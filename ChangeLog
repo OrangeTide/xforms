@@ -1,4 +1,4 @@
-2004-04-05  Angus Leeming  <angus.leeming@btopenworld.com>
+2004-04-30  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/Makefile.am, fdesign/Makefile.am: silence automake
 	warning about trailing backslash on last line of file.
