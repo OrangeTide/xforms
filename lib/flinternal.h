@@ -168,6 +168,7 @@ extern void fl_set_debug_level(int);
 /* from forms.c and object.c */
 extern FL_FORM *fl_make_form(FL_Coord, FL_Coord);
 extern void fl_detach_form(FL_FORM *);
+extern void fl_handle_form(FL_FORM *, int, int, XEvent *);
 extern void fl_handle_object(FL_OBJECT *, int, FL_Coord, FL_Coord, int,
 			     XEvent *);
 extern int fl_handle_object_direct(FL_OBJECT *, int, FL_Coord, FL_Coord, int,

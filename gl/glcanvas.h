@@ -1,8 +1,6 @@
 #ifndef FL_GLCANVAS_H
 #define FL_GLCANVAS_H
 
-#ifdef HAVE_GL_GLX_H
-
 /* OpenGL canvases */
 FL_EXPORT FL_OBJECT *fl_create_glcanvas(
 		int type,
@@ -73,7 +71,5 @@ FL_EXPORT Window fl_glwinopen(
 		int w,
 		int h
 		);
-
-#endif /* HAVE_GL_GLX_H */
 
 #endif /* NOT FL_GLCANVAS_H */

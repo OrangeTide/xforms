@@ -1,5 +1,16 @@
 2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/flinternal.h: add declaration of fl_handle_form.
+	Squash warnings about implicit declaration of the function when
+	compiling lib/tabfolder.c.
+
+	* gl/glcanvas.h: remove #ifdef HAVE_GL_GLX_H guard.
+	Cruft from pre-autoconf days.
+	Squash warnings about implicit declaration of the function when
+	compiling gl/glcanvas.c
+
+2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* fd2ps/papers.c:
 	* fd2ps/pscol.c:
 	* fd2ps/psdraw.c:
