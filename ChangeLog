@@ -1,6 +1,6 @@
 2003-11-26  Angus Leeming  <angus.leeming@btopenworld.com>
 
-	* demos/boxtype.c: fix warning about uninitialized data.
+	* demos/boxtype.c: squash warning about uninitialized data.
 
 2003-11-24  Angus Leeming  <angus.leeming@btopenworld.com>
 
