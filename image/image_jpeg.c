@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.7 2003/11/28 14:28:46 leeming Exp $
+ * $Id: image_jpeg.c,v 1.8 2004/12/29 11:01:48 lasgouttes Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -41,6 +41,12 @@
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
+/* jpeglib.h includes jconfig.h which has a old-style definition of
+ * HAVE_STDLIB_H. This breaks compilation with compilers like IBM's
+ * xlc. */
+#ifdef HAVE_STDLIB_H
+#undef HAVE_STDLIB_H
+#endif
 #include "jpeglib.h"
 #include "jerror.h"
 #include <setjmp.h>

@@ -27,9 +27,6 @@ SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS)
 EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL README README.OS2 \
 	autogen.sh xforms.spec.in xforms.spec
 
-# Hack so that the targets that use tar will also work with automake 1.4
-AMTAR ?= $(TAR)
-
 rpmdist: dist
 	if [ -z "`type -path rpmbuild`" ]; \
 	then \
