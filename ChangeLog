@@ -1,3 +1,19 @@
+2003-11-19  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* config/xformsinclude.m4 (XFORMS_PATH_XPM): honor X_CFLAGS to
+	find xpm.h (should fix problem reported by Reed Riddle)
+	
+	* README: update. In particular, the acknowledgement of copyright
+	has been removed since the code is not here anymore (and the
+	advertising clause is not needed anymore). Try to point to the new
+	nongnu.org site.
+
+	* Makefile.am (dist-hook): remove old leftover from LyX
+	(EXTRA_DIST): do not distribute xforms.spec, which
+	is generated at configure time
+
+	* lib/signal.c (default_signal_handler): fix typo
+
 2003-11-14  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* config/config.guess:

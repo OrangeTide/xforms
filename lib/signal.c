@@ -78,7 +78,7 @@ default_signal_handler(int sig)
 	exit(sig);
     }
 
-#if RETSYGTYPE != void
+#if RETSIGTYPE != void
     return 0;
 #endif
 }

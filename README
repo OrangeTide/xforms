@@ -3,17 +3,11 @@
 This is the Open Source distribution of the XForms Library, a
 graphical user interface toolkit for X Window Systems.
 
-It should work under X11 R4, R5 & R6.  XForms is free.  It is licensed
-under the LGPL (Lesser Gnu Public License) version 2.1.  See the file
-COPYING.LIB for the gory details.
+It should work under X11 R4, R5 & R6. XForms is free software. It is
+licensed under the LGPL (Lesser Gnu Public License) version 2.1. See
+the file COPYING.LIB for the gory details.
 
-What do I need to compile xforms from the source distribution?
-
-	* You should be able to compile xforms on any 'reasonable' flavour of
-	unix.
-	* LibXpm, version 4.7 or newer.
-
-get it from ftp://avahi.inria.fr/pub/xpm or ftp://ftp.x.org/contrib.
+				- - -
 
 What's new?
 
@@ -23,27 +17,39 @@ Documentation on XForms is available from ncmir.ucsd.edu /pub/xforms
 via anonymous ftp.
 
 The entire XForms distribution plus the latest info is accessible via
-http://world.std.com/~xforms
+http://www.nongnu.org/xforms/
+
+				- - -
+
+What do I need to compile xforms from the source distribution?
+
+You should be able to compile xforms on any 'reasonable' flavour of
+unix.
+
+xforms relies on several other libraries, namely
+
+	* libXpm, version 4.7 or newer.
+	* libjpeg, 6.0b or newer.
+	* libGL (optional)
+
+What's new?
+
+	Read NEWS.
+
+Documentation on XForms is available from ncmir.ucsd.edu /pub/xforms
+via anonymous ftp.
+
+The entire XForms distribution plus the latest info is accessible via
+http://www.nongnu.org/xforms/
 
 				- - -
 
 This Open Source distribution is available at
 
- <ftp://ncmir.ucsd.edu/pub/xforms/OpenSource/xforms-1.0-release.tgz>
+ <http://savannah.nongnu.org/files/?group=xforms>
 
 If you would like to act as a mirror for this distribution, please
 feel free to do so.
-
-The binary distributions of XForms will at some time in the future be
-deleted from the server.  Effective immediately, they are considered
-unmaintained deprecated versions.
-
-				- - -
-
-The strtod() function code is Copyright The Regents of
-the University of California and derived from software contributed to
-Berkeley by Chris Torek and is distributed as per the licensing
-therein.
 
 				- - -
 
@@ -54,6 +60,9 @@ xforms-request@bob.usuhs.mil with one of the following commands
 	unsubscribe xforms
 
 to get on and off the list.
+
+You can also use a web interface here:
+http://cweblog.usuhs.mil/mailman/listinfo/xforms
 
 To use the mailing list, send your message to
   xforms@bob.usuhs.mil

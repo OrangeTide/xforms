@@ -46,6 +46,8 @@ AC_SUBST(XPM_LIB)
 LIBS="$SAVE_LIBS"
 
 ### Check for Xpm headers
+SAVE_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$X_CFLAGS $CPPFLAGS"
 xforms_cv_xpm_h_location="<xpm.h>"
 AC_CHECK_HEADER(X11/xpm.h,[
   ac_cv_header_xpm_h=yes
@@ -54,6 +56,7 @@ AC_CHECK_HEADER(xpm.h,[],[
 XFORMS_LIB_ERROR(xpm.h,Xpm)])])
 AC_DEFINE_UNQUOTED(XPM_H_LOCATION,$xforms_cv_xpm_h_location,
   [define this to the location of xpm.h to be used with #include, e.g. <xpm.h>])
+CPPFLAGS="$SAVE_CPPFLAGS"
 
 ### Test for the header version
 if test $ac_cv_header_xpm_h = yes; then
