@@ -22,7 +22,7 @@
 /********************** crop here for forms.h **********************/
 
 /*
- * $Id: Basic.h,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: Basic.h,v 1.2 2003/04/09 15:55:09 leeming Exp $
  *
  *  Basic definitions and limits.
  *  Window system independent prototypes
@@ -343,7 +343,11 @@ typedef enum
     FL_TRPLCLICK,		/* triple click            */
     FL_ATTRIB,			/* attribute change        */
     FL_KEYRELEASE,
-    FL_PS			/* dump a form into EPS    */
+    FL_PS,			/* dump a form into EPS    */
+    FL_MOVEORIGIN		/* dragging the form across the screen
+				   changes its absolute x,y coords. Objects
+				   that themselves contain forms should
+				   ensure that they are up to date. */
 }
 FL_EVENTS;
 

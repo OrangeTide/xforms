@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: tabfolder.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: tabfolder.c,v 1.2 2003/04/09 15:55:09 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -77,6 +77,14 @@ handle(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 
     switch (event)
     {
+    case FL_MOVEORIGIN: {
+	FL_FORM * const folder = fl_get_active_folder(ob);
+	fl_get_winorigin(folder->window, &(folder->x), &(folder->y));
+	/* Don't forget nested folders */
+	fl_handle_form(folder, FL_MOVEORIGIN, 0, ev);
+	break;
+    }
+
     case FL_ATTRIB:
     case FL_DRAW:
 	fl_set_canvas_decoration(sp->canvas, fl_boxtype2frametype(ob->boxtype));
@@ -866,7 +874,7 @@ static void
 compute_position(FL_OBJECT * ob)
 {
 #if 0
-    if (((SPEC *) (ob->spec))->nforms == 0)
+    if (((ob->spec)->nforms) == 0)
 	return;
 #endif
 #if TBDEBUG
@@ -878,6 +886,7 @@ compute_position(FL_OBJECT * ob)
     else
 	compute_top_position(ob);
 
+    
 }
 
 int

@@ -1,3 +1,27 @@
+2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	Move tabfolder-specific code out of forms.c and allow individual
+	FL_OBJECTs to respond to such events. Means that the library
+	becomes extensible to new, user-defined widgets once again.
+
+	* lib/include/Basic.h: add FL_MOVEORIGIN to the FL_EVENTS enum.
+
+	* lib/forms.h:
+	* lib/include/forms.h: regenerated automatically.
+
+	* lib/forms.c (fl_handle_form): no longer a static function.
+	Dispatch FL_MOVEORIGIN events to the form's constituent objects.
+	(fl_get_tabfolder_origin): removed. Functionality moved into
+	tabfolder.c.
+	(do_interaction_step): no longer call fl_get_tabfolder_origin. Instead,
+	dispatch a call to fl_handle_form(form, FL_MOVEORIGIN, ...).
+
+	* lib/tabfolder.c (handle): add FL_MOVEORIGIN to the event switch.
+	Update the x,y absolute coords of the active_folder and dispatch
+	a call to fl_handle_form(active_folder, FL_MOVEORIGIN, ...) to
+	ensure that the x,y absolute coords of nested tabfolders are also
+	updated.
+
 2003-04-09  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* image/Imakefile (EXTRA_INCLUDES): change the order of includes,

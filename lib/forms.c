@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: forms.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.c,v 1.2 2003/04/09 15:55:09 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.1 2003/04/06 15:52:39 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.2 2003/04/09 15:55:09 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -1306,7 +1306,7 @@ fl_keyboard(FL_FORM * form, int key, FL_Coord x, FL_Coord y, void *xev)
 }
 
 /* updates a form according to an event */
-static void
+void
 fl_handle_form(FL_FORM * form, int event, int key, XEvent * xev)
 {
     FL_OBJECT *obj = 0, *obj1;
@@ -1437,12 +1437,13 @@ fl_handle_form(FL_FORM * form, int event, int key, XEvent * xev)
 	    obj1 = fl_find_object(obj1->next, FL_FIND_AUTOMATIC, 0, 0);
 	}
 	break;
+    case FL_MOVEORIGIN:
     case FL_OTHER:
 	/* need to dispatch it thru all objects and monitor the status of
 	   forms as it may get closed */
 	for (obj1 = form->first; obj1 && form->visible; obj1 = obj1->next)
 	    if (obj1->visible)
-		fl_handle_object(obj1, FL_OTHER, xx, yy, key, xev);
+		fl_handle_object(obj1, event, xx, yy, key, xev);
 	break;
     }
 }
@@ -1754,24 +1755,6 @@ xmask2key(unsigned mask)
 }
 
 
-/* Ensure that the tabfolder forms' x,y coords are updated correctly */
-static void
-fl_get_tabfolder_origin(FL_FORM * form)
-{
-    FL_OBJECT *ob = 0;
-
-    for (ob = form->first; ob; ob = ob->next) {
-	if (ob->objclass == FL_TABFOLDER) {
-	    FL_FORM * const folder = fl_get_active_folder(ob);
-	    if (folder && folder->window) {
-		fl_get_winorigin(folder->window, &(folder->x), &(folder->y));
-		/* Don't forget nested folders */
-		fl_get_tabfolder_origin(folder);
-	    }
-	}
-    }
-}
-
 static void
 do_interaction_step(int wait_io)
 {
@@ -2068,8 +2051,11 @@ do_interaction_step(int wait_io)
 				   st_xev.xconfigure.height != evform->h));
 
 
-	/* Ensure that the tabfolder forms' x,y coords are updated correctly */
-	fl_get_tabfolder_origin(evform);
+	/* Dragging the form across the screen changes its absolute x,y coords.
+	   Objects that themselves contain forms should ensure that they are
+	   up to date.
+	*/
+	fl_handle_form(evform, FL_MOVEORIGIN, 0, &st_xev);
 
 	if (!st_xev.xconfigure.send_event)
 	{
