@@ -57,4 +57,4 @@ fdesign_SOURCES = \
 
 #	viewforms.c \
 #	viewforms.h \
-#	viewforms_main.c \
+#	viewforms_main.c

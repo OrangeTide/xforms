@@ -120,4 +120,4 @@ libforms_la_SOURCES = \
 	xyplot.c
 
 #	dirent_vms.h \
-#	vms_readdir.c \
+#	vms_readdir.c

@@ -1,3 +1,8 @@
+2004-04-05  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/Makefile.am, fdesign/Makefile.am: silence automake
+	warning about trailing backslash on last line of file.
+
 2004-04-20  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* lib/xpopup.c (fl_freepup): do not free unallocated entries
