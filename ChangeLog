@@ -1,3 +1,9 @@
+2003-04-09  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* image/Imakefile (EXTRA_INCLUDES): change the order of includes,
+	to avoid that an older installed forms.h is used instead of the
+	fresh one
+
 2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/objects.c (hide_tooltip): renamed as checked_hide_tooltip.
