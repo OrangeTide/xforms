@@ -1641,6 +1641,9 @@ FL_EXPORT void fl_set_error_handler(
 		FL_ERROR_FUNC user_func
 		);
 
+/* This function was called 'fl_set_error_logfp/' in XForms 0.89. */
+#define fl_set_error_logfp fl_set_err_logfp
+
 #define fl_mousebutton fl_mouse_button
 
 /* these give more flexibility for future changes. Also application

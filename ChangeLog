@@ -1,5 +1,11 @@
 2004-05-18  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/include/Basic.h (fl_set_err_logfp): function was known as
+	'fl_set_error_logfp' in XForms 0.89. Define a typedef to map
+	from the old to the new.
+
+2004-05-18  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* demos/demo27.c:
 	* demos/iconify.c:
 	* demos/pup.c:
