@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fs = "$Id: fselect.c,v 1.9 2003/11/13 21:56:02 leeming Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.10 2004/05/05 13:48:06 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -313,24 +313,18 @@ select_cb(FL_OBJECT * ob, long arg)
     }
     return 0;
 }
+
 #else
-/*
- * A file is selected from the browser.
- * generate ready if valid selection (e.g. double-clicked)
- * Note that if a call back is defined, never generate ready
- */
+
 static void
-select_cb(FL_OBJECT * ob, long arg)
+select_cb(FL_OBJECT *ob, long isdblclick)
 {
     int dir;
     char seltext[FL_PATH_MAX];
-    static int lastline = -1, clicked;
-    int dblclick, thisline;
+    int thisline;
     FD_fselect *lfs = ob->form->fdui;
-    const XEvent *xev = fl_last_event();
 
     thisline = fl_get_browser(ob);
-
     if (thisline <= 0)
 	return;
 
@@ -340,31 +334,9 @@ select_cb(FL_OBJECT * ob, long arg)
 
     strcpy(seltext, seltext + 2);
 
-    dblclick = (lastline == thisline && clicked &&
-		fl_time_passed(FL_FS_T) < ob->click_timeout * 0.001f);
-
-    lastline = thisline;
-
-    clicked = (clicked || xev->type == ButtonPress);
-
-    /* cursor keys can cause a single line being repeatedly selected
-       causing a wrong dblclick detection */
-
-    if (clicked)
-    {
-	if (xev->type == KeyPress || xev->type == KeyRelease)
-	{
-	    dblclick = 0;
-	    clicked = 0;
-	    lastline = -1;
-	}
-    }
-
-    fl_reset_time(FL_FS_T);
-
     if (dir)
     {
-	if (dblclick)
+	if (isdblclick)
 	{
 	    strcat(append_slash(lfs->dname), seltext);
 	    fl_fix_dirname(lfs->dname);
@@ -379,7 +351,7 @@ select_cb(FL_OBJECT * ob, long arg)
 	fl_set_input(lfs->input, seltext);
 	strcpy(lfs->filename, seltext);
 
-	if (dblclick)
+	if (isdblclick)
 	{
 	    if (lfs->fselect_cb)
 	    {
@@ -390,7 +362,6 @@ select_cb(FL_OBJECT * ob, long arg)
 		fl_object_qenter(lfs->ready);
 	}
     }
-    return;
 }
 #endif
 
@@ -969,6 +940,7 @@ create_form_fselect(void)
     fs->browser = obj = fl_add_browser(FL_HOLD_BROWSER, 15, 80, 185, 180, "");
 #if ATTACHABLE
     fl_set_object_callback(obj, select_cb, 0);
+    fl_set_browser_dblclick_callback(obj, select_cb, 1);
 #endif
     fl_set_object_gravity(obj, NorthWestGravity, SouthEastGravity);
     obj->click_timeout = FL_CLICK_TIMEOUT;

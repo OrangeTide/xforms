@@ -1,3 +1,8 @@
+2004-05-05  Mike Heffner  <mheffner@vt.edu>
+
+	* lib/fselect.c (select_cb): clean-up and simplify this callback
+	function by use of the existing fl_set_browser_dblclick_callback.
+
 2004-05-04  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	The original patch, posted to the xforms list on June 21, 2002,
