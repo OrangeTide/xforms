@@ -38,6 +38,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 #include "pformbrowser.h"
 
 void check_scrollbar(FL_OBJECT * ob);

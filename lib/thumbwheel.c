@@ -34,6 +34,8 @@
  *         do we need increments a la slider?
  */
 #include "forms.h"
+#include "flinternal.h"
+
 #include <math.h>
 #include "ptwheel.h"
 #define SPEC   FL_THUMBWHEEL_SPEC

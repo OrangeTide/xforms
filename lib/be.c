@@ -35,6 +35,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 #include <stdlib.h>
 
 void

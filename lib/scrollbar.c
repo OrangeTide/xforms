@@ -32,6 +32,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 #include "pscrollbar.h"
 
 #define SPEC FL_SCROLLBAR_SPEC

@@ -34,6 +34,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 
 #define TBDEBUG    0
 

@@ -38,7 +38,7 @@
  *    void (*gmout)(const char *, const char *, const char *, int);
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_errm = "$Id: errmsg.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
 #include <stdio.h>
@@ -50,6 +50,7 @@ char *id_errm = "$Id: errmsg.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #include "local.h"  /* up stairs */
 
 #include "forms.h"
+#include "flinternal.h"
 #include "ulib.h"
 extern int errno;		/* system error no            */
 

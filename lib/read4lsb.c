@@ -21,6 +21,7 @@
 
 #include <stdio.h>
 #include "forms.h"
+#include "flinternal.h"
 #include "ulib.h"
 
 int

@@ -34,6 +34,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 
 void
 fl_get_hv_align(int align, int *halign, int *valign)

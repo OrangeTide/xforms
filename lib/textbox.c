@@ -34,14 +34,15 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_brw = "$Id: textbox.c,v 1.3 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.4 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
+#include "forms.h"
+#include "flinternal.h"
+#include "ptextbox.h"
 #include <string.h>
 #include <sys/types.h>
 #include <stdlib.h>
-#include "forms.h"
-#include "ptextbox.h"
 
 #define LMARGIN   3		/* left margin */
 #define NL        10

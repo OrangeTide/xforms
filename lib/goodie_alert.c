@@ -31,6 +31,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 
 /****************** Alert dialog ********************{**/
 typedef struct

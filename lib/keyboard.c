@@ -32,6 +32,7 @@
  *
  */
 #include "forms.h"
+#include "flinternal.h"
 
 void
 fl_ringbell(int percent)

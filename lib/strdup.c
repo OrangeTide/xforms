@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "forms.h"
+#include "flinternal.h"
 
 char *
 fl_strdup(const char *s)

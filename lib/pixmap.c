@@ -35,6 +35,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 
 /*
  * If you've parked xpm.h somewhere other than the standard place,

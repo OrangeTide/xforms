@@ -34,6 +34,7 @@
  *
  */
 #include "forms.h"
+#include "flinternal.h"
 #include "ptextbox.h"
 #include "pbrowser.h"
 

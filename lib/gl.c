@@ -41,12 +41,13 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_gl = "$Id: gl.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_gl = "$Id: gl.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
 #include "GL/glx.h"
 #include "GL/gl.h"
 #include "forms.h"
+#include "flinternal.h"
 #include <stdlib.h>
 
 #define MAXATTRIB  34

@@ -31,13 +31,15 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_posi = "$Id: positioner.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_posi = "$Id: positioner.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
 #endif
+
+#include "forms.h"
+#include "flinternal.h"
+#include "ppositioner.h"
 
 #include <sys/types.h>
 #include <stdlib.h>
-#include "forms.h"
-#include "ppositioner.h"
 
 /* The special information for positioners.
  * ymin is the value at the bottom and ymax is the value at the top

@@ -32,11 +32,12 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.4 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.5 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
-#include <string.h>
 #include "forms.h"
+#include "flinternal.h"
+#include <string.h>
 
 /* Creates an empty form. NOT FOR USER. */
 #define DELTA 0.4

@@ -33,6 +33,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 
 /***********    Simple input    ********************{*******/
 typedef struct

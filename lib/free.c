@@ -31,10 +31,11 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fre = "$Id: free.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_fre = "$Id: free.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
 #include "forms.h"
+#include "flinternal.h"
 
 FL_OBJECT *
 fl_create_free(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,

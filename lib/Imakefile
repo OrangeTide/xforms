@@ -120,12 +120,8 @@ XPMFLAG		= -DNONSTANDARD_XPM
 #endif
 
 EXTRA_INCLUDES	= \
-		  $(XPMINC) \
-		  -I$(BUILDINCDIR) \
-		  -Iprivate \
-		  -Ibitmaps \
 		  -I. \
-		  -Ifd
+		  -Iprivate \
 
 DEPEND_DEFINES	= \
 		  -I/usr/local/include

@@ -33,12 +33,13 @@
  *
  */
 
+#include "forms.h"
+#include "flinternal.h"
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
 #include <ctype.h>
 #include <sys/types.h>
-#include "forms.h"
 
 /* used to do timeout, now almost does nothing */
 int

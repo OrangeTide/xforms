@@ -27,6 +27,7 @@
  * have to pull other files in.
  */
 #include "forms.h"
+#include "flinternal.h"
 #include <X11/Xlib.h>
 
 Display *fl_display;

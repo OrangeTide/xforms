@@ -32,6 +32,8 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
+#include "local.h"
 
 /****************** Alert dialog ********************{**/
 typedef struct
@@ -100,7 +102,7 @@ fl_show_stacked_alert(const char *title, const char *str1,
     fl_handle_goodie_font(fd_alert->but, fd_alert->str);
 
     fl_set_object_label(fd_alert->title, title);
-    snprintf(buf,sizeof(buf),"%s\n%s",(str1?str1:"",(str2?str2 : ""));
+    snprintf(buf,sizeof(buf),"%s\n%s",(str1?str1:""),(str2?str2 : ""));
     fl_set_object_label(fd_alert->str, buf);
 
     fl_deactivate_all_forms();

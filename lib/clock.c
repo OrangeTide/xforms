@@ -33,6 +33,8 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
+
 #include <math.h>
 #include <time.h>
 

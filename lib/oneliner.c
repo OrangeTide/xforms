@@ -34,6 +34,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 
 static int fntstyle = FL_NORMAL_STYLE, fntsize = FL_DEFAULT_SIZE;
 static FL_COLOR background = FL_YELLOW, textcolor = FL_BLACK;

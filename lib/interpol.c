@@ -36,6 +36,7 @@
 
 #include <stdio.h>
 #include "forms.h"
+#include "flinternal.h"
 
 int
 fl_interpolate(const float *wx, const float *wy, int nin,

@@ -34,6 +34,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 
 typedef struct
 {

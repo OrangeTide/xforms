@@ -33,7 +33,8 @@
  *
  */
 #include "forms.h"
-#include "cmdbr.h"		/* from directory fd */
+#include "flinternal.h"
+#include "fd/cmdbr.h"		/* from directory fd */
 
 #ifndef FL_WIN32
 #include <unistd.h>
@@ -599,4 +600,4 @@ fl_set_command_log_position(int x, int y)
     fl_set_form_position(logger->cmd, x, y);
 }
 
-#include "cmdbr.c"		/* from directory fd */
+#include "fd/cmdbr.c"		/* from directory fd */

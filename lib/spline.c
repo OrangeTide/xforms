@@ -35,6 +35,7 @@
 
 #include <stdio.h>
 #include "forms.h"
+#include "flinternal.h"
 
 /* the input X should be monotonic increasing */
 int

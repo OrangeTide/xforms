@@ -33,11 +33,12 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.5 2003/04/10 21:44:33 leeming Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.6 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
 #include <stdio.h>
 #include "forms.h"
+#include "flinternal.h"
 
 static const char *version[] =
 {

@@ -32,6 +32,7 @@
  *
  */
 #include "forms.h"
+#include "flinternal.h"
 
 void
 fl_add_child(FL_OBJECT * parent, FL_OBJECT * child)

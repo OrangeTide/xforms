@@ -32,11 +32,12 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_r3dbut = "$Id: round3d.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
+char *fl_r3dbut = "$Id: round3d.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
 #include <sys/types.h>
 #include "forms.h"
+#include "flinternal.h"
 
 typedef FL_BUTTON_STRUCT SPEC;
 

@@ -36,6 +36,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 #include <sys/types.h>
 
 #ifndef FL_WIN32

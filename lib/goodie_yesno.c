@@ -31,6 +31,7 @@
  */
 
 #include "forms.h"
+#include "flinternal.h"
 #include <ctype.h>
 
 /************* Ask yes/no question **********************{****/

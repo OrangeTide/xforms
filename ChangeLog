@@ -1,5 +1,10 @@
 2003-04-15  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lots of files: reduce the amount of magic includes of header files
+	and therefore include flinternal.h explicitly much more.
+
+2003-04-15  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* .cvsignore:
 	* demos/.cvsignore:
 	* fd2ps/.cvsignore:

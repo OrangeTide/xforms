@@ -33,12 +33,13 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fnt = "$Id: fonts.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
 #endif
 
+#include "forms.h"
+#include "flinternal.h"
 #include <string.h>
 #include <ctype.h>
-#include "forms.h"
 static XFontStruct *defaultfs;
 static XFontStruct *fl_try_get_font_struct(int, int, int);
 static char *get_fname(const char *str, int size);

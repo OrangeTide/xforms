@@ -28,6 +28,7 @@
 
 
 #include "forms.h"
+#include "flinternal.h"
 #include "ulib.h"
 #include <stdlib.h>
 
