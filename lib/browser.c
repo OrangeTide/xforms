@@ -195,6 +195,8 @@ get_geometry(FL_OBJECT * ob)
     {
 	comp->attrib = 1;
 	comp->dead_area = !(comp->h_on ^ comp->v_on);
+	if (h_on)
+	    fl_set_textbox_xoffset(comp->tb, 0);
     }
     else
     {

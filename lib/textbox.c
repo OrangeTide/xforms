@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_brw = "$Id: textbox.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.9 2004/10/06 11:18:14 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1702,7 +1702,7 @@ fl_set_textbox_xoffset(FL_OBJECT * ob, FL_Coord npixels)
 	npixels = sp->maxpixels - sp->w + 5;
 
     if (npixels < 0)
-	return sp->xoffset;
+	npixels = 0;
 
     if (sp->xoffset != npixels)
     {

@@ -1,3 +1,12 @@
+2004-10-06  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/textbox.c (fl_set_textbox_xoffset): don't ignore a
+	request to reset the offset if the manipulated value is less
+	than zero. Instead, reset it to zero and proceed.
+
+	* lib/browser.c (get_geometry): reset the horizontal offset to
+	zero if the horizontal scrollbar is turned off. (Bug #3205.)
+
 2004-07-28  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/forms.c (fl_prepare_form_window): correct typo in
