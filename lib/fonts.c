@@ -33,7 +33,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fnt = "$Id: fonts.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.7 2004/06/04 16:16:30 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -245,9 +245,15 @@ fl_try_get_font_struct(int numb, int size, int with_fail)
 
     if (numb < 0 || numb >= FL_MAXFONTS || !flf->fname[0])
     {
-	/* for fdesign: no connecton has fname empty and is legit */
-	if (!fl_no_connection)
-	    M_err("SetFont", "Bad FontStyle request %d: %s", numb, flf->fname);
+	if (!fl_no_connection) {
+	    /*
+	     * This function is typically used to test whether a font is
+	     * loadable or not, so need not be a fatal condition if
+	     * it fails. Issue a message for information therefore.
+	     */
+	    M_info("SetFont", "Bad FontStyle request %d: %s",
+		   numb, flf->fname);
+	}
 	if (!fl_state[fl_vmode].cur_fnt)
 	    M_warn("FontStruct", "bad font returned");
 	return fl_state[fl_vmode].cur_fnt;

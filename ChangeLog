@@ -1,3 +1,9 @@
+2004-06-04  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/fonts.c (fl_try_get_font_struct): change an error message to
+	an informational one as the function is often used to test
+	whether a font is loadable or not.
+
 2004-06-03  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/Makefile.am (EXTRA_DIST): distribute dirent_vms.h and
