@@ -1,3 +1,7 @@
+2004-04-05  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* Dummy commit to check all is well with my account.
+
 2004-04-01  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* lib/flresource.c (fl_get_resource): when a resource is a
