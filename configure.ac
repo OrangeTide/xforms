@@ -1,20 +1,15 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
-AC_INIT(xforms,1.1cvs,xforms@bob.usuhs.mil)
 AC_PREREQ(2.52)
-AC_CONFIG_SRCDIR(lib/forms.c)
-AM_CONFIG_HEADER([lib/config.h])
-
+AC_INIT(xforms, 1.0.90, xforms@bob.usuhs.mil)
 AC_CONFIG_AUX_DIR(config)
-
-PACKAGE=xforms
-XFORMS_SET_VERSION(1,0,2)
+AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
 
-AM_MAINTAINER_MODE
 AC_CANONICAL_TARGET
-
-AM_INIT_AUTOMAKE(xforms, $VERSION)
+AM_CONFIG_HEADER([lib/config.h])
+AM_INIT_AUTOMAKE($PACKAGE_NAME, $PACKAGE_VERSION)
+AM_MAINTAINER_MODE
 
 # fix the value of the prefixes.
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
@@ -100,7 +95,10 @@ XFORMS_PATH_XPM
 XFORMS_CHECK_LIB_JPEG
 
 # Checks for library functions.
-AC_TYPE_SIGNAL dnl used
+AC_TYPE_SIGNAL
+if test $ac_cv_type_signal = "void" ; then
+  AC_DEFINE(RETSIGTYPE_IS_VOID, 1, [Define if the return type of signal handlers is void])
+fi
 AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep vsnprintf])
 XFORMS_CHECK_DECL(snprintf, stdio.h)
 XFORMS_CHECK_DECL(vsnprintf, stdio.h)

@@ -1,10 +1,10 @@
 			  XForms Version 1.1
 
-This is the Open Source distribution of the XForms Library, a
+This is the Free Software distribution of the XForms Library, a
 graphical user interface toolkit for X Window Systems.
 
 It should work under X11 R4, R5 & R6. XForms is free software. It is
-licensed under the LGPL (Lesser Gnu Public License) version 2.1. See
+licensed under the LGPL (Lesser General Public License) version 2.1. See
 the file COPYING.LIB for the gory details.
 
 				- - -
@@ -13,7 +13,7 @@ What's new?
 
 	Read NEWS.
 
-Documentation on XForms is available from ncmir.ucsd.edu /pub/xforms
+Documentation on XForms is available from ncmir.ucsd.edu /pub/xforms/DOC/
 via anonymous ftp.
 
 The entire XForms distribution plus the latest info is accessible via
@@ -32,19 +32,9 @@ xforms relies on several other libraries, namely
 	* libjpeg, 6.0b or newer.
 	* libGL (optional)
 
-What's new?
-
-	Read NEWS.
-
-Documentation on XForms is available from ncmir.ucsd.edu /pub/xforms
-via anonymous ftp.
-
-The entire XForms distribution plus the latest info is accessible via
-http://www.nongnu.org/xforms/
-
 				- - -
 
-This Open Source distribution is available at
+This source distribution is available at
 
  <http://savannah.nongnu.org/files/?group=xforms>
 

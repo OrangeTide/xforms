@@ -4,27 +4,23 @@ dnl         Lars Gullik Bjønnes (larsbj@lyx.org)
 dnl         Allan Rae (rae@lyx.org)
 
 
-dnl Usage XFORMS_SET_VERSION(Version, Revision, Fixlevel)
-dnl Sets variables VERSION, FL_VERSION, FL_REVISION, FL_FIXLEVEL.
-AC_DEFUN(XFORMS_SET_VERSION,[
-AC_SUBST(FL_VERSION, $1)
-AC_SUBST(FL_REVISION, $2)
-AC_SUBST(FL_FIXLEVEL, $3)
-AC_SUBST(VERSION, $1.$2.$3)
-])
-
-dnl Usage XFORMS_CHECK_VERSION   Displays version of xforms being built and
-dnl sets variables "xforms_devel_version" and "xforms_prerelease"
-AC_DEFUN(XFORMS_CHECK_VERSION,[
+dnl Usage XFORMS_CHECK_VERSION
+dnl Sets variables VERSION, FL_VERSION, FL_REVISION, FL_FIXLEVEL and 
+dnl xforms_devel_version.
+AC_DEFUN([XFORMS_CHECK_VERSION],[
+AC_SUBST(PACKAGE, $PACKAGE_NAME)
+AC_SUBST(VERSION, $PACKAGE_VERSION)
+[eval] `echo $PACKAGE_VERSION | sed -e 's/\(.*\)\.\(.*\)\.\(.*\)/FL_VERSION=\1; FL_REVISION=\2; FL_FIXLEVEL=\3/'`
+AC_SUBST(FL_VERSION)
+AC_SUBST(FL_REVISION)
+AC_SUBST(FL_FIXLEVEL)
 echo "configuring xforms version $VERSION"
-xforms_prerelease=no
 xforms_devel_version=no
 case $VERSION in
-  *cvs*) xforms_devel_version=yes
+dnl (
+  *.[[5-9]][[0-9]]) xforms_devel_version=yes
          AC_DEFINE(DEVEL_VERSION, 1, Define if you are building a development version of xforms)
          echo "WARNING: This is a development version. Expect bugs." ;;
-  *pre*) xforms_prerelease=yes
-         echo "WARNING: This is a prerelease. Be careful!" ;;
 esac])
 
 dnl Usage XFORMS_CHECK_LIB_JPEG: Checks for jpeg library
@@ -155,7 +151,7 @@ AC_LANG_COMPILER(C)
 ### We might want to get or shut warnings.
 AC_ARG_ENABLE(warnings,
   [  --enable-warnings       tell the compiler to display more warnings],,
-  [ if test $xforms_devel_version = yes -o $xforms_prerelease = yes && test $ac_cv_prog_gcc = yes ; then
+  [ if test $xforms_devel_version = yes && test $ac_cv_prog_gcc = yes ; then
 	enable_warnings=yes;
     else
 	enable_warnings=no;
@@ -171,7 +167,7 @@ fi
 ### We might want to disable debug
 AC_ARG_ENABLE(debug,
   [  --enable-debug          enable debug information],,
-  [ if test $xforms_devel_version = yes -o $xforms_prerelease = yes && test $ac_cv_prog_gcc = yes ; then
+  [ if test $xforms_devel_version = yes && test $ac_cv_prog_gcc = yes ; then
 	enable_debug=yes;
     else
 	enable_debug=no;

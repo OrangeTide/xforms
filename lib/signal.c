@@ -78,7 +78,7 @@ default_signal_handler(int sig)
 	exit(sig);
     }
 
-#if RETSIGTYPE != void
+#ifndef RETSIGTYPE_IS_VOID
     return 0;
 #endif
 }

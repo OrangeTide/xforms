@@ -1,3 +1,19 @@
+2004-03-30  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* configure.ac: set version to 1.0.90. Use XFORMS_CHECK_VERSION
+
+	* config/xformsinclude.m4 (XFORMS_CHECK_VERSION): merge
+	XFORMS_SET_VERSION and XFORMS_CHECK_VERSION. Set PACKAGE here and
+	read version from PACKAGE_VERSION (set by AC_INIT). Remove
+	detection of prereleases. Development versions are now versions
+	with minor version number >= 50.
+
+	* README: small update
+
+	* configure.ac: add new define RETSIGTYPE_IS_VOID
+	
+	* lib/signal.c: fix handling of RETSIGTYPE
+
 2003-12-02  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/Makefile.am: enable 'make -j2' to work on a
