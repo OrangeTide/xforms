@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.4 2003/04/10 21:30:55 leeming Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.5 2003/04/10 21:44:33 leeming Exp $";
 #endif
 
 #include <stdio.h>
@@ -55,13 +55,14 @@ static const char *version[] =
 int
 fl_library_version(int *ver, int *rev)
 {
-    int v, r = -1;
+    int const v = FL_VERSION;
+    int const r = FL_REVISION;
     int c = 0;
 
     if (rev)
-	*rev = FL_REVISION;
+	*rev = r;
     if (ver)
-	*ver = FL_VERSION;
+	*ver = v;
 
     return v * 1000 + r;
 }
