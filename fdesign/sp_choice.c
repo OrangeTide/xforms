@@ -35,7 +35,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "pchoice.h"
+#include "private/pchoice.h"
 #include "spec/choice_spec.h"
 
 extern FD_choiceattrib *create_form_choiceattrib(void);

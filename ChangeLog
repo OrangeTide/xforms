@@ -1,5 +1,45 @@
 2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* demos/Imakefile:
+	* fd2ps/Imakefile:
+	* fdesign/Imakefile:
+	* gl/Imakefile:
+	* image/Imakefile:
+	* lib/Imakefile: don't pass -Iprivate to the complier.
+
+	* fdesign/fd_super.c:
+	* fdesign/sp_browser.c:
+	* fdesign/sp_choice.c:
+	* fdesign/sp_counter.c:
+	* fdesign/sp_dial.c:
+	* fdesign/sp_menu.c:
+	* fdesign/sp_positioner.c:
+	* fdesign/sp_xyplot.c:
+	* image/image_postscript.c:
+	* image/postscript.c:
+	* image/ps_core.c:
+	* image/ps_draw.c:
+	* image/ps_text.c:
+	* lib/browser.c:
+	* lib/canvas.c:
+	* lib/choice.c:
+	* lib/counter.c:
+	* lib/dial.c:
+	* lib/flinternal.h:
+	* lib/formbrowser.c:
+	* lib/menu.c:
+	* lib/objects.c:
+	* lib/positioner.c:
+	* lib/scrollbar.c:
+	* lib/sldraw.c:
+	* lib/slider.c:
+	* lib/textbox.c:
+	* lib/thumbwheel.c:
+	* lib/valuator.c:
+	* lib/xyplot.c: associated changes to the #include directives.
+
+2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/xforms.5: renamed as xforms.man. This probably breaks the
 	installation, but that is all slated for change anyway.
 

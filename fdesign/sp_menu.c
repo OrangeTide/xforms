@@ -35,7 +35,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "pmenu.h"
+#include "private/pmenu.h"
 #include "spec/menu_spec.h"
 #include <ctype.h>
 

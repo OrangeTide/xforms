@@ -591,7 +591,7 @@ extern const char *fl_object_class_name(FL_OBJECT *);
 extern void fl_print_form_object(FL_FORM *, const char *);
 extern void fl_mark_composite_for_redraw(FL_OBJECT *);
 
-#include "textbox.h"		/* from private/ directory */
+#include "private/textbox.h"
 
 extern int (*fl_handle_clipboard) (void *event);
 
@@ -603,7 +603,7 @@ extern void fl_replacepup_text(int, int, const char *);
 
 extern int fl_handle_mouse_wheel(FL_OBJECT *, int *, int *, void *);
 
-#include "pvaluator.h"
+#include "private/pvaluator.h"
 
 extern int fl_valuator_handle_drag(FL_OBJECT *, double);
 extern int fl_valuator_handle_release(FL_OBJECT *, double);

@@ -55,7 +55,6 @@ REQUIREDLIBS	= \
 
 EXTRA_INCLUDES	= \
 		  -I$(TOP)/lib \
-		  -I$(TOP)/lib/private \
 		  -I.
 
 DEPEND_DEFINES	= \

@@ -38,7 +38,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "pdial.h"
+#include "private/pdial.h"
 #include "spec/dial_spec.h"
 
 extern FD_dialattrib *create_form_dialattrib(void);

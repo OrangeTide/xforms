@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.5 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.6 2003/04/17 11:48:17 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -2032,7 +2032,7 @@ fl_set_object_automatic(FL_OBJECT * ob, int flag)
     }
 }
 
-#include "pcanvas.h"
+#include "private/pcanvas.h"
 void
 fl_hide_canvas(FL_OBJECT * ob)
 {

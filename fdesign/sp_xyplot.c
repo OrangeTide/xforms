@@ -36,7 +36,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "pxyplot.h"
+#include "private/pxyplot.h"
 #include "spec/xyplot_spec.h"
 
 extern FD_xyplotattrib *create_form_xyplotattrib(void);

@@ -142,7 +142,6 @@ JPEG		= $(JPEGLIBDIR) -ljpeg
 
 
 EXTRA_INCLUDES  = \
-		  -I$(BUILDINCDIR) \
 		  -I$(FORMSINCDIR) \
 		  -I$(IMAGEINCDIR) \
 		  -I.

@@ -2,10 +2,13 @@
 #define Optimize NO
 
 # $Locker:  $
-# $Date: 2003/04/17 09:04:57 $
+# $Date: 2003/04/17 11:48:17 $
 # $State: Exp $
 
 # $Log: Imakefile,v $
+# Revision 1.4  2003/04/17 11:48:17  leeming
+# Don't pass -Iprivate to the complier.
+#
 # Revision 1.3  2003/04/17 09:04:57  leeming
 # Redo of snp stuff to avoid need for libformssnp.
 #
@@ -95,7 +98,6 @@ INCDIR		= XFormsNonstandardInstallDir/include
 
 EXTRA_INCLUDES  = \
 		  -I$(FORMSINCDIR) \
-		  -I$(FORMSINCDIR)/private \
 		  -I.
 
 DEPEND_DEFINES	= \

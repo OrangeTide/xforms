@@ -36,7 +36,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "pcounter.h"
+#include "private/pcounter.h"
 #include "spec/counter_spec.h"
 
 extern FD_counterattrib *create_form_counterattrib(void);

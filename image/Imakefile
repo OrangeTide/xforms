@@ -84,7 +84,6 @@ JPEGLIBDIR	= -L$(JPEGLIBLOC)
 
 EXTRA_INCLUDES	= \
 		  -I$(TOP)/lib \
-		  -I$(TOP)/lib/private \
 		  $(XPMINCDIR) \
 		  $(TIFFINCDIR) \
 		  $(JPEGINCDIR) \

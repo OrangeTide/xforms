@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: postscript.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: postscript.c,v 1.2 2003/04/17 11:48:17 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -36,8 +36,8 @@
 
 #include "forms.h"
 #include "flinternal.h"
-#include "pxyplot.h"
-#include "pflps.h"
+#include "private/pxyplot.h"
+#include "private/pflps.h"
 #include <math.h>
 
 #ifdef BAD_SPRINTF

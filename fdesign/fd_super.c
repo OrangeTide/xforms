@@ -35,15 +35,15 @@
 #include "fd_main.h"
 #include "fd_spec.h"
 
-#include "pslider.h"
-#include "pbrowser.h"
-#include "ppositioner.h"
-#include "pcounter.h"
-#include "pscrollbar.h"
-#include "pdial.h"
-#include "pxyplot.h"
-#include "pchoice.h"
-#include "pmenu.h"
+#include "private/pslider.h"
+#include "private/pbrowser.h"
+#include "private/ppositioner.h"
+#include "private/pcounter.h"
+#include "private/pscrollbar.h"
+#include "private/pdial.h"
+#include "private/pxyplot.h"
+#include "private/pchoice.h"
+#include "private/pmenu.h"
 
 SuperSPEC *
 get_superspec(FL_OBJECT * ob)

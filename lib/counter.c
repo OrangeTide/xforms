@@ -32,12 +32,12 @@
  *   only FL_RETURN_END_CHANGED and FL_RETURN_CHANED are meaningful
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_cntr = "$Id: counter.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.4 2003/04/17 11:48:17 leeming Exp $";
 #endif
 
 #include "forms.h"
 #include "flinternal.h"
-#include "pcounter.h"
+#include "private/pcounter.h"
 
 #include <string.h>
 #include <stdlib.h>

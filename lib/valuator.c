@@ -34,7 +34,7 @@
 
 #include "forms.h"
 #include "flinternal.h"
-#include "pvaluator.h"
+#include "private/pvaluator.h"
 
 void *
 fl_init_valuator(FL_OBJECT * ob)

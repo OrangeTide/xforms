@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_draw.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: ps_draw.c,v 1.2 2003/04/17 11:48:17 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -33,7 +33,7 @@
  */
 
 #include "forms.h"
-#include "pflps.h"
+#include "private/pflps.h"
 
 /* rectangle with rounded corners */
 #define RS 16

@@ -39,7 +39,7 @@
 
 #include "forms.h"
 #include "flinternal.h"
-#include "pformbrowser.h"
+#include "private/pformbrowser.h"
 
 void check_scrollbar(FL_OBJECT * ob);
 #define SPEC     FL_FORMBROWSER_SPEC

@@ -35,8 +35,8 @@
  */
 #include "forms.h"
 #include "flinternal.h"
-#include "ptextbox.h"
-#include "pbrowser.h"
+#include "private/ptextbox.h"
+#include "private/pbrowser.h"
 
 #define SPEC   FL_BROWSER_SPEC
 #define Comp   FL_BROWSER_SPEC

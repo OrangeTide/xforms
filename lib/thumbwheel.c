@@ -37,7 +37,7 @@
 #include "flinternal.h"
 
 #include <math.h>
-#include "ptwheel.h"
+#include "private/ptwheel.h"
 #define SPEC   FL_THUMBWHEEL_SPEC
 
 #ifndef M_PI

@@ -35,7 +35,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "pbrowser.h"
+#include "private/pbrowser.h"
 #include "spec/browser_spec.h"
 
 extern FD_browserattrib *create_form_browserattrib(void);

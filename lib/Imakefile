@@ -125,8 +125,7 @@ XPMFLAG		= -DNONSTANDARD_XPM
 #endif
 
 EXTRA_INCLUDES	= \
-		  -I. \
-		  -Iprivate \
+		  -I.
 
 DEPEND_DEFINES	= \
 		  -I/usr/local/include

@@ -34,12 +34,12 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_chc = "$Id: choice.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.5 2003/04/17 11:48:17 leeming Exp $";
 #endif
 
 #include "forms.h"
 #include "flinternal.h"
-#include "pchoice.h"
+#include "private/pchoice.h"
 #include <string.h>
 #include <stdlib.h>
 
