@@ -1,3 +1,8 @@
+2003-11-26  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* fdesign/fd_forms.c (save_forms): do not try to remove twice ".fd"
+	from file name (avoids problem with path names containing a '.').
+
 2003-11-25  Clive A Stubbings <xforms2@vjet.demon.co.uk>
 
 	* image/image_gif.c (flush_buffer): new static function, containig ]

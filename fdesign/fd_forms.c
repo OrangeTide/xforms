@@ -491,15 +491,12 @@ save_forms(char *str)
 
     conv = convertor + fdopt.language;
 
-    if ((ff = strrchr(fname, '.')))
-	*ff = '\0';
-
     /* some converter works on the c code */
     if (conv->need_c_code)
-	convertor[FD_C].convert(fname, forms, fnumb);
+	convertor[FD_C].convert(filename, forms, fnumb);
 
     if (conv->convert)
-	return conv->convert(fname, forms, fnumb);
+	return conv->convert(filename, forms, fnumb);
     else if (conv->extern_convertor)
     {
 	char cmdbuf[1024];
@@ -517,7 +514,7 @@ save_forms(char *str)
 	if (fdopt.compensate)
 	    strcat(optbuf, "-compensate ");
 
-	sprintf(cmdbuf, "%s %s%s", conv->extern_convertor, optbuf, fname);
+	sprintf(cmdbuf, "%s %s%s", conv->extern_convertor, optbuf, filename);
 	M_warn("Convert", "Executing %s", cmdbuf);
 
 	if (fdopt.conv_only)
