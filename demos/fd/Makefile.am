@@ -27,6 +27,9 @@ EXTRA_DIST = \
 	is_gui.fd \
 	is_gui.h \
 	is_gui_main.c \
+	pmbrowse_gui.c \
+	pmbrowse_gui.fd \
+	pmbrowse_gui.h \
 	porsche.xpm \
 	scrollbar_gui.c \
 	scrollbar_gui.fd \

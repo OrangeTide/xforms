@@ -30,21 +30,20 @@
 #include <config.h>
 #endif
 #include "include/forms.h"
+#include "fd/pmbrowse_gui.h"
 #include <stdlib.h>
 
-FL_FORM *ttt;
-FL_OBJECT *bm, *pm;
+FD_ttt * fd_ttt;
 
-static void create_form_ttt(void);
 static int load_file(const char *, void *);
 
 int
 main(int argc, char *argv[])
 {
     fl_initialize(&argc, argv, "FormDemo", 0, 0);
-    create_form_ttt();
+    fd_ttt = create_form_ttt();
 
-    fl_show_form(ttt, FL_PLACE_CENTER, FL_TRANSIENT, "PixmapBrowser");
+    fl_show_form(fd_ttt->ttt, FL_PLACE_CENTER, FL_TRANSIENT, "PixmapBrowser");
 
     fl_set_fselector_placement(FL_PLACE_FREE);
     fl_set_fselector_callback(load_file, 0);
@@ -64,53 +63,33 @@ load_file(const char *fname, void *data)
 
      if(ispix)
      {
-        fl_hide_object(bm);
-        fl_show_object(pm);
-        fl_free_pixmap_pixmap(pm);
-        fl_set_pixmap_file(pm, fname);
+        fl_hide_object(fd_ttt->bm);
+        fl_show_object(fd_ttt->pm);
+        fl_free_pixmap_pixmap(fd_ttt->pm);
+        fl_set_pixmap_file(fd_ttt->pm, fname);
      }
      else
      {
-        fl_hide_object(pm);
-        fl_show_object(bm);
-        fl_set_bitmap_file(bm, fname);
+        fl_hide_object(fd_ttt->pm);
+        fl_show_object(fd_ttt->bm);
+        fl_set_bitmap_file(fd_ttt->bm, fname);
      }
      return 1;
 }
 
-static void
-done(FL_OBJECT *ob, long q)
+
+void done(FL_OBJECT *ob, long q)
 {
     fl_finish();
     exit(0);
 }
 
-static void
-reload(FL_OBJECT *ob, long q)
+
+void reload(FL_OBJECT *ob, long q)
 {
     fl_set_fselector_placement(FL_PLACE_MOUSE);
     fl_set_fselector_callback(load_file, 0);
     fl_show_fselector("Load a Pix/bitMap file", 0, 0,0);
 }
 
-
-static void create_form_ttt(void)
-{
-  FL_OBJECT *obj;
-
-  if (ttt)
-     return;
-
-  ttt = fl_bgn_form(FL_NO_BOX,330,320);
-  obj = fl_add_box(FL_UP_BOX,0,0,330,320,"");
-  bm = obj = fl_add_bitmap(FL_NORMAL_BITMAP,30,20,270,240,"");
-  fl_set_object_boxtype(obj, FL_FLAT_BOX);
-  pm = obj = fl_add_pixmap(FL_NORMAL_PIXMAP,30,20,270,240,"");
-  fl_set_object_boxtype(obj, FL_FLAT_BOX);
-  obj = fl_add_button(FL_NORMAL_BUTTON,220,280,90,30,"Done");
-  fl_set_object_callback(obj, done, 0);
-  obj = fl_add_button(FL_NORMAL_BUTTON,20,280,90,30,"Load");
-  fl_set_object_callback(obj, reload, 0);
-  fl_set_object_shortcut(obj,"L",1);
-  fl_end_form();
-}
+#include "fd/pmbrowse_gui.c"

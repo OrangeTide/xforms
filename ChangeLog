@@ -1,5 +1,21 @@
 2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* demos/demotest_fd.[ch]:
+	* demos/demotest_fd.fd: removed. The routines were not invoked by demotest
+	(witness that it still links fine).
+
+	* demos/pmbrowse.c: split out the fdesign generated code. Ensuing changes
+	to use the fdesign generated code unchanged.
+
+	* demos/pmbrowse.fd: moved...
+	* demos/fd/pmbrowse_gui.[ch]:
+	* demos/fd/pmbrowse_gui.fd: to here.
+
+	* demos/Makefile.am:
+	* demos/fd/Makefile.am: ensuing changes.
+
+2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* image/image_gif.c (flush_buffer): do not pass 'incode'. Instead use
 	a local variable.
 

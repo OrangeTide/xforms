@@ -3,8 +3,7 @@ include $(top_srcdir)/config/common.am
 EXTRA_DIST = 01Readme iconvert.1 demo.menu test.ps \
 	bm1.xbm bm2.xbm newmail.xbm nomail.xbm picture.xbm srs.xbm \
 	crab45.xpm crab_tran.xpm crab.xpm porsche.xpm \
-	test.xpm xconq.xpm xterm.xpm \
-	demotest_fd.fd  pmbrowse.fd
+	test.xpm xconq.xpm xterm.xpm
 
 SUBDIRS = fd
 
@@ -127,7 +126,7 @@ demo05_SOURCES = demo05.c
 demo06_SOURCES = demo06.c
 demo27_SOURCES = demo27.c
 demo33_SOURCES = demo33.c
-demotest_SOURCES = demotest.c demotest_fd.c demotest_fd.h
+demotest_SOURCES = demotest.c
 demotest2_SOURCES = demotest2.c
 demotest3_SOURCES = demotest3.c
 dirlist_SOURCES = dirlist.c
