@@ -26,10 +26,28 @@
 #ifndef FL_SNPRINTF_H
 #define FL_SNPRINTF_H
 
-#include <stdarg.h>
-#include <sys/types.h>
+#include <stdio.h>
 
-int fl_snprintf(char *, size_t, const char *, ...);
-int fl_vsnprintf(char *, size_t, const char *, va_list);
+#ifdef HAVE_SNPRINTF
+
+#ifndef HAVE_DECL_SNPRINTF
+int snprintf(char *, size_t, const char *, ...);
+#endif
+#ifndef HAVE_DECL_VSNPRINTF
+int vsnprintf(char *, size_t, const char *, va_list);
+#endif
+
+#define fl_snprintf  snprintf
+#define fl_vsnprintf vsnprintf
+
+#else /* HAVE_SNPRINTF */
+
+FL_EXPORT int fl_portable_snprintf(char *, size_t, const char *, ...);
+FL_EXPORT int fl_portable_vsnprintf(char *, size_t, const char *, va_list);
+
+#define fl_snprintf  fl_portable_snprintf
+#define fl_vsnprintf fl_portable_vsnprintf
+
+#endif /* HAVE_SNPRINTF */
 
 #endif /* NOT FL_SNPRINTF_H */

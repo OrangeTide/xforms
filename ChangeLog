@@ -1,5 +1,15 @@
 2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/private/flsnprintf.h: use #defines to prevent needless
+	fl_snprintf bloat.
+	* lib/flsnprintf.c: prepend portable_v?snprintf with "fl_" to prevent
+	name clashes with other software. Make these functions globally
+	accessible.
+	Importantly, #if 0...#endif a block that prevents the code from
+	linking correctly on the DEC.
+
+2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* image/image.c:
 	* lib/errmsg.c: no need to check for fl_vsnprintf anymore.
 
