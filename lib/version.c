@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.3 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.4 2003/04/10 21:30:55 leeming Exp $";
 #endif
 
 #include <stdio.h>
@@ -41,8 +41,6 @@ char *fl_id_ver = "$Id: version.c,v 1.3 2003/04/10 20:46:37 leeming Exp $";
 
 static const char *version[] =
 {
-    "FORMS Library",
-    "$State: Exp $  $Revision: 1.3 $ of $Date: 2003/04/10 20:46:37 $"
     "(Compiled "__DATE__")",
 #ifdef FL_WIN32
     "Copyright (c) 1996-2002 by T.C. Zhao, Gang Li and Mark Overmars",
@@ -53,30 +51,26 @@ static const char *version[] =
     0
 };
 
-/* it is important not to use the FL_INCLUDE_VERSION as it is
- * not automated with rcs checks in
- */
+
 int
 fl_library_version(int *ver, int *rev)
 {
     int v, r = -1;
     int c = 0;
 
-    sscanf(version[1], "%*s %*s %*s %*s %d.%d.%d", &v, &r, &c);
-    if (c != FL_FIXLEVEL)
-	M_err(0, "Inconsistent version: fixlevel:%d found %d", FL_FIXLEVEL, c);
-
     if (rev)
-	*rev = r;
+	*rev = FL_REVISION;
     if (ver)
-	*ver = v;
+	*ver = FL_VERSION;
 
     return v * 1000 + r;
 }
 
+
 void
 fl_print_version(int g)
 {
+    char tmp[100];
 #ifndef M_XENIX
     const char *p[5], **q = version;
 #else
@@ -84,21 +78,24 @@ fl_print_version(int g)
 #endif
     int n;
 
-    for (n = 0; *q; n++, q++)
-    {
+    snprintf(tmp, 100, "FORMS Library Version %d.%d", FL_VERSION, FL_REVISION);
+    p[0] = tmp;
+
+    for (n = 1; *q; n++, q++) {
 	/* SCO compiler needs the cast */
 	p[n] = (char *) fl_rm_rcs_kw(*q);
-	if (!g)
-	    fprintf(stderr, (n == 0) ? "%s" : "%s\n", p[n]);
     }
 
-    if (g)
-    {
+    if (g) {
 	if (n >= 3)
 	    fl_show_message(p[0], p[1], p[2]);
 	else if (n == 2)
 	    fl_show_message(p[0], "", p[1]);
 	else
 	    fl_show_message("", p[0], "");
+    } else {
+	int i = 0;
+	for (; i<n; ++i)
+	    fprintf(stderr, "%s\n", p[i]);
     }
 }

@@ -1,5 +1,10 @@
 2003-04-10  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/version.c (fl_print_version, fl_library_version): use
+	FL_VERSION, FL_REVISION rather than RCS stuff.
+
+2003-04-10  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* most files: Remove all the RCS strings from the header files
 	and about half of 'em from the .c files.
 
