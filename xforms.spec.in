@@ -70,7 +70,15 @@ do
 	ln -sf ${lib_path}.${so_version} ${lib_path}
 	ln -sf ${lib_path}.${so_version} ${lib_path}.${current_version}
 done
-
+# Modify libforms.la et al. to prevent libtool from complaining
+# that the files have been moved.
+test "${RPM_INSTALL_PREFIX}" = "/usr" && exit
+for la_name in libforms.la libformsGL.la libflimage.la
+do
+	la_path="${lib_prefix}/${la_name}"
+	tmp=`sed "/^libdir=/s@/usr@${RPM_INSTALL_PREFIX}@" ${la_path}`
+	echo "${tmp}" > ${la_path}
+done
 
 %postun -n %{name}
 # Remove symbolic links libforms.so, libforms.so.1, etc
@@ -85,6 +93,10 @@ done
 
 
 %changelog
+* Fri May 7 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
+- add code to the 'post' script to modify libforms.la et al. to prevent
+  libtool from complaining that the files have been moved.
+
 * Thu May 6 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
 - fix 'Release' and 'Source0' info.
 - add 'post' and 'postun' scripts to create and remove symbolic links,

@@ -7,6 +7,12 @@
 
 2004-05-07  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* (xforms.spec.in): add code to the 'post' script to modify
+	libforms.la et al. to prevent libtool from complaining that
+	the files have been moved.
+
+2004-05-07  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/private/pvaluator.h (repeat_ms, timeout_id, mouse_pos):
 	new variables.
 	* lib/include/slider.[ch] (fl_[sg]et_slider_repeat):
