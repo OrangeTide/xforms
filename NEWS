@@ -1,3 +1,4 @@
+  o Repair double clicking on a file in the file selector.
   o Pass the associated (XEvent * xev) to fl_handle_object on an FL_DRAW
     event, allowing an FL_FREE object to make use of this info to
     redraw only the part of the window that has changed.
