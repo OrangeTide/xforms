@@ -1,3 +1,8 @@
+2003-04-24  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* image/image_fits.c (Bad_bpp): use abs() and not fabs(), since
+	bpp is an int
+
 2003-04-24  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	Migrate from imake to autoconf/automake.
