@@ -1,3 +1,7 @@
+2003-11-26  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* demos/boxtype.c: fix warning about uninitialized data.
+
 2003-11-24  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* fdesign/sp_menu.c (emit_menu_header): output properly initialized

@@ -63,7 +63,7 @@ static VN_struct btypes[]=
    {FL_OVAL3D_UPBOX,"oval3d upbox"},
    {FL_OVAL3D_DOWNBOX,"oval3d downbox"},
    /* sentinel */
-   {-1}
+   {-1, 0}
 };
 
 #include "srs.xbm"
