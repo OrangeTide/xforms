@@ -38,7 +38,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "fd_main.h"
 #include "private/flsnprintf.h"
 

@@ -22,7 +22,7 @@
 
 /* Form definition file generated with fdesign. */
 
-#include "forms.h"
+#include "include/forms.h"
 #include <stdlib.h>
 #include "scrollbar_gui.h"
 

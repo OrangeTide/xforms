@@ -29,7 +29,7 @@
 #include <config.h>
 #endif
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 
 typedef struct {
 	FL_FORM *fontsform;

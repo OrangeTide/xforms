@@ -36,7 +36,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 static int fntstyle = FL_NORMAL_STYLE, fntsize = FL_DEFAULT_SIZE;

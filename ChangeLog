@@ -1,3 +1,12 @@
+2003-04-24  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/include/Imakefile: do not copy the generated forms.h to ../.
+	* lib/Imakefile: remove the targets to install forms.h. This 
+	temporarily breaks the install.
+
+	* pretty well all .c files: change #include "forms.h" to 
+	#include "include/forms.h".
+
 2003-04-22  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* fd2ps/sys.h: remove #define NO_STRDUP and FL_SIGRET as they aren't

@@ -31,7 +31,7 @@
  *
  */
 #if !defined(lint) && defined(F_ID)
-char *id_vstrcat = "$Id: vstrcat.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
+char *id_vstrcat = "$Id: vstrcat.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -41,7 +41,7 @@ char *id_vstrcat = "$Id: vstrcat.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
 #include <stdarg.h>
 #include <string.h>
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 

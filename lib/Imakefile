@@ -95,7 +95,6 @@ SRCS		= \
 		  xtext.c \
 		  xyplot.c
 
-HEADERS		= forms.h
 LIBNAME		= LibName
 XFORMSLIBREV	= XFormsLibRev
 #if InstallNonstandard
@@ -213,8 +212,6 @@ InstallLibrary($(LIBNAME),$(XFORMSLIBDIR))
 #endif
 
 #endif /* (ProjectX < 5) */
-
-InstallMultiple(forms.h,$(XFORMSINCDIR))
 
 LintLibraryTarget($(LIBNAME),$(SRCS))
 InstallLintLibrary($(LIBNAME),$(LINTLIBDIR))

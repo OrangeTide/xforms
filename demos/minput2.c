@@ -26,7 +26,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include <stdlib.h>
 
 extern void howreturn_callback(FL_OBJECT *, long);

@@ -38,7 +38,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 int

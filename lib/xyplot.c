@@ -38,13 +38,13 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xyp = "$Id: xyplot.c,v 1.5 2003/04/22 10:06:59 leeming Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.6 2003/04/24 09:35:35 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 #include <math.h>
 #include "private/pxyplot.h"

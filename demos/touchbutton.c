@@ -27,7 +27,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
-#include "forms.h"
+#include "include/forms.h"
 
 static void show_val(FL_OBJECT *, long);
 FL_OBJECT *valobj;

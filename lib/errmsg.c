@@ -38,7 +38,7 @@
  *    void (*gmout)(const char *, const char *, const char *, int);
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_errm = "$Id: errmsg.c,v 1.6 2003/04/22 10:06:58 leeming Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.7 2003/04/24 09:35:34 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,7 +52,7 @@ char *id_errm = "$Id: errmsg.c,v 1.6 2003/04/22 10:06:58 leeming Exp $";
 #include <errno.h>
 #include "local.h"  /* up stairs */
 
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 #include "private/flsnprintf.h"
 #include "ulib.h"

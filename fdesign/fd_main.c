@@ -39,7 +39,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 #include "fd/ui_theforms.h"
 #include "fd_main.h"
@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.4 $ of $Date: 2003/04/22 10:06:57 $",
+    "$State: Exp $  $Revision: 1.5 $ of $Date: 2003/04/24 09:35:33 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 

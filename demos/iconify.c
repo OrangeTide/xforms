@@ -28,7 +28,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "crab.xpm"
 
 FL_FORM * create_form_form0(void);

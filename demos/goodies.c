@@ -30,7 +30,7 @@
 #endif
 #include <stdlib.h>
 #include <string.h>
-#include "forms.h"
+#include "include/forms.h"
 
 void timeout_remove_alert(int id, void *data)
 {

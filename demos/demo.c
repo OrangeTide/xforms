@@ -37,7 +37,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "forms.h"
+#include "include/forms.h"
 
 FL_FORM *form;
 extern void create_the_forms(void);

@@ -33,14 +33,14 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fbut = "$Id: labelbut.c,v 1.4 2003/04/22 10:06:58 leeming Exp $";
+char *fl_id_fbut = "$Id: labelbut.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 #include <sys/types.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 typedef FL_BUTTON_STRUCT SPEC;

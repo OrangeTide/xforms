@@ -31,7 +31,7 @@
 #define FD_MAIN_H_
 
 #include <stdio.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 #ifndef FALSE

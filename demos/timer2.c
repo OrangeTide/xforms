@@ -28,7 +28,7 @@
 #include <config.h>
 #endif
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 
 FL_FORM *form1, *form2;
 FL_OBJECT *tim, *tim2;

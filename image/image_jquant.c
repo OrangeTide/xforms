@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jquant.c,v 1.2 2003/04/22 10:06:57 leeming Exp $
+ * $Id: image_jquant.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
  *
  * Copyright (C) 1998  T.C. Zhao
  *
@@ -38,7 +38,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 

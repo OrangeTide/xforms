@@ -35,7 +35,7 @@
 #endif
 #include <stdlib.h>
 #include <string.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 char *

@@ -31,7 +31,7 @@
 #ifndef PFLPS_H
 #define PFLPS_H
 
-#include "forms.h"
+#include "include/forms.h"
 
 /* configuration infomation. contains all information needed for
  * both regular gui postscript and image_postscript members

@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "bm1.xbm"
 #include "bm2.xbm"
 

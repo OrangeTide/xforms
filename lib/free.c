@@ -31,13 +31,13 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fre = "$Id: free.c,v 1.4 2003/04/22 10:06:58 leeming Exp $";
+char *fl_id_fre = "$Id: free.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 FL_OBJECT *

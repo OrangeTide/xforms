@@ -38,7 +38,7 @@
 #endif
 #include "GL/gl.h"
 #include "GL/glx.h"
-#include "forms.h"
+#include "include/forms.h"
 #include <stdlib.h>
 
 typedef struct {

@@ -30,7 +30,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 
 FL_FORM *form;
 FL_OBJECT *sexobj, *childobj, *licenceobj, *marriedobj, *readyobj;

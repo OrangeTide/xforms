@@ -32,7 +32,7 @@
  *
  ***********************************************************************/
 #if !defined(lint) && defined(F_OK)
-static char *id_space = "$Id: space.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
+static char *id_space = "$Id: space.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -42,7 +42,7 @@ static char *id_space = "$Id: space.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
 #include <string.h>
 #include <ctype.h>
 
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 

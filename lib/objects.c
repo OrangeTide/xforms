@@ -32,13 +32,13 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.7 2003/04/22 10:06:59 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.8 2003/04/24 09:35:34 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 #include <string.h>
 

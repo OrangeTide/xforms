@@ -38,7 +38,7 @@
 #endif
 #include <string.h>
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "fd2ps.h"
 #include "global.h"
 

@@ -27,7 +27,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
-#include "forms.h"
+#include "include/forms.h"
 
 int
 main(int argc, char *argv[])

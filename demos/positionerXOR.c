@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
-#include "forms.h"
+#include "include/forms.h"
 
 FL_OBJECT *xval, *yval;
 

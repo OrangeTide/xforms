@@ -32,7 +32,7 @@
 #include <config.h>
 #endif
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 
 /**** Forms and Objects ****/
 typedef struct {

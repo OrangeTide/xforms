@@ -29,7 +29,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
-#include "forms.h"
+#include "include/forms.h"
 
 void slider_cb(FL_OBJECT *ob, long data)
 {

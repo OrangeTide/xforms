@@ -29,7 +29,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include "porsche.xpm"
 #include "nomail.xbm"
 #include "bm1.xbm"

@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_dlist = "$Id: listdir.c,v 1.4 2003/04/22 10:06:58 leeming Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -77,7 +77,7 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.4 2003/04/22 10:06:58 leeming Exp $";
 #endif
 
 #include <sys/stat.h>
-#include "forms.h"		/* for definitation of FL_EXPORT */
+#include "include/forms.h"		/* for definitation of FL_EXPORT */
 #include "flinternal.h"
 #include "local.h"
 #include "ulib.h"

@@ -20,7 +20,7 @@
  */
 
 
-#include "forms.h"
+#include "include/forms.h"
 #include "is_gui.h"
 
 /*** callbacks and freeobj handles for form is_mainform ***/

@@ -34,7 +34,7 @@
  * For hex integers, a-f, A-F is assumed continous
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_rdint = "$Id: readint.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
+char *id_rdint = "$Id: readint.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -42,7 +42,7 @@ char *id_rdint = "$Id: readint.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
 #endif
 #include <stdio.h>
 #include <ctype.h>		/* for isdigit */
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 

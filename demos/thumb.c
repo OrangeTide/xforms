@@ -26,7 +26,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 
 typedef struct {
 	FL_FORM *pupform;
@@ -205,7 +205,7 @@ choice_callback(FL_OBJECT *ob, long data)
 
 /* Form definition file generated with fdesign. */
 
-#include "forms.h"
+#include "include/forms.h"
 #include <stdlib.h>
 
 FD_pupform *create_form_pupform(void)

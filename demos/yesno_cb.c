@@ -28,7 +28,7 @@
 #include <config.h>
 #endif
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 
 void yes_push(FL_OBJECT *ob, long data)
 {

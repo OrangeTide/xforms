@@ -32,7 +32,7 @@
 #endif
 #include <stdio.h>
 #include <string.h>
-#include "forms.h"
+#include "include/forms.h"
 
 FL_FORM *form;
 FL_OBJECT *br[4], *exitobj, *readout;

@@ -33,7 +33,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_tim = "$Id: timer.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
+char *fl_id_tim = "$Id: timer.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -41,7 +41,7 @@ char *fl_id_tim = "$Id: timer.c,v 1.4 2003/04/22 10:06:59 leeming Exp $";
 #endif
 #include <string.h>
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 /* Extra information need for input boxes. */

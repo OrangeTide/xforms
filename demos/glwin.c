@@ -32,7 +32,7 @@
 #endif
 #include "GL/glx.h"
 #include "GL/gl.h"
-#include "forms.h"
+#include "include/forms.h"
 #include <stdlib.h>
 
 extern Window fl_glwincreate(int *, GLXContext *, int, int);

@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_chrt = "$Id: chart.c,v 1.4 2003/04/22 10:06:57 leeming Exp $";
+char *fl_id_chrt = "$Id: chart.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -44,7 +44,7 @@ char *fl_id_chrt = "$Id: chart.c,v 1.4 2003/04/22 10:06:57 leeming Exp $";
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 #include "flinternal.h"
 
 #ifndef M_PI

@@ -40,7 +40,6 @@ forms.h: $(HDRSRC) ../ulib.h
 	@for i in $(HDRSRC); do \
 		sed "1,/crop here for forms/d" $$i >> $@; \
 	done
-	cp forms.h ../forms.h
 	@echo created new forms.h
 
 includes::	forms.h

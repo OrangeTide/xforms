@@ -26,7 +26,7 @@
 #include <config.h>
 #endif
 #include <stdio.h>
-#include "forms.h"
+#include "include/forms.h"
 
 FL_FORM *form;
 FL_OBJECT *button, *red, *green, *blue, *redtext, *greentext, *bluetext,

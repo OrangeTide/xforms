@@ -25,7 +25,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 
 
 char *label1= "This demo shows the use of some very\n"

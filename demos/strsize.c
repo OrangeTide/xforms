@@ -23,7 +23,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
-#include "forms.h"
+#include "include/forms.h"
 #include <stdlib.h>
 
 extern void exit_cb(FL_OBJECT *, long);

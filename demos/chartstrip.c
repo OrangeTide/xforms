@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 #include <math.h>
-#include "forms.h"
+#include "include/forms.h"
 
 long func = 1;
 float x = 0.0;

@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "forms.h"
+#include "include/forms.h"
 #include "fd_main.h"
 #include "fd/ui_theforms.h"
 
@@ -117,7 +117,7 @@ char mainhelp[][80] =
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.4 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@c$Revision: 1.5 $" LIBVERSION(FL_VERSION, FL_REVISION),
     "@C4@c@bWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",

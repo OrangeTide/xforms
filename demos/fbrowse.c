@@ -34,7 +34,7 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
-#include "forms.h"
+#include "include/forms.h"
 
 typedef struct {
     FL_FORM *form;

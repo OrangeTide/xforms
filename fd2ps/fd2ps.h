@@ -27,7 +27,7 @@
 #ifndef FD2PS_H
 #define FD2PS_H
 
-#include "forms.h"
+#include "include/forms.h"
 
 /* configuration infomation */
 typedef struct
