@@ -1,5 +1,10 @@
 2004-03-30  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
+	* XForms 1.0.90 released
+	
+	* NEWS: 
+	* README: update for 1.0.90
+
 	* configure.ac: set version to 1.0.90. Use XFORMS_CHECK_VERSION
 
 	* config/xformsinclude.m4 (XFORMS_CHECK_VERSION): merge

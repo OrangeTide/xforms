@@ -1,5 +1,5 @@
 ------------------------------------------
-V1.1cvs
+V1.0.90 March 30, 2004
   o Migrate from Imake to the GNU autotools.
   o "Composite" widgets, such as the browser, can now display tooltips.
   o Prevent a crash when rotating grayscale images by 90 degree multiples.
