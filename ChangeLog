@@ -1,5 +1,9 @@
 2003-11-19  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* autogen.sh: enable the use of autoconf 2.58.
+
+2003-11-19  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/OS2 and all files therein: removed.
 
 	* lib/Makefile.am: remove mention of OS2.
