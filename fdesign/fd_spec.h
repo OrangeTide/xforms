@@ -68,7 +68,7 @@ extern int set_choice_attrib(FL_OBJECT *);
 extern void save_choice_attrib(FILE *, FL_OBJECT *);
 extern void emit_choice_code(FILE *, FL_OBJECT *);
 
-/* choice */
+/* menu */
 extern void *get_menu_spec_fdform(void);
 extern void menu_spec_restore(FL_OBJECT * ob, long data);
 extern int set_menu_attrib(FL_OBJECT *);
