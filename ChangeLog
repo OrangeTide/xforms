@@ -1,5 +1,10 @@
 2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/xforms.5: renamed as xforms.man. This probably breaks the
+	installation, but that is all slated for change anyway.
+
+2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* demos/Imakefile: do not -Ifd when compiling.
 
 	* demos/Imakefile:

@@ -1,5 +1,5 @@
 .\"
-.\" $Id: xforms.5,v 1.1 2003/04/06 15:52:40 leeming Exp $
+.\" $Id: xforms.man,v 1.1 2003/04/17 10:32:10 leeming Exp $
 .\"
 .\" Man page for XFORMS.
 .\" Use the following command to generate viewable man page
