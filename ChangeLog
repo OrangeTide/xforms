@@ -1,3 +1,8 @@
+2004-10-05  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* configure.ac (SO_VERSION): updated to "2:0:1" in preparation
+	for the xforms 1.1 release.
+
 2004-10-06  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/textbox.c (fl_set_textbox_xoffset): don't ignore a
