@@ -1,3 +1,17 @@
+2003-11-26  Angus Leeming  <angus.leeming@btopenworld.com>
+ 
+	* fdesign/fd_main.h: add a 'char * output_dir' var to the FD_Opt struct.
+
+	* fdesign/fd_main.c: add code to initialize FD_Opt::output_dir.
+
+	* fdesign/fd_forms.c (save_forms): pass fdopt.output_dir var to the
+	external converter if non-zero.
+
+	* fdesign/fd_printC.c (filename_only, build_fname): new helper functions
+	that use FD_Opt::output_dir if it is set.
+	(C_output): invoke build_fname rather than building the file name
+	itself.
+
 2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/demotest_fd.[ch]:
