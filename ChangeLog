@@ -1,5 +1,19 @@
 2003-04-10  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/include/Basic.h: add FL_RESIZED to the FL_EVENTS enum.
+	* lib/include/AAA.h: up FL_FIXLEVEL to 2 to reflect this.
+
+	* lib/forms.h:
+	* lib/include/forms.h: regenerated.
+
+	* lib/forms.c (scale_form): pass event FL_RESIZED to the object handler
+	if the object size is changed.
+
+	* lib/tabfolder.c (handle): handle the FL_RESIZED event to ensure
+	that the currently active folder is resized.
+
+2003-04-10  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/version.c (fl_print_version, fl_library_version): use
 	FL_VERSION, FL_REVISION rather than RCS stuff.
 

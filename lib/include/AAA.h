@@ -56,7 +56,7 @@
 
 #define FL_VERSION             1
 #define FL_REVISION            0
-#define FL_FIXLEVEL            1
+#define FL_FIXLEVEL            2
 #define FL_INCLUDE_VERSION    (FL_VERSION * 1000 + FL_REVISION)
 
 #include <stdio.h>

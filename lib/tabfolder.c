@@ -77,6 +77,16 @@ handle(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 
     switch (event)
     {
+    case FL_RESIZED: {
+	FL_FORM * const folder = fl_get_active_folder(ob);
+	if (folder && sp->auto_fit != FL_NO) {
+	    if (sp->auto_fit == FL_FIT)
+		fl_set_form_size(folder, sp->canvas->w, sp->canvas->h);
+	    else if (folder->w < sp->canvas->w || folder->h < sp->canvas->h)
+		fl_set_form_size(folder, sp->canvas->w, sp->canvas->h);
+	}
+	break;
+    }
     case FL_MOVEORIGIN: {
 	FL_FORM * const folder = fl_get_active_folder(ob);
 	fl_get_winorigin(folder->window, &(folder->x), &(folder->y));

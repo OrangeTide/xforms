@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.3 2003/04/10 20:46:37 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.4 2003/04/10 21:58:29 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -256,6 +256,9 @@ scale_form(FL_FORM * form, double xsc, double ysc)
     /* need to handle different resizing request */
     for (obj = form->first; obj; obj = obj->next)
     {
+	int const oldw = obj->w;
+	int const oldh = obj->h;
+
 	/* calculate various positions before scaling */
 	fromleft2 = obj->x + obj->w;
 
@@ -360,6 +363,9 @@ scale_form(FL_FORM * form, double xsc, double ysc)
 	    obj->w = neww - fromright2 - obj->x;
 	    obj->h = newh - frombott2 - obj->y;
 	    break;
+	}
+	if (obj->w != oldw || obj->h != oldh) {
+	    fl_handle_object_direct(obj, FL_RESIZED, 0, 0, 0, 0);
 	}
     }
 

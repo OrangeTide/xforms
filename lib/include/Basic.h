@@ -344,10 +344,14 @@ typedef enum
     FL_ATTRIB,			/* attribute change        */
     FL_KEYRELEASE,
     FL_PS,			/* dump a form into EPS    */
-    FL_MOVEORIGIN		/* dragging the form across the screen
+    FL_MOVEORIGIN,		/* dragging the form across the screen
 				   changes its absolute x,y coords. Objects
 				   that themselves contain forms should
 				   ensure that they are up to date. */
+    FL_RESIZED			/* The object has been resized by scale_form
+				   Tell it that this has happened so that
+				   it can resize any FL_FORMs that it
+				   contains. */
 }
 FL_EVENTS;
 
