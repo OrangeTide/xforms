@@ -1,3 +1,15 @@
+2003-11-19  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/OS2 and all files therein: removed.
+
+	* lib/Makefile.am: remove mention of OS2.
+
+	* lib/Readme: removed.
+	* os2move.cmd: removed.
+	* gl/canvas.h: removed.
+
+	* gl/Makefile.am: remove canvas.h.
+
 2003-11-19  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* lib/flinternal.h: remove obsolete comment

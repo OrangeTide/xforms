@@ -169,7 +169,6 @@ AC_CONFIG_FILES([Makefile \
        lib/bitmaps/Makefile \
        lib/fd/Makefile \
        lib/include/Makefile \
-       lib/OS2/Makefile \
        lib/private/Makefile \
        image/Makefile
        gl/Makefile \

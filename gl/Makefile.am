@@ -10,6 +10,5 @@ lib_LTLIBRARIES = libformsGL.la
 libformsGL_la_LDFLAGS = -version-info 1:0:0
 
 libformsGL_la_SOURCES = \
-	canvas.h \
 	glcanvas.c \
 	glcanvas.h

@@ -4,7 +4,7 @@ CLEANFILES = forms.h xforms.5
 
 EXTRA_DIST = xforms.man
 
-SUBDIRS = bitmaps fd include OS2 private
+SUBDIRS = bitmaps fd include private
 
 # The Autobook recommends using "man5_MANS = xforms.man" which certainly
 # simplifies things but appears not to work with automake 1.5.
