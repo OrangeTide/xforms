@@ -20,7 +20,8 @@ V1.0.90 March 30, 2004
   o Enable xforms to read a wider variety of gif and jpeg images.
   o Enable fdesign to work correctly with paths like ../foo/bar/your_file.fd.
   o Add a -dir <destdir> option to fdesign to place generated files in destdir.
-  o Add an RPM spec file.
+  o Add an RPM spec file. The XForms rpms can be built with a simple
+    "make rpmdist".
   o Get rid of the separate snprintf compatibility library.
   o Removal of lots of little pieces of cruft that crept into the xforms
     1.0 release.

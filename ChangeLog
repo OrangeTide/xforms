@@ -1,5 +1,17 @@
 2004-05-06  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* configure.ac (SO_VERSION): new variable defining the libtool
+	version info. Substituted in lib/Makefile.am and xforms.spec.in.
+
+	* lib/Makefile.am (libforms_la_LDFLAGS): use the configure-time
+	variable @SO_VERSION@ rather than the hard-coded 1:0:0.
+
+	* xforms.spec.in: fix 'Release' and 'Source0' info.
+	add 'post' and 'postun' scripts to create and remove symbolic links,
+	respectively.
+
+2004-05-06  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* fdesign/fd_spec.c: revert the change made earlier today.
 	Turned out to be used in the demos code...
 

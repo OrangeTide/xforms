@@ -11,6 +11,10 @@ AM_CONFIG_HEADER([lib/config.h])
 AM_INIT_AUTOMAKE($PACKAGE_NAME, $PACKAGE_VERSION)
 AM_MAINTAINER_MODE
 
+### This defines the version number of the installed .so files
+### using libtool's versioning system.
+AC_SUBST(SO_VERSION, ["1:0:0"])
+
 # fix the value of the prefixes.
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'

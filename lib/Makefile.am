@@ -17,7 +17,7 @@ INCLUDES = -DMAKING_FORMS $(X_CFLAGS)
 
 lib_LTLIBRARIES = libforms.la
 
-libforms_la_LDFLAGS = -version-info 1:0:0
+libforms_la_LDFLAGS = -version-info @SO_VERSION@
 
 libforms_la_SOURCES = \
 	align.c \

@@ -1,8 +1,8 @@
 Summary: XForms library
 Name: @PACKAGE@
 Version: @VERSION@
-Release: 1rh8x
-Source0: http://savannah.nongnu.org/download/xforms/stable.pkg/1.0/%{name}-%{version}.tar.gz
+Release: 1
+Source0: http://savannah.nongnu.org/download/xforms/%{name}-%{version}.tar.gz
 License: LGPL
 Group: System/Libraries
 BuildRequires: xpm
@@ -58,7 +58,38 @@ rm -f %{_tmppath}/%{name}-%{version}-devfiles
 %files -n %{name}-devel -f %{_tmppath}/%{name}-%{version}-devfiles
 %defattr(-,root,root)
 
+
+%post -n %{name}
+# Create symbolic links from libforms.so.1.0.0 to libforms.so, libforms.so.1
+so_version=`echo @SO_VERSION@ | sed 's/:/./g'`
+current_version=`echo ${so_version} | cut -d'.' -f1`
+lib_prefix=${RPM_INSTALL_PREFIX}/lib
+for lib_name in libforms.so libformsGL.so libflimage.so
+do
+	lib_path="${lib_prefix}/${lib_name}"
+	ln -sf ${lib_path}.${so_version} ${lib_path}
+	ln -sf ${lib_path}.${so_version} ${lib_path}.${current_version}
+done
+
+
+%postun -n %{name}
+# Remove symbolic links libforms.so, libforms.so.1, etc
+so_version=`echo @SO_VERSION@ | sed 's/:/./g'`
+current_version=`echo ${so_version} | cut -d'.' -f1`
+lib_prefix=${RPM_INSTALL_PREFIX}/lib
+for lib_name in libforms.so libformsGL.so libflimage.so
+do
+	lib_path="${lib_prefix}/${lib_name}"
+	rm -f ${lib_path} ${lib_path}.${current_version}
+done
+
+
 %changelog
+* Thu May 6 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
+- fix 'Release' and 'Source0' info.
+- add 'post' and 'postun' scripts to create and remove symbolic links,
+  respectively.
+
 * Thu May 6 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
 - no longer place devfiles and binfiles in ${RPM_BUILD_ROOT}.
   Prevents rpm from bombing with a "Checking for unpackaged files" error.
