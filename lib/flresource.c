@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: flresource.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: flresource.c,v 1.2 2003/04/08 21:14:51 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.1 2003/04/06 15:52:39 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.2 2003/04/08 21:14:51 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -960,7 +960,15 @@ fl_initialize(int *na, char *arg[], const char *appclass,
             fl_context->xic = XCreateIC(fl_context->xim,
                                  XNInputStyle, style,
                                  0);
-        }
+
+	    /* Clean-up on failure */
+	    if (!fl_context->xic) {
+		M_err("fl_initialize", "Could not create an input context");
+		XCloseIM (fl_context->xim);
+		fl_context->xim;
+	    }
+        } else
+	    M_err("fl_initialize", "Could not create an input method");
     }
 #endif
     fl_default_xswa();

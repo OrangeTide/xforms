@@ -4,3 +4,5 @@
 	grayscale images by 90degree multiples and more generally prevent
 	other unsupported image types from crashing xforms.
 
+	* lib/flresource.c (fl_initialize): clean-up properly if we fail to
+	create input contexts or methods.
