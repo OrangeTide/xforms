@@ -2,7 +2,9 @@ include $(top_srcdir)/config/common.am
 
 CLEANFILES = forms.h xforms.5
 
-EXTRA_DIST = xforms.man
+EXTRA_DIST = xforms.man \
+	dirent_vms.h \
+	vms_readdir.c
 
 SUBDIRS = bitmaps fd include private
 
@@ -118,6 +120,3 @@ libforms_la_SOURCES = \
 	xsupport.c \
 	xtext.c \
 	xyplot.c
-
-#	dirent_vms.h \
-#	vms_readdir.c

@@ -1,3 +1,8 @@
+2004-06-03  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/Makefile.am (EXTRA_DIST): distribute dirent_vms.h and
+	vms_readdir.c.
+
 2004-06-01  Duncan Simpson  <dps@simpson.demon.co.uk>
 
 	* fdesign/fd_printC.c (build_fname): re-write using fl_snprintf
