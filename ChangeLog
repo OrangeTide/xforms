@@ -1,5 +1,10 @@
 2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* demos/.cvsignore:
+	* snp/.cvsignore: Ignore Makefile*
+
+2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	Move tabfolder-specific code out of forms.c and allow individual
 	FL_OBJECTs to respond to such events. Means that the library
 	becomes extensible to new, user-defined widgets once again.
