@@ -1,3 +1,14 @@
+2003-11-14  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* config/config.guess:
+	* config/config.sub:
+	* config/libtool.m4:
+	* config/ltmain.sh: updated from libtool 1.4.3 (as distributed
+	with rh9)
+
+	* config/depcomp: updated from automake 1.4 (as distributed
+	with rh9)
+
 2003-11-18  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* xforms.spec.in: update the %doc list to reflect actuality.
@@ -21,11 +32,11 @@
 
 	* config/common.am: do not set LIBS to an empty value
 
-	* image/Makefile.am (INCLUDES): 
+	* image/Makefile.am (INCLUDES):
 	* lib/Makefile.am (INCLUDES): honor X_CFLAGS
 
 	* demos/Makefile.am:
-	* fdesign/Makefile.am: 
+	* fdesign/Makefile.am:
 	* fd2ps/Makefile.am: use $(foo) form instead of @foo@ for
 	variables references. Honor X_LIBS, X_PRE_LIBS and X_EXTRA_LIBS.
 
