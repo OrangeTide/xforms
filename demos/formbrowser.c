@@ -22,7 +22,7 @@
 
 #include "forms.h"
 #include <stdlib.h>
-#include "formbrowser_gui.h"
+#include "fd/formbrowser_gui.h"
 
 void done_cb(FL_OBJECT *ob, long data)
 {
@@ -110,4 +110,4 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-#include "formbrowser_gui.c"
+#include "fd/formbrowser_gui.c"

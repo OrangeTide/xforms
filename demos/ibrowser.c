@@ -30,7 +30,7 @@
 
 #include "forms.h"
 #include "flimage.h"
-#include "ibrowser_gui.h"   /* from fd/ directory */
+#include "fd/ibrowser_gui.h"   /* from fd/ directory */
 #include <stdlib.h>
 
 static FL_IMAGE *curr_image;
@@ -572,4 +572,4 @@ int main(int argc, char *argv[])
 }
 
 
-#include "ibrowser_gui.c"
+#include "fd/ibrowser_gui.c"

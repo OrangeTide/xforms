@@ -29,7 +29,7 @@
  */
 
 #include "forms.h"
-#include "folder_gui.h"
+#include "fd/folder_gui.h"
 #include <stdlib.h>
 
 /* callback routines */
@@ -157,4 +157,4 @@ static void make_folder(FL_OBJECT *folder)
 #endif
 }
 
-#include "folder_gui.c"
+#include "fd/folder_gui.c"

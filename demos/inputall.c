@@ -27,7 +27,7 @@
  *  T.C. Zhao and M. Overmars, 1997
  */
 #include "forms.h"
-#include "inputall_gui.h"
+#include "fd/inputall_gui.h"
 #include <stdlib.h>
 
 /* callbacks for form input */
@@ -78,5 +78,4 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-#include "inputall_gui.c"
-
+#include "fd/inputall_gui.c"

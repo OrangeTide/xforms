@@ -30,7 +30,7 @@
 #include "forms.h"
 #include <time.h>
 #include <stdlib.h>
-#include "fbtest_gui.h"
+#include "fd/fbtest_gui.h"
 
 static void
 fill_browser(FL_OBJECT *ob)
@@ -90,4 +90,4 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-#include "fbtest_gui.c"
+#include "fd/fbtest_gui.c"

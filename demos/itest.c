@@ -29,7 +29,7 @@
 
 #include "forms.h"
 #include "flimage.h"
-#include "is_gui.h"
+#include "fd/is_gui.h"
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -541,4 +541,4 @@ main(int argc, char *argv[])
     return 0;
 }
 
-#include "is_gui.c"
+#include "fd/is_gui.c"

@@ -25,7 +25,7 @@
  */
 #include "forms.h"
 #include <stdlib.h>
-#include "scrollbar_gui.h"   /* from fd/ directory */
+#include "fd/scrollbar_gui.h"   /* from fd/ directory */
 
 
 void hide_cb(FL_OBJECT *ob, long data)
@@ -84,4 +84,4 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-#include "scrollbar_gui.c"
+#include "fd/scrollbar_gui.c"

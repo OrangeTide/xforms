@@ -21,7 +21,7 @@
 
 
 #include "forms.h"
-#include "twheel_gui.h"
+#include "fd/twheel_gui.h"
 
 /* callbacks and freeobj handles for form twheelform */
 void valchange_cb(FL_OBJECT *ob, long data)
@@ -60,4 +60,4 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-#include "twheel_gui.c"
+#include "fd/twheel_gui.c"

@@ -145,7 +145,6 @@ EXTRA_INCLUDES  = \
 		  -I$(BUILDINCDIR) \
 		  -I$(FORMSINCDIR) \
 		  -I$(IMAGEINCDIR) \
-		  -Ifd \
 		  -I.
 
 DEPEND_DEFINES	= \

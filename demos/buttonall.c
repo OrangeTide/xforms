@@ -28,7 +28,7 @@
  */
 
 #include "forms.h"
-#include "buttons_gui.h"   /* from fd/ directory */
+#include "fd/buttons_gui.h"   /* from fd/ directory */
 #include <stdlib.h>
 
 /* callbacks for form buttform */
@@ -73,4 +73,4 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-#include "buttons_gui.c"
+#include "fd/buttons_gui.c"

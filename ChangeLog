@@ -1,5 +1,23 @@
 2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* demos/Imakefile: do not -Ifd when compiling.
+
+	* demos/Imakefile:
+	* demos/buttonall.c:
+	* demos/demotest.c:
+	* demos/dirlist.c:
+	* demos/folder.c:
+	* demos/formbrowser.c:
+	* demos/ibrowser.c:
+	* demos/inputall.c:
+	* demos/itest.c:
+	* demos/scrollbar.c:
+	* demos/thumbwheel.c: associated changes.
+
+	* demos/.cvsignore: add all the generated executables.
+
+2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/include/canvas.h: cruft removal. Don't mention glcanvas.h
 	here in case the user does not want GL support.
 
