@@ -74,27 +74,39 @@ filename_only(char const * filename)
 }
 
 static void
-build_fname(char * fname, char const * filename, char const * ext)
+build_fname(char * fname, size_t fname_capacity,
+	    char const * filename, char const * ext)
 {
+    char const * const only_filename = filename_only(filename);
+    size_t fname_size;
+
+    fname[fname_capacity] = '\0';
+
     if (fdopt.output_dir) {
-	strcpy(fname, fdopt.output_dir);
-	if (fname[strlen(fdopt.output_dir) - 1] != '/')
+	strncpy(fname, fdopt.output_dir, fname_capacity);
+	fname_size = strlen(fname);
+
+	if (fname_size != fname_capacity && fname[fname_size - 1] != '/') {
 	    strcat(fname, "/");
-	strcat(fname, filename_only(filename));
+	    fname_size += 1;
+	}
+	strncat(fname, only_filename, fname_capacity-fname_size);
     } else
-	strcpy(fname, filename);
-    strcat(fname, ext);
+	strncpy(fname, only_filename, fname_capacity);
+
+    fname_size = strlen(fname);
+    strncat(fname, ext, fname_capacity-fname_size);
 }
 
 /* filename is without extensions */
 int
 C_output(const char *filename, FRM * forms, int fnumb)
 {
-    char fname[512], *tmp;
+    char fname[PATH_MAX+1], *tmp;
     int i, j;
     FILE *fn;
 
-    build_fname(fname, filename, ".h");
+    build_fname(fname, PATH_MAX, filename, ".h");
 
     make_backup(fname);
     if (!(fn = fopen(fname, "w")))
@@ -130,7 +142,7 @@ C_output(const char *filename, FRM * forms, int fnumb)
     fclose(fn);
 
     /* Make the .c file. */
-    build_fname(fname, filename, ".c");
+    build_fname(fname, PATH_MAX, filename, ".c");
 
     make_backup(fname);
     if (!(fn = fopen(fname, "w")))
