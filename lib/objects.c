@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: objects.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: objects.c,v 1.2 2003/04/08 22:06:08 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.2 2003/04/08 22:06:08 leeming Exp $";
 #endif
 
 #include <string.h>
@@ -1420,16 +1420,55 @@ fl_reset_focus_object(FL_OBJECT * ob)
 }
 
 /* handle tooltips */
-static void
-tooltip_handler(int ID, void *data)
+static
+FL_OBJECT * get_parent(FL_OBJECT * obj)
 {
-    FL_OBJECT *obj = data;
+    if (obj) {
+	while (obj->parent && obj->parent != obj)
+	    obj = obj->parent;
+    }
+    return obj;
+}
 
-    if (obj->tooltip && *(obj->tooltip))
-	fl_show_tooltip(obj->tooltip, obj->form->x + obj->x,
+static
+void tooltip_handler(int ID, void *data)
+{
+    FL_OBJECT * const obj = get_parent(data);
+    char const * const tooltip = obj->tooltip;
+
+    if (tooltip && *(tooltip))
+	fl_show_tooltip(tooltip, obj->form->x + obj->x,
 			obj->form->y + obj->y + obj->h + 1);
     obj->tipID = 0;
 }
+
+static
+void hide_tooltip(FL_OBJECT * obj, XEvent * xev)
+{
+    FL_OBJECT * const parent = get_parent(obj);
+    char const * const tooltip = parent->tooltip;
+    if (tooltip && *(tooltip)) {
+	/* If obj is part of a composite widget, it may well be that we're
+	   leaving a child widget but are still within the parent.
+	   If that is the case, we don't want to hide the tooltip at all. */
+	int outside_parent = 1;
+	if (parent != obj && xev) {
+	    int const pointer_x = xev->xmotion.x;
+	    int const pointer_y = xev->xmotion.y;
+	    if (pointer_x >= parent->x && pointer_x <= parent->x + parent->w &&
+		pointer_y >= parent->y && pointer_y <= parent->y + parent->h)
+		outside_parent = 0;
+	}
+	if (outside_parent) {
+	    fl_hide_tooltip();
+	    if (parent->tipID) {
+		fl_remove_timeout(parent->tipID);
+		parent->tipID = 0;
+	    }
+	}
+    }
+}
+
 
 /* handles an event for an object */
 static int
@@ -1463,30 +1502,29 @@ fl_handle_it(FL_OBJECT * obj, int event, FL_Coord mx, FL_Coord my, int key,
     switch (event)
     {
     case FL_ENTER:
-	if (obj->tooltip && *(obj->tooltip) && !obj->form->no_tooltip)
-	    obj->tipID = fl_add_timeout(fl_context->tooltip_time,
-					tooltip_handler, obj);
+    {
+	/* We assign the timer to the parent widget in the case of a
+	   composite object as that's the thing that's actually got the tip. */
+	FL_OBJECT * const parent = get_parent(obj);
+	if (!parent->tipID) {
+	    char const * const tooltip = parent->tooltip;
+	    if (tooltip && *(tooltip) && !parent->form->no_tooltip)
+		parent->tipID = fl_add_timeout(fl_context->tooltip_time,
+					       tooltip_handler, parent);
+	}
 	obj->belowmouse = 1;
 	break;
+    }
     case FL_LEAVE:
-	if (obj->tooltip && *(obj->tooltip))
-	{
-	    fl_hide_tooltip();
-	    if (obj->tipID)
-		fl_remove_timeout(obj->tipID);
-	    obj->tipID = 0;
-	}
+	hide_tooltip(obj, xev);
 	obj->belowmouse = 0;
 	break;
     case FL_PUSH:
-	if (obj->tooltip && *(obj->tooltip))
-	{
-	    fl_hide_tooltip();
-	    if (obj->tipID)
-		fl_remove_timeout(obj->tipID);
-	    obj->tipID = 0;
-	}
+	hide_tooltip(obj, xev);
 	obj->pushed = 1;
+	break;
+    case FL_KEYPRESS:
+	hide_tooltip(obj, xev);
 	break;
     case FL_RELEASE:
 	if (!obj->radio)

@@ -12,3 +12,19 @@
 	* lib/util.c (flevent): FL_KEYBOARD has been replaced by FL_KEYPRESS.
 	The former is retained for compatability, but the latter should be
 	used internally.
+
+2003-04-08  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	Enable tooltips to be shown correctly in "composite" widgets
+	such as the browser.
+
+	* lib/objects.c (get_parent): new static helper function. Given an
+	FL_OBJECT*, returns its parent FL_OBJECT.
+	(tooltip_handler): rewritten to show the tooltip that is stored
+	by the parent FL_OBJECT.
+	(hide_tooltip): new static helper function: on leaving an FL_OBJECT,
+	only hide the tooltip if we have also left the bounds of the parent
+	FL_OBJECT.
+	(fl_handle_it): make use of these new functions to show and hide
+	tooltips.
+
