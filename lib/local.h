@@ -51,12 +51,10 @@ extern int strcasecmp(const char *, const char *);
 
 #if defined(__linux__)||defined(linux)
 #undef DONT_HAVE_USLEEP
-#define HAVE_SNPRINTF
 #endif
 
 /* solaris: do we need to check the version number ? */
 #if defined(__SUNPRO_C) && __SUNPRO_C >=0x500
-#define HAVE_SNPRINTF
 #endif
 
 #if defined(Lynx)
@@ -137,9 +135,4 @@ extern int gettimeofday(struct timeval *tv, struct timezone *tz);
 
 /*#define NO_MSG_INFO */
 
-#ifdef HAVE_SNPRINTF
-#define fl_snprintf snprintf
-#else
-extern int fl_snprintf(char *, size_t, const char *, ...);
-#endif
 #endif /* ifndef local.h } */

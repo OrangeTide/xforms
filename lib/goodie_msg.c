@@ -111,7 +111,7 @@ void
 fl_show_message(const char *s1, const char *s2, const char *s3)
 {
     char buf[2048];
-    snprintf(buf,sizeof(buf),
+    fl_snprintf(buf,sizeof(buf),
          "%s\n%s\n%s", s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "");
     fl_show_messages(buf);
 }

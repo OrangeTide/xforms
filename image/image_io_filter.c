@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_io_filter.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: image_io_filter.c,v 1.2 2003/04/17 09:04:57 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -64,7 +64,7 @@ get_tmpf(char *obuf)
 	    ;
 	else
 	{
-	    snprintf(buf[k], sizeof(buf[k]),
+	    fl_snprintf(buf[k], sizeof(buf[k]),
                        "%s/.FL%03d_%d.tmp", "/tmp",seq++, (int) getpid());
 	    name = buf[k];
 	    /* creat the file now in exclusive mode (for security) */
@@ -101,7 +101,7 @@ flimage_description_via_filter(FL_IMAGE * im, char *const *cmds,
 
     do
     {
-	snprintf(cmd, sizeof(cmd)-12, *q, im->infile, tmpf);
+	fl_snprintf(cmd, sizeof(cmd)-12, *q, im->infile, tmpf);
 	if (verbose)
 	    fprintf(stderr, "executing %s\n", cmd);
 	else
@@ -233,7 +233,7 @@ flimage_write_via_filter(FL_IMAGE * im,
     /* now we have the intermediate image ready, generate the shell cmd */
     for (shellcmd = cmds, status = !err; status && *shellcmd; shellcmd++)
     {
-	snprintf(cmd, sizeof(cmd), *shellcmd, tmpf, ofile);
+	fl_snprintf(cmd, sizeof(cmd), *shellcmd, tmpf, ofile);
 	if (!verbose)
 	    strcat(cmd, " 2>/dev/null");
 	else

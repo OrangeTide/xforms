@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: image.c,v 1.2 2003/04/17 09:04:57 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -469,7 +469,7 @@ flimage_dump(FL_IMAGE * image, const char *filename, const char *fmt)
 	    flimage_close(image);
 
 	    image->completed = image->total;
-	    snprintf(buf, sizeof(buf),
+	    fl_snprintf(buf, sizeof(buf),
                         "Done Writing %s(%s)", image->outfile, fmt);
 	    image->visual_cue(image, buf);
 	    return status;
@@ -1332,7 +1332,7 @@ flimage_error(FL_IMAGE * im, const char *fmt,...)
     {
 	va_start(args, fmt);
 #ifdef HAVE_SNPRINTF
-	(void) vsnprintf(buf, sizeof(buf), fmt, args);
+	(void) fl_vsnprintf(buf, sizeof(buf), fmt, args);
 #else
 	(void) vsprintf(buf, fmt, args);
 #endif

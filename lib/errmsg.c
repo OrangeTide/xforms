@@ -38,7 +38,7 @@
  *    void (*gmout)(const char *, const char *, const char *, int);
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_errm = "$Id: errmsg.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
 #endif
 
 #include <stdio.h>
@@ -182,7 +182,7 @@ P_errmsg(const char *func, const char *fmt,...)
       {
 	  va_start(args, fmt);
 #ifdef HAVE_SNPRINTF
-	  (void) vsnprintf(emsg, sizeof(emsg)-5, fmt, args);
+	  (void) fl_vsnprintf(emsg, sizeof(emsg)-5, fmt, args);
 #else
 	  (void) vsprintf(emsg, fmt, args);
 #endif

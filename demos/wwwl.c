@@ -335,7 +335,7 @@ connect_cb(FL_OBJECT * ob, long data)
     {
 	fl_set_cursor(ui->www->window, XC_watch);
 	XFlush(fl_get_display());
-	snprintf(cmdbuf, 
+	fl_snprintf(cmdbuf, 
 		 sizeof( cmdbuf), 
 		 "%s %s",
 		 WWW_BROWSER,

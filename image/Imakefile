@@ -57,6 +57,10 @@ OBJS	= $(SRCS:.c=.o)
 HAVE_STRERROR	= -DHAVE_STRERROR
 #endif
 
+#if HaveSnprintf
+HAVE_SNPRINTF	= -DHAVE_SNPRINTF
+#endif
+
 #if NonstandardXpm
 XPMINCLOC	= XpmIncLoc
 XPMINCDIR	= -I$(XPMINCLOC)
@@ -90,7 +94,8 @@ DEPEND_DEFINES	= \
 		  -I/usr/local/include
 
 EXTRA_DEFINES	= \
-		  $(HAVE_STRERROR )
+		  $(HAVE_STRERROR) \
+		  $(HAVE_SNPRINTF)
 
 PICFLAGS	= -fPIC
 

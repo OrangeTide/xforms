@@ -30,6 +30,10 @@ OBJS	= $(SRCS:.c=.o)
 HAVE_STRERROR	= -DHAVE_STRERROR
 #endif
 
+#if HaveSnprintf
+HAVE_SNPRINTF	= -DHAVE_SNPRINTF
+#endif
+
 #if defined( PpcDarwinArchitecture )
 SHLIBLDFLAGS	+= -lSystem -lcc_dynamic
 #endif
@@ -59,7 +63,8 @@ DEPEND_DEFINES	= \
 
 EXTRA_DEFINES	= \
 		  -DMAKING_FORMS \
-		  $(HAVE_STRERROR)
+		  $(HAVE_STRERROR) \
+		  $(HAVE_SNPRINTF)
 
 PICFLAGS	= -fPIC
 

@@ -2,10 +2,13 @@
 #define Optimize NO
 
 # $Locker:  $
-# $Date: 2003/04/15 19:21:42 $
+# $Date: 2003/04/17 09:04:57 $
 # $State: Exp $
 
 # $Log: Imakefile,v $
+# Revision 1.3  2003/04/17 09:04:57  leeming
+# Redo of snp stuff to avoid need for libformssnp.
+#
 # Revision 1.2  2003/04/15 19:21:42  leeming
 # Further reductions in dirs included during compilation.
 #
@@ -53,6 +56,10 @@ SRCS	= \
 
 OBJS	= $(SRCS:.c=.o)
 
+#if HaveSnprintf
+HAVE_SNPRINTF	= -DHAVE_SNPRINTF
+#endif
+
 #if Solaris64Bit
 LDPRELIB	= -L/usr/openwin/lib/sparcv9
 CCENVSETUP	= LD_RUN_PATH=/usr/openwin/lib/sparcv9
@@ -80,14 +87,6 @@ FORMSINCDIR     = $(FORMSLIBDIR)
 FORMSLIB        = -L$(FORMSLIBDIR) -lforms
 DEPFORMSLIB     = $(FORMSLIBDIR)/libforms.a
 
-#if !HaveSnprintf
-SNPLIBDIR	= $(TOP)/snp
-SNPINCDIR	= $(SNPLIBDIR)       
-SNPINC		= -I$(SNPINCDIR)
-SNPLIB		= -L$(SNPLIBDIR) -lformssnp
-DEPSNPLIB	= $(SNPLIBDIR)/libformssnp.a
-#endif
-
 #if InstallNonstandard
 SHLIBDIR	= XFormsNonstandardInstallDir/lib
 USRLIBDIR	= XFormsNonstandardInstallDir/lib
@@ -107,15 +106,14 @@ EXTRA_LIBRARIES	= \
 		  $(STATIC) \
 		  $(FORMSLIB) \
 		  $(XPMLIB) \
-		  $(SNPLIB) \
 		  $(UNSTATIC) \
 		  -lm
 
 EXTRA_DEFINES	= \
-		  -DMAKING_FORMS=1
+		  -DMAKING_FORMS=1 \
+		  $(HAVE_SNPRINTF)
 
 DEPLIBS		= \
-		  $(DEPSNPLIB) \
 		  $(DEPFORMSLIB) \
 		  $(DEPXPMLIB)
 

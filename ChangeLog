@@ -1,3 +1,51 @@
+2003-04-16  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	Remove the SNP directory and replace it with a single file,
+	flsnprintf.c. Invoke snprintf through a wrapper fl_snprintf.
+
+	* Imakefile: remove SUBDIR snp.
+
+	* lib/flsnprintf.c, lib/include/flsnprintf.h: new files.
+
+	* lib/include/Imakefile: add flsnprintf.h to the files used to
+	generated forms.h.
+
+	* lib/forms.h
+	* lib/include/forms.h: regenerated.
+
+	* lib/Imakefile: add flsnprintf.c.
+	Pass -DHAVE_SNPRINTF as a compiler option.
+
+	* lib/local.h: remove HAVE_SNPRINTF stuff.
+
+	* demos/Imakefile:
+	* fd2ps/Imakefile:
+	* fdesign/Imakefile:
+	* gl/Imakefile:
+	* image/Imakefile:
+	pass -DHAVE_SNPRINTF as a compiler option. Remove other SNP stuff.
+
+	* demos/wwwl.c:
+	* fdesign/fd_attribs.c:
+	* image/image.c:
+	* image/image_io_filter.c:
+	* image/image_postscript.c:
+	* lib/choice.c:
+	* lib/cmd_br.c:
+	* lib/errmsg.c:
+	* lib/events.c:
+	* lib/flresource.c:
+	* lib/fselect.c:
+	* lib/goodie_alert.c:
+	* lib/goodie_choice.c:
+	* lib/goodie_msg.c:
+	* lib/goodie_salert.c:
+	* lib/version.c:
+	* lib/xpopup.c:
+	s/\(v*snprintf\)/fl_\1/
+
+	* snp/*: all files removed.
+
 2003-04-15  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lots of files: reduce the amount of magic includes of header files

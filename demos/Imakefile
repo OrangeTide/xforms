@@ -97,6 +97,10 @@ OBJS		= $(SRCS:.c=.o)
 DEPOBJS		= $(DEPSRCS:.c=.o)
 PROGRAMS	= $(DEMOSRCS:.c=)
 
+#if HaveSnprintf
+HAVE_SNPRINTF	= -DHAVE_SNPRINTF
+#endif
+
 #if Solaris64Bit
 LDPRELIB	= -L/usr/openwin/lib/sparcv9 -L/usr/local/lib/sparcv9
 CCENVSETUP	= LD_RUN_PATH=/usr/openwin/lib/sparcv9
@@ -116,14 +120,6 @@ IMAGELIBDIR     = $(TOP)/image
 IMAGEINCDIR     = $(IMAGELIBDIR)       
 IMAGELIB        = -L$(IMAGELIBDIR) -lflimage
 DEPIMAGELIB     = $(IMAGELIBDIR)/libflimage.a
-
-#if !HaveSnprintf
-SNPLIBDIR	= $(TOP)/snp
-SNPINCDIR	= $(SNPLIBDIR)       
-SNPINC		= -I$(SNPINCDIR)
-SNPLIB		= -L$(SNPLIBDIR) -lformssnp
-DEPSNPLIB	= $(SNPLIBDIR)/libformssnp.a
-#endif
 
 #if StaticLink
 #if NonstandardXpm
@@ -146,7 +142,6 @@ JPEG		= $(JPEGLIBDIR) -ljpeg
 
 
 EXTRA_INCLUDES  = \
-		  $(SNPINC) \
 		  -I$(BUILDINCDIR) \
 		  -I$(FORMSINCDIR) \
 		  -I$(IMAGEINCDIR) \
@@ -161,12 +156,11 @@ EXTRA_LIBRARIES	= \
 		  $(IMAGELIB) \
 		  $(FORMSLIB) \
 		  $(XPMLIB) \
-		  $(SNPLIB) \
 		  $(UNSTATIC) \
 		  $(JPEG) \
 		  -lm
 
-EXTRA_DEFINES	= 
+EXTRA_DEFINES	= $(HAVE_SNPRINTF)
 
 
 PSRCS	= $(SPLSRCS) \
@@ -182,7 +176,6 @@ OPTIMIZER	=
 #endif
 
 DEPLIBS		= \
-		  $(DEPSNPLIB) \
 		  $(DEPFORMSLIB) \
 		  $(DEPIMAGELIB)
 

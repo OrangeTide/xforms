@@ -35,6 +35,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include "forms.h"
 #include "fd_main.h"
 
 /****************** FORMS AND CALL-BACKS ************************/
@@ -296,7 +297,7 @@ readback_attributes(FL_OBJECT * obj)
     obj->lcol = fd_generic_attrib->lcolobj->col1;
 
 
-    snprintf(tmpbuf,sizeof(tmpbuf),"FL_ALIGN_%s",
+    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_ALIGN_%s",
                 fl_get_choice_text(fd_generic_attrib->align));
     obj->align = align_val(tmpbuf);
 
@@ -305,15 +306,15 @@ readback_attributes(FL_OBJECT * obj)
     else
 	obj->align &= ~FL_ALIGN_INSIDE;
 
-    snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
+    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
                 fl_get_choice_text(fd_generic_attrib->resize));
     obj->resize = resize_val(tmpbuf);
 
-    snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
+    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
                 fl_get_choice_text(fd_generic_attrib->segravity));
     obj->segravity = gravity_val(tmpbuf);
 
-    snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
+    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
                 fl_get_choice_text(fd_generic_attrib->nwgravity));
     obj->nwgravity = gravity_val(tmpbuf);
 

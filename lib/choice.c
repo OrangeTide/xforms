@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_chc = "$Id: choice.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -193,7 +193,7 @@ do_pup(FL_OBJECT * ob)
     {
 	if (!sp->no_title)
         {
-            snprintf(title,sizeof(title)-4,"%s",ob->label);
+            fl_snprintf(title,sizeof(title)-4,"%s",ob->label);
 	    fl_addtopup(menu, strcat(title, "%t"));
         }
     }

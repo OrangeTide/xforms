@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_postscript.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: image_postscript.c,v 1.2 2003/04/17 09:04:57 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -117,7 +117,7 @@ load_page(FL_IMAGE * im, int pageNo)
     FLIMAGE_IO *fileIO;
     int status, n;
 
-    snprintf(name, sizeof(name), "%s/%s_%d", sp->tmpdir, sp->prefix, pageNo);
+    fl_snprintf(name, sizeof(name), "%s/%s_%d", sp->tmpdir, sp->prefix, pageNo);
 
     if (sp->verbose)
 	M_err("LoadPage", "loading %s", name);
@@ -164,7 +164,7 @@ PS_cleanup(FL_IMAGE * im)
 
     for (i = 1; i <= n; i++)
     {
-	snprintf(name, sizeof(name), "%s/%s_%d", sp->tmpdir, sp->prefix, i);
+	fl_snprintf(name, sizeof(name), "%s/%s_%d", sp->tmpdir, sp->prefix, i);
 	if (sp->verbose)
 	    M_err("Cleanup", "deleting %s", name);
 	remove(name);
@@ -194,7 +194,7 @@ PS_read_pixels(FL_IMAGE * im)
     int old_sort;
 
     /* the tmp file pattern will be /tmp/gs_$InputFile_$pid_pageNO */
-    snprintf(prefix, sizeof(prefix),
+    fl_snprintf(prefix, sizeof(prefix),
                "gs_%s_%d", file_tail(im->infile), (int) fl_getpid());
 
     sp->prefix = strdup(prefix);
@@ -202,7 +202,7 @@ PS_read_pixels(FL_IMAGE * im)
     if (sp->verbose)
 	M_err("LoadPS", "prefix=%s", sp->prefix);
 
-    snprintf(cmd, sizeof(cmd),
+    fl_snprintf(cmd, sizeof(cmd),
             "gs -sDEVICE=%s %s -r%dx%d -sOutputFile=%s/%s_%%d -- %s %s",
 	    GS_DEVICE, GS_OPTION, (int) sp->xdpi, (int) sp->ydpi,
 	    sp->tmpdir, sp->prefix, im->infile,

@@ -6940,6 +6940,21 @@ FL_EXPORT int fl_set_xyplot_mark_active(
 
 #endif  /* FL_XYPLOT_H */
 
+/**
+ * \file flsnprintf.h
+ *
+ */
+#ifndef FL_SNPRINTF_H
+#define FL_SNPRINTF_H
+
+#include <stdarg.h>
+#include <sys/types.h>
+
+int fl_snprintf(char *, size_t, const char *, ...);
+int fl_vsnprintf(char *, size_t, const char *, va_list);
+
+#endif /* NOT FL_SNPRINTF_H */
+
 /* the following (fl_fheight) etc. were never documented and were
    removed from V0.89, but apparently this broke some applications that
    were using them. Put them back in 10/22/00 */

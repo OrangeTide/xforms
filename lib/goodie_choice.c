@@ -170,7 +170,7 @@ fl_show_choice(const char *m1, const char *m2, const char *m3, int numb,
 {
     char buf[1024];
 
-    snprintf(buf, sizeof(buf), "%s\n%s\n%s", m1 ? m1 : "",
+    fl_snprintf(buf, sizeof(buf), "%s\n%s\n%s", m1 ? m1 : "",
 	    m2 ? m2 : "",
 	    m3 ? m3 : "");
     return fl_show_choices(buf, numb, c1, c2, c3, def);

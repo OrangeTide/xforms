@@ -30,6 +30,7 @@ SRCS		= \
 		  flcolor.c \
 		  fldraw.c \
 		  flresource.c \
+		  flsnprintf.c \
 		  flvisual.c \
 		  fonts.c \
 		  formbrowser.c \
@@ -111,6 +112,10 @@ OBJS	= $(SRCS:.c=.o)
 HAVE_STRERROR	= -DHAVE_STRERROR
 #endif
 
+#if HaveSnprintf
+HAVE_SNPRINTF	= -DHAVE_SNPRINTF
+#endif
+
 #if NonstandardXpm
 XPMLIBLOC	= XpmLibLoc
 XPMLIB		= -L$(XPMLIBLOC)
@@ -134,7 +139,8 @@ EXTRA_DEFINES	= \
 		  -DMAKING_FORMS \
 		  $(XPMFLAG) \
 		  $(NO_GL) \
-		  $(HAVE_STRERROR)
+		  $(HAVE_STRERROR) \
+		  $(HAVE_SNPRINTF)
 
 #if HasGcc2
 PICFLAGS	= -fPIC

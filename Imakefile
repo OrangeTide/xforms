@@ -85,24 +85,19 @@ CDEBUGFLAGS	= $(DEBUG_FLAG) $(OPTIMIZER) $(WALL) $(BITS)
 GL	= gl
 #endif
 
-#if !HaveSnprintf
-SNPRINTF= snp
-#endif
-
 #if BuildDemos
 DEMOS	= demos
 #endif
 
 SUBDIRS = \
-	  $(SNPRINTF) \
 	  lib/include \
 	  lib \
 	  image \
 	  $(GL) \
 	  fdesign \
- 	  fd2ps \
+	  fd2ps \
 	  $(DEMOS)
-	  	
+
 IMAKE_DEFINES	= \
 		  -DOptimizationLevel=OptimizationLevel \
 		  -DHaveStrerror=HaveStrerror \

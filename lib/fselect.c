@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fs = "$Id: fselect.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -487,7 +487,7 @@ fill_entries(FL_OBJECT * br, const char *fn, int show)
 				   lfs->disabled_cache)))
     {
         char tmpbuf[256], *p;
-        snprintf(tmpbuf,sizeof(tmpbuf), "Can't read %s", lfs->dname);
+        fl_snprintf(tmpbuf,sizeof(tmpbuf), "Can't read %s", lfs->dname);
         fl_show_alert("ReadDir", tmpbuf, fl_get_syserror_msg(), 0);
 	M_err("ReadDir", "Can't read %s", lfs->dname);
         /* backup */
@@ -509,7 +509,7 @@ fill_entries(FL_OBJECT * br, const char *fn, int show)
 	{
 	    if (dl->type == FT_DIR)
 	    {
-		snprintf(tt, sizeof(tt), "%c %s", dirmarker, dl->name);
+		fl_snprintf(tt, sizeof(tt), "%c %s", dirmarker, dl->name);
 		fl_add_browser_line(br, tt);
 	    }
 	}
@@ -521,33 +521,33 @@ fill_entries(FL_OBJECT * br, const char *fn, int show)
 	{
 	    if (!listdirfirst)
 	    {
-		snprintf(tt, sizeof(tt), "%c %s", dirmarker, dl->name);
+		fl_snprintf(tt, sizeof(tt), "%c %s", dirmarker, dl->name);
 		fl_add_browser_line(br, tt);
 	    }
 	}
 	else if (dl->type == FT_FIFO)
 	{
-	    snprintf(tt, sizeof(tt), "%c %s", fifomarker, dl->name);
+	    fl_snprintf(tt, sizeof(tt), "%c %s", fifomarker, dl->name);
 	    fl_add_browser_line(br, tt);
 	}
 	else if (dl->type == FT_SOCK)
 	{
-	    snprintf(tt, sizeof(tt), "%c %s", sockmarker, dl->name);
+	    fl_snprintf(tt, sizeof(tt), "%c %s", sockmarker, dl->name);
 	    fl_add_browser_line(br, tt);
 	}
 	else if (dl->type == FT_BLK)
 	{
-	    snprintf(tt, sizeof(tt), "%c %s", bdevmarker, dl->name);
+	    fl_snprintf(tt, sizeof(tt), "%c %s", bdevmarker, dl->name);
 	    fl_add_browser_line(br, tt);
 	}
 	else if (dl->type == FT_CHR)
 	{
-	    snprintf(tt, sizeof(tt), "%c %s", cdevmarker, dl->name);
+	    fl_snprintf(tt, sizeof(tt), "%c %s", cdevmarker, dl->name);
 	    fl_add_browser_line(br, tt);
 	}
 	else
 	{
-	    snprintf(tt, sizeof(tt),"  %s", dl->name);
+	    fl_snprintf(tt, sizeof(tt),"  %s", dl->name);
 	    fl_add_browser_line(br, tt);
 	    if (fn && strcmp(dl->name, fn) == 0)
 	    {

@@ -38,7 +38,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xpup = "$Id: xpopup.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -1833,9 +1833,9 @@ generate_menu(int n, const FL_PUP_ENTRY * pup, int top)
 	    int m = fl_newpup(menu->parent);
 
 	    if (p->text[1] != '_')
-		snprintf(buf, sizeof(buf), "%s%%x%d%%m", (p->text) + 1, val);
+		fl_snprintf(buf, sizeof(buf), "%s%%x%d%%m", (p->text) + 1, val);
 	    else
-		snprintf(buf, sizeof(buf), "%s%%x%d%%l%%m", (p->text) + 2, val);
+		fl_snprintf(buf, sizeof(buf), "%s%%x%d%%l%%m", (p->text) + 2, val);
 
 	    fl_addtopup(n, buf, m);
 
@@ -1853,9 +1853,9 @@ generate_menu(int n, const FL_PUP_ENTRY * pup, int top)
 	{
 	    /* regular entry */
 	    if (*p->text == '_')
-		snprintf(buf,sizeof(buf),"%s%%l%%x%d%%f", p->text + 1, val);
+		fl_snprintf(buf,sizeof(buf),"%s%%l%%x%d%%f", p->text + 1, val);
 	    else
-		snprintf(buf,sizeof(buf), "%s%%x%d%%f", p->text, val);
+		fl_snprintf(buf,sizeof(buf), "%s%%x%d%%f", p->text, val);
 
 	    fl_addtopup(n, buf, p->callback ? p->callback : ignore_item);
 

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.6 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.7 2003/04/17 09:04:57 leeming Exp $";
 #endif
 
 #include <stdio.h>
@@ -80,7 +80,7 @@ fl_print_version(int g)
 #endif
     int n;
 
-    snprintf(tmp, 100, "FORMS Library Version %d.%d", FL_VERSION, FL_REVISION);
+    fl_snprintf(tmp, 100, "FORMS Library Version %d.%d", FL_VERSION, FL_REVISION);
     p[0] = tmp;
 
     for (n = 1; *q; n++, q++) {

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_evt = "$Id: events.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -119,7 +119,7 @@ obj_name(FL_OBJECT * ob)
     else
 	p = "?";
 
-    snprintf(buf, sizeof(buf), "%s %s", p, ob->label);
+    fl_snprintf(buf, sizeof(buf), "%s %s", p, ob->label);
     return buf;
 }
 
@@ -471,7 +471,7 @@ fl_get_xevent_name(const XEvent *xev)
       {
           if(evname[i].type == xev->type)
           {
-             snprintf(buf,sizeof(buf),"%s(0x%x)",evname[i].name, xev->type);
+             fl_snprintf(buf,sizeof(buf),"%s(0x%x)",evname[i].name, xev->type);
              return buf;
           }
       }

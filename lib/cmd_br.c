@@ -248,7 +248,7 @@ fl_exe_command(const char *cmd, int block)
 
     if (pipe(p_err) < 0 || pipe(p_inout) < 0)
     {
-	snprintf(buf,sizeof(buf), 
+	fl_snprintf(buf,sizeof(buf), 
                      "Can't create pipe - %s", fl_get_syserror_msg());
 	fprintf(stderr, "%s\n", buf);
 	fl_addto_browser(logger->browser, buf);
@@ -257,7 +257,7 @@ fl_exe_command(const char *cmd, int block)
 
     if ((pid = fork()) < 0)
     {
-	snprintf(buf,sizeof(buf),"fork failed: %s",fl_get_syserror_msg());
+	fl_snprintf(buf,sizeof(buf),"fork failed: %s",fl_get_syserror_msg());
 	fl_addto_browser(logger->browser, buf);
 	perror("fork");
 	close(p_inout[0]);
@@ -329,7 +329,7 @@ fl_exe_command(const char *cmd, int block)
     sa.lpSecurityDescriptor = NULL;
     if (!CreatePipe(&hPipeRead, &hPipeWrite, &sa, 255))
     {
-	snprintf(buf, sizeof(buf), "Can't create pipe - %s", 
+	fl_snprintf(buf, sizeof(buf), "Can't create pipe - %s", 
                     fl_get_syserror_msg());
 	fprintf(stderr, "%s\n", buf);
 	fl_addto_browser(logger->browser, buf);
@@ -361,7 +361,7 @@ fl_exe_command(const char *cmd, int block)
     }
     else
     {
-	snprintf(buf,sizeof(buf),"spawn failed: %s",fl_get_syserror_msg());
+	fl_snprintf(buf,sizeof(buf),"spawn failed: %s",fl_get_syserror_msg());
 	fl_addto_browser(logger->browser, buf);
 	perror("spawn");
 	/* close the pipes */
@@ -397,7 +397,7 @@ fl_popen(const char *cmd, const char *type)
 
     if (pipe(p_err) < 0 || pipe(p_p2c) < 0 || pipe(p_c2p) < 0)
     {
-	snprintf(buf, sizeof(buf),
+	fl_snprintf(buf, sizeof(buf),
                     "Can't create pipe - %s", fl_get_syserror_msg());
 	fprintf(stderr, "%s\n", buf);
 	fl_addto_browser(logger->browser, buf);
@@ -413,7 +413,7 @@ fl_popen(const char *cmd, const char *type)
 
     if ((pid = fork()) < 0)
     {
-	snprintf(buf,sizeof(buf),"fork failed: %s", fl_get_syserror_msg());
+	fl_snprintf(buf,sizeof(buf),"fork failed: %s", fl_get_syserror_msg());
 	fl_addto_browser(logger->browser, buf);
 	perror("fork");
 	for (i = 0; i < 2; i++)

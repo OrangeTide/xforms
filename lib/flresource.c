@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.4 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.5 2003/04/17 09:04:57 leeming Exp $";
 #endif
 
 #include "forms.h"
@@ -379,7 +379,7 @@ handle_applresdir(const char *rstr, const char *appclass)
     strcpy(rbuf, rstr);
     for (tok = strtok(rbuf, ":"); tok; tok = strtok(0, ":"))
     {
-        snprintf(buf,sizeof(buf),"%s/%s",tok,appclass);
+        fl_snprintf(buf,sizeof(buf),"%s/%s",tok,appclass);
 	M_info(0, "Trying XAPPLRESDIR: %s", buf);
 	if ((fdb = XrmGetFileDatabase(buf)))
 	{
@@ -420,7 +420,7 @@ init_resource_database(const char *appclass)
    The window resource manager for this display
 
  */
-    snprintf(buf, sizeof(buf), "DECW$SYSTEM_DEFAULTS:%s.DAT", appclass);
+    fl_snprintf(buf, sizeof(buf), "DECW$SYSTEM_DEFAULTS:%s.DAT", appclass);
     M_info(0, "Trying Sys_default: %s", buf);
     if ((fdb = XrmGetFileDatabase(buf)))
     {
@@ -428,7 +428,7 @@ init_resource_database(const char *appclass)
 	M_warn(0, "   system default %s loaded", buf);
     }
 
-    snprintf(buf, sizeof(buf), "DECW$USER_DEFAULTS:%s.DAT", appclass);
+    fl_snprintf(buf, sizeof(buf), "DECW$USER_DEFAULTS:%s.DAT", appclass);
     M_info(0, "Trying User_default: %s", buf);
     if ((fdb = XrmGetFileDatabase(buf)))
     {
@@ -437,7 +437,7 @@ init_resource_database(const char *appclass)
     }
 
 
-    snprintf(buf, sizeof(buf), "DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT");
+    fl_snprintf(buf, sizeof(buf), "DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT");
     M_info(0, "Trying Sys_default: %s", buf);
     if ((fdb = XrmGetFileDatabase(buf)))
     {
@@ -455,7 +455,7 @@ init_resource_database(const char *appclass)
 	}
     }
 #else /* !VMS */
-    snprintf(buf, sizeof(buf), "/usr/lib/X11/app-defaults/%s", appclass);
+    fl_snprintf(buf, sizeof(buf), "/usr/lib/X11/app-defaults/%s", appclass);
     M_info(0, "Trying Sys_default: %s", buf);
     if ((fdb = XrmGetFileDatabase(buf)))
     {
@@ -483,7 +483,7 @@ init_resource_database(const char *appclass)
 	/* try ~/.Xdefaults   */
 	if ((rstr = getenv("HOME")))
 	{
-            snprintf(buf,sizeof(buf),"%s/.Xdefaults",rstr);
+            fl_snprintf(buf,sizeof(buf),"%s/.Xdefaults",rstr);
 	    M_info(0, "Trying %s", buf);
 	    if ((fdb = XrmGetFileDatabase(buf)))
 	    {
@@ -510,7 +510,7 @@ init_resource_database(const char *appclass)
 	if ((rstr = getenv("HOME")))
 	{
 	    int l;
-            snprintf(buf,sizeof(buf),"%s/.Xdefaults",rstr);
+            fl_snprintf(buf,sizeof(buf),"%s/.Xdefaults",rstr);
 	    l = strlen(strcat(buf, "-"));
 	    gethostname(buf + l, sizeof(buf) - l);
 	    M_info(0, "Trying %s", buf);
@@ -561,9 +561,9 @@ fl_get_resource(const char *rname,	/* resource name */
     char res_name[256], res_class[256];
 
     res_name[0] = res_class[0] = '\0';
-    snprintf(res_name,sizeof(res_name),"%s.%s",fl_app_name,rname);
+    fl_snprintf(res_name,sizeof(res_name),"%s.%s",fl_app_name,rname);
     if (cname)
-        snprintf(res_class,sizeof(res_class),"%s.%s",fl_app_class,cname);
+        fl_snprintf(res_class,sizeof(res_class),"%s.%s",fl_app_class,cname);
 
     entry.addr = 0;
     entry.size = 0;
@@ -615,7 +615,7 @@ void
 fl_set_resource(const char *str, const char *val)
 {
     char res_name[256];
-    snprintf(res_name,sizeof(res_name),"%s.%s",fl_app_name,str);
+    fl_snprintf(res_name,sizeof(res_name),"%s.%s",fl_app_name,str);
     XrmPutStringResource(&fldatabase, res_name, (char *) val);
 }
 
@@ -632,11 +632,11 @@ fl_init_resources(void)
     /* internal resources need to be prefixed xform and XForm. need to
        generate for all names */
 
-    snprintf(cls,sizeof(cls),"%s.XForm",fl_app_class);
+    fl_snprintf(cls,sizeof(cls),"%s.XForm",fl_app_class);
     fl_app_class = cls;
-    snprintf(res,sizeof(res),"%s.xform",fl_app_name);
+    fl_snprintf(res,sizeof(res),"%s.xform",fl_app_name);
     fl_app_name = res;
-    snprintf(ores,sizeof(ores),"%s.xform",fl_ori_app_name);
+    fl_snprintf(ores,sizeof(ores),"%s.xform",fl_ori_app_name);
     fl_ori_app_name = ores;
     fl_get_app_resources(internal_resources, Niopt);
 
@@ -805,15 +805,15 @@ fl_initialize(int *na, char *arg[], const char *appclass,
 			(char *) fl_ori_app_name, na, arg);
 
     /* check version request */
-    snprintf(disp_name,sizeof(disp_name), "%s.fl_version", fl_app_name);
-    snprintf(disp_cls,sizeof(disp_cls), "%s.FLversion", fl_app_name);
+    fl_snprintf(disp_name,sizeof(disp_name), "%s.fl_version", fl_app_name);
+    fl_snprintf(disp_cls,sizeof(disp_cls), "%s.FLversion", fl_app_name);
 
     if (XrmGetResource(cmddb, disp_name, disp_cls, &type, &xval))
 	fl_print_version(0);
 
     /* get the display name first before doing anything */
-    snprintf(disp_name,sizeof(disp_name), "%s.display",fl_ori_app_name);
-    snprintf(disp_cls ,sizeof(disp_cls ), "%s.Display",fl_app_class);
+    fl_snprintf(disp_name,sizeof(disp_name), "%s.display",fl_ori_app_name);
+    fl_snprintf(disp_cls ,sizeof(disp_cls ), "%s.Display",fl_app_class);
 
     buf[0] = '\0';
     if (XrmGetResource(cmddb, disp_name, disp_cls, &type, &xval))
@@ -838,14 +838,14 @@ fl_initialize(int *na, char *arg[], const char *appclass,
 
     /* get debug level settings since all error reporting will be controled
        by it */
-    snprintf(disp_name,sizeof(disp_name),"%s.debug",fl_app_name);
-    snprintf(disp_cls, sizeof(disp_cls ),"%s.Debug",fl_app_class);
+    fl_snprintf(disp_name,sizeof(disp_name),"%s.debug",fl_app_name);
+    fl_snprintf(disp_cls, sizeof(disp_cls ),"%s.Debug",fl_app_class);
     if (XrmGetResource(cmddb, disp_name, disp_cls, &type, &xval))
 	fl_set_debug_level(atoi(xval.addr));
 
     /* check if -name is present */
-    snprintf(disp_name,sizeof(disp_name),"%s.name",fl_app_name);
-    snprintf(disp_cls, sizeof(disp_cls ),"%s.Name",fl_app_class);
+    fl_snprintf(disp_name,sizeof(disp_name),"%s.name",fl_app_name);
+    fl_snprintf(disp_cls, sizeof(disp_cls ),"%s.Name",fl_app_class);
     M_warn(0, "trying %s", disp_name);
     if (XrmGetResource(cmddb, disp_name, disp_cls, &type, &xval))
     {
