@@ -1,5 +1,14 @@
 2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/flsnprintf.c: remove unused variable 'credits'.
+
+	* lib/flresource.c: remove line 'fl_context->xim;' as it is a
+	statement with no effect.
+
+	* lib/version.c: remove unused variable 'c'.
+
+2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/flinternal.h: add declaration of fl_handle_form.
 	Squash warnings about implicit declaration of the function when
 	compiling lib/tabfolder.c.

@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.9 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.10 2003/11/20 11:24:15 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -971,7 +971,6 @@ fl_initialize(int *na, char *arg[], const char *appclass,
 	    if (!fl_context->xic) {
 		M_err("fl_initialize", "Could not create an input context");
 		XCloseIM (fl_context->xim);
-		fl_context->xim;
 	    }
         } else
 	    M_err("fl_initialize", "Could not create an input method");

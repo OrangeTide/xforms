@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.11 2003/09/08 23:48:36 leeming Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.12 2003/11/20 11:24:16 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -62,7 +62,6 @@ fl_library_version(int *ver, int *rev)
 {
     int const v = FL_VERSION;
     int const r = FL_REVISION;
-    int c = 0;
 
     if (rev)
 	*rev = r;
