@@ -1,3 +1,13 @@
+2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* demos/Imakefile:
+	* fd2ps/Imakefile:
+	* fdesign/Imakefile:
+	* gl/Imakefile:
+	* image/Imakefile:
+	* lib/Imakefile: pass the expected -DHAVE_SNPRINTF options to the
+	compiler.
+
 2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	Make fl_snprintf private.

@@ -2,10 +2,13 @@
 #define Optimize NO
 
 # $Locker:  $
-# $Date: 2003/04/17 11:48:17 $
+# $Date: 2003/04/20 21:16:02 $
 # $State: Exp $
 
 # $Log: Imakefile,v $
+# Revision 1.5  2003/04/20 21:16:02  leeming
+# Pass the expected -DHAVE_SNPRINTF options to the compiler.
+#
 # Revision 1.4  2003/04/17 11:48:17  leeming
 # Don't pass -Iprivate to the complier.
 #
@@ -42,7 +45,7 @@ SRCS	= \
 OBJS	= $(SRCS:.c=.o)
 
 #if HaveSnprintf
-HAVE_SNPRINTF	= -DHAVE_SNPRINTF
+HAVE_SNPRINTF	= -DHAVE_SNPRINTF -DHAVE_DECL_SNPRINTF -DHAVE_DECL_VSNPRINTF
 #endif
 
 #if !defined( PpcDarwinArchitecture )
