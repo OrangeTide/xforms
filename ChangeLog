@@ -1,3 +1,14 @@
+2003-11-25  Clive A Stubbings <xforms2@vjet.demon.co.uk>
+
+	* image/image_gif.c (flush_buffer): new static function, containig ]
+	code factored out of process_lzw_code.
+	(process_lzw_code): invoke flush_buffer where old code was in
+	process_lzw_code itself. In addition, also invoke flush_buffer
+	when cleaning up after an old-style gif image.
+
+	* image/image_jpeg.c (JPEG_identify): handle 'raw' JPEG images
+	without the JFIF header.
+
 2003-11-26  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/boxtype.c: squash warning about uninitialized data.

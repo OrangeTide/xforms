@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.5 2003/11/21 13:23:23 leeming Exp $
+ * $Id: image_jpeg.c,v 1.6 2003/11/27 10:29:47 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -68,12 +68,23 @@ static unsigned int jpeg_getc(j_decompress_ptr cinfo);
 static int
 JPEG_identify(FILE * fp)
 {
-    char buf[128];
+    unsigned char buf[128];
     size_t i;
 
     fread(buf, 1, sizeof(buf), fp);
     rewind(fp);
     buf[sizeof(buf) - 1] = '\0';
+
+    /* Clive Stubbings.
+     * Test for a JPEG SOI code (0xff, 0xd8) followed by the start of
+     * APP0 segement (0xff).
+     * A 'raw' JPEG will not have the JFIF (JPEG file interchange format)
+     * header but is still readable
+     */
+    if (buf[0] == (unsigned char)0xff &&
+	buf[1] == (unsigned char)0xd8 &&
+	buf[2] == (unsigned char)0xff)
+	return 1;
 
     for (i = 0; i < sizeof(buf) - 3 && buf[i] != 'J'; i++)
 	;

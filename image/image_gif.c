@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.5 2003/11/21 13:23:23 leeming Exp $
+ * $Id: image_gif.c,v 1.6 2003/11/27 10:29:47 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -585,10 +585,35 @@ GIF_load(FL_IMAGE * im)
 #define OUTPIX(c)   *lbuf++ = (c)
 #define MC_SIZE      4097
 
+/* if we've got more than one scanline, output */
+static void flush_buffer(FL_IMAGE * im, int incode)
+{
+    int i;
+
+    incode = lbuf - lhead;
+    if (incode >= im->w)
+    {
+	lbuf = lhead;
+
+	while (incode >= im->w)
+	{
+	    outputline(im, lbuf);
+	    incode -= im->w;
+	    lbuf += im->w;
+	}
+
+	/* copy the left over */
+	for (i = 0; i < incode; i++)
+	    lhead[i] = *lbuf++;
+	lbuf = lhead + incode;
+    }
+}
+
+
 static int
 process_lzw_code(FL_IMAGE * im, register int code)
 {
-    register int incode, i;
+    register int incode;
     static unsigned char firstchar;
     static unsigned char stack[MC_SIZE];
     static int avail, oldcode;
@@ -637,6 +662,14 @@ process_lzw_code(FL_IMAGE * im, register int code)
     {
 	OUTPIX(suffix[code]);
 	firstchar = oldcode = code;
+ 	/* Clive Stubbings.
+	 * There is the posibility of an image with just alternate
+	 * single code bytes and resets. I know thats really dumb,
+	 * but I found one and it took a long time to work out why
+	 * it crashed...
+	 * So flush the buffer before it overuns.
+	 */
+	flush_buffer(im, incode);
 	return 0;
     }
 
@@ -676,23 +709,7 @@ process_lzw_code(FL_IMAGE * im, register int code)
     while (stackp > stack);
 
     /* if we've got more than one scanline, output */
-    incode = lbuf - lhead;
-    if (incode >= im->w)
-    {
-	lbuf = lhead;
-
-	while (incode >= im->w)
-	{
-	    outputline(im, lbuf);
-	    incode -= im->w;
-	    lbuf += im->w;
-	}
-
-	/* copy the left over */
-	for (i = 0; i < incode; i++)
-	    lhead[i] = *lbuf++;
-	lbuf = lhead + incode;
-    }
+    flush_buffer(im, incode);
     return 0;
 }
 
