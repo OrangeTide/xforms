@@ -60,7 +60,7 @@ create_it(void)
 }
 
 void
-fl_show_oneliner(const char *s, int x, int y)
+fl_show_oneliner(const char *s, FL_Coord x, FL_Coord y)
 {
     int maxw = 0, maxh = 0;
 

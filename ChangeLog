@@ -1,5 +1,49 @@
 2004-05-17  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	Revert some functions to the same API as was used in XForms
+	version 0.89, patch level 5. In all cases, this is just a case of using
+	the typedef rather than the raw type.
+
+	* lib/browser.c (fl_create_browser, fl_add_browser):
+	* lib/include/browser.h (fl_create_browser, fl_add_browser): use FL_Coord.
+
+	* lib/flcolor.c (fl_bk_color, fl_bk_textcolor):
+	* lib/include/Basic.h (fl_bk_color, fl_bk_textcolor): use FL_COLOR.
+
+	* lib/flresource.c (fl_initialize):
+	* lib/include/XBasic.h (fl_initialize): use FL_CMD_OPT *.
+
+	* lib/formbrowser.c (fl_add_formbrowser):
+	* lib/include/formbrowser.h (fl_add_formbrowser): use FL_Coord.
+
+	* lib/oneliner.c (fl_show_oneliner):
+	* lib/include/goodies.h (fl_show_oneliner): use FL_Coord.
+
+	* lib/scrollbar.c (fl_create_scrollbar, fl_add_scrollbar():
+	* lib/include/scrollbar.h (fl_create_scrollbar, fl_add_scrollbar():
+	use FL_Coord.
+
+	* lib/signal.c (fl_add_signal_callback):
+	* lib/include/Basic.h (fl_add_signal_callback): use FL_SIGNAL_HANDLER.
+
+	* lib/tabfolder.c (fl_add_tabfolder, fl_get_folder_area):
+	* lib/include/tabfolder.h (fl_add_tabfolder, fl_get_folder_area):
+	use FL_Coord.
+
+	* lib/win.c (fl_winmove, fl_winreshape):
+	* lib/include/XBasic.h (fl_winmove, fl_winreshape): use FL_Coord.
+
+	* lib/xdraw.c (fl_polygon):
+	* lib/include/XBasic.h (fl_polygon): use FL_COLOR.
+
+	* lib/xtext.c (fl_drw_text_beside):
+	* lib/include/Basic.h (fl_drw_text_beside): use FL_COLOR.
+
+	* lib/include/goodies.h (fl_exe_command, fl_end_command, fl_check_command):
+	use FL_PID_T.
+
+2004-05-17  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/include/canvas.h: change the change to AUTOINCLUDE_GLCANVAS_H.
 	* gl/glcanvas.h: #include <GL/glx.h>. Add C++ guards.
 

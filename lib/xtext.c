@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xtxt = "$Id: xtext.c,v 1.6 2004/05/06 10:03:37 leeming Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.7 2004/05/18 08:56:26 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -596,7 +596,7 @@ fl_draw_text_beside(int align, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 
 void
 fl_drw_text_beside(int align, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		   unsigned long c, int style, int size, char *str)
+		   FL_COLOR c, int style, int size, char *str)
 {
     int newa, newx, newy, dx = 0, dy = 0;
 

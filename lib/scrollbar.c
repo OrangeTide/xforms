@@ -232,7 +232,7 @@ down_cb(FL_OBJECT * ob, long data)
 
 
 FL_OBJECT *
-fl_create_scrollbar(int type, int x, int y, int w, int h, const char *l)
+fl_create_scrollbar(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h, const char *l)
 {
     SPEC *sp;
     FL_OBJECT *obj;
@@ -307,7 +307,7 @@ fl_create_scrollbar(int type, int x, int y, int w, int h, const char *l)
 
 
 FL_OBJECT *
-fl_add_scrollbar(int type, int x, int y, int w, int h, const char *l)
+fl_add_scrollbar(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h, const char *l)
 {
     FL_OBJECT *ob = fl_create_scrollbar(type, x, y, w, h, l);
 

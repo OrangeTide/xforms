@@ -49,19 +49,19 @@ enum
 
 FL_EXPORT FL_OBJECT *fl_create_scrollbar(
 		int type,
-		int x,
-		int y,
-		int w,
-		int h,
+		FL_Coord x,
+		FL_Coord y,
+		FL_Coord w,
+		FL_Coord h,
 		const char *l
 		);
 
 FL_EXPORT FL_OBJECT *fl_add_scrollbar(
 		int type,
-		int x,
-		int y,
-		int w,
-		int h,
+		FL_Coord x,
+		FL_Coord y,
+		FL_Coord w,
+		FL_Coord h,
 		const char *l
 		);
 

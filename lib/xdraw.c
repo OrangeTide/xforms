@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_drw = "$Id: xdraw.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_drw = "$Id: xdraw.c,v 1.6 2004/05/18 08:56:26 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -107,7 +107,7 @@ fl_rectangle(int fill, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 
 /* if fill == 0, xp must be 1 more than n */
 void
-fl_polygon(int fill, FL_POINT * xp, int n, unsigned long col)
+fl_polygon(int fill, FL_POINT * xp, int n, FL_COLOR col)
 {
     int bw = fl_dithered(fl_vmode) && mono_dither(col);
     GC gc = flx->gc;

@@ -148,8 +148,8 @@ FL_EXPORT void fl_set_choice_shortcut(
 
 FL_EXPORT void fl_show_oneliner(
 		const char *s,
-		int x,
-		int y
+		FL_Coord x,
+		FL_Coord y
 		);
 
 FL_EXPORT void fl_hide_oneliner(
@@ -206,17 +206,17 @@ FD_CMDLOG;
 #define FL_PID_T long
 #endif
 
-FL_EXPORT long fl_exe_command(
+FL_EXPORT FL_PID_T fl_exe_command(
 		const char *cmd,
 		int block
 		);
 
 FL_EXPORT int fl_end_command(
-		long pid
+		FL_PID_T pid
 		);
 
 FL_EXPORT int fl_check_command(
-		long pid
+		FL_PID_T pid
 		);
 
 FL_EXPORT FILE *fl_popen(

@@ -85,7 +85,7 @@ default_signal_handler(int sig)
 
 
 void
-fl_add_signal_callback(int s, void (*cb) (int, void *), void *data)
+fl_add_signal_callback(int s, FL_SIGNAL_HANDLER cb, void *data)
 {
     FL_SIGNAL_REC *sig_rec, *rec = fl_context->signal_rec;
 

@@ -269,7 +269,7 @@ FL_EXPORT void fl_replace_xyplot_point(
 		double y
 		);
 
-/* Replace the value of a particular point in dataset setID, 
+/* Replace the value of a particular point in dataset setID,
  * where setID=0 is the first data set.
  * This routine is an extension of fl_replace_xyplot_point
  * which acts on the first dataset only.

@@ -226,7 +226,7 @@ FL_EXPORT void fl_polygon(
 		int fill,
 		FL_POINT *xp,
 		int n,
-		unsigned long col
+		FL_COLOR col
 		);
 
 #define fl_polyf(p,n,c)  fl_polygon(1, p, n, c)
@@ -534,16 +534,16 @@ FL_EXPORT void fl_winresize(
 
 FL_EXPORT void fl_winmove(
 		Window win,
-		int dx,
-		int dy
+		FL_Coord dx,
+		FL_Coord dy
 		);
 
 FL_EXPORT void fl_winreshape(
 		Window win,
-		int dx,
-		int dy,
-		int w,
-		int h
+		FL_Coord dx,
+		FL_Coord dy,
+		FL_Coord w,
+		FL_Coord h
 		);
 
 FL_EXPORT void fl_winicon(
@@ -841,7 +841,7 @@ FL_EXPORT Display *fl_initialize(
 		int *na,
 		char *arg[],
 		const char *appclass,
-		XrmOptionDescList appopt,
+		FL_CMD_OPT * appopt,
 		int nappopt
 		);
 

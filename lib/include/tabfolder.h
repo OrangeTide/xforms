@@ -56,10 +56,10 @@ FL_EXPORT FL_OBJECT *fl_create_tabfolder(
 
 FL_EXPORT FL_OBJECT *fl_add_tabfolder(
 		int type,
-		int x,
-		int y,
-		int w,
-		int h,
+		FL_Coord x,
+		FL_Coord y,
+		FL_Coord w,
+		FL_Coord h,
 		const char *l
 		);
 
@@ -147,10 +147,10 @@ FL_EXPORT const char *fl_get_active_folder_name(
 
 FL_EXPORT void fl_get_folder_area(
 		FL_OBJECT *ob,
-		int *x,
-		int *y,
-		int *w,
-		int *h
+		FL_Coord *x,
+		FL_Coord *y,
+		FL_Coord *w,
+		FL_Coord *h
 		);
 
 

@@ -379,7 +379,7 @@ fl_get_default_scrollbarsize(FL_OBJECT * ob)
 }
 
 FL_OBJECT *
-fl_create_browser(int type, int x, int y, int w, int h, const char *l)
+fl_create_browser(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h, const char *l)
 {
     FL_OBJECT *ob;
     SPEC *sp;
@@ -426,7 +426,7 @@ fl_create_browser(int type, int x, int y, int w, int h, const char *l)
 }
 
 FL_OBJECT *
-fl_add_browser(int type, int x, int y, int w, int h, const char *l)
+fl_add_browser(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h, const char *l)
 {
     FL_OBJECT *ob = fl_create_browser(type, x, y, w, h, l);
     SPEC *sp = ob->spec;

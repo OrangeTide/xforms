@@ -708,10 +708,10 @@ FL_EXPORT void fl_remove_io_callback(
 /* signals */
 
 typedef void (*FL_SIGNAL_HANDLER) (int, void *);
+
 FL_EXPORT void fl_add_signal_callback(
 		int s,
-		void (*cb)(int,
-		void *),
+		FL_SIGNAL_HANDLER cb,
 		void *data
 		);
 
@@ -1379,7 +1379,7 @@ FL_EXPORT void fl_drw_text_beside(
 		FL_Coord y,
 		FL_Coord w,
 		FL_Coord h,
-		unsigned long c,
+		FL_COLOR c,
 		int style,
 		int size,
 		char *str
@@ -1523,7 +1523,7 @@ FL_EXPORT void fl_color(
 		);
 
 FL_EXPORT void fl_bk_color(
-		unsigned long col
+		FL_COLOR col
 		);
 
 FL_EXPORT void fl_textcolor(
@@ -1531,7 +1531,7 @@ FL_EXPORT void fl_textcolor(
 		);
 
 FL_EXPORT void fl_bk_textcolor(
-		unsigned long col
+		FL_COLOR col
 		);
 
 FL_EXPORT void fl_set_gamma(

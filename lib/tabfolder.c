@@ -219,7 +219,7 @@ fl_create_tabfolder(int type, FL_Coord x, FL_Coord y, FL_Coord w,
 }
 
 FL_OBJECT *
-fl_add_tabfolder(int type, int x, int y, int w, int h, const char *l)
+fl_add_tabfolder(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h, const char *l)
 {
     FL_OBJECT *ob = fl_create_tabfolder(type, x, y, w, h, l);
     SPEC *sp = ob->spec;
@@ -745,7 +745,7 @@ fl_get_active_folder_name(FL_OBJECT * ob)
 
 
 void
-fl_get_folder_area(FL_OBJECT * ob, int *x, int *y, int *w, int *h)
+fl_get_folder_area(FL_OBJECT * ob, FL_Coord *x, FL_Coord *y, FL_Coord *w, FL_Coord *h)
 {
     SPEC *sp = ob->spec;
 

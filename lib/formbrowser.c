@@ -127,7 +127,7 @@ fl_create_formbrowser(int type, FL_Coord x, FL_Coord y,
 }
 
 FL_OBJECT *
-fl_add_formbrowser(int type, int x, int y, int w, int h, const char *label)
+fl_add_formbrowser(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h, const char *label)
 {
 
     FL_OBJECT *ob = fl_create_formbrowser(type, x, y, w, h, label);

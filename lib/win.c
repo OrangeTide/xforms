@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xsupt = "$Id: win.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.7 2004/05/18 08:56:26 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -292,7 +292,7 @@ fl_transient(void)
 }
 
 void
-fl_winmove(Window win, int dx, int dy)
+fl_winmove(Window win, FL_Coord dx, FL_Coord dy)
 {
     if (win)
 	XMoveWindow(flx->display, win, dx, dy);
@@ -301,7 +301,7 @@ fl_winmove(Window win, int dx, int dy)
 }
 
 void
-fl_winreshape(Window win, int dx, int dy, int w, int h)
+fl_winreshape(Window win, FL_Coord dx, FL_Coord dy, FL_Coord w, FL_Coord h)
 {
     if (win)
 	XMoveResizeWindow(flx->display, win, dx, dy, w, h);

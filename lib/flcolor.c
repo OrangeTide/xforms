@@ -43,7 +43,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_col = "$Id: flcolor.c,v 1.9 2003/11/28 14:28:46 leeming Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.10 2004/05/18 08:56:26 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -874,7 +874,7 @@ fl_textcolor(FL_COLOR col)
 }
 
 void
-fl_bk_color(unsigned long col)
+fl_bk_color(FL_COLOR col)
 {
     if (flx->bkcolor != col)
     {
@@ -886,7 +886,7 @@ fl_bk_color(unsigned long col)
 }
 
 void
-fl_bk_textcolor(unsigned long col)
+fl_bk_textcolor(FL_COLOR col)
 {
     if (flx->bktextcolor != col)
     {

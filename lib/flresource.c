@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.12 2004/05/03 12:00:28 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.13 2004/05/18 08:56:26 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -762,7 +762,7 @@ void fl_set_input_navigate(unsigned mask)
 
 Display *
 fl_initialize(int *na, char *arg[], const char *appclass,
-	      XrmOptionDescList appopt, int nappopt)
+	      FL_CMD_OPT * appopt, int nappopt)
 {
     char disp_name[256], disp_cls[256], buf[256];
     XrmValue xval;

@@ -136,10 +136,10 @@ FL_EXPORT int fl_find_formbrowser_form_number(
 
 FL_EXPORT FL_OBJECT *fl_add_formbrowser(
 		int type,
-		int x,
-		int y,
-		int w,
-		int h,
+		FL_Coord x,
+		FL_Coord y,
+		FL_Coord w,
+		FL_Coord h,
 		const char *label
 		);
 
