@@ -30,8 +30,6 @@
 #ifndef SYS_H
 #define SYS_H
 
-#define FL_SIGRET void
-
 /* unixware and Lynx do not have strcasecmp */
 #if defined(__USLC__) || defined(Lynx)
 #define NO_STRCASECMP
