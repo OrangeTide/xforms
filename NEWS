@@ -1,4 +1,22 @@
-
+------------------------------------------
+V1.1cvs
+  o Migrate from Imake to the GNU autotools.
+  o "Composite" widgets, such as the browser, can now display tooltips.
+  o Prevent a crash when rotating grayscale images by 90 degree multiples.
+  o Enable xforms to handle XPixmaps containing colour "opaque".
+  o Tabfolder widgets are now resizable.
+  o Re-add fl_lookup_RGBcolor which fell off the dist at 1.0pre3.
+  o fl_init_RGBdatabase is no longer needed, does nothing and is
+    retained for compatibility only.
+  o Pass KeyRelease events to the widgets.
+  o Display the tab forms correctly when using bottom tab folders.
+  o Enable xforms to read a wider variety of gif and jpeg images.
+  o Enable fdesign to work correctly with paths like ../foo/bar/your_file.fd.
+  o Add a -dir <destdir> option to fdesign to place generated files in destdir.
+  o Add an RPM spec file.
+  o Get rid of the separate snprintf compatibility library.
+  o Removal of lots of little pieces of cruft that crept into the xforms
+    1.0 release.
 ------------------------------------------
 V1.0RC6.1 November 19, 2002
   o. Fixed early tooltip hide causing recursive fl_free_forms() entry.
