@@ -122,7 +122,6 @@ typedef struct
 }
 FL_IMAP;
 
-#define FL_NoColor     0x7fffffffL
 #define BadPixel       FL_NoColor
 
 

@@ -298,7 +298,8 @@ typedef enum
     FL_FREE_COL9, FL_FREE_COL10,
     FL_FREE_COL11, FL_FREE_COL12,
     FL_FREE_COL13, FL_FREE_COL14,
-    FL_FREE_COL15, FL_FREE_COL16
+    FL_FREE_COL15, FL_FREE_COL16,
+    FL_NOCOLOR = 0x7fffffffL
 }
 FL_PD_COL;
 
@@ -316,6 +317,7 @@ FL_PD_COL;
 #define FL_GRAY75           FL_MCOL
 
 #define  FL_LCOL            FL_BLACK
+#define  FL_NoColor         FL_NOCOLOR
 
 
 /* Events that a form reacts to.  */

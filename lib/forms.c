@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.13 2004/07/28 15:58:28 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.14 2004/10/06 23:25:34 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -2025,7 +2025,7 @@ do_interaction_step(int wait_io)
 		FL_Coord neww, newh;
 
 		M_warn("Expose", "Run into trouble - correcting it");
-		fl_get_winsize(evform->w, &neww, &newh);
+		fl_get_winsize(evform->window, &neww, &newh);
 		scale_form(evform, (double) neww / evform->w,
 			   (double) newh / evform->h);
 	    }

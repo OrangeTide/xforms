@@ -1,5 +1,21 @@
 2004-10-05  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* xforms.spec.in: Updating SO_VERSION revealed a flaw in the logic
+	that tries to use this variable to define some missing
+	symbolic links. The 'post' and 'postun' scripts have been rewritten
+	to work once more.
+
+	* lib/flinternal.h: move FL_NoColor...
+	* lib/include/Basic.h: here.
+
+	* lib/forms.c (do_interaction_step): prevent potential crash
+	caused by invoking fl_get_winsize with a width as the first
+	argument rather than a window ID.
+
+	* NEWS: add some highlights post 1.0.90.
+
+2004-10-05  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* configure.ac (SO_VERSION): updated to "2:0:1" in preparation
 	for the xforms 1.1 release.
 

@@ -35,6 +35,7 @@ XForms header files for development.
 	--without-warnings --disable-debug --enable-optimization=-O2
 make
 
+
 %install
 rm -rf ${RPM_BUILD_ROOT}
 install -d -m 755 ${RPM_BUILD_ROOT}
@@ -46,32 +47,52 @@ echo "$allfiles" | grep -v "^/usr/include/" > \
 echo "$allfiles" | grep "^/usr/include/" > \
 	%{_tmppath}/%{name}-%{version}-devfiles
 
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 rm -f %{_tmppath}/%{name}-%{version}-binfiles
 rm -f %{_tmppath}/%{name}-%{version}-devfiles
 
+
 %files -n %{name} -f %{_tmppath}/%{name}-%{version}-binfiles
 %defattr(-,root,root)
 %doc COPYING.LIB Copyright ChangeLog INSTALL NEWS README
+
 
 %files -n %{name}-devel -f %{_tmppath}/%{name}-%{version}-devfiles
 %defattr(-,root,root)
 
 
 %post -n %{name}
+#
 # Create symbolic links from libforms.so.1.0.0 to libforms.so, libforms.so.1
-so_version=`echo @SO_VERSION@ | sed 's/:/./g'`
-current_version=`echo ${so_version} | cut -d'.' -f1`
+#
+# 1. Create a list of files that require symbolic links.
+#
 lib_prefix=${RPM_INSTALL_PREFIX}/lib
-for lib_name in libforms.so libformsGL.so libflimage.so
+sofiles=""
+for file in \
+	"${lib_prefix}/libforms.so"* \
+	"${lib_prefix}/libformsGL.so"* \
+	"${lib_prefix}/libflimage.so"*
 do
-	lib_path="${lib_prefix}/${lib_name}"
-	ln -sf ${lib_path}.${so_version} ${lib_path}
-	ln -sf ${lib_path}.${so_version} ${lib_path}.${current_version}
+	test -L "${file}" || sofiles="${sofiles} ${file}"
 done
+#
+# 2. Create the links.
+#
+for file in ${sofiles}
+do
+	test -f "${file}" || continue
+	symlink=`echo "${file}" | sed 's/\(\.so\.[0-9]\).*/\1/'`
+	test "${file}" != "${symlink}" && ln -fs "${file}" "${symlink}"
+	symlink=`echo "${symlink}" | sed 's/\(\.so\).*/\1/'`
+	test "${file}" != "${symlink}" && ln -fs "${file}" "${symlink}"
+done
+#
 # Modify libforms.la et al. to prevent libtool from complaining
 # that the files have been moved.
+#
 test "${RPM_INSTALL_PREFIX}" = "/usr" && exit
 for la_name in libforms.la libformsGL.la libflimage.la
 do
@@ -80,19 +101,26 @@ do
 	echo "${tmp}" > ${la_path}
 done
 
+
 %postun -n %{name}
+#
 # Remove symbolic links libforms.so, libforms.so.1, etc
-so_version=`echo @SO_VERSION@ | sed 's/:/./g'`
-current_version=`echo ${so_version} | cut -d'.' -f1`
+#
 lib_prefix=${RPM_INSTALL_PREFIX}/lib
-for lib_name in libforms.so libformsGL.so libflimage.so
+for file in \
+	"${lib_prefix}/libforms.so"* \
+	"${lib_prefix}/libformsGL.so"* \
+	"${lib_prefix}/libflimage.so"*
 do
-	lib_path="${lib_prefix}/${lib_name}"
-	rm -f ${lib_path} ${lib_path}.${current_version}
+	test -L "${file}" && rm -f "${file}"
 done
 
 
 %changelog
+* Wed Oct 6 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
+- Re-write the 'post' and 'postun' scripts to create the
+  symbolic links correctly without requiring the SO_VERSION hack.
+
 * Fri May 7 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
 - add code to the 'post' script to modify libforms.la et al. to prevent
   libtool from complaining that the files have been moved.

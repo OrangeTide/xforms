@@ -1,3 +1,11 @@
+------------------------------------------
+V1.1 ???????????
+  o Reset the horizontal offset of a browser to zero if the
+    horizontal scrollbar is turned off (Bug #3205.)
+  o Add a fl_replace_xyplot_point_in_overlay function that generalizes
+    the existing fl_replace_xyplot_point.
+  o Add new accessor functions to query and modify the timeouts that
+    control the behaviour of the sloder and counter widgets.
   o Enable input widgets to (partially) display characters larger than
     the input height.
   o Repair double clicking on a file in the file selector.
