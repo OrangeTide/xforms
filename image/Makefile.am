@@ -1,7 +1,7 @@
 include $(top_srcdir)/config/common.am
 
 # forms.h is a generated file
-INCLUDES = -DMAKING_FORMS -I../lib -I$(top_srcdir)/lib
+INCLUDES = -DMAKING_FORMS -I../lib -I$(top_srcdir)/lib $(X_CFLAGS)
 
 include_HEADERS	= flimage.h
 

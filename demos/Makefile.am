@@ -98,7 +98,7 @@ noinst_PROGRAMS = arrowbutton \
 
 # Most of these demos link against libforms only. For them this default is
 # sufficient:
-AM_LDFLAGS = ../lib/libforms.la @X_LIBS@ @XPM_LIB@ -lX11 @LIBS@
+AM_LDFLAGS = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(XPM_LIB) -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 arrowbutton_SOURCES = arrowbutton.c
 borderwidth_SOURCES = borderwidth.c
@@ -140,27 +140,31 @@ group_SOURCES = group.c
 
 ibrowser_SOURCES = ibrowser.c
 ibrowser_LDADD  = ../image/libflimage.la ../lib/libforms.la \
-	@X_LIBS@ @JPEG_LIB@ @XPM_LIB@ -lX11 @LIBS@
+	$(X_LIBS) $(X_PRE_LIBS) $(JPEG_LIB) $(XPM_LIB) -lX11 $(LIBS) \
+	$(X_EXTRA_LIBS)
 
 iconify_SOURCES = iconify.c
 
 iconvert_SOURCES = iconvert.c
 iconvert_LDADD  = ../image/libflimage.la ../lib/libforms.la \
-	@X_LIBS@ @JPEG_LIB@ @XPM_LIB@ -lX11 @LIBS@
+	$(X_LIBS) $(X_PRE_LIBS) $(JPEG_LIB) $(XPM_LIB) -lX11 $(LIBS) \
+	$(X_EXTRA_LIBS)
 
 inputall_SOURCES = inputall.c
 invslider_SOURCES = invslider.c
 
 itest_SOURCES = itest.c
 itest_LDADD  = ../image/libflimage.la ../lib/libforms.la \
-	@X_LIBS@ @JPEG_LIB@ @XPM_LIB@ -lX11 @LIBS@
+	$(X_LIBS) $(X_PRE_LIBS) $(JPEG_LIB) $(XPM_LIB) -lX11 $(LIBS) \
+	$(X_EXTRA_LIBS)
 
 lalign_SOURCES = lalign.c
 ldial_SOURCES = ldial.c
 
 ll_SOURCES = ll.c
 ll_LDADD  = ../image/libflimage.la ../lib/libforms.la \
-	@X_LIBS@ @JPEG_LIB@ @XPM_LIB@ -lX11 @LIBS@
+	$(X_LIBS) $(X_PRE_LIBS) $(JPEG_LIB) $(XPM_LIB) -lX11 $(LIBS) \
+	$(X_EXTRA_LIBS)
 
 longlabel_SOURCES = longlabel.c
 menu_SOURCES = menu.c
@@ -200,7 +204,8 @@ xyplotall_SOURCES = xyplotall.c
 
 xyplotover_SOURCES = xyplotover.c
 xyplotover_LDADD  = ../image/libflimage.la ../lib/libforms.la \
-	@X_LIBS@ @JPEG_LIB@ @XPM_LIB@ -lX11 @LIBS@
+	$(X_LIBS) $(X_PRE_LIBS) $(JPEG_LIB) $(XPM_LIB) -lX11 $(LIBS) \
+	$(X_EXTRA_LIBS)
 
 yesno_SOURCES = yesno.c
 yesno_cb_SOURCES = yesno_cb.c

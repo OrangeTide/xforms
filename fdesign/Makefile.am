@@ -16,7 +16,7 @@ INCLUDES = -I../lib -I$(top_srcdir)/lib
 
 bin_PROGRAMS = fdesign
 
-fdesign_LDADD = ../lib/libforms.la @X_LIBS@ @XPM_LIB@ -lX11 @LIBS@
+fdesign_LDADD = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(XPM_LIB) -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 fdesign_SOURCES = \
 	fd_attribs.c \

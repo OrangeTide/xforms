@@ -1,3 +1,15 @@
+2003-11-13  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* config/common.am: do not set LIBS to an empty value
+
+	* image/Makefile.am (INCLUDES): 
+	* lib/Makefile.am (INCLUDES): honor X_CFLAGS
+
+	* demos/Makefile.am:
+	* fdesign/Makefile.am: 
+	* fd2ps/Makefile.am: use $(foo) form instead of @foo@ for
+	variables references. Honor X_LIBS, X_PRE_LIBS and X_EXTRA_LIBS.
+
 2003-09-10  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* Makefile.am: only build the gl/ directory if required

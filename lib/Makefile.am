@@ -13,7 +13,7 @@ man_MANS = xforms.5
 xforms.5:
 	cp -p $(srcdir)/xforms.man xforms.5
 
-INCLUDES = -DMAKING_FORMS
+INCLUDES = -DMAKING_FORMS $(X_CFLAGS)
 
 lib_LTLIBRARIES = libforms.la
 
