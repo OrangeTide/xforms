@@ -1,3 +1,12 @@
+2003-05-23  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/forms.c (fl_keyboard): pass it the event to allow it to
+	distinguish between KeyPress and KeyRelease events.
+	(dispatch_key): new function, factored out of do_keyboard.
+	(do_keyboard): Handles KeyRelease events correctly. The KeyPress keysym
+	is stored and then dispatched on KeyRelease also, since
+	XmbLookupString is undefined on a KeyRelease event.
+
 2003-09-05  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* lib/version.c (fl_print_version): remove workaround for XENIX
