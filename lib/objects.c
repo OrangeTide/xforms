@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: objects.c,v 1.2 2003/04/08 22:06:08 leeming Exp $
+ * $Id: objects.c,v 1.3 2003/04/09 09:22:41 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.2 2003/04/08 22:06:08 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.3 2003/04/09 09:22:41 leeming Exp $";
 #endif
 
 #include <string.h>
@@ -1443,7 +1443,7 @@ void tooltip_handler(int ID, void *data)
 }
 
 static
-void hide_tooltip(FL_OBJECT * obj, XEvent * xev)
+void checked_hide_tooltip(FL_OBJECT * obj, XEvent * xev)
 {
     FL_OBJECT * const parent = get_parent(obj);
     char const * const tooltip = parent->tooltip;
@@ -1466,6 +1466,17 @@ void hide_tooltip(FL_OBJECT * obj, XEvent * xev)
 		parent->tipID = 0;
 	    }
 	}
+    }
+}
+
+static
+void unconditional_hide_tooltip(FL_OBJECT * obj)
+{
+    FL_OBJECT * const parent = get_parent(obj);
+    fl_hide_tooltip();
+    if (parent->tipID) {
+	fl_remove_timeout(parent->tipID);
+	parent->tipID = 0;
     }
 }
 
@@ -1516,15 +1527,15 @@ fl_handle_it(FL_OBJECT * obj, int event, FL_Coord mx, FL_Coord my, int key,
 	break;
     }
     case FL_LEAVE:
-	hide_tooltip(obj, xev);
+	checked_hide_tooltip(obj, xev);
 	obj->belowmouse = 0;
 	break;
     case FL_PUSH:
-	hide_tooltip(obj, xev);
+	unconditional_hide_tooltip(obj);
 	obj->pushed = 1;
 	break;
     case FL_KEYPRESS:
-	hide_tooltip(obj, xev);
+	unconditional_hide_tooltip(obj);
 	break;
     case FL_RELEASE:
 	if (!obj->radio)

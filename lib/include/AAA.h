@@ -22,8 +22,8 @@
  */
 
 /*
- *  forms.h   $Revision: 1.1 $ $State: Exp $
- *            $Date: 2003/04/06 15:52:40 $ $Author: leeming $
+ *  forms.h   $Revision: 1.2 $ $State: Exp $
+ *            $Date: 2003/04/09 09:22:41 $ $Author: leeming $
  *
  *. All XForms files as distributed in this package are
  *  Copyright(c) 1996-2002 by T.C. Zhao and Mark Overmars,
@@ -57,7 +57,7 @@
 
 #define FL_VERSION             1
 #define FL_REVISION            0
-#define FL_FIXLEVEL            0
+#define FL_FIXLEVEL            1
 #define FL_INCLUDE_VERSION    (FL_VERSION * 1000 + FL_REVISION)
 
 #include <stdio.h>

@@ -28,3 +28,12 @@
 	(fl_handle_it): make use of these new functions to show and hide
 	tooltips.
 
+2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/objects.c (hide_tooltip): renamed as checked_hide_tooltip.
+	(unconditional_hide_tooltip): new static helper function,
+	invoked within fl_handle_it on FL_KEYPRESS and FL_PUSH events.
+
+	* lib/include/AAA.h: up-ed FL_FIXLEVEL to 1 to reflect the changes
+	made above.
+	* lib/forms.h: regenerated to reflect changed FL_FIXLEVEL.

@@ -20,8 +20,8 @@
  */
 
 /*
- *  forms.h   $Revision: 1.1 $ $State: Exp $
- *            $Date: 2003/04/06 15:52:39 $ $Author: leeming $
+ *  forms.h   $Revision: 1.2 $ $State: Exp $
+ *            $Date: 2003/04/09 09:22:41 $ $Author: leeming $
  *
  *. All XForms files as distributed in this package are
  *  Copyright(c) 1996-2002 by T.C. Zhao and Mark Overmars,
@@ -55,7 +55,7 @@
 
 #define FL_VERSION             1
 #define FL_REVISION            0
-#define FL_FIXLEVEL            0
+#define FL_FIXLEVEL            1
 #define FL_INCLUDE_VERSION    (FL_VERSION * 1000 + FL_REVISION)
 
 #include <stdio.h>
@@ -84,7 +84,7 @@ extern "C"
 #endif				/* FL_WIN32 */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *  Basic definitions and limits.
  *  Window system independent prototypes
@@ -1750,7 +1750,7 @@ typedef const char *(*FL_VAL_FILTER) (FL_OBJECT *, double, int);
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *  X Window dependent stuff
  *
@@ -2803,7 +2803,7 @@ typedef struct
 #endif 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *   Object Class: Bitmap
  */
@@ -2959,7 +2959,7 @@ FL_EXPORT Pixmap fl_create_from_pixmapdata(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_BOX_H
@@ -2992,7 +2992,7 @@ FL_EXPORT FL_OBJECT *fl_add_box(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *  Object class Browser
  */
@@ -3234,7 +3234,7 @@ FL_EXPORT FL_BROWSER_SCROLL_CALLBACK fl_get_browser_vscroll_callback(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  * All Buttons: regular button, light button and round button
  *
@@ -3605,7 +3605,7 @@ FL_EXPORT void fl_add_button_class(
 #endif 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  * Header for FL_CANVAS
  *
@@ -3764,7 +3764,7 @@ FL_EXPORT void fl_canvas_yield_to_shortcut(
 /****FL_CANVAS_H ******/
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  * Object Class: Chart
  *
@@ -3892,7 +3892,7 @@ FL_EXPORT void fl_set_chart_baseline(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_CHOICE_H
@@ -4032,7 +4032,7 @@ FL_EXPORT int fl_set_choice_notitle(
 #endif 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  * prototypes for clipboard stuff
  *
@@ -4069,7 +4069,7 @@ FL_EXPORT int fl_request_clipboard(
 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_CLOCK_H
@@ -4129,7 +4129,7 @@ FL_EXPORT void fl_set_clock_ampm(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 
@@ -4228,7 +4228,7 @@ FL_EXPORT void fl_set_counter_filter(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  * Cursor defs and prototypes
  *
@@ -4290,7 +4290,7 @@ FL_EXPORT Cursor fl_get_cursor_byname(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  */
 #ifndef FL_DIAL_H
 #define FL_DIAL_H
@@ -4395,7 +4395,7 @@ FL_EXPORT void fl_set_dial_direction(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *  Convenience functions to read a directory
  */
@@ -4486,7 +4486,7 @@ FL_EXPORT char *fl_fix_dirname(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  */
 
 #ifndef FLPS_H
@@ -4541,7 +4541,7 @@ FL_EXPORT int fl_object_ps_dump(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_FORMBROWSER_H
@@ -4687,7 +4687,7 @@ FL_EXPORT FL_FORM *fl_get_formbrowser_form(
 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 
@@ -4756,7 +4756,7 @@ FL_EXPORT FL_OBJECT *fl_add_labelframe(
 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *  Object Class: Free
  */
@@ -4799,7 +4799,7 @@ FL_EXPORT FL_OBJECT *fl_add_free(
 #endif /* !def FREE_H } */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  */
 #ifndef FL_GOODIES_H
 #define FL_GOODIES_H		/* { */
@@ -5174,7 +5174,7 @@ FL_EXPORT int fl_goodies_atclose(
 #endif /* } */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_INPUT_H
@@ -5414,7 +5414,7 @@ FL_EXPORT void fl_set_input_editkeymap(
 #endif /* Input_H  } */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_MENU_H
@@ -5550,7 +5550,7 @@ FL_EXPORT int fl_set_menu_entries(
 #endif /* MENU } */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_MENUBAR_H
@@ -5591,7 +5591,7 @@ FL_EXPORT void fl_set_menubar_entries(FL_OBJECT *, const char *, FL_PUP_ENTRY *)
 #endif /* MENUBAR } */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *  Prototypes for pop-up menus
  */
@@ -5792,7 +5792,7 @@ FL_EXPORT void fl_setpup_submenu(
 #endif /* Xpopup } */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_POSITIONER_H
@@ -5993,7 +5993,7 @@ FL_EXPORT void fl_set_scrollbar_step(
 #endif   /* SCROLLBAR */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  * Object Class: Slider
  *
@@ -6143,7 +6143,7 @@ FL_EXPORT void fl_set_slider_filter(
 #endif 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_FOLDER_H
@@ -6299,7 +6299,7 @@ FL_EXPORT int fl_set_tabfolder_offset(
 #endif 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_TEXT_H
@@ -6340,7 +6340,7 @@ FL_EXPORT FL_OBJECT *fl_add_text(
 
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  */
 
 #ifndef FL_THUMBWHEEL_H
@@ -6426,7 +6426,7 @@ FL_EXPORT FL_OBJECT *fl_add_thumbwheel(
 #endif    /* THUMBWHEEL_H */
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  *  Object Class: Timer
  *
@@ -6512,7 +6512,7 @@ FL_EXPORT void fl_resume_timer(
 #endif
 
 /*
- * $Id: forms.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: forms.h,v 1.2 2003/04/09 09:22:41 leeming Exp $
  *
  */
 #ifndef FL_XYPLOT_H_
