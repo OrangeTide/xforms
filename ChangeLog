@@ -1,3 +1,8 @@
+2003-12-02  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* demos/Makefile.am: enable 'make -j2' to work on a
+	multi-processor machine.
+
 2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* Makefile.am: re-add xforms.spec to EXTRA_DIST. It is needed as well

@@ -8,7 +8,7 @@ EXTRA_DIST = 01Readme iconvert.1 demo.menu test.ps \
 SUBDIRS = fd
 
 # forms.h is a generated file
-INCLUDES = -I../lib -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/image
+INCLUDES = -I../lib -I../lib/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/image
 
 if BUILD_GL
 GL = gl glwin
@@ -113,11 +113,11 @@ browserop_SOURCES = browserop.c
 
 buttonall_SOURCES = buttonall.c
 nodist_buttonall_SOURCES = fd/buttons_gui.c fd/buttons_gui.h
-buttonall.$(OBJEXT): $(nodist_buttonall_SOURCES)
+buttonall.$(OBJEXT): fd/buttons_gui.c
 
 butttypes_SOURCES = butttypes.c
 nodist_butttypes_SOURCES = fd/butttypes_gui.c fd/butttypes_gui.h
-butttypes.$(OBJEXT): $(nodist_butttypes_SOURCES)
+butttypes.$(OBJEXT): fd/butttypes_gui.c
 
 canvas_SOURCES = canvas.c
 chartall_SOURCES = chartall.c
@@ -136,14 +136,14 @@ demo33_SOURCES = demo33.c
 
 demotest_SOURCES = demotest.c
 nodist_demotest_SOURCES = fd/folder_gui.c fd/folder_gui.h
-demotest.$(OBJEXT): $(nodist_demotest_SOURCES)
+demotest.$(OBJEXT): fd/folder_gui.c
 
 demotest2_SOURCES = demotest2.c
 demotest3_SOURCES = demotest3.c
 
 dirlist_SOURCES = dirlist.c
 nodist_dirlist_SOURCES = fd/fbtest_gui.c fd/fbtest_gui.h
-dirlist.$(OBJEXT): $(nodist_dirlist_SOURCES)
+dirlist.$(OBJEXT): fd/fbtest_gui.c
 
 fbrowse_SOURCES = fbrowse.c
 fbrowse1_SOURCES = fbrowse1.c
@@ -152,13 +152,13 @@ flclock_SOURCES = flclock.c
 
 folder_SOURCES = folder.c
 nodist_folder_SOURCES = fd/folder_gui.c fd/folder_gui.h
-folder.$(OBJEXT): $(nodist_folder_SOURCES)
+folder.$(OBJEXT): fd/folder_gui.c
 
 fonts_SOURCES = fonts.c
 
 formbrowser_SOURCES = formbrowser.c
 nodist_formbrowser_SOURCES = fd/formbrowser_gui.c fd/formbrowser_gui.h
-formbrowser.$(OBJEXT): $(nodist_formbrowser_SOURCES)
+formbrowser.$(OBJEXT): fd/formbrowser_gui.c
 
 free1_SOURCES = free1.c
 freedraw_SOURCES = freedraw.c
@@ -190,7 +190,7 @@ iconvert_LDADD  = ../image/libflimage.la ../lib/libforms.la \
 
 inputall_SOURCES = inputall.c
 nodist_inputall_SOURCES = fd/inputall_gui.c fd/inputall_gui.h
-inputall.$(OBJEXT): $(nodist_inputall_SOURCES)
+inputall.$(OBJEXT): fd/inputall_gui.c
 
 invslider_SOURCES = invslider.c
 
@@ -223,7 +223,7 @@ objreturn_SOURCES = objreturn.c
 
 pmbrowse_SOURCES = pmbrowse.c
 nodist_pmbrowse_SOURCES = fd/pmbrowse_gui.c fd/pmbrowse_gui.h
-pmbrowse.$(OBJEXT): $(nodist_pmbrowse_SOURCES)
+pmbrowse.$(OBJEXT): fd/pmbrowse_gui.c
 
 popup_SOURCES = popup.c
 positioner_SOURCES = positioner.c
@@ -236,7 +236,7 @@ rescale_SOURCES = rescale.c
 
 scrollbar_SOURCES = scrollbar.c
 nodist_scrollbar_SOURCES = fd/scrollbar_gui.c fd/scrollbar_gui.h
-scrollbar.$(OBJEXT): $(nodist_scrollbar_SOURCES)
+scrollbar.$(OBJEXT): fd/scrollbar_gui.c
 
 secretinput_SOURCES = secretinput.c
 sld_radio_SOURCES = sld_radio.c
@@ -248,7 +248,7 @@ symbols_SOURCES = symbols.c
 
 thumbwheel_SOURCES = thumbwheel.c
 nodist_thumbwheel_SOURCES = fd/twheel_gui.c fd/twheel_gui.h
-thumbwheel.$(OBJEXT): $(nodist_thumbwheel_SOURCES)
+thumbwheel.$(OBJEXT): fd/twheel_gui.c
 
 timer_SOURCES = timer.c
 timerprec_SOURCES = timerprec.c
