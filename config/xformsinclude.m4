@@ -1,5 +1,5 @@
-dnl Some useful functions for xformss configure.in                 -*- sh -*-
-dnl Author: Jean-Marc Lasgouttes (Jean-Marc.Lasgouttes@inria.fr)
+dnl Some useful functions for xforms configure.in                 -*- sh -*-
+dnl Author: Jean-Marc Lasgouttes (lasgouttes@lyx.org)
 dnl         Lars Gullik Bjønnes (larsbj@lyx.org)
 dnl         Allan Rae (rae@lyx.org)
 
@@ -7,11 +7,10 @@ dnl         Allan Rae (rae@lyx.org)
 dnl Usage XFORMS_SET_VERSION(Version, Revision, Fixlevel)
 dnl Sets variables VERSION, FL_VERSION, FL_REVISION, FL_FIXLEVEL.
 AC_DEFUN(XFORMS_SET_VERSION,[
-VERSION="$1.$2.$3"
 AC_SUBST(FL_VERSION, $1)
 AC_SUBST(FL_REVISION, $2)
 AC_SUBST(FL_FIXLEVEL, $3)
-AC_SUBST(VERSION, $VERSION)
+AC_SUBST(VERSION, $1.$2.$3)
 ])
 
 dnl Usage XFORMS_CHECK_VERSION   Displays version of xforms being built and

@@ -1,8 +1,7 @@
 include $(top_srcdir)/config/common.am
 
-include_HEADERS = forms.h
+nodist_include_HEADERS = forms.h
 CLEANFILES = forms.h AAA.h stamp-forms
-BUILT_SOURCES = forms.h AAA.h
 
 noinst_HEADERS = \
 	Basic.h \

@@ -1,3 +1,14 @@
+2003-05-22  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* lib/include/Makefile.am: make sure that forms.h is not distributed
+
+2003-05-21  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* configure.ac: do not set VERSION explicitely, this is done in
+	XFORMS_SET_VERSION.
+
+	* config/xformsinclude.m4 (XFORMS_SET_VERSION): simplify a tiny bit
+
 2003-05-22  Rouben Rostamian  <rostamian@umbc.edu>
 
 	* image/rgb_db.c (fl_lookup_RGBcolor): this function fell off the
