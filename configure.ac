@@ -74,41 +74,32 @@ XFORMS_LOOP_DIR($xforms_cv_extra_prefix,[
 XFORMS_ADD_INC_DIR(CPPFLAGS,$dir/include)
   XFORMS_ADD_LIB_DIR(LDFLAGS,$dir/lib)])
 
-# Check for X
-AC_PATH_XTRA
+# Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST  dnl used
+AC_TYPE_PID_T
+AC_TYPE_SIZE_T
 
 # Checks for libraries.
 dnl by testing these we check if it is ok to have
 dnl -lc and -lm as args to the compiler
 AC_CHECK_LIB(m, sin)
 AC_CHECK_LIB(c, fopen)
-XFORMS_CHECK_LIB_JPEG
 
 # Checks for header files.
-XFORMS_PATH_XPM
-AC_HEADER_DIRENT
-AC_HEADER_STDC
-AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([fcntl.h float.h limits.h locale.h malloc.h memory.h stdlib.h string.h sys/select.h sys/time.h sys/timeb.h sys/types.h unistd.h, GL/glx.h])
+dnl we should do something clever when GL is not installed
+AC_CHECK_HEADERS([sys/select.h GL/glx.h])
 
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STAT
-AC_C_CONST  dnl used
-AC_TYPE_PID_T
-AC_TYPE_SIZE_T
-AC_HEADER_TIME
-AC_STRUCT_TM
+dnl we have some code in lib/listdir.c that could use that...
+dnl AC_HEADER_DIRENT
+
+# Check for X, XPM and JPEG
+AC_PATH_XTRA
+XFORMS_PATH_XPM
+XFORMS_CHECK_LIB_JPEG
 
 # Checks for library functions.
-AC_FUNC_FORK
-AC_FUNC_MALLOC
 AC_TYPE_SIGNAL dnl used
-AC_FUNC_STAT
-AC_FUNC_STRTOD
-AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([usleep dup2 endpwent floor ftime getcwd gethostname gettimeofday getwd memmove memset modf pow putenv select setlocale strcasecmp strchr strdup strerror strrchr strstr strtol])
-
-AC_CHECK_FUNCS(snprintf vsnprintf)
+AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep vsnprintf])
 XFORMS_CHECK_DECL(snprintf, stdio.h)
 XFORMS_CHECK_DECL(vsnprintf, stdio.h)
 

@@ -46,7 +46,7 @@
 #include <sys/time.h>
 #endif
 
-#if defined(_AIX)
+#ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
 

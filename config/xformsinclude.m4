@@ -30,12 +30,9 @@ esac])
 dnl Usage XFORMS_CHECK_LIB_JPEG: Checks for jpeg library
 AC_DEFUN(XFORMS_CHECK_LIB_JPEG,[
 ### Check for Jpeg library
-SAVE_LIBS="$LIBS"
-LIBS="$X_PRE_LIBS $LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
 AC_CHECK_LIB(jpeg, jpeg_CreateDecompress, JPEG_LIB="-ljpeg",
 	[XFORMS_LIB_ERROR(libjpeg,jpeg)])
 AC_SUBST(JPEG_LIB)
-LIBS="$SAVE_LIBS"
 ])
 
 dnl Usage XFORMS_PATH_XPM: Checks for xpm library and header

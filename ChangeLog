@@ -1,5 +1,16 @@
 2003-09-09  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
+	* config/xformsinclude.m4 (XFORMS_CHECK_LIB_JPEG): no need to link
+	against the X11 libs...
+
+	* configure.ac: remove lots of checks for headers and functions.
+	We only keep the ones that were already tested for in the old
+	source (although we do not know whether they are still useful).
+
+	* lib/asyn_io.c: use HAVE_SYS_SELECT_H
+
+2003-09-09  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
 	* Makefile.am: only build demos/ directory if required
 
 	* configure.ac: add --enable-demos option
