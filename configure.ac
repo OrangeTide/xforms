@@ -172,14 +172,14 @@ AC_CONFIG_FILES([Makefile \
        lib/private/Makefile \
        image/Makefile
        gl/Makefile \
-       fd2ps/Makefile \
-       fd2ps/test/Makefile \
        fdesign/Makefile \
        fdesign/fd/Makefile \
        fdesign/fd4test/Makefile \
        fdesign/notes/Makefile \
        fdesign/spec/Makefile \
        fdesign/xpm/Makefile \
+       fd2ps/Makefile \
+       fd2ps/test/Makefile \
        demos/Makefile \
        demos/fd/Makefile
 ])
