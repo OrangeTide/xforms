@@ -1,3 +1,8 @@
+2004-07-28  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/forms.c (fl_prepare_form_window): correct typo in
+	error message.
+
 2004-06-04  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/fonts.c (fl_try_get_font_struct): change an error message to

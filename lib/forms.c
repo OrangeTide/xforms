@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.12 2004/05/18 13:57:42 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.13 2004/07/28 15:58:28 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -567,7 +567,7 @@ fl_prepare_form_window(FL_FORM * form, int place, int border, const char *name)
 
     if (fl_current_form)
     {
-	M_err(0, "You forget to call fl_end_form %s", name ? name : "");
+	M_err(0, "You forgot to call fl_end_form %s", name ? name : "");
 	fl_current_form = 0;
     }
 
