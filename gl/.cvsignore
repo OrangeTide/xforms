@@ -1,5 +1,6 @@
 libformsGL*
-Makefile*
+Makefile
+Makefile.in
 unshared
 .deps
 .libs

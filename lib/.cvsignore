@@ -1,6 +1,8 @@
 libforms*
-Makefile*
+Makefile
+Makefile.in
 unshared
 .deps
 .libs
 *.lo
+xforms.5

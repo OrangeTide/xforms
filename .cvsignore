@@ -1,6 +1,7 @@
-Makefile*
+Makefile
+Makefile.in
 config.*
 configure
-configure.ac
 libtool
 autom4te*
+xforms.spec
