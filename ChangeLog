@@ -1,3 +1,12 @@
+2004-05-14  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/include/canvas.h: add a preprocessor-qualified #include
+	of glcanvas.h. The user must inititalise the GLCANVAS_H_LOCATION
+	appropriately.
+
+	This is a means to maintain some sort of backwards compatibility
+	without the old, hacky code.
+
 2004-05-13  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* image/Makefile.am (libflimage_la_LDFLAGS): 
