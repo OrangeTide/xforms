@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.6 2003/11/27 10:29:47 leeming Exp $
+ * $Id: image_gif.c,v 1.7 2003/11/27 12:24:17 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -586,9 +586,10 @@ GIF_load(FL_IMAGE * im)
 #define MC_SIZE      4097
 
 /* if we've got more than one scanline, output */
-static void flush_buffer(FL_IMAGE * im, int incode)
+static void flush_buffer(FL_IMAGE * im)
 {
     int i;
+    int incode;
 
     incode = lbuf - lhead;
     if (incode >= im->w)
@@ -669,7 +670,7 @@ process_lzw_code(FL_IMAGE * im, register int code)
 	 * it crashed...
 	 * So flush the buffer before it overuns.
 	 */
-	flush_buffer(im, incode);
+	flush_buffer(im);
 	return 0;
     }
 
@@ -709,7 +710,7 @@ process_lzw_code(FL_IMAGE * im, register int code)
     while (stackp > stack);
 
     /* if we've got more than one scanline, output */
-    flush_buffer(im, incode);
+    flush_buffer(im);
     return 0;
 }
 

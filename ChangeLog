@@ -1,3 +1,8 @@
+2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* image/image_gif.c (flush_buffer): do not pass 'incode'. Instead use
+	a local variable.
+
 2003-11-26  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* fdesign/fd_forms.c (save_forms): do not try to remove twice ".fd"
