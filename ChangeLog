@@ -1,3 +1,13 @@
+2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/include/canvas.h: cruft removal. Don't mention glcanvas.h
+	here in case the user does not want GL support.
+
+	* lib/include/forms.h
+	* lib/forms.h: regenerated.
+
+	* gl/glcanvas.c: include glcanvas.h as this is no longer in forms.h
+
 2003-04-16  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	Remove the SNP directory and replace it with a single file,

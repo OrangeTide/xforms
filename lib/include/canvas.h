@@ -173,9 +173,5 @@ FL_EXPORT void fl_canvas_yield_to_shortcut(
 		int yes
 		);
 
-#if defined(__GLX_glx_h__) || defined(GLX_H)
-#include <X11/glcanvas.h>
-#endif
-
 #endif
 /****FL_CANVAS_H ******/
