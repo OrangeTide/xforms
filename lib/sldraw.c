@@ -31,9 +31,12 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_sldr = "$Id: sldraw.c,v 1.4 2003/04/17 11:48:17 leeming Exp $";
+char *fl_id_sldr = "$Id: sldraw.c,v 1.5 2003/04/22 10:06:59 leeming Exp $";
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 #include "private/pslider.h"		/* for FL_MINKNOB */

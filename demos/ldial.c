@@ -23,6 +23,9 @@
 /* This is an example of the use of dials.
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdio.h>
 #include "forms.h"
 

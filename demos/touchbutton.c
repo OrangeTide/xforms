@@ -23,6 +23,9 @@
 /* This demo shows the use of a touch buttons.
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdio.h>
 #include "forms.h"
 

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_scale.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: image_scale.c,v 1.2 2003/04/22 10:06:57 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *   Copyright (c) 1993, 1998-2002  T.C. Zhao
@@ -31,6 +31,9 @@
  *  Scale an image with or without subpixel sampling.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flimage.h"
 #include "flimage_int.h"

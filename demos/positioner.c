@@ -22,6 +22,9 @@
 
 /* This demo shows the use of a positioner.  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdio.h>
 #include "forms.h"
 

@@ -28,6 +28,9 @@
  *  M. Overmars and T.C. Zhao  (1997) 
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 
 static int border = FL_TRANSIENT;

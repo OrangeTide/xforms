@@ -25,6 +25,9 @@
    forms in an even easier way.
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include "forms.h"

@@ -24,6 +24,9 @@
  * note there is only one fl_do_form().
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdlib.h>
 #include "forms.h"
 

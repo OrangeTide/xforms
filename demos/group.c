@@ -26,6 +26,9 @@
  * T.C. Zhao and M. Overmars
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "porsche.xpm"
 #include "nomail.xbm"

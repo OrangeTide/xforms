@@ -27,6 +27,9 @@ show the use of setting object colors and call-back routines.
 
 ************/
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdio.h>
 #include "forms.h"
 

@@ -20,6 +20,9 @@
  */
 
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include <stdlib.h>
 #include "fd/formbrowser_gui.h"

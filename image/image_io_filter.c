@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_io_filter.c,v 1.3 2003/04/17 13:12:47 leeming Exp $
+ * $Id: image_io_filter.c,v 1.4 2003/04/22 10:06:57 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -34,6 +34,9 @@
  *  TODO: add signal handling to make sure the temp files are deleted.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flimage.h"
 #include "flimage_int.h"

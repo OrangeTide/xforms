@@ -32,6 +32,9 @@
  *   TODO: move slider and counter handler here
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 #include "private/pvaluator.h"

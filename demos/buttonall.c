@@ -27,6 +27,9 @@
  *  T.C. Zhao and M. Overmars (1997)
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "fd/buttons_gui.h"   /* from fd/ directory */
 #include <stdlib.h>

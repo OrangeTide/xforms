@@ -22,6 +22,9 @@
 
 /* Form definition file generated with fdesign. */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include <stdlib.h>
 #include "viewforms.h"

@@ -35,6 +35,9 @@
  *  X event handling better.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdio.h>
 #include "forms.h"
 #include "fd_main.h"

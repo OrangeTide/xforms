@@ -34,6 +34,9 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdlib.h>
 #include "forms.h"
 #include "flimage.h"
@@ -41,7 +44,7 @@
 static void initialize(void);
 static void usage(const char *, int);
 static int  parse_command_line(int *, char **);
-static char *version="$Id: iconvert.c,v 1.1 2003/04/06 15:52:38 leeming Exp $";
+static char *version="$Id: iconvert.c,v 1.2 2003/04/22 10:06:57 leeming Exp $";
 
 int
 main(int argc, char *argv[])

@@ -31,6 +31,9 @@
  * Temprary hack to get composite (sort of) object support in
  *
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 

@@ -21,13 +21,16 @@
 
 
 /*
- *  $Id: rgb_db.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ *  $Id: rgb_db.c,v 1.2 2003/04/22 10:06:57 leeming Exp $
  *
  *  Copyright (c) 1999-2002 T.C. Zhao
  *
  *  search the rgb.txt database for a specific color
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flimage.h"
 #include "flimage_int.h"

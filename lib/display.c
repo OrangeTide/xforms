@@ -26,6 +26,9 @@
  * We need this so files that reference fl_display don't
  * have to pull other files in.
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 #include <X11/Xlib.h>

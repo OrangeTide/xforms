@@ -28,6 +28,9 @@
  *   The GUI (fdui) is placed in image->app_data;
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flimage.h"
 #include "fd/ibrowser_gui.h"   /* from fd/ directory */

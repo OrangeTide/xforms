@@ -31,6 +31,9 @@
  *  create and initialize all control panels
  *
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "fd_main.h"
 #include "flinternal.h"
 #include "fd/ui_attrib.h"		/* from  directory fd */

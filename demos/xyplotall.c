@@ -21,6 +21,9 @@
 
 
 /* test screen/world conversion in addition to showing the xyplot styles */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include <stdlib.h>
 

@@ -27,6 +27,9 @@
  *  M. Overmars and T.C. Zhao   (1997)
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <math.h>
 #include "forms.h"
 

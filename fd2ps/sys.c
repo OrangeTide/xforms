@@ -25,6 +25,9 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "fd2ps.h"
 #include <string.h>
 #include <time.h>

@@ -33,6 +33,9 @@
  *   scrollbar redrawing can be further optimized.
  *
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 #include "private/ptextbox.h"

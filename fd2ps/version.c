@@ -31,6 +31,9 @@
  *
  * version information
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,7 +42,7 @@
 static char *version[] =
 {
     "fd2ps",
-    "$State: Exp $ $Revision: 1.2 $ of $Date: 2003/04/10 20:46:36 $",
+    "$State: Exp $ $Revision: 1.3 $ of $Date: 2003/04/22 10:06:57 $",
     "Copyright (c) 1997-2000 by T.C. Zhao",
     0
 };

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_rotate.c,v 1.2 2003/04/08 21:05:25 leeming Exp $
+ * $Id: image_rotate.c,v 1.3 2003/04/22 10:06:57 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -32,6 +32,9 @@
  *      Image rotation
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flimage.h"
 #include "flimage_int.h"

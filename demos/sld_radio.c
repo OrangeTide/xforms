@@ -22,6 +22,9 @@
 
 /* This demo shows the use of a slider as radio object */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 
 int

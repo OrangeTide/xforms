@@ -32,6 +32,9 @@
  * Not very robust as signals are not handled.
  *
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 #include "fd/cmdbr.h"

@@ -27,6 +27,9 @@
  *  T.C. Zhao (Nov., 1999)
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flimage.h"
 #include "fd/is_gui.h"

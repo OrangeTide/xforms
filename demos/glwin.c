@@ -27,6 +27,9 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "GL/glx.h"
 #include "GL/gl.h"
 #include "forms.h"

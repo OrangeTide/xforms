@@ -27,6 +27,9 @@
  * changed stub button to crossbutton
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "crossbut.h"
 #include <stdlib.h>

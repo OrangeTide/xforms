@@ -33,6 +33,9 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "GL/gl.h"
 #include "GL/glx.h"
 #include "forms.h"

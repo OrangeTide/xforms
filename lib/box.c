@@ -30,9 +30,12 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_box = "$Id: box.c,v 1.3 2003/04/15 19:14:16 leeming Exp $";
+char *fl_id_box = "$Id: box.c,v 1.4 2003/04/22 10:06:57 leeming Exp $";
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 

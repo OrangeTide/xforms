@@ -35,6 +35,9 @@
  *
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -114,7 +117,7 @@ char mainhelp[][80] =
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.3 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@c$Revision: 1.4 $" LIBVERSION(FL_VERSION, FL_REVISION),
     "@C4@c@bWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",

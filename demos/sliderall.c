@@ -22,6 +22,9 @@
 
 /* This demo shows the different types of sliders */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 
 FL_FORM *form;

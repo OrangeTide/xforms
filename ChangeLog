@@ -1,7 +1,15 @@
 2003-04-22  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* */*.c: ensure that config.h is #included if the HAVE_CONFIG_H
+	preprocessor variable is set.
+
+2003-04-22  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/include/zzz.h: remove the #include "flinternal.h" line whose
 	inclusion depends on the MAKING_FORMS preprocessor variable.
+
+	* lib/forms.h:
+        * lib/include/forms.h: regenerated.
 
 2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
 

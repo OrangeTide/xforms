@@ -34,6 +34,9 @@
  *  Only permit a specific signal to have one handler
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "flinternal.h"
 #include <stdlib.h>

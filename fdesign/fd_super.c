@@ -31,6 +31,9 @@
  *
  * translation between superspec and spec
  */
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"

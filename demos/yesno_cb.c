@@ -24,6 +24,9 @@
  * same functionality as yesno.c, but with callbacks.
  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 #include <stdlib.h>
 #include "forms.h"
 
