@@ -1,17 +1,14 @@
-2003-04-08  Angus Leeming  <angus.leeming@btopenworld.com>
+2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
 
-	* image/image_rotate.c (flimage_rotate): enable the rotation of
-	grayscale images by 90degree multiples and more generally prevent
-	other unsupported image types from crashing xforms.
+	* lib/objects.c (hide_tooltip): renamed as checked_hide_tooltip.
+	(unconditional_hide_tooltip): new static helper function,
+	invoked within fl_handle_it on FL_KEYPRESS and FL_PUSH events.
 
-	* lib/flresource.c (fl_initialize): clean-up properly if we fail to
-	create input contexts or methods.
+	* lib/include/AAA.h: up-ed FL_FIXLEVEL to 1 to reflect the changes
+	made above.
+	* lib/forms.h: regenerated to reflect changed FL_FIXLEVEL.
 
-	* lib/textbox.c (handle_textbox):
-	* lib/thumbwheel.c (handle):
-	* lib/util.c (flevent): FL_KEYBOARD has been replaced by FL_KEYPRESS.
-	The former is retained for compatability, but the latter should be
-	used internally.
+	* version.c (version): update to reflect this also.
 
 2003-04-08  Angus Leeming  <angus.leeming@btopenworld.com>
 
@@ -28,14 +25,17 @@
 	(fl_handle_it): make use of these new functions to show and hide
 	tooltips.
 
-2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
+2003-04-08  Angus Leeming  <angus.leeming@btopenworld.com>
 
-	* lib/objects.c (hide_tooltip): renamed as checked_hide_tooltip.
-	(unconditional_hide_tooltip): new static helper function,
-	invoked within fl_handle_it on FL_KEYPRESS and FL_PUSH events.
+	* image/image_rotate.c (flimage_rotate): enable the rotation of
+	grayscale images by 90degree multiples and more generally prevent
+	other unsupported image types from crashing xforms.
 
-	* lib/include/AAA.h: up-ed FL_FIXLEVEL to 1 to reflect the changes
-	made above.
-	* lib/forms.h: regenerated to reflect changed FL_FIXLEVEL.
+	* lib/flresource.c (fl_initialize): clean-up properly if we fail to
+	create input contexts or methods.
 
-	* version.c (version): update to reflect this also.
+	* lib/textbox.c (handle_textbox):
+	* lib/thumbwheel.c (handle):
+	* lib/util.c (flevent): FL_KEYBOARD has been replaced by FL_KEYPRESS.
+	The former is retained for compatability, but the latter should be
+	used internally.
