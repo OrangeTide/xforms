@@ -167,6 +167,18 @@ FL_EXPORT void fl_set_slider_filter(
 		FL_VAL_FILTER filter
 		);
 
+/** Functions to set and get the timeout value used by the
+    slider code to increment the position of the knob.
+ */
+FL_EXPORT int fl_get_slider_repeat(
+		FL_OBJECT *ob
+		);
+
+FL_EXPORT void fl_set_slider_repeat(
+		FL_OBJECT *ob,
+		int millisec
+		);
+
 
 
 #endif

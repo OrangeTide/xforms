@@ -1,3 +1,19 @@
+2004-05-07  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/private/pvaluator.h (repeat_ms, timeout_id, mouse_pos):
+	new variables.
+	* lib/include/slider.[ch] (fl_[sg]et_slider_repeat):
+	* lib/include/counter.[ch] (fl_[sg]et_counter_repeat):
+	new accessor functions, enabling the user to query and modify the
+	timeout used to control the behaviour of these widgets when the
+	mouse is kept pressed down.
+
+	* lib/include/slider.[ch] (handle_mouse):
+	* lib/include/counter.[ch] (handle_mouse): use a timeout to
+	control the rate at which the slider/counter is incremented.
+	Replaces the current strategy which used a simple counter loop and
+	which has become unusable with today's fast processors.
+
 2004-05-06  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* configure.ac (SO_VERSION): new variable defining the libtool

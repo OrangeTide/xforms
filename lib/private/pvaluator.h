@@ -67,6 +67,9 @@ typedef struct
     int changed;
     unsigned int mouseobj;
     int cross_over;             /* allow cross over                        */
+    int repeat_ms;
+    int timeout_id;
+    int mouse_pos;	        /* < 0 below knob, 0 on knob, > 0 above knob */
 }
 FL_VALUATOR_SPEC;
 

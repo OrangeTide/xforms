@@ -32,7 +32,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_slid = "$Id: slider.c,v 1.7 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.8 2004/05/07 08:48:00 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -296,8 +296,28 @@ get_newvalue(FL_OBJECT * ob, FL_Coord mx, FL_Coord my)
     return (sp->min + newval * (sp->max - sp->min));
 }
 
-static int timdel;
-static int mpos;		/* < 0 below knob, 0 on knob, > 0 above knob */
+
+int fl_get_slider_repeat(FL_OBJECT * ob)
+{
+    SPEC * sp = (SPEC *) ob->spec;
+    return sp->repeat_ms;
+}
+
+
+void fl_set_slider_repeat(FL_OBJECT * ob, int millisec)
+{
+    SPEC * sp = (SPEC *) ob->spec;
+    sp->repeat_ms = millisec;
+}
+
+
+static void
+timeoutCB(int val, void * data)
+{
+    SPEC * sp = (SPEC *)data;
+    sp->timeout_id = -1;
+}
+
 
 /* Handle a mouse position change */
 static int
@@ -307,17 +327,20 @@ handle_mouse(FL_OBJECT * ob, FL_Coord mx, FL_Coord my, int key)
     float newval;
 
     /* mouse on trough */
-    if (mpos && (sp->rdelta + sp->ldelta) > 0.0f)
+    if (sp->mouse_pos && (sp->rdelta + sp->ldelta) > 0.0f)
     {
-	if (timdel++ == 0 || (timdel > 11 && (timdel & 1) == 0))
+	if (sp->timeout_id == -1)
 	{
+	    sp->timeout_id = fl_add_timeout(sp->repeat_ms, timeoutCB, sp);
 	    if (key == FL_LEFT_MOUSE)
-		newval = sp->val + mpos * sp->ldelta;
+		newval = sp->val + sp->mouse_pos * sp->ldelta;
 	    else
-		newval = sp->val + mpos * sp->rdelta;
+		newval = sp->val + sp->mouse_pos * sp->rdelta;
 	}
 	else
+	{
 	    return 0;
+	}
     }
     else
 	newval = get_newvalue(ob, mx, my);
@@ -329,7 +352,7 @@ handle_mouse(FL_OBJECT * ob, FL_Coord mx, FL_Coord my, int key)
 	sp->val = newval;
 	sp->norm_val = (sp->min == sp->max) ? 0.5f :
 	    (sp->val - sp->min) / (sp->max - sp->min);
-	sp->draw_type = mpos ? SLIDER_JUMP : SLIDER_MOTION;
+	sp->draw_type = sp->mouse_pos ? SLIDER_JUMP : SLIDER_MOTION;
 	fl_redraw_object(ob);
 	return 1;
     }
@@ -395,7 +418,8 @@ handle_it(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 	}
 	break;
     case FL_PUSH:
-	timdel = mpos = 0;
+	sp->timeout_id = -1;
+	sp->mouse_pos = 0;
 	sp->start_val = sp->val;
 	sp->offx = sp->offy = 0;
 	lmx = lmy = -1;
@@ -421,11 +445,11 @@ handle_it(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 	else
 	{
 	    float newval = get_newvalue(ob, mx, my);
-	    mpos = (newval > sp->val) ? 1 : -1;
+	    sp->mouse_pos = (newval > sp->val) ? 1 : -1;
 	}
     case FL_MOUSE:
 	/* need to fix get_pos before removing this */
-	if (mx == lmx && my == lmy && mpos == 0)
+	if (mx == lmx && my == lmy && sp->mouse_pos == 0)
 	    break;
 
 	handle_mouse(ob, mx, my, key);
@@ -439,6 +463,11 @@ handle_it(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 	    return 1;
 	break;
     case FL_RELEASE:
+
+	if (sp->timeout_id != -1) {
+	    fl_remove_timeout(sp->timeout_id);
+	    sp->timeout_id = -1;
+	}
 	if (is_focus(ob->type))
 	{
 	    fl_redraw_object(ob);
@@ -491,6 +520,10 @@ create_it(int objclass, int type, FL_Coord x, FL_Coord y,
 	sp->slsize *= 1.5;
     sp->prec = 2;
     sp->how_return = FL_RETURN_CHANGED;
+
+    sp->repeat_ms = 100;
+    sp->timeout_id = -1;
+    sp->mouse_pos = 0;
 
     fl_set_object_dblbuffer(ob, 1	/* is_fill(ob->type) ||
 					   is_nice(ob->type) */ );

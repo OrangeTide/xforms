@@ -32,7 +32,7 @@
  *   only FL_RETURN_END_CHANGED and FL_RETURN_CHANED are meaningful
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_cntr = "$Id: counter.c,v 1.6 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.7 2004/05/07 08:48:00 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,8 +52,6 @@ enum
 {
     NONE, OB0 = 1, OB1 = 2, OB2 = 4, OB3 = 8, OB4 = 16, ALL = 31
 };
-
-static int timdel;		/* Delay since last value change */
 
 /* Draws a counter */
 static void
@@ -187,6 +185,29 @@ calc_mouse_obj(FL_OBJECT * ob, FL_Coord mx, FL_Coord my)
 
 }
 
+
+int fl_get_counter_repeat(FL_OBJECT * ob)
+{
+    SPEC * sp = (SPEC *) ob->spec;
+    return sp->repeat_ms;
+}
+
+
+void fl_set_counter_repeat(FL_OBJECT * ob, int millisec)
+{
+    SPEC * sp = (SPEC *) ob->spec;
+    sp->repeat_ms = millisec;
+}
+
+
+static void
+timeoutCB(int val, void * data)
+{
+    SPEC * sp = (SPEC *)data;
+    sp->timeout_id = -1;
+}
+
+
 /* handles an event on ob */
 static int
 handle_mouse(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my)
@@ -205,14 +226,15 @@ handle_mouse(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my)
 	calc_mouse_obj(ob, mx, my);
 	if (sp->mouseobj != NONE)
 	    changeval = 1;
-	timdel = 1;
+	sp->timeout_id = -1;
     }
     else if (event == FL_MOUSE && sp->mouseobj != NONE)
-	changeval = (timdel++ > 10 && (timdel & 1) == 0);
+	changeval = sp->timeout_id == -1;
 
     if (changeval)
     {
 	double oval = sp->val;
+	sp->timeout_id = fl_add_timeout(sp->repeat_ms, timeoutCB, sp);
 
 	if (sp->mouseobj == OB0)
 	    sp->val -= sp->lstep;
@@ -354,6 +376,10 @@ fl_create_counter(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     sp->mouseobj = NONE;
     sp->draw_type = ALL;
     sp->how_return = FL_RETURN_END_CHANGED;
+
+    sp->repeat_ms = 100;
+    sp->timeout_id = -1;
+
     return ob;
 }
 
