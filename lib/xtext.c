@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xtxt = "$Id: xtext.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.6 2004/05/06 10:03:37 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -214,9 +214,9 @@ fl_drw_string(int horalign, int vertalign,
 
     for (i = topline; i < endline; i++)
     {
-	/* Check whether visible  */
-	if (clip && (starty[i] + flx->fdesc) > y + h)
-	    continue;
+	/* If clipping, check whether any of the font is visible  */
+	if (clip != 0 && (starty[i] - flx->fasc) > (y + h))
+	    break;
 
 	ulpos = -1;
 	/* check if have underline request */
