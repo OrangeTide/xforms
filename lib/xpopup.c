@@ -38,7 +38,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xpup = "$Id: xpopup.c,v 1.12 2004/05/18 13:57:49 leeming Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.13 2004/10/06 11:56:22 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -82,7 +82,7 @@ typedef struct
 {
     char *title;		/* Menu title            */
     Window win;			/* menu window           */
-    Window parent;		/* and its paranet       */
+    Window parent;		/* and its parent        */
     Cursor cursor;		/* cursor for the pup    */
     GC shadowGC;		/* GC for the shadow     */
     GC pupGC1;			/* GC for maintext       */
