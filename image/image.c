@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.3 2003/04/17 13:12:47 leeming Exp $
+ * $Id: image.c,v 1.4 2003/04/20 21:19:15 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -1332,11 +1332,7 @@ flimage_error(FL_IMAGE * im, const char *fmt,...)
     if (fmt && *fmt)
     {
 	va_start(args, fmt);
-#ifdef HAVE_SNPRINTF
-	(void) fl_vsnprintf(buf, sizeof(buf), fmt, args);
-#else
-	(void) vsprintf(buf, fmt, args);
-#endif
+	fl_vsnprintf(buf, sizeof(buf), fmt, args);
 	va_end(args);
     }
 

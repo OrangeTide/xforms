@@ -38,7 +38,7 @@
  *    void (*gmout)(const char *, const char *, const char *, int);
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_errm = "$Id: errmsg.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.5 2003/04/20 21:19:15 leeming Exp $";
 #endif
 
 #include <stdio.h>
@@ -51,6 +51,7 @@ char *id_errm = "$Id: errmsg.c,v 1.4 2003/04/17 09:04:57 leeming Exp $";
 
 #include "forms.h"
 #include "flinternal.h"
+#include "private/flsnprintf.h"
 #include "ulib.h"
 extern int errno;		/* system error no            */
 
@@ -181,11 +182,7 @@ P_errmsg(const char *func, const char *fmt,...)
     if (fmt && *fmt)
       {
 	  va_start(args, fmt);
-#ifdef HAVE_SNPRINTF
-	  (void) fl_vsnprintf(emsg, sizeof(emsg)-5, fmt, args);
-#else
-	  (void) vsprintf(emsg, fmt, args);
-#endif
+	  fl_vsnprintf(emsg, sizeof(emsg)-5, fmt, args);
 	  va_end(args);
       }
 

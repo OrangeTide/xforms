@@ -1,5 +1,10 @@
 2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* image/image.c:
+	* lib/errmsg.c: no need to check for fl_vsnprintf anymore.
+
+2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* demos/Imakefile:
 	* fd2ps/Imakefile:
 	* fdesign/Imakefile:
