@@ -161,19 +161,19 @@ emit_menu_header(FILE * fp, FL_OBJECT * ob)
 
     get_pupentry_name(ob);
 
-    fprintf(fp, "%sFL_PUP_ENTRY %s[] =\n{ \n",
+    fprintf(fp, "%sFL_PUP_ENTRY %s[] =\n{\n",
 	    sp->global_scope ? "" : "static ", sp->misc_char);
     fprintf(fp, "    /*  itemtext   callback  shortcut   mode */\n");
 
     for (i = 1; i <= sp->nlines; i++)
     {
-	fprintf(fp, "    { \"%s\",\t0,\t\"%s\",\t %s},\n",
+	fprintf(fp, "    { \"%s\",\t0,\t\"%s\",\t %s, {0, 0}},\n",
 		sp->content[i], sp->shortcut[i] ? sp->shortcut[i] : "",
 		get_pupmode_name(sp->mode[i]));
     }
 
     /* sentinel */
-    fprintf(fp, "    {0}\n};\n\n");
+    fprintf(fp, "    {0, 0, 0, 0, {0, 0}}\n};\n\n");
 }
 
 /* emit header info that is global in nature */

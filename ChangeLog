@@ -1,3 +1,8 @@
+2003-11-24  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* fdesign/sp_menu.c (emit_menu_header): output properly initialized
+	C-code.
+
 2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/Makefile.am: enable the conditional building of the demo
