@@ -13,6 +13,7 @@ V1.1 ???????????
     event, allowing an FL_FREE object to make use of this info to
     redraw only the part of the window that has changed.
   o Fix possible crash when using popups heavily.
+  o Fix compilation on SCO OpenServer.
 ------------------------------------------
 V1.0.90 March 30, 2004
   o Migrate from Imake to the GNU autotools.

@@ -1,3 +1,8 @@
+2004-12-28  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* lib/listdir.c: add a better definition of S_ISSOCK, that works
+	with SCO OpenServer (thanks to Paul McNary).
+
 2004-10-05  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* xforms.spec.in: Updating SO_VERSION revealed a flaw in the logic

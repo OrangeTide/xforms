@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_dlist = "$Id: listdir.c,v 1.8 2004/05/18 13:57:45 leeming Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.9 2004/12/28 15:51:14 lasgouttes Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -104,9 +104,18 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.8 2004/05/18 13:57:45 leeming Exp $";
 #define S_ISCHR(m)      (((m) & S_IFCHR) == S_IFCHR)
 #endif
 
-#if !defined(S_ISSOCK) && defined(S_IFSOCK)
-#define S_ISSOCK(m)      (((m) & S_IFSOCK) == S_IFSOCK)
-#endif
+#ifndef S_ISSOCK
+# if defined( S_IFSOCK )
+#   ifdef S_IFMT
+#     define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
+#   else
+#     define S_ISSOCK(m) ((m) & S_IFSOCK)
+#   endif /* S_IFMT */
+# elif defined( S_ISNAM )
+    /* SCO OpenServer 5.0.7 */
+#   define S_ISSOCK S_ISNAM
+# endif /* !S_IFSOCK && S_ISNAM */
+#endif /* !S_ISSOCK */
 
 #define MAXCACHE 10		/* upto MAXCHCHE dir will be cached */
 #define MAXFL  (FL_PATH_MAX + FL_FLEN)	/* maximum file length */
