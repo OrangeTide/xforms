@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_inp = "$Id: input.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.7 2004/05/07 13:06:54 lasgouttes Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1235,7 +1235,7 @@ handle_it(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my, int key, void *ev
         ob->spec = 0;
 	break;
     case FL_OTHER:
-	M_warn("input", "handle sepcial");
+	M_warn("input", "handle special");
 	break;
     }
 
