@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: thumbwheel.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: thumbwheel.c,v 1.2 2003/04/08 21:19:52 leeming Exp $
  *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  T.C. Zhao 
@@ -222,7 +222,7 @@ handle(FL_OBJECT * ob, int ev, int mx, int my, int key, void *xev)
 	sp->oldmx = mx;
 	sp->oldmy = my;
 	return fl_valuator_handle_drag(ob, value);
-    case FL_KEYBOARD:
+    case FL_KEYPRESS:
 	value = sp->val;
 	if (IsHome(key))
 	    value = 0.5f * (sp->min + sp->max);

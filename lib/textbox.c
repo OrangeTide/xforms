@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: textbox.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: textbox.c,v 1.2 2003/04/08 21:19:52 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_brw = "$Id: textbox.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.2 2003/04/08 21:19:52 leeming Exp $";
 #endif
 
 #include <string.h>
@@ -1148,7 +1148,7 @@ handle_textbox(FL_OBJECT * ob, int ev, FL_Coord mx, FL_Coord my,
 	    return 1;
 	}
 	break;
-    case FL_KEYBOARD:
+    case FL_KEYPRESS:
 	return handle_keyboard(ob, key, xev);
     case FL_RELEASE:
 	sp->lastmy = -1;
@@ -1799,7 +1799,7 @@ fl_handle_mouse_wheel(FL_OBJECT * ob, int *ev, int *key, void *xev)
 
     if (*ev == FL_RELEASE && (*key > FL_MBUTTON3))
     {
-	*ev = FL_KEYBOARD;
+	*ev = FL_KEYPRESS;
 	if (xev && shiftkey_down((((XButtonEvent *) xev)->state)))
 	{
 	    ((XButtonEvent *) xev)->state &= ~ShiftMask;

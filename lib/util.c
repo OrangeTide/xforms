@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: util.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: util.c,v 1.2 2003/04/08 21:19:52 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -33,7 +33,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_util = "$Id: util.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+char *fl_id_util = "$Id: util.c,v 1.2 2003/04/08 21:19:52 leeming Exp $";
 #endif
 
 #include <string.h>
@@ -84,7 +84,7 @@ static FL_VN_PAIR flevent[] =
 {
     VN(FL_ENTER), VN(FL_LEAVE), VN(FL_PUSH), VN(FL_RELEASE),
     VN(FL_STEP), VN(FL_SHORTCUT), VN(FL_MOUSE), VN(FL_MOTION),
-    VN(FL_KEYBOARD), VN(FL_DRAW), VN(FL_FOCUS), VN(FL_UNFOCUS),
+    VN(FL_KEYPRESS), VN(FL_DRAW), VN(FL_FOCUS), VN(FL_UNFOCUS),
     VN(FL_FREEMEM), VN(FL_DRAWLABEL), VN(FL_DBLCLICK),
     VN(FL_OTHER), VN(FL_ATTRIB),
     VN(-1)

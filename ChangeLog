@@ -6,3 +6,9 @@
 
 	* lib/flresource.c (fl_initialize): clean-up properly if we fail to
 	create input contexts or methods.
+
+	* lib/textbox.c (handle_textbox):
+	* lib/thumbwheel.c (handle):
+	* lib/util.c (flevent): FL_KEYBOARD has been replaced by FL_KEYPRESS.
+	The former is retained for compatability, but the latter should be
+	used internally.
