@@ -43,10 +43,6 @@ extern Display*     fl_display_(void);
 #define TRUE        (!FALSE)
 #endif
 
-#if defined(MAKING_FORMS) || defined(MAKING_FD)
-#include "flinternal.h"
-#endif /* MAKING_FORMS */
-
 #if defined(__cplusplus)
 }
 #endif

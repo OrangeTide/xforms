@@ -1,3 +1,8 @@
+2003-04-22  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/include/zzz.h: remove the #include "flinternal.h" line whose
+	inclusion depends on the MAKING_FORMS preprocessor variable.
+
 2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/wwwl.c: #include "private/flsnprintf.h".
