@@ -1,5 +1,10 @@
 2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* Makefile.am: re-add xforms.spec to EXTRA_DIST. It is needed as well
+	as xforms.spec.in or else 'make rpmdist' will fail.
+
+2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* fdesign/fd_attribs.c:
 	* image/image_jpeg.c:
 	* image/image_xwd.c:

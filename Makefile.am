@@ -22,8 +22,10 @@ endif
 
 SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS)
 
+# xforms.spec is needed as well as xforms.spec.in or else 'make rpmdist'
+# will fail.
 EXTRA_DIST = ChangeLog COPYING.LIB Copyright INSTALL README README.OS2 \
-	autogen.sh xforms.spec.in
+	autogen.sh xforms.spec.in xforms.spec
 
 # Hack so that the targets that use tar will also work with automake 1.4
 AMTAR ?= $(TAR)
