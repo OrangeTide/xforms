@@ -36,7 +36,7 @@
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "pchoice.h"
-#include "choice_spec.h"
+#include "spec/choice_spec.h"
 
 extern FD_choiceattrib *create_form_choiceattrib(void);
 static FD_choiceattrib *choice_attrib;
@@ -319,4 +319,4 @@ choiceentry_scope_cb(FL_OBJECT * ob, long data)
 }
 
 
-#include "choice_spec.c"
+#include "spec/choice_spec.c"

@@ -50,7 +50,6 @@ REQUIREDLIBS	= \
 		  $(LGCC)
 
 EXTRA_INCLUDES	= \
-		  -I$(BUILDINCDIR) \
 		  -I$(TOP)/lib \
 		  -I$(TOP)/lib/private \
 		  -I.

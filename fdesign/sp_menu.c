@@ -36,7 +36,7 @@
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "pmenu.h"
-#include "menu_spec.h"
+#include "spec/menu_spec.h"
 #include <ctype.h>
 
 extern FD_menuattrib *create_form_menuattrib(void);
@@ -359,4 +359,4 @@ menuentry_scope_cb(FL_OBJECT * ob, long data)
     menu_spec->global_scope = (fl_get_choice(ob) - 1) > 0;
 }
 
-#include "menu_spec.c"
+#include "spec/menu_spec.c"

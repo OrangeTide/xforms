@@ -49,13 +49,13 @@ FD_pmain *create_form_pmain(void)
 }
 /*---------------------------------------*/
 
-#include "butt.xpm"
-#include "lightb.xpm"
-#include "roundb.xpm"
-#include "r3dbut.xpm"
-#include "check.xpm"
-#include "picture.xbm"
-#include "xconq.xpm"
+#include "xpm/butt.xpm"
+#include "xpm/lightb.xpm"
+#include "xpm/roundb.xpm"
+#include "xpm/r3dbut.xpm"
+#include "xpm/check.xpm"
+#include "xpm/picture.xbm"
+#include "xpm/xconq.xpm"
 FD_buttform *create_form_buttform(void)
 {
   FL_OBJECT *obj;
@@ -106,13 +106,13 @@ FD_buttform *create_form_buttform(void)
 }
 /*---------------------------------------*/
 
-#include "box.xpm"
-#include "text.xpm"
-#include "frame.xpm"
-#include "chart.xpm"
-#include "clock.xpm"
-#include "picture1.xbm"
-#include "xconq1.xpm"
+#include "xpm/box.xpm"
+#include "xpm/text.xpm"
+#include "xpm/frame.xpm"
+#include "xpm/chart.xpm"
+#include "xpm/clock.xpm"
+#include "xpm/picture1.xbm"
+#include "xpm/xconq1.xpm"
 FD_staticform *create_form_staticform(void)
 {
   FL_OBJECT *obj;
@@ -162,13 +162,13 @@ FD_staticform *create_form_staticform(void)
 }
 /*---------------------------------------*/
 
-#include "sld.xpm"
-#include "scb.xpm"
-#include "dial.xpm"
-#include "cnt.xpm"
-#include "pos.xpm"
-#include "vals.xpm"
-#include "twheel.xpm"
+#include "xpm/sld.xpm"
+#include "xpm/scb.xpm"
+#include "xpm/dial.xpm"
+#include "xpm/cnt.xpm"
+#include "xpm/pos.xpm"
+#include "xpm/vals.xpm"
+#include "xpm/twheel.xpm"
 FD_valuatorform *create_form_valuatorform(void)
 {
   FL_OBJECT *obj;
@@ -217,9 +217,9 @@ FD_valuatorform *create_form_valuatorform(void)
 }
 /*---------------------------------------*/
 
-#include "menu.xpm"
-#include "choice.xpm"
-#include "br.xpm"
+#include "xpm/menu.xpm"
+#include "xpm/choice.xpm"
+#include "xpm/br.xpm"
 FD_choiceform *create_form_choiceform(void)
 {
   FL_OBJECT *obj;
@@ -252,10 +252,10 @@ FD_choiceform *create_form_choiceform(void)
 }
 /*---------------------------------------*/
 
-#include "timer.xpm"
-#include "xyplot.xpm"
-#include "glcan.xpm"
-#include "tab.xpm"
+#include "xpm/timer.xpm"
+#include "xpm/xyplot.xpm"
+#include "xpm/glcan.xpm"
+#include "xpm/tab.xpm"
 FD_miscform *create_form_miscform(void)
 {
   FL_OBJECT *obj;

@@ -31,9 +31,11 @@
  *  handles the object pallette
  */
 #include "forms.h"
-#include <stdlib.h>
-#include "pallette.h"
+#include "flinternal.h"
+#include "fd/pallette.h"
 #include "fd_main.h"
+
+#include <stdlib.h>
 
 static FD_pmain *pmain;
 
@@ -181,4 +183,4 @@ select_pallette_entry(int cls)
     }
 }
 
-#include "pallette.c"
+#include "fd/pallette.c"

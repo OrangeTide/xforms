@@ -36,14 +36,15 @@
  *
  */
 
+#include "forms.h"
+#include "flinternal.h"
+#include "fd/ui_theforms.h"
+#include "fd_main.h"
+#include "xpm/fd_logo.xpm"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "forms.h"
-#include "ui_theforms.h"
-#include "fd_main.h"
-#include "fd_logo.xpm"
 
 #if defined(__EMX__) || defined(WIN32)
 #define strcasecmp stricmp
@@ -57,7 +58,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.2 $ of $Date: 2003/04/10 20:46:37 $",
+    "$State: Exp $  $Revision: 1.3 $ of $Date: 2003/04/15 19:21:42 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 

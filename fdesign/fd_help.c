@@ -41,7 +41,7 @@
 
 #include "forms.h"
 #include "fd_main.h"
-#include "ui_theforms.h"
+#include "fd/ui_theforms.h"
 
 /* Loads the help browser with specific information. */
 
@@ -114,7 +114,7 @@ char mainhelp[][80] =
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.2 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@c$Revision: 1.3 $" LIBVERSION(FL_VERSION, FL_REVISION),
     "@C4@c@bWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",

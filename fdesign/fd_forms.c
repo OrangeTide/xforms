@@ -37,11 +37,13 @@
  *
  */
 
+#include "forms.h"
+#include "flinternal.h"
+#include "fd_main.h"
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "forms.h"
-#include "fd_main.h"
 
 static FRM forms[MAXFRM];	/* The forms */
 int fnumb = 0;

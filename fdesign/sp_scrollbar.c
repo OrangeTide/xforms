@@ -35,7 +35,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "scrollbar_spec.h"
+#include "spec/scrollbar_spec.h"
 
 extern FD_scrollbarattrib *create_form_scrollbarattrib(void);
 
@@ -244,4 +244,4 @@ scb_returnsetting_change(FL_OBJECT * ob, long data)
 }
 
 
-#include "scrollbar_spec.c"
+#include "spec/scrollbar_spec.c"

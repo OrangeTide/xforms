@@ -32,6 +32,10 @@
  *  Generate header/C files
  */
 
+#include "forms.h"
+#include "flinternal.h"
+#include "fd_main.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -40,9 +44,6 @@
 #ifdef WIN32
 #include <io.h>
 #endif
-
-#include "forms.h"
-#include "fd_main.h"
 
 void
 make_backup(const char *s)

@@ -36,12 +36,13 @@
  *
  */
 
+#include "forms.h"
+#include "flinternal.h"
+#include "fd_main.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-
-#include "forms.h"
-#include "fd_main.h"
 
 /* Writes an obj description to a file. Note externally the coordinate
  * system always starts from lower-left corner of the screen */

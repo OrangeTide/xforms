@@ -41,11 +41,13 @@
  *
  */
 
+#include "forms.h"
+#include "fd_main.h"
+#include "xpm/crab.xpm"
+
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
-#include "forms.h"
-#include "fd_main.h"
 
 #define VN(a)        a,#a
 #define OBJNAME(a)   #a,fl_create_##a,fl_add_##a
@@ -646,7 +648,6 @@ static unsigned char bm1_bits[] =
 
 #define pm_width 28
 #define pm_height 28
-#include "crab.xpm"
 
 
 void

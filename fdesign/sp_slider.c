@@ -35,7 +35,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "slider_spec.h"
+#include "spec/slider_spec.h"
 
 extern FD_sliderattrib *create_form_sliderattrib(void);
 
@@ -270,4 +270,4 @@ returnsetting_change(FL_OBJECT * ob, long data)
 }
 
 
-#include "slider_spec.c"
+#include "spec/slider_spec.c"

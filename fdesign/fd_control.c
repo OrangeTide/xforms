@@ -35,7 +35,7 @@
 
 #include "forms.h"
 #include "fd_main.h"
-#include "ui_theforms.h"
+#include "fd/ui_theforms.h"
 
 /* All control panel menus, File Object Options etc. have this
  * common structures

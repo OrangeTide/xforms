@@ -32,8 +32,9 @@
  *
  */
 #include "fd_main.h"
-#include "ui_attrib.h"		/* from  directory fd */
-#include "ui_theforms.h"	/* from  directory fd */
+#include "flinternal.h"
+#include "fd/ui_attrib.h"		/* from  directory fd */
+#include "fd/ui_theforms.h"	/* from  directory fd */
 
 FD_control *fd_control;
 FD_test *fd_test;
@@ -169,5 +170,5 @@ init_testform(void)
     fl_set_object_dblbuffer(fd_test->browser, 1);
 }
 
-#include "ui_attrib.c"
-#include "ui_theforms.c"
+#include "fd/ui_attrib.c"
+#include "fd/ui_theforms.c"

@@ -36,7 +36,7 @@
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "pbrowser.h"
-#include "browser_spec.h"
+#include "spec/browser_spec.h"
 
 extern FD_browserattrib *create_form_browserattrib(void);
 static FD_browserattrib *br_attrib;
@@ -273,4 +273,4 @@ clear_field_cb(FL_OBJECT * ob, long data)
 }
 
 
-#include "browser_spec.c"
+#include "spec/browser_spec.c"

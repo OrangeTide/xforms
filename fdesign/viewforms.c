@@ -46,7 +46,7 @@ static FL_PUP_ENTRY fdmenu_options_1[] =
     {0}
 };
 
-#include "quit.xpm"
+#include "xpm/quit.xpm"
 static FL_PUP_ENTRY fdmenu_help_2[] =
 { 
     /*  itemtext   callback  shortcut   mode */
@@ -56,14 +56,14 @@ static FL_PUP_ENTRY fdmenu_help_2[] =
     {0}
 };
 
-#include "reload.xpm"
-#include "button1.xpm"
-#include "pause.xpm"
-#include "play.xpm"
-#include "forward.xpm"
-#include "backward.xpm"
-#include "rewind.xpm"
-#include "squiggle.xpm"
+#include "xpm/reload.xpm"
+#include "xpm/button1.xpm"
+#include "xpm/pause.xpm"
+#include "xpm/play.xpm"
+#include "xpm/forward.xpm"
+#include "xpm/backward.xpm"
+#include "xpm/rewind.xpm"
+#include "xpm/squiggle.xpm"
 FD_main *create_form_main(void)
 {
   FL_OBJECT *obj;
@@ -222,7 +222,7 @@ FD_main *create_form_main(void)
 }
 /*---------------------------------------*/
 
-#include "close.xpm"
+#include "xpm/close.xpm"
 FD_help *create_form_help(void)
 {
   FL_OBJECT *obj;
@@ -286,7 +286,7 @@ FD_help *create_form_help(void)
 }
 /*---------------------------------------*/
 
-#include "cancel.xpm"
+#include "xpm/cancel.xpm"
 static FL_PUP_ENTRY fdchoice_font_3[] =
 { 
     /*  itemtext   callback  shortcut   mode */
@@ -309,7 +309,7 @@ static FL_PUP_ENTRY fdchoice_font_3[] =
     {0}
 };
 
-#include "accept.xpm"
+#include "xpm/accept.xpm"
 static FL_PUP_ENTRY fdchoice_size_4[] =
 { 
     /*  itemtext   callback  shortcut   mode */

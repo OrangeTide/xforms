@@ -35,7 +35,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
-#include "twheel_spec.h"
+#include "spec/twheel_spec.h"
 
 extern FD_twheelattrib *create_form_twheelattrib(void);
 
@@ -217,4 +217,4 @@ twheel_adjust_precision(FL_OBJECT * ob, long data)
 }
 
 
-#include "twheel_spec.c"
+#include "spec/twheel_spec.c"

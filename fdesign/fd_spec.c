@@ -36,6 +36,7 @@
 #include "forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
+#include <string.h>
 
 #define MAXOBJCLASS 8
 

@@ -32,6 +32,7 @@
 
 #include <stdio.h>
 #include "forms.h"
+#include "flinternal.h"
 
 #ifndef FALSE
 #define FALSE    0
@@ -419,8 +420,8 @@ extern void show_attributes(const FL_OBJECT *);
 extern int read_key_val(FILE * fp, char *key, char *val);
 
 /* Control panel etc */
-#include "ui_theforms.h"
-#include "ui_attrib.h"
+#include "fd/ui_theforms.h"
+#include "fd/ui_attrib.h"
 
 extern FD_control *fd_control;
 extern FD_attrib *fd_attrib;
