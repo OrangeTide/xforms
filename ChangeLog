@@ -1,5 +1,14 @@
 2003-05-23  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* image/rgb_db.c: follow Rouben Rostamian's advice and remove all the
+	helper functions that were used to ascertain the name of the RGB color
+	before he rewrote fl_lookup_RGBcolor.
+
+	* flimage.h: add a comment to the declaration of fl_init_RGBdatabase
+	that is does nothing and is retained for compatibility only.
+
+2003-05-23  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/include/Basic.h: remove declarations of functions
 	fl_init_RGBdatabase and fl_lookup_RGBcolor as they are part of
 	libflimage, not libforms.

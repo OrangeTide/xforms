@@ -22,7 +22,7 @@
 /********************** crop here for forms.h **********************/
 
 /*
- * $Id: flimage.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: flimage.h,v 1.2 2003/05/30 11:04:57 leeming Exp $
  *
  * Image related routines
  *
@@ -592,6 +592,9 @@ FL_EXPORT char *fl_basename(
 		char name[]
 		);
 
+/** This function is retained for compatibility reasons only.
+    It returns 1 always.
+*/
 FL_EXPORT int fl_init_RGBdatabase(
 		const char *f
 		);
