@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.9 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.10 2004/05/05 12:06:52 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1270,7 +1270,7 @@ object_is_clipped(FL_OBJECT * ob)
  */
 
 static void
-redraw_marked(FL_FORM * form)
+redraw_marked(FL_FORM * form, int key, XEvent * xev)
 {
     FL_OBJECT *ob;
 
@@ -1309,7 +1309,7 @@ redraw_marked(FL_FORM * form)
 		fl_set_text_clipping(ob->x, ob->y, ob->w, ob->h);
 	    }
 
-	    fl_handle_object(ob, FL_DRAW, 0, 0, 0, 0);
+	    fl_handle_object(ob, FL_DRAW, 0, 0, key, xev);
 
 	    if ((ob->objclass == FL_FREE || ob->clip) && !fl_perm_clip)
 	    {
@@ -1354,26 +1354,40 @@ fl_redraw_object(FL_OBJECT * obj)
 
     /* if obj is a child object and the parent is not visible, do nothing */
     if (obj->visible && (!obj->is_child || obj->parent->visible))
-	redraw_marked(obj->form);
+	redraw_marked(obj->form, 0, 0);
 
+}
+
+/* Marks all objects for redraw */
+static void
+mark_for_redraw(FL_FORM * form)
+{
+    FL_OBJECT *ob;
+
+    if (form == NULL)
+    {
+	fl_error("mark_for_redraw", "Drawing NULL form.");
+	return;
+    }
+
+    for (ob = form->first; ob; ob = ob->next)
+	ob->redraw = 1;
 }
 
 /* Draws a form */
 void
 fl_redraw_form(FL_FORM * form)
 {
-    FL_OBJECT *ob;
+    mark_for_redraw(form);
+    redraw_marked(form, 0, 0);
+}
 
-    if (form == NULL)
-    {
-	fl_error("fl_redraw_form", "Drawing NULL form.");
-	return;
-    }
-
-    for (ob = form->first; ob; ob = ob->next)
-	ob->redraw = 1;
-
-    redraw_marked(form);
+/* Draws a form */
+void
+fl_redraw_form_using_xevent(FL_FORM * form, int key, XEvent * xev)
+{
+    mark_for_redraw(form);
+    redraw_marked(form, key, xev);
 }
 
 /* Disables drawing of form */
@@ -1407,7 +1421,7 @@ fl_unfreeze_form(FL_FORM * form)
     form->frozen--;
 
     if (form->frozen == 0)
-	redraw_marked(form);
+	redraw_marked(form, 0, 0);
 }
 
 /*-----------------------------------------------------------------------

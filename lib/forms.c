@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.10 2003/11/21 13:23:23 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.11 2004/05/05 12:06:52 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -53,6 +53,8 @@ static int reopened_group;
 static int do_x_only;
 
 static int fl_XLookupString(XKeyEvent *, char *, int, KeySym *);
+
+void fl_redraw_form_using_xevent(FL_FORM *, int, XEvent *);
 
 
 #define SHORT_PAUSE          10	/* check_form wait             */
@@ -1372,7 +1374,7 @@ fl_handle_form(FL_FORM * form, int event, int key, XEvent * xev)
     {
 
     case FL_DRAW:		/* form must be redrawn */
-	fl_redraw_form(form);
+	fl_redraw_form_using_xevent(form, key, xev);
 	break;
     case FL_ENTER:		/* Mouse did enter the form */
 	fl_mouseobj = obj;

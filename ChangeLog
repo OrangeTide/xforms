@@ -1,3 +1,23 @@
+2004-05-04  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	The original patch, posted to the xforms list on June 21, 2002,
+	appears to have got lost. Archived here:
+	http://bob.usuhs.mil/mailserv/list-archives/xforms-archive/0285.html
+
+	Pass the associated (XEvent * xev) to fl_handle_object on an FL_DRAW
+	event. This XEvent * is not used at all by any of xforms' "native"
+	widgets, but an FL_FREE object is able to make use of this info to
+	redraw only the part of the window that has changed. 
+ 
+	* forms.c (fl_handle_form): pass the XEvent on an FL_DRAW event.
+
+	* objects.c (redraw_marked): pass the XEvent to fl_handle_object.
+	(mark_for_redraw): new, static function containing all but the
+	'redraw_marked' call of the original fl_redraw_form.
+	(fl_redraw_form): refactored code. Functionality unchanged.
+	(fl_redraw_form_using_xevent): identical to fl_redraw_form, except
+	that it passes the XEvent on to redraw_marked.
+
 2004-05-02  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/flresource.c (get_command_name): squash valgrind warning
