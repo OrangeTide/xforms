@@ -21,7 +21,7 @@
 
 
 /*
- *  $Id: rgb_db.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ *  $Id: rgb_db.c,v 1.4 2003/05/22 17:35:50 leeming Exp $
  *
  *  Copyright (c) 1999-2002 T.C. Zhao
  *
@@ -153,165 +153,6 @@ fl_init_RGBdatabase(const char *f)
     return (nentries > 100) ? 1 : -1;
 }
 
-int
-fl_lookup_RGBcolor(const char *req_name, int *r, int *g, int *b)
-{
-    int match, i;
-    RGBDB *db;
-    char name[128], *p;
-
-    if (!req_name || !*req_name)
-    {
-	*r = *g = *b = 0;
-	return -1;
-    }
-
-    p = (char *) req_name;
-
-    /* squeeze out all spaces */
-    for (i = 0; *p && i < 127; p++)
-    {
-	if (!isspace( ( int ) *p))
-	    name[i++] = *p;
-    }
-    name[i] = '\0';
-
-    if (!rgb_db)
-	fl_init_RGBdatabase(0);
-
-    if (!rgb_db)
-    {
-	M_err("LookupColor", "database uninitialized");
-	*r = *g = *b = 0;
-	return -1;
-    }
-
-    /* search for special cases: numerical and None */
-    if (strcasecmp(name, "None") == 0)
-    {
-	*r = *g = *b = -1;
-    }
-    else if (*name == '#')
-    {
-	unsigned char *q = (unsigned char *) name;
-	if ((match = strlen(name)) == 7)	/* #rrggbb */
-	{
-	    *r = (hexv[q[1]] << 4) | hexv[q[2]];
-	    *g = (hexv[q[3]] << 4) | hexv[q[4]];
-	    *b = (hexv[q[5]] << 4) | hexv[q[6]];
-	}
-	else if (match == 13)	/* #rrrrggggbbbb */
-	{
-	    *r = (hexv[q[1]] << 12) | (hexv[q[2]] << 8) |
-		(hexv[q[3]] << 4) | hexv[q[4]];
-	    *g = (hexv[q[5]] << 12) | (hexv[q[6]] << 8) |
-		(hexv[q[7]] << 4) | hexv[q[8]];
-	    *b = (hexv[q[9]] << 12) | (hexv[q[10]] << 8) |
-		(hexv[q[11]] << 4) | hexv[q[12]];
-
-	    *r = (*r * 255L) / 65535L;
-	    *g = (*g * 255L) / 65535L;
-	    *b = (*b * 255L) / 65535L;
-	}
-	else if (match == 10)	/* #rrrgggbbb */
-	{
-	    *r = (hexv[q[1]] << 8) | (hexv[q[2]] << 4) | (hexv[q[3]]);
-	    *g = (hexv[q[4]] << 8) | (hexv[q[5]] << 4) | (hexv[q[6]]);
-	    *b = (hexv[q[7]] << 8) | (hexv[q[8]] << 4) | (hexv[q[9]]);
-
-	    *r = (*r * 255L) / 4095;
-	    *g = (*g * 255L) / 4095;
-	    *b = (*b * 255L) / 4095;
-	}
-	else if (match == 4)
-	{
-	    /* this is not conformant to the spec but probably better */
-	    *r = (hexv[q[1]] * 255) / 15;
-	    *g = (hexv[q[2]] * 255) / 15;
-	    *b = (hexv[q[3]] * 255) / 15;
-	}
-	else if (match == 3)
-	{
-	    *r = *g = *b = 0;
-	}
-	else
-	{
-	    M_err("LookupColor", "can't handle color %s", name);
-	    return -1;
-	}
-    }
-    else if (strstr(name, "rgb:"))
-    {
-	unsigned char *q = (unsigned char *) strchr(name, ':');
-	if ((match = strlen((char *)q)) == 6)
-	{
-	    /* :r/g/b */
-	    *r = (hexv[q[1]] * 255) / 15;
-	    *g = (hexv[q[3]] * 255) / 15;
-	    *b = (hexv[q[5]] * 255) / 15;
-	}
-	else if (match == 9)
-	{
-	    /* :rr/gg/bb */
-	    *r = (hexv[q[1]] << 4) | hexv[q[2]];
-	    *g = (hexv[q[4]] << 4) | hexv[q[5]];
-	    *b = (hexv[q[7]] << 4) | hexv[q[8]];
-	}
-	else if (match == 12)
-	{
-	    /* :rrr/ggg/bbb */
-	    *r = (hexv[q[1]] << 8) | (hexv[q[2]] << 4) | (hexv[q[3]]);
-	    *g = (hexv[q[5]] << 8) | (hexv[q[6]] << 4) | (hexv[q[7]]);
-	    *b = (hexv[q[9]] << 8) | (hexv[q[10]] << 4) | (hexv[q[11]]);
-
-	    *r = (*r * 255L) / 4095;
-	    *g = (*g * 255L) / 4095;
-	    *b = (*b * 255L) / 4095;
-
-	}
-	else if (match == 15)
-	{
-	    *r = (hexv[q[1]] << 12) | (hexv[q[2]] << 8) |
-		(hexv[q[3]] << 4) | hexv[q[4]];
-	    *g = (hexv[q[6]] << 12) | (hexv[q[7]] << 8) |
-		(hexv[q[8]] << 4) | hexv[q[9]];
-	    *b = (hexv[q[11]] << 12) | (hexv[q[12]] << 8) |
-		(hexv[q[13]] << 4) | hexv[q[14]];
-
-	    *r = (*r * 255L) / 65535L;
-	    *g = (*g * 255L) / 65535L;
-	    *b = (*b * 255L) / 65535L;
-	}
-	else
-	{
-	    M_err("LookupColor", "can't handle color %s\n", name);
-	    return -1;
-	}
-    }
-    else
-    {
-	/* search the pre-defined colorname database */
-	for (match = 0, db = rgb_db; !match && db < rgb_db + db_size; db++)
-	{
-	    if (strcasecmp(name, db->name) == 0)
-	    {
-		match = 1;
-		*r = db->r;
-		*g = db->g;
-		*b = db->b;
-	    }
-	}
-
-	if (!match)
-	{
-	    M_warn("LookupColor", "colorname (%s) not found\n", name);
-	    return -1;
-	}
-    }
-    return 0;
-}
-
-
 static int
 read_entry(FILE * fp, int *r, int *g, int *b, char name[])
 {
@@ -339,4 +180,22 @@ read_entry(FILE * fp, int *r, int *g, int *b, char name[])
     *name = 0;
 
     return (feof(fp) || ferror(fp)) ? 0 : 1;
+}
+
+
+/* A new implementation from Rouben Rostamian. */
+int fl_lookup_RGBcolor(const char *colname, int *r, int *g, int *b)
+{
+    XColor xc;
+    unsigned int M = (1U<<fl_state[fl_vmode].depth)-1;
+
+    if (XParseColor(fl_display, fl_state[fl_vmode].colormap,
+		    colname,  &xc) == 0)
+	return -1;
+
+    *r = 255 * xc.red   / M;
+    *g = 255 * xc.green / M;
+    *b = 255 * xc.blue  / M;
+
+    return 0;
 }
