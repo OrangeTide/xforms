@@ -410,19 +410,6 @@ enum
 #define FL_PUP_TOGGLE    FL_PUP_BOX
 #define FL_PUP_INACTIVE  FL_PUP_GREY
 
-/* read rgb.txt file */
-FL_EXPORT int fl_init_RGBdatabase(
-		const char *f
-		);
-
-FL_EXPORT int fl_lookup_RGBcolor(
-		const char *req_name,
-		int *r,
-		int *g,
-		int *b
-		);
-
-
 /* popup and menu entries */
 typedef int (*FL_PUP_CB) (int);	/* call back prototype  */
 typedef struct

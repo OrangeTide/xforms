@@ -28,13 +28,10 @@
  *  All rights reserved.
  *.
  *  Some machine specific stuff.
- *
- *  if sprintf returns char *, need to define BAD_SPRINTF
- *
  */
 
 #ifndef FL_LOCAL_H
-#define FL_LOCAL_H		/* { */
+#define FL_LOCAL_H
 
 #ifndef _WIN32
 #include <unistd.h>

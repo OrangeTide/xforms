@@ -1,3 +1,9 @@
+2003-05-23  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/include/Basic.h: remove declarations of functions
+	fl_init_RGBdatabase and fl_lookup_RGBcolor as they are part of
+	libflimage, not libforms.
+
 2003-05-30  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* Changes: renamed as NEWS.
