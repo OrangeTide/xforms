@@ -1,5 +1,10 @@
 2004-05-06  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* fdesign/fd_spec.c: revert the change made earlier today.
+	Turned out to be used in the demos code...
+
+2004-05-06  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* xforms.spec.in: modify so that devfiles and binfiles are not
 	placed in ${RPM_BUILD_ROOT}. Prevents rpm from bombing out with a
 	"Checking for unpackaged files" error.
