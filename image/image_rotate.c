@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_rotate.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: image_rotate.c,v 1.2 2003/04/08 21:05:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -72,9 +72,18 @@ flimage_rotate(FL_IMAGE * im, int deg, int subp)
 	    g = rotate_matrix(im->green, im->h, im->w, deg, sizeof(**im->red));
 	    b = rotate_matrix(im->blue, im->h, im->w, deg, sizeof(**im->red));
 	}
-	else
+	else if (im->type == FL_IMAGE_GRAY)
+	{
+	    r = rotate_matrix(im->gray, im->h, im->w, deg, sizeof(**im->gray));
+	}
+	else if (im->type == FL_IMAGE_CI)
 	{
 	    r = rotate_matrix(im->ci, im->h, im->w, deg, sizeof(**im->ci));
+	}
+	else
+	{
+	    M_err("flimage_rotate", "InternalError: unsupported image type\n");
+	    return -1;	    
 	}
 
 	if ((deg % 180) == 0)

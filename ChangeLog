@@ -1,0 +1,6 @@
+2003-04-08  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* image/image_rotate.c (flimage_rotate): enable the rotation of
+	grayscale images by 90degree multiples and more generally prevent
+	other unsupported image types from crashing xforms.
+
