@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.8 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.9 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1502,7 +1502,7 @@ fl_handle_it(FL_OBJECT * obj, int event, FL_Coord mx, FL_Coord my, int key,
 #if (FL_DEBUG >= ML_WARN)
     if (obj->form == 0 && event != FL_FREEMEM)
     {
-	M_err("fl_handle_it", "Bad object %s. Event=%s", 
+	M_err("fl_handle_it", "Bad object %s. Event=%s",
               obj->label ? obj->label : "", fl_event_name(event));
 	return 0;
     }

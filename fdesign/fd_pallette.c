@@ -20,7 +20,7 @@
  */
 
 
-/** 
+/**
  * \file fd_pallette.c
  *.
  *  This file is part of XForms package

@@ -21,10 +21,10 @@
 
 
 /*
- * $Id: image_proc.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_proc.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1993, 1998-2002  By T.C. Zhao 
+ *  Copyright (c) 1993, 1998-2002  By T.C. Zhao
  *  All rights reserved.
  *.
  *
@@ -40,9 +40,9 @@
 
 
 /********************************************************************
- *  general pixel transformation 
+ *  general pixel transformation
  ********************************************************************/
-int 
+int
 flimage_transform_pixels(FL_IMAGE * im, int *red, int *green, int *blue)
 {
     int i, j;
@@ -71,7 +71,7 @@ flimage_transform_pixels(FL_IMAGE * im, int *red, int *green, int *blue)
            im->completed = i;
            im->visual_cue(im,"Transforming");
         }
-           
+
 	for (j = 0; j < sub->w; j++)
 	{
 	    r[j] = red[r[j]];
@@ -96,7 +96,7 @@ flimage_transform_pixels(FL_IMAGE * im, int *red, int *green, int *blue)
 
 
 /********************************************************************
- * tint. 
+ * tint.
  ******************************************************************{*/
 int
 flimage_tint(FL_IMAGE * im, unsigned int packed, double opacity)

@@ -58,7 +58,7 @@ int peek_event(FL_FORM *form, void *xev)
        XFlush(fl_get_display()); /* necessary to show the label */
        fl_msleep(50);
     }
-    return 0;  
+    return 0;
 }
 
 int main(int argc, char *argv[])
@@ -75,7 +75,7 @@ int main(int argc, char *argv[])
 }
 
 void input_callback(FL_OBJECT *ob, long data)
-{ 
+{
      char buf[32];
      sprintf(buf,"Input%ld returned",data);
      fl_set_object_label(ui->status,buf);

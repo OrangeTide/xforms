@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_evt = "$Id: events.c,v 1.7 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -470,7 +470,7 @@ fl_get_xevent_name(const XEvent *xev)
 {
       int i;
       static char buf[128];
-      
+
       for ( i = 0; i < sizeof(evname); i++)
       {
           if(evname[i].type == xev->type)
@@ -534,14 +534,14 @@ fl_xevent_name(const char *where, const XEvent * xev)
 
 
 static int
-badwin_handler(Display * dpy, XErrorEvent * xev) 
+badwin_handler(Display * dpy, XErrorEvent * xev)
 {
 	if (xev->type != BadWindow && xev->type != BadDrawable)
-		M_err("badwin_handler", 
+		M_err("badwin_handler",
 			"X error happened when expecting only BadWindow/Drawable\n");
 	return 0;
 }
- 
+
 
 /***********************************************************************
  * Received a redraw event ev, see if next event is the same as the

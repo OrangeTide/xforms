@@ -108,7 +108,7 @@ o. finally fixed the hide_form and input handling
 o. FL_PUSH now always sends the focus object FL_UNFOCUS
 o. re-worked fl_set_button a bit
 o. added a group_id entry to FL_OBJECT to handle mixed group radio correctly
-o. fixed an input validation scroll problem (xoffset was not restored) 
+o. fixed an input validation scroll problem (xoffset was not restored)
 o. switched to xpm-3.4k
 --- 88.9
 o. fixed a bug with popups (mcb and enter|leave_cb not reset)
@@ -121,7 +121,7 @@ o. fixed a typo in image.c where gray16->jpeg generates coredumps
 o. added tiff reader/writer 04/07/99
 o. some portability changes: casts, and sign and unsigned long stuff
 o. fixed a bug in fl_create_colormap(): asking for too many colors. (03/20/99)
-o. fixed a small bug with fl_set_browser_xoffset(). 
+o. fixed a small bug with fl_set_browser_xoffset().
 o. added get_xyplot_data_pointer().
 o. added fl_update_display(1) after one liner.
 o. added XWD image format support.

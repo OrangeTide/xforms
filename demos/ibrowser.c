@@ -53,12 +53,12 @@ static void show_image_info(FL_IMAGE *im)
          wl[0] = '\0';
 
      sprintf(buf,"%s(%s): (%dX%d) t=%s ot=%s dt=%s cols=%d used=%d %s",
-         im->infile,im->fmt_name, im->w,im->h, 
+         im->infile,im->fmt_name, im->w,im->h,
          flimage_type_name(im->type)+9,
          flimage_type_name(im->original_type)+9,
          flimage_type_name(im->display_type)+9,
          im->map_len, im->colors, wl);
-       
+
      fdui = (FD_ibcanvas *)im->app_data;
      fl_set_object_label(fdui->text,buf);
 
@@ -98,7 +98,7 @@ static int load_and_show(const char *filename, void *data)
        image->sh = image->h/2;
        image->sw = image->w/2;
 #endif
-       flimage_display(image, FL_ObjWin(fdui->canvas)); 
+       flimage_display(image, FL_ObjWin(fdui->canvas));
        show_image_info(image);
        flimage_free(curr_image);
        curr_image = image;
@@ -109,7 +109,7 @@ static int load_and_show(const char *filename, void *data)
        image->sx  = image->sy = 80;
        image->sh = image->h - 90;
        image->sw = image->w - 90;
-       flimage_display(image, FL_ObjWin(fdui->canvas)); 
+       flimage_display(image, FL_ObjWin(fdui->canvas));
 #endif
 
        /* re-adjust the window level stuff */
@@ -133,9 +133,9 @@ void scale_image(FL_OBJECT *ob, long data)
 
      if(!curr_image)
          return;
-      
-     flimage_scale(curr_image, 
-                  (int)(xs*curr_image->w), 
+
+     flimage_scale(curr_image,
+                  (int)(xs*curr_image->w),
                   (int)(ys*curr_image->h),
                   aa ? FLIMAGE_SUBPIXEL:FLIMAGE_NOSUBPIXEL);
      flimage_display(curr_image, FL_ObjWin(fdui->canvas));
@@ -183,10 +183,10 @@ void annotate_cb(FL_OBJECT *ob, long data)
       }
 
       /* positioning check */
-      flimage_add_text(curr_image, "@arrow", 6, 0, 20, 
+      flimage_add_text(curr_image, "@arrow", 6, 0, 20,
                        FL_PACK(r,g,b), 0, 1, 30, 30, 0);
 
-      flimage_add_text(curr_image, "X", 1, 0, 20, 
+      flimage_add_text(curr_image, "X", 1, 0, 20,
                        FL_PACK(r,g,b), 0, 1, 30, 30, 0);
 
       flimage_add_marker(curr_image, "oval",
@@ -194,12 +194,12 @@ void annotate_cb(FL_OBJECT *ob, long data)
                         (mw-15), (mh-15), FL_SOLID,
                         0, 0, FL_PACK(r,g,b),0);
 
-      flimage_add_text(curr_image, buf, strlen(buf), 
-                       FL_TIMESBOLD_STYLE, 20, 
-                       FL_PACK(r,g,b), FL_PACK(255,0,255), 
+      flimage_add_text(curr_image, buf, strlen(buf),
+                       FL_TIMESBOLD_STYLE, 20,
+                       FL_PACK(r,g,b), FL_PACK(255,0,255),
                        0, tx, ty, 0);
 
-      
+
       memset(&text,0,sizeof(text));
       text.align = FL_ALIGN_LEFT;
       text.str = "qXXd\nqXXd";
@@ -216,14 +216,14 @@ void annotate_cb(FL_OBJECT *ob, long data)
 
       tx += 5;
       ty += 5;
-    
+
       for ( j = 0; j < 8; j++)
       {
-          char *ss[] = {"oval","delta", "rect","cross", 
+          char *ss[] = {"oval","delta", "rect","cross",
                         "arrow", "thinarrow","line", "star"};
           for ( i = 0; i < 9; i++)
           {
-             flimage_add_marker(curr_image, ss[j], 
+             flimage_add_marker(curr_image, ss[j],
                                curr_image->w-(i)*mw, curr_image->h-(j)*mh,
                                (mw-15), (mh-15), FL_SOLID,
                                i%2, i*delta, FL_PACK(r,g,b),0);
@@ -266,7 +266,7 @@ void rotate_image(FL_OBJECT *ob, long data)
 
      if(!curr_image)
          return;
-      
+
      curr_image->fill_color = fill;
      flimage_rotate(curr_image, (angle*10), subpix ? FLIMAGE_SUBPIXEL:0);
      flimage_display(curr_image, FL_ObjWin(fdui->canvas));
@@ -286,7 +286,7 @@ void write_image(FL_OBJECT *ob, long data)
         return;
      flimage_dump(curr_image, f, fl_get_choice_text(fdui->format));
 }
-     
+
 static int expose_handle(FL_OBJECT *ob, Window win,
                          int w, int h, XEvent *xev, void *data)
 {
@@ -334,7 +334,7 @@ void convolve_it(FL_OBJECT *ob, long data)
      else
         curr_image->subw = 0;
 
-     flimage_convolve(curr_image, (int**)data, 0, 0); 
+     flimage_convolve(curr_image, (int**)data, 0, 0);
 /*     flimage_convolve(curr_image, kernel, 3, 3); */
      flimage_display(curr_image, FL_ObjWin(fdui->canvas));
      show_image_info(curr_image);
@@ -375,7 +375,7 @@ void window_level(FL_OBJECT *ob, long data)
      flimage_display(curr_image, FL_ObjWin(fdui->canvas));
      show_image_info(curr_image);
 }
-      
+
 
 void warp_it(FL_OBJECT *ob, long data)
 {
@@ -384,13 +384,13 @@ void warp_it(FL_OBJECT *ob, long data)
     /*static float border[2][2] = {{1,0},{0,1}};
     int subimage = fl_get_button(fdui->subimage); */
     int aa = fl_get_button(fdui->anti_aliasing);
-    
+
     if(!curr_image)
        return ;
 
     curr_image->fill_color = FL_PACK(255,255,0);
 #if 0
-    flimage_warp(curr_image, border, curr_image->w+2, curr_image->h+2, 
+    flimage_warp(curr_image, border, curr_image->w+2, curr_image->h+2,
        (aa ? FLIMAGE_SUBPIXEL:FLIMAGE_NOSUBPIXEL)|FLIMAGE_CENTER);
 #else
     flimage_warp(curr_image, m, 0,0, aa ? FLIMAGE_SUBPIXEL:FLIMAGE_NOSUBPIXEL);
@@ -414,10 +414,10 @@ void enhance_it(FL_OBJECT *ob, long data)
 void crop_it(FL_OBJECT *ob, long data)
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
-    
+
      if(!curr_image)
         return;
-     
+
      if(data == 0)
      {
          flimage_autocrop(curr_image, FLIMAGE_AUTOCOLOR);
@@ -450,7 +450,7 @@ static int enter_handle(FL_OBJECT *ob, Window win,
                          int w, int h, XEvent *xev, void *data)
 {
      if(fl_vmode != FL_DirectColor)
-        XInstallColormap(fl_display, map); 
+        XInstallColormap(fl_display, map);
      return 0;
 }
 
@@ -475,7 +475,7 @@ static int
 supported_image_filter(const char *name, int type)
 {
     return (type==FT_DIR || (type==FT_FILE && flimage_is_supported(name) >0 ));
-} 
+}
 
 static void error_report(FL_IMAGE *im, const char *s)
 {
@@ -497,11 +497,11 @@ static int status_report(FL_IMAGE *im, const char *s)
      }
      else if(im->completed >= 0 && im->completed < im->total)
      {
-        sprintf(buf,"%s %3.0f%% (%4d of %4d)", s, 
+        sprintf(buf,"%s %3.0f%% (%4d of %4d)", s,
                  (im->completed*100.0)/im->total,
                  im->completed, im->h);
      }
-     else 
+     else
         strcpy(buf,s);
 
     fl_set_object_label(fdui->status, buf);
@@ -552,7 +552,7 @@ int main(int argc, char *argv[])
 
     fl_add_canvas_handler(fd_ibcanvas->canvas,
                           Expose, expose_handle, 0);
-                         
+
     fl_add_canvas_handler(fd_ibcanvas->canvas,
                           MotionNotify, motion_handle, 0);
 

@@ -20,7 +20,7 @@
  */
 
 
-/* 
+/*
  * Cursor routines demo.
  *
  * This file is part of xforms package
@@ -58,7 +58,7 @@ void setbitmapcursor_cb(FL_OBJECT *ob, long data)
    static int bitmapcur;
 
    if(!bitmapcur)
-      bitmapcur = fl_create_bitmap_cursor((char *)bm1_bits, (char *)bm2_bits, 
+      bitmapcur = fl_create_bitmap_cursor((char *)bm1_bits, (char *)bm2_bits,
                                           bm1_width, bm1_height,
                                           bm1_width/2, bm1_height/2);
    fl_set_cursor(FL_ObjWin(ob), bitmapcur);

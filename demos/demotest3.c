@@ -39,7 +39,7 @@ timeoutCB(int tid, void *stuff) {
   fl_show_alert("Standby", "This may abort", "with SEGV", 1);
 }
 
-void 
+void
 pressedCB(FL_OBJECT *obj, long data) {
   int tid = fl_add_timeout(300L, timeoutCB, NULL);
   fprintf(stderr,"tid=%d\n",tid);

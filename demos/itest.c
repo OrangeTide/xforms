@@ -144,7 +144,7 @@ hscroll_callback(FL_OBJECT * ob, long data)
     }
 }
 
-void 
+void
 outformat_callback(FL_OBJECT *ob, long data)
 {
     app.outformat = fl_get_choice_text(ob);
@@ -329,7 +329,7 @@ test_icon(void)
 
     flimage_free(im);
 }
-    
+
 static int
 load_and_show(const char *file, void *data)
 {
@@ -455,7 +455,7 @@ static void hide_it(FL_OBJECT *ob, long data)
         sprintf(file,"%s/%s", d, f);
         save_file(f, 0);
     }
-      
+
     fl_hide_form(app.fd_saveAs_form->saveAs_form);
 }
 

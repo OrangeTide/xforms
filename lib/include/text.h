@@ -59,5 +59,5 @@ FL_EXPORT FL_OBJECT *fl_add_text(
 		);
 
 
-#endif 
+#endif
 

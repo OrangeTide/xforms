@@ -20,12 +20,12 @@
  */
 
 
-/* 
+/*
  * This demo show the different boxtypes. Note that some
  * boxtypes are not appropriate for some objects
  *
  *  This file is part of xforms package.
- *  M. Overmars and T.C. Zhao  (1997) 
+ *  M. Overmars and T.C. Zhao  (1997)
  */
 
 #ifdef HAVE_CONFIG_H
@@ -73,7 +73,7 @@ static VN_struct btypes[]=
 FL_FORM *form;
 FL_OBJECT *tobj[18], *exitob, *btypeob, *modeob;
 
-void 
+void
 boxtype_cb (FL_OBJECT * ob, long arg)
 {
    int i, req_bt = fl_get_choice(ob) - 1;
@@ -90,7 +90,7 @@ boxtype_cb (FL_OBJECT * ob, long arg)
    }
 }
 
-void 
+void
 mode_cb (FL_OBJECT * ob, long arg)
 {
    static int lval = -1;
@@ -115,7 +115,7 @@ mode_cb (FL_OBJECT * ob, long arg)
 
 /*************** Creation Routines *********************/
 
-void 
+void
 create_form_form (void)
 {
   FL_OBJECT *obj;
@@ -157,7 +157,7 @@ create_form_form (void)
 }
 /*---------------------------------------*/
 
-void 
+void
 create_the_forms (void)
 {
    create_form_form ();

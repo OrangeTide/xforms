@@ -8,7 +8,7 @@ directory here is mesa headers.
 OpenGL canvas gl.c by default is compiled into the static library using
 OpenGL on SGI and Mesa on other platforms. Shared library might not
 contain gl.o on some platforms. You can always add it by compiling
-gl.c here or compiling gl.c here and link it with your application. 
+gl.c here or compiling gl.c here and link it with your application.
 
 If you use the gl.o for Mesa from the pre-built static library, you need
 Mesa 2.0

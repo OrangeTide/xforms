@@ -35,7 +35,7 @@ push_cb(FL_OBJECT *ob, long n)
 {
    if(fl_get_button(ob))
       fl_show_object(abox[n]);
-   else 
+   else
       fl_hide_object(abox[n]);
 }
 
@@ -61,7 +61,7 @@ void makeform(void)
 
 int
 main(int argc, char *argv[])
-{ 
+{
   fl_initialize(&argc, argv, "FormDemo", 0, 0);
   makeform();
 

@@ -20,7 +20,7 @@
  */
 
 
-/* 
+/*
  * Demo showing the use of preemptive and post-object handler,
  * and one possible way of implementing a "tool tip"
  *
@@ -69,7 +69,7 @@ preemptive_handler(FL_OBJECT *ob, int event,
     switch(event)
     {
       case FL_ENTER:
-         if(fl_get_button(fd_form0->enter)) 
+         if(fl_get_button(fd_form0->enter))
          {
            /* ok, want to handle enter */
              sprintf(buf,"%s %s", "FL_ENTER",what);
@@ -130,7 +130,7 @@ post_handler(FL_OBJECT *ob, int event,
      if(!ob->u_vdata)
        return 0;
 
-     if(event == FL_ENTER) 
+     if(event == FL_ENTER)
          timeoutID = fl_add_timeout(INTERVAL,do_tips, ob);
      else if(event == FL_LEAVE || event == FL_PUSH)
      {

@@ -14,4 +14,4 @@ o. handles 2byte primary color for xpm files.
 o. direct xpm to ps transation added. Added -rgb flag
 o. recognizes Struct keyword.
 V0.32
-o. added FL_[HOR|VERT]_BASIC_SCROLBAR/slider 
+o. added FL_[HOR|VERT]_BASIC_SCROLBAR/slider

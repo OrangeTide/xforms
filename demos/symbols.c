@@ -36,8 +36,8 @@ char *symbols[] =
 {
     "@>", "@<-", "@9->", "@DnLine", "@8>", "@circle", "@->|",
     "@>>", "@square", "@4->|", /*    "@8->|", */ "@<->",
-    "@UpArrow", "@9+", "@->", "@<", "@DnArrow", "@+", "@-->", 
-    "@line", "@3->", "@UpLine", "@>|", "@2-->", "@4>|", "@8>|", 
+    "@UpArrow", "@9+", "@->", "@<", "@DnArrow", "@+", "@-->",
+    "@line", "@3->", "@UpLine", "@>|", "@2-->", "@4>|", "@8>|",
     "@=", "@menu", "@8=", "@|>", "@2|>", "@-32|>", "@+32|>",
     "@-2circle",
     0
@@ -70,7 +70,7 @@ make_symbols(void)
 
     fl_set_object_callback(obj,done_cb,0);
 
-    for ( x = x0, y=y0, i = 1, p = symbols; *p; p++, i++) 
+    for ( x = x0, y=y0, i = 1, p = symbols; *p; p++, i++)
     {
         obj = fl_add_box(FL_UP_BOX,x,y,dx,dy,*p);
         fl_set_object_lcol(obj, FL_BOTTOM_BCOL);
@@ -80,7 +80,7 @@ make_symbols(void)
         {
             static int j = 1;
             x = x0;
-            y = y0 +  j * ( dy + ty + ysep + 1); 
+            y = y0 +  j * ( dy + ty + ysep + 1);
             j++;
          }
          else

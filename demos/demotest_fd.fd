@@ -22,13 +22,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_MENU
@@ -41,10 +41,10 @@ style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Menu
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
+name:
 callback: menu_callback
 argument: 0
   struct: 0

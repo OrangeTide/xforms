@@ -1057,7 +1057,7 @@ typedef unsigned int       FL_PACKED4;
 
 #define FL_UNPACK(p,r,g,b) do {r=FL_GETR(p);g=FL_GETG(p),b=FL_GETB(p);} while(0)
 #define FL_UNPACK3         FL_UNPACK
-#define FL_UNPACK4(p,r,g,b,a) do {FL_UNPACK3(p,r,g,b);a=FL_GETA(p);} while(0) 
+#define FL_UNPACK4(p,r,g,b,a) do {FL_UNPACK3(p,r,g,b);a=FL_GETA(p);} while(0)
 #endif
 
 typedef struct
@@ -1072,4 +1072,4 @@ typedef struct
 
 #define FL_RGB2PIXEL  FL_RGB2PIXEL_
 
-#endif 
+#endif

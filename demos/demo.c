@@ -26,7 +26,7 @@
  * Driver for the demo/test suite
  *
  *  This file is part of xforms package
- *  M. Overmars and T.C. Zhao 
+ *  M. Overmars and T.C. Zhao
  *
  */
 
@@ -105,7 +105,7 @@ MENU menus[MAXMENU];
 int mennumb = 0;
 
 /* Returns the number of a given menu name. */
-int 
+int
 find_menu(char *nnn)
 {
     int i;
@@ -196,7 +196,7 @@ char stack[64][32];
 int stsize = 0;
 
 /* Pushes a menu to be visible */
-static void 
+static void
 push_menu(char nnn[])
 {
     int n, i, bn;
@@ -228,7 +228,7 @@ push_menu(char nnn[])
 }
 
 /* Pops a menu */
-static void 
+static void
 pop_menu(void)
 {
     if (stsize <= 1)
@@ -245,7 +245,7 @@ extern "C"
 char **fl_get_cmdline_args(int *);
 
 /* handles a button push */
-void 
+void
 dobut(FL_OBJECT * obj, long arg)
 {
     int men = find_menu(stack[stsize - 1]);
@@ -268,20 +268,20 @@ dobut(FL_OBJECT * obj, long arg)
         fl_addto_command_log(cmd);
         fl_addto_command_log("\n");
         fl_deactivate_all_forms();
-	fl_exe_command(cmd, 1); 
+	fl_exe_command(cmd, 1);
 	fl_activate_all_forms();
     }
 }
 
 /* Go up a level in the menu tree */
-void 
+void
 doback(FL_OBJECT * obj, long arg)
 {
     pop_menu();
 }
 
 /* Exit the program */
-void 
+void
 doexit(FL_OBJECT * obj, long arg)
 {
     fl_hide_form(form);
@@ -297,7 +297,7 @@ showlog(FL_OBJECT *obj, long arg)
 
 
 /* Loads the menu file. Returns whether successful. */
-static int 
+static int
 load_the_menu(char fname[])
 {
     FILE *fin;
@@ -355,7 +355,7 @@ extern void doback(FL_OBJECT *, long);
 extern void dobut(FL_OBJECT *, long);
 
 
-void 
+void
 create_form_form(void)
 {
     FL_OBJECT *obj;
@@ -420,7 +420,7 @@ create_form_form(void)
     fl_adjust_form_size(form);
 }
 
-void 
+void
 create_the_forms(void)
 {
     create_form_form();

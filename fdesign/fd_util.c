@@ -24,9 +24,9 @@
  * \file fd_util.c
  *
  * Eliminate the emission of duplicate info. This is necessary as
- * some #include define data (pixmap for example). 
+ * some #include define data (pixmap for example).
  *
- * We should eventually move the functionality of already_emited in 
+ * We should eventually move the functionality of already_emited in
  * fd_printC.c into this function so callback is also checked. This
  * probably means we need make struct CodeInfo more efficient.
  */

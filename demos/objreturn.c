@@ -48,13 +48,13 @@ extern FD_form0 *create_form_form0(void);
 static FD_form0 *fd_form0;
 
 /* callbacks for form form0 */
-void 
+void
 return_cb(FL_OBJECT * ob, long data)
 {
     fl_addto_browser(fd_form0->br, (char *) data);
 }
 
-void 
+void
 set_when(int n)
 {
     fl_set_object_return(fd_form0->obj[0], n);
@@ -63,7 +63,7 @@ set_when(int n)
     fl_set_object_return(fd_form0->obj[3], n);
 }
 
-void 
+void
 when_cb(FL_OBJECT * ob, long data)
 {
     int n = fl_get_choice(ob) - 1;
@@ -71,13 +71,13 @@ when_cb(FL_OBJECT * ob, long data)
 	set_when(n);
 }
 
-void 
+void
 resetlog_cb(FL_OBJECT * ob, long data)
 {
     fl_clear_browser(fd_form0->br);
 }
 
-int 
+int
 main(int argc, char *argv[])
 {
 

@@ -37,8 +37,8 @@ FL_FORM *form;
 FL_OBJECT *topbox;
 
 void change_color(FL_OBJECT *obj, long col)
-{ 
-  fl_set_object_color(topbox, col,  col); 
+{
+  fl_set_object_color(topbox, col,  col);
 }
 
 void makeform(void)

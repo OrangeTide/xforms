@@ -25,7 +25,7 @@
  *
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1997-2002  By T.C. Zhao 
+ *  Copyright (c) 1997-2002  By T.C. Zhao
  *  All rights reserved.
  *.
  *
@@ -460,7 +460,7 @@ fl_delete_folder_byname(FL_OBJECT * ob, const char *name)
 }
 
 #if TBDEBUG
-void 
+void
 fl_print_tabfolder(FL_OBJECT * ob, const char *s)
 {
     SPEC *sp = ob->spec;
@@ -902,7 +902,7 @@ compute_position(FL_OBJECT * ob)
     else
 	compute_top_position(ob);
 
-    
+
 }
 
 int

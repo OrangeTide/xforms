@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.8 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.9 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -750,7 +750,7 @@ void fl_set_input_navigate(unsigned mask)
      if (mask == ShiftMask || mask == Mod1Mask || mask == ControlMask)
           fl_context->navigate_mask = mask;
 }
-          
+
 
 Display *
 fl_initialize(int *na, char *arg[], const char *appclass,
@@ -832,7 +832,7 @@ fl_initialize(int *na, char *arg[], const char *appclass,
         /* if no display is set, there is no guarantee that buf
            is long enough to contain the DISPLAY setting
          */
-	M_err(0, "%s: Can't open display %s", fl_argv[0], 
+	M_err(0, "%s: Can't open display %s", fl_argv[0],
               XDisplayName(buf[0] ? buf:0));
 	return 0;
     }

@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 #ifdef LOG
    fl_set_xyplot_xscale(xypui->xyplot, FL_LOG, 5);
    fl_set_xyplot_yscale(xypui->xyplot, FL_LOG, 5);
-   fl_set_xyplot_xbounds(xypui->xyplot, 0.01,10); 
+   fl_set_xyplot_xbounds(xypui->xyplot, 0.01,10);
    fl_set_xyplot_ytics(xypui->xyplot, 3,5);
    fl_set_xyplot_xgrid(xypui->xyplot, FL_GRID_MINOR);
 /*   fl_set_xyplot_ygrid(xypui->xyplot, 2); */

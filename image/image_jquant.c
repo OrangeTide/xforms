@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jquant.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_jquant.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  * Copyright (C) 1998  T.C. Zhao
  *
@@ -377,7 +377,7 @@ find_nearby_colors(SPEC *sp, int minc0, int minc1, int minc2,
        to any point in the update box *     (zero if color is within update
        box); *  2. its maximum squared-distance to any point in the update
        box. * Both of these can be found by considering only the corners of
-       the box. * We save the minimum distance for each color in mindist[]; * 
+       the box. * We save the minimum distance for each color in mindist[]; *
 
 
 
@@ -760,7 +760,7 @@ pass2_fs_dither(SPEC *sp, unsigned char **red,
 		cur2 -= colormap2[pixcode];
 	    }
 
-	    /* Compute error fractions to be propagated to adjacent pixels. * 
+	    /* Compute error fractions to be propagated to adjacent pixels. *
 	       Add these into the running sums, and simultaneously shift the
 	       * next-line error sums left by 1 column. */
 	    {
@@ -794,7 +794,7 @@ pass2_fs_dither(SPEC *sp, unsigned char **red,
 
 	    /* At this point curN contains the 7/16 error value to be
 	       propagated * to the next pixel on the current line, and all
-	       the errors for the * next line have been shifted over.  We are 
+	       the errors for the * next line have been shifted over.  We are
 	       therefore ready to move on. */
 	    r += dir;
 	    g += dir;

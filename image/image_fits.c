@@ -21,11 +21,11 @@
 
 
 /*
- * $Id: image_fits.c,v 1.4 2003/04/24 14:05:39 leeming Exp $
+ * $Id: image_fits.c,v 1.5 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1993, 1998-2002  T.C. Zhao 
+ *  Copyright (c) 1993, 1998-2002  T.C. Zhao
  *  All rights reserved.
  *.
  *
@@ -187,7 +187,7 @@ generate_fits_header_info(FL_IMAGE *im)
 
     for (im->info[0] = '\0', q = FITS_header_info(h); *q; q++)
       strcat(strcat(im->info, *q),"\n");
-}    
+}
 
 #if FITS_DEBUG
 static int verbose = 4;
@@ -286,7 +286,7 @@ FITS_description(FL_IMAGE * im)
     {
 	flimage_add_text(im, sp->label[0], strlen(sp->label[0]),
 			 LBFONT, LBSIZE,
-			 FL_PACK(FL_PCMAX, FL_PCMAX, 0), 
+			 FL_PACK(FL_PCMAX, FL_PCMAX, 0),
                          FL_PACK(0, FL_PCMAX, FL_PCMAX),
 			 1, im->w / 3, im->h + LBSIZE, 0);
 #if 0

@@ -30,7 +30,7 @@
 #include "viewforms.h"
 
 static FL_PUP_ENTRY fdmenu_file_0[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "Open",	0,	"^O",	 FL_PUP_NONE},
     { "Save",	0,	"^S",	 FL_PUP_NONE},
@@ -40,7 +40,7 @@ static FL_PUP_ENTRY fdmenu_file_0[] =
 };
 
 static FL_PUP_ENTRY fdmenu_options_1[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "Interpolations",	0,	"",	 FL_PUP_NONE},
     { "Layout",	0,	"",	 FL_PUP_NONE},
@@ -51,7 +51,7 @@ static FL_PUP_ENTRY fdmenu_options_1[] =
 
 #include "xpm/quit.xpm"
 static FL_PUP_ENTRY fdmenu_help_2[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "About",	0,	"",	 FL_PUP_NONE},
     { "Index",	0,	"",	 FL_PUP_NONE},
@@ -291,7 +291,7 @@ FD_help *create_form_help(void)
 
 #include "xpm/cancel.xpm"
 static FL_PUP_ENTRY fdchoice_font_3[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "helvetica-medium-r",	0,	"",	 FL_PUP_NONE},
     { "helvetica-bold-r",	0,	"",	 FL_PUP_NONE},
@@ -314,7 +314,7 @@ static FL_PUP_ENTRY fdchoice_font_3[] =
 
 #include "xpm/accept.xpm"
 static FL_PUP_ENTRY fdchoice_size_4[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "8 Tiny",	0,	"",	 FL_PUP_NONE},
     { "10 Small",	0,	"",	 FL_PUP_NONE},

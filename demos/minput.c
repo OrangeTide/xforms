@@ -25,7 +25,7 @@
 #endif
 #include "include/forms.h"
 
-void 
+void
 input_cb(FL_OBJECT *ob, long data)
 {
     int x, y;

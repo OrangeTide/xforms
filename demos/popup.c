@@ -78,14 +78,14 @@ void menu_callback(FL_OBJECT *ob, long data)
     FD_pupform *fdui = (FD_pupform *)ob->form->fdui;
     char buf[128];
 
-    sprintf(buf,"item %d (%s) selected", 
+    sprintf(buf,"item %d (%s) selected",
        fl_get_menu(ob), fl_get_menu_text(ob));
 
     fl_set_object_label(fdui->status, buf);
 }
 
 /** menu initialization entries. No callbacks for the item */
-FL_PUP_ENTRY menu_entries[] = 
+FL_PUP_ENTRY menu_entries[] =
 {
      {"Menu Item1"},
      {"Menu Item2"},
@@ -143,7 +143,7 @@ static int pupitem_cb(int selected)
      return selected;
 }
 
-FL_PUP_ENTRY pup_entries[] = 
+FL_PUP_ENTRY pup_entries[] =
 {
      {"Popup Item1", pupitem_cb, "1", FL_PUP_RADIO},
      {"Popup Item2", pupitem_cb, "2", FL_PUP_RADIO},
@@ -160,14 +160,14 @@ FL_PUP_ENTRY pup_entries[] =
 };
 
 static void pup_entercb(int n, void *data)
-{ 
+{
       FD_pupform *fdui = (FD_pupform *)data;
       char buf[128];
       sprintf(buf,"Entered %d (%s)", n, pup_entries[n-1].text);
       fl_set_object_label(fdui->status, buf);
 }
 
-void 
+void
 dopup_callback(FL_OBJECT *ob, long data)
 {
     if(pupID < 0)
@@ -181,7 +181,7 @@ dopup_callback(FL_OBJECT *ob, long data)
     fl_dopup(pupID);
 }
 
-/********* End of pup *****************/ 
+/********* End of pup *****************/
 
 static void
 init_choice(FL_OBJECT *ob)

@@ -70,7 +70,7 @@ main(int argc, char *argv[])
     sprintf(str, "%.2f", sc);
     fl_set_input(ui->scaleobj, str);
 
-    fl_show_form(ui->form, FL_PLACE_CENTER|FL_FREE_SIZE, 
+    fl_show_form(ui->form, FL_PLACE_CENTER|FL_FREE_SIZE,
 		FL_FULLBORDER, "Scaling");
 
     while (1)

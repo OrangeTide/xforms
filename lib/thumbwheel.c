@@ -24,7 +24,7 @@
  * \file thumbwheel.c
  *
  *  This file is part of the XForms library package.
- *  Copyright (c) 1998-2002  T.C. Zhao 
+ *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
  *
  *  The thumbwheel

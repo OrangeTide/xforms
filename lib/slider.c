@@ -32,7 +32,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_slid = "$Id: slider.c,v 1.6 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.7 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -229,7 +229,7 @@ draw_slider(FL_OBJECT * ob)
     if (ob->align == FL_ALIGN_CENTER)
     {
 	fl_drw_slider(ob->boxtype, sp->x, sp->y, sp->w, sp->h,
-		   ob->col1, ob->col2, ob->type, sp->slsize, val, 
+		   ob->col1, ob->col2, ob->type, sp->slsize, val,
                     is_fill(ob->type) ? "":ob->label,
 		      FL_SLIDER_ALL & ~sp->mouse, inv, ob->bw);
 

@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * Demo showing the use of a free obejct 
+/*
+ * Demo showing the use of a free obejct
  *
  * This file is part of xforms package
  * T.C. Zhao and M. Overmars
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
     drawui = create_form_drawfree();
     fl_set_object_color(drawui->colorobj,FL_FREE_COL1, FL_FREE_COL1);
     draw_initialize(drawui);
-    fl_show_form(drawui->drawfree, FL_PLACE_CENTER|FL_FREE_SIZE, 
+    fl_show_form(drawui->drawfree, FL_PLACE_CENTER|FL_FREE_SIZE,
                  FL_FULLBORDER, "FreeObject");
     fl_do_forms();
     fl_finish();
@@ -98,7 +98,7 @@ void draw_triangle(int fill, int x, int y, int w, int h, unsigned long col)
          xpoint[3].x = xpoint[0].x; xpoint[3].y = xpoint[0].y;
          XDrawLines(dpy, win, gc, xpoint, 4, CoordModeOrigin);
      }
-}  
+}
 
 
 static DrawFunc drawfunc[] =
@@ -126,7 +126,7 @@ void draw_initialize(FD_drawfree *ui)
     fl_set_object_resize(ui->miscgrp, FL_RESIZE_NONE);
 
     cur_fig = saved_figure;
-    cur_fig->c[0] = cur_fig->c[1] = cur_fig->c[2] = 127, 
+    cur_fig->c[0] = cur_fig->c[1] = cur_fig->c[2] = 127,
     cur_fig->w = cur_fig->h = 30;
     cur_fig->drawit = fl_oval;
     cur_fig->fill = 1;
@@ -210,10 +210,10 @@ int freeobject_handler(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
     case FL_DRAW:
         if (cur_fig->newfig == 1)
         {
-	    cur_fig->drawit(cur_fig->fill, 
+	    cur_fig->drawit(cur_fig->fill,
 	                    cur_fig->x + ob->x,
-	                    cur_fig->y + ob->y, 
-	                    cur_fig->w, cur_fig->h, cur_fig->col); 
+	                    cur_fig->y + ob->y,
+	                    cur_fig->w, cur_fig->h, cur_fig->col);
         }
         else
 	{
@@ -222,7 +222,7 @@ int freeobject_handler(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
            for (dr = saved_figure; dr < cur_fig; dr++)
 	   {
 	      dr->drawit(dr->fill, dr->x + ob->x,
-	                            dr->y + ob->y, 
+	                            dr->y + ob->y,
 	                            dr->w, dr->h, dr->col);
 	   }
 	}

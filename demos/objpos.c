@@ -20,7 +20,7 @@
  */
 
 
-/* 
+/*
  * This is a crazy demo showing the "use" of changing
  * fields in objects.
  *
@@ -37,7 +37,7 @@ move_cb(FL_OBJECT *ob, long data)
 {
    static FL_Coord dx=11, dy=7;
    FL_OBJECT *but = (FL_OBJECT *)data;
-   FL_Coord x,y,w,h; 
+   FL_Coord x,y,w,h;
 
    fl_get_object_geometry(but,&x,&y, &w, &h);
 

@@ -599,11 +599,11 @@ FL_EXPORT FL_OBJECT *FL_EVENT;
 
 /* form visibility state: form->visible */
 enum {
-  FL_BEING_HIDDEN = -1, 
-  FL_HIDDEN = 0, 
+  FL_BEING_HIDDEN = -1,
+  FL_HIDDEN = 0,
   FL_INVISIBLE = FL_HIDDEN,
   FL_VISIBLE = 1
-}; 
+};
 
 typedef struct forms_
 {

@@ -24,7 +24,7 @@
  * \file be.c
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1996-2000  T.C. Zhao 
+ *  Copyright (c) 1996-2000  T.C. Zhao
  *  Copyright (c) 2002 T.C. Zhao and Steve Lamont
  *  All rights reserved.
  *.
@@ -87,7 +87,7 @@ fl_free_freelist(void)
 	return;
 
     /* scan the list for objects eligible for deletion and delete those
-       found. 
+       found.
      */
     for ( n = 0; n < rec->avail; n++)
     {
@@ -97,5 +97,5 @@ fl_free_freelist(void)
              rec->data[n] = 0;
              --rec->nfree;
         }
-    }         
+    }
 }

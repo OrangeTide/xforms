@@ -21,11 +21,11 @@
 
 
 /*
- * $Id: image_gif.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_gif.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1993, 1998-2002  By T.C. Zhao 
+ *  Copyright (c) 1993, 1998-2002  By T.C. Zhao
  *  All rights reserved.
  *.
  *
@@ -42,7 +42,7 @@
  *   image descriptor   --- 1
  *   raster             --- 2
  *   terminator
- *   
+ *
  *  1 & 2 can be repeated.
  */
 
@@ -271,7 +271,7 @@ convert_gif_text(FL_IMAGE * im)
 	if (!p->str[0])
 	    continue;
 
-	/* 
+	/*
 	 * gif text size is given in pixels, convert to point. 1pixel =
 	 * 0.75pt for a typical screen
 	 */
@@ -956,7 +956,7 @@ write_pixels(FL_IMAGE * im)
     WorkStr workstring;
     FILE *fp = im->fpout;
 
-    /* 
+    /*
      * IMPORTANT: number of colors handed to this routine might not be 2^n,
      * need to make it so to fool the encoder (colors-1 need to be full bits)
      */
@@ -976,7 +976,7 @@ write_pixels(FL_IMAGE * im)
     ccode = EOFCode + 1;
     cstr->prefix = -1;
 
-    /* 
+    /*
      * start raster stream. Old way of doing things, that is as soon as we
      * get 4095, a clearcode is emitted.
      */

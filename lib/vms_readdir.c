@@ -123,7 +123,7 @@ opendir(name)
     {
 	name_dsc.len = len = strlen(nambuf);
 	/* Check which components of file specification seem to be present. */
-	flags = ~0;		/* (init so that we can ignore return status) 
+	flags = ~0;		/* (init so that we can ignore return status)
 				 */
 	(void) sys$filescan(&name_dsc, (void *) 0, &flags);
 	if ((flags & ~FSCN_DIR) != 0 || strchr(nambuf, '/') != 0)

@@ -20,7 +20,7 @@
  */
 
 
-/* 
+/*
  * Demo showing the use of FREE Object with color leakage
  *
  */
@@ -86,7 +86,7 @@ void draw_triangle(int fill, int x, int y, int w, int h, unsigned long col)
          xpoint[3].x = xpoint[0].x; xpoint[3].y = xpoint[0].y;
          XDrawLines(dpy, win, gc, xpoint, 4, CoordModeOrigin);
      }
-}  
+}
 
 
 static DrawFunc drawfunc[] =
@@ -106,7 +106,7 @@ static DrawFigure saved_figure[800], *cur_fig;
 void draw_initialize(FD_drawfree *ui)
 {
     cur_fig = saved_figure;
-    cur_fig->c[0] = cur_fig->c[1] = cur_fig->c[2] = 127, 
+    cur_fig->c[0] = cur_fig->c[1] = cur_fig->c[2] = 127,
     cur_fig->w = cur_fig->h = 30;
     cur_fig->drawit = fl_oval;
     cur_fig->fill = 1;
@@ -181,10 +181,10 @@ int freeobject_handler(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
     {
     case FL_DRAW:
         if (cur_fig->newfig == 1)
-	    cur_fig->drawit(cur_fig->fill, 
+	    cur_fig->drawit(cur_fig->fill,
 	                    cur_fig->x + ob->x,
-	                    cur_fig->y + ob->y, 
-	                    cur_fig->w, cur_fig->h, FL_FREE_COL1); 
+	                    cur_fig->y + ob->y,
+	                    cur_fig->w, cur_fig->h, FL_FREE_COL1);
         else
 	{
            fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
@@ -194,7 +194,7 @@ int freeobject_handler(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 	   {
 	      fl_mapcolor(FL_FREE_COL1, dr->c[0], dr->c[1], dr->c[2]);
 	      dr->drawit(dr->fill, dr->x + ob->x,
-	                            dr->y + ob->y, 
+	                            dr->y + ob->y,
 	                            dr->w, dr->h, FL_FREE_COL1);
 	   }
 	}
@@ -232,9 +232,9 @@ FD_drawfree *create_form_drawfree(void)
   fdui->freeobj = obj = fl_add_free(FL_NORMAL_FREE,
                         145, 55, 370, 405, "", freeobject_handler);
 /*    fl_set_object_dblbuffer(obj, 1); */
-  fl_set_object_boxtype(obj, FL_FLAT_BOX); 
+  fl_set_object_boxtype(obj, FL_FLAT_BOX);
   fdui->colorobj = obj = fl_add_box(FL_BORDER_BOX,25,325,90,25,"");
-    fl_set_object_color(obj, FL_FREE_COL1, FL_COL1), 
+    fl_set_object_color(obj, FL_FREE_COL1, FL_COL1),
   fdui->hsli = obj = fl_add_valslider(FL_HOR_SLIDER,15,55,120,25,"Height");
     fl_set_object_lalign(obj,FL_ALIGN_TOP);
     fl_set_object_callback(obj,change_size,1);

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_text.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_text.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -157,8 +157,8 @@ display_text(FL_IMAGE * im)
 
     for (t = im->text, tend = t + im->ntext; t < tend; t++)
     {
-	fl_draw_text_inside(t->align, 
-                            t->x + im->wxd - im->sxd -1, 
+	fl_draw_text_inside(t->align,
+                            t->x + im->wxd - im->sxd -1,
                             t->y + im->wyd - im->syd -1,
                             2, 2, t->str, t->len,
 			    t->style, t->size, t->color, t->bcolor, !t->nobk,

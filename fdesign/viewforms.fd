@@ -24,13 +24,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -43,12 +43,12 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Frame
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -61,12 +61,12 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Structure
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_FRAME
@@ -78,13 +78,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_FRAME
@@ -96,13 +96,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -115,12 +115,12 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Comment
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TIMER
@@ -133,7 +133,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Timer
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: timeout
@@ -150,13 +150,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_MENU
@@ -195,12 +195,12 @@ style: FL_BOLD_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLUE
 label: RNA Movies
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_MENU
@@ -255,12 +255,12 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_SouthEast
 name: glcanvas
-callback: 
+callback:
 argument: 0
 
 --------------------
@@ -294,8 +294,8 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthEast
 name: movie_slider
@@ -315,13 +315,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: file_grp
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_FRAME
@@ -333,13 +333,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -373,7 +373,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Open
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button1
@@ -393,13 +393,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BEGIN_GROUP
@@ -411,13 +411,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: player_grp
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_FRAME
@@ -429,13 +429,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -448,7 +448,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Pause
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button60
@@ -469,7 +469,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Play
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button61
@@ -490,7 +490,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Forward
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button62
@@ -511,7 +511,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Backward
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button63
@@ -532,7 +532,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Rewind
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button64
@@ -552,13 +552,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -571,7 +571,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Snapshot
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button9
@@ -591,13 +591,13 @@ alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLUE
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthEast
 name: comment
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_BUTTON
@@ -609,8 +609,8 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLUE
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_SouthWest FL_SouthWest
 name: struccount
@@ -627,8 +627,8 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLUE
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_SouthWest FL_SouthWest
 name: framecount
@@ -651,13 +651,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -670,12 +670,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Index
-shortcut: 
+shortcut:
 resize: FL_RESIZE_Y
 gravity: FL_NorthWest FL_SouthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -688,12 +688,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Help Browser
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BROWSER
@@ -705,8 +705,8 @@ alignment: FL_ALIGN_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_Y
 gravity: FL_NorthWest FL_SouthWest
 name: help_index
@@ -734,17 +734,17 @@ alignment: FL_ALIGN_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_SouthEast
 name: help_disp
-callback: 
-argument: 
+callback:
+argument:
   v_pref: FL_ON
-  content:    
+  content:
   content: @C1@l@c Help Instructions
-  content:   
+  content:
   content: @C4@c Select one of the topics on the left.
 
 --------------------
@@ -757,8 +757,8 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: timeout
@@ -776,7 +776,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Close
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button10
@@ -802,13 +802,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -821,12 +821,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Font Selection
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -839,7 +839,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Cancel
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
 name: button20
@@ -860,7 +860,7 @@ style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Font
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: font
@@ -915,7 +915,7 @@ style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Size
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: size
@@ -938,13 +938,13 @@ alignment: FL_ALIGN_LEFT
 style: FL_BOLD_STYLE
 size: FL_HUGE_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_SouthEast
 name: text
-callback: 
-argument: 
+callback:
+argument:
 
 =============== FORM ===============
 Name: about
@@ -962,13 +962,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -980,13 +980,13 @@ alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: revision
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -998,13 +998,13 @@ alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: date
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -1017,12 +1017,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Written by Dirk Evers
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -1056,12 +1056,12 @@ style: FL_NORMAL_STYLE+FL_SHADOW_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLUE
 label: The RNA 2D Structure Animator
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -1074,12 +1074,12 @@ style: FL_BOLD_STYLE+FL_SHADOW_STYLE
 size: FL_LARGE_SIZE
 lcol: FL_BLUE
 label: RNA Movies
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -1092,12 +1092,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: dirk@TechFak.Uni-Bielefeld.DE
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -1110,12 +1110,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLUE
 label: http://BiBiServ.TechFak.Uni-Bielefeld.DE/rnamovies/
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 =============== FORM ===============
 Name: brucc_opt
@@ -1133,13 +1133,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -1152,12 +1152,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Label
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -1170,12 +1170,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Bonds
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -1188,12 +1188,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Nucleotides
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_INPUT
@@ -1206,7 +1206,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Frequency
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: labelfreq
@@ -1224,7 +1224,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Colored
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button43
@@ -1243,7 +1243,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Labeled
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button42
@@ -1262,12 +1262,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Structure Layout
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -1280,7 +1280,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Dismiss
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
 name: button40
@@ -1301,12 +1301,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Backbone
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BEGIN_GROUP
@@ -1318,13 +1318,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: spl_brucc
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_CHECKBUTTON
@@ -1337,7 +1337,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Linear
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button47
@@ -1356,7 +1356,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Spline
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button44
@@ -1374,7 +1374,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Strips
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button48
@@ -1391,13 +1391,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -1410,12 +1410,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Direction
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_CHECKBUTTON
@@ -1428,7 +1428,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Display 3'
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: but401
@@ -1447,7 +1447,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Display 5'
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: but400
@@ -1465,13 +1465,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: dln_brucc
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_CHECKBUTTON
@@ -1484,7 +1484,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: None
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button46
@@ -1502,7 +1502,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Lines
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button45
@@ -1520,7 +1520,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: WC/GU
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button49
@@ -1538,13 +1538,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_VALSLIDER
@@ -1557,7 +1557,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Nucleotide Distance
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: label_dist
@@ -1577,7 +1577,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Label Distance
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: freq_dist
@@ -1598,7 +1598,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Anim Time
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: anim_time
@@ -1621,7 +1621,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Strip Width
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: strip_width
@@ -1646,13 +1646,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_FRAME
@@ -1664,13 +1664,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthEast FL_SouthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_GLCANVAS
@@ -1682,13 +1682,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_SouthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_SLIDER
@@ -1700,8 +1700,8 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthEast
 name: x_displacmnt
@@ -1718,8 +1718,8 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_SouthEast
 name: y_displacmnt
@@ -1736,8 +1736,8 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthEast FL_SouthEast
 name: rotation
@@ -1754,8 +1754,8 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthWest
 name: zoom
@@ -1772,13 +1772,13 @@ alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLUE
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthEast
 name: comment
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_BUTTON
@@ -1791,7 +1791,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Close
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthWest
 name: button70
@@ -1809,12 +1809,12 @@ style: FL_BOLD_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLUE
 label: Snapshot
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 =============== FORM ===============
 Name: log
@@ -1832,13 +1832,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BROWSER
@@ -1850,13 +1850,13 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_SouthEast
 name: browser
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -1869,7 +1869,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Close
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button80
@@ -1890,12 +1890,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Log Browser
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -1908,7 +1908,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Clear Log
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: button81
@@ -1934,13 +1934,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -1953,12 +1953,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Save
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -1971,7 +1971,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Cancel
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthWest
 name: button90
@@ -1992,7 +1992,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Accept
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
 name: button91
@@ -2013,12 +2013,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Filename
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: filename
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_COUNTER
@@ -2031,7 +2031,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: X-Size
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: xsize
@@ -2054,7 +2054,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Y-Size
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: ysize
@@ -2082,13 +2082,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -2101,12 +2101,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Frames
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -2119,12 +2119,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Save
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -2137,7 +2137,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Cancel
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
 name: button90
@@ -2158,7 +2158,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Accept
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthWest
 name: button91
@@ -2179,7 +2179,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Filename:
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: filename
@@ -2197,7 +2197,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: X-Size
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: xsize
@@ -2220,7 +2220,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Y-Size
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: ysize
@@ -2243,7 +2243,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Browse
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: button92
@@ -2260,13 +2260,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_CHECKBUTTON
@@ -2278,8 +2278,8 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_fr_to
@@ -2297,7 +2297,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: from:
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_from
@@ -2315,7 +2315,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: to:
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_to
@@ -2333,7 +2333,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: current
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_current
@@ -2352,7 +2352,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: all
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_all
@@ -2369,13 +2369,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 =============== FORM ===============
 Name: save_as
@@ -2393,13 +2393,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_LABELFRAME
@@ -2412,12 +2412,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: File Format
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_TEXT
@@ -2430,12 +2430,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Save
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -2448,7 +2448,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Cancel
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
 name: button90
@@ -2469,7 +2469,7 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Accept
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthWest FL_NorthWest
 name: button91
@@ -2490,7 +2490,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: X-Size
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: xsize
@@ -2513,7 +2513,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Y-Size
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: ysize
@@ -2536,12 +2536,12 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Frames
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_INPUT
@@ -2554,7 +2554,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: from:
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_from
@@ -2572,7 +2572,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: to:
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_to
@@ -2589,13 +2589,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_CHECKBUTTON
@@ -2607,8 +2607,8 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_fr_to
@@ -2626,7 +2626,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: current
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_current
@@ -2645,7 +2645,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: all
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: frames_all
@@ -2662,13 +2662,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BEGIN_GROUP
@@ -2680,13 +2680,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: format
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_CHECKBUTTON
@@ -2699,7 +2699,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: GIF
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: format_gif
@@ -2718,7 +2718,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: PS
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: format_ps
@@ -2736,7 +2736,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: EPS
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: format_eps
@@ -2754,7 +2754,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: 2D Coords
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: format_2dcoords
@@ -2771,13 +2771,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_INPUT
@@ -2790,7 +2790,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Path:
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthWest
 name: pathname
@@ -2808,7 +2808,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Prefix:
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_SouthWest FL_SouthWest
 name: prefix
@@ -2831,13 +2831,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BUTTON
@@ -2850,7 +2850,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Backbone
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: backbone_col
@@ -2868,7 +2868,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Background
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: background_col
@@ -2886,7 +2886,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Nucleotide Number
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: nucno_col
@@ -2904,7 +2904,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: WC Bond
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: wc_col
@@ -2922,7 +2922,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: GU Bond
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: gu_col
@@ -2940,7 +2940,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Other Bonds
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: other_bond_col
@@ -2958,7 +2958,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: A
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: a_col
@@ -2976,7 +2976,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: C
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: c_col
@@ -2994,7 +2994,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: G
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: g_col
@@ -3012,7 +3012,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: U
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: u_col
@@ -3030,7 +3030,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Other Nucleotides
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: other_nuc_col
@@ -3048,12 +3048,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Colors
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -3066,10 +3066,10 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Dismiss
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NorthEast FL_NorthEast
-name: 
+name:
 callback: but_cb
 argument: 110
 	file: cancel.xpm
@@ -3087,7 +3087,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Single Color
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: nuc_un_col
@@ -3110,13 +3110,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_FRAME
@@ -3128,11 +3128,11 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
+name:
 callback: but_cb
 argument: 41
 
@@ -3147,10 +3147,10 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Accept
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
-name: 
+name:
 callback: but_cb
 argument: 121
 	file: accept.xpm
@@ -3168,10 +3168,10 @@ style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
 label: Cancel
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
-name: 
+name:
 callback: but_cb
 argument: 120
 	file: cancel.xpm
@@ -3189,12 +3189,12 @@ style: FL_BOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Interpolations
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthEast FL_NorthEast
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_INPUT
@@ -3207,7 +3207,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Interpolations
-shortcut: 
+shortcut:
 resize: FL_RESIZE_NONE
 gravity: FL_NorthWest FL_NorthWest
 name: interp_freq

@@ -21,7 +21,7 @@
 
 
 /* A demo of the forms library using light buttons for
-   radio buttons and input fields. 
+   radio buttons and input fields.
 */
 
 #ifdef HAVE_CONFIG_H
@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include "include/forms.h"
 
-  
+
 FL_FORM *form;
 FL_OBJECT *but;
 
@@ -82,7 +82,7 @@ main(int argc, char *argv[])
   while (1)
   {
        do obj = fl_do_forms(); while (obj != but);
-       if (fl_show_question("Do you really want to Quit?",0)) 
+       if (fl_show_question("Do you really want to Quit?",0))
        {
           fl_finish();
 	  exit(0);

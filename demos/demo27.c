@@ -106,9 +106,9 @@ void clearit(FL_OBJECT *, long );
 /* control form callback routine */
 void control_callback(FL_OBJECT *obj, void *d)
 {
-   if (obj == sizeobj) 
+   if (obj == sizeobj)
        cursize = (int)(40 * fl_get_slider_value(sizeobj));
-   else if (obj == exitobj) 
+   else if (obj == exitobj)
        exit(0);
 }
 
@@ -140,7 +140,7 @@ void init_controlpart(void)
    create_controlform();
    fl_set_form_callback(controlform,control_callback, 0);
    fl_set_button(squareobj,1);
-   fl_set_initial_placement(controlform, 20, -controlform->h - 40, 
+   fl_set_initial_placement(controlform, 20, -controlform->h - 40,
                             controlform->w, controlform->h);
    fl_show_form(controlform,FL_PLACE_SIZE,FL_TRANSIENT,"Control");
 }
@@ -159,7 +159,7 @@ void drawit(OBJ *obj)
    fl_winset(main_win);
    fl_mapcolor(FL_FREE_COL1,obj->r, obj->g, obj->b);
    if (obj->type == 1)
-     fl_rectf(obj->x - obj->size, obj->y - obj->size, 
+     fl_rectf(obj->x - obj->size, obj->y - obj->size,
            obj->size * 2, obj->size *2, FL_FREE_COL1);
    else if (obj->type == 2)
      fl_circf(obj->x, obj->y, obj->size, FL_FREE_COL1);
@@ -197,7 +197,7 @@ void redrawit(void)
    int i;
 
    XClearWindow(fl_display, main_win);
-   for (i=0; i<onumb; i++) 
+   for (i=0; i<onumb; i++)
        drawit(ob + i);
 }
 
@@ -219,12 +219,12 @@ int main_callback(XEvent *xev, void *p)
     return 0;
 }
 
-void 
+void
 init_mainpart(void)
 {
    fl_pref_wingeometry(400,300,400,400);
    fl_pref_winsize(400,400);
-   fl_winbackground(0, fl_get_flcolor(FL_COL1)); 
+   fl_winbackground(0, fl_get_flcolor(FL_COL1));
    main_win  = fl_winopen("Drawing");
    fl_set_event_callback(main_callback, 0);
 }

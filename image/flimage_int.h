@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: flimage_int.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+ * $Id: flimage_int.h,v 1.2 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -57,7 +57,7 @@ typedef struct
     int w, h;
     int type;
     void *pixels;
-} FLIMAGE_BUFFER;   
+} FLIMAGE_BUFFER;
 
 /* subimage for convolve etc */
 typedef struct
@@ -94,7 +94,7 @@ extern FLIMAGE_QUANTIZE_RGB flimage_quantize_rgb;
 extern FLIMAGE_QUANTIZE_PACKED flimage_quantize_packed;
 
 extern void flimage_replace_image(FL_IMAGE *, int, int, void *, void *, void *);
-extern int flimage_transform(FL_IMAGE * im, int nw, int nh, float m[][2], 
+extern int flimage_transform(FL_IMAGE * im, int nw, int nh, float m[][2],
                              float shift[], unsigned int fill, int subp);
 extern int flimage_getmem(FL_IMAGE * image);
 extern void flimage_freemem(FL_IMAGE * image);

@@ -1,5 +1,5 @@
 .\"
-.\" $Id: xforms.man,v 1.1 2003/04/17 10:32:10 leeming Exp $
+.\" $Id: xforms.man,v 1.2 2003/09/09 00:28:25 leeming Exp $
 .\"
 .\" Man page for XFORMS.
 .\" Use the following command to generate viewable man page
@@ -11,7 +11,7 @@
 .\"
 .TH XFORMS 5 "June 2000" "Version 0.89" "Forms Library"
 .SH NAME
-xforms \-   A GUI Toolkit for X Window Systems 
+xforms \-   A GUI Toolkit for X Window Systems
 .\"
 .\" setup
 .de Cr
@@ -19,11 +19,11 @@ xforms \-   A GUI Toolkit for X Window Systems
 .el \(co
 ..
 .SH SYNOPSIS
-.B Forms Library for X 
+.B Forms Library for X
 (xforms) is a GUI toolkit and builder for the X Window Systems and
-runs on all major UNIX platforms as well as OpenVMS and OS2. 
+runs on all major UNIX platforms as well as OpenVMS and OS2.
 .B Forms Library
-is too complex to be described in the "man" page format. 
+is too complex to be described in the "man" page format.
 Ask your system administrator for the location of the PostScript
 document or follow the links on the
 .BR "Forms Library" 's
@@ -43,10 +43,10 @@ writing, perl, ada95, pascal, scheme and Fortran bindings to the
 are in beta.)
 
 The library is efficient and portable and runs on all major
-Unix platforms, including Sun, SGI, HP, 
-DEC Alpha/OSF, IBM RS6000, Convex, Cray, 
-Linux(i386, alpha, m68k, sparc), 
-FreeBSD, NetBSD(i386, m68k, sparc, StrongARM, ppc), SCO, Unixware,  
+Unix platforms, including Sun, SGI, HP,
+DEC Alpha/OSF, IBM RS6000, Convex, Cray,
+Linux(i386, alpha, m68k, sparc),
+FreeBSD, NetBSD(i386, m68k, sparc, StrongARM, ppc), SCO, Unixware,
 OpenBSD (i386, pmax), DGUX (m88k, i386), BSDi,
 DecSystem(mips)/Ultrix and others.
 Non-unix platforms include OpenVMS, OS/2, and Window/NT.
@@ -66,7 +66,7 @@ recognize the following command line options
 specifies the server to connect to.
 .TP
 .BI \-bw " borderwidth"
-specifies the border width to use for built-in objects. 
+specifies the border width to use for built-in objects.
 .TP
 .B \-flversion
 prints the xforms version information.
@@ -81,8 +81,8 @@ requests a specific depth.
 .TP
 .BI \-debug " level"
 generates some info about the state of the
-.B XForms. 
-where 
+.B XForms.
+where
 .I level
 is an integer between 1-5 and controls the amount of
 information to output. Depending on the options used
@@ -91,7 +91,7 @@ when the
 was built, a level more than 3 might not be available.
 .TP
 .B \-sync
-runs the application in synchronous mode with debug level set to 4. 
+runs the application in synchronous mode with debug level set to 4.
 .TP
 .B \-private
 requests a private colormap for the application.
@@ -107,8 +107,8 @@ requests a standard colormap.
 .TP
 .B \-name " newname"
 specifies the application name under which resources are to be
-obtained, rather than the default executable file name. 
-.B 
+obtained, rather than the default executable file name.
+.B
 .SH SEE ALSO
 fdesign(1L), fd2ps(1L)
 
@@ -116,7 +116,7 @@ fdesign(1L), fd2ps(1L)
 Copyright
 .Cr
 1996-2000
-T.C. Zhao (tc_zhao@yahoo.com) 
+T.C. Zhao (tc_zhao@yahoo.com)
 and Mark Overmars (markov@cs.ruu.nl).
 .br
 Parts also Copyright

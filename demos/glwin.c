@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 
    if(!(glwin = fl_glwincreate(config, &context, 250, 250)))
    {
-      fprintf(stderr,"GLWin: Can't create OpenGL window\n"); 
+      fprintf(stderr,"GLWin: Can't create OpenGL window\n");
       exit(0);
    }
 
@@ -140,7 +140,7 @@ int animate(XEvent *ev, void *data)
     glRotatef( xrot, 1.0, 0.0, 0.0 );
     glRotatef( yrot, 0.0, 1.0, 0.0 );
     glRotatef( zrot, 0.0, 0.0, 1.0 );
-    glTranslatef(-1.0,1.2,-0.5); 
+    glTranslatef(-1.0,1.2,-0.5);
     draw_cube();
     glPopMatrix();
     glFinish();
@@ -162,20 +162,20 @@ handle_expose(XEvent *xev, void *data)
 {
     FL_Coord w ,h ;
 
-    fl_get_winsize(glwin, &w, &h); 
-    glViewport(0,0, w, h); 
+    fl_get_winsize(glwin, &w, &h);
+    glViewport(0,0, w, h);
 
     glClearColor(0.0,0.0,0.0,0.0);
 
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
-    glFrustum( -1.0, 1.0,  -1.0, 1.0,  1.0, 10.0 ); 
-    glTranslatef( 0.0, 0.0, -5.0 );  
+    glFrustum( -1.0, 1.0,  -1.0, 1.0,  1.0, 10.0 );
+    glTranslatef( 0.0, 0.0, -5.0 );
 
-    glMatrixMode( GL_MODELVIEW ); 
+    glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     glCullFace( GL_BACK );
-    glEnable( GL_CULL_FACE ); 
+    glEnable( GL_CULL_FACE );
     glShadeModel( GL_FLAT );
     animate(xev, 0);
     return 0;

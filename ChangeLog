@@ -15,10 +15,10 @@
 
 2003-07-31  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
-	* lib/local.h (FL_SIGRET): 
+	* lib/local.h (FL_SIGRET):
 
 	* lib/signal.c (default_signal_handler): use RETSIGTYPE instead of
-	FL_SIG_RET 
+	FL_SIG_RET
 
 	* lib/errmsg.c (fl_get_syserror_msg): use HAVE_STRERROR
 
@@ -76,7 +76,7 @@
 
 	* lib/include/AAA.h.in: new file. This is the template from which
 	AAA.h is generated
-	
+
 	* lib/include/.cvsignore: add AAA.h
 
 	* configure.ac: call XFORMS_SET_VERSION; generate AAA.h from AAA.h.in
@@ -172,7 +172,7 @@
 	* lib/include/Imakefile: do not copy the generated forms.h to ../.
 	* lib/Imakefile: remove the targets to install forms.h.
 
-	* pretty well all .c files: change #include "forms.h" to 
+	* pretty well all .c files: change #include "forms.h" to
 	#include "include/forms.h".
 
 2003-04-22  Angus Leeming  <angus.leeming@btopenworld.com>

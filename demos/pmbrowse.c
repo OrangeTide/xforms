@@ -20,7 +20,7 @@
  */
 
 
-/* 
+/*
  * Showing the use of non-modal file selector
  *
  * T.C. Zhao and M. Overmars
@@ -62,14 +62,14 @@ load_file(const char *fname, void *data)
      if (( p = strrchr(fname, '.')))
          ispix = strcmp(p+1, "xbm") != 0;
 
-     if(ispix) 
+     if(ispix)
      {
         fl_hide_object(bm);
         fl_show_object(pm);
         fl_free_pixmap_pixmap(pm);
         fl_set_pixmap_file(pm, fname);
      }
-     else 
+     else
      {
         fl_hide_object(pm);
         fl_show_object(bm);

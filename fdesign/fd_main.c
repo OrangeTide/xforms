@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.5 $ of $Date: 2003/04/24 09:35:33 $",
+    "$State: Exp $  $Revision: 1.6 $ of $Date: 2003/09/09 00:28:25 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -465,7 +465,7 @@ lang_val(const char *s)
 
     for (i = 1; i < MAX_CONVERTOR; i++)
 	if (strcasecmp(s, convertor[i].lang_name) == 0 ||
-	    strncmp(s, convertor[i].lang_name, 3) == 0)		/* compatibility 
+	    strncmp(s, convertor[i].lang_name, 3) == 0)		/* compatibility
 
 
 
@@ -581,7 +581,7 @@ pre_connect(int ac, char *av[])
 
     if (fdopt.conv_only)
     {
-	fl_set_app_name(av[0], "Fdesign");	/* resource routine want this 
+	fl_set_app_name(av[0], "Fdesign");	/* resource routine want this
 
 
 

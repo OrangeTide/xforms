@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_postscript.c,v 1.6 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_postscript.c,v 1.7 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -31,8 +31,8 @@
  *
  *  PostScript support.
  *
- * Do we want to integrate the stuff from ps_core.c, ps_draw.c and 
- * postscript.c to consolidate ps support ?  
+ * Do we want to integrate the stuff from ps_core.c, ps_draw.c and
+ * postscript.c to consolidate ps support ?
  *
  */
 
@@ -445,7 +445,7 @@ PS_write_header(FL_IMAGE * im)
     fprintf(fp, "/pw {pagew lm 2 mul sub} BD \t%% writable width\n");
     fprintf(fp, "/ph {pageh bm 2 mul sub} BD \t%% writable height\n");
 
-    /* 
+    /*
      * instead of emitting numbers, the actual calculation is output so that
      * both scale and margin can be adjusted in PS
      */

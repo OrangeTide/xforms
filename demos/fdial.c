@@ -51,7 +51,7 @@ void makeform(void)
     green = fl_add_dial(FL_FILL_DIAL,30,155,60,60,"Green");
     fl_set_dial_bounds(green,0.0,255.0);
     fl_set_dial_value(green,128.0);
-    fl_set_dial_angles(green, 45., 360-45.); 
+    fl_set_dial_angles(green, 45., 360-45.);
     fl_set_object_color(green,FL_DIAL_COL1, FL_GREEN);
     greentext = fl_add_box(FL_DOWN_BOX,105,170,50,25,"");
 

@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
    /* fill-in form initialization code */
    fl_set_object_dblbuffer(xypui->status, 1);
    for (i  = 0; i <= 10; i++)
-      x[i] = y[i] = i; 
+      x[i] = y[i] = i;
    fl_set_xyplot_data(xypui->xyplot, x, y, 11, "","","");
    fl_set_xyplot_linewidth(xypui->xyplot, 0, 2);
    fl_set_xyplot_xgrid(xypui->xyplot,FL_GRID_MINOR);

@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_chrt = "$Id: chart.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_chrt = "$Id: chart.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -291,7 +291,7 @@ draw_linechart(int type, SPEC *sp, float min, float max)
 
     /* Draw base line */
     if (!sp->no_baseline)
-       fl_line(x, (FL_Coord)(zeroh + 0.5f), x + w, 
+       fl_line(x, (FL_Coord)(zeroh + 0.5f), x + w,
               (FL_Coord)(zeroh + 0.5f), FL_BLACK);
 
     /* Draw the labels */
@@ -301,7 +301,7 @@ draw_linechart(int type, SPEC *sp, float min, float max)
     {
 
 	if (e->val < 0.0f)
-	    fl_drw_text_beside(FL_ALIGN_TOP, xx, 
+	    fl_drw_text_beside(FL_ALIGN_TOP, xx,
                               (FL_Coord)(zeroh - e->val * incr + 12),
 			       lbox, lbox, e->lcol, sp->lstyle,
 			       sp->lsize, e->str);
@@ -386,12 +386,12 @@ draw_piechart(SPEC *sp, int special)
 	    yl = tyc - 1.1 * rad * sin(ARCINC * curang);
 
 	    if (xl < txc)
-		fl_drw_text_beside(FL_ALIGN_LEFT, xl, 
+		fl_drw_text_beside(FL_ALIGN_LEFT, xl,
                                    (FL_Coord)(yl - 0.5f * lbox),
 				   lbox, lbox, e->lcol, sp->lstyle,
 				   sp->lsize, e->str);
 	    else
-		fl_drw_text_beside(FL_ALIGN_RIGHT, xl - lbox, 
+		fl_drw_text_beside(FL_ALIGN_RIGHT, xl - lbox,
                                    (FL_Coord)(yl - 0.5f * lbox),
 				   lbox, lbox, e->lcol, sp->lstyle,
 				   sp->lsize, e->str);
@@ -717,7 +717,7 @@ fl_set_chart_maxnumb(FL_OBJECT * ob, int maxnumb)
 	sp->maxnumb = maxnumb;
 
     if (sp->maxnumb > curmax)
-        sp->entries = fl_realloc(sp->entries, 
+        sp->entries = fl_realloc(sp->entries,
                       (sp->maxnumb+1)*sizeof *sp->entries);
 
    if (!sp->entries)

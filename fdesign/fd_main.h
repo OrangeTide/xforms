@@ -89,7 +89,7 @@ FRM;
 typedef struct
 {
     const char *lang_name;
-    int (*convert) (const char *s, FRM *, int);		/* built-in convertot 
+    int (*convert) (const char *s, FRM *, int);		/* built-in convertot
 
 
 

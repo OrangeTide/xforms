@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * demo showing the effect of different border widths 
+/*
+ * demo showing the effect of different border widths
  *
  * This file is part of xforms packge
  * T.C. Zhao and M. Overmars  (1997)
@@ -68,7 +68,7 @@ void bw_callback(FL_OBJECT *ob, long data)
    int bw = bws[fl_get_choice(ob)-1];
 
    fl_set_object_bw(fd_bwform->bwgroup, bw);
-   /* since bwgroup includes the backface, it wipes out the done button*/  
+   /* since bwgroup includes the backface, it wipes out the done button*/
    fl_redraw_object(fd_bwform->done);
    fl_redraw_object(fd_bwform->bw_choice);
 }
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
 {
 
    /* application default. Can be overriden by the command line options */
-   fl_set_border_width(-2); 
+   fl_set_border_width(-2);
 
    fl_initialize(&argc, argv, "FormDemo", 0, 0);
    fd_bwform = create_form_bwform();

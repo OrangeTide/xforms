@@ -21,8 +21,8 @@
 
 
 /*
- * Demo, showing the different fonts in different sizes. 
- * M. Overmars and T.C. Zhao 
+ * Demo, showing the different fonts in different sizes.
+ * M. Overmars and T.C. Zhao
  */
 
 #ifdef HAVE_CONFIG_H
@@ -46,7 +46,7 @@ extern FD_fontsform * create_form_fontsform(void);
 FD_fontsform *ui;
 
 void done_cb(FL_OBJECT *obj, long arg)
-{ 
+{
     fl_finish();
     exit(0);
 }
@@ -73,8 +73,8 @@ void size_cb(FL_OBJECT *obj, long arg)
 }
 
 void addit(const char *str)
-{ 
-    fl_add_browser_line(ui->fontobj,str); 
+{
+    fl_add_browser_line(ui->fontobj,str);
 }
 
 int

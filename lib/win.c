@@ -24,7 +24,7 @@
  * \file win.c
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1996-2002  T.C. Zhao 
+ *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
  *.
  *
@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xsupt = "$Id: win.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -78,7 +78,7 @@ fl_default_xswa(void)
     /* VisibilityChangeMask| PropertyChangeMask | */
 			  StructureNotifyMask);
 
- 
+
     /* for input method */
     if(fl_context->xic)
        st_xswa.event_mask |= FocusChangeMask;
@@ -952,7 +952,7 @@ fl_winfocus(Window win)
     XSetInputFocus(flx->display, win, RevertToParent, CurrentTime);
 #if 0
     if (fl_context->xic)
-       XSetICValues(fl_context->xic, 
+       XSetICValues(fl_context->xic,
                     XNClientWindow, win, XNFocusWindow, win, 0);
 #endif
 }

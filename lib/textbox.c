@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_brw = "$Id: textbox.c,v 1.7 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1065,7 +1065,7 @@ handle_keyboard(FL_OBJECT * ob, int key, XKeyEvent * xev)
 		fl_set_browser_topline(ob, sp->selectline - sp->screenlines / 2);
 	}
     }
-    
+
     fl_adjust_browser_scrollbar(ob);
 
     return (old != sp->selectline);

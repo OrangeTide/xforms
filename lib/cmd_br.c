@@ -252,7 +252,7 @@ fl_exe_command(const char *cmd, int block)
 
     if (pipe(p_err) < 0 || pipe(p_inout) < 0)
     {
-	fl_snprintf(buf,sizeof(buf), 
+	fl_snprintf(buf,sizeof(buf),
                      "Can't create pipe - %s", fl_get_syserror_msg());
 	fprintf(stderr, "%s\n", buf);
 	fl_addto_browser(logger->browser, buf);
@@ -303,7 +303,7 @@ fl_exe_command(const char *cmd, int block)
 			   (void *) ( long ) cur->pid);
 	fl_add_io_callback(cur->fd_out,
 			   FL_READ,
-			   io_cb, 
+			   io_cb,
 			   (void *) ( long ) cur->pid);
     }
 
@@ -333,7 +333,7 @@ fl_exe_command(const char *cmd, int block)
     sa.lpSecurityDescriptor = NULL;
     if (!CreatePipe(&hPipeRead, &hPipeWrite, &sa, 255))
     {
-	fl_snprintf(buf, sizeof(buf), "Can't create pipe - %s", 
+	fl_snprintf(buf, sizeof(buf), "Can't create pipe - %s",
                     fl_get_syserror_msg());
 	fprintf(stderr, "%s\n", buf);
 	fl_addto_browser(logger->browser, buf);
@@ -498,7 +498,7 @@ fl_pclose(FILE * stream)
     fclose(stream);
 
     for (last = 0, cur = pidlist; cur && cur->fd_user != fd;
-	 last = cur, cur = last->next) 
+	 last = cur, cur = last->next)
         ;
 
     if (!cur)

@@ -1,6 +1,6 @@
 /*
  * Demo showing the use of xyplot overlay, plot key and
- * PostScript output. 
+ * PostScript output.
  *
  *  This file is part of xforms package
  *  T.C. Zhao and M. Overmars
@@ -22,7 +22,7 @@ typedef struct
 extern FD_fff *create_form_fff(void);
 extern void init_xyplot(FD_fff *);
 
-int 
+int
 main(int argc, char *argv[])
 {
     FD_fff *fd_fff;
@@ -57,7 +57,7 @@ void newsymbol(FL_OBJECT *ob, int id,
 
 
 
-void 
+void
 init_xyplot(FD_fff * fd_fff)
 {
     int i;
@@ -93,7 +93,7 @@ create_form_fff(void)
 
     fdui->fff = fl_bgn_form(FL_NO_BOX, 370, 310);
     obj = fl_add_box(FL_UP_BOX, 0, 0, 370, 310, "");
-    fdui->xyplot = obj = fl_add_xyplot(FL_IMPULSE_XYPLOT, 10, 20, 350, 260, 
+    fdui->xyplot = obj = fl_add_xyplot(FL_IMPULSE_XYPLOT, 10, 20, 350, 260,
         "An XYPlot with overlay");
       fl_set_object_lalign(obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE);
       fl_set_object_lsize(obj, FL_NORMAL_SIZE);

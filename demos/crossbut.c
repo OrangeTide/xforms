@@ -20,7 +20,7 @@
  */
 
 
-/* 
+/*
  * Routines implementing the "crossbutton" class
  *
  *  ob->col1 is the color of the box. ob->col2 is the color of cross
@@ -90,7 +90,7 @@ fl_create_crossbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w,
                       FL_Coord h, const char *label)
 {
      FL_OBJECT *ob;
-     fl_add_button_class(FL_CROSSBUTTON, draw_crossbutton, 0); 
+     fl_add_button_class(FL_CROSSBUTTON, draw_crossbutton, 0);
      ob = fl_create_generic_button(FL_CROSSBUTTON, type, x, y,w, h, label);
      ob->boxtype = FL_NO_BOX;
      ob->col2 = FL_BLACK;   /* cross color */

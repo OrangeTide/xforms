@@ -25,7 +25,7 @@ Group: System/Libraries
 Provides: %{name}
 
 %description -n %{name}-devel
-XForms header files for development. 
+XForms header files for development.
 
 %prep
 %setup -q -n %{name}-%{version}

@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * This demo shows the use of special symbol labels 
+/*
+ * This demo shows the use of special symbol labels
  *
  * This file is part of xforms packge
  * M. Overmars and T.C. Zhao (1997)

@@ -34,7 +34,7 @@ int on = 1, dcol = 1;
 FL_COLOR cole;
 
 /* The call back routine */
-int handle_it(FL_OBJECT *obj, int event, FL_Coord mx, FL_Coord my, 
+int handle_it(FL_OBJECT *obj, int event, FL_Coord mx, FL_Coord my,
           int key, void *ev)
 {
   static int dcol = 1;
@@ -49,10 +49,10 @@ int handle_it(FL_OBJECT *obj, int event, FL_Coord mx, FL_Coord my,
 	break;
     case FL_STEP:
  	if (on)
-	{ 
-	  if (obj->u_ldata == cole) 
+	{
+	  if (obj->u_ldata == cole)
 	      dcol = -1;
-	  if (obj->u_ldata == FL_FREE_COL1) 
+	  if (obj->u_ldata == FL_FREE_COL1)
 	      dcol = 1;
           obj->u_ldata += dcol;
           fl_redraw_object(obj);

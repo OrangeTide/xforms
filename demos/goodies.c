@@ -57,7 +57,7 @@ main(int argc, char *argv[])
 		"forms library");
 
   fl_add_timeout(5000, timeout_remove_alert, 0);
-  fl_show_alert("Alert", "Alert form can be used to inform", 
+  fl_show_alert("Alert", "Alert form can be used to inform",
                "recoverable errors", 0);
 
   if (fl_show_question("Do you want to quit?", 0))

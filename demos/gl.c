@@ -24,7 +24,7 @@
  * OpenGL/mesa canvas demo
  *
  * On most platforms, the mesa/OpenGL support is not compiled into
- * the shared library (It it in the static library). You can compile 
+ * the shared library (It it in the static library). You can compile
  * ../FORMS/gl.c and put it in the shared library if you have mesa/OpenGL
  *
  *   Also you might want to make a link libGL.a to libMesaGL.a
@@ -112,7 +112,7 @@ idle_cb(XEvent *ev, void *data)
     glRotatef( xrot, 1.0, 0.0, 0.0 );
     glRotatef( yrot, 0.0, 1.0, 0.0 );
     glRotatef( zrot, 0.0, 0.0, 1.0 );
-    glTranslatef(-1.0,1.2,-0.5); 
+    glTranslatef(-1.0,1.2,-0.5);
 
     draw_cube();
 
@@ -141,13 +141,13 @@ canvas_expose(FL_OBJECT *ob, Window win, int w, int h, XEvent *xev, void *ud)
 
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
-    glFrustum( -1.0, 1.0,  -1.0, 1.0,  1.0, 10.0 ); 
-    glTranslatef( 0.0, 0.0, -5.0 );  
+    glFrustum( -1.0, 1.0,  -1.0, 1.0,  1.0, 10.0 );
+    glTranslatef( 0.0, 0.0, -5.0 );
 
-    glMatrixMode( GL_MODELVIEW ); 
+    glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
     glCullFace( GL_BACK );
-    glEnable( GL_CULL_FACE ); 
+    glEnable( GL_CULL_FACE );
 
     glShadeModel( GL_FLAT );
 

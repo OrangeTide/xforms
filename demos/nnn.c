@@ -23,7 +23,7 @@
 /*
  * Demo showing the use of user defined object class: CROSSBUTTON
  *
- * Form definition file generated with fdesign. 
+ * Form definition file generated with fdesign.
  * changed stub button to crossbutton
  */
 

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_marker.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_marker.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -30,7 +30,7 @@
  *
  *  Handling misc. geometric markers
  *
- *   TODO: consolidate symbol and markers. 
+ *   TODO: consolidate symbol and markers.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -111,7 +111,7 @@ get_marker(const char *name)
     return 0;
 }
 
-int 
+int
 flimage_define_marker(const char *name, void (*draw) (FLIMAGE_MARKER *),
 	       	   const char *psdraw)
 {

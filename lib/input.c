@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_inp = "$Id: input.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -309,7 +309,7 @@ draw_input(FL_OBJECT * ob)
 			       col, textcol, curscol,
 			       ob->lstyle, ob->lsize,	/* Size and style */
                                /* Cursor position */
-			       sp->no_cursor ? -1 : sp->position,	
+			       sp->no_cursor ? -1 : sp->position,
 			       sp->beginrange,	/* selection begin */
 			       sp->endrange,	/* Selection range */
 			       sp->str,
@@ -1357,7 +1357,7 @@ fl_create_input(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     sp->input = ob;
     sp->field_char = ' ';
 
-    /* can't remember why validated input return is set to RETURN_END 
+    /* can't remember why validated input return is set to RETURN_END
        but probably with some reason. Wait until 1.0 to reset it
      */
     if (ob->type == FL_FLOAT_INPUT || ob->type == FL_INT_INPUT)
@@ -2238,9 +2238,9 @@ make_cursor_visible(FL_OBJECT * ob, SPEC *sp, int startpos, int prev)
     }
 }
 
-int 
+int
 fl_input_changed(FL_OBJECT *obj)
 {
-    return (obj && (obj->objclass == FL_INPUT)) ? 
+    return (obj && (obj->objclass == FL_INPUT)) ?
            ((SPEC*)(obj->spec))->changed:0;
 }

@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fs = "$Id: fselect.c,v 1.7 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -315,7 +315,7 @@ select_cb(FL_OBJECT * ob, long arg)
 }
 #else
 /*
- * A file is selected from the browser. 
+ * A file is selected from the browser.
  * generate ready if valid selection (e.g. double-clicked)
  * Note that if a call back is defined, never generate ready
  */
@@ -347,7 +347,7 @@ select_cb(FL_OBJECT * ob, long arg)
 
     clicked = (clicked || xev->type == ButtonPress);
 
-    /* cursor keys can cause a single line being repeatedly selected 
+    /* cursor keys can cause a single line being repeatedly selected
        causing a wrong dblclick detection */
 
     if (clicked)

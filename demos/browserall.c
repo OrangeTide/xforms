@@ -20,8 +20,8 @@
  */
 
 
-/* 
- *  This is a demo that shows the different types of browsers. 
+/*
+ *  This is a demo that shows the different types of browsers.
  *
  *  This file is part of xforms package
  *  M. Overmars and T.C. Zhao  (1997)
@@ -50,7 +50,7 @@ main(int argc, char *argv[])
    return 0;
 }
 
-static char *bnames[] = 
+static char *bnames[] =
 {
     "NORMAL_BROWSER", "SELECT_BROWSER", "HOLD_BROWSER", "MULTI_BROWSER"
 };
@@ -59,21 +59,21 @@ static char *bnames[] =
 void deselect(FL_OBJECT *obj, long arg)
 {
    int i;
-   for (i=0; i<4; i++) 
+   for (i=0; i<4; i++)
       fl_deselect_browser(br[i]);
 }
 
 void set_size(FL_OBJECT *obj, long arg)
 {
    int i;
-   for (i=0; i<4; i++) 
+   for (i=0; i<4; i++)
       fl_set_browser_fontsize(br[i],arg);
 }
 
 void set_style(FL_OBJECT *obj, long arg)
 {
    int i;
-   for (i=0; i<4; i++) 
+   for (i=0; i<4; i++)
       fl_set_browser_fontstyle(br[i], arg);
 }
 
@@ -88,7 +88,7 @@ void br_callback(FL_OBJECT *ob, long arg)
     else
       sprintf(buf,"In %s", bnames[arg]);
     i = fl_get_browser(ob);
-    strcat(buf,fl_get_browser_line(ob,i >0 ? i:-i)); 
+    strcat(buf,fl_get_browser_line(ob,i >0 ? i:-i));
     strcat(buf,i > 0 ?  " was selected":" was deselected.");
     fl_set_object_label(readout,buf);
 }
@@ -103,7 +103,7 @@ void vcallback(FL_OBJECT *ob, int topline, void *data)
 }
 
 
-static void 
+static void
 link_browsers(FL_OBJECT *ob, long data)
 {
     int sync = fl_get_button(ob);
@@ -123,7 +123,7 @@ link_browsers(FL_OBJECT *ob, long data)
        fl_set_browser_vscrollbar(br[2], FL_ON);
        fl_set_browser_vscrollbar(br[3], FL_ON);
        fl_set_browser_vscroll_callback(br[0], 0,0);
-    }     
+    }
 }
 
 void create_form(void)

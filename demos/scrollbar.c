@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
 {
    FD_scb *fd_scb;
 
-   fl_set_border_width(-2); 
+   fl_set_border_width(-2);
    fl_initialize(&argc, argv, 0, 0, 0);
    fd_scb = create_form_scb();
 

@@ -21,15 +21,15 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_tiff.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 2000-2002  By T.C. Zhao
  *.
  *
- *  TIFF file reader/writer for some tiff files. It is not possible to 
- *  develop a tiff reader to handle all possible valid tiffs. 
+ *  TIFF file reader/writer for some tiff files. It is not possible to
+ *  develop a tiff reader to handle all possible valid tiffs.
  *
  *  could use some optimization
  *
@@ -665,7 +665,7 @@ read_pixels(FL_IMAGE * im)
 		unsigned short **ctmp = FL_IsCI(im->type) ? im->ci : im->gray;
 		/* TIFF SPEC did not define 16 bps, and seems libtiff always
 		   uses MSB. */
-		sbuf = convert2((void *) tmp, bytecount, MSBFirst	/* sp->endian 
+		sbuf = convert2((void *) tmp, bytecount, MSBFirst	/* sp->endian
 
 
 									 */ );

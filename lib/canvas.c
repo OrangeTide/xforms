@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_canvas = "$Id: canvas.c,v 1.6 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.7 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -115,7 +115,7 @@ canvas_event_intercept(XEvent * xev, void *vob)
 	handle_keyboard_special(ob, xev))
 	return FL_PREEMPT;
 
-    if (xev->type != Expose && 
+    if (xev->type != Expose &&
         xev->type != GraphicsExpose &&
         xev->type != ClientMessage &&
 	(ob->active == DEACTIVATED || ob->form->deactivated))

@@ -317,7 +317,7 @@ create_form_cl(void)
 
 
     colbr = obj = fl_add_browser(FL_HOLD_BROWSER, 10, 90, 205, 240, "");
-    fl_set_browser_fontstyle(obj, FL_FIXED_STYLE); 
+    fl_set_browser_fontstyle(obj, FL_FIXED_STYLE);
     fl_set_object_callback(obj, br_cb, 0);
 
 

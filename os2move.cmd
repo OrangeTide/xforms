@@ -1,4 +1,4 @@
-/* OS/2 REXX 
+/* OS/2 REXX
  * this cmd script renames a number of files in the tree which
  * are not in a correct place or have incorrect names
  */

@@ -351,7 +351,7 @@ readback_attributes(FL_OBJECT * obj)
 		      m[warn - 1], 0);
     set_object_name(obj, name, cbname, fl_get_input(fd_generic_attrib->argobj));
 
-    /* change type need to be the last call as it may create objects based on 
+    /* change type need to be the last call as it may create objects based on
 
 
        the current object, which need to have the latest attributes */

@@ -44,7 +44,7 @@ FL_OBJECT
 void exit_cb(FL_OBJECT *obj, long arg)
 {
     fl_finish();
-    exit(0); 
+    exit(0);
 }
 
 void setit(FL_OBJECT *obj, int val)

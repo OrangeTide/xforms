@@ -37,7 +37,7 @@
 #define PVALUATOR_H
 
 /* The special information for valuators. the size of this structure
- * probably can be reduced quite a bit. 
+ * probably can be reduced quite a bit.
  */
 typedef struct
 {

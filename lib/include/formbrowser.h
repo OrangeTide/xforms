@@ -33,7 +33,7 @@ enum
     FL_NORMAL_FORMBROWSER
 };
 
-enum 
+enum
 {
    FL_SMOOTH_SCROLL,
    FL_JUMP_SCROLL

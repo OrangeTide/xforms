@@ -38,7 +38,7 @@ typedef struct
    int type;
    char *name;
    FL_COLOR color;
-} 
+}
 XYType;
 
 #define VN(a,c)   {a,#a,c}
@@ -60,13 +60,13 @@ static XYType xytype[] =
 static void
 done_xyplot(FL_OBJECT *ob, long q)
 {
-    fl_hide_form(ob->form); 
+    fl_hide_form(ob->form);
     exit(0);
 }
 
 #include <math.h>
 
-static int post(FL_OBJECT *ob, int ev, 
+static int post(FL_OBJECT *ob, int ev,
                FL_Coord mx, FL_Coord my, int key, void *xev)
 {
     if(ev == FL_PUSH || ev == FL_MOUSE)
@@ -113,7 +113,7 @@ main(int argc, char *argv[])
          }
 
 
-         fl_set_xyplot_data(xyplot[i], x[i], y[i], 21, "TestTitle", 
+         fl_set_xyplot_data(xyplot[i], x[i], y[i], 21, "TestTitle",
                            "X-axis", "Y|axis");
          if(i==0)
             fl_add_xyplot_text(xyplot[i], x[i][15], 0.1,
@@ -137,7 +137,7 @@ main(int argc, char *argv[])
              fl_set_xyplot_ytics(xyplot[i], 5, 2);
              fl_set_xyplot_ybounds(xyplot[i], 2.4,-2.4);
          }
-        
+
          fl_set_object_posthandler(xyplot[i], post);
      }
 
@@ -212,7 +212,7 @@ void create_form_xyplot(void)
    fl_set_object_callback(obj, done_xyplot, 0);
 
    obj = fl_add_text(FL_NORMAL_TEXT,180,15,240,30,"FL_XYPLOT");
-   fl_set_object_lcol(obj, FL_SLATEBLUE); 
+   fl_set_object_lcol(obj, FL_SLATEBLUE);
    fl_set_object_lsize(obj, FL_HUGE_SIZE);
    fl_set_object_lstyle(obj, FL_BOLD_STYLE|FL_EMBOSSED_STYLE);
    fl_set_object_boxtype(obj, FL_FLAT_BOX);

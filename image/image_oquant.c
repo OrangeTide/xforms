@@ -21,13 +21,13 @@
 
 
 /*
- * $Id: image_oquant.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_oquant.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  * Copyright (c)  1998-2002 T.C. Zhao
  *
  *  A color quantizer based on octree algorithm. The algorithm
  *  is implemented and copyright by Steve Lamont (spl@ucsd.edu)
- *  Copyright (C) 1998, Steve Lamont and the National Center for Microscopy 
+ *  Copyright (C) 1998, Steve Lamont and the National Center for Microscopy
  *                      and Imaging Research
  *
  *  Contact Steve for the latest version of the quantization library.

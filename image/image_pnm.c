@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_pnm.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_pnm.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -92,7 +92,7 @@ generate_header_info(FL_IMAGE *im)
     sprintf(im->info,"Size=(%d x %d)\nMaxVal=%d\nRaw=%d\n",
         im->w, im->h, sp->maxval, sp->raw);
 }
-   
+
 
 static int
 PNM_description(FL_IMAGE * im)

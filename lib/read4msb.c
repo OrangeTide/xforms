@@ -29,7 +29,7 @@
  *   Read 4bytes MSB first
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_4msb = "$Id: read4msb.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+char *id_4msb = "$Id: read4msb.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -54,10 +54,10 @@ fl_fget4MSBF(FILE * fp)
 int
 fl_fput4MSBF(int n, FILE *fp)
 {
-     putc((n>>24)&0xff,fp); 
-     putc((n>>16)&0xff,fp); 
-     putc((n>>8)&0xff,fp); 
-     putc(n&0xff,fp); 
+     putc((n>>24)&0xff,fp);
+     putc((n>>16)&0xff,fp);
+     putc((n>>8)&0xff,fp);
+     putc(n&0xff,fp);
      return n;
 }
 

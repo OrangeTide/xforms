@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.6 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image.c,v 1.7 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -29,7 +29,7 @@
  *  All rights reserved.
  *.
  *
- *   Public API for image file IO 
+ *   Public API for image file IO
  */
 
 #ifdef HAVE_CONFIG_H
@@ -1012,13 +1012,13 @@ flimage_add_format(const char *formal_name,
     return k;
 }
 
-void 
+void
 flimage_set_annotation_support(int in, int flag)
 {
      --in;
 
      if(in < 0 || in >= nimage)
-        return; 
+        return;
      flimage_io[in].annotation = (flag != 0);
 }
 

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_rotate.c,v 1.4 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_rotate.c,v 1.5 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -86,7 +86,7 @@ flimage_rotate(FL_IMAGE * im, int deg, int subp)
 	else
 	{
 	    M_err("flimage_rotate", "InternalError: unsupported image type\n");
-	    return -1;	    
+	    return -1;
 	}
 
 	if ((deg % 180) == 0)
@@ -106,7 +106,7 @@ flimage_rotate(FL_IMAGE * im, int deg, int subp)
 	return 0;
     }
 
-    /* three shear is slightly faster , but with general transform, 
+    /* three shear is slightly faster , but with general transform,
      * we save a lot of code */
     mat[0][0] = mat[1][1] = cos(deg * M_PI / 1800.0);
     mat[0][1] = sin(deg * M_PI / 1800.0);

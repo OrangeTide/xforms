@@ -43,7 +43,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_col = "$Id: flcolor.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -807,9 +807,9 @@ fl_get_rgb_pixel(FL_COLOR packed, int *newpix)
 	if (!xcolor)
 	    xcolor = fl_malloc(256 * sizeof(*xcolor));
 
-	/* 
-	 * not theoretically correct as colormap may have changed 
-	 * since the last time we asked for colors. Take a chance for 
+	/*
+	 * not theoretically correct as colormap may have changed
+	 * since the last time we asked for colors. Take a chance for
 	 * performace.
 	 */
 	if (lastcolormap != s->colormap || new_col > 3)

@@ -464,7 +464,7 @@ fl_set_browser_hscrollbar(FL_OBJECT * ob, int on)
 }
 
 void
-fl_set_browser_hscroll_callback(FL_OBJECT *ob, 
+fl_set_browser_hscroll_callback(FL_OBJECT *ob,
                                FL_BROWSER_SCROLL_CALLBACK cb,
                                void *data)
 {
@@ -479,10 +479,10 @@ fl_get_browser_hscroll_callback(FL_OBJECT *ob)
 {
       return ((Comp *) GetSpec(ob))->hcb;
 }
- 
+
 
 void
-fl_set_browser_vscroll_callback(FL_OBJECT *ob, 
+fl_set_browser_vscroll_callback(FL_OBJECT *ob,
                                FL_BROWSER_SCROLL_CALLBACK cb,
                                void *data)
 {

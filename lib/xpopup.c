@@ -33,12 +33,12 @@
  * model of forms library, but it is needed to make other things
  * work.
  *
- * These functionalities should be someday rewritten using 
+ * These functionalities should be someday rewritten using
  * forms construct rather than Xlib.
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xpup = "$Id: xpopup.c,v 1.7 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1599,7 +1599,7 @@ fl_showpup(int n)
 	xswa.event_mask = m->event_mask;
 	xswa.save_under = True;
 	xswa.backing_store = WhenMapped;	/* fl_cntl.backingStore; */
-	xswa.cursor = m->cursor;	/* fl_get_cursor_byname(XC_sb_right_arrow)); 
+	xswa.cursor = m->cursor;	/* fl_get_cursor_byname(XC_sb_right_arrow));
 
 
 

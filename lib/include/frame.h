@@ -43,7 +43,7 @@ enum
     FL_OVAL_FRAME
 };
 
-#define FL_FRAME_COL1   FL_BLACK   /* border color     */ 
+#define FL_FRAME_COL1   FL_BLACK   /* border color     */
 #define FL_FRAME_COL2   FL_COL1    /* label background */
 #define FL_FRAME_LCOL   FL_BLACK   /* label color      */
 

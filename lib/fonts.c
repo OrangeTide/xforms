@@ -33,7 +33,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fnt = "$Id: fonts.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -486,7 +486,7 @@ fl_set_tabstop(const char *s)
 }
 
 #if 0
-int 
+int
 fl_set_tabstops(int n, const char *s)
 {
     if (n < 0 || n >= MaxTabs || !s)
@@ -494,7 +494,7 @@ fl_set_tabstops(int n, const char *s)
 
     if (tabstop[n] != 0)
          fl_free(tabstop[n]);
-    
+
     tabstop[n] = fl_strdup(s);
     tabstopNchar[n] = strlen(tabstop[n]);
     return 0;

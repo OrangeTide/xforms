@@ -44,7 +44,7 @@ main(int argc, char *argv[])
   fl_show_form(form,FL_PLACE_CENTER,FL_NOBORDER,"Inactive Slider");
 
   do {
-      obj =fl_do_forms(); 
+      obj =fl_do_forms();
       fl_set_slider_value(sl2,1.0-fl_get_slider_value(sl1));
   } while (obj != but);
 

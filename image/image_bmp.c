@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_bmp.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_bmp.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -117,7 +117,7 @@ static void generate_header_info(FL_IMAGE *im)
     sprintf(buf,"Encoding=%s",encoding[sp->encode]);
     strcat(im->info,buf);
 }
-                      
+
 
 static int
 BMP_description(FL_IMAGE * im)
@@ -298,7 +298,7 @@ load_8bit_bmp(FL_IMAGE * im, SPEC *sp)
 		    goto done;
 		else if (pix == 2)
 		{
-		    /* the document is unclear. don't know what does down 
+		    /* the document is unclear. don't know what does down
 		       mean */
 		    ci += getc(fp);
 		    i += (pix = getc(fp));

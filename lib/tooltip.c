@@ -24,7 +24,7 @@
  * \file tooltip.c
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1998-2002  T.C. Zhao 
+ *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
  *.
  *
@@ -100,7 +100,7 @@ fl_show_tooltip(const char *s, int x, int y)
     create_it();
 
     extra = 1 + !(tip->boxtype == FL_FLAT_BOX || tip->boxtype == FL_BORDER_BOX);
-    fl_get_string_dimension(tip->fntstyle, tip->fntsize, 
+    fl_get_string_dimension(tip->fntstyle, tip->fntsize,
                             s, strlen(s), &maxw, &maxh);
 
     maxw += 7 + extra;
@@ -147,7 +147,7 @@ fl_set_tooltip_font(int style, int size)
     fl_set_object_lsize(tip->text, tip->fntsize = size);
 }
 
-void 
+void
 fl_set_tooltip_lalign(int align)
 {
     create_it();

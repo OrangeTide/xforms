@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xpm.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_xpm.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -30,7 +30,7 @@
  *.
  *
  *
- *  Read and write XPM3 files. 
+ *  Read and write XPM3 files.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -148,7 +148,7 @@ XPM_load(FL_IMAGE * im)
         {
             while (strstr(buf,"*/") == 0)
                fgets(buf,buflen, fp);
-        }     
+        }
 
 	if ((head = strchr(buf, '"')) == 0)
 	{
@@ -191,7 +191,7 @@ XPM_load(FL_IMAGE * im)
                 for (len = strlen(val), p = val + len -1;
                      p > val && ( *p ==',' || *p=='"'); p--)
                      *p = '\0';
-                      
+
 #endif
 		fl_lookup_RGBcolor(val, &r, &g, &b);
 		strcpy(map[icol].key, key);

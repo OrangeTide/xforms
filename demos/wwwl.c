@@ -20,7 +20,7 @@
  */
 
 
-/* Demo showing object gravity, form minsize etc. (also double click). 
+/* Demo showing object gravity, form minsize etc. (also double click).
  *
  * With some more work, this could be made into a useful program ...
  *
@@ -66,7 +66,7 @@ static WWW www_sites[] =
 {
     {
       "XForms App.",
-      { 
+      {
 	  {
 	      "@b@C4XForms Home Page",
 	      "http://world.std.com/~xforms"
@@ -154,7 +154,7 @@ static WWW www_sites[] =
     {
 	"All FAQs",
 	{
-	    { 
+	    {
 		"Usenet FAQs",
 		"http://www.cis.ohio-state.edu/hypertext/faq/usenet"
 	    },
@@ -186,7 +186,7 @@ static WWW www_sites[] =
 		"Houston Rockets",
 		"http://hyrax.med.uth.tmc.edu/misc/rockets.html"
 	    },
-	    { 
+	    {
 		NULL,
 		NULL
 	    }
@@ -251,7 +251,7 @@ FD_www *ui;
 static int show_sites;
 
 /* initialize and show how many categories we have got */
-void 
+void
 init_cat(void)
 {
     WWW *www = www_sites;
@@ -261,7 +261,7 @@ init_cat(void)
 }
 
 /* initialize file menu */
-void 
+void
 init_file_menu(void)
 {
     fl_fit_object_label(ui->file,1,0);
@@ -269,7 +269,7 @@ init_file_menu(void)
 }
 
 /* initialize sites given category cat */
-void 
+void
 init_sites(int cat)
 {
     WWW *www = www_sites + cat - 1;
@@ -287,7 +287,7 @@ init_sites(int cat)
 }
 
 /* new catogrey is selected */
-void 
+void
 change_cat(FL_OBJECT * ob, long data)
 {
     init_sites(fl_get_choice(ob));
@@ -299,8 +299,8 @@ void init_shown(void)
     fl_addto_choice(ui->shown, "Subject|Sites");
 }
 
-/* request a change of what is shown, site name or subject */ 
-void 
+/* request a change of what is shown, site name or subject */
+void
 change_shown(FL_OBJECT * ob, long data)
 {
     int oldshow = show_sites;
@@ -308,8 +308,8 @@ change_shown(FL_OBJECT * ob, long data)
 	init_sites(fl_get_choice(ui->cat));
 }
 
-/* file menu is selected. Currently we do nothing except exit */ 
-void 
+/* file menu is selected. Currently we do nothing except exit */
+void
 do_file_menu(FL_OBJECT * ob, long data)
 {
       if(fl_get_menu(ob)== 3)
@@ -329,7 +329,7 @@ get_site(int cat, int thesite)
 }
 
 /* either double-clicked or connect button is pressed */
-void 
+void
 connect_cb(FL_OBJECT * ob, long data)
 {
     char cmdbuf[1024];
@@ -339,8 +339,8 @@ connect_cb(FL_OBJECT * ob, long data)
     {
 	fl_set_cursor(ui->www->window, XC_watch);
 	XFlush(fl_get_display());
-	fl_snprintf(cmdbuf, 
-		 sizeof( cmdbuf), 
+	fl_snprintf(cmdbuf,
+		 sizeof( cmdbuf),
 		 "%s %s",
 		 WWW_BROWSER,
 		 get_site(fl_get_choice(ui->cat), i));
@@ -350,13 +350,13 @@ connect_cb(FL_OBJECT * ob, long data)
     }
 }
 
-void 
+void
 change_sites(FL_OBJECT * ob, long data)
 {
    /* no-op */
 }
 
-int 
+int
 main(int argc, char *argv[])
 {
 
@@ -374,7 +374,7 @@ main(int argc, char *argv[])
 
     fl_set_browser_dblclick_callback(ui->listbr, connect_cb, 0);
 
-    fl_show_form(ui->www, FL_PLACE_CENTER|FL_FREE_SIZE, 
+    fl_show_form(ui->www, FL_PLACE_CENTER|FL_FREE_SIZE,
                           FL_FULLBORDER, "www launcher");
     fl_do_forms();
     fl_end_all_command();

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.7 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1328,7 +1328,7 @@ fl_handle_form(FL_FORM * form, int event, int key, XEvent * xev)
     if (form->deactivated && event != FL_DRAW)
 	return;
 
-    if (form->parent_obj && form->parent_obj->active == DEACTIVATED && 
+    if (form->parent_obj && form->parent_obj->active == DEACTIVATED &&
           event != FL_DRAW)
 	return;
 
@@ -1551,32 +1551,32 @@ do_keyboard(XEvent * xev, int formevent)
 
 	kbuflen = fl_XLookupString((XKeyEvent *) xev, (char *) keybuf,
 				   sizeof(keybuf), &keysym);
-	
+
 	if (kbuflen < 0) {
-	    
+
 	    if ( kbuflen != INT_MIN ) {
-		
+
 		/* buffer overflow, should not happen */
 		M_err("DoKeyBoard", "keyboad buffer overflow ?");
-		
+
 	    } else {
 
 		M_err("DoKeyBoard", "fl_XLookupString failed ?");
-	    
+
 	    }
 
 	} else {
-	    
+
 	    /* ignore modifier keys as they don't cause action and are
 	       taken care of by the lookupstring routine */
-	    
+
 	    if (IsModifierKey(keysym))
 		;
 	    else if (IsTab(keysym)) {
-		
+
 		/* fake a tab key. */
 		/* some system shift+tab does not generate tab */
-		
+
 		fl_handle_form(keyform, formevent, 9, xev);
 
 	    }
@@ -1584,7 +1584,7 @@ do_keyboard(XEvent * xev, int formevent)
 	    else if (keysym == XK_F10)	/* && controlkey_down(fl_keymask)) */
 		hack_test();
 #endif
-	    
+
 	    /* pass all keys to the handler */
 	    else if (IsCursorKey(keysym) || kbuflen == 0)
 		fl_handle_form(keyform, formevent, keysym, xev);
@@ -1598,7 +1598,7 @@ do_keyboard(XEvent * xev, int formevent)
 		    fl_handle_form(keyform, formevent, *ch, xev);
 
 	    }
-	    
+
 	}
 
     }
@@ -1788,7 +1788,7 @@ do_interaction_step(int wait_io)
 	{
 	    fl_get_form_mouse(mouseform, &fl_mousex, &fl_mousey, &fl_keymask);
 	    st_xev.xany.window = mouseform ? mouseform->window : 0;
-	    st_xev.xany.send_event = 1;		/* indicating synthetic event 
+	    st_xev.xany.send_event = 1;		/* indicating synthetic event
 						 */
 	    st_xev.xmotion.state = fl_keymask;
 	    st_xev.xmotion.x = fl_mousex;
@@ -2482,8 +2482,8 @@ get_next_event(int wait_io, FL_FORM ** form, XEvent * xev)
     if (has_event || do_x_only)
 	return has_event;
 
-    /* if incoming XEvent has already being pumped from the socket, 
-       watch_io() will time out, causing a bad delay in handling xevent. 
+    /* if incoming XEvent has already being pumped from the socket,
+       watch_io() will time out, causing a bad delay in handling xevent.
        Make sure there is no event in the X event queue before we go into
        watch_io() */
     if ((dox % 11) && XEventsQueued(flx->display, QueuedAfterFlush))
@@ -2682,7 +2682,7 @@ fl_adjust_form_size(FL_FORM * form)
 	    ob->boxtype != FL_NO_BOX &&
 	    (ob->boxtype != FL_FLAT_BOX || ob->objclass == FL_MENU))
 	{
-	    fl_get_string_dimension(ob->lstyle, ob->lsize, ob->label, 
+	    fl_get_string_dimension(ob->lstyle, ob->lsize, ob->label,
                        strlen(ob->label), &sw, &sh);
 
 	    bw = (ob->boxtype == FL_UP_BOX || ob->boxtype == FL_DOWN_BOX) ?

@@ -21,13 +21,13 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_NORMAL_FONT1
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: ForgetGravity ForgetGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BITMAP
@@ -39,13 +39,13 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_NORMAL_FONT1
 lcol: FL_BLACK
-label: 
-shortcut: 
+label:
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: ForgetGravity ForgetGravity
-name: 
-callback: 
-argument: 
+name:
+callback:
+argument:
 
 --------------------
 class: FL_BUTTON
@@ -58,12 +58,12 @@ style: FL_NORMAL_STYLE
 size: FL_NORMAL_FONT1
 lcol: FL_BLACK
 label: Done
-shortcut: 
+shortcut:
 resize: FL_RESIZE_ALL
 gravity: ForgetGravity ForgetGravity
 name: done
-callback: 
-argument: 
+callback:
+argument:
 
 --------------------
 class: FL_BUTTON
@@ -80,8 +80,8 @@ shortcut: L
 resize: FL_RESIZE_ALL
 gravity: ForgetGravity ForgetGravity
 name: load
-callback: 
-argument: 
+callback:
+argument:
 
 ==============================
 create_the_forms

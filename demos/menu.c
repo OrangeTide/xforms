@@ -20,7 +20,7 @@
  */
 
 
-/* This demo shows the use of menu's. 
+/* This demo shows the use of menu's.
  * The first two are PUSH_MENUs (pop-up).
  * The third one is PULLDOWN_MENU
  * and the last one is TOUCH_MENU
@@ -54,7 +54,7 @@ main(int argc, char *argv[])
    for (i=0; i<4; i++)
    {
       fl_show_menu_symbol(menu[i], 1);
-      fl_set_menu(menu[i], 
+      fl_set_menu(menu[i],
               "Red%r1|Green%r1|Yellow%r1|Blue%r1|Purple%r1|Cyran%r1|White%r1");
       fl_set_menu_item_shortcut(menu[i], 1, "Rr#R#r");
       fl_set_menu_item_shortcut(menu[i], 2, "Gg#G#g");
@@ -65,7 +65,7 @@ main(int argc, char *argv[])
       fl_set_menu_item_shortcut(menu[i], 7, "Ww#W#w");
 
       /* initially the last three entries are enabled */
-      for (j=5; j<=7; j++) 
+      for (j=5; j<=7; j++)
          fl_set_menu_item_mode(menu[i], j, FL_PUP_RADIO);
       /* the first four are disabled except the item (i+1) */
       for (j=1; j<=4; j++)
@@ -74,7 +74,7 @@ main(int argc, char *argv[])
       fl_set_object_color(abox[i], FL_BLACK+set[i], FL_BLACK);
       fl_set_menu_item_mode(menu[i], set[i], FL_PUP_CHECK | FL_PUP_RADIO);
   }
-   
+
   fl_show_form(form,FL_PLACE_CENTER,FL_TRANSIENT,"Menu");
 
   fl_do_forms();
@@ -83,7 +83,7 @@ main(int argc, char *argv[])
 }
 
 /* m is the menu index 0 - 3 */
-static void 
+static void
 menu_cb(FL_OBJECT *ob, long m)
 {
     int i, item = fl_get_menu(ob);
@@ -103,7 +103,7 @@ menu_cb(FL_OBJECT *ob, long m)
     }
     set[m] = item;
     fl_set_object_color(abox[m], FL_BLACK+item, FL_BLACK);
-}      
+}
 
 static void
 done_cb(FL_OBJECT *ob, long data)

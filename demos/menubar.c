@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * menubar routines demo. 
+/*
+ * menubar routines demo.
  *
  *  T.C. Zhao and M. Overmars
  */
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
 }
 
 
-FL_PUP_ENTRY file_menu[] = 
+FL_PUP_ENTRY file_menu[] =
 {
     {"_Open"},
     {"Save"},

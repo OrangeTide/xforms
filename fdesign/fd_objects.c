@@ -36,7 +36,7 @@
  * form designer, only this file has to be changed slightly:
  *      - in init_classes() the class and types must be added.
  *      - in add_an_object() the way of adding it should be added.
- *  
+ *
  * Also to support output fully, fd_spec.c needs to be modified
  *
  */

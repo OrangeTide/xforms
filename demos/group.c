@@ -102,7 +102,7 @@ void init_gui(FD_objsform *fd)
 
     fl_set_xyplot_data(fd->xyplot,x,y,6,"","","");
     fl_add_xyplot_overlay(fd->xyplot,1, x, y, 6, FL_RED);
-    fl_add_xyplot_text(fd->xyplot,2.5,5.2,"Weekly Summary", 
+    fl_add_xyplot_text(fd->xyplot,2.5,5.2,"Weekly Summary",
                        FL_ALIGN_CENTER,FL_BLUE);
     fl_add_xyplot_text(fd->xyplot, 3, 3.85, "@-22->", FL_ALIGN_TOP, FL_RED);
 

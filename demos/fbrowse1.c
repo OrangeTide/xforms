@@ -36,7 +36,7 @@ void load_file(FL_OBJECT *ob, long arg)
   if (! fl_load_browser(br,fl_show_input("Filename to load","")))
     fl_add_browser_line(br,"NO SUCH FILE!");
 }
- 
+
 void set_size(FL_OBJECT *ob, long arg)
 {
   fl_set_browser_fontsize(br, arg);

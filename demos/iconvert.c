@@ -44,7 +44,7 @@
 static void initialize(void);
 static void usage(const char *, int);
 static int  parse_command_line(int *, char **);
-static char *version="$Id: iconvert.c,v 1.3 2003/04/24 09:35:33 leeming Exp $";
+static char *version="$Id: iconvert.c,v 1.4 2003/09/09 00:28:25 leeming Exp $";
 
 int
 main(int argc, char *argv[])
@@ -102,7 +102,7 @@ static int noop(FL_IMAGE *im, const char *s)
 }
 
 static int parse_command_line(int *argc, char *argv[])
-{ 
+{
     int i;
     static FLIMAGE_SETUP setup;
 
@@ -129,10 +129,10 @@ static int parse_command_line(int *argc, char *argv[])
              usage(argv[0],0);
     }
 
-    flimage_setup(&setup); 
+    flimage_setup(&setup);
     *argc -= i-1;
     return i-1;
-} 
+}
 
 static void initialize(void)
 {

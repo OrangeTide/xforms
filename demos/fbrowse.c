@@ -51,11 +51,11 @@ void load_file(FL_OBJECT *ob, long arg)
 
     if((fname = fl_show_file_selector("File To Load","","*","")))
     {
-       if (! fl_load_browser(fdui->br,fname)) 
+       if (! fl_load_browser(fdui->br,fname))
            fl_add_browser_line(fdui->br,"NO SUCH FILE!");
     }
 }
- 
+
 void set_size(FL_OBJECT *ob, long arg)
 {
     FD_form *fdui = (FD_form *)ob->form->fdui;
@@ -110,14 +110,14 @@ FD_form * create_form(void)
    obj = fl_add_button(FL_NORMAL_BUTTON,x,565,dx,dy,"Hide/Show");
     fl_set_object_callback(obj, hide_show, 0);
      x += dx + 5;
- 
+
    obj = fl_add_button(FL_NORMAL_BUTTON,x,565,60,dy,"Exit");
      fl_set_object_callback(obj, exit_program, 0);
    fl_end_form();
 
    fl_adjust_form_size(fdui->form);
    fdui->form->fdui = fdui;
- 
+
    return fdui;
 }
 

@@ -24,7 +24,7 @@
  * \file listdir.c
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1996-2002  T.C. Zhao 
+ *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
  *.
  *
@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_dlist = "$Id: listdir.c,v 1.6 2003/09/08 23:48:36 leeming Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.7 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -228,7 +228,7 @@ fselect(const char *d_name, struct stat *ffstat, int *type)
            ret = *type == FT_DIR ||
                        (fl_wildmat(d_name, cpat) && ffilter(fname, *type));
         else
-           ret = (*type == FT_DIR || fl_wildmat(d_name, cpat)) && 
+           ret = (*type == FT_DIR || fl_wildmat(d_name, cpat)) &&
                   ffilter(fname, *type);
     }
     return ret;

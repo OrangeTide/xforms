@@ -4,7 +4,7 @@ Holger.Veit@gmd.de 14 Dec 97
 
 1. XForms is only supported for XFree86/OS2 3.2 or later, not for
    PMX or eXceed.
-2. You must have XPM installed. This package is available from the 
+2. You must have XPM installed. This package is available from the
    XFree86/OS2 ported software page http://set.gmd.de/~veit/os2/xf86ported.html
 3. You must have a complete EMX 0.9C fix2 development environment installed,
    including X331prog.zip or later
@@ -23,7 +23,7 @@ Holger.Veit@gmd.de 14 Dec 97
 	make all
 	make install
 	make install.man
-6. Note the imake process will overwrite provided Makefiles in the 
+6. Note the imake process will overwrite provided Makefiles in the
    subdirectories. This is no problem unless you want to use special
    targets. The Imakefiles will build everything which you can get, so
    there is no selection among library only, forms design tool and demos.

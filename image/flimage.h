@@ -22,7 +22,7 @@
 /********************** crop here for forms.h **********************/
 
 /*
- * $Id: flimage.h,v 1.2 2003/05/30 11:04:57 leeming Exp $
+ * $Id: flimage.h,v 1.3 2003/09/09 00:28:25 leeming Exp $
  *
  * Image related routines
  *
@@ -94,7 +94,7 @@ typedef unsigned int       FL_PACKED4;
 
 #define FL_UNPACK(p,r,g,b) do {r=FL_GETR(p);g=FL_GETG(p),b=FL_GETB(p);} while(0)
 #define FL_UNPACK3         FL_UNPACK
-#define FL_UNPACK4(p,r,g,b,a) do {FL_UNPACK3(p,r,g,b);a=FL_GETA(p);} while(0) 
+#define FL_UNPACK4(p,r,g,b,a) do {FL_UNPACK3(p,r,g,b);a=FL_GETA(p);} while(0)
 #endif
 
 #define FL_LUTBITS        12    /* max colormap bits. 4096 entries */
@@ -102,10 +102,10 @@ typedef unsigned int       FL_PACKED4;
 #define FL_IsRGB(im)      (im->type == FL_IMAGE_RGB)
 #define FL_IsPacked(im)   (im->type == FL_IMAGE_PACKED)
 
-enum 
-{ 
+enum
+{
     FLIMAGE_AUTOCOLOR = 0x7fffffff,
-    FLIMAGE_BADCOLOR = FLIMAGE_AUTOCOLOR 
+    FLIMAGE_BADCOLOR = FLIMAGE_AUTOCOLOR
 };
 
 
@@ -144,7 +144,7 @@ typedef struct flimage_marker_
     const char *psdraw;
     int reserved[6];
 } FLIMAGE_MARKER;
-    
+
 
 #define FLIMAGE_REPFREQ  0x1f   /* report every 32 lines */
 
@@ -175,7 +175,7 @@ typedef struct flimage_
     void *app_data;		/* for application at setup time */
     void *u_vdata;		/* for application               */
     long  u_ldata;		/* for application               */
-    unsigned char **red;        
+    unsigned char **red;
     unsigned char **green;
     unsigned char **blue;
     unsigned char **alpha;
@@ -232,7 +232,7 @@ typedef struct flimage_
 
     /* physicalValue = poffset + pixelValue * pscale  */
     double pmin, pmax;        /* physical data range             */
-    double poffset;   
+    double poffset;
     double pscale;
     /* pixel grid distance */
     double xdist_offset;
@@ -246,10 +246,10 @@ typedef struct flimage_
     long foffset;
     int original_type;
      /* hooks for application to have a chance to set some options.
-        if pre_write returns -1, the output will be canceled 
+        if pre_write returns -1, the output will be canceled
      */
     int (*pre_write)(struct flimage_ *);
-    int (*post_write)(struct flimage_ *); 
+    int (*post_write)(struct flimage_ *);
     int f_reserved[16];
 
     /* image processing stuff */
@@ -259,11 +259,11 @@ typedef struct flimage_
     unsigned int fill_color;  /* fill color            */
     int force_convert;
     int *llut[3];            /* linear lut            */
-    int llut_len; 
+    int llut_len;
     unsigned int *hist[4];
     int ip_reserved[16];
 
-    /* application handlers */ 
+    /* application handlers */
     int total, completed;
     int (*visual_cue) (struct flimage_*,  const char *);
     void (*error_message) (struct flimage_*, const char *);
@@ -314,7 +314,7 @@ typedef struct flimage_
     struct flimage_src_  *src;  /* src other than file         */
     struct flimage_dest_ *dest; /* destination other than file */
     int internal_reserved[14];
-} 
+}
 FL_IMAGE;
 
 /* some configuration stuff */
@@ -642,17 +642,17 @@ FL_EXPORT void fl_select_mediancut_quantizer(
 
 #define FLIMAGE_SHARPEN        (int**)(-1)
 #define FLIMAGE_SMOOTH         (int**)(-2)
-#define FL_SMOOTH              FLIMAGE_SMOOTH  
-#define FL_SHARPEN             FLIMAGE_SHARPEN  
+#define FL_SMOOTH              FLIMAGE_SMOOTH
+#define FL_SHARPEN             FLIMAGE_SHARPEN
 
 enum
-{ 
-   FLIMAGE_NOSUBPIXEL  = 0,    /* scale with no subpixel sampling */         
-   FLIMAGE_SUBPIXEL  = 1,      /* scale with  subpixel sampling */         
+{
+   FLIMAGE_NOSUBPIXEL  = 0,    /* scale with no subpixel sampling */
+   FLIMAGE_SUBPIXEL  = 1,      /* scale with  subpixel sampling */
    FLIMAGE_CENTER = 2,         /* center warped image. default  */
    FLIMAGE_RIGHT = 8,          /* flush right the warped image  */
    FLIMAGE_ASPECT = 32,        /* fit the size */
-   FLIMAGE_NOCENTER = FL_ALIGN_TOP_LEFT 
+   FLIMAGE_NOCENTER = FL_ALIGN_TOP_LEFT
 };
 
 FL_EXPORT int flimage_convolve(

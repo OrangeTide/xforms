@@ -37,7 +37,7 @@
 
 static void
 fill_browser(FL_OBJECT *ob)
-{ 
+{
     FD_fbform *fdui = (FD_fbform *)ob->form->fdui;
     int nfiles = 0;
     const FL_Dirlist *dl = fl_get_dirlist(".","*", &nfiles, 0), *ds;
@@ -47,7 +47,7 @@ fill_browser(FL_OBJECT *ob)
     fl_freeze_form(ob->form);
     sprintf(buf,"Total %d files", nfiles);
     fl_set_object_label(fdui->total, buf);
-    fl_clear_browser(fdui->browser); 
+    fl_clear_browser(fdui->browser);
 
     for (ds = dl; dl < dlend; dl++)
     {

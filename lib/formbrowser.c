@@ -628,7 +628,7 @@ canvas_handler(FL_OBJECT * ob, Window win, int w, int h,
     return 0;
 }
 
-/* 
+/*
    Before canvas is destroyed, this routine will be called.
    we need to close the form that is attached to this canvas
  */

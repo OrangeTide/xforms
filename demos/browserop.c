@@ -54,7 +54,7 @@ void replaceit(FL_OBJECT *obj, long arg)
 {
    int n;
 
-   if ((n=fl_get_browser(browserobj))) 
+   if ((n=fl_get_browser(browserobj)))
       fl_replace_browser_line(browserobj,n,fl_get_input(inputobj));
 }
 
@@ -62,7 +62,7 @@ void deleteit(FL_OBJECT *obj, long arg)
 {
    int n;
 
-   if ((n = fl_get_browser(browserobj))) 
+   if ((n = fl_get_browser(browserobj)))
       fl_delete_browser_line(browserobj,n);
 }
 
@@ -107,8 +107,8 @@ main(int argc, char *argv[])
    create_form();
    fl_show_form(form,FL_PLACE_CENTER,FL_TRANSIENT,"Browser Op");
 
-   do 
-      obj = fl_do_forms(); 
+   do
+      obj = fl_do_forms();
    while (obj != exitobj);
 
    fl_hide_form(form);

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_convolve.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_convolve.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -30,7 +30,7 @@
  *.
  *
  *  General colvolution routines for RGB and gray (both 8bit and 16bit)
- *  images. 3x3 and 5x5 kernels are manually unrolled. 
+ *  images. 3x3 and 5x5 kernels are manually unrolled.
  *
  */
 
@@ -298,14 +298,14 @@ flimage_convolve(FL_IMAGE * im, int **kernel, int krow, int kcol)
  * almost the same as convolve except the kernel is a proper C array
  * kernel[krow][kcol]
  */
- 
+
 int
 flimage_convolvea(FL_IMAGE * im, int *kernel, int krow, int kcol)
 {
     int **kk,status;
 
     if (!(krow & 1) || !(kcol & 1))
-	M_err("Convolve", "even or zero kernel size (row=%d col=%d)!", 
+	M_err("Convolve", "even or zero kernel size (row=%d col=%d)!",
              krow, kcol);
     kk = fl_make_matrix(krow,kcol,sizeof(int), kernel);
     status = flimage_convolve(im, kk, krow,kcol);

@@ -51,7 +51,7 @@ void create_form_clock(void)
    obj = fl_add_box(FL_UP_BOX,0,0,500,350,"");
 
    obj = fl_add_clock(FL_DIGITAL_CLOCK,185,20,150,35,"");
-   fl_set_object_boxtype(obj,FL_ROUNDED_BOX); 
+   fl_set_object_boxtype(obj,FL_ROUNDED_BOX);
    fl_set_object_color(obj,FL_COL1,FL_BLACK);
    fl_set_object_lsize(obj,FL_MEDIUM_SIZE);
    fl_set_object_lstyle(obj,FL_BOLD_STYLE);

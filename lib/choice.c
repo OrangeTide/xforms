@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_chc = "$Id: choice.c,v 1.8 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.9 2003/09/09 00:28:25 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -252,21 +252,21 @@ handle_choice(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
     case FL_DRAW:
 	/* always force outside alignment */
 	ob->align &= ~FL_ALIGN_INSIDE;
-	(ob->type == FL_DROPLIST_CHOICE ? draw_droplist_choice : draw_choice) (ob);	/* Draw 
+	(ob->type == FL_DROPLIST_CHOICE ? draw_droplist_choice : draw_choice) (ob);	/* Draw
 
 
 
 
 
 
-											   the 
+											   the
 
 
 
 
 
 
-											   object 
+											   object
 
 
 

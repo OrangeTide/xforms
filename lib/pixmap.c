@@ -252,7 +252,7 @@ init_xpm_attributes(Window win, XpmAttributes * xpma, FL_COLOR tran)
 	xpcm[1].name = "opaque";
 	xpcm[1].value = 0;
 	xpcm[1].pixel = fl_get_flcolor(FL_BLACK);
-	
+
 	xpma->valuemask |= XpmColorSymbols;
 	xpma->colorsymbols = xpcm;
 	xpma->numsymbols = 2;

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_combine.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_combine.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -31,10 +31,10 @@
  *
  *
  * combine two images in the following way
- *   IM = IM1 * alpha + IM2 * (1-alpha) 
+ *   IM = IM1 * alpha + IM2 * (1-alpha)
  *
  */
- 
+
 
 /*** UNFINISHED and UNTESTED */
 #ifdef HAVE_CONFIG_H
@@ -64,7 +64,7 @@ FL_IMAGE* flimage_combine(FL_IMAGE *im1, FL_IMAGE *im2, double alpha)
     ret->type = FLIMAGE_RGB;
 
     flimage_get_linearlut(ret);
-  
+
     /* convert to RGB */
     flimage_convert(im1, FLIMAGE_RGB, 0);
     flimage_convert(im2, FLIMAGE_RGB, 0);
@@ -82,11 +82,11 @@ FL_IMAGE* flimage_combine(FL_IMAGE *im1, FL_IMAGE *im2, double alpha)
     {
          for ( x = 0; x < w; x++)
          {
-             ret->red[y][x] = ret->llut[0][im1->red[y][x]] + 
+             ret->red[y][x] = ret->llut[0][im1->red[y][x]] +
                               ret->llut[1][im2->red[y][x]];
-             ret->green[y][x] = ret->llut[0][im1->green[y][x]] + 
+             ret->green[y][x] = ret->llut[0][im1->green[y][x]] +
                                 ret->llut[1][im2->green[y][x]];
-             ret->blue[y][x] = ret->llut[0][im1->blue[y][x]] + 
+             ret->blue[y][x] = ret->llut[0][im1->blue[y][x]] +
                                ret->llut[1][im2->blue[y][x]];
          }
 
@@ -106,7 +106,7 @@ FL_IMAGE* flimage_combine(FL_IMAGE *im1, FL_IMAGE *im2, double alpha)
             ret->green[y][x] = im1->green[y][x];
             ret->blue[y][x] = im1->blue[y][x];
          }
-      } 
+      }
 
      return ret;
 }

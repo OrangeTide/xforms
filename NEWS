@@ -48,9 +48,9 @@ V1.0RC1	May 30, 2002
   o. The majority of the function prototypes in `forms.h' have been
      expanded to include variable names.
   o. various bug fixes.
- 
+
 ------------------------------------------
-V0.89  
+V0.89
   o. No API changes. V0.89 is source API compatible with V0.86 and v0.88
   o. Added image support: reads and writes a variety of image formats
      (gif, jpeg, tiff, bmp, postscript).

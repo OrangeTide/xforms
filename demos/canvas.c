@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * Demo showing the interaction with a canvas object.   
+/*
+ * Demo showing the interaction with a canvas object.
  *
  *  This file is part of xforms package
  *  T.C. Zhao and M. Overmars  (1997)
@@ -58,7 +58,7 @@ extern FD_canvasform * create_form_canvasform(void);
 
 static GC canvasGC;
 
-int 
+int
 canvas_expose(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
 {
     FD_canvasform *ui = (FD_canvasform *)d;
@@ -67,18 +67,18 @@ canvas_expose(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
     return 0;
 }
 
-int 
+int
 canvas_key(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
 {
     FD_canvasform *ui = (FD_canvasform *)d;
     char buf[128];
-    sprintf(buf, "KeyPress: keysym=%ld", 
+    sprintf(buf, "KeyPress: keysym=%ld",
            XKeycodeToKeysym(fl_display,ev->xkey.keycode, 0));
     fl_addto_browser(ui->br, buf);
     return 0;
 }
 
-int 
+int
 canvas_but(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
 {
     FD_canvasform *ui = (FD_canvasform *)d;
@@ -89,11 +89,11 @@ canvas_but(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
     return 0;
 }
 
-int 
+int
 canvas_misc(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
 {
     FD_canvasform *ui = (FD_canvasform *)d;
-    fl_addto_browser(ui->br, 
+    fl_addto_browser(ui->br,
          ev->xcrossing.type == EnterNotify ? "Enter canvas":"Leave canvas");
     return 0;
 }
@@ -158,19 +158,19 @@ void hide_it(FL_OBJECT *ob, long all)
 }
 
 void misc_cb(FL_OBJECT *ob, long data)
-{ 
+{
     if(fl_get_button(ob))
     {
-       fl_add_canvas_handler(fd_canvasform->canvas, EnterNotify, 
+       fl_add_canvas_handler(fd_canvasform->canvas, EnterNotify,
                              canvas_misc, fd_canvasform);
        fl_add_canvas_handler(fd_canvasform->canvas, LeaveNotify,
                              canvas_misc, fd_canvasform);
     }
     else
     {
-       fl_remove_canvas_handler(fd_canvasform->canvas, 
+       fl_remove_canvas_handler(fd_canvasform->canvas,
                                 EnterNotify, canvas_misc);
-       fl_remove_canvas_handler(fd_canvasform->canvas, 
+       fl_remove_canvas_handler(fd_canvasform->canvas,
                                 LeaveNotify, canvas_misc);
     }
 }
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
             OwnerGrabButtonMask);
 #endif
 
-   while (fl_do_forms() != fd_canvasform->done) 
+   while (fl_do_forms() != fd_canvasform->done)
       ;
 
    return 0;

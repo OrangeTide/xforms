@@ -28,7 +28,7 @@
  *  All rights reserved.
  *
  *
- *  Handle some common valuator tasks. 
+ *  Handle some common valuator tasks.
  *   TODO: move slider and counter handler here
  */
 

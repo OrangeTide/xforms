@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * A demo of a moving chart 
+/*
+ * A demo of a moving chart
  *
  *  This file is part of xforms package
  *  M. Overmars and T.C. Zhao   (1997)
@@ -43,14 +43,14 @@ FL_OBJECT *chartobj, *sinobj, *exitbut, *stepobj;
 void create_form_form(void);
 
 void set_function(FL_OBJECT *obj, long arg)
-{ 
-    func = arg; 
-    fl_clear_chart(chartobj); 
+{
+    func = arg;
+    fl_clear_chart(chartobj);
     x = 0.0;
 }
 
 void set_step(FL_OBJECT *obj, long arg)
-{ 
+{
      step = fl_get_slider_value(stepobj);
 }
 
@@ -83,7 +83,7 @@ int idle_cb(XEvent *xev, void *d)
     return 0;
 }
 
-void add_value(void *xev, void *a) 
+void add_value(void *xev, void *a)
 {
      fl_insert_chart_value(chartobj,1,next_step(),"",1);
 }

@@ -21,8 +21,8 @@
 
 
 /*
- *  This demo shows the use of choice objects.  
- *  
+ *  This demo shows the use of choice objects.
+ *
  *  This file is part of xforms package
  *  M. Overmars and T.C. Zhao    (1997)
  */

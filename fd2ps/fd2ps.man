@@ -1,5 +1,5 @@
 .\"
-.\" $Id: fd2ps.man,v 1.1 2003/04/06 15:52:39 leeming Exp $
+.\" $Id: fd2ps.man,v 1.2 2003/09/09 00:28:25 leeming Exp $
 .\"
 .\" Man page for Forms Designer
 .\" Use the following command to generate viewable man page
@@ -35,9 +35,9 @@ of the
 into PostScript (ps), or optionally Encapsulated PostScript
 (eps) for printing or inclusion into other documents. The input file
 can be given with or without the .fd extension.
-If output file name is not specified, used is a filename derived 
+If output file name is not specified, used is a filename derived
 from the input file name by replacing the .fd extension with
-ps or eps. If output filename is specified as \-, 
+ps or eps. If output filename is specified as \-,
 stdout is used.
 
 .SH OPTIONS
@@ -45,7 +45,7 @@ stdout is used.
 accepts the following command line options
 .TP 6
 .B \-help
-Prints a brief summary of all command line options. 
+Prints a brief summary of all command line options.
 .TP
 .B \-version
 Prints the current version of
@@ -59,32 +59,32 @@ if portrait will not fit the page. This option
 overrides the default.
 .TP
 .B \-l
-This options requests landscape output. 
+This options requests landscape output.
 .TP
 .BI \-bw " n"
 Specifies the border width of the interface. By default this information
 is obtained from the .fd file.
 .TP
-.B \-eps 
+.B \-eps
 This option requests Encapsulated PostScript instead of
 the plain PostScript output.
 .TP
 .B \-gray
 This options requests all colors be converted
 to gray levels. By default,
-.I fd2ps 
+.I fd2ps
 outputs colors as specified in the .fd file.
 .TP
 .B \-G f
 specifies a gamma factor that will be used to
-adjust the builtin colors in a non-linear fashion. 
+adjust the builtin colors in a non-linear fashion.
 It can be thought as a way to brighten or dim
 the builtin colors: larger the gamma, brighter the color.
-The default gamma is 1.0. 
+The default gamma is 1.0.
 .TP
 .BI \-dpi " f"
 This option specifies the screen resolution on which
-the user interface is designed. 
+the user interface is designed.
 By giving a smaller or larger dpi number than that of the screen,
 the output is in effect being enlarged or shrunk. This
 flag does not affect text size. The default DPI is 85.
@@ -94,16 +94,16 @@ unit, this flag does not have effect.
 .BI \-rgb " file"
 This option specifies the path to the X color database (rgb.txt)
 for use in parsing XPM colornames. The default is
-/usr/lib/X11/rgb.txt. Environment variable 
+/usr/lib/X11/rgb.txt. Environment variable
 .B RGBFile
 can be used to change the default.
 .TP
 .BI \-paper " name"
 This option specifies the paper name, such as A4, Letter etc.
-The output PostScript will always center 
-on the page.  Use name 
+The output PostScript will always center
+on the page.  Use name
 .I all
-to get a list of the known paper names and sizes.  
+to get a list of the known paper names and sizes.
 The default is US Letter unless environment variable
 .B PAPER
 is set to one of the known paper names.
@@ -121,12 +121,12 @@ debugging the
 .I fd2ps
 program.
 .SH BUGS
-Not all objects are currently supported. 
+Not all objects are currently supported.
 .SH SEE ALSO
 fdesign(1L), xforms(5)
 .SH AUTHOR
 Copyright
 .Cr
-1997-98 by T.C. Zhao (tc_zhao@yahoo.com) 
+1997-98 by T.C. Zhao (tc_zhao@yahoo.com)
 .SH HOME PAGE
 http://world.std.com/~xforms

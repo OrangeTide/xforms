@@ -30,7 +30,7 @@
 
 /* postscript stuff */
 
-enum 
+enum
 {
    FLPS_AUTO,                  /* switch to landscale if does not fit */
    FLPS_LANDSCAPE,             /* landscape always                    */
@@ -59,7 +59,7 @@ enum
              int        scale_text;                      \
              int        first_page_only;                 \
              int        clip;                            \
-             int        reserved[10]             
+             int        reserved[10]
 
 /* configuration infomation */
 typedef struct flps_cntl_ { FLPS_MEMBERS; } FLPS_CONTROL;

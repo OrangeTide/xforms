@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_disp.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_disp.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -29,7 +29,7 @@
  *  All rights reserved.
  *.
  *
- * Image display. 
+ * Image display.
  *
  */
 
@@ -723,10 +723,10 @@ flimage_color_to_pixel(FL_IMAGE * im, int r, int g, int b, int *newpix)
 	max_col = FL_min(256, (1 << im->depth));
 	if (!xcolor)
 	    xcolor = fl_malloc(256 * sizeof(*xcolor));
-	/* 
+	/*
 	 * not theoretically correct as colormap may have changed
 	 * since the last time we asked for colors. Take a chance for
-	 * performace. 
+	 * performace.
 	 */
 	if (lastcolormap != im->xcolormap)
 	{
@@ -816,7 +816,7 @@ adapt_image_to_window(FL_IMAGE *im, XWindowAttributes *xwa)
      fl_rgbmask_to_shifts(rgb2p->rmask, &rgb2p->rshift, &rgb2p->rbits);
      fl_rgbmask_to_shifts(rgb2p->gmask, &rgb2p->gshift, &rgb2p->gbits);
      fl_rgbmask_to_shifts(rgb2p->bmask, &rgb2p->bshift, &rgb2p->bbits);
-}     
+}
 
 #define Compatible(x,im)                                               \
      (x.depth==im->depth                        &&                     \
@@ -1122,7 +1122,7 @@ do_quantization(FL_IMAGE * im, Colormap colormap, int maxcol,
 			       im->red_lut, im->green_lut, im->blue_lut,
 			       im->map_len, &empty_slots);
 
-	/* It's better to take a chance of finding similar colors in the 
+	/* It's better to take a chance of finding similar colors in the
 	   colormap than reducing the number of colors too much */
 	done = (empty_slots == im->map_len) ||
 	    (empty_slots < 12 || empty_slots < maxcol / 4);
@@ -1381,7 +1381,7 @@ flimage_from_pixmap_(FL_IMAGE * im, Pixmap pixmap, int w, int h)
         unsigned int ww, hh, bjunk, djunk;
         int xx, yy;
         Window root;
-        XGetGeometry(im->xdisplay, pixmap, &root, &xx, &yy, &ww, &hh, 
+        XGetGeometry(im->xdisplay, pixmap, &root, &xx, &yy, &ww, &hh,
                     &bjunk, &djunk);
         w = ww;
         h = hh;

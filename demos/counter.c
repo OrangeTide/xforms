@@ -20,11 +20,11 @@
  */
 
 
-/* 
+/*
  * This is an example of the use of counters.
  *
  *  This file is part of xforms package
- *  T.C. Zhao and M. Overmars 
+ *  T.C. Zhao and M. Overmars
  */
 
 #ifdef HAVE_CONFIG_H
@@ -74,11 +74,11 @@ int
 main(int argc, char *argv[])
 {
    int i;
- 
+
    fl_initialize(&argc, argv, "FormDemo", 0, 0);
    create_form_form();
    fl_set_object_color(result,FL_FREE_COL1,FL_FREE_COL1);
-  
+
    for (i=0; i<3; i++)
    {
       fl_set_counter_bounds(co[i],0.0,255.0);

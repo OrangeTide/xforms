@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_warp.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_warp.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -55,7 +55,7 @@ interpol2d_short(unsigned short *out, float y, float x, unsigned short **mat,
 	return;
     }
 
-    /* we need to fake one row/column of samples outside of the image to 
+    /* we need to fake one row/column of samples outside of the image to
        make the boundary look nice */
     ix = (x < 0 ? -1 : x);
     iy = (y < 0 ? -1 : y);
@@ -98,7 +98,7 @@ interpol2d_uc(int out[3], float y, float x,
     ix = (x < 0.0f) ? -1 : (int) x;
     iy = (y < 0.0f) ? -1 : (int) y;
 
-    /* we need to fake one row/column of samples outside of the image to 
+    /* we need to fake one row/column of samples outside of the image to
        make the boundary look nice */
     if (ix >= 0 && iy >= 0)
     {

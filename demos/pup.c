@@ -20,9 +20,9 @@
  */
 
 
-/* Demo: complete pop-ups. 
+/* Demo: complete pop-ups.
  * test font/cursor change
- * test attaching pup to menu 
+ * test attaching pup to menu
  */
 
 #ifdef HAVE_CONFIG_H
@@ -64,16 +64,16 @@ int main(int argc,char *argv[])
     return 0;
 }
 
-static int subm = -1, m = -1, ssm; 
+static int subm = -1, m = -1, ssm;
 
 /* post-handler */
-int 
+int
 post(FL_OBJECT *ob, int ev, FL_Coord mx, FL_Coord y, int key, void *xev)
 {
     static int n1 = -1,n2 = -1;
 
     if(n1 == -1)
-    {    
+    {
       n1 = fl_defpup(FL_ObjWin(ob),"line1|line2");
       fl_setpup_shadow(n1,0);
       fl_setpup_bw(n1,0);
@@ -147,7 +147,7 @@ do_pup(FL_OBJECT *ob, long q)
       fl_addtopup(ssm,"SSMItem32%x32%r2");
 
 /*      fl_addtopup(subm,"SubMenu%t");*/
-      fl_addtopup(subm,"SMItemA\tAlt-A%x10%h","#a"); 
+      fl_addtopup(subm,"SMItemA\tAlt-A%x10%h","#a");
       fl_addtopup(subm,"SMItemB\tAlt-B%x11%h","#b");
       fl_addtopup(subm,"SMItemC\tAlt-C%x12%h","#c");
       fl_addtopup(subm,"SMItemD\tAlt-F5%x13%h%m","#&5",ssm);
@@ -166,8 +166,8 @@ do_pup(FL_OBJECT *ob, long q)
 
 
    if(fl_get_button_numb(ob) >= FL_SHORTCUT)
-      fl_setpup_position(ob->form->x + ob->x, 
-                      ob->form->y + ob->y + ob->h); 
+      fl_setpup_position(ob->form->x + ob->x,
+                      ob->form->y + ob->y + ob->h);
 
    show_return_val(fl_dopup(m));
 

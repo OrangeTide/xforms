@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * Different label alignments 
+/*
+ * Different label alignments
  *
  *  This file is part of xforms package
  *  T.C. Zhao and M. Overmars

@@ -21,15 +21,15 @@
 
 
 /*
- * $Id: image_io_filter.c,v 1.5 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_io_filter.c,v 1.6 2003/09/09 00:28:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
- *  Copyright (c) 1993, 1998-2002  T.C. Zhao 
+ *  Copyright (c) 1993, 1998-2002  T.C. Zhao
  *  All rights reserved.
  *
  *  Use one of the builtin image reader and an external filter to
- *  add new supported format. 
+ *  add new supported format.
  *
  *  TODO: add signal handling to make sure the temp files are deleted.
  */

@@ -20,8 +20,8 @@
  */
 
 
-/* 
- * Showing all different charts 
+/*
+ * Showing all different charts
  *
  *  This file is part of xforms package
  *  M. Overmars and T.C. Zhao   (1997)

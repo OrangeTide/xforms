@@ -20,7 +20,7 @@
  */
 
 
-/* 
+/*
  * same functionality as yesno.c, but with callbacks.
  */
 
@@ -46,7 +46,7 @@ main(int argc, char *argv[])
 {
    FL_FORM *form;
    FL_OBJECT *obj;
-  
+
   fl_initialize(&argc, argv, "FormDemo", 0, 0);
   form = fl_bgn_form(FL_UP_BOX,320,120);
     fl_add_box(FL_NO_BOX,160,40,0,0,"Do you want to Quit?");

@@ -30,7 +30,7 @@
 
 #define FL_CROSSBUTTON_BW  2
 
-extern FL_OBJECT *fl_add_crossbutton(int, FL_Coord, FL_Coord, 
+extern FL_OBJECT *fl_add_crossbutton(int, FL_Coord, FL_Coord,
                     FL_Coord, FL_Coord, const char *);
 
 extern FL_OBJECT *fl_create_crossbutton(int, FL_Coord, FL_Coord,
