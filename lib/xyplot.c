@@ -38,7 +38,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xyp = "$Id: xyplot.c,v 1.6 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.7 2004/05/13 17:01:14 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1872,6 +1872,26 @@ fl_replace_xyplot_point(FL_OBJECT * ob, int i, double x, double y)
     {
 	sp->x[0][i] = x;
 	sp->y[0][i] = y;
+	fl_redraw_object(ob);
+    }
+}
+
+void
+fl_replace_xyplot_point_in_overlay(FL_OBJECT * ob, int i, int ID,
+				   double x, double y)
+{
+    SPEC *sp = ob->spec;
+
+    if (ID < 0 || ID > sp->maxoverlay)
+	return;
+
+    if (i < 0 || i >= sp->n[ID])
+	return;
+
+    if ((sp->x[ID][i] != x) || (sp->y[ID][i] != y))
+    {
+	sp->x[ID][i] = x;
+	sp->y[ID][i] = y;
 	fl_redraw_object(ob);
     }
 }
