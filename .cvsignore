@@ -5,3 +5,6 @@ configure
 libtool
 autom4te*
 xforms.spec
+acinclude.m4
+aclocal.m4
+stamp-h1
