@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.11 2004/04/06 14:08:09 lasgouttes Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.12 2004/05/03 12:00:28 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -709,6 +709,12 @@ get_command_name(const char *arg0)
     /* remove the extension and the period */
     if ((p = strrchr(cmd_name, '.')))
 	*p = '\0';
+
+    /* prevent a valgrind warning about a possible memory leak. */
+    if (s != cmd_name) {
+	cmd_name = fl_strdup(cmd_name);
+	fl_free(s);
+    }
 
     return cmd_name;
 }

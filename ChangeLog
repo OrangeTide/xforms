@@ -1,3 +1,8 @@
+2004-05-02  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/flresource.c (get_command_name): squash valgrind warning
+	about a possible memory leak.
+
 2004-04-30  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/Makefile.am, fdesign/Makefile.am: silence automake
