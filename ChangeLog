@@ -1,5 +1,7 @@
 2003-11-19  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
+	* lib/flinternal.h: remove obsolete comment
+
 	* config/xformsinclude.m4 (XFORMS_PATH_XPM): honor X_CFLAGS to
 	find xpm.h (should fix problem reported by Reed Riddle)
 	

@@ -34,8 +34,6 @@
  * not use any of this since there is no guarantee that exactly some
  * thing will exist in future versions of XForms.
  *
- * This header file is needed by forms.h only if MAKING_FORMS is defined.
- *
  */
 
 #ifndef FLINTERNAL_H
