@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_dlist = "$Id: listdir.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.6 2003/09/08 23:48:36 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -184,10 +184,8 @@ mode2type(unsigned mode, int *type)
 	*type = FT_FILE;
     else if (S_ISLNK(mode))
 	*type = FT_LINK;
-#if !defined(NO_SOCK)		/* only old SCO */
     else if (S_ISSOCK(mode))
 	*type = FT_SOCK;
-#endif
     else if (S_ISFIFO(mode))
 	*type = FT_FIFO;
     else if (S_ISCHR(mode))

@@ -84,7 +84,7 @@ AC_CHECK_HEADERS([fcntl.h float.h limits.h locale.h malloc.h memory.h stdlib.h s
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STAT
-AC_C_CONST
+AC_C_CONST  dnl used
 AC_TYPE_PID_T
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
@@ -93,11 +93,11 @@ AC_STRUCT_TM
 # Checks for library functions.
 AC_FUNC_FORK
 AC_FUNC_MALLOC
-AC_TYPE_SIGNAL
+AC_TYPE_SIGNAL dnl used
 AC_FUNC_STAT
 AC_FUNC_STRTOD
 AC_FUNC_VPRINTF
-AC_CHECK_FUNCS([dup2 endpwent floor ftime getcwd gethostname gettimeofday getwd memmove memset modf pow putenv select setlocale strcasecmp strchr strdup strerror strrchr strstr strtol])
+AC_CHECK_FUNCS([usleep dup2 endpwent floor ftime getcwd gethostname gettimeofday getwd memmove memset modf pow putenv select setlocale strcasecmp strchr strdup strerror strrchr strstr strtol])
 
 AC_CHECK_FUNCS(snprintf vsnprintf)
 XFORMS_CHECK_DECL(snprintf, stdio.h)

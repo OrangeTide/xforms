@@ -39,7 +39,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_sysd = "$Id: sysdep.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_sysd = "$Id: sysdep.c,v 1.6 2003/09/08 23:48:36 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -140,7 +140,7 @@ fl_msleep(unsigned long msec)
     _sleep(msec);
     return 0;
 #else
-#if !defined(DONT_HAVE_USLEEP)
+#ifdef HAVE_USLEEP
     usleep(msec * 1000);
     return 0;
 #else

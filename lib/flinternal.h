@@ -353,7 +353,7 @@ typedef struct fl_freelist_
 }
 FL_FREE_REC;
 
-typedef FL_SIGRET(*FL_OSSIG_HANDLER) (int);
+typedef RETSIGTYPE(*FL_OSSIG_HANDLER) (int);
 
 typedef struct fl_signallist_
 {

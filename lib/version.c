@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.10 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.11 2003/09/08 23:48:36 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -77,19 +77,14 @@ void
 fl_print_version(int g)
 {
     char tmp[100];
-#ifndef M_XENIX
     const char *p[5], **q = version;
-#else
-    char *p[5], **q = (char **) version;
-#endif
     int n;
 
     fl_snprintf(tmp, 100, "FORMS Library Version %d.%d", FL_VERSION, FL_REVISION);
     p[0] = tmp;
 
     for (n = 1; *q; n++, q++) {
-	/* SCO compiler needs the cast */
-	p[n] = (char *) fl_rm_rcs_kw(*q);
+	p[n] = fl_rm_rcs_kw(*q);
     }
 
     if (g) {

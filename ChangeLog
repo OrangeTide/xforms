@@ -1,3 +1,26 @@
+2003-09-05  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* lib/version.c (fl_print_version): remove workaround for XENIX
+
+	* lib/local.h: remove NO_SOCK (who wants to support old SCO anyway?)
+
+2003-07-31  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* lib/local.h (FL_SIGRET): 
+
+	* lib/signal.c (default_signal_handler): use RETSIGTYPE instead of
+	FL_SIG_RET 
+
+	* lib/errmsg.c (fl_get_syserror_msg): use HAVE_STRERROR
+
+	* lib/sysdep.c (fl_msleep): use HAVE_USLEEP
+
+	* lib/local.h: remove variables DONT_HAVE_USLEEP,
+	DONT_HAVE_STRERROR, NO_CONST (handled by AC_C_CONST),
+	FL_SIGRET_IS_VOID, FL_SIGRET
+
+	* configure.ac: check for usleep too
+
 2003-05-23  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* image/rgb_db.c: follow Rouben Rostamian's advice and remove all the

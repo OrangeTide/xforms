@@ -63,7 +63,7 @@ handle_signal(void)
 
 static int sig_direct;
 
-static FL_SIGRET
+static RETSIGTYPE
 default_signal_handler(int sig)
 {
     fl_signal_caught(sig);
@@ -78,10 +78,8 @@ default_signal_handler(int sig)
 	exit(sig);
     }
 
-#if !defined(M_XENIX) && !defined(_WIN32)
-#if !defined( FL_SIGRET_IS_VOID )
+#if RETSYGTYPE != void
     return 0;
-#endif
 #endif
 }
 

@@ -38,7 +38,7 @@
  *    void (*gmout)(const char *, const char *, const char *, int);
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_errm = "$Id: errmsg.c,v 1.7 2003/04/24 09:35:34 leeming Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.8 2003/09/08 23:48:36 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -58,7 +58,7 @@ char *id_errm = "$Id: errmsg.c,v 1.7 2003/04/24 09:35:34 leeming Exp $";
 #include "ulib.h"
 extern int errno;		/* system error no            */
 
-#ifdef DONT_HAVE_STRERROR
+#ifndef HAVE_STRERROR
 extern char *sys_errlist[];
 #endif
 
@@ -98,7 +98,7 @@ fl_set_error_handler( FL_ERROR_FUNC user_func)
 const char *fl_get_syserror_msg(void)
 {
     const char  *pp;
-#ifndef DONT_HAVE_STRERROR
+#ifdef HAVE_STRERROR
     pp = errno ? strerror(errno) : "";
 #else
     pp = errno ? sys_errlist[errno]:"";

@@ -41,19 +41,6 @@
 extern int strcasecmp(const char *, const char *);
 #endif
 
-#define DONT_HAVE_USLEEP
-
-#define FL_SIGRET_IS_VOID
-#define FL_SIGRET void
-
-#if defined(__linux__)||defined(linux)
-#undef DONT_HAVE_USLEEP
-#endif
-
-/* solaris: do we need to check the version number ? */
-#if defined(__SUNPRO_C) && __SUNPRO_C >=0x500
-#endif
-
 #if defined(Lynx)
 #define NEED_GETCWD
 #endif
@@ -76,39 +63,15 @@ extern int gettimeofday(struct timeval *tv, struct timezone *tz);
 /* (some) suns do not have strerror, use sys_errlist */
 
 #if ( defined(sun) || defined(__sun__) ) && !defined( SYSV )
-#define DONT_HAVE_STRERROR
-#define DONT_HAVE_ATEXIT
 #define BAD_SPRINTF		/* returns char * */
 #endif
 
-/*#if defined(__sgi)
-   #endif
- */
-
-/* #if defined(_HPUX_SOURCE)
-   #endif
- */
-
-#if defined(M_XENIX)
-#define NO_SOCK
-#endif
-
-/* #define NO_CONST     */
-
-/* prototype is currently required */
-
-/* #define NO_PROTOTYPE */
 
 /********* End of Configurable stuff ***********/
 
 /* some header has XK_XP_Left etc */
 #if (XlibSpecificationRelease>=6)
 #define HAVE_KP_DEFINE 1
-#endif
-
-#ifdef NO_CONST
-#undef  const
-#define const
 #endif
 
 #ifndef FL_PATH_MAX
