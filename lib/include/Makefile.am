@@ -1,11 +1,10 @@
 include $(top_srcdir)/config/common.am
 
 include_HEADERS = forms.h
-CLEANFILES = forms.h
-BUILT_SOURCES = forms.h
+CLEANFILES = forms.h AAA.h stamp-forms
+BUILT_SOURCES = forms.h AAA.h
 
 noinst_HEADERS = \
-	AAA.h \
 	Basic.h \
 	XBasic.h \
 	bitmap.h \
@@ -40,8 +39,19 @@ noinst_HEADERS = \
 	xyplot.h \
 	zzz.h
 
-forms.h: $(noinst_HEADERS)
-	@rm -f $@
-	@for i in $(noinst_HEADERS); do \
-		sed "1,/crop here for forms/d" ${srcdir}/$$i >> $@; \
+forms.h: stamp-forms
+	@:
+
+stamp-forms: AAA.h $(noinst_HEADERS)
+	rm -f tmpforms
+	sed "1,/crop here for forms/d" AAA.h > tmpforms
+	for i in $(noinst_HEADERS); do \
+		sed "1,/crop here for forms/d" ${srcdir}/$$i >> tmpforms; \
 	done
+	if cmp -s tmpforms forms.h ; then \
+		rm -f tmpforms ;\
+	else \
+		rm -f forms.h ;\
+		mv tmpforms forms.h ;\
+	fi
+	echo timestamp > $@

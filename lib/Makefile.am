@@ -1,6 +1,6 @@
 include $(top_srcdir)/config/common.am
 
-CLEANFILES = forms.h
+CLEANFILES = forms.h xforms.5
 
 EXTRA_DIST = xforms.man
 

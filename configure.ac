@@ -9,6 +9,7 @@ AC_CONFIG_AUX_DIR(config)
 
 PACKAGE=xforms
 VERSION="1.1cvs"
+XFORMS_SET_VERSION(1,0,2)
 XFORMS_CHECK_VERSION
 
 AM_MAINTAINER_MODE
@@ -161,6 +162,7 @@ AH_BOTTOM([
 ### Finish the work.
 AC_CONFIG_FILES([Makefile \
        xforms.spec \
+       lib/include/AAA.h \
        config/Makefile \
        lib/Makefile \
        lib/bitmaps/Makefile \

@@ -4,29 +4,29 @@ dnl         Lars Gullik Bjønnes (larsbj@lyx.org)
 dnl         Allan Rae (rae@lyx.org)
 
 
+dnl Usage XFORMS_SET_VERSION(Version, Revision, Fixlevel)
+dnl Sets variables VERSION, FL_VERSION, FL_REVISION, FL_FIXLEVEL.
+AC_DEFUN(XFORMS_SET_VERSION,[
+VERSION="$1.$2.$3"
+AC_SUBST(FL_VERSION, $1)
+AC_SUBST(FL_REVISION, $2)
+AC_SUBST(FL_FIXLEVEL, $3)
+AC_SUBST(VERSION, $VERSION)
+])
+
 dnl Usage XFORMS_CHECK_VERSION   Displays version of xforms being built and
 dnl sets variables "xforms_devel_version" and "xforms_prerelease"
 AC_DEFUN(XFORMS_CHECK_VERSION,[
-changequote(, ) dnl
 echo "configuring xforms version $VERSION"
-if echo "$VERSION" | grep 'cvs' >/dev/null ; then
-  xforms_devel_version=yes
-  echo "WARNING: This is a development version. Expect bugs."
-else
-  xforms_devel_version=no
-fi
-if echo "$VERSION" | grep 'pre' > /dev/null ; then
-    xforms_prerelease=yes
-    echo "WARNING: This is a prerelease. Be careful!"
-else
-    xforms_prerelease=no
-fi
-changequote([, ]) dnl
-AC_SUBST(xforms_devel_version)
-if test $xforms_devel_version = yes ; then
-  AC_DEFINE(DEVEL_VERSION, 1, Define if you are building a development version of xforms)
-fi])
-
+xforms_prerelease=no
+xforms_devel_version=no
+case $VERSION in
+  *cvs*) xforms_devel_version=yes
+         AC_DEFINE(DEVEL_VERSION, 1, Define if you are building a development version of xforms)
+         echo "WARNING: This is a development version. Expect bugs." ;;
+  *pre*) xforms_prerelease=yes
+         echo "WARNING: This is a prerelease. Be careful!" ;;
+esac])
 
 dnl Usage XFORMS_CHECK_LIB_JPEG: Checks for jpeg library
 AC_DEFUN(XFORMS_CHECK_LIB_JPEG,[

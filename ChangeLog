@@ -1,3 +1,20 @@
+2003-05-05  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* lib/include/Makefile.am (forms.h): create forms.h using the
+	target stamp-forms, so that it remains untouched when AAA.h is
+	regenerated but did not change.
+
+	* lib/include/AAA.h.in: new file. This is the template from which
+	AAA.h is generated
+	
+	* lib/include/.cvsignore: add AAA.h
+
+	* configure.ac: call XFORMS_SET_VERSION; generate AAA.h from AAA.h.in
+
+	* config/xformsinclude.m4 (XFORMS_SET_VERSION): new macro, which
+	sets the VERSION string for xforms
+	(XFORMS_CHECK_VERSION): simplify a bit
+
 2003-04-24  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* image/image_fits.c (Bad_bpp): use abs() and not fabs(), since
