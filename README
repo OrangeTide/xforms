@@ -1,47 +1,36 @@
-			  XForms Version 1.1
+			  XForms Version 1.0.90
 
 This is the Free Software distribution of the XForms Library, a
 graphical user interface toolkit for X Window Systems.
 
 It should work under X11 R4, R5 & R6. XForms is free software. It is
-licensed under the LGPL (Lesser General Public License) version 2.1. See
-the file COPYING.LIB for the gory details.
+licensed under the GNU LGPL (Lesser General Public License) version 2.1.
+See the file COPYING.LIB for the gory details.
 
-				- - -
 
 What's new?
+-----------
 
-	Read NEWS.
+XForms 1.0.90 is a development version in preparation for XForms 1.1.0.
+While we believe that it performs correctly, as with any development
+version, you may find out that it has too many bugs for your taste.
 
-Documentation on XForms is available from ncmir.ucsd.edu /pub/xforms/DOC/
-via anonymous ftp.
+For more information, read the file NEWS.
+
+
+Getting XForms
+--------------
 
 The entire XForms distribution plus the latest info is accessible via
 http://www.nongnu.org/xforms/
-
-				- - -
-
-What do I need to compile xforms from the source distribution?
-
-You should be able to compile xforms on any 'reasonable' flavour of
-unix.
-
-xforms relies on several other libraries, namely
-
-	* libXpm, version 4.7 or newer.
-	* libjpeg, 6.0b or newer.
-	* libGL (optional)
-
-				- - -
 
 This source distribution is available at
 
  <http://savannah.nongnu.org/files/?group=xforms>
 
-If you would like to act as a mirror for this distribution, please
-feel free to do so.
 
-				- - -
+Keeping in touch
+----------------
 
 There is a mailing list for XForms. Send a message to
 xforms-request@bob.usuhs.mil with one of the following commands
@@ -60,3 +49,80 @@ To use the mailing list, send your message to
 Remember your message will be sent to many people. Please DO NOT send
 subscribe/unsubscribe messages to the list, send it to
 xforms-request@bob.usuhs.mil
+
+
+Compiling XForms
+----------------
+
+You should be able to compile XForms on any 'reasonable' flavour of
+unix.
+
+XForms relies on several other libraries, namely
+
+	* libXpm, version 4.7 or newer.
+	* libjpeg, 6.0b or newer.
+	* libGL (optional)
+
+You will find generic installation instructions common to all
+autoconf-based packages in the file INSTALL. In general, all it takes
+to compile and install XForms is
+
+	./configure
+	make
+	make install
+
+For more complicated cases, ./configure takes the following specific
+flags:
+
+  o --with-extra-lib=DIRECTORY that specifies the path where XForms will
+    find extra libraries (Xpm, jpeg...) it needs. Defaults to NONE
+    (i.e. search in standard places). You can specify several
+    directories, separated by colons.
+
+  o --with-extra-inc=DIRECTORY that gives the place where XForms will find
+    headers.  Defaults to NONE (i.e.  search in standard places).
+    You can specify several directories, separated by colons.
+
+  o --with-extra-prefix[=DIRECTORY] that is equivalent to
+       --with-extra-lib=DIRECTORY/lib --with-extra-inc=DIRECTORY/include
+    If DIRECTORY is not specified, the current prefix is used.
+
+  o --enable-optimization=VALUE enables you to set optimization to a
+    higher level as the default (-O), for example --enable-optimization=-O3.
+
+  o --disable-optimization - you can use this to disable compiler
+    optimization of LyX. The compile may be much quicker with some
+    compilers, but XForms applications will run more slowly.
+
+  o --enable-debug will add debug information to your binary. This
+    requires a lot more disk space, but is a must if you want to try to
+    debug problems in XForms. The default is to have debug information
+    for development versions and prereleases only.
+
+Moreover, the following generic configure flags may be useful:
+
+  o --prefix=DIRECTORY specifies the root directory to use for
+    installation. [defaults to /usr/local]
+
+  o --enable-maintainer-mode enables some code that automatically
+    rebuilds the configure script, makefiles templates and other useful
+    files when needed. This is off by default, to avoid surprises.
+
+Note that the --with-extra-* commands are not really robust when it
+comes to use of relative paths.  If you really want to use a relative path
+here, you can prepend it with "`pwd`/".
+
+If you do not like the default compile flags used (-g -O on gcc), you can
+set CFLAGS variable to other values as follows:
+
+  ./configure CFLAGS='-O2' <other-options>
+
+Similarly, if you want to force the use of some specific compiler, you can
+give a value to the CC variable.
+
+The following option might be useful in desperate cases:
+
+  o --enable-warnings that make the compiler output more warnings during
+    the compilation of LyX.  Opposite is --disable-warnings.  By default,
+    this flag is on for development versions only.
+
