@@ -59,7 +59,7 @@ static struct paper papers[] =
     {"B", "11x17in", 11.0, 17.0},	/* US tabloid */
     {"Note", "4x5in", 4.0, 5.0},
  /* sentinel */
-    {0}
+    {0, 0, 0, 0}
 };
 
 void

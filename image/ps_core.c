@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_core.c,v 1.4 2003/04/24 09:35:34 leeming Exp $
+ * $Id: ps_core.c,v 1.5 2003/11/20 10:46:16 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -386,42 +386,42 @@ flps_pieslice(int fill, int x, int y, int w, int h,
 
 static FL_IMAP fl_imap[] =
 {
-    {NV(FL_BLACK), 0, 0, 0},
-    {NV(FL_WHITE), 255, 255, 255},
+    {NV(FL_BLACK), 0, 0, 0, 0, 0},
+    {NV(FL_WHITE), 255, 255, 255, 0, 0},
 
-    {NV(FL_COL1), 161, 161, 161},	/* default color, gray63 */
-    {NV(FL_MCOL), 191, 191, 191},	/* used as magic, gray75 */
-    {NV(FL_RIGHT_BCOL), 41, 41, 41},	/* right  gray16  */
-    {NV(FL_BOTTOM_BCOL), 89, 89, 89},	/* bottom  gray35 */
-    {NV(FL_LEFT_BCOL), 222, 222, 222},	/* left color  gray87 */
+    {NV(FL_COL1), 161, 161, 161, 0, 0},		/* default color, gray63 */
+    {NV(FL_MCOL), 191, 191, 191, 0, 0},		/* used as magic, gray75 */
+    {NV(FL_RIGHT_BCOL), 41, 41, 41, 0, 0},	/* right  gray16  */
+    {NV(FL_BOTTOM_BCOL), 89, 89, 89, 0, 0},	/* bottom  gray35 */
+    {NV(FL_LEFT_BCOL), 222, 222, 222, 0, 0},	/* left color  gray87 */
 
-    {NV(FL_SLATEBLUE), 113, 113, 198},
-    {NV(FL_INDIANRED), 198, 113, 113},
+    {NV(FL_SLATEBLUE), 113, 113, 198, 0, 0},
+    {NV(FL_INDIANRED), 198, 113, 113, 0, 0},
 
-    {NV(FL_RED), 255, 0, 0},
-    {NV(FL_BLUE), 0, 0, 255},
-    {NV(FL_GREEN), 0, 255, 0},
-    {NV(FL_YELLOW), 255, 255, 0},
-    {NV(FL_MAGENTA), 255, 0, 255},
-    {NV(FL_CYAN), 0, 255, 255},
-    {NV(FL_TOMATO), 255, 99, 71},
+    {NV(FL_RED), 255, 0, 0, 0, 0},
+    {NV(FL_BLUE), 0, 0, 255, 0, 0},
+    {NV(FL_GREEN), 0, 255, 0, 0, 0},
+    {NV(FL_YELLOW), 255, 255, 0, 0, 0},
+    {NV(FL_MAGENTA), 255, 0, 255, 0, 0},
+    {NV(FL_CYAN), 0, 255, 255, 0, 0},
+    {NV(FL_TOMATO), 255, 99, 71, 0, 0},
 
-    {NV(FL_INACTIVE), 110, 110, 110},	/* gray43       */
-    {NV(FL_TOP_BCOL), 204, 204, 204},	/* top  gray80  */
+    {NV(FL_INACTIVE), 110, 110, 110, 0, 0},	/* gray43       */
+    {NV(FL_TOP_BCOL), 204, 204, 204, 0, 0},	/* top  gray80  */
 
-    {NV(FL_PALEGREEN), 113, 198, 113},
-    {NV(FL_DARKGOLD), 205, 149, 10},
-    {NV(FL_ORCHID), 205, 105, 201},
-    {NV(FL_DARKCYAN), 40, 170, 175},
-    {NV(FL_DARKTOMATO), 139, 54, 38},
-    {NV(FL_WHEAT), 255, 231, 155},
-    {NV(FL_DARKORANGE), 255, 128, 0},
-    {NV(FL_DEEPPINK), 255, 0, 128},
-    {NV(FL_CHARTREUSE), 128, 255, 0},
-    {NV(FL_DARKVIOLET), 128, 0, 255},
-    {NV(FL_SPRINGGREEN), 0, 255, 128},
-    {NV(FL_DODGERBLUE), 0, 128, 255},
-    {NV(FL_DOGERBLUE), 0, 128, 255},
+    {NV(FL_PALEGREEN), 113, 198, 113, 0, 0},
+    {NV(FL_DARKGOLD), 205, 149, 10, 0, 0},
+    {NV(FL_ORCHID), 205, 105, 201, 0, 0},
+    {NV(FL_DARKCYAN), 40, 170, 175, 0, 0},
+    {NV(FL_DARKTOMATO), 139, 54, 38, 0, 0},
+    {NV(FL_WHEAT), 255, 231, 155, 0, 0},
+    {NV(FL_DARKORANGE), 255, 128, 0, 0, 0},
+    {NV(FL_DEEPPINK), 255, 0, 128, 0, 0},
+    {NV(FL_CHARTREUSE), 128, 255, 0, 0, 0},
+    {NV(FL_DARKVIOLET), 128, 0, 255, 0, 0},
+    {NV(FL_SPRINGGREEN), 0, 255, 128, 0, 0},
+    {NV(FL_DODGERBLUE), 0, 128, 255, 0, 0},
+    {NV(FL_DOGERBLUE), 0, 128, 255, 0, 0},
 };
 
 #define builtin   sizeof(fl_imap)/sizeof(fl_imap[0])
@@ -777,82 +777,94 @@ static PS_draw psdraw[] =
 {
     {"returnarrow", "symreturnarrow",
      "-0.8 0.0 -0.1 0.7 -0.1 0.05 0.6 0.05 0.6 0.7 0.7 0.7 0.7 -0.05\n"
-     "-0.1 -0.05 -0.1 -0.7 9 P"
+     "-0.1 -0.05 -0.1 -0.7 9 P",
+     0, 0, 0, 0
     },
 
     {"->", "symrarrow",
-     "-0.8 -0.4 -0.8 0.4 0 0.4 0 0.8 0.8 0 0 -0.8 0 -0.4 7 P"
+     "-0.8 -0.4 -0.8 0.4 0 0.4 0 0.8 0.8 0 0 -0.8 0 -0.4 7 P",
+     0, 0, 0, 0
     },
-    {"<-", "180 rotate", 0, -1},
+    {"<-", "180 rotate", 0, -1, 0, 0, 0},
 
-    {">", "symrarrowh", "-0.2 0.7 M 0.5 0.0 LT -0.2 -0.7 LT C"},
-    {"<", "180 rotate", 0, -1},
+    {">", "symrarrowh", "-0.2 0.7 M 0.5 0.0 LT -0.2 -0.7 LT C", 0, 0, 0, 0},
+    {"<", "180 rotate", 0, -1, 0, 0, 0},
 
     {"<->", "symdarrow",
      "-0.25 0.4 0.25 0.4 0.25 0.8 0.85 0 0.25 -0.8 0.25 -0.4 -0.25 -0.4\n"
-     "-0.25 -0.8 -0.85 0 -0.25 0.8 10 P"
+     "-0.25 -0.8 -0.85 0 -0.25 0.8 10 P",
+     0, 0, 0, 0
     },
 
     {"plus", "symplus",
    "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
-     "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P"
+     "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P",
+     0, 0, 0, 0
     },
 
     {">>", "symdarrowh",
    "0.15 0.7 0.85 0 0.15 -0.7 0.15 -0.001 -0.55 -0.7 -0.55 0.7 0.15 0.001\n"
-     "7 P"
+     "7 P",
+     0, 0, 0, 0
     },
-    {"<<", "180 rotate", 0, -1},
+    {"<<", "180 rotate", 0, -1, 0, 0, 0},
 
     {"arrow", "symthinarrow",
      "-0.9 0.02 M 0.65 0.02 LT 0.65 0.15 LT 0.9 0 LT 0.65 -0.15 LT\n"
-     "0.65 -0.02 LT -0.9 -0.02 LT C"
+     "0.65 -0.02 LT -0.9 -0.02 LT C",
+     0, 0, 0, 0
     },
 
-    {"circle", "symcircle", "0 0 0.77 0 360 arc"},
+    {"circle", "symcircle", "0 0 0.77 0 360 arc", 0, 0, 0, 0},
 
     {"square", "symsquare",
-     "-0.77 -0.77 M -0.77 0.77 LT 0.77 0.77 LT 0.77 -0.77 LT C"
+     "-0.77 -0.77 M -0.77 0.77 LT 0.77 0.77 LT 0.77 -0.77 LT C",
+     0, 0, 0, 0
     },
 
     {"line", "symline",
      "-0.97 0.01 M  0.97 0.01 LT 0.97 -0.01 LT -0.08 -0.01 LT C",
+     0, 0, 0, 0
     },
 
     {"->|", "symarrowbar",
      "-0.75 0.35 -0.1 0.35 -0.1 0.75 0.6 0.001 0.6 0.75 0.75 0.75\n"
 " 0.75 -0.75 0.6 -0.75 0.6 -0.001 -0.1 -0.75 -0.1 -0.35 -0.75 -0.35 12 P\n",
+     0, 0, 0, 0
     },
 
-    {"|<-", "180 rotate", 0, -1},
+    {"|<-", "180 rotate", 0, -1, 0, 0, 0},
 
     {">|", "symarrowheadbar",	/* bar 0.25 */
      "-0.60 0.7 0.22 0.001 0.22 0.7 0.47 0.7 0.47 -0.7 0.22 -0.7\n"
      " 0.22 -0.001 -0.60 -0.7 8 P",
+     0, 0, 0, 0
     },
 
-    {"|<", "180 rotate", 0, -1},
+    {"|<", "180 rotate", 0, -1, 0, 0, 0},
 
-    {"|>", "symbararrowhead", 0, -1, draw_bararrowhead, 1},
-    {"DnLine", "symdnline", 0, -1, draw_dnline},
-    {"dnline", "symdnline", 0, -1, draw_dnline},
-    {"UpLine", "symupline", 0, -1, draw_upline},
-    {"upline", "symupline", 0, -1, draw_upline},
-    {"UpArrow", "symuparrow", 0, -1, draw_uparrow, 1},
-    {"DnArrow", "symdnarrow", 0, -1, draw_dnarrow, 1},
-    {"=", "symRippleLines", 0, -1, draw_ripple_lines, 1},
+    {"|>", "symbararrowhead", 0, -1, draw_bararrowhead, 1, 0},
+    {"DnLine", "symdnline", 0, -1, draw_dnline, 0, 0},
+    {"dnline", "symdnline", 0, -1, draw_dnline, 0, 0},
+    {"UpLine", "symupline", 0, -1, draw_upline, 0, 0},
+    {"upline", "symupline", 0, -1, draw_upline, 0, 0},
+    {"UpArrow", "symuparrow", 0, -1, draw_uparrow, 1, 0},
+    {"DnArrow", "symdnarrow", 0, -1, draw_dnarrow, 1, 0},
+    {"=", "symRippleLines", 0, -1, draw_ripple_lines, 1, 0},
 
  /* aliases */
-    {"RippleLines", "symRippleLines", 0, -1, draw_ripple_lines, 1},
+    {"RippleLines", "symRippleLines", 0, -1, draw_ripple_lines, 1, 0},
 
     {"+", "symplus",
    "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
-     "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P"
+     "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P",
+     0, 0, 0, 0
     },
 
     {"-->", "symthinarrow",
      "-0.9 0.02 M 0.65 0.02 LT 0.65 0.15 LT 0.9 0 LT 0.65 -0.15 LT\n"
-     "0.65 -0.02 LT -0.9 -0.02 LT C"
+     "0.65 -0.02 LT -0.9 -0.02 LT C",
+     0, 0, 0, 0
     }
 };
 

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_tiff.c,v 1.5 2003/11/20 10:46:16 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -261,7 +261,7 @@ flimage_enable_tiff(void)
 
 static int junkBuffer;
 
-#define NV(a,t)  {a,#a,t,&junkBuffer}
+#define NV(a,t)  {a,#a,t,&junkBuffer,0,0,0}
 
 #define SubFileType       254
 #define    ReduceImage          1

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_marker.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_marker.c,v 1.5 2003/11/20 10:46:15 leeming Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -94,7 +94,7 @@ static MARKER markers[MaxMarkers] =
     {"line", draw_line, ps_line},
     {"star", draw_star, ps_star},
     /* sentinel */
-    {0, 0}
+    {0, 0, 0}
 };
 
 

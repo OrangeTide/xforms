@@ -59,11 +59,11 @@ extern void exit_cb(FL_OBJECT *, long), saveforms_cb(FL_OBJECT *, long);
 
 static MenuEntry fmenu[] =
 {
-    {" Open", "Oo#o", loadforms_cb},
-    {" Merge", "Mm#m", mergeforms_cb},
-    {" Save", "Ss#s", saveforms_cb},
-    {" Save As %l", "Aa#a", saveforms_as_cb},
-    {" Exit", "Ee#e", exit_cb}
+    {" Open", "Oo#o", loadforms_cb, 0, 0},
+    {" Merge", "Mm#m", mergeforms_cb, 0, 0},
+    {" Save", "Ss#s", saveforms_cb, 0, 0},
+    {" Save As %l", "Aa#a", saveforms_as_cb, 0, 0},
+    {" Exit", "Ee#e", exit_cb, 0, 0}
 };
 
 #define NFM (sizeof(fmenu)/sizeof(fmenu[0]))
@@ -154,9 +154,9 @@ loadforms_cb(FL_OBJECT * obj, long arg)
 /* Group Menu entry */
 static MenuEntry gmenu[] =
 {
-    {"New group", "Nn#n", 0, 7},
-    {"Delete Group", "Dd#d", 0, 8},
-    {"Rename Group", "Rr#r", changegroupname_cb}
+    {"New group", "Nn#n", 0, 7, 0},
+    {"Delete Group", "Dd#d", 0, 8, 0},
+    {"Rename Group", "Rr#r", changegroupname_cb, 0, 0}
 };
 #define NGM (sizeof(gmenu)/sizeof(gmenu[0]))
 
@@ -177,13 +177,13 @@ groupmenu_callback(FL_OBJECT * ob, long data)
 /* object menu entry */
 static MenuEntry obmenu[] =
 {
-    {"Object Attributes", "Oo#o", 0, 1},
-    {"Lower Object", "Ll#l", 0, 2},
-    {"Raise Object", "Rr#r", 0, 3},
-    {"Show Object", "Ss#s", 0, 5},
-    {"Hide Object", "Hh#h", 0, 6},
-    {"Cut Object", "Cc#c", 0, 12},
-    {"Paste Object", "Pp#p", 0, 10}
+    {"Object Attributes", "Oo#o", 0, 1, 0},
+    {"Lower Object", "Ll#l", 0, 2, 0},
+    {"Raise Object", "Rr#r", 0, 3, 0},
+    {"Show Object", "Ss#s", 0, 5, 0},
+    {"Hide Object", "Hh#h", 0, 6, 0},
+    {"Cut Object", "Cc#c", 0, 12, 0},
+    {"Paste Object", "Pp#p", 0, 10, 0}
 };
 #define NOBM  (sizeof(obmenu)/sizeof(obmenu[0]))
 
@@ -199,9 +199,9 @@ objectmenu_callback(FL_OBJECT * ob, long data)
 /* form menu entry */
 static MenuEntry fmmenu[] =
 {
-    {"New Form", "Nn#n", addform_cb},
-    {"Delete Form", "Dd#d", deleteform_cb},
-    {"Rename Form", "Rr#r", changename_cb}
+    {"New Form", "Nn#n", addform_cb, 0, 0},
+    {"Delete Form", "Dd#d", deleteform_cb, 0, 0},
+    {"Rename Form", "Rr#r", changename_cb, 0, 0}
 };
 #define NFMM (sizeof(fmmenu)/sizeof(fmmenu[0]))
 

@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.6 $ of $Date: 2003/09/09 00:28:25 $",
+    "$State: Exp $  $Revision: 1.7 $ of $Date: 2003/11/20 10:46:15 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -400,19 +400,19 @@ static FL_resource fdres[] =
     {"test.geometry", "Test.Geometry", FL_STRING, fdtestgeom, 0, NG},
     {"help.geometry", "Help.Geometry", FL_STRING, fdhelpgeom, 0, NG},
     {"align.geometry", "Align.Geometry", FL_STRING, fdaligngeom, 0, NG},
-    {"control.border", "XForm.Border", FL_BOOL, &fd_cntlborder, "0"},
-    {"convert", "Convert", FL_BOOL, &fdopt.conv_only, "0"},
-    {"compensate", "Compensate", FL_BOOL, &fdopt.compensate, "0"},
+    {"control.border", "XForm.Border", FL_BOOL, &fd_cntlborder, "0", 0},
+    {"convert", "Convert", FL_BOOL, &fdopt.conv_only, "0", 0},
+    {"compensate", "Compensate", FL_BOOL, &fdopt.compensate, "0", 0},
     {"unit", "Unit", FL_STRING, fd_sunit, "pixel", 30},
     {"language", "Language", FL_STRING, fd_slanguage, "C", 30},
     {"filter", "Filter", FL_STRING, fd_sfilter, 0, 30},
     {"xformHeader", "XFormHeader", FL_STRING, xform_header, "forms.h", 128},
-    {"altformat", "AltFormat", FL_BOOL, &fdopt.altformat, "0"},
-    {"helpFontSize", "HelpFontSize", FL_INT, &fd_helpfontsize, "12"},
-    {"nocode", "NoCode", FL_BOOL, &fdopt.emit_code, "1"},
-    {"main", "Main", FL_BOOL, &fdopt.emit_main, "0"},
-    {"callback", "Callback", FL_BOOL, &fdopt.emit_cb, "0"},
-    {"lax", "Lax", FL_BOOL, &fdopt.lax, "0"},
+    {"altformat", "AltFormat", FL_BOOL, &fdopt.altformat, "0", 0},
+    {"helpFontSize", "HelpFontSize", FL_INT, &fd_helpfontsize, "12", 0},
+    {"nocode", "NoCode", FL_BOOL, &fdopt.emit_code, "1", 0},
+    {"main", "Main", FL_BOOL, &fdopt.emit_main, "0", 0},
+    {"callback", "Callback", FL_BOOL, &fdopt.emit_cb, "0", 0},
+    {"lax", "Lax", FL_BOOL, &fdopt.lax, "0", 0},
 };
 
 #define Nropt  (sizeof(fdres)/sizeof(fdres[0]))

@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_cur = "$Id: cursor.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_cur = "$Id: cursor.c,v 1.6 2003/11/20 10:46:16 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -68,12 +68,12 @@ CurStruct;
 /* pre-built cursors */
 static CurStruct prebuilt[] =
 {
-    {XC_watch},
-    {XC_sb_right_arrow},
-    {XC_hand2},
-    {XC_top_left_arrow},
-    {XC_tcross},
-    {XC_pirate}
+    {XC_watch, 0, 0, 0, 0, 0, {0}},
+    {XC_sb_right_arrow, 0, 0, 0, 0, 0, {0}},
+    {XC_hand2, 0, 0, 0, 0, 0, {0}},
+    {XC_top_left_arrow, 0, 0, 0, 0, 0, {0}},
+    {XC_tcross, 0, 0, 0, 0, 0, {0}},
+    {XC_pirate, 0, 0, 0, 0, 0, {0}}
 };
 
 static CurStruct *cursors;

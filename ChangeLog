@@ -1,3 +1,21 @@
+2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* fd2ps/papers.c:
+	* fd2ps/pscol.c:
+	* fd2ps/psdraw.c:
+	* fdesign/fd_control.c:
+	* fdesign/fd_main.c:
+	* fdesign/fd_printC.c:
+	* fdesign/fd_spec.c:
+	* fdesign/sp_dial.c:
+	* image/image_marker.c:
+	* image/image_tiff.c:
+	* image/ps_core.c:
+	* lib/cursor.c:
+	* lib/flcolor.c: squash warnings about 'var may be uninitialized' when
+	compiling with gcc -W -Wall by explicitly initializing all parts of the
+	arrays in the above files.
+
 2003-11-19  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* autogen.sh: enable the use of autoconf 2.58.

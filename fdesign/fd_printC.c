@@ -205,7 +205,7 @@ C_output(const char *filename, FRM * forms, int fnumb)
 
 /*** Some attributes query routines ***{*/
 
-#define VN(v)   {v,#v}
+#define VN(v)   {v,#v, 0, 0}
 #define PVN(v)   v,#v
 
 
@@ -261,8 +261,8 @@ static VN_pair vn_lsize[] =
     VN(FL_TINY_FONT), VN(FL_SMALL_FONT),
     VN(FL_NORMAL_FONT), VN(FL_MEDIUM_FONT),
     VN(FL_LARGE_FONT), VN(FL_HUGE_FONT),
-    {FL_SMALL_FONT, "FL_NORMAL_FONT1"},
-    {FL_NORMAL_FONT, "FL_NORMAL_FONT2"},
+    {FL_SMALL_FONT, "FL_NORMAL_FONT1", 0, 0},
+    {FL_NORMAL_FONT, "FL_NORMAL_FONT2", 0, 0},
     VN(-1)
 };
 
@@ -319,12 +319,12 @@ static VN_pair vn_unit[] =
     VN(FL_COORD_centiMM),
     VN(FL_COORD_POINT),
     VN(FL_COORD_centiPOINT),
-    {FL_COORD_PIXEL, "pixel"},
-    {FL_COORD_MM, "mm"},
-    {FL_COORD_POINT, "point"},
-    {FL_COORD_centiPOINT, "cp"},
-    {FL_COORD_centiMM, "cmm"},
-    {FL_COORD_centiPOINT, "cpoint"},
+    {FL_COORD_PIXEL, "pixel", 0, 0},
+    {FL_COORD_MM, "mm", 0, 0},
+    {FL_COORD_POINT, "point", 0, 0},
+    {FL_COORD_centiPOINT, "cp", 0, 0},
+    {FL_COORD_centiMM, "cmm", 0, 0},
+    {FL_COORD_centiPOINT, "cpoint", 0, 0},
     VN(-1)
 };
 
@@ -632,15 +632,15 @@ convert_u(FL_Coord l)
  */
 static VN_pair scclass[] =
 {
-    {FL_BUTTON, "button"},
-    {FL_LIGHTBUTTON, "button"},
-    {FL_ROUNDBUTTON, "button"},
-    {FL_CHECKBUTTON, "button"},
-    {FL_BITMAPBUTTON, "button"},
-    {FL_PIXMAPBUTTON, "button"},
-    {FL_INPUT, "input"},
+    {FL_BUTTON, "button", 0, 0},
+    {FL_LIGHTBUTTON, "button", 0, 0},
+    {FL_ROUNDBUTTON, "button", 0, 0},
+    {FL_CHECKBUTTON, "button", 0, 0},
+    {FL_BITMAPBUTTON, "button", 0, 0},
+    {FL_PIXMAPBUTTON, "button", 0, 0},
+    {FL_INPUT, "input", 0, 0},
  /* sentinel */
-    {-1, 0}
+    {-1, 0, 0, 0}
 };
 
 static const char *

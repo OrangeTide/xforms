@@ -50,7 +50,7 @@ static FD_dialattrib *dial_attrib;
 static SuperSPEC *dial_spec;
 static void show_spec(SuperSPEC *);
 
-#define VN(a)  {a,#a}
+#define VN(a)  {a,#a,0,0}
 
 static VN_pair dial_dir[] =
 {

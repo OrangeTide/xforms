@@ -63,35 +63,40 @@ static ObjSPEC objspec[] =
 	{FL_SLIDER, FL_VALSLIDER},
 	get_slider_spec_fdform,
 	set_slider_attrib, slider_spec_restore,
-	save_slider_attrib, emit_slider_code
+	save_slider_attrib, emit_slider_code,
+	0, 0, 0
     },
 
     {
 	{FL_COUNTER},
 	get_counter_spec_fdform,
 	set_counter_attrib, counter_spec_restore,
-	save_counter_attrib, emit_counter_code
+	save_counter_attrib, emit_counter_code,
+	0, 0, 0
     },
 
     {
 	{FL_DIAL},
 	get_dial_spec_fdform,
 	set_dial_attrib, dial_spec_restore,
-	save_dial_attrib, emit_dial_code
+	save_dial_attrib, emit_dial_code,
+	0, 0, 0
     },
 
     {
 	{FL_POSITIONER},
 	get_pos_spec_fdform,
 	set_pos_attrib, pos_spec_restore,
-	save_pos_attrib, emit_pos_code
+	save_pos_attrib, emit_pos_code,
+	0, 0, 0
     },
 
     {
 	{FL_THUMBWHEEL},
 	get_twheel_spec_fdform,
 	set_twheel_attrib, twheel_spec_restore,
-	save_twheel_attrib, emit_twheel_code
+	save_twheel_attrib, emit_twheel_code,
+	0, 0, 0
     },
 
     {
@@ -100,28 +105,32 @@ static ObjSPEC objspec[] =
 	 FL_ROUND3DBUTTON, FL_LABELBUTTON},
 	get_button_spec_fdform,
 	set_button_attrib, button_spec_restore,
-	save_button_attrib, emit_button_code, emit_button_header
+	save_button_attrib, emit_button_code, emit_button_header,
+	0, 0
     },
 
     {
 	{FL_PIXMAP, FL_BITMAP},
 	get_pixmap_spec_fdform,
 	set_pixmap_attrib, pixmap_spec_restore,
-	save_pixmap_attrib, emit_pixmap_code, emit_pixmap_header
+	save_pixmap_attrib, emit_pixmap_code, emit_pixmap_header,
+	0, 0
     },
 
     {
 	{FL_SCROLLBAR},
 	get_scrollbar_spec_fdform,
 	set_scrollbar_attrib, scrollbar_spec_restore,
-	save_scrollbar_attrib, emit_scrollbar_code
+	save_scrollbar_attrib, emit_scrollbar_code,
+	0, 0, 0
     },
 
     {
 	{FL_BROWSER},
 	get_browser_spec_fdform,
 	set_browser_attrib, browser_spec_restore,
-	save_browser_attrib, emit_browser_code
+	save_browser_attrib, emit_browser_code,
+	0, 0, 0
     },
 
     {
@@ -129,7 +138,7 @@ static ObjSPEC objspec[] =
 	get_choice_spec_fdform,
 	set_choice_attrib, choice_spec_restore,
 	save_choice_attrib, emit_choice_code, emit_menu_header,
-	emit_menu_global,
+	emit_menu_global, 0
     },
 
     {
@@ -137,25 +146,27 @@ static ObjSPEC objspec[] =
 	get_menu_spec_fdform,
 	set_menu_attrib, menu_spec_restore,
 	save_menu_attrib, emit_menu_code, emit_menu_header,
-	emit_menu_global
+	emit_menu_global, 0
     },
 
     {
 	{FL_XYPLOT},
 	get_xyplot_spec_fdform,
 	set_xyplot_attrib, xyplot_spec_restore,
-	save_xyplot_attrib, emit_xyplot_code
+	save_xyplot_attrib, emit_xyplot_code,
+	0, 0, 0
     },
 
     {
 	{FL_FREE},
 	get_freeobj_spec_fdform,
 	set_freeobj_attrib, freeobj_spec_restore,
-	save_freeobj_attrib, emit_freeobj_code
+	save_freeobj_attrib, emit_freeobj_code,
+	0, 0, 0
     },
 
     {
-	{-1}			/* sentinel */
+	{-1}, 0, 0, 0, 0, 0, 0, 0, 0			/* sentinel */
     }
 
 };
@@ -497,7 +508,7 @@ static FL_VN_PAIR howreturn_str[] =
     {FL_RETURN_CHANGED, "Whenever Changed"},
     {FL_RETURN_END, "Always at End"},
     {FL_RETURN_ALWAYS, " Always"},
-    {-1}
+    {-1, 0}
 };
 
 const char *
