@@ -49,7 +49,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n %{name} -f %{_tmppath}/%{name}-buildroot/binfiles
 %defattr(-,root,root)
-%doc COPYING Copyright Changes ChangeLog
+%doc COPYING.LIB Copyright ChangeLog INSTALL NEWS README
 
 %files -n %{name}-devel -f %{_tmppath}/%{name}-buildroot/devfiles
 %defattr(-,root,root)

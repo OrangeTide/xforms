@@ -1,3 +1,7 @@
+2003-11-18  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* xforms.spec.in: update the %doc list to reflect actuality.
+
 2003-11-18  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* INSTALL: generic instructions from autoconf.
