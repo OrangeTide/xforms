@@ -1,4 +1,4 @@
-2003-05-23  Angus Leeming  <angus.leeming@btopenworld.com>
+2003-09-09  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/forms.c (fl_keyboard): pass it the event to allow it to
 	distinguish between KeyPress and KeyRelease events.
