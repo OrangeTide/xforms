@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_gif.c,v 1.5 2003/11/21 13:23:23 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -507,7 +507,7 @@ GIF_load(FL_IMAGE * im)
 
     while (!err && (count = getc(fp)) != EOF && count > 0)
     {
-	err = Badfread(buf, 1, count, fp);
+	err = Badfread(buf, 1, (size_t)count, fp);
 	for (ch = buf; count-- > 0; ch++)
 	{
 	    datum += *ch << bits;
@@ -1100,9 +1100,9 @@ output_lzw_code(register unsigned int code, FILE * fp)
 	accum >>= 8;
     }
 
-    if (bytes >= 254 || code == EOFCode)
+    if (bytes >= 254 || (int)code == EOFCode)
     {
-	if (code == EOFCode && bits)
+	if ((int)code == EOFCode && bits)
 	{
 	    *ch = (unsigned char)(accum & 255);
 	    bytes++;

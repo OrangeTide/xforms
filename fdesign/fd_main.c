@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.7 $ of $Date: 2003/11/20 10:46:15 $",
+    "$State: Exp $  $Revision: 1.8 $ of $Date: 2003/11/21 13:23:22 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -165,9 +165,9 @@ double_click(const XEvent * xev)
 {
     static Time lasttime;
     static int lastbut, lastx, lasty;
-    int dblclk, x = xev->xbutton.x, y = xev->xbutton.y;
+    int dblclk, x = (int)xev->xbutton.x, y = xev->xbutton.y;
 
-    dblclk = xev->xbutton.button == lastbut &&
+    dblclk = (int)xev->xbutton.button == lastbut &&
 	(xev->xbutton.time - lasttime) < FL_CLICK_TIMEOUT &&
 	lastx == x && lasty == y;
 

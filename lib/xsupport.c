@@ -37,7 +37,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.6 2003/11/21 13:23:23 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -233,7 +233,7 @@ fl_create_object_pixmap(FL_OBJECT * ob)
 	p = ob->flpixmap = fl_calloc(1, sizeof(FL_pixmap));
 
 
-    if (p->pixmap && (p->w == ob->w && p->h == ob->h &&
+    if (p->pixmap && ((int)p->w == ob->w && (int)p->h == ob->h &&
 		      p->depth == fl_depth(fl_vmode) &&
 		      p->visual == fl_visual(fl_vmode) &&
 		      p->dbl_background == ob->dbl_background &&
@@ -352,7 +352,7 @@ fl_create_form_pixmap(FL_FORM * fm)
 	p = fm->flpixmap = fl_calloc(1, sizeof(FL_pixmap));
 
 
-    if (p->pixmap && (p->w == fm->w && p->h == fm->h &&
+    if (p->pixmap && ((int)p->w == fm->w && (int)p->h == fm->h &&
 		      p->depth == fl_depth(fl_vmode) &&
 		      p->visual == fl_visual(fl_vmode)))
     {

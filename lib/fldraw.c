@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_drw = "$Id: fldraw.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.6 2003/11/21 13:23:23 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -129,7 +129,7 @@ compute_round_corners(FL_Coord x, FL_Coord y, FL_Coord w,
 		      FL_Coord h, FL_POINT * point)
 {
     FL_POINT *xp;
-    int i, n;
+    size_t i, n;
     float rsx, rsy, xf, yf;
 
     rsx = rsy = 0.45f * FL_min(w, h);

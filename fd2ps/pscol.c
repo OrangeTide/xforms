@@ -130,7 +130,7 @@ fl_query_imap(long col, int *r, int *g, int *b)
     FL_IMAP *flmap = fl_imap, *flmape = flmap + builtin;
 
     for (; flmap < flmape; flmap++)
-	if (col == flmap->index)
+	if (col == (long)flmap->index)
 	{
 	    *r = flmap->r;
 	    *g = flmap->g;

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.5 2003/11/20 10:46:16 leeming Exp $
+ * $Id: image_tiff.c,v 1.6 2003/11/21 13:23:23 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -1031,7 +1031,8 @@ write_pixels(FL_IMAGE * im, SPEC *sp)
 	    {
 		for (k = 0; k < im->w; k++)
 		    tmpbuf[k] = im->ci[row][k];
-		err = (fwrite(tmpbuf, 1, bytesPerRow, fp) != bytesPerRow);
+		err = (fwrite(tmpbuf, 1, bytesPerRow, fp) !=
+		       (size_t)bytesPerRow);
 	    }
 	}
 	else if (im->type == FL_IMAGE_GRAY)
@@ -1040,7 +1041,8 @@ write_pixels(FL_IMAGE * im, SPEC *sp)
 	    {
 		for (k = 0; k < im->w; k++)
 		    tmpbuf[k] = im->gray[row][k];
-		err = (fwrite(tmpbuf, 1, bytesPerRow, fp) != bytesPerRow);
+		err = (fwrite(tmpbuf, 1, bytesPerRow, fp) !=
+		       (size_t)bytesPerRow);
 	    }
 	}
 	else if (im->type == FL_IMAGE_GRAY16)
@@ -1059,7 +1061,8 @@ write_pixels(FL_IMAGE * im, SPEC *sp)
 	    for (j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++)
 	    {
 		fl_pack_bits(tmpbuf, im->ci[row], im->w);
-		err = fwrite(tmpbuf, 1, bytesPerRow, fp) != bytesPerRow;
+		err = (fwrite(tmpbuf, 1, bytesPerRow, fp) !=
+		       (size_t)bytesPerRow);
 	    }
 	}
 	else if (im->type == FL_IMAGE_RGB)

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_evt = "$Id: events.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.9 2003/11/21 13:23:23 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -468,10 +468,10 @@ static ev_name evname[] =
 const char *
 fl_get_xevent_name(const XEvent *xev)
 {
-      int i;
+      size_t i;
       static char buf[128];
 
-      for ( i = 0; i < sizeof(evname); i++)
+      for (i = 0; i < sizeof(evname); i++)
       {
           if(evname[i].type == xev->type)
           {
@@ -485,7 +485,7 @@ fl_get_xevent_name(const XEvent *xev)
 XEvent *
 fl_print_xevent_name(const char *where, const XEvent * xev)
 {
-    int i, known;
+    size_t i, known;
     Window win = ((XAnyEvent *) xev)->window;
 
     for (i = known = 0; !known && i < sizeof(evname) / sizeof(evname[0]); i++)

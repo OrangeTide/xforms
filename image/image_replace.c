@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_replace.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_replace.c,v 1.4 2003/11/21 13:23:23 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -64,7 +64,7 @@ flimage_replace_pixel(FL_IMAGE * im, unsigned int target, unsigned int repl)
 	for (n = im->w * im->h; --n >= 0;)
 	{
 	    tmp = FL_PACK(red[n], green[n], blue[n]);
-	    if (tmp == target)
+	    if (tmp == (int)target)
 	    {
 		red[n] = r2;
 		green[n] = g2;

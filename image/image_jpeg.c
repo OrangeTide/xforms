@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_jpeg.c,v 1.5 2003/11/21 13:23:23 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -69,7 +69,7 @@ static int
 JPEG_identify(FILE * fp)
 {
     char buf[128];
-    int i;
+    size_t i;
 
     fread(buf, 1, sizeof(buf), fp);
     rewind(fp);

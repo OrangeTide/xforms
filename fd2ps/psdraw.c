@@ -234,7 +234,7 @@ compute_rounded_corners(FL_Coord x, FL_Coord y, FL_Coord w,
 			FL_Coord h, Point * point)
 {
     Point *xp;
-    int i, n;
+    size_t i, n;
     float rsx, rsy, xf, yf;
 
     rsx = rsy = 0.42 * FL_min(w, h);

@@ -38,7 +38,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xpup = "$Id: xpopup.c,v 1.9 2003/11/21 10:54:03 lasgouttes Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.10 2003/11/21 13:23:23 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -737,7 +737,7 @@ handle_shortcut(PopUP * m, KeySym keysym, unsigned keymask)
 		sc = mi[i]->shortcut[j];
 		alt = (sc & AltMask) == AltMask;
 		sc &= ~AltMask;
-		if (sc == keysym && !(alt ^ alt_down))
+		if (sc == (int)keysym && !(alt ^ alt_down))
 		    return i + 1;
 	    }
     }
@@ -857,9 +857,10 @@ is_on_title(PopUP * m, int mx, int my)
 {
     int val;
 
-    val = (mx < m->x || mx > m->x + m->w) ? -1 : (my - m->y + m->titleh) / m->cellh;
+    val = (mx < m->x || mx > (int)(m->x + m->w)) ?
+	-1 : (my - m->y + m->titleh) / m->cellh;
     if (val == 0 && (!m->title || !*m->title))
-	val = (mx > m->x + m->w / 3 || mx < (m->x - 2)) ? -1 : 0;
+	val = (mx > (int)(m->x + m->w / 3) || mx < (m->x - 2)) ? -1 : 0;
 
     return val == 0 ? 1 : 0;
 }
@@ -875,13 +876,14 @@ handle_motion(PopUP * m, int mx, int my, int *val)
     int titleh = m->titleh;
     static MenuItem *lastitem;
 
-    cval = (mx < 0 || mx > m->w) ? -1 : ((my - titleh + m->cellh) / m->cellh);
+    cval = (mx < 0 || mx > (int)m->w) ?
+	-1 : ((my - titleh + m->cellh) / m->cellh);
 
     /* if released on title bar, cval is zero. However, if there is no title,
        change cval to -1 (invalid) if "too right" */
 
     if (cval == 0 && (!m->title || !*m->title))
-	cval = (mx > m->w / 3) ? -1 :
+	cval = (mx > (int)m->w / 3) ? -1 :
 	    ((puplevel > 1 && mx < m->x) ? -1 : 0);
     else if (cval > m->nitems || cval < 0)
 	cval = -1;
@@ -990,7 +992,7 @@ pup_interact(PopUP * m)
 	case ButtonPress:
 	    /* taking adv. of xbutton.x == xcrossing.x */
 	    item = handle_motion(m, ev.xbutton.x, ev.xbutton.y, &val);
-	    if (item && item->subm >= 0 && ev.xbutton.x > (m->w - 20))
+	    if (item && item->subm >= 0 && ev.xbutton.x > ((int)m->w - 20))
 		done = handle_submenu(m, item, &val);
 	    else if (puplevel > 1 && val < 0)
 		done = (ev.xmotion.x < 0);

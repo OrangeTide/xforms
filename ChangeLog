@@ -12,6 +12,34 @@
 
 2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/events.c:
+	* lib/fldraw.c:
+	* lib/forms.c:
+	* lib/xpopup.c:
+	* lib/xsupport.c:
+
+	* image/image_fits.c:
+	* image/image_gif.c:
+	* image/image_jpeg.c:
+	* image/image_replace.c:
+	* image/image_tiff.c:
+	* image/ps_core.c:
+	* image/ps_draw.c:
+
+	* image/image_fits.c:
+	* image/image_gif.c:
+	* image/image_jpeg.c:
+	* image/image_replace.c:
+	* image/image_tiff.c:
+	* image/image_xwd.c:
+	* image/ps_core.c:
+	* image/ps_draw.c:
+
+	* fdesign/fd_main.c: squash warnings about comparison of
+	signed and unsigned variables. Only 'safe' warnings have been squashed.
+	
+2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/flsnprintf.c: remove unused variable 'credits'.
 
 	* lib/flresource.c: remove line 'fl_context->xim;' as it is a

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.9 2003/11/21 10:54:03 lasgouttes Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.10 2003/11/21 13:23:23 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1640,7 +1640,8 @@ handle_client_message(FL_FORM * form, void *xev)
     }
 
     /* if delete top-level window, quit unless handlers are installed */
-    if (xcm->message_type == atom_protocol && xcm->data.l[0] == atom_del_win)
+    if (xcm->message_type == atom_protocol &&
+	(Atom)xcm->data.l[0] == atom_del_win)
     {
 	if (form->close_callback)
 	{
@@ -2223,7 +2224,7 @@ fl_rm_rcs_kw(register const char *s)
     register unsigned char *q = buf[(nbuf = (nbuf + 1) % 5)];
     int left = 0, lastc = -1;
 
-    while (*s && (q - buf[nbuf]) < sizeof(buf[nbuf]) - 2)
+    while (*s && (q - buf[nbuf]) < (int)sizeof(buf[nbuf]) - 2)
     {
 	switch (*s)
 	{

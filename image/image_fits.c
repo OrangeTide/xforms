@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_fits.c,v 1.5 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_fits.c,v 1.6 2003/11/21 13:23:23 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -495,7 +495,8 @@ FITS_load(FL_IMAGE * im)
 	    im->visual_cue(im, "Reading FITS");
 
 	k = im->h - 1 - i;
-	if ((err = (fread(c = vals[k], byte_per_pix, im->w, fp) != im->w)))
+	if ((err = (fread(c = vals[k], byte_per_pix, im->w, fp) !=
+		    (size_t)im->w)))
 	    im->error_message(im, "Error reading FITS");
 
 	/* now do data conversion to MSBF order */

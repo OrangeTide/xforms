@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_draw.c,v 1.4 2003/04/24 09:35:34 leeming Exp $
+ * $Id: ps_draw.c,v 1.5 2003/11/21 13:23:23 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -56,7 +56,7 @@ compute_rounded_corners(FL_Coord x, FL_Coord y, FL_Coord w,
 			FL_Coord h, FL_POINT * point)
 {
     FL_POINT *xp;
-    int i, n;
+    size_t i, n;
     float rsx, rsy, xf, yf;
 
     rsx = rsy = 0.42f * FL_min(w, h);

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_core.c,v 1.5 2003/11/20 10:46:16 leeming Exp $
+ * $Id: ps_core.c,v 1.6 2003/11/21 13:23:23 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -463,7 +463,7 @@ flps_query_imap(long col, int *r, int *g, int *b)
     FL_IMAP *flmap = fl_imap, *flmape = flmap + builtin;
 
     for (; flmap < flmape; flmap++)
-	if (col == flmap->index)
+	if (col == (long)flmap->index)
 	{
 	    *r = flmap->r;
 	    *g = flmap->g;
@@ -513,7 +513,7 @@ flps_rgbcolor(int r, int g, int b)
 {
     unsigned int packed = FL_PACK(r, g, b);
 
-    if (flps->cur_color == packed)
+    if (flps->cur_color == (int)packed)
 	return;
 
     if (flps->ps_color == FLPS_COLOR && (r != g || r != b))
