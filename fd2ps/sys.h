@@ -32,10 +32,6 @@
 
 #define FL_SIGRET void
 
-#if defined(__ultrix)||defined(ultrix)||defined(linux) || defined(__linux__)
-#define NO_STRDUP
-#endif
-
 /* unixware and Lynx do not have strcasecmp */
 #if defined(__USLC__) || defined(Lynx)
 #define NO_STRCASECMP

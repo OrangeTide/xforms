@@ -1,5 +1,9 @@
 2003-04-22  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* fd2ps/sys.h: remove #define NO_STRDUP as it isn't used.
+
+2003-04-22  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* */*.c: ensure that config.h is #included if the HAVE_CONFIG_H
 	preprocessor variable is set.
 
