@@ -21,8 +21,8 @@
 
 /********************** crop here for forms.h **********************/
 
-/*
- * $Id: cursor.h,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file cursor.h
  *
  * Cursor defs and prototypes
  *

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: fd_help.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file fd_help.c
  *
  *.
  *  This file is part of XForms package
@@ -114,7 +114,7 @@ char mainhelp[][80] =
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.1 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@c$Revision: 1.2 $" LIBVERSION(FL_VERSION, FL_REVISION),
     "@C4@c@bWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",

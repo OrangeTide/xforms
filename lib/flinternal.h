@@ -20,9 +20,8 @@
  */
 
 
-/*
- *  flinternal.h   $Revision: 1.1 $ $State: Exp $
- *                 $Date: 2003/04/06 15:52:39 $ $Author: leeming $
+/**
+ *  \file flinternal.h
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-1998  T.C. Zhao and Mark Overmars

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: version.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file version.c
  *
  *.
  *  This file is part of XForms package
@@ -39,7 +39,7 @@
 static char *version[] =
 {
     "fd2ps",
-    "$State: Exp $ $Revision: 1.1 $ of $Date: 2003/04/06 15:52:39 $",
+    "$State: Exp $ $Revision: 1.2 $ of $Date: 2003/04/10 20:46:36 $",
     "Copyright (c) 1997-2000 by T.C. Zhao",
     0
 };

@@ -19,6 +19,9 @@
  *
  */
 
+/**
+ * \file pscrollbar.h
+ */
 
 #ifndef PSCROLLBAR_H_
 #define PSCROLLBAR_H_

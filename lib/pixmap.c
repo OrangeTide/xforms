@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: pixmap.c,v 1.2 2003/04/10 19:53:13 leeming Exp $
+/**
+ * \file pixmap.c
  *
  *.
  *  This file is part of the XForms library package.

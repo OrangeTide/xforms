@@ -21,9 +21,8 @@
  *
  */
 
-/*
- *  forms.h   $Revision: 1.2 $ $State: Exp $
- *            $Date: 2003/04/09 09:22:41 $ $Author: leeming $
+/**
+ *  \file forms.h
  *
  *. All XForms files as distributed in this package are
  *  Copyright(c) 1996-2002 by T.C. Zhao and Mark Overmars,

@@ -19,17 +19,13 @@
  *
  */
 
-
-
-/*
- * $Id: pcounter.h,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file pcounter.h
  *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *.
- *
- *
  *  private header for counter objects
  *
  */

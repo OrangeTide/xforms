@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: extern.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file extern.h
  *
  *.
  *  This file is part of the XForms library package.

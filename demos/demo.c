@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: demo.c,v 1.1 2003/04/06 15:52:37 leeming Exp $
+/**
+ * \file demo.c
  *
  * Driver for the demo/test suite
  *

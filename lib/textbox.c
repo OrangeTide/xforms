@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: textbox.c,v 1.2 2003/04/08 21:19:52 leeming Exp $
+/**
+ * \file textbox.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_brw = "$Id: textbox.c,v 1.2 2003/04/08 21:19:52 leeming Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.3 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <string.h>

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: flresource.c,v 1.2 2003/04/08 21:14:51 leeming Exp $
+/**
+ * \file flresource.c
  *
  *.
  *  This file is part of the XForms library package.
@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.2 2003/04/08 21:14:51 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.3 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include "forms.h"

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: display.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file display.c
  *
  * We need this so files that reference fl_display don't
  * have to pull other files in.

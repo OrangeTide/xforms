@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: thumbwheel.c,v 1.2 2003/04/08 21:19:52 leeming Exp $
+/**
+ * \file thumbwheel.c
  *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  T.C. Zhao 

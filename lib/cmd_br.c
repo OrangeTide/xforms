@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: cmd_br.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file cmd_br.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  T.C. Zhao

@@ -20,6 +20,15 @@
  */
 
 
+/**
+ * \file pchoice.h
+ *.
+ *  This file is part of the XForms library package.
+ *  Copyright T.C. Zhao and Mark Overmars
+ *  All rights reserved.
+ *.
+ */
+
 #ifndef PCHOICE_H_
 #define PCHOICE_H_
 

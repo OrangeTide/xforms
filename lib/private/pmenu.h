@@ -19,6 +19,9 @@
  *
  */
 
+/**
+ * \file pmenu.h
+ */
 
 #ifndef PMENU_H_
 #define PMENU_H_

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: n2a.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file n2a.c
  *
  *.  Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
@@ -36,7 +36,7 @@
  *              ftoa is about 4 times (6digits)faster than sprintf
  */
 #if !defined(lint) && defined(F_ID)
-char *id_n2a = "$Id: n2a.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+char *id_n2a = "$Id: n2a.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <stdio.h>

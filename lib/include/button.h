@@ -21,8 +21,8 @@
 
 /********************** crop here for forms.h **********************/
 
-/*
- * $Id: button.h,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file button.h
  *
  * All Buttons: regular button, light button and round button
  *

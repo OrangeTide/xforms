@@ -20,6 +20,15 @@
  */
 
 
+/**
+ * \file pbrowser.h
+ *.
+ *  This file is part of the XForms library package.
+ *  Copyright (c) T.C. Zhao and Mark Overmars
+ *  All rights reserved.
+ *.
+ */
+
 #ifndef PBROWSER_H_
 #define PBROWSER_H_
 

@@ -22,7 +22,7 @@
 
 /*
 **  Header file for VMS readdir() routines.
-**  Written by Rich $alz, <rsalz@bbn.com> in August, 1990.
+**  Written by Rich Salz, <rsalz@bbn.com> in August, 1990.
 **  This code has no copyright.
 **
 **  Feb'95 --	eliminate reliance on <descrip.h>; safeguard multiple

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: be.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file be.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2000  T.C. Zhao 

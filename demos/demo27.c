@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: demo27.c,v 1.1 2003/04/06 15:52:38 leeming Exp $
+/**
+ * \file demo27.c
  *
  * This demo shows the use of event callbacks and form callbacks.
  * purposesly mixed form callback, object callback and event callback

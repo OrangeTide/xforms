@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: space.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file space.c
  *
  *.  Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
@@ -32,7 +32,7 @@
  *
  ***********************************************************************/
 #if !defined(lint) && defined(F_OK)
-static char *id_space = "$Id: space.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+static char *id_space = "$Id: space.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <stdio.h>

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: pformbrowser.h,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file pformbrowser.h
  */
 #ifndef PFORMBROWSER_H
 #define PFORMBROWSER_H

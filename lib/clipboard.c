@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: clipboard.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file clipboard.c
  *
  *.
  *  This file is part of the XForms library package.

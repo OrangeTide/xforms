@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: fd_util.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file fd_util.c
  *
  * Eliminate the emission of duplicate info. This is necessary as
  * some #include define data (pixmap for example). 

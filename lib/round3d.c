@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: round3d.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file round3d.c
  *
  *.
  *  This file is part of the XForms library package.
@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_r3dbut = "$Id: round3d.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+char *fl_r3dbut = "$Id: round3d.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <sys/types.h>

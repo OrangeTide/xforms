@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: counter.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file counter.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -32,7 +32,7 @@
  *   only FL_RETURN_END_CHANGED and FL_RETURN_CHANED are meaningful
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_cntr = "$Id: counter.c,v 1.1 2003/04/06 15:52:39 leeming Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <string.h>

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: forms.c,v 1.2 2003/04/09 15:55:09 leeming Exp $
+/**
+ * \file forms.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.2 2003/04/09 15:55:09 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.3 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include "forms.h"

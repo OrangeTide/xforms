@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: pflps.h,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file pflps.h
  *
  * private headers of postscript support. Must come
  * after forms.h

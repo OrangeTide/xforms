@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: labelbut.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file labelbut.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  T.C. Zhao
@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fbut = "$Id: labelbut.c,v 1.1 2003/04/06 15:52:39 leeming Exp $";
+char *fl_id_fbut = "$Id: labelbut.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <sys/types.h>

@@ -21,8 +21,8 @@
 
 /********************** crop here for forms.h **********************/
 
-/*
- * $Id: Basic.h,v 1.2 2003/04/09 15:55:09 leeming Exp $
+/**
+ * \file Basic.h
  *
  *  Basic definitions and limits.
  *  Window system independent prototypes

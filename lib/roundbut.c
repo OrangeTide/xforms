@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: roundbut.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file roundbut.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rbut = "$Id: roundbut.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+char *fl_id_rbut = "$Id: roundbut.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <sys/types.h>

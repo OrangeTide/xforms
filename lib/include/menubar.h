@@ -21,8 +21,8 @@
 
 /********************** crop here for forms.h **********************/
 
-/*
- * $Id: menubar.h,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file menubar.h
  *
  */
 #ifndef FL_MENUBAR_H

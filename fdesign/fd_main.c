@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: fd_main.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file fd_main.c
  *
  *.
  *  This file is part of XForms package
@@ -57,7 +57,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.1 $ of $Date: 2003/04/06 15:52:39 $",
+    "$State: Exp $  $Revision: 1.2 $ of $Date: 2003/04/10 20:46:37 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 

@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: errmsg.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file errmsg.c
  *
  *.  Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
@@ -38,7 +38,7 @@
  *    void (*gmout)(const char *, const char *, const char *, int);
  ***********************************************************************/
 #if !defined(lint) && defined(F_ID)
-char *id_errm = "$Id: errmsg.c,v 1.1 2003/04/06 15:52:39 leeming Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include <stdio.h>

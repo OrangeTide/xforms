@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: fd_main.h,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file fd_main.h
  *
  * This file is the header file used in the Form Designer
  *

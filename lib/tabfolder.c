@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: tabfolder.c,v 1.2 2003/04/09 15:55:09 leeming Exp $
+/**
+ * \file tabfolder.c
  *
  *.
  *  This file is part of the XForms library package.

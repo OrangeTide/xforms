@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: frame.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file frame.c
  *
  *.
  *  This file is part of the XForms library package.
@@ -31,7 +31,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_frame = "$Id: frame.c,v 1.1 2003/04/06 15:52:39 leeming Exp $";
+char *fl_id_frame = "$Id: frame.c,v 1.2 2003/04/10 20:46:37 leeming Exp $";
 #endif
 
 #include "forms.h"

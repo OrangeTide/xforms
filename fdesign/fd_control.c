@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: fd_control.c,v 1.1 2003/04/06 15:52:39 leeming Exp $
+/**
+ * \file fd_control.c
  *
  *.
  *  This file is part of XForms package

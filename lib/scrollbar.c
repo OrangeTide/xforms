@@ -20,8 +20,8 @@
  */
 
 
-/*
- * $Id: scrollbar.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+/**
+ * \file scrollbar.c
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao

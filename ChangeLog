@@ -1,3 +1,8 @@
+2003-04-10  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* most files: Remove all the RCS strings from the header files
+	and about half of 'em from the .c files.
+
 2003-04-10  John Levon <moz@compsoc.man.ac.uk>
 
 	* lib/pixmap.c (init_xpm_attributes): "fix" XPixmaps containing
