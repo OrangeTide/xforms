@@ -1,3 +1,9 @@
+2004-05-27  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* fdesign/fd_main.c: improve diagnostics when failing to convert
+	the .fd file to a .[ch] pair.
+	Also remove some redundant cruft.
+
 2004-05-18  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/include/Basic.h (fl_set_err_logfp): function was known as

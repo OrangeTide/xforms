@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.10 $ of $Date: 2004/05/18 13:57:11 $",
+    "$State: Exp $  $Revision: 1.11 $ of $Date: 2004/05/27 12:21:44 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -86,12 +86,10 @@ FD_Opt fdopt;
 Conv convertor[MAX_CONVERTOR + 1];
 
 int fd_cntlborder;
-int help;			/* if convert only */
 int fd_bwidth;
 int is_pasting;
 int fd_trackgeometry = 1;
 int fd_show_palette;
-int fd_pversion;
 int fd_buttonLabelSize;
 int fd_helpfontsize = 14;
 int fd_align_fontsize = FL_TINY_SIZE;
@@ -587,15 +585,7 @@ pre_connect(int ac, char *av[])
 
     if (fdopt.conv_only)
     {
-	fl_set_app_name(av[0], "Fdesign");	/* resource routine want this
-
-
-
-
-
-
-
-						 */
+	fl_set_app_name(av[0], "Fdesign");  /* resource routine wants this */
 	fl_init_fl_context();
 	create_the_forms();
 	init_classes();
@@ -610,8 +600,14 @@ pre_connect(int ac, char *av[])
 
 	for (s = i; s < ac; s++)
 	{
-	    if (load_forms(FALSE, av[s], 0) >= 0)
-		save_forms(av[s]);
+	    if (load_forms(FALSE, av[s], 0) < 0) {
+		fprintf(stderr, "Unable to load %s\n", av[s]);
+		exit(1);
+	    }
+	    if (!save_forms(av[s])) {
+		fprintf(stderr, "Unable to convert %s\n", av[s]);
+		exit(1);
+	    }
 	}
 	exit(0);
     }
@@ -721,7 +717,9 @@ main(int ac, char *av[])
 
     initialize();
 
-    /* For conversion and usage help, we don't need a connection */
+    /* For conversion, version and usage help, we don't need a connection.
+       pre_connect will exit in such circumstances.
+    */
     pre_connect(ac, av);
 
     /* force fdesign to come up in default visual */
@@ -741,18 +739,11 @@ main(int ac, char *av[])
     fl_get_app_resources(fdres, Nropt);
     fl_add_signal_callback(SIGINT, interrupted, 0);
 
-    if (fd_pversion)
-	print_version(1);
-
-    if (help)
-	usage(av[0], 1);
-
     if (av[1] && av[1][0] == '-')
     {
 	fprintf(stderr, " Unknown option: %s\n", av[1]);
 	usage(av[0], 1);
     }
-
 
     fl_cntl.coordUnit = FL_COORD_PIXEL;
     fdopt.unit = unit_val(fd_sunit);
@@ -780,22 +771,8 @@ main(int ac, char *av[])
     fd_buttonLabelSize = fl_cntl.buttonFontSize;
     fl_cntl.buttonFontSize = 0;
 
-
     /* Initialize stuff */
     init_classes();
-
-    if (fdopt.conv_only)
-    {
-	if (ac == 1)
-	    fprintf(stderr, "%s: -convert requires arguments\n", av[0]);
-
-	for (s = 1; s < ac; s++)
-	{
-	    load_forms(FALSE, av[s], 0);
-	    save_forms(av[s]);
-	}
-	exit(0);
-    }
 
     fl_set_counter_bounds(fd_align->snapobj, 0.0, 500.0);
     fl_set_counter_step(fd_align->snapobj, 1.0, 5.0);
