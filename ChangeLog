@@ -1,5 +1,11 @@
 2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* fdesign/fd_printC.c (filename_only): use strrchr.
+
+	* fdesign/fdesign.man: document the -dir <destdir> option.
+
+2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* NEWS: updated to reflect what has been going on in the 1.1 cycle.
 
 2003-11-26  Angus Leeming  <angus.leeming@btopenworld.com>

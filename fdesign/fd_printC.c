@@ -67,12 +67,10 @@ make_backup(const char *s)
 static char const *
 filename_only(char const * filename)
 {
-    char const * ptr = filename + strlen(filename) - 1;
-    for (; ptr >= filename; --ptr) {
-	if (*ptr == '/')
-	    return ptr+1;
-    }
-    return ptr;
+    char const * ptr = strrchr(filename, '/');
+    if (ptr)
+	return ptr+1;
+    return filename;
 }
 
 static void
