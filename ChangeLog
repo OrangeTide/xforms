@@ -1,3 +1,9 @@
+2004-05-04  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* NT/libxforms.dsp, NT/xformsAll.dsw: removed these Visual C++
+	project files. They're way out of date and can be re-added
+	if needed.
+
 2004-05-05  Mike Heffner  <mheffner@vt.edu>
 
 	* lib/fselect.c (select_cb): clean-up and simplify this callback
