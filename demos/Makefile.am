@@ -7,6 +7,8 @@ EXTRA_DIST = 01Readme iconvert.1 demo.menu test.ps \
 
 SUBDIRS = fd
 
+SUFFIXES = .fd .c
+
 # forms.h is a generated file
 INCLUDES = -I../lib -I../lib/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/image
 
@@ -266,5 +268,5 @@ yesno_cb_SOURCES = yesno_cb.c
 wwwl_SOURCES = wwwl.c
 
 
-%.c: %.fd ../fdesign/fdesign
+.fd.c: ../fdesign/fdesign
 	../fdesign/fdesign -dir fd -convert $<

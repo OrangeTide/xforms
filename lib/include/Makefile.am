@@ -45,7 +45,7 @@ stamp-forms: AAA.h $(noinst_HEADERS)
 	rm -f tmpforms
 	sed "1,/crop here for forms/d" AAA.h > tmpforms
 	for i in $(noinst_HEADERS); do \
-		sed "1,/crop here for forms/d" ${srcdir}/$$i >> tmpforms; \
+		sed "1,/crop here for forms/d" ${srcdir}/`basename $$i` >> tmpforms; \
 	done
 	if cmp -s tmpforms forms.h ; then \
 		rm -f tmpforms ;\

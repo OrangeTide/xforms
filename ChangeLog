@@ -3,6 +3,13 @@
 	* demos/Makefile.am: enable 'make -j2' to work on a
 	multi-processor machine.
 
+	* demos/Makefile.am: handle the .fd -> .c conversion in
+	automake-standard fashion.
+
+	* lib/include/Makefile.am: pass sed the names of the files to
+	be manipulated as '${srcdir}/`basename $$i`' rather than as
+	'${srcdir}/$$i' or things go awol on the Dec. (Running ksh, fwiw.)
+
 2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* Makefile.am: re-add xforms.spec to EXTRA_DIST. It is needed as well
