@@ -91,5 +91,3 @@ void reload(FL_OBJECT *ob, long q)
     fl_set_fselector_callback(load_file, 0);
     fl_show_fselector("Load a Pix/bitMap file", 0, 0,0);
 }
-
-#include "fd/pmbrowse_gui.c"

@@ -110,8 +110,15 @@ borderwidth_SOURCES = borderwidth.c
 boxtype_SOURCES = boxtype.c
 browserall_SOURCES = browserall.c
 browserop_SOURCES = browserop.c
+
 buttonall_SOURCES = buttonall.c
+nodist_buttonall_SOURCES = fd/buttons_gui.c fd/buttons_gui.h
+buttonall.$(OBJEXT): $(nodist_buttonall_SOURCES)
+
 butttypes_SOURCES = butttypes.c
+nodist_butttypes_SOURCES = fd/butttypes_gui.c fd/butttypes_gui.h
+butttypes.$(OBJEXT): $(nodist_butttypes_SOURCES)
+
 canvas_SOURCES = canvas.c
 chartall_SOURCES = chartall.c
 chartstrip_SOURCES = chartstrip.c
@@ -126,17 +133,33 @@ demo05_SOURCES = demo05.c
 demo06_SOURCES = demo06.c
 demo27_SOURCES = demo27.c
 demo33_SOURCES = demo33.c
+
 demotest_SOURCES = demotest.c
+nodist_demotest_SOURCES = fd/folder_gui.c fd/folder_gui.h
+demotest.$(OBJEXT): $(nodist_demotest_SOURCES)
+
 demotest2_SOURCES = demotest2.c
 demotest3_SOURCES = demotest3.c
+
 dirlist_SOURCES = dirlist.c
+nodist_dirlist_SOURCES = fd/fbtest_gui.c fd/fbtest_gui.h
+dirlist.$(OBJEXT): $(nodist_dirlist_SOURCES)
+
 fbrowse_SOURCES = fbrowse.c
 fbrowse1_SOURCES = fbrowse1.c
 fdial_SOURCES = fdial.c
 flclock_SOURCES = flclock.c
+
 folder_SOURCES = folder.c
+nodist_folder_SOURCES = fd/folder_gui.c fd/folder_gui.h
+folder.$(OBJEXT): $(nodist_folder_SOURCES)
+
 fonts_SOURCES = fonts.c
+
 formbrowser_SOURCES = formbrowser.c
+nodist_formbrowser_SOURCES = fd/formbrowser_gui.c fd/formbrowser_gui.h
+formbrowser.$(OBJEXT): $(nodist_formbrowser_SOURCES)
+
 free1_SOURCES = free1.c
 freedraw_SOURCES = freedraw.c
 freedraw_leak_SOURCES = freedraw_leak.c
@@ -153,6 +176,7 @@ goodies_SOURCES = goodies.c
 group_SOURCES = group.c
 
 ibrowser_SOURCES = ibrowser.c
+ibrowser.$(OBJEXT): fd/ibrowser_gui.c
 ibrowser_LDADD  = ../image/libflimage.la ../lib/libforms.la \
 	$(X_LIBS) $(X_PRE_LIBS) $(JPEG_LIB) $(XPM_LIB) -lX11 $(LIBS) \
 	$(X_EXTRA_LIBS)
@@ -165,9 +189,13 @@ iconvert_LDADD  = ../image/libflimage.la ../lib/libforms.la \
 	$(X_EXTRA_LIBS)
 
 inputall_SOURCES = inputall.c
+nodist_inputall_SOURCES = fd/inputall_gui.c fd/inputall_gui.h
+inputall.$(OBJEXT): $(nodist_inputall_SOURCES)
+
 invslider_SOURCES = invslider.c
 
 itest_SOURCES = itest.c
+itest.$(OBJEXT): fd/is_gui.c
 itest_LDADD  = ../image/libflimage.la ../lib/libforms.la \
 	$(X_LIBS) $(X_PRE_LIBS) $(JPEG_LIB) $(XPM_LIB) -lX11 $(LIBS) \
 	$(X_EXTRA_LIBS)
@@ -192,7 +220,11 @@ ndial_SOURCES = ndial.c
 objinactive_SOURCES = objinactive.c
 objpos_SOURCES = objpos.c
 objreturn_SOURCES = objreturn.c
+
 pmbrowse_SOURCES = pmbrowse.c
+nodist_pmbrowse_SOURCES = fd/pmbrowse_gui.c fd/pmbrowse_gui.h
+pmbrowse.$(OBJEXT): $(nodist_pmbrowse_SOURCES)
+
 popup_SOURCES = popup.c
 positioner_SOURCES = positioner.c
 positionerXOR_SOURCES = positionerXOR.c
@@ -201,7 +233,11 @@ pup_SOURCES = pup.c
 pushbutton_SOURCES = pushbutton.c
 pushme_SOURCES = pushme.c
 rescale_SOURCES = rescale.c
+
 scrollbar_SOURCES = scrollbar.c
+nodist_scrollbar_SOURCES = fd/scrollbar_gui.c fd/scrollbar_gui.h
+scrollbar.$(OBJEXT): $(nodist_scrollbar_SOURCES)
+
 secretinput_SOURCES = secretinput.c
 sld_radio_SOURCES = sld_radio.c
 sldinactive_SOURCES = sldinactive.c
@@ -209,7 +245,11 @@ sldsize_SOURCES = sldsize.c
 sliderall_SOURCES = sliderall.c
 strsize_SOURCES = strsize.c
 symbols_SOURCES = symbols.c
+
 thumbwheel_SOURCES = thumbwheel.c
+nodist_thumbwheel_SOURCES = fd/twheel_gui.c fd/twheel_gui.h
+thumbwheel.$(OBJEXT): $(nodist_thumbwheel_SOURCES)
+
 timer_SOURCES = timer.c
 timerprec_SOURCES = timerprec.c
 touchbutton_SOURCES = touchbutton.c
@@ -224,3 +264,7 @@ xyplotover_LDADD  = ../image/libflimage.la ../lib/libforms.la \
 yesno_SOURCES = yesno.c
 yesno_cb_SOURCES = yesno_cb.c
 wwwl_SOURCES = wwwl.c
+
+
+%.c: %.fd ../fdesign/fdesign
+	../fdesign/fdesign -dir fd -convert $<

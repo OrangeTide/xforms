@@ -159,5 +159,3 @@ static void make_folder(FL_OBJECT *folder)
    fl_addto_tabfolder(folder,"InputObj", fd_inputform->inputform);
 #endif
 }
-
-#include "fd/folder_gui.c"

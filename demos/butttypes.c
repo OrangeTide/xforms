@@ -70,5 +70,3 @@ int main(int argc, char *argv[])
     fl_do_forms();
     return 0;
 }
-
-#include "fd/butttypes_gui.c"

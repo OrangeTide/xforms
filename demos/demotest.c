@@ -161,5 +161,3 @@ static void make_folder(FL_OBJECT *folder)
    fprintf(stderr,"ww=%d hh=%d\n", ww, hh);
 #endif
 }
-
-#include "fd/folder_gui.c"

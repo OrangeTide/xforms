@@ -1,5 +1,38 @@
 2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* demos/fd/Makefile.am: remove all the .[ch] files generated from their
+	.fd parents.
+
+	* demos/Makefile.am: generate the fd/*.[ch] files on-the-fly.
+
+	* demos/buttonall.c: no longer #include fd/buttons_gui.c.
+	* demos/butttypes.c:
+	* demos/demotest.c:
+	* demos/dirlist.c:
+	* demos/folder.c:
+	* demos/formbrowser.c:
+	* demos/inputall.c:
+	* demos/pmbrowse.c:
+	* demos/scrollbar.c:
+	* demos/thumbwheel.c: ditto for their own fd-generated files.
+
+	* demos/pmbrowse.h: removed: cruft.
+
+	* demos/fd/buttons_gui.[ch]:
+	* demos/fd/butttypes_gui.[ch]:
+	* demos/fd/fbtest_gui.[ch]:
+	* demos/fd/folder_gui.[ch]:
+	* demos/fd/formbrowser_gui.[ch]:
+	* demos/fd/ibrowser_gui.[ch]:
+	* demos/fd/inputall_gui.[ch]:
+	* demos/fd/is_gui.[ch]:
+	* demos/fd/is_gui_main.c:
+	* demos/fd/pmbrowse_gui.[ch]:
+	* demos/fd/scrollbar_gui.[ch]:
+	* demos/fd/twheel_gui.[ch]: removed.
+
+2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* fdesign/fd_printC.c (filename_only): use strrchr.
 
 	* fdesign/fdesign.man: document the -dir <destdir> option.
@@ -9,7 +42,7 @@
 	* NEWS: updated to reflect what has been going on in the 1.1 cycle.
 
 2003-11-26  Angus Leeming  <angus.leeming@btopenworld.com>
- 
+
 	* fdesign/fd_main.h: add a 'char * output_dir' var to the FD_Opt struct.
 
 	* fdesign/fd_main.c: add code to initialize FD_Opt::output_dir.
@@ -83,9 +116,9 @@
 
 	* lib/flinternal.h: test directly for X11 version here
 
-	* lib/forms.c (fl_keyboard): 
-	* lib/flcolor.c (fl_mapcolor, fl_dump_state_info): 
-	* lib/xpopup.c (fl_addtopup): 
+	* lib/forms.c (fl_keyboard):
+	* lib/flcolor.c (fl_mapcolor, fl_dump_state_info):
+	* lib/xpopup.c (fl_addtopup):
 	* lib/clock.c (draw_clock): use proper ML_xxx macros instead of
 	bogus names
 
@@ -116,7 +149,7 @@
 
 	* fdesign/fd_main.c: squash warnings about comparison of
 	signed and unsigned variables. Only 'safe' warnings have been squashed.
-	
+
 2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/flsnprintf.c: remove unused variable 'credits'.
