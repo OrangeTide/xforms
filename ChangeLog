@@ -1,3 +1,7 @@
+2003-11-18  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* INSTALL: generic instructions from autoconf.
+
 2003-10-03  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	Patch from Matthew Yaconis by way of
