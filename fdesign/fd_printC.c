@@ -64,6 +64,30 @@ make_backup(const char *s)
     }
 }
 
+static char const *
+filename_only(char const * filename)
+{
+    char const * ptr = filename + strlen(filename) - 1;
+    for (; ptr >= filename; --ptr) {
+	if (*ptr == '/')
+	    return ptr+1;
+    }
+    return ptr;
+}
+
+static void
+build_fname(char * fname, char const * filename, char const * ext)
+{
+    if (fdopt.output_dir) {
+	strcpy(fname, fdopt.output_dir);
+	if (fname[strlen(fdopt.output_dir) - 1] != '/')
+	    strcat(fname, "/");
+	strcat(fname, filename_only(filename));
+    } else
+	strcpy(fname, filename);
+    strcat(fname, ext);
+}
+
 /* filename is without extensions */
 int
 C_output(const char *filename, FRM * forms, int fnumb)
@@ -72,8 +96,7 @@ C_output(const char *filename, FRM * forms, int fnumb)
     int i, j;
     FILE *fn;
 
-    strcpy(fname, filename);
-    strcat(fname, ".h");
+    build_fname(fname, filename, ".h");
 
     make_backup(fname);
     if (!(fn = fopen(fname, "w")))
@@ -109,8 +132,7 @@ C_output(const char *filename, FRM * forms, int fnumb)
     fclose(fn);
 
     /* Make the .c file. */
-    strcpy(fname, filename);
-    strcat(fname, ".c");
+    build_fname(fname, filename, ".c");
 
     make_backup(fname);
     if (!(fn = fopen(fname, "w")))

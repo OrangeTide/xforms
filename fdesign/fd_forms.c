@@ -513,6 +513,10 @@ save_forms(char *str)
 	    strcat(optbuf, "-altformat ");
 	if (fdopt.compensate)
 	    strcat(optbuf, "-compensate ");
+	if (fdopt.output_dir) {
+	    strcat(optbuf, "-dir ");
+	    strcat(optbuf, fdopt.output_dir);
+	}
 
 	sprintf(cmdbuf, "%s %s%s", conv->extern_convertor, optbuf, filename);
 	M_warn("Convert", "Executing %s", cmdbuf);

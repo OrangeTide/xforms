@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.8 $ of $Date: 2003/11/21 13:23:22 $",
+    "$State: Exp $  $Revision: 1.9 $ of $Date: 2003/11/27 14:51:04 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -355,6 +355,7 @@ static FL_CMD_OPT fd_cmdopt[] =
     {"-geometry", "*geometry", XrmoptionSepArg, 0},
     {"-border", ".XForm.Border", XrmoptionNoArg, "1"},
     {"-convert", ".convert", XrmoptionNoArg, "1"},
+    {"-dir", ".dir", XrmoptionSepArg, 0},
     {"-unit", "*unit", XrmoptionSepArg, 0},
     {"-altformat", "*altformat", XrmoptionNoArg, "1"},
     {"-I", "*xformHeader", XrmoptionSepArg, 0},
@@ -432,6 +433,7 @@ char *helps[] =
     "-lax                      go easy on syntax checking",
     "-I headername             alternate header file (forms.h default)",
     "-convert file-list        convert .fd to code non-interactively",
+    "-dir destdir              output any generated files in destdir",
     "-geometry geom            initial working area geometry",
     0,
 };
@@ -557,6 +559,10 @@ pre_connect(int ac, char *av[])
 	{
 	    fl_set_no_connection(1);
 	    fdopt.conv_only = 1;
+	}
+	else if (strncmp(av[i] + 1, "dir", 3) == 0 && (i + 1) < ac) {
+	    fdopt.output_dir = (char *)malloc(strlen(av[++i]));
+	    strcpy(fdopt.output_dir, av[i]);
 	}
 	else if (strncmp(av[i] + 1, "lang", 4) == 0 && (i + 1) < ac)
 	    fdopt.language = lang_val(av[++i]);

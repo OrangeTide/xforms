@@ -60,6 +60,7 @@ typedef struct
     int show_pallete;
     int compensate;		/* if emit font size compensation code */
     int unit;
+    char * output_dir;
 }
 FD_Opt;
 
