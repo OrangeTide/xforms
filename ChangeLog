@@ -1,3 +1,9 @@
+2004-05-13  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* image/Makefile.am (libflimage_la_LDFLAGS): 
+	* gl/Makefile.am (libformsGL_la_LDFLAGS): change the -version-info
+	data to '@SO_VERSION@' so that all get updated automatically.
+
 2004-05-13  Reed Riddle  <drriddle@mac.com>
 
 	* lib/xyplot.c:

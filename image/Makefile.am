@@ -7,7 +7,7 @@ include_HEADERS	= flimage.h
 
 lib_LTLIBRARIES = libflimage.la
 
-libflimage_la_LDFLAGS = -version-info 1:0:0
+libflimage_la_LDFLAGS = -version-info @SO_VERSION@
 
 libflimage_la_SOURCES = \
 	flimage.h \
