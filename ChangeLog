@@ -1,3 +1,7 @@
+2003-04-17  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* lib/Imakefile (EXTRA_INCLUDES): add $(XPMINC)
+
 2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/Imakefile:

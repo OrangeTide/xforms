@@ -125,6 +125,7 @@ XPMFLAG		= -DNONSTANDARD_XPM
 #endif
 
 EXTRA_INCLUDES	= \
+		  $(XPMINC) \
 		  -I.
 
 DEPEND_DEFINES	= \
