@@ -3,3 +3,4 @@ config.*
 configure
 configure.ac
 libtool
+autom4te*
