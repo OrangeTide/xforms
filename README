@@ -71,6 +71,15 @@ to compile and install XForms is
 	make
 	make install
 
+There are some features that you may want to control:
+
+  o --disable-gl that makes sure that gl support is not built even if
+    you have proper GL libraries installed.
+
+  o --enable-demos that adds "demos/" to the list of directories to
+    build. It contains various program demonstrating the use of the
+    XForms library.
+
 For more complicated cases, ./configure takes the following specific
 flags:
 

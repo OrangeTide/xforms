@@ -1,5 +1,15 @@
 2004-03-30  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
+	* README: mention the --enable-demos and --disable-gl flags, which
+	got forgotten
+
+2004-03-30  Hans J. Johnson <hjohnson@mail.psychiatry.uiowa.edu>
+	
+	* lib/pixmap.c (cleanup_xpma_struct): use a better check for
+	libXpm version
+
+2004-03-30  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
 	* XForms 1.0.90 released
 	
 	* NEWS: 

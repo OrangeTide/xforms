@@ -54,9 +54,6 @@
 #define CHECK(ob,f)
 #endif
 
-/* turn on good features if we are using 3.4g or later */
-
-#define XPM_34g_or_later  (XpmLibraryVersion() >= 30407)
 
 /*
  * Define this to use override instead of clipping. Slight performace
@@ -89,19 +86,17 @@ cleanup_xpma_struct(XpmAttributes * xpma)
     if (!xpma || !xpma->colormap)
 	return;
 
-    if (XPM_34g_or_later)
-    {
+/* do we use at least libXpm 3.4g? */
+#if (XpmFormat >= 3) && (XpmVersion >= 4) && (XpmRevision >= 7)
 	M_warn("XpmCleanUP", "Using 3.4g features");
 	XFreeColors(flx->display, xpma->colormap,
 		    xpma->alloc_pixels, xpma->nalloc_pixels, 0);
-    }
-    else
-    {
+#else
 	/* somewhat dangerous */
 	M_warn("XpmCleanUP", "Using old xpm libs");
 	XFreeColors(flx->display, xpma->colormap,
 		    xpma->pixels, xpma->npixels, 0);
-    }
+#endif
 
     xpma->colormap = 0;
 
