@@ -1,3 +1,8 @@
+2003-04-10  John Levon <moz@compsoc.man.ac.uk>
+
+	* lib/pixmap.c (init_xpm_attributes): "fix" XPixmaps containing
+	colour "opaque".
+
 2003-04-09  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/.cvsignore:

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: pixmap.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: pixmap.c,v 1.2 2003/04/10 19:53:13 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -249,17 +249,19 @@ init_xpm_attributes(Window win, XpmAttributes * xpma, FL_COLOR tran)
     xpma->valuemask |= XpmReturnPixels;
 #endif
 
-#ifdef USE_OVERRIDE
     {
-	static XpmColorSymbol xpcm;
-	xpcm.name = "None";
-	xpcm.value = 0;
-	xpcm.pixel = fl_get_flcolor(tran);
+	static XpmColorSymbol xpcm[2];
+	xpcm[0].name = "None";
+	xpcm[0].value = 0;
+	xpcm[0].pixel = fl_get_flcolor(tran);
+	xpcm[1].name = "opaque";
+	xpcm[1].value = 0;
+	xpcm[1].pixel = fl_get_flcolor(FL_BLACK);
+	
 	xpma->valuemask |= XpmColorSymbols;
-	xpma->colorsymbols = &xpcm;
-	xpma->numsymbols = 1;
+	xpma->colorsymbols = xpcm;
+	xpma->numsymbols = 2;
     }
-#endif
 }
 
 
