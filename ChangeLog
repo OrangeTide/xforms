@@ -1,3 +1,10 @@
+2004-05-06  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* fdesign/fd_spec.c: initialization of the FL_CHOICE component of
+	the objspec struct used 'emit_menu_header' and 'emit_menu_global',
+	a cut-n-paste typo from the following FL_MENU component. 
+	They have both been reset to '0'.
+
 2004-05-04  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* NT/libxforms.dsp, NT/xformsAll.dsw: removed these Visual C++

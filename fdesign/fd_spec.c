@@ -137,8 +137,8 @@ static ObjSPEC objspec[] =
 	{FL_CHOICE},
 	get_choice_spec_fdform,
 	set_choice_attrib, choice_spec_restore,
-	save_choice_attrib, emit_choice_code, emit_menu_header,
-	emit_menu_global, 0
+	save_choice_attrib, emit_choice_code,
+	0, 0, 0
     },
 
     {
