@@ -102,7 +102,7 @@ collect_fd(void)
  * Register a callback function for file descriptor fd
  */
 void
-fl_add_io_callback(int fd, unsigned mask, FL_IO_CALLBACK callback, void *data)
+fl_add_io_callback(int fd, unsigned int mask, FL_IO_CALLBACK callback, void *data)
 {
     FL_IO_REC *io_rec;
 
@@ -123,7 +123,7 @@ fl_add_io_callback(int fd, unsigned mask, FL_IO_CALLBACK callback, void *data)
 }
 
 void
-fl_remove_io_callback(int fd, unsigned mask, FL_IO_CALLBACK cb)
+fl_remove_io_callback(int fd, unsigned int mask, FL_IO_CALLBACK cb)
 {
     FL_IO_REC *io = fl_context->io_rec, *last;
 

@@ -41,7 +41,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_gl = "$Id: glcanvas.c,v 1.6 2003/11/20 11:24:15 leeming Exp $";
+char *fl_id_gl = "$Id: glcanvas.c,v 1.7 2004/05/18 13:57:23 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -272,7 +272,7 @@ fl_glwincreate(int *config, GLXContext * context, int w, int h)
 {
     XVisualInfo *xvi;
     XSetWindowAttributes xswa;
-    unsigned mask;
+    unsigned int mask;
     Window win;
 
     if (!glXQueryExtension(fl_display, 0, 0))

@@ -205,7 +205,7 @@ void change_type(FL_OBJECT *, int);	/* Changes the type of a particular
 
 /* sets all attributes for an object */
 void set_attribs(FL_OBJECT *, int, int, int, int, int, float, int, char[]);
-void set_miscattribs(FL_OBJECT *, unsigned, unsigned, unsigned);
+void set_miscattribs(FL_OBJECT *, unsigned int, unsigned int, unsigned int);
 
 void set_label(FL_OBJECT *, const char *);	/* Sets the object label
 						   (interpreting \n's). */

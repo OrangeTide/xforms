@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_drw = "$Id: xdraw.c,v 1.6 2004/05/18 08:56:26 leeming Exp $";
+char *fl_id_drw = "$Id: xdraw.c,v 1.7 2004/05/18 13:57:48 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -61,13 +61,13 @@ draw_rectangle(int fill, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 	       FL_COLOR col)
 {
     (fill ? XFillRectangle : XDrawRectangle) (flx->display, flx->win,
-		       flx->gc, (int) x, (int) y, (unsigned) w, (unsigned) h);
+		       flx->gc, (int) x, (int) y, (unsigned int) w, (unsigned int) h);
 }
 
 #else
 #define draw_rectangle(f,x,y,w,h,c)    \
           ((f)?XFillRectangle:XDrawRectangle)(flx->display, flx->win,\
-          flx->gc, (int)(x), (int)(y), (unsigned)(w), (unsigned)(h))
+          flx->gc, (int)(x), (int)(y), (unsigned int)(w), (unsigned int)(h))
 #endif
 
 /* General rectangle routine */

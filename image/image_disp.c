@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_disp.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_disp.c,v 1.5 2004/05/18 13:57:26 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -149,7 +149,7 @@ static unsigned int trr, tgg, tbb;
 } while (0)
 
 static unsigned int
-rgb2pixel_8bits_or_less(unsigned r, unsigned g, unsigned b, FL_RGB2PIXEL * s)
+rgb2pixel_8bits_or_less(unsigned int r, unsigned int g, unsigned int b, FL_RGB2PIXEL * s)
 {
     unsigned int ret;
     RGB2PIXEL_8_OR_LESS(r, g, b, s, ret);
@@ -167,7 +167,7 @@ rgb2pixel_8bits_or_less(unsigned r, unsigned g, unsigned b, FL_RGB2PIXEL * s)
 } while (0)
 
 static unsigned int
-rgb2pixel_more_than_8bits(unsigned r, unsigned g, unsigned b, FL_RGB2PIXEL * s)
+rgb2pixel_more_than_8bits(unsigned int r, unsigned int g, unsigned int b, FL_RGB2PIXEL * s)
 {
     unsigned int ret;
     RGB2PIXEL_8_OR_MORE(r, g, b, s, ret);
@@ -175,7 +175,7 @@ rgb2pixel_more_than_8bits(unsigned r, unsigned g, unsigned b, FL_RGB2PIXEL * s)
 }
 
 static unsigned int
-  (*rgb2pixel) (unsigned, unsigned, unsigned, FL_RGB2PIXEL *) =
+  (*rgb2pixel) (unsigned int, unsigned int, unsigned int, FL_RGB2PIXEL *) =
   rgb2pixel_8bits_or_less;
 
 static int
@@ -1202,7 +1202,7 @@ convert_ximage(FL_IMAGE * im, XImage * ximage)
     unsigned int *ui;
     unsigned short *us;
     unsigned char *uc;
-    unsigned rnorm, gnorm, bnorm, r, g, b;
+    unsigned int rnorm, gnorm, bnorm, r, g, b;
     int x, y;
 
 #if 0

@@ -38,7 +38,7 @@
 typedef struct
 {
     char *txt;			/* The text                      */
-    unsigned len;		/* line length                   */
+    unsigned int len;		/* line length                   */
     short selected;		/* Whether selected              */
     short non_selectable;	/* if non-selectable             */
     short pixels;		/* length in pixels              */

@@ -192,7 +192,7 @@ extern Window fl_create_window(Window, Colormap, const char *);
 extern void fl_create_gc(Window);
 extern void fl_demand_event(int);
 
-extern Window fl_get_win_mouse(Window win, FL_Coord *, FL_Coord *, unsigned *);
+extern Window fl_get_win_mouse(Window win, FL_Coord *, FL_Coord *, unsigned int *);
 
 enum
 {
@@ -201,8 +201,8 @@ enum
     FL_PROP_SET = (1 << 10)	/* really set */
 };
 
-extern FL_FORM *fl_property_set(unsigned);
-extern void fl_set_winproperty(Window, unsigned);
+extern FL_FORM *fl_property_set(unsigned int);
+extern void fl_set_winproperty(Window, unsigned int);
 #define fl_set_property  fl_set_winproperty
 
 /* timer stuff */
@@ -256,7 +256,7 @@ extern void fl_add_q_icon(FL_Coord, FL_Coord, FL_Coord, FL_Coord);
 extern void fl_add_warn_icon(FL_Coord, FL_Coord, FL_Coord, FL_Coord);
 extern void fl_check_key_focus(const char *, Window);
 
-extern Pixmap fl_read_bitmapfile(Window, const char *, unsigned *, unsigned *,
+extern Pixmap fl_read_bitmapfile(Window, const char *, unsigned int *, unsigned int *,
 				 int *, int *);
 
 extern char **fl_get_cmdline_args(int *);
@@ -338,7 +338,7 @@ typedef struct fl_io_event_
     struct fl_io_event_ *next;
     FL_IO_CALLBACK callback;
     void *data;
-    unsigned mask;
+    unsigned int mask;
     int source;
 }
 FL_IO_REC;
@@ -538,8 +538,8 @@ extern void fl_show_composite(FL_OBJECT *);
 extern void fl_deactivate_composite(FL_OBJECT *);
 extern void fl_activate_composite(FL_OBJECT *);
 extern void fl_delete_composite(FL_OBJECT *);
-extern void fl_set_composite_gravity(FL_OBJECT * ob, unsigned nw, unsigned se);
-extern void fl_set_composite_resize(FL_OBJECT * ob, unsigned);
+extern void fl_set_composite_gravity(FL_OBJECT * ob, unsigned int nw, unsigned int se);
+extern void fl_set_composite_resize(FL_OBJECT * ob, unsigned int);
 extern void fl_add_child(FL_OBJECT *, FL_OBJECT *);
 extern void fl_delete_child(FL_OBJECT *);
 
@@ -647,7 +647,7 @@ fl_draw_text_cursor(int align, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 
 extern const char *fl_get_xevent_name(const XEvent *);
 
-extern void fl_set_input_navigate(unsigned mask);
+extern void fl_set_input_navigate(unsigned int mask);
 extern void fl_adjust_browser_scrollbar(FL_OBJECT *);
 
 #if XlibSpecificationRelease==6

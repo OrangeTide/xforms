@@ -139,7 +139,7 @@ FL_EXPORT void fl_set_choice_align(
 FL_EXPORT void fl_set_choice_item_mode(
 		FL_OBJECT *ob,
 		int item,
-		unsigned mode
+		unsigned int mode
 		);
 
 FL_EXPORT void fl_set_choice_item_shortcut(

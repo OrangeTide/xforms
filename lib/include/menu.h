@@ -109,7 +109,7 @@ FL_EXPORT void fl_set_menu_item_shortcut(
 FL_EXPORT void fl_set_menu_item_mode(
 		FL_OBJECT *ob,
 		int numb,
-		unsigned mode
+		unsigned int mode
 		);
 
 FL_EXPORT void fl_show_menu_symbol(
@@ -140,7 +140,7 @@ FL_EXPORT int fl_get_menu_maxitems(
 		FL_OBJECT *ob
 		);
 
-FL_EXPORT unsigned fl_get_menu_item_mode(
+FL_EXPORT unsigned int fl_get_menu_item_mode(
 		FL_OBJECT *ob,
 		int n
 		);

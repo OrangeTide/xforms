@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_dlist = "$Id: listdir.c,v 1.7 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.8 2004/05/18 13:57:45 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -176,7 +176,7 @@ static int filter_directory = 0;   /* true to filter directory entries */
 #ifndef FL_WIN32		/* [  */
 
 static void
-mode2type(unsigned mode, int *type)
+mode2type(unsigned int mode, int *type)
 {
     if (S_ISDIR(mode))
 	*type = FT_DIR;
@@ -206,7 +206,7 @@ static int
 fselect(const char *d_name, struct stat *ffstat, int *type)
 {
     int ret = 0;
-    unsigned mode;
+    unsigned int mode;
 
     strcat(strcpy(fname, cdir), d_name);
     stat(fname, ffstat);

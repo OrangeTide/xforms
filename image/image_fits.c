@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_fits.c,v 1.6 2003/11/21 13:23:23 leeming Exp $
+ * $Id: image_fits.c,v 1.7 2004/05/18 13:57:28 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -49,7 +49,7 @@
 #define FITS_DEBUG         0
 
 /* number of bits of gray image to generate for float/double FITS */
-static unsigned fits_bit = 12;
+static unsigned int fits_bit = 12;
 
 int flimage_set_fits_bits(int bits)
 {

@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.13 2004/05/18 08:56:26 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.14 2004/05/18 13:57:42 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -751,7 +751,7 @@ fl_init_fl_context(void)
 }
 
 
-void fl_set_input_navigate(unsigned mask)
+void fl_set_input_navigate(unsigned int mask)
 {
      fl_init_fl_context();
 

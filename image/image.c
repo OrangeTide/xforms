@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.7 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image.c,v 1.8 2004/05/18 13:57:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -620,7 +620,7 @@ int
 flimage_getmem(FL_IMAGE * im)
 {
     int nomap, err = 0, same_size;
-    unsigned esize;
+    unsigned int esize;
 
     if (!im || !im->w || !im->h)
 	return -1;
@@ -1235,7 +1235,7 @@ FL_IMAGE *
 flimage_dup_(FL_IMAGE * sim, int pix)
 {
     FL_IMAGE *im = flimage_alloc();
-    unsigned mapsize = sim->map_len * sizeof(*sim->red_lut);
+    unsigned int mapsize = sim->map_len * sizeof(*sim->red_lut);
     char *infile, *outfile;
 
     if(!im)

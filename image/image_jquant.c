@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jquant.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_jquant.c,v 1.5 2004/05/18 13:57:30 leeming Exp $
  *
  * Copyright (C) 1998  T.C. Zhao
  *
@@ -86,7 +86,7 @@ typedef unsigned char JSAMPLE;
 #define C1_SHIFT  (BITS_IN_JSAMPLE-HIST_C1_BITS)
 #define C2_SHIFT  (BITS_IN_JSAMPLE-HIST_C2_BITS)
 
-typedef u_short histcell;	/* histogram cell; prefer an unsigned type */
+typedef u_short histcell;	/* histogram cell; prefer an unsigned int type */
 typedef histcell *histptr;	/* for pointers to histogram cells */
 typedef histcell hist1d[HIST_C2_ELEMS];		/* typedefs for the array */
 typedef hist1d *hist2d;		/* type for the 2nd-level pointers */

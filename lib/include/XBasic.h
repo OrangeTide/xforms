@@ -443,7 +443,7 @@ FL_EXPORT XFontStruct *fl_get_fontstruct(
 FL_EXPORT Window fl_get_mouse(
 		FL_Coord *x,
 		FL_Coord *y,
-		unsigned *keymask
+		unsigned int *keymask
 		);
 
 FL_EXPORT void fl_set_mouse(
@@ -455,14 +455,14 @@ FL_EXPORT Window fl_get_win_mouse(
 		Window win,
 		FL_Coord *x,
 		FL_Coord *y,
-		unsigned *keymask
+		unsigned int *keymask
 		);
 
 FL_EXPORT Window fl_get_form_mouse(
 		FL_FORM *fm,
 		FL_Coord *x,
 		FL_Coord *y,
-		unsigned *keymask
+		unsigned int *keymask
 		);
 
 FL_EXPORT FL_FORM *fl_win_to_form(
@@ -776,7 +776,7 @@ typedef struct
     int trpx, trpy;		/* reparenting offset for transient   */
     int bw;			/* additional border                  */
     int rep_method;		/* 1 for shifting, 2 for normal       */
-    unsigned pos_request;	/* USPOSITION or PPOSITION            */
+    unsigned int pos_request;	/* USPOSITION or PPOSITION            */
 }
 FL_WM_STUFF;
 

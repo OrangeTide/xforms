@@ -38,7 +38,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xpup = "$Id: xpopup.c,v 1.11 2004/04/21 15:00:04 lasgouttes Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.12 2004/05/18 13:57:49 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -70,7 +70,7 @@ typedef struct
     FL_PUP_CB icb;		/* call back           */
     long *shortcut;		/* shortcut keys       */
     int subm;			/* sub menu            */
-    unsigned mode;		/* various attributes  */
+    unsigned int mode;		/* various attributes  */
     int ret;			/* %x stuff            */
     short ulpos;		/* hotkeys in label    */
     short radio;		/* radio entry. 0 mean no radio */
@@ -252,7 +252,7 @@ parse_entry(int n, const char *str, va_list ap)
     PopUP *m = menu_rec + n;
     MenuItem **item = m->item + m->nitems;
     char *s, *val, *p, tmp[128], *tt;
-    unsigned flags;
+    unsigned int flags;
 
     if (n < 0 || n >= fl_maxpup || !str)
 	return -1;
@@ -723,7 +723,7 @@ get_valid_entry(PopUP * m, int target, int dir)
 #define alt_down    (metakey_down(keymask) != 0)
 
 static int
-handle_shortcut(PopUP * m, KeySym keysym, unsigned keymask)
+handle_shortcut(PopUP * m, KeySym keysym, unsigned int keymask)
 {
     MenuItem **mi = m->item;
     int i, j;
@@ -951,7 +951,7 @@ pup_interact(PopUP * m)
 	    if ((timer_cnt++ % 10) == 0)
 	    {
 		FL_Coord x, y;
-		unsigned km;
+		unsigned int km;
 		timer_cnt = 0;
 		fl_get_win_mouse(m->win, &x, &y, &km);
 		/* only set some of the field in the synthetic event */
@@ -1579,7 +1579,7 @@ fl_showpup(int n)
 	int bw = 0, w, h;
 	XSetWindowAttributes xswa;
 	unsigned long wmask;
-	unsigned depth = fl_depth(fl_vmode);
+	unsigned int depth = fl_depth(fl_vmode);
 	Visual *visual = fl_visual(fl_vmode);
 
 	m->maxw = FL_max(m->titlewidth, m->maxw);
@@ -1738,7 +1738,7 @@ fl_hidepup(int n)
 	fl_context->pup_id = -1;
 }
 
-unsigned
+unsigned int
 fl_getpup_mode(int nm, int ni)
 {
     MenuItem *item;

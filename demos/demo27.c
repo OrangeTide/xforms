@@ -177,7 +177,7 @@ void drawit(OBJ *obj)
 void drawobject(void)
 {
    FL_Coord x0,y0;
-   unsigned km;
+   unsigned int km;
    OBJ *cur_obj = ob + onumb;
 
    fl_get_win_mouse(main_win, &x0,&y0,&km);

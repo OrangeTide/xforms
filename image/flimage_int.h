@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: flimage_int.h,v 1.2 2003/09/09 00:28:25 leeming Exp $
+ * $Id: flimage_int.h,v 1.3 2004/05/18 13:57:25 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -137,7 +137,7 @@ extern void flimage_enable_gzip(void);
 extern void flimage_invalidate_pixels(FL_IMAGE *);
 
 extern int flimage_get_closest_color_from_map(FL_IMAGE * im, unsigned int col);
-extern int flimage_replace_pixel(FL_IMAGE *, unsigned, unsigned);
+extern int flimage_replace_pixel(FL_IMAGE *, unsigned int, unsigned int);
 extern void flimage_free_gray(FL_IMAGE *);
 extern void flimage_free_ci(FL_IMAGE *);
 extern void flimage_free_rgb(FL_IMAGE *);
@@ -147,7 +147,7 @@ extern void flimage_error(FL_IMAGE *, const char *, ...);
 extern void flimage_enable_genesis(void);
 
 extern int fl_spline_int_interpolate(const int *, const int *, int, int, int *);
-extern unsigned int fl_value_to_bits(unsigned val);
+extern unsigned int fl_value_to_bits(unsigned int val);
 extern int flimage_get_linearlut(FL_IMAGE *);
 extern void flimage_free_linearlut(FL_IMAGE *);
 extern FLIMAGE_IO *flimage_find_imageIO(const char *fmt);

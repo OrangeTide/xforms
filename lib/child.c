@@ -140,7 +140,7 @@ fl_activate_composite(FL_OBJECT * ob)
 }
 
 void
-fl_set_composite_resize(FL_OBJECT * ob, unsigned resize)
+fl_set_composite_resize(FL_OBJECT * ob, unsigned int resize)
 {
     FL_OBJECT *tmp = ob->child;
 
@@ -149,7 +149,7 @@ fl_set_composite_resize(FL_OBJECT * ob, unsigned resize)
 }
 
 void
-fl_set_composite_gravity(FL_OBJECT * ob, unsigned nw, unsigned se)
+fl_set_composite_gravity(FL_OBJECT * ob, unsigned int nw, unsigned int se)
 {
     FL_OBJECT *tmp = ob->child;
 

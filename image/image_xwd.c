@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xwd.c,v 1.4 2003/11/28 14:28:46 leeming Exp $
+ * $Id: image_xwd.c,v 1.5 2004/05/18 13:57:40 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -48,9 +48,9 @@ typedef struct
     XWDFileHeader header;
     char name[256];
     int swap;
-    unsigned rbits, rshifts;
-    unsigned gbits, gshifts;
-    unsigned bbits, bshifts;
+    unsigned int rbits, rshifts;
+    unsigned int gbits, gshifts;
+    unsigned int bbits, bshifts;
 }
 SPEC;
 
@@ -198,7 +198,7 @@ XWD_description(FL_IMAGE * im)
     fl_rgbmask_to_shifts(header->green_mask, &sp->gshifts, &sp->gbits);
     fl_rgbmask_to_shifts(header->blue_mask, &sp->bshifts, &sp->bbits);
 
-    if (sp->gbits > (unsigned)FL_PCBITS)
+    if (sp->gbits > (unsigned int)FL_PCBITS)
     {
 	sp->rshifts += (sp->rbits - FL_PCBITS);
 	sp->gshifts += (sp->gbits - FL_PCBITS);

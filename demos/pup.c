@@ -41,7 +41,7 @@ int post(FL_OBJECT *, int, FL_Coord, FL_Coord, int, void *);
 int main(int argc,char *argv[])
 {
     FL_IOPT aa;
-    unsigned mask = FL_PDVisual;
+    unsigned int mask = FL_PDVisual;
 
     aa.vclass = FL_DefaultVisual;
     fl_set_defaults(mask, &aa);

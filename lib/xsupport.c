@@ -37,7 +37,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.6 2003/11/21 13:23:23 leeming Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.7 2004/05/18 13:57:50 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -72,7 +72,7 @@ fl_check_key_focus(const char *s, Window win)
  */
 
 Window
-fl_get_mouse(FL_Coord * x, FL_Coord * y, unsigned *keymask)
+fl_get_mouse(FL_Coord * x, FL_Coord * y, unsigned int *keymask)
 {
     Window rjunk, childwin;
     int cx, cy, xx, yy;
@@ -91,7 +91,7 @@ fl_get_mouse(FL_Coord * x, FL_Coord * y, unsigned *keymask)
  */
 
 Window
-fl_get_win_mouse(Window win, FL_Coord * x, FL_Coord * y, unsigned *keymask)
+fl_get_win_mouse(Window win, FL_Coord * x, FL_Coord * y, unsigned int *keymask)
 {
     Window rjunk, childwin;
     int xx, yy, ix, iy;
@@ -105,7 +105,7 @@ fl_get_win_mouse(Window win, FL_Coord * x, FL_Coord * y, unsigned *keymask)
 
 
 Window
-fl_get_form_mouse(FL_FORM * fm, FL_Coord * x, FL_Coord * y, unsigned *keymask)
+fl_get_form_mouse(FL_FORM * fm, FL_Coord * x, FL_Coord * y, unsigned int *keymask)
 {
     if (fl_is_good_form(fm))
     {
@@ -215,7 +215,7 @@ void
 fl_create_object_pixmap(FL_OBJECT * ob)
 {
     Window root;
-    unsigned junk;
+    unsigned int junk;
     FL_pixmap *p;
     int i, fdouble;
 
@@ -249,7 +249,7 @@ fl_create_object_pixmap(FL_OBJECT * ob)
     oldhandler = XSetErrorHandler(fl_xerror_handler);
 
     p->pixmap = XCreatePixmap(flx->display, FL_ObjWin(ob),
-		    (unsigned) ob->w, (unsigned) ob->h, fl_depth(fl_vmode));
+		    (unsigned int) ob->w, (unsigned int) ob->h, fl_depth(fl_vmode));
 
     fl_winset(p->pixmap);
     fl_rectf(0, 0, ob->w, ob->h, ob->dbl_background);
@@ -340,7 +340,7 @@ void
 fl_create_form_pixmap(FL_FORM * fm)
 {
     Window root;
-    unsigned junk;
+    unsigned int junk;
     FL_pixmap *p;
     int i;
 
@@ -366,7 +366,7 @@ fl_create_form_pixmap(FL_FORM * fm)
     oldhandler = XSetErrorHandler(fl_xerror_handler);
 
     p->pixmap = XCreatePixmap(flx->display, fm->window,
-		    (unsigned) fm->w, (unsigned) fm->h, fl_depth(fl_vmode));
+		    (unsigned int) fm->w, (unsigned int) fm->h, fl_depth(fl_vmode));
 
     M_info("FormPixmap", "creating(w=%d h=%d)", fm->w, fm->h);
 

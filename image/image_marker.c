@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_marker.c,v 1.5 2003/11/20 10:46:15 leeming Exp $
+ * $Id: image_marker.c,v 1.6 2004/05/18 13:57:40 leeming Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -145,7 +145,7 @@ flimage_define_marker(const char *name, void (*draw) (FLIMAGE_MARKER *),
 int
 flimage_add_marker(FL_IMAGE * im, const char *name, double x, double y,
 		   double w, double h, int style, int fill, int rot,
-		   unsigned int col, unsigned bcol)
+		   unsigned int col, unsigned int bcol)
 {
     int nm = im->nmarkers;
     FLIMAGE_MARKER *imarker;

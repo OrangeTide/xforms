@@ -38,7 +38,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_inp = "$Id: input.c,v 1.7 2004/05/07 13:06:54 lasgouttes Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.8 2004/05/18 13:57:44 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -821,7 +821,7 @@ handle_edit(FL_OBJECT * ob, int key, int slen, int startpos, int keymask)
 
 /* Handles a key press, returns whether something has changed */
 static int
-handle_key(FL_OBJECT * ob, int key, unsigned kmask)
+handle_key(FL_OBJECT * ob, int key, unsigned int kmask)
 {
     int i, ret = 1;
     SPEC *sp = ob->spec;

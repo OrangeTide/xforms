@@ -190,7 +190,7 @@ void
 get_mouse_pos(float *xx, float *yy)
 {
     FL_Coord x, y;
-    unsigned kmask;
+    unsigned int kmask;
 
     fl_get_win_mouse(main_window, &x, &y, &kmask);
     *xx = x;

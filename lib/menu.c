@@ -42,7 +42,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_menu = "$Id: menu.c,v 1.6 2003/04/24 09:35:34 leeming Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.7 2004/05/18 13:57:45 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -464,7 +464,7 @@ fl_set_menu_item_shortcut(FL_OBJECT * ob, int numb, const char *str)
 
 /* Sets the display mode for the menu item */
 void
-fl_set_menu_item_mode(FL_OBJECT * ob, int numb, unsigned mode)
+fl_set_menu_item_mode(FL_OBJECT * ob, int numb, unsigned int mode)
 {
     SPEC *sp = ((SPEC *) (ob->spec));
 
@@ -567,7 +567,7 @@ fl_get_menu_item_text(FL_OBJECT * ob, int n)
     return s;
 }
 
-unsigned
+unsigned int
 fl_get_menu_item_mode(FL_OBJECT * ob, int n)
 {
     SPEC *sp;

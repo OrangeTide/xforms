@@ -116,7 +116,7 @@ FL_EXPORT void fl_set_canvas_depth(
 
 FL_EXPORT void fl_set_canvas_attributes(
 		FL_OBJECT *ob,
-		unsigned mask,
+		unsigned int mask,
 		XSetWindowAttributes *xswa
 		);
 

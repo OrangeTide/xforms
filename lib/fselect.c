@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fs = "$Id: fselect.c,v 1.10 2004/05/05 13:48:06 leeming Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.11 2004/05/18 13:57:44 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -870,7 +870,7 @@ contract_dirname(const char *dir, int limit)
     }
 
     /* final check */
-    if (strlen(buf) > (unsigned)limit)
+    if (strlen(buf) > (unsigned int)limit)
     {
 	p = buf + limit - 3;
 	*p++ = '.';

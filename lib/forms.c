@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.11 2004/05/05 12:06:52 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.12 2004/05/18 13:57:42 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -822,7 +822,7 @@ close_form_win(Window win)
 }
 
 FL_FORM *
-fl_property_set(unsigned prop)
+fl_property_set(unsigned int prop)
 {
     int i;
     for (i = 0; i < formnumb; i++)
@@ -832,7 +832,7 @@ fl_property_set(unsigned prop)
 }
 
 void
-fl_set_form_property(FL_FORM * form, unsigned prop)
+fl_set_form_property(FL_FORM * form, unsigned int prop)
 {
     if (!form || fl_property_set(prop))
 	return;
@@ -1744,7 +1744,7 @@ static int
 button_is_really_down(void)
 {
     FL_Coord x, y;
-    unsigned km;
+    unsigned int km;
     fl_get_mouse(&x, &y, &km);
     return button_down(km);
 }
@@ -1753,7 +1753,7 @@ button_is_really_down(void)
  * event handler. basically throwing away info ..
  */
 static int
-xmask2key(unsigned mask)
+xmask2key(unsigned int mask)
 {
     int ret = 0;
 
@@ -1774,7 +1774,7 @@ do_interaction_step(int wait_io)
     Window win;
     FL_FORM *evform = 0;
     int has_event;
-    static unsigned auto_cnt, query_cnt;
+    static unsigned int auto_cnt, query_cnt;
     static int lasttimer;
 
     has_event = get_next_event(wait_io, &evform, &st_xev);

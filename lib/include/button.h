@@ -51,7 +51,7 @@ FL_BUTTON_TYPE;
 typedef struct
 {
     Pixmap pixmap, mask;
-    unsigned bits_w, bits_h;
+    unsigned int bits_w, bits_h;
     int val;			/* whether on */
     int mousebut;		/* mouse button that caused the push     */
     int timdel;			/* time since last touch (TOUCH buttons) */

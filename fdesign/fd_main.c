@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.9 $ of $Date: 2003/11/27 14:51:04 $",
+    "$State: Exp $  $Revision: 1.10 $ of $Date: 2004/05/18 13:57:11 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -707,7 +707,7 @@ main(int ac, char *av[])
     unsigned int w = 0, h = 0;
     int x = 0, y = 0, s, version, revision;
     FL_IOPT cntl;
-    unsigned mask;
+    unsigned int mask;
 
     /* before doing anything, check to make sure the library is made
        correctly */

@@ -22,7 +22,7 @@
 /********************** crop here for forms.h **********************/
 
 /*
- * $Id: flimage.h,v 1.3 2003/09/09 00:28:25 leeming Exp $
+ * $Id: flimage.h,v 1.4 2004/05/18 13:57:24 leeming Exp $
  *
  * Image related routines
  *
@@ -41,7 +41,7 @@ extern "C"
 #endif
 
 
-#define FL_RGB2GRAY(r,g,b)  (unsigned)((78*(r)+150*(g)+28*(b))>>8)
+#define FL_RGB2GRAY(r,g,b)  (unsigned int)((78*(r)+150*(g)+28*(b))>>8)
 
 enum
 {
@@ -473,7 +473,7 @@ FL_EXPORT int flimage_add_marker(
 		int fill,
 		int rot,
 		unsigned int col,
-		unsigned bcol
+		unsigned int bcol
 		);
 
 

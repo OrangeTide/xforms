@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_proc.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_proc.c,v 1.5 2004/05/18 13:57:40 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  By T.C. Zhao
@@ -136,7 +136,7 @@ flimage_get_subimage(FL_IMAGE * im, int make)
     static int buf;
     int err;
     SubImage *sub = subimage + buf;
-    void *(*submat) (void *, int, int, int, int, int, int, unsigned);
+    void *(*submat) (void *, int, int, int, int, int, int, unsigned int);
 
     submat = make ? fl_make_submatrix : fl_get_submatrix;
     im->subx = FL_clamp(im->subx, 0, im->w - 1);
@@ -288,7 +288,7 @@ fl_insert_submatrix(void *dest, int drows, int dcols,
 #endif
 {
     char **dmat = dest, **smat = src;
-    unsigned size = cs * esize, offset = c1 * esize;
+    unsigned int size = cs * esize, offset = c1 * esize;
     int i;
 
     for (i = 0; i < rs; i++)

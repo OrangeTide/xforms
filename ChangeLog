@@ -1,3 +1,53 @@
+2004-05-18  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* demos/demo27.c:
+	* demos/iconify.c:
+	* demos/pup.c:
+	* fdesign/fd_attribs.c:
+	* fdesign/fd_main.c:
+	* fdesign/fd_main.h:
+	* fdesign/fd_rubber.c:
+	* gl/glcanvas.c:
+	* image/flimage.h:
+	* image/flimage_int.h:
+	* image/image.c:
+	* image/image_disp.c:
+	* image/image_fits.c:
+	* image/image_gif.c:
+	* image/image_jquant.c:
+	* image/image_marker.c:
+	* image/image_proc.c:
+	* image/image_xwd.c:
+	* image/matrix.c:
+	* lib/asyn_io.c:
+	* lib/canvas.c:
+	* lib/child.c:
+	* lib/choice.c:
+	* lib/flcolor.c:
+	* lib/flinternal.h:
+	* lib/flresource.c:
+	* lib/forms.c:
+	* lib/fselect.c:
+	* lib/input.c:
+	* lib/listdir.c:
+	* lib/menu.c:
+	* lib/objects.c:
+	* lib/pixmap.c:
+	* lib/win.c:
+	* lib/xdraw.c:
+	* lib/xpopup.c:
+	* lib/xsupport.c:
+	* lib/include/Basic.h:
+	* lib/include/XBasic.h:
+	* lib/include/bitmap.h:
+	* lib/include/button.h:
+	* lib/include/canvas.h:
+	* lib/include/choice.h:
+	* lib/include/menu.h:
+	* lib/include/popup.h:
+	* lib/private/pcanvas.h:
+	* lib/private/ptextbox.h: s/unsigned/unsigned int/
+
 2004-05-17  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	Revert some functions to the same API as was used in XForms

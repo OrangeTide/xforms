@@ -34,7 +34,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_chc = "$Id: choice.c,v 1.9 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.10 2004/05/18 13:57:41 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -609,7 +609,7 @@ fl_set_choice_text(FL_OBJECT * ob, const char *txt)
 }
 
 void
-fl_set_choice_item_mode(FL_OBJECT * ob, int item, unsigned mode)
+fl_set_choice_item_mode(FL_OBJECT * ob, int item, unsigned int mode)
 {
     SPEC *sp = ((SPEC *) (ob->spec));
 

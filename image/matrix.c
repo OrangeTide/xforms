@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: matrix.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: matrix.c,v 1.4 2004/05/18 13:57:40 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -95,7 +95,7 @@ fl_free_matrix(void *p)
 
 #if 0
 void *
-fl_get_3d(int d1, int d2, int d3, unsigned es)
+fl_get_3d(int d1, int d2, int d3, unsigned int es)
 {
     char **m;
     int i;

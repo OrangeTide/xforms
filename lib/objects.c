@@ -32,7 +32,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_obj = "$Id: objects.c,v 1.10 2004/05/05 12:06:52 leeming Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.11 2004/05/18 13:57:45 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -461,7 +461,7 @@ fl_set_object_boxtype(FL_OBJECT * ob, int boxtype)
 }
 
 void
-fl_set_object_resize(FL_OBJECT * ob, unsigned what)
+fl_set_object_resize(FL_OBJECT * ob, unsigned int what)
 {
     if (ob == NULL)
     {
@@ -484,7 +484,7 @@ fl_set_object_resize(FL_OBJECT * ob, unsigned what)
 }
 
 void
-fl_set_object_gravity(FL_OBJECT * ob, unsigned nw, unsigned se)
+fl_set_object_gravity(FL_OBJECT * ob, unsigned int nw, unsigned int se)
 {
     if (ob == NULL)
     {

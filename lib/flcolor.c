@@ -43,7 +43,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_col = "$Id: flcolor.c,v 1.10 2004/05/18 08:56:26 leeming Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.11 2004/05/18 13:57:41 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -58,7 +58,7 @@ static unsigned long *lut;
 static long max_server_cols;	/* max cols in current visual       */
 static long cols_in_default_visual;
 static long predefined_cols;	/* min(max_server_col, built_in_col) */
-static FL_COLOR rgb2pixel(unsigned, unsigned, unsigned);
+static FL_COLOR rgb2pixel(unsigned int, unsigned int, unsigned int);
 static int allow_leakage;
 static FL_COLOR lastmapped;	/* so fl_textcolor can refresh its cache */
 
@@ -335,7 +335,7 @@ fill_map(void)
     XColor xc;
     int ok;
     long pred = predefined_cols;
-    unsigned r, g, b;
+    unsigned int r, g, b;
     FL_IMAP *fm, *fs;
 
     lut = fl_state[fl_vmode].lut;
@@ -781,9 +781,9 @@ fl_get_rgb_pixel(FL_COLOR packed, int *newpix)
     static int new_col;
     XColor xc;
 
-    unsigned r = FL_GETR(packed);
-    unsigned g = FL_GETG(packed);
-    unsigned b = FL_GETB(packed);
+    unsigned int r = FL_GETR(packed);
+    unsigned int g = FL_GETG(packed);
+    unsigned int b = FL_GETB(packed);
 
     *newpix = 0;
     if (s->vclass == TrueColor || s->vclass == DirectColor)
@@ -1225,7 +1225,7 @@ fl_mode_capable(int mode, int warn)
  */
 
 static FL_COLOR
-rgb2pixel(register unsigned r, register unsigned g, register unsigned b)
+rgb2pixel(register unsigned int r, register unsigned int g, register unsigned int b)
 {
     register FL_State *s = fl_state + fl_vmode;
 

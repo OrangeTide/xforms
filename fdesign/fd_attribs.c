@@ -539,7 +539,7 @@ set_attribs(FL_OBJECT * obj, int boxtype, int col1, int col2,
 
 /* more attributes */
 void
-set_miscattribs(FL_OBJECT * obj, unsigned nw, unsigned se, unsigned re)
+set_miscattribs(FL_OBJECT * obj, unsigned int nw, unsigned int se, unsigned int re)
 {
     obj->nwgravity = nw;
     obj->segravity = se;

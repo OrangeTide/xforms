@@ -165,8 +165,8 @@ FL_EXPORT Pixmap fl_read_pixmapfile(
 FL_EXPORT Pixmap fl_create_from_pixmapdata(
 		Window win,
 		char **data,
-		unsigned *w,
-		unsigned *h,
+		unsigned int *w,
+		unsigned int *h,
 		Pixmap *sm,
 		int *hotx,
 		int *hoty,

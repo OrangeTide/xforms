@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 {
    FL_FORM *form0;
    Pixmap p, mask;
-   unsigned w,h;
+   unsigned int w,h;
 
    fl_initialize(&argc, argv, "FormDemo", 0, 0);
    form0 = create_form_form0();

@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_canvas = "$Id: canvas.c,v 1.7 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.8 2004/05/18 13:57:41 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -175,7 +175,7 @@ BegWMColormap(SPEC *sp)
 }
 
 void
-fl_set_canvas_attributes(FL_OBJECT * ob, unsigned mask,
+fl_set_canvas_attributes(FL_OBJECT * ob, unsigned int mask,
 			 XSetWindowAttributes * xswa)
 {
     SPEC *sp = ob->spec;
@@ -526,7 +526,7 @@ void
 fl_canvas_yield_to_shortcut(FL_OBJECT * ob, int yes)
 {
     SPEC *sp = ob->spec;
-    unsigned emask = KeyPressMask;
+    unsigned int emask = KeyPressMask;
 
     if ((sp->yield_to_shortcut = yes))
     {

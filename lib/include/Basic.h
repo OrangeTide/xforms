@@ -693,14 +693,14 @@ enum
 typedef void (*FL_IO_CALLBACK) (int, void *);
 FL_EXPORT void fl_add_io_callback(
 		int fd,
-		unsigned mask,
+		unsigned int mask,
 		FL_IO_CALLBACK callback,
 		void *data
 		);
 
 FL_EXPORT void fl_remove_io_callback(
 		int fd,
-		unsigned mask,
+		unsigned int mask,
 		FL_IO_CALLBACK cb
 		);
 
@@ -899,7 +899,7 @@ FL_EXPORT void fl_set_form_title(
 
 FL_EXPORT void fl_set_form_property(
 		FL_FORM *form,
-		unsigned prop
+		unsigned int prop
 		);
 
 FL_EXPORT void fl_set_app_mainform(
@@ -1053,13 +1053,13 @@ FL_EXPORT void fl_set_object_bw(
 
 FL_EXPORT void fl_set_object_resize(
 		FL_OBJECT *ob,
-		unsigned what
+		unsigned int what
 		);
 
 FL_EXPORT void fl_set_object_gravity(
 		FL_OBJECT *ob,
-		unsigned nw,
-		unsigned se
+		unsigned int nw,
+		unsigned int se
 		);
 
 FL_EXPORT void fl_set_object_lsize(

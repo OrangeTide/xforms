@@ -47,7 +47,7 @@ typedef struct
 
     Colormap colormap;		/* colormap for the canvas       */
     GC gc;
-    unsigned mask, user_mask;
+    unsigned int mask, user_mask;
     int depth;
     int dec_type;		/* if and how to decorate canvas */
     int x, y, w, h;		/* window size                   */

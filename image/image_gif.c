@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.7 2003/11/27 12:24:17 leeming Exp $
+ * $Id: image_gif.c,v 1.8 2004/05/18 13:57:29 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -486,7 +486,7 @@ static int
 GIF_load(FL_IMAGE * im)
 {
     int bits = 0, err, count, code = -1;
-    unsigned datum = 0;
+    unsigned int datum = 0;
     unsigned char *ch, buf[257];
     SPEC *sp = im->io_spec;
     const char *func = "GIFReadPix";
@@ -845,7 +845,7 @@ addto_table(register WorkStr * cstr, register int code)
    } while(ZERO)
 #endif
 
-static void output_lzw_code(unsigned code, FILE * fp);
+static void output_lzw_code(unsigned int code, FILE * fp);
 static void init_table(int, FILE * fp);
 #if 0
 static unsigned short *get_scan_line(FL_IMAGE *, int);

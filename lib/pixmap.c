@@ -338,7 +338,7 @@ fl_add_pixmap(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 
 
 Pixmap
-fl_create_from_pixmapdata(Window win, char **data, unsigned *w, unsigned *h,
+fl_create_from_pixmapdata(Window win, char **data, unsigned int *w, unsigned int *h,
 			  Pixmap * sm, int *hotx, int *hoty, FL_COLOR tran)
 {
     Pixmap p = None;

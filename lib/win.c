@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xsupt = "$Id: win.c,v 1.7 2004/05/18 08:56:26 leeming Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.8 2004/05/18 13:57:46 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -58,7 +58,7 @@ static XSizeHints st_xsh;
 static XWMHints st_xwmh;
 static unsigned int st_wmask;
 static int st_wmborder;
-static unsigned bwidth = 0;
+static unsigned int bwidth = 0;
 
 
 /*********************************************************************
@@ -395,7 +395,7 @@ get_wm_decoration(const char *what, XEvent * xrp,
 		  FL_Coord * x, FL_Coord * y, FL_Coord * bw)
 {
     Window junk;
-    unsigned uj, rbw;
+    unsigned int uj, rbw;
 
     if (!*y)
     {
@@ -473,7 +473,7 @@ static void
 wait_mapwin(Window win, int border)
 {
     XEvent xev;
-    unsigned mask;
+    unsigned int mask;
     static int reparent_method, tran_method, tran_done;
 
     if (!(st_xswa.event_mask & ExposureMask))
@@ -572,7 +572,7 @@ get_machine_name(Display * d)
 
 
 void
-fl_set_winproperty(Window win, unsigned prop)
+fl_set_winproperty(Window win, unsigned int prop)
 {
     char **argv;
     int argc;

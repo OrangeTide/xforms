@@ -171,7 +171,7 @@ FL_EXPORT int fl_setpup_maxpup(
 		int n
 		);
 
-FL_EXPORT unsigned fl_getpup_mode(
+FL_EXPORT unsigned int fl_getpup_mode(
 		int nm,
 		int ni
 		);
