@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xwd.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_xwd.c,v 1.4 2003/11/28 14:28:46 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -198,7 +198,7 @@ XWD_description(FL_IMAGE * im)
     fl_rgbmask_to_shifts(header->green_mask, &sp->gshifts, &sp->gbits);
     fl_rgbmask_to_shifts(header->blue_mask, &sp->bshifts, &sp->bbits);
 
-    if (sp->gbits > FL_PCBITS)
+    if (sp->gbits > (unsigned)FL_PCBITS)
     {
 	sp->rshifts += (sp->rbits - FL_PCBITS);
 	sp->gshifts += (sp->gbits - FL_PCBITS);
@@ -292,7 +292,7 @@ XWD_read_pixels(FL_IMAGE * im)
 	fread(xwdcolor, sizeof(XWDColor), h->ncolors, fp);
 	if (h->visual_class != TrueColor && h->visual_class != DirectColor)
 	{
-	    for (i = 0; i < h->ncolors; i++)
+	    for (i = 0; i < (int)h->ncolors; i++)
 	    {
 		if (sp->swap)
 		{
@@ -354,7 +354,7 @@ XWD_read_pixels(FL_IMAGE * im)
 		    im->green[y][x] = ((g + 1) << gn) - 1;
 		    im->blue[y][x] = ((b + 1) << bn) - 1;
 		}
-		for (; x < h->bytes_per_line; x++)
+		for (; x < (int)h->bytes_per_line; x++)
 		    (void) getc(fp);
 		err = feof(fp) || ferror(fp);
 	    }
@@ -365,7 +365,7 @@ XWD_read_pixels(FL_IMAGE * im)
 	    {
 		for (x = 0; x < im->w; x++)
 		    im->ci[y][x] = getc(fp);
-		for (; x < h->bytes_per_line; x++)
+		for (; x < (int)h->bytes_per_line; x++)
 		    (void) getc(fp);
 		err = feof(fp) || ferror(fp);
 	    }
@@ -387,7 +387,7 @@ XWD_read_pixels(FL_IMAGE * im)
 		    im->green[y][x] = ((g + 1) << gn) - 1;
 		    im->blue[y][x] = ((b + 1) << bn) - 1;
 		}
-		for (x = im->w * 2; x < h->bytes_per_line; x++)
+		for (x = im->w * 2; x < (int)h->bytes_per_line; x++)
 		    (void) getc(fp);
 
 		err = feof(fp) || ferror(fp);
@@ -399,7 +399,7 @@ XWD_read_pixels(FL_IMAGE * im)
 	    {
 		for (x = 0; x < im->w; x++)
 		    im->ci[y][x] = get16(fp);
-		for (n = im->w * 2; x < h->bytes_per_line; x++)
+		for (n = im->w * 2; x < (int)h->bytes_per_line; x++)
 		    (void) getc(fp);
 		err = feof(fp) || ferror(fp);
 	    }
@@ -528,7 +528,7 @@ XWD_write_image(FL_IMAGE * im)
 
     /* write the header */
     c32 = (CARD32 *) h;
-    for (n = 0; n < sizeof(*h) / sizeof(h->file_version); n++, c32++)
+    for (n = 0; (size_t)n < sizeof(*h) / sizeof(h->file_version); n++, c32++)
 	write32(*c32, fp);
     fwrite(im->outfile, 1, strlen(im->outfile) + 1, fp);
 
@@ -536,7 +536,7 @@ XWD_write_image(FL_IMAGE * im)
     {
 	XWDColor xwdcolor;
 	xwdcolor.flags = DoRed | DoGreen | DoBlue;
-	for (n = 0; n < h->ncolors; n++)
+	for (n = 0; n < (int)h->ncolors; n++)
 	{
 	    xwdcolor.red = (im->red_lut[n] << 8) | 0xff;
 	    xwdcolor.green = (im->green_lut[n] << 8) | 0xff;;

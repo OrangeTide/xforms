@@ -43,7 +43,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_col = "$Id: flcolor.c,v 1.8 2003/11/21 10:54:03 lasgouttes Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.9 2003/11/28 14:28:46 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -254,8 +254,10 @@ be_nice(void)
     for (npixels = 0, i = 2; fl_depth(fl_vmode) > 4 && i < saved; i++)
     {
 	k = newpixels[i];
-	for (j = found = 0; !found && j < NSAVE; j++)
-	    found = ((k == save_index[j]) || k == white || k == black);
+	for (j = found = 0; !found && j < (int)NSAVE; j++)
+	    found = ((k == save_index[j]) ||
+		     k == (int)white ||
+		     k == (int)black);
 
 	if (!found)
 	    frees[npixels++] = k;
@@ -1103,7 +1105,7 @@ fl_getmcolor(FL_COLOR i, int *r, int *g, int *b)
 {
     XColor exact;
 
-    if ((exact.pixel = fl_get_pixel(i)) >= max_server_cols)
+    if ((exact.pixel = fl_get_pixel(i)) >= (unsigned long)max_server_cols)
     {
 	*r = *g = *b = 0;
 	return (unsigned long) -1;
@@ -1317,7 +1319,10 @@ fl_create_colormap(XVisualInfo * xv, int nfill)
 	{
 	    p = allocated[i];
 	    for (j = found = 0; !found && j < nfill; j++)
-		found = (p == fl_get_pixel(j) || (p == white || p == black || p == 34));
+		found = (p == fl_get_pixel(j) ||
+			 p == (unsigned long)white ||
+			 p == (unsigned long)black ||
+			 p == 34);
 	    if (!found && p != FL_NoColor)
 		pixels[k++] = p;
 	}

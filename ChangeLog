@@ -1,5 +1,12 @@
 2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* fdesign/fd_attribs.c:
+	* image/image_jpeg.c:
+	* image/image_xwd.c:
+	* lib/flcolor.c: warning free compilation of the entire xforms source.
+
+2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* demos/demotest.c:
 	* demos/folder.c:
 	* demos/free1.c:

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.6 2003/11/27 10:29:47 leeming Exp $
+ * $Id: image_jpeg.c,v 1.7 2003/11/28 14:28:46 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -263,7 +263,7 @@ JPEG_read_pixels(FL_IMAGE * im)
 
 	if (im->type == FL_IMAGE_RGB)
 	{
-	    for (i = j = 0; i < cinfo->output_width; i++, j += 3)
+	    for (i = j = 0; i < (int)cinfo->output_width; i++, j += 3)
 	    {
 		im->red[cinfo->output_scanline - 1][i] = buf[0][j];
 		im->green[cinfo->output_scanline - 1][i] = buf[0][j + 1];
@@ -280,7 +280,7 @@ JPEG_read_pixels(FL_IMAGE * im)
 		im->blue_lut[i] = cinfo->colormap[2][i];
 	    }
 	    ci = im->ci[cinfo->output_scanline - 1];
-	    for (i = 0; i < cinfo->output_width; i++)
+	    for (i = 0; i < (int)cinfo->output_width; i++)
 		ci[i] = buf[0][i];
 	}
 	else if (im->type == FL_IMAGE_GRAY)

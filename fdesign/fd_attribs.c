@@ -213,7 +213,7 @@ attrib_init(FD_generic_attrib * ui)
     fl_addto_choice(ui->styleobj, "Normal|Shadow|Engraved|Embossed");
 
     /* size */
-    for (i = 0; i < NFSIZE; i++)
+    for (i = 0; i < (int)NFSIZE; i++)
     {
 	if (fsizes[i].size == FL_NORMAL_SIZE)
 	{
@@ -399,7 +399,7 @@ show_attributes(const FL_OBJECT * obj)
     fl_set_choice(fd_generic_attrib->fontobj, lstyle + 1);
     fl_set_choice(fd_generic_attrib->styleobj, spstyle + 1);
 
-    for (oksize = i = 0; !oksize && i < NFSIZE; i++)
+    for (oksize = i = 0; !oksize && i < (int)NFSIZE; i++)
 	if ((oksize = obj->lsize == fsizes[i].size))
 	    fl_set_choice(fd_generic_attrib->sizeobj, i + 1);
 
