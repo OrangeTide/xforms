@@ -15,11 +15,11 @@
 2003-11-27  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* demos/demotest_fd.[ch]:
-	* demos/demotest_fd.fd: removed. The routines were not invoked by demotest
-	(witness that it still links fine).
+	* demos/demotest_fd.fd: removed. The routines were not invoked by
+	demotest (witness that it still links fine).
 
-	* demos/pmbrowse.c: split out the fdesign generated code. Ensuing changes
-	to use the fdesign generated code unchanged.
+	* demos/pmbrowse.c: split out the fdesign generated code.
+	Ensuing changes to use the fdesign generated code unchanged.
 
 	* demos/pmbrowse.fd: moved...
 	* demos/fd/pmbrowse_gui.[ch]:
@@ -40,7 +40,7 @@
 
 2003-11-25  Clive A Stubbings <xforms2@vjet.demon.co.uk>
 
-	* image/image_gif.c (flush_buffer): new static function, containig ]
+	* image/image_gif.c (flush_buffer): new static function, containing
 	code factored out of process_lzw_code.
 	(process_lzw_code): invoke flush_buffer where old code was in
 	process_lzw_code itself. In addition, also invoke flush_buffer
