@@ -1,5 +1,17 @@
 2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* demos/demotest.c:
+	* demos/folder.c:
+	* demos/free1.c:
+	* demos/group.c:
+	* demos/popup.c:
+	* demos/wwwl.c:
+	* demos/xyplotall.c:
+	* demos/fd/scrollbar_gui.fd: squash all remaining warnings when
+	compiling the demos directory '-W -Wall -Wno-unused-parameter'.
+
+2003-11-28  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* Makefile.am:
 	* configure.ac: compile fd2ps after fdesign. Will allow me to get rid
 	of the files generated from the .fd files.

@@ -196,7 +196,7 @@ argument: 0
 
 --------------------
 class: FL_SCROLLBAR
-type: HOR_BASIC_SCROLLBAR
+type: HOR_PLAIN_SCROLLBAR
 box: 30 155 230 18
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -204,7 +204,7 @@ alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_TINY_SIZE
 lcol: FL_BLACK
-label: HOR_BASIC_SCROLLBAR
+label: HOR_PLAIN_SCROLLBAR
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
@@ -216,7 +216,7 @@ argument: 0
 
 --------------------
 class: FL_SCROLLBAR
-type: VERT_BASIC_SCROLLBAR
+type: VERT_PLAIN_SCROLLBAR
 box: 410 10 17 185
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1

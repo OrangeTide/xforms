@@ -76,7 +76,7 @@ void init_gui(FD_objsform *fd)
     float x[6] = { 0, 1, 2, 3, 4, 5};
     float y[6] = { 5.5, 4, 4.5, 3.8, 4, 5};
     char *label[] = {"Mon","Tue","Wed", "Thur","Fri","Sat"};
-    int i;
+    size_t i;
 
     fl_addto_menu(fd->menu,"One\tF1|Two\tF2|Three\tF3|Four\tF4");
     fl_addto_choice(fd->choice,"Option1|Option2|Option3");

@@ -95,7 +95,7 @@ static int post(FL_OBJECT *ob, int ev,
 int
 main(int argc, char *argv[])
 {
-     int i, j;
+     size_t i, j;
 
      fl_initialize(&argc, argv, "FormDemo", 0, 0);
      create_form_xyplot();

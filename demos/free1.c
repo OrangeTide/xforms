@@ -50,7 +50,7 @@ int handle_it(FL_OBJECT *obj, int event, FL_Coord mx, FL_Coord my,
     case FL_STEP:
  	if (on)
 	{
-	  if (obj->u_ldata == cole)
+	  if ((FL_COLOR)obj->u_ldata == cole)
 	      dcol = -1;
 	  if (obj->u_ldata == FL_FREE_COL1)
 	      dcol = 1;
@@ -69,7 +69,8 @@ main(int argc, char *argv[])
 {
   FL_FORM *form;
   FL_OBJECT *obj;
-  int i, j, depth, col;
+  FL_COLOR i;
+  int j, depth, col;
 
   fl_initialize(&argc, argv, "FormDemo", 0, 0);
 

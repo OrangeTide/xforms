@@ -125,7 +125,7 @@ static void make_folder(FL_OBJECT *folder)
 #endif
    float y[6] = { 5.5, 4, 4.5, 3.8, 4, 5};
    char *label[] = {"Mon","Tue","Wed", "Thur","Fri","Sat"};
-   int i;
+   size_t i;
 #if 0
    int xx, yy, ww, hh;
 #endif

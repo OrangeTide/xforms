@@ -242,8 +242,7 @@ static WWW www_sites[] =
     },
 
     /* sentinel */
-
-    {0}
+    {0, {{0, 0}}}
 };
 
 

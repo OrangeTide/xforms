@@ -87,19 +87,19 @@ void menu_callback(FL_OBJECT *ob, long data)
 /** menu initialization entries. No callbacks for the item */
 FL_PUP_ENTRY menu_entries[] =
 {
-     {"Menu Item1"},
-     {"Menu Item2"},
-     {"_Menu Item3"},
-     {"/_Menu Item 4"},
-        {"Menu Item 5"},
-        {"Menu Item 6"},
-        {"Menu Item 7"},
-        {"Menu Item 8"},
-     {0},
-     {"Menu Item10"},
-     {"menu Item11"},
-     {"menu Item12"},
-     {0}
+     {"Menu Item1", 0, 0, 0, {0, 0}},
+     {"Menu Item2", 0, 0, 0, {0, 0}},
+     {"_Menu Item3", 0, 0, 0, {0, 0}},
+     {"/_Menu Item 4", 0, 0, 0, {0, 0}},
+        {"Menu Item 5", 0, 0, 0, {0, 0}},
+        {"Menu Item 6", 0, 0, 0, {0, 0}},
+        {"Menu Item 7", 0, 0, 0, {0, 0}},
+        {"Menu Item 8", 0, 0, 0, {0, 0}},
+     {0, 0, 0, 0, {0, 0}},
+     {"Menu Item10", 0, 0, 0, {0, 0}},
+     {"menu Item11", 0, 0, 0, {0, 0}},
+     {"menu Item12", 0, 0, 0, {0, 0}},
+     {0, 0, 0, 0, {0, 0}}
 };
 
 static void menuitem_entercb(int n, void *data)
@@ -145,18 +145,18 @@ static int pupitem_cb(int selected)
 
 FL_PUP_ENTRY pup_entries[] =
 {
-     {"Popup Item1", pupitem_cb, "1", FL_PUP_RADIO},
-     {"Popup Item2", pupitem_cb, "2", FL_PUP_RADIO},
-     {"Popup Item3", pupitem_cb, "3", FL_PUP_RADIO},
-     {"/Popup Item 4", pupitem_cb},
-        {"Popup Item 5", pupitem_cb},
-        {"Popup Item 6", pupitem_cb},
-        {"Popup Item 7", pupitem_cb},
-        {"Popup Item 8", pupitem_cb},
-     {0},
-     {"Popup Item10", pupitem_cb, 0, FL_PUP_GRAY},
-     {"Popup Item11", pupitem_cb},
-     {0}
+     {"Popup Item1", pupitem_cb, "1", FL_PUP_RADIO, {0, 0}},
+     {"Popup Item2", pupitem_cb, "2", FL_PUP_RADIO, {0, 0}},
+     {"Popup Item3", pupitem_cb, "3", FL_PUP_RADIO, {0, 0}},
+     {"/Popup Item 4", pupitem_cb, 0, 0, {0, 0}},
+        {"Popup Item 5", pupitem_cb, 0, 0, {0, 0}},
+        {"Popup Item 6", pupitem_cb, 0, 0, {0, 0}},
+        {"Popup Item 7", pupitem_cb, 0, 0, {0, 0}},
+        {"Popup Item 8", pupitem_cb, 0, 0, {0, 0}},
+     {0, 0, 0, 0, {0, 0}},
+     {"Popup Item10", pupitem_cb, 0, FL_PUP_GRAY, {0, 0}},
+     {"Popup Item11", pupitem_cb, 0, 0, {0, 0}},
+     {0, 0, 0, 0, {0, 0}}
 };
 
 static void pup_entercb(int n, void *data)
