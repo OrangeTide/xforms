@@ -1,3 +1,9 @@
+2004-04-20  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* lib/xpopup.c (fl_freepup): do not free unallocated entries
+	(fl_setpup_maxpup): do not forget to reset parent and window in
+	newly created menu_rec entries
+
 2004-04-19  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* demos/Makefile.am (glwin_LDADD, gl_LDADD): fix ordering of

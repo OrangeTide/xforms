@@ -38,7 +38,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xpup = "$Id: xpopup.c,v 1.10 2003/11/21 13:23:23 leeming Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.11 2004/04/21 15:00:04 lasgouttes Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1158,9 +1158,8 @@ fl_freepup(int n)
 	return;
     }
 
-    for (i = 0; i < FL_MAXPUPI; i++)
+    for (i = 0; i < p->nitems; i++)
     {
-
 	if (p->item[i])
 	{
 	    if (p->item[i]->subm >= 0 && p->isEntry)
@@ -1601,16 +1600,7 @@ fl_showpup(int n)
 	xswa.event_mask = m->event_mask;
 	xswa.save_under = True;
 	xswa.backing_store = WhenMapped;	/* fl_cntl.backingStore; */
-	xswa.cursor = m->cursor;	/* fl_get_cursor_byname(XC_sb_right_arrow));
-
-
-
-
-
-
-
-
-					 */
+	xswa.cursor = m->cursor;	/* fl_get_cursor_byname(XC_sb_right_arrow)); */
 	wmask = CWEventMask | CWSaveUnder | CWCursor | CWBackingStore;
 
 	xswa.border_pixel = 0;
@@ -1798,6 +1788,8 @@ fl_setpup_maxpup(int n)
     {
 	menu_rec[i].title = 0;
 	menu_rec[i].item[0] = 0;
+	menu_rec[i].parent = 0;
+	menu_rec[i].win = 0;
     }
 
     return fl_maxpup = n;
