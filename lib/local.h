@@ -69,11 +69,6 @@ extern int gettimeofday(struct timeval *tv, struct timezone *tz);
 
 /********* End of Configurable stuff ***********/
 
-/* some header has XK_XP_Left etc */
-#if (XlibSpecificationRelease>=6)
-#define HAVE_KP_DEFINE 1
-#endif
-
 #ifndef FL_PATH_MAX
 #ifdef PATH_MAX
 #define FL_PATH_MAX   PATH_MAX

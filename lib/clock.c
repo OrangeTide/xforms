@@ -134,7 +134,7 @@ draw_clock(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     FL_POINT xp[5];
     float f1, f2, f3;
 
-#if (FL_DEBUG >= M_DEBUG)
+#if (FL_DEBUG >= ML_DEBUG)
     M_info("DrawClock", "entering");
 #endif
 
@@ -175,7 +175,7 @@ draw_clock(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     show_hands(x + 2 + 0.02f * w, y + 2 + 0.02f * h, w, h, FL_RIGHT_BCOL, FL_RIGHT_BCOL);
     show_hands(x, y, w, h, col2, FL_LEFT_BCOL);
 
-#if (FL_DEBUG >= M_DEBUG)
+#if (FL_DEBUG >= ML_DEBUG)
     M_info("DrawClock", "done");
 #endif
 }

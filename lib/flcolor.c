@@ -43,7 +43,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_col = "$Id: flcolor.c,v 1.7 2003/11/20 10:46:16 leeming Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.8 2003/11/21 10:54:03 lasgouttes Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1023,7 +1023,7 @@ fl_mapcolor(FL_COLOR col, int r, int g, int b)
 	M_warn("MapColor", "Something is wrong - will proceed");
 
 
-#if (FL_DEBUG >= M_DEBUG)
+#if (FL_DEBUG >= ML_DEBUG)
     M_warn("MapColor", "(%d %d %d)<->(%d %d %d)",
 	   r, g, b, cur_map[j].red, cur_map[j].green, cur_map[j].blue);
 #endif
@@ -1148,7 +1148,7 @@ fl_get_visual_depth(void)
     return fl_state[fl_vmode].depth;
 }
 
-#if (FL_DEBUG >= FL_WARN)	/* { */
+#if (FL_DEBUG >= ML_WARN)	/* { */
 /* print out the current state info. For debugging only */
 void
 fl_dump_state_info(int mode, const char *where)

@@ -38,7 +38,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_xpup = "$Id: xpopup.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.9 2003/11/21 10:54:03 lasgouttes Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -530,7 +530,7 @@ fl_addtopup(int n, const char *str,...)
 
     if (n >= 0 && n < fl_maxpup)
     {
-#if (FL_DEBUG >= M_DEBUG)
+#if (FL_DEBUG >= ML_DEBUG)
 	{
 	    char *q = fl_strdup(str), *p;
 	    while ((p = strchr(q, '%')))

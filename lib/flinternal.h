@@ -479,7 +479,8 @@ extern int fl_handle_event_callbacks(XEvent *);
 #define XK_PageUp    XK_Prior
 #define XK_PageDn    XK_Next
 
-#ifdef HAVE_KP_DEFINE
+/* some header has XK_XP_Left etc */
+#if XlibSpecificationRelease >= 6
 #define IsHome(k)      (k==XK_Home || k==XK_Begin || k==XK_KP_Home)
 #define IsLeft(k)      (k==XK_Left || k==XK_KP_Left)
 #define IsRight(k)     (k==XK_Right|| k==XK_KP_Right)

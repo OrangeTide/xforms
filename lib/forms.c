@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fm = "$Id: forms.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.9 2003/11/21 10:54:03 lasgouttes Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1310,7 +1310,7 @@ fl_keyboard(FL_FORM * form, int key, FL_Coord x, FL_Coord y, void *xev)
     else if (special->wantkey == FL_KEY_ALL)
 	fl_handle_object(special, FL_KEYBOARD, x, y, key, xev);
 
-#if FL_DEBUG >= ML_INFO
+#if FL_DEBUG >= ML_INFO1
     M_info("KeyBoard", "(%d %d)pushing %d to %s\n", x, y, key, special->label);
 #endif
 }
