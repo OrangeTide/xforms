@@ -840,7 +840,17 @@ compute_top_position(FL_OBJECT * ob)
 	sp->title[i]->h = max_h;
 
     /* this will be the canvas location */
-    sp->canvas->y = sp->y + max_h - (ob->bw < 0);
+    if (ob->objclass == FL_TABFOLDER)
+    {
+        if (ob->type != FL_BOTTOM_TABFOLDER)
+            sp->canvas->y = sp->y + max_h - (ob->bw < 0);
+    }
+    else
+    {
+        if(sp->parent->type != FL_BOTTOM_TABFOLDER)
+            sp->canvas->y = sp->y + max_h - (ob->bw < 0);
+    }
+
     sp->canvas->h = ob->h - max_h - FL_abs(ob->bw) - 1;
     sp->max_h = max_h;
     fl_set_object_color(sp->canvas, ob->col1, ob->col2);

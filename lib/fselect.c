@@ -36,7 +36,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_fs = "$Id: fselect.c,v 1.8 2003/09/09 00:28:25 leeming Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.9 2003/11/13 21:56:02 leeming Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -610,7 +610,7 @@ void
 fl_set_fselector_border(int b)
 {
     fselector_init();
-    fs->border = (b == FL_NOBORDER ? FL_TRANSIENT : b);
+    fs->border = b;
 }
 
 void

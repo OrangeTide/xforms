@@ -1,3 +1,14 @@
+2003-10-03  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	Patch from Matthew Yaconis by way of
+	David Dembrow <ddembrow@nlxcorp.com>.
+
+	* lib/fselect.c: remove the arbitrary restriction on the display of
+	borderless forms.
+
+	* lib/tabfolder.c: display the tab forms correctly when using
+	bottom tab folders.
+
 2003-11-13  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* config/common.am: do not set LIBS to an empty value
