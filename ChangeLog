@@ -1,3 +1,8 @@
+2004-05-17  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* lib/include/canvas.h: change the change to AUTOINCLUDE_GLCANVAS_H.
+	* gl/glcanvas.h: #include <GL/glx.h>. Add C++ guards.
+
 2004-05-14  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/include/canvas.h: add a preprocessor-qualified #include

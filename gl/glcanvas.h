@@ -1,6 +1,13 @@
 #ifndef FL_GLCANVAS_H
 #define FL_GLCANVAS_H
 
+#if defined(__cplusplus)
+extern "C"
+{
+#endif
+
+#include <GL/glx.h>
+
 /* OpenGL canvases */
 FL_EXPORT FL_OBJECT *fl_create_glcanvas(
 		int type,
@@ -71,5 +78,9 @@ FL_EXPORT Window fl_glwinopen(
 		int w,
 		int h
 		);
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif /* NOT FL_GLCANVAS_H */

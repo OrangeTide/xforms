@@ -175,10 +175,10 @@ FL_EXPORT void fl_canvas_yield_to_shortcut(
 
 /* This is an attempt to maintain some sort of backwards compatibility
  * with old code whilst also getting rid of the old, system-specific
- * hack. Angus 14 May, 2004. 
+ * hack.
  */
-#ifdef GLCANVAS_H_LOCATION
-#include GLCANVAS_H_LOCATION
+#ifdef AUTOINCLUDE_GLCANVAS_H
+#include <glcanvas.h>
 #endif
 
 #endif
