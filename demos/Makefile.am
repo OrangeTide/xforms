@@ -10,7 +10,7 @@ SUBDIRS = fd
 SUFFIXES = .fd .c
 
 # forms.h is a generated file
-INCLUDES = -I../lib -I../lib/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/image
+INCLUDES = -I../lib -I../lib/include -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/image $(X_CFLAGS)
 
 if BUILD_GL
 GL = gl glwin

@@ -12,7 +12,7 @@ fd2ps.1:
 	cp -p $(srcdir)/fd2ps.man fd2ps.1
 
 # forms.h is a generated file
-INCLUDES = -I../lib -I$(top_srcdir)/lib
+INCLUDES = -I../lib -I$(top_srcdir)/lib $(X_CFLAGS)
 
 bin_PROGRAMS = fd2ps
 

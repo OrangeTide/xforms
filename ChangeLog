@@ -1,3 +1,10 @@
+2004-05-12  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* gl/Makefile.am (INCLUDES): 
+	* demos/Makefile.am (INCLUDES): 
+	* fd2ps/Makefile.am (INCLUDES): 
+	* fdesign/Makefile.am (INCLUDES): add X_CFLAGS
+
 2004-05-07  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/private/pvaluator.h (repeat_ms, timeout_id, mouse_pos):
