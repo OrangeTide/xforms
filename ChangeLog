@@ -1,3 +1,12 @@
+2003-11-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* demos/Makefile.am: enable the conditional building of the demo
+	GL codes.
+
+	* demos/gl.c:
+	* demos/glwin.c: #include gl/glcanvas.h and so prevent warnings
+	about implicit function declarations.
+
 2003-11-20  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* lib/local.h: do not define HAVE_KP_DEFINE

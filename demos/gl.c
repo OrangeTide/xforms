@@ -39,6 +39,8 @@
 #include "GL/gl.h"
 #include "GL/glx.h"
 #include "include/forms.h"
+#include "gl/glcanvas.h"
+
 #include <stdlib.h>
 
 typedef struct {

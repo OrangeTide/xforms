@@ -9,7 +9,13 @@ EXTRA_DIST = 01Readme iconvert.1 demo.menu test.ps \
 SUBDIRS = fd
 
 # forms.h is a generated file
-INCLUDES = -I../lib -I$(top_srcdir)/lib -I$(top_srcdir)/image
+INCLUDES = -I../lib -I$(top_srcdir) -I$(top_srcdir)/lib -I$(top_srcdir)/image
+
+if BUILD_GL
+GL = gl glwin
+else
+GL =
+endif
 
 noinst_PROGRAMS = arrowbutton \
 	borderwidth \
@@ -46,7 +52,7 @@ noinst_PROGRAMS = arrowbutton \
 	free1 \
 	freedraw \
 	freedraw_leak \
-	goodies \
+	$(GL) goodies \
 	group \
 	ibrowser \
 	iconify \
@@ -135,6 +141,15 @@ formbrowser_SOURCES = formbrowser.c
 free1_SOURCES = free1.c
 freedraw_SOURCES = freedraw.c
 freedraw_leak_SOURCES = freedraw_leak.c
+
+gl_SOURCES = gl.c
+gl_LDADD  = ../lib/libforms.la ../gl/libformsGL.la \
+	$(X_LIBS) $(X_PRE_LIBS) -lGL -lX11 $(LIBS) $(X_EXTRA_LIBS)
+
+glwin_SOURCES = glwin.c
+glwin_LDADD  = ../lib/libforms.la ../gl/libformsGL.la \
+	$(X_LIBS) $(X_PRE_LIBS) -lGL -lX11 $(LIBS) $(X_EXTRA_LIBS)
+
 goodies_SOURCES = goodies.c
 group_SOURCES = group.c
 
