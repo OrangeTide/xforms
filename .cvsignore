@@ -1,6 +1,5 @@
 Makefile
 Makefile.in
-config.*
 configure
 libtool
 autom4te*

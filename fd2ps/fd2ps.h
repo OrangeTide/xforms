@@ -193,8 +193,6 @@ extern void emit_epsf_import_command(void);
 extern FL_OBJECT *flps_make_object(int, int, int, int, int, int,
 				   const char *, void *);
 
-#include "sys.h"
-
 #define PS_SPECIAL(c) ( c=='('||c==')'||c=='[' ||c==']' || c==' '|| \
                         c=='<'||c=='>'||c=='%' ||c=='#' ||c=='/')
 

@@ -1,7 +1,7 @@
 libforms*
 Makefile
 Makefile.in
-unshared
+config.*
 .deps
 .libs
 *.lo

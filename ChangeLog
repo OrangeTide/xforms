@@ -1,13 +1,84 @@
 2003-04-24  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	Migrate from imake to autoconf/automake.
+
+	* Imakefile:
+	* Imakefile.os2:
+	* demos/Imakefile:
+	* demos/Imakefile.os2:
+	* fd2ps/Imakefile:
+	* fd2ps/Imakefile.os2:
+	* fdesign/Imakefile:
+	* fdesign/Imakefile.os2:
+	* fdesign/Imakefile.xxx:
+	* gl/Imakefile:
+	* image/Imakefile:
+	* lib/Imakefile:
+	* lib/Imakefile.os2:
+	* lib/OS2/Imakefile.os2:
+	* lib/include/Imakefile: removed.
+
+	* autogen.sh:
+	* configure.ac:
+	* config/.cvsignore:
+	* config/common.am:
+	* config/config.guess:
+	* config/config.sub:
+	* config/cygwin.m4:
+	* config/depcomp:
+	* config/libtool.m4:
+	* config/ltmain.sh:
+	* config/xformsinclude.m4: Here be magic ;-)
+
+	* Makefile.am:
+	* config/Makefile.am:
+	* demos/Makefile.am:
+	* demos/fd/Makefile.am:
+	* fd2ps/Makefile.am:
+	* fd2ps/test/Makefile.am:
+	* fdesign/Makefile.am:
+	* fdesign/fd/Makefile.am:
+	* fdesign/fd4test/Makefile.am:
+	* fdesign/notes/Makefile.am:
+	* fdesign/spec/Makefile.am:
+	* fdesign/xpm/Makefile.am:
+	* gl/Makefile.am:
+	* image/Makefile.am:
+	* lib/Makefile.am:
+	* lib/OS2/Makefile.am:
+	* lib/bitmaps/Makefile.am:
+	* lib/fd/Makefile.am:
+	* lib/include/Makefile.am:
+	* lib/private/Makefile.am: added.
+
+	* xforms.spec.in: the RPM spec file.
+
+	* lib/local.h: make use of the HAVE_STRCASECMP preprocessor variable.
+
+	* lib/pixmap.c: use XPM_H_LOCATION instead of pre-processor stuff.
+
+	* demos/demotest.c: define the callback.
+
+	* fd2ps/sys.c: use preprocessor variable HAVE_STRCASECMP rather than
+	NO_STRCASECMP.
+
+	* fd2ps/sys.h: now redundant, so remove it.
+
+	* fd2ps/fd2ps.h:
+	* fd2ps/sys.c: remove #include "sys.h"
+
+	* gl/canvas.h:
+	* gl/glcanvas.h: make use of HAVE_GL_GLX_H preprocessor variable.
+
+2003-04-24  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/tabfolder.c (handle): ensure that we have an active folder
 	before trying to manipulate its contents.
 
 2003-04-24  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/include/Imakefile: do not copy the generated forms.h to ../.
-	* lib/Imakefile: remove the targets to install forms.h. This 
-	temporarily breaks the install.
+	* lib/Imakefile: remove the targets to install forms.h.
 
 	* pretty well all .c files: change #include "forms.h" to 
 	#include "include/forms.h".

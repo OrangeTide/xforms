@@ -63,8 +63,6 @@ whoami(void)
 }
 
 
-#include "sys.h"
-
 char *
 fl_strdup(const char *s)
 {
@@ -72,7 +70,7 @@ fl_strdup(const char *s)
     return p ? strcpy(p, s) : p;
 }
 
-#ifdef NO_STRCASECMP
+#ifndef HAVE_STRCASECMP
 int
 strcasecmp(register const char *s1, register const char *s2)
 {

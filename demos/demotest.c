@@ -36,6 +36,10 @@
 #include <stdlib.h>
 
 /* callback routines */
+void menu_callback(FL_OBJECT *ob, long data)
+{
+}
+
 void hide_show_cb(FL_OBJECT *ob, long data)
 {
    FD_mainform *fdui = ob->form->fdui;

@@ -1,0 +1,44 @@
+include $(top_srcdir)/config/common.am
+
+EXTRA_DIST = browser_spec.c \
+	browser_spec.fd \
+	browser_spec.h \
+	button_spec.c \
+	button_spec.fd \
+	button_spec.h \
+	choice_spec.c \
+	choice_spec.fd \
+	choice_spec.h \
+	counter_spec.c \
+	counter_spec.fd \
+	counter_spec.h \
+	dial_spec.c \
+	dial_spec.fd \
+	dial_spec.h \
+	freeobj_spec.c \
+	freeobj_spec.fd \
+	freeobj_spec.h \
+	free_spec.c \
+	free_spec.fd \
+	free_spec.h \
+	menu_spec.c \
+	menu_spec.fd \
+	menu_spec.h \
+	pixmap_spec.c \
+	pixmap_spec.fd \
+	pixmap_spec.h \
+	positioner_spec.c \
+	positioner_spec.fd \
+	positioner_spec.h \
+	scrollbar_spec.c \
+	scrollbar_spec.fd \
+	scrollbar_spec.h \
+	slider_spec.c \
+	slider_spec.fd \
+	slider_spec.h \
+	twheel_spec.c \
+	twheel_spec.fd \
+	twheel_spec.h \
+	xyplot_spec.c \
+	xyplot_spec.fd \
+	xyplot_spec.h

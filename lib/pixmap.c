@@ -39,17 +39,8 @@
 #endif
 #include "include/forms.h"
 #include "flinternal.h"
+#include XPM_H_LOCATION
 
-/*
- * If you've parked xpm.h somewhere other than the standard place,
- * you may need to fiddle with this.
- */
-
-#if !defined( NONSTANDARD_XPM )
-#include <X11/xpm.h>
-#else
-#include <xpm.h>
-#endif
 
 #if (FL_DEBUG >= ML_ERR)
 #define CHECK(ob,f)  if (!IsValidClass(ob, FL_PIXMAP) &&             \

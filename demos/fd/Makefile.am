@@ -1,0 +1,36 @@
+include $(top_srcdir)/config/common.am
+
+EXTRA_DIST = \
+	buttons_gui.c \
+	buttons_gui.fd \
+	buttons_gui.h \
+	butttypes_gui.c \
+	butttypes_gui.fd \
+	butttypes_gui.h \
+	dim_porsche.xpm \
+	fbtest_gui.c \
+	fbtest_gui.fd \
+	fbtest_gui.h \
+	folder_gui.c \
+	folder_gui.fd \
+	folder_gui.h \
+	formbrowser_gui.c \
+	formbrowser_gui.fd \
+	formbrowser_gui.h \
+	ibrowser_gui.c \
+	ibrowser_gui.fd \
+	ibrowser_gui.h \
+	inputall_gui.c \
+	inputall_gui.fd \
+	inputall_gui.h \
+	is_gui.c \
+	is_gui.fd \
+	is_gui.h \
+	is_gui_main.c \
+	porsche.xpm \
+	scrollbar_gui.c \
+	scrollbar_gui.fd \
+	scrollbar_gui.h \
+	twheel_gui.c \
+	twheel_gui.fd \
+	twheel_gui.h

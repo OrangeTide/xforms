@@ -1,7 +1,6 @@
 libflimage*
 Makefile
 Makefile.in
-unshared
 .deps
 .libs
 *.lo

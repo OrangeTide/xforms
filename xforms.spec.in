@@ -1,0 +1,68 @@
+Summary: XForms library
+Name: @PACKAGE@
+Version: @VERSION@
+Release: 1rh8x
+Source0: http://savannah.nongnu.org/download/xforms/stable.pkg/1.0/%{name}-%{version}.tar.gz
+License: LGPL
+Group: System/Libraries
+BuildRequires: xpm
+BuildRequires: xpm-devel
+BuildRoot: %{_tmppath}/%{name}-buildroot
+Prefix: %{_prefix}
+URL: http://www.nongnu.org/xforms/
+
+%description
+XForms is a GUI toolkit based on Xlib for X Window Systems. It
+features a rich set of objects, such as buttons, sliders, and menus
+etc. integrated into an easy and efficient object/event callback
+execution model that allows fast and easy construction of
+X-applications. In addition, the library is extensible and new objects
+can easily be created and added to the library.
+
+%package -n %{name}-devel
+Summary: XForms development header files
+Group: System/Libraries
+Provides: %{name}
+
+%description -n %{name}-devel
+XForms header files for development. 
+
+%prep
+%setup -q -n %{name}-%{version}
+
+%build
+./configure --prefix=%{_prefix} --mandir=%{_mandir} --bindir=%{_bindir} \
+	--without-warnings --disable-debug --enable-optimization=-O2
+make
+
+%install
+rm -rf ${RPM_BUILD_ROOT}
+install -d -m 755 ${RPM_BUILD_ROOT}
+make DESTDIR=${RPM_BUILD_ROOT} install
+gzip -f9 ${RPM_BUILD_ROOT}%{_mandir}/man?/*
+allfiles=`find ${RPM_BUILD_ROOT}/usr -type f -print | sed "s@^${RPM_BUILD_ROOT}@@g"`
+echo "$allfiles" | grep -v "^/usr/include/" > ${RPM_BUILD_ROOT}/binfiles
+echo "$allfiles" | grep "^/usr/include/" > ${RPM_BUILD_ROOT}/devfiles
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files -n %{name} -f %{_tmppath}/%{name}-buildroot/binfiles
+%defattr(-,root,root)
+%doc COPYING Copyright Changes ChangeLog
+
+%files -n %{name}-devel -f %{_tmppath}/%{name}-buildroot/devfiles
+%defattr(-,root,root)
+
+%changelog
+* Sat Aug 31 2002 Duncan Haldane <duncan_haldane@users.sourceforge.net> 1.0-RC4
+- mv fdesign, fd2ps to devel.  restore xforms name of rpm.
+
+* Sun Jul 14 2002 Greg Hosler <hosler@lugs.org.sg> 1.0-RC4
+- Pass DESTDIR to makeinstall_std.
+
+* Thu Jul 11 2002 Peter Galbraith <balbraith@dfo-mpo.gc.ca> 1.0-RC4
+- Move from libxforms to libforms to match other distros.
+
+* Tue Jul 8 2002 Chris Freeze <cfreeze@alumni.clemson.edu> 1.0-RC4
+- First stab at spec file.

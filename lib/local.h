@@ -40,7 +40,7 @@
 #include <unistd.h>
 #endif
 
-#if defined(_WIN32)
+#ifndef HAVE_STRCASECMP
 extern int strcasecmp(const char *, const char *);
 #endif
 

@@ -1,0 +1,47 @@
+include $(top_srcdir)/config/common.am
+
+EXTRA_DIST = allbutton.fd \
+	bm1.xbm \
+	bottom.xbm \
+	box.xpm \
+	br.xpm \
+	butt.xpm \
+	chart.xpm \
+	check.xpm \
+	choice.fd \
+	choice.xpm \
+	clock.xpm \
+	cnt.xpm \
+	crab_focus.xpm \
+	crab.xpm \
+	dial.xpm \
+	fd_logo.xpm \
+	frame.xpm \
+	glcan.xpm \
+	hcenter.xbm \
+	left.xbm \
+	lightb.xpm \
+	menu.xpm \
+	misc.fd \
+	nomail.xbm \
+	picture1.xbm \
+	picture.xbm \
+	porsche.xpm \
+	pos.xpm \
+	r3dbut.xpm \
+	right.xbm \
+	roundb.xpm \
+	scb.xpm \
+	sld.xpm \
+	static.fd \
+	tab.xpm \
+	text.xpm \
+	timer.xpm \
+	top.xbm \
+	twheel.xpm \
+	val.fd \
+	vals.xpm \
+	vcenter.xbm \
+	xconq1.xpm \
+	xconq.xpm \
+	xyplot.xpm
