@@ -34,7 +34,8 @@
  */
 #include "forms.h"
 #include "flinternal.h"
-#include "fd/cmdbr.h"		/* from directory fd */
+#include "fd/cmdbr.h"
+#include "private/flsnprintf.h"
 
 #ifndef FL_WIN32
 #include <unistd.h>

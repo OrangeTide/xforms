@@ -35,11 +35,12 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.5 2003/04/17 09:04:57 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.6 2003/04/17 13:12:46 leeming Exp $";
 #endif
 
 #include "forms.h"
 #include "flinternal.h"
+#include "private/flsnprintf.h"
 #include <X11/Xresource.h>
 #include <ctype.h>
 #include <sys/types.h>

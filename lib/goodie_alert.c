@@ -32,6 +32,7 @@
 
 #include "forms.h"
 #include "flinternal.h"
+#include "private/flsnprintf.h"
 
 /****************** Alert dialog ********************{**/
 typedef struct

@@ -37,6 +37,7 @@
 #include <ctype.h>
 #include "forms.h"
 #include "fd_main.h"
+#include "private/flsnprintf.h"
 
 /****************** FORMS AND CALL-BACKS ************************/
 

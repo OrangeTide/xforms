@@ -31,7 +31,6 @@ HDRSRC		= AAA.h \
 		  thumbwheel.h \
 		  timer.h \
 		  xyplot.h \
-		  flsnprintf.h \
 		  zzz.h
 
 #	Professional driver.  Closed course.  Do not attempt.

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_postscript.c,v 1.3 2003/04/17 11:48:17 leeming Exp $
+ * $Id: image_postscript.c,v 1.4 2003/04/17 13:12:47 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -40,6 +40,7 @@
 #include "flinternal.h"
 #include "flimage.h"
 #include "flimage_int.h"
+#include "private/flsnprintf.h"
 #ifndef FLPS_H
 #include "flps.h"
 #endif

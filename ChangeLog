@@ -1,3 +1,29 @@
+2003-04-17  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	Make fl_snprintf private.
+
+	* lib/include/flsnprintf.h: moved to lib/private/flsnprintf.h.
+	* lib/include/Imakefile: remove flsnprintf.h.
+
+	* lib/forms.h:
+	* lib/include/forms.h: regenerated.
+
+	* fdesign/fd_attribs.c:
+	* image/image.c:
+	* image/image_io_filter.c:
+	* image/image_postscript.c:
+	* lib/choice.c:
+	* lib/cmd_br.c:
+	* lib/events.c:
+	* lib/flresource.c:
+	* lib/fselect.c:
+	* lib/goodie_alert.c:
+	* lib/goodie_choice.c:
+	* lib/goodie_msg.c:
+	* lib/goodie_salert.c:
+	* lib/version.c:
+	* lib/xpopup.c: add #include "private/flsnprintf.h".
+
 2003-04-17  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* lib/Imakefile (EXTRA_INCLUDES): add $(XPMINC)

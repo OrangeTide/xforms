@@ -19,8 +19,6 @@
  *
  */
 
-/********************** crop here for forms.h **********************/
-
 /**
  * \file flsnprintf.h
  *

@@ -33,6 +33,7 @@
 
 #include "forms.h"
 #include "flinternal.h"
+#include "private/flsnprintf.h"
 
 /*************** Three line messages *******************{*****/
 

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.2 2003/04/17 09:04:57 leeming Exp $
+ * $Id: image.c,v 1.3 2003/04/17 13:12:47 leeming Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -35,6 +35,7 @@
 #include "forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
+#include "private/flsnprintf.h"
 #include <stdlib.h>
 
 static int visual_cue(FL_IMAGE *, const char *);
