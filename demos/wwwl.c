@@ -33,6 +33,7 @@
 #endif
 
 #include "forms.h"
+#include "private/flsnprintf.h"
 #include <stdlib.h>
 
 /* Header file generated with fdesign. */

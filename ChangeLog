@@ -1,5 +1,9 @@
 2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* demos/wwwl.c: #include "private/flsnprintf.h".
+
+2003-04-20  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/private/flsnprintf.h: use #defines to prevent needless
 	fl_snprintf bloat.
 	* lib/flsnprintf.c: prepend portable_v?snprintf with "fl_" to prevent
