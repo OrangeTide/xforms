@@ -1,1 +1,5 @@
-Makefile
+Makefile*
+config.*
+configure
+configure.ac
+libtool

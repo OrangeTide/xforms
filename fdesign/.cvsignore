@@ -1,2 +1,4 @@
-Makefile
 fdesign
+Makefile*
+.deps
+.libs

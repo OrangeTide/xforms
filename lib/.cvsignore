@@ -1,3 +1,6 @@
-Makefile
-libforms.so.1.0
+libforms*
+Makefile*
 unshared
+.deps
+.libs
+*.lo

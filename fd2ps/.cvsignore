@@ -1,2 +1,4 @@
-Makefile
 fd2ps
+Makefile*
+.deps
+.libs

@@ -1,3 +1,14 @@
+2003-04-15  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* .cvsignore:
+	* demos/.cvsignore:
+	* fd2ps/.cvsignore:
+	* fdesign/.cvsignore:
+	* gl/.cvsignore:
+	* image/.cvsignore:
+	* libs/.cvsignore:
+	* libs/include/.cvsignore: prepare the way for autoconf/automake.
+
 2003-04-10  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/include/Basic.h: add FL_RESIZED to the FL_EVENTS enum.
