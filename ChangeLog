@@ -1,3 +1,9 @@
+2003-09-09  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* Makefile.am: only build demos/ directory if required
+
+	* configure.ac: add --enable-demos option
+
 2003-09-09  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/forms.c (fl_keyboard): pass it the event to allow it to

@@ -25,6 +25,15 @@ for file in config/install-sh config/mkinstalldirs ; do
   chmod 755 ${srcdir}/${file}
 done
 
+AC_ARG_ENABLE(demos,
+    [AC_HELP_STRING([--enable-demos], [Build demo programs (default is NO)])],
+    [case "${enableval}" in
+	yes) demos=true ;;
+	no)  demos=false ;;
+	*) AC_MSG_ERROR(bad value ${enableval} for --enable-demos) ;;
+     esac],[demos=false])
+AM_CONDITIONAL(BUILD_DEMOS, test x$demos = xtrue)
+
 ### Check for programs
 XFORMS_PROG_CC
 AC_PROG_CPP

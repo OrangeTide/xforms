@@ -8,13 +8,16 @@ MAINTAINERCLEANFILES += \
 	$(srcdir)/acinclude.m4 \
 	$(srcdir)/config.h.in
 
-SUBDIRS = config lib image gl fd2ps fdesign
+if BUILD_DEMOS
+DEMOS = demos
+else
+DEMOS = 
+endif
 
-# Putting 'demos' in EXTRA_DIST rather than SUBDIRS prevents its contents
-# from being built from the top level directory.
-# (cd demos && make) works fine.
+SUBDIRS = config lib image gl fd2ps fdesign $(DEMOS)
+
 EXTRA_DIST = ChangeLog COPYING.LIB Copyright README README.OS2 \
-	autogen.sh xforms.spec.in xforms.spec demos
+	autogen.sh xforms.spec.in xforms.spec
 
 # Hack so that the targets that use tar will also work with automake 1.4
 AMTAR ?= $(TAR)
