@@ -35,7 +35,7 @@
  *
  */
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_rsc = "$Id: flresource.c,v 1.10 2003/11/20 11:24:15 leeming Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.11 2004/04/06 14:08:09 lasgouttes Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -603,8 +603,10 @@ fl_get_resource(const char *rname,	/* resource name */
 	    *(float *) val = (float)atof(entry.addr);
 	    break;
 	case FL_STRING:
-	    strncpy(val, entry.addr, size);
-	    ((char *) val)[size - 1] = '\0';
+	    if (val != entry.addr) {
+	        strncpy(val, entry.addr, size);
+		((char *) val)[size - 1] = '\0';
+	    }
 	    break;
 	default:
 	    M_err("GetResource", "Unknown type %d", dtype);
