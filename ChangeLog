@@ -1,3 +1,9 @@
+2004-05-06  Angus Leeming  <angus.leeming@btopenworld.com>
+
+	* xforms.spec.in: modify so that devfiles and binfiles are not
+	placed in ${RPM_BUILD_ROOT}. Prevents rpm from bombing out with a
+	"Checking for unpackaged files" error.
+
 2004-05-05  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* lib/xtext.c (fl_drw_string): enable the drawing of characters

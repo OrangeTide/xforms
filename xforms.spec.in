@@ -41,20 +41,28 @@ install -d -m 755 ${RPM_BUILD_ROOT}
 make DESTDIR=${RPM_BUILD_ROOT} install
 gzip -f9 ${RPM_BUILD_ROOT}%{_mandir}/man?/*
 allfiles=`find ${RPM_BUILD_ROOT}/usr -type f -print | sed "s@^${RPM_BUILD_ROOT}@@g"`
-echo "$allfiles" | grep -v "^/usr/include/" > ${RPM_BUILD_ROOT}/binfiles
-echo "$allfiles" | grep "^/usr/include/" > ${RPM_BUILD_ROOT}/devfiles
+echo "$allfiles" | grep -v "^/usr/include/" > \
+	%{_tmppath}/%{name}-%{version}-binfiles
+echo "$allfiles" | grep "^/usr/include/" > \
+	%{_tmppath}/%{name}-%{version}-devfiles
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+rm -f %{_tmppath}/%{name}-%{version}-binfiles
+rm -f %{_tmppath}/%{name}-%{version}-devfiles
 
-%files -n %{name} -f %{_tmppath}/%{name}-buildroot/binfiles
+%files -n %{name} -f %{_tmppath}/%{name}-%{version}-binfiles
 %defattr(-,root,root)
 %doc COPYING.LIB Copyright ChangeLog INSTALL NEWS README
 
-%files -n %{name}-devel -f %{_tmppath}/%{name}-buildroot/devfiles
+%files -n %{name}-devel -f %{_tmppath}/%{name}-%{version}-devfiles
 %defattr(-,root,root)
 
 %changelog
+* Thu May 6 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
+- no longer place devfiles and binfiles in ${RPM_BUILD_ROOT}.
+  Prevents rpm from bombing with a "Checking for unpackaged files" error.
+
 * Sat Aug 31 2002 Duncan Haldane <duncan_haldane@users.sourceforge.net> 1.0-RC4
 - mv fdesign, fd2ps to devel.  restore xforms name of rpm.
 
