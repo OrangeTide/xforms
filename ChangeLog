@@ -37,3 +37,5 @@
 	* lib/include/AAA.h: up-ed FL_FIXLEVEL to 1 to reflect the changes
 	made above.
 	* lib/forms.h: regenerated to reflect changed FL_FIXLEVEL.
+
+	* version.c (version): update to reflect this also.

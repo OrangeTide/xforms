@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: version.c,v 1.1 2003/04/06 15:52:40 leeming Exp $
+ * $Id: version.c,v 1.2 2003/04/09 10:36:03 leeming Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.2 2003/04/09 10:36:03 leeming Exp $";
 #endif
 
 #include <stdio.h>
@@ -42,7 +42,7 @@ char *fl_id_ver = "$Id: version.c,v 1.1 2003/04/06 15:52:40 leeming Exp $";
 static const char *version[] =
 {
     "FORMS Library",
-    "$State: Exp $  $Revision: 1.1 $ of $Date: 2003/04/06 15:52:40 $"
+    "$State: Exp $  $Revision: 1.2 $ of $Date: 2003/04/09 10:36:03 $"
     "(Compiled "__DATE__")",
 #ifdef FL_WIN32
     "Copyright (c) 1996-2002 by T.C. Zhao, Gang Li and Mark Overmars",
