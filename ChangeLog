@@ -1,5 +1,10 @@
 2003-04-24  Angus Leeming  <angus.leeming@btopenworld.com>
 
+	* lib/tabfolder.c (handle): ensure that we have an active folder
+	before trying to manipulate its contents.
+
+2003-04-24  Angus Leeming  <angus.leeming@btopenworld.com>
+
 	* lib/include/Imakefile: do not copy the generated forms.h to ../.
 	* lib/Imakefile: remove the targets to install forms.h. This 
 	temporarily breaks the install.

@@ -93,9 +93,11 @@ handle(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
     }
     case FL_MOVEORIGIN: {
 	FL_FORM * const folder = fl_get_active_folder(ob);
-	fl_get_winorigin(folder->window, &(folder->x), &(folder->y));
-	/* Don't forget nested folders */
-	fl_handle_form(folder, FL_MOVEORIGIN, 0, ev);
+	if (folder) {
+		fl_get_winorigin(folder->window, &(folder->x), &(folder->y));
+		/* Don't forget nested folders */
+		fl_handle_form(folder, FL_MOVEORIGIN, 0, ev);
+	}
 	break;
     }
 
