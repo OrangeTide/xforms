@@ -27,7 +27,7 @@
 #include "twheel_gui.h"
 
 static FL_PUP_ENTRY fdchoice_returnsetting_0[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "End & Changed",	0,	"",	 FL_PUP_NONE},
     { "Whenever Changed",	0,	"",	 FL_PUP_NONE},

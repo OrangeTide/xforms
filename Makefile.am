@@ -11,13 +11,13 @@ MAINTAINERCLEANFILES += \
 if BUILD_DEMOS
 DEMOS = demos
 else
-DEMOS = 
+DEMOS =
 endif
 
 if BUILD_GL
 GL = gl
 else
-GL = 
+GL =
 endif
 
 SUBDIRS = config lib image $(GL) fd2ps fdesign $(DEMOS)

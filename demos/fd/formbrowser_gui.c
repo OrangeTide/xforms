@@ -174,7 +174,7 @@ FD_valuatorform *create_form_valuatorform(void)
 /*---------------------------------------*/
 
 static FL_PUP_ENTRY fdmenu_pulldown_0[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "Menu item 1",	0,	"1#1",	 FL_PUP_NONE},
     { "Menu item 2",	0,	"2#2",	 FL_PUP_NONE},
@@ -184,7 +184,7 @@ static FL_PUP_ENTRY fdmenu_pulldown_0[] =
 };
 
 static FL_PUP_ENTRY fdchoice_choice_1[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "Choice item 1",	0,	"1#1",	 FL_PUP_NONE},
     { "Choice item 2",	0,	"",	 FL_PUP_NONE},
@@ -193,7 +193,7 @@ static FL_PUP_ENTRY fdchoice_choice_1[] =
 };
 
 static FL_PUP_ENTRY fdmenu_pushmenu_2[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "1",	0,	"",	 FL_PUP_NONE},
     { "2",	0,	"",	 FL_PUP_NONE},

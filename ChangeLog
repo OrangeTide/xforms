@@ -20,7 +20,7 @@
 
 	* config/xformsinclude.m4 (XFORMS_PATH_XPM): honor X_CFLAGS to
 	find xpm.h (should fix problem reported by Reed Riddle)
-	
+
 	* README: update. In particular, the acknowledgement of copyright
 	has been removed since the code is not here anymore (and the
 	advertising clause is not needed anymore). Try to point to the new

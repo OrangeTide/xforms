@@ -27,7 +27,7 @@
 #include "is_gui.h"
 
 static FL_PUP_ENTRY fdmenu_File_0[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "New",	0,	"#N",	 FL_PUP_NONE},
     { "Open",	0,	"#O",	 FL_PUP_NONE},
@@ -122,7 +122,7 @@ FD_viewform *create_form_viewform(void)
 /*---------------------------------------*/
 
 static FL_PUP_ENTRY fdchoice_subpixel_1[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "subpixel",	0,	"",	 FL_PUP_NONE},
     { "no subpixel",	0,	"",	 FL_PUP_NONE},
@@ -130,7 +130,7 @@ static FL_PUP_ENTRY fdchoice_subpixel_1[] =
 };
 
 static FL_PUP_ENTRY fdchoice_aspect_2[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "aspect",	0,	"",	 FL_PUP_NONE},
     { "exact",	0,	"",	 FL_PUP_NONE},
@@ -138,7 +138,7 @@ static FL_PUP_ENTRY fdchoice_aspect_2[] =
 };
 
 static FL_PUP_ENTRY fdchoice_align_3[] =
-{ 
+{
     /*  itemtext   callback  shortcut   mode */
     { "center",	0,	"",	 FL_PUP_NONE},
     { "topleft",	0,	"",	 FL_PUP_NONE},

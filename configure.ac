@@ -83,7 +83,7 @@ AC_CHECK_LIB(c, fopen)
 AC_CHECK_HEADERS([sys/select.h])
 
 # Check whether we want to build the gl code
-AC_ARG_ENABLE(gl, 
+AC_ARG_ENABLE(gl,
   [AC_HELP_STRING([--disable-gl], [Do not build GL support library])])
 if test x$enable_gl != xno ; then
   AC_CHECK_HEADER([GL/glx.h],, [enable_gl=no])

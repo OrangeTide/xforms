@@ -19,20 +19,20 @@ In editing mode:
 
 In testing mode:
    Object testing etc. only changes obj->spec, it never touches the
-   superspec. 
+   superspec.
 
 In saving the spec info:
    We always save the spec info using superSPEC.
 
 In Loading the spec info:
    spec info is first loaded into a superspec, which
-   is then transfered into obj->spec. 
+   is then transfered into obj->spec.
 
 For object like buttons where some of the information is not
 on the SPEC structure, we'll have to create the members
 on SuperSPEC as well as a seperate structure that
 "hangs off" of SuperSPEC. When modifying attributes,
 we modify this seperate structure as if it is part of the button.
-We copy this info SuperSPEC only if AcceptSpec. 
+We copy this info SuperSPEC only if AcceptSpec.
 
 When save/emit, always do it from SuperSPEC
