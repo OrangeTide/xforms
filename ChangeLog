@@ -1,3 +1,11 @@
+2003-09-10  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* Makefile.am: only build the gl/ directory if required
+
+	* configure.ac: simplify handling of --enable-demos. Add support
+	for --disable-gl option; gl support is only compiled in if
+	GL/glx.h is found
+
 2003-09-09  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* config/xformsinclude.m4 (XFORMS_CHECK_LIB_JPEG): no need to link

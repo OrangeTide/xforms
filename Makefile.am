@@ -14,7 +14,13 @@ else
 DEMOS = 
 endif
 
-SUBDIRS = config lib image gl fd2ps fdesign $(DEMOS)
+if BUILD_GL
+GL = gl
+else
+GL = 
+endif
+
+SUBDIRS = config lib image $(GL) fd2ps fdesign $(DEMOS)
 
 EXTRA_DIST = ChangeLog COPYING.LIB Copyright README README.OS2 \
 	autogen.sh xforms.spec.in xforms.spec

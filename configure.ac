@@ -25,14 +25,8 @@ for file in config/install-sh config/mkinstalldirs ; do
   chmod 755 ${srcdir}/${file}
 done
 
-AC_ARG_ENABLE(demos,
-    [AC_HELP_STRING([--enable-demos], [Build demo programs (default is NO)])],
-    [case "${enableval}" in
-	yes) demos=true ;;
-	no)  demos=false ;;
-	*) AC_MSG_ERROR(bad value ${enableval} for --enable-demos) ;;
-     esac],[demos=false])
-AM_CONDITIONAL(BUILD_DEMOS, test x$demos = xtrue)
+AC_ARG_ENABLE(demos, [AC_HELP_STRING([--enable-demos], [Build demo programs])])
+AM_CONDITIONAL(BUILD_DEMOS, test x$enable_demos = xyes)
 
 ### Check for programs
 XFORMS_PROG_CC
@@ -86,8 +80,16 @@ AC_CHECK_LIB(m, sin)
 AC_CHECK_LIB(c, fopen)
 
 # Checks for header files.
-dnl we should do something clever when GL is not installed
-AC_CHECK_HEADERS([sys/select.h GL/glx.h])
+AC_CHECK_HEADERS([sys/select.h])
+
+# Check whether we want to build the gl code
+AC_ARG_ENABLE(gl, 
+  [AC_HELP_STRING([--disable-gl], [Do not build GL support library])])
+if test x$enable_gl != xno ; then
+  AC_CHECK_HEADER([GL/glx.h],, [enable_gl=no])
+fi
+AM_CONDITIONAL(BUILD_GL, [test x$enable_gl != xno])
+
 
 dnl we have some code in lib/listdir.c that could use that...
 dnl AC_HEADER_DIRENT
