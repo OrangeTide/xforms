@@ -1,3 +1,12 @@
+2004-04-19  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
+
+	* demos/Makefile.am (glwin_LDADD, gl_LDADD): fix ordering of
+	libraries
+	(LDFLAGS): rename from AM_LDFLAGS (automake 1.5 did not like that)
+
+	* config/xformsinclude.m4 (XFORMS_PROG_CC): fix description of
+	--enable-debug
+
 2004-04-05  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* Dummy commit to check all is well with my account.

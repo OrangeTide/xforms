@@ -175,7 +175,7 @@ AC_ARG_ENABLE(debug,
 
 ### set up optimization
 AC_ARG_ENABLE(optimization,
-  [  --enable-optimization[=value]   enable compiler optimisation],,
+  [  --enable-optimization[=value]   enable compiler optimisation default=-O],,
 	enable_optimization=yes;)
 case $enable_optimization in
   yes) xforms_opt=-O;;

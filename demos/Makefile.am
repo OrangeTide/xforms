@@ -105,7 +105,7 @@ noinst_PROGRAMS = arrowbutton \
 
 # Most of these demos link against libforms only. For them this default is
 # sufficient:
-AM_LDFLAGS = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(XPM_LIB) -lX11 $(LIBS) $(X_EXTRA_LIBS)
+LDFLAGS = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(XPM_LIB) -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 arrowbutton_SOURCES = arrowbutton.c
 borderwidth_SOURCES = borderwidth.c
@@ -167,11 +167,11 @@ freedraw_SOURCES = freedraw.c
 freedraw_leak_SOURCES = freedraw_leak.c
 
 gl_SOURCES = gl.c
-gl_LDADD  = ../lib/libforms.la ../gl/libformsGL.la \
+gl_LDADD  = ../gl/libformsGL.la ../lib/libforms.la \
 	$(X_LIBS) $(X_PRE_LIBS) -lGL -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 glwin_SOURCES = glwin.c
-glwin_LDADD  = ../lib/libforms.la ../gl/libformsGL.la \
+glwin_LDADD  = ../gl/libformsGL.la ../lib/libforms.la \
 	$(X_LIBS) $(X_PRE_LIBS) -lGL -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 goodies_SOURCES = goodies.c
