@@ -1,3 +1,8 @@
+2004-06-01  Duncan Simpson  <dps@simpson.demon.co.uk>
+
+	* fdesign/fd_printC.c (build_fname): re-write using fl_snprintf
+	as a simpler and safer replacement for strncat and strncpy.
+
 2004-05-27  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* fdesign/fd_printC.c (build_fname): if no output_dir is specified,

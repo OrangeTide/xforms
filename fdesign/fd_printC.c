@@ -36,6 +36,7 @@
 #include <config.h>
 #endif
 #include "include/forms.h"
+#include "private/flsnprintf.h"
 #include "flinternal.h"
 #include "fd_main.h"
 
@@ -73,40 +74,46 @@ filename_only(char const * filename)
     return filename;
 }
 
-static void
+static int
 build_fname(char * fname, size_t fname_capacity,
 	    char const * filename, char const * ext)
 {
     char const * const only_filename = filename_only(filename);
-    size_t fname_size;
+    char const null = '\0';
+    char const * dname = &null;
+    char const * slash = &null;
+    int npc;
 
-    fname[fname_capacity] = '\0';
+    if (fdopt.output_dir) {	
+	size_t const l = strlen(fdopt.output_dir);
+	if (fdopt.output_dir[l-1] != '/')
+	    slash = "/";
+	dname = fdopt.output_dir;
+    }
 
-    if (fdopt.output_dir) {
-	strncpy(fname, fdopt.output_dir, fname_capacity);
-	fname_size = strlen(fname);
+    npc = fl_snprintf(fname, fname_capacity, "%s%s%s%s",
+		      dname, slash, only_filename, ext);
 
-	if (fname_size != fname_capacity && fname[fname_size - 1] != '/') {
-	    strcat(fname, "/");
-	    fname_size += 1;
-	}
-	strncat(fname, only_filename, fname_capacity-fname_size);
-    } else
-	strncpy(fname, only_filename, fname_capacity);
-
-    fname_size = strlen(fname);
-    strncat(fname, ext, fname_capacity-fname_size);
+    /* npc==-1 is glibc <= 2.0.6 and npc >= fname_capacity is C99 */
+    return  (npc == -1 || (ptrdiff_t)npc >= (ptrdiff_t)fname_capacity) ? 0 : 1;
 }
+
 
 /* filename is without extensions */
 int
 C_output(const char *filename, FRM * forms, int fnumb)
 {
-    char fname[PATH_MAX+1], *tmp;
+    static size_t const fname_capacity = PATH_MAX + 1;
+    char fname[fname_capacity];
+    char *tmp;
     int i, j;
     FILE *fn;
 
-    build_fname(fname, PATH_MAX, filename, ".h");
+    if (!build_fname(fname, fname_capacity, filename, ".h")) {
+	fl_show_alert("Cannot create C-code header file!!",
+		      "Filename is too long.", "", 1);
+	return 0;
+    }
 
     make_backup(fname);
     if (!(fn = fopen(fname, "w")))
@@ -142,7 +149,11 @@ C_output(const char *filename, FRM * forms, int fnumb)
     fclose(fn);
 
     /* Make the .c file. */
-    build_fname(fname, PATH_MAX, filename, ".c");
+    if (!build_fname(fname, fname_capacity, filename, ".c")) {
+	fl_show_alert("Cannot create C-code file!!",
+		      "Filename is too long.", "", 1);
+	return 0;
+    }
 
     make_backup(fname);
     if (!(fn = fopen(fname, "w")))
