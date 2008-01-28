@@ -35,6 +35,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "private/flsnprintf.h"
 #include <stdlib.h>
@@ -54,7 +55,9 @@ typedef struct {
 extern FD_www * create_form_www(void);
 
 /* Application program begins */
+
 #define MAX_SITES 30
+
 typedef struct
 {
     char *cat;
@@ -62,6 +65,7 @@ typedef struct
 } WWW;
 
 /* real program should have these on disks */
+
 static WWW www_sites[] =
 {
     {
@@ -148,9 +152,8 @@ static WWW www_sites[] =
 	}
     },
 
-
-
     /* useful FAQS */
+
     {
 	"All FAQs",
 	{
@@ -162,11 +165,11 @@ static WWW www_sites[] =
 		NULL,
 		NULL
 	    }
-
 	}
     },
 
     /* Sports related www sites */
+
     {
 	"Sports",
 	{
@@ -194,6 +197,7 @@ static WWW www_sites[] =
     },
 
     /* money */
+
     {
 	"Financial",
 	{
@@ -223,6 +227,7 @@ static WWW www_sites[] =
     },
 
     /* things that do not belong to any of the above */
+
     {
 	"Misc",
 	{
@@ -249,176 +254,239 @@ static WWW www_sites[] =
 FD_www *ui;
 static int show_sites;
 
-/* initialize and show how many categories we have got */
+/***************************************
+ * initialize and show how many categories we have got
+ ***************************************/
+
+
 void
-init_cat(void)
+init_cat( void )
 {
     WWW *www = www_sites;
 
-    for (; www->cat; www++)
-	fl_addto_choice(ui->cat, www->cat);
+    for ( ; www->cat; www++ )
+		fl_addto_choice( ui->cat, www->cat );
 }
 
-/* initialize file menu */
+
+/***************************************
+ * initialize file menu
+ ***************************************/
+
 void
 init_file_menu(void)
 {
-    fl_fit_object_label(ui->file,1,0);
-    fl_addto_menu(ui->file, "Save|Load|Quit");
+    fl_fit_object_label( ui->file, 1, 0 );
+	fl_addto_menu( ui->file, "Save|Load|Quit" );
 }
 
-/* initialize sites given category cat */
+
+/***************************************
+ * initialize sites given category cat
+ ***************************************/
+
 void
-init_sites(int cat)
+init_sites( int cat )
 {
     WWW *www = www_sites + cat - 1;
     int i;
 
-    if (cat <= 0)
-	return;
+    if ( cat <= 0 )
+		return;
 
     /* cat changed. Update sites */
-    fl_freeze_form(ui->www);
-    fl_clear_browser(ui->listbr);
-    for (i = 0; www->sites[i][0]; i++)
-	fl_addto_browser(ui->listbr, www->sites[i][show_sites]);
-    fl_unfreeze_form(ui->www);
+
+    fl_freeze_form( ui->www );
+    fl_clear_browser( ui->listbr );
+
+    for ( i = 0; www->sites[ i ][ 0 ]; i++ )
+		fl_addto_browser( ui->listbr, www->sites[ i ][ show_sites ] );
+    fl_unfreeze_form( ui->www );
 }
 
-/* new catogrey is selected */
+
+/***************************************
+ * new categorey is selected
+ ***************************************/
+
 void
-change_cat(FL_OBJECT * ob, long data)
+change_cat( FL_OBJECT * ob,
+			long        data  FL_UNUSED_ARG )
 {
-    init_sites(fl_get_choice(ob));
+    init_sites( fl_get_choice( ob ) );
 }
 
-/* we can show either the subject a site carries or the site name*/
-void init_shown(void)
+
+/***************************************
+ * we can show either the subject a site carries or the site name
+ ***************************************/
+
+void init_shown( void )
 {
-    fl_addto_choice(ui->shown, "Subject|Sites");
+    fl_addto_choice( ui->shown, "Subject|Sites" );
 }
 
-/* request a change of what is shown, site name or subject */
+
+/***************************************
+ * request a change of what is shown, site name or subject
+ ***************************************/
+
 void
-change_shown(FL_OBJECT * ob, long data)
+change_shown( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
     int oldshow = show_sites;
-    if ((show_sites = fl_get_choice(ob) == 2) != oldshow)
-	init_sites(fl_get_choice(ui->cat));
+
+    if ( ( show_sites = fl_get_choice( ob ) == 2 ) != oldshow )
+		init_sites(fl_get_choice( ui->cat ) );
 }
 
-/* file menu is selected. Currently we do nothing except exit */
+
+/***************************************
+ * file menu is selected. Currently we do nothing except exit
+ ***************************************/
+
 void
-do_file_menu(FL_OBJECT * ob, long data)
+do_file_menu( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
-      if(fl_get_menu(ob)== 3)
+      if ( fl_get_menu( ob )== 3 )
       {
-        fl_end_all_command();
-        exit(1);
+		  fl_end_all_command( );
+		  exit( 1 );
       }
       else
-        fl_show_alert("Sorry","Not implemented yet","", 0);
+		  fl_show_alert( "Sorry","Not implemented yet","", 0 );
 }
 
-/* give category, cat, and the line no. within the browser, get sitename*/
+
+/***************************************
+ * give category, cat, and the line no. within the browser, get sitename
+ ***************************************/
+
 char *
-get_site(int cat, int thesite)
+get_site( int cat,
+		  int thesite )
 {
-    return www_sites[cat - 1].sites[thesite - 1][1];
+    return www_sites[ cat - 1 ].sites[ thesite - 1 ][ 1 ];
 }
 
-/* either double-clicked or connect button is pressed */
+
+/***************************************
+ * either double-clicked or connect button is pressed
+ ***************************************/
+
 void
-connect_cb(FL_OBJECT * ob, long data)
+connect_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			long        data  FL_UNUSED_ARG )
 {
-    char cmdbuf[1024];
+    char cmdbuf[ 1024 ];
     int i;
 
-    if ((i = fl_get_browser(ui->listbr)) > 0)
+    if ( ( i = fl_get_browser( ui->listbr ) ) > 0 )
     {
-	fl_set_cursor(ui->www->window, XC_watch);
-	XFlush(fl_get_display());
-	fl_snprintf(cmdbuf,
-		 sizeof( cmdbuf),
-		 "%s %s",
-		 WWW_BROWSER,
-		 get_site(fl_get_choice(ui->cat), i));
-	if(fl_exe_command(cmdbuf,0) < 0)
-	  fprintf(stderr,"Error running %s\n",cmdbuf);
-	fl_reset_cursor(ui->www->window);
+		fl_set_cursor( ui->www->window, XC_watch );
+		XFlush( fl_get_display( ) );
+		fl_snprintf( cmdbuf, sizeof cmdbuf, "%s %s", WWW_BROWSER,
+					 get_site( fl_get_choice( ui->cat ), i ) );
+		if( fl_exe_command( cmdbuf, 0 ) < 0 )
+			fprintf( stderr,"Error running %s\n", cmdbuf );
+		fl_reset_cursor( ui->www->window );
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-change_sites(FL_OBJECT * ob, long data)
+change_sites( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
-   /* no-op */
+	/* no-op */
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char * argv[ ] )
 {
 
-    fl_initialize(&argc, argv, "FormDemo", 0, 0);
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-    ui = create_form_www();
+    ui = create_form_www( );
 
     /* some basic resizing policy */
-    fl_set_form_minsize(ui->www, 320, 330);
-    init_file_menu();
-    init_cat();
-    init_sites(1);
-    init_shown();
-    ui->listbr->u_vdata = (void*)100;
 
-    fl_set_browser_dblclick_callback(ui->listbr, connect_cb, 0);
+    fl_set_form_minsize( ui->www, 320, 330 );
+    init_file_menu( );
+    init_cat( );
+    init_sites( 1 );
+    init_shown( );
+    ui->listbr->u_vdata = ( void * ) 100;
 
-    fl_show_form(ui->www, FL_PLACE_CENTER|FL_FREE_SIZE,
-                          FL_FULLBORDER, "www launcher");
-    fl_do_forms();
-    fl_end_all_command();
-    fl_finish();
+    fl_set_browser_dblclick_callback( ui->listbr, connect_cb, 0 );
+
+    fl_show_form( ui->www, FL_PLACE_CENTER | FL_FREE_SIZE,
+				  FL_FULLBORDER, "www launcher" );
+    fl_do_forms( );
+    fl_end_all_command( );
+    fl_finish( );
     return 0;
 }
 
-FD_www *create_form_www(void)
+
+/***************************************
+ ***************************************/
+
+FD_www *create_form_www( void )
 {
-  FL_OBJECT *obj;
-  FD_www *fdui = (FD_www *) fl_calloc(1, sizeof(*fdui));
-  int old_bw = fl_get_border_width();
+	FL_OBJECT *obj;
+	FD_www *fdui = fl_calloc( 1, sizeof *fdui );
+	int old_bw = fl_get_border_width( );
 
-  fl_set_border_width(-3);
-  fdui->www = fl_bgn_form(FL_NO_BOX, 371, 331);
-  obj = fl_add_box(FL_UP_BOX,0,0,371,331,"");
-  obj = fl_add_frame(FL_UP_FRAME,3,2,365,25,"");
-    fl_set_object_gravity(obj, NorthGravity, NorthGravity);
-  fdui->listbr = obj = fl_add_browser(FL_HOLD_BROWSER,20,90,250,220,"");
-    fl_set_object_lalign(obj,FL_ALIGN_BOTTOM|FL_ALIGN_INSIDE);
-    fl_set_object_gravity(obj, NorthWestGravity, SouthEastGravity);
-    fl_set_object_callback(obj,change_sites,0);
-  fdui->cat = obj = fl_add_choice(FL_NORMAL_CHOICE,20,50,112,25,"");
-    fl_set_object_gravity(obj, NorthGravity, NorthGravity);
-    fl_set_object_callback(obj,change_cat,0);
-  fdui->file = obj = fl_add_menu(FL_PULLDOWN_MENU,15,5,42,20,"File");
-    fl_set_object_shortcut(obj,"Ff#f",1);
-    fl_set_object_boxtype(obj,FL_FLAT_BOX);
-    fl_set_object_lstyle(obj,FL_BOLD_STYLE);
-    fl_set_object_gravity(obj, NorthWestGravity, NorthWestGravity);
-    fl_set_object_callback(obj,do_file_menu,0);
-  obj = fl_add_button(FL_NORMAL_BUTTON,280,280,75,30,"Done");
-    fl_set_button_shortcut(obj,"#Dd]",1);
-    fl_set_object_gravity(obj, SouthEastGravity, SouthEastGravity);
-  obj = fl_add_button(FL_NORMAL_BUTTON,280,90,75,30,"Connect");
-    fl_set_button_shortcut(obj,"C#cc",1);
-    fl_set_object_gravity(obj, NorthEastGravity, NorthEastGravity);
-    fl_set_object_callback(obj,connect_cb,0);
-  fdui->shown = obj = fl_add_choice(FL_NORMAL_CHOICE,156,50,112,25,"");
-    fl_set_object_gravity(obj, NorthGravity, NorthGravity);
-    fl_set_object_callback(obj,change_shown,0);
-  fl_end_form();
-  fl_set_border_width(old_bw);
+	fl_set_border_width( -3 );
+	fdui->www = fl_bgn_form( FL_NO_BOX, 371, 331 );
 
-  return fdui;
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 371, 331, "" );
+	obj = fl_add_frame( FL_UP_FRAME, 3, 2, 365, 25, "" );
+    fl_set_object_gravity( obj, FL_North, FL_North );
+
+	fdui->listbr = obj = fl_add_browser( FL_HOLD_BROWSER, 20, 90,
+										 250, 220, "" );
+    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );
+    fl_set_object_callback( obj, change_sites, 0 );
+
+	fdui->cat = obj = fl_add_choice( FL_NORMAL_CHOICE, 20, 50, 112, 25, "" );
+    fl_set_object_gravity( obj, FL_North, FL_North );
+    fl_set_object_callback( obj, change_cat, 0 );
+
+	fdui->file = obj = fl_add_menu( FL_PULLDOWN_MENU, 15, 5, 42, 20, "File" );
+    fl_set_object_shortcut( obj, "Ff#f",1 );
+    fl_set_object_boxtype( obj, FL_FLAT_BOX );
+    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
+    fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
+    fl_set_object_callback( obj, do_file_menu, 0 );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 280, 280, 75, 30, "Done" );
+    fl_set_button_shortcut( obj, "#Dd]", 1 );
+    fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 280, 90, 75, 30, "Connect" );
+    fl_set_button_shortcut( obj, "C#cc", 1 );
+    fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
+    fl_set_object_callback( obj, connect_cb, 0 );
+
+	fdui->shown = obj = fl_add_choice( FL_NORMAL_CHOICE, 156, 50, 112, 25, "" );
+    fl_set_object_gravity( obj, FL_North, FL_North );
+    fl_set_object_callback( obj,change_shown, 0 );
+
+	fl_end_form( );
+	fl_set_border_width( old_bw );
+
+	return fdui;
 }
-/*---------------------------------------*/
-
