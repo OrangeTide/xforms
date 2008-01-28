@@ -59,7 +59,8 @@ get_scrollbar_spec_fdform(void)
 }
 
 void
-scrollbar_spec_restore(FL_OBJECT * ob, long data)
+scrollbar_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+						long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *edited = scb_attrib->vdata;
 
@@ -182,7 +183,8 @@ save_scrollbar_attrib(FILE * fp, FL_OBJECT * ob)
 
 
 void
-scb_minmax_change(FL_OBJECT * ob, long data)
+scb_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value(scb_attrib->minval, 3);
     double max = get_finput_value(scb_attrib->maxval, 3);
@@ -194,7 +196,8 @@ scb_minmax_change(FL_OBJECT * ob, long data)
 }
 
 void
-scb_delta_change(FL_OBJECT * ob, long data)
+scb_delta_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+				  long        data  FL_UNUSED_ARG )
 {
     double ldelta = get_finput_value(scb_attrib->ldelta, -1);
     double rdelta = get_finput_value(scb_attrib->rdelta, -1);
@@ -206,7 +209,8 @@ scb_delta_change(FL_OBJECT * ob, long data)
 }
 
 void
-scb_slsize_change(FL_OBJECT * ob, long data)
+scb_slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     double slsize = get_finput_value(scb_attrib->slsize, 2);
 
@@ -217,7 +221,8 @@ scb_slsize_change(FL_OBJECT * ob, long data)
 }
 
 void
-scb_step_change(FL_OBJECT * ob, long data)
+scb_step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+				 long        data  FL_UNUSED_ARG )
 {
     double step = get_finput_value(scb_attrib->step, 4);
 
@@ -228,7 +233,8 @@ scb_step_change(FL_OBJECT * ob, long data)
 }
 
 void
-scb_initialvalue_change(FL_OBJECT * ob, long data)
+scb_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						 long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value(scb_attrib->initial_val, 3);
 
@@ -240,7 +246,8 @@ scb_initialvalue_change(FL_OBJECT * ob, long data)
 }
 
 void
-scb_returnsetting_change(FL_OBJECT * ob, long data)
+scb_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						  long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(scb_attrib->returnsetting);
     fl_set_scrollbar_return(scb_attrib->vdata, get_how_return_str_value(s));

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_sgi.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_sgi.c,v 1.4 2008/01/28 23:42:58 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -61,7 +61,7 @@ IRIS_description(FL_IMAGE * im)
 }
 
 static int
-IRIS_load(FL_IMAGE * im)
+IRIS_load( FL_IMAGE * im  FL_UNUSED_ARG )
 {
     fprintf(stderr, "should never been here\n");
     return -1;

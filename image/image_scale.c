@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_scale.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_scale.c,v 1.4 2008/01/28 23:42:54 jtt Exp $
  *.
  *  This file is part of the XForms library package.
  *   Copyright (c) 1993, 1998-2002  T.C. Zhao
@@ -42,8 +42,14 @@
    for reporting purposes
  */
 static int
-image_zoom(void *om[], void *nm[], int h, int w, int nh, int nw, int comp,
-	   FL_IMAGE * im)
+image_zoom( void     * om[ ],
+			void     * nm[ ],
+			int        h,
+			int        w,
+			int        nh,
+			int        nw,
+			int        comp,
+			FL_IMAGE * im  FL_UNUSED_ARG )
 {
     int *lut = fl_malloc(sizeof(*lut) * (nw + 1));
     unsigned short **ngray = nm[0], **ogray = om[0];

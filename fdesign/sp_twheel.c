@@ -60,7 +60,8 @@ get_twheel_spec_fdform(void)
 
 
 void
-twheel_spec_restore(FL_OBJECT * ob, long data)
+twheel_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *edit_obj;
 
@@ -173,7 +174,8 @@ save_twheel_attrib(FILE * fp, FL_OBJECT * ob)
 }
 
 void
-twheel_minmax_change(FL_OBJECT * ob, long data)
+twheel_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+					  long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value(twheel_attrib->minval, 3);
     double max = get_finput_value(twheel_attrib->maxval, 3);
@@ -184,7 +186,8 @@ twheel_minmax_change(FL_OBJECT * ob, long data)
 }
 
 void
-twheel_step_change(FL_OBJECT * ob, long data)
+twheel_step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
     double step = get_finput_value(twheel_attrib->step, 5);
 
@@ -194,7 +197,8 @@ twheel_step_change(FL_OBJECT * ob, long data)
 }
 
 void
-twheel_initialvalue_change(FL_OBJECT * ob, long data)
+twheel_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+							long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value(twheel_attrib->initial_val, 2);
 
@@ -207,7 +211,8 @@ twheel_initialvalue_change(FL_OBJECT * ob, long data)
 }
 
 void
-twheel_returnsetting_change(FL_OBJECT * ob, long data)
+twheel_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+							 long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(twheel_attrib->returnsetting);
     fl_set_thumbwheel_return(twheel_attrib->vdata,
@@ -215,7 +220,8 @@ twheel_returnsetting_change(FL_OBJECT * ob, long data)
 }
 
 void
-twheel_adjust_precision(FL_OBJECT * ob, long data)
+twheel_adjust_precision( FL_OBJECT * ob    FL_UNUSED_ARG,
+						 long        data  FL_UNUSED_ARG )
 {
 }
 

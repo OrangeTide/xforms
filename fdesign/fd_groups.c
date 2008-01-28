@@ -54,7 +54,8 @@ static FL_OBJECT *begobj[MAXGROUP];	/* Begin objects of the groups */
 
 /* Sets the current group in the form */
 void
-group_cb(FL_OBJECT * obj, long arg)
+group_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		  long        arg  FL_UNUSED_ARG )
 {
     int nn = fl_get_browser(fd_control->groupbrowser);
 
@@ -67,7 +68,8 @@ group_cb(FL_OBJECT * obj, long arg)
 
 /* Changes the name of the current group */
 void
-changegroupname_cb(FL_OBJECT * obj, long arg)
+changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+					long        arg  FL_UNUSED_ARG )
 {
     char name[MAX_VAR_LEN], cbname[MAX_VAR_LEN], argname[MAX_VAR_LEN];
     int i, numb = 0;

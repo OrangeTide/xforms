@@ -111,14 +111,16 @@ reshape_form_background(FL_Coord neww, FL_Coord newh)
 /* Callback routine that is called when the user selects another form
    to work on. */
 void
-form_cb(FL_OBJECT * obj, long arg)
+form_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		 long        arg  FL_UNUSED_ARG )
 {
     set_form(fl_get_browser(fd_control->formbrowser) - 1);
 }
 
 /* Callback routine called when the user adds a form. */
 void
-addform_cb(FL_OBJECT * obj, long arg)
+addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			long        arg  FL_UNUSED_ARG )
 {
     float w = 0, h = 0;
     FL_Coord xx, yy;
@@ -170,7 +172,8 @@ addform_cb(FL_OBJECT * obj, long arg)
 
 /* Callback routine called when the user wants to change the name */
 void
-changename_cb(FL_OBJECT * obj, long arg)
+changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
 {
     int fn = get_form_numb(cur_form);
     const char *s;
@@ -189,7 +192,8 @@ changename_cb(FL_OBJECT * obj, long arg)
 
 /* Callback routine called to delete a form */
 void
-deleteform_cb(FL_OBJECT * obj, long arg)
+deleteform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
 {
     int i, fn = get_form_numb(cur_form);
 

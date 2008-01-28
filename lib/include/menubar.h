@@ -1,6 +1,6 @@
 /*
  *
- *  This file is part of the XForms library package.
+ *	This file is part of the XForms library package.
  *
  * XForms is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -9,11 +9,11 @@
  *
  * XForms is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
+ * License along with XForms; see the file COPYING.	 If not, write to
  * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  *
@@ -25,15 +25,21 @@
  * \file menubar.h
  *
  */
+
+/*-------------------------------------------------------*/
+/* ---- THIS FILE SEEMS NOT TO BE NEEDED AT ALL JTT ---- */
+/*-------------------------------------------------------*/
+
+
 #ifndef FL_MENUBAR_H
-#define FL_MENUBAR_H		/* { */
+#define FL_MENUBAR_H
 
 
-/************   Object Class: MenuBar         ************/
+/************	Object Class: MenuBar		  ************/
 
 enum
 {
-    FL_NORMAL_MENUBAR
+	FL_NORMAL_MENUBAR
 };
 
 /***** Defaults *****/
@@ -45,19 +51,40 @@ enum
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT *fl_create_menubar(int, FL_Coord, FL_Coord, FL_Coord, FL_Coord,
-				 const char *);
+FL_EXPORT FL_OBJECT * fl_create_menubar(
+		int			 type,
+		FL_Coord	 x,
+		FL_Coord	 y,
+		FL_Coord	 w,
+		FL_Coord	 h,
+		const char * label
+		);
 
 
-FL_EXPORT FL_OBJECT *fl_add_menubar(int, FL_Coord, FL_Coord, FL_Coord, FL_Coord,
-			      const char *);
+FL_EXPORT FL_OBJECT * fl_add_menubar(
+		int			 type,
+		FL_Coord	 x,
+		FL_Coord	 y,
+		FL_Coord	 w,
+		FL_Coord	 h,
+		const char * label
+		);
 
 
-FL_EXPORT void fl_clear_menubar(FL_OBJECT *);
+FL_EXPORT void fl_clear_menubar(
+		FL_OBJECT * ob
+		);
 
-FL_EXPORT void fl_set_menubar(FL_OBJECT *, const char *);
+FL_EXPORT void fl_set_menubar(
+		FL_OBJECT *	 ob,
+		const char * label
+		);
 
-FL_EXPORT void fl_set_menubar_entries(FL_OBJECT *, const char *, FL_PUP_ENTRY *);
+FL_EXPORT void fl_set_menubar_entries(
+		FL_OBJECT *	   ob,
+		const char *   label,
+		FL_PUP_ENTRY * pup
+		);
 
 
-#endif /* MENUBAR } */
+#endif /* ! defined FL_MENUBAR_H */

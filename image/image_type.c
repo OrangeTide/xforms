@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_type.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_type.c,v 1.5 2008/01/28 23:43:06 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -452,7 +452,7 @@ typedef struct
 Cnvt;
 
 static int
-noop(FL_IMAGE * im)
+noop( FL_IMAGE * im  FL_UNUSED_ARG)
 {
     return 0;
 }

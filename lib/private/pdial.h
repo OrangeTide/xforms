@@ -36,19 +36,19 @@
 
 typedef struct
 {
-    float a, b;			/* for speed                      */
-    float min, max;		/* min/max value of dial          */
-    float val;			/* current value of dial          */
-    float step;			/* step size                      */
-    float thetai;		/* start angle (degrees)          */
-    float thetaf;		/* end angle   (degrees)          */
-    float origin;		/* where the origin is            */
-    short how_return;		/* whether always returning value */
-    short cross_over;
-    short changed;
-    short direction;		/* not currently used            */
-}
-
-FL_DIAL_SPEC;
+    double a,				/* for speed                      */
+	       b;
+    double min,				/* min/max value of dial          */
+	       max;
+    double val;				/* current value of dial          */
+    double step;			/* step size                      */
+    double thetai;			/* start angle (degrees)          */
+    double thetaf;			/* end angle   (degrees)          */
+    double origin;			/* where the origin is            */
+    short  how_return;		/* whether always returning value */
+    short  cross_over;
+    short  changed;
+    short  direction;		/* not currently used            */
+} FL_DIAL_SPEC;
 
 #endif /* pdial_h */

@@ -42,18 +42,18 @@
 static char *version[] =
 {
     "fd2ps",
-    "$State: Exp $ $Revision: 1.4 $ of $Date: 2003/11/21 13:23:22 $",
+    "$State: Exp $ $Revision: 1.5 $ of $Date: 2008/01/28 23:41:53 $",
     "Copyright (c) 1997-2000 by T.C. Zhao",
     0
 };
 
 
 static const char *
-rm_rcs_kw(register const char *s, int strip_time)
+rm_rcs_kw( const char *s, int strip_time)
 {
     static char buf[6][255];
     static int nbuf;
-    register char *q = buf[(nbuf = (nbuf + 1) % 5)];
+    char *q = buf[(nbuf = (nbuf + 1) % 5)];
     int left = 0, lastc = -1;
 
     while (*s && (q - buf[nbuf]) < (int)sizeof(buf[nbuf]) - 2)

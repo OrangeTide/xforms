@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jquant.c,v 1.5 2004/05/18 13:57:30 leeming Exp $
+ * $Id: image_jquant.c,v 1.6 2008/01/28 23:42:33 jtt Exp $
  *
  * Copyright (C) 1998  T.C. Zhao
  *
@@ -171,7 +171,11 @@ cleanup_spec(SPEC *sp)
 }
 
 static SPEC *
-alloc_spec(int w, int h, int *rlut, int *glut, int *blut)
+alloc_spec( int   w,
+			int   h  FL_UNUSED_ARG,
+			int * rlut,
+			int * glut,
+			int * blut )
 {
     int fs_size = (w + 2) * (3 * sizeof(FSERROR)), i;
     SPEC *sp = fl_calloc(1, sizeof(*sp));
@@ -514,12 +518,12 @@ find_best_colors(SPEC *sp, int minc0, int minc1, int minc2,
 {
     int ic0, ic1, ic2;
     int i, icolor;
-    register int *bptr;		/* pointer into bestdist[] array */
+    int *bptr;		/* pointer into bestdist[] array */
     JSAMPLE *cptr;		/* pointer into bestcolor[] array */
     int dist0, dist1;		/* initial distance values */
-    register int dist2;		/* current distance in inner loop */
+    int dist2;		/* current distance in inner loop */
     int xx0, xx1;		/* distance increments */
-    register int xx2;
+    int xx2;
     int inc0, inc1, inc2;	/* initial values for increments */
     /* This array holds the distance to the nearest-so-far color for each
        cell */
@@ -597,8 +601,8 @@ fill_inverse_cmap(SPEC *cquantize, int c0, int c1, int c2)
     hist3d histogram = cquantize->histogram;
     int minc0, minc1, minc2;	/* lower left corner of update box */
     int ic0, ic1, ic2;
-    register JSAMPLE *cptr;	/* pointer into bestcolor[] array */
-    register histptr cachep;	/* pointer into main cache array */
+    JSAMPLE *cptr;	/* pointer into bestcolor[] array */
+    histptr cachep;	/* pointer into main cache array */
     /* This array lists the candidate colormap indexes. */
     JSAMPLE colorlist[MAXNUMCOLORS];
     int numcolors;		/* number of candidate colors */
@@ -654,13 +658,13 @@ pass2_fs_dither(SPEC *sp, unsigned char **red,
 /* This version performs Floyd-Steinberg dithering */
 {
     hist3d histogram = sp->histogram;
-    register LOCFSERROR cur0, cur1, cur2;	/* current error or pixel
+    LOCFSERROR cur0, cur1, cur2;	/* current error or pixel
 						   value */
     LOCFSERROR belowerr0, belowerr1, belowerr2;		/* error for pixel
 							   below cur */
     LOCFSERROR bpreverr0, bpreverr1, bpreverr2;		/* error for
 							   below/prev col */
-    register FSERRPTR errorptr;	/* => fserrors[] at column before current */
+    FSERRPTR errorptr;	/* => fserrors[] at column before current */
     unsigned short *outptr;	/* => current output pixel */
     histptr cachep;
     int dir;			/* +1 or -1 depending on direction */
@@ -751,7 +755,7 @@ pass2_fs_dither(SPEC *sp, unsigned char **red,
 		fill_inverse_cmap(sp, cur0 >> C0_SHIFT, cur1 >> C1_SHIFT, cur2 >> C2_SHIFT);
 	    /* Now emit the colormap index for this cell */
 	    {
-		register int pixcode = *cachep - 1;
+		int pixcode = *cachep - 1;
 		*outptr = (JSAMPLE) pixcode;
 
 		/* Compute representation error for this pixel */
@@ -764,7 +768,7 @@ pass2_fs_dither(SPEC *sp, unsigned char **red,
 	       Add these into the running sums, and simultaneously shift the
 	       * next-line error sums left by 1 column. */
 	    {
-		register LOCFSERROR bnexterr, delta;
+		LOCFSERROR bnexterr, delta;
 
 		bnexterr = cur0;	/* Process component 0 */
 		delta = cur0 * 2;
@@ -949,9 +953,9 @@ find_biggest_color_pop(boxptr boxlist, int numboxes)
 /* Find the splittable box with the largest color population */
 /* Returns NULL if no splittable boxes remain */
 {
-    register boxptr boxp;
-    register int i;
-    register long maxc = 0;
+    boxptr boxp;
+    int i;
+    long maxc = 0;
     boxptr which = NULL;
 
     for (i = 0, boxp = boxlist; i < numboxes; i++, boxp++)
@@ -971,9 +975,9 @@ find_biggest_volume(boxptr boxlist, int numboxes)
 /* Find the splittable box with the largest (scaled) volume */
 /* Returns NULL if no splittable boxes remain */
 {
-    register boxptr boxp;
-    register int i;
-    register int maxv = 0;
+    boxptr boxp;
+    int i;
+    int maxv = 0;
     boxptr which = NULL;
 
     for (i = 0, boxp = boxlist; i < numboxes; i++, boxp++)
@@ -994,7 +998,7 @@ median_cut(SPEC *sp, boxptr boxlist, int numboxes,
 {
     int n, lb;
     int c0, c1, c2, cmax;
-    register boxptr b1, b2;
+    boxptr b1, b2;
 
     while (numboxes < desired_colors)
     {
@@ -1165,8 +1169,8 @@ METHODDEF(void)
 prescan_quantize(SPEC *sp, unsigned char **r, unsigned char **g,
 		 unsigned char **b, int width, int num_rows)
 {
-    register histptr histp;
-    register hist3d histogram = sp->histogram;
+    histptr histp;
+    hist3d histogram = sp->histogram;
     int row, col;
 
     if (sp->im)

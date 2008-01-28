@@ -24,7 +24,7 @@ dnl (
 esac])
 
 dnl Usage XFORMS_CHECK_LIB_JPEG: Checks for jpeg library
-AC_DEFUN(XFORMS_CHECK_LIB_JPEG,[
+AC_DEFUN([XFORMS_CHECK_LIB_JPEG],[
 ### Check for Jpeg library
 AC_CHECK_LIB(jpeg, jpeg_CreateDecompress, JPEG_LIB="-ljpeg",
 	[XFORMS_LIB_ERROR(libjpeg,jpeg)])
@@ -32,7 +32,7 @@ AC_SUBST(JPEG_LIB)
 ])
 
 dnl Usage XFORMS_PATH_XPM: Checks for xpm library and header
-AC_DEFUN(XFORMS_PATH_XPM,[
+AC_DEFUN([XFORMS_PATH_XPM],[
 ### Check for Xpm library
 SAVE_LIBS="$LIBS"
 LIBS="$X_PRE_LIBS $LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
@@ -92,7 +92,7 @@ fi])
 
 dnl Usage: XFORMS_ERROR(message)  Displays the warning "message" and sets the
 dnl flag xforms_error to yes.
-AC_DEFUN(XFORMS_ERROR,[
+AC_DEFUN([XFORMS_ERROR],[
 xforms_error_txt="$xforms_error_txt
 ** $1
 "
@@ -101,7 +101,7 @@ xforms_error=yes])
 
 dnl Usage: XFORMS_WARNING(message)  Displays the warning "message" and sets the
 dnl flag xforms_warning to yes.
-AC_DEFUN(XFORMS_WARNING,[
+AC_DEFUN([XFORMS_WARNING],[
 xforms_warning_txt="$xforms_warning_txt
 == $1
 "
@@ -110,14 +110,14 @@ xforms_warning=yes])
 
 dnl Usage: XFORMS_LIB_ERROR(file,library)  Displays an error message indication
 dnl  that 'file' cannot be found because 'lib' may be uncorrectly installed.
-AC_DEFUN(XFORMS_LIB_ERROR,[
+AC_DEFUN([XFORMS_LIB_ERROR],[
 XFORMS_ERROR([Cannot find $1. Please check that the $2 library
    is correctly installed on your system.])])
 
 
 dnl Usage: XFORMS_CHECK_ERRORS  Displays a warning message if a XFORMS_ERROR
 dnl   has occured previously.
-AC_DEFUN(XFORMS_CHECK_ERRORS,[
+AC_DEFUN([XFORMS_CHECK_ERRORS],[
 if test x$xforms_error = xyes; then
 cat <<EOF
 **** The following problems have been detected by configure.
@@ -144,7 +144,7 @@ EOF
 fi])
 
 
-AC_DEFUN(XFORMS_PROG_CC,
+AC_DEFUN([XFORMS_PROG_CC],
 [
 AC_LANG_COMPILER(C)
 
@@ -194,7 +194,7 @@ if test x$GCC = xyes; then
 	fi
     fi
     if test x$enable_warnings = xyes ; then
-	CFLAGS="$CFLAGS -Wall"
+	CFLAGS="$CFLAGS -W -Wall"
     fi
 fi
 ])
@@ -204,7 +204,7 @@ dnl Usage: XFORMS_WITH_DIR(dir-name,desc,dir-var-name,default-value,
 dnl                       [default-yes-value])
 dnl  Adds a --with-'dir-name' option (described by 'desc') and puts the
 dnl  resulting directory name in 'dir-var-name'.
-AC_DEFUN(XFORMS_WITH_DIR,[
+AC_DEFUN([XFORMS_WITH_DIR],[
   AC_ARG_WITH($1,[  --with-$1        specify $2])
   AC_MSG_CHECKING([for $2])
   if test -z "$with_$3"; then
@@ -219,7 +219,7 @@ AC_DEFUN(XFORMS_WITH_DIR,[
 dnl Usage: XFORMS_LOOP_DIR(value,action)
 dnl Executes action for values of variable `dir' in `values'. `values' can
 dnl use ":" as a separator.
-AC_DEFUN(XFORMS_LOOP_DIR,[
+AC_DEFUN([XFORMS_LOOP_DIR],[
 IFS="${IFS=	}"; ac_save_ifs="$IFS"; IFS="${IFS}:"
 for dir in `eval "echo $1"`; do
   if test ! "$dir" = NONE; then
@@ -233,7 +233,7 @@ IFS=$ac_save_ifs
 
 dnl Usage: XFORMS_ADD_LIB_DIR(var-name,dir) Adds a -L directive to variable
 dnl var-name.
-AC_DEFUN(XFORMS_ADD_LIB_DIR,[
+AC_DEFUN([XFORMS_ADD_LIB_DIR],[
 $1="${$1} -L$2"
 if test "`(uname) 2>/dev/null`" = SunOS &&
     uname -r | grep '^5' >/dev/null; then
@@ -247,7 +247,7 @@ fi])
 
 dnl Usage: XFORMS_ADD_INC_DIR(var-name,dir) Adds a -I directive to variable
 dnl var-name.
-AC_DEFUN(XFORMS_ADD_INC_DIR,[$1="${$1} -I$2 "])
+AC_DEFUN([XFORMS_ADD_INC_DIR],[$1="${$1} -I$2 "])
 
 
 dnl this is used by the macro below to general a proper config.h.in entry
@@ -258,7 +258,7 @@ m4_define([XFORMS_AH_CHECK_DECL],
 dnl Check things are declared in headers to avoid errors or warnings.
 dnl Called like XFORMS_CHECK_DECL(function, header1 header2...)
 dnl Defines HAVE_DECL_{FUNCTION}
-AC_DEFUN(XFORMS_CHECK_DECL,
+AC_DEFUN([XFORMS_CHECK_DECL],
 [XFORMS_AH_CHECK_DECL($1)
 for ac_header in $2
 do

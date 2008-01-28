@@ -62,7 +62,8 @@ get_counter_spec_fdform(void)
 }
 
 void
-counter_spec_restore(FL_OBJECT * ob, long data)
+counter_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					  long        data  FL_UNUSED_ARG )
 {
     superspec_to_spec(cnt_attrib->vdata);
     init_spec(get_superspec(cnt_attrib->vdata));
@@ -180,7 +181,8 @@ save_counter_attrib(FILE * fp, FL_OBJECT * ob)
 
 
 void
-cnt_precision_cb(FL_OBJECT * ob, long data)
+cnt_precision_cb( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
     double p = fl_get_counter_value(ob);
 
@@ -190,7 +192,8 @@ cnt_precision_cb(FL_OBJECT * ob, long data)
 }
 
 void
-cnt_minmax_change(FL_OBJECT * ob, long data)
+cnt_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value(cnt_attrib->minval, 3);
     double max = get_finput_value(cnt_attrib->maxval, 3);
@@ -201,7 +204,8 @@ cnt_minmax_change(FL_OBJECT * ob, long data)
 }
 
 void
-cnt_stepchange_cb(FL_OBJECT * ob, long data)
+cnt_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     float s1 = get_finput_value(cnt_attrib->step1, 3);
     float s2 = get_finput_value(cnt_attrib->step2, 3);
@@ -213,7 +217,8 @@ cnt_stepchange_cb(FL_OBJECT * ob, long data)
 }
 
 void
-cnt_initialvalue_change(FL_OBJECT * ob, long data)
+cnt_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						 long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value(cnt_attrib->initialval, 2);
 
@@ -229,7 +234,8 @@ cnt_initialvalue_change(FL_OBJECT * ob, long data)
 }
 
 void
-cnt_returnsetting_change(FL_OBJECT * ob, long data)
+cnt_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						  long        data  FL_UNUSED_ARG )
 {
 #if 1
     const char *s = fl_get_choice_text(cnt_attrib->returnsetting);

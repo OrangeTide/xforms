@@ -1135,40 +1135,42 @@ flps_draw_choice(FL_OBJECT * ob)
 }
 
 static void
-flps_draw_counter(FL_OBJECT * ob)
+flps_draw_counter( FL_OBJECT * ob )
 {
-    int i, btype[5];
-    float xx[5], ww[5];
-    char str[30];
+    int i, btype[ 5 ];
+    float xx[ 5 ] = { 0.0, 0.0, 0.0, 0.0, 0.0 },
+		  ww[ 5 ] = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+    char str[ 30 ];
     SPEC *sp = ob->spec;
 
     for (i = 0; i < 5; i++)
-	btype[i] = ob->boxtype;
+		btype[i] = ob->boxtype;
 
     if (btype[4] == FL_UP_BOX)
-	btype[4] = FL_DOWN_BOX;
+		btype[4] = FL_DOWN_BOX;
 
     /* Compute sizes */
 
     if (ob->type == FL_NORMAL_COUNTER)
     {
-	/* button is numbered 01 4 23 */
-	ww[0] = ww[1] = ww[2] = ww[3] = FL_min(0.16 * ob->w, ob->h);
-	ww[4] = ob->w - 4 * ww[0];	/* must calculate this way */
-	xx[0] = ob->x;
-	xx[1] = xx[0] + ww[0];
-	xx[4] = xx[1] + ww[1];
-	xx[2] = xx[4] + ww[4];
-	xx[3] = xx[2] + ww[2];
+		/* button is numbered 01 4 23 */
+
+		ww[0] = ww[1] = ww[2] = ww[3] = FL_min(0.16 * ob->w, ob->h);
+		ww[4] = ob->w - 4 * ww[0];	/* must calculate this way */
+		xx[0] = ob->x;
+		xx[1] = xx[0] + ww[0];
+		xx[4] = xx[1] + ww[1];
+		xx[2] = xx[4] + ww[4];
+		xx[3] = xx[2] + ww[2];
     }
     else
     {
-	/* 1  4  2 */
-	ww[1] = ww[2] = FL_min(0.20 * ob->w, ob->h);
-	ww[4] = ob->w - 2 * ww[1];
-	xx[1] = ob->x;
-	xx[4] = ob->x + ww[1];
-	xx[2] = xx[4] + ww[4];
+		/* 1  4  2 */
+		ww[1] = ww[2] = FL_min(0.20 * ob->w, ob->h);
+		ww[4] = ob->w - 2 * ww[1];
+		xx[1] = ob->x;
+		xx[4] = ob->x + ww[1];
+		xx[2] = xx[4] + ww[4];
     }
 
     /* Create value string */
@@ -1176,17 +1178,17 @@ flps_draw_counter(FL_OBJECT * ob)
     sprintf(str, "%.*f", sp->prec, sp->val);
 
     /* Draw the thing */
+
     if (ob->type == FL_NORMAL_COUNTER)
     {
-	ps_draw_box(btype[0], xx[0], ob->y, ww[0], ob->h, ob->col1, ob->bw);
-
-	ps_draw_text(FL_ALIGN_CENTER, xx[0], ob->y, ww[0], ob->h, ob->col2,
-		     0.0, 0, "@<<");
+		ps_draw_box(btype[0], xx[0], ob->y, ww[0], ob->h, ob->col1, ob->bw);
+		ps_draw_text(FL_ALIGN_CENTER, xx[0], ob->y, ww[0], ob->h, ob->col2,
+					 0.0, 0, "@<<");
     }
 
     ps_draw_box(btype[1], xx[1], ob->y, ww[1], ob->h, ob->col1, ob->bw);
     ps_draw_text(FL_ALIGN_CENTER, xx[1], ob->y, ww[1], ob->h, ob->col2,
-		 0.0, 0, "@<");
+				 0.0, 0, "@<");
     ps_draw_box(btype[4], xx[4], ob->y, ww[4], ob->h, ob->col1, ob->bw);
     ps_draw_text(FL_ALIGN_CENTER, xx[4], ob->y, ww[4], ob->h,
 		 ob->lcol, ob->lstyle, ob->lsize, str);
@@ -1906,7 +1908,8 @@ flps_draw_free(FL_OBJECT * ob)
 
 /*************** timer ********************/
 static char *
-default_filter(FL_OBJECT * ob, double totalsec)
+default_filter( FL_OBJECT * ob  FL_UNUSED_ARG,
+				double      totalsec )
 {
     static char buf[32];
     int hr, minutes;

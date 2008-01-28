@@ -72,9 +72,9 @@ fl_strdup(const char *s)
 
 #ifndef HAVE_STRCASECMP
 int
-strcasecmp(register const char *s1, register const char *s2)
+strcasecmp( const char *s1, const char *s2)
 {
-    register int c1, c2;
+    int c1, c2;
 
     while (*s1 && *s2)
     {

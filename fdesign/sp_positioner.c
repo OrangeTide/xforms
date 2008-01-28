@@ -60,7 +60,8 @@ get_pos_spec_fdform(void)
 
 
 void
-pos_spec_restore(FL_OBJECT * ob, long data)
+pos_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+				  long        data  FL_UNUSED_ARG )
 {
     superspec_to_spec(pos_attrib->vdata);
     init_spec(get_superspec(pos_attrib->vdata));
@@ -179,7 +180,8 @@ save_pos_attrib(FILE * fp, FL_OBJECT * ob)
 
 
 void
-pos_xminmax_change(FL_OBJECT * ob, long data)
+pos_xminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value(pos_attrib->xminval, -1);
     double max = get_finput_value(pos_attrib->xmaxval, -1);
@@ -190,7 +192,8 @@ pos_xminmax_change(FL_OBJECT * ob, long data)
 }
 
 void
-pos_yminmax_change(FL_OBJECT * ob, long data)
+pos_yminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value(pos_attrib->yminval, -1);
     double max = get_finput_value(pos_attrib->ymaxval, -1);
@@ -201,7 +204,8 @@ pos_yminmax_change(FL_OBJECT * ob, long data)
 }
 
 void
-pos_xstepchange_cb(FL_OBJECT * ob, long data)
+pos_xstepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
     float s = get_finput_value(pos_attrib->xstep, -1);
     fl_set_positioner_xstep(pos_attrib->vdata, s);
@@ -210,7 +214,8 @@ pos_xstepchange_cb(FL_OBJECT * ob, long data)
 }
 
 void
-pos_ystepchange_cb(FL_OBJECT * ob, long data)
+pos_ystepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
     float s = get_finput_value(pos_attrib->ystep, -1);
     fl_set_positioner_ystep(pos_attrib->vdata, s);
@@ -219,7 +224,8 @@ pos_ystepchange_cb(FL_OBJECT * ob, long data)
 }
 
 void
-pos_initialxvalue_change(FL_OBJECT * ob, long data)
+pos_initialxvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						  long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value(pos_attrib->initialxval, -1);
     fl_set_positioner_xvalue(pos_attrib->vdata, val);
@@ -228,7 +234,8 @@ pos_initialxvalue_change(FL_OBJECT * ob, long data)
 }
 
 void
-pos_initialyvalue_change(FL_OBJECT * ob, long data)
+pos_initialyvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						  long        data  FL_UNUSED_ARG)
 {
     double val = get_finput_value(pos_attrib->initialyval, -1);
     fl_set_positioner_yvalue(pos_attrib->vdata, val);
@@ -237,7 +244,8 @@ pos_initialyvalue_change(FL_OBJECT * ob, long data)
 }
 
 void
-pos_returnsetting_change(FL_OBJECT * ob, long data)
+pos_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						  long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(pos_attrib->returnsetting);
     fl_set_positioner_return(pos_attrib->vdata, get_how_return_str_value(s));

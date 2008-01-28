@@ -174,10 +174,10 @@ static ObjSPEC objspec[] =
 
 /* check if ob has spec info functions */
 static ObjSPEC *
-find_entry(register FL_OBJECT * ob)
+find_entry(FL_OBJECT * ob)
 {
-    register ObjSPEC *attrib = objspec;
-    register int *cls;
+    ObjSPEC *attrib = objspec;
+    int *cls;
 
     for (; ob && attrib->objclass[0] >= 0; attrib++)
     {
@@ -191,7 +191,8 @@ find_entry(register FL_OBJECT * ob)
 
 /* callback function for SEPC folder. Entry point from fd_attrib.c */
 void
-set_objclass_spec_attributes(FL_OBJECT * ob, long data)
+set_objclass_spec_attributes( FL_OBJECT * ob,
+							  long        data  FL_UNUSED_ARG )
 {
     ObjSPEC *spec;
     FD_Any *fd;
@@ -476,7 +477,8 @@ set_finput_value(FL_OBJECT * ob, double f, int prec)
 }
 
 double
-get_finput_value(FL_OBJECT * ob, int prec)
+get_finput_value( FL_OBJECT * ob,
+				  int         prec  FL_UNUSED_ARG )
 {
     double f = 0;
     const char *s = fl_get_input(ob);

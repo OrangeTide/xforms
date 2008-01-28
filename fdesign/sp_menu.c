@@ -69,7 +69,8 @@ get_menu_spec_fdform(void)
 }
 
 void
-menu_spec_restore(FL_OBJECT * ob, long data)
+menu_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *edited = menu_attrib->vdata;
 
@@ -261,7 +262,8 @@ save_menu_attrib(FILE * fp, FL_OBJECT * ob)
 
 /* callbacks and freeobj handles for form choiceattrib */
 void
-add_menu_item_cb(FL_OBJECT * ob, long data)
+add_menu_item_cb( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
     FD_menuattrib *ui = ob->form->fdui;
     const char *s = fl_get_input(ui->input);
@@ -284,7 +286,8 @@ add_menu_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-replace_menu_item_cb(FL_OBJECT * ob, long data)
+replace_menu_item_cb( FL_OBJECT * ob,
+					  long        data  FL_UNUSED_ARG )
 {
     FD_menuattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -309,7 +312,8 @@ replace_menu_item_cb(FL_OBJECT * ob, long data)
 
 
 void
-delete_menu_item_cb(FL_OBJECT * ob, long data)
+delete_menu_item_cb( FL_OBJECT * ob,
+					 long        data  FL_UNUSED_ARG )
 {
     FD_menuattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -324,7 +328,8 @@ delete_menu_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-change_menu_item_cb(FL_OBJECT * ob, long data)
+change_menu_item_cb( FL_OBJECT * ob,
+					 long        data  FL_UNUSED_ARG )
 {
     FD_menuattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -341,7 +346,8 @@ change_menu_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-clear_menu_field_cb(FL_OBJECT * ob, long data)
+clear_menu_field_cb( FL_OBJECT * ob,
+					 long        data  FL_UNUSED_ARG )
 {
     FD_menuattrib *ui = ob->form->fdui;
 
@@ -351,13 +357,15 @@ clear_menu_field_cb(FL_OBJECT * ob, long data)
 }
 
 void
-new_menuapi_cb(FL_OBJECT * ob, long data)
+new_menuapi_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     menu_spec->new_menuapi = fl_get_button(ob);
 }
 
 void
-menuentry_scope_cb(FL_OBJECT * ob, long data)
+menuentry_scope_cb( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     menu_spec->global_scope = (fl_get_choice(ob) - 1) > 0;
 }

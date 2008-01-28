@@ -110,7 +110,8 @@ create_all(void)
 }
 
 void
-dismiss_pallete(FL_OBJECT * ob, long data)
+dismiss_pallete( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
     fl_hide_form(ob->form);
     reset_pallette_menu_status();

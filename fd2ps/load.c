@@ -47,7 +47,9 @@
 extern char *de_space(char *s);
 
 static FL_FORM *
-make_form(int type, int w, int h)
+make_form( int type  FL_UNUSED_ARG,
+		   int w,
+		   int h )
 {
     FL_FORM *form;
 
@@ -68,10 +70,16 @@ make_form(int type, int w, int h)
 		     t==FL_VERT_THIN_SLIDER )
 
 FL_OBJECT *
-flps_make_object(int objclass, int type, int x, int y,
-		 int w, int h, const char *label, void *p)
+flps_make_object( int          objclass,
+				  int          type,
+				  int          x,
+				  int          y,
+				  int          w,
+				  int          h,
+				  const char * label,
+				  void       * p  FL_UNUSED_ARG )
 {
-    FL_OBJECT *ob = calloc(1, sizeof(*ob));
+    FL_OBJECT *ob = calloc( 1, sizeof *ob );
     ALLSPEC *sp;
 
     ob->objclass = objclass;
@@ -765,9 +773,11 @@ align_val(const char *cc)
 char *
 de_space(char *s)
 {
-    register char *p;
+    char *p;
+
     /* not all isspace considers '\t' a white space */
+
     for (p = s; p && ( isspace( ( int ) *p) || *p == '\t'); p++)
-	;
+		/* empty */ ;
     return (p == s) ? s : strcpy(s, p);
 }

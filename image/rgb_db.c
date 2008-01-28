@@ -21,7 +21,7 @@
 
 
 /*
- *  $Id: rgb_db.c,v 1.5 2003/05/30 11:04:57 leeming Exp $
+ *  $Id: rgb_db.c,v 1.6 2008/01/28 23:43:18 jtt Exp $
  *
  *  Copyright (c) 1999-2002 T.C. Zhao
  *
@@ -35,7 +35,7 @@
 #include "flimage.h"
 
 int
-fl_init_RGBdatabase(const char *f)
+fl_init_RGBdatabase( const char * f  FL_UNUSED_ARG )
 {
     return 1;
 }

@@ -1,3 +1,58 @@
+2008-01-28 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* Resizing behaviour got rewritten to get it to work correctly
+	even if a window gets resized to a very small size and then
+	back to a large one (see e.g. the xyplotall demo program for
+	the behaviour). This required to add elements to the FL_FORM
+	and FL_OBJECT structures, but since they shouldn't be used
+	directly from user programs and also user defined object should
+	always be created via a call of fl_make_object(), where the
+	geometry of the object gets set, this shouldn't lead to any
+	trouble. One aspect of the changes is that an objects gravity
+	setting now always takes precedence over the 'resize' setting
+	and the 'resize' setting gets automatically corrected whenever
+	necessary.
+
+	* lib/events.c: changed queueing system so that queue overflows
+	and thus loss of calls of callback functions or Xevents shouldn't
+	be possible anymore. The queues are now implemented using linked
+	lists that get extendend if necessary, deallocation is done from
+	fl_finish().
+
+	* Got rid of a redraw bug that led to a form not being redrawn
+	correctly after its window was made smaller (e.g. under fvwm2)
+
+	* Several bugs where fixed that sometimes crashed the program
+	with XErrors after resizing a window, especially when the
+	window was made very small (exhibited by e.g. the formbrowser
+	demo program).
+
+	* Number of forms that can be created is now unlimited (or
+	only limited by the available memory) instead of having an
+	arbitrary maximum of 64
+
+	* Changes to autogen.sh to allow built with newer versions of
+	autoconf and small changes on config/xformsinclude.m4 to avoid
+	warnings. Added '-W' compiler flag (which in turn required to
+	mark unused arguments of a lot of functions as such to avoid
+	compiler warnings, see the new macro FL_UNUSED_ARG in
+	lib/include/Basic.h that exists for just that purpose).
+
+	* Handling of the number of colors was corrected for displays
+	with more colors than can be stored in an unsigned long (e.g.
+	32-bit depth display with 32-bit wide unsigned longs).
+
+	* Correction of the sizes of the scrollbars of FL_NORMAL_FORMBROWSER
+	type of objects.
+
+	* lib/dial.c: mouse-wheel handling for dials added
+
+	* lib/tabfolder.c: bugs in memory handling corrected
+
+	* Replaced float by double in many places (not yet finished!).
+
+	* Code cleanup (concerns several dozens of files)
+
 2004-12-28  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* image/image_jpeg.c: fix compilation with IBM's xlc.

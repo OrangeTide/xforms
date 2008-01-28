@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_postscript.c,v 1.7 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_postscript.c,v 1.8 2008/01/28 23:42:41 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -341,13 +341,13 @@ auto_scale(float pagew, float pageh, float w, float h, int landscape)
 }
 
 static void
-PS_start_image(FL_IMAGE * im)
+PS_start_image( FL_IMAGE * im  FL_UNUSED_ARG )
 {
-    PS_push();
+    PS_push( );
 }
 
 static void
-PS_end_image(FL_IMAGE * im)
+PS_end_image( FL_IMAGE * im  FL_UNUSED_ARG )
 {
     PS_pop();
 }

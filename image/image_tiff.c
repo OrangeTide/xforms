@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.6 2003/11/21 13:23:23 leeming Exp $
+ * $Id: image_tiff.c,v 1.7 2008/01/28 23:43:02 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -43,16 +43,16 @@
 #include "flimage.h"
 #include "flimage_int.h"
 
-#if defined( __sun__ ) && !defined( SYSV )
-int fgetc(FILE *stream);
-int fputc(int c, FILE *stream);
+#if defined __sun__ && ! defined SYSV 
+int fgetc( FILE *stream );
+int fputc( int c, FILE *stream );
 #endif
 
 #define TIFF_DEBUG    0
 
-static int get_image_info_from_ifd(FL_IMAGE * im);
-typedef int (*ReadIT) (FILE *);
-typedef int (*WriteIT) (int, FILE *);
+static int get_image_info_from_ifd( FL_IMAGE * im );
+typedef int ( * ReadIT ) ( FILE * );
+typedef int ( * WriteIT ) ( int, FILE * );
 
 typedef struct
 {
@@ -63,27 +63,26 @@ typedef struct
     int count;
     int offset;
     char *svalue;
-}
-TIFFTag;
+} TIFFTag;
 
 
-static TIFFTag *find_tag(int);
+static TIFFTag *find_tag( int );
 
 typedef struct
 {
     int endian;
     int ifd_offset;		/* next ifd location. 0 indicates end */
     int spp;			/* samples per pixel                  */
-    int bps[4];			/* bits per sample                    */
+    int bps[ 4 ];		/* bits per sample                    */
     int curr_pos;		/* current writing location           */
     int next_pos;		/* next   writing location           */
-    int (*read2bytes) (FILE *);
-    int (*read4bytes) (FILE *);
-    int (*write2bytes) (int, FILE *);
-    int (*write4bytes) (int, FILE *);
+    int ( * read2bytes ) ( FILE * );
+    int ( * read4bytes ) ( FILE * );
+    int ( * write2bytes ) ( int, FILE * );
+    int ( * write4bytes ) ( int, FILE * );
     FL_IMAGE *image;
-    ReadIT readit[15];
-    WriteIT writeit[15];
+    ReadIT readit[ 15 ];
+    WriteIT writeit[ 15 ];
     int strip_size;		/* strip size in bytes */
     int rowsPerStrip;		/* preferred  */
     int nstrips;
@@ -92,148 +91,159 @@ typedef struct
     int offset_offset;
     int bytecount_offset;
     int max_tags;
-}
-SPEC;
+} SPEC;
 
-static void initialize_tiff_io(SPEC *, int endian);
+static void initialize_tiff_io( SPEC *,
+								int );
 
 static int
-TIFF_identify(FILE * fp)
+TIFF_identify( FILE * fp )
 {
-    char c[4];
+    char c[ 4 ];
 
-    fread(c, 1, 4, fp);
-    rewind(fp);
-    return (c[0] == 'I' && c[1] == 'I') || (c[0] == 'M' && c[1] == 'M');
+    fread( c, 1, 4, fp );
+    rewind( fp );
+    return    ( c[ 0 ] == 'I' && c[ 1 ] == 'I' )
+		   || ( c[ 0 ] == 'M' && c[ 1 ] == 'M' );
 }
 
-static int read_tiff_ifd(FILE * fp, SPEC *sp);
+static int read_tiff_ifd( FILE * fp,
+						  SPEC * sp );
 
 static int
-TIFF_description(FL_IMAGE * im)
+TIFF_description( FL_IMAGE * im )
 {
     FILE *fp = im->fpin;
-    SPEC *sp = fl_malloc(sizeof(*sp));
-    char buf[4];
+    SPEC *sp = fl_malloc( sizeof *sp );
+    char buf[ 4 ];
 
     im->io_spec = sp;
-    im->spec_size = sizeof(*sp);
+    im->spec_size = sizeof *sp;
     sp->image = im;
 
-    fread(buf, 1, 4, fp);
-    sp->endian = buf[0] == 'M' ? MSBFirst : LSBFirst;
+    fread( buf, 1, 4, fp );
+    sp->endian = buf[ 0 ] == 'M' ? MSBFirst : LSBFirst;
 
-    initialize_tiff_io(sp, sp->endian);
+    initialize_tiff_io( sp, sp->endian );
 
-    sp->ifd_offset = sp->read4bytes(fp);
+    sp->ifd_offset = sp->read4bytes( fp );
 
-    if (!sp->ifd_offset)
+    if ( ! sp->ifd_offset )
     {
-	flimage_error(im, "Invalid TIFF: no IFD");
-	return -1;
+		flimage_error( im, "Invalid TIFF: no IFD" );
+		return -1;
     }
 
-    read_tiff_ifd(fp, sp);
+    read_tiff_ifd( fp, sp );
 
-    if (get_image_info_from_ifd(im) < 0)
-	return -1;
+    if ( get_image_info_from_ifd( im ) < 0 )
+		return -1;
 
     return 0;
 }
 
-static int read_pixels(FL_IMAGE * im), TIFF_next(FL_IMAGE *);
-static int load_tiff_colormap(FL_IMAGE *);
+
+static int read_pixels( FL_IMAGE * im );
+static int TIFF_next( FL_IMAGE * );
+static int load_tiff_colormap( FL_IMAGE * );
 
 static int
-TIFF_readpixels(FL_IMAGE * im)
+TIFF_readpixels( FL_IMAGE * im )
 {
     SPEC *sp = im->io_spec;
 
-    load_tiff_colormap(im);
+    load_tiff_colormap( im );
 
-    if (sp->ifd_offset)
-	im->next_frame = TIFF_next;
+    if ( sp->ifd_offset )
+		im->next_frame = TIFF_next;
     else
-	im->next_frame = 0;
+		im->next_frame = 0;
 
     im->more = sp->ifd_offset != 0;
 
     return read_pixels(im);
 }
 
+
 static int
-TIFF_next(FL_IMAGE * im)
+TIFF_next( FL_IMAGE * im )
 {
     SPEC *sp = im->io_spec;
 
-    read_tiff_ifd(im->fpin, sp);
+    read_tiff_ifd( im->fpin, sp );
 
-    if (get_image_info_from_ifd(im) < 0)
+    if ( get_image_info_from_ifd( im ) < 0 )
     {
-	flimage_error(im, "Can't get image info");
-	M_err("Next", "Can't get image info");
-	return -1;
+		flimage_error( im, "Can't get image info" );
+		M_err( "Next", "Can't get image info" );
+		return -1;
     }
 
-    flimage_getmem(im);
+    flimage_getmem( im );
 
-    return TIFF_readpixels(im);
+    return TIFF_readpixels( im );
 }
 
 
-static int write_ifd(FL_IMAGE *, SPEC *);
-static int write_pixels(FL_IMAGE *, SPEC *);
+static int write_ifd( FL_IMAGE *,
+					  SPEC * );
+static int write_pixels( FL_IMAGE *,
+						 SPEC * );
+
 static int
-machine_endian(void)
+machine_endian( void )
 {
     static unsigned short a = 0x1234;
-    static unsigned char *c = (unsigned char *) &a;
-    return c[0] == 0x12 ? MSBFirst : LSBFirst;
+    static unsigned char *c = ( unsigned char * ) &a;
+    return c[ 0 ] == 0x12 ? MSBFirst : LSBFirst;
 }
 
 #define MaxStripSize 32767       /* max strip size */
 
 static int
-TIFF_write(FL_IMAGE * image)
+TIFF_write( FL_IMAGE * image )
 {
     FILE *fp = image->fpout;
     FL_IMAGE *im = image;
-    int err, t;
+    int err,
+		t;
     SPEC *sp;
 
     /* we do not touch im->io_spec. Use this local copy */
-    sp = fl_calloc(1, sizeof(*sp));
 
-    t = (im->w*im->h) / (im->type == FL_IMAGE_MONO ? 8:1);
+    sp = fl_calloc( 1, sizeof *sp );
+
+    t = ( im->w * im->h ) / ( im->type == FL_IMAGE_MONO ? 8 : 1 );
 
     /* We always write StripByteCount at offset. Need to make
        sure we'll have more than one strips */
-    if(t <= MaxStripSize)
-         sp->strip_size = (t+1)/2;
+
+    if ( t <= MaxStripSize )
+         sp->strip_size = ( t + 1 ) / 2;
     else
          sp->strip_size = MaxStripSize;
 
-    sp->endian = machine_endian();
+    sp->endian = machine_endian( );
 
-    initialize_tiff_io(sp, sp->endian);
+    initialize_tiff_io( sp, sp->endian );
 
-    fwrite(sp->endian == LSBFirst ? "II" : "MM", 1, 2, fp);
-    sp->write2bytes(42, fp);
+    fwrite( sp->endian == LSBFirst ? "II" : "MM", 1, 2, fp );
+    sp->write2bytes( 42, fp );
     sp->next_pos = 4;
     sp->max_tags = 15;
-    sp->write4bytes(sp->next_pos += 4, fp);	/* ifd location */
+    sp->write4bytes( sp->next_pos += 4, fp );	/* ifd location */
 
-    for (err = 0; !err && im; im = im->next)
+    for ( err = 0; !err && im; im = im->next)
     {
-	sp->curr_pos = sp->next_pos;
-	sp->next_pos += sp->max_tags * 12;
-	im->fpout = image->fpout;
-	fseek(fp, sp->curr_pos, SEEK_SET);
-	err = write_ifd(im, sp) < 0;
-	err = err || write_pixels(im, sp) < 0;
-	/* update the IFD location */
-	fseek(fp, sp->ifd_offset, SEEK_SET);
-	sp->write4bytes(im->next ? sp->next_pos : 0, fp);
+		sp->curr_pos = sp->next_pos;
+		sp->next_pos += sp->max_tags * 12;
+		im->fpout = image->fpout;
+		fseek(fp, sp->curr_pos, SEEK_SET);
+		err = write_ifd(im, sp) < 0;
+		err = err || write_pixels(im, sp) < 0;
+		/* update the IFD location */
+		fseek(fp, sp->ifd_offset, SEEK_SET);
+		sp->write4bytes(im->next ? sp->next_pos : 0, fp);
     }
 
     fl_free(sp->stripByteCount);
@@ -426,94 +436,106 @@ get_image_info_from_ifd(FL_IMAGE * im)
 static int typeSize[13];
 
 /* this need to be called everytime to avoid re-entrant problems */
+
 static void
-initialize_tiff_io(SPEC *sp, int endian)
+initialize_tiff_io( SPEC * sp,
+					int    endian )
 {
-    if (!typeSize[kUByte])
+    if ( ! typeSize[ kUByte ] )
     {
-	/* initialize the typeSize                       */
-	typeSize[kUByte] = typeSize[SBYTE] = 1;
-	typeSize[ASCII] = 1;
-	typeSize[kShort] = typeSize[kUShort] = 2;
-	typeSize[kLong] = typeSize[kULong] = 4;
-	typeSize[RATIONAL] = typeSize[SRATIONAL] = 8;
-	typeSize[kFloat] = 4;
-	typeSize[kDouble] = 8;
+		/* initialize the typeSize                       */
+
+		typeSize[ kUByte ] = typeSize[ SBYTE ] = 1;
+		typeSize[ ASCII ] = 1;
+		typeSize[ kShort ] = typeSize[ kUShort ] = 2;
+		typeSize[ kLong ] = typeSize[ kULong ] = 4;
+		typeSize[ RATIONAL ] = typeSize[ SRATIONAL ] = 8;
+		typeSize[ kFloat ] = 4;
+		typeSize[ kDouble ] = 8;
     }
 
     /* initialize the functions that reads various types */
 
-    sp->readit[kUByte] = sp->readit[SBYTE] = fgetc;
-    sp->writeit[kUByte] = sp->writeit[SBYTE] = fputc;
-    sp->readit[ASCII] = fgetc;
-    sp->writeit[ASCII] = fputc;
+    sp->readit[ kUByte ] = sp->readit[SBYTE] = fgetc;
+    sp->writeit[ kUByte ] = sp->writeit[SBYTE] = fputc;
+    sp->readit[ ASCII ] = fgetc;
+    sp->writeit[ ASCII ] = fputc;
 
-    sp->readit[kShort] = endian == MSBFirst ? fl_fget2MSBF : fl_fget2LSBF;
-    sp->readit[kUShort] = endian == MSBFirst ? fl_fget2MSBF : fl_fget2LSBF;
-    sp->writeit[kUShort] = endian == MSBFirst ? fl_fput2MSBF : fl_fput2LSBF;
-    sp->writeit[kShort] = endian == MSBFirst ? fl_fput2MSBF : fl_fput2LSBF;
+    sp->readit[ kShort ] = endian == MSBFirst ? fl_fget2MSBF : fl_fget2LSBF;
+    sp->readit[ kUShort ] = endian == MSBFirst ? fl_fget2MSBF : fl_fget2LSBF;
+    sp->writeit[ kUShort ] = endian == MSBFirst ? fl_fput2MSBF : fl_fput2LSBF;
+    sp->writeit[ kShort ] = endian == MSBFirst ? fl_fput2MSBF : fl_fput2LSBF;
 
-    sp->readit[kULong] = endian == MSBFirst ? fl_fget4MSBF : fl_fget4LSBF;
-    sp->readit[kLong] = endian == MSBFirst ? fl_fget4MSBF : fl_fget4LSBF;
-    sp->writeit[kULong] = endian == MSBFirst ? fl_fput4MSBF : fl_fput4LSBF;
-    sp->writeit[kLong] = endian == MSBFirst ? fl_fput4MSBF : fl_fput4LSBF;
+    sp->readit[ kULong ] = endian == MSBFirst ? fl_fget4MSBF : fl_fget4LSBF;
+    sp->readit[ kLong ] = endian == MSBFirst ? fl_fget4MSBF : fl_fget4LSBF;
+    sp->writeit[ kULong ] = endian == MSBFirst ? fl_fput4MSBF : fl_fput4LSBF;
+    sp->writeit[ kLong ] = endian == MSBFirst ? fl_fput4MSBF : fl_fput4LSBF;
 
-    sp->read2bytes = sp->readit[kShort];
-    sp->read4bytes = sp->readit[kLong];
-    sp->write2bytes = sp->writeit[kShort];
-    sp->write4bytes = sp->writeit[kLong];
+    sp->read2bytes = sp->readit[ kShort ];
+    sp->read4bytes = sp->readit[ kLong ];
+    sp->write2bytes = sp->writeit[ kShort ];
+    sp->write4bytes = sp->writeit[ kLong ];
 }
 
 
 static void
-read_tag(FILE * fp, long offset, SPEC *sp)
+read_tag( FILE * fp,
+		  long   offset,
+		  SPEC * sp )
 {
-    int tag_val, count, type, nbyte, i;
+    int tag_val,
+		count,
+		type,
+		nbyte,
+		i;
     TIFFTag *tag;
 
-    fseek(fp, offset, SEEK_SET);
+    fseek( fp, offset, SEEK_SET );
 
-    tag_val = sp->read2bytes(fp);
-    if (!(tag = find_tag(tag_val)))
+    tag_val = sp->read2bytes( fp );
+    if ( ! ( tag = find_tag( tag_val ) ) )
     {
 #if TIFF_DEBUG
-	fprintf(stderr, "Unsupported tag 0x%x(%d)\n", tag_val, tag_val);
+		fprintf( stderr, "Unsupported tag 0x%x(%d)\n", tag_val, tag_val );
 #endif
-	return;
+		return;
     }
 
-    tag->type = type = sp->read2bytes(fp);
-    tag->count = count = sp->read4bytes(fp);
+    tag->type = type = sp->read2bytes( fp );
+    tag->count = count = sp->read4bytes( fp );
 
-    if ((type < 0 || type > kDouble) || (nbyte = count * typeSize[type]) <= 0)
+    if (    type < 0
+		 || type > kDouble
+		 || ( nbyte = count * typeSize[ type ] ) <= 0 )
     {
-	flimage_error(sp->image, "BadType (%d) or count (%d)\n", type, count);
-	M_err("ReadTag", "BadType (%d) or count (%d)\n", type, count);
-	return;
+		flimage_error( sp->image, "BadType (%d) or count (%d)\n", type, count );
+		M_err( "ReadTag", "BadType (%d) or count (%d)\n", type, count );
+		return;
     }
 
-    if (tag->value && tag->value != &junkBuffer)
-	fl_free(tag->value);
+    if ( tag->value && tag->value != &junkBuffer )
+		fl_free( tag->value );
 
-    if (!(tag->value = fl_malloc(sizeof(*tag->value) * tag->count)))
+    if ( ! ( tag->value = fl_malloc( sizeof *tag->value * tag->count ) ) )
     {
-	flimage_error(sp->image, "Can't allocate %d tag value buffer",
-		      tag->count);
-	return;
+		flimage_error( sp->image, "Can't allocate %d tag value buffer",
+					   tag->count );
+		return;
     }
 
-    if (nbyte > 4)
+    if ( nbyte > 4 )
     {
-	tag->offset = sp->read4bytes(fp);
-	tag->value[0] = tag->offset;
-	fseek(fp, tag->offset, SEEK_SET);
+		tag->offset = sp->read4bytes( fp );
+		tag->value[ 0 ] = tag->offset;
+		fseek( fp, tag->offset, SEEK_SET );
     }
 
     /* we read the colormap seperately */
-    if (tag->tag_value != ColorMap)
+
+    if ( tag->tag_value != ColorMap )
     {
-	for (i = 0; i < count; i++)
-	    tag->value[i] = (sp->readit[type]) (fp);
+		for ( i = 0; i < count; i++)
+			tag->value[ i ] = ( sp->readit[ type ] )( fp );
     }
 }
 
@@ -561,33 +583,39 @@ read_tiff_ifd(FILE * fp, SPEC *sp)
 
 
 /* parameter endian is the endian the input data is in */
-static unsigned short *
-convert2(unsigned short *sbuf, int nbytes, int endian)
-{
-    int nshort = nbytes / 2, i, j;
-    unsigned char *buf = (unsigned char *) sbuf;
 
-    if (nbytes & 1)
+static unsigned short *
+convert2( unsigned short * sbuf,
+		  int              nbytes,
+		  int              endian )
+{
+    int nshort = nbytes / 2,
+		i,
+		j;
+    unsigned char *buf = ( unsigned char * ) sbuf;
+
+    if ( nbytes & 1 )
     {
-	fprintf(stderr, "Error: Bad ByteCount %d\n", nbytes);
-	return sbuf;
+		fprintf( stderr, "Error: Bad ByteCount %d\n", nbytes );
+		return sbuf;
     }
 
-    if (endian == machine_endian())
-	return sbuf;
+    if ( endian == machine_endian( ) )
+		return sbuf;
 
-    if (endian == MSBFirst)
+    if ( endian == MSBFirst )
     {
-	for (i = j = 0; i < nshort; i++, j += 2)
-	    sbuf[i] = (buf[j] << 8) | buf[j + 1];
+		for ( i = j = 0; i < nshort; i++, j += 2 )
+			sbuf[ i ] = ( buf[ j ] << 8 ) | buf[ j + 1 ];
     }
     else
     {
-	for (i = j = 0; i < nshort; i++, j += 2)
-	    sbuf[i] = buf[j] | (buf[j + 1] << 8);
+		for ( i = j = 0; i < nshort; i++, j += 2 )
+			sbuf[ i ] = buf[ j ] | ( buf[ j + 1 ] << 8 );
     }
     return sbuf;
 }
+
 
 static int
 read_pixels(FL_IMAGE * im)
@@ -828,6 +856,7 @@ write_tiff_colormap(FL_IMAGE * im, SPEC *sp, int len)
     for (; i < len; i++)
 	sp->write2bytes(0, fp);
 }
+
 
 static void
 write_tag(FILE * fp, SPEC *sp, int tag_val, int count, int *value, int *n)

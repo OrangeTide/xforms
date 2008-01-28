@@ -40,8 +40,12 @@
 #include "fd_main.h"
 
 static int
-handle_simu_canvas(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-		   int key, void *ev)
+handle_simu_canvas( FL_OBJECT * ob,
+					int         event,
+					FL_Coord    mx   FL_UNUSED_ARG,
+					FL_Coord    my   FL_UNUSED_ARG,
+					int         key  FL_UNUSED_ARG,
+					void      * ev   FL_UNUSED_ARG )
 {
     int ftype;
 
@@ -126,8 +130,12 @@ fl_add_simu_glcanvas(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
  */
 
 static int
-handle_tabfolder(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-		 int key, void *ev)
+handle_tabfolder( FL_OBJECT * ob,
+				  int         event,
+				  FL_Coord    mx   FL_UNUSED_ARG,
+				  FL_Coord    my   FL_UNUSED_ARG,
+				  int         key  FL_UNUSED_ARG,
+				  void      * ev   FL_UNUSED_ARG )
 {
     if (event == FL_DRAW)
     {
@@ -165,8 +173,12 @@ fl_add_ntabfolder(int type, FL_Coord x, FL_Coord y, FL_Coord w,
 
 /* fake formbrowser */
 static int
-handle_formbrowser(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-		   int key, void *ev)
+handle_formbrowser( FL_OBJECT * ob,
+					int         event,
+					FL_Coord    mx   FL_UNUSED_ARG,
+					FL_Coord    my   FL_UNUSED_ARG,
+					int         key  FL_UNUSED_ARG,
+					void      * ev   FL_UNUSED_ARG )
 {
     if (event == FL_DRAW)
     {

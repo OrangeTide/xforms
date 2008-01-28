@@ -27,6 +27,7 @@
  * Object Class: Slider
  *
  */
+
 #ifndef FL_SLIDER_H
 #define FL_SLIDER_H
 
@@ -41,20 +42,19 @@ typedef enum
     FL_HOR_NICE_SLIDER,
     FL_HOR_BROWSER_SLIDER,
     FL_VERT_BROWSER_SLIDER,
-    FL_HOR_BROWSER_SLIDER2,	/* for internal use only */
+    FL_HOR_BROWSER_SLIDER2,		/* for internal use only */
     FL_VERT_BROWSER_SLIDER2,	/* for internal use only */
-    FL_HOR_THIN_SLIDER,		/* internal use          */
-    FL_VERT_THIN_SLIDER,	/* internal use          */
-    FL_HOR_BASIC_SLIDER,	/* internal use          */
-    FL_VERT_BASIC_SLIDER	/* internal use          */
-}
-FL_SLIDER_TYPE;
+    FL_HOR_THIN_SLIDER,			/* internal use          */
+    FL_VERT_THIN_SLIDER,		/* internal use          */
+    FL_HOR_BASIC_SLIDER,		/* internal use          */
+    FL_VERT_BASIC_SLIDER		/* internal use          */
+} FL_SLIDER_TYPE;
 
 
 /***** Defaults *****/
 
-#define FL_SLIDER_BW1           FL_BOUND_WIDTH
-#define FL_SLIDER_BW2           (FL_abs(FL_BOUND_WIDTH)-1)
+#define FL_SLIDER_BW1       FL_BOUND_WIDTH
+#define FL_SLIDER_BW2       ( FL_abs( FL_BOUND_WIDTH ) - 1 )
 #define FL_SLIDER_BOXTYPE	FL_DOWN_BOX
 #define FL_SLIDER_COL1		FL_COL1
 #define FL_SLIDER_COL2		FL_COL1
@@ -69,101 +69,97 @@ FL_SLIDER_TYPE;
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT *fl_create_slider(
-		int type,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		const char *label
+FL_EXPORT FL_OBJECT * fl_create_slider(
+		int          type,
+		FL_Coord     x,
+		FL_Coord     y,
+		FL_Coord     w,
+		FL_Coord     h,
+		const char * label
 		);
 
-FL_EXPORT FL_OBJECT *fl_add_slider(
-		int type,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		const char *label
+FL_EXPORT FL_OBJECT * fl_add_slider(
+		int          type,
+		FL_Coord     x,
+		FL_Coord     y,
+		FL_Coord     w,
+		FL_Coord     h,
+		const char * label
 		);
 
-
-FL_EXPORT FL_OBJECT *fl_create_valslider(
-		int type,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		const char *label
+FL_EXPORT FL_OBJECT * fl_create_valslider(
+		int          type,
+		FL_Coord     x,
+		FL_Coord     y,
+		FL_Coord     w,
+		FL_Coord     h,
+		const char * label
 		);
 
-FL_EXPORT FL_OBJECT *fl_add_valslider(
-		int type,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		const char *label
+FL_EXPORT FL_OBJECT * fl_add_valslider(
+		int          type,
+		FL_Coord     x,
+		FL_Coord     y,
+		FL_Coord     w,
+		FL_Coord     h,
+		const char * label
 		);
-
 
 FL_EXPORT void fl_set_slider_value(
-		FL_OBJECT *ob,
-		double val
+		FL_OBJECT * ob,
+		double      val
 		);
 
 FL_EXPORT double fl_get_slider_value(
-		FL_OBJECT *ob
+		FL_OBJECT * ob
 		);
 
 FL_EXPORT void fl_set_slider_bounds(
-		FL_OBJECT *ob,
-		double min,
-		double max
+		FL_OBJECT * ob,
+		double      min,
+		double      max
 		);
 
 FL_EXPORT void fl_get_slider_bounds(
-		FL_OBJECT *ob,
-		double *min,
-		double *max
+		FL_OBJECT * ob,
+		double *    min,
+		double *    max
 		);
-
 
 FL_EXPORT void fl_set_slider_return(
-		FL_OBJECT *ob,
-		int value
+		FL_OBJECT * ob,
+		int         value
 		);
 
-
 FL_EXPORT void fl_set_slider_step(
-		FL_OBJECT *ob,
-		double value
+		FL_OBJECT * ob,
+		double      value
 		);
 
 FL_EXPORT void fl_set_slider_increment(
-		FL_OBJECT *ob,
-		double l,
-		double r
+		FL_OBJECT * ob,
+		double      l,
+		double      r
 		);
 
 FL_EXPORT void fl_get_slider_increment(
-		FL_OBJECT *ob,
-		float *l,
-		float *r
+		FL_OBJECT * ob,
+		double *    l,
+		double *    r
 		);
 
 FL_EXPORT void fl_set_slider_size(
-		FL_OBJECT *ob,
-		double size
+		FL_OBJECT * ob,
+		double      size
 		);
 
 FL_EXPORT void fl_set_slider_precision(
-		FL_OBJECT *ob,
-		int prec
+		FL_OBJECT * ob,
+		int         prec
 		);
 
 FL_EXPORT void fl_set_slider_filter(
-		FL_OBJECT *ob,
+		FL_OBJECT *   ob,
 		FL_VAL_FILTER filter
 		);
 
@@ -171,14 +167,13 @@ FL_EXPORT void fl_set_slider_filter(
     slider code to increment the position of the knob.
  */
 FL_EXPORT int fl_get_slider_repeat(
-		FL_OBJECT *ob
+		FL_OBJECT * ob
 		);
 
 FL_EXPORT void fl_set_slider_repeat(
-		FL_OBJECT *ob,
-		int millisec
+		FL_OBJECT * ob,
+		int         millisec
 		);
 
 
-
-#endif
+#endif /* ! defined FL_SLIDER_H */

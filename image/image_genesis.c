@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_genesis.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_genesis.c,v 1.5 2008/01/28 23:42:20 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -99,8 +99,8 @@ GENESIS_description(FL_IMAGE * im)
 static void
 convert_msbf(unsigned short *pixels, int npixels)
 {
-    register unsigned short *p = pixels, *ps = p + npixels;
-    register unsigned char *c = (unsigned char *) p;
+    unsigned short *p = pixels, *ps = p + npixels;
+    unsigned char *c = (unsigned char *) p;
 
     for (; p < ps; p++, c += 2)
 	*p = (c[0] << 8) | c[1];

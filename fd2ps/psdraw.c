@@ -722,7 +722,13 @@ ps_draw_box(int style, float x, float y, float w, float h, long col,
  * Frame is drawn OUTSIDE of the bounding box
  */
 void
-ps_draw_frame(int style, float x, float y, float w, float h, long col, int bw)
+ps_draw_frame( int   style,
+			   float x,
+			   float y,
+			   float w,
+			   float h,
+			   long  col  FL_UNUSED_ARG,
+			   int bw )
 {
     int border;
     float B;
@@ -888,7 +894,12 @@ typedef struct
 PS_draw;
 
 static void
-draw_dnline(float x, float y, float w, float h, int angle, long col)
+draw_dnline( float x      FL_UNUSED_ARG,
+			 float y      FL_UNUSED_ARG,
+			 float w,
+			 float h,
+			 int   angle  FL_UNUSED_ARG,
+			 long  col    FL_UNUSED_ARG )
 {
     float t = 0.20;
     float len;
@@ -909,7 +920,12 @@ draw_dnline(float x, float y, float w, float h, int angle, long col)
 
 
 static void
-draw_upline(float x, float y, float w, float h, int angle, long col)
+draw_upline( float x      FL_UNUSED_ARG,
+			 float y      FL_UNUSED_ARG,
+			 float w,
+			 float h,
+			 int   angle  FL_UNUSED_ARG,
+			 long  col    FL_UNUSED_ARG )
 {
     float t = 0.033;
 
@@ -927,7 +943,12 @@ draw_upline(float x, float y, float w, float h, int angle, long col)
  */
 
 static void
-draw_uparrow(float x, float y, float w, float h, int angle, long col)
+draw_uparrow( float x,
+			  float y,
+			  float w,
+			  float h,
+			  int angle,
+			  long col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
@@ -970,7 +991,12 @@ draw_uparrow(float x, float y, float w, float h, int angle, long col)
 }
 
 static void
-draw_dnarrow(float x, float y, float w, float h, int angle, long col)
+draw_dnarrow( float x,
+			  float y,
+			  float w,
+			  float h,
+			  int   angle,
+			  long  col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
@@ -987,29 +1013,29 @@ draw_dnarrow(float x, float y, float w, float h, int angle, long col)
 
     if (angle == 90)
     {
-	ps_line(xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL);
-	ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL);
-	ps_line(xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL);
+		ps_line(xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL);
+		ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL);
+		ps_line(xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL);
     }
     else if (angle == 180)
     {
-	ps_line(xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL);
-	ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL);
-	ps_line(xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL);
+		ps_line(xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL);
+		ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL);
+		ps_line(xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL);
 
     }
     else if (angle == 270)
     {
-	ps_line(xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL);
-	ps_line(xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL);
-	ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL);
+		ps_line(xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL);
+		ps_line(xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL);
+		ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL);
 
     }
     else
     {
-	ps_line(xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL);
-	ps_line(xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL);
-	ps_line(xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL);
+		ps_line(xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL);
+		ps_line(xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL);
+		ps_line(xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL);
     }
 }
 
@@ -1017,7 +1043,12 @@ draw_dnarrow(float x, float y, float w, float h, int angle, long col)
  * need single pixel precision, draw in abs. coordiante system
  */
 static void
-draw_ripple_lines(float x, float y, float w, float h, int angle, long col)
+draw_ripple_lines( float x,
+				   float y,
+				   float w,
+				   float h,
+				   int   angle,
+				   long  col  FL_UNUSED_ARG )
 {
     float ym = y + h / 2, ys;
     float xm = x + w / 2, xs;

@@ -37,23 +37,25 @@
 
 #if 0
 
-typedef const char *(*SL_FILTER) (FL_OBJECT *, double, int);
+typedef const char * ( * SL_FILTER )( FL_OBJECT *, double, int );
+
 
 /* The special information for sliders. */
+
 typedef struct
 {
-    float min;			/* minimal value of slider */
-    float max;			/* maximal value of slider */
-    float val;			/* current value of slider */
+    double min;			/* minimal value of slider */
+    double max;			/* maximal value of slider */
+    double val;			/* current value of slider */
     int prec;			/* precision when printing value */
     int how_return;		/* whether always returning value */
     double step;		/* step size             */
     double ldelta;		/* "left mouse" step   */
     double rdelta;		/* "right mouse " step   */
-    float slsize;		/* size of the slider    */
-    float oldval;
-    float norm_val;		/* normalized value between 0 & 1 */
-    float oldnorm_val;		/* normalized value between 0 & 1 */
+    double slsize;		/* size of the slider    */
+    double oldval;
+    double norm_val;		/* normalized value between 0 & 1 */
+    double oldnorm_val;		/* normalized value between 0 & 1 */
     int drawtype;
     SL_FILTER filter;
     FL_Coord offx;
@@ -61,27 +63,27 @@ typedef struct
     FL_Coord x, y, w, h;	/* draw (dbl buffer): adjustment report box */
     FL_Coord mx, my, mw, mh;	/* mouse: after adjustment for report box   */
     int mouse, lmouse;		/* part the mouse is on                     */
-}
+} FL_SLIDER_SPEC;
 
-FL_SLIDER_SPEC;
 #else
+
 #include "pvaluator.h"
+
 typedef FL_VALUATOR_SPEC FL_SLIDER_SPEC;
 
 #endif
 
+#define FL_MINKNOB_SB    16		/* scrollbar        */
+#define FL_MINKNOB_SL    10		/* regular sliders  */
 
-#define FL_MINKNOB_SB    16	/* scrollbar        */
-#define FL_MINKNOB_SL    10	/* regular sliders  */
+#define is_hslider( t )      (    t == FL_HOR_SLIDER          	\
+							   || t == FL_HOR_FILL_SLIDER     	\
+							   || t == FL_HOR_NICE_SLIDER     	\
+							   || t == FL_HOR_BROWSER_SLIDER  	\
+							   || t == FL_HOR_BROWSER_SLIDER2 	\
+							   || t == FL_HOR_THIN_SLIDER     	\
+							   || t == FL_HOR_BASIC_SLIDER)
 
-#define is_hslider(t)      (t==FL_HOR_SLIDER        ||\
-                           t==FL_HOR_FILL_SLIDER    ||\
-                           t==FL_HOR_NICE_SLIDER    ||\
-                           t==FL_HOR_BROWSER_SLIDER ||\
-                           t==FL_HOR_BROWSER_SLIDER2||\
-                           t==FL_HOR_THIN_SLIDER    ||\
-                           t==FL_HOR_BASIC_SLIDER)
-
-#define is_vslider(t)     (!is_hslider(t))
+#define is_vslider( t )      ( ! is_hslider( t ) )
 
 #endif /* PSLIDER_H */

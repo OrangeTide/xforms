@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_disp.c,v 1.5 2004/05/18 13:57:26 leeming Exp $
+ * $Id: image_disp.c,v 1.6 2008/01/28 23:42:16 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -190,8 +190,10 @@ machine_endian(void)
 
 /* display colormapped image: always 8bit color LUT. */
 /* ASSUMPTIONS: sizeof(int)==32bits */
+
 static int
-fl_display_ci(FL_IMAGE * im, Window win)
+fl_display_ci( FL_IMAGE * im,
+			   Window     win  FL_UNUSED_ARG )
 {
     Colormap xcolormap;
     unsigned long *xmapped = 0;
@@ -550,7 +552,8 @@ fl_display_gray(FL_IMAGE * im, Window win)
 } while (0)
 
 static int
-fl_display_rgb(FL_IMAGE * im, Window win)
+fl_display_rgb( FL_IMAGE * im,
+				Window     win  FL_UNUSED_ARG )
 {
     unsigned char *xpixels;
     int i, j, pad, total = im->w * im->h;

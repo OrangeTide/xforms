@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.8 2004/05/18 13:57:29 leeming Exp $
+ * $Id: image_gif.c,v 1.9 2008/01/28 23:42:24 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -612,9 +612,9 @@ static void flush_buffer(FL_IMAGE * im)
 
 
 static int
-process_lzw_code(FL_IMAGE * im, register int code)
+process_lzw_code(FL_IMAGE * im, int code)
 {
-    register int incode;
+    int incode;
     static unsigned char firstchar;
     static unsigned char stack[MC_SIZE];
     static int avail, oldcode;
@@ -806,11 +806,11 @@ static Strtab *strtab[MAXTABL], strspace[MAXTABL];
  * Check if current string is already in the string table
  **************************************************************/
 static int
-in_table(register WorkStr * cstr)
+in_table(WorkStr * cstr)
 {
-    register Strtab *p = strtab[cstr->prefix];
+    Strtab *p = strtab[cstr->prefix];
     for (; p && (p->cchar != cstr->cchar); p = p->next)
-	;
+		/* empty */ ;
     return p ? p->code : -1;
 }
 
@@ -823,9 +823,9 @@ in_table(register WorkStr * cstr)
 
 #ifdef USE_TAB_FUNC
 static void
-addto_table(register WorkStr * cstr, register int code)
+addto_table(WorkStr * cstr, int code)
 {
-    register Strtab *p = &strspace[code];
+    Strtab *p = &strspace[code];
 
     p->code = code;
     p->cchar = cstr->cchar;
@@ -837,7 +837,7 @@ addto_table(register WorkStr * cstr, register int code)
 
 #define  addto_table(cstr, ccode)                           \
     do {                                                    \
-         register Strtab *p = &strspace[ccode];             \
+         Strtab *p = &strspace[ccode];						\
          p->code = ccode;                                   \
          p->cchar = cstr->cchar;                            \
          p->next = strtab[cstr->prefix];                    \
@@ -967,10 +967,10 @@ write_desc(FL_IMAGE * im, FILE * ffp)
 static int
 write_pixels(FL_IMAGE * im)
 {
-    register int j, code, ccode;
-    register unsigned short *scan, *ss;
-    register WorkStr *cstr;
-    register int colors;
+    int j, code, ccode;
+    unsigned short *scan, *ss;
+    WorkStr *cstr;
+    int colors;
     WorkStr workstring;
     FILE *fp = im->fpout;
 
@@ -1069,8 +1069,8 @@ GIF_write(FL_IMAGE * sim)
 static void
 init_table(int rootlen, FILE * fp)
 {
-    register int i;
-    register Strtab *sp = strspace;
+    int i;
+    Strtab *sp = strspace;
 
     output_lzw_code(ClearCode, fp);
 
@@ -1096,12 +1096,12 @@ init_table(int rootlen, FILE * fp)
  *******************************************************************/
 
 static void
-output_lzw_code(register unsigned int code, FILE * fp)
+output_lzw_code(unsigned int code, FILE * fp)
 {
     static unsigned int bytes, bits;
     static unsigned char bbuf[255 + 3];
     static unsigned long accum;
-    register unsigned char *ch;
+    unsigned char *ch;
 
 
     accum &= gif_codemask[bits];

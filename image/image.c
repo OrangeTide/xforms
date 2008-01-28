@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.8 2004/05/18 13:57:25 leeming Exp $
+ * $Id: image.c,v 1.9 2008/01/28 23:42:11 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -35,14 +35,18 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 #include "private/flsnprintf.h"
 #include <stdlib.h>
 
-static int visual_cue(FL_IMAGE *, const char *);
-static void error_message(FL_IMAGE *, const char *);
+static int visual_cue( FL_IMAGE *,
+					   const char * );
+static void error_message( FL_IMAGE *,
+						   const char * );
+
 static int nimage;
 static FLIMAGE_SETUP current_setup;
 
@@ -52,13 +56,16 @@ FLIMAGE_IO *flimage_io;
 FLIMAGE_QUANTIZE_RGB flimage_quantize_rgb;
 FLIMAGE_QUANTIZE_PACKED flimage_quantize_packed;
 
-static int ppm_added, gzip_added;
-static void add_default_formats(void);
+static int ppm_added,
+           gzip_added;
+
+static void add_default_formats( void );
+
 static void
-null_op(FL_IMAGE * im)
+null_op( FL_IMAGE * im  FL_UNUSED_ARG )
 {
-    return;
 }
+
 
 /*********************************************************************
  * Setup and image structure creation
@@ -91,7 +98,7 @@ init_setup(void)
 FL_IMAGE *
 flimage_alloc(void)
 {
-    FL_IMAGE *image = fl_calloc(1, sizeof(*image));
+    FL_IMAGE *image = fl_calloc(1, sizeof *image );
 
     init_setup();
 
@@ -1316,10 +1323,11 @@ flimage_dup_(FL_IMAGE * sim, int pix)
 
 
 static void
-error_message(FL_IMAGE * im, const char *s)
+error_message( FL_IMAGE   * im  FL_UNUSED_ARG,
+			   const char * s )
 {
-    if (s && *s)
-	M_err(0, s);
+    if ( s && *s )
+		M_err( 0, s );
 }
 
 #include <stdarg.h>

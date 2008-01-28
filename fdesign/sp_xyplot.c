@@ -65,7 +65,8 @@ get_xyplot_spec_fdform(void)
 }
 
 void
-xyplot_spec_restore(FL_OBJECT * ob, long data)
+xyplot_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     superspec_to_spec(xyplot_attrib->vdata);
     show_spec(get_superspec(xyplot_attrib->vdata));
@@ -245,7 +246,8 @@ save_xyplot_attrib(FILE * fp, FL_OBJECT * ob)
 /************ callback stuff  ************/
 
 void
-grid_change_cb(FL_OBJECT * ob, long data)
+grid_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+				long        data  FL_UNUSED_ARG )
 {
     int xg = fl_get_choice(xyplot_attrib->xgrid) - 1;
     int yg = fl_get_choice(xyplot_attrib->ygrid) - 1;
@@ -263,7 +265,8 @@ grid_change_cb(FL_OBJECT * ob, long data)
 }
 
 void
-markactive_change_cb(FL_OBJECT * ob, long data)
+markactive_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					  long        data  FL_UNUSED_ARG )
 {
     fl_set_xyplot_mark_active(xyplot_attrib->vdata,
 			      fl_get_button(xyplot_attrib->mark_active));
@@ -272,7 +275,8 @@ markactive_change_cb(FL_OBJECT * ob, long data)
 }
 
 void
-gridstyle_change_cb(FL_OBJECT * ob, long data)
+gridstyle_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     int style = fl_get_choice(xyplot_attrib->gridstyle) - 1;
 
@@ -283,7 +287,8 @@ gridstyle_change_cb(FL_OBJECT * ob, long data)
 }
 
 void
-xscale_change_cb(FL_OBJECT * ob, long data)
+xscale_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+				  long        data  FL_UNUSED_ARG )
 {
     int s = fl_get_choice(xyplot_attrib->xscale) - 1;
     float base = get_finput_value(xyplot_attrib->xbase, -1);
@@ -300,7 +305,8 @@ xscale_change_cb(FL_OBJECT * ob, long data)
 }
 
 void
-yscale_change_cb(FL_OBJECT * ob, long data)
+yscale_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+				  long        data  FL_UNUSED_ARG )
 {
     /* fill-in code for callback */
     int s = fl_get_choice(xyplot_attrib->yscale) - 1;
@@ -318,7 +324,8 @@ yscale_change_cb(FL_OBJECT * ob, long data)
 }
 
 void
-ymajorminor_change_cb(FL_OBJECT * ob, long data)
+ymajorminor_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					   long        data  FL_UNUSED_ARG )
 {
     /* fill-in code for callback */
     int ymajor = fl_get_counter_value(xyplot_attrib->ymajor);
@@ -331,7 +338,8 @@ ymajorminor_change_cb(FL_OBJECT * ob, long data)
 
 
 void
-xmajorminor_change_cb(FL_OBJECT * ob, long data)
+xmajorminor_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					   long        data  FL_UNUSED_ARG )
 {
     int xmajor = fl_get_counter_value(xyplot_attrib->xmajor);
     int xminor = fl_get_counter_value(xyplot_attrib->xminor);
@@ -342,7 +350,8 @@ xmajorminor_change_cb(FL_OBJECT * ob, long data)
 }
 
 void
-xyplot_returnsetting_change(FL_OBJECT * ob, long data)
+xyplot_returnsetting_change( FL_OBJECT * ob,
+							 long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(ob);
     fl_set_xyplot_return(xyplot_attrib->how_return,

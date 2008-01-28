@@ -1,6 +1,6 @@
 /*
  *
- *  This file is part of the XForms library package.
+ *	This file is part of the XForms library package.
  *
  * XForms is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -9,11 +9,11 @@
  *
  * XForms is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
  * Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
+ * License along with XForms; see the file COPYING.	 If not, write to
  * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
  * MA 02111-1307, USA.
  *
@@ -25,20 +25,20 @@
  * \file choice.h
  *
  */
+
 #ifndef FL_CHOICE_H
 #define FL_CHOICE_H
 
 
 typedef enum
 {
-    FL_NORMAL_CHOICE,
-    FL_NORMAL_CHOICE2,
-    FL_DROPLIST_CHOICE,
-    FL_BROWSER_CHOICE
-}
-FL_CHOICE_TYPE;
+	FL_NORMAL_CHOICE,
+	FL_NORMAL_CHOICE2,
+	FL_DROPLIST_CHOICE,
+	FL_BROWSER_CHOICE
+} FL_CHOICE_TYPE;
 
-#define  FL_SIMPLE_CHOICE  FL_NORMAL_CHOICE
+#define	 FL_SIMPLE_CHOICE  FL_NORMAL_CHOICE
 
 /***** Defaults *****/
 
@@ -48,115 +48,115 @@ FL_CHOICE_TYPE;
 #define FL_CHOICE_LCOL		FL_LCOL
 #define FL_CHOICE_ALIGN		FL_ALIGN_LEFT
 
-/***** Others   *****/
+/***** Others	*****/
 
 #define FL_CHOICE_MCOL		FL_MCOL
 #define FL_CHOICE_MAXITEMS	128
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT *fl_create_choice(
-		int type,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		const char *label
+FL_EXPORT FL_OBJECT * fl_create_choice(
+		int			 type,
+		FL_Coord	 x,
+		FL_Coord	 y,
+		FL_Coord	 w,
+		FL_Coord	 h,
+		const char * label
 		);
 
 
-FL_EXPORT FL_OBJECT *fl_add_choice(
-		int type,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		const char *l
+FL_EXPORT FL_OBJECT * fl_add_choice(
+		int			 type,
+		FL_Coord	 x,
+		FL_Coord	 y,
+		FL_Coord	 w,
+		FL_Coord	 h,
+		const char * l
 		);
 
 FL_EXPORT void fl_clear_choice(
-		FL_OBJECT *ob
+		FL_OBJECT * ob
 		);
 
 FL_EXPORT int fl_addto_choice(
-		FL_OBJECT *ob,
-		const char *str
+		FL_OBJECT *	 ob,
+		const char * str
 		);
 
 FL_EXPORT void fl_replace_choice(
-		FL_OBJECT *ob,
-		int numb,
-		const char *str
+		FL_OBJECT *	 ob,
+		int			 numb,
+		const char * str
 		);
 
 FL_EXPORT void fl_delete_choice(
-		FL_OBJECT *ob,
-		int numb
+		FL_OBJECT * ob,
+		int			numb
 		);
 
 FL_EXPORT void fl_set_choice(
-		FL_OBJECT *ob,
-		int choice
+		FL_OBJECT * ob,
+		int			choice
 		);
 
 FL_EXPORT void fl_set_choice_text(
-		FL_OBJECT *ob,
-		const char *txt
+		FL_OBJECT *	 ob,
+		const char * txt
 		);
 
 FL_EXPORT int fl_get_choice(
-		FL_OBJECT *ob
+		FL_OBJECT * ob
 		);
 
-FL_EXPORT const char *fl_get_choice_item_text(
-		FL_OBJECT *ob,
+FL_EXPORT const char * fl_get_choice_item_text(
+		FL_OBJECT * ob,
 		int n
 		);
 
 FL_EXPORT int fl_get_choice_maxitems(
-		FL_OBJECT *ob
+		FL_OBJECT * ob
 		);
 
-FL_EXPORT const char *fl_get_choice_text(
-		FL_OBJECT *ob
+FL_EXPORT const char * fl_get_choice_text(
+		FL_OBJECT * ob
 		);
 
 FL_EXPORT void fl_set_choice_fontsize(
-		FL_OBJECT *ob,
-		int size
+		FL_OBJECT * ob,
+		int			size
 		);
 
 FL_EXPORT void fl_set_choice_fontstyle(
-		FL_OBJECT *ob,
-		int style
+		FL_OBJECT * ob,
+		int			style
 		);
 
 FL_EXPORT void fl_set_choice_align(
-		FL_OBJECT *ob,
-		int align
+		FL_OBJECT * ob,
+		int			align
 		);
 
 FL_EXPORT void fl_set_choice_item_mode(
-		FL_OBJECT *ob,
-		int item,
+		FL_OBJECT *	 ob,
+		int			 item,
 		unsigned int mode
 		);
 
 FL_EXPORT void fl_set_choice_item_shortcut(
-		FL_OBJECT *ob,
-		int item,
-		const char *sc
+		FL_OBJECT *	 ob,
+		int			 item,
+		const char * sc
 		);
 
 FL_EXPORT int fl_set_choice_entries(
-		FL_OBJECT *ob,
-		FL_PUP_ENTRY *ent
+		FL_OBJECT *	   ob,
+		FL_PUP_ENTRY * ent
 		);
 
 FL_EXPORT int fl_set_choice_notitle(
-		FL_OBJECT *ob,
-		int n
+		FL_OBJECT * ob,
+		int			n
 		);
 
 
-#endif
+#endif /* ! defined FL_CHOICE_H */

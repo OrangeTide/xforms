@@ -29,6 +29,7 @@
  *  private header for counter objects
  *
  */
+
 #ifndef PCOUNTER_H
 #define PCOUNTER_H
 

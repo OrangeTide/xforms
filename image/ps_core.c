@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_core.c,v 1.6 2003/11/21 13:23:23 leeming Exp $
+ * $Id: ps_core.c,v 1.7 2008/01/28 23:43:10 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -568,7 +568,12 @@ typedef struct
 PS_draw;
 
 static void
-draw_dnline(int x, int y, int w, int h, int angle, long col)
+draw_dnline( int x      FL_UNUSED_ARG,
+			 int y      FL_UNUSED_ARG,
+			 int w,
+			 int h,
+			 int angle  FL_UNUSED_ARG,
+			 long col   FL_UNUSED_ARG )
 {
     float t = 0.20f, len;
 
@@ -587,7 +592,12 @@ draw_dnline(int x, int y, int w, int h, int angle, long col)
 }
 
 static void
-draw_upline(int x, int y, int w, int h, int angle, long col)
+draw_upline( int x      FL_UNUSED_ARG,
+			 int y      FL_UNUSED_ARG,
+			 int w,
+			 int h,
+			 int angle  FL_UNUSED_ARG,
+			 long col   FL_UNUSED_ARG )
 {
     float t = 0.033f;
 
@@ -605,7 +615,12 @@ draw_upline(int x, int y, int w, int h, int angle, long col)
  */
 
 static void
-draw_uparrow(int x, int y, int w, int h, int angle, long col)
+draw_uparrow( int x,
+			  int y,
+			  int w,
+			  int h,
+			  int angle,
+			  long col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5f;
     float xc = x + w * 0.5f;
@@ -648,7 +663,12 @@ draw_uparrow(int x, int y, int w, int h, int angle, long col)
 }
 
 static void
-draw_dnarrow(int x, int y, int w, int h, int angle, long col)
+draw_dnarrow( int x,
+			  int y,
+			  int w,
+			  int h,
+			  int angle,
+			  long col   FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5f;
     float xc = x + w * 0.5f;
@@ -695,7 +715,12 @@ draw_dnarrow(int x, int y, int w, int h, int angle, long col)
  * need single pixel precision, draw in abs. coordiante system
  */
 static void
-draw_ripple_lines(int x, int y, int w, int h, int angle, long col)
+draw_ripple_lines( int x,
+				   int y,
+				   int w,
+				   int h,
+				   int angle,
+				   long col  FL_UNUSED_ARG )
 {
     float ym = y + h / 2, ys;
     float xm = x + w / 2, xs;

@@ -22,26 +22,31 @@
 
 #ifndef FD_cmd_h_
 #define FD_cmd_h_
+
 /* Header file generated with fdesign. */
 
 /**** Callback routines ****/
 
-extern void fl_cmdbr_close_cb(FL_OBJECT *, long);
-extern void fl_cmdbr_clear_cb(FL_OBJECT *, long);
+extern void fl_cmdbr_close_cb( FL_OBJECT *,
+							   long );
+
+extern void fl_cmdbr_clear_cb( FL_OBJECT *,
+							   long );
 
 
 /**** Forms and Objects ****/
 
 typedef struct {
-	FL_FORM *cmd;
-	void *vdata;
-	long ldata;
-	FL_OBJECT *backface;
-	FL_OBJECT *browser;
-	FL_OBJECT *close_br;
-	FL_OBJECT *clear_br;
+	FL_FORM *   cmd;
+	void *      vdata;
+	long        ldata;
+	FL_OBJECT * backface;
+	FL_OBJECT * browser;
+	FL_OBJECT * close_br;
+	FL_OBJECT * clear_br;
 } FD_cmd;
 
-extern FD_cmd * create_form_cmd(void);
+extern FD_cmd * create_form_cmd( void );
+
 
 #endif /* FD_cmd_h_ */

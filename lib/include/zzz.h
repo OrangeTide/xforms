@@ -25,25 +25,27 @@
    removed from V0.89, but apparently this broke some applications that
    were using them. Put them back in 10/22/00 */
 
-#define fl_textgc      fl_textgc_()
-#define fl_gc          fl_gc_()
-#define fl_cur_win     fl_cur_win_()
-#define fl_fheight     fl_fheight_()
-#define fl_fdesc       fl_fdesc_()
-#define fl_cur_fs      fl_cur_fs_()
+#define fl_textgc      fl_textgc_( )
+#define fl_gc          fl_gc_( )
+#define fl_cur_win     fl_cur_win_( )
+#define fl_fheight     fl_fheight_( )
+#define fl_fdesc       fl_fdesc_( )
+#define fl_cur_fs      fl_cur_fs_( )
 
-extern GC           fl_gc_(void), fl_textgc_(void);
-extern int          fl_fheight_(void), fl_fdesc_(void);
-extern Window       fl_cur_win_(void);
-extern XFontStruct* fl_cur_fs_(void);
-extern Display*     fl_display_(void);
+extern GC fl_gc_( void );
+extern GC fl_textgc_( void );
+extern int fl_fheight_( void );
+extern int fl_fdesc_( void );
+extern Window fl_cur_win_( void );
+extern XFontStruct * fl_cur_fs_( void );
+extern Display * fl_display_( void );
 
-#if !defined(TRUE) && !defined(FALSE)
+#if ! defined TRUE && ! defined FALSE
 #define FALSE        0
-#define TRUE        (!FALSE)
+#define TRUE         ( ! FALSE )
 #endif
 
-#if defined(__cplusplus)
+#if defined __cplusplus
 }
 #endif
 

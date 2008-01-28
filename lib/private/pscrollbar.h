@@ -28,13 +28,12 @@
 
 typedef struct
 {
-    FL_OBJECT *scrollbar;
-    FL_OBJECT *slider;
-    FL_OBJECT *up, *down;
-    double increment;
-    long reserve[10];
-}
-
-FL_SCROLLBAR_SPEC;
+    FL_OBJECT * scrollbar;
+    FL_OBJECT * slider;
+    FL_OBJECT * up;
+	FL_OBJECT * down;
+    double      increment;
+    long        reserve[ 10 ];
+} FL_SCROLLBAR_SPEC;
 
 #endif

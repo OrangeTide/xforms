@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_proc.c,v 1.5 2004/05/18 13:57:40 leeming Exp $
+ * $Id: image_proc.c,v 1.6 2008/01/28 23:42:46 jtt Exp $
  *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  By T.C. Zhao
@@ -374,9 +374,10 @@ get_histogram(FL_IMAGE * im)
 
 
 int
-flimage_enhance(FL_IMAGE * im, int delta)
+flimage_enhance( FL_IMAGE * im,
+				 int        delta  FL_UNUSED_ARG )
 {
-    long sum[FL_PCMAX + 2];
+    long sum[ FL_PCMAX + 2 ];
     int i, n;
 
     if (im->type == FL_IMAGE_CI)

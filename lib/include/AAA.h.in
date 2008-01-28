@@ -57,24 +57,24 @@
 #define FL_VERSION             @FL_VERSION@
 #define FL_REVISION            @FL_REVISION@
 #define FL_FIXLEVEL            @FL_FIXLEVEL@
-#define FL_INCLUDE_VERSION    (FL_VERSION * 1000 + FL_REVISION)
+#define FL_INCLUDE_VERSION     (FL_VERSION * 1000 + FL_REVISION)
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
 #include <limits.h>
 
-#if defined(__cplusplus)
+#if defined __cplusplus
 extern "C"
 {
 #endif
 
-#if defined(_WIN32)
+#if defined _WIN32
 #define FL_WIN32
 #include <windows.h>
 #endif
 
-#if !defined(FL_WIN32) || !defined(SHARED_LIB)
+#if ! defined FL_WIN32 || ! defined SHARED_LIB
 #define FL_EXPORT extern
 #else
 #ifdef MAKING_FORMS

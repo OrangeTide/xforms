@@ -82,7 +82,8 @@ get_dial_spec_fdform(void)
 
 
 void
-dial_spec_restore(FL_OBJECT * ob, long data)
+dial_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *edited = dial_attrib->vdata;
 
@@ -188,7 +189,8 @@ save_dial_attrib(FILE * fp, FL_OBJECT * ob)
 
 
 void
-dial_minmax_change(FL_OBJECT * ob, long data)
+dial_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value(dial_attrib->minval, -1);
     double max = get_finput_value(dial_attrib->maxval, -1);
@@ -199,7 +201,8 @@ dial_minmax_change(FL_OBJECT * ob, long data)
 }
 
 void
-dial_thetachange_cb(FL_OBJECT * ob, long data)
+dial_thetachange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     double t1 = get_finput_value(dial_attrib->thetai, -1);
     double t2 = get_finput_value(dial_attrib->thetaf, -1);
@@ -210,7 +213,8 @@ dial_thetachange_cb(FL_OBJECT * ob, long data)
 }
 
 void
-dial_stepchange_cb(FL_OBJECT * ob, long data)
+dial_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
     float s = get_finput_value(dial_attrib->step, -1);
     fl_set_dial_step(dial_attrib->vdata, s);
@@ -219,7 +223,8 @@ dial_stepchange_cb(FL_OBJECT * ob, long data)
 }
 
 void
-dial_initialvalue_change(FL_OBJECT * ob, long data)
+dial_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						  long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value(dial_attrib->initialval, -1);
     fl_set_dial_value(dial_attrib->vdata, val);
@@ -229,7 +234,8 @@ dial_initialvalue_change(FL_OBJECT * ob, long data)
 
 /* direction change */
 void
-dir_cb(FL_OBJECT * ob, long data)
+dir_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		long        data  FL_UNUSED_ARG )
 {
     int dir = fl_get_choice(ob) - 1;
 
@@ -242,7 +248,8 @@ dir_cb(FL_OBJECT * ob, long data)
 }
 
 void
-dial_returnsetting_change(FL_OBJECT * ob, long data)
+dial_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						   long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(dial_attrib->returnsetting);
     fl_set_dial_return(dial_attrib->vdata,

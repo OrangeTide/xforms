@@ -57,7 +57,8 @@ reset_dupinfo_cache(void)
 }
 
 int
-is_duplicate_info(FL_OBJECT * ob, const char *s)
+is_duplicate_info( FL_OBJECT  * ob  FL_UNUSED_ARG,
+				   const char * s )
 {
     int i;
 

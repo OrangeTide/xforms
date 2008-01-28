@@ -62,7 +62,8 @@ load_it(char str[][80])
 
  /* Shows the help form. */
 void
-help_cb(FL_OBJECT * obj, long arg)
+help_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		 long        arg  FL_UNUSED_ARG )
 {
     fl_show_form(fd_help->helpform,
 		 FL_PLACE_GEOMETRY, FL_FULLBORDER, "fdesign help");
@@ -70,7 +71,8 @@ help_cb(FL_OBJECT * obj, long arg)
 
  /* Stop showing the help window */
 void
-exithelp_cb(FL_OBJECT * obj, long arg)
+exithelp_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			 long        arg  FL_UNUSED_ARG )
 {
     fl_hide_form(fd_help->helpform);
 }
@@ -81,7 +83,8 @@ extern char mousehelp[][80];
 
 /* Shows a particular help item. */
 void
-showhelp_cb(FL_OBJECT * obj, long arg)
+showhelp_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			 long        arg )
 {
     switch (arg)
     {
@@ -117,7 +120,7 @@ char mainhelp[][80] =
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.5 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@c$Revision: 1.6 $" LIBVERSION(FL_VERSION, FL_REVISION),
     "@C4@c@bWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",

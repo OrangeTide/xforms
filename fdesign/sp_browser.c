@@ -64,7 +64,8 @@ get_browser_spec_fdform(void)
 }
 
 void
-browser_spec_restore(FL_OBJECT * ob, long data)
+browser_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					  long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *edited = br_attrib->vdata;
 
@@ -162,7 +163,8 @@ save_browser_attrib(FILE * fp, FL_OBJECT * ob)
 
 /* callbacks and freeobj handles for form browserattrib */
 void
-add_item_cb(FL_OBJECT * ob, long data)
+add_item_cb( FL_OBJECT * ob,
+			 long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
     const char *s = fl_get_input(ui->input);
@@ -179,7 +181,8 @@ add_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-replace_item_cb(FL_OBJECT * ob, long data)
+replace_item_cb( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -198,7 +201,8 @@ replace_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-insert_cb(FL_OBJECT * ob, long data)
+insert_cb( FL_OBJECT * ob,
+		   long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -217,7 +221,8 @@ insert_cb(FL_OBJECT * ob, long data)
 }
 
 void
-delete_item_cb(FL_OBJECT * ob, long data)
+delete_item_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -232,7 +237,8 @@ delete_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-change_item_cb(FL_OBJECT * ob, long data)
+change_item_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -242,7 +248,8 @@ change_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-hscb_pref_cb(FL_OBJECT * ob, long data)
+hscb_pref_cb( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
     int i = fl_get_choice(ob);
@@ -255,7 +262,8 @@ hscb_pref_cb(FL_OBJECT * ob, long data)
 }
 
 void
-vscb_pref_cb(FL_OBJECT * ob, long data)
+vscb_pref_cb( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
     int i = fl_get_choice(ob);
@@ -268,7 +276,8 @@ vscb_pref_cb(FL_OBJECT * ob, long data)
 }
 
 void
-clear_field_cb(FL_OBJECT * ob, long data)
+clear_field_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     FD_browserattrib *ui = ob->form->fdui;
 

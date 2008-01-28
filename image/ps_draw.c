@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_draw.c,v 1.5 2003/11/21 13:23:23 leeming Exp $
+ * $Id: ps_draw.c,v 1.6 2008/01/28 23:43:14 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -38,6 +38,13 @@
 #include "include/forms.h"
 #include "private/pflps.h"
 
+#if defined __GNUC__
+#define FL_UNUSED_ARG __attribute__ ((unused))
+#else
+#define FL_UNUSED_ARG
+#endif
+
+
 /* rectangle with rounded corners */
 #define RS 16
 
@@ -49,7 +56,7 @@ static float offset[] =
     0.0f, 0.07612f, 0.29289f, 0.61732f, 1.0f
 };
 
-#define RN   (sizeof(offset)/sizeof(offset[0]))
+#define RN   ( sizeof offset / sizeof *offset )
 
 static int
 compute_rounded_corners(FL_Coord x, FL_Coord y, FL_Coord w,
@@ -498,7 +505,13 @@ flps_draw_box(int style, int x, int y, int w, int h, long col,
  * Frame is drawn OUTSIDE of the bounding box
  */
 void
-flps_draw_frame(int style, int x, int y, int w, int h, long col, int bw)
+flps_draw_frame( int  style,
+				 int  x,
+				 int  y,
+				 int  w,
+				 int  h,
+				 long col  FL_UNUSED_ARG,
+				 int  bw )
 {
     int border;
     int B;

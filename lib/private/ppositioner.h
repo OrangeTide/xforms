@@ -37,16 +37,19 @@
 
 typedef struct
 {
-    float xmin, ymin;		/* minimal values  */
-    float xmax, ymax;		/* maximal values  */
-    float xval, yval;		/* current values  */
-    float lxval, lyval;		/* previous values */
-    float xstep, ystep;		/* step size to which values are rounded  */
-    int how_return;		/* whether always returning value  */
-    int partial;
-    int changed;
-}
-
-FL_POSITIONER_SPEC;
+    double xmin,				/* minimal values  */
+           ymin;
+    double xmax,				/* maximal values  */
+	       ymax;
+    double xval,				/* current values  */
+	       yval;
+    double lxval,				/* previous values */
+	       lyval;
+    double xstep,				/* step size to which values are rounded  */
+	       ystep;
+    int    how_return;			/* whether always returning value  */
+    int    partial;
+    int    changed;
+} FL_POSITIONER_SPEC;
 
 #endif

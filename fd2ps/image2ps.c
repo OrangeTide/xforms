@@ -43,8 +43,12 @@ static const char *hexdigits = "0123456789abcdef";
 #define LINELENGTH  37
 
 int
-image2colorps(short *pixels, int w, int h, fd2psCMAP * map, int ncol,
-	      const char *cmt)
+image2colorps( short      * pixels,
+			   int          w,
+			   int          h,
+			   fd2psCMAP *  map,
+			   int          ncol  FL_UNUSED_ARG,
+			   const char * cmt)
 {
     int x, y, k, r, g, b;
     int *rb, *gb, *bb;

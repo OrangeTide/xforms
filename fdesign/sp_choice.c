@@ -73,7 +73,8 @@ get_choice_spec_fdform(void)
 }
 
 void
-choice_spec_restore(FL_OBJECT * ob, long data)
+choice_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *edited = choice_attrib->vdata;
 
@@ -194,7 +195,8 @@ save_choice_attrib(FILE * fp, FL_OBJECT * ob)
 
 /* callbacks and freeobj handles for form choiceattrib */
 void
-add_choice_item_cb(FL_OBJECT * ob, long data)
+add_choice_item_cb( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     FD_choiceattrib *ui = ob->form->fdui;
     const char *s = fl_get_input(ui->input);
@@ -221,7 +223,8 @@ add_choice_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-replace_choice_item_cb(FL_OBJECT * ob, long data)
+replace_choice_item_cb( FL_OBJECT * ob,
+						long        data  FL_UNUSED_ARG )
 {
     FD_choiceattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -245,7 +248,8 @@ replace_choice_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-delete_choice_item_cb(FL_OBJECT * ob, long data)
+delete_choice_item_cb( FL_OBJECT * ob,
+					   long        data  FL_UNUSED_ARG )
 {
     FD_choiceattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -260,7 +264,8 @@ delete_choice_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-change_choice_item_cb(FL_OBJECT * ob, long data)
+change_choice_item_cb( FL_OBJECT * ob,
+					   long        data  FL_UNUSED_ARG )
 {
     FD_choiceattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
@@ -277,7 +282,8 @@ change_choice_item_cb(FL_OBJECT * ob, long data)
 }
 
 void
-clear_choice_field_cb(FL_OBJECT * ob, long data)
+clear_choice_field_cb( FL_OBJECT * ob,
+					   long        data  FL_UNUSED_ARG )
 {
     FD_choiceattrib *ui = ob->form->fdui;
 
@@ -287,7 +293,8 @@ clear_choice_field_cb(FL_OBJECT * ob, long data)
 }
 
 void
-choice_align_cb(FL_OBJECT * ob, long data)
+choice_align_cb( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
     FD_choiceattrib *ui = ob->form->fdui;
     const char *s = fl_get_choice_text(ob);
@@ -298,7 +305,8 @@ choice_align_cb(FL_OBJECT * ob, long data)
 }
 
 void
-choice_val_cb(FL_OBJECT * ob, long data)
+choice_val_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
     FD_choiceattrib *ui = ob->form->fdui;
     int v = fl_get_counter_value(ob) + 0.1;
@@ -310,13 +318,15 @@ choice_val_cb(FL_OBJECT * ob, long data)
 }
 
 void
-use_struct_cb(FL_OBJECT * ob, long data)
+use_struct_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
     choice_spec->new_menuapi = fl_get_button(ob);
 }
 
 void
-choiceentry_scope_cb(FL_OBJECT * ob, long data)
+choiceentry_scope_cb( FL_OBJECT * ob,
+					  long        data  FL_UNUSED_ARG )
 {
     choice_spec->global_scope = (fl_get_choice(ob) - 1) > 0;
 }

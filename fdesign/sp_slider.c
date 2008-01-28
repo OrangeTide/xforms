@@ -60,7 +60,8 @@ get_slider_spec_fdform(void)
 
 
 void
-slider_spec_restore(FL_OBJECT * ob, long data)
+slider_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *edit_obj;
 
@@ -203,7 +204,8 @@ save_slider_attrib(FILE * fp, FL_OBJECT * ob)
 }
 
 void
-adjust_precision(FL_OBJECT * ob, long data)
+adjust_precision( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
     double p = fl_get_counter_value(ob);
 
@@ -213,7 +215,8 @@ adjust_precision(FL_OBJECT * ob, long data)
 }
 
 void
-minmax_change(FL_OBJECT * ob, long data)
+minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+			   long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value(sl_attrib->minval, 3);
     double max = get_finput_value(sl_attrib->maxval, 3);
@@ -224,7 +227,8 @@ minmax_change(FL_OBJECT * ob, long data)
 }
 
 void
-slsize_change(FL_OBJECT * ob, long data)
+slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+			   long        data  FL_UNUSED_ARG )
 {
     double slsize = get_finput_value(sl_attrib->slsize, 3);
 
@@ -234,7 +238,8 @@ slsize_change(FL_OBJECT * ob, long data)
 }
 
 void
-step_change(FL_OBJECT * ob, long data)
+step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+			 long        data  FL_UNUSED_ARG )
 {
     double step = get_finput_value(sl_attrib->step, 5);
 
@@ -244,7 +249,8 @@ step_change(FL_OBJECT * ob, long data)
 }
 
 void
-increment_change(FL_OBJECT * ob, long data)
+increment_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+				  long        data  FL_UNUSED_ARG )
 {
     double l = get_finput_value(sl_attrib->ldelta, -1);
     double r = get_finput_value(sl_attrib->rdelta, -1);
@@ -253,7 +259,8 @@ increment_change(FL_OBJECT * ob, long data)
 }
 
 void
-initialvalue_change(FL_OBJECT * ob, long data)
+initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value(sl_attrib->initial_val, 3);
 
@@ -266,7 +273,8 @@ initialvalue_change(FL_OBJECT * ob, long data)
 }
 
 void
-returnsetting_change(FL_OBJECT * ob, long data)
+returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+					  long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(sl_attrib->returnsetting);
     fl_set_slider_return(sl_attrib->vdata, get_how_return_str_value(s));

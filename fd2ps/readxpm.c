@@ -75,7 +75,9 @@ read_xpm(const char *file, int *w, int *h, int *ncol,
     int char_per_pixel, signature = 0;
     int x, y, icol, c, n, i, match;
     fd2psCMAP *map = 0;
-    int r, g, b;
+    int r = 0,
+		g = 0,
+		b = 0;
     short *pixels, *p;
     FILE *fp;
 

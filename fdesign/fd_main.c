@@ -61,7 +61,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.11 $ of $Date: 2004/05/27 12:21:44 $",
+    "$State: Exp $  $Revision: 1.12 $ of $Date: 2008/01/28 23:39:00 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -144,7 +144,8 @@ add_something(void)
 
 /* Changes the main calling name. */
 void
-mainname_cb(FL_OBJECT * obj, long arg)
+mainname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			 long        arg  FL_UNUSED_ARG )
 {
     const char *s;
 
@@ -179,7 +180,8 @@ double_click(const XEvent * xev)
 
 /* mouse click inside the working window */
 static int
-handle_click(XEvent * xev, void *p)
+handle_click( XEvent * xev,
+			  void   * p  FL_UNUSED_ARG  )
 {
     int dblclk = double_click(xev);
 
@@ -274,7 +276,7 @@ handle_keypress(const XKeyEvent * xev)
  * badly, can't use buttonpress callback
  */
 void
-process_xevent(int no_add)
+process_xevent( int no_add  FL_UNUSED_ARG )
 {
     XEvent xev;
 
@@ -482,7 +484,8 @@ lang_val(const char *s)
 static int ignored_fake_configure;
 
 static int
-handle_configure(XEvent * xev, void *p)
+handle_configure( XEvent * xev,
+				  void   * p  FL_UNUSED_ARG )
 {
     /* some window managers sends bogus configure events. Make a note of it */
     if (xev->xconfigure.send_event)
@@ -497,7 +500,8 @@ handle_configure(XEvent * xev, void *p)
 }
 
 static int
-handle_expose(XEvent * xev, void *p)
+handle_expose( XEvent * xev,
+			   void   * p  FL_UNUSED_ARG )
 {
     if (xev->xexpose.count == 0)
     {
@@ -629,7 +633,8 @@ parse_geometry(const char *gstr, int *x, int *y,
 
 #include <signal.h>
 static void
-interrupted(int s, void *data)
+interrupted( int    s     FL_UNUSED_ARG,
+			 void * data  FL_UNUSED_ARG )
 {
     exit_cb(0, 0);
 }
@@ -638,7 +643,8 @@ interrupted(int s, void *data)
  * default action for delete window client message
  */
 static int
-delete_handler(FL_FORM * form, void *data)
+delete_handler( FL_FORM * form  FL_UNUSED_ARG,
+				void    * data  FL_UNUSED_ARG )
 {
     if (changed)
     {

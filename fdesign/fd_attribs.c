@@ -49,26 +49,33 @@ int auto_apply = 1;
 static void readback_attributes(FL_OBJECT *);
 
 /* Call-back routine to get a color from the user */
+
 void
-setcolor_cb(FL_OBJECT * obj, long arg)
+setcolor_cb( FL_OBJECT * obj,
+			 long        arg  FL_UNUSED_ARG )
 {
     int col1 = fl_show_colormap(obj->col1);
     fl_set_object_color(obj, col1, col1);
     auto_apply_cb(0, 0);
 }
 
+
 /* if change attributes automatically */
+
 void
-auto_apply_cb(FL_OBJECT * ob, long arg)
+auto_apply_cb( FL_OBJECT * ob,
+			   long        arg )
 {
     if (auto_apply)
 	apply_cb(ob, arg);
 }
 
+
 /* the auto-apply setting itself */
 
 void
-autoapply_setting_cb(FL_OBJECT * ob, long arg)
+autoapply_setting_cb( FL_OBJECT * ob,
+					  long        arg  FL_UNUSED_ARG )
 {
     if (!(auto_apply = fl_get_button(ob)))
 	fl_show_object(fd_attrib->applyobj);
@@ -115,18 +122,24 @@ restore_object(FL_OBJECT * obj)
 
 /********** End of cancel/restore ********}***/
 
+
 /* really change object attributes */
+
 void
-apply_cb(FL_OBJECT * obj, long arg)
+apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		  long        arg  FL_UNUSED_ARG )
 {
     readback_attributes(curobj);
     change_selected_objects(curobj);
     redraw_the_form(0);
 }
 
+
 /* restore from the original copy */
+
 void
-restore_cb(FL_OBJECT * ob, long data)
+restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			long        data  FL_UNUSED_ARG )
 {
     restore_object(curobj);
     show_attributes(curobj);
@@ -273,8 +286,10 @@ validate_attributes(void)
 	    validate_cvar_name(fd_generic_attrib->cbnameobj));
 }
 
+
 void
-validate_cvar_name_cb(FL_OBJECT * ob, long data)
+validate_cvar_name_cb( FL_OBJECT * ob,
+					   long        data  FL_UNUSED_ARG )
 {
     validate_cvar_name(ob);
 }
@@ -873,7 +888,8 @@ change_type(FL_OBJECT * obj, int type)
 
 
 static void
-accept_spec(FL_OBJECT * ob, long data)
+accept_spec( FL_OBJECT * ob    FL_UNUSED_ARG,
+			 long        data  FL_UNUSED_ARG )
 {
     long tmp;
 
@@ -886,7 +902,8 @@ accept_spec(FL_OBJECT * ob, long data)
 }
 
 static void
-spec_apply_cb(FL_OBJECT * ob, long data)
+spec_apply_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			   long        data  FL_UNUSED_ARG )
 {
     redraw_the_form(0);
 }

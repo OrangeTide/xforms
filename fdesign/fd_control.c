@@ -69,7 +69,8 @@ static MenuEntry fmenu[] =
 #define NFM (sizeof(fmenu)/sizeof(fmenu[0]))
 
 void
-filemenu_callback(FL_OBJECT * ob, long data)
+filemenu_callback( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_menu(ob) - 1;
 
@@ -79,7 +80,8 @@ filemenu_callback(FL_OBJECT * ob, long data)
 
 /* Exit the program */
 void
-exit_cb(FL_OBJECT * obj, long arg)
+exit_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		 long        arg  FL_UNUSED_ARG )
 {
     int rep;
 
@@ -104,7 +106,8 @@ exit_cb(FL_OBJECT * obj, long arg)
 
 /* Escape or clicked on the control panel. If escape, quit */
 void
-esc_exit_cb(FL_OBJECT * obj, long arg)
+esc_exit_cb( FL_OBJECT * obj,
+			 long        arg  FL_UNUSED_ARG )
 {
     if (fl_get_button_numb(obj) > 3)
 	exit_cb(0, 0);
@@ -112,7 +115,8 @@ esc_exit_cb(FL_OBJECT * obj, long arg)
 
 /* Merge a set of forms with the current ones. */
 void
-mergeforms_cb(FL_OBJECT * obj, long arg)
+mergeforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
 {
     load_forms(TRUE, NULL, 0);
     changed = 1;
@@ -121,20 +125,23 @@ mergeforms_cb(FL_OBJECT * obj, long arg)
 
 /* Save the current set of forms. */
 void
-saveforms_cb(FL_OBJECT * obj, long arg)
+saveforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			  long        arg  FL_UNUSED_ARG )
 {
     changed = !save_forms(loadedfile_fullpath);
 }
 
 void
-saveforms_as_cb(FL_OBJECT * obj, long arg)
+saveforms_as_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+				 long        arg  FL_UNUSED_ARG )
 {
     changed = !save_forms(0);
 }
 
 /* Load a new set of forms */
 void
-loadforms_cb(FL_OBJECT * obj, long arg)
+loadforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			  long        arg  FL_UNUSED_ARG )
 {
     if (changed)
     {
@@ -161,7 +168,8 @@ static MenuEntry gmenu[] =
 #define NGM (sizeof(gmenu)/sizeof(gmenu[0]))
 
 void
-groupmenu_callback(FL_OBJECT * ob, long data)
+groupmenu_callback( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_menu(ob) - 1;
 
@@ -188,7 +196,8 @@ static MenuEntry obmenu[] =
 #define NOBM  (sizeof(obmenu)/sizeof(obmenu[0]))
 
 void
-objectmenu_callback(FL_OBJECT * ob, long data)
+objectmenu_callback( FL_OBJECT * ob,
+					 long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_menu(ob) - 1;
 
@@ -206,7 +215,8 @@ static MenuEntry fmmenu[] =
 #define NFMM (sizeof(fmmenu)/sizeof(fmmenu[0]))
 
 void
-formmenu_callback(FL_OBJECT * ob, long data)
+formmenu_callback( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_menu(ob) - 1;
     if (n >= 0 && fmmenu[n].callback)
@@ -227,7 +237,8 @@ static MenuEntry opmenu[] =
 #define NOPM (sizeof(opmenu)/sizeof(opmenu[0]))
 
 void
-optionmenu_callback(FL_OBJECT * ob, long data)
+optionmenu_callback( FL_OBJECT * ob,
+					 long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_menu(ob) - 1;
     char buf[32];
@@ -249,7 +260,8 @@ reset_pallette_menu_status(void)
 }
 
 static void
-deactivate_control(FL_FORM * form, void *data)
+deactivate_control( FL_FORM * form  FL_UNUSED_ARG,
+					void    * data  FL_UNUSED_ARG )
 {
     fl_set_object_lcol(fd_control->title, FL_SLATEBLUE);
     fl_set_object_lcol(fd_control->menubar_group, FL_INACTIVE);
@@ -258,7 +270,8 @@ deactivate_control(FL_FORM * form, void *data)
 }
 
 static void
-activate_control(FL_FORM * form, void *data)
+activate_control( FL_FORM * form  FL_UNUSED_ARG,
+				  void    * data  FL_UNUSED_ARG )
 {
     fl_set_object_lcol(fd_control->title, FL_BLUE);
     fl_set_object_lcol(fd_control->menubar_group, FL_BLACK);
@@ -346,7 +359,11 @@ control_init(FD_control * ui)
 
 /* Misc. service routines */
 void
-show_geometry(const char *s, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h)
+show_geometry( const char * s  FL_UNUSED_ARG,
+			   FL_Coord     x,
+			   FL_Coord     y,
+			   FL_Coord     w,
+			   FL_Coord     h )
 {
     char buf[128];
     static FL_Coord lx = -1, ly, lw = -1, lh;
@@ -455,7 +472,8 @@ fix_button_label_size(FL_FORM * form, int save)
 
 /* testing. */
 void
-test_cb(FL_OBJECT * obj, long arg)
+test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		 long        arg  FL_UNUSED_ARG )
 {
     int i;
     FL_OBJECT *ob;
@@ -516,7 +534,8 @@ test_cb(FL_OBJECT * obj, long arg)
 
 /* Ends a testing session */
 void
-stoptest_cb(FL_OBJECT * obj, long arg)
+stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			 long        arg  FL_UNUSED_ARG )
 {
     int i;
     FL_OBJECT *ob;
@@ -550,7 +569,8 @@ stoptest_cb(FL_OBJECT * obj, long arg)
 /** do alignment */
 /* Shows the align form. */
 void
-align_cb(FL_OBJECT * obj, long arg)
+align_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		  long        arg  FL_UNUSED_ARG )
 {
     if (fd_align->align->visible)
 	fl_hide_form(fd_align->align);
@@ -562,14 +582,16 @@ align_cb(FL_OBJECT * obj, long arg)
 
 /* Stop showing the align window */
 void
-exitalign_cb(FL_OBJECT * obj, long arg)
+exitalign_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			  long        arg  FL_UNUSED_ARG )
 {
     fl_hide_form(fd_align->align);
 }
 
 /* Does some alignment action */
 void
-doalign_cb(FL_OBJECT * obj, long arg)
+doalign_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			long        arg )
 {
     if (fd_align->vdata)
 	free_dupped_selection(fd_align->vdata);
@@ -578,7 +600,8 @@ doalign_cb(FL_OBJECT * obj, long arg)
 }
 
 void
-undoalign_cb(FL_OBJECT * obj, long arg)
+undoalign_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			  long        arg  FL_UNUSED_ARG )
 {
 
     if (fd_align->vdata)
@@ -591,7 +614,8 @@ undoalign_cb(FL_OBJECT * obj, long arg)
 }
 
 void
-snap_cb(FL_OBJECT * obj, long arg)
+snap_cb( FL_OBJECT * obj,
+		 long        arg  FL_UNUSED_ARG )
 {
     float u = fl_get_counter_value(obj);
     set_step_size(u);
@@ -602,7 +626,8 @@ snap_cb(FL_OBJECT * obj, long arg)
 
 /* The user pressed one of the function keys on the main form */
 void
-func_cb(FL_OBJECT * obj, long arg)
+func_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+		 long        arg )
 {
     switch (arg)
     {

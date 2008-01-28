@@ -23,43 +23,47 @@
 /**
  * \file pformbrowser.h
  */
+
 #ifndef PFORMBROWSER_H
 #define PFORMBROWSER_H
 
 typedef struct
 {
 
-    FL_OBJECT *canvas;
-    FL_OBJECT *parent;
-    int nforms;
-    FL_FORM **form;
-    int v_pref;
-    int h_pref;
-    int vw_def, vw;
-    int hh_def, hh;
-    FL_OBJECT *hsl, *vsl;
-    int h_on, v_on;
+    FL_OBJECT * canvas;
+    FL_OBJECT * parent;
+    int         nforms;
+    FL_FORM **  form;
+    int         v_pref;
+    int         h_pref;
+    int         vw_def,
+	            vw;
+    int         hh_def,
+	            hh;
+    FL_OBJECT * hsl;
+	FL_OBJECT * vsl;
+    int         h_on,
+	            v_on;
 
-    int x, y;
-    int left_edge;
-    int top_edge;
-    int top_form;
+    int         x,
+	            y;
+    int         left_edge;
+    int         top_edge;
+    int         top_form;
 
-    int max_height;
-    int max_width;
+    int         max_height;
+    int         max_width;
 
-    int processing_destroy;
-    int in_draw;
-    int scroll;			/* either pixel based or form based */
-}
-FL_FORMBROWSER_SPEC;
+    int         processing_destroy;
+    int         in_draw;
+    int         scroll;			/* either pixel based or form based */
+} FL_FORMBROWSER_SPEC;
 
-#define IsFormBrowserClass(ob) ((ob) && (ob)->objclass==FL_FORMBROWSER)
+#define IsFormBrowserClass( ob )  \
+	( ( ob ) && ( ob )->objclass == FL_FORMBROWSER )
 
-#define OBSPEC(ob) ( ( SPEC *) ob->spec )
-
-#if defined( sun ) && !defined( __SVR4 )
-#define memmove(a,b,c) bcopy(b,a,c)
+#if defined sun && ! defined __SVR4
+#define memmove( a, b, c )   bcopy( b, a, c )
 #endif
 
 #endif

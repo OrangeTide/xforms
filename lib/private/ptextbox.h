@@ -37,48 +37,48 @@
 
 typedef struct
 {
-    char *txt;			/* The text                      */
-    unsigned int len;		/* line length                   */
-    short selected;		/* Whether selected              */
-    short non_selectable;	/* if non-selectable             */
-    short pixels;		/* length in pixels              */
-}
-
-LINE;
+    char *       txt;				/* The text                      */
+    unsigned int len;				/* line length                   */
+    short        selected;			/* Whether selected              */
+    short        non_selectable;	/* if non-selectable             */
+    short        pixels;			/* length in pixels              */
+} LINE;
 
 typedef struct
 {
-    LINE **text;		/* lines of text(0 not used) */
+    LINE **        text;			/* lines of text(0 not used) */
     FL_CALLBACKPTR callback;
-    long callback_data;
-    GC bkGC;			/* background GC             */
-    GC selectGC;		/* selected mark GC          */
-    GC primaryGC;		/* text drawing GC           */
-    GC specialGC;		/* handle font/color change  */
-    FL_COLOR lcol;
-    FL_COLOR col1;
-    FL_COLOR col2;
-    FL_Coord x, y, w, h;	/* browser drawing area      */
-    unsigned int drawtype;
-    int topline;		/* Current topline           */
-    int oldtopline;		/* change mark               */
-    int lines;			/* Number of lines in browser */
-    int avail_lines;		/* Max. available lines      */
-    int selectline;		/* Last selected line        */
-    int desel_mark;
-    int specialkey;		/* Key that indicates a special symbol */
-    int fontstyle;		/* Style of font                 */
-    int fontsize;		/* The character size            */
-    int charheight;		/* base font height              */
-    int chardesc;		/* base font descent             */
-    int screenlines;		/* no. of visible lines          */
-    int vmode;			/* vmode GCs are valid for       */
-    int maxpixels_line;
-    int maxpixels;
-    int attrib;			/* set if there is attrib change */
-    int xoffset;		/* horizontal scroll in pixels    */
-    int lastmx, lastmy;
-}
-FL_TEXTBOX_SPEC;
+    long           callback_data;
+    GC             bkGC;			/* background GC             */
+    GC             selectGC;		/* selected mark GC          */
+    GC             primaryGC;		/* text drawing GC           */
+    GC             specialGC;		/* handle font/color change  */
+    FL_COLOR       lcol;
+    FL_COLOR       col1;
+    FL_COLOR       col2;
+    FL_Coord       x,				/* browser drawing area      */
+	               y,
+	               w,
+	               h;
+    unsigned int   drawtype;
+    int            topline;			/* Current topline           */
+    int            oldtopline;		/* change mark               */
+    int            lines;			/* Number of lines in browser */
+    int            avail_lines;		/* Max. available lines      */
+    int            selectline;		/* Last selected line        */
+    int            desel_mark;
+    int            specialkey;		/* Key that indicates a special symbol */
+    int            fontstyle;		/* Style of font                 */
+    int            fontsize;		/* The character size            */
+    int            charheight;		/* base font height              */
+    int            chardesc;		/* base font descent             */
+    int            screenlines;		/* no. of visible lines          */
+    int            vmode;			/* vmode GCs are valid for       */
+    int            maxpixels_line;
+    int            maxpixels;
+    int            attrib;			/* set if there is attrib change */
+    int            xoffset;			/* horizontal scroll in pixels    */
+    int            lastmx, lastmy;
+} FL_TEXTBOX_SPEC;
 
 #endif

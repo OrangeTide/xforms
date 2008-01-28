@@ -164,7 +164,8 @@ set_class_default(int cn, int def_type, char *label)
 }
 
 static void
-set_var_boxtype(int cn, int yes)
+set_var_boxtype( int cn,
+				 int yes  FL_UNUSED_ARG )
 {
     int i;
 
@@ -194,7 +195,8 @@ fd_add_free(int type, FL_Coord x, FL_Coord y, FL_Coord w,
 
 /* handles a class change event */
 void
-object_cb(FL_OBJECT * obj, long arg)
+object_cb( FL_OBJECT * obj,
+		   long        arg  FL_UNUSED_ARG )
 {
     if (fl_get_browser(obj))
 	cur_class = classes[fl_get_browser(obj) - 1].cn;

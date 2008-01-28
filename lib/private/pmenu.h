@@ -26,8 +26,7 @@
 #ifndef PMENU_H_
 #define PMENU_H_
 
-#define MAXITEMS  (FL_MENU_MAXITEMS+1)	/* index 0 unused */
-typedef unsigned char UChar;
+#define MAXITEMS  ( FL_MENU_MAXITEMS + 1 )	/* index 0 unused */
 
 /* make sure that the first 5 elements are the same as FL_CHOICE.
  * fdesign assumes this
@@ -35,21 +34,19 @@ typedef unsigned char UChar;
 
 typedef struct
 {
-    int numitems;		/* number of items in menu */
-    int val;			/* last menu item selected */
-    char *items[MAXITEMS];	/* individual menu items   */
-    char *shortcut[MAXITEMS];	/* shortcuts for items */
-    UChar mode[MAXITEMS];	/* menu item mode */
-    int align;			/* not used. here to mirror FL_CHOICE */
-    int extern_menu;		/* if external pop is used */
-    int menu;			/* pop-up ID               */
-    short showsymbol;		/* whether menu symbol should be shown */
-    short shown;		/* if shown                     */
-    char mval[MAXITEMS];	/* entry value. currently position based */
-    char modechange[MAXITEMS];
-    char cur_val;		/* a counter for the value      */
-}
-
-FL_MENU_SPEC;
+    int           numitems;				/* number of items in menu */
+    int           val;					/* last menu item selected */
+    char *        items[ MAXITEMS ];	/* individual menu items   */
+    char *        shortcut[ MAXITEMS ];	/* shortcuts for items */
+    unsigned char mode[ MAXITEMS ];		/* menu item mode */
+    int           align;				/* not used. here to mirror FL_CHOICE */
+    int           extern_menu;			/* if external pop is used */
+    int           menu;					/* pop-up ID               */
+    short         showsymbol;			/* whether menu symbol is to be shown */
+    short         shown;				/* if shown                     */
+    char          mval[ MAXITEMS ];		/* entry value, position based */
+    char          modechange[ MAXITEMS ];
+    char          cur_val;				/* a counter for the value      */
+} FL_MENU_SPEC;
 
 #endif

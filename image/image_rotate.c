@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_rotate.c,v 1.5 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_rotate.c,v 1.6 2008/01/28 23:42:49 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -208,20 +208,20 @@ flip_matrix(void *matrix, int rows, int cols, int esize, int what)
  **************************************************************/
 
 /*  Rotate 90 degrees */
-#define DO_M90(type, out, in)                                          \
+#define DO_M90(type, out, in)                                         \
            do {                                                       \
-             register type *p= ((type **)out)[0], **o= in;             \
-             register int i, j;                                       \
+             type *p= ((type **)out)[0], **o= in;                     \
+             int i, j;                                                \
              for ( j= 0; j < col; j++) {                              \
                 for (i= row-1; i>=0; i--) *p++ = o[i][j];             \
              }                                                        \
            } while (0)
 
 /*  Rotate -90 degrees */
-#define DO_90(type, out, in)                                         \
+#define DO_90(type, out, in)                                          \
            do {                                                       \
-              register type *p= ((type **) out)[0], **o= in;          \
-              register int i, j;                                      \
+              type *p= ((type **) out)[0], **o= in;                   \
+              int i, j;                                               \
               for (j= col - 1; j >= 0; j--) {                         \
                  for (i= 0; i < row; i++) *p++ = o[i][j];             \
                }                                                      \
@@ -229,8 +229,8 @@ flip_matrix(void *matrix, int rows, int cols, int esize, int what)
 
 #define DO_180(ty, out, in)                                           \
            do {                                                       \
-             register ty *p= ((ty **)out)[0], *o=((ty **)in)[0];       \
-             register  ty *os;                                        \
+             ty *p= ((ty **)out)[0], *o=((ty **)in)[0];               \
+              ty *os;                                                 \
              for (os= o + col*row-1 ; os>o; *p++ = *os--) ;           \
            } while(0)
 

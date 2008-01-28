@@ -104,7 +104,8 @@ modify_attrib_basic_color(FL_COLOR col1, FL_COLOR col2)
 
 
 void
-clearlog_cb(FL_OBJECT * ob, long data)
+clearlog_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			 long        data  FL_UNUSED_ARG )
 {
     fl_clear_browser(fd_test->browser);
 }

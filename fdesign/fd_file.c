@@ -229,21 +229,21 @@ do_trans(Trantable * tab, int n, int old)
 #define new_btype(o)  do_trans(tbtype, sizeof(tbtype)/sizeof(tbtype[0]),o)
 
 static void
-fd_skip_comment(FILE * fp)
+fd_skip_comment( FILE * fp   FL_UNUSED_ARG )
 {
 #if 0
     int c, done = 0;
 
-    while (!done)
+    while ( ! done )
     {
-	if ((c = getc(fp)) == '#' || c == ';')
-	    while ((c = getc(fp)) != '\n' && c != EOF)
-		;
-	else
-	{
-	    done = 1;
-	    ungetc(c, fp);
-	}
+		if ( ( c = getc( fp ) ) == '#' || c == ';' )
+			while ( ( c = getc( fp ) ) != '\n' && c != EOF )
+				;
+		else
+		{
+			done = 1;
+			ungetc( c, fp );
+		}
     }
 #endif
 }

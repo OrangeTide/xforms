@@ -70,7 +70,8 @@ get_pixmap_spec_fdform(void)
 }
 
 void
-pixmap_spec_restore(FL_OBJECT * ob, long data)
+pixmap_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *pedited = px_attrib->vdata;
 
@@ -258,20 +259,23 @@ save_pixmap_attrib(FILE * fp, FL_OBJECT * ob)
 
 
 void
-pixmapusedata_change(FL_OBJECT * ob, long data)
+pixmapusedata_change( FL_OBJECT * ob,
+					  long        data  FL_UNUSED_ARG )
 {
     info->use_data = fl_get_button(ob);
 }
 
 void
-pixmapfullpath_cb(FL_OBJECT * ob, long data)
+pixmapfullpath_cb( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
     info->fullpath = fl_get_button(ob);
 }
 
 
 void
-pixmap_filename_change(FL_OBJECT * ob, long data)
+pixmap_filename_change( FL_OBJECT * ob,
+						long        data  FL_UNUSED_ARG )
 {
     strcpy(info->filename, fl_get_input(ob));
 
@@ -292,7 +296,8 @@ pixmap_filename_change(FL_OBJECT * ob, long data)
 }
 
 void
-pixmapalign_change(FL_OBJECT * ob, long data)
+pixmapalign_change( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(ob);
 
@@ -308,7 +313,8 @@ pixmapalign_change(FL_OBJECT * ob, long data)
 }
 
 static int
-loadfile(const char *file, void *data)
+loadfile( const char * file,
+		  void       * data  FL_UNUSED_ARG )
 {
     char buf[512];
     char *cwd = fl_getcwd(buf, sizeof(buf) - 2);
@@ -326,7 +332,8 @@ loadfile(const char *file, void *data)
 
 
 void
-pixmaplookfor_pixmapfile_cb(FL_OBJECT * ob, long data)
+pixmaplookfor_pixmapfile_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+							 long        data  FL_UNUSED_ARG )
 {
 
     fl_use_fselector(XPM_FSELECTOR);
@@ -365,7 +372,8 @@ get_xpm_stuff(IconInfo * in, FILE * fp)
 }
 
 static void
-get_xbm_stuff(IconInfo * in, FILE * fp)
+get_xbm_stuff( IconInfo * in,
+			   FILE     * fp  FL_UNUSED_ARG )
 {
     char buf[512], *p;
 

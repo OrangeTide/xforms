@@ -36,114 +36,273 @@
 /* configuration infomation. contains all information needed for
  * both regular gui postscript and image_postscript members
  */
+
 typedef struct
 {
     FLPS_MEMBERS;
-    FILE *fp;
-    int lastc, literal, len;
-    int pack;
-    int verbose;
+    FILE *       fp;
+    int          lastc,
+	             literal,
+	             len;
+    int          pack;
+    int          verbose;
+
     /* cache */
-    int cur_lw, last_lw;        /* line width                */
-    int cur_style, cur_size;    /* font style and size       */
-    long cur_color;             /* color cache               */
-    int landscape;
-    float final_xscale, final_yscale;
+
+    int          cur_lw,        	/* line width                */
+	             last_lw;
+    int          cur_style,    		/* font style and size       */
+	             cur_size;
+    long         cur_color;         /* color cache               */
+    int          landscape;
+    float        final_xscale,
+	             final_yscale;
+
     /* private fields for regular flps  */
-    int unit;			/* unit of measure           */
-    int pages;			/* how many pages            */
-    int page;			/* current page              */
-    int epsf_import;		/* true if importing EPS     */
-    int inverted;		/* take care of coord switch */
-    int user_bw;		/* bw specified on cmdline   */
-    int bw;			/* current border width      */
-    const char *poly_name;	/* PS poly name              */
+
+    int          unit;				/* unit of measure           */
+    int          pages;				/* how many pages            */
+    int          page;				/* current page              */
+    int          epsf_import;		/* true if importing EPS     */
+    int          inverted;			/* take care of coord switch */
+    int          user_bw;			/* bw specified on cmdline   */
+    int          bw;				/* current border width      */
+    const char * poly_name;			/* PS poly name              */
+
     /* private field for image postscript */
-    char *prefix;               /* output file prefix        */
-    int misct, miscl, miscb, miscr; /* misc. margins         */
-    int lastr, lastg, lastb;
-    int comment;
-    int isRGBColor;
-    int rotation;
-    float s2px;             /* screen to paper scaling        */
-    float s2py;             /* screen to paper scaling        */
-    int preserved[2];
-}
-FLPSInfo;
+
+    char *       prefix;            /* output file prefix        */
+    int          misct, 			/* misc. margins         */
+	             miscl,
+	             miscb,
+	             miscr;
+    int          lastr,
+	             lastg,
+	             lastb;
+    int          comment;
+    int          isRGBColor;
+    int          rotation;
+    float        s2px;             /* screen to paper scaling        */
+    float        s2py;             /* screen to paper scaling        */
+    int          preserved[ 2 ];
+} FLPSInfo;
 
 extern FLPSInfo *flps;
 
-extern void flps_color(long);
-extern void flps_rgbcolor(int, int, int);
-extern int flps_get_gray255(long);
-extern void flps_emit_prolog(void);
-extern void flps_emit_header(const char *, int, int, int, int, int);
+extern void flps_color( long );
 
-extern void flps_switch_flps(FLPSInfo *info);
-extern void flps_restore_flps(void);
+extern void flps_rgbcolor( int,
+						   int,
+						   int );
+
+extern int flps_get_gray255( long );
+
+extern void flps_emit_prolog( void );
+
+extern void flps_emit_header( const char *,
+							  int,
+							  int,
+							  int,
+							  int,
+							  int );
+
+extern void flps_switch_flps( FLPSInfo * );
+
+extern void flps_restore_flps( void );
 
 
 /* basic drawing of simple geomtric figures */
-extern void flps_draw_init(void);
-extern void flps_rectangle(int, int, int, int, int, long);
-extern void flps_roundrectangle(int, int, int, int, int, long);
-extern void flps_lines(FL_POINT *, int, long);
-extern void flps_line(int, int, int, int, long);
-extern void flps_poly(int, FL_POINT *, int, long);
-extern int flps_draw_symbol(const char *, int, int, int, int, long);
-extern void flps_oval(int, int, int, int, int, long);
-extern void flps_pieslice(int fill, int x, int y, int w, int h,
-			  int t1, int t2, long col);
-extern void flps_circ(int, int, int, int, long);
-extern void flps_arc(int fill, int x, int y, int r, int t1, int t2, long col);
+
+extern void flps_draw_init( void );
+
+extern void flps_rectangle( int,
+							int,
+							int,
+							int,
+							int,
+							long );
+
+extern void flps_roundrectangle( int,
+								 int,
+								 int,
+								 int,
+								 int,
+								 long );
+
+extern void flps_lines( FL_POINT *,
+						int,
+						long);
+
+extern void flps_line( int,
+					   int,
+					   int,
+					   int,
+					   long );
+
+extern void flps_poly( int,
+					   FL_POINT *,
+					   int,
+					   long );
+extern int flps_draw_symbol( const char *,
+							 int,
+							 int,
+							 int,
+							 int,
+							 long );
+
+extern void flps_oval( int,
+					   int,
+					   int,
+					   int,
+					   int,
+					   long );
+
+extern void flps_pieslice( int,
+						   int,
+						   int,
+						   int,
+						   int,
+						   int,
+						   int,
+						   long );
+
+extern void flps_circ( int,
+					   int,
+					   int,
+					   int,
+					   long );
+
+extern void flps_arc( int,
+					  int,
+					  int,
+					  int,
+					  int,
+					  int,
+					  long );
 
 
-#define flps_rectf(x,y,w,h,c)   flps_rectangle(1,x,y,w,h,c)
-#define flps_rect(x,y,w,h,c)    flps_rectangle(0,x,y,w,h,c)
+#define flps_rectf( x, y, w, h, c )   flps_rectangle( 1, x, y, w, h, c )
+#define flps_rect( x, y, w, h, c )    flps_rectangle( 0, x, y, w, h, c )
 
 
-extern void flps_draw_box(int, int, int, int, int, long, int);
-extern void flps_draw_tbox(int, int, int, int, int, long, int);
-extern void flps_draw_frame(int, int, int, int, int, long, int);
-extern void flps_draw_checkbox(int, int, int, int, int, long, int);
+extern void flps_draw_box( int,
+						   int,
+						   int,
+						   int,
+						   int,
+						   long,
+						   int );
+
+extern void flps_draw_tbox( int,
+							int,
+							int,
+							int,
+							int,
+							long,
+							int );
+
+extern void flps_draw_frame( int,
+							 int,
+							 int,
+							 int,
+							 int,
+							 long,
+							 int );
+
+extern void flps_draw_checkbox( int,
+								int,
+								int,
+								int,
+								int,
+								long,
+								int );
+
 
 /* basic text drawing routines */
 
-extern void flps_draw_text(int, int, int, int, int, long, int, int,
-			   const char *);
-extern void flps_draw_text_beside(int, int, int, int, int, long, int,
-				  int, const char *);
-extern void flps_text_init(void);
+extern void flps_draw_text( int,
+							int,
+							int,
+							int,
+							int,
+							long,
+							int,
+							int,
+							const char * );
 
-extern int find_type_val(int, const char *);
-extern void flps_reset_cache(void);
-extern void flps_invalidate_color_cache(void);
-extern void flps_invalidate_font_cache(void);
-extern void flps_invalidate_linewidth_cache(void);
-extern void flps_invalidate_symbol_cache(void);
-extern void flps_linewidth(int);
-extern int flps_get_linewidth(void);
-extern void flps_reset_linewidth(void);
-extern void flps_linestyle(int);
-extern int flps_get_linestyle(void);
+extern void flps_draw_text_beside( int,
+								   int,
+								   int,
+								   int,
+								   int,
+								   long,
+								   int,
+								   int, const char * );
 
-extern void flps_log(const char *s);
-extern void flps_output(const char *s,...);
-extern void flps_set_font(int, int);
+extern void flps_text_init( void );
 
-extern int get_gray255(long);
-extern void get_scale_unit(int, float *, float *);
+extern int find_type_val( int,
+						  const char * );
+
+extern void flps_reset_cache( void );
+
+extern void flps_invalidate_color_cache( void );
+
+extern void flps_invalidate_font_cache( void );
+
+extern void flps_invalidate_linewidth_cache( void );
+
+extern void flps_invalidate_symbol_cache( void );
+
+extern void flps_linewidth( int );
+
+extern int flps_get_linewidth( void );
+
+extern void flps_reset_linewidth( void );
+
+extern void flps_linestyle( int );
+
+extern int flps_get_linestyle( void );
+
+extern void flps_log( const char * );
+
+extern void flps_output(const char *,
+						... );
+
+extern void flps_set_font( int,
+						   int );
+
+extern int get_gray255( long );
+
+extern void get_scale_unit( int,
+							float *,
+							float * );
+
 extern void ps_invalidate_font_cache(void);
-extern char *ps_literal(const char *);
-extern void flps_set_clipping(int, int, int, int);
-extern void flps_unset_clipping(void);
-extern void flps_apply_gamma(float);
-extern int flps_get_namedcolor(const char *);
+
+extern char *ps_literal( const char * );
+
+extern void flps_set_clipping( int,
+							   int,
+							   int,
+							   int);
+
+extern void flps_unset_clipping( void );
+
+extern void flps_apply_gamma( float );
+
+extern int flps_get_namedcolor( const char * );
 
 
-
-#define PS_SPECIAL(c) ( c=='('||c==')'||c=='['||c==']' || \
-                        c=='<'||c=='>'||c=='%' ||c=='#' ||c=='/')
+#define PS_SPECIAL( c )  (    ( c ) == '('  \
+						   || ( c ) == ')'  \
+						   || ( c ) == '['  \
+						   || ( c ) == ']'  \
+						   || ( c ) == '<'  \
+						   || ( c ) == '>'  \
+						   || ( c ) == '%'  \
+						   || ( c ) == '#'  \
+						   || ( c ) == '/' )
 
 
 #endif

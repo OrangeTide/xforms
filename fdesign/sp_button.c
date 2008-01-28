@@ -71,7 +71,8 @@ get_button_spec_fdform(void)
 }
 
 void
-button_spec_restore(FL_OBJECT * ob, long data)
+button_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     FL_OBJECT *bedited = bt_attrib->vdata;
 
@@ -366,19 +367,22 @@ save_button_attrib(FILE * fp, FL_OBJECT * ob)
 
 
 void
-usedata_change(FL_OBJECT * ob, long data)
+usedata_change( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     info->use_data = fl_get_button(ob);
 }
 
 void
-fullpath_cb(FL_OBJECT * ob, long data)
+fullpath_cb( FL_OBJECT * ob,
+			 long        data  FL_UNUSED_ARG )
 {
     info->fullpath = fl_get_button(ob);
 }
 
 void
-initialval_change(FL_OBJECT * ob, long data)
+initialval_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     fl_set_button(edited, fl_get_button(bt_attrib->initialval));
 
@@ -387,14 +391,16 @@ initialval_change(FL_OBJECT * ob, long data)
 }
 
 void
-showfocus_change(FL_OBJECT * ob, long data)
+showfocus_change( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
     info->show_focus = fl_get_button(ob);
     fl_set_pixmapbutton_focus_outline(edited, info->show_focus);
 }
 
 void
-iconbutton_filename_change(FL_OBJECT * ob, long data)
+iconbutton_filename_change( FL_OBJECT * ob,
+							long        data  FL_UNUSED_ARG )
 {
     if (!IsIconButton(edited->objclass))
 	return;
@@ -419,7 +425,8 @@ iconbutton_filename_change(FL_OBJECT * ob, long data)
 }
 
 void
-focusiconbutton_filename_change(FL_OBJECT * ob, long data)
+focusiconbutton_filename_change( FL_OBJECT * ob,
+								 long        data  FL_UNUSED_ARG )
 {
     if (!IsIconButton(edited->objclass))
 	return;
@@ -455,7 +462,8 @@ get_helper(char *s)
 }
 
 void
-helper_change_cb(FL_OBJECT * ob, long data)
+helper_change_cb( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
     strcpy(info->helper, fl_get_input(ob));
     if (info->helper[0])
@@ -463,7 +471,8 @@ helper_change_cb(FL_OBJECT * ob, long data)
 }
 
 void
-pixalign_change(FL_OBJECT * ob, long data)
+pixalign_change( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(ob);
 
@@ -500,7 +509,8 @@ loadfile(const char *file, void *data)
 
 
 void
-lookfor_pixmapfile_cb(FL_OBJECT * ob, long data)
+lookfor_pixmapfile_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
+					   long        data )
 {
     fl_use_fselector(XPM_FSELECTOR);
     fl_set_fselector_placement(FL_PLACE_MOUSE);
@@ -513,7 +523,8 @@ lookfor_pixmapfile_cb(FL_OBJECT * ob, long data)
  * and size
  */
 static void
-get_xpm_stuff(char *inbuf, FILE * fp)
+get_xpm_stuff( char * inbuf,
+			   FILE * fp )
 {
     char buf[256], *p;
     int done = 0;
@@ -544,7 +555,8 @@ get_xpm_stuff(char *inbuf, FILE * fp)
 }
 
 static void
-get_xbm_stuff(IconInfo * in, FILE * fp)
+get_xbm_stuff( IconInfo * in,
+			   FILE     * fp  FL_UNUSED_ARG )
 {
     char buf[512], *p;
 
