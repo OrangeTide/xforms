@@ -37,8 +37,8 @@
 #ifndef FL_EXTERN_H_MAKING_FORMS_ONLY
 #define FL_EXTERN_H_MAKING_FORMS_ONLY
 
-extern Pixmap fl_gray_pattern[];
-extern GC fl_bwgc[];
+extern Pixmap fl_gray_pattern[ ];
+extern GC fl_bwgc[ ];
 extern GC fl_whitegc;
 extern int fl_safe;
 extern FL_COLOR fl_shadow_col;
@@ -47,16 +47,20 @@ extern unsigned long fl_keybdmask;
 
 extern FL_OBJECT *fl_current_group;
 
-#define fl_inactive_pattern fl_gray_pattern[1]
+#define fl_inactive_pattern fl_gray_pattern[ 1 ]
 
 extern Display *fl_display;
-extern Window fl_root, fl_vroot;
+extern Window fl_root,
+              fl_vroot;
 extern int fl_screen;
 
-extern int fl_vmode, fl_vdepth;
-extern int fl_bestvmode, fl_mostdepth;
+extern int fl_vmode,
+           fl_vdepth;
+extern int fl_bestvmode,
+           fl_mostdepth;
 
-extern int fl_scrh, fl_scrw;
+extern int fl_scrh,
+           fl_scrw;
 extern unsigned int fl_keymask;
 
 extern FL_WM_STUFF fl_wmstuff;
@@ -68,15 +72,20 @@ extern FL_CONTEXT *fl_context;
 extern FL_TARGET  *flx;
 extern long fl_requested_vid;
 extern int fl_no_connection;
-extern char fl_curfnt[127];
+extern char fl_curfnt[ 127 ];
 
-extern int fl_canvas_boxtype2frame(int);
+extern int fl_canvas_boxtype2frame( int );
 
-extern void fl_drw_tbox(int, FL_Coord, FL_Coord, FL_Coord, FL_Coord,
-			FL_COLOR, int);
+extern void fl_drw_tbox( int,
+						 FL_Coord,
+						 FL_Coord,
+						 FL_Coord,
+						 FL_Coord,
+						 FL_COLOR,
+						 int );
 
 
-extern void (*fl_xyplot_return) (FL_OBJECT *, int);
+extern void ( * fl_xyplot_return )( FL_OBJECT *, int );
 
 
 #endif /* !def EXTERN.H */

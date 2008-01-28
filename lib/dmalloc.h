@@ -41,37 +41,54 @@
 
 #include <stdlib.h>
 
-#ifdef  TC_MEMDBG
-extern void *tc_dbg_malloc(size_t, const char *, int);
-extern void *tc_dbg_calloc(size_t, size_t, const char *, int);
-extern void *tc_dbg_realloc(void *, size_t, const char *, int);
-extern void *tc_dbg_getmat(int, int, size_t, const char *, int);
-extern char *tc_dbg_strdup(const char *, const char *, int);
-extern void tc_dbg_free(void *, const char *, int);
-extern void tc_true_free(void *);
-extern void tc_set_mem_warn(int);
-extern void tc_mem_stat(int);
+#ifdef TC_MEMDBG
+
+extern void *tc_dbg_malloc( size_t,
+							const char *,
+							int );
+extern void *tc_dbg_calloc( size_t,
+							size_t,
+							const char *,
+							int );
+extern void *tc_dbg_realloc( void *,
+							 size_t,
+							 const char *,
+							 int );
+extern void *tc_dbg_getmat( int,
+							int,
+							size_t,
+							const char *,
+							int );
+extern char *tc_dbg_strdup( const char *,
+							const char *,
+							int );
+extern void tc_dbg_free( void *,
+						 const char *,
+						 int );
+extern void tc_true_free( void * );
+extern void tc_set_mem_warn( int );
+extern void tc_mem_stat( int );
 
 #ifndef TC_MEMDBG_OWNER		/* actual replacememnt */
-#define fl_malloc(a)        tc_dbg_malloc(a,__FILE__,__LINE__)
-#define fl_calloc(a,b)      tc_dbg_calloc(a,b,__FILE__,__LINE__)
-#define fl_realloc(a,b)     tc_dbg_realloc(a,b,__FILE__,__LINE__)
-#define fl_free(a)          tc_dbg_free(a,__FILE__,__LINE__)
-#define strdup(a)           tc_dbg_strdup(a,__FILE__,__LINE__)
+#define fl_malloc( a )        tc_dbg_malloc( a, __FILE__, __LINE__ )
+#define fl_calloc( a, b )     tc_dbg_calloc( a, b, __FILE__, __LINE__ )
+#define fl_realloc( a, b )    tc_dbg_realloc( a, b, __FILE__, __LINE__ )
+#define fl_free( a )          tc_dbg_free( a, __FILE__, __LINE__ )
+#define strdup( a )           tc_dbg_strdup( a, __FILE__, __LINE__ )
 #endif /* TC_MEMDBG_OWNER */
 
 #else /* if not debug, tfree becomes free */
 
 #ifndef fl_free
-#define fl_malloc(a)        malloc(a)
-#define fl_calloc(a,b)      calloc(a,b)
-#define fl_realloc(a,b)     realloc(a,b)
-#define fl_free(a)          free(a)
+#define fl_malloc( a )        malloc( a )
+#define fl_calloc( a, b )     calloc( a, b )
+#define fl_realloc( a, b )    realloc( a, b )
+#define fl_free( a )          free( a )
 #endif
 
-#define tc_true_free(p)     free(p)
-#define tc_mem_stat(a)
-#define tc_set_mem_warn(p)
+#define tc_true_free( p )     free( p )
+#define tc_mem_stat( a )
+#define tc_set_mem_warn( p )
 
 #endif /* TC_MEMDBG */
 

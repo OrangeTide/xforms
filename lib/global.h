@@ -36,27 +36,32 @@
 #ifndef FL_GLOBAL_H
 #define FL_GLOBAL_H
 
-Window fl_root, fl_vroot;
+Window fl_root,
+       fl_vroot;
 int fl_screen;
 
 /* memory routines */
-void *(*fl_calloc) (size_t, size_t) = calloc;
-void *(*fl_malloc) (size_t) = malloc;
-void *(*fl_realloc) (void *, size_t) = realloc;
-void (*fl_free) (void *) = free;
 
-FL_State fl_state[6];
-int fl_vmode = -1, fl_vdepth;
-int fl_bestvmode, fl_mostdepth;
+void * ( * fl_calloc )( size_t, size_t )  = calloc;
+void * ( * fl_malloc )( size_t )          = malloc;
+void * ( * fl_realloc )( void *, size_t ) = realloc;
+void ( * fl_free )( void * )              = free;
 
-int fl_scrh, fl_scrw;
+FL_State fl_state[ 6 ];
+int fl_vmode = -1,
+    fl_vdepth;
+int fl_bestvmode,
+    fl_mostdepth;
+
+int fl_scrh,
+    fl_scrw;
 int fl_safe;
 unsigned int fl_keymask;
 char *fl_ul_magic_char = "\010";
 
 FL_COLOR fl_shadow_col = FL_RIGHT_BCOL;
 XKeyboardControl fl_keybdcontrol;
-unsigned long fl_keybdmask = (1L << 8) - 1;
+unsigned long fl_keybdmask = ( 1L << 8 ) - 1;
 
 FL_WM_STUFF fl_wmstuff;
 float fl_dpi = 80.0;
@@ -65,16 +70,18 @@ long fl_requested_vid;
 FL_IOPT fl_cntl;
 
 FL_CONTEXT *fl_context;
-char fl_curfnt[127];
+char fl_curfnt[ 127 ];
 FL_FORM *fl_current_form;
 FL_OBJECT *fl_current_group;
 int fl_no_connection;
 FL_WIN *fl_app_win;
-FL_OBJECT *FL_EVENT = (FL_OBJECT *) (-1L);	/* The special event object */
+
+FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;	  /* The special event object */
 
 /* to improve link profile */
-void (*fl_xyplot_return) (FL_OBJECT * ob, int);
+
+void ( * fl_xyplot_return )( FL_OBJECT * ob, int );
 
 FL_TARGET *flx;
 
-#endif /* !def GLOBAL_H */
+#endif /* ! def GLOBAL_H */

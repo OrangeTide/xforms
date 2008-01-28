@@ -38,31 +38,33 @@
 #endif
 
 #ifndef HAVE_STRCASECMP
-extern int strcasecmp(const char *, const char *);
+extern int strcasecmp( const char *,
+					   const char * );
 #endif
 
-#if defined(Lynx)
+#if defined Lynx
 #define NEED_GETCWD
 #endif
 
-#if defined(__VMS)
+#if defined __VMS
 #define NEED_GETCWD
 
 #if __VMS_VER < 70000000
 struct timezone
 {
     int tz_minuteswest;		/* minutes west of Greenwich */
-    int tz_dsttime;		/* type of dst correction */
+    int tz_dsttime;	    	/* type of dst correction */
 };
 
-extern int gettimeofday(struct timeval *tv, struct timezone *tz);
+extern int gettimeofday( struct timeval  * tv,
+						 struct timezone * tz );
 #endif /* ___VMS_VER  */
 
 #endif /* __VMS */
 
 /* (some) suns do not have strerror, use sys_errlist */
 
-#if ( defined(sun) || defined(__sun__) ) && !defined( SYSV )
+#if ( defined sun || defined __sun__ ) && ! defined SYSV
 #define BAD_SPRINTF		/* returns char * */
 #endif
 
