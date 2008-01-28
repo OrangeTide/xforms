@@ -49,7 +49,8 @@ static FD_form0 *fd_form0;
 
 /* callbacks for form form0 */
 void
-return_cb(FL_OBJECT * ob, long data)
+return_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
+		   long        data )
 {
     fl_addto_browser(fd_form0->br, (char *) data);
 }
@@ -64,7 +65,8 @@ set_when(int n)
 }
 
 void
-when_cb(FL_OBJECT * ob, long data)
+when_cb( FL_OBJECT * ob,
+		 long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_choice(ob) - 1;
     if (n >= 0)
@@ -72,7 +74,8 @@ when_cb(FL_OBJECT * ob, long data)
 }
 
 void
-resetlog_cb(FL_OBJECT * ob, long data)
+resetlog_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			 long        data  FL_UNUSED_ARG )
 {
     fl_clear_browser(fd_form0->br);
 }

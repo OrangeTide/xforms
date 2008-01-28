@@ -31,13 +31,15 @@
 FL_FORM *form;
 FL_OBJECT *br, *but;
 
-void load_file(FL_OBJECT *ob, long arg)
+void load_file( FL_OBJECT * ob   FL_UNUSED_ARG,
+				long        arg  FL_UNUSED_ARG )
 {
   if (! fl_load_browser(br,fl_show_input("Filename to load","")))
     fl_add_browser_line(br,"NO SUCH FILE!");
 }
 
-void set_size(FL_OBJECT *ob, long arg)
+void set_size( FL_OBJECT * ob  FL_UNUSED_ARG,
+			   long        arg )
 {
   fl_set_browser_fontsize(br, arg);
 }

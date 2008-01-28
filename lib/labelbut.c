@@ -32,50 +32,55 @@
  *  fl_add_button_class and fl_create_generic_button
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_fbut = "$Id: labelbut.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_fbut = "$Id: labelbut.c,v 1.6 2008/01/28 23:20:33 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <sys/types.h>
 #include "include/forms.h"
 #include "flinternal.h"
 
 typedef FL_BUTTON_STRUCT SPEC;
 
+
 /********** DRAWING *************/
 
-/* Draws the object */
+
+/***************************************
+ * Draws the object
+ ***************************************/
+
 static void
-draw_labelbutton(FL_OBJECT * ob)
+draw_labelbutton( FL_OBJECT * ob )
 {
     FL_COLOR scol = ob->lcol;
     FL_COLOR col = ob->lcol;
     FL_Coord dh, dw, ww, absbw = FL_abs(ob->bw);
 
     if (ob->belowmouse)
-	col = ob->col1;
-    if (((SPEC *) (ob->spec))->val)
-	col = ob->col2;
+		col = ob->col1;
+    if (((SPEC *) ob->spec)->val)
+		col = ob->col2;
 
     ob->lcol = col;
 
-    dh = 0.6f * ob->h;
-    dw = FL_min(0.6f * ob->w, dh);
+    dh = 0.6 * ob->h;
+    dw = FL_min(0.6 * ob->w, dh);
 
-    ww = 0.75f * ob->h;
+    ww = 0.75 * ob->h;
     if (ww < (dw + absbw + 1 + (ob->bw > 0)))
-	ww = dw + absbw + 1 + (ob->bw > 0);
+		ww = dw + absbw + 1 + (ob->bw > 0);
 
     if (ob->type == FL_RETURN_BUTTON)
     {
-	fl_drw_text(0,
-		    (FL_Coord) (ob->x + ob->w - ww),
-		    (FL_Coord) (ob->y + 0.2f * ob->h),
-		    dw, dh, ob->lcol, 0, 0, "@returnarrow");
-
+		fl_drw_text(0,
+					(FL_Coord) (ob->x + ob->w - ww),
+					(FL_Coord) (ob->y + 0.2 * ob->h),
+					dw, dh, ob->lcol, 0, 0, "@returnarrow");
     }
 
     fl_draw_object_label(ob);
@@ -83,12 +88,17 @@ draw_labelbutton(FL_OBJECT * ob)
 }
 
 
+/***************************************
+ * creates an object
+ ***************************************/
 
-
-/* creates an object */
 FL_OBJECT *
-fl_create_labelbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		      const char *label)
+fl_create_labelbutton( int          type,
+					   FL_Coord     x,
+					   FL_Coord     y,
+					   FL_Coord     w,
+					   FL_Coord     h,
+					   const char * label)
 {
     FL_OBJECT *ob;
 
@@ -103,10 +113,17 @@ fl_create_labelbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 }
 
 
-/* Adds an object */
+/***************************************
+ * Adds an object
+ ***************************************/
+
 FL_OBJECT *
-fl_add_labelbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		   const char *label)
+fl_add_labelbutton( int          type,
+					FL_Coord     x,
+					FL_Coord     y,
+					FL_Coord     w,
+					FL_Coord     h,
+					const char * label)
 {
     FL_OBJECT *ob;
 

@@ -37,7 +37,8 @@ FL_FORM *form;
 FL_OBJECT *result, *co[3];
 
 void
-color_change(FL_OBJECT *ob, long data)
+color_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
     int r =  (int)fl_get_counter_value(co[0]);
     int g =  (int)fl_get_counter_value(co[1]);

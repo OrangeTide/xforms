@@ -27,34 +27,39 @@
 #include <stdlib.h>
 #include "fd/formbrowser_gui.h"
 
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
     exit(0);
 }
 
-void hide_show_cb(FL_OBJECT *ob, long data)
+void hide_show_cb( FL_OBJECT * ob,
+				   long        data )
 {
-    FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
+    FD_mainform *fdui = ob->form->fdui;
 
     (data ? fl_show_object:fl_hide_object)(fdui->formbrowser);
 }
 
-void reshow_cb(FL_OBJECT *ob, long data)
+void reshow_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
    fl_hide_form(ob->form);
    fl_show_form(ob->form,FL_PLACE_POSITION,FL_FULLBORDER,"formbrowser");
 
 }
 
-void scroll_cb(FL_OBJECT *ob, long data)
+void scroll_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
      static int n;
-     FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
+     FD_mainform *fdui = ob->form->fdui;
 
      fl_set_formbrowser_scroll(fdui->formbrowser, ++n%2);
 }
 
-void deactivate_cb(FL_OBJECT *ob, long data)
+void deactivate_cb( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
    FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
 

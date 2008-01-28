@@ -48,7 +48,8 @@ FL_OBJECT *redsl, *greensl, *bluesl, *colorobj;
 int r= 128, g = 128, b= 128 ;
 
 /* color form callback routine */
-void color_callback(FL_OBJECT *obj, void *d)
+void color_callback( FL_OBJECT * obj  FL_UNUSED_ARG,
+					 void      * d    FL_UNUSED_ARG )
 {
    r =  (int)(255*fl_get_slider_value(redsl));
    g =  (int)(255*fl_get_slider_value(greensl));
@@ -96,7 +97,8 @@ FL_OBJECT *squareobj, *exitobj, *sizeobj;
 int curobj = 1, cursize = 20;
 
 void
-select_object(FL_OBJECT *ob, long which)
+select_object( FL_OBJECT * ob  FL_UNUSED_ARG,
+			   long        which )
 {
    curobj = which;
 }
@@ -104,7 +106,8 @@ select_object(FL_OBJECT *ob, long which)
 void clearit(FL_OBJECT *, long );
 
 /* control form callback routine */
-void control_callback(FL_OBJECT *obj, void *d)
+void control_callback( FL_OBJECT * obj,
+					   void      * d  FL_UNUSED_ARG )
 {
    if (obj == sizeobj)
        cursize = (int)(40 * fl_get_slider_value(sizeobj));
@@ -201,14 +204,16 @@ void redrawit(void)
        drawit(ob + i);
 }
 
-void clearit(FL_OBJECT *ob, long data)
+void clearit( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
    onumb = 0;
    redrawit();
 }
 
 /* event callback routine */
-int main_callback(XEvent *xev, void *p)
+int main_callback( XEvent * xev,
+				   void   * p    FL_UNUSED_ARG )
 {
    fl_winset(main_win);
 

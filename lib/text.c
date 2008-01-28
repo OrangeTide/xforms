@@ -32,43 +32,63 @@
  * Text object
  *
  */
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_txt = "$Id: text.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+
+#if defined F_ID || defined DEBUG
+char *fl_id_txt = "$Id: text.c,v 1.6 2008/01/28 23:23:36 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
+
+/***************************************
+ ***************************************/
+
 static int
-handle_it(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-	  int key, void *ev)
+handle_it( FL_OBJECT * ob,
+		   int         event,
+		   FL_Coord    mx   FL_UNUSED_ARG,
+		   FL_Coord    my   FL_UNUSED_ARG,
+		   int         key  FL_UNUSED_ARG,
+		   void *      ev   FL_UNUSED_ARG )
 {
-    switch (event)
+    switch ( event )
     {
-    case FL_DRAW:
-	ob->align |= FL_ALIGN_INSIDE;
-	fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
-		   ob->bw);
-    case FL_DRAWLABEL:
-	fl_set_text_clipping(ob->x + FL_abs(ob->bw), ob->y + 2,
-			     ob->w - 2 * FL_abs(ob->bw), ob->h - 4);
-	fl_draw_object_label(ob);
-	fl_unset_text_clipping();
-	break;
+		case FL_DRAW:
+			ob->align |= FL_ALIGN_INSIDE;
+			fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+					   ob->bw);
+
+		case FL_DRAWLABEL:
+			fl_set_text_clipping(ob->x + FL_abs(ob->bw), ob->y + 2,
+								 ob->w - 2 * FL_abs(ob->bw), ob->h - 4);
+			fl_draw_object_label(ob);
+			fl_unset_text_clipping();
+			break;
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_text(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	       const char *label)
+fl_create_text( int          type,
+				FL_Coord     x,
+				FL_Coord     y,
+				FL_Coord     w,
+				FL_Coord     h,
+				const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_TEXT, type, x, y, w, h, label, handle_it);
+    ob = fl_make_object( FL_TEXT, type, x, y, w, h, label, handle_it );
     ob->boxtype = FL_TEXT_BOXTYPE;
     ob->col1 = FL_TEXT_COL1;
     ob->col2 = FL_TEXT_COL2;
@@ -78,13 +98,21 @@ fl_create_text(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_text(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	    const char *label)
+fl_add_text( int          type,
+			 FL_Coord     x,
+			 FL_Coord     y,
+			 FL_Coord     w,
+			 FL_Coord     h,
+			 const char * label)
 {
     FL_OBJECT *ob;
 
-    ob = fl_create_text(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+    ob = fl_create_text( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, ob );
     return ob;
 }

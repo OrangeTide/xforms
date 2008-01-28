@@ -36,19 +36,21 @@
 #include <math.h>
 
 /**** Forms and Objects ****/
+
 typedef struct
 {
-    FL_FORM *fff;
-    void *vdata;
-    long ldata;
-    FL_OBJECT *xyplot;
+    FL_FORM *   fff;
+    void *      vdata;
+    long        ldata;
+    FL_OBJECT * xyplot;
 } FD_fff;
 
-extern FD_fff *create_form_fff(void);
-extern void init_xyplot(FD_fff *);
+extern FD_fff * create_form_fff( void );
+extern void init_xyplot( FD_fff * );
 
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char * argv[ ] )
 {
     FD_fff *fd_fff;
 
@@ -57,15 +59,17 @@ main(int argc, char *argv[])
     fd_fff = create_form_fff();
 
     /* fill-in form initialization code */
+
     init_xyplot(fd_fff);
 
     /* show the first form */
-    fl_show_form(fd_fff->fff, FL_PLACE_MOUSE, FL_TRANSIENT, "XYPlot Overlay");
+
+    fl_show_form(fd_fff->fff, FL_PLACE_MOUSE | FL_FREE_SIZE, FL_TRANSIENT, "XYPlot Overlay");
 
     fl_do_forms();
 
-    if(fl_object_ps_dump(fd_fff->xyplot,"test.ps")>= 0)
-      fprintf(stderr,"PostScript output test.ps written\n");
+    if ( fl_object_ps_dump(fd_fff->xyplot,"test.ps")>= 0)
+		fprintf(stderr,"PostScript output test.ps written\n");
 
     return 0;
 }
@@ -79,8 +83,8 @@ init_xyplot(FD_fff * fd_fff)
 
     for (i = 0; i <= 10; i++)
     {
-	xx[i] = i;
-	yy[i] = exp(-(xx[i] - 5) * (xx[i] - 5) / 8);
+		xx[i] = i;
+		yy[i] = exp(-(xx[i] - 5) * (xx[i] - 5) / 8);
     }
 
     fl_set_xyplot_data(fd_fff->xyplot, xx, yy, 8, "Plot Title", "X-Axis", "Y|Axis");
@@ -102,18 +106,18 @@ FD_fff *
 create_form_fff(void)
 {
     FL_OBJECT *obj;
-    FD_fff *fdui = (FD_fff *) fl_calloc(1, sizeof(*fdui));
+    FD_fff *fdui = fl_calloc( 1, sizeof *fdui );
 
     fdui->fff = fl_bgn_form(FL_NO_BOX, 370, 310);
     obj = fl_add_box(FL_UP_BOX, 0, 0, 370, 310, "");
     fdui->xyplot = obj = fl_add_xyplot(FL_IMPULSE_XYPLOT, 10, 20, 350, 260,
-        "An XYPlot with overlay");
-      fl_set_object_lalign(obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE);
-      fl_set_object_lsize(obj, FL_NORMAL_SIZE);
-      fl_set_object_boxtype(obj, FL_DOWN_BOX);
-      fl_set_object_color(obj, FL_BLACK, FL_GREEN);
+									   "An XYPlot with overlay");
+	fl_set_object_lalign(obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE);
+	fl_set_object_lsize(obj, FL_NORMAL_SIZE);
+	fl_set_object_boxtype(obj, FL_DOWN_BOX);
+	fl_set_object_color(obj, FL_BLACK, FL_GREEN);
     obj = fl_add_button(FL_HIDDEN_BUTTON, 10, 10, 350, 290, "");
-      fl_set_button_shortcut(obj,"qQ", 0);
+	fl_set_button_shortcut(obj,"qQ", 0);
     fl_end_form();
 
     return fdui;

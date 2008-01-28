@@ -37,13 +37,15 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_dlist = "$Id: listdir.c,v 1.9 2004/12/28 15:51:14 lasgouttes Exp $";
+
+#if defined F_ID || defined DEBUG
+char *fl_id_dlist = "$Id: listdir.c,v 1.10 2008/01/28 23:20:49 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -61,6 +63,7 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.9 2004/12/28 15:51:14 lasgouttes Exp $";
 #endif
 
 /* vms 7.0 has dirent.h */
+
 #if defined(__VMS) && __VMS_VER < 70000000
 #include "dirent_vms.h"
 #endif
@@ -72,7 +75,7 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.9 2004/12/28 15:51:14 lasgouttes Exp $";
 #include <dirent.h>
 #endif
 
-#if !defined(__VMS) && !defined(Lynx) && !defined(FL_WIN32)
+#if !defined __VMS  && !defined Lynx && ! defined FL_WIN32
 #include <dirent.h>
 #endif
 
@@ -82,10 +85,12 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.9 2004/12/28 15:51:14 lasgouttes Exp $";
 #include "local.h"
 #include "ulib.h"
 
+
 /******** limits and macros *********/
+
 #ifndef S_ISREG
-#define S_ISREG(m)      (((m) & S_IFREG) == S_IFREG)
-#define S_ISDIR(m)      (((m) & S_IFDIR) == S_IFDIR)
+#define S_ISREG( m )      ( ( ( m ) & S_IFREG ) == S_IFREG )
+#define S_ISDIR( m )      ( ( ( m ) & S_IFDIR ) == S_IFDIR )
 #endif
 
 #if defined (__EMX__) || defined (FL_WIN32) || defined (opennt)
@@ -117,8 +122,8 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.9 2004/12/28 15:51:14 lasgouttes Exp $";
 # endif /* !S_IFSOCK && S_ISNAM */
 #endif /* !S_ISSOCK */
 
-#define MAXCACHE 10		/* upto MAXCHCHE dir will be cached */
-#define MAXFL  (FL_PATH_MAX + FL_FLEN)	/* maximum file length */
+#define MAXCACHE 10		                  /* upto MAXCACHE dir will be cached */
+#define MAXFL    ( FL_PATH_MAX + FL_FLEN )/* maximum file length */
 
 #ifndef StrReDup
 #define StrReDup(a,b)   do { if(a) fl_free(a); a = fl_strdup(b);} while(0)
@@ -172,7 +177,8 @@ extern int fl_wildmat(const char *, const char *);
 static int tc_sort(const void *, const void *);
 static int tc_scandir(const char *, struct DIRENT ***);
 
-static int default_filter(const char *, int);
+static int default_filter( const char *  FL_UNUSED_ARG,
+						   int );
 
 /* default filter and sort method */
 static int sort_method = FL_ALPHASORT;
@@ -184,61 +190,72 @@ static int filter_directory = 0;   /* true to filter directory entries */
  */
 #ifndef FL_WIN32		/* [  */
 
+
+/***************************************
+ ***************************************/
+
 static void
 mode2type(unsigned int mode, int *type)
 {
     if (S_ISDIR(mode))
-	*type = FT_DIR;
+		*type = FT_DIR;
     else if (S_ISREG(mode))
-	*type = FT_FILE;
+		*type = FT_FILE;
     else if (S_ISLNK(mode))
-	*type = FT_LINK;
+		*type = FT_LINK;
     else if (S_ISSOCK(mode))
-	*type = FT_SOCK;
+		*type = FT_SOCK;
     else if (S_ISFIFO(mode))
-	*type = FT_FIFO;
+		*type = FT_FIFO;
     else if (S_ISCHR(mode))
-	*type = FT_CHR;
+		*type = FT_CHR;
 #if !defined(__EMX__)
     else if (S_ISBLK(mode))
-	*type = FT_BLK;
+		*type = FT_BLK;
 #endif
     else
-	*type = FT_OTHER;
+		*type = FT_OTHER;
 }
+
 
 /******************************************************************
  * Filter the filename before handing over to the "file is here" list.
  * Only files (include links) are shown,
  ******************************************************************/
+
 static int
-fselect(const char *d_name, struct stat *ffstat, int *type)
+fselect( const char  * d_name,
+		 struct stat * ffstat,
+		 int         * type )
 {
     int ret = 0;
     unsigned int mode;
 
-    strcat(strcpy(fname, cdir), d_name);
-    stat(fname, ffstat);
+    strcat(strcpy( fname, cdir), d_name );
+    stat( fname, ffstat );
     mode = ffstat->st_mode;
-    mode2type(mode, type);
+    mode2type( mode, type );
 
-    if (!ffilter)
-	ret = 1;
-    else if (ffilter == default_filter)
+    if ( ! ffilter )
+		ret = 1;
+    else if ( ffilter == default_filter )
     {
-	/* always keep directory and links */
-	ret = S_ISDIR(mode) ||
-	    ((S_ISREG(mode) || S_ISLNK(mode)) && fl_wildmat(d_name, cpat));
+		/* always keep directory and links */
+
+		ret = S_ISDIR(mode) ||
+			 (    ( S_ISREG( mode ) || S_ISLNK( mode ) )
+			   && fl_wildmat( d_name, cpat ) );
     }
     else
     {
         /* we don't filter directories unless requested */
-        if(!filter_directory)
-           ret = *type == FT_DIR ||
-                       (fl_wildmat(d_name, cpat) && ffilter(fname, *type));
+
+        if ( ! filter_directory )
+           ret = *type == FT_DIR
+			     || ( fl_wildmat( d_name, cpat ) && ffilter( fname, *type ) );
         else
-           ret = (*type == FT_DIR || fl_wildmat(d_name, cpat)) &&
-                  ffilter(fname, *type);
+			ret =    ( *type == FT_DIR || fl_wildmat( d_name, cpat ) )
+				  && ffilter( fname, *type );
     }
     return ret;
 }
@@ -246,68 +263,82 @@ fselect(const char *d_name, struct stat *ffstat, int *type)
 #else /* WIN 32 ][ */
 
 static int
-fselect(struct _finddata_t *c_file, FL_Dirlist * dl)
+fselect( struct _finddata_t *c_file,
+		 FL_Dirlist *          dl )
 {
-    int type, ret = 0;
+    int type,
+		ret = 0;
 
-    if (c_file->attrib & _A_SUBDIR)
-	type = FT_DIR;
+    if ( c_file->attrib & _A_SUBDIR )
+		type = FT_DIR;
     else
-	type = FT_FILE;
+		type = FT_FILE;
 
-    if (!ffilter)
-	ret = 1;
-    else if (ffilter == default_filter)
+    if ( ! ffilter )
+		ret = 1;
+    else if ( ffilter == default_filter )
     {				/* always keep directory and links */
-	ret = (type == FT_DIR) || fl_wildmat(c_file->name, cpat);
+		ret = type == FT_DIR || fl_wildmat( c_file->name, cpat );
     }
     else
     {
-	strcat(strcpy(fname, cdir), c_file->name);
-	ret = (type == FT_DIR) ||
-	    (fl_wildmat(c_file->name, cpat) && ffilter(fname, type));
+		strcat( strcpy( fname, cdir ), c_file->name );
+		ret = type == FT_DIR
+			  || ( fl_wildmat( c_file->name, cpat ) && ffilter( fname, type ) );
     }
 
-    if (ret)
+    if ( ret )
     {
-	dl->name = fl_strdup(c_file->name);
-	dl->type = type;
-	dl->dl_mtime = c_file->time_write;
-	dl->dl_size = c_file->size;
+		dl->name = fl_strdup( c_file->name );
+		dl->type = type;
+		dl->dl_mtime = c_file->time_write;
+		dl->dl_size = c_file->size;
     }
     return ret;
 }
 
 #endif /* FL_WIN32 ] */
 
-/* Sort the directory entries according to the sort method */
-static int
-tc_sort(const void *a, const void *b)
-{
-    FL_Dirlist *da = (FL_Dirlist *) a;
-    FL_Dirlist *db = (FL_Dirlist *) b;
 
-    switch (sort_method)
+/***************************************
+ * Sort the directory entries according to the sort method
+ ***************************************/
+
+static int
+tc_sort( const void * a,
+		 const void * b )
+{
+    FL_Dirlist *da = ( FL_Dirlist * ) a;
+    FL_Dirlist *db = ( FL_Dirlist * ) b;
+
+    switch ( sort_method )
     {
-    case FL_RALPHASORT:
-	return strcmp(db->name, da->name);
-    case FL_RCASEALPHASORT:
-	return strcasecmp(db->name, da->name);
-    case FL_MTIMESORT:
-	return (da->dl_mtime - db->dl_mtime);
-    case FL_RMTIMESORT:
-	return (db->dl_mtime - da->dl_mtime);
-    case FL_SIZESORT:
-	return (da->dl_size > db->dl_size) ? 1 :
-	    ((da->dl_size == db->dl_size) ? 0 : -1);
-    case FL_RSIZESORT:
-	return (da->dl_size < db->dl_size) ? 1 :
-	    ((da->dl_size == db->dl_size) ? 0 : -1);
-    case FL_CASEALPHASORT:
-	return strcasecmp(da->name, db->name);
-    case FL_ALPHASORT:
-    default:
-	return strcmp(da->name, db->name);
+		case FL_RALPHASORT:
+			return strcmp( db->name, da->name );
+
+		case FL_RCASEALPHASORT:
+			return strcasecmp( db->name, da->name );
+
+		case FL_MTIMESORT:
+			return da->dl_mtime - db->dl_mtime;
+
+		case FL_RMTIMESORT:
+			return db->dl_mtime - da->dl_mtime;
+
+		case FL_SIZESORT:
+			return ( da->dl_size > db->dl_size) ? 1 :
+			       ( ( da->dl_size == db->dl_size ) ? 0 : -1 );
+
+		case FL_RSIZESORT:
+			return ( da->dl_size < db->dl_size ) ? 1 :
+			       ( ( da->dl_size == db->dl_size ) ? 0 : -1 );
+
+		case FL_CASEALPHASORT:
+			return strcasecmp( da->name, db->name );
+
+		case FL_ALPHASORT:
+		default:
+			return strcmp( da->name, db->name );
     }
 }
 
@@ -317,59 +348,67 @@ tc_sort(const void *a, const void *b)
  * ends with /
  *******************************************************************/
 #ifndef FL_WIN32		/* [ */
+
 static int
-scandir_get_entries(const char *dir, const char *pat, FL_Dirlist ** dirlist)
+scandir_get_entries( const char  * dir,
+					 const char  * pat,
+					 FL_Dirlist ** dirlist )
 {
     static struct DIRENT **dlist;
     FL_Dirlist *dl;
     static int lastn;
     static struct stat ffstat;
-    int i, n;
+    int i,
+		n;
 
     cpat = pat;
     cdir = dir;
 
     /* free all memory used last time we were here */
-    if (dlist)
+
+    if ( dlist )
     {
-	while (--lastn >= 0)
-	    if (dlist[lastn])
-		free(dlist[lastn]);
-	free(dlist);
-	dlist = 0;
+		while ( --lastn >= 0 )
+			if ( dlist[lastn] )
+				free( dlist[ lastn ]);
+		free( dlist );
+		dlist = 0;
     }
 
     n = 0;
-    if ((lastn = tc_scandir((char *) dir, &dlist)) > 0)
+    if ( ( lastn = tc_scandir( ( char * ) dir, &dlist ) ) > 0 )
     {
-	dl = *dirlist = (FL_Dirlist *) fl_malloc((lastn + 1) * sizeof(FL_Dirlist));
-	for (i = n = 0; i < lastn; i++)
-	{
-	    if (fselect(dlist[i]->d_name, &ffstat, &dl->type))
-	    {
-		dl->name = fl_strdup(dlist[i]->d_name);
-		dl->dl_mtime = ffstat.st_mtime;
-		dl->dl_size = ffstat.st_size;
-		dl++;
-		n++;
-	    }
-	}
+		dl = *dirlist = fl_malloc( ( lastn + 1 ) * sizeof **dirlist );
+		for ( i = n = 0; i < lastn; i++ )
+		{
+			if ( fselect( dlist[ i ]->d_name, &ffstat, &dl->type ) )
+			{
+				dl->name = fl_strdup( dlist[ i ]->d_name );
+				dl->dl_mtime = ffstat.st_mtime;
+				dl->dl_size = ffstat.st_size;
+				dl++;
+				n++;
+			}
+		}
 
-	dl->name = 0;		/* sentinel */
+		dl->name = 0;		/* sentinel */
 
-	if (sort_method != FL_NONE)
-	    qsort(*dirlist, n, sizeof(**dirlist), tc_sort);
+		if ( sort_method != FL_NONE )
+			qsort( *dirlist, n, sizeof **dirlist, tc_sort );
     }
 
     return n;
 }
 
 #else /* FL_WIN32 ][ */
+
 static int
-scandir_get_entries(const char *dir, const char *pat, FL_Dirlist ** dirlist)
+scandir_get_entries( const char  * dir,
+					 const char  * pat,
+					 FL_Dirlist ** dirlist )
 {
     FL_Dirlist *dl;
-    char cwd[FL_PATH_MAX];
+    char cwd[ FL_PATH_MAX ];
     struct _finddata_t c_file;
     long hFile;
     int n, lastn;
@@ -379,50 +418,55 @@ scandir_get_entries(const char *dir, const char *pat, FL_Dirlist ** dirlist)
     n = 0;
 
     /* save the working directory */
-    getcwd(cwd, FL_PATH_MAX);
-    if (chdir(dir) != 0)	/* invalid directory */
-	return 0;
+
+    getcwd( cwd, FL_PATH_MAX );
+    if ( chdir( dir ) != 0 )	/* invalid directory */
+		return 0;
 
     /* Find all files matched the pattern in current directory */
-    if ((hFile = _findfirst("*", &c_file)) == -1L)
+
+    if ( ( hFile = _findfirst( "*", &c_file ) ) == -1L )
     {
-	/* directory is empty, nothing to do */
-	chdir(cwd);
-	return 0;
+		/* directory is empty, nothing to do */
+
+		chdir( cwd );
+		return 0;
     }
 
     lastn = 10;
-    dl = *dirlist = (FL_Dirlist *) fl_malloc((lastn + 1) * sizeof(FL_Dirlist));
-    if (fselect(&c_file, dl))
+    dl = *dirlist = fl_malloc( ( lastn + 1 ) * sizeof **dirlist );
+    if ( fselect( &c_file, dl ) )
     {
-	dl++;
-	n++;
+		dl++;
+		n++;
     }
 
     /* Find the rest of the files */
-    while (_findnext(hFile, &c_file) == 0)
-    {
-	if (fselect(&c_file, dl))
-	{
-	    dl++;
-	    n++;
-	    if (n > lastn)
-	    {
-		lastn += 10;
-		*dirlist = (FL_Dirlist *) fl_realloc(*dirlist,
-					  (lastn + 1) * sizeof(FL_Dirlist));
-		dl = *dirlist + n;
-	    }
-	}
 
+    while ( _findnext( hFile, &c_file ) == 0 )
+    {
+		if ( fselect( &c_file, dl ) )
+		{
+			dl++;
+			n++;
+			if ( n > lastn )
+			{
+				lastn += 10;
+				*dirlist = fl_realloc( *dirlist,
+									   ( lastn + 1 ) * sizeof **dirlist );
+				dl = *dirlist + n;
+			}
+		}
     }
-    _findclose(hFile);
-    chdir(cwd);
+
+    _findclose( hFile );
+    chdir( cwd );
 
     dl->name = 0;		/* sentinel */
 
-    if (sort_method != FL_NONE)
-	qsort(*dirlist, n, sizeof(**dirlist), tc_sort);
+    if ( sort_method != FL_NONE )
+		qsort( *dirlist, n, sizeof **dirlist, tc_sort );
+
     return n;
 }
 
@@ -438,71 +482,90 @@ scandir_get_entries(const char *dir, const char *pat, FL_Dirlist ** dirlist)
  *
  ********************************************************************/
 
-static char *lastdir[MAXCACHE], *lastpat[MAXCACHE];
-static int lastn[MAXCACHE], last_sort[MAXCACHE];
-static FL_Dirlist *dirlist[MAXCACHE];
+static char *lastdir[ MAXCACHE ],
+            *lastpat[ MAXCACHE ];
+static int lastn[ MAXCACHE ],
+           last_sort[ MAXCACHE ];
+static FL_Dirlist *dirlist[ MAXCACHE ];
+
 
 /********************************************************************
  * Check if a particular directory is cached
  ********************************************************************/
+
 static int
-is_cached(const char *dir, const char *pat, int *c)
+is_cached( const char * dir,
+		   const char * pat,
+		   int        * c )
 {
-    int cached = 0, i = 0;
+    int cached = 0,
+		i = 0;
     static int lastcache;
 
     do
     {
-	cached = lastpat[i] && lastdir[i] &&
-	    strcmp(lastdir[i], dir) == 0 && strcmp(lastpat[i], pat) == 0 &&
-	    (dirlist[i] && dirlist[i]->name);
-	*c = i++;
+		cached =    lastpat[ i ]
+			     && lastdir[ i ]
+			     && strcmp( lastdir[ i ], dir ) == 0
+			     && strcmp( lastpat[ i ], pat ) == 0
+		         && dirlist[ i ]
+			     && dirlist[ i ]->name;
+		*c = i++;
     }
-    while (!cached && i < MAXCACHE);
+    while ( ! cached && i < MAXCACHE );
 
     /* search for the least used slot if not cached */
-    if (!cached)
-	*c = (++lastcache) % MAXCACHE;
+
+    if ( ! cached )
+		*c = ++lastcache % MAXCACHE;
 
     lastcache = *c;
-    M_info("CheckDirCache", "%s is %s cached", dir, cached ? "" : "not");
+    M_info( "CheckDirCache", "%s is %s cached", dir, cached ? "" : "not" );
     return cached;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_free_dirlist(FL_Dirlist * dl)
+fl_free_dirlist( FL_Dirlist * dl )
 {
     int i, j;
 
-    for (j = -1, i = 0; j < 0 && i < MAXCACHE; i++)
-	if (dl == dirlist[i])
-	    j = i;
+    for ( j = -1, i = 0; j < 0 && i < MAXCACHE; i++ )
+		if ( dl == dirlist[ i ] )
+			j = i;
 
-    if (j < 0)
+    if ( j < 0 )
     {
-	M_err("FreeDirList", "Bad list");
-	return;
+		M_err( "FreeDirList", "Bad list" );
+		return;
     }
 
-    while (dl && dl->name)
+    while ( dl && dl->name )
     {
-	fl_free(dl->name);
-	dl->name = 0;		/* important: signifies empty list */
-	dl++;
+		fl_free( dl->name );
+		dl->name = 0;		/* important: signifies empty list */
+		dl++;
     }
 
-    if ( dirlist[j])
-       fl_free(dirlist[j]);
-    dirlist[j] = 0;
+    if ( dirlist[ j ] )
+		fl_free( dirlist[ j ] );
+    dirlist[ j ] = 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_free_all_dirlist(void)
+fl_free_all_dirlist( void )
 {
     int i;
 
-    for (i = 0; i < MAXCACHE; i++)
-	fl_free_dirlist(dirlist[i]);
+    for ( i = 0; i < MAXCACHE; i++ )
+		fl_free_dirlist( dirlist[ i ] );
 }
 
 
@@ -511,96 +574,110 @@ fl_free_all_dirlist(void)
  *********************************************************************/
 
 const FL_Dirlist *
-fl_get_dirlist(const char *dir, const char *pattern, int *n, int rescan)
+fl_get_dirlist( const char * dir,
+				const char * pattern,
+				int        * n,
+				int          rescan )
 {
-    int i, c;
+    int i,
+		c;
     const char *pat = pattern;
-    char okdir[FL_PATH_MAX + 1];
+    char okdir[ FL_PATH_MAX + 1 ];
 
-    if (!dir || !*dir)
-	return 0;
-    if (!pat || !*pat)
-	pat = "*";
+    if ( ! dir || ! *dir )
+		return NULL;
+
+    if ( ! pat || ! *pat )
+		pat = "*";
 
     /* fix the directory on the fly */
-    i = strlen(strcpy(okdir, dir));
-    if (okdir[i - 1] != '/')
+
+    i = strlen( strcpy( okdir, dir ) );
+    if ( okdir[ i - 1 ] != '/' )
     {
-	okdir[i] = '/';
-	okdir[++i] = '\0';
+		okdir[ i ] = '/';
+		okdir[ ++i ] = '\0';
     }
 
     /* is_cached must go first to get correct cache location */
-    if (!is_cached(okdir, pat, &c) || rescan)
+
+    if ( ! is_cached( okdir, pat, &c ) || rescan )
     {
-	fl_free_dirlist(dirlist[c]);
-	lastn[c] = scandir_get_entries(okdir, pat, dirlist + c);
-	last_sort[c] = sort_method;
-	StrReDup(lastpat[c], pat);
-	StrReDup(lastdir[c], okdir);
+		fl_free_dirlist( dirlist[ c ] );
+		lastn[ c ] = scandir_get_entries( okdir, pat, dirlist + c );
+		last_sort[ c ] = sort_method;
+		StrReDup( lastpat[ c ], pat );
+		StrReDup( lastdir[ c ], okdir );
     }
 
-    *n = lastn[c];
-    if (last_sort[c] != sort_method)
+    *n = lastn[ c ];
+    if ( last_sort[ c ] != sort_method )
     {
-	qsort(dirlist[c], *n, sizeof(**dirlist), tc_sort);
-	last_sort[c] = sort_method;
+		qsort( dirlist[ c ], *n, sizeof **dirlist, tc_sort );
+		last_sort[ c ] = sort_method;
     }
 
-    return dirlist[c];
+    return dirlist[ c ];
 }
+
 
 /***********************************************************************
  * Misc. routines related directory
  **********************************************************************/
+
 int
-fl_is_valid_dir(const char *name)
+fl_is_valid_dir( const char *name )
 {
     struct stat stbuf;
 
 #ifdef __EMX__
-    if (isalpha(name[0]) && name[1] == ':' && name[2] == '0')
-	return 1;
+    if ( isalpha( name[ 0 ] ) && name[ 1 ] == ':' && name[ 2 ] == '0' )
+		return 1;
 #endif
 
     /* on some machines, name should be plain char * */
-    return name && (stat((char *) name, &stbuf) == 0 && S_ISDIR(stbuf.st_mode));
+
+    return name
+		   && stat( ( char * ) name, &stbuf ) == 0
+		   && S_ISDIR( stbuf.st_mode );
 }
 
 
-
-
-/*
+/***************************************
  * Fix directory name, such as ../../a/b etc
- */
-static void add_one(char[], char[]);
+ ***************************************/
+
+static void add_one( char *, char * );
 
 char *
-fl_fix_dirname(char dir[])
+fl_fix_dirname( char *dir )
 {
-    static char ldir[FL_PATH_MAX], one[FL_PATH_MAX];
-    char *p = ldir, *q = one;
+    static char ldir[ FL_PATH_MAX ],
+		        one[ FL_PATH_MAX ];
+    char *p = ldir,
+		 *q = one;
 
-    fl_b2f_slash(dir);
+    fl_b2f_slash( dir );
 
-    if (!dir[0])
+    if ( ! *dir )    /* Here's some bullshit going one, what's ldir set to ? */
     {
-	return fl_getcwd((dir ? dir : ldir), FL_PATH_MAX - 2);
+		return fl_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );
     }
-    else if (dir[0] == '.' && dir[1] == '.' && dir[2] == '\0')
+    else if ( dir[ 0 ] == '.' && dir[ 1 ] == '.' && dir[ 2 ] == '\0' )
     {
-	fl_getcwd((dir ? dir : ldir), FL_PATH_MAX - 2);
-	if ((p = strrchr(dir ? dir : ldir, '/')))
-	    *p = '\0';
-	return dir ? dir : ldir;
+		fl_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );
+		if ( ( p = strrchr( dir ? dir : ldir, '/' ) ) )
+			*p = '\0';
+		return dir ? dir : ldir;
     }
-    else if (dir[0] == '/')
+    else if ( *dir == '/')
     {
-	if (dir[1] == '\0' ||
-	    (dir[1] == '.' && dir[2] == '.' && (dir[3] == '/' || dir[3] == '\0')))
-	    return strcpy(dir, "/");
+		if ( dir[ 1 ] == '\0'
+			 || (    dir[ 1 ] == '.' && dir[ 2 ] == '.'
+				  && ( dir[ 3 ] == '/' || dir[ 3 ] == '\0' ) ) )
+			return strcpy( dir, "/" );
     }
-    strcpy(ldir, dir);
+    strcpy( ldir, dir );
     p = ldir;
 
 #if defined __EMX__ || defined FL_WIN32
@@ -731,6 +808,7 @@ add_one(char dir[], char one[])
 /************************************************************
  * File modification time
  ***********************************************************/
+
 unsigned long
 fl_fmtime(const char *s)
 {
@@ -745,44 +823,48 @@ static int match_star(const char *s, const char *p);
 
 /* match string "s" to pattern "p" */
 static int
-do_matching(register const char *s, register const char *p)
+do_matching( const char *s, const char *p)
 {
-    register int last, matched, reverse;
+    int last, matched, reverse;
 
     for (; *p; s++, p++)
     {
-	if (*s == '\0')
-	    return (*p == '*' && *++p == '\0' ? 1 : -1);
-	switch (*p)
-	{			/* parse pattern */
-	case '\\':		/* Literal match with following character. */
-	    if (*s != *++p)
-		return 0;
-	    continue;
-	default:		/* literal match */
+		if (*s == '\0')
+			return (*p == '*' && *++p == '\0' ? 1 : -1);
+
+		switch (*p)
+		{			/* parse pattern */
+			case '\\':		/* Literal match with following character. */
+				if (*s != *++p)
+					return 0;
+				continue;
+			default:		/* literal match */
 #ifdef __VMS			/* vms filenames are not case sensitive */
-	    if (toupper(*s) != toupper(*p))
+				if (toupper(*s) != toupper(*p))
 #else
-	    if (*s != *p)
+					if (*s != *p)
 #endif
-		return 0;
-	    continue;
-	case '?':		/* Match anything. */
-	    continue;
-	case '*':		/* Trailing star matches everything. */
-	    return (*++p ? match_star(s, p) : 1);
-	case '[':		/* [!....] means inverse character class. */
-	    if ((reverse = p[1] == '!'))
-		p++;
-	    for (last = 0400, matched = 0; *++p && *p != ']'; last = *p)
-		/* This next line requires a good C compiler. */
-		/* range?        (in bounds) (equal) */
-		if ((*p == '-') ? (*s <= *++p && *s >= last) : (*s == *p))
-		    matched = 1;
-	    if (matched == reverse)
-		return 0;
-	    continue;
-	}
+						return 0;
+				continue;
+
+			case '?':		/* Match anything. */
+				continue;
+
+			case '*':		/* Trailing star matches everything. */
+				return (*++p ? match_star(s, p) : 1);
+
+			case '[':		/* [!....] means inverse character class. */
+				if ((reverse = p[1] == '!'))
+					p++;
+				for (last = 0400, matched = 0; *++p && *p != ']'; last = *p)
+					/* This next line requires a good C compiler. */
+					/* range?        (in bounds) (equal) */
+					if ((*p == '-') ? (*s <= *++p && *s >= last) : (*s == *p))
+						matched = 1;
+				if (matched == reverse)
+					return 0;
+				continue;
+		}
     }
     return *s == '\0';
 }
@@ -793,23 +875,24 @@ match_star(const char *s, const char *p)
     int result;
 
     while ((result = do_matching(s, p)) == 0)	/* gobble up * match */
-	if (*++s == '\0')
-	    return -1;
+		if (*++s == '\0')
+			return -1;
     return result;
 }
+
 
 /* check if s matches pattern p */
 int
 fl_wildmat(const char *s, const char *p)
 {
     if (*p == '\0' && *s != '.')
-	return 1;
+		return 1;
     else if (*p == '\0')
-	return 0;
+		return 0;
     else if ((*p == '?' || *p == '*') && *s == '.')
-	return 0;
+		return 0;
     else
-	return do_matching(s, p) == 1;
+		return do_matching(s, p) == 1;
 }
 
 
@@ -828,34 +911,34 @@ tc_scandir(const char *dirname, struct DIRENT ***namelist)
     static int dname_is_1;
 
     if (!(dir = opendir(dirname)))
-	return -1;
+		return -1;
 
     if (sizeof(struct DIRENT) < 100 && !dname_is_1)
     {
-	M_warn("scandir", "Bad dirent--will fix on the fly");
-	dname_is_1 = 1;
+		M_warn("scandir", "Bad dirent--will fix on the fly");
+		dname_is_1 = 1;
     }
 
     /* start reading the darn thing */
     for (n = 0, head = 0; (dentry = readdir(dir));)
     {
-	/* not all system has conforming realloc when head == 0 */
+		/* not all system has conforming realloc when head == 0 */
 
-	head = head ? realloc(head, (n + 1) * sizeof(*head)) :
-	    malloc(sizeof(*head));
+		head = head ? realloc(head, (n + 1) * sizeof(*head)) :
+			malloc(sizeof(*head));
 
-	/* here it is even weirder: some systems have d_reclen =
-	   sizeof(struct dirent) + strlen(d_name) and some have it as
-	   d_reclen = strlen(d_name) */
+		/* here it is even weirder: some systems have d_reclen =
+		   sizeof(struct dirent) + strlen(d_name) and some have it as
+		   d_reclen = strlen(d_name) */
 
-	/* Mathog, VMS<7.0, at least has no d_reclen *at all */
+		/* Mathog, VMS<7.0, at least has no d_reclen *at all */
 #if defined(__VMS) && __VMS_VER < 70000000 || defined opennt || defined __CYGWIN__
-	total = dname_is_1 ? strlen(dentry->d_name) : sizeof(*dentry);
+		total = dname_is_1 ? strlen(dentry->d_name) : sizeof(*dentry);
 #else
-	total = dname_is_1 ? dentry->d_reclen : sizeof(*dentry);
+		total = dname_is_1 ? dentry->d_reclen : sizeof(*dentry);
 #endif
-	memcpy(head[n] = malloc(total), dentry, total);
-	n++;
+		memcpy(head[n] = malloc(total), dentry, total);
+		n++;
     }
 
     closedir(dir);
@@ -884,7 +967,8 @@ fl_set_dirlist_filterdir(int yes)
 
 /* for application's benifit */
 static int
-default_filter(const char *name, int type)
+default_filter( const char * name  FL_UNUSED_ARG,
+				int          type )
 {
     return type == FT_FILE || type == FT_DIR || type == FT_LINK;
 }

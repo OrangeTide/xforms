@@ -35,9 +35,14 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/pvaluator.h"
+
+
+/***************************************
+ ***************************************/
 
 void *
 fl_init_valuator(FL_OBJECT * ob)
@@ -60,29 +65,38 @@ fl_init_valuator(FL_OBJECT * ob)
 #define CROSS_OVER(v,vmin,vmax)  ((v)<(vmin)?(vmax):((v)>(vmax)?(vmin):(v)))
 
 
+/***************************************
+ ***************************************/
+
 double
-fl_valuator_round_and_clamp(FL_OBJECT * ob, double value)
+fl_valuator_round_and_clamp( FL_OBJECT * ob,
+							 double      value )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
     double vmin, vmax;
 
     if (sp->step != 0.0)
     {
-	float f = value / sp->step;
-	value = sp->step * (int) (f > 0 ? (f + 0.4) : (f - 0.4));
+		float f = value / sp->step;
+		value = sp->step * (int) (f > 0 ? (f + 0.4) : (f - 0.4));
     }
 
     vmin = FL_min(sp->min, sp->max);
     vmax = FL_max(sp->min, sp->max);
 
     if(!sp->cross_over)
-       return FL_clamp(value, vmin, vmax);
+		return FL_clamp(value, vmin, vmax);
     else
-       return CROSS_OVER(value,vmin,vmax);
+		return CROSS_OVER(value,vmin,vmax);
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_valuator_handle_drag(FL_OBJECT * ob, double value)
+fl_valuator_handle_drag( FL_OBJECT * ob,
+						 double      value )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
 
@@ -90,18 +104,23 @@ fl_valuator_handle_drag(FL_OBJECT * ob, double value)
 
     if (value != sp->val)
     {
-	sp->val = value;
-	sp->draw_type = VALUE_DRAW;
-	fl_redraw_object(ob);
-	return (sp->how_return == FL_RETURN_CHANGED ||
-		sp->how_return == FL_RETURN_ALWAYS);
+		sp->val = value;
+		sp->draw_type = VALUE_DRAW;
+		fl_redraw_object(ob);
+		return    sp->how_return == FL_RETURN_CHANGED
+			   || sp->how_return == FL_RETURN_ALWAYS;
     }
 
-    return (sp->how_return == FL_RETURN_ALWAYS);
+    return sp->how_return == FL_RETURN_ALWAYS;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_valuator_handle_release(FL_OBJECT * ob, double value)
+fl_valuator_handle_release( FL_OBJECT * ob,
+							double      value )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
 
@@ -109,22 +128,27 @@ fl_valuator_handle_release(FL_OBJECT * ob, double value)
 
     if (value != sp->val)
     {
-	sp->val = value;
-	sp->draw_type = VALUE_DRAW;
-	fl_redraw_object(ob);
-	if (sp->how_return == FL_RETURN_CHANGED)
-	    return 1;
+		sp->val = value;
+		sp->draw_type = VALUE_DRAW;
+		fl_redraw_object(ob);
+		if (sp->how_return == FL_RETURN_CHANGED)
+			return 1;
     }
 
     if (sp->start_val != sp->val && (sp->how_return == FL_RETURN_END_CHANGED))
-	return 1;
+		return 1;
 
-    return (sp->how_return == FL_RETURN_ALWAYS ||
-	    sp->how_return == FL_RETURN_END);
+    return    sp->how_return == FL_RETURN_ALWAYS
+		   || sp->how_return == FL_RETURN_END;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_set_valuator_return(FL_OBJECT * ob, int n)
+fl_set_valuator_return( FL_OBJECT * ob,
+						int         n )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
     int old = sp->how_return;
@@ -134,9 +158,16 @@ fl_set_valuator_return(FL_OBJECT * ob, int n)
     return old;
 }
 
+
+/***************************************
+ ***************************************/
+
 double
-fl_clamp(double val, double min, double max)
+fl_clamp( double val,
+		  double min,
+		  double max)
 {
     double vmin = FL_min(min, max), vmax = FL_max(min, max);
+
     return FL_clamp(val, vmin, vmax);
 }

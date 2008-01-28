@@ -31,13 +31,15 @@
  *  Remove unescaped leadingi/trailing spaces from a string.
  *
  ***********************************************************************/
-#if !defined(lint) && defined(F_OK)
-static char *id_space = "$Id: space.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+
+#if ! defined lint && defined F_OK
+static char *id_space = "$Id: space.c,v 1.6 2008/01/28 23:22:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -46,83 +48,119 @@ static char *id_space = "$Id: space.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
 #include "flinternal.h"
 #include "ulib.h"
 
+
 static int es = '\\';     /* escape character */
 
-/** Remove leading space */
+
+/***************************************
+ * Remove leading space
+ ***************************************/
+
 char *
-fl_de_space(char *s)
+fl_de_space( char * s )
 {
-    register char *p;
+    char *p;
+
     /* not all isspace considers '\t' a white space */
-    for (p = s ; p && (isspace( ( int ) *p) || *p=='\t'); p++)
-       ;
-    return (p == s) ? s : strcpy(s, p);
+
+    for ( p = s; p && ( isspace( ( int ) *p ) || *p == '\t' ); p++ )
+		/* empty */ ;
+
+    return p == s ? s : strcpy( s, p );
 }
 
-/* remove trailing space */
+
+/***************************************
+ * remove trailing space
+ ***************************************/
+
 char *
-fl_space_de(register char *s)
+fl_space_de( char * s )
 {
-    register char *p, *q;
+	char *p,
+		 *q;
 
-    if (!s || !*s)
-	return s;
+    if ( ! s || ! *s )
+		return s;
 
-    q = p = s + strlen(s) - 1;
+    q = p = s + strlen( s ) - 1;
+
     /* maybe replace \ with space ? */
-    for ( q--; p >= s && isspace( ( int ) *p) && (q < s || *q != es);p--,q--)
-        ;
+
+    for ( q--; p >= s && isspace( ( int ) *p ) && ( q < s || *q != es );
+		  p--,q-- )
+        /* empty */ ;
+
     *++p = '\0';
     return s;
 }
 
-/***** remove space from both ends *******/
+
+/***************************************
+ * remove space from both ends
+ ***************************************/
+
 char *
-fl_de_space_de(char *p)
+fl_de_space_de( char * p )
 {
-    return (fl_space_de(fl_de_space(p)));
+    return fl_space_de( fl_de_space( p ) );
 }
 
-/* remove all spaces from string */
-char *
-fl_nuke_all_spaces(char *s)
-{
-    char *p = s, *q = s + strlen(s), *b;
-    char buf[1024];
 
-    for  (b = buf ; p < q; p++)
-        if(!isspace( ( int ) *p))
-           *b++ = *p;
+/***************************************
+ * remove all spaces from string
+ * This is bullshit!
+ ***************************************/
+
+char *
+fl_nuke_all_spaces( char * s )
+{
+    char *p = s,
+		 *q = s + strlen( s ),
+		 *b;
+    char buf[ 1024 ];
+
+    for ( b = buf; p < q; p++ )
+        if ( ! isspace( ( int ) *p ) )
+			*b++ = *p;
     *b = '\0';
-    return strcpy(s, buf);
+    return strcpy( s, buf );
 }
 
-/* remove non-alphanumericals from string */
+
+/***************************************
+ * remove non-alphanumericals from string
+ ***************************************/
+
 char *
-fl_nuke_all_non_alnum(char *s)
+fl_nuke_all_non_alnum( char * s )
 {
-    char *p = s, *q = s + strlen(s), *b;
-    char buf[1024];
-    for  (b = buf ; p < q; p++)
-        if(isalnum( ( int ) *p))
-           *b++ = *p;
+    char *p = s,
+		 *q = s + strlen( s ),
+		 *b;
+    char buf[ 1024 ];
+
+    for ( b = buf; p < q; p++ )
+        if ( isalnum( ( int ) *p ) )
+			*b++ = *p;
     *b = '\0';
-    return strcpy(s, buf);
+    return strcpy( s, buf );
 }
 
 
 #ifdef TEST
-main()
+int main( void )
 {
-    char buf[100], *p;
+    char buf[ 100 ],
+		 *p;
 
-    while (fgets(buf, 100, stdin))
-      {
-	  buf[99] = '\0';
-	  if((p = strchr(buf,'\n')))
-	    *p = '\0';
-	  fprintf(stderr, "^%s$\n",buf);
-	  fprintf(stderr, "^%s$\n",de_space_de(buf));
-      }
+    while ( fgets( buf, 100, stdin ) )
+	{
+		buf[ 99 ] = '\0';
+		if ( ( p = strchr( buf,'\n' ) ) )
+			*p = '\0';
+		fprintf( stderr, "^%s$\n", buf );
+		fprintf( stderr, "^%s$\n", de_space_de( buf ) );
+	}
 }
 #endif /* TEST */

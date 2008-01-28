@@ -34,8 +34,12 @@ int on = 1, dcol = 1;
 FL_COLOR cole;
 
 /* The call back routine */
-int handle_it(FL_OBJECT *obj, int event, FL_Coord mx, FL_Coord my,
-          int key, void *ev)
+int handle_it( FL_OBJECT * obj,
+			   int         event,
+			   FL_Coord    mx   FL_UNUSED_ARG,
+			   FL_Coord    my   FL_UNUSED_ARG,
+			   int         key  FL_UNUSED_ARG,
+			   void      * ev   FL_UNUSED_ARG )
 {
   static int dcol = 1;
 
@@ -62,7 +66,11 @@ int handle_it(FL_OBJECT *obj, int event, FL_Coord mx, FL_Coord my,
   return 0;
 }
 
-void done(FL_OBJECT *ob, long data) { exit(0);}
+void done( FL_OBJECT * ob    FL_UNUSED_ARG,
+		   long        data  FL_UNUSED_ARG )
+{
+	exit(0);
+}
 
 int
 main(int argc, char *argv[])

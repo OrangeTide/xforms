@@ -32,17 +32,19 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_ver = "$Id: version.c,v 1.12 2003/11/20 11:24:16 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_ver = "$Id: version.c,v 1.13 2008/01/28 23:24:26 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/flsnprintf.h"
+
 
 static const char *version[] =
 {
@@ -57,45 +59,53 @@ static const char *version[] =
 };
 
 
+/***************************************
+ ***************************************/
+
 int
-fl_library_version(int *ver, int *rev)
+fl_library_version( int * ver,
+					int * rev )
 {
     int const v = FL_VERSION;
     int const r = FL_REVISION;
 
-    if (rev)
-	*rev = r;
-    if (ver)
-	*ver = v;
+    if ( rev )
+		*rev = r;
+    if ( ver )
+		*ver = v;
 
     return v * 1000 + r;
 }
 
 
 void
-fl_print_version(int g)
+fl_print_version( int g )
 {
-    char tmp[100];
-    const char *p[5], **q = version;
+    char tmp[ 100 ];
+    const char *p[ 5 ],
+		       **q = version;
     int n;
 
-    fl_snprintf(tmp, 100, "FORMS Library Version %d.%d", FL_VERSION, FL_REVISION);
-    p[0] = tmp;
+    fl_snprintf( tmp, 100, "FORMS Library Version %d.%d",
+				 FL_VERSION, FL_REVISION );
+    p[ 0 ] = tmp;
 
-    for (n = 1; *q; n++, q++) {
-	p[n] = fl_rm_rcs_kw(*q);
-    }
+    for ( n = 1; *q; n++, q++ )
+		p[ n ] = fl_rm_rcs_kw( *q );
 
-    if (g) {
-	if (n >= 3)
-	    fl_show_message(p[0], p[1], p[2]);
-	else if (n == 2)
-	    fl_show_message(p[0], "", p[1]);
+    if ( g ) {
+	if ( n >= 3 )
+	    fl_show_message( p[ 0 ], p[ 1 ], p[ 2 ] );
+	else if ( n == 2 )
+	    fl_show_message( p[ 0 ], "", p[ 1 ] );
 	else
-	    fl_show_message("", p[0], "");
-    } else {
-	int i = 0;
-	for (; i<n; ++i)
-	    fprintf(stderr, "%s\n", p[i]);
+	    fl_show_message( "", p[ 0 ], "" );
+    }
+	else
+	{
+		int i = 0;
+
+		for ( ; i<n; ++i )
+			fprintf( stderr, "%s\n", p[ i ] );
     }
 }

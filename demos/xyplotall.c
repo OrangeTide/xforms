@@ -58,7 +58,8 @@ static XYType xytype[] =
 
 
 static void
-done_xyplot(FL_OBJECT *ob, long q)
+done_xyplot( FL_OBJECT * ob,
+			 long        q  FL_UNUSED_ARG )
 {
     fl_hide_form(ob->form);
     exit(0);
@@ -66,8 +67,12 @@ done_xyplot(FL_OBJECT *ob, long q)
 
 #include <math.h>
 
-static int post(FL_OBJECT *ob, int ev,
-               FL_Coord mx, FL_Coord my, int key, void *xev)
+static int post( FL_OBJECT * ob,
+				 int         ev,
+				 FL_Coord    mx,
+				 FL_Coord    my,
+				 int         key,
+				 void      * xev  FL_UNUSED_ARG )
 {
     if(ev == FL_PUSH || ev == FL_MOUSE)
     {
@@ -141,7 +146,7 @@ main(int argc, char *argv[])
          fl_set_object_posthandler(xyplot[i], post);
      }
 
-     fl_show_form(fxyplot, FL_PLACE_ASPECT, FL_TRANSIENT, "XYplot");
+     fl_show_form(fxyplot, FL_PLACE_MOUSE | FL_FREE_SIZE, FL_TRANSIENT, "XYplot");
 
      while (fl_do_forms())
         ;
@@ -151,71 +156,71 @@ main(int argc, char *argv[])
 static
 void create_form_xyplot(void)
 {
-   FL_OBJECT *obj;
-   XYType *xy  = xytype;
-   int dx = 180, dy = 160;
+	FL_OBJECT *obj;
+	XYType *xy  = xytype;
+	int dx = 180, dy = 160;
 
-   if (fxyplot)
-      return;
+	if (fxyplot)
+		return;
 
-   fxyplot = fl_bgn_form(FL_NO_BOX,570,430);
-   obj = fl_add_box(FL_UP_BOX,0,0,570,430,"");
+	fxyplot = fl_bgn_form(FL_NO_BOX,570,440);
+	obj = fl_add_box(FL_UP_BOX,0,0,570,440,"");
 
-   if(xy->type != -1)
-   {
-      xyplot[0] = obj = fl_add_xyplot(xy->type,20,40,dx,dy,xy->name);
-      fl_set_object_lsize(obj, FL_TINY_SIZE);
-      fl_set_object_color(obj, FL_COL1, xy->color);
-      xy++;
-   }
+	if(xy->type != -1)
+	{
+		xyplot[0] = obj = fl_add_xyplot(xy->type,20,40,dx,dy,xy->name);
+		fl_set_object_lsize(obj, FL_TINY_SIZE);
+		fl_set_object_color(obj, FL_COL1, xy->color);
+		xy++;
+	}
 
-   if(xy->type != -1)
-   {
-      xyplot[1] = obj = fl_add_xyplot(xy->type,200,40,dx,dy,xy->name);
-      fl_set_object_lsize(obj, FL_TINY_SIZE);
-      fl_set_object_color(obj, FL_COL1, xy->color);
-      xy++;
-   }
+	if(xy->type != -1)
+	{
+		xyplot[1] = obj = fl_add_xyplot(xy->type,200,40,dx,dy,xy->name);
+		fl_set_object_lsize(obj, FL_TINY_SIZE);
+		fl_set_object_color(obj, FL_COL1, xy->color);
+		xy++;
+	}
 
-   if(xy->type != -1)
-   {
-      xyplot[2] = obj = fl_add_xyplot(xy->type,380,40,dx,dy,xy->name);
-      fl_set_object_lsize(obj, FL_TINY_SIZE);
-      fl_set_object_color(obj, FL_COL1, xy->color);
-      xy++;
-   }
+	if(xy->type != -1)
+	{
+		xyplot[2] = obj = fl_add_xyplot(xy->type,380,40,dx,dy,xy->name);
+		fl_set_object_lsize(obj, FL_TINY_SIZE);
+		fl_set_object_color(obj, FL_COL1, xy->color);
+		xy++;
+	}
 
-   if(xy->type != -1)
-   {
-      xyplot[3] = obj = fl_add_xyplot(xy->type,20,210,dx,dy,xy->name);
-      fl_set_object_lsize(obj, FL_TINY_SIZE);
-      fl_set_object_color(obj, FL_COL1, xy->color);
-      xy++;
-   }
+	if(xy->type != -1)
+	{
+		xyplot[3] = obj = fl_add_xyplot(xy->type,20,220,dx,dy,xy->name);
+		fl_set_object_lsize(obj, FL_TINY_SIZE);
+		fl_set_object_color(obj, FL_COL1, xy->color);
+		xy++;
+	}
 
-   if(xy->type != -1)
-   {
-      xyplot[4] = obj = fl_add_xyplot(xy->type,200,210,dx,dy,xy->name);
-      fl_set_object_lsize(obj, FL_TINY_SIZE);
-      fl_set_object_color(obj, FL_COL1, xy->color);
-      xy++;
-   }
+	if(xy->type != -1)
+	{
+		xyplot[4] = obj = fl_add_xyplot(xy->type,200,220,dx,dy,xy->name);
+		fl_set_object_lsize(obj, FL_TINY_SIZE);
+		fl_set_object_color(obj, FL_COL1, xy->color);
+		xy++;
+	}
 
-   if(xy->type != -1)
-   {
-      xyplot[5] = obj = fl_add_xyplot(xy->type,380,210,dx,dy,xy->name);
-      fl_set_object_lsize(obj, FL_TINY_SIZE);
-      fl_set_object_color(obj, FL_COL1, xy->color);
-   }
+	if(xy->type != -1)
+	{
+		xyplot[5] = obj = fl_add_xyplot(xy->type,380,220,dx,dy,xy->name);
+		fl_set_object_lsize(obj, FL_TINY_SIZE);
+		fl_set_object_color(obj, FL_COL1, xy->color);
+	}
 
-   obj = fl_add_button(FL_NORMAL_BUTTON,230,390,100,30,"Exit");
-   fl_set_object_callback(obj, done_xyplot, 0);
+	obj = fl_add_button(FL_NORMAL_BUTTON,230,400,100,30,"Exit");
+	fl_set_object_callback(obj, done_xyplot, 0);
 
-   obj = fl_add_text(FL_NORMAL_TEXT,180,15,240,30,"FL_XYPLOT");
-   fl_set_object_lcol(obj, FL_SLATEBLUE);
-   fl_set_object_lsize(obj, FL_HUGE_SIZE);
-   fl_set_object_lstyle(obj, FL_BOLD_STYLE|FL_EMBOSSED_STYLE);
-   fl_set_object_boxtype(obj, FL_FLAT_BOX);
+	obj = fl_add_text(FL_NORMAL_TEXT,180,15,240,30,"FL_XYPLOT");
+	fl_set_object_lcol(obj, FL_SLATEBLUE);
+	fl_set_object_lsize(obj, FL_HUGE_SIZE);
+	fl_set_object_lstyle(obj, FL_BOLD_STYLE|FL_EMBOSSED_STYLE);
+	fl_set_object_boxtype(obj, FL_FLAT_BOX);
 
-   fl_end_form();
+	fl_end_form();
 }

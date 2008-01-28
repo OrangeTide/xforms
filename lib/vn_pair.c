@@ -30,31 +30,46 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 #include <stdlib.h>
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_get_vn_value(register FL_VN_PAIR * vn_pair, const char *name)
+fl_get_vn_value( FL_VN_PAIR * vn_pair,
+				 const char * name )
 {
-    for (; vn_pair->val >= 0; vn_pair++)
-        if (strcmp(vn_pair->name, name) == 0)
+    for ( ; vn_pair->val >= 0; vn_pair++ )
+        if ( strcmp( vn_pair->name, name ) == 0 )
             return vn_pair->val;
+
     /* not found. Take a guess */
-    return atoi(name);
+
+    return atoi( name );
 }
 
+
+/***************************************
+ ***************************************/
+
 const char *
-fl_get_vn_name(register FL_VN_PAIR * vn_pair, int val)
+fl_get_vn_name( FL_VN_PAIR * vn_pair,
+				int          val )
 {
-    static char buf[5][16];
+    static char buf[ 5 ][ 16 ];
     static int k;
 
-    k = ( k+1)%5;
-    for (; vn_pair->val >= 0; vn_pair++)
-        if (vn_pair->val == val)
+    k = ( k + 1 ) % 5;
+
+    for ( ; vn_pair->val >= 0; vn_pair++ )
+        if ( vn_pair->val == val )
             return vn_pair->name;
-    sprintf(buf[k], "%d", val);
-    return buf[k];
+    sprintf( buf[ k ], "%d", val );
+
+    return buf[ k ];
 }

@@ -57,7 +57,8 @@ extern FD_timerform * create_form_timerform(void);
 FD_timerform *fd_timerform;
 
 /* callbacks for form timerform */
-void suspend_resume(FL_OBJECT *ob, long data)
+void suspend_resume( FL_OBJECT * ob  FL_UNUSED_ARG,
+					 long        data )
 {
    if(data)
       fl_resume_timer(fd_timerform->timer);
@@ -65,17 +66,20 @@ void suspend_resume(FL_OBJECT *ob, long data)
       fl_suspend_timer(fd_timerform->timer);
 }
 
-void reset(FL_OBJECT *ob, long data)
+void reset( FL_OBJECT * ob    FL_UNUSED_ARG,
+			long        data  FL_UNUSED_ARG )
 {
    fl_set_timer(fd_timerform->timer, T);
 }
 
-void timer_direction(FL_OBJECT *ob, long data)
+void timer_direction( FL_OBJECT * ob  FL_UNUSED_ARG,
+					  long        data )
 {
    fl_set_timer_countup(fd_timerform->timer,data);
 }
 
-void expired(FL_OBJECT *ob, long data)
+void expired( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
    if(fl_show_question("Expired!\n\nQuit ?",0))
    {

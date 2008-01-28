@@ -32,7 +32,8 @@ FL_OBJECT *xval, *yval;
 
 /* callback routine */
 void
-positioner_cb(FL_OBJECT *ob, long q)
+positioner_cb( FL_OBJECT * ob,
+			   long        q   FL_UNUSED_ARG )
 {
     char str[30];
     sprintf(str,"%f",fl_get_positioner_xvalue(ob));

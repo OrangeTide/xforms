@@ -246,7 +246,8 @@ char **fl_get_cmdline_args(int *);
 
 /* handles a button push */
 void
-dobut(FL_OBJECT * obj, long arg)
+dobut( FL_OBJECT * obj  FL_UNUSED_ARG,
+	   long        arg )
 {
     int men = find_menu(stack[stsize - 1]);
     int n = menus[men].numb;
@@ -275,14 +276,16 @@ dobut(FL_OBJECT * obj, long arg)
 
 /* Go up a level in the menu tree */
 void
-doback(FL_OBJECT * obj, long arg)
+doback( FL_OBJECT * obj  FL_UNUSED_ARG,
+		long        arg  FL_UNUSED_ARG )
 {
     pop_menu();
 }
 
 /* Exit the program */
 void
-doexit(FL_OBJECT * obj, long arg)
+doexit( FL_OBJECT * obj  FL_UNUSED_ARG,
+		long        arg  FL_UNUSED_ARG )
 {
     fl_hide_form(form);
     fl_finish();
@@ -290,7 +293,8 @@ doexit(FL_OBJECT * obj, long arg)
 }
 
 void
-showlog(FL_OBJECT *obj, long arg)
+showlog( FL_OBJECT * obj  FL_UNUSED_ARG,
+		 long        arg  FL_UNUSED_ARG )
 {
    fl_show_command_log(FL_TRANSIENT);
 }

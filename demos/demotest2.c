@@ -32,7 +32,8 @@
 #include <string.h>
 #include "include/forms.h"
 
-void timeout_remove_alert(int id, void *data)
+void timeout_remove_alert( int    id    FL_UNUSED_ARG,
+						   void * data  FL_UNUSED_ARG )
 {
     fl_hide_alert();
 }

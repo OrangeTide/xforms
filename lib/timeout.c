@@ -36,6 +36,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include <string.h>
@@ -44,25 +45,34 @@
 #include <ctype.h>
 #include <sys/types.h>
 
-/* used to do timeout, now almost does nothing */
+
+/***************************************
+ * used to do timeout, now almost does nothing
+ ***************************************/
+
 int
-fl_check_it(const char *et)
+fl_check_it( const char * et )
 {
-    if (fl_cntl.debug == 11)
-	fprintf(stderr, "%s\r        ", et);
+    if ( fl_cntl.debug == 11 )
+		fprintf( stderr, "%s\r        ", et );
     return 0;
 }
 
 
+/***************************************
+ ***************************************/
+
 int
-fl_add_timeout(long msec, FL_TIMEOUT_CALLBACK callback, void *data)
+fl_add_timeout( long                msec,
+				FL_TIMEOUT_CALLBACK callback,
+				void *              data )
 {
     FL_TIMEOUT_REC *rec;
     static int id = 1;
     int retid;
 
-    rec = fl_calloc(1, sizeof(*rec));
-    fl_gettime(&rec->sec, &rec->usec);
+    rec = fl_calloc( 1, sizeof *rec );
+    fl_gettime( &rec->sec, &rec->usec );
 
     retid = id;
 
@@ -77,65 +87,75 @@ fl_add_timeout(long msec, FL_TIMEOUT_CALLBACK callback, void *data)
     id++;
 
     /* we'll never generate timeout ID 0 or -1 */
+
     if (id == 0 || id == -1)
-	id = 1;
+		id = 1;
 
     return retid;
 }
 
-void
-fl_remove_timeout(int id)
-{
-    FL_TIMEOUT_REC *rec = fl_context->timeout_rec, *last;
 
+/***************************************
+ ***************************************/
+
+void
+fl_remove_timeout( int id )
+{
+    FL_TIMEOUT_REC *rec = fl_context->timeout_rec,
+		           *last;
 
     for (last = rec; rec && rec->id != id; last = rec, rec = rec->next)
-	;
+		/* empty */ ;
 
-    if (rec)
+    if ( rec )
     {
-	if (rec == fl_context->timeout_rec)
-	    fl_context->timeout_rec = rec->next;
-	else
-	    last->next = rec->next;
+		if ( rec == fl_context->timeout_rec )
+			fl_context->timeout_rec = rec->next;
+		else
+			last->next = rec->next;
 
-	fl_addto_freelist(rec);
+		fl_addto_freelist( rec );
     }
     else
     {
-	M_err("RemoveTimeout", "ID %d not found", id);
+		M_err( "RemoveTimeout", "ID %d not found", id );
     }
 }
 
-#define HALF_TIMER_RES (TIMER_RES/2)
+
+/***************************************
+ ***************************************/
 
 void
-fl_handle_timeouts(long msec)
+fl_handle_timeouts( long msec )
 {
     FL_TIMEOUT_REC *rec = fl_context->timeout_rec;
-    long sec = 0, usec, elapsed;
+    long sec = 0,
+		 usec,
+		 elapsed;
 
-    if (!rec)
-	return;
+    if ( ! rec )
+		return;
 
     /* re-synchronize if near expiration */
-    if (rec->msec < 250 || msec > 2 * TIMER_RES)
-	fl_gettime(&sec, &usec);
 
-    for (; rec; rec = rec->next)
+    if ( rec->msec < 250 || msec > 2 * TIMER_RES )
+		fl_gettime( &sec, &usec );
+
+    for ( ; rec; rec = rec->next )
     {
-	if (sec)
-	{
-	    elapsed = 1000 * (sec - rec->sec) + (usec - rec->usec) / 1000;
-	    rec->msec = rec->msec0 - elapsed;
-	    msec = 0;
-	}
+		if ( sec )
+		{
+			elapsed = 1000 * ( sec - rec->sec ) + ( usec - rec->usec ) / 1000;
+			rec->msec = rec->msec0 - elapsed;
+			msec = 0;
+		}
 
-	if ((rec->msec -= msec) < HALF_TIMER_RES)
-	{
-	    fl_remove_timeout(rec->id);
-	    if (rec->callback)
-		rec->callback(rec->id, rec->data);
-	}
+		if ( ( rec->msec -= msec ) < TIMER_RES / 2 )
+		{
+			fl_remove_timeout( rec->id );
+			if ( rec->callback )
+				rec->callback( rec->id, rec->data );
+		}
     }
 }

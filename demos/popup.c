@@ -73,7 +73,8 @@ int main(int argc, char *argv[])
 
 /********* MENU ***********************************************/
 
-void menu_callback(FL_OBJECT *ob, long data)
+void menu_callback( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     FD_pupform *fdui = (FD_pupform *)ob->form->fdui;
     char buf[128];
@@ -168,7 +169,8 @@ static void pup_entercb(int n, void *data)
 }
 
 void
-dopup_callback(FL_OBJECT *ob, long data)
+dopup_callback( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     if(pupID < 0)
     {
@@ -192,7 +194,8 @@ init_choice(FL_OBJECT *ob)
 }
 
 void
-choice_callback(FL_OBJECT *ob, long data)
+choice_callback( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
     char buf[128];
     FD_pupform *fdui = (FD_pupform *)ob->form->fdui;

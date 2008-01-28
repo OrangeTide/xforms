@@ -69,7 +69,8 @@ void sort_method_cb(FL_OBJECT *ob, long data)
     fill_browser(ob);
 }
 
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
     fl_finish();
     exit(0);

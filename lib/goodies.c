@@ -32,121 +32,170 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_gds = "$Id: goodies.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_gds = "$Id: goodies.c,v 1.6 2008/01/28 23:19:57 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "bitmaps/q.xbm"		/* in directory bitmaps */
 #include "bitmaps/warn.xbm"		/* in directory bitmaps */
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_update_display(int block)
+fl_update_display( int block )
 {
     if (block)
-	XSync(flx->display, 0);
+		XSync(flx->display, 0);
     else
-	XFlush(flx->display);
+		XFlush(flx->display);
 }
 
-/*
+
+/***************************************
  * preemptive handlers to work around some window mangers bugs
  * where iconification causes window to close. For normal closing,
  * we don't see any unmap events as winclose eats it
- */
+ ***************************************/
 
 int
-fl_goodies_preemptive(FL_FORM * form, void *ev)
+fl_goodies_preemptive( FL_FORM * form,
+					   void *    ev )
 {
     XEvent *xev = ev;
 
     if (xev->type == UnmapNotify)
     {
-	fl_trigger_object(form->u_vdata);
-	return FL_PREEMPT;
+		fl_trigger_object(form->u_vdata);
+		return FL_PREEMPT;
     }
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_goodies_atclose(FL_FORM * form, void *data)
+fl_goodies_atclose( FL_FORM * form,
+					void *    data )
 {
     fl_trigger_object(data ? data : form->u_vdata);
     if (form->sort_of_modal)
-	form->sort_of_modal = 0;
+		form->sort_of_modal = 0;
     return FL_IGNORE;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_parse_goodies_label(FL_OBJECT * ob, const char *name)
+fl_parse_goodies_label( FL_OBJECT *  ob,
+						const char * name )
 {
     const char *s;
 
     if ((s = fl_get_resource(name, 0, FL_NONE, 0, 0, 0)))
     {
-	fl_set_object_label(ob, s);
-	fl_fit_object_label(ob, 5, 2);
+		fl_set_object_label(ob, s);
+		fl_fit_object_label(ob, 5, 2);
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_get_goodie_title(FL_FORM * form, const char *res)
+fl_get_goodie_title( FL_FORM *    form,
+					 const char * res )
 {
     const char *s;
+
     if ((s = fl_get_resource(res, 0, FL_NONE, 0, 0, 0)))
-	fl_set_form_title(form, s);
+		fl_set_form_title(form, s);
 }
 
 
 static int goodie_style = -1, goodie_size;
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_goodies_font(int style, int size)
+fl_set_goodies_font( int style,
+					 int size )
 {
     goodie_style = style;
     goodie_size = size;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_get_goodies_font(int *style, int *size)
+fl_get_goodies_font( int * style,
+					 int * size )
 {
     *style = goodie_style;
     *size = goodie_size;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_handle_goodie_font(FL_OBJECT * ob1, FL_OBJECT * ob2)
+fl_handle_goodie_font( FL_OBJECT * ob1,
+					   FL_OBJECT * ob2 )
 {
     if (goodie_style < 0)
-	return;
+		return;
 
     if (ob1)
     {
-	fl_set_object_lstyle(ob1, goodie_style);
-	fl_set_object_lsize(ob1, goodie_size);
-	fl_fit_object_label(ob1, 1, 1);
+		fl_set_object_lstyle(ob1, goodie_style);
+		fl_set_object_lsize(ob1, goodie_size);
+		fl_fit_object_label(ob1, 1, 1);
     }
 
     if (ob2)
     {
-	fl_set_object_lstyle(ob2, goodie_style);
-	fl_set_object_lsize(ob2, goodie_size);
+		fl_set_object_lstyle(ob2, goodie_style);
+		fl_set_object_lsize(ob2, goodie_size);
     }
 
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_init_goodies(void)
+fl_init_goodies( void )
 {
     fl_init_alert();
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-box_vert(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h)
+box_vert( FL_Coord x,
+		  FL_Coord y,
+		  FL_Coord w,
+		  FL_Coord h )
 {
     int xy[2];
     int halfh = (int)(0.5f * h), halfw = (int)(0.5f* w);
@@ -166,9 +215,16 @@ box_vert(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h)
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-draw_box(FL_OBJECT * ob, int ev, FL_Coord x, FL_Coord y,
-	 int k, void *sp)
+draw_box( FL_OBJECT * ob,
+		  int         ev,
+		  FL_Coord    x   FL_UNUSED_ARG,
+		  FL_Coord    y   FL_UNUSED_ARG,
+		  int         k   FL_UNUSED_ARG,
+		  void      * sp  FL_UNUSED_ARG )
 {
     if (ev == FL_DRAW)
     {
@@ -195,8 +251,14 @@ draw_box(FL_OBJECT * ob, int ev, FL_Coord x, FL_Coord y,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_add_q_icon(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h)
+fl_add_q_icon( FL_Coord x,
+			   FL_Coord y,
+			   FL_Coord w,
+			   FL_Coord h )
 {
     FL_OBJECT *obj;
 
@@ -208,8 +270,14 @@ fl_add_q_icon(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h)
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_add_warn_icon(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h)
+fl_add_warn_icon( FL_Coord x,
+				  FL_Coord y,
+				  FL_Coord w,
+				  FL_Coord h )
 {
     FL_OBJECT *obj;
 

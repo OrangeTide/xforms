@@ -53,7 +53,8 @@ void setcursor_cb(FL_OBJECT *ob, long data)
    fl_set_cursor(FL_ObjWin(ob), data);
 }
 
-void setbitmapcursor_cb(FL_OBJECT *ob, long data)
+void setbitmapcursor_cb( FL_OBJECT * ob,
+						 long        data  FL_UNUSED_ARG )
 {
    static int bitmapcur;
 
@@ -66,12 +67,14 @@ void setbitmapcursor_cb(FL_OBJECT *ob, long data)
 }
 
 
-void setanimatedcursor_cb(FL_OBJECT *ob, long data)
+void setanimatedcursor_cb( FL_OBJECT * ob,
+						   long        data  FL_UNUSED_ARG )
 {
     fl_set_cursor(FL_ObjWin(ob), animated);
 }
 
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
     fl_finish();
     exit(0);

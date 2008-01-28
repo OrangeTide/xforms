@@ -70,7 +70,8 @@ int main(int argc, char *argv[])
 /* #define TEST_PIXMAP_ALIGN */
 
 void
-align_cb(FL_OBJECT *ob, long n)
+align_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
+		  long        n )
 {
     if(fl_get_button(fd_form0->inside))
        n |= FL_ALIGN_INSIDE;
@@ -84,7 +85,8 @@ align_cb(FL_OBJECT *ob, long n)
 }
 
 void
-inside_cb(FL_OBJECT *ob, long data)
+inside_cb( FL_OBJECT * ob,
+		   long        data  FL_UNUSED_ARG )
 {
    if(fl_get_button(ob))
       fd_form0->box->align |= FL_ALIGN_INSIDE;

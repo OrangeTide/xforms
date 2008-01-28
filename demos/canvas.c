@@ -59,7 +59,12 @@ extern FD_canvasform * create_form_canvasform(void);
 static GC canvasGC;
 
 int
-canvas_expose(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
+canvas_expose( FL_OBJECT * ob  FL_UNUSED_ARG,
+			   Window      win,
+			   int         w,
+			   int         h,
+			   XEvent    * ev  FL_UNUSED_ARG,
+			   void      * d)
 {
     FD_canvasform *ui = (FD_canvasform *)d;
     XFillRectangle(fl_get_display(), win, canvasGC, 0, 0, w, h);
@@ -68,7 +73,12 @@ canvas_expose(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
 }
 
 int
-canvas_key(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
+canvas_key( FL_OBJECT * ob   FL_UNUSED_ARG,
+			Window      win  FL_UNUSED_ARG,
+			int         w    FL_UNUSED_ARG,
+			int         h    FL_UNUSED_ARG,
+			XEvent    * ev,
+			void      * d )
 {
     FD_canvasform *ui = (FD_canvasform *)d;
     char buf[128];
@@ -79,7 +89,12 @@ canvas_key(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
 }
 
 int
-canvas_but(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
+canvas_but( FL_OBJECT * ob   FL_UNUSED_ARG,
+			Window      win  FL_UNUSED_ARG,
+			int         w    FL_UNUSED_ARG,
+			int         h    FL_UNUSED_ARG,
+			XEvent    * ev,
+			void      * d )
 {
     FD_canvasform *ui = (FD_canvasform *)d;
     char buf[128];
@@ -90,7 +105,12 @@ canvas_but(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
 }
 
 int
-canvas_misc(FL_OBJECT *ob, Window win, int w, int h, XEvent *ev, void *d)
+canvas_misc( FL_OBJECT * ob   FL_UNUSED_ARG,
+			 Window      win  FL_UNUSED_ARG,
+			 int         w    FL_UNUSED_ARG,
+			 int         h    FL_UNUSED_ARG,
+			 XEvent    * ev,
+			 void      * d )
 {
     FD_canvasform *ui = (FD_canvasform *)d;
     fl_addto_browser(ui->br,
@@ -124,7 +144,8 @@ void sensitive_setting(FL_OBJECT *ob, long event)
        fl_remove_canvas_handler(fd_canvasform->canvas, event, hc);
 }
 
-void disable_it(FL_OBJECT *ob, long data)
+void disable_it( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
     (fl_get_button(ob) ? fl_deactivate_object:fl_activate_object)
     (fd_canvasform->canvas);
@@ -157,7 +178,8 @@ void hide_it(FL_OBJECT *ob, long all)
       }
 }
 
-void misc_cb(FL_OBJECT *ob, long data)
+void misc_cb( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
     if(fl_get_button(ob))
     {

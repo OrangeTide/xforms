@@ -36,7 +36,8 @@ show the use of setting object colors and call-back routines.
 FL_FORM *form;
 FL_OBJECT *topbox;
 
-void change_color(FL_OBJECT *obj, long col)
+void change_color( FL_OBJECT * obj  FL_UNUSED_ARG,
+				   long        col )
 {
   fl_set_object_color(topbox, col,  col);
 }

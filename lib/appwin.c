@@ -32,254 +32,316 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_evt = "$Id: appwin.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
+#if defined F_ID || defined DEBUG 
+char *fl_id_evt = "$Id: appwin.c,v 1.7 2008/01/28 23:15:48 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
+
 
 /*****************************************************************
  * Application window management. Data structure is grossly wrong
  * ****TODO******
  **************************************************************{**/
 
-
 /* some constant handlers */
+
 static int
-handle_mappingnotify(XEvent * xev, void *user_data)
+handle_mapping_notify( XEvent * xev,
+					   void   * user_data  FL_UNUSED_ARG )
 {
-    XRefreshKeyboardMapping((XMappingEvent *) xev);
+    XRefreshKeyboardMapping( ( XMappingEvent * ) xev );
     return 0;
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
-remove_app_win(FL_WIN * appwin)
+remove_app_win( FL_WIN * appwin )
 {
     FL_WIN *fwin;
 
-#if (FL_DEBUG >= ML_DEBUG)
-    M_info("RemoveAppwin", "deleting 0x%lx", appwin->win);
+#if FL_DEBUG >= ML_DEBUG
+    M_info( "RemoveAppwin", "deleting 0x%lx", appwin->win );
 #endif
-    if (fl_app_win == appwin)
-    {
-	fl_app_win = appwin->next;
-    }
+
+    if ( fl_app_win == appwin )
+		fl_app_win = appwin->next;
     else
     {
-	for (fwin = fl_app_win; fwin && fwin->next != appwin; fwin = fwin->next)
-	    ;
-	if (fwin)
-	    fwin->next = fwin->next->next;
+		for ( fwin = fl_app_win; fwin && fwin->next != appwin;
+			  fwin = fwin->next )
+			/* empty */ ;
+
+		if ( fwin )
+			fwin->next = fwin->next->next;
     }
+
     appwin->win = 0;
-    fl_free(appwin);
+    fl_free( appwin );
 }
 
-/* given a window, find the correct structure, create if necessary */
+
+/***************************************
+ * given a window, find the correct structure, create if necessary
+ ***************************************/
+
 static FL_WIN *
-find_fl_win_struct(register Window win)
+find_fl_win_struct( Window win )
 {
-    register FL_WIN *fwin = fl_app_win, *lwin = fl_app_win;
+    FL_WIN *fwin = fl_app_win,
+		   *lwin = fl_app_win;
+	size_t i;
 
-    for (; fwin && fwin->win != win; lwin = fwin, fwin = fwin->next)
-	;
+    for ( ; fwin && fwin->win != win; lwin = fwin, fwin = fwin->next )
+		/* empty */ ;
 
-    if (!fwin)
-    {
-#if (FL_DEBUG >= ML_DEBUG)
-	M_info("AppwinFind", "Creating for 0x%lx", win);
+	/* if we found it we're done */
+
+    if ( fwin )
+		return fwin;
+
+#if FL_DEBUG >= ML_DEBUG
+	M_info( "AppwinFind", "Creating for 0x%lx", win );
 #endif
-	/* append to the end */
-	fwin = fl_calloc(1, sizeof(*fwin));
-	fwin->next = 0;
+
+	/* otherwise create a new structure and append it to the end */
+
+	if ( ( fwin = fl_malloc( sizeof *fwin ) ) == NULL )
+		return NULL;
+
+	fwin->next = NULL;
 	fwin->win = win;
+	fwin->pre_emptive = NULL;
+	fwin->pre_emptive_data = NULL;
+	for ( i = 0; i < LASTEvent; i++ )
+	{
+		fwin->callback[ i ] = NULL;
+		fwin->user_data[ i ] = NULL;
+	}
+
 	/* default handlers */
-	fwin->callback[MappingNotify] = handle_mappingnotify;
-	if (!fl_app_win)
-	    fl_app_win = fwin;
+
+	fwin->callback[ MappingNotify ] = handle_mapping_notify;
+
+	fwin->default_callback = NULL;
+	fwin->mask = 0;
+
+	if ( ! fl_app_win )
+		fl_app_win = fwin;
 	else
-	    lwin->next = fwin;
-    }
+		lwin->next = fwin;
+
     return fwin;
 }
 
 
+/***************************************
+ ***************************************/
+
 FL_APPEVENT_CB
-fl_set_preemptive_callback(Window win, FL_APPEVENT_CB pcb, void *data)
+fl_set_preemptive_callback( Window           win,
+							FL_APPEVENT_CB   pcb,
+							void           * data )
 {
     FL_WIN *fwin;
-    FL_APPEVENT_CB old = 0;
+    FL_APPEVENT_CB old = NULL;
 
-    if (!(fwin = find_fl_win_struct(win)))
-	return 0;
+    if ( ! ( fwin = find_fl_win_struct( win ) ) )
+		return NULL;
+
     old = fwin->pre_emptive;
     fwin->pre_emptive = pcb;
     fwin->pre_emptive_data = data;
     return old;
 }
 
-/*  add an event handler for window */
+
+/***************************************
+ * add an event handler for window
+ ***************************************/
+
 FL_APPEVENT_CB
-fl_add_event_callback(Window win, int ev,
-		      FL_APPEVENT_CB wincb, void *user_data)
+fl_add_event_callback( Window           win,
+					   int              ev,
+					   FL_APPEVENT_CB   wincb,
+					   void *           user_data )
 {
     FL_WIN *fwin;
-    int i, nev;
-    FL_APPEVENT_CB old = 0;
+    int i,
+		nev;
+    FL_APPEVENT_CB old = NULL;
 
-    if (ev < 0 || ev >= LASTEvent)
-	return 0;
+    if ( ev < 0 || ev >= LASTEvent )
+		return 0;
 
-    if (!(fwin = find_fl_win_struct(win)))
+    if ( ! ( fwin = find_fl_win_struct( win ) ) )
     {
-	M_err("AddEventCallback", "Bad Window x%lx", win);
-	return 0;
+		M_err( "AddEventCallback", "Bad Window x%lx", win );
+		return NULL;
     }
 
     /* ev <= 1 means all events. Also events start from 2 */
+
     nev = ev;
-    if (ev < 2)
+    if ( ev < 2 )
     {
-	ev = 2;
-	nev = LASTEvent - 1;
+		ev = 2;
+		nev = LASTEvent;
     }
 
-    for (i = ev; i <= nev; i++)
+    for ( i = ev; i < nev; i++ )
     {
-	old = fwin->callback[i];
-	fwin->callback[i] = wincb;
-	fwin->user_data[i] = user_data;
+		old = fwin->callback[ i ];
+		fwin->callback[ i ] = wincb;
+		fwin->user_data[ i ] = user_data;
     }
+
     return old;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_remove_event_callback(Window win, int ev)
+fl_remove_event_callback( Window win,
+						  int    ev )
 {
     FL_WIN *fwin;
 
-    if (ev >= LASTEvent)
-	return;
+    if ( ev < 0 || ev >= LASTEvent )
+		return;
 
-    if (!(fwin = find_fl_win_struct(win)))
-	return;
+    if ( ! ( fwin = find_fl_win_struct( win ) ) )
+		return;
 
-    if (ev >= 2)
+    if ( ev >= 2 )
     {
-	fwin->callback[ev] = 0;
-	fwin->user_data[ev] = 0;
+		fwin->callback[ ev ] = NULL;
+		fwin->user_data[ ev ] = NULL;
     }
     else
     {
-	fwin->win = 0;		/* window deactivated */
-	remove_app_win(fwin);
+		fwin->win = 0;		/* window deactivated */
+		remove_app_win( fwin );
     }
 }
 
+
 typedef struct
 {
-    int event;
+    int           event;
     unsigned long mask;
-}
-EMS;
+} EMS;
 
-static EMS ems[] =
+static EMS ems[ ] =
 {
-    {CirculateNotify, StructureNotifyMask},
-    {ConfigureNotify, StructureNotifyMask},
-    {DestroyNotify, StructureNotifyMask},
-    {CreateNotify, StructureNotifyMask},
-    {GravityNotify, StructureNotifyMask},
-    {MapNotify, StructureNotifyMask},
-    {ReparentNotify, StructureNotifyMask},
-    {UnmapNotify, StructureNotifyMask},
-
-    {CirculateRequest, SubstructureRedirectMask},
-    {ConfigureRequest, SubstructureRedirectMask},
-    {MapRequest, SubstructureRedirectMask},
-
-    {ResizeRequest, ResizeRedirectMask},
-
-
-    {Expose, ExposureMask},
-
-    {EnterNotify, EnterWindowMask},
-    {LeaveNotify, LeaveWindowMask},
-    {KeyPress, KeyPressMask},
-    {KeyRelease, KeyReleaseMask},
-    {ButtonPress, ButtonPressMask /* | OwnerGrabButtonMask */ },
-    {ButtonRelease, ButtonReleaseMask /* | OwnerGrabButtonMask */ },
-{MotionNotify, PointerMotionMask | ButtonMotionMask | PointerMotionHintMask},
-
-    {FocusIn, FocusChangeMask},
-    {FocusOut, FocusChangeMask},
-
-    {KeymapNotify, KeymapStateMask},
-    {PropertyNotify, PropertyChangeMask},
-    {VisibilityNotify, VisibilityChangeMask},
-    {ColormapNotify, ColormapChangeMask},
-
+    { CirculateNotify,  StructureNotifyMask },
+    { ConfigureNotify,  StructureNotifyMask },
+    { DestroyNotify,    StructureNotifyMask },
+    { CreateNotify,     StructureNotifyMask },
+    { GravityNotify,    StructureNotifyMask },
+    { MapNotify,        StructureNotifyMask },
+    { ReparentNotify,   StructureNotifyMask },
+    { UnmapNotify,      StructureNotifyMask },
+    { CirculateRequest, SubstructureRedirectMask },
+    { ConfigureRequest, SubstructureRedirectMask },
+    { MapRequest,       SubstructureRedirectMask },
+    { ResizeRequest,    ResizeRedirectMask },
+    { Expose,           ExposureMask },
+    { EnterNotify,      EnterWindowMask },
+    { LeaveNotify,      LeaveWindowMask },
+    { KeyPress,         KeyPressMask },
+    { KeyRelease,       KeyReleaseMask} ,
+    { ButtonPress,      ButtonPressMask /* | OwnerGrabButtonMask */ },
+    { ButtonRelease,    ButtonReleaseMask /* | OwnerGrabButtonMask */ },
+	{ MotionNotify,     PointerMotionMask | ButtonMotionMask | PointerMotionHintMask },
+    { FocusIn,          FocusChangeMask },
+    { FocusOut,         FocusChangeMask },
+    { KeymapNotify,     KeymapStateMask },
+    { PropertyNotify,   PropertyChangeMask },
+    { VisibilityNotify, VisibilityChangeMask },
+    { ColormapNotify,   ColormapChangeMask },
  /* non-maskable events */
-    {MappingNotify, 0},
-    {SelectionNotify, 0},
-    {SelectionRequest, 0},
-    {SelectionClear, 0},
-    {ClientMessage, 0},
-    {GraphicsExpose, 0},
-    {NoExpose, 0}
+    { MappingNotify,    0 },
+    { SelectionNotify,  0 },
+    { SelectionRequest, 0},
+    { SelectionClear,   0 },
+    { ClientMessage,    0 },
+    { GraphicsExpose,   0 },
+    { NoExpose,         0 }
 };
 
-unsigned long
-fl_xevent_to_mask(int event)
-{
-    register EMS *em = ems, *eme = ems + sizeof(ems) / sizeof(ems[0]);
 
-    for (; em < eme; em++)
-	if (em->event == event)
-	    return em->mask;
+/***************************************
+ ***************************************/
+
+unsigned long
+fl_xevent_to_mask( int event )
+{
+    EMS *em = ems,
+		*eme = ems + sizeof ems / sizeof *ems;
+
+    for ( ; em < eme; em++ )
+		if ( em->event == event )
+			return em->mask;
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_activate_event_callbacks(Window win)
+fl_activate_event_callbacks( Window win )
 {
     FL_WIN *fwin = fl_app_win;
     int i;
     unsigned long mask;
 
-    for (; fwin && fwin->win != win; fwin = fwin->next)
-	;
+    for ( ; fwin && fwin->win != win; fwin = fwin->next )
+		/* empty */ ;
 
-    if (!fwin)
+    if ( ! fwin )
     {
-	M_err("ActiveEventCB", "Unknown window 0x%lx", win);
-	return;
+		M_err( "ActiveEventCB", "Unknown window 0x%lx", win );
+		return;
     }
 
     /* solicit all registered events */
-    for (mask = i = 0; i < LASTEvent; i++)
-	if (fwin->callback[i])
-	    mask |= fl_xevent_to_mask(i);
-    XSelectInput(flx->display, win, mask);
+
+    for ( mask = i = 0; i < LASTEvent; i++ )
+		if ( fwin->callback[ i ] )
+			mask |= fl_xevent_to_mask( i );
+
+    XSelectInput( flx->display, win, mask );
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_winclose(Window win)
+fl_winclose( Window win )
 {
     XEvent xev;
 
-    XUnmapWindow(flx->display, win);
-    XDestroyWindow(flx->display, win);
+    XUnmapWindow( flx->display, win );
+    XDestroyWindow( flx->display, win );
 
-    XSync(flx->display, 0);
-    while (XCheckWindowEvent(flx->display, win, FL_ALL_MASKS, &xev))
-	fl_xevent_name("Eaten", &xev);
+    XSync( flx->display, 0 );
 
-    fl_remove_event_callback(win, 0);
+    while ( XCheckWindowEvent( flx->display, win, FL_ALL_MASKS, &xev ) )
+		fl_xevent_name( "Eaten", &xev );
+
+    fl_remove_event_callback( win, 0 );
 }

@@ -36,7 +36,8 @@
 FL_FORM *form;
 FL_OBJECT *browserobj, *inputobj, *exitobj;
 
-void addit(FL_OBJECT *obj, long arg)
+void addit( FL_OBJECT * obj  FL_UNUSED_ARG,
+			long        arg  FL_UNUSED_ARG )
 {
    /* append and show the last line. Don't use this if you just want
     * to add some lines. use fl_add_browser_line
@@ -44,13 +45,15 @@ void addit(FL_OBJECT *obj, long arg)
    fl_addto_browser(browserobj,fl_get_input(inputobj));
 }
 
-void insertit(FL_OBJECT *obj, long arg)
+void insertit( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
 {
    int n = fl_get_browser(browserobj);
    fl_insert_browser_line(browserobj,n,fl_get_input(inputobj));
 }
 
-void replaceit(FL_OBJECT *obj, long arg)
+void replaceit( FL_OBJECT * obj  FL_UNUSED_ARG,
+				long        arg  FL_UNUSED_ARG )
 {
    int n;
 
@@ -58,7 +61,8 @@ void replaceit(FL_OBJECT *obj, long arg)
       fl_replace_browser_line(browserobj,n,fl_get_input(inputobj));
 }
 
-void deleteit(FL_OBJECT *obj, long arg)
+void deleteit( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
 {
    int n;
 
@@ -66,7 +70,8 @@ void deleteit(FL_OBJECT *obj, long arg)
       fl_delete_browser_line(browserobj,n);
 }
 
-void clearit(FL_OBJECT *obj, long arg)
+void clearit( FL_OBJECT * obj  FL_UNUSED_ARG,
+			  long        arg  FL_UNUSED_ARG )
 {
    fl_clear_browser(browserobj);
 }

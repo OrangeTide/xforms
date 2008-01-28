@@ -34,22 +34,27 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/flsnprintf.h"
+
 
 /*************** Three line messages *******************{*****/
 
 typedef struct
 {
-    FL_FORM *form;
-    FL_OBJECT *str;
-    FL_OBJECT *but;
-}
-FD_msg;
+    FL_FORM   * form;
+    FL_OBJECT * str;
+    FL_OBJECT * but;
+} FD_msg;
+
+
+/***************************************
+ ***************************************/
 
 static FD_msg *
-create_msg(void)
+create_msg( void )
 {
     FD_msg *fdui = (FD_msg *) fl_calloc(1, sizeof(*fdui));
     int oldy = fl_inverted_y;
@@ -67,29 +72,34 @@ create_msg(void)
     fl_set_form_atclose(fdui->form, fl_goodies_atclose, fdui->but);
 
     if (fl_cntl.buttonFontSize != FL_DEFAULT_SIZE)
-	fl_fit_object_label(fdui->but, 18, 2);
+		fl_fit_object_label(fdui->but, 18, 2);
 
     fl_inverted_y = oldy;
     fl_set_coordunit(oldu);
     return fdui;
 }
 
+
 static FD_msg *fd_msg;
 
-/* Shows a simple message with an OK button */
+
+/***************************************
+ * Shows a simple message with an OK button
+ ***************************************/
+
 void
-fl_show_messages(const char *str)
+fl_show_messages( const char *str )
 {
     static int first = 1;
     int alreadyon;
 
     if (!fd_msg)
-	fd_msg = create_msg();
+		fd_msg = create_msg();
 
     if (first)
     {
-	fl_parse_goodies_label(fd_msg->but, FLOKLabel);
-	first = 0;
+		fl_parse_goodies_label(fd_msg->but, FLOKLabel);
+		first = 0;
     }
 
     fl_handle_goodie_font(fd_msg->but, fd_msg->str);
@@ -98,31 +108,42 @@ fl_show_messages(const char *str)
     fl_set_object_label(fd_msg->str, str);
 
     if (!alreadyon)
-	fl_deactivate_all_forms();
+		fl_deactivate_all_forms();
 
     fl_show_form(fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "message");
 
     fl_update_display(1);
 
     while (fl_do_only_forms() != fd_msg->but)
-	;
+		/* empty */ ;
 
     fl_hide_form(fd_msg->form);
     fl_activate_all_forms();
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_show_message(const char *s1, const char *s2, const char *s3)
+fl_show_message( const char * s1,
+				 const char * s2,
+				 const char * s3 )
 {
     char buf[2048];
-    fl_snprintf(buf,sizeof(buf),
+
+    fl_snprintf(buf,sizeof buf,
          "%s\n%s\n%s", s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "");
     fl_show_messages(buf);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_hide_message(void)
+fl_hide_message( void )
 {
     if (fd_msg && fd_msg->form->visible)
-	fl_object_qenter(fd_msg->but);
+		fl_object_qenter(fd_msg->but);
 }

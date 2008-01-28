@@ -35,13 +35,15 @@
  * On IRIX 3.3, itoa is about 3 times faster than sprintf
  *              ftoa is about 4 times (6digits)faster than sprintf
  */
+
 #if !defined(lint) && defined(F_ID)
-char *id_n2a = "$Id: n2a.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+char *id_n2a = "$Id: n2a.c,v 1.6 2008/01/28 23:21:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include "include/forms.h"
@@ -50,36 +52,43 @@ char *id_n2a = "$Id: n2a.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
 
 static const char *digits = "0123456789";
 
-/************* convert integer to string **********/
+
+/***************************************
+ * convert integer to string
+ ***************************************/
 
 const char *
-fl_itoa(register int n)
+fl_itoa( int n )
 {
-    static char buf[20];
-    register char *p = buf + sizeof(buf);
-    register int l, sign = 0;
+    static char buf[ 20 ];
+    char *p = buf + sizeof buf;
+    int l,
+		sign = 0;
 
-    if (n < 0)
+    if ( n < 0 )
     {
-	sign = '-';
-	n = -n;			/* might overflow if n most negative */
+		sign = '-';
+		n = -n;			/* might overflow if n most negative */
     }
 
     *--p = '\0';		/* terminating 0 */
-    while (n >= 10)
+    while ( n >= 10 )
     {
-	*--p = *(digits + (n - (l = n / 10) * 10));
-	n = l;
+		*--p = *( digits + ( n - ( l = n / 10 ) * 10 ) );
+		n = l;
     }
 
-    *--p = *(digits + n);
-    if (sign)
-	*--p = sign;
+    *--p = *( digits + n );
+    if ( sign )
+		*--p = sign;
 
     return p;
 }
 
-/*******  convert float to a string. Max keep 6 digits *****/
+
+/***************************************
+ *  convert float to a string. Max keep 6 digits
+ ***************************************/
 
 static int multab[] =
 {
@@ -87,23 +96,24 @@ static int multab[] =
 };
 
 const char *
-fl_ftoa(float f, int n)
+fl_ftoa( float f,
+		 int   n )
 {
-    static char buf[33];
-    register char *fbuf;
-    static int nmax = sizeof(multab) / sizeof(multab[0]);
+    static char buf[ 33 ];
+    char *fbuf;
+    static int nmax = sizeof multab / sizeof *multab;
     int i, sign = 0;
-    register float ff;
-    register int fi, ffi, l;
+    float ff;
+    int fi, ffi, l;
 
 #if 1
     if (n >= nmax || n < 0)
-	n = nmax - 1;
+		n = nmax - 1;
 
     if (f < 0)
     {
-	f = -f;
-	sign = '-';
+		f = -f;
+		sign = '-';
     }
 
     f += 0.05 / multab[n];	/* rounding */
@@ -114,15 +124,15 @@ fl_ftoa(float f, int n)
 
     if (ff < 1.0 / multab[n])
     {
-	*++fbuf = '0';
+		*++fbuf = '0';
     }
     else
     {
-	for (i = 1; i <= n; i++)
-	{
-	    *++fbuf = *(digits + (ffi = (ff *= 10.0)));
-	    ff = ff - ffi;
-	}
+		for (i = 1; i <= n; i++)
+		{
+			*++fbuf = *(digits + (ffi = (ff *= 10.0)));
+			ff = ff - ffi;
+		}
     }
     *++fbuf = '\0';
     /* covert the interal part */
@@ -130,12 +140,12 @@ fl_ftoa(float f, int n)
     fbuf = buf + n + 2;
     while (fi >= 10)
     {
-	*--fbuf = *(digits + (fi - (l = fi / 10) * 10));
-	fi = l;
+		*--fbuf = *(digits + (fi - (l = fi / 10) * 10));
+		fi = l;
     }
     *--fbuf = *(digits + fi);
     if (sign)
-	*--fbuf = sign;
+		*--fbuf = sign;
     return fbuf;
 
 #else
@@ -143,25 +153,3 @@ fl_ftoa(float f, int n)
     return buf;
 #endif
 }
-
-
-#ifdef TEST
-#include <stdio.h>
-main()
-{
-    static int nn[] =
-    {0, 1, 5, -1, -10, 1234567, -121};
-    static float ff[] =
-    {1.2, -2.1, 0.01, 0.001, 1.00, -123456.252, 1.23552};
-    int j;
-
-    for (j = 0; j < sizeof(nn) / sizeof(nn[0]); j++)
-	fprintf(stderr, "itoa(%d)=%s\n", nn[j], itoa(nn[j]));
-
-    for (j = 0; j < sizeof(ff) / sizeof(ff[0]); j++)
-	fprintf(stderr, "ftoa(%f, %d)=%s\n", ff[j], j, ftoa(ff[j], j));
-
-
-}
-
-#endif

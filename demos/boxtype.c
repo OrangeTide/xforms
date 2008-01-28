@@ -74,7 +74,8 @@ FL_FORM *form;
 FL_OBJECT *tobj[18], *exitob, *btypeob, *modeob;
 
 void
-boxtype_cb (FL_OBJECT * ob, long arg)
+boxtype_cb( FL_OBJECT * ob,
+			 long        arg  FL_UNUSED_ARG )
 {
    int i, req_bt = fl_get_choice(ob) - 1;
    static int lastbt = -1;
@@ -91,7 +92,8 @@ boxtype_cb (FL_OBJECT * ob, long arg)
 }
 
 void
-mode_cb (FL_OBJECT * ob, long arg)
+mode_cb( FL_OBJECT * ob,
+		 long        arg  FL_UNUSED_ARG )
 {
    static int lval = -1;
    int val = fl_get_choice (ob) -1;

@@ -34,7 +34,8 @@
 FL_FORM *fclock;
 
 void
-exit_cb(FL_OBJECT *ob, long q)
+exit_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
+		 long        q   FL_UNUSED_ARG )
 {
    fl_finish();
    exit(0);

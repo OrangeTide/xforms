@@ -45,18 +45,21 @@ extern FD_fontsform * create_form_fontsform(void);
 
 FD_fontsform *ui;
 
-void done_cb(FL_OBJECT *obj, long arg)
+void done_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			  long        arg  FL_UNUSED_ARG )
 {
     fl_finish();
     exit(0);
 }
 
-void style_cb(FL_OBJECT *obj, long arg)
+void style_cb( FL_OBJECT * obj,
+			   long        arg  FL_UNUSED_ARG )
 {
   fl_set_object_lstyle(ui->textobj, fl_get_browser(obj) - 1);
 }
 
-void size_cb(FL_OBJECT *obj, long arg)
+void size_cb( FL_OBJECT * obj,
+			  long        arg  FL_UNUSED_ARG )
 {
   switch (fl_get_browser(obj))
   {

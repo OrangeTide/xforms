@@ -28,27 +28,38 @@
  *.
  *    Read 2bytes MSB first
  ***********************************************************************/
-#if !defined(lint) && defined(F_ID)
-char *id_2msb = "$Id: read2msbf.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+
+#if ! defined lint && defined F_ID
+char *id_2msb = "$Id: read2msbf.c,v 1.6 2008/01/28 23:21:37 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_fget2MSBF(FILE * fp)
+fl_fget2MSBF( FILE * fp )
 {
     int ret = getc(fp);
     return (ret << 8) + getc(fp);
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_fput2MSBF(int code, FILE * fp)
+fl_fput2MSBF( int    code,
+			  FILE * fp )
 {
     putc((code >>8)&0xff, fp);
     putc(code&0xff, fp);

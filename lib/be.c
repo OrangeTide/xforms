@@ -37,65 +37,79 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include <stdlib.h>
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_addto_freelist(void *data)
+fl_addto_freelist( void *data )
 {
     FL_FREE_REC *rec = fl_context->free_rec;
     int n;
 
-    if (!data)
-	return;
+    if ( ! data )
+		return;
 
-    if (!rec)
+    if ( ! rec )
     {
-	rec = fl_context->free_rec = fl_calloc(1, sizeof(*rec));
-	rec->avail = 10;
-	rec->data = fl_calloc(rec->avail, sizeof(void *));
-        rec->age = fl_malloc(rec->avail * sizeof *rec->age);
+		rec = fl_context->free_rec = fl_malloc( sizeof *rec );
+		rec->nfree = 0;
+		rec->avail = 10;
+		rec->data = fl_malloc( rec->avail * sizeof *rec->data );
+		for ( n = 0; n < rec->avail; n++ )
+			rec->data[ n ] = NULL;
+        rec->age = fl_malloc( rec->avail * sizeof *rec->age );
     }
 
     /* look for an open slot */
 
-    for ( n = 0; n < rec->avail && rec->data[n]; n++)
-            ;
+    for ( n = 0; n < rec->avail && rec->data[ n ]; n++ )
+		/* empty */ ;
 
-    if (n  == rec->avail )
+    if ( n == rec->avail )
     {
         int osize = rec->avail;
-	rec->avail *= 2;
-	rec->data = fl_realloc(rec->data, rec->avail * sizeof(void *));
-        rec->age = fl_realloc(rec->age, rec->avail * sizeof *rec->age);
-        memset(rec->data + osize, 0, sizeof *rec->data * osize);
+
+		rec->avail *= 2;
+		rec->data = fl_realloc( rec->data, rec->avail * sizeof *rec->data );
+		for ( ; osize < rec->avail; osize++ )
+			rec->data[ osize ] = NULL;
+        rec->age = fl_realloc( rec->age, rec->avail * sizeof *rec->age );
     }
 
-    rec->data[n] = data;
-    rec->age[n] = 0;
+    rec->data[ n ] = data;
+    rec->age[ n ] = 0;
     ++rec->nfree;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_free_freelist(void)
+fl_free_freelist( void )
 {
     FL_FREE_REC *rec;
     int n;
 
-    if (!(rec = fl_context->free_rec) || !rec->nfree)
-	return;
+    if ( ! ( rec = fl_context->free_rec ) || ! rec->nfree )
+		return;
 
     /* scan the list for objects eligible for deletion and delete those
-       found.
-     */
-    for ( n = 0; n < rec->avail; n++)
+       found. */
+
+    for ( n = 0; n < rec->avail; n++ )
     {
-        if (rec->data[n] && (++rec->age[n] > 25))
+        if ( rec->data[ n ] && ++rec->age[ n ] > 25 )
         {
-             fl_free(rec->data[n]);
-             rec->data[n] = 0;
-             --rec->nfree;
+			fl_free(rec->data[ n ] );
+			rec->data[ n ] = 0;
+			--rec->nfree;
         }
     }
 }

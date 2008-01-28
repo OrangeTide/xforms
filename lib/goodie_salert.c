@@ -34,23 +34,29 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/flsnprintf.h"
 #include "local.h"
 
+
 /****************** Alert dialog ********************{**/
+
 typedef struct
 {
-    FL_FORM *form;
-    FL_OBJECT *str;
-    FL_OBJECT *but;
-    FL_OBJECT *title;
-}
-FD_alert;
+    FL_FORM   * form;
+    FL_OBJECT * str;
+    FL_OBJECT * but;
+    FL_OBJECT * title;
+} FD_alert;
+
+
+/***************************************
+ ***************************************/
 
 static FD_alert *
-create_alert(void)
+create_alert( void )
 {
     FD_alert *fdui = (FD_alert *) fl_calloc(1, sizeof(*fdui));
     int oldy = fl_inverted_y;
@@ -64,7 +70,6 @@ create_alert(void)
     fl_set_form_title(fdui->form, "Alert");
     ob = fl_add_box(FL_UP_BOX, 0, 0, 460, 130, "");
     fl_set_object_bw(ob, -2);
-
 
     fl_add_box(FL_FLAT_BOX, 50, 30, 380, 5, "@DnLine");
     fdui->title = fl_add_box(FL_FLAT_BOX, 50, 10, 380, 20, "");
@@ -90,10 +95,15 @@ create_alert(void)
 }
 
 
-/* show a simple message with an Alert icon and a dismiss button */
+/***************************************
+ * show a simple message with an Alert icon and a dismiss button
+ ***************************************/
+
 void
-fl_show_stacked_alert(const char *title, const char *str1,
-		      const char *str2, int c)
+fl_show_stacked_alert( const char * title,
+					   const char * str1,
+					   const char * str2,
+					   int          c )
 {
     FL_OBJECT *retobj;
     char buf[1024];
@@ -112,15 +122,16 @@ fl_show_stacked_alert(const char *title, const char *str1,
     fl_deactivate_all_forms();
 
     fl_show_form(fd_alert->form, c ? FL_PLACE_CENTER : FL_PLACE_HOTSPOT,
-		 FL_TRANSIENT, fd_alert->form->label);
+				 FL_TRANSIENT, fd_alert->form->label);
 
     fl_update_display(1);
 
     while ((retobj = fl_do_only_forms()) != fd_alert->but)
-	;
+		/* empty */ ;
 
     fl_hide_form(fd_alert->form);
     fl_activate_all_forms();
 }
+
 
 /********************* End of alert ************************}*/

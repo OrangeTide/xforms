@@ -31,61 +31,71 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_cbut = "$Id: checkbut.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_cbut = "$Id: checkbut.c,v 1.6 2008/01/28 23:16:52 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <sys/types.h>
 #include "include/forms.h"
 #include "flinternal.h"
 
 typedef FL_BUTTON_STRUCT SPEC;
 
+
 /**************************************************************************
  * Check buttons
  **********************************************************************{*/
+
 static void
-draw_checkbutton(FL_OBJECT * ob)
+draw_checkbutton( FL_OBJECT * ob )
 {
     FL_Coord xx, yy, ww, hh, bw = FL_abs(ob->bw);
+	SPEC *sp = ob->spec;
 
-
-    if (((SPEC *) ob->spec)->event == FL_ENTER ||
-	((SPEC *) ob->spec)->event == FL_LEAVE)
-	return;
+    if ( sp->event == FL_ENTER || sp->event == FL_LEAVE )
+		return;
 
     fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
 
-    ww = hh = (FL_Coord)(0.6f * FL_min(ob->w, ob->h));
-    xx = (FL_Coord)(ob->x + 1.5f * (bw < 2 ? 2 : bw) + 1.5f);
+    ww = hh = ( FL_Coord ) ( 0.6 * FL_min( ob->w, ob->h ) );
+    xx = ( FL_Coord ) ( ob->x + 1.5 * ( bw < 2 ? 2 : bw ) + 1.5 );
     yy = ob->y + (ob->h - hh) / 2;
 
-    if (((SPEC *) ob->spec)->val)
-	fl_drw_checkbox(FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, FL_abs(ob->bw));
+    if ( sp->val )
+		fl_drw_checkbox(FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, FL_abs(ob->bw));
     else
-	fl_drw_checkbox(FL_UP_BOX, xx, yy, ww, hh, ob->col1, FL_abs(ob->bw));
+		fl_drw_checkbox(FL_UP_BOX, xx, yy, ww, hh, ob->col1, FL_abs(ob->bw));
 
     if (ob->align == FL_ALIGN_CENTER)
-	fl_drw_text(FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3, ob->h,
-		    ob->lcol, ob->lstyle, ob->lsize, ob->label);
+		fl_drw_text(FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3, ob->h,
+					ob->lcol, ob->lstyle, ob->lsize, ob->label);
     else
-	fl_drw_text_beside(ob->align, ob->x, ob->y, ob->w, ob->h,
-			   ob->lcol, ob->lstyle, ob->lsize, ob->label);
+		fl_drw_text_beside(ob->align, ob->x, ob->y, ob->w, ob->h,
+						   ob->lcol, ob->lstyle, ob->lsize, ob->label);
 
     if (ob->type == FL_RETURN_BUTTON)
-	fl_drw_text(0,
-		    (FL_Coord) (ob->x + ob->w - 0.8f * ob->h),
-		    (FL_Coord) (ob->y + 0.2f * ob->h),
-		    (FL_Coord) (0.6f * ob->h), (FL_Coord) (0.6f * ob->h),
-		    ob->lcol, 0, 0, "@returnarrow");
+		fl_drw_text(0,
+					(FL_Coord) (ob->x + ob->w - 0.8f * ob->h),
+					(FL_Coord) (ob->y + 0.2f * ob->h),
+					(FL_Coord) (0.6f * ob->h), (FL_Coord) (0.6f * ob->h),
+					ob->lcol, 0, 0, "@returnarrow");
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_checkbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		      FL_Coord h, const char *label)
+fl_create_checkbutton( int          type,
+					   FL_Coord     x,
+					   FL_Coord     y,
+					   FL_Coord     w,
+					   FL_Coord     h,
+					   const char * label )
 {
     FL_OBJECT *ob;
 
@@ -99,11 +109,20 @@ fl_create_checkbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w,
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_checkbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		   const char *label)
+fl_add_checkbutton( int          type,
+					FL_Coord     x,
+					FL_Coord     y,
+					FL_Coord     w,
+					FL_Coord     h,
+					const char * label )
 {
     FL_OBJECT *ob;
+
     ob = fl_create_checkbutton(type, x, y, w, h, label);
     fl_add_object(fl_current_form, ob);
     return ob;

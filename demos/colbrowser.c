@@ -98,7 +98,8 @@ set_entry(int i)
 }
 
 static void
-br_cb(FL_OBJECT * ob, long q)
+br_cb( FL_OBJECT * ob,
+	   long        q   FL_UNUSED_ARG )
 {
     int r = fl_get_browser(ob);
 
@@ -196,7 +197,7 @@ load_browser(char *fname)
 static int
 search_entry(int r, int g, int b)
 {
-    register RGBdb *db = rgbdb;
+    RGBdb *db = rgbdb;
     int i, j, diffr, diffg, diffb;
     unsigned int diff, mindiff;
 
@@ -228,7 +229,8 @@ search_entry(int r, int g, int b)
 }
 
 static void
-search_rgb(FL_OBJECT * ob, long q)
+search_rgb( FL_OBJECT * ob  FL_UNUSED_ARG,
+			long        q   FL_UNUSED_ARG )
 {
     int r, g, b, i;
     int top  = fl_get_browser_topline(colbr);
@@ -250,7 +252,8 @@ search_rgb(FL_OBJECT * ob, long q)
 
 /* change database */
 static void
-db_cb(FL_OBJECT * ob, long q)
+db_cb( FL_OBJECT * ob,
+	   long        q   FL_UNUSED_ARG )
 {
     const char *p = fl_show_input("Enter New Database Name", dbname);
     char buf[512];
@@ -266,7 +269,8 @@ db_cb(FL_OBJECT * ob, long q)
 }
 
 static void
-done_cb(FL_OBJECT * ob, long q)
+done_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
+		 long        q   FL_UNUSED_ARG )
 {
     fl_finish();
     exit(0);

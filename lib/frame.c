@@ -30,43 +30,64 @@
  *.
  *
  */
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_frame = "$Id: frame.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+
+#if defined F_ID || defined DEBUG
+char *fl_id_frame = "$Id: frame.c,v 1.6 2008/01/28 23:19:07 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
+
+/***************************************
+ ***************************************/
+
 static int
-handle_frame(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-	     int key, void *ev)
+handle_frame( FL_OBJECT * ob,
+			  int         event,
+			  FL_Coord    mx   FL_UNUSED_ARG,
+			  FL_Coord    my   FL_UNUSED_ARG,
+			  int         key  FL_UNUSED_ARG,
+			  void *      ev   FL_UNUSED_ARG )
 {
-    switch (event)
+    switch ( event )
     {
-    case FL_DRAW:
-	fl_drw_frame(ob->type, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	fl_drw_text(ob->align, ob->x, ob->y, ob->w, ob->h,
-		    ob->lcol, ob->lstyle, ob->lsize, ob->label);
-	break;
-    case FL_DRAWLABEL:
-	if (ob->align != FL_ALIGN_CENTER)
-	    fl_drw_text(ob->align, ob->x, ob->y, ob->w, ob->h,
-			ob->lcol, ob->lstyle, ob->lsize, ob->label);
-	break;
+		case FL_DRAW:
+			fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
+						  ob->col1, ob->bw );
+			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+						 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+			break;
+
+		case FL_DRAWLABEL:
+			if ( ob->align != FL_ALIGN_CENTER )
+				fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+							 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+			break;
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_frame(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		FL_Coord h, const char *label)
+fl_create_frame( int          type,
+				 FL_Coord     x,
+				 FL_Coord     y,
+				 FL_Coord     w,
+				 FL_Coord     h,
+				 const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_FRAME, type, x, y, w, h, label, handle_frame);
+    ob = fl_make_object( FL_FRAME, type, x, y, w, h, label, handle_frame );
     ob->boxtype = FL_NO_BOX;
     ob->col1 = FL_FRAME_COL1;
     ob->col2 = FL_FRAME_COL2;
@@ -76,12 +97,21 @@ fl_create_frame(int type, FL_Coord x, FL_Coord y, FL_Coord w,
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_frame(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	     const char *label)
+fl_add_frame( int          type,
+			  FL_Coord     x,
+			  FL_Coord     y,
+			  FL_Coord     w,
+			  FL_Coord     h,
+			  const char * label )
 {
     FL_OBJECT *ob;
-    ob = fl_create_frame(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+
+    ob = fl_create_frame( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, ob );
     return ob;
 }

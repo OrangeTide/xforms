@@ -30,13 +30,15 @@
  *
  *
  */
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_posi = "$Id: positioner.c,v 1.6 2003/04/24 09:35:35 leeming Exp $";
+
+#if defined F_ID || defined DEBUG
+char *fl_id_posi = "$Id: positioner.c,v 1.7 2008/01/28 23:21:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/ppositioner.h"
@@ -44,27 +46,40 @@ char *fl_id_posi = "$Id: positioner.c,v 1.6 2003/04/24 09:35:35 leeming Exp $";
 #include <sys/types.h>
 #include <stdlib.h>
 
+
 /* The special information for positioners.
- * ymin is the value at the bottom and ymax is the value at the top
- */
+ * ymin is the value at the bottom and ymax is the value at the top */
 
 #define SPEC FL_POSITIONER_SPEC
 
-/* performs linear interpolation */
-static float
-flinear(float val, float smin, float smax, float gmin, float gmax)
+
+
+/***************************************
+ * performs linear interpolation
+ ***************************************/
+
+static double
+flinear( double val,
+		 double smin,
+		 double smax,
+		 double gmin,
+		 double gmax )
 {
     if (smin == smax)
-	return gmax;
-    else
-	return gmin + (gmax - gmin) * (val - smin) / (smax - smin);
+		return gmax;
+
+	return gmin + ( gmax - gmin ) * ( val - smin ) / ( smax - smin );
 }
 
-/* Draws a positioner */
+
+/***************************************
+ * Draws a positioner
+ ***************************************/
+
 static void
-draw_positioner(FL_OBJECT * ob)
+draw_positioner( FL_OBJECT * ob )
 {
-    SPEC *sp = ((SPEC *) (ob->spec));
+    SPEC *sp = ob->spec;
     FL_Coord absbw = FL_abs(ob->bw);
     FL_Coord x1 = ob->x + absbw + 1, y1 = ob->y + absbw + 1;
     FL_Coord w1 = ob->w - 2 * absbw - 2, h1 = ob->h - 2 * absbw - 2;
@@ -75,29 +90,30 @@ draw_positioner(FL_OBJECT * ob)
 
     if (!sp->partial)
     {
-	if (ob->type != FL_OVERLAY_POSITIONER)
-	    fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	fl_draw_object_label_outside(ob);
+		if (ob->type != FL_OVERLAY_POSITIONER)
+			fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h,
+					   ob->col1, ob->bw);
+		fl_draw_object_label_outside(ob);
 
     }
     else
     {
-	long col = (ob->type == FL_OVERLAY_POSITIONER ? ob->col2 : ob->col1);
+		long col = ob->type == FL_OVERLAY_POSITIONER ? ob->col2 : ob->col1;
 
-	xx = flinear(sp->lxval, sp->xmin, sp->xmax, x1, x1 + w1 - 1.0);
-	yy = flinear(sp->lyval, sp->ymin, sp->ymax, y1 + h1 - 1.0, y1);
+		xx = flinear(sp->lxval, sp->xmin, sp->xmax, x1, x1 + w1 - 1.0);
+		yy = flinear(sp->lyval, sp->ymin, sp->ymax, y1 + h1 - 1.0, y1);
 
-	if (oldmode != newmode)
-	    fl_drawmode(newmode);
-	fl_diagline(x1, yy, w1, 1, col);
-	fl_diagline(xx, y1, 1, h1, col);
+		if (oldmode != newmode)
+			fl_drawmode(newmode);
+		fl_diagline(x1, yy, w1, 1, col);
+		fl_diagline(xx, y1, 1, h1, col);
     }
 
     xx = flinear(sp->xval, sp->xmin, sp->xmax, x1, x1 + w1 - 1.0);
     yy = flinear(sp->yval, sp->ymin, sp->ymax, y1 + h1 - 1.0, y1);
 
     if (oldmode != newmode)
-	fl_drawmode(newmode);
+		fl_drawmode(newmode);
 
     fl_diagline(x1, yy, w1, 1, ob->col2);
     fl_diagline(xx, y1, 1, h1, ob->col2);
@@ -106,45 +122,60 @@ draw_positioner(FL_OBJECT * ob)
 	fl_drawmode(oldmode);
 }
 
-/* Handle a mouse position change */
+
+/***************************************
+ * Handle a mouse position change
+ ***************************************/
+
 static int
-handle_mouse(FL_OBJECT * ob, FL_Coord mx, FL_Coord my)
+handle_mouse( FL_OBJECT * ob,
+			  FL_Coord    mx,
+			  FL_Coord    my )
 {
-    SPEC *sp = ((SPEC *) (ob->spec));
+    SPEC *sp = ob->spec;
     FL_Coord absbw = FL_abs(ob->bw);
     FL_Coord x1 = ob->x + absbw + 1, y1 = ob->y + absbw + 1;
     FL_Coord w1 = ob->w - 2 * absbw - 2, h1 = ob->h - 2 * absbw - 2;
-    float oldx = sp->xval, oldy = sp->yval;
+    double oldx = sp->xval, oldy = sp->yval;
 
     sp->xval = flinear(mx, x1, x1 + w1 - 1.0, sp->xmin, sp->xmax);
     sp->yval = flinear(my, y1 + h1 - 1.0, y1, sp->ymin, sp->ymax);
 
     if (sp->xstep != 0.0)
-	sp->xval = ((int) (sp->xval / sp->xstep + 0.5)) * sp->xstep;
+		sp->xval = ((int) (sp->xval / sp->xstep + 0.5)) * sp->xstep;
     if (sp->ystep != 0.0)
-	sp->yval = ((int) (sp->yval / sp->ystep + 0.5)) * sp->ystep;
+		sp->yval = ((int) (sp->yval / sp->ystep + 0.5)) * sp->ystep;
 
     /* make sure the position is in bounds */
+
     sp->xval = fl_clamp(sp->xval, sp->xmin, sp->xmax);
     sp->yval = fl_clamp(sp->yval, sp->ymin, sp->ymax);
 
     if (sp->xval != oldx || sp->yval != oldy)
     {
-	sp->partial = 1;
-	sp->lxval = oldx;
-	sp->lyval = oldy;
-	fl_redraw_object(ob);
-	return 1;
+		sp->partial = 1;
+		sp->lxval = oldx;
+		sp->lyval = oldy;
+		fl_redraw_object(ob);
+		return 1;
     }
     return 0;
 }
 
-/* Handles an event */
+
+/***************************************
+ * Handles an event
+ ***************************************/
+
 static int
-handle_it(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-	  int key, void *ev)
+handle_it( FL_OBJECT * ob,
+		   int         event,
+		   FL_Coord    mx,
+		   FL_Coord    my,
+		   int         key  FL_UNUSED_ARG,
+		   void *      ev   FL_UNUSED_ARG )
 {
-    SPEC *sp = (SPEC *) ob->spec;
+    SPEC *sp = ob->spec;
 
 #if (FL_DEBUG >= ML_DEBUG)
     M_info("HandlePositioner", fl_event_name(event));
@@ -152,42 +183,53 @@ handle_it(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 
     switch (event)
     {
-    case FL_DRAW:
-	draw_positioner(ob);
-	sp->partial = 0;
-	break;
-    case FL_DRAWLABEL:
-	fl_draw_object_label_outside(ob);
-	break;
-    case FL_PUSH:
-	sp->changed = 0;
-    case FL_MOUSE:
-	if (handle_mouse(ob, mx, my))
-	    sp->changed = 1;
-	if (sp->how_return == FL_RETURN_CHANGED && sp->changed)
-	{
-	    sp->changed = 0;
-	    return 1;
-	}
-	else if (sp->how_return == FL_RETURN_ALWAYS)
-	    return 1;
-	break;
-    case FL_RELEASE:
-	return ((sp->how_return == FL_RETURN_END) ||
-		(sp->how_return == FL_RETURN_END_CHANGED && sp->changed));
-    case FL_FREEMEM:
-	fl_free(ob->spec);
-	break;
+		case FL_DRAW:
+			draw_positioner(ob);
+			sp->partial = 0;
+			break;
+
+		case FL_DRAWLABEL:
+			fl_draw_object_label_outside(ob);
+			break;
+
+		case FL_PUSH:
+			sp->changed = 0;
+
+		case FL_MOUSE:
+			if (handle_mouse(ob, mx, my))
+				sp->changed = 1;
+			if (sp->how_return == FL_RETURN_CHANGED && sp->changed)
+			{
+				sp->changed = 0;
+				return 1;
+			}
+			else if (sp->how_return == FL_RETURN_ALWAYS)
+				return 1;
+			break;
+
+		case FL_RELEASE:
+			return ((sp->how_return == FL_RETURN_END) ||
+					(sp->how_return == FL_RETURN_END_CHANGED && sp->changed));
+
+		case FL_FREEMEM:
+			fl_free(ob->spec);
+			break;
     }
+
     return 0;
 }
 
-/*------------------------------*/
+/***************************************
+ * creates an object
+ ***************************************/
 
-/* creates an object */
 FL_OBJECT *
-fl_create_positioner(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		     const char *label)
+fl_create_positioner( int          type,
+					  FL_Coord     x,
+					  FL_Coord     y,
+					  FL_Coord     w,
+					  FL_Coord     h,
+					  const char * label )
 {
     FL_OBJECT *ob;
     SPEC *sp;
@@ -220,10 +262,18 @@ fl_create_positioner(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     return ob;
 }
 
-/* Adds an object */
+
+/***************************************
+ * Adds an object
+ ***************************************/
+
 FL_OBJECT *
-fl_add_positioner(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		  const char *label)
+fl_add_positioner( int          type,
+				   FL_Coord     x,
+				   FL_Coord     y,
+				   FL_Coord     w,
+				   FL_Coord     h,
+				   const char * label )
 {
     FL_OBJECT *ob;
 
@@ -241,14 +291,19 @@ fl_set_positioner_xvalue(FL_OBJECT * ob, double val)
 
     if (sp->xval != val)
     {
-	sp->lxval = sp->xval;
-	sp->xval = val;
-	fl_redraw_object(ob);
+		sp->lxval = sp->xval;
+		sp->xval = val;
+		fl_redraw_object(ob);
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_positioner_yvalue(FL_OBJECT * ob, double val)
+fl_set_positioner_yvalue( FL_OBJECT * ob,
+						  double      val )
 {
     SPEC *sp = ob->spec;
 
@@ -256,83 +311,126 @@ fl_set_positioner_yvalue(FL_OBJECT * ob, double val)
 
     if (sp->yval != val)
     {
-	sp->lyval = sp->yval;
-	sp->yval = val;
-	fl_redraw_object(ob);
+		sp->lyval = sp->yval;
+		sp->yval = val;
+		fl_redraw_object(ob);
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_positioner_xbounds(FL_OBJECT * ob, double min, double max)
+fl_set_positioner_xbounds( FL_OBJECT * ob,
+						   double      min,
+						   double      max )
 {
     SPEC *sp = ob->spec;
 
     if (sp->xmin != min || sp->xmax != max)
     {
-	sp->xmin = min;
-	sp->xmax = max;
-	sp->xval = fl_clamp(sp->xval, sp->xmin, sp->xmax);
-	fl_redraw_object(ob);
+		sp->xmin = min;
+		sp->xmax = max;
+		sp->xval = fl_clamp(sp->xval, sp->xmin, sp->xmax);
+		fl_redraw_object(ob);
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_positioner_ybounds(FL_OBJECT * ob, double min, double max)
+fl_set_positioner_ybounds( FL_OBJECT * ob,
+						   double      min,
+						   double     max )
 {
     SPEC *sp = ob->spec;
 
     if (sp->ymin != min || sp->ymax != max)
     {
-	sp->ymin = min;
-	sp->ymax = max;
-	sp->yval = fl_clamp(sp->yval, sp->ymin, sp->ymax);
-	fl_redraw_object(ob);
+		sp->ymin = min;
+		sp->ymax = max;
+		sp->yval = fl_clamp(sp->yval, sp->ymin, sp->ymax);
+		fl_redraw_object(ob);
     }
 }
 
-double
-fl_get_positioner_xvalue(FL_OBJECT * ob)
-{
-    return ((SPEC *) (ob->spec))->xval;
-}
+
+/***************************************
+ ***************************************/
 
 double
-fl_get_positioner_yvalue(FL_OBJECT * ob)
+fl_get_positioner_xvalue( FL_OBJECT * ob )
 {
-    return ((SPEC *) (ob->spec))->yval;
+    return ( ( SPEC * ) ob->spec )->xval;
+}
+
+
+/***************************************
+ ***************************************/
+
+double
+fl_get_positioner_yvalue( FL_OBJECT * ob )
+{
+    return ( ( SPEC * ) ob->spec )->yval;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_get_positioner_xbounds( FL_OBJECT * ob,
+						   double *    min,
+						   double *    max )
+{
+    *min = ( ( SPEC * ) ob->spec)->xmin;
+    *max = ( ( SPEC * ) ob->spec)->xmax;
 }
 
 void
-fl_get_positioner_xbounds(FL_OBJECT * ob, double *min, double *max)
+fl_get_positioner_ybounds( FL_OBJECT * ob,
+						   double *    min,
+						   double *    max)
 {
-    *min = ((SPEC *) (ob->spec))->xmin;
-    *max = ((SPEC *) (ob->spec))->xmax;
+    *min = ( ( SPEC * ) ob->spec)->ymin;
+    *max = ( ( SPEC * ) ob->spec)->ymax;
 }
 
+
+/***************************************
+ * Sets the step size to which values are rounded.
+ ***************************************/
+
 void
-fl_get_positioner_ybounds(FL_OBJECT * ob, double *min, double *max)
+fl_set_positioner_xstep( FL_OBJECT * ob,
+						 double      value )
 {
-    *min = ((SPEC *) (ob->spec))->ymin;
-    *max = ((SPEC *) (ob->spec))->ymax;
+    ( ( SPEC * ) ob->spec )->xstep = value;
 }
 
-/* Sets the step size to which values are rounded.  */
+
+/***************************************
+ * Sets the step size to which values are rounded.
+ ***************************************/
+
 void
-fl_set_positioner_xstep(FL_OBJECT * ob, double value)
+fl_set_positioner_ystep( FL_OBJECT * ob,
+						 double      value )
 {
-    ((SPEC *) (ob->spec))->xstep = value;
+    ( ( SPEC * ) ob->spec )->ystep = value;
 }
 
-/* Sets the step size to which values are rounded. */
-void
-fl_set_positioner_ystep(FL_OBJECT * ob, double value)
-{
-    ((SPEC *) (ob->spec))->ystep = value;
-}
 
-/* Sets whether to return value all the time */
+/***************************************
+ * Sets whether to return value all the time
+ ***************************************/
+
 void
-fl_set_positioner_return(FL_OBJECT * ob, int value)
+fl_set_positioner_return( FL_OBJECT * ob,
+						  int         value )
 {
-    ((SPEC *) (ob->spec))->how_return = value;
+    ( ( SPEC * ) ob->spec )->how_return = value;
 }

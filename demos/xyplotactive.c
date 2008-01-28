@@ -40,7 +40,8 @@ extern FD_axypform * create_form_axypform(void);
 FD_axypform *xypui;
 
 /* callbacks for form axypform */
-void xyplot_cb(FL_OBJECT *ob, long data)
+void xyplot_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     float x, y;
     int i;
@@ -52,22 +53,26 @@ void xyplot_cb(FL_OBJECT *ob, long data)
     fl_set_object_label(xypui->status, buf);
 }
 
-void alwaysreturn_cb(FL_OBJECT *ob, long data)
+void alwaysreturn_cb( FL_OBJECT * ob,
+					  long        data  FL_UNUSED_ARG )
 {
    fl_set_xyplot_return(xypui->xyplot, fl_get_button(ob));
 }
 
-void interpolate_cb(FL_OBJECT *ob, long data)
+void interpolate_cb( FL_OBJECT * ob,
+					 long        data  FL_UNUSED_ARG )
 {
    fl_set_xyplot_interpolate(xypui->xyplot, 0, fl_get_button(ob) ? 3:0, 0.2);
 }
 
-void inspect_cb(FL_OBJECT *ob, long data)
+void inspect_cb( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
    fl_set_xyplot_inspect(xypui->xyplot, fl_get_button(ob));
 }
 
-void notic_cb(FL_OBJECT *ob, long data)
+void notic_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
    int notic = fl_get_button(ob);
 

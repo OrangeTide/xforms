@@ -43,14 +43,16 @@ void hide_show_cb(FL_OBJECT *ob, long data)
    (data ? fl_show_object:fl_hide_object)(fdui->folder);
 }
 
-void reshow_cb(FL_OBJECT *ob, long data)
+void reshow_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
    fl_hide_form(ob->form);
-   fl_show_form(ob->form,FL_PLACE_CENTER,FL_FULLBORDER,"TabFolder");
+   fl_show_form(ob->form,FL_PLACE_MOUSE|FL_FREE_SIZE,FL_FULLBORDER,"TabFolder");
 
 }
 
-void set_cb(FL_OBJECT *ob, long data)
+void set_cb( FL_OBJECT * ob,
+			 long        data  FL_UNUSED_ARG )
 {
     FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
     int n = fl_get_active_folder_number(fdui->folder);
@@ -58,9 +60,10 @@ void set_cb(FL_OBJECT *ob, long data)
     fl_set_folder_bynumber(fdui->folder, (n%5)+1);
 }
 
-void deactivate_cb(FL_OBJECT *ob, long data)
+void deactivate_cb( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
-    FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
+    FD_mainform *fdui = ob->form->fdui;
 
 
     if(fdui->folder->active > 0)
@@ -75,7 +78,8 @@ void deactivate_cb(FL_OBJECT *ob, long data)
     }
 }
 
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
 #if 0
     fl_hide_form(ob->form);
@@ -85,11 +89,11 @@ void done_cb(FL_OBJECT *ob, long data)
     fprintf(stderr,"will quit after 5 seconds\n");
     fl_msleep(5000);
 #endif
-    fl_finish();
-    exit(0);
+    fl_finish( );
+    exit( 0 );
 }
 
-static void make_folder(FL_OBJECT *);
+static void make_folder( FL_OBJECT * );
 
 int main(int argc, char *argv[])
 {
@@ -99,22 +103,24 @@ int main(int argc, char *argv[])
    fl_initialize(&argc, argv, 0, 0, 0);
    fd_mainform = create_form_mainform();
 
-   make_folder(fd_mainform->folder);
+   make_folder( fd_mainform->folder );
 
    /* show the first form */
-   fl_show_form(fd_mainform->mainform,FL_PLACE_CENTER,FL_FULLBORDER,"TabFolder");
 
-   while (fl_do_forms())
-     ;
+   fl_show_form( fd_mainform->mainform, FL_PLACE_ASPECT, FL_FULLBORDER,
+				 "TabFolder");
+
+   while ( fl_do_forms( ) )
+	   /* empty */ ;
    return 0;
 }
 
-void folder_change(FL_OBJECT *ob, long val)
+void folder_change( FL_OBJECT * ob   FL_UNUSED_ARG,
+					long        val  FL_UNUSED_ARG )
 {
-
 }
 
-static void make_folder(FL_OBJECT *folder)
+static void make_folder( FL_OBJECT *folder )
 {
    FD_buttonform *fd_buttonform;
    FD_staticform *fd_staticform;
@@ -122,40 +128,41 @@ static void make_folder(FL_OBJECT *folder)
    FD_choiceform *fd_choiceform;
    FD_inputform *fd_inputform;
 #if 0
-   float x[6] = { 0, 1, 2, 3, 4, 5};
+   float x[ ] = { 0, 1, 2, 3, 4, 5 };
 #endif
-   float y[6] = { 5.5, 4, 4.5, 3.8, 4, 5};
-   char *label[] = {"Mon","Tue","Wed", "Thur","Fri","Sat"};
+   float y[ ] = { 5.5, 4, 4.5, 3.8, 4, 5 };
+   char *label[ ] = { "Mon","Tue","Wed", "Thur","Fri","Sat" };
    size_t i;
 #if 0
    FL_OBJECT *ob;
 #endif
 
-   fd_buttonform = create_form_buttonform();
-   fd_staticform = create_form_staticform();
-   fd_valuatorform = create_form_valuatorform();
-   fd_choiceform = create_form_choiceform();
-   fd_inputform = create_form_inputform();
+   fd_buttonform = create_form_buttonform( );
+   fd_staticform = create_form_staticform( );
+   fd_valuatorform = create_form_valuatorform( );
+   fd_choiceform = create_form_choiceform( );
+   fd_inputform = create_form_inputform( );
 
    /* fill-in form initialization code */
-   for ( i = 0; i < sizeof(y)/sizeof(y[0]); i++)
-      fl_add_chart_value(fd_staticform->chart,y[i],label[i],i+1);
 
-   fl_addto_menu(fd_choiceform->pulldown,"MenuEntry1|MenuEntry2"
-                "MenuEntry3|MenuEntry4");
-   fl_addto_menu(fd_choiceform->pushmenu,"MuEntry1|MenuEntry2|"
-                "MenuEntry3");
-   fl_addto_choice(fd_choiceform->choice,"Choice1|Choice2|Choice3|Choice4|"
-                   "Choice5|Choice6");
+   for ( i = 0; i < sizeof y / sizeof *y; i++)
+	   fl_add_chart_value( fd_staticform->chart,y[ i ],label[ i ], i + 1 );
 
-   fl_load_browser(fd_choiceform->browser,"01Readme");
+   fl_addto_menu( fd_choiceform->pulldown,
+				  "MenuEntry1|MenuEntry2|MenuEntry3|MenuEntry4" );
+   fl_addto_menu( fd_choiceform->pushmenu,
+				  "MenEntry1|MenuEntry2|MenuEntry3" );
+   fl_addto_choice( fd_choiceform->choice,
+					"Choice1|Choice2|Choice3|Choice4|Choice5|Choice6" );
+
+   fl_load_browser( fd_choiceform->browser, "01Readme" );
 
 #if 1
-   fl_set_object_callback(folder, folder_change, 0);
-   fl_addto_tabfolder(folder,"ButtonObj", fd_buttonform->buttonform);
-   fl_addto_tabfolder(folder,"StaticObj", fd_staticform->staticform);
-   fl_addto_tabfolder(folder,"ValuatorObj", fd_valuatorform->valuatorform);
-   fl_addto_tabfolder(folder,"ChoiceObj", fd_choiceform->choiceform);
-   fl_addto_tabfolder(folder,"InputObj", fd_inputform->inputform);
+   fl_set_object_callback( folder, folder_change, 0 );
+   fl_addto_tabfolder( folder,"ButtonObj", fd_buttonform->buttonform );
+   fl_addto_tabfolder( folder,"StaticObj", fd_staticform->staticform );
+   fl_addto_tabfolder( folder,"ValuatorObj", fd_valuatorform->valuatorform );
+   fl_addto_tabfolder( folder,"ChoiceObj", fd_choiceform->choiceform );
+   fl_addto_tabfolder( folder,"InputObj", fd_inputform->inputform );
 #endif
 }

@@ -45,7 +45,8 @@ typedef struct {
 extern FD_inv * create_form_inv(void);
 
 FD_inv *ui;
-void invert_it(FL_OBJECT *ob, long data)
+void invert_it( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
    if(fl_get_button(ob))
    {
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
 
    /* fill-in form initialization code */
 
-   fl_show_form(ui->inv,FL_PLACE_CENTER,FL_TRANSIENT,"inv");
+   fl_show_form(ui->inv, FL_PLACE_CENTER | FL_FREE_SIZE, FL_TRANSIENT,"inv");
 
    while (fl_do_forms() != ui->done)
       ;

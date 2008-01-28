@@ -32,21 +32,26 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_rbut = "$Id: scrollbut.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_rbut = "$Id: scrollbut.c,v 1.6 2008/01/28 23:22:19 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <sys/types.h>
 #include "include/forms.h"
 #include "flinternal.h"
 
 typedef FL_BUTTON_STRUCT SPEC;
 
+
+/***************************************
+ ***************************************/
+
 static void
-draw_sbbutton(FL_OBJECT * ob)
+draw_sbbutton( FL_OBJECT * ob )
 {
     FL_COLOR c1;
     FL_Coord abw = FL_abs(ob->bw);
@@ -57,45 +62,52 @@ draw_sbbutton(FL_OBJECT * ob)
     int x = ob->x, y = ob->y, w = ob->w, h = ob->h;
 
     if (ob->col2 != FL_COL1 && (sp->event == FL_ENTER || sp->event == FL_LEAVE))
-	return;
+		return;
 
     if (sp->event == FL_DRAW)
-	fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+		fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
 
 
     if (*label == '#')
     {
-	w = h = FL_min(ob->w, ob->h);
-	x += (ob->w - w) / 2;
-	y += (ob->h - h) / 2;
-	label++;
+		w = h = FL_min(ob->w, ob->h);
+		x += (ob->w - w) / 2;
+		y += (ob->h - h) / 2;
+		label++;
     }
 
     if ((ob->boxtype != FL_NO_BOX && ob->boxtype != FL_FLAT_BOX) || abw == 1)
     {
-	extra += 1 + 0.051 * FL_min(w, h);
-	abw = 1;
+		extra += 1 + 0.051 * FL_min(w, h);
+		abw = 1;
     }
 
-
     if (*label == '8')
-	btype = sp->val ? FL_TRIANGLE_DOWNBOX8 : FL_TRIANGLE_UPBOX8;
+		btype = sp->val ? FL_TRIANGLE_DOWNBOX8 : FL_TRIANGLE_UPBOX8;
     else if (*label == '2')
-	btype = sp->val ? FL_TRIANGLE_DOWNBOX2 : FL_TRIANGLE_UPBOX2;
+		btype = sp->val ? FL_TRIANGLE_DOWNBOX2 : FL_TRIANGLE_UPBOX2;
     else if (*label == '6')
-	btype = sp->val ? FL_TRIANGLE_DOWNBOX6 : FL_TRIANGLE_UPBOX6;
+		btype = sp->val ? FL_TRIANGLE_DOWNBOX6 : FL_TRIANGLE_UPBOX6;
     else if (*label == '4')
-	btype = sp->val ? FL_TRIANGLE_DOWNBOX4 : FL_TRIANGLE_UPBOX4;
+		btype = sp->val ? FL_TRIANGLE_DOWNBOX4 : FL_TRIANGLE_UPBOX4;
 
     c1 = (ob->belowmouse && sp->event != FL_RELEASE) ? FL_MCOL : ob->col2;
     fl_drw_tbox(btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,
-		c1, abw);
+				c1, abw);
 }
 
-/* creates an object */
+
+/***************************************
+ * creates an object
+ ***************************************/
+
 FL_OBJECT *
-fl_create_scrollbutton(int type, FL_Coord x, FL_Coord y,
-		       FL_Coord w, FL_Coord h, const char *label)
+fl_create_scrollbutton( int          type,
+						FL_Coord     x,
+						FL_Coord     y,
+						FL_Coord     w,
+						FL_Coord     h,
+						const char * label )
 {
     FL_OBJECT *ob;
 
@@ -108,12 +120,21 @@ fl_create_scrollbutton(int type, FL_Coord x, FL_Coord y,
     return ob;
 }
 
-/* Adds an object */
+
+/***************************************
+ * Adds an object
+ ***************************************/
+
 FL_OBJECT *
-fl_add_scrollbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		    const char *label)
+fl_add_scrollbutton( int          type,
+					 FL_Coord     x,
+					 FL_Coord     y,
+					 FL_Coord     w,
+					 FL_Coord     h,
+					 const char * label )
 {
     FL_OBJECT *ob;
+
     ob = fl_create_scrollbutton(type, x, y, w, h, label);
     fl_add_object(fl_current_form, ob);
     return ob;

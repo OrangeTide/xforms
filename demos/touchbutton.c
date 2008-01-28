@@ -74,7 +74,8 @@ main(int argc, char *argv[])
 }
 
 static void
-show_val(FL_OBJECT *ob, long delta)
+show_val( FL_OBJECT * ob  FL_UNUSED_ARG,
+		  long        delta )
 {
    static int val = 0;
    char str[32];

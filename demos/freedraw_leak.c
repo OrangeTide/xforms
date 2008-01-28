@@ -134,7 +134,8 @@ void draw_initialize(FD_drawfree *ui)
 }
 
 
-void switch_object(FL_OBJECT * ob, long which)
+void switch_object( FL_OBJECT * ob  FL_UNUSED_ARG,
+					long        which)
 {
     cur_fig->drawit = drawfunc[which];
 }
@@ -146,7 +147,8 @@ void change_color(FL_OBJECT * ob, long which)
     fl_redraw_object(((FD_drawfree *)ob->u_vdata)->colorobj);
 }
 
-void fill_cb(FL_OBJECT * ob, long notused)
+void fill_cb( FL_OBJECT * ob,
+			  long        notused  FL_UNUSED_ARG )
 {
     cur_fig->fill = !fl_get_button(ob);
 }
@@ -159,12 +161,14 @@ void change_size(FL_OBJECT * ob, long which)
 	cur_fig->h = (int)fl_get_slider_value(ob);
 }
 
-void refresh_cb(FL_OBJECT * ob, long which)
+void refresh_cb( FL_OBJECT * ob     FL_UNUSED_ARG,
+				 long        which  FL_UNUSED_ARG )
 {
     fl_redraw_object(drawui->freeobj);
 }
 
-void clear_cb(FL_OBJECT * ob, long notused)
+void clear_cb( FL_OBJECT * ob       FL_UNUSED_ARG,
+			   long        notused  FL_UNUSED_ARG )
 {
     saved_figure[0] = *cur_fig;
     cur_fig = saved_figure;
@@ -172,8 +176,12 @@ void clear_cb(FL_OBJECT * ob, long notused)
 }
 
 /*  The routine that does drawing */
-int freeobject_handler(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-		   int key, void *xev)
+int freeobject_handler( FL_OBJECT * ob,
+						int         event,
+						FL_Coord    mx,
+						FL_Coord    my,
+						int         key,
+						void      * xev  FL_UNUSED_ARG )
 {
     DrawFigure *dr;
 

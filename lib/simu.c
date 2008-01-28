@@ -29,37 +29,56 @@
  *.
  *
  * temporary routine. Eventually it will be implemented as a
- * real routine that manipulates memebers of obj
+ * real routine that manipulates members of obj
  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_set_object_return(FL_OBJECT * ob, int when)
+fl_set_object_return( FL_OBJECT * ob,
+					  int         when )
 {
-    if (!ob)
-	return;
+    if ( ! ob )
+		return;
 
-    if (when < 0 || when > 5)
-	when = 0;
+    if ( when < 0 || when > 5 )
+		when = 0;
 
-    if (ob->objclass == FL_SLIDER || ob->objclass == FL_VALSLIDER ||
-	ob->objclass == FL_THUMBWHEEL)
-	fl_set_valuator_return(ob, when);
-    else if (ob->objclass == FL_INPUT)
-	fl_set_input_return(ob, when);
-    else if (ob->objclass == FL_COUNTER)
-	fl_set_counter_return(ob, when);
-    else if (ob->objclass == FL_DIAL)
-	fl_set_dial_return(ob, when);
-    else if (ob->objclass == FL_POSITIONER)
-	fl_set_positioner_return(ob, when);
-    else if (ob->objclass == FL_XYPLOT)
-	fl_xyplot_return(ob, when);
+	switch ( ob->objclass )
+	{
+		case FL_SLIDER:
+		case FL_VALSLIDER:
+		case FL_THUMBWHEEL:
+			fl_set_valuator_return( ob, when );
+			break;
+
+		case FL_INPUT:
+			fl_set_input_return( ob, when );
+			break;
+
+		case FL_COUNTER:
+			fl_set_counter_return( ob, when );
+			break;
+
+		case FL_DIAL:
+			fl_set_dial_return( ob, when );
+			break;
+
+		case FL_POSITIONER:
+			fl_set_positioner_return( ob, when );
+			break;
+
+		case FL_XYPLOT:
+			fl_xyplot_return( ob, when );
+			break;
+	}
 }
-

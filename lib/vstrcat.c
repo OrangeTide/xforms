@@ -30,13 +30,15 @@
  *   Similar to strcat, but takes variable number of argument
  *
  */
-#if !defined(lint) && defined(F_ID)
-char *id_vstrcat = "$Id: vstrcat.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+
+#if ! defined lint && defined F_ID
+char *id_vstrcat = "$Id: vstrcat.c,v 1.6 2008/01/28 23:24:48 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -45,63 +47,50 @@ char *id_vstrcat = "$Id: vstrcat.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
 #include "flinternal.h"
 #include "ulib.h"
 
-/* VARARGS1 */
+
+/***************************************
+ ***************************************/
+
 char *
-vstrcat(const char *s1,...)
+vstrcat( const char * s1,
+		 ... )
 {
-    register size_t total = 0;
-    register char *ret, *p;
+    size_t total = 0;
+    char *ret,
+		 *p;
     va_list ap;
 
-    if (!s1)
-	return 0;
+    if ( ! s1 )
+		return NULL;
 
-    total = strlen(s1);
+    total = strlen( s1 );
 
     /* record total length */
-    va_start(ap, s1);
-    while ((p = va_arg(ap, char *)))
-	  total += strlen(p);
-    va_end(ap);
 
+    va_start( ap, s1 );
+    while ( ( p = va_arg( ap, char * ) ) )
+		total += strlen( p );
+    va_end( ap );
 
-    if (!(ret = malloc(total + 1)))
-	return 0;
+    if ( ! ( ret = malloc( total + 1 ) ))
+		return NULL;
 
-    strcpy(ret, s1);
-    va_start(ap, s1);
-    while ((p = va_arg(ap, char *)))
-	  strcat(ret, p);
-    va_end(ap);
+    strcpy( ret, s1 );
+    va_start( ap, s1 );
+    while ( ( p = va_arg( ap, char * ) ) )
+		strcat( ret, p );
+    va_end( ap );
+
     return ret;
 }
 
-/****** so to protect from M_DBG *******/
+
+/***************************************
+ ****** so to protect from M_DBG *******
+ ***************************************/
+
 void
-free_vstrcat(void *p)
+free_vstrcat( void * p )
 {
-    free(p);
+    free( p );
 }
-
-/*
- * Simple test
- */
-#ifdef TEST
-#include <stdio.h>
-#include <string.h>
-
-main()
-{
-    char *p = vstrcat("Hello", " World", "!", (char *) 0);
-    char *q = vstrcat(p, " again", " and again", (char *) 0);
-    char *l = vstrcat(q, " again", " and again", (char *) 0);
-    fprintf(stderr, "%s\n", p);
-    fprintf(stderr, "%s\n", q);
-    fprintf(stderr, "%s\n", l);
-    free(p);
-    free(q);
-    free(l);
-}
-
-#endif
-

@@ -36,6 +36,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "GL/gl.h"
 #include "GL/glx.h"
 #include "include/forms.h"
@@ -61,235 +62,280 @@ FD_form *ui;
 static int prim = GL_POLYGON ;
 
 #define v3f glVertex3f
+
 static void draw_cube( void )
 {
-   glColor3f( 1.0, 0.0, 0.0 );
-   glBegin( prim );
-   v3f( 1.0, 1.0, 1.0 );   v3f( 1.0, -1.0, 1.0 );
-   v3f( 1.0, -1.0, -1.0 ); v3f( 1.0, 1.0, -1.0 );
-   glEnd();
+	glColor3f( 1.0, 0.0, 0.0 );
+	glBegin( prim );
+	v3f( 1.0, 1.0, 1.0 );   v3f( 1.0, -1.0, 1.0 );
+	v3f( 1.0, -1.0, -1.0 ); v3f( 1.0, 1.0, -1.0 );
+	glEnd();
 
-   glBegin( prim );
-   v3f( -1.0, 1.0, 1.0 );   v3f( -1.0, 1.0, -1.0 );
-   v3f( -1.0, -1.0, -1.0 ); v3f( -1.0, -1.0, 1.0 );
-   glEnd();
+	glBegin( prim );
+	v3f( -1.0, 1.0, 1.0 );   v3f( -1.0, 1.0, -1.0 );
+	v3f( -1.0, -1.0, -1.0 ); v3f( -1.0, -1.0, 1.0 );
+	glEnd();
 
-   glColor3f( 0.0, 1.0, 0.0 );
-   glBegin( prim );
-   v3f(  1.0, 1.0,  1.0 ); v3f(  1.0, 1.0, -1.0 );
-   v3f( -1.0, 1.0, -1.0 ); v3f( -1.0, 1.0,  1.0 );
-   glEnd();
+	glColor3f( 0.0, 1.0, 0.0 );
+	glBegin( prim );
+	v3f(  1.0, 1.0,  1.0 ); v3f(  1.0, 1.0, -1.0 );
+	v3f( -1.0, 1.0, -1.0 ); v3f( -1.0, 1.0,  1.0 );
+	glEnd();
 
-   glBegin( prim );
-   v3f(  1.0, -1.0,  1.0 ); v3f( -1.0, -1.0,  1.0 );
-   v3f( -1.0, -1.0, -1.0 ); v3f(  1.0, -1.0, -1.0 );
-   glEnd();
+	glBegin( prim );
+	v3f(  1.0, -1.0,  1.0 ); v3f( -1.0, -1.0,  1.0 );
+	v3f( -1.0, -1.0, -1.0 ); v3f(  1.0, -1.0, -1.0 );
+	glEnd();
 
-   glColor3f( 0.0, 0.0, 1.0 );
-   glBegin( prim );
-   v3f(  1.0,  1.0,  1.0 ); v3f( -1.0,  1.0,  1.0 );
-   v3f( -1.0, -1.0,  1.0 ); v3f(  1.0, -1.0,  1.0 );
-   glEnd();
+	glColor3f( 0.0, 0.0, 1.0 );
+	glBegin( prim );
+	v3f(  1.0,  1.0,  1.0 ); v3f( -1.0,  1.0,  1.0 );
+	v3f( -1.0, -1.0,  1.0 ); v3f(  1.0, -1.0,  1.0 );
+	glEnd();
 
-   glBegin( prim );
-   v3f(  1.0, 1.0, -1.0 ); v3f(  1.0,-1.0, -1.0 );
-   v3f( -1.0,-1.0, -1.0 ); v3f( -1.0, 1.0, -1.0 );
-   glEnd();
+	glBegin( prim );
+	v3f(  1.0, 1.0, -1.0 ); v3f(  1.0,-1.0, -1.0 );
+	v3f( -1.0,-1.0, -1.0 ); v3f( -1.0, 1.0, -1.0 );
+	glEnd();
 }
 
 int
-idle_cb(XEvent *ev, void *data)
+idle_cb( XEvent * ev,
+		 void   * data  FL_UNUSED_ARG )
 {
     static GLfloat xrot, yrot, zrot;
 
-    if(!ui->form->visible  || ! ui->canvas->visible)
-       return 0;
+    if( ! ui->form->visible  || ! ui->canvas->visible )
+		return 0;
 
     fl_activate_glcanvas(ui->canvas);
 
-    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-    glPushMatrix();
+    glPushMatrix( );
 
     glRotatef( xrot, 1.0, 0.0, 0.0 );
     glRotatef( yrot, 0.0, 1.0, 0.0 );
     glRotatef( zrot, 0.0, 0.0, 1.0 );
-    glTranslatef(-1.0,1.2,-0.5);
+    glTranslatef( -1.0,1.2,-0.5 );
 
-    draw_cube();
+    draw_cube( );
 
-    glPopMatrix();
+    glPopMatrix( );
 
-    glFinish();
+    glFinish( );
 
-    if(ev)
+    if ( ev )
     {
-       xrot += 10.0;
-       yrot += 7.0;
-       zrot -= 3.0;
+		xrot += 10.0;
+		yrot += 7.0;
+		zrot -= 3.0;
     }
 
-    glXSwapBuffers(fl_display, fl_get_canvas_id(ui->canvas));
+    glXSwapBuffers( fl_display, fl_get_canvas_id( ui->canvas ) );
 
     return 0;
 }
 
+
 int
-canvas_expose(FL_OBJECT *ob, Window win, int w, int h, XEvent *xev, void *ud)
+canvas_expose( FL_OBJECT * ob   FL_UNUSED_ARG,
+			   Window      win  FL_UNUSED_ARG,
+			   int         w,
+			   int         h,
+			   XEvent *    xev  FL_UNUSED_ARG,
+			   void *      ud   FL_UNUSED_ARG )
 {
 
-    glViewport(0,0, (GLint)w, (GLint)h);
-    glClearColor(0.0,0.0,0.0,0.0);
+    glViewport( 0, 0, ( GLint ) w, ( GLint ) h );
+    glClearColor( 0.0, 0.0, 0.0, 0.0 );
 
     glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    glFrustum( -1.0, 1.0,  -1.0, 1.0,  1.0, 10.0 );
+    glLoadIdentity( );
+    glFrustum( -1.0, 1.0, -1.0, 1.0, 1.0, 10.0 );
     glTranslatef( 0.0, 0.0, -5.0 );
 
     glMatrixMode( GL_MODELVIEW );
-    glLoadIdentity();
+    glLoadIdentity( );
     glCullFace( GL_BACK );
     glEnable( GL_CULL_FACE );
 
     glShadeModel( GL_FLAT );
 
     /* refresh */
-    idle_cb(0, 0);
+
+    idle_cb( 0, 0 );
     return 0;
 }
 
 
 int
-buttonpress_cb(FL_OBJECT *ob, Window win, int w, int h, XEvent *xev, void *ud)
+buttonpress_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
+				Window      win  FL_UNUSED_ARG,
+				int         w    FL_UNUSED_ARG,
+				int         h    FL_UNUSED_ARG,
+				XEvent *    xev  FL_UNUSED_ARG,
+				void *      ud   FL_UNUSED_ARG )
 {
    static int suspended;
 
-   suspended = (suspended + 1) %2;
-   fl_set_idle_callback(suspended ? 0:idle_cb,0);
+   suspended = ( suspended + 1 ) % 2;
+   fl_set_idle_callback( suspended ? 0 : idle_cb, 0 );
+
    return 0;
 }
 
+
 void
-switch_primitive(FL_OBJECT *ob, long data)
+switch_primitive( FL_OBJECT * ob    FL_UNUSED_ARG,
+				  long        data  FL_UNUSED_ARG )
 {
-    static int primitive[] = { GL_POLYGON, GL_LINE_LOOP};
+    static int primitive[ ] = { GL_POLYGON, GL_LINE_LOOP };
     static int i ;
 
-    prim = primitive[++i%2];
+    prim = primitive[ ++i % 2 ];
 }
 
-/* switch single/dblbuffer */
-static int sbuf[]= {GLX_RGBA,GLX_DEPTH_SIZE,1,
-                     GLX_RED_SIZE,1,GLX_GREEN_SIZE,1,GLX_BLUE_SIZE,1,None};
 
-static int dbuf[]= {GLX_RGBA,GLX_DEPTH_SIZE,1,
-                    GLX_RED_SIZE,1,GLX_GREEN_SIZE,1,GLX_BLUE_SIZE,1,
-                    /*GLX_DOUBLEBUFFER,*/ None};
+/* switch single/dblbuffer */
+
+static int sbuf[ ]= { GLX_RGBA,GLX_DEPTH_SIZE, 1,
+					  GLX_RED_SIZE,            1,
+					  GLX_GREEN_SIZE,          1,
+					  GLX_BLUE_SIZE,           1,
+					  None                        };
+
+static int dbuf[ ]= { GLX_RGBA,
+					  GLX_DEPTH_SIZE,
+					  1,
+					  GLX_RED_SIZE,
+					  1,
+					  GLX_GREEN_SIZE,
+					  1,
+					  GLX_BLUE_SIZE,
+					  1,
+					  /* GLX_DOUBLEBUFFER, */
+					  None};
+
+
 void
-buffer_cb(FL_OBJECT *ob, long data)
+buffer_cb( FL_OBJECT * ob,
+		   long        data  FL_UNUSED_ARG )
 {
     static int is_double = 1;
     FD_form *fdui = ob->form->fdui;
 
-    is_double = !is_double;
-    fl_set_object_label(ob,is_double ? "Single":"Double");
-    fl_set_glcanvas_attributes(fdui->canvas, is_double ?dbuf:sbuf);
+    is_double = ! is_double;
+    fl_set_object_label( ob,is_double ? "Single":"Double" );
+    fl_set_glcanvas_attributes( fdui->canvas, is_double ? dbuf : sbuf );
 }
 
+
 void
-menu_cb(FL_OBJECT *ob, long data)
+menu_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
 }
 
-int main(int argc, char *argv[])
+int main( int    argc,
+		  char * argv[ ] )
 {
 
    FL_OBJECT *ob;
 
-   fl_initialize(&argc, argv, "FormDemo", 0, 0);
-   ui = create_form_form();
+   fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+   ui = create_form_form( );
 
    /* fill-in form initialization code */
-   fl_set_object_gravity(ui->butgrp, NorthEastGravity,NorthEastGravity);
-   fl_addto_menu(ui->menu,"Item1|Item2|Item3|Item4");
 
-   fl_add_canvas_handler(ui->canvas, Expose, canvas_expose, 0);
-   fl_add_canvas_handler(ui->canvas, ButtonPress, buttonpress_cb, 0);
-   fl_set_idle_callback(idle_cb, 0);
+   fl_set_object_gravity( ui->butgrp, NorthEastGravity, NorthEastGravity );
+   fl_addto_menu( ui->menu,"Item1|Item2|Item3|Item4" );
+
+   fl_add_canvas_handler( ui->canvas, Expose, canvas_expose, 0 );
+   fl_add_canvas_handler( ui->canvas, ButtonPress, buttonpress_cb, 0 );
+   fl_set_idle_callback( idle_cb, 0 );
 
    /* geometry stuff */
-   fl_set_form_minsize(ui->form, 340, 280);
 
-   fl_show_form(ui->form,FL_PLACE_CENTER|FL_FREE_SIZE,FL_FULLBORDER,
-               "OpenGL Canvas");
+   fl_set_form_minsize( ui->form, 340, 280 );
 
-   while((ob = fl_do_forms()) != ui->done)
-       ;
-   fl_finish();
+   fl_show_form( ui->form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_FULLBORDER,
+				 "OpenGL Canvas");
+
+   while( ( ob = fl_do_forms( ) ) != ui->done )
+       /* empty */ ;
+
+   fl_finish( );
    return 0;
 }
 
+
 static void
-hide_it(FL_OBJECT *ob, long data)
+hide_it( FL_OBJECT * ob,
+		 long        data  FL_UNUSED_ARG )
 {
-    if(ui->canvas->visible)
+    if( ui->canvas->visible )
     {
-       fl_hide_object(ui->canvas);
-       fl_set_object_label(ob,"Show");
+		fl_hide_object( ui->canvas );
+		fl_set_object_label( ob,"Show" );
     }
     else
     {
-       fl_show_object(ui->canvas);
-       fl_set_object_label(ob,"Hide");
+       fl_show_object( ui->canvas );
+       fl_set_object_label( ob, "Hide" );
     }
 }
 
+
 static void
-reshow(FL_OBJECT *ob, long data)
+reshow( FL_OBJECT * ob,
+		long        data  FL_UNUSED_ARG )
 {
-   fl_hide_form(ob->form);
-   fl_show_form(ui->form,FL_PLACE_CENTER|FL_FREE_SIZE,FL_FULLBORDER,
-               "OpenGL Canvas");
+	fl_hide_form( ob->form );
+	fl_show_form( ui->form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_FULLBORDER,
+				  "OpenGL Canvas" );
 }
+
 
 #include <stdlib.h>
 
-FD_form *create_form_form(void)
-{
-  FL_OBJECT *obj;
-  FD_form *fdui = (FD_form *) fl_calloc(1, sizeof(*fdui));
 
-  fdui->form = fl_bgn_form(FL_NO_BOX, 340, 280);
-  obj = fl_add_box(FL_UP_BOX,0,0,340,280,"");
-  fdui->canvas = obj = fl_add_glcanvas(FL_NORMAL_CANVAS,20,45,225,215,"");
+FD_form *create_form_form( void )
+{
+	FL_OBJECT *obj;
+	FD_form *fdui = (FD_form *) fl_calloc(1, sizeof(*fdui));
+
+	fdui->form = fl_bgn_form(FL_NO_BOX, 340, 280);
+	obj = fl_add_box(FL_UP_BOX,0,0,340,280,"");
+	fdui->canvas = obj = fl_add_glcanvas(FL_NORMAL_CANVAS,20,45,225,215,"");
     fl_set_object_gravity(obj, FL_NorthWest, FL_SouthEast);
-  fdui->done = obj = fl_add_button(FL_NORMAL_BUTTON,255,230,70,30,"Done");
+	fdui->done = obj = fl_add_button(FL_NORMAL_BUTTON,255,230,70,30,"Done");
     fl_set_button_shortcut(obj,"Dd#d",1);
     fl_set_object_gravity(obj, FL_SouthEast, FL_SouthEast);
-  fdui->menu = obj = fl_add_menu(FL_PULLDOWN_MENU,20,15,54,20,"Canvas");
+	fdui->menu = obj = fl_add_menu(FL_PULLDOWN_MENU,20,15,54,20,"Canvas");
     fl_set_object_shortcut(obj,"#CcC",1);
     fl_set_object_boxtype(obj,FL_FLAT_BOX);
     fl_set_object_lstyle(obj,FL_BOLD_STYLE);
     fl_set_object_gravity(obj, FL_NorthWest, FL_NorthWest);
     fl_set_object_callback(obj,menu_cb,0);
 
-  fdui->butgrp = fl_bgn_group();
-  obj = fl_add_button(FL_NORMAL_BUTTON,255,45,70,30,"Poly/Line");
+	fdui->butgrp = fl_bgn_group();
+	obj = fl_add_button(FL_NORMAL_BUTTON,255,45,70,30,"Poly/Line");
     fl_set_object_gravity(obj, FL_NorthEast, FL_NorthEast);
     fl_set_object_callback(obj,switch_primitive,0);
-  obj = fl_add_button(FL_NORMAL_BUTTON,255,75,70,30,"Hide");
+	obj = fl_add_button(FL_NORMAL_BUTTON,255,75,70,30,"Hide");
     fl_set_button_shortcut(obj,"#HhH",1);
     fl_set_object_callback(obj,hide_it,0);
-  obj = fl_add_button(FL_NORMAL_BUTTON,255,105,70,30,"ReShow");
-    fl_set_button_shortcut(obj,"#RRr",1);
-    fl_set_object_callback(obj,reshow,0);
-  obj = fl_add_button(FL_NORMAL_BUTTON,255,135,70,30,"Single");
+	obj = fl_add_button( FL_NORMAL_BUTTON, 255, 105, 70, 30, "ReShow" );
+    fl_set_button_shortcut( obj, "#RRr", 1 );
+    fl_set_object_callback( obj, reshow, 0 );
+	obj = fl_add_button(FL_NORMAL_BUTTON,255,135,70,30,"Single");
     fl_set_object_callback(obj,buffer_cb,0);
-  fl_end_group();
-  fl_end_form();
+	fl_end_group();
+	fl_end_form();
 
-  fdui->form->fdui = fdui;
+	fdui->form->fdui = fdui;
 
-  return fdui;
+	return fdui;
 }
 

@@ -34,13 +34,15 @@
 #include <stdlib.h>
 
 /* callbacks for form input */
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
    fl_finish();
    exit(0);
 }
 
-void input_cb(FL_OBJECT *ob, long data)
+void input_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
    int cx, cy;
    char buf[128];
@@ -50,7 +52,8 @@ void input_cb(FL_OBJECT *ob, long data)
    fl_set_object_label(((FD_input *)ob->form->fdui)->report,buf);
 }
 
-void hide_show_cb(FL_OBJECT *ob, long data)
+void hide_show_cb( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
     FD_input *fd = (FD_input *)ob->form->fdui;
 

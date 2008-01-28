@@ -27,7 +27,8 @@
 #include "fd/twheel_gui.h"
 
 /* callbacks and freeobj handles for form twheelform */
-void valchange_cb(FL_OBJECT *ob, long data)
+void valchange_cb( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
      FD_twheelform *fdui = (FD_twheelform *)ob->form->fdui;
      char buf[128];
@@ -36,7 +37,8 @@ void valchange_cb(FL_OBJECT *ob, long data)
      fl_set_object_label(fdui->report,buf);
 }
 
-void returnchange_cb(FL_OBJECT *ob, long data)
+void returnchange_cb( FL_OBJECT * ob,
+					  long        data  FL_UNUSED_ARG )
 {
      FD_twheelform *fdui = (FD_twheelform *)ob->form->fdui;
      int n = fl_get_choice(ob)-1;

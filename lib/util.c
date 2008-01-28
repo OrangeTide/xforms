@@ -32,121 +32,191 @@
  * X independent utilities
  *
  */
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_util = "$Id: util.c,v 1.6 2003/04/24 09:35:35 leeming Exp $";
+
+
+#if defined F_ID || defined DEBUG
+char *fl_id_util = "$Id: util.c,v 1.7 2008/01/28 23:24:12 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
 
-/* Sets the form windom */
+
+
+/***************************************
+ * Sets the form windom
+ ***************************************/
+
 void
-fl_set_form_window(FL_FORM * form)
+fl_set_form_window( FL_FORM * form )
 {
-    if (form && form->window > 0)
-	flx->win = form->window;
+    if ( form && form->window > 0 )
+		flx->win = form->window;
 }
 
 
+/***************************************
+ ***************************************/
+
 static int showerrors = 1;
+
 void
-fl_show_errors(int y)
+fl_show_errors( int y )
 {
     showerrors = y;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_error(const char *where, const char *why)
+fl_error( const char * where,
+		  const char * why )
 {
     int resp;
 
-    M_err(where, why);
+    M_err( where, why );
 
-    if (showerrors)
+    if ( showerrors )
     {
-	resp = fl_show_choice("XForms Error", where, why, 3,
-			      "Continue", "Exit", "HideErrors", 2);
-	if (resp == 2)
-	    exit(-1);
-	else if (resp == 3)
+		resp = fl_show_choice( "XForms Error", where, why, 3,
+							   "Continue", "Exit", "HideErrors", 2 );
+	if ( resp == 2 )
+	    exit( -1 );
+	else if ( resp == 3 )
 	    showerrors = 0;
     }
-
 }
 
-/*
+
+/***************************************
  * for debugging
- */
-#define VN(v)  {v,#v}
-static FL_VN_PAIR flevent[] =
+ ***************************************/
+
+#define VN( v )  { v, #v }
+
+static FL_VN_PAIR flevent[ ] =
 {
-    VN(FL_ENTER), VN(FL_LEAVE), VN(FL_PUSH), VN(FL_RELEASE),
-    VN(FL_STEP), VN(FL_SHORTCUT), VN(FL_MOUSE), VN(FL_MOTION),
-    VN(FL_KEYPRESS), VN(FL_DRAW), VN(FL_FOCUS), VN(FL_UNFOCUS),
-    VN(FL_FREEMEM), VN(FL_DRAWLABEL), VN(FL_DBLCLICK),
-    VN(FL_OTHER), VN(FL_ATTRIB),
-    VN(-1)
+    VN( FL_ENTER ),
+	VN( FL_LEAVE ),
+	VN( FL_PUSH ),
+	VN( FL_RELEASE ),
+    VN( FL_STEP ),
+	VN( FL_SHORTCUT ),
+	VN( FL_MOUSE ),
+	VN( FL_MOTION ),
+    VN( FL_KEYPRESS ),
+	VN( FL_DRAW ),
+	VN( FL_FOCUS ),
+	VN( FL_UNFOCUS ),
+    VN( FL_FREEMEM ),
+	VN( FL_DRAWLABEL ),
+	VN( FL_DBLCLICK ),
+    VN( FL_OTHER ),
+	VN( FL_ATTRIB ),
+    VN( -1 )
 };
 
+
+/***************************************
+ ***************************************/
+
 const char *
-fl_event_name(int ev)
+fl_event_name( int ev )
 {
-    return fl_get_vn_name(flevent, ev);
+    return fl_get_vn_name( flevent, ev );
 }
 
-static FL_VN_PAIR flclass[] =
+
+static FL_VN_PAIR flclass[ ] =
 {
-    VN(FL_BUTTON), VN(FL_LIGHTBUTTON),
-    VN(FL_ROUNDBUTTON), VN(FL_ROUND3DBUTTON),
-    VN(FL_CHECKBUTTON), VN(FL_BITMAPBUTTON), VN(FL_PIXMAPBUTTON),
-    VN(FL_BITMAP), VN(FL_PIXMAP), VN(FL_BOX), VN(FL_TEXT),
-    VN(FL_MENU), VN(FL_CHART), VN(FL_CHOICE),
-    VN(FL_COUNTER), VN(FL_SLIDER), VN(FL_VALSLIDER), VN(FL_INPUT),
-    VN(FL_BROWSER), VN(FL_DIAL), VN(FL_TIMER), VN(FL_CLOCK),
-    VN(FL_POSITIONER), VN(FL_FREE), VN(FL_XYPLOT),
-    VN(FL_FRAME), VN(FL_LABELFRAME), VN(FL_CANVAS),
-    VN(FL_GLCANVAS), VN(FL_TABFOLDER), VN(FL_SCROLLBAR),
-    VN(FL_SCROLLBUTTON), VN(FL_MENUBAR), VN(FL_IMAGECANVAS),
-    VN(FL_TEXTBOX),
-    VN(-1)
+    VN( FL_BUTTON ),
+	VN( FL_LIGHTBUTTON ),
+    VN( FL_ROUNDBUTTON ),
+	VN( FL_ROUND3DBUTTON ),
+    VN( FL_CHECKBUTTON ),
+	VN( FL_BITMAPBUTTON ),
+	VN( FL_PIXMAPBUTTON ),
+    VN( FL_BITMAP ),
+	VN( FL_PIXMAP ),
+	VN( FL_BOX ),
+	VN( FL_TEXT ),
+    VN( FL_MENU ),
+	VN( FL_CHART ),
+	VN( FL_CHOICE ),
+    VN( FL_COUNTER ),
+	VN( FL_SLIDER ),
+	VN( FL_VALSLIDER ),
+	VN( FL_INPUT ),
+    VN( FL_BROWSER ),
+	VN( FL_DIAL ),
+	VN( FL_TIMER ),
+	VN( FL_CLOCK ),
+    VN( FL_POSITIONER ),
+	VN( FL_FREE ),
+	VN( FL_XYPLOT ),
+    VN( FL_FRAME ),
+	VN( FL_LABELFRAME ),
+	VN( FL_CANVAS ),
+    VN( FL_GLCANVAS ),
+	VN( FL_TABFOLDER ),
+	VN( FL_SCROLLBAR ),
+    VN( FL_SCROLLBUTTON ),
+	VN( FL_MENUBAR ),
+	VN( FL_IMAGECANVAS ),
+    VN( FL_TEXTBOX ),
+    VN( -1 )
 };
 
+
+/***************************************
+ ***************************************/
+
 const char *
-fl_object_class_name(FL_OBJECT * ob)
+fl_object_class_name( FL_OBJECT * ob )
 {
-    return !ob ? "null" :
-	(ob == FL_EVENT ? "fl_event" : fl_get_vn_name(flclass, ob->objclass));
+    return ! ob ?
+		   "null" :
+		   ( ob == FL_EVENT ?
+			 "fl_event" : fl_get_vn_name( flclass, ob->objclass ) );
 }
+
+
+/***************************************
+ ***************************************/
 
 void
-fl_print_form_object(FL_FORM * form, const char *msg)
+fl_print_form_object( FL_FORM *    form,
+					  const char * msg )
 {
     FL_OBJECT *ob;
 
-    if (msg && *msg)
-	fprintf(stderr, "**** %s ****\n", msg);
+    if ( msg && *msg )
+		fprintf( stderr, "**** %s ****\n", msg );
 
-    fprintf(stderr, "dumping form: %s\n", form ?
-	    (form->label ? form->label : "Unknown") : "null");
+    fprintf( stderr, "dumping form: %s\n",
+			 form ? ( form->label ? form->label : "Unknown" ) : "null" );
 
-    if (!form)
-	return;
+    if ( ! form )
+		return;
 
-    for (ob = form->first; ob; ob = ob->next)
-	fprintf(stderr, "Next: %s (parent: %s)\n",
-		fl_object_class_name(ob),
-		fl_object_class_name(ob->parent));
+    for ( ob = form->first; ob; ob = ob->next )
+		fprintf( stderr, "Next: %s (parent: %s)\n",
+				 fl_object_class_name( ob ),
+				 fl_object_class_name( ob->parent ) );
 
-    fprintf(stderr, "\n");
+    fprintf( stderr, "\n" );
 
-    for (ob = form->last; ob; ob = ob->prev)
-	fprintf(stderr, "Prev: %s (parent: %s) \n",
-		fl_object_class_name(ob),
-		fl_object_class_name(ob->parent));
+    for ( ob = form->last; ob; ob = ob->prev )
+		fprintf( stderr, "Prev: %s (parent: %s) \n",
+				 fl_object_class_name( ob ),
+				 fl_object_class_name( ob->parent ) );
 }

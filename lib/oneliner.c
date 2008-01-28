@@ -36,16 +36,24 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
-static int fntstyle = FL_NORMAL_STYLE, fntsize = FL_DEFAULT_SIZE;
-static FL_COLOR background = FL_YELLOW, textcolor = FL_BLACK;
+
+static int fntstyle = FL_NORMAL_STYLE,
+           fntsize = FL_DEFAULT_SIZE;
+static FL_COLOR background = FL_YELLOW,
+                textcolor = FL_BLACK;
 static FL_FORM *oneliner;
 static FL_OBJECT *text;
 
+
+/***************************************
+ ***************************************/
+
 static void
-create_it(void)
+create_it( void )
 {
     if (!oneliner)
     {
@@ -59,13 +67,19 @@ create_it(void)
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_show_oneliner(const char *s, FL_Coord x, FL_Coord y)
+fl_show_oneliner( const char * s,
+				  FL_Coord     x,
+				  FL_Coord     y )
 {
     int maxw = 0, maxh = 0;
 
     if (!s)
-	return;
+		return;
 
     create_it();
 
@@ -80,21 +94,30 @@ fl_show_oneliner(const char *s, FL_Coord x, FL_Coord y)
     fl_unfreeze_form(oneliner);
 
     if (!oneliner->visible)
-	fl_show_form(oneliner, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
-		     FL_NOBORDER, "OneLiner");
+		fl_show_form(oneliner, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
+					 FL_NOBORDER, "OneLiner");
     fl_update_display(1);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_hide_oneliner(void)
+fl_hide_oneliner( void )
 {
     create_it();
     if (oneliner->visible)
-	fl_hide_form(oneliner);
+		fl_hide_form(oneliner);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_oneliner_color(FL_COLOR tc, FL_COLOR bc)
+fl_set_oneliner_color( FL_COLOR tc,
+					   FL_COLOR bc )
 {
     create_it();
     fl_set_object_lcol(text, textcolor = tc);
@@ -102,8 +125,13 @@ fl_set_oneliner_color(FL_COLOR tc, FL_COLOR bc)
     fl_set_object_color(text, background, background);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_oneliner_font(int style, int size)
+fl_set_oneliner_font( int style,
+					  int size )
 {
     create_it();
     fl_set_object_lstyle(text, fntstyle = style);

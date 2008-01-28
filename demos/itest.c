@@ -102,7 +102,8 @@ app_init(void)
 }
 
 void
-doublebuffer_callback(FL_OBJECT * ob, long data)
+doublebuffer_callback( FL_OBJECT * ob,
+					   long        data  FL_UNUSED_ARG )
 {
     app.double_buffer = fl_get_button(ob);
     if (app.image)
@@ -110,7 +111,8 @@ doublebuffer_callback(FL_OBJECT * ob, long data)
 }
 
 void
-windowlevel_callback(FL_OBJECT * ob, long data)
+windowlevel_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
+					  long        data  FL_UNUSED_ARG )
 {
 
     if (!app.image)
@@ -125,7 +127,8 @@ windowlevel_callback(FL_OBJECT * ob, long data)
 
 /*** callbacks and freeobj handles for form is_mainform ***/
 void
-vscroll_callback(FL_OBJECT * ob, long data)
+vscroll_callback( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
     if (app.image)
     {
@@ -135,7 +138,8 @@ vscroll_callback(FL_OBJECT * ob, long data)
 }
 
 void
-hscroll_callback(FL_OBJECT * ob, long data)
+hscroll_callback( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
     if (app.image)
     {
@@ -145,7 +149,8 @@ hscroll_callback(FL_OBJECT * ob, long data)
 }
 
 void
-outformat_callback(FL_OBJECT *ob, long data)
+outformat_callback( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     app.outformat = fl_get_choice_text(ob);
 }
@@ -165,7 +170,8 @@ colorchange_callback(FL_OBJECT * ob, long data)
 }
 
 void
-autocrop_callback(FL_OBJECT * ob, long data)
+autocrop_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
+				   long        data  FL_UNUSED_ARG )
 {
     if (!app.image)
 	return;
@@ -175,7 +181,8 @@ autocrop_callback(FL_OBJECT * ob, long data)
 }
 
 void
-convolve_callback(FL_OBJECT * ob, long data)
+convolve_callback( FL_OBJECT * ob  FL_UNUSED_ARG,
+				   long        data)
 {
 #if 1
     if (app.image)
@@ -199,7 +206,8 @@ convolve_callback(FL_OBJECT * ob, long data)
 }
 
 void
-scaling_callback(FL_OBJECT * ob, long data)
+scaling_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
+				  long        data  FL_UNUSED_ARG )
 {
     FD_processform *processform = app.fd_processform;
     int neww, newh, options;
@@ -243,7 +251,8 @@ scaling_callback(FL_OBJECT * ob, long data)
 }
 
 void
-switchtopixel_callback(FL_OBJECT * ob, long data)
+switchtopixel_callback( FL_OBJECT * ob,
+					    long        data  FL_UNUSED_ARG )
 {
     FD_processform *processform = app.fd_processform;
     float w, h;
@@ -381,7 +390,8 @@ load_and_show(const char *file, void *data)
 static int save_file(const char *file, void *data);
 
 void
-filemenu_callback(FL_OBJECT * ob, long data)
+filemenu_callback( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_menu(ob);
 
@@ -415,15 +425,20 @@ filemenu_callback(FL_OBJECT * ob, long data)
 }
 
 void
-progressbar(FL_OBJECT * ob, long data)
+progressbar( FL_OBJECT * ob    FL_UNUSED_ARG,
+			 long        data  FL_UNUSED_ARG )
 {
     /* fill-in code for callback */
 }
 
 
 static int
-expose_handle(FL_OBJECT * ob, Window win,
-	      int w, int h, XEvent * xev, void *data)
+expose_handle( FL_OBJECT * ob    FL_UNUSED_ARG,
+			   Window      win,
+			   int         w     FL_UNUSED_ARG,
+			   int         h     FL_UNUSED_ARG,
+			   XEvent    * xev   FL_UNUSED_ARG,
+			   void      * data  FL_UNUSED_ARG)
 {
     if (app.image)
 	app.image->display(app.image, win);
@@ -436,14 +451,16 @@ expose_handle(FL_OBJECT * ob, Window win,
  *********************************************************************/
 
 /* SaveAs file selector callback */
-static int save_file(const char *file, void *data)
+static int save_file( const char * file,
+					  void       * data  FL_UNUSED_ARG )
 {
      if(!file || !*file)
          return -1;
      return flimage_dump(app.image, file, app.outformat);
 }
 
-static void hide_it(FL_OBJECT *ob, long data)
+static void hide_it( FL_OBJECT * ob    FL_UNUSED_ARG,
+					 long        data  FL_UNUSED_ARG )
 {
     char file[256];
     const char *d, *f;

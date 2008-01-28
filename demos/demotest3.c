@@ -35,12 +35,16 @@ typedef struct {
 FD_S *S;
 
 void
-timeoutCB(int tid, void *stuff) {
+timeoutCB( int    tid    FL_UNUSED_ARG,
+		   void * stuff  FL_UNUSED_ARG )
+{
   fl_show_alert("Standby", "This may abort", "with SEGV", 1);
 }
 
 void
-pressedCB(FL_OBJECT *obj, long data) {
+pressedCB( FL_OBJECT * obj   FL_UNUSED_ARG,
+		   long        data  FL_UNUSED_ARG )
+{
   int tid = fl_add_timeout(300L, timeoutCB, NULL);
   fprintf(stderr,"tid=%d\n",tid);
 }

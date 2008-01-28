@@ -50,7 +50,8 @@ extern FD_inputform * create_form_inputform(void);
 
 FD_inputform *ui;
 
-int peek_event(FL_FORM *form, void *xev)
+int peek_event( FL_FORM * form  FL_UNUSED_ARG,
+				void    * xev )
 {
     if(((XEvent *)xev)->type == KeyPress)
     {
@@ -74,7 +75,8 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void input_callback(FL_OBJECT *ob, long data)
+void input_callback( FL_OBJECT * ob  FL_UNUSED_ARG,
+					 long        data )
 {
      char buf[32];
      sprintf(buf,"Input%ld returned",data);
@@ -83,7 +85,8 @@ void input_callback(FL_OBJECT *ob, long data)
      fl_msleep(50);
 }
 
-void howreturn_callback(FL_OBJECT *ob, long data)
+void howreturn_callback( FL_OBJECT * ob,
+						 long        data  FL_UNUSED_ARG )
 {
     fl_set_input_return(ui->input1, fl_get_button(ob));
     fl_set_input_return(ui->input2, fl_get_button(ob));

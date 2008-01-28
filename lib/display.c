@@ -26,45 +26,59 @@
  * We need this so files that reference fl_display don't
  * have to pull other files in.
  */
+
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include <X11/Xlib.h>
 
+
 Display *fl_display;
 
-/* given a mask for RGB, find the shifts and number of bits */
+
+/***************************************
+ * given a mask for RGB, find the shifts and number of bits
+ ***************************************/
+
 void
-fl_rgbmask_to_shifts(unsigned long mask, unsigned int *shift,
-		     unsigned int *bits)
+fl_rgbmask_to_shifts( unsigned long   mask,
+					  unsigned int  * shift,
+					  unsigned int  * bits )
 {
     unsigned int val;
 
-    if (mask == 0)
+    if ( mask == 0 )
     {
-	*shift = *bits = 0;
-	return;
+		*shift = *bits = 0;
+		return;
     }
 
-    for (*shift = 0; !((1 << *shift) & mask);)
-	(*shift)++;
+    for ( *shift = 0; ! ( ( 1 << *shift ) & mask ); )
+		( *shift )++;
 
-    val = (mask >> *shift);
-    for (*bits = 0; (1 << *bits) & val; (*bits)++)
-	;
+    val = mask >> *shift;
+    for ( *bits = 0; ( 1 << *bits ) & val; ( *bits )++ )
+		/* empty */ ;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_xvisual2flstate(FL_State * s, XVisualInfo * xvinfo)
+fl_xvisual2flstate( FL_State    * s,
+					XVisualInfo * xvinfo )
 {
     s->rgb_bits = xvinfo->bits_per_rgb;
     s->rmask = xvinfo->red_mask;
     s->gmask = xvinfo->green_mask;
     s->bmask = xvinfo->blue_mask;
 
-    fl_rgbmask_to_shifts(s->rmask, &s->rshift, &s->rbits);
-    fl_rgbmask_to_shifts(s->gmask, &s->gshift, &s->gbits);
-    fl_rgbmask_to_shifts(s->bmask, &s->bshift, &s->bbits);
+    fl_rgbmask_to_shifts( s->rmask, &s->rshift, &s->rbits );
+    fl_rgbmask_to_shifts( s->gmask, &s->gshift, &s->gbits );
+    fl_rgbmask_to_shifts( s->bmask, &s->bshift, &s->bbits );
 }

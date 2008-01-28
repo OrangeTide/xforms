@@ -37,12 +37,13 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include XPM_H_LOCATION
 
 
-#if (FL_DEBUG >= ML_ERR)
+#if FL_DEBUG >= ML_ERR
 #define CHECK(ob,f)  if (!IsValidClass(ob, FL_PIXMAP) &&             \
                          !IsValidClass(ob, FL_PIXMAPBUTTON))         \
                      {                                               \
@@ -51,7 +52,7 @@
                        return;                                       \
                      }
 #else
-#define CHECK(ob,f)
+#define CHECK( ob, f )
 #endif
 
 
@@ -71,31 +72,36 @@ typedef struct
     int dx, dy;
     int show_focus;
     unsigned int focus_w, focus_h;	/* these should be in button_spec */
-}
-PixmapSPEC;
+} PixmapSPEC;
 
 static XpmAttributes *xpmattrib;
 
-/* part of pixmap cleanup */
+
+/***************************************
+ * part of pixmap cleanup
+ ***************************************/
+
 static void
-cleanup_xpma_struct(XpmAttributes * xpma)
+cleanup_xpma_struct( XpmAttributes * xpma )
 {
     /* only versions >= 3.4g have alloc_pixels. We always compile with 3.4g
        but have to re-act to dynamic libraries, which may be older */
 
     if (!xpma || !xpma->colormap)
-	return;
+		return;
 
-/* do we use at least libXpm 3.4g? */
+	/* do we use at least libXpm 3.4g? */
+
 #if (XpmFormat >= 3) && (XpmVersion >= 4) && (XpmRevision >= 7)
 	M_warn("XpmCleanUP", "Using 3.4g features");
 	XFreeColors(flx->display, xpma->colormap,
-		    xpma->alloc_pixels, xpma->nalloc_pixels, 0);
+				xpma->alloc_pixels, xpma->nalloc_pixels, 0);
 #else
 	/* somewhat dangerous */
+
 	M_warn("XpmCleanUP", "Using old xpm libs");
 	XFreeColors(flx->display, xpma->colormap,
-		    xpma->pixels, xpma->npixels, 0);
+				xpma->pixels, xpma->npixels, 0);
 #endif
 
     xpma->colormap = 0;
@@ -104,11 +110,13 @@ cleanup_xpma_struct(XpmAttributes * xpma)
     fl_free(xpma);
 }
 
-/*
+
+/***************************************
  * Free pixmaps associated with an object
- */
+ ***************************************/
+
 static void
-free_pixmap(SPEC *sp)
+free_pixmap( SPEC * sp )
 {
     PixmapSPEC *psp = sp->cspecv;
 
@@ -120,28 +128,39 @@ free_pixmap(SPEC *sp)
     sp->mask = None;
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-free_focuspixmap(SPEC *sp)
+free_focuspixmap( SPEC * sp )
 {
     fl_free_pixmap(sp->focus_pixmap);
     fl_free_pixmap(sp->focus_mask);
     sp->focus_pixmap = None;
     sp->focus_mask = None;
 }
-/*
+
+
+/***************************************
  * Change pixmap/mask. del==true means we want to destroy old pixmaps
- */
+ ***************************************/
+
 static void
-change_pixmap(SPEC *sp, Window win, Pixmap p, Pixmap shape_mask, int del)
+change_pixmap( SPEC * sp,
+			   Window win,
+			   Pixmap p,
+			   Pixmap shape_mask,
+			   int    del )
 {
     PixmapSPEC *psp = sp->cspecv;
 
     if (del)
-	free_pixmap(sp);
+		free_pixmap(sp);
     else
     {
-	cleanup_xpma_struct(psp->xpma);
-	psp->xpma = 0;
+		cleanup_xpma_struct(psp->xpma);
+		psp->xpma = 0;
     }
 
     sp->pixmap = p;
@@ -151,8 +170,8 @@ change_pixmap(SPEC *sp, Window win, Pixmap p, Pixmap shape_mask, int del)
 
     if (psp->gc == 0)
     {
-	psp->gc = XCreateGC(flx->display, win, 0, 0);
-	XSetGraphicsExposures(flx->display, psp->gc, False);
+		psp->gc = XCreateGC(flx->display, win, 0, 0);
+		XSetGraphicsExposures(flx->display, psp->gc, False);
     }
 
 #if !defined(USE_OVERRIDE)
@@ -161,23 +180,34 @@ change_pixmap(SPEC *sp, Window win, Pixmap p, Pixmap shape_mask, int del)
 
 }
 
-/*
+
+/***************************************
  * Change pixmap/mask. del==true means we want to destroy old pixmaps
- */
+ ***************************************/
+
 static void
-change_focuspixmap(SPEC *sp, Window win, Pixmap p, Pixmap shape_mask, int del)
+change_focuspixmap( SPEC * sp,
+					Window win  FL_UNUSED_ARG,
+					Pixmap p,
+					Pixmap shape_mask,
+					int    del )
 {
-    if (del)
-	free_focuspixmap(sp);
+    if ( del )
+		free_focuspixmap( sp );
 
     sp->focus_pixmap = p;
     sp->focus_mask = shape_mask;
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-show_pixmap(FL_OBJECT * ob, int focus)
+show_pixmap( FL_OBJECT * ob,
+			 int         focus )
 {
-    SPEC *sp = ((SPEC *) (ob->spec));
+    SPEC *sp = ob->spec;
     PixmapSPEC *psp = sp->cspecv;
     int xx, yy;			/* position of bitmap */
     Pixmap pixmap, mask;
@@ -188,37 +218,44 @@ show_pixmap(FL_OBJECT * ob, int focus)
     bits_w = (is_focus) ? psp->focus_w : sp->bits_w;
     bits_h = (is_focus) ? psp->focus_h : sp->bits_h;
 
-
     /* do nothing if empty data */
+
     if (sp->bits_w == 0 || pixmap == None)
     {
-	fl_drw_text(FL_ALIGN_CENTER, ob->x, ob->y,
-		    ob->w, ob->h, ob->lcol, ob->lstyle, FL_TINY_SIZE, "p");
-	return;
+		fl_drw_text(FL_ALIGN_CENTER, ob->x, ob->y,
+					ob->w, ob->h, ob->lcol, ob->lstyle, FL_TINY_SIZE, "p");
+		return;
     }
 
     fl_get_align_xy(psp->align, ob->x, ob->y, ob->w, ob->h, bits_w, bits_h,
-		    FL_abs(ob->bw) + psp->dx, FL_abs(ob->bw) + psp->dy,
-		    &xx, &yy);
+					FL_abs(ob->bw) + psp->dx, FL_abs(ob->bw) + psp->dy,
+					&xx, &yy);
 
 #if !defined(USE_OVERRIDE)
     /* hopefully, XSetClipMask is smart */
+
     XSetClipMask(flx->display, psp->gc, mask);
     XSetClipOrigin(flx->display, psp->gc, xx, yy);
 #endif
 
     XCopyArea(flx->display, pixmap, FL_ObjWin(ob),
-	      psp->gc, 0, 0, bits_w, bits_h, xx, yy);
+			  psp->gc, 0, 0, bits_w, bits_h, xx, yy);
 }
+
 
 static int red_closeness = 40000;
 static int green_closeness = 30000;
 static int blue_closeness = 50000;
-/*
+
+
+/***************************************
  * basic attributes.
- */
+ ***************************************/
+
 static void
-init_xpm_attributes(Window win, XpmAttributes * xpma, FL_COLOR tran)
+init_xpm_attributes( Window          win,
+					 XpmAttributes * xpma,
+					 FL_COLOR        tran )
 {
     XWindowAttributes xwa;
 
@@ -240,17 +277,18 @@ init_xpm_attributes(Window win, XpmAttributes * xpma, FL_COLOR tran)
 #endif
 
     {
-	static XpmColorSymbol xpcm[2];
-	xpcm[0].name = "None";
-	xpcm[0].value = 0;
-	xpcm[0].pixel = fl_get_flcolor(tran);
-	xpcm[1].name = "opaque";
-	xpcm[1].value = 0;
-	xpcm[1].pixel = fl_get_flcolor(FL_BLACK);
+		static XpmColorSymbol xpcm[2];
 
-	xpma->valuemask |= XpmColorSymbols;
-	xpma->colorsymbols = xpcm;
-	xpma->numsymbols = 2;
+		xpcm[0].name = "None";
+		xpcm[0].value = 0;
+		xpcm[0].pixel = fl_get_flcolor(tran);
+		xpcm[1].name = "opaque";
+		xpcm[1].value = 0;
+		xpcm[1].pixel = fl_get_flcolor(FL_BLACK);
+
+		xpma->valuemask |= XpmColorSymbols;
+		xpma->colorsymbols = xpcm;
+		xpma->numsymbols = 2;
     }
 }
 
@@ -259,24 +297,33 @@ init_xpm_attributes(Window win, XpmAttributes * xpma, FL_COLOR tran)
  * Static PIXMAP
  ******************************************************************{**/
 
+
 static void
-draw_pixmap(FL_OBJECT * ob)
+draw_pixmap( FL_OBJECT * ob )
 {
     /* Draw the box */
+
     fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-	       ob->col2, ob->bw);
+			   ob->col2, ob->bw);
 
     show_pixmap(ob, 0);
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-handle_pixmap(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-	      int key, void *ev)
+handle_pixmap( FL_OBJECT * ob,
+			   int         event,
+			   FL_Coord    mx   FL_UNUSED_ARG,
+			   FL_Coord    my   FL_UNUSED_ARG,
+			   int         key  FL_UNUSED_ARG,
+			   void *      ev   FL_UNUSED_ARG )
 {
     SPEC *sp;
 
-#if (FL_DEBUG >= ML_DEBUG)
+#if FL_DEBUG >= ML_DEBUG
     M_info("HandlePixmap", fl_event_name(event));
 #endif
 
@@ -284,25 +331,36 @@ handle_pixmap(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
 
     switch (event)
     {
-    case FL_DRAW:
-	draw_pixmap(ob);
-    case FL_DRAWLABEL:
-	fl_draw_object_label(ob);
-	break;
-    case FL_FREEMEM:
-	free_pixmap(ob->spec);
-	if (((PixmapSPEC *) sp->cspecv)->gc)
-	    XFreeGC(flx->display, ((PixmapSPEC *) sp->cspecv)->gc);
-	fl_free(sp->cspecv);
-	fl_free(ob->spec);
-	break;
+		case FL_DRAW:
+			draw_pixmap(ob);
+
+		case FL_DRAWLABEL:
+			fl_draw_object_label(ob);
+			break;
+
+		case FL_FREEMEM:
+			free_pixmap(ob->spec);
+			if (((PixmapSPEC *) sp->cspecv)->gc)
+				XFreeGC(flx->display, ((PixmapSPEC *) sp->cspecv)->gc);
+			fl_free(sp->cspecv);
+			fl_free(ob->spec);
+			break;
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_pixmap(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		 const char *label)
+fl_create_pixmap( int          type,
+				  FL_Coord     x,
+				  FL_Coord     y,
+				  FL_Coord     w,
+				  FL_Coord     h,
+				  const char * label )
 {
     FL_OBJECT *ob;
     SPEC *sp;
@@ -323,10 +381,18 @@ fl_create_pixmap(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     return ob;
 }
 
-/* Adds an object */
+
+/***************************************
+ * Adds an object
+ ***************************************/
+
 FL_OBJECT *
-fl_add_pixmap(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	      const char *label)
+fl_add_pixmap( int          type,
+			   FL_Coord      x,
+			   FL_Coord      y,
+			   FL_Coord      w,
+			   FL_Coord      h,
+			   const char * label )
 {
     FL_OBJECT *ob;
 
@@ -336,15 +402,24 @@ fl_add_pixmap(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 }
 
 
+/***************************************
+ ***************************************/
 
 Pixmap
-fl_create_from_pixmapdata(Window win, char **data, unsigned int *w, unsigned int *h,
-			  Pixmap * sm, int *hotx, int *hoty, FL_COLOR tran)
+fl_create_from_pixmapdata( Window         win,
+						   char **        data,
+						   unsigned int * w,
+						   unsigned int * h,
+						   Pixmap *       sm,
+						   int *          hotx,
+						   int *          hoty,
+						   FL_COLOR       tran )
 {
     Pixmap p = None;
     int s;
 
     /* this ensures we do not depend on the header/dl having the same size */
+
     xpmattrib = calloc(1, XpmAttributesSize());
     init_xpm_attributes(win, xpmattrib, tran);
 
@@ -352,31 +427,37 @@ fl_create_from_pixmapdata(Window win, char **data, unsigned int *w, unsigned int
 
     if (s != XpmSuccess)
     {
-	errno = 0;
-	M_err("CreateXPM", "error converting: %s",
-	      (s == XpmOpenFailed ? "(Can't open)" :
-	       (s == XpmFileInvalid ? "(Invalid file)" :
-		(s == XpmColorFailed ? "(Can't get color)" : ""))));
+		errno = 0;
+		M_err("CreateXPM", "error converting: %s",
+			  (s == XpmOpenFailed ? "(Can't open)" :
+			   (s == XpmFileInvalid ? "(Invalid file)" :
+				(s == XpmColorFailed ? "(Can't get color)" : ""))));
 
-	if (s < 0)
-	    return None;
+		if (s < 0)
+			return None;
     }
 
     if (p != None)
     {
-	*w = xpmattrib->width;
-	*h = xpmattrib->height;
-	if (hotx)
-	    *hotx = xpmattrib->x_hotspot;
-	if (hoty)
-	    *hoty = xpmattrib->y_hotspot;
+		*w = xpmattrib->width;
+		*h = xpmattrib->height;
+		if (hotx)
+			*hotx = xpmattrib->x_hotspot;
+		if (hoty)
+			*hoty = xpmattrib->y_hotspot;
     }
 
     return p;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmap_pixmap(FL_OBJECT * ob, Pixmap id, Pixmap mask)
+fl_set_pixmap_pixmap( FL_OBJECT * ob,
+					  Pixmap      id,
+					  Pixmap      mask )
 {
     SPEC *sp;
     FL_Coord w = 0, h = 0;
@@ -385,39 +466,54 @@ fl_set_pixmap_pixmap(FL_OBJECT * ob, Pixmap id, Pixmap mask)
     sp = ob->spec;
     change_pixmap(sp, FL_ObjWin(ob), id, mask, 0);	/* 0 don't free old */
     if (sp->pixmap != None)
-	fl_get_winsize(sp->pixmap, &w, &h);
+		fl_get_winsize(sp->pixmap, &w, &h);
     sp->bits_w = w;
     sp->bits_h = h;
     fl_redraw_object(ob);
 }
 
+
+/***************************************
+ ***************************************/
+
 Pixmap
-fl_get_pixmap_pixmap(FL_OBJECT * ob, Pixmap * p, Pixmap * m)
+fl_get_pixmap_pixmap( FL_OBJECT * ob,
+					  Pixmap *    p,
+					  Pixmap *    m )
 {
     SPEC *sp;
 
     if (!IsValidClass(ob, FL_PIXMAP) && !IsValidClass(ob, FL_PIXMAPBUTTON))
     {
-	Bark("GetPixmapPixmap", "%s is not Pixmap/pixmapbutton class",
-	     ob ? ob->label : "");
-	return None;
+		Bark("GetPixmapPixmap", "%s is not Pixmap/pixmapbutton class",
+			 ob ? ob->label : "");
+		return None;
     }
+
     sp = ob->spec;
 
     /* pixmapbutton and pixmap use the same structure */
+
     *p = sp->pixmap;
     if (m)
-	*m = sp->mask;
+		*m = sp->mask;
     return sp->pixmap;
 }
 
-/* generic routine to read a pixmap file. */
+
+/***************************************
+ * generic routine to read a pixmap file.
+ ***************************************/
 
 Pixmap
-fl_read_pixmapfile(Window win, const char *file,
-		   unsigned int *w, unsigned int *h,
-		   Pixmap * shape_mask,
-		   int *hotx, int *hoty, FL_COLOR tran)
+fl_read_pixmapfile(Window         win,
+				   const char *   file,
+				   unsigned int * w,
+				   unsigned int * h,
+				   Pixmap *       shape_mask,
+				   int *          hotx,
+				   int *          hoty,
+				   FL_COLOR       tran )
 {
     Pixmap p = 0;
     int s;
@@ -426,32 +522,37 @@ fl_read_pixmapfile(Window win, const char *file,
     init_xpm_attributes(win, xpmattrib, tran);
 
     s = XpmReadFileToPixmap(flx->display, win,
-			    (char *) file, &p, shape_mask, xpmattrib);
+							(char *) file, &p, shape_mask, xpmattrib);
     if (s != XpmSuccess)
     {
-	errno = 0;
-	M_err("LoadXPM", "error reading %s %s", file,
-	      (s == XpmOpenFailed ? "(Can't open)" :
-	       (s == XpmFileInvalid ? "(Invalid file)" :
-		(s == XpmColorFailed ? "(Can't get color)" : ""))));
+		errno = 0;
+		M_err("LoadXPM", "error reading %s %s", file,
+			  (s == XpmOpenFailed ? "(Can't open)" :
+			   (s == XpmFileInvalid ? "(Invalid file)" :
+				(s == XpmColorFailed ? "(Can't get color)" : ""))));
 
-	if (s < 0)
-	    return None;
+		if (s < 0)
+			return None;
     }
 
     *w = xpmattrib->width;
     *h = xpmattrib->height;
 
     if (hotx)
-	*hotx = xpmattrib->x_hotspot;
+		*hotx = xpmattrib->x_hotspot;
     if (hoty)
-	*hoty = xpmattrib->y_hotspot;
+		*hoty = xpmattrib->y_hotspot;
 
     return p;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmap_file(FL_OBJECT * ob, const char *fname)
+fl_set_pixmap_file( FL_OBJECT *  ob,
+					const char * fname )
 {
     Pixmap p = 0, shape_mask = 0;
     SPEC *sp;
@@ -459,23 +560,24 @@ fl_set_pixmap_file(FL_OBJECT * ob, const char *fname)
     Window win;
 
     if (!flx || !flx->display)
-	return;
+		return;
 
     sp = ob->spec;
     win = FL_ObjWin(ob) ? FL_ObjWin(ob) : fl_default_win();
     p = fl_read_pixmapfile(win, fname, &sp->bits_w, &sp->bits_h,
-			   &shape_mask, &hotx, &hoty, ob->col1);
+						   &shape_mask, &hotx, &hoty, ob->col1);
 
     if (p != None)
     {
-	change_pixmap(sp, win, p, shape_mask, 0);
-	((PixmapSPEC *) sp->cspecv)->xpma = xpmattrib;
-	fl_redraw_object(ob);
+		change_pixmap(sp, win, p, shape_mask, 0);
+		((PixmapSPEC *) sp->cspecv)->xpma = xpmattrib;
+		fl_redraw_object(ob);
     }
 
 }
 
 /******** End of static pixmap ************************}*/
+
 
 /*****************************************************************
  *      Pixmap button
@@ -483,8 +585,12 @@ fl_set_pixmap_file(FL_OBJECT * ob, const char *fname)
 
 #define IsFlat(t) ((t)==FL_FLAT_BOX||(t)==FL_FRAME_BOX||(t)==FL_BORDER_BOX)
 
+
+/***************************************
+ ***************************************/
+
 static void
-draw_pixmapbutton(FL_OBJECT * ob)
+draw_pixmapbutton( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
     PixmapSPEC *psp = sp->cspecv;
@@ -493,121 +599,134 @@ draw_pixmapbutton(FL_OBJECT * ob)
 
     switch (sp->event)
     {
-    case FL_ENTER:
-	if (!psp->show_focus)
-	    break;
-	if (IsFlat(ob->boxtype) && !sp->val)
-	{
-	    fl_drw_box(FL_UP_BOX, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	    show_pixmap(ob, 1);
-	}
-	else if (ob->boxtype == FL_UP_BOX)
-	{
-	    if (absbw > 1)
-	    {
-		fl_color(fl_depth(fl_vmode) == 1 ? FL_BLACK : ob->col2);
-		XDrawRectangle(flx->display, FL_ObjWin(ob),
-			       flx->gc, ob->x, ob->y, ob->w - 1, ob->h - 1);
-	    }
+		case FL_ENTER:
+			if (!psp->show_focus)
+				break;
+			if (IsFlat(ob->boxtype) && !sp->val)
+			{
+				fl_drw_box(FL_UP_BOX, ob->x, ob->y, ob->w, ob->h,
+						   ob->col1, ob->bw);
+				show_pixmap(ob, 1);
+			}
+			else if (ob->boxtype == FL_UP_BOX)
+			{
+				if (absbw > 1)
+				{
+					fl_color(fl_depth(fl_vmode) == 1 ? FL_BLACK : ob->col2);
+					XDrawRectangle(flx->display, FL_ObjWin(ob),
+								   flx->gc, ob->x, ob->y, ob->w - 1, ob->h - 1);
+				}
 
-	    if (sp->focus_pixmap)
-		show_pixmap(ob, 1);
-	}
-	break;
-    case FL_LEAVE:
-	if (!psp->show_focus)
-	    break;
-	if (IsFlat(ob->boxtype) && !sp->val)
-	{
-	    fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-		       ob->col1, ob->bw);
-	    show_pixmap(ob, 0);
-	}
-	else if (ob->boxtype == FL_UP_BOX)
-	{
-	    if (ob->bw >= 1)
-	    {
-		fl_color(FL_BLACK);
-		XDrawRectangle(flx->display, FL_ObjWin(ob),
-			       flx->gc, ob->x, ob->y, ob->w - 1, ob->h - 1);
-	    }
-	    else
-		/* need to undo the focus outline */
-	    {
-		fl_drw_box(sp->val ? FL_TO_DOWNBOX(ob->boxtype) : ob->boxtype,
-			   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	    }
-	    show_pixmap(ob, sp->val);
-	}
-	break;
-    default:
-	focus = sp->val || ob->belowmouse;
-	if (IsFlat(ob->boxtype))
-	{
-	    if (sp->val)
-		newbt = FL_DOWN_BOX;
-	    else if (ob->belowmouse)
-		newbt = FL_UP_BOX;
-	    else
-		newbt = ob->boxtype;
-	    fl_drw_box(newbt, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	}
-	else if (FL_IS_UPBOX(ob->boxtype))
-	{
-	    if (sp->val)
-		fl_drw_box(FL_TO_DOWNBOX(ob->boxtype),
-			   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+				if (sp->focus_pixmap)
+					show_pixmap(ob, 1);
+			}
+			break;
 
-	    else
-		fl_drw_box(ob->boxtype,
-			   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+		case FL_LEAVE:
+			if (!psp->show_focus)
+				break;
+			if (IsFlat(ob->boxtype) && !sp->val)
+			{
+				fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h,
+						   ob->col1, ob->bw);
+				show_pixmap(ob, 0);
+			}
+			else if (ob->boxtype == FL_UP_BOX)
+			{
+				if (ob->bw >= 1)
+				{
+					fl_color(FL_BLACK);
+					XDrawRectangle(flx->display, FL_ObjWin(ob),
+								   flx->gc, ob->x, ob->y, ob->w - 1, ob->h - 1);
+				}
+				else  /* need to undo the focus outline */
+				{
+					fl_drw_box(sp->val ?
+							   FL_TO_DOWNBOX(ob->boxtype) : ob->boxtype,
+							   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+				}
+				show_pixmap(ob, sp->val);
+			}
+			break;
 
-	    if (ob->belowmouse && psp->show_focus && absbw > 1)
-	    {
-		fl_color(fl_depth(fl_vmode) == 1 ? FL_BLACK : ob->col2);
-		XDrawRectangle(flx->display, FL_ObjWin(ob),
-			       flx->gc, ob->x, ob->y, ob->w - 1, ob->h - 1);
-	    }
-	}
-	else
-	    fl_drw_box(ob->boxtype,
-		       ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+		default:
+			focus = sp->val || ob->belowmouse;
+			if (IsFlat(ob->boxtype))
+			{
+				if (sp->val)
+					newbt = FL_DOWN_BOX;
+				else if (ob->belowmouse)
+					newbt = FL_UP_BOX;
+				else
+					newbt = ob->boxtype;
+				fl_drw_box(newbt, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+			}
+			else if (FL_IS_UPBOX(ob->boxtype))
+			{
+				if (sp->val)
+					fl_drw_box(FL_TO_DOWNBOX(ob->boxtype),
+							   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+				else
+					fl_drw_box(ob->boxtype,
+							   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+				if (ob->belowmouse && psp->show_focus && absbw > 1)
+				{
+					fl_color(fl_depth(fl_vmode) == 1 ? FL_BLACK : ob->col2);
+					XDrawRectangle(flx->display, FL_ObjWin(ob),
+								   flx->gc, ob->x, ob->y, ob->w - 1, ob->h - 1);
+				}
+			}
+			else
+				fl_drw_box(ob->boxtype,
+						   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
 
-	show_pixmap(ob, focus);
-	break;
+			show_pixmap(ob, focus);
+			break;
     }
 
     fl_draw_object_label(ob);
 }
 
-/* button driver will clean up spec after this function returns */
+
+/***************************************
+ * button driver will clean up spec after this function returns
+ ***************************************/
+
 static void
-cleanup_pixmapbutton(SPEC *sp)
+cleanup_pixmapbutton( SPEC *sp )
 {
     PixmapSPEC *psp = sp->cspecv;
 
     if (psp->gc)
     {
-	XFreeGC(flx->display, psp->gc);
-	psp->gc = 0;
+		XFreeGC(flx->display, psp->gc);
+		psp->gc = 0;
     }
 
     if (psp->xpma)
     {
-	cleanup_xpma_struct(psp->xpma);
-	psp->xpma = 0;
+		cleanup_xpma_struct(psp->xpma);
+		psp->xpma = 0;
     }
 
     if (sp->cspecv)
     {
-	fl_free(sp->cspecv);
-	sp->cspecv = 0;
+		fl_free(sp->cspecv);
+		sp->cspecv = 0;
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_pixmapbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		       const char *label)
+fl_create_pixmapbutton( int          type,
+						FL_Coord     x,
+						FL_Coord     y,
+						FL_Coord     w,
+						FL_Coord     h,
+						const char * label )
 {
     FL_OBJECT *ob;
     static int class_init;
@@ -615,8 +734,9 @@ fl_create_pixmapbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 
     if (!class_init)
     {
-	fl_add_button_class(FL_PIXMAPBUTTON, draw_pixmapbutton, cleanup_pixmapbutton);
-	class_init = 1;
+		fl_add_button_class(FL_PIXMAPBUTTON,
+							draw_pixmapbutton, cleanup_pixmapbutton);
+		class_init = 1;
     }
 
     ob = fl_create_generic_button(FL_PIXMAPBUTTON, type, x, y, w, h, label);
@@ -632,9 +752,17 @@ fl_create_pixmapbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_pixmapbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		    const char *label)
+fl_add_pixmapbutton( int          type,
+					 FL_Coord     x,
+					 FL_Coord     y,
+					 FL_Coord     w,
+					 FL_Coord     h,
+					 const char * label )
 {
     FL_OBJECT *ob;
 
@@ -643,8 +771,13 @@ fl_add_pixmapbutton(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmap_data(FL_OBJECT * ob, char **bits)
+fl_set_pixmap_data( FL_OBJECT * ob,
+					char **     bits )
 {
     SPEC *sp;
     Window win;
@@ -654,24 +787,30 @@ fl_set_pixmap_data(FL_OBJECT * ob, char **bits)
     CHECK(ob, "SetPixmapData");
 
     if (!flx->display)
-	return;
+		return;
 
     sp = ob->spec;
     win = FL_ObjWin(ob) ? FL_ObjWin(ob) : fl_default_win();
     p = fl_create_from_pixmapdata(win, bits, &sp->bits_w, &sp->bits_h,
-				  &shape_mask, &hx, &hy, ob->col1);
+								  &shape_mask, &hx, &hy, ob->col1);
 
     if (p != None)
     {
-	change_pixmap(sp, win, p, shape_mask, 0);
-	((PixmapSPEC *) sp->cspecv)->xpma = xpmattrib;
+		change_pixmap(sp, win, p, shape_mask, 0);
+		((PixmapSPEC *) sp->cspecv)->xpma = xpmattrib;
     }
 
     fl_redraw_object(ob);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmap_colorcloseness(int red, int green, int blue)
+fl_set_pixmap_colorcloseness( int red,
+							  int green,
+							  int blue )
 {
     red_closeness = red;
     green_closeness = green;
@@ -681,8 +820,15 @@ fl_set_pixmap_colorcloseness(int red, int green, int blue)
 
 /****************** End of pixmap stuff ************}**/
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmap_align(FL_OBJECT * ob, int align, int xmargin, int ymargin)
+fl_set_pixmap_align( FL_OBJECT * ob,
+					 int         align,
+					 int         xmargin,
+					 int         ymargin )
 {
     SPEC *sp;
     PixmapSPEC *psp;
@@ -692,16 +838,21 @@ fl_set_pixmap_align(FL_OBJECT * ob, int align, int xmargin, int ymargin)
     psp = sp->cspecv;
     if (align != psp->align || xmargin != psp->dx || ymargin != psp->dy)
     {
-	psp->align = align;
-	psp->dx = xmargin;
-	psp->dy = ymargin;
-	fl_redraw_object(ob);
+		psp->align = align;
+		psp->dx = xmargin;
+		psp->dy = ymargin;
+		fl_redraw_object(ob);
     }
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmapbutton_focus_pixmap(FL_OBJECT * ob, Pixmap id, Pixmap mask)
+fl_set_pixmapbutton_focus_pixmap( FL_OBJECT * ob,
+								  Pixmap      id,
+								  Pixmap      mask )
 {
     SPEC *sp = ob->spec;
     PixmapSPEC *psp = sp->cspecv;
@@ -710,14 +861,19 @@ fl_set_pixmapbutton_focus_pixmap(FL_OBJECT * ob, Pixmap id, Pixmap mask)
     change_focuspixmap(sp, FL_ObjWin(ob), id, mask, 0);
     if (sp->focus_pixmap != None)
     {
-	fl_get_winsize(sp->focus_pixmap, &w, &h);
-	psp->focus_w = w;
-	psp->focus_h = h;
+		fl_get_winsize(sp->focus_pixmap, &w, &h);
+		psp->focus_w = w;
+		psp->focus_h = h;
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmapbutton_focus_data(FL_OBJECT * ob, char **bits)
+fl_set_pixmapbutton_focus_data( FL_OBJECT * ob,
+								char **     bits )
 {
     SPEC *sp;
     PixmapSPEC *psp;
@@ -728,23 +884,28 @@ fl_set_pixmapbutton_focus_data(FL_OBJECT * ob, char **bits)
     CHECK(ob, "SetPixmapData");
 
     if (!flx->display)
-	return;
+		return;
 
     sp = ob->spec;
     psp = sp->cspecv;
     win = FL_ObjWin(ob) ? FL_ObjWin(ob) : fl_default_win();
     p = fl_create_from_pixmapdata(win, bits, &psp->focus_w, &psp->focus_h,
-				  &shape_mask, &hx, &hy, ob->col1);
+								  &shape_mask, &hx, &hy, ob->col1);
 
     if (p != None)
     {
-	change_focuspixmap(sp, win, p, shape_mask, 0);
-	((PixmapSPEC *) sp->cspecv)->xpma = xpmattrib;
+		change_focuspixmap(sp, win, p, shape_mask, 0);
+		((PixmapSPEC *) sp->cspecv)->xpma = xpmattrib;
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmapbutton_focus_file(FL_OBJECT * ob, const char *fname)
+fl_set_pixmapbutton_focus_file( FL_OBJECT *  ob,
+								const char * fname )
 {
     Pixmap p = 0, shape_mask = 0;
     SPEC *sp;
@@ -753,21 +914,25 @@ fl_set_pixmapbutton_focus_file(FL_OBJECT * ob, const char *fname)
     PixmapSPEC *psp;
 
     if (!flx->display)
-	return;
+		return;
 
     sp = ob->spec;
     psp = sp->cspecv;
     win = FL_ObjWin(ob) ? FL_ObjWin(ob) : fl_default_win();
     p = fl_read_pixmapfile(win, fname, &psp->focus_w, &psp->focus_h,
-			   &shape_mask, &hotx, &hoty, ob->col1);
+						   &shape_mask, &hotx, &hoty, ob->col1);
 
     if (p != None)
-	change_focuspixmap(sp, win, p, shape_mask, 0);
+		change_focuspixmap(sp, win, p, shape_mask, 0);
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_set_pixmapbutton_focus_outline(FL_OBJECT * ob, int yes)
+fl_set_pixmapbutton_focus_outline( FL_OBJECT * ob,
+								   int         yes )
 {
     SPEC *sp;
     PixmapSPEC *psp;
@@ -780,19 +945,25 @@ fl_set_pixmapbutton_focus_outline(FL_OBJECT * ob, int yes)
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_free_pixmap_pixmap(FL_OBJECT * ob)
+fl_free_pixmap_pixmap( FL_OBJECT * ob )
 {
     CHECK(ob, "FreePixmapPixmap");
     free_pixmap(ob->spec);
 }
 
 
-/* this can't go into forms.c as it will pull xpm into
+/***************************************
+ * this can't go into forms.c as it will pull xpm into
  * programs that don't need it
- */
+ ***************************************/
+
 void
-fl_set_form_icon_data(FL_FORM * form, char *data[])
+fl_set_form_icon_data( FL_FORM * form,
+					   char *    data[ ] )
 {
     Pixmap p, s;
     unsigned int j;

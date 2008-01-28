@@ -37,43 +37,46 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_cur = "$Id: cursor.c,v 1.6 2003/11/20 10:46:16 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_cur = "$Id: cursor.c,v 1.7 2008/01/28 23:17:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "extern.h"
 
+
 #define MAX_CURSORS   64	/* max. number of bitmap cursors     */
 #define MAX_SEQ       24	/* max. number cursors per animation */
 
+
 /* cursor cache */
-typedef struct
-{
-    int name;
-    int ncursor;
-    int cur_cursor;
+
+typedef struct {
+    int    name;
+    int    ncursor;
+    int    cur_cursor;
     Window win;
-    int timeout_id;
-    int timeout;
-    Cursor cur[MAX_SEQ];
-}
-CurStruct;
+    int    timeout_id;
+    int    timeout;
+    Cursor cur[ MAX_SEQ ];
+} CurStruct;
 
 
 /* pre-built cursors */
-static CurStruct prebuilt[] =
+
+static CurStruct prebuilt[ ] =
 {
-    {XC_watch, 0, 0, 0, 0, 0, {0}},
-    {XC_sb_right_arrow, 0, 0, 0, 0, 0, {0}},
-    {XC_hand2, 0, 0, 0, 0, 0, {0}},
-    {XC_top_left_arrow, 0, 0, 0, 0, 0, {0}},
-    {XC_tcross, 0, 0, 0, 0, 0, {0}},
-    {XC_pirate, 0, 0, 0, 0, 0, {0}}
+    { XC_watch,          0, 0, 0, 0, 0, { 0 } },
+    { XC_sb_right_arrow, 0, 0, 0, 0, 0, { 0 } },
+    { XC_hand2,          0, 0, 0, 0, 0, { 0 } },
+    { XC_top_left_arrow, 0, 0, 0, 0, 0, { 0 } },
+    { XC_tcross,         0, 0, 0, 0, 0, { 0 } },
+    { XC_pirate,         0, 0, 0, 0, 0, { 0 } }
 };
 
 static CurStruct *cursors;
@@ -86,241 +89,297 @@ static int fl_default_curname = XC_top_left_arrow;	/* xforms' default */
 
 static int user_cur_name = XC_num_glyphs;
 
-static CurStruct *find_timeout(Window win);
+static CurStruct *find_timeout( Window win );
+
+
+/***************************************
+ ***************************************/
 
 static CurStruct *
-add_cursor(int name, Cursor cur)
+add_cursor( int    name,
+			Cursor cur )
 {
     CurStruct *c;
     static int warned;
 
-    for (c = cursors; c->name && c->name != name; c++)
-	;
+    for ( c = cursors; c->name && c->name != name; c++ )
+		/* empty */ ;
 
-    if (c < cursors + MAX_CURSORS)
+    if ( c < cursors + MAX_CURSORS )
     {
-	c->name = name;
-	c->cur[c->ncursor++] = cur;
+		c->name = name;
+		c->cur[ c->ncursor++ ] = cur;
     }
-    else if (!warned)
+    else if ( ! warned )
     {
-	M_err("AddCursor", "too many cursors");
-	warned = 1;
+		M_err( "AddCursor", "too many cursors" );
+		warned = 1;
     }
     return c;
 }
 
+
+/***************************************
+ ***************************************/
+
 static Cursor
-create_bitmap_cursor(const char *source, const char *mask,
-		     int w, int h, int hotx, int hoty)
+create_bitmap_cursor( const char * source,
+					  const char * mask,
+					  int          w,
+					  int          h,
+					  int          hotx,
+					  int          hoty )
 {
-    Pixmap s, m = None;
-    XColor fg, bg;
+    Pixmap s,
+		   m = None;
+    XColor fg,
+		   bg;
     Cursor cur;
     Window win = fl_root;
 
-    s = XCreateBitmapFromData(flx->display, win, (char *) source, w, h);
+    s = XCreateBitmapFromData( flx->display, win, source, w, h );
 
-    if (mask)
-	m = XCreateBitmapFromData(flx->display, win, (char *) mask, w, h);
+    if ( mask )
+		m = XCreateBitmapFromData( flx->display, win, mask, w, h );
 
     fg.red = fg.green = fg.blue = 0;
     bg.red = bg.green = bg.blue = 0xffff;
-    cur = XCreatePixmapCursor(flx->display, s, m, &fg, &bg, hotx, hoty);
+    cur = XCreatePixmapCursor( flx->display, s, m, &fg, &bg, hotx, hoty );
 
     return cur;
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
-init_cursors(void)
+init_cursors( void )
 {
     static int ok;
     CurStruct *c;
-    static char c_bits[] =
-    {0x00};
+    static char c_bits[ ] = { 0x00 };
 
-    if (ok)
-	return;
+    if ( ok )
+		return;
 
     ok = 1;
 
-    if (!cursors)
+    if ( ! cursors )
     {
-	cursors = fl_calloc(MAX_CURSORS, sizeof(*c));
-	memcpy(cursors, prebuilt, sizeof(prebuilt));
+		cursors = fl_calloc( MAX_CURSORS, sizeof *c );
+		memcpy( cursors, prebuilt, sizeof prebuilt );
     }
 
-    for (c = cursors; c->name; c++)
-	c->cur[c->ncursor++] = XCreateFontCursor(flx->display, c->name);
+    for ( c = cursors; c->name; c++ )
+		c->cur[ c->ncursor++ ] = XCreateFontCursor( flx->display, c->name );
 
     /* create an invisible cursor */
-    add_cursor(FL_INVISIBLE_CURSOR,
-	       create_bitmap_cursor(c_bits, c_bits, 1, 1, 0, 0));
+
+    add_cursor( FL_INVISIBLE_CURSOR,
+				create_bitmap_cursor( c_bits, c_bits, 1, 1, 0, 0 ) );
 
     /* add the default cursor     */
-    add_cursor(FL_DEFAULT_CURSOR,
-	       XCreateFontCursor(flx->display, fl_default_curname));
+
+    add_cursor( FL_DEFAULT_CURSOR,
+				XCreateFontCursor( flx->display, fl_default_curname ) );
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
-animate_cursor(int id, void *data)
+animate_cursor( int    id    FL_UNUSED_ARG,
+				void * data )
 {
     CurStruct *cur = data;
 
     cur->timeout_id = 0;
-    fl_set_cursor(cur->win, cur->name);
+    fl_set_cursor( cur->win, cur->name );
 }
 
-/*
+
+/***************************************
  * Set cursor for win to name. Name is either the standard XC_ or
  * Form defined
- */
+ ***************************************/
+
 void
-fl_set_cursor(Window win, int name)
+fl_set_cursor( Window win,
+			   int    name )
 {
     CurStruct *c = cursors;
 
-    init_cursors();
+    init_cursors( );
 
-    if (win == 0)
+    if ( win == 0 )
     {
-	M_err("SetCuror", "Bad Window");
-	return;
+		M_err( "SetCuror", "Bad Window" );
+		return;
     }
 
-    for (; c->name; c++)
+    for ( ; c->name; c++ )
     {
-	if (c->name == name)
-	{
-	    if (c->ncursor > 1)
-	    {
-		int n = (c->cur_cursor % c->ncursor);
-		XDefineCursor(flx->display, win, c->cur[n]);;
-		c->cur_cursor++;
-		c->win = win;
-		if (c->timeout_id == 0)
-		    c->timeout_id = fl_add_timeout(c->timeout, animate_cursor, c);
-	    }
-	    else
-	    {
-		CurStruct *cur;
-		cur = find_timeout(win);
-		if (cur && cur->timeout_id)
+		if ( c->name == name )
 		{
-		    fl_remove_timeout(cur->timeout_id);
-		    cur->timeout_id = 0;
+			if ( c->ncursor > 1 )
+			{
+				int n = c->cur_cursor % c->ncursor;
+				XDefineCursor( flx->display, win, c->cur[ n ] );;
+				c->cur_cursor++;
+				c->win = win;
+				if ( c->timeout_id == 0 )
+					c->timeout_id =
+						        fl_add_timeout( c->timeout, animate_cursor, c );
+			}
+			else
+			{
+				CurStruct *cur = find_timeout( win );
+
+				if ( cur && cur->timeout_id )
+				{
+					fl_remove_timeout( cur->timeout_id );
+					cur->timeout_id = 0;
+				}
+				XDefineCursor( flx->display, win, c->cur[ 0 ] );;
+			}
+			return;
 		}
-		XDefineCursor(flx->display, win, c->cur[0]);;
-	    }
-	    return;
-	}
     }
 
-    XDefineCursor(flx->display, win, fl_get_cursor_byname(name));
+    XDefineCursor( flx->display, win, fl_get_cursor_byname( name ) );
 }
 
-/*
+
+/***************************************
  * to be used in XDefineCursor
- */
+ ***************************************/
+
 Cursor
-fl_get_cursor_byname(int name)
+fl_get_cursor_byname( int name )
 {
     CurStruct *c;
     Cursor cur = 0;
 
-    init_cursors();
+    init_cursors( );
 
-    for (c = cursors; c->name; c++)
+    for ( c = cursors; c->name; c++ )
     {
-	if (c->name == name)
-	{
-	    int n = c->cur_cursor % c->ncursor;
-	    c->cur_cursor++;
-	    return c->cur[n];
-	}
+		if ( c->name == name )
+		{
+			int n = c->cur_cursor % c->ncursor;
+			c->cur_cursor++;
+			return c->cur[ n ];
+		}
     }
 
     /* take a wild shot. Since we can generate the default X cursor on the
        fly, we don't have to always save them to the cursor structure */
-    if (name < XC_num_glyphs - 1)
+
+    if ( name < XC_num_glyphs - 1 )
     {
-	static int nn;
-	cur = XCreateFontCursor(flx->display, name);
-	if (nn < 10)
-	{
-	    add_cursor(name, cur);
-	    nn++;
-	}
+		static int nn;
+		cur = XCreateFontCursor( flx->display, name );
+		if ( nn < 10 )
+		{
+			add_cursor( name, cur );
+			nn++;
+		}
     }
     else
     {
-	M_err("GetCursor", "Unknown cursor: %d\n", name);
-	cur = fl_get_cursor_byname(FL_DEFAULT_CURSOR);	/* recursion */
+		M_err( "GetCursor", "Unknown cursor: %d\n", name );
+		cur = fl_get_cursor_byname( FL_DEFAULT_CURSOR );	/* recursion */
     }
 
     return cur;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_cursor_color(int name, FL_COLOR fg, FL_COLOR bg)
+fl_set_cursor_color( int      name,
+					 FL_COLOR fg,
+					 FL_COLOR bg )
 {
-    XColor xfg, xbg;
-    int r, g, b;
-    Cursor cur = fl_get_cursor_byname(name);
+    XColor xfg,
+		   xbg;
+    int r,
+		g,
+		b;
+    Cursor cur = fl_get_cursor_byname( name );
 
-    fl_getmcolor(fg, &r, &g, &b);
-    xfg.red = (r << 8) | 0xff;
-    xfg.green = (g << 8) | 0xff;
-    xfg.blue = (b << 8) | 0xff;
+    fl_getmcolor( fg, &r, &g, &b );
+    xfg.red   = ( r << 8 ) | 0xff;
+    xfg.green = ( g << 8 ) | 0xff;
+    xfg.blue  = ( b << 8 ) | 0xff;
 
-    fl_getmcolor(bg, &r, &g, &b);
-    xbg.red = (r << 8) | 0xff;
-    xbg.green = (g << 8) | 0xff;
-    xbg.blue = (b << 8) | 0xff;
+    fl_getmcolor( bg, &r, &g, &b );
+    xbg.red   = ( r << 8 ) | 0xff;
+    xbg.green = ( g << 8 ) | 0xff;
+    xbg.blue  = ( b << 8 ) | 0xff;
 
-    XRecolorCursor(flx->display, cur, &xfg, &xbg);
+    XRecolorCursor( flx->display, cur, &xfg, &xbg );
 }
 
 
+/***************************************
+ ***************************************/
+
 int
-fl_create_bitmap_cursor(const char *source, const char *mask,
-			int w, int h, int hotx, int hoty)
+fl_create_bitmap_cursor( const char * source,
+						 const char * mask,
+						 int          w,
+						 int          h,
+						 int          hotx,
+						 int          hoty )
 {
     Cursor cur;
 
-    init_cursors();
-    cur = create_bitmap_cursor(source, mask, w, h, hotx, hoty);
-    add_cursor(user_cur_name, cur);
+    init_cursors( );
+    cur = create_bitmap_cursor( source, mask, w, h, hotx, hoty );
+    add_cursor( user_cur_name, cur );
+
     return user_cur_name++;
 }
 
-/* cursor animation */
+
+/***************************************
+ * cursor animation
+ ***************************************/
 
 int
-fl_create_animated_cursor(int *cur_names, int timeout)
+fl_create_animated_cursor( int * cur_names,
+						   int   timeout )
 {
-    int *n = cur_names, k = MAX_SEQ;
+    int *n = cur_names,
+		k = MAX_SEQ;
     CurStruct *c = 0;
 
-    for (; *n >= 0 && --k >= 0; n++)
-	c = add_cursor(user_cur_name, fl_get_cursor_byname(*n));
+    for ( ; *n >= 0 && --k >= 0; n++ )
+		c = add_cursor( user_cur_name, fl_get_cursor_byname( *n ) );
 
-    if (c)
-	c->timeout = timeout > 0 ? timeout : 20;
+    if ( c )
+		c->timeout = timeout > 0 ? timeout : 20;
 
     return user_cur_name++;
 }
 
+
+/***************************************
+ ***************************************/
+
 static CurStruct *
-find_timeout(Window win)
+find_timeout( Window win )
 {
     CurStruct *c = cursors;
-    for (; c->name; c++)
-    {
-	if (c->win == win && c->timeout_id)
-	    return c;
-    }
+
+    for ( ; c->name; c++ )
+		if ( c->win == win && c->timeout_id )
+			return c;
+
     return 0;
 }

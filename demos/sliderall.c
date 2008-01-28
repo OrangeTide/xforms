@@ -98,7 +98,7 @@ main(int argc, char *argv[])
   fl_initialize(&argc, argv, "FormDemo", 0, 0);
   create_the_forms();
 
-  fl_show_form(form,FL_PLACE_CENTER,FL_NOBORDER,"All Sliders");
+  fl_show_form(form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_FULLBORDER,"All Sliders");
 
   do obj = fl_do_forms(); while (obj != exitobj);
 

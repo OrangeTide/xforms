@@ -31,22 +31,28 @@
  * Misc. keyboard routines
  *
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_ringbell(int percent)
+fl_ringbell( int percent )
 {
     if (percent < -100)
-	percent = -100;
+		percent = -100;
     else if (percent > 100)
-	percent = 100;
+		percent = 100;
 
     if (flx->display)
-	XBell(flx->display, percent);
+		XBell(flx->display, percent);
     else
-	fprintf(stderr, "\a");
+		fprintf(stderr, "\a");
 }

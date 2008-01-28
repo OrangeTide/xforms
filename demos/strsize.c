@@ -43,12 +43,14 @@ extern FD_form0 * create_form_form0(void);
 FD_form0 *fd_form0;
 
 /* callbacks for form form0 */
-void exit_cb(FL_OBJECT *ob, long data)
+void exit_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
    exit(0);
 }
 
-void input_cb(FL_OBJECT *ob, long data)
+void input_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_input(ob);
     int w = fl_get_string_width(ob->lstyle, ob->lsize, s, strlen(s));

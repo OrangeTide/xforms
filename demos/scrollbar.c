@@ -31,7 +31,8 @@
 #include "fd/scrollbar_gui.h"   /* from fd/ directory */
 
 
-void hide_cb(FL_OBJECT *ob, long data)
+void hide_cb( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
     FD_scb *fdui = (FD_scb *)ob->form->fdui;
 
@@ -48,7 +49,8 @@ void hide_cb(FL_OBJECT *ob, long data)
 
 }
 
-void deactivate_cb(FL_OBJECT *ob, long data)
+void deactivate_cb( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     FD_scb *fdui = (FD_scb *)ob->form->fdui;
 
@@ -64,12 +66,14 @@ void deactivate_cb(FL_OBJECT *ob, long data)
     }
 }
 
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
     exit(0);
 }
 
-void noop_cb(FL_OBJECT *ob, long data)
+void noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
 }
 

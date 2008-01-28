@@ -36,13 +36,15 @@
 
 /* callbacks for form buttform */
 
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
     fl_finish();
     exit(0);
 }
 
-void bw_cb(FL_OBJECT *ob, long data)
+void bw_cb( FL_OBJECT * ob,
+		    long        data  FL_UNUSED_ARG )
 {
     int bws[] = {-4,-3,-2,-1,1,2,3,4};
     int n = fl_get_choice(ob)-1;

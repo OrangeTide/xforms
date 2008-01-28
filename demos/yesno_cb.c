@@ -30,13 +30,15 @@
 #include <stdlib.h>
 #include "include/forms.h"
 
-void yes_push(FL_OBJECT *ob, long data)
+void yes_push( FL_OBJECT * ob    FL_UNUSED_ARG,
+			   long        data  FL_UNUSED_ARG )
 {
   fprintf(stderr,"Yes is pushed\n");
   exit(1);
 }
 
-void no_push(FL_OBJECT *ob, long data)
+void no_push( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
   fprintf(stderr,"No is pushed\n");
 }

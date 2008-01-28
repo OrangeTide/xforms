@@ -32,103 +32,122 @@
  *  similar to FL_FRAME, but label is drawn On the frame
  *
  */
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_lframe = "$Id: lframe.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+
+#if defined F_ID || defined DEBUG
+char *fl_id_lframe = "$Id: lframe.c,v 1.6 2008/01/28 23:20:38 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
+
+/***************************************
+ ***************************************/
+
 static int
-handle_lframe(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-	      int key, void *ev)
+handle_lframe( FL_OBJECT * ob,
+			   int         event,
+			   FL_Coord    mx   FL_UNUSED_ARG,
+			   FL_Coord    my   FL_UNUSED_ARG,
+			   int         key  FL_UNUSED_ARG,
+			   void *      ev   FL_UNUSED_ARG )
 {
     int sx, sy, sw, sh, align, bw = FL_abs(ob->bw), dy;
     int margin, len;
 
     switch (event)
     {
-    case FL_DRAW:
-	fl_drw_frame(ob->type, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+		case FL_DRAW:
+			fl_drw_frame(ob->type, ob->x, ob->y, ob->w, ob->h,
+						 ob->col1, ob->bw);
 
-    case FL_DRAWLABEL:
-	if (!(len = strlen(ob->label)))
-	    return 0;
+		case FL_DRAWLABEL:
+			if (!(len = strlen(ob->label)))
+				return 0;
 
-	fl_get_string_dimension(ob->lstyle, ob->lsize,
-				ob->label, len, &sw, &sh);
+			fl_get_string_dimension(ob->lstyle, ob->lsize,
+									ob->label, len, &sw, &sh);
 
-	align = ob->align & ~FL_ALIGN_INSIDE;
+			align = ob->align & ~FL_ALIGN_INSIDE;
 
-	sw += 8;
-	margin = 11 + (ob->w * 0.02);
-	dy = 0;
+			sw += 8;
+			margin = 11 + (ob->w * 0.02);
+			dy = 0;
 
-	if (ob->type == FL_ROUNDED_FRAME)
-	    margin += 7;
+			if (ob->type == FL_ROUNDED_FRAME)
+				margin += 7;
 
-	if ((ob->w - sw) < 2 * margin)
-	{
-	    margin /= 2;
-	    sw -= 2;
-	}
+			if ((ob->w - sw) < 2 * margin)
+			{
+				margin /= 2;
+				sw -= 2;
+			}
 
-	if ((ob->w - sw) < 2 * margin)
-	{
-	    margin /= 2;
-	    sw -= 2;
-	}
+			if ((ob->w - sw) < 2 * margin)
+			{
+				margin /= 2;
+				sw -= 2;
+			}
 
-	if (ob->type == FL_UP_FRAME || ob->type == FL_DOWN_FRAME)
-	    dy = (bw + 1) / 2;
+			if (ob->type == FL_UP_FRAME || ob->type == FL_DOWN_FRAME)
+				dy = (bw + 1) / 2;
 
-	if (align == FL_ALIGN_TOP_RIGHT || align == FL_ALIGN_RIGHT)
-	{
-	    sx = ob->x + ob->w - margin - sw;
-	    sy = ob->y - sh / 2 - dy;
-	}
-	else if (align == FL_ALIGN_TOP)
-	{
-	    sx = ob->x + (ob->w - sw) / 2;
-	    sy = ob->y - sh / 2 - dy;
-	}
-	else if (align == FL_ALIGN_LEFT_BOTTOM)
-	{
-	    sx = ob->x + margin;
-	    sy = ob->y + ob->h - sh / 2 + dy;
-	}
-	else if (align == FL_ALIGN_BOTTOM_RIGHT)
-	{
-	    sx = ob->x + ob->w - margin - sw;
-	    sy = ob->y + ob->h - sh / 2 + dy;
-	}
-	else if (align == FL_ALIGN_BOTTOM)
-	{
-	    sx = ob->x + (ob->w - sw) / 2;
-	    sy = ob->y + ob->h - sh / 2 + dy;
-	}
-	else
-	{
-	    sx = ob->x + margin;
-	    sy = ob->y - sh / 2 - dy;
-	}
+			if (align == FL_ALIGN_TOP_RIGHT || align == FL_ALIGN_RIGHT)
+			{
+				sx = ob->x + ob->w - margin - sw;
+				sy = ob->y - sh / 2 - dy;
+			}
+			else if (align == FL_ALIGN_TOP)
+			{
+				sx = ob->x + (ob->w - sw) / 2;
+				sy = ob->y - sh / 2 - dy;
+			}
+			else if (align == FL_ALIGN_LEFT_BOTTOM)
+			{
+				sx = ob->x + margin;
+				sy = ob->y + ob->h - sh / 2 + dy;
+			}
+			else if (align == FL_ALIGN_BOTTOM_RIGHT)
+			{
+				sx = ob->x + ob->w - margin - sw;
+				sy = ob->y + ob->h - sh / 2 + dy;
+			}
+			else if (align == FL_ALIGN_BOTTOM)
+			{
+				sx = ob->x + (ob->w - sw) / 2;
+				sy = ob->y + ob->h - sh / 2 + dy;
+			}
+			else
+			{
+				sx = ob->x + margin;
+				sy = ob->y - sh / 2 - dy;
+			}
 
+			fl_drw_box(FL_FLAT_BOX, sx, sy, sw, sh, ob->col2, 0);
 
-	fl_drw_box(FL_FLAT_BOX, sx, sy, sw, sh, ob->col2, 0);
-
-	fl_drw_text(FL_ALIGN_CENTER, sx, sy, sw, sh,
-		    ob->lcol, ob->lstyle, ob->lsize, ob->label);
-	break;
+			fl_drw_text(FL_ALIGN_CENTER, sx, sy, sw, sh,
+						ob->lcol, ob->lstyle, ob->lsize, ob->label);
+			break;
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_labelframe(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		     FL_Coord h, const char *label)
+fl_create_labelframe( int          type,
+					  FL_Coord     x,
+					  FL_Coord     y,
+					  FL_Coord     w,
+					  FL_Coord     h,
+					  const char * label )
 {
     FL_OBJECT *ob;
 
@@ -142,12 +161,20 @@ fl_create_labelframe(int type, FL_Coord x, FL_Coord y, FL_Coord w,
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_labelframe(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		  const char *label)
+fl_add_labelframe( int          type,
+				   FL_Coord     x,
+				   FL_Coord     y,
+				   FL_Coord     w,
+				   FL_Coord     h,
+				   const char * label )
 {
-    FL_OBJECT *ob;
-    ob = fl_create_labelframe(type, x, y, w, h, label);
+    FL_OBJECT *ob = fl_create_labelframe(type, x, y, w, h, label);
+
     fl_add_object(fl_current_form, ob);
     return ob;
 }

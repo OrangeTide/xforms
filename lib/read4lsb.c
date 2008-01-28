@@ -22,15 +22,20 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_fget4LSBF(FILE * fp)
+fl_fget4LSBF( FILE * fp )
 {
-    register int ret;
+    int ret;
     ret = getc(fp);
     ret |= getc(fp) << 8;
     ret |= getc(fp) << 16;
@@ -39,8 +44,12 @@ fl_fget4LSBF(FILE * fp)
 }
 
 
+/***************************************
+ ***************************************/
+
 int
-fl_fput4LSBF(register int code, FILE * fp)
+fl_fput4LSBF( int    code,
+			  FILE * fp )
 {
     putc(code & 0xff, fp);
     putc((code >> 8) & 0xff, fp);

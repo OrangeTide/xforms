@@ -36,7 +36,8 @@
 #include <stdlib.h>
 
 /* callback routines */
-void menu_callback(FL_OBJECT *ob, long data)
+void menu_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
 }
 
@@ -47,14 +48,16 @@ void hide_show_cb(FL_OBJECT *ob, long data)
    (data ? fl_show_object:fl_hide_object)(fdui->folder);
 }
 
-void reshow_cb(FL_OBJECT *ob, long data)
+void reshow_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
    fl_hide_form(ob->form);
    fl_show_form(ob->form,FL_PLACE_CENTER,FL_FULLBORDER,"TabFolder");
 
 }
 
-void set_cb(FL_OBJECT *ob, long data)
+void set_cb( FL_OBJECT * ob,
+			 long        data  FL_UNUSED_ARG )
 {
     FD_mainform *fdui = ob->form->fdui;
     int n = fl_get_active_folder_number(fdui->folder);
@@ -62,7 +65,8 @@ void set_cb(FL_OBJECT *ob, long data)
     fl_set_folder_bynumber(fdui->folder, (n%5)+1);
 }
 
-void deactivate_cb(FL_OBJECT *ob, long data)
+void deactivate_cb( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
     FD_mainform *fdui = ob->form->fdui;
 
@@ -79,7 +83,8 @@ void deactivate_cb(FL_OBJECT *ob, long data)
     }
 }
 
-void done_cb(FL_OBJECT *ob, long data)
+void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
 #if 0
     fl_hide_form(ob->form);
@@ -93,7 +98,7 @@ void done_cb(FL_OBJECT *ob, long data)
     exit(0);
 }
 
-static void make_folder(FL_OBJECT *);
+static void make_folder( FL_OBJECT * );
 
 int main(int argc, char *argv[])
 {
@@ -113,7 +118,7 @@ int main(int argc, char *argv[])
    return 0;
 }
 
-static void make_folder(FL_OBJECT *folder)
+static void make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )
 {
    FD_buttonform *fd_buttonform;
    FD_staticform *fd_staticform;

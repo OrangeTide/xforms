@@ -37,13 +37,15 @@
  *  The graphical output routine must have the following form:
  *    void (*gmout)(const char *, const char *, const char *, int);
  ***********************************************************************/
-#if !defined(lint) && defined(F_ID)
-char *id_errm = "$Id: errmsg.c,v 1.8 2003/09/08 23:48:36 leeming Exp $";
+
+#if ! defined lint && defined F_ID
+char *id_errm = "$Id: errmsg.c,v 1.9 2008/01/28 23:18:05 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -56,6 +58,7 @@ char *id_errm = "$Id: errmsg.c,v 1.8 2003/09/08 23:48:36 leeming Exp $";
 #include "flinternal.h"
 #include "private/flsnprintf.h"
 #include "ulib.h"
+
 extern int errno;		/* system error no            */
 
 #ifndef HAVE_STRERROR
@@ -63,6 +66,7 @@ extern char *sys_errlist[];
 #endif
 
 #define MAXESTR 2048		/* maximum error string len   */
+
 
 /**********************************************************************
  * msg_threshold controls amount of message to print
@@ -74,20 +78,28 @@ extern char *sys_errlist[];
 /************ Local variables ****************************************/
 
 static FILE *errlog;		/* where the msg is going       */
-static ML_t threshold;		/* current threshold            */
-static ML_t req_level;		/* requested message level      */
+static int threshold;		/* current threshold            */
+static int req_level;		/* requested message level      */
 static const char *file;	/* source file name             */
 static int lineno;		/* line no. in that file        */
 static int gout;		/* if demand graphics           */
 static Gmsgout_ gmout;
 
-/*************** set up where err is gonna go ********************/
+
+/***************************************
+ * set up where err is gonna go 
+ ***************************************/
+
 void
-fl_set_err_logfp(FILE * fp)
+fl_set_err_logfp( FILE * fp )
 {
-    if (fp)
-	errlog = fp;
+    if ( fp )
+		errlog = fp;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 fl_set_error_handler( FL_ERROR_FUNC user_func)
@@ -95,9 +107,14 @@ fl_set_error_handler( FL_ERROR_FUNC user_func)
     user_error_function_ = user_func;
 }
 
-const char *fl_get_syserror_msg(void)
+
+/***************************************
+ ***************************************/
+
+const char *fl_get_syserror_msg( void )
 {
     const char  *pp;
+
 #ifdef HAVE_STRERROR
     pp = errno ? strerror(errno) : "";
 #else
@@ -106,16 +123,24 @@ const char *fl_get_syserror_msg(void)
     return pp;
 }
 
-/********************* Message levels  ****************************/
+
+/***************************************
+ * Message levels
+ ***************************************/
+
 void
-set_msg_threshold(ML_t mlevel)
+set_msg_threshold( int mlevel )
 {
     threshold = mlevel;
 }
 
-/************* Graphics output routine ***************(((*****/
+
+/***************************************
+ * Graphics output routine
+ ***************************************/
+
 void
-set_err_msg_func(Gmsgout_ errf)
+set_err_msg_func( Gmsgout_ errf )
 {
     gmout = errf;
 }
@@ -124,13 +149,16 @@ set_err_msg_func(Gmsgout_ errf)
 FL_ERROR_FUNC efp_;			/* global pointer to shut up lint */
 FL_ERROR_FUNC user_error_function_;  /* hooks for application error handler */
 
+
 /********************************************************************
  * generate two strings that contain where and why an error occured
  *********************************************************************/
 
 /* VARARGS2 */
 static void
-P_errmsg(const char *func, const char *fmt,...)
+P_errmsg( const char * func,
+		  const char * fmt,
+		  ... )
 {
     va_list args;
     char *where, *why,  line[20];
@@ -138,7 +166,7 @@ P_errmsg(const char *func, const char *fmt,...)
     static char emsg[MAXESTR + 1];
 
     if (!errlog)
-	errlog = stderr;
+		errlog = stderr;
 
     /* if there is nothing to do, do nothing ! */
 
@@ -152,28 +180,28 @@ P_errmsg(const char *func, const char *fmt,...)
 #endif
     {
         errno = 0;
-	return;
+		return;
     }
 
-/*
- * where comes in two varieties, one is to print everthing, i.e.,
- * 1. FUNC [file, lineno]: why an error occured.
- * 2. why the mesage is printed
- *
- * If func passed is null, 2 will be used else 1 will be used.
- */
+	/*
+	 * where comes in two varieties, one is to print everthing, i.e.,
+	 * 1. FUNC [file, lineno]: why an error occured.
+	 * 2. why the mesage is printed
+	 *
+	 * If func passed is null, 2 will be used else 1 will be used.
+	 */
 
     if (func != 0)
     {
-	  strcpy(line, lineno > 0 ? fl_itoa(lineno) : "?");
-	  where = *func ?
-	      vstrcat("In ", func, " [", file, " ", line, "] ", (char *) 0) :
-	      vstrcat("In ", file, "[", line, "]: ", (char *) 0);
+		strcpy(line, lineno > 0 ? fl_itoa(lineno) : "?");
+		where = *func ?
+			vstrcat("In ", func, " [", file, " ", line, "] ", (char *) 0) :
+			vstrcat("In ", file, "[", line, "]: ", (char *) 0);
     }
     else
     {
-	  line[0] = '\0';
-	  where = strdup("");
+		line[0] = '\0';
+		where = strdup("");
     }
 
     /* now find out why */
@@ -182,39 +210,44 @@ P_errmsg(const char *func, const char *fmt,...)
     why = 0;
 
     /* parse the fmt */
+
     if (fmt && *fmt)
-      {
-	  va_start(args, fmt);
-	  fl_vsnprintf(emsg, sizeof(emsg)-5, fmt, args);
-	  va_end(args);
-      }
+	{
+		va_start(args, fmt);
+		fl_vsnprintf(emsg, sizeof(emsg)-5, fmt, args);
+		va_end(args);
+	}
 
     /* check if there is any system errors */
+
     if((pp = fl_get_syserror_msg()) && *pp)
     {
-	strncat(strcat(emsg, "--"), pp, MAXESTR);
+		strncat(strcat(emsg, "--"), pp, MAXESTR);
         emsg[MAXESTR-1] = '\0';
     }
 
     why = emsg;
 
-/*
- * have gotten the message, where and why, show it
- */
+	/*
+	 * have gotten the message, where and why, show it
+	 */
+
     if (req_level < threshold)
-	fprintf(errlog, "%s%s\n", where, why);
+		fprintf(errlog, "%s%s\n", where, why);
 
     if (gout && gmout)
     {
-	gmout("Warning", where, why,  0);
+		gmout("Warning", where, why,  0);
     }
 
     free_vstrcat(where);
 
     /* reset system errors */
+
     errno = 0;
     return;
 }
+
 
 /*********************************************************************
  * get the line number in file where error occurred. gui indicates
@@ -222,22 +255,14 @@ P_errmsg(const char *func, const char *fmt,...)
  ********************************************************************/
 
 FL_ERROR_FUNC
-whereError(int gui, ML_t level, const char *f, int l)
+whereError( int          gui,
+			int          level,
+			const char * f,
+			int          l )
 {
     file = f;
     lineno = l;
     req_level = level;
     gout = gui;
-    return user_error_function_ ? user_error_function_:P_errmsg;
+    return user_error_function_ ? user_error_function_ : P_errmsg;
 }
-
-#ifdef TEST
-extern void TC_continue(const char *, const char *, const char *, int);
-main()
-{
-    set_err_msg_fp(stderr);
-    Bark("ThisisMain", "error1");
-    M_err("ThisisMain", "error1");
-}
-
-#endif

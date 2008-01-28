@@ -36,31 +36,41 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include <stdlib.h>
 
+
 /* simple input form */
+
 typedef struct
 {
-    FL_FORM *form;
-    FL_OBJECT *input;
-    FL_OBJECT *cancel;
-    FL_OBJECT *clear;
-    FL_OBJECT *ok;
-}
-FD_input;
+    FL_FORM   * form;
+    FL_OBJECT * input;
+    FL_OBJECT * cancel;
+    FL_OBJECT * clear;
+    FL_OBJECT * ok;
+} FD_input;
+
+
+/***************************************
+ ***************************************/
 
 static void
-clear_cb(FL_OBJECT * ob, long data)
+clear_cb( FL_OBJECT * ob,
+		  long        data  FL_UNUSED_ARG )
 {
     FD_input *fd = ob->form->fdui;
     fl_set_input(fd->input, "");
 }
 
 
+/***************************************
+ ***************************************/
+
 static FD_input *
-create_form_input(void)
+create_form_input( void )
 {
     FL_OBJECT *obj;
     FD_input *fdui = (FD_input *) fl_calloc(1, sizeof(*fdui));
@@ -92,24 +102,29 @@ create_form_input(void)
 
 static FD_input *fd_input;
 
-/* Asks the user for textual input */
+
+/***************************************
+ * Asks the user for textual input
+ ***************************************/
+
 const char *
-fl_show_input(const char *str1, const char *defstr)
+fl_show_input( const char *str1,
+			   const char *defstr )
 {
     static int first = 1;
     FL_OBJECT *retobj;
 
     if (!fd_input)
     {
-	int oldy = fl_inverted_y;
+		int oldy = fl_inverted_y;
 
-	fl_inverted_y = 0;
-	fd_input = create_form_input();
-	fl_set_form_hotobject(fd_input->form, fd_input->ok);
-	fl_set_form_atclose(fd_input->form, fl_goodies_atclose, fd_input->ok);
-	fl_register_raw_callback(fd_input->form, FL_ALL_EVENT,
-				 fl_goodies_preemptive);
-	fl_inverted_y = oldy;
+		fl_inverted_y = 0;
+		fd_input = create_form_input();
+		fl_set_form_hotobject(fd_input->form, fd_input->ok);
+		fl_set_form_atclose(fd_input->form, fl_goodies_atclose, fd_input->ok);
+		fl_register_raw_callback(fd_input->form, FL_ALL_EVENT,
+								 fl_goodies_preemptive);
+		fl_inverted_y = oldy;
     }
 
     fl_handle_goodie_font(fd_input->ok, fd_input->input);
@@ -117,31 +132,31 @@ fl_show_input(const char *str1, const char *defstr)
 
     if (first)
     {
-	fl_parse_goodies_label(fd_input->ok, FLOKLabel);
-	fl_parse_goodies_label(fd_input->clear, FLInputClearLabel);
-	fl_parse_goodies_label(fd_input->cancel, FLInputCancelLabel);
-	first = 0;
+		fl_parse_goodies_label(fd_input->ok, FLOKLabel);
+		fl_parse_goodies_label(fd_input->clear, FLInputClearLabel);
+		fl_parse_goodies_label(fd_input->cancel, FLInputCancelLabel);
+		first = 0;
     }
-
 
     fl_get_goodie_title(fd_input->form, FLInputTitle);
     fl_set_object_label(fd_input->input, str1);
     fl_set_input(fd_input->input, defstr);
 
     if (!fd_input->form->visible)
-	fl_deactivate_all_forms();
+		fl_deactivate_all_forms();
 
     fl_show_form(fd_input->form, FL_PLACE_HOTSPOT, FL_TRANSIENT,
-		 fd_input->form->label);
+				 fd_input->form->label);
 
     fl_update_display(0);
 
     /* grab keyboard focus */
+
     fl_winfocus(fd_input->form->window);
 
     do
     {
-	retobj = fl_do_only_forms();
+		retobj = fl_do_only_forms();
     }
     while (retobj != fd_input->ok && retobj != fd_input->cancel);
 
@@ -151,8 +166,12 @@ fl_show_input(const char *str1, const char *defstr)
     return (retobj == fd_input->ok ? fl_get_input(fd_input->input) : 0);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_hide_input(void)
+fl_hide_input( void )
 {
     if (fd_input && fd_input->form->visible)
 	fl_object_qenter(fd_input->cancel);

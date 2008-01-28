@@ -30,25 +30,32 @@
  *
  */
 
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include <ctype.h>
 
+
 /************* Ask yes/no question **********************{****/
+
 typedef struct
 {
-    FL_FORM *form;
-    FL_OBJECT *str;
-    FL_OBJECT *yes;
-    FL_OBJECT *no;
-}
-FD_yesno;
+    FL_FORM   * form;
+    FL_OBJECT * str;
+    FL_OBJECT * yes;
+    FL_OBJECT * no;
+} FD_yesno;
+
+
+/***************************************
+ ***************************************/
 
 static FD_yesno *
-create_yesno(void)
+create_yesno( void )
 {
     FD_yesno *fdui = (FD_yesno *) fl_calloc(1, sizeof(*fdui));
     int oldy = fl_inverted_y;
@@ -79,36 +86,41 @@ create_yesno(void)
 static FD_yesno *fd_yesno;
 static int default_ans;
 
-/* Shows a question with two buttons, yes, and no */
+
+/***************************************
+ * Shows a question with two buttons, yes, and no
+ ***************************************/
+
 int
-fl_show_question(const char *str, int ans)
+fl_show_question(const char * str,
+				 int          ans )
 {
     static int first = 1;
     FL_OBJECT *retobj;
 
     if (!fd_yesno)
-	fd_yesno = create_yesno();
+		fd_yesno = create_yesno();
 
     default_ans = ans;
 
     if (first)
     {
-	char shortcut[4];
-	int k = 0;
+		char shortcut[4];
+		int k = 0;
 
-	first = 1;		/* force parsing every time */
-	fl_parse_goodies_label(fd_yesno->yes, FLQuestionYesLabel);
-	fl_parse_goodies_label(fd_yesno->no, FLQuestionNoLabel);
-	shortcut[0] = fd_yesno->yes->label[0];
-	shortcut[1] = tolower(fd_yesno->yes->label[0]);
-	shortcut[2] = toupper(fd_yesno->yes->label[0]);
-	shortcut[3] = '\0';
-	fl_set_button_shortcut(fd_yesno->yes, shortcut, 1);
-	k = tolower(fd_yesno->yes->label[0]) == tolower(fd_yesno->no->label[0]);
-	shortcut[0] = fd_yesno->no->label[k];
-	shortcut[1] = toupper(fd_yesno->no->label[k]);
-	shortcut[2] = tolower(fd_yesno->no->label[k]);
-	fl_set_button_shortcut(fd_yesno->no, shortcut, 1);
+		first = 1;		/* force parsing every time */
+		fl_parse_goodies_label(fd_yesno->yes, FLQuestionYesLabel);
+		fl_parse_goodies_label(fd_yesno->no, FLQuestionNoLabel);
+		shortcut[0] = fd_yesno->yes->label[0];
+		shortcut[1] = tolower(fd_yesno->yes->label[0]);
+		shortcut[2] = toupper(fd_yesno->yes->label[0]);
+		shortcut[3] = '\0';
+		fl_set_button_shortcut(fd_yesno->yes, shortcut, 1);
+		k = tolower(fd_yesno->yes->label[0]) == tolower(fd_yesno->no->label[0]);
+		shortcut[0] = fd_yesno->no->label[k];
+		shortcut[1] = toupper(fd_yesno->no->label[k]);
+		shortcut[2] = tolower(fd_yesno->no->label[k]);
+		fl_set_button_shortcut(fd_yesno->no, shortcut, 1);
     }
 
     fl_get_goodie_title(fd_yesno->form, FLQuestionTitle);
@@ -117,33 +129,36 @@ fl_show_question(const char *str, int ans)
 
     fl_set_object_label(fd_yesno->str, str);
 
-
     if (ans == 1)
-	fl_set_form_hotobject(fd_yesno->form, fd_yesno->yes);
+		fl_set_form_hotobject(fd_yesno->form, fd_yesno->yes);
     else if (ans == 0)
-	fl_set_form_hotobject(fd_yesno->form, fd_yesno->no);
+		fl_set_form_hotobject(fd_yesno->form, fd_yesno->no);
     else
-	fl_set_form_hotspot(fd_yesno->form, -1, -1);
+		fl_set_form_hotspot(fd_yesno->form, -1, -1);
 
     if (!fd_yesno->form->visible)
-	fl_deactivate_all_forms();
+		fl_deactivate_all_forms();
 
     fl_show_form(fd_yesno->form, FL_PLACE_HOTSPOT, FL_TRANSIENT,
-		 fd_yesno->form->label);
+				 fd_yesno->form->label);
     fl_update_display(0);
 
     while ((retobj = fl_do_only_forms()) != fd_yesno->yes &&
-	   retobj != fd_yesno->no)
-	;
+		   retobj != fd_yesno->no)
+		/* empty */;
 
     fl_hide_form(fd_yesno->form);
     fl_activate_all_forms();
     return (retobj == fd_yesno->yes);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_hide_question(void)
+fl_hide_question( void )
 {
     if (fd_yesno && fd_yesno->form->visible)
-	fl_object_qenter(default_ans == 1 ? fd_yesno->yes : fd_yesno->no);
+		fl_object_qenter(default_ans == 1 ? fd_yesno->yes : fd_yesno->no);
 }

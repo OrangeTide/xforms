@@ -32,25 +32,31 @@
  *  Input goodie
  */
 
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
+
 /***********    Simple input    ********************{*******/
+
 typedef struct
 {
-    FL_FORM *form;
-    FL_OBJECT *str1;
-    FL_OBJECT *input;
-    FL_OBJECT *but;
-}
-FD_input;
+    FL_FORM   * form;
+    FL_OBJECT * str1;
+    FL_OBJECT * input;
+    FL_OBJECT * but;
+} FD_input;
 
+
+/***************************************
+ ***************************************/
 
 static FD_input *
-create_input(void)
+create_input( void )
 {
     FD_input *fdui = (FD_input *) fl_calloc(1, sizeof(*fdui));
     int oldy = fl_inverted_y;
@@ -74,20 +80,24 @@ create_input(void)
 }
 
 
-/* Asks the user for textual input */
+/***************************************
+ * Asks the user for textual input
+ ***************************************/
+
 const char *
-fl_show_simple_input(const char *str1, const char *defstr)
+fl_show_simple_input( const char * str1,
+					  const char * defstr )
 {
     static int first = 1;
     static FD_input *fd_input;
 
     if (!fd_input)
-	fd_input = create_input();
+		fd_input = create_input();
 
     if (first)
     {
-	fl_parse_goodies_label(fd_input->but, FLOKLabel);
-	first = 0;
+		fl_parse_goodies_label(fd_input->but, FLOKLabel);
+		first = 0;
     }
 
     fl_handle_goodie_font(fd_input->but, fd_input->input);
@@ -96,15 +106,15 @@ fl_show_simple_input(const char *str1, const char *defstr)
     fl_set_input(fd_input->input, defstr);
 
     if (!fd_input->form->visible)
-	fl_deactivate_all_forms();
+		fl_deactivate_all_forms();
 
     fl_show_form(fd_input->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Input");
     fl_update_display(0);
 
     while (fl_do_only_forms() != fd_input->but)
-	;
+		/* empty */ ;
 
     fl_hide_form(fd_input->form);
     fl_activate_all_forms();
-    return (fl_get_input(fd_input->input));
+    return fl_get_input(fd_input->input);
 }

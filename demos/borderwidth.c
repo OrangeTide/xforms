@@ -53,7 +53,8 @@ typedef struct {
 extern FD_bwform * create_form_bwform(void);
 
 /* callbacks for form bwform */
-void done_callback(FL_OBJECT *ob, long data)
+void done_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
    fl_finish();
    exit(0);
@@ -61,7 +62,8 @@ void done_callback(FL_OBJECT *ob, long data)
 
 FD_bwform *fd_bwform;
 
-void bw_callback(FL_OBJECT *ob, long data)
+void bw_callback( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
   /* fill-in code for callback */
    static int bws[] = { -3,-2,-1,1,2,3,4,5};

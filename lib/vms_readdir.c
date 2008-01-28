@@ -34,9 +34,11 @@
    **  Known problems:
    **           garbage directory specifications aren't always diagnosed.
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -46,9 +48,12 @@
 #include <fscndef.h>		/* $FILESCAN arguments */
 #include <rmsdef.h>
 
+
  /* Protect against TEST being defined by some other module */
+
 #undef TEST
- /* Uncomment the next line to get a test routine. */
+
+/* Uncomment the next line to get a test routine. */
 /* #define TEST */
 
  /* Number of elements in vms_versions array */

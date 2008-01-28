@@ -33,8 +33,8 @@
  *  Default 0 is at 6 oclock and clock-wise is positive.
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_dial = "$Id: dial.c,v 1.6 2003/04/24 09:35:34 leeming Exp $";
+#if defined F_ID || definedDEBUG
+char *fl_id_dial = "$Id: dial.c,v 1.7 2008/01/28 23:17:53 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -42,6 +42,7 @@ char *fl_id_dial = "$Id: dial.c,v 1.6 2003/04/24 09:35:34 leeming Exp $";
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/pdial.h"
@@ -50,53 +51,69 @@ char *fl_id_dial = "$Id: dial.c,v 1.6 2003/04/24 09:35:34 leeming Exp $";
 #include <sys/types.h>
 #include <stdlib.h>
 
+
 #define SPEC FL_DIAL_SPEC
 
 #ifndef M_PI
-#define M_PI 3.1415926f
+#define M_PI 3.14159265359
 #endif
 
 
-static float xo, yo;
+static double xo, yo;
 
-#define ROTx(x,y,a) (xo + ((x)-xo)*cosa + ((y)-yo)*sina)
-#define ROTy(x,y,a) (yo - ((x)-xo)*sina + ((y)-yo)*cosa)
+
+/***************************************
+ ***************************************/
 
 static void
-rotate_it(FL_POINT * xp, float x, float y, float a)
+rotate_it( FL_POINT * xp,
+		   double     x,
+		   double     y,
+		   double     a )
 {
-    float sina = (float)sin(a);
-    float cosa = (float)cos(a);
+    double sina = sin( a );
+    double cosa = cos( a );
 
-    xp->x = (short)ROTx(x, y, a);
-    xp->y = (short)ROTy(x, y, a);
+    xp->x = FL_crnd( xo + ( x - xo ) * cosa + ( y - yo ) * sina );
+	xp->y = FL_crnd( yo - ( x - xo ) * sina + ( y - yo ) * cosa );
 }
 
-/* Draws a dial */
+
+/***************************************
+ * Draws a dial
+ ***************************************/
+
 static void
-draw_dial(FL_OBJECT * ob)
+draw_dial( FL_OBJECT * ob )
 {
-    FL_Coord x, y, w, h, radius;
-    float dangle;
+    FL_Coord x,
+		     y,
+		     w,
+		     h,
+		     radius;
+    double dangle;
     SPEC *sp = ob->spec;
-    FL_POINT xp[6];
-    int boxtype, iradius;
+    FL_POINT xp[ 6 ];
+    int boxtype,
+		iradius;
 
-    dangle = ((sp->val - sp->b) / sp->a);
-
-    /* since rotate_it always does the rotation in the math way, i.e., 0 at
+    /* since rotate_it always does the rotation in the math way, i.e. 0 at
        three o'clock and CCW, need to translate the current theta into that
        coordiante system */
 
-    if (sp->direction == FL_DIAL_CW)
-	dangle = sp->origin - dangle;
-    else
-	dangle += sp->origin;
+    dangle = ( sp->val - sp->b ) / sp->a;
 
-    if (dangle < 0)
-	dangle += 360;
-    else if (dangle > 360)
-	dangle -= 360;
+    if ( sp->direction == FL_DIAL_CW )
+		dangle = sp->origin - dangle;
+    else
+		dangle += sp->origin;
+
+    while ( dangle < 0.0 )
+		dangle += 360.0;
+    while ( dangle > 360.0 )
+		dangle -= 360.0;
+
+    dangle *= M_PI / 180.0;
 
     w = ob->w - 3;
     h = ob->h - 3;
@@ -104,341 +121,499 @@ draw_dial(FL_OBJECT * ob)
     x = xo = ob->x + ob->w / 2;
     y = yo = ob->y + ob->h / 2;
 
-    if (FL_IS_UPBOX(ob->boxtype))
-	boxtype = FL_OVAL3D_UPBOX;
-    else if (FL_IS_DOWNBOX(ob->boxtype))
-	boxtype = FL_OVAL3D_DOWNBOX;
-    else if (ob->boxtype == FL_FRAME_BOX)
-	boxtype = FL_OVAL3D_FRAMEBOX;
-    else if (ob->boxtype == FL_EMBOSSED_BOX)
-	boxtype = FL_OVAL3D_EMBOSSEDBOX;
+    if ( FL_IS_UPBOX( ob->boxtype ) )
+		boxtype = FL_OVAL3D_UPBOX;
+    else if ( FL_IS_DOWNBOX( ob->boxtype ) )
+		boxtype = FL_OVAL3D_DOWNBOX;
+    else if ( ob->boxtype == FL_FRAME_BOX )
+		boxtype = FL_OVAL3D_FRAMEBOX;
+    else if ( ob->boxtype == FL_EMBOSSED_BOX )
+		boxtype = FL_OVAL3D_EMBOSSEDBOX;
     else
-	boxtype = FL_OVAL_BOX;
+		boxtype = FL_OVAL_BOX;
 
     /* the dial itself */
-    radius = (int) (0.5f * FL_min(w, h));
-    iradius = radius - 1;	/* internal radius */
 
-    fl_drw_box(boxtype, x - radius, y - radius, 2 * radius, 2 * radius,
-	       ob->col1, ob->bw);
+    radius = 0.5 * FL_min( w, h );
+    iradius = radius - 1;	      /* internal radius */
 
-    dangle *= M_PI / 180.0f;
+    fl_drw_box( boxtype, x - radius, y - radius, 2 * radius, 2 * radius,
+				ob->col1, ob->bw );
 
     /* the "hand" */
-    if (ob->type == FL_NORMAL_DIAL)
+
+    if ( ob->type == FL_NORMAL_DIAL )
     {
-	FL_Coord r;
+		FL_Coord r;
 
-	r = 0.5f * iradius;
-	r = FL_min(15, r);
-	rotate_it(xp, x + iradius - 1, y - 2, dangle);
-	rotate_it(xp + 1, x + iradius - 1 - r, y - 2, dangle);
-	rotate_it(xp + 2, x + iradius - 1 - r, y + 2, dangle);
-	rotate_it(xp + 3, x + iradius - 1, y + 2, dangle);
-	fl_polygon(1, xp, 4, ob->col2);
+		r = FL_min( 0.5 * iradius, 15 );
+		rotate_it( xp, x + iradius - 1, y - 2, dangle );
+		rotate_it( xp + 1, x + iradius - 1 - r, y - 2, dangle );
+		rotate_it( xp + 2, x + iradius - 1 - r, y + 2, dangle );
+		rotate_it( xp + 3, x + iradius - 1, y + 2, dangle );
+		fl_polygon( 1, xp, 4, ob->col2 );
     }
-    else if (ob->type == FL_LINE_DIAL)
+    else if ( ob->type == FL_LINE_DIAL )
     {
-	float dx = 0.1f + (0.08f * iradius), dy = 0.1f + (0.08f * iradius);
+		double dx = 0.1 + 0.08 * iradius,
+			   dy = 0.1 + 0.08 * iradius;
 
-	rotate_it(xp, x, y, dangle);
-	rotate_it(xp + 1, x + dx, y - dy, dangle);
-	rotate_it(xp + 2, x + iradius - 2, y, dangle);
-	rotate_it(xp + 3, x + dx, y + dy, dangle);
+		rotate_it( xp, x, y, dangle );
+		rotate_it( xp + 1, x + dx, y - dy, dangle );
+		rotate_it( xp + 2, x + iradius - 2, y, dangle );
+		rotate_it( xp + 3, x + dx, y + dy, dangle );
 
-	fl_polygon(1, xp, 4, ob->col2);
-	fl_polygon(0, xp, 4, FL_BLACK);
+		fl_polygon( 1, xp, 4, ob->col2 );
+		fl_polygon( 0, xp, 4, FL_BLACK );
     }
-    else if (ob->type == FL_FILL_DIAL)
+    else if ( ob->type == FL_FILL_DIAL )
     {
-	float ti, delta;
+		double ti,
+			   delta;
 
-	delta = (sp->val - sp->b) / sp->a;
-	delta = FL_abs(sp->thetai - delta);
-	delta = (sp->direction == FL_DIAL_CW) ? -delta : delta;
+		delta = ( sp->val - sp->b ) / sp->a;
+		delta = FL_abs( sp->thetai - delta );
+		delta = sp->direction == FL_DIAL_CW ? -delta : delta;
 
-	iradius -= boxtype != FL_OVAL_BOX;
+		iradius -= boxtype != FL_OVAL_BOX;
 
-	if (sp->direction == FL_DIAL_CCW)
-	    ti = sp->thetai + sp->origin;
-	else
-	    ti = sp->origin - sp->thetai;
+		if ( sp->direction == FL_DIAL_CCW )
+			ti = sp->thetai + sp->origin;
+		else
+			ti = sp->origin - sp->thetai;
+		
+		while ( ti < 0.0 )
+			ti += 360.0;
+		while ( ti > 360.0 )
+			ti -= 360.0;
 
-	if (ti < 0)
-	    ti += 360.0f;
-	else if (ti > 360.0f)
-	    ti -= 360.0f;
+		fl_ovalarc( 1, xo - iradius, yo - iradius, 2 * iradius, 2 * iradius,
+					ti * 10, delta * 10, ob->col2 );
 
-	fl_ovalarc(1, xo - iradius, yo - iradius, 2 * iradius, 2 * iradius,
-		   ti * 10, delta * 10, ob->col2);
+		rotate_it( xp, xo + iradius - 1, yo, dangle );
+		rotate_it( xp + 1, xo + iradius - 1, yo, ti * M_PI / 180.0 );
+		fl_simple_line( FL_crnd( xo ), FL_crnd( yo ),
+						xp[ 0 ].x, xp[ 0 ].y, FL_BLACK );
+		fl_simple_line( FL_crnd( xo ), FL_crnd( yo ),
+						xp[ 1 ].x, xp[ 1 ].y, FL_BLACK );
 
-	rotate_it(xp, xo + iradius - 1, yo, dangle);
-	rotate_it(xp + 1, xo + iradius - 1, yo, ti * M_PI / 180.0f);
-	fl_simple_line(xo, yo, xp[0].x, xp[0].y, FL_BLACK);
-	fl_simple_line(xo, yo, xp[1].x, xp[1].y, FL_BLACK);
-
-	if (boxtype == FL_OVAL_BOX)
-	    fl_circ(x, y, iradius, FL_BLACK);
+		if ( boxtype == FL_OVAL_BOX )
+			fl_circ( x, y, iradius, FL_BLACK );
     }
-
     else
-	M_err("DrawDial", "Bad type");
+		M_err( "DrawDial", "Bad type" );
 
-    fl_drw_text_beside(ob->align, ob->x, ob->y, ob->w, ob->h,
-		       ob->lcol, ob->lstyle, ob->lsize, ob->label);
+    fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+						ob->lcol, ob->lstyle, ob->lsize, ob->label );
 }
 
 
-/* Handle a mouse position change */
+/***************************************
+* Handle a mouse position change
+ ***************************************/
+
 static int
-handle_mouse(FL_OBJECT * ob, FL_Coord mousex, FL_Coord mousey)
+handle_mouse( FL_OBJECT * ob,
+			  FL_Coord    mousex,
+			  FL_Coord    mousey )
 {
-    SPEC *sp = (SPEC *) ob->spec;
-    double oldv, val, olda;
-    double mx, my, angle, range = (sp->max - sp->min);
+    SPEC *sp = ob->spec;
+    double oldv,
+		   val,
+		   olda;
+    double mx,
+		   my,
+		   angle,
+		   range = sp->max - sp->min;
 
     oldv = sp->val;
-    olda = (oldv - sp->b) / sp->a;
+    olda = ( oldv - sp->b ) / sp->a;
 
     /* convert to sane FL_coordinate system, i.e., +y up */
-    mx = mousex - (ob->x + ob->w * 0.5f);
-    my = -mousey + (ob->y + ob->h * 0.5f);
+
+    mx =   mousex - ( ob->x + ob->w * 0.5 );
+    my = - mousey + ( ob->y + ob->h * 0.5 );
 
     /* skip clicks very close to center */
-    if (fabs(mx) < 2 && fabs(my) < 2)
-	return 0;
+
+    if ( fabs( mx ) < 2 && fabs( my ) < 2 )
+		return 0;
 
     /* get angle and normalize to (0,2PI) */
-    angle = atan2(my, mx) * 180.0f / M_PI;
 
-    if (sp->direction == FL_DIAL_CW)
-	angle = sp->origin - angle;
+    angle = atan2( my, mx ) * 180.0 / M_PI;
+
+    if ( sp->direction == FL_DIAL_CW )
+		angle = sp->origin - angle;
     else
-	angle -= sp->origin;
+		angle -= sp->origin;
 
-    while (angle < 0.0f)
-	angle += 360.0;
+    while ( angle < 0.0 )
+		angle += 360.0;
+    while ( angle > 360.0 )
+		angle -= 360.0;
 
-    while (angle > 360.0f)
-	angle -= 360.0f;
-
-    val = fl_clamp(sp->a * angle + sp->b, sp->min, sp->max);
+    val = fl_clamp( sp->a * angle + sp->b, sp->min, sp->max );
 
     /* check if crossed boundary. Fix it if it did. Fixing is necessary
        otherwise might be unable to reach thetaf(360) */
 
-    if (!sp->cross_over && fabs(oldv - val) > (0.6f * range))
+    if ( ! sp->cross_over && fabs( oldv - val ) > 0.6 * range )
     {
-	if (fabs(olda - sp->thetai) < (fabs(olda - sp->thetaf)))
-	    angle = sp->thetai;
-	else
-	    angle = sp->thetaf;
-	val = sp->a * angle + sp->b;
+		if ( fabs( olda - sp->thetai ) < fabs( olda - sp->thetaf ) )
+			angle = sp->thetai;
+		else
+			angle = sp->thetaf;
+		val = sp->a * angle + sp->b;
     }
 
-    if (sp->step != 0.0)
-	val = ((int) (val / sp->step + 0.5f)) * sp->step;
+    if ( sp->step != 0.0 )
+		val = ( int ) ( val / sp->step + 0.5 ) * sp->step;
 
     /* allow a resolution about 0.2 degrees */
-    if (fabs(val - oldv) > (range / 1800.0f))
+
+    if ( fabs( val - oldv ) > range / 1800.0 )
     {
-	sp->val = val;
-	fl_redraw_object(ob);
-	return 1;
+		sp->val = val;
+		fl_redraw_object( ob );
+		return 1;
     }
 
     return 0;
 }
 
-/* Handles an event */
-static int
-handle_dial(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-	    int key, void *ev)
-{
-    SPEC *sp = (SPEC *) ob->spec;
 
-#if (FL_DEBUG >= ML_DEBUG)
-    M_info("HandleDial", fl_event_name(event));
+/***************************************
+ * Function for handling mouse wheel input
+ ***************************************/
+
+static int
+handle_mouse_wheel( FL_OBJECT * ob,
+					XEvent *    xev,
+					int         key )
+{
+    SPEC *sp = ob->spec;
+    double val,
+		   step,
+		   oldv = sp->val,
+		   range = sp->max - sp->min;
+
+	if ( key != FL_MBUTTON4 && key != FL_MBUTTON5 )
+		return 0;
+
+	step = sp->step > 0.0 ? 10.0 * sp->step : 0.1 * range;
+
+	if ( shiftkey_down( ( ( XButtonEvent * ) xev )->state ) )
+		step *= 0.1;
+	else if ( controlkey_down( ( ( XButtonEvent * ) xev )->state ) )
+		step *= 2.5;
+
+	if ( sp->direction == FL_DIAL_CW )
+		step = key == FL_MBUTTON4 ? - step : step;
+	else
+		step = key == FL_MBUTTON4 ? step : - step;
+
+	val = sp->val + step;
+
+	if ( sp->cross_over )
+	{
+		while ( val > sp->max )
+			val -= range;
+		while ( val < sp->min )
+			val += range;
+	}
+	else
+	{
+		if ( val > sp->max )
+			val = sp->max;
+		else if ( val < sp->min )
+			val = sp->min;
+	}
+		
+	if ( val != oldv )
+	{
+		sp->val = val;
+		fl_redraw_object( ob );
+		return 1;
+	}
+
+    return 0;
+}
+
+
+/***************************************
+ * Handles an event
+ ***************************************/
+
+static int
+handle_dial( FL_OBJECT * ob,
+			 int         event,
+			 FL_Coord    mx,
+			 FL_Coord    my,
+			 int         key  FL_UNUSED_ARG,
+			 void *      ev )
+{
+    SPEC *sp = ob->spec;
+
+#if FL_DEBUG >= ML_DEBUG
+    M_info( "HandleDial", fl_event_name( event ) );
 #endif
 
-    switch (event)
+    switch ( event )
     {
-    case FL_DRAW:
-	draw_dial(ob);
-	return 0;
-    case FL_DRAWLABEL:
-	fl_drw_text_beside(ob->align, ob->x, ob->y, ob->w, ob->h,
-			   ob->lcol, ob->lstyle, ob->lsize, ob->label);
-	break;
-    case FL_PUSH:
-	sp->changed = 0;
-    case FL_MOUSE:
-	if (handle_mouse(ob, mx, my))
-	    sp->changed = 1;
-	if (sp->changed && sp->how_return == FL_RETURN_CHANGED)
-	{
-	    sp->changed = 0;
-	    return 1;
-	}
-	else if (sp->how_return == FL_RETURN_ALWAYS)
-	    return 1;
-	break;
-    case FL_RELEASE:
-	if (sp->how_return == FL_RETURN_END)
-	    return 1;
-	else
-	    return (sp->changed && sp->how_return == FL_RETURN_END_CHANGED);
-    case FL_FREEMEM:
-	fl_free(ob->spec);
-	return 0;
+		case FL_DRAW:
+			draw_dial( ob );
+			return 0;
+
+		case FL_DRAWLABEL:
+			fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+								ob->lcol, ob->lstyle, ob->lsize, ob->label );
+			break;
+
+		case FL_PUSH:
+			if ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+				return 0;
+			sp->changed = 0;
+
+		case FL_MOUSE:
+			if ( handle_mouse( ob, mx, my ) )
+				sp->changed = 1;
+			if ( sp->changed && sp->how_return == FL_RETURN_CHANGED )
+			{
+				sp->changed = 0;
+				return 1;
+			}
+			else if ( sp->how_return == FL_RETURN_ALWAYS )
+				return 1;
+			break;
+
+		case FL_RELEASE:
+			if ( handle_mouse_wheel( ob, ev, key ) )
+				sp->changed = 1;
+			if ( sp->how_return == FL_RETURN_END )
+				return 1;
+			else
+				return sp->changed && sp->how_return == FL_RETURN_END_CHANGED;
+
+		case FL_FREEMEM:
+			fl_free( ob->spec );
+			return 0;
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-get_mapping(SPEC *sp)
+get_mapping( SPEC *sp )
 {
-    sp->a = (double) (sp->max - sp->min) / (sp->thetaf - sp->thetai);
-    sp->b = sp->max - (double) sp->a * sp->thetaf;
+    sp->a = ( sp->max - sp->min ) / ( sp->thetaf - sp->thetai );
+    sp->b = sp->max - sp->a * sp->thetaf;
 }
 
-/* creates an object */
+
+/***************************************
+ * creates an object
+ ***************************************/
+
 FL_OBJECT *
-fl_create_dial(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	       const char *label)
+fl_create_dial( int          type,
+				FL_Coord     x,
+				FL_Coord     y,
+				FL_Coord     w,
+				FL_Coord     h,
+				const char * label )
 {
     FL_OBJECT *ob;
     SPEC *sp;
 
-    ob = fl_make_object(FL_DIAL, type, x, y, w, h, label, handle_dial);
+    ob = fl_make_object( FL_DIAL, type, x, y, w, h, label, handle_dial );
     ob->col1 = FL_DIAL_COL1;
     ob->col2 = FL_DIAL_COL2;
     ob->align = FL_DIAL_ALIGN;
     ob->lcol = FL_DIAL_LCOL;
     ob->boxtype = FL_DIAL_BOXTYPE;
 
-    ob->spec_size = sizeof(SPEC);
-    sp = ob->spec = calloc(1, sizeof(SPEC));
-    sp->min = 0.0f;
-    sp->max = 1.0f;
-    sp->val = 0.5f;
-    sp->step = 0.0f;
-    sp->thetai = 0.0f;
-    sp->thetaf = 360.0f;
-    sp->origin = 270;
+    ob->spec_size = sizeof *sp;
+    sp = ob->spec = calloc( 1, sizeof *sp );
+    sp->min = 0.0;
+    sp->max = 1.0;
+    sp->val = 0.5;
+    sp->step = 0.0;
+    sp->thetai = 0.0;
+    sp->thetaf = 360.0;
+    sp->origin = 270.0;
     sp->direction = FL_DIAL_CW;
-    get_mapping(sp);
+    get_mapping( sp );
     sp->how_return = FL_RETURN_END_CHANGED;
 
     return ob;
 }
 
-/* Adds an object */
+
+/*************************************** 
+ * Adds an object
+***************************************/
+
 FL_OBJECT *
-fl_add_dial(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	    const char *label)
+fl_add_dial( int          type,
+			 FL_Coord     x,
+			 FL_Coord     y,
+			 FL_Coord     w,
+			 FL_Coord     h,
+			 const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_create_dial(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
-    fl_set_object_dblbuffer(ob, 1);
+    ob = fl_create_dial( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, ob );
+    fl_set_object_dblbuffer( ob, 1 );
     return ob;
 }
 
-void
-fl_set_dial_value(FL_OBJECT * ob, double val)
-{
-    if (((SPEC *) (ob->spec))->val != val)
-    {
-	((SPEC *) (ob->spec))->val = val;
-	fl_redraw_object(ob);
-    }
-}
+
+/***************************************
+ ***************************************/
 
 void
-fl_set_dial_bounds(FL_OBJECT * ob, double min, double max)
+fl_set_dial_value( FL_OBJECT * ob,
+				   double      val )
 {
     SPEC *sp = ob->spec;
 
-    if (sp->min != min || sp->max != max)
+    if ( sp->val != val )
     {
-	sp->min = min;
-	sp->max = max;
-	get_mapping(sp);
-	sp->val = fl_clamp(sp->val, sp->min, sp->max);
-	fl_redraw_object(ob);
+		sp->val = val;
+		fl_redraw_object( ob );
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_dial_angles(FL_OBJECT * ob, double amin, double amax)
+fl_set_dial_bounds( FL_OBJECT * ob,
+					double      min,
+					double      max )
 {
     SPEC *sp = ob->spec;
 
-    if (amin < 0)
-	amin += 360.0;
-    else if (amin > 360)
-	amin -= 360.0;
-
-    if (amax < 0)
-	amax += 360.0;
-    else if (amax > 360)
-	amax += 360.0;
-
-    if (sp->thetaf != amax || sp->thetai != amin)
+    if ( sp->min != min || sp->max != max )
     {
-	sp->thetaf = amax;
-	sp->thetai = amin;
-	get_mapping(sp);
-	fl_redraw_object(ob);
+		sp->min = min;
+		sp->max = max;
+		get_mapping( sp );
+		sp->val = fl_clamp( sp->val, sp->min, sp->max );
+		fl_redraw_object( ob );
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_set_dial_cross(FL_OBJECT * ob, int flag)
+fl_set_dial_angles( FL_OBJECT * ob,
+					double      amin,
+					double      amax )
 {
-    ((SPEC *) (ob->spec))->cross_over = flag;
+    SPEC *sp = ob->spec;
+
+    while ( amin < 0.0 )
+		amin += 360.0;
+	while ( amin > 360 )
+		amin -= 360.0;
+
+    while ( amax < 0.0 )
+		amax += 360.0;
+    while ( amax > 360.0 )
+		amax += 360.0;
+
+    if ( sp->thetaf != amax || sp->thetai != amin )
+    {
+		sp->thetaf = amax;
+		sp->thetai = amin;
+		get_mapping( sp );
+		fl_redraw_object( ob );
+    }
 }
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_dial_cross( FL_OBJECT * ob,
+				   int         flag )
+{
+    ( ( SPEC * ) ob->spec )->cross_over = flag;
+}
+
+
+/***************************************
+ ***************************************/
 
 double
-fl_get_dial_value(FL_OBJECT * ob)
+fl_get_dial_value( FL_OBJECT * ob )
 {
-    return ((SPEC *) (ob->spec))->val;
+    return ( ( SPEC * ) ob->spec )->val;
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-fl_get_dial_bounds(FL_OBJECT * ob, double *min, double *max)
+fl_get_dial_bounds( FL_OBJECT * ob,
+					double *    min,
+					double *    max )
 {
-    *min = ((SPEC *) (ob->spec))->min;
-    *max = ((SPEC *) (ob->spec))->max;
+    *min = ( ( SPEC * ) ob->spec )->min;
+    *max = ( ( SPEC * ) ob->spec )->max;
 }
 
 
-/* Sets whether to return value all the time */
-void
-fl_set_dial_return(FL_OBJECT * ob, int value)
-{
-    ((SPEC *) (ob->spec))->how_return = value;
-}
-
-/* Sets the step size to which values are rounded. */
-void
-fl_set_dial_step(FL_OBJECT * ob, double value)
-{
-    ((SPEC *) (ob->spec))->step = value;
-}
+/***************************************
+ * Sets whether to return value all the time
+ ***************************************/
 
 void
-fl_set_dial_direction(FL_OBJECT * ob, int dir)
+fl_set_dial_return( FL_OBJECT * ob,
+				    int         value )
+{
+    ( ( SPEC * ) ob->spec )->how_return = value;
+}
+
+
+/***************************************
+ * Sets the step size to which values are rounded.
+ ***************************************/
+
+void
+fl_set_dial_step( FL_OBJECT * ob,
+				  double      value )
+{
+    ( ( SPEC * ) ob->spec )->step = value;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_dial_direction( FL_OBJECT * ob,
+					   int         dir )
 {
     SPEC *sp = ob->spec;
 
-    if (sp->direction != dir)
+    if ( sp->direction != dir )
     {
-	sp->direction = dir;
-	get_mapping(sp);
-	fl_redraw_object(ob);
+		sp->direction = dir;
+		get_mapping( sp );
+		fl_redraw_object( ob );
     }
 }

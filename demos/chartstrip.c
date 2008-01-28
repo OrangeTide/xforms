@@ -42,14 +42,16 @@ FL_FORM *form;
 FL_OBJECT *chartobj, *sinobj, *exitbut, *stepobj;
 void create_form_form(void);
 
-void set_function(FL_OBJECT *obj, long arg)
+void set_function( FL_OBJECT * obj  FL_UNUSED_ARG,
+				   long        arg )
 {
     func = arg;
     fl_clear_chart(chartobj);
     x = 0.0;
 }
 
-void set_step(FL_OBJECT *obj, long arg)
+void set_step( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
 {
      step = fl_get_slider_value(stepobj);
 }
@@ -77,13 +79,15 @@ float next_step(void)
     return res;
 }
 
-int idle_cb(XEvent *xev, void *d)
+int idle_cb( XEvent * xev  FL_UNUSED_ARG,
+			 void   * d    FL_UNUSED_ARG )
 {
     fl_insert_chart_value(chartobj,1,next_step(),"",1);
     return 0;
 }
 
-void add_value(void *xev, void *a)
+void add_value( void * xev  FL_UNUSED_ARG,
+				void * a    FL_UNUSED_ARG )
 {
      fl_insert_chart_value(chartobj,1,next_step(),"",1);
 }
@@ -103,7 +107,7 @@ main(int argc, char *argv[])
    fl_set_slider_value(stepobj,0.15);
    fl_set_slider_bounds(stepobj,0.0,0.4);
 
-   fl_show_form(form,FL_PLACE_CENTER,FL_NOBORDER,"StripChart");
+   fl_show_form(form,FL_PLACE_CENTER|FL_FREE_SIZE,FL_TRANSIENT,"StripChart");
 
     do
     {

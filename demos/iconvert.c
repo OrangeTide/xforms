@@ -44,7 +44,7 @@
 static void initialize(void);
 static void usage(const char *, int);
 static int  parse_command_line(int *, char **);
-static char *version="$Id: iconvert.c,v 1.4 2003/09/09 00:28:25 leeming Exp $";
+static char *version="$Id: iconvert.c,v 1.5 2008/01/28 22:56:18 jtt Exp $";
 
 int
 main(int argc, char *argv[])
@@ -96,7 +96,8 @@ static void usage(const char *cmd, int more)
 }
 
 /* shut up visual_cue */
-static int noop(FL_IMAGE *im, const char *s)
+static int noop( FL_IMAGE   * im  FL_UNUSED_ARG,
+				 const char * s   FL_UNUSED_ARG )
 {
     return 0;
 }

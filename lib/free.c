@@ -30,51 +30,70 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_fre = "$Id: free.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_fre = "$Id: free.c,v 1.6 2008/01/28 23:19:13 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_free(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	       const char *label, FL_HANDLEPTR handle)
+fl_create_free( int          type,
+				FL_Coord     x,
+				FL_Coord     y,
+				FL_Coord     w,
+				FL_Coord     h,
+				const char * label,
+				FL_HANDLEPTR handle )
 {
     FL_OBJECT *obj;
 
-    obj = fl_make_object(FL_FREE, type, x, y, w, h, label, handle);
+    obj = fl_make_object( FL_FREE, type, x, y, w, h, label, handle );
     obj->boxtype = FL_FLAT_BOX;
 
-    if (type == FL_INACTIVE_FREE)
-	obj->active = 0;
-    else if (type == FL_CONTINUOUS_FREE)
-	obj->automatic = 1;
-    else if (type == FL_INPUT_FREE)
-	obj->input = 1;
-    else if (type == FL_ALL_FREE)
+    if ( type == FL_INACTIVE_FREE )
+		obj->active = 0;
+    else if ( type == FL_CONTINUOUS_FREE )
+		obj->automatic = 1;
+    else if ( type == FL_INPUT_FREE )
+		obj->input = 1;
+    else if ( type == FL_ALL_FREE )
     {
-	obj->input = 1;
-	obj->automatic = 1;
+		obj->input = 1;
+		obj->automatic = 1;
     }
 
-    if (type != FL_INACTIVE_FREE)
-	obj->click_timeout = FL_CLICK_TIMEOUT;
+    if ( type != FL_INACTIVE_FREE )
+		obj->click_timeout = FL_CLICK_TIMEOUT;
 
     return obj;
 }
 
-/* Adds an object */
+
+/***************************************
+ * Adds an object 
+ ***************************************/
+
 FL_OBJECT *
-fl_add_free(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	    const char *label, FL_HANDLEPTR handle)
+fl_add_free( int          type,
+			 FL_Coord     x,
+			 FL_Coord     y,
+			 FL_Coord     w,
+			 FL_Coord     h,
+			 const char * label,
+			 FL_HANDLEPTR handle)
 {
     FL_OBJECT *ob;
 
-    ob = fl_create_free(type, x, y, w, h, label, handle);
-    fl_add_object(fl_current_form, ob);
+    ob = fl_create_free( type, x, y, w, h, label, handle );
+    fl_add_object( fl_current_form, ob );
     return ob;
 }

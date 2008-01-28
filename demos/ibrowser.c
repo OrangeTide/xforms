@@ -75,7 +75,8 @@ static void show_image_info(FL_IMAGE *im)
 }
 
 void
-show_comments(FL_OBJECT *ob, long data)
+show_comments( FL_OBJECT * ob    FL_UNUSED_ARG,
+			   long        data  FL_UNUSED_ARG )
 {
     if(curr_image && curr_image->comments)
         fprintf(stderr,"%s\n", curr_image->comments);
@@ -124,7 +125,8 @@ static int load_and_show(const char *filename, void *data)
     return 0;
 }
 
-void scale_image(FL_OBJECT *ob, long data)
+void scale_image( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
      float xs = fl_get_slider_value(fdui->xfloat);
@@ -142,7 +144,8 @@ void scale_image(FL_OBJECT *ob, long data)
      show_image_info(curr_image);
 }
 
-void annotate_cb(FL_OBJECT *ob, long data)
+void annotate_cb( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
      char buf[128];
@@ -234,7 +237,8 @@ void annotate_cb(FL_OBJECT *ob, long data)
 
 }
 
-void render_cb(FL_OBJECT *ob, long data)
+void render_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
 
@@ -257,7 +261,8 @@ void flip_image(FL_OBJECT *ob, long data)
      flimage_display(curr_image, FL_ObjWin(fdui->canvas));
 }
 
-void rotate_image(FL_OBJECT *ob, long data)
+void rotate_image( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
      int angle = (int)fl_get_counter_value(fdui->angle);
@@ -273,7 +278,8 @@ void rotate_image(FL_OBJECT *ob, long data)
      show_image_info(curr_image);
 }
 
-void write_image(FL_OBJECT *ob, long data)
+void write_image( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
      const char *f;
@@ -287,16 +293,24 @@ void write_image(FL_OBJECT *ob, long data)
      flimage_dump(curr_image, f, fl_get_choice_text(fdui->format));
 }
 
-static int expose_handle(FL_OBJECT *ob, Window win,
-                         int w, int h, XEvent *xev, void *data)
+static int expose_handle( FL_OBJECT * ob   FL_UNUSED_ARG,
+						  Window      win,
+						  int         w    FL_UNUSED_ARG,
+						  int         h    FL_UNUSED_ARG,
+						  XEvent    * xev  FL_UNUSED_ARG,
+						  void      * data  FL_UNUSED_ARG )
 {
      if(curr_image)
         flimage_display(curr_image, win);
      return 0;
 }
 
-static int motion_handle(FL_OBJECT *ob, Window win,
-                         int w, int h, XEvent *xev, void *data)
+static int motion_handle( FL_OBJECT * ob    FL_UNUSED_ARG,
+						  Window      win   FL_UNUSED_ARG,
+						  int         w     FL_UNUSED_ARG,
+						  int         h     FL_UNUSED_ARG,
+						  XEvent    * xev   FL_UNUSED_ARG,
+						  void      * data  FL_UNUSED_ARG)
 {
      if(!curr_image)
         return 0;
@@ -340,7 +354,8 @@ void convolve_it(FL_OBJECT *ob, long data)
      show_image_info(curr_image);
 }
 
-void tint_it(FL_OBJECT *ob, long data)
+void tint_it( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
      int subimage = fl_get_button(fdui->subimage);
@@ -363,7 +378,8 @@ void tint_it(FL_OBJECT *ob, long data)
      show_image_info(curr_image);
 }
 
-void window_level(FL_OBJECT *ob, long data)
+void window_level( FL_OBJECT * ob,
+				   long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
 
@@ -377,7 +393,8 @@ void window_level(FL_OBJECT *ob, long data)
 }
 
 
-void warp_it(FL_OBJECT *ob, long data)
+void warp_it( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
     static float m[2][2] = {{0.5,0.5},{-1,0.7}};
     FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
@@ -399,7 +416,8 @@ void warp_it(FL_OBJECT *ob, long data)
     show_image_info(curr_image);
 }
 
-void enhance_it(FL_OBJECT *ob, long data)
+void enhance_it( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = (FD_ibcanvas *)ob->form->fdui;
 
@@ -457,7 +475,8 @@ static int enter_handle(FL_OBJECT *ob, Window win,
 #endif
 
 /* callbacks and freeobj handles for form ibcanvas */
-void browse_file(FL_OBJECT *ob, long data)
+void browse_file( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
      fl_use_fselector(0);
      fl_set_fselector_placement(FL_PLACE_MOUSE);
@@ -465,7 +484,8 @@ void browse_file(FL_OBJECT *ob, long data)
      fl_show_fselector("Load an Image",  0, "*",0);
 }
 
-void quit_callback(FL_OBJECT *ob, long data)
+void quit_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
+					long        data  FL_UNUSED_ARG )
 {
      flimage_free(curr_image);
      exit(0);

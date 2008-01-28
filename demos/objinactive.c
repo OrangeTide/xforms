@@ -41,7 +41,8 @@ FL_OBJECT
         *group,
         *firstbut;
 
-void exit_cb(FL_OBJECT *obj, long arg)
+void exit_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			  long        arg  FL_UNUSED_ARG )
 {
     fl_finish();
     exit(0);
@@ -69,7 +70,8 @@ void doit(int b1, int b2, int b3, int b4)
    setit(button4,b4);
 }
 
-void set_active(FL_OBJECT *obj, long arg)
+void set_active( FL_OBJECT * obj  FL_UNUSED_ARG,
+				 long        arg)
 {
    switch (arg)
    {

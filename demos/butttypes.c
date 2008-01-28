@@ -35,7 +35,8 @@
 #include <stdlib.h>
 
 /* callbacks for form form0 */
-void button_cb(FL_OBJECT *ob, long data)
+void button_cb( FL_OBJECT * ob,
+				long        data  FL_UNUSED_ARG )
 {
     FD_form0 *ui = (FD_form0 *)ob->form->fdui;
     char buf[128];

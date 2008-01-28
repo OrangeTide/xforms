@@ -32,49 +32,71 @@
  *  fl_add_button_class and fl_create_generic_button
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_combo = "$Id: combo.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_combo = "$Id: combo.c,v 1.6 2008/01/28 23:17:35 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <sys/types.h>
 #include "include/forms.h"
 #include "flinternal.h"
 
+
 typedef struct
 {
-    FL_OBJECT *input;
-    FL_OBJECT *browser;
-}
-SPEC;
+    FL_OBJECT * input;
+    FL_OBJECT * browser;
+} SPEC;
 
 
+/***************************************
+ ***************************************/
 
 static int
-handle(FL_OBJECT * ob, int ev, int mx, int my, int key, void *xev)
+handle( FL_OBJECT * ob   FL_UNUSED_ARG,
+		int         ev   FL_UNUSED_ARG,
+		int         mx   FL_UNUSED_ARG,
+		int         my   FL_UNUSED_ARG,
+		int         key  FL_UNUSED_ARG,
+		void *      xev  FL_UNUSED_ARG )
 {
     return 0;
 }
 
 
-/* creates an object */
+/***************************************
+ * creates an object
+ ***************************************/
+
 FL_OBJECT *
-fl_create_combobox(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		   const char *label)
+fl_create_combobox( int          type,
+					FL_Coord     x,
+					FL_Coord     y,
+					FL_Coord     w,
+					FL_Coord     h,
+					const char * label )
 {
     FL_OBJECT *ob;
 
     ob = fl_make_object(FL_COMBOBOX, type, x, y, w, h, label, handle);
-
     return ob;
 }
 
-/* Adds an object */
+
+/***************************************
+ * Adds an object
+ ***************************************/
+
 FL_OBJECT *
-fl_add_combobox(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		const char *label)
+fl_add_combobox( int          type,
+				 FL_Coord     x,
+				 FL_Coord     y,
+				 FL_Coord     w,
+				 FL_Coord     h,
+				 const char * label )
 {
     FL_OBJECT *ob;
 

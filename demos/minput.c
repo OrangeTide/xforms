@@ -26,7 +26,8 @@
 #include "include/forms.h"
 
 void
-input_cb(FL_OBJECT *ob, long data)
+input_cb( FL_OBJECT * ob,
+		  long        data  FL_UNUSED_ARG )
 {
     int x, y;
 

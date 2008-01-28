@@ -68,7 +68,12 @@ static int subm = -1, m = -1, ssm;
 
 /* post-handler */
 int
-post(FL_OBJECT *ob, int ev, FL_Coord mx, FL_Coord y, int key, void *xev)
+post( FL_OBJECT * ob,
+	  int         ev,
+	  FL_Coord    mx   FL_UNUSED_ARG,
+	  FL_Coord    my   FL_UNUSED_ARG,
+	  int         key  FL_UNUSED_ARG,
+	  void      * xev  FL_UNUSED_ARG )
 {
     static int n1 = -1,n2 = -1;
 
@@ -128,7 +133,8 @@ int ssm_cb(int a)
 }
 
 void
-do_pup(FL_OBJECT *ob, long q)
+do_pup( FL_OBJECT * ob,
+		long        q  FL_UNUSED_ARG )
 {
    static int n;
 
@@ -198,7 +204,8 @@ void init_menu(void)
 
 
 void
-do_menu(FL_OBJECT *ob, long data)
+do_menu( FL_OBJECT * ob,
+		 long        data  FL_UNUSED_ARG )
 {
     char buf[128];
 
@@ -213,7 +220,8 @@ do_menu(FL_OBJECT *ob, long data)
 }
 
 void
-done_cb(FL_OBJECT *ob, long data)
+done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
    exit(0);
 }

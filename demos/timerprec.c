@@ -47,7 +47,8 @@ typedef struct {
 
 extern FD_form0 * create_form_form0(void);
 
-void exit_cb(FL_OBJECT *ob, long data)
+void exit_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
    fl_finish();
    exit(0);
@@ -57,7 +58,8 @@ long start_sec, start_usec;
 long end_sec, end_usec;
 
 /* timer expired */
-void timer_cb(FL_OBJECT *ob, long data)
+void timer_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
    char buf[128];
    float df;
@@ -75,7 +77,8 @@ void timer_cb(FL_OBJECT *ob, long data)
 
 }
 
-void start_timer(FL_OBJECT *ob, long data)
+void start_timer( FL_OBJECT * ob,
+				  long        data  FL_UNUSED_ARG )
 {
    FD_form0 *fd = (FD_form0 *)ob->form->fdui;
    char buf[128];

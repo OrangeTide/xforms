@@ -29,54 +29,85 @@
  *.
  *
  */
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_box = "$Id: box.c,v 1.5 2003/04/24 09:35:34 leeming Exp $";
+
+#if defined F_ID || defined DEBUG
+char *fl_id_box = "$Id: box.c,v 1.6 2008/01/28 23:16:20 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 
+
+
+/***************************************
+ ***************************************/
+
 static int
-handle_box(FL_OBJECT * ob, int event, FL_Coord mx, FL_Coord my,
-	   int key, void *ev)
+handle_box( FL_OBJECT * ob,
+			int         event,
+			FL_Coord    mx   FL_UNUSED_ARG,
+			FL_Coord    my   FL_UNUSED_ARG,
+			int         key  FL_UNUSED_ARG,
+			void *      ev   FL_UNUSED_ARG )
 {
-    switch (event)
+    switch ( event )
     {
-    case FL_DRAW:
-	fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-		   ob->col1, ob->bw);
-    case FL_DRAWLABEL:
-	fl_draw_object_label(ob);
-	break;
+		case FL_DRAW:
+			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
+						ob->col1, ob->bw );
+
+		case FL_DRAWLABEL:
+			fl_draw_object_label( ob );
+			break;
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_box(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-	      FL_Coord h, const char *label)
+fl_create_box( int          type,
+			   FL_Coord     x,
+			   FL_Coord     y,
+			   FL_Coord     w,
+			   FL_Coord     h,
+			   const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_BOX, type, x, y, w, h, label, handle_box);
+    ob = fl_make_object( FL_BOX, type, x, y, w, h, label, handle_box );
     ob->boxtype = type;
-    ob->col1 = FL_COL1;
-    ob->col2 = FL_COL1;
-    ob->lcol = FL_LCOL;
-    ob->align = FL_ALIGN_CENTER;
-    ob->active = 0;
+    ob->col1    = FL_COL1;
+    ob->col2    = FL_COL1;
+    ob->lcol    = FL_LCOL;
+    ob->align   = FL_ALIGN_CENTER;
+    ob->active  = 0;
+
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_box(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-	   const char *label)
+fl_add_box( int          type,
+			FL_Coord     x,
+			FL_Coord     y,
+			FL_Coord     w,
+			FL_Coord     h,
+			const char * label)
 {
     FL_OBJECT *ob;
-    ob = fl_create_box(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+
+    ob = fl_create_box( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, ob );
     return ob;
 }

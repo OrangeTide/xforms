@@ -48,7 +48,8 @@ char *symbols[] =
 FL_FORM *form;
 
 static void
-done_cb(FL_OBJECT *ob, long data)
+done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
    exit(0);
 }

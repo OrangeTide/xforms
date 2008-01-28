@@ -28,36 +28,47 @@
  *.
  *   Read 4bytes MSB first
  ***********************************************************************/
-#if !defined(lint) && defined(F_ID)
-char *id_4msb = "$Id: read4msb.c,v 1.6 2003/09/09 00:28:25 leeming Exp $";
+
+#if ! defined lint && defined F_ID
+char *id_4msb = "$Id: read4msb.c,v 1.7 2008/01/28 23:21:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_fget4MSBF(FILE * fp)
+fl_fget4MSBF( FILE * fp )
 {
-    register int ret;
-    ret = getc(fp);
-    ret = (ret << 8) | getc(fp);
-    ret = (ret << 8) | getc(fp);
-    ret = (ret << 8) | getc(fp);
+    int ret = getc(fp);
+
+    ret = ( ret << 8 ) | getc( fp );
+    ret = ( ret << 8 ) | getc( fp );
+    ret = ( ret << 8 ) | getc( fp );
     return ret;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_fput4MSBF(int n, FILE *fp)
+fl_fput4MSBF( int    n,
+			  FILE * fp )
 {
-     putc((n>>24)&0xff,fp);
-     putc((n>>16)&0xff,fp);
-     putc((n>>8)&0xff,fp);
-     putc(n&0xff,fp);
+     putc( ( n >> 24 ) & 0xff, fp );
+     putc( ( n >> 16 ) & 0xff, fp );
+     putc( ( n >>  8 ) & 0xff, fp );
+     putc( n           & 0xff, fp );
      return n;
 }
 

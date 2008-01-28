@@ -32,661 +32,952 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_evt = "$Id: events.c,v 1.9 2003/11/21 13:23:23 leeming Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_evt = "$Id: events.c,v 1.10 2008/01/28 23:18:11 jtt Exp $";
 #endif
+
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/flsnprintf.h"
 
-/*
+
+static void handle_object( FL_OBJECT * obj );
+
+
+/***************************************
  * Function returns 1 if the event is consumed so it will never
  * reach the application window event Q
- */
+ ***************************************/
+
 int
-fl_handle_event_callbacks(XEvent * xev)
+fl_handle_event_callbacks( XEvent * xev )
 {
-    Window win = ((XAnyEvent *) xev)->window;
+    Window win = ( ( XAnyEvent * ) xev )->window;
     FL_WIN *fwin = fl_app_win;
 
-    for (; fwin && fwin->win != win; fwin = fwin->next)
-	;
+    for ( ; fwin && fwin->win != win; fwin = fwin->next )
+		/* empty */ ;
 
-    if (!fwin)
+    if ( ! fwin )
     {
-	M_warn("EventCallback", "Unknown window=0x%lx", xev->xany.window);
-	fl_xevent_name("Ignored", xev);
-	return 0;
+		M_warn( "EventCallback", "Unknown window=0x%lx", xev->xany.window );
+		fl_xevent_name( "Ignored", xev );
+		return 1;                         /* Changed from 0  JTT */
     }
 
-    if (fwin->pre_emptive)
-    {
-	if (fwin->pre_emptive(xev, fwin->pre_emptive_data) == FL_PREEMPT)
-	    return 1;
-    }
+    if (    fwin->pre_emptive
+		 && fwin->pre_emptive( xev, fwin->pre_emptive_data ) == FL_PREEMPT )
+		return 1;
 
-    if (fwin->callback[xev->type])
+    if ( fwin->callback[ xev->type ] )
     {
-	(fwin->callback[xev->type]) (xev, fwin->user_data[xev->type]);
-	return 1;
+		( fwin->callback[ xev->type ] )( xev, fwin->user_data[ xev->type ] );
+		return 1;
     }
 
     return 0;
 }
+
 
 /*** Global event handlers for all windows ******/
 
 static FL_APPEVENT_CB fl_event_callback;
 static void *fl_user_data;
 
-/* Sets the call_back routine for the events */
+
+/***************************************
+ * Sets the call_back routine for the events
+ ***************************************/
+
 FL_APPEVENT_CB
-fl_set_event_callback(FL_APPEVENT_CB callback, void *user_data)
+fl_set_event_callback( FL_APPEVENT_CB callback,
+					   void *         user_data )
 {
     FL_APPEVENT_CB old = fl_event_callback;
+
     fl_event_callback = callback;
     fl_user_data = user_data;
     return old;
 }
 
+
 /********* End of Application Window management ***********}*****/
 
 
+/*************** THE OBJECT EVENTS *************{******/
 /*************** CALL-BACK ROUTINE HANDLING ***********/
 
-#define FL_QSIZE	      64
+#define FL_QSIZE	      64            /* default size of object queue */
 
-/*************** THE OBJECT EVENTS *************{******/
+typedef struct FL_OBJECT_QUEUE_ENTRY_ {
+	FL_OBJECT *                     obj;
+	struct FL_OBJECT_QUEUE_ENTRY_ * next;
+} FL_OBJECT_QUEUE_ENTRY;
 
-static FL_OBJECT *theobj[FL_QSIZE];	/* The object event queue */
-static int ohead = 0, otail = 0;
+typedef struct FL_OBJECT_QUEUE_ {
+	FL_OBJECT_QUEUE_ENTRY * head;       /* here objects get added to */
+	FL_OBJECT_QUEUE_ENTRY * tail;       /* and here they get removed from */
+	FL_OBJECT_QUEUE_ENTRY * empty;      /* linked list if empty entries */
+	FL_OBJECT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
+} FL_OBJECT_QUEUE;
 
-static char *
-obj_name(FL_OBJECT * ob)
+static FL_OBJECT_QUEUE obj_queue;
+
+
+/***************************************************
+ * Function for creating/extending the object queue
+ * (gets called automatically the first time an
+ * object gets pushed on the queue, so no previous
+ * call, e.g. from fl_initialize(), is necessary)
+ ***************************************************/
+
+static void
+extend_obj_queue( void )
 {
-    static char buf[128];
-    char *p;
+	FL_OBJECT_QUEUE_ENTRY *p = fl_malloc( ( FL_QSIZE + 1 ) * sizeof *p );
+	size_t i;
 
-    if (ob == FL_EVENT)
-	return "FL_EVENT";
+	/* The first element of the area gets used from book-keeping purposes */
 
-    if (ob->objclass == FL_BUTTON)
-	p = "Button";
-    else if (ob->objclass == FL_XYPLOT)
-	p = "XYPlot";
-    else if (ob->objclass == FL_SLIDER || ob->objclass == FL_VALSLIDER)
-	p = "Slider";
-    else
-	p = "?";
+	p->next = obj_queue.blocks;
+	obj_queue.blocks = p++;
 
-    fl_snprintf(buf, sizeof(buf), "%s %s", p, ob->label);
-    return buf;
+	/* The rest gets added to (or makes up) the empty list */
+
+	obj_queue.empty = p;
+
+	for ( i = 0; i < FL_QSIZE - 1; p++, i++ )
+		p->next = p + 1;
+
+	p->next = NULL;
 }
 
 
-/* Adds an object to the queue */
-void
-fl_object_qenter(FL_OBJECT * obj)
-{
-    static int warned;
+/******************************************************
+ * Fuction for removing the object queue, should be
+ * called when all forms and application windows have
+ * been closed to get rid of allocated memory.
+ ******************************************************/
 
-/* flinternal.h controls this */
+void
+fl_obj_queue_delete( void )
+{
+	FL_OBJECT_QUEUE_ENTRY *b;
+
+	while ( ( b = obj_queue.blocks ) != NULL )
+	{
+		obj_queue.blocks = b->next;
+		fl_free( b );
+	}
+
+	obj_queue.tail = obj_queue.head = obj_queue.empty = NULL;
+}
+
+
+/***********************************************************
+ * Function for appending a new element to the object queue
+ ***********************************************************/
+
+static void
+add_to_obj_queue( FL_OBJECT * obj )
+{
+	if ( obj == NULL )
+		return;
+
+	if ( obj_queue.empty == NULL )
+		extend_obj_queue( );
+
+	if ( obj_queue.head )
+		obj_queue.head = obj_queue.head->next = obj_queue.empty;
+	else
+		obj_queue.tail = obj_queue.head = obj_queue.empty;
+
+	obj_queue.empty = obj_queue.empty->next;
+
+	obj_queue.head->next = NULL;
+	obj_queue.head->obj = obj;
+}
+
+
+/*****************************************************************
+ * Function for fetching the oldest element form the object queue
+ *****************************************************************/
+
+static FL_OBJECT *
+get_from_obj_queue( void )
+{
+	FL_OBJECT_QUEUE_ENTRY *t = obj_queue.tail;
+
+	if ( t == NULL )
+		return NULL;
+
+	if ( t->next == NULL )
+		obj_queue.tail = obj_queue.head = NULL;
+	else
+		obj_queue.tail = t->next;
+
+	t->next = obj_queue.empty;
+	obj_queue.empty = t;
+
+	return t->obj;
+}
+	
+
+/*************************************************************************
+ * Function for removing all entries for a certain object from the queue.
+ * This routine is called as part of the deletion of an object.
+ *************************************************************************/
+
+void
+fl_object_qflush_object( FL_OBJECT * obj )
+{
+	FL_OBJECT_QUEUE_ENTRY *c,
+		                  *p;
+
+	while ( obj_queue.tail && obj_queue.tail->obj == obj )
+		get_from_obj_queue( );
+
+	if ( ! obj_queue.tail )
+		return;
+
+	p = obj_queue.tail;
+	c = p->next;
+
+	while ( c )
+	{
+		if ( c->obj == obj )
+		{
+			p->next = c->next;
+			c->next = obj_queue.empty;
+			obj_queue.empty = c;
+		}
+		else
+			p = c;
+
+		c = p->next;
+	}
+}
+
+
+/**********************************************************************
+ * Function for removing all entries for a certain form from the queue
+ * - here the object handler must be executed for FL_INPUT objects.
+ * This should be called as part of free_form process.
+ **********************************************************************/
+
+void
+fl_object_qflush( FL_FORM * form )
+{
+	FL_OBJECT_QUEUE_ENTRY *c,
+		                  *p;
+
+	while (    obj_queue.tail
+			&& obj_queue.tail->obj != FL_EVENT
+			&& obj_queue.tail->obj->form == form )
+	{
+		if ( obj_queue.tail->obj->objclass == FL_INPUT )
+			handle_object( obj_queue.tail->obj );
+		get_from_obj_queue( );
+	}
+
+	if ( ! obj_queue.tail )
+		return;
+
+	p = obj_queue.tail;
+	c = p->next;
+
+	while ( c )
+	{
+		if ( c->obj != FL_EVENT && c->obj->form == form )
+		{
+			if ( c->obj->objclass == FL_INPUT )
+				handle_object( c->obj );
+
+			p->next = c->next;
+			c->next = obj_queue.empty;
+			obj_queue.empty = c;
+		}
+		else
+			p = c;
+
+		c = p->next;
+	}
+}
+
+
+/***************************************
+ * Adds an object to the queue
+ ***************************************/
+
+void
+fl_object_qenter( FL_OBJECT * obj )
+{
+	if ( ! obj )
+	{
+		M_err( "Qenter", "NULL object" );
+		return;
+	}
+
 #ifndef DELAYED_ACTION
 
-    if (obj != FL_EVENT &&
-	(!obj || !obj->form || !obj->visible || obj->active <= 0))
+    if (    obj != FL_EVENT
+		 && ( ! obj->form || ! obj->visible || obj->active <= 0 ) )
     {
-
-#if (FL_DEBUG >= ML_DEBUG)
-	M_err("Qenter", "Bad object");
+#if FL_DEBUG >= ML_DEBUG
+		M_err( "Qenter", "Bad object" );
 #endif
-	return;
+		return;
     }
 
-
-    if (obj != FL_EVENT && obj->object_callback)
-    {
-	XFlush(flx->display);
-	obj->object_callback(obj, obj->argument);
-	return;
-    }
-    else if (obj != FL_EVENT && obj->form->form_callback)
-    {
-	XFlush(flx->display);
-	obj->form->form_callback(obj, obj->form->form_cb_data);
-	return;
-    }
-#endif /* DELAYED_ACTION */
-
-    if (ohead == otail - 1 || (ohead == FL_QSIZE - 1 && otail == 0))
-    {
-	if (!warned)
+	if ( obj != FL_EVENT )
 	{
-	    M_warn("QEnter", "object Q overflown:%s", obj_name(obj));
-	    warned = 1;
+		if ( obj->object_callback )
+		{
+			XFlush( flx->display );
+			obj->object_callback( obj, obj->argument );
+			return;
+		}
+		else if ( obj->form->form_callback )
+		{
+			XFlush( flx->display );
+			obj->form->form_callback( obj, obj->form->form_cb_data );
+			return;
+		}
+    }
+#endif /* ! DELAYED_ACTION */
+
+	add_to_obj_queue( obj );
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_OBJECT *
+fl_object_qtest( void )
+{
+    if ( obj_queue.tail == NULL )
+		return NULL;
+    return obj_queue.tail->obj;
+}
+
+
+/***************************************
+ * reads an object from the queue.
+ ***************************************/
+
+FL_OBJECT *
+fl_object_qread( void )
+{
+    FL_OBJECT *obj = get_from_obj_queue( );
+
+	if ( ! obj || obj == FL_EVENT )
+		return obj;
+
+	if ( ! obj->form )
+		return NULL;
+
+	if ( obj->object_callback )
+	{
+		obj->object_callback( obj, obj->argument );
+		return NULL;
 	}
-	otail = ohead = 0;
-/*      otail = (otail + 1) % FL_QSIZE; */
-    }
+	else if ( obj->form->form_callback )
+	{
+		obj->form->form_callback( obj, obj->form->form_cb_data );
+		return NULL;
+	}
 
-    theobj[ohead] = obj;
-    ohead = (ohead + 1) % FL_QSIZE;
-}
-
-FL_OBJECT *
-fl_object_qtest(void)
-{
-    if (ohead == otail)
-	return NULL;
-    return theobj[otail];
-}
-
-
-/* reads an object from the queue. */
-FL_OBJECT *
-fl_object_qread(void)
-{
-    FL_OBJECT *obj;
-
-    if (ohead == otail)
-	return NULL;
-
-    obj = theobj[otail];
-    otail = (otail + 1) % FL_QSIZE;
-
-    if (obj != FL_EVENT && !obj->form)
-       return 0;
-
-    if (obj != FL_EVENT && obj->object_callback)
-    {
-	obj->object_callback(obj, obj->argument);
-	return NULL;
-    }
-    else if (obj != FL_EVENT && obj->form->form_callback)
-    {
-	obj->form->form_callback(obj, obj->form->form_cb_data);
-	return NULL;
-    }
     return obj;
 }
 
-/* this is mainly used to handle the input correctly when a form
-   is being hidden
- */
+
+/***************************************
+ * this is mainly used to handle the input correctly when a form
+ * is being hidden
+ ***************************************/
+
 static void
-handle_object(FL_OBJECT * obj)
+handle_object( FL_OBJECT * obj )
 {
-    if (obj != FL_EVENT && obj->object_callback)
-    {
-	obj->object_callback(obj, obj->argument);
-    }
-    else if (obj != FL_EVENT && obj->form->form_callback)
-    {
-	obj->form->form_callback(obj, obj->form->form_cb_data);
-    }
+	if ( obj != FL_EVENT || ! obj->form )
+		return;
+
+    if ( obj->object_callback )
+		obj->object_callback( obj, obj->argument );
+    else if ( obj->form->form_callback )
+		obj->form->form_callback( obj, obj->form->form_cb_data );
 }
 
-#ifdef DELAYED_ACTION
-
-/***************************************************************
- * Flush all object that belong to form. This should be called
- * as part of free_form process
- *************************************************************{*/
-
-/* read an object directly without invoking callback routines */
-FL_OBJECT *
-fl_object_qread_direct(void)
-{
-    FL_OBJECT *obj;
-
-    if (ohead == otail)
-	return NULL;
-    obj = theobj[otail];
-    otail = (otail + 1) % FL_QSIZE;
-    return obj;
-}
-
-/*
- * flush all the objects in Q that belong to form. This routine is
- * called as part of hide_form
- */
-void
-fl_object_qflush(FL_FORM * form)
-{
-    FL_OBJECT *saveobj[50], *obj, **ppp;
-    int i = 0, flushed = 0;
-
-    for (ppp = saveobj; ppp < (saveobj + 50) && ohead != otail;)
-    {
-	if ((obj = fl_object_qread_direct()))
-	{
-	    if (obj == FL_EVENT || obj->form != form)
-	    {
-		*ppp++ = obj;
-		i++;
-	    }
-	    else if (obj->objclass == FL_INPUT)
-		handle_object(obj);
-	    else
-		flushed++;
-	}
-    }
-
-    if (flushed)
-	M_warn("obj_qflush", "Total of %d objects flushed for %s form",
-	       flushed, form->label ? form->label : "unknown");
-
-    /* re-Q the objects */
-    for (ppp = saveobj; ppp < (saveobj + i); ppp++)
-	fl_object_qenter(*ppp);
-}
-
-/*
- * remove a specific object from object Q. This routine is called
- * as part of delete object.
- */
-void
-fl_object_qflush_object(FL_OBJECT * ob)
-{
-    FL_OBJECT *saveobj[50], *obj, **ppp;
-    int i = 0;
-
-    for (ppp = saveobj; ppp < (saveobj + 50) && ohead != otail;)
-    {
-	if ((obj = fl_object_qread_direct()))
-	{
-	    if (obj != ob)
-	    {
-		*ppp++ = obj;
-		i++;
-	    }
-#if (FL_DEBUG >= ML_DEBUG)
-	    else
-	    {
-		M_err("QflushObject", "%s flushed", ob->label);
-	    }
-#endif
-	}
-    }
-
-    /* re-Q the objects */
-    for (ppp = saveobj; ppp < (saveobj + i); ppp++)
-	fl_object_qenter(*ppp);
-}
-
-#endif /* DELAYED_ACTION * */
 
 /** End of object flush ************* */
+
 
 /***************** End of object Q *****************/
 
 
+
 /**************** Normal Events ********************/
 
-/* Treats all new user events, i.e., either calls the callback routine
- * or places FL_EVENT in the object queue. */
+typedef struct FL_EVENT_QUEUE_ENTRY_ {
+	XEvent                         xev;
+	struct FL_EVENT_QUEUE_ENTRY_ * next;
+} FL_EVENT_QUEUE_ENTRY;
 
-static XEvent appev[FL_QSIZE];
-static int tail, head;
-static int new_events;
+typedef struct FL_EVENT_QUEUE_ {
+	FL_EVENT_QUEUE_ENTRY * head;       /* here events get added to */
+	FL_EVENT_QUEUE_ENTRY * tail;       /* and here they get removed from */
+	FL_EVENT_QUEUE_ENTRY * empty;      /* linked list if empty entries */
+	FL_EVENT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
+} FL_EVENT_QUEUE;
+
+static FL_EVENT_QUEUE event_queue;
+
+static int new_events = 0;
+
+
+/***************************************************
+ * Function for creating/extending the event queue
+ * (gets called automatically the first time an
+ * event gets pushed on the queue, so no previous
+ * call, e.g. from fl_initialize(), is necessary)
+ ***************************************************/
+
+static void
+extend_event_queue( void )
+{
+	FL_EVENT_QUEUE_ENTRY *p = fl_malloc( ( FL_QSIZE + 1 ) * sizeof *p );
+	size_t i;
+
+	/* The first element of the area gets used from book-keeping purposes */
+
+	p->next = event_queue.blocks;
+	event_queue.blocks = p++;
+
+	/* The rest gets added to (or makes up) the empty list */
+
+	event_queue.empty = p;
+
+	for ( i = 0; i < FL_QSIZE - 1; p++, i++ )
+		p->next = p + 1;
+
+	p->next = NULL;
+}
+
+
+/******************************************************
+ * Fuction for removing the event queue, should be
+ * called when all forms and application windows have
+ * been closed to get rid of allocated memory.
+ ******************************************************/
 
 void
-fl_XPutBackEvent(XEvent * xev)
+fl_event_queue_delete( void )
 {
-    static int nn, mm;
+	FL_EVENT_QUEUE_ENTRY *b;
 
-    if (fl_handle_event_callbacks(xev))
-	return;
+	while ( ( b = event_queue.blocks ) != NULL )
+	{
+		event_queue.blocks = b->next;
+		fl_free( b );
+	}
 
-    if (fl_event_callback)
+	event_queue.tail = event_queue.head = event_queue.empty = NULL;
+}
+
+
+/***********************************************************
+ * Function for appending a new element to the event queue
+ ***********************************************************/
+
+static void
+add_to_event_queue( XEvent *xev )
+{
+	if ( event_queue.empty == NULL )
+		extend_event_queue( );
+
+	if ( event_queue.head )
+		event_queue.head = event_queue.head->next = event_queue.empty;
+	else
+		event_queue.tail = event_queue.head = event_queue.empty;
+
+	event_queue.empty = event_queue.empty->next;
+
+	event_queue.head->next = NULL;
+	event_queue.head->xev = *xev;
+}
+
+
+/****************************************************************
+ * Function for removing the oldest element form the event queue
+ ****************************************************************/
+
+static XEvent
+get_from_event_queue( void )
+{
+	FL_EVENT_QUEUE_ENTRY *t = event_queue.tail;
+
+	if ( t->next == NULL )
+		event_queue.tail = event_queue.head = NULL;
+	else
+		event_queue.tail = t->next;
+
+	t->next = event_queue.empty;
+	event_queue.empty = t;
+
+	return t->xev;
+}
+	
+
+/***************************************
+ * Replacement for the Xlib XPiutBackEvent() function: allows to
+ * push back an event onto the queue
+ ***************************************/
+
+void
+fl_XPutBackEvent( XEvent * xev )
+{
+    static int mm;
+
+    if ( fl_handle_event_callbacks( xev ) )
+		return;
+
+    if ( fl_event_callback )
     {
-	fl_event_callback(xev, fl_user_data);
-	return;
+		fl_event_callback( xev, fl_user_data );
+		return;
     }
 
     /* these must be from simulating double buffering, throw them away */
-    if (xev->type == NoExpose)
-    {
-	if ((++mm % 20) == 0)
-	    M_warn("XPutbackEvent", "20 NoExpose discarded");
-	return;
-    }
 
-
-    if (head == tail - 1 || (head == FL_QSIZE - 1 && tail == 0))
+    if ( xev->type == NoExpose )
     {
-	if ((nn++ % 10) == 0)
-	{
-	    M_err("PutBackEvent", "Q overflow");
-	    fl_print_xevent_name("PutBackEvent", xev);
-	}
-	tail = (tail + 1) % FL_QSIZE;
+		if ( ++mm % 20 == 0 )
+			M_warn( "XPutbackEvent", "20 NoExpose discarded" );
+		return;
     }
 
     new_events++;
-    fl_xevent_name("PutbackEvent", xev);
-    memcpy(appev + head, xev, sizeof(*xev));
-    head = (head + 1) % FL_QSIZE;
+    fl_xevent_name( "fl_XPutBackEvent", xev );
+	add_to_event_queue( xev );
 }
 
-int
-fl_XEventsQueued(int mode)
-{
 
-    if (head == tail)
+/***************************************
+ * Replacement for the Xlib XEventsQueued() function: returns
+ * if there are any events in the event queue.
+ ***************************************/
+
+int
+fl_XEventsQueued( int mode  FL_UNUSED_ARG )
+{
+    if ( event_queue.tail == NULL )
     {
-	fl_treat_interaction_events(0);
-	fl_treat_user_events();
+		fl_treat_interaction_events( 0 );
+		fl_treat_user_events( );
     }
-    return (head != tail);
+
+    return event_queue.tail != NULL;
 }
 
+
+/***************************************
+ * Replacement for the Xlib XNextEvent() function: copies the first
+ * frst event into the XEvent structure and removes it from the queue.
+ * If the queue is empty it blocks until an event has been received.
+ ***************************************/
+
 int
-fl_XNextEvent(XEvent * xev)
+fl_XNextEvent( XEvent * xev )
 {
-    while (head == tail)
+    while ( event_queue.tail == NULL )
     {
-	M_err("XNextEvent", "FL_EVENT/FL_XNextEvent not right");
-	fl_treat_interaction_events(1);
-	fl_treat_user_events();
+		fl_treat_interaction_events( 1 );
+		fl_treat_user_events( );
     }
 
-    memcpy(xev, appev + tail, sizeof(*xev));
-    tail = (tail + 1) % FL_QSIZE;
+	*xev = get_from_event_queue( );
+	return 1;
+}
+
+
+/***************************************
+ * Replacement for the Xlib XPeekEvent() function: returns the the
+ * first event avaialable without removing it from the queue and
+ * blocks until an event is received.
+ ***************************************/
+
+int
+fl_XPeekEvent( XEvent * xev )
+{
+    while ( event_queue.tail == NULL )
+    {
+		fl_treat_interaction_events( 1 );
+		fl_treat_user_events( );
+    }
+
+	*xev = event_queue.tail->xev;
     return 1;
 }
 
-int
-fl_XPeekEvent(XEvent * xev)
-{
-    while (head == tail)
-    {
-	M_err("XNextEvent", "FL_EVENT/FL_XNextEvent not right");
-	fl_treat_interaction_events(1);
-	fl_treat_user_events();
-    }
-    memcpy(xev, appev + tail, sizeof(*xev));
-    return 1;
-}
 
-/*
+/***************************************
  * get all user events and treat them: either consume by calling
- * the call back routine or put into FL internal Q for later
+ * the callback routine or put into FL internal Q for later
  * retrival
- */
+ ***************************************/
+
 void
-fl_treat_user_events(void)
+fl_treat_user_events( void )
 {
     XEvent xev;
 
-    if (fl_event_callback)
-    {
-	for (; --new_events >= 0;)
-	{
-	    fl_XNextEvent(&xev);
-	    fl_event_callback(&xev, 0);
-	}
-    }
+
+	if ( new_events == 0 )
+		return;
+
+    if ( fl_event_callback )
+		while ( new_events-- > 0 )
+		{
+			fl_XNextEvent( &xev );
+			fl_event_callback( &xev, 0 );
+		}
     else
-    {
-	for (; --new_events >= 0;)
-	    fl_object_qenter(FL_EVENT);
-    }
-    new_events = 0;
+		while ( new_events-- > 0 )
+			fl_object_qenter( FL_EVENT );
 }
+
 
 /******************** DEBUG use only *****************/
 
-#define NV(a) {#a,a}
+
+#define NV( a ) { #a, a }
+
 typedef struct
 {
-    const char *name;
-    int type;
-}
-ev_name;
+    const char * name;
+    int          type;
+} ev_name;
 
-static ev_name evname[] =
+
+static ev_name evname[ ] =
 {
-    NV(KeyPress), NV(KeyRelease), NV(ButtonPress),
-    NV(ButtonRelease), NV(MotionNotify), NV(EnterNotify),
-    NV(LeaveNotify), NV(FocusIn), NV(FocusOut),
-    NV(KeymapNotify), NV(Expose), NV(GraphicsExpose),
-    NV(NoExpose), NV(VisibilityNotify), NV(CreateNotify),
-    NV(DestroyNotify), NV(UnmapNotify), NV(MapNotify),
-    NV(MapRequest), NV(ReparentNotify), NV(ConfigureNotify),
-    NV(ConfigureRequest), NV(GravityNotify), NV(ResizeRequest),
-    NV(CirculateNotify), NV(CirculateRequest), NV(PropertyNotify),
-    NV(SelectionClear), NV(SelectionRequest), NV(SelectionNotify),
-    NV(ColormapNotify), NV(ClientMessage), NV(MappingNotify),
-    NV(TIMER3)
+    NV( KeyPress ),
+	NV( KeyRelease ),
+	NV( ButtonPress ),
+    NV( ButtonRelease ),
+	NV( MotionNotify ),
+	NV( EnterNotify ),
+    NV( LeaveNotify ),
+	NV( FocusIn ),
+	NV( FocusOut ),
+    NV( KeymapNotify ),
+	NV( Expose ),
+	NV( GraphicsExpose ),
+    NV( NoExpose ),
+	NV( VisibilityNotify ),
+	NV( CreateNotify ),
+    NV( DestroyNotify ),
+	NV( UnmapNotify ),
+	NV( MapNotify ),
+    NV( MapRequest ),
+	NV( ReparentNotify ),
+	NV( ConfigureNotify ),
+    NV( ConfigureRequest ),
+	NV( GravityNotify ),
+	NV( ResizeRequest ),
+    NV( CirculateNotify ),
+	NV( CirculateRequest ),
+	NV( PropertyNotify ),
+    NV( SelectionClear ),
+	NV( SelectionRequest ),
+	NV( SelectionNotify ),
+    NV( ColormapNotify ),
+	NV( ClientMessage ),
+	NV( MappingNotify ),
+    NV( FLArtificialTimerEvent )
 };
 
+
+/***************************************
+ ***************************************/
+
 const char *
-fl_get_xevent_name(const XEvent *xev)
+fl_get_xevent_name( const XEvent *xev )
 {
       size_t i;
-      static char buf[128];
+      static char buf[ 128 ];
 
-      for (i = 0; i < sizeof(evname); i++)
+      for ( i = 0; i < sizeof evname; i++ )
       {
-          if(evname[i].type == xev->type)
+          if ( evname[ i ].type == xev->type )
           {
-             fl_snprintf(buf,sizeof(buf),"%s(0x%x)",evname[i].name, xev->type);
-             return buf;
+			  fl_snprintf( buf,sizeof buf,"%s(0x%x)",
+						   evname[ i ].name, xev->type );
+			  return buf;
           }
       }
+
       return "unknown event";
 }
 
+
+/***************************************
+ ***************************************/
+
 XEvent *
-fl_print_xevent_name(const char *where, const XEvent * xev)
+fl_print_xevent_name( const char *   where,
+					  const XEvent * xev )
 {
     size_t i, known;
-    Window win = ((XAnyEvent *) xev)->window;
+    Window win = ( ( XAnyEvent * ) xev )->window;
 
-    for (i = known = 0; !known && i < sizeof(evname) / sizeof(evname[0]); i++)
-	if (evname[i].type == xev->type)
-	{
-	    fprintf(stderr, "%s Event(%d,w=0x%lx s=%ld) %s ",
-		    where ? where : "",
-		    xev->type, win, ((XAnyEvent *) xev)->serial,
-		    evname[i].name);
+    for ( i = known = 0; ! known && i < sizeof evname / sizeof *evname; i++ )
+		if ( evname[i].type == xev->type )
+		{
+			fprintf( stderr, "%s Event(%d,w=0x%lx s=%ld) %s ",
+					 where ? where : "",
+					 xev->type, win, ( ( XAnyEvent * ) xev)->serial,
+					 evname[ i ].name );
 
-	    if (xev->type == Expose)
-		fprintf(stderr, "count=%d serial=%lx\n",
-			xev->xexpose.count, xev->xexpose.serial);
-	    else if (xev->type == LeaveNotify || xev->type == EnterNotify)
-		fprintf(stderr, "Mode %s\n", xev->xcrossing.mode == NotifyGrab ?
-			"Grab" :
-		(xev->xcrossing.mode == NotifyNormal ? "Normal" : "UnGrab"));
-	    else if (xev->type == MotionNotify)
-		fprintf(stderr, "Mode %s\n",
-			xev->xmotion.is_hint ? "Hint" : "Normal");
-	    else if (xev->type == ConfigureNotify)
-		fprintf(stderr, "(%d,%d) w=%d h=%d %s\n",
-			xev->xconfigure.x, xev->xconfigure.y,
-			xev->xconfigure.width, xev->xconfigure.height,
-			xev->xconfigure.send_event ? "Syn" : "Non-Syn");
-	    else if (xev->type == ButtonRelease)
-		fprintf(stderr, "button: %d\n", xev->xbutton.button);
-	    else
-		fputc('\n', stderr);
-	    known = 1;
-	}
+			if ( xev->type == Expose )
+				fprintf( stderr, "count=%d serial=%lx\n",
+						 xev->xexpose.count, xev->xexpose.serial );
+			else if ( xev->type == LeaveNotify || xev->type == EnterNotify )
+				fprintf(stderr, "Mode %s\n", xev->xcrossing.mode == NotifyGrab ?
+						"Grab" :
+						( xev->xcrossing.mode == NotifyNormal ?
+						  "Normal" : "UnGrab" ) );
+			else if ( xev->type == MotionNotify )
+				fprintf(stderr, "Mode %s\n",
+						xev->xmotion.is_hint ? "Hint" : "Normal" );
+			else if ( xev->type == ConfigureNotify )
+				fprintf(stderr, "(%d,%d) w=%d h=%d %s\n",
+						xev->xconfigure.x, xev->xconfigure.y,
+						xev->xconfigure.width, xev->xconfigure.height,
+						xev->xconfigure.send_event ? "Syn" : "Non-Syn" );
+			else if ( xev->type == ButtonRelease )
+				fprintf( stderr, "button: %d\n", xev->xbutton.button );
+			else
+				fputc( '\n', stderr );
+			known = 1;
+		}
 
-    if (!known)
-	fprintf(stderr, "Unknown event %d, win=%lu", xev->type, win);
-    return (XEvent *) xev;
+    if ( ! known )
+		fprintf( stderr, "Unknown event %d, win=%lu", xev->type, win );
+
+    return ( XEvent * ) xev;
 }
+
+
+/***************************************
+ ***************************************/
 
 XEvent *
-fl_xevent_name(const char *where, const XEvent * xev)
+fl_xevent_name( const char *   where,
+				const XEvent * xev )
 {
 
-    if (fl_cntl.debug >= 2)
-	fl_print_xevent_name(where, xev);
-    return (XEvent *) xev;
+    if ( fl_cntl.debug >= 2 )
+		fl_print_xevent_name( where, xev );
+
+    return ( XEvent * ) xev;
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-badwin_handler(Display * dpy, XErrorEvent * xev)
+badwin_handler( Display *     dpy  FL_UNUSED_ARG,
+				XErrorEvent * xev )
 {
-	if (xev->type != BadWindow && xev->type != BadDrawable)
-		M_err("badwin_handler",
-			"X error happened when expecting only BadWindow/Drawable\n");
+	if ( xev->type != BadWindow && xev->type != BadDrawable )
+		M_err( "badwin_handler",
+			   "X error happened when expecting only BadWindow/Drawable\n" );
 	return 0;
 }
 
 
 /***********************************************************************
- * Received a redraw event ev, see if next event is the same as the
+ * Received an Expose event ev, see if next event is the same as the
  * the current one, drop it if it is, but we need consolidate all the
  * dirty rectangles into one.
  *
  * Must not block.
  ************************************************************************/
+
 static void
-compress_redraw(XEvent * ev)
+compress_redraw( XEvent * ev )
 {
-    XExposeEvent *xpe = (XExposeEvent *) ev;
+    XExposeEvent *xpe = ( XExposeEvent * ) ev;
     Window win = xpe->window;
-    XRectangle rec;
-    Region reg = XCreateRegion();
+	XRectangle rec;
+    Region reg = XCreateRegion( );
 
     /* this is theoretically not correct as we can't peek ahead and ignore
        the events in between, but it works in XForms as we always update the
        form size and position when dealing with Expose event */
+
     do
     {
-#if (FL_DEBUG >= ML_DEBUG)
-	M_warn("CompressExpose", "x=%d y=%d w=%u h=%u count=%d",
-	       xpe->x, xpe->y, xpe->width, xpe->height, xpe->count);
+#if FL_DEBUG >= ML_DEBUG
+		M_warn( "X CompressExpose", "x=%d y=%d w=%d h=%d count=%d",
+				xpe->x, xpe->y, xpe->width, xpe->height, xpe->count );
 #endif
-	rec.x = xpe->x;
-	rec.y = xpe->y;
-	rec.width = xpe->width;
-	rec.height = xpe->height;
-	XUnionRectWithRegion(&rec, reg, reg);
-    }
-    while (XCheckWindowEvent(flx->display, win, ExposureMask, ev));
 
-    if (xpe->count != 0)
+		rec.x      = xpe->x;
+		rec.y      = xpe->y;
+		rec.width  = xpe->width;
+		rec.height = xpe->height;
+
+		XUnionRectWithRegion( &rec, reg, reg );
+    }
+    while ( XCheckWindowEvent( flx->display, win, ExposureMask, ev ) );
+
+    if ( xpe->count != 0 )
     {
-	M_warn("CompressExpose", "Something is wrong");
-	xpe->count = 0;
+		M_warn( "Y CompressExpose", "Something is wrong" );
+		xpe->count = 0;
     }
 
     /* get the consolidated rectangle. Here somehow if we can get the region
        to the calling routine, XSetRegion might be more efficient as far as
        the total area painted. */
 
-    XClipBox(reg, &rec);
-    XDestroyRegion(reg);
-#if (FL_DEBUG >= ML_WARN)
-    M_warn("CompressExpose", "x=%d y=%d w=%u h=%u Sum\n",
-	   rec.x, rec.y, rec.width, rec.height);
+    XClipBox( reg, &rec );
+    XDestroyRegion( reg );
+
+#if FL_DEBUG >= ML_WARN
+    M_warn( "Z CompressExpose", "x=%hd y=%hd w=%hu h=%hu Sum\n",
+			rec.x, rec.y, rec.width, rec.height );
 #endif
+
     xpe->x = rec.x;
     xpe->y = rec.y;
     xpe->width = rec.width;
     xpe->height = rec.height;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_compress_motion(XEvent * xme)
+fl_compress_motion( XEvent * xme )
 {
     Window win = xme->xmotion.window;
     unsigned long evm = PointerMotionMask | ButtonMotionMask;
 
     do
     {
-#if (FL_DEBUG >= ML_DEBUG)
-	M_info2("CompressMotion", "win=0x%lx (%d,%d) %s",
-		xme->xany.window, xme->xmotion.x, xme->xmotion.y,
-		xme->xmotion.is_hint ? "hint" : "")
+#if FL_DEBUG >= ML_DEBUG
+		M_info2( "CompressMotion", "win=0x%lx (%d,%d) %s",
+				 xme->xany.window, xme->xmotion.x, xme->xmotion.y,
+				 xme->xmotion.is_hint ? "hint" : "" )
 #endif
-	    ;
+			/* empty */ ;
     }
-    while (XCheckWindowEvent(flx->display, win, evm, xme));
+    while ( XCheckWindowEvent(flx->display, win, evm, xme ) );
 
-    if (xme->xmotion.is_hint)
+    if ( xme->xmotion.is_hint )
     {
-        int (*old) (Display *, XErrorEvent *);
+        int ( *old )( Display *, XErrorEvent * );
+
         /* We must protect against BadWindow here, because we have only
          * looked for Motion events, and there could be a Destroy event
          * which makes the XQueryPointer fail as the window is deleted.
          */
-        old = XSetErrorHandler(badwin_handler);
-	fl_get_win_mouse(xme->xmotion.window,
-			 &(xme->xmotion.x), &(xme->xmotion.y), &fl_keymask);
-        XSetErrorHandler(old);
-	xme->xmotion.is_hint = 0;
+
+        old = XSetErrorHandler( badwin_handler );
+		fl_get_win_mouse( xme->xmotion.window,
+						  &xme->xmotion.x, &xme->xmotion.y, &fl_keymask );
+        XSetErrorHandler( old );
+		xme->xmotion.is_hint = 0;
     }
 }
 
+
+/***************************************
+ ***************************************/
 
 void
-fl_compress_event(XEvent * xev, unsigned long mask)
+fl_compress_event( XEvent *      xev,
+				   unsigned long mask )
 {
-    if (xev->type == Expose && (mask & ExposureMask))
-	compress_redraw(xev);
-    else if (xev->type == MotionNotify &&
-	     ((mask & PointerMotionMask) || mask & ButtonMotionMask))
-	fl_compress_motion(xev);
+    if ( xev->type == Expose && mask & ExposureMask )
+		compress_redraw( xev );
+    else if (    xev->type == MotionNotify
+			  && mask & ( PointerMotionMask | ButtonMotionMask ) )
+		fl_compress_motion( xev );
 }
+
+
+/***************************************
+ ***************************************/
 
 int
-fl_keysym_pressed(KeySym k)
+fl_keysym_pressed( KeySym k )
 {
-    char kvec[32];
+    char kvec[ 32 ];
     KeyCode code;
 
-    if ((code = XKeysymToKeycode(flx->display, k)) == NoSymbol)
+    if ( ( code = XKeysymToKeycode( flx->display, k ) ) == NoSymbol )
     {
-	M_warn("CheckKeyPress", "Bad KeySym %d", (int) k);
-	return 0;
+		M_warn( "CheckKeyPress", "Bad KeySym %d", (int) k );
+		return 0;
     }
 
-    XQueryKeymap(flx->display, kvec);
-    return (1 & (kvec[code / 8] >> (code & 7)));
+    XQueryKeymap( flx->display, kvec );
+    return 1 & ( kvec[ code / 8 ] >> ( code & 7 ) );
 }
 
-/* add an event */
+
+/***************************************
+ * add an event
+ ***************************************/
+
 long
-fl_addto_selected_xevent(Window win, long mask)
+fl_addto_selected_xevent( Window win,
+						  long   mask )
 {
     XWindowAttributes xwa;
 
-    XGetWindowAttributes(flx->display, win, &xwa);
+    XGetWindowAttributes( flx->display, win, &xwa );
     xwa.your_event_mask |= mask;
 
-    /* on some SGI machines, your_e_m has bogus value 0x80??????, causing an
-       X protocol errors. Fix this here */
+    /* on some SGI machines, 'your_event_mask' has bogus value 0x80??????,
+	   causing an X protocol error. Fix this here */
 
-    xwa.your_event_mask &= (1L << 25) - 1;
-    XSelectInput(flx->display, win, xwa.your_event_mask);
+    xwa.your_event_mask &= ( 1L << 25 ) - 1;
+    XSelectInput( flx->display, win, xwa.your_event_mask );
 
     return xwa.your_event_mask;
 }
 
+
+/***************************************
+ ***************************************/
+
 long
-fl_remove_selected_xevent(Window win, long mask)
+fl_remove_selected_xevent( Window win,
+						   long   mask )
 {
     XWindowAttributes xwa;
 
-    XGetWindowAttributes(flx->display, win, &xwa);
+    XGetWindowAttributes( flx->display, win, &xwa );
     xwa.your_event_mask &= ~mask;
 
-    /* on some SGI machines, your_e_m has bogus value 0x80??????, causing an
-       X protocol errors. Fix this here */
+    /* on some SGI machines, your_event_mask has bogus value 0x80??????,
+	   causing an X protocol error. Fix this here */
 
-    xwa.your_event_mask &= (1L << 25) - 1;
-    XSelectInput(flx->display, win, xwa.your_event_mask);
+    xwa.your_event_mask &= ( 1L << 25 ) - 1;
+    XSelectInput( flx->display, win, xwa.your_event_mask );
 
     return xwa.your_event_mask;
 }

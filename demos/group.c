@@ -63,7 +63,8 @@ extern FD_objsform * create_form_objsform(void);
 FD_objsform *fd_objsform;
 
 /* callbacks for form objsform */
-void show_group(FL_OBJECT *ob, long data)
+void show_group( FL_OBJECT * ob    FL_UNUSED_ARG,
+				 long        data )
 {
      int i;
      for ( i = 0; i <= NGROUP;i++)

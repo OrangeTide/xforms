@@ -51,55 +51,63 @@ typedef struct {
 	FL_OBJECT *done;
 } FD_form0;
 
-extern FD_form0 * create_form_form0(void);
+extern FD_form0 * create_form_form0( void );
 
 FD_form0 *fd_form0;
 
 /* which event to take over is better kept in a state varible even though
    query the status via fl_get_button is cheap
  */
-int
-preemptive_handler(FL_OBJECT *ob, int event,
-                          FL_Coord mx, FL_Coord my, int key, void *xev)
-{
-    int override = fl_get_button(fd_form0->override);
-    char buf[128];
-    char *what = override ? "preempted":"detected";
 
-    switch(event)
+int
+preemptive_handler( FL_OBJECT * ob   FL_UNUSED_ARG,
+					int         event,
+					FL_Coord    mx   FL_UNUSED_ARG,
+					FL_Coord    my   FL_UNUSED_ARG,
+					int         key  FL_UNUSED_ARG,
+					void *      xev  FL_UNUSED_ARG )
+{
+    int override = fl_get_button( fd_form0->override );
+    char buf[ 128 ];
+    char *what = override ? "preempted" : "detected";
+
+    switch( event )
     {
-      case FL_ENTER:
-         if(fl_get_button(fd_form0->enter))
-         {
-           /* ok, want to handle enter */
-             sprintf(buf,"%s %s", "FL_ENTER",what);
-             fl_set_object_label(fd_form0->event, buf);
-             return (override ? FL_PREEMPT: 0);
+		case FL_ENTER:
+			if ( fl_get_button(fd_form0->enter ) )
+			{
+				/* ok, want to handle enter */
+				sprintf( buf,"%s %s", "FL_ENTER", what );
+				fl_set_object_label( fd_form0->event, buf );
+				return override ? FL_PREEMPT : 0;
+			}
+			break;
+
+		case FL_LEAVE:
+			if( fl_get_button( fd_form0->leave ) )
+			{
+				sprintf( buf,"%s %s", "FL_LEAVE", what);
+				fl_set_object_label( fd_form0->event, buf );
+				return override ? FL_PREEMPT : 0;
          }
          break;
-      case FL_LEAVE:
-         if(fl_get_button(fd_form0->leave))
-         {
-             sprintf(buf,"%s %s", "FL_LEAVE",what);
-             fl_set_object_label(fd_form0->event, buf);
-             return (override ? FL_PREEMPT: 0);
-         }
-         break;
-      case FL_PUSH:
-      case FL_MOUSE: /* one of the quirks of the button class */
-         if(fl_get_button(fd_form0->push))
-         {
-             sprintf(buf,"%s %s", "FL_PUSH",what);
-             fl_set_object_label(fd_form0->event, buf);
-             return (override ? FL_PREEMPT: 0);
-         }
-         break;
-      case FL_RELEASE:
-         if(fl_get_button(fd_form0->release))
-         {
-             sprintf(buf,"%s %s", "FL_RELEASE",what);
-             fl_set_object_label(fd_form0->event, buf);
-             return (override ? FL_PREEMPT: 0);
+
+		case FL_PUSH:
+		case FL_MOUSE: /* one of the quirks of the button class */
+			if ( fl_get_button( fd_form0->push ) )
+			{
+				sprintf( buf,"%s %s", "FL_PUSH", what );
+				fl_set_object_label( fd_form0->event, buf );
+				return override ? FL_PREEMPT : 0;
+			}
+			break;
+
+		case FL_RELEASE:
+			if ( fl_get_button( fd_form0->release ) )
+			{
+				sprintf( buf,"%s %s", "FL_RELEASE", what );
+				fl_set_object_label( fd_form0->event, buf );
+				return override ? FL_PREEMPT : 0;
          }
          break;
     }
@@ -107,83 +115,100 @@ preemptive_handler(FL_OBJECT *ob, int event,
     return 0;
 }
 
+
 #define INTERVAL  800  /* wait this long before show tip */
 static int timeoutID;  /* we can also use ob->u_ldata to hold it */
 
 static void
-do_tips(int id, void *p)
+do_tips( int    id  FL_UNUSED_ARG,
+		 void * p )
 {
-   FL_OBJECT *ob = (FL_OBJECT *)p;
+	FL_OBJECT *ob = p;
 
-   fl_show_oneliner((char *)ob->u_vdata, ob->form->x + ob->x,
-                   ob->form->y + ob->y + ob->h + 1);
-   timeoutID = fl_add_timeout(INTERVAL, do_tips, ob);
+	fl_show_oneliner( ob->u_vdata, ob->form->x + ob->x,
+					  ob->form->y + ob->y + ob->h + 1 );
+	timeoutID = fl_add_timeout( INTERVAL, do_tips, ob );
 }
+
 
 /*
  * use the post handler as a tipper
  */
 int
-post_handler(FL_OBJECT *ob, int event,
-            FL_Coord mx, FL_Coord my, int key, void *xev)
-{
-     if(!ob->u_vdata)
-       return 0;
 
-     if(event == FL_ENTER)
-         timeoutID = fl_add_timeout(INTERVAL,do_tips, ob);
-     else if(event == FL_LEAVE || event == FL_PUSH)
-     {
-         fl_hide_oneliner();
-         if(timeoutID)
-         {
-            fl_remove_timeout(timeoutID);
+post_handler( FL_OBJECT * ob,
+			  int         event,
+			  FL_Coord    mx   FL_UNUSED_ARG,
+			  FL_Coord    my   FL_UNUSED_ARG,
+			  int         key  FL_UNUSED_ARG,
+			  void *      xev  FL_UNUSED_ARG )
+{
+	if ( ! ob->u_vdata )
+		return 0;
+
+	if ( event == FL_ENTER )
+		timeoutID = fl_add_timeout( INTERVAL,do_tips, ob );
+	else if ( event == FL_LEAVE || event == FL_PUSH )
+	{
+		fl_hide_oneliner( );
+		if( timeoutID )
+		{
+            fl_remove_timeout( timeoutID );
             timeoutID = 0;
-         }
+		}
      }
 
      return 0;
 }
 
-void set_tip(FL_OBJECT *ob, char *s)
+
+void
+set_tip( FL_OBJECT * ob,
+		 char *      s )
 {
     ob->u_vdata = s;
-    fl_set_object_posthandler(ob, post_handler);
+    fl_set_object_posthandler( ob, post_handler );
 }
 
-int main(int argc, char *argv[])
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-   fl_initialize(&argc, argv, "FormDemo", 0, 0);
+	fd_form0 = create_form_form0( );
 
-   fd_form0 = create_form_form0();
+	/* fill-in form initialization code */
 
-   /* fill-in form initialization code */
+	fl_set_button( fd_form0->peek, 1 );
+	fl_set_button( fd_form0->enter, 1 );
+	fl_set_button( fd_form0->leave, 1 );
+	fl_set_button( fd_form0->push, 1 );
+	fl_set_button( fd_form0->release, 1 );
 
-   fl_set_button(fd_form0->peek, 1);
-   fl_set_button(fd_form0->enter, 1);
-   fl_set_button(fd_form0->leave, 1);
-   fl_set_button(fd_form0->push, 1);
-   fl_set_button(fd_form0->release, 1);
+	fl_set_object_prehandler( fd_form0->butt, preemptive_handler );
 
-   fl_set_object_prehandler(fd_form0->butt,preemptive_handler);
+	set_tip( fd_form0->done, "Want to quit ?\nPress me" );
+	set_tip( fd_form0->peek, "Turn preempting off" );
+	set_tip( fd_form0->override, "Turn preempting on" );
 
-   set_tip(fd_form0->done, "Want to quit ?\nPress me");
-   set_tip(fd_form0->peek, "Turn preempting off");
-   set_tip(fd_form0->override, "Turn preempting on");
+	/* show the first form */
 
-   /* show the first form */
-   fl_show_form(fd_form0->form0,FL_PLACE_CENTER,FL_TRANSIENT,"Preemptive");
+	fl_show_form( fd_form0->form0, FL_PLACE_CENTER, FL_TRANSIENT,
+				  "Preemptive" );
 
-   while (fl_do_forms() != fd_form0->done)
-      ;
+	while ( fl_do_forms( ) != fd_form0->done )
+		/* empty */ ;
 
-   return 0;
+	return 0;
 }
+
 
 /* Form definition file generated with fdesign. */
 
-FD_form0 *create_form_form0(void)
+FD_form0 *
+create_form_form0( void )
 {
   FL_OBJECT *obj;
   FD_form0 *fdui = (FD_form0 *) fl_calloc(1, sizeof(FD_form0));

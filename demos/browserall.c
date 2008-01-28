@@ -44,7 +44,7 @@ main(int argc, char *argv[])
    fl_initialize(&argc, argv, "FormDemo", 0, 0);
    create_form();
    fill_browsers();
-   fl_show_form(form,FL_PLACE_CENTER,FL_TRANSIENT,"All Browsers");
+   fl_show_form(form,FL_PLACE_CENTER|FL_FREE_SIZE,FL_TRANSIENT,"All Browsers");
    fl_do_forms();
    fl_hide_form(form);
    return 0;
@@ -56,21 +56,24 @@ static char *bnames[] =
 };
 
 
-void deselect(FL_OBJECT *obj, long arg)
+void deselect( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
 {
    int i;
    for (i=0; i<4; i++)
       fl_deselect_browser(br[i]);
 }
 
-void set_size(FL_OBJECT *obj, long arg)
+void set_size( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg)
 {
    int i;
    for (i=0; i<4; i++)
       fl_set_browser_fontsize(br[i],arg);
 }
 
-void set_style(FL_OBJECT *obj, long arg)
+void set_style( FL_OBJECT * obj  FL_UNUSED_ARG,
+				long        arg)
 {
    int i;
    for (i=0; i<4; i++)
@@ -93,7 +96,9 @@ void br_callback(FL_OBJECT *ob, long arg)
     fl_set_object_label(readout,buf);
 }
 
-void vcallback(FL_OBJECT *ob, int topline, void *data)
+void vcallback( FL_OBJECT * ob    FL_UNUSED_ARG,
+				int         topline,
+				void      * data  FL_UNUSED_ARG )
 {
      int i;
      for ( i = 1; i < 4; i++)
@@ -104,7 +109,8 @@ void vcallback(FL_OBJECT *ob, int topline, void *data)
 
 
 static void
-link_browsers(FL_OBJECT *ob, long data)
+link_browsers( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
     int sync = fl_get_button(ob);
 

@@ -33,140 +33,168 @@
  *
  * For hex integers, a-f, A-F is assumed continous
  ***********************************************************************/
-#if !defined(lint) && defined(F_ID)
-char *id_rdint = "$Id: readint.c,v 1.5 2003/04/24 09:35:35 leeming Exp $";
+
+#if ! defined lint && defined F_ID
+char *id_rdint = "$Id: readint.c,v 1.6 2008/01/28 23:21:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <ctype.h>		/* for isdigit */
 #include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 
-#define IS_FS(c)      ((c)==' ' || (c)=='\t' || (c)=='\n' || (c)==',' )
-#define IS_COMMENT(c) ((c) == '#')
+
+#define IS_FS( c )     \
+	( ( c )==' ' || ( c ) == '\t' || ( c )== '\n' || ( c ) == ',' )
+#define IS_COMMENT( c )  ( ( c ) == '#' )
 
 static int yell = 0;
 
+
+/***************************************
+ ***************************************/
+
 static void
-bad_character(int c)
+bad_character( int c )
 {
-    if (yell && c != EOF)
-	(void) fprintf(stderr, "Bad character %c Code=%d\n", c, c);
+    if ( yell && c != EOF )
+		fprintf(stderr, "Bad character %c Code=%d\n", c, c);
 }
+
+
+/***************************************
+ ***************************************/
 
 static int
-skip_comment(FILE * fp)
+skip_comment( FILE * fp )
 {
-    register int c;
-    while ((c = getc(fp)) != EOF && c != '\n')
-	;
-    return (c != EOF) ? getc(fp) : EOF;
+    int c;
+
+    while ( ( c = getc( fp ) ) != EOF && c != '\n' )
+		/* empty */ ;
+    return c != EOF ? getc( fp ) : EOF;
 }
 
-/* read an integer [+-]nnn. No way to return error status */
+
+/***************************************
+ * read an integer [+-]nnn. No way to return error status
+ ***************************************/
+
 int
-fl_readint(FILE * fp)
+fl_readint( FILE * fp )
 {
-    register int c, num = 0, sign = 1;
+    int c,
+		num = 0,
+		sign = 1;
 
     do
     {
-	c = getc(fp);
-	while (IS_COMMENT(c))
-	    c = skip_comment(fp);
-    }
-    while (IS_FS(c));
+		c = getc( fp );
+		while ( IS_COMMENT( c ) )
+			c = skip_comment( fp );
+    } while ( IS_FS( c ) );
 
-    if (c == '-' || c == '+')
+    if ( c == '-' || c == '+' )
     {
-	sign = (c == '-') ? -1 : 1;
-	c = getc(fp);
-    }
-
-    while (isdigit(c))
-    {
-	num = 10 * num + c - '0';
-	c = getc(fp);
+		sign = ( c == '-' ) ? -1 : 1;
+		c = getc( fp );
     }
 
-    if (!IS_FS(c))
+    while ( isdigit( c ) )
     {
-	bad_character(c);
-	num = 123456;
+		num = 10 * num + c - '0';
+		c = getc( fp );
+    }
+
+    if ( ! IS_FS( c ) )
+    {
+		bad_character( c );
+		num = 123456;
     }
 
     return sign * num;
 }
 
-/* Read a positive integer. return EOF if error */
+
+/***************************************
+ * Read a positive integer. return EOF if error
+ ***************************************/
+
 int
-fl_readpint(FILE * fp)
+fl_readpint( FILE * fp )
 {
-    register int c, num = 0;
+    int c,
+		num = 0;
 
     do
     {
-	c = getc(fp);
-	while (IS_COMMENT(c))
-	    c = skip_comment(fp);
-    }
-    while (IS_FS(c));
+		c = getc( fp );
+		while ( IS_COMMENT( c ) )
+			c = skip_comment( fp );
+    } while ( IS_FS( c ) );
 
-    if (!(c == '+' || isdigit(c)))
+    if ( ! ( c == '+' || isdigit( c ) ) )
     {
-	bad_character(c);
-	return EOF;
+		bad_character( c );
+		return EOF;
     }
 
     do
     {
-	num = 10 * num + c - '0';
-	c = getc(fp);
-    }
-    while (isdigit(c));
+		num = 10 * num + c - '0';
+		c = getc( fp );
+    } while ( isdigit( c ) );
 
     return num;
 }
 
-/*  Read a hex integer */
+
+/***************************************
+ *  Read a hex integer
+ ***************************************/
+
 int
-fl_readhexint(FILE * fp)
+fl_readhexint( FILE * fp )
 {
-    register int num = 0, i, c;
-    static short hextab[256];
+    int num = 0, i, c;
+    static short hextab[ 256 ];
 
     /* initialize the hex table */
-    if (!hextab['1'])
+
+    if ( ! hextab[ '1' ] )
     {
-	for (i = '1'; i <= '9'; i++)
-	    hextab[i] = i - '0';
-	for (i = 'A'; i <= 'F'; i++)
-	    hextab[i] = 10 + i - 'A';
-	for (i = 'a'; i <= 'f'; i++)
-	    hextab[i] = 10 + i - 'a';
+		for ( i = '1'; i <= '9'; i++ )
+			hextab[ i ] = i - '0';
+		for ( i = 'A'; i <= 'F'; i++ )
+			hextab[ i ] = 10 + i - 'A';
+		for ( i = 'a'; i <= 'f'; i++ )
+			hextab[ i ] = 10 + i - 'a';
     }
 
     do
     {
-	c = getc(fp);
-	while (IS_COMMENT(c))
-	    c = skip_comment(fp);
-    }
-    while (IS_FS(c));
+		c = getc( fp );
+		while ( IS_COMMENT( c ) )
+			c = skip_comment( fp );
+    } while ( IS_FS( c ) );
 
     /* demand  0[xX] */
-    if (c != '0' || ((c = getc(fp)) != 'x' && c != 'X'))
+
+    if ( c != '0' || ( ( c = getc( fp ) ) != 'x' && c != 'X' ) )
     {
-	bad_character(c);
-	return EOF;
+		bad_character( c );
+		return EOF;
     }
 
     /* now do the coversion */
-    while ((c = getc(fp)), isxdigit(c))
-	num = (num << 4) + hextab[c];
+
+    while ( ( c = getc( fp ) ), isxdigit( c ) )
+		num = ( num << 4 ) + hextab[ c ];
+
     return num;
 }
