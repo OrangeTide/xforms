@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.15 2008/01/28 23:18:30 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.16 2008/01/29 20:05:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -164,9 +164,9 @@ static FL_resource internal_resources[ ] =
     SetR( sync,  "Sync",  FL_BOOL, OpSync,  0 ),
 
 #ifdef DO_GAMMA_CORRECTION
-    SetR( rgamma, "Gamma", FL_FLOAT, OpRgamma, 0),
-    SetR( ggamma, "Gamma", FL_FLOAT, OpGgamma, 0),
-    SetR( bgamma, "Gamma", FL_FLOAT, OpBgamma, 0),
+    SetR( rgamma, "Gamma", FL_FLOAT, OpRgamma, 0 ),
+    SetR( ggamma, "Gamma", FL_FLOAT, OpGgamma, 0 ),
+    SetR( bgamma, "Gamma", FL_FLOAT, OpBgamma, 0 ),
 #endif
 
     SetR( depth, "Depth", FL_INT, OpDepth, 0 ),
@@ -627,71 +627,78 @@ fl_get_resource( const char * rname,	/* resource name */
 				 const char * cname,	/* class name    */
 				 FL_RTYPE     dtype,	/* data type     */
 				 const char * defval,	/* default       */
-				 void       * val,	    /* variable      */
+				 void *       val,	    /* variable      */
 				 int          size )    /* buffer size if string */
 {
-    XrmValue entry;
-    char *type = 0;
-    char res_name[ 256 ],
-		 res_class[ 256 ];
+    XrmValue entry = { 0, NULL };
+    char *type = NULL;
+    char res_name[ 256 ]  = "",
+		 res_class[ 256 ] = "";
 
-    res_name[ 0 ] = res_class[ 0 ] = '\0';
-    fl_snprintf( res_name, sizeof res_name,"%s.%s", fl_app_name, rname );
-    if ( cname )
+
+	if ( ( ! rname || ! * rname ) && ( ! cname || ! *cname ) )
+		return NULL;
+
+	if ( rname && *rname )
+		fl_snprintf( res_name, sizeof res_name,"%s.%s", fl_app_name, rname );
+    else if ( cname && *cname )
         fl_snprintf( res_class, sizeof res_class,"%s.%s", fl_app_class, cname );
 
-    entry.addr = 0;
-    entry.size = 0;
-    XrmGetResource( fldatabase, res_name, res_class, &type, &entry );
+	/* Just checking the return value of XrmGetResource() doesn't seem to
+	   work (as it should, unless I completely mis-understand the man
+	   page), and 'entry' seems to return the same data as on a previous
+	   call (despite the initialization!), but 'type' seems to get set to
+	   NULL in cases of failure to find the requested resource in the
+	   database. So in that case we try to use the default value.       JTT */
 
-    M_warn( 0, "GetResource %s(%s): %s ", res_name, res_class,
-			entry.addr ? entry.addr : "None" );
-
-    /* use the default if not set */
-
-    if ( ! entry.addr )
-		entry.addr = ( void * ) defval;	 /* entry.add can be XPointer/caddr_t */
+	if (    ! XrmGetResource( fldatabase, res_name, res_class, &type, &entry )
+		 || ! type
+		 || strcmp( type, "String" )
+		 || ! entry.addr )
+	{
+		M_warn( "GetResource", "%s (%s): not found", res_name, res_class );
+		entry.addr = ( XPointer ) defval;
+	}
+	else
+		M_info( "GetResource", "%s (%s): %s", res_name, res_class, entry.addr );
 
     if ( dtype == FL_NONE || ! entry.addr )
 		return entry.addr;
 
-    if ( entry.addr )
-    {
-		switch ( dtype )
-		{
-			case FL_SHORT:
-				*( short * ) val = atoi( entry.addr );
-				break;
+	switch ( dtype )
+	{
+		case FL_SHORT:
+			*( short * ) val = atoi( entry.addr );
+			break;
 
-			case FL_INT:
-				*( int * ) val = atoi( entry.addr );
-				break;
+		case FL_INT:
+			*( int * ) val = atoi( entry.addr );
+			break;
 
-			case FL_BOOL:
-				*( int * ) val = is_true( entry.addr );
-				break;
+		case FL_BOOL:
+			*( int * ) val = is_true( entry.addr );
+			break;
 
-			case FL_LONG:
-				*( long * ) val = strtol( entry.addr, NULL, 0 );
-				break;
+		case FL_LONG:
+			*( long * ) val = strtol( entry.addr, NULL, 0 );
+			break;
 
-			case FL_FLOAT:
-				*( float * ) val = ( float ) atof(entry.addr );
-				break;
+		case FL_FLOAT:
+			*( float * ) val = ( float ) atof( entry.addr );
+			break;
 
-			case FL_STRING:
-				if ( val != entry.addr )
-				{
-					strncpy( val, entry.addr, size );
-					( ( char * ) val )[ size - 1 ] = '\0';
-				}
-				break;
+		case FL_STRING:
+			if ( val && val != entry.addr && size > 0 )
+			{
+				strncpy( val, entry.addr, size );
+				( ( char * ) val )[ size - 1 ] = '\0';
+			}
+			break;
 
-			default:
-				M_err( "GetResource", "Unknown type %d", dtype );
-				break;
-		}
-    }
+		default:
+			M_err( "GetResource", "Unknown type %d", dtype );
+			return NULL;
+	}
 
     return entry.addr;
 }
@@ -791,7 +798,7 @@ fl_get_cmdline_args( int *n )
  ***************************************/
 
 static char *
-get_command_name(const char * arg0 )
+get_command_name( const char * arg0 )
 {
     char *p;
     char *s = fl_strdup( arg0 );
@@ -934,7 +941,7 @@ fl_initialize( int        * na,
     if ( ! appclass || ! *appclass )
     {
 		fl_app_class[ 0 ] = toupper( fl_app_class[ 0 ] );
-		if (fl_app_class[ 0 ] == 'X' )
+		if ( fl_app_class[ 0 ] == 'X' )
 			fl_app_class[ 1 ] = toupper( fl_app_class[ 1 ] );
     }
 
@@ -1030,7 +1037,7 @@ fl_initialize( int        * na,
 				 fl_vclass_name( fl_cntl.vclass ) : "To be set",
 				 fl_cntl.vclass );
 		DumpD( depth );
-		DumpD( privateColormap);
+		DumpD( privateColormap );
 		DumpD( sharedColormap );
 		DumpD( standardColormap );
 		DumpD( doubleBuffer );
