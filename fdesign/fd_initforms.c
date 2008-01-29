@@ -143,35 +143,35 @@ init_controlform(void)
 }
 
 static void
-init_attribform(void)
+init_attribform( void )
 {
     int a = 1;
 
-    if (fl_get_visual_depth() <= 2)
-	modify_attrib_basic_color(FL_WHITE, FL_WHITE);
+    if ( fl_get_visual_depth( ) <= 2 )
+		modify_attrib_basic_color( FL_WHITE, FL_WHITE );
 
-    fl_adjust_form_size(fd_attrib->attrib);
-    fl_fit_object_label(fd_attrib->readyobj, 12, 1);
+    fl_adjust_form_size( fd_attrib->attrib );
+    fl_fit_object_label( fd_attrib->readyobj, 12, 1 );
     fd_attrib->attrib->y = 5;
 
-    fl_get_resource("autoApply", "AutoApply", FL_BOOL, "1", &a, 0);
-    fl_set_button(fd_attrib->autoapplyobj, a);
-    fl_call_object_callback(fd_attrib->autoapplyobj);
+    fl_get_resource( "autoApply", "AutoApply", FL_BOOL, "1", &a, 0 );
+    fl_set_button( fd_attrib->autoapplyobj, a );
+    fl_call_object_callback( fd_attrib->autoapplyobj );
 
-    fl_set_tabfolder_autofit(fd_attrib->attrib_folder, FL_ENLARGE_ONLY);
+    fl_set_tabfolder_autofit( fd_attrib->attrib_folder, FL_ENLARGE_ONLY );
 
-    fl_addto_tabfolder(fd_attrib->attrib_folder, " Generic ",
-		       fd_generic_attrib->generic_attrib);
+    fl_addto_tabfolder( fd_attrib->attrib_folder, " Generic ",
+						fd_generic_attrib->generic_attrib );
 
-    fl_addto_tabfolder(fd_attrib->attrib_folder, "  Spec   ",
-		       fd_nullattrib->nullattrib);
+    fl_addto_tabfolder( fd_attrib->attrib_folder, "  Spec   ",
+						fd_nullattrib->nullattrib );
 }
 
 static void
-init_testform(void)
+init_testform( void )
 {
-    fl_fit_object_label(fd_test->stoptesting, 2, 1);
-    fl_set_object_dblbuffer(fd_test->browser, 1);
+    fl_fit_object_label( fd_test->stoptesting, 2, 1 );
+    fl_set_object_dblbuffer( fd_test->browser, 1 );
 }
 
 #include "fd/ui_attrib.c"

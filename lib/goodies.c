@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_gds = "$Id: goodies.c,v 1.6 2008/01/28 23:19:57 jtt Exp $";
+char *fl_id_gds = "$Id: goodies.c,v 1.7 2008/01/29 20:05:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,16 +52,16 @@ char *fl_id_gds = "$Id: goodies.c,v 1.6 2008/01/28 23:19:57 jtt Exp $";
 void
 fl_update_display( int block )
 {
-    if (block)
-		XSync(flx->display, 0);
+    if ( block )
+		XSync( flx->display, 0 );
     else
-		XFlush(flx->display);
+		XFlush( flx->display );
 }
 
 
 /***************************************
- * preemptive handlers to work around some window mangers bugs
- * where iconification causes window to close. For normal closing,
+ * Preemptive handler to work around a bug in some window managers
+ * where iconification causes a window to close. For normal closing,
  * we don't see any unmap events as winclose eats it
  ***************************************/
 
@@ -69,13 +69,12 @@ int
 fl_goodies_preemptive( FL_FORM * form,
 					   void *    ev )
 {
-    XEvent *xev = ev;
-
-    if (xev->type == UnmapNotify)
+    if ( ( ( XEvent * ) ev )->type == UnmapNotify )
     {
-		fl_trigger_object(form->u_vdata);
+		fl_trigger_object( form->u_vdata );
 		return FL_PREEMPT;
     }
+
     return 0;
 }
 
@@ -87,9 +86,10 @@ int
 fl_goodies_atclose( FL_FORM * form,
 					void *    data )
 {
-    fl_trigger_object(data ? data : form->u_vdata);
-    if (form->sort_of_modal)
+    fl_trigger_object( data ? data : form->u_vdata );
+    if ( form->sort_of_modal )
 		form->sort_of_modal = 0;
+
     return FL_IGNORE;
 }
 
@@ -101,12 +101,12 @@ void
 fl_parse_goodies_label( FL_OBJECT *  ob,
 						const char * name )
 {
-    const char *s;
+    char s[ 256 ];
 
-    if ((s = fl_get_resource(name, 0, FL_NONE, 0, 0, 0)))
+    if ( fl_get_resource( name, NULL, FL_STRING, NULL, s, 256 ) )
     {
-		fl_set_object_label(ob, s);
-		fl_fit_object_label(ob, 5, 2);
+		fl_set_object_label( ob, s );
+		fl_fit_object_label( ob, 5, 2 );
     }
 }
 
@@ -118,14 +118,16 @@ void
 fl_get_goodie_title( FL_FORM *    form,
 					 const char * res )
 {
-    const char *s;
+    char s[ 256 ];
 
-    if ((s = fl_get_resource(res, 0, FL_NONE, 0, 0, 0)))
-		fl_set_form_title(form, s);
+    if ( fl_get_resource( res, NULL, FL_STRING, NULL, s, 256 ) )
+		fl_set_form_title( form, s );
 }
 
 
-static int goodie_style = -1, goodie_size;
+
+static int goodie_style = -1,
+           goodie_size;
 
 
 /***************************************
@@ -159,20 +161,20 @@ void
 fl_handle_goodie_font( FL_OBJECT * ob1,
 					   FL_OBJECT * ob2 )
 {
-    if (goodie_style < 0)
+    if ( goodie_style < 0 )
 		return;
 
-    if (ob1)
+    if ( ob1 )
     {
-		fl_set_object_lstyle(ob1, goodie_style);
-		fl_set_object_lsize(ob1, goodie_size);
-		fl_fit_object_label(ob1, 1, 1);
+		fl_set_object_lstyle( ob1, goodie_style );
+		fl_set_object_lsize( ob1, goodie_size );
+		fl_fit_object_label( ob1, 1, 1 );
     }
 
-    if (ob2)
+    if ( ob2 )
     {
-		fl_set_object_lstyle(ob2, goodie_style);
-		fl_set_object_lsize(ob2, goodie_size);
+		fl_set_object_lstyle( ob2, goodie_style );
+		fl_set_object_lsize( ob2, goodie_size );
     }
 
 }
@@ -184,7 +186,7 @@ fl_handle_goodie_font( FL_OBJECT * ob1,
 void
 fl_init_goodies( void )
 {
-    fl_init_alert();
+    fl_init_alert( );
 }
 
 
@@ -197,21 +199,22 @@ box_vert( FL_Coord x,
 		  FL_Coord w,
 		  FL_Coord h )
 {
-    int xy[2];
-    int halfh = (int)(0.5f * h), halfw = (int)(0.5f* w);
+    int xy[ 2 ];
+    int halfh = 0.5 * h,
+		halfw = 0.5 * w;
 
-    xy[0] = x;
-    xy[1] = y + halfh;
-    fl_v2i(xy);
-    xy[0] = x + halfw;
-    xy[1] = y;
-    fl_v2i(xy);
-    xy[0] = x + 2 * halfw;
-    xy[1] = y + halfh;
-    fl_v2i(xy);
-    xy[0] = x + halfw;
-    xy[1] = y + 2 * halfh;
-    fl_v2i(xy);
+    xy[ 0 ] = x;
+    xy[ 1 ] = y + halfh;
+    fl_v2i( xy );
+    xy[ 0 ] = x + halfw;
+    xy[ 1 ] = y;
+    fl_v2i( xy );
+    xy[ 0 ] = x + 2 * halfw;
+    xy[ 1 ] = y + halfh;
+    fl_v2i( xy );
+    xy[ 0 ] = x + halfw;
+    xy[ 1 ] = y + 2 * halfh;
+    fl_v2i( xy );
 }
 
 
@@ -226,28 +229,29 @@ draw_box( FL_OBJECT * ob,
 		  int         k   FL_UNUSED_ARG,
 		  void      * sp  FL_UNUSED_ARG )
 {
-    if (ev == FL_DRAW)
-    {
-	int p = (FL_max(ob->w, ob->h) / 2) * 2 + 1;
+	int p = ( FL_max( ob->w, ob->h ) / 2 ) * 2 + 1;
 
-	fl_winset(FL_ObjWin(ob));
+    if ( ev != FL_DRAW )
+		return 0;
 
-	if (!fl_dithered(fl_vmode))
+	fl_winset( FL_ObjWin( ob ) );
+
+	if ( ! fl_dithered( fl_vmode ) )
 	{
-	    fl_color(FL_YELLOW);
-	    fl_bgnpolygon();
-	    box_vert(ob->x, ob->y, p, p);
-	    fl_endpolygon();
+		fl_color( FL_YELLOW );
+		fl_bgnpolygon( );
+		box_vert( ob->x, ob->y, p, p );
+		fl_endpolygon( );
 	}
 
-	fl_linewidth(2);
-	fl_color(FL_BLACK);
-	fl_bgnclosedline();
-	box_vert(ob->x, ob->y, ob->w, ob->h);
-	fl_endclosedline();
-	fl_linewidth(0);
-    }
-    return 0;
+	fl_linewidth( 2 );
+	fl_color( FL_BLACK );
+	fl_bgnclosedline( );
+	box_vert( ob->x, ob->y, ob->w, ob->h );
+	fl_endclosedline( );
+	fl_linewidth( 0 );
+
+	return 0;
 }
 
 
@@ -262,11 +266,11 @@ fl_add_q_icon( FL_Coord x,
 {
     FL_OBJECT *obj;
 
-    obj = fl_add_free(FL_SLEEPING_FREE, x, y, w, h, "", draw_box);
-    obj = fl_add_bitmap(FL_NORMAL_BITMAP, x, y, w, h, "");
-    fl_set_bitmap_data(obj, q_width, q_height, q_bits);
-    fl_set_object_color(obj, FL_YELLOW, FL_YELLOW);
-    fl_set_object_lcol(obj, FL_BLACK);
+    fl_add_free( FL_SLEEPING_FREE, x, y, w, h, "", draw_box );
+    obj = fl_add_bitmap( FL_NORMAL_BITMAP, x, y, w, h, "" );
+    fl_set_bitmap_data( obj, q_width, q_height, q_bits );
+    fl_set_object_color( obj, FL_YELLOW, FL_YELLOW );
+    fl_set_object_lcol( obj, FL_BLACK );
 }
 
 
@@ -281,9 +285,9 @@ fl_add_warn_icon( FL_Coord x,
 {
     FL_OBJECT *obj;
 
-    obj = fl_add_free(FL_SLEEPING_FREE, x, y, w, h, "", draw_box);
-    obj = fl_add_bitmap(FL_NORMAL_BITMAP, x, y, w, h, "");
-    fl_set_bitmap_data(obj, warn_width, warn_height, warn_bits);
-    fl_set_object_color(obj, FL_YELLOW, FL_YELLOW);
-    fl_set_object_lcol(obj, FL_BLACK);
+    fl_add_free( FL_SLEEPING_FREE, x, y, w, h, "", draw_box );
+    obj = fl_add_bitmap( FL_NORMAL_BITMAP, x, y, w, h, "" );
+    fl_set_bitmap_data( obj, warn_width, warn_height, warn_bits );
+    fl_set_object_color( obj, FL_YELLOW, FL_YELLOW );
+    fl_set_object_lcol( obj, FL_BLACK );
 }
