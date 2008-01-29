@@ -21,7 +21,7 @@
 
 
 /*
- *  $Id: rgb_db.c,v 1.6 2008/01/28 23:43:18 jtt Exp $
+ *  $Id: rgb_db.c,v 1.7 2008/01/29 13:59:09 jtt Exp $
  *
  *  Copyright (c) 1999-2002 T.C. Zhao
  *
@@ -31,8 +31,13 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
+
+
+/***************************************
+ ***************************************/
 
 int
 fl_init_RGBdatabase( const char * f  FL_UNUSED_ARG )
@@ -41,19 +46,33 @@ fl_init_RGBdatabase( const char * f  FL_UNUSED_ARG )
 }
 
 
-/* A new implementation from Rouben Rostamian. */
-int fl_lookup_RGBcolor(const char *colname, int *r, int *g, int *b)
+/***************************************
+ * A new implementation from Rouben Rostamian
+ * Changed to make it work with machines that a color depth of 32 bit
+ * but only 24 planes. It's a bit slow because each time the two colors
+ * are queried but I did have any better idea at the moment how to figure
+ * out how many bits the red, green and blue members of the XColor
+ * structure have in every possible case and this looked like the
+ * safest method...                 JTT
+ ***************************************/
+
+int fl_lookup_RGBcolor( const char * colname,
+						int *        r,
+						int *        g,
+						int *        b )
 {
     XColor xc;
-    unsigned int M = (1U<<fl_state[fl_vmode].depth)-1;
+	XColor w;
 
-    if (XParseColor(fl_display, fl_state[fl_vmode].colormap,
-		    colname,  &xc) == 0)
-	return -1;
+    if (    XParseColor( fl_display, fl_state[ fl_vmode ].colormap,
+						 "rgb:ffff/ffff/ffff",  &w ) == 0 
+		 || XParseColor( fl_display, fl_state[ fl_vmode ].colormap,
+						 colname,  &xc ) == 0 )
+		return -1;
 
-    *r = 255 * xc.red   / M;
-    *g = 255 * xc.green / M;
-    *b = 255 * xc.blue  / M;
+	*r = ( ( xc.red   << 8 ) - 1 ) / w.red;
+	*g = ( ( xc.green << 8 ) - 1 ) / w.green;
+	*b = ( ( xc.blue  << 8 ) - 1 ) / w.blue;
 
     return 0;
 }
