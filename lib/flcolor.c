@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.12 2008/01/28 23:18:18 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.13 2008/01/29 15:57:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -90,7 +90,7 @@ static FL_IMAP fl_imap[ FL_MAX_COLS ] =
     { NV( FL_BOTTOM_BCOL ),   89,  89,  89, 0, 0 },	/* bottom  gray35 */
     { NV( FL_RIGHT_BCOL ),    41,  41,  41, 0, 0 },	/* right  gray16  */
     { NV( FL_MCOL ),         191, 191, 191, 0, 0 }, /* used as magic, gray75 */
-    { NV( FL_LEFT_BCOL),     222, 222, 222, 0, 0 },	/* left color  gray87 */
+    { NV( FL_LEFT_BCOL ),    222, 222, 222, 0, 0 },	/* left color  gray87 */
 
     { NV( FL_LIGHTER_COL1 ), 172, 172, 172, 0, 0 },	/* left color  gray87 */
     { NV( FL_DARKER_COL1 ),  150, 150, 150, 0, 0 },	/* left color  gray87 */
@@ -196,10 +196,14 @@ fl_query_namedcolor( const char *s )
 
 #include <math.h>
 
+
+/***************************************
+ ***************************************/
+
 void
 fl_set_gamma( double r,
 			  double g,
-			  double b)
+			  double b )
 {
     FL_IMAP *fm = fl_imap,
 		    *fs;
@@ -246,7 +250,9 @@ static XColor *defaultc;
  ***************************************/
 
 #define DEFAULT_SAVE   35
+
 static int save_index[ ] = { 2, 3, 4, 5, 6, 7, 34 };
+
 #define NSAVE ( sizeof save_index / sizeof *save_index )
 
 static void
@@ -403,7 +409,7 @@ fill_map( void )
 		if ( ok )
 		{
 			lut[ fm->index ] = xc.pixel;
-			M_warn(0, "   got %5ld (%3d %3d %3d)", xc.pixel, r, g, b);
+			M_warn( 0, "   got %5ld (%3d %3d %3d)", xc.pixel, r, g, b );
 		}
     }
 
@@ -517,7 +523,7 @@ get_standard_cmap( int vmode )
 		xc.red   = ( fm->r << 8 ) | 0xff;
 		xc.green = ( fm->g << 8 ) | 0xff;
 		xc.blue  = ( fm->b << 8 ) | 0xff;
-		XAllocColor( flx->display, fl_colormap(vmode), &xc );
+		XAllocColor( flx->display, fl_colormap( vmode ), &xc );
 		lut[ fm->index ] = xc.pixel;
     }
 
@@ -560,10 +566,10 @@ get_shared_cmap( int vmode )
 		exit( 1 );
     }
 
-#define PD(v) \
-     if((DefaultVisual(flx->display, fl_screen))->class==v) \
-       fprintf(stderr,"DefaultVisual=%s CurrentVisual=%s\n",\
-       #v,fl_vclass_name(fl_class(vmode)));
+#define PD( v )                                                          \
+	if ( ( DefaultVisual( flx->display, fl_screen ) )->class == ( v ) )	 \
+		fprintf( stderr, "DefaultVisual=%s CurrentVisual=%s\n",			 \
+				 #v, fl_vclass_name( fl_class( vmode ) ) );
 
     if ( fl_cntl.debug )
     {
@@ -657,44 +663,46 @@ fl_create_gc( Window win )
     flgce = flgcs + sizeof fs->textgc / sizeof *fs->textgc;
     for ( ; flgcs < flgce; flgcs++ )
     {
-		*flgcs = XCreateGC(flx->display, win, 0, 0);
-		XSetStipple(flx->display, *flgcs, fl_inactive_pattern);
-		XSetGraphicsExposures(flx->display, *flgcs, 0);
+		*flgcs = XCreateGC( flx->display, win, 0, 0 );
+		XSetStipple( flx->display, *flgcs, fl_inactive_pattern );
+		XSetGraphicsExposures( flx->display, *flgcs, 0 );
     }
-    flx->textgc = fl_state[fl_vmode].textgc[0];
+    flx->textgc = fl_state[ fl_vmode ].textgc[ 0 ];
 
     /* initialize a dimmed GC */
 
-    fl_state[fl_vmode].dimmedGC = XCreateGC(flx->display, win, 0, 0);
-    XSetStipple(flx->display, fl_state[fl_vmode].dimmedGC, fl_inactive_pattern);
-    XSetGraphicsExposures(flx->display, fl_state[fl_vmode].dimmedGC, 0);
-    XSetFillStyle(flx->display, fl_state[fl_vmode].dimmedGC, FillStippled);
+    fl_state[ fl_vmode ].dimmedGC = XCreateGC( flx->display, win, 0, 0 );
+    XSetStipple( flx->display, fl_state[ fl_vmode ].dimmedGC,
+				 fl_inactive_pattern );
+    XSetGraphicsExposures( flx->display, fl_state[ fl_vmode ].dimmedGC, 0 );
+    XSetFillStyle( flx->display, fl_state[ fl_vmode ].dimmedGC, FillStippled );
 
     /* special for B&W and 2bits displays */
 
-    if (fl_dithered(fl_vmode))
+    if ( fl_dithered( fl_vmode ) )
     {
-		fl_whitegc = XCreateGC(flx->display, win, 0, 0);
-		XSetForeground(flx->display, fl_whitegc, fl_get_flcolor(FL_WHITE));
+		fl_whitegc = XCreateGC( flx->display, win, 0, 0 );
+		XSetForeground( flx->display, fl_whitegc, fl_get_flcolor( FL_WHITE ) );
 
-		fl_bwgc[0] = XCreateGC(flx->display, win, 0, 0);
-		XSetStipple(flx->display, fl_bwgc[0], fl_gray_pattern[0]);
-		XSetGraphicsExposures(flx->display, fl_bwgc[0], 0);
-		XSetFillStyle(flx->display, fl_bwgc[0], FillStippled);
+		fl_bwgc[ 0 ] = XCreateGC( flx->display, win, 0, 0 );
+		XSetStipple( flx->display, fl_bwgc[ 0 ], fl_gray_pattern[ 0 ] );
+		XSetGraphicsExposures( flx->display, fl_bwgc[ 0 ], 0 );
+		XSetFillStyle( flx->display, fl_bwgc[ 0 ], FillStippled );
 
-		fl_bwgc[1] = XCreateGC(flx->display, win, 0, 0);
-		XSetStipple(flx->display, fl_bwgc[1], fl_gray_pattern[1]);
-		XSetGraphicsExposures(flx->display, fl_bwgc[1], 0);
-		XSetFillStyle(flx->display, fl_bwgc[1], FillStippled);
+		fl_bwgc[ 1 ] = XCreateGC( flx->display, win, 0, 0 );
+		XSetStipple( flx->display, fl_bwgc[ 1 ], fl_gray_pattern[ 1 ] );
+		XSetGraphicsExposures( flx->display, fl_bwgc[ 1 ], 0 );
+		XSetFillStyle( flx->display, fl_bwgc[ 1 ], FillStippled );
 
-		fl_bwgc[2] = XCreateGC(flx->display, win, 0, 0);
-		XSetStipple(flx->display, fl_bwgc[2], fl_gray_pattern[2]);
-		XSetGraphicsExposures(flx->display, fl_bwgc[2], 0);
-		XSetFillStyle(flx->display, fl_bwgc[2], FillStippled);
+		fl_bwgc[ 2 ] = XCreateGC( flx->display, win, 0, 0 );
+		XSetStipple( flx->display, fl_bwgc[ 2 ], fl_gray_pattern[ 2 ] );
+		XSetGraphicsExposures( flx->display, fl_bwgc[ 2 ], 0 );
+		XSetFillStyle( flx->display, fl_bwgc[ 2 ], FillStippled );
     }
 
-    if (fl_state[fl_vmode].cur_fnt)
-		XSetFont(flx->display, flx->textgc, fl_state[fl_vmode].cur_fnt->fid);
+    if ( fl_state[ fl_vmode ].cur_fnt )
+		XSetFont( flx->display, flx->textgc,
+				  fl_state[ fl_vmode ].cur_fnt->fid );
 }
 
 
@@ -704,20 +712,22 @@ fl_create_gc( Window win )
  ***************************************/
 
 void
-fl_init_colormap(int vmode)
+fl_init_colormap( int vmode )
 {
-    int i, ok;
+    int i,
+		ok;
     FL_IMAP *fm = fl_imap;
     Colormap defmap;
 
     /* if map for this mode already exists, leave it alone, not only
        efficient but also necessary as fl_win_open may call init map */
-    if (fl_map(vmode))
+
+    if ( fl_map( vmode ) )
     {
-#if (FL_DEBUG >= ML_DEBUG)
-	M_info("InitColormap", "%s is ok", fl_vclass_name(vmode));
+#if FL_DEBUG >= ML_DEBUG
+		M_info( "InitColormap", "%s is ok", fl_vclass_name( vmode ) );
 #endif
-	return;
+		return;
     }
 
     /* get max colors we can have, take care there are machines where an
@@ -725,7 +735,7 @@ fl_init_colormap(int vmode)
 
 	if ( ( unsigned int ) fl_depth( vmode ) >=
 		                                     CHAR_BIT * sizeof max_server_cols )
-		max_server_cols = ~0;
+		max_server_cols = ~ 0;
 	else
 		max_server_cols = 1L << fl_depth( vmode );
 
@@ -757,47 +767,48 @@ fl_init_colormap(int vmode)
 
     /* some server may have a default visual with depth == 32 */
 
-    if (cols_in_default_visual <= 0)
+    if ( cols_in_default_visual <= 0 )
 		cols_in_default_visual = 80;
 
-    M_warn("DefaultColormap", "%ld (0x%lx)", defmap, defmap);
+    M_warn( "DefaultColormap", "%ld (0x%lx)", defmap, defmap );
 
-    XQueryColors(flx->display, defmap, defaultc,
-		 FL_min(cols_in_default_visual, DEFAULT_SAVE));
+    XQueryColors( flx->display, defmap, defaultc,
+				  FL_min( cols_in_default_visual, DEFAULT_SAVE ) );
 
     ok = 0;
 
-    if (fl_cntl.privateColormap)
-	ok = get_private_cmap(vmode);
-    else if (fl_cntl.standardColormap)
-	ok = get_standard_cmap(vmode);
+    if ( fl_cntl.privateColormap )
+		ok = get_private_cmap( vmode );
+    else if ( fl_cntl.standardColormap )
+		ok = get_standard_cmap( vmode );
 
-    if (!ok && !(ok = get_shared_cmap(vmode)))
+    if ( ! ok && ! ( ok = get_shared_cmap( vmode ) ) )
     {
-	/* if unable to share colormaps, we can either get a private colormap
-	   or force substitutions */
+		/* if unable to share colormaps, we can either get a private colormap
+		   or force substitutions */
 #if 1
-	M_err(0, "Failed to share colors. Using private colormap");
-	ok = get_private_cmap(vmode);
+		M_err( 0, "Failed to share colors. Using private colormap" );
+		ok = get_private_cmap( vmode );
 #else
-	ok = 1;
-	fl_cntl.sharedColormap = 1;
-	get_shared_cmap(vmode);
+		ok = 1;
+		fl_cntl.sharedColormap = 1;
+		get_shared_cmap( vmode );
 #endif
     }
 
-    if (!ok)
+    if ( ! ok )
     {
-	M_err("Init", "I screwed up or you have a weird workstatation");
-	exit(1);
+		M_err( "Init", "I screwed up or you have a weird workstatation" );
+		exit( 1 );
     }
 
-    M_warn("InitCMap", "%s Done", fl_vclass_name(vmode));
+    M_warn( "InitCMap", "%s Done", fl_vclass_name( vmode ) );
 
-#if (FL_DEBUG >= ML_WARN)
-    fl_dump_state_info(vmode, "FLMap");
+#if FL_DEBUG >= ML_WARN
+    fl_dump_state_info( vmode, "FLMap" );
 #endif
 }
+
 
 static unsigned long
 fl_get_rgb_pixel( FL_COLOR packed,
@@ -841,20 +852,20 @@ fl_color( FL_COLOR col )
     static int vmode = -1;
     long p;
 
-    if (flx->color != col || vmode != fl_vmode)
+    if ( flx->color != col || vmode != fl_vmode )
     {
-	flx->color = col;
-	vmode = fl_vmode;
-	p = fl_get_pixel(col);
-	XSetForeground(flx->display, flx->gc, p);
-	fl_free_newpixel(p);
+		flx->color = col;
+		vmode = fl_vmode;
+		p = fl_get_pixel( col );
+		XSetForeground( flx->display, flx->gc, p );
+		fl_free_newpixel( p );
     }
 }
 
 #ifndef FL_GETR
-#define FL_GETR(p)  (p & 0xff)
-#define FL_GETG(p)  ((p >> 8) & 0xff)
-#define FL_GETB(p)  ((p >> 16) & 0xff)
+#define FL_GETR( p )  ( ( p )           & 0xff )
+#define FL_GETG( p )  ( ( ( p ) >>  8 ) & 0xff )
+#define FL_GETB( p )  ( ( ( p ) >> 16 ) & 0xff )
 #endif
 
 
@@ -866,7 +877,7 @@ static unsigned long
 fl_get_rgb_pixel( FL_COLOR packed,
 				  int *    newpix )
 {
-    FL_STATE *s = &fl_state[fl_vmode];
+    FL_STATE *s = &fl_state[ fl_vmode ];
     unsigned long pixel;
     int max_col;
     static Colormap lastcolormap;
@@ -874,51 +885,48 @@ fl_get_rgb_pixel( FL_COLOR packed,
     static int new_col;
     XColor xc;
 
-    unsigned int r = FL_GETR(packed);
-    unsigned int g = FL_GETG(packed);
-    unsigned int b = FL_GETB(packed);
+    unsigned int r = FL_GETR( packed );
+    unsigned int g = FL_GETG( packed );
+    unsigned int b = FL_GETB( packed );
 
     *newpix = 0;
-    if (s->vclass == TrueColor || s->vclass == DirectColor)
-    {
-		return rgb2pixel(r, g, b);
-    }
+    if ( s->vclass == TrueColor || s->vclass == DirectColor )
+		return rgb2pixel( r, g, b );
     else
     {
 		xc.flags = DoRed | DoGreen | DoBlue;
-		xc.red = (r << 8) | 0xff;
-		xc.green = (g << 8) | 0xff;
-		xc.blue = (b << 8) | 0xff;
+		xc.red   = ( r << 8 ) | 0xff;
+		xc.green = ( g << 8 ) | 0xff;
+		xc.blue  = ( b << 8 ) | 0xff;
 
 		new_col++;
 
-		if ((*newpix = XAllocColor(flx->display, s->colormap, &xc)))
+		if ( ( *newpix = XAllocColor( flx->display, s->colormap, &xc ) ) )
 			return xc.pixel;
 
 		/* color allocation failed. Search for best match */
 
-		if((max_col = FL_min(256, (1 << s->depth))) == 0)
+		if ( ( max_col = FL_min( 256, 1 << s->depth ) ) == 0 )
             max_col = 256;
 
-		if (!xcolor)
+		if ( ! xcolor )
 			xcolor = fl_malloc( 256 * sizeof *xcolor );
 
-		/*
-		 * not theoretically correct as colormap may have changed
+		/* not theoretically correct as colormap may have changed
 		 * since the last time we asked for colors. Take a chance for
-		 * performace.
-		 */
+		 * performace. */
 
-		if (lastcolormap != s->colormap || new_col > 3)
+		if ( lastcolormap != s->colormap || new_col > 3 )
 		{
 			int i;
-			for (i = 0; i < max_col; i++)
-				xcolor[i].pixel = i;
-			XQueryColors(flx->display, s->colormap, xcolor, max_col);
+
+			for ( i = 0; i < max_col; i++ )
+				xcolor[ i ].pixel = i;
+			XQueryColors( flx->display, s->colormap, xcolor, max_col );
 			lastcolormap = s->colormap;
 			new_col = 0;
 		}
-		fl_find_closest_color(r, g, b, xcolor, max_col, &pixel);
+		fl_find_closest_color( r, g, b, xcolor, max_col, &pixel );
 		return pixel;
     }
 }
@@ -930,9 +938,9 @@ fl_get_rgb_pixel( FL_COLOR packed,
 void
 fl_free_newpixel( unsigned long pixel )
 {
-    if (flx->newpix)
+    if ( flx->newpix )
     {
-		XFreeColors(flx->display, flx->colormap, &pixel, 1, 0);
+		XFreeColors( flx->display, flx->colormap, &pixel, 1, 0 );
 		flx->newpix = 0;
     }
 }
@@ -948,9 +956,9 @@ fl_textcolor( FL_COLOR col )
     static int switched;
     static GC textgc;
 
-    if (   flx->textcolor != col
-		|| vmode != fl_vmode
-		|| flx->textcolor == lastmapped)
+    if (    flx->textcolor != col
+		 || vmode != fl_vmode
+		 || flx->textcolor == lastmapped )
     {
 
 		lastmapped = FL_NoColor;
@@ -958,22 +966,24 @@ fl_textcolor( FL_COLOR col )
 		flx->textcolor = col;
 
 		vmode = fl_vmode;
-		if (col == FL_INACTIVE_COL && fl_dithered(vmode))
+		if ( col == FL_INACTIVE_COL && fl_dithered( vmode ) )
 		{
 			textgc = flx->textgc;
-			flx->textgc = fl_state[vmode].dimmedGC;
-			XSetFont(flx->display, flx->textgc, fl_state[vmode].cur_fnt->fid);
+			flx->textgc = fl_state[ vmode ].dimmedGC;
+			XSetFont( flx->display, flx->textgc,
+					  fl_state[ vmode ].cur_fnt->fid );
 			switched = 1;
 		}
-		else if (switched)
+		else if ( switched )
 		{
 			flx->textgc = textgc;
-			XSetFont(flx->display, flx->textgc, fl_state[vmode].cur_fnt->fid);
+			XSetFont( flx->display, flx->textgc,
+					  fl_state[ vmode ].cur_fnt->fid );
 			switched = 0;
 		}
 
-		XSetForeground(flx->display, flx->textgc, col = fl_get_pixel(col));
-		fl_free_newpixel(col);
+		XSetForeground( flx->display, flx->textgc, col = fl_get_pixel( col ) );
+		fl_free_newpixel( col );
     }
 }
 
@@ -982,14 +992,14 @@ fl_textcolor( FL_COLOR col )
  ***************************************/
 
 void
-fl_bk_color(FL_COLOR col)
+fl_bk_color( FL_COLOR col )
 {
-    if (flx->bkcolor != col)
+    if ( flx->bkcolor != col )
     {
 		flx->bkcolor = col;
-		col = fl_get_pixel(col);
-		XSetBackground(flx->display, flx->gc, col);
-		fl_free_newpixel(col);
+		col = fl_get_pixel( col );
+		XSetBackground( flx->display, flx->gc, col );
+		fl_free_newpixel( col );
     }
 }
 
@@ -998,14 +1008,14 @@ fl_bk_color(FL_COLOR col)
  ***************************************/
 
 void
-fl_bk_textcolor(FL_COLOR col)
+fl_bk_textcolor( FL_COLOR col )
 {
-    if (flx->bktextcolor != col)
+    if ( flx->bktextcolor != col )
     {
 		flx->bktextcolor = col;
-		col = fl_get_pixel(col);
-		XSetBackground(flx->display, flx->textgc, col);
-		fl_free_newpixel(col);
+		col = fl_get_pixel( col );
+		XSetBackground( flx->display, flx->textgc, col );
+		fl_free_newpixel( col );
     }
 }
 
@@ -1017,139 +1027,145 @@ fl_bk_textcolor(FL_COLOR col)
  ***************************************/
 
 unsigned long
-fl_mapcolor(FL_COLOR col, int r, int g, int b)
+fl_mapcolor( FL_COLOR col,
+			 int      r,
+			 int      g,
+			 int      b )
 {
     XColor exact;
     int i, j = -1;
     static int totalcols;
-    static XColor *cur_mapvals[6], *cur_map;
+    static XColor *cur_mapvals[ 6 ],
+		          *cur_map;
     unsigned long pixel;
 
     /* if requested color is reserved, warn */
 
-    if (col < FL_BUILT_IN_COLS)
-		M_warn("MapColor", "Changing reserved color");
+    if ( col < FL_BUILT_IN_COLS )
+		M_warn( "MapColor", "Changing reserved color" );
 
     /* must invalidate color cache */
 
-    if (col == flx->color)
+    if ( col == flx->color )
 		flx->color = BadPixel;
 
-    lut = fl_state[fl_vmode].lut;
+    lut = fl_state[ fl_vmode ].lut;
 
-    if (col >= flmapsize)
+    if ( col >= flmapsize )
     {
-		M_err("MapColor", "Only %d indexed colors are supported", flmapsize);
+		M_err( "MapColor", "Only %d indexed colors are supported", flmapsize );
 		return 0;
     }
 
     /* col is the external colorname, FL_RED etc, which is kept in
        fl_imap[].index. */
 
-    if (col == fl_imap[col].index)
+    if ( col == fl_imap[ col ].index )
 		j = col;
 
-    for (i = 0; j < 0 && i < flmapsize; i++)
-		if (col == fl_imap[i].index)
+    for ( i = 0; j < 0 && i < flmapsize; i++ )
+		if ( col == fl_imap[ i ].index )
 			j = i;
 
-    if (j < 0)
+    if ( j < 0 )
 		j = flmapsize - 1;
 
     /* in BW, too many colors collaps together */
 
-    if (fl_imap[j].r == r && fl_imap[j].g == g && fl_imap[j].b == b &&
-		r != 0 && !fl_dithered(fl_vmode) && lut[col])
-    {
-		return lut[col];
-    }
+    if (    fl_imap[ j ].r == r
+		 && fl_imap[ j ].g == g
+		 && fl_imap[ j ].b == b
+		 && r != 0
+		 && ! fl_dithered( fl_vmode )
+		 && lut[ col ] )
+		return lut[ col ];
 
-    fl_imap[j].r = r;
-    fl_imap[j].g = g;
-    fl_imap[j].b = b;
-    fl_imap[j].grayval = FL_RGB2GRAY(r, g, b);
-    fl_imap[j].index = col;
+    fl_imap[ j ].r = r;
+    fl_imap[ j ].g = g;
+    fl_imap[ j ].b = b;
+    fl_imap[ j ].grayval = FL_RGB2GRAY( r, g, b );
+    fl_imap[ j ].index = col;
 
     lastmapped = col;
 
-    M_warn("fl_mapcolor", "mapping %ld (%d,%d,%d)", col, r, g, b);
+    M_warn( "fl_mapcolor", "mapping %ld (%d,%d,%d)", col, r, g, b );
 
-    pixel = lut[col];
-    exact.red = (r << 8) | 0xff;
-    exact.green = (g << 8) | 0xff;
-    exact.blue = (b << 8) | 0xff;
+    pixel = lut[ col ];
+    exact.red   = ( r << 8 ) | 0xff;
+    exact.green = ( g << 8 ) | 0xff;
+    exact.blue  = ( b << 8 ) | 0xff;
     exact.flags = DoRed | DoGreen | DoBlue;
     exact.pixel = pixel;
 
-    if (fl_vmode == DirectColor)
+    if ( fl_vmode == DirectColor )
     {
-		exact.pixel = lut[col] = rgb2pixel(r, g, b);
-		XStoreColors(flx->display, fl_map(fl_vmode), &exact, 1);
-		return lut[col];
+		exact.pixel = lut[ col ] = rgb2pixel( r, g, b );
+		XStoreColors( flx->display, fl_map( fl_vmode ), &exact, 1 );
+		return lut[ col ];
     }
 
     /* pixel value known by the server */
 
-    if (!allow_leakage && fl_depth(fl_vmode) >= 4 && pixel != BadPixel)
-		fl_free_pixels(&pixel, 1);
+    if ( ! allow_leakage && fl_depth( fl_vmode ) >= 4 && pixel != BadPixel )
+		fl_free_pixels( &pixel, 1 );
 
-    if (XAllocColor(flx->display, fl_colormap(fl_vmode), &exact))
+    if ( XAllocColor( flx->display, fl_colormap( fl_vmode ), &exact ) )
     {
-		lut[col] = exact.pixel;
-		return lut[col];
+		lut[ col ] = exact.pixel;
+		return lut[ col ];
     }
 
     /* colormap is full. Warn once and substitute from now on */
 
-    if (!cur_mapvals[fl_vmode])
+    if ( ! cur_mapvals[ fl_vmode ] )
     {
-		totalcols = FL_min(FL_MAX_COLS, (1L << fl_depth(fl_vmode)));
-		M_err("MapColor", "ColormapFull. Using substitutions");
+		totalcols = FL_min( FL_MAX_COLS, 1L << fl_depth( fl_vmode ) );
+		M_err( "MapColor", "ColormapFull. Using substitutions" );
 		cur_map = fl_calloc( totalcols + 1, sizeof *cur_map );
-		cur_mapvals[fl_vmode] = cur_map;
+		cur_mapvals[ fl_vmode ] = cur_map;
 
 		/* take a snapshot of the color map */
 
-		for (i = 0; i < totalcols; i++)
-			cur_map[i].pixel = i;
+		for ( i = 0; i < totalcols; i++ )
+			cur_map[ i ].pixel = i;
 
-		XQueryColors(flx->display, fl_map(fl_vmode), cur_map, totalcols);
+		XQueryColors( flx->display, fl_map( fl_vmode ), cur_map, totalcols );
     }
 
     /* search for the closest match */
 
-    cur_map = cur_mapvals[fl_vmode];
-    j = fl_find_closest_color(r, g, b, cur_map, totalcols, &pixel);
+    cur_map = cur_mapvals[ fl_vmode ];
+    j = fl_find_closest_color( r, g, b, cur_map, totalcols, &pixel );
 
-    if (j < 0)
+    if ( j < 0 )
     {
-		M_err("fl_mapcolor", "Something is very wrong");
-		exit(1);
+		M_err( "fl_mapcolor", "Something is very wrong" );
+		exit( 1 );
     }
 
     /* j will be the stuff we want */
 
-    lut[col] = cur_map[j].pixel;
+    lut[ col ] = cur_map[ j ].pixel;
 
     /* we still need to allocate the color, otherwise destroying the just
        requested color might accidentally free a reserved pixel */
 
-    exact.red = cur_map[j].red;
-    exact.green = cur_map[j].green;
-    exact.blue = cur_map[j].blue;
-    exact.pixel = cur_map[j].pixel;
+    exact.red   = cur_map[ j ].red;
+    exact.green = cur_map[ j ].green;
+    exact.blue  = cur_map[ j ].blue;
+    exact.pixel = cur_map[ j ].pixel;
     exact.flags = DoRed | DoGreen | DoBlue;
 
-    if (!XAllocColor(flx->display, fl_colormap(fl_vmode), &exact))
-		M_warn("MapColor", "Something is wrong - will proceed");
+    if ( ! XAllocColor( flx->display, fl_colormap( fl_vmode ), &exact ) )
+		M_warn( "MapColor", "Something is wrong - will proceed" );
 
 
-#if (FL_DEBUG >= ML_DEBUG)
-    M_warn("MapColor", "(%d %d %d)<->(%d %d %d)",
-	   r, g, b, cur_map[j].red, cur_map[j].green, cur_map[j].blue);
+#if FL_DEBUG >= ML_DEBUG
+    M_warn( "MapColor", "(%d %d %d)<->(%d %d %d)",
+			r, g, b, cur_map[ j ].red, cur_map[ j ].green, cur_map[ j ].blue );
 #endif
 
-    return lut[col];
+    return lut[ col ];
 }
 
 
@@ -1157,17 +1173,20 @@ fl_mapcolor(FL_COLOR col, int r, int g, int b)
  ***************************************/
 
 long
-fl_mapcolorname(FL_COLOR col, const char *name)
+fl_mapcolorname( FL_COLOR     col,
+				 const char * name )
 {
     XColor xc;
 
-    if (XParseColor(flx->display, fl_colormap(fl_vmode), (char *) name, &xc))
+    if ( XParseColor( flx->display, fl_colormap( fl_vmode ),
+					  ( char * ) name, &xc ) )
     {
-		xc.red = (xc.red >> 8) & 0xff;
-		xc.green = (xc.green >> 8) & 0xff;
-		xc.blue = (xc.blue >> 8) & 0xff;
-		return fl_mapcolor(col, xc.red, xc.green, xc.blue);
+		xc.red   = ( xc.red   >> 8 ) & 0xff;
+		xc.green = ( xc.green >> 8 ) & 0xff;
+		xc.blue  = ( xc.blue  >> 8 ) & 0xff;
+		return fl_mapcolor( col, xc.red, xc.green, xc.blue );
     }
+
     return -1;
 }
 
@@ -1178,23 +1197,25 @@ fl_mapcolorname(FL_COLOR col, const char *name)
  ***************************************/
 
 void
-fl_set_icm_color(FL_COLOR col, int r, int g, int b)
+fl_set_icm_color( FL_COLOR col,
+				  int      r,
+				  int      g,
+				  int      b )
 {
     int i;
 
-    for (i = 0; i < flmapsize; i++)
-		if (col == fl_imap[i].index)
+    for ( i = 0; i < flmapsize; i++ )
+		if ( col == fl_imap[ i ].index )
 		{
-			if (FL_is_gray(fl_vmode))
-			{
-				fl_imap[i].grayval = FL_RGB2GRAY(r, g, b);
-			}
+			if ( FL_is_gray( fl_vmode ) )
+				fl_imap[ i ].grayval = FL_RGB2GRAY( r, g, b );
 			else
 			{
-				fl_imap[i].r = r;
-				fl_imap[i].g = g;
-				fl_imap[i].b = b;
+				fl_imap[ i ].r = r;
+				fl_imap[ i ].g = g;
+				fl_imap[ i ].b = b;
 			}
+
 			return;
 		}
 }
@@ -1205,26 +1226,25 @@ fl_set_icm_color(FL_COLOR col, int r, int g, int b)
  ***************************************/
 
 void
-fl_get_icm_color(FL_COLOR col,
-				 int *r,
-				 int *g,
-				 int *b)
+fl_get_icm_color( FL_COLOR col,
+				  int *    r,
+				  int *    g,
+				  int *    b )
 {
     int i;
 
-    for (i = 0; i < flmapsize; i++)
-		if (col == fl_imap[i].index)
+    for ( i = 0; i < flmapsize; i++ )
+		if ( col == fl_imap[ i ].index )
 		{
-			if (FL_is_gray(fl_vmode))
-			{
-				*r = *g = *b = fl_imap[i].grayval;
-			}
+			if ( FL_is_gray( fl_vmode ) )
+				*r = *g = *b = fl_imap[ i ].grayval;
 			else
 			{
-				*r = fl_imap[i].r;
-				*g = fl_imap[i].g;
-				*b = fl_imap[i].b;
+				*r = fl_imap[ i ].r;
+				*g = fl_imap[ i ].g;
+				*b = fl_imap[ i ].b;
 			}
+
 			return;
 		}
 }
@@ -1253,6 +1273,7 @@ fl_getmcolor( FL_COLOR i,
     *r = ( exact.red   >> 8 ) & 0xff;
     *g = ( exact.green >> 8 ) & 0xff;
     *b = ( exact.blue  >> 8 ) & 0xff;
+
     return exact.pixel;
 }
 
@@ -1264,24 +1285,25 @@ fl_getmcolor( FL_COLOR i,
  ***************************************/
 
 void
-fl_set_graphics_mode(int mode, int doublebuf)
+fl_set_graphics_mode( int mode,
+					  int doublebuf )
 {
-    if (mode >= 0 && mode < 6 && fl_mode_capable(mode, 1))
+    if ( mode >= 0 && mode < 6 && fl_mode_capable( mode, 1 ) )
     {
 		fl_vmode = mode;
-		M_warn("GraphicsMode", "Changed to %s\n", fl_vclass_name(mode));
+		M_warn( "GraphicsMode", "Changed to %s\n", fl_vclass_name( mode ) );
     }
 
-    fl_cntl.doubleBuffer = doublebuf && fl_doublebuffer_capable(0);
+    fl_cntl.doubleBuffer = doublebuf && fl_doublebuffer_capable( 0 );
 
 #if 0
-    if (!fl_state[mode].trailblazer)
+    if ( ! fl_state[ mode ].trailblazer )
     {
-		fl_init_colormap(fl_vmode);
-		fl_get_font_struct(FL_NORMAL_STYLE, FL_DEFAULT_FONT);
-		fl_state[mode].trailblazer = fl_create_window(fl_root,
-													  fl_map(fl_vmode), "trailblazer");
-		XSync(flx->display, 1);
+		fl_init_colormap( fl_vmode );
+		fl_get_font_struct( FL_NORMAL_STYLE, FL_DEFAULT_FONT );
+		fl_state[ mode ].trailblazer =
+			     fl_create_window( fl_root, fl_map( fl_vmode ), "trailblazer" );
+		XSync( flx->display, 1 );
     }
 #endif
 }
@@ -1291,60 +1313,63 @@ fl_set_graphics_mode(int mode, int doublebuf)
  ***************************************/
 
 int
-fl_get_visual_depth(void)
+fl_get_visual_depth( void )
 {
-    return fl_state[fl_vmode].depth;
+    return fl_state[ fl_vmode ].depth;
 }
 
 
 /***************************************
  ***************************************/
 
-#if (FL_DEBUG >= ML_WARN)	/* { */
+#if FL_DEBUG >= ML_WARN	/* { */
 /* print out the current state info. For debugging only */
 void
-fl_dump_state_info(int mode, const char *where)
+fl_dump_state_info( int          mode,
+					const char * where )
 {
     FL_State *fs = fl_state + mode;
     XVisualInfo xvi;
 
-    if (fl_cntl.debug)
+    if ( fl_cntl.debug )
     {
-		fprintf(stderr, "In %s", where);
-		fprintf(stderr, " VClass:%s", fl_vclass_name(fl_class(mode)));
-		fprintf(stderr, " VisualID:0x%lx", fs->xvinfo->visualid);
-		fprintf(stderr, " Depth:%d %d",
-				fl_depth(mode), fs->xvinfo->depth);
-		fprintf(stderr, " Colormap:0x%lx\n", fl_map(mode));
+		fprintf( stderr, "In %s", where );
+		fprintf( stderr, " VClass:%s", fl_vclass_name( fl_class( mode ) ) );
+		fprintf( stderr, " VisualID:0x%lx", fs->xvinfo->visualid );
+		fprintf( stderr, " Depth:%d %d",
+				 fl_depth( mode ), fs->xvinfo->depth );
+		fprintf( stderr, " Colormap:0x%lx\n", fl_map( mode ) );
     }
 
     /* some more checks */
-    if (!XMatchVisualInfo(flx->display, fl_screen, fl_depth(mode),
-						  fl_class(mode), &xvi))
+
+    if ( ! XMatchVisualInfo( flx->display, fl_screen, fl_depth( mode ),
+							 fl_class( mode ), &xvi ) )
     {
-		M_err("StateInfo", "Can't match listed visual");
-		exit(1);
+		M_err( "StateInfo", "Can't match listed visual" );
+		exit( 1 );
     }
 
-    if (fl_visual(mode)->visualid != xvi.visualid)
+    if ( fl_visual( mode )->visualid != xvi.visualid )
     {
 		/* possible on SGI with OpenGL selected visuals */
-		M_warn("StateInfo", "inconsistent visualID, probably OK");
+
+		M_warn( "StateInfo", "inconsistent visualID, probably OK" );
     }
 
     /* state info consistency */
 
-    if (fl_depth(mode) != fs->xvinfo->depth)
+    if ( fl_depth( mode ) != fs->xvinfo->depth )
     {
-		M_err("StateInfo", "Bad Depth");
-		exit(1);
+		M_err( "StateInfo", "Bad Depth" );
+		exit( 1 );
     }
 
-    if (fl_class(mode) != fs->xvinfo->class)
+    if ( fl_class( mode ) != fs->xvinfo->class )
     {
-		fprintf(stderr, "Bad visual class\n");
-		M_err("StateInfo", "Bad visual class");
-		exit(1);
+		fprintf( stderr, "Bad visual class\n" );
+		M_err( "StateInfo", "Bad visual class" );
+		exit( 1 );
     }
 }
 
@@ -1463,7 +1488,7 @@ fl_create_colormap( XVisualInfo * xv,
 
     if ( nfill > 0 && fl_vmode == xv->class && fl_vmode != DirectColor )
     {
-		nfill = FL_min(MAXFILL, nfill);
+		nfill = FL_min( MAXFILL, nfill );
 		nfill = FL_min( nfill, maxcolors );
 		if ( nfill < 4 )		/* potentially 8+1+4 colors */
 			nfill = 4;
@@ -1577,7 +1602,7 @@ fl_free_colors( FL_COLOR * c,
 			flx->color = BadPixel;
 
 		for ( i = 0; j < 0 && i < flmapsize; i++ )
-			if ( *c == fl_imap[i].index )
+			if ( *c == fl_imap[ i ].index )
 				j = i;
 
 		if ( j < 0 )
@@ -1645,5 +1670,6 @@ fl_find_closest_color( int             r,
 			*pix = map[ i ].pixel;
 		}
     }
+
     return k;
 }
