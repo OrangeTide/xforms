@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.10 2008/01/28 23:23:30 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.11 2008/02/04 01:22:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,6 +47,7 @@ char *fl_id_brw = "$Id: textbox.c,v 1.10 2008/01/28 23:23:30 jtt Exp $";
 #include <string.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include "private/pbrowser.h"
 
 
 #define LMARGIN   3		/* left margin */
@@ -60,9 +61,9 @@ char *fl_id_brw = "$Id: textbox.c,v 1.10 2008/01/28 23:23:30 jtt Exp $";
 
 typedef enum
 {
-    COMPLETE,			/* non-conditional complete redraw    */
-    VSLIDER,			/* slider moved, copyarea can be used */
-    SELECTION,			/* selection/deselection change       */
+    COMPLETE,			/* non-conditional complete redraw     */
+    VSLIDER,			/* slider moved, copyarea can be used  */
+    SELECTION,			/* selection/deselection change        */
     FULL = 4,			/* draw without drawing the box/slider */
     HSLIDER = FULL
 } DrawType;
@@ -401,8 +402,10 @@ fl_calc_textbox_size( FL_OBJECT * ob )
 										 &junk, &sp->chardesc );
     sp->w = ob->w - 3 * bw - 1;
     sp->h = ob->h - bw - FLTopMargin - 1;
+
     if ( sp->h <= 0 )
 		sp->h = 1;
+
     sp->screenlines = ( double ) sp->h / sp->charheight + 0.001;
 }
 
@@ -416,7 +419,7 @@ calc_textarea( FL_OBJECT * ob )
     SPEC *sp = ob->spec;
     FL_Coord bw = FL_abs( ob->bw );
 
-    /* total textbox drawing area, to be adjusted for scroll bars */
+    /* total textbox drawing area, to be adjusted for scrollbars */
 
     sp->x = ob->x + bw + 1;
     sp->y = ob->y + FLTopMargin;
@@ -455,12 +458,12 @@ prepare_redraw( FL_OBJECT * ob,
 
     /* from no slider to slider, clip might be wrong. Check that */
 
-    w = sp->w;
-    h = sp->h;
+    calc_textarea( ob );
+
     x = sp->x;
     y = sp->y;
-
-    calc_textarea( ob );
+    w = sp->w;
+    h = sp->h;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info( "DrawPrepare", "x=%d y=%d w=%d h=%d", sp->x, sp->y, sp->w, sp->h );
@@ -471,10 +474,10 @@ prepare_redraw( FL_OBJECT * ob,
     if (    sp->primaryGC
 		 && sp->vmode == fl_vmode
 		 && ! sp->attrib
-		 && w == sp->w
-		 && h == sp->h
 		 && x == sp->x
 		 && y == sp->y
+		 && w == sp->w
+		 && h == sp->h
 		 && ob->lcol == sp->lcol
 		 && ob->col1 == sp->col1
 		 && ob->col2 == sp->col2 )
@@ -556,24 +559,23 @@ prepare_redraw( FL_OBJECT * ob,
 
 
 /***************************************
- * Corrects the position of the topline inside the textbox
+ * Corrects the position of the topline inside the textbox, taking
+ * the slider setting into account if a slider is shown.
  ***************************************/
 
 static void
 correct_topline( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
+	FL_BROWSER_SPEC *br = ob->parent->spec;
 
-    if ( sp->lines > sp->screenlines )
-    {
-		if ( sp->lines - sp->topline + 1 < sp->screenlines )
-			sp->topline = sp->lines - sp->screenlines + 1;
-		if ( sp->topline < 1 )
-			sp->topline = 1;
-    }
-    else
+	if ( ! br->v_on )
 		sp->topline = 1;
+	else
+		sp->topline = FL_nint( fl_get_scrollbar_value( br->vsl ) 
+							   * ( sp->lines - sp->screenlines ) ) + 1;
 }
+
 
 /***************************************
  * Draws the line on the textbox at position xx,yy, with maximal width ww.
@@ -773,11 +775,9 @@ draw_textbox( FL_OBJECT * ob )
     SPEC *sp = ob->spec;
     FL_Coord charheight = sp->charheight;
     FL_Coord ascend = charheight - sp->chardesc;	/* character height */
-    int screenlines;		                        /* lines on screen */
     int i,
 		y;
 
-    screenlines = sp->screenlines;
     correct_topline( ob );
 
     /* Changed from "if ( sp->drawtype == COMPLETE )" to avoid a redraw bug
@@ -790,7 +790,7 @@ draw_textbox( FL_OBJECT * ob )
 		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 		fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
 							ob->lcol, ob->lstyle, ob->lsize, ob->label );
-    }
+	}
 
     if ( sp->lines == 0 )
 		return;
@@ -798,10 +798,9 @@ draw_textbox( FL_OBJECT * ob )
     fixup( ob, sp );
 
     y = sp->y + ascend;
-    for ( i = 0; i < screenlines; i++, y += charheight )
+    for ( i = 0; i < sp->screenlines; i++, y += charheight )
 		draw_textline( ob, i + sp->topline, sp->x, y, sp->w,
 					   sp->drawtype != COMPLETE );
-
 }
 
 
@@ -840,8 +839,8 @@ draw_slider_motion( FL_OBJECT * ob )
     M_info( "SliderMotion", "Delta=%d", delta );
 #endif
 
-    /* since user can influence the topline, blit is not always faster or
-       appropriate. Set threshold to about 2/3 of the visible lines */
+    /* since the user can influence the topline, blit is not always faster
+	   or appropriate. Set threshold to about 2/3 of the visible lines */
 
     if ( FL_abs( delta ) > 2 * screenlines / 3 )
     {
@@ -1010,7 +1009,7 @@ handle_missed_deselection( FL_OBJECT * ob,
     }
     else
     {
-		for ( k = FL_abs(sp->selectline ) - 1; k > line; k-- )
+		for ( k = FL_abs( sp->selectline ) - 1; k > line; k-- )
 		{
 			sp->text[ k ]->selected = 0;
 			sp->selectline = - k;
@@ -1030,9 +1029,9 @@ enum
 	PAGEEVENT
 };
 
-static int eventtype = NOEVENT;	     /* Type of interaction taking place */
-static int lastselect,
-           lastdeselect;
+static int event_type = NOEVENT;	     /* Type of interaction taking place */
+static int last_select,
+           last_deselect;
 
 
 /***************************************
@@ -1060,23 +1059,23 @@ handle_mouse( FL_OBJECT *    ob,
     correct_topline( ob );
     screenlines = sp->screenlines;
 
+	if ( ob->type == FL_NORMAL_TEXTBOX )
+		return 0;
+
     /* Determine the type of event */
 
-    if ( eventtype == NOEVENT )
+    if ( event_type == NOEVENT )
     {
-		eventtype = SELECTEVENT;
+		event_type = SELECTEVENT;
 		line = sp->topline + ( my - ob->y - FLTopMargin ) / charheight;
 		if (    ob->type == FL_MULTI_TEXTBOX
 			 && line >= 1 && line <= sp->lines
 			 && line < sp->topline + screenlines
 			 && sp->text[line]->selected )
-			eventtype = DESELECTEVENT;
+			event_type = DESELECTEVENT;
     }
 
     /* Handle the event */
-
-	if ( ob->type == FL_NORMAL_TEXTBOX )
-		return 0;
 
 	line = sp->topline + ( my - ob->y - FLTopMargin ) / charheight;
 
@@ -1088,7 +1087,7 @@ handle_mouse( FL_OBJECT *    ob,
 	if ( line > sp->lines )
 		line = sp->lines;
 
-	if ( eventtype == SELECTEVENT )
+	if ( event_type == SELECTEVENT )
 	{
 		/* if select a line that is already been selected, do nothing */
 
@@ -1114,7 +1113,7 @@ handle_mouse( FL_OBJECT *    ob,
 			fl_object_qread( );
 
 		if (    ob->type == FL_MULTI_TEXTBOX
-				&& lastselect
+				&& last_select
 				&& FL_abs( line - sp->selectline ) > 1 )
 		{
 			handle_missed_selection( ob, line );
@@ -1126,7 +1125,7 @@ handle_mouse( FL_OBJECT *    ob,
 	}
 	else
 	{
-		/* eventtype == DESELECTEVENT && ob->type == FL_MULTI_TEXTBOX */
+		/* event_type == DESELECTEVENT && ob->type == FL_MULTI_TEXTBOX */
 
 		if (    ! sp->text[ line ]->selected
 			 || sp->text[ line ]->non_selectable )
@@ -1137,7 +1136,7 @@ handle_mouse( FL_OBJECT *    ob,
 			fl_object_qread( );
 
 		if (    ob->type == FL_MULTI_TEXTBOX
-			 && lastdeselect
+			 && last_deselect
 			 && FL_abs( -sp->selectline - line ) > 1 )
 		{
 			handle_missed_deselection( ob, line );
@@ -1150,8 +1149,8 @@ handle_mouse( FL_OBJECT *    ob,
 	}
 
 	fl_redraw_object( ob );
-	lastselect = eventtype == SELECTEVENT;
-	lastdeselect = eventtype == DESELECTEVENT;
+	last_select = event_type == SELECTEVENT;
+	last_deselect = event_type == DESELECTEVENT;
 
 	return 1;
 }
@@ -1247,7 +1246,6 @@ handle_textbox( FL_OBJECT * ob,
 				void *      xev )
 {
     SPEC *sp = ob->spec;
-	static int status_changed = 0;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info2( "HandleBrowser", fl_event_name( ev ) );
@@ -1255,7 +1253,8 @@ handle_textbox( FL_OBJECT * ob,
 
     /* wheel mouse hack */
 
-    if ( fl_handle_mouse_wheel( ob, &ev, &key, xev ) == 0 )
+    if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+		 && fl_handle_mouse_wheel( ob, &ev, &key, xev ) == 0 )
 		return 0;
 
     switch ( ev )
@@ -1294,17 +1293,17 @@ handle_textbox( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
-			eventtype = NOEVENT;
-			status_changed = 0;
-			lastselect = lastdeselect = 0;
+			event_type = NOEVENT;
+			sp->status_changed = 0;
+			last_select = last_deselect = 0;
 
 			/* Fall through */
 
 		case FL_MOUSE:
 			if ( my == sp->lastmy && my > ob->y && my < ob->y + ob->h - 1 )
-				return 0;
+				break;
 
-			if ( eventtype == SELECTEVENT || eventtype == DESELECTEVENT )
+			if ( event_type == SELECTEVENT || event_type == DESELECTEVENT )
 			{
 				if ( my < ob->y )
 					fl_set_browser_topline( ob, sp->topline - 1 );
@@ -1313,14 +1312,14 @@ handle_textbox( FL_OBJECT * ob,
 			}
 
 			if ( handle_mouse( ob, mx, my, xev ) )
-				status_changed = 1;
+				sp->status_changed = 1;
 
 			sp->lastmx = mx;
 			sp->lastmy = my;
 
-			if ( status_changed && ob->type == FL_MULTI_BROWSER )
+			if ( sp->status_changed && ob->type == FL_MULTI_BROWSER )
 			{
-				status_changed = 0;
+				sp->status_changed = 0;
 				return 1;
 			}
 			break;
@@ -1330,15 +1329,16 @@ handle_textbox( FL_OBJECT * ob,
 
 		case FL_RELEASE:
 			sp->lastmy = -1;
-			if ( ob->type == FL_SELECT_BROWSER )
+			if ( ob->type == FL_SELECT_TEXTBOX )
 			{
 				sp->drawtype = SELECTION;
 				sp->desel_mark = sp->selectline;
 				fl_deselect_textbox( ob );
 			}
-			return status_changed;
+			return sp->status_changed;
 
 		case FL_DBLCLICK:
+		case FL_TRPLCLICK:
 			if ( sp->callback )
 				sp->callback( ob, sp->callback_data );
 			return 0;
@@ -1391,10 +1391,10 @@ fl_create_textbox( int          type,
 
     ob = fl_make_object( FL_TEXTBOX, type, x, y, w, h, label, handle_textbox );
     ob->boxtype = FL_TEXTBOX_BOXTYPE;
-    ob->lcol = FL_TEXTBOX_LCOL;
-    ob->align = FL_TEXTBOX_ALIGN;
-    ob->col1 = FL_TEXTBOX_COL1;
-    ob->col2 = FL_TEXTBOX_COL2;
+    ob->lcol    = FL_TEXTBOX_LCOL;
+    ob->align   = FL_TEXTBOX_ALIGN;
+    ob->col1    = FL_TEXTBOX_COL1;
+    ob->col2    = FL_TEXTBOX_COL2;
     ob->wantkey = FL_KEY_SPECIAL;
 
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
@@ -1411,6 +1411,7 @@ fl_create_textbox( int          type,
     sp->specialkey = '@';
     sp->avail_lines = 0;
 	sp->primaryGC = 0;
+	sp->status_changed = 0;
 
     fl_set_object_dblbuffer( ob, 1 );
     extend_textbox( ob );
@@ -1448,6 +1449,7 @@ fl_set_textbox_topline( FL_OBJECT * ob,
 						int         line )
 {
     SPEC *sp = ob->spec;
+	FL_BROWSER_SPEC *br = ob->parent->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
@@ -1460,12 +1462,14 @@ fl_set_textbox_topline( FL_OBJECT * ob,
     if ( line < 1 )
 		line = 1;
 
-    if ( line > sp->lines )
-		line = sp->lines;
+    if ( line > sp->lines - sp->screenlines  + 1 )
+		line = sp->lines - sp->screenlines + 1;
 
     if ( line == sp->topline )
 		return sp->topline;
 
+	fl_set_scrollbar_value( br->vsl, ( line - 1.0 ) /
+							         ( sp->lines - sp->screenlines ) );
     sp->drawtype |= VSLIDER;
     sp->oldtopline = sp->topline;
     sp->topline = line;
@@ -1482,6 +1486,7 @@ void
 fl_clear_textbox( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
+	FL_BROWSER_SPEC *br = ob->parent->spec;
     int i;
 
     /* if already empty, do nothing */
@@ -1494,6 +1499,9 @@ fl_clear_textbox( FL_OBJECT * ob )
     sp->selectline = 0;
     sp->attrib = 1;
     sp->maxpixels = sp->xoffset = 0;
+
+	fl_set_scrollbar_value( br->vsl, 0.0 );
+	fl_set_scrollbar_value( br->hsl, 0.0 );
 
     for ( i = 0; i < sp->avail_lines; i++ )
     {
@@ -1679,18 +1687,15 @@ fl_load_textbox( FL_OBJECT *  ob,
     char *newtext;
     int c, i;
 
-    if ( ob == 0 || ob->objclass != FL_TEXTBOX )
+    if ( ob == NULL || ob->objclass != FL_TEXTBOX )
 		return 0;
 
     fl_clear_textbox( ob );
 
-    if ( ! filename || ! *filename )
-    {
-		fl_redraw_object( ob );
-		return 1;
-    }
-
     /* LOAD THE FILE */
+
+    if ( ! filename || ! *filename )
+		return 1;
 
     if ( ! ( fl = fopen( filename, "r" ) ) )
 		return 0;
@@ -1702,22 +1707,24 @@ fl_load_textbox( FL_OBJECT *  ob,
     {
 		c = getc( fl );
 		if ( c == NL || c == EOF )
-	{
-	    newtext[ i ] = 0;
-	    if ( c != EOF || i != 0 )
-			insert_line( ob, sp->lines + 1, newtext );
-	    i = 0;
-	}
+		{
+			newtext[ i ] = 0;
+			if ( c != EOF || i != 0 )
+				insert_line( ob, sp->lines + 1, newtext );
+			i = 0;
+		}
 		else if ( i < maxlen - 1 )
 			newtext[ i++ ] = c;
     }
 
     while ( c != EOF && ! ferror( fl ) )
 		/* empty */ ;
+
     fclose( fl );
     sp->drawtype = COMPLETE;
     fl_redraw_object( ob );
     fl_free( newtext );
+
     return 1;
 }
 
@@ -1796,7 +1803,7 @@ fl_deselect_textbox_line( FL_OBJECT * ob,
 		sp->selectline = -line;
     }
 
-    lastselect = 0;
+    last_select = 0;
     sp->drawtype |= SELECTION;
     fl_redraw_object( ob );
     sp->drawtype = COMPLETE;
@@ -1991,8 +1998,8 @@ fl_set_textbox_xoffset( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
     {
-		Bark( "SetBRxoffset", "%s not a textbox", ob ? ob->label : "" );
-		return sp->xoffset;
+		Bark( "set_textbox_xoffset", "%s not a textbox", ob ? ob->label : "" );
+		return 0;
     }
 #endif
 
@@ -2132,10 +2139,10 @@ fl_handle_mouse_wheel( FL_OBJECT * ob   FL_UNUSED_ARG,
 					   int *       key,
 					   void *      xev )
 {
-    if ( *ev == FL_PUSH && ( *key == FL_MBUTTON4 || *key == FL_MBUTTON5 ) )
+    if ( *ev == FL_PUSH )
 		return 0;
 
-    if ( *ev == FL_RELEASE && ( *key == FL_MBUTTON4 || *key == FL_MBUTTON5 ) )
+    if ( *ev == FL_RELEASE )
     {
 		*ev = FL_KEYPRESS;
 

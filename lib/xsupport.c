@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.8 2008/01/28 23:25:16 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.9 2008/02/04 01:22:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -355,7 +355,6 @@ void
 fl_show_object_pixmap( FL_OBJECT * ob )
 {
     FL_pixmap *p = ob->flpixmap;
-
 
     if ( ! p || ! p->pixmap || ! p->win || NON_SQB( ob->boxtype ) )
 		return;

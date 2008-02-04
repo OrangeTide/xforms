@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.12 2008/01/28 23:21:07 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.13 2008/02/04 01:22:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -42,6 +42,10 @@ char *fl_id_obj = "$Id: objects.c,v 1.12 2008/01/28 23:21:07 jtt Exp $";
 #include "include/forms.h"
 #include "flinternal.h"
 #include <string.h>
+
+
+extern FL_OBJECT * fl_mouseobj,          /* defined in forms.c */
+                 * fl_pushobj;
 
 
 #define PointToPixel( a )     FL_crnd( ( a ) * fl_dpi / 72.0   )
@@ -54,53 +58,6 @@ char *fl_id_obj = "$Id: objects.c,v 1.12 2008/01/28 23:21:07 jtt Exp $";
 #define LInside( a )    \
                  ( ( ( a ) == FL_ALIGN_CENTER ) || ( ( a ) & FL_ALIGN_INSIDE ) )
 
-
-/* Some macros to test if an object can be moved or resized, depending on
-   its gravity settings */
-
-#define HAS_FIXED_VERT_POS( obj )                     \
-	( ( obj )->nwgravity & (   FL_NorthWest	          \
-    				         | FL_NorthEast           \
-							 | FL_West                \
-							 | FL_East                \
-							 | FL_SouthWest           \
-							 | FL_SouthEast ) )
-
-#define HAS_FIXED_HORI_POS( obj )                     \
-	( ( obj )->nwgravity & (   FL_NorthWest	          \
-    	       			     | FL_North               \
-    		   			     | FL_NorthEast           \
-			   				 | FL_SouthWest           \
-               				 | FL_South               \
-			   				 | FL_SouthEast ) )
-
-#define HAS_FIXED_WIDTH( obj )                        \
-	(     ( obj )->nwgravity & (   FL_NorthWest	      \
-    				             | FL_NorthEast       \
-							     | FL_West            \
-							     | FL_East            \
-							     | FL_SouthWest       \
-			   				     | FL_SouthEast )     \
-	   && ( obj )->segravity & (   FL_NorthWest       \
-								 | FL_NorthEast	      \
-							     | FL_West            \
-								 | FL_East            \
-			   				     | FL_SouthEast       \
-								 | FL_SouthWest ) )
-
-#define HAS_FIXED_HEIGHT( obj )                       \
-	(     ( obj )->nwgravity & (   FL_NorthWest	      \
-    	       			         | FL_North           \
-    				             | FL_NorthEast       \
-								 | FL_SouthWest       \
-               				     | FL_South           \
-			   				     | FL_SouthEast )     \
-	   && ( obj )->segravity & (   FL_NorthWest	      \
-    	       			         | FL_North           \
-    				             | FL_NorthEast       \
-								 | FL_SouthWest       \
-               				     | FL_South           \
-								 | FL_SouthEast ) )
 
 static void lose_focus( FL_OBJECT * ob );
 
@@ -500,9 +457,9 @@ fl_delete_object( FL_OBJECT * obj )
 		fl_set_focus_object( form, NULL );
 
     if ( obj == fl_pushobj )
-		fl_pushobj = 0;
+		fl_pushobj = NULL;
     if ( obj == fl_mouseobj )
-		fl_mouseobj = 0;
+		fl_mouseobj = NULL;
 
 #ifdef DELAYED_ACTION
     fl_object_qflush_object( obj );
@@ -594,60 +551,11 @@ void
 fl_set_object_resize( FL_OBJECT *  ob,
 					  unsigned int what )
 {
-	unsigned int req_what = what;
-
     if ( ob == NULL )
     {
 		fl_error( "fl_set_object_resize", "Setting resize of NULL object." );
 		return;
     }
-
-	/* Do not allow to set a resizing behaviour that's not consistent with
-	   the gravity settings */
-
-	if (    what & FL_RESIZE_X
-		 && (    ob->nwgravity == FL_NorthWest
-			  || ob->nwgravity == FL_West
-			  || ob->nwgravity == FL_SouthWest )
-		 && (    ob->segravity == FL_NorthWest
-			  || ob->segravity == FL_West
-			  || ob->segravity == FL_SouthWest ) )
-		what &= ~ FL_RESIZE_X;
-	else if (    ! ( what & FL_RESIZE_X )
-			  && (    ob->nwgravity == FL_NorthWest
-				   || ob->nwgravity == FL_West
-				   || ob->nwgravity == FL_SouthWest )
-			  && (    ob->segravity == FL_NorthEast
-				   || ob->segravity == FL_East
-				   || ob->segravity == FL_SouthEast ) )
-		what |= ~ FL_RESIZE_X;
-
-	if (    what & FL_RESIZE_Y
-		 && (    ob->nwgravity == FL_NorthWest
-			  || ob->nwgravity == FL_North
-			  || ob->nwgravity == FL_NorthEast )
-		 && (    ob->segravity == FL_NorthWest
-			  || ob->segravity == FL_North
-			  || ob->segravity == FL_NorthEast ) )
-		what &= ~ FL_RESIZE_Y;
-	else if (    ! ( what & FL_RESIZE_Y )
-			  && (    ob->nwgravity == FL_NorthWest
-				   || ob->nwgravity == FL_North
-				   || ob->nwgravity == FL_NorthEast )
-			  && (    ob->segravity == FL_SouthWest
-				   || ob->segravity == FL_South
-				   || ob->segravity == FL_SouthEast ) )
-		what |= ~ FL_RESIZE_Y;
-
-	if ( req_what != what )
-	{
-		char *rn[ ] = { "FL_RESIZE_NONE", "FL_RESIZE_X",
-						"FL_RESIZE_Y",    "FL_RESIZE_ALL" };
-
-		M_warn( "fl_set_object_resize", "Requested resizing behaviour %s of "
-				"object %s can't be set due to gravity, using %s instead.\n",
-				rn[ req_what ], ob->label ? ob->label : "", rn[ what ] );
-	}
 
     ob->resize = what;
 
@@ -671,64 +579,33 @@ fl_set_object_resize( FL_OBJECT *  ob,
  ***************************************/
 
 void
+fl_get_object_resize( FL_OBJECT *    ob,
+					  unsigned int * what )
+
+{
+    if ( ob == NULL )
+    {
+		fl_error( "fl_get_object_resize", "NULL object." );
+		return;
+    }
+
+	*what = ob->resize;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
 fl_set_object_gravity( FL_OBJECT *  ob,
 					   unsigned int nw,
 					   unsigned int se )
 {
-	unsigned int resize = ob->resize;
-
     if ( ob == NULL )
     {
 		fl_error( "fl_set_object_gravity", "NULL object." );
 		return;
     }
-
-	/* Depending on the gravity settings the resizing behaviour of the
-	   object may have to be changed */
-
-	if (    ob->resize & FL_RESIZE_X
-		 && (    nw == FL_NorthWest
-			  || nw == FL_West
-			  || nw == FL_SouthWest )
-		 && (    se == FL_NorthWest
-			  || se == FL_West
-			  || se == FL_SouthWest ) )
-		ob->resize &= ~ FL_RESIZE_X;
-	else if (    ! ( ob->resize & FL_RESIZE_X )
-			  && (    nw == FL_NorthWest
-				   || nw == FL_West
-				   || nw == FL_SouthWest )
-			  && (    se == FL_NorthEast
-				   || se == FL_East
-				   || se == FL_SouthEast ) )
-		ob->resize |= FL_RESIZE_X;
-
-	if (    ob->resize & FL_RESIZE_Y
-		 && (    nw == FL_NorthWest
-			  || nw == FL_North
-			  || nw == FL_NorthEast )
-		 && (    se == FL_NorthWest
-			  || se == FL_North
-			  || se == FL_NorthEast ) )
-		ob->resize &= ~ FL_RESIZE_Y;
-	else if (    ! ( ob->resize & FL_RESIZE_Y )
-			  && (    nw == FL_NorthWest
-				   || nw == FL_North
-				   || nw == FL_NorthEast )
-			  && (    se == FL_SouthWest
-				   || se == FL_South
-				   || se == FL_SouthEast ) )
-		ob->resize |= FL_RESIZE_Y;
-
-	if ( ob->resize != resize )
-	{
-		char *rn[ ] = { "FL_RESIZE_NONE", "FL_RESIZE_X",
-						"FL_RESIZE_Y", "FL_RESIZE_ALL" };
-
-		M_warn( "fl_set_object_gravity", "Resizing behaviour of object %s had "
-				"to be changed from %s to %s.\n", ob->label ? ob->label : "",
-				rn[ resize ], rn[ ob->resize ] );
-	}
 
     ob->nwgravity = nw;
     ob->segravity = se;
@@ -736,11 +613,7 @@ fl_set_object_gravity( FL_OBJECT *  ob,
 	/* Check if object has childs, if so also change all of them */
 
     if ( ob->child )
-	{
-		if ( ob->resize != resize )
-			fl_set_composite_resize( ob, ob->resize );
 		fl_set_composite_gravity( ob, nw, se );
-	}
 
     /* Check if object is a group, if so change also all members */
 
@@ -751,6 +624,24 @@ fl_set_object_gravity( FL_OBJECT *  ob,
 			ob->segravity = se;
 			fl_set_composite_gravity( ob, nw, se );
 		}
+}
+
+
+/***************************************
+ ***************************************/
+void
+fl_get_object_gravity( FL_OBJECT *    ob,
+					   unsigned int * nw,
+					   unsigned int * se )
+{
+    if ( ob == NULL )
+    {
+		fl_error( "fl_get_object_gravity", "NULL object." );
+		return;
+    }
+
+	*nw = ob->nwgravity;
+	*se = ob->segravity;
 }
 
 
@@ -1257,9 +1148,9 @@ fl_hide_object( FL_OBJECT * ob )
 		ob->visible = 0;
 
 		if ( ob == fl_pushobj )
-			fl_pushobj = 0;
+			fl_pushobj = NULL;
 		if ( ob == fl_mouseobj )
-			fl_mouseobj = 0;
+			fl_mouseobj = NULL;
 
 #ifdef DELAYED_ACTION
 		fl_object_qflush_object( ob );
@@ -1436,7 +1327,7 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 						const char * sstr,
 						int          showit )
 {
-    long sc[ MAX_SHORTCUTS ];	/* converted shortcuts */
+    long sc[ MAX_SHORTCUTS ];	   /* converted shortcuts */
     int scsize,
 		n;
 
@@ -1459,12 +1350,14 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
     }
 
     n = fl_convert_shortcut( sstr, sc );
-    scsize = ( n + 1 ) * sizeof *obj->shortcut;
+    scsize = n * sizeof *obj->shortcut;
     obj->shortcut = fl_realloc( obj->shortcut, scsize );
     memcpy( obj->shortcut, sc, scsize );
 
-    if (    ! showit || ! obj->label
-		 || ! obj->label[ 0 ] || obj->label[ 0 ] == '@' )
+    if (    ! showit
+		 || ! obj->label
+		 || ! obj->label[ 0 ]
+		 || obj->label[ 0 ] == '@' )
 		return;
 
     /* find out where to underline */
@@ -1472,13 +1365,11 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
     if (    ( n = fl_get_underline_pos( obj->label, sstr ) ) > 0
 		 && ! strchr( obj->label, *fl_ul_magic_char ) )
     {
-		char *q = obj->label;
+		size_t len = strlen( obj->label ) + 1;
 
-		obj->label = fl_malloc( strlen( q ) + 2 );
-		strncpy( obj->label, q, n );
+		obj->label = fl_realloc( obj->label, len + 1 );
+		memmove( obj->label + n + 1, obj->label + n, len - n );
 		obj->label[ n ] = *fl_ul_magic_char;
-		strcpy( obj->label + n + 1, q + n );
-		fl_free( q );
     }
 }
 
@@ -1491,17 +1382,15 @@ void
 fl_set_object_shortcutkey( FL_OBJECT *  obj,
 						   unsigned int keysym )
 {
-    int n,
-		scsize;
-    long *p = obj->shortcut;
+    size_t n;
 
-    for ( n = 0; *p; n++, p++ )
+    for ( n = 0; obj->shortcut[ n ]; n++ )
 		/* empty */;
 
-    /* always have a terminator, thus n+2 */
+    /* always have a terminator, thus n + 2 */
 
-    scsize = ( n + 2 ) * sizeof *obj->shortcut;
-    obj->shortcut = fl_realloc( obj->shortcut, scsize );
+    obj->shortcut = fl_realloc( obj->shortcut,
+								( n + 2 ) * sizeof *obj->shortcut );
     obj->shortcut[ n ] = keysym;
     obj->shortcut[ n + 1 ] = 0;
 }
@@ -1545,6 +1434,7 @@ fl_get_focus_object( FL_FORM * form )
 		else
 			return form->focusobj;
     }
+
     return 0;
 #endif
 }
@@ -1567,8 +1457,7 @@ fl_find_object( FL_OBJECT * obj,
 				FL_Coord    mx,
 				FL_Coord    my )
 {
-    while ( obj != NULL )
-    {
+    for ( ; obj != NULL; obj = obj->next )
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
 			 && ( obj->visible
@@ -1593,8 +1482,7 @@ fl_find_object( FL_OBJECT * obj,
 			if ( find == FL_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
 				return obj;
 		}
-		obj = obj->next;
-    }
+
     return NULL;
 }
 
@@ -1627,11 +1515,13 @@ fl_find_last( FL_FORM * form,
 		      *obj;
 
     last = obj = fl_find_first( form, find, mx, my );
+
     while ( obj != NULL )
     {
 		last = obj;
 		obj = fl_find_object( obj->next, find, mx, my );
     }
+
     return last;
 }
 
@@ -1652,9 +1542,10 @@ object_is_clipped( FL_OBJECT * ob )
     int extra = 1;
 
     fl_get_object_bbox_rect( ob, &xr );
-    xr.x -= extra;
-    xr.y -= extra;
-    xr.width += 2 * extra;
+
+    xr.x      -= extra;
+    xr.y      -= extra;
+    xr.width  += 2 * extra;
     xr.height += 2 * extra;
 
 	xc = fl_union_rect( &xr, &fl_perm_xcr );
@@ -1686,16 +1577,16 @@ redraw_marked( FL_FORM * form,
 		return;
 
     fl_set_form_window( form );
-    ob = form->first;
-
     fl_create_form_pixmap( form );
 
-    for ( ; ob; ob = ob->next )
+    for ( ob = form->first; ob; ob = ob->next )
     {
 		if (    ob->visible
-				&& ob->redraw-- > 0
+			 && ob->redraw
 			 && ( ! ob->is_child || ob->parent->visible ) )
 		{
+			ob->redraw = 0;
+
 			/* no point redrawing unexposed object */
 
 			if ( fl_perm_clip && object_is_clipped( ob ) )
@@ -1788,7 +1679,8 @@ mark_for_redraw( FL_FORM * form )
     }
 
     for ( ob = form->first; ob; ob = ob->next )
-		ob->redraw = 1;
+		if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
+			ob->redraw = 1;
 }
 
 
@@ -1985,14 +1877,14 @@ fl_handle_it( FL_OBJECT * obj,
 			  XEvent *    xev )
 {
     static unsigned long last_clicktime;
-    static int last_dblclick, last_key;
+    static int last_dblclick,
+		       last_key;
     static FL_Coord lmx,
 		            lmy;
-    int status = 0,
-		         moved;
+    int status = 0;
     int cur_event;
 
-    if ( obj == NULL )
+    if ( ! obj )
 		return 0;
 
 #if FL_DEBUG >= ML_WARN
@@ -2007,7 +1899,7 @@ fl_handle_it( FL_OBJECT * obj,
     if ( obj->objclass == FL_BEGIN_GROUP || obj->objclass == FL_END_GROUP )
 		return 0;
 
-    if ( obj->handle == NULL )
+    if ( ! obj->handle )
 		return 0;
 
     switch ( event )
@@ -2032,10 +1924,10 @@ fl_handle_it( FL_OBJECT * obj,
 			break;
 		}
 
-    case FL_LEAVE:
-		checked_hide_tooltip( obj, xev );
-		obj->belowmouse = 0;
-		break;
+		case FL_LEAVE:
+			checked_hide_tooltip( obj, xev );
+			obj->belowmouse = 0;
+			break;
 
 		case FL_PUSH:
 			unconditional_hide_tooltip( obj );
@@ -2049,8 +1941,15 @@ fl_handle_it( FL_OBJECT * obj,
 		case FL_RELEASE:
 			if ( ! obj->radio )
 				obj->pushed = 0;
-			moved = FL_abs( lmx - mx ) > 4 || FL_abs( lmy - my ) > 4;
-			if (    key != 2 && key == last_key && xev && ! moved
+
+			/* Changed: before double and triple clicks weren't accepted for
+			   the middle mouse button (which didn't make too much sense IMHO),
+			   now they don't get flagged for the mouse wheel "buttons". JTT */
+
+			if (    key == last_key
+//				 && key != 2             /* what's that good for? JTT */
+				 && ! ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+				 && ! ( FL_abs( lmx - mx ) > 4 || FL_abs( lmy - my ) > 4 )
 				 && xev->xbutton.time - last_clicktime < obj->click_timeout )
 				event = last_dblclick ? FL_TRPLCLICK : FL_DBLCLICK;
 
@@ -2067,6 +1966,7 @@ fl_handle_it( FL_OBJECT * obj,
 				obj = refocus;
 				refocus = 0;
 			}
+
 			if ( obj->form )
 			{
 				obj->form->focusobj = obj;
@@ -2093,12 +1993,9 @@ fl_handle_it( FL_OBJECT * obj,
 		event = FL_RELEASE;
 
  recover:
-    if ( obj->prehandle )
-    {
-		int st = obj->prehandle( obj, event, mx, my, key, xev );
-		if ( st == FL_PREEMPT )
-			return 0;
-    }
+    if (    obj->prehandle
+		 && obj->prehandle( obj, event, mx, my, key, xev ) == FL_PREEMPT )
+		return 0;
 
     status = obj->handle( obj, event, mx, my, key, xev );
 
@@ -2221,6 +2118,23 @@ fl_set_object_bw( FL_OBJECT * ob,
 		ob->bw = bw;
 		fl_redraw_object( ob );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_get_object_bw( FL_OBJECT * ob,
+				  int *       bw )
+{
+    if ( ! ob )
+    {
+		fl_error( "fl_set_object_bw", "NULL object." );
+		return;
+    }
+
+	*bw = ob->bw;
 }
 
 
@@ -2527,25 +2441,11 @@ fl_set_object_position( FL_OBJECT * obj,
     if ( obj->x == x && obj->y == y )
 		return;
 
-	/* If the position of an object is fixed by its (nw) gravity its position
-	   can't be changed*/
-
-	if ( x != obj->x && HAS_FIXED_VERT_POS( obj ) )
-	{
-		M_err( "fl_set_object_position", "Attempt to change objects x-position "
-			   "fixed via its nwgravity setting.\n" );
-		return;
-	}
-
-	if ( y != obj->y && HAS_FIXED_HORI_POS( obj ) )
-	{
-		M_err( "fl_set_object_position", "Attempt to change objects y-position "
-			   "fixed via its nwgravity setting.\n" );
-		return;
-	}
-
     if ( fl_inverted_y )
 		y = obj->form->h - obj->h - y;
+
+    if ( obj->x == x && obj->y == y )
+		return;
 
 	if ( visible )
 		fl_hide_object( obj );
@@ -2605,45 +2505,24 @@ fl_set_object_size( FL_OBJECT * obj,
     if ( obj->w == w && obj->h == h )
 		return;
 
-	/* If the sizes of an object are fixed by the combination of the nw and
-	   se gravity settings the size can't be changed */
-
-	if ( w != obj->w && HAS_FIXED_WIDTH( obj ) )
-	{
-		M_err( "fl_set_object_size", "Attempt to change objects width "
-			   "fixed via its nwgravity and swgravity setting.\n" );
-		return;
-	}
-
-	if ( h != obj->h && HAS_FIXED_HEIGHT( obj ) )
-	{
-		M_err( "fl_set_object_size", "Attempt to change objects height "
-			   "fixed via its nwgravity and swgravity setting.\n" );
-		return;
-	}
-
 	if ( visible )
 		fl_hide_object( obj );
 
 	if ( w != obj->w )
 	{
-		diff = w - obj->w;
+		diff = w - ( obj->fl2 - obj->fl1 );
 
-		if (    obj->nwgravity == FL_NorthWest
-			 || obj->nwgravity == FL_West
-			 || obj->nwgravity == FL_SouthWest )
+		if ( HAS_FIXED_HORI_ULC_POS( obj ) )
 		{
 			obj->fl2 += diff;
 			obj->fr2 -= diff;
 		}
-		else if (    obj->segravity == FL_NorthEast
-				  || obj->segravity == FL_East
-				  || obj->segravity == FL_SouthEast )
+		if ( HAS_FIXED_HORI_LRC_POS( obj ) )
 		{
 			obj->fl1 -= diff;
 			obj->fr1 += diff;
 		}
-		else
+		else    /* keep center of gravity */
 		{
 			diff *= 0.5;
 			obj->fl1 -= diff;
@@ -2653,28 +2532,24 @@ fl_set_object_size( FL_OBJECT * obj,
 		}
 
 		obj->x = FL_crnd( obj->fl1 );
-		obj->w = FL_crnd( obj->fl2 - obj->fl2 );
+		obj->w = FL_crnd( obj->fl2 - obj->fl1 );
 	}
 
 	if ( h != obj->h )
 	{
-		diff = h - obj->h;
+		diff = h - ( obj->ft2 - obj->ft1 );
 
-		if (    obj->nwgravity == FL_NorthWest
-			 || obj->nwgravity == FL_North
-			 || obj->nwgravity == FL_NorthEast )
+		if ( HAS_FIXED_VERT_ULC_POS( obj ) )
 		{
 			obj->ft2 += diff;
 			obj->fb2 -= diff;
 		}
-		else if (    obj->segravity == FL_SouthWest
-				  || obj->segravity == FL_South
-				  || obj->segravity == FL_SouthEast )
+		else if ( HAS_FIXED_VERT_LRC_POS( obj ) )
 		{
 			obj->ft1 -= diff;
 			obj->fb1 += diff;
 		}
-		else
+		else    /* keep center of gravity */
 		{
 			diff *= 0.5;
 			obj->ft1 -= diff;
@@ -2689,6 +2564,8 @@ fl_set_object_size( FL_OBJECT * obj,
 
 	if ( fl_inverted_y )
 		obj->y = TRANY( obj, obj->form );
+
+	fl_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, 0 );
 
     if ( visible )
 		fl_show_object( obj );

@@ -278,13 +278,17 @@ enum
 	FL_MBUTTON5
 };
 
-#define FL_LEFT_MOUSE	 FL_MBUTTON1
-#define FL_MIDDLE_MOUSE	 FL_MBUTTON2
-#define FL_RIGHT_MOUSE	 FL_MBUTTON3
+#define FL_LEFT_MOUSE	     FL_MBUTTON1
+#define FL_MIDDLE_MOUSE	     FL_MBUTTON2
+#define FL_RIGHT_MOUSE	     FL_MBUTTON3
+#define FL_SCROLLUP_MOUSE    FL_MBUTTON4
+#define FL_SCROLLDOWN_MOUSE  FL_MBUTTON5
 
-#define FL_LEFTMOUSE	 FL_LEFT_MOUSE
-#define FL_MIDDLEMOUSE	 FL_MIDDLE_MOUSE
-#define FL_RIGHTMOUSE	 FL_RIGHT_MOUSE
+#define FL_LEFTMOUSE	     FL_LEFT_MOUSE
+#define FL_MIDDLEMOUSE	     FL_MIDDLE_MOUSE
+#define FL_RIGHTMOUSE	     FL_RIGHT_MOUSE
+#define FL_SCROLLUPMOUSE     FL_FL_SCROLLUP_MOUSE
+#define FL_SCROLLDOWNMOUSE   FL_FL_SCROLLDOWN_MOUSE
 
 
 /* control when to reutrn input, slider and dial object. */
@@ -387,37 +391,37 @@ typedef enum
 
 typedef enum
 {
-	FL_NOEVENT,
-	FL_DRAW,
-	FL_PUSH,
-	FL_RELEASE,
-	FL_ENTER,
-	FL_LEAVE,
-	FL_MOUSE,
-	FL_DRAG = FL_MOUSE,
-	FL_FOCUS,
-	FL_UNFOCUS,
-	FL_KEYBOARD,
-	FL_KEYPRESS = FL_KEYBOARD,
-	FL_MOTION,
-	FL_STEP,
-	FL_SHORTCUT,
-	FL_FREEMEM,
-	FL_OTHER,			/* property, selection etc */
-	FL_DRAWLABEL,
-	FL_DBLCLICK,		/* double click			   */
-	FL_TRPLCLICK,		/* triple click			   */
-	FL_ATTRIB,			/* attribute change		   */
-	FL_KEYRELEASE,
-	FL_PS,				/* dump a form into EPS	   */
-	FL_MOVEORIGIN,		/* dragging the form across the screen
-						   changes its absolute x,y coords. Objects
-						   that themselves contain forms should
-						   ensure that they are up to date. */
-	FL_RESIZED			/* The object has been resized by scale_form
-						   Tell it that this has happened so that
-						   it can resize any FL_FORMs that it
-						   contains. */
+	FL_NOEVENT,                /*  0 */
+	FL_DRAW,                   /*  1 */
+	FL_PUSH,                   /*  2 */
+	FL_RELEASE,                /*  3 */
+	FL_ENTER,                  /*  4 */
+	FL_LEAVE,                  /*  5 */
+	FL_MOUSE,                  /*  6 */
+	FL_DRAG = FL_MOUSE,        /*  6 */
+	FL_FOCUS,                  /*  7 */
+	FL_UNFOCUS,                /*  8 */
+	FL_KEYBOARD,               /*  9 */
+	FL_KEYPRESS = FL_KEYBOARD, /*  9 */
+	FL_MOTION,                 /* 10 */
+	FL_STEP,                   /* 11 */
+	FL_SHORTCUT,               /* 12 */
+	FL_FREEMEM,                /* 13 */
+	FL_OTHER,			       /* 14, property, selection etc */
+	FL_DRAWLABEL,              /* 15 */
+	FL_DBLCLICK,		       /* 16, double click			   */
+	FL_TRPLCLICK,		       /* 17, triple click			   */
+	FL_ATTRIB,			       /* 18, attribute change		   */
+	FL_KEYRELEASE,             /* 19 */
+	FL_PS,				       /* 20, dump a form into EPS	   */
+	FL_MOVEORIGIN,		       /* 21, dragging the form across the screen
+								      changes its absolute x,y coords. Objects
+								      that themselves contain forms should
+								      ensure that they are up to date. */
+	FL_RESIZED			       /* 22, the object has been resized by scale_form
+								      Tell it that this has happened so that
+									  it can resize any FL_FORMs that it
+									  contains. */
 } FL_EVENTS;
 
 #define FL_MOVE	  FL_MOTION	   /* for compatibility */
@@ -1187,15 +1191,31 @@ FL_EXPORT void fl_set_object_bw(
 		int			bw
 		);
 
+FL_EXPORT void fl_get_object_bw(
+		FL_OBJECT * ob,
+		int	*		bw
+		);
+
 FL_EXPORT void fl_set_object_resize(
 		FL_OBJECT *	 ob,
 		unsigned int what
+		);
+
+FL_EXPORT void fl_get_object_resize(
+		FL_OBJECT *	   ob,
+		unsigned int * what
 		);
 
 FL_EXPORT void fl_set_object_gravity(
 		FL_OBJECT *	 ob,
 		unsigned int nw,
 		unsigned int se
+		);
+
+FL_EXPORT void fl_get_object_gravity(
+		FL_OBJECT *	   ob,
+		unsigned int * nw,
+		unsigned int * se
 		);
 
 FL_EXPORT void fl_set_object_lsize(

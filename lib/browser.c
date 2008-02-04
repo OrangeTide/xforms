@@ -134,6 +134,9 @@ get_geometry( FL_OBJECT * ob )
     FL_TEXTBOX_SPEC *sp = comp->tb->spec;
     int h_on = comp->h_on,
 		v_on = comp->v_on;
+	FL_Coord oldw = tb->w;
+	FL_Coord oldh = tb->h;
+	int delta;
 
     comp->hh = comp->vw = 0;
     comp->h_on = comp->v_on = 0;
@@ -163,12 +166,12 @@ get_geometry( FL_OBJECT * ob )
 		comp->hh = comp->hh_def;
 		tb->h -= comp->hh;
 		sp->h -= comp->hh;
+
+		sp->screenlines = ( double ) sp->h / sp->charheight + 0.001;
     }
 
 	/* Due to the addition of an horizontal slider also a vertical slider
 	   may be needed now, so recheck for its necessity */
-
-    sp->screenlines = ( double ) sp->h / sp->charheight + 0.001;
 
     if ( ! comp->v_on && sp->screenlines < sp->lines && comp->v_pref != FL_OFF )
     {
@@ -183,7 +186,7 @@ get_geometry( FL_OBJECT * ob )
 
     if ( comp->v_on )
     {
-		int delta = sp->lines - sp->screenlines;
+		delta = sp->lines - sp->screenlines;
 
 		comp->vsl->x = ob->x + ob->w - comp->vw;
 		comp->vsl->y = ob->y;
@@ -203,7 +206,7 @@ get_geometry( FL_OBJECT * ob )
 
     if ( comp->h_on )
     {
-		int delta = MaxPixels( sp ) - sp->w;
+		delta = MaxPixels( sp ) - sp->w;
 
 		comp->hsl->x = ob->x;
 		comp->hsl->y = ob->y + ob->h - comp->hh;
@@ -230,10 +233,53 @@ get_geometry( FL_OBJECT * ob )
     }
     else
 		comp->attrib = 0;
+
+	/* On resize recalculate the slider positions to keep the point in the
+	   left upper corner were it is before (unless the text wouldn't fill the
+	   textbox completely anymore) - like we are used to e.g. by web browsers.*/
+
+    sp->screenlines = ( double ) sp->h / sp->charheight + 0.001;
+
+	if ( oldh != tb->h )
+	{
+		delta = sp->lines - sp->screenlines;
+
+		if ( delta > 0 )
+		{
+			sp->attrib = 1;           /* otherwise parts of textbrowser may
+										 not get redrawn due to clipping JTT */
+			if ( sp->topline - 1 > delta )
+				sp->topline = delta + 1;
+
+			fl_set_scrollbar_value( comp->vsl, ( sp->topline - 1.0 ) / delta );
+		}
+		else
+			fl_set_scrollbar_value( comp->vsl, 0.0 );
+	}
+
+	if ( oldw != tb->w )
+	{
+		delta = MaxPixels( sp ) - sp->w;
+
+		if ( delta > 0 )
+		{
+			sp->attrib = 1;
+
+			if ( sp->xoffset > delta )
+				sp->xoffset = delta;
+
+			fl_set_scrollbar_value( comp->hsl, ( double ) sp->xoffset / delta );
+		}
+		else
+			fl_set_scrollbar_value( comp->hsl, 0.0 );
+	}
 }
 
 
 /***************************************
+ * The "dead area" is the small square in the lower right hand corner
+ * of the browser (to the right of the vertical slider and blow the
+ * horizontal one) that shows up when both the sliders are displayed.
  ***************************************/
 
 static void
@@ -263,13 +309,16 @@ handle( FL_OBJECT * ob,
 		void      * ev   FL_UNUSED_ARG )
 {
     Comp *comp = GetSpec( ob );
+	FL_TEXTBOX_SPEC *sp = comp->tb->spec;
+	FL_Coord np = 0;
 
     switch ( event )
     {
 		case FL_DRAW:
+
 			attrib_change( ob );
 			get_geometry( ob );
-			( ( FL_TEXTBOX_SPEC * ) comp->tb->spec )->attrib = 1;
+			sp->attrib = 1;
 
 			/* initial scrollbar size */
 
@@ -277,8 +326,15 @@ handle( FL_OBJECT * ob,
 			comp->vsl->visible = 0;
 			fl_set_scrollbar_size( comp->hsl, comp->hsize );
 			fl_set_scrollbar_size( comp->vsl, comp->vsize );
+
 			comp->hsl->visible = comp->h_on;
 			comp->vsl->visible = comp->v_on;
+
+			if ( comp->h_on )
+				np = FL_crnd(   fl_get_scrollbar_value( comp->hsl )
+							  * ( MaxPixels( sp ) - sp->w ) );
+			fl_set_textbox_xoffset( comp->tb, np );
+
 			draw_dead_area( ob, comp );
 
 		case FL_DRAWLABEL:
@@ -291,6 +347,7 @@ handle( FL_OBJECT * ob,
 			fl_addto_freelist( comp );
 			break;
     }
+
     return 0;
 }
 
@@ -346,9 +403,12 @@ hcb( FL_OBJECT * ob,
 	 long        data  FL_UNUSED_ARG )
 {
     Comp *comp = ob->parent->spec;
-    double val = fl_get_scrollbar_value( comp->hsl );
     FL_TEXTBOX_SPEC *sp = comp->tb->spec;
-    int np = val * ( MaxPixels( sp ) - sp->w ) + 0.1;
+	FL_Coord np = 0;
+
+	if ( comp->h_on )
+		np = FL_crnd(   fl_get_scrollbar_value( comp->hsl )
+					  * ( MaxPixels( sp ) - sp->w ) );
 
     np = fl_set_textbox_xoffset( comp->tb, np );
 
@@ -366,8 +426,11 @@ vcb( FL_OBJECT * ob,
 {
     Comp *comp = ob->parent->spec;
     FL_TEXTBOX_SPEC *sp = comp->tb->spec;
-    int nl = fl_get_scrollbar_value( comp->vsl )
-		     * ( sp->lines - sp->screenlines ) + 1.001;
+    int nl = 0;
+
+	if ( comp->v_on )
+		nl = FL_nint(   fl_get_scrollbar_value( comp->vsl )
+					  * ( sp->lines - sp->screenlines ) ) + 1;
 
     nl = fl_set_textbox_topline( comp->tb, nl );
 
@@ -666,11 +729,11 @@ fl_clear_browser( FL_OBJECT * ob )
 
     fl_clear_textbox( comp->tb );
     fl_freeze_form( ob->form );
-    fl_redraw_scrollbar( ob );
     fl_set_scrollbar_value( comp->hsl, 0.0 );
     fl_set_scrollbar_size( comp->hsl, 1.0 );
     fl_set_scrollbar_value( comp->vsl, 0.0 );
     fl_set_scrollbar_size( comp->vsl, 1.0 );
+    fl_redraw_scrollbar( ob );
     fl_unfreeze_form( ob->form );
 }
 
@@ -715,6 +778,7 @@ fl_set_browser_topline( FL_OBJECT * ob,
 						int         topline )
 {
     SPEC *sp = ob->parent->spec;
+
     fl_set_textbox_topline( sp->tb, topline );
     fl_redraw_scrollbar( sp->br );
 }
@@ -842,7 +906,7 @@ int
 fl_get_browser( FL_OBJECT * ob )
 {
     if ( ! ob || ob->objclass != FL_BROWSER )
-		M_err( "GetBrowser", "ob %s is not a browser",
+		M_err( "fl_get_browser", "ob %s is not a browser",
 			   ob ? ob->label : "null" );
 
     return fl_get_textbox( GetSpec( ob )->tb );

@@ -535,9 +535,6 @@ extern void fl_dump_state_info( int,
 
 extern int fl_initialize_program_visual( void );
 
-extern FL_OBJECT * fl_mouseobj,
-                 * fl_pushobj;
-
 
 #define TIMER_RES           50	/* resolution of FL_STEP event */
 
@@ -734,6 +731,73 @@ extern unsigned long fl_fmtime( const char * );
 extern char *fix_dirname( char * );
 
 extern int fl_handle_event_callbacks( XEvent * );
+
+
+
+/* Some macros to test how an object can be moved or resized, depending on
+   its gravity settings (ULC = uppler left hand cornner, LRC = lower right
+   hand corner) */
+
+#define ULC_POS_LEFT_FIXED( obj )                \
+	(    ( obj )->nwgravity == FL_NorthWest	     \
+      || ( obj )->nwgravity == FL_West           \
+	  || ( obj )->nwgravity == FL_SouthWest )
+
+#define ULC_POS_RIGHT_FIXED( obj )               \
+	(    ( obj )->nwgravity == FL_NorthEast	     \
+      || ( obj )->nwgravity == FL_East           \
+	  || ( obj )->nwgravity == FL_SouthEast )
+
+#define LRC_POS_LEFT_FIXED( obj )                \
+	(    ( obj )->segravity == FL_NorthWest	     \
+      || ( obj )->segravity == FL_West           \
+	  || ( obj )->segravity == FL_SouthWest )
+
+#define LRC_POS_RIGHT_FIXED( obj )               \
+	(    ( obj )->segravity == FL_NorthEast	     \
+      || ( obj )->segravity == FL_East           \
+	  || ( obj )->segravity == FL_SouthEast )
+
+#define HAS_FIXED_HORI_ULC_POS( obj )                             \
+	( ULC_POS_LEFT_FIXED( obj ) || ULC_POS_RIGHT_FIXED( obj ) )
+
+#define HAS_FIXED_HORI_LRC_POS( obj )                             \
+	( LRC_POS_LEFT_FIXED( obj ) || LRC_POS_RIGHT_FIXED( obj ) )
+
+#define HAS_FIXED_WIDTH( obj )                                          \
+	( HAS_FIXED_HORI_ULC_POS( obj ) && HAS_FIXED_HORI_LRC_POS( obj ) ) 
+
+
+#define ULC_POS_TOP_FIXED( obj )                 \
+	(    ( obj )->nwgravity == FL_NorthWest	     \
+      || ( obj )->nwgravity == FL_North          \
+	  || ( obj )->nwgravity == FL_NorthEast )
+
+#define ULC_POS_BOTTOM_FIXED( obj )              \
+	(    ( obj )->nwgravity == FL_SouthWest	     \
+      || ( obj )->nwgravity == FL_South          \
+	  || ( obj )->nwgravity == FL_SouthEast )
+
+#define LRC_POS_TOP_FIXED( obj )                 \
+	(    ( obj )->segravity == FL_NorthWest	     \
+      || ( obj )->segravity == FL_North          \
+	  || ( obj )->segravity == FL_NorthEast )
+
+#define LRC_POS_BOTTOM_FIXED( obj )              \
+	(    ( obj )->segravity == FL_SouthWest	     \
+      || ( obj )->segravity == FL_South          \
+	  || ( obj )->segravity == FL_SouthEast )
+
+#define HAS_FIXED_VERT_ULC_POS( obj )                             \
+	( ULC_POS_TOP_FIXED( obj ) || ULC_POS_BOTTOM_FIXED( obj ) )
+
+#define HAS_FIXED_VERT_LRC_POS( obj )                             \
+	( LRC_POS_TOP_FIXED( obj ) || LRC_POS_BOTTOM_FIXED( obj ) )
+
+#define HAS_FIXED_HEIGHT( obj )                                         \
+	( HAS_FIXED_VERT_ULC_POS( obj ) && HAS_FIXED_VERT_LRC_POS( obj ) ) 
+
+
 
 #define XK_PageUp    XK_Prior
 #define XK_PageDn    XK_Next

@@ -95,15 +95,14 @@ handle( FL_OBJECT * ob,
 		int         key  FL_UNUSED_ARG,
 		void *      ev )
 {
+	FL_FORM *folder;
     SPEC *sp = ob->spec;
 
     switch ( event )
     {
 		case FL_RESIZED:
-		{
-			FL_FORM * const folder = fl_get_active_folder( ob );
-
-			if ( folder && sp->auto_fit != FL_NO )
+			if (    ( folder = fl_get_active_folder( ob ) )
+				 && sp->auto_fit != FL_NO )
 			{
 				if ( sp->auto_fit == FL_FIT )
 					fl_set_form_size( folder, sp->canvas->w, sp->canvas->h );
@@ -112,13 +111,9 @@ handle( FL_OBJECT * ob,
 					fl_set_form_size( folder, sp->canvas->w, sp->canvas->h );
 			}
 			break;
-		}
 
 		case FL_MOVEORIGIN:
-		{
-			FL_FORM * const folder = fl_get_active_folder( ob );
-
-			if ( folder )
+			if ( ( folder = fl_get_active_folder( ob ) ) )
 			{
 				fl_get_winorigin( folder->window, &folder->x, &folder->y );
 
@@ -127,7 +122,6 @@ handle( FL_OBJECT * ob,
 				fl_handle_form( folder, FL_MOVEORIGIN, 0, ev );
 			}
 			break;
-		}
 
 		case FL_ATTRIB:
 		case FL_DRAW:

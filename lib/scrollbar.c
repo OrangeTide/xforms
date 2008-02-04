@@ -76,8 +76,9 @@ handle( FL_OBJECT * ob,
 			attrib_change( ob );
 			get_geom( ob );
 			if ( IsVThin( ob->type ) || IsHThin( ob->type ) )
-				fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
-							ob->bw );
+				fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
+							ob->col1, ob->bw );
+			/* fall through */
 
 		case FL_DRAWLABEL:
 			fl_draw_object_label_outside( ob );
@@ -88,6 +89,7 @@ handle( FL_OBJECT * ob,
 			fl_addto_freelist( spec );
 			break;
     }
+
     return 0;
 }
 
@@ -126,8 +128,8 @@ static void
 get_geom( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
-    FL_OBJECT *up = sp->up,
-		      *down = sp->down,
+    FL_OBJECT *up     = sp->up,
+		      *down   = sp->down,
 		      *slider = sp->slider;
     int x = ob->x,
 		y = ob->y,
@@ -170,6 +172,7 @@ get_geom( FL_OBJECT * ob )
 			slider->h = h / 3;
 			slider->y = y + up->h / 3;
 		}
+
 		down->y = y + h - down->h;
     }
 
@@ -192,9 +195,9 @@ get_geom( FL_OBJECT * ob )
 		up->boxtype = down->boxtype = FL_NO_BOX;
 		up->bw = down->bw = absbw;
 
-		/* due to slider double buffering, have to be completly clear of the
-		   scrollbar bounding box, otherwise the slider will wipe out the
-		   scrollbar bounding box */
+		/* Due to slider double buffering,we  have to be completly clear of
+		   the scrollbar bounding box, otherwise the slider will wipe out the
+		   scrollbars bounding box */
 
 		if ( IsVThin( t ) )
 		{
@@ -239,6 +242,7 @@ up_cb( FL_OBJECT * ob,
 		   slmin;
 
     fl_get_slider_bounds( spec->slider, &slmin, &slmax );
+
     if ( slmax > slmin )
 		nval = oval + spec->increment;
     else
@@ -262,7 +266,8 @@ down_cb( FL_OBJECT * ob,
     SPEC *spec = ob->parent->spec;
     double oval = fl_get_slider_value( spec->slider ),
 		   nval;
-    double slmax, slmin;
+    double slmax,
+		   slmin;
 
     fl_get_slider_bounds( spec->slider, &slmin, &slmax );
 
@@ -362,6 +367,13 @@ fl_create_scrollbar( int          type,
 }
 
 
+/*
+ * User routines
+ */
+
+#define NOTSCROLLBAR( o )  ( ! ( o ) || ( o )->objclass != FL_SCROLLBAR )
+
+
 /***************************************
  ***************************************/
 
@@ -380,13 +392,6 @@ fl_add_scrollbar( int          type,
 }
 
 
-/*
- * User routines
- */
-
-#define NOTSCROLLBAR( o )  ( ! o || o->objclass != FL_SCROLLBAR )
-
-
 /***************************************
  ***************************************/
 
@@ -398,7 +403,7 @@ fl_get_scrollbar_value( FL_OBJECT * ob )
     if ( NOTSCROLLBAR( ob ) )
     {
 		M_err( "GetScrollBarVal", "%s not a scrollbar",
-			   ob ? ob->label : "null" );
+			   ob ? ob->label : "Object" );
 		return -1000;
     }
 
@@ -417,8 +422,8 @@ fl_set_scrollbar_value( FL_OBJECT * ob,
 
     if ( NOTSCROLLBAR( ob ) )
     {
-		M_err( "SetScrollBarVal", "%s not a scrollbar",
-			   ob ? ob->label : "null" );
+		M_err( "fl_set_scrollbar_value", "%s not a scrollbar",
+			   ob ? ob->label : "Object" );
 		return;
     }
 
@@ -457,8 +462,8 @@ fl_set_scrollbar_increment( FL_OBJECT * ob,
 
 void
 fl_get_scrollbar_increment( FL_OBJECT * ob,
-						    double *     a,
-							double *     b )
+						    double *    a,
+							double *    b )
 {
     fl_get_slider_increment( ( ( SPEC * ) ob->spec )->slider, a, b );
 }
@@ -475,7 +480,7 @@ fl_set_scrollbar_bounds( FL_OBJECT * ob,
     if ( NOTSCROLLBAR( ob ) )
     {
 		M_err( "SetScrollBarBounds", "%s not a scrollbar",
-			   ob ? ob->label : "null" );
+			   ob ? ob->label : "Object" );
 		return;
     }
 

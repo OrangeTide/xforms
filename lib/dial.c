@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.7 2008/01/28 23:17:53 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.8 2008/02/04 01:22:17 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -354,6 +354,7 @@ handle_dial( FL_OBJECT * ob,
 			 void *      ev )
 {
     SPEC *sp = ob->spec;
+	static int x = 0;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info( "HandleDial", fl_event_name( event ) );

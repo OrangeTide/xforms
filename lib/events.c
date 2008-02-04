@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.10 2008/01/28 23:18:11 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.11 2008/02/04 01:22:17 jtt Exp $";
 #endif
 
 
@@ -761,8 +761,13 @@ fl_print_xevent_name( const char *   where,
 						xev->xconfigure.x, xev->xconfigure.y,
 						xev->xconfigure.width, xev->xconfigure.height,
 						xev->xconfigure.send_event ? "Syn" : "Non-Syn" );
+			else if ( xev->type == ButtonPress )
+				fprintf( stderr, "button: %d\n", xev->xbutton.button );
 			else if ( xev->type == ButtonRelease )
 				fprintf( stderr, "button: %d\n", xev->xbutton.button );
+			else if ( xev->type == ConfigureNotify )
+				fprintf( stderr, "ConfigureNotify: %d %d\n",
+						 xev->xconfigure.width, xev->xconfigure.height );
 			else
 				fputc( '\n', stderr );
 			known = 1;
@@ -816,52 +821,76 @@ static void
 compress_redraw( XEvent * ev )
 {
     XExposeEvent *xpe = ( XExposeEvent * ) ev;
+	XEvent exposure_ev = *ev,
+		   configure_ev;
     Window win = xpe->window;
-	XRectangle rec;
     Region reg = XCreateRegion( );
+	XRectangle rec = { xpe->x, xpe->y, xpe->width, xpe->height };
 
-    /* this is theoretically not correct as we can't peek ahead and ignore
+	configure_ev.type = LASTEvent;
+	xpe = ( XExposeEvent * ) &exposure_ev;
+	XUnionRectWithRegion( &rec, reg, reg );
+
+    /* This is theoretically not correct as we can't peek ahead and ignore
        the events in between, but it works in XForms as we always update the
-       form size and position when dealing with Expose event */
+       form size and position when dealing with Expose event.
 
-    do
-    {
+	   This has been a bit changed since 1.0.90: There was a problem with
+	   e.g. KDE or Gnome when they were set up to redraw also during resizing
+	   and the mouse was moved around rather fast. We collect now not only
+	   Expose events, compressing them to a single one, covering the combined
+	   area of all of them, but also ConfigureNotify events. If there was one
+	   or more ConfigureNotify events we put back the "consolidated" Exposure
+	   event and return the last ConfigureNotify event, instead of the original
+	   Expose event we got started with. This hopefully is not only be a
+	   solution that covers all cases but also keep the number of events to
+	   be processed to a minimum. The only drawback is that the function
+	   handling the Expose event (do_interaction_step() in lib/forms.c) has
+	   to check if the area specified by the event isn't larger than the (new)
+	   size of the window and prune it if necessary.                     JTT */
+		
+	while ( XCheckWindowEvent( flx->display, win,
+							   ExposureMask | StructureNotifyMask, ev ) )
+	{
+		if ( ev->type == ConfigureNotify )
+			configure_ev = *ev;
+		else if ( ev->type == Expose )
+		{
+			exposure_ev = *ev;
+
+			rec.x      = xpe->x;
+			rec.y      = xpe->y;
+			rec.width  = xpe->width;
+			rec.height = xpe->height;
+
+			XUnionRectWithRegion( &rec, reg, reg );
+		}
 #if FL_DEBUG >= ML_DEBUG
-		M_warn( "X CompressExpose", "x=%d y=%d w=%d h=%d count=%d",
-				xpe->x, xpe->y, xpe->width, xpe->height, xpe->count );
+		else
+			M_warn( "compress_redraw", "Lost event of type %s", 
+					fl_get_xevent_name( ev ) );
 #endif
+	}
 
-		rec.x      = xpe->x;
-		rec.y      = xpe->y;
-		rec.width  = xpe->width;
-		rec.height = xpe->height;
+	/* Set up the area for the "consolidated" Expose event */
 
-		XUnionRectWithRegion( &rec, reg, reg );
-    }
-    while ( XCheckWindowEvent( flx->display, win, ExposureMask, ev ) );
+	XClipBox( reg, &rec );
 
-    if ( xpe->count != 0 )
-    {
-		M_warn( "Y CompressExpose", "Something is wrong" );
-		xpe->count = 0;
-    }
+	xpe->x = rec.x;
+	xpe->y = rec.y;
+	xpe->width = rec.width;
+	xpe->height = rec.height;
 
-    /* get the consolidated rectangle. Here somehow if we can get the region
-       to the calling routine, XSetRegion might be more efficient as far as
-       the total area painted. */
-
-    XClipBox( reg, &rec );
     XDestroyRegion( reg );
 
-#if FL_DEBUG >= ML_WARN
-    M_warn( "Z CompressExpose", "x=%hd y=%hd w=%hu h=%hu Sum\n",
-			rec.x, rec.y, rec.width, rec.height );
-#endif
-
-    xpe->x = rec.x;
-    xpe->y = rec.y;
-    xpe->width = rec.width;
-    xpe->height = rec.height;
+	if ( configure_ev.type == ConfigureNotify )
+	{
+		XPutBackEvent( flx->display, &exposure_ev );
+		*ev = configure_ev;
+		ev->xconfigure.send_event = 0;      /* necessary due to mwm hack */
+	}
+	else if ( ev != &exposure_ev )
+		*ev = exposure_ev;
 }
 
 

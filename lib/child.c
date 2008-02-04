@@ -319,10 +319,8 @@ fl_mark_composite_for_redraw( FL_OBJECT * ob )
     FL_OBJECT *tmp = ob->child;
 
     for ( ; tmp; tmp = tmp->nc )
-    {
-		/* M_err("Marking", "%s", fl_object_class_name(ob)); */
-		tmp->redraw = 1;
-    }
+		if ( tmp->objclass != FL_BEGIN_GROUP && tmp->objclass != FL_END_GROUP )
+			tmp->redraw = 1;
 }
 
 

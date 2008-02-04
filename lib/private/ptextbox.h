@@ -78,7 +78,9 @@ typedef struct
     int            maxpixels;
     int            attrib;			/* set if there is attrib change */
     int            xoffset;			/* horizontal scroll in pixels    */
-    int            lastmx, lastmy;
+    int            lastmx,
+	               lastmy;
+	int            status_changed;
 } FL_TEXTBOX_SPEC;
 
 #endif

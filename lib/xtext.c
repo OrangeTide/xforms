@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.8 2008/01/28 23:25:22 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.9 2008/02/04 01:22:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -984,5 +984,6 @@ fl_drw_stringTAB( Window       win,
     }
 
     XdrawString( flx->display, win, gc, x + w, y, ( char * ) q, s - q + len );
+
     return 0;			/* w + XTextWidth(fs, q, len - (q - s)); */
 }

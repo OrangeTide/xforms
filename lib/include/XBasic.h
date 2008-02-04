@@ -865,7 +865,9 @@ FL_EXPORT XEvent *fl_print_xevent_name(
 #define controlkey_down( mask )	 ( ( mask ) & ControlMask )
 #define button_down( mask )		 (	  ( ( mask ) & Button1Mask )  \
 								   || ( ( mask ) & Button2Mask )  \
-								   || ( ( mask ) & Button3Mask ) )
+								   || ( ( mask ) & Button3Mask )  \
+								   || ( ( mask ) & Button4Mask )  \
+								   || ( ( mask ) & Button5Mask ) )
 
 #define fl_keypressed			 fl_keysym_pressed
 

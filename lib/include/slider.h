@@ -44,10 +44,10 @@ typedef enum
     FL_VERT_BROWSER_SLIDER,
     FL_HOR_BROWSER_SLIDER2,		/* for internal use only */
     FL_VERT_BROWSER_SLIDER2,	/* for internal use only */
-    FL_HOR_THIN_SLIDER,			/* internal use          */
-    FL_VERT_THIN_SLIDER,		/* internal use          */
-    FL_HOR_BASIC_SLIDER,		/* internal use          */
-    FL_VERT_BASIC_SLIDER		/* internal use          */
+    FL_HOR_THIN_SLIDER,			/* for internal use only */
+    FL_VERT_THIN_SLIDER,		/* for internal use only */
+    FL_HOR_BASIC_SLIDER,		/* for internal use only */
+    FL_VERT_BASIC_SLIDER		/* for internal use only */
 } FL_SLIDER_TYPE;
 
 
@@ -163,9 +163,9 @@ FL_EXPORT void fl_set_slider_filter(
 		FL_VAL_FILTER filter
 		);
 
-/** Functions to set and get the timeout value used by the
-    slider code to increment the position of the knob.
- */
+/* Functions to set and get the timeout value used by the
+   slider code to increment the position of the knob */
+
 FL_EXPORT int fl_get_slider_repeat(
 		FL_OBJECT * ob
 		);

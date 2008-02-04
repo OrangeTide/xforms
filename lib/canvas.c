@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.9 2008/01/28 23:16:40 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.10 2008/02/04 01:22:17 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,7 +52,7 @@ char *fl_id_canvas = "$Id: canvas.c,v 1.9 2008/01/28 23:16:40 jtt Exp $";
 
 
 /***************************************
- * if yield_to_shortcut is set, every key press will have to
+ * If yield_to_shortcut is set, every key press will have to
  * be checked for all objects' shortcuts on the current form
  ***************************************/
 
@@ -90,7 +90,7 @@ handle_keyboard_special( FL_OBJECT * ob,
 
 
 /***************************************
-* we have to intercept all events destined for the canvas.
+ * We have to intercept all events destined for the canvas.
  * Must return 0 if canvas is used just like an arbitary application
  * window. event processing routine calls the preemptive routine
  * and continues dispatching events if preemptive handler

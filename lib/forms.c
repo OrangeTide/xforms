@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.15 2008/01/28 23:19:01 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.16 2008/02/04 01:22:18 jtt Exp $";
 #endif
 
 
@@ -160,7 +160,6 @@ fl_bgn_group( void )
 {
     static int id = 1;
 
-
     if ( ! fl_current_form )
     {
 		fl_error( "fl_bgn_group", "Starting group in NULL form." );
@@ -173,7 +172,8 @@ fl_bgn_group( void )
 		fl_end_group( );
     }
 
-    fl_current_group = fl_make_object( FL_BEGIN_GROUP, 0, 0, 10, 10, 0, "", 0 );
+    fl_current_group = fl_make_object( FL_BEGIN_GROUP, 0, 0, 10, 10, 0,
+									   "", NULL );
     fl_current_group->group_id = id++;
     fl_add_object( fl_current_form, fl_current_group );
 
@@ -190,7 +190,6 @@ fl_end_group( void )
 {
     FL_OBJECT *ob = fl_current_group;
     int id;
-
 
     if ( fl_current_form == NULL )
     {
@@ -225,7 +224,7 @@ fl_end_group( void )
 /************************ Doing the Interaction *************************/
 
 static FL_FORM **forms = NULL;	    /* The forms being shown. */
-static int formnumb = 0;	        /* Their number. */
+static size_t formnumb = 0;	        /* Their number. */
 static FL_FORM * mouseform;	        /* The current form under mouse */
 static FL_FORM * keyform;	        /* keyboard focus form */
 FL_OBJECT * fl_pushobj;		        /* latest pushed object */
@@ -238,8 +237,7 @@ FL_OBJECT * fl_mouseobj;	        /* object under the mouse */
 void
 fl_freeze_all_forms( void )
 {
-    int i;
-
+    size_t i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_freeze_form( forms[ i ] );
@@ -252,8 +250,7 @@ fl_freeze_all_forms( void )
 void
 fl_unfreeze_all_forms( void )
 {
-    int i;
-
+    size_t i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_unfreeze_form( forms[ i ] );
@@ -312,8 +309,6 @@ scale_form( FL_FORM * form,
 			double    ysc )
 {
     FL_OBJECT *obj;
-	double old_fl1,
-		   old_ft1;
     double neww = form->w_hr * xsc,
 		   newh = form->h_hr * ysc;
 
@@ -336,168 +331,110 @@ scale_form( FL_FORM * form,
 
     for ( obj = form->first; obj; obj = obj->next )
     {
-		FL_Coord const oldw = obj->w;
-		FL_Coord const oldh = obj->h;
+		double oldw = obj->fl2 - obj->fl1;
+		double oldh = obj->ft2 - obj->ft1;
 
-		/* Resizing of scrollbars and textboxes gets dealt with by the parent
-		   objects */
+		/* Resizing of scrollbars and textboxes gets dealt with by their
+		   parent objects on redraw */
 
 		if (    obj->objclass == FL_TEXTBOX
 			 || obj->objclass == FL_SCROLLBAR )
 			continue;
 
-		/* Special case to keep the center of gravity */
+		/* Special case to keep the center of gravity of obejcts that have
+		   no gravity set and aren't to be resized */
 
 		if (    obj->resize == FL_RESIZE_NONE
 			 && obj->segravity == FL_NoGravity
 			 && obj->nwgravity == FL_NoGravity )
 		{
-			double xx = xsc * ( obj->fl1 + 0.5 * obj->w ) / neww;
-			double yy = ysc * ( obj->ft1 + 0.5 * obj->h ) / newh;
-
-			obj->fl1 = xx * neww - 0.5 * obj->w;
+			obj->fl1 += ( xsc - 1 ) * ( obj->fl1 + 0.5 * oldw );
+			obj->ft1 += ( ysc - 1 ) * ( obj->ft1 + 0.5 * oldh );
 			obj->fr1 = neww - obj->fl1;
-			obj->ft1 = yy * newh - 0.5 * obj->h;
 			obj->fb1 = newh - obj->ft1;
 
-			obj->fl2 = obj->fl1 + obj->w;
+			obj->fl2 = obj->fl1 + oldw;
+			obj->ft2 = obj->ft1 + oldh;
 			obj->fr2 = neww - obj->fl2;
-			obj->ft2 = obj->ft1 + obj->h;
 			obj->fb2 = newh - obj->ft2;
-
-			obj->x = FL_crnd( obj->fl1 );
-			obj->y = FL_crnd( obj->ft1 );
-
-			if ( fl_inverted_y )
-				obj->y = TRANY( obj, form );
-
-			continue;
 		}
-
-		old_fl1 = obj->fl1;
-		old_ft1 = obj->ft1;
-
-		switch ( obj->nwgravity )
+		else
 		{
-			case FL_NorthWest:
-				obj->fr1  = neww - obj->fl1;
-				obj->fb1  = newh - obj->ft1;
-				break;
+			/* In all other cases we recalculate the position of the upper left
+			   hand and the lower right hand corner of the object relative to
+			   all the borders of the form enclosing it, taking gravity and
+			   resizing setting into account. The results sometimes can be
+			   unexpected but hopefully are logically correct;-) */
 
-			case FL_North:
-				obj->fl1 *= xsc;
-				obj->fr1  = neww - obj->fl1;
-				obj->fb1  = newh - obj->ft1;
-				break;
+			if ( ULC_POS_LEFT_FIXED( obj ) )
+				obj->fr1 = neww - obj->fl1;
+			else if ( ULC_POS_RIGHT_FIXED( obj ) )
+				obj->fl1 = neww - obj->fr1;
 
-			case FL_NorthEast:
-				obj->fl1  = neww - obj->fr1;
-				obj->fb1  = newh - obj->ft1;
-				break;
-
-			case FL_West:
-				obj->fr1  = neww - obj->fl1;
-				obj->ft1 *= ysc;
-				obj->fb1  = newh - obj->ft1;
-				break;
-
-			case FL_East:
-				obj->fl1  = neww - obj->fr1;
-				obj->ft1 *= ysc;
-				obj->fb1  = newh - obj->ft1;
-				break;
-
-			case FL_SouthWest:
-				obj->fr1  = neww - obj->fl1;
-				obj->ft1  = newh - obj->fb1;
-				break;
-
-			case FL_South:
-				obj->fl1 *= xsc;
-				obj->fr1  = neww - obj->fl1;
-				obj->ft1  = newh - obj->fb1;
-				break;
-
-			case FL_SouthEast:
-				obj->fl1  = neww - obj->fr1;
-				obj->ft1  = newh - obj->fb1;
-				break;
-
-			case FL_NoGravity:
-				obj->fl1 *= xsc;
-				obj->fr1  = neww - obj->fl1;
-				obj->ft1 *= ysc;
-				obj->fb1  = newh - obj->ft1;
-				break;
-		}
-
-		switch ( obj->segravity )
-		{
-			case FL_NorthWest:
+			if ( LRC_POS_LEFT_FIXED( obj ) )
 				obj->fr2 = neww - obj->fl2;
-				obj->fb2 = newh - obj->ft2;
-				break;
-
-			case FL_North:
-				if ( obj->resize & FL_RESIZE_X )
-					obj->fl2  = obj->fl1 + xsc * ( obj->fl2 - old_fl1 );
-				else
-					obj->fl2 += obj->fl1 - old_fl1;
-				obj->fr2 = neww - obj->fl2;
-				obj->fb2 = newh - obj->ft2;
-				break;
-
-			case FL_NorthEast:
+			else if ( LRC_POS_RIGHT_FIXED( obj ) )
 				obj->fl2 = neww - obj->fr2;
-				obj->fb2 = newh - obj->ft2;
-				break;
 
-			case FL_West:
-				obj->fr2 = neww - obj->fl2;
-				if ( obj->resize & FL_RESIZE_Y )
-					obj->ft2  = obj->ft1 + ysc * ( obj->ft2 - old_ft1 );
+			if ( ! HAS_FIXED_HORI_ULC_POS( obj ) )
+			{
+				if ( HAS_FIXED_HORI_LRC_POS( obj ) )
+				{
+					if ( obj->resize & FL_RESIZE_X )
+						obj->fl1 = obj->fl2 - xsc * oldw;
+					else
+						obj->fl1 = obj->fl2 - oldw;
+				}
 				else
-					obj->ft2 += obj->ft1 - old_ft1;
-				obj->fb2 = newh - obj->ft2;
-				break;
+					obj->fl1 *= xsc;
+					
+				obj->fr1 = neww - obj->fl1;
+			}
 
-			case FL_East:
-				obj->fl2 = neww - obj->fr2;
-				if ( obj->resize & FL_RESIZE_Y )
-					obj->ft2 = obj->ft1 + ysc * ( obj->ft2 - old_ft1 );
-				else
-					obj->ft2 += obj->ft1 - old_ft1;
-				obj->fb2 = newh - obj->ft2;
-				break;
-
-			case FL_SouthWest:
-				obj->fr2 = neww - obj->fl2;
-				obj->ft2 = newh - obj->fb2;
-				break;
-
-			case FL_South:
+			if ( ! HAS_FIXED_HORI_LRC_POS( obj ) )
+			{
 				if ( obj->resize & FL_RESIZE_X )
-					obj->fl2 = obj->fl1 + xsc * ( obj->fl2 - old_fl1 );
+					obj->fl2 = obj->fl1 + xsc * oldw;
 				else
-					obj->fl2 = obj->fl1 + obj->fl2 - old_fl1;
+					obj->fl2 = obj->fl1 + oldw;
+	
 				obj->fr2 = neww - obj->fl2;
-				obj->ft2 = newh - obj->fb2;
-				break;
+			}
+			
+			if ( ULC_POS_TOP_FIXED( obj ) )
+				obj->fb1 = newh - obj->ft1;
+			else if ( ULC_POS_BOTTOM_FIXED( obj ) )
+				obj->ft1 = newh - obj->fb1;
 
-			case FL_SouthEast:
-				obj->fl2 = neww - obj->fr2;
-				obj->ft2 = newh - obj->fb2;
-				break;
-
-			case FL_NoGravity:
-				if ( obj->resize & FL_RESIZE_X )
-					obj->fl2 = obj->fl1 + xsc * ( obj->fl2 - old_fl1 );
-				obj->fr2 = neww - obj->fl2;
-
-				if ( obj->resize & FL_RESIZE_Y )
-					obj->ft2 = obj->ft1 + ysc * ( obj->ft2 - old_ft1 );
+			if ( LRC_POS_TOP_FIXED( obj ) )
 				obj->fb2 = newh - obj->ft2;
-				break;
+			else if ( LRC_POS_BOTTOM_FIXED( obj ) )
+				obj->ft2 = newh - obj->fb2;
+
+			if ( ! HAS_FIXED_VERT_ULC_POS( obj ) )
+			{
+				if ( HAS_FIXED_VERT_LRC_POS( obj ) )
+				{
+					if ( obj->resize & FL_RESIZE_Y )
+						obj->ft1 = obj->ft2 - ysc * oldh;
+					else
+						obj->ft1 = obj->ft2 - oldh;
+				}
+				else
+					obj->ft1 *= ysc;
+
+				obj->fb1 = newh - obj->ft1;
+			}
+
+			if ( ! HAS_FIXED_VERT_LRC_POS( obj ) )
+			{
+				if ( obj->resize & FL_RESIZE_Y )
+					obj->ft2 = obj->ft1 + ysc * oldh;
+				else
+					obj->ft2 = obj->ft1 + oldh;
+	
+				obj->fb2 = newh - obj->ft2;
+			}
 		}
 
 		obj->x = FL_crnd( obj->fl1 );
@@ -508,16 +445,8 @@ scale_form( FL_FORM * form,
 		if ( fl_inverted_y )
 			obj->y = TRANY( obj, form );
 
-		if ( obj->w < oldw || obj->h < oldh )
-			fl_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, 0 );
+		fl_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, 0 );
     }
-
-	/* Temporary (?) bug fix: unless the form gets resized to have both
-	   a larger width and a lamakrger height the objects it contains don't
-	   get redrawn with their new sizes e.g. under fvwm2  JTT */
-
-    if ( form->visible > 0 )
-		fl_redraw_form( form );
 }
 
 
@@ -540,8 +469,9 @@ fl_scale_form( FL_FORM * form,
 		 && FL_crnd( form->h_hr * ysc ) == form->h )
 		return;
 
-    /* if form is visible, after reshaping of the window, a ConfigureNotify
-       will be generated, which will then call scale_form. So, don't have to
+#if 0
+    /* If form is visible, after reshaping of the window, a ConfigureNotify
+       will be generated, which will then call scale_form. So don't have to
        do it here. */
 
     if ( ! form->visible )
@@ -551,8 +481,14 @@ fl_scale_form( FL_FORM * form,
 		form->w_hr *= xsc;
 		form->h_hr *= ysc;
 		form->w = FL_crnd( form->w_hr );
-		form->y = FL_crnd( form->h_hr );
+		form->h = FL_crnd( form->h_hr );
 	}
+#else
+	/* The above claim doesn't seem to be correct for e.g. fvwm2. Moreover,
+	   which part of the program would rescale the objects in the form?  JTT */
+
+	scale_form( form, xsc, ysc );
+#endif
 
     /* resize the window */
 
@@ -570,7 +506,7 @@ fl_set_form_minsize( FL_FORM * form,
 {
     if ( ! form )
     {
-		Bark( "FormMinSize", "Null Form" );
+		Bark( "fl_set_form_minsize", "Null Form" );
 		return;
     }
 
@@ -588,7 +524,7 @@ fl_set_form_maxsize( FL_FORM * form,
 {
     if ( ! form )
     {
-		Bark( "FormMaxSize", "Null Form" );
+		Bark( "fl_set_form_maxsize", "Null Form" );
 		return;
     }
 
@@ -750,7 +686,7 @@ fl_set_form_title( FL_FORM *    form,
 
 static int has_initial;
 static int unmanaged_count;
-static int auto_count;
+static size_t auto_count = 0;
 
 
 long
@@ -768,7 +704,6 @@ fl_prepare_form_window( FL_FORM *    form,
 		     my,
 		     nmx,
 		     nmy;
-
 
     if ( border == 0 )
 		border = FL_FULLBORDER;
@@ -1020,7 +955,6 @@ close_form_win( Window win )
 {
     XEvent xev;
 
-
     XUnmapWindow( flx->display, win );
     XDestroyWindow( flx->display, win );
 
@@ -1041,7 +975,7 @@ close_form_win( Window win )
 
 		if ( select_form_event( flx->display, &xev, &form ) )
 		{
-			int i;
+			size_t i;
 
 			form->visible = 0;
 			form->window = 0;
@@ -1078,8 +1012,7 @@ close_form_win( Window win )
 FL_FORM *
 fl_property_set( unsigned int prop )
 {
-    int i;
-
+    size_t i;
 
     for ( i = 0; i < formnumb; i++ )
 		if ( forms[ i ]->prop & prop && forms[ i ]->prop & FL_PROP_SET )
@@ -1119,8 +1052,8 @@ fl_set_form_property( FL_FORM *    form,
 void
 fl_hide_form( FL_FORM * form )
 {
-    int i;
-    FL_OBJECT *obj = NULL;
+    size_t i;
+    FL_OBJECT *obj;
     Window owin;
 
     if ( form == NULL )
@@ -1151,7 +1084,7 @@ fl_hide_form( FL_FORM * form )
     {
 #if FL_DEBUG >= ML_WARN
 		if ( ! fl_mouseobj->visible )
-			M_err( "fl_hide_form", "Out dated mouseobj %s",
+			M_err( "fl_hide_form", "Outdated mouseobj %s",
 				   fl_mouseobj->label ? fl_mouseobj->label : "" );
 #endif
 		obj = fl_mouseobj;
@@ -1215,12 +1148,10 @@ fl_hide_form( FL_FORM * form )
 
     if ( form->has_auto )
     {
-		auto_count--;
-		if ( auto_count < 0 )
-		{
+		if ( auto_count == 0 )
 			M_err( "fl_hide_form", "Bad auto count" );
-			auto_count = 0;
-		}
+		else
+			auto_count--;
     }
 
     /* need to re-establish command property */
@@ -1242,7 +1173,6 @@ fl_free_form( FL_FORM * form )
 {
     FL_OBJECT *current,
 		      *next;
-
 
     /* check whether ok to free */
 
@@ -1353,7 +1283,6 @@ fl_set_form_atactivate( FL_FORM *          form,
 {
     FL_FORM_ATACTIVATE old = NULL;
 
-
     if ( form )
     {
 		old = form->activate_callback;
@@ -1374,7 +1303,6 @@ fl_set_form_atdeactivate( FL_FORM *            form,
 {
     FL_FORM_ATDEACTIVATE old = NULL;
 
-
     if ( form )
     {
 		old = form->deactivate_callback;
@@ -1393,8 +1321,7 @@ fl_set_form_atdeactivate( FL_FORM *            form,
 void
 fl_activate_all_forms( void )
 {
-    int i;
-
+    size_t i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_activate_form( forms[ i ] );
@@ -1408,8 +1335,7 @@ fl_activate_all_forms( void )
 void
 fl_deactivate_all_forms( void )
 {
-    int i;
-
+    size_t i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_deactivate_form( forms[ i ] );
@@ -1430,7 +1356,6 @@ do_radio( FL_OBJECT * ob,
 		  void *      d )
 {
     FL_OBJECT *p = d;
-
 
     if ( ob->pushed && ob->radio && ob != d && ob->group_id == p->group_id )
     {
@@ -1456,17 +1381,14 @@ fl_do_radio_push( FL_OBJECT * obj,
 {
     FL_OBJECT *obj1 = obj;
 
-
-    /* if this radio button does not belong to any group, have to search the
+    /* If this radio button does not belong to any group, have to search the
        entire form */
 
     if ( obj->group_id == 0 )
-    {
 		fl_for_all_objects( obj->form, do_radio, obj );
-    }
     else
     {
-		/* find the begining of the current obj belongs */
+		/* Find the begining of the group the current object belongs to */
 
 		while ( obj1->prev != NULL && obj1->objclass != FL_BEGIN_GROUP )
 			obj1 = obj1->prev;
@@ -1479,6 +1401,7 @@ fl_do_radio_push( FL_OBJECT * obj,
 				fl_handle_object_direct( obj1, FL_RELEASE, xx, yy, key, xev );
 				obj1->pushed = 0;
 			}
+
 			obj1 = obj1->next;
 		}
     }
@@ -1495,15 +1418,15 @@ do_shortcut( FL_FORM * form,
 			 FL_Coord  y,
 			 XEvent *  xev )
 {
-    int i,
-		key1,
+    int key1,
 		key2;
-    FL_OBJECT *obj1 = form->first;
-
+    FL_OBJECT *obj;
+	long *s;
 
     /* Check whether the <Alt> key is pressed */
 
     key1 = key2 = key;
+
     if ( fl_keypressed( XK_Alt_L ) || fl_keypressed( XK_Alt_R ) )
     {
 		if ( key < 256 )
@@ -1519,45 +1442,47 @@ do_shortcut( FL_FORM * form,
 
     M_info( "Shortcut", "win=%lu key=%d %d %d", form->window, key, key1, key2 );
 
-    /* Check whether an object has this as shortcut. */
+    /* Check whether an object has this as a shortcut */
 
-    for ( i = -1; obj1; obj1 = obj1->next, i = -1 )
+    for ( obj = form->first; obj; obj = obj->next )
     {
-		if ( ! obj1->visible || obj1->active <= 0 )
+		if ( ! obj->visible || obj->active <= 0 || ! obj->shortcut )
 			continue;
 
-		while ( obj1->shortcut[ ++i ] != '\0' )
+		for ( s = obj->shortcut; *s != 0; s++ )
 		{
-			if ( obj1->shortcut[ i ] == key1 || obj1->shortcut[i] == key2 )
+			if ( ! ( *s == key1 || *s == key2 ) )
+				continue;
+
+			if ( obj->objclass == FL_INPUT )
 			{
-				if ( obj1->objclass == FL_INPUT )
+				if ( obj != form->focusobj )
 				{
-					if ( obj1 != form->focusobj )
-					{
-						fl_handle_object( form->focusobj, FL_UNFOCUS,
-										  x, y, 0, xev );
-						fl_handle_object( obj1, FL_FOCUS, x, y, 0, xev );
-					}
+					fl_handle_object( form->focusobj, FL_UNFOCUS,
+									  x, y, 0, xev );
+					fl_handle_object( obj, FL_FOCUS, x, y, 0, xev );
 				}
-				else
-				{
-					if ( obj1->radio )
-						fl_do_radio_push( obj1, x, y, key1, xev );
-
-					XAutoRepeatOff( flx->display );
-					fl_handle_object( obj1, FL_SHORTCUT, x, y, key1, xev );
-					fl_context->mouse_button = FL_SHORTCUT + key1;
-
-					/* this is not exactly correct as shortcut might quit,
-					   fl_finish will restore the keyboard state */
-
-					if ( fl_keybdcontrol.auto_repeat_mode == AutoRepeatModeOn )
-						XAutoRepeatOn( flx->display );
-				}
-				return 1;
 			}
+			else
+			{
+				if ( obj->radio )
+					fl_do_radio_push( obj, x, y, key1, xev );
+
+				XAutoRepeatOff( flx->display );
+				fl_handle_object( obj, FL_SHORTCUT, x, y, key1, xev );
+				fl_context->mouse_button = FL_SHORTCUT + key1;
+
+				/* this is not exactly correct as shortcut might quit,
+				   fl_finish will restore the keyboard state */
+
+				if ( fl_keybdcontrol.auto_repeat_mode == AutoRepeatModeOn )
+					XAutoRepeatOn( flx->display );
+			}
+
+			return 1;
 		}
     }
+
     return 0;
 }
 
@@ -1713,7 +1638,6 @@ fl_handle_form( FL_FORM * form,
     FL_Coord xx,
 		     yy;
 
-
     if ( ! form || ! form->visible )
 		return;
 
@@ -1747,15 +1671,18 @@ fl_handle_form( FL_FORM * form,
 			fl_get_form_mouse( form, &xx, &yy, &fl_keymask );
 
 		/* obj under the mouse */
+
 		obj = fl_find_last( form, FL_FIND_MOUSE, xx, yy );
     }
 
 #if 1
     /* this is an ugly hack. This is necessary due to popup pointer grab
        where a button release is eaten. Really should do a send event from
-       the pop-up routines */
+       the pop-up routines. */
 
-    if ( fl_pushobj && ! button_down( fl_keymask )  /* && event == FL_ENTER */ )
+    if (    fl_pushobj
+		 && ! button_down( fl_keymask )
+		 /* && event == FL_ENTER */ )
     {
 		obj = fl_pushobj;
 		fl_pushobj = NULL;
@@ -1790,6 +1717,7 @@ fl_handle_form( FL_FORM * form,
 #if 1
 			/* can't remember why this is here, probably does something
 			   required */
+
 			else if ( fl_mouseobj != NULL )
 				fl_handle_object( fl_mouseobj, FL_MOTION, xx, yy, 0, xev );
 #endif
@@ -1807,6 +1735,7 @@ fl_handle_form( FL_FORM * form,
 #else
 			/* 05/29/99 Always force unfocus. Could be risky just before
 			   release */
+
 			if ( obj != NULL && form->focusobj != obj )
 			{
 				FL_OBJECT *tmpobj = form->focusobj;
@@ -1824,19 +1753,24 @@ fl_handle_form( FL_FORM * form,
 				keyform = form;
 
 			/* handle a radio button */
+
 			if ( obj != NULL && obj->radio )
 				fl_do_radio_push( obj, xx, yy, key, xev );
 
 			/* push the object except when focus is overriden  */
+
 			if ( obj && ( ! obj->input || ( obj->input && obj->focus ) ) )
 				fl_handle_object( obj, FL_PUSH, xx, yy, key, xev );
 			fl_pushobj = obj;
 			break;
 
 		case FL_RELEASE:		/* Mouse was released inside the form */
-			obj = fl_pushobj;
-			fl_pushobj = NULL;
-			fl_handle_object( obj, FL_RELEASE, xx, yy, key, xev );
+			if ( fl_pushobj )
+			{
+				obj = fl_pushobj;
+				fl_pushobj = NULL;
+				fl_handle_object( obj, FL_RELEASE, xx, yy, key, xev );
+			}
 			break;
 
 		case FL_KEYBOARD:		/* A key was pressed */
@@ -1879,8 +1813,7 @@ typedef struct
 {
     long sec;
     long usec;
-}
-TimeVal;
+} TimeVal;
 
 static TimeVal tp;
 
@@ -1951,7 +1884,6 @@ do_keyboard( XEvent * xev,
     Window win;
     int kbuflen;
 
-
     /* before doing anything, save the current modifier key for the handlers */
 
     win = xev->xkey.window;
@@ -2003,6 +1935,7 @@ do_keyboard( XEvent * xev,
 			{
 				/* fake a tab key. */
 				/* some system shift+tab does not generate tab */
+
 				fl_handle_form( keyform, formevent, 9, xev );
 			}
 #if FL_DEBUG >= ML_DEBUG
@@ -2103,6 +2036,7 @@ handle_client_message( FL_FORM * form,
     else
     {
 		/* pump it thru current form */
+
 		fl_handle_form( form, FL_OTHER, 0, xev );
     }
 }
@@ -2119,13 +2053,11 @@ static int pre_emptive_consumed( FL_FORM *,
 FL_FORM *
 fl_win_to_form( Window win )
 {
-    FL_FORM **fws,
-		    **fw;
+	size_t i;
 
-
-    for ( fw = forms, fws = fw + formnumb; fw < fws; fw++ )
-		if ( ( *fw )->window == win )
-			return *fw;
+    for ( i = 0; i < formnumb; i++ )
+		if ( forms[ i ]->window == win )
+			return forms[ i ];
     return 0;
 }
 
@@ -2141,18 +2073,17 @@ void
 fl_handle_automatic( XEvent * xev,
 					 int      idle_cb )
 {
-    FL_FORM **f = forms,
-		    **fe;
     FL_IDLE_REC *idle_rec;
+	size_t i;
     static int nc;
-
 
     if ( fl_handle_signal )
 		fl_handle_signal( );
 
-    for ( fe = f + formnumb; auto_count && f < fe; f++ )
-		if ( ( *f )->has_auto )
-			fl_handle_form( *f, FL_STEP, 0, xev );
+	if ( auto_count )
+		for ( i = 0; i < formnumb; i++ )
+			if ( forms[ i ]->has_auto )
+				fl_handle_form( forms[ i ], FL_STEP, 0, xev );
 
     if ( idle_cb )
     {
@@ -2231,6 +2162,12 @@ xmask2key( unsigned int mask )
     if ( mask & Button3Mask )
 		return FL_RIGHT_MOUSE;
 
+    if ( mask & Button4Mask )
+		return FL_SCROLLUP_MOUSE;
+
+    if ( mask & Button5Mask )
+		return FL_SCROLLDOWN_MOUSE;
+
     return 0;
 }
 
@@ -2243,17 +2180,18 @@ do_interaction_step( int wait_io )
 {
     Window win;
     FL_FORM *evform = NULL;
+	static FL_FORM *redraw_form = NULL;
     int has_event;
     static unsigned int auto_cnt,
 		                query_cnt;
     static int lasttimer;
-
 
     has_event = get_next_event( wait_io, &evform, &st_xev );
 
     if ( ! has_event )
     {
 		/* we are idling */
+
 		st_xev.type = FLArtificialTimerEvent;
 
 		/* certain events like Selection/GraphicsExpose do not have a window
@@ -2261,6 +2199,7 @@ do_interaction_step( int wait_io )
 
 		if ( query_cnt++ % 100 == 0 )
 		{
+			query_cnt = 1;
 			fl_get_form_mouse( mouseform, &fl_mousex, &fl_mousey, &fl_keymask );
 			st_xev.xany.window = mouseform ? mouseform->window : 0;
 			st_xev.xany.send_event = 1;		/* indicating synthetic event */
@@ -2318,12 +2257,13 @@ do_interaction_step( int wait_io )
 			}
 
 			/* handle both automatic and idle callback */
+
 			fl_handle_automatic( &st_xev, 1 );
-			return;
+			break;
 
 		case MappingNotify:
 			XRefreshKeyboardMapping( ( XMappingEvent * ) &st_xev );
-			return;
+			break;
 
 		case FocusIn:
 			if ( fl_context->xic )
@@ -2372,12 +2312,14 @@ do_interaction_step( int wait_io )
 				/* this is necessary because win might be un-managed. To be
 				   friendly to other applications, grab focus only if abslutely
 				   necessary */
+
 				if (    mouseform->deactivated == 0
 					 && ! st_xev.xcrossing.focus && unmanaged_count > 0 )
 				{
 					fl_check_key_focus( "EnterNotify", win );
 					fl_winfocus( win );
 				}
+
 				fl_handle_form( mouseform, FL_ENTER,
 								xmask2key( fl_keymask ), &st_xev );
 			}
@@ -2410,6 +2352,7 @@ do_interaction_step( int wait_io )
 		if ( mouseform )
 		{
 			/* due to grab in pop-up , FL_RELEASE is necessary */
+
 			fl_handle_form( mouseform, FL_RELEASE, 0, &st_xev );
 			fl_handle_form( mouseform, FL_LEAVE,
 							xmask2key( fl_keymask ), &st_xev );
@@ -2461,7 +2404,7 @@ do_interaction_step( int wait_io )
 			else
 				fl_handle_form( mouseform, FL_PUSH,
 								st_xev.xbutton.button, &st_xev );
-			return;
+			break;
 
 		case ButtonRelease:
 			fl_keymask = st_xev.xbutton.state;
@@ -2478,11 +2421,31 @@ do_interaction_step( int wait_io )
 								st_xev.xbutton.button, &st_xev );
 
 			mouseform = evform;
-			return;
+			break;
 
 		case Expose:
 			if ( evform )
 			{
+				/* If 'redraw_form' is set we got a ConfigureNotify and the
+				   data from the Exposure event aren't correct - set clipping
+				   to the complete area of the form.                   JTT */
+
+				if ( redraw_form == evform )
+				{
+					st_xev.xexpose.x = 0;
+					st_xev.xexpose.y = 0;
+					st_xev.xexpose.width  = evform->w;
+					st_xev.xexpose.height = evform->h;
+					redraw_form = NULL;
+				}
+				else
+				{
+					if ( st_xev.xexpose.x + st_xev.xexpose.width > evform->w )
+						st_xev.xexpose.width = evform->w - st_xev.xexpose.x;
+					if ( st_xev.xexpose.y + st_xev.xexpose.height > evform->h )
+						st_xev.xexpose.height = evform->h - st_xev.xexpose.y;
+				}
+
 				fl_set_perm_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
 									  st_xev.xexpose.width,
 									  st_xev.xexpose.height );
@@ -2537,7 +2500,7 @@ do_interaction_step( int wait_io )
 				       && (    st_xev.xconfigure.width  != evform->w
 					        || st_xev.xconfigure.height != evform->h );
 
-			/* Dragging the form across the screen changes its absolute x,y
+			/* Dragging the form across the screen changes its absolute x, y
 			   coords. Objects that themselves contain forms should ensure
 			   that they are up to date. */
 
@@ -2545,12 +2508,29 @@ do_interaction_step( int wait_io )
 
 			if ( ! st_xev.xconfigure.send_event )
 			{
+				int old_w = evform->w;
+				int old_h = evform->h;
+
 				/* can't just set form->{w,h}. Need to take care of obj
 				   gravity */
 
 				scale_form( evform,
 							( double ) st_xev.xconfigure.width / evform->w,
 							( double ) st_xev.xconfigure.height / evform->h );
+
+				/* If both the width and the height got smaller (or one got
+				   smaller and the other one is unchanged) we're not going
+				   to get an Exposure event at all, so redraw the form. Even if
+				   only one of the lengths got smaller or remained unchanged
+				   while the other got larger, the next (compressed) Expose
+				   event will only cover the added part, so in this case store
+				   the forms address, so on the next Expose event we receive
+				   for it it's full area can be redrawn.                 JTT */
+
+				if ( evform->w <= old_w && evform->h <= old_h )
+					fl_redraw_form( evform );
+				else if ( ! ( evform->w > old_w && evform->h > old_h ) ) 
+					redraw_form = evform;
 			}
 			break;
 
@@ -2560,7 +2540,7 @@ do_interaction_step( int wait_io )
 
 		case DestroyNotify:	/* only sub-form gets this due to parent destroy */
 			{
-				int i;
+				size_t i;
 
 				evform->visible = 0;
 				evform->window = 0;
@@ -2596,7 +2576,6 @@ void
 fl_treat_interaction_events( int wait )
 {
     XEvent xev;
-
 
     do
 		do_interaction_step( wait );
@@ -2700,9 +2679,8 @@ select_form_event( Display *  d  FL_UNUSED_ARG,
 				   XEvent  *  xev,
 				   FL_FORM ** form )
 {
-    int i;
+    size_t i;
     Window win = ( ( XAnyEvent * ) xev )->window;
-
 
     for ( i = 0; i < formnumb; i++ )
 		if ( win == forms[ i ]->window )
@@ -2870,18 +2848,21 @@ pre_emptive_consumed( FL_FORM * form,
     if ( ! form || ! form->evmask || form->deactivated )
 		return 0;
 
-    if ( ( form->evmask & FL_ALL_EVENT ) == FL_ALL_EVENT && form->all_callback )
+    if (    ( form->evmask & FL_ALL_EVENT ) == FL_ALL_EVENT
+		 && form->all_callback )
 		return form->all_callback( form, xev );
 
     switch ( type )
     {
 		case ButtonPress:
-			if ( form->evmask & ButtonPressMask && form->push_callback )
+			if (    form->evmask & ButtonPressMask
+				 && form->push_callback )
 				return form->push_callback( form, xev );
 			break;
 
 		case ButtonRelease:
-			if ( form->evmask & ButtonReleaseMask && form->push_callback )
+			if (    form->evmask & ButtonReleaseMask
+				 && form->push_callback )
 				return form->push_callback( form, xev );
 			break;
 
@@ -2893,12 +2874,14 @@ pre_emptive_consumed( FL_FORM * form,
 			break;
 
 		case EnterNotify:
-			if ( form->evmask & EnterWindowMask && form->crossing_callback )
+			if (    form->evmask & EnterWindowMask
+				 && form->crossing_callback )
 				return form->crossing_callback( form, xev );
 			break;
 
 		case LeaveNotify:
-			if ( form->evmask & LeaveWindowMask && form->crossing_callback )
+			if (    form->evmask & LeaveWindowMask
+				 && form->crossing_callback )
 				return form->crossing_callback( form, xev );
 			break;
 
@@ -3248,11 +3231,10 @@ fl_fit_object_label( FL_OBJECT * obj,
 int
 fl_is_good_form( FL_FORM * form )
 {
-    FL_FORM **f = forms,
-		    **fe;
+	size_t i;
 
-    for ( fe = f + formnumb; form && f < fe; f++ )
-		if ( *f == form )
+    for ( i = 0; i < formnumb; i++ )
+		if ( forms[ i ] == form )
 			return 1;
 
     if ( form )
@@ -3268,8 +3250,7 @@ fl_is_good_form( FL_FORM * form )
 void
 fl_recount_auto_object( void )
 {
-    int i;
-
+    size_t i;
 
     for ( auto_count = i = 0; i < formnumb; i++ )
 		if ( forms[ i ]->has_auto )
