@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.11 2008/02/04 01:22:17 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.12 2008/02/04 09:28:09 jtt Exp $";
 #endif
 
 
@@ -820,77 +820,79 @@ badwin_handler( Display *     dpy  FL_UNUSED_ARG,
 static void
 compress_redraw( XEvent * ev )
 {
-    XExposeEvent *xpe = ( XExposeEvent * ) ev;
-	XEvent exposure_ev = *ev,
-		   configure_ev;
-    Window win = xpe->window;
+	XEvent expose_ev;
+    Window win = ev->xexpose.window;
     Region reg = XCreateRegion( );
-	XRectangle rec = { xpe->x, xpe->y, xpe->width, xpe->height };
-
-	configure_ev.type = LASTEvent;
-	xpe = ( XExposeEvent * ) &exposure_ev;
-	XUnionRectWithRegion( &rec, reg, reg );
+	XRectangle rec;
 
     /* This is theoretically not correct as we can't peek ahead and ignore
        the events in between, but it works in XForms as we always update the
        form size and position when dealing with Expose event.
 
-	   This has been a bit changed since 1.0.90: There was a problem with
+	   This has been changed a bit since 1.0.90: There was a problem with
 	   e.g. KDE or Gnome when they were set up to redraw also during resizing
 	   and the mouse was moved around rather fast. We collect now not only
 	   Expose events, compressing them to a single one, covering the combined
 	   area of all of them, but also ConfigureNotify events. If there was one
-	   or more ConfigureNotify events we put back the "consolidated" Exposure
-	   event and return the last ConfigureNotify event, instead of the original
-	   Expose event we got started with. This hopefully is not only be a
-	   solution that covers all cases but also keep the number of events to
-	   be processed to a minimum. The only drawback is that the function
-	   handling the Expose event (do_interaction_step() in lib/forms.c) has
-	   to check if the area specified by the event isn't larger than the (new)
-	   size of the window and prune it if necessary.                     JTT */
+	   or more ConfigureNotify events we put back the "consolidated" Expose
+	   event onto the event queue and return the last ConfigureNotify event
+	   instead of the original Expose event we got started with. This hope-
+	   fully is not only be a solution that covers all cases but also keep
+	   the numbers of redraws to a minimum. The only drawback is that the
+	   function do_interaction_step(), handling the Expose event, one has to
+	   check if the area specified by the event isn't larger than the (new)
+	   size of the window and prune it if necessary.                  JTT */
 		
-	while ( XCheckWindowEvent( flx->display, win,
-							   ExposureMask | StructureNotifyMask, ev ) )
-	{
-		if ( ev->type == ConfigureNotify )
-			configure_ev = *ev;
-		else if ( ev->type == Expose )
-		{
-			exposure_ev = *ev;
+	/* Collect all Expose events, combining their areas */
 
-			rec.x      = xpe->x;
-			rec.y      = xpe->y;
-			rec.width  = xpe->width;
-			rec.height = xpe->height;
+	do {
+		rec.x      = ev->xexpose.x;
+		rec.y      = ev->xexpose.y;
+		rec.width  = ev->xexpose.width;
+		rec.height = ev->xexpose.height;
 
-			XUnionRectWithRegion( &rec, reg, reg );
-		}
-#if FL_DEBUG >= ML_DEBUG
-		else
-			M_warn( "compress_redraw", "Lost event of type %s", 
-					fl_get_xevent_name( ev ) );
-#endif
-	}
+		XUnionRectWithRegion( &rec, reg, reg );
 
-	/* Set up the area for the "consolidated" Expose event */
+	} while ( XCheckTypedWindowEvent( flx->display, win, Expose, ev ) );
+
+	/* Set the area of the last events to that of the "consolidated" event
+	   and make a backup copy */
 
 	XClipBox( reg, &rec );
 
-	xpe->x = rec.x;
-	xpe->y = rec.y;
-	xpe->width = rec.width;
-	xpe->height = rec.height;
+	ev->xexpose.x = rec.x;
+	ev->xexpose.y = rec.y;
+	ev->xexpose.width = rec.width;
+	ev->xexpose.height = rec.height;
+
+	expose_ev = *ev;
 
     XDestroyRegion( reg );
 
-	if ( configure_ev.type == ConfigureNotify )
+	/* Now get all ConfigureNotify events */
+
+	while ( XCheckTypedWindowEvent( flx->display, win, ConfigureNotify, ev ) )
+		/*empty */ ;
+
+	/* If there was at least one put the "consolidated" Expose event back
+	   onto the event queue and return the last ConfigureNotify event we got,
+	   otherwise the Expose event itself.
+
+	   Since e.g. KDE and Gnome send the ConfigureNotify event artificially
+	   to achieve an update of the display while resizing is still going on,
+	   the 'send_event' member of the XEvent structure might be set. On the
+	   other hand, in do_interaction_step(), where the events are handled,
+	   this member is checked for to get around a bug in mwm. So we got to
+	   reset it here to avoid the event getting flagged as spurious. This
+	   hopefully won't interfere we the mwm bug detection since it's for
+	   cases were a ConfigureNotify gets send, but no corresponding Expose
+	   events, and in this case we wouldn't have gotten here... */
+
+	if ( ev->type == ConfigureNotify )
 	{
-		XPutBackEvent( flx->display, &exposure_ev );
-		*ev = configure_ev;
-		ev->xconfigure.send_event = 0;      /* necessary due to mwm hack */
+		XPutBackEvent( flx->display, &expose_ev );
+		ev->xconfigure.send_event = 0;
 	}
-	else if ( ev != &exposure_ev )
-		*ev = exposure_ev;
 }
 
 
