@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_disp.c,v 1.6 2008/01/28 23:42:16 jtt Exp $
+ * $Id: image_disp.c,v 1.7 2008/02/04 01:31:08 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -36,6 +36,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "flimage.h"
@@ -46,11 +47,19 @@
 
 static int count_repeats_and_shared(unsigned long *, int);
 
-static int fl_display_ci(FL_IMAGE * im, Window win);
-static int fl_display_gray(FL_IMAGE * im, Window win);
-static int fl_display_rgb(FL_IMAGE * im, Window win);
-static int fl_display_packed(FL_IMAGE * im, Window win);
-static int do_quantization(FL_IMAGE *, Colormap, int, unsigned short **);
+static int fl_display_ci( FL_IMAGE * im,
+						  Window     win );
+static int fl_display_gray( FL_IMAGE * im,
+							Window     win );
+static int fl_display_rgb( FL_IMAGE * im,
+						   Window     win );
+static int fl_display_packed( FL_IMAGE * im,
+							  Window     win );
+static int do_quantization( FL_IMAGE *,
+							Colormap,
+							int,
+							unsigned short ** );
+
 
 /* try to allocate all colors.  */
 static unsigned long *
@@ -821,164 +830,183 @@ adapt_image_to_window(FL_IMAGE *im, XWindowAttributes *xwa)
      fl_rgbmask_to_shifts(rgb2p->bmask, &rgb2p->bshift, &rgb2p->bbits);
 }
 
-#define Compatible(x,im)                                               \
-     (x.depth==im->depth                        &&                     \
-      x.visual->class==im->vclass               &&                     \
-      x.visual->red_mask == im->rgb2p.rmask     &&                     \
-      x.visual->green_mask == im->rgb2p.gmask)
+#define Compatible( x, im )                             \
+	(    ( x ).depth == im->depth                     	\
+	  && ( x ).visual->class == im->vclass             	\
+	  && ( x ).visual->red_mask == im->rgb2p.rmask      \
+	  && ( x ).visual->green_mask == im->rgb2p.gmask )
 
 /*
  * Convert an FL_IMAGE into an XImage. The converted ximage is
  * im->ximage if successful
  */
+
 int
-flimage_to_ximage(FL_IMAGE * im, FL_WINDOW win, XWindowAttributes * xwa)
+flimage_to_ximage( FL_IMAGE *          im,
+				   FL_WINDOW           win,
+				   XWindowAttributes * xwa )
 {
     unsigned long bk = 0;
-    int type, ret = 0;
+    int type,
+		ret = 0;
 
-    if (im->display_type != FL_IMAGE_NONE && im->modified)
+    if ( im->display_type != FL_IMAGE_NONE && im->modified )
     {
-	if (im->pixels)
-	{
-	    fl_free_matrix(im->pixels);
-	    im->pixels = 0;
-	}
-	im->display_type = FL_IMAGE_NONE;
+		if ( im->pixels )
+		{
+			fl_free_matrix( im->pixels );
+			im->pixels = 0;
+		}
+		im->display_type = FL_IMAGE_NONE;
     }
 
-    if(!xwa)
+    if( ! xwa )
     {
         static XWindowAttributes tmpxwa;
-        XGetWindowAttributes(im->xdisplay, win, &tmpxwa);
+
+        XGetWindowAttributes( im->xdisplay, win, &tmpxwa );
         xwa = &tmpxwa;
     }
 
-
     /* handle transparency */
-    if (im->tran_rgb >= 0 && im->app_background >= 0)
+
+    if ( im->tran_rgb >= 0 && im->app_background >= 0 )
     {
-	int ar, ag, ab, tc;
+		int ar,
+			ag,
+			ab,
+			tc;
 
-	if (im->app_background >= 0)
-	    bk = im->app_background;
+		if ( im->app_background >= 0 )
+			bk = im->app_background;
 
-	if (FL_IsCI(im->type) && im->tran_index < im->map_len)
-	{
-	    tc = im->tran_index;
-	    FL_UNPACK3(bk, ar, ag, ab);
-	    im->red_lut[tc] = ar;
-	    im->green_lut[tc] = ag;
-	    im->blue_lut[tc] = ab;
-	}
-	else
-	{
-	    flimage_replace_pixel(im, im->tran_rgb, bk);
-	}
+		if ( FL_IsCI( im->type ) && im->tran_index < im->map_len )
+		{
+			tc = im->tran_index;
+			FL_UNPACK3( bk, ar, ag, ab );
+			im->red_lut[ tc ]   = ar;
+			im->green_lut[ tc ] = ag;
+			im->blue_lut[ tc ]  = ab;
+		}
+		else
+			flimage_replace_pixel( im, im->tran_rgb, bk );
     }
 
 
-    if (!(im->win == win || Compatible((*xwa), im)))
+    if ( ! ( im->win == win || Compatible( * xwa, im ) ) )
     {
-        adapt_image_to_window(im, xwa);
+        adapt_image_to_window( im, xwa );
 
-	if (im->rgb2p.rbits > 8 || im->rgb2p.gbits > 8)
-	    rgb2pixel = rgb2pixel_more_than_8bits;
-	else
-	    rgb2pixel = rgb2pixel_8bits_or_less;
+		if ( im->rgb2p.rbits > 8 || im->rgb2p.gbits > 8 )
+			rgb2pixel = rgb2pixel_more_than_8bits;
+		else
+			rgb2pixel = rgb2pixel_8bits_or_less;
     }
 
     im->win = win;
 
     /* some server wrongly sets the depth to 32 when it's really 24 */
-    if (im->depth == 32 &&
-	(im->rgb2p.rbits + im->rgb2p.gbits + im->rgb2p.bbits) < 32)
+
+    if (    im->depth == 32
+		 && ( im->rgb2p.rbits + im->rgb2p.gbits + im->rgb2p.bbits ) < 32 )
     {
-	static int warned;
-	if (!warned)
-	    M_err("ImageDisplay", "Bad server setting: depth=%d. Will use %d\n",
-	    im->depth, im->rgb2p.rbits + im->rgb2p.gbits + im->rgb2p.bbits);
-	im->depth = im->rgb2p.rbits + im->rgb2p.gbits + im->rgb2p.bbits;
-	warned = 1;
+		static int warned;
+
+		if ( ! warned )
+			M_err( "ImageDisplay", "Bad server setting: depth = %d. Will "
+				   "use %d\n", im->depth,
+				   im->rgb2p.rbits + im->rgb2p.gbits + im->rgb2p.bbits );
+		im->depth = im->rgb2p.rbits + im->rgb2p.gbits + im->rgb2p.bbits;
+		warned = 1;
     }
 
     /* prepare the display image */
-    if (im->depth == 1 && im->type != FL_IMAGE_MONO)
+
+    if ( im->depth == 1 && im->type != FL_IMAGE_MONO )
     {
-	unsigned short **ci;
-	int otype = im->type;
+		unsigned short **ci;
+		int otype = im->type;
 
-	if (im->type != FL_IMAGE_CI)
-	{
-	    flimage_convert(im, FL_IMAGE_MONO, 2);
-	    im->pixels = im->ci;
-	    im->ci = 0;
-	}
-	else
-	{
-	    im->pixels = fl_get_matrix(im->h, im->w, sizeof(**im->pixels));
-	    memcpy(im->pixels[0], im->ci[0], sizeof(**im->ci) * im->w * im->h);
-	    flimage_convert(im, FL_IMAGE_MONO, 2);
-	    ci = im->pixels;
-	    im->pixels = im->ci;
-	    im->ci = ci;
-	}
+		if ( im->type != FL_IMAGE_CI )
+		{
+			flimage_convert( im, FL_IMAGE_MONO, 2 );
+			im->pixels = im->ci;
+			im->ci = 0;
+		}
+		else
+		{
+			im->pixels = fl_get_matrix( im->h, im->w, sizeof **im->pixels );
+			memcpy( im->pixels[ 0 ], im->ci[ 0 ],
+					sizeof **im->ci * im->w * im->h );
+			flimage_convert( im, FL_IMAGE_MONO, 2 );
+			ci = im->pixels;
+			im->pixels = im->ci;
+			im->ci = ci;
+		}
 
-	im->available_type &= ~FL_IMAGE_MONO;
-	im->type = otype;
-	im->display_type = FL_IMAGE_MONO;
-	im->available_type |= otype;
+		im->available_type &= ~ FL_IMAGE_MONO;
+		im->type = otype;
+		im->display_type = FL_IMAGE_MONO;
+		im->available_type |= otype;
     }
-    else if ((im->vclass == StaticGray || im->vclass == GrayScale) &&
-	     im->depth != 1 && !FL_IsGray(im->type))
+    else if (    ( im->vclass == StaticGray || im->vclass == GrayScale )
+			  && im->depth != 1 && ! FL_IsGray( im->type ) )
     {
-	int otype = im->type;
-	flimage_convert(im, FL_IMAGE_GRAY, 2);
-	im->type = otype;
-	/* this gets reset by fl_display_gray */
-	im->display_type = FL_IMAGE_GRAY;
+		int otype = im->type;
+
+		flimage_convert( im, FL_IMAGE_GRAY, 2 );
+		im->type = otype;
+
+		/* this gets reset by fl_display_gray */
+
+		im->display_type = FL_IMAGE_GRAY;
     }
-    else if ((im->vclass == PseudoColor || im->vclass == StaticColor) &&
-	     im->type == FL_IMAGE_RGB)
+    else if (    ( im->vclass == PseudoColor || im->vclass == StaticColor )
+			  && im->type == FL_IMAGE_RGB )
     {
-	int max_colors = (1 << im->depth);
-	unsigned short **ci = fl_get_matrix(im->h, im->w, sizeof(**ci));
+		int max_colors = 1 << im->depth;
+		unsigned short **ci = fl_get_matrix( im->h, im->w, sizeof **ci );
 
-	if (max_colors > 250)
-	    max_colors -= 20;
+		if ( max_colors > 250 )
+			max_colors -= 20;
 
-	im->map_len = max_colors;
-	flimage_getcolormap(im);
-	do_quantization(im, im->xcolormap, im->map_len, ci);
-	im->pixels = ci;
-	im->display_type = FL_IMAGE_CI;
+		im->map_len = max_colors;
+		flimage_getcolormap( im );
+		do_quantization( im, im->xcolormap, im->map_len, ci );
+		im->pixels = ci;
+		im->display_type = FL_IMAGE_CI;
     }
 
-    if ((type = im->display_type) == FL_IMAGE_NONE)
-	type = im->type;
+    if ( ( type = im->display_type ) == FL_IMAGE_NONE )
+		type = im->type;
 
-    switch (type)
+    switch ( type )
     {
-    case FL_IMAGE_GRAY:
-    case FL_IMAGE_GRAY16:
-	ret = fl_display_gray(im, win);
-	break;
-    case FL_IMAGE_CI:
-    case FL_IMAGE_MONO:
-	ret = fl_display_ci(im, win);
-	break;
-    case FL_IMAGE_RGB:
-	ret = fl_display_rgb(im, win);
-	break;
-    case FL_IMAGE_PACKED:
-	ret = fl_display_packed(im, win);
-	break;
-    default:
-	ret = -1;
+		case FL_IMAGE_GRAY:
+		case FL_IMAGE_GRAY16:
+			ret = fl_display_gray( im, win );
+			break;
+
+		case FL_IMAGE_CI:
+		case FL_IMAGE_MONO:
+			ret = fl_display_ci( im, win );
+			break;
+
+		case FL_IMAGE_RGB:
+			ret = fl_display_rgb( im, win );
+			break;
+
+		case FL_IMAGE_PACKED:
+			ret = fl_display_packed( im, win );
+			break;
+
+		default:
+			ret = -1;
     }
 
     return ret;
 }
+
 
 /* We always keep hi-res image whenever possible. For this reason,
  * the displayed image and the image in memory are not necessarily the

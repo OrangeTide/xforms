@@ -260,75 +260,75 @@ int freeobject_handler( FL_OBJECT * ob,
 
 FD_drawfree *create_form_drawfree(void)
 {
-  FL_OBJECT *obj;
-  FD_drawfree *fdui = (FD_drawfree *) fl_calloc(1, sizeof(*fdui));
+	FL_OBJECT *obj;
+	FD_drawfree *fdui = fl_calloc(1, sizeof(*fdui));
 
-  fdui->drawfree = fl_bgn_form(FL_NO_BOX, 530, 490);
-  obj = fl_add_box(FL_UP_BOX,0,0,530,490,"");
-  obj = fl_add_frame(FL_DOWN_FRAME,145,30,370,405,"");
+	fdui->drawfree = fl_bgn_form(FL_NO_BOX, 530, 490);
+
+	obj = fl_add_box(FL_UP_BOX,0,0,530,490,"");
+
+	obj = fl_add_frame(FL_DOWN_FRAME,145,30,370,405,"");
     fl_set_object_gravity(obj, FL_NorthWest, FL_SouthEast);
-  fdui->freeobj = obj = fl_add_free(FL_NORMAL_FREE,145,30,370,405,"",
-       freeobject_handler);
+	fdui->freeobj = obj = fl_add_free(FL_NORMAL_FREE,145,30,370,405,"",
+									  freeobject_handler);
     fl_set_object_gravity(obj, FL_NorthWest, FL_SouthEast);
-  obj = fl_add_checkbutton(FL_PUSH_BUTTON,15,25,100,35,"Outline");
+	obj = fl_add_checkbutton(FL_PUSH_BUTTON,15,25,100,35,"Outline");
     fl_set_object_color(obj,FL_MCOL,FL_BLUE);
     fl_set_object_gravity(obj, FL_NorthWest, FL_NorthWest);
     fl_set_object_callback(obj,fill_cb,0);
 
-  fdui->figgrp = fl_bgn_group();
-  fdui->drobj[0] = obj = fl_add_button(FL_RADIO_BUTTON,10,60,40,40,"@#circle");
+	fdui->figgrp = fl_bgn_group();
+	fdui->drobj[0] = obj = fl_add_button(FL_RADIO_BUTTON,10,60,40,40,"@#circle");
     fl_set_object_lcol(obj,FL_YELLOW);
     fl_set_object_callback(obj,switch_object,0);
-  fdui->drobj[1] = obj = fl_add_button(FL_RADIO_BUTTON,50,60,40,40,"@#square");
+	fdui->drobj[1] = obj = fl_add_button(FL_RADIO_BUTTON,50,60,40,40,"@#square");
     fl_set_object_lcol(obj,FL_YELLOW);
     fl_set_object_callback(obj,switch_object,1);
-  fdui->drobj[2] = obj = fl_add_button(FL_RADIO_BUTTON,90,60,40,40,"@#8>");
+	fdui->drobj[2] = obj = fl_add_button(FL_RADIO_BUTTON,90,60,40,40,"@#8>");
     fl_set_object_lcol(obj,FL_YELLOW);
     fl_set_object_callback(obj,switch_object,2);
-  fl_end_group();
+	fl_end_group();
 
 
-  fdui->colgrp = fl_bgn_group();
-  fdui->colorobj = obj = fl_add_box(FL_BORDER_BOX,25,140,90,25,"");
-  fdui->rsli = obj = fl_add_slider(FL_VERT_FILL_SLIDER,25,170,30,125,"");
+	fdui->colgrp = fl_bgn_group();
+	fdui->colorobj = obj = fl_add_box(FL_BORDER_BOX,25,140,90,25,"");
+	fdui->rsli = obj = fl_add_slider(FL_VERT_FILL_SLIDER,25,170,30,125,"");
     fl_set_object_color(obj,FL_COL1,FL_RED);
     fl_set_object_callback(obj,change_color,0);
-     fl_set_slider_return(obj, FL_RETURN_CHANGED);
-  fdui->gsli = obj = fl_add_slider(FL_VERT_FILL_SLIDER,55,170,30,125,"");
+	fl_set_slider_return(obj, FL_RETURN_CHANGED);
+	fdui->gsli = obj = fl_add_slider(FL_VERT_FILL_SLIDER,55,170,30,125,"");
     fl_set_object_color(obj,FL_COL1,FL_GREEN);
     fl_set_object_callback(obj,change_color,1);
-     fl_set_slider_return(obj, FL_RETURN_CHANGED);
-  fdui->bsli = obj = fl_add_slider(FL_VERT_FILL_SLIDER,85,170,30,125,"");
+	fl_set_slider_return(obj, FL_RETURN_CHANGED);
+	fdui->bsli = obj = fl_add_slider(FL_VERT_FILL_SLIDER,85,170,30,125,"");
     fl_set_object_color(obj,FL_COL1,FL_BLUE);
     fl_set_object_callback(obj,change_color,2);
-     fl_set_slider_return(obj, FL_RETURN_CHANGED);
-  fl_end_group();
+	fl_set_slider_return(obj, FL_RETURN_CHANGED);
+	fl_end_group();
 
-
-  fdui->miscgrp = fl_bgn_group();
-  obj = fl_add_button(FL_NORMAL_BUTTON,395,445,105,30,"Quit");
+	fdui->miscgrp = fl_bgn_group();
+	obj = fl_add_button(FL_NORMAL_BUTTON,425,460,105,30,"Quit");
     fl_set_button_shortcut(obj,"Qq#q",1);
-  obj = fl_add_button(FL_NORMAL_BUTTON,280,445,105,30,"Refresh");
+	obj = fl_add_button(FL_NORMAL_BUTTON,280,445,105,30,"Refresh");
     fl_set_object_callback(obj,refresh_cb,0);
-  obj = fl_add_button(FL_NORMAL_BUTTON,165,445,105,30,"Clear");
+	obj = fl_add_button(FL_NORMAL_BUTTON,165,445,105,30,"Clear");
     fl_set_object_callback(obj,clear_cb,0);
-  fl_end_group();
+	fl_end_group();
 
-
-  fdui->sizegrp = fl_bgn_group();
-  fdui->hsli = obj = fl_add_valslider(FL_HOR_SLIDER,15,410,120,25,"Height");
+	fdui->sizegrp = fl_bgn_group();
+	fdui->hsli = obj = fl_add_valslider(FL_HOR_SLIDER,15,410,120,25,"Height");
     fl_set_object_lalign(obj,FL_ALIGN_TOP);
     fl_set_object_callback(obj,change_size,1);
-     fl_set_slider_return(obj, FL_RETURN_CHANGED);
-  fdui->wsli = obj = fl_add_valslider(FL_HOR_SLIDER,15,370,120,25,"Width");
+	fl_set_slider_return(obj, FL_RETURN_CHANGED);
+	fdui->wsli = obj = fl_add_valslider(FL_HOR_SLIDER,15,370,120,25,"Width");
     fl_set_object_lalign(obj,FL_ALIGN_TOP);
     fl_set_object_callback(obj,change_size,0);
-     fl_set_slider_return(obj, FL_RETURN_CHANGED);
-  fl_end_group();
+	fl_set_slider_return(obj, FL_RETURN_CHANGED);
+	fl_end_group();
 
-  fl_end_form();
+	fl_end_form();
 
-  return fdui;
+	return fdui;
 }
 /*---------------------------------------*/
 

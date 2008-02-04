@@ -53,7 +53,9 @@ noinst_PROGRAMS = arrowbutton \
 	free1 \
 	freedraw \
 	freedraw_leak \
-	$(GL) goodies \
+	$(GL) \
+	goodies \
+	grav \
 	group \
 	ibrowser \
 	iconify \
@@ -175,6 +177,7 @@ glwin_LDADD  = ../gl/libformsGL.la ../lib/libforms.la \
 	$(X_LIBS) $(X_PRE_LIBS) -lGL -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 goodies_SOURCES = goodies.c
+grav_SOURCES = grav.c
 group_SOURCES = group.c
 
 ibrowser_SOURCES = ibrowser.c
