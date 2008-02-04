@@ -1,3 +1,51 @@
+2008-02-04 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* Resizing code again changed since I hadn't understood all
+	the interdepencies between gravity and resize settings.
+	Hopefully works correctly now.
+
+	The special treatment of the case for objects that have no
+	gravity set and all resizing switched off (in which case
+	the center of gravity is moved when the enclosing form is
+	resized) seems to be a bit strange. Why is not the same
+	behaviour used for e.g. the  x-direction if an object 
+	isn't fixed in x-direction by its gravity setting and it
+	isn't to be resized in horizontal direction (same for y)?
+
+	* lib/events.c: Changed the Expose event compression code that
+	did lead to missed redraws under e.g. KDE or Gnome if they are
+	set up to update a window also during resizing and the mouse is
+	moved around a lot in the process.
+	
+	* lib/textbox.c: Hopefully fixed a bug (perhaps it's the one
+	that Michal Szymanski reported on 2005/3/11 in the XForms
+	mailing list) that resulted under certain circumstances in e.g.
+	fl_do_forms() returning the object for a normal textbrowser
+	unexpectedly when the mouse wheel was used, which in turn could
+	make programs exit that did not expect such a return value (the
+	fbrowse.c demo program did show the problem).
+
+	* lib/textbox.c: Hopefully fixed another bug that kept the
+	text area of a browser from being redrawn correctly following
+	the resizing of its window when sliders were on and not in
+	the left- or top-most position. The whole behaviour
+	
+	* lib/objects.c: Added three functions fl_get_object_bw(),
+	fl_get_object_gravity() and fl_get_object_resize() (to be
+	added to the public interface).
+
+	* lib/flinternal.h: Added several macros that test if the
+	upper left hand and the lower right hand corner of an
+	object are locked due to gravity settings and macros that
+	test if the width or height is "fixed", i.e. determined
+	by the gravity settings (so they are not influenced by
+	the corresponding resizing settings).
+
+	* demos/grav.c: Created a small demo program that shows the
+	effects of the different gravity and resizing settings. The
+	results can sometimes be a bit surprising at a first glance
+	but I hope to have gotten it right;-)
+
 2008-01-28 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* Resizing behaviour got rewritten to get it to work correctly
@@ -1230,7 +1278,7 @@
 2003-04-08  Angus Leeming  <angus.leeming@btopenworld.com>
 
 	* image/image_rotate.c (flimage_rotate): enable the rotation of
-	grayscale images by 90degree multiples and more generally prevent
+	grayscale images by 90 degree multiples and more generally prevent
 	other unsupported image types from crashing xforms.
 
 	* lib/flresource.c (fl_initialize): clean-up properly if we fail to
