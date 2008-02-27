@@ -39,7 +39,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_dlist = "$Id: listdir.c,v 1.10 2008/01/28 23:20:49 jtt Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.11 2008/02/27 12:12:14 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -94,27 +94,27 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.10 2008/01/28 23:20:49 jtt Exp $";
 #endif
 
 #if defined (__EMX__) || defined (FL_WIN32) || defined (opennt)
-#define S_ISLNK(m)   0		/* no links in OS/2      */
-#define S_ISBLB(m)   0		/* no blk devices in OS2 */
+#define S_ISLNK( m )   0		/* no links in OS/2      */
+#define S_ISBLB( m )   0		/* no blk devices in OS2 */
 #else
 #ifndef S_ISLNK
-#define S_ISLNK(m)      (((m) & S_IFLNK) == S_IFLNK)
+#define S_ISLNK( m )   ( ( ( m ) & S_IFLNK ) == S_IFLNK )
 #endif
 #ifndef S_ISBLK
-#define S_ISBLK(m)      (((m) & S_IFBLK) == S_IFBLK)
+#define S_ISBLK( m )   ( ( ( m ) & S_IFBLK ) == S_IFBLK )
 #endif
 #endif /* __EMX__ */
 
 #ifndef S_ISCHR
-#define S_ISCHR(m)      (((m) & S_IFCHR) == S_IFCHR)
+#define S_ISCHR( m )   ( ( ( m ) & S_IFCHR ) == S_IFCHR )
 #endif
 
 #ifndef S_ISSOCK
 # if defined( S_IFSOCK )
 #   ifdef S_IFMT
-#     define S_ISSOCK(m) (((m) & S_IFMT) == S_IFSOCK)
+#     define S_ISSOCK( m ) ( ( ( m ) & S_IFMT ) == S_IFSOCK )
 #   else
-#     define S_ISSOCK(m) ((m) & S_IFSOCK)
+#     define S_ISSOCK( m ) ( ( m ) & S_IFSOCK )
 #   endif /* S_IFMT */
 # elif defined( S_ISNAM )
     /* SCO OpenServer 5.0.7 */
@@ -126,61 +126,81 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.10 2008/01/28 23:20:49 jtt Exp $";
 #define MAXFL    ( FL_PATH_MAX + FL_FLEN )/* maximum file length */
 
 #ifndef StrReDup
-#define StrReDup(a,b)   do { if(a) fl_free(a); a = fl_strdup(b);} while(0)
+#define StrReDup( a, b )  do                       \
+                          {                        \
+							  if( a )              \
+								  fl_free( a );    \
+							  a = fl_strdup( b );  \
+						  } while( 0 )
 #endif
 
-#if defined(NEED_DIRECT)
+#if defined NEED_DIRECT
 #define DIRENT direct
 #else
 #define DIRENT dirent
 #endif
 
-#if defined(NEED_GETCWD)
-#if defined(Lynx)
+#if defined NEED_GETCWD
+#if defined Lynx
+
+/***************************************
+ ***************************************/
+
 char *
-getcwd(char *a, int b)
+getcwd( char * a,
+	    int    b )
 {
-    return getwd(a);
+    return getwd( a );
 }
 
 #endif
-#if defined(__VMS)
-#define getcwd(a,b)    getcwd(a,b,0)	/* use unix file/path syntax */
+#if defined __VMS
+#define getcwd( a, b )    getcwd( a, b, 0 )	/* use unix file/path syntax */
 #endif
 #endif
 
 #ifdef FL_WIN32
-/* convert the backslash to slash */
+
+/***************************************
+ * convert the backslash to slash
+ ***************************************/
+
 static char *
-fl_b2f_slash(char *dir)
+fl_b2f_slash( char *dir )
 {
     char *p = dir;
-    for (; p && *p; p++)
-	if (*p == '\\')
+
+    for ( ; p && *p; p++ )
+	if ( *p == '\\' )
 	    *p = '/';
     return dir;
 }
+
 #else
-#define fl_b2f_slash(a)
+#define fl_b2f_slash( a )
 #endif
 /************* local variables ****************/
 
 static const char *cpat;	/* current pattern          */
 static const char *cdir;	/* current working directory */
-static char fname[MAXFL + 2];
+static char fname[ MAXFL + 2 ];
 
 #define FL_NONE 0
 
 /******* local function forward dec **********/
 
-extern int fl_wildmat(const char *, const char *);
-static int tc_sort(const void *, const void *);
-static int tc_scandir(const char *, struct DIRENT ***);
+extern int fl_wildmat( const char *,
+					   const char * );
+static int tc_sort( const void *,
+					const void * );
+static int tc_scandir( const char *,
+					   struct DIRENT *** );
 
-static int default_filter( const char *  FL_UNUSED_ARG,
+static int default_filter( const char *,
 						   int );
 
 /* default filter and sort method */
+
 static int sort_method = FL_ALPHASORT;
 static FL_DIRLIST_FILTER ffilter = default_filter;
 static int filter_directory = 0;   /* true to filter directory entries */
@@ -188,6 +208,7 @@ static int filter_directory = 0;   /* true to filter directory entries */
 /*
  * convert native file types to FL
  */
+
 #ifndef FL_WIN32		/* [  */
 
 
@@ -195,22 +216,23 @@ static int filter_directory = 0;   /* true to filter directory entries */
  ***************************************/
 
 static void
-mode2type(unsigned int mode, int *type)
+mode2type( unsigned int mode,
+		   int *        type )
 {
-    if (S_ISDIR(mode))
+    if ( S_ISDIR( mode ) )
 		*type = FT_DIR;
-    else if (S_ISREG(mode))
+    else if ( S_ISREG( mode ) )
 		*type = FT_FILE;
-    else if (S_ISLNK(mode))
+    else if ( S_ISLNK( mode ) )
 		*type = FT_LINK;
-    else if (S_ISSOCK(mode))
+    else if ( S_ISSOCK(mode ) )
 		*type = FT_SOCK;
-    else if (S_ISFIFO(mode))
+    else if ( S_ISFIFO( mode ) )
 		*type = FT_FIFO;
-    else if (S_ISCHR(mode))
+    else if ( S_ISCHR( mode ) )
 		*type = FT_CHR;
-#if !defined(__EMX__)
-    else if (S_ISBLK(mode))
+#if !defined __EMX__
+    else if ( S_ISBLK( mode ) )
 		*type = FT_BLK;
 #endif
     else
@@ -242,9 +264,9 @@ fselect( const char  * d_name,
     {
 		/* always keep directory and links */
 
-		ret = S_ISDIR(mode) ||
-			 (    ( S_ISREG( mode ) || S_ISLNK( mode ) )
-			   && fl_wildmat( d_name, cpat ) );
+		ret =    S_ISDIR(mode)
+			  || (    ( S_ISREG( mode ) || S_ISLNK( mode ) )
+				   && fl_wildmat( d_name, cpat ) );
     }
     else
     {
@@ -262,9 +284,12 @@ fselect( const char  * d_name,
 
 #else /* WIN 32 ][ */
 
+/***************************************
+ ***************************************/
+
 static int
-fselect( struct _finddata_t *c_file,
-		 FL_Dirlist *          dl )
+fselect( struct _finddata_t * c_file,
+		 FL_Dirlist *         dl )
 {
     int type,
 		ret = 0;
@@ -283,7 +308,7 @@ fselect( struct _finddata_t *c_file,
     else
     {
 		strcat( strcpy( fname, cdir ), c_file->name );
-		ret = type == FT_DIR
+		ret =    type == FT_DIR
 			  || ( fl_wildmat( c_file->name, cpat ) && ffilter( fname, type ) );
     }
 
@@ -370,9 +395,9 @@ scandir_get_entries( const char  * dir,
     {
 		while ( --lastn >= 0 )
 			if ( dlist[lastn] )
-				free( dlist[ lastn ]);
-		free( dlist );
-		dlist = 0;
+				fl_free( dlist[ lastn ]);
+		fl_free( dlist );
+		dlist = NULL;
     }
 
     n = 0;
@@ -391,7 +416,7 @@ scandir_get_entries( const char  * dir,
 			}
 		}
 
-		dl->name = 0;		/* sentinel */
+		dl->name = NULL;		/* sentinel */
 
 		if ( sort_method != FL_NONE )
 			qsort( *dirlist, n, sizeof **dirlist, tc_sort );
@@ -401,6 +426,9 @@ scandir_get_entries( const char  * dir,
 }
 
 #else /* FL_WIN32 ][ */
+
+/***************************************
+ ***************************************/
 
 static int
 scandir_get_entries( const char  * dir,
@@ -462,7 +490,7 @@ scandir_get_entries( const char  * dir,
     _findclose( hFile );
     chdir( cwd );
 
-    dl->name = 0;		/* sentinel */
+    dl->name = NULL;		/* sentinel */
 
     if ( sort_method != FL_NONE )
 		qsort( *dirlist, n, sizeof **dirlist, tc_sort );
@@ -531,13 +559,13 @@ is_cached( const char * dir,
 void
 fl_free_dirlist( FL_Dirlist * dl )
 {
-    int i, j;
+    size_t i;
 
-    for ( j = -1, i = 0; j < 0 && i < MAXCACHE; i++ )
+    for ( i = 0; i < MAXCACHE; i++ )
 		if ( dl == dirlist[ i ] )
-			j = i;
+			break;
 
-    if ( j < 0 )
+    if ( i >= MAXCACHE )
     {
 		M_err( "FreeDirList", "Bad list" );
 		return;
@@ -546,13 +574,15 @@ fl_free_dirlist( FL_Dirlist * dl )
     while ( dl && dl->name )
     {
 		fl_free( dl->name );
-		dl->name = 0;		/* important: signifies empty list */
+		dl->name = NULL;		/* important: signifies empty list */
 		dl++;
     }
 
-    if ( dirlist[ j ] )
-		fl_free( dirlist[ j ] );
-    dirlist[ j ] = 0;
+    if ( dirlist[ i ] )
+	{
+		fl_free( dirlist[ i ] );
+		dirlist[ i ] = NULL;
+	}
 }
 
 
@@ -647,7 +677,8 @@ fl_is_valid_dir( const char *name )
  * Fix directory name, such as ../../a/b etc
  ***************************************/
 
-static void add_one( char *, char * );
+static void add_one( char *,
+					 char * );
 
 char *
 fl_fix_dirname( char *dir )
@@ -681,267 +712,297 @@ fl_fix_dirname( char *dir )
     p = ldir;
 
 #if defined __EMX__ || defined FL_WIN32
-    if (isalpha(ldir[0]) && ldir[1] == ':')
+    if ( isalpha( ldir[ 0 ] ) && ldir[ 1 ] == ':' )
     {				/* drive letter */
-	dir[0] = ldir[0];
-	dir[1] = ldir[1];
-	dir[2] = '\0';
-	p = ldir + 2;
+		dir[ 0 ] = ldir[ 0 ];
+		dir[ 1 ] = ldir[ 1 ];
+		dir[ 2 ] = '\0';
+		p = ldir + 2;
     }
     else
 #elif defined opennt
-    if (ldir[0] == '/' && ldir[1] == '/' && isalpha(ldir[2]))
+    if ( ldir[ 0 ] == '/' && ldir[ 1 ] == '/' && isalpha( ldir[ 2 ] ) )
     {				/* //E is E dirver */
-	dir[0] = ldir[0];
-	dir[1] = ldir[1];
-	dir[2] = ldir[2];
-	dir[3] = '\0';
-	p = ldir + 3;
+		dir[ 0 ] = ldir[ 0 ];
+		dir[ 1 ] = ldir[ 1 ];
+		dir[ 2 ] = ldir[ 2 ];
+		dir[ 3 ] = '\0';
+		p = ldir + 3;
     }
     else
 #endif
-    if (ldir[0] != '/' && ldir[0] != '~')
-	fl_getcwd(dir, FL_PATH_MAX - 2);
-    else
-	dir[0] = '\0';
+		if ( ldir[ 0 ] != '/' && ldir[ 0 ] != '~' )
+			fl_getcwd( dir, FL_PATH_MAX - 2 );
+		else
+			dir[ 0 ] = '\0';
 
-    while (*p)
+    while ( *p )
     {
 #ifdef __EMX__
-	if (*p == '/' || *p == '\\')
-	{
+		if ( *p == '/' || *p == '\\' )
+		{
 #else
-	if (*p == '/')
-	{
+		if ( *p == '/' )
+		{
 #endif
-	    *q = '\0';
-	    if (q > one)
-		add_one(dir, (q = one));
+			*q = '\0';
+			if ( q > one )
+				add_one( dir, q = one );
+		}
+		else
+			*q++ = *p;
+		p++;
 	}
-	else
-	    *q++ = *p;
-	p++;
-    }
 
     *q = '\0';
-    if (q > one)
-	add_one(dir, one);
+    if ( q > one )
+		add_one( dir, one );
 
 #if defined __EMX__ || defined FL_WIN32
-    if (strlen(dir) == 2 && dir[1] == ':')
+    if ( strlen( dir ) == 2 && dir[ 1 ] == ':' )
     {				/* fix a single "C:" */
-	dir[2] = '/';
-	dir[3] = '\0';
+		dir[ 2 ] = '/';
+		dir[ 3 ] = '\0';
     }
 #endif
 
 #if defined opennt
-    if (strlen(dir) == 3 && dir[0] == '/' &&
-	dir[1] == '/' && isalpha(ldir[2]))
+    if (    strlen( dir ) == 3
+		 && dir[ 0 ] == '/'
+		 && dir[ 1 ] == '/'
+		 && isalpha( ldir[ 2 ] ) )
     {				/* fix  "//C" */
-	dir[3] = '/';
-	dir[4] = '\0';
+		dir[ 3 ] = '/';
+		dir[ 4 ] = '\0';
     }
 #endif
 
-    fl_b2f_slash(dir);
+    fl_b2f_slash( dir );
 
     return dir;
 }
+
 
 #ifndef FL_WIN32
 #include <pwd.h>
 #endif
 
+/***************************************
+ ***************************************/
+
 static void
-add_one(char dir[], char one[])
+add_one( char dir[ ],
+		 char one[ ] )
 {
     char *q;
 
-    if (one[0] == '.' && one[1] == '.' && one[2] == '\0')
+    if ( one[ 0 ] == '.' && one[ 1] == '.' && one[ 2 ] == '\0' )
     {
-	if ((q = strrchr(dir, '/')))
-	    *(q + (q == dir)) = '\0';
+		if ( ( q = strrchr( dir, '/' ) ) )
+			*( q + ( q == dir ) ) = '\0';
 #ifndef FL_WIN32
     }
-    else if (one[0] == '~')
+    else if ( one[ 0 ] == '~' )
     {
-	if (one[1] == '\0')
-	{			/* must be ~/ ... */
-	    strcat(dir, (q = getenv("HOME")) ? q : "/");
-	}
-	else
-	{			/* must be ~name */
-	    /* Mathod: vms <7.0 has no getpwnam(). Ignore ~name */
-#if !defined(__VMS) || __VMS_VER >=  70000000
-	    struct passwd *p = getpwnam(one + 1);
-	    strcat(dir, p ? p->pw_dir : "/");
+		if ( one[ 1 ] == '\0' )
+		{			/* must be ~/ ... */
+			strcat( dir, ( q = getenv( "HOME" ) ) ? q : "/" );
+		}
+		else
+		{			/* must be ~name */
+			/* Mathod: vms <7.0 has no getpwnam(). Ignore ~name */
+#if !defined __VMS || __VMS_VER >=  70000000
+			struct passwd *p = getpwnam( one + 1 );
+
+			strcat( dir, p ? p->pw_dir : "/" );
 #ifndef opennt
-	    endpwent();
+			endpwent( );
 #endif
 #endif
-	}
+		}
 #endif /* FL_WIN32 */
     }
-    else if (!(one[0] == '.' && one[1] == '\0'))
+    else if ( ! ( one[0] == '.' && one[ 1 ] == '\0' ) )
     {
-	strcat(strcat(dir, "/"), one);
+		strcat( strcat( dir, "/" ), one );
     }
 
 #ifdef __VMS
     /* VMS has directory extensions, strip it */
     {
-	int n = strlen(dir);
-	char *p;
+		int n = strlen( dir );
+		char *p;
 
-	if (n > 4)
-	{
-	    for (p = dir + n - 4; *p; p++)
-		*p = toupper(*p);
-	    if (strcmp((p = dir + n - 4), ".DIR") == 0)
-		*p = '\0';
-	}
+		if ( n > 4 )
+		{
+			for ( p = dir + n - 4; *p; p++ )
+				*p = toupper( *p );
+			if ( strcmp( ( p = dir + n - 4 ), ".DIR" ) == 0 )
+				*p = '\0';
+		}
     }
 #endif
 }
+
 
 /************************************************************
  * File modification time
  ***********************************************************/
 
 unsigned long
-fl_fmtime(const char *s)
+fl_fmtime( const char * s )
 {
     struct stat fffstat;
-    stat((char *) s, &fffstat);
+
+    stat( ( char * ) s, &fffstat );
     return fffstat.st_mtime;
 }
 
+
 /* String matching routine is adapted from Rick Salz */
 
-static int match_star(const char *s, const char *p);
+static int match_star( const char * s,
+					   const char * p );
 
-/* match string "s" to pattern "p" */
+
+/***************************************
+ * match string "s" to pattern "p"
+ ***************************************/
+
 static int
-do_matching( const char *s, const char *p)
+do_matching( const char * s,
+			 const char * p )
 {
-    int last, matched, reverse;
+    int last,
+		matched,
+		reverse;
 
-    for (; *p; s++, p++)
+    for ( ; *p; s++, p++ )
     {
-		if (*s == '\0')
-			return (*p == '*' && *++p == '\0' ? 1 : -1);
+		if ( *s == '\0' )
+			return *p == '*' && *++p == '\0' ? 1 : -1;
 
-		switch (*p)
+		switch ( *p )
 		{			/* parse pattern */
 			case '\\':		/* Literal match with following character. */
-				if (*s != *++p)
+				if ( *s != *++p )
 					return 0;
 				continue;
+
 			default:		/* literal match */
 #ifdef __VMS			/* vms filenames are not case sensitive */
-				if (toupper(*s) != toupper(*p))
+				if ( toupper( *s ) != toupper( *p ) )
 #else
-					if (*s != *p)
+				if ( *s != *p )
 #endif
-						return 0;
+					return 0;
 				continue;
 
 			case '?':		/* Match anything. */
 				continue;
 
 			case '*':		/* Trailing star matches everything. */
-				return (*++p ? match_star(s, p) : 1);
+				return *++p ? match_star( s, p ) : 1;
 
 			case '[':		/* [!....] means inverse character class. */
-				if ((reverse = p[1] == '!'))
+				if ( ( reverse = p[ 1 ] == '!' ) )
 					p++;
-				for (last = 0400, matched = 0; *++p && *p != ']'; last = *p)
-					/* This next line requires a good C compiler. */
-					/* range?        (in bounds) (equal) */
-					if ((*p == '-') ? (*s <= *++p && *s >= last) : (*s == *p))
+				for ( last = 0400, matched = 0; *++p && *p != ']'; last = *p )
+					if (    ( *p == '-' && *s <= *++p && *s >= last ) 
+						 || ( *p != '-' && *s == *p ) )
 						matched = 1;
-				if (matched == reverse)
+				if ( matched == reverse )
 					return 0;
 				continue;
 		}
     }
+
     return *s == '\0';
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-match_star(const char *s, const char *p)
+match_star( const char * s,
+			const char * p )
 {
     int result;
 
-    while ((result = do_matching(s, p)) == 0)	/* gobble up * match */
-		if (*++s == '\0')
+    while ( ( result = do_matching( s, p ) ) == 0 )	/* gobble up * match */
+		if ( *++s == '\0' )
 			return -1;
     return result;
 }
 
 
-/* check if s matches pattern p */
+
+/***************************************
+ * check if s matches pattern p
+ ***************************************/
+
 int
-fl_wildmat(const char *s, const char *p)
+fl_wildmat( const char * s,
+			const char * p )
 {
-    if (*p == '\0' && *s != '.')
+    if ( *p == '\0' && *s != '.' )
 		return 1;
-    else if (*p == '\0')
+    else if ( *p == '\0' )
 		return 0;
-    else if ((*p == '?' || *p == '*') && *s == '.')
+    else if ( ( *p == '?' || *p == '*' ) && *s == '.' )
 		return 0;
     else
-		return do_matching(s, p) == 1;
+		return do_matching( s, p ) == 1;
 }
 
 
-/*
+/***************************************
  * scandir emulation
- */
+ ***************************************/
 
 #ifndef FL_WIN32		/* [  */
 
 static int
-tc_scandir(const char *dirname, struct DIRENT ***namelist)
+tc_scandir( const char      * dirname,
+			struct DIRENT *** namelist )
 {
     DIR *dir;
-    struct DIRENT *dentry, **head;
-    int n = 0, total;
+    struct DIRENT *dentry,
+		          **head = NULL;
+    int n = 0,
+		total;
     static int dname_is_1;
 
-    if (!(dir = opendir(dirname)))
+    if ( ! ( dir = opendir( dirname ) ) )
 		return -1;
 
-    if (sizeof(struct DIRENT) < 100 && !dname_is_1)
+    if ( sizeof( struct DIRENT ) < 100 && ! dname_is_1 )
     {
 		M_warn("scandir", "Bad dirent--will fix on the fly");
 		dname_is_1 = 1;
     }
 
     /* start reading the darn thing */
-    for (n = 0, head = 0; (dentry = readdir(dir));)
-    {
-		/* not all system has conforming realloc when head == 0 */
 
-		head = head ? realloc(head, (n + 1) * sizeof(*head)) :
-			malloc(sizeof(*head));
+    for ( n = 0; ( dentry = readdir( dir ) ) != NULL; n++ )
+    {
+		head = fl_realloc( head, ( n + 1 ) * sizeof *head );
 
 		/* here it is even weirder: some systems have d_reclen =
 		   sizeof(struct dirent) + strlen(d_name) and some have it as
 		   d_reclen = strlen(d_name) */
 
 		/* Mathog, VMS<7.0, at least has no d_reclen *at all */
-#if defined(__VMS) && __VMS_VER < 70000000 || defined opennt || defined __CYGWIN__
-		total = dname_is_1 ? strlen(dentry->d_name) : sizeof(*dentry);
+#if defined __VMS && __VMS_VER < 70000000 || defined opennt || defined __CYGWIN__
+		total = dname_is_1 ? strlen( dentry->d_name ) : sizeof *dentry;
 #else
-		total = dname_is_1 ? dentry->d_reclen : sizeof(*dentry);
+		total = dname_is_1 ? dentry->d_reclen : sizeof *dentry;
 #endif
-		memcpy(head[n] = malloc(total), dentry, total);
-		n++;
+		memcpy( head[ n ] = fl_malloc( total ), dentry, total );
     }
 
-    closedir(dir);
+    closedir( dir );
     *namelist = head;
 
     return n;
@@ -949,23 +1010,37 @@ tc_scandir(const char *dirname, struct DIRENT ***namelist)
 
 #endif /* FL_WIN32 ] */
 
+
+/***************************************
+ ***************************************/
+
 FL_DIRLIST_FILTER
-fl_set_dirlist_filter(FL_DIRLIST_FILTER filter)
+fl_set_dirlist_filter( FL_DIRLIST_FILTER filter )
 {
     FL_DIRLIST_FILTER old = ffilter;
+
     ffilter = filter;
     return old;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_set_dirlist_filterdir(int yes)
+fl_set_dirlist_filterdir( int yes )
 {
     int old = filter_directory;
+
     filter_directory = yes;
     return old;
 }
 
-/* for application's benifit */
+
+/***************************************
+ * for application's benifit
+ ***************************************/
+
 static int
 default_filter( const char * name  FL_UNUSED_ARG,
 				int          type )
@@ -973,10 +1048,15 @@ default_filter( const char * name  FL_UNUSED_ARG,
     return type == FT_FILE || type == FT_DIR || type == FT_LINK;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_set_dirlist_sort(int method)
+fl_set_dirlist_sort( int method )
 {
     int old = sort_method;
+
     sort_method = method;
     return old;
 }
@@ -985,21 +1065,31 @@ fl_set_dirlist_sort(int method)
 #include "vms_readdir.c"
 #endif
 
+
+/***************************************
+ ***************************************/
+
 char *
-fl_getcwd(char *buf, int len)
+fl_getcwd( char * buf,
+		   int    len )
 {
 #ifdef FL_WIN32
-    return fl_b2f_slash(getcwd(buf, len));
+    return fl_b2f_slash( getcwd( buf, len ) );
 #else
-    return getcwd(buf, len);
+    return getcwd( buf, len );
 #endif
 
 
 }
 
+
+/***************************************
+ ***************************************/
+
 char *
-fl_basename(char name[])
+fl_basename( char name[ ] )
 {
-    char *p = strrchr(name, '/');
+    char *p = strrchr( name, '/' );
+
     return p ? p : name;
 }
