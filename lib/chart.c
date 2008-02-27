@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chrt = "$Id: chart.c,v 1.7 2008/01/28 23:16:46 jtt Exp $";
+char *fl_id_chrt = "$Id: chart.c,v 1.8 2008/02/27 15:21:37 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -54,14 +54,16 @@ char *fl_id_chrt = "$Id: chart.c,v 1.7 2008/01/28 23:16:46 jtt Exp $";
 
 #define ARCINC	( M_PI / 1800 )
 
+#define MAX_CHART_LABEL_LEN  16
+
 /* Object specific information */
 
 typedef struct
 {
-    float val;			/* Value of the entry       */
-    int   col;			/* Color of the entry       */
-    int   lcol;			/* Label color of the entry */
-    char  str[ 16 ];	/* Label of the entry       */
+    float val;			                /* Value of the entry       */
+    int   col;			                /* Color of the entry       */
+    int   lcol;			                /* Label color of the entry */
+    char  str[ MAX_CHART_LABEL_LEN ];	/* Label of the entry       */
 } ENTRY;
 
 typedef struct
@@ -126,7 +128,7 @@ draw_barchart( SPEC * sp,
 		zeroh = y + h - lh;
     }
 
-    bwidth = ( float ) w / ( sp->autosize ? numb : sp->maxnumb );
+    bwidth = ( double ) w / ( sp->autosize ? numb : sp->maxnumb );
 
     /* base line */
 
@@ -581,6 +583,8 @@ handle_chart( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
+			if ( ( ( SPEC * ) ob->spec )->entries )
+				fl_free( ( ( SPEC * ) ob->spec )->entries );
 			fl_free( ob->spec );
 			break;
     }
@@ -728,7 +732,7 @@ fl_add_chart_value( FL_OBJECT *  ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
     {
-		Bark( "AddChartValue", "%s not a chart", ob ? ob->label : "" );
+		Bark( "fl_add_chart_value", "%s not a chart", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -747,8 +751,13 @@ fl_add_chart_value( FL_OBJECT *  ob,
     sp->entries[ sp->numb ].val = val;
     sp->entries[ sp->numb ].col = col;
     sp->entries[ sp->numb ].lcol = sp->lcol;
-    strncpy( sp->entries[sp->numb ].str, str, 16 );
-    sp->entries[ sp->numb ].str[ 15 ] = '\0';
+	if ( str )
+	{
+		strncpy( sp->entries[sp->numb ].str, str, MAX_CHART_LABEL_LEN );
+		sp->entries[ sp->numb ].str[ MAX_CHART_LABEL_LEN - 1 ] = '\0';
+	}
+	else
+		sp->entries[sp->numb ].str[ 0 ] = '\0';
     sp->numb++;
     fl_redraw_object( ob );
 }
@@ -791,8 +800,13 @@ fl_insert_chart_value( FL_OBJECT *  ob,
 
     sp->entries[ indx - 1 ].val = val;
     sp->entries[ indx - 1 ].col = col;
-    strncpy( sp->entries[ indx - 1 ].str, str, 16 );
-    sp->entries[ indx - 1 ].str[ 15 ] = '\0';
+	if ( str != NULL )
+	{
+		strncpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
+		sp->entries[ indx - 1 ].str[ MAX_CHART_LABEL_LEN - 1 ] = '\0';
+	}
+	else
+		sp->entries[ indx - 1 ].str[ 0 ] = '\0';
     fl_redraw_object( ob );
 }
 
@@ -815,8 +829,13 @@ fl_replace_chart_value( FL_OBJECT *  ob,
 
     sp->entries[ indx - 1 ].val = val;
     sp->entries[ indx - 1 ].col = col;
-    strncpy( sp->entries[ indx - 1 ].str, str, 16 );
-    sp->entries[ indx - 1 ].str[ 15 ] = '\0';
+	if ( str )
+	{
+		strncpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
+		sp->entries[ indx - 1 ].str[ MAX_CHART_LABEL_LEN - 1 ] = '\0';
+	}
+	else
+		sp->entries[ indx - 1 ].str[ 0 ] = '\0';
     fl_redraw_object( ob );
 }
 
@@ -880,6 +899,9 @@ fl_set_chart_maxnumb( FL_OBJECT * ob,
 
     if ( maxnumb < 0 )
 		return FL_ARGUMENT;
+
+	if ( maxnumb == sp->maxnumb )
+		return 0;
 
     curmax = sp->maxnumb;
 
