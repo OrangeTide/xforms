@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.13 2008/02/28 14:30:48 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.14 2008/02/28 14:32:18 jtt Exp $";
 #endif
 
 
@@ -650,10 +650,7 @@ fl_treat_user_events( void )
 		}
     else
 		for ( ; new_events > 0; new_events-- )
-		{
-			fprintf( stderr, "Pushing FL_ENTER\n" );
 			fl_object_qenter( FL_EVENT );
-		}
 }
 
 
