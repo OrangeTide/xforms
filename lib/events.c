@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.12 2008/02/04 09:28:09 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.13 2008/02/28 14:30:48 jtt Exp $";
 #endif
 
 
@@ -58,14 +58,15 @@ int
 fl_handle_event_callbacks( XEvent * xev )
 {
     Window win = ( ( XAnyEvent * ) xev )->window;
-    FL_WIN *fwin = fl_app_win;
+    FL_WIN *fwin;
 
-    for ( ; fwin && fwin->win != win; fwin = fwin->next )
+    for ( fwin = fl_app_win; fwin && fwin->win != win; fwin = fwin->next )
 		/* empty */ ;
 
     if ( ! fwin )
     {
-		M_warn( "EventCallback", "Unknown window=0x%lx", xev->xany.window );
+		M_warn( "fl_handle_event_callbacks", "Unknown window = 0x%lx",
+				xev->xany.window );
 		fl_xevent_name( "Ignored", xev );
 		return 1;                         /* Changed from 0  JTT */
     }
@@ -76,7 +77,7 @@ fl_handle_event_callbacks( XEvent * xev )
 
     if ( fwin->callback[ xev->type ] )
     {
-		( fwin->callback[ xev->type ] )( xev, fwin->user_data[ xev->type ] );
+		fwin->callback[ xev->type ]( xev, fwin->user_data[ xev->type ] );
 		return 1;
     }
 
@@ -642,14 +643,17 @@ fl_treat_user_events( void )
 		return;
 
     if ( fl_event_callback )
-		while ( new_events-- > 0 )
+		for ( ; new_events > 0; new_events-- )
 		{
 			fl_XNextEvent( &xev );
 			fl_event_callback( &xev, 0 );
 		}
     else
-		while ( new_events-- > 0 )
+		for ( ; new_events > 0; new_events-- )
+		{
+			fprintf( stderr, "Pushing FL_ENTER\n" );
 			fl_object_qenter( FL_EVENT );
+		}
 }
 
 
@@ -837,7 +841,7 @@ compress_redraw( XEvent * ev )
 	   or more ConfigureNotify events we put back the "consolidated" Expose
 	   event onto the event queue and return the last ConfigureNotify event
 	   instead of the original Expose event we got started with. This hope-
-	   fully is not only be a solution that covers all cases but also keep
+	   fully is not only a solution that covers all cases but also keeps
 	   the numbers of redraws to a minimum. The only drawback is that the
 	   function do_interaction_step(), handling the Expose event, one has to
 	   check if the area specified by the event isn't larger than the (new)
@@ -913,8 +917,7 @@ fl_compress_motion( XEvent * xme )
 				 xme->xmotion.is_hint ? "hint" : "" )
 #endif
 			/* empty */ ;
-    }
-    while ( XCheckWindowEvent(flx->display, win, evm, xme ) );
+    } while ( XCheckWindowEvent(flx->display, win, evm, xme ) );
 
     if ( xme->xmotion.is_hint )
     {
