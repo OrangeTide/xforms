@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG 
-char *fl_id_evt = "$Id: appwin.c,v 1.7 2008/01/28 23:15:48 jtt Exp $";
+char *fl_id_evt = "$Id: appwin.c,v 1.8 2008/02/28 13:10:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -194,10 +194,10 @@ fl_add_event_callback( Window           win,
     if ( ev < 2 )
     {
 		ev = 2;
-		nev = LASTEvent;
+		nev = LASTEvent - 1;
     }
 
-    for ( i = ev; i < nev; i++ )
+    for ( i = ev; i <= nev; i++ )
     {
 		old = fwin->callback[ i ];
 		fwin->callback[ i ] = wincb;
