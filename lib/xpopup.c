@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.15 2008/02/04 01:22:18 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.16 2008/02/28 16:19:38 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -56,9 +56,9 @@ char *fl_id_xpup = "$Id: xpopup.c,v 1.15 2008/02/04 01:22:18 jtt Exp $";
 #include <stdarg.h>
 
 
-#define ALWAYSROOT 1		/* true to use root as parent. not working */
-#define FL_MAXPUP  32		/* default maximum pups    */
-#define PADH       FL_PUP_PADH	/* space between items     */
+#define ALWAYSROOT 1		     /* true to use root as parent. not working */
+#define FL_MAXPUP  32		     /* default maximum pups    */
+#define PADH       FL_PUP_PADH	 /* space between items     */
 
 
 /****************************************************************
@@ -106,6 +106,7 @@ typedef struct
     short            titlewidth;	/* title width           */
     short            maxw;
     short            noshadow;
+	short            shade;
     short            bw;
     short            lpad;
     short            rpad;
@@ -119,7 +120,7 @@ static void grab_both( PopUP * );
 static void reset_radio( PopUP *,
 						 MenuItem * );
 
-static int subreturn;
+static int subreturn = 0;
 
 
 /* Resources that control the fontsize and other things */
@@ -128,27 +129,30 @@ static int pfstyle = FL_BOLDITALIC_STYLE;
 static int tfstyle = FL_BOLDITALIC_STYLE;
 
 #ifdef __sgi
-static int pfsize = FL_SMALL_FONT, tfsize = FL_SMALL_FONT;
+static int pfsize = FL_SMALL_FONT,
+           tfsize = FL_SMALL_FONT;
 #else
-static int pfsize = FL_NORMAL_FONT, tfsize = FL_NORMAL_FONT;
+static int pfsize = FL_NORMAL_FONT,
+           tfsize = FL_NORMAL_FONT;
 #endif
 
-static FL_COLOR pupcolor = FL_COL1,
-                puptcolor = FL_BLACK;
+static FL_COLOR pupcolor   = FL_COL1;
+static FL_COLOR puptcolor  = FL_BLACK;
 static FL_COLOR checkcolor = FL_BLUE;
-static int puplevel;
+static int puplevel = 0;
 static int fl_maxpup = FL_MAXPUP;
-static int pupbw = 2;
+static int pupbw = -2;
+static int pupbw_is_set = 0;
 
-static PopUP *menu_rec;
+static PopUP *menu_rec = NULL;
 
-static XFontStruct *pup_fs;		/* pop main text font */
-static int pup_ascent,			/* font properties    */
-           pup_desc;
-static XFontStruct *tit_fs;		/* tit text font      */
-static int tit_ascent,
-           tit_desc;
-static Cursor pup_defcursor;
+static XFontStruct *pup_fs = NULL;		/* pop main text font */
+static int pup_ascent = 0,			    /* font properties    */
+           pup_desc = 0;
+static XFontStruct *tit_fs = NULL;		/* tit text font      */
+static int tit_ascent = 0,
+           tit_desc = 0;
+static Cursor pup_defcursor = 0;
 
 
 /************ data struct maintanance ******************{**/
@@ -176,6 +180,7 @@ init_pupfont( void )
     }
 }
 
+
 #define PADW           15	/* space on each side(> 16) with marks */
 
 
@@ -192,7 +197,8 @@ init_pup( PopUP * m )
     m->nitems = m->titlewidth = 0;
     m->parent = m->win = 0;
     m->noshadow = 0;
-    m->bw = pupbw;
+	m->bw = pupbw;
+	m->shade = 2 * FL_abs( pupbw );
     m->title = 0;
     m->item[ 0 ] = 0;
     m->padh = PADH;
@@ -478,7 +484,8 @@ fl_init_pup( void )
 			mr->enter_data = mr->leave_data = NULL;
 		}
 
-		fl_setpup_default_fontsize( fl_cntl.pupFontSize );
+		fl_setpup_default_fontsize( fl_cntl.pupFontSize ?
+									fl_cntl.pupFontSize : -2 );
     }
 }
 
@@ -598,6 +605,13 @@ fl_newpup( Window win )
     if ( win == 0 )
 		win = fl_root;
 
+
+	if ( ! pupbw_is_set )
+	{
+		pupbw = fl_cntl.borderWidth ? fl_cntl.borderWidth : -2;
+		pupbw_is_set = 1;
+	}
+
     /* if not private colormap, it does not matter who the popup's parent is
        and root probably makes more sense */
 
@@ -609,7 +623,7 @@ fl_newpup( Window win )
 		int nrt =    fs->pcm
 				  || fl_visual( fl_vmode ) != DefaultVisual( flx->display,
 															 fl_screen );
-	return find_index( nrt ? win : fl_root );
+		return find_index( nrt ? win : fl_root );
     }
 #endif
 }
@@ -685,6 +699,7 @@ fl_defpup( Window       win,
 					 m->item[ i ]->icb ? "callback" : "" );
     }
 #endif
+
     return n;
 }
 
@@ -708,6 +723,7 @@ ind_is_valid( PopUP * m,
 		else if ( ( *is )->subm >= 0 )
 			item = ind_is_valid( menu_rec + ( *is )->subm, ind );
     }
+
     return item;
 }
 
@@ -790,6 +806,7 @@ static void draw_item( PopUP *,
 #define SHADE           6
 #define CHECKW          6	/* check box size          */
 
+
 #define TITLEH         ( tit_ascent + tit_desc + PADTITLE )
 
 #define BLOCK
@@ -800,7 +817,7 @@ static void draw_item( PopUP *,
 
 #ifndef BLOCK
 
-static long old_delta;
+static long old_delta = 0;
 
 static int
 popclose( XEvent * xev,
@@ -821,12 +838,14 @@ static void
 wait_for_close( Window win )
 {
 #ifdef BLOCK
-    long emask = 0x00ffffff;
+    long emask = 0x01ffffff;   /* better? ~ NoEventMask */
     XEvent xev;
+
+	/* Drop all events for the window */
 
     XSync( flx->display, 0 );
     while ( XCheckWindowEvent( flx->display, win, emask, &xev ) )
-		fl_xevent_name( "PopClose", &xev );
+		fl_xevent_name( "wait_for_close", &xev );
 #else
     fl_add_event_callback( win, DestroyNotify, popclose, 0 );
     fl_add_event_callback( win, UnmapNotify, popclose, 0 );
@@ -856,7 +875,7 @@ get_valid_entry( PopUP * m,
 
     for ( ; target > 0 && target <= m->nitems; target += dir )
 		if ( ! (   m->item[ target - 1 ]->mode
-				   & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) )
+				 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) )
 			return target;
 
     /* wrap */
@@ -931,6 +950,7 @@ handle_submenu( PopUP *    m,
 			return 1;
 		}
     }
+
     return 0;
 }
 
@@ -1058,7 +1078,7 @@ handle_motion( PopUP * m,
     int cval;
     MenuItem *item = 0;
     int titleh = m->titleh;
-    static MenuItem *lastitem;
+    static MenuItem *lastitem = NULL;
 
     cval = ( mx < 0 || mx > ( int ) m->w ) ?
 		-1 : ( ( my - titleh + m->cellh ) / m->cellh );
@@ -1563,7 +1583,9 @@ Cursor
 fl_setpup_default_cursor( int cursor )
 {
     Cursor old = pup_defcursor;
+
     pup_defcursor = fl_get_cursor_byname( cursor );
+
     return old;
 }
 
@@ -1616,7 +1638,7 @@ fl_setpup_shadow( int n,
     if ( n < 0 || n >= fl_maxpup )
 		return;
 
-	m->noshadow = !y;
+	m->noshadow = ! y;
 	for ( i = 0; i < m->nitems; i++ )
 		if ( m->item[ i ]->subm )
 			fl_setpup_shadow( m->item[ i ]->subm, y );
@@ -1845,9 +1867,9 @@ draw_title( Display * d,
  * set position. Good for programmatical pop-ups
  ***************************************/
 
-static int extpos;
-static FL_Coord extx,
-                exty;
+static int extpos = 0;
+static FL_Coord extx = 0,
+                exty = 0;
 
 void
 fl_setpup_position( int x,
@@ -1879,9 +1901,9 @@ draw_only( PopUP * m )
         /** create the shadow  ***/
 
 		XFillRectangle( flx->display, m->win, m->shadowGC, m->w,
-						SHADE, SHADE, m->h );
+						m->shade, m->shade, m->h );
 		XFillRectangle( flx->display, m->win, m->shadowGC,
-						SHADE, m->h, m->w - SHADE, SHADE );
+						m->shade, m->h, m->w - m->shade, m->shade );
     }
 
 	/*** make the popup box  ***/
@@ -2000,8 +2022,8 @@ fl_showpup( int n )
 
 		if ( ! m->noshadow )
 		{
-			w += SHADE;
-			h += SHADE;
+			w += m->shade;
+			h += m->shade;
 		}
 
 		m->win = XCreateWindow( flx->display, m->parent,
@@ -2230,9 +2252,9 @@ generate_menu( int                  n,
 			   const FL_PUP_ENTRY * pup,
 			   int                  top )
 {
-    static const FL_PUP_ENTRY *p;
-    static PopUP *menu;
-    static int val;
+    static const FL_PUP_ENTRY *p = NULL;
+    static PopUP *menu = NULL;
+    static int val = 0;
     char buf[ 256 ];
 
     if ( top )
@@ -2402,5 +2424,6 @@ fl_setpup_default_bw( int bw )
     int ori = pupbw;
 
     pupbw = bw;
+	pupbw_is_set = 1;
     return ori;
 }
