@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.16 2008/02/28 16:19:38 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.17 2008/02/29 12:20:35 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -199,7 +199,7 @@ init_pup( PopUP * m )
     m->noshadow = 0;
 	m->bw = pupbw;
 	m->shade = 2 * FL_abs( pupbw );
-    m->title = 0;
+    m->title = NULL;
     m->item[ 0 ] = 0;
     m->padh = PADH;
     if ( ! pup_defcursor )
@@ -265,7 +265,8 @@ reset_max_width( PopUP * m )
 		w = 0,
 		tw;
     MenuItem **item = m->item;
-    char *t;
+    char *t,
+		 *b;
 
 
     if ( ! m->parent || m->nitems <= 0 )
@@ -278,8 +279,13 @@ reset_max_width( PopUP * m )
 			w = tw;
 
     m->maxw = w;
-    t = m->title ? m->title : "";
+
+
+    b = t = fl_strdup( m->title ? m->title : "" );
+	while ( ( b = strchr( b, '\b' ) ) )
+		memmove( b, b + 1, strlen( b ) );
     m->titlewidth = XTextWidth( tit_fs, t, strlen( t ) );
+	fl_free( t );
     m->cellh = pup_ascent + pup_desc + 2 * m->padh;
 }
 
@@ -406,8 +412,14 @@ parse_entry( int          n,
 
 		if ( flags & M_TITLE )
 		{
+			char *t, *b;
+
 			m->title = fl_strdup( tt );
-			m->titlewidth = XTextWidth( tit_fs, tt, strlen( tt ) );
+			b = t = fl_strdup( tt );
+			while ( ( b = strchr( b, '\b' ) ) )
+				memmove( b, b + 1, strlen( b ) );
+			m->titlewidth = XTextWidth( tit_fs, t, strlen( t ) );
+			fl_free( t );
 		}
 		else
 		{
@@ -1546,13 +1558,18 @@ fl_setpup_title( int          nm,
 				 const char * title )
 {
     PopUP *m = menu_rec + nm;
+	char *t, *b;
 
     if ( nm < 0 || nm >= fl_maxpup || ! title )
 		return;
 
 	fl_safe_free( m->title );
-	m->title = fl_strdup( title );
-	m->titlewidth = XTextWidth( tit_fs, m->title, strlen( m->title ) );
+	m->title = fl_strdup( title ? title : "" );
+	b = t = fl_strdup( title ? title : "" );
+	while ( ( b = strchr( b, '\b' ) ) )
+		memmove( b, b + 1, strlen( b ) );
+	m->titlewidth = XTextWidth( tit_fs, t, strlen( t ) );
+	fl_free( t );
 }
 
 
@@ -1834,9 +1851,11 @@ draw_title( Display * d,
 			Drawable  w,
 			int       x,
 			int       y,
-			char *    s,
-			int       n )
+			char *    s )
 {
+	char *t, *b;
+	int n;
+
     if ( ! s || ! * s )
 		return;
 #if 0
@@ -1845,19 +1864,26 @@ draw_title( Display * d,
 				 0, FL_SLATEBLUE, tfsize,
 				 tfstyle + FL_EMBOSSED_STYLE, s );
 #else
+	b = t = fl_strdup( s );
+	while ( ( b = strchr( b, '\b' ) ) )
+		memmove( b, b + 1, strlen( b ) );
+
+	n = strlen( t );
 
     fl_set_font( tfstyle, tfsize );
     fl_textcolor( puptcolor );
-    XDrawString( d, w, flx->textgc, x - 1, y - 1, s, n );
-    XDrawString( d, w, flx->textgc, x, y - 1, s, n );
-    XDrawString( d, w, flx->textgc, x + 1, y - 1, s, n );
-    XDrawString( d, w, flx->textgc, x - 1, y, s, n );
-    XDrawString( d, w, flx->textgc, x + 1, y, s, n );
-    XDrawString( d, w, flx->textgc, x - 1, y + 1, s, n );
-    XDrawString( d, w, flx->textgc, x, y + 1, s, n );
-    XDrawString( d, w, flx->textgc, x + 1, y + 1, s, n );
+    XDrawString( d, w, flx->textgc, x - 1, y - 1, t, n );
+    XDrawString( d, w, flx->textgc, x, y - 1, t, n );
+    XDrawString( d, w, flx->textgc, x + 1, y - 1, t, n );
+    XDrawString( d, w, flx->textgc, x - 1, y, t, n );
+    XDrawString( d, w, flx->textgc, x + 1, y, t, n );
+    XDrawString( d, w, flx->textgc, x - 1, y + 1, t, n );
+    XDrawString( d, w, flx->textgc, x, y + 1, t, n );
+    XDrawString( d, w, flx->textgc, x + 1, y + 1, t, n );
     fl_textcolor( FL_WHITE );
-    XDrawString( d, w, flx->textgc, x, y, s, n );
+    XDrawString( d, w, flx->textgc, x, y, t, n );
+
+	fl_free( t );
 #endif
 }
 
@@ -1917,7 +1943,7 @@ draw_only( PopUP * m )
 		fl_drw_box( FL_FRAME_BOX, 3, 3, m->w - 6, m->titleh - 6, pupcolor, 1 );
 
 		draw_title( flx->display, m->win, ( m->w - m->titlewidth ) / 2,
-					PADTITLE / 2 + tit_ascent, m->title, strlen( m->title ) );
+					PADTITLE / 2 + tit_ascent, m->title );
     }
 
     for ( i = 1; i <= m->nitems; i++ )
