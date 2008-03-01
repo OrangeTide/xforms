@@ -48,11 +48,11 @@
 
 #define BackOBJ()    cur_form->first->next
 
-static FL_OBJECT *selobj[MAXSEL];	/* The selected objects */
+static FL_OBJECT *selobj[ MAXSEL ];	/* The selected objects */
 static int selnumb = 0;		/* Their number */
-int backf = FALSE;		/* Whether the selection is the backface */
+int backf = FALSE;		    /* Whether the selection is the backface */
 
-static FL_OBJECT *tmpobj[MAXSEL];	/* A temporary list of objects */
+static FL_OBJECT *tmpobj[ MAXSEL ];	/* A temporary list of objects */
 static int tmpnumb = 0;		/* Their number */
 
 
@@ -61,12 +61,14 @@ static int tmpnumb = 0;		/* Their number */
  ***************************************/
 
 static int
-find_selobject(FL_OBJECT * obj)
+find_selobject( FL_OBJECT * obj )
 {
     int i;
-    for (i = 0; i < selnumb; i++)
-		if (selobj[i] == obj)
+
+    for ( i = 0; i < selnumb; i++ )
+		if ( selobj[ i ] == obj )
 			return i;
+
     return -1;
 }
 
@@ -77,12 +79,15 @@ find_selobject(FL_OBJECT * obj)
  ***************************************/
 
 static void
-cleanup_selection(void)
+cleanup_selection( void )
 {
-    FL_OBJECT *obj, *begobj = 0;
-    int i, tt, sel = -1;
+    FL_OBJECT *obj,
+		      *begobj = NULL;
+    int i,
+		tt,
+		sel = -1;
 
-    if (cur_form == NULL)
+    if ( cur_form == NULL )
     {
 		selnumb = 0;
 		backf = FALSE;
@@ -92,51 +97,50 @@ cleanup_selection(void)
     /* Figure out whether whole groups are selected */
 
     obj = cur_form->first;
-    while (obj != NULL)
+    while ( obj != NULL )
     {
-		if (obj->objclass == FL_BEGIN_GROUP)
+		if ( obj->objclass == FL_BEGIN_GROUP )
 		{
 			sel = 1;
 			begobj = obj;
 		}
-		else if (obj->objclass == FL_END_GROUP)
+		else if ( obj->objclass == FL_END_GROUP )
 		{
-			if (sel)
+			if ( sel )
 			{
-				selobj[selnumb++] = begobj;
-				selobj[selnumb++] = obj;
+				selobj[ selnumb++ ] = begobj;
+				selobj[ selnumb++ ] = obj;
 			}
 			else
 			{
-				if ((tt = find_selobject(begobj)) != -1)
-					selobj[tt] = NULL;
-				if ((tt = find_selobject(obj)) != -1)
-					selobj[tt] = NULL;
+				if ( ( tt = find_selobject( begobj ) ) != -1 )
+					selobj[ tt ] = NULL;
+				if ( ( tt = find_selobject( obj ) ) != -1 )
+					selobj[ tt ] = NULL;
 			}
 		}
 		else
 		{
-			if (find_selobject(obj) == -1)
+			if ( find_selobject( obj ) == -1 )
 				sel = 0;
 		}
+
 		obj = obj->next;
     }
 
     /* make a new, ordered list of selected items, removing duplicates and
        NULL objects */
 
-    obj = cur_form->first;
     tmpnumb = 0;
+    for ( obj = cur_form->first; obj != NULL; obj = obj->next )
+		if ( ( tt = find_selobject( obj ) ) != -1 )
+			tmpobj[ tmpnumb++ ] = obj;
 
-    for (; obj != NULL; obj = obj->next)
-		if ((tt = find_selobject(obj)) != -1)
-			tmpobj[tmpnumb++] = obj;
-
-    for (i = 0; i < tmpnumb; i++)
-		selobj[i] = tmpobj[i];
+    for ( i = 0; i < tmpnumb; i++ )
+		selobj[ i ] = tmpobj[ i ];
 
     selnumb = tmpnumb;
-    fillin_groups();
+    fillin_groups( );
 }
 
 
@@ -145,7 +149,7 @@ cleanup_selection(void)
  ***************************************/
 
 int
-is_selected(FL_OBJECT * obj)
+is_selected( FL_OBJECT * obj )
 {
     return find_selobject( obj ) != -1;
 }
@@ -156,27 +160,27 @@ is_selected(FL_OBJECT * obj)
  ***************************************/
 
 void
-addto_selection(FL_OBJECT * obj)
+addto_selection( FL_OBJECT * obj )
 {
-    if (backf)
+    if ( backf )
     {
-		M_warn("", "ignoring backf");
+		M_warn( "", "ignoring backf" );
 		return;			/* Don't add objects with backface */
     }
 
-    if (selnumb == MAXSEL)
+    if ( selnumb == MAXSEL )
     {
-		fprintf(stderr, "Exceeding selection limits\n");
+		fprintf( stderr, "Exceeding selection limits\n" );
 		return;
     }
 
     /* find the real parent */
 
-    while (obj->is_child)
+    while ( obj->is_child )
 		obj = obj->parent;
 
-    selobj[selnumb++] = obj;
-    cleanup_selection();
+    selobj[ selnumb++ ] = obj;
+    cleanup_selection( );
 }
 
 
@@ -185,27 +189,27 @@ addto_selection(FL_OBJECT * obj)
  ***************************************/
 
 void
-addgroupto_selection(FL_OBJECT * obj)
+addgroupto_selection( FL_OBJECT * obj )
 {
     FL_OBJECT *ob;
 
-    if (backf)
+    if ( backf )
 		return;			/* Don't add objects with backface */
 
-    if (obj->objclass != FL_BEGIN_GROUP)
+    if ( obj->objclass != FL_BEGIN_GROUP )
 		return;
 
-    for (ob = obj; ob && ob->objclass != FL_END_GROUP; ob = ob->next)
+    for ( ob = obj; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
     {
-		if (selnumb == MAXSEL)
+		if ( selnumb == MAXSEL )
 			return;
-		selobj[selnumb++] = ob;
+		selobj[ selnumb++ ] = ob;
     }
 
-    if (ob != NULL)
-		selobj[selnumb++] = ob;
+    if ( ob != NULL )
+		selobj[ selnumb++ ] = ob;
 
-    cleanup_selection();
+    cleanup_selection( );
 }
 
 
@@ -214,13 +218,13 @@ addgroupto_selection(FL_OBJECT * obj)
  ***************************************/
 
 void
-deletefrom_selection(FL_OBJECT * obj)
+deletefrom_selection( FL_OBJECT * obj )
 {
-    int ind = find_selobject(obj);
+    int ind = find_selobject( obj );
 
-    if (ind != -1)
-		selobj[ind] = NULL;
-    cleanup_selection();
+    if ( ind != -1 )
+		selobj[ ind ] = NULL;
+    cleanup_selection( );
 }
 
 
@@ -229,27 +233,22 @@ deletefrom_selection(FL_OBJECT * obj)
  ***************************************/
 
 void
-deletegroupfrom_selection(FL_OBJECT * obj)
+deletegroupfrom_selection( FL_OBJECT * obj )
 {
     FL_OBJECT *ob;
     int ind;
 
-    if (backf)
+    if ( backf )
 		return;			/* Don't remove objects with backface */
 
-    if (obj->objclass != FL_BEGIN_GROUP)
+    if ( obj->objclass != FL_BEGIN_GROUP )
 		return;
 
-    ob = obj;
-    while (ob != NULL && ob->objclass != FL_END_GROUP)
-    {
-		ind = find_selobject(ob);
-		if (ind != -1)
-			selobj[ind] = NULL;
-		ob = ob->next;
-    }
+    for ( ob = obj; ob != NULL && ob->objclass != FL_END_GROUP; ob = ob->next )
+		if ( ( ind = find_selobject( ob ) ) != -1 )
+			selobj[ ind ] = NULL;
 
-    cleanup_selection();
+    cleanup_selection( );
 }
 
 
@@ -258,43 +257,47 @@ deletegroupfrom_selection(FL_OBJECT * obj)
  ***************************************/
 
 void
-clear_selection(void)
+clear_selection( void )
 {
     selnumb = 0;
     backf = FALSE;
-    cleanup_selection();
+    cleanup_selection( );
 }
+
 
 /****
   Help procedures
 ****/
-
 
 /***************************************
  * Compute the bounding box of the selection
  ***************************************/
 
 static void
-compute_selbox(float *x, float *y, float *w, float *h)
+compute_selbox( float * x,
+				float * y,
+				float * w,
+				float * h )
 {
     int i;
-    float x1 = 8000, y1 = 8000, x2 = 0, y2 = 0;
+    float x1 = 1.0e+37,
+		  y1 = 1.0e+37,
+		  x2 = - 1.0e+37,
+		  y2 = - 1.0e+37;
 
-    for (i = 0; i < selnumb; i++)
-    {
-		if (selobj[i]->objclass != FL_BEGIN_GROUP &&
-			selobj[i]->objclass != FL_END_GROUP)
+    for ( i = 0; i < selnumb; i++ )
+		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
+			 && selobj[ i ]->objclass != FL_END_GROUP )
 		{
-			if (selobj[i]->x < x1)
-				x1 = selobj[i]->x;
-			if (selobj[i]->y < y1)
-				y1 = selobj[i]->y;
-			if (selobj[i]->x + selobj[i]->w > x2)
-				x2 = selobj[i]->x + selobj[i]->w;
-			if (selobj[i]->y + selobj[i]->h > y2)
-				y2 = selobj[i]->y + selobj[i]->h;
+			if ( selobj[ i ]->fl1 < x1 )
+				x1 = selobj[ i ]->fl1;
+			if ( selobj[ i ]->ft1 < y1 )
+				y1 = selobj[ i ]->ft1;
+			if ( selobj[ i ]->fl2 > x2 )
+				x2 = selobj[ i ]->fl2;
+			if ( selobj[ i ]->ft2 > y2 )
+				y2 = selobj[ i ]->ft2;
 		}
-    }
 
     *x = x1;
     *y = y1;
@@ -308,12 +311,14 @@ compute_selbox(float *x, float *y, float *w, float *h)
  ***************************************/
 
 static void
-find_mousepos(float *mx, float *my)
+find_mousepos( float * mx,
+			   float * my )
 {
-    if (cur_form == NULL)
+    if ( cur_form == NULL )
 		return;
-    fl_winset(main_window);
-    get_mouse_pos(mx, my);
+
+    fl_winset( main_window );
+    get_mouse_pos( mx, my );
 }
 
 
@@ -322,13 +327,16 @@ find_mousepos(float *mx, float *my)
  ***************************************/
 
 static FL_OBJECT *
-find_mouseobj(void)
+find_mouseobj( void )
 {
-    float xx, yy;
-    if (cur_form == NULL)
-	return NULL;
-    find_mousepos(&xx, &yy);
-    return fl_find_last(cur_form, FL_FIND_MOUSE, xx, yy);
+    float xx,
+		  yy;
+
+    if ( cur_form == NULL )
+		return NULL;
+
+    find_mousepos( &xx, &yy );
+    return fl_find_last( cur_form, FL_FIND_MOUSE, xx, yy );
 }
 
 
@@ -346,50 +354,53 @@ int hidden = FALSE;
  ***************************************/
 
 void
-draw_selbox(void)
+draw_selbox( void )
 {
-    float x, y, w, h;
+    float x,
+		  y,
+		  w,
+		  h;
     int i;
     FL_OBJECT *ob;
 
-    if (selnumb == 0)
+    if ( selnumb == 0 )
 		return;
 
     /* draw object boxes */
 
-    color(fd_red);
-    for (i = 0; i < selnumb; i++)
+    color( fd_red );
+    for ( i = 0; i < selnumb; i++ )
     {
-		ob = selobj[i];
-		if (ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP)
-			rect(ob->x, ob->y, ob->x + ob->w - 1.0, ob->y + ob->h - 1.0);
+		ob = selobj[ i ];
+		if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
+			rect( ob->x, ob->y, ob->x + ob->w - 1.0, ob->y + ob->h - 1.0 );
     }
 
-    if (hidden)
+    if ( hidden )
 		return;
 
     /* draw the total box */
 
-    compute_selbox(&x, &y, &w, &h);
+    compute_selbox( &x, &y, &w, &h );
 
-    show_geometry("", (int) x, (int) y, (int) w, (int) h);
+    show_geometry( "", x, y, w, h );
 
-    if (!backf)
+    if ( ! backf )
     {
 		x -= 1.0;
 		y -= 1.0;
 		w += 2.0;
 		h += 2.0;
     }
-    color(fd_red);
+    color( fd_red );
 
-    rect(x, y, x + w - 1.0, y + h - 1.0);
-    rectf(x, y, x + HS - 1.0, y + HS - 1.0);
-    rectf(x + w - HS, y, x + w - 1.0, y + HS - 1.0);
-    rectf(x + w - HS, y + h - HS, x + w - 1.0, y + h - 1.0);
-    rectf(x, y + h - HS, x + HS - 1.0, y + h - 1.0);
+    rect( x, y, x + w - 1.0, y + h - 1.0 );
+    rectf( x, y, x + HS - 1.0, y + HS - 1.0 );
+    rectf( x + w - HS, y, x + w - 1.0, y + HS - 1.0 );
+    rectf( x + w - HS, y + h - HS, x + w - 1.0, y + h - 1.0 );
+    rectf( x, y + h - HS, x + HS - 1.0, y + h - 1.0 );
 
-    show_selmessage(selobj, selnumb);
+    show_selmessage( selobj, selnumb );
 }
 
 
@@ -397,62 +408,33 @@ draw_selbox(void)
   Interaction handling
 ****/
 
-
-#if 0
-/*
- * since objects may integer coordinates, scaling can introduce errors
- * that result in "gaps" between otherwise "glued together" objects.
- *
- * This function takes care of the precision.
- */
-
-#define DELTA 0.2
-
-static void
-fl_scale_object( FL_OBJECT * ob,
-				 float       xs,
-				 float       ys )
-{
-    int xi,
-		yi,
-		xf,
-		yf;
-
-    xi = ob->x * xs + DELTA;
-    xf = ( ob->x + ob->w ) * xs + DELTA;
-    ob->w = xf - xi;
-    ob->x = xi;
-
-    yi = ob->y * ys + DELTA;
-    yf = ( ob->y + ob->h ) * ys + DELTA;
-    ob->h = yf - yi;
-    ob->y = yi;
-}
-
-#endif
-
-
 /***************************************
  * Handles the moving of the selection (by mouse)
  ***************************************/
 
 int
-within_selection(float mx, float my)
+within_selection( float mx,
+				  float my )
 {
-    float x, y, w = 0, h = 0;
+    float x,
+		  y,
+		  w = 0.0,
+		  h = 0.0;
 
-    if (!selnumb || !cur_form || !cur_form->first)
+    if ( ! selnumb || ! cur_form || ! cur_form->first )
 		return 0;
 
-    compute_selbox(&x, &y, &w, &h);
+    compute_selbox( &x, &y, &w, &h );
 
     /* if backface, only within scale knob is considered within */
 
-    if (selobj[selnumb - 1] == BackOBJ())
-		return (mx >= x + w - HS && mx < x + w &&
-				my >= y + h - HS && my < y + h);
+    if ( selobj[ selnumb - 1 ] == BackOBJ( ) )
+		return    mx >= x + w - HS
+			   && mx <  x + w
+			   && my >= y + h - HS
+			   && my <  y + h;
     else
-		return (mx > x && mx < x + w && my > y && my < y + h);
+		return mx > x && mx < x + w && my > y && my < y + h;
 }
 
 
@@ -462,11 +444,20 @@ within_selection(float mx, float my)
 void
 handle_move( const XEvent * xev )
 {
-    float x, y, w, h;
-    float mx, my;
-    float ox, oy, ow, oh;
-    FL_Coord xx, yy;
-    int i, s;
+    float x,
+		  y,
+		  w,
+		  h;
+    float mx,
+		  my;
+    float ox,
+		  oy,
+		  ow,
+		  oh;
+    FL_Coord xx,
+		     yy;
+    int i,
+		s;
 
     if ( cur_form == NULL )
 		return;
@@ -489,13 +480,19 @@ handle_move( const XEvent * xev )
 		if ( mx >= x + w - HS && my >= y + h - HS )
 		{
 			fl_get_winsize( main_window, &xx, &yy );
-			set_bounding_box( 0.0f, 0.0f, xx, yy );
+			set_bounding_box( 0.0, 0.0, xx, yy );
 			scale_box( &x, &y, &w, &h );
-			cur_form->w = w;
-			cur_form->h = h;
-			selobj[0]->w = w;
-			selobj[0]->h = h;
-			set_bounding_box( 0.0f, 0.0f, cur_form->w, cur_form->h );
+			cur_form->w_hr = cur_form->w = w;
+			cur_form->h_hr = cur_form->h = h;
+			selobj[ 0 ]->fl1 = selobj[ 0 ]->w = w;
+			selobj[ 0 ]->fl2 = selobj[ 0 ]->fl1 + w;
+			selobj[ 0 ]->fr1 = cur_form->w_hr - selobj[ 0 ]->fl1;
+			selobj[ 0 ]->fr2 = cur_form->w_hr - selobj[ 0 ]->fl2;
+			selobj[ 0 ]->ft1 = selobj[ 0 ]->h = h;
+			selobj[ 0 ]->ft2 = selobj[ 0 ]->ft1 + h;
+			selobj[ 0 ]->fb1 = cur_form->h_hr - selobj[ 0 ]->ft1;
+			selobj[ 0 ]->fb2 = cur_form->h_hr - selobj[ 0 ]->ft2;
+			set_bounding_box( 0.0, 0.0, cur_form->w, cur_form->h );
 			fl_winresize( main_window, cur_form->w, cur_form->h );
 		}
     }
@@ -545,40 +542,33 @@ handle_move( const XEvent * xev )
 			if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
 				 && selobj[ i ]->objclass != FL_END_GROUP )
 			{
-				double ofl1 = selobj[ i ]->fl1;
-				double oft1 = selobj[ i ]->ft1;
+				selobj[ i ]->fl1 -= ox;
+				selobj[ i ]->fl2 -= ox;
+				selobj[ i ]->fr1 += ox;
+				selobj[ i ]->fr2 += ox;
 
-				selobj[ i ]->fl1 = 0.0;
-				selobj[ i ]->fl2 -= ofl1;
-				selobj[ i ]->fr1 += ofl1;
-				selobj[ i ]->fr2 += ofl1;
+				selobj[ i ]->ft1 -= oy;
+				selobj[ i ]->ft2 -= oy;
+				selobj[ i ]->fb1 += oy;
+				selobj[ i ]->fb2 += oy;
 
-				selobj[ i ]->ft1 = 0.0;
-				selobj[ i ]->ft2 -= oft1;
-				selobj[ i ]->fb1 += oft1;
-				selobj[ i ]->fb2 += oft1;
-
-				selobj[ i ]->x -= ox;
-				selobj[ i ]->y -= oy;
 				fl_scale_object( selobj[ i ], w / ow, h / oh);
-				selobj[ i ]->x += x;
-				selobj[ i ]->y += y;
 
-				selobj[ i ]->fl1 = ofl1;
-				selobj[ i ]->fl2 += ofl1;
-				selobj[ i ]->fr1 -= ofl1;
-				selobj[ i ]->fr2 -= ofl1;
+				selobj[ i ]->x = selobj[ i ]->fl1 += x;
+				selobj[ i ]->fl2 += x;
+				selobj[ i ]->fr1 -= x;
+				selobj[ i ]->fr2 -= x;
 
-				selobj[ i ]->ft1 = oft1;
-				selobj[ i ]->ft2 += oft1;
-				selobj[ i ]->fb1 -= oft1;
-				selobj[ i ]->fb2 -= oft1;
+				selobj[ i ]->y = selobj[ i ]->ft1 += y;
+				selobj[ i ]->ft2 += y;
+				selobj[ i ]->fb1 -= y;
+				selobj[ i ]->fb2 -= y;
 			}
 		}
     }
 
     hidden = FALSE;
-    redraw_the_form(backf);
+    redraw_the_form( backf );
     changed = TRUE;
 }
 
@@ -588,47 +578,62 @@ handle_move( const XEvent * xev )
  ***************************************/
 
 void
-move_selection(FL_Coord dx, FL_Coord dy)
+move_selection( FL_Coord dx,
+				FL_Coord dy )
 {
     int i;
-    float x, y, w, h;
-    float ox, oy;
+    float x,
+		  y,
+		  w,
+		  h;
+    float ox,
+		  oy;
     FL_OBJECT *ob;
 
-    if (cur_form == NULL || backf || selnumb == 0)
+    if ( ! cur_form || backf || selnumb == 0 )
 		return;
 
-    compute_selbox(&x, &y, &w, &h);
+    compute_selbox( &x, &y, &w, &h );
 
     ox = x;
     oy = y;
 
     if ( ( x += dx ) < 0 )
-		x = 0;
-    else if ( x > winw - w )
+		x = 0.0;
+    else if ( x + w > winw )
 		x = winw - w;
 
     if ( ( y += dy ) < 0 )
-		y = 0;
-    else if ( y > winh - h )
+		y = 0.0;
+    else if ( y + h > winh )
 		y = winh - h;
 
     if ( ( dx = x - ox ) == 0 && ( dy = y - oy ) == 0 )
 		return;
 
-    for (i = 0; i < selnumb; i++)
+    for ( i = 0; i < selnumb; i++ )
     {
-		ob = selobj[i];
-		if (ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP)
+		ob = selobj[ i ];
+		if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
 		{
-			ob->x += dx;
-			ob->y += dy;
+			ob->x   += dx;
+			ob->fl1 += dx;
+			ob->fl2 += dx;
+			ob->fr1 -= dx;
+			ob->fr2 -= dx;
+
+			ob->y   += dy;
+			ob->ft1 += dy;
+			ob->ft2 += dy;
+			ob->fb1 -= dy;
+			ob->fb2 -= dy;
 		}
     }
 
-    redraw_the_form(1);
+    redraw_the_form( 1 );
     changed = TRUE;
 }
+
 
 /* change the selection  size */
 
@@ -640,10 +645,19 @@ move_selection(FL_Coord dx, FL_Coord dy)
  ***************************************/
 
 void
-resize_selection( FL_Coord dx, FL_Coord dy )
+resize_selection( FL_Coord dx,
+				  FL_Coord dy )
 {
-    float x, y, w, h, ox, oy, ow, oh;
-    float yscale, xscale;
+    float x,
+		  y,
+		  w,
+		  h,
+		  ox,
+		  oy,
+		  ow,
+		  oh;
+    float yscale,
+		  xscale;
     int i;
 
     if ( ! cur_form || selnumb == 0 )
@@ -656,7 +670,7 @@ resize_selection( FL_Coord dx, FL_Coord dy )
     ow = w;
     oh = h;
 
-    if (backf)
+    if ( backf )
     {
 		winw = fl_scrw;
 		winh = fl_scrh;
@@ -664,12 +678,12 @@ resize_selection( FL_Coord dx, FL_Coord dy )
 
     if ( ( w += dx ) > winw)
 		w = winw;
-    else if (w < MINSIZE)
+    else if ( w < MINSIZE )
 		w = MINSIZE;
 
     if ( ( h += dy ) > winh )
 		h = winh;
-    else if (h < MINSIZE)
+    else if ( h < MINSIZE )
 		h = MINSIZE;
 
     if ( w == ow && oh == h )
@@ -681,26 +695,40 @@ resize_selection( FL_Coord dx, FL_Coord dy )
     /* recompute object sizes */
 
     for ( i = 0; i < selnumb; i++ )
-    {
 		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
 			 && selobj[ i ]->objclass != FL_END_GROUP )
 		{
-			selobj[ i ]->x -= ox;
-			selobj[ i ]->y -= oy;
+			selobj[ i ]->fl1 -= ox;
+			selobj[ i ]->fl2 -= ox;
+			selobj[ i ]->fr1 += ox;
+			selobj[ i ]->fr2 += ox;
+
+			selobj[ i ]->ft1 -= oy;
+			selobj[ i ]->ft2 -= oy;
+			selobj[ i ]->fb1 += oy;
+			selobj[ i ]->fb2 += oy;
+
 			fl_scale_object( selobj[ i ], xscale, yscale );
-			selobj[ i ]->x += x;
-			selobj[ i ]->y += y;
+
+			selobj[ i ]->x = selobj[ i ]->fl1 += x;
+			selobj[ i ]->fl2 += x;
+			selobj[ i ]->fr1 -= x;
+			selobj[ i ]->fr2 -= x;
+
+			selobj[ i ]->y = selobj[ i ]->ft1 += y;
+			selobj[ i ]->ft2 += y;
+			selobj[ i ]->fb1 -= y;
+			selobj[ i ]->fb2 -= y;
 		}
-    }
 
-    if (backf)
+    if ( backf )
     {
-		cur_form->w = selobj[0]->w;
-		cur_form->h = selobj[0]->h;
-		fl_winresize(main_window, cur_form->w, cur_form->h);
+		cur_form->w_hr = cur_form->w = selobj[ 0 ]->w;
+		cur_form->h_hr = cur_form->h = selobj[ 0 ]->h;
+		fl_winresize( main_window, cur_form->w, cur_form->h );
     }
 
-    redraw_the_form(1);
+    redraw_the_form( 1 );
     changed = TRUE;
 }
 
@@ -723,7 +751,7 @@ handle_select( const XEvent * xev )
 		  my;
     float stepsize;
 
-    if (cur_form == NULL)
+    if ( cur_form == NULL )
 		return;
 
     s = ShiftIsDown( xev->xbutton.state );
@@ -750,12 +778,12 @@ handle_select( const XEvent * xev )
 		y = my;
 		w = 0.0;
 		h = 0.0;
-		stepsize = get_step_size();
-		set_step_size(0.0f);
-		if (xev->type != ButtonRelease)
-			scale_box(&x, &y, &w, &h);
-		set_step_size(stepsize);
-		obj = BackOBJ()->next;
+		stepsize = get_step_size( );
+		set_step_size( 0.0 );
+		if ( xev->type != ButtonRelease )
+			scale_box( &x, &y, &w, &h );
+		set_step_size( stepsize );
+		obj = BackOBJ( )->next;
 
 		while ( obj != NULL )
 		{
@@ -791,24 +819,20 @@ handle_select( const XEvent * xev )
  ***************************************/
 
 void
-select_all(void)
+select_all( void )
 {
     FL_OBJECT *obj;
 
-    if (cur_form == NULL)
+    if ( ! cur_form )
 		return;
 
-    clear_selection();
-    obj = BackOBJ()->next;
+    clear_selection( );
+    
+    for ( obj = BackOBJ( )->next; obj != NULL; obj = obj->next )
+		if ( ! obj->is_child )
+			selobj[ selnumb++ ] = obj;
 
-    while (obj != NULL)
-    {
-		if (!obj->is_child)
-			selobj[selnumb++] = obj;
-		obj = obj->next;
-    }
-
-    cleanup_selection();
+    cleanup_selection( );
 }
 
 
@@ -816,28 +840,27 @@ select_all(void)
   Operations on the selection
 ****/
 
-
 /***************************************
  * clone curobj's attributes to the currently selected objects
  ***************************************/
 
 void
-change_selected_objects(FL_OBJECT * curobj)
+change_selected_objects( FL_OBJECT * curobj )
 {
     int i;
     FL_OBJECT *ob;
 
-    for (i = 0; i < selnumb; i++)
+    for ( i = 0; i < selnumb; i++ )
     {
-		ob = selobj[i];
-		if (ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP)
+		ob = selobj[ i ];
+		if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
 		{
-			change_type(ob, curobj->type);
-			set_attribs(ob, curobj->boxtype, curobj->col1, curobj->col2,
-						curobj->lcol, curobj->align,
-						curobj->lsize, curobj->lstyle, selobj[i]->label);
-			set_miscattribs(ob, curobj->nwgravity, curobj->segravity,
-							curobj->resize);
+			change_type( ob, curobj->type );
+			set_attribs( ob, curobj->boxtype, curobj->col1, curobj->col2,
+						 curobj->lcol, curobj->align,
+						 curobj->lsize, curobj->lstyle, ob->label );
+			set_miscattribs( ob, curobj->nwgravity, curobj->segravity,
+							 curobj->resize );
 		}
     }
 }
@@ -848,52 +871,56 @@ change_selected_objects(FL_OBJECT * curobj)
  ***************************************/
 
 void
-change_selection(void)
+change_selection( void )
 {
     FL_OBJECT *firstobj = NULL;
-    int objclass = -1, i;
+    int objclass = -1,
+		i;
     FL_OBJECT *ob;
 
-    if (cur_form == NULL)
+    if ( ! cur_form )
 		return;
 
-    if (selnumb == 0)
+    if ( selnumb == 0 )
     {
-		fl_show_alert("", "Please select an object first",
-					  "by clicking the right button on the object", 0);
+		fl_show_alert( "", "Please select an object first",
+					   "by clicking the right button on the object", 0 );
 		return;
     }
 
-    if (selnumb == 1)
-		change_object(selobj[0], TRUE);
+    if ( selnumb == 1 )
+		change_object( selobj[ 0 ], TRUE );
     else
     {
-		for (i = 0; i < selnumb; i++)
+		for ( i = 0; i < selnumb; i++ )
 		{
-			ob = selobj[i];
-			if (ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP)
+			ob = selobj[ i ];
+			if (    ob->objclass != FL_BEGIN_GROUP
+				 && ob->objclass != FL_END_GROUP )
 			{
-				if (firstobj == NULL)
+				if ( firstobj == NULL )
 				{
 					firstobj = ob;
 					objclass = ob->objclass;
 				}
-				else if (objclass != ob->objclass)
+				else if ( objclass != ob->objclass )
 				{
-					fl_show_messages("Selected objects have different classes");
+					fl_show_messages( "Selected objects have different "
+									  "classes" );
 					return;
 				}
 			}
 		}
 
-		if (firstobj == NULL)
+		if ( firstobj == NULL )
 			return;
 
-		if (!change_object(firstobj, FALSE))
+		if ( ! change_object( firstobj, FALSE ) )
 			return;
 
-		change_selected_objects(firstobj);
+		change_selected_objects( firstobj );
     }
+
     changed = 1;
 }
 
@@ -903,92 +930,141 @@ change_selection(void)
  ***************************************/
 
 void
-align_selection(int dir)
+align_selection( int dir )
 {
-    float x, y, w, h, gap;
-    int used[10000], current;
-    int i, j;
+    float x,
+		  y,
+		  w,
+		  h,
+		  gap,
+		  shift;
+    int used[ MAXSEL ],
+		current;
+    int i,
+		j;
 
-    if (backf || !cur_form)
+    if ( backf || ! cur_form )
 		return;			/* Cannot align the backface */
 
-    if (selnumb <= 1)
+    if ( selnumb <= 1 )
 		return;			/* Nothing to align */
 
-    compute_selbox(&x, &y, &w, &h);
+    compute_selbox( &x, &y, &w, &h );
 
-    if (dir == FD_HEQUAL)	/* Horizontal equal distance */
+    if ( dir == FD_HEQUAL )	/* Horizontal equal distance */
     {
 		gap = 0.0;
-		for (i = 0; i < selnumb; i++)
-			gap += selobj[i]->w;
-		gap = (w - gap) / (selnumb - 1);
-		for (i = 0; i < selnumb; i++)
-			used[i] = 0;
-		for (j = 0; j < selnumb; j++)
+		for ( i = 0; i < selnumb; i++ )
+			gap += selobj[ i ]->w;
+		gap = ( w - gap ) / ( selnumb - 1 );
+		for ( i = 0; i < selnumb; i++ )
+			used[ i ] = 0;
+		for ( j = 0; j < selnumb; j++ )
 		{
 			current = -1;
-			for (i = 0; i < selnumb; i++)
-				if (!used[i])
-					if (current == -1 || selobj[i]->x < selobj[current]->x)
+			for ( i = 0; i < selnumb; i++ )
+				if ( ! used[ i ] )
+					if (    current == -1
+						 || selobj[ i ]->x < selobj[ current ]->x )
 						current = i;
-			used[current] = 1;
-			selobj[current]->x = x;
-			x += selobj[current]->w + gap;
+			used[ current ] = 1;
+			shift = x - selobj[ current ]->x;
+			selobj[ current ]->x   += shift;
+			selobj[ current ]->fl1 += shift;
+			selobj[ current ]->fl2 += shift;
+			selobj[ current ]->fr1 -= shift;
+			selobj[ current ]->fr2 -= shift;
+			x += selobj[ current ]->w + gap;
 		}
     }
-    else if (dir == FD_VEQUAL)	/* Vertical equal distance */
+    else if ( dir == FD_VEQUAL )	/* Vertical equal distance */
     {
 		gap = 0.0;
-		for (i = 0; i < selnumb; i++)
-			gap += selobj[i]->h;
-		gap = (h - gap) / (selnumb - 1);
-		for (i = 0; i < selnumb; i++)
-			used[i] = 0;
-		for (j = 0; j < selnumb; j++)
+		for ( i = 0; i < selnumb; i++ )
+			gap += selobj[ i ]->h;
+		gap = ( h - gap ) / ( selnumb - 1 );
+		for ( i = 0; i < selnumb; i++ )
+			used[ i ] = 0;
+		for ( j = 0; j < selnumb; j++ )
 		{
 			current = -1;
-			for (i = 0; i < selnumb; i++)
-				if (!used[i])
-					if (current == -1 || selobj[i]->y < selobj[current]->y)
+			for ( i = 0; i < selnumb; i++ )
+				if ( ! used[ i ] )
+					if (    current == -1
+						 || selobj[ i ]->y < selobj[ current ]->y )
 						current = i;
-			used[current] = 1;
-			selobj[current]->y = y;
-			y += selobj[current]->h + gap;
+			used[ current ] = 1;
+			shift = y - selobj[ current ]->y;
+			selobj[ current ]->y   += shift;
+			selobj[ current ]->ft1 += shift;
+			selobj[ current ]->ft2 += shift;
+			selobj[ current ]->fb1 -= shift;
+			selobj[ current ]->fb2 -= shift;
+			y += selobj[ current ]->h + gap;
 		}
     }
     else
-		for (i = 0; i < selnumb; i++)
+		for ( i = 0; i < selnumb; i++ )
 		{
-			switch (dir)
+			switch ( dir )
 			{
 				case FD_LEFT:	/* Left */
-					selobj[i]->x = x;
+					shift = x - selobj[ i ]->x;
+					selobj[ i ]->x   += shift;
+					selobj[ i ]->fl1 += shift;
+					selobj[ i ]->fl2 += shift;
+					selobj[ i ]->fr1 -= shift;
+					selobj[ i ]->fr2 -= shift;
 					break;
 
 				case FD_HCENTER:	/* Center */
-					selobj[i]->x = x + w / 2.0 - selobj[i]->w / 2.0;
+					shift = x + w / 2.0 - selobj[ i ]->w / 2.0 - selobj[ i ]->x;
+					selobj[ i ]->x   += shift;
+					selobj[ i ]->fl1 += shift;
+					selobj[ i ]->fl2 += shift;
+					selobj[ i ]->fr1 -= shift;
+					selobj[ i ]->fr2 -= shift;
 					break;
 
 				case FD_RIGHT:	/* Right */
-					selobj[i]->x = x + w - selobj[i]->w;
+					shift = x + w - selobj[ i ]->w - selobj[ i ]->x;
+					selobj[ i ]->x   += shift;
+					selobj[ i ]->fl1 += shift;
+					selobj[ i ]->fl2 += shift;
+					selobj[ i ]->fr1 -= shift;
+					selobj[ i ]->fr2 -= shift;
 					break;
 
 				case FD_TOP:
-					selobj[i]->y = y;
+					shift = y - selobj[ i ]->y;
+					selobj[ i ]->y   += shift;
+					selobj[ i ]->ft1 += shift;
+					selobj[ i ]->ft2 += shift;
+					selobj[ i ]->fb1 -= shift;
+					selobj[ i ]->fb2 -= shift;
 					break;
 
 				case FD_VCENTER:	/* Center */
-					selobj[i]->y = y + h / 2.0 - selobj[i]->h / 2.0;
+					shift = y + h / 2.0 - selobj[ i ]->h / 2.0 - selobj[ i ]->y;
+					selobj[ i ]->y   += shift;
+					selobj[ i ]->ft1 += shift;
+					selobj[ i ]->ft2 += shift;
+					selobj[ i ]->fb1 -= shift;
+					selobj[ i ]->fb2 -= shift;
 					break;
 
 				case FD_BOTTOM:
-					selobj[i]->y = y + h - selobj[i]->h;
+					shift = y + h - selobj[ i ]->h - selobj[ i ]->y;
+					selobj[ i ]->y   += shift;
+					selobj[ i ]->ft1 += shift;
+					selobj[ i ]->ft2 += shift;
+					selobj[ i ]->fb1 -= shift;
+					selobj[ i ]->fb2 -= shift;
 					break;
 			}
 		}
 
-    redraw_the_form(0);
+    redraw_the_form( 0 );
     changed = 1;
 }
 
@@ -998,18 +1074,18 @@ align_selection(int dir)
  ***************************************/
 
 void
-show_selection(void)
+show_selection( void )
 {
     int i;
 
-    if (backf)
+    if ( backf )
 		return;			/* Cannot show the backface */
 
-    if (cur_form == NULL)
+    if ( ! cur_form )
 		return;
 
-    for (i = 0; i < selnumb; i++)
-		fl_show_object(selobj[i]);
+    for ( i = 0; i < selnumb; i++ )
+		fl_show_object( selobj[ i ] );
 }
 
 
@@ -1018,18 +1094,18 @@ show_selection(void)
  ***************************************/
 
 void
-hide_selection(void)
+hide_selection( void )
 {
     int i;
 
-    if (backf)
+    if ( backf )
 		return;			/* Cannot hide the backface */
 
-    if (cur_form == NULL)
+    if ( ! cur_form )
 		return;
 
-    for (i = 0; i < selnumb; i++)
-		fl_hide_object(selobj[i]);
+    for ( i = 0; i < selnumb; i++ )
+		fl_hide_object( selobj[ i ] );
 }
 
 
@@ -1038,26 +1114,27 @@ hide_selection(void)
  ***************************************/
 
 void
-raise_selection(void)
+raise_selection( void )
 {
     int i;
 
-    if (backf)
+    if ( backf )
 		return;			/* Cannot raise the backface */
 
-    if (cur_form == NULL)
+    if ( ! cur_form )
 		return;
 
-    for (i = 0; i < selnumb; i++)
+    for ( i = 0; i < selnumb; i++ )
     {
-		fl_delete_object(selobj[i]);
+		fl_delete_object( selobj[ i ] );
 
 		/* add_object expects the coordinates of the object measured from
 		   lower-left corner. Translate to conform */
 
-		TRANY(selobj[i], cur_form);
-		fl_add_object(cur_form, selobj[i]);
+		TRANY( selobj[ i ], cur_form );
+		fl_add_object( cur_form, selobj[ i ] );
     }
+
     changed = 1;
 }
 
@@ -1067,43 +1144,43 @@ raise_selection(void)
  ***************************************/
 
 void
-lower_selection(void)
+lower_selection( void )
 {
     int i;
 
-    if (backf)
+    if ( backf )
 		return;			/* Cannot lower the backface. */
 
-    if (cur_form == NULL)
+    if ( ! cur_form )
 		return;
 
-    for (i = selnumb - 1; i >= 0; i--)
+    for ( i = selnumb - 1; i >= 0; i-- )
     {
-		if (selobj[i] != BackOBJ()->next)
+		if ( selobj[ i ] != BackOBJ( )->next )
 		{
-			fl_delete_object(selobj[i]);
-			fl_insert_object(selobj[i], BackOBJ()->next);
+			fl_delete_object( selobj[ i ] );
+			fl_insert_object( selobj[ i ], BackOBJ( )->next );
 		}
     }
 
     changed = 1;
 }
 
-static FL_OBJECT *cutbuf[MAXSEL];	/* Buffered objects */
-static int ncut = 0;		/* Their number */
 
+static FL_OBJECT *cutbuf[ MAXSEL ];	/* Buffered objects */
+static int ncut = 0;		/* Their number */
 
 /***************************************
  ***************************************/
 
 static void
-clear_cutbuffer(void)
+clear_cutbuffer( void )
 {
-    for (; --ncut >= 0;)
+    for ( ; --ncut >= 0; )
     {
-		if (cutbuf[ncut]->u_vdata)
-			fl_free(cutbuf[ncut]->u_vdata);
-		fl_free_object(cutbuf[ncut]);
+		if ( cutbuf[ ncut ]->u_vdata )
+			fl_free( cutbuf[ ncut ]->u_vdata );
+		fl_free_object( cutbuf[ ncut ] );
     }
 }
 
@@ -1113,34 +1190,34 @@ clear_cutbuffer(void)
  ***************************************/
 
 void
-cut_selection(void)
+cut_selection( void )
 {
     int i;
 
     if (backf)
 		return;			/* Cannot cut the backface. */
 
-    if (cur_form == NULL)
+    if (! cur_form )
     {
 		fl_show_alert("Warning", "Please Add a form first", "", 0);
 		return;
     }
 
-    if (selnumb == 0)
+    if ( selnumb == 0 )
 		return;
 
-    clear_cutbuffer();
+    clear_cutbuffer( );
 
     /* Make new deletion and save it */
 
-    for (i = 0; i < selnumb; i++)
+    for ( i = 0; i < selnumb; i++ )
     {
-		fl_delete_object(selobj[i]);
-		cutbuf[i] = copy_object(selobj[i], 1);
+		fl_delete_object( selobj[ i ] );
+		cutbuf[ i ] = copy_object( selobj[ i ], 1 );
     }
 
     ncut = selnumb;
-    clear_selection();
+    clear_selection( );
 
     changed = 1;
 }
@@ -1154,62 +1231,80 @@ void
 paste_selection(void)
 {
     FL_OBJECT *obj;
-    float x, y, w, h, ox, oy;
+    float x,
+		  y,
+		  w,
+		  h,
+		  ox,
+		  oy,
+		  shift;
     int i;
 
-    if (cur_form == NULL || ncut == 0)
+    if ( ! cur_form || ncut == 0 )
 		return;
 
     is_pasting = 1;		/* horrible hack */
 
     /* Copy selection from buffer */
 
-    clear_selection();
-    redraw_the_form(0);
+    clear_selection( );
+    redraw_the_form( 0 );
 
-    for (i = 0; i < ncut; i++)
+    for ( i = 0; i < ncut; i++ )
     {
-		obj = copy_object(cutbuf[i], 1);
+		obj = copy_object( cutbuf[ i ], 1 );
 
 		/* fix label:  if underlining caused by cutbuf shortcut, remove it.
 		   Note can't use cutbuf as cutbuf does not contain shortcut info */
 
-		if (strchr(obj->label, fl_ul_magic_char[0]) && selobj[i]->shortcut[0])
+		if (    obj->label
+			 && strchr( obj->label, *fl_ul_magic_char )
+			 && selobj[ i ]->shortcut[ 0 ] )
 		{
-			char tmpbuf[128], *dp, *sp;
-			for (dp = tmpbuf, sp = obj->label; *sp; sp++)
-				if (*sp != *fl_ul_magic_char)
-					*dp++ = *sp;
-			*dp = '\0';
-			fl_set_object_label(obj, tmpbuf);
+			char *t, *b;
+
+			b = t = fl_strdup( obj->label );
+			while ( ( b = strchr( b, *fl_ul_magic_char ) ) )
+				memmove( b, b + 1, strlen( b ) );
+			fl_set_object_label( obj, t );
+			fl_free( t );
 		}
 
-		TRANY(obj, cur_form);
-		fl_add_object(cur_form, obj);
-		selobj[selnumb++] = obj;
+		TRANY( obj, cur_form );
+		fl_add_object( cur_form, obj );
+		selobj[ selnumb++ ] = obj;
     }
 
     /* Move the selection to the correct place */
 
-    compute_selbox(&x, &y, &w, &h);
+    compute_selbox( &x, &y, &w, &h );
     ox = x;
     oy = y;
-    move_box(&x, &y, &w, &h, FALSE);
+    move_box( &x, &y, &w, &h, FALSE );
 
     /* recompute object sizes */
 
-    for (i = 0; i < selnumb; i++)
-    {
-		if (selobj[i]->objclass != FL_BEGIN_GROUP &&
-			selobj[i]->objclass != FL_END_GROUP)
+    for ( i = 0; i < selnumb; i++ )
+		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
+			 && selobj[ i ]->objclass != FL_END_GROUP)
 		{
-			selobj[i]->x += x - ox;
-			selobj[i]->y += y - oy;
-		}
-    }
+			shift = x - ox;
+			selobj[ i ]->x   += shift;
+			selobj[ i ]->fl1 += shift;
+			selobj[ i ]->fl2 += shift;
+			selobj[ i ]->fr1 -= shift;
+			selobj[ i ]->fr2 -= shift;
 
-    cleanup_selection();
-    redraw_the_form(0);
+			shift = y - oy;
+			selobj[ i ]->y   += shift;
+			selobj[ i ]->ft1 += shift;
+			selobj[ i ]->ft2 += shift;
+			selobj[ i ]->fb1 -= shift;
+			selobj[ i ]->fb2 -= shift;
+		}
+
+    cleanup_selection( );
+    redraw_the_form( 0 );
     changed = 1;
     is_pasting = 0;
 }
@@ -1220,23 +1315,23 @@ paste_selection(void)
  ***************************************/
 
 void
-copy_selection(void)
+copy_selection( void )
 
 {
     FL_OBJECT *obj;
     int i;
 
-    if (backf || selnumb == 0 || !cur_form)
+    if ( backf || selnumb == 0 || ! cur_form )
 		return;
 
-    clear_cutbuffer();
+    clear_cutbuffer( );
 
     /* Copy the objects */
 
-    for (i = 0; i < selnumb; i++)
+    for ( i = 0; i < selnumb; i++ )
     {
-		obj = copy_object(selobj[i], 0);
-		cutbuf[i] = obj;
+		obj = copy_object( selobj[ i ], 0 );
+		cutbuf[ i ] = obj;
     }
 
     ncut = selnumb;
@@ -1248,18 +1343,18 @@ copy_selection(void)
  ***************************************/
 
 void *
-dup_selection(void)
+dup_selection( void )
 {
     FL_OBJECT **ob;
     int i;
 
-    if (!selnumb)
-		return 0;
+    if ( ! selnumb )
+		return NULL;
 
-    ob = fl_calloc(selnumb + 1, sizeof(*ob));
+    ob = fl_calloc( selnumb + 1, sizeof *ob );
 
-    for (i = 0; i < selnumb; i++)
-		ob[i] = copy_object(selobj[i], 1);
+    for ( i = 0; i < selnumb; i++ )
+		ob[ i ] = copy_object( selobj[ i ], 1 );
 
     return ob;
 }
@@ -1269,12 +1364,12 @@ dup_selection(void)
  ***************************************/
 
 void
-free_dupped_selection(void *a)
+free_dupped_selection( void *a )
 {
     FL_OBJECT **ob = a;
-    for (; *ob; ob++)
-		fl_free_object(*ob);
-    fl_free(a);
+    for ( ; *ob; ob++ )
+		fl_free_object( *ob );
+    fl_free( a );
 }
 
 
@@ -1283,26 +1378,27 @@ free_dupped_selection(void *a)
  ***************************************/
 
 void
-set_selection(void *a)
+set_selection( void *a )
 {
-    FL_OBJECT *obj, **ob = a;
+    FL_OBJECT *obj,
+		      **ob = a;
     int i;
 
-    for (i = 0; i < selnumb; i++)
-		fl_delete_object(selobj[i]);
+    for ( i = 0; i < selnumb; i++ )
+		fl_delete_object( selobj[ i ] );
 
-    clear_selection();
-    redraw_the_form(0);
+    clear_selection( );
+    redraw_the_form( 0 );
 
-    for (selnumb = 0; ob[selnumb]; selnumb++)
+    for ( selnumb = 0; ob[ selnumb ]; selnumb++ )
     {
-		obj = copy_object(ob[selnumb], 1);
-		TRANY(obj, cur_form);
-		fl_add_object(cur_form, obj);
-		selobj[selnumb] = obj;
+		obj = copy_object( ob[ selnumb ], 1 );
+		TRANY( obj, cur_form );
+		fl_add_object( cur_form, obj );
+		selobj[ selnumb ] = obj;
     }
 
-    redraw_the_form(0);
+    redraw_the_form( 0 );
 }
 
 
@@ -1310,22 +1406,22 @@ set_selection(void *a)
  ***************************************/
 
 void
-next_selection(void)
+next_selection( void )
 {
-    if (!cur_form || !BackOBJ())
+    if ( ! cur_form || ! BackOBJ( ) )
 		return;
 
     do
     {
-		if (!selnumb || !selobj[0]->next)
-			selobj[0] = BackOBJ()->next ? BackOBJ()->next : BackOBJ();
-		else if (selnumb && selobj[0]->next)
-			selobj[0] = selobj[0]->next;
+		if ( ! selnumb || ! selobj[ 0 ]->next )
+			selobj[ 0 ] = BackOBJ( )->next ? BackOBJ( )->next : BackOBJ( );
+		else if ( selnumb && selobj[ 0 ]->next )
+			selobj[ 0 ] = selobj[ 0 ]->next;
 
-    } while (selobj[0]->is_child);
+    } while ( selobj[ 0 ]->is_child );
 
     selnumb = 1;
-    redraw_the_form(0);
+    redraw_the_form( 0 );
 }
 
 
@@ -1333,21 +1429,21 @@ next_selection(void)
  ***************************************/
 
 void
-prev_selection(void)
+prev_selection( void )
 {
-    if (!cur_form || !BackOBJ())
+    if ( ! cur_form || ! BackOBJ( ) )
 		return;
 
     do
     {
-		if (!selnumb || !selobj[0]->prev)
-			selobj[0] = BackOBJ()->prev ? BackOBJ()->prev : BackOBJ();
-		else if (selnumb && selobj[0]->prev)
-			selobj[0] = selobj[0]->prev;
-    } while (selobj[0]->is_child);
+		if ( ! selnumb || ! selobj[ 0 ]->prev )
+			selobj[ 0 ] = BackOBJ( )->prev ? BackOBJ( )->prev : BackOBJ( );
+		else if ( selnumb && selobj[ 0 ]->prev )
+			selobj[ 0 ] = selobj[ 0 ]->prev;
+    } while (selobj[ 0 ]->is_child );
 
     selnumb = 1;
-    redraw_the_form(0);
+    redraw_the_form( 0 );
 }
 
 
@@ -1356,37 +1452,37 @@ prev_selection(void)
  ***************************************/
 
 void
-group_selection(void)
+group_selection( void )
 {
     int i;
     FL_OBJECT *obj;
     const char *s;
 
-    if (backf)
+    if ( backf )
 		return;			/* Cannot group the backface */
 
-    if (cur_form == NULL || selnumb == 0)
+    if ( ! cur_form || selnumb == 0 )
 		return;
 
-    if (!(s = fl_show_input("Give group name", "")))
-	return;
+    if ( ! ( s = fl_show_input( "Give group name", "" ) ) )
+		return;
 
-    obj = add_an_object(FL_BEGIN_GROUP, -1, 0, 0, 0, 0);
-    for (i = 0; i < selnumb; i++)
+    obj = add_an_object( FL_BEGIN_GROUP, -1, 0, 0, 0, 0 );
+    for ( i = 0; i < selnumb; i++ )
     {
-		fl_delete_object(selobj[i]);
-		if (selobj[i]->objclass != FL_BEGIN_GROUP &&
-			selobj[i]->objclass != FL_END_GROUP)
+		fl_delete_object( selobj[ i ] );
+		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
+			 && selobj[ i ]->objclass != FL_END_GROUP)
 		{
-			TRANY(selobj[i], cur_form);
-			fl_add_object(cur_form, selobj[i]);
+			TRANY( selobj[ i ], cur_form );
+			fl_add_object( cur_form, selobj[ i ] );
 		}
     }
 
-    add_an_object(FL_END_GROUP, -1, 0, 0, 0, 0);
-    clear_selection();
-    set_object_name(obj, s, "", "");
-    addgroupto_selection(obj);
+    add_an_object( FL_END_GROUP, -1, 0, 0, 0, 0 );
+    clear_selection( );
+    set_object_name( obj, s, "", "" );
+    addgroupto_selection( obj );
     changed = 1;
 }
 
@@ -1396,29 +1492,29 @@ group_selection(void)
  ***************************************/
 
 void
-flatten_selection(void)
+flatten_selection( void )
 {
     int i;
 
-    if (backf)
+    if ( backf )
 		return;			/* Cannot flatten the backface */
 
-    if (cur_form == NULL)
+    if ( ! cur_form )
 		return;
 
-    for (i = 0; i < selnumb; i++)
+    for ( i = 0; i < selnumb; i++ )
     {
-		if (selobj[i]->objclass == FL_BEGIN_GROUP ||
-			selobj[i]->objclass == FL_END_GROUP)
+		if (    selobj[ i ]->objclass == FL_BEGIN_GROUP
+			 || selobj[ i ]->objclass == FL_END_GROUP)
 		{
-			fl_delete_object(selobj[i]);
+			fl_delete_object( selobj[ i ] );
 
 			/* CAUSES PROBLEMS WITH NAMING fl_free_object(selobj[i]); */
 
-			selobj[i] = NULL;
+			selobj[ i ] = NULL;
 		}
     }
 
-    cleanup_selection();
+    cleanup_selection( );
     changed = 1;
 }
