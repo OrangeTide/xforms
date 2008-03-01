@@ -65,7 +65,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.13 $ of $Date: 2008/02/28 20:44:19 $",
+    "$State: Exp $  $Revision: 1.14 $ of $Date: 2008/03/01 16:16:03 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -131,7 +131,7 @@ add_something( void )
 		  ww = 0.0,
 		  hh = 0.0;
 
-    if ( cur_form == NULL )
+    if ( ! cur_form )
     {
 		fl_show_alert( "Warning", "Please Add a form first", "", 0 );
 		return;
@@ -556,6 +556,12 @@ handle_configure( XEvent * xev,
     {
 		winw = xev->xconfigure.width;
 		winh = xev->xconfigure.height;
+
+		if ( cur_form && ( cur_form->w > winw || cur_form->h > winh ) )
+		{
+			reshape_form_background( winw, winh );
+			redraw_the_form( 1 );
+		}
     }
 
     return 1;
@@ -605,7 +611,7 @@ pre_connect( int    ac,
 		s;
     static char filter[ 128 ];
 
-    for (i = 1; i < ac && *av[i] == '-'; i++)
+    for ( i = 1; i < ac && *av[ i ] == '-'; i++ )
     {
 		if ( strncmp( av[ i ] + 1, "help", 1 ) == 0 )
 			usage( av[ 0 ], 1 );
