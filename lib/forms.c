@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.16 2008/02/04 01:22:18 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.17 2008/03/01 16:22:57 jtt Exp $";
 #endif
 
 
@@ -46,9 +46,8 @@ char *fl_id_fm = "$Id: forms.c,v 1.16 2008/02/04 01:22:18 jtt Exp $";
 #include "global.h"
 
 
-static int select_form_event( Display  *,
-							  XEvent *,
-							  FL_FORM ** );
+static FL_FORM * select_form_event( Display  *,
+									XEvent * );
 static int get_next_event( int,
 						   FL_FORM **,
 						   XEvent * );
@@ -225,10 +224,10 @@ fl_end_group( void )
 
 static FL_FORM **forms = NULL;	    /* The forms being shown. */
 static size_t formnumb = 0;	        /* Their number. */
-static FL_FORM * mouseform;	        /* The current form under mouse */
-static FL_FORM * keyform;	        /* keyboard focus form */
-FL_OBJECT * fl_pushobj;		        /* latest pushed object */
-FL_OBJECT * fl_mouseobj;	        /* object under the mouse */
+static FL_FORM * mouseform = NULL;  /* The current form under mouse */
+static FL_FORM * keyform = NULL;    /* keyboard focus form */
+FL_OBJECT * fl_pushobj = NULL;	    /* latest pushed object */
+FL_OBJECT * fl_mouseobj = NULL;	    /* object under the mouse */
 
 
 /***************************************
@@ -973,7 +972,7 @@ close_form_win( Window win )
     {
 		FL_FORM *form;
 
-		if ( select_form_event( flx->display, &xev, &form ) )
+		if ( ( form = select_form_event( flx->display, &xev ) ) )
 		{
 			size_t i;
 
@@ -1115,7 +1114,7 @@ fl_hide_form( FL_FORM * form )
     fl_free_flpixmap( form->flpixmap );
 
     if ( mouseform && mouseform->window == form->window )
-		mouseform = 0;
+		mouseform = NULL;
 
     form->deactivated = 1;
     form->visible = FL_INVISIBLE;
@@ -2172,108 +2171,72 @@ xmask2key( unsigned int mask )
 }
 
 
+static void handle_idling( int            wait_io,
+						   int *          lasttimer,
+						   unsigned int * query_cnt );
+static void handle_EnterNotify_event( FL_FORM * evform );
+static void handle_LeaveNotify_event( void );
+static void handle_MotionNotify_event( FL_FORM * evform );
+static void handle_Expose_event( FL_FORM *  evform,
+								 FL_FORM ** redraw_form );
+static void handle_ConfigureNotify_event( FL_FORM *  evform,
+										  FL_FORM ** redraw_form );
+static void handle_DestroyNotify_event( FL_FORM * evform );
+
+
 /***************************************
  ***************************************/
 
 static void
 do_interaction_step( int wait_io )
 {
-    Window win;
     FL_FORM *evform = NULL;
 	static FL_FORM *redraw_form = NULL;
-    int has_event;
-    static unsigned int auto_cnt,
-		                query_cnt;
-    static int lasttimer;
+    static unsigned int query_cnt = 0;
+    static int lasttimer = 0;
 
-    has_event = get_next_event( wait_io, &evform, &st_xev );
-
-    if ( ! has_event )
+    if ( ! get_next_event( wait_io, &evform, &st_xev ) )
     {
-		/* we are idling */
+		handle_idling( wait_io, &lasttimer, &query_cnt );
+		return;
+	}
 
-		st_xev.type = FLArtificialTimerEvent;
+	/* got an event for forms */
 
-		/* certain events like Selection/GraphicsExpose do not have a window
-		   member itself, but xany.window happens to be the one we want */
-
-		if ( query_cnt++ % 100 == 0 )
-		{
-			query_cnt = 1;
-			fl_get_form_mouse( mouseform, &fl_mousex, &fl_mousey, &fl_keymask );
-			st_xev.xany.window = mouseform ? mouseform->window : 0;
-			st_xev.xany.send_event = 1;		/* indicating synthetic event */
-			st_xev.xmotion.state = fl_keymask;
-			st_xev.xmotion.x = fl_mousex;
-			st_xev.xmotion.y = fl_mousey;
-			st_xev.xmotion.is_hint = 0;
-		}
-		else
-			st_xev.xmotion.time += wait_io ? delta_msec : SHORT_PAUSE;
-    }
-    else
-    {
-		/* got an event for forms */
 #if FL_DEBUG >= ML_WARN
-		if ( st_xev.type != MotionNotify || fl_cntl.debug > 2 )
-			fl_xevent_name( "MainLoop", &st_xev );
+	if ( st_xev.type != MotionNotify || fl_cntl.debug > 2 )
+		fl_xevent_name( "MainLoop", &st_xev );
 #endif
 
-		if ( ! evform )
-			M_err( "FormEvent", "Something is wrong" );
+	if ( ! evform )
+	{
+		M_err( "FormEvent", "Something is wrong" );
+		return;
+	}
 
-		fl_compress_event( &st_xev, evform->compress_mask );
+	fl_compress_event( &st_xev, evform->compress_mask );
 
-		lasttimer = 0;
-		query_cnt = 0;
+	lasttimer = 0;
+	query_cnt = 0;
 
-		if ( pre_emptive_consumed( evform, st_xev.type, &st_xev ) )
-			return;
-    }
-
-    win = st_xev.xany.window;
+	if ( pre_emptive_consumed( evform, st_xev.type, &st_xev ) )
+		return;
 
     switch ( st_xev.type )
     {
-		case FLArtificialTimerEvent:
-#if FL_DEBUG >= ML_TRACE
-			M_info( "Main", "Timer Event" );
-#endif
-
-			/* need to do FL_MOUSE for touch buttons */
-
-			st_xev.type = MotionNotify;
-
-			/* unless ButtonRelease does both Release and Leave, have to
-			   generate at least one lasttimer due to the possibility of a
-			   Release/Leave/Motion eaten by popups. True fix would be to have
-			   xpopup send an motion event */
-
-			if ( button_down( fl_keymask ) || fl_pushobj || ! lasttimer )
-			{
-				fl_handle_form( mouseform, FL_MOUSE,
-								xmask2key( fl_keymask ), &st_xev );
-				lasttimer = 1;
-			}
-
-			/* handle both automatic and idle callback */
-
-			fl_handle_automatic( &st_xev, 1 );
-			break;
-
 		case MappingNotify:
 			XRefreshKeyboardMapping( ( XMappingEvent * ) &st_xev );
 			break;
 
 		case FocusIn:
-			if ( fl_context->xic )
-			{
-				M_info( "Focus", "Setting focus window for IC" );
-				XSetICValues( fl_context->xic,
-							  XNFocusWindow, st_xev.xfocus.window,
-							  XNClientWindow, st_xev.xfocus.window,
-							  ( char * ) NULL );
-			}
+			if ( ! fl_context->xic )
+				break;
+
+			M_info( "Focus", "Setting focus window for IC" );
+			XSetICValues( fl_context->xic,
+						  XNFocusWindow, st_xev.xfocus.window,
+						  XNClientWindow, st_xev.xfocus.window,
+						  ( char * ) NULL );
 			break;
 
 		case KeyPress:
@@ -2281,117 +2244,25 @@ do_interaction_step( int wait_io )
 			fl_mousey = st_xev.xkey.y;
 			fl_keymask = st_xev.xkey.state;
 			do_keyboard( &st_xev, FL_KEYPRESS );
-			return;
+			break;
 
 		case KeyRelease:
 			fl_mousex = st_xev.xkey.x;
 			fl_mousey = st_xev.xkey.y;
 			fl_keymask = st_xev.xkey.state;
 			do_keyboard( &st_xev, FL_KEYRELEASE );
-			return;
+			break;
 
 		case EnterNotify:
-			fl_keymask = st_xev.xcrossing.state;
-
-			if (    button_down( fl_keymask )
-				 && st_xev.xcrossing.mode != NotifyUngrab )
-				break;
-
-			fl_mousex = st_xev.xcrossing.x;
-			fl_mousey = st_xev.xcrossing.y;
-
-			if ( mouseform )
-				fl_handle_form( mouseform, FL_LEAVE,
-								xmask2key( fl_keymask ), &st_xev );
-			mouseform = 0;
-
-			if ( evform )
-			{
-				mouseform = evform;
-
-				/* this is necessary because win might be un-managed. To be
-				   friendly to other applications, grab focus only if abslutely
-				   necessary */
-
-				if (    mouseform->deactivated == 0
-					 && ! st_xev.xcrossing.focus && unmanaged_count > 0 )
-				{
-					fl_check_key_focus( "EnterNotify", win );
-					fl_winfocus( win );
-				}
-
-				fl_handle_form( mouseform, FL_ENTER,
-								xmask2key( fl_keymask ), &st_xev );
-			}
-#if FL_DEBUG >= ML_DEBUG
-			else
-				M_err( "EnterNotify", "Null form!" );
-#endif
-
+			handle_EnterNotify_event( evform );
 			break;
 
-    case LeaveNotify:
-		fl_keymask = st_xev.xcrossing.state;
-
-		if (    button_down( fl_keymask )
-			 && st_xev.xcrossing.mode == NotifyNormal )
+		case LeaveNotify:
+			handle_LeaveNotify_event( );
 			break;
-
-		/* olvwm sends leavenotify with NotifyGrab whenever button is
-		   clicked. Ignore it. Due to Xpoup grab, (maybe Wm bug ?), end grab
-		   can also generate this event. we can tell these two situations by
-		   doing a real button_down test (as opposed to relying on the
-		   keymask in event) */
-
-		if ( st_xev.xcrossing.mode == NotifyGrab && button_is_really_down( ) )
-			break;
-
-		fl_mousex = st_xev.xcrossing.x;
-		fl_mousey = st_xev.xcrossing.y;
-
-		if ( mouseform )
-		{
-			/* due to grab in pop-up , FL_RELEASE is necessary */
-
-			fl_handle_form( mouseform, FL_RELEASE, 0, &st_xev );
-			fl_handle_form( mouseform, FL_LEAVE,
-							xmask2key( fl_keymask ), &st_xev );
-			mouseform = NULL;
-		}
-		break;
 
 		case MotionNotify:
-			fl_keymask = st_xev.xmotion.state;
-			fl_mousex = st_xev.xmotion.x;
-			fl_mousey = st_xev.xmotion.y;
-
-			if ( ! mouseform )
-			{
-				M_warn( "Main-NoMotionForm", "evwin=0x%lx", win );
-				break;
-			}
-
-			if ( mouseform->window != win )
-			{
-				M_warn( "*Motion", "mousewin=0x%ld evwin=0x%ld",
-						mouseform->window, win );
-				fl_mousex += evform->x - mouseform->x;
-				fl_mousey += evform->y - mouseform->y;
-			}
-
-			fl_handle_form( mouseform, FL_MOUSE,
-							xmask2key( fl_keymask ), &st_xev );
-
-			/* Handle FL_STEP. Every 10 events. This will reduce cpu usage */
-
-			if ( ++auto_cnt % 10 == 0 )
-			{
-#if FL_DEBUG >= ML_TRACE
-				M_info( "Motion", "Auto FL_STEP" );
-#endif
-				fl_handle_automatic( &st_xev, 0 );
-				auto_cnt = 0;
-			}
+			handle_MotionNotify_event( evform );
 			break;
 
 		case ButtonPress:
@@ -2424,114 +2295,11 @@ do_interaction_step( int wait_io )
 			break;
 
 		case Expose:
-			if ( evform )
-			{
-				/* If 'redraw_form' is set we got a ConfigureNotify and the
-				   data from the Exposure event aren't correct - set clipping
-				   to the complete area of the form.                   JTT */
-
-				if ( redraw_form == evform )
-				{
-					st_xev.xexpose.x = 0;
-					st_xev.xexpose.y = 0;
-					st_xev.xexpose.width  = evform->w;
-					st_xev.xexpose.height = evform->h;
-					redraw_form = NULL;
-				}
-				else
-				{
-					if ( st_xev.xexpose.x + st_xev.xexpose.width > evform->w )
-						st_xev.xexpose.width = evform->w - st_xev.xexpose.x;
-					if ( st_xev.xexpose.y + st_xev.xexpose.height > evform->h )
-						st_xev.xexpose.height = evform->h - st_xev.xexpose.y;
-				}
-
-				fl_set_perm_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
-									  st_xev.xexpose.width,
-									  st_xev.xexpose.height );
-				fl_set_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
-								 st_xev.xexpose.width, st_xev.xexpose.height );
-
-				/* run into trouble by ignoring configure notify */
-
-				if ( ignored_fake_configure )
-				{
-					FL_Coord neww,
-						     newh;
-
-					M_warn( "Expose", "Run into trouble - correcting it" );
-					fl_get_winsize( evform->window, &neww, &newh );
-					scale_form( evform, ( double ) neww / evform->w,
-								        ( double ) newh / evform->h );
-					ignored_fake_configure = 0;
-				}
-
-				fl_handle_form( evform, FL_DRAW, 0, &st_xev );
-
-				fl_unset_perm_clipping( );
-				fl_unset_clipping( );
-				fl_unset_text_clipping( );
-			}
+			handle_Expose_event( evform, &redraw_form );
 			break;
 
 		case ConfigureNotify:
-			if ( ! evform )
-				break;
-
-			if ( ! st_xev.xconfigure.send_event )
-				fl_get_winorigin( win, &evform->x, &evform->y );
-			else
-			{
-				evform->x = st_xev.xconfigure.x;
-				evform->y = st_xev.xconfigure.y;
-				M_warn( "Configure", "WMConfigure:x=%d y=%d",
-						evform->x, evform->y );
-			}
-
-			/* mwm sends bogus ConfigureNotify randomly without following up
-			   with a redraw event, but it does set send_event. The check is
-			   somewhat dangerous, use 'ignored_fake_configure' to make sure
-			   when we got expose we can respond correctly. The correct fix is
-			   always to get window geometry in Expose handler, but that has a
-			   two-way traffic overhead */
-
-			ignored_fake_configure =
-				          st_xev.xconfigure.send_event
-				       && (    st_xev.xconfigure.width  != evform->w
-					        || st_xev.xconfigure.height != evform->h );
-
-			/* Dragging the form across the screen changes its absolute x, y
-			   coords. Objects that themselves contain forms should ensure
-			   that they are up to date. */
-
-			fl_handle_form( evform, FL_MOVEORIGIN, 0, &st_xev );
-
-			if ( ! st_xev.xconfigure.send_event )
-			{
-				int old_w = evform->w;
-				int old_h = evform->h;
-
-				/* can't just set form->{w,h}. Need to take care of obj
-				   gravity */
-
-				scale_form( evform,
-							( double ) st_xev.xconfigure.width / evform->w,
-							( double ) st_xev.xconfigure.height / evform->h );
-
-				/* If both the width and the height got smaller (or one got
-				   smaller and the other one is unchanged) we're not going
-				   to get an Exposure event at all, so redraw the form. Even if
-				   only one of the lengths got smaller or remained unchanged
-				   while the other got larger, the next (compressed) Expose
-				   event will only cover the added part, so in this case store
-				   the forms address, so on the next Expose event we receive
-				   for it it's full area can be redrawn.                 JTT */
-
-				if ( evform->w <= old_w && evform->h <= old_h )
-					fl_redraw_form( evform );
-				else if ( ! ( evform->w > old_w && evform->h > old_h ) ) 
-					redraw_form = evform;
-			}
+			handle_ConfigureNotify_event( evform, &redraw_form );
 			break;
 
 		case ClientMessage:
@@ -2539,19 +2307,7 @@ do_interaction_step( int wait_io )
 			break;
 
 		case DestroyNotify:	/* only sub-form gets this due to parent destroy */
-			{
-				size_t i;
-
-				evform->visible = 0;
-				evform->window = 0;
-				for ( i = 0; i < formnumb; i++ )
-					if ( evform == forms[ i ] )
-					{
-						forms[ i ] = forms[ --formnumb ];
-						forms = fl_realloc( forms, formnumb * sizeof *forms );
-						break;
-					}
-			}
+			handle_DestroyNotify_event( evform );
 			break;
 
 		case SelectionClear:
@@ -2569,6 +2325,331 @@ do_interaction_step( int wait_io )
 
 
 /***************************************
+ ***************************************/
+
+static void
+handle_idling( int            wait_io,
+	           int *          lasttimer,
+			   unsigned int * query_cnt )
+{
+#if FL_DEBUG >= ML_TRACE
+	M_info( "do_interaction_step", "Artificial timer event" );
+#endif
+
+	/* certain events like Selection/GraphicsExpose do not have a window
+	   member itself, but xany.window happens to be the one we want */
+
+	if ( ( *query_cnt )++ % 100 == 0 )
+	{
+		*query_cnt = 1;
+		fl_get_form_mouse( mouseform, &fl_mousex, &fl_mousey, &fl_keymask );
+		st_xev.xany.window = mouseform ? mouseform->window : 0;
+		st_xev.xany.send_event = 1;		/* indicating synthetic event */
+		st_xev.xmotion.state = fl_keymask;
+		st_xev.xmotion.x = fl_mousex;
+		st_xev.xmotion.y = fl_mousey;
+		st_xev.xmotion.is_hint = 0;
+	}
+	else
+		st_xev.xmotion.time += wait_io ? delta_msec : SHORT_PAUSE;
+
+	/* need to do FL_MOUSE for touch buttons */
+
+	st_xev.type = MotionNotify;
+
+	/* unless ButtonRelease does both Release and Leave, have to generate at
+	   least one lasttimer due to the possibility of a Release/Leave/Motion
+	   eaten by popups. True fix would be to have xpopup send an motion
+	   event */
+
+	if ( button_down( fl_keymask ) || fl_pushobj || ! *lasttimer )
+	{
+		fl_handle_form( mouseform, FL_MOUSE,
+						xmask2key( fl_keymask ), &st_xev );
+		*lasttimer = 1;
+	}
+
+	/* handle both automatic and idle callback */
+
+	fl_handle_automatic( &st_xev, 1 );
+}
+
+
+/***************************************
+ * Handling of EnterNotiy events
+ ***************************************/
+
+static void
+handle_EnterNotify_event( FL_FORM * evform )
+{
+    Window win = st_xev.xany.window;
+
+	fl_keymask = st_xev.xcrossing.state;
+
+	if (    button_down( fl_keymask )
+		 && st_xev.xcrossing.mode != NotifyUngrab )
+		return;
+
+	fl_mousex = st_xev.xcrossing.x;
+	fl_mousey = st_xev.xcrossing.y;
+
+	if ( mouseform )
+		fl_handle_form( mouseform, FL_LEAVE,
+						xmask2key( fl_keymask ), &st_xev );
+	mouseform = NULL;
+
+	if ( evform )
+	{
+		mouseform = evform;
+
+		/* this is necessary because win might be un-managed. To be
+		   friendly to other applications, grab focus only if abslutely
+		   necessary */
+
+		if (    mouseform->deactivated == 0
+			 && ! st_xev.xcrossing.focus && unmanaged_count > 0 )
+		{
+			fl_check_key_focus( "EnterNotify", win );
+			fl_winfocus( win );
+		}
+
+		fl_handle_form( mouseform, FL_ENTER,
+						xmask2key( fl_keymask ), &st_xev );
+	}
+#if FL_DEBUG >= ML_DEBUG
+	else
+		M_err( "EnterNotify", "Null form!" );
+#endif
+}
+
+
+/***************************************
+ * Handling of LeaveNotiy events
+ ***************************************/
+
+static void
+handle_LeaveNotify_event( void )
+{
+	fl_keymask = st_xev.xcrossing.state;
+
+	if (    button_down( fl_keymask )
+		 && st_xev.xcrossing.mode == NotifyNormal )
+		return;
+
+	/* olvwm sends leavenotify with NotifyGrab whenever button is clicked.
+	   Ignore it. Due to Xpoup grab, (maybe Wm bug ?), end grab can also
+	   generate this event. we can tell these two situations by doing a real
+	   button_down test (as opposed to relying on the keymask in event) */
+
+	if (    st_xev.xcrossing.mode == NotifyGrab
+		 && button_is_really_down( ) )
+		return;
+
+	fl_mousex = st_xev.xcrossing.x;
+	fl_mousey = st_xev.xcrossing.y;
+
+	if ( ! mouseform )
+		return;
+
+	/* due to grab in pop-up , FL_RELEASE is necessary */
+
+	fl_handle_form( mouseform, FL_RELEASE, 0, &st_xev );
+	fl_handle_form( mouseform, FL_LEAVE,
+					xmask2key( fl_keymask ), &st_xev );
+	mouseform = NULL;
+}
+
+
+/***************************************
+ * Handling of MotionNotify events
+ ***************************************/
+
+static void
+handle_MotionNotify_event( FL_FORM * evform )
+{
+    static unsigned int auto_cnt = 0;
+    Window win = st_xev.xany.window;
+
+	fl_keymask = st_xev.xmotion.state;
+	fl_mousex = st_xev.xmotion.x;
+	fl_mousey = st_xev.xmotion.y;
+
+	if ( ! mouseform )
+	{
+		M_warn( "Main-NoMotionForm", "evwin=0x%lx", win );
+		return;
+	}
+
+	if ( mouseform->window != win )
+	{
+		M_warn( "*Motion", "mousewin=0x%ld evwin=0x%ld",
+				mouseform->window, win );
+		fl_mousex += evform->x - mouseform->x;
+		fl_mousey += evform->y - mouseform->y;
+	}
+
+	fl_handle_form( mouseform, FL_MOUSE,
+					xmask2key( fl_keymask ), &st_xev );
+
+	/* Handle FL_STEP. Every 10 events. This will reduce cpu usage */
+
+	if ( ++auto_cnt % 10 == 0 )
+	{
+#if FL_DEBUG >= ML_TRACE
+		M_info( "Motion", "Auto FL_STEP" );
+#endif
+		fl_handle_automatic( &st_xev, 0 );
+		auto_cnt = 0;
+	}
+}
+
+
+/***************************************
+ * Handling of Expose events
+ ***************************************/
+
+static void
+handle_Expose_event( FL_FORM *  evform,
+					 FL_FORM ** redraw_form )
+{
+	if ( ! evform )
+		return;
+
+	/* If 'redraw_form' is set we got a ConfigureNotify and the data from the
+	   Exposure event aren't correct - set clipping to the complete area of
+	   the form.                                                         JTT */
+
+	if ( *redraw_form == evform )
+	{
+		st_xev.xexpose.x = 0;
+		st_xev.xexpose.y = 0;
+		st_xev.xexpose.width  = evform->w;
+		st_xev.xexpose.height = evform->h;
+		*redraw_form = NULL;
+	}
+	else
+	{
+		if ( st_xev.xexpose.x + st_xev.xexpose.width > evform->w )
+			st_xev.xexpose.width = evform->w - st_xev.xexpose.x;
+		if ( st_xev.xexpose.y + st_xev.xexpose.height > evform->h )
+			st_xev.xexpose.height = evform->h - st_xev.xexpose.y;
+	}
+
+	fl_set_perm_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
+						  st_xev.xexpose.width, st_xev.xexpose.height );
+	fl_set_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
+					 st_xev.xexpose.width, st_xev.xexpose.height );
+
+	/* run into trouble by ignoring configure notify */
+
+	if ( ignored_fake_configure )
+	{
+		FL_Coord neww,
+			     newh;
+
+		M_warn( "Expose", "Run into trouble - correcting it" );
+		fl_get_winsize( evform->window, &neww, &newh );
+		scale_form( evform, ( double ) neww / evform->w,
+					( double ) newh / evform->h );
+		ignored_fake_configure = 0;
+	}
+
+	fl_handle_form( evform, FL_DRAW, 0, &st_xev );
+
+	fl_unset_perm_clipping( );
+	fl_unset_clipping( );
+	fl_unset_text_clipping( );
+}
+
+
+/***************************************
+ * Handling of ConfigureNotify events
+ ***************************************/
+
+static void
+handle_ConfigureNotify_event( FL_FORM *  evform,
+							  FL_FORM ** redraw_form )
+{
+	Window win = st_xev.xany.window;
+
+	if ( ! evform )
+		return;
+
+	if ( ! st_xev.xconfigure.send_event )
+		fl_get_winorigin( win, &evform->x, &evform->y );
+	else
+	{
+		evform->x = st_xev.xconfigure.x;
+		evform->y = st_xev.xconfigure.y;
+		M_warn( "Configure", "WMConfigure:x=%d y=%d",
+				evform->x, evform->y );
+	}
+
+	/* mwm sends bogus ConfigureNotify randomly without following up with a
+	   redraw event, but it does set send_event. The check is somewhat
+	   dangerous, use 'ignored_fake_configure' to make sure when we got expose
+	   we can respond correctly. The correct fix is always to get window
+	   geometry in Expose handler, but that has a two-way traffic overhead */
+
+	ignored_fake_configure =    st_xev.xconfigure.send_event
+				             && (    st_xev.xconfigure.width  != evform->w
+					              || st_xev.xconfigure.height != evform->h );
+
+	/* Dragging the form across the screen changes its absolute x, y coords.
+	   Objects that themselves contain forms should ensure that they are up to
+	   date. */
+
+	fl_handle_form( evform, FL_MOVEORIGIN, 0, &st_xev );
+
+	if ( ! st_xev.xconfigure.send_event )
+	{
+		int old_w = evform->w;
+		int old_h = evform->h;
+
+		/* can't just set form->{w,h}. Need to take care of obj gravity */
+
+		scale_form( evform, ( double ) st_xev.xconfigure.width / evform->w,
+							( double ) st_xev.xconfigure.height / evform->h );
+
+		/* If both the width and the height got smaller (or one got smaller
+		   and the other one is unchanged) we're not going to get an Exposure
+		   event at all, so redraw the form. Even if only one of the lengths
+		   got smaller or remained unchanged while the other got larger, the
+		   next (compressed) Expose event will only cover the added part, so
+		   in this case store the forms address, so on the next Expose event
+		   we receive for it it's full area can be redrawn.              JTT */
+
+		if ( evform->w <= old_w && evform->h <= old_h )
+			fl_redraw_form( evform );
+		else if ( ! ( evform->w > old_w && evform->h > old_h ) ) 
+			*redraw_form = evform;
+	}
+}
+
+
+/***************************************
+ * Handling of DestroyNotify events - only
+ * sub-form gets this due to parent destroy
+ ***************************************/
+
+static void
+handle_DestroyNotify_event( FL_FORM * evform )
+{
+	size_t i;
+
+	evform->visible = 0;
+	evform->window = 0;
+	for ( i = 0; i < formnumb; i++ )
+		if ( evform == forms[ i ] )
+		{
+			forms[ i ] = forms[ --formnumb ];
+			forms = fl_realloc( forms, formnumb * sizeof *forms );
+			return;
+		}
+}
+
+
+/***************************************
  * Handle all events in the queue and flush output buffer
  ***************************************/
 
@@ -2577,12 +2658,11 @@ fl_treat_interaction_events( int wait )
 {
     XEvent xev;
 
-    do
-		do_interaction_step( wait );
-
     /* if no event, output buffer will be flushed. If event exists,
        XNextEvent in do_interaction will flush the output buffer */
 
+    do
+		do_interaction_step( wait );
     while ( form_event_queued( &xev, QueuedAfterFlush ) );
 }
 
@@ -2603,6 +2683,7 @@ fl_check_forms( void )
 		fl_treat_user_events( );
 		obj = fl_object_qread( );
     }
+
     return obj;
 }
 
@@ -2617,13 +2698,13 @@ fl_do_forms( void )
     FL_OBJECT *obj;
 
 
-    while ( 1 )
+    while ( ( obj = fl_object_qread( ) ) == NULL )
     {
-		if ( ( obj = fl_object_qread( ) ) != NULL )
-			return obj;
 		fl_treat_interaction_events( 1 );
 		fl_treat_user_events( );
     }
+
+	return obj;
 }
 
 
@@ -2657,16 +2738,13 @@ fl_do_only_forms( void )
     FL_OBJECT *obj;
 
 
-    while ( 1 )
-    {
-		if ( ( obj = fl_object_qread( ) ) != NULL )
-		{
-			if ( obj == FL_EVENT )
-				M_warn( "DoOnlyForms", "Shouldn't happen" );
-			return obj;
-		}
+    while ( ( obj = fl_object_qread( ) ) == NULL )
 		fl_treat_interaction_events( 1 );
-    }
+
+	if ( obj == FL_EVENT )
+		M_warn( "DoOnlyForms", "Shouldn't happen" );
+
+	return obj;
 }
 
 
@@ -2674,22 +2752,18 @@ fl_do_only_forms( void )
  * Check if an event exists that is meant for FORMS
  ***************************************/
 
-static int
+static FL_FORM *
 select_form_event( Display *  d  FL_UNUSED_ARG,
-				   XEvent  *  xev,
-				   FL_FORM ** form )
+				   XEvent  *  xev )
 {
     size_t i;
     Window win = ( ( XAnyEvent * ) xev )->window;
 
     for ( i = 0; i < formnumb; i++ )
 		if ( win == forms[ i ]->window )
-		{
-			*form = forms[ i ];
-			return 1;
-		}
+			return forms[ i ];
 
-    return 0;
+    return NULL;
 }
 
 
@@ -2702,10 +2776,8 @@ form_event_queued( XEvent * xev,
 {
     if ( XEventsQueued( flx->display, mode ) )
     {
-		FL_FORM *f;
-
 		XPeekEvent( flx->display, xev );
-		return select_form_event( flx->display, xev, &f );
+		return select_form_event( flx->display, xev ) != NULL;
     }
 
     return 0;
@@ -3049,7 +3121,10 @@ get_next_event( int        wait_io,
 			return has_event;
 		}
 
-		if ( ! ( has_event = select_form_event( flx->display, xev, form ) ) )
+		*form = select_form_event( flx->display, xev );
+		has_event = *form != NULL;
+
+		if ( ! has_event )
 		{
 			fl_compress_event( xev, ExposureMask | uev_cmask );
 
