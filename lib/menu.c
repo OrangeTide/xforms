@@ -43,7 +43,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_menu = "$Id: menu.c,v 1.8 2008/01/28 23:20:56 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.9 2008/03/02 23:14:17 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -58,7 +58,7 @@ char *fl_id_menu = "$Id: menu.c,v 1.8 2008/01/28 23:20:56 jtt Exp $";
 #include <stdlib.h>
 
 #define SPEC          FL_MENU_SPEC
-#define ISPUP( sp )   ( sp->extern_menu >= 0 )
+#define ISPUP( sp )   ( ( sp )->extern_menu >= 0 )
 
 
 /***************************************
@@ -75,6 +75,7 @@ val_to_index( SPEC * sp,
     for ( i = 1; i <= sp->numitems; i++ )
 		if ( val == sp->mval[ i ] )
 			return i;
+
     return 0;
 }
 
@@ -198,7 +199,8 @@ handle_menu( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
     static int i = -1;
     int boxtype = ob->boxtype,
-		bw = ob->bw, dm;
+		bw = ob->bw,
+		dm;
     FL_COLOR col;
 
 #if FL_DEBUG >= ML_DEBUG
@@ -210,19 +212,14 @@ handle_menu( FL_OBJECT * ob,
 		case FL_DRAW:
 			/* Draw the object */
 
-			if (    ( ob->type == FL_PUSH_MENU && ob->pushed )
+			if (    ( ob->type == FL_PUSH_MENU  && ob->pushed )
 				 || ( ob->type == FL_TOUCH_MENU && ob->belowmouse ) )
 				col = ob->col2;
 			else
 				col = ob->col1;
 
 			if ( ob->type == FL_PULLDOWN_MENU && ob->pushed )
-			{
-				/* col = ob->col2; */
-
 				boxtype = FL_UP_BOX;
-				bw = -2;
-			}
 
 			fl_drw_box( boxtype, ob->x, ob->y, ob->w, ob->h, col, bw );
 			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
@@ -289,10 +286,9 @@ handle_menu( FL_OBJECT * ob,
 			fl_clear_menu( ob );
 			fl_free( ob->spec );
 			return 0;
-
-		default:
-			return 0;
     }
+
+	return 0;
 }
 
 
@@ -312,18 +308,21 @@ fl_create_menu( int          type,
     SPEC *sp;
 
     ob = fl_make_object( FL_MENU, type, x, y, w, h, label, handle_menu );
+
     if ( type == FL_PULLDOWN_MENU )
 		ob->boxtype = FL_FLAT_BOX;
     else
 		ob->boxtype = FL_MENU_BOXTYPE;
-    ob->col1 = FL_MENU_COL1;
-    ob->col2 = FL_MENU_COL2;
-    ob->lcol = FL_MENU_LCOL;
+
+    ob->col1   = FL_MENU_COL1;
+    ob->col2   = FL_MENU_COL2;
+    ob->lcol   = FL_MENU_LCOL;
     ob->lstyle = FL_BOLD_STYLE;
-    ob->align = FL_MENU_ALIGN;
+    ob->align  = FL_MENU_ALIGN;
 
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
     sp->extern_menu = -1;
+
     return ob;
 }
 
@@ -344,6 +343,7 @@ fl_add_menu( int          type,
 
     ob = fl_create_menu( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
+
     return ob;
 }
 
@@ -370,8 +370,10 @@ fl_clear_menu( FL_OBJECT * ob )
 
     for ( i = 1; i <= sp->numitems; i++ )
     {
-		fl_free( sp->items[ i ] );
-		fl_free( sp->shortcut[ i ] );
+		if ( sp->items[ i ] )
+			fl_free( sp->items[ i ] );
+		if ( sp->shortcut[ i ] )
+			fl_free( sp->shortcut[ i ] );
 		sp->mode[ i ] = FL_PUP_NONE;
     }
 
@@ -393,12 +395,9 @@ addto_menu( FL_OBJECT  * ob,
     if ( sp->numitems >= FL_MENU_MAXITEMS )
 		return;
 
-    n = ++( sp->numitems );
-    sp->items[ n ] = fl_malloc( FL_MENU_MAXSTR + 1 );
-    strncpy( sp->items[ n ], str, FL_MENU_MAXSTR );
-    sp->items[ n ][ FL_MENU_MAXSTR ] = '\0';
-    sp->shortcut[ n ] = fl_malloc( 1 );
-    sp->shortcut[ n ][ 0 ] = '\0';
+    n = ++sp->numitems;
+    sp->items[ n ] = fl_strdup( str );
+    sp->shortcut[ n ] = fl_strdup( "" );
     sp->mode[ n ] = FL_PUP_NONE;
 
     /* If we want to support %x, need to parse the string */
@@ -429,38 +428,33 @@ int
 fl_addto_menu( FL_OBJECT  * ob,
 			   const char * menustr )
 {
-    char ttt[ 256 ];
-    int i = 0,
-		j = 0;
+    char *t,
+		 *c,
+		 *n;
     SPEC *sp;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "AddtoMenu", "%s is not Menu class", ob ? ob->label : "" );
+		Bark( "fl_addto_menu", "%s is not Menu class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
+
     sp = ob->spec;
 
-    while ( menustr[ i ] != '\0' )
-    {
-		if ( menustr[ i ] == '|' )
-		{
-			ttt[ j ] = '\0';
-			addto_menu( ob, ttt );
-			j = 0;
-		}
-		else
-			ttt[ j++ ] = menustr[ i ];
-		i++;
-    }
+	/* Split up menu string at '|' chars and create an entry for each part */
 
-    if ( j != 0 )
-    {
-		ttt[ j ] = '\0';
-		addto_menu( ob, ttt );
-    }
+	for ( c = t = fl_strdup( menustr ); c; c = n )
+	{
+		n = strchr( c, '|' );
+		if ( n )
+			*n++ = '\0';
+		addto_menu( ob, c );
+	}
+
+	if ( t )
+		fl_free( t );
 
     return sp->numitems;
 }
@@ -483,8 +477,10 @@ fl_replace_menu_item( FL_OBJECT *  ob,
     {
 		if ( numb < 1 || numb > sp->numitems )
 			return;
-		strncpy( sp->items[numb], str, FL_MENU_MAXSTR );
-		sp->items[ numb ][ FL_MENU_MAXSTR ] = '\0';
+
+		if ( sp->items[ numb ] )
+			fl_free( sp->items[ numb ] );
+		sp->items[ numb ] = fl_strdup( str );
     }
 }
 
@@ -501,6 +497,7 @@ gen_index( FL_OBJECT * ob )
     int i;
 
     sp->cur_val = 0;
+
     for ( i = 1; i <= sp->numitems; i++ )
 		if ( ! strstr( sp->items[ i ], "%t" ) )
 			sp->mval[ i ] = ++sp->cur_val;
@@ -522,8 +519,10 @@ fl_delete_menu_item( FL_OBJECT * ob,
     if ( numb < 1 || numb > sp->numitems )
 		return;
 
-    fl_free( sp->items[ numb ] );
-    fl_free( sp->shortcut[ numb ] );
+	if ( sp->items[ numb ] )
+		fl_free( sp->items[ numb ] );
+	if ( sp->shortcut[ numb ] )
+		fl_free( sp->shortcut[ numb ] );
 
     for ( i = numb; i < sp->numitems; i++ )
     {
@@ -535,7 +534,8 @@ fl_delete_menu_item( FL_OBJECT * ob,
     }
 
     sp->mode[ sp->numitems ] = FL_PUP_NONE;
-    sp->items[ sp->numitems ] = 0;
+    sp->items[ sp->numitems ] = NULL;
+	sp->shortcut[ sp->numitems ] = NULL;
     sp->numitems--;
     sp->cur_val--;
 }
@@ -551,8 +551,9 @@ fl_set_menu_item_shortcut( FL_OBJECT *  ob,
 {
     SPEC *sp = ob->spec;
 
-    sp->shortcut[ numb ] = fl_realloc( sp->shortcut[numb], strlen( str ) + 1 );
-    strcpy( sp->shortcut[ numb ], str );
+	if ( sp->shortcut[ numb ] )
+		fl_free( sp->shortcut[ numb ] );
+	sp->shortcut[ numb ] = fl_strdup( str ? str : "" );
 }
 
 
@@ -592,6 +593,7 @@ fl_show_menu_symbol( FL_OBJECT * ob,
 					 int         show )
 {
     SPEC *sp = ob->spec;
+
     sp->showsymbol = show;
     fl_redraw_object( ob );
 }
@@ -750,7 +752,7 @@ fl_set_menu_entries( FL_OBJECT *    ob,
 
     if ( ob->type == FL_PULLDOWN_MENU )
     {
-		fl_setpup_bw( n, -2 );
+		fl_setpup_bw( n, ob->bw );
 		fl_setpup_shadow( n, 0 );
     }
 
@@ -765,5 +767,6 @@ int
 fl_get_menu_popup( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
+
     return ISPUP( sp ) ? sp->extern_menu : -1;
 }

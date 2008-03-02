@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.11 2008/01/28 23:17:05 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.12 2008/03/02 23:13:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -50,8 +50,6 @@ char *fl_id_chc = "$Id: choice.c,v 1.11 2008/01/28 23:17:05 jtt Exp $";
 
 #define SPEC   FL_CHOICE_SPEC
 
-#define FL_CHOICE_MAXSTR  128
-
 static int lastpup_return;
 
 
@@ -65,8 +63,10 @@ free_choice( SPEC * sp )
 
     for ( i = 1; i <= FL_CHOICE_MAXITEMS; i++ )
     {
-		fl_safe_free( sp->items[ i ] );
-		fl_safe_free( sp->shortcut[ i ] );
+		if ( sp->items[ i ] )
+			fl_safe_free( sp->items[ i ] );
+		if ( sp->shortcut[ i ] )
+			fl_safe_free( sp->shortcut[ i ] );
     }
 }
 
@@ -80,8 +80,6 @@ draw_choice( FL_OBJECT * ob )
 {
     FL_COLOR c1;
     SPEC *sp = ob->spec;
-    char *str,
-		 *cc;
     int absbw = FL_abs(ob->bw);
     int off1 = 0,
 		off2 = 0;
@@ -108,13 +106,15 @@ draw_choice( FL_OBJECT * ob )
     fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h, ob->lcol,
 						ob->lstyle, ob->lsize, ob->label );
 
-    /* string can conceivably contain ``type flags". need to get rid of them
+    /* string can conceivably contain "type flags". need to get rid of them
        on the fly */
 
     if ( sp->val > 0 && sp->val <= sp->numitems )
     {
-		str = fl_strdup( sp->items[ sp->val ] );
-		if ( ( cc = strchr( str, '%' ) ) )
+		char *str = fl_strdup( sp->items[ sp->val ] ),
+			 *cc  = strchr( str, '%' );
+
+		if ( cc )
 		{
 			if ( cc[ 1 ] == '%' )
 				cc[ 1 ] = '\0';
@@ -141,8 +141,6 @@ draw_droplist_choice( FL_OBJECT * ob )
 {
     FL_COLOR c1;
     SPEC *sp = ob->spec;
-    char *str,
-		 *cc;
     FL_Coord dw = ob->h,
 		     dx = ob->w - dw,
 		     bw;
@@ -165,13 +163,15 @@ draw_droplist_choice( FL_OBJECT * ob )
     fl_drw_text_beside( ob->align, ob->x, ob->y, dx, ob->h, ob->lcol,
 						ob->lstyle, ob->lsize, ob->label );
 
-    /* string can conceivably contain ``type flags". need to get rid of them
+    /* string can conceivably contain "type flags", need to get rid of them
        on the fly */
 
-    if ( sp->val > 0 )
+    if ( sp->val > 0 && sp->val <= sp->numitems )
     {
-		str = fl_strdup( sp->items[ sp->val ] );
-		if ( ( cc = strchr( str, '%' ) ) )
+		char *str = fl_strdup( sp->items[ sp->val ] ),
+			 *cc = strchr( str, '%' );
+
+		if ( cc )
 		{
 			if ( cc[ 1 ] == '%')
 				cc[ 1 ] = '\0';
@@ -202,7 +202,8 @@ set_valid_entry( SPEC * sp,
     for ( ; target > 0 && target <= sp->numitems; target += dir )
 		if ( ! ( sp->mode[ target ] & FL_PUP_GREY ) )
 			return target;
-    Bark("Choice", "No valid entries");
+
+    Bark( "set_valid_entry", "No valid entries" );
     return -1;
 }
 
@@ -215,21 +216,24 @@ do_pup( FL_OBJECT * ob )
 {
     int menu;
     SPEC *sp = ob->spec;
-    char title[ 256 ];
     int i;
 
     menu = fl_newpup( FL_ObjWin( ob ) );
 
     /* fake a title */
 
-    if ( ob->label && ob->label[ 0 ] && ob->type != FL_DROPLIST_CHOICE )
-    {
-		if ( ! sp->no_title )
-        {
-            fl_snprintf( title,sizeof title - 4,"%s",ob->label );
-			fl_addtopup( menu, strcat( title, "%t" ) );
-        }
-    }
+    if (    ob->label
+		 && ob->label[ 0 ]
+		 && ob->type != FL_DROPLIST_CHOICE
+		 && ! sp->no_title )
+	{
+		char *t = fl_malloc( strlen( ob->label ) + 3 );
+
+		strcpy( t, ob->label );
+		strcat( t, "%t" );
+		fl_addtopup( menu, t );
+		fl_free( t );
+	}
 
     for ( i = 1; i <= sp->numitems; i++ )
     {
@@ -240,6 +244,7 @@ do_pup( FL_OBJECT * ob )
 			fl_setpup( menu, i, sp->mode[ i ] );
 			sp->modechange[ i ] = 0;
 		}
+
 		fl_setpup_shortcut( menu, i, sp->shortcut[ i ] );
     }
 
@@ -259,8 +264,6 @@ do_pup( FL_OBJECT * ob )
     fl_freepup( menu );
     return lastpup_return = i;
 }
-
-
 
 
 #define Within( x, y, w, h )   (    mx >= ( x )              \
@@ -287,9 +290,8 @@ handle_choice( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
 	static int mousebutton = 0;
 
-
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleChoice", fl_event_name( event ) );
+    M_info2( "handle_choice", fl_event_name( event ) );
 #endif
 
     switch ( event )
@@ -488,7 +490,8 @@ fl_clear_choice( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark( "ClearChoice", "%s is not choice class", ob ? ob->label : "" );
+		Bark( "fl_clear_choice", "%s is not choice class",
+			  ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -515,20 +518,11 @@ addto_choice( FL_OBJECT *  ob,
     if ( sp->numitems >= FL_CHOICE_MAXITEMS )
 		return;
 
-    cur_item = ++( sp->numitems );
+    cur_item = ++sp->numitems;
 
-#ifdef FL_CHOICE_MAXSTR
-    sp->items[ cur_item ] = fl_malloc( FL_CHOICE_MAXSTR + 1 );
-    strncpy( sp->items[cur_item], str, FL_CHOICE_MAXSTR );
-    sp->items[ cur_item ][ FL_CHOICE_MAXSTR ] = '\0';
-#else
     sp->items[ cur_item ] = fl_strdup( str );
-#endif
 
-	/* Allocating just a single char for the shortcut loooks strange... JTT */
-
-    sp->shortcut[ cur_item ] = fl_malloc( 1 );
-    sp->shortcut[ cur_item ][ 0 ] = '\0';
+    sp->shortcut[ cur_item ] = fl_strdup( "" );
 
     sp->mode[ cur_item ] = FL_PUP_NONE;
     sp->modechange[ cur_item ] = 0;
@@ -550,14 +544,15 @@ fl_addto_choice( FL_OBJECT *  ob,
 				 const char * str )
 {
     SPEC *sp = ob->spec;
-    char ttt[ 128 ];
-    int i,
-		j;
+    char *t,
+		 *c,
+		 *n;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark("AddtoChoice", "%s is not choice class", ob ? ob->label : "");
+		Bark( "fl_addto_choice", "%s is not choice class",
+			  ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -565,23 +560,18 @@ fl_addto_choice( FL_OBJECT *  ob,
     if ( sp->numitems >= FL_CHOICE_MAXITEMS )
 		return sp->numitems;
 
-    for ( i = j = 0; str[ i ] != '\0'; i++ )
-    {
-		if ( str[ i ] == '|' )
-		{
-			ttt[ j ] = '\0';
-			addto_choice( ob, ttt );
-			j = 0;
-		}
-		else
-			ttt[ j++ ] = str[ i ];
-    }
+	/* Split up string at '|' chars and create an entry for each part */
 
-    if ( j != 0 )
-    {
-		ttt[ j ] = '\0';
-		addto_choice( ob, ttt );
-    }
+	for ( c = t = fl_strdup( str ); c; c = n )
+	{
+		n = strchr( c, '|' );
+		if ( n )
+			*n++ = '\0';
+		addto_choice( ob, c );
+	}
+
+	if ( t )
+		fl_free( t );
 
     return sp->numitems;
 }
@@ -600,13 +590,10 @@ fl_replace_choice( FL_OBJECT *  ob,
 
     if ( numb < 1 || numb > sp->numitems )
 		return;
-#ifdef FL_CHOICE_MAXSTR
-    strncpy( sp->items[ numb ], str, FL_CHOICE_MAXSTR );
-    sp->items[ numb ][ FL_CHOICE_MAXSTR ] = 0;
-#else
-    fl_free( sp->items[ numb ] );
+
+	if ( sp->items[ numb ] )
+		fl_free( sp->items[ numb ] );
     sp->items[ numb ] = fl_strdup( str );
-#endif
 
     if ( sp->val == numb )
 		fl_redraw_object( ob );
@@ -632,7 +619,7 @@ fl_delete_choice( FL_OBJECT * ob,
 	if ( sp->shortcut[ numb ] )
 		fl_free( sp->shortcut[ numb ] );
 
-    for (i = numb; i < sp->numitems; i++)
+    for ( i = numb; i < sp->numitems; i++ )
     {
 		sp->items[ i ] = sp->items[ i + 1 ];
 		sp->shortcut[ i ] = sp->shortcut[ i + 1 ];
@@ -663,11 +650,11 @@ fl_set_choice( FL_OBJECT * ob,
 {
     SPEC *sp = ob->spec;
 
-    if (choice < 1 || choice > sp->numitems)
+    if ( choice < 1 || choice > sp->numitems )
 		sp->val = 0;
     else
 		sp->val = choice;
-    fl_redraw_object(ob);
+    fl_redraw_object( ob );
 }
 
 
@@ -683,21 +670,23 @@ fl_set_choice_text( FL_OBJECT *  ob,
     int i;
 
 #if FL_DEBUG >= ML_ERR
-    if (!IsValidClass(ob, FL_CHOICE))
+    if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark("SetChoiceText", "%s not choice class", ob ? ob->label : "");
+		Bark( "fl_set_choice_text", "%s not choice class",
+			  ob ? ob->label : "" );
 		return;
     }
 #endif
     sp = ob->spec;
 
-    for (i = 1; i <= sp->numitems; i++)
-		if (strcmp(txt, sp->items[i]) == 0)
+    for ( i = 1; i <= sp->numitems; i++ )
+		if ( strcmp( txt, sp->items[ i ] ) == 0 )
 		{
-			fl_set_choice(ob, i);
+			fl_set_choice( ob, i );
 			return;
 		}
-    M_err("SetChoiceText", "%s not found", txt);
+
+    M_err( "fl_set_choice_text", "%s not found", txt );
 }
 
 
@@ -711,14 +700,14 @@ fl_set_choice_item_mode( FL_OBJECT *  ob,
 {
     SPEC *sp = ob->spec;
 
-    if (item < 1 || item > sp->numitems)
+    if ( item < 1 || item > sp->numitems )
     {
-		M_err("ChoiceMode", "Bad item index %d", item);
+		M_err( "fl_set_choice_item_mode", "Bad item index %d", item );
 		return;
     }
 
-    sp->mode[item] = mode;
-    sp->modechange[item] = 1;
+    sp->mode[ item ] = mode;
+    sp->modechange[ item ] = 1;
 }
 
 
@@ -734,12 +723,13 @@ fl_set_choice_item_shortcut( FL_OBJECT *  ob,
 
     if ( item < 1 || item > sp->numitems )
     {
-		M_err( "ChoiceShortcut", "Bad item index %d", item );
+		M_err( "fl_set_choice_item_shortcut", "Bad item index %d", item );
 		return;
     }
 
-    sp->shortcut[ item ] = fl_realloc( sp->shortcut[ item ], 1 + strlen( sc ) );
-    strcpy( sp->shortcut[ item ], sc );
+	if ( sp->shortcut[ item ] )
+		fl_free( sp->shortcut[ item ] );
+    sp->shortcut[ item ] = fl_strdup( sc ? sc : "" );
 }
 
 
@@ -750,17 +740,15 @@ fl_set_choice_item_shortcut( FL_OBJECT *  ob,
 int
 fl_get_choice( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
-
-#if (FL_DEBUG >= ML_ERR)
-    if (!IsValidClass(ob, FL_CHOICE))
+#if FL_DEBUG >= ML_ERR
+    if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark("GetChoice", "%s is not choice class", ob ? ob->label : "");
+		Bark( "fl_get_choice", "%s is not choice class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
 
-    return sp->val;
+    return ( ( SPEC * ) ob->spec )->val;
 }
 
 
@@ -784,16 +772,17 @@ fl_get_choice_text( FL_OBJECT * ob )
     SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
-    if (!IsValidClass(ob, FL_CHOICE))
+    if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark("GetChoiceText", "%s is not choice class", ob ? ob->label : "");
+		Bark( "fl_get_choice_text", "%s is not choice class",
+			  ob ? ob->label : "" );
 		return 0;
     }
 #endif
 
-    if (sp->val == 0)
+    if ( sp->val == 0 )
 		return NULL;
-    return sp->items[sp->val];
+    return sp->items[ sp->val ];
 }
 
 
@@ -806,9 +795,10 @@ fl_get_choice_item_text( FL_OBJECT * ob,
 {
     SPEC *sp = ob->spec;
 
-    if (n < 1 || n > sp->numitems)
-		return 0;
-    return sp->items[n];
+    if ( n < 1 || n > sp->numitems )
+		return NULL;
+
+    return sp->items[ n ];
 }
 
 
@@ -825,7 +815,7 @@ fl_set_choice_fontsize( FL_OBJECT * ob,
     if ( sp->fontsize != size )
     {
 		sp->fontsize = size;
-		fl_redraw_object(ob);
+		fl_redraw_object( ob );
     }
 }
 
@@ -843,7 +833,7 @@ fl_set_choice_fontstyle( FL_OBJECT * ob,
     if ( sp->fontstyle != style )
     {
 		sp->fontstyle = style;
-		fl_redraw_object(ob);
+		fl_redraw_object( ob );
     }
 }
 
@@ -860,29 +850,29 @@ fl_set_choice_align( FL_OBJECT * ob,
     if ( sp->align != align )
     {
 		sp->align = align;
-		fl_redraw_object(ob);
+		fl_redraw_object( ob );
     }
 }
 
 
 /***************************************
- * ignore the callback stuff
  ***************************************/
 
 int
 fl_set_choice_entries(FL_OBJECT * ob, FL_PUP_ENTRY * ent)
 {
-    int i, k;
+    int i,
+		k;
 
-    fl_clear_choice(ob);
+    fl_clear_choice( ob );
 
-    for (k = 0; ent && ent->text; ent++, k++)
+    for ( k = 0; ent && ent->text; ent++, k++ )
     {
-	i = fl_addto_choice(ob, ent->text);
-	if (ent->mode == FL_PUP_GRAY)
-	    fl_set_choice_item_mode(ob, i, ent->mode);
-	if ( ent->shortcut && *ent->shortcut )
-	    fl_set_choice_item_shortcut( ob, i, ent->shortcut );
+		i = fl_addto_choice( ob, ent->text );
+		if ( ent->mode == FL_PUP_GRAY )
+			fl_set_choice_item_mode( ob, i, ent->mode );
+		if ( ent->shortcut && *ent->shortcut )
+			fl_set_choice_item_shortcut( ob, i, ent->shortcut );
     }
 
     return k;
