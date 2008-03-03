@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.13 2008/02/04 01:22:18 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.14 2008/03/03 17:45:41 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1203,7 +1203,7 @@ fl_hide_object( FL_OBJECT * ob )
 #define CNTL_CHAR      '^'
 #define FKEY_CHAR      '&'
 
-#define MAX_SHORTCUTS   17
+#define MAX_SHORTCUTS   16
 
 
 int
@@ -1267,9 +1267,8 @@ fl_convert_shortcut( const char * str,
 
     if ( j >= MAX_SHORTCUTS )
     {
-		j = j - 1;
-		M_err( " ConvertShortcuts", "Too many shortcuts (>%d)",
-			   MAX_SHORTCUTS - 1 );
+		j = MAX_SHORTCUTS;
+		M_err( " ConvertShortcuts", "Too many shortcuts (>%d)", MAX_SHORTCUTS );
     }
 
     sc[ j ] = 0;
@@ -1327,9 +1326,10 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 						const char * sstr,
 						int          showit )
 {
-    long sc[ MAX_SHORTCUTS ];	   /* converted shortcuts */
     int scsize,
 		n;
+    long sc[ MAX_SHORTCUTS + 1 ];	   /* converted shortcuts - we need one
+										  more than max for trailing 0 */
 
     if ( obj == NULL )
     {
@@ -1350,7 +1350,7 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
     }
 
     n = fl_convert_shortcut( sstr, sc );
-    scsize = n * sizeof *obj->shortcut;
+    scsize = ( n + 1 ) * sizeof *obj->shortcut;
     obj->shortcut = fl_realloc( obj->shortcut, scsize );
     memcpy( obj->shortcut, sc, scsize );
 
