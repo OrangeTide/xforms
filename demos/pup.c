@@ -85,7 +85,7 @@ post( FL_OBJECT * ob,
 	  FL_Coord    mx   FL_UNUSED_ARG,
 	  FL_Coord    my   FL_UNUSED_ARG,
 	  int         key  FL_UNUSED_ARG,
-	  void      * xev )
+	  void      * xev  FL_UNUSED_ARG )
 {
     static int n1 = -1,
 		       n2 = -1;

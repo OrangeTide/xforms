@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_lbut = "$Id: lightbut.c,v 1.7 2008/03/12 16:00:25 jtt Exp $";
+char *fl_id_lbut = "$Id: lightbut.c,v 1.8 2008/03/12 17:59:20 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -141,7 +141,7 @@ draw_lightbutton( FL_OBJECT * ob )
 
     /* Draw the label */
 
-    if ( ob->align & ~FL_ALIGN_INSIDE == FL_ALIGN_CENTER )
+    if ( ( ob->align & ~ FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER )
 		fl_drw_text(FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
 					ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label);
     else
