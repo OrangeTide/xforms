@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.9 2008/03/04 11:53:55 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.10 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -363,7 +363,7 @@ handle_dial( FL_OBJECT * ob,
     {
 		case FL_DRAW:
 			draw_dial( ob );
-			return 0;
+			break;
 
 		case FL_DRAWLABEL:
 			fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
@@ -372,8 +372,9 @@ handle_dial( FL_OBJECT * ob,
 
 		case FL_PUSH:
 			if ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-				return 0;
+				break;
 			sp->changed = 0;
+			/* fall through */
 
 		case FL_MOUSE:
 			if ( handle_mouse( ob, mx, my ) )
@@ -397,7 +398,7 @@ handle_dial( FL_OBJECT * ob,
 
 		case FL_FREEMEM:
 			fl_free( ob->spec );
-			return 0;
+			break;
     }
 
     return 0;

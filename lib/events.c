@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.14 2008/02/28 14:32:18 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.15 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 
@@ -113,7 +113,13 @@ fl_set_event_callback( FL_APPEVENT_CB callback,
 /*************** THE OBJECT EVENTS *************{******/
 /*************** CALL-BACK ROUTINE HANDLING ***********/
 
-#define FL_QSIZE	      64            /* default size of object queue */
+/* Normally, the object queue doesn't have to be large and a default
+   size is sufficient. In the case that more objects need to be
+   stored the queue isn't increased by just another element but
+   instead by the same number of objects we started with, reducing
+   the number of calls of malloc() a bit */
+
+#define FL_QSIZE	      64            /* chunk size of object queue */
 
 typedef struct FL_OBJECT_QUEUE_ENTRY_ {
 	FL_OBJECT *                     obj;
@@ -123,7 +129,7 @@ typedef struct FL_OBJECT_QUEUE_ENTRY_ {
 typedef struct FL_OBJECT_QUEUE_ {
 	FL_OBJECT_QUEUE_ENTRY * head;       /* here objects get added to */
 	FL_OBJECT_QUEUE_ENTRY * tail;       /* and here they get removed from */
-	FL_OBJECT_QUEUE_ENTRY * empty;      /* linked list if empty entries */
+	FL_OBJECT_QUEUE_ENTRY * empty;      /* linked list of empty entries */
 	FL_OBJECT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
 } FL_OBJECT_QUEUE;
 
@@ -143,7 +149,7 @@ extend_obj_queue( void )
 	FL_OBJECT_QUEUE_ENTRY *p = fl_malloc( ( FL_QSIZE + 1 ) * sizeof *p );
 	size_t i;
 
-	/* The first element of the area gets used from book-keeping purposes */
+	/* The first element of the (new) area is used from book-keeping purposes */
 
 	p->next = obj_queue.blocks;
 	obj_queue.blocks = p++;
@@ -289,11 +295,7 @@ fl_object_qflush( FL_FORM * form )
 	if ( ! obj_queue.tail )
 		return;
 
-	p = obj_queue.tail;
-	c = p->next;
-
-	while ( c )
-	{
+	for ( p = obj_queue.tail, c = p->next; c != NULL; c = p->next )
 		if ( c->obj != FL_EVENT && c->obj->form == form )
 		{
 			if ( c->obj->objclass == FL_INPUT )
@@ -305,9 +307,6 @@ fl_object_qflush( FL_FORM * form )
 		}
 		else
 			p = c;
-
-		c = p->next;
-	}
 }
 
 
@@ -433,7 +432,7 @@ typedef struct FL_EVENT_QUEUE_ENTRY_ {
 typedef struct FL_EVENT_QUEUE_ {
 	FL_EVENT_QUEUE_ENTRY * head;       /* here events get added to */
 	FL_EVENT_QUEUE_ENTRY * tail;       /* and here they get removed from */
-	FL_EVENT_QUEUE_ENTRY * empty;      /* linked list if empty entries */
+	FL_EVENT_QUEUE_ENTRY * empty;      /* linked list of empty entries */
 	FL_EVENT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
 } FL_EVENT_QUEUE;
 
@@ -668,6 +667,8 @@ typedef struct
 
 static ev_name evname[ ] =
 {
+	NV( 0 ),
+	NV( 1 ),
     NV( KeyPress ),
 	NV( KeyRelease ),
 	NV( ButtonPress ),
@@ -700,8 +701,7 @@ static ev_name evname[ ] =
 	NV( SelectionNotify ),
     NV( ColormapNotify ),
 	NV( ClientMessage ),
-	NV( MappingNotify ),
-    NV( FLArtificialTimerEvent )
+	NV( MappingNotify )
 };
 
 
@@ -714,11 +714,11 @@ fl_get_xevent_name( const XEvent *xev )
       size_t i;
       static char buf[ 128 ];
 
-      for ( i = 0; i < sizeof evname; i++ )
+      for ( i = KeyPress; i < LASTEvent; i++ )
       {
           if ( evname[ i ].type == xev->type )
           {
-			  fl_snprintf( buf,sizeof buf,"%s(0x%x)",
+			  fl_snprintf( buf, sizeof buf, "%s(0x%x)",
 						   evname[ i ].name, xev->type );
 			  return buf;
           }
@@ -735,13 +735,14 @@ XEvent *
 fl_print_xevent_name( const char *   where,
 					  const XEvent * xev )
 {
-    size_t i, known;
+    size_t i,
+		   known;
     Window win = ( ( XAnyEvent * ) xev )->window;
 
-    for ( i = known = 0; ! known && i < sizeof evname / sizeof *evname; i++ )
-		if ( evname[i].type == xev->type )
+    for ( i = KeyPress, known = 0; ! known && i < LASTEvent; i++ )
+		if ( evname[ i ].type == xev->type )
 		{
-			fprintf( stderr, "%s Event(%d,w=0x%lx s=%ld) %s ",
+			fprintf( stderr, "%s Event (%d,w=0x%lx s=%ld) %s ",
 					 where ? where : "",
 					 xev->type, win, ( ( XAnyEvent * ) xev)->serial,
 					 evname[ i ].name );
@@ -775,7 +776,7 @@ fl_print_xevent_name( const char *   where,
 		}
 
     if ( ! known )
-		fprintf( stderr, "Unknown event %d, win=%lu", xev->type, win );
+		fprintf( stderr, "Unknown event %d, win=%lu\n", xev->type, win );
 
     return ( XEvent * ) xev;
 }
@@ -914,7 +915,7 @@ fl_compress_motion( XEvent * xme )
 				 xme->xmotion.is_hint ? "hint" : "" )
 #endif
 			/* empty */ ;
-    } while ( XCheckWindowEvent(flx->display, win, evm, xme ) );
+    } while ( XCheckWindowEvent( flx->display, win, evm, xme ) );
 
     if ( xme->xmotion.is_hint )
     {
@@ -922,8 +923,7 @@ fl_compress_motion( XEvent * xme )
 
         /* We must protect against BadWindow here, because we have only
          * looked for Motion events, and there could be a Destroy event
-         * which makes the XQueryPointer fail as the window is deleted.
-         */
+         * which makes the XQueryPointer fail as the window is deleted. */
 
         old = XSetErrorHandler( badwin_handler );
 		fl_get_win_mouse( xme->xmotion.window,
@@ -960,7 +960,7 @@ fl_keysym_pressed( KeySym k )
 
     if ( ( code = XKeysymToKeycode( flx->display, k ) ) == NoSymbol )
     {
-		M_warn( "CheckKeyPress", "Bad KeySym %d", (int) k );
+		M_warn( "fl_keysym_pressed", "Bad KeySym %d", (int) k );
 		return 0;
     }
 
@@ -985,7 +985,7 @@ fl_addto_selected_xevent( Window win,
     /* on some SGI machines, 'your_event_mask' has bogus value 0x80??????,
 	   causing an X protocol error. Fix this here */
 
-    xwa.your_event_mask &= ( 1L << 25 ) - 1;
+    xwa.your_event_mask &= ( OwnerGrabButtonMask << 1 ) - 1;
     XSelectInput( flx->display, win, xwa.your_event_mask );
 
     return xwa.your_event_mask;
@@ -1007,7 +1007,7 @@ fl_remove_selected_xevent( Window win,
     /* on some SGI machines, your_event_mask has bogus value 0x80??????,
 	   causing an X protocol error. Fix this here */
 
-    xwa.your_event_mask &= ( 1L << 25 ) - 1;
+    xwa.your_event_mask &= ( OwnerGrabButtonMask << 1 ) - 1;
     XSelectInput( flx->display, win, xwa.your_event_mask );
 
     return xwa.your_event_mask;

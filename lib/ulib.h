@@ -144,8 +144,8 @@ extern const char * fl_ftoa( float, int );
 extern FL_ERROR_FUNC whereError( int,
 								 int,
 								 const char *,
-								 int ),
-                     efp_;
+								 int );
+extern FL_ERROR_FUNC efp_;
 extern FL_ERROR_FUNC user_error_function_;
 
 

@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.12 2008/01/28 23:19:20 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.13 2008/03/12 16:00:24 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -185,7 +185,7 @@ fl_add_fselector_appbutton( const char * label,
 		}
 
 	if ( ! ok )
-		Bark( "AddAppButton", "Only %d allowd. %s ignored",
+		Bark( "fl_add_fselector_appbutton", "Only %d allowd. %s ignored",
 			  MAX_APPBUTT, label );
 }
 
@@ -331,7 +331,7 @@ select_cb( FL_OBJECT * ob,
 	seltext[ sizeof seltext - 1 ] = '\0';
 	dir = seltext[ 0 ] == dirmarker && seltext[ 1 ] == ' ';
 
-	strcpy( seltext, seltext + 2 );
+	memmove( seltext, seltext + 2, strlen( seltext + 2 ) + 1 );
 
 	dblclick =	  lastline == thisline
 			   && fl_time_passed( FL_FS_T ) < 1.0e-3 * ob->click_timeout;
@@ -360,10 +360,7 @@ select_cb( FL_OBJECT * ob,
 		if ( dblclick )
 		{
 			if ( lfs->fselect_cb )
-			{
 				lfs->fselect_cb( cmplt_name( ), lfs->callback_data );
-				return 0;
-			}
 			else
 				return 1;
 		}
@@ -390,7 +387,7 @@ select_cb( FL_OBJECT * ob,
 	seltext[ sizeof seltext - 1 ] = '\0';
 	dir = seltext[ 0 ] == dirmarker && seltext[ 1 ] == ' ';
 
-	strcpy( seltext, seltext + 2 );
+	memmove( seltext, seltext + 2, strlen( seltext + 2 ) + 1 );
 
 	if ( dir )
 	{
@@ -903,7 +900,7 @@ fl_show_fselector( const char * message,
 
 	fl_set_fselector_callback( 0, 0 );
 	fs->place = FL_PLACE_FREE_CENTER;
-	return ( obj == fs->cancel || fs->fselect_cb ) ? 0 : cmplt_name( );
+	return ( obj == fs->cancel || fs->fselect_cb ) ? NULL : cmplt_name( );
 }
 
 
@@ -1079,7 +1076,8 @@ create_form_fselect( void )
 	fl_set_coordunit( FL_COORD_PIXEL );
 	fs->fselect = fl_bgn_form( FL_NO_BOX, 305, 330 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 305, 330, "" );
+	fl_add_box( FL_UP_BOX, 0, 0, 305, 330, "" );
+
 	fs->patbutt = obj = fl_add_button( FL_NORMAL_BUTTON, 76, 41, 217, 24, "" );
 	fl_set_button_shortcut( obj, "#P#p", 1 );
 	fl_set_object_boxtype( obj, FL_FRAME_BOX );

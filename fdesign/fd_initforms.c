@@ -34,6 +34,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "fd_main.h"
 #include "flinternal.h"
 #include "fd/ui_attrib.h"		/* from  directory fd */
@@ -49,98 +50,125 @@ FD_generic_attrib *fd_generic_attrib;
 FD_nullattrib *fd_nullattrib;
 
 extern int fd_helpfontsize;
-extern int fd_align_fontsize, fd_type_fontsize;
+extern int fd_align_fontsize,
+              fd_type_fontsize;
 
-static void init_helpform(void);
-static void init_controlform(void);
-static void init_attribform(void);
-static void init_testform(void);
+static void init_helpform( void );
+static void init_controlform( void );
+static void init_attribform( void );
+static void init_testform( void );
+
+
+/***************************************
+ ***************************************/
 
 void
-create_the_forms(void)
+create_the_forms( void )
 {
     static int init;
 
-    if (init)
+    if ( init )
     {
-	fprintf(stderr, "fd forms already initialized\n");
-	return;
+		fprintf( stderr, "fd forms already initialized\n" );
+		return;
     }
 
     init = 1;
 
-    fd_control = create_form_control();
-    init_controlform();		/* GUI  */
-    control_init(fd_control);	/* menu */
+    fd_control = create_form_control( );
+    init_controlform( );		/* GUI  */
+    control_init( fd_control );	/* menu */
 
-    fd_attrib = create_form_attrib();
-    fd_generic_attrib = create_form_generic_attrib();
-    fd_nullattrib = create_form_nullattrib();
+    fd_attrib = create_form_attrib( );
+    fd_generic_attrib = create_form_generic_attrib( );
+    fd_nullattrib = create_form_nullattrib( );
 
-    init_attribform();
+    init_attribform( );
 
-    fd_test = create_form_test();
-    init_testform();
+    fd_test = create_form_test( );
+    init_testform( );
 
-    fd_align = create_form_align();
-    init_align();
+    fd_align = create_form_align( );
+    init_align( );
 
     /* help form */
-    fd_help = create_form_helpform();
-    init_helpform();
 
+    fd_help = create_form_helpform( );
+    init_helpform( );
 }
 
-/* conditionally modify the basic color of attribute form */
+
+/***************************************
+ * conditionally modify the basic color of attribute form
+ ***************************************/
+
 void
-modify_attrib_basic_color(FL_COLOR col1, FL_COLOR col2)
+modify_attrib_basic_color( FL_COLOR col1,
+						   FL_COLOR col2 )
 {
-    fl_set_object_color(fd_generic_attrib->text[0], col1, col2);
-    fl_set_object_color(fd_generic_attrib->text[1], col1, col2);
-    fl_set_object_color(fd_generic_attrib->text[2], col1, col2);
-    fl_set_object_color(fd_generic_attrib->text[3], col1, col2);
-    fl_set_object_color(fd_generic_attrib->background, col1, col2);
+    fl_set_object_color( fd_generic_attrib->text[0], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->text[1], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->text[2], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->text[3], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->background, col1, col2 );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 clearlog_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			 long        data  FL_UNUSED_ARG )
 {
-    fl_clear_browser(fd_test->browser);
+    fl_clear_browser( fd_test->browser );
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-init_helpform(void)
+init_helpform( void )
 {
-    fl_adjust_form_size(fd_help->helpform);
-    fl_set_form_position(fd_help->helpform, -1, 1);
+    fl_adjust_form_size( fd_help->helpform );
+    fl_set_form_position( fd_help->helpform, -1, 1 );
 
     /* load one help */
-    fl_set_button(fd_help->vbutt, 1);
-    fl_call_object_callback(fd_help->vbutt);
+
+    fl_set_button( fd_help->vbutt, 1 );
+    fl_call_object_callback( fd_help->vbutt );
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
-init_controlform(void)
+init_controlform( void )
 {
     /* sort of auto-resizing depending on the font size */
-    if (fl_cntl.buttonFontSize > FL_DEFAULT_SIZE)
+
+    if ( fl_cntl.buttonFontSize > FL_DEFAULT_SIZE )
     {
-	fd_align_fontsize = FL_SMALL_SIZE;
-	fd_type_fontsize = FL_SMALL_SIZE;
+		fd_align_fontsize = FL_SMALL_SIZE;
+		fd_type_fontsize = FL_SMALL_SIZE;
     }
 
-    if (fd_control->objectbrowser->lsize > FL_NORMAL_SIZE)
+    if ( fd_control->objectbrowser->lsize > FL_NORMAL_SIZE )
     {
-	fl_set_object_lsize(fd_control->objectbrowser, FL_NORMAL_SIZE);
-	fl_set_object_lsize(fd_control->formbrowser, FL_NORMAL_SIZE);
-	fl_set_object_lsize(fd_control->groupbrowser, FL_NORMAL_SIZE);
+		fl_set_object_lsize( fd_control->objectbrowser, FL_NORMAL_SIZE );
+		fl_set_object_lsize( fd_control->formbrowser, FL_NORMAL_SIZE );
+		fl_set_object_lsize( fd_control->groupbrowser, FL_NORMAL_SIZE );
     }
 
-    fl_fit_object_label(fd_control->renameform, 1, 0);
-    fl_fit_object_label(fd_control->objectmenu, -3, 0);
+    fl_fit_object_label( fd_control->renameform, 1, 0 );
+    fl_fit_object_label( fd_control->objectmenu, -3, 0 );
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
 init_attribform( void )
@@ -166,6 +194,10 @@ init_attribform( void )
     fl_addto_tabfolder( fd_attrib->attrib_folder, "  Spec   ",
 						fd_nullattrib->nullattrib );
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
 init_testform( void )

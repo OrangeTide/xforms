@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fbut = "$Id: labelbut.c,v 1.6 2008/01/28 23:20:33 jtt Exp $";
+char *fl_id_fbut = "$Id: labelbut.c,v 1.7 2008/03/12 16:00:24 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -63,7 +63,7 @@ draw_labelbutton( FL_OBJECT * ob )
 
     if (ob->belowmouse)
 		col = ob->col1;
-    if (((SPEC *) ob->spec)->val)
+    if ( ( ( SPEC * ) ob->spec )->val )
 		col = ob->col2;
 
     ob->lcol = col;
@@ -77,9 +77,7 @@ draw_labelbutton( FL_OBJECT * ob )
 
     if (ob->type == FL_RETURN_BUTTON)
     {
-		fl_drw_text(0,
-					(FL_Coord) (ob->x + ob->w - ww),
-					(FL_Coord) (ob->y + 0.2 * ob->h),
+		fl_drw_text(0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
 					dw, dh, ob->lcol, 0, 0, "@returnarrow");
     }
 

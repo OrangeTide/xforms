@@ -41,7 +41,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.8 2008/01/28 23:25:28 jtt Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.9 2008/03/12 16:00:28 jtt Exp $";
 #endif
 
 
@@ -595,7 +595,7 @@ draw_curve_only( FL_OBJECT * ob )
 
 			case FL_POINTS_XYPLOT:
 				noline = 1;
-				/* fall through (that's correct? JTT) */
+				/* fall through */
 
 			case FL_LINEPOINTS_XYPLOT:
 				drawsymbol = sp->symbol[ nplot ] ?
@@ -2045,7 +2045,7 @@ handle_it( FL_OBJECT * ob,
     }
 
     if ( ret && sp->inside == 0 )
-		fprintf( stderr, "Something is wrong\n" );
+		M_err( "handle_it", "Something is wrong\n" );
 
     return ret;
 }

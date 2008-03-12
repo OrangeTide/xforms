@@ -1,3 +1,20 @@
+2008-03-12 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/forms.c: Removed code injecting fake FL_RELEASE
+	events that led to problems with double click selections
+	e.g. in the file selector (this in turn required changes
+	to lib/xpopup.c).
+
+	* lib/xpopup.c: Extensive code cleanup, bug fixes and
+	rewrite of event handling. Popup's, menus etc. now work
+	more like one is it used from other toolkits. Shadows
+	around popups got removed since they don't (and never
+	did) work correctly.
+
+	* Further code cleanup all over the place, removing
+	bugs that may lead to segmentation faults or memory
+	or X resources leaks.
+
 2008-02-04 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* Resizing code again changed since I hadn't understood all
@@ -28,7 +45,7 @@
 	* lib/textbox.c: Hopefully fixed another bug that kept the
 	text area of a browser from being redrawn correctly following
 	the resizing of its window when sliders were on and not in
-	the left- or top-most position. The whole behaviour
+	the left- or top-most position.
 	
 	* lib/objects.c: Added three functions fl_get_object_bw(),
 	fl_get_object_gravity() and fl_get_object_resize() (to be

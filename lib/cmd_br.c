@@ -82,31 +82,31 @@ io_cb( int    fd,
     int n;
 
 #ifndef FL_WIN32
-    if ((n = read(fd, buf, sizeof(buf) - 1)) > 0)
+    if ( ( n = read( fd, buf, sizeof buf - 1 ) ) > 0 )
     {
-		buf[n] = '\0';
-		fl_addto_browser_chars(logger->browser, buf);
+		buf[ n ] = '\0';
+		fl_addto_browser_chars( logger->browser, buf );
     }
-    else if (n <= 0)
+    else if ( n <= 0 )
     {				/* 0: EOF   <0: error. */
-		if (n < 0)
-			M_err("ExeCmd", "read returns %d", n);
-		fl_remove_io_callback(fd, FL_READ, io_cb);
-		close(fd);
+		if ( n < 0 )
+			M_err( "ExeCmd", "read returns %d", n );
+		fl_remove_io_callback( fd, FL_READ, io_cb );
+		close( fd );
     }
 #else
-    ReadFile((HANDLE) fd, buf, sizeof(buf) - 1, &n, NULL);
-    if (n > 0)
+    ReadFile( ( HANDLE ) fd, buf, sizeof buf - 1, &n, NULL );
+    if ( n > 0 )
     {
-		buf[n] = '\0';
-		fl_addto_browser_chars(logger->browser, buf);
+		buf[ n ] = '\0';
+		fl_addto_browser_chars( logger->browser, buf );
     }
-    else if (n <= 0)
+    else if ( n <= 0 )
     {				/* 0: EOF   <0: error. */
-		if (n < 0)
-			M_err("ExeCmd", "read returns %d", n);
-		fl_remove_io_callback(fd, FL_READ, io_cb);
-		CloseHandle((HANDLE) fd);
+		if ( n < 0 )
+			M_err( "ExeCmd", "read returns %d", n );
+		fl_remove_io_callback( fd, FL_READ, io_cb );
+		CloseHandle( ( HANDLE ) fd );
     }
 #endif
 }
@@ -124,12 +124,12 @@ check_for_activity( PIDList * cur )
 
     do
     {
-		if (fl_check_forms() == FL_EVENT)
-			fl_XNextEvent(&xev);
-    }
-    while (fl_is_watched_io(cur->fd_out) || fl_is_watched_io(cur->fd_err));
+		if ( fl_check_forms( ) == FL_EVENT )
+			fl_XNextEvent( &xev );
+    } while (    fl_is_watched_io( cur->fd_out )
+			  || fl_is_watched_io( cur->fd_err ) );
 
-    fl_update_display(1);
+    fl_update_display( 1 );
 }
 
 
@@ -175,16 +175,16 @@ create_logger( void )
     if ( ! logger )
     {
 		int oldy = fl_inverted_y;
-		int oldu = fl_get_coordunit();
+		int oldu = fl_get_coordunit( );
 		fl_inverted_y = 0;
-		fl_set_coordunit(FL_COORD_PIXEL);
-		logger = create_form_cmd();
-		fl_set_object_bw(logger->backface, 2);
-		fl_set_form_minsize(logger->cmd, 250, 100);
-		fl_set_form_atclose(logger->cmd, atclose, 0);
-		fl_set_form_position(logger->cmd, -logger->cmd->w - 5, 3);
+		fl_set_coordunit( FL_COORD_PIXEL );
+		logger = create_form_cmd( );
+		fl_set_object_bw( logger->backface, 2 );
+		fl_set_form_minsize( logger->cmd, 250, 100 );
+		fl_set_form_atclose( logger->cmd, atclose, 0 );
+		fl_set_form_position( logger->cmd, -logger->cmd->w - 5, 3 );
 		fl_inverted_y = oldy;
-		fl_set_coordunit(oldu);
+		fl_set_coordunit( oldu );
     }
 }
 
@@ -195,8 +195,8 @@ create_logger( void )
 void
 fl_addto_command_log( const char * s )
 {
-    create_logger();
-    fl_addto_browser_chars(logger->browser, s);
+    create_logger( );
+    fl_addto_browser_chars( logger->browser, s );
 }
 
 
@@ -206,8 +206,8 @@ fl_addto_command_log( const char * s )
 void
 fl_clear_command_log( void )
 {
-    create_logger();
-    fl_clear_browser(logger->browser);
+    create_logger( );
+    fl_clear_browser( logger->browser );
 }
 
 
@@ -217,10 +217,10 @@ fl_clear_command_log( void )
 void
 fl_show_command_log( int border )
 {
-    create_logger();
-    fl_fit_object_label(logger->close_br, 2, 1);
-    fl_fit_object_label(logger->clear_br, 2, 1);
-    fl_show_form(logger->cmd, FL_PLACE_POSITION, border, "MessageLog");
+    create_logger( );
+    fl_fit_object_label( logger->close_br, 2, 1 );
+    fl_fit_object_label( logger->clear_br, 2, 1 );
+    fl_show_form( logger->cmd, FL_PLACE_POSITION, border, "MessageLog" );
 }
 
 
@@ -230,10 +230,10 @@ fl_show_command_log( int border )
 void
 fl_hide_command_log( void )
 {
-    create_logger();
+    create_logger( );
 
-    if (logger->cmd->visible)
-	fl_hide_form(logger->cmd);
+    if ( logger->cmd->visible )
+		fl_hide_form( logger->cmd );
 }
 
 
@@ -270,22 +270,22 @@ fl_execl( const char * path,
        the command line arguments includes double quotes around spaces. A
        maximum of 16 tokens can exist in the command line. */
 
-    for (i = 0; i < 16; i++)
-		cmd_token[i] = NULL;
+    for ( i = 0; i < 16; i++ )
+		cmd_token[ i ] = NULL;
 
-    strncpy(cmd_tmp, arg2, 1024);
-    cmd_token[0] = strtok(cmd_tmp, " ");
-    cmd_token[15] = NULL;
+    strncpy( cmd_tmp, arg2, 1024 );
+    cmd_token[ 0 ]  = strtok( cmd_tmp, " " );
+    cmd_token[ 15 ] = NULL;
 
-    for (i = 1; i < 15, (cmd_token[i - 1] != NULL); i++)
-		cmd_token[i] = strtok(NULL, " ");
+    for ( i = 1; i < 15, ( cmd_token[ i - 1 ] != NULL ); i++ )
+		cmd_token[ i ] = strtok( NULL, " " );
 
-    execl(cmd_token[0],
-		  cmd_token[0], cmd_token[1], cmd_token[2], cmd_token[3],
-		  cmd_token[4], cmd_token[5], cmd_token[6], cmd_token[7],
-		  cmd_token[8], cmd_token[9], cmd_token[10], cmd_token[11],
-		  cmd_token[12], cmd_token[13], cmd_token[14], cmd_token[15],
-		  (char *) 0);
+    execl( cmd_token[ 0 ],
+		   cmd_token[ 0 ],  cmd_token[ 1 ],  cmd_token[ 2 ],  cmd_token[ 3 ],
+		   cmd_token[ 4 ],  cmd_token[ 5 ],  cmd_token[ 6 ],  cmd_token[ 7 ],
+		   cmd_token[ 8 ],  cmd_token[ 9 ],  cmd_token[ 10 ], cmd_token[ 11 ],
+		   cmd_token[ 12 ], cmd_token[ 13 ], cmd_token[ 14 ], cmd_token[ 15 ],
+		   ( char * ) 0);
 }
 
 
@@ -298,7 +298,7 @@ waitpid( pid_t pid,
 		 int * status,
 		 int   options )
 {
-    return wait(status);
+    return wait( status );
 }
 #endif /* VMS_VER < 7.0 */
 #else
@@ -313,43 +313,51 @@ fl_exe_command( const char * cmd,
 				int          block )
 {
     pid_t pid;
-    static int p_err[2], p_inout[2];
-    char buf[256];
+    static int p_err[ 2 ] = { -1, -1 },
+		       p_inout[ 2 ];
+    char buf[ 256 ];
 
-    create_logger();
+    create_logger( );
 
-    if (pipe(p_err) < 0 || pipe(p_inout) < 0)
+    if ( pipe( p_err ) < 0 || pipe( p_inout ) < 0 )
     {
-		fl_snprintf(buf,sizeof(buf),
-					"Can't create pipe - %s", fl_get_syserror_msg());
+		fl_snprintf( buf, sizeof buf,
+					 "Can't create pipe - %s", fl_get_syserror_msg( ) );
 		fprintf(stderr, "%s\n", buf);
-		fl_addto_browser(logger->browser, buf);
+		fl_addto_browser( logger->browser, buf );
+		if ( p_err[ 0 ] > 0 )
+		{
+			close( p_err[ 0 ] );
+			close( p_err[ 1 ] );
+		}
+
 		return -1;
     }
 
-    if ((pid = fork()) < 0)
+    if ( ( pid = fork( ) ) < 0 )
     {
-		fl_snprintf(buf,sizeof(buf),"fork failed: %s",fl_get_syserror_msg());
-		fl_addto_browser(logger->browser, buf);
-		perror("fork");
-		close(p_inout[0]);
-		close(p_inout[1]);
-		close(p_err[0]);
-		close(p_err[1]);
+		fl_snprintf( buf, sizeof buf, "fork failed: %s",
+					 fl_get_syserror_msg( ) );
+		fl_addto_browser( logger->browser, buf );
+		perror( "fork" );
+		close( p_inout[ 0 ] );
+		close( p_inout[ 1 ] );
+		close( p_err[ 0 ] );
+		close( p_err[ 1 ] );
 		return -1;
     }
 
-    if (pid == 0)
+    if ( pid == 0 )
     {
-		dup2(p_inout[1], fileno(stdout));
-		close(p_inout[1]);
-		close(p_inout[0]);
-		dup2(p_err[1], fileno(stderr));
-		close(p_err[1]);
-		close(p_err[0]);
-		fl_execl("/bin/sh", "sh", "-c", cmd, (char *) 0);
-		perror("execle");
-		_exit(127);
+		dup2( p_inout[ 1 ], fileno( stdout ) );
+		close( p_inout[ 1 ] );
+		close( p_inout[ 0 ] );
+		dup2( p_err[ 1 ], fileno( stderr ) );
+		close( p_err[ 1 ] );
+		close( p_err[ 0 ] );
+		fl_execl( "/bin/sh", "sh", "-c", cmd, ( char * ) 0 );
+		perror( "execle" );
+		_exit( 127 );
     }
     else
     {
@@ -361,24 +369,24 @@ fl_exe_command( const char * cmd,
 
 		/* close write end of the pipe, only child process uses them */
 
-		close(p_inout[1]);
-		close(p_err[1]);
-		cur->fd_out = p_inout[0];
-		cur->fd_err = p_err[0];
+		close( p_inout[ 1 ] );
+		close( p_err[ 1 ] );
+		cur->fd_out = p_inout[ 0 ];
+		cur->fd_err = p_err[ 0 ];
 
 		/* add_io prepends. handle stdout first when data is present */
 
-		fl_add_io_callback(cur->fd_err,
-						   FL_READ,
-						   io_cb,
-						   (void *) ( long ) cur->pid);
-		fl_add_io_callback(cur->fd_out,
-						   FL_READ,
-						   io_cb,
-						   (void *) ( long ) cur->pid);
+		fl_add_io_callback( cur->fd_err,
+							FL_READ,
+							io_cb,
+							( void * ) ( long ) cur->pid );
+		fl_add_io_callback( cur->fd_out,
+							FL_READ,
+							io_cb,
+							( void * ) ( long ) cur->pid );
     }
 
-    return block ? (FL_PID_T) fl_end_command(pid) : pid;
+    return block ? ( FL_PID_T ) fl_end_command( pid ) : pid;
 }
 
 #else /* Win/NT platform */
@@ -387,45 +395,46 @@ FL_PID_T
 fl_exe_command( const char * cmd,
 				int          block )
 {
-    SECURITY_ATTRIBUTES sa = {0};
-    STARTUPINFO si = {0};
-    PROCESS_INFORMATION pi = {0};
+    SECURITY_ATTRIBUTES sa = { 0 };
+    STARTUPINFO si = { 0 };
+    PROCESS_INFORMATION pi = { 0 };
     HANDLE hPipeWrite = NULL;
     HANDLE hPipeRead = NULL;
-    char buf[512];
+    char buf[ 512 ];
     PIDList *cur;
 
-    create_logger();
+    create_logger( );
 
-    sa.nLength = sizeof(sa);
+    sa.nLength = sizeof sa;
     sa.bInheritHandle = TRUE;
     sa.lpSecurityDescriptor = NULL;
-    if (!CreatePipe(&hPipeRead, &hPipeWrite, &sa, 255))
+    if ( ! CreatePipe( &hPipeRead, &hPipeWrite, &sa, 255 ) )
     {
-		fl_snprintf(buf, sizeof(buf), "Can't create pipe - %s",
-                    fl_get_syserror_msg());
-		fprintf(stderr, "%s\n", buf);
-		fl_addto_browser(logger->browser, buf);
-		return (FL_PID_T) - 1;
+		fl_snprintf( buf, sizeof buf, "Can't create pipe - %s",
+					 fl_get_syserror_msg( ) );
+		fprintf( stderr, "%s\n", buf );
+		fl_addto_browser( logger->browser, buf );
+		return ( FL_PID_T ) - 1;
     }
 
     /* Make child process use p_inout as standard out, and make sure it does
        not show on screen. */
 
-    si.cb = sizeof(si);
+    si.cb = sizeof si;
     si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
     si.wShowWindow = SW_HIDE;
-    si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    si.hStdInput = GetStdHandle( STD_INPUT_HANDLE );
     si.hStdOutput = hPipeWrite;
     si.hStdError = hPipeWrite;
 
-    if (CreateProcess(NULL, (LPTSTR) cmd, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi))
+    if ( CreateProcess( NULL, ( LPTSTR ) cmd, NULL, NULL, TRUE, 0,
+						NULL, NULL, &si, &pi ) )
     {
 		/* close write end of the pipe, only child process uses them */
 
-		CloseHandle(hPipeWrite);
-		CloseHandle(pi.hThread);	/* close the primay thread handle */
-		cur = fl_malloc(sizeof *cur );
+		CloseHandle( hPipeWrite );
+		CloseHandle( pi.hThread );	/* close the primay thread handle */
+		cur = fl_malloc( sizeof *cur );
 		cur->next = pidlist;
 		cur->pid = pi.hProcess;
 		pidlist = cur;
@@ -433,22 +442,24 @@ fl_exe_command( const char * cmd,
 
 		/* add_io prepends. handle stdout first when data is present */
 
-		fl_add_io_callback((int) cur->fd_out, FL_READ, io_cb, (void *) cur->pid);
+		fl_add_io_callback( ( int ) cur->fd_out, FL_READ, io_cb,
+							( void * ) cur->pid );
     }
     else
     {
-		fl_snprintf(buf,sizeof(buf),"spawn failed: %s",fl_get_syserror_msg());
-		fl_addto_browser(logger->browser, buf);
-		perror("spawn");
+		fl_snprintf( buf,sizeof buf, "spawn failed: %s",
+					 fl_get_syserror_msg( ) );
+		fl_addto_browser( logger->browser, buf );
+		perror( "spawn" );
 
 		/* close the pipes */
 
-		CloseHandle(hPipeRead);
-		CloseHandle(hPipeWrite);
-		return (FL_PID_T) - 1;
+		CloseHandle( hPipeRead );
+		CloseHandle( hPipeWrite );
+		return ( FL_PID_T ) - 1;
     }
 
-    return block ? (FL_PID_T) fl_end_command(cur->pid) : cur->pid;
+    return block ? ( FL_PID_T ) fl_end_command( cur->pid ) : cur->pid;
 }
 #endif
 
@@ -462,96 +473,102 @@ fl_popen( const char * cmd,
 		  const char * type )
 {
     pid_t pid;
-    static int p_err[2], p_p2c[2], p_c2p[2];
-    char buf[512];
-    int iswrite, i;
+    static int p_err[ 2 ] = { -1, -1 },
+		       p_p2c[ 2 ] = { -1, -1 },
+		       p_c2p[ 2 ] = { -1, -1 };
+    char buf[ 512 ];
+    int iswrite,
+		i;
     FILE *fp = 0;
 
-    if (!cmd || !*cmd || !type || !*type || (*type != 'r' && *type != 'w'))
+    if (    ! cmd
+		 || ! *cmd
+		 || ! type
+		 || ! *type
+		 || ( *type != 'r' && *type != 'w' ) )
 		return 0;
 
-    iswrite = (*type == 'w');
+    iswrite = *type == 'w';
 
-    create_logger();
+    create_logger( );
 
-    p_err[0] = p_err[1] = p_p2c[0] = p_p2c[1] = -1;
-
-    if (pipe(p_err) < 0 || pipe(p_p2c) < 0 || pipe(p_c2p) < 0)
+    if ( pipe( p_err ) < 0 || pipe( p_p2c ) < 0 || pipe( p_c2p ) < 0 )
     {
-		fl_snprintf(buf, sizeof(buf),
-                    "Can't create pipe - %s", fl_get_syserror_msg());
-		fprintf(stderr, "%s\n", buf);
-		fl_addto_browser(logger->browser, buf);
-		for (i = 0; i < 2; i++)
+		fl_snprintf( buf, sizeof buf,
+					 "Can't create pipe - %s", fl_get_syserror_msg( ) );
+		fprintf( stderr, "%s\n", buf );
+		fl_addto_browser(logger->browser, buf );
+		for ( i = 0; i < 2; i++ )
 		{
-			if (p_err[i] >= 0)
-				close(p_err[i]);
-			if (p_p2c[i] >= 0)
-				close(p_p2c[i]);
+			if ( p_err[ i ] >= 0 )
+				close( p_err[ i ] );
+			if (p_p2c[ i ] >= 0 )
+				close( p_p2c[ i ] );
 		}
 		return NULL;
     }
 
-    if ((pid = fork()) < 0)
+    if ( ( pid = fork( ) ) < 0 )
     {
-		fl_snprintf(buf,sizeof(buf),"fork failed: %s", fl_get_syserror_msg());
-		fl_addto_browser(logger->browser, buf);
-		perror("fork");
-		for (i = 0; i < 2; i++)
+		fl_snprintf( buf,sizeof buf, "fork failed: %s",
+					 fl_get_syserror_msg( ) );
+		fl_addto_browser( logger->browser, buf );
+		perror( "fork" );
+		for ( i = 0; i < 2; i++ )
 		{
-			close(p_err[i]);
-			close(p_p2c[i]);
-			close(p_c2p[i]);
+			close( p_err[ i ] );
+			close( p_p2c[ i ] );
+			close( p_c2p[ i ] );
 		}
 		return NULL;
     }
 
-    if (pid == 0)
+    if ( pid == 0 )
     {
-		dup2(p_p2c[0], fileno(stdin));
-		dup2(p_c2p[1], fileno(stdout));
-		dup2(p_err[1], fileno(stderr));
+		dup2( p_p2c[ 0 ], fileno( stdin ) );
+		dup2( p_c2p[ 1 ], fileno( stdout ) );
+		dup2( p_err[ 1 ], fileno( stderr ) );
 
-		close(p_p2c[0]);
-		close(p_p2c[1]);
-		close(p_c2p[0]);
-		close(p_c2p[1]);
-		close(p_err[0]);
-		close(p_err[1]);
+		close( p_p2c[ 0 ] );
+		close( p_p2c[ 1 ] );
+		close( p_c2p[ 0 ] );
+		close( p_c2p[ 1 ] );
+		close( p_err[ 0 ] );
+		close( p_err[ 1 ] );
 
-		fl_execl("/bin/sh", "sh", "-c", cmd, (char *) 0);
+		fl_execl( "/bin/sh", "sh", "-c", cmd, ( char * ) 0 );
 
-		perror("execle");
-		_exit(127);
+		perror( "execle" );
+		_exit( 127 );
     }
     else
     {
 		/* the parent process */
 
-		PIDList *cur = (PIDList *) fl_malloc( sizeof *cur );
+		PIDList *cur = fl_malloc( sizeof *cur );
 
 		cur->next = pidlist;
 		cur->pid = pid;
 		pidlist = cur;
 
-		close(p_p2c[0]);
-		close(p_c2p[1]);
-		close(p_err[1]);
+		close( p_p2c[ 0 ] );
+		close( p_c2p[ 1 ] );
+		close( p_err[ 1 ] );
 
-		cur->fd_err = p_err[0];
-		cur->fd_out = p_c2p[0];
+		cur->fd_err = p_err[ 0 ];
+		cur->fd_out = p_c2p[ 0 ];
 
-		fl_add_io_callback(cur->fd_err,
-						   FL_READ, io_cb,
-						   ( void * ) ( long ) pid);
+		fl_add_io_callback( cur->fd_err,
+							FL_READ, io_cb,
+							( void * ) ( long ) pid);
 
-		if (iswrite)
+		if ( iswrite )
 		{
 			cur->fd_user = p_p2c[1];
-			fl_add_io_callback(cur->fd_out,
-							   FL_READ,
-							   io_cb,
-							   ( void * ) ( long ) pid );
+			fl_add_io_callback( cur->fd_out,
+								FL_READ,
+								io_cb,
+								( void * ) ( long ) pid );
 		}
 		else
 		{
@@ -560,7 +577,7 @@ fl_popen( const char * cmd,
             /* should we dup the stream so the browser gets a copy ? */
 		}
 
-		fp = fdopen(cur->fd_user, type);
+		fp = fdopen( cur->fd_user, type );
     }
 
     return fp;
@@ -582,8 +599,9 @@ fl_pclose( FILE * stream )
 
     fclose( stream );
 
-    for (last = 0, cur = pidlist; cur && cur->fd_user != fd;
-		 last = cur, cur = last->next )
+    for ( last = 0, cur = pidlist;
+		  cur && cur->fd_user != fd;
+		  last = cur, cur = last->next )
         /* empty */ ;
 
     if ( ! cur )
@@ -604,27 +622,28 @@ fl_end_command( FL_PID_T pid )
     PIDList *cur, *last;
     int pstat;
 
-    for (last = 0, cur = pidlist; cur && cur->pid != pid;
-		 last = cur, cur = last->next)
+    for ( last = 0, cur = pidlist;
+		  cur && cur->pid != pid;
+		  last = cur, cur = last->next )
 		/* empty */ ;
 
-    if (!cur)
+    if ( ! cur )
 		return -1;
 
     do
     {
-		check_for_activity(cur);
-		pid = waitpid(cur->pid, &pstat, 0);
-    } while (pid == -1 && errno == EINTR);
+		check_for_activity( cur );
+		pid = waitpid( cur->pid, &pstat, 0 );
+    } while ( pid == -1 && errno == EINTR );
 
-    if (last)
+    if ( last )
 		last->next = cur->next;
     else
 		pidlist = cur->next;
 
-    fl_addto_freelist(cur);
+    fl_addto_freelist( cur );
 
-    return (pid == -1 ? -1 : pstat);
+    return pid == -1 ? -1 : pstat;
 }
 
 
@@ -637,19 +656,20 @@ int
 fl_check_command( FL_PID_T pid )
 {
 #ifndef FL_WIN32
-    if (kill(pid, 0) == 0)
+    if ( kill( pid, 0 ) == 0 )
     {
-		waitpid(pid, 0, WNOHANG);
+		waitpid( pid, 0, WNOHANG );
 		return 1;
     }
+
     return errno == ESRCH ? 0 : -1;
 #else
     DWORD ExitCode = 0;
-    GetExitCodeProcess(pid, &ExitCode);
+    GetExitCodeProcess( pid, &ExitCode );
 
-    if (ExitCode == STILL_ACTIVE)
+    if ( ExitCode == STILL_ACTIVE )
 		return 1;
-    return (GetLastError() == ERROR_INVALID_HANDLE) ? 0 : -1;
+    return ( GetLastError( ) == ERROR_INVALID_HANDLE ) ? 0 : -1;
 #endif
 }
 
@@ -661,16 +681,17 @@ fl_check_command( FL_PID_T pid )
 int
 fl_end_all_command( void )
 {
-    PIDList *cur, *next;
+    PIDList *cur,
+		    *next;
     int pstat = 0;
     pid_t pid = 0;
 
-    for (cur = pidlist; cur; cur = next)
+    for ( cur = pidlist; cur; cur = next )
     {
 		next = cur->next;
-		check_for_activity(cur);
-		pid = waitpid(cur->pid, &pstat, 0);
-		fl_addto_freelist(cur);
+		check_for_activity( cur );
+		pid = waitpid( cur->pid, &pstat, 0 );
+		fl_addto_freelist( cur );
     }
 
     pidlist = 0;
@@ -687,7 +708,7 @@ fl_get_command_log_fdstruct( void )
 {
     static FD_CMDLOG ret;
 
-    create_logger();
+    create_logger( );
     ret.form = logger->cmd;
     ret.browser = logger->browser;
     ret.close_browser = logger->close_br;
@@ -703,8 +724,8 @@ void
 fl_set_command_log_position( int x,
 							 int y )
 {
-    create_logger();
-    fl_set_form_position(logger->cmd, x, y);
+    create_logger( );
+    fl_set_form_position( logger->cmd, x, y );
 }
 
 #include "fd/cmdbr.c"		/* from directory fd */

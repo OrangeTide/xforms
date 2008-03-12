@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_gds = "$Id: goodies.c,v 1.7 2008/01/29 20:05:54 jtt Exp $";
+char *fl_id_gds = "$Id: goodies.c,v 1.8 2008/03/12 16:00:24 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -176,7 +176,6 @@ fl_handle_goodie_font( FL_OBJECT * ob1,
 		fl_set_object_lstyle( ob2, goodie_style );
 		fl_set_object_lsize( ob2, goodie_size );
     }
-
 }
 
 

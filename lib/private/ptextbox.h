@@ -46,7 +46,7 @@ typedef struct
 
 typedef struct
 {
-    LINE **        text;			/* lines of text(0 not used) */
+    LINE **        text;			/* lines of text (NULL if not used) */
     FL_CALLBACKPTR callback;
     long           callback_data;
     GC             bkGC;			/* background GC             */

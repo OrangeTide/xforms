@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_tim = "$Id: timer.c,v 1.6 2008/01/28 23:23:57 jtt Exp $";
+char *fl_id_tim = "$Id: timer.c,v 1.7 2008/03/12 16:00:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -154,6 +154,7 @@ handle_timer( FL_OBJECT * ob,
     {
 		case FL_DRAW:
 			draw_timer( ob );
+			/* fall through */
 
 		case FL_DRAWLABEL:
 			if ( ob->type != FL_HIDDEN_TIMER && ! update_only )

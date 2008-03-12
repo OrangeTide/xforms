@@ -63,10 +63,10 @@ handle_signal( void )
 
 
 #ifndef FL_WIN32
-#define IsDangerous( s ) (    s == SIGBUS  \
-						   || s == SIGSEGV \
-						   || s == SIGILL  \
-						   || s == SIGFPE )
+#define IsDangerous( s ) (    ( s ) == SIGBUS   \
+						   || ( s ) == SIGSEGV  \
+						   || ( s ) == SIGILL   \
+						   || ( s ) == SIGFPE )
 #else
 #define IsDangerous( s )  0
 #endif
@@ -85,7 +85,7 @@ default_signal_handler( int sig )
     /* if the signal is one of those that can cause infinite loops, handle it
        and then exit */
 
-    if (IsDangerous( sig ) )
+    if ( IsDangerous( sig ) )
     {
 		handle_signal( );
 		fprintf( stderr, "Can't continue upon receiving signal %d\n", sig );
@@ -123,7 +123,7 @@ fl_add_signal_callback( int                 s,
     else
     {
 		sig_rec = fl_calloc( 1, sizeof *sig_rec );
-		sig_rec->next = 0;
+		sig_rec->next = NULL;
 		sig_rec->data = data;
 		sig_rec->callback = cb;
 		sig_rec->signum = s;
@@ -159,21 +159,21 @@ fl_remove_signal_callback( int s )
     for ( last = rec; rec && rec->signum != s; last = rec, rec = rec->next )
 		/* empty */ ;
 
-    if ( rec )
+    if ( ! rec )
     {
-		if ( rec == fl_context->signal_rec )
-			fl_context->signal_rec = rec->next;
-		else
-			last->next = rec->next;
+		M_err( "fl_remove_signal_callback", "No handler exists for signal %d",
+			   s );
+		return;
+	}
 
-		fl_addto_freelist( rec );
-		if ( ! sig_direct )
-			signal( s, rec->ocallback );
-    }
-    else
-    {
-		M_err( "RemoveSignalCallback", "No handler exists for signal %d", s );
-    }
+	if ( rec == fl_context->signal_rec )
+		fl_context->signal_rec = rec->next;
+	else
+		last->next = rec->next;
+
+	fl_addto_freelist( rec );
+	if ( ! sig_direct )
+		signal( s, rec->ocallback );
 }
 
 
@@ -188,14 +188,15 @@ fl_signal_caught( int s )
     for ( ; rec && rec->signum != s; rec = rec->next )
 		/* empty */ ;
 
-    if ( rec )
-    {
-		rec->expired = 1;
-		if ( ! sig_direct && ! IsDangerous( s ) )
-			signal( s, default_signal_handler );
-    }
-    else
-		M_err( "SignalCaught", "Caught bogus signal %d", s );
+    if ( ! rec )
+	{
+		M_err( "fl_signal_caught", "Caught bogus signal %d", s );
+		return;
+	}
+
+	rec->expired = 1;
+	if ( ! sig_direct && ! IsDangerous( s ) )
+		signal( s, default_signal_handler );
 }
 
 

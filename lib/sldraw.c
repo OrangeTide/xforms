@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sldr = "$Id: sldraw.c,v 1.7 2008/01/28 23:22:37 jtt Exp $";
+char *fl_id_sldr = "$Id: sldraw.c,v 1.8 2008/03/12 16:00:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -391,17 +391,13 @@ fl_drw_slider( int      boxtype,
 				int extra = bw2 < 0;
 
 				fl_drw_text( FL_ALIGN_CENTER,
-							 xsl - extra,
-							 ysl, wsl + 2 * extra,
-							 hsl, 0,
+							 xsl - extra, ysl, wsl + 2 * extra, hsl, 0,
 							 FL_NORMAL_STYLE, FL_TINY_SIZE, "@RippleLines" );
 			}
 			else if (    sltype == FL_HOR_BROWSER_SLIDER
 					  || sltype == FL_HOR_BROWSER_SLIDER2 )
-			{
 				fl_drw_text( FL_ALIGN_CENTER, xsl - 1, ysl, wsl, hsl,
 							 0, 10, 1, "@2RippleLines" );
-			}
 		}
     }
 

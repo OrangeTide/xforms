@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.7 2008/01/28 23:18:23 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.8 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -722,7 +722,7 @@ fl_drw_frame( int      style,
 		return;
 
     if ( ! ( border = bw > 0 ) )
-		bw = -bw;
+		bw = - bw;
 
     B = border;
 
@@ -998,7 +998,8 @@ fl_foldertab_box( int      style,
 				  int      bw )
 {
     int ctr, right, bott;
-    FL_POINT vert[10], *fp;
+    FL_POINT vert[10],
+		     *fp;
     int border;
     int absbw = FL_abs( bw ),
 		i;

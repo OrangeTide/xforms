@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.17 2008/03/01 16:22:57 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.18 2008/03/12 16:00:24 jtt Exp $";
 #endif
 
 
@@ -70,7 +70,7 @@ void fl_redraw_form_using_xevent( FL_FORM *,
 								  XEvent * );
 
 
-#define SHORT_PAUSE   10	      /* check_form wait */
+#define SHORT_PAUSE   10	      /* check_form wait (in ms) */
 
 #define TRANY( ob, form )      ( form->h - ob->h - ob->y )
 
@@ -162,7 +162,7 @@ fl_bgn_group( void )
     if ( ! fl_current_form )
     {
 		fl_error( "fl_bgn_group", "Starting group in NULL form." );
-		return 0;
+		return NULL;
     }
 
     if ( fl_current_group )
@@ -491,7 +491,7 @@ fl_scale_form( FL_FORM * form,
 
     /* resize the window */
 
-    resize_form_win( form, form->w, form->h );
+	resize_form_win( form, form->w, form->h );
 }
 
 
@@ -709,7 +709,8 @@ fl_prepare_form_window( FL_FORM *    form,
 
     if ( fl_current_form )
     {
-		M_err( 0, "You forgot to call fl_end_form %s", name ? name : "" );
+		M_err( "fl_prepare_form_window", "You forgot to call fl_end_form %s",
+			   name ? name : "" );
 		fl_current_form = 0;
     }
 
@@ -871,7 +872,7 @@ fl_prepare_form_window( FL_FORM *    form,
     }
     else
     {
-		M_err( "ShowForm", "Unknown requests: %d", place );
+		M_err( "fl_prepare_form_window", "Unknown requests: %d", place );
 		fl_initial_wingeometry( form->x, form->y, form->w, form->h );
     }
 
@@ -919,13 +920,13 @@ fl_prepare_form_window( FL_FORM *    form,
 long
 fl_show_form_window( FL_FORM * form )
 {
-    if ( form->window == 0 || form->visible )
+    if ( form->window == None || form->visible )
 		return form->window;
 
     fl_winshow( form->window );
     form->visible = 1;
     reshape_form( form );
-    fl_redraw_form( form );
+	fl_redraw_form( form );
 
     return form->window;
 }
@@ -1016,6 +1017,7 @@ fl_property_set( unsigned int prop )
     for ( i = 0; i < formnumb; i++ )
 		if ( forms[ i ]->prop & prop && forms[ i ]->prop & FL_PROP_SET )
 			return forms[ i ];
+
     return NULL;
 }
 
@@ -1030,18 +1032,21 @@ fl_set_form_property( FL_FORM *    form,
     if ( ! form || fl_property_set( prop ) )
 		return;
 
-    if ( prop & FL_COMMAND_PROP )
-    {
-		if ( form->window )
-		{
-			fl_set_property( form->window, FL_COMMAND_PROP );
-			form->prop |= FL_PROP_SET;
-		}
-		form->prop |= FL_COMMAND_PROP;
-		fl_mainform = form;
-    }
-    else
-		M_err( "FormProperty", "Unknown form property request %u", prop );
+    if ( ! ( prop & FL_COMMAND_PROP ) )
+	{
+		M_err( "fl_set_form_property", "Unknown form property request %u",
+			   prop );
+		return;
+	}
+
+	if ( form->window )
+	{
+		fl_set_property( form->window, FL_COMMAND_PROP );
+		form->prop |= FL_PROP_SET;
+	}
+
+	form->prop |= FL_COMMAND_PROP;
+	fl_mainform = form;
 }
 
 
@@ -1431,6 +1436,7 @@ do_shortcut( FL_FORM * form,
 		if ( key < 256 )
 		{
 			/* always a good idea to make Alt_k case insensitive */
+
 			key1 = FL_ALT_VAL
 				   + ( islower( key ) ? toupper( key ) : tolower( key ) );
 			key2 = key + FL_ALT_VAL;
@@ -1439,7 +1445,8 @@ do_shortcut( FL_FORM * form,
 			key1 = key2 = key + FL_ALT_VAL;
     }
 
-    M_info( "Shortcut", "win=%lu key=%d %d %d", form->window, key, key1, key2 );
+    M_info( "do_shortcut", "win=%lu key=%d %d %d",
+			form->window, key, key1, key2 );
 
     /* Check whether an object has this as a shortcut */
 
@@ -1448,7 +1455,7 @@ do_shortcut( FL_FORM * form,
 		if ( ! obj->visible || obj->active <= 0 || ! obj->shortcut )
 			continue;
 
-		for ( s = obj->shortcut; *s != 0; s++ )
+		for ( s = obj->shortcut; *s; s++ )
 		{
 			if ( ! ( *s == key1 || *s == key2 ) )
 				continue;
@@ -1498,7 +1505,6 @@ fl_do_shortcut( FL_FORM * form,
 {
     int ret = do_shortcut( form, key, x, y, xev );
 
-
     if ( ! ret )
     {
 		if ( form->child )
@@ -1524,7 +1530,6 @@ fl_keyboard( FL_FORM * form,
     FL_OBJECT *obj,
 		      *obj1,
 		      *special;
-
 
     /* always check shortcut first */
 
@@ -1616,7 +1621,7 @@ fl_keyboard( FL_FORM * form,
 		fl_handle_object( special, FL_KEYBOARD, x, y, key, xev );
 
 #if FL_DEBUG >= ML_INFO1
-    M_info( "KeyBoard", "(%d %d)pushing %d to %s\n",
+    M_info( "do_shortcut", "(%d %d)pushing %d to %s\n",
 			x, y, key, special->label );
 #endif
 }
@@ -1674,7 +1679,7 @@ fl_handle_form( FL_FORM * form,
 		obj = fl_find_last( form, FL_FIND_MOUSE, xx, yy );
     }
 
-#if 1
+#if 0
     /* this is an ugly hack. This is necessary due to popup pointer grab
        where a button release is eaten. Really should do a send event from
        the pop-up routines. */
@@ -1838,14 +1843,14 @@ fl_time_passed( int n )
 {
     n %= NTIMER;
     fl_gettime( &tp.sec, &tp.usec );
-    return ( tp.sec - lastsec[ n ] ) + ( tp.usec - lastusec[ n ] ) * 1.0e-6;
+    return tp.sec - lastsec[ n ] + 1.0e-6 * ( tp.usec - lastusec[ n ] );
 }
 
 
 /***************************************
  ***************************************/
 
-#if ( FL_DEBUG >= ML_DEBUG )	/* { */
+#if FL_DEBUG >= ML_DEBUG	/* { */
 static void
 hack_test( void )
 {
@@ -1895,7 +1900,7 @@ do_keyboard( XEvent * xev,
 
     if ( keyform && keyform->window != win )
     {
-		M_warn( "KeyEvent", "pointer/keybd focus differ" );
+		M_warn( "do_keyboard", "pointer/keybd focus differ" );
 		if (    ( keyform->child && keyform->child->window == win )
 			 || ( keyform->parent && keyform->parent->window == win ) )
 			;
@@ -1916,11 +1921,11 @@ do_keyboard( XEvent * xev,
 			if ( kbuflen != INT_MIN )
 			{
 				/* buffer overflow, should not happen */
-				M_err( "DoKeyBoard", "keyboad buffer overflow ?" );
+				M_err( "do_keyboard", "keyboad buffer overflow ?" );
 			}
 			else
 			{
-				M_err( "DoKeyBoard", "fl_XLookupString failed ?" );
+				M_err( "do_keyboard", "fl_XLookupString failed ?" );
 			}
 		}
 		else
@@ -1967,7 +1972,6 @@ fl_set_form_atclose( FL_FORM *       form,
 {
     FL_FORM_ATCLOSE old = form->close_callback;
 
-
     form->close_callback = fmclose;
     form->close_data = data;
     return old;
@@ -1982,7 +1986,6 @@ fl_set_atclose( FL_FORM_ATCLOSE fmclose,
 				void *          data )
 {
     FL_FORM_ATCLOSE old = fl_context->atclose;
-
 
     fl_context->atclose = fmclose;
     fl_context->close_data = data;
@@ -2041,13 +2044,12 @@ handle_client_message( FL_FORM * form,
 }
 
 
-/***************************************
- ***************************************/
-
 static int pre_emptive_consumed( FL_FORM *,
 								 int,
 								 XEvent * );
 
+/***************************************
+ ***************************************/
 
 FL_FORM *
 fl_win_to_form( Window win )
@@ -2057,7 +2059,8 @@ fl_win_to_form( Window win )
     for ( i = 0; i < formnumb; i++ )
 		if ( forms[ i ]->window == win )
 			return forms[ i ];
-    return 0;
+
+    return NULL;
 }
 
 
@@ -2122,7 +2125,6 @@ fl_last_event( void )
 }
 
 
-static unsigned long uev_cmask = PointerMotionMask | ButtonMotionMask;
 static int ignored_fake_configure;
 
 
@@ -2135,7 +2137,6 @@ button_is_really_down( void )
     FL_Coord x,
 		     y;
     unsigned int km;
-
 
     fl_get_mouse( &x, &y, &km );
     return button_down( km );
@@ -2210,7 +2211,7 @@ do_interaction_step( int wait_io )
 
 	if ( ! evform )
 	{
-		M_err( "FormEvent", "Something is wrong" );
+		M_err( "do_interaction_step", "Something is wrong" );
 		return;
 	}
 
@@ -2232,7 +2233,7 @@ do_interaction_step( int wait_io )
 			if ( ! fl_context->xic )
 				break;
 
-			M_info( "Focus", "Setting focus window for IC" );
+			M_info( "do_interaction_step", "Setting focus window for IC" );
 			XSetICValues( fl_context->xic,
 						  XNFocusWindow, st_xev.xfocus.window,
 						  XNClientWindow, st_xev.xfocus.window,
@@ -2285,7 +2286,7 @@ do_interaction_step( int wait_io )
 
 #if FL_DEBUG >= ML_DEBUG
 			if ( ! mouseform )
-				M_warn( "ButtonRelease", "mouse form == 0!" );
+				M_warn( "do_interaction_step", "mouse form == 0" );
 #endif
 			if ( mouseform )
 				fl_handle_form( mouseform, FL_RELEASE,
@@ -2333,7 +2334,7 @@ handle_idling( int            wait_io,
 			   unsigned int * query_cnt )
 {
 #if FL_DEBUG >= ML_TRACE
-	M_info( "do_interaction_step", "Artificial timer event" );
+	M_info( "handle_idling", "Artificial timer event" );
 #endif
 
 	/* certain events like Selection/GraphicsExpose do not have a window
@@ -2418,7 +2419,7 @@ handle_EnterNotify_event( FL_FORM * evform )
 	}
 #if FL_DEBUG >= ML_DEBUG
 	else
-		M_err( "EnterNotify", "Null form!" );
+		M_err( "handle_EnterNotify_event", "Null form!" );
 #endif
 }
 
@@ -2476,13 +2477,13 @@ handle_MotionNotify_event( FL_FORM * evform )
 
 	if ( ! mouseform )
 	{
-		M_warn( "Main-NoMotionForm", "evwin=0x%lx", win );
+		M_warn( "handle_MotionNotify_event", "evwin=0x%lx", win );
 		return;
 	}
 
 	if ( mouseform->window != win )
 	{
-		M_warn( "*Motion", "mousewin=0x%ld evwin=0x%ld",
+		M_warn( "handle_MotionNotify_event", "mousewin=0x%ld evwin=0x%ld",
 				mouseform->window, win );
 		fl_mousex += evform->x - mouseform->x;
 		fl_mousey += evform->y - mouseform->y;
@@ -2496,7 +2497,7 @@ handle_MotionNotify_event( FL_FORM * evform )
 	if ( ++auto_cnt % 10 == 0 )
 	{
 #if FL_DEBUG >= ML_TRACE
-		M_info( "Motion", "Auto FL_STEP" );
+		M_info( "handle_MotionNotify_event", "Auto FL_STEP" );
 #endif
 		fl_handle_automatic( &st_xev, 0 );
 		auto_cnt = 0;
@@ -2547,7 +2548,7 @@ handle_Expose_event( FL_FORM *  evform,
 		FL_Coord neww,
 			     newh;
 
-		M_warn( "Expose", "Run into trouble - correcting it" );
+		M_warn( "handle_Expose_event", "Run into trouble - correcting it" );
 		fl_get_winsize( evform->window, &neww, &newh );
 		scale_form( evform, ( double ) neww / evform->w,
 					( double ) newh / evform->h );
@@ -2571,6 +2572,8 @@ handle_ConfigureNotify_event( FL_FORM *  evform,
 							  FL_FORM ** redraw_form )
 {
 	Window win = st_xev.xany.window;
+	int old_w = evform->w;
+	int old_h = evform->h;
 
 	if ( ! evform )
 		return;
@@ -2581,7 +2584,7 @@ handle_ConfigureNotify_event( FL_FORM *  evform,
 	{
 		evform->x = st_xev.xconfigure.x;
 		evform->y = st_xev.xconfigure.y;
-		M_warn( "Configure", "WMConfigure:x=%d y=%d",
+		M_warn( "handle_ConfigureNotify_event", "WMConfigure:x=%d y=%d",
 				evform->x, evform->y );
 	}
 
@@ -2601,29 +2604,26 @@ handle_ConfigureNotify_event( FL_FORM *  evform,
 
 	fl_handle_form( evform, FL_MOVEORIGIN, 0, &st_xev );
 
-	if ( ! st_xev.xconfigure.send_event )
-	{
-		int old_w = evform->w;
-		int old_h = evform->h;
+	if ( st_xev.xconfigure.send_event )
+		return;
 
-		/* can't just set form->{w,h}. Need to take care of obj gravity */
+	/* can't just set form->{w,h}. Need to take care of obj gravity */
 
-		scale_form( evform, ( double ) st_xev.xconfigure.width / evform->w,
-							( double ) st_xev.xconfigure.height / evform->h );
+	scale_form( evform, ( double ) st_xev.xconfigure.width  / evform->w,
+				        ( double ) st_xev.xconfigure.height / evform->h );
 
-		/* If both the width and the height got smaller (or one got smaller
-		   and the other one is unchanged) we're not going to get an Exposure
-		   event at all, so redraw the form. Even if only one of the lengths
-		   got smaller or remained unchanged while the other got larger, the
-		   next (compressed) Expose event will only cover the added part, so
-		   in this case store the forms address, so on the next Expose event
-		   we receive for it it's full area can be redrawn.              JTT */
+	/* If both the width and the height got smaller (or one got smaller and
+	   the other one is unchanged) we're not going to get an Expose event at
+	   all, so we need to redraw the form. Even if only one of the lengths
+	   gets smaller or remains unchanged while the other got larger, the next
+	   (compressed) Expose event will only cover the added part, so in this
+	   case store the forms address, so on the next Expose event we receive
+	   for it it's full area can be redrawn.                              JTT */
 
-		if ( evform->w <= old_w && evform->h <= old_h )
-			fl_redraw_form( evform );
-		else if ( ! ( evform->w > old_w && evform->h > old_h ) ) 
-			*redraw_form = evform;
-	}
+	if ( evform->w <= old_w && evform->h <= old_h )
+		fl_redraw_form( evform );
+	else if ( ! ( evform->w > old_w && evform->h > old_h ) ) 
+		*redraw_form = evform;
 }
 
 
@@ -2676,7 +2676,6 @@ fl_check_forms( void )
 {
     FL_OBJECT *obj;
 
-
     if ( ( obj = fl_object_qread( ) ) == NULL )
     {
 		fl_treat_interaction_events( 0 );
@@ -2696,7 +2695,6 @@ FL_OBJECT *
 fl_do_forms( void )
 {
     FL_OBJECT *obj;
-
 
     while ( ( obj = fl_object_qread( ) ) == NULL )
     {
@@ -2737,12 +2735,11 @@ fl_do_only_forms( void )
 {
     FL_OBJECT *obj;
 
-
     while ( ( obj = fl_object_qread( ) ) == NULL )
 		fl_treat_interaction_events( 1 );
 
 	if ( obj == FL_EVENT )
-		M_warn( "DoOnlyForms", "Shouldn't happen" );
+		M_warn( "fl_do_only_forms", "Shouldn't happen" );
 
 	return obj;
 }
@@ -2855,11 +2852,10 @@ fl_register_raw_callback( FL_FORM *       form,
     FL_RAW_CALLBACK old_rcb = NULL;
     int valid = 0;
 
-
     if ( ! form )
     {
-		Bark( "RawCallBack", "Null form" );
-		return 0;
+		Bark( "fl_register_raw_callback", "Null form" );
+		return NULL;
     }
 
     if ( ( mask & FL_ALL_EVENT ) == FL_ALL_EVENT )
@@ -2903,7 +2899,7 @@ fl_register_raw_callback( FL_FORM *       form,
     }
 
     if ( ! valid )			/* unsupported mask */
-		Bark( "RawCallBack", "Unsupported mask 0x%x", mask );
+		Bark( "fl_register_raw_callback", "Unsupported mask 0x%x", mask );
 
     return old_rcb;
 }
@@ -2939,8 +2935,13 @@ pre_emptive_consumed( FL_FORM * form,
 			break;
 
 		case KeyPress:
+			if (    form->evmask & KeyPressMask
+				 && form->key_callback )
+				return form->key_callback( form, xev );
+			break;
+
 		case KeyRelease:
-			if (    form->evmask & ( KeyPressMask | KeyRelease )
+			if (    form->evmask & KeyRelease
 				 && form->key_callback )
 				return form->key_callback( form, xev );
 			break;
@@ -3063,10 +3064,10 @@ fl_set_idle_callback( FL_APPEVENT_CB callback,
     FL_APPEVENT_CB old =
 		           fl_context->idle_rec ? fl_context->idle_rec->callback : NULL;
 
-
     add_idle_callback( callback, user_data );
 
     /* if we have idle callbacks, decrease the wait time */
+
     delta_msec = ( int ) ( TIMER_RES * ( callback ? 0.8 : 1.0 ) );
 
     fl_context->idle_delta = delta_msec;
@@ -3110,7 +3111,6 @@ get_next_event( int        wait_io,
 		has_event = 0;
     static int dox;
 
-
     if ( ++dox % 11 && XEventsQueued( flx->display, QueuedAfterFlush ) )
     {
 		XNextEvent( flx->display, xev );
@@ -3126,7 +3126,9 @@ get_next_event( int        wait_io,
 
 		if ( ! has_event )
 		{
-			fl_compress_event( xev, ExposureMask | uev_cmask );
+			fl_compress_event( xev,   ExposureMask
+							        | PointerMotionMask
+							        | ButtonMotionMask );
 
 			/* process user events */
 
@@ -3154,12 +3156,13 @@ get_next_event( int        wait_io,
 
     if ( ! wait_io )
 		msec = SHORT_PAUSE;
-    else
-		msec = (    auto_count
-			     || fl_pushobj
-			     || fl_context->idle_rec
-			     || fl_context->timeout_rec ) ?
-			   delta_msec : FL_min( delta_msec * 3, 300 );
+    else if (    auto_count
+			  || fl_pushobj
+			  || fl_context->idle_rec
+			  || fl_context->timeout_rec )
+		msec = delta_msec;
+	else
+		msec = FL_min( delta_msec * 3, 300 );
 
     fl_watch_io( fl_context->io_rec, msec );
 
@@ -3262,7 +3265,6 @@ fl_fit_object_label( FL_OBJECT * obj,
 		   xfactor,
 		   yfactor;
 
-
     if ( fl_no_connection )
 		return;
 
@@ -3295,7 +3297,6 @@ fl_fit_object_label( FL_OBJECT * obj,
 			 && ob->objclass != FL_END_GROUP )
 			fl_scale_object( ob, factor, factor );
 
-
     fl_redraw_form( obj->form );
 }
 
@@ -3313,7 +3314,7 @@ fl_is_good_form( FL_FORM * form )
 			return 1;
 
     if ( form )
-		M_warn( 0, "skipped invisible form" );
+		M_warn( "fl_is_good_form", "skipped invisible form" );
 
     return 0;
 }
@@ -3400,7 +3401,6 @@ fl_adjust_form_size( FL_FORM * form )
     double xm = 0.5,
 		   ym = 0.5;
     int bw;
-
 
     if ( fl_no_connection )
 		return 1.0;
@@ -3494,7 +3494,6 @@ fl_internal_init( void )
 {
     static FL_TARGET *default_flx;
 
-
     if ( ! default_flx )
 		default_flx = fl_calloc( 1, sizeof *default_flx );
 
@@ -3535,7 +3534,6 @@ fl_XLookupString( XKeyEvent * xkey,
 				  KeySym *    ks )
 {
     int len = INT_MIN;
-
 
     if ( ! fl_context->xic )
 		len = XLookupString( xkey, buf, buflen, ks, 0 );

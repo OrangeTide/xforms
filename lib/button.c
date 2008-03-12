@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.6 2008/01/28 23:16:33 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.7 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -46,6 +46,7 @@ char *fl_id_but = "$Id: button.c,v 1.6 2008/01/28 23:16:33 jtt Exp $";
 
 typedef FL_BUTTON_STRUCT SPEC;
 
+extern FL_FORM *fl_popup_form;
 
 /***************************************
  ***************************************/
@@ -61,12 +62,10 @@ free_pixmap( SPEC * sp )
 }
 
 
-#define ISUPBOX  FL_IS_UPBOX
-#define DOWNBOX  FL_TO_DOWNBOX
-#define ISTABBOX( t )   (    t == FL_TOPTAB_UPBOX			 \
-						  || t== FL_SELECTED_TOPTAB_UPBOX	 \
-						  || t== FL_BOTTOMTAB_UPBOX			 \
-						  || t== FL_SELECTED_BOTTOMTAB_UPBOX    )
+#define ISTABBOX( t )   (    t == FL_TOPTAB_UPBOX			       \
+						  || t == FL_SELECTED_TOPTAB_UPBOX	       \
+						  || t == FL_BOTTOMTAB_UPBOX			   \
+						  || t == FL_SELECTED_BOTTOMTAB_UPBOX    )
 
 
 /********** DRAWING *************/
@@ -90,9 +89,9 @@ draw_button( FL_OBJECT * ob )
     if ( ob->belowmouse && col == FL_BUTTON_COL2 )
 		col = FL_BUTTON_MCOL2;
 
-    if ( ISUPBOX( ob->boxtype ) && ( ( SPEC * ) ( ob->spec ) )->val )
-		fl_drw_box( DOWNBOX( ob->boxtype ), ob->x, ob->y, ob->w, ob->h,
-					col, ob->bw );
+    if ( FL_IS_UPBOX( ob->boxtype ) && ( ( SPEC * ) ( ob->spec ) )->val )
+		fl_drw_box( FL_TO_DOWNBOX( ob->boxtype ), ob->x, ob->y, ob->w,
+					ob->h, col, ob->bw );
     else
 		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
 
@@ -113,17 +112,13 @@ draw_button( FL_OBJECT * ob )
 
     if ( ob->type == FL_MENU_BUTTON && ob->boxtype == FL_UP_BOX )
     {
-		int dbh = FL_max(absbw - 1, 1);
+		int dbh = FL_max( absbw - 1, 1 );
 
-		dw = (int)FL_max(0.11f * ob->w, 13);
-		dh = (int)FL_max(6 + (ob->bw > 0), ob->h * 0.1f);
+		dw = FL_max( 0.11 * ob->w, 13 );
+		dh = FL_max( 6 + (ob->bw > 0 ), ob->h * 0.1 );
 
-		fl_drw_box(FL_UP_BOX,
-				   (FL_Coord) (ob->x + ob->w - dw - absbw - 2),
-				   (FL_Coord) ob->y + (ob->h - dh) / 2,
-				   (FL_Coord) dw,
-				   (FL_Coord) dh,
-				   ob->col1, -dbh);
+		fl_drw_box( FL_UP_BOX, ob->x + ob->w - dw - absbw - 2,
+					ob->y + ( ob->h - dh ) / 2, dw, dh, ob->col1, -dbh );
 		off2 = dw - 1;
     }
 
@@ -150,6 +145,7 @@ draw_button( FL_OBJECT * ob )
  ***************************************/
 
 #define MAX_BUTCLASS 12
+
 typedef struct
 {
     FL_DrawButton    drawbutton;
@@ -172,6 +168,7 @@ lookup_drawfunc( int bclass )
     for ( dbs = db + MAX_BUTCLASS; db < dbs; db++ )
 		if ( db->bclass == bclass )
 			return db->drawbutton;
+
     return 0;
 }
 
@@ -187,6 +184,7 @@ lookup_cleanupfunc( int bclass )
     for ( dbs = db + MAX_BUTCLASS; db < dbs; db++ )
 		if ( db->bclass == bclass )
 			return db->cleanup;
+
     return 0;
 }
 
@@ -208,10 +206,8 @@ fl_add_button_class( int              bclass,
     if ( ! initialized )
     {
 		for ( dbs = db + MAX_BUTCLASS; db < dbs; db++ )
-		{
 			db->bclass = -1;
-			/* db->drawbutton = draw_button;  */
-		}
+
 		initialized = 1;
     }
 
@@ -313,9 +309,10 @@ handle_it( FL_OBJECT * ob,
 			sp->event = FL_PUSH;
 			oldval = sp->val;
 			sp->val = ! sp->val;
-			sp->mousebut = ( int ) key;
+			sp->mousebut = key;
 			sp->timdel = 1;
 			fl_redraw_object( ob );
+			fl_popup_form = ob->form;
 			return    ob->type == FL_INOUT_BUTTON
 				   || ob->type == FL_TOUCH_BUTTON
 				   || ob->type == FL_MENU_BUTTON;
@@ -361,8 +358,8 @@ handle_it( FL_OBJECT * ob,
 
 			if ( ob->type == FL_PUSH_BUTTON || ob->type == FL_RADIO_BUTTON )
 			{
-				sp->val = !sp->val;
-				ob->pushed = (ob->type == FL_RADIO_BUTTON);
+				sp->val = ! sp->val;
+				ob->pushed = ob->type == FL_RADIO_BUTTON;
 				fl_redraw_object( ob );
 				wait_for_release( ev );
 			}
@@ -370,6 +367,7 @@ handle_it( FL_OBJECT * ob,
 					  || ob->type == FL_RETURN_BUTTON )
 			{
 				int obl = ob->belowmouse;
+
 				sp->val = ob->belowmouse = 1;
 				fl_redraw_object( ob );
 				wait_for_release( ev );
@@ -449,13 +447,11 @@ unset_radio( FL_OBJECT * ob )
 			obj1 = obj1->prev;
 
 		for ( ; obj1 && obj1->objclass != FL_END_GROUP; obj1 = obj1->next )
-		{
 			if ( obj1->radio && obj1->pushed && obj1 != ob )
 			{
 				obj1->pushed = ( ( FL_BUTTON_SPEC * ) obj1->spec )->val = 0;
 				fl_redraw_object( obj1 );
 			}
-		}
     }
 }
 #endif
@@ -495,7 +491,7 @@ fl_set_button( FL_OBJECT * ob,
 int
 fl_get_button( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ( ob->spec ) )->val;
+    return ( ( SPEC * ) ob->spec )->val;
 }
 
 
@@ -507,7 +503,7 @@ fl_get_button( FL_OBJECT * ob )
 int
 fl_get_button_numb( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ( ob->spec ) )->mousebut;
+    return ( ( SPEC * ) ob->spec )->mousebut;
 }
 
 

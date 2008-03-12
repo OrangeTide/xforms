@@ -35,7 +35,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_util = "$Id: util.c,v 1.7 2008/01/28 23:24:12 jtt Exp $";
+char *fl_id_util = "$Id: util.c,v 1.8 2008/03/12 16:00:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -85,15 +85,15 @@ fl_error( const char * where,
 
     M_err( where, why );
 
-    if ( showerrors )
-    {
-		resp = fl_show_choice( "XForms Error", where, why, 3,
-							   "Continue", "Exit", "HideErrors", 2 );
+    if ( ! showerrors )
+		return;
+
+	resp = fl_show_choice( "XForms Error", where, why, 3,
+						   "Continue", "Exit", "HideErrors", 2 );
 	if ( resp == 2 )
-	    exit( -1 );
+		exit( -1 );
 	else if ( resp == 3 )
-	    showerrors = 0;
-    }
+		showerrors = 0;
 }
 
 
@@ -183,10 +183,12 @@ static FL_VN_PAIR flclass[ ] =
 const char *
 fl_object_class_name( FL_OBJECT * ob )
 {
-    return ! ob ?
-		   "null" :
-		   ( ob == FL_EVENT ?
-			 "fl_event" : fl_get_vn_name( flclass, ob->objclass ) );
+	if ( ! ob )
+		return "null";
+	else if ( ob == FL_EVENT )
+		return "FL_EVENT";
+
+	return fl_get_vn_name( flclass, ob->objclass );
 }
 
 
@@ -216,7 +218,7 @@ fl_print_form_object( FL_FORM *    form,
     fprintf( stderr, "\n" );
 
     for ( ob = form->last; ob; ob = ob->prev )
-		fprintf( stderr, "Prev: %s (parent: %s) \n",
+		fprintf( stderr, "Prev: %s (parent: %s)\n",
 				 fl_object_class_name( ob ),
 				 fl_object_class_name( ob->parent ) );
 }

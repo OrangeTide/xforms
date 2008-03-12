@@ -336,6 +336,7 @@ handle( FL_OBJECT * ob,
 			fl_set_textbox_xoffset( comp->tb, np );
 
 			draw_dead_area( ob, comp );
+			/* fall through */
 
 		case FL_DRAWLABEL:
 			fl_draw_object_label( ob );

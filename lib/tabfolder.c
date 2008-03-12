@@ -130,6 +130,7 @@ handle( FL_OBJECT * ob,
 			sp->processing_destroy = 0;
 #if 0
 			/* for size testing */
+
 			fl_drw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h, FL_RED, 0 );
 #endif
 			compute_position( ob );

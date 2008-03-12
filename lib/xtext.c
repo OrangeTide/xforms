@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.9 2008/02/04 01:22:18 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.10 2008/03/12 16:00:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -314,7 +314,7 @@ fl_drw_string( int      horalign,
 
             if ( fset == 0 )
             {
-				M_err( "DrawString","Bad fontset" );
+				M_err( "DrawString", "Bad fontset" );
 				exit( 0 );
             }
 

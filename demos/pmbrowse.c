@@ -35,20 +35,22 @@
 
 FD_ttt * fd_ttt;
 
-static int load_file(const char *, void *);
+static int load_file( const char *,
+					  void       * );
 
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char * argv[ ] )
 {
-    fl_initialize(&argc, argv, "FormDemo", 0, 0);
-    fd_ttt = create_form_ttt();
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    fd_ttt = create_form_ttt( );
 
-    fl_show_form(fd_ttt->ttt, FL_PLACE_CENTER, FL_TRANSIENT, "PixmapBrowser");
+    fl_show_form( fd_ttt->ttt, FL_PLACE_CENTER, FL_TRANSIENT, "PixmapBrowser" );
 
-    fl_set_fselector_placement(FL_PLACE_FREE);
-    fl_set_fselector_callback(load_file, 0);
-    fl_show_fselector("Load a Pixmap file", 0, "*.x?m",0);
-    fl_do_forms();
+    fl_set_fselector_placement( FL_PLACE_FREE );
+    fl_set_fselector_callback( load_file, 0 );
+    fl_show_fselector( "Load a Pixmap file", NULL, "*.x?m", NULL );
+    fl_do_forms( );
     return 0;
 }
 
@@ -56,25 +58,39 @@ static int
 load_file( const char * fname,
 		   void       * data  FL_UNUSED_ARG )
 {
-     int ispix = 0;
      char *p;
 
-     if (( p = strrchr(fname, '.')))
-         ispix = strcmp(p+1, "xbm") != 0;
+	 if ( ! fname || ! *fname )
+	 {
+		 fprintf( stderr, "Missing file name\n" );
+		 return 0;
+	 }
 
-     if(ispix)
+     if ( ! ( p = strrchr( fname, '.' ) ) )
+	 {
+		 fprintf( stderr, "Missing file extension\n" );
+		 return 0;
+	 }
+
+     if ( ! strcmp( p + 1, "xpm" ) )
      {
-        fl_hide_object(fd_ttt->bm);
-        fl_show_object(fd_ttt->pm);
-        fl_free_pixmap_pixmap(fd_ttt->pm);
-        fl_set_pixmap_file(fd_ttt->pm, fname);
+		 fl_hide_object( fd_ttt->bm );
+		 fl_free_pixmap_pixmap( fd_ttt->pm );
+		 fl_set_pixmap_file( fd_ttt->pm, fname );
+		 fl_show_object( fd_ttt->pm );
      }
-     else
+     else if ( ! strcmp( p + 1, "xbm" ) )
      {
-        fl_hide_object(fd_ttt->pm);
-        fl_show_object(fd_ttt->bm);
-        fl_set_bitmap_file(fd_ttt->bm, fname);
+		 fl_hide_object( fd_ttt->pm );
+		 fl_set_bitmap_file( fd_ttt->bm, fname );
+		 fl_show_object( fd_ttt->bm );
      }
+	 else
+	 {
+		 fprintf( stderr, "Invalid file extension: %s\n", p + 1 );
+		 return 0;
+	 }
+
      return 1;
 }
 
@@ -82,15 +98,15 @@ load_file( const char * fname,
 void done( FL_OBJECT * ob  FL_UNUSED_ARG,
 		   long        q   FL_UNUSED_ARG )
 {
-    fl_finish();
-    exit(0);
+    fl_finish( );
+    exit( 0 );
 }
 
 
 void reload( FL_OBJECT * ob  FL_UNUSED_ARG,
 			 long        q   FL_UNUSED_ARG )
 {
-    fl_set_fselector_placement(FL_PLACE_MOUSE);
-    fl_set_fselector_callback(load_file, 0);
-    fl_show_fselector("Load a Pix/bitMap file", 0, 0,0);
+    fl_set_fselector_placement( FL_PLACE_MOUSE );
+    fl_set_fselector_callback( load_file, 0 );
+    fl_show_fselector( "Load a Pix/bitMap file", NULL, NULL, NULL );
 }

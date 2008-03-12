@@ -70,24 +70,25 @@ fl_init_valuator(FL_OBJECT * ob)
 
 double
 fl_valuator_round_and_clamp( FL_OBJECT * ob,
-							 double      value )
+							 double      val )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
-    double vmin, vmax;
+    double vmin,
+		   vmax;
 
-    if (sp->step != 0.0)
+    if ( sp->step != 0.0 )
     {
-		float f = value / sp->step;
-		value = sp->step * (int) (f > 0 ? (f + 0.4) : (f - 0.4));
+	   val /= sp->step;
+	   val = sp->step * ( val >= 0 ? floor( val + 0.5 ) : ceil( val - 0.5 ) );
     }
 
-    vmin = FL_min(sp->min, sp->max);
-    vmax = FL_max(sp->min, sp->max);
+    vmin = FL_min( sp->min, sp->max );
+    vmax = FL_max( sp->min, sp->max );
 
-    if(!sp->cross_over)
-		return FL_clamp(value, vmin, vmax);
+    if ( ! sp->cross_over )
+		return FL_clamp( val, vmin, vmax );
     else
-		return CROSS_OVER(value,vmin,vmax);
+		return CROSS_OVER( val, vmin, vmax );
 }
 
 
@@ -167,7 +168,8 @@ fl_clamp( double val,
 		  double min,
 		  double max)
 {
-    double vmin = FL_min(min, max), vmax = FL_max(min, max);
+    double vmin = FL_min( min, max ),
+		   vmax = FL_max( min, max );
 
-    return FL_clamp(val, vmin, vmax);
+    return FL_clamp( val, vmin, vmax );
 }

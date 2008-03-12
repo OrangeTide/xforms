@@ -772,6 +772,7 @@ handle( FL_OBJECT * ob,
     {
 		case FL_ATTRIB:
 			check_scrollbar( ob );
+			/* fall through */
 
 		case FL_DRAW:
 			fl_set_canvas_decoration( sp->canvas,

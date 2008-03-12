@@ -39,7 +39,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_dlist = "$Id: listdir.c,v 1.11 2008/02/27 12:12:14 jtt Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.12 2008/03/12 16:00:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -351,12 +351,12 @@ tc_sort( const void * a,
 			return db->dl_mtime - da->dl_mtime;
 
 		case FL_SIZESORT:
-			return ( da->dl_size > db->dl_size) ? 1 :
-			       ( ( da->dl_size == db->dl_size ) ? 0 : -1 );
+			return da->dl_size > db->dl_size ?
+				   1 : ( da->dl_size == db->dl_size ? 0 : -1 );
 
 		case FL_RSIZESORT:
-			return ( da->dl_size < db->dl_size ) ? 1 :
-			       ( ( da->dl_size == db->dl_size ) ? 0 : -1 );
+			return da->dl_size < db->dl_size ?
+		           1 : ( da->dl_size == db->dl_size ? 0 : -1 );
 
 		case FL_CASEALPHASORT:
 			return strcasecmp( da->name, db->name );

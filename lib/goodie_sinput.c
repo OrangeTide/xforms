@@ -58,7 +58,7 @@ typedef struct
 static FD_input *
 create_input( void )
 {
-    FD_input *fdui = (FD_input *) fl_calloc(1, sizeof(*fdui));
+    FD_input *fdui = fl_calloc(1, sizeof *fdui );
     int oldy = fl_inverted_y;
     int oldu = fl_get_coordunit();
 
@@ -102,19 +102,20 @@ fl_show_simple_input( const char * str1,
 
     fl_handle_goodie_font(fd_input->but, fd_input->input);
 
-    fl_set_object_label(fd_input->str1, str1);
-    fl_set_input(fd_input->input, defstr);
+    fl_set_object_label( fd_input->str1, str1 );
+    fl_set_input( fd_input->input, defstr );
 
-    if (!fd_input->form->visible)
-		fl_deactivate_all_forms();
+    if ( ! fd_input->form->visible )
+		fl_deactivate_all_forms( );
 
-    fl_show_form(fd_input->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Input");
-    fl_update_display(0);
+    fl_show_form( fd_input->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Input" );
+    fl_update_display( 0 );
 
-    while (fl_do_only_forms() != fd_input->but)
+    while ( fl_do_only_forms( ) != fd_input->but )
 		/* empty */ ;
 
-    fl_hide_form(fd_input->form);
-    fl_activate_all_forms();
-    return fl_get_input(fd_input->input);
+    fl_hide_form( fd_input->form );
+    fl_activate_all_forms( );
+
+    return fl_get_input( fd_input->input );
 }

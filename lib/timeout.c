@@ -47,19 +47,6 @@
 
 
 /***************************************
- * used to do timeout, now almost does nothing
- ***************************************/
-
-int
-fl_check_it( const char * et )
-{
-    if ( fl_cntl.debug == 11 )
-		fprintf( stderr, "%s\r        ", et );
-    return 0;
-}
-
-
-/***************************************
  ***************************************/
 
 int

@@ -42,8 +42,8 @@
  *
  */
 
-#if defined(F_ID) || defined(DEBUG)
-char *fl_id_menu = "$Id: menu.c,v 1.9 2008/03/02 23:14:17 jtt Exp $";
+#if defined F_ID || defined DEBUG
+char *fl_id_menu = "$Id: menu.c,v 1.10 2008/03/12 16:00:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,6 +59,9 @@ char *fl_id_menu = "$Id: menu.c,v 1.9 2008/03/02 23:14:17 jtt Exp $";
 
 #define SPEC          FL_MENU_SPEC
 #define ISPUP( sp )   ( ( sp )->extern_menu >= 0 )
+
+
+extern Window fl_popup_parent_window;
 
 
 /***************************************
@@ -94,6 +97,8 @@ do_menu( FL_OBJECT * ob )
     if ( sp->numitems == 0 && sp->extern_menu < 0 )
 		return 0;
 
+	fl_popup_parent_window = FL_ObjWin( ob );
+
     if ( sp->extern_menu >= 0 )
     {
 		Window oparent,
@@ -101,7 +106,7 @@ do_menu( FL_OBJECT * ob )
 
 		fl_getpup_window( sp->extern_menu, &oparent, &win );
 
-		if ( *ob->label && ob->type != FL_PULLDOWN_MENU )
+		if ( ob->label && *ob->label && ob->type != FL_PULLDOWN_MENU )
 			fl_setpup_title( sp->extern_menu, ob->label );
 
 		fl_reparent_pup( sp->extern_menu, FL_ObjWin( ob ) );
@@ -204,7 +209,7 @@ handle_menu( FL_OBJECT * ob,
     FL_COLOR col;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleMenu", fl_event_name( event ) );
+    M_info2( "handle_menu", fl_event_name( event ) );
 #endif
 
     switch ( event )
@@ -275,7 +280,7 @@ handle_menu( FL_OBJECT * ob,
 				fl_setpup_position( ob->form->x + ob->x + 5,
 									ob->form->y + ob->y + ob->h + 5 );
 
-			if ( ( i = do_menu( ob ) ) != sp->val && i > 0) 
+			if ( ( i = do_menu( ob ) ) != sp->val && i > 0 ) 
 				sp->val = i;
 
 			ob->pushed = 0;
@@ -696,7 +701,7 @@ fl_get_menu_item_text( FL_OBJECT * ob,
 
 unsigned int
 fl_get_menu_item_mode( FL_OBJECT * ob,
-					   int         n)
+					   int         n )
 {
     SPEC *sp = ob->spec;
 

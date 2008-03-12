@@ -64,7 +64,7 @@ fl_interpolate( const float * wx,
 		return -1;
     }
 
-    nout = (int) ((wx[nin - 1] - wx[0]) / grid + 1.01f);
+    nout = (int) ((wx[nin - 1] - wx[0]) / grid + 1.01);
 
     x[0] = wx[0];
     y[0] = wy[0];

@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.16 2008/01/29 20:05:22 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.17 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -54,9 +54,6 @@ char *fl_id_rsc = "$Id: flresource.c,v 1.16 2008/01/29 20:05:22 jtt Exp $";
 #include <X11/Xw32defs.h>
 #endif
 
-/* used to have other uses, currently does almost nothing */
-
-extern int fl_check_it( const char * );
 
 static XrmDatabase fldatabase;	/* final merged database */
 static XrmDatabase cmddb;	/* command line database */
@@ -901,7 +898,6 @@ fl_initialize( int        * na,
 		 buf[ 256 ];
     XrmValue xval;
     char *type;
-    char *expire = "NC_PA_@X";
     float xdpi,
 		  ydpi;
 
@@ -921,7 +917,7 @@ fl_initialize( int        * na,
 
     if ( ! na || ! *na )
     {
-		fprintf( stderr, "XForms: argc==0 detected\n" );
+		fprintf( stderr, "XForms: argc == 0 detected\n" );
 		exit( 1 );
     }
 
@@ -1064,9 +1060,6 @@ fl_initialize( int        * na,
     fl_set_ul_property( fl_cntl.ulPropWidth, fl_cntl.ulThickness );
 
     fl_cntl.vclass = fl_vclass_val( fl_cntl.vname );
-
-    if ( fl_check_it( expire ) )
-		exit( 1 );
 
     /* get the current keyboard state */
 

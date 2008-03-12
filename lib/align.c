@@ -99,7 +99,7 @@ fl_get_hv_align( int   align,
 			break;
 
 		default:
-			Bark( "GetAlign", "bad request: %d\n", align );
+			Bark( "fl_get_hv_align", "bad request: %d\n", align );
 			*halign = FL_ALIGN_CENTER;
 			*valign = FL_ALIGN_CENTER;
 			break;

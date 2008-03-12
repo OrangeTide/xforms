@@ -39,7 +39,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.9 2008/01/28 23:18:05 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.10 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -195,8 +195,8 @@ P_errmsg( const char * func,
     {
 		strcpy(line, lineno > 0 ? fl_itoa(lineno) : "?");
 		where = *func ?
-			vstrcat("In ", func, " [", file, " ", line, "] ", (char *) 0) :
-			vstrcat("In ", file, "[", line, "]: ", (char *) 0);
+			vstrcat( "In ", func, " [", file, " ", line, "] ", ( char * ) 0 ) :
+			vstrcat( "In ", file, "[", line, "]: ", ( char * ) 0 );
     }
     else
     {
@@ -228,19 +228,17 @@ P_errmsg( const char * func,
 
     why = emsg;
 
-	/*
-	 * have gotten the message, where and why, show it
-	 */
+	/* have gotten the message, where and why, show it */
 
-    if (req_level < threshold)
-		fprintf(errlog, "%s%s\n", where, why);
+    if ( req_level < threshold )
+		fprintf( errlog, "%s%s\n", where, why );
 
     if (gout && gmout)
     {
 		gmout("Warning", where, why,  0);
     }
 
-    free_vstrcat(where);
+    free_vstrcat( where );
 
     /* reset system errors */
 

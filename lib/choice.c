@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.12 2008/03/02 23:13:59 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.13 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -380,7 +380,7 @@ handle_choice( FL_OBJECT * ob,
 
 		case FL_LEAVE:
 			sp->below = 0;
-			/* FALL THROUGH */
+			/* fall through */
 
 		case FL_ENTER:
 			fl_redraw_object( ob );

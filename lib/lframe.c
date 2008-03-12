@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_lframe = "$Id: lframe.c,v 1.6 2008/01/28 23:20:38 jtt Exp $";
+char *fl_id_lframe = "$Id: lframe.c,v 1.7 2008/03/12 16:00:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -64,6 +64,7 @@ handle_lframe( FL_OBJECT * ob,
 		case FL_DRAW:
 			fl_drw_frame(ob->type, ob->x, ob->y, ob->w, ob->h,
 						 ob->col1, ob->bw);
+			/* fall through */
 
 		case FL_DRAWLABEL:
 			if (!(len = strlen(ob->label)))

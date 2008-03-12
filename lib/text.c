@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_txt = "$Id: text.c,v 1.6 2008/01/28 23:23:36 jtt Exp $";
+char *fl_id_txt = "$Id: text.c,v 1.7 2008/03/12 16:00:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -60,14 +60,15 @@ handle_it( FL_OBJECT * ob,
     {
 		case FL_DRAW:
 			ob->align |= FL_ALIGN_INSIDE;
-			fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
-					   ob->bw);
+			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+						ob->bw );
+			/* fall through */
 
 		case FL_DRAWLABEL:
-			fl_set_text_clipping(ob->x + FL_abs(ob->bw), ob->y + 2,
-								 ob->w - 2 * FL_abs(ob->bw), ob->h - 4);
-			fl_draw_object_label(ob);
-			fl_unset_text_clipping();
+			fl_set_text_clipping( ob->x + FL_abs( ob->bw ), ob->y + 2,
+								  ob->w - 2 * FL_abs( ob->bw ), ob->h - 4 );
+			fl_draw_object_label( ob );
+			fl_unset_text_clipping( );
 			break;
     }
 

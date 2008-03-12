@@ -129,14 +129,14 @@ typedef struct
 } FL_IMAP;
 
 
-#define BadPixel     FL_NoColor
+#define AllEventsMask   ( ( OwnerGrabButtonMask << 1 ) - 1 )
+
+#define BadPixel        FL_NoColor
 
 
 #define Clamp( v, vmin, vmax ) ( ( v ) < (vmin ) ? \
 								 ( vmin ) : ( ( v ) > ( vmax ) ? \
 											  ( vmax ) :( v ) ) )
-
-#define FLArtificialTimerEvent  -1
 
 #define IsValidClass( o, c ) ( ( o ) && ( o )->objclass == ( c ) )
 
@@ -420,10 +420,6 @@ extern Pixmap fl_read_bitmapfile( Window,
 extern char **fl_get_cmdline_args( int * );
 
 
-/* just for fun */
-
-extern int fl_check_it( const char * );
-
 extern XRectangle *fl_get_underline_rect( XFontStruct *,
 										  FL_Coord,
 										  FL_Coord,
@@ -615,7 +611,6 @@ typedef struct fl_context_
     FL_TIMEOUT_REC *     timeout_rec;       /* timeout callbacks      */
     int                  idle_delta;		/* timer resolution       */
     long                 mouse_button;		/* push/release record    */
-    Window               pup_win;		    /* popup window           */
     int                  pup_id;			/* current active pup id  */
     FL_FORM *            modal;		        /* current modal form     */
     long                 max_request_size;	/* max protocol size      */

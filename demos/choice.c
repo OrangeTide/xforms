@@ -60,14 +60,16 @@ void create_form(void)
    fl_end_form();
 }
 
+
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char * argv[ ] )
 {
    FL_OBJECT *obj;
 
-   fl_flip_yorigin();
-   fl_initialize(&argc, argv, "FormDemo", 0, 0);
-   create_form();
+   fl_flip_yorigin( );
+   fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+   create_form( );
    fl_addto_choice(sexobj,"Male");
    fl_addto_choice(sexobj,"Female");
    fl_addto_choice(childobj,"Zero|One|Two|Three|Many");

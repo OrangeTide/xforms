@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.9 2008/01/28 23:22:49 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.10 2008/03/12 16:00:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -483,6 +483,7 @@ handle_it( FL_OBJECT * ob,
 
 		case FL_ENTER:
 			compute_bounds( ob, &sp->mx, &sp->my, &sp->mw, &sp->mh );
+			/* fall through */
 
 		case FL_MOTION:
 			if ( is_focus( ob->type ) && focusobj_change( ob, mx, my ) )
@@ -523,9 +524,9 @@ handle_it( FL_OBJECT * ob,
 				lmy = my;
 			}
 			else
-			{
 				sp->mouse_pos = get_newvalue(ob, mx, my) > sp->val ? 1 : -1;
-			}
+
+			/* fall through */
 
 		case FL_MOUSE:
 			/* need to fix get_pos before removing this */
@@ -551,6 +552,7 @@ handle_it( FL_OBJECT * ob,
 				fl_remove_timeout( sp->timeout_id );
 				sp->timeout_id = -1;
 			}
+
 			if ( is_focus( ob->type ) )
 			{
 				fl_redraw_object( ob );
@@ -569,7 +571,7 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-			fl_free(ob->spec);
+			fl_free( ob->spec );
 			break;
     }
 

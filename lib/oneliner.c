@@ -55,16 +55,16 @@ static FL_OBJECT *text;
 static void
 create_it( void )
 {
-    if (!oneliner)
-    {
-	oneliner = fl_bgn_form(FL_NO_BOX, 5, 5);
-	text = fl_add_box(FL_BORDER_BOX, 0, 0, 5, 5, "");
-	fl_set_object_lstyle(text, fntstyle);
-	fl_set_object_lsize(text, fntsize);
-	fl_set_object_lcol(text, textcolor);
-	fl_set_object_color(text, background, background);
-	fl_end_form();
-    }
+    if ( oneliner )
+		return;
+
+	oneliner = fl_bgn_form( FL_NO_BOX, 5, 5 );
+	text = fl_add_box( FL_BORDER_BOX, 0, 0, 5, 5, "" );
+	fl_set_object_lstyle( text, fntstyle );
+	fl_set_object_lsize( text, fntsize );
+	fl_set_object_lcol( text, textcolor );
+	fl_set_object_color( text, background, background );
+	fl_end_form( );
 }
 
 
@@ -76,27 +76,29 @@ fl_show_oneliner( const char * s,
 				  FL_Coord     x,
 				  FL_Coord     y )
 {
-    int maxw = 0, maxh = 0;
+    int maxw = 0,
+		maxh = 0;
 
-    if (!s)
+    if ( ! s )
 		return;
 
-    create_it();
+    create_it( );
 
-    fl_get_string_dimension(fntstyle, fntsize, s, strlen(s), &maxw, &maxh);
+    fl_get_string_dimension( fntstyle, fntsize, s, strlen( s ), &maxw, &maxh );
 
     maxw += 6;
     maxh += 6;
 
-    fl_freeze_form(oneliner);
-    fl_set_form_geometry(oneliner, x, y, maxw, maxh);
-    fl_set_object_label(text, s);
-    fl_unfreeze_form(oneliner);
+	fl_freeze_form( oneliner );
+    fl_set_form_geometry( oneliner, x, y, maxw, maxh );
+    fl_set_object_label( text, s );
+	fl_unfreeze_form( oneliner );
 
-    if (!oneliner->visible)
-		fl_show_form(oneliner, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
-					 FL_NOBORDER, "OneLiner");
-    fl_update_display(1);
+    if ( oneliner->visible == FL_INVISIBLE )
+		fl_show_form( oneliner, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
+					  FL_NOBORDER, "OneLiner" );
+
+	fl_update_display( 1 );
 }
 
 
@@ -106,9 +108,8 @@ fl_show_oneliner( const char * s,
 void
 fl_hide_oneliner( void )
 {
-    create_it();
-    if (oneliner->visible)
-		fl_hide_form(oneliner);
+    if ( oneliner && oneliner->visible )
+		fl_hide_form( oneliner );
 }
 
 
@@ -119,10 +120,10 @@ void
 fl_set_oneliner_color( FL_COLOR tc,
 					   FL_COLOR bc )
 {
-    create_it();
-    fl_set_object_lcol(text, textcolor = tc);
+    create_it( );
+    fl_set_object_lcol( text, textcolor = tc );
     background = bc;
-    fl_set_object_color(text, background, background);
+    fl_set_object_color( text, background, background );
 }
 
 
@@ -133,7 +134,7 @@ void
 fl_set_oneliner_font( int style,
 					  int size )
 {
-    create_it();
-    fl_set_object_lstyle(text, fntstyle = style);
-    fl_set_object_lsize(text, fntsize = size);
+    create_it( );
+    fl_set_object_lstyle( text, fntstyle = style );
+    fl_set_object_lsize( text, fntsize = size );
 }

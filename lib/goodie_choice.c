@@ -60,24 +60,24 @@ static int default_choice;
 static FD_choice *
 create_choice( void )
 {
-    FD_choice *fdui = (FD_choice *) fl_calloc(1, sizeof(*fdui));
+    FD_choice *fdui = fl_calloc(1, sizeof *fdui );
     int oldy = fl_inverted_y;
     int oldu = fl_get_coordunit();
 
     fl_inverted_y = 0;
-    fl_set_coordunit(FL_COORD_PIXEL);
-    fdui->form = fl_bgn_form(FL_UP_BOX, 460, 130);
-    fl_set_form_title(fdui->form, "Choice");
-    fdui->str = fl_add_box(FL_FLAT_BOX, 20, 15, 420, 65, "");
-    fdui->but[1] = fl_add_button(FL_NORMAL_BUTTON, 40, 93, 90, 27, "");
-    fdui->but[2] = fl_add_button(FL_NORMAL_BUTTON, 185, 93, 90, 27, "");
-    fdui->but[3] = fl_add_button(FL_NORMAL_BUTTON, 330, 93, 90, 27, "");
-    fdui->sc[1] = "1";
-    fdui->sc[2] = "2";
-    fdui->sc[3] = "3";
-    fl_end_form();
+    fl_set_coordunit( FL_COORD_PIXEL );
+    fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
+    fl_set_form_title( fdui->form, "Choice" );
+    fdui->str = fl_add_box( FL_FLAT_BOX, 20, 15, 420, 65, "" );
+    fdui->but[ 1 ] = fl_add_button( FL_NORMAL_BUTTON, 40, 93, 90, 27, "" );
+    fdui->but[ 2 ] = fl_add_button( FL_NORMAL_BUTTON, 185, 93, 90, 27, "" );
+    fdui->but[ 3 ] = fl_add_button( FL_NORMAL_BUTTON, 330, 93, 90, 27, "" );
+    fdui->sc[ 1 ] = fl_strdup( "1" );
+    fdui->sc[ 2 ] = fl_strdup( "2" );
+    fdui->sc[ 3 ] = fl_strdup( "3" );
+    fl_end_form( );
     fl_inverted_y = oldy;
-    fl_set_coordunit(oldu);
+    fl_set_coordunit( oldu );
     return fdui;
 }
 
@@ -97,91 +97,90 @@ fl_show_choices( const char * msg,
     const char *c[ 4 ];
     int i;
 
-    c[1] = c1;
-    c[2] = c2;
-    c[3] = c3;
+    c[ 1 ] = c1;
+    c[ 2 ] = c2;
+    c[ 3 ] = c3;
 
-    if (!fd_choice)
-		fd_choice = create_choice();
+    if ( ! fd_choice )
+		fd_choice = create_choice( );
 
-    fl_handle_goodie_font(fd_choice->but[1], fd_choice->but[2]);
-    fl_handle_goodie_font(fd_choice->but[3], fd_choice->str);
-    fl_set_object_label(fd_choice->str, msg);
+    fl_handle_goodie_font( fd_choice->but[ 1 ], fd_choice->but[ 2 ] );
+    fl_handle_goodie_font( fd_choice->but[ 3 ], fd_choice->str );
+    fl_set_object_label( fd_choice->str, msg );
 
-    fl_hide_object(fd_choice->but[1]);
-    fl_hide_object(fd_choice->but[2]);
-    fl_hide_object(fd_choice->but[3]);
+    fl_hide_object( fd_choice->but[ 1 ] );
+    fl_hide_object( fd_choice->but[ 2 ] );
+    fl_hide_object( fd_choice->but[ 3 ] );
 
     default_choice = def;
 
-    switch (numb)
+    switch ( numb )
     {
 		case 3:
-			for (i = 1; i <= 3; i++)
+			for ( i = 1; i <= 3; i++ )
 			{
-				fl_set_object_label(fd_choice->but[i], c[i]);
-				fl_set_object_shortcut(fd_choice->but[i], fd_choice->sc[i], 1);
-				fl_show_object(fd_choice->but[i]);
-				fl_fit_object_label(fd_choice->but[i], 1, 1);
+				fl_set_object_label( fd_choice->but[ i ], c[ i ] );
+				fl_set_object_shortcut( fd_choice->but[ i ],
+										fd_choice->sc[ i ], 1 );
+				fl_show_object( fd_choice->but[ i ] );
+				fl_fit_object_label( fd_choice->but[ i ], 1, 1 );
 			}
 			break;
 
 		case 2:
 			/* pick button 1 and 3 */
-			fl_set_object_label(fd_choice->but[1], c[1]);
-			fl_set_object_shortcut(fd_choice->but[1], fd_choice->sc[1], 1);
-			fl_show_object(fd_choice->but[1]);
-			fl_fit_object_label(fd_choice->but[1], 1, 1);
 
-			fl_set_object_label(fd_choice->but[3], c[2]);
-			fl_set_object_shortcut(fd_choice->but[3], fd_choice->sc[2], 1);
-			fl_show_object(fd_choice->but[3]);
-			fl_fit_object_label(fd_choice->but[3], 1, 1);
+			fl_set_object_label( fd_choice->but[ 1 ], c[ 1 ] );
+			fl_set_object_shortcut( fd_choice->but[ 1 ],
+									fd_choice->sc[ 1 ], 1 );
+			fl_show_object( fd_choice->but[ 1 ] );
+			fl_fit_object_label( fd_choice->but[ 1 ], 1, 1 );
+
+			fl_set_object_label( fd_choice->but[ 3 ], c[ 2 ] );
+			fl_set_object_shortcut( fd_choice->but[ 3 ],
+									fd_choice->sc[ 2 ], 1 );
+			fl_show_object( fd_choice->but[ 3 ] );
+			fl_fit_object_label( fd_choice->but[ 3 ], 1, 1 );
 			break;
 
 		case 1:
-			fl_set_object_label(fd_choice->but[1], c[1]);
-			fl_set_object_shortcut(fd_choice->but[1], fd_choice->sc[1], 1);
-			fl_show_object(fd_choice->but[1]);
-			fl_fit_object_label(fd_choice->but[1], 1, 1);
+			fl_set_object_label( fd_choice->but[ 1 ], c[ 1 ] );
+			fl_set_object_shortcut( fd_choice->but[ 1 ],
+									fd_choice->sc[ 1 ], 1 );
+			fl_show_object( fd_choice->but[ 1 ] );
+			fl_fit_object_label( fd_choice->but[ 1 ], 1, 1 );
 			break;
 
 		default:
 			return 0;
     }
 
-    fl_get_goodie_title(fd_choice->form, FLChoiceTitle);
+    fl_get_goodie_title( fd_choice->form, FLChoiceTitle );
 
-    if (!fd_choice->form->visible)
-		fl_deactivate_all_forms();
+    if ( ! fd_choice->form->visible )
+		fl_deactivate_all_forms( );
 
-    if (def > 0 && def <= 3)
-		fl_set_form_hotobject(fd_choice->form, fd_choice->but[def]);
+    if ( def > 0 && def <= 3 )
+		fl_set_form_hotobject( fd_choice->form, fd_choice->but[ def ] );
     else
-		fl_set_form_hotspot(fd_choice->form, -1, -1);
+		fl_set_form_hotspot( fd_choice->form, -1, -1 );
 
-    fl_show_form(fd_choice->form, FL_PLACE_HOTSPOT, FL_TRANSIENT,
-		 fd_choice->form->label);
+    fl_show_form( fd_choice->form, FL_PLACE_HOTSPOT, FL_TRANSIENT,
+				  fd_choice->form->label );
 
-    fl_update_display(0);
+    fl_update_display( 0 );
 
     do
-		retobj = fl_do_only_forms();
-    while (retobj != fd_choice->but[1] &&
-		   retobj != fd_choice->but[2] &&
-		   retobj != fd_choice->but[3]);
+		retobj = fl_do_only_forms( );
+    while (    retobj != fd_choice->but[ 1 ]
+		    && retobj != fd_choice->but[ 2 ]
+			&& retobj != fd_choice->but[ 3 ] );
 
-    fl_hide_form(fd_choice->form);
-    fl_activate_all_forms();
+    fl_hide_form( fd_choice->form );
+    fl_activate_all_forms( );
 
-    /* reset shortcut */
-
-    fd_choice->sc[1] = "1";
-    fd_choice->sc[2] = "2";
-    fd_choice->sc[3] = "3";
-
-    return (retobj == fd_choice->but[1]) ? 1 :
-		   ((retobj == fd_choice->but[2] || numb == 2) ? 2 : 3);
+    return retobj == fd_choice->but[ 1 ] ?
+		   1 : ( ( retobj == fd_choice->but[ 2 ] || numb == 2 ) ? 2 : 3);
 }
 
 
@@ -198,12 +197,11 @@ fl_show_choice( const char * m1,
 				const char * c3,
 				int          def )
 {
-    char buf[1024];
+    char buf[ 1024 ];
 
-    fl_snprintf(buf, sizeof(buf), "%s\n%s\n%s", m1 ? m1 : "",
-				m2 ? m2 : "",
-				m3 ? m3 : "");
-    return fl_show_choices(buf, numb, c1, c2, c3, def);
+    fl_snprintf( buf, sizeof buf, "%s\n%s\n%s",
+				 m1 ? m1 : "", m2 ? m2 : "", m3 ? m3 : "" );
+    return fl_show_choices( buf, numb, c1, c2, c3, def );
 }
 
 
@@ -215,11 +213,20 @@ fl_set_choices_shortcut( const char * a,
 						 const char * b,
 						 const char * c )
 {
-    if (!fd_choice)
-		fd_choice = create_choice();
-    fd_choice->sc[1] = a;
-    fd_choice->sc[2] = b;
-    fd_choice->sc[3] = c;
+    if ( ! fd_choice )
+		fd_choice = create_choice( );
+
+	if ( fd_choice->sc[ 1 ] )
+		fl_free( ( char * ) fd_choice->sc[ 1 ] );
+	fd_choice->sc[ 1 ] = ( a && *a ) ? strdup( a ) : NULL;
+
+	if ( fd_choice->sc[ 2 ] )
+		fl_free( ( char * ) fd_choice->sc[ 2 ] );
+	fd_choice->sc[ 2 ] = ( b && *b ) ? strdup( b ) : NULL;
+
+	if ( fd_choice->sc[ 3 ] )
+		fl_free( ( char * ) fd_choice->sc[ 3 ] );
+	fd_choice->sc[ 3 ] = ( c && *c ) ? strdup( c ) : NULL;
 }
 
 
@@ -229,10 +236,10 @@ fl_set_choices_shortcut( const char * a,
 void
 fl_hide_choice( void )
 {
-    if (fd_choice && fd_choice->form->visible)
+    if ( fd_choice && fd_choice->form->visible )
     {
-		if (default_choice <= 0 || default_choice > 3)
+		if ( default_choice <= 0 || default_choice > 3 )
 			default_choice = 1;
-		fl_object_qenter(fd_choice->but[default_choice]);
+		fl_object_qenter( fd_choice->but[ default_choice ] );
     }
 }

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_lbut = "$Id: lightbut.c,v 1.6 2008/01/28 23:20:44 jtt Exp $";
+char *fl_id_lbut = "$Id: lightbut.c,v 1.7 2008/03/12 16:00:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -141,7 +141,7 @@ draw_lightbutton( FL_OBJECT * ob )
 
     /* Draw the label */
 
-    if ((ob->align & ~FL_ALIGN_INSIDE) == FL_ALIGN_CENTER)
+    if ( ob->align & ~FL_ALIGN_INSIDE == FL_ALIGN_CENTER )
 		fl_drw_text(FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
 					ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label);
     else
@@ -152,11 +152,8 @@ draw_lightbutton( FL_OBJECT * ob )
 		ww = absbw + 1;
 
     if (ob->type == FL_RETURN_BUTTON)
-		fl_drw_text(0,
-					(FL_Coord) (ob->x + ob->w - ww),
-					(FL_Coord) (ob->y + 0.2f * ob->h),
-					(FL_Coord) (0.6f * ob->h),
-					(FL_Coord) (0.6f * ob->h),
+		fl_drw_text(0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
+					0.6 * ob->h, 0.6 * ob->h,
 					ob->lcol, 0, 0, "@returnarrow");
 }
 

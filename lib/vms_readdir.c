@@ -152,28 +152,28 @@ opendir(name)
     while (retry);
 
     /* Get memory for the handle, and the pattern. */
-    if ((dd = (DIR *) malloc(sizeof *dd)) == NULL)
+    if ((dd = fl_malloc( sizeof *dd ) ) == NULL )
     {
-	errno = ENOMEM;
-	return NULL;
+		errno = ENOMEM;
+		return NULL;
     }
-    dd->pattern = malloc((unsigned int) (strlen(nambuf) + sizeof "*.*"));
+    dd->pattern = fl_malloc( strlen( nambuf ) + sizeof "*.*" );
     if (dd->pattern == NULL)
     {
-	free((void *) dd);
-	errno = ENOMEM;
-	return NULL;
+		fl_free( dd );
+		errno = ENOMEM;
+		return NULL;
     }
 
     /* Fill in the fields. */
-    (void) strcat(strcpy(dd->pattern, nambuf), "*.*");
+    strcat(strcpy(dd->pattern, nambuf), "*.*");
     dd->context = 0;
     dd->count = 0;
     dd->vms_wantversions = 0;
     dd->pat.adr = dd->pattern;
     dd->pat.len = strlen(dd->pattern);
     dd->pat.mbz = 0;
-    (void) memset(&dd->entry, 0, sizeof dd->entry);
+    memset(&dd->entry, 0, sizeof dd->entry);
 
     return dd;
 }
@@ -204,8 +204,8 @@ closedir(dd)
     if (dd)
     {
 	(void) lib$find_file_end(&dd->context);
-	free(dd->pattern);
-	free((void *) dd);
+	fl_free(dd->pattern);
+	fl_free((void *) dd);
     }
 }
 
@@ -232,11 +232,12 @@ collectversions(dd)
     /* Add the name plus version wildcard, replacing the "*.*" put on before */
     i = strlen(dd->pattern);
     /* assert( i > 3 ); */
-    text = malloc((unsigned int) ((i - 3) + strlen(e->d_name) + sizeof ";*"));
+	i = FL_max( i, 4 );
+    text = fl_malloc( (i - 3) + strlen(e->d_name) + sizeof ";*");
     if (text == NULL)
-	return;
-    (void) strcpy(text, dd->pattern);
-    (void) strcat(strcpy(&text[i - 3], e->d_name), ";*");
+		return;
+    strcpy(text, dd->pattern);
+    strcat(strcpy(&text[i - 3], e->d_name), ";*");
 
     /* Set up the pattern and result descriptors. */
     pat.adr = text;
@@ -248,19 +249,19 @@ collectversions(dd)
     /* Read files, collecting versions. */
     for (context = 0; e->vms_verscount < VERSIZE(e); e->vms_verscount++)
     {
-	if (lib$find_file(&pat, &res, &context) == RMS$_NMF || context == 0)
-	    break;
-	buff[sizeof buff - 1] = '\0';
-	if (p = strchr(buff, ';'))
-	    e->vms_versions[e->vms_verscount] = atoi(p + 1);
-	else
-	    e->vms_versions[e->vms_verscount] = -1;
+		if (lib$find_file(&pat, &res, &context) == RMS$_NMF || context == 0)
+			break;
+		buff[sizeof buff - 1] = '\0';
+		if (p = strchr(buff, ';'))
+			e->vms_versions[e->vms_verscount] = atoi(p + 1);
+		else
+			e->vms_versions[e->vms_verscount] = -1;
     }
     if (e->vms_verscount < VERSIZE(e))
-	e->vms_versions[e->vms_verscount] = -1;
+		e->vms_versions[e->vms_verscount] = -1;
 
     (void) lib$find_file_end(&context);
-    free(text);
+    fl_free(text);
 }
 
 

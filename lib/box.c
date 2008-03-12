@@ -31,7 +31,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_box = "$Id: box.c,v 1.6 2008/01/28 23:16:20 jtt Exp $";
+char *fl_id_box = "$Id: box.c,v 1.7 2008/03/12 16:00:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,6 +59,7 @@ handle_box( FL_OBJECT * ob,
 		case FL_DRAW:
 			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
 						ob->col1, ob->bw );
+			/* fall through */
 
 		case FL_DRAWLABEL:
 			fl_draw_object_label( ob );
@@ -109,5 +110,6 @@ fl_add_box( int          type,
 
     ob = fl_create_box( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
+
     return ob;
 }

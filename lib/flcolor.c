@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.13 2008/01/29 15:57:29 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.14 2008/03/12 16:00:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -407,10 +407,7 @@ fill_map( void )
 
 		ok = XAllocColor( flx->display, fl_map( fl_vmode ), &xc );
 		if ( ok )
-		{
 			lut[ fm->index ] = xc.pixel;
-			M_warn( 0, "   got %5ld (%3d %3d %3d)", xc.pixel, r, g, b );
-		}
     }
 
     if (    fl_state[ fl_vmode ].pcm

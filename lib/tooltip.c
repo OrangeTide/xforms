@@ -69,15 +69,17 @@ create_it( void )
     if ( tip )
 		return;
 
-	tip = fl_calloc( 1, sizeof *tip );
-	tip->fntstyle = FL_NORMAL_STYLE;
-	tip->fntsize = FL_DEFAULT_SIZE;
-	tip->boxtype = FL_BORDER_BOX;
-	tip->lalign = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
-	tip->textcolor = FL_BLACK;
-	tip->background = FL_YELLOW;
-	tip->tooltipper = fl_bgn_form( FL_NO_BOX, 5, 5 );
+	tip              = fl_calloc( 1, sizeof *tip );
+	tip->fntstyle    = FL_NORMAL_STYLE;
+	tip->fntsize     = FL_DEFAULT_SIZE;
+	tip->boxtype     = FL_BORDER_BOX;
+	tip->lalign      = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
+	tip->textcolor   = FL_BLACK;
+	tip->background  = FL_YELLOW;
+
+	tip->tooltipper  = fl_bgn_form( FL_NO_BOX, 5, 5 );
 	tip->text = text = fl_add_box( tip->boxtype, 0, 0, 5, 5, "" );
+
 	fl_set_object_bw( text, -1 );
 	fl_set_object_lstyle( text, tip->fntstyle );
 	fl_set_object_lsize( text, tip->fntsize );
@@ -138,6 +140,7 @@ fl_show_tooltip( const char * s,
     if ( ! tip->tooltipper->visible )
 		fl_show_form( tip->tooltipper, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
 					  FL_NOBORDER, "Tooltip" );
+
     fl_update_display( 1 );
 }
 

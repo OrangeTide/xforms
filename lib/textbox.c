@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.11 2008/02/04 01:22:18 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.12 2008/03/12 16:00:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -97,7 +97,7 @@ free_spec( SPEC * sp )
     }
 
     fl_free( sp->text );
-    sp->text = 0;
+    sp->text = NULL;
 
     /* it is possible that a textbox that has never been shown is being
        freed, thus the check. */
@@ -221,7 +221,7 @@ insert_line( FL_OBJECT  * ob,
     /* Create new line if required */
 
     if ( sp->text[ sp->lines ] == 0 )
-	sp->text[ sp->lines ] = fl_calloc( 1, sizeof( LINE ) );
+	sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
 
     /* Shift lines */
 
@@ -1297,7 +1297,7 @@ handle_textbox( FL_OBJECT * ob,
 			sp->status_changed = 0;
 			last_select = last_deselect = 0;
 
-			/* Fall through */
+			/* fall through */
 
 		case FL_MOUSE:
 			if ( my == sp->lastmy && my > ob->y && my < ob->y + ob->h - 1 )
@@ -1510,7 +1510,7 @@ fl_clear_textbox( FL_OBJECT * ob )
 			fl_free( sp->text[ i ]->txt );
 			fl_free( sp->text[ i ] );
 		}
-		sp->text[ i ] = 0;
+		sp->text[ i ] = NULL;
     }
 
     fl_redraw_object( ob );
@@ -1573,7 +1573,7 @@ fl_addto_textbox_chars( FL_OBJECT *  ob,
     /* Create new line if required */
 
     if ( sp->text[ sp->lines ] == 0 )
-		sp->text[ sp->lines ] = fl_calloc( 1, sizeof( LINE ) );
+		sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
 
     cur_line = sp->text[ sp->lines ];
     cur_line->len += strlen( s );

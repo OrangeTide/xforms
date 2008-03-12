@@ -37,8 +37,7 @@ typedef enum
 	FL_TOUCH_MENU,
 	FL_PUSH_MENU,
 	FL_PULLDOWN_MENU
-}
-FL_MENU_TYPE;
+} FL_MENU_TYPE;
 
 /***** Defaults *****/
 
@@ -48,10 +47,11 @@ FL_MENU_TYPE;
 #define FL_MENU_LCOL		FL_LCOL
 #define FL_MENU_ALIGN		FL_ALIGN_CENTER
 
+
 /***** Others	*****/
 
 #define FL_MENU_MAXITEMS	128
-#define FL_MENU_MAXSTR		64
+#define FL_MENU_MAXSTR		64        /* not used anymore! JTT */
 
 /***** Routines *****/
 

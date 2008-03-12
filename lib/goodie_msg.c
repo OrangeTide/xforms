@@ -56,26 +56,27 @@ typedef struct
 static FD_msg *
 create_msg( void )
 {
-    FD_msg *fdui = (FD_msg *) fl_calloc(1, sizeof(*fdui));
+    FD_msg *fdui = fl_calloc(1, sizeof *fdui );
     int oldy = fl_inverted_y;
-    int oldu = fl_get_coordunit();
+    int oldu = fl_get_coordunit( );
 
     fl_inverted_y = 0;
-    fl_set_coordunit(FL_COORD_PIXEL);
+    fl_set_coordunit( FL_COORD_PIXEL );
 
-    fdui->form = fl_bgn_form(FL_UP_BOX, 460, 130);
-    fdui->str = fl_add_box(FL_FLAT_BOX, 20, 15, 420, 65, "");
-    fdui->but = fl_add_button(FL_RETURN_BUTTON, 185, 94, 90, 27, "OK");
-    fl_set_form_hotobject(fdui->form, fdui->but);
-    fl_end_form();
-    fl_register_raw_callback(fdui->form, FL_ALL_EVENT, fl_goodies_preemptive);
-    fl_set_form_atclose(fdui->form, fl_goodies_atclose, fdui->but);
+    fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
+    fdui->str = fl_add_box( FL_FLAT_BOX, 20, 15, 420, 65, "" );
+    fdui->but = fl_add_button( FL_RETURN_BUTTON, 185, 94, 90, 27, "OK" );
+    fl_set_form_hotobject( fdui->form, fdui->but );
+    fl_end_form( );
+    fl_register_raw_callback( fdui->form, FL_ALL_EVENT, fl_goodies_preemptive );
+    fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
 
-    if (fl_cntl.buttonFontSize != FL_DEFAULT_SIZE)
-		fl_fit_object_label(fdui->but, 18, 2);
+    if ( fl_cntl.buttonFontSize != FL_DEFAULT_SIZE )
+		fl_fit_object_label( fdui->but, 18, 2 );
 
     fl_inverted_y = oldy;
-    fl_set_coordunit(oldu);
+    fl_set_coordunit( oldu );
+
     return fdui;
 }
 
@@ -93,32 +94,32 @@ fl_show_messages( const char *str )
     static int first = 1;
     int alreadyon;
 
-    if (!fd_msg)
-		fd_msg = create_msg();
+    if ( ! fd_msg )
+		fd_msg = create_msg( );
 
-    if (first)
+    if ( first )
     {
-		fl_parse_goodies_label(fd_msg->but, FLOKLabel);
+		fl_parse_goodies_label( fd_msg->but, FLOKLabel );
 		first = 0;
     }
 
-    fl_handle_goodie_font(fd_msg->but, fd_msg->str);
+    fl_handle_goodie_font( fd_msg->but, fd_msg->str );
 
     alreadyon = fd_msg->form->visible;
-    fl_set_object_label(fd_msg->str, str);
+    fl_set_object_label( fd_msg->str, str );
 
-    if (!alreadyon)
-		fl_deactivate_all_forms();
+    if ( ! alreadyon )
+		fl_deactivate_all_forms( );
 
     fl_show_form(fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "message");
 
-    fl_update_display(1);
+    fl_update_display( 1 );
 
-    while (fl_do_only_forms() != fd_msg->but)
+    while ( fl_do_only_forms( ) != fd_msg->but )
 		/* empty */ ;
 
-    fl_hide_form(fd_msg->form);
-    fl_activate_all_forms();
+    fl_hide_form( fd_msg->form );
+    fl_activate_all_forms( );
 }
 
 
@@ -130,11 +131,11 @@ fl_show_message( const char * s1,
 				 const char * s2,
 				 const char * s3 )
 {
-    char buf[2048];
+    char buf[ 2048 ];
 
-    fl_snprintf(buf,sizeof buf,
-         "%s\n%s\n%s", s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "");
-    fl_show_messages(buf);
+    fl_snprintf( buf, sizeof buf, "%s\n%s\n%s",
+				 s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "");
+    fl_show_messages( buf );
 }
 
 
@@ -144,6 +145,6 @@ fl_show_message( const char * s1,
 void
 fl_hide_message( void )
 {
-    if (fd_msg && fd_msg->form->visible)
-		fl_object_qenter(fd_msg->but);
+    if ( fd_msg && fd_msg->form->visible )
+		fl_object_qenter( fd_msg->but );
 }

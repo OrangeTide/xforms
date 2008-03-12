@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.14 2008/03/03 17:45:41 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.15 2008/03/12 16:00:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -102,7 +102,7 @@ fl_make_form( FL_Coord w,
 			break;
 
 		default :
-			M_err( "makeform", "Unknown unit: %d. Reset to pixel",
+			M_err( "fl_make_form", "Unknown unit: %d. Reset to pixel",
 				   fl_cntl.coordUnit );
 			fl_cntl.coordUnit = FL_COORD_PIXEL;
     }
@@ -112,20 +112,21 @@ fl_make_form( FL_Coord w,
     form->w_hr = form->w = w;
     form->h_hr = form->h = h;
 
-    form->deactivated = 1;
-    form->form_callback = NULL;
-    form->compress_mask = ExposureMask | ButtonMotionMask | PointerMotionMask;
-    form->key_callback = form->push_callback = form->crossing_callback = NULL;
-    form->focusobj = NULL;
-    form->first = form->last = NULL;
-    form->hotx = form->hoty = -1;
-    form->use_pixmap = fl_cntl.doubleBuffer;
-    form->label = NULL;
-    form->u_vdata = NULL;
+    form->deactivated    = 1;
+    form->form_callback  = NULL;
+    form->compress_mask  = ExposureMask | ButtonMotionMask | PointerMotionMask;
+    form->key_callback   =
+	form->push_callback  = form->crossing_callback = NULL;
+    form->focusobj       = NULL;
+    form->first          = form->last = NULL;
+    form->hotx           = form->hoty = -1;
+    form->use_pixmap     = fl_cntl.doubleBuffer;
+    form->label          = NULL;
+    form->u_vdata        = NULL;
     form->close_callback = NULL;
-    form->close_data = NULL;
-    form->icon_pixmap = form->icon_mask = 0;
-    form->no_tooltip = 0;
+    form->close_data     = NULL;
+    form->icon_pixmap    = form->icon_mask = 0;
+    form->no_tooltip     = 0;
 
     return form;
 }
@@ -197,7 +198,8 @@ fl_make_object( int          objclass,
 			break;
 
 		default:
-			M_err( "MakeObject", "Unknown unit: %d. Reset", fl_cntl.coordUnit );
+			M_err( "fl_make_object", "Unknown unit: %d. Reset",
+				   fl_cntl.coordUnit );
 			fl_cntl.coordUnit = FL_COORD_PIXEL;
     }
 
@@ -260,7 +262,7 @@ fl_free_object( FL_OBJECT * obj )
 		return;
     }
 
-    fl_handle_object( obj, FL_FREEMEM, 0, 0, 0, 0 );
+    fl_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
 
     if ( obj->form != NULL )
 		fl_delete_object( obj );
@@ -307,7 +309,7 @@ fl_add_object( FL_FORM *   form,
 
     if ( form == NULL )
     {
-		M_err( "addobject", "%s", fl_object_class_name( obj ) );
+		M_err( "fl_add_object", "%s", fl_object_class_name( obj ) );
 		fl_error( "fl_add_object", "Trying to add object to NULL form." );
 		return;
     }
@@ -340,6 +342,7 @@ fl_add_object( FL_FORM *   form,
     if ( fl_current_group )
     {
 		FL_OBJECT *end = fl_current_group;
+
 		for ( ; end && end->objclass != FL_END_GROUP; end = end->next )
 			/* empty */ ;
 
@@ -538,7 +541,7 @@ fl_set_object_boxtype( FL_OBJECT * ob,
     {
 		ob->boxtype = boxtype;
         if( ob->child )
-            fl_handle_object( ob, FL_ATTRIB, 0, 0, 0, 0 );
+            fl_handle_object( ob, FL_ATTRIB, 0, 0, 0, NULL );
 		fl_redraw_object( ob );
     }
 }
@@ -708,9 +711,9 @@ fl_set_object_dblbuffer( FL_OBJECT * ob,
 
 
 /* really visible */
-#define ObjIsVisible( ob )   (    ob->visible                        \
-                               && ob->form                           \
-							   && ob->form->visible == FL_VISIBLE )
+#define ObjIsVisible( ob )   (    ( ob )->visible                        \
+                               && ( ob )->form                           \
+							   && ( ob )->form->visible == FL_VISIBLE )
 
 
 /***************************************
@@ -772,6 +775,7 @@ fl_set_object_lcol( FL_OBJECT * ob,
     if ( ob->objclass == FL_BEGIN_GROUP )
     {
 		fl_freeze_form( ob->form );
+
 		for ( ; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
 		{
 			if ( ob->lcol != lcol )
@@ -781,6 +785,7 @@ fl_set_object_lcol( FL_OBJECT * ob,
 					fl_redraw_object( ob );
 			}
 		}
+
 		fl_unfreeze_form( ob->form );
     }
     else if ( ob->lcol != lcol )
@@ -944,8 +949,8 @@ fl_set_object_dragndrop( FL_OBJECT * ob,
 /***************************************
  * makes an object active if it was deactivated by fl_deactivate_object
  ***************************************/
-void
 
+void
 fl_activate_object( FL_OBJECT * ob )
 {
     if ( ob == NULL )
@@ -1078,7 +1083,8 @@ fl_hide_object( FL_OBJECT * ob )
 
     if ( ! ob->visible )
     {
-		M_warn( "fl_hide_object", "%s already invisible", ob->label );
+		M_warn( "fl_hide_object", "%s already invisible",
+				ob->label ? ob->label : "Object" );
 		return;
     }
 
@@ -1252,7 +1258,7 @@ fl_convert_shortcut( const char * str,
 			else if (    isdigit( ( int ) str[ i ] )
 					  && ( key = atoi( str + i ) ) < 35 )
 			{
-				i += ( key >= 10 );
+				i += key >= 10;
 				sc[ j++ ] = offset + XK_F1 + key - 1;
 			}
 			offset = 0;
@@ -1262,13 +1268,15 @@ fl_convert_shortcut( const char * str,
 			sc[ j++ ] = str[ i ] + offset;
 			offset = 0;
 		}
+
 		i++;
     }
 
     if ( j >= MAX_SHORTCUTS )
     {
 		j = MAX_SHORTCUTS;
-		M_err( " ConvertShortcuts", "Too many shortcuts (>%d)", MAX_SHORTCUTS );
+		M_err( "fl_convert_shortcut", "Too many shortcuts (>%d)",
+			   MAX_SHORTCUTS );
     }
 
     sc[ j ] = 0;
@@ -1413,8 +1421,8 @@ fl_set_focus_object( FL_FORM *   form,
     if ( obj == form->focusobj )
 		return;
 
-    fl_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, 0 );
-    fl_handle_object_direct( obj, FL_FOCUS, 0, 0, 0, 0 );
+    fl_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
+    fl_handle_object_direct( obj, FL_FOCUS, 0, 0, 0, NULL );
 }
 
 
@@ -1425,7 +1433,7 @@ FL_OBJECT *
 fl_get_focus_object( FL_FORM * form )
 {
 #if 0
-    return ( form && form->focusobj ) ? form->focusobj : 0;
+    return ( form && form->focusobj ) ? form->focusobj : NULL;
 #else
     if ( form && form->focusobj )
     {
@@ -1435,7 +1443,7 @@ fl_get_focus_object( FL_FORM * form )
 			return form->focusobj;
     }
 
-    return 0;
+    return NULL;
 #endif
 }
 
@@ -1460,13 +1468,11 @@ fl_find_object( FL_OBJECT * obj,
     for ( ; obj != NULL; obj = obj->next )
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
-			 && ( obj->visible
-				  && ( ! obj->is_child || obj->parent->visible )
-				  && (     obj->active > 0
-					   || (    obj->posthandle
-							&& ! obj->active )
-					   || (    ( obj->tooltip && *obj->tooltip )
-							&& ! obj->active ) ) ) )
+			 && obj->visible
+			 && ( ! obj->is_child || obj->parent->visible )
+			 && (     obj->active > 0
+				  || ( obj->posthandle && ! obj->active )
+				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
 		{
 			if ( find == FL_FIND_INPUT && obj->input )
 				return obj;
@@ -1475,8 +1481,10 @@ fl_find_object( FL_OBJECT * obj,
 				return obj;
 
 			if (    find == FL_FIND_MOUSE
-				 && mx >= obj->x && mx <= obj->x + obj->w
-				 && my >= obj->y && my <= obj->y + obj->h )
+				 && mx >= obj->x
+				 && mx <= obj->x + obj->w
+				 && my >= obj->y
+				 && my <= obj->y + obj->h )
 				return obj;
 
 			if ( find == FL_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
@@ -1573,7 +1581,7 @@ redraw_marked( FL_FORM * form,
 {
     FL_OBJECT *ob;
 
-    if ( ! form->visible || form->frozen > 0 )
+    if ( form->visible != FL_VISIBLE || form->frozen > 0 )
 		return;
 
     fl_set_form_window( form );
@@ -1592,7 +1600,7 @@ redraw_marked( FL_FORM * form,
 			if ( fl_perm_clip && object_is_clipped( ob ) )
 			{
 #if FL_DEBUG >= ML_WARN
-				M_warn( "Redraw", "%s is clipped", ob->label );
+				M_warn( "redraw_marked", "%s is clipped", ob->label );
 #endif
 				continue;
 			}
@@ -1659,7 +1667,7 @@ fl_redraw_object( FL_OBJECT * obj )
     /* if obj is a child object and the parent is not visible, do nothing */
 
     if ( obj->visible && ( ! obj->is_child || obj->parent->visible ) )
-		redraw_marked( obj->form, 0, 0 );
+		redraw_marked( obj->form, 0, NULL );
 }
 
 
@@ -1692,7 +1700,7 @@ void
 fl_redraw_form( FL_FORM * form )
 {
     mark_for_redraw( form );
-    redraw_marked( form, 0, 0 );
+    redraw_marked( form, 0, NULL );
 }
 
 
@@ -1710,7 +1718,6 @@ fl_redraw_form_using_xevent( FL_FORM * form,
 }
 
 
-
 /***************************************
  * Disables drawing of form
  ***************************************/
@@ -1723,6 +1730,7 @@ fl_freeze_form( FL_FORM * form )
 		fl_error( "fl_freeze_form", "Freezing NULL form." );
 		return;
     }
+
     form->frozen++;
 }
 
@@ -1748,8 +1756,8 @@ fl_unfreeze_form( FL_FORM * form )
 
     form->frozen--;
 
-    if ( form->frozen == 0 )
-		redraw_marked( form, 0, 0 );
+    if ( form->frozen == 0 && form->visible == FL_VISIBLE )
+		redraw_marked( form, 0, NULL );
 }
 
 /*-----------------------------------------------------------------------
@@ -1778,10 +1786,8 @@ static
 FL_OBJECT * get_parent( FL_OBJECT * obj )
 {
     if ( obj )
-	{
 		while ( obj->parent && obj->parent != obj )
 			obj = obj->parent;
-    }
 
     return obj;
 }
@@ -1876,11 +1882,11 @@ fl_handle_it( FL_OBJECT * obj,
 			  int         key,
 			  XEvent *    xev )
 {
-    static unsigned long last_clicktime;
-    static int last_dblclick,
-		       last_key;
-    static FL_Coord lmx,
-		            lmy;
+    static unsigned long last_clicktime = 0;
+    static int last_dblclick = 0,
+		       last_key = 0;
+    static FL_Coord last_mx,
+		            last_my;
     int status = 0;
     int cur_event;
 
@@ -1888,7 +1894,7 @@ fl_handle_it( FL_OBJECT * obj,
 		return 0;
 
 #if FL_DEBUG >= ML_WARN
-    if ( obj->form == 0 && event != FL_FREEMEM )
+    if ( obj->form == NULL && event != FL_FREEMEM )
     {
 		M_err( "fl_handle_it", "Bad object %s. Event=%s",
 			   obj->label ? obj->label : "", fl_event_name( event ) );
@@ -1947,24 +1953,24 @@ fl_handle_it( FL_OBJECT * obj,
 			   now they don't get flagged for the mouse wheel "buttons". JTT */
 
 			if (    key == last_key
-//				 && key != 2             /* what's that good for? JTT */
 				 && ! ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-				 && ! ( FL_abs( lmx - mx ) > 4 || FL_abs( lmy - my ) > 4 )
+				 && ! (    FL_abs( last_mx - mx ) > 4
+						|| FL_abs( last_my - my ) > 4 )
 				 && xev->xbutton.time - last_clicktime < obj->click_timeout )
 				event = last_dblclick ? FL_TRPLCLICK : FL_DBLCLICK;
 
 			last_dblclick = event == FL_DBLCLICK;
 			last_clicktime = xev ? xev->xbutton.time : 0;
 			last_key = key;
-			lmx = mx;
-			lmy = my;
+			last_mx = mx;
+			last_my = my;
 			break;
 
 		case FL_FOCUS:
 			if ( refocus && refocus->form )  /* ?? from Lyx patch */
 			{
 				obj = refocus;
-				refocus = 0;
+				refocus = NULL;
 			}
 
 			if ( obj->form )
@@ -2044,7 +2050,7 @@ fl_handle_object( FL_OBJECT * obj,
 
 int
 fl_handle_object_direct( FL_OBJECT * obj,
-						 int event,
+						 int         event,
 						 FL_Coord    mx,
 						 FL_Coord    my,
 						 int         key,
@@ -2067,13 +2073,15 @@ fl_set_object_callback( FL_OBJECT *    obj,
 
     if ( obj == NULL )
     {
-		fl_error( "SetObjectCallback", "Setting callback of NULL object." );
-		return 0;
+		fl_error( "fl_set_object_callback",
+				  "Setting callback of NULL object." );
+		return NULL;
     }
 
     old = obj->object_callback;
     obj->object_callback = callback;
     obj->argument = argument;
+
     return old;
 }
 
@@ -2111,6 +2119,7 @@ fl_set_object_bw( FL_OBJECT * ob,
 					fl_redraw_object( ob );
 			}
 		}
+
 		fl_unfreeze_form( ob->form );
     }
     else if ( ob->bw != bw )
@@ -2146,7 +2155,7 @@ fl_get_real_object_window( FL_OBJECT * ob )
 {
     FL_pixmap *objp = ob->flpixmap;
     FL_pixmap *formp = ob->form->flpixmap;
-    Window win = 0;
+    Window win = None;
 
     if ( objp && objp->win ) 
 		win = objp->win;
@@ -2202,7 +2211,10 @@ fl_bounding_rect( const FL_RECT * r1,
 				  const FL_RECT * r2 )
 {
     static FL_RECT rect;
-    int xi, yi, xf, yf;
+    int xi,
+		yi,
+		xf,
+		yf;
 
     xi = rect.x = FL_min( r1->x, r2->x );
     yi = rect.y = FL_min( r1->y, r2->y );
@@ -2271,10 +2283,10 @@ fl_scale_object( FL_OBJECT * ob,
 		ob->ft2  = ob->ft1 + new_h;;
 		ob->fb2  = ob->form->h_hr - ob->ft2;;
 
-		ob->x = FL_crnd( ob->fl1 );
-		ob->y = FL_crnd( ob->ft1 );
-		ob->w = FL_crnd( new_w );
-		ob->h = FL_crnd( new_h );
+		ob->x    = FL_crnd( ob->fl1 );
+		ob->y    = FL_crnd( ob->ft1 );
+		ob->w    = FL_crnd( new_w );
+		ob->h    = FL_crnd( new_h );
 
 		if ( fl_inverted_y )
 			ob->y = TRANY( ob, ob->form );
@@ -2565,7 +2577,7 @@ fl_set_object_size( FL_OBJECT * obj,
 	if ( fl_inverted_y )
 		obj->y = TRANY( obj, obj->form );
 
-	fl_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, 0 );
+	fl_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, NULL );
 
     if ( visible )
 		fl_show_object( obj );
@@ -2736,7 +2748,7 @@ fl_hide_canvas( FL_OBJECT * ob )
 		fl_winclose( sp->window );
     }
 
-    sp->window = 0;
+    sp->window = None;
 }
 
 
@@ -2751,12 +2763,13 @@ fl_get_canvas_id( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_DEBUG
     if ( ! IsValidCanvas( ob ) )
     {
-		M_err( "CanvasID", "%s not a canvas", ob ? ob->label : "" );
-		return 0;
+		M_err( "fl_get_canvas_id", "%s not a canvas",
+			   ( ob && ob->label ) ? ob->label : "" );
+		return None;
     }
 #endif
 
-    return sp->window ? sp->window : 0;
+    return sp->window ? sp->window : None;
 }
 
 
@@ -2766,7 +2779,7 @@ fl_get_canvas_id( FL_OBJECT * ob )
 static void
 lose_focus( FL_OBJECT * ob )
 {
-    if (    fl_handle_object_direct( ob, FL_UNFOCUS, 0, 0, 0, 0 )
+    if (    fl_handle_object_direct( ob, FL_UNFOCUS, 0, 0, 0, NULL )
 		 && ob->object_callback )
 		ob->object_callback( ob, ob->argument );
 }

@@ -54,21 +54,33 @@ extern Display *fd_display;
 static float xmin = 0.0f, ymin = 0.0f, width = 1280.0f, height = 1024.0f;
 static float stepsize = 10.0f;	/* Step size (for alignment) */
 
-/* Sets the step size */
+
+/***************************************
+ * Sets the step size
+ ***************************************/
+
 void
-set_step_size(float size)
+set_step_size( float size )
 {
     stepsize = (size < 1.0f) ? 1.0f : size;
 }
 
-/* Returns the step size */
+
+/***************************************
+ * Returns the step size
+ ***************************************/
+
 float
-get_step_size(void)
+get_step_size( void )
 {
     return stepsize;
 }
 
-/* Sets the bounding box. */
+
+/***************************************
+ * Sets the bounding box.
+ ***************************************/
+
 void
 set_bounding_box(float x, float y, float w, float h)
 {
@@ -78,83 +90,103 @@ set_bounding_box(float x, float y, float w, float h)
     height = h;
 }
 
-/* rounds the box size to the stepsize and inside the bounding box */
+
+/***************************************
+ * rounds the box size to the stepsize and inside the bounding box
+ ***************************************/
+
 static void
-round_size(float *x, float *y, float *w, float *h)
+round_size( float * x,
+			float * y,
+			float * w,
+			float * h )
 {
     int t;
 
     if (*w > width)
-	*w = width;
+		*w = width;
     if (*h > height)
-	*h = height;
+		*h = height;
     if (stepsize > 0.0f)
     {
-	t = (int) (*w / stepsize + 0.5f);
-	if (*w >= 0.0f)
-	    *w = stepsize * t;
-	else
-	    *w = stepsize * (t - 1);
-	t = (int) (*h / stepsize + 0.5f);
-	*h = stepsize * t;
-	if (*h >= 0.0f)
-	    *h = stepsize * t;
-	else
-	    *h = stepsize * (t - 1);
+		t = (int) (*w / stepsize + 0.5f);
+		if (*w >= 0.0f)
+			*w = stepsize * t;
+		else
+			*w = stepsize * (t - 1);
+		t = (int) (*h / stepsize + 0.5f);
+		*h = stepsize * t;
+		if (*h >= 0.0f)
+			*h = stepsize * t;
+		else
+			*h = stepsize * (t - 1);
     }
 
     if (*x + *w > xmin + width)
-	*w = xmin + width - *x;
+		*w = xmin + width - *x;
     if (*y + *h > ymin + height)
-	*h = ymin + height - *y;
+		*h = ymin + height - *y;
     if (*x + *w < xmin)
-	*w = xmin - *x;
+		*w = xmin - *x;
     if (*y + *h < ymin)
-	*h = ymin - *y;
+		*h = ymin - *y;
     if (*w >= 0.0f && *w < stepsize)
-	*w = stepsize;
+		*w = stepsize;
     if (*h >= 0.0f && *h < stepsize)
-	*h = stepsize;
+		*h = stepsize;
     if (*w < 0.0f && *w > -stepsize)
-	*w = -stepsize;
+		*w = -stepsize;
     if (*h < 0.0f && *h > -stepsize)
-	*h = -stepsize;
+		*h = -stepsize;
 }
 
-/* rounds the position to the stepsize and inside the bounding box */
+
+/***************************************
+ * rounds the position to the stepsize and inside the bounding box
+ ***************************************/
+
 static void
-round_position(float *x, float *y, float *w, float *h)
+round_position( float * x,
+				float * y,
+				float * w,
+				float * h )
 {
     int t;
 
     if (*w > width)
-	*w = width;
+		*w = width;
     if (*h > height)
-	*h = height;
+		*h = height;
     if (stepsize > 0.0f)
     {
-	t = (int) (*x / stepsize + 0.5f);
-	*x = stepsize * t;
-	t = (int) (*y / stepsize + 0.5f);
-	*y = stepsize * t;
+		t = (int) (*x / stepsize + 0.5f);
+		*x = stepsize * t;
+		t = (int) (*y / stepsize + 0.5f);
+		*y = stepsize * t;
     }
     if (*x < xmin)
-	*x = xmin;
+		*x = xmin;
     if (*y < ymin)
-	*y = ymin;
+		*y = ymin;
     if (*x + *w > xmin + width)
-	*x = xmin + width - *w;
+		*x = xmin + width - *w;
     if (*y + *h > ymin + height)
-	*y = ymin + height - *h;
+		*y = ymin + height - *h;
 }
 
 /****
   DRAWING
 ****/
 
-/* draws a box */
+/***************************************
+ * draws a box
+ ***************************************/
+
 static void
-show_box(float x, float y, float w, float h)
+show_box( float x,
+		  float y,
+		  float w,
+		  float h )
 {
     XSetFunction(fd_display, fd_gc, GXxor);
     color(fd_col ^ fd_black);
@@ -168,26 +200,37 @@ show_box(float x, float y, float w, float h)
   THE ACTUAL ROUTINES
 ****/
 
-/* Whether we should stop */
+
+/***************************************
+ * Whether we should stop
+ ***************************************/
+
 static int
-ready(void)
+ready( void )
 {
     XEvent xev;
 
-    if (fl_check_forms() == FL_EVENT)
+    if ( fl_check_forms( ) == FL_EVENT )
     {
-	fl_XNextEvent(&xev);
-	fl_xevent_name("ScaleBox:", &xev);
-	return (xev.type == ButtonRelease ||
-		(is_pasting && xev.type == KeyPress));
+		fl_XNextEvent( &xev );
+		fl_xevent_name( "ready:", &xev );
+		return (   xev.type == ButtonRelease
+				|| ( is_pasting && xev.type == KeyPress ) );
     }
-    fl_msleep(10);
+
+    fl_msleep( 10 );
+
     return 0;
 }
 
-/* returns the position of the mouse in world coordinates */
+
+/***************************************
+ * returns the position of the mouse in world coordinates
+ ***************************************/
+
 void
-get_mouse_pos(float *xx, float *yy)
+get_mouse_pos( float * xx,
+			   float * yy )
 {
     FL_Coord x, y;
     unsigned int kmask;
@@ -197,127 +240,175 @@ get_mouse_pos(float *xx, float *yy)
     *yy = y;
 }
 
-/* drag a box around until the user releases a mouse button */
+
+/***************************************
+ * drag a box around until the user releases a mouse button
+ ***************************************/
+
 void
-move_box(float *x, float *y, float *w, float *h, int offset)
+move_box( float * x,
+		  float * y,
+		  float * w,
+		  float * h,
+		  int     offset )
 {
     float oldx = *x, oldy = *y, oldw = *w, oldh = *h;
     float xoff, yoff;
 
-    if (offset)
+    if ( offset )
     {
-	get_mouse_pos(&xoff, &yoff);
-	xoff -= *x;
-	yoff -= *y;
+		get_mouse_pos( &xoff, &yoff );
+		xoff -= *x;
+		yoff -= *y;
     }
     else
     {
-	xoff = *w / 2.0;
-	yoff = *h / 2.0;
+		xoff = *w / 2.0;
+		yoff = *h / 2.0;
     }
 
-    show_box(*x, *y, *w, *h);
-    while (!ready())
+    show_box( *x, *y, *w, *h );
+
+    while ( ! ready( ) )
     {
-	get_mouse_pos(x, y);
-	*x -= xoff;
-	*y -= yoff;
-	round_position(x, y, w, h);
-	if (*x != oldx || *y != oldy)
-	{
-	    hide_box(oldx, oldy, oldw, oldh);
-	    show_box(*x, *y, *w, *h);
-	    if (fd_trackgeometry)
-		show_geometry(0, (int) *x, (int) *y, (int) *w, (int) *h);
-	    oldx = *x;
-	    oldy = *y;
-	    oldw = *w;
-	    oldh = *h;
-	}
+		get_mouse_pos( x, y );
+		*x -= xoff;
+		*y -= yoff;
+		round_position( x, y, w, h );
+		if ( *x != oldx || *y != oldy )
+		{
+			hide_box( oldx, oldy, oldw, oldh );
+			show_box( *x, *y, *w, *h );
+
+			if ( fd_trackgeometry )
+				show_geometry( 0, *x, *y, *w, *h );
+			oldx = *x;
+			oldy = *y;
+			oldw = *w;
+			oldh = *h;
+		}
     }
-    hide_box(oldx, oldy, *w, *h);
+
+    hide_box( oldx, oldy, *w, *h );
 }
 
-/* scales a box until the user releases a mouse button */
+
+/***************************************
+ * scales a box until the user releases a mouse button
+ ***************************************/
+
 void
-scale_box(float *x, float *y, float *w, float *h)
+scale_box( float * x,
+		   float * y,
+		   float * w,
+		   float * h )
 {
-    float oldw = 1.0f, oldh = 1.0f;
+    float oldw = 1.0,
+		  oldh = 1.0;
 
-    round_position(x, y, w, h);
+    round_position( x, y, w, h );
 
-    while (!ready())
+    while ( ! ready( ) )
     {
-	get_mouse_pos(w, h);
-	*w -= *x;
-	*h -= *y;
-	round_size(x, y, w, h);
-	if (*w != oldw || *h != oldh)
-	{
-	    if (fd_trackgeometry)
-		show_geometry("", *x, *y, *w, *h);
-	    hide_box(*x - 1, *y - 1, oldw, oldh);
-	    show_box(*x - 1, *y - 1, *w, *h);
-	    oldw = *w;
-	    oldh = *h;
-	}
+		get_mouse_pos( w, h );
+		*w -= *x;
+		*h -= *y;
+		round_size( x, y, w, h );
+
+		if ( *w != oldw || *h != oldh )
+		{
+			if ( fd_trackgeometry )
+				show_geometry( "", *x, *y, *w, *h );
+			hide_box( *x - 1, *y - 1, oldw, oldh );
+			show_box( *x - 1, *y - 1, *w, *h );
+			oldw = *w;
+			oldh = *h;
+		}
     }
 
-    hide_box(*x - 1, *y - 1, oldw, oldh);
+    hide_box( *x - 1, *y - 1, oldw, oldh );
 
-    if (*w < 0.0f)
+    if ( *w < 0.0 )
     {
-	*x += *w;
-	*w = -*w;
+		*x += *w;
+		*w = - *w;
     }
-    if (*h < 0.0f)
+
+    if ( *h < 0.0 )
     {
-	*y += *h;
-	*h = -*h;
+		*y += *h;
+		*h = - *h;
     }
 
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-color(unsigned long n)
+color( unsigned long n )
 {
     static unsigned long oldcol;
+
     if (fd_gc && oldcol != n)
     {
-	XSetForeground(fd_display, fd_gc, n);
-	oldcol = n;
+		XSetForeground(fd_display, fd_gc, n);
+		oldcol = n;
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-rectf(FL_Coord x1, FL_Coord y1, FL_Coord x2, FL_Coord y2)
+rectf( FL_Coord x1,
+	   FL_Coord y1,
+	   FL_Coord x2,
+	   FL_Coord y2 )
 {
     int x = x1, y = y1, w = (x2 - x1), h = (y2 - y1);
+
     fl_canonicalize_rect(&x, &y, &w, &h);
     XFillRectangle(fd_display, main_window, fd_gc, x, y, w, h);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-rect(FL_Coord x1, FL_Coord y1, FL_Coord x2, FL_Coord y2)
+rect( FL_Coord x1,
+	  FL_Coord y1,
+	  FL_Coord x2,
+	  FL_Coord y2 )
 {
     FL_Coord x = x1, y = y1, w = (x2 - x1), h = (y2 - y1);
+
     fl_canonicalize_rect(&x, &y, &w, &h);
     XDrawRectangle(fd_display, main_window, fd_gc, x, y, w, h);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fd_clear(int x, int y, int w, int h)
+fd_clear( int x,
+		  int y,
+		  int w,
+		  int h )
 {
     static GC blk_gc;
 
     if (main_window && w >= 0 && h >= 0)
     {
-	if (!blk_gc)
-	{
-	    blk_gc = XCreateGC(fd_display, main_window, 0, 0);
-	    XSetForeground(fd_display, blk_gc, fd_black);
-	}
-	XFillRectangle(fd_display, main_window, blk_gc, x, y, w, h);
+		if (!blk_gc)
+		{
+			blk_gc = XCreateGC(fd_display, main_window, 0, 0);
+			XSetForeground(fd_display, blk_gc, fd_black);
+		}
+		XFillRectangle(fd_display, main_window, blk_gc, x, y, w, h);
     }
 }

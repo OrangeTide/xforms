@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.9 2008/01/28 23:24:54 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.10 2008/03/12 16:00:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -824,7 +824,6 @@ fl_create_window( Window       parent,
 		st_xwmh.window_group = mainform->window;
     }
 
-
 #if FL_DEBUG >= ML_WARN
     fl_dump_state_info( fl_vmode, "WinOpen" );
 #endif
@@ -1142,7 +1141,7 @@ fl_winresize( Window   win,
 
 
 /***************************************
-* check if a given window is valid. At the moment only used by
+ * check if a given window is valid. At the moment only used by
  * canvas. A dirty hack. *****TODO *****
  * If the main event loop is correct, we don't need to do this stuff
  ***************************************/

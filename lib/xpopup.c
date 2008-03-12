@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.17 2008/02/29 12:20:35 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.18 2008/03/12 16:00:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,7 +59,7 @@ char *fl_id_xpup = "$Id: xpopup.c,v 1.17 2008/02/29 12:20:35 jtt Exp $";
 #define ALWAYSROOT 1		     /* true to use root as parent. not working */
 #define FL_MAXPUP  32		     /* default maximum pups    */
 #define PADH       FL_PUP_PADH	 /* space between items     */
-
+#define SUBMENU_SHIFT  5
 
 /****************************************************************
  * pop up menu structure and some defaults
@@ -69,59 +69,63 @@ char *fl_id_xpup = "$Id: xpopup.c,v 1.17 2008/02/29 12:20:35 jtt Exp $";
 
 typedef struct
 {
-    char         * str;			/* label               */
-    FL_PUP_CB      icb;		    /* call back           */
-    long         * shortcut;	/* shortcut keys       */
-    int            subm;		/* sub menu            */
-    unsigned int   mode;		/* various attributes  */
-    int            ret;			/* %x stuff            */
-    short          ulpos;		/* hotkeys in label    */
-    short          radio;		/* radio entry. 0 mean no radio */
-    short          len;
+    char *       str;			/* label               */
+    FL_PUP_CB    icb;		    /* call back           */
+    long *       shortcut;		/* shortcut keys       */
+    int          subm;			/* sub menu            */
+    unsigned int mode;			/* various attributes  */
+    int          ret;			/* %x stuff            */
+    short        ulpos;			/* hotkeys in label    */
+    short        radio;			/* radio entry. 0 mean no radio */
+    short        len;
 } MenuItem;
 
 
 typedef struct
 {
-    char           * title;		    /* Menu title            */
-    Window           win;			/* menu window           */
-    Window           parent;		/* and its parent        */
-    Cursor           cursor;		/* cursor for the pup    */
-    GC               shadowGC;		/* GC for the shadow     */
-    GC               pupGC1;		/* GC for maintext       */
-    GC               pupGC2;		/* GC for inactive text  */
-    MenuItem       * item[ FL_MAXPUPI + 1 ];
-    FL_PUP_CB        mcb;		    /* call back routine     */
-    FL_PUP_ENTERCB   enter_cb;	    /* enter callback routine */
-    void           * enter_data;
-    FL_PUP_ENTERCB   leave_cb;	    /* enter callback routine */
-    void           * leave_data;
-    unsigned long    event_mask;
-    int              x,
-	                 y;			    /* origin relative to root */
-    unsigned int     w,
-	                 h;		        /* total dimension       */
-    short            titleh;
-    short            nitems;		/* no. of item in menu   */
-    short            titlewidth;	/* title width           */
-    short            maxw;
-    short            noshadow;
-	short            shade;
-    short            bw;
-    short            lpad;
-    short            rpad;
-    short            padh;
-    short            cellh;
-    short            isEntry;		/* true if menu is setup via entry struct */
+    char *         title;		    /* Menu title            */
+    Window         win;				/* menu window           */
+    Window         parent;			/* and its parent        */
+    Cursor         cursor;			/* cursor for the pup    */
+#if 0
+    GC             shadowGC;		/* GC for the shadow     */
+#endif
+    GC             pupGC1;			/* GC for maintext       */
+    GC             pupGC2;			/* GC for inactive text  */
+    MenuItem *     item[ FL_MAXPUPI + 1 ];
+    FL_PUP_CB      mcb;		    	/* call back routine     */
+    FL_PUP_ENTERCB enter_cb;	    /* enter callback routine */
+    void *         enter_data;
+    FL_PUP_ENTERCB leave_cb;	    /* enter callback routine */
+    void *         leave_data;
+    unsigned long  event_mask;
+    int            x,			    /* origin relative to root */
+	               y;
+    unsigned int   w,		        /* total dimension       */
+	               h;
+    int            win_x,
+	               win_y;
+    short          titleh;
+    short          nitems;			/* no. of item in menu   */
+    short          titlewidth;		/* title width           */
+    short          maxw;
+    short          noshadow;
+	short          shade;
+    short          bw;
+    short          lpad;
+    short          rpad;
+    short          padh;
+    short          cellh;
+    short          isEntry;			/* true if menu is setup via entry struct */
+	int            par_y;
 } PopUP;
 
+
+static int subreturn;
 
 static void grab_both( PopUP * );
 static void reset_radio( PopUP *,
 						 MenuItem * );
-
-static int subreturn = 0;
-
 
 /* Resources that control the fontsize and other things */
 
@@ -154,6 +158,16 @@ static int tit_ascent = 0,
            tit_desc = 0;
 static Cursor pup_defcursor = 0;
 
+Window fl_popup_parent_window = None;
+FL_FORM *fl_popup_form = NULL;
+
+static int using_key;
+static int internal_showpup_call = 0;
+
+#define PADTITLE       14	/* extran space for title  */
+#define SHADE           6
+#define CHECKW          6	/* check box size          */
+
 
 /************ data struct maintanance ******************{**/
 
@@ -181,7 +195,7 @@ init_pupfont( void )
 }
 
 
-#define PADW           15	/* space on each side(> 16) with marks */
+#define PADW           8	/* space on each side(> 16) with marks */
 
 
 /***************************************
@@ -191,21 +205,23 @@ init_pupfont( void )
 static void
 init_pup( PopUP * m )
 {
-    m->mcb = 0;
-    m->enter_cb = m->leave_cb = 0;
+    m->mcb = NULL;
+    m->enter_cb = m->leave_cb = NULL;
     m->w = m->h = m->maxw = 0;
-    m->nitems = m->titlewidth = 0;
-    m->parent = m->win = 0;
+    m->nitems = 0;
+	m->titlewidth = 0;
+    m->parent = m->win = None;
+    m->pupGC1 = m->pupGC2 = None;
     m->noshadow = 0;
 	m->bw = pupbw;
 	m->shade = 2 * FL_abs( pupbw );
     m->title = NULL;
-    m->item[ 0 ] = 0;
+    m->item[ 0 ] = NULL;
     m->padh = PADH;
     if ( ! pup_defcursor )
 		pup_defcursor = fl_get_cursor_byname( XC_sb_right_arrow );
     m->cursor = pup_defcursor;
-    m->lpad = m->rpad = 8;
+    m->lpad = m->rpad = PADW;
     init_pupfont( );
     m->cellh = pup_ascent + pup_desc + 2 * m->padh;
     m->isEntry = 0;
@@ -216,7 +232,7 @@ init_pup( PopUP * m )
  ***************************************/
 
 static int
-find_index( Window win )
+find_empty_index( Window win )
 {
     PopUP *p = menu_rec,
 		  *ps = p + fl_maxpup;
@@ -261,9 +277,7 @@ static void wait_for_close( Window );
 static void
 reset_max_width( PopUP * m )
 {
-    int i,
-		w = 0,
-		tw;
+    int i;
     MenuItem **item = m->item;
     char *t,
 		 *b;
@@ -272,30 +286,40 @@ reset_max_width( PopUP * m )
     if ( ! m->parent || m->nitems <= 0 )
 		return;
 
+	m->maxw = 0;
+
     for ( i = 0; i < m->nitems; i++ )
-		if ( ( tw = fl_get_string_widthTAB( pfstyle, pfsize,
-											item[ i ]->str,
-											item[ i ]->len ) ) > w )
-			w = tw;
+	{
+		b = t = fl_strdup( item[ i ]->str );
+		while ( ( b = strchr( b, '\b' ) ) )
+			memmove( b, b + 1, strlen( b ) );
+		m->maxw = FL_max( m->maxw,
+						  fl_get_string_widthTAB( pfstyle, pfsize,
+												  t, strlen( t ) ) );
+		fl_free( t );
+	}
 
-    m->maxw = w;
+	if ( m->title && *m->title )
+	{
+		b = t = fl_strdup( m->title );
+		while ( ( b = strchr( b, '\b' ) ) )
+			memmove( b, b + 1, strlen( b ) );
+		m->titlewidth = XTextWidth( tit_fs, t, strlen( t ) );
+		fl_free( t );
+	}
+	else
+		m->titlewidth = 0;
 
-
-    b = t = fl_strdup( m->title ? m->title : "" );
-	while ( ( b = strchr( b, '\b' ) ) )
-		memmove( b, b + 1, strlen( b ) );
-    m->titlewidth = XTextWidth( tit_fs, t, strlen( t ) );
-	fl_free( t );
-    m->cellh = pup_ascent + pup_desc + 2 * m->padh;
+	m->cellh = pup_ascent + pup_desc + 2 * m->padh;
 }
-
-
-#define HAS_BOX( m )  ( ( m ) & ( FL_PUP_CHECK | FL_PUP_RADIO | FL_PUP_BOX ) )
 
 
 /***************************************
  * Parse the menu entries
  ***************************************/
+
+#define mv( d, s )   memmove( d, s, strlen( s ) + 1 );
+
 
 static int
 parse_entry( int          n,
@@ -303,154 +327,207 @@ parse_entry( int          n,
 			 va_list      ap )
 {
     PopUP *m = menu_rec + n;
-    MenuItem **item = m->item + m->nitems;
+    MenuItem *item;
     char *s,
-		 *val,
+		 *c,
 		 *p,
-		 tmp[ 128 ],
-		 *tt = NULL;
-    unsigned int flags;
+		 *e,
+		 *sc = NULL;
+    unsigned int flags = 0;
+	long num;
 
-
-    if ( n < 0 || n >= fl_maxpup || !str )
+    if ( n < 0 || n >= fl_maxpup || ! str )
 		return -1;
 
     s = fl_strdup( str );
 
-    for ( val = strtok( s, "|" ); val && m->nitems < FL_MAXPUPI - 1;
-		  val = strtok( NULL, "|" ) )
+    for ( c = strtok( s, "|" );
+		  c && m->nitems < FL_MAXPUPI;
+		  c = strtok( NULL, "|" ) )
     {
 		flags = 0;
-		*item = fl_calloc( 1, sizeof **item );
-		( *item )->ret = m->nitems + 1;
-		( *item )->ulpos = -1;
-		( *item )->subm = -1;
-		tt = tmp + 1;
-		*tt = '\0';
+		m->item[ m->nitems ] = item = fl_calloc( 1, sizeof *item );
+		item->str = NULL;
+		item->icb = NULL;
+		item->shortcut = NULL;
+		item->ret = m->nitems + 1;
+		item->ulpos = -1;
+		item->subm = -1;
 
-		while ( ( p = strchr( val, '%' ) ) )
+		p = c;
+		while ( ( p = strchr( p, '%' ) ) && ! ( flags & M_ERR ) )
 		{
-			int nc = *( p + 1 );
+			switch ( p[ 1 ] )
+			{
+				case '%' :
+					mv( p, p + 1 );
+					p = p + 1;
+					break;
 
-			*p = '\0';
-			if ( ! *tt )
-				strcpy( tt, val );
-			val = p + 2;
-			if ( nc == 'F' )
-				m->mcb = va_arg( ap, FL_PUP_CB );
-			else if ( nc == 'e' )
-				m->enter_cb = va_arg( ap, FL_PUP_ENTERCB );
-			else if ( nc == 'f' )
-				( *item )->icb = va_arg( ap, FL_PUP_CB );
-			else if ( nc == 'm' )
-				( *item )->subm = va_arg( ap, int );
-			else if ( nc == 'E' )
-				fl_setpup_entries( n, va_arg( ap, FL_PUP_ENTRY * ) );
-			else if ( nc == 't' )
-				flags |= M_TITLE;
-			else if ( nc == 'l' )
-				*--tt = '\010';
-			else if ( nc == 'b' )
-				( *item )->mode |= FL_PUP_TOGGLE;
-			else if ( nc == 'i' )
-				( *item )->mode |= FL_PUP_INACTIVE;
-			else if ( nc == 'x' )
-			{
-				( *item )->ret = atoi( p + 2 );
-				for ( ; isdigit( ( int ) *val ) || isspace( ( int ) *val );
-					  val++ )
-					/* empty */ ;
-			}
-			else if ( nc == 'r' || nc == 'R' )
-			{
-				( *item )->radio = atoi( p + 2 );
-				( *item )->mode |= FL_PUP_BOX;
-				if ( nc == 'R' )
-					( *item )->mode |= FL_PUP_CHECK;
-				for ( ; isdigit( ( int ) *val ) || isspace( ( int ) *val );
-					  val++ )
-					/* empty */ ;
-			}
-			else if ( nc == 'B' )
-			{
-				( *item )->mode |= FL_PUP_CHECK | FL_PUP_TOGGLE;
-			}
-			else if ( nc == 'd' )
-			{
-				( *item )->mode |= FL_PUP_GREY;
-			}
-			else if ( nc == 'h' || nc == 's' )
-			{
-				char *sc = va_arg( ap, char * );
+				case 't' :
+					flags |= M_TITLE;
+					mv( p, p + 2 );
+					break;
 
-				M_info( 0, "shortcut=%s for %s", sc, tt );
-				convert_shortcut( sc, tt, *item, NSC );
-			}
-			else if ( nc == '%' )
-				strcat( tt, "%" );
-			else
-			{
-				flags |= M_ERR;
-				M_err( "ParsePup", "Unknown sequence %%%c", nc );
+				case 'f' :
+					item->icb = va_arg( ap, FL_PUP_CB );
+					mv( p, p + 2 );
+					break;
+
+				case 'F' :
+					m->mcb = va_arg( ap, FL_PUP_CB );
+					mv( p, p + 2 );
+					break;
+
+				case 'e' :
+					m->enter_cb = va_arg( ap, FL_PUP_ENTERCB );
+					mv( p, p + 2 );
+					break;
+
+				case 'E' :
+					fl_setpup_entries( n, va_arg( ap, FL_PUP_ENTRY * ) );
+					mv( p, p + 2 );
+					break;
+
+				case 'm' :
+					item->subm = va_arg( ap, int );
+					mv( p, p + 2 );
+					break;
+
+				case 'l' :
+					mv( p, p + 2 );
+					mv( c + 1, c );
+					*c = '\010';
+					p = p + 1;
+					break;
+
+				case 'i' :
+					item->mode |= FL_PUP_INACTIVE;
+					mv( p, p + 2 );
+					break;
+
+				case 'd' :
+					item->mode |= FL_PUP_GREY;
+					mv( p, p + 2 );
+					break;
+
+				case 'x' :
+					num = strtol( p + 2, &e, 10 );
+					if ( e == p + 2 )
+					{
+						flags |= M_ERR;
+						M_err( "parse_entry", "Missing number after %%x" );
+						break;
+					}
+					item->ret = num;
+					while ( isspace( ( int ) *e ) )
+						e++;
+					mv( p, e );
+					break;
+
+				case 'B' :
+					item->mode |= FL_PUP_CHECK;
+					/* fall through */
+
+				case 'b' :
+					item->mode |= FL_PUP_BOX;
+					mv( p, p + 2 );
+					break;
+
+				case 'R' :
+					item->mode |= FL_PUP_CHECK;
+					/* fall through */
+
+				case 'r' :
+					item->mode |= FL_PUP_BOX;
+					num = strtol( p + 2, &e, 10 );
+					if ( e == p + 2 )
+					{
+						flags |= M_ERR;
+						M_err( "parse_entry", "Missing number after %%%c",
+							   p + 1 );
+						break;
+					}
+					item->radio = num;
+					while ( isspace( ( int ) *e ) )
+						e++;
+					mv( p, e );
+					break;
+
+				case 'h' :
+				case 's' :
+					sc = va_arg( ap, char * );
+					mv( p, p + 2 );
+					break;
+
+				default :
+					flags |= M_ERR;
+					M_err( "parse_entry", "Unknown sequence %%%c", p[ 1 ] );
+					break;
 			}
 		}
 
 		if ( flags & M_ERR )
 		{
-			M_err( "PupParse", "Error while parsing pup entry" );
-			continue;
+			M_err( "parse_entry", "Error while parsing pup entry" );
+			fl_free( item );
+			m->item[ m->nitems ] = NULL;
+			break;
 		}
 
-		if ( HAS_BOX( ( *item )->mode ) )
-			m->lpad = PADW + 2 * FL_abs( pupbw );
+		if ( sc )
+		{
+			M_info( 0, "shortcut = %s for %s", sc, c );
+			convert_shortcut( sc, c, item, NSC );
+		}
 
-		if ( ( *item )->subm >= 0 )
-			m->rpad = PADW + 2 * FL_abs( pupbw );
+		if ( item->mode & FL_PUP_BOX )
+			m->lpad = PADW + 16;
 
-		if ( *tt == '\0' )
-			tt = val;
+		if ( item->subm >= 0 )
+			m->rpad = PADW + CHECKW + 2;
 
 		if ( flags & M_TITLE )
 		{
-			char *t, *b;
+			char *t,
+				 *b;
 
-			m->title = fl_strdup( tt );
-			b = t = fl_strdup( tt );
+			m->title = fl_strdup( c );
+			b = t = fl_strdup( c );
 			while ( ( b = strchr( b, '\b' ) ) )
 				memmove( b, b + 1, strlen( b ) );
 			m->titlewidth = XTextWidth( tit_fs, t, strlen( t ) );
 			fl_free( t );
+			fl_free( item );
+			m->item[ m->nitems ] = NULL;
 		}
 		else
 		{
-			int w, len;
+			char *t,
+			     *b;
 
-			( *item )->str = fl_strdup( tt );
-			len = ( *item )->len = strlen( tt );
-			if ( ( w = fl_get_string_widthTAB( pfstyle, pfsize,
-											   tt, len ) ) > m->maxw )
-				m->maxw = w;
+			item->str = fl_strdup( c );
+			item->len = strlen( item->str );
 
+			b = t = fl_strdup( item->str );
+			while ( ( b = strchr( b, '\b' ) ) )
+				memmove( b, b + 1, strlen( b ) );
+			m->maxw = FL_max( m->maxw,
+							  fl_get_string_widthTAB( pfstyle, pfsize,
+													  t, strlen( t ) ) );
+			fl_free( t );
 			m->nitems++;
-			item++;
-		}
-
-		if ( flags & ( M_ERR | M_TITLE ) )
-		{
-			fl_free( *item );
-			*item = NULL;
 		}
     }
 
-    if ( val )
-		M_err( "Xpup", "too many menu items. Max=%d", FL_MAXPUPI );
+    if ( c )
+		M_err( "parse_entry", "Too many menu items, max is %d", FL_MAXPUPI );
 
     fl_free( s );
-    return 0;
+
+    return ( flags & M_ERR ) ? -1 : 0;
 }
 
-
-/************** End of data struct maint. *********}***************/
 
 /***************************************
  ***************************************/
@@ -462,7 +539,7 @@ close_pupwin( PopUP * pup )
     {
 		XDestroyWindow( flx->display, pup->win );
 		wait_for_close( pup->win );
-		pup->win = 0;
+		pup->win = None;
     }
 }
 
@@ -486,9 +563,12 @@ fl_init_pup( void )
 		for ( mr = menu_rec; mr < menu_rec + fl_maxpup; mr++ )
 		{
 			mr->title = NULL;
-			menu_rec->win = menu_rec->parent = 0;
+			menu_rec->win = menu_rec->parent = None;
 			mr->cursor = 0;
-			mr->shadowGC = mr->pupGC1 = mr->pupGC2 = 0;
+			mr->pupGC1 = mr->pupGC2 = None;
+#if 0
+			mr->shadowGC = None;
+#endif
 			for ( i = 0; i <= FL_MAXPUPI; i++ )
 				mr->item[ i ] = NULL;
 			mr->mcb = NULL;
@@ -532,8 +612,7 @@ fl_setpup_default_fontsize( int size )
     for ( pups = pup + fl_maxpup; pup < pups; pup++ )
     {
 		reset_max_width( pup );
-		if ( pup->win )
-			close_pupwin( pup );
+		close_pupwin( pup );
     }
 
     return opfsize;
@@ -610,13 +689,12 @@ fl_newpup( Window win )
 
     if ( puplevel )
     {
-		M_warn( "Defpup", "Inconsistent puplevel %d", puplevel );
+		M_warn( "fl_newpup", "Inconsistent puplevel %d", puplevel );
 		puplevel = 0;
     }
 
     if ( win == 0 )
 		win = fl_root;
-
 
 	if ( ! pupbw_is_set )
 	{
@@ -628,14 +706,15 @@ fl_newpup( Window win )
        and root probably makes more sense */
 
 #if ALWAYSROOT
-    return find_index( fl_root );
+    return find_empty_index( fl_root );
 #else
     {
 		FL_State *fs = fl_state + fl_vmode;
 		int nrt =    fs->pcm
-				  || fl_visual( fl_vmode ) != DefaultVisual( flx->display,
+			      || fl_visual( fl_vmode ) != DefaultVisual( flx->display,
 															 fl_screen );
-		return find_index( nrt ? win : fl_root );
+
+		return find_empty_index( nrt ? win : fl_root );
     }
 #endif
 }
@@ -651,7 +730,7 @@ fl_addtopup( int          n,
 			 ... )
 {
     va_list ap;
-
+	int ret;
 
     if ( n < 0 || n >= fl_maxpup )
 		return -1;
@@ -663,15 +742,16 @@ fl_addtopup( int          n,
 
 		while ( ( p = strchr( q, '%' ) ) )
 			*p = 'P';	/* % can cause problems */
-		M_info( "addtopup", q );
+		M_info( "fl_addtopup", q );
 		fl_free( q );
 	}
 #endif
 
 	va_start( ap, str );
-	parse_entry( n, str, ap );
+	ret = parse_entry( n, str, ap );
 	va_end( ap );
-	return n;
+
+	return ret = 0 ? n : -1;
 }
 
 
@@ -685,16 +765,17 @@ fl_defpup( Window       win,
 		   ... )
 {
     int n;
+	int ret;
     va_list ap;
 
     if ( ( n = fl_newpup( win ) ) < 0 )
     {
-		fl_error( "XPopUP", "Can't Allocate" );
+		fl_error( "fl_defpup", "Can't Allocate" );
 		return n;
     }
 
     va_start( ap, str );
-    parse_entry( n, str, ap );
+    ret = parse_entry( n, str, ap );
     va_end( ap );
 
 #if FL_DEBUG > ML_WARN
@@ -712,7 +793,7 @@ fl_defpup( Window       win,
     }
 #endif
 
-    return n;
+    return ret == 0 ? n : -1;
 }
 
 
@@ -744,14 +825,14 @@ ind_is_valid( PopUP * m,
  ***************************************/
 
 static MenuItem *
-requested_item_isvalid( const char * where,
-						int          nm,
-						int          ni )
+requested_item_is_valid( const char * where,
+						 int          nm,
+						 int          ni )
 {
     if ( nm < 0 || nm >= fl_maxpup )
     {
 		M_err( where, "Bad popup index %d", nm );
-		return 0;
+		return NULL;
     }
 
     return ind_is_valid( menu_rec + nm, ni );
@@ -769,20 +850,20 @@ fl_setpup_mode( int          nm,
 {
     MenuItem *item;
 
-    if ( ( item = requested_item_isvalid( "setpup", nm, ni ) ) )
-    {
-		if ( ( item->mode = mode ) & FL_PUP_CHECK )
-			item->mode |= FL_PUP_BOX;
-		if ( item->mode & FL_PUP_RADIO )
-		{
-			item->mode |= FL_PUP_BOX;
-			if ( ! item->radio )
-				item->radio = 255;
-		}
+    if ( ! ( item = requested_item_is_valid( "fl_setpup_mode", nm, ni ) ) )
+		return -1;
 
-		if ( HAS_BOX( mode ) )
-			menu_rec[ nm ].lpad = PADW + 2 * FL_abs( pupbw );
-    }
+	if ( ( item->mode = mode ) & FL_PUP_CHECK )
+		item->mode |= FL_PUP_BOX;
+	if ( item->mode & FL_PUP_RADIO )
+	{
+		item->mode |= FL_PUP_BOX;
+		if ( ! item->radio )
+			item->radio = 255;
+	}
+
+	if ( item->mode & FL_PUP_BOX )
+		menu_rec[ nm ].lpad = PADW + CHECKW + 2;
 
     return 0;
 }
@@ -805,19 +886,15 @@ convert_shortcut( const char * sc,
     item->ulpos = fl_get_underline_pos( str, sc ) - 1;
     fl_convert_shortcut( sc, item->shortcut );
     if ( sc[ 0 ] == '&' )
-		M_info( "sc=%s keysym=%ld\n", sc, item->shortcut[ 0 ] );
+		M_info( "convert_shortcut", "sc=%s keysym=%ld\n",
+				sc, item->shortcut[ 0 ] );
 }
 
 
-static void draw_only( PopUP * );
+static void draw_popup( PopUP * );
 static void draw_item( PopUP *,
 					   int,
 					   int );
-
-#define PADTITLE       14	/* extran space for title  */
-#define SHADE           6
-#define CHECKW          6	/* check box size          */
-
 
 #define TITLEH         ( tit_ascent + tit_desc + PADTITLE )
 
@@ -850,14 +927,14 @@ static void
 wait_for_close( Window win )
 {
 #ifdef BLOCK
-    long emask = 0x01ffffff;   /* better? ~ NoEventMask */
+    long emask = AllEventsMask;
     XEvent xev;
 
 	/* Drop all events for the window */
 
     XSync( flx->display, 0 );
     while ( XCheckWindowEvent( flx->display, win, emask, &xev ) )
-		fl_xevent_name( "wait_for_close", &xev );
+		/* empty */ ;
 #else
     fl_add_event_callback( win, DestroyNotify, popclose, 0 );
     fl_add_event_callback( win, UnmapNotify, popclose, 0 );
@@ -902,7 +979,7 @@ get_valid_entry( PopUP * m,
 				 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) )
 			return target;
 
-    M_err( "PopUp", "No valid entries among total of %d", m->nitems );
+    M_err( "get_valid_entry", "No valid entries among total of %d", m->nitems );
     return 0;
 }
 
@@ -948,19 +1025,16 @@ handle_submenu( PopUP *    m,
 				MenuItem * item,
 				int *      val )
 {
-    int c;
-
     if ( ! ( item->mode & ( FL_PUP_GREY | FL_INACTIVE ) ) && item->subm >= 0 )
     {
-		fl_setpup_position( m->x + m->w - 25, m->y + m->cellh * *val - 20 );
-		if ( ( c = fl_dopup( item->subm ) ) <= 0 )
+		fl_setpup_position( m->x + m->w,
+							m->y + m->cellh * ( *val - 1 )
+							+ ( ( m->title && *m->title ) ?
+								m->titleh - m->padh : 0 ) );
+		if ( ( subreturn = *val = fl_dopup( item->subm ) ) <= 0 )
 			grab_both( m );
 		else
-		{
-			*val = c;
-			subreturn = c;
 			return 1;
-		}
     }
 
     return 0;
@@ -978,7 +1052,8 @@ pup_keyboard( XKeyEvent * xev,
 {
     KeySym keysym = NoSymbol;
     char buf[ 16 ];
-    int i, oldval = *val;
+    int i,
+		oldval = *val;
 
     XLookupString( xev, buf, sizeof buf, &keysym, 0 );
 
@@ -1008,10 +1083,13 @@ pup_keyboard( XKeyEvent * xev,
     }
     else if ( IsRight( keysym ) )
     {
-		if ( *val > 0 && *val <= m->nitems )
+		if ( *val > 0 && *val <= m->nitems && m->item[ *val - 1 ]->subm )
 		{
+			oldval = *val;
 			if ( handle_submenu( m, m->item[ *val - 1 ], val ) )
 				keysym = XK_Return;
+			else
+				*val = oldval;
 		}
     }
     else if ( IsLeft( keysym ) )
@@ -1031,7 +1109,7 @@ pup_keyboard( XKeyEvent * xev,
     }
     else if ( keysym == XK_Return )
     {
-		if ( *val > 0 && *val <= m->nitems )
+		if ( *val > 0 && *val <= m->nitems && m->item[ *val - 1 ]->subm )
 			handle_submenu( m, m->item[ *val - 1 ], val );
     }
     else
@@ -1042,6 +1120,8 @@ pup_keyboard( XKeyEvent * xev,
 			handle_submenu( m, m->item[ *val - 1 ], val );
 			keysym = XK_Return;
 		}
+		else
+			using_key = 0;
     }
 
     if ( oldval != *val && ( m->enter_cb || m->leave_cb ) )
@@ -1057,27 +1137,6 @@ pup_keyboard( XKeyEvent * xev,
 
 
 /***************************************
- * given mouse position and a menu, return if the mouse is on
- * the title bar
- ***************************************/
-
-static int
-is_on_title( PopUP * m,
-			 int     mx,
-			 int     my )
-{
-    int val;
-
-    val = ( mx < m->x || mx > m->x + ( int ) m->w ) ?
-		  -1 : ( my - m->y + m->titleh ) / m->cellh;
-    if ( val == 0 && ( ! m->title || ! *m->title ) )
-		val = ( mx > ( int ) ( m->x + m->w / 3 ) || mx < m->x - 2 ) ? -1 : 0;
-
-    return val == 0 ? 1 : 0;
-}
-
-
-/***************************************
  * mouse moved. val is set to the item number (not value) upon return
  ***************************************/
 
@@ -1087,42 +1146,39 @@ handle_motion( PopUP * m,
 			   int     my,
 			   int *   val )
 {
-    int cval;
-    MenuItem *item = 0;
-    int titleh = m->titleh;
+    int cval = -1;
+    MenuItem *item = NULL;
     static MenuItem *lastitem = NULL;
+	static PopUP *lastm = NULL;
 
-    cval = ( mx < 0 || mx > ( int ) m->w ) ?
-		-1 : ( ( my - titleh + m->cellh ) / m->cellh );
+	if (    mx >= 0 && mx <= ( int ) m->w
+		 && my >= 0 && my <= ( int ) m->h - ( FL_abs( m->bw ) > 2 )
+			                 - ( m->padh > 1 ) )
+	{
+		cval = m->nitems - ( m->h - ( FL_abs( m->bw ) > 2 )
+							 - ( m->padh > 1 ) - my ) / m->cellh;
+		if ( cval > 0 )
+			item = m->item[ cval - 1 ];
+	}
 
-    /* if released on title bar, cval is zero. However, if there is no title,
-       change cval to -1 (invalid) if "too right" */
-
-    if ( cval == 0 && ( ! m->title || ! *m->title ) )
-		cval = ( mx > ( int ) m->w / 3 ) ?
-			   -1 : ( ( puplevel > 1 && mx < m->x ) ? -1 : 0 );
-    else if ( cval > m->nitems || cval < 0 )
-		cval = -1;
-    else if ( cval > 0 )
-		item = m->item[ cval - 1 ];
-
-    if ( cval != *val )
+    if ( cval != *val || m != lastm )
     {
 		draw_item( m, *val, FL_FLAT_BOX );
 		draw_item( m, cval, FL_UP_BOX );
 		*val = cval;
     }
 
-    item = ( item && ! ( item->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) ) ?
-		   item : 0;
+    if ( item && item->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) )
+		item = NULL;
 
     if ( lastitem && item != lastitem && m->leave_cb )
 		m->leave_cb( lastitem->ret, m->leave_data );
 
-    if ( item && m->enter_cb && item != lastitem )
+    if ( item && item != lastitem  && m->enter_cb )
 		m->enter_cb( item->ret, m->enter_data );
 
     lastitem = item;
+	lastm = m;
 
     return item;
 }
@@ -1132,8 +1188,6 @@ handle_motion( PopUP * m,
  * Interaction routine. If mouse is released on the title bar,
  * consider its a "hanging" pop-up request else return
  ***************************************/
-
-/* #define USEEVENT */
 
 static int
 pup_interact( PopUP * m )
@@ -1149,24 +1203,37 @@ pup_interact( PopUP * m )
     m->event_mask |= KeyPressMask;
     ev.xmotion.time = 0;
 
+	/* If the new popup was opened due to a kreypress mark the first
+	   active entry as currently selected */
+
+	if ( using_key )
+	{
+		int i;
+
+		for ( i = 1; i < m->nitems; i++ )
+		{
+			if ( m->item[ i - 1 ]->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) )
+				continue;
+			draw_item( m, i, FL_UP_BOX );
+			val = i;
+			break;
+		}
+	}
+
     while ( ! ( done || timeout ) )
     {
 		timeout = fl_time_passed( FL_PUP_T ) > 40.0;
+
 		if ( ! XCheckWindowEvent( flx->display, m->win, m->event_mask, &ev ) )
 		{
-    	    XEvent xev;
+			/* If the mouse button was released or pressed not within the
+			   popup's window we're through with the popup */
 
-			if ( XCheckTypedEvent( flx->display, ButtonRelease, &xev ) )
+			if (    XCheckTypedEvent( flx->display, ButtonPress, &ev )
+				 || XCheckTypedEvent( flx->display, ButtonRelease, &ev ) )
 			{
-				/* fl_print_xevent_name( "pop",&xev ); */
-				/* terminate popup if not on the title bar */
-
-				if ( ! is_on_title( m, xev.xbutton.x_root,
-									xev.xbutton.y_root ) )
-				{
-					val = -1;
-					done = 1;
-				}
+				val = -1;
+				break;
 			}
 
 			fl_watch_io( fl_context->io_rec, fl_context->idle_delta );
@@ -1197,61 +1264,62 @@ pup_interact( PopUP * m )
 			}
 
 			fl_handle_automatic( &ev, 1 );
+			fl_winset( m->win );
 			continue;
 		}
 
 		timer_cnt = 0;
-		fl_winset( m->win );
-
-		fl_xevent_name( "PopUP", &ev );
-
-		/* this could be a little better is enter/leave is checked and a loop
-		   over all valid pup is done */
 
 		switch ( ev.type )
 		{
 			case Expose:
-				/* need to redraw form first */
-
-				if ( fl_check_forms( ) == FL_EVENT )
-					fl_XNextEvent( &ev );
-				draw_only( m );
+				draw_popup( m );
+				XSync( flx->display, 0 );
 				break;
 
 			case MotionNotify:
 				fl_compress_event( &ev, ButtonMotionMask );
-				/* FALL THROUGH */
+				/* fall through */
 
 			case ButtonPress:
 				/* taking adv. of xbutton.x == xcrossing.x */
 
+				using_key = 0;
 				item = handle_motion( m, ev.xbutton.x, ev.xbutton.y, &val );
-				if (    item
-					 && item->subm >= 0
-					 && ev.xbutton.x > ( ( int ) m->w - 20 ) )
+
+				if ( item && item->subm >= 0 && ev.xbutton.x >= 0 )
+				{
+					unsigned int keymask;
+					int old_val = val;
+
 					done = handle_submenu( m, item, &val );
+					fl_get_win_mouse( m->win, &ev.xbutton.x, &ev.xbutton.y,
+									  &keymask );
+					if ( ! ( done = keymask ? done : 1 ) )
+						draw_item( m, old_val, FL_FLAT_BOX );
+				}
 				else if ( puplevel > 1 && val < 0 )
-					done = ev.xmotion.x < 0;
+					done =    ev.xbutton.x < 0
+						   && (    ev.xbutton.y <= m->par_y
+				                || ev.xbutton.y > m->par_y + m->cellh );
 				break;
 
 			case ButtonRelease:
 				item = handle_motion( m, ev.xbutton.x, ev.xbutton.y, &val );
-				if ( item && item->subm >= 0 )
+				if ( item && item->subm >= 0 && val != -1 )
 					done = handle_submenu( m, item, &val );
 				else
 					done = val != 0;
 				break;
 
 			case KeyPress:
+				using_key = 1;
 				done = pup_keyboard( ( XKeyEvent * ) &ev, m, &val );
 				break;
 
 			case UnmapNotify:	/* must be by external routine */
 				done = 1;
 				val = -1;
-				break;
-
-			default:
 				break;
 		}
     }
@@ -1268,24 +1336,30 @@ grab_both( PopUP * m )
 {
     unsigned int evmask = m->event_mask;
 
+	/* Set the window we're using */
+
+	fl_winset( m->win );
+
     /* get rid of all non-pointer events in event_mask */
 
     evmask &= ~ ( ExposureMask | KeyPressMask );
-    XFlush( flx->display );
+    XSync( flx->display, 0 );
     fl_msleep( 30 );
     XChangeActivePointerGrab( flx->display, evmask, m->cursor, CurrentTime );
 
-    fl_winset( m->win );
-
     /* do both pointer and keyboard grab */
 
-    if ( XGrabPointer( flx->display, m->win, True, evmask, GrabModeAsync,
+    if ( XGrabPointer( flx->display, m->win, False, evmask, GrabModeAsync,
 					   GrabModeAsync, None, m->cursor, CurrentTime )
 		                                                        != GrabSuccess )
-		M_err( "dopup", "Can't grab pointer" );
+		M_err( "grab_both", "Can't grab pointer" );
 
-    XGrabKeyboard( flx->display, m->win, False, GrabModeAsync,
-				   GrabModeAsync, CurrentTime );
+    if ( XGrabKeyboard( flx->display, m->win, False, GrabModeAsync,
+						GrabModeAsync, CurrentTime ) != GrabSuccess )
+	{
+		M_err( "grab_both", "Can't grab keyboard" );
+		XUngrabPointer( flx->display, CurrentTime );
+	}
 }
 
 
@@ -1298,21 +1372,32 @@ fl_dopup( int n )
     PopUP *m = menu_rec + n;
     int val = 0;
     MenuItem *item = 0;
+	XEvent xev;
 
     if ( n < 0 || n >= fl_maxpup )
     {
-		M_err( "dopup", "bad pupID: %d\n", n );
+		M_err( "fl_dopup", "bad pupID: %d\n", n );
 		return -1;
     }
-
-    subreturn = -1;
 
     if ( puplevel == 0 )
 		fl_context->pup_id = n;
 
+    subreturn = -1;
+
     puplevel++;
+	internal_showpup_call = 1;
     fl_showpup( n );
-    grab_both( m );
+
+	/* If one opens a touch menu but is fast enough to move the mouse out
+	   and back into the window before the grab is active an extra EnterNotify
+	   event comes in that results in the touch menu getting opened again after
+	   closing it, so delete all such events for the form the touch menu
+	   belongs to. */
+
+	while ( XCheckWindowEvent( flx->display, fl_popup_parent_window,
+							   EnterWindowMask, &xev ) )
+		/* empty */ ;
 
     /* pup_interact returns the item number */
 
@@ -1320,15 +1405,23 @@ fl_dopup( int n )
 
     if ( m->win )
     {
-		XUngrabPointer( flx->display, CurrentTime );
-		XUngrabKeyboard( flx->display, CurrentTime );
 		XUnmapWindow( flx->display, m->win );
 		wait_for_close( m->win );
-		if ( m->win == fl_context->pup_win )
-			fl_context->pup_win = 0;
     }
     else
-		M_err( "dopup", "WinClosed" );
+		M_err( "fl_dopup", "Window already closed" );
+
+	/* The following is necessary because 'save_under' may bot be supported. */
+
+	if ( fl_popup_form )
+	{
+		fl_winset( fl_popup_form->window );
+		fl_set_clipping( m->win_x - fl_popup_form->x,
+						 m->win_y - fl_popup_form->y,
+						 m->w, m->h );
+		fl_redraw_form( fl_popup_form );
+		fl_set_clipping( 0, 0, 0, 0 );
+	}
 
     if ( puplevel > 1 )
     {
@@ -1337,13 +1430,13 @@ fl_dopup( int n )
 		XEvent xev;
 
 		while ( XCheckMaskEvent( flx->display, ButtonMotionMask, &xev ) )
-			fl_xevent_name( "SyncFlush", &xev );
+			/* empty */ ;
     }
 
-    /* handle call back if any  */
+    /* handle callback if any  */
 
     puplevel--;
-    if ( val > 0
+    if (    val > 0
 		 && val <= m->nitems
 		 && ( subreturn < 0 || ( subreturn > 0 && puplevel > 0 ) ) )
     {
@@ -1352,7 +1445,7 @@ fl_dopup( int n )
 			return -1;
 
 		if ( item->subm >= 0 )
-			return val;
+			return -1;
 
 		if ( item->radio )
 			reset_radio( m, item );
@@ -1373,19 +1466,6 @@ fl_dopup( int n )
 
     if ( puplevel <= 0 )
 		fl_context->pup_id = -1;
-
-#if 0
-    fprintf( stderr, "val=%d sunreturnval=%d\n", val, subreturn );
-    if ( subreturn > 0 && submenu && subreturn <= submenu->nitems )
-    {
-		fprintf( stderr, "subitems=%d\n", submenu->nitems );
-		item = submenu->item[ subreturn - 1 ];
-		if ( item->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) )
-			return -1;
-		val = item->ret;
-    }
-    fprintf( stderr, "final val=%d sunreturnval=%d\n", val, subreturn );
-#endif
 
     if ( subreturn > 0 )
 		val = subreturn;
@@ -1425,7 +1505,12 @@ fl_freepup( int n )
 		fl_safe_free( p->item[ i ] );
     }
 
-    p->parent = 0;
+    p->parent = None;
+
+	if ( p->pupGC1 != None )
+		XFreeGC( flx->display, p->pupGC1 );
+	if ( p->pupGC2 != None )
+		XFreeGC( flx->display, p->pupGC2 );
 
     fl_safe_free( p->title );
 
@@ -1447,9 +1532,8 @@ fl_setpup_shortcut( int          nm,
 {
     MenuItem *item;
 
-    if ( ! sc || ! ( item = requested_item_isvalid( "pupshortcut", nm, ni ) ) )
-		return;
-    convert_shortcut( sc, item->str, item, NSC );
+    if ( sc && ( item = requested_item_is_valid( "pupshortcut", nm, ni ) ) )
+		convert_shortcut( sc, item->str, item, NSC );
 }
 
 
@@ -1461,7 +1545,7 @@ fl_setpup_menucb( int       nm,
 				  FL_PUP_CB cb )
 {
     PopUP *m = menu_rec + nm;
-    FL_PUP_CB oldcb = 0;
+    FL_PUP_CB oldcb = NULL;
 
     if ( nm >= 0 && nm < fl_maxpup && m->parent )
     {
@@ -1540,7 +1624,7 @@ fl_setpup_itemcb( int       nm,
     MenuItem *item;
     FL_PUP_CB oldcb = NULL;
 
-    if ( ( item = requested_item_isvalid( "pupitemcb", nm, ni ) ) )
+    if ( ( item = requested_item_is_valid( "pupitemcb", nm, ni ) ) )
     {
 		oldcb = item->icb;
 		item->icb = cb;
@@ -1558,7 +1642,8 @@ fl_setpup_title( int          nm,
 				 const char * title )
 {
     PopUP *m = menu_rec + nm;
-	char *t, *b;
+	char *t,
+		 *b;
 
     if ( nm < 0 || nm >= fl_maxpup || ! title )
 		return;
@@ -1724,7 +1809,7 @@ fl_setpup_selection( int nm,
 {
     MenuItem *item;
 
-    if (    ( item = requested_item_isvalid( "pupselection", nm, ni ) )
+    if (    ( item = requested_item_is_valid( "pupselection", nm, ni ) )
 		 && item->radio )
 		reset_radio( menu_rec + nm, item );
 }
@@ -1740,9 +1825,9 @@ fl_setpup_submenu( int m,
 {
     MenuItem *item;
 
-    if ( ( item = requested_item_isvalid( "subm", m, i ) ) )
+    if ( ( item = requested_item_is_valid( "subm", m, i ) ) )
     {
-		menu_rec[ m ].rpad = PADW + 2 * FL_abs( pupbw );
+		menu_rec[ m ].rpad = PADW + 16;
 		item->subm = subm;
     }
 }
@@ -1765,8 +1850,7 @@ draw_item( PopUP * m,
 {
     int j = i - 1;
     int bw = FL_abs( m->bw );
-    int x,
-		y = m->titleh + m->cellh * j + 1,
+    int y = m->titleh + m->cellh * j + 1,
 		dy = m->cellh - 2;
     char *str;
     MenuItem *item;
@@ -1775,20 +1859,14 @@ draw_item( PopUP * m,
     if ( j < 0 || j >= m->nitems )
 		return;
 
-    if ( bw > 3 )
-		x = bw * 1.5;
-    else
-		x = bw * 2;
-
     item = m->item[ j ];
     gc = ( item->mode & FL_PUP_GREY ) ? m->pupGC2 : m->pupGC1;
     str = item->str;
 
     if ( ! ( item->mode & FL_PUP_GREY ) )
-		fl_drw_box( style, x - 1, y, m->w - 2 * x + 2 + ( m->bw == -2 ),
-					dy, pupcolor, m->bw == -1 ? -1 : -2 );
-
-    fl_winset( m->win );
+		fl_drw_box( style, bw + 1, m->titleh + m->cellh * j + 1,
+					m->w - 2 * bw - 2, dy, pupcolor,
+					m->bw == -1 ? -1 : -2 );
 
     if ( item->mode & FL_PUP_BOX && ! ( item->mode & FL_PUP_CHECK ) )
     {
@@ -1796,7 +1874,7 @@ draw_item( PopUP * m,
 		int bbw = item->radio ? -2 : -1;
 
 		( item->radio ? fl_drw_checkbox : fl_drw_box )
-			( FL_UP_BOX, x + 3, y + ( dy - CHECKW ) / 2 ,
+			( FL_UP_BOX, 2 * bw + ( m->lpad - w ) / 2, y + ( dy - CHECKW ) / 2,
 			  w, w, pupcolor, bbw );
     }
 
@@ -1806,7 +1884,7 @@ draw_item( PopUP * m,
 		int bbw = item->radio ? -3 : -2;
 
 		( item->radio ? fl_drw_checkbox : fl_drw_box )
-			( FL_DOWN_BOX, x + 3, y + ( dy - CHECKW ) / 2,
+			( FL_DOWN_BOX, 2 * bw + ( m->lpad - w ) / 2, y + ( dy - CHECKW ) / 2,
 			  w, w, fl_depth( fl_vmode ) == 1 ? FL_BLACK : checkcolor, bbw );
     }
 
@@ -1814,7 +1892,7 @@ draw_item( PopUP * m,
 
     j = str[ 0 ] == '\010';
     fl_drw_stringTAB( m->win, gc,
-					  m->lpad, y + m->padh + pup_ascent - 1,
+					  m->lpad + 2 * bw, y + m->padh + pup_ascent - 1,
 					  pfstyle, pfsize, str + j, strlen( str ) - j, 0 );
 
     /* do underline */
@@ -1823,23 +1901,24 @@ draw_item( PopUP * m,
     {
 		XRectangle *xr;
 
-		xr = fl_get_underline_rect( pup_fs, m->lpad,
+		xr = fl_get_underline_rect( pup_fs, m->lpad + 2 * bw,
 									y + m->padh + pup_ascent - 1,
 									str, item->ulpos );
-
 		XFillRectangle( flx->display, m->win, gc,
 						xr->x, xr->y, xr->width, xr->height );
     }
 
     if ( j )
-		fl_draw_symbol( "@DnLine", x, y + dy, m->w - 2 * x, 1, FL_COL1 );
+		fl_draw_symbol( "@DnLine", 2 * bw, y + dy, m->w - 4 * bw, 1, FL_COL1 );
 
     if ( item->subm >= 0 )
 		fl_draw_symbol( (    style == FL_UP_BOX
 						  && ! (   item->mode
 								 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) ) ?
 						"@DnArrow" : "@UpArrow",
-						m->w - m->rpad + 1, y + dy / 2 - 7, 16, 16, FL_BLACK );
+						m->w - 2 * bw - 9 - m->rpad / 2,
+						y + dy / 2 - 7,
+						16, 16, FL_BLACK );
 }
 
 
@@ -1911,26 +1990,26 @@ fl_setpup_position( int x,
  ***************************************/
 
 static void
-draw_only( PopUP * m )
+draw_popup( PopUP * m )
 {
     int i;
 
-    flx->win = m->win;
-
-    if ( m->title )
+    if ( m->title && *m->title )
 		m->titleh = TITLEH;
     else
 		m->titleh = m->padh;
 
+#if 0
     if ( ! m->noshadow )
     {
         /** create the shadow  ***/
 
-		XFillRectangle( flx->display, m->win, m->shadowGC, m->w,
-						m->shade, m->shade, m->h );
+		XFillRectangle( flx->display, m->win, m->shadowGC,
+						m->w, m->shade, m->shade, m->h );
 		XFillRectangle( flx->display, m->win, m->shadowGC,
 						m->shade, m->h, m->w - m->shade, m->shade );
     }
+#endif
 
 	/*** make the popup box  ***/
 
@@ -1938,7 +2017,7 @@ draw_only( PopUP * m )
 
 	/*** title box ***/
 
-    if ( m->title )
+    if ( m->title && *m->title )
     {
 		fl_drw_box( FL_FRAME_BOX, 3, 3, m->w - 6, m->titleh - 6, pupcolor, 1 );
 
@@ -1957,17 +2036,16 @@ draw_only( PopUP * m )
 void
 fl_showpup( int n )
 {
-    XEvent ev;
-    int x, y;
+    int x,
+		y;
     FL_Coord px = 1,
 		     py = 1,
 		     pw = fl_scrw,
 		     ph = fl_scrh,
 		     mw,
 		     mh;
-    unsigned int kmask;
-    XGCValues xgcv;
     PopUP *m = menu_rec + n;
+	int req_y = exty;
 
     if ( n < 0 || n >= fl_maxpup )
     {
@@ -1986,14 +2064,14 @@ fl_showpup( int n )
 			w,
 			h;
 		XSetWindowAttributes xswa;
-		unsigned long wmask;
+		unsigned long int vmask;
 		unsigned int depth = fl_depth( fl_vmode );
 		Visual *visual = fl_visual( fl_vmode );
 
 		m->maxw = FL_max( m->titlewidth, m->maxw );
-		m->w = m->maxw + m->rpad + m->lpad;
-		m->h = m->nitems * m->cellh + m->titleh + 1 + ( m->padh > 1 );
-		m->h += 2 * ( FL_abs( m->bw ) > 2 );
+		m->w = m->maxw + m->rpad + m->lpad + 4 * FL_abs( m->bw );
+		m->h = m->nitems * m->cellh + m->titleh + 1 + ( m->padh > 1 )
+			   + 2 * ( FL_abs( m->bw ) > 2 );
 
 		m->event_mask =   ExposureMask
 			            | ButtonPressMask
@@ -2002,85 +2080,71 @@ fl_showpup( int n )
 			            | OwnerGrabButtonMask
 			            | PointerMotionHintMask
 			            | StructureNotifyMask 	/* for UnmapNotify */
-#if 1
 						| EnterWindowMask
-#endif
 						| KeyPressMask;
 
-		xswa.event_mask = m->event_mask;
-		xswa.save_under = True;
-		xswa.backing_store = WhenMapped;	/* fl_cntl.backingStore; */
-		xswa.cursor = m->cursor; /* fl_get_cursor_byname(XC_sb_right_arrow)); */
-		wmask = CWEventMask | CWSaveUnder | CWCursor | CWBackingStore;
+		xswa.event_mask            = m->event_mask;
+		xswa.save_under            = True;
+		xswa.backing_store         = WhenMapped;
+		xswa.cursor                = m->cursor;
+		xswa.border_pixel          = 0;
+		xswa.colormap              = fl_colormap( fl_vmode );
+		xswa.do_not_propagate_mask = ButtonPress | ButtonRelease | KeyPress;
+		vmask =   CWEventMask   | CWSaveUnder | CWBackingStore  | CWCursor
+			    | CWBorderPixel | CWColormap  | CWDontPropagate;
 
-		xswa.border_pixel = 0;
-		wmask |= CWBorderPixel;
-
-		xswa.colormap = fl_colormap( fl_vmode );
-		wmask |= CWColormap;
-
-		/* set transient hint does not do the trick if parent is rootwin */
+		/* Setting the transient hint (done after the window is created)
+		   does not do the trick if parent is the root window */
 
 		if ( m->parent == fl_root )
 		{
 			xswa.override_redirect = True;
-			wmask |= CWOverrideRedirect;
+			vmask |= CWOverrideRedirect;
 		}
-
-		/* don't bother others */
-
-		xswa.do_not_propagate_mask = ButtonPress | ButtonRelease | KeyPress;
-		wmask |= CWDontPropagate;
-
-#if ALWAYSROOT
-		if (    m->parent == fl_root
-			 && (    fl_state[fl_vmode].pcm
-				  || ( fl_visual( fl_vmode ) !=
-					              DefaultVisual( flx->display, fl_screen ) ) ) )
-		{
-			xswa.colormap = fl_colormap( fl_vmode );
-			wmask |= CWColormap;
-		}
-#endif
 
 		w = m->w;
 		h = m->h;
 
+#if 0
 		if ( ! m->noshadow )
 		{
 			w += m->shade;
 			h += m->shade;
 		}
+#endif
 
 		m->win = XCreateWindow( flx->display, m->parent,
 								0, 0, w, h, bw,
 								depth, InputOutput, visual,
-								wmask, &xswa );
+								vmask, &xswa );
 
 		XSetTransientForHint( flx->display, m->win, m->parent );
 		XStoreName( flx->display, m->win, m->title );
 
-		if ( ! m->shadowGC )
+		if ( ! m->pupGC1 && ! m->pupGC2 )
 		{
+			XGCValues xgcv;
+
+			xgcv.foreground     = fl_get_flcolor( puptcolor );
+			xgcv.font           = pup_fs->fid;
+			xgcv.subwindow_mode = IncludeInferiors;
+			xgcv.stipple        = fl_inactive_pattern;
+			vmask = GCForeground | GCFont | GCSubwindowMode | GCStipple;
+
+#if 0
 			/* GC for the shadow */
 
-			xgcv.foreground = fl_get_flcolor( puptcolor );
-			xgcv.font = pup_fs->fid;
-			xgcv.subwindow_mode = IncludeInferiors;
-			xgcv.stipple = fl_inactive_pattern;
-			kmask = GCForeground | GCFont | GCSubwindowMode | GCStipple;
-
-			m->shadowGC = XCreateGC( flx->display, m->win, kmask, &xgcv );
+			m->shadowGC = XCreateGC( flx->display, m->win, vmask, &xgcv );
 			XSetFillStyle( flx->display, m->shadowGC, FillStippled );
-
+#endif
 			/* GC for main text */
 
-			m->pupGC1 = XCreateGC( flx->display, m->win, kmask, &xgcv );
+			m->pupGC1 = XCreateGC( flx->display, m->win, vmask, &xgcv );
 
 			/* GC for inactive text */
 
 			xgcv.foreground = fl_get_flcolor( FL_INACTIVE );
-			m->pupGC2 = XCreateGC( flx->display, m->win, kmask, &xgcv );
+			m->pupGC2 = XCreateGC( flx->display, m->win, vmask, &xgcv );
 
 			/* special hack for B&W */
 
@@ -2092,7 +2156,11 @@ fl_showpup( int n )
     /* external coord is given relative to root */
 
     if ( ! extpos )
+	{
+		unsigned int kmask;
+
 		fl_get_mouse( &extx, &exty, &kmask );
+	}
     else if ( extx < 0 )
 		extx = - extx - m->w;
     else if ( exty < 0 )
@@ -2108,7 +2176,7 @@ fl_showpup( int n )
     mw = m->w;
     mh = m->h;
 
-#if !ALWAYSROOT
+#if ! ALWAYSROOT
     /* check if the stuff is inside the window, if not, make it so  */
 
     if ( x + mw > px + pw )
@@ -2136,25 +2204,52 @@ fl_showpup( int n )
     if ( ! extpos && ( x != extx || y != exty ) )
 		XWarpPointer( flx->display, None, None, 0, 0, 0, 0,
 					  x - extx, y - exty );
+
     extpos = 0;
     m->x = x;
     m->y = y;
 
-    /* window is created at (0,0). Move to new locations */
+    /* Calculate where the window is supposed to appear */
 
-    XMoveWindow( flx->display, m->win, x - px, y - 2 * m->padh - py );
-    XMapRaised( flx->display, m->win );
-    XSetWMColormapWindows( flx->display, m->parent, &m->win, 1 );
-    fl_context->pup_win = m->win;
+	m->win_x = x - px;
+	m->win_y = y - 2 * m->padh - py;
 
-    /* make sure the popup window shows up */
+	/* Normally, one would move the window first and only then map it.
+	   Unfortuantely, this results in some strange effect for submenu
+	   windows if the window had been mapped before: if the old position
+	   of the submenu window intersects with the new position of the
+	   parent window this part of the parent window becomes transparent,
+	   i.e the background suddenly is visible. Mapping first and only
+	   then moving the window seems to get rid of the problem. Unfortunately
+	   I haven't found a reason and start to susect it's a bug in X.   JTT */
 
-    XSync( flx->display, 0 );
+	XMapWindow( flx->display, m->win );
+	XMoveWindow( flx->display, m->win, m->win_x, m->win_y );
+	XSetWMColormapWindows( flx->display, m->parent, &m->win, 1 );
 
-    while ( XCheckWindowEvent( flx->display, m->win, 0x00ffffff, &ev ) )
-		/* empty */ ;
+	/* The function gets either called directly from a user program or via
+	   the fl_dopup() function. In the first case we need to draw the pupup
+	   and then remove all events the creation of the window produced.
+	   Otherwise we can leave the drawing to the routine dealing with the
+	   events for the window and just grab pointer and keyboard. */
 
-    draw_only( m );
+	if ( ! internal_showpup_call )
+	{
+		XEvent ev;
+
+		fl_winset( m->win );
+		draw_popup( m );
+		XFlush( flx->display );
+
+		while ( XCheckWindowEvent( flx->display, m->win, AllEventsMask, &ev) )
+			/* empty */ ;
+	}
+	else
+	{
+		m->par_y = m->padh + req_y - ( y - py );
+		grab_both( m );
+		internal_showpup_call = 0;
+	}
 }
 
 
@@ -2180,8 +2275,9 @@ fl_getpup_mode( int nm,
 {
     MenuItem *item;
 
-    if ( ( item = requested_item_isvalid( "getpup", nm, ni ) ) )
+    if ( ( item = requested_item_is_valid( "getpup", nm, ni ) ) )
 		return item->mode;
+
     return 0;
 }
 
@@ -2195,9 +2291,10 @@ fl_getpup_text( int nm,
 {
     MenuItem *item;
 
-    if ( ( item = requested_item_isvalid( "getpup", nm, ni ) ) )
+    if ( ( item = requested_item_is_valid( "getpup", nm, ni ) ) )
 		return item->str;
-    return 0;
+
+    return NULL;
 }
 
 
@@ -2214,7 +2311,7 @@ fl_replacepup_text( int          nm,
     if ( ! nt )
 		nt = "";
 
-    if ( ( item = requested_item_isvalid( "getpup", nm, ni ) ) )
+    if ( ( item = requested_item_is_valid( "getpup", nm, ni ) ) )
     {
 		fl_safe_free( item->str );
 		item->str = fl_strdup( nt );
@@ -2240,10 +2337,12 @@ fl_setpup_maxpup( int n )
     for ( i = fl_maxpup; i < n; i++ )
     {
 		menu_rec[ i ].title = NULL;
-		menu_rec[ i ].parent = menu_rec[ i ].win = 0;
-		menu_rec[ i ].cursor = 0;
-		menu_rec[ i ].shadowGC = menu_rec[ i ].pupGC1 =
-			menu_rec[ i ].pupGC2 = 0;
+		menu_rec[ i ].parent = menu_rec[ i ].win = None;
+		menu_rec[ i ].cursor = None;
+#if 0
+		menu_rec[ i ].shadowGC = None;
+#endif
+		menu_rec[ i ].pupGC1 = menu_rec[ i ].pupGC2 = None;
 		for ( j = 0; j <= FL_MAXPUPI; j++ )
 			menu_rec[ i ].item[ j ] = NULL;
 		menu_rec[ i ].mcb = NULL;
@@ -2255,22 +2354,8 @@ fl_setpup_maxpup( int n )
 }
 
 
-/******************************************************************
- * a slightly high(ier) level interface
- *****************************************************************/
-
-/* if no callback function is supplied, ignore the selection */
-
-static int
-ignore_item( int h )
-{
-    M_warn( "DoPUP", "ignored=%d", h );
-    return h;
-}
-
-
 /***************************************
- * build the menu using low-level pup support
+ * Build the menu using low-level pup support
  ***************************************/
 
 static int
@@ -2281,7 +2366,6 @@ generate_menu( int                  n,
     static const FL_PUP_ENTRY *p = NULL;
     static PopUP *menu = NULL;
     static int val = 0;
-    char buf[ 256 ];
 
     if ( top )
     {
@@ -2291,49 +2375,75 @@ generate_menu( int                  n,
 		p = pup;
     }
 
+	if ( ! p || ! p->text )
+		return n;
+
     for ( ; p && p->text; p++, val++ )
     {
-		if ( *p->text == '/' )
+		int cnt = 0;
+		char *t,
+			 *w;
+
+		/* Count number of '%' */
+
+		for ( w = ( char * ) p->text; *w; w++ )
+			if ( *w == '%' )
+				cnt++;
+
+		/* Get copy of the string with enough room for all further additions */
+
+		w = t = fl_malloc( strlen( p->text ) + cnt + 6 + log10( INT_MAX ) );
+		strcpy( t, p->text );
+
+		/* Double all '%' */
+
+		while ( ( w = strchr( w, '%' ) ) )
+			memmove( w + 1, w, strlen( w ) + 1 );
+
+		if ( *t != '/' )
 		{
-			int m = fl_newpup( menu->parent );
+			if ( *t == '_' )
+				*t = '\010';
 
-			if ( p->text[ 1 ] != '_' )
-				fl_snprintf( buf, sizeof buf, "%s%%x%d%%m", p->text + 1, val );
-			else
-				fl_snprintf( buf, sizeof buf, "%s%%x%d%%l%%m", p->text + 2,
-							 val );
+			sprintf( t + strlen( t ), "%%x%d", val );
 
-			fl_addtopup( n, buf, m );
+			fl_addtopup( n, t );
 
 			if ( p->mode )
 				fl_setpup_mode( n, val, p->mode );
+
 			if ( p->shortcut && *p->shortcut )
 				fl_setpup_shortcut( n, val, p->shortcut );
 
-			/* advance val due to recursion */
+			if ( p->callback )
+				fl_setpup_itemcb( n, val, p->callback );
+		}
+		else
+		{
+			int m = fl_newpup( menu->parent );
+
+			if ( t[ 1 ] == '_' )
+				t[ 1 ] = '\010';
+
+			sprintf( t + strlen( t ), "%%x%d%%m", val );
+
+			fl_addtopup( n, t + 1, m );
+
+			if ( p->shortcut && *p->shortcut )
+				fl_setpup_shortcut( n, val, p->shortcut );
+
+			if ( p->mode & FL_PUP_GREY )
+				fl_setpup_mode( n, val, p->mode & FL_PUP_GREY );
 
 			val++;
 			generate_menu( m, ++p, 0 );
 			menu_rec[ m ].isEntry = 1;
 		}
-		else
-		{
-			/* regular entry */
 
-			if ( *p->text == '_' )
-				fl_snprintf( buf,sizeof buf,"%s%%l%%x%d%%f", p->text + 1, val );
-			else
-				fl_snprintf( buf,sizeof buf, "%s%%x%d%%f", p->text, val );
-
-			fl_addtopup( n, buf, p->callback ? p->callback : ignore_item );
-
-			if ( p->mode )
-				fl_setpup_mode( n, val, p->mode );
-
-			if ( p->shortcut && *p->shortcut )
-				fl_setpup_shortcut( n, val, p->shortcut );
-		}
+		fl_free( t );
     }
+
+	val--;
 
     return n;
 }
@@ -2347,7 +2457,6 @@ fl_setpup_entries( int            nm,
 				   FL_PUP_ENTRY * entries )
 {
     return generate_menu( nm, entries, 1 );
-
 }
 
 
@@ -2360,8 +2469,8 @@ fl_reparent_pup( int    n,
 {
     FL_State *fs = fl_state + fl_vmode;
     int nrt =    fs->pcm
-		      || fl_visual( fl_vmode ) !=
-		                              DefaultVisual( flx->display, fl_screen );
+		      || fl_visual( fl_vmode ) != DefaultVisual( flx->display,
+														 fl_screen );
 
     if ( newwin == 0 )
 		newwin = fl_root;
@@ -2404,7 +2513,7 @@ fl_getpup_window( int      n,
 		*win = menu_rec[ n ].win;
     }
     else
-		*parent = *win = 0;
+		*parent = *win = None;
 }
 
 

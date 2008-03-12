@@ -946,8 +946,9 @@ add_an_object( int      objclass,
 			break;
     }
 
-    if (!obj)
-		fprintf(stderr, "Unknown object(class=%d type=%d)\n", objclass, type);
+    if ( ! obj )
+		fprintf( stderr, "Unknown object(class=%d type=%d)\n",
+				 objclass, type );
 
 	obj->fl1 = obj->x;
 	obj->fr1 = cur_form->w_hr - obj->fl1;
@@ -959,10 +960,10 @@ add_an_object( int      objclass,
 	obj->ft2 = obj->y + obj->h;
 	obj->fb2 = cur_form->h - obj->ft2;
 
-    fl_end_form();
+    fl_end_form( );
 
-    if (!nosuper)
-		get_superspec(obj);
+    if ( ! nosuper )
+		get_superspec( obj );
 
     obj->active = TRUE;
 

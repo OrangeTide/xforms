@@ -326,6 +326,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
+	file: nomail.xbm
+	focus_file: 
+	fullpath: 1
 
 --------------------
 class: FL_PIXMAP
@@ -344,6 +347,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
+	file: porsche.xpm
+	focus_file: 
+	fullpath: 1
 
 --------------------
 class: FL_TEXT
