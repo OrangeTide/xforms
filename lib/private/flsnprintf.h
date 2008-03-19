@@ -52,7 +52,7 @@ int vsnprintf( char *,
 FL_EXPORT int fl_portable_snprintf( char *,
 									size_t,
 									const char *,
-									...);
+									... );
 
 FL_EXPORT int fl_portable_vsnprintf( char *,
 									 size_t,

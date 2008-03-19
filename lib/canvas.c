@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.10 2008/02/04 01:22:17 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.11 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -446,6 +446,7 @@ fl_add_canvas_handler( FL_OBJECT *      ob,
 		else
 			sp->xswa.event_mask = fl_addto_selected_xevent( sp->window, emask );
     }
+
     return oldh;
 }
 

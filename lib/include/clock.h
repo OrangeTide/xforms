@@ -63,9 +63,9 @@ FL_EXPORT FL_OBJECT * fl_add_clock(
 
 FL_EXPORT void fl_get_clock(
 		FL_OBJECT * ob,
-		int *		h,
-		int *		m,
-		int *		s
+		int       * h,
+		int       * m,
+		int       * s
 		);
 
 FL_EXPORT long fl_set_clock_adjustment(

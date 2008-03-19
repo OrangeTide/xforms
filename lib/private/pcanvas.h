@@ -37,45 +37,45 @@
 
 typedef struct
 {
-    const char *          winname;		/* name of the window                */
-    Window                parent;		/* real parent(needed for dblbuffer) */
-    Window                window;		/* Canvas window                     */
-    Visual *              visual;		/* canvas visual                     */
-    void *                context;		/* context for glx/mesa              */
+    const char            * winname;	/* name of the window                */
+    Window                  parent;		/* real parent(needed for dblbuffer) */
+    Window                  window;		/* Canvas window                     */
+    Visual                * visual;		/* canvas visual                     */
+    void                  * context;	/* context for glx/mesa              */
 
-    FL_MODIFY_CANVAS_PROP init;
-    FL_MODIFY_CANVAS_PROP activate;
-    FL_MODIFY_CANVAS_PROP cleanup;
+    FL_MODIFY_CANVAS_PROP   init;
+    FL_MODIFY_CANVAS_PROP   activate;
+    FL_MODIFY_CANVAS_PROP   cleanup;
 
-    Colormap              colormap;		/* colormap for the canvas       */
-    GC                    gc;
-    unsigned int          mask,
-	                      user_mask;
-    int                   depth;
-    int                   dec_type;		/* if and how to decorate canvas */
-    int                   x,			/* window size                   */
-	                      y,
-	                      w,
-	                      h;
-    int                   yield_to_shortcut;  /* other object's shortcut
+    Colormap                colormap;	/* colormap for the canvas       */
+    GC                      gc;
+    unsigned int            mask,
+	                        user_mask;
+    int                     depth;
+    int                     dec_type;	/* if and how to decorate canvas */
+    int                     x,			/* window size                   */
+	                        y,
+	                        w,
+	                        h;
+    int                     yield_to_shortcut;  /* other object's shortcut
 												 has priority */
 
-    XSetWindowAttributes  xswa;
-    XSetWindowAttributes  user_xswa;
+    XSetWindowAttributes    xswa;
+    XSetWindowAttributes    user_xswa;
 
-    FL_OBJECT *           last_active;	/* last sp->activated object */
+    FL_OBJECT             * last_active;	/* last sp->activated object */
 
     /* this is not exactly right. sort of wasteful */
 
-    FL_HANDLE_CANVAS       canvas_handler[ LASTEvent ];
-    void *                 user_data[ LASTEvent ];
-    int                    keep_colormap;
+    FL_HANDLE_CANVAS         canvas_handler[ LASTEvent ];
+    void *                   user_data[ LASTEvent ];
+    int                      keep_colormap;
 
-    Window                 swindow;		/* scrolled/subwindow           */
-    int                    sx,
-	                       sy,
-	                       sw,
-	                       sh;			/* scrolled window size          */
+    Window                   swindow;		/* scrolled/subwindow           */
+    int                      sx,
+	                         sy,
+	                         sw,
+	                         sh;			/* scrolled window size          */
 } FL_CANVAS_SPEC;
 
 #endif /* PCANVAS_H */

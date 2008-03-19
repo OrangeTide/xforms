@@ -90,7 +90,7 @@ FL_EXPORT FL_OBJECT * fl_add_input(
 		);
 
 FL_EXPORT void fl_set_input(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * str
 		);
 
@@ -129,8 +129,8 @@ FL_EXPORT void fl_set_input_selected_range(
 
 FL_EXPORT const char *fl_get_input_selected_range(
 		FL_OBJECT * ob,
-		int *		begin,
-		int *		end
+		int       * begin,
+		int       * end
 		);
 
 FL_EXPORT void fl_set_input_maxchars(
@@ -190,8 +190,8 @@ FL_EXPORT int fl_get_input_screenlines(
 
 FL_EXPORT int fl_get_input_cursorpos(
 		FL_OBJECT * ob,
-		int *		x,
-		int *		y
+		int       * x,
+		int       * y
 		);
 
 FL_EXPORT void fl_set_input_cursor_visible(
@@ -205,8 +205,8 @@ FL_EXPORT int fl_get_input_numberoflines(
 
 FL_EXPORT void fl_get_input_format(
 		FL_OBJECT * ob,
-		int *		fmt,
-		int *		sep
+		int       * fmt,
+		int       * sep
 		);
 
 FL_EXPORT const char * fl_get_input(
@@ -220,8 +220,8 @@ typedef int ( * FL_INPUTVALIDATOR )(FL_OBJECT *,
 									int );
 
 FL_EXPORT FL_INPUTVALIDATOR fl_set_input_filter(
-		FL_OBJECT *		  ob,
-		FL_INPUTVALIDATOR validate
+		FL_OBJECT         * ob,
+		FL_INPUTVALIDATOR   validate
 		);
 
 #define fl_set_input_shortcut	fl_set_object_shortcut

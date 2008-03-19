@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.12 2008/03/12 16:00:27 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.13 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1293,6 +1293,9 @@ handle_textbox( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			event_type = NOEVENT;
 			sp->status_changed = 0;
 			last_select = last_deselect = 0;
@@ -1300,6 +1303,9 @@ handle_textbox( FL_OBJECT * ob,
 			/* fall through */
 
 		case FL_MOUSE:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			if ( my == sp->lastmy && my > ob->y && my < ob->y + ob->h - 1 )
 				break;
 
@@ -1328,6 +1334,9 @@ handle_textbox( FL_OBJECT * ob,
 			return handle_keyboard( ob, key, xev );
 
 		case FL_RELEASE:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			sp->lastmy = -1;
 			if ( ob->type == FL_SELECT_TEXTBOX )
 			{
@@ -1342,11 +1351,6 @@ handle_textbox( FL_OBJECT * ob,
 			if ( sp->callback )
 				sp->callback( ob, sp->callback_data );
 			return 0;
-
-		case FL_LEAVE:
-		case FL_ENTER:
-		case FL_MOTION:
-			break;
 
 		case FL_FREEMEM:
 			free_spec( ob->spec );
@@ -2139,10 +2143,10 @@ fl_handle_mouse_wheel( FL_OBJECT * ob   FL_UNUSED_ARG,
 					   int *       key,
 					   void *      xev )
 {
-    if ( *ev == FL_PUSH )
+    if ( *ev == FL_PUSH && *key >= FL_MBUTTON4 )
 		return 0;
 
-    if ( *ev == FL_RELEASE )
+    if ( *ev == FL_RELEASE && *key >= FL_MBUTTON4 )
     {
 		*ev = FL_KEYPRESS;
 

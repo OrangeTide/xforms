@@ -44,7 +44,7 @@ typedef int ( * FL_HANDLE_CANVAS )( FL_OBJECT *,
 									int,
 									int,
 									XEvent *,
-									void *);
+									void * );
 
 typedef int ( * FL_MODIFY_CANVAS_PROP )( FL_OBJECT * );
 
@@ -98,7 +98,7 @@ FL_EXPORT void fl_set_canvas_colormap(
 
 FL_EXPORT void fl_set_canvas_visual(
 		FL_OBJECT * obj,
-		Visual *	vi
+		Visual    * vi
 		);
 
 FL_EXPORT void fl_set_canvas_depth(
@@ -107,17 +107,17 @@ FL_EXPORT void fl_set_canvas_depth(
 		);
 
 FL_EXPORT void fl_set_canvas_attributes(
-		FL_OBJECT *			   ob,
+		FL_OBJECT            * ob,
 		unsigned int		   mask,
 		XSetWindowAttributes * xswa
 		);
 
 
 FL_EXPORT FL_HANDLE_CANVAS fl_add_canvas_handler(
-		FL_OBJECT *		 ob,
-		int				 ev,
-		FL_HANDLE_CANVAS h,
-		void *			 udata
+		FL_OBJECT        * ob,
+		int				   ev,
+		FL_HANDLE_CANVAS   h,
+		void             * udata
 		);
 
 FL_EXPORT Window fl_get_canvas_id(
@@ -133,9 +133,9 @@ FL_EXPORT int fl_get_canvas_depth(
 		);
 
 FL_EXPORT void fl_remove_canvas_handler(
-		FL_OBJECT *		 ob,
-		int				 ev,
-		FL_HANDLE_CANVAS h
+		FL_OBJECT        * ob,
+		int				   ev,
+		FL_HANDLE_CANVAS   h
 		);
 
 FL_EXPORT void fl_hide_canvas(
@@ -152,10 +152,10 @@ FL_EXPORT void fl_clear_canvas(
 		);
 
 FL_EXPORT void fl_modify_canvas_prop(
-		FL_OBJECT *			  obj,
-		FL_MODIFY_CANVAS_PROP init,
-		FL_MODIFY_CANVAS_PROP activate,
-		FL_MODIFY_CANVAS_PROP cleanup
+		FL_OBJECT             * obj,
+		FL_MODIFY_CANVAS_PROP   init,
+		FL_MODIFY_CANVAS_PROP   activate,
+		FL_MODIFY_CANVAS_PROP   cleanup
 		);
 
 FL_EXPORT void fl_canvas_yield_to_shortcut(

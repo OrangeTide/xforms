@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.15 2008/03/12 16:00:23 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.16 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 
@@ -51,7 +51,7 @@ static void handle_object( FL_OBJECT * obj );
 
 /***************************************
  * Function returns 1 if the event is consumed so it will never
- * reach the application window event Q
+ * reach the application window event queue
  ***************************************/
 
 int
@@ -535,7 +535,7 @@ get_from_event_queue( void )
 	
 
 /***************************************
- * Replacement for the Xlib XPiutBackEvent() function: allows to
+ * Replacement for the Xlib XPutBackEvent() function: allows to
  * push back an event onto the queue
  ***************************************/
 
@@ -642,13 +642,13 @@ fl_treat_user_events( void )
 		return;
 
     if ( fl_event_callback )
-		for ( ; new_events > 0; new_events-- )
+		while ( new_events-- > 0 )
 		{
 			fl_XNextEvent( &xev );
 			fl_event_callback( &xev, 0 );
 		}
     else
-		for ( ; new_events > 0; new_events-- )
+		while ( new_events-- > 0 )
 			fl_object_qenter( FL_EVENT );
 }
 
@@ -880,7 +880,7 @@ compress_redraw( XEvent * ev )
 	   onto the event queue and return the last ConfigureNotify event we got,
 	   otherwise the Expose event itself.
 
-	   Since e.g. KDE and Gnome send the ConfigureNotify event artificially
+	   Since e.g. KDE and Gnome can send the ConfigureNotify event artificially
 	   to achieve an update of the display while resizing is still going on,
 	   the 'send_event' member of the XEvent structure might be set. On the
 	   other hand, in do_interaction_step(), where the events are handled,
@@ -901,11 +901,14 @@ compress_redraw( XEvent * ev )
 /***************************************
  ***************************************/
 
-void
+static void
 fl_compress_motion( XEvent * xme )
 {
     Window win = xme->xmotion.window;
     unsigned long evm = PointerMotionMask | ButtonMotionMask;
+
+	if ( xme->type != MotionNotify )
+		return;
 
     do
     {
@@ -927,7 +930,8 @@ fl_compress_motion( XEvent * xme )
 
         old = XSetErrorHandler( badwin_handler );
 		fl_get_win_mouse( xme->xmotion.window,
-						  &xme->xmotion.x, &xme->xmotion.y, &fl_keymask );
+						  &xme->xmotion.x, &xme->xmotion.y,
+						  &xme->xmotion.state );
         XSetErrorHandler( old );
 		xme->xmotion.is_hint = 0;
     }

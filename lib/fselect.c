@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.13 2008/03/12 16:00:24 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.14 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -75,27 +75,27 @@ typedef struct
 	/* due to FD_FSELECTOR, the order of these objects are important. maybe
 	   put them in a union ? */
 
-	FL_FORM *	fselect;
-	void *		vdata;
-	char *		cdata;
+	FL_FORM   * fselect;
+	void      * vdata;
+	char      * cdata;
 	long		ldata;
 	FL_OBJECT * browser,
 			  * input,
 			  * prompt,
 			  * resbutt;
 	FL_OBJECT * patbutt,
-			   * dirbutt,
-			   * cancel,
-			   * ready;
+			  * dirbutt,
+			  * cancel,
+			  * ready;
 	FL_OBJECT * dirlabel,
 			  * patlabel;
 	FL_OBJECT * appbutt[ MAX_APPBUTT ];
 	FL_OBJECT * appbuttgrp;
 	FL_FSCB		fselect_cb;
-	void *		callback_data;
+	void      * callback_data;
 	char		applabel[ MAX_APPBUTT ][ 32 ];
 	void		( * appcb[ MAX_APPBUTT ] )( void * );
-	void		* appdata[ MAX_APPBUTT ];
+	void	  * appdata[ MAX_APPBUTT ];
 
 	FL_COLOR	fg;
 	FL_COLOR	brcol;
@@ -139,6 +139,7 @@ allocate_fselector( int a )
 		fl_set_object_resize( fs->appbuttgrp, FL_RESIZE_NONE );
 		fl_set_object_gravity( fs->appbuttgrp, EastGravity, EastGravity );
 	}
+
 	fs = fd_fselector[ a ];
 }
 
@@ -164,8 +165,8 @@ fl_use_fselector( int n )
 
 void
 fl_add_fselector_appbutton( const char * label,
-							void	   ( * cb )( void * ),
-							void *	   data )
+							void	     ( * cb )( void * ),
+							void       * data )
 {
 	int ok, i;
 
@@ -216,7 +217,7 @@ fl_remove_fselector_appbutton( const char * label )
  ***************************************/
 
 static void
-appbutton_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
+appbutton_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 			  long		  arg )
 {
 	if ( fs->appcb[ arg ] )
@@ -524,7 +525,7 @@ pattern_cb( FL_OBJECT * ob,
  ***************************************/
 
 static int
-fill_entries( FL_OBJECT *  br,
+fill_entries( FL_OBJECT  * br,
 			  const char * fn,
 			  int		   show )
 {
@@ -641,8 +642,8 @@ fill_entries( FL_OBJECT *  br,
  ***************************************/
 
 void
-fl_set_fselector_callback( FL_FSCB fscb,
-						   void *  data )
+fl_set_fselector_callback( FL_FSCB   fscb,
+						   void    * data )
 {
 	fselector_init( );
 
@@ -768,7 +769,7 @@ fl_show_fselector( const char * message,
 	lfs = fs;
 
 	/* update directory only if requested dir is valid. This way, passing
-	   dir==0 has the effect of keeping where we were the last time */
+	   dir == 0 has the effect of keeping where we were the last time */
 
 	if ( fl_is_valid_dir( dir ) )
 		strcpy( fs->dname, dir );
@@ -864,7 +865,7 @@ fl_show_fselector( const char * message,
 			else
 			{
 				strncpy( lfs->dname, tmp, sizeof lfs->dname );
-				lfs->dname[ sizeof lfs->dname- 1 ] = '\0';
+				lfs->dname[ sizeof lfs->dname - 1 ] = '\0';
 				fl_fix_dirname( lfs->dname );
 			}
 
@@ -1096,14 +1097,14 @@ create_form_fselect( void )
 	fs->dirlabel = obj = fl_add_text( FL_NORMAL_TEXT, 12, 15, 64, 24,
 									  "D\010irectory" );
 	fl_set_object_boxtype( obj, FL_FRAME_BOX );
-	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
+	fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
 	fl_set_object_resize( obj, FL_RESIZE_NONE );
 	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
 
 	fs->patlabel = obj = fl_add_text( FL_NORMAL_TEXT, 12, 41, 64, 24,
 									  "P\010attern" );
 	fl_set_object_boxtype( obj, FL_FRAME_BOX );
-	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
+	fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
 	fl_set_object_resize( obj, FL_RESIZE_NONE );
 	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
 
@@ -1151,11 +1152,11 @@ create_form_fselect( void )
 	fs->appbuttgrp = fl_bgn_group( );
 
 	fs->appbutt[ 0 ] = fl_add_button( FL_NORMAL_BUTTON, 210, 114, 83, 28, "" );
-
-	fs->appbutt[ 2 ] = fl_add_button( FL_NORMAL_BUTTON, 210, 170, 83, 28, "" );
 	fs->appbutt[ 1 ] = fl_add_button( FL_NORMAL_BUTTON, 210, 142, 83, 28, "" );
+	fs->appbutt[ 2 ] = fl_add_button( FL_NORMAL_BUTTON, 210, 170, 83, 28, "" );
 
 	fl_end_group( );
+
 	fl_end_form( );
 
 	fs->fselect->fdui = fs;
@@ -1165,6 +1166,13 @@ create_form_fselect( void )
 
 	fl_inverted_y = oldy;
 	fl_set_coordunit( oldunit );
+
+	/* These labels sometimes don't fit the above set sizes, so we
+	   resize the whole file selector box to make them fit    JTT */
+
+	fl_fit_object_label( fs->dirlabel, 0, 0 );
+	fl_fit_object_label( fs->resbutt, 0, 0 );
+
 	return fs;
 }
 
@@ -1179,7 +1187,7 @@ fl_set_fselector_filetype_marker( int dir,
 								  int cdev,
 								  int bdev )
 {
-	dirmarker = dir;
+	dirmarker  = dir;
 	fifomarker = fifo;
 	cdevmarker = cdev;
 	bdevmarker = bdev;
@@ -1199,15 +1207,16 @@ fl_set_fselector_fontsize( int fsize )
 
 	fl_freeze_form( fs->fselect );
 
-	fl_set_object_lsize( fs->input, fsize );
-	fl_set_object_lsize( fs->prompt, fsize );
-	fl_set_object_lsize( fs->patbutt, fsize );
-	fl_set_object_lsize( fs->dirbutt, fsize );
-	fl_set_object_lsize( fs->resbutt, fsize );
-	fl_set_object_lsize( fs->cancel, fsize );
+	fl_set_object_lsize( fs->input,    fsize );
+	fl_set_object_lsize( fs->prompt,   fsize );
+	fl_set_object_lsize( fs->patbutt,  fsize );
+	fl_set_object_lsize( fs->dirbutt,  fsize );
+	fl_set_object_lsize( fs->resbutt,  fsize );
+	fl_set_object_lsize( fs->cancel,   fsize );
 	fl_set_object_lsize( fs->dirlabel, fsize );
 	fl_set_object_lsize( fs->patlabel, fsize );
-	fl_set_object_lsize( fs->ready, fsize );
+	fl_set_object_lsize( fs->ready,    fsize );
+
 	fl_set_browser_fontsize( fs->browser, fsize );
 
 	for ( i = 0; i < MAX_APPBUTT; i++ )

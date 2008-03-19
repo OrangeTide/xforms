@@ -315,7 +315,6 @@ handle( FL_OBJECT * ob,
     switch ( event )
     {
 		case FL_DRAW:
-
 			attrib_change( ob );
 			get_geometry( ob );
 			sp->attrib = 1;

@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.13 2008/03/12 16:00:23 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.14 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -49,8 +49,6 @@ char *fl_id_chc = "$Id: choice.c,v 1.13 2008/03/12 16:00:23 jtt Exp $";
 #include <stdlib.h>
 
 #define SPEC   FL_CHOICE_SPEC
-
-static int lastpup_return;
 
 
 /***************************************
@@ -195,15 +193,43 @@ draw_droplist_choice( FL_OBJECT * ob )
  ***************************************/
 
 static int
-set_valid_entry( SPEC * sp,
-				 int    target,
+set_next_entry( SPEC * sp,
 				 int    dir )
 {
-    for ( ; target > 0 && target <= sp->numitems; target += dir )
-		if ( ! ( sp->mode[ target ] & FL_PUP_GREY ) )
-			return target;
+	int target = 0;
+	int min = 1,
+		max = sp->numitems;
 
-    Bark( "set_valid_entry", "No valid entries" );
+	if ( sp->numitems == 0 )
+		return -1;
+
+	while ( sp->mode[ min ] & FL_PUP_GREY && min < max )
+		min++;
+
+	while ( sp->mode[ max ] & FL_PUP_GREY && max > min )
+		max--;
+
+	if ( min == max )
+		return -1;
+
+	if ( dir > 0 )
+	{
+		target = sp->val + 1;
+		if ( target > max )
+			target = min;
+	}
+	else if ( dir < 0 )
+	{
+		target = sp->val - 1;
+		if ( target < min )
+			target = max;
+	}
+
+    for ( ; target >= min && target <= max; target += dir )
+		if ( ! ( sp->mode[ target ] & FL_PUP_GREY ) )
+			return sp->val = target;
+
+    Bark( "set_next_entry", "No valid entries" );
     return -1;
 }
 
@@ -214,11 +240,12 @@ set_valid_entry( SPEC * sp,
 static int
 do_pup( FL_OBJECT * ob )
 {
-    int menu;
+    int popup_id;
     SPEC *sp = ob->spec;
-    int i;
+    int i,
+		val;
 
-    menu = fl_newpup( FL_ObjWin( ob ) );
+    popup_id = fl_newpup( FL_ObjWin( ob ) );
 
     /* fake a title */
 
@@ -231,38 +258,39 @@ do_pup( FL_OBJECT * ob )
 
 		strcpy( t, ob->label );
 		strcat( t, "%t" );
-		fl_addtopup( menu, t );
+		fl_addtopup( popup_id, t );
 		fl_free( t );
 	}
 
     for ( i = 1; i <= sp->numitems; i++ )
     {
-		fl_addtopup( menu, sp->items[ i ] );
+		fl_addtopup( popup_id, sp->items[ i ] );
 
 		if ( sp->modechange[ i ] || sp->mode[ i ] != FL_PUP_NONE )
 		{
-			fl_setpup( menu, i, sp->mode[ i ] );
+			fl_setpup( popup_id, i, sp->mode[ i ] );
 			sp->modechange[ i ] = 0;
 		}
 
-		fl_setpup_shortcut( menu, i, sp->shortcut[ i ] );
+		fl_setpup_shortcut( popup_id, i, sp->shortcut[ i ] );
     }
 
-    fl_setpup_shadow( menu, ob->type != FL_DROPLIST_CHOICE );
-    fl_setpup_selection( menu, sp->val );
+    fl_setpup_shadow( popup_id, ob->type != FL_DROPLIST_CHOICE );
+    fl_setpup_selection( popup_id, sp->val );
 
-    fl_setpup_softedge( menu, ob->bw < 0 );
+    fl_setpup_softedge( popup_id, ob->bw < 0 );
 
-    i = fl_dopup( menu );
+    val = fl_dopup( popup_id );
 
-    if ( i > 0 )
+    if ( val > 0 )
     {
-		sp->mode[ i ] = fl_getpup_mode( menu, i );
-		sp->modechange[ i ] = 1;
+		sp->mode[ val ] = fl_getpup_mode( popup_id, i );
+		sp->modechange[ val ] = 1;
+		sp->val = val;
     }
 
-    fl_freepup( menu );
-    return lastpup_return = i;
+    fl_freepup( popup_id );
+    return val;
 }
 
 
@@ -284,11 +312,8 @@ handle_choice( FL_OBJECT * ob,
 			   int         key,
 			   void *      ev   FL_UNUSED_ARG )
 {
-    int val,
-		i,
-		in;
     SPEC *sp = ob->spec;
-	static int mousebutton = 0;
+    int val;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info2( "handle_choice", fl_event_name( event ) );
@@ -303,8 +328,10 @@ handle_choice( FL_OBJECT * ob,
 
 			/* Draw the object */
 
-			( ob->type == FL_DROPLIST_CHOICE ?
-			  draw_droplist_choice : draw_choice )( ob );
+			if ( ob->type == FL_DROPLIST_CHOICE )
+				draw_droplist_choice( ob );
+			else
+				draw_choice( ob );
 			break;
 
 		case FL_DRAWLABEL:
@@ -313,101 +340,109 @@ handle_choice( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
-			mousebutton = key;
-			if ( sp->numitems == 0 )
-				return 0;
-			sp->counter = 0;
-			if ( mousebutton == 1
-				 && (    ob->type == FL_NORMAL_CHOICE
-					  || ob->type == FL_NORMAL_CHOICE2 ) )
+			if ( key != FL_MBUTTON1 || sp->numitems == 0 )
+				break;
+
+			if ( ob->type != FL_DROPLIST_CHOICE )
+				return do_pup( ob ) > 0;
+
+			/* Droplist choices only become active when the mouse button
+			   has been released */
+
+			if ( Within( ob->x + ob->w - ob->h, ob->y, ob->h, ob->h ) )
 			{
-				if ( ( val = do_pup( ob ) ) > 0 )
-					sp->val = val;
+				sp->pushed = 1;
+				draw_droplist_choice( ob );
+			}
+			break;
+
+		case FL_UPDATE:
+			if (    ( key == FL_MBUTTON2 || key == FL_MBUTTON3 )
+				 && ++sp->counter % 15 == 0 )
+			{
+				sp->counter = 0;
+				val = set_next_entry( sp, key == FL_MBUTTON3 ? 1 : -1 );
+				sp->pushed = 0;
 				fl_redraw_object( ob );
+				return val > 0;
 			}
 			break;
 
 		case FL_MOUSE:
 			if ( sp->numitems == 0 )
-				return 0;
+				break;
 
-			if ( ob->type == FL_DROPLIST_CHOICE
-				 && ( in = Within( ob->x + ob->w - ob->h, ob->y,
-								   ob->h, ob->h ) ) )
+			if ( ob->type != FL_DROPLIST_CHOICE )
+				break;
+
+			if ( Within( ob->x + ob->w - ob->h, ob->y, ob->h, ob->h ) )
 			{
-				if ( ! ( in ^ ! sp->pushed ) )
+				if ( ! sp->below )
 				{
-					sp->pushed = ! sp->pushed;
-					fl_redraw_object( ob );
+					sp->below = 1;
+					draw_droplist_choice( ob );
 				}
-				return 0;
 			}
-
-			if ( mousebutton == 3 && sp->counter++ % 20 == 0 )
+			else if ( sp->below )
 			{
-				if ( sp->val == sp->numitems )
-					sp->val = set_valid_entry( sp, 1, 1 );
-				else
-					sp->val = set_valid_entry( sp, sp->val + 1, 1 );
-				fl_redraw_object( ob );
-				lastpup_return = sp->val;
-			}
-			else if ( mousebutton == 2 && sp->counter++ % 15 == 0 )
-			{
-				if ( sp->val <= 1 )
-					sp->val = set_valid_entry( sp, sp->numitems, -1 );
-				else
-					sp->val = set_valid_entry( sp, sp->val - 1, -1 );
-				fl_redraw_object( ob );
-				lastpup_return = sp->val;
+				sp->below = 0;
+				draw_droplist_choice( ob );
 			}
 			break;
-
+				
 		case FL_RELEASE:
-			mousebutton = 0;
-			if ( ob->type == FL_DROPLIST_CHOICE && sp->pushed )
+			if ( sp->numitems == 0 )
+				return 0;
+
+			if (    key == FL_MBUTTON4
+				 || key == FL_MBUTTON5 )
+			{
+				val = set_next_entry( sp, key == FL_MBUTTON5 ? 1 : -1 );
+				sp->pushed = 0;
+				fl_redraw_object( ob );
+				return val > 0;
+			}
+
+			if ( ob->type != FL_DROPLIST_CHOICE || ! sp->pushed )
+				break;
+
+			if ( ! Within( ob->x + ob->w - ob->h, ob->y, ob->h, ob->h ) )
 			{
 				sp->pushed = 0;
-				fl_setpup_position( - (ob->form->x + ob->x + ob->w ),
-									ob->form->y + ob->y + ob->h + FL_PUP_PADH );
-				if ( ( val = do_pup( ob ) ) > 0 )
-					sp->val = val;
 				fl_redraw_object( ob );
-				return lastpup_return > 0;
+				break;
 			}
+
+			fl_setpup_position( - ( ob->form->x + ob->x + ob->w ),
+								ob->form->y + ob->y + ob->h + FL_PUP_PADH );
 			sp->pushed = 0;
-			return lastpup_return > 0 || ob->type == FL_DROPLIST_CHOICE;
+			return do_pup( ob ) > 0;
 
 		case FL_LEAVE:
 			sp->below = 0;
-			/* fall through */
-
-		case FL_ENTER:
 			fl_redraw_object( ob );
 			break;
 
-		case FL_MOTION:
-			if ( ob->type == FL_DROPLIST_CHOICE )
+		case FL_ENTER:
+			if ( sp->numitems == 0 )
+				return 0;
+
+			if (    (    ob->type == FL_DROPLIST_CHOICE
+				      && Within( ob->x + ob->w - ob->h, ob->y, ob->h, ob->h ) )
+				 || ob->type != FL_DROPLIST_CHOICE )
 			{
-				in = Within( ob->x + ob->w - ob->h, ob->y, ob->h, ob->h );
-				if ( sp->below ^ in )
-				{
-					sp->below = in;
-					fl_redraw_object( ob );
-				}
+				sp->below = 1;
+				fl_redraw_object( ob );
 			}
 			break;
 
 		case FL_SHORTCUT:
+			if ( sp->numitems == 0 )
+				return 0;
+
 			fl_setpup_position( ob->form->x + ob->x + 10,
 								ob->form->y + ob->y + ob->h / 2 );
-			if ( ( i = do_pup( ob ) ) != sp->val && i >= 0 )
-			{
-				sp->val = i;
-				fl_redraw_object( ob );
-				return 1;
-			}
-			break;
+			return do_pup( ob ) > 0;
 
 		case FL_FREEMEM:
 			free_choice( ob->spec );
@@ -436,17 +471,19 @@ fl_create_choice( int          type,
     SPEC *sp;
 
     ob = fl_make_object( FL_CHOICE, type, x, y, w, h, label, handle_choice );
-    ob->boxtype = type == FL_NORMAL_CHOICE2 ? FL_UP_BOX : FL_CHOICE_BOXTYPE;
-    ob->col1 = FL_CHOICE_COL1;
-    ob->col2 = FL_CHOICE_COL2;
-    ob->lcol = FL_CHOICE_LCOL;
-    ob->align = FL_CHOICE_ALIGN;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
 
-    sp->fontsize = fl_cntl.choiceFontSize ?
-		           fl_cntl.choiceFontSize : FL_DEFAULT_FONT;
+    ob->boxtype     = type == FL_NORMAL_CHOICE2 ? FL_UP_BOX : FL_CHOICE_BOXTYPE;
+    ob->col1        = FL_CHOICE_COL1;
+    ob->col2        = FL_CHOICE_COL2;
+    ob->lcol        = FL_CHOICE_LCOL;
+    ob->align       = FL_CHOICE_ALIGN;
+	ob->want_update = 1;
+    ob->spec = sp   = fl_calloc( 1, sizeof *sp );
+
+    sp->fontsize  = fl_cntl.choiceFontSize ?
+		            fl_cntl.choiceFontSize : FL_DEFAULT_FONT;
     sp->fontstyle = FL_NORMAL_STYLE;
-    sp->align = FL_ALIGN_CENTER;
+    sp->align     = FL_ALIGN_CENTER;
 
     for ( i = 0; i <= FL_CHOICE_MAXITEMS; i++ )
     {
@@ -513,19 +550,16 @@ addto_choice( FL_OBJECT *  ob,
 			  const char * str )
 {
     SPEC *sp = ob->spec;
-    int cur_item;
 
     if ( sp->numitems >= FL_CHOICE_MAXITEMS )
 		return;
 
-    cur_item = ++sp->numitems;
+    sp->items[ ++sp->numitems ] = fl_strdup( str );
 
-    sp->items[ cur_item ] = fl_strdup( str );
+    sp->shortcut[ sp->numitems ] = fl_strdup( "" );
 
-    sp->shortcut[ cur_item ] = fl_strdup( "" );
-
-    sp->mode[ cur_item ] = FL_PUP_NONE;
-    sp->modechange[ cur_item ] = 0;
+    sp->mode[ sp->numitems ] = FL_PUP_NONE;
+    sp->modechange[ sp->numitems ] = 0;
 
     if ( sp->val == 0 )
     {
@@ -545,8 +579,7 @@ fl_addto_choice( FL_OBJECT *  ob,
 {
     SPEC *sp = ob->spec;
     char *t,
-		 *c,
-		 *n;
+		 *c;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
@@ -562,13 +595,12 @@ fl_addto_choice( FL_OBJECT *  ob,
 
 	/* Split up string at '|' chars and create an entry for each part */
 
-	for ( c = t = fl_strdup( str ); c; c = n )
-	{
-		n = strchr( c, '|' );
-		if ( n )
-			*n++ = '\0';
+	t = fl_strdup( str );
+
+    for ( c = strtok( t, "|" );
+		  c && sp->numitems < FL_CHOICE_MAXITEMS;
+		  c = strtok( NULL, "|" ) )
 		addto_choice( ob, c );
-	}
 
 	if ( t )
 		fl_free( t );
@@ -650,11 +682,13 @@ fl_set_choice( FL_OBJECT * ob,
 {
     SPEC *sp = ob->spec;
 
-    if ( choice < 1 || choice > sp->numitems )
+    if (    choice < 1
+		 || choice > sp->numitems
+		 || sp->mode[ choice ] & FL_PUP_GREY )
 		sp->val = 0;
     else
 		sp->val = choice;
-    fl_redraw_object( ob );
+	fl_redraw_object( ob );
 }
 
 
@@ -691,6 +725,27 @@ fl_set_choice_text( FL_OBJECT *  ob,
 
 
 /***************************************
+ ***************************************/
+
+int
+fl_get_choice_item_mode( FL_OBJECT *  ob,
+						 int          item )
+{
+    SPEC *sp = ob->spec;
+
+    if ( item < 1 || item > sp->numitems )
+    {
+		M_err( "fl_get_choice_item_mode", "Bad item index %d", item );
+		return -1;
+    }
+
+	return sp->mode[ item ];
+}
+
+
+
+/***************************************
+ * Set the mode of an item in a choice object
  ***************************************/
 
 void

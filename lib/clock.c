@@ -141,11 +141,11 @@ show_hands( FL_Coord x,
     double ra;
     double fact = - M_PI / 180.0;
 
-    ra = fact * ( 180 + hours * 30 + minutes * 0.5 );
+    ra = fact * ( 180 + 30 * hours + 0.5 * minutes );
     draw_hand( x, y, w, h, hourhand, ra, fcolor, bcolor );
-    ra = fact * ( 180 + minutes * 6 + seconds / 10 );
+    ra = fact * ( 180 + 6 * minutes + seconds / 10 );
     draw_hand( x, y, w, h, minhand, ra, fcolor, bcolor );
-    ra = fact * ( 180 + seconds * 6 );
+    ra = fact * ( 180 + 6 * seconds );
     draw_hand( x, y, w, h, sechand, ra, fcolor, bcolor );
 }
 
@@ -166,8 +166,10 @@ draw_clock( int      type  FL_UNUSED_ARG,
 		   yc = y + 0.5 * h;
     int i;
     double ra;
-    FL_POINT xp[ 4 ];
-    double f1, f2, f3;
+    FL_POINT xp[ 5 ];             /* need one extra for closing of polygon! */
+    double f1,
+		   f2,
+		   f3;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info( "DrawClock", "entering" );
@@ -260,8 +262,9 @@ handle_clock( FL_OBJECT * ob,
 			break;
 
 		case FL_STEP:
-			/* clock only has resolution about 1sec. FL_STEP is sent about every
-			   0.05 sec. If more than 10 clocks, we might run into trouble   */
+			/* clock only has resolution about 1 sec. FL_STEP is sent about
+			   every 0.05 sec. If more than 10 clocks, we might run into
+			   trouble   */
 
 			if ( ++sp->nstep & 1 )
 				break;
@@ -303,13 +306,15 @@ fl_create_clock( int          type,
     FL_OBJECT *obj;
 
     obj = fl_make_object( FL_CLOCK, type, x, y, w, h, s, handle_clock );
-    obj->boxtype = FL_CLOCK_BOXTYPE;
-    obj->col1 = FL_CLOCK_COL1;
-    obj->col2 = FL_CLOCK_COL2;
-    obj->lcol = FL_CLOCK_LCOL;
-    obj->align = FL_CLOCK_ALIGN;
+
+    obj->boxtype   = FL_CLOCK_BOXTYPE;
+    obj->col1      = FL_CLOCK_COL1;
+    obj->col2      = FL_CLOCK_COL2;
+    obj->lcol      = FL_CLOCK_LCOL;
+    obj->align     = FL_CLOCK_ALIGN;
     obj->automatic = obj->active = 1;
-    obj->spec = fl_calloc( 1, sizeof( SPEC ) );
+    obj->spec      = fl_calloc( 1, sizeof *obj->spec );
+
     return obj;
 }
 

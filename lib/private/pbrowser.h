@@ -41,35 +41,35 @@ typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *, int, void * );
 
 typedef struct
 {
-    FL_OBJECT *                br;			/* the browser - container    */
-    FL_OBJECT *                tb;			/* the textbox                */
-    FL_OBJECT *                hsl;			/* horizontal scrollbar       */
-    FL_OBJECT *                vsl;			/* vertical scrollbar         */
-    FL_CALLBACKPTR             callback;
-    long                       callback_data;
-    double                     hsize,
-	                           vsize;
-    double                     hval,
-	                           vval;
-    double                     hinc1,
-	                           hinc2;
-    double                     vinc1,
-	                           vinc2;
-    int                        dead_area;
-    int                        attrib;
-    int                        v_on,		/* scrollbar on/off state     */
-	                           h_on;
-    int                        v_pref,		/* on/off prefererence        */
-	                           h_pref;
-    int                        vw,
-	                           vw_def;
-    int                        hh,
-	                           hh_def;
-    int                        user_set;
-    FL_BROWSER_SCROLL_CALLBACK hcb,
-	                           vcb;
-    void *                     hcb_data,
-	     *                     vcb_data;
+    FL_OBJECT                   * br;			/* the browser - container    */
+    FL_OBJECT                   * tb;			/* the textbox                */
+    FL_OBJECT                   * hsl;			/* horizontal scrollbar       */
+    FL_OBJECT                   * vsl;			/* vertical scrollbar         */
+    FL_CALLBACKPTR               callback;
+    long                         callback_data;
+    double                       hsize,
+	                             vsize;
+    double                       hval,
+	                             vval;
+    double                       hinc1,
+	                             hinc2;
+    double                       vinc1,
+	                             vinc2;
+    int                          dead_area;
+    int                          attrib;
+    int                          v_on,		    /* scrollbar on/off state     */
+	                             h_on;
+    int                          v_pref,		/* on/off prefererence        */
+	                             h_pref;
+    int                          vw,
+	                             vw_def;
+    int                          hh,
+	                             hh_def;
+    int                          user_set;
+    FL_BROWSER_SCROLL_CALLBACK   hcb,
+	                             vcb;
+    void                       * hcb_data,
+	                           * vcb_data;
 } FL_BROWSER_SPEC;
 
 #endif

@@ -91,9 +91,9 @@ FL_EXPORT FL_OBJECT * fl_add_xyplot(
 		);
 
 FL_EXPORT int fl_set_xyplot_data(
-		FL_OBJECT *	 ob,
-		float *		 x,
-		float *		 y,
+		FL_OBJECT  * ob,
+		float      * x,
+		float      * y,
 		int			 n,
 		const char * title,
 		const char * xlabel,
@@ -101,9 +101,9 @@ FL_EXPORT int fl_set_xyplot_data(
 		);
 
 FL_EXPORT int fl_set_xyplot_data_double(
-		FL_OBJECT *	 ob,
-		double *	 x,
-		double *	 y,
+		FL_OBJECT  * ob,
+		double     * x,
+		double     * y,
 		int			 n,
 		const char * title,
 		const char * xlabel,
@@ -111,7 +111,7 @@ FL_EXPORT int fl_set_xyplot_data_double(
 		);
 
 FL_EXPORT int fl_set_xyplot_file(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * f,
 		const char * title,
 		const char * xl,
@@ -130,7 +130,7 @@ FL_EXPORT void fl_insert_xyplot_data(
 #define fl_set_xyplot_datafile	 fl_set_xyplot_file
 
 FL_EXPORT void fl_add_xyplot_text(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		double		 x,
 		double		 y,
 		const char * text,
@@ -139,7 +139,7 @@ FL_EXPORT void fl_add_xyplot_text(
 		);
 
 FL_EXPORT void fl_delete_xyplot_text(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * text
 		);
 
@@ -151,14 +151,14 @@ FL_EXPORT int fl_set_xyplot_maxoverlays(
 FL_EXPORT void fl_add_xyplot_overlay(
 		FL_OBJECT * ob,
 		int			id,
-		float *		x,
-		float *		y,
+		float     * x,
+		float     * y,
 		int			n,
 		FL_COLOR	col
 		);
 
 FL_EXPORT int fl_add_xyplot_overlay_file(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 id,
 		const char * f,
 		FL_COLOR	 c
@@ -195,44 +195,44 @@ FL_EXPORT void fl_set_xyplot_ybounds(
 
 FL_EXPORT void fl_get_xyplot_xbounds(
 		FL_OBJECT * ob,
-		float *		xmin,
-		float *		xmax
+		float     * xmin,
+		float     * xmax
 		);
 
 FL_EXPORT void fl_get_xyplot_ybounds(
 		FL_OBJECT * ob,
-		float *		ymin,
-		float *		ymax
+		float     * ymin,
+		float     * ymax
 		);
 
 FL_EXPORT void fl_get_xyplot(
 		FL_OBJECT * ob,
-		float *		x,
-		float *		y,
-		int *		i
+		float     * x,
+		float     * y,
+		int       * i
 		);
 
 FL_EXPORT void fl_get_xyplot_data(
 		FL_OBJECT * ob,
-		float *		x,
-		float *		y,
-		int *		n
+		float     * x,
+		float     * y,
+		int       * n
 		);
 
 FL_EXPORT void fl_get_xyplot_data_pointer(
-		FL_OBJECT * ob,
+		FL_OBJECT  * ob,
 		int			id,
-		float **	x,
-		float **	y,
-		int *		n
+		float     ** x,
+		float     ** y,
+		int       * n
 		);
 
 FL_EXPORT void fl_get_xyplot_overlay_data(
 		FL_OBJECT * ob,
 		int			id,
-		float *		x,
-		float *		y,
-		int *		n
+		float     * x,
+		float     * y,
+		int       * n
 		);
 
 FL_EXPORT void fl_set_xyplot_overlay_type(
@@ -285,26 +285,26 @@ FL_EXPORT void fl_replace_xyplot_point_in_overlay(
 
 FL_EXPORT void fl_get_xyplot_xmapping(
 		FL_OBJECT * ob,
-		float *		a,
-		float *		b
+		float     * a,
+		float     * b
 		);
 
 FL_EXPORT void fl_get_xyplot_ymapping(
 		FL_OBJECT * ob,
-		float *		a,
-		float *		b
+		float     * a,
+		float     * b
 		);
 
 FL_EXPORT void fl_set_xyplot_keys(
-		FL_OBJECT * ob,
-		char **		keys,
-		float		x,
-		float		y,
-		int			align
+		FL_OBJECT  * ob,
+		char      ** keys,
+		float		 x,
+		float		 y,
+		int			 align
 		);
 
 FL_EXPORT void fl_set_xyplot_key(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 id,
 		const char * key
 		);
@@ -345,16 +345,16 @@ FL_EXPORT void fl_xyplot_s2w(
 		FL_OBJECT * ob,
 		double		sx,
 		double		sy,
-		float *		wx,
-		float *		wy
+		float     * wx,
+		float     * wy
 		);
 
 FL_EXPORT void fl_xyplot_w2s(
 		FL_OBJECT * ob,
 		double		wx,
 		double		wy,
-		float *		sx,
-		float *		sy
+		float     * sx,
+		float     * sy
 		);
 
 FL_EXPORT void fl_set_xyplot_xscale(
@@ -395,25 +395,25 @@ FL_EXPORT int fl_set_xyplot_grid_linestyle(
 		);
 
 FL_EXPORT void fl_set_xyplot_alphaxtics(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * m,
 		const char * s
 		);
 
 FL_EXPORT void fl_set_xyplot_alphaytics(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * m,
 		const char * s
 		);
 
 FL_EXPORT void fl_set_xyplot_fixed_xaxis(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * lm,
 		const char * rm
 		);
 
 FL_EXPORT void fl_set_xyplot_fixed_yaxis(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * bm,
 		const char * tm
 		);
@@ -422,8 +422,8 @@ FL_EXPORT int fl_interpolate(
 		const float * wx,
 		const float * wy,
 		int			  nin,
-		float *		  x,
-		float *		  y,
+		float       * x,
+		float       * y,
 		double		  grid,
 		int			  ndeg
 		);
@@ -432,8 +432,8 @@ FL_EXPORT int fl_spline_interpolate(
 		const float * wx,
 		const float * wy,
 		int			  nin,
-		float *		  x,
-		float *		  y,
+		float       * x,
+		float       * y,
 		double		  grid
 		);
 
@@ -446,9 +446,9 @@ typedef void ( * FL_XYPLOT_SYMBOL )( FL_OBJECT *,
 									 int );
 
 FL_EXPORT FL_XYPLOT_SYMBOL fl_set_xyplot_symbol(
-		FL_OBJECT *		 ob,
-		int				 id,
-		FL_XYPLOT_SYMBOL symbol
+		FL_OBJECT        * ob,
+		int				   id,
+		FL_XYPLOT_SYMBOL   symbol
 		);
 
 FL_EXPORT int fl_set_xyplot_mark_active(

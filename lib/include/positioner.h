@@ -100,8 +100,8 @@ FL_EXPORT void fl_set_positioner_ybounds(
 
 FL_EXPORT void fl_get_positioner_ybounds(
 		FL_OBJECT * ob,
-		double *	min,
-		double *	max
+		double    * min,
+		double    * max
 		);
 
 FL_EXPORT void fl_set_positioner_xstep(

@@ -65,7 +65,7 @@ extern int strcasecmp(const char *, const char *);
 static const char *fd_version[] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.14 $ of $Date: 2008/03/01 16:16:03 $",
+    "$State: Exp $  $Revision: 1.15 $ of $Date: 2008/03/19 21:04:21 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -335,22 +335,6 @@ process_xevent( int no_add  FL_UNUSED_ARG )
 }
 
 
-#if 0
-/***************************************
- ***************************************/
-
-static int
-PgroupID( FL_OBJECT * ob,
-		  void *      d )
-{
-    fprintf( stderr, "obj %s: class=%s groupID=%d pushed=%d\n",
-			 ob->label, find_class_name( ob->objclass ),
-			 ob->group_id, ob->pushed );
-    return 0;
-}
-#endif
-
-
 /***************************************
  * The main event handling loop.
  ***************************************/
@@ -372,14 +356,6 @@ main_loop( void )
 
 		if ( thetestform != NULL && obj != FL_EVENT )
 		{
-#if 0
-			static ii;
-			if ( ii < 5 )
-			{
-				ii++;
-				fl_for_all_objects( obj->form, PgroupID, 0 );
-			}
-#endif
 			get_object_name( obj, name, cbname, argname );
 			if ( name[ 0 ] == '\0' )
 				strcpy( name, "<noname>" );

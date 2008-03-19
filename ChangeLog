@@ -1,3 +1,58 @@
+2008-03-19 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/forms.c: Further cleanup and removal of cruft that
+	was hard to understand but actually was unnecessary or
+	counter-productive. Added check that makes sure that
+	one of the radio buttons of a form is always set.
+
+	* lib/include/Basic.h: FL_MOTION got removed, instead
+	FL_UPDATE was introduced for events of the artificial
+	timer (the one that kicks in when there are no events).
+	The FL_OBJECT structure got two new elements, 'want_motion'
+	and 'want_update'. If the first is set an object which is
+	not an object that can be "pushed" will receive mouse
+	movement events (e.g. in case the object has some inner
+	structure that depends on the mouse position like counter
+	objects) and the second is to be set by objects that want
+	to receive FL_UPDATE events (but they still need to be
+	objects that can be "pushed") - at the moment these are
+	touch buttons, counters and choice objects.
+
+	* lib/choice.c: FL_DROPLIST_CHOICE didn't work correctly
+	anymore, fixed. Scroll wheel can now also be  used to
+	walk through the entry up or down in the popup. Added a
+	new function fl_get_choice_item_mode() to the public
+	interface.
+
+	* lib/menu.c: Menus become highlighted when the mouse
+	is moved onto it. Code cleaned up a bit.
+	Added a function fl_set_menu_notitle() (analogous to
+	the fl_set_choice_notitle() function) to allow removal
+	of the sometimes ugly menu popup titles. This leads to
+	an important change in the behaviour of FL_PUSH_MENU
+	objects: if the title is switched off they only get
+	opened on button release and stay directly below the	
+	menu button (like FL_PULLDOWN_MENU objects).
+
+	There's a lot of code identical to that in choice.c,
+	it might be reasonable to remove the duplication (what
+	actually is the big difference between the menu and
+	choice objects, anyway?)
+
+	* lib/button: Changes to fit the new event handling
+	code. Buttons now only react to clicks with the left
+	mouse. button. Handling of radio buttons corrected.
+
+	* lib/choice, lib/counter: Changes to fit the new event
+	handling code.
+
+	* lib/slider.c, lib/thumbwheel.c, lib/textbox.c,
+	lib/positioner.c, lib/dial.c: Now react to left mouse
+	button only (and mouse wheel as far as reasonable).
+
+	* lib/fldraw.c: Issues with memory handling checked
+	and corrected.
+
 2008-03-12 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/forms.c: Removed code injecting fake FL_RELEASE

@@ -41,7 +41,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_gl = "$Id: glcanvas.c,v 1.8 2008/01/28 23:40:45 jtt Exp $";
+char *fl_id_gl = "$Id: glcanvas.c,v 1.9 2008/03/19 21:04:21 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -105,6 +105,7 @@ fl_add_glcanvas( int          type,
 				 const char * label )
 {
     FL_OBJECT * ob = fl_create_glcanvas( type, x, y, w, h, label );
+
     fl_add_object( fl_current_form, ob );
     return ob;
 }

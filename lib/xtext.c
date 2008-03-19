@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.10 2008/03/12 16:00:28 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.11 2008/03/19 21:04:24 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -163,7 +163,7 @@ fl_drw_string( int      horalign,
     int cdelta;
     DrawString XdrawString;
 
-	if ( flx->win == 0 )
+	if ( flx->win == None )
 		return 0;
 
     if ( ! startx )
@@ -623,7 +623,8 @@ fl_draw_text_inside( int      align,
 			str[ 0 ] = ' ';
     }
 
-    str += str[ 0 ] == '@';
+    if ( str[ 0 ] == '@' )
+		str++;
 
     xoff = 5;
     yoff = 4;
@@ -892,7 +893,7 @@ do_underline( FL_Coord     x,
 {
     XRectangle *xr = fl_get_underline_rect( flx->fs, x, y, cstr, n );
 
-	if ( flx->win == 0 || xr->width <= 0 ||  xr->height <= 0 )
+	if ( flx->win == None || xr->width <= 0 ||  xr->height <= 0 )
 		return;
 
     XFillRectangle( flx->display, flx->win, flx->gc, xr->x, xr->y,
@@ -922,7 +923,7 @@ do_underline_all( FL_Coord     x,
 		          ul_thickness = 0;
     char *str = ( char * ) cstr;
 
-	if ( flx->win == 0 )
+	if ( flx->win == None )
 		return;
 
     if ( UL_thickness < 0 )

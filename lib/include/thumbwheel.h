@@ -81,8 +81,8 @@ FL_EXPORT void fl_set_thumbwheel_bounds(
 
 FL_EXPORT void fl_get_thumbwheel_bounds(
 		FL_OBJECT * ob,
-		double *	min,
-		double *	max
+		double    * min,
+		double    * max
 		);
 
 FL_EXPORT FL_OBJECT * fl_create_thumbwheel(

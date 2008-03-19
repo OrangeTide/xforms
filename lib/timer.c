@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_tim = "$Id: timer.c,v 1.7 2008/03/12 16:00:27 jtt Exp $";
+char *fl_id_tim = "$Id: timer.c,v 1.8 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -82,17 +82,17 @@ default_filter( FL_OBJECT * ob  FL_UNUSED_ARG,
 		minutes = totalsec / 60.0 + 0.001;
 		minutes -= hr * 60;
 		sec = totalsec - 60 * ( minutes + 60 * hr );
-		sprintf( buf, "%2d:%0d:%2.1f", hr, minutes, sec );
+		sprintf( buf, "%d:%02d:%04.1f", hr, minutes, sec );
     }
     else if ( totalsec >= 60.0 )
     {
 		minutes = totalsec / 60.0 + 0.001;
 		sec = totalsec - minutes * 60;
-		sprintf( buf, "%2d:%2.1f", minutes, sec );
+		sprintf( buf, "%d:%04.1f", minutes, sec );
     }
     else
     {
-		sprintf( buf, "%2.1f", totalsec );
+		sprintf( buf, "%.1f", totalsec );
     }
 
     return buf;

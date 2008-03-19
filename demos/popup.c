@@ -274,7 +274,7 @@ create_form_pupform( void )
 
 	obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
 
-	fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 95, 60, 20, "Menu" );
+	fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 90, 60, 30, "Menu" );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );
     fl_set_object_callback( obj, menu_callback, 0 );
     fl_set_object_shortcut( obj, "#MM", 1 );

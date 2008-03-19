@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.10 2008/03/12 16:00:24 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1309,7 +1309,6 @@ handle_it( FL_OBJECT * ob,
 			if ( event == FL_DRAW && sp->input->type != FL_HIDDEN_INPUT )
 				draw_input( sp->input );
 			/* fall through */
-/*      break; */
 
 		case FL_DRAWLABEL:
 			if ( sp->input->type != FL_MULTILINE_INPUT )
@@ -1356,17 +1355,11 @@ handle_it( FL_OBJECT * ob,
 				fl_redraw_object( sp->input );
 			break;
 
-		case FL_RELEASE:
-			if ( key == 1 && motion )
-				do_XCut( ob, sp->beginrange, sp->endrange - 1 );
-			motion = 0;
-			break;
-
 		case FL_PUSH:
 			paste = 0;
 			lx = mx;
 			ly = my;
-			if ( key == 2 && ( sp->changed = do_XPaste( ob ) ) )
+			if ( key == FL_MBUTTON2 && ( sp->changed = do_XPaste( ob ) ) )
 			{
 				if ( sp->how_return == FL_RETURN_CHANGED )
 					sp->changed = 0;
@@ -1376,6 +1369,12 @@ handle_it( FL_OBJECT * ob,
 			}
 			else if ( handle_select( mx, my, ob, 0, NORMAL_SELECT ) )
 				fl_redraw_object( sp->input );
+			break;
+
+		case FL_RELEASE:
+			if ( key == FL_MBUTTON1 && motion )
+				do_XCut( ob, sp->beginrange, sp->endrange - 1 );
+			motion = 0;
 			break;
 
 		case FL_DBLCLICK:
@@ -1549,7 +1548,6 @@ fl_create_input( int          type,
     ob->col2 = FL_INPUT_COL2;
     ob->align = FL_INPUT_ALIGN;
     ob->lcol = FL_INPUT_LCOL;
-
     ob->lsize = fl_cntl.inputFontSize ?
 		        fl_cntl.inputFontSize : FL_DEFAULT_SIZE;
 

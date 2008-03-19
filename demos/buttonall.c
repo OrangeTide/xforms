@@ -30,6 +30,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd/buttons_gui.h"   /* from fd/ directory */
 #include <stdlib.h>
@@ -39,41 +40,55 @@
 void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
 {
-    fl_finish();
-    exit(0);
+    fl_finish( );
+    exit( 0 );
 }
+
 
 void bw_cb( FL_OBJECT * ob,
 		    long        data  FL_UNUSED_ARG )
 {
-    int bws[] = {-4,-3,-2,-1,1,2,3,4};
-    int n = fl_get_choice(ob)-1;
-    FD_buttform *fdui = (FD_buttform *)ob->form->fdui;
+    int bws[ ] = { -4, -3, -2, -1, 1, 2, 3, 4 };
+    int n = fl_get_choice( ob ) - 1;
+    FD_buttform *fdui = ob->form->fdui;
 
-    fl_freeze_form(ob->form);
-    fl_set_object_bw(fdui->backface, bws[n]);
-    fl_set_object_bw(fdui->objsgroup, bws[n]);
+    fl_freeze_form( ob->form );
+    fl_set_object_bw( fdui->backface, bws[ n ] );
+    fl_set_object_bw( fdui->objsgroup, bws[ n ] );
+    fl_set_object_bw( fdui->done, bws[ n ] );
+
     /* redrawing the backface wipes out the done button. Redraw it*/
-    fl_redraw_object(fdui->done);
-    fl_unfreeze_form(ob->form);
+
+    fl_redraw_object( fdui->done );
+    fl_unfreeze_form( ob->form );
 }
 
-int main(int argc, char *argv[])
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
     FD_buttform *fd_buttform;
 
-    fl_initialize(&argc, argv, 0, 0, 0);
-    fd_buttform = create_form_buttform();
+	fl_set_border_width( 1 );
+    fl_initialize( &argc, argv, 0, 0, 0 );
+    fd_buttform = create_form_buttform( );
 
     /* fill-in form initialization code */
-    fl_set_pixmapbutton_file(fd_buttform->pbutt,"crab45.xpm");
-    fl_set_bitmapbutton_file(fd_buttform->bbutt,"bm1.xbm");
-    fl_addto_choice(fd_buttform->bw_obj," -4 | -3 | -2 | -1 |  1|  2|  3|  4");
-    fl_set_choice(fd_buttform->bw_obj,7);
+
+    fl_set_pixmapbutton_file( fd_buttform->pbutt,"crab45.xpm" );
+    fl_set_bitmapbutton_file( fd_buttform->bbutt,"bm1.xbm" );
+    fl_addto_choice( fd_buttform->bw_obj,
+					 " -4 | -3 | -2 | -1 |  1|  2|  3|  4" );
+
+    fl_set_choice( fd_buttform->bw_obj, 5 );
 
     /* show the first form */
-    fl_show_form(fd_buttform->buttform,FL_PLACE_CENTER,FL_FULLBORDER,"buttform");
-    while (fl_do_forms())
-     ;
+
+    fl_show_form( fd_buttform->buttform, FL_PLACE_CENTER, FL_FULLBORDER,
+				  "buttform" );
+    while ( fl_do_forms( ) )
+		/* empty */ ;
+
     return 0;
 }

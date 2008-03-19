@@ -45,38 +45,35 @@ enum
   FLPS_COLOR
 };
 
-#define FLPS_MEMBERS									   \
-			 int		  ps_color;						   \
-			 int		  orientation;					   \
-			 int		  auto_fit;						   \
-			 int		  drawbox;						   \
-			 int		  eps;							   \
-			 float		  xdpi,							   \
-						  ydpi;							   \
-			 float		  paper_w,						   \
-						  paper_h;						   \
-			 float		  gamma;						   \
-			 const char * tmpdir;						   \
-			 int		  printer_dpi;					   \
-			 float		  hm,							   \
-						  vm;							   \
-			 float		  xscale,						   \
-						  yscale;						   \
-			 int		  scale_text;					   \
-			 int		  first_page_only;				   \
-			 int		  clip;							   \
-			 int		  reserved[ 10 ]
-
-/* configuration infomation */
-
-typedef struct flps_cntl_ { FLPS_MEMBERS; } FLPS_CONTROL;
+typedef struct {
+	int		     ps_color;
+	int		     orientation;
+	int		     auto_fit;
+	int		     drawbox;
+	int		     eps;
+	float		 xdpi,
+	             ydpi;
+	float		 paper_w,
+	             paper_h;
+	float		 gamma;
+	const char * tmpdir;
+	int		     printer_dpi;
+	float		 hm,
+	             vm;
+	float		 xscale,
+	             yscale;
+	int		     scale_text;
+	int		     first_page_only;
+	int		     clip;
+	int		     reserved[ 10 ];
+} FLPS_CONTROL;
 
 FL_EXPORT FLPS_CONTROL * flps_init(
 		void
 		);
 
 FL_EXPORT int fl_object_ps_dump(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * fname
 		);
 

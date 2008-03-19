@@ -46,7 +46,7 @@ FL_COUNTER_TYPE;
 
 /***** Others	*****/
 
-#define FL_COUNTER_BW		(FL_BOUND_WIDTH-1)
+#define FL_COUNTER_BW		( FL_BOUND_WIDTH - 1 )
 
 /***** Routines *****/
 
@@ -101,19 +101,19 @@ FL_EXPORT double fl_get_counter_value(
 
 FL_EXPORT void fl_get_counter_bounds(
 		FL_OBJECT * ob,
-		double *	min,
-		double *	max
+		double    * min,
+		double    * max
 		);
 
 FL_EXPORT void fl_get_counter_step(
 		FL_OBJECT * ob,
-		double *	s,
-		double *	l
+		double    * s,
+		double    * l
 		);
 
 FL_EXPORT void fl_set_counter_filter(
-		FL_OBJECT *	  ob,
-		FL_VAL_FILTER filter
+		FL_OBJECT     * ob,
+		FL_VAL_FILTER   filter
 		);
 
 /** Functions to set and get the timeout value used by the

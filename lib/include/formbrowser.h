@@ -47,7 +47,7 @@ enum
 
 FL_EXPORT int fl_addto_formbrowser(
 		FL_OBJECT * ob,
-		FL_FORM *	form
+		FL_FORM   * form
 		);
 
 FL_EXPORT FL_FORM * fl_delete_formbrowser_bynumber(
@@ -57,27 +57,27 @@ FL_EXPORT FL_FORM * fl_delete_formbrowser_bynumber(
 
 FL_EXPORT int fl_delete_formbrowser(
 		FL_OBJECT * ob,
-		FL_FORM *	candidate_form
+		FL_FORM   * candidate_form
 		);
 
 FL_EXPORT FL_FORM * fl_replace_formbrowser(
 		FL_OBJECT * ob,
 		int			num,
-		FL_FORM *	form
+		FL_FORM   * form
 		);
 
 FL_EXPORT int fl_insert_formbrowser(
 		FL_OBJECT * ob,
 		int			line,
-		FL_FORM *	new_form
+		FL_FORM   * new_form
 		);
 
 FL_EXPORT int fl_get_formbrowser_area(
 		FL_OBJECT * ob,
-		int *		x,
-		int *		y,
-		int *		w,
-		int *		h
+		int       * x,
+		int       * y,
+		int       * w,
+		int       * h
 		);
 
 FL_EXPORT void fl_set_formbrowser_scroll(
@@ -101,7 +101,7 @@ FL_EXPORT FL_FORM *fl_get_formbrowser_topform(
 
 FL_EXPORT int fl_set_formbrowser_topform(
 		FL_OBJECT * ob,
-		FL_FORM *	form
+		FL_FORM   * form
 		);
 
 FL_EXPORT FL_FORM * fl_set_formbrowser_topform_bynumber(
@@ -129,7 +129,7 @@ FL_EXPORT int fl_get_formbrowser_yoffset(
 
 FL_EXPORT int fl_find_formbrowser_form_number(
 		FL_OBJECT * ob,
-		FL_FORM *	candidate_form
+		FL_FORM   * candidate_form
 		);
 
 FL_EXPORT FL_OBJECT * fl_add_formbrowser(

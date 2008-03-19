@@ -56,7 +56,6 @@ int fl_bestvmode,
 int fl_scrh,
     fl_scrw;
 int fl_safe;
-unsigned int fl_keymask;
 char *fl_ul_magic_char = "\b";
 
 FL_COLOR fl_shadow_col = FL_RIGHT_BCOL;

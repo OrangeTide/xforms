@@ -76,13 +76,13 @@ FL_EXPORT void fl_clear_menubar(
 		);
 
 FL_EXPORT void fl_set_menubar(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * label
 		);
 
 FL_EXPORT void fl_set_menubar_entries(
-		FL_OBJECT *	   ob,
-		const char *   label,
+		FL_OBJECT    * ob,
+		const char   * label,
 		FL_PUP_ENTRY * pup
 		);
 

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG 
-char *fl_id_evt = "$Id: appwin.c,v 1.8 2008/02/28 13:10:51 jtt Exp $";
+char *fl_id_evt = "$Id: appwin.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -230,7 +230,7 @@ fl_remove_event_callback( Window win,
     }
     else
     {
-		fwin->win = 0;		/* window deactivated */
+		fwin->win = None;		/* window deactivated */
 		remove_app_win( fwin );
     }
 }
@@ -340,7 +340,7 @@ fl_winclose( Window win )
 
     XSync( flx->display, 0 );
 
-    while ( XCheckWindowEvent( flx->display, win, FL_ALL_MASKS, &xev ) )
+    while ( XCheckWindowEvent( flx->display, win, AllEventsMask, &xev ) )
 		fl_xevent_name( "Eaten", &xev );
 
     fl_remove_event_callback( win, 0 );

@@ -90,8 +90,8 @@ FL_EXPORT void fl_set_dial_bounds(
 
 FL_EXPORT void fl_get_dial_bounds(
 		FL_OBJECT * ob,
-		double *	min,
-		double *	max
+		double    * min,
+		double    * max
 		);
 
 

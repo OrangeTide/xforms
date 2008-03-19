@@ -153,8 +153,8 @@ typedef enum
 	FL_CLASS_END		   /* sentinel */
 } FL_CLASS;
 
-#define FL_BEGIN_GROUP	  10000
-#define FL_END_GROUP	  20000
+#define FL_BEGIN_GROUP		  10000
+#define FL_END_GROUP		  20000
 
 #define FL_USER_CLASS_START	  1001	/* min. user class	value */
 #define FL_USER_CLASS_END	  9999	/* max. user class	value */
@@ -238,11 +238,11 @@ typedef enum
 							  || ( t ) == FL_OVAL3D_DOWNBOX	   \
 							  || ( t ) == FL_ROUNDED3D_DOWNBOX)
 
-#define FL_TO_DOWNBOX( t )	( t == FL_UP_BOX ? FL_DOWN_BOX:				\
-							  ( t == FL_ROUNDED3D_UPBOX ?				\
-									 FL_ROUNDED3D_DOWNBOX:				\
-									 ( t == FL_OVAL3D_UPBOX ?			\
-											FL_OVAL3D_DOWNBOX : t ) ) )
+#define FL_TO_DOWNBOX( t )	( ( t ) == FL_UP_BOX ? FL_DOWN_BOX:			\
+							  ( ( t ) == FL_ROUNDED3D_UPBOX ?			\
+								FL_ROUNDED3D_DOWNBOX:					\
+								( ( t ) == FL_OVAL3D_UPBOX ?			\
+								  FL_OVAL3D_DOWNBOX : ( t ) ) ) )
 
 
 /* How to place text relative to a box */
@@ -278,17 +278,17 @@ enum
 	FL_MBUTTON5
 };
 
-#define FL_LEFT_MOUSE	     FL_MBUTTON1
-#define FL_MIDDLE_MOUSE	     FL_MBUTTON2
-#define FL_RIGHT_MOUSE	     FL_MBUTTON3
-#define FL_SCROLLUP_MOUSE    FL_MBUTTON4
-#define FL_SCROLLDOWN_MOUSE  FL_MBUTTON5
+#define FL_LEFT_MOUSE		 FL_MBUTTON1
+#define FL_MIDDLE_MOUSE		 FL_MBUTTON2
+#define FL_RIGHT_MOUSE		 FL_MBUTTON3
+#define FL_SCROLLUP_MOUSE	 FL_MBUTTON4
+#define FL_SCROLLDOWN_MOUSE	 FL_MBUTTON5
 
-#define FL_LEFTMOUSE	     FL_LEFT_MOUSE
-#define FL_MIDDLEMOUSE	     FL_MIDDLE_MOUSE
-#define FL_RIGHTMOUSE	     FL_RIGHT_MOUSE
-#define FL_SCROLLUPMOUSE     FL_FL_SCROLLUP_MOUSE
-#define FL_SCROLLDOWNMOUSE   FL_FL_SCROLLDOWN_MOUSE
+#define FL_LEFTMOUSE		 FL_LEFT_MOUSE
+#define FL_MIDDLEMOUSE		 FL_MIDDLE_MOUSE
+#define FL_RIGHTMOUSE		 FL_RIGHT_MOUSE
+#define FL_SCROLLUPMOUSE	 FL_FL_SCROLLUP_MOUSE
+#define FL_SCROLLDOWNMOUSE	 FL_FL_SCROLLDOWN_MOUSE
 
 
 /* control when to reutrn input, slider and dial object. */
@@ -391,37 +391,38 @@ typedef enum
 
 typedef enum
 {
-	FL_NOEVENT,                /*  0 */
-	FL_DRAW,                   /*  1 */
-	FL_PUSH,                   /*  2 */
-	FL_RELEASE,                /*  3 */
-	FL_ENTER,                  /*  4 */
-	FL_LEAVE,                  /*  5 */
-	FL_MOUSE,                  /*  6 */
-	FL_DRAG = FL_MOUSE,        /*  6 */
-	FL_FOCUS,                  /*  7 */
-	FL_UNFOCUS,                /*  8 */
-	FL_KEYBOARD,               /*  9 */
+	FL_NOEVENT,				   /*  0 */
+	FL_DRAW,				   /*  1 */
+	FL_PUSH,				   /*  2 */
+	FL_RELEASE,				   /*  3 */
+	FL_ENTER,				   /*  4 */
+	FL_LEAVE,				   /*  5 */
+	FL_MOUSE,				   /*  6  should better be named FL_MOTION... */
+	FL_DRAG = FL_MOUSE,		   /*  6 */
+	FL_FOCUS,				   /*  7 */
+	FL_UNFOCUS,				   /*  8 */
+	FL_KEYBOARD,			   /*  9 */
 	FL_KEYPRESS = FL_KEYBOARD, /*  9 */
-	FL_MOTION,                 /* 10 */
-	FL_STEP,                   /* 11 */
-	FL_SHORTCUT,               /* 12 */
-	FL_FREEMEM,                /* 13 */
-	FL_OTHER,			       /* 14, property, selection etc */
-	FL_DRAWLABEL,              /* 15 */
-	FL_DBLCLICK,		       /* 16, double click			   */
-	FL_TRPLCLICK,		       /* 17, triple click			   */
-	FL_ATTRIB,			       /* 18, attribute change		   */
-	FL_KEYRELEASE,             /* 19 */
-	FL_PS,				       /* 20, dump a form into EPS	   */
-	FL_MOVEORIGIN,		       /* 21, dragging the form across the screen
-								      changes its absolute x,y coords. Objects
-								      that themselves contain forms should
-								      ensure that they are up to date. */
-	FL_RESIZED			       /* 22, the object has been resized by scale_form
-								      Tell it that this has happened so that
-									  it can resize any FL_FORMs that it
-									  contains. */
+	FL_UPDATE,				   /* 10 for objects that need to update something
+								     from time to time */
+	FL_STEP,				   /* 11 */
+	FL_SHORTCUT,			   /* 12 */
+	FL_FREEMEM,				   /* 13 */
+	FL_OTHER,				   /* 14 property, selection etc */
+	FL_DRAWLABEL,			   /* 15 */
+	FL_DBLCLICK,			   /* 16 double click			   */
+	FL_TRPLCLICK,			   /* 17 triple click			   */
+	FL_ATTRIB,				   /* 18 attribute change		   */
+	FL_KEYRELEASE,			   /* 19 */
+	FL_PS,					   /* 20 dump a form into EPS	   */
+	FL_MOVEORIGIN,			   /* 21 dragging the form across the screen
+									 changes its absolute x,y coords. Objects
+									 that themselves contain forms should
+									 ensure that they are up to date. */
+	FL_RESIZED			   	   /* 22 the object has been resized by scale_form
+									 Tell it that this has happened so that
+									 it can resize any FL_FORMs that it
+									 contains. */
 } FL_EVENTS;
 
 #define FL_MOVE	  FL_MOTION	   /* for compatibility */
@@ -479,13 +480,13 @@ enum
 };
 
 #define FL_PUP_GRAY		 FL_PUP_GREY
-#define FL_PUP_TOGGLE	 FL_PUP_BOX
+#define FL_PUP_TOGGLE	 FL_PUP_BOX		   /* not used anymore */
 #define FL_PUP_INACTIVE	 FL_PUP_GREY
 
 
 /* popup and menu entries */
 
-typedef int ( * FL_PUP_CB )( int );	  /* call back prototype  */
+typedef int ( * FL_PUP_CB )( int );		   /* call back prototype  */
 
 typedef struct
 {
@@ -538,8 +539,8 @@ typedef enum
 
 #define FL_FONT_STYLE FL_TEXT_STYLE
 
-#define special_style( a )	(	 a >= FL_SHADOW_STYLE						\
-							  && a <= ( FL_EMBOSSED_STYLE + FL_MAXFONTS ) )
+#define special_style( a )	(	 ( a ) >= FL_SHADOW_STYLE					  \
+							  && ( a ) <= ( FL_EMBOSSED_STYLE + FL_MAXFONTS ) )
 
 /* Standard sizes in XForms */
 
@@ -566,7 +567,7 @@ typedef enum
 #define FL_NORMAL_FONT2	  FL_NORMAL_FONT
 #define FL_DEFAULT_FONT	  FL_SMALL_FONT
 
-#define FL_BOUND_WIDTH	( FL_Coord ) 3	   /* Border width of boxes */
+#define FL_BOUND_WIDTH	( FL_Coord ) 1	   /* Border width of boxes */
 
 
 
@@ -579,9 +580,9 @@ struct fl_pixmap;
 
 typedef struct flobjs_
 {
-	struct forms_ *	 form;			 /* the form this object belongs to */
-	void *			 u_vdata;		 /* anything the user likes */
-	char *			 u_cdata;		 /* anything the user likes */
+	struct forms_  * form;			 /* the form this object belongs to */
+	void		   * u_vdata;		 /* anything the user likes */
+	char		   * u_cdata;		 /* anything the user likes */
 	long			 u_ldata;		 /* anything the user likes */
 
 	int				 objclass;		 /* class of object, button, slider etc */
@@ -591,23 +592,23 @@ typedef struct flobjs_
 					 y,
 					 w,
 					 h;
-	double           fl1,
-	                 fr1,
-	                 ft1,
-	                 fb1,
-	                 fl2,
-	                 fr2,
-	                 ft2,
-	                 fb2;
+	double			 fl1,			 /* distances of upper left hand (1) and */
+					 fr1,			 /* lower right hand corner (2) to left, */
+					 ft1,			 /* right, top and bottom of enclosing	 */
+					 fb1,			 /* form */
+					 fl2,
+					 fr2,
+					 ft2,
+					 fb2;
 	FL_Coord		 bw;
 	FL_COLOR		 col1,			 /* colors of obj */
 					 col2;
-	char *			 label;			 /* object label */
+	char		   * label;			 /* object label */
 	FL_COLOR		 lcol;			 /* label color */
 	int				 align;
 	int				 lsize,			 /* label size and style */
 					 lstyle;
-	long *			 shortcut;
+	long		   * shortcut;
 	int				 ( * handle )( struct flobjs_ *,
 								   int,
 								   FL_Coord,
@@ -617,7 +618,7 @@ typedef struct flobjs_
 	void			 ( * object_callback )( struct flobjs_ *,
 											 long );
 	long			 argument;
-	void *			 spec;		 /* instantiation					   */
+	void		   * spec;		 /* instantiation					   */
 
 	int				 ( * prehandle )( struct flobjs_ *,
 									  int,
@@ -664,17 +665,19 @@ typedef struct flobjs_
 	int				 visible;
 	int				 clip;
 	unsigned long	 click_timeout;
-	void  *			 c_vdata;		 /* for class use */
-	char *			 c_cdata;		 /* for class use */
+	void		   * c_vdata;		 /* for class use */
+	char		   * c_cdata;		 /* for class use */
 	long			 c_ldata;		 /* for class use */
 	unsigned int	 spec_size;		 /* for internal use */
 	FL_COLOR		 aux_col1,		 /* aux colors */
 					 aux_col2;
 	FL_COLOR		 dbl_background; /* double buffer background */
 	int				 how_return;
-	char *			 tooltip;
+	char		   * tooltip;
 	int				 tipID;
 	int				 group_id;
+	int              want_motion;
+	int              want_update;
 	int				 reserved[ 5 ];	 /* for future use */
 } FL_OBJECT;
 
@@ -735,9 +738,9 @@ enum {
 
 typedef struct forms_
 {
-	void *				 fdui;			 /* for fdesign */
-	void *				 u_vdata;		 /* for application */
-	char *				 u_cdata;		 /* for application */
+	void			   * fdui;			 /* for fdesign */
+	void			   * u_vdata;		 /* for application */
+	char			   * u_cdata;		 /* for application */
 	long				 u_ldata;		 /* for application */
 
 	char *				 label;			 /* window title */
@@ -748,19 +751,19 @@ typedef struct forms_
 						 h;
 	FL_Coord			 hotx,			 /* hot-spot of the form */
 						 hoty;
-	double				 w_hr,           /* high resolution width and height */
-						 h_hr;
+	double				 w_hr,			 /* high resolution width and height */
+						 h_hr;			 /* (needed for precise scaling) */
 
-	struct flobjs_ *	 first;
-	struct flobjs_ *	 last;
-	struct flobjs_ *	 focusobj;
+	struct flobjs_	   * first;
+	struct flobjs_	   * last;
+	struct flobjs_	   * focusobj;
 
 	FL_FORMCALLBACKPTR	 form_callback;
 	FL_FORM_ATACTIVATE	 activate_callback;
 	FL_FORM_ATDEACTIVATE deactivate_callback;
-	void *				 form_cb_data;
-	void *				 activate_data;
-	void *				 deactivate_data;
+	void			   * form_cb_data;
+	void			   * activate_data;
+	void			   * deactivate_data;
 
 	FL_RAW_CALLBACK		 key_callback;
 	FL_RAW_CALLBACK		 push_callback;
@@ -793,12 +796,12 @@ typedef struct forms_
 	int					 has_auto;
 	int					 top;
 	int					 sort_of_modal;	 /* internal use */
-	struct forms_ *		 parent;
-	struct forms_ *		 child;
-	struct flobjs_ *	 parent_obj;
+	struct forms_	   * parent;
+	struct forms_	   * child;
+	struct flobjs_	   * parent_obj;
 	int					 attached;		 /* not independent anymore */
 	void				 ( * pre_attach )( struct forms_ * );
-	void *				 attach_data;
+	void			   * attach_data;
 	int					 no_tooltip;
 	int					 reserved[ 10 ]; /* future use */
 } FL_FORM;
@@ -820,8 +823,8 @@ typedef struct
 
 enum
 {
-	FL_READ = 1,
-	FL_WRITE = 2,
+	FL_READ	  = 1,
+	FL_WRITE  = 2,
 	FL_EXCEPT = 4
 };
 
@@ -832,10 +835,10 @@ typedef void ( * FL_IO_CALLBACK )( int,
 								   void * );
 
 FL_EXPORT void fl_add_io_callback(
-		int			   fd,
-		unsigned int   mask,
-		FL_IO_CALLBACK callback,
-		void *		   data
+		int				 fd,
+		unsigned int	 mask,
+		FL_IO_CALLBACK	 callback,
+		void		   * data
 		);
 
 FL_EXPORT void fl_remove_io_callback(
@@ -851,9 +854,9 @@ typedef void ( * FL_SIGNAL_HANDLER )( int,
 									  void * );
 
 FL_EXPORT void fl_add_signal_callback(
-		int				  s,
-		FL_SIGNAL_HANDLER cb,
-		void *			  data
+		int					s,
+		FL_SIGNAL_HANDLER	cb,
+		void			  * data
 		);
 
 FL_EXPORT void fl_remove_signal_callback(
@@ -874,9 +877,9 @@ FL_EXPORT void fl_app_signal_direct(
 typedef void (* FL_TIMEOUT_CALLBACK )( int, void * );
 
 FL_EXPORT int fl_add_timeout(
-		long				msec,
-		FL_TIMEOUT_CALLBACK callback,
-		void *				data
+		long				  msec,
+		FL_TIMEOUT_CALLBACK	  callback,
+		void				* data
 		);
 
 FL_EXPORT void fl_remove_timeout(
@@ -953,7 +956,7 @@ FL_EXPORT void fl_freeze_form(
 		);
 
 FL_EXPORT void fl_set_focus_object(
-		FL_FORM *	form,
+		FL_FORM	  * form,
 		FL_OBJECT * obj
 		);
 
@@ -987,9 +990,9 @@ FL_EXPORT FL_FORM_ATACTIVATE fl_set_form_atactivate(
 		);
 
 FL_EXPORT FL_FORM_ATDEACTIVATE fl_set_form_atdeactivate(
-		FL_FORM *			 form,
-		FL_FORM_ATDEACTIVATE cb,
-		void *				 data
+		FL_FORM				 * form,
+		FL_FORM_ATDEACTIVATE   cb,
+		void				 * data
 		);
 
 FL_EXPORT void fl_unfreeze_form(
@@ -1027,19 +1030,19 @@ FL_EXPORT void fl_scale_form(
 		);
 
 FL_EXPORT void fl_set_form_position(
-		FL_FORM * form,
-		FL_Coord  x,
-		FL_Coord  y
+		FL_FORM	 * form,
+		FL_Coord   x,
+		FL_Coord   y
 		);
 
 FL_EXPORT void fl_set_form_title(
-		FL_FORM *	form,
+		FL_FORM	   * form,
 		const char * name
 		);
 
 FL_EXPORT void fl_set_form_property(
-		FL_FORM *	 form,
-		unsigned int prop
+		FL_FORM		 * form,
+		unsigned int   prop
 		);
 
 FL_EXPORT void fl_set_app_mainform(
@@ -1055,46 +1058,46 @@ FL_EXPORT void fl_set_app_nomainform(
 		);
 
 FL_EXPORT void fl_set_form_callback(
-		FL_FORM *		   form,
-		FL_FORMCALLBACKPTR callback,
-		void *			   d
+		FL_FORM			   * form,
+		FL_FORMCALLBACKPTR	 callback,
+		void			   * d
 		);
 
 
 #define	 fl_set_form_call_back	  fl_set_form_callback
 
 FL_EXPORT void fl_set_form_size(
-		FL_FORM * form,
-		FL_Coord  w,
-		FL_Coord  h
+		FL_FORM	 * form,
+		FL_Coord   w,
+		FL_Coord   h
 		);
 
 FL_EXPORT void fl_set_form_hotspot(
-		FL_FORM * form,
-		FL_Coord  x,
-		FL_Coord  y
+		FL_FORM	 * form,
+		FL_Coord   x,
+		FL_Coord   y
 		);
 
 FL_EXPORT void fl_set_form_hotobject(
-		FL_FORM *	form,
+		FL_FORM	  * form,
 		FL_OBJECT * ob
 		);
 
 FL_EXPORT void fl_set_form_minsize(
-		FL_FORM * form,
-		FL_Coord  w,
-		FL_Coord  h
+		FL_FORM	 * form,
+		FL_Coord   w,
+		FL_Coord   h
 		);
 
 FL_EXPORT void fl_set_form_maxsize(
-		FL_FORM * form,
-		FL_Coord  w,
-		FL_Coord  h
+		FL_FORM	 * form,
+		FL_Coord   w,
+		FL_Coord   h
 		);
 
 FL_EXPORT void fl_set_form_event_cmask(
-		FL_FORM *	  form,
-		unsigned long cmask
+		FL_FORM		  * form,
+		unsigned long	cmask
 		);
 
 FL_EXPORT unsigned long fl_get_form_event_cmask(
@@ -1103,18 +1106,18 @@ FL_EXPORT unsigned long fl_get_form_event_cmask(
 
 
 FL_EXPORT void fl_set_form_geometry(
-		FL_FORM * form,
-		FL_Coord  x,
-		FL_Coord  y,
-		FL_Coord  w,
-		FL_Coord  h
+		FL_FORM	 * form,
+		FL_Coord   x,
+		FL_Coord   y,
+		FL_Coord   w,
+		FL_Coord   h
 		);
 
 
 #define fl_set_initial_placement fl_set_form_geometry
 
 FL_EXPORT long fl_show_form(
-		FL_FORM *	 form,
+		FL_FORM	   * form,
 		int			 place,
 		int			 border,
 		const char * name
@@ -1138,7 +1141,7 @@ FL_EXPORT void fl_set_form_dblbuffer(
 		);
 
 FL_EXPORT long fl_prepare_form_window(
-		FL_FORM *	 form,
+		FL_FORM	   * form,
 		int			 place,
 		int			 border,
 		const char * name
@@ -1158,9 +1161,9 @@ FL_EXPORT int fl_form_is_visible(
 
 
 FL_EXPORT FL_RAW_CALLBACK fl_register_raw_callback(
-		FL_FORM *		form,
-		unsigned long	mask,
-		FL_RAW_CALLBACK rcb
+		FL_FORM			* form,
+		unsigned long	  mask,
+		FL_RAW_CALLBACK	  rcb
 		);
 
 
@@ -1193,27 +1196,27 @@ FL_EXPORT void fl_set_object_bw(
 
 FL_EXPORT void fl_get_object_bw(
 		FL_OBJECT * ob,
-		int	*		bw
+		int		  * bw
 		);
 
 FL_EXPORT void fl_set_object_resize(
-		FL_OBJECT *	 ob,
-		unsigned int what
+		FL_OBJECT	 * ob,
+		unsigned int   what
 		);
 
 FL_EXPORT void fl_get_object_resize(
-		FL_OBJECT *	   ob,
+		FL_OBJECT	 * ob,
 		unsigned int * what
 		);
 
 FL_EXPORT void fl_set_object_gravity(
-		FL_OBJECT *	 ob,
-		unsigned int nw,
-		unsigned int se
+		FL_OBJECT	 * ob,
+		unsigned int   nw,
+		unsigned int   se
 		);
 
 FL_EXPORT void fl_get_object_gravity(
-		FL_OBJECT *	   ob,
+		FL_OBJECT	 * ob,
 		unsigned int * nw,
 		unsigned int * se
 		);
@@ -1244,14 +1247,14 @@ FL_EXPORT void fl_set_object_lalign(
 		);
 
 FL_EXPORT void fl_set_object_shortcut(
-		FL_OBJECT *	 obj,
+		FL_OBJECT  * obj,
 		const char * sstr,
 		int			 showit
 		);
 
 FL_EXPORT void fl_set_object_shortcutkey(
-		FL_OBJECT *	 obj,
-		unsigned int keysym
+		FL_OBJECT	 * obj,
+		unsigned int   keysym
 		);
 
 FL_EXPORT void fl_set_object_dblbuffer(
@@ -1266,12 +1269,12 @@ FL_EXPORT void fl_set_object_color(
 		);
 
 FL_EXPORT void fl_set_object_label(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * label
 		);
 
 FL_EXPORT void fl_set_object_helper(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * tip
 		);
 
@@ -1283,8 +1286,8 @@ FL_EXPORT void fl_set_object_position(
 
 FL_EXPORT void fl_get_object_size(
 		FL_OBJECT * obj,
-		FL_Coord *  w,
-		FL_Coord *  h
+		FL_Coord  * w,
+		FL_Coord  * h
 		);
 
 FL_EXPORT void fl_set_object_size(
@@ -1316,7 +1319,7 @@ FL_EXPORT FL_OBJECT * fl_get_object_component(
 FL_EXPORT void fl_for_all_objects(
 		FL_FORM * form,
 		int		  ( * cb )( FL_OBJECT *, void * ),
-		void *	  v
+		void	* v
 		);
 
 
@@ -1348,16 +1351,16 @@ FL_EXPORT void fl_fit_object_label(
 
 FL_EXPORT void fl_get_object_geometry(
 		FL_OBJECT * ob,
-		FL_Coord *	x,
-		FL_Coord *	y,
-		FL_Coord *	w,
-		FL_Coord *	h
+		FL_Coord  *	 x,
+		FL_Coord  *	 y,
+		FL_Coord  *	 w,
+		FL_Coord  *	 h
 		);
 
 FL_EXPORT void fl_get_object_position(
 		FL_OBJECT * ob,
-		FL_Coord *	x,
-		FL_Coord *	y
+		FL_Coord  * x,
+		FL_Coord  * y
 		);
 
 FL_EXPORT const char * fl_get_object_label(
@@ -1368,10 +1371,10 @@ FL_EXPORT const char * fl_get_object_label(
 /* this one takes into account the label */
 FL_EXPORT void fl_get_object_bbox(
 		FL_OBJECT * obj,
-		FL_Coord *	x,
-		FL_Coord *	y,
-		FL_Coord *	w,
-		FL_Coord *	h
+		FL_Coord  * x,
+		FL_Coord  * y,
+		FL_Coord  * w,
+		FL_Coord  * h
 		);
 
 
@@ -1382,19 +1385,19 @@ FL_EXPORT void fl_call_object_callback(
 		);
 
 FL_EXPORT FL_HANDLEPTR fl_set_object_prehandler(
-		FL_OBJECT *	 ob,
-		FL_HANDLEPTR phandler
+		FL_OBJECT	 * ob,
+		FL_HANDLEPTR   phandler
 		);
 
 FL_EXPORT FL_HANDLEPTR fl_set_object_posthandler(
-		FL_OBJECT *	 ob,
-		FL_HANDLEPTR post
+		FL_OBJECT	 * ob,
+		FL_HANDLEPTR   post
 		);
 
 FL_EXPORT FL_CALLBACKPTR fl_set_object_callback(
-		FL_OBJECT *	   obj,
-		FL_CALLBACKPTR callback,
-		long		   argument
+		FL_OBJECT	   * obj,
+		FL_CALLBACKPTR	 callback,
+		long			 argument
 		);
 
 
@@ -1475,8 +1478,8 @@ FL_EXPORT int fl_get_string_height(
 		int			 size,
 		const char * s,
 		int			 len,
-		int *		 asc,
-		int *		 desc
+		int		   * asc,
+		int		   * desc
 		);
 
 FL_EXPORT int fl_get_string_width(
@@ -1498,8 +1501,8 @@ FL_EXPORT void fl_get_string_dimension(
 		int			 fntsize,
 		const char * s,
 		int			 len,
-		int *		 width,
-		int *		 height
+		int		   * width,
+		int		   * height
 		);
 
 
@@ -1520,27 +1523,27 @@ FL_EXPORT void fl_get_align_xy(
 		);
 
 FL_EXPORT void fl_drw_text(
-		int		 align,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR c,
-		int		 style,
-		int		 size,
-		char *	 istr
+		int		   align,
+		FL_Coord   x,
+		FL_Coord   y,
+		FL_Coord   w,
+		FL_Coord   h,
+		FL_COLOR   c,
+		int		   style,
+		int		   size,
+		char	 * istr
 		);
 
 FL_EXPORT void fl_drw_text_beside(
-		int		 align,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR c,
-		int		 style,
-		int		 size,
-		char *	 str
+		int		   align,
+		FL_Coord   x,
+		FL_Coord   y,
+		FL_Coord   w,
+		FL_Coord   h,
+		FL_COLOR   c,
+		int		   style,
+		int		   size,
+		char	 * str
 		);
 
 
@@ -1551,17 +1554,17 @@ FL_EXPORT void fl_drw_text_beside(
 #endif
 
 FL_EXPORT void fl_drw_text_cursor(
-		int		 align,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR c,
-		int		 style,
-		int		 size,
-		char *	 str,
-		int		 cc,
-		int		 pos
+		int		   align,
+		FL_Coord   x,
+		FL_Coord   y,
+		FL_Coord   w,
+		FL_Coord   h,
+		FL_COLOR   c,
+		int		   style,
+		int		   size,
+		char	 * str,
+		int		   cc,
+		int		   pos
 		);
 
 FL_EXPORT void fl_drw_box(
@@ -1609,19 +1612,19 @@ enum
 
 FL_EXPORT void fl_drw_slider(
 		int		 boxtype,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR col1,
-		FL_COLOR col2,
-		int		 sltype,
-		double	 size,
-		double	 val,
-		char *	 str,
-		int		 d,
-		int		 inv,
-		FL_Coord bw
+		FL_Coord   x,
+		FL_Coord   y,
+		FL_Coord   w,
+		FL_Coord   h,
+		FL_COLOR   col1,
+		FL_COLOR   col2,
+		int		   sltype,
+		double	   size,
+		double	   val,
+		char	 * str,
+		int		   d,
+		int		   inv,
+		FL_Coord   bw
 		);
 
 FL_EXPORT unsigned long fl_mapcolor(
@@ -1654,10 +1657,10 @@ FL_EXPORT void fl_set_color_leak(
 		);
 
 FL_EXPORT unsigned long fl_getmcolor(
-		FL_COLOR i,
-		int *	 r,
-		int *	 g,
-		int *	 b
+		FL_COLOR   i,
+		int		 * r,
+		int		 * g,
+		int		 * b
 		);
 
 FL_EXPORT unsigned long fl_get_pixel(
@@ -1668,10 +1671,10 @@ FL_EXPORT unsigned long fl_get_pixel(
 #define fl_get_flcolor	 fl_get_pixel
 
 FL_EXPORT void fl_get_icm_color(
-		FL_COLOR col,
-		int *	 r,
-		int *	 g,
-		int *	 b
+		FL_COLOR   col,
+		int		 * r,
+		int		 * g,
+		int		 * b
 		);
 
 FL_EXPORT void fl_set_icm_color(
@@ -1711,17 +1714,17 @@ FL_EXPORT void fl_show_errors(
 
 /* Some macros */
 
-#define FL_max( a,b )			  ( ( a ) > ( b ) ? ( a ) : ( b ) )
-#define FL_min( a,b )			  ( ( a ) < ( b ) ? ( a ) : ( b ) )
+#define FL_max( a, b )			  ( ( a ) > ( b ) ? ( a ) : ( b ) )
+#define FL_min( a, b )			  ( ( a ) < ( b ) ? ( a ) : ( b ) )
 #define FL_abs( a )				  ( ( a ) > 0 ? ( a ) : ( - ( a ) ) )
 #define FL_nint( a )			  ( ( int ) ( ( a ) > 0 ?				\
-											  ( ( a ) + 0.5 ) :         \
+											  ( ( a ) + 0.5 ) :			\
 											  ( ( a ) - 0.5 ) ) )
 #define FL_clamp( a, amin, amax ) ( ( a ) < ( amin ) ?					\
 									( amin ) : ( ( a ) > ( amax ) ?		\
 												 ( amax ) : ( a ) ) )
 #define FL_crnd( a )			  ( ( FL_Coord ) ( ( a ) > 0 ?			\
-												   ( ( a ) + 0.5 ) :    \
+												   ( ( a ) + 0.5 ) :	\
 												   ( ( a ) - 0.5 ) ) )
 
 typedef int ( * FL_FSCB )( const char *,
@@ -1732,7 +1735,7 @@ typedef int ( * FL_FSCB )( const char *,
 FL_EXPORT FL_FORM *fl_current_form;
 
 FL_EXPORT void fl_add_object(
-		FL_FORM *	form,
+		FL_FORM	  * form,
 		FL_OBJECT * obj
 		);
 
@@ -1741,14 +1744,14 @@ FL_EXPORT void fl_addto_form(
 		);
 
 FL_EXPORT FL_OBJECT * fl_make_object(
-		int			 objclass,
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label,
-		FL_HANDLEPTR handle
+		int			   objclass,
+		int			   type,
+		FL_Coord	   x,
+		FL_Coord	   y,
+		FL_Coord	   w,
+		FL_Coord	   h,
+		const char	 * label,
+		FL_HANDLEPTR   handle
 		);
 
 

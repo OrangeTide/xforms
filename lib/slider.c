@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.10 2008/03/12 16:00:27 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -317,9 +317,10 @@ show_focus( FL_OBJECT * ob )
  ***************************************/
 
 static double
-get_newvalue( FL_OBJECT * ob,
-			  FL_Coord    mx,
-			  FL_Coord    my )
+get_newvalue( FL_OBJECT    * ob,
+			  FL_Coord       mx,
+			  FL_Coord       my,
+	          unsigned int   state )
 {
     SPEC *sp = ob->spec;
     double oldval,
@@ -332,8 +333,9 @@ get_newvalue( FL_OBJECT * ob,
 
     /* get_pos always has newval between (0,1) with 0 on top */
 
-    fl_get_pos_in_slider( sp->mx, sp->my, sp->mw, sp->mh, ob->type, sp->slsize,
-						  mx - sp->offx, my - sp->offy, oldval, &newval);
+    fl_get_pos_in_slider( sp->mx, sp->my, sp->mw, sp->mh, state, ob->type,
+						  sp->slsize, mx - sp->offx, my - sp->offy,
+						  oldval, &newval );
 
     return sp->min + newval * ( sp->max - sp->min );
 }
@@ -374,10 +376,11 @@ timeoutCB( int    val   FL_UNUSED_ARG,
  ***************************************/
 
 static int
-handle_mouse( FL_OBJECT * ob,
-			  FL_Coord    mx,
-			  FL_Coord    my,
-			  int        key )
+handle_mouse( FL_OBJECT    * ob,
+			  FL_Coord       mx,
+			  FL_Coord       my,
+			  int            key,
+	          unsigned int   state )
 {
     SPEC *sp = ob->spec;
     double newval;
@@ -386,31 +389,27 @@ handle_mouse( FL_OBJECT * ob,
 
     if ( sp->mouse_pos && sp->rdelta + sp->ldelta > 0.0 )
     {
-		if (sp->timeout_id == -1)
+		if ( sp->timeout_id == -1 )
 		{
 			sp->timeout_id = fl_add_timeout( sp->repeat_ms, timeoutCB, sp );
-			if (key == FL_LEFT_MOUSE)
+			if ( key == FL_MBUTTON1 )
 				newval = sp->val + sp->mouse_pos * sp->ldelta;
 			else
 				newval = sp->val + sp->mouse_pos * sp->rdelta;
 		}
 		else
-		{
 			return 0;
-		}
     }
     else
-		newval = get_newvalue(ob, mx, my);
+		newval = get_newvalue( ob, mx, my, state );
 
-    newval = fl_valuator_round_and_clamp(ob, newval);
-
-    if (sp->val != newval)
+    if ( sp->val != newval )
     {
 		sp->val = newval;
-		sp->norm_val = sp->min == sp->max ? 0.5 :
-			(sp->val - sp->min) / (sp->max - sp->min);
+		sp->norm_val = sp->min == sp->max ?
+			           0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
 		sp->draw_type = sp->mouse_pos ? SLIDER_JUMP : SLIDER_MOTION;
-		fl_redraw_object(ob);
+		fl_redraw_object( ob );
 		return 1;
     }
 
@@ -446,7 +445,7 @@ handle_it( FL_OBJECT * ob,
 		   FL_Coord    mx,
 		   FL_Coord    my,
 		   int         key,
-		   void      * ev   FL_UNUSED_ARG )
+		   void      * ev )
 {
     SPEC *sp = ob->spec;
     int mobj;
@@ -483,19 +482,19 @@ handle_it( FL_OBJECT * ob,
 
 		case FL_ENTER:
 			compute_bounds( ob, &sp->mx, &sp->my, &sp->mw, &sp->mh );
-			/* fall through */
-
-		case FL_MOTION:
-			if ( is_focus( ob->type ) && focusobj_change( ob, mx, my ) )
-			{
-				sp->draw_type = FOCUS;
-				fl_redraw_object( ob );
-				lmx = mx;
-				lmy = my;
-			}
+	        if ( is_focus( ob->type ) && focusobj_change( ob, mx, my ) )
+            {
+                sp->draw_type = FOCUS;
+                fl_redraw_object( ob );
+                lmx = mx;
+                lmy = my;
+            }
 			break;
-
+ 
 		case FL_PUSH:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			sp->timeout_id = -1;
 			sp->mouse_pos = 0;
 			sp->start_val = sp->val;
@@ -524,8 +523,10 @@ handle_it( FL_OBJECT * ob,
 				lmy = my;
 			}
 			else
-				sp->mouse_pos = get_newvalue(ob, mx, my) > sp->val ? 1 : -1;
-
+				sp->mouse_pos =
+					get_newvalue( ob, mx, my,
+								  ( ( XEvent * ) ev )->xbutton.state ) >
+					                                           sp->val ? 1 : -1;
 			/* fall through */
 
 		case FL_MOUSE:
@@ -534,7 +535,8 @@ handle_it( FL_OBJECT * ob,
 			if ( mx == lmx && my == lmy && sp->mouse_pos == 0 )
 				break;
 
-			handle_mouse( ob, mx, my, key );
+			handle_mouse( ob, mx, my, key,
+						  ( ( XEvent * ) ev )->xmotion.state );
 
 			if (    sp->how_return == FL_RETURN_CHANGED
 				 && sp->start_val != sp->val )
@@ -547,6 +549,9 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_RELEASE:
+			if ( event == FL_RELEASE && key != FL_MBUTTON1 )
+				break;
+
 			if ( sp->timeout_id != -1 )
 			{
 				fl_remove_timeout( sp->timeout_id );

@@ -39,8 +39,33 @@
 
 typedef struct
 {
-    FLPS_MEMBERS;
-    FILE *       fp;
+	/* The first entries must be identical to the ones of a FLPS_CONTROL
+	   structure defined in flps.h */
+
+	int		     ps_color;
+	int		     orientation;
+	int		     auto_fit;
+	int		     drawbox;
+	int		     eps;
+	float		 xdpi,
+	             ydpi;
+	float		 paper_w,
+	             paper_h;
+	float		 gamma;
+	const char * tmpdir;
+	int		     printer_dpi;
+	float		 hm,
+	             vm;
+	float		 xscale,
+	             yscale;
+	int		     scale_text;
+	int		     first_page_only;
+	int		     clip;
+	int		     reserved[ 10 ];
+
+	/* Now follow elements not from the FLPS_CONTROL structure */
+
+    FILE       * fp;
     int          lastc,
 	             literal,
 	             len;
@@ -71,7 +96,7 @@ typedef struct
 
     /* private field for image postscript */
 
-    char *       prefix;            /* output file prefix        */
+    char       * prefix;            /* output file prefix        */
     int          misct, 			/* misc. margins         */
 	             miscl,
 	             miscb,
@@ -237,7 +262,8 @@ extern void flps_draw_text_beside( int,
 								   int,
 								   long,
 								   int,
-								   int, const char * );
+								   int,
+								   const char * );
 
 extern void flps_text_init( void );
 
@@ -266,8 +292,8 @@ extern int flps_get_linestyle( void );
 
 extern void flps_log( const char * );
 
-extern void flps_output(const char *,
-						... );
+extern void flps_output( const char *,
+						 ... );
 
 extern void flps_set_font( int,
 						   int );
@@ -294,15 +320,14 @@ extern void flps_apply_gamma( float );
 extern int flps_get_namedcolor( const char * );
 
 
-#define PS_SPECIAL( c )  (    ( c ) == '('  \
-						   || ( c ) == ')'  \
-						   || ( c ) == '['  \
-						   || ( c ) == ']'  \
-						   || ( c ) == '<'  \
-						   || ( c ) == '>'  \
-						   || ( c ) == '%'  \
-						   || ( c ) == '#'  \
+#define PS_SPECIAL( c )  (    ( c ) == '('   \
+						   || ( c ) == ')'   \
+						   || ( c ) == '['   \
+						   || ( c ) == ']'   \
+						   || ( c ) == '<'   \
+						   || ( c ) == '>'   \
+						   || ( c ) == '%'   \
+						   || ( c ) == '#'   \
 						   || ( c ) == '/' )
 
-
-#endif
+#endif  /* ifndef PFLPS_H */

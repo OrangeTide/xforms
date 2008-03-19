@@ -92,11 +92,11 @@
 	@nice:Drawing\nProgram:demo27
 	@nice:File\nBrowser:fbrowse
 	@nice:Color\nEditor:ldial
-	@nice:Nicer Drawing\nProgram:freedraw
+	@nice:Nicer\nDrawing\nProgram:freedraw
 	@nice:Color\nMap:colsel1
 	@nice:Color\nBrowser:colbrowser
 	@nice:Pixmap\nBrowser:pmbrowse
-	@nice:WWW browser\nLauncher:wwwl
+	@nice:WWW\nbrowser\nLauncher:wwwl
 
 @main:Miscllenous\nDemos:@Misc
 	@Misc:Iconify\nvia WM:iconify

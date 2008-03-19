@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_disp.c,v 1.7 2008/02/04 01:31:08 jtt Exp $
+ * $Id: image_disp.c,v 1.8 2008/03/19 21:04:21 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -62,9 +62,10 @@ static int do_quantization( FL_IMAGE *,
 
 
 /* try to allocate all colors.  */
+
 static unsigned long *
 get_colors(Colormap colormap, int *red_lut, int *green_lut, int *blue_lut,
-	   int map_len, int *allocated)
+		   int map_len, int *allocated)
 {
     XColor xc;
     unsigned long *newpixels = 0;
@@ -74,32 +75,34 @@ get_colors(Colormap colormap, int *red_lut, int *green_lut, int *blue_lut,
 
     if (map_len <= 0)
     {
-	M_err("GetColors", "bad map length %d\n", map_len);
-	return 0;
+		M_err("GetColors", "bad map length %d\n", map_len);
+		return 0;
     }
 
     if (!(newpixels = fl_malloc(map_len * sizeof(*newpixels))))
     {
-	M_err("GetColors", "malloc failed while getting colors");
-	return 0;
+		M_err("GetColors", "malloc failed while getting colors");
+		return 0;
     }
 
     xc.flags = DoRed | DoGreen | DoBlue;
 
     for (npixels = i = 0; i < map_len; i++)
     {
-	xc.red = (red_lut[i] << 8) | 0xff;
-	xc.green = (green_lut[i] << 8) | 0xff;
-	xc.blue = (blue_lut[i] << 8) | 0xff;
-	if (XAllocColor(fl_display, colormap, &xc))
-	    newpixels[npixels++] = xc.pixel;
+		xc.red = (red_lut[i] << 8) | 0xff;
+		xc.green = (green_lut[i] << 8) | 0xff;
+		xc.blue = (blue_lut[i] << 8) | 0xff;
+		if (XAllocColor(fl_display, colormap, &xc))
+			newpixels[npixels++] = xc.pixel;
     }
 
     *allocated = npixels;
     return newpixels;
 }
 
+
 /* allocate colors. If not enough color, use substitutions */
+
 static void
 get_all_colors(FL_IMAGE * im, unsigned long newpix[], int *npix, XColor xc[])
 {
@@ -107,46 +110,48 @@ get_all_colors(FL_IMAGE * im, unsigned long newpix[], int *npix, XColor xc[])
 
     for (i = n = *npix = 0; i < im->map_len; i++)
     {
-	xc[i].flags = DoRed | DoGreen | DoBlue;
-	xc[i].red = (im->red_lut[i] << 8) | 0xff;
-	xc[i].green = (im->green_lut[i] << 8) | 0xff;
-	xc[i].blue = (im->blue_lut[i] << 8) | 0xff;
+		xc[i].flags = DoRed | DoGreen | DoBlue;
+		xc[i].red = (im->red_lut[i] << 8) | 0xff;
+		xc[i].green = (im->green_lut[i] << 8) | 0xff;
+		xc[i].blue = (im->blue_lut[i] << 8) | 0xff;
 
-	if (XAllocColor(im->xdisplay, im->xcolormap, xc + i))
-	    newpix[n++] = xc[i].pixel;
-	else
-	    xc[i].pixel = FL_NoColor;	/* bad pixel marker */
+		if (XAllocColor(im->xdisplay, im->xcolormap, xc + i))
+			newpix[n++] = xc[i].pixel;
+		else
+			xc[i].pixel = FL_NoColor;	/* bad pixel marker */
     }
 
     *npix = n;
 
     if (n < im->map_len)
     {
-	XColor *mapentry = fl_malloc(sizeof(*mapentry) * max_colors);
+		XColor *mapentry = fl_malloc(sizeof(*mapentry) * max_colors);
 
-	if (!mapentry)
-	{
-	    M_err("GetAllColors", "malloc failure(%d entries)", max_colors);
-	    return;
-	}
+		if (!mapentry)
+		{
+			M_err("GetAllColors", "malloc failure(%d entries)", max_colors);
+			return;
+		}
 
-	for (i = 0; i < max_colors; i++)
-	    mapentry[i].pixel = i;
+		for (i = 0; i < max_colors; i++)
+			mapentry[i].pixel = i;
 
-	XQueryColors(im->xdisplay, im->xcolormap, mapentry, max_colors);
+		XQueryColors(im->xdisplay, im->xcolormap, mapentry, max_colors);
 
-	for (i = 0; i < im->map_len; i++)
-	{
-	    if (xc[i].pixel == FL_NoColor)
-		fl_find_closest_color(xc[i].red >> 8, xc[i].green >> 8,
-				      xc[i].blue >> 8, mapentry, max_colors,
-				      &(xc[i].pixel));
-	}
-	fl_free(mapentry);
+		for (i = 0; i < im->map_len; i++)
+		{
+			if (xc[i].pixel == FL_NoColor)
+				fl_find_closest_color(xc[i].red >> 8, xc[i].green >> 8,
+									  xc[i].blue >> 8, mapentry, max_colors,
+									  &(xc[i].pixel));
+		}
+		fl_free(mapentry);
     }
 }
 
+
 static unsigned int trr, tgg, tbb;
+
 #define RGB2PIXEL_8_OR_LESS(r,g,b,s, out)   do                           \
 {                                                                        \
        trr = (r) >> (8 - (s)->rbits);                                    \
@@ -157,13 +162,18 @@ static unsigned int trr, tgg, tbb;
              ((tbb << (s)->bshift) & (s)->bmask);                        \
 } while (0)
 
+
 static unsigned int
-rgb2pixel_8bits_or_less(unsigned int r, unsigned int g, unsigned int b, FL_RGB2PIXEL * s)
+rgb2pixel_8bits_or_less( unsigned int   r,
+						 unsigned int   g,
+						 unsigned int   b,
+						 FL_RGB2PIXEL * s )
 {
     unsigned int ret;
     RGB2PIXEL_8_OR_LESS(r, g, b, s, ret);
     return ret;
 }
+
 
 #define RGB2PIXEL_8_OR_MORE(r,g,b,s,out) do                              \
 {                                                                        \
@@ -175,17 +185,23 @@ rgb2pixel_8bits_or_less(unsigned int r, unsigned int g, unsigned int b, FL_RGB2P
              ((tbb << (s)->bshift) & (s)->bmask);                        \
 } while (0)
 
+
 static unsigned int
-rgb2pixel_more_than_8bits(unsigned int r, unsigned int g, unsigned int b, FL_RGB2PIXEL * s)
+rgb2pixel_more_than_8bits( unsigned int   r,
+						   unsigned int   g,
+						   unsigned int   b,
+						   FL_RGB2PIXEL * s )
 {
     unsigned int ret;
     RGB2PIXEL_8_OR_MORE(r, g, b, s, ret);
     return ret;
 }
 
+
 static unsigned int
   (*rgb2pixel) (unsigned int, unsigned int, unsigned int, FL_RGB2PIXEL *) =
   rgb2pixel_8bits_or_less;
+
 
 static int
 machine_endian(void)
@@ -195,7 +211,13 @@ machine_endian(void)
     return c[0] == 0x12 ? MSBFirst : LSBFirst;
 }
 
-#define SWAP_CHAR(a,b)  tmp_char = (a); (a) = (b); (b) = tmp_char
+
+#define SWAP_CHAR( a, b )  do {                                 \
+	                           unsigned char tmp_char = ( a );  \
+							   ( a ) = ( b );                   \
+							   ( b ) = tmp_char;                \
+                           } while ( 0 )
+
 
 /* display colormapped image: always 8bit color LUT. */
 /* ASSUMPTIONS: sizeof(int)==32bits */
@@ -222,215 +244,211 @@ fl_display_ci( FL_IMAGE * im,
     pad = (im->depth <= 8 ? 8 : (im->depth <= 16 ? 16 : 32));
 
     ximage = XCreateImage(im->xdisplay, im->visual, im->sdepth,
-			  ZPixmap, 0, 0, im->w, im->h, pad, 0);
+						  ZPixmap, 0, 0, im->w, im->h, pad, 0);
 
-    xpixels = fl_malloc(sizeof(*xpixels) * im->h * ximage->bytes_per_line);
+    xpixels = fl_malloc(sizeof *xpixels * im->h * ximage->bytes_per_line);
 
     if (!ximage || !xpixels)
     {
-	im->error_message(im, "display: Can't allocate memory");
-	return -1;
+		im->error_message(im, "display: Can't allocate memory");
+		return -1;
     }
 
     ximage->data = (char *) xpixels;
 #if IMAGEDEBUG
     M_err("displayCI", "w=%d bytes_per_line=%d bits_per_pixel=%d",
-	  im->w, ximage->bytes_per_line, ximage->bits_per_pixel);
+		  im->w, ximage->bytes_per_line, ximage->bits_per_pixel);
 #endif
 
     if (im->vclass == DirectColor || im->vclass == TrueColor)
     {
-	if (!(xmapped = fl_malloc(sizeof(*xmapped) * im->map_len)))
-	{
-	    M_err("DisplayCI", "malloc failed");
-	    return -1;
-	}
+		if (!(xmapped = fl_malloc(sizeof(*xmapped) * im->map_len)))
+		{
+			M_err("DisplayCI", "malloc failed");
+			return -1;
+		}
 
 #if IMAGEDEBUG
-	fprintf(stderr, "rbits: %d gbits: %d bbits: %d\n",
-		im->rgb2p.rbits, im->rgb2p.gbits, im->rgb2p.bbits);
-	fprintf(stderr, "rshift: %d gshift: %d bshift: %d\n",
-		im->rgb2p.rshift, im->rgb2p.gshift, im->rgb2p.bshift);
+		fprintf(stderr, "rbits: %d gbits: %d bbits: %d\n",
+				im->rgb2p.rbits, im->rgb2p.gbits, im->rgb2p.bbits);
+		fprintf(stderr, "rshift: %d gshift: %d bshift: %d\n",
+				im->rgb2p.rshift, im->rgb2p.gshift, im->rgb2p.bshift);
 #endif
 
-	for (i = 0; i < im->map_len; i++)
-	{
-	    xmapped[i] = rgb2pixel(im->red_lut[i], im->green_lut[i],
-				   im->blue_lut[i], &im->rgb2p);
-	}
+		for (i = 0; i < im->map_len; i++)
+			xmapped[i] = rgb2pixel(im->red_lut[i], im->green_lut[i],
+								   im->blue_lut[i], &im->rgb2p);
 
-	if (machine_endian() != ximage->byte_order)
-	{
-	    unsigned char *rgba = (unsigned char *) xmapped, tmp_char;
-	    if (ximage->bits_per_pixel == 32)
-	    {
-		for (i = 0; i < im->map_len; i++, rgba += 4)
+		if (machine_endian() != ximage->byte_order)
 		{
-		    SWAP_CHAR(rgba[0], rgba[3]);
-		    SWAP_CHAR(rgba[1], rgba[2]);
-		}
-	    }
-	    else if (ximage->bits_per_pixel == 16)
-	    {
-		for (i = 0; i < im->map_len; i++, rgba += 2)
-		{
-		    SWAP_CHAR(rgba[0], rgba[1]);
-		}
-	    }
-	}
+			unsigned char *rgba = ( unsigned char * ) xmapped;
 
-	if (ximage->bits_per_pixel == 32)
-	{
-	    unsigned int *ltmp = (unsigned int *) xpixels;
-	    for (i = 0; i < total; i++)
-		*ltmp++ = xmapped[ipixels[i]];
-	}
-	else if (ximage->bits_per_pixel == 16)
-	{
-	    unsigned short *stmp = (unsigned short *) xpixels;
-	    for (i = 0; i < total; i++)
-		*stmp++ = (unsigned short)xmapped[ipixels[i]];
-	}
-	else if (ximage->bits_per_pixel == 8)
-	{
-	    unsigned char *ctmp = (unsigned char *) xpixels;
-	    for (i = 0; i < total; i++)
-		*ctmp++ = (unsigned char)xmapped[ipixels[i]];
-
-	}
-	else if (ximage->bits_per_pixel == 24)
-	{
-	    unsigned char *tt = (unsigned char *) xpixels, *tmp3;
-	    unsigned int xcol;
-	    for (j = 0; j < im->h; j++, tt += ximage->bytes_per_line)
-		for (i = 0, tmp3 = tt; i < im->w; i++)
-		{
-		    xcol = xmapped[ci[j][i]];
-		    if (ximage->byte_order == MSBFirst)
-		    {
-			*tmp3++ = (xcol >> 16) & 0xff;
-			*tmp3++ = (xcol >> 8) & 0xff;
-			*tmp3++ = (xcol) & 0xff;
-		    }
-		    else
-		    {
-			*tmp3++ = xcol & 0xff;
-			*tmp3++ = (xcol >> 8) & 0xff;
-			*tmp3++ = (xcol >> 16) & 0xff;
-		    }
+			if (ximage->bits_per_pixel == 32)
+			{
+				for (i = 0; i < im->map_len; i++, rgba += 4)
+				{
+					SWAP_CHAR(rgba[0], rgba[3]);
+					SWAP_CHAR(rgba[1], rgba[2]);
+				}
+			}
+			else if (ximage->bits_per_pixel == 16)
+				for (i = 0; i < im->map_len; i++, rgba += 2)
+					SWAP_CHAR(rgba[0], rgba[1]);
 		}
-	}
-	else
-	{
-	    im->error_message(im, "unhandled non-byte-aligned pixel");
-	    return -1;
-	}
+
+		if (ximage->bits_per_pixel == 32)
+		{
+			unsigned int *ltmp = (unsigned int *) xpixels;
+
+			for (i = 0; i < total; i++)
+				*ltmp++ = xmapped[ipixels[i]];
+		}
+		else if (ximage->bits_per_pixel == 16)
+		{
+			unsigned short *stmp = (unsigned short *) xpixels;
+
+			for (i = 0; i < total; i++)
+				*stmp++ = (unsigned short)xmapped[ipixels[i]];
+		}
+		else if (ximage->bits_per_pixel == 8)
+		{
+			unsigned char *ctmp = (unsigned char *) xpixels;
+
+			for (i = 0; i < total; i++)
+				*ctmp++ = (unsigned char)xmapped[ipixels[i]];
+
+		}
+		else if (ximage->bits_per_pixel == 24)
+		{
+			unsigned char *tt = (unsigned char *) xpixels, *tmp3;
+			unsigned int xcol;
+
+			for (j = 0; j < im->h; j++, tt += ximage->bytes_per_line)
+				for (i = 0, tmp3 = tt; i < im->w; i++)
+				{
+					xcol = xmapped[ci[j][i]];
+					if (ximage->byte_order == MSBFirst)
+					{
+						*tmp3++ = (xcol >> 16) & 0xff;
+						*tmp3++ = (xcol >> 8) & 0xff;
+						*tmp3++ = (xcol) & 0xff;
+					}
+					else
+					{
+						*tmp3++ = xcol & 0xff;
+						*tmp3++ = (xcol >> 8) & 0xff;
+						*tmp3++ = (xcol >> 16) & 0xff;
+					}
+				}
+		}
+		else
+		{
+			im->error_message(im, "unhandled non-byte-aligned pixel");
+			return -1;
+		}
     }
     else if (im->vclass == GrayScale || im->vclass == StaticGray)
     {
-	int gray;
+		int gray;
 
-	npixels = 0;
+		npixels = 0;
+
 #if IMAGEDEBUG
-	M_err("DisplayCI", "Grayscale: maplen=%d", im->map_len);
+		M_err("DisplayCI", "Grayscale: maplen=%d", im->map_len);
 #endif
-	for (i = 0; i < im->map_len; i++)
-	{
-	    xc[i].flags = DoRed | DoGreen | DoBlue;
-	    gray = FL_RGB2GRAY(im->red_lut[i], im->green_lut[i],
-			       im->blue_lut[i]);
-	    xc[i].red = xc[i].green = xc[i].blue = (gray << 8) | 0xff;
-	}
 
-	get_all_colors(im, newpixels, &npixels, xc);
-	im->colors = npixels;
+		for (i = 0; i < im->map_len; i++)
+		{
+			xc[i].flags = DoRed | DoGreen | DoBlue;
+			gray = FL_RGB2GRAY(im->red_lut[i], im->green_lut[i],
+							   im->blue_lut[i]);
+			xc[i].red = xc[i].green = xc[i].blue = (gray << 8) | 0xff;
+		}
+
+		get_all_colors(im, newpixels, &npixels, xc);
+		im->colors = npixels;
 
 #if TRACE
-	M_err("DisplayCI", "Done colormap");
+		M_err("DisplayCI", "Done colormap");
 #endif
-	if (ximage->bits_per_pixel == 1)
-	{
-	    int bit, k;
+		if (ximage->bits_per_pixel == 1)
+		{
+			int bit, k;
 
-	    for (i = 0; i < im->h; i++)
-	    {
-		xpixtmp = xpixels + (i * ximage->bytes_per_line);
-		for (k = bit = j = 0; j < im->w; j++)
-		{
-		    k = (k << 1) | xc[ci[i][j]].pixel;
-		    if (++bit == 8)
-		    {
-			*xpixtmp++ = k;
-			k = bit = 0;
-		    }
+			for (i = 0; i < im->h; i++)
+			{
+				xpixtmp = xpixels + (i * ximage->bytes_per_line);
+				for (k = bit = j = 0; j < im->w; j++)
+				{
+					k = (k << 1) | xc[ci[i][j]].pixel;
+					if (++bit == 8)
+					{
+						*xpixtmp++ = k;
+						k = bit = 0;
+					}
+				}
+				if (bit)
+				{
+					k <<= (8 - bit);
+					*xpixtmp++ = k;
+				}
+			}
 		}
-		if (bit)
+		else if (ximage->bits_per_pixel == 8)
 		{
-		    k <<= (8 - bit);
-		    *xpixtmp++ = k;
-		}
-	    }
-	}
-	else if (ximage->bits_per_pixel == 8)
-	{
 #if TRACE
-	    M_err("DisplayCI", "Converting %d pixels", im->w * im->h);
+			M_err("DisplayCI", "Converting %d pixels", im->w * im->h);
 #endif
-	    for (i = 0, total = im->w * im->h; i < total; i++)
-		xpixels[i] = (unsigned char)xc[ipixels[i]].pixel;
-	}
-	else
-	{
-	    M_err("DisplayCIGray", "unhandled bits_per_pixel=%d depth=%d",
-		  ximage->bits_per_pixel, im->depth);
-	}
 
+			for (i = 0, total = im->w * im->h; i < total; i++)
+				xpixels[i] = (unsigned char)xc[ipixels[i]].pixel;
+		}
+		else
+			M_err("DisplayCIGray", "unhandled bits_per_pixel=%d depth=%d",
+				  ximage->bits_per_pixel, im->depth);
     }
     else if (im->vclass == StaticColor || im->vclass == PseudoColor)
     {
-	/* get all needed colors. Use substituion if necessary */
-	get_all_colors(im, newpixels, &npixels, xc);
-	im->colors = npixels;
+		/* get all needed colors. Use substituion if necessary */
 
-	if (ximage->bits_per_pixel == 8)
-	{
-	    for (i = 0; i < total; i++)
-		xpixels[i] = (unsigned char)xc[ipixels[i]].pixel;
-	}
-	else
-	{
-	    M_err("DisplayCIColor", "unhandled bits_per_pixel=%d depth=%d",
-		  ximage->bits_per_pixel, im->depth);
-	}
+		get_all_colors(im, newpixels, &npixels, xc);
+		im->colors = npixels;
+
+		if (ximage->bits_per_pixel == 8)
+			for (i = 0; i < total; i++)
+				xpixels[i] = (unsigned char)xc[ipixels[i]].pixel;
+		else
+			M_err("DisplayCIColor", "unhandled bits_per_pixel=%d depth=%d",
+				  ximage->bits_per_pixel, im->depth);
     }
     else
-    {
-	fprintf(stderr, "unhandled visualclass\n");
-    }
+		fprintf(stderr, "unhandled visualclass\n");
 
 #if TRACE
     M_err("DisplayCI", "about to XPutImage");
 #endif
+
     if (ximage && ximage->data)
-    {
-	im->ximage = ximage;
-    }
+		im->ximage = ximage;
     else
-	fprintf(stderr, "no image\n");
+		fprintf(stderr, "no image\n");
 
     if (npixels)
-	XFreeColors(im->xdisplay, xcolormap, newpixels, npixels, 0);
+		XFreeColors(im->xdisplay, xcolormap, newpixels, npixels, 0);
 
     if (xmapped)
-	fl_free(xmapped);
+		fl_free(xmapped);
 
 #if TRACE
     M_err("DisplayCI", "Leaving");
 #endif
+
     return 0;
 }
 
+
 /* do window levelling */
+
 static void
 window_levelling(FL_IMAGE * im)
 {
@@ -446,24 +464,25 @@ window_levelling(FL_IMAGE * im)
 
     if (im->wwidth <= 0)
     {
-	lower = 0;
-	upper = im->gray_maxval;
+		lower = 0;
+		upper = im->gray_maxval;
     }
 
     if (lower < 0)
-	lower = 0;
+		lower = 0;
 
     fact = (im->map_len - 0.999f) / (upper - lower);
 
     for (i = 0; i <= im->gray_maxval; i++)
     {
-	tmp = i < lower ? lower : (i > upper ? upper : i);
-	wlut[i] = (unsigned short)((tmp - lower) * fact);
+		tmp = i < lower ? lower : (i > upper ? upper : i);
+		wlut[i] = (unsigned short)((tmp - lower) * fact);
     }
 
     for (i = 0; i < npix; i++)
-	pix[i] = wlut[ci[i]];
+		pix[i] = wlut[ci[i]];
 }
+
 
 static int
 fl_display_gray(FL_IMAGE * im, Window win)
@@ -479,71 +498,74 @@ fl_display_gray(FL_IMAGE * im, Window win)
 #endif
 
     /* to avoid scaling of the original data, we create display type */
+
     if (!(im->pixels = fl_get_matrix(im->h, im->w, sizeof(**im->pixels))))
     {
-	M_err("DisplayGray", "can't get memory");
-	return -1;
+		M_err("DisplayGray", "can't get memory");
+		return -1;
     }
 
     pix = im->pixels[0];
     im->display_type = FL_IMAGE_CI;
 
     /* graymax takes care of 12bit gray displays */
+
     if (im->vclass == DirectColor || im->vclass == TrueColor)
     {
-	if (im->rgb2p.bbits > FL_PCBITS)
-	    im->map_len = (1 << im->rgb2p.bbits);
-	else
-	    im->map_len = (1 << FL_PCBITS);
+		if (im->rgb2p.bbits > FL_PCBITS)
+			im->map_len = (1 << im->rgb2p.bbits);
+		else
+			im->map_len = (1 << FL_PCBITS);
     }
     else
     {
-	im->map_len = (1 << im->depth);
-	if (im->map_len > 250)
-	    im->map_len -= 20;
-	else if (im->map_len == 0)
-	    im->map_len = FLIMAGE_MAXLUT;
+		im->map_len = (1 << im->depth);
+		if (im->map_len > 250)
+			im->map_len -= 20;
+		else if (im->map_len == 0)
+			im->map_len = FLIMAGE_MAXLUT;
     }
 
     flimage_getcolormap(im);
 
     if (im->rgb2p.bbits > FL_PCBITS)
-	graymax = (float)((1 << im->rgb2p.bbits) - 1);
+		graymax = (float)((1 << im->rgb2p.bbits) - 1);
     else
-	graymax = 255.0f;	/* (1 << FL_PCBITS) - 1; */
+		graymax = 255.0f;	/* (1 << FL_PCBITS) - 1; */
 
     fact = (graymax + 0.001f) / (im->map_len - 1);
     scale = (im->map_len - 1) / (graymax - 0.001f);
 
     for (i = 0; i < im->map_len; i++)
-	im->red_lut[i] = im->green_lut[i] = im->blue_lut[i] = (int)(i * fact);
+		im->red_lut[i] = im->green_lut[i] = im->blue_lut[i] = (int)(i * fact);
 
     if (im->type == FL_IMAGE_GRAY16)
-    {
-	window_levelling(im);
-    }
+		window_levelling(im);
     else
     {
-	/* 8bit grayscale */
-	if (im->map_len != 256)
-	{
-	    unsigned short *wlut = im->wlut;
-	    for (i = 0; i < 256; i++)
-		wlut[i] = (unsigned short)(i * scale);
-	    for (i = 0; i < npix; i++)
-		pix[i] = wlut[ci[i]];
+		/* 8bit grayscale */
 
-	}
-	else
-	    memcpy(pix, ci, sizeof(*ci) * npix);
+		if (im->map_len != 256)
+		{
+			unsigned short *wlut = im->wlut;
+			for (i = 0; i < 256; i++)
+				wlut[i] = (unsigned short)(i * scale);
+			for (i = 0; i < npix; i++)
+				pix[i] = wlut[ci[i]];
+		}
+		else
+			memcpy(pix, ci, sizeof(*ci) * npix);
     }
 
     fl_display_ci(im, win);
+
 #if TRACE
     M_err("DisplayGray", "Leaving");
 #endif
+
     return 0;
 }
+
 
 #define RGBTOPIXEL(type) do                                                \
 {                                                                          \
@@ -560,6 +582,7 @@ fl_display_gray(FL_IMAGE * im, Window win)
     }                                                                      \
 } while (0)
 
+
 static int
 fl_display_rgb( FL_IMAGE * im,
 				Window     win  FL_UNUSED_ARG )
@@ -572,108 +595,112 @@ fl_display_rgb( FL_IMAGE * im,
 
     if (im->vclass == DirectColor || im->vclass == TrueColor)
     {
-	/* use minimum possible padding */
-	pad = (im->depth <= 8 ? 8 : (im->depth <= 16 ? 16 : 32));
-	ximage = XCreateImage(im->xdisplay, im->visual, im->sdepth,
-			      ZPixmap, 0, 0, w, h, pad, 0);
+		/* use minimum possible padding */
 
-	if ((ximage->bits_per_pixel % 8))
-	{
-	    im->error_message(im, "can't handle non-byte aligned pixel");
-	    return -1;
-	}
+		pad = (im->depth <= 8 ? 8 : (im->depth <= 16 ? 16 : 32));
+		ximage = XCreateImage(im->xdisplay, im->visual, im->sdepth,
+							  ZPixmap, 0, 0, w, h, pad, 0);
+
+		if ((ximage->bits_per_pixel % 8))
+		{
+			im->error_message(im, "can't handle non-byte aligned pixel");
+			return -1;
+		}
 
 #if IMAGEDEBUG
-	fprintf(stderr, "XBytesPerLine: %d BitsPerPixel=%d\n",
-		ximage->bytes_per_line, ximage->bits_per_pixel);
+		fprintf(stderr, "XBytesPerLine: %d BitsPerPixel=%d\n",
+				ximage->bytes_per_line, ximage->bits_per_pixel);
 #endif
 
-	xpixels = fl_malloc(sizeof(*xpixels) * h * ximage->bytes_per_line);
-	if (!xpixels)
-	{
-	    flimage_error(im, "malloc() failed");
-	    return -1;
-	}
-	ximage->data = (char *) xpixels;
+		xpixels = fl_malloc(sizeof(*xpixels) * h * ximage->bytes_per_line);
+		if (!xpixels)
+		{
+			flimage_error(im, "malloc() failed");
+			return -1;
+		}
+		ximage->data = (char *) xpixels;
 
-	if (ximage->bits_per_pixel == 32)
-	{
-	    RGBTOPIXEL(unsigned int);
-	    if (machine_endian() != ximage->byte_order)
-	    {
-		unsigned char *rgba = (unsigned char *) ximage->data, tmp_char;
+		if (ximage->bits_per_pixel == 32)
+		{
+			RGBTOPIXEL(unsigned int);
+
+			if (machine_endian() != ximage->byte_order)
+			{
+				unsigned char *rgba = (unsigned char *) ximage->data;
+
 #if IMAGEDEBUG
-		fprintf(stderr, "swaping*\n");
+				fprintf(stderr, "swaping*\n");
 #endif
-		for (i = 0; i < total; i++, rgba += 4)
-		{
-		    SWAP_CHAR(rgba[0], rgba[3]);
-		    SWAP_CHAR(rgba[1], rgba[2]);
-		}
-	    }
-	}
-	else if (ximage->bits_per_pixel == 16)
-	{
-	    RGBTOPIXEL(unsigned short);
-	    if (machine_endian() != ximage->byte_order)
-	    {
-		unsigned char *rgba = (unsigned char *) ximage->data, tmp_char;
-		for (i = 0; i < total; i++, rgba += 2)
-		{
-		    SWAP_CHAR(rgba[0], rgba[1]);
-		}
-	    }
-	}
-	else if (ximage->bits_per_pixel == 8)
-	{
-	    RGBTOPIXEL(unsigned char);
-	}
-	else if (ximage->bits_per_pixel == 24)
-	{
-	    unsigned char *tt = (unsigned char *) xpixels, *tmp3;
-	    unsigned int xcol;
-	    for (j = 0; j < im->h; j++, tt += ximage->bytes_per_line)
-	    {
-		if (ximage->byte_order == MSBFirst)
-		{
-		    for (i = 0, tmp3 = tt; i < im->w; i++)
-		    {
-			xcol = rgb2pixel(red[i], green[i], blue[i], &im->rgb2p);
-			*tmp3++ = (xcol >> 16) & 0xff;
-			*tmp3++ = (xcol >> 8) & 0xff;
-			*tmp3++ = (xcol) & 0xff;
-		    }
-		}
-		else
-		{
-		    for (i = 0, tmp3 = tt; i < im->w; i++)
-		    {
-			xcol = rgb2pixel(red[i], green[i], blue[i], &im->rgb2p);
-			*tmp3++ = xcol & 0xff;
-			*tmp3++ = (xcol >> 8) & 0xff;
-			*tmp3++ = (xcol >> 16) & 0xff;
-		    }
-		}
-	    }
-	}
 
-	im->ximage = ximage;
+				for (i = 0; i < total; i++, rgba += 4)
+				{
+					SWAP_CHAR(rgba[0], rgba[3]);
+					SWAP_CHAR(rgba[1], rgba[2]);
+				}
+			}
+		}
+		else if (ximage->bits_per_pixel == 16)
+		{
+			RGBTOPIXEL(unsigned short);
+			if (machine_endian() != ximage->byte_order)
+			{
+				unsigned char *rgba = (unsigned char *) ximage->data;
+
+				for (i = 0; i < total; i++, rgba += 2)
+					SWAP_CHAR(rgba[0], rgba[1]);
+			}
+		}
+		else if (ximage->bits_per_pixel == 8)
+		{
+			RGBTOPIXEL(unsigned char);
+		}
+		else if (ximage->bits_per_pixel == 24)
+		{
+			unsigned char *tt = (unsigned char *) xpixels, *tmp3;
+			unsigned int xcol;
+			for (j = 0; j < im->h; j++, tt += ximage->bytes_per_line)
+			{
+				if (ximage->byte_order == MSBFirst)
+				{
+					for (i = 0, tmp3 = tt; i < im->w; i++)
+					{
+						xcol = rgb2pixel(red[i], green[i], blue[i], &im->rgb2p);
+						*tmp3++ = (xcol >> 16) & 0xff;
+						*tmp3++ = (xcol >> 8) & 0xff;
+						*tmp3++ = (xcol) & 0xff;
+					}
+				}
+				else
+				{
+					for (i = 0, tmp3 = tt; i < im->w; i++)
+					{
+						xcol = rgb2pixel(red[i], green[i], blue[i], &im->rgb2p);
+						*tmp3++ = xcol & 0xff;
+						*tmp3++ = (xcol >> 8) & 0xff;
+						*tmp3++ = (xcol >> 16) & 0xff;
+					}
+				}
+			}
+		}
+
+		im->ximage = ximage;
     }
     else if (im->vclass == GrayScale || im->vclass == StaticGray)
     {
-	M_err("InternalError", "RGB with grayscale display");
-	return -1;
+		M_err("InternalError", "RGB with grayscale display");
+		return -1;
     }
     else if (im->vclass == PseudoColor || im->vclass == StaticColor)
     {
-	M_err("DisplayRGB", "InternalError");
-	return -1;
+		M_err("DisplayRGB", "InternalError");
+		return -1;
     }
     else
     {
-	fprintf(stderr, "ImageDisp: internal color\n");
-	return -1;
+		fprintf(stderr, "ImageDisp: internal color\n");
+		return -1;
     }
+
     return 0;
 }
 
@@ -684,9 +711,11 @@ fl_display_packed(FL_IMAGE * im, Window win)
     return fl_display_rgb(im, win);
 }
 
+
 /* here we already got the proper XImage. Actually it would be
    much faster if we create a Pixmap from the XImage. TODO
  */
+
 static void
 displayXImage(FL_IMAGE * im)
 {
@@ -697,16 +726,18 @@ displayXImage(FL_IMAGE * im)
     int npix = 0;
 
     if (im->vclass != TrueColor && im->vclass != DirectColor)
-	get_all_colors(im, newpixels, &npix, xc);
+		get_all_colors(im, newpixels, &npix, xc);
 
     XPutImage(im->xdisplay, im->win, im->gc, ximage, im->sxd, im->syd,
-	      im->wxd, im->wyd, im->swd, im->shd);
+			  im->wxd, im->wyd, im->swd, im->shd);
 
     if (npix)
-	XFreeColors(im->xdisplay, xcolormap, newpixels, npix, 0);
+		XFreeColors(im->xdisplay, xcolormap, newpixels, npix, 0);
 }
 
+
 /* convert an RGB triple to a pixel */
+
 unsigned long
 flimage_color_to_pixel(FL_IMAGE * im, int r, int g, int b, int *newpix)
 {
@@ -720,37 +751,42 @@ flimage_color_to_pixel(FL_IMAGE * im, int r, int g, int b, int *newpix)
 
     if (im->vclass == TrueColor || im->vclass == DirectColor)
     {
-	return rgb2pixel(r, g, b, &im->rgb2p);
+		return rgb2pixel(r, g, b, &im->rgb2p);
     }
     else
     {
-	xc.flags = DoRed | DoGreen | DoBlue;
-	xc.red = (r << 8) | 0xff;
-	xc.green = (g << 8) | 0xff;
-	xc.blue = (b << 8) | 0xff;
-	if ((*newpix = XAllocColor(im->xdisplay, im->xcolormap, &xc)))
-	    return xc.pixel;
+		xc.flags = DoRed | DoGreen | DoBlue;
+		xc.red = (r << 8) | 0xff;
+		xc.green = (g << 8) | 0xff;
+		xc.blue = (b << 8) | 0xff;
+		if ((*newpix = XAllocColor(im->xdisplay, im->xcolormap, &xc)))
+			return xc.pixel;
 
-	/* search for a closest match */
-	max_col = FL_min(256, (1 << im->depth));
-	if (!xcolor)
-	    xcolor = fl_malloc(256 * sizeof(*xcolor));
-	/*
-	 * not theoretically correct as colormap may have changed
-	 * since the last time we asked for colors. Take a chance for
-	 * performace.
-	 */
-	if (lastcolormap != im->xcolormap)
-	{
-	    for (i = 0; i < max_col; i++)
-		xcolor[i].pixel = i;
-	    XQueryColors(im->xdisplay, im->xcolormap, xcolor, max_col);
-	    lastcolormap = im->xcolormap;
-	}
-	fl_find_closest_color(r, g, b, xcolor, max_col, &pixel);
+		/* search for a closest match */
+
+		max_col = FL_min(256, (1 << im->depth));
+		if (!xcolor)
+			xcolor = fl_malloc(256 * sizeof(*xcolor));
+
+		/*
+		 * not theoretically correct as colormap may have changed
+		 * since the last time we asked for colors. Take a chance for
+		 * performace.
+		 */
+
+		if (lastcolormap != im->xcolormap)
+		{
+			for (i = 0; i < max_col; i++)
+				xcolor[i].pixel = i;
+			XQueryColors(im->xdisplay, im->xcolormap, xcolor, max_col);
+			lastcolormap = im->xcolormap;
+		}
+		fl_find_closest_color(r, g, b, xcolor, max_col, &pixel);
     }
+
     return pixel;
 }
+
 
 int
 flimage_swapbuffer(FL_IMAGE * im)
@@ -758,24 +794,25 @@ flimage_swapbuffer(FL_IMAGE * im)
     int sw = im->sw ? im->sw : im->w, sh = im->sh ? im->sh : im->h;
 
     XCopyArea(im->xdisplay, im->pixmap, im->win, im->gc,
-	      im->sx, im->sy, sw, sh, im->wx, im->wy);
+			  im->sx, im->sy, sw, sh, im->wx, im->wy);
 
     return 0;
 }
+
 
 static void
 create_backbuffer(FL_IMAGE * im, FL_WINDOW win, int depth)
 {
     if (depth != im->pixmap_depth ||
-	(im->w > im->pixmap_w || im->pixmap_w > 1200) ||
-	(im->h > im->pixmap_h || im->pixmap_h > 1200))
+		(im->w > im->pixmap_w || im->pixmap_w > 1200) ||
+		(im->h > im->pixmap_h || im->pixmap_h > 1200))
     {
-	if (im->pixmap)
-	    XFreePixmap(im->xdisplay, im->pixmap);
-	im->pixmap = XCreatePixmap(im->xdisplay, win, im->w, im->h, depth);
-	im->pixmap_w = im->w;
-	im->pixmap_h = im->h;
-	im->pixmap_depth = depth;
+		if (im->pixmap)
+			XFreePixmap(im->xdisplay, im->pixmap);
+		im->pixmap = XCreatePixmap(im->xdisplay, win, im->w, im->h, depth);
+		im->pixmap_w = im->w;
+		im->pixmap_h = im->h;
+		im->pixmap_depth = depth;
         im->modified = 1;
     }
 }
@@ -785,25 +822,27 @@ create_backbuffer(FL_IMAGE * im, FL_WINDOW win, int depth)
  * somehow can get hold of the Expose event, we may only need
  * to re-display part of the image
  */
+
 static void
 handle_redraw(FL_IMAGE * im, FL_WINDOW win)
 {
     if (im->double_buffer && im->pixmap)
     {
-	im->win = im->pixmap;
-	im->display_markers(im);
-	im->display_text(im);
-	im->win = win;
-	flimage_swapbuffer(im);
+		im->win = im->pixmap;
+		im->display_markers(im);
+		im->display_text(im);
+		im->win = win;
+		flimage_swapbuffer(im);
     }
     else
     {
-	im->win = win;
-	displayXImage(im);
-	im->display_markers(im);
-	im->display_text(im);
+		im->win = win;
+		displayXImage(im);
+		im->display_markers(im);
+		im->display_text(im);
     }
 }
+
 
 static void
 adapt_image_to_window(FL_IMAGE *im, XWindowAttributes *xwa)
@@ -814,27 +853,29 @@ adapt_image_to_window(FL_IMAGE *im, XWindowAttributes *xwa)
     rgb2p->colormap_size = xwa->visual->map_entries;
 
 #if IMAGEDEBUG
-        fprintf(stderr, "bits_per_rgb=%d mapsize=%d\n",
-                im->rgb2p.bits_per_rgb, im->rgb2p.colormap_size);
+	fprintf(stderr, "bits_per_rgb=%d mapsize=%d\n",
+			im->rgb2p.bits_per_rgb, im->rgb2p.colormap_size);
 #endif
 
-     rgb2p->rmask = xwa->visual->red_mask;
-     rgb2p->gmask = xwa->visual->green_mask;
-     rgb2p->bmask = xwa->visual->blue_mask;
-     im->depth = im->sdepth = xwa->depth;
-     im->vclass = xwa->visual->class;
-     im->visual = xwa->visual;
-     im->xcolormap = xwa->colormap;
-     fl_rgbmask_to_shifts(rgb2p->rmask, &rgb2p->rshift, &rgb2p->rbits);
-     fl_rgbmask_to_shifts(rgb2p->gmask, &rgb2p->gshift, &rgb2p->gbits);
-     fl_rgbmask_to_shifts(rgb2p->bmask, &rgb2p->bshift, &rgb2p->bbits);
+	rgb2p->rmask = xwa->visual->red_mask;
+	rgb2p->gmask = xwa->visual->green_mask;
+	rgb2p->bmask = xwa->visual->blue_mask;
+	im->depth = im->sdepth = xwa->depth;
+	im->vclass = xwa->visual->class;
+	im->visual = xwa->visual;
+	im->xcolormap = xwa->colormap;
+	fl_rgbmask_to_shifts(rgb2p->rmask, &rgb2p->rshift, &rgb2p->rbits);
+	fl_rgbmask_to_shifts(rgb2p->gmask, &rgb2p->gshift, &rgb2p->gbits);
+	fl_rgbmask_to_shifts(rgb2p->bmask, &rgb2p->bshift, &rgb2p->bbits);
 }
+
 
 #define Compatible( x, im )                             \
 	(    ( x ).depth == im->depth                     	\
 	  && ( x ).visual->class == im->vclass             	\
 	  && ( x ).visual->red_mask == im->rgb2p.rmask      \
 	  && ( x ).visual->green_mask == im->rgb2p.gmask )
+
 
 /*
  * Convert an FL_IMAGE into an XImage. The converted ximage is
@@ -1020,116 +1061,121 @@ flimage_sdisplay(FL_IMAGE * im, Window win)
     int ret = 0;
 
     if (win <= 0 || !im || im->w <= 0 || im->type == FL_IMAGE_NONE)
-	return -1;
+		return -1;
 
     if (sizeof(int) != 4)
     {
-	fprintf(stderr, "FatalError: Assumed sizeof(int)==4\n");
-	exit(1);
+		fprintf(stderr, "FatalError: Assumed sizeof(int)==4\n");
+		exit(1);
     }
 
     /* check for consistent subimage */
+
     im->sx = FL_clamp(im->sx, 0, im->w);
     im->sy = FL_clamp(im->sy, 0, im->h);
     im->sw = FL_clamp(im->sw, 0, im->w);
     im->sh = FL_clamp(im->sh, 0, im->h);
 
     if (im->sx + im->sw > im->w)
-	im->sx = im->sw = 0;
+		im->sx = im->sw = 0;
     if (im->sy + im->sh > im->h)
-	im->sy = im->sh = 0;
+		im->sy = im->sh = 0;
 
     if (im->double_buffer)
     {
-	im->sxd = im->syd = 0;
-	im->swd = im->w;
-	im->shd = im->h;
-	im->wxd = im->wyd = 0;
+		im->sxd = im->syd = 0;
+		im->swd = im->w;
+		im->shd = im->h;
+		im->wxd = im->wyd = 0;
     }
     else
     {
-	im->sxd = im->sx;
-	im->syd = im->sy;
-	im->wxd = im->wx;
-	im->wyd = im->wy;
-	im->swd = im->sw ? im->sw : im->w;
-	im->shd = im->sh ? im->sh : im->h;
+		im->sxd = im->sx;
+		im->syd = im->sy;
+		im->wxd = im->wx;
+		im->wyd = im->wy;
+		im->swd = im->sw ? im->sw : im->w;
+		im->shd = im->sh ? im->sh : im->h;
     }
 
     XGetWindowAttributes(im->xdisplay, win, &xwa);
 
-
     if (!im->setup->do_not_clear)
     {
-	/* only clear the minimum region we have to */
-	int sw = im->sw ? im->sw : im->w;
-	int sh = im->sh ? im->sh : im->h;
-	if (im->wx > 0)
-	    XClearArea(im->xdisplay, win, 0, 0, im->wx, 0, 0);
-	if (im->wy > 0)
-	    XClearArea(im->xdisplay, win, 0, 0, 0, im->wy, 0);
-	XClearArea(im->xdisplay, win, im->wx + sw, 0, 0, 0, 0);
-	XClearArea(im->xdisplay, win, 0, im->wy + sh, 0, 0, 0);
+		/* only clear the minimum region we have to */
+
+		int sw = im->sw ? im->sw : im->w;
+		int sh = im->sh ? im->sh : im->h;
+
+		if (im->wx > 0)
+			XClearArea(im->xdisplay, win, 0, 0, im->wx, 0, 0);
+		if (im->wy > 0)
+			XClearArea(im->xdisplay, win, 0, 0, 0, im->wy, 0);
+		XClearArea(im->xdisplay, win, im->wx + sw, 0, 0, 0, 0);
+		XClearArea(im->xdisplay, win, 0, im->wy + sh, 0, 0, 0);
     }
 
     if (im->double_buffer)
-	create_backbuffer(im, win, xwa.depth);
+		create_backbuffer(im, win, xwa.depth);
 
     /* check if redraw. Possible optimization: obtain the dirty region  and
        do subimage stuff */
 
     if (im->ximage && !im->modified && (im->win == win || Compatible(xwa, im)))
     {
-	handle_redraw(im, win);
-	return 0;
+		handle_redraw(im, win);
+		return 0;
     }
 
-
     /* if we got here, we need to re-generate ximage */
+
     if (im->ximage)
     {
-	XDestroyImage((XImage *) im->ximage);
-	im->ximage = 0;
+		XDestroyImage((XImage *) im->ximage);
+		im->ximage = 0;
     }
 
     if (!Compatible(xwa, im))
     {
-	if (im->gc)
-	    XFreeGC(im->xdisplay, im->gc);
+		if (im->gc)
+			XFreeGC(im->xdisplay, im->gc);
 
-	if (im->textgc)
-	    XFreeGC(im->xdisplay, im->textgc);
+		if (im->textgc)
+			XFreeGC(im->xdisplay, im->textgc);
 
-	im->gc = im->textgc = 0;
+		im->gc = im->textgc = 0;
     }
 
     if (!im->gc)
     {
-	if (im->gc)
-	    XFreeGC(im->xdisplay, im->gc);
-	im->gc = XCreateGC(im->xdisplay, win, 0, 0);
+		if (im->gc)
+			XFreeGC(im->xdisplay, im->gc);
+		im->gc = XCreateGC(im->xdisplay, win, 0, 0);
     }
 
     ret = flimage_to_ximage(im, win, &xwa);
 
     if (ret >= 0)
     {
-	im->win = im->double_buffer ? im->pixmap : win;
+		im->win = im->double_buffer ? im->pixmap : win;
 
-	XPutImage(im->xdisplay, im->win, im->gc, im->ximage,
-		  im->sxd, im->syd, im->wxd, im->wyd, im->swd, im->shd);
-	im->display_markers(im);
-	im->display_text(im);
-	im->win = win;
+		XPutImage(im->xdisplay, im->win, im->gc, im->ximage,
+				  im->sxd, im->syd, im->wxd, im->wyd, im->swd, im->shd);
+		im->display_markers(im);
+		im->display_text(im);
+		im->win = win;
 
-	if (im->double_buffer)
-	    flimage_swapbuffer(im);
-	im->modified = 0;
+		if (im->double_buffer)
+			flimage_swapbuffer(im);
+		im->modified = 0;
     }
+
     return ret;
 }
 
+
 /* quantize a full color image */
+
 static int
 do_quantization(FL_IMAGE * im, Colormap colormap, int maxcol,
 		unsigned short **ci)
@@ -1140,37 +1186,37 @@ do_quantization(FL_IMAGE * im, Colormap colormap, int maxcol,
 
     do
     {
-	if (im->type == FL_IMAGE_RGB)
-	    flimage_quantize_rgb(im->red, im->green, im->blue, im->w, im->h,
-				 request, ci, &im->map_len,
-			      im->red_lut, im->green_lut, im->blue_lut, im);
-	else
-	    flimage_quantize_packed(im->packed, im->w, im->h,
-				    request, ci, &im->map_len,
-			      im->red_lut, im->green_lut, im->blue_lut, im);
+		if (im->type == FL_IMAGE_RGB)
+			flimage_quantize_rgb(im->red, im->green, im->blue, im->w, im->h,
+								 request, ci, &im->map_len,
+								 im->red_lut, im->green_lut, im->blue_lut, im);
+		else
+			flimage_quantize_packed(im->packed, im->w, im->h,
+									request, ci, &im->map_len,
+									im->red_lut, im->green_lut, im->blue_lut, im);
 
-	newpixels = get_colors(colormap,
-			       im->red_lut, im->green_lut, im->blue_lut,
-			       im->map_len, &empty_slots);
+		newpixels = get_colors(colormap,
+							   im->red_lut, im->green_lut, im->blue_lut,
+							   im->map_len, &empty_slots);
 
-	/* It's better to take a chance of finding similar colors in the
-	   colormap than reducing the number of colors too much */
-	done = (empty_slots == im->map_len) ||
-	    (empty_slots < 12 || empty_slots < maxcol / 4);
+		/* It's better to take a chance of finding similar colors in the
+		   colormap than reducing the number of colors too much */
 
-	if (!done)
-	{
-	    repeats = count_repeats_and_shared(newpixels, empty_slots);
-	    XFreeColors(im->xdisplay, colormap, newpixels, empty_slots, 0);
-	    fl_free(newpixels);
-	    im->map_len = 1;
-	    request = empty_slots - repeats;
-	}
-    }
-    while (!done);
+		done = (empty_slots == im->map_len) ||
+			(empty_slots < 12 || empty_slots < maxcol / 4);
+
+		if (!done)
+		{
+			repeats = count_repeats_and_shared(newpixels, empty_slots);
+			XFreeColors(im->xdisplay, colormap, newpixels, empty_slots, 0);
+			fl_free(newpixels);
+			im->map_len = 1;
+			request = empty_slots - repeats;
+		}
+    } while (!done);
 
     if (empty_slots)
-	XFreeColors(im->xdisplay, colormap, newpixels, empty_slots, 0);
+		XFreeColors(im->xdisplay, colormap, newpixels, empty_slots, 0);
     fl_free(newpixels);
 
     return newpixels ? 0 : -1;
@@ -1182,26 +1228,29 @@ do_quantization(FL_IMAGE * im, Colormap colormap, int maxcol,
  ***************************************************************/
 
 #define SSS 8
+
 static int
 count_repeats_and_shared(unsigned long *array, int len)
 {
     int i, j, n;
 
     if (len < 10)
-	return 0;
+		return 0;
 
     /* this does not really count the shared colors, but < 5 is a good guess */
+
     for (i = n = 0; i < len - 1; i++)
     {
-	for (j = i + 1; j < len; j++)
-	    if (array[i] == array[j] || array[i] < SSS)
-		n++;
+		for (j = i + 1; j < len; j++)
+			if (array[i] == array[j] || array[i] < SSS)
+				n++;
     }
 
     n += array[len - 1] < SSS;
 
     return (n > 4) ? 4 : n;
 }
+
 
 int
 flimage_display(FL_IMAGE * in_image, Window win)
@@ -1210,21 +1259,23 @@ flimage_display(FL_IMAGE * in_image, Window win)
     FL_IMAGE *im = in_image;
 
     if (!im || im->w <= 0 || win == 0)
-	return -1;
+		return -1;
 
     for (err = 0; err >= 0 && im; im = im->next)
     {
-	im->app_background = in_image->app_background;
-	err = flimage_sdisplay(im, win);
-	XSync(in_image->xdisplay, 0);
-	if (in_image->setup->delay)
-	    fl_msleep(in_image->setup->delay);
+		im->app_background = in_image->app_background;
+		err = flimage_sdisplay(im, win);
+		XSync(in_image->xdisplay, 0);
+		if (in_image->setup->delay)
+			fl_msleep(in_image->setup->delay);
     }
 
     return err;
 }
 
+
 /* convert an XImage into flimage */
+
 static int
 convert_ximage(FL_IMAGE * im, XImage * ximage)
 {
@@ -1241,6 +1292,7 @@ convert_ximage(FL_IMAGE * im, XImage * ximage)
        This problem makes this conversion unsafe as we're blindingly
        using the red_mask of some arbirary window!
     */
+
     fl_rgbmask_to_shifts(ximage->red_mask, &rshift, &rbits);
     fl_rgbmask_to_shifts(ximage->green_mask, &gshift, &gbits);
     fl_rgbmask_to_shifts(ximage->blue_mask, &bshift, &bbits);
@@ -1258,29 +1310,28 @@ convert_ximage(FL_IMAGE * im, XImage * ximage)
     rnorm = (FL_PCBITS - rbits);
     gnorm = (FL_PCBITS - gbits);
     bnorm = (FL_PCBITS - bbits);
+
     if (im->rgb2p.gbits > FL_PCBITS)
     {
-	rshift += (rbits - FL_PCBITS);
-	gshift += (gbits - FL_PCBITS);
-	bshift += (gbits - FL_PCBITS);
-	rnorm = gnorm = bnorm = 0;
+		rshift += (rbits - FL_PCBITS);
+		gshift += (gbits - FL_PCBITS);
+		bshift += (gbits - FL_PCBITS);
+		rnorm = gnorm = bnorm = 0;
     }
 
     if (ximage->bits_per_pixel != 1 && (ximage->bits_per_pixel % 8))
     {
-	M_err("ConvertImage", "unsupported bpp=%d",
-	      ximage->bits_per_pixel);
-	return -1;
+		M_err("ConvertImage", "unsupported bpp=%d",
+			  ximage->bits_per_pixel);
+		return -1;
     }
 
     if (im->vclass == TrueColor || im->vclass == DirectColor)
-    {
-	im->type = FL_IMAGE_RGB;
-    }
+		im->type = FL_IMAGE_RGB;
     else
     {
-	im->type = im->depth == 1 ? FL_IMAGE_MONO : FL_IMAGE_CI;
-	im->map_len = (1 << im->depth);
+		im->type = im->depth == 1 ? FL_IMAGE_MONO : FL_IMAGE_CI;
+		im->map_len = (1 << im->depth);
     }
 
     im->w = ximage->width;
@@ -1289,112 +1340,119 @@ convert_ximage(FL_IMAGE * im, XImage * ximage)
 
     if (flimage_getmem(im) < 0)
     {
-	flimage_error(im, "ConvertXImage(%dX%d): out of memory",
-		      im->w, im->h);
-	return -1;
+		flimage_error(im, "ConvertXImage(%dX%d): out of memory",
+					  im->w, im->h);
+		return -1;
     }
 
     im->modified = 1;
+
     switch (ximage->bits_per_pixel)
     {
-    case 32:
-	ui = (unsigned int *) ximage->data;
-	delta = ximage->bytes_per_line / 4;
-	for (y = 0; y < im->h; y++)
-	{
-	    for (x = 0; x < im->w; x++)
-	    {
-		im->red[y][x] = (ui[x] & ximage->red_mask) >> rshift;
-		im->green[y][x] = (ui[x] & ximage->green_mask) >> gshift;
-		im->blue[y][x] = (ui[x] & ximage->blue_mask) >> bshift;
-	    }
-	    ui += delta;
-	}
-	im->modified = 1;
-	break;
-    case 16:
-	if (im->vclass == GrayScale || im->vclass == StaticGray)
-	{
-	    /* probably very rare */
-	    M_err("ConvertXImage", "16bpp grayscale not handled");
-	    return -1;
-	}
-	us = (unsigned short *) ximage->data;
-	delta = ximage->bytes_per_line / 2;
-	for (y = 0; y < im->h; y++)
-	{
-	    for (x = 0; x < im->w; x++)
-	    {
-		r = (us[x] & ximage->red_mask) >> rshift;
-		g = (us[x] & ximage->green_mask) >> gshift;
-		b = (us[x] & ximage->blue_mask) >> bshift;
-		/* normalize */
-		im->red[y][x] = ((r + 1) << rnorm) - 1;
-		im->green[y][x] = ((g + 1) << gnorm) - 1;
-		im->blue[y][x] = ((b + 1) << bnorm) - 1;
-	    }
-	    us += delta;
-	}
-	im->modified = 1;
-	break;
-    case 8:
-	uc = (unsigned char *) ximage->data;
-	if (im->type == FL_IMAGE_RGB)
-	{
-	    for (y = 0; y < im->h; y++)
-	    {
-		for (x = 0; x < im->w; x++)
-		{
-		    r = (uc[x] & ximage->red_mask) >> rshift;
-		    g = (uc[x] & ximage->green_mask) >> gshift;
-		    b = (uc[x] & ximage->blue_mask) >> bshift;
-		    /* normalize */
-		    im->red[y][x] = ((r + 1) << rnorm) - 1;
-		    im->green[y][x] = ((g + 1) << gnorm) - 1;
-		    im->blue[y][x] = ((b + 1) << bnorm) - 1;
-		}
-		uc += ximage->bytes_per_line;
-	    }
-	}
-	else
-	{
-	    XColor xcolor[256], *xc, *xce;
-	    int max_colors = (1 << im->depth), pixel;
+		case 32:
+			ui = (unsigned int *) ximage->data;
+			delta = ximage->bytes_per_line / 4;
+			for (y = 0; y < im->h; y++)
+			{
+				for (x = 0; x < im->w; x++)
+				{
+					im->red[y][x] = (ui[x] & ximage->red_mask) >> rshift;
+					im->green[y][x] = (ui[x] & ximage->green_mask) >> gshift;
+					im->blue[y][x] = (ui[x] & ximage->blue_mask) >> bshift;
+				}
+				ui += delta;
+			}
+			im->modified = 1;
+			break;
 
-	    for (x = 0; x < max_colors; x++)
-		xcolor[x].pixel = x;
+		case 16:
+			if (im->vclass == GrayScale || im->vclass == StaticGray)
+			{
+				/* probably very rare */
 
-	    XQueryColors(im->xdisplay, im->xcolormap, xcolor, max_colors);
+				M_err("ConvertXImage", "16bpp grayscale not handled");
+				return -1;
+			}
+			us = (unsigned short *) ximage->data;
+			delta = ximage->bytes_per_line / 2;
+			for (y = 0; y < im->h; y++)
+			{
+				for (x = 0; x < im->w; x++)
+				{
+					r = (us[x] & ximage->red_mask) >> rshift;
+					g = (us[x] & ximage->green_mask) >> gshift;
+					b = (us[x] & ximage->blue_mask) >> bshift;
+					/* normalize */
+					im->red[y][x] = ((r + 1) << rnorm) - 1;
+					im->green[y][x] = ((g + 1) << gnorm) - 1;
+					im->blue[y][x] = ((b + 1) << bnorm) - 1;
+				}
+				us += delta;
+			}
+			im->modified = 1;
+			break;
 
-	    for (xc = xcolor, xce = xc + max_colors; xc < xce; xc++)
-	    {
-		pixel = xc->pixel;
-		im->red_lut[pixel] = xc->red >> 8;
-		im->green_lut[pixel] = xc->green >> 8;
-		im->blue_lut[pixel] = xc->blue >> 8;
-	    }
+		case 8:
+			uc = (unsigned char *) ximage->data;
+			if (im->type == FL_IMAGE_RGB)
+			{
+				for (y = 0; y < im->h; y++)
+				{
+					for (x = 0; x < im->w; x++)
+					{
+						r = (uc[x] & ximage->red_mask) >> rshift;
+						g = (uc[x] & ximage->green_mask) >> gshift;
+						b = (uc[x] & ximage->blue_mask) >> bshift;
+						/* normalize */
+						im->red[y][x] = ((r + 1) << rnorm) - 1;
+						im->green[y][x] = ((g + 1) << gnorm) - 1;
+						im->blue[y][x] = ((b + 1) << bnorm) - 1;
+					}
+					uc += ximage->bytes_per_line;
+				}
+			}
+			else
+			{
+				XColor xcolor[256], *xc, *xce;
+				int max_colors = (1 << im->depth), pixel;
 
-	    for (y = 0; y < im->h; y++)
-	    {
-		for (x = 0; x < im->w; x++)
-		    im->ci[y][x] = uc[x];
-		uc += ximage->bytes_per_line;
-	    }
-	}
-	break;
-    case 1:
-	uc = (unsigned char *) ximage->data;
-	for (y = 0; y < im->h; y++)
-	{
-	    fl_unpack_bits(im->ci[y], uc, ximage->bytes_per_line);
-	    uc += ximage->bytes_per_line;
-	}
-	break;
-    default:
-	M_err("XImageConvert", "unsupported bpp %d", ximage->depth);
-	im->modified = 0;
-	return -1;
+				for (x = 0; x < max_colors; x++)
+					xcolor[x].pixel = x;
+
+				XQueryColors(im->xdisplay, im->xcolormap, xcolor, max_colors);
+
+				for (xc = xcolor, xce = xc + max_colors; xc < xce; xc++)
+				{
+					pixel = xc->pixel;
+					im->red_lut[pixel] = xc->red >> 8;
+					im->green_lut[pixel] = xc->green >> 8;
+					im->blue_lut[pixel] = xc->blue >> 8;
+				}
+
+				for (y = 0; y < im->h; y++)
+				{
+					for (x = 0; x < im->w; x++)
+						im->ci[y][x] = uc[x];
+					uc += ximage->bytes_per_line;
+				}
+			}
+			break;
+
+		case 1:
+			uc = (unsigned char *) ximage->data;
+			for (y = 0; y < im->h; y++)
+			{
+				fl_unpack_bits(im->ci[y], uc, ximage->bytes_per_line);
+				uc += ximage->bytes_per_line;
+			}
+			break;
+
+		default:
+			M_err("XImageConvert", "unsupported bpp %d", ximage->depth);
+			im->modified = 0;
+			return -1;
     }
+
     return 0;
 }
 
@@ -1412,6 +1470,7 @@ flimage_from_pixmap_(FL_IMAGE * im, Pixmap pixmap, int w, int h)
         unsigned int ww, hh, bjunk, djunk;
         int xx, yy;
         Window root;
+
         XGetGeometry(im->xdisplay, pixmap, &root, &xx, &yy, &ww, &hh,
                     &bjunk, &djunk);
         w = ww;
@@ -1419,17 +1478,20 @@ flimage_from_pixmap_(FL_IMAGE * im, Pixmap pixmap, int w, int h)
     }
 
     /* turn pixmap into an X image */
+
     ximage = XGetImage(im->xdisplay, pixmap, 0, 0, w, h, AllPlanes, ZPixmap);
     if (!ximage)
     {
-	flimage_error(im, "XGetImage() failed");
-	return -1;
+		flimage_error(im, "XGetImage() failed");
+		return -1;
     }
 
     /* it's possible that im may contain nothing if w==h==0 on input */
+
     if (im->rgb2p.rbits == 0)
     {
         XWindowAttributes xwa;
+
         XGetWindowAttributes(im->xdisplay, fl_root, &xwa);
         adapt_image_to_window(im, &xwa);
      }
@@ -1437,45 +1499,50 @@ flimage_from_pixmap_(FL_IMAGE * im, Pixmap pixmap, int w, int h)
     status = convert_ximage(im, ximage);
 
     /* the old Ximage is now out of date */
+
     if (im->ximage)
-	XDestroyImage((XImage *) im->ximage);
+		XDestroyImage((XImage *) im->ximage);
 
     im->ximage = ximage;
 
     return status;
 }
 
+
 int flimage_from_pixmap(FL_IMAGE *im, Pixmap pixmap)
 {
-      if(!im || !pixmap)
-        return -1;
+	if(!im || !pixmap)
+		return -1;
 
-      return flimage_from_pixmap_(im, pixmap, 0, 0);
+	return flimage_from_pixmap_(im, pixmap, 0, 0);
 }
+
 
 Pixmap flimage_to_pixmap(FL_IMAGE *im, FL_WINDOW win)
 {
-      Pixmap pixmap;
-      XWindowAttributes xwa;
+	Pixmap pixmap;
+	XWindowAttributes xwa;
 
-      if(!im || im->type == FLIMAGE_NONE || win == 0)
-         return 0;
+	if(!im || im->type == FLIMAGE_NONE || win == 0)
+		return 0;
 
-      XGetWindowAttributes(im->xdisplay, win, &xwa);
+	XGetWindowAttributes(im->xdisplay, win, &xwa);
 
-      if(!im->gc)
-	im->gc = XCreateGC(im->xdisplay, win, 0, 0);
+	if(!im->gc)
+		im->gc = XCreateGC(im->xdisplay, win, 0, 0);
 
-      pixmap = XCreatePixmap(im->xdisplay, win, im->w, im->h, xwa.depth);
+	pixmap = XCreatePixmap(im->xdisplay, win, im->w, im->h, xwa.depth);
 
-      if(flimage_to_ximage(im, win, &xwa) >= 0)
+	if(flimage_to_ximage(im, win, &xwa) >= 0)
         XPutImage(im->xdisplay, pixmap, im->gc, im->ximage,
                   0, 0, 0, 0, im->w, im->h);
-      return pixmap;
+
+	return pixmap;
 }
 
 
 /* Render possible annotations into the the image  */
+
 int
 flimage_render_annotation(FL_IMAGE * im, FL_WINDOW win)
 {
@@ -1483,21 +1550,22 @@ flimage_render_annotation(FL_IMAGE * im, FL_WINDOW win)
     XWindowAttributes xwa;
 
     if (!im || !win)
-	return -1;
+		return -1;
 
     if (!im->ntext && !im->nmarkers)
-	return 0;
+		return 0;
 
     XGetWindowAttributes(im->xdisplay, win, &xwa);
 
     /* create an offscreen pixmap to hold the image */
+
     create_backbuffer(im, win, xwa.depth);
 
     if (flimage_to_ximage(im, win, &xwa) < 0)
-	return -1;
+		return -1;
 
     XPutImage(im->xdisplay, im->pixmap, im->gc, im->ximage, 0, 0, 0, 0,
-	      im->w, im->h);
+			  im->w, im->h);
 
     im->win = im->pixmap;
     im->display_markers(im);

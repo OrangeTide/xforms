@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_posi = "$Id: positioner.c,v 1.8 2008/03/12 16:00:25 jtt Exp $";
+char *fl_id_posi = "$Id: positioner.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -200,10 +200,14 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
+			if ( key != FL_MBUTTON1 )
+				break;
 			sp->changed = 0;
 			/* fall through */
 
 		case FL_MOUSE:
+			if ( key != FL_MBUTTON1 )
+				break;
 			if ( handle_mouse( ob, mx, my ) )
 				sp->changed = 1;
 			if ( sp->how_return == FL_RETURN_CHANGED && sp->changed )
@@ -216,6 +220,8 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_RELEASE:
+			if ( key != FL_MBUTTON1 )
+				break;
 			return    sp->how_return == FL_RETURN_END
 				   || (    sp->how_return == FL_RETURN_END_CHANGED
 						&& sp->changed );

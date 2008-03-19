@@ -83,9 +83,9 @@ typedef struct
 
 enum
 {
-    COMPLETE_DRAW = 1,
-    VALUE_DRAW = 2,
-    FOCUS_DRAW = 4,
+    COMPLETE_DRAW  = 1,
+    VALUE_DRAW     = 2,
+    FOCUS_DRAW     = 4,
     VALUATOR_DRAWS = 4
 };
 

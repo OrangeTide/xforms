@@ -99,8 +99,8 @@ enum
 
 typedef struct
 {
-	XVisualInfo *	xvinfo;
-	XFontStruct *	cur_fnt;			/* current font in default GC */
+	XVisualInfo   * xvinfo;
+	XFontStruct   * cur_fnt;			/* current font in default GC */
 	Colormap		colormap;			/* colormap valid for xvinfo */
 	Window			trailblazer;		/* a valid window for xvinfo */
 	int				vclass,				/* visual class and color depth */
@@ -167,16 +167,16 @@ FL_EXPORT int fl_mode_capable(
 
 typedef struct
 {
-	Pixmap		 pixmap;
-	Window		 win;
-	Visual *	 visual;
-	FL_Coord	 x,
-				 y;
-	unsigned int w,
-				 h;
-	int			 depth;
-	FL_COLOR	 dbl_background;
-	FL_COLOR	 pixel;
+	Pixmap		   pixmap;
+	Window		   win;
+	Visual       * visual;
+	FL_Coord	   x,
+				   y;
+	unsigned int   w,
+				   h;
+	int			   depth;
+	FL_COLOR	   dbl_background;
+	FL_COLOR	   pixel;
 } FL_pixmap;
 
 
@@ -486,15 +486,15 @@ FL_EXPORT void fl_set_mouse(
 
 FL_EXPORT Window fl_get_win_mouse(
 		Window		   win,
-		FL_Coord *	   x,
-		FL_Coord *	   y,
+		FL_Coord     * x,
+		FL_Coord 	 * y,
 		unsigned int * keymask
 		);
 
 FL_EXPORT Window fl_get_form_mouse(
-		FL_FORM *	   fm,
-		FL_Coord *	   x,
-		FL_Coord *	   y,
+		FL_FORM      * fm,
+		FL_Coord     * x,
+		FL_Coord     * y,
 		unsigned int * keymask
 		);
 
@@ -784,7 +784,6 @@ FL_EXPORT const XEvent *fl_last_event(
 		void
 		);
 
-
 typedef int ( * FL_APPEVENT_CB )( XEvent *, void * );
 
 FL_EXPORT FL_APPEVENT_CB fl_set_event_callback(
@@ -793,8 +792,8 @@ FL_EXPORT FL_APPEVENT_CB fl_set_event_callback(
 		);
 
 FL_EXPORT FL_APPEVENT_CB fl_set_idle_callback(
-		FL_APPEVENT_CB callback,
-		void *		   user_data
+		FL_APPEVENT_CB   callback,
+		void           * user_data
 		);
 
 FL_EXPORT long fl_addto_selected_xevent(
@@ -837,10 +836,10 @@ typedef struct
 
 
 FL_EXPORT FL_APPEVENT_CB fl_add_event_callback(
-		Window		   win,
-		int			   ev,
-		FL_APPEVENT_CB wincb,
-		void *		   user_data
+		Window		     win,
+		int			     ev,
+		FL_APPEVENT_CB   wincb,
+		void           * user_data
 		);
 
 FL_EXPORT void fl_remove_event_callback(
@@ -854,7 +853,7 @@ FL_EXPORT void fl_activate_event_callbacks(
 
 
 FL_EXPORT XEvent *fl_print_xevent_name(
-		const char *   where,
+		const char   * where,
 		const XEvent * xev
 		);
 
@@ -891,7 +890,7 @@ typedef struct
 	const char * res_name;		/* resource name						*/
 	const char * res_class;		/* resource class						*/
 	FL_RTYPE	 type;			/* FL_INT, FL_FLOAT, FL_BOOL,FL_STRING	*/
-	void *		 var;			/* address for the variable				*/
+	void       * var;			/* address for the variable				*/
 	const char * defval;		/* default setting in string form		*/
 	int			 nbytes;		/* used only for strings				*/
 } FL_RESOURCE;
@@ -901,8 +900,8 @@ typedef struct
 #define FL_CMD_OPT	 XrmOptionDescRec
 
 FL_EXPORT Display * fl_initialize(
-		int *		 na,
-		char *		 arg[ ],
+		int        * na,
+		char       * arg[ ],
 		const char * appclass,
 		FL_CMD_OPT * appopt,
 		int			 nappopt
@@ -921,7 +920,7 @@ FL_EXPORT const char * fl_get_resource(
 		const char * cname,
 		FL_RTYPE	 dtype,
 		const char * defval,
-		void *		 val,
+		void       * val,
 		int			 size
 		);
 

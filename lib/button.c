@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.7 2008/03/12 16:00:23 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.8 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -94,7 +94,6 @@ draw_button( FL_OBJECT * ob )
 					ob->h, col, ob->bw );
     else
 		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
-
 
     dh = FL_crnd( 0.6 * ob->h );
     dw = FL_crnd( FL_min( 0.6 * ob->w, dh ) );
@@ -292,21 +291,43 @@ handle_it( FL_OBJECT * ob,
 					M_err( "ButtonDraw", "Unknown class: %d", ob->objclass );
 			}
 			sp->event = FL_DRAW;
-			return 0;
+			break;
 
 		case FL_DRAWLABEL:
 			sp->event = event;
 			break;			/* TODO. Missing labels */
 
-		case FL_ENTER:
 		case FL_LEAVE:
+			/* FL_MENU_BUTTON objects never get a FL_RELEASE event,
+			   so we have to "fake" it */
+
+			if ( ob->type == FL_MENU_BUTTON )
+			{
+				sp->event = FL_RELEASE;
+				sp->val = 0;
+			}
+			/* fall through */
+
+		case FL_ENTER:
 			sp->event = event;
 			if ( ! fl_dithered( fl_vmode ) )
 				fl_redraw_object(ob);
-			return 0;
+			break;
 
 		case FL_PUSH:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			sp->event = FL_PUSH;
+
+
+			if ( ob->type == FL_RADIO_BUTTON )
+			{
+				sp->val = 1;
+				fl_redraw_object( ob );
+				return 1;
+			}
+
 			oldval = sp->val;
 			sp->val = ! sp->val;
 			sp->mousebut = key;
@@ -318,10 +339,11 @@ handle_it( FL_OBJECT * ob,
 				   || ob->type == FL_MENU_BUTTON;
 
 		case FL_RELEASE:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			sp->event = FL_RELEASE;
-			if ( ob->type == FL_RADIO_BUTTON )
-				return 1;
-			else if ( ob->type == FL_PUSH_BUTTON )
+			if ( ob->type == FL_PUSH_BUTTON )
 				return sp->val != oldval;
 			else if ( sp->val == 0 && ob->type != FL_MENU_BUTTON )
 				return 0;
@@ -329,8 +351,8 @@ handle_it( FL_OBJECT * ob,
 			fl_redraw_object( ob );
 			return ob->type != FL_TOUCH_BUTTON && ob->type != FL_MENU_BUTTON;
 
-		case FL_MOUSE:
-			sp->event = FL_MOUSE;
+		case FL_UPDATE:
+			sp->event = FL_UPDATE;
 			if ( ob->type != FL_RADIO_BUTTON && ob->type != FL_INOUT_BUTTON )
 			{
 				if (    mx < ob->x
@@ -349,7 +371,7 @@ handle_it( FL_OBJECT * ob,
 			return    sp->val
 				   && ob->type == FL_TOUCH_BUTTON
 				   && sp->timdel++ > 10
-				&& ( sp->timdel & 1 ) == 0;
+				   && ( sp->timdel & 1 ) == 0;
 
 		case FL_SHORTCUT:
 			sp->event = FL_SHORTCUT;
@@ -413,48 +435,20 @@ fl_create_generic_button( int          objclass,
 		fl_set_object_shortcut( ob, "^M", 0 );
     if ( type == FL_HIDDEN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
 		ob->boxtype = FL_NO_BOX;
+	if ( type == FL_TOUCH_BUTTON )
+		ob->want_update = 1;
 
     ob->spec_size = sizeof *sp;
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
-    sp->event = FL_DRAW;
-    sp->pixmap = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
-	sp->cspecv = NULL;
+    sp->event     = FL_DRAW;
+    sp->pixmap    = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
+	sp->cspecv    = NULL;
 	sp-> filename = sp->focus_filename = NULL;
 
     if ( fl_cntl.buttonLabelSize )
 		ob->lsize = fl_cntl.buttonLabelSize;
     return ob;
 }
-
-
-/***************************************
- * Unset other radio buttons in the group.
- * Kind of ugly.
- ***************************************/
-
-#if 0
-static void
-unset_radio( FL_OBJECT * ob )
-{
-    FL_OBJECT *obj1 = ob;
-
-    if ( ob->group_id == 0 )
-    {
-    }
-    else
-    {
-		while (obj1->prev && obj1->objclass != FL_BEGIN_GROUP)
-			obj1 = obj1->prev;
-
-		for ( ; obj1 && obj1->objclass != FL_END_GROUP; obj1 = obj1->next )
-			if ( obj1->radio && obj1->pushed && obj1 != ob )
-			{
-				obj1->pushed = ( ( FL_BUTTON_SPEC * ) obj1->spec )->val = 0;
-				fl_redraw_object( obj1 );
-			}
-    }
-}
-#endif
 
 
 /***************************************
@@ -465,20 +459,21 @@ void
 fl_set_button( FL_OBJECT * ob,
 			   int         pushed )
 {
-    if ( ( ( SPEC * ) ( ob->spec ) )->val != pushed )
+	SPEC *sp = ob->spec;
+
+	pushed = pushed ? 1 : 0;     /* button can only be on or off */
+
+    if ( sp->val != pushed )
     {
-		( ( SPEC * ) ( ob->spec ) )->val = pushed;
 		if ( ob->type == FL_RADIO_BUTTON )
 		{
-			if ( pushed )		/* don't do anything if not pushing */
-#if 0
-				unset_radio( ob );
-#else
-			fl_do_radio_push( ob, ob->x, ob->y, 0, 0 );
-#endif
-			ob->pushed = pushed;
-		}
+			if ( ! pushed )
+				return;
 
+			fl_do_radio_push( ob, ob->x, ob->y, FL_MBUTTON1, NULL );
+		}			
+
+		sp->val = pushed;
 		fl_redraw_object( ob );
     }
 }

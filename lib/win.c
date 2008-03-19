@@ -36,13 +36,14 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.10 2008/03/12 16:00:28 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
+#include <ctype.h>
 #include "include/forms.h"
 #include "flinternal.h"
 
@@ -73,13 +74,21 @@ fl_default_xswa( void )
 {
     /* OwnerGrab is needed for pop-up to work correctly */
 
-    st_xswa.event_mask =   ExposureMask | KeyPressMask | KeyReleaseMask
-						 | ButtonPressMask | ButtonReleaseMask
+    st_xswa.event_mask =   ExposureMask
+                         | KeyPressMask
+                         | KeyReleaseMask
+						 | ButtonPressMask
+                         | ButtonReleaseMask
 		                 | OwnerGrabButtonMask
-		                 | EnterWindowMask | LeaveWindowMask
-		                 | ButtonMotionMask | PointerMotionMask
+		                 | EnterWindowMask
+                         | LeaveWindowMask
+		                 | ButtonMotionMask
+                         | PointerMotionMask
 		                 | PointerMotionHintMask
-		                 /* | VisibilityChangeMask| PropertyChangeMask */
+/*
+                         | VisibilityChangeMask
+                         | PropertyChangeMask
+*/
 		                 | StructureNotifyMask;
 
     /* for input method */
@@ -99,7 +108,7 @@ fl_default_xswa( void )
 
     /* default size */
 
-    st_xsh.width = st_xsh.base_width = 320;
+    st_xsh.width = st_xsh.base_width   = 320;
     st_xsh.height = st_xsh.base_height = 200;
 
     /* border */
@@ -124,7 +133,7 @@ void
 fl_initial_winsize( FL_Coord w,
 					FL_Coord h )
 {
-    st_xsh.width = st_xsh.base_width = w;
+    st_xsh.width  = st_xsh.base_width = w;
     st_xsh.height = st_xsh.base_height = h;
     st_xsh.flags |= USSize;
 }
@@ -155,7 +164,7 @@ fl_winicon( Window win,
     lxwmh.flags = 0;
     xwmh = win ? &lxwmh : &st_xwmh;
     xwmh->icon_pixmap = p;
-    xwmh->icon_mask = m;
+    xwmh->icon_mask   = m;
     xwmh->flags |= IconPixmapHint | IconMaskHint;
     if ( win )
 		XSetWMHints( flx->display, win, xwmh );
@@ -175,7 +184,7 @@ fl_winsize( FL_Coord w,
 
     /* try to disable interactive resizing */
 
-    st_xsh.min_width = st_xsh.max_width = w;
+    st_xsh.min_width  = st_xsh.max_width  = w;
     st_xsh.min_height = st_xsh.max_height = h;
     st_xsh.flags |= PMinSize | PMaxSize;
 }
@@ -246,7 +255,7 @@ fl_winstepunit( Window   win,
     mxsh = st_xsh;
     mxsh.flags = 0;
     sh = win ? &mxsh : &st_xsh;
-    sh->width_inc = dx;
+    sh->width_inc  = dx;
     sh->height_inc = dy;
     sh->flags |= PResizeInc;
     if ( win )
@@ -680,8 +689,7 @@ wait_mapwin( Window win,
 			/* not all WMs send this event, bloody shame */
 		}
 #endif
-
-		if ( xev.type == Expose )
+		else if ( xev.type == Expose )
 			fl_handle_event_callbacks( &xev );
 
     } while ( xev.type != Expose );
@@ -706,8 +714,6 @@ wait_mapwin( Window win,
     }
 }
 
-
-#include <ctype.h>
 
 /***************************************
  ***************************************/

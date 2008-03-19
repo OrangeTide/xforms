@@ -46,11 +46,11 @@ enum
 
 typedef struct
 {
-	char *		  name;			/* entry name			  */
-	int			  type;			/* FILE_TYPE			  */
-	long		  dl_mtime;		/* file modification time */
-	unsigned long dl_size;		/* file size in bytes	  */
-	long		  filler[ 3 ];	/* reserved				  */
+	char          * name;			/* entry name			  */
+	int			    type;			/* FILE_TYPE			  */
+	long		    dl_mtime;		/* file modification time */
+	unsigned long   dl_size;		/* file size in bytes	  */
+	long		    filler[ 3 ];	/* reserved				  */
 } FL_Dirlist;
 
 enum
@@ -74,7 +74,7 @@ typedef int ( * FL_DIRLIST_FILTER )( const char *, int );
 FL_EXPORT const FL_Dirlist * fl_get_dirlist(
 		const char * dir,
 		const char * pattern,
-		int *		 n,
+		int        * n,
 		int			 rescan
 		);
 

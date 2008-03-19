@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.17 2008/03/12 16:00:23 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.18 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -50,13 +50,14 @@ char *fl_id_rsc = "$Id: flresource.c,v 1.17 2008/03/12 16:00:23 jtt Exp $";
 #include <ctype.h>
 #include <sys/types.h>
 #include <locale.h>
+
 #ifdef FL_WIN32
 #include <X11/Xw32defs.h>
 #endif
 
 
 static XrmDatabase fldatabase;	/* final merged database */
-static XrmDatabase cmddb;	/* command line database */
+static XrmDatabase cmddb;	    /* command line database */
 static char *fl_app_name,
             *fl_app_class,
             *fl_ori_app_name;
@@ -100,7 +101,7 @@ static XrmOptionDescRec copt[ ] =
 
 #define PV( a )  &( fl_cntl.a )
 #define PS( a )  ( fl_cntl.a )
-#define NS( a )   #a
+#define NS( a )  #a
 
 
 /* xform and XForm will be generated on the fly */
@@ -110,24 +111,24 @@ typedef char Iop[ 8 ];		/* Integer default */
 static Bop OpPrivateMap,
            OpSharedMap,
            OpStandardMap,
-            OpDouble;
+           OpDouble;
 static Bop OpSync,
            OpULW = "1";
 static Iop OpDebug,
            OpDepth,
            OpULT = "-1";
-static char OpBS[ 12 ] = "1";	/* whenmapped */
+static char OpBS[ 12 ]       = "1";	/* whenmapped */
 static char OpSafe[ 12 ];
-static char OpSCBT[ 16 ] = "thin";
-static char OpBLsize[ 20 ] = NS( FL_DEFAULT_SIZE );
-static char OpMLsize[ 20 ] = NS( FL_DEFAULT_SIZE );
-static char OpBrFsize[ 20 ] = NS( FL_DEFAULT_SIZE );
-static char OpChFsize[ 20 ] = NS( FL_DEFAULT_SIZE );
-static char OpSLsize[ 20 ] = NS( FL_DEFAULT_SIZE );
-static char OpLLsize[ 20 ] = NS( FL_DEFAULT_SIZE );
-static char OpILsize[ 20 ] = NS( FL_DEFAULT_SIZE );
-static char OpIBW[ 20 ] = NS( FL_BOUND_WIDTH );
-static char OpPsize[ 20 ] = NS( FL_DEFAULT_SIZE );
+static char OpSCBT[ 16 ]     = "thin";
+static char OpBLsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
+static char OpMLsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
+static char OpBrFsize[ 20 ]  = NS( FL_DEFAULT_SIZE );
+static char OpChFsize[ 20 ]  = NS( FL_DEFAULT_SIZE );
+static char OpSLsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
+static char OpLLsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
+static char OpILsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
+static char OpIBW[ 20 ]      = NS( FL_BOUND_WIDTH );
+static char OpPsize[ 20 ]    = NS( FL_DEFAULT_SIZE );
 static char OpVisualID[ 20 ] = "0";
 
 #ifdef DO_GAMMA_CORRECTION
@@ -453,7 +454,7 @@ handle_applresdir( const char * rstr,
 static void
 init_resource_database( const char *appclass )
 {
-    char buf[FL_PATH_MAX + 127],
+    char buf[ FL_PATH_MAX + 127 ],
 		 *rstr;
     XrmDatabase fdb = 0;
 
@@ -856,16 +857,16 @@ fl_init_fl_context( void )
 		/* initialize context */
 
 		fl_context = fl_calloc( 1, sizeof *fl_context );
-		fl_context->next = 0;
-		fl_context->io_rec = 0;
-		fl_context->idle_rec = 0;
-		fl_context->atclose = 0;
-		fl_context->free_rec = 0;
-		fl_context->signal_rec = 0;
-		fl_context->idle_delta = TIMER_RES;
-		fl_context->hscb = FL_HOR_THIN_SCROLLBAR;
-		fl_context->vscb = FL_VERT_THIN_SCROLLBAR;
-        fl_context->navigate_mask = ShiftMask; /* to navigate input field */
+		fl_context->next          = 0;
+		fl_context->io_rec        = 0;
+		fl_context->idle_rec      = 0;
+		fl_context->atclose       = 0;
+		fl_context->free_rec      = 0;
+		fl_context->signal_rec    = 0;
+		fl_context->idle_delta    = TIMER_RES;
+		fl_context->hscb          = FL_HOR_THIN_SCROLLBAR;
+		fl_context->vscb          = FL_VERT_THIN_SCROLLBAR;
+        fl_context->navigate_mask = ShiftMask;   /* to navigate input field */
     }
 }
 
@@ -903,8 +904,16 @@ fl_initialize( int        * na,
 
     if ( fl_display )
     {
-		Bark( "fl_initialize", "Already initialized" );
+		Bark( "fl_initialize", "XForms: already initialized" );
 		return fl_display;
+    }
+
+    /* be paranoid */
+
+    if ( ! na || ! *na )
+    {
+		fprintf( stderr, "XForms: argc == 0 or argv == NULL detected\n" );
+		exit( 1 );
     }
 
     setlocale( LC_ALL, "" );
@@ -912,14 +921,6 @@ fl_initialize( int        * na,
     fl_internal_init( );
 
     XrmInitialize( );
-
-    /* be paranoid */
-
-    if ( ! na || ! *na )
-    {
-		fprintf( stderr, "XForms: argc == 0 detected\n" );
-		exit( 1 );
-    }
 
     /* save a copy of the command line for later WM hints */
 
@@ -1065,6 +1066,7 @@ fl_initialize( int        * na,
 
     {
 		XKeyboardState xks;
+
 		XGetKeyboardControl( fl_display, &xks );
 		fl_keybdcontrol.auto_repeat_mode = xks.global_auto_repeat;
 		fl_keybdmask = KBAutoRepeatMode;

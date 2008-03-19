@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.9 2008/02/04 01:22:18 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.10 2008/03/19 21:04:24 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -78,8 +78,8 @@ fl_check_key_focus( const char * s,
  ***************************************/
 
 Window
-fl_get_mouse( FL_Coord *     x,
-			  FL_Coord *     y,
+fl_get_mouse( FL_Coord     * x,
+			  FL_Coord     * y,
 			  unsigned int * keymask )
 {
     Window rjunk,
@@ -91,9 +91,9 @@ fl_get_mouse( FL_Coord *     x,
 
     XQueryPointer( flx->display, fl_root, &rjunk, &childwin,
 				   &xx, &yy, &cx, &cy, keymask );
-
     *x = xx;
     *y = yy;
+
     return childwin;
 }
 
@@ -105,8 +105,8 @@ fl_get_mouse( FL_Coord *     x,
 
 Window
 fl_get_win_mouse( Window         win,
-				  FL_Coord *     x,
-				  FL_Coord *     y,
+				  FL_Coord     * x,
+				  FL_Coord     * y,
 				  unsigned int * keymask )
 {
     Window rjunk,
@@ -120,6 +120,7 @@ fl_get_win_mouse( Window         win,
 				   &xx, &yy, &ix, &iy, keymask );
     *x = ix;
     *y = iy;
+
     return childwin;
 }
 
@@ -128,21 +129,21 @@ fl_get_win_mouse( Window         win,
  ***************************************/
 
 Window
-fl_get_form_mouse( FL_FORM *      fm,
-				   FL_Coord *     x,
-				   FL_Coord *     y,
+fl_get_form_mouse( FL_FORM      * fm,
+				   FL_Coord     * x,
+				   FL_Coord     * y,
 				   unsigned int * keymask )
 {
+	Window win = None;
+	FL_pixmap *flp = fm->flpixmap;
+
     if ( fl_is_good_form( fm ) )
     {
-		Window win;
-		FL_pixmap *flp = fm->flpixmap;
-
-		win = ( flp && flp->win > 0 ) ? flp->win : fm->window;
+		win = ( flp && flp->win != None ) ? flp->win : fm->window;
 		fl_get_win_mouse( win, x, y, keymask );
-		return win;
     }
-    return 0;
+
+    return win;
 }
 
 
@@ -228,7 +229,7 @@ change_drawable( FL_pixmap * p,
 
 static void
 change_form_drawable( FL_pixmap * p,
-					  FL_FORM *   fm )
+					  FL_FORM   * fm )
 {
     p->x = fm->x;
     p->y = fm->y;
@@ -244,7 +245,7 @@ change_form_drawable( FL_pixmap * p,
  ***************************************/
 
 static int
-fl_xerror_handler( Display *     d  FL_UNUSED_ARG,
+fl_xerror_handler( Display     * d  FL_UNUSED_ARG,
 				   XErrorEvent * xev )
 {
     if ( xev->error_code == BadAlloc )
@@ -397,7 +398,8 @@ static int
 form_pixmapable( FL_FORM * fm )
 {
 
-    FL_OBJECT *first, *second;
+    FL_OBJECT *first,
+		      *second;
 
     if ( ! fm->use_pixmap )
 		return 0;
@@ -497,7 +499,7 @@ fl_show_form_pixmap( FL_FORM * fm )
     if (    ! form_pixmapable( fm )
 		 || ! ( p = fm->flpixmap )
 		 || ! p->pixmap
-		 || ! p->win
+			|| ( p->win == None )
 		 || p->w <= 0
 		 || p->h <= 0 )
 		return;

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.15 2008/03/12 16:00:25 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.16 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -56,7 +56,7 @@ extern FL_OBJECT * fl_mouseobj,          /* defined in forms.c */
 #define TRANY( ob, form )      ( form->h - ob->h - ob->y )
 
 #define LInside( a )    \
-                 ( ( ( a ) == FL_ALIGN_CENTER ) || ( ( a ) & FL_ALIGN_INSIDE ) )
+               ( ( ( a ) == FL_ALIGN_CENTER ) || ( ( a ) & FL_ALIGN_INSIDE ) )
 
 
 static void lose_focus( FL_OBJECT * ob );
@@ -118,7 +118,7 @@ fl_make_form( FL_Coord w,
     form->key_callback   =
 	form->push_callback  = form->crossing_callback = NULL;
     form->focusobj       = NULL;
-    form->first          = form->last = NULL;
+    form->first          = form->last           = NULL;
     form->hotx           = form->hoty = -1;
     form->use_pixmap     = fl_cntl.doubleBuffer;
     form->label          = NULL;
@@ -145,14 +145,14 @@ fl_make_form( FL_Coord w,
  ***************************************/
 
 FL_OBJECT *
-fl_make_object( int          objclass,
-				int          type,
-				FL_Coord     x,
-				FL_Coord     y,
-				FL_Coord     w,
-				FL_Coord     h,
-				const char * label,
-				FL_HANDLEPTR handle )
+fl_make_object( int            objclass,
+				int            type,
+				FL_Coord       x,
+				FL_Coord       y,
+				FL_Coord       w,
+				FL_Coord       h,
+				const char   * label,
+				FL_HANDLEPTR   handle )
 {
     FL_OBJECT *ob;
 #ifdef FL_WIN32
@@ -243,6 +243,7 @@ fl_make_object( int          objclass,
     ob->next = ob->prev = NULL;
     ob->form = NULL;
     ob->dbl_background = FL_COL1;
+
     return ob;
 }
 
@@ -296,7 +297,7 @@ fl_free_object( FL_OBJECT * obj )
 ***************************************/
 
 void
-fl_add_object( FL_FORM *   form,
+fl_add_object( FL_FORM   * form,
 			   FL_OBJECT * obj )
 {
     /* Checking for correct behaviour. */
@@ -551,8 +552,8 @@ fl_set_object_boxtype( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_resize( FL_OBJECT *  ob,
-					  unsigned int what )
+fl_set_object_resize( FL_OBJECT    * ob,
+					  unsigned int   what )
 {
     if ( ob == NULL )
     {
@@ -600,9 +601,9 @@ fl_get_object_resize( FL_OBJECT *    ob,
  ***************************************/
 
 void
-fl_set_object_gravity( FL_OBJECT *  ob,
-					   unsigned int nw,
-					   unsigned int se )
+fl_set_object_gravity( FL_OBJECT    * ob,
+					   unsigned int   nw,
+					   unsigned int   se )
 {
     if ( ob == NULL )
     {
@@ -721,7 +722,7 @@ fl_set_object_dblbuffer( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_label( FL_OBJECT *  ob,
+fl_set_object_label( FL_OBJECT  * ob,
 					 const char * label )
 {
     if ( ob == NULL )
@@ -1387,8 +1388,8 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
  ***************************************/
 
 void
-fl_set_object_shortcutkey( FL_OBJECT *  obj,
-						   unsigned int keysym )
+fl_set_object_shortcutkey( FL_OBJECT    * obj,
+						   unsigned int   keysym )
 {
     size_t n;
 
@@ -1409,7 +1410,7 @@ fl_set_object_shortcutkey( FL_OBJECT *  obj,
  ***************************************/
 
 void
-fl_set_focus_object( FL_FORM *   form,
+fl_set_focus_object( FL_FORM   * form,
 					 FL_OBJECT * obj )
 {
     if ( form == NULL )
@@ -1500,10 +1501,10 @@ fl_find_object( FL_OBJECT * obj,
  ***************************************/
 
 FL_OBJECT *
-fl_find_first( FL_FORM * form,
-			   int       find,
-			   FL_Coord  mx,
-			   FL_Coord  my )
+fl_find_first( FL_FORM  * form,
+			   int        find,
+			   FL_Coord   mx,
+			   FL_Coord   my )
 {
     return fl_find_object( form->first, find, mx, my );
 }
@@ -1577,7 +1578,7 @@ object_is_clipped( FL_OBJECT * ob )
 static void
 redraw_marked( FL_FORM * form,
 			   int       key,
-			   XEvent *  xev )
+			   XEvent  * xev )
 {
     FL_OBJECT *ob;
 
@@ -1711,7 +1712,7 @@ fl_redraw_form( FL_FORM * form )
 void
 fl_redraw_form_using_xevent( FL_FORM * form,
 							 int       key,
-							 XEvent *  xev )
+							 XEvent  * xev )
 {
     mark_for_redraw( form );
     redraw_marked( form, key, xev );
@@ -1797,7 +1798,7 @@ FL_OBJECT * get_parent( FL_OBJECT * obj )
  ***************************************/
 
 static
-void tooltip_handler( int    ID    FL_UNUSED_ARG,
+void tooltip_handler( int    ID  FL_UNUSED_ARG,
 					  void * data )
 {
     FL_OBJECT * const obj = get_parent( data );
@@ -1815,7 +1816,7 @@ void tooltip_handler( int    ID    FL_UNUSED_ARG,
 
 static
 void checked_hide_tooltip( FL_OBJECT * obj,
-						   XEvent *    xev )
+						   XEvent    * xev )
 {
     FL_OBJECT * const parent = get_parent( obj );
     char const * const tooltip = parent->tooltip;
@@ -1880,7 +1881,7 @@ fl_handle_it( FL_OBJECT * obj,
 			  FL_Coord    mx,
 			  FL_Coord    my,
 			  int         key,
-			  XEvent *    xev )
+			  XEvent    * xev )
 {
     static unsigned long last_clicktime = 0;
     static int last_dblclick = 0,
@@ -2054,7 +2055,7 @@ fl_handle_object_direct( FL_OBJECT * obj,
 						 FL_Coord    mx,
 						 FL_Coord    my,
 						 int         key,
-						 XEvent *    xev )
+						 XEvent    * xev )
 {
     return fl_handle_it( obj, event, mx, my, key, xev );
 }
@@ -2065,9 +2066,9 @@ fl_handle_object_direct( FL_OBJECT * obj,
  ***************************************/
 
 FL_CALLBACKPTR
-fl_set_object_callback( FL_OBJECT *    obj,
-						FL_CALLBACKPTR callback,
-						long           argument )
+fl_set_object_callback( FL_OBJECT      * obj,
+						FL_CALLBACKPTR   callback,
+						long             argument )
 {
     FL_CALLBACKPTR old;
 
@@ -2312,8 +2313,8 @@ fl_set_object_prehandler( FL_OBJECT *  ob,
  ***************************************/
 
 FL_HANDLEPTR
-fl_set_object_posthandler( FL_OBJECT *  ob,
-						   FL_HANDLEPTR post )
+fl_set_object_posthandler( FL_OBJECT    * ob,
+						   FL_HANDLEPTR   post )
 {
     FL_HANDLEPTR oldh = ob->posthandle;
     ob->posthandle = post;
@@ -2495,8 +2496,8 @@ fl_set_object_position( FL_OBJECT * obj,
 
 void
 fl_get_object_size( FL_OBJECT * obj,
-					FL_Coord *  w,
-					FL_Coord *  h )
+					FL_Coord  * w,
+					FL_Coord  * h )
 {
     *w = obj->w;
     *h = obj->h;
@@ -2621,10 +2622,10 @@ fl_set_object_geometry( FL_OBJECT * obj,
 
 void
 fl_get_object_bbox( FL_OBJECT * obj,
-					FL_Coord *  x,
-					FL_Coord *  y,
-					FL_Coord *  w,
-					FL_Coord *  h )
+					FL_Coord  * x,
+					FL_Coord  * y,
+					FL_Coord  * w,
+					FL_Coord  * h )
 {
     char *label = obj->label;
     FL_OBJECT *tmp;
@@ -2688,7 +2689,7 @@ fl_get_object_bbox( FL_OBJECT * obj,
 
 void
 fl_get_object_bbox_rect( FL_OBJECT * obj,
-						 FL_RECT *   xr )
+						 FL_RECT   * xr )
 {
 	FL_Coord  x,
 		      y,
@@ -2786,12 +2787,14 @@ lose_focus( FL_OBJECT * ob )
 
 
 /***************************************
+ * Seems to be part of the public interface but isn't used anywhere
+ * within the library...
  ***************************************/
 
 void
 fl_for_all_objects( FL_FORM * form,
 					int       ( * cb )( FL_OBJECT *, void * ),
-					void *    v )
+					void    * v )
 {
     FL_OBJECT *ob;
     int ret;
@@ -2818,7 +2821,7 @@ fl_get_object_label( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_object_helper( FL_OBJECT *  ob,
+fl_set_object_helper( FL_OBJECT  * ob,
 					  const char * tip )
 {
     char *s = ob->tooltip;

@@ -89,8 +89,8 @@ FL_EXPORT void fl_set_timer_countup(
 		);
 
 FL_EXPORT FL_TIMER_FILTER fl_set_timer_filter(
-		FL_OBJECT *		ob,
-		FL_TIMER_FILTER filter
+		FL_OBJECT       * ob,
+		FL_TIMER_FILTER   filter
 		);
 
 FL_EXPORT void fl_suspend_timer(

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sldr = "$Id: sldraw.c,v 1.8 2008/03/12 16:00:27 jtt Exp $";
+char *fl_id_sldr = "$Id: sldraw.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -425,16 +425,17 @@ fl_drw_slider( int      boxtype,
  ***************************************/
 
 int
-fl_get_pos_in_slider( FL_Coord x,
-					  FL_Coord y,
-					  FL_Coord w,
-					  FL_Coord h,
-					  int      sltype,	/* Slider type */
-					  double   size,	/* Slider size */
-					  FL_Coord xpos,
-					  FL_Coord ypos,	/* Mouse position */
-					  double   oldval,	/* The old value */
-					  double * newval	/* The new value */ )
+fl_get_pos_in_slider( FL_Coord       x,
+					  FL_Coord       y,
+					  FL_Coord       w,
+					  FL_Coord       h,
+					  unsigned int   state,
+					  int            sltype,	/* Slider type */
+					  double         size,	/* Slider size */
+					  FL_Coord       xpos,
+					  FL_Coord       ypos,	/* Mouse position */
+					  double         oldval,	/* The old value */
+					  double       * newval	/* The new value */ )
 {
     double v = 0.0,
 		   tmp;
@@ -492,7 +493,7 @@ fl_get_pos_in_slider( FL_Coord x,
     if ( v > 1.0 )
 		v = 1.0;
 
-    if ( shiftkey_down( fl_keymask ) )
+    if ( shiftkey_down( state ) )
 		*newval = oldval + ( v - oldval ) * FL_SLIDER_FINE;
     else
 		*newval = v;

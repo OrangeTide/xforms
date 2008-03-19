@@ -33,6 +33,11 @@
  *
  */
 
+#if defined F_ID || defined DEBUG
+char *fl_id_ol = "$Id: oneliner.c,v 1.10 2008/03/19 21:04:23 jtt Exp $$";
+#endif
+
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -42,9 +47,9 @@
 
 
 static int fntstyle = FL_NORMAL_STYLE,
-           fntsize = FL_DEFAULT_SIZE;
+           fntsize  = FL_DEFAULT_SIZE;
 static FL_COLOR background = FL_YELLOW,
-                textcolor = FL_BLACK;
+                textcolor  = FL_BLACK;
 static FL_FORM *oneliner;
 static FL_OBJECT *text;
 
@@ -59,7 +64,9 @@ create_it( void )
 		return;
 
 	oneliner = fl_bgn_form( FL_NO_BOX, 5, 5 );
+
 	text = fl_add_box( FL_BORDER_BOX, 0, 0, 5, 5, "" );
+
 	fl_set_object_lstyle( text, fntstyle );
 	fl_set_object_lsize( text, fntsize );
 	fl_set_object_lcol( text, textcolor );
@@ -76,21 +83,21 @@ fl_show_oneliner( const char * s,
 				  FL_Coord     x,
 				  FL_Coord     y )
 {
-    int maxw = 0,
-		maxh = 0;
+    int w,
+		h;
 
     if ( ! s )
 		return;
 
     create_it( );
 
-    fl_get_string_dimension( fntstyle, fntsize, s, strlen( s ), &maxw, &maxh );
+    fl_get_string_dimension( fntstyle, fntsize, s, strlen( s ), &w, &h );
 
-    maxw += 6;
-    maxh += 6;
+    w += ( 2 * fntsize ) / 3;
+    h += ( 2 * fntsize ) / 3;
 
 	fl_freeze_form( oneliner );
-    fl_set_form_geometry( oneliner, x, y, maxw, maxh );
+    fl_set_form_geometry( oneliner, x, y, w, h );
     fl_set_object_label( text, s );
 	fl_unfreeze_form( oneliner );
 

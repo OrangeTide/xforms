@@ -51,15 +51,17 @@ main(int argc, char *argv[])
     int version, revision;
 
     /* make sure the distribution is consistent wrt version numbers */
+
     if (FL_INCLUDE_VERSION != fl_library_version(&version, &revision))
     {
-	fprintf(stderr, "header/library version mismatch\n");
-	fprintf(stderr, "   Header: %d.%d\n", FL_VERSION, FL_REVISION);
-	fprintf(stderr, "  Library: %d.%d\n", version, revision);
-	exit(1);
+		fprintf(stderr, "header/library version mismatch\n");
+		fprintf(stderr, "   Header: %d.%d\n", FL_VERSION, FL_REVISION);
+		fprintf(stderr, "  Library: %d.%d\n", version, revision);
+		exit(1);
     }
 
     /* to cut down the "bug" reports of "can't run the demos", put . on path */
+
 #ifndef __VMS
     if ((p = getenv("PATH")))
 	putenv(strcat(strcat(strcpy(buf, "PATH="), p), ":."));
@@ -69,7 +71,7 @@ main(int argc, char *argv[])
      printf("  to include the directory where they live\n");
 #endif
 
-/*  fl_set_border_width(6); */
+	 fl_set_border_width( 1 );
 
     fl_initialize(&argc, argv, "FormDemo", 0, 0);
     fl_clear_command_log();
@@ -104,29 +106,36 @@ typedef struct
 MENU menus[MAXMENU];
 int mennumb = 0;
 
+
 /* Returns the number of a given menu name. */
+
 int
 find_menu(char *nnn)
 {
     int i;
+
     for (i = 0; i < mennumb; i++)
-	if (strcmp(menus[i].name, nnn) == 0)
-	    return i;
+		if (strcmp(menus[i].name, nnn) == 0)
+			return i;
     return -1;
 }
 
+
 /* Creates a new menu with name nnn */
+
 static void
 create_menu(char nnn[])
 {
     if (mennumb == MAXMENU - 1)
-	return;
+		return;
     strcpy(menus[mennumb].name, nnn);
     menus[mennumb].numb = 0;
     mennumb++;
 }
 
+
 /* Adds an item to a menu */
+
 static void
 addto_menu(char men[], char item[], char comm[])
 {
@@ -134,17 +143,18 @@ addto_menu(char men[], char item[], char comm[])
 
     if (n < 0)
     {
-	create_menu(men);
-	n = find_menu(men);
+		create_menu(men);
+		n = find_menu(men);
     }
 
     if (menus[n].numb == 9)
-	return;
+		return;
 
     strcpy(menus[n].iname[menus[n].numb], item);
     strcpy(menus[n].icommand[menus[n].numb], comm);
     menus[n].numb++;
 }
+
 
 /* Button to Item conversion and back. */
 
@@ -161,6 +171,7 @@ int b2n[][9] =
     {0, 1, 2, 3, 4, 5, 6, 7, 8}
 };
 
+
 int n2b[][9] =
 {
     {4, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -174,77 +185,94 @@ int n2b[][9] =
     {0, 1, 2, 3, 4, 5, 6, 7, 8}
 };
 
+
 /* Transforms a button number to an item number when there are
    maxnumb items in total. -1 if the button should not exist. */
+
 static int
 but2numb(int bnumb, int maxnumb)
 {
     return b2n[maxnumb][bnumb];
 }
 
+
 /* Transforms an item number to a button number when there are
    maxnumb items in total. -1 if the item should not exist. */
+
 static int
 numb2but(int inumb, int maxnumb)
 {
     return n2b[maxnumb][inumb];
 }
 
+
 /* Pushing and Popping menus */
 
 char stack[64][32];
 int stsize = 0;
 
+
 /* Pushes a menu to be visible */
+
 static void
 push_menu(char nnn[])
 {
     int n, i, bn;
     int men = find_menu(nnn);
+
     /* make exceptions for B&W */
+
     FL_COLOR bc_more = fl_get_visual_depth() == 1 ? FL_COL1 : FL_INDIANRED;
     FL_COLOR bc_term = fl_get_visual_depth() == 1 ? FL_COL1 : FL_SLATEBLUE;
 
     if (men < 0)
-	return;
+		return;
     n = menus[men].numb;
 
     fl_freeze_form(form);
+
     for (i = 0; i < 9; i++)
-	fl_hide_object(but[i]);
+		fl_hide_object(but[i]);
+
     for (i = 0; i < n; i++)
     {
-	bn = numb2but(i, n - 1);
-	fl_show_object(but[bn]);
-	fl_set_object_label(but[bn], menus[men].iname[i]);
-	if (menus[men].icommand[i][0] == '@')
-	    fl_set_object_color(but[bn], bc_more, FL_RED);
-	else
-	    fl_set_object_color(but[bn], bc_term, FL_BLUE);
+		bn = numb2but(i, n - 1);
+		fl_show_object(but[bn]);
+		fl_set_object_label(but[bn], menus[men].iname[i]);
+		if (menus[men].icommand[i][0] == '@')
+			fl_set_object_color(but[bn], bc_more, FL_RED);
+		else
+			fl_set_object_color(but[bn], bc_term, FL_BLUE);
     }
     fl_unfreeze_form(form);
     strcpy(stack[stsize], nnn);
     stsize++;
 }
 
+
 /* Pops a menu */
+
 static void
 pop_menu(void)
 {
     if (stsize <= 1)
-	return;
+		return;
     stsize -= 2;
     push_menu(stack[stsize]);
 }
+
 
 /* The callback Routines */
 
 #if defined(__cplusplus)
 extern "C"
 #endif
+
 char **fl_get_cmdline_args(int *);
 
+
 /* handles a button push */
+
 void
 dobut( FL_OBJECT * obj  FL_UNUSED_ARG,
 	   long        arg )
@@ -252,111 +280,127 @@ dobut( FL_OBJECT * obj  FL_UNUSED_ARG,
     int men = find_menu(stack[stsize - 1]);
     int n = menus[men].numb;
     int bn = but2numb((int) arg, n - 1);
+
     if (menus[men].icommand[bn][0] == '@')
-	push_menu(menus[men].icommand[bn]);
+		push_menu(menus[men].icommand[bn]);
     else
     {
-	char cmd[1024];
-	char **vv;
-	int c, i;
+		char cmd[ 1024 ];
+		char **vv;
+		int c, i;
 
-	vv = fl_get_cmdline_args(&c);
-	strcpy(cmd, menus[men].icommand[bn]);
-	for (i = 1; i < c; i++)
-	    strcat(strcat(cmd, " "),vv[i]);
+		vv = fl_get_cmdline_args(&c);
+		strcpy( cmd, menus[ men ].icommand[bn]);
+		for (i = 1; i < c; i++)
+			strcat(strcat(cmd, " "),vv[i]);
 
-        fl_addto_command_log("running ");
-        fl_addto_command_log(cmd);
-        fl_addto_command_log("\n");
-        fl_deactivate_all_forms();
-	fl_exe_command(cmd, 1);
-	fl_activate_all_forms();
+        fl_addto_command_log( "running " );
+        fl_addto_command_log( cmd );
+        fl_addto_command_log( "\n" );
+        fl_deactivate_all_forms( );
+		fl_exe_command( cmd, 1 );
+		fl_activate_all_forms( );
     }
 }
 
+
 /* Go up a level in the menu tree */
+
 void
 doback( FL_OBJECT * obj  FL_UNUSED_ARG,
 		long        arg  FL_UNUSED_ARG )
 {
-    pop_menu();
+    pop_menu( );
 }
 
+
 /* Exit the program */
+
 void
 doexit( FL_OBJECT * obj  FL_UNUSED_ARG,
 		long        arg  FL_UNUSED_ARG )
 {
-    fl_hide_form(form);
-    fl_finish();
-    exit(0);
+    fl_hide_form( form );
+    fl_finish( );
+    exit( 0 );
 }
+
 
 void
 showlog( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 long        arg  FL_UNUSED_ARG )
 {
-   fl_show_command_log(FL_TRANSIENT);
+	fl_show_command_log( FL_TRANSIENT );
 }
 
 
 /* Loads the menu file. Returns whether successful. */
+
 static int
-load_the_menu(char fname[])
+load_the_menu( char fname[ ] )
 {
     FILE *fin;
-    char line[256], mname[64], iname[64], cname[64];
-    int i, j;
+    char line[ 256 ],
+		 mname[ 64 ],
+		 iname[ 64 ],
+		 cname[ 64 ];
+    int i,
+		j;
+
     fin = fopen(fname, "r");
-    if (fin == NULL)
+    if ( fin == NULL )
     {
-	fl_show_message("ERROR", "", "Cannot read the menu description file.");
-	return 0;
+		fl_show_message( "ERROR", "",
+						 "Cannot read the menu description file." );
+		return 0;
     }
-    while (1)
+
+    while ( 1 )
     {
-	if (fgets(line, 256, fin) == NULL)
-	    break;
-	j = 0;
-	i = 0;
-	while (line[i] == ' ' || line[i] == '\t')
-	    i++;
-	if (line[i] == '\n')
-	    continue;
-	if (line[i] == '#')
-	    continue;
-	while (line[i] != ':' && line[i] != '\n')
-	    mname[j++] = line[i++];
-	mname[j] = '\0';
-	if (line[i] == ':')
-	    i++;
-	j = 0;
-	while (line[i] != ':' && line[i] != '\n')
-	{
-	    if (line[i] == '\\' && line[i + 1] == 'n')
-	    {
-		iname[j++] = '\n';
-		i += 2;
-	    }
-	    else
-		iname[j++] = line[i++];
-	}
-	iname[j] = '\0';
-	if (line[i] == ':')
-	    i++;
-	j = 0;
-	while (line[i] != ':' && line[i] != '\n')
-	    cname[j++] = line[i++];
-	cname[j] = '\0';
-	addto_menu(mname, iname, cname);
+		if ( fgets( line, 256, fin ) == NULL)
+			break;
+
+		j = 0;
+		i = 0;
+
+		while ( line[ i ] == ' ' || line[ i ] == '\t' )
+			i++;
+		if ( line[ i ] == '\n' )
+			continue;
+		if ( line[ i ] == '#' )
+			continue;
+		while ( line[ i ] != ':' && line[ i ] != '\n' )
+			mname[ j++ ] = line[ i++ ];
+		mname[ j ] = '\0';
+		if ( line[ i ] == ':' )
+			i++;
+		j = 0;
+		while ( line[ i ] != ':' && line[ i ] != '\n' )
+		{
+			if ( line[ i ] == '\\' && line[ i + 1 ] == 'n' )
+			{
+				iname[ j++ ] = '\n';
+				i += 2;
+			}
+			else
+				iname[ j++ ] = line[ i++ ];
+		}
+		iname[ j ] = '\0';
+		if ( line[ i ] == ':' )
+			i++;
+		j = 0;
+		while ( line[ i ] != ':' && line[ i ] != '\n' )
+			cname[ j++ ] = line[ i++ ];
+		cname[ j ] = '\0';
+		addto_menu( mname, iname, cname );
     }
-    fclose(fin);
+    fclose( fin );
     return 1;
 }
 
-extern void doexit(FL_OBJECT *, long);
-extern void doback(FL_OBJECT *, long);
-extern void dobut(FL_OBJECT *, long);
+extern void doexit( FL_OBJECT *, long );
+extern void doback( FL_OBJECT *, long );
+extern void dobut( FL_OBJECT *, long );
 
 
 void
@@ -365,13 +409,16 @@ create_form_form(void)
     FL_OBJECT *obj;
 
     form = fl_bgn_form(FL_NO_BOX, 370, 450);
+
     obj = fl_add_box(FL_UP_BOX, 0, 0, 370, 450, "");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
+
     obj = fl_add_box(FL_FRAME_BOX, 20, 20, 330, 40, "Forms Demonstration");
     fl_set_object_color(obj, FL_INDIANRED, FL_COL1);
     fl_set_object_lsize(obj, FL_HUGE_SIZE);
     fl_set_object_lstyle(obj, FL_ENGRAVED_STYLE + FL_BOLD_STYLE);
     fl_set_object_lcol(obj, FL_INDIANRED);
+
     obj = fl_add_box(FL_FRAME_BOX, 20, 70, 330, 330, "");
     fl_set_object_color(obj, FL_INDIANRED, FL_COL1);
 
@@ -388,34 +435,42 @@ create_form_form(void)
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 0);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[1] = obj = fl_add_button(FL_NORMAL_BUTTON, 140, 90, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 1);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[2] = obj = fl_add_button(FL_NORMAL_BUTTON, 240, 90, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 2);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[5] = obj = fl_add_button(FL_NORMAL_BUTTON, 240, 190, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 5);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[4] = obj = fl_add_button(FL_NORMAL_BUTTON, 140, 190, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 4);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[3] = obj = fl_add_button(FL_NORMAL_BUTTON, 40, 190, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 3);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[6] = obj = fl_add_button(FL_NORMAL_BUTTON, 40, 290, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 6);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[7] = obj = fl_add_button(FL_NORMAL_BUTTON, 140, 290, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 7);
     fl_set_object_lstyle(obj, FL_BOLD_STYLE);
+
     but[8] = obj = fl_add_button(FL_NORMAL_BUTTON, 240, 290, 90, 90, "Button");
     fl_set_object_color(obj, FL_SLATEBLUE, FL_COL1);
     fl_set_object_callback(obj, dobut, 8);
@@ -423,6 +478,7 @@ create_form_form(void)
     fl_end_form();
     fl_adjust_form_size(form);
 }
+
 
 void
 create_the_forms(void)

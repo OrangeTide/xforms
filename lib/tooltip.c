@@ -151,8 +151,7 @@ fl_show_tooltip( const char * s,
 void
 fl_hide_tooltip( void )
 {
-    create_it( );
-    if ( tip->tooltipper->visible )
+    if ( tip && tip->tooltipper->visible )
 		fl_hide_form( tip->tooltipper );
 }
 

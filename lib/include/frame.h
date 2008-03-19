@@ -89,4 +89,3 @@ FL_EXPORT FL_OBJECT * fl_add_labelframe(
 
 
 #endif /* ! defined FL_FRAME_H */
-

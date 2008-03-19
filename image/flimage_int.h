@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: flimage_int.h,v 1.3 2004/05/18 13:57:25 leeming Exp $
+ * $Id: flimage_int.h,v 1.4 2008/03/19 21:04:21 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -39,36 +39,37 @@
 
 typedef struct flimageIO
 {
-    const char *formal_name;
-    const char *short_name;
-    const char *signature;
-    const char *extension;
-    int type;
-    FLIMAGE_Identify identify;
-    FLIMAGE_Description read_description;
-    FLIMAGE_Read_Pixels read_pixels;
-    FLIMAGE_Write_Image write_image;
+    const char          * formal_name;
+    const char          * short_name;
+    const char          * signature;
+    const char          * extension;
+    int                   type;
+    FLIMAGE_Identify      identify;
+    FLIMAGE_Description   read_description;
+    FLIMAGE_Read_Pixels   read_pixels;
+    FLIMAGE_Write_Image   write_image;
     int annotation;
-}
-FLIMAGE_IO;
+} FLIMAGE_IO;
 
 typedef struct
 {
-    int w, h;
-    int type;
-    void *pixels;
+    int    w,
+	       h;
+    int    type;
+    void * pixels;
 } FLIMAGE_BUFFER;
 
 /* subimage for convolve etc */
 typedef struct
 {
-    int w, h;
-    void *mat[3];
-    int comp;                   /* number of components */
-}
-SubImage;
+    int    w,
+	       h;
+    void * mat[ 3 ];
+    int    comp;                   /* number of components */
+} SubImage;
 
-extern SubImage * flimage_get_subimage(FL_IMAGE * im, int make);
+extern SubImage * flimage_get_subimage( FL_IMAGE * im,
+										int make );
 
 
 
@@ -79,22 +80,41 @@ extern SubImage * flimage_get_subimage(FL_IMAGE * im, int make);
 
 extern FLIMAGE_IO *flimage_io;
 
-typedef int (*FLIMAGE_QUANTIZE_RGB) (unsigned char **, unsigned char **,
-				    unsigned char **, int, int, int,
-				    unsigned short **, int *,
-				    int *, int *, int *, FL_IMAGE *);
+typedef int ( * FLIMAGE_QUANTIZE_RGB )( unsigned char **,
+										unsigned char **,
+										unsigned char **,
+										int,
+										int,
+										int,
+										unsigned short **,
+										int *,
+										int *,
+										int *,
+										int *,
+										FL_IMAGE * );
 
-
-typedef int (*FLIMAGE_QUANTIZE_PACKED)(unsigned int **packed, int w, int h,
-				     int max_color, unsigned short **ci,
-				     int *actual_color, int *red_lut,
-				 int *green_lut, int *blue_lut, FL_IMAGE *);
+typedef int ( * FLIMAGE_QUANTIZE_PACKED )( unsigned int   **,
+										   int,
+										   int,
+										   int,
+										   unsigned short **,
+										   int *,
+										   int *,
+										   int *,
+										   int *,
+										   FL_IMAGE * );
 
 extern FLIMAGE_QUANTIZE_RGB flimage_quantize_rgb;
 extern FLIMAGE_QUANTIZE_PACKED flimage_quantize_packed;
 
-extern void flimage_replace_image(FL_IMAGE *, int, int, void *, void *, void *);
-extern int flimage_transform(FL_IMAGE * im, int nw, int nh, float m[][2],
+extern void flimage_replace_image( FL_IMAGE *,
+								   int,
+								   int,
+								   void *,
+								   void *,
+								   void * );
+
+extern int flimage_transform( FL_IMAGE *, int nw, int nh, float m[][2],
                              float shift[], unsigned int fill, int subp);
 extern int flimage_getmem(FL_IMAGE * image);
 extern void flimage_freemem(FL_IMAGE * image);

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.8 2008/03/12 16:00:23 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -172,7 +172,6 @@ compute_round_corners( FL_Coord   x,
 					   FL_Coord   h,
 					   FL_POINT * point )
 {
-    FL_POINT *xp = point;
     size_t i,
 		   n = 0;
     double rs = 0.45 * FL_min( w, h );
@@ -180,28 +179,28 @@ compute_round_corners( FL_Coord   x,
     if ( rs > RS )
 		rs = RS;
 
-    for ( i = 0; i < RN; i++, n++, xp++ )
+    for ( i = 0; i < RN; i++, n++, point++ )
     {
-		xp->x = ( short ) FL_nint( x + offset[ RN - i - 1 ] * rs );
-		xp->y = ( short ) FL_nint( y + offset[ i ] * rs );
+		point->x = ( short ) FL_nint( x + offset[ RN - i - 1 ] * rs );
+		point->y = ( short ) FL_nint( y + offset[ i ] * rs );
     }
 
-    for ( i = 0; i < RN; i++, n++, xp++ )
+    for ( i = 0; i < RN; i++, n++, point++ )
     {
-		xp->x = ( short ) FL_nint( x + offset[ i ] * rs );
-		xp->y = ( short ) FL_nint( y + h - 1 - offset[ RN - i - 1 ] * rs );
+		point->x = ( short ) FL_nint( x + offset[ i ] * rs );
+		point->y = ( short ) FL_nint( y + h - 1 - offset[ RN - i - 1 ] * rs );
     }
 
-    for ( i = 0; i < RN; i++, n++, xp++ )
+    for ( i = 0; i < RN; i++, n++, point++ )
     {
-		xp->x = ( short )  FL_nint( x + w - 1 - offset[ RN - i - 1 ] * rs );
-		xp->y = ( short )  FL_nint( y + h - 1 - offset[ i ] * rs );
+		point->x = ( short )  FL_nint( x + w - 1 - offset[ RN - i - 1 ] * rs );
+		point->y = ( short )  FL_nint( y + h - 1 - offset[ i ] * rs );
     }
 
-    for ( i = 0; i < RN; i++, n++, xp++ )
+    for ( i = 0; i < RN; i++, n++, point++ )
     {
-		xp->x = ( short ) FL_nint( x + w - 1 - offset[ i ] * rs );
-		xp->y = ( short ) FL_nint( y + offset[ RN - i - 1 ] * rs );
+		point->x = ( short ) FL_nint( x + w - 1 - offset[ i ] * rs );
+		point->y = ( short ) FL_nint( y + offset[ RN - i - 1 ] * rs );
     }
 
     return n;
@@ -219,7 +218,7 @@ fl_roundrectangle( int      fill,
 				   FL_Coord h,
 				   FL_COLOR col )
 {
-    FL_POINT point[ 5 * RN + 2 ];
+    FL_POINT point[ 4 * RN + 1 ];  /* need one extra for closing of polygon! */
     int n;
 
     n = compute_round_corners( x, y, w, h, point );
@@ -247,7 +246,7 @@ fl_rounded3dbox( int      style,
 				 FL_COLOR col,
 				 int bw )
 {
-    FL_POINT point[ 5 *  RN + 2 ];
+    FL_POINT point[ 4 *  RN + 1 ];
     int lw = FL_abs( bw );
     int n,
 		olw;
@@ -264,17 +263,17 @@ fl_rounded3dbox( int      style,
 
     if ( style == FL_ROUNDED3D_UPBOX )
     {
-		fl_lines( point, 2 * RN, FL_LEFT_BCOL );
+		fl_lines( point,              2 * RN, FL_LEFT_BCOL   );
 		fl_lines( point + 2 * RN - 3, RN + 1, FL_BOTTOM_BCOL );
-		fl_lines( point + 3 * RN - 4, RN + 2, FL_RIGHT_BCOL );
+		fl_lines( point + 3 * RN - 4, RN + 2, FL_RIGHT_BCOL  );
 		point[ n ] = point[ 0 ];
 		fl_lines( point + n - 3, 4, FL_TOP_BCOL );
     }
     else
     {
-		fl_lines( point, 2 * RN, FL_BOTTOM_BCOL );
-		fl_lines( point + 2 * RN - 3, RN + 1, FL_TOP_BCOL );
-		fl_lines( point + 3 * RN - 4, RN + 2, FL_LEFT_BCOL );
+		fl_lines( point,              2 * RN, FL_BOTTOM_BCOL );
+		fl_lines( point + 2 * RN - 3, RN + 1, FL_TOP_BCOL    );
+		fl_lines( point + 3 * RN - 4, RN + 2, FL_LEFT_BCOL   );
 		point[ n ] = point[ 0 ];
 		fl_lines( point + n - 3, 4, FL_BOTTOM_BCOL );
     }
@@ -390,7 +389,7 @@ fl_drw_box( int      style,
 			FL_COLOR c,
 			int      bw_in )
 {
-    FL_POINT vert[ 25 ],
+    FL_POINT vert[ 5 ],             /* need one extra for closing of polygon! */
 		     *fp;
     int border,
 		B,
@@ -443,10 +442,10 @@ fl_drw_box( int      style,
 			AddVertex( fp, x + w - B, y + B );
 			fl_polyf( vert, 4, FL_RIGHT_BCOL );
 
-			fp = vert;
 
 			/* left trapzoidal */
 
+			fp = vert;
 			AddVertex( fp, x + B, y + B );
 			AddVertex( fp, x + B, y + h - B );
 			AddVertex( fp, x + bw + B, y + h - bw - B );
@@ -467,7 +466,6 @@ fl_drw_box( int      style,
 					AddVertex( fp, x + B + bw - 1, y + bw );
 					AddVertex( fp, x + w - bw, y + bw );
 					fl_lines( vert, 3, FL_BLACK );
-					fp = vert;
 					fl_simple_line( x + B + bw - 1, y + B + bw, x + B + bw - 1,
 									y + h - bw, FL_BLACK );
 				}
@@ -629,9 +627,9 @@ fl_drw_checkbox( int      type,
 				 FL_COLOR col,
 				 int      bw )
 {
-    FL_POINT xpoint[ 6 ],
+    FL_POINT xpoint[ 5 ],          /* need one extra for closing of polygon! */
+		     allp[ 9 ],
 		     *xp;
-    FL_POINT allp[ 10 ];
     int halfh = h / 2,
 		halfw = w / 2;
 
@@ -641,20 +639,20 @@ fl_drw_checkbox( int      type,
     /* generate all points */
 
     xp = allp;
-    AddVertex( xp, x + halfw, y );
-    AddVertex( xp, x, y + halfh );
-    AddVertex( xp, x + halfw, y + h );
-    AddVertex( xp, x + w, y + halfh );
 
-    AddVertex( xp, x + halfw, y + bw );
-    AddVertex( xp, x + bw, y + halfh );
-    AddVertex( xp, x + halfw, y + h - bw );
+    AddVertex( xp, x + halfw, y );
+    AddVertex( xp, x,         y + halfh );
+    AddVertex( xp, x + halfw, y + h );
+    AddVertex( xp, x + w,     y + halfh );
+
+    AddVertex( xp, x + halfw,  y + bw );
+    AddVertex( xp, x + bw,     y + halfh );
+    AddVertex( xp, x + halfw,  y + h - bw );
     AddVertex( xp, x + w - bw, y + halfh );
 
     /* draw overall box */
 
-    xp = allp + 4;
-    fl_polyf( xp, 4, col );
+    fl_polyf( allp + 4, 4, col );
 
 	if ( type == FL_UP_BOX || type == FL_DOWN_BOX )
 	{
@@ -712,7 +710,7 @@ fl_drw_frame( int      style,
 			  FL_COLOR c,
 			  int      bw )
 {
-    FL_POINT vert[ 25 ],
+    FL_POINT vert[ 5 ],          /* need one extra for closing of polygon! */
 		     *fp;
     int border,
 		B,
@@ -745,20 +743,19 @@ fl_drw_frame( int      style,
 			fl_rectf( x + B, y + h - bw - B, w - 1 - B, bw, FL_BOTTOM_BCOL );
 
 			fp = vert;
-			AddVertex( fp, x + w - B - bw, y + bw + B );
+			AddVertex( fp, x + w - B - bw, y + bw + B     );
 			AddVertex( fp, x + w - B - bw, y + h - B - bw );
-			AddVertex( fp, x + w - B, y + h - B );
-			AddVertex( fp, x + w - B, y + B );
+			AddVertex( fp, x + w - B,      y + h - B      );
+			AddVertex( fp, x + w - B,      y + B          );
 			fl_polyf( vert, 4, FL_RIGHT_BCOL );
-
-			fp = vert;
 
 			/* left trapzoidal */
 
-			AddVertex( fp, x + B, y + B );
-			AddVertex( fp, x + B, y + h - B );
+			fp = vert;
+			AddVertex( fp, x + B,      y + B          );
+			AddVertex( fp, x + B,      y + h - B      );
 			AddVertex( fp, x + bw + B, y + h - bw - B );
-			AddVertex( fp, x + bw + B, y + bw + B );
+			AddVertex( fp, x + bw + B, y + bw + B     );
 			fl_polyf( vert, 4, FL_LEFT_BCOL );
 
 			if ( border || fl_dithered( fl_vmode ) )
@@ -771,13 +768,12 @@ fl_drw_frame( int      style,
 				if ( bw > 2 )
 				{
 					fp = vert;
-					AddVertex( fp, x + B, y + B );
+					AddVertex( fp, x + B,          y + B  );
 					AddVertex( fp, x + B + bw - 1, y + bw );
-					AddVertex( fp, x + w - bw, y + bw );
+					AddVertex( fp, x + w - bw,     y + bw );
 					fl_lines( vert, 3, FL_BLACK );
-					fp = vert;
-					fl_simple_line( x + B + bw - 1, y + B + bw, x + B + bw - 1,
-									y + h - bw, FL_BLACK );
+					fl_simple_line( x + B + bw - 1, y + B + bw,
+									x + B + bw - 1, y + h - bw, FL_BLACK );
 				}
 				else
 					fl_rect( x, y, w - 1, h - 1, FL_BLACK );
@@ -798,19 +794,19 @@ fl_drw_frame( int      style,
 			/* right trapzoid */
 
 			fp = vert;
-			AddVertex( fp, x + w - bw, y + bw );
+			AddVertex( fp, x + w - bw, y + bw     );
 			AddVertex( fp, x + w - bw, y + h - bw );
-			AddVertex( fp, x + w - dp, y + h );
-			AddVertex( fp, x + w - dp, y );
+			AddVertex( fp, x + w - dp, y + h      );
+			AddVertex( fp, x + w - dp, y          );
 			fl_polyf( vert, 4, FL_LEFT_BCOL );
 
 			/* left trapzoid */
 
 			fp = vert;
-			AddVertex( fp, x, y );
-			AddVertex( fp, x, y + h - 1 );
+			AddVertex( fp, x,      y          );
+			AddVertex( fp, x,      y + h - 1  );
 			AddVertex( fp, x + bw, y + h - bw );
-			AddVertex( fp, x + bw, y + bw );
+			AddVertex( fp, x + bw, y + bw     );
 			fl_polyf( vert, 4, FL_RIGHT_BCOL );
 
 			/* special hack for B&W */
@@ -818,9 +814,9 @@ fl_drw_frame( int      style,
 			if ( fl_dithered( fl_vmode ) )
 			{
 				fp = vert;
-				AddVertex( fp, x + B, y + h - 1 );
+				AddVertex( fp, x + B,     y + h - 1 );
 				AddVertex( fp, x + w - 1, y + h - 1 );
-				AddVertex( fp, x + w - 1, y + B );
+				AddVertex( fp, x + w - 1, y + B     );
 				fl_lines( vert, 3, FL_BLACK );
 			}
 			break;
@@ -831,9 +827,10 @@ fl_drw_frame( int      style,
 				if ( ( bw += ( w + h ) / 140 ) > 5 )
 					bw = 5;
 			}
-			fl_rectf( x + bw, y + h, w, bw, fl_shadow_col );
-			fl_rectf( x + w, y + bw, bw, h, fl_shadow_col );
-			fl_rect( x - 1, y - 1, w + 1, h + 1, FL_BLACK );
+
+			fl_rectf( x + bw, y + h,  w,     bw,    fl_shadow_col );
+			fl_rectf( x + w,  y + bw, bw,    h,     fl_shadow_col );
+			fl_rect(  x - 1,  y - 1,  w + 1, h + 1, FL_BLACK      );
 			break;
 
 		case FL_BORDER_FRAME:
@@ -884,10 +881,10 @@ fl_add_vertex( FL_Coord x,
 			   FL_Coord y )
 {
 #if FL_CoordIsFloat
-    xpbuf[ npt ].x   = FL_nint( x );
+    xpbuf[ npt   ].x = FL_nint( x );
     xpbuf[ npt++ ].y = FL_nint( y );
 #else
-    xpbuf[ npt ].x   = x;
+    xpbuf[ npt   ].x = x;
     xpbuf[ npt++ ].y = y;
 #endif
 }
@@ -900,7 +897,7 @@ void
 fl_add_float_vertex( float x,
 					 float y )
 {
-    xpbuf[ npt ].x   = FL_nint( x );
+    xpbuf[ npt   ].x = FL_nint( x );
     xpbuf[ npt++ ].y = FL_nint( y );
 }
 
@@ -998,7 +995,7 @@ fl_foldertab_box( int      style,
 				  int      bw )
 {
     int ctr, right, bott;
-    FL_POINT vert[10],
+    FL_POINT vert[ 9 ],          /* need one extra for closing of polygon! */
 		     *fp;
     int border;
     int absbw = FL_abs( bw ),
@@ -1031,19 +1028,20 @@ fl_foldertab_box( int      style,
 
     right = x + w - 1;
     bott = y + h - 1;
-    fp = vert;
 
     switch ( style )
     {
 		case FL_TOPTAB_UPBOX:
+			fp = vert;
 			vv3( x, y + h - ( ctr == 0 ), x, y + C - 1, x + C - 1, y );
 			vv2( right - C, y, x + C - 1, y );
 			vv3( right - C + 1, y, right, y + C - 1,
 				 right, y + h - ( ctr == 0 ) );
 			fl_polyf ( vert, 8, c );
+
 			fl_set_linewidth( absbw );
-			fl_lines( vert, 3, FL_LEFT_BCOL );
-			fl_lines( vert + 3, 2, FL_TOP_BCOL );
+			fl_lines( vert,     3, FL_LEFT_BCOL );
+			fl_lines( vert + 3, 2, FL_TOP_BCOL  );
 			if ( ! isbroken )
 				fl_lines( vert + 5, 3, FL_BOTTOM_BCOL );
 			else
@@ -1084,10 +1082,12 @@ fl_foldertab_box( int      style,
 			break;
 
 		case FL_SELECTED_TOPTAB_UPBOX:
+			fp = vert;
 			vv3( x, bott + absbw + 3, x, y + C - 1, x + C - 1, y );
 			vv2( right - C, y, x + C - 1, y );
 			vv3( right - C + 1, y, right, y + C - 1, right, bott + absbw + 3 );
 			fl_polyf( vert, 8, c );
+
 			fl_set_linewidth( absbw );
 			fl_lines( vert, 3, FL_LEFT_BCOL );
 			fl_lines( vert + 3, 2, FL_TOP_BCOL );
@@ -1114,11 +1114,12 @@ fl_foldertab_box( int      style,
 			break;
 
 		case FL_BOTTOMTAB_UPBOX:
+			fp = vert;
 			vv3( x, y + ( ctr == 0 ), x, bott - C + 1, x + C - 1, bott );
 			vv2( x + C - 1, bott, right - C, bott );
 			vv3( right - C, bott, right, bott - C, right, y + ( ctr == 0 ) );
-
 			fl_polyf( vert, 8, c );
+
 			fl_linewidth( absbw );
 			fl_lines( vert, 3, FL_TOP_BCOL );
 			fl_lines( vert + 3, 2, FL_BOTTOM_BCOL );
@@ -1142,15 +1143,16 @@ fl_foldertab_box( int      style,
 			break;
 
 		case FL_SELECTED_BOTTOMTAB_UPBOX:
+			fp = vert;
 			vv3( x, y - absbw - 1, x, bott - C + 1, x + C - 1, bott );
 			vv2( x + C - 1, bott, right - C, bott );
 			vv3( right - C, bott, right, bott - C + 1, right, y - absbw - 1 );
-
 			fl_polyf( vert, 8, c );
+
 			fl_linewidth( absbw );
-			fl_lines( vert, 3, FL_TOP_BCOL );
+			fl_lines( vert,     3, FL_TOP_BCOL    );
 			fl_lines( vert + 3, 2, FL_BOTTOM_BCOL );
-			fl_lines( vert + 5, 3, FL_RIGHT_BCOL );
+			fl_lines( vert + 5, 3, FL_RIGHT_BCOL  );
 			fl_linewidth( 0 );
 
 			if ( border || fl_dithered( fl_vmode ) )
@@ -1188,7 +1190,7 @@ fl_drw_tbox( int      style,
 			 FL_COLOR c,
 			 int bw_in )
 {
-    FL_POINT vert[ 5 ],
+    FL_POINT vert[ 4 ],          /* need one extra for closing of polygon! */
 		     *fp;
     int dp = fl_dithered( fl_vmode ),
 		bw = bw_in;
@@ -1205,10 +1207,10 @@ fl_drw_tbox( int      style,
     if ( bw == 0 && style != FL_NO_BOX )
 		style = FL_FLAT_BOX;
 
-    fp = vert;
     switch ( style )
     {
 		case FL_TRIANGLE_UPBOX8:
+			fp = vert;
 			AddVertex( fp, xc, y + bw );
 			AddVertex( fp, x + bw, y + h - bw );
 			AddVertex( fp, x + w - bw, y + h - bw );
@@ -1224,6 +1226,7 @@ fl_drw_tbox( int      style,
 			break;
 
 		case FL_TRIANGLE_DOWNBOX8:
+			fp = vert;
 			AddVertex( fp, xc, y + bw );
 			AddVertex( fp, x + bw, y + h - bw );
 			AddVertex( fp, x + w - bw, y + h - bw );
@@ -1239,6 +1242,7 @@ fl_drw_tbox( int      style,
 			break;
 
 		case FL_TRIANGLE_UPBOX2:
+			fp = vert;
 			AddVertex( fp, xc, y + h - bw );
 			AddVertex( fp, x + bw, y + bw );
 			AddVertex( fp, x + w - bw, y + bw );
@@ -1254,6 +1258,7 @@ fl_drw_tbox( int      style,
 			break;
 
 		case FL_TRIANGLE_DOWNBOX2:
+			fp = vert;
 			AddVertex( fp, xc, y + h - bw );
 			AddVertex( fp, x + bw, y + bw );
 			AddVertex( fp, x + w - bw, y + bw );
@@ -1269,6 +1274,7 @@ fl_drw_tbox( int      style,
 			break;
 
 		case FL_TRIANGLE_UPBOX4:
+			fp = vert;
 			AddVertex( fp, x + bw, yc );
 			AddVertex( fp, x + w - bw, y + bw );
 			AddVertex( fp, x + w - bw, y + h - bw );
@@ -1284,6 +1290,7 @@ fl_drw_tbox( int      style,
 			break;
 
 		case FL_TRIANGLE_DOWNBOX4:
+			fp = vert;
 			AddVertex( fp, x + bw, yc );
 			AddVertex( fp, x + w - bw, y + bw );
 			AddVertex( fp, x + w - bw, y + h - bw );
@@ -1299,6 +1306,7 @@ fl_drw_tbox( int      style,
 			break;
 
 		case FL_TRIANGLE_UPBOX6:
+			fp = vert;
 			AddVertex( fp, x + bw, y + bw );
 			AddVertex( fp, x + w - bw, yc );
 			AddVertex( fp, x + bw, y + h - bw );
@@ -1314,6 +1322,7 @@ fl_drw_tbox( int      style,
 			break;
 
 		case FL_TRIANGLE_DOWNBOX6:
+			fp = vert;
 			AddVertex( fp, x + bw, y + bw );
 			AddVertex( fp, x + w - bw, yc );
 			AddVertex( fp, x + bw, y + h - bw );

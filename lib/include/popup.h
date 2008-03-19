@@ -146,15 +146,15 @@ FL_EXPORT void fl_setpup_title(
 		);
 
 FL_EXPORT FL_PUP_ENTERCB fl_setpup_entercb(
-		int			   nm,
-		FL_PUP_ENTERCB cb,
-		void *		   data
+		int			     nm,
+		FL_PUP_ENTERCB   cb,
+		void           * data
 		);
 
 FL_EXPORT FL_PUP_LEAVECB fl_setpup_leavecb(
-		int			   nm,
-		FL_PUP_LEAVECB cb,
-		void *		   data
+		int			     nm,
+		FL_PUP_LEAVECB   cb,
+		void           * data
 		);
 
 FL_EXPORT void fl_setpup_pad(

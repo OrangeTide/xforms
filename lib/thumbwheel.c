@@ -254,12 +254,17 @@ handle( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			sp->oldmx = mx;
 			sp->oldmy = my;
 			sp->start_val = sp->val;
-			/* fall throuugh */
+			/* fall through */
 
 		case FL_DRAG:
+			if ( key != FL_MBUTTON1 )
+				break;
 			cur_pos = ob->type == FL_VERT_THUMBWHEEL ? sp->oldmy : mx;
 			old_pos = ob->type == FL_VERT_THUMBWHEEL ? my : sp->oldmx;
 			value = sp->val + step * ( cur_pos - old_pos );
@@ -282,6 +287,12 @@ handle( FL_OBJECT * ob,
 			return fl_valuator_handle_release( ob, value );
 
 		case FL_RELEASE:
+			if (    ! ( key == FL_MBUTTON1
+				 || (    ob->type == FL_VERT_THUMBWHEEL
+					  && (    key == FL_MBUTTON4
+						   || key == FL_MBUTTON5 ) ) ) )
+				break;
+
 			if (    ob->type == FL_VERT_THUMBWHEEL
 				 && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 ) )
 				value = sp->val + ( key == FL_MBUTTON4 ? step : -step );

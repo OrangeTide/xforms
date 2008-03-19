@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.10 2008/03/12 16:00:23 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.11 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -93,7 +93,7 @@ draw_dial( FL_OBJECT * ob )
 		     radius;
     double dangle;
     SPEC *sp = ob->spec;
-    FL_POINT xp[ 6 ];
+    FL_POINT xp[ 5 ];             /* need one extra for closing of polygon! */
     int boxtype,
 		iradius;
 
@@ -147,10 +147,10 @@ draw_dial( FL_OBJECT * ob )
 		FL_Coord r;
 
 		r = FL_min( 0.5 * iradius, 15 );
-		rotate_it( xp, x + iradius - 1, y - 2, dangle );
+		rotate_it( xp,     x + iradius - 1,     y - 2, dangle );
 		rotate_it( xp + 1, x + iradius - 1 - r, y - 2, dangle );
 		rotate_it( xp + 2, x + iradius - 1 - r, y + 2, dangle );
-		rotate_it( xp + 3, x + iradius - 1, y + 2, dangle );
+		rotate_it( xp + 3, x + iradius - 1,     y + 2, dangle );
 		fl_polygon( 1, xp, 4, ob->col2 );
     }
     else if ( ob->type == FL_LINE_DIAL )
@@ -158,10 +158,10 @@ draw_dial( FL_OBJECT * ob )
 		double dx = 0.1 + 0.08 * iradius,
 			   dy = 0.1 + 0.08 * iradius;
 
-		rotate_it( xp, x, y, dangle );
-		rotate_it( xp + 1, x + dx, y - dy, dangle );
-		rotate_it( xp + 2, x + iradius - 2, y, dangle );
-		rotate_it( xp + 3, x + dx, y + dy, dangle );
+		rotate_it( xp,     x,               y,      dangle );
+		rotate_it( xp + 1, x + dx,          y - dy, dangle );
+		rotate_it( xp + 2, x + iradius - 2, y,      dangle );
+		rotate_it( xp + 3, x + dx,          y + dy, dangle );
 
 		fl_polygon( 1, xp, 4, ob->col2 );
 		fl_polygon( 0, xp, 4, FL_BLACK );
@@ -190,7 +190,7 @@ draw_dial( FL_OBJECT * ob )
 		fl_ovalarc( 1, xo - iradius, yo - iradius, 2 * iradius, 2 * iradius,
 					ti * 10, delta * 10, ob->col2 );
 
-		rotate_it( xp, xo + iradius - 1, yo, dangle );
+		rotate_it( xp,     xo + iradius - 1, yo, dangle );
 		rotate_it( xp + 1, xo + iradius - 1, yo, ti * M_PI / 180.0 );
 		fl_simple_line( FL_crnd( xo ), FL_crnd( yo ),
 						xp[ 0 ].x, xp[ 0 ].y, FL_BLACK );
@@ -371,12 +371,14 @@ handle_dial( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
-			if ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+			if ( key != FL_MBUTTON1 )
 				break;
 			sp->changed = 0;
 			/* fall through */
 
 		case FL_MOUSE:
+			if ( key != FL_MBUTTON1 )
+				break;
 			if ( handle_mouse( ob, mx, my ) )
 				sp->changed = 1;
 			if ( sp->changed && sp->how_return == FL_RETURN_CHANGED )
@@ -389,6 +391,10 @@ handle_dial( FL_OBJECT * ob,
 			break;
 
 		case FL_RELEASE:
+			if (    key != FL_MBUTTON1
+				 && key != FL_MBUTTON4
+				 && key != FL_MBUTTON5 )
+				break;
 			if ( handle_mouse_wheel( ob, ev, key ) )
 				sp->changed = 1;
 			if ( sp->how_return == FL_RETURN_END )

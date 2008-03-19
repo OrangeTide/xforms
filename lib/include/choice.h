@@ -79,12 +79,12 @@ FL_EXPORT void fl_clear_choice(
 		);
 
 FL_EXPORT int fl_addto_choice(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * str
 		);
 
 FL_EXPORT void fl_replace_choice(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 numb,
 		const char * str
 		);
@@ -100,7 +100,7 @@ FL_EXPORT void fl_set_choice(
 		);
 
 FL_EXPORT void fl_set_choice_text(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * txt
 		);
 
@@ -136,20 +136,25 @@ FL_EXPORT void fl_set_choice_align(
 		int			align
 		);
 
+FL_EXPORT int fl_get_choice_item_mode(
+		FL_OBJECT *  ob,
+		int          item
+		);
+
 FL_EXPORT void fl_set_choice_item_mode(
-		FL_OBJECT *	 ob,
-		int			 item,
-		unsigned int mode
+		FL_OBJECT    * ob,
+		int			   item,
+		unsigned int   mode
 		);
 
 FL_EXPORT void fl_set_choice_item_shortcut(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 item,
 		const char * sc
 		);
 
 FL_EXPORT int fl_set_choice_entries(
-		FL_OBJECT *	   ob,
+		FL_OBJECT    * ob,
 		FL_PUP_ENTRY * ent
 		);
 

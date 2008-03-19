@@ -63,6 +63,12 @@
 #define FL_DEBUG   ML_WARN
 #endif
 
+
+/* Mask for all possible events */
+
+#define AllEventsMask   ( ( OwnerGrabButtonMask << 1 ) - 1 )
+
+
 #define DEACTIVATED   -1	/* must be none zero and negative */
 
 /*
@@ -107,14 +113,6 @@ typedef void ( * FL_DRAW_BOX )( int,
 
 #define DO_GAMMA_CORRECTION
 
-/*
- * FL_MAX_MASK_BITS is the same as the event masks defined by X
- */
-
-#define FL_MAX_MASK_BITS    24
-
-#define FL_ALL_MASKS        ( ( 1L << ( FL_MAX_MASK_BITS + 1 ) ) - 1 )
-
 /* XForms internal colormap */
 
 typedef struct
@@ -128,8 +126,6 @@ typedef struct
     int            grayval;
 } FL_IMAP;
 
-
-#define AllEventsMask   ( ( OwnerGrabButtonMask << 1 ) - 1 )
 
 #define BadPixel        FL_NoColor
 
@@ -467,6 +463,7 @@ extern int fl_get_pos_in_slider( FL_Coord,
 								 FL_Coord,
 								 FL_Coord,
 								 FL_Coord,
+								 unsigned int,
 								 int,
 								 double,
 								 FL_Coord,
@@ -703,8 +700,6 @@ extern void fl_draw_object_label( FL_OBJECT * );
 
 extern void fl_set_object_clip( FL_OBJECT *,
 								int );
-
-extern void fl_compress_motion( XEvent * );
 
 extern void fl_get_hv_align( int,
 							 int *,

@@ -38,11 +38,11 @@
 #include "include/forms.h"
 
 typedef struct {
-    FL_FORM *form;
-    void *vdata;
-    char *cdata;
-    long ldata;
-    FL_OBJECT *br;
+    FL_FORM *   form;
+    void *      vdata;
+    char *      cdata;
+    long        ldata;
+    FL_OBJECT * br;
 } FD_form;
 
 
@@ -55,7 +55,7 @@ void load_file( FL_OBJECT * ob,
     const char *fname;
     FD_form *fdui = ob->form->fdui;
 
-    if ( ( fname = fl_show_file_selector( "File To Load","","*","" ) ) )
+    if ( ( fname = fl_show_file_selector( "File To Load", "", "*", "" ) ) )
     {
 		if ( ! fl_load_browser( fdui->br, fname ) )
 			fl_add_browser_line( fdui->br,"NO SUCH FILE!" );
@@ -106,7 +106,7 @@ void hide_show( FL_OBJECT * ob,
 FD_form * create_form(void)
 {
 	FL_OBJECT *obj;
-	FL_Coord x = 20,
+	FL_Coord x  = 20,
 		     dx = 80,
 		     dy = 28;
 	FD_form *fdui = fl_calloc( 1, sizeof *fdui );
@@ -163,7 +163,6 @@ main( int    argc,
 {
    FD_form *fdui;
    FL_OBJECT *o;
-
 
    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 

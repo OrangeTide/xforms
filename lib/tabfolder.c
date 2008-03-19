@@ -236,8 +236,8 @@ fl_create_tabfolder( int          type,
     ob->boxtype = FL_UP_BOX;
     absbw = FL_abs( ob->bw );
 
-    ob->spec_size = sizeof( SPEC );
-    sp = ob->spec = fl_calloc( 1, ob->spec_size );
+    ob->spec_size = sizeof *sp;
+    sp = ob->spec = fl_calloc( 1, sizeof *sp );
     sp->parent = ob;
     sp->forms = NULL;
     sp->title = NULL;
@@ -254,14 +254,14 @@ fl_create_tabfolder( int          type,
 								   ob->h - 2 * absbw, label ? label : "tab" );
 
     sp->canvas->u_vdata = sp;
-    fl_modify_canvas_prop(sp->canvas, 0, 0, canvas_cleanup);
-    fl_set_canvas_decoration(sp->canvas, fl_boxtype2frametype(ob->boxtype));
-    fl_add_canvas_handler(sp->canvas, Expose, canvas_handler, 0);
+    fl_modify_canvas_prop( sp->canvas, 0, 0, canvas_cleanup );
+    fl_set_canvas_decoration( sp->canvas, fl_boxtype2frametype( ob->boxtype ) );
+    fl_add_canvas_handler( sp->canvas, Expose, canvas_handler, 0 );
 
-    fl_set_object_color(sp->canvas, ob->col1, ob->col2);
-    fl_set_object_bw(sp->canvas, ob->bw);
-    fl_set_object_gravity(sp->canvas, ob->nwgravity, ob->segravity);
-    fl_set_coordunit(oldu);
+    fl_set_object_color( sp->canvas, ob->col1, ob->col2 );
+    fl_set_object_bw( sp->canvas, ob->bw );
+    fl_set_object_gravity( sp->canvas, ob->nwgravity, ob->segravity );
+    fl_set_coordunit( oldu );
 
     return ob;
 }
@@ -278,11 +278,11 @@ fl_add_tabfolder( int          type,
 				  FL_Coord     h,
 				  const char * l )
 {
-    FL_OBJECT *ob = fl_create_tabfolder(type, x, y, w, h, l);
+    FL_OBJECT *ob = fl_create_tabfolder( type, x, y, w, h, l );
     SPEC *sp = ob->spec;
 
-    fl_add_child(ob, sp->canvas);
-    fl_add_object(fl_current_form, ob);
+    fl_add_child( ob, sp->canvas );
+    fl_add_object( fl_current_form, ob );
 
     return ob;
 }
@@ -294,7 +294,7 @@ fl_add_tabfolder( int          type,
 int
 fl_get_tabfolder_numfolders( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec)->nforms;
+    return ( ( SPEC * ) ob->spec )->nforms;
 }
 
 
@@ -312,12 +312,12 @@ program_switch( FL_OBJECT * ob,
     {
 		sp = ob->u_vdata;
 		sp->non_interactive = 1;
-		switch_folder(ob, folder);
+		switch_folder( ob, folder );
 		sp->non_interactive = 0;
 
 		/* this handles set_folder while hidden */
 
-		if (!ob->visible || !ob->form->visible)
+		if ( ! ob->visible || ! ob->form->visible )
 			sp->last_active = folder;
     }
 }
@@ -337,54 +337,54 @@ switch_folder( FL_OBJECT * ob,
     int active = data;
 
 #if TBDEBUG
-    fl_print_tabfolder(sp->parent, "SwitchFolder");
-    fprintf(stderr, "data=%ld active=%d lastactive=%d\n",
-			data, sp->active_folder, sp->last_active);
+    fl_print_tabfolder( sp->parent, "SwitchFolder" );
+    fprintf( stderr, "data=%ld active=%d lastactive=%d\n",
+			 data, sp->active_folder, sp->last_active );
 #endif
 
-    if (active == sp->active_folder || sp->processing_destroy)
+    if ( active == sp->active_folder || sp->processing_destroy )
     {
 		sp->processing_destroy = 0;
 		return;
     }
 
-    if (!ob->form->window || !FL_ObjWin(sp->canvas))
+    if ( ! ob->form->window || !FL_ObjWin( sp->canvas ) )
 		return;
 
-    if (sp->auto_fit != FL_NO)
+    if ( sp->auto_fit != FL_NO )
     {
-		if (sp->auto_fit == FL_FIT)
-			fl_set_form_size(form, sp->canvas->w, sp->canvas->h);
-		else if (form->w < sp->canvas->w || form->h < sp->canvas->h)
-			fl_set_form_size(form, sp->canvas->w, sp->canvas->h);
+		if ( sp->auto_fit == FL_FIT )
+			fl_set_form_size( form, sp->canvas->w, sp->canvas->h );
+		else if ( form->w < sp->canvas->w || form->h < sp->canvas->h )
+			fl_set_form_size( form, sp->canvas->w, sp->canvas->h );
     }
 
     /* we have more tabs than that can be shown */
 
-    if (sp->num_visible < sp->nforms - 1 || sp->offset)
+    if ( sp->num_visible < sp->nforms - 1 || sp->offset )
     {
-		if ((active && active == sp->offset) || active > sp->num_visible)
+		if ( ( active && active == sp->offset ) || active > sp->num_visible )
 		{
 			int last;
 
-			shift_tabs(ob, active == sp->offset ? -1 : 1);
-			sp->title[active]->boxtype &= ~FL_BROKEN_BOX;
-			sp->title[active]->align = FL_ALIGN_CENTER;
+			shift_tabs( ob, active == sp->offset ? -1 : 1 );
+			sp->title[ active ]->boxtype &= ~FL_BROKEN_BOX;
+			sp->title[ active ]->align = FL_ALIGN_CENTER;
 			last = sp->num_visible + sp->offset + 1;
-			last = FL_clamp(last, 0, sp->nforms - 1);
-			sp->title[last]->boxtype |= FL_BROKEN_BOX;
-			sp->title[last]->align = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
-			fl_redraw_form(ob->form);
+			last = FL_clamp( last, 0, sp->nforms - 1 );
+			sp->title[ last ]->boxtype |= FL_BROKEN_BOX;
+			sp->title[ last ]->align = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
+			fl_redraw_form( ob->form );
 		}
     }
 
-    win = fl_prepare_form_window(form, 0, 0, "Folder");
+    win = fl_prepare_form_window( form, 0, 0, "Folder" );
 
     /* win reparent eats the reparent event */
 
-    fl_winreparent(win, FL_ObjWin(sp->canvas));
+    fl_winreparent( win, FL_ObjWin( sp->canvas ) );
     form->parent_obj = ob;
-    fl_show_form_window(form);
+    fl_show_form_window( form );
 
     /* need to redraw the last selected folder tab */
 
@@ -392,15 +392,15 @@ switch_folder( FL_OBJECT * ob,
     {
 		FL_OBJECT *actobj;
 
-		actobj = sp->title[sp->active_folder];
+		actobj = sp->title[ sp->active_folder ];
 		actobj->col1 = sp->parent->col1;
 
-		fl_set_object_boxtype(actobj,
-							  ob->parent->type != FL_BOTTOM_TABFOLDER ?
-							  FL_TOPTAB_UPBOX : FL_BOTTOMTAB_UPBOX);
+		fl_set_object_boxtype( actobj,
+							   ob->parent->type != FL_BOTTOM_TABFOLDER ?
+							   FL_TOPTAB_UPBOX : FL_BOTTOMTAB_UPBOX );
 
-		fl_drw_frame(FL_UP_FRAME, sp->canvas->x, sp->canvas->y, sp->canvas->w,
-					 sp->canvas->h, sp->canvas->col1, sp->canvas->bw);
+		fl_drw_frame( FL_UP_FRAME, sp->canvas->x, sp->canvas->y, sp->canvas->w,
+					  sp->canvas->h, sp->canvas->col1, sp->canvas->bw );
 		fl_hide_form( sp->forms[ sp->active_folder ] );
 		sp->forms[ sp->active_folder ]->parent_obj = 0;
 		sp->last_active = sp->active_folder;
@@ -411,20 +411,20 @@ switch_folder( FL_OBJECT * ob,
 
     /* find out the color of the new form */
 
-    if ((bkob = form->first) && bkob->type == FL_NO_BOX)
+    if ( ( bkob = form->first ) && bkob->type == FL_NO_BOX )
 		bkob = bkob->next;
 
-    if (bkob)
-		fl_set_object_color(ob, bkob->col1, ob->col2);
+    if ( bkob )
+		fl_set_object_color( ob, bkob->col1, ob->col2 );
 
-    fl_set_object_boxtype(ob, ob->parent->type != FL_BOTTOM_TABFOLDER ?
-						  FL_SELECTED_TOPTAB_UPBOX :
-						  FL_SELECTED_BOTTOMTAB_UPBOX);
+    fl_set_object_boxtype( ob, ob->parent->type != FL_BOTTOM_TABFOLDER ?
+						   FL_SELECTED_TOPTAB_UPBOX :
+						   FL_SELECTED_BOTTOMTAB_UPBOX );
 
     sp->active_folder = active;
 
-    if (!sp->non_interactive)
-		fl_call_object_callback(ob->parent);
+    if ( ! sp->non_interactive )
+		fl_call_object_callback( ob->parent );
 }
 
 
@@ -443,19 +443,19 @@ fl_addto_tabfolder( FL_OBJECT *  ob,
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err(func, "%s not a folder class", ob ? ob->label : "null");
+		M_err( func, "%s not a folder class", ob ? ob->label : "null" );
 		return 0;
     }
 
     if ( ! form || ! title )
     {
-		M_err(func, "Invalid argument(s)");
+		M_err( func, "Invalid argument(s)" );
 		return 0;
     }
 
     if ( form->attached )
     {
-		M_err(func, "Seems the form already attached");
+		M_err( func, "Seems the form already attached" );
 		return 0;
     }
 
@@ -488,8 +488,8 @@ fl_addto_tabfolder( FL_OBJECT *  ob,
     sp->nforms++;
     compute_position( ob );
 
-    fl_add_child(ob, tab);
-    fl_add_object(ob->form, tab);
+    fl_add_child( ob, tab );
+    fl_add_object( ob->form, tab );
 
     if ( sp->nforms == 1 )
     {
@@ -569,7 +569,7 @@ fl_print_tabfolder( FL_OBJECT *  ob,
     fprintf( stderr, "%s*************\n", s );
     for ( i = 0; i < sp->nforms; i++ )
 		fprintf( stderr, "folder%d: title=%s form=%p\n",
-				 i, sp->title[i]->label, sp->forms[ i ] );
+				 i, sp->title[ i ]->label, sp->forms[ i ] );
 }
 #endif
 
@@ -732,7 +732,8 @@ fl_set_folder_byname( FL_OBJECT *  ob,
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err("SetFolderName", "%s is not tabfolder", ob ? ob->label : "null");
+		M_err( "SetFolderName", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return;
     }
 
@@ -854,7 +855,8 @@ fl_get_folder_name( FL_OBJECT * ob )
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err("GetFolderName", "%s is not tabfolder", ob ? ob->label : "null");
+		M_err( "GetFolderName", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return NULL;
     }
 
@@ -867,7 +869,7 @@ fl_get_folder_name( FL_OBJECT * ob )
  ***************************************/
 
 FL_FORM *
-fl_get_active_folder(FL_OBJECT * ob)
+fl_get_active_folder( FL_OBJECT * ob )
 {
     SPEC *sp;
 
@@ -891,10 +893,10 @@ fl_get_active_folder_name( FL_OBJECT * ob )
 {
     SPEC *sp;
 
-    if ( ! IsFolderClass(ob ) )
+    if ( ! IsFolderClass( ob ) )
     {
 		M_err( "GetActiveFolderName", "%s is not tabfolder",
-			  ob ? ob->label : "null");
+			  ob ? ob->label : "null" );
 		return NULL;
     }
 
@@ -1093,7 +1095,7 @@ static void
 compute_position( FL_OBJECT * ob )
 {
 #if 0
-    if ( ( ( SPEC * ) ob->spec) ->nforms == 0 )
+    if ( ( ( SPEC * ) ob->spec ) ->nforms == 0 )
 		return;
 #endif
 #if TBDEBUG

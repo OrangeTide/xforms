@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_ver = "$Id: version.c,v 1.13 2008/01/28 23:24:26 jtt Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.14 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -66,17 +66,17 @@ int
 fl_library_version( int * ver,
 					int * rev )
 {
-    int const v = FL_VERSION;
-    int const r = FL_REVISION;
-
-    if ( rev )
-		*rev = r;
     if ( ver )
-		*ver = v;
+		*ver = FL_VERSION;
+    if ( rev )
+		*rev = FL_REVISION;
 
-    return v * 1000 + r;
+    return FL_VERSION * 1000 + FL_REVISION;
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 fl_print_version( int g )
@@ -86,8 +86,8 @@ fl_print_version( int g )
 		       **q = version;
     int n;
 
-    fl_snprintf( tmp, 100, "FORMS Library Version %d.%d",
-				 FL_VERSION, FL_REVISION );
+    fl_snprintf( tmp, sizeof tmp, "FORMS Library Version %d.%d.%s",
+				 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
     p[ 0 ] = tmp;
 
     for ( n = 1; *q; n++, q++ )

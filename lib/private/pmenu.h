@@ -34,19 +34,19 @@
 
 typedef struct
 {
-    int           numitems;				/* number of items in menu */
-    int           val;					/* last menu item selected */
-    char *        items[ MAXITEMS ];	/* individual menu items   */
-    char *        shortcut[ MAXITEMS ];	/* shortcuts for items */
-    unsigned char mode[ MAXITEMS ];		/* menu item mode */
-    int           align;				/* not used. here to mirror FL_CHOICE */
-    int           extern_menu;			/* if external pop is used */
-    int           menu;					/* pop-up ID               */
-    short         showsymbol;			/* whether menu symbol is to be shown */
-    short         shown;				/* if shown                     */
-    char          mval[ MAXITEMS ];		/* entry value, position based */
-    char          modechange[ MAXITEMS ];
-    char          cur_val;				/* a counter for the value      */
+    int             numitems;				/* number of items in menu */
+    int             val;					/* last menu item selected */
+    char          * items[ MAXITEMS ];	    /* individual menu items   */
+    char          * shortcut[ MAXITEMS ];	/* shortcuts for items */
+    unsigned char   mode[ MAXITEMS ];		/* menu item mode */
+    int             align;				    /* onle here to mirror FL_CHOICE */
+    int             extern_menu;			/* if external pop is used */
+    short           showsymbol;			    /* whether symbol is to be shown */
+    short           shown;				    /* if shown                     */
+    char            mval[ MAXITEMS ];		/* entry value, position based */
+    char            modechange[ MAXITEMS ];
+    char            cur_val;				/* a counter for the value      */
+	int             no_title;
 } FL_MENU_SPEC;
 
 #endif

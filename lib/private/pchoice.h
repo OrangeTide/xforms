@@ -38,19 +38,19 @@
 
 typedef struct
 {
-    int           numitems;		/* number of items in choice */
-    int           val;			/* last menu item selected */
-    char *        items[ FL_CHOICE_MAXITEMS + 1 ];	/* choice items */
-    char *        shortcut[ FL_CHOICE_MAXITEMS + 1 ];
-    unsigned char mode[ FL_CHOICE_MAXITEMS + 1 ];
-    int           align;			/* the choice text is aligned */
-    int           counter;		/* counts mouse events */
-    int           fontsize;		/* font size */
-    int           fontstyle;		/* font style */
-    int           pushed;
-    int           below;
-    unsigned char modechange[ FL_CHOICE_MAXITEMS + 1 ];
-    int           no_title;
+    int             numitems;		/* number of items in choice */
+    int             val;			/* last menu item selected */
+    char          * items[ FL_CHOICE_MAXITEMS + 1 ];	/* choice items */
+    char          * shortcut[ FL_CHOICE_MAXITEMS + 1 ];
+    unsigned char   mode[ FL_CHOICE_MAXITEMS + 1 ];
+    int             align;			/* the choice text is aligned */
+    int             fontsize;		/* font size */
+    int             fontstyle;		/* font style */
+    int             pushed;
+    int             below;
+    unsigned char   modechange[ FL_CHOICE_MAXITEMS + 1 ];
+	int             counter;
+    int             no_title;
 } FL_CHOICE_SPEC;
 
 #endif

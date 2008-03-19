@@ -65,14 +65,14 @@ FL_EXPORT GLXContext fl_get_glcanvas_context(
 		);
 
 FL_EXPORT Window fl_glwincreate(
-		int *        config,
+		int        * config,
 		GLXContext * context,
 		int          w,
 		int          h
 		);
 
 FL_EXPORT Window fl_glwinopen(
-		int *        config,
+		int        * config,
 		GLXContext * context,
 		int          w,
 		int          h

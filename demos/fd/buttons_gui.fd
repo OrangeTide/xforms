@@ -195,7 +195,7 @@ argument:
 --------------------
 class: FL_LIGHTBUTTON
 type: PUSH_BUTTON
-box: 20 170 92 30
+box: 20 170 108 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_CENTER

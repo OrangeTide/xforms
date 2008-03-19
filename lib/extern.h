@@ -61,7 +61,6 @@ extern int fl_bestvmode,
 
 extern int fl_scrh,
            fl_scrw;
-extern unsigned int fl_keymask;
 
 extern FL_WM_STUFF fl_wmstuff;
 extern float fl_dpi;

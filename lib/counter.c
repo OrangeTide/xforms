@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.8 2008/01/28 23:17:40 jtt Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -276,7 +276,7 @@ handle_mouse( FL_OBJECT * ob,
 			changeval = 1;
 		sp->timeout_id = -1;
     }
-    else if ( event == FL_MOUSE && sp->mouseobj != NONE )
+    else if ( event == FL_UPDATE && sp->mouseobj != NONE )
 		changeval = sp->timeout_id == -1;
 
     if ( changeval )
@@ -373,6 +373,9 @@ handle_counter( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			sp->changed = handle_mouse( ob, event, mx, my );
 
 			if ( sp->how_return == FL_RETURN_CHANGED && sp->changed )
@@ -382,10 +385,10 @@ handle_counter( FL_OBJECT * ob,
 			}
 			break;
 
-		case FL_MOUSE:
+		case FL_UPDATE:
+			fprintf( stderr, "FL_UDATE\n" );
 			if ( handle_mouse( ob, event, mx, my ) )
 				sp->changed = 1;
-
 			if ( sp->how_return == FL_RETURN_CHANGED && sp->changed )
 			{
 				sp->changed = 0;
@@ -394,14 +397,21 @@ handle_counter( FL_OBJECT * ob,
 			break;
 
 		case FL_RELEASE:
+			if ( key != FL_MBUTTON1 )
+				break;
+
 			if ( handle_mouse( ob, event, mx, my ) )
 				sp->changed = 1;
 			else if ( sp->how_return == FL_RETURN_END_CHANGED && sp->changed )
+			{
+				show_focus_obj( ob, mx, my );
 				return 1;
+			}
+			show_focus_obj( ob, mx, my );
 			break;
 
+		case FL_MOUSE:
 		case FL_ENTER:
-		case FL_MOTION:
 		case FL_LEAVE:
 			show_focus_obj( ob, mx, my );
 			break;
@@ -431,11 +441,13 @@ fl_create_counter( int          type,
     SPEC *sp;
 
     ob = fl_make_object( FL_COUNTER, type, x, y, w, h, label, handle_counter );
-    ob->boxtype = FL_COUNTER_BOXTYPE;
-    ob->col1 = FL_COUNTER_COL1;
-    ob->col2 = FL_COUNTER_COL2;
-    ob->align = FL_COUNTER_ALIGN;
-    ob->lcol = FL_COUNTER_LCOL;
+    ob->boxtype     = FL_COUNTER_BOXTYPE;
+    ob->col1        = FL_COUNTER_COL1;
+    ob->col2        = FL_COUNTER_COL2;
+    ob->align       = FL_COUNTER_ALIGN;
+    ob->lcol        = FL_COUNTER_LCOL;
+	ob->want_motion = 1;
+	ob->want_update = 1;
 
     /* counter has a different default */
 
@@ -443,19 +455,18 @@ fl_create_counter( int          type,
 		ob->bw = FL_COUNTER_BW;
 
     ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
-    sp->min = -1000000.0;
-    sp->max = 1000000.0;
-    sp->sstep = 0.1;
-    sp->lstep = 1.0;
-    sp->val = 0.0;
-    sp->prec = 1;
-    sp->mouseobj = NONE;
-    sp->draw_type = ALL;
+    sp = ob->spec  = fl_calloc( 1, sizeof *sp );
+    sp->min        = -1000000.0;
+    sp->max        = 1000000.0;
+    sp->sstep      = 0.1;
+    sp->lstep      = 1.0;
+    sp->val        = 0.0;
+    sp->prec       = 1;
+    sp->mouseobj   = NONE;
+    sp->draw_type  = ALL;
     sp->how_return = FL_RETURN_END_CHANGED;
-	sp->filter = NULL;
-
-    sp->repeat_ms = 100;
+	sp->filter     = NULL;
+    sp->repeat_ms  = 100;
     sp->timeout_id = -1;
 
     return ob;

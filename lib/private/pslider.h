@@ -44,25 +44,32 @@ typedef const char * ( * SL_FILTER )( FL_OBJECT *, double, int );
 
 typedef struct
 {
-    double min;			/* minimal value of slider */
-    double max;			/* maximal value of slider */
-    double val;			/* current value of slider */
-    int prec;			/* precision when printing value */
-    int how_return;		/* whether always returning value */
-    double step;		/* step size             */
-    double ldelta;		/* "left mouse" step   */
-    double rdelta;		/* "right mouse " step   */
-    double slsize;		/* size of the slider    */
-    double oldval;
-    double norm_val;		/* normalized value between 0 & 1 */
-    double oldnorm_val;		/* normalized value between 0 & 1 */
-    int drawtype;
+    double    min;			/* minimal value of slider */
+    double    max;			/* maximal value of slider */
+    double    val;			/* current value of slider */
+    int       prec;			/* precision when printing value */
+    int       how_return;	/* whether always returning value */
+    double    step;			/* step size             */
+    double    ldelta;		/* "left mouse" step   */
+    double    rdelta;		/* "right mouse " step   */
+    double    slsize;		/* size of the slider    */
+    double    oldval;
+    double    norm_val;		/* normalized value between 0 & 1 */
+    double    oldnorm_val;		/* normalized value between 0 & 1 */
+    int       drawtype;
     SL_FILTER filter;
-    FL_Coord offx;
-    FL_Coord offy;
-    FL_Coord x, y, w, h;	/* draw (dbl buffer): adjustment report box */
-    FL_Coord mx, my, mw, mh;	/* mouse: after adjustment for report box   */
-    int mouse, lmouse;		/* part the mouse is on                     */
+    FL_Coord  offx;
+    FL_Coord  offy;
+    FL_Coord  x,	        /* draw (dbl buffer): adjustment report box */
+	          y,
+	          w,
+	          h;
+    FL_Coord  mx,
+	          my,
+	          mw,
+	          mh;	        /* mouse: after adjustment for report box   */
+    int mouse,		        /* part the mouse is on                     */
+	    lmouse;
 } FL_SLIDER_SPEC;
 
 #else

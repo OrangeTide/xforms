@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.10 2008/03/12 16:00:25 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -90,7 +90,8 @@ val_to_index( SPEC * sp,
 static int
 do_menu( FL_OBJECT * ob )
 {
-    int i,
+    int popup_id,
+		i,
 		val;
     SPEC *sp = ob->spec;
 
@@ -112,35 +113,38 @@ do_menu( FL_OBJECT * ob )
 		fl_reparent_pup( sp->extern_menu, FL_ObjWin( ob ) );
 		val = fl_dopup( sp->extern_menu );
 
+		if ( val > 0 )
+			sp->val = val;
+
 		/* menu might go away, need to restore old parent */
 
 		fl_reparent_pup( sp->extern_menu, oparent );
 		return val;
     }
 
-    sp->menu = fl_newpup( FL_ObjWin( ob ) );
+    popup_id = fl_newpup( FL_ObjWin( ob ) );
 
-    if ( ob->type != FL_PULLDOWN_MENU )
-		fl_setpup_title( sp->menu, ob->label );
+    if ( ob->type != FL_PULLDOWN_MENU && ! sp->no_title )
+		fl_setpup_title( popup_id, ob->label );
     else
     {
-		fl_setpup_shadow( sp->menu, 0 );
-		fl_setpup_softedge( sp->menu, 1 );
+		fl_setpup_shadow( popup_id, 0 );
+		fl_setpup_softedge( popup_id, 1 );
     }
 
     for ( i = 1; i <= sp->numitems; i++ )
     {
-		fl_addtopup( sp->menu, sp->items[ i ] );
+		fl_addtopup( popup_id, sp->items[ i ] );
 		if (    ( sp->modechange[ i ] || sp->mode[ i ] != FL_PUP_NONE )
 			 && sp->mval[ i ] )
 		{
-			fl_setpup_mode( sp->menu, sp->mval[ i ], sp->mode[ i ] );
+			fl_setpup_mode( popup_id, sp->mval[ i ], sp->mode[ i ] );
 			sp->modechange[ i ] = 0;
 		}
-		fl_setpup_shortcut( sp->menu, i, sp->shortcut[ i ] );
+		fl_setpup_shortcut( popup_id, i, sp->shortcut[ i ] );
     }
 
-    val = fl_dopup( sp->menu );
+    val = fl_dopup( popup_id );
 
     if ( val > 0 )
     {
@@ -152,7 +156,7 @@ do_menu( FL_OBJECT * ob )
 		{
 			for ( i = 1; i <= sp->numitems; i++ )
 			{
-				int m = fl_getpup_mode( sp->menu, sp->mval[ i ] );
+				int m = fl_getpup_mode( popup_id, sp->mval[ i ] );
 
 				sp->modechange[ i ] = sp->mode[ i ] != m;
 				sp->mode[ i ] = m;
@@ -163,34 +167,32 @@ do_menu( FL_OBJECT * ob )
 		{
 			int k = val_to_index( sp, val );
 
-			sp->mode[ k ] = fl_getpup_mode( sp->menu, val );
+			sp->mode[ k ] = fl_getpup_mode( popup_id, val );
 			sp->modechange[ k ] = 1;
 
 			/* old val also might change mode if binary */
 
 			if ( sp->val > 0 )
 			{
-				int m = fl_getpup_mode( sp->menu, sp->val );
+				int m = fl_getpup_mode( popup_id, sp->val );
 
 				k = val_to_index( sp, sp->val );
 				sp->modechange[ k ] = sp->mode[ k ] != m;
 				sp->mode[ k ] = m;
 			}
 		}
+
+		sp->val = val;
     }
 
-    fl_freepup( sp->menu );
-    sp->menu = 0;
+    fl_freepup( popup_id );
 
     return val;
 }
 
 
 /***************************************
- * Handles an event, returns whether value has changed. Here
- * we only update sp->val if dopup return a positive value,
- * otherwise two radio button might be set due to mode[val]
- * and sp->val checking reset
+ * Handles an event, return non-zero if an item has been selected.
  ***************************************/
 
 static int
@@ -202,10 +204,8 @@ handle_menu( FL_OBJECT * ob,
 			 void *      ev   FL_UNUSED_ARG )
 {
     SPEC *sp = ob->spec;
-    static int i = -1;
-    int boxtype = ob->boxtype,
-		bw = ob->bw,
-		dm;
+    int val,
+		boxtype = ob->boxtype;
     FL_COLOR col;
 
 #if FL_DEBUG >= ML_DEBUG
@@ -217,8 +217,7 @@ handle_menu( FL_OBJECT * ob,
 		case FL_DRAW:
 			/* Draw the object */
 
-			if (    ( ob->type == FL_PUSH_MENU  && ob->pushed )
-				 || ( ob->type == FL_TOUCH_MENU && ob->belowmouse ) )
+			if ( ob->pushed || ob->belowmouse )
 				col = ob->col2;
 			else
 				col = ob->col1;
@@ -226,66 +225,114 @@ handle_menu( FL_OBJECT * ob,
 			if ( ob->type == FL_PULLDOWN_MENU && ob->pushed )
 				boxtype = FL_UP_BOX;
 
-			fl_drw_box( boxtype, ob->x, ob->y, ob->w, ob->h, col, bw );
+			fl_drw_box( boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
 			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
 						 ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
 			if ( sp->showsymbol )
 			{
-				dm = 0.85 * FL_min( ob->w, ob->h );
+				int dm = 0.85 * FL_min( ob->w, ob->h );
+
 				fl_drw_text( 0, ob->x + ob->w - dm - 1, ob->y + 1,
 							 dm, dm, col, 0, 0, "@menu" );
 			}
-			return 0;
+			break;
 
 		case FL_ENTER:
-			if ( ob->type == FL_TOUCH_MENU )
-			{
-				fl_redraw_object( ob );
-				if ( ( i = do_menu( ob ) ) > 0 )
-					sp->val = i;
-			}
-			return 0;
+			/* Everything except touch menus just get shown as highlighted
+			   when the mouse is getting on top of them while for touch
+			   menus interaction gets started */
+
+			if ( ob->type == FL_PULLDOWN_MENU )
+				ob->belowmouse = 1;
+			else
+				ob->pushed = 1;
+			fl_redraw_object( ob );
+
+			if ( ob->type != FL_TOUCH_MENU )
+				break;
+
+			val = do_menu( ob ) > 0;
+			ob->pushed = ob->belowmouse = 0;
+			fl_redraw_object( ob );
+			return val > 0;
 
 		case FL_LEAVE:
-			fl_redraw_object( ob );
-			return ob->type == FL_TOUCH_MENU && sp->val != -1 && i > 0;
-
-		case FL_PUSH:
-			if ( ob->type == FL_PUSH_MENU || ob->type == FL_PULLDOWN_MENU )
+			if ( ob->type != FL_TOUCH_MENU )
 			{
-				fl_redraw_object( ob );
-				if ( ob->type == FL_PULLDOWN_MENU )
-					fl_setpup_position( ob->form->x + ob->x + 1,
-										  ob->form->y + ob->y + ob->h
-										+ 2 * FL_PUP_PADH + 1 );
-				if ( ( i = do_menu( ob ) ) > 0 )
-					sp->val = i;
+				ob->pushed = 0;
 				fl_redraw_object( ob );
 			}
-			return 0;
+			break;
 
-		case FL_RELEASE:
-			fl_redraw_object( ob );
-			return ob->type != FL_TOUCH_MENU && sp->val != -1 && i > 0;
+		case FL_PUSH:
+			/* Touch menus and push menus without a title don't do anything
+			   on a button press */
+
+			if (    key != FL_MBUTTON1
+				 || ob->type == FL_TOUCH_MENU
+				 || ( ob->type == FL_PUSH_MENU && sp->no_title ) )
+				break;
+
+			/* Popup for pulldown menus appears directly below the menu,
+			   all others get their position from where the mouse is */
+
+			if ( ob->type == FL_PULLDOWN_MENU )
+			{
+				ob->pushed = 1;
+				fl_redraw_object( ob );
+				fl_setpup_position( ob->form->x + ob->x + 2,
+									ob->form->y + ob->y + ob->h
+									+ 2 * FL_PUP_PADH + 1 );
+			}
+			return do_menu( ob ) > 0;
+
+		case FL_RELEASE :
+			/* Button release is only important for push menus without a
+			   title, all others get started by a button press or by just
+			   moving the mouse on top of it (and they also don't expect
+			   a release - that gets eaten by the popup handler) */
+
+			if (    key != FL_MBUTTON1
+				 || ! ( ob->type == FL_PUSH_MENU && sp->no_title )
+				 || mx < ob->x
+				 || mx > ob->x + ob->w
+				 || my < ob->y
+				 || my > ob->y + ob->h  )
+				break;
+
+			/* Push menus without a title only: position the popup exactly
+			   below the menu and do interaction */
+
+			fl_setpup_position( ob->form->x + ob->x + 2,
+								ob->form->y + ob->y + ob->h
+								+ 2 * FL_PUP_PADH + 1 );
+			return do_menu( ob ) > 0;
 
 		case FL_SHORTCUT:
+			/* Show menu as highlighted */
+
 			ob->pushed = 1;
 			fl_redraw_object( ob );
-			if ( ob->type == FL_PULLDOWN_MENU )
-				fl_setpup_position( ob->form->x + ob->x + 1,
+
+			/* Pulldown menus and those without a title appear directly
+			   below the menu itself, the others more or less on top of
+			   the menu */
+
+			if ( ob->type == FL_PULLDOWN_MENU || sp->no_title )
+				fl_setpup_position( ob->form->x + ob->x + 2,
 									  ob->form->y + ob->y + ob->h
 									+ 2 * FL_PUP_PADH + 1 );
 			else
 				fl_setpup_position( ob->form->x + ob->x + 5,
-									ob->form->y + ob->y + ob->h + 5 );
+									ob->form->y + ob->y + 5 + 2 * FL_PUP_PADH );
 
-			if ( ( i = do_menu( ob ) ) != sp->val && i > 0 ) 
-				sp->val = i;
+			/* Do interaction and then redraw without highlighting */
 
+			val = do_menu( ob );
 			ob->pushed = 0;
 			fl_redraw_object( ob );
-			return sp->val != -1 && i > 0;
+			return val > 0;
 
 		case FL_FREEMEM:
 			fl_clear_menu( ob );
@@ -433,10 +480,9 @@ int
 fl_addto_menu( FL_OBJECT  * ob,
 			   const char * menustr )
 {
+    SPEC *sp= ob->spec;
     char *t,
-		 *c,
-		 *n;
-    SPEC *sp;
+		 *c;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
@@ -446,17 +492,14 @@ fl_addto_menu( FL_OBJECT  * ob,
     }
 #endif
 
-    sp = ob->spec;
-
 	/* Split up menu string at '|' chars and create an entry for each part */
 
-	for ( c = t = fl_strdup( menustr ); c; c = n )
-	{
-		n = strchr( c, '|' );
-		if ( n )
-			*n++ = '\0';
+	t = fl_strdup( menustr );
+
+    for ( c = strtok( t, "|" );
+		  c && sp->numitems < FL_CHOICE_MAXITEMS;
+		  c = strtok( NULL, "|" ) )
 		addto_menu( ob, c );
-	}
 
 	if ( t )
 		fl_free( t );
@@ -774,4 +817,19 @@ fl_get_menu_popup( FL_OBJECT * ob )
     SPEC *sp = ob->spec;
 
     return ISPUP( sp ) ? sp->extern_menu : -1;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_set_menu_notitle( FL_OBJECT * ob,
+					 int         n )
+{
+    SPEC *sp = ob->spec;
+    int old = sp->no_title;
+
+    sp->no_title = n;
+    return old;
 }

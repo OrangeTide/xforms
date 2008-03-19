@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_lbut = "$Id: lightbut.c,v 1.8 2008/03/12 17:59:20 jtt Exp $";
+char *fl_id_lbut = "$Id: lightbut.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -54,58 +54,60 @@ typedef FL_BUTTON_STRUCT SPEC;
 static void
 draw_lightbutton( FL_OBJECT * ob )
 {
-    int c1, c2, libox;
-    FL_Coord xx, yy, ww, hh, absbw = FL_abs(ob->bw), bw2;
+    int c1,
+		c2,
+		libox;
+    FL_Coord xx,
+		     yy,
+		     ww,
+		     hh,
+		     absbw = FL_abs( ob->bw ),
+		     bw2;
     SPEC *sp = ob->spec;
 
     c1 = ob->belowmouse ? FL_LIGHTBUTTON_MCOL : FL_LIGHTBUTTON_TOPCOL;
     c2 = sp->val ? ob->col2 : ob->col1;
 
-    fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw);
+    fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
 
-    if (ob->boxtype == FL_NO_BOX || ob->boxtype == FL_FLAT_BOX)
-		absbw = FL_abs(FL_BOUND_WIDTH);
+    if ( ob->boxtype == FL_NO_BOX || ob->boxtype == FL_FLAT_BOX )
+		absbw = FL_abs( FL_BOUND_WIDTH );
 
     /* otherwise too close to the edge */
 
-    if (absbw < 3)
+    if ( absbw < 3 )
 		absbw = 3;
 
     /* Calculate and draw the light */
 
-    hh = ob->h - 3 * absbw - 1;
+	hh = FL_max( ob->h - 3 * absbw - 1, FL_LIGHTBUTTON_MINSIZE );
 
-    if (hh < FL_LIGHTBUTTON_MINSIZE)
-		hh = FL_LIGHTBUTTON_MINSIZE;
-
-    ww = hh / 2;
-    if (ww < FL_LIGHTBUTTON_MINSIZE)
-		ww = FL_LIGHTBUTTON_MINSIZE;
+    ww = FL_max( hh / 2, FL_LIGHTBUTTON_MINSIZE );
     if (ww > ob->w / 6)
 		ww = ob->w / 6;
 
     xx = ob->x + 1.5 * absbw + 1;
     yy = ob->y + ob->h / 2 - hh / 2;
 
-    absbw = FL_abs(ob->bw);
+    absbw = FL_abs( ob->bw );
 
     /* adjustment for non-rectangular boxes */
 
-    if (ob->boxtype == FL_ROUNDED3D_UPBOX ||
-		ob->boxtype == FL_ROUNDED3D_DOWNBOX)
+    if (    ob->boxtype == FL_ROUNDED3D_UPBOX
+		 || ob->boxtype == FL_ROUNDED3D_DOWNBOX )
     {
 		hh -= 2;
 		yy += 1;
-		xx += 3 + (ob->w * 0.01f);
+		xx += 3 + ob->w * 0.01;
 		ww -= 1;
     }
-    else if (ob->boxtype == FL_RSHADOW_BOX)
+    else if ( ob->boxtype == FL_RSHADOW_BOX )
     {
 		hh -= 1;
 		xx += 1;
     }
 
-    switch (ob->boxtype)
+    switch ( ob->boxtype )
     {
 		case FL_UP_BOX:
 		case FL_ROUNDED3D_UPBOX:
@@ -136,25 +138,25 @@ draw_lightbutton( FL_OBJECT * ob )
 			break;
     }
 
-    bw2 = (absbw > 2) ? (absbw - 1) : absbw;
-    fl_drw_box(libox, xx, yy, ww, hh, c2, bw2);
+    bw2 = absbw > 2 ? absbw - 1 : absbw;
+    fl_drw_box( libox, xx, yy, ww, hh, c2, bw2 );
 
     /* Draw the label */
 
     if ( ( ob->align & ~ FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER )
-		fl_drw_text(FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
-					ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label);
+		fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
+					 ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
-		fl_draw_object_label(ob);
+		fl_draw_object_label( ob );
 
     ww = 0.75f * ob->h;
-    if (ww < absbw + 1)
+    if ( ww < absbw + 1 )
 		ww = absbw + 1;
 
-    if (ob->type == FL_RETURN_BUTTON)
-		fl_drw_text(0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
-					0.6 * ob->h, 0.6 * ob->h,
-					ob->lcol, 0, 0, "@returnarrow");
+    if ( ob->type == FL_RETURN_BUTTON )
+		fl_drw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
+					 0.6 * ob->h, 0.6 * ob->h,
+					 ob->lcol, 0, 0, "@returnarrow" );
 }
 
 
@@ -172,13 +174,15 @@ fl_create_lightbutton( int          type,
 {
     FL_OBJECT *ob;
 
-    fl_add_button_class(FL_LIGHTBUTTON, draw_lightbutton, 0);
-    ob = fl_create_generic_button(FL_LIGHTBUTTON, type, x, y, w, h, label);
+    fl_add_button_class( FL_LIGHTBUTTON, draw_lightbutton, NULL );
+    ob = fl_create_generic_button( FL_LIGHTBUTTON, type, x, y, w, h, label );
+
     ob->boxtype = FL_LIGHTBUTTON_BOXTYPE;
-    ob->col1 = FL_LIGHTBUTTON_COL1;
-    ob->col2 = FL_LIGHTBUTTON_COL2;
-    ob->align = FL_LIGHTBUTTON_ALIGN;
-    ob->lcol = FL_LIGHTBUTTON_LCOL;
+    ob->col1    = FL_LIGHTBUTTON_COL1;
+    ob->col2    = FL_LIGHTBUTTON_COL2;
+    ob->align   = FL_LIGHTBUTTON_ALIGN;
+    ob->lcol    = FL_LIGHTBUTTON_LCOL;
+
     return ob;
 }
 
@@ -195,8 +199,8 @@ fl_add_lightbutton( int          type,
 					FL_Coord     h,
 					const char * label )
 {
-    FL_OBJECT *ob = fl_create_lightbutton(type, x, y, w, h, label);
+    FL_OBJECT *ob = fl_create_lightbutton( type, x, y, w, h, label );
 
-    fl_add_object(fl_current_form, ob);
+    fl_add_object( fl_current_form, ob );
     return ob;
 }

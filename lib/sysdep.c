@@ -40,7 +40,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sysd = "$Id: sysdep.c,v 1.7 2008/01/28 23:23:18 jtt Exp $";
+char *fl_id_sysd = "$Id: sysdep.c,v 1.8 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -119,7 +119,7 @@ fl_now( void )
 unsigned long
 fl_msleep( unsigned long msec )
 {
-    float wait_time =1.0e-3 * msec;
+    float wait_time = 1.0e-3 * msec;
     ( void ) lib$wait( &wait_time );
     return 0;
 }

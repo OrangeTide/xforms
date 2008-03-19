@@ -267,9 +267,9 @@ FL_EXPORT FD_CMDLOG * fl_get_command_log_fdstruct(
 
 typedef struct
 {
-	FL_FORM *	fselect;
-	void *		vdata;
-	void *		cdata;
+	FL_FORM   * fselect;
+	void      * vdata;
+	void      * cdata;
 	long		ldata;
 	FL_OBJECT * browser,
 			  * input,
@@ -320,8 +320,8 @@ FL_EXPORT void fl_set_fselector_border(
 			fl_set_fselector_border( ( b ) ? FL_TRANSIENT : FL_FULLBORDER )
 
 FL_EXPORT void fl_set_fselector_callback(
-		FL_FSCB fscb,
-		void *	data
+		FL_FSCB   fscb,
+		void    * data
 		);
 
 FL_EXPORT const char * fl_get_filename(
@@ -351,7 +351,7 @@ FL_EXPORT void fl_refresh_fselector(
 FL_EXPORT void fl_add_fselector_appbutton(
 		const char * label,
 		void		 ( * cb )( void * ),
-		void *		 data
+		void       * data
 		);
 
 FL_EXPORT void fl_remove_fselector_appbutton(
@@ -389,12 +389,13 @@ FL_EXPORT void fl_set_fselector_filetype_marker(
 
 #define fl_show_file_selector	  fl_show_fselector
 #define fl_set_fselector_cb		  fl_set_fselector_callback
+
 #define fl_set_fselector_title( s )	  \
 		fl_set_form_title( fl_get_fselector_form( ), s )
 
 FL_EXPORT int fl_goodies_atclose(
 		FL_FORM * form,
-		void *	  data
+		void    * data
 		);
 
 

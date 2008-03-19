@@ -38,8 +38,7 @@ typedef enum
 	FL_SELECT_BROWSER,
 	FL_HOLD_BROWSER,
 	FL_MULTI_BROWSER
-}
-FL_BROWSER_TYPE;
+} FL_BROWSER_TYPE;
 
 /***** Defaults *****/
 
@@ -80,24 +79,24 @@ FL_EXPORT void fl_clear_browser(
 		);
 
 FL_EXPORT void fl_add_browser_line(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * newtext
 		);
 
 FL_EXPORT void fl_addto_browser(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * newtext
 		);
 
 FL_EXPORT void fl_addto_browser_chars(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * str
 		);
 
 #define fl_append_browser  fl_addto_browser_chars
 
 FL_EXPORT void fl_insert_browser_line(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 linenumb,
 		const char * newtext
 		);
@@ -108,7 +107,7 @@ FL_EXPORT void fl_delete_browser_line(
 		);
 
 FL_EXPORT void fl_replace_browser_line(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 linenumb,
 		const char * newtext
 		);
@@ -119,7 +118,7 @@ FL_EXPORT const char *fl_get_browser_line(
 		);
 
 FL_EXPORT int fl_load_browser(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * f
 		);
 
@@ -197,16 +196,16 @@ FL_EXPORT void fl_set_browser_line_selectable(
 
 FL_EXPORT void fl_get_browser_dimension(
 		FL_OBJECT * ob,
-		FL_Coord *	x,
-		FL_Coord *	y,
-		FL_Coord *	w,
-		FL_Coord *	h
+		FL_Coord  * x,
+		FL_Coord  * y,
+		FL_Coord  * w,
+		FL_Coord  * h
 		);
 
 FL_EXPORT void fl_set_browser_dblclick_callback(
-		FL_OBJECT *	   ob,
-		FL_CALLBACKPTR cb,
-		long		   a
+		FL_OBJECT      * ob,
+		FL_CALLBACKPTR   cb,
+		long		     a
 		);
 
 FL_EXPORT void fl_set_browser_xoffset(
@@ -240,15 +239,15 @@ typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *ob, int, void * );
 #endif
 
 FL_EXPORT void fl_set_browser_hscroll_callback(
-		FL_OBJECT *				   ob,
-		FL_BROWSER_SCROLL_CALLBACK cb,
-		void *					   data
+		FL_OBJECT                  * ob,
+		FL_BROWSER_SCROLL_CALLBACK   cb,
+		void                       * data
 		);
 
 FL_EXPORT void fl_set_browser_vscroll_callback(
-		FL_OBJECT *				   ob,
-		FL_BROWSER_SCROLL_CALLBACK cb,
-		void *					   data
+		FL_OBJECT                  * ob,
+		FL_BROWSER_SCROLL_CALLBACK   cb,
+		void                       * data
 		);
 
 FL_EXPORT FL_BROWSER_SCROLL_CALLBACK fl_get_browser_hscroll_callback(

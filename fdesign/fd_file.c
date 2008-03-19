@@ -39,6 +39,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "fd_main.h"
@@ -56,75 +57,89 @@
 #define OBJ_Y(ob)   obj->y
 #endif
 
+
+/***************************************
+ ***************************************/
+
 static void
-save_object(FILE * fl, FL_OBJECT * obj)
+save_object( FILE      * fl,
+			 FL_OBJECT * obj )
 {
-    char name[MAX_VAR_LEN], cbname[MAX_VAR_LEN], argname[MAX_VAR_LEN];
-    double sc = get_conversion_factor();
+    char name[ MAX_VAR_LEN ],
+		 cbname[ MAX_VAR_LEN ],
+		 argname[ MAX_VAR_LEN ];
+    double sc = get_conversion_factor( );
     FL_OBJECT fake_obj;
 
-    if (obj->is_child)
-	return;
+    if ( obj->is_child )
+		return;
 
-    get_object_name(obj, name, cbname, argname);
+    get_object_name( obj, name, cbname, argname );
 
-    fprintf(fl, "\n--------------------\n");
-    fprintf(fl, "class: %s\n", class_name(obj->objclass));
-    fprintf(fl, "type: %s\n", find_type_name(obj->objclass, obj->type));
+    fprintf( fl, "\n--------------------\n" );
+    fprintf( fl, "class: %s\n", class_name( obj->objclass ) );
+    fprintf( fl, "type: %s\n", find_type_name( obj->objclass, obj->type ) );
 
     fake_obj.x = obj->x;
     fake_obj.y = obj->y;
     fake_obj.w = obj->w;
     fake_obj.h = obj->h;
-    fl_scale_object(&fake_obj, sc, sc);
-    fprintf(fl, "box: %d %d %d %d\n", fake_obj.x, fake_obj.y, fake_obj.w, fake_obj.h);
+    fl_scale_object( &fake_obj, sc, sc );
+    fprintf( fl, "box: %d %d %d %d\n", fake_obj.x, fake_obj.y,
+			 fake_obj.w, fake_obj.h );
 
-    fprintf(fl, "boxtype: %s\n", boxtype_name(obj->boxtype));
-    fprintf(fl, "colors: %s %s\n", fl_query_colorname(obj->col1),
-	    fl_query_colorname(obj->col2));
-    fprintf(fl, "alignment: %s\n", align_name(obj->align));
-    fprintf(fl, "style: %s\n", style_name(obj->lstyle));
-    fprintf(fl, "size: %s\n", lsize_name(obj->lsize));
-    fprintf(fl, "lcol: %s\n", fl_query_colorname(obj->lcol));
-    fprintf(fl, "label: %s\n", get_label(obj, 0));
-    fprintf(fl, "shortcut: %s\n", get_shortcut_string(obj));
-    fprintf(fl, "resize: %s\n", resize_name(obj->resize));
-    fprintf(fl, "gravity: %s %s\n",
-	    gravity_name(obj->nwgravity),
-	    gravity_name(obj->segravity));
-    fprintf(fl, "name: %s\n", name);
-    fprintf(fl, "callback: %s\n", cbname);
-    fprintf(fl, "argument: %s\n", argname);
+    fprintf( fl, "boxtype: %s\n", boxtype_name( obj->boxtype ) );
+    fprintf( fl, "colors: %s %s\n", fl_query_colorname( obj->col1 ),
+			 fl_query_colorname( obj->col2 ) );
+    fprintf( fl, "alignment: %s\n", align_name( obj->align ) );
+    fprintf( fl, "style: %s\n", style_name( obj->lstyle ) );
+    fprintf( fl, "size: %s\n", lsize_name( obj->lsize ) );
+    fprintf( fl, "lcol: %s\n", fl_query_colorname( obj->lcol ) );
+    fprintf( fl, "label: %s\n", get_label( obj, 0 ) );
+    fprintf( fl, "shortcut: %s\n", get_shortcut_string( obj ) );
+    fprintf( fl, "resize: %s\n", resize_name( obj->resize ) );
+    fprintf( fl, "gravity: %s %s\n",
+			 gravity_name( obj->nwgravity ),
+			 gravity_name( obj->segravity ) );
+    fprintf( fl, "name: %s\n", name );
+    fprintf( fl, "callback: %s\n", cbname );
+    fprintf( fl, "argument: %s\n", argname );
 
     save_objclass_spec_info(fl, obj);
 }
 
-/* My version of fgets, removing heading name:  */
+
+/***************************************
+ * My version of fgets, removing heading name:
+ ***************************************/
+
 static void
-myfgets(char *line, FILE * fl)
+myfgets( char * line,
+		 FILE * fl )
 {
-    char tmpstr[10000];		/* Maximal label length is limited here. */
-    int i = 0, j;
-    int ch;
-    ch = fgetc(fl);
-    while (ch != '\n' && ch != EOF)
+    char tmpstr[ 10000 ];		/* Maximal label length is limited here. */
+    int i = 0,
+		j;
+    int ch = fgetc(fl);
+
+    while ( ch != '\n' && ch != EOF )
     {
-	tmpstr[i++] = ch;
-	ch = fgetc(fl);
+		tmpstr[ i++ ] = ch;
+		ch = fgetc( fl );
     }
 
-    tmpstr[i] = '\0';
+    tmpstr[ i ] = '\0';
 
     i = 0;
-    while (tmpstr[i] != ':' && tmpstr[i + 1] != ' ')
-	i++;
+    while ( tmpstr[ i ] != ':' && tmpstr[ i + 1 ] != ' ' )
+		i++;
 
     i += 2;
     j = 0;
 
     do
-	line[j++] = tmpstr[i++];
-    while (tmpstr[i - 1] != '\0');
+		line[ j++ ] = tmpstr[ i++ ];
+    while ( tmpstr[ i - 1 ] != '\0' );
 }
 
 /*
@@ -135,8 +150,7 @@ myfgets(char *line, FILE * fl)
 typedef struct
 {
     int oldval, newval;
-}
-Trantable;
+} Trantable;
 
 static Trantable tcolor[] =
 {

@@ -29,14 +29,18 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd/pmbrowse_gui.h"
 #include <stdlib.h>
 
-FD_ttt * fd_ttt;
+FD_ttt *fd_ttt;
 
 static int load_file( const char *,
 					  void       * );
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -53,6 +57,10 @@ main( int    argc,
     fl_do_forms( );
     return 0;
 }
+
+
+/***************************************
+ ***************************************/
 
 static int
 load_file( const char * fname,
@@ -95,6 +103,9 @@ load_file( const char * fname,
 }
 
 
+/***************************************
+ ***************************************/
+
 void done( FL_OBJECT * ob  FL_UNUSED_ARG,
 		   long        q   FL_UNUSED_ARG )
 {
@@ -102,6 +113,9 @@ void done( FL_OBJECT * ob  FL_UNUSED_ARG,
     exit( 0 );
 }
 
+
+/***************************************
+ ***************************************/
 
 void reload( FL_OBJECT * ob  FL_UNUSED_ARG,
 			 long        q   FL_UNUSED_ARG )

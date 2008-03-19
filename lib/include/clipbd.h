@@ -40,17 +40,17 @@ typedef int ( * FL_SELECTION_CB )( FL_OBJECT *, long, const void *, long );
 #define FL_LOSE_SELECTION_CALLBACK	 FL_LOSE_SELECTION_CB
 
 FL_EXPORT int fl_stuff_clipboard(
-		FL_OBJECT *			 ob,
-		long				 type,
-		const void *		 data,
-		long				 size,
-		FL_LOSE_SELECTION_CB lose_callback
+		FL_OBJECT            * ob,
+		long				   type,
+		const void           * data,
+		long				   size,
+		FL_LOSE_SELECTION_CB   lose_callback
 		);
 
 FL_EXPORT int fl_request_clipboard(
-		FL_OBJECT *		ob,
-		long			type,
-		FL_SELECTION_CB got_it_callback
+		FL_OBJECT       * ob,
+		long			  type,
+		FL_SELECTION_CB   got_it_callback
 		);
 
 

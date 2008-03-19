@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.8 2008/01/28 23:18:48 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -408,7 +408,7 @@ fl_enumerate_loaded_font( void )
 
 /***************************************
  * Similar to fl_get_string_xxxGC except that there is no side effects.
- * Must not free the fontstruct as structure FL_FONT cache the
+ * Must not free the fontstruct as structure FL_FONT caches the
  * structure for possible future use.
  ***************************************/
 
@@ -544,8 +544,7 @@ fl_get_string_dimension( int          fntstyle,
 {
     const char *p,
 		       *q;
-    int w,
-		h,
+    int h,
 		maxw = 0,
 		maxh = 0;
 
@@ -553,15 +552,13 @@ fl_get_string_dimension( int          fntstyle,
 
     for ( q = s; *q && ( p = strchr( q, '\n' ) ); q = p + 1 )
     {
-		w = fl_get_string_width( fntstyle, fntsize, q, p - q );
-		if ( maxw < w )
-			maxw = w;
+		maxw = FL_max( maxw,
+					   fl_get_string_width( fntstyle, fntsize, q, p - q ) );
 		maxh += h;
     }
 
-    w = fl_get_string_width( fntstyle, fntsize, q, len - ( q - s ) );
-    if ( maxw < w )
-		maxw = w;
+    maxw = FL_max( maxw, fl_get_string_width( fntstyle, fntsize,
+											  q, len - ( q - s ) ) );
     maxh += h;
 
     *width = maxw;

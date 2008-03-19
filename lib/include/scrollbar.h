@@ -87,8 +87,8 @@ FL_EXPORT void fl_set_scrollbar_increment(
 
 FL_EXPORT void fl_get_scrollbar_increment(
 		FL_OBJECT * ob,
-		double *	a,
-		double *	b
+		double    * a,
+		double    * b
 		);
 
 FL_EXPORT void fl_set_scrollbar_bounds(
@@ -99,8 +99,8 @@ FL_EXPORT void fl_set_scrollbar_bounds(
 
 FL_EXPORT void fl_get_scrollbar_bounds(
 		FL_OBJECT * ob,
-		double *	b1,
-		double *	b2
+		double    * b1,
+		double    * b2
 		);
 
 FL_EXPORT void fl_set_scrollbar_return(

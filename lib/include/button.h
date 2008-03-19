@@ -43,28 +43,27 @@ typedef enum
 	FL_RETURN_BUTTON,
 	FL_HIDDEN_RET_BUTTON,
 	FL_MENU_BUTTON
-}
-FL_BUTTON_TYPE;
+} FL_BUTTON_TYPE;
 
 #define FL_TOGGLE_BUTTON	FL_PUSH_BUTTON
 
 typedef struct
 {
-	Pixmap		 pixmap,
-				 mask;
-	unsigned int bits_w,
-				 bits_h;
-	int			 val;			/* whether on */
-	int			 mousebut;		/* mouse button that caused the push	 */
-	int			 timdel;		/* time since last touch (TOUCH buttons) */
-	int			 event;			/* what event triggers redraw			 */
-	long		 cspecl;		/* reserved for class specfic stuff		 */
-	void *		 cspecv;		/* misc. things							 */
-	char *		 filename;
-	Pixmap		 focus_pixmap,
-				 focus_mask;
-	char *		 focus_filename;
-	long		 reserverd[ 2 ];
+	Pixmap		   pixmap,
+				   mask;
+	unsigned int   bits_w,
+				   bits_h;
+	int			   val;			/* whether on */
+	int			   mousebut;	/* mouse button that caused the push	 */
+	int			   timdel;		/* time since last touch (TOUCH buttons) */
+	int			   event;		/* what event triggers redraw			 */
+	long		   cspecl;		/* reserved for class specfic stuff		 */
+	void 		 * cspecv;		/* misc. things							 */
+	char 		 * filename;
+	Pixmap		   focus_pixmap,
+				   focus_mask;
+	char 		 * focus_filename;
+	long		   reserverd[ 2 ];
 } FL_BUTTON_SPEC;
 
 #define FL_BUTTON_STRUCT FL_BUTTON_SPEC
@@ -79,36 +78,36 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
  *	normal button default
  */
 
-#define FL_BUTTON_BOXTYPE	FL_UP_BOX
-#define FL_BUTTON_COL1		FL_COL1
-#define FL_BUTTON_COL2		FL_COL1
-#define FL_BUTTON_LCOL		FL_LCOL
-#define FL_BUTTON_ALIGN		FL_ALIGN_CENTER
-#define FL_BUTTON_MCOL1		FL_MCOL
-#define FL_BUTTON_MCOL2		FL_MCOL
-#define FL_BUTTON_BW		FL_BOUND_WIDTH
+#define FL_BUTTON_BOXTYPE	        FL_UP_BOX
+#define FL_BUTTON_COL1		        FL_COL1
+#define FL_BUTTON_COL2		        FL_COL1
+#define FL_BUTTON_LCOL		        FL_LCOL
+#define FL_BUTTON_ALIGN		        FL_ALIGN_CENTER
+#define FL_BUTTON_MCOL1		        FL_MCOL
+#define FL_BUTTON_MCOL2		        FL_MCOL
+#define FL_BUTTON_BW		        FL_BOUND_WIDTH
 
 /*
  *	light button defaults
  */
-#define FL_LIGHTBUTTON_BOXTYPE	FL_UP_BOX
-#define FL_LIGHTBUTTON_COL1		FL_COL1
-#define FL_LIGHTBUTTON_COL2		FL_YELLOW
-#define FL_LIGHTBUTTON_LCOL		FL_LCOL
-#define FL_LIGHTBUTTON_ALIGN	FL_ALIGN_CENTER
-#define FL_LIGHTBUTTON_TOPCOL	FL_COL1
-#define FL_LIGHTBUTTON_MCOL		FL_MCOL
-#define FL_LIGHTBUTTON_MINSIZE	( ( FL_Coord ) 12 )
+#define FL_LIGHTBUTTON_BOXTYPE	    FL_UP_BOX
+#define FL_LIGHTBUTTON_COL1		    FL_COL1
+#define FL_LIGHTBUTTON_COL2		    FL_YELLOW
+#define FL_LIGHTBUTTON_LCOL		    FL_LCOL
+#define FL_LIGHTBUTTON_ALIGN	    FL_ALIGN_CENTER
+#define FL_LIGHTBUTTON_TOPCOL	    FL_COL1
+#define FL_LIGHTBUTTON_MCOL		    FL_MCOL
+#define FL_LIGHTBUTTON_MINSIZE	    ( ( FL_Coord ) 12 )
 
 /** round button defaults ***/
 
-#define FL_ROUNDBUTTON_BOXTYPE	FL_NO_BOX
-#define FL_ROUNDBUTTON_COL1		FL_MCOL
-#define FL_ROUNDBUTTON_COL2		FL_YELLOW
-#define FL_ROUNDBUTTON_LCOL		FL_LCOL
-#define FL_ROUNDBUTTON_ALIGN	FL_ALIGN_CENTER
-#define FL_ROUNDBUTTON_TOPCOL	FL_COL1
-#define FL_ROUNDBUTTON_MCOL		FL_MCOL
+#define FL_ROUNDBUTTON_BOXTYPE	    FL_NO_BOX
+#define FL_ROUNDBUTTON_COL1		    FL_MCOL
+#define FL_ROUNDBUTTON_COL2		    FL_YELLOW
+#define FL_ROUNDBUTTON_LCOL		    FL_LCOL
+#define FL_ROUNDBUTTON_ALIGN	    FL_ALIGN_CENTER
+#define FL_ROUNDBUTTON_TOPCOL	    FL_COL1
+#define FL_ROUNDBUTTON_MCOL		    FL_MCOL
 
 /* round3d button defaults	 */
 
@@ -122,30 +121,30 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 
 /** check button defaults ***/
 
-#define FL_CHECKBUTTON_BOXTYPE	FL_NO_BOX
-#define FL_CHECKBUTTON_COL1		FL_COL1
-#define FL_CHECKBUTTON_COL2		FL_YELLOW
-#define FL_CHECKBUTTON_LCOL		FL_LCOL
-#define FL_CHECKBUTTON_ALIGN	FL_ALIGN_CENTER
+#define FL_CHECKBUTTON_BOXTYPE	    FL_NO_BOX
+#define FL_CHECKBUTTON_COL1		    FL_COL1
+#define FL_CHECKBUTTON_COL2		    FL_YELLOW
+#define FL_CHECKBUTTON_LCOL		    FL_LCOL
+#define FL_CHECKBUTTON_ALIGN	    FL_ALIGN_CENTER
 
-#define FL_CHECKBUTTON_TOPCOL	FL_COL1
-#define FL_CHECKBUTTON_MCOL		FL_MCOL
-
-/** bitmap button defaults **/
-
-#define FL_BITMAPBUTTON_BOXTYPE FL_UP_BOX
-#define FL_BITMAPBUTTON_COL1	FL_COL1				/* bitmap background  */
-#define FL_BITMAPBUTTON_COL2	FL_BLUE				/* "focus" color	   */
-#define FL_BITMAPBUTTON_LCOL	FL_LCOL				/* bitmap foreground   */
-#define FL_BITMAPBUTTON_ALIGN	FL_ALIGN_BOTTOM
+#define FL_CHECKBUTTON_TOPCOL	    FL_COL1
+#define FL_CHECKBUTTON_MCOL		    FL_MCOL
 
 /** bitmap button defaults **/
 
-#define FL_PIXMAPBUTTON_BOXTYPE FL_UP_BOX
-#define FL_PIXMAPBUTTON_COL1	FL_COL1				/* box col	  */
-#define FL_PIXMAPBUTTON_COL2	FL_YELLOW			/* bound rect */
-#define FL_PIXMAPBUTTON_LCOL	FL_LCOL
-#define FL_PIXMAPBUTTON_ALIGN	FL_ALIGN_BOTTOM
+#define FL_BITMAPBUTTON_BOXTYPE     FL_UP_BOX
+#define FL_BITMAPBUTTON_COL1	    FL_COL1			/* bitmap background  */
+#define FL_BITMAPBUTTON_COL2	    FL_BLUE			/* "focus" color	   */
+#define FL_BITMAPBUTTON_LCOL	    FL_LCOL			/* bitmap foreground   */
+#define FL_BITMAPBUTTON_ALIGN	    FL_ALIGN_BOTTOM
+
+/** bitmap button defaults **/
+
+#define FL_PIXMAPBUTTON_BOXTYPE     FL_UP_BOX
+#define FL_PIXMAPBUTTON_COL1	    FL_COL1			/* box col	  */
+#define FL_PIXMAPBUTTON_COL2	    FL_YELLOW		/* bound rect */
+#define FL_PIXMAPBUTTON_LCOL	    FL_LCOL
+#define FL_PIXMAPBUTTON_ALIGN	    FL_ALIGN_BOTTOM
 
 /***** Routines *****/
 
@@ -303,12 +302,12 @@ FL_EXPORT FL_OBJECT * fl_add_labelbutton(
 		);
 
 FL_EXPORT void fl_set_bitmapbutton_file(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * file
 		);
 
 FL_EXPORT void fl_set_bitmapbutton_data(
-		FL_OBJECT *		ob,
+		FL_OBJECT     * ob,
 		int				w,
 		int				h,
 		unsigned char * bits
@@ -343,12 +342,12 @@ FL_EXPORT void fl_set_pixmapbutton_focus_outline(
 		);
 
 FL_EXPORT void fl_set_pixmapbutton_focus_data(
-		FL_OBJECT * ob,
-		char **		bits
+		FL_OBJECT  * ob,
+		char      ** bits
 		);
 
 FL_EXPORT void fl_set_pixmapbutton_focus_file(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		const char * fname
 		);
 
@@ -364,7 +363,7 @@ FL_EXPORT int fl_get_button(
 
 FL_EXPORT void fl_set_button(
 		FL_OBJECT * ob,
-		int pushed
+		int         pushed
 		);
 
 FL_EXPORT int fl_get_button_numb(

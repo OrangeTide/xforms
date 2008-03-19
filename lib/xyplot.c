@@ -41,7 +41,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.9 2008/03/12 16:00:28 jtt Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.10 2008/03/19 21:04:24 jtt Exp $";
 #endif
 
 
@@ -238,6 +238,9 @@ draw_square( FL_OBJECT * ob  FL_UNUSED_ARG,
 		h2 = h / 2;
     FL_POINT *ps = p + n;
 
+	if ( flx->win == None )
+		return;
+
     for ( ; p < ps; p++ )
 		XDrawRectangle( flx->display, flx->win, flx->gc,
 						p->x - w2, p->y - h2, w, h );
@@ -259,6 +262,9 @@ draw_circle( FL_OBJECT * ob  FL_UNUSED_ARG,
 		h2 = h / 2;
     FL_POINT *ps = p + n;
 
+	if ( flx->win == None )
+		return;
+
     for ( ; p < ps; p++ )
 		XDrawArc( flx->display, flx->win, flx->gc, p->x - w2, p->y - h2,
 				  w, h, 0, 64 * 360 );
@@ -279,6 +285,9 @@ draw_points( FL_OBJECT * ob  FL_UNUSED_ARG,
     FL_POINT *ps = p + n;
     int w2 = w / 2,
 	    h2 = h / 2;
+
+	if ( flx->win == None )
+		return;
 
     for ( ; p < ps; p++ )
     {

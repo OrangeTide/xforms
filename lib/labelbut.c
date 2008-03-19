@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fbut = "$Id: labelbut.c,v 1.7 2008/03/12 16:00:24 jtt Exp $";
+char *fl_id_fbut = "$Id: labelbut.c,v 1.8 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,9 +59,12 @@ draw_labelbutton( FL_OBJECT * ob )
 {
     FL_COLOR scol = ob->lcol;
     FL_COLOR col = ob->lcol;
-    FL_Coord dh, dw, ww, absbw = FL_abs(ob->bw);
+    FL_Coord dh,
+		     dw,
+		     ww,
+		     absbw = FL_abs( ob->bw );
 
-    if (ob->belowmouse)
+    if ( ob->belowmouse )
 		col = ob->col1;
     if ( ( ( SPEC * ) ob->spec )->val )
 		col = ob->col2;
@@ -69,19 +72,17 @@ draw_labelbutton( FL_OBJECT * ob )
     ob->lcol = col;
 
     dh = 0.6 * ob->h;
-    dw = FL_min(0.6 * ob->w, dh);
+    dw = FL_min( 0.6 * ob->w, dh );
 
     ww = 0.75 * ob->h;
-    if (ww < (dw + absbw + 1 + (ob->bw > 0)))
-		ww = dw + absbw + 1 + (ob->bw > 0);
+    if ( ww < dw + absbw + 1 + ( ob->bw > 0 ) )
+		ww = dw + absbw + 1 + ( ob->bw > 0 );
 
-    if (ob->type == FL_RETURN_BUTTON)
-    {
-		fl_drw_text(0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
-					dw, dh, ob->lcol, 0, 0, "@returnarrow");
-    }
+    if ( ob->type == FL_RETURN_BUTTON )
+		fl_drw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
+					 dw, dh, ob->lcol, 0, 0, "@returnarrow" );
 
-    fl_draw_object_label(ob);
+    fl_draw_object_label( ob );
     ob->lcol = scol;
 }
 
@@ -100,13 +101,15 @@ fl_create_labelbutton( int          type,
 {
     FL_OBJECT *ob;
 
-    fl_add_button_class(FL_LABELBUTTON, draw_labelbutton, 0);
-    ob = fl_create_generic_button(FL_LABELBUTTON, type, x, y, w, h, label);
+    fl_add_button_class( FL_LABELBUTTON, draw_labelbutton, NULL );
+    ob = fl_create_generic_button( FL_LABELBUTTON, type, x, y, w, h, label );
+
     ob->boxtype = FL_FLAT_BOX;
-    ob->col1 = FL_RED;
-    ob->col2 = FL_BLUE;
-    ob->align = FL_LIGHTBUTTON_ALIGN;
-    ob->lcol = FL_LIGHTBUTTON_LCOL;
+    ob->col1    = FL_RED;
+    ob->col2    = FL_BLUE;
+    ob->align   = FL_LIGHTBUTTON_ALIGN;
+    ob->lcol    = FL_LIGHTBUTTON_LCOL;
+
     return ob;
 }
 
@@ -125,7 +128,8 @@ fl_add_labelbutton( int          type,
 {
     FL_OBJECT *ob;
 
-    ob = fl_create_labelbutton(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+    ob = fl_create_labelbutton( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, ob );
+
     return ob;
 }

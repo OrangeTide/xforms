@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_lframe = "$Id: lframe.c,v 1.7 2008/03/12 16:00:25 jtt Exp $";
+char *fl_id_lframe = "$Id: lframe.c,v 1.8 2008/03/19 21:04:23 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -56,70 +56,77 @@ handle_lframe( FL_OBJECT * ob,
 			   int         key  FL_UNUSED_ARG,
 			   void *      ev   FL_UNUSED_ARG )
 {
-    int sx, sy, sw, sh, align, bw = FL_abs(ob->bw), dy;
-    int margin, len;
+    int sx,
+		sy,
+		sw,
+		sh,
+		align,
+		bw = FL_abs( ob->bw ),
+		dy;
+    int margin,
+		len;
 
-    switch (event)
+    switch ( event )
     {
 		case FL_DRAW:
-			fl_drw_frame(ob->type, ob->x, ob->y, ob->w, ob->h,
-						 ob->col1, ob->bw);
+			fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
+						  ob->col1, ob->bw );
 			/* fall through */
 
 		case FL_DRAWLABEL:
-			if (!(len = strlen(ob->label)))
+			if ( ! ( len = strlen( ob->label ) ) )
 				return 0;
 
-			fl_get_string_dimension(ob->lstyle, ob->lsize,
-									ob->label, len, &sw, &sh);
+			fl_get_string_dimension( ob->lstyle, ob->lsize,
+									 ob->label, len, &sw, &sh );
 
 			align = ob->align & ~FL_ALIGN_INSIDE;
 
 			sw += 8;
-			margin = 11 + (ob->w * 0.02);
+			margin = 11 + ob->w * 0.02;
 			dy = 0;
 
-			if (ob->type == FL_ROUNDED_FRAME)
+			if ( ob->type == FL_ROUNDED_FRAME )
 				margin += 7;
 
-			if ((ob->w - sw) < 2 * margin)
+			if ( ob->w - sw < 2 * margin )
 			{
 				margin /= 2;
 				sw -= 2;
 			}
 
-			if ((ob->w - sw) < 2 * margin)
+			if ( ob->w - sw < 2 * margin )
 			{
 				margin /= 2;
 				sw -= 2;
 			}
 
-			if (ob->type == FL_UP_FRAME || ob->type == FL_DOWN_FRAME)
-				dy = (bw + 1) / 2;
+			if ( ob->type == FL_UP_FRAME || ob->type == FL_DOWN_FRAME )
+				dy = ( bw + 1 ) / 2;
 
-			if (align == FL_ALIGN_TOP_RIGHT || align == FL_ALIGN_RIGHT)
+			if ( align == FL_ALIGN_TOP_RIGHT || align == FL_ALIGN_RIGHT )
 			{
 				sx = ob->x + ob->w - margin - sw;
 				sy = ob->y - sh / 2 - dy;
 			}
-			else if (align == FL_ALIGN_TOP)
+			else if ( align == FL_ALIGN_TOP )
 			{
-				sx = ob->x + (ob->w - sw) / 2;
+				sx = ob->x + ( ob->w - sw ) / 2;
 				sy = ob->y - sh / 2 - dy;
 			}
-			else if (align == FL_ALIGN_LEFT_BOTTOM)
+			else if ( align == FL_ALIGN_LEFT_BOTTOM )
 			{
 				sx = ob->x + margin;
 				sy = ob->y + ob->h - sh / 2 + dy;
 			}
-			else if (align == FL_ALIGN_BOTTOM_RIGHT)
+			else if ( align == FL_ALIGN_BOTTOM_RIGHT )
 			{
 				sx = ob->x + ob->w - margin - sw;
 				sy = ob->y + ob->h - sh / 2 + dy;
 			}
-			else if (align == FL_ALIGN_BOTTOM)
+			else if ( align == FL_ALIGN_BOTTOM )
 			{
-				sx = ob->x + (ob->w - sw) / 2;
+				sx = ob->x + ( ob->w - sw ) / 2;
 				sy = ob->y + ob->h - sh / 2 + dy;
 			}
 			else
@@ -128,10 +135,10 @@ handle_lframe( FL_OBJECT * ob,
 				sy = ob->y - sh / 2 - dy;
 			}
 
-			fl_drw_box(FL_FLAT_BOX, sx, sy, sw, sh, ob->col2, 0);
+			fl_drw_box( FL_FLAT_BOX, sx, sy, sw, sh, ob->col2, 0 );
 
-			fl_drw_text(FL_ALIGN_CENTER, sx, sy, sw, sh,
-						ob->lcol, ob->lstyle, ob->lsize, ob->label);
+			fl_drw_text( FL_ALIGN_CENTER, sx, sy, sw, sh,
+						 ob->lcol, ob->lstyle, ob->lsize, ob->label );
 			break;
     }
 
@@ -152,13 +159,15 @@ fl_create_labelframe( int          type,
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_LABELFRAME, type, x, y, w, h, label, handle_lframe);
+    ob = fl_make_object( FL_LABELFRAME, type, x, y, w, h, label,
+						 handle_lframe );
     ob->boxtype = FL_NO_BOX;
-    ob->col1 = FL_FRAME_COL1;
-    ob->col2 = FL_FRAME_COL2;
-    ob->lcol = FL_FRAME_LCOL;
-    ob->align = FL_ALIGN_TOP_LEFT;
-    ob->active = 0;
+    ob->col1    = FL_FRAME_COL1;
+    ob->col2    = FL_FRAME_COL2;
+    ob->lcol    = FL_FRAME_LCOL;
+    ob->align   = FL_ALIGN_TOP_LEFT;
+    ob->active  = 0;
+
     return ob;
 }
 
@@ -174,8 +183,9 @@ fl_add_labelframe( int          type,
 				   FL_Coord     h,
 				   const char * label )
 {
-    FL_OBJECT *ob = fl_create_labelframe(type, x, y, w, h, label);
+    FL_OBJECT *ob = fl_create_labelframe( type, x, y, w, h, label );
 
-    fl_add_object(fl_current_form, ob);
+    fl_add_object( fl_current_form, ob );
+
     return ob;
 }

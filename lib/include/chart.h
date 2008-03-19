@@ -80,14 +80,14 @@ FL_EXPORT void fl_clear_chart(
 		);
 
 FL_EXPORT void fl_add_chart_value(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		double		 val,
 		const char * str,
 		int			 col
 		);
 
 FL_EXPORT void fl_insert_chart_value(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 indx,
 		double		 val,
 		const char * str,
@@ -95,7 +95,7 @@ FL_EXPORT void fl_insert_chart_value(
 		);
 
 FL_EXPORT void fl_replace_chart_value(
-		FL_OBJECT *	 ob,
+		FL_OBJECT  * ob,
 		int			 indx,
 		double		 val,
 		const char * str,
@@ -110,8 +110,8 @@ FL_EXPORT void fl_set_chart_bounds(
 
 FL_EXPORT void fl_get_chart_bounds(
 		FL_OBJECT * ob,
-		double *	min,
-		double *	max
+		double    * min,
+		double    * max
 		);
 
 FL_EXPORT int fl_set_chart_maxnumb(

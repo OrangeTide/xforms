@@ -35,9 +35,14 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "fd_main.h"
+
+
+/***************************************
+ ***************************************/
 
 static int
 handle_simu_canvas( FL_OBJECT * ob,
@@ -49,85 +54,126 @@ handle_simu_canvas( FL_OBJECT * ob,
 {
     int ftype;
 
-    switch (event)
+    switch ( event )
     {
-    case FL_DRAW:
-	fl_drw_box(FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	ftype = fl_boxtype2frametype(ob->boxtype);
-	fl_drw_frame(ftype, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw);
-	fl_drw_text(ob->align, ob->x, ob->y, ob->w, ob->h,
-		    ob->lcol, ob->lstyle, ob->lsize, ob->label);
-	break;
-    case FL_DRAWLABEL:
-	if (ob->align != FL_ALIGN_CENTER)
-	    fl_drw_text(ob->align, ob->x, ob->y, ob->w, ob->h,
-			ob->lcol, ob->lstyle, ob->lsize, ob->label);
-	break;
+		case FL_DRAW:
+			fl_drw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h,
+						ob->col1, ob->bw );
+			ftype = fl_boxtype2frametype( ob->boxtype );
+			fl_drw_frame( ftype, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
+			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+						 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+			break;
+
+		case FL_DRAWLABEL:
+			if ( ob->align != FL_ALIGN_CENTER )
+				fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+							 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+			break;
     }
+
     return 0;
 }
 
 
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_simu_canvas(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		      FL_Coord h, const char *label)
+fl_create_simu_canvas( int          type,
+					   FL_Coord     x,
+					   FL_Coord     y,
+					   FL_Coord     w,
+					   FL_Coord     h,
+					   const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_CANVAS, type, x, y, w, h, label,
-			handle_simu_canvas);
+    ob = fl_make_object( FL_CANVAS, type, x, y, w, h, label,
+						 handle_simu_canvas );
     ob->boxtype = FL_CANVAS_BOXTYPE;
-    ob->col1 = FL_NoColor;
-    ob->col2 = FL_BLACK;
-    ob->lcol = FL_LCOL;
-    ob->align = FL_ALIGN_CENTER;
-    ob->active = 0;
-    ob->spec = fl_calloc(1, 160);
+    ob->col1    = FL_NoColor;
+    ob->col2    = FL_BLACK;
+    ob->lcol    = FL_LCOL;
+    ob->align   = FL_ALIGN_CENTER;
+    ob->active  = 0;
+    ob->spec    = fl_calloc(1, 160);
+
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_simu_canvas(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		   const char *label)
+fl_add_simu_canvas( int          type,
+					FL_Coord     x,
+					FL_Coord     y,
+					FL_Coord     w,
+					FL_Coord     h,
+					const char * label )
 {
     FL_OBJECT *ob;
-    ob = fl_create_simu_canvas(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+
+    ob = fl_create_simu_canvas( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, ob );
+
     return ob;
 }
 
-/* glcanvas */
+
+/***************************************
+ * glcanvas
+ ***************************************/
+
 FL_OBJECT *
-fl_create_simu_glcanvas(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-			FL_Coord h, const char *label)
+fl_create_simu_glcanvas( int          type,
+						 FL_Coord     x,
+						 FL_Coord     y,
+						 FL_Coord     w,
+						 FL_Coord     h,
+						 const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_GLCANVAS, type, x, y, w, h, label,
-			handle_simu_canvas);
+    ob = fl_make_object( FL_GLCANVAS, type, x, y, w, h, label,
+						 handle_simu_canvas );
     ob->boxtype = FL_CANVAS_BOXTYPE;
-    ob->col1 = FL_NoColor;
-    ob->col2 = FL_BLACK;
-    ob->lcol = FL_LCOL;
-    ob->align = FL_ALIGN_CENTER;
-    ob->active = 0;
-    ob->spec = fl_calloc(1, 160);
+    ob->col1    = FL_NoColor;
+    ob->col2    = FL_BLACK;
+    ob->lcol    = FL_LCOL;
+    ob->align   = FL_ALIGN_CENTER;
+    ob->active  = 0;
+    ob->spec = fl_calloc( 1, 160 );     /* og shit, why 160?  JTT */
+
     return ob;
 }
+
+
+/***************************************
+ ***************************************/
 
 FL_OBJECT *
-fl_add_simu_glcanvas(int type, FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		     const char *label)
+fl_add_simu_glcanvas( int          type,
+					  FL_Coord     x,
+					  FL_Coord     y,
+					  FL_Coord     w,
+					  FL_Coord     h,
+					  const char * label )
 {
     FL_OBJECT *ob;
-    ob = fl_create_simu_glcanvas(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+
+    ob = fl_create_simu_glcanvas( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, ob );
+
     return ob;
 }
 
-/*
+
+/***************************************
  * fake tabfolder
- */
+ ***************************************/
 
 static int
 handle_tabfolder( FL_OBJECT * ob,
@@ -137,41 +183,65 @@ handle_tabfolder( FL_OBJECT * ob,
 				  int         key  FL_UNUSED_ARG,
 				  void      * ev   FL_UNUSED_ARG )
 {
-    if (event == FL_DRAW)
+    if ( event == FL_DRAW )
     {
-	fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	fl_draw_object_label(ob);
+		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+		fl_draw_object_label( ob );
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_ntabfolder(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		     FL_Coord h, const char *label)
+fl_create_ntabfolder( int          type,
+					  FL_Coord     x,
+					  FL_Coord     y,
+					  FL_Coord     w,
+					  FL_Coord     h,
+					  const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_NTABFOLDER, type, x, y, w, h, label,
-			handle_tabfolder);
+    ob = fl_make_object( FL_NTABFOLDER, type, x, y, w, h, label,
+						 handle_tabfolder );
 
     ob->boxtype = FL_UP_BOX;
-    ob->resize = FL_RESIZE_NONE;
-    ob->col1 = FL_COL1;
-    ob->col2 = FL_COL1;
-    ob->align = FL_ALIGN_TOP_LEFT;
+    ob->resize  = FL_RESIZE_NONE;
+    ob->col1    = FL_COL1;
+    ob->col2    = FL_COL1;
+    ob->align   = FL_ALIGN_TOP_LEFT;
+
     return ob;
 }
+
+
+/***************************************
+ ***************************************/
 
 FL_OBJECT *
-fl_add_ntabfolder(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		  FL_Coord h, const char *label)
+fl_add_ntabfolder( int          type,
+				   FL_Coord     x,
+				   FL_Coord     y,
+				   FL_Coord     w,
+				   FL_Coord     h,
+				   const char * label )
 {
-    FL_OBJECT *ob = fl_create_ntabfolder(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+    FL_OBJECT *ob = fl_create_ntabfolder( type, x, y, w, h, label );
+
+    fl_add_object( fl_current_form, ob );
+
     return ob;
 }
 
-/* fake formbrowser */
+
+/***************************************
+ * fake formbrowser
+ ***************************************/
+
 static int
 handle_formbrowser( FL_OBJECT * ob,
 					int         event,
@@ -180,36 +250,56 @@ handle_formbrowser( FL_OBJECT * ob,
 					int         key  FL_UNUSED_ARG,
 					void      * ev   FL_UNUSED_ARG )
 {
-    if (event == FL_DRAW)
+    if ( event == FL_DRAW )
     {
-	fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	fl_draw_object_label(ob);
+		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+		fl_draw_object_label( ob );
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_create_nformbrowser(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		       FL_Coord h, const char *label)
+fl_create_nformbrowser( int          type,
+						FL_Coord     x,
+						FL_Coord     y,
+						FL_Coord     w,
+						FL_Coord     h,
+						const char * label )
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object(FL_FORMBROWSER, type, x, y, w, h, label,
-			handle_formbrowser);
+    ob = fl_make_object( FL_FORMBROWSER, type, x, y, w, h, label,
+						 handle_formbrowser );
 
     ob->boxtype = FL_DOWN_BOX;
-    ob->resize = FL_RESIZE_NONE;
-    ob->col1 = FL_COL1;
-    ob->col2 = FL_COL1;
-    ob->align = FL_ALIGN_BOTTOM;
+    ob->resize  = FL_RESIZE_NONE;
+    ob->col1    = FL_COL1;
+    ob->col2    = FL_COL1;
+    ob->align   = FL_ALIGN_BOTTOM;
+
     return ob;
 }
 
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
-fl_add_nformbrowser(int type, FL_Coord x, FL_Coord y, FL_Coord w,
-		    FL_Coord h, const char *label)
+fl_add_nformbrowser( int          type,
+					 FL_Coord     x,
+					 FL_Coord     y,
+					 FL_Coord     w,
+					 FL_Coord     h,
+					 const char * label )
 {
-    FL_OBJECT *ob = fl_create_nformbrowser(type, x, y, w, h, label);
-    fl_add_object(fl_current_form, ob);
+    FL_OBJECT *ob = fl_create_nformbrowser( type, x, y, w, h, label );
+
+    fl_add_object( fl_current_form, ob );
+
     return ob;
 }

@@ -122,8 +122,8 @@ FL_EXPORT void fl_set_slider_bounds(
 
 FL_EXPORT void fl_get_slider_bounds(
 		FL_OBJECT * ob,
-		double *    min,
-		double *    max
+		double    * min,
+		double    * max
 		);
 
 FL_EXPORT void fl_set_slider_return(
@@ -144,8 +144,8 @@ FL_EXPORT void fl_set_slider_increment(
 
 FL_EXPORT void fl_get_slider_increment(
 		FL_OBJECT * ob,
-		double *    l,
-		double *    r
+		double    * l,
+		double    * r
 		);
 
 FL_EXPORT void fl_set_slider_size(
@@ -159,8 +159,8 @@ FL_EXPORT void fl_set_slider_precision(
 		);
 
 FL_EXPORT void fl_set_slider_filter(
-		FL_OBJECT *   ob,
-		FL_VAL_FILTER filter
+		FL_OBJECT     * ob,
+		FL_VAL_FILTER   filter
 		);
 
 /* Functions to set and get the timeout value used by the
