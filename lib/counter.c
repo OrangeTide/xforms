@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.10 2008/03/20 12:41:48 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -386,7 +386,6 @@ handle_counter( FL_OBJECT * ob,
 			break;
 
 		case FL_UPDATE:
-			fprintf( stderr, "FL_UDATE\n" );
 			if ( handle_mouse( ob, event, mx, my ) )
 				sp->changed = 1;
 			if ( sp->how_return == FL_RETURN_CHANGED && sp->changed )

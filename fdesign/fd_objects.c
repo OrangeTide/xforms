@@ -799,7 +799,6 @@ add_an_object( int      objclass,
 			break;
 
 		case FL_END_GROUP:
-			fprintf( stderr, "FL_END_GROUP\n" );
 			obj = fl_end_group( );
 			break;
 

@@ -1,3 +1,15 @@
+2008-03-20 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* textbox.c: Textboxes didn't get regular update
+	events that are needed for scrolling with the
+	mouse pressed down just below or above the box.
+	They also did only react to left mouse buttons
+	(and scroll wheel) and now again also to the
+	middle and right button.
+
+	* lib/counter.c, fdesign/fd_object.c: Removed some
+	debugging output accidentally left in.
+
 2008-03-19 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/forms.c: Further cleanup and removal of cruft that

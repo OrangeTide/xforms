@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.13 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.14 2008/03/20 12:41:49 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1293,19 +1293,12 @@ handle_textbox( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
-			if ( key != FL_MBUTTON1 )
-				break;
-
 			event_type = NOEVENT;
 			sp->status_changed = 0;
 			last_select = last_deselect = 0;
-
 			/* fall through */
 
-		case FL_MOUSE:
-			if ( key != FL_MBUTTON1 )
-				break;
-
+		case FL_UPDATE:
 			if ( my == sp->lastmy && my > ob->y && my < ob->y + ob->h - 1 )
 				break;
 
@@ -1334,9 +1327,6 @@ handle_textbox( FL_OBJECT * ob,
 			return handle_keyboard( ob, key, xev );
 
 		case FL_RELEASE:
-			if ( key != FL_MBUTTON1 )
-				break;
-
 			sp->lastmy = -1;
 			if ( ob->type == FL_SELECT_TEXTBOX )
 			{
@@ -1400,6 +1390,7 @@ fl_create_textbox( int          type,
     ob->col1    = FL_TEXTBOX_COL1;
     ob->col2    = FL_TEXTBOX_COL2;
     ob->wantkey = FL_KEY_SPECIAL;
+	ob->want_update = 1;
 
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
 

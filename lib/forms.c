@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.20 2008/03/20 02:27:43 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.21 2008/03/20 12:41:48 jtt Exp $";
 #endif
 
 
@@ -1804,7 +1804,7 @@ fl_handle_form( FL_FORM * form,
 			}
 			break;
 
-		case FL_MOUSE:		/* Mouse position changed in the form */
+		case FL_MOUSE:		     /* Mouse position changed in the form */
 			/* "Pushable" objects always get FL_MOUSE events. Since there's
 			   no direct EnterNotify or LeaveNotify event for objects we
 			   "fake" them when an object gets entered or left. */
@@ -1820,7 +1820,7 @@ fl_handle_form( FL_FORM * form,
 			/* Objects can declare that they want FL_MOUSE events even
 			   though they're not "pushable" objects e.g. because they
 			   have some internal structure that depends on the mouse
-			   position (e.g. counters) . */
+			   position (e.g. choice and counter objects) . */
 
 			if ( obj && obj != fl_pushobj && obj->want_motion )
 				fl_handle_object( obj, FL_MOUSE, x, y, key, xev );
@@ -2409,7 +2409,7 @@ handle_idling( int            wait_io,
 		st_xev.xmotion.time += wait_io ? delta_msec : SHORT_PAUSE;
 
 	/* Need to do FL_UPDATE for objects that want it (currently touch buttons,
-	   choice objects and counters) */
+	   choice, textbox s and counter objects) */
 
 	if (    ( button_down( fl_keymask ) || ! *last_timer )
 		 && ( fl_pushobj  && fl_pushobj->want_update ) )
