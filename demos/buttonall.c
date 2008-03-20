@@ -80,7 +80,6 @@ main( int    argc,
     fl_set_bitmapbutton_file( fd_buttform->bbutt,"bm1.xbm" );
     fl_addto_choice( fd_buttform->bw_obj,
 					 " -4 | -3 | -2 | -1 |  1|  2|  3|  4" );
-
     fl_set_choice( fd_buttform->bw_obj, 5 );
 
     /* show the first form */

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.19 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.20 2008/03/20 02:27:43 jtt Exp $";
 #endif
 
 
@@ -769,7 +769,7 @@ fl_prepare_form_window( FL_FORM    * form,
     {
 		M_err( "fl_prepare_form_window", "You forgot to call fl_end_form %s",
 			   name ? name : "" );
-		fl_current_form = 0;
+		fl_current_form = NULL;
     }
 
     if ( form == NULL )
@@ -3279,7 +3279,7 @@ fl_addto_group( FL_OBJECT * group )
     }
 
     reopened_group = 1;
-    reopened_group += fl_current_form == 0 ? 2 : 0;
+    reopened_group += fl_current_form == NULL ? 2 : 0;
     fl_current_form = group->form;
     fl_current_group = group;
 }

@@ -770,10 +770,11 @@ add_an_object( int      objclass,
 			   FL_Coord w,
 			   FL_Coord h )
 {
-    FL_OBJECT *obj = 0;
+    FL_OBJECT *obj = NULL;
     int nosuper = 0, i;
     char buf[128];
     CDEF *cls;
+	static FL_FORM *cf = NULL;
 
     if ( cur_form == NULL )
 		return NULL;
@@ -787,15 +788,18 @@ add_an_object( int      objclass,
 		return 0;
     }
 
-    fl_addto_form( cur_form );
+	if ( ! cf )
+		fl_addto_form( cur_form );
 
     switch ( objclass )
     {
 		case FL_BEGIN_GROUP:
+			cf = cur_form;
 			obj = fl_bgn_group( );
 			break;
 
 		case FL_END_GROUP:
+			fprintf( stderr, "FL_END_GROUP\n" );
 			obj = fl_end_group( );
 			break;
 
@@ -960,7 +964,11 @@ add_an_object( int      objclass,
 	obj->ft2 = obj->y + obj->h;
 	obj->fb2 = cur_form->h - obj->ft2;
 
-    fl_end_form( );
+	if ( ! cf || objclass == FL_END_GROUP )
+	{
+		fl_end_form( );
+		cf = NULL;
+	}
 
     if ( ! nosuper )
 		get_superspec( obj );

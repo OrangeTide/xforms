@@ -303,7 +303,7 @@ read_key_val(FILE * fp, char *key, char *val)
  *  need to do the transformation manually
  */
 static FL_OBJECT *
-load_object(FILE * fl)
+load_object( FILE * fl )
 {
     FL_OBJECT *obj;
     int objclass, type;
@@ -314,10 +314,11 @@ load_object(FILE * fl)
     char key[MAX_VAR_LEN], val[10000];
 
     /* Must demand the vital info */
+
     if (fscanf(fl, "\n--------------------\n") == EOF)
     {
-	M_err("LoadObject", "Error reading input file");
-	return 0;
+		M_err("LoadObject", "Error reading input file");
+		return 0;
     }
 
     fscanf(fl, "class: %s\n", objcls);
@@ -328,92 +329,98 @@ load_object(FILE * fl)
     type = find_type_value(objclass, val);
 
     if (fd_magic == MAGIC2)
-	objclass = new_class(objclass);
+		objclass = new_class(objclass);
 
     if (cur_form && fd_magic != FD_V1)
-	y = (cur_form->h - y - h);
+		y = (cur_form->h - y - h);
 
     /* create this object */
+
     obj = add_an_object(objclass, type, x, y, w, h);
 
     if (obj == NULL)
     {
-	char tmpbuf[128];
-	sprintf(tmpbuf, "Object (class=%s(%d) type=%s) discarded",
-		objcls, objclass, val);
-	fl_show_alert("UnknownObject", tmpbuf, "", 1);
-	return NULL;
+		char tmpbuf[128];
+		sprintf(tmpbuf, "Object (class=%s(%d) type=%s) discarded",
+				objcls, objclass, val);
+		fl_show_alert("UnknownObject", tmpbuf, "", 1);
+		return NULL;
     }
 
     /* now parse the attributes */
+
     while (read_key_val(fl, key, val) != EOF)
     {
-	if (strcmp(key, "boxtype") == 0)
-	    obj->boxtype = boxtype_val(val);
-	else if (strcmp(key, "colors") == 0)
-	{
-	    cn1[0] = cn2[0] = '\0';
-	    sscanf(val, "%s %s", cn1, cn2);
-	    obj->col1 = fl_query_namedcolor(cn1);
-	    obj->col2 = fl_query_namedcolor(cn2);
-	    if (obj->col1 == 0x8fffffff)
-		obj->col1 = FL_NoColor;
-	}
-	else if (strcmp(key, "alignment") == 0)
-	    obj->align = align_val(val);
-	else if (strcmp(key, "style") == 0 || strcmp(key, "lstyle") == 0)
-	    obj->lstyle = style_val(val);
-	else if (strcmp(key, "size") == 0 || strcmp(key, "lsize") == 0)
-	    obj->lsize = lsize_val(val);
-	else if (strcmp(key, "lcol") == 0)
-	    obj->lcol = fl_query_namedcolor(val);
-	else if (strcmp(key, "resize") == 0)
-	    obj->resize = resize_val(val);
-	else if (strcmp(key, "label") == 0)
-	    set_label(obj, val);
-	else if (strcmp(key, "shortcut") == 0)
-	    set_shortcut(obj, val);
-	else if (strcmp(key, "callback") == 0)
-	    strcpy(cbname, val);
-	else if (strcmp(key, "name") == 0)
-	    strcpy(name, val);
-	else if (strcmp(key, "gravity") == 0)
-	{
-	    cn1[0] = cn2[0] = '\0';
-	    sscanf(val, "%s %s", cn1, cn2);
-	    obj->nwgravity = gravity_val(cn1);
-	    obj->segravity = gravity_val(cn2);
-	}
-	else if (strcmp(key, "argument") == 0)
-	{
-	    strcpy(argname, val);
-	    goto done;
-	}
-	else
-	{
-	    fprintf(stderr, "Unknown keyword %s ignored\n", key);
-	}
+		if (strcmp(key, "boxtype") == 0)
+			obj->boxtype = boxtype_val(val);
+		else if (strcmp(key, "colors") == 0)
+		{
+			cn1[0] = cn2[0] = '\0';
+			sscanf(val, "%s %s", cn1, cn2);
+			obj->col1 = fl_query_namedcolor(cn1);
+			obj->col2 = fl_query_namedcolor(cn2);
+			if (obj->col1 == 0x8fffffff)
+				obj->col1 = FL_NoColor;
+		}
+		else if (strcmp(key, "alignment") == 0)
+			obj->align = align_val(val);
+		else if (strcmp(key, "style") == 0 || strcmp(key, "lstyle") == 0)
+			obj->lstyle = style_val(val);
+		else if (strcmp(key, "size") == 0 || strcmp(key, "lsize") == 0)
+			obj->lsize = lsize_val(val);
+		else if (strcmp(key, "lcol") == 0)
+			obj->lcol = fl_query_namedcolor(val);
+		else if (strcmp(key, "resize") == 0)
+			obj->resize = resize_val(val);
+		else if (strcmp(key, "label") == 0)
+			set_label(obj, val);
+		else if (strcmp(key, "shortcut") == 0)
+			set_shortcut(obj, val);
+		else if (strcmp(key, "callback") == 0)
+			strcpy(cbname, val);
+		else if (strcmp(key, "name") == 0)
+			strcpy(name, val);
+		else if (strcmp(key, "gravity") == 0)
+		{
+			cn1[0] = cn2[0] = '\0';
+			sscanf(val, "%s %s", cn1, cn2);
+			obj->nwgravity = gravity_val(cn1);
+			obj->segravity = gravity_val(cn2);
+		}
+		else if (strcmp(key, "argument") == 0)
+		{
+			strcpy(argname, val);
+			goto done;
+		}
+		else
+		{
+			fprintf(stderr, "Unknown keyword %s ignored\n", key);
+		}
     }
 
-  done:
+ done:
+
     /* do the translation from old fdesign on the fly */
+
     if (fd_magic == MAGIC2)
     {
-	obj->col1 = new_color(obj->col1);
-	obj->col2 = new_color(obj->col2);
-	obj->lcol = new_color(obj->lcol);
-	obj->align = new_align(obj->align);
-	obj->boxtype = new_btype(obj->boxtype);
+		obj->col1 = new_color(obj->col1);
+		obj->col2 = new_color(obj->col2);
+		obj->lcol = new_color(obj->lcol);
+		obj->align = new_align(obj->align);
+		obj->boxtype = new_btype(obj->boxtype);
     }
 
     set_object_name(obj, name, cbname, argname);
 
     /* load object specific info */
+
     fd_skip_comment(fl);
     load_objclass_spec_info(fl, obj);
 
     return obj;
 }
+
 
 /* Saves a form definition to the file. */
 void
@@ -443,16 +450,19 @@ write_form(FILE * fl, FL_FORM * form, char fname[])
 }
 
 /* Loads a form definition from the file */
+
 int
-read_form(FILE * fl, char *fname)
+read_form( FILE * fl,
+		   char * fname )
 {
     double w, h;
     int onumb, i, ok;
     char buf[256], *s;
 
     /* skip until we get ===, the form seperator */
+
     while (fgets(buf, sizeof(buf) - 1, fl) && strncmp(buf, "===", 3))
-	;
+		;
 
     myfgets(fname, fl);
     fscanf(fl, "Width: %lf\n", &w);
@@ -460,8 +470,8 @@ read_form(FILE * fl, char *fname)
 
     if (w <= 0.0 || h <= 0.0 || feof(fl))
     {
-	M_err("LoadForm", " Invalid Width/Height: %f %f", w, h);
-	return -1;
+		M_err("LoadForm", " Invalid Width/Height: %f %f", w, h);
+		return -1;
     }
 
     cur_form = fl_bgn_form(FL_NO_BOX, (FL_Coord) w, (FL_Coord) h);
@@ -469,18 +479,17 @@ read_form(FILE * fl, char *fname)
 
     /* between width/height and number of objects, we can put anything we
        want. */
-    while ((s = fgets(buf, sizeof(buf) - 1, fl)) &&
-	   strncmp(s, "Number of O", 11))
+
+    while (    ( s = fgets( buf, sizeof buf  - 1, fl ) )
+			&& strncmp( s, "Number of O", 11 ))
     {
-	/* see what this is */
-
+		/* see what this is */		
     }
-
 
     sscanf(buf, "Number of Objects: %d", &onumb);
 
     for (ok = 1, i = 0; i < onumb && ok; i++)
-	ok = (load_object(fl) != 0);
+		ok = load_object( fl ) != 0;
 
     return 0;
 }
