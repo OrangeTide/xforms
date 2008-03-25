@@ -17,7 +17,8 @@
 	of timeouts to be a bit higher (haven't seen it being
 	off more than 5 ms on my machine under light load) and
 	made sure they never expire too early (as promised in
-	the manual).
+	the manual). Added a function to remove all timeouts,
+	to be be called from fl_finish.
 
 	* lib/be.c: File isn't used anymore, the list of memory
 	to be allocated never was used anyway if no idle handler
@@ -43,13 +44,6 @@
 	instead of signal() is used now. Added a function
 	to remove all signal handlers, to be used from
 	fl_finish().
-
-	* lib/timeout.c: Partly rewrote code for timeouts
-	to make it easier to understand. Changed the end
-	condition so that, as promised in the documentation,
-	it never ends before the timeout period, Added a
-	function to remove all timeouts, to be be called
-	from fl_finish.
 
 	* fdesign/ps_printC.c: Replaced the use of fl_calloc()
 	by fl_malloc() when writing out C files - there's no
