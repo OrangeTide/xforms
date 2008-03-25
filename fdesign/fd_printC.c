@@ -838,11 +838,17 @@ print_form_newformat( FILE *       fn,
     for ( obj = form->first; obj; obj = obj->next )
 		emit_objclass_spec_header( fn, obj );
 
+	fprintf( fn, "\n\n/***************************************\n"
+			     " ***************************************/\n\n" );
+
     fprintf( fn, "%s *\ncreate_form_%s( void )\n{\n    FL_OBJECT *obj;\n",
 			 fdtname, fname );
 
-    fprintf( fn, "    %s *%s = fl_calloc( 1, sizeof *%s );\n",
+    fprintf( fn, "    %s *%s = fl_malloc( sizeof *%s );\n\n",
 			 fdtname, fdvname, fdvname );
+
+	fprintf( fn, "    %s->vdata = %s->cdata = NULL;\n"
+			     "    %s->ldata = 0;\n", fdvname, fdvname, fdvname );
 
     /* take care of unit, borderwidth etc that affect the entire form */
 
@@ -866,7 +872,6 @@ print_form_newformat( FILE *       fn,
     post_form_output( fn );
 
     fprintf( fn, "\n    return %s;\n}\n", fdvname );
-    fprintf( fn, "\n\n/*---------------------------------------*/\n\n" );
 }
 
 
@@ -924,6 +929,9 @@ print_form_altformat( FILE *       fn,
 		emit_objclass_spec_header( fn, obj );
 
     /* Print the defining procedure */
+
+	fprintf( fn, "\n\n/***************************************\n"
+			     " ***************************************/\n\n" );
 
     fprintf( fn, "void\ncreate_form_%s( void )\n{\n    FL_OBJECT *obj;\n",
 			 fname );
@@ -1391,11 +1399,9 @@ output_object( FILE *      fn,
 	fl_scale_object( &fakeobj, sc, sc );
 
 	if ( obj->objclass != FL_FREE )
-	    /* ( */
 	    fprintf( fn, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
 				 fakeobj.w, fakeobj.h, get_label( obj, 1 ) );
 	else
-	    /* ( */
 	    fprintf( fn, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
 				 fakeobj.x, fakeobj.y, fakeobj.w, fakeobj.h,
 				 get_label( obj, 1 ), get_free_handle( obj, name ) );

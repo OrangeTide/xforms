@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.8 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.9 2008/03/25 12:41:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -319,7 +319,6 @@ handle_it( FL_OBJECT * ob,
 				break;
 
 			sp->event = FL_PUSH;
-
 
 			if ( ob->type == FL_RADIO_BUTTON )
 			{

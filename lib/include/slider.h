@@ -42,12 +42,14 @@ typedef enum
     FL_HOR_NICE_SLIDER,
     FL_HOR_BROWSER_SLIDER,
     FL_VERT_BROWSER_SLIDER,
-    FL_HOR_BROWSER_SLIDER2,		/* for internal use only */
-    FL_VERT_BROWSER_SLIDER2,	/* for internal use only */
-    FL_HOR_THIN_SLIDER,			/* for internal use only */
-    FL_VERT_THIN_SLIDER,		/* for internal use only */
-    FL_HOR_BASIC_SLIDER,		/* for internal use only */
-    FL_VERT_BASIC_SLIDER		/* for internal use only */
+    FL_VERT_NICE_SLIDER2,		/* for use as FL_VERT_NICE_SCROLLBAR  only */
+    FL_HOR_NICE_SLIDER2,		/* for use as FL_HOR_NICE_SCROLLBAR   only */
+    FL_HOR_BROWSER_SLIDER2,		/* for use as FL_VERT_SCROLLBAR       only */
+    FL_VERT_BROWSER_SLIDER2,	/* for use as FL_HOR_SCROLLBAR        only */
+    FL_HOR_THIN_SLIDER,			/* for use as FL_VERT_THIN_SCROLLBAR  only */
+    FL_VERT_THIN_SLIDER,		/* for use as FL_HOR_THIN_SCROLLBAR   only */
+    FL_HOR_BASIC_SLIDER,		/* for use as FL_VERT_PLAIN_SCROLLBAR only */
+    FL_VERT_BASIC_SLIDER		/* for use as FL_HOR_PLAIN_SCROLLBAR  only */
 } FL_SLIDER_TYPE;
 
 
@@ -63,7 +65,7 @@ typedef enum
 
 /***** Others   *****/
 
-#define FL_SLIDER_FINE		0.05
+#define FL_SLIDER_FINE		0.25
 #define FL_SLIDER_WIDTH		0.10
 
 
@@ -162,18 +164,5 @@ FL_EXPORT void fl_set_slider_filter(
 		FL_OBJECT     * ob,
 		FL_VAL_FILTER   filter
 		);
-
-/* Functions to set and get the timeout value used by the
-   slider code to increment the position of the knob */
-
-FL_EXPORT int fl_get_slider_repeat(
-		FL_OBJECT * ob
-		);
-
-FL_EXPORT void fl_set_slider_repeat(
-		FL_OBJECT * ob,
-		int         millisec
-		);
-
 
 #endif /* ! defined FL_SLIDER_H */

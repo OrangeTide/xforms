@@ -48,17 +48,8 @@
 #define SPEC   FL_BROWSER_SPEC
 #define Comp   FL_BROWSER_SPEC
 
-/* from child object to get to the browser SPEC */
 
-#define GetPSpec( ob )    ( ( SPEC * ) ob->parent->spec )
-
-/* from child object ob to get to the browser */
-
-#define GetBR( ob )       GetPSpec( ob )->br
-
-/* from browser to get to SPEC */
-
-#define GetSpec( ob )     GetPSpec( ob )
+#define GetSpec( ob )     ( ( SPEC * ) ( ob )->parent->spec )
 
 #define MaxPixels( sp )   ( sp->maxpixels + 5 )
 
@@ -343,8 +334,7 @@ handle( FL_OBJECT * ob,
 
 		case FL_FREEMEM:
 			/* children take care of themselves */
-
-			fl_addto_freelist( comp );
+			fl_free( comp );
 			break;
     }
 
@@ -448,7 +438,7 @@ static void
 tbcb( FL_OBJECT * ob,
 	  long        data  FL_UNUSED_ARG )
 {
-    SPEC *sp = GetPSpec( ob );
+    SPEC *sp = GetSpec( ob );
 
     if ( sp->tb->type == FL_MULTI_TEXTBOX )
 		fl_call_object_callback( sp->br );
@@ -465,7 +455,7 @@ static void
 tb_dblcallback( FL_OBJECT * ob,
 				long        data  FL_UNUSED_ARG )
 {
-    SPEC *sp = GetPSpec( ob );
+    SPEC *sp = GetSpec( ob );
 
     if ( sp->callback )
 		sp->callback( sp->br, sp->callback_data );
@@ -483,7 +473,7 @@ tbpost( FL_OBJECT * ob,
        int          key,
 		void      * xev )
 {
-    FL_OBJECT *br = GetPSpec( ob )->br;
+    FL_OBJECT *br = GetSpec( ob )->br;
     return br->posthandle ? br->posthandle( br, ev, mx, my, key, xev ) : 0;
 }
 
@@ -500,7 +490,8 @@ tbpre( FL_OBJECT * ob,
 	   void      * xev )
 {
 
-    FL_OBJECT *br = GetPSpec( ob )->br;
+    FL_OBJECT *br = GetSpec( ob )->br;
+
     return br->prehandle ? br->prehandle( br, ev, mx, my, key, xev ) : 0;
 }
 

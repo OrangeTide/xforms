@@ -1,3 +1,60 @@
+2008-03-25 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/forms: Further restructuring of event handling.
+	All memory for objects of a form now (hopefully) gets
+	deallocated on a call of fl_free_form() and a call of
+	fl_finish() deallocates all memory used for forms and
+	their objects, removes signal callbacks and deletes
+	timers.
+
+	* lib/objects.c: Object pre- and posthandlers aren't
+	called anymore on FL_FREEMEM events (the object or
+	some of its childs probably doesn't exist anymore
+	in that kind of situation).
+
+	* lib/timeout.c: Changed the code a bit and, in combi-
+	nation with changes in lib/forms.c, got the precision
+	of timeouts to be a bit higher (haven't seen it being
+	off more than 5 ms on my machine under light load) and
+	made sure they never expire too early (as promised in
+	the manual).
+
+	* lib/be.c: File isn't used anymore, the list of memory
+	to be allocated never was used anyway if no idle handler
+	was installed and it also didn't do the right thing.
+	No calls to fl_addto_freelist() and fl_free_freelist()	
+	are left in XForms.
+
+	* lib/include/Basic.h: FL_MOTION has come back, what
+	I should have thrown out was FL_MOUSE. FL_MOUSE is
+	still available for backward compatibility but isn't
+	used in the code anymore - FL_UPDATE is the new name
+	(in the object structure the 'want_update' member must
+	be set to request this type of event - can be switched
+	on and off at any time).
+
+	* lib/slider.c: Changed the code for sliders (and
+	thereby scrollbars) quite a bit - it was much too
+	complicated (unfortunately still is:-( and didn't
+	always work correctly. Scrollbars now react to
+	scroll wheel mouse the same way a textbrowser does.
+
+	* lib/signal: On system that support it sigaction()
+	instead of signal() is used now. Added a function
+	to remove all signal handlers, to be used from
+	fl_finish().
+
+	* lib/timeout.c: Partly rewrote code for timeouts
+	to make it easier to understand. Changed the end
+	condition so that, as promised in the documentation,
+	it never ends before the timeout period, Added a
+	function to remove all timeouts, to be be called
+	from fl_finish.
+
+	* fdesign/ps_printC.c: Replaced the use of fl_calloc()
+	by fl_malloc() when writing out C files - there's no
+	good reason to spend time on zeroing out the memory.
+
 2008-03-20 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* textbox.c: Textboxes didn't get regular update
@@ -9,6 +66,9 @@
 
 	* lib/counter.c, fdesign/fd_object.c: Removed some
 	debugging output accidentally left in.
+
+	* lib/dial.c: Corrected return behaviour on mouse
+	button release.
 
 2008-03-19 Jens Thoms Toerring    <jtt@toerring.de>
 

@@ -129,25 +129,25 @@ emit_scrollbar_code(FILE * fp, FL_OBJECT * ob)
 
     if (spec->min != defspec->min || spec->max != defspec->max)
     {
-	fprintf(fp, "    fl_set_scrollbar_bounds(obj, %g, %g);\n",
+	fprintf(fp, "    fl_set_scrollbar_bounds( obj, %g, %g );\n",
 		spec->min, spec->max);
     }
 
     if (spec->val != defspec->val)
-	fprintf(fp, "    fl_set_scrollbar_value(obj, %g);\n", spec->val);
+	fprintf(fp, "    fl_set_scrollbar_value( obj, %g );\n", spec->val);
 
     if (spec->slsize != defspec->slsize)
-	fprintf(fp, "    fl_set_scrollbar_size(obj, %.2f);\n", spec->slsize);
+	fprintf(fp, "    fl_set_scrollbar_size( obj, %.2f );\n", spec->slsize);
 
     if (spec->step != defspec->step)
-	fprintf(fp, "    fl_set_scrollbar_step(obj, %g);\n", spec->step);
+	fprintf(fp, "    fl_set_scrollbar_step( obj, %g );\n", spec->step);
 
     if (spec->ldelta != defspec->ldelta || spec->rdelta != defspec->rdelta)
-	fprintf(fp, "    fl_set_scrollbar_increment(obj, %g, %g);\n",
+	fprintf(fp, "    fl_set_scrollbar_increment( obj, %g, %g );\n",
 		spec->ldelta, spec->rdelta);
 
     if (spec->how_return != defspec->how_return)
-	fprintf(fp, "     fl_set_scrollbar_return(obj, %s);\n",
+	fprintf(fp, "     fl_set_scrollbar_return( obj, %s );\n",
 		get_how_return_name(spec->how_return));
 
 }

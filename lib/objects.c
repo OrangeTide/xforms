@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.16 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.17 2008/03/25 12:41:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -243,6 +243,8 @@ fl_make_object( int            objclass,
     ob->next = ob->prev = NULL;
     ob->form = NULL;
     ob->dbl_background = FL_COL1;
+	ob->parent = ob->child = ob->nc = NULL;
+	ob->is_child = 0;
 
     return ob;
 }
@@ -288,7 +290,7 @@ fl_free_object( FL_OBJECT * obj )
 		obj->flpixmap = NULL;
     }
 
-    fl_addto_freelist( obj );
+    fl_free( obj );
 }
 
 
@@ -316,7 +318,10 @@ fl_add_object( FL_FORM   * form,
     }
 
     if ( obj->automatic )
+	{
 		form->has_auto++;
+		fl_recount_auto_object( );
+	}
 
     obj->prev = obj->next = NULL;
     obj->form = form;
@@ -334,23 +339,22 @@ fl_add_object( FL_FORM   * form,
     if ( fl_inverted_y )
 		obj->y = TRANY( obj, form );
 
-    if ( fl_current_group )
-		obj->group_id = fl_current_group->group_id;
-
-    /* if adding to a group, find the end of group or the end of the object
-       list on this form */
+    /* If adding to a group, set objects group ID, then find the end of the
+	   group or the end of the object list on this form */
 
     if ( fl_current_group )
     {
 		FL_OBJECT *end = fl_current_group;
 
+		obj->group_id = fl_current_group->group_id;
+
 		for ( ; end && end->objclass != FL_END_GROUP; end = end->next )
 			/* empty */ ;
 
+		/* If 'end' exists must've opened the group with fl_addto_group */
+
 		if ( end )
 		{
-			/* must've opened the group with fl_addto_group */
-
 			end->prev->next = obj;
 			obj->prev = end->prev;
 			obj->next = end;
@@ -451,12 +455,18 @@ fl_delete_object( FL_OBJECT * obj )
     if ( obj->form == NULL )
     {
 		M_err( "fl_delete_object", "delete %s from NULL form.",
-			   ( obj->label && obj->label[ 0 ] != '\0' ) ?
-			   obj->label : "object" );
+			   ( obj->label && *obj->label ) ? obj->label : "object" );
 		return;
     }
 
     form = obj->form;
+
+    if ( obj->automatic )
+	{
+		form->has_auto--;
+		fl_recount_auto_object( );
+	}
+
     if ( obj->focus )
 		fl_set_focus_object( form, NULL );
 
@@ -490,7 +500,7 @@ fl_delete_object( FL_OBJECT * obj )
     /* if this object is a parent of a group, remove the entire group */
 
     if ( obj->child )
-		fl_delete_composite( obj );
+		fl_free_composite( obj );
 
     if ( obj->visible && form && form->visible == FL_VISIBLE )
 		fl_redraw_form( form );
@@ -503,17 +513,16 @@ fl_delete_object( FL_OBJECT * obj )
 void
 fl_delete_group( FL_OBJECT * ob )
 {
-    if ( ! ob )
+	FL_OBJECT *next;
+
+    if ( ! ob || ob->objclass != FL_BEGIN_GROUP )
 		return;
 
-    if ( ob->objclass != FL_BEGIN_GROUP )
-    {
+    for ( ; ob && ob->objclass != FL_END_GROUP; ob = next )
+	{
+		next = ob->next;
 		fl_delete_object( ob );
-		return;
-    }
-
-    for ( ; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
-		fl_delete_object( ob );
+	}
 
     if ( ob )
 		fl_delete_object( ob );
@@ -1455,7 +1464,7 @@ fl_get_focus_object( FL_FORM * form )
 
 /***************************************
  * returns object in form starting at obj of type find. If
- * find_object does not return object, the event that triggered
+ * find_object() does not return object, the event that triggered
  * the call would be eaten. This is how the deactived and
  * inactive object rejects events. Modify with care!
  ***************************************/
@@ -2001,12 +2010,13 @@ fl_handle_it( FL_OBJECT * obj,
 
  recover:
     if (    obj->prehandle
+		 && event != FL_FREEMEM
 		 && obj->prehandle( obj, event, mx, my, key, xev ) == FL_PREEMPT )
 		return 0;
 
     status = obj->handle( obj, event, mx, my, key, xev );
 
-    if ( obj->posthandle )
+    if ( obj->posthandle && event != FL_FREEMEM )
 		obj->posthandle( obj, event, mx, my, key, xev );
 
     if ( cur_event == FL_DBLCLICK || cur_event == FL_TRPLCLICK )
@@ -2715,6 +2725,7 @@ fl_set_object_automatic( FL_OBJECT * ob,
     if ( ob->automatic != flag )
     {
 		ob->automatic = flag;
+
 		if ( ob->form )
 		{
 			if ( flag )
@@ -2722,6 +2733,7 @@ fl_set_object_automatic( FL_OBJECT * ob,
 			else
 				ob->form->has_auto--;
 		}
+
 		fl_recount_auto_object( );
     }
 }

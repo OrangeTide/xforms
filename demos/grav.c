@@ -437,12 +437,12 @@ main( int    argc,
 
 	fl_do_forms( );
 
-	fl_hide_form( grav->grav );
-	fl_free_form( grav->grav );
+//	fl_hide_form( grav->grav );
+//	fl_free_form( grav->grav );
 
-	if ( help->is_shown )
-		fl_hide_form( help->help );
-	fl_free_form( help->help );
+//	if ( help->is_shown )
+//		fl_hide_form( help->help );
+//	fl_free_form( help->help );
 
 	fl_finish( );
 

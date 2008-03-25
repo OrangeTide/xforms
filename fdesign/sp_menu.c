@@ -162,19 +162,19 @@ emit_menu_header(FILE * fp, FL_OBJECT * ob)
 
     get_pupentry_name(ob);
 
-    fprintf(fp, "%sFL_PUP_ENTRY %s[] =\n{\n",
+    fprintf(fp, "%sFL_PUP_ENTRY %s[ ] = {\n",
 	    sp->global_scope ? "" : "static ", sp->misc_char);
     fprintf(fp, "    /*  itemtext   callback  shortcut   mode */\n");
 
     for (i = 1; i <= sp->nlines; i++)
     {
-	fprintf(fp, "    { \"%s\",\t0,\t\"%s\",\t %s, {0, 0}},\n",
+	fprintf(fp, "    { \"%s\", 0, \"%s\", %s, { 0, 0 }},\n",
 		sp->content[i], sp->shortcut[i] ? sp->shortcut[i] : "",
 		get_pupmode_name(sp->mode[i]));
     }
 
     /* sentinel */
-    fprintf(fp, "    {0, 0, 0, 0, {0, 0}}\n};\n\n");
+    fprintf(fp, "    { 0, 0, 0, 0, { 0, 0 } }\n};\n\n");
 }
 
 /* emit header info that is global in nature */
@@ -188,7 +188,7 @@ emit_menu_global(FILE * fp, FL_OBJECT * ob)
 
     get_pupentry_name(ob);
 
-    fprintf(fp, "extern FL_PUP_ENTRY %s[];\n", sp->misc_char);
+    fprintf(fp, "extern FL_PUP_ENTRY %s[ ];\n", sp->misc_char);
 }
 
 void
@@ -209,19 +209,19 @@ emit_menu_code(FILE * fp, FL_OBJECT * ob)
 
     if (sp->new_menuapi)
     {
-	fprintf(fp, "    fl_set_menu_entries(obj, %s);\n", sp->misc_char);
+	fprintf(fp, "    fl_set_menu_entries( obj, %s );\n", sp->misc_char);
     }
     else
     {
 
 	for (i = 1; i <= sp->nlines; i++)
 	{
-	    fprintf(fp, "    fl_addto_menu(obj, \"%s\");\n", sp->content[i]);
+	    fprintf(fp, "    fl_addto_menu( obj, \"%s\" );\n", sp->content[i]);
 	    if (sp->mode[i] != defsp->mode[i])
-		fprintf(fp, "    fl_set_menu_item_mode(obj, %d, %s);\n",
+		fprintf(fp, "    fl_set_menu_item_mode( obj, %d, %s );\n",
 			i, get_pupmode_name(sp->mode[i]));
 	    if (sp->shortcut[i] && *sp->shortcut[i])
-		fprintf(fp, "    fl_set_menu_item_shortcut(obj, %d, \"%s\");\n",
+		fprintf(fp, "    fl_set_menu_item_shortcut( obj, %d, \"%s\" );\n",
 			i, sp->shortcut[i]);
 	}
     }

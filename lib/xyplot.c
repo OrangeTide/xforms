@@ -41,7 +41,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.10 2008/03/19 21:04:24 jtt Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.11 2008/03/25 12:41:30 jtt Exp $";
 #endif
 
 
@@ -2029,13 +2029,19 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
-		case FL_MOUSE:
+		case FL_MOTION:
+			if ( key != FL_MBUTTON1 )
+				return 0;
+
 			sp->objx = ob->x;
 			sp->objy = ob->y;
 			ret = handle_mouse( ob, mx, my );
 			break;
 
 		case FL_RELEASE:
+			if ( key != FL_MBUTTON1 )
+				return 0;;
+
 			if ( ! sp->active && ! sp->inspect )
 				return 0;
 

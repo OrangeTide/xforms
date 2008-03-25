@@ -49,20 +49,24 @@ fl_init_valuator(FL_OBJECT * ob)
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
 
-    if (!sp)
-	sp = ob->spec = fl_calloc(1, ob->spec_size = sizeof(*sp));
+    if ( ! sp )
+	{
+		ob->spec_size = sizeof *sp;
+		sp = ob->spec = fl_calloc( 1, sizeof *sp );
+	}
 
-    sp->min = 0.0;
-    sp->max = 1.0;
-    sp->val = 0.5;
-    sp->prec = 2;
-    sp->step = 0.01;
+    sp->min       = 0.0;
+    sp->max       = 1.0;
+    sp->val       = 0.5;
+    sp->prec      = 2;
+    sp->step      = 0.01;
     sp->draw_type = COMPLETE_DRAW;
 
     return sp;
 }
 
-#define CROSS_OVER(v,vmin,vmax)  ((v)<(vmin)?(vmax):((v)>(vmax)?(vmin):(v)))
+#define CROSS_OVER( v, vmin, vmax )  \
+	( ( v ) < ( vmin ) ? ( vmax ) : ( ( v ) > ( vmax ) ? ( vmin ) : ( v ) ) )
 
 
 /***************************************

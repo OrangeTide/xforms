@@ -137,36 +137,37 @@ emit_slider_code(FILE * fp, FL_OBJECT * ob)
 	return;
 
     /* create a default object */
-    defobj = (ob->objclass == FL_SLIDER ?
-	 fl_create_slider : fl_create_valslider) (ob->type, 0, 0, 0, 0, "");
+    defobj = ( ob->objclass == FL_SLIDER ?
+			   fl_create_slider : fl_create_valslider )
+		     ( ob->type, 0, 0, 0, 0, "");
 
     defsp = get_superspec(defobj);
     sp = get_superspec(ob);
 
     if (sp->prec != defsp->prec)
-	fprintf(fp, "    fl_set_slider_precision(obj, %d);\n", sp->prec);
+	fprintf(fp, "    fl_set_slider_precision( obj, %d );\n", sp->prec);
 
     if (sp->min != defsp->min || sp->max != defsp->max)
     {
-	fprintf(fp, "    fl_set_slider_bounds(obj, %g, %g);\n",
+	fprintf(fp, "    fl_set_slider_bounds( obj, %g, %g );\n",
 		sp->min, sp->max);
     }
 
     if (sp->val != defsp->val)
-	fprintf(fp, "    fl_set_slider_value(obj, %g);\n", sp->val);
+	fprintf(fp, "    fl_set_slider_value( obj, %g );\n", sp->val);
 
     if (sp->slsize != defsp->slsize)
-	fprintf(fp, "    fl_set_slider_size(obj, %.2f);\n", sp->slsize);
+	fprintf(fp, "    fl_set_slider_size( obj, %.2f );\n", sp->slsize);
 
     if (sp->step != defsp->step)
-	fprintf(fp, "    fl_set_slider_step(obj, %g);\n", sp->step);
+	fprintf(fp, "    fl_set_slider_step( obj, %g );\n", sp->step);
 
     if (sp->ldelta != defsp->ldelta || sp->rdelta != defsp->rdelta)
-	fprintf(fp, "    fl_set_slider_increment(obj, %g, %g);\n",
+	fprintf(fp, "    fl_set_slider_increment( obj, %g, %g );\n",
 		sp->ldelta, sp->rdelta);
 
     if (sp->how_return != defsp->how_return)
-	fprintf(fp, "     fl_set_slider_return(obj, %s);\n",
+	fprintf(fp, "    fl_set_slider_return( obj, %s );\n",
 		get_how_return_name(sp->how_return));
 
 }

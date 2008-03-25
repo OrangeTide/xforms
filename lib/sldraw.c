@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sldr = "$Id: sldraw.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_sldr = "$Id: sldraw.c,v 1.10 2008/03/25 12:41:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -42,6 +42,9 @@ char *fl_id_sldr = "$Id: sldraw.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/pslider.h"		/* for FL_MINKNOB */
+
+
+typedef FL_SLIDER_SPEC SPEC;
 
 
 /***************************************
@@ -65,79 +68,67 @@ flinear( double val,
 #define MINKNOB_SL    FL_MINKNOB_SL
 
 
-/* sliders that must have certain minimum value for the knob */
-
-#define SLIDER_MIN( t )     (    t == FL_HOR_BROWSER_SLIDER    \
-						      || t == FL_HOR_BROWSER_SLIDER2	\
-						      || t == FL_HOR_THIN_SLIDER      	\
-						      || t == FL_VERT_BROWSER_SLIDER  	\
-						      || t == FL_VERT_BROWSER_SLIDER2 	\
-						      || t == FL_VERT_THIN_SLIDER )
-
-
-#define IS_FLATBOX( t )     (    t == FL_FRAME_BOX        \
-							  || t == FL_EMBOSSED_BOX 	\
-							  || t == FL_BORDER_BOX       \
-                              || t == FL_ROUNDED_BOX )
-
 #define IS_FLATORDOWN( t )  ( IS_FLATBOX( t ) || t == FL_DOWN_BOX )
 
-#define IS_FLATORUPBOX( t ) ( IS_FLATBOX( t ) || t==FL_UP_BOX )
+#define IS_FLATORUPBOX( t ) ( IS_FLATBOX( t ) || t == FL_UP_BOX )
 
 
 /***************************************
  ***************************************/
 
 void
-fl_calc_slider_size(int             boxtype,
-					FL_Coord        x,
-					FL_Coord        y,
-					FL_Coord        w,
-					FL_Coord        h,
-					int             sltype,
-					double          size,
-					double          val,
-					FL_SCROLL_BAR * slb,
-					int             inv,
-					FL_Coord        bw )
+fl_calc_slider_size( FL_OBJECT         * ob,
+					 FL_SCROLLBAR_KNOB * slb )
 {
-
+	SPEC *sp = ob->spec;
+	FL_COORD x = sp->x,
+		     y = sp->y,
+		     w = sp->w,
+		     h = sp->h;
+	int sltype = ob->type;
+	double val = sp->norm_val;
+	double size = sp->slsize;
+	FL_COORD bw = ob->bw;
     int absbw = FL_abs( bw );
-    int fudge1 = IS_FLATORUPBOX( boxtype ) ? 0 : ( bw == -2 || bw >= 2 );
-    int fudge2 = IS_FLATORUPBOX( boxtype ) ?
+    int fudge1 = IS_FLATORUPBOX( ob->boxtype ) ? 0 : ( bw == -2 || bw >= 2 );
+    int fudge2 = IS_FLATORUPBOX( ob->boxtype ) ?
 		         0 : ( 2 * ( bw == -2 ) + ( bw >= 2 ) );
-
-    slb->buttw = slb->butth = 0;
 
     if ( sltype == FL_VERT_FILL_SLIDER )
     {
+		int inv = sp->min > sp->max;
+
 		slb->h = ( inv ? 1 - val : val ) * ( h - 2 * absbw );
 		slb->y = inv ? y + h - absbw - slb->h : y + absbw;
 		slb->w = w - 2 * absbw;
 		slb->x = x + absbw;
+		return;
     }
-    else if ( sltype == FL_HOR_FILL_SLIDER )
+
+    if ( sltype == FL_HOR_FILL_SLIDER )
     {
 		slb->w = val * ( w - 2 * absbw );
 		slb->x = x + absbw;
 		slb->h = h - 2 * absbw;
 		slb->y = y + absbw;
+		return;
     }
-    else if (is_vslider( sltype ) )
+
+	if ( IS_VSLIDER( sltype ) )
     {
 		slb->h = size * ( h - 2 * absbw );
 	
-		if ( SLIDER_MIN( sltype ) && slb->h < MINKNOB_SB )
+		if ( IS_SCROLLBAR( sltype ) && slb->h < MINKNOB_SB )
 			slb->h = MINKNOB_SB;
-		else if ( slb->h < 2 * absbw + MINKNOB_SL )
+		else if ( ! IS_SCROLLBAR( sltype ) && slb->h < 2 * absbw + MINKNOB_SL )
 			slb->h = 2 * absbw + MINKNOB_SL;
 
 		if ( sltype == FL_VERT_BROWSER_SLIDER2 )
 		{
 			slb->h = size * h;
 			slb->y = flinear( val, 0.0, 1.0, y, y + h - slb->h );
-			slb->x = x + 1 + IS_FLATORDOWN( boxtype );
-			slb->w = w - 2 - 2 * IS_FLATORDOWN( boxtype );
+			slb->x = x + 1 + IS_FLATORDOWN( ob->boxtype );
+			slb->w = w - 2 - 2 * IS_FLATORDOWN( ob->boxtype );
 		}
 		else if (    sltype == FL_VERT_THIN_SLIDER
 				  || sltype == FL_VERT_BASIC_SLIDER )
@@ -151,26 +142,28 @@ fl_calc_slider_size(int             boxtype,
 		{
 			slb->y = flinear( val, 0.0, 1.0, y + absbw,
 							  y + h - absbw - slb->h );
-
 			slb->w = w - 2 * absbw;
 			slb->x = x + absbw;
 		}
+
+		return;
     }
-    else if ( is_hslider( sltype ) )
+
+    if ( IS_HSLIDER( sltype ) )
     {
 		slb->w = size * ( w - 2 * absbw );
 
-		if ( SLIDER_MIN( sltype ) && slb->w < MINKNOB_SB )
+		if ( IS_SCROLLBAR( sltype ) && slb->w < MINKNOB_SB )
 			slb->w = MINKNOB_SB;
-		else if ( slb->w < 2 * absbw + MINKNOB_SL )
+		else if ( ! IS_SCROLLBAR( sltype ) && slb->w < 2 * absbw + MINKNOB_SL )
 			slb->w = 2 * absbw + MINKNOB_SL;
 
 		if ( sltype == FL_HOR_BROWSER_SLIDER2 )
 		{
 			slb->w = size * w;
-			slb->x = flinear( val, 0.0, 1.0, x, x + w - slb->w);
-			slb->h = h - 2 * ( 1 + IS_FLATORDOWN( boxtype ) );
-			slb->y = y + 1 + IS_FLATORDOWN( boxtype );
+			slb->x = flinear( val, 0.0, 1.0, x, x + w - slb->w );
+			slb->h = h - 2 * ( 1 + IS_FLATORDOWN( ob->boxtype ) );
+			slb->y = y + 1 + IS_FLATORDOWN( ob->boxtype );
 		}
 		else if (    sltype == FL_HOR_THIN_SLIDER
 				  || sltype == FL_HOR_BASIC_SLIDER )
@@ -187,9 +180,11 @@ fl_calc_slider_size(int             boxtype,
 			slb->h = h - 2 * absbw;
 			slb->y = y + absbw;
 		}
+
+		return;
     }
-    else
-		M_err( "CalcSize", "Bad slider type:%d", sltype );
+
+	M_err( "fl_calc_slider_size", "Bad slider type:%d", sltype );
 }
 
 
@@ -197,29 +192,53 @@ fl_calc_slider_size(int             boxtype,
  ***************************************/
 
 int
-fl_slider_mouse_object( int      boxtype,
-						FL_Coord x,
-						FL_Coord y,
-						FL_Coord w,
-						FL_Coord h,
-						int      sltype,
-						double   size,
-						double   val,
-						FL_Coord mx,
-						FL_Coord my,
-						int      bw )
+fl_slider_mouse_object( FL_OBJECT * ob,
+						FL_Coord    mx,
+						FL_Coord    my )
 {
-    FL_SCROLL_BAR slb;
+    FL_SCROLLBAR_KNOB slb;
+	SPEC *sp = ob->spec;
 
-    fl_calc_slider_size( boxtype, x, y, w, h, sltype, size, val, &slb, 0, bw );
+    fl_calc_slider_size( ob, &slb );
 
-    if (    mx >= slb.x
-		 && mx <= slb.x + slb.w
-		 && my >= slb.y
-		 && my <= slb.y + slb.h )
-		return FL_SLIDER_KNOB;
+    if ( IS_VSLIDER( ob->type ) )
+	{
+		my -= ob->y;
+		if ( IS_FILL( ob->type ) )
+			sp->mw = 0;
+		else
+			sp->mh = slb.h;
 
-    return FL_SLIDER_NONE;
+		if ( my < slb.y )
+			return ABOVE_KNOB;
+		else if ( my > slb.y + slb.h )
+			return BELOW_KNOB;
+		else
+			sp->offy = slb.y + slb.h / 2 - my;
+
+		if ( IS_FILL( ob->type ) )
+			 sp->offy = 0;
+	}
+	else
+	{
+		mx -= ob->x;
+		if ( IS_FILL( ob->type ) )
+			sp->mw = 0;
+		else
+			 sp->mw = slb.w;
+
+		if ( mx < slb.x )
+			return LEFT_OF_KNOB;
+		else if ( mx > slb.x + slb.w )
+			return RIGHT_OF_KNOB;
+		else
+			sp->offx = slb.x + slb.w / 2 - mx;
+
+		if ( IS_FILL( ob->type ) )
+			 sp->offx = 0;
+	}
+
+	return ON_TOP_OF_KNOB;
 }
 
 
@@ -227,30 +246,30 @@ fl_slider_mouse_object( int      boxtype,
  * val is normalized betweew 0 and 1
  ***************************************/
 
-void
-fl_drw_slider( int      boxtype,
-			   FL_Coord x,
-			   FL_Coord y,
-			   FL_Coord w,
-			   FL_Coord h,
-			   FL_COLOR col1,
-			   FL_COLOR col2,
-			   int      sltype,
-			   double   size,
-			   double   val,
-			   char *   str,
-			   int      d,
-			   int      inv,
-			   FL_Coord bw )
-
+void fl_drw_slider( FL_OBJECT  * ob,
+					FL_COLOR     col1,
+					FL_COLOR     col2,
+					const char * str,
+					int          d )
 {
-    FL_Coord xsl, ysl, hsl, wsl;
-    FL_Coord  absbw = FL_abs(bw), bw2, absbw2;
+	SPEC *sp = ob->spec;
+	FL_COORD x = sp->x,
+		     y = sp->y,
+		     w = sp->w,
+		     h = sp->h;
+	int sltype = ob->type;
+	int bw = ob->bw;
+    FL_Coord xsl,
+		     ysl,
+		     hsl,
+		     wsl;
+    FL_Coord absbw = FL_abs( bw ),
+		     bw2,
+		     absbw2;
     int slbox;
-    FL_SCROLL_BAR slb;
+    FL_SCROLLBAR_KNOB slb;
 
-    fl_calc_slider_size( boxtype, x, y, w, h, sltype, size, val,
-						 &slb, inv, bw );
+    fl_calc_slider_size( ob, &slb );
 
     xsl = slb.x;
     ysl = slb.y;
@@ -261,7 +280,7 @@ fl_drw_slider( int      boxtype,
 
     if ( d & FL_SLIDER_BOX )
     {
-		int btype = boxtype;
+		int btype = ob->boxtype;
 		int actual_bw = bw;
 
 		if (    sltype == FL_VERT_BROWSER_SLIDER2
@@ -275,26 +294,12 @@ fl_drw_slider( int      boxtype,
 		{
 			btype = FL_FLAT_BOX;
 			actual_bw = bw > 0 ? 1 : -1;
-#if 0
-			col1 = FL_RED;
-			y -= 1;
-			h += 2;
-			x += 1;
-			w -= 2;
-#endif
 		}
 		else if (    sltype == FL_HOR_THIN_SLIDER
 				  || sltype == FL_HOR_BASIC_SLIDER )
 		{
 			btype = FL_FLAT_BOX;
 			actual_bw = 1;
-#if 0
-			col1 = FL_RED;
-			x -= 1;
-			w += 2;
-			y += absbw;
-			h -= 2 * absbw;
-#endif
 		}
 		else
 			btype = btype == FL_SHADOW_BOX ? FL_BORDER_BOX : btype;
@@ -302,29 +307,29 @@ fl_drw_slider( int      boxtype,
 		fl_drw_box( btype, x, y, w, h, col1, actual_bw );
     }
 
-    if ( sltype == FL_VERT_NICE_SLIDER )
+    if ( sltype == FL_VERT_NICE_SLIDER || sltype == FL_VERT_NICE_SLIDER2 )
     {
 		fl_drw_box( FL_FLAT_BOX, x + w / 2 - 2, y + absbw,
 					4, h - 2 * absbw, FL_BLACK, 0 );
 		fl_drw_box( FL_UP_BOX, xsl, ysl, wsl, hsl, col1,
-					IS_FLATBOX( boxtype ) ? -1 : bw );
+					IS_FLATBOX( ob->boxtype ) ? -1 : bw );
 		fl_drw_box( FL_DOWN_BOX, xsl + 2, ysl + hsl / 2 - 2,
 					wsl - 4, 5, col2, 1 );
     }
-    else if ( sltype == FL_HOR_NICE_SLIDER )
+    else if ( sltype == FL_HOR_NICE_SLIDER || sltype == FL_HOR_NICE_SLIDER2 )
     {
 		int yoff = hsl > 15 ? 3 : 2;
 
 		fl_drw_box( FL_FLAT_BOX, x + absbw, y + h / 2 - 2,
 					w - 2 * absbw, 4, FL_BLACK, 0 );
 		fl_drw_box( FL_UP_BOX, xsl, ysl, wsl, hsl, col1,
-				    IS_FLATBOX( boxtype ) ? -1 : bw );
+				    IS_FLATBOX( ob->boxtype ) ? -1 : bw );
 		fl_drw_box( FL_DOWN_BOX, xsl + wsl / 2 - 2, ysl + yoff,
 				    5, hsl - 2 * yoff, col2, 1 /* absbw - 2 */ );
     }
     else
     {
-		switch ( boxtype )
+		switch ( ob->boxtype )
 		{
 			case FL_UP_BOX:
 				slbox = FL_UP_BOX;
@@ -336,7 +341,7 @@ fl_drw_slider( int      boxtype,
 
 			case FL_FRAME_BOX:
 			case FL_EMBOSSED_BOX:
-				slbox = boxtype;
+				slbox = ob->boxtype;
 				break;
 
 			case FL_ROUNDED_BOX:
@@ -408,95 +413,4 @@ fl_drw_slider( int      boxtype,
 
     fl_drw_text( FL_ALIGN_CENTER, xsl, ysl, wsl, hsl, 0, FL_NORMAL_STYLE,
 				 FL_TINY_FONT, str );
-}
-
-
-/***************************************
- * Routine to determine the value indicated by the mouse position.
- * The routine return the following possible value
- *	-2  do a page down (mouse click was below sliding part)
- *	-1  do a line down (mouse click in down button if available (not yet))
- *	 0  simple adapt value (mouse click in sliding part)
- *	 1  line up
- *	 2  page up
- * In all cases, in newval the new value is return as if 0 was returned
- * (i.e., you can ignore the returned value and simple set the slider
- * to the new value if you don't want page down's etc.).
- ***************************************/
-
-int
-fl_get_pos_in_slider( FL_Coord       x,
-					  FL_Coord       y,
-					  FL_Coord       w,
-					  FL_Coord       h,
-					  unsigned int   state,
-					  int            sltype,	/* Slider type */
-					  double         size,	/* Slider size */
-					  FL_Coord       xpos,
-					  FL_Coord       ypos,	/* Mouse position */
-					  double         oldval,	/* The old value */
-					  double       * newval	/* The new value */ )
-{
-    double v = 0.0,
-		   tmp;
-    int ret = 0;
-
-    if ( sltype == FL_HOR_THIN_SLIDER || sltype == FL_HOR_BASIC_SLIDER )
-		sltype = FL_HOR_BROWSER_SLIDER2;
-    if ( sltype == FL_VERT_THIN_SLIDER || sltype == FL_VERT_BASIC_SLIDER )
-		sltype = FL_VERT_BROWSER_SLIDER2;
-
-    xpos -= x + FL_SLIDER_BW2;
-    ypos -= y + FL_SLIDER_BW2;
-    h -= 2.0 * FL_SLIDER_BW2;
-    w -= 2.0 * FL_SLIDER_BW2;
-
-    if ( sltype == FL_VERT_FILL_SLIDER )
-    {
-		v = flinear( ypos, 0.0, h, 0.0, 1.0 );
-    }
-    else if ( sltype == FL_HOR_FILL_SLIDER )
-		v = flinear( xpos, 0.0, w, 0.0, 1.0 );
-    else if (    sltype == FL_VERT_SLIDER
-			  || sltype == FL_VERT_NICE_SLIDER
-			  || sltype == FL_VERT_BROWSER_SLIDER
-			  || sltype == FL_VERT_BROWSER_SLIDER2 )
-    {
-		FL_Coord hsl = size * h;
-
-		tmp = hsl * 0.5;
-
-		if ( sltype == FL_VERT_BROWSER_SLIDER && hsl < MINKNOB_SB )
-			hsl = MINKNOB_SB;
-
-		v = flinear( ypos, tmp, h - tmp, 0.0, 1.0 );
-
-		if ( ypos < oldval * (h - hsl ) )
-			ret = 2;
-		else if ( ypos > oldval * ( h - hsl ) + hsl )
-			ret = -2;
-    }
-    else if ( is_hslider( sltype ) )
-    {
-		tmp = size * w;
-		v = flinear( xpos, 0.5 * tmp, w - 0.5 * tmp, 0.0, 1.0 );
-		if ( xpos < oldval * ( w - tmp ) )
-			ret = -2;
-		else if ( xpos > oldval * ( w - tmp ) + tmp )
-			ret = 2;
-    }
-    else
-		M_err("", "bad slider type");
-
-    if ( v < 0.0 )
-		v = 0.0;
-    if ( v > 1.0 )
-		v = 1.0;
-
-    if ( shiftkey_down( state ) )
-		*newval = oldval + ( v - oldval ) * FL_SLIDER_FINE;
-    else
-		*newval = v;
-
-    return ret;
 }

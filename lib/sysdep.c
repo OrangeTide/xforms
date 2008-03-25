@@ -40,7 +40,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sysd = "$Id: sysdep.c,v 1.8 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_sysd = "$Id: sysdep.c,v 1.9 2008/03/25 12:41:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -159,60 +159,24 @@ fl_msleep( unsigned long msec )
 
 #endif /* VMS */
 
+
 /******* End of fl_msleep() ***************************/
 
 
-/*************************************************************
- * Return the system time since a fixed point in time (On unix
- * systems, this point is typically 01/01/70).
- * Most useful for elapsed time.
- ************************************************************/
+#if defined __VMS && __VMS_VER < 70000000
 
-void
-fl_gettime( long * sec,
-			long * usec )
-{
-#ifndef FL_WIN32
-    static struct timeval tp;
-#ifdef opennt
-    static unsigned long tzp;
-#else
-    static struct timezone tzp;
-#endif
-
-    gettimeofday( &tp, &tzp );
-    *sec = tp.tv_sec;
-    *usec = tp.tv_usec;
-#else
-    struct _timeb _gtodtmp;
-    _ftime( &_gtodtmp );
-    *sec = _gtodtmp.time;
-    *usec = _gtodtmp.millitm * 1000;
-#endif
-}
-
-
-long fl_getpid( void )
-{
-    return getpid( );
-}
-
-
-#if defined(__VMS) && __VMS_VER < 70000000
-/* Thanks to David Mathog (mathog@seqaxp.bio.caltech.edu) for
-   stealing it from the X11KIT distribution
- */
-
-/*
+/***************************************
+ * Thanks to David Mathog (mathog@seqaxp.bio.caltech.edu) for
+ * stealing it from the X11KIT distribution
+ *
  *      gettimeofday(2) - Returns the current time
  *
  *      NOTE: The timezone portion is useless on VMS.
  *      Even on UNIX, it is only provided for backwards
  *      compatibilty and is not guaranteed to be correct.
- */
+ ***************************************/
 
-#include "include/forms.h"
-#include "flinternal.h"
+
 #include <timeb.h>
 
 int
@@ -240,4 +204,45 @@ gettimeofday( struct timeval *  tv,
 }
 /*** End gettimeofday() ***/
 
-#endif /* __VMS_VER */
+#endif /* defined __VMS && __VMS_VER < 70000000 */
+
+
+/*************************************************************
+ * Return the system time since a fixed point in time (On unix
+ * systems, this point is typically 01/01/70).
+ * Most useful for elapsed time.
+ ************************************************************/
+
+void
+fl_gettime( long * sec,
+			long * usec )
+{
+#ifndef FL_WIN32
+    static struct timeval tp;
+#ifdef opennt
+    static unsigned long tzp;
+#else
+    static struct timezone tzp;
+#endif
+
+    gettimeofday( &tp, &tzp );
+    *sec  = tp.tv_sec;
+    *usec = tp.tv_usec;
+#else
+    struct _timeb _gtodtmp;
+    _ftime( &_gtodtmp );
+    *sec  = _gtodtmp.time;
+    *usec = _gtodtmp.millitm * 1000;
+#endif
+}
+
+
+/***************************************
+ ***************************************/
+
+long fl_getpid( void )
+{
+    return getpid( );
+}
+
+

@@ -95,6 +95,7 @@ noinst_PROGRAMS = arrowbutton \
 	thumbwheel \
 	timer \
 	timerprec \
+	timeoutprec \
 	touchbutton \
 	xyplotactive \
 	xyplotall \
@@ -257,6 +258,7 @@ thumbwheel.$(OBJEXT): fd/twheel_gui.c
 
 timer_SOURCES = timer.c
 timerprec_SOURCES = timerprec.c
+timeoutprec_SOURCES = timeoutprec.c
 touchbutton_SOURCES = touchbutton.c
 xyplotactive_SOURCES = xyplotactive.c
 xyplotall_SOURCES = xyplotall.c

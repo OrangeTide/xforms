@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.21 2008/03/20 12:41:48 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.22 2008/03/25 12:41:28 jtt Exp $";
 #endif
 
 
@@ -59,8 +59,9 @@ void fl_redraw_form_using_xevent( FL_FORM *,
 								  int,
 								  XEvent * );
 static void do_interaction_step( int wait_io );
-static void handle_idling( int            wait_io,
-						   unsigned int * last_timer );
+static int get_next_event_or_idle( int        wait_io,
+								   FL_FORM ** form,
+								   XEvent   * xev );
 static void handle_EnterNotify_event( FL_FORM * evform );
 static void handle_LeaveNotify_event( void );
 static void handle_MotionNotify_event( FL_FORM * evform );
@@ -68,22 +69,31 @@ static void handle_Expose_event( FL_FORM  * evform,
 								 FL_FORM ** redraw_form );
 static void handle_ConfigureNotify_event( FL_FORM  * evform,
 										  FL_FORM ** redraw_form );
-static void handle_DestroyNotify_event( FL_FORM * evform );
-
 
 static FL_FORM *fl_mainform;
 static int nomainform;
 static int reopened_group;
 
-static FL_Coord fl_mousex,	  /* last known mouse pos */
-                fl_mousey;
-static unsigned int fl_keymask;
-static unsigned int fl_query_age = UINT_MAX;
-
 void ( * fl_handle_signal )( void );
 int ( * fl_handle_clipboard )( void * );
 
 #define SHORT_PAUSE   10	      /* check_form wait (in ms) */
+
+
+/* The following variables store the last recorded mouse position
+   and state of buttons and modifier keys as well as how old the
+   information is. They're not defined as static since they are\
+   also needed in xpopup.c */
+
+FL_Coord fl_mousex,
+         fl_mousey;
+unsigned int fl_keymask;
+unsigned int fl_query_age = UINT_MAX;
+
+
+static FL_FORM **forms = NULL;	    /* The forms being shown. */
+static size_t formnumb = 0;	        /* Number of visible forms */
+static size_t hidden_formnumb = 0;  /* Number of hidden forms */
 
 
 /***************************************
@@ -122,6 +132,12 @@ fl_bgn_form( int      type,
     }
 
     fl_current_form = fl_make_form( w, h );
+
+	/* Add the new form to the list of still hidden forms */
+
+	forms = realloc( forms, ( formnumb + ++hidden_formnumb ) * sizeof *forms );
+	forms[ formnumb + hidden_formnumb - 1 ] = fl_current_form;
+
     fl_add_box( type, 0, 0, w, h, "" );
 
     return fl_current_form;
@@ -279,8 +295,6 @@ fl_end_group( void )
 
 /************************ Doing the Interaction *************************/
 
-static FL_FORM **forms = NULL;	    /* The forms being shown. */
-static size_t formnumb = 0;	        /* Their number. */
 static FL_FORM * mouseform = NULL;  /* The current form under mouse */
 static FL_FORM * keyform = NULL;    /* keyboard focus form */
 FL_OBJECT * fl_pushobj = NULL;	    /* latest pushed object */
@@ -745,7 +759,6 @@ static int has_initial;
 static int unmanaged_count;
 static size_t auto_count = 0;
 
-
 long
 fl_prepare_form_window( FL_FORM    * form,
 						int          place,
@@ -754,6 +767,7 @@ fl_prepare_form_window( FL_FORM    * form,
 {
     long screenw,
 		 screenh;
+	size_t i;
     int itx = 0,
 		ity = 0,
 		dont_fix_size = 0;
@@ -781,8 +795,26 @@ fl_prepare_form_window( FL_FORM    * form,
     if ( form->visible )
 		return form->window;
 
-	forms = fl_realloc( forms, ++formnumb * sizeof *forms );
-	forms[ formnumb - 1 ] = form;
+	/* Try to move the form from the part of the list for hidden forms to
+	   tha at the start for visible forms */
+
+	for ( i = formnumb; i < formnumb + hidden_formnumb; i++ )
+		if ( forms[ i ] == form )
+			break;
+
+	if ( i == formnumb + hidden_formnumb )
+	{
+		M_err( "fl_prepare_form_window", "Showing inexistent form" );
+		return None;
+	}
+
+	if ( i != formnumb )
+	{
+		forms[ i ] = forms[ formnumb ];
+		forms[ formnumb ] = form;
+	}
+	formnumb++;
+	hidden_formnumb--;
 
     if ( form->label != name )
     {
@@ -1039,19 +1071,7 @@ close_form_win( Window win )
 		FL_FORM *form;
 
 		if ( ( form = find_event_form( &xev ) ) )
-		{
-			size_t i;
-
-			form->visible = 0;
-			form->window = 0;
-			for ( i = 0; i < formnumb; i++ )
-				if ( form == forms[ i ] )
-				{
-					forms[ i ] = forms[ --formnumb ];
-					forms = fl_realloc( forms, formnumb * sizeof *forms );
-					break;
-				}
-		}
+			fl_hide_form( form );
 		else
 			fl_XPutBackEvent( &xev );
     }
@@ -1177,7 +1197,13 @@ fl_hide_form( FL_FORM * form )
     fl_free_flpixmap( form->flpixmap );
 
     if ( mouseform && mouseform->window == form->window )
+	{
+		if ( fl_pushobj && fl_pushobj->form == mouseform )
+			fl_pushobj = NULL;
+		if ( fl_mouseobj && fl_mouseobj->form == mouseform )
+			fl_mouseobj = NULL;
 		mouseform = NULL;
+	}
 
     form->deactivated = 1;
     form->visible = FL_INVISIBLE;
@@ -1191,13 +1217,25 @@ fl_hide_form( FL_FORM * form )
 	if ( flx->win == owin )
 		flx->win = None;
 
-    for ( i = 0; i < formnumb; i++ )
+	/* Move the form from the part of the list for visible forms to the
+	   part of hidden forms at the end of the array */
+
+	for ( i = 0; i < formnumb; i++ )
 		if ( form == forms[ i ] )
-		{
-			forms[ i ] = forms[ --formnumb ];
-			forms = fl_realloc( forms, formnumb * sizeof *forms );
 			break;
-		}
+
+	if ( i == formnumb )
+	{
+		M_err( "fl_hide_form", "Hiding unknown form" );
+		return;
+	}
+
+	if ( formnumb > 0 )
+	{
+		forms[ i ] = forms[ --formnumb ];
+		forms[ formnumb ] = form;
+	}
+	hidden_formnumb++;
 
     if ( form->wm_border == FL_NOBORDER )
     {
@@ -1236,6 +1274,7 @@ fl_free_form( FL_FORM * form )
 {
     FL_OBJECT *current,
 		      *next;
+	size_t i;
 
     /* check whether ok to free */
 
@@ -1251,10 +1290,15 @@ fl_free_form( FL_FORM * form )
 		fl_hide_form( form );
     }
 
-    /* free the objects */
+    /* Free all objects */
 
-    for ( current = next = form->first; next != NULL; current = next )
+    for ( current = next = form->first; next; current = next )
     {
+		if ( current->child )
+		{
+			fl_free_object( current->child );
+			current->child = NULL;
+		}
 		next = current->next;
 		fl_free_object( current );
     }
@@ -1277,9 +1321,24 @@ fl_free_form( FL_FORM * form )
     if ( form == fl_mainform )
 		fl_mainform = NULL;
 
-    /* free the form structure */
+    /* Free the form and remove it from the list of existing forms */
 
-    fl_addto_freelist( form );
+	for ( i = formnumb; i < formnumb + hidden_formnumb; i++ )
+		if ( form == forms[ i ] )
+			break;
+
+	if ( i == formnumb + hidden_formnumb )
+	{
+		M_err( "fl_free_form", "Freeing unknown form" );
+		return;
+	}
+
+	if ( i != formnumb + --hidden_formnumb )
+		forms[ i ] = forms[ formnumb + hidden_formnumb ];
+
+	fl_free( form );
+
+	forms = fl_realloc( forms, ( formnumb + hidden_formnumb ) * sizeof *forms );
 }
 
 
@@ -1760,7 +1819,7 @@ fl_handle_form( FL_FORM * form,
 			fl_handle_object( fl_mouseobj, FL_ENTER, x, y, 0, xev );
 			break;
 
-		case FL_LEAVE:		/* Mouse did left the form */
+		case FL_LEAVE:		         /* Mouse left the form */
 			fl_handle_object( fl_mouseobj, FL_LEAVE, x, y, 0, xev );
 			if ( fl_pushobj == fl_mouseobj )
 				fl_pushobj = NULL;
@@ -1804,26 +1863,26 @@ fl_handle_form( FL_FORM * form,
 			}
 			break;
 
-		case FL_MOUSE:		     /* Mouse position changed in the form */
-			/* "Pushable" objects always get FL_MOUSE events. Since there's
+		case FL_MOTION:		     /* Mouse position changed in the form */
+			/* "Pushable" objects always get FL_MOTION events. Since there's
 			   no direct EnterNotify or LeaveNotify event for objects we
 			   "fake" them when an object gets entered or left. */
 
 			if ( fl_pushobj != NULL )
-				fl_handle_object( fl_pushobj, FL_MOUSE, x, y, key, xev );
+				fl_handle_object( fl_pushobj, FL_MOTION, x, y, key, xev );
 			else if ( obj != fl_mouseobj )
 			{
 				fl_handle_object( fl_mouseobj, FL_LEAVE, x, y, 0, xev );
 				fl_handle_object( fl_mouseobj = obj, FL_ENTER, x, y, 0, xev );
 			}
 
-			/* Objects can declare that they want FL_MOUSE events even
+			/* Objects can declare that they want FL_MOTION events even
 			   though they're not "pushable" objects e.g. because they
 			   have some internal structure that depends on the mouse
 			   position (e.g. choice and counter objects) . */
 
 			if ( obj && obj != fl_pushobj && obj->want_motion )
-				fl_handle_object( obj, FL_MOUSE, x, y, key, xev );
+				fl_handle_object( obj, FL_MOTION, x, y, key, xev );
 
 			break;
 
@@ -1845,8 +1904,8 @@ fl_handle_form( FL_FORM * form,
 			break;
 
 		case FL_UPDATE:
-			/* "Pushable" objects can request an FL_UPDATE event by an
-			   artificial (but not very precise) timer */
+			/* "Pushable" objects may request an FL_UPDATE event by an
+			   artificial (but not very precise) timer.*/
 
 			if ( fl_pushobj && fl_pushobj->want_update )
 				fl_handle_object( fl_pushobj, FL_UPDATE, x, y, key, xev );
@@ -1914,7 +1973,7 @@ static void
 do_keyboard( XEvent * xev,
 			 int      formevent )
 {
-    Window win;
+    Window win = xev->xkey.window;
 	KeySym keysym = 0;
 	unsigned char keybuf[ 227 ];
     int kbuflen;
@@ -1925,8 +1984,6 @@ do_keyboard( XEvent * xev,
 	fl_query_age = 0;
 
     /* before doing anything, save the current modifier key for the handlers */
-
-    win = xev->xkey.window;
 
     if ( win && ( ! keyform || ! fl_is_good_form( keyform ) ) )
 		keyform = fl_win_to_form( win );
@@ -2103,41 +2160,6 @@ fl_win_to_form( Window win )
 }
 
 
-/***************************************
- ***************************************/
-
-void
-fl_handle_automatic( XEvent * xev,
-					 int      idle_cb )
-{
-    FL_IDLE_REC *idle_rec;
-	size_t i;
-    static int nc = 0;
-
-    if ( fl_handle_signal )
-		fl_handle_signal( );
-
-	if ( auto_count )
-		for ( i = 0; i < formnumb; i++ )
-			if ( forms[ i ]->has_auto )
-				fl_handle_form( forms[ i ], FL_STEP, 0, xev );
-
-    if ( idle_cb )
-    {
-		if ( ++nc >= 64 )
-		{
-			fl_free_freelist( );
-			nc = 0;
-		}
-
-		if ( ( idle_rec = fl_context->idle_rec ) && idle_rec->callback )
-			idle_rec->callback( xev, idle_rec->data );
-
-		fl_handle_timeouts( 200 );	/* force a re-sync */
-    }
-}
-
-
 /* how frequent to generate FL_STEP event, in milli-seconds. These
  * are modified if idle callback exists */
 
@@ -2198,72 +2220,15 @@ fl_treat_interaction_events( int wait )
 /***************************************
  ***************************************/
 
-static int
-get_next_event( int        wait_io,
-				FL_FORM ** form,
-				XEvent   * xev )
-{
-    static int cnt = 0;
-    int msec;
-
-	/* Skip looking for an X event on eleventh time round, thus giving
-	   X events a 10:1 priority over async IO and timers (and the time
-	   the program is sleeping) */
-
-    if ( ++cnt % 11 && XEventsQueued( flx->display, QueuedAfterFlush ) )
-    {
-		XNextEvent( flx->display, xev );
-
-		/* Find the form the event is for - if it's for none of "our" forms
-		   it must be for some window the user generated himself. */
-
-		if ( ( *form = find_event_form( xev ) ) != NULL )
-			return 1;
-		else
-		{
-			fl_XPutBackEvent( xev );
-			return 0;
-		}
-    }
-
-	cnt = 0;
-
-    /* Determine how much time to wait */
-
-    if ( ! wait_io )
-		msec = SHORT_PAUSE;
-    else if (    auto_count
-			  || fl_pushobj
-			  || fl_context->idle_rec
-			  || fl_context->timeout_rec )
-		msec = delta_msec;
-	else
-		msec = FL_min( delta_msec * 3, 300 );
-
-    fl_watch_io( fl_context->io_rec, msec );
-
-    if ( fl_context->timeout_rec )
-		fl_handle_timeouts( msec );
-
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
 static void
 do_interaction_step( int wait_io )
 {
     FL_FORM *evform = NULL;
 	static FL_FORM *redraw_form = NULL;
-	static unsigned int last_timer = 0;
 
-    if ( ! get_next_event( wait_io, &evform, &st_xev ) )
-    {
-		handle_idling( wait_io, &last_timer );
+
+    if ( ! get_next_event_or_idle( wait_io, &evform, &st_xev ) )
 		return;
-	}
 
 	/* got an event for one of the forms */
 
@@ -2275,7 +2240,6 @@ do_interaction_step( int wait_io )
 	fl_compress_event( &st_xev, evform->compress_mask );
 
 	fl_query_age++;
-	last_timer = 0;
 
 	/* Run user raw callbacks for events, we're done if we get told that
 	   we're not supposed to do anything else with the event */
@@ -2365,7 +2329,7 @@ do_interaction_step( int wait_io )
 			break;
 
 		case DestroyNotify:	/* only sub-form gets this due to parent destroy */
-			handle_DestroyNotify_event( evform );
+			fl_hide_form( evform );
 			break;
 
 		case SelectionClear:
@@ -2385,52 +2349,121 @@ do_interaction_step( int wait_io )
 /***************************************
  ***************************************/
 
-static void
-handle_idling( int            wait_io,
-			   unsigned int * last_timer )
+void
+fl_handle_idling( XEvent * xev,
+				  long     msec,
+				  int      do_idle_cb )
 {
-#if FL_DEBUG >= ML_TRACE
-	M_info( "handle_idling", "Artificial timer event" );
-#endif
+	size_t i;
 
-	if ( ! mouseform )
-		return;
+	/* Sleep a bit, keeping a lookout for async IO events */
 
-	/* Certain events like Selection/GraphicsExpose do not have a window
-	   member itself, but xany.window happens to be the one we want */
+	fl_watch_io( fl_context->io_rec, msec );
 
-	if ( fl_query_age != 0 )
+	/* Deal with signals */
+
+    if ( fl_handle_signal )
+		fl_handle_signal( );
+
+	/* Make sure we have an up-to-date set of data for the mouse position
+	   and the state of the keyboard and mouse buttons */
+
+	if ( fl_query_age != 0 && mouseform )
 	{
 		fl_get_form_mouse( mouseform, &fl_mousex, &fl_mousey, &fl_keymask );
 		fl_query_age = 0;
 		st_xev.xmotion.time = CurrentTime;
 	}
 	else
-		st_xev.xmotion.time += wait_io ? delta_msec : SHORT_PAUSE;
+		st_xev.xmotion.time += msec;
 
-	/* Need to do FL_UPDATE for objects that want it (currently touch buttons,
-	   choice, textbox s and counter objects) */
-
-	if (    ( button_down( fl_keymask ) || ! *last_timer )
-		 && ( fl_pushobj  && fl_pushobj->want_update ) )
-	{
-		fl_handle_form( mouseform, FL_UPDATE,
-						xmask2key( fl_keymask ), NULL );
-		*last_timer = 1;
-	}
-
-	/* Automatic handlers and idle callbacks expect a synthetic MotionNotify
-	   event, make it up, then call the handler */
+	/* FL_UPDATE and automatic handlers as well as idle callbacks can expect
+	   a synthetic MotionNotify event, make it up, then call the handler */
 
 	st_xev.type            = MotionNotify;
-	st_xev.xany.window     = mouseform->window;
+	st_xev.xany.window     = mouseform ? mouseform->window : None;
 	st_xev.xany.send_event = 1;
 	st_xev.xmotion.state   = fl_keymask;
 	st_xev.xmotion.x       = fl_mousex;
 	st_xev.xmotion.y       = fl_mousey;
 	st_xev.xmotion.is_hint = 0;
 
-	fl_handle_automatic( &st_xev, 1 );
+	/* We need to send an FL_UPDATE while a mouse button is down to "pushable"
+	   objects that want it (currently touch buttons, slider, choice, textbox
+	   and counter objects) */
+
+	if (    button_down( fl_keymask )
+		 && ( fl_pushobj  && fl_pushobj->want_update )
+		 && mouseform )
+	{
+		fl_handle_form( mouseform, FL_UPDATE,
+						xmask2key( fl_keymask ), &st_xev );
+	}
+
+	/* Handle automatic tasks */
+
+	if ( auto_count )
+		for ( i = 0; i < formnumb; i++ )
+			if ( forms[ i ]->has_auto )
+				fl_handle_form( forms[ i ], FL_STEP, 0, xev );
+
+	/* If asked to also execute user idle callbacks */
+
+    if ( do_idle_cb && fl_context->idle_rec && fl_context->idle_rec->callback )
+		fl_context->idle_rec->callback( xev, fl_context->idle_rec->data );
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+get_next_event_or_idle( int        wait_io,
+						FL_FORM ** form,
+						XEvent   * xev )
+{
+    static unsigned int cnt = 0;
+    long msec;
+
+    /* Timeouts should be as precise as possible, so check them each time
+	   round. Since they may dictate how long we're going to wait if there
+	   is no event determine how how much time we will have to wait now */
+
+    if ( ! wait_io )
+		msec = SHORT_PAUSE;
+    else if (    auto_count
+			  || fl_pushobj
+			  || fl_context->idle_rec )
+		msec = delta_msec;
+	else
+		msec = FL_min( delta_msec * 3, 300 );
+
+    if ( fl_context->timeout_rec )
+		fl_handle_timeouts( &msec );
+
+	/* Skip checking for an X event after 10 events, thus giving X events
+	   a 10:1 priority over async IO, UPDATE events, automatic handlers and
+	   idle callbacks  */
+
+    if ( ++cnt % 11 && XEventsQueued( flx->display, QueuedAfterFlush ) )
+    {
+		XNextEvent( flx->display, xev );
+
+		/* Find the form the event is for - if it's for none of "our" forms
+		   it must be for some window the user generated him/herself. */
+
+		if ( ( *form = find_event_form( xev ) ) != NULL )
+			return 1;
+
+		fl_XPutBackEvent( xev );
+		return 0;
+    }
+
+	cnt = 0;
+
+	fl_handle_idling( &st_xev, msec, 1 );
+
+	return 0;
 }
 
 
@@ -2542,7 +2575,7 @@ handle_MotionNotify_event( FL_FORM * evform )
 		fl_mousey += evform->y - mouseform->y;
 	}
 
-	fl_handle_form( mouseform, FL_MOUSE,
+	fl_handle_form( mouseform, FL_MOTION,
 					xmask2key( fl_keymask ), &st_xev );
 }
 
@@ -2666,28 +2699,6 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
 		fl_redraw_form( evform );
 	else if ( ! ( evform->w > old_w && evform->h > old_h ) ) 
 		*redraw_form = evform;
-}
-
-
-/***************************************
- * Handling of DestroyNotify events - only
- * sub-form gets this due to parent destroy
- ***************************************/
-
-static void
-handle_DestroyNotify_event( FL_FORM * evform )
-{
-	size_t i;
-
-	evform->visible = 0;
-	evform->window = 0;
-	for ( i = 0; i < formnumb; i++ )
-		if ( evform == forms[ i ] )
-		{
-			forms[ i ] = forms[ --formnumb ];
-			forms = fl_realloc( forms, formnumb * sizeof *forms );
-			return;
-		}
 }
 
 
@@ -3009,6 +3020,14 @@ fl_finish( void )
     if ( flx->display )
     {
 		XChangeKeyboardControl( flx->display, fl_keybdmask, &fl_keybdcontrol );
+
+		fl_remove_all_signal_callbacks( );
+		fl_remove_all_timeouts( );
+
+		while ( formnumb > 0 )
+			fl_hide_form( *forms );
+		while ( hidden_formnumb > 0 )
+			fl_free_form( *forms );
 
 		fl_obj_queue_delete( );
 		fl_event_queue_delete( );

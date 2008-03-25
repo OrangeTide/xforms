@@ -170,7 +170,7 @@ change_pixmap( SPEC * sp,
 
 	M_warn( "change_pixmap", "Pixmap=%ld mask=%ld", p, shape_mask );
 
-	if ( psp->gc == 0 )
+	if ( psp->gc == None )
 	{
 		psp->gc = XCreateGC( flx->display, win, 0, 0 );
 		XSetGraphicsExposures( flx->display, psp->gc, False );
@@ -528,7 +528,7 @@ fl_read_pixmapfile( Window		   win,
 					int *		   hoty,
 					FL_COLOR	   tran )
 {
-	Pixmap p = 0;
+	Pixmap p = None;
 	int s;
 
 	xpmattrib = fl_calloc( 1, XpmAttributesSize( ) );
@@ -622,7 +622,8 @@ draw_pixmapbutton( FL_OBJECT * ob )
 	SPEC *sp = ob->spec;
 	PixmapSPEC *psp = sp->cspecv;
 	int absbw = FL_abs( ob->bw );
-	int newbt = ob->boxtype, focus = 0;
+	int newbt = ob->boxtype,
+		focus = 0;
 
 	switch ( sp->event )
 	{
@@ -810,7 +811,8 @@ fl_set_pixmap_data( FL_OBJECT * ob,
 {
 	SPEC *sp;
 	Window win;
-	Pixmap p, shape_mask = 0;
+	Pixmap p,
+		   shape_mask = None;
 	int hx, hy;
 
 	CHECK( ob, "fl_set_pixmap_data" );

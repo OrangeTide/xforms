@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.19 2008/03/19 21:04:24 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.20 2008/03/25 12:41:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -178,6 +178,10 @@ static int pup_subreturn;
 static int pup_using_keys = 0;
 static int pup_internal_showpup_call = 0;
 
+extern FL_Coord fl_mousex,	                    /* defined in forms.c */
+                fl_mousey;
+extern unsigned int fl_keymask;
+extern unsigned int fl_query_age;
 
 
 /************ data struct maintanance ******************{**/
@@ -1223,6 +1227,11 @@ pup_interact( PopUP * m )
 
     while ( ! ( done || timeout ) )
     {
+		long msec = fl_context->idle_delta;
+
+		if ( fl_context->timeout_rec )
+			fl_handle_timeouts( &msec );
+
 		timeout = fl_time_passed( FL_PUP_T ) > 40.0;
 
 		if ( ! XCheckWindowEvent( flx->display, m->win, m->event_mask, &ev ) )
@@ -1237,39 +1246,17 @@ pup_interact( PopUP * m )
 				break;
 			}
 
-			fl_watch_io( fl_context->io_rec, fl_context->idle_delta );
-
-			/* mouse pos do not matter. However if idle is 1, need to pass a
-			   valid event. */
-
 			if ( timer_cnt++ % 10 == 0 )
 			{
-				FL_Coord x,
-					     y;
-				unsigned int km;
-
 				timer_cnt = 0;
-				fl_get_win_mouse( m->win, &x, &y, &km );
-
-				/* only set some of the field in the synthetic event */
-
-				ev.type = MotionNotify;
-				ev.xmotion.send_event = 1;
-				ev.xmotion.is_hint = 0;
-				ev.xmotion.display = flx->display;
-				ev.xmotion.x = x;
-				ev.xmotion.y = y;
-				ev.xmotion.state = km;
-				ev.xmotion.window = m->win;
-				ev.xmotion.time += 200;
+				fl_handle_idling( &ev, msec, 1 );
+				fl_winset( m->win );
 			}
-
-			fl_handle_automatic( &ev, 1 );
-			fl_winset( m->win );
 			continue;
 		}
 
 		timer_cnt = 0;
+		fl_query_age++;
 
 		switch ( ev.type )
 		{
@@ -1284,6 +1271,11 @@ pup_interact( PopUP * m )
 
 			case ButtonPress:
 				/* taking adv. of xbutton.x == xcrossing.x */
+
+				fl_mousex  = ev.xmotion.x;
+				fl_mousey  = ev.xmotion.y;
+				fl_keymask = ev.xmotion.state;
+				fl_query_age = 0;
 
 				pup_using_keys = 0;
 				item = handle_motion( m, ev.xbutton.x, ev.xbutton.y, &val );
@@ -1306,6 +1298,11 @@ pup_interact( PopUP * m )
 				break;
 
 			case ButtonRelease:
+				fl_mousex  = ev.xbutton.x;
+				fl_mousey  = ev.xbutton.y;
+				fl_keymask = ev.xbutton.state;
+				fl_query_age = 0;
+
 				item = handle_motion( m, ev.xbutton.x, ev.xbutton.y, &val );
 				if ( item && item->subm >= 0 && val != -1 )
 					done = handle_submenu( m, item, &val );
@@ -1314,6 +1311,11 @@ pup_interact( PopUP * m )
 				break;
 
 			case KeyPress:
+				fl_mousex  = ev.xkey.x;
+				fl_mousey  = ev.xkey.y;
+				fl_keymask = ev.xkey.state;
+				fl_query_age = 0;
+
 				pup_using_keys = 1;
 				done = pup_keyboard( ( XKeyEvent * ) &ev, m, &val );
 				break;

@@ -35,7 +35,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_util = "$Id: util.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_util = "$Id: util.c,v 1.10 2008/03/25 12:41:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -111,7 +111,8 @@ static FL_VN_PAIR flevent[ ] =
 	VN( FL_RELEASE ),
     VN( FL_STEP ),
 	VN( FL_SHORTCUT ),
-	VN( FL_MOUSE ),
+	VN( FL_UPDATE ),
+	VN( FL_MOTION ),
     VN( FL_KEYPRESS ),
 	VN( FL_DRAW ),
 	VN( FL_FOCUS ),

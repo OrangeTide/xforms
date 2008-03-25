@@ -262,9 +262,10 @@ handle( FL_OBJECT * ob,
 			sp->start_val = sp->val;
 			/* fall through */
 
-		case FL_DRAG:
+		case FL_MOTION:
 			if ( key != FL_MBUTTON1 )
 				break;
+
 			cur_pos = ob->type == FL_VERT_THUMBWHEEL ? sp->oldmy : mx;
 			old_pos = ob->type == FL_VERT_THUMBWHEEL ? my : sp->oldmx;
 			value = sp->val + step * ( cur_pos - old_pos );

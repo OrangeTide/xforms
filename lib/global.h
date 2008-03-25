@@ -29,7 +29,7 @@
  *.
  *
  * All gloabl varialbes used in XForms. It is important to start all
- * variables wth fl/FL to avoid name space pollution.
+ * variables with fl/FL to avoid name space pollution.
  *
  */
 
@@ -42,10 +42,12 @@ int fl_screen;
 
 /* memory routines */
 
-void * ( * fl_calloc )( size_t, size_t )  = calloc;
-void * ( * fl_malloc )( size_t )          = malloc;
+
+void * ( * fl_calloc  )( size_t, size_t ) = calloc;
+void * ( * fl_malloc  )( size_t )         = malloc;
 void * ( * fl_realloc )( void *, size_t ) = realloc;
-void ( * fl_free )( void * )              = free;
+void   ( * fl_free    )( void * )         = free;
+
 
 FL_State fl_state[ 6 ];
 int fl_vmode = -1,

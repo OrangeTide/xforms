@@ -190,24 +190,24 @@ emit_pixmap_code(FILE * fp, FL_OBJECT * ob)
 
     if (info->filename[0] && !info->use_data)
     {
-	fprintf(fp, "    fl_set_%s_file(obj, \"%s\");\n",
+	fprintf(fp, "    fl_set_%s_file( obj, \"%s\" );\n",
 		ob->objclass == FL_PIXMAP ? "pixmap" : "bitmap",
 		info->filename);
     }
 
     if (info->align != definfo->align && ob->objclass == FL_PIXMAP)
     {
-	fprintf(fp, "    fl_set_pixmap_align(obj, %s, %d, %d);\n",
+	fprintf(fp, "    fl_set_pixmap_align( obj, %s, %d, %d );\n",
 	     align_name(info->align | FL_ALIGN_INSIDE), info->dx, info->dy);
     }
 
     if (info->data[0] && info->use_data && info->filename[0])
     {
 	if (ob->objclass == FL_PIXMAP)
-	    fprintf(fp, "    fl_set_pixmap_data(obj,%s);\n",
+	    fprintf(fp, "    fl_set_pixmap_data( obj,%s );\n",
 		    info->data);
 	else
-	    fprintf(fp, "    fl_set_bitmap_data(obj,%s, %s, (unsigned char *)%s);\n",
+	    fprintf(fp, "    fl_set_bitmap_data( obj,%s, %s, ( unsigned char * ) %s);\n",
 		    info->width, info->height, info->data);
     }
 

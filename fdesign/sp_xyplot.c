@@ -154,42 +154,42 @@ emit_xyplot_code(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->xmajor != defsp->xmajor || sp->xminor != defsp->xminor)
-	fprintf(fp, "    fl_set_xyplot_xtics(obj, %d, %d);\n",
+	fprintf(fp, "    fl_set_xyplot_xtics( obj, %d, %d );\n",
 		sp->xmajor, sp->xminor);
 
     if (sp->ymajor != defsp->ymajor || sp->yminor != defsp->yminor)
-	fprintf(fp, "    fl_set_xyplot_ytics(obj, %d, %d);\n",
+	fprintf(fp, "    fl_set_xyplot_ytics( obj, %d, %d );\n",
 		sp->ymajor, sp->yminor);
 
     if (sp->xscale != defsp->xscale ||
 	(sp->xscale == FL_LOG && (sp->xbase != defsp->xbase)))
-	fprintf(fp, "    fl_set_xyplot_xscale(obj, %s, %g);\n",
+	fprintf(fp, "    fl_set_xyplot_xscale( obj, %s, %g );\n",
 		get_scale_name(sp->xscale), sp->xbase);
 
     if (sp->yscale != defsp->yscale ||
 	(sp->yscale == FL_LOG && (sp->ybase != defsp->ybase)))
-	fprintf(fp, "    fl_set_xyplot_yscale(obj, %s, %g);\n",
+	fprintf(fp, "    fl_set_xyplot_yscale( obj, %s, %g );\n",
 		get_scale_name(sp->yscale), sp->ybase);
 
     if (sp->xgrid != defsp->xgrid)
-	fprintf(fp, "    fl_set_xyplot_xgrid(obj, %s);\n",
+	fprintf(fp, "    fl_set_xyplot_xgrid( obj, %s );\n",
 		get_grid_name(sp->xgrid));
 
     if (sp->ygrid != defsp->ygrid)
-	fprintf(fp, "    fl_set_xyplot_ygrid(obj, %s);\n",
+	fprintf(fp, "    fl_set_xyplot_ygrid( obj, %s );\n",
 		get_grid_name(sp->ygrid));
 
     if (sp->grid_linestyle != defsp->grid_linestyle)
-	fprintf(fp, "    fl_set_xyplot_grid_linestyle(obj, %s);\n",
+	fprintf(fp, "    fl_set_xyplot_grid_linestyle( obj, %s );\n",
 		get_linestyle_name(sp->grid_linestyle));
 
     if (ob->type == FL_ACTIVE_XYPLOT)
     {
 	if (sp->mark_active != defsp->mark_active)
-	    fprintf(fp, "    fl_set_xyplot_mark_active(obj, %d);\n",
+	    fprintf(fp, "    fl_set_xyplot_mark_active( obj, %d );\n",
 		    sp->mark_active);
 	if (sp->how_return != defsp->how_return)
-	    fprintf(fp, "    fl_set_xyplot_return(obj, %s);\n",
+	    fprintf(fp, "    fl_set_xyplot_return( obj, %s );\n",
 		    get_how_return_name(sp->how_return));
     }
 

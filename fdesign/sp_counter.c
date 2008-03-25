@@ -120,22 +120,22 @@ emit_counter_code(FILE * fp, FL_OBJECT * ob)
     spec = get_superspec(ob);
 
     if (spec->prec != defspec->prec)
-	fprintf(fp, "    fl_set_counter_precision(obj, %d);\n", spec->prec);
+	fprintf(fp, "    fl_set_counter_precision( obj, %d );\n", spec->prec);
 
     if (spec->min != defspec->min || spec->max != defspec->max)
-	fprintf(fp, "    fl_set_counter_bounds(obj, %.*f, %.*f);\n",
+	fprintf(fp, "    fl_set_counter_bounds( obj, %.*f, %.*f );\n",
 		spec->prec, spec->min, spec->prec, spec->max);
 
     if (spec->val != defspec->val)
-	fprintf(fp, "    fl_set_counter_value(obj, %.*f);\n",
+	fprintf(fp, "    fl_set_counter_value( obj, %.*f );\n",
 		spec->prec, spec->val);
 
     if (spec->sstep != defspec->sstep || spec->lstep != defspec->lstep)
-	fprintf(fp, "    fl_set_counter_step(obj, %.*f, %.*f);\n",
+	fprintf(fp, "    fl_set_counter_step( obj, %.*f, %.*f );\n",
 		spec->prec, spec->sstep, spec->prec, spec->lstep);
 
     if (spec->how_return != defspec->how_return)
-	fprintf(fp, "    fl_set_counter_return(obj, %s);\n",
+	fprintf(fp, "    fl_set_counter_return( obj, %s );\n",
 		get_how_return_name(spec->how_return));
 
 

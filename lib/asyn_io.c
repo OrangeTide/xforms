@@ -120,11 +120,11 @@ fl_add_io_callback( int              fd,
     /* create new record */
 
     io_rec = fl_malloc( sizeof *io_rec );
-    io_rec->next = NULL;
+    io_rec->next     = NULL;
     io_rec->callback = callback;
-    io_rec->data = data;
-    io_rec->source = fd;
-    io_rec->mask = mask;
+    io_rec->data     = data;
+    io_rec->source   = fd;
+    io_rec->mask     = mask;
 
     /* prepend to the global record */
 
@@ -153,19 +153,17 @@ fl_remove_io_callback( int            fd,
 		{
 			io->mask &= ~mask;
 
-			/* special case: if after removal, fd does not do anything
-			   anymore, i.e., mask == 0, remove it from global record */
+			/* special case: if after removal fd does not do anything
+			   anymore, i.e. mask == 0, remove it from global record */
 
 			if ( io->mask == 0 )
 			{
-				io->source = -1;
-
 				if ( io == fl_context->io_rec )
 					fl_context->io_rec = io->next;
 				else
 					last->next = io->next;
 
-				fl_addto_freelist( io );
+				fl_free( io );
 			}
 
 			collect_fd( );
@@ -173,7 +171,7 @@ fl_remove_io_callback( int            fd,
 		}
     }
 
-    M_err( "RemoveIOCB", "non-existent handler for %d", fd );
+    M_err( "fl_remove_io_callback", "Non-existent handler for %d", fd );
 }
 
 

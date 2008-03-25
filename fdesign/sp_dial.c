@@ -133,24 +133,24 @@ emit_dial_code(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->min != defspec->min || sp->max != defspec->max)
-	fprintf(fp, "    fl_set_dial_bounds(obj, %g, %g);\n", sp->min, sp->max);
+	fprintf(fp, "    fl_set_dial_bounds( obj, %g, %g );\n", sp->min, sp->max);
 
     if (sp->thetai != defspec->thetai || sp->thetaf != defspec->thetaf)
-	fprintf(fp, "    fl_set_dial_angles(obj, %g, %g);\n",
+	fprintf(fp, "    fl_set_dial_angles( obj, %g, %g );\n",
 		sp->thetai, sp->thetaf);
 
     if (sp->val != defspec->val)
-	fprintf(fp, "    fl_set_dial_value(obj, %g);\n", sp->val);
+	fprintf(fp, "    fl_set_dial_value( obj, %g );\n", sp->val);
 
     if (sp->step != defspec->step)
-	fprintf(fp, "    fl_set_dial_step(obj, %g);\n", sp->step);
+	fprintf(fp, "    fl_set_dial_step( obj, %g );\n", sp->step);
 
     if (sp->direction != defspec->direction)
-	fprintf(fp, "    fl_set_dial_direction(obj, %s);\n",
+	fprintf(fp, "    fl_set_dial_direction( obj, %s );\n",
 		get_vn_name(dial_dir, sp->direction));
 
     if (sp->how_return != defspec->how_return)
-	fprintf(fp, "    fl_set_dial_return(obj, %s);\n",
+	fprintf(fp, "    fl_set_dial_return( obj, %s );\n",
 		get_how_return_name(sp->how_return));
 
     fl_free_object(defobj);

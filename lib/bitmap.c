@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID  || defined DEBUG
-char *fl_id_bmp = "$Id: bitmap.c,v 1.7 2008/03/12 16:00:22 jtt Exp $";
+char *fl_id_bmp = "$Id: bitmap.c,v 1.8 2008/03/25 12:41:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -55,7 +55,7 @@ free_bitmap( SPEC * p )
 {
 	if ( p->pixmap )
 		XFreePixmap( flx->display, p->pixmap );
-	p->pixmap = 0;
+	p->pixmap = None;
 }
 
 
@@ -165,7 +165,7 @@ fl_create_bitmap( int		   type,
 	ob->active = type != FL_NORMAL_BITMAP;
 
 	sp = ob->spec = fl_calloc( 1, sizeof *sp );
-	sp->pixmap = sp->mask = sp->focus_pixmap = sp->focus_mask = 0;
+	sp->pixmap = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
 	sp->cspecv = NULL;
 	sp->filename = sp->focus_filename = NULL;
 

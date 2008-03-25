@@ -67,8 +67,8 @@ typedef struct pidlist
 	                 fd_user;
 } PIDList;
 
-static PIDList *pidlist;
-static FD_cmd *logger;
+static PIDList *pidlist = NULL;
+static FD_cmd *logger = NULL;
 
 
 /***************************************
@@ -361,10 +361,12 @@ fl_exe_command( const char * cmd,
     }
     else
     {
-		PIDList *cur = fl_calloc( 1, sizeof *cur );
+		PIDList *cur = fl_malloc( sizeof *cur );
 
-		cur->next = pidlist;
-		cur->pid = pid;
+		cur->next    = pidlist;
+		cur->pid     = pid;
+		cur->fd_user = -1;
+
 		pidlist = cur;
 
 		/* close write end of the pipe, only child process uses them */
@@ -434,11 +436,16 @@ fl_exe_command( const char * cmd,
 
 		CloseHandle( hPipeWrite );
 		CloseHandle( pi.hThread );	/* close the primay thread handle */
+
 		cur = fl_malloc( sizeof *cur );
-		cur->next = pidlist;
-		cur->pid = pi.hProcess;
+
+		cur->next    = pidlist;
+		cur->pid     = pi.hProcess;
+		cur->fd_out  = hPipeRead;
+		cur->fd_err  = 0;
+		cur->fd_user = 0;
+
 		pidlist = cur;
-		cur->fd_out = hPipeRead;
 
 		/* add_io prepends. handle stdout first when data is present */
 
@@ -547,8 +554,9 @@ fl_popen( const char * cmd,
 
 		PIDList *cur = fl_malloc( sizeof *cur );
 
-		cur->next = pidlist;
-		cur->pid = pid;
+		cur->next    = pidlist;
+		cur->pid     = pid;
+
 		pidlist = cur;
 
 		close( p_p2c[ 0 ] );
@@ -560,7 +568,7 @@ fl_popen( const char * cmd,
 
 		fl_add_io_callback( cur->fd_err,
 							FL_READ, io_cb,
-							( void * ) ( long ) pid);
+							( void * ) ( long ) pid );
 
 		if ( iswrite )
 		{
@@ -571,11 +579,7 @@ fl_popen( const char * cmd,
 								( void * ) ( long ) pid );
 		}
 		else
-		{
 			cur->fd_user = p_c2p[ 0 ];
-
-            /* should we dup the stream so the browser gets a copy ? */
-		}
 
 		fp = fdopen( cur->fd_user, type );
     }
@@ -619,7 +623,8 @@ fl_pclose( FILE * stream )
 int
 fl_end_command( FL_PID_T pid )
 {
-    PIDList *cur, *last;
+    PIDList *cur,
+		    *last;
     int pstat;
 
     for ( last = 0, cur = pidlist;
@@ -641,7 +646,7 @@ fl_end_command( FL_PID_T pid )
     else
 		pidlist = cur->next;
 
-    fl_addto_freelist( cur );
+    fl_free( cur );
 
     return pid == -1 ? -1 : pstat;
 }
@@ -691,10 +696,10 @@ fl_end_all_command( void )
 		next = cur->next;
 		check_for_activity( cur );
 		pid = waitpid( cur->pid, &pstat, 0 );
-		fl_addto_freelist( cur );
+		fl_free( cur );
     }
 
-    pidlist = 0;
+    pidlist = NULL;
 
     return pid == -1 ? pid : pstat;
 }

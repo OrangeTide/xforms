@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.11 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.12 2008/03/25 12:41:27 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -376,9 +376,10 @@ handle_dial( FL_OBJECT * ob,
 			sp->changed = 0;
 			/* fall through */
 
-		case FL_MOUSE:
+		case FL_MOTION:
 			if ( key != FL_MBUTTON1 )
 				break;
+
 			if ( handle_mouse( ob, mx, my ) )
 				sp->changed = 1;
 			if ( sp->changed && sp->how_return == FL_RETURN_CHANGED )
@@ -391,16 +392,19 @@ handle_dial( FL_OBJECT * ob,
 			break;
 
 		case FL_RELEASE:
-			if (    key != FL_MBUTTON1
-				 && key != FL_MBUTTON4
-				 && key != FL_MBUTTON5 )
+			if ( key == FL_MBUTTON2 || key == FL_MBUTTON3 )
 				break;
+
 			if ( handle_mouse_wheel( ob, ev, key ) )
 				sp->changed = 1;
-			if ( sp->how_return == FL_RETURN_END )
+
+			if (    sp->how_return == FL_RETURN_ALWAYS
+				 || sp->how_return == FL_RETURN_END
+				 || (    sp->changed
+					  && (    sp->how_return == FL_RETURN_CHANGED
+						   || sp->how_return == FL_RETURN_END_CHANGED ) ) )
 				return 1;
-			else
-				return sp->changed && sp->how_return == FL_RETURN_END_CHANGED;
+			break;
 
 		case FL_FREEMEM:
 			fl_free( ob->spec );

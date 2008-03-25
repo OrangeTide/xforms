@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.14 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.15 2008/03/25 12:41:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -368,11 +368,8 @@ handle_choice( FL_OBJECT * ob,
 			}
 			break;
 
-		case FL_MOUSE:
-			if ( sp->numitems == 0 )
-				break;
-
-			if ( ob->type != FL_DROPLIST_CHOICE )
+		case FL_MOTION:
+			if ( sp->numitems == 0 || ob->type != FL_DROPLIST_CHOICE )
 				break;
 
 			if ( Within( ob->x + ob->w - ob->h, ob->y, ob->h, ob->h ) )
@@ -392,7 +389,7 @@ handle_choice( FL_OBJECT * ob,
 				
 		case FL_RELEASE:
 			if ( sp->numitems == 0 )
-				return 0;
+				break;
 
 			if (    key == FL_MBUTTON4
 				 || key == FL_MBUTTON5 )
@@ -425,7 +422,7 @@ handle_choice( FL_OBJECT * ob,
 
 		case FL_ENTER:
 			if ( sp->numitems == 0 )
-				return 0;
+				break;
 
 			if (    (    ob->type == FL_DROPLIST_CHOICE
 				      && Within( ob->x + ob->w - ob->h, ob->y, ob->h, ob->h ) )
@@ -438,7 +435,7 @@ handle_choice( FL_OBJECT * ob,
 
 		case FL_SHORTCUT:
 			if ( sp->numitems == 0 )
-				return 0;
+				break;
 
 			fl_setpup_position( ob->form->x + ob->x + 10,
 								ob->form->y + ob->y + ob->h / 2 );

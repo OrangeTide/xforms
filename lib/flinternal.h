@@ -39,6 +39,7 @@
 #define FLINTERNAL_H
 
 #include <stdlib.h>
+#include <signal.h>
 #include "local.h"
 #include "ulib.h"
 
@@ -117,13 +118,13 @@ typedef void ( * FL_DRAW_BOX )( int,
 
 typedef struct
 {
-    const char *   name;
-    FL_COLOR       index;
-    unsigned short r,
-	               g,
-	               b,
-	               a;
-    int            grayval;
+    const char     * name;
+    FL_COLOR         index;
+    unsigned short   r,
+	                 g,
+	                 b,
+	                 a;
+    int              grayval;
 } FL_IMAP;
 
 
@@ -176,8 +177,9 @@ extern const char *fl_event_name( int );
 extern XEvent *fl_xevent_name( const char *,
 							   const XEvent * );
 
-extern void fl_handle_automatic( XEvent *,
-								 int );
+extern void fl_handle_idling( XEvent * xev,
+							  long     msec,
+							  int      do_idle_cb );
 
 extern FL_FORM *fl_get_fselector_form( void );
 
@@ -367,7 +369,7 @@ extern int fl_drw_string( int,
 						  int,
 						  int,
 						  int,
-						  char *,
+						  const char *,
 						  int,
 						  int,
 						  int,
@@ -423,53 +425,28 @@ extern XRectangle *fl_get_underline_rect( XFontStruct *,
 										  int );
 
 
-/***** Routines in sldraw.c. */
+/* Routines in sldraw.c. */
 
 typedef struct
 {
     FL_Coord x,
 	         y,
 	         w,
-	         h;	           /* slider           */
-    FL_Coord buttw,
-	         butth;	       /* line button size */
-} FL_SCROLL_BAR;
+	         h;
+} FL_SCROLLBAR_KNOB;
 
-extern void fl_calc_slider_size( int,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 int,
-								 double,
-								 double,
-								 FL_SCROLL_BAR *,
-								 int,
-								 int );
+extern void fl_calc_slider_size( FL_OBJECT *,
+								 FL_SCROLLBAR_KNOB * );
 
-extern int fl_slider_mouse_object( int,
+extern int fl_slider_mouse_object( FL_OBJECT *,
 								   FL_Coord,
-								   FL_Coord,
-								   FL_Coord,
-								   FL_Coord,
-								   int,
-								   double,
-								   double,
-								   FL_Coord,
-								   FL_Coord,
-								   int );
+								   FL_Coord );
 
-extern int fl_get_pos_in_slider( FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 unsigned int,
-								 int,
-								 double,
-								 FL_Coord,
-								 FL_Coord,
-								 double,
-								 double * );
+extern void fl_drw_slider( FL_OBJECT  * ob,
+						   FL_COLOR     col1,
+						   FL_COLOR     col2,
+						   const char * str,
+						   int          d );
 
 extern void fl_getimcolor( FL_COLOR,
 						   int *,
@@ -497,8 +474,8 @@ typedef struct fl_win_
     Window           win;
     FL_APPEVENT_CB   pre_emptive;	    /* always gets called first if set */
     FL_APPEVENT_CB   callback[ LASTEvent ];
-    void *           pre_emptive_data;
-    void *           user_data[ LASTEvent ];
+    void           * pre_emptive_data;
+    void           * user_data[ LASTEvent ];
     FL_APPEVENT_CB   default_callback;
     unsigned long    mask;
 } FL_WIN;
@@ -539,25 +516,35 @@ typedef struct fl_idle_cb_
 {
     struct fl_idle_cb_ * next;
     FL_APPEVENT_CB       callback;
-    void *               data;
+    void               * data;
 } FL_IDLE_REC;
+
 
 typedef struct fl_io_event_
 {
     struct fl_io_event_ * next;
     FL_IO_CALLBACK        callback;
-    void *                data;
+    void                * data;
     unsigned int          mask;
     int                   source;
 } FL_IO_REC;
+
 
 typedef struct fl_freelist_
 {
     int     nfree;
     int     avail;
     void ** data;
-    int *   age;
+    int   * age;
 } FL_FREE_REC;
+
+extern void fl_addto_freelist( void * );
+
+extern void fl_free_freelist( void );
+
+
+/* signals */
+
 
 typedef RETSIGTYPE ( * FL_OSSIG_HANDLER )( int );
 
@@ -565,31 +552,36 @@ typedef struct fl_signallist_
 {
     struct fl_signallist_ * next;
     FL_SIGNAL_HANDLER       callback;
+#if defined HAVE_SIGACTION
+	struct sigaction        old_sigact;
+#else
     FL_OSSIG_HANDLER        ocallback;	/* default OS signal handler */
-    void *                  data;
+#endif
+    void                  * data;
     int                     signum;
-    int                     expired;
+    int                     caught;
 } FL_SIGNAL_REC;
+
+
+extern void fl_remove_all_signal_callbacks( void );
 
 
 /* timeouts */
 
 typedef struct fl_timeout_
 {
-    struct fl_timeout_ * next;
-    FL_TIMEOUT_CALLBACK  callback;
-    long                 msec,
-	                     msec0;
-    void *               data;
-    long                 sec;
-    long                 usec;
-    int                  id;
+    int                   id;
+    struct fl_timeout_  * next;
+    struct fl_timeout_  * prev;
+    long                  start_sec,
+	                      start_usec;
+    long                  ms_to_wait;
+    FL_TIMEOUT_CALLBACK   callback;
+    void                * data;
 } FL_TIMEOUT_REC;
 
 
-extern void fl_addto_freelist( void * );
-
-extern void fl_free_freelist( void );
+extern void fl_remove_all_timeouts( void );
 
 
 /*
@@ -598,18 +590,17 @@ extern void fl_free_freelist( void );
 
 typedef struct fl_context_
 {
-    struct fl_context_ * next;	            /* not used at the moment */
     FL_FORM_ATCLOSE      atclose;	        /* what to do if WM_DELETE_WINDOW */
-    void *               close_data;
-    FL_IDLE_REC *        idle_rec;	        /* idle callback record   */
-    FL_IO_REC *          io_rec;		    /* async IO      record   */
-    FL_FREE_REC *        free_rec;	        /* stuff need to be freed */
-    FL_SIGNAL_REC *      signal_rec;	    /* list of app signals    */
-    FL_TIMEOUT_REC *     timeout_rec;       /* timeout callbacks      */
+    void               * close_data;
+    FL_IDLE_REC        * idle_rec;	        /* idle callback record   */
+    FL_IO_REC          * io_rec;		    /* async IO      record   */
+    FL_FREE_REC        * free_rec;	        /* stuff need to be freed */
+    FL_SIGNAL_REC      * signal_rec;	    /* list of app signals    */
+    FL_TIMEOUT_REC     * timeout_rec;       /* timeout callbacks      */
     int                  idle_delta;		/* timer resolution       */
     long                 mouse_button;		/* push/release record    */
     int                  pup_id;			/* current active pup id  */
-    FL_FORM *            modal;		        /* current modal form     */
+    FL_FORM            * modal;		        /* current modal form     */
     long                 max_request_size;	/* max protocol size      */
     int                  num_io;
     int                  hscb,
@@ -620,8 +611,8 @@ typedef struct fl_context_
     XIM                  xim ;              /* input method           */
     XIC                  xic ;              /* input context          */
 #else
-    void *               xim;
-    void *               xic;
+    void               * xim;
+    void               * xic;
 #endif
     unsigned int         navigate_mask;     /* input field            */
     long                 reserverd[ 6 ];
@@ -633,24 +624,24 @@ typedef struct fl_context_
 
 typedef struct
 {
-    Display *     display;
-    Window        win;
-    GC            gc,
-	              textgc;
-    GC            miscgc;
-    int           isRGBColor;
-    int           isMBFont;			/* multi-byte font       */
-    unsigned long bktextcolor;
-    int           newpix;
-    int           fdesc;		    /* font descent          */
-    int           fasc;		    	/* font ascent           */
-    int           fheight;			/* font height           */
-    Colormap      colormap;
-    XFontStruct * fs;
-    unsigned long color;	        /* last color. cache     */
-    unsigned long textcolor;	    /* last textcolor. cache */
-    unsigned long bkcolor;
-    int           screen;
+    Display       * display;
+    Window          win;
+    GC              gc,
+	                textgc;
+    GC              miscgc;
+    int             isRGBColor;
+    int             isMBFont;		/* multi-byte font       */
+    unsigned long   bktextcolor;
+    int             newpix;
+    int             fdesc;		    /* font descent          */
+    int             fasc;		    	/* font ascent           */
+    int             fheight;			/* font height           */
+    Colormap        colormap;
+    XFontStruct   * fs;
+    unsigned long   color;	        /* last color. cache     */
+    unsigned long   textcolor;	    /* last textcolor. cache */
+    unsigned long   bkcolor;
+    int             screen;
 } FL_TARGET;
 
 
@@ -879,6 +870,8 @@ extern void fl_activate_composite( FL_OBJECT * );
 
 extern void fl_delete_composite( FL_OBJECT * );
 
+extern void fl_free_composite( FL_OBJECT * ob );
+
 extern void fl_set_composite_gravity( FL_OBJECT *,
 									  unsigned int,
 									  unsigned int );
@@ -908,7 +901,7 @@ extern void fl_handle_goodie_font( FL_OBJECT *,
 
 extern void fl_init_alert( void );
 
-extern void fl_handle_timeouts( long );
+extern void fl_handle_timeouts( long * );
 
 
 #define FL_IS_NONSQRBOX( t ) (    t == FL_SHADOW_BOX          \
@@ -1114,7 +1107,7 @@ extern void fl_draw_text_inside( int align,
 								 FL_Coord,
 								 FL_Coord,
 								 FL_Coord,
-								 char *,
+								 const char *,
 								 int,
 								 int,
 								 int,
@@ -1128,7 +1121,7 @@ extern void fl_draw_text_cursor( int,
 								 FL_Coord,
 								 FL_Coord,
 								 FL_Coord,
-								 char *,
+								 const char *,
 								 int,
 								 int,
 								 int,

@@ -45,6 +45,8 @@
 #include <ctype.h>
 #include <sys/types.h>
 
+long msec0 = 0;
+
 
 /***************************************
  ***************************************/
@@ -56,57 +58,125 @@ fl_add_timeout( long                msec,
 {
     FL_TIMEOUT_REC *rec;
     static int id = 1;
-    int retid;
 
-    rec = fl_calloc( 1, sizeof *rec );
-    fl_gettime( &rec->sec, &rec->usec );
+    rec = fl_malloc( sizeof *rec );
+    fl_gettime( &rec->start_sec, &rec->start_usec );
 
-    retid = id;
+    rec->id         = id;
+    rec->ms_to_wait = FL_max( msec, 0 );
+    rec->callback   = callback;
+    rec->data       = data;
+	rec->prev       = NULL;
 
-    rec->id = retid;
-    rec->msec = rec->msec0 = msec;
-    rec->callback = callback;
-    rec->data = data;
+	/* Make it the start of the (doubly) linked list */
 
     rec->next = fl_context->timeout_rec;
+	if ( fl_context->timeout_rec )
+		fl_context->timeout_rec->prev = rec;
     fl_context->timeout_rec = rec;
 
-    id++;
+	/* Deal with wrap around of IDs- rather unlikely to happen but if it does
+	   it's not a 100% safe way to do it, we can only bet on the chance that
+	   the timeouts with the re-used numbers have expired a long time ago... */
 
-    /* we'll never generate timeout ID 0 or -1 */
-
-    if (id == 0 || id == -1)
+	if ( id++ <= 0 )
 		id = 1;
 
-    return retid;
+    return rec->id;
 }
 
 
 /***************************************
+ * Internal function for remving a timeout - remove
+ * it from the (doubly) linked list and free memory
+ ***************************************/
+
+static void
+remove_timeout( FL_TIMEOUT_REC * rec )
+{
+	if ( rec == fl_context->timeout_rec )
+	{
+		fl_context->timeout_rec = rec->next;
+		if ( rec->next )
+			fl_context->timeout_rec->prev = NULL;
+	}
+	else
+	{
+		rec->prev->next = rec->next;
+		if ( rec->next )
+			rec->next->prev = rec->prev;
+	}
+
+	fl_free( rec );
+}
+
+
+/***************************************
+ * Public function for removing a timeout
  ***************************************/
 
 void
 fl_remove_timeout( int id )
 {
-    FL_TIMEOUT_REC *rec = fl_context->timeout_rec,
-		           *last;
+    FL_TIMEOUT_REC *rec = fl_context->timeout_rec;
 
-    for (last = rec; rec && rec->id != id; last = rec, rec = rec->next)
-		/* empty */ ;
+	while ( rec && rec->id != id )
+		rec = rec->next;
 
     if ( rec )
-    {
-		if ( rec == fl_context->timeout_rec )
-			fl_context->timeout_rec = rec->next;
-		else
-			last->next = rec->next;
-
-		fl_addto_freelist( rec );
-    }
+		remove_timeout( rec );
     else
-    {
-		M_err( "RemoveTimeout", "ID %d not found", id );
-    }
+		M_err( "fl_remove_timeout", "ID %d not found", id );
+}
+
+
+/***************************************
+ * Function that periodically gets called to deal with expired
+ * timeouts, invoking their handlers and removing them. Via the
+ * argument the time untilthe next timeout expires gets returned
+ * (if this is earlier than the original value).
+ ***************************************/
+
+void
+fl_handle_timeouts( long * msec )
+{
+    FL_TIMEOUT_REC *rec,
+		           *next;
+    long sec = 0,
+		 usec,
+		 elapsed,
+		 diff;
+
+    if ( ! fl_context->timeout_rec )
+		return;
+
+	fl_gettime( &sec, &usec );
+
+	/* Loop over all candidates, dealing with those that expired and
+	   removing them, while also keeping looking for the time the next
+	   one is going to expire */
+
+    for ( rec = fl_context->timeout_rec; rec; rec = next )
+	{
+		next = rec->next;
+
+		elapsed =   1000 * ( sec - rec->start_sec )
+			      + ( usec - rec->start_usec ) / 1000;
+		diff = rec->ms_to_wait - elapsed;
+
+		if ( diff <= 0 )
+		{
+			if ( rec->callback )
+			{
+				rec->callback( rec->id, rec->data );
+				fl_gettime( &sec, &usec );
+			}
+
+			remove_timeout( rec );
+		}
+		else
+			*msec = FL_min( *msec, diff );
+	}
 }
 
 
@@ -114,35 +184,8 @@ fl_remove_timeout( int id )
  ***************************************/
 
 void
-fl_handle_timeouts( long msec )
+fl_remove_all_timeouts( void )
 {
-    FL_TIMEOUT_REC *rec = fl_context->timeout_rec;
-    long sec = 0,
-		 usec,
-		 elapsed;
-
-    if ( ! rec )
-		return;
-
-    /* re-synchronize if near expiration */
-
-    if ( rec->msec < 250 || msec > 2 * TIMER_RES )
-		fl_gettime( &sec, &usec );
-
-    for ( ; rec; rec = rec->next )
-    {
-		if ( sec )
-		{
-			elapsed = 1000 * ( sec - rec->sec ) + ( usec - rec->usec ) / 1000;
-			rec->msec = rec->msec0 - elapsed;
-			msec = 0;
-		}
-
-		if ( ( rec->msec -= msec ) < TIMER_RES / 2 )
-		{
-			fl_remove_timeout( rec->id );
-			if ( rec->callback )
-				rec->callback( rec->id, rec->data );
-		}
-    }
+	while ( fl_context->timeout_rec )
+		fl_remove_timeout( fl_context->timeout_rec->id );
 }

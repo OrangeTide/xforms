@@ -54,10 +54,10 @@ handle_signal( void )
     FL_SIGNAL_REC *rec = fl_context->signal_rec;
 
     for ( ; rec; rec = rec->next )
-		if ( rec->expired )
+		while ( rec->caught )
 		{
-			rec->expired = 0;
 			rec->callback( rec->signum, rec->data );
+			rec->caught--;
 		}
 }
 
@@ -117,24 +117,36 @@ fl_add_signal_callback( int                 s,
 
     if ( rec )
     {
-		rec->data = data;
 		rec->callback = cb;
+		rec->data = data;
     }
     else
     {
-		sig_rec = fl_calloc( 1, sizeof *sig_rec );
-		sig_rec->next = NULL;
-		sig_rec->data = data;
-		sig_rec->callback = cb;
-		sig_rec->signum = s;
+		sig_rec = fl_malloc( sizeof *sig_rec );
+		sig_rec->next      = NULL;
+		sig_rec->data      = data;
+		sig_rec->callback  = cb;
+		sig_rec->signum    = s;
+		sig_rec->caught    = 0;
 
 		if ( ! sig_direct )
 		{
+#if defined HAVE_SIGACTION
+			struct sigaction sact;
+
+			sact.sa_handler = default_signal_handler;
+			sigemptyset( &sact.sa_mask );
+			sact.sa_flags = 0;
+
+			if ( sigaction( s, &sact, &sig_rec->old_sigact ) < 0 )
+#else
 			errno = 0;
 			sig_rec->ocallback = signal( s, default_signal_handler );
 			if ( sig_rec->ocallback == ( FL_OSSIG_HANDLER ) - 1L || errno )
+#endif
 			{
-				M_err( "AddSignal", "Can't add" );
+				M_err( "fl_add_signal_callback", "Can't add handler for "
+					   "signal %d", s );
 				fl_free( sig_rec );
 				return;
 			}
@@ -171,9 +183,16 @@ fl_remove_signal_callback( int s )
 	else
 		last->next = rec->next;
 
-	fl_addto_freelist( rec );
 	if ( ! sig_direct )
+	{
+#if defined HAVE_SIGACTION
+		sigaction( s, &rec->old_sigact, NULL );
+#else
 		signal( s, rec->ocallback );
+#endif
+	}
+
+	fl_safe_free( rec );
 }
 
 
@@ -185,8 +204,8 @@ fl_signal_caught( int s )
 {
     FL_SIGNAL_REC *rec = fl_context->signal_rec;
 
-    for ( ; rec && rec->signum != s; rec = rec->next )
-		/* empty */ ;
+    while ( rec && rec->signum != s )
+		rec = rec->next;
 
     if ( ! rec )
 	{
@@ -194,9 +213,12 @@ fl_signal_caught( int s )
 		return;
 	}
 
-	rec->expired = 1;
+	rec->caught++;
+
+#if ! defined HAVE_SIGACTION
 	if ( ! sig_direct && ! IsDangerous( s ) )
 		signal( s, default_signal_handler );
+#endif
 }
 
 
@@ -209,4 +231,15 @@ fl_app_signal_direct( int y )
     if ( ! fl_handle_signal )
 		fl_handle_signal = handle_signal;
     sig_direct = y;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_remove_all_signal_callbacks( void )
+{
+	while ( fl_context->signal_rec )
+		fl_remove_signal_callback( fl_context->signal_rec->signum );
 }

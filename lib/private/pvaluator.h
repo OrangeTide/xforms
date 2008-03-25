@@ -57,7 +57,7 @@ typedef struct
 	              y,
 	              w,
 	              h;
-    double        slsize;		/* size of the slider    */
+    double        slsize;		/* size of the slider             */
     double        norm_val;		/* normalized value between 0 & 1 */
     double        oldnorm_val;	/* normalized value between 0 & 1 */
     int           oldmx,
@@ -74,11 +74,11 @@ typedef struct
     FL_Coord      ww[ 5 ],		/* for counter                             */
 	              xx[ 5 ];
     int           changed;
-    unsigned int mouseobj;
-    int          cross_over;    /* allow cross over                        */
-    int          repeat_ms;
-    int          timeout_id;
-    int          mouse_pos;	    /* < 0 below knob, 0 on knob, > 0 above knob */
+    unsigned int  mouseobj;
+    int           cross_over;   /* allow cross over                        */
+    int           repeat_ms;
+    int           timeout_id;
+    int           mouse_pos;	/* < 0 below knob, 0 on knob, > 0 above knob */
 } FL_VALUATOR_SPEC;
 
 enum

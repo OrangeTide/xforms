@@ -55,7 +55,7 @@ typedef struct
     double    slsize;		/* size of the slider    */
     double    oldval;
     double    norm_val;		/* normalized value between 0 & 1 */
-    double    oldnorm_val;		/* normalized value between 0 & 1 */
+    double    oldnorm_val;	/* normalized value between 0 & 1 */
     int       drawtype;
     SL_FILTER filter;
     FL_Coord  offx;
@@ -68,8 +68,8 @@ typedef struct
 	          my,
 	          mw,
 	          mh;	        /* mouse: after adjustment for report box   */
-    int mouse,		        /* part the mouse is on                     */
-	    lmouse;
+    int       mouse,		/* part the mouse is on                     */
+	          lmouse;
 } FL_SLIDER_SPEC;
 
 #else
@@ -80,17 +80,42 @@ typedef FL_VALUATOR_SPEC FL_SLIDER_SPEC;
 
 #endif
 
-#define FL_MINKNOB_SB    16		/* scrollbar        */
-#define FL_MINKNOB_SL    10		/* regular sliders  */
+#define FL_MINKNOB_SB   16		/* scrollbar        */
+#define FL_MINKNOB_SL   10		/* regular sliders  */
 
-#define is_hslider( t )      (    t == FL_HOR_SLIDER          	\
+#define ON_TOP_OF_KNOB  0
+#define LEFT_OF_KNOB   -1
+#define ABOVE_KNOB     -1
+#define RIGHT_OF_KNOB   1
+#define BELOW_KNOB      1
+
+#define IS_HSLIDER( t )      (    t == FL_HOR_SLIDER          	\
 							   || t == FL_HOR_FILL_SLIDER     	\
 							   || t == FL_HOR_NICE_SLIDER     	\
+							   || t == FL_HOR_NICE_SLIDER2     	\
 							   || t == FL_HOR_BROWSER_SLIDER  	\
 							   || t == FL_HOR_BROWSER_SLIDER2 	\
 							   || t == FL_HOR_THIN_SLIDER     	\
-							   || t == FL_HOR_BASIC_SLIDER)
+							   || t == FL_HOR_BASIC_SLIDER )
 
-#define is_vslider( t )      ( ! is_hslider( t ) )
+#define IS_VSLIDER( t )      ( ! IS_HSLIDER( t ) )
+
+#define IS_FILL( t )         (    t == FL_VERT_FILL_SLIDER      \
+                               || t == FL_HOR_FILL_SLIDER )
+
+#define IS_SCROLLBAR( t )    (    t == FL_HOR_NICE_SLIDER2      \
+						       || t == FL_HOR_BROWSER_SLIDER2   \
+						       || t == FL_HOR_THIN_SLIDER       \
+						       || t == FL_HOR_BASIC_SLIDER      \
+						       || t == FL_VERT_NICE_SLIDER2     \
+						       || t == FL_VERT_BROWSER_SLIDER2  \
+						       || t == FL_VERT_THIN_SLIDER      \
+                               || t == FL_VERT_BASIC_SLIDER )
+
+#define IS_FLATBOX( t )      (    t == FL_FRAME_BOX        \
+							   || t == FL_EMBOSSED_BOX 	  \
+							   || t == FL_BORDER_BOX       \
+                               || t == FL_ROUNDED_BOX )
+
 
 #endif /* PSLIDER_H */

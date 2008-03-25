@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.10 2008/03/20 12:41:48 jtt Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.11 2008/03/25 12:41:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -409,7 +409,7 @@ handle_counter( FL_OBJECT * ob,
 			show_focus_obj( ob, mx, my );
 			break;
 
-		case FL_MOUSE:
+		case FL_MOTION:
 		case FL_ENTER:
 		case FL_LEAVE:
 			show_focus_obj( ob, mx, my );

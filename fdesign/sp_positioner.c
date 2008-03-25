@@ -113,28 +113,28 @@ emit_pos_code(FILE * fp, FL_OBJECT * ob)
 
     if (spec->xmin != defspec->xmin || spec->xmax != defspec->xmax)
     {
-	fprintf(fp, "    fl_set_positioner_xbounds(obj, %g, %g);\n",
+	fprintf(fp, "    fl_set_positioner_xbounds( obj, %g, %g );\n",
 		spec->xmin, spec->xmax);
     }
 
     if (spec->ymin != defspec->ymin || spec->ymax != defspec->ymax)
     {
-	fprintf(fp, "    fl_set_positioner_ybounds(obj, %g, %g);\n",
+	fprintf(fp, "    fl_set_positioner_ybounds( obj, %g, %g );\n",
 		spec->ymin, spec->ymax);
     }
 
     if (spec->xval != defspec->xval)
-	fprintf(fp, "    fl_set_positioner_xvalue(obj, %g);\n", spec->xval);
+	fprintf(fp, "    fl_set_positioner_xvalue( obj, %g );\n", spec->xval);
     if (spec->yval != defspec->yval)
-	fprintf(fp, "    fl_set_positioner_yvalue(obj, %g);\n", spec->yval);
+	fprintf(fp, "    fl_set_positioner_yvalue( obj, %g );\n", spec->yval);
 
     if (spec->xstep != defspec->xstep)
-	fprintf(fp, "    fl_set_positioner_xstep(obj, %g);\n", spec->xstep);
+	fprintf(fp, "    fl_set_positioner_xstep( obj, %g );\n", spec->xstep);
     if (spec->ystep != defspec->ystep)
-	fprintf(fp, "    fl_set_positioner_ystep(obj, %g);\n", spec->ystep);
+	fprintf(fp, "    fl_set_positioner_ystep( obj, %g );\n", spec->ystep);
 
     if (spec->how_return != defspec->how_return)
-	fprintf(fp, "    fl_set_positioner_return(obj, %s);\n",
+	fprintf(fp, "    fl_set_positioner_return( obj, %s );\n",
 		get_how_return_name(spec->how_return));
 
 

@@ -130,31 +130,31 @@ emit_choice_code(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->align != defsp->align)
-	fprintf(fp, "    fl_set_choice_align(obj, %s);\n", align_name(sp->align));
+	fprintf(fp, "    fl_set_choice_align( obj, %s );\n", align_name(sp->align));
 
     if (sp->nlines < 1)
 	return;
 
     if (sp->new_menuapi)
     {
-	fprintf(fp, "    fl_set_choice_entries(obj, %s);\n", sp->misc_char);
+	fprintf(fp, "    fl_set_choice_entries( obj, %s );\n", sp->misc_char);
     }
     else
     {
 	for (i = 1; i <= sp->nlines; i++)
 	{
-	    fprintf(fp, "    fl_addto_choice(obj, \"%s\");\n", sp->content[i]);
+	    fprintf(fp, "    fl_addto_choice( obj, \"%s\" );\n", sp->content[i]);
 	    if (sp->mode[i] != defsp->mode[i])
-		fprintf(fp, "    fl_set_choice_item_mode(obj, %d, %s);\n",
+		fprintf(fp, "    fl_set_choice_item_mode( obj, %d, %s );\n",
 			i, get_pupmode_name(sp->mode[i]));
 	    if (sp->shortcut[i] && *sp->shortcut[i])
-		fprintf(fp, "    fl_set_choice_item_shortcut(obj, %d, \"%s\");\n",
+		fprintf(fp, "    fl_set_choice_item_shortcut( obj, %d, \"%s\" );\n",
 			i, sp->shortcut[i]);
 	}
     }
 
     if (sp->int_val != defsp->int_val)
-	fprintf(fp, "    fl_set_choice(obj,%d);\n", sp->int_val);
+	fprintf(fp, "    fl_set_choice( obj, %d );\n", sp->int_val);
 }
 
 void

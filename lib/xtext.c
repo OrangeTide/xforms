@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.11 2008/03/19 21:04:24 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.12 2008/03/25 12:41:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -126,26 +126,26 @@ typedef int ( * DrawString )( Display *,
  ***************************************/
 
 int
-fl_drw_string( int      horalign,
-			   int      vertalign,
-			   FL_Coord x,
-			   FL_Coord y,
-			   FL_Coord w,
-			   FL_Coord h,
-			   int      clip,
-			   FL_COLOR backcol,
-			   FL_COLOR forecol,
-			   FL_COLOR curscol,
-			   int      style,
-			   int      size,
-			   int      curspos,
-			   int      selstart,
-			   int      selend,
-			   char *   str,
-			   int      img,
-			   int      topline,
-			   int      endline,
-			   FL_COLOR bkcol )
+fl_drw_string( int           horalign,
+			   int           vertalign,
+			   FL_Coord      x,
+			   FL_Coord      y,
+			   FL_Coord      w,
+			   FL_Coord      h,
+			   int           clip,
+			   FL_COLOR      backcol,
+			   FL_COLOR      forecol,
+			   FL_COLOR      curscol,
+			   int           style,
+			   int           size,
+			   int           curspos,
+			   int           selstart,
+			   int           selend,
+			   const char *  istr,
+			   int           img,
+			   int           topline,
+			   int           endline,
+			   FL_COLOR      bkcol )
 {
     int i;
     int width;			/* string width of the lines  */
@@ -162,6 +162,7 @@ fl_drw_string( int      horalign,
     int max_pixels = 0;
     int cdelta;
     DrawString XdrawString;
+	char *str = fl_strdup( istr );
 
 	if ( flx->win == None )
 		return 0;
@@ -171,7 +172,7 @@ fl_drw_string( int      horalign,
 
     /* Check whether anything has to be done  */
 
-    if ( curspos != 0 && ( str == NULL || str[ 0 ] == '\0' ) )
+    if ( curspos != 0 && ( ! str || str[ 0 ] == '\0' ) )
 		return max_pixels;
 
     XdrawString = img ? XDrawImageString : XDrawString;
@@ -195,6 +196,7 @@ fl_drw_string( int      horalign,
     i = 0;
 
   redo:
+
     for ( ; str[ i ] != '\0' && lnumb < nlines - 1; i++ )
     {
 		slen[ lnumb - 1 ]++;
@@ -388,10 +390,7 @@ fl_drw_string( int      horalign,
 		}
     }
 
-    /* Restore the original string.  */
-
-    for ( i = 1; i < lnumb; i++ )
-		str[ start[ i ] - 1 ] = '\n';
+	fl_free( str );
 
     /* Reset clipping if required  */
 
@@ -522,17 +521,17 @@ fl_get_pos_in_string( int          horalign,
  ***************************************/
 
 void
-fl_drw_text_cursor( int      align,
-					FL_Coord x,
-					FL_Coord y,
-					FL_Coord w,
-					FL_Coord h,
-					FL_COLOR c,
-					int      style,
-					int      size,
-					char *   str,
-					int      cc,
-					int      pos )
+fl_drw_text_cursor( int          align,
+					FL_Coord     x,
+					FL_Coord     y,
+					FL_Coord     w,
+					FL_Coord     h,
+					FL_COLOR     c,
+					int          style,
+					int          size,
+					const char * str,
+					int          cc,
+					int          pos )
 {
     int horalign,
 		vertalign;
@@ -548,20 +547,20 @@ fl_drw_text_cursor( int      align,
  ***************************************/
 
 void
-fl_draw_text_cursor( int      align,
-					 FL_Coord x,
-					 FL_Coord y,
-					 FL_Coord w,
-					 FL_Coord h,
-					 char *   str,
-					 int      len   FL_UNUSED_ARG,
-					 int      style,
-					 int      size,
-					 FL_COLOR c,
-					 FL_COLOR bc,
-					 FL_COLOR cc,
-					 int      bk,
-					 int      pos )
+fl_draw_text_cursor( int          align,
+					 FL_Coord     x,
+					 FL_Coord     y,
+					 FL_Coord     w,
+					 FL_Coord     h,
+					 const char * str,
+					 int          len   FL_UNUSED_ARG,
+					 int          style,
+					 int          size,
+					 FL_COLOR     c,
+					 FL_COLOR     bc,
+					 FL_COLOR     cc,
+					 int          bk,
+					 int          pos )
 {
     int horalign,
 		vertalign;
@@ -582,31 +581,33 @@ fl_draw_text_cursor( int      align,
  ***************************************/
 
 void
-fl_draw_text_inside( int      align,
-					 FL_Coord x,
-					 FL_Coord y,
-					 FL_Coord w,
-					 FL_Coord h,
-					 char *   istr,
-					 int      len,
-					 int      style,
-					 int      size,
-					 FL_COLOR c,
-					 FL_COLOR bc,
-					 int      bk,
-					 int      angle  FL_UNUSED_ARG )
+fl_draw_text_inside( int          align,
+					 FL_Coord     x,
+					 FL_Coord     y,
+					 FL_Coord     w,
+					 FL_Coord     h,
+					 const char * istr,
+					 int          len,
+					 int          style,
+					 int          size,
+					 FL_COLOR     c,
+					 FL_COLOR     bc,
+					 int          bk,
+					 int          angle  FL_UNUSED_ARG )
 {
     int special = 0;
     int xoff,
 		yoff;
-    char *str = istr;
+    char *str;
     int sw = w,
 		sh = h,
 		sx = x,
 		sy = y;
 
-    if ( ! str || ! *str )
+    if ( ! istr || ! *istr )
 		return;
+
+	str = fl_strdup( istr );
 
     if ( str[ 0 ] == '@' && str[ 1 ] != '@' )
     {
@@ -618,7 +619,10 @@ fl_draw_text_inside( int      align,
 		}
 
 		if ( fl_draw_symbol( str, sx, sy, sw, sh, c ) )
+		{
+			fl_free( str );
 			return;
+		}
 		else
 			str[ 0 ] = ' ';
     }
@@ -665,6 +669,8 @@ fl_draw_text_inside( int      align,
 
     fl_draw_text_cursor( align, x, y, w, h, str, len, style, size,
 						 c, bc, 0, special ? 0 : bk, -1 );
+
+	fl_free( str );
 }
 
 
@@ -673,15 +679,15 @@ fl_draw_text_inside( int      align,
  ***************************************/
 
 void
-fl_drw_text( int      align,
-			 FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 FL_COLOR c,
-			 int      style,
-			 int      size,
-			 char *   istr )
+fl_drw_text( int            align,
+			 FL_Coord       x,
+			 FL_Coord       y,
+			 FL_Coord       w,
+			 FL_Coord       h,
+			 FL_COLOR       c,
+			 int            style,
+			 int            size,
+			 const char *   istr )
 {
     fl_draw_text_inside( align, x, y, w, h, istr, strlen( istr ),
 						 style, size, c, 0, 0, 0 );
@@ -753,15 +759,15 @@ fl_draw_text_beside( int      align,
  ***************************************/
 
 void
-fl_drw_text_beside( int      align,
-					FL_Coord x,
-					FL_Coord y,
-					FL_Coord w,
-					FL_Coord h,
-					FL_COLOR c,
-					int      style,
-					int      size,
-					char *   str )
+fl_drw_text_beside( int          align,
+					FL_Coord     x,
+					FL_Coord     y,
+					FL_Coord     w,
+					FL_Coord     h,
+					FL_COLOR     c,
+					int          style,
+					int          size,
+					const char * str )
 {
     int newa,
 		newx,
@@ -803,12 +809,8 @@ fl_drw_text_beside( int      align,
 }
 
 
-/*
- * Do underlined text, single character only
- */
-
-
 /***************************************
+ * Do underlined text, single character only
  * if underline width to be proportional or fixed width
  ***************************************/
 

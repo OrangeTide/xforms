@@ -397,14 +397,14 @@ typedef enum
 	FL_RELEASE,				   /*  3 */
 	FL_ENTER,				   /*  4 */
 	FL_LEAVE,				   /*  5 */
-	FL_MOUSE,				   /*  6  should better be named FL_MOTION... */
-	FL_DRAG = FL_MOUSE,		   /*  6 */
+	FL_MOTION,				   /*  6 */
 	FL_FOCUS,				   /*  7 */
 	FL_UNFOCUS,				   /*  8 */
 	FL_KEYBOARD,			   /*  9 */
 	FL_KEYPRESS = FL_KEYBOARD, /*  9 */
 	FL_UPDATE,				   /* 10 for objects that need to update something
 								     from time to time */
+	FL_MOUSE = FL_UPDATE,	   /* 10 */
 	FL_STEP,				   /* 11 */
 	FL_SHORTCUT,			   /* 12 */
 	FL_FREEMEM,				   /* 13 */
@@ -1523,27 +1523,27 @@ FL_EXPORT void fl_get_align_xy(
 		);
 
 FL_EXPORT void fl_drw_text(
-		int		   align,
-		FL_Coord   x,
-		FL_Coord   y,
-		FL_Coord   w,
-		FL_Coord   h,
-		FL_COLOR   c,
-		int		   style,
-		int		   size,
-		char	 * istr
+		int		     align,
+		FL_Coord     x,
+		FL_Coord     y,
+		FL_Coord     w,
+		FL_Coord     h,
+		FL_COLOR     c,
+		int		     style,
+		int		     size,
+		const char * istr
 		);
 
 FL_EXPORT void fl_drw_text_beside(
-		int		   align,
-		FL_Coord   x,
-		FL_Coord   y,
-		FL_Coord   w,
-		FL_Coord   h,
-		FL_COLOR   c,
-		int		   style,
-		int		   size,
-		char	 * str
+		int		     align,
+		FL_Coord     x,
+		FL_Coord     y,
+		FL_Coord     w,
+		FL_Coord     h,
+		FL_COLOR     c,
+		int		     style,
+		int		     size,
+		const char * str
 		);
 
 
@@ -1554,17 +1554,17 @@ FL_EXPORT void fl_drw_text_beside(
 #endif
 
 FL_EXPORT void fl_drw_text_cursor(
-		int		   align,
-		FL_Coord   x,
-		FL_Coord   y,
-		FL_Coord   w,
-		FL_Coord   h,
-		FL_COLOR   c,
-		int		   style,
-		int		   size,
-		char	 * str,
-		int		   cc,
-		int		   pos
+		int		     align,
+		FL_Coord     x,
+		FL_Coord     y,
+		FL_Coord     w,
+		FL_Coord     h,
+		FL_COLOR     c,
+		int		     style,
+		int		     size,
+		const char * str,
+		int		     cc,
+		int		     pos
 		);
 
 FL_EXPORT void fl_drw_box(
@@ -1609,23 +1609,6 @@ enum
 	FL_SLIDER_DOWN = 8,
 	FL_SLIDER_ALL  = 15
 };
-
-FL_EXPORT void fl_drw_slider(
-		int		 boxtype,
-		FL_Coord   x,
-		FL_Coord   y,
-		FL_Coord   w,
-		FL_Coord   h,
-		FL_COLOR   col1,
-		FL_COLOR   col2,
-		int		   sltype,
-		double	   size,
-		double	   val,
-		char	 * str,
-		int		   d,
-		int		   inv,
-		FL_Coord   bw
-		);
 
 FL_EXPORT unsigned long fl_mapcolor(
 		FL_COLOR col,

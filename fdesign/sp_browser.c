@@ -119,14 +119,14 @@ emit_browser_code(FILE * fp, FL_OBJECT * ob)
 
 
     if (spec->h_pref != defspec->h_pref)
-	fprintf(fp, "    fl_set_browser_hscrollbar(obj, %s);\n",
+	fprintf(fp, "    fl_set_browser_hscrollbar( obj, %s );\n",
 		get_scrollbar_pref_name(spec->h_pref));
     if (spec->v_pref != defspec->v_pref)
-	fprintf(fp, "    fl_set_browser_vscrollbar(obj, %s);\n",
+	fprintf(fp, "    fl_set_browser_vscrollbar( obj, %s );\n",
 		get_scrollbar_pref_name(spec->v_pref));
 
     for (i = 1; i <= spec->nlines; i++)
-	fprintf(fp, "    fl_add_browser_line(obj, \"%s\");\n",
+	fprintf(fp, "    fl_add_browser_line( obj, \"%s\" );\n",
 		spec->content[i]);
 }
 

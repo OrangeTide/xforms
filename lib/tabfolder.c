@@ -137,7 +137,7 @@ handle( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-			fl_addto_freelist( ob->spec );
+			fl_free( ob->spec );
 			break;
     }
 

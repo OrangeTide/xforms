@@ -102,13 +102,11 @@ fl_delete_child( FL_OBJECT * child )
 void
 fl_hide_composite( FL_OBJECT * ob )
 {
-    FL_OBJECT *tmp = ob->child;
-
-    for ( ; tmp; tmp = tmp->nc )
+    for ( ob = ob->child; ob; ob = ob->nc )
     {
-		if ( tmp->objclass == FL_CANVAS )
-			fl_hide_canvas( tmp );
-		tmp->visible = 0;
+		if ( ob->objclass == FL_CANVAS )
+			fl_hide_canvas( ob );
+		ob->visible = 0;
     }
 }
 
@@ -119,11 +117,45 @@ fl_hide_composite( FL_OBJECT * ob )
 void
 fl_delete_composite( FL_OBJECT * ob )
 {
-    FL_OBJECT *tmp = ob->child;
+    for ( ob = ob->child; ob; ob = ob->nc )
+	{
+		if ( ! ob->form )
+		{
+			M_err( "fl_delete_composite", "Deleting object without form" );
+			return;
+		}
 
-    for ( ; tmp; tmp = tmp->nc )
-		if ( tmp->form )
-			fl_delete_object( tmp) ;
+		if ( ob->child )
+			fl_delete_composite( ob );
+
+		ob->child = NULL;
+		fl_delete_object( ob) ;
+	}
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_free_composite( FL_OBJECT * ob )
+{
+    FL_OBJECT *next;
+
+    for ( ob = ob->child; ob; ob = next )
+	{
+		if ( ! ob->form )
+		{
+			M_err( "fl_free_composite", "Freeing object without form" );
+			return;
+		}
+
+		if ( ob->child )
+			fl_free_composite( ob );
+		ob->child = NULL;
+		next = ob->next;
+		fl_free_object( ob ) ;
+	}
 }
 
 
@@ -133,9 +165,9 @@ fl_delete_composite( FL_OBJECT * ob )
 void
 fl_show_composite( FL_OBJECT * ob )
 {
-    FL_OBJECT *tmp = ob->child;
+    FL_OBJECT *tmp;
 
-    for ( ; tmp; tmp = tmp->nc )
+    for ( tmp = ob->child; tmp; tmp = tmp->nc )
 		tmp->visible = 1;
 }
 
@@ -146,11 +178,9 @@ fl_show_composite( FL_OBJECT * ob )
 void
 fl_deactivate_composite( FL_OBJECT * ob )
 {
-    FL_OBJECT *tmp = ob->child;
-
     ob->parent->active = DEACTIVATED;
-    for ( ; tmp; tmp = tmp->nc )
-		tmp->active = DEACTIVATED;;
+    for ( ob = ob->child; ob; ob = ob->nc )
+		ob->active = DEACTIVATED;;
 }
 
 
@@ -160,11 +190,9 @@ fl_deactivate_composite( FL_OBJECT * ob )
 void
 fl_activate_composite( FL_OBJECT * ob )
 {
-    FL_OBJECT *tmp = ob->child;
-
     ob->parent->active = 1;
-    for ( ; tmp; tmp = tmp->nc )
-		tmp->active = 1;
+    for ( ob = ob->child; ob; ob = ob->nc )
+		ob->active = 1;
 }
 
 
@@ -175,10 +203,8 @@ void
 fl_set_composite_resize( FL_OBJECT *  ob,
 						 unsigned int resize )
 {
-    FL_OBJECT *tmp = ob->child;
-
-    for ( ; tmp; tmp = tmp->nc )
-		tmp->resize = resize;
+    for ( ob = ob->child; ob; ob = ob->nc )
+		ob->resize = resize;
 }
 
 
@@ -190,12 +216,10 @@ fl_set_composite_gravity( FL_OBJECT *  ob,
 						  unsigned int nw,
 						  unsigned int se )
 {
-    FL_OBJECT *tmp = ob->child;
-
-    for ( ; tmp; tmp = tmp->nc )
+    for ( ob = ob->child; ob; ob = ob->nc )
     {
-		tmp->nwgravity = nw;
-		tmp->segravity = se;
+		ob->nwgravity = nw;
+		ob->segravity = se;
     }
 }
 
@@ -207,18 +231,20 @@ void
 fl_insert_composite_after( FL_OBJECT * comp,
 						   FL_OBJECT * node )
 {
-    FL_OBJECT *next, *tmp, *prev;
+    FL_OBJECT *next,
+		      *tmp,
+		      *prev;
     FL_FORM *form;
 
     if ( ! comp || !node )
     {
-		M_err( "InsertComp", "Bad argument" );
+		M_err( "fl_insert_composite_after", "Bad argument" );
 		return;
     }
 
     if ( ! ( form = node->form ) )
     {
-		M_err( "InsertComp", "null form" );
+		M_err( "fl_insert_composite_after", "Null form" );
 		return;
     }
 
@@ -258,10 +284,10 @@ void
 fl_change_composite_parent( FL_OBJECT * comp,
 							FL_OBJECT * newparent )
 {
-    FL_OBJECT *tmp = comp->child;
+    FL_OBJECT *tmp;
 
     comp->parent = newparent;
-    for ( ; tmp; tmp = tmp->nc )
+    for ( tmp = comp->child; tmp; tmp = tmp->nc )
 		if ( tmp->parent == comp )
 			tmp->parent = newparent;
 }
@@ -274,10 +300,10 @@ void
 fl_add_composite( FL_FORM *   form,
 				  FL_OBJECT * ob )
 {
-    FL_OBJECT *tmp = ob->child,
+    FL_OBJECT *tmp,
 		      *tmp1 = ob;
 
-    for ( ; tmp; tmp1 = tmp, tmp = tmp->nc )
+    for ( tmp = ob->child; tmp; tmp1 = tmp, tmp = tmp->nc )
 		fl_add_object( form, tmp );
 
     if ( form->last == ob )
@@ -304,7 +330,7 @@ fl_get_object_component( FL_OBJECT * composite,
 				return tmp;
 		}
 
-    M_err( "GetComponent", "requested object not found" );
+    M_err( "fl_get_object_component", "requested object not found" );
 
     return 0;
 }
@@ -316,9 +342,9 @@ fl_get_object_component( FL_OBJECT * composite,
 void
 fl_mark_composite_for_redraw( FL_OBJECT * ob )
 {
-    FL_OBJECT *tmp = ob->child;
+    FL_OBJECT *tmp;
 
-    for ( ; tmp; tmp = tmp->nc )
+    for ( tmp = ob->child; tmp; tmp = tmp->nc )
 		if ( tmp->objclass != FL_BEGIN_GROUP && tmp->objclass != FL_END_GROUP )
 			tmp->redraw = 1;
 }

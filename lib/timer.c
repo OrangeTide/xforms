@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_tim = "$Id: timer.c,v 1.8 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_tim = "$Id: timer.c,v 1.9 2008/03/25 12:41:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -91,9 +91,7 @@ default_filter( FL_OBJECT * ob  FL_UNUSED_ARG,
 		sprintf( buf, "%d:%04.1f", minutes, sec );
     }
     else
-    {
 		sprintf( buf, "%.1f", totalsec );
-    }
 
     return buf;
 }
@@ -182,7 +180,7 @@ handle_timer( FL_OBJECT * ob,
 			lasttime_left = sp->time_left;
 			fl_gettime( &sec, &usec );
 			sp->time_left = sp->timer - ( sec - sp->sec )
-				            - ( usec - sp->usec ) / 1000000.0;
+				            - ( usec - sp->usec ) * 1.0e-6;
 			update_only = 1;
 
 			/* don't check for zero. we can overshoot by as much as 50msec. try
@@ -240,8 +238,6 @@ fl_create_timer( int          type,
     ob->align = FL_TIMER_ALIGN;
     ob->lcol = FL_TIMER_LCOL;
     ob->spec = fl_calloc( 1, sizeof( SPEC ) );
-
-/*    ob->automatic = 1; */
 
     fl_set_timer( ob, 0.0 );       /* disabled timer */
     ( ( SPEC * ) ob->spec )->filter = default_filter;

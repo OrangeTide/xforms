@@ -47,9 +47,10 @@ static void get_geom( FL_OBJECT * );
 static void attrib_change( FL_OBJECT * );
 
 #define IsVThin( t )  (    t == FL_VERT_THIN_SCROLLBAR    \
-                        || t == FL_VERT_BASIC_SCROLLBAR )
+                        || t == FL_VERT_PLAIN_SCROLLBAR )
 #define IsHThin( t )  (    t == FL_HOR_THIN_SCROLLBAR     \
-						|| t == FL_HOR_BASIC_SCROLLBAR )
+						|| t == FL_HOR_PLAIN_SCROLLBAR )
+#define IsThin( t )   ( IsVThin( t ) || IsHThin( t ) )
 
 
 /***************************************
@@ -63,8 +64,6 @@ handle( FL_OBJECT * ob,
 		int         key  FL_UNUSED_ARG,
 		void      * ev   FL_UNUSED_ARG )
 {
-    SPEC *spec = ob->spec;
-
     switch ( event )
     {
 		case FL_ATTRIB:
@@ -75,7 +74,7 @@ handle( FL_OBJECT * ob,
 		case FL_DRAW:
 			attrib_change( ob );
 			get_geom( ob );
-			if ( IsVThin( ob->type ) || IsHThin( ob->type ) )
+			if ( IsThin( ob->type ) )
 				fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
 							ob->col1, ob->bw );
 			/* fall through */
@@ -86,8 +85,7 @@ handle( FL_OBJECT * ob,
 
 		case FL_FREEMEM:
 			/* children will take care of themselves */
-
-			fl_addto_freelist( spec );
+			fl_free( ob->spec );
 			break;
     }
 
@@ -97,7 +95,7 @@ handle( FL_OBJECT * ob,
 #define is_horiz( t )  (    ( t ) == FL_HOR_SCROLLBAR         \
 						 || ( t ) == FL_HOR_THIN_SCROLLBAR    \
 						 || ( t ) == FL_HOR_NICE_SCROLLBAR    \
-						 || ( t ) == FL_HOR_BASIC_SCROLLBAR )
+						 || ( t ) == FL_HOR_PLAIN_SCROLLBAR )
 
 
 /***************************************
@@ -189,14 +187,14 @@ get_geom( FL_OBJECT * ob )
     else
 		up->bw = down->bw = -absbw;
 
-    if ( IsVThin( t ) || IsHThin( t ) )
+    if ( IsThin( t ) )
     {
 		absbw = IS_FLATBOX( ob->boxtype ) ? 1 : absbw;
 
 		up->boxtype = down->boxtype = FL_NO_BOX;
 		up->bw = down->bw = absbw;
 
-		/* Due to slider double buffering,we  have to be completly clear of
+		/* Due to slider double buffering we  have to be completly clear of
 		   the scrollbar bounding box, otherwise the slider will wipe out the
 		   scrollbars bounding box */
 
@@ -305,7 +303,7 @@ fl_create_scrollbar( int          type,
     obj->col1 = obj->col2 = FL_COL1;
     obj->align = FL_ALIGN_BOTTOM;
 
-    if ( IsHThin( type ) || IsVThin( type ) )
+    if ( IsThin( type ) )
 		obj->boxtype = FL_DOWN_BOX;
     else if ( type == FL_HOR_NICE_SCROLLBAR || type == FL_VERT_NICE_SCROLLBAR )
 		obj->boxtype = FL_FRAME_BOX;
@@ -325,12 +323,14 @@ fl_create_scrollbar( int          type,
 			sp->slider = fl_create_slider( FL_HOR_BROWSER_SLIDER2,
 										   1, 1, 1, 1, "" );
 		else if ( type == FL_HOR_THIN_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_HOR_THIN_SLIDER, 1, 1, 1, 1, "" );
-		else if ( type == FL_HOR_BASIC_SCROLLBAR )
+			sp->slider = fl_create_slider( FL_HOR_THIN_SLIDER,
+										   1, 1, 1, 1, "" );
+		else if ( type == FL_HOR_PLAIN_SCROLLBAR )
 			sp->slider = fl_create_slider( FL_HOR_BASIC_SLIDER,
 										   1, 1, 1, 1, "" );
 		else if ( type == FL_HOR_NICE_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_HOR_NICE_SLIDER, 1, 1, 1, 1, "" );
+			sp->slider = fl_create_slider( FL_HOR_NICE_SLIDER2,
+										   1, 1, 1, 1, "" );
     }
     else
     {
@@ -345,18 +345,18 @@ fl_create_scrollbar( int          type,
 		else if ( type == FL_VERT_THIN_SCROLLBAR )
 			sp->slider = fl_create_slider( FL_VERT_THIN_SLIDER, 1, 1,
 										   1, 1, "" );
-		else if ( type == FL_VERT_BASIC_SCROLLBAR )
+		else if ( type == FL_VERT_PLAIN_SCROLLBAR )
 			sp->slider = fl_create_slider( FL_VERT_BASIC_SLIDER, 1, 1,
 										   1, 1, "" );
 		else if ( type == FL_VERT_NICE_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_VERT_NICE_SLIDER, 1, 1,
+			sp->slider = fl_create_slider( FL_VERT_NICE_SLIDER2, 1, 1,
 										   1, 1, "" );
 		else
 			M_err( "CreateScrollbar", "Unknown type %d", type );
     }
 
     sp->increment = 0.1;
-    fl_set_slider_increment( sp->slider, 0, sp->increment );
+    fl_set_slider_increment( sp->slider, sp->increment, 0.1 * sp->increment );
     fl_set_object_callback( sp->slider, slider_cb, 0 );
     get_geom( obj );
 
@@ -399,7 +399,7 @@ fl_add_scrollbar( int          type,
 double
 fl_get_scrollbar_value( FL_OBJECT * ob )
 {
-    SPEC *spec = ob->spec;;
+    SPEC *spec = ob->spec;
 
     if ( NOTSCROLLBAR( ob ) )
     {
@@ -419,7 +419,7 @@ void
 fl_set_scrollbar_value( FL_OBJECT * ob,
 						double      val )
 {
-    SPEC *spec = ob->spec;;
+    SPEC *spec = ob->spec;
 
     if ( NOTSCROLLBAR( ob ) )
     {

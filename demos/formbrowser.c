@@ -38,7 +38,7 @@ void hide_show_cb( FL_OBJECT * ob,
 {
     FD_mainform *fdui = ob->form->fdui;
 
-    (data ? fl_show_object:fl_hide_object)(fdui->formbrowser);
+    ( data ? fl_show_object : fl_hide_object )( fdui->formbrowser );
 }
 
 void reshow_cb( FL_OBJECT * ob,
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
 
    /* fill-in form initialization code */
 
-/*   fl_set_object_boxtype(fd_mainform->formbrowser, FL_BORDER_BOX); */
+/*   fl_set_object_boxtype(fd_mainform->formbrowser, FL_SHADOW_BOX); */
    fl_addto_formbrowser(fd_mainform->formbrowser,fd_buttonform->buttonform);
    fl_addto_formbrowser(fd_mainform->formbrowser,fd_valuatorform->valuatorform);
    fl_addto_formbrowser(fd_mainform->formbrowser,fd_big->big);

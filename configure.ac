@@ -103,9 +103,10 @@ AC_TYPE_SIGNAL
 if test $ac_cv_type_signal = "void" ; then
   AC_DEFINE(RETSIGTYPE_IS_VOID, 1, [Define if the return type of signal handlers is void])
 fi
-AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep vsnprintf])
+AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep vsnprintf sigaction])
 XFORMS_CHECK_DECL(snprintf, stdio.h)
 XFORMS_CHECK_DECL(vsnprintf, stdio.h)
+XFORMS_CHECK_DECL(sigaction, signal.h)
 
 ### Some information on what just happened
 VERSION_INFO="Configuration\n\

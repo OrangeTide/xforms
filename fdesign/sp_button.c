@@ -256,23 +256,23 @@ emit_button_code(FILE * fp, FL_OBJECT * ob)
 
 
     if (btspec->int_val != defspec->int_val)
-	fprintf(fp, "    fl_set_button(obj, %d);\n", btspec->int_val);
+	fprintf(fp, "    fl_set_button( obj, %d );\n", btspec->int_val);
 
     if (!(info = btspec->cspecv))
 	return;
 
     if (info->helper[0])
-	fprintf(fp, "    fl_set_object_helper(obj, \"%s\");\n", info->helper);
+	fprintf(fp, "    fl_set_object_helper( obj, \"%s\" );\n", info->helper);
 
     definfo = defspec->cspecv;
 
     if (info->filename[0] && !info->use_data)
     {
-	fprintf(fp, "    fl_set_%sbutton_file(obj, \"%s\");\n",
+	fprintf(fp, "    fl_set_%sbutton_file( obj, \"%s\" );\n",
 		ob->objclass == FL_PIXMAPBUTTON ? "pixmap" : "bitmap",
 		info->filename);
 	if (info->focus_filename[0])
-	    fprintf(fp, "    fl_set_%sbutton_focus_file(obj, \"%s\");\n",
+	    fprintf(fp, "    fl_set_%sbutton_focus_file( obj, \"%s\" );\n",
 		    ob->objclass == FL_PIXMAPBUTTON ? "pixmap" : "bitmap",
 		    info->focus_filename);
 
@@ -280,27 +280,27 @@ emit_button_code(FILE * fp, FL_OBJECT * ob)
 
     if (info->align != definfo->align && ob->objclass == FL_PIXMAPBUTTON)
     {
-	fprintf(fp, "    fl_set_pixmapbutton_align(obj, %s, %d, %d);\n",
+	fprintf(fp, "    fl_set_pixmapbutton_align( obj, %s, %d, %d );\n",
 	     align_name(info->align | FL_ALIGN_INSIDE), info->dx, info->dy);
     }
 
     if (info->data[0] && info->use_data && info->filename[0])
     {
 	if (ob->objclass == FL_PIXMAPBUTTON)
-	    fprintf(fp, "    fl_set_pixmapbutton_data(obj,%s);\n",
+	    fprintf(fp, "    fl_set_pixmapbutton_data( obj, %s );\n",
 		    info->data);
 	else
-	    fprintf(fp, "    fl_set_bitmapbutton_data(obj,%s, %s, (unsigned char *)%s);\n",
+	    fprintf(fp, "    fl_set_bitmapbutton_data( obj, %s, %s, ( unsigned char * ) %s );\n",
 		    info->width, info->height, info->data);
 	if (info->focus_filename[0])
-	    fprintf(fp, "    fl_set_pixmapbutton_focus_data(obj,%s);\n",
+	    fprintf(fp, "    fl_set_pixmapbutton_focus_data( obj, %s );\n",
 		    info->focus_data);
 
     }
 
     if (info->show_focus != definfo->show_focus &&
 	ob->objclass == FL_PIXMAPBUTTON)
-	fprintf(fp, "    fl_set_pixmapbutton_focus_outline(obj,%d);\n",
+	fprintf(fp, "    fl_set_pixmapbutton_focus_outline( obj, %d );\n",
 		info->show_focus);
 
     fl_free_object(defobj);

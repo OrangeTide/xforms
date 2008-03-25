@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.12 2008/03/25 12:41:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1262,7 +1262,6 @@ do_XCut( FL_OBJECT * ob,
     fl_stuff_clipboard( ob, XA_STRING, buff, nc, lose_selection );
 
     fl_free( buff );
-
 }
 
 
@@ -1349,7 +1348,8 @@ handle_it( FL_OBJECT * ob,
 			}
 			break;
 
-		case FL_MOUSE:
+		case FL_MOTION:
+		case FL_UPDATE:
 			motion = ( mx != lx || my != ly ) && ! paste;
 			if ( motion && handle_select( mx, my, ob, 1, NORMAL_SELECT ) )
 				fl_redraw_object( sp->input );
@@ -1555,6 +1555,7 @@ fl_create_input( int          type,
     fl_set_object_posthandler( ob, input_post );
 
     ob->wantkey = ob->type == FL_MULTILINE_INPUT ? FL_KEY_ALL : FL_KEY_NORMAL;
+	ob->want_update = 1;
     ob->input = 1;
     ob->click_timeout = FL_CLICK_TIMEOUT;
 
@@ -2200,6 +2201,7 @@ date_validator( FL_OBJECT  * ob,
 
 		ival[ i++ ] = atoi( val );
     }
+
     fl_free( s );
 
     if ( i > 3 )

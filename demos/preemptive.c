@@ -93,7 +93,7 @@ preemptive_handler( FL_OBJECT * ob   FL_UNUSED_ARG,
          break;
 
 		case FL_PUSH:
-		case FL_MOUSE: /* one of the quirks of the button class */
+		case FL_MOTION: /* one of the quirks of the button class */
 			if ( fl_get_button( fd_form0->push ) )
 			{
 				sprintf( buf,"%s %s", "FL_PUSH", what );

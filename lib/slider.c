@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.12 2008/03/25 12:41:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -50,75 +50,60 @@ char *fl_id_slid = "$Id: slider.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
 typedef FL_SLIDER_SPEC SPEC;
 
 
-#define is_normal( t )  ( t == FL_HOR_SLIDER       || t == FL_VERT_SLIDER )
-#define is_fill( t )    ( t == FL_VERT_FILL_SLIDER || t == FL_HOR_FILL_SLIDER )
-#define is_nice( t )    ( t == FL_VERT_NICE_SLIDER || t == FL_HOR_NICE_SLIDER )
+#define IS_NORMAL( t )  (    t == FL_HOR_SLIDER            \
+                          || t == FL_VERT_SLIDER )
 
-#define is_browser( t ) (    t == FL_HOR_BROWSER_SLIDER    \
-						  || t == FL_VERT_BROWSER_SLIDER   \
-						  || t == FL_VERT_BROWSER_SLIDER2  \
-						  || t == FL_HOR_BROWSER_SLIDER2   \
-						  || t == FL_VERT_THIN_SLIDER      \
-						  || t == FL_HOR_THIN_SLIDER    )
+#define IS_NICE( t )    (    t == FL_VERT_NICE_SLIDER      \
+                          || t == FL_VERT_NICE_SLIDER2     \
+                          || t == FL_HOR_NICE_SLIDER       \
+                          || t == FL_HOR_NICE_SLIDER2 )
 
-#define is_focus( t )   is_browser( t )
+
 
 enum
 {
-    COMPLETE = 0,
-	FOCUS = 1,
+    COMPLETE      = 0,
+	FOCUS         = 1,
 	SLIDER_MOTION = 2,
-	SLIDER_JUMP = 4
+	SLIDER_JUMP   = 4
 };
 
 
 #define VAL_BOXW   FL_max( 35, 0.18 * ob->w )	/* reporting boxsize */
 #define VAL_BOXH   25		                    /* vertical RBW      */
 
-static FL_SCROLL_BAR osb;
-static FL_SCROLL_BAR slb;
+static FL_SCROLLBAR_KNOB osb;
+static FL_SCROLLBAR_KNOB slb;
 
 
 /***************************************
-* due to reporting box, need to compute bounds
+* due to reporting box need to compute bounds
  ***************************************/
 
 static void
-compute_bounds( FL_OBJECT * ob,
-				FL_Coord *  x,
-				FL_Coord *  y,
-				FL_Coord *  w,
-				FL_Coord *  h )
+compute_bounds( FL_OBJECT * ob )
 {
-    FL_Coord delta;
+    SPEC *sp = ob->spec;
 
-    *x = ob->x;
-    *y = ob->y;
-    *w = ob->w;
-    *h = ob->h;
+	sp->x = ob->x;
+	sp->y = ob->y;
+	sp->w = ob->w;
+	sp->h = ob->h;
 
-    if (ob->objclass == FL_VALSLIDER)
+    if ( ob->objclass == FL_VALSLIDER )
     {
-		if ( is_vslider( ob->type ) )
+		if ( IS_VSLIDER( ob->type ) )
 		{
-			delta = VAL_BOXH;
-			*y += delta;
-			*h -= delta;
+			sp->y += VAL_BOXH;
+			sp->h -= VAL_BOXH;
 		}
-		else if ( is_hslider( ob->type ) )
+		else if ( IS_HSLIDER( ob->type ) )
 		{
-			delta = VAL_BOXW;
-			*x += delta;
-			*w -= delta;
+			sp->x += VAL_BOXW;
+			sp->w -= VAL_BOXW;
 		}
     }
 }
-
-
-#define IS_FLATBOX( b )  (    b == FL_BORDER_BOX    \
-						   || b == FL_FRAME_BOX     \
-						   || b == FL_EMBOSSED_BOX  \
-						   || b == FL_ROUNDED_BOX )
 
 
 /***************************************
@@ -129,70 +114,64 @@ static void
 draw_motion( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
-    XRectangle xrec[2];
-    int abbw = FL_abs(ob->bw);
+    XRectangle xrec[ 2 ];
+    int abbw = FL_abs( ob->bw );
     FL_COLOR col;
 
-    if (ob->type != FL_VERT_BROWSER_SLIDER2 &&
-	ob->type != FL_HOR_BROWSER_SLIDER2 &&
-	ob->type != FL_HOR_THIN_SLIDER &&
-	ob->type != FL_VERT_THIN_SLIDER)
+    if (    ob->type != FL_VERT_BROWSER_SLIDER2
+		 && ob->type != FL_VERT_THIN_SLIDER
+		 && ob->type != FL_HOR_BROWSER_SLIDER2
+		 && ob->type != FL_HOR_THIN_SLIDER )
     {
-	fl_calc_slider_size(ob->boxtype, sp->x, sp->y, sp->w, sp->h,
-		       ob->type, sp->slsize, sp->norm_val, &slb, 0, ob->bw);
+		fl_calc_slider_size( ob, &slb );
 
-	if (is_hslider(ob->type))
-	{
-	    xrec[ 0 ].x = sp->x;
-	    xrec[ 0 ].y = sp->y;
-	    xrec[ 0 ].width = slb.x - sp->x + 1;
-	    xrec[ 0 ].height = sp->h;
+		if ( IS_HSLIDER( ob->type ) )
+		{
+			xrec[ 0 ].x = sp->x;
+			xrec[ 0 ].y = sp->y;
+			xrec[ 0 ].width = slb.x - sp->x + 1;
+			xrec[ 0 ].height = sp->h;
 
-	    xrec[ 1 ].x = slb.x + slb.w - 1;
-	    xrec[ 1 ].y = sp->y;
-	    xrec[ 1 ].width = sp->x + sp->w - 1;
-	    xrec[ 1 ].height = sp->mh;
-	}
-	else
-	{
-	    xrec[ 0 ].x = sp->x;
-	    xrec[ 0 ].y = sp->y;
-	    xrec[ 0 ].width = sp->w;
-	    xrec[ 0 ].height = slb.y - sp->y;
+			xrec[ 1 ].x = slb.x + slb.w - 1;
+			xrec[ 1 ].y = sp->y;
+			xrec[ 1 ].width = sp->x + sp->w - 1;
+			xrec[ 1 ].height = sp->h;
+		}
+		else
+		{
+			xrec[ 0 ].x = sp->x;
+			xrec[ 0 ].y = sp->y;
+			xrec[ 0 ].width = sp->w;
+			xrec[ 0 ].height = slb.y - sp->y;
 
-	    xrec[ 1 ].x = sp->x;
-	    xrec[ 1 ].y = slb.y + slb.h - 1;
-	    xrec[ 1 ].width = sp->w;
-	    xrec[ 1 ].height = sp->y + sp->h - 1;
+			xrec[ 1 ].x = sp->x;
+			xrec[ 1 ].y = slb.y + slb.h - 1;
+			xrec[ 1 ].width = sp->w;
+			xrec[ 1 ].height = sp->y + sp->h - 1;
+		}
 
-	}
-
-	fl_set_clippings(xrec, 2);
-	fl_drw_box(FL_FLAT_BOX, sp->x + abbw, sp->y + abbw,
-		   sp->w - 2 * abbw, sp->h - 2 * abbw, ob->col1, 0);
+		fl_set_clippings( xrec, 2 );
+		fl_drw_box( FL_FLAT_BOX, sp->x + abbw, sp->y + abbw,
+					sp->w - 2 * abbw, sp->h - 2 * abbw, ob->col1, 0 );
     }
-    else if (   ob->type == FL_HOR_THIN_SLIDER
-			 || ob->type == FL_VERT_THIN_SLIDER
-			 || ob->type == FL_HOR_BASIC_SLIDER
-			 || ob->type == FL_VERT_BASIC_SLIDER )
-    {
+    else if (    ob->type == FL_HOR_THIN_SLIDER
+			  || ob->type == FL_VERT_THIN_SLIDER
+			  || ob->type == FL_HOR_BASIC_SLIDER
+			  || ob->type == FL_VERT_BASIC_SLIDER )
 		fl_drw_box( FL_FLAT_BOX, sp->x, sp->y, sp->w, sp->h, ob->col1, 1 );
-    }
-    else if (   ob->type == FL_HOR_BROWSER_SLIDER2
-			 || ob->type == FL_VERT_BROWSER_SLIDER2 )
-    {
+    else if (    ob->type == FL_HOR_BROWSER_SLIDER2
+			  || ob->type == FL_VERT_BROWSER_SLIDER2 )
 		fl_drw_box( ob->boxtype, sp->x, sp->y,
 					sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
-    }
     else
 		fl_drw_box( FL_UP_BOX, sp->x, sp->y,
 					sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
 
     /* for slider jumps, osb is NOT initialized */
 
-    if ( is_focus( ob->type ) && ! ( sp->draw_type & SLIDER_JUMP ) )
+    if ( IS_SCROLLBAR( ob->type ) && ! ( sp->draw_type & SLIDER_JUMP ) )
     {
-		int knob_depth = IS_FLATBOX(ob->boxtype) ? 1 : FL_max(abbw - 1, 1);
+		int knob_depth = IS_FLATBOX( ob->boxtype ) ? 1 : FL_max(abbw - 1, 1 );
 
 		fl_drw_box( FL_DOWN_BOX, osb.x + 1, osb.y + 1, osb.w - 2, osb.h - 2,
 					FL_INACTIVE, knob_depth > 2 ? 2 : knob_depth );
@@ -200,11 +179,9 @@ draw_motion( FL_OBJECT * ob )
 
     fl_unset_clipping( );
 
-    col = ( is_focus( ob->type ) && sp->mouse == FL_SLIDER_KNOB ) ?
+    col = ( IS_SCROLLBAR( ob->type ) && sp->mouse == FL_SLIDER_KNOB ) ?
 		  FL_MCOL : ob->col2;
-    fl_drw_slider( ob->boxtype, sp->x, sp->y, sp->w, sp->h, ob->col1,
-				   col, ob->type, sp->slsize, sp->norm_val, "",
-				   FL_SLIDER_KNOB, sp->min > sp->max, ob->bw );
+    fl_drw_slider( ob, ob->col1, col, "", FL_SLIDER_KNOB );
 }
 
 
@@ -218,17 +195,16 @@ draw_slider( FL_OBJECT * ob )
     SPEC *sp = ob->spec;
     char valstr[ 64 ];
     double val;
-    FL_Coord bx = ob->x,
+    FL_Coord bx = ob->x,	/* value box */
 		     by = ob->y,
 		     bw = ob->w,
-		     bh = ob->h;	/* value box */
-    int inv = sp->min > sp->max;
+		     bh = ob->h;
 
     /* Draw the value box */
 
     if ( ob->objclass == FL_VALSLIDER )
     {
-		if ( is_vslider( ob->type ) )
+		if ( IS_VSLIDER( ob->type ) )
 			bh = VAL_BOXH;
 		else
 			bw = VAL_BOXW;
@@ -244,9 +220,9 @@ draw_slider( FL_OBJECT * ob )
     }
 
     if (    ( sp->draw_type == SLIDER_MOTION || sp->draw_type == SLIDER_JUMP )
-		 && (    is_focus( ob->type )
-			  || is_normal( ob->type )
-			  || is_nice( ob->type ) ) )
+		 && (    IS_SCROLLBAR( ob->type )
+			  || IS_NORMAL( ob->type )
+			  || IS_NICE( ob->type ) ) )
     {
 		draw_motion( ob );
 		return;
@@ -259,56 +235,26 @@ draw_slider( FL_OBJECT * ob )
 
     if ( ob->align == FL_ALIGN_CENTER )
     {
-		fl_drw_slider( ob->boxtype, sp->x, sp->y, sp->w, sp->h,
-					   ob->col1, ob->col2, ob->type, sp->slsize, val,
-					  is_fill( ob->type ) ? "":ob->label,
-					  FL_SLIDER_ALL & ~sp->mouse, inv, ob->bw );
+		fl_drw_slider( ob, ob->col1, ob->col2,
+					   IS_FILL( ob->type ) ? "" : ob->label,
+					   FL_SLIDER_ALL & ~sp->mouse );
+		
+        /* added 10/21/00 TCZ: need this to get the inside label right
+		   otherwise fl_drw_sliders draw lable centered on the filled part!*/
 
-        /* added 10/21/00 TCZ: need this to get the inside label right*/
-        /* otherwise fl_drw_slider draw lable centered on the filled part!*/
-
-        if ( is_fill( ob->type ) )
+        if ( IS_FILL( ob->type ) )
             fl_draw_object_label( ob );
     }
     else
     {
-		fl_drw_slider( ob->boxtype, sp->x, sp->y, sp->w, sp->h, ob->col1,
-					   ob->col2, ob->type, sp->slsize, val, "",
-					   FL_SLIDER_ALL & ~sp->mouse, inv, ob->bw );
+		fl_drw_slider( ob, ob->col1, ob->col2, "",
+					   FL_SLIDER_ALL & ~sp->mouse );
 		fl_draw_object_label_outside( ob );
     }
 
     if ( sp->mouse != FL_SLIDER_NONE )
-		fl_drw_slider( ob->boxtype, sp->x, sp->y, sp->w, sp->h, ob->col1,
-					   sp->mouse ? FL_MCOL : ob->col2,
-					   ob->type, sp->slsize, val, "",
-					   sp->mouse, inv, ob->bw );
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-show_focus( FL_OBJECT * ob )
-{
-    SPEC *sp = ob->spec;
-    int inv = sp->min > sp->max;
-
-    if ( sp->lmouse == sp->mouse )
-		return;
-
-    if ( sp->lmouse != FL_SLIDER_NONE )
-		fl_drw_slider( ob->boxtype, sp->x, sp->y, sp->w, sp->h,
-					   ob->col1, ob->col2, ob->type,
-					   sp->slsize, sp->norm_val, "", sp->lmouse, inv, ob->bw );
-
-    if ( sp->mouse != FL_SLIDER_NONE )
-		fl_drw_slider( ob->boxtype, sp->x, sp->y, sp->w, sp->h,
-					   ob->col1, FL_MCOL, ob->type,
-					   sp->slsize, sp->norm_val, "", sp->mouse, inv, ob->bw );
-
-    sp->lmouse = sp->mouse;
+		fl_drw_slider( ob, ob->col1, sp->mouse ? FL_MCOL : ob->col2,
+					   "", sp->mouse );
 }
 
 
@@ -319,44 +265,40 @@ show_focus( FL_OBJECT * ob )
 static double
 get_newvalue( FL_OBJECT    * ob,
 			  FL_Coord       mx,
-			  FL_Coord       my,
-	          unsigned int   state )
+			  FL_Coord       my )
 {
     SPEC *sp = ob->spec;
-    double oldval,
-		   newval;
+    double newval = 0.0;
+	int absbw = FL_abs( ob->bw );
 
-    /* Calculate the value */
+	if ( IS_HSLIDER( ob->type ) )
+	{
+		double dmx = mx + sp->offx - ob->x - sp->x;
 
-	oldval = sp->min == sp->max ?
-		     0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
+		if ( dmx < 0.5 * sp->mw + absbw )
+			newval = sp->min;
+		else if ( dmx > sp->w - 0.5 * sp->mw - absbw )
+			newval = sp->max;
+		else
+			newval = sp->min + ( sp->max - sp->min )
+				     * ( dmx - 0.5 * sp->mw - absbw )
+				     / ( sp->w - sp->mw - 2 * absbw );
+	}
+	else
+	{
+		double dmy = my + sp->offy - ob->y - sp->y;
 
-    /* get_pos always has newval between (0,1) with 0 on top */
+		if ( dmy < 0.5 * sp->mh + absbw )
+			newval = sp->min;
+		else if ( dmy > sp->h - 0.5 * sp->mh - absbw )
+			newval = sp->max;
+		else
+			newval = sp->min + ( sp->max - sp->min )
+				     * ( dmy - 0.5 * sp->mh - absbw )
+				     / ( sp->h - sp->mh - 2 * absbw );
+	}
 
-    fl_get_pos_in_slider( sp->mx, sp->my, sp->mw, sp->mh, state, ob->type,
-						  sp->slsize, mx - sp->offx, my - sp->offy,
-						  oldval, &newval );
-
-    return sp->min + newval * ( sp->max - sp->min );
-}
-
-
-/***************************************
- ***************************************/
-
-int fl_get_slider_repeat( FL_OBJECT * ob )
-{
-    return ( ( SPEC * ) ob->spec )->repeat_ms;
-}
-
-
-/***************************************
- ***************************************/
-
-void fl_set_slider_repeat( FL_OBJECT * ob,
-						   int         millisec )
-{
-    ( ( SPEC * ) ob->spec )->repeat_ms = millisec;
+	return newval;
 }
 
 
@@ -364,8 +306,8 @@ void fl_set_slider_repeat( FL_OBJECT * ob,
  ***************************************/
 
 static void
-timeoutCB( int    val   FL_UNUSED_ARG,
-		   void * data )
+scrollbar_timeout( int    val   FL_UNUSED_ARG,
+				   void * data )
 {
     ( ( SPEC * ) data )->timeout_id = -1;
 }
@@ -385,53 +327,48 @@ handle_mouse( FL_OBJECT    * ob,
     SPEC *sp = ob->spec;
     double newval;
 
-    /* mouse on trough */
-
-    if ( sp->mouse_pos && sp->rdelta + sp->ldelta > 0.0 )
+	if ( key == FL_MBUTTON4 )
+		newval = sp->val - ( shiftkey_down( state ) ?
+							 sp->rdelta : sp->ldelta / 2 );
+	else if ( key == FL_MBUTTON5 )
+		newval = sp->val + ( shiftkey_down( state ) ?
+							 sp->rdelta : sp->ldelta / 2 );
+    else if ( sp->mouse_pos )
     {
 		if ( sp->timeout_id == -1 )
 		{
-			sp->timeout_id = fl_add_timeout( sp->repeat_ms, timeoutCB, sp );
 			if ( key == FL_MBUTTON1 )
 				newval = sp->val + sp->mouse_pos * sp->ldelta;
-			else
+			else if ( key == FL_MBUTTON2 )
 				newval = sp->val + sp->mouse_pos * sp->rdelta;
+			else
+				return 0;
 		}
 		else
 			return 0;
     }
-    else
-		newval = get_newvalue( ob, mx, my, state );
+    else if ( key == FL_MBUTTON1 )
+		newval = get_newvalue( ob, mx, my );
+	else
+		return 0;
 
-    if ( sp->val != newval )
-    {
-		sp->val = newval;
-		sp->norm_val = sp->min == sp->max ?
-			           0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
-		sp->draw_type = sp->mouse_pos ? SLIDER_JUMP : SLIDER_MOTION;
-		fl_redraw_object( ob );
-		return 1;
-    }
+	newval = fl_valuator_round_and_clamp( ob, newval );
+	
+    if ( sp->val == newval )
+		return 0;
 
-    return 0;
-}
+	/* When we're still doing jumps in a scrollbar restart the timer */
 
+	if ( sp->mouse_pos )
+		sp->timeout_id = fl_add_timeout( sp->repeat_ms, scrollbar_timeout, sp );
 
-/***************************************
- ***************************************/
+	sp->val = newval;
+	sp->norm_val = sp->min == sp->max ?
+		           0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
+	sp->draw_type = sp->mouse_pos ? SLIDER_JUMP : SLIDER_MOTION;
+	fl_redraw_object( ob );
 
-static int
-focusobj_change( FL_OBJECT * ob,
-				 FL_Coord    mx,
-				 FL_Coord    my )
-{
-    SPEC *sp = ob->spec;
-
-    sp->lmouse = sp->mouse;
-    sp->mouse = fl_slider_mouse_object(ob->boxtype, sp->mx, sp->my, sp->mw,
-									   sp->mh, ob->type, sp->slsize,
-									   sp->norm_val, mx, my, ob->bw);
-    return sp->lmouse != sp->mouse;
+	return 1;
 }
 
 
@@ -448,98 +385,195 @@ handle_it( FL_OBJECT * ob,
 		   void      * ev )
 {
     SPEC *sp = ob->spec;
-    int mobj;
-    static int lmx,
-		       lmy;
-
-#if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleSlider", fl_event_name( event ) );
-#endif
+	static FL_Coord mx_start,
+		            my_start;
+	int ret;
+	static int was_shift = 0;
 
     switch ( event )
     {
 		case FL_DRAW:
-			compute_bounds( ob, &sp->x, &sp->y, &sp->w, &sp->h );
+			compute_bounds( ob );
 			ob->align &= ~ FL_ALIGN_INSIDE;
-			( sp->draw_type == FOCUS ? show_focus : draw_slider )( ob );
 			sp->draw_type = COMPLETE;
+			draw_slider( ob );
 			break;
 
 		case FL_DRAWLABEL:
 			fl_draw_object_label_outside( ob );
 			break;
 
-		case FL_LEAVE:
-			if ( is_focus( ob->type ) && sp->mouse == FL_SLIDER_KNOB )
+		case FL_ENTER:
+			/* When an scrollbar is entered we want to keep track of the mouse
+			   movements in order to be able to highlight the knob when the
+			   mouse is on top of it ('sp->mouse' keeps track of that). */
+
+			if ( IS_SCROLLBAR( ob->type ) )
 			{
-				sp->mouse = FL_SLIDER_NONE;
-				sp->draw_type = FOCUS;
-				fl_redraw_object( ob );
-				lmx = mx;
-				lmy = my;
+				ob->want_motion = 1;
+				sp->mouse_pos = fl_slider_mouse_object( ob, mx, my );
+				if ( sp->mouse_pos == ON_TOP_OF_KNOB )
+				{
+					sp->mouse = FL_SLIDER_KNOB;
+					fl_redraw_object( ob );
+				}
 			}
 			break;
 
-		case FL_ENTER:
-			compute_bounds( ob, &sp->mx, &sp->my, &sp->mw, &sp->mh );
-	        if ( is_focus( ob->type ) && focusobj_change( ob, mx, my ) )
-            {
-                sp->draw_type = FOCUS;
-                fl_redraw_object( ob );
-                lmx = mx;
-                lmy = my;
-            }
+		case FL_LEAVE:
+			/* When the mouse leaves a scrollbar we no longer need reports
+			   about mouse movements and may have to un-highlight the knob */
+
+			if ( IS_SCROLLBAR( ob->type ) )
+			{
+				ob->want_motion = 0;
+				if ( sp->mouse == FL_SLIDER_KNOB )
+				{
+					sp->mouse = FL_SLIDER_NONE;
+					fl_redraw_object( ob );
+				}
+			}
 			break;
- 
-		case FL_PUSH:
+
+		case FL_MOTION:
+			/* If this is a motion while in "jumping mode" for a scrollbar
+			   don't do anything, just continue jumping in the same
+			   direction */
+
+			if (    IS_SCROLLBAR( ob->type )
+				 && sp->mouse_pos != ON_TOP_OF_KNOB
+				 && key )
+				 break;
+
+			/* If we get here even though the left mouse button isn't pressed
+			   we're monitoring the mouse movements to change hightlighting of
+			   the knob of a scrollbar if necessary. Test if highlighting has
+			   to be switched on or off */
+
 			if ( key != FL_MBUTTON1 )
+			{
+				int old_state = sp->mouse_pos;
+
+				sp->mouse_pos = fl_slider_mouse_object( ob, mx, my );
+				if ( old_state != sp->mouse_pos )
+				{
+					if ( sp->mouse_pos == ON_TOP_OF_KNOB )
+						sp->mouse = FL_SLIDER_KNOB;
+					else
+						sp->mouse = FL_SLIDER_NONE;
+
+					fl_redraw_object( ob );
+				}
+
+				break;
+			}
+
+			/* Otherwise the left mouse button is pressed and we need to
+			   update the sliders position - if a shift key is pressed
+			   fake a smaller mouse movement */
+
+			if (    ! IS_SCROLLBAR( ob->type ) )
+			{
+				if ( shiftkey_down( ( ( XEvent * ) ev )->xmotion.state ) )
+				{
+					if ( ! was_shift )
+					{
+						mx_start = mx;
+						my_start = my;
+						was_shift = 1;
+					}
+
+					if ( IS_HSLIDER( ob->type ) )
+						mx = mx_start + ( mx - mx_start ) * FL_SLIDER_FINE;
+					else
+						my = my_start + ( my - my_start ) * FL_SLIDER_FINE;
+				}
+				else
+					was_shift = 0;
+			}
+
+			if (    handle_mouse( ob, mx, my, key,
+							   ( ( XEvent * ) ev )->xmotion.state )
+				 && sp->how_return == FL_RETURN_CHANGED )
+			{
+				sp->start_val = sp->val;
+				return 1;
+			}
+			else if ( sp->how_return == FL_RETURN_ALWAYS )
+				return 1;
+			break;
+
+		case FL_PUSH:
+			if ( key != FL_MBUTTON1 && key != FL_MBUTTON2 )
 				break;
 
-			sp->timeout_id = -1;
-			sp->mouse_pos = 0;
 			sp->start_val = sp->val;
+			sp->timeout_id = -1;
 			sp->offx = sp->offy = 0;
-			lmx = lmy = -1;
-			mobj = FL_SLIDER_ALL;
-			if ( ! is_fill( ob->type ) )
-				mobj = fl_slider_mouse_object( ob->boxtype, sp->mx, sp->my,
-											   sp->mw, sp->mh, ob->type,
-											   sp->slsize, sp->norm_val,
-											   mx, my, ob->bw );
 
-			if ( mobj == FL_SLIDER_KNOB )
+			/* For value sliders we do not want to jump the slider to one of
+			   the extreme positions just because the user clicked on the
+			   number field - they may just be trying if it's possible to
+			   edit the number... */
+
+			if ( ob->objclass == FL_VALSLIDER
+				 && (    ( IS_HSLIDER( ob->type ) && mx < ob->x + sp->x )
+					  || ( IS_VSLIDER( ob->type ) && my < ob->y + sp->y ) ) )
+				break;
+
+			/* Check were the mouse button was clicked */
+
+			sp->mouse_pos = fl_slider_mouse_object( ob, mx, my );
+
+			/* If the object is a scrollbar and the mouse is on its knob
+			   nothing happens yet and we're just going to wait for mouse
+			   movements. If it's not on the knon we need articfical timer
+			   events to make the knob jump. For non-scrollbars we're going
+			   to jump the slider so the mouse will be on top of the
+			   "knob" and will stay there (and we will get updates about
+			   mouse movements via FL_MOTION events). */
+
+			if ( IS_SCROLLBAR( ob->type ) )
 			{
-				fl_calc_slider_size( ob->boxtype, sp->mx, sp->my, sp->mw,
-									 sp->mh, ob->type, sp->slsize,
-									 sp->norm_val, &osb, 0, ob->bw);
-				sp->offx = mx - ( osb.x + osb.w / 2 );
-				sp->offy = my - ( osb.y + osb.h / 2 );
-
-				if ( sp->mx != sp->x )
-					fl_calc_slider_size( ob->boxtype, sp->x, sp->y, sp->w,
-										 sp->h, ob->type, sp->slsize,
-										 sp->norm_val, &osb, 0, ob->bw);
-				lmx = mx;
-				lmy = my;
+				if ( sp->mouse_pos == ON_TOP_OF_KNOB )	
+					break;
+				ob->want_update = 1;
+				fl_add_timeout( sp->repeat_ms, scrollbar_timeout, sp );
 			}
 			else
-				sp->mouse_pos =
-					get_newvalue( ob, mx, my,
-								  ( ( XEvent * ) ev )->xbutton.state ) >
-					                                           sp->val ? 1 : -1;
-			/* fall through */
+				sp->mouse_pos = ON_TOP_OF_KNOB;
 
-		case FL_MOUSE:
-			/* need to fix get_pos before removing this */
+			/* If we got here the slider position got to be changed,
+			   for scrollbars by a first jump, for normal sliders by
+			   moving the slider to the current mouse postion. We then
+			   need to record the position for faked slwoing of the
+			   mouse */
 
-			if ( mx == lmx && my == lmy && sp->mouse_pos == 0 )
-				break;
+			ret = handle_mouse( ob, mx, my, key,
+								( ( XEvent * ) ev )->xbutton.state );
 
-			handle_mouse( ob, mx, my, key,
-						  ( ( XEvent * ) ev )->xmotion.state );
+			/* If a shift key is pressed record the mouse position */
 
-			if (    sp->how_return == FL_RETURN_CHANGED
-				 && sp->start_val != sp->val )
+			if ( shiftkey_down( ( ( XEvent * ) ev )->xbutton.state ) )
+			{
+				mx_start = mx;
+				my_start = my;
+				was_shift = 1;
+			}
+
+			if ( ret && sp->how_return == FL_RETURN_CHANGED )
+			{
+				sp->start_val = sp->val;
+				return 1;
+			}
+			else if ( sp->how_return == FL_RETURN_ALWAYS )
+				return 1;
+			break;
+
+		case FL_UPDATE:
+			if (    handle_mouse( ob, mx, my, key,
+							   ( ( XEvent * ) ev )->xmotion.state )
+				 && sp->how_return == FL_RETURN_CHANGED )
 			{
 				sp->start_val = sp->val;
 				return 1;
@@ -549,30 +583,48 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_RELEASE:
-			if ( event == FL_RELEASE && key != FL_MBUTTON1 )
-				break;
-
 			if ( sp->timeout_id != -1 )
 			{
 				fl_remove_timeout( sp->timeout_id );
 				sp->timeout_id = -1;
 			}
 
-			if ( is_focus( ob->type ) )
+			ob->want_update = 0;
+
+			/* For vertical scrollbars we also accept the scroll wheel
+			   "buttons" */
+
+			if ( IS_SCROLLBAR( ob->type ) && key != FL_MBUTTON3 )
 			{
-				fl_redraw_object( ob );
+				int old_mouse_pos = sp->mouse_pos;
+
+				if (    IS_VSLIDER( ob->type )
+					 && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 ) )
+					handle_mouse( ob, 0, 0, key,
+								  ( ( XEvent * ) ev )->xbutton.state );
+
+				if ( ( sp->mouse_pos = fl_slider_mouse_object( ob, mx, my ) )
+					                                          != old_mouse_pos )
+				{
+					if ( sp->mouse_pos == ON_TOP_OF_KNOB )
+						sp->mouse = FL_SLIDER_KNOB;
+					else
+						sp->mouse = FL_SLIDER_NONE;
+
+					fl_redraw_object( ob );
+				}
+
 				osb = slb;
 			}
 
 			if (    sp->how_return == FL_RETURN_END
 				 || sp->how_return == FL_RETURN_ALWAYS )
 				return 1;
-			else if (    sp->how_return == FL_RETURN_END_CHANGED
-					  && sp->start_val != sp->val )
-			{
-				sp->start_val = sp->val;
+
+			if (    ( sp->start_val != sp->val )
+				 && (    sp->how_return == FL_RETURN_CHANGED
+					  || sp->how_return == FL_RETURN_END_CHANGED ) )
 				return 1;
-			}
 			break;
 
 		case FL_FREEMEM:
@@ -602,30 +654,29 @@ create_it( int          objclass,
 
     ob = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
     ob->boxtype = FL_SLIDER_BOXTYPE;
-    ob->col1 = FL_SLIDER_COL1;
-    ob->col2 = FL_SLIDER_COL2;
-    ob->align = FL_SLIDER_ALIGN;
-    ob->lcol = FL_SLIDER_LCOL;
-    ob->lsize = FL_TINY_SIZE;
+    ob->col1    = FL_SLIDER_COL1;
+    ob->col2    = FL_SLIDER_COL2;
+    ob->align   = FL_SLIDER_ALIGN;
+    ob->lcol    = FL_SLIDER_LCOL;
+    ob->lsize   = FL_TINY_SIZE;
 
-    ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
-    sp->max = 1.0;
-    sp->val = sp->norm_val = 0.5;
-    sp->start_val = sp->val;
-    sp->filter = 0;
-    sp->slsize = FL_SLIDER_WIDTH;
-    if ( is_focus( ob->type ) )
-		sp->slsize *= 1.5;
-    sp->prec = 2;
+    ob->spec_size  = sizeof *sp;
+    sp = ob->spec  = fl_calloc( 1, sizeof *sp );
+	sp->min        = 0.0;
+    sp->max        = 1.0;
+    sp->val        = sp->start_val = sp->norm_val = 0.5;
+    sp->filter     = NULL;
+    sp->slsize     = FL_SLIDER_WIDTH;
+    sp->prec       = 2;
     sp->how_return = FL_RETURN_CHANGED;
-
-    sp->repeat_ms = 100;
+    sp->repeat_ms  = 100;
     sp->timeout_id = -1;
-    sp->mouse_pos = 0;
+    sp->mouse_pos  = 0;
+    if ( IS_SCROLLBAR( ob->type ) )
+		sp->slsize *= 1.5;
 
-    fl_set_object_dblbuffer( ob, 1	/* is_fill(ob->type) ||
-									   is_nice(ob->type) */ );
+    fl_set_object_dblbuffer( ob, 1	/* IS_FILL(ob->type) ||
+									   IS_NICE(ob->type) */ );
     return ob;
 }
 
@@ -718,12 +769,14 @@ fl_set_slider_value( FL_OBJECT * ob,
 					 double      val )
 {
     SPEC *sp;
-    double smin, smax;
+    double smin,
+		   smax;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_SLIDER ) && ! IsValidClass( ob, FL_VALSLIDER ) )
     {
-		Bark( "SetSliderValue", "%s is not a slider", ob ? ob->label : "" );
+		Bark( "fl_set_slider_value", "%s is not a slider",
+			  ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -756,26 +809,27 @@ fl_set_slider_bounds( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_SLIDER ) && ! IsValidClass( ob, FL_VALSLIDER ) )
     {
-		Bark( "SetSliderBounds", "%s is not a slider", ob ? ob->label : "" );
+		Bark( "fl_set_slider_bounds", "%s is not a slider",
+			  ob ? ob->label : "" );
 		return;
     }
 #endif
 
     sp = ob->spec;
-    if ( sp->min != min || sp->max != max )
-    {
-		sp->min = min;
-		sp->max = max;
-		if ( sp->val < sp->min && sp->val < sp->max )
-			sp->val = FL_min(sp->min, sp->max);
-		if ( sp->val > sp->min && sp->val > sp->max )
-			sp->val = FL_max(sp->min, sp->max);
+    if ( sp->min == min && sp->max == max )
+		return;
 
-		sp->norm_val = (sp->min == sp->max) ? 0.5 :
-			(sp->val - sp->min) / (sp->max - sp->min);
+	sp->min = min;
+	sp->max = max;
+	if ( sp->val < sp->min && sp->val < sp->max )
+		sp->val = FL_min( sp->min, sp->max );
+	if ( sp->val > sp->min && sp->val > sp->max )
+		sp->val = FL_max( sp->min, sp->max );
 
-		fl_redraw_object( ob );
-    }
+	sp->norm_val = ( sp->min == sp->max ) ?
+		           0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
+
+	fl_redraw_object( ob );
 }
 
 
@@ -836,6 +890,7 @@ fl_set_slider_step( FL_OBJECT * ob,
 
 
 /***************************************
+ * Set slider incrments for clicks with left and middle mouse button
  ***************************************/
 
 void
@@ -870,24 +925,23 @@ fl_set_slider_size( FL_OBJECT * ob,
 					double      size )
 {
     SPEC *sp = ob->spec;
+	double psize,
+	 	   dim;
+	int min_knob = IS_SCROLLBAR( ob->type ) ? FL_MINKNOB_SB : FL_MINKNOB_SL;
 
     if ( size <= 0.0 )
-		size = 0.005;
+		size = 0.0;
     else if (size >= 1.0)
 		size = 1.0;
 
-    /* impose min knob size limit for scrollbar slider */
+    /* Impose min knob size limit */
 
-    if ( is_browser( ob->type ) )
-    {
-		double psize, dim;
-		dim = is_vslider( ob->type ) ? ob->h : ob->w;
-		dim -= 2 * FL_abs( ob->bw );
-		psize = dim * size;
-		if ( psize < FL_MINKNOB_SB && dim > 0.0 )
-			size = FL_MINKNOB_SB / dim;
-    }
-
+	dim = IS_VSLIDER( ob->type ) ? ob->h : ob->w;
+	dim -= 2 * FL_abs( ob->bw );
+	psize = dim * size;
+	if ( psize < min_knob && dim > 0.0 )
+		size = min_knob / dim;
+		
     if ( size != sp->slsize )
     {
 		sp->slsize = size;
@@ -926,4 +980,24 @@ fl_set_slider_filter( FL_OBJECT *   ob,
 					  FL_VAL_FILTER filter )
 {
     ( ( SPEC * ) ob->spec )->filter = filter;
+}
+
+
+/***************************************
+ ***************************************/
+
+int fl_get_slider_repeat( FL_OBJECT * ob )
+{
+    return ( ( SPEC * ) ob->spec )->repeat_ms;
+}
+
+
+/***************************************
+ ***************************************/
+
+void fl_set_slider_repeat( FL_OBJECT * ob,
+                           int         millisec )
+{
+	if ( millisec > 0 )
+		( ( SPEC * ) ob->spec )->repeat_ms = millisec;
 }

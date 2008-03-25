@@ -25,7 +25,6 @@ libforms_la_SOURCES = \
 	align.c \
 	appwin.c \
 	asyn_io.c \
-	be.c \
 	bitmap.c \
 	box.c \
 	browser.c \

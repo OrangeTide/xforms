@@ -30,79 +30,98 @@
 FL_FORM *form;
 FL_OBJECT *exitobj;
 
-void create_form_form(void)
-{
-  FL_OBJECT *obj;
 
-  form = fl_bgn_form(FL_NO_BOX,780,320);
-  obj = fl_add_box(FL_UP_BOX,0,0,780,320,"");
+void
+create_form_form( void )
+{
+	FL_OBJECT *obj;
+
+	form = fl_bgn_form(FL_NO_BOX,780,320);
+
+	obj = fl_add_box(FL_UP_BOX,0,0,780,320,"");
     fl_set_object_color(obj,FL_PALEGREEN,FL_COL1);
-  obj = fl_add_box(FL_SHADOW_BOX,20,30,360,270,"SLIDER");
+
+	obj = fl_add_box(FL_SHADOW_BOX,20,30,360,270,"SLIDER");
     fl_set_object_color(obj,FL_SLATEBLUE,47);
     fl_set_object_lalign(obj,FL_ALIGN_TOP);
     fl_set_object_lstyle(obj,FL_BOLD_STYLE);
-  obj = fl_add_box(FL_SHADOW_BOX,390,30,370,270,"VALSLIDER");
+
+	obj = fl_add_box(FL_SHADOW_BOX,390,30,370,270,"VALSLIDER");
     fl_set_object_color(obj,FL_SLATEBLUE,FL_COL1);
     fl_set_object_lalign(obj,FL_ALIGN_TOP);
     fl_set_object_lstyle(obj,FL_BOLD_STYLE);
-  obj = fl_add_slider(FL_VERT_SLIDER,30,50,40,220,"vert");
-    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
-  obj = fl_add_slider(FL_VERT_FILL_SLIDER,80,50,40,220,"vert_fill");
-    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
-  obj = fl_add_slider(FL_HOR_SLIDER,180,50,190,40,"hor");
-    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
-  obj = fl_add_slider(FL_HOR_FILL_SLIDER,180,110,190,40,"hor_fill");
-    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
-  obj = fl_add_valslider(FL_VERT_NICE_SLIDER,610,50,30,220,"vert_nice");
-    fl_set_object_boxtype(obj,FL_FLAT_BOX);
-    fl_set_object_color(obj,FL_SLATEBLUE,FL_INDIANRED);
-  obj = fl_add_valslider(FL_VERT_FILL_SLIDER,660,50,40,220,"vert_fill");
+
+	obj = fl_add_slider(FL_VERT_SLIDER,30,50,40,220,"vert");
     fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
 
-  obj = fl_add_valslider(FL_HOR_SLIDER,400,50,190,40,"hor");
+	obj = fl_add_slider(FL_VERT_FILL_SLIDER,80,50,40,220,"vert_fill");
     fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
-  obj = fl_add_valslider(FL_HOR_FILL_SLIDER,400,110,190,40,"hor_fill");
+
+	obj = fl_add_slider(FL_HOR_SLIDER,180,50,195,40,"hor");
     fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
-  obj = fl_add_valslider(FL_HOR_BROWSER_SLIDER,400,220,190,25,"hor_browser");
-  exitobj = obj = fl_add_button(FL_NORMAL_BUTTON,450,260,100,30,"Exit");
+
+	obj = fl_add_slider(FL_HOR_FILL_SLIDER,180,110,190,40,"hor_fill");
+    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
+
+	obj = fl_add_valslider(FL_VERT_NICE_SLIDER,610,50,30,220,"vert_nice");
+    fl_set_object_boxtype(obj,FL_FLAT_BOX);
+    fl_set_object_color(obj,FL_SLATEBLUE,FL_INDIANRED);
+
+	obj = fl_add_valslider(FL_VERT_FILL_SLIDER,660,50,40,220,"vert_fill");
+    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
+
+	obj = fl_add_valslider(FL_HOR_SLIDER,400,50,190,40,"hor");
+    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
+
+	obj = fl_add_valslider(FL_HOR_FILL_SLIDER,400,110,190,40,"hor_fill");
+    fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
+
+	fl_add_valslider(FL_HOR_BROWSER_SLIDER,400,220,190,25,"hor_browser");
+
+	exitobj = obj = fl_add_button(FL_NORMAL_BUTTON,450,260,100,30,"Exit");
     fl_set_object_color(obj,FL_INDIANRED,FL_RED);
-  obj = fl_add_slider(FL_VERT_NICE_SLIDER,130,50,30,220,"vert_nice");
+
+	obj = fl_add_slider(FL_VERT_NICE_SLIDER,130,50,30,220,"vert_nice");
     fl_set_object_boxtype(obj,FL_FLAT_BOX);
     fl_set_object_color(obj,FL_SLATEBLUE,FL_INDIANRED);
-  obj = fl_add_slider(FL_HOR_NICE_SLIDER,180,170,190,30,"hor_nice");
+
+	obj = fl_add_slider(FL_HOR_NICE_SLIDER,180,170,190,30,"hor_nice");
     fl_set_object_boxtype(obj,FL_FLAT_BOX);
     fl_set_object_color(obj,FL_SLATEBLUE,FL_INDIANRED);
-  obj = fl_add_slider(FL_HOR_BROWSER_SLIDER,180,220,190,25,"hor_browser");
-  obj = fl_add_valslider(FL_HOR_NICE_SLIDER,400,170,190,30,"hor_nice");
+
+	fl_add_slider(FL_HOR_BROWSER_SLIDER,180,220,190,25,"hor_browser");
+
+	obj = fl_add_valslider(FL_HOR_NICE_SLIDER,400,170,190,30,"hor_nice");
     fl_set_object_boxtype(obj,FL_FLAT_BOX);
     fl_set_object_color(obj,FL_SLATEBLUE,FL_INDIANRED);
-  obj = fl_add_valslider(FL_VERT_SLIDER,710,50,40,220,"vert");
+
+	obj = fl_add_valslider(FL_VERT_SLIDER,710,50,40,220,"vert");
     fl_set_object_color(obj,FL_INDIANRED,FL_PALEGREEN);
-  fl_end_form();
+
+	fl_end_form();
 }
 
-/*---------------------------------------*/
-
-void create_the_forms(void)
-{
-  create_form_form();
-}
 
 /*---------------------------------*/
 
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char * argv[ ] )
 {
-  FL_OBJECT *obj;
+	FL_OBJECT *obj;
 
-  fl_initialize(&argc, argv, "FormDemo", 0, 0);
-  create_the_forms();
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	create_form_form( );
 
-  fl_show_form(form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_FULLBORDER,"All Sliders");
+	fl_show_form( form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_FULLBORDER,
+				  "All Sliders" );
 
-  do obj = fl_do_forms(); while (obj != exitobj);
+	do
+		obj = fl_do_forms( );
+	while ( obj != exitobj );
 
-  fl_hide_form(form);
-  return 0;
+	fl_hide_form( form );
+
+	return 0;
 }
 

@@ -47,8 +47,8 @@ extern void timer_direction( FL_OBJECT *,
 /**** Forms and Objects ****/
 
 typedef struct {
-	FL_FORM *   timerform;
-	void    *   vdata;
+	FL_FORM   * timerform;
+	void      * vdata;
 	long        ldata;
 	FL_OBJECT * timer;
 	FL_OBJECT * down;

@@ -135,7 +135,7 @@ fl_create_formbrowser( int          type,
     sp->hsl = fl_create_scrollbar( FL_HOR_THIN_SCROLLBAR, ob->x,
 								   y + h - D, w - D, D, "" );
     fl_set_scrollbar_value( sp->hsl, 0.0 );
-/*   fl_set_object_boxtype( sp->hsl, ob->boxtype ); */
+	fl_set_object_boxtype( sp->hsl, ob->boxtype );
     sp->hsl->visible = sp->h_pref == FL_ON;
     sp->hsl->resize = FL_RESIZE_X;
     fl_set_object_callback( sp->hsl, hcb, 0 );
@@ -792,7 +792,7 @@ handle( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-			fl_addto_freelist( sp );
+			fl_free( sp );
 			break;
     }
 

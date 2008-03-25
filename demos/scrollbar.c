@@ -26,6 +26,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include <stdlib.h>
 #include "fd/scrollbar_gui.h"   /* from fd/ directory */
