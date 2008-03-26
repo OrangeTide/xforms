@@ -66,7 +66,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.16 $ of $Date: 2008/03/26 20:08:27 $",
+    "$State: Exp $  $Revision: 1.17 $ of $Date: 2008/03/26 20:25:55 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -807,7 +807,8 @@ main( int    ac,
     if ( FL_INCLUDE_VERSION != fl_library_version( &version, &revision ) )
     {
 		fprintf( stderr, "Library and header mismatch\n" );
-		fprintf( stderr, "  Header Version:%d.%d\n", FL_VERSION, FL_REVISION );
+		fprintf( stderr, "  Header Version:%d.%d.%s\n",
+				 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
 		fprintf( stderr, " Library version:%d.%d\n", version, revision );
     }
 

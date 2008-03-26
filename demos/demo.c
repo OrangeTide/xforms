@@ -55,7 +55,8 @@ main(int argc, char *argv[])
     if (FL_INCLUDE_VERSION != fl_library_version(&version, &revision))
     {
 		fprintf(stderr, "header/library version mismatch\n");
-		fprintf(stderr, "   Header: %d.%d\n", FL_VERSION, FL_REVISION);
+		fprintf(stderr, "   Header: %d.%d.%s\n",
+				FL_VERSION, FL_REVISION, FL_FIXLEVEL);
 		fprintf(stderr, "  Library: %d.%d\n", version, revision);
 		exit(1);
     }

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_core.c,v 1.7 2008/01/28 23:43:10 jtt Exp $
+ * $Id: ps_core.c,v 1.8 2008/03/26 20:25:55 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -1095,9 +1095,9 @@ flps_emit_header(const char *title, int n, int xi, int yi, int xf, int yf)
     fprintf(flps->fp, "%%%%Title: %s\n", title);
     fprintf(flps->fp, "%%%%For: %s\n", fl_whoami());
     fprintf(flps->fp, "%%%%CreateDate: %s\n", fl_now());
-    fprintf(flps->fp, "%%%%Creator: xforms V%d.%d "
-	    "Copyright (c) 1997-1999 T.C. Zhao and M. Overmars\n",
-	    FL_VERSION, FL_REVISION);
+    fprintf(flps->fp, "%%%%Creator: xforms V%d.%d.%s "
+			"Copyright (c) 1997-1999 T.C. Zhao and M. Overmars\n",
+			FL_VERSION, FL_REVISION, FL_FIXLEVEL );
     fprintf(flps->fp, "%%%%Pages: %d\n", n);
     fprintf(flps->fp, "%%%%BoundingBox: %d %d %d %d\n", xi, yi, xf, yf);
     fprintf(flps->fp, "%%%%Orientation: %s\n",
