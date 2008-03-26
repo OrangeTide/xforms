@@ -1,11 +1,24 @@
+2008-03-26 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/forms.c: Clicking on a "pushable" object now
+	leads to an input object currently having the focus
+	lose the focus, thus enforcing it to report changes.
+	Until now this only happened if the object that was
+	clicked on was another input object.
+
+	A FocusOut event now takes away keyboard input from
+	input objects on the form in the window that lost
+	the focus, a FocusIn event restores it.
+
 2008-03-25 Jens Thoms Toerring    <jtt@toerring.de>
 
-	* lib/forms: Further restructuring of event handling.
+	* lib/forms.c: Further restructuring of event handling.
 	All memory for objects of a form now (hopefully) gets
 	deallocated on a call of fl_free_form() and a call of
 	fl_finish() deallocates all memory used for forms and
 	their objects, removes signal callbacks and deletes
-	timers.
+	timers. The only exception is memory for tabfolder,
+	I haven't yet understood the code for that...
 
 	* lib/objects.c: Object pre- and posthandlers aren't
 	called anymore on FL_FREEMEM events (the object or
@@ -18,13 +31,13 @@
 	off more than 5 ms on my machine under light load) and
 	made sure they never expire too early (as promised in
 	the manual). Added a function to remove all timeouts,
-	to be be called from fl_finish.
+	to be be called from fl_finish().
 
 	* lib/be.c: File isn't used anymore, the list of memory
 	to be allocated never was used anyway if no idle handler
-	was installed and it also didn't do the right thing.
-	No calls to fl_addto_freelist() and fl_free_freelist()	
-	are left in XForms.
+	was installed and it also didn't do the right thing. No
+	calls to fl_addto_freelist() and fl_free_freelist() are
+	left in XForms.
 
 	* lib/include/Basic.h: FL_MOTION has come back, what
 	I should have thrown out was FL_MOUSE. FL_MOUSE is

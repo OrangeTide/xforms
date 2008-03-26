@@ -122,47 +122,47 @@ void folder_change( FL_OBJECT * ob   FL_UNUSED_ARG,
 
 static void make_folder( FL_OBJECT *folder )
 {
-   FD_buttonform *fd_buttonform;
-   FD_staticform *fd_staticform;
-   FD_valuatorform *fd_valuatorform;
-   FD_choiceform *fd_choiceform;
-   FD_inputform *fd_inputform;
+	FD_buttonform *fd_buttonform;
+	FD_staticform *fd_staticform;
+	FD_valuatorform *fd_valuatorform;
+	FD_choiceform *fd_choiceform;
+	FD_inputform *fd_inputform;
 #if 0
-   float x[ ] = { 0, 1, 2, 3, 4, 5 };
+	float x[ ] = { 0, 1, 2, 3, 4, 5 };
 #endif
-   float y[ ] = { 5.5, 4, 4.5, 3.8, 4, 5 };
-   char *label[ ] = { "Mon","Tue","Wed", "Thur","Fri","Sat" };
-   size_t i;
+	float y[ ] = { 5.5, 4, 4.5, 3.8, 4, 5 };
+	const char *label[ ] = { "Mon","Tue","Wed", "Thur","Fri","Sat" };
+	size_t i;
 #if 0
-   FL_OBJECT *ob;
+	FL_OBJECT *ob;
 #endif
 
-   fd_buttonform = create_form_buttonform( );
-   fd_staticform = create_form_staticform( );
-   fd_valuatorform = create_form_valuatorform( );
-   fd_choiceform = create_form_choiceform( );
-   fd_inputform = create_form_inputform( );
+	fd_buttonform = create_form_buttonform( );
+	fd_staticform = create_form_staticform( );
+	fd_valuatorform = create_form_valuatorform( );
+	fd_choiceform = create_form_choiceform( );
+	fd_inputform = create_form_inputform( );
 
-   /* fill-in form initialization code */
+	/* fill-in form initialization code */
 
-   for ( i = 0; i < sizeof y / sizeof *y; i++)
-	   fl_add_chart_value( fd_staticform->chart,y[ i ],label[ i ], i + 1 );
+	for ( i = 0; i < sizeof y / sizeof *y; i++)
+		fl_add_chart_value( fd_staticform->chart,y[ i ],label[ i ], i + 1 );
 
-   fl_addto_menu( fd_choiceform->pulldown,
-				  "MenuEntry1|MenuEntry2|MenuEntry3|MenuEntry4" );
-   fl_addto_menu( fd_choiceform->pushmenu,
-				  "MenEntry1|MenuEntry2|MenuEntry3" );
-   fl_addto_choice( fd_choiceform->choice,
-					"Choice1|Choice2|Choice3|Choice4|Choice5|Choice6" );
+	fl_addto_menu( fd_choiceform->pulldown,
+				   "MenuEntry1|MenuEntry2|MenuEntry3|MenuEntry4" );
+	fl_addto_menu( fd_choiceform->pushmenu,
+				   "MenEntry1|MenuEntry2|MenuEntry3" );
+	fl_addto_choice( fd_choiceform->choice,
+					 "Choice1|Choice2|Choice3|Choice4|Choice5|Choice6" );
 
-   fl_load_browser( fd_choiceform->browser, "01Readme" );
+	fl_load_browser( fd_choiceform->browser, "01Readme" );
 
 #if 1
-   fl_set_object_callback( folder, folder_change, 0 );
-   fl_addto_tabfolder( folder,"ButtonObj", fd_buttonform->buttonform );
-   fl_addto_tabfolder( folder,"StaticObj", fd_staticform->staticform );
-   fl_addto_tabfolder( folder,"ValuatorObj", fd_valuatorform->valuatorform );
-   fl_addto_tabfolder( folder,"ChoiceObj", fd_choiceform->choiceform );
-   fl_addto_tabfolder( folder,"InputObj", fd_inputform->inputform );
+	fl_set_object_callback( folder, folder_change, 0 );
+	fl_addto_tabfolder( folder,"ButtonObj", fd_buttonform->buttonform );
+	fl_addto_tabfolder( folder,"StaticObj", fd_staticform->staticform );
+	fl_addto_tabfolder( folder,"ValuatorObj", fd_valuatorform->valuatorform );
+	fl_addto_tabfolder( folder,"ChoiceObj", fd_choiceform->choiceform );
+	fl_addto_tabfolder( folder,"InputObj", fd_inputform->inputform );
 #endif
 }

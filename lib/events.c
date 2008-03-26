@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.16 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.17 2008/03/26 20:08:27 jtt Exp $";
 #endif
 
 
@@ -133,7 +133,7 @@ typedef struct FL_OBJECT_QUEUE_ {
 	FL_OBJECT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
 } FL_OBJECT_QUEUE;
 
-static FL_OBJECT_QUEUE obj_queue;
+static FL_OBJECT_QUEUE obj_queue = { NULL, NULL, NULL, NULL };
 
 
 /***************************************************
@@ -434,11 +434,10 @@ typedef struct FL_EVENT_QUEUE_ {
 	FL_EVENT_QUEUE_ENTRY * tail;       /* and here they get removed from */
 	FL_EVENT_QUEUE_ENTRY * empty;      /* linked list of empty entries */
 	FL_EVENT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
+	unsigned long          count;
 } FL_EVENT_QUEUE;
 
-static FL_EVENT_QUEUE event_queue;
-
-static int new_events = 0;
+static FL_EVENT_QUEUE event_queue = { NULL, NULL, NULL, NULL, 0 };
 
 
 /***************************************************
@@ -510,6 +509,7 @@ add_to_event_queue( XEvent *xev )
 
 	event_queue.head->next = NULL;
 	event_queue.head->xev = *xev;
+	event_queue.count++;
 }
 
 
@@ -562,7 +562,6 @@ fl_XPutBackEvent( XEvent * xev )
 		return;
     }
 
-    new_events++;
     fl_xevent_name( "fl_XPutBackEvent", xev );
 	add_to_event_queue( xev );
 }
@@ -587,9 +586,9 @@ fl_XEventsQueued( int mode  FL_UNUSED_ARG )
 
 
 /***************************************
- * Replacement for the Xlib XNextEvent() function: copies the first
- * frst event into the XEvent structure and removes it from the queue.
- * If the queue is empty it blocks until an event has been received.
+ * Replacement for the Xlib XNextEvent() function: copies the oldest
+ * event into the XEvent structure and removes it from the queue. If
+ * the queue is empty it blocks until an event has been received.
  ***************************************/
 
 int
@@ -637,19 +636,18 @@ fl_treat_user_events( void )
 {
     XEvent xev;
 
-
-	if ( new_events == 0 )
-		return;
-
-    if ( fl_event_callback )
-		while ( new_events-- > 0 )
+	while ( event_queue.count )
+	{
+		if ( fl_event_callback )
 		{
 			fl_XNextEvent( &xev );
 			fl_event_callback( &xev, 0 );
 		}
-    else
-		while ( new_events-- > 0 )
+		else
 			fl_object_qenter( FL_EVENT );
+
+		event_queue.count--;
+	}
 }
 
 
@@ -759,17 +757,14 @@ fl_print_xevent_name( const char *   where,
 				fprintf(stderr, "Mode %s\n",
 						xev->xmotion.is_hint ? "Hint" : "Normal" );
 			else if ( xev->type == ConfigureNotify )
-				fprintf(stderr, "(%d,%d) w=%d h=%d %s\n",
-						xev->xconfigure.x, xev->xconfigure.y,
-						xev->xconfigure.width, xev->xconfigure.height,
-						xev->xconfigure.send_event ? "Syn" : "Non-Syn" );
+				fprintf( stderr, "(x=%d y=%d w=%d h=%d) %s\n",
+						 xev->xconfigure.x, xev->xconfigure.y,
+						 xev->xconfigure.width, xev->xconfigure.height,
+						 xev->xconfigure.send_event ? "Syn" : "Non-Syn" );
 			else if ( xev->type == ButtonPress )
 				fprintf( stderr, "button: %d\n", xev->xbutton.button );
 			else if ( xev->type == ButtonRelease )
 				fprintf( stderr, "button: %d\n", xev->xbutton.button );
-			else if ( xev->type == ConfigureNotify )
-				fprintf( stderr, "ConfigureNotify: %d %d\n",
-						 xev->xconfigure.width, xev->xconfigure.height );
 			else
 				fputc( '\n', stderr );
 			known = 1;

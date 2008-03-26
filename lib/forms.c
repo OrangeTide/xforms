@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.22 2008/03/25 12:41:28 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.23 2008/03/26 20:08:27 jtt Exp $";
 #endif
 
 
@@ -92,8 +92,9 @@ unsigned int fl_query_age = UINT_MAX;
 
 
 static FL_FORM **forms = NULL;	    /* The forms being shown. */
-static size_t formnumb = 0;	        /* Number of visible forms */
-static size_t hidden_formnumb = 0;  /* Number of hidden forms */
+static int formnumb = 0;	        /* Number of visible forms */
+static int hidden_formnumb = 0;  	/* Number of hidden forms */
+static size_t auto_count = 0;
 
 
 /***************************************
@@ -104,6 +105,134 @@ fl_set_no_connection( int yes )
 {
     if ( ( fl_no_connection = yes ) )
       fl_internal_init( );
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_get_visible_form_index( FL_FORM * form )
+{
+	int i;
+
+    for ( i = 0; i < formnumb; i++ )
+		if ( forms[ i ] == form )
+			return i;
+
+    return -1;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_get_hidden_form_index( FL_FORM * form )
+{
+	int i;
+
+    for ( i = formnumb; i < formnumb + hidden_formnumb; i++ )
+		if ( forms[ i ] == form )
+			return i;
+
+    return -1;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_add_form_to_hidden_list( FL_FORM *form )
+{
+	forms = realloc( forms, ( formnumb + ++hidden_formnumb ) * sizeof *forms );
+	forms[ formnumb + hidden_formnumb - 1 ] = form;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_move_form_to_visible_list( FL_FORM *form )
+{
+	int i;
+
+	if ( ( i = fl_get_hidden_form_index( form ) ) < 0 )
+	{
+		M_err( "fl_move_form_to_visble_list", "Form not on hidden list" );
+		return -1;
+	}
+		
+	if ( i != formnumb )
+	{
+		forms[ i ] = forms[ formnumb ];
+		forms[ formnumb ] = form;
+	}
+	hidden_formnumb--;
+
+    if ( form->has_auto )
+			auto_count++;
+
+	return formnumb++;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_move_form_to_hidden_list( FL_FORM *form )
+{
+	int i;
+
+	if ( ( i = fl_get_visible_form_index( form ) ) < 0 )
+	{
+		M_err( "fl_move_form_to_hidden_list", "Form not onvisible list" );
+		return -1;
+	}
+
+	if ( formnumb > 0 )
+	{
+		forms[ i ] = forms[ --formnumb ];
+		forms[ formnumb ] = form;
+	}
+
+	hidden_formnumb++;
+
+    if ( form->has_auto )
+    {
+		if ( auto_count == 0 )
+			M_err( "fl_move_form_to_hidden_list", "Bad auto count" );
+		else
+			auto_count--;
+    }
+
+	return formnumb;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_remove_form_from_hidden_list( FL_FORM *form )
+{
+	int i;
+
+	if ( ( i = fl_get_hidden_form_index( form ) ) < 0 )
+	{
+		M_err( "fl_remove_form_from_hidden_list", "Form not on hidden list" );
+		return -1;
+	}
+
+	if ( i != formnumb + --hidden_formnumb )
+		forms[ i ] = forms[ formnumb + hidden_formnumb ];
+
+	forms = fl_realloc( forms, ( formnumb + hidden_formnumb ) * sizeof *forms );
+
+	return formnumb;
 }
 
 
@@ -135,8 +264,7 @@ fl_bgn_form( int      type,
 
 	/* Add the new form to the list of still hidden forms */
 
-	forms = realloc( forms, ( formnumb + ++hidden_formnumb ) * sizeof *forms );
-	forms[ formnumb + hidden_formnumb - 1 ] = fl_current_form;
+	fl_add_form_to_hidden_list( fl_current_form );
 
     fl_add_box( type, 0, 0, w, h, "" );
 
@@ -307,7 +435,7 @@ FL_OBJECT * fl_mouseobj = NULL;	    /* object under the mouse */
 void
 fl_freeze_all_forms( void )
 {
-    size_t i;
+    int i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_freeze_form( forms[ i ] );
@@ -320,7 +448,7 @@ fl_freeze_all_forms( void )
 void
 fl_unfreeze_all_forms( void )
 {
-    size_t i;
+	int i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_unfreeze_form( forms[ i ] );
@@ -515,26 +643,7 @@ fl_scale_form( FL_FORM * form,
 		 && FL_crnd( form->h_hr * ysc ) == form->h )
 		return;
 
-#if 0
-    /* If form is visible, after reshaping of the window, a ConfigureNotify
-       will be generated, which will then call scale_form. So don't have to
-       do it here. */
-
-    if ( ! form->visible )
-		scale_form( form, xsc, ysc );
-	else
-	{
-		form->w_hr *= xsc;
-		form->h_hr *= ysc;
-		form->w = FL_crnd( form->w_hr );
-		form->h = FL_crnd( form->h_hr );
-	}
-#else
-	/* The above claim doesn't seem to be correct for e.g. fvwm2. Moreover,
-	   which part of the program would rescale the objects in the form?  JTT */
-
 	scale_form( form, xsc, ysc );
-#endif
 
     /* resize the window */
 
@@ -757,7 +866,6 @@ fl_set_form_title( FL_FORM *    form,
 
 static int has_initial;
 static int unmanaged_count;
-static size_t auto_count = 0;
 
 long
 fl_prepare_form_window( FL_FORM    * form,
@@ -767,7 +875,6 @@ fl_prepare_form_window( FL_FORM    * form,
 {
     long screenw,
 		 screenh;
-	size_t i;
     int itx = 0,
 		ity = 0,
 		dont_fix_size = 0;
@@ -798,23 +905,7 @@ fl_prepare_form_window( FL_FORM    * form,
 	/* Try to move the form from the part of the list for hidden forms to
 	   tha at the start for visible forms */
 
-	for ( i = formnumb; i < formnumb + hidden_formnumb; i++ )
-		if ( forms[ i ] == form )
-			break;
-
-	if ( i == formnumb + hidden_formnumb )
-	{
-		M_err( "fl_prepare_form_window", "Showing inexistent form" );
-		return None;
-	}
-
-	if ( i != formnumb )
-	{
-		forms[ i ] = forms[ formnumb ];
-		forms[ formnumb ] = form;
-	}
-	formnumb++;
-	hidden_formnumb--;
+	fl_move_form_to_visible_list( form );
 
     if ( form->label != name )
     {
@@ -848,10 +939,6 @@ fl_prepare_form_window( FL_FORM    * form,
     }
     else
 		unmanaged_count++;
-
-    /* see if automatic */
-
-    auto_count += form->has_auto > 0;
 
     form->wm_border = border;
     form->deactivated = 0;
@@ -1064,14 +1151,18 @@ close_form_win( Window win )
     while ( XCheckWindowEvent( flx->display, win, AllEventsMask, &xev ) )
 		fl_xevent_name( "Eaten", &xev );
 
-    /* This gives subwindows a chance to handle destroy event promptly */
+    /* Gives subwindows a chance to handle destroy event promptly, take care
+	   the window of the form doesn't exist anymore! */
 
     while ( XCheckTypedEvent( flx->display, DestroyNotify, &xev ) )
     {
 		FL_FORM *form;
 
 		if ( ( form = find_event_form( &xev ) ) )
+		{
+			form->window = None;
 			fl_hide_form( form );
+		}
 		else
 			fl_XPutBackEvent( &xev );
     }
@@ -1084,7 +1175,7 @@ close_form_win( Window win )
 FL_FORM *
 fl_property_set( unsigned int prop )
 {
-    size_t i;
+    int i;
 
     for ( i = 0; i < formnumb; i++ )
 		if ( forms[ i ]->prop & prop && forms[ i ]->prop & FL_PROP_SET )
@@ -1134,8 +1225,6 @@ fl_set_form_property( FL_FORM *    form,
 void
 fl_hide_form( FL_FORM * form )
 {
-    size_t i;
-    FL_OBJECT *obj;
     Window owin;
 
     if ( ! form )
@@ -1144,9 +1233,9 @@ fl_hide_form( FL_FORM * form )
 		return;
     }
 
-    if ( ! fl_is_good_form( form ) )
+    if ( fl_get_visible_form_index( form ) < 0 )
     {
-		M_err( "fl_hide_form", "Hiding invisible/freeed form" );
+		M_err( "fl_hide_form", "Hiding unknown form" );
 		return;
     }
 
@@ -1169,23 +1258,20 @@ fl_hide_form( FL_FORM * form )
 			M_err( "fl_hide_form", "Outdated mouseobj %s",
 				   fl_mouseobj->label ? fl_mouseobj->label : "" );
 #endif
-		obj = fl_mouseobj;
+		fl_handle_object( fl_mouseobj, FL_LEAVE, 0, 0, 0, 0 );
 		fl_mouseobj = NULL;
-		fl_handle_object( obj, FL_LEAVE, 0, 0, 0, 0 );
     }
 
     if ( fl_pushobj != NULL && fl_pushobj->form == form )
     {
-		obj = fl_pushobj;
+		fl_handle_object( fl_pushobj, FL_RELEASE, 0, 0, 0, 0 );
 		fl_pushobj = NULL;
-		fl_handle_object( obj, FL_RELEASE, 0, 0, 0, 0 );
     }
 
     if ( form->focusobj != NULL )
     {
-		obj = form->focusobj;
-		fl_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, 0 );
-		fl_handle_object( obj, FL_FOCUS, 0, 0, 0, 0 );
+		fl_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
+		form->focusobj = NULL;
     }
 
 #ifdef DELAYED_ACTION
@@ -1197,13 +1283,7 @@ fl_hide_form( FL_FORM * form )
     fl_free_flpixmap( form->flpixmap );
 
     if ( mouseform && mouseform->window == form->window )
-	{
-		if ( fl_pushobj && fl_pushobj->form == mouseform )
-			fl_pushobj = NULL;
-		if ( fl_mouseobj && fl_mouseobj->form == mouseform )
-			fl_mouseobj = NULL;
 		mouseform = NULL;
-	}
 
     form->deactivated = 1;
     form->visible = FL_INVISIBLE;
@@ -1212,7 +1292,10 @@ fl_hide_form( FL_FORM * form )
 
     fl_hide_tooltip( );
 
-    close_form_win( owin );
+	/* If the forms window is None it already has been closed */
+
+	if ( owin )
+		close_form_win( owin );
 
 	if ( flx->win == owin )
 		flx->win = None;
@@ -1220,22 +1303,7 @@ fl_hide_form( FL_FORM * form )
 	/* Move the form from the part of the list for visible forms to the
 	   part of hidden forms at the end of the array */
 
-	for ( i = 0; i < formnumb; i++ )
-		if ( form == forms[ i ] )
-			break;
-
-	if ( i == formnumb )
-	{
-		M_err( "fl_hide_form", "Hiding unknown form" );
-		return;
-	}
-
-	if ( formnumb > 0 )
-	{
-		forms[ i ] = forms[ --formnumb ];
-		forms[ formnumb ] = form;
-	}
-	hidden_formnumb++;
+	fl_move_form_to_hidden_list( form );
 
     if ( form->wm_border == FL_NOBORDER )
     {
@@ -1245,14 +1313,6 @@ fl_hide_form( FL_FORM * form )
 			M_err( "fl_hide_form", "Bad unmanaged count" );
 			unmanaged_count = 0;
 		}
-    }
-
-    if ( form->has_auto )
-    {
-		if ( auto_count == 0 )
-			M_err( "fl_hide_form", "Bad auto count" );
-		else
-			auto_count--;
     }
 
     /* need to re-establish command property */
@@ -1274,13 +1334,18 @@ fl_free_form( FL_FORM * form )
 {
     FL_OBJECT *current,
 		      *next;
-	size_t i;
 
     /* check whether ok to free */
 
     if ( ! form )
     {
 		fl_error( "fl_free_form", "NULL form." );
+		return;
+    }
+
+    if ( fl_get_hidden_form_index( form ) < 0 )
+    {
+		M_err( "fl_free_form", "Freeing unknown form" );
 		return;
     }
 
@@ -1323,22 +1388,9 @@ fl_free_form( FL_FORM * form )
 
     /* Free the form and remove it from the list of existing forms */
 
-	for ( i = formnumb; i < formnumb + hidden_formnumb; i++ )
-		if ( form == forms[ i ] )
-			break;
-
-	if ( i == formnumb + hidden_formnumb )
-	{
-		M_err( "fl_free_form", "Freeing unknown form" );
-		return;
-	}
-
-	if ( i != formnumb + --hidden_formnumb )
-		forms[ i ] = forms[ formnumb + hidden_formnumb ];
-
 	fl_free( form );
 
-	forms = fl_realloc( forms, ( formnumb + hidden_formnumb ) * sizeof *forms );
+	fl_remove_form_from_hidden_list( form );
 }
 
 
@@ -1451,7 +1503,7 @@ fl_set_form_atdeactivate( FL_FORM              * form,
 void
 fl_activate_all_forms( void )
 {
-    size_t i;
+    int i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_activate_form( forms[ i ] );
@@ -1465,7 +1517,7 @@ fl_activate_all_forms( void )
 void
 fl_deactivate_all_forms( void )
 {
-    size_t i;
+    int i;
 
     for ( i = 0; i < formnumb; i++ )
 		fl_deactivate_form( forms[ i ] );
@@ -1827,14 +1879,28 @@ fl_handle_form( FL_FORM * form,
 			break;
 
 		case FL_PUSH:		/* Mouse was pushed inside the form */
-			/* change focus for input objects if necessary */
+			/* Change focus: If an input object has the focus make it lose it
+			   (and thus report changes) and then set the focus to either the
+			   object that got pushed (if it's an input object) or back to the
+			   original one. Then we have to recheck that the object the
+			   FL_PUSH was for is still active - it may have become deactivated
+			   due to the handler for the object that became unfocused! */
 
-			if ( obj && obj->input && form->focusobj != obj )
+			if ( obj && form->focusobj && form->focusobj != obj )
 			{
-				fl_handle_object( form->focusobj, FL_UNFOCUS,
-								  x, y, key, xev );
-				fl_handle_object( obj, FL_FOCUS, x, y, key, xev );
+				FL_OBJECT *old_focusobj = form->focusobj;
+
+				fl_handle_object( form->focusobj, FL_UNFOCUS, x, y, key, xev );
+
+				if ( ! obj->input )
+					fl_handle_object( old_focusobj, FL_FOCUS, x, y, key, xev );
+
+				if ( obj->active == DEACTIVATED )
+					break;
 			}
+
+			if ( obj && obj->input )
+				fl_handle_object( obj, FL_FOCUS, x, y, key, xev );
 
 			if ( form->focusobj )
 				keyform = form;
@@ -1985,7 +2051,7 @@ do_keyboard( XEvent * xev,
 
     /* before doing anything, save the current modifier key for the handlers */
 
-    if ( win && ( ! keyform || ! fl_is_good_form( keyform ) ) )
+    if ( win && ( ! keyform || fl_get_visible_form_index( keyform ) < 0 ) )
 		keyform = fl_win_to_form( win );
 
     /* switch keyboard input only if different top-level form */
@@ -2147,7 +2213,7 @@ find_event_form( XEvent * xev )
 FL_FORM *
 fl_win_to_form( Window win )
 {
-	size_t i;
+	int i;
 
 	if ( win == None )
 		return NULL;
@@ -2256,6 +2322,9 @@ do_interaction_step( int wait_io )
 			break;
 
 		case FocusIn:
+			if ( evform->focusobj )
+				keyform = evform;
+
 			if ( ! fl_context->xic )
 				break;
 
@@ -2263,6 +2332,10 @@ do_interaction_step( int wait_io )
 						  XNFocusWindow, st_xev.xfocus.window,
 						  XNClientWindow, st_xev.xfocus.window,
 						  ( char * ) NULL );
+			break;
+
+		case FocusOut:
+			keyform = NULL;
 			break;
 
 		case KeyPress:
@@ -2354,7 +2427,7 @@ fl_handle_idling( XEvent * xev,
 				  long     msec,
 				  int      do_idle_cb )
 {
-	size_t i;
+	int i;
 
 	/* Sleep a bit, keeping a lookout for async IO events */
 
@@ -2593,7 +2666,7 @@ handle_Expose_event( FL_FORM  * evform,
 
 	/* If 'redraw_form' is set we got a ConfigureNotify and the data from the
 	   Exposure event aren't correct - set clipping to the complete area of
-	   the form.                                                         JTT */
+	   the form. */
 
 	if ( *redraw_form == evform )
 	{
@@ -2693,7 +2766,7 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
 	   gets smaller or remains unchanged while the other got larger, the next
 	   (compressed) Expose event will only cover the added part, so in this
 	   case store the forms address, so on the next Expose event we receive
-	   for it it's full area can be redrawn.                              JTT */
+	   for it it's full area can be redrawn. */
 
 	if ( evform->w <= old_w && evform->h <= old_h )
 		fl_redraw_form( evform );
@@ -3237,29 +3310,10 @@ fl_fit_object_label( FL_OBJECT * obj,
 /***************************************
  ***************************************/
 
-int
-fl_is_good_form( FL_FORM * form )
-{
-	size_t i;
-
-    for ( i = 0; i < formnumb; i++ )
-		if ( forms[ i ] == form )
-			return 1;
-
-    if ( form )
-		M_warn( "fl_is_good_form", "Unknown form" );
-
-    return 0;
-}
-
-
-/***************************************
- ***************************************/
-
 void
 fl_recount_auto_object( void )
 {
-    size_t i;
+    int i;
 
     for ( auto_count = i = 0; i < formnumb; i++ )
 		if ( forms[ i ]->has_auto )

@@ -843,7 +843,7 @@ extern void fl_scale_length( FL_Coord *,
 							 FL_Coord *,
 							 double );
 
-extern int fl_is_good_form( FL_FORM * );
+extern int fl_get_visible_form_index( FL_FORM * );
 
 extern void fl_recount_auto_object( void );
 

@@ -137,6 +137,8 @@ handle( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
+//			while ( sp->nforms > 0 )
+//				fl_delete_folder_bynumber( ob, sp->nforms );
 			fl_free( ob->spec );
 			break;
     }
@@ -595,6 +597,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
     {
 		deleted = sp->title[ i ];
 		fl_detach_form( theform = sp->forms[ i ] );
+
 		for ( j = i + 1; j < sp->nforms; j++ )
 		{
 			sp->title[ j - 1 ] = sp->title[ j ];
@@ -636,6 +639,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 
 		fl_delete_object( deleted );
 		fl_free_object( deleted );
+
 		fl_redraw_form( ob->form );
     }
 }

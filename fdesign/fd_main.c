@@ -39,6 +39,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "fd/ui_theforms.h"
@@ -53,8 +54,8 @@
 #define strcasecmp stricmp
 #endif
 
-#if defined(__VMS) && __VMS_VER < 70000000
-extern int strcasecmp(const char *, const char *);
+#if defined __VMS && __VMS_VER < 70000000
+extern int strcasecmp( const char *, const char * );
 #endif
 
 
@@ -62,10 +63,10 @@ extern int strcasecmp(const char *, const char *);
  * Info about the program
  ***************************************/
 
-static const char *fd_version[] =
+static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.15 $ of $Date: 2008/03/19 21:04:21 $",
+    "$State: Exp $  $Revision: 1.16 $ of $Date: 2008/03/26 20:08:27 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -84,10 +85,12 @@ print_version( int die )
 		exit( 0 );
 }
 
+
 char xform_header[ 128 ] = "forms.h";
 long main_window = 0;		/* The main screen window */
 FL_Coord winw,
          winh;
+
 
 /* various options  of the program */
 
@@ -112,7 +115,7 @@ unsigned long fd_red,
               fd_white,
               fd_col;
 Display *fd_display;
-int changed = 0;		/* Whether the thing has changed. */
+int changed = 0;				/* Whether the thing has changed. */
 char main_name[ MAX_VAR_LEN ];	/* Name of the main calling routine */
 char *loadedfile;
 char *loadedfile_fullpath;
@@ -228,31 +231,25 @@ handle_click( XEvent * xev,
     if ( dblclk )
     {
 		if ( xev->xbutton.button == 1 )
-		{
 			cut_selection( );
-		}
 		else if ( xev->xbutton.button == 3 )
-		{
 			change_selection( );
-		}
 
-		redraw_the_form(0);
+		redraw_the_form( 0 );
 		return 0;
     }
-
 
     if ( xev->xbutton.button == 1 && cur_class != -1 )
     {
 		XEvent ev;
 
 		XNextEvent( fl_display, &ev );
+
 		if ( ev.type == MotionNotify )
 			add_something( );
     }
     else if ( is_pasting )
-    {
-		;
-    }
+		/* empty */;
     else if (    within_selection( xev->xbutton.x, xev->xbutton.y )
 			  && xev->xbutton.button != 3 )
     {

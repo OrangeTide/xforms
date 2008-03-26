@@ -528,7 +528,7 @@ change_object(FL_OBJECT * obj, int all)
 
     /* Do interaction */
 
-    fl_deactivate_all_forms();
+    fl_deactivate_all_forms( );
 
     /* disable selection */
 
@@ -536,13 +536,14 @@ change_object(FL_OBJECT * obj, int all)
 
     /* always come up with Generic */
 
-    fl_set_folder_bynumber(fd_attrib->attrib_folder, 1);
+    fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
 
-    if (fd_attrib->attrib->y < 55)
+    if ( fd_attrib->attrib->y < 55 )
 		fd_attrib->attrib->y = 25;
 
-    fl_show_form(fd_attrib->attrib, FL_PLACE_GEOMETRY, FL_FULLBORDER, "Attributes");
-    fl_set_app_mainform(fd_attrib->attrib);
+    fl_show_form( fd_attrib->attrib, FL_PLACE_GEOMETRY, FL_FULLBORDER,
+				  "Attributes" );
+    fl_set_app_mainform( fd_attrib->attrib );
 
     /* Both cancel and readyobj should have their own callbacks, so we don't
        need this do_form stuff, but since attribute editing can't be invoked
@@ -552,17 +553,16 @@ change_object(FL_OBJECT * obj, int all)
     do
     {
 		XEvent xev;
-		retobj = fl_do_forms();
-		if (retobj == FL_EVENT)
-		{
-			fl_XNextEvent(&xev);
-		}
+
+		retobj = fl_do_forms( );
+		if ( retobj == FL_EVENT )
+			fl_XNextEvent( &xev );
     } while (    ( retobj != fd_attrib->readyobj || ! validate_attributes( ) )
 			  && retobj != fd_attrib->cancelobj );
 
-    fl_hide_form(fd_attrib->attrib);
-    fl_set_app_mainform(fd_control->control);
-    fl_activate_all_forms();
+    fl_set_app_mainform( fd_control->control );
+    fl_hide_form( fd_attrib->attrib );
+    fl_activate_all_forms( );
 
     no_selection = 0;
 

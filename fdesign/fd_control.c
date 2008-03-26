@@ -625,57 +625,68 @@ snap_cb( FL_OBJECT * obj,
 /***** End of alignment stuff */
 
 /* The user pressed one of the function keys on the main form */
+
 void
 func_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 long        arg )
 {
     switch (arg)
     {
-    case 1:
-	change_selection();
-	redraw_the_form(0);
-	break;
-    case 2:
-	lower_selection();
-	redraw_the_form(0);
-	break;
-    case 3:
-	raise_selection();
-	redraw_the_form(0);
-	break;
-    case 4:
-	select_all();
-	redraw_the_form(0);
-	break;
+		case 1:
+			change_selection();
+			redraw_the_form(0);
+			break;
 
-    case 5:
-	show_selection();
-	redraw_the_form(0);
-	break;
-    case 6:
-	hide_selection();
-	redraw_the_form(0);
-	break;
-    case 7:
-	group_selection();
-	break;
-    case 8:
-	flatten_selection();
-	break;
-    case 9:
-	copy_selection();
-	break;
-    case 10:
-	paste_selection();
-	redraw_the_form(0);
-	break;
-    case 11:
-	next_selection();
-	break;
-    case 12:
-	cut_selection();
-	redraw_the_form(0);
-	break;
+		case 2:
+			lower_selection();
+			redraw_the_form(0);
+			break;
+
+		case 3:
+			raise_selection();
+			redraw_the_form(0);
+			break;
+
+		case 4:
+			select_all();
+			redraw_the_form(0);
+			break;
+
+		case 5:
+			show_selection();
+			redraw_the_form(0);
+			break;
+
+		case 6:
+			hide_selection();
+			redraw_the_form(0);
+			break;
+
+		case 7:
+			group_selection();
+			break;
+
+		case 8:
+			flatten_selection();
+			break;
+
+		case 9:
+			copy_selection();
+			break;
+
+		case 10:
+			paste_selection();
+			redraw_the_form(0);
+			break;
+
+		case 11:
+			next_selection();
+			break;
+
+		case 12:
+			cut_selection();
+			redraw_the_form(0);
+			break;
     }
 }
 

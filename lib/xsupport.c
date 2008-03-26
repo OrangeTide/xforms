@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.10 2008/03/19 21:04:24 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.11 2008/03/26 20:08:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -137,7 +137,7 @@ fl_get_form_mouse( FL_FORM      * fm,
 	Window win = None;
 	FL_pixmap *flp = fm->flpixmap;
 
-    if ( fl_is_good_form( fm ) )
+    if ( fl_get_visible_form_index( fm ) >= 0 )
     {
 		win = ( flp && flp->win != None ) ? flp->win : fm->window;
 		fl_get_win_mouse( win, x, y, keymask );

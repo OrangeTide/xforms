@@ -235,7 +235,7 @@ get_mouse_pos( float * xx,
     FL_Coord x, y;
     unsigned int kmask;
 
-    fl_get_win_mouse(main_window, &x, &y, &kmask);
+    fl_get_win_mouse( main_window, &x, &y, &kmask );
     *xx = x;
     *yy = y;
 }

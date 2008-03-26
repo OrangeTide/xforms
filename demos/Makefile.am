@@ -86,6 +86,7 @@ noinst_PROGRAMS = arrowbutton \
 	rescale \
 	scrollbar \
 	secretinput \
+	sld_alt \
 	sld_radio \
 	sldinactive \
 	sldsize \
@@ -245,6 +246,7 @@ nodist_scrollbar_SOURCES = fd/scrollbar_gui.c fd/scrollbar_gui.h
 scrollbar.$(OBJEXT): fd/scrollbar_gui.c
 
 secretinput_SOURCES = secretinput.c
+sld_alt_SOURCES = sld_alt.c
 sld_radio_SOURCES = sld_radio.c
 sldinactive_SOURCES = sldinactive.c
 sldsize_SOURCES = sldsize.c
