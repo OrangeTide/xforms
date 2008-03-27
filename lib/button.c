@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.10 2008/03/27 14:30:41 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.11 2008/03/27 15:39:15 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,6 +52,12 @@ extern FL_FORM *fl_popup_form;
 						  || t == FL_SELECTED_TOPTAB_UPBOX	       \
 						  || t == FL_BOTTOMTAB_UPBOX			   \
 						  || t == FL_SELECTED_BOTTOMTAB_UPBOX    )
+
+#define WITHIN( o, mx, my )   (    ( mx ) >= ( ob )->x                \
+                                && ( mx ) <= ( ob )->x + ( ob )->w    \
+					            && ( my ) >= ( ob )->y                \
+					            && ( my ) <= ( ob )->y + ( ob )->h )
+
 
 /***************************************
  ***************************************/
@@ -305,6 +311,7 @@ handle_it( FL_OBJECT * ob,
 			if ( ob->type == FL_MENU_BUTTON )
 			{
 				sp->event = FL_RELEASE;
+				sp->is_pushed = 0;
 				sp->val = 0;
 			}
 			/* fall through */
@@ -348,18 +355,15 @@ handle_it( FL_OBJECT * ob,
 				 && ob->type != FL_INOUT_BUTTON
 				 && ob->type != FL_MENU_BUTTON )
 			{
-				if (    mx < ob->x
-					 || mx > ob->x + ob->w
-					 || my < ob->y
-					 || my > ob->y + ob->h )
-				{
-					ob->belowmouse = 0;
-					newval = oldval;
-				}
-				else
+				if ( WITHIN( ob, mx, my ) )
 				{
 					ob->belowmouse = 1;
 					newval = ! oldval;
+				}
+				else
+				{
+					ob->belowmouse = 0;
+					newval = oldval;
 				}
 
 				if ( sp->val != newval )
@@ -381,10 +385,7 @@ handle_it( FL_OBJECT * ob,
 			sp->is_pushed = 0;
 
 			if ( ob->type == FL_INOUT_BUTTON
-				 && (    mx < ob->x
-					  || mx > ob->x + ob->w
-					  || my < ob->y
-					  || my > ob->y + ob->h ) )
+				 && ! WITHIN( ob, mx, my ) )
 				ob->belowmouse = 0;
 
 			if ( ob->type == FL_PUSH_BUTTON )
@@ -405,10 +406,7 @@ handle_it( FL_OBJECT * ob,
 			sp->event = FL_UPDATE;
 			if ( ob->type != FL_RADIO_BUTTON && ob->type != FL_INOUT_BUTTON )
 			{
-				if (    mx < ob->x
-					 || mx > ob->x + ob->w
-					 || my < ob->y
-					 || my > ob->y + ob->h )
+				if ( ! WITHIN( ob, mx, my ) )
 					newval = oldval;
 				else
 					newval = ! oldval;
