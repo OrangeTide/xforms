@@ -147,12 +147,12 @@ save_browser_attrib(FILE * fp, FL_OBJECT * ob)
     spec = get_superspec(ob);
 
     if (defspec->h_pref != spec->h_pref)
-	fprintf(fp, "  h_pref: %s\n", get_scrollbar_pref_name(spec->h_pref));
+	fprintf(fp, "h_pref: %s\n", get_scrollbar_pref_name(spec->h_pref));
     if (defspec->v_pref != spec->v_pref)
 	fprintf(fp, "  v_pref: %s\n", get_scrollbar_pref_name(spec->v_pref));
 
     for (i = 1; i <= spec->nlines; i++)
-	fprintf(fp, "  content: %s\n", spec->content[i]);
+	fprintf(fp, "content: %s\n", spec->content[i]);
 
 }
 

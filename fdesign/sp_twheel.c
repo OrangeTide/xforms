@@ -149,7 +149,7 @@ save_twheel_attrib(FILE * fp, FL_OBJECT * ob)
     SuperSPEC *defsp, *sp;
 
     if (ob->objclass != FL_THUMBWHEEL)
-	return;
+		return;
 
     /* create a default object */
     defobj = fl_create_thumbwheel(ob->type, 0, 0, 0, 0, "");
@@ -158,19 +158,19 @@ save_twheel_attrib(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->min != defsp->min || sp->max != defsp->max)
-	fprintf(fp, "\tbounds: %g %g\n", sp->min, sp->max);
+		fprintf(fp, "bounds: %g %g\n", sp->min, sp->max);
     if (sp->prec != defsp->prec)
-	fprintf(fp, "\tprecision: %d\n", sp->prec);
+		fprintf(fp, "precision: %d\n", sp->prec);
     if (sp->val != defsp->val)
-	fprintf(fp, "\tvalue: %g\n", sp->val);
+		fprintf(fp, "value: %g\n", sp->val);
     if (sp->ldelta != defsp->ldelta || sp->rdelta != defsp->rdelta)
-	fprintf(fp, "\tincrement: %g %g\n", sp->ldelta, sp->rdelta);
+		fprintf(fp, "increment: %g %g\n", sp->ldelta, sp->rdelta);
     if (sp->slsize != defsp->slsize)
-	fprintf(fp, "\tslsize: %.2f\n", sp->slsize);
+		fprintf(fp, "slsize: %.2f\n", sp->slsize);
     if (sp->step != defsp->step)
-	fprintf(fp, "\tstep: %g\n", sp->step);
+		fprintf(fp, "step: %g\n", sp->step);
     if (sp->how_return != defsp->how_return)
-	fprintf(fp, "\treturn: %s\n", get_how_return_name(sp->how_return));
+		fprintf(fp, "return: %s\n", get_how_return_name(sp->how_return));
 }
 
 void

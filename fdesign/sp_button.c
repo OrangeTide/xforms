@@ -105,8 +105,8 @@ set_button_attrib(FL_OBJECT * ob)
 {
 
     if (!IsIconButton(ob->objclass) &&
-	ob->type != FL_PUSH_BUTTON && ob->type != FL_RADIO_BUTTON)
-	return -1;
+		ob->type != FL_PUSH_BUTTON && ob->type != FL_RADIO_BUTTON)
+		return -1;
 
     bt_attrib->vdata = edited = ob;
 
@@ -115,48 +115,47 @@ set_button_attrib(FL_OBJECT * ob)
 
     if (!info)
     {
-	M_err("ButtonAttrib", "internal error");
-	return -1;
+		M_err("ButtonAttrib", "internal error");
+		return -1;
     }
 
-
     if (ob->type == FL_PUSH_BUTTON || ob->type == FL_RADIO_BUTTON)
-	fl_show_object(bt_attrib->initialval);
+		fl_show_object(bt_attrib->initialval);
     else
-	fl_hide_object(bt_attrib->initialval);
+		fl_hide_object(bt_attrib->initialval);
 
     if (ob->objclass == FL_PIXMAPBUTTON || ob->objclass == FL_BITMAPBUTTON)
     {
-	fl_show_object(bt_attrib->filename);
-	fl_show_object(bt_attrib->browse);
-	fl_show_object(bt_attrib->use_data);
-	fl_show_object(bt_attrib->fullpath);
-	fl_show_object(bt_attrib->tooltip);
-	(ob->objclass == FL_PIXMAPBUTTON ?
-	 fl_show_object : fl_hide_object) (bt_attrib->focus_filename);
-	(ob->objclass == FL_PIXMAPBUTTON ?
-	 fl_show_object : fl_hide_object) (bt_attrib->browse2);
+		fl_show_object(bt_attrib->filename);
+		fl_show_object(bt_attrib->browse);
+		fl_show_object(bt_attrib->use_data);
+		fl_show_object(bt_attrib->fullpath);
+		fl_show_object(bt_attrib->tooltip);
+		(ob->objclass == FL_PIXMAPBUTTON ?
+		 fl_show_object : fl_hide_object) (bt_attrib->focus_filename);
+		(ob->objclass == FL_PIXMAPBUTTON ?
+		 fl_show_object : fl_hide_object) (bt_attrib->browse2);
     }
     else
     {
-	fl_hide_object(bt_attrib->filename);
-	fl_hide_object(bt_attrib->focus_filename);
-	fl_hide_object(bt_attrib->browse);
-	fl_hide_object(bt_attrib->browse2);
-	fl_hide_object(bt_attrib->use_data);
-	fl_hide_object(bt_attrib->fullpath);
-	fl_hide_object(bt_attrib->tooltip);
+		fl_hide_object(bt_attrib->filename);
+		fl_hide_object(bt_attrib->focus_filename);
+		fl_hide_object(bt_attrib->browse);
+		fl_hide_object(bt_attrib->browse2);
+		fl_hide_object(bt_attrib->use_data);
+		fl_hide_object(bt_attrib->fullpath);
+		fl_hide_object(bt_attrib->tooltip);
     }
 
     if (ob->objclass == FL_PIXMAPBUTTON)
     {
-	fl_show_object(bt_attrib->pixalign);
-	fl_show_object(bt_attrib->showfocus);
+		fl_show_object(bt_attrib->pixalign);
+		fl_show_object(bt_attrib->showfocus);
     }
     else
     {
-	fl_hide_object(bt_attrib->pixalign);
-	fl_hide_object(bt_attrib->showfocus);
+		fl_hide_object(bt_attrib->pixalign);
+		fl_hide_object(bt_attrib->showfocus);
     }
 
     show_spec(button_spec);
@@ -323,44 +322,44 @@ save_button_attrib(FILE * fp, FL_OBJECT * ob)
     info = btspec->cspecv;
 
     if (btspec->int_val != defspec->int_val)
-	fprintf(fp, "\tvalue: %d\n", btspec->int_val);
+		fprintf(fp, "value: %d\n", btspec->int_val);
 
     if (!info || !definfo)
     {
-	M_err("SaveButtonAttrib", "internal error");
-	return;
+		M_err("SaveButtonAttrib", "internal error");
+		return;
     }
 
     get_data_name(ob, info);
 
     if (info->filename[0])
     {
-	fprintf(fp, "\tfile: %s\n", info->filename);
-	if (info->focus_filename[0])
-	    fprintf(fp, "\tfocus_file: %s\n", info->focus_filename);
-	fprintf(fp, "\tfullpath: %d\n", info->fullpath);
+		fprintf(fp, "\tfile: %s\n", info->filename);
+		if (info->focus_filename[0])
+			fprintf(fp, "focus_file: %s\n", info->focus_filename);
+		fprintf(fp, "fullpath: %d\n", info->fullpath);
     }
 
     if (info->align != definfo->align)
-	fprintf(fp, "\talign: %s\n", align_name(info->align | FL_ALIGN_INSIDE));
+		fprintf(fp, "align: %s\n", align_name(info->align | FL_ALIGN_INSIDE));
 
     if (info->show_focus != definfo->show_focus)
-	fprintf(fp, "\tfocus: %d\n", info->show_focus);
+		fprintf(fp, "focus: %d\n", info->show_focus);
 
     if (info->data[0] && info->filename[0])
     {
-	fprintf(fp, "\tdata: %s\n", info->data);
-	if (info->focus_data[0])
-	    fprintf(fp, "\tfocus_data: %s\n", info->focus_data);
+		fprintf(fp, "data: %s\n", info->data);
+		if (info->focus_data[0])
+			fprintf(fp, "focus_data: %s\n", info->focus_data);
     }
 
     if (info->width[0])
-	fprintf(fp, "\twidth: %s\n", info->width);
+		fprintf(fp, "width: %s\n", info->width);
     if (info->height[0])
-	fprintf(fp, "\theight: %s\n", info->height);
+		fprintf(fp, "height: %s\n", info->height);
 
     if (info->helper[0])
-	fprintf(fp, "\thelper: %s\n", info->helper);
+		fprintf(fp, "helper: %s\n", info->helper);
 
     fl_free_object(defobj);
 }

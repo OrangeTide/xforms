@@ -204,7 +204,7 @@ save_xyplot_attrib(FILE * fp, FL_OBJECT * ob)
     SuperSPEC *defsp, *sp;
 
     if (ob->objclass != FL_XYPLOT)
-	return;
+		return;
 
     /* create a default object */
     defobj = fl_create_xyplot(ob->type, 0, 0, 0, 0, "");
@@ -213,31 +213,31 @@ save_xyplot_attrib(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->xmajor != defsp->xmajor || sp->xminor != defsp->xminor)
-	fprintf(fp, "  xtics: %d %d\n", sp->xmajor, sp->xminor);
+		fprintf(fp, "xtics: %d %d\n", sp->xmajor, sp->xminor);
 
     if (sp->ymajor != defsp->ymajor || sp->yminor != defsp->yminor)
-	fprintf(fp, "  ytics: %d %d\n", sp->ymajor, sp->yminor);
+		fprintf(fp, "ytics: %d %d\n", sp->ymajor, sp->yminor);
 
     if (sp->xgrid != defsp->xgrid || sp->ygrid != defsp->ygrid)
-	fprintf(fp, "   grid: %s %s\n",
-		get_grid_name(sp->xgrid), get_grid_name(sp->ygrid));
+		fprintf(fp, "grid: %s %s\n",
+				get_grid_name(sp->xgrid), get_grid_name(sp->ygrid));
 
     if (sp->grid_linestyle != defsp->grid_linestyle)
-	fprintf(fp, "   gridstyle: %s\n",
-		get_linestyle_name(sp->grid_linestyle));
+		fprintf(fp, "gridstyle: %s\n",
+				get_linestyle_name(sp->grid_linestyle));
 
     if (sp->xscale != defsp->xscale || sp->xbase != defsp->xbase)
-	fprintf(fp, "  xscale: %s %g\n", get_scale_name(sp->xscale), sp->xbase);
+		fprintf(fp, "xscale: %s %g\n", get_scale_name(sp->xscale), sp->xbase);
     if (sp->yscale != defsp->yscale || sp->ybase != defsp->ybase)
-	fprintf(fp, "  yscale: %s %g\n", get_scale_name(sp->yscale), sp->ybase);
+		fprintf(fp, "yscale: %s %g\n", get_scale_name(sp->yscale), sp->ybase);
 
     if (ob->type == FL_ACTIVE_XYPLOT)
     {
-	if (sp->how_return != defsp->how_return)
-	    fprintf(fp, "  return: %s\n",
-		    get_how_return_str_name(sp->how_return));
-	if (sp->mark_active != defsp->mark_active)
-	    fprintf(fp, "  markactive: %d\n", sp->mark_active);
+		if (sp->how_return != defsp->how_return)
+			fprintf(fp, "return: %s\n",
+					get_how_return_str_name(sp->how_return));
+		if (sp->mark_active != defsp->mark_active)
+			fprintf(fp, "markactive: %d\n", sp->mark_active);
     }
 
     fl_free_object(defobj);

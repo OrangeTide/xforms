@@ -223,7 +223,7 @@ save_pixmap_attrib(FILE * fp, FL_OBJECT * ob)
     IconInfo *definfo;
 
     if (!(defobj = create_a_pixmap(ob)))
-	return;
+		return;
 
     defspec = get_superspec(defobj);
     definfo = defspec->cspecv;
@@ -232,27 +232,27 @@ save_pixmap_attrib(FILE * fp, FL_OBJECT * ob)
 
     if (!info || !definfo)
     {
-	M_err("SavePixmapAttrib", "internal error");
-	return;
+		M_err("SavePixmapAttrib", "internal error");
+		return;
     }
 
     get_data_name(ob, info);
 
     if (info->filename[0])
     {
-	fprintf(fp, "\tfile: %s\n", info->filename);
-	fprintf(fp, "\tfullpath: %d\n", info->fullpath);
+		fprintf(fp, "file: %s\n", info->filename);
+		fprintf(fp, "fullpath: %d\n", info->fullpath);
     }
 
     if (info->align != definfo->align)
-	fprintf(fp, "\talign: %s\n", align_name(info->align | FL_ALIGN_INSIDE));
+		fprintf(fp, "align: %s\n", align_name(info->align | FL_ALIGN_INSIDE));
 
     if (info->data[0] && info->filename[0])
-	fprintf(fp, "\tdata: %s\n", info->data);
+		fprintf(fp, "data: %s\n", info->data);
     if (info->width[0])
-	fprintf(fp, "\twidth: %s\n", info->width);
+		fprintf(fp, "width: %s\n", info->width);
     if (info->height[0])
-	fprintf(fp, "\theight: %s\n", info->height);
+		fprintf(fp, "height: %s\n", info->height);
 
     fl_free_object(defobj);
 }

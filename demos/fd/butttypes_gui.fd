@@ -9,13 +9,13 @@ Unit of measure: FL_COORD_PIXEL
 =============== FORM ===============
 Name: form0
 Width: 360
-Height: 300
-Number of Objects: 10
+Height: 330
+Number of Objects: 11
 
 --------------------
 class: FL_BOX
 type: UP_BOX
-box: 0 0 360 300
+box: 0 0 360 330
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -33,7 +33,7 @@ argument:
 --------------------
 class: FL_BUTTON
 type: HIDDEN_BUTTON
-box: 0 0 360 300
+box: 0 0 360 330
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -41,24 +41,6 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: 
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: button_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: INOUT_BUTTON
-box: 18 168 107 30
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_BOLD_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: InOutButton
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
@@ -76,7 +58,7 @@ alignment: FL_ALIGN_CENTER
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: NormalButton
+label: Normal
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
@@ -94,62 +76,8 @@ alignment: FL_ALIGN_CENTER
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: PushButton
+label: Push
 shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: button_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: TOUCH_BUTTON
-box: 18 130 107 30
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_BOLD_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: TouchButton
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: button_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: MENU_BUTTON
-box: 18 206 107 30
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_BOLD_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: MenuButton
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: button_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: RETURN_BUTTON
-box: 18 244 107 30
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_BOLD_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: ReturnButton
-shortcut: ^M
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: 
@@ -166,8 +94,99 @@ alignment: FL_ALIGN_CENTER
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: RadioButton
+label: Radio 1
 shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: button_cb
+argument: 0
+value: 1
+
+--------------------
+class: FL_BUTTON
+type: RADIO_BUTTON
+box: 18 129 107 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Radio 2
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: button_cb
+argument: 0
+
+--------------------
+class: FL_BUTTON
+type: TOUCH_BUTTON
+box: 18 167 107 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Touch
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: button_cb
+argument: 0
+
+--------------------
+class: FL_BUTTON
+type: INOUT_BUTTON
+box: 18 205 107 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: InOut
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: button_cb
+argument: 0
+
+--------------------
+class: FL_BUTTON
+type: MENU_BUTTON
+box: 18 243 107 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Menu
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: 
+callback: button_cb
+argument: 0
+
+--------------------
+class: FL_BUTTON
+type: RETURN_BUTTON
+box: 18 281 107 30
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_COL1
+alignment: FL_ALIGN_CENTER
+style: FL_BOLD_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Return
+shortcut: ^M
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: 
@@ -177,7 +196,7 @@ argument: 0
 --------------------
 class: FL_BROWSER
 type: NORMAL_BROWSER
-box: 135 15 210 260
+box: 135 15 210 296
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_BOTTOM

@@ -242,17 +242,17 @@ save_menu_attrib(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->new_menuapi != defsp->new_menuapi)
-	fprintf(fp, "  struct: %d\n", sp->new_menuapi);
+		fprintf(fp, "struct: %d\n", sp->new_menuapi);
     if (sp->global_scope != defsp->global_scope)
-	fprintf(fp, "  global: %d\n", sp->global_scope);
+		fprintf(fp, "global: %d\n", sp->global_scope);
 
     for (i = 1; i <= sp->nlines; i++)
     {
-	fprintf(fp, "  content: %s\n", sp->content[i]);
-	if (sp->mode[i] != defsp->mode[i])
-	    fprintf(fp, "  mode: %s\n", get_pupmode_name(sp->mode[i]));
-	if (sp->shortcut[i] && *sp->shortcut[i])
-	    fprintf(fp, "  shortcut: %s\n", sp->shortcut[i]);
+		fprintf(fp, "content: %s\n", sp->content[i]);
+		if (sp->mode[i] != defsp->mode[i])
+			fprintf(fp, "mode: %s\n", get_pupmode_name(sp->mode[i]));
+		if (sp->shortcut[i] && *sp->shortcut[i])
+			fprintf(fp, "shortcut: %s\n", sp->shortcut[i]);
     }
 }
 

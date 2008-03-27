@@ -159,22 +159,22 @@ save_counter_attrib(FILE * fp, FL_OBJECT * ob)
     spec = get_superspec(ob);
 
     if (spec->min != defspec->min ||
-	spec->max != defspec->max)
+		spec->max != defspec->max)
     {
-	fprintf(fp, "  bounds: %.*f %.*f\n",
-		spec->prec, spec->min, spec->prec, spec->max);
+		fprintf(fp, "bounds: %.*f %.*f\n",
+				spec->prec, spec->min, spec->prec, spec->max);
     }
 
     if (spec->prec != defspec->prec)
-	fprintf(fp, "  precision: %d\n", spec->prec);
+		fprintf(fp, "precision: %d\n", spec->prec);
     if (spec->val != defspec->val)
-	fprintf(fp, "  value: %.*f\n", spec->prec, spec->val);
+		fprintf(fp, "value: %.*f\n", spec->prec, spec->val);
     if (spec->how_return != defspec->how_return)
-	fprintf(fp, "  return: %s\n", get_how_return_name(spec->how_return));
+		fprintf(fp, "return: %s\n", get_how_return_name(spec->how_return));
     if (spec->sstep != defspec->sstep)
-	fprintf(fp, "  sstep: %.*f\n", spec->prec, spec->sstep);
+		fprintf(fp, "sstep: %.*f\n", spec->prec, spec->sstep);
     if (spec->lstep != defspec->lstep)
-	fprintf(fp, "  lstep: %.*f\n", spec->prec, spec->lstep);
+		fprintf(fp, "lstep: %.*f\n", spec->prec, spec->lstep);
 
     fl_free_object(defobj);
 }

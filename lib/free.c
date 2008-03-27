@@ -31,7 +31,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fre = "$Id: free.c,v 1.6 2008/01/28 23:19:13 jtt Exp $";
+char *fl_id_fre = "$Id: free.c,v 1.7 2008/03/27 14:30:41 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -46,13 +46,13 @@ char *fl_id_fre = "$Id: free.c,v 1.6 2008/01/28 23:19:13 jtt Exp $";
  ***************************************/
 
 FL_OBJECT *
-fl_create_free( int          type,
-				FL_Coord     x,
-				FL_Coord     y,
-				FL_Coord     w,
-				FL_Coord     h,
-				const char * label,
-				FL_HANDLEPTR handle )
+fl_create_free( int            type,
+				FL_Coord       x,
+				FL_Coord       y,
+				FL_Coord       w,
+				FL_Coord       h,
+				const char   * label,
+				FL_HANDLEPTR   handle )
 {
     FL_OBJECT *obj;
 
@@ -83,13 +83,13 @@ fl_create_free( int          type,
  ***************************************/
 
 FL_OBJECT *
-fl_add_free( int          type,
-			 FL_Coord     x,
-			 FL_Coord     y,
-			 FL_Coord     w,
-			 FL_Coord     h,
-			 const char * label,
-			 FL_HANDLEPTR handle)
+fl_add_free( int            type,
+			 FL_Coord       x,
+			 FL_Coord       y,
+			 FL_Coord       w,
+			 FL_Coord       h,
+			 const char   * label,
+			 FL_HANDLEPTR   handle)
 {
     FL_OBJECT *ob;
 

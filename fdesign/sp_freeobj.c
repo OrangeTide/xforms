@@ -137,7 +137,7 @@ void
 save_freeobj_attrib(FILE * fp, FL_OBJECT * ob)
 {
     if (ob->c_vdata)
-	fprintf(fp, "   handler: %s\n", (char *) ob->c_vdata);
+		fprintf(fp, "handler: %s\n", (char *) ob->c_vdata);
 }
 
 void

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.23 2008/03/26 20:08:27 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.24 2008/03/27 14:30:41 jtt Exp $";
 #endif
 
 
@@ -1939,7 +1939,11 @@ fl_handle_form( FL_FORM * form,
 			else if ( obj != fl_mouseobj )
 			{
 				fl_handle_object( fl_mouseobj, FL_LEAVE, x, y, 0, xev );
-				fl_handle_object( fl_mouseobj = obj, FL_ENTER, x, y, 0, xev );
+				if ( obj )
+					fl_handle_object( fl_mouseobj = obj, FL_ENTER,
+									  x, y, 0, xev );
+				else
+					fl_mouseobj = NULL;
 			}
 
 			/* Objects can declare that they want FL_MOTION events even

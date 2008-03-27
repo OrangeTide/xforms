@@ -57,6 +57,7 @@ typedef struct
 	int			   mousebut;	/* mouse button that caused the push	 */
 	int			   timdel;		/* time since last touch (TOUCH buttons) */
 	int			   event;		/* what event triggers redraw			 */
+	int            is_pushed;
 	long		   cspecl;		/* reserved for class specfic stuff		 */
 	void 		 * cspecv;		/* misc. things							 */
 	char 		 * filename;

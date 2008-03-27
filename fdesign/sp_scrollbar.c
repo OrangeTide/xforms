@@ -168,17 +168,17 @@ save_scrollbar_attrib(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->min != defsp->min || sp->max != defsp->max)
-	fprintf(fp, "\tbounds: %g %g\n", sp->min, sp->max);
+		fprintf(fp, "bounds: %g %g\n", sp->min, sp->max);
     if (sp->val != defsp->val)
-	fprintf(fp, "\tvalue: %g\n", sp->val);
+		fprintf(fp, "value: %g\n", sp->val);
     if (sp->slsize != defsp->slsize)
-	fprintf(fp, "\tslsize: %.2f\n", sp->slsize);
+		fprintf(fp, "slsize: %.2f\n", sp->slsize);
     if (sp->step != defsp->step)
-	fprintf(fp, "\tstep: %.3f\n", sp->step);
+		fprintf(fp, "step: %.3f\n", sp->step);
     if (sp->rdelta != defsp->rdelta || sp->ldelta != defsp->ldelta)
-	fprintf(fp, "\tincrement: %g %g\n", sp->ldelta, sp->rdelta);
+		fprintf(fp, "increment: %g %g\n", sp->ldelta, sp->rdelta);
     if (sp->how_return != defsp->how_return)
-	fprintf(fp, "\treturn: %s\n", get_how_return_name(sp->how_return));
+		fprintf(fp, "return: %s\n", get_how_return_name(sp->how_return));
 }
 
 

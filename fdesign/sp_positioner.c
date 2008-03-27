@@ -147,9 +147,8 @@ save_pos_attrib(FILE * fp, FL_OBJECT * ob)
     FL_OBJECT *defobj;
     SuperSPEC *defspec, *spec;
 
-
     if (ob->objclass != FL_POSITIONER)
-	return;
+		return;
 
     /* create a default object */
     defobj = fl_create_positioner(ob->type, 0, 0, 0, 0, "");
@@ -158,22 +157,22 @@ save_pos_attrib(FILE * fp, FL_OBJECT * ob)
     spec = get_superspec(ob);
 
     if (spec->xmin != defspec->xmin || spec->xmax != defspec->xmax)
-	fprintf(fp, "  xbounds: %g %g\n", spec->xmin, spec->xmax);
+		fprintf(fp, "xbounds: %g %g\n", spec->xmin, spec->xmax);
     if (spec->ymin != defspec->ymin || spec->ymax != defspec->ymax)
-	fprintf(fp, "  ybounds: %g %g\n", spec->ymin, spec->ymax);
+		fprintf(fp, "ybounds: %g %g\n", spec->ymin, spec->ymax);
 
     if (spec->xval != defspec->xval)
-	fprintf(fp, "  xvalue: %g\n", spec->xval);
+		fprintf(fp, "xvalue: %g\n", spec->xval);
     if (spec->yval != defspec->yval)
-	fprintf(fp, "  yvalue: %g\n", spec->yval);
+		fprintf(fp, "yvalue: %g\n", spec->yval);
 
     if (spec->xstep != defspec->xstep)
-	fprintf(fp, "  xstep: %g\n", spec->xstep);
+		fprintf(fp, "xstep: %g\n", spec->xstep);
     if (spec->ystep != defspec->ystep)
-	fprintf(fp, "  ystep: %g\n", spec->ystep);
+		fprintf(fp, "ystep: %g\n", spec->ystep);
 
     if (spec->how_return != defspec->how_return)
-	fprintf(fp, "  return: %s\n", get_how_return_name(spec->how_return));
+		fprintf(fp, "return: %s\n", get_how_return_name(spec->how_return));
 
     fl_free_object(defobj);
 }
