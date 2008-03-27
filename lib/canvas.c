@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.11 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.12 2008/03/27 20:14:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -329,9 +329,9 @@ init_canvas( FL_OBJECT * ob,
 		/* find the real parent of the canvas */
 
 		sp->parent = fl_get_real_object_window( ob );
-		sp->window = 0;
+		sp->window = None;
 
-		if ( sp->parent == 0 )
+		if ( sp->parent == None )
 		{
 			M_err( "InitCanvas", "Internal Error" );
 			exit( 0 );
@@ -399,6 +399,7 @@ init_canvas( FL_OBJECT * ob,
     if ( Moved( ob, sp ) || Resized( ob, sp ) )
     {
 		/* XMoveWindow */
+
 		M_warn( "Canvas", "Canvas: WinMoved\n" );
 		XMoveResizeWindow( flx->display, sp->window, ob->x, ob->y,
 						   ob->w, ob->h );
@@ -467,7 +468,7 @@ fl_remove_canvas_handler( FL_OBJECT *      ob,
     if ( ev >= LASTEvent )
 		return;
 
-    sp->canvas_handler[ ev ] = 0;
+    sp->canvas_handler[ ev ] = NULL;
 
     if ( ! sp->window )
     {
@@ -560,8 +561,8 @@ fl_create_generic_canvas( int          canvas_class,
     ob->boxtype = FL_CANVAS_BOXTYPE;
     ob->col1 = FL_NoColor;	     /* indicates no background */
     ob->col2 = FL_BLACK;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
 
+    sp = ob->spec = fl_calloc( 1, sizeof *sp );
     sp->xswa.border_pixel = 0;
     sp->xswa.event_mask = ExposureMask | StructureNotifyMask;
     sp->xswa.do_not_propagate_mask = 0;

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.11 2008/03/27 15:39:15 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.12 2008/03/27 20:14:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -306,7 +306,7 @@ handle_it( FL_OBJECT * ob,
 
 		case FL_LEAVE:
 			/* FL_MENU_BUTTON objects never get a FL_RELEASE event,
-			   so we have to "fake" it */
+			   so we have to "fake" one */
 
 			if ( ob->type == FL_MENU_BUTTON )
 			{
@@ -317,12 +317,13 @@ handle_it( FL_OBJECT * ob,
 			/* fall through */
 
 		case FL_ENTER:
+			/* Keep active radio buttons from reacting */
+
 			if ( ob->type == FL_RADIO_BUTTON && sp->val == 1 )
 				ob->belowmouse = 0;
 
 			sp->event = event;
-			if ( ! fl_dithered( fl_vmode ) )
-				fl_redraw_object(ob);
+			fl_redraw_object(ob);
 			break;
 
 		case FL_PUSH:

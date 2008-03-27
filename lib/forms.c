@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.24 2008/03/27 14:30:41 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.25 2008/03/27 20:14:53 jtt Exp $";
 #endif
 
 
@@ -1939,11 +1939,7 @@ fl_handle_form( FL_FORM * form,
 			else if ( obj != fl_mouseobj )
 			{
 				fl_handle_object( fl_mouseobj, FL_LEAVE, x, y, 0, xev );
-				if ( obj )
-					fl_handle_object( fl_mouseobj = obj, FL_ENTER,
-									  x, y, 0, xev );
-				else
-					fl_mouseobj = NULL;
+				fl_handle_object( fl_mouseobj = obj, FL_ENTER, x, y, 0, xev );
 			}
 
 			/* Objects can declare that they want FL_MOTION events even
@@ -1951,7 +1947,7 @@ fl_handle_form( FL_FORM * form,
 			   have some internal structure that depends on the mouse
 			   position (e.g. choice and counter objects) . */
 
-			if ( obj && obj != fl_pushobj && obj->want_motion )
+			if ( obj != fl_pushobj && obj && obj->want_motion )
 				fl_handle_object( obj, FL_MOTION, x, y, key, xev );
 
 			break;
@@ -1994,10 +1990,6 @@ fl_handle_form( FL_FORM * form,
 }
 
 
-/***************
-  Routine to check for events
-***************/
-
 static long lastsec[ FL_NTIMER ];
 static long lastusec[ FL_NTIMER ];
 
@@ -2017,8 +2009,11 @@ static TimeVal tp;
 void
 fl_reset_time( int n )
 {
-    n %= FL_NTIMER;
-    fl_gettime( lastsec + n, lastusec + n );
+	if ( n >= 0 )
+	{
+		n %= FL_NTIMER;
+		fl_gettime( lastsec + n, lastusec + n );
+	}
 }
 
 
@@ -2029,6 +2024,9 @@ fl_reset_time( int n )
 double
 fl_time_passed( int n )
 {
+	if ( n < 0 )
+		return -1.0;
+
     n %= FL_NTIMER;
     fl_gettime( &tp.sec, &tp.usec );
     return tp.sec - lastsec[ n ] + 1.0e-6 * ( tp.usec - lastusec[ n ] );
@@ -2053,7 +2051,7 @@ do_keyboard( XEvent * xev,
 	fl_keymask = xev->xkey.state;
 	fl_query_age = 0;
 
-    /* before doing anything, save the current modifier key for the handlers */
+    /* Before doing anything save the current modifier key for the handlers */
 
     if ( win && ( ! keyform || fl_get_visible_form_index( keyform ) < 0 ) )
 		keyform = fl_win_to_form( win );
@@ -2532,7 +2530,12 @@ get_next_event_or_idle( int        wait_io,
 		if ( ( *form = find_event_form( xev ) ) != NULL )
 			return 1;
 
+		fl_compress_event( xev,
+						     ExposureMask
+						   | PointerMotionMask
+						   | ButtonMotionMask );
 		fl_XPutBackEvent( xev );
+
 		return 0;
     }
 

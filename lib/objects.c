@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.17 2008/03/25 12:41:28 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.18 2008/03/27 20:14:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -205,14 +205,14 @@ fl_make_object( int            objclass,
 
     ob->wantkey = FL_KEY_NORMAL;
 
-    ob->flpixmap = 0;
+    ob->flpixmap = None;
 
-    ob->label = fl_strdup( label ? label : "" );
+    ob->label  = fl_strdup( label ? label : "" );
     ob->handle = handle;
-    ob->align = FL_ALIGN_CENTER;
-    ob->lcol = FL_BLACK;
-    ob->col1 = FL_COL1;
-    ob->col2 = FL_MCOL;
+    ob->align  = FL_ALIGN_CENTER;
+    ob->lcol   = FL_BLACK;
+    ob->col1   = FL_COL1;
+    ob->col2   = FL_MCOL;
 
     if ( BUTTON_CLASS( objclass ) && fl_cntl.buttonFontSize )
 		ob->lsize = fl_cntl.buttonFontSize;
@@ -233,18 +233,18 @@ fl_make_object( int            objclass,
     else
 		ob->lsize = FL_DEFAULT_SIZE;
 
-    ob->lstyle = FL_NORMAL_STYLE;
-    ob->shortcut = fl_calloc( 1, sizeof *ob->shortcut );
-    ob->shortcut[ 0 ] = 0;
-    ob->active = 1;
-    ob->visible = FL_VISIBLE;
+    ob->lstyle          = FL_NORMAL_STYLE;
+    ob->shortcut        = fl_calloc( 1, sizeof *ob->shortcut );
+    ob->shortcut[ 0 ]   = 0;
+    ob->active          = 1;
+    ob->visible         = FL_VISIBLE;
     ob->object_callback = NULL;
-    ob->spec = NULL;
+    ob->spec            = NULL;
     ob->next = ob->prev = NULL;
-    ob->form = NULL;
-    ob->dbl_background = FL_COL1;
+    ob->form            = NULL;
+    ob->dbl_background  = FL_COL1;
 	ob->parent = ob->child = ob->nc = NULL;
-	ob->is_child = 0;
+	ob->is_child        = 0;
 
     return ob;
 }
@@ -2050,6 +2050,9 @@ fl_handle_object( FL_OBJECT * obj,
 				  int         key,
 				  XEvent *    xev )
 {
+    if ( ! obj )
+		return;
+
     if ( fl_handle_it( obj, event, mx, my, key, xev ) )
 		fl_object_qenter( obj );
 }
