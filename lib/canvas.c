@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.13 2008/03/28 11:48:02 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.14 2008/03/28 12:19:07 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -475,7 +475,7 @@ fl_remove_canvas_handler( FL_OBJECT *      ob,
     if ( ev < 0 || ev >= LASTEvent )
 	{
 		M_err( "fl_remove_canvas_handler", "Invalid event %d", ev );
-		return NULL;
+		return;
 	}
 
     sp->canvas_handler[ ev ] = NULL;
