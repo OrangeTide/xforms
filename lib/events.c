@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.17 2008/03/26 20:08:27 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.18 2008/03/28 11:48:02 jtt Exp $";
 #endif
 
 
@@ -92,7 +92,7 @@ static void *fl_user_data;
 
 
 /***************************************
- * Sets the call_back routine for the events
+ * Sets the callback routine for the events
  ***************************************/
 
 FL_APPEVENT_CB
@@ -984,7 +984,7 @@ fl_addto_selected_xevent( Window win,
     /* on some SGI machines, 'your_event_mask' has bogus value 0x80??????,
 	   causing an X protocol error. Fix this here */
 
-    xwa.your_event_mask &= ( OwnerGrabButtonMask << 1 ) - 1;
+    xwa.your_event_mask &= AllEventsMask;
     XSelectInput( flx->display, win, xwa.your_event_mask );
 
     return xwa.your_event_mask;
@@ -1006,7 +1006,7 @@ fl_remove_selected_xevent( Window win,
     /* on some SGI machines, your_event_mask has bogus value 0x80??????,
 	   causing an X protocol error. Fix this here */
 
-    xwa.your_event_mask &= ( OwnerGrabButtonMask << 1 ) - 1;
+    xwa.your_event_mask &= AllEventsMask;
     XSelectInput( flx->display, win, xwa.your_event_mask );
 
     return xwa.your_event_mask;

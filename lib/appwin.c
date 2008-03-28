@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG 
-char *fl_id_evt = "$Id: appwin.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_evt = "$Id: appwin.c,v 1.10 2008/03/28 11:48:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -160,6 +160,7 @@ fl_set_preemptive_callback( Window           win,
     old = fwin->pre_emptive;
     fwin->pre_emptive = pcb;
     fwin->pre_emptive_data = data;
+
     return old;
 }
 
@@ -180,7 +181,7 @@ fl_add_event_callback( Window           win,
     FL_APPEVENT_CB old = NULL;
 
     if ( ev < 0 || ev >= LASTEvent )
-		return 0;
+		return NULL;
 
     if ( ! ( fwin = find_fl_win_struct( win ) ) )
     {
@@ -188,12 +189,12 @@ fl_add_event_callback( Window           win,
 		return NULL;
     }
 
-    /* ev <= 1 means all events. Also events start from 2 */
+    /* ev < KeyPress means all events */
 
     nev = ev;
-    if ( ev < 2 )
+    if ( ev < KeyPress )
     {
-		ev = 2;
+		ev = KeyPress;
 		nev = LASTEvent - 1;
     }
 
@@ -223,7 +224,7 @@ fl_remove_event_callback( Window win,
     if ( ! ( fwin = find_fl_win_struct( win ) ) )
 		return;
 
-    if ( ev >= 2 )
+    if ( ev >= KeyPress )
     {
 		fwin->callback[ ev ] = NULL;
 		fwin->user_data[ ev ] = NULL;
@@ -261,9 +262,13 @@ static EMS ems[ ] =
     { LeaveNotify,      LeaveWindowMask },
     { KeyPress,         KeyPressMask },
     { KeyRelease,       KeyReleaseMask} ,
-    { ButtonPress,      ButtonPressMask /* | OwnerGrabButtonMask */ },
-    { ButtonRelease,    ButtonReleaseMask /* | OwnerGrabButtonMask */ },
-	{ MotionNotify,     PointerMotionMask | ButtonMotionMask | PointerMotionHintMask },
+    { ButtonPress,        ButtonPressMask
+	                 /* | OwnerGrabButtonMask */ },
+    { ButtonRelease,      ButtonReleaseMask
+                     /* | OwnerGrabButtonMask */ },
+	{ MotionNotify,       PointerMotionMask
+	                    | ButtonMotionMask
+                        | PointerMotionHintMask },
     { FocusIn,          FocusChangeMask },
     { FocusOut,         FocusChangeMask },
     { KeymapNotify,     KeymapStateMask },

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.25 2008/03/27 20:14:53 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.26 2008/03/28 11:48:02 jtt Exp $";
 #endif
 
 
@@ -2518,17 +2518,27 @@ get_next_event_or_idle( int        wait_io,
 
 	/* Skip checking for an X event after 10 events, thus giving X events
 	   a 10:1 priority over async IO, UPDATE events, automatic handlers and
-	   idle callbacks  */
+	   idle callbacks etc. */
 
     if ( ++cnt % 11 && XEventsQueued( flx->display, QueuedAfterFlush ) )
     {
 		XNextEvent( flx->display, xev );
 
 		/* Find the form the event is for - if it's for none of "our" forms
-		   it must be for some window the user generated him/herself. */
+		   it must be for e.g. a canvas window and must be put on the internal
+		   event queue */
 
 		if ( ( *form = find_event_form( xev ) ) != NULL )
 			return 1;
+
+		/* Please note: we do event compression before the user ever sees the
+		   events. This is a bit questionable at least for mouse movements
+		   since a user may want to get all events (e.g. because s/he wants
+		   to draw something exactly following the mouse movements). If this
+		   is removed then care must be taen that in the mask for MotionNotify
+		   PointerMotionHintMask is *not* set (see the fl_xevent_to_mask()
+		   function in appwin.c) since that keeps most motion events from
+		   coming through! */
 
 		fl_compress_event( xev,
 						     ExposureMask

@@ -26,6 +26,7 @@ noinst_PROGRAMS = arrowbutton \
 	buttonall \
 	butttypes \
 	canvas \
+	canvas2 \
 	chartall \
 	chartstrip \
 	choice \

@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.12 2008/03/27 20:14:53 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.13 2008/03/28 11:48:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -208,7 +208,7 @@ fl_set_canvas_attributes( FL_OBJECT *            ob,
 {
     SPEC *sp = ob->spec;
 
-    /* must not allow adding/removing events. We take care of soliciting
+    /* Must not allow adding/removing events. We take care of soliciting
        events via canvas handler registrations */
 
     if ( mask & CWEventMask )
@@ -220,7 +220,7 @@ fl_set_canvas_attributes( FL_OBJECT *            ob,
     sp->user_mask = mask;
     sp->user_xswa = *xswa;
 
-    /* check if canvas is already active */
+    /* Check if canvas is already active */
 
     if ( sp->window )
     {
@@ -433,9 +433,16 @@ fl_add_canvas_handler( FL_OBJECT *      ob,
 
     if ( ! IsValidCanvas( ob ) )
     {
-		Bark( "AddCanvasHandler", "%s not canvas class", ob ? ob->label : "" );
-		return 0;
+		Bark( "fl_add_canvas_handler", "%s not canvas class",
+			  ob ? ob->label : "" );
+		return NULL;
     }
+
+	if ( ev < KeyPress )
+	{
+		M_err( "fl_add_canvas_handler", "Invalid event %d", ev );
+		return NULL;
+	}
 
     if ( ev != 0 && ev < LASTEvent )
     {
@@ -465,8 +472,11 @@ fl_remove_canvas_handler( FL_OBJECT *      ob,
     SPEC *sp = ob->spec;
     unsigned long emask = fl_xevent_to_mask( ev );
 
-    if ( ev >= LASTEvent )
-		return;
+    if ( ev < 0 || ev >= LASTEvent )
+	{
+		M_err( "fl_remove_canvas_handler", "Invalid event %d", ev );
+		return NULL;
+	}
 
     sp->canvas_handler[ ev ] = NULL;
 
