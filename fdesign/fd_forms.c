@@ -362,7 +362,7 @@ load_forms( int    merge,
     if ( ! ( fn = fopen( fname, "r" ) ) )
     {
 		if ( ! fdopt.conv_only )
-			fl_show_alert( "No such file", fname ? fname : "", "", 0 );
+			fl_show_alert( "Can't open file for reading", fname, "", 0 );
 		else
 			M_err( "LoadForm", "can't open %s", fname );
 		return -1;
