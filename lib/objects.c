@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.18 2008/03/27 20:14:53 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.19 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -233,18 +233,18 @@ fl_make_object( int            objclass,
     else
 		ob->lsize = FL_DEFAULT_SIZE;
 
-    ob->lstyle          = FL_NORMAL_STYLE;
-    ob->shortcut        = fl_calloc( 1, sizeof *ob->shortcut );
-    ob->shortcut[ 0 ]   = 0;
-    ob->active          = 1;
-    ob->visible         = FL_VISIBLE;
-    ob->object_callback = NULL;
-    ob->spec            = NULL;
-    ob->next = ob->prev = NULL;
-    ob->form            = NULL;
-    ob->dbl_background  = FL_COL1;
+    ob->lstyle             = FL_NORMAL_STYLE;
+    ob->shortcut           = fl_calloc( 1, sizeof *ob->shortcut );
+    ob->shortcut[ 0 ]      = 0;
+    ob->active             = 1;
+    ob->visible            = FL_VISIBLE;
+    ob->object_callback    = NULL;
+    ob->spec               = NULL;
+    ob->next = ob->prev    = NULL;
+    ob->form               = NULL;
+    ob->dbl_background     = FL_COL1;
 	ob->parent = ob->child = ob->nc = NULL;
-	ob->is_child        = 0;
+	ob->is_child           = 0;
 
     return ob;
 }
@@ -261,7 +261,7 @@ fl_free_object( FL_OBJECT * obj )
 
     if ( obj == NULL )
     {
-		fl_error( "fl_free_object", "Trying to free NULL object." );
+		fl_error( "fl_free_object", "NULL object." );
 		return;
     }
 
@@ -272,16 +272,9 @@ fl_free_object( FL_OBJECT * obj )
 
     /* free object */
 
-    if ( obj->label )
-		fl_free( obj->label );
-    if ( obj->tooltip )
-		fl_free( obj->tooltip );
-    if ( obj->shortcut )
-		fl_free( obj->shortcut );
-
-    obj->label = NULL;
-    obj->tooltip = NULL;
-    obj->shortcut = NULL;
+	fl_safe_free( obj->label );
+	fl_safe_free( obj->tooltip );
+	fl_safe_free( obj->shortcut );
 
     if ( obj->flpixmap )
     {
@@ -306,14 +299,14 @@ fl_add_object( FL_FORM   * form,
 
     if ( obj == NULL )
     {
-		fl_error( "fl_add_object", "Trying to add NULL object." );
+		fl_error( "fl_add_object", "NULL object." );
 		return;
     }
 
     if ( form == NULL )
     {
 		M_err( "fl_add_object", "%s", fl_object_class_name( obj ) );
-		fl_error( "fl_add_object", "Trying to add object to NULL form." );
+		fl_error( "fl_add_object", "NULL form." );
 		return;
     }
 
@@ -397,7 +390,7 @@ fl_insert_object( FL_OBJECT * obj,
 
     if ( obj == NULL )
     {
-		fl_error( "fl_insert_object", "Trying to insert NULL object." );
+		fl_error( "fl_insert_object", "NULL object." );
 		return;
     }
 
@@ -448,7 +441,7 @@ fl_delete_object( FL_OBJECT * obj )
 
     if ( obj == NULL )
     {
-		fl_error( "fl_delete_object", "Trying to delete NULL object." );
+		fl_error( "fl_delete_object", "NULL object." );
 		return;
     }
 
@@ -543,7 +536,7 @@ fl_set_object_boxtype( FL_OBJECT * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_boxtype", "Setting boxtype of NULL object." );
+		fl_error( "fl_set_object_boxtype", "NULL object." );
 		return;
     }
 
@@ -566,7 +559,7 @@ fl_set_object_resize( FL_OBJECT    * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_resize", "Setting resize of NULL object." );
+		fl_error( "fl_set_object_resize", "NULL object." );
 		return;
     }
 
@@ -669,7 +662,7 @@ fl_set_object_color( FL_OBJECT * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_color", "Setting color of NULL object." );
+		fl_error( "fl_set_object_color", "NULL object." );
 		return;
     }
 
@@ -693,7 +686,7 @@ fl_set_object_dblbuffer( FL_OBJECT * ob,
 
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_dblbuffer", "Setting color of NULL object." );
+		fl_error( "fl_set_object_dblbuffer", "NULL object." );
 		return;
     }
 
@@ -736,14 +729,14 @@ fl_set_object_label( FL_OBJECT  * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_label", "Setting label of NULL object." );
-	return;
+		fl_error( "fl_set_object_label", "NULL object." );
+		return;
     }
 
     if ( ! label )
 		label = "";
 
-    if ( strcmp( ob->label, label ) == 0 )
+    if ( ! strcmp( ob->label, label )  )
 		return;
 
     if ( LInside( ob->align ) )
@@ -778,7 +771,7 @@ fl_set_object_lcol( FL_OBJECT * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_lcol", "Setting label color of NULL object." );
+		fl_error( "fl_set_object_lcol", "NULL object." );
 		return;
     }
 
@@ -816,7 +809,7 @@ fl_set_object_lsize( FL_OBJECT * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_lsize", "Setting label size of NULL object." );
+		fl_error( "fl_set_object_lsize", "NULL object." );
 		return;
     }
 
@@ -861,8 +854,7 @@ fl_set_object_lstyle( FL_OBJECT * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_lstyle",
-				  "Setting label style of NULL object." );
+		fl_error( "fl_set_object_lstyle", "NULL object." );
 		return;
     }
 
@@ -907,8 +899,7 @@ fl_set_object_lalign( FL_OBJECT * ob,
 
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_align",
-				  "Setting label alignment of NULL object." );
+		fl_error( "fl_set_object_align", "NULL object." );
 		return;
     }
 
@@ -946,8 +937,7 @@ fl_set_object_dragndrop( FL_OBJECT * ob,
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_set_object_dnd",
-				  "Setting drag'n drop of NULL object." );
+		fl_error( "fl_set_object_dragndrop", "NULL object." );
 		return;
     }
     ob->dnd = yes;
@@ -965,7 +955,7 @@ fl_activate_object( FL_OBJECT * ob )
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_activate_object", "Trying to activate NULL object." );
+		fl_error( "fl_activate_object", "NULL object." );
 		return;
     }
 
@@ -1002,7 +992,7 @@ fl_deactivate_object( FL_OBJECT * ob )
 {
     if ( ob == NULL )
     {
-		fl_error( "fl_deactive_object", "Trying to deactive NULL object." );
+		fl_error( "fl_deactive_object", "NULL object." );
 		return;
     }
 
@@ -1035,7 +1025,7 @@ fl_deactivate_object( FL_OBJECT * ob )
 
 
 /***************************************
- * Always makes an object visible and sets the visible flag to 1
+ * Makes an object visible and sets the visible flag to 1
  ***************************************/
 
 void
@@ -1045,7 +1035,7 @@ fl_show_object( FL_OBJECT * ob )
 
     if ( ob == NULL )
     {
-		fl_error( "fl_show_object", "Trying to show NULL object." );
+		fl_error( "fl_show_object", "NULL object." );
 		return;
     }
 
@@ -1087,7 +1077,7 @@ fl_hide_object( FL_OBJECT * ob )
 
     if ( ob == NULL )
     {
-		fl_error( "fl_hide_object", "Trying to hide NULL object." );
+		fl_error( "fl_hide_object", "NULL object." );
 		return;
     }
 
@@ -1186,7 +1176,7 @@ fl_hide_object( FL_OBJECT * ob )
 
 		xrect.x -= extra;
 		xrect.y -= extra;
-		xrect.width += 2 * extra + 1;
+		xrect.width  += 2 * extra + 1;
 		xrect.height += 2 * extra + 1;
     }
 
@@ -1351,13 +1341,14 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 
     if ( obj == NULL )
     {
-		fl_error( "fl_set_object_shortcut", "Object is NULL." );
+		fl_error( "fl_set_object_shortcut", "NULL object." );
 		return;
     }
 
     if ( ! obj->active )
     {
-		M_err( "fl_set_object_shortcut", "setting shortcut for inactive obj" );
+		M_err( "fl_set_object_shortcut",
+			   "Setting shortcut for inactive object." );
 		return;
     }
 
@@ -1378,7 +1369,7 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 		 || obj->label[ 0 ] == '@' )
 		return;
 
-    /* find out where to underline */
+    /* Find out where to underline */
 
     if (    ( n = fl_get_underline_pos( obj->label, sstr ) ) > 0
 		 && ! strchr( obj->label, *fl_ul_magic_char ) )
@@ -1424,7 +1415,7 @@ fl_set_focus_object( FL_FORM   * form,
 {
     if ( form == NULL )
     {
-		fl_error( "fl_set_focus_object", "Setting focus in NULL form." );
+		fl_error( "fl_set_focus_object", "NULL form." );
 		return;
     }
 
@@ -1442,9 +1433,6 @@ fl_set_focus_object( FL_FORM   * form,
 FL_OBJECT *
 fl_get_focus_object( FL_FORM * form )
 {
-#if 0
-    return ( form && form->focusobj ) ? form->focusobj : NULL;
-#else
     if ( form && form->focusobj )
     {
 		if ( form->focusobj->type == FL_MULTILINE_INPUT )
@@ -1454,7 +1442,6 @@ fl_get_focus_object( FL_FORM * form )
     }
 
     return NULL;
-#endif
 }
 
 
@@ -1617,7 +1604,7 @@ redraw_marked( FL_FORM * form,
 
 			fl_create_object_pixmap( ob );
 
-			/* will not allow free object draw outside of its box. Check
+			/* Will not allow free object draw outside of its box. Check
 			   perm_clip so we don't have draw regions we don't have to
 			   (Expose etc.) */
 
@@ -1652,7 +1639,7 @@ fl_redraw_object( FL_OBJECT * obj )
 {
     if ( obj == NULL )
     {
-		fl_error( "fl_redraw_object", "Trying to draw NULL object." );
+		fl_error( "fl_redraw_object", "NULL object." );
 		return;
     }
 
@@ -1737,7 +1724,7 @@ fl_freeze_form( FL_FORM * form )
 {
     if ( form == NULL )
     {
-		fl_error( "fl_freeze_form", "Freezing NULL form." );
+		fl_error( "fl_freeze_form", "NULL form." );
 		return;
     }
 
@@ -1754,7 +1741,7 @@ fl_unfreeze_form( FL_FORM * form )
 {
     if ( form == NULL )
     {
-		fl_error( "fl_unfreeze_form", "Unfreezing NULL form." );
+		fl_error( "fl_unfreeze_form", "NULL form." );
 		return;
     }
 
@@ -2087,8 +2074,7 @@ fl_set_object_callback( FL_OBJECT      * obj,
 
     if ( obj == NULL )
     {
-		fl_error( "fl_set_object_callback",
-				  "Setting callback of NULL object." );
+		fl_error( "fl_set_object_callback", "NULL object." );
 		return NULL;
     }
 
@@ -2115,7 +2101,7 @@ fl_set_object_bw( FL_OBJECT * ob,
 
     if ( ! ob )
     {
-		fl_error( "fl_set_object_bw", "Trying to set NULL object." );
+		fl_error( "fl_set_object_bw", "NULL object." );
 		return;
     }
 
@@ -2173,8 +2159,8 @@ fl_get_real_object_window( FL_OBJECT * ob )
 
     if ( objp && objp->win ) 
 		win = objp->win;
-    else if (    ob->objclass == FL_CANVAS
-			  && ob->objclass == FL_GLCANVAS
+    else if (    (    ob->objclass == FL_CANVAS
+			       || ob->objclass == FL_GLCANVAS )
 			  && fl_get_canvas_id( ob ) )
 		win = fl_get_canvas_id( ob );
     else if ( formp && formp->win )
@@ -2204,7 +2190,7 @@ fl_union_rect( const FL_RECT * r1,
     xf = FL_min( r1->x + r1->width,  r2->x + r2->width )  - 1;
     yf = FL_min( r1->y + r1->height, r2->y + r2->height ) - 1;
 
-    p->width = xf - xi + 1;
+    p->width  = xf - xi + 1;
     p->height = yf - yi + 1;
 
 	if ( p->width <= 0 || p->height <= 0 )
@@ -2235,7 +2221,7 @@ fl_bounding_rect( const FL_RECT * r1,
     xf = FL_max( r1->x + r1->width, r2->x + r2->width ) + 1;
     yf = FL_max( r1->y + r1->height, r2->y + r2->height ) + 1;
 
-    rect.width = xf - xi + 1;
+    rect.width  = xf - xi + 1;
     rect.height = yf - yi + 1;
 
     return &rect;
@@ -2317,6 +2303,7 @@ fl_set_object_prehandler( FL_OBJECT *  ob,
 						  FL_HANDLEPTR phandler )
 {
     FL_HANDLEPTR oldh = ob->prehandle;
+
     ob->prehandle = phandler;
     return oldh;
 }
@@ -2674,7 +2661,7 @@ fl_get_object_bbox( FL_OBJECT * obj,
 						 sw, sh + d, 3, 3, &xx, &yy );
 		lrect.x = xx - 1;
 		lrect.y = yy - 1;
-		lrect.width = sw + 2;
+		lrect.width  = sw + 2;
 		lrect.height = sh + d + 2 + a;
     }
 
@@ -2785,7 +2772,7 @@ fl_get_canvas_id( FL_OBJECT * ob )
     }
 #endif
 
-    return sp->window ? sp->window : None;
+    return sp->window;
 }
 
 
@@ -2812,13 +2799,15 @@ fl_for_all_objects( FL_FORM * form,
 					void    * v )
 {
     FL_OBJECT *ob;
-    int ret;
 
     if ( ! form )
+    {
+		fl_error( "fl_for_all_objects", "NULL form." );
 		return;
+    }
 
-    for ( ret = 0, ob = form->first; ob && ! ret; ob = ob->next )
-		ret = cb( ob, v );
+    for ( ob = form->first; ob && ! cb( ob, v ); ob = ob->next )
+		/* empty */ ;
 }
 
 
@@ -2828,7 +2817,13 @@ fl_for_all_objects( FL_FORM * form,
 const char *
 fl_get_object_label( FL_OBJECT * ob )
 {
-    return ob ? ob->label : NULL;
+    if ( ! ob )
+    {
+		fl_error( "fl_get_object_label", "NULL object." );
+		return NULL;
+    }
+
+    return ob->label;
 }
 
 
@@ -2839,10 +2834,12 @@ void
 fl_set_object_helper( FL_OBJECT  * ob,
 					  const char * tip )
 {
-    char *s = ob->tooltip;
+    if ( ! ob )
+    {
+		fl_error( "fl_set_object_helper", "NULL object." );
+		return;
+    }
 
+	fl_safe_free( ob->tooltip );
     ob->tooltip = tip ? fl_strdup( tip ) : NULL;
-
-    if ( s )
-      free( s );
 }

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.26 2008/03/28 11:48:02 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.27 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 
@@ -77,7 +77,11 @@ static int reopened_group;
 void ( * fl_handle_signal )( void );
 int ( * fl_handle_clipboard )( void * );
 
-#define SHORT_PAUSE   10	      /* check_form wait (in ms) */
+
+/* Waiting time (in ms) for fl_check_forms() and fl_check_only_forms().
+   Originally this value was 10 ms. */
+
+#define SHORT_PAUSE   1
 
 
 /* The following variables store the last recorded mouse position
@@ -112,7 +116,7 @@ fl_set_no_connection( int yes )
  ***************************************/
 
 int
-fl_get_visible_form_index( FL_FORM * form )
+fl_get_visible_forms_index( FL_FORM * form )
 {
 	int i;
 
@@ -128,7 +132,7 @@ fl_get_visible_form_index( FL_FORM * form )
  ***************************************/
 
 int
-fl_get_hidden_form_index( FL_FORM * form )
+fl_get_hidden_forms_index( FL_FORM * form )
 {
 	int i;
 
@@ -159,7 +163,7 @@ fl_move_form_to_visible_list( FL_FORM *form )
 {
 	int i;
 
-	if ( ( i = fl_get_hidden_form_index( form ) ) < 0 )
+	if ( ( i = fl_get_hidden_forms_index( form ) ) < 0 )
 	{
 		M_err( "fl_move_form_to_visble_list", "Form not on hidden list" );
 		return -1;
@@ -187,7 +191,7 @@ fl_move_form_to_hidden_list( FL_FORM *form )
 {
 	int i;
 
-	if ( ( i = fl_get_visible_form_index( form ) ) < 0 )
+	if ( ( i = fl_get_visible_forms_index( form ) ) < 0 )
 	{
 		M_err( "fl_move_form_to_hidden_list", "Form not onvisible list" );
 		return -1;
@@ -221,7 +225,7 @@ fl_remove_form_from_hidden_list( FL_FORM *form )
 {
 	int i;
 
-	if ( ( i = fl_get_hidden_form_index( form ) ) < 0 )
+	if ( ( i = fl_get_hidden_forms_index( form ) ) < 0 )
 	{
 		M_err( "fl_remove_form_from_hidden_list", "Form not on hidden list" );
 		return -1;
@@ -273,42 +277,6 @@ fl_bgn_form( int      type,
 
 
 /***************************************
- * Called when a new form has been created to check that for each
- * group that has radio buttons one is set - if not the first one
- * in the group gets set.
- ***************************************/
-
-static FL_OBJECT *
-check_form_radio_button( FL_OBJECT *obj )
-{
-	FL_OBJECT *o = obj,
-	          *frb = NULL;
-	int gid = obj->group_id;
-
-	for ( ; o && ( gid == 0 || o->objclass != FL_END_GROUP ); o = o->next )
-		if ( o->objclass == FL_BEGIN_GROUP )
-			o = check_form_radio_button( o->next );
-		else if ( o->group_id == gid && o->radio )
-		{
-			if ( fl_get_button( o ) )
-			{
-				while ( o->next && ( gid == 0 || o->objclass != FL_END_GROUP ) )
-					o = o->next;
-				return o;
-			}
-
-			if ( ! frb )
-				frb = o;
-		}
-
-	if ( frb )
-		fl_set_button( frb, 1 );
-
-	return o;
-}
-
-
-/***************************************
  * Ends a form definition
  ***************************************/
 
@@ -323,8 +291,6 @@ fl_end_form( void )
 		fl_error( "fl_end_form", "You forgot to call fl_end_group." );
 		fl_end_group( );
     }
-
-	check_form_radio_button( fl_current_form->first );
 
     fl_current_form = NULL;
 }
@@ -635,7 +601,7 @@ fl_scale_form( FL_FORM * form,
 {
     if ( form == NULL )
     {
-		fl_error( "fl_scale_form", "Scaling NULL form." );
+		fl_error( "fl_scale_form", "NULL form." );
 		return;
     }
 
@@ -662,7 +628,7 @@ fl_set_form_minsize( FL_FORM * form,
 {
     if ( ! form )
     {
-		fl_error( "fl_set_form_minsize", "Null Form" );
+		fl_error( "fl_set_form_minsize", "Null form" );
 		return;
     }
 
@@ -895,7 +861,7 @@ fl_prepare_form_window( FL_FORM    * form,
 
     if ( form == NULL )
     {
-		fl_error( "fl_show_form", "Trying to display NULL form." );
+		fl_error( "fl_show_form", "NULL form." );
 		return -1;
     }
 
@@ -1233,7 +1199,7 @@ fl_hide_form( FL_FORM * form )
 		return;
     }
 
-    if ( fl_get_visible_form_index( form ) < 0 )
+    if ( fl_get_visible_forms_index( form ) < 0 )
     {
 		M_err( "fl_hide_form", "Hiding unknown form" );
 		return;
@@ -1332,10 +1298,7 @@ fl_hide_form( FL_FORM * form )
 void
 fl_free_form( FL_FORM * form )
 {
-    FL_OBJECT *current,
-		      *next;
-
-    /* check whether ok to free */
+    /* Check whether ok to free */
 
     if ( ! form )
     {
@@ -1343,7 +1306,7 @@ fl_free_form( FL_FORM * form )
 		return;
     }
 
-    if ( fl_get_hidden_form_index( form ) < 0 )
+    if ( fl_get_hidden_forms_index( form ) < 0 )
     {
 		M_err( "fl_free_form", "Freeing unknown form" );
 		return;
@@ -1355,20 +1318,18 @@ fl_free_form( FL_FORM * form )
 		fl_hide_form( form );
     }
 
-    /* Free all objects */
+    /* Free all objects of the form */
 
-    for ( current = next = form->first; next; current = next )
-    {
-		if ( current->child )
+	while ( form->first )
+	{
+		if ( form->first->child )
 		{
-			fl_free_object( current->child );
-			current->child = NULL;
+			fl_free_object( form->first->child );
+			form->first->child = NULL;
 		}
-		next = current->next;
-		fl_free_object( current );
-    }
 
-    form->first = NULL;
+		fl_free_object( form->first );
+    }
 
     if ( form->flpixmap )
     {
@@ -1574,7 +1535,7 @@ fl_do_radio_push( FL_OBJECT * obj,
 
     if ( obj->group_id == 0 )
 	{
-		for ( o = o->form->first; o; o = o->next )
+		for ( o = obj->form->first; o; o = o->next )
 			if (    o != obj
 				 && o->radio
 				 && o->group_id == 0
@@ -1879,6 +1840,7 @@ fl_handle_form( FL_FORM * form,
 			break;
 
 		case FL_PUSH:		/* Mouse was pushed inside the form */
+
 			/* Change focus: If an input object has the focus make it lose it
 			   (and thus report changes) and then set the focus to either the
 			   object that got pushed (if it's an input object) or back to the
@@ -2053,7 +2015,7 @@ do_keyboard( XEvent * xev,
 
     /* Before doing anything save the current modifier key for the handlers */
 
-    if ( win && ( ! keyform || fl_get_visible_form_index( keyform ) < 0 ) )
+    if ( win && ( ! keyform || fl_get_visible_forms_index( keyform ) < 0 ) )
 		keyform = fl_win_to_form( win );
 
     /* switch keyboard input only if different top-level form */
@@ -2272,7 +2234,7 @@ button_is_really_down( void )
  ***************************************/
 
 void
-fl_treat_interaction_events( int wait )
+fl_treat_interaction_events( int wait_io )
 {
     XEvent xev;
 
@@ -2280,7 +2242,7 @@ fl_treat_interaction_events( int wait )
        XNextEvent in do_interaction will flush the output buffer */
 
     do
-		do_interaction_step( wait );
+		do_interaction_step( wait_io );
     while ( form_event_queued( &xev, QueuedAfterFlush ) );
 }
 
@@ -2431,7 +2393,7 @@ fl_handle_idling( XEvent * xev,
 {
 	int i;
 
-	/* Sleep a bit, keeping a lookout for async IO events */
+	/* Sleep a bit while keeping lookout for async IO events */
 
 	fl_watch_io( fl_context->io_rec, msec );
 
@@ -2813,7 +2775,26 @@ fl_check_forms( void )
 
 
 /***************************************
- * Checks all forms. Waits if nothing happens.
+ * Same as fl_check_forms() but never returns FL_EVENT.
+ ***************************************/
+
+FL_OBJECT *
+fl_check_only_forms( void )
+{
+    FL_OBJECT *obj;
+
+    if ( ( obj = fl_object_qread( ) ) == NULL )
+    {
+		fl_treat_interaction_events( 0 );
+		obj = fl_object_qread( );
+    }
+
+    return obj;
+}
+
+
+/***************************************
+ * Checks all forms and keep checking if nothing happens.
  ***************************************/
 
 FL_OBJECT *
@@ -2832,27 +2813,7 @@ fl_do_forms( void )
 
 
 /***************************************
- * Same as fl_check_forms but never returns FL_EVENT.
- ***************************************/
-
-FL_OBJECT *
-fl_check_only_forms( void )
-{
-    FL_OBJECT *obj;
-
-
-    if ( ( obj = fl_object_qread( ) ) == NULL )
-    {
-		fl_treat_interaction_events( 0 );
-		obj = fl_object_qread( );
-    }
-
-    return obj;
-}
-
-
-/***************************************
- * Same as fl_do_forms but never returns FL_EVENT.
+ * Same as fl_do_forms() but never returns FL_EVENT.
  ***************************************/
 
 FL_OBJECT *
@@ -2884,45 +2845,6 @@ form_event_queued( XEvent * xev,
     }
 
     return 0;
-}
-
-
-/***************************************
- * remove RCS keywords
- ***************************************/
-
-const char *
-fl_rm_rcs_kw( const char * s )
-{
-    static unsigned char buf[ 5 ][ 255 ];
-    static int nbuf;
-    unsigned char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
-    int left = 0,
-		lastc = -1;
-
-
-    while ( *s && ( q - buf[ nbuf ] ) < ( int ) sizeof buf[ nbuf ] - 2 )
-    {
-		switch ( *s )
-		{
-			case '$':
-				if ( ( left = ! left ) )
-					while ( *s && *s != ':' )
-						s++;
-				break;
-
-			default:
-				/* copy the char and remove extra space */
-				if ( ! ( lastc == ' ' && *s == ' ' ) )
-					*q++ = lastc = *s;
-				break;
-		}
-		s++;
-    }
-
-    *q = '\0';
-
-    return ( const char * ) buf[ nbuf ];
 }
 
 
@@ -3114,16 +3036,34 @@ fl_finish( void )
 		fl_remove_all_signal_callbacks( );
 		fl_remove_all_timeouts( );
 
+		/* Get rid of all forms */
+
 		while ( formnumb > 0 )
 			fl_hide_form( *forms );
 		while ( hidden_formnumb > 0 )
 			fl_free_form( *forms );
 
+		/* Delete the object and event queue */
+
 		fl_obj_queue_delete( );
 		fl_event_queue_delete( );
 
+		/* Free memory allocated in xtext.c */
+
+		fl_free_xtext_workmem( );
+
+		/* Release memory used for symbols */
+
+		fl_release_symbols( );
+
+		/* Release memory used for the copy of the command line arguments */
+
+		fl_free_cmdline_args( );
+
+		/* Close the display */
+
 		XCloseDisplay( flx->display );
-		flx->display = fl_display = 0;
+		flx->display = fl_display = None;
     }
 }
 
@@ -3139,7 +3079,7 @@ fl_set_form_callback( FL_FORM            * form,
 {
     if ( form == NULL )
     {
-		fl_error( "fl_set_form_callback", "Setting callback of NULL form." );
+		fl_error( "fl_set_form_callback", "NULL form." );
 		return;
     }
 
@@ -3344,32 +3284,33 @@ fl_recount_auto_object( void )
 void
 fl_addto_group( FL_OBJECT * group )
 {
-    if ( group == 0 )
+    if ( group == NULL )
     {
-		fl_error( "addto_group", "trying add to null group" );
+		fl_error( "fl_addto_group", "NULL group." );
 		return;
     }
 
     if ( group->objclass != FL_BEGIN_GROUP )
     {
-		fl_error( "addto_group", "parameter is not a group object" );
+		fl_error( "fl_addto_group", "Parameter is not a group object." );
 		return;
     }
 
     if ( fl_current_form && fl_current_form != group->form )
     {
-		fl_error( "addto_group", "can't switch to a group on different from" );
+		fl_error( "fl_addto_group",
+				  "Can't switch to a group on different form." );
 		return;
     }
 
     if ( fl_current_group && fl_current_group != group )
     {
-		fl_error( "addto_group", "you forgot to call fl_end_group" );
+		fl_error( "fl_addto_group", "You forgot to call fl_end_group" );
 		fl_end_group( );
     }
 
     reopened_group = 1;
-    reopened_group += fl_current_form == NULL ? 2 : 0;
+    reopened_group += fl_current_form ? 0 : 2;
     fl_current_form = group->form;
     fl_current_group = group;
 }

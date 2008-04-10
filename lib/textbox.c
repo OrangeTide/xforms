@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.14 2008/03/20 12:41:49 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.15 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -51,7 +51,6 @@ char *fl_id_brw = "$Id: textbox.c,v 1.14 2008/03/20 12:41:49 jtt Exp $";
 
 
 #define LMARGIN   3		/* left margin */
-#define NL        10
 
 
 /*
@@ -93,13 +92,13 @@ free_spec( SPEC * sp )
     {
 		fl_free( sp->text[ i ]->txt );
 		fl_free( sp->text[ i ] );
-		sp->text[ i ] = 0;
+		sp->text[ i ] = NULL;
     }
 
     fl_free( sp->text );
     sp->text = NULL;
 
-    /* it is possible that a textbox that has never been shown is being
+    /* It's possible that a textbox that has never been shown is being
        freed, thus the check. */
 
     if ( sp->primaryGC )
@@ -177,7 +176,8 @@ static void
 extend_textbox( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
-    int i, newline;
+    int i,
+		newline;
 
     if ( sp->lines < sp->avail_lines - 1 )
 		return;
@@ -188,7 +188,7 @@ extend_textbox( FL_OBJECT * ob )
 		sp->text = fl_malloc( sp->avail_lines * sizeof *sp->text );
 
 		for ( i = 0; i < sp->avail_lines; i++ )
-			sp->text[ i ] = 0;
+			sp->text[ i ] = NULL;
     }
     else
     {
@@ -220,7 +220,7 @@ insert_line( FL_OBJECT  * ob,
 
     /* Create new line if required */
 
-    if ( sp->text[ sp->lines ] == 0 )
+    if ( sp->text[ sp->lines ] == NULL )
 	sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
 
     /* Shift lines */
@@ -287,7 +287,7 @@ insert_lines( FL_OBJECT  * ob,
 
     for ( i = lastc = 0; *text; text++ )
     {
-		if ( *text == NL )
+		if ( *text == '\n' )
 		{
 			newtext[ i ] = 0;
 			insert_line( ob, linenumb++, newtext );
@@ -1567,7 +1567,7 @@ fl_addto_textbox_chars( FL_OBJECT *  ob,
 
     /* Create new line if required */
 
-    if ( sp->text[ sp->lines ] == 0 )
+    if ( sp->text[ sp->lines ] == NULL )
 		sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
 
     cur_line = sp->text[ sp->lines ];
@@ -1701,7 +1701,7 @@ fl_load_textbox( FL_OBJECT *  ob,
     do
     {
 		c = getc( fl );
-		if ( c == NL || c == EOF )
+		if ( c == '\n' || c == EOF )
 		{
 			newtext[ i ] = 0;
 			if ( c != EOF || i != 0 )

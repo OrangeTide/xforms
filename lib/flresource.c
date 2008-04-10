@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.19 2008/03/25 12:41:28 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.20 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -771,7 +771,7 @@ dup_argv( char ** argv,
 		return;
 
     if ( ! fl_argv )
-		fl_argv = fl_malloc( n * sizeof *fl_argv );
+		fl_argv = fl_malloc( ( n + 1 ) * sizeof *fl_argv );
 
     for ( i = 0; i < n; i++ )
 		fl_argv[ i ] = fl_strdup( argv[ i ] );
@@ -788,6 +788,24 @@ fl_get_cmdline_args( int *n )
 {
     *n = fl_argc;
     return fl_argv;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_free_cmdline_args( void )
+{
+	size_t i;
+
+	if ( ! fl_argv )
+		return;
+
+	for ( i = 0; fl_argv[ i ]; i++ )
+		fl_free( fl_argv[ i ] );
+
+	fl_safe_free( fl_argv );
 }
 
 

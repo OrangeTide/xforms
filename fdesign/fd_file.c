@@ -265,33 +265,36 @@ fd_skip_comment( FILE * fp   FL_UNUSED_ARG )
 /* Read lines consisting of keyword: value and split. Return -1 if EOF
    or error */
 int
-read_key_val(FILE * fp, char *key, char *val)
+read_key_val( FILE * fp,
+			  char * key,
+			  char * val )
 {
-    char buf[1024], *p;
+    char buf[ 1024 ], *p;
 
-    fd_skip_comment(fp);
+    fd_skip_comment( fp );
 
-    if (!fgets(buf, 1024, fp) || ferror(fp))
-	return EOF;
+    if ( ! fgets( buf, 1024, fp ) || ferror( fp ) )
+		return EOF;
 
-    buf[1023] = 0;
-    val[0] = key[0] = 0;
+    buf[ 1023 ] = '\0';
+    val[ 0 ] = key[ 0 ] = '\0';
 
     /* nuke the new line */
-    if ((p = strchr(buf, '\n')))
-	*p = '\0';
 
-    if (!(p = strchr(buf, ':')))
+    if ( ( p = strchr( buf, '\n' ) ) )
+		*p = '\0';
+
+    if ( ! ( p = strchr (buf, ':' ) ) )
     {
-	strcpy(key, "?");
-	return EOF;
+		strcpy( key, "?" );
+		return EOF;
     }
 
     *p = '\0';
-    strcpy(key, buf);
+    strcpy( key, buf );
 
-    if (*(p + 1))
-	strcpy(val, p + 2);
+    if ( * ( p + 1 ) )
+		strcpy( val, p + 2 );
     return 0;
 }
 

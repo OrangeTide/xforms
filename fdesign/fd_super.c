@@ -169,7 +169,13 @@ spec_to_superspec( FL_OBJECT * ob )
 		FL_BUTTON_SPEC *sp = ob->spec;
 		IconInfo *info;
 
+		spp->mbuttons = 0;
+		for ( i = 0; i < 5; i++ )
+			if ( sp->react_to[ i ] )
+				spp->mbuttons |= 1 << i; 
+
 		spp->int_val = sp->val;
+
 		if ( ! spp->cspecv )
 		{
 			info = spp->cspecv = fl_calloc( 1, sizeof *info );
@@ -365,6 +371,11 @@ superspec_to_spec( FL_OBJECT * ob )
     {
 		FL_BUTTON_SPEC *sp = ob->spec;
 		IconInfo *info = spp->cspecv;
+
+		for ( i = 0; i < 5; i++ )
+			sp->react_to[ i ] = ( spp->mbuttons & ( 1 << i ) ) != 0;
+		if ( ISBUTTON( ob->objclass ) )
+			fl_set_button_mouse_buttons( ob, spp->mbuttons );
 
 		sp->val = spp->int_val;
 		if ( ISBUTTON( ob->objclass ) )

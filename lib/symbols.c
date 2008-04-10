@@ -39,7 +39,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_syml = "$Id: symbols.c,v 1.6 2008/01/28 23:23:13 jtt Exp $";
+char *fl_id_syml = "$Id: symbols.c,v 1.7 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 
@@ -65,14 +65,13 @@ char *fl_id_syml = "$Id: symbols.c,v 1.6 2008/01/28 23:23:13 jtt Exp $";
 
 typedef struct
 {
-    FL_DRAWPTR drawit;		/* how to draw it              */
-    char       name[ 16 ];	/* symbol name                 */
-    float      margin;
+    FL_DRAWPTR   drawit;		/* how to draw it              */
+    char       * name;			/* symbol name                 */
+	int          scalable;  	/* currently unused            */
 } SYMBOL;
 
-#define MAXSBL        ( 16 + 26 )	/* 16 external, 23 internal */
-
-static SYMBOL *symbols;		/* The symbols */
+static SYMBOL * symbols = NULL;		/* The symbols */
+static size_t nsymbols = 0;
 
 #define swapit( type, a, b )  \
 	do { type a_;             \
@@ -81,10 +80,10 @@ static SYMBOL *symbols;		/* The symbols */
 		 b = a_;              \
 	} while ( 0 )
 
-#define AddPoint( p, xp, yp )  \
-	do { p->x = ( xp );        \
-		p->y = ( yp );         \
-		p++;                   \
+#define AddPoint( p, xp, yp )   \
+	do { p->x = ( xp );         \
+		 p->y = ( yp );         \
+		 p++;                   \
 	} while ( 0 )
 
 #define ShrinkBox( x, y, w, h, d )  \
@@ -101,42 +100,17 @@ static SYMBOL *symbols;		/* The symbols */
  ***************************************/
 
 static SYMBOL *
-find( const char *name )
+find_symbol( const char *name )
 {
-    SYMBOL *s = symbols,
-		   *se = s + MAXSBL;
-    for ( ; s < se && strcmp( s->name, name ); s++ )
-		/* empty */ ;
-    return ( s == se || ! s->drawit ) ? 0 : s;
+    size_t i;
+
+	for ( i = 0; i < nsymbols; i++ )
+		if ( ! strcmp( symbols[ i ].name, name ) )
+			break;
+
+    return i < nsymbols ? symbols + i : NULL;
 }
 
-
-/***************************************
- * find an un-used slot or the old one if a symbol by the same name
- * already exists. Since no deletion is allowd, we can safely
- * return when the first empty entry is found
- ***************************************/
-
-static SYMBOL *
-find_empty( const char * name )
-{
-    SYMBOL *s = symbols,
-		   *se = s + MAXSBL;
-
-    if ( ! symbols )
-    {
-		s = symbols = fl_calloc( MAXSBL, sizeof *symbols );
-		se = s + MAXSBL;
-    }
-
-    for ( ; s < se && s->drawit && strcmp( s->name, name ); s++ )
-		/* empty */ ;
-
-    return s == se ? 0 : s;
-}
-
-
-/* initialises all the symbol entries and adds the default symbols */
 
 /******************* PUBLIC ROUTINES ******************{**/
 
@@ -150,17 +124,18 @@ fl_add_symbol( const char * name,
 {
     SYMBOL *s;
 
-    if ( ! name || ! drawit )
+    if ( ! name || ! *name || ! drawit )
 		return -1;
 
-    if ( ! ( s = find_empty( name ) ) )
-    {
-		fl_error( "fl_add_symbol", "Cannot add another symbol." );
-		return 0;
-    }
+	if ( ! ( s = find_symbol( name ) ) )
+	{
+		symbols = fl_realloc( symbols, ++nsymbols * sizeof *symbols );
+		s = symbols + nsymbols - 1;
+		s->name = fl_strdup( name );
+	}
 
-    strcpy( s->name, name );
-    s->drawit = drawit;
+    s->drawit   = drawit;
+	s->scalable = scalable;
     return 1;
 }
 
@@ -232,7 +207,7 @@ fl_draw_symbol( const char * label,
 
     /* need to special-casing labels like "@4" etc. */
 
-    if ( ! ( s = label[ shift ] ? find( label + shift ) : symbols ) )
+    if ( ! ( s = label[ shift ] ? find_symbol( label + shift ) : symbols ) )
     {
 		char *newlabel = fl_strdup( label );
 
@@ -254,7 +229,6 @@ fl_draw_symbol( const char * label,
     if ( delta )
 		ShrinkBox( x, y, w, h, delta );
 
-#if 1
     /* also if rotated 90 degrees, switch w, h and the bounding box. TODO  */
 
     if ( rotated == 90 || rotated == 270 )
@@ -263,7 +237,6 @@ fl_draw_symbol( const char * label,
 		y += ( h - w ) / 2;
 		swapit( FL_Coord, w, h );
     }
-#endif
 
     s->drawit( x + dx, y + dy, w, h, rotated, col );
     return 1;
@@ -380,20 +353,17 @@ draw_returnarrow( FL_Coord x,
     FL_POINT xpoint[ 10 ],
 		     *xp;
 
-#define px8  ( 0.8  * wm )
-#define py6  ( 0.6  * hm )
-
     xp = xpoint;
-    AddPoint( xp, xc - px8, yc );
-    AddPoint( xp, xc - 0.1 * wm, yc - py6 );
-    AddPoint( xp, xc - 0.1 * wm, yc + py6 );
+    AddPoint( xp, xc - 0.8 * wm, yc );
+    AddPoint( xp, xc - 0.1 * wm, yc - 0.6 * hm );
+    AddPoint( xp, xc - 0.1 * wm, yc + 0.6 * hm );
 
     /* trailing line */
 
     xp = xpoint + 4;
     AddPoint( xp, xc - 0.1 * wm, yc );
-    AddPoint( xp, xc + px8, yc );
-    AddPoint( xp, xc + px8, yc - 0.7 * hm );
+    AddPoint( xp, xc + 0.8 * wm, yc );
+    AddPoint( xp, xc + 0.8 * wm, yc - 0.7 * hm );
 
     fl_polyf( xpoint, 3, col );
     fl_lines( xpoint + 4, 3, col );
@@ -1265,44 +1235,55 @@ draw_bararrowhead0( FL_Coord x,
 void
 fl_init_symbols( void )
 {
-    static int initialized;
-
-    if ( initialized )
+	if ( symbols )
 		return;
 
-	symbols = fl_calloc( MAXSBL, sizeof *symbols );
-	initialized = 1;
-
-	fl_add_symbol( "", draw_arrow1, 1 );
-	fl_add_symbol( "->", draw_arrow1, 1 );
-	fl_add_symbol( ">", draw_arrow2, 1 );
-	fl_add_symbol( ">>", draw_arrow3, 1 );
-	fl_add_symbol( "<-", draw_arrow01, 1 );
-	fl_add_symbol( "<", draw_arrow02, 1 );
-	fl_add_symbol( "<<", draw_arrow03, 1 );
-	fl_add_symbol( "returnarrow", draw_returnarrow, 1 );
-	fl_add_symbol( "circle", draw_circle, 1 );
-	fl_add_symbol( "square", draw_square, 1 );
-	fl_add_symbol( "plus", draw_plus, 1 );
-	fl_add_symbol( "menu", draw_menu, 1 );
-	fl_add_symbol( "line", draw_line, 1 );
-	fl_add_symbol( "=", draw_ripplelines, 1 );
-	fl_add_symbol( "DnLine", draw_dnline, 1 );
-	fl_add_symbol( "UpLine", draw_upline, 1 );
-	fl_add_symbol( "UpArrow", draw_uparrow, 1 );
-	fl_add_symbol( "DnArrow", draw_dnarrow, 1 );
-	fl_add_symbol( "-->", draw_arrow, 1 );
-	fl_add_symbol( "<->", draw_doublearrow, 1 );
-	fl_add_symbol( "->|", draw_arrowbar, 1 );
-	fl_add_symbol( "|<-", draw_arrowbar0, 1 );
-	fl_add_symbol( ">|", draw_arrowheadbar, 1 );
-	fl_add_symbol( "|<", draw_arrowheadbar0, 1 );
-	fl_add_symbol( "|>", draw_bararrowhead, 1 );
-	fl_add_symbol( "<|", draw_bararrowhead0, 1 );
+	fl_add_symbol( "",            draw_arrow1,        1 );
+	fl_add_symbol( "->",          draw_arrow1,        1 );
+	fl_add_symbol( ">",           draw_arrow2,        1 );
+	fl_add_symbol( ">>",          draw_arrow3,        1 );
+	fl_add_symbol( "<-",          draw_arrow01,       1 );
+	fl_add_symbol( "<",           draw_arrow02,       1 );
+	fl_add_symbol( "<<",          draw_arrow03,       1 );
+	fl_add_symbol( "returnarrow", draw_returnarrow,   1 );
+	fl_add_symbol( "circle",      draw_circle,        1 );
+	fl_add_symbol( "square",      draw_square,        1 );
+	fl_add_symbol( "plus",        draw_plus,          1 );
+	fl_add_symbol( "menu",        draw_menu,          1 );
+	fl_add_symbol( "line",        draw_line,          1 );
+	fl_add_symbol( "=",           draw_ripplelines,   1 );
+	fl_add_symbol( "DnLine",      draw_dnline,        1 );
+	fl_add_symbol( "UpLine",      draw_upline,        1 );
+	fl_add_symbol( "UpArrow",     draw_uparrow,       1 );
+	fl_add_symbol( "DnArrow",     draw_dnarrow,       1 );
+	fl_add_symbol( "-->",         draw_arrow,         1 );
+	fl_add_symbol( "<->",         draw_doublearrow,   1 );
+	fl_add_symbol( "->|",         draw_arrowbar,      1 );
+	fl_add_symbol( "|<-",         draw_arrowbar0,     1 );
+	fl_add_symbol( ">|",          draw_arrowheadbar,  1 );
+	fl_add_symbol( "|<",          draw_arrowheadbar0, 1 );
+	fl_add_symbol( "|>",          draw_bararrowhead,  1 );
+	fl_add_symbol( "<|",          draw_bararrowhead0, 1 );
 
 	/* aliases */
 
-	fl_add_symbol( "arrow", draw_arrow, 1 );
-	fl_add_symbol( "RippleLines", draw_ripplelines, 1 );
-	fl_add_symbol( "+", draw_plus, 1 );
+	fl_add_symbol( "arrow",       draw_arrow,         1 );
+	fl_add_symbol( "RippleLines", draw_ripplelines,   1 );
+	fl_add_symbol( "+",           draw_plus,          1 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_release_symbols( void )
+{
+	size_t i;
+
+	for ( i = 0; i < nsymbols; i++ )
+		fl_safe_free( symbols[ i ].name );
+		
+	fl_safe_free( symbols );
+	nsymbols = 0;
 }

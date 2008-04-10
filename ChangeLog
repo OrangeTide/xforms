@@ -1,3 +1,46 @@
+2008-04-10 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/buttons.c: Removed code that enforced on of a
+	set of radio buttons to be set - thus led to problems
+	for some older applications.
+
+	Also emoved restriction that buttons only react to
+	a click with the left mouse button per default.
+	Instead added two new public functions
+	  fl_set_button_mouse_buttons()
+	  fl_get_button_mouse_buttons()
+	that allow to set and query the mouse buttons a
+	button will react to. dfault is to react to all
+	mouse buttons.
+
+	* fdesign/sp_buttons.c, fdesign/fd_spec.c: Added
+	support for setting the mouse buttons a button
+	reacts to via fdesign (click the "Spec" tab rider
+	in the attributes window).
+
+	* fdesign/fd_main.c: Added option '-xforms-version'
+	to print out the version of the library being used.
+
+	* lib/tabfolder.c: All memory now gets released on
+	call of fl_finish().
+
+	* lib/symbols.c: Unlimited number of symbols can be
+	created without restrictions on the name length.
+	Memory allocated for symbols gets deallocated in
+	fl_finish().
+
+	* lib/flresource.c: Array allocated for copy of
+	command line arguments was one element too short
+	which led to crashes when using lots of command
+	line arguments. Added function to free this memory
+	in fl_finish().
+
+	* fdesign/fd_printC.c: Output wasn't correct ANSI-C89
+	when the pre_form_output() function was called. 
+
+	* fdesign/fd/*.[ch], fdesign/spec/*.[ch]: Newly
+	generated using the newest fdesign version.
+
 2008-03-27 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/button.c: Most buttons now again react only

@@ -11,7 +11,7 @@ Border Width: -2
 Name: buttonattrib
 Width: 540
 Height: 280
-Number of Objects: 12
+Number of Objects: 18
 
 --------------------
 class: FL_BOX
@@ -52,7 +52,7 @@ argument:
 --------------------
 class: FL_CHECKBUTTON
 type: PUSH_BUTTON
-box: 170 45 30 30
+box: 160 60 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
@@ -70,7 +70,7 @@ argument: 0
 --------------------
 class: FL_INPUT
 type: NORMAL_INPUT
-box: 160 108 210 25
+box: 160 110 210 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_LEFT
@@ -88,7 +88,7 @@ argument: 0
 --------------------
 class: FL_CHOICE
 type: NORMAL_CHOICE2
-box: 282 50 155 25
+box: 280 70 155 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
 alignment: FL_ALIGN_LEFT
@@ -106,7 +106,7 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: PUSH_BUTTON
-box: 170 70 30 30
+box: 160 80 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_LEFT
@@ -120,12 +120,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: showfocus
 callback: showfocus_change
 argument: 0
-	value: 1
+value: 1
 
 --------------------
 class: FL_BUTTON
 type: NORMAL_BUTTON
-box: 372 108 66 25
+box: 370 110 66 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -229,6 +229,119 @@ gravity: FL_NoGravity FL_NoGravity
 name: tooltip
 callback: helper_change_cb
 argument: 0
+
+--------------------
+class: FL_TEXT
+type: NORMAL_TEXT
+box: 60 40 100 20
+boxtype: FL_FLAT_BOX
+colors: FL_COL1 FL_MCOL
+alignment: FL_ALIGN_CENTER | FL_ALIGN_INSIDE
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Mouse buttons
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: mbuttons_label
+callback: 
+argument: 
+
+--------------------
+class: FL_ROUNDBUTTON
+type: PUSH_BUTTON
+box: 160 40 20 20
+boxtype: FL_NO_BOX
+colors: FL_MCOL FL_YELLOW
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Left
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: react_left
+callback: react_to_button
+argument: 0
+value: 1
+
+--------------------
+class: FL_ROUNDBUTTON
+type: PUSH_BUTTON
+box: 210 40 20 20
+boxtype: FL_NO_BOX
+colors: FL_MCOL FL_YELLOW
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Middle
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: react_middle
+callback: react_to_button
+argument: 1
+value: 1
+
+--------------------
+class: FL_ROUNDBUTTON
+type: PUSH_BUTTON
+box: 280 40 20 20
+boxtype: FL_NO_BOX
+colors: FL_MCOL FL_YELLOW
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Right
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: react_right
+callback: react_to_button
+argument: 2
+value: 1
+
+--------------------
+class: FL_ROUNDBUTTON
+type: PUSH_BUTTON
+box: 340 40 20 20
+boxtype: FL_NO_BOX
+colors: FL_MCOL FL_YELLOW
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Up
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: react_up
+callback: react_to_button
+argument: 3
+value: 1
+
+--------------------
+class: FL_ROUNDBUTTON
+type: PUSH_BUTTON
+box: 390 40 20 20
+boxtype: FL_NO_BOX
+colors: FL_MCOL FL_YELLOW
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Down
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: react_down
+callback: react_to_button
+argument: 4
+value: 1
 
 ==============================
 create_the_forms

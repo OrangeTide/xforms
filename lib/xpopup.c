@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.20 2008/03/25 12:41:29 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.21 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -79,57 +79,57 @@ char *fl_id_xpup = "$Id: xpopup.c,v 1.20 2008/03/25 12:41:29 jtt Exp $";
 
 typedef struct
 {
-    char *       str;			/* label               */
-    FL_PUP_CB    icb;		    /* call back           */
-    long *       shortcut;		/* shortcut keys       */
-    int          subm;			/* sub menu            */
-    unsigned int mode;			/* various attributes  */
-    int          ret;			/* %x stuff            */
-    short        ulpos;			/* hotkeys in label    */
-    short        radio;			/* radio entry. 0 mean no radio */
-    short        len;
+    char         * str;				/* label               */
+    FL_PUP_CB      icb;		    	/* call back           */
+    long         * shortcut;		/* shortcut keys       */
+    int            subm;			/* sub menu            */
+    unsigned int   mode;			/* various attributes  */
+    int            ret;				/* %x stuff            */
+    short          ulpos;			/* hotkeys in label    */
+    short          radio;			/* radio entry. 0 mean no radio */
+    short          len;
 } MenuItem;
 
 
 typedef struct
 {
-    char *         title;		    /* Menu title            */
-    Window         win;				/* menu window           */
-    Window         parent_win;		/* and its parent        */
-    Cursor         cursor;			/* cursor for the pup    */
+    char           * title;		    /* Menu title            */
+    Window           win;			/* menu window           */
+    Window           parent_win;	/* and its parent        */
+    Cursor           cursor;		/* cursor for the pup    */
 #if USE_SHADOW
-    GC             gc_shadow;		/* GC for the shadow     */
+    GC               gc_shadow;		/* GC for the shadow     */
 #endif
-    GC             gc_active;		/* GC for maintext       */
-    GC             gc_inactive;		/* GC for inactive text  */
-    MenuItem *     item[ FL_MAXPUPI + 1 ];
-    FL_PUP_CB      menu_cb;		   	/* call back routine     */
-    FL_PUP_ENTERCB enter_cb;	    /* enter callback routine */
-    void *         enter_data;
-    FL_PUP_ENTERCB leave_cb;	    /* enter callback routine */
-    void *         leave_data;
-    unsigned long  event_mask;
-    int            x,			    /* origin relative to root */
-	               y;
-    unsigned int   w,		        /* total dimension       */
-	               h;
-    int            win_x,
-	               win_y;
-    short          titleh;
-    short          nitems;			/* no. of item in menu   */
-    short          title_width;		/* title width           */
-    short          maxw;
+    GC               gc_active;		/* GC for maintext       */
+    GC               gc_inactive;	/* GC for inactive text  */
+    MenuItem       * item[ FL_MAXPUPI + 1 ];
+    FL_PUP_CB        menu_cb;	   	/* call back routine     */
+    FL_PUP_ENTERCB   enter_cb;	    /* enter callback routine */
+    void *           enter_data;
+    FL_PUP_ENTERCB   leave_cb;	    /* enter callback routine */
+    void *           leave_data;
+    unsigned long    event_mask;
+    int              x,			    /* origin relative to root */
+	                 y;
+    unsigned int     w,		        /* total dimension       */
+	                 h;
+    int              win_x,
+	                 win_y;
+    short            titleh;
+    short            nitems;		/* no. of item in menu   */
+    short            title_width;	/* title width           */
+    short            maxw;
 #if USE_SHADOW
-    short          noshadow;
-	short          shade;
+    short            noshadow;
+	short            shade;
 #endif
-    short          bw;
-    short          lpad;
-    short          rpad;
-    short          padh;
-    short          cellh;
-    short          isEntry;			/* true if menu is setup via entry struct */
-	int            par_y;
+    short            bw;
+    short            lpad;
+    short            rpad;
+    short            padh;
+    short            cellh;
+    short            isEntry;		/* true if menu is setup via entry struct */
+	int              par_y;
 } PopUP;
 
 
@@ -2408,8 +2408,11 @@ generate_menu( int                  n,
 
 		/* Double all '%' */
 
-		while ( ( w = strchr( w, '%' ) ) )
+		while ( *w && ( w = strchr( w, '%' ) ) )
+		{
 			memmove( w + 1, w, strlen( w ) + 1 );
+			w += 2;
+		}
 
 		if ( *t != '/' )
 		{

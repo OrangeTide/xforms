@@ -246,7 +246,6 @@ int
 fl_addto_formbrowser( FL_OBJECT * ob,
 					  FL_FORM   * form )
 {
-    int return_value = 0;
     SPEC *sp = ob->spec;
 
     if ( ! IsFormBrowserClass( ob ) )
@@ -273,8 +272,8 @@ fl_addto_formbrowser( FL_OBJECT * ob,
 		fl_set_form_callback( form, form_callback, 0 );
 
 	parentize_form( form, ob );
-	sp->form = fl_realloc( sp->form, sizeof *sp->form * ( sp->nforms + 1 ) );
-	sp->form[ sp->nforms ] = form;
+	sp->form = fl_realloc( sp->form, ( sp->nforms + 1 ) * sizeof *sp->form );
+	sp->form[ sp->nforms++ ] = form;
 	form->attached = 1;
 
 	if ( form->pre_attach )
@@ -283,11 +282,10 @@ fl_addto_formbrowser( FL_OBJECT * ob,
 	if ( sp->max_width < form->w )
 		sp->max_width = form->w;
 		
-	return_value = ++sp->nforms;
 	sp->max_height += form->h;
 	display_forms( sp );
 
-    return return_value;
+    return sp->nforms;
 }
 
 
@@ -923,7 +921,7 @@ delete_form( SPEC *sp,
 {
     fl_hide_form( sp->form[ f ] );
     sp->form[ f ]->attached = 0;
-    sp->nforms -= 1;
+    sp->nforms--;
     sp->max_height -= sp->form[ f ]->h;
     for ( ; f < sp->nforms; f++ )
 		sp->form[ f ] = sp->form[ f + 1 ];

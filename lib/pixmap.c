@@ -157,6 +157,9 @@ change_pixmap( SPEC * sp,
 {
 	PixmapSPEC *psp = sp->cspecv;
 
+	if ( p == None || win == None )
+		return;
+
 	if ( del )
 		free_pixmap( sp );
 	else
@@ -168,15 +171,16 @@ change_pixmap( SPEC * sp,
 	sp->pixmap = p;
 	sp->mask = shape_mask;
 
-	M_warn( "change_pixmap", "Pixmap=%ld mask=%ld", p, shape_mask );
+	M_warn( "change_pixmap", "Pixmap=%ld mask=%ld win=%ld",
+			p, shape_mask, win );
 
 	if ( psp->gc == None )
 	{
-		psp->gc = XCreateGC( flx->display, win, 0, 0 );
+		psp->gc = XCreateGC( flx->display, win, 0, NULL );
 		XSetGraphicsExposures( flx->display, psp->gc, False );
 	}
 
-#if !defined USE_OVERRIDE
+#if ! defined USE_OVERRIDE
 	XSetClipMask( flx->display, psp->gc, sp->mask );
 #endif
 

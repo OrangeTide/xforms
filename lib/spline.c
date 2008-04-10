@@ -54,8 +54,20 @@ fl_spline_interpolate( const float * wx,
 					   float *       y,
 					   double        grid )
 {
-    int i, j, k, jo, ih, im, nout;
-    double sig, un, p, qn, h, a, b;
+    int i,
+		j,
+		k,
+		jo,
+		ih,
+		im,
+		nout;
+    double sig,
+		   un,
+		   p,
+		   qn,
+		   h,
+		   a,
+		   b;
     static int nwork = 0;
     static double *y2 = NULL,
 		          *u = NULL;
@@ -155,15 +167,28 @@ fl_spline_int_interpolate( const int * wx,
 						   int         grid,
 						   int *       y )
 {
-    int i, j, k, jo, ih, im, nout;
-    double sig, un, p, qn, h, a, b, x;
+    int i,
+		j,
+		k,
+		jo,
+		ih,
+		im,
+		nout;
+    double sig,
+		   un,
+		   p,
+		   qn,
+		   h,
+		   a,
+		   b,
+		   x;
     static int nwork = 0;
     static double *y2 = NULL,
 		          *u = NULL;
 
-    if (nin <= 3)
+    if ( nin <= 3 )
     {
-		fputs("too few points in interpol\n", stderr);
+		fputs( "too few points in interpol\n", stderr );
 		return -1;
     }
 

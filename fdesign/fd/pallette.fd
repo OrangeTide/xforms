@@ -126,11 +126,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BUTTON
-	file: /home/zhao/xforms/DESIGN/xpm/butt.xpm
-	focus_file: 
-	fullpath: 0
-	data: butt_pixels
-	focus_data: 
+file: ../xpm/butt.xpm
+focus_file: 
+fullpath: 0
+data: butt_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -149,11 +149,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_LIGHTBUTTON
-	file: /home/zhao/xforms/DESIGN/xpm/lightb.xpm
-	focus_file: 
-	fullpath: 0
-	data: lightb_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/lightb.xpm
+focus_file: 
+fullpath: 0
+data: lightb_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -172,11 +172,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_ROUNDBUTTON
-	file: /home/zhao/xforms/DESIGN/xpm/roundb.xpm
-	focus_file: 
-	fullpath: 0
-	data: roundb_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/roundb.xpm
+focus_file: 
+fullpath: 0
+data: roundb_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -195,12 +195,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_ROUND3DBUTTON
-	file: /home/zhao/xforms/DESIGN/xpm/r3dbut.xpm
-	focus_file: 
-	fullpath: 0
-	align: FL_ALIGN_TOP|FL_ALIGN_INSIDE
-	data: r3dbut_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/r3dbut.xpm
+focus_file: 
+fullpath: 0
+align: FL_ALIGN_TOP|FL_ALIGN_INSIDE
+data: r3dbut_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -219,11 +219,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHECKBUTTON
-	file: /home/zhao/xforms/DESIGN/xpm/check.xpm
-	focus_file: 
-	fullpath: 0
-	data: check_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/check.xpm
+focus_file: 
+fullpath: 0
+data: check_pixels
+focus_data: 
 
 --------------------
 class: FL_BITMAPBUTTON
@@ -242,13 +242,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BITMAPBUTTON
-	file: /home/zhao/xforms/DESIGN/xpm/picture.xbm
-	focus_file: 
-	fullpath: 0
-	data: picture_bits
-	focus_data: 
-	width: picture_width
-	height: picture_height
+file: /home/zhao/xforms/DESIGN/xpm/picture.xbm
+focus_file: 
+fullpath: 0
+data: picture_bits
+focus_data: 
+width: picture_width
+height: picture_height
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -267,11 +267,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_PIXMAPBUTTON
-	file: /home/zhao/xforms/DESIGN/xpm/xconq.xpm
-	focus_file: 
-	fullpath: 0
-	data: xconq
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/xconq.xpm
+focus_file: 
+fullpath: 0
+data: xconq
+focus_data: 
 
 =============== FORM ===============
 Name: staticform
@@ -332,11 +332,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BOX
-	file: /home/zhao/xforms/DESIGN/xpm/box.xpm
-	focus_file: 
-	fullpath: 0
-	data: box_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/box.xpm
+focus_file: 
+fullpath: 0
+data: box_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -355,11 +355,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_TEXT
-	file: /home/zhao/xforms/DESIGN/xpm/text.xpm
-	focus_file: 
-	fullpath: 0
-	data: text_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/text.xpm
+focus_file: 
+fullpath: 0
+data: text_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -378,11 +378,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_LABELFRAME
-	file: /home/zhao/xforms/DESIGN/xpm/frame.xpm
-	focus_file: 
-	fullpath: 0
-	data: frame_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/frame.xpm
+focus_file: 
+fullpath: 0
+data: frame_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -401,11 +401,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHART
-	file: /home/zhao/xforms/DESIGN/xpm/chart.xpm
-	focus_file: 
-	fullpath: 0
-	data: chart_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/chart.xpm
+focus_file: 
+fullpath: 0
+data: chart_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -424,11 +424,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CLOCK
-	file: /home/zhao/xforms/DESIGN/xpm/clock.xpm
-	focus_file: 
-	fullpath: 0
-	data: clock_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/clock.xpm
+focus_file: 
+fullpath: 0
+data: clock_pixels
+focus_data: 
 
 --------------------
 class: FL_BITMAPBUTTON
@@ -447,13 +447,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BITMAP
-	file: /home/zhao/xforms/DESIGN/xpm/picture1.xbm
-	focus_file: 
-	fullpath: 0
-	data: picture1_bits
-	focus_data: 
-	width: picture1_width
-	height: picture1_height
+file: /home/zhao/xforms/DESIGN/xpm/picture1.xbm
+focus_file: 
+fullpath: 0
+data: picture1_bits
+focus_data: 
+width: picture1_width
+height: picture1_height
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -472,11 +472,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_PIXMAP
-	file: /home/zhao/xforms/DESIGN/xpm/xconq1.xpm
-	focus_file: 
-	fullpath: 0
-	data: xconq1
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/xconq1.xpm
+focus_file: 
+fullpath: 0
+data: xconq1
+focus_data: 
 
 =============== FORM ===============
 Name: valuatorform
@@ -537,11 +537,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_SLIDER
-	file: /home/zhao/xforms/DESIGN/xpm/sld.xpm
-	focus_file: 
-	fullpath: 0
-	data: sld_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/sld.xpm
+focus_file: 
+fullpath: 0
+data: sld_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -560,11 +560,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_SCROLLBAR
-	file: /home/zhao/xforms/DESIGN/xpm/scb.xpm
-	focus_file: 
-	fullpath: 0
-	data: scb_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/scb.xpm
+focus_file: 
+fullpath: 0
+data: scb_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -583,11 +583,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_DIAL
-	file: /home/zhao/xforms/DESIGN/xpm/dial.xpm
-	focus_file: 
-	fullpath: 0
-	data: dial_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/dial.xpm
+focus_file: 
+fullpath: 0
+data: dial_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -606,11 +606,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_COUNTER
-	file: /home/zhao/xforms/DESIGN/xpm/cnt.xpm
-	focus_file: 
-	fullpath: 0
-	data: cnt_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/cnt.xpm
+focus_file: 
+fullpath: 0
+data: cnt_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -629,11 +629,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_POSITIONER
-	file: /home/zhao/xforms/DESIGN/xpm/pos.xpm
-	focus_file: 
-	fullpath: 0
-	data: pos_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/pos.xpm
+focus_file: 
+fullpath: 0
+data: pos_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -652,11 +652,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_VALSLIDER
-	file: /home/zhao/xforms/DESIGN/xpm/vals.xpm
-	focus_file: 
-	fullpath: 0
-	data: vals_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/vals.xpm
+focus_file: 
+fullpath: 0
+data: vals_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -675,11 +675,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_THUMBWHEEL
-	file: /home/zhao/xforms/DESIGN/xpm/twheel.xpm
-	focus_file: 
-	fullpath: 0
-	data: twheel
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/twheel.xpm
+focus_file: 
+fullpath: 0
+data: twheel
+focus_data: 
 
 =============== FORM ===============
 Name: choiceform
@@ -740,11 +740,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_MENU
-	file: /home/zhao/xforms/DESIGN/xpm/menu.xpm
-	focus_file: 
-	fullpath: 0
-	data: menu_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/menu.xpm
+focus_file: 
+fullpath: 0
+data: menu_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -763,11 +763,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHOICE
-	file: /home/zhao/xforms/DESIGN/xpm/choice.xpm
-	focus_file: 
-	fullpath: 0
-	data: choice_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/choice.xpm
+focus_file: 
+fullpath: 0
+data: choice_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -786,11 +786,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BROWSER
-	file: /home/zhao/xforms/DESIGN/xpm/br.xpm
-	focus_file: 
-	fullpath: 0
-	data: br_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/br.xpm
+focus_file: 
+fullpath: 0
+data: br_pixels
+focus_data: 
 
 =============== FORM ===============
 Name: miscform
@@ -851,11 +851,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_TIMER
-	file: /home/zhao/xforms/DESIGN/xpm/time.xpm
-	focus_file: 
-	fullpath: 0
-	data: Atime
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/timer.xpm
+focus_file: 
+fullpath: 0
+data: rtime_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -874,11 +874,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_XYPLOT
-	file: /home/zhao/xforms/DESIGN/xpm/xyplot.xpm
-	focus_file: 
-	fullpath: 0
-	data: xyplot_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/xyplot.xpm
+focus_file: 
+fullpath: 0
+data: xyplot_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -915,11 +915,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_GLCANVAS
-	file: /home/zhao/xforms/DESIGN/xpm/glcan.xpm
-	focus_file: 
-	fullpath: 0
-	data: glcan_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/glcan.xpm
+focus_file: 
+fullpath: 0
+data: glcan_pixels
+focus_data: 
 
 --------------------
 class: FL_PIXMAPBUTTON
@@ -938,11 +938,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_NTABFOLDER
-	file: /home/zhao/xforms/DESIGN/xpm/tab.xpm
-	focus_file: 
-	fullpath: 0
-	data: tabfolder_pixels
-	focus_data: 
+file: /home/zhao/xforms/DESIGN/xpm/tab.xpm
+focus_file: 
+fullpath: 0
+data: tabfolder_pixels
+focus_data: 
 
 ==============================
 create_the_forms

@@ -62,6 +62,7 @@ typedef struct {
     int          num_visible;
 } SPEC;
 
+
 static void compute_position( FL_OBJECT * );
 static void switch_folder( FL_OBJECT *,
 						   long );
@@ -72,15 +73,17 @@ static void get_tabsize( FL_OBJECT *,
 						 int *,
 						 int *,
 						 int );
-static void shift_tabs( FL_OBJECT * ob,
+static void shift_tabs( FL_OBJECT *,
 						int left );
+#if TBDEBUG
+static void fl_print_tabfolder( FL_OBJECT  *,
+								const char * );
+#endif
+
 
 #define IsFolderClass( ob ) ( ( ob ) && ( ob )->objclass == FL_TABFOLDER )
 
-#if TBDEBUG
-static void fl_print_tabfolder( FL_OBJECT * ob,
-								const char *s );
-#endif
+
 
 
 
@@ -93,7 +96,7 @@ handle( FL_OBJECT * ob,
 		FL_Coord    mx   FL_UNUSED_ARG,
 		FL_Coord    my   FL_UNUSED_ARG,
 		int         key  FL_UNUSED_ARG,
-		void *      ev )
+		void      * ev )
 {
 	FL_FORM *folder;
     SPEC *sp = ob->spec;
@@ -137,9 +140,9 @@ handle( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-//			while ( sp->nforms > 0 )
-//				fl_delete_folder_bynumber( ob, sp->nforms );
-			fl_free( ob->spec );
+			fl_safe_free( sp->forms );
+			fl_safe_free( sp->title );
+			fl_free( sp );
 			break;
     }
 
@@ -156,8 +159,8 @@ canvas_handler( FL_OBJECT * ob,
 				Window      win   FL_UNUSED_ARG,
 				int         w     FL_UNUSED_ARG,
 				int         h     FL_UNUSED_ARG,
-				XEvent *    ev    FL_UNUSED_ARG,
-				void *      data  FL_UNUSED_ARG )
+				XEvent    * ev    FL_UNUSED_ARG,
+				void      * data  FL_UNUSED_ARG )
 {
     SPEC *sp = ob->u_vdata;
 
@@ -211,7 +214,7 @@ canvas_cleanup( FL_OBJECT * ob )
 
 static void
 form_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-			   void *      data  FL_UNUSED_ARG )
+			   void      * data  FL_UNUSED_ARG )
 {
 }
 
@@ -240,13 +243,12 @@ fl_create_tabfolder( int          type,
 
     ob->spec_size = sizeof *sp;
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
+
     sp->parent = ob;
     sp->forms = NULL;
     sp->title = NULL;
-
     sp->x = ob->x + absbw;
     sp->y = ob->y + absbw;
-
     sp->h_pad = 12;
     sp->v_pad = 5;
     sp->auto_fit = FL_NO;
@@ -333,7 +335,7 @@ switch_folder( FL_OBJECT * ob,
 			   long        data )
 {
     SPEC *sp = ob->u_vdata;
-    FL_FORM *form = sp->forms[ data ];
+    FL_FORM *form;
     Window win;
     FL_OBJECT *bkob;
     int active = data;
@@ -344,13 +346,21 @@ switch_folder( FL_OBJECT * ob,
 			 data, sp->active_folder, sp->last_active );
 #endif
 
+	if ( data < 0 || data >= sp->nforms )
+	{
+		M_err( "switch_folder", "Invalid index");
+		return;
+	}
+
+	form = sp->forms[ data ];
+
     if ( active == sp->active_folder || sp->processing_destroy )
     {
 		sp->processing_destroy = 0;
 		return;
     }
 
-    if ( ! ob->form->window || !FL_ObjWin( sp->canvas ) )
+    if ( ! ob->form->window || ! FL_ObjWin( sp->canvas ) )
 		return;
 
     if ( sp->auto_fit != FL_NO )
@@ -404,7 +414,7 @@ switch_folder( FL_OBJECT * ob,
 		fl_drw_frame( FL_UP_FRAME, sp->canvas->x, sp->canvas->y, sp->canvas->w,
 					  sp->canvas->h, sp->canvas->col1, sp->canvas->bw );
 		fl_hide_form( sp->forms[ sp->active_folder ] );
-		sp->forms[ sp->active_folder ]->parent_obj = 0;
+		sp->forms[ sp->active_folder ]->parent_obj = NULL;
 		sp->last_active = sp->active_folder;
     }
 
@@ -435,9 +445,9 @@ switch_folder( FL_OBJECT * ob,
  ***************************************/
 
 FL_OBJECT *
-fl_addto_tabfolder( FL_OBJECT *  ob,
+fl_addto_tabfolder( FL_OBJECT  * ob,
 					const char * title,
-					FL_FORM *    form )
+					FL_FORM    * form )
 {
     SPEC *sp = ob->spec;
     FL_OBJECT *tab;
@@ -513,10 +523,10 @@ fl_addto_tabfolder( FL_OBJECT *  ob,
  ***************************************/
 
 static void
-get_tabsize( FL_OBJECT *  ob,
+get_tabsize( FL_OBJECT  * ob,
 			 const char * label,
-			 int *        ww,
-			 int *        hh,
+			 int        * ww,
+			 int        * hh,
 			 int          fudge )
 {
     int w,
@@ -540,7 +550,7 @@ get_tabsize( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_delete_folder_byname( FL_OBJECT *  ob,
+fl_delete_folder_byname( FL_OBJECT  * ob,
 						 const char * name )
 {
     SPEC *sp = ob->spec;
@@ -548,7 +558,7 @@ fl_delete_folder_byname( FL_OBJECT *  ob,
 		done;
 
     for ( done = i = 0; ! done && i < sp->nforms; i++ )
-		if ( strcmp( sp->title[ i ]->label, name ) == 0 )
+		if ( ! strcmp( sp->title[ i ]->label, name ) )
 			done = i + 1;
 
     if ( done )
@@ -562,7 +572,7 @@ fl_delete_folder_byname( FL_OBJECT *  ob,
 
 #if TBDEBUG
 void
-fl_print_tabfolder( FL_OBJECT *  ob,
+fl_print_tabfolder( FL_OBJECT  * ob,
 					const char * s )
 {
     SPEC *sp = ob->spec;
@@ -616,11 +626,10 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 
     if ( deleted )
     {
-/*      fl_hide_object( deleted ); */
 		deleted->visible = 0;
 
 		if ( theform->form_callback == form_callback )
-			theform->form_callback = 0;
+			theform->form_callback = NULL;
 
 		if ( theform->visible )
 			fl_hide_form( theform );
@@ -637,7 +646,6 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 			fl_set_folder_bynumber( ob, i );
 		}
 
-		fl_delete_object( deleted );
 		fl_free_object( deleted );
 
 		fl_redraw_form( ob->form );
@@ -663,7 +671,7 @@ fl_get_tabfolder_folder_bynumber( FL_OBJECT * ob,
  ***************************************/
 
 FL_FORM *
-fl_get_tabfolder_folder_byname( FL_OBJECT *  ob,
+fl_get_tabfolder_folder_byname( FL_OBJECT  * ob,
 								const char * name )
 {
     int i;
@@ -682,7 +690,7 @@ fl_get_tabfolder_folder_byname( FL_OBJECT *  ob,
 
 void
 fl_delete_folder( FL_OBJECT * ob,
-				  FL_FORM *   form )
+				  FL_FORM   * form )
 {
     int i, done;
     SPEC *sp = ob->spec;
@@ -701,7 +709,7 @@ fl_delete_folder( FL_OBJECT * ob,
 
 void
 fl_set_folder( FL_OBJECT * ob,
-			   FL_FORM *   form )
+			   FL_FORM   * form )
 {
     SPEC *sp;
     int i,
@@ -727,7 +735,7 @@ fl_set_folder( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_folder_byname( FL_OBJECT *  ob,
+fl_set_folder_byname( FL_OBJECT  * ob,
 					  const char * name )
 {
     SPEC *sp;
@@ -780,7 +788,7 @@ fl_set_folder_bynumber( FL_OBJECT * ob,
 void
 fl_replace_folder_bynumber( FL_OBJECT * ob,
 							int         num,
-							FL_FORM *   form )
+							FL_FORM   * form )
 {
     SPEC *sp = ob->spec;
     int i = num - 1;
@@ -915,10 +923,10 @@ fl_get_active_folder_name( FL_OBJECT * ob )
 
 void
 fl_get_folder_area( FL_OBJECT * ob,
-					FL_Coord *  x,
-					FL_Coord *  y,
-					FL_Coord *  w,
-					FL_Coord *  h )
+					FL_Coord  * x,
+					FL_Coord  * y,
+					FL_Coord  * w,
+					FL_Coord  * h )
 {
     SPEC *sp = ob->spec;
 

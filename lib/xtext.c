@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.12 2008/03/25 12:41:29 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.13 2008/04/10 00:05:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -60,13 +60,14 @@ static void do_underline_all( FL_Coord,
 							  const char *,
 							  int );
 
-#define LINES   1024
+#define LINES           1024
+#define LINES_INCREMENT  512
 
-static char **lines;
-static int *start;		/* start position of these lines  */
-static int *startx;		/* start x-FL_coordinate of these lines  */
-static int *starty;		/* start y-FL_coordinate of these lines  */
-static int *slen;
+static char **lines = NULL;
+static int *start = NULL;		/* start position of these lines  */
+static int *startx = NULL;		/* start x-FL_coordinate of these lines  */
+static int *starty = NULL;		/* start y-FL_coordinate of these lines  */
+static int *slen = NULL;
 static int nlines = LINES;
 static int max_pixelline;
 
@@ -77,22 +78,25 @@ static int max_pixelline;
 static void
 extend_workmem( int nl )
 {
-    if ( ! startx )
-    {
-		lines = fl_malloc( nl * sizeof *lines );
-		start = fl_malloc( nl * sizeof *start );
-		startx = fl_malloc( nl * sizeof *startx );
-		starty = fl_malloc( nl * sizeof *starty );
-		slen = fl_malloc( nl * sizeof *slen );
-    }
-    else if ( nl > LINES )
-    {
-		lines = fl_realloc( lines, nl * sizeof *lines );
-		start = fl_realloc( start, nl * sizeof *start );
-		startx = fl_realloc( startx, nl * sizeof *startx );
-		starty = fl_realloc( starty, nl * sizeof *starty );
-		slen = fl_realloc( slen, nl * sizeof *slen );
-    }
+	lines  = fl_realloc( lines,  nl * sizeof *lines );
+	start  = fl_realloc( start,  nl * sizeof *start );
+	startx = fl_realloc( startx, nl * sizeof *startx );
+	starty = fl_realloc( starty, nl * sizeof *starty );
+	slen   = fl_realloc( slen,   nl * sizeof *slen );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_free_xtext_workmem( void )
+{
+	fl_safe_free( lines );
+	fl_safe_free( start );
+	fl_safe_free( startx );
+	fl_safe_free( starty );
+	fl_safe_free( slen );
 }
 
 
@@ -172,7 +176,7 @@ fl_drw_string( int           horalign,
 
     /* Check whether anything has to be done  */
 
-    if ( curspos != 0 && ( ! str || str[ 0 ] == '\0' ) )
+    if ( curspos != 0 && ( ! str || ! *str ) )
 		return max_pixels;
 
     XdrawString = img ? XDrawImageString : XDrawString;
@@ -211,9 +215,9 @@ fl_drw_string( int           horalign,
 		}
     }
 
-    if ( str[ i ] != 0 )
+    if ( str[ i ] != '\0' )
     {
-		extend_workmem( nlines += 500 );
+		extend_workmem( nlines += LINES_INCREMENT );
 		goto redo;
     }
 

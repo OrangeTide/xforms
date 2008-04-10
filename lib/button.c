@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.12 2008/03/27 20:14:53 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.13 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -327,7 +327,7 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
-			if ( key != FL_MBUTTON1 )
+			if ( key > 5 || ! sp->react_to[ key - 1 ] )
 				break;
 
 			sp->event = FL_PUSH;
@@ -379,7 +379,7 @@ handle_it( FL_OBJECT * ob,
 				   && ( sp->timdel & 1 ) == 0;
 
 		case FL_RELEASE:
-			if ( key != FL_MBUTTON1 )
+			if ( key > 5 || ! sp->react_to[ key - 1 ] )
 				break;
 
 			sp->event = FL_RELEASE;
@@ -476,6 +476,7 @@ fl_create_generic_button( int          objclass,
 {
     FL_OBJECT *ob;
 	SPEC *sp;
+	int i;
 
     ob = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
     if ( type == FL_RADIO_BUTTON )
@@ -494,6 +495,9 @@ fl_create_generic_button( int          objclass,
     sp->pixmap    = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
 	sp->cspecv    = NULL;
 	sp-> filename = sp->focus_filename = NULL;
+
+	for ( i = 0; i < 5; i++ )
+		sp->react_to[ i ] = 1;
 
     if ( fl_cntl.buttonLabelSize )
 		ob->lsize = fl_cntl.buttonLabelSize;
@@ -594,4 +598,40 @@ fl_add_button( int          type,
     ob = fl_create_button( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
     return ob;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_button_mouse_buttons( FL_OBJECT * ob,
+							 int         mouse_buttons )
+{
+	SPEC *sp = ob->spec;
+	int i,
+		j;
+
+	if ( mouse_buttons < 0 || mouse_buttons > 31 )
+		return;
+
+	for ( i = 0, j = 1; i < 5; i++, j <<= 1 )
+		sp->react_to[ i ] = ( mouse_buttons & j ) != 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_get_button_mouse_buttons( FL_OBJECT * ob )
+{
+	SPEC *sp = ob->spec;
+	int i,
+		ret;
+
+	for ( i = 0, ret = 0; i < 5; i++ )
+		ret |= sp->react_to[ i ] ? 1 << i : 0;
+
+	return ret;
 }

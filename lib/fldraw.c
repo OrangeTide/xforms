@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.10 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -994,7 +994,9 @@ fl_foldertab_box( int      style,
 				  FL_COLOR c,
 				  int      bw )
 {
-    int ctr, right, bott;
+    int ctr,
+		right,
+		bott;
     FL_POINT vert[ 9 ],          /* need one extra for closing of polygon! */
 		     *fp;
     int border;

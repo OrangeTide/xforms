@@ -330,6 +330,8 @@ extern long fl_query_namedcolor( const char *s );
 extern void fl_error( const char *,
 					  const char * );
 
+void fl_free_xtext_workmem( void );
+
 extern int fl_get_pos_in_string( int,
 								 int,
 								 FL_Coord,
@@ -416,6 +418,7 @@ extern Pixmap fl_read_bitmapfile( Window,
 								  int * );
 
 extern char **fl_get_cmdline_args( int * );
+extern void fl_free_cmdline_args( void );
 
 
 extern XRectangle *fl_get_underline_rect( XFontStruct *,
@@ -707,6 +710,8 @@ extern void fl_get_outside_align( int,
 
 extern void fl_init_symbols( void );
 
+extern void fl_release_symbols( void );
+
 extern unsigned long fl_fmtime( const char * );
 
 extern char *fix_dirname( char * );
@@ -843,7 +848,7 @@ extern void fl_scale_length( FL_Coord *,
 							 FL_Coord *,
 							 double );
 
-extern int fl_get_visible_form_index( FL_FORM * );
+extern int fl_get_visible_forms_index( FL_FORM * );
 
 extern void fl_recount_auto_object( void );
 

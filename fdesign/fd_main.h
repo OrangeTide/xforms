@@ -43,64 +43,69 @@
 #define MAGIC3   12322
 
 /* general limits */
-#define MAX_CLASS_NAME_LEN 64	/* FL_BUTTON etc.                     */
-#define MAX_TYPE_NAME_LEN  64	/* FL_RADIO_BUTTON etc                */
-#define MAX_VAR_LEN       128	/* max. length of a variable/function */
+#define MAX_CLASS_NAME_LEN  64	/* FL_BUTTON etc.                     */
+#define MAX_TYPE_NAME_LEN   64	/* FL_RADIO_BUTTON etc                */
+#define MAX_VAR_LEN        128	/* max. length of a variable/function */
 
 /* various options  of the program */
 typedef struct
 {
-    int language;
-    int emit_code;		/* if emit UI code */
-    int emit_main;
-    int emit_cb;
-    int lax;
-    int altformat;
-    int conv_only;
-    int show_pallete;
-    int compensate;		/* if emit font size compensation code */
-    int unit;
+    int    language;
+    int    emit_code;		/* if emit UI code */
+    int    emit_main;
+    int    emit_cb;
+    int    lax;
+    int    altformat;
+    int    conv_only;
+    int    show_pallete;
+    int    compensate;		/* if emit font size compensation code */
+    int    unit;
     char * output_dir;
-}
-FD_Opt;
+} FD_Opt;
 
 
 enum
 {
-    FD_C = 1, FD_ADA95, FD_PERL, FD_PASCAL,
-    FD_PYTHON, FD_FORTRAN, FD_PS, FD_SCM, FD_EXP
+    FD_C = 1,
+	FD_ADA95,
+	FD_PERL,
+	FD_PASCAL,
+    FD_PYTHON,
+	FD_FORTRAN,
+	FD_PS,
+	FD_SCM,
+	FD_EXP
 };
 
 /* we use different file selector for different tasks */
 enum
 {
-    SAVE_FSELECTOR, LOAD_FSELECTOR, XPM_FSELECTOR
+    SAVE_FSELECTOR,
+	LOAD_FSELECTOR,
+	XPM_FSELECTOR
 };
 
-#define MAX_CONVERTOR  (FD_EXP+1)
+#define MAX_CONVERTOR  ( FD_EXP + 1 )
 
 /* structure that will hole all forms created */
-typedef struct
-{
-    FL_FORM *form;		/* The form */
-    char fname[MAX_VAR_LEN];	/* Its name */
-}
-FRM;
 
 typedef struct
 {
-    const char *lang_name;
-    int (*convert) (const char *s, FRM *, int);		/* built-in convertot
+    FL_FORM * form;		            /* The form */
+    char      fname[ MAX_VAR_LEN ];	/* Its name */
+} FRM;
 
-
-
-							 */
-    const char *extern_convertor;	/* the converter itself         */
-    const char *contact_info;	/* who to contact in case of error      */
-    int need_c_code;		/* if translator works on C or .fd file */
-    void (*init) (void);	/* additional initialization            */
-}
-Conv;
+typedef struct
+{
+    const char * lang_name;
+    int          ( * convert )( const char *,
+								FRM        *,
+								int );		/* built-in convertor */
+    const char * extern_convertor;	  /* the converter itself         */
+    const char * contact_info;	      /* who to contact in case of error      */
+    int          need_c_code;		  /* if translator works on C or .fd file */
+    void         ( * init )( void );  /* additional initialization */
+} Conv;
 
 extern Conv convertor[];
 extern FD_Opt fdopt;
@@ -123,26 +128,30 @@ extern FD_Opt fdopt;
 
 extern long main_window;	/* The identifier of the main window */
 extern FL_Coord winw, winh;
-extern int changed;		/* Whether the file has changed. */
-extern char main_name[];	/* Main creation routine name */
+extern int changed;		    /* Whether the file has changed. */
+extern char main_name[ ];	/* Main creation routine name */
 
 /******** in fd_rubber.c  *********/
 
 /* Contains routines for drawing rubberband boxes. */
 
-extern void set_step_size(float);	/* sets the stepsize */
-extern float get_step_size(void);	/* returns the stepsize */
+extern void set_step_size( float );	/* sets the stepsize */
+extern float get_step_size( void );	/* returns the stepsize */
 
 /* sets the bounding box in which the drawing occurs */
+
 extern void set_bounding_box(float, float, float, float);
 
 /* returns the position of the mouse in world coordinates */
+
 extern void get_mouse_pos(float *, float *);
 
 /* drag a box around until the user releases a mouse button */
+
 extern void move_box(float *, float *, float *, float *, int);
 
 /* scales a box until the user releases a left mouse button */
+
 extern void scale_box(float *, float *, float *, float *);
 
 /******** in fd_select.c *********/
@@ -151,48 +160,48 @@ extern void scale_box(float *, float *, float *, float *);
    current selection of objects */
 
 extern int is_selected(FL_OBJECT *);	/* Returns whether the object is
-					   selected. */
+										   selected. */
 extern void addto_selection(FL_OBJECT *);	/* Adds an object to a
-						   selection */
+											   selection */
 extern void addgroupto_selection(FL_OBJECT *);	/* Adds a group of objects to
-						   a selection */
+												   a selection */
 extern void deletefrom_selection(FL_OBJECT *);	/* Deletes an object from a
-						   selection */
+												   selection */
 extern void clear_selection(void);	/* Clears the current selection */
 extern void resize_selection(FL_Coord, FL_Coord);
 extern void move_selection(FL_Coord, FL_Coord);
 extern void deletegroupfrom_selection(FL_OBJECT *);	/* Deletes a group of
-							   objects from a
-							   selection */
+													   objects from a
+													   selection */
 extern void draw_selbox(void);	/* Draws the box around the selected objects */
 extern void handle_select(const XEvent *);	/* Change the selection when
-						   user puhed mouse. */
+											   user puhed mouse. */
 extern void handle_move(const XEvent *);	/* Moves or scales the
-						   selection. */
+											   selection. */
 extern void select_all(void);	/* Selects all objectsin the form */
 extern void change_selection(void);	/* Changes the atributes of the
-					   selection */
+									   selection */
 extern void change_selected_objects(FL_OBJECT *);
 extern void align_selection(int);	/* Aligns the objects in the
-					   selection */
+									   selection */
 extern void show_selection(void);	/* Makes the selection visible. */
 extern void hide_selection(void);	/* Makes the selection invisible. */
 extern void raise_selection(void);	/* Raises the selection */
 extern void lower_selection(void);	/* Lower the selection */
 extern void cut_selection(void);	/* Deletes all objects in the
-					   selection */
+									   selection */
 extern void paste_selection(void);	/* Puts elements from buffer into
-					   form */
+									   form */
 extern void copy_selection(void);	/* Copies objects in selection to
-					   buffer */
+									   buffer */
 extern void *dup_selection(void);
 extern void set_selection(void *);
 extern void free_dupped_selection(void *);
 extern void next_selection(void), prev_selection(void);
 extern void group_selection(void);	/* Turns objects in the selection
-					   into a group. */
+									   into a group. */
 extern void flatten_selection(void);	/* Removes begin and end groups from
-					   the selection. */
+										   the selection. */
 
 /******** in fd_attribs.c **********/
 
@@ -201,9 +210,10 @@ extern void flatten_selection(void);	/* Removes begin and end groups from
 int change_object(FL_OBJECT *, int);	/* changes the settings for object */
 
 void change_type(FL_OBJECT *, int);	/* Changes the type of a particular
-					   object. */
+									   object. */
 
 /* sets all attributes for an object */
+
 void set_attribs(FL_OBJECT *, int, int, int, int, int, float, int, char[]);
 void set_miscattribs(FL_OBJECT *, unsigned int, unsigned int, unsigned int);
 
@@ -232,6 +242,7 @@ void print_form(FILE *, FL_FORM *, const char *);
 void print_callbacks_and_globals(FILE *, FL_FORM *, int);
 
 /* For making the header file */
+
 void print_header(FILE *, FL_FORM *, const char *);
 void output_main(FILE *, FRM *, int);
 void output_callbacks(FILE *, FRM *, int);
@@ -245,18 +256,22 @@ void output_callbacks(FILE *, FRM *, int);
 #define MAXOBJS    64		/* max object on a form               */
 
 extern FL_FORM *cur_form;
+
 /* The current form under construction */
 
 extern void redraw_the_form(int);
+
 /* Redraws the current form. The argument indicates whether the background
    should be redrawn. */
 
 extern void reshape_form_background(FL_Coord, FL_Coord);
 
 /* loads the forms from a file */
+
 extern int load_forms(int, char *, int);
 
 extern int save_forms(char *);
+
 /* saves the forms to a file, returns whether actually saved */
 
 /******** fd_groups.c *********/
@@ -265,6 +280,7 @@ extern int save_forms(char *);
 
 
 /* Fills in the groups in the current form. */
+
 void fillin_groups(void);
 
 /******** fd_names.c  **********/
@@ -272,9 +288,11 @@ void fillin_groups(void);
 /* Contains the routines that keep track of the object names */
 
 void get_object_name(const FL_OBJECT *, char *, char *, char *);
+
 /* returns the names of an object */
 
 void set_object_name(FL_OBJECT *, const char *, const char *, const char *);
+
 /* returns the names of an object */
 
 /******** fd_objects.c *********/
@@ -287,25 +305,32 @@ void set_object_name(FL_OBJECT *, const char *, const char *, const char *);
 /* Maximal number of object classes. */
 
 /* The current class of object to be added */
+
 extern int cur_class;
 
 /* Initializes all the classes and types. */
+
 extern void init_classes(void);
 
 /* adds an object to the current form */
+
 extern FL_OBJECT *add_an_object(int, int, FL_Coord, FL_Coord, FL_Coord, FL_Coord);
 
 /* Returns a pointer to the name of the class */
+
 extern char *find_class_name(int);
 extern char *find_class_name(int);
 
 /* Returns the number of types in the class */
+
 extern int find_class_maxtype(int);
 
 /* Returns the default object in the class */
+
 extern FL_OBJECT *find_class_default(int, int);
 
 /* Returns a pointer to the name of the type in the class */
+
 extern const char *find_type_name(int, int);
 extern int find_type_value(int, const char *);
 
@@ -321,6 +346,7 @@ extern void rectf(FL_Coord, FL_Coord, FL_Coord, FL_Coord);
 extern int fl_qtest(void);
 
 /* attribute query routines */
+
 extern char *class_name(int);
 extern int class_val(const char *);
 
@@ -346,12 +372,11 @@ extern char *loadedfile_fullpath;
 
 typedef struct
 {
-    int val;			/* value       */
-    char *name;			/* formal name */
-    char *shown;		/* name shown  */
-    char *hotkey;		/* hotkeys     */
-}
-VN_pair;
+    int    val;			/* value       */
+    char * name;		/* formal name */
+    char * shown;		/* name shown  */
+    char * hotkey;		/* hotkeys     */
+} VN_pair;
 
 extern char *get_vn_name(VN_pair *, int);
 extern int get_vn_val(VN_pair *, const char *);
@@ -399,16 +424,17 @@ enum
 extern FL_FORM *thetestform;
 
 extern FL_OBJECT *fl_create_simu_canvas(int, FL_Coord, FL_Coord,
-					FL_Coord, FL_Coord, const char *);
+										FL_Coord, FL_Coord, const char *);
 extern FL_OBJECT *fl_add_simu_canvas(int, FL_Coord, FL_Coord,
-				     FL_Coord, FL_Coord, const char *);
+									 FL_Coord, FL_Coord, const char *);
 
 extern FL_OBJECT *fl_create_simu_glcanvas(int, FL_Coord, FL_Coord,
-					  FL_Coord, FL_Coord, const char *);
+										  FL_Coord, FL_Coord, const char *);
 extern FL_OBJECT *fl_add_simu_glcanvas(int, FL_Coord, FL_Coord,
-				       FL_Coord, FL_Coord, const char *);
+									   FL_Coord, FL_Coord, const char *);
 
 /* object class specific info handler */
+
 extern void save_objclass_spec_info(FILE *, FL_OBJECT *);
 extern void load_objclass_spec_info(FILE *, FL_OBJECT *);
 extern void emit_objclass_spec_info(FILE *, FL_OBJECT *);
@@ -421,6 +447,7 @@ extern void show_attributes(const FL_OBJECT *);
 extern int read_key_val(FILE * fp, char *key, char *val);
 
 /* Control panel etc */
+
 #include "fd/ui_theforms.h"
 #include "fd/ui_attrib.h"
 
@@ -454,15 +481,17 @@ extern int auto_apply;
 extern void cleanup_spec(FL_OBJECT *);
 
 /* fake stuff */
+
 #define FL_NTABFOLDER  50
+
 extern FL_OBJECT *fl_add_ntabfolder(int, FL_Coord, FL_Coord, FL_Coord,
-				    FL_Coord, const char *);
+									FL_Coord, const char *);
 extern FL_OBJECT *fl_create_ntabfolder(int, FL_Coord, FL_Coord, FL_Coord,
-				       FL_Coord, const char *);
+									   FL_Coord, const char *);
 extern FL_OBJECT *fl_add_nformbrowser(int, FL_Coord, FL_Coord, FL_Coord,
-				      FL_Coord, const char *);
+									  FL_Coord, const char *);
 extern FL_OBJECT *fl_create_nformbrowser(int, FL_Coord, FL_Coord, FL_Coord,
-					 FL_Coord, const char *);
+										 FL_Coord, const char *);
 extern void make_backup(const char *);
 extern int is_var_boxtype(int cn);
 extern void set_testing_pixmap(FL_OBJECT *);
@@ -478,78 +507,99 @@ extern void reset_pallette(void);
 
 typedef struct
 {
-    float min, max, xmin, xmax, ymin, ymax;
-    float val, xval, yval;
-    float step, sstep, lstep, xstep, ystep;
-    float slsize;
-    float thetai, thetaf;
-    float ldelta, rdelta;
-    int prec;
-    int direction;
-    int int_val;
-    int how_return;
-    int align;
-    int dx, dy;
-    int show_focus;
-    int h_pref, v_pref;
-    int nlines;
-    char filename[512];
-    char focus_filename[512];
-    char data[64];
-    char focus_data[64];
-    char width[64], height[64];
-    void *cspecv;
-    int use_data;
-    int fullpath;
-    int xmajor, xminor;
-    int ymajor, yminor;
-    int xscale, yscale;
-    float xbase, ybase;
-    int xgrid, ygrid;
-    char **content;
-    char **shortcut;
-    unsigned char *mode;
-    int new_menuapi;
-    int global_scope;
-    int showsymbol;
-    int cspecv_size;
-    char *misc_char;
-    int grid_linestyle;
-    int no_title;
-    int mark_active;
-    char helper[512];
-    int reserverd[12];
-}
-SuperSPEC;
+    float            min,
+	                 max,
+	                 xmin,
+	                 xmax,
+	                 ymin,
+	                 ymax;
+    float            val,
+	                 xval,
+	                 yval;
+    float            step,
+	                 sstep,
+	                 lstep,
+	                 xstep,
+	                 ystep;
+    float            slsize;
+    float            thetai,
+	                 thetaf;
+    float            ldelta,
+	                 rdelta;
+    int              prec;
+    int              direction;
+	int              mbuttons;
+    int              int_val;
+    int              how_return;
+    int              align;
+    int              dx,
+	                 dy;
+    int              show_focus;
+    int              h_pref, v_pref;
+    int              nlines;
+    char             filename[512];
+    char             focus_filename[512];
+    char             data[64];
+    char             focus_data[64];
+    char             width[64],
+	                 height[64];
+    void           * cspecv;
+    int              use_data;
+    int              fullpath;
+    int              xmajor,
+	                 xminor;
+    int              ymajor,
+	                 yminor;
+    int              xscale,
+	                 yscale;
+    float            xbase,
+	                 ybase;
+    int              xgrid,
+	                 ygrid;
+    char          ** content;
+    char          ** shortcut;
+    unsigned char  * mode;
+    int              new_menuapi;
+    int              global_scope;
+    int              showsymbol;
+    int              cspecv_size;
+    char           * misc_char;
+    int              grid_linestyle;
+    int              no_title;
+    int              mark_active;
+    char             helper[512];
+    int              reserverd[12];
+} SuperSPEC;
 
-extern SuperSPEC *get_superspec(FL_OBJECT *);
+extern SuperSPEC *get_superspec( FL_OBJECT * );
 extern SuperSPEC *spec_to_superspec(FL_OBJECT *);
 extern void *superspec_to_spec(FL_OBJECT *);
 extern void copy_superspec(FL_OBJECT * dest, FL_OBJECT * src);
 
 typedef struct
 {
-    int align;
-    int dx, dy;
-    int show_focus;
+    int  align;
+    int  dx,
+	     dy;
+    int  show_focus;
     char filename[512];
     char focus_filename[512];
     char data[64];
     char focus_data[64];
     char width[64];
     char height[64];
-    int use_data;
-    int fullpath;
+    int  use_data;
+    int  fullpath;
     char helper[512];
-}
-IconInfo;
+} IconInfo;
 
 #define ISBUTTON(cls)  (cls==FL_BUTTON       || cls==FL_LIGHTBUTTON ||\
                         cls==FL_CHECKBUTTON  || cls==FL_ROUNDBUTTON ||\
                         cls==FL_ROUND3DBUTTON|| cls==FL_PIXMAPBUTTON||\
                         cls==FL_BITMAPBUTTON || cls==FL_SCROLLBUTTON||\
                         cls==FL_LABELBUTTON)
-#define ISCHOICE(cls)  (cls==FL_CHOICE || cls==FL_MENU || cls==FL_BROWSER)
+#define ISCHOICE( cls )  \
+( ( cls ) == FL_CHOICE || ( cls ) == FL_MENU || ( cls ) == FL_BROWSER )
 
 extern void select_object_by_class(int);
 extern char *append_fd_suffix(const char *);

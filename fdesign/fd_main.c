@@ -66,7 +66,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.17 $ of $Date: 2008/03/26 20:25:55 $",
+    "$State: Exp $  $Revision: 1.18 $ of $Date: 2008/04/10 00:05:47 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -81,6 +81,20 @@ print_version( int die )
 
     for ( ; *p; p++ )
 		fprintf( stderr, "%s\n", fl_rm_rcs_kw( *p ) );
+    if ( die )
+		exit( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+print_xforms_version( int die )
+{
+    fprintf( stderr, "FORMS Library Version %d.%d.%s\n",
+			 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
+
     if ( die )
 		exit( 0 );
 }
@@ -590,6 +604,8 @@ pre_connect( int    ac,
 			usage( av[ 0 ], 1 );
 		else if ( strncmp( av[ i ] + 1, "version", 4 ) == 0 )
 			print_version( 1 );
+		else if ( strncmp( av[ i ] + 1, "xforms_version", 4 ) == 0 )
+			print_xforms_version( 1 );
 		else if ( strncmp( av[ i ] + 1, "altformat", 3 ) == 0 )
 			fdopt.altformat = 1;
 		else if ( strncmp( av[ i ] + 1, "callback", 3 ) == 0 )

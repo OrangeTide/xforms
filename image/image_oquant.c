@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_oquant.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_oquant.c,v 1.5 2008/04/10 00:05:50 jtt Exp $
  *
  * Copyright (c)  1998-2002 T.C. Zhao
  *
@@ -36,116 +36,136 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 #include "quantize.h"
 
-void fl_select_octree_quantizer(void)
+
+void fl_select_octree_quantizer( void )
 {
    flimage_quantize_rgb = fl_octree_quantize_rgb;
    flimage_quantize_packed  = fl_octree_quantize_packed;
 }
 
+
 int
-fl_octree_quantize_rgb(unsigned char **red,
-		       unsigned char **green,
-		       unsigned char **blue, int w, int h,
-		       int max_color,
-		       unsigned short **ci, int *actual_color,
-		       int *red_lut,
-		       int *green_lut,
-		       int *blue_lut, FL_IMAGE * im)
+fl_octree_quantize_rgb( unsigned char  ** red,
+						unsigned char  ** green,
+						unsigned char  ** blue,
+						int               w,
+						int               h,
+						int               max_color,
+						unsigned short ** ci,
+						int             * actual_color,
+						int             * red_lut,
+						int             * green_lut,
+						int             * blue_lut,
+						FL_IMAGE        * im )
 {
-    int i, j;
-    unsigned int *rlut, *glut, *blut;
-    QuantizeDatabaseP database = QuantizeInitialize(max_color,
-						    QuantizeStyleLeast);
-    if (im)
+    int i,
+		j;
+    unsigned int *rlut,
+		         *glut,
+		         *blut;
+    QuantizeDatabaseP database = QuantizeInitialize( max_color,
+													 QuantizeStyleLeast );
+    if ( im )
     {
-	im->completed = 0;
-	im->visual_cue(im, "Starting OctreeQuantizer ...");
+		im->completed = 0;
+		im->visual_cue( im, "Starting OctreeQuantizer ..." );
     }
 
-    for (i = 0; i < h; i++)
-	for (j = 0; j < w; j++)
-	    QuantizeColor(database, red[i][j], green[i][j], blue[i][j]);
+    for ( i = 0; i < h; i++ )
+		for ( j = 0; j < w; j++ )
+			QuantizeColor( database,
+						   red[ i ][ j ], green[ i ][ j ], blue[ i ][ j ] );
 
-    QuantizeCreateLUT(database, actual_color,
-		      &rlut, &glut, &blut);
+    QuantizeCreateLUT( database, actual_color, &rlut, &glut, &blut);
 
-    for (i = 0; i < *actual_color; i++)
+    for ( i = 0; i < *actual_color; i++ )
     {
-	red_lut[i] = rlut[i];
-	green_lut[i] = glut[i];
-	blue_lut[i] = blut[i];
+		red_lut[ i ]   = rlut[ i ];
+		green_lut[ i ] = glut[ i ];
+		blue_lut[ i ]  = blut[ i ];
     }
 
     free(rlut);
     free(glut);
     free(blut);
 
-    for (i = 0; i < h; i++)
-	for (j = 0; j < w; j++)
-	    ci[i][j] = QuantizeFindIndex(database,
-					 red[i][j], green[i][j], blue[i][j]);
+    for ( i = 0; i < h; i++ )
+		for ( j = 0; j < w; j++ )
+			ci[ i ][ j ] = QuantizeFindIndex( database, red[ i ][ j ],
+											  green[ i ][ j ], blue[ i ][ j ] );
 
 
-    QuantizeDatabaseFree(database);
+    QuantizeDatabaseFree( database );
 
-    if (im)
+    if ( im )
     {
-	im->completed = im->total;
-	im->visual_cue(im, "Done OctreeQuantizer");
+		im->completed = im->total;
+		im->visual_cue( im, "Done OctreeQuantizer" );
     }
+
     return 0;
 }
 
+
 int
-fl_octree_quantize_packed(unsigned int **packed, int w, int h,
-		      int max_color, unsigned short **ci, int *actual_color,
-			  int *red_lut, int *green_lut, int *blue_lut,
-			  FL_IMAGE * im)
+fl_octree_quantize_packed(unsigned int   ** packed,
+						  int               w,
+						  int               h,
+						  int               max_color,
+						  unsigned short ** ci,
+						  int             * actual_color,
+						  int             * red_lut,
+						  int             * green_lut,
+						  int             * blue_lut,
+						  FL_IMAGE        * im )
 {
-    int i, n = h * w;
+    int i,
+		n = h * w;
     unsigned int *p;
     unsigned short *ind;
-    unsigned int *rlut, *glut, *blut;
-
-    QuantizeDatabaseP database = QuantizeInitialize(max_color,
-						    QuantizeStyleLeast);
-    if (im)
+    unsigned int *rlut,
+		         *glut,
+		         *blut;
+    QuantizeDatabaseP database = QuantizeInitialize( max_color,
+													 QuantizeStyleLeast );
+    if ( im )
     {
-	im->completed = 0;
-	im->visual_cue(im, "Starting OctreeQuantizer ...");
+		im->completed = 0;
+		im->visual_cue( im, "Starting OctreeQuantizer ..." );
     }
 
-    for (p = packed[0], i = 0; i < n; i++, p++)
-	QuantizeColor(database, FL_GETR(*p), FL_GETG(*p), FL_GETB(*p));
+    for ( p = packed[ 0 ], i = 0; i < n; i++, p++ )
+		QuantizeColor( database, FL_GETR( *p ), FL_GETG( *p ), FL_GETB( *p ) );
 
-    QuantizeCreateLUT(database, actual_color, &rlut, &glut, &blut);
-    for (i = 0; i < *actual_color; i++)
+    QuantizeCreateLUT( database, actual_color, &rlut, &glut, &blut );
+    for ( i = 0; i < *actual_color; i++ )
     {
-	red_lut[i] = rlut[i];
-	green_lut[i] = glut[i];
-	blue_lut[i] = blut[i];
+		red_lut[ i ]   = rlut[ i ];
+		green_lut[ i ] = glut[ i ];
+		blue_lut[ i ]  = blut[ i ];
     }
 
-    free(rlut);
-    free(glut);
-    free(blut);
+    free( rlut );
+    free( glut );
+    free( blut );
 
+    for ( ind = ci[ 0 ], p = packed[ 0 ], i = 0; i < n; i++, p++, ind++ )
+		*ind = QuantizeFindIndex( database, FL_GETR( *p ),
+								  FL_GETG( *p ), FL_GETB( *p ) );
 
-    for (ind = ci[0], p = packed[0], i = 0; i < n; i++, p++, ind++)
-	*ind = QuantizeFindIndex(database,
-				 FL_GETR(*p), FL_GETG(*p), FL_GETB(*p));
+    QuantizeDatabaseFree( database );
 
-    QuantizeDatabaseFree(database);
-
-    if (im)
+    if ( im )
     {
-	im->completed = im->total;
-	im->visual_cue(im, "Done OctreeQuantizer");
+		im->completed = im->total;
+		im->visual_cue( im, "Done OctreeQuantizer" );
     }
+
     return 0;
 }

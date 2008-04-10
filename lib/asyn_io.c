@@ -192,7 +192,8 @@ fl_watch_io( FL_IO_REC * io_rec,
 
     if ( ! io_rec )
     {
-		fl_msleep( msec );
+		if ( msec > 0 )
+			fl_msleep( msec );
 		return;
     }
 

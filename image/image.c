@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.10 2008/03/19 21:04:21 jtt Exp $
+ * $Id: image.c,v 1.11 2008/04/10 00:05:49 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -41,6 +41,7 @@
 #include "flimage_int.h"
 #include "private/flsnprintf.h"
 #include <stdlib.h>
+#include <stdarg.h>
 
 static int visual_cue( FL_IMAGE *,
 					   const char * );
@@ -91,7 +92,7 @@ flimage_setup( FLIMAGE_SETUP * setup )
 static void
 init_setup( void )
 {
-    if (current_setup.max_frames || current_setup.delay)
+    if ( current_setup.max_frames || current_setup.delay )
 		return;
 
     current_setup.max_frames = 30;
@@ -105,11 +106,11 @@ init_setup( void )
 FL_IMAGE *
 flimage_alloc( void )
 {
-    FL_IMAGE *image = fl_calloc(1, sizeof *image );
+    FL_IMAGE *image = fl_calloc( 1, sizeof *image );
 
     init_setup( );
 
-    add_default_formats();
+    add_default_formats( );
 
     image->setup = &current_setup;
     image->visual_cue = current_setup.visual_cue;
@@ -125,16 +126,16 @@ flimage_alloc( void )
     image->pscale = 1.0;
     image->display = flimage_display;
     image->xdisplay = current_setup.xdisplay;
-    image->infile = fl_malloc(MaxImageFileNameLen * sizeof(*image->infile));
-    image->outfile = fl_malloc(MaxImageFileNameLen * sizeof(*image->outfile));
-    image->infile[0] = image->outfile[0] = '\0';
+    image->infile = fl_malloc( MaxImageFileNameLen * sizeof *image->infile );
+    image->outfile = fl_malloc( MaxImageFileNameLen * sizeof *image->outfile );
+    image->infile[0] = image->outfile[ 0 ] = '\0';
 
     if ( ! image->xdisplay )
 		image->xdisplay = fl_display;
 
     /* initialize the quantizer */
 
-    if (!flimage_quantize_rgb)
+    if ( ! flimage_quantize_rgb )
     {
 		flimage_quantize_rgb = fl_j2pass_quantize_rgb;
 		flimage_quantize_packed = fl_j2pass_quantize_packed;
@@ -142,10 +143,10 @@ flimage_alloc( void )
 
     /* make sure visual_cue and error_message are ok */
 
-    if (!image->visual_cue)
+    if ( ! image->visual_cue )
 		image->visual_cue = visual_cue;
 
-    if (!image->error_message)
+    if ( ! image->error_message )
 		image->error_message = error_message;
 
     /* annotation stuff */
@@ -449,7 +450,9 @@ flimage_load(const char *file)
 static void convert_type(FL_IMAGE * im, FLIMAGE_IO * io);
 
 int
-flimage_dump(FL_IMAGE * image, const char *filename, const char *fmt)
+flimage_dump( FL_IMAGE   * image,
+			  const char * filename,
+			  const char * fmt )
 {
     FLIMAGE_IO *io = flimage_io;
     char buf[256], *p;
@@ -528,9 +531,13 @@ flimage_dump(FL_IMAGE * image, const char *filename, const char *fmt)
 }
 
 
-/* convert the image to a type the output routine can handle */
+/***************************************
+ * convert the image to a type the output routine can handle
+ ***************************************/
+
 static void
-convert_type(FL_IMAGE * im, FLIMAGE_IO * io)
+convert_type( FL_IMAGE   * im,
+			  FLIMAGE_IO * io )
 {
     const int types[] =
     {FL_IMAGE_RGB, FL_IMAGE_PACKED, FL_IMAGE_CI, FL_IMAGE_GRAY, FL_IMAGE_MONO};
@@ -615,9 +622,13 @@ flimage_free(FL_IMAGE * image)
 		im->next = 0;
 		fl_free(im);
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 flimage_get_linearlut(FL_IMAGE * im)
@@ -650,6 +661,9 @@ flimage_get_linearlut(FL_IMAGE * im)
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 flimage_free_linearlut(FL_IMAGE * im)
 {
@@ -665,10 +679,15 @@ flimage_free_linearlut(FL_IMAGE * im)
 }
 
 
+/***************************************
+ ***************************************/
+
 int
-flimage_getmem(FL_IMAGE * im)
+flimage_getmem( FL_IMAGE * im )
 {
-    int nomap, err = 0, same_size;
+    int nomap,
+		err = 0,
+		same_size;
     unsigned int esize;
 
     if (!im || !im->w || !im->h)
@@ -778,6 +797,9 @@ flimage_getmem(FL_IMAGE * im)
 }
 
 
+/***************************************
+ ***************************************/
+
 int
 flimage_getcolormap(FL_IMAGE * im)
 {
@@ -839,11 +861,13 @@ flimage_getcolormap(FL_IMAGE * im)
 }
 
 
-/* before we modify the current image, need to invalidate/free all
-   other types */
+/***************************************
+ * before we modify the current image, need to invalidate/free all
+ * other types
+ ***************************************/
 
 void
-flimage_invalidate_pixels(FL_IMAGE * im)
+flimage_invalidate_pixels( FL_IMAGE * im )
 {
     if (!FL_IsGray(im->type))
     {
@@ -876,10 +900,12 @@ flimage_invalidate_pixels(FL_IMAGE * im)
 }
 
 
-/* free all allocated memory associated with the image */
+/***************************************
+ * free all allocated memory associated with the image
+ ***************************************/
 
 void
-flimage_freemem(FL_IMAGE * image)
+flimage_freemem( FL_IMAGE * image )
 {
 
     if (!image || !image->w || !image->h)
@@ -1000,15 +1026,18 @@ flimage_freemem(FL_IMAGE * image)
 /*}****************************************************************** */
 
 
+/***************************************
+ ***************************************/
+
 int
-flimage_add_format(const char *formal_name,
-				   const char *short_name,
-				   const char *extension,
-				   int type,
-				   FLIMAGE_Identify identify,
-				   FLIMAGE_Description description,
-				   FLIMAGE_Read_Pixels read_pixels,
-				   FLIMAGE_Write_Image write_image)
+flimage_add_format( const char          * formal_name,
+					const char          * short_name,
+					const char          * extension,
+					int                   type,
+					FLIMAGE_Identify      identify,
+					FLIMAGE_Description   description,
+					FLIMAGE_Read_Pixels   read_pixels,
+					FLIMAGE_Write_Image   write_image )
 {
     int i, k;
     FLIMAGE_IO *thisIO;
@@ -1049,7 +1078,7 @@ flimage_add_format(const char *formal_name,
 		}
     }
 
-    thisIO = flimage_io + (k - 1);
+    thisIO = flimage_io + k - 1;
 
     thisIO->formal_name = formal_name;
     thisIO->short_name = short_name;
@@ -1061,21 +1090,25 @@ flimage_add_format(const char *formal_name,
     thisIO->write_image = write_image;
     thisIO->annotation = 0;
 
-    nimage += (k == nimage);
+    nimage += k == nimage;
 
     if (!strcmp(short_name, "ppm") || !strcmp(short_name, "pgm"))
 		thisIO->annotation = 1;
 
     /* sentinel */
 
-    (++thisIO)->formal_name = 0;
+    ( ++thisIO )->formal_name = 0;
 
     return k;
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-flimage_set_annotation_support(int in, int flag)
+flimage_set_annotation_support( int in,
+								int flag )
 {
      --in;
 
@@ -1100,12 +1133,18 @@ static FL_VN_PAIR types[] =
 };
 
 
+/***************************************
+ ***************************************/
+
 const char *
 flimage_type_name(int type)
 {
     return fl_get_vn_name(types, type);
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 flimage_get_number_of_formats(void)
@@ -1115,10 +1154,13 @@ flimage_get_number_of_formats(void)
 }
 
 
+/***************************************
+ ***************************************/
+
 #define MaxInfoBuffer 6
 
 const FLIMAGE_FORMAT_INFO *
-flimage_get_format_info(int n)
+flimage_get_format_info( int n )
 {
     static FLIMAGE_FORMAT_INFO fmt_return[MaxInfoBuffer];
     static int k;
@@ -1145,6 +1187,9 @@ flimage_get_format_info(int n)
     return fmtinfo;
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 flimage_replace_image(FL_IMAGE * im, int w, int h,
@@ -1201,6 +1246,9 @@ flimage_replace_image(FL_IMAGE * im, int w, int h,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 flimage_add_comments(FL_IMAGE * im, const char *s, int len)
 {
@@ -1224,109 +1272,131 @@ flimage_add_comments(FL_IMAGE * im, const char *s, int len)
 }
 
 
+/***************************************
+ ***************************************/
+
 int
-flimage_windowlevel(FL_IMAGE * im, int level, int width)
+flimage_windowlevel( FL_IMAGE * im,
+					 int        level,
+					 int        width)
 {
-    if (!im || im->type != FL_IMAGE_GRAY16)
+    if ( ! im || im->type != FL_IMAGE_GRAY16 )
 		return -1;
 
-    im->modified = (im->level != level || im->wwidth != width);
-    if (im->modified)
+    im->modified = im->level != level || im->wwidth != width;
+
+    if ( im->modified )
     {
 		im->level = level > im->gray_maxval ? im->gray_maxval : level;
 		im->wwidth = width;
     }
+
     return im->modified;
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-visual_cue(FL_IMAGE * im, const char *s)
+visual_cue( FL_IMAGE   * im,
+			const char * s )
 {
-    if (im->completed < 0)
+    if ( im->completed < 0 )
     {
 		/* don't know how long */
 
-		fprintf(stderr, "\r%s", s);
+		fprintf( stderr, "\r%s", s );
     }
-    else if (im->completed >= 0 && im->completed != im->total)
+    else if ( im->completed >= 0 && im->completed != im->total )
     {
-		fprintf(stderr, "\r%s %3.0f%%(%d of %d)                  ",
-				s, 100.0 * im->completed / (im->total - 1.0),
-				im->completed, im->h);
+		fprintf( stderr, "\r%s %3.0f%%(%d of %d)                  ",
+				 s, 100.0 * im->completed / ( im->total - 1.0 ),
+				 im->completed, im->h );
     }
-    else if (im->completed == im->total)
-		fprintf(stderr, "\n%s 100%%(%d of %d)\n", s, im->total, im->total);
+    else if ( im->completed == im->total )
+		fprintf( stderr, "\n%s 100%%(%d of %d)\n", s, im->total, im->total );
 
     return 0;
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
-copy_pixels(FL_IMAGE * dim, FL_IMAGE * sim)
+copy_pixels( FL_IMAGE * dim,
+			 FL_IMAGE * sim )
 {
     unsigned int size;
 
-    flimage_getmem(dim);
+    flimage_getmem( dim );
 
-    switch (sim->type)
+    switch ( sim->type )
     {
 		case FLIMAGE_RGB:
-			size = sim->w * sim->h * sizeof(**sim->red);
-			memcpy(dim->red[0], sim->red[0], size);
-			memcpy(dim->green[0], sim->green[0], size);
-			memcpy(dim->blue[0], sim->blue[0], size);
-			memcpy(dim->alpha[0], sim->alpha[0], size);
+			size = sim->w * sim->h * sizeof **sim->red;
+			memcpy( dim->red[ 0 ], sim->red[ 0 ], size );
+			memcpy( dim->green[ 0 ], sim->green[ 0 ], size );
+			memcpy( dim->blue[ 0 ],  sim->blue[ 0 ],  size );
+			memcpy( dim->alpha[0 ],  sim->alpha[ 0 ], size );
 			break;
 
 		case FLIMAGE_CI:
 		case FLIMAGE_MONO:
-			size = sim->w * sim->h * sizeof(**sim->ci);
-			memcpy(dim->ci[0], sim->ci[0], size);
+			size = sim->w * sim->h * sizeof **sim->ci;
+			memcpy( dim->ci[ 0 ], sim->ci[ 0 ], size );
 			break;
 
 		case FLIMAGE_GRAY:
 		case FLIMAGE_GRAY16:
-			size = sim->w * sim->h * sizeof(**sim->gray);
-			memcpy(dim->gray[0], sim->gray[0], size);
+			size = sim->w * sim->h * sizeof **sim->gray;
+			memcpy( dim->gray[ 0 ], sim->gray[ 0 ], size );
 			break;
 
 		default:
-			M_err("CopyPixel", "Bad type: %d", sim->type);
+			M_err( "CopyPixel", "Bad type: %d", sim->type );
 			break;
     }
 }
 
 
+/***************************************
+ ***************************************/
+
 FL_IMAGE *
-flimage_dup(FL_IMAGE * sim)
+flimage_dup( FL_IMAGE * sim )
 {
-    if(!sim || !sim->w || sim->type == FLIMAGE_NONE)
+    if ( ! sim || ! sim->w || sim->type == FLIMAGE_NONE )
 		return 0;
 
-    return flimage_dup_(sim, 1);
+    return flimage_dup_( sim, 1 );
 }
 
 
-/* duplicate an image, with or without the pixels */
+/***************************************
+ * duplicate an image, with or without the pixels
+ ***************************************/
 
 FL_IMAGE *
-flimage_dup_(FL_IMAGE * sim, int pix)
+flimage_dup_( FL_IMAGE * sim,
+			  int        pix )
 {
-    FL_IMAGE *im = flimage_alloc();
-    unsigned int mapsize = sim->map_len * sizeof(*sim->red_lut);
-    char *infile, *outfile;
+    FL_IMAGE *im = flimage_alloc( );
+    unsigned int mapsize = sim->map_len * sizeof *sim->red_lut;
+    char *infile,
+		 *outfile;
 
-    if(!im)
+    if ( ! im )
     {
-        flimage_error(sim,"malloc() failed in image_dup()");
+        flimage_error( sim,"malloc() failed in image_dup()" );
         return 0;
     }
 
     infile = im->infile;
     outfile = im->outfile;
 
-    memcpy(im, sim, sizeof(*im));
+    memcpy( im, sim, sizeof *im );
 
     /* reset all pointers */
 
@@ -1337,41 +1407,41 @@ flimage_dup_(FL_IMAGE * sim, int pix)
     im->red16 = im->green16 = im->blue16 = im->alpha16 = 0;
     im->packed = 0;
     im->wlut = 0;
-    im->llut[0] = im->llut[1] = im->llut[2] = 0;
+    im->llut[ 0 ] = im->llut[ 1 ] = im->llut[ 2 ] = 0;
     im->extra_io_info = 0;
     im->info = 0;
 
-    flimage_getmem(im);
+    flimage_getmem( im );
 
     im->available_type = im->type;
     im->next = 0;
-    strcpy(im->infile = infile, sim->infile);
-    strcpy(im->outfile = outfile, sim->outfile);
+    strcpy( im->infile = infile, sim->infile );
+    strcpy( im->outfile = outfile, sim->outfile );
 
     /* copy pixels if requested */
 
-    if (pix)
-		copy_pixels(im, sim);
+    if ( pix )
+		copy_pixels( im, sim );
 
-    if (mapsize)
+    if ( mapsize )
     {
-		if (flimage_getcolormap(im) < 0)
+		if ( flimage_getcolormap( im ) < 0 )
 		{
-			flimage_error(im, "Can't alloc colormap");
+			flimage_error( im, "Can't alloc colormap" );
 			return 0;
 		}
 
-		memcpy(im->red_lut, sim->red_lut, mapsize);
-		memcpy(im->green_lut, sim->green_lut, mapsize);
-		memcpy(im->blue_lut, sim->blue_lut, mapsize);
-		memcpy(im->alpha_lut, sim->alpha_lut, mapsize);
+		memcpy( im->red_lut,   sim->red_lut,   mapsize );
+		memcpy( im->green_lut, sim->green_lut, mapsize );
+		memcpy( im->blue_lut,  sim->blue_lut,  mapsize );
+		memcpy( im->alpha_lut, sim->alpha_lut, mapsize );
     }
 
     im->io_spec = 0;
-    if (sim->spec_size && sim->io_spec)
+    if ( sim->spec_size && sim->io_spec )
     {
-		im->io_spec = fl_malloc(sim->spec_size);
-		memcpy(im->io_spec, sim->io_spec, sim->spec_size);
+		im->io_spec = fl_malloc( sim->spec_size );
+		memcpy( im->io_spec, sim->io_spec, sim->spec_size );
     }
 
     /* reset stuff that's on a per-image basis */
@@ -1398,6 +1468,9 @@ flimage_dup_(FL_IMAGE * sim, int pix)
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 error_message( FL_IMAGE   * im  FL_UNUSED_ARG,
 			   const char * s )
@@ -1406,87 +1479,110 @@ error_message( FL_IMAGE   * im  FL_UNUSED_ARG,
 		M_err( 0, s );
 }
 
-#include <stdarg.h>
 
-/* a short cut for error message generating */
+/***************************************
+ * a short cut for error message generating
+ ***************************************/
 
 void
-flimage_error(FL_IMAGE * im, const char *fmt,...)
+flimage_error( FL_IMAGE   * im,
+			   const char * fmt,
+			   ... )
 {
     va_list args;
-    char buf[1024];
+    char buf[ 1024 ];
 
-    buf[0] = '\0';
-    if (fmt && *fmt)
+    buf[ 0 ] = '\0';
+    if ( fmt && *fmt )
     {
-		va_start(args, fmt);
-		fl_vsnprintf(buf, sizeof(buf), fmt, args);
-		va_end(args);
+		va_start( args, fmt );
+		fl_vsnprintf( buf, sizeof buf, fmt, args );
+		va_end( args );
     }
 
-    im->error_message(im, buf);
+    im->error_message( im, buf );
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-flimage_free_rgb(FL_IMAGE * im)
+flimage_free_rgb( FL_IMAGE * im )
 {
-    fl_free_matrix(im->red);
-    fl_free_matrix(im->green);
-    fl_free_matrix(im->blue);
-    fl_free_matrix(im->alpha);
+    fl_free_matrix( im->red );
+    fl_free_matrix( im->green );
+    fl_free_matrix( im->blue );
+    fl_free_matrix( im->alpha );
     im->red = im->green = im->blue = im->alpha = 0;
     im->available_type &= ~FL_IMAGE_RGB;
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-flimage_free_ci(FL_IMAGE * im)
+flimage_free_ci( FL_IMAGE * im )
 {
-    fl_free_matrix(im->ci);
+    fl_free_matrix( im->ci );
     im->ci = 0;
     im->available_type = ~FL_IMAGE_CI;
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-flimage_free_gray(FL_IMAGE * im)
+flimage_free_gray( FL_IMAGE * im )
 {
-    fl_free_matrix(im->gray);
+    fl_free_matrix( im->gray );
     im->gray = 0;
     im->available_type = ~FL_IMAGE_GRAY;
 }
 
-/* unpack packed bits into color indeces (0 or 1). len is the length
-   of packed bytes */
+
+/***************************************
+ * unpack packed bits into color indeces (0 or 1). len is the length
+ * of packed bytes
+ ***************************************/
 
 void
-fl_unpack_bits(unsigned short *out, unsigned char *in, int len)
+fl_unpack_bits( unsigned short * out,
+				unsigned char  * in,
+				int              len )
 {
     unsigned int mask = 0x80;
 
-    for (; --len >= 0; out++, mask >>= 1)
+    for ( ; --len >= 0; out++, mask >>= 1 )
     {
-		if (!mask)
+		if ( ! mask )
 		{
 			in++;
 			mask = 0x80;
 		}
-		*out = (*in & mask) != 0;
+		*out = ( *in & mask ) != 0;
     }
 }
 
-/* pack color index (0 or 1 ) into bytes. len is number of indeces */
+
+/***************************************
+ * pack color index (0 or 1 ) into bytes. len is number of indeces
+ ***************************************/
 
 void
-fl_pack_bits(unsigned char *out, unsigned short *in, int len)
+fl_pack_bits( unsigned char  * out,
+			  unsigned short * in,
+			  int              len)
 {
-    int k = 0, bit = 0;
+    int k = 0,
+		bit = 0;
 
-    for (k = bit = 0; --len >= 0; in++)
+    for ( k = bit = 0; --len >= 0; in++ )
     {
-		k = (k << 1) | *in;
-		if (++bit == 8)
+		k = ( k << 1 ) | *in;
+		if ( ++bit == 8 )
 		{
 			*out++ = k;
 			k = bit = 0;
@@ -1495,99 +1591,120 @@ fl_pack_bits(unsigned char *out, unsigned short *in, int len)
 
     /* left overs */
 
-    if (bit)
+    if ( bit )
     {
-		k <<= (8 - bit);
+		k <<= 8 - bit;
 		*out++ = k;
     }
 }
 
 
+/***************************************
+ ***************************************/
+
 unsigned int
-fl_value_to_bits(unsigned int val)
+fl_value_to_bits( unsigned int val )
 {
     unsigned int i;
 
-    for (i = 1; (1u << i) < val; i++)
+    for ( i = 1; ( 1u << i ) < val; i++ )
 		/* empty */ ;
     return i;
 }
 
 
-/*
+/***************************************
  * default supported image formats
- */
+ ***************************************/
 
 static void
-add_default_formats(void)
+add_default_formats( void )
 {
-    if (!ppm_added)
+    if ( ! ppm_added )
     {
-		flimage_enable_pnm();
-		flimage_enable_genesis();
+		flimage_enable_pnm( );
+		flimage_enable_genesis( );
     }
 
-    if (!gzip_added)
-		flimage_enable_gzip();
+    if ( ! gzip_added )
+		flimage_enable_gzip( );
 }
 
 
-/* given a format, find the corresponding io handler */
+/***************************************
+ * given a format, find the corresponding io handler
+ ***************************************/
 
 FLIMAGE_IO *
-flimage_find_imageIO(const char *fmt)
+flimage_find_imageIO( const char *fmt )
 {
     FLIMAGE_IO *io = flimage_io;
 
-    for (; io && io->formal_name; io++)
+    for ( ; io && io->formal_name; io++ )
     {
-		if (strcmp(io->formal_name, fmt) == 0 ||
-			strcmp(io->short_name, fmt) == 0 ||
-			strcmp(io->extension, fmt) == 0)
+		if (    ! strcmp(io->formal_name, fmt)
+			 || ! strcmp(io->short_name, fmt)
+			 || ! strcmp(io->extension, fmt) )
 			return io;
     }
+
     return 0;
 }
 
 
-/****
+/***************************************
  * Annoation IO
- */
+ ***************************************/
 
 static int
-write_marker(FLIMAGE_MARKER * m, FILE * fp)
+write_marker( FLIMAGE_MARKER * m,
+			  FILE           * fp )
 {
-    int r, g, b;
+    int r,
+		g,
+		b;
 
-    fprintf(fp, "%s %d %d %d %d %d %d %d %d", m->name, m->x, m->y,
-			m->w, m->h, m->fill, m->angle, m->thickness, m->style);
-    FL_UNPACK(m->color, r, g, b);
-    fprintf(fp, " %d %d %d", r, g, b);
-    FL_UNPACK(m->bcolor, r, g, b);
-    fprintf(fp, " %d %d %d\n", r, g, b);
+    fprintf( fp, "%s %d %d %d %d %d %d %d %d", m->name, m->x, m->y,
+			 m->w, m->h, m->fill, m->angle, m->thickness, m->style );
+    FL_UNPACK( m->color, r, g, b );
+    fprintf( fp, " %d %d %d", r, g, b );
+    FL_UNPACK( m->bcolor, r, g, b );
+    fprintf( fp, " %d %d %d\n", r, g, b );
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-read_marker(FLIMAGE_MARKER * m, FILE * fp)
+read_marker( FLIMAGE_MARKER * m,
+			 FILE           * fp )
 {
-    char buf[128];
-    static char name[64];
+    char buf[ 128 ];
+    static char name[ 64 ];
     int n;
-    int r, g, b, br, bg, bb;
+    int r,
+		g,
+		b,
+		br,
+		bg,
+		bb;
 
-    fgets(buf, sizeof(buf) - 1, fp);
-    buf[sizeof buf - 1] = '\0';
+    fgets( buf, sizeof buf - 1, fp );
+    buf[ sizeof buf - 1 ] = '\0';
 
-    n = sscanf(buf, "%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d", name,
-			   &m->x, &m->y, &m->w, &m->h, &m->fill, &m->angle, &m->thickness,
-			   &m->style, &r, &g, &b, &br, &bg, &bb);
-    if (n == 15)
+    n = sscanf( buf, "%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d", name,
+				&m->x, &m->y, &m->w, &m->h, &m->fill, &m->angle, &m->thickness,
+				&m->style, &r, &g, &b, &br, &bg, &bb );
+
+    if ( n == 15 )
     {
 		m->name = name;
-		m->color = FL_PACK(r, g, b);
-		m->bcolor = FL_PACK(br, bg, bb);
+		m->color = FL_PACK( r, g, b );
+		m->bcolor = FL_PACK( br, bg, bb );
     }
+
     return n == 15 ? 0 : -1;
 }
 
@@ -1595,227 +1712,266 @@ read_marker(FLIMAGE_MARKER * m, FILE * fp)
 #define LB '('
 #define RB ')'
 
-static FL_VN_PAIR fonts_vn[] =
+static FL_VN_PAIR fonts_vn[ ] =
 {
-    {FL_NORMAL_STYLE, "Helvetica"},
-    {FL_ITALIC_STYLE, "Helvetica-Oblique"},
-    {FL_BOLD_STYLE, "Helvetica-Bold"},
-    {FL_BOLDITALIC_STYLE, "Helvetica-BoldOblique"},
+    { FL_NORMAL_STYLE,          "Helvetica" },
+    { FL_ITALIC_STYLE,          "Helvetica-Oblique" },
+    { FL_BOLD_STYLE,            "Helvetica-Bold" },
+    { FL_BOLDITALIC_STYLE,      " Helvetica-BoldOblique" },
 
-    {FL_FIXED_STYLE, "Courier"},
-    {FL_FIXEDBOLD_STYLE, "Courier-Bold"},
-    {FL_FIXEDITALIC_STYLE, "Courier-Oblique"},
-    {FL_FIXEDBOLDITALIC_STYLE, "Courier-BoldOblique"},
+    { FL_FIXED_STYLE,           "Courier" },
+    { FL_FIXEDBOLD_STYLE,       "Courier-Bold" },
+    { FL_FIXEDITALIC_STYLE,     "Courier-Oblique" },
+    { FL_FIXEDBOLDITALIC_STYLE, "Courier-BoldOblique" },
 
-    {FL_TIMES_STYLE, "Times-Roman"},
-    {FL_TIMESBOLD_STYLE, "Times-Bold"},
-    {FL_TIMESITALIC_STYLE, "Times-Oblique"},
-    {FL_TIMESBOLDITALIC_STYLE, "Times-BoldOblique"},
+    { FL_TIMES_STYLE,           "Times-Roman" },
+    { FL_TIMESBOLD_STYLE,       "Times-Bold" },
+    { FL_TIMESITALIC_STYLE,     "Times-Oblique" },
+    { FL_TIMESBOLDITALIC_STYLE, "Times-BoldOblique" },
 
-    {FL_SYMBOL_STYLE, "Symbol"},
+    { FL_SYMBOL_STYLE,          "Symbol" },
 
-    {FL_SHADOW_STYLE, "Shadow"},
-    {FL_ENGRAVED_STYLE, "Engraved"},
-    {FL_ENGRAVED_STYLE, "Enbossed"},
+    { FL_SHADOW_STYLE,          "Shadow" },
+    { FL_ENGRAVED_STYLE,        "Engraved" },
+    { FL_ENGRAVED_STYLE,        "Enbossed" },
 
-    /* sentinel */
-    {-1, 0}
+    
+    { -1,                       NULL }    /* sentinel */
 };
 
 
+/***************************************
+ ***************************************/
+
 static const char *
-get_font_style(int fstyle)
+get_font_style( int fstyle )
 {
-    static char retbuf[128];
+    static char retbuf[ 128 ];
     const char *font_spstyle = "normal";
     int spstyle = fstyle / FL_SHADOW_STYLE;
     int style = fstyle % FL_SHADOW_STYLE;
 
-    strcpy(retbuf, fl_get_vn_name(fonts_vn, style));
-    if (spstyle)
-		font_spstyle = fl_get_vn_name(fonts_vn, spstyle * FL_SHADOW_STYLE);
-    return strcat(strcat(retbuf, " "), font_spstyle);
+    strcpy( retbuf, fl_get_vn_name( fonts_vn, style ) );
+    if ( spstyle )
+		font_spstyle = fl_get_vn_name( fonts_vn, spstyle * FL_SHADOW_STYLE );
+    return strcat( strcat( retbuf, " " ), font_spstyle );
 }
 
 
-static FL_VN_PAIR align_vn[] =
+static FL_VN_PAIR align_vn[ ] =
 {
-    {FL_ALIGN_CENTER, "center"},
-    {FL_ALIGN_TOP, "top"},
-    {FL_ALIGN_LEFT, "left"},
-    {FL_ALIGN_RIGHT, "right"},
-    {FL_ALIGN_TOP_LEFT, "topleft"},
-    {FL_ALIGN_TOP_RIGHT, "topleft"},
-    {FL_ALIGN_BOTTOM_LEFT, "bottomleft"},
-    {FL_ALIGN_BOTTOM_RIGHT, "bottomleft"},
-   /* sentinel */
-    {-1, 0}
+    { FL_ALIGN_CENTER,       "center"},
+    { FL_ALIGN_TOP,          "top" },
+    { FL_ALIGN_LEFT,         "left" },
+    { FL_ALIGN_RIGHT,        "right" },
+    { FL_ALIGN_TOP_LEFT,     "topleft" },
+    { FL_ALIGN_TOP_RIGHT,    "topleft" },
+    { FL_ALIGN_BOTTOM_LEFT,  "bottomleft" },
+    { FL_ALIGN_BOTTOM_RIGHT, "bottomleft" },
+    { -1,                    NULL }      /* sentinel */
 };
 
 
+/***************************************
+ ***************************************/
+
 static void
-write_text(FLIMAGE_TEXT * t, FILE * fp)
+write_text( FLIMAGE_TEXT * t,
+			FILE         * fp )
 {
-    int r, g, b;
+    int r,
+		g,
+		b;
     char *p;
 
     /* output string. */
 
-    putc(LB, fp);
-    for (p = t->str; p && *p; p++)
+    putc( LB, fp );
+    for ( p = t->str; p && *p; p++ )
     {
-		if (*p == RB)
-			putc('\\', fp);
-		putc(*p, fp);
+		if ( *p == RB )
+			putc( '\\', fp );
+		putc( *p, fp );
     }
-    putc(RB, fp);
+    putc( RB, fp );
 
-    fprintf(fp, " %s %d %d %d %s %d %d", get_font_style(t->style), t->size,
-			t->x, t->y, fl_get_vn_name(align_vn, t->align), t->angle, t->nobk);
-    FL_UNPACK(t->color, r, g, b);
-    fprintf(fp, " %d %d %d", r, g, b);
-    FL_UNPACK(t->bcolor, r, g, b);
-    fprintf(fp, " %d %d %d\n", r, g, b);
+    fprintf( fp, " %s %d %d %d %s %d %d", get_font_style(t->style), t->size,
+			 t->x, t->y, fl_get_vn_name(align_vn, t->align), t->angle,
+			 t->nobk );
+    FL_UNPACK( t->color, r, g, b );
+    fprintf( fp, " %d %d %d", r, g, b );
+    FL_UNPACK( t->bcolor, r, g, b );
+    fprintf( fp, " %d %d %d\n", r, g, b );
 }
 
+
+/***************************************
+ ***************************************/
 
 static int
 read_text( FLIMAGE_TEXT * t,
 		   FILE *         fp )
 {
-    char buf[1024], fnt[64], style[64], align[64];
-    static char name[512];
-    int r, g, b, br, bg, bb;
+    char buf[ 1024 ],
+		 fnt[ 64 ],
+		 style[ 64 ],
+		 align[ 64 ];
+    static char name[ 512 ];
+    int r,
+		g,
+		b,
+		br,
+		bg,
+		bb;
     int n;
-    char *p = buf + 1, *s = name, *ss = name + sizeof(name) - 1;
+    char *p = buf + 1,
+		 *s = name,
+		 *ss = name + sizeof name - 1;
 
-    fgets(buf, sizeof(buf) - 1, fp);
-    buf[sizeof(buf) - 1] = '\0';
+    fgets( buf, sizeof buf - 1, fp );
+    buf[ sizeof buf - 1 ] = '\0';
 
-    for (; s < ss && *p && (*p != ')' || *(p - 1) == '\\'); p++)
+    for ( ; s < ss && *p && ( *p != ')' || *( p - 1 ) == '\\' ); p++ )
 		*s++ = *p;
     *s = '\0';
 
-    n = sscanf(p + 1, "%s %s %d %d %d %s %d %d %d %d %d %d %d %d", fnt, style,
-			   &t->size, &t->x, &t->y, align, &t->angle, &t->nobk,
-			   &r, &g, &b, &br, &bg, &bb);
+    n = sscanf( p + 1, "%s %s %d %d %d %s %d %d %d %d %d %d %d %d", fnt, style,
+				&t->size, &t->x, &t->y, align, &t->angle, &t->nobk,
+				&r, &g, &b, &br, &bg, &bb );
 
-    if (n == 14)
+    if ( n == 14 )
     {
 		t->str = name;
 		t->len = s - name;
-		t->style = fl_get_vn_value(fonts_vn, fnt);
-		t->style |= fl_get_vn_value(fonts_vn, style);
-		t->align = fl_get_vn_value(align_vn, align);
-		t->color = FL_PACK(r, g, b);
-		t->bcolor = FL_PACK(br, bg, bb);
+		t->style = fl_get_vn_value( fonts_vn, fnt );
+		t->style |= fl_get_vn_value( fonts_vn, style );
+		t->align = fl_get_vn_value( align_vn, align );
+		t->color = FL_PACK( r, g, b );
+		t->bcolor = FL_PACK( br, bg, bb );
     }
     return n == 14 ? 0 : -1;
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-skip_line(FILE * fp)
+skip_line( FILE * fp )
 {
     int c;
 
-    if ((c = getc(fp)) == '#')
+    if ( ( c = getc( fp ) ) == '#' )
     {
-		while ((c = getc(fp)) != '\n' && c != EOF)
+		while ( ( c = getc( fp ) ) != '\n' && c != EOF )
 			/* empty */ ;
     }
     else
-		ungetc(c, fp);
-    return (c == '#' && c != EOF);
+		ungetc( c, fp );
+    return c == '#' && c != EOF;
 }
 
+
+/***************************************
+ ***************************************/
 
 #define TEXTVERSION           1
 #define MARKERVERSION         1
 
 int
-flimage_write_annotation(FL_IMAGE * im)
+flimage_write_annotation( FL_IMAGE * im )
 {
     FILE *fp;
     int i;
     FLIMAGE_MARKER *m;
     FLIMAGE_TEXT *t;
 
-    if (!im || im->type == FL_IMAGE_NONE)
+    if ( !im || im->type == FL_IMAGE_NONE )
 		return -1;
 
     fp = im->fpout;
 
     /* write markers first */
 
-    if (im->nmarkers)
+    if ( im->nmarkers )
     {
-		fprintf(fp, "\n###markers %d %d\n", im->nmarkers, MARKERVERSION);
-		fprintf(fp, "# name x y w h fill angle thick style r g b r g b\n");
+		fprintf( fp, "\n###markers %d %d\n", im->nmarkers, MARKERVERSION );
+		fprintf( fp, "# name x y w h fill angle thick style r g b r g b\n" );
 		m = im->marker;
-		for (i = 0; i < im->nmarkers; i++, m++)
-			write_marker(m, fp);
+		for ( i = 0; i < im->nmarkers; i++, m++ )
+			write_marker( m, fp );
     }
 
-    if (im->ntext)
+    if ( im->ntext )
     {
-		fprintf(fp, "###text %d %d\n", im->ntext, TEXTVERSION);
-		fprintf(fp, "# (s) font style size x y align angle nobk r g b r g b\n");
+		fprintf( fp, "###text %d %d\n", im->ntext, TEXTVERSION );
+		fprintf( fp, "# (s) font style size x y align angle nobk "
+				 "r g b r g b\n" );
 		t = im->text;
-		for (i = 0; i < im->ntext; i++, t++)
-			write_text(t, fp);
+		for ( i = 0; i < im->ntext; i++, t++ )
+			write_text( t, fp );
     }
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-flimage_read_annotation(FL_IMAGE * im)
+flimage_read_annotation( FL_IMAGE * im )
 {
     FILE *fp;
     FLIMAGE_MARKER m;
     FLIMAGE_TEXT t;
-    int c, done, v, nmarkers, i, ntext;
-    char buf[1024];
+    int c,
+		done,
+		v,
+		nmarkers,
+		i,
+		ntext;
+    char buf[ 1024 ];
 
-    if (!im || im->type == FL_IMAGE_NONE)
+    if ( ! im || im->type == FL_IMAGE_NONE )
 		return -1;
 
     fp = im->fpin;
 
     /* load the markers */
 
-    for (done = 0; !done;)
+    for ( done = 0; ! done; )
     {
-		while ((c = getc(fp)) != EOF && c != '#')
+		while ( ( c = getc( fp ) ) != EOF && c != '#' )
 			/* empty */ ;
-		done = (c == EOF);
-		fgets(buf, sizeof(buf) - 1, fp);
-		buf[sizeof(buf) - 1] = '\0';
-		if (strstr(buf, "#marker"))
+		done = c == EOF;
+		fgets( buf, sizeof buf - 1, fp );
+		buf[ sizeof buf - 1 ] = '\0';
+		if ( strstr( buf, "#marker" ) )
 		{
-			sscanf(buf, "%*s %d %d", &nmarkers, &v);
-			if (v > MARKERVERSION)
-				M_err("ReadMarker", "wrong version");
-			for (i = 0; i < nmarkers; i++)
+			sscanf( buf, "%*s %d %d", &nmarkers, &v );
+			if ( v > MARKERVERSION )
+				M_err( "ReadMarker", "wrong version" );
+			for ( i = 0; i < nmarkers; i++ )
 			{
-				while (skip_line(fp))
+				while ( skip_line( fp ) )
 					/* empty */ ;
-				if (read_marker(&m, fp) >= 0)
-					flimage_add_marker_struct(im, &m);
+				if ( read_marker( &m, fp ) >= 0 )
+					flimage_add_marker_struct( im, &m );
 			}
 		}
 
-		if (strstr(buf, "#text"))
+		if ( strstr( buf, "#text" ) )
 		{
-			sscanf(buf, "%*s %d %d", &ntext, &v);
-			if (v > TEXTVERSION)
-				M_err("ReadText", "wrong version");
-			for (i = 0; i < ntext; i++)
+			sscanf( buf, "%*s %d %d", &ntext, &v );
+			if ( v > TEXTVERSION )
+				M_err( "ReadText", "wrong version" );
+			for ( i = 0; i < ntext; i++ )
 			{
-				while (skip_line(fp))
+				while ( skip_line( fp ) )
 					/* empty */ ;
-				if (read_text(&t, fp) >= 0)
-					flimage_add_text_struct(im, &t);
+				if ( read_text( &t, fp) >= 0 )
+					flimage_add_text_struct( im, &t );
 			}
 			done = 1;
 		}

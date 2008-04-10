@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rbut = "$Id: scrollbut.c,v 1.7 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_rbut = "$Id: scrollbut.c,v 1.8 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -118,9 +118,10 @@ fl_create_scrollbutton( int          type,
     fl_add_button_class( FL_SCROLLBUTTON, draw_sbbutton, 0 );
     ob = fl_create_generic_button( FL_SCROLLBUTTON, type, x, y, w, h, label );
     ob->boxtype = FL_UP_BOX;
-    ob->col1 = FL_COL1;
-    ob->col2 = FL_COL1;
-    ob->lcol = FL_COL1;
+    ob->col1    = FL_COL1;
+    ob->col2    = FL_COL1;
+    ob->lcol    = FL_COL1;
+
     return ob;
 }
 
@@ -137,9 +138,8 @@ fl_add_scrollbutton( int          type,
 					 FL_Coord     h,
 					 const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *ob = fl_create_scrollbutton( type, x, y, w, h, label );
 
-    ob = fl_create_scrollbutton( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
     return ob;
 }

@@ -411,14 +411,15 @@ char *
 get_vn_name( VN_pair * vn,
 			 int       val )
 {
-    static char buf[MAX_TYPE_NAME_LEN];
+    static char buf[ MAX_TYPE_NAME_LEN ];
 
-    for (; vn->val >= 0; vn++)
-	if (vn->val == val)
+    for ( ; vn->val >= 0; vn++ )
+	if ( vn->val == val )
 	    return vn->name;
-    sprintf(buf, "%d", val);
+    sprintf( buf, "%d", val );
     return buf;
 }
+
 
 static void output_object( FILE * fn, FL_OBJECT * obj, int );
 static void pre_form_output( FILE * fn );
@@ -426,19 +427,19 @@ static void post_form_output( FILE * fn );
 
 
 static void
-emit_attrib( FILE *      fp,
-			 int         a,
-			 VN_pair *   vn,
-			 const char *aname )
+emit_attrib( FILE *       fp,
+			 int          a,
+			 VN_pair    * vn,
+			 const char * aname )
 {
     const char *s;
 
-    if (vn == vn_align)
-		s = align_name(a);
+    if ( vn == vn_align )
+		s = align_name( a );
     else
 		s = get_vn_name(vn, a);
 
-    fprintf(fp, "    %s(obj,%s);\n", aname, s);
+    fprintf( fp, "    %s( obj, %s );\n", aname, s);
 }
 
 
@@ -446,16 +447,16 @@ static char *
 pure_style_name( int val )
 {
     VN_pair *vn = vn_lstyle;
-    static char buf[64];
+    static char buf[ 64 ];
 
-    for (; vn->val >= 0 && vn->val != val; vn++)
+    for ( ; vn->val >= 0 && vn->val != val; vn++ )
 		/* empty */ ;
 
-    if (vn->val == val)
+    if ( vn->val == val )
 		return vn->name;
     else
     {
-		sprintf(buf, "%d", val);
+		sprintf( buf, "%d", val );
 		return buf;
     }
 }
@@ -466,22 +467,22 @@ pure_style_val( const char *cc )
 {
     VN_pair *vn = vn_lstyle;
 
-    for (; vn->val >= 0 && strcmp(cc, vn->name); vn++)
+    for ( ; vn->val >= 0 && strcmp( cc, vn->name ); vn++ )
 		/* empty */;
-    return strcmp(cc, vn->name) == 0 ? vn->val : atoi(cc);
+    return strcmp( cc, vn->name ) == 0 ? vn->val : atoi( cc );
 }
 
 
 char *
 style_name( int style )
 {
-    static char buf[64];
+    static char buf[ 64 ];
     int lstyle = style % FL_SHADOW_STYLE;
-    int spstyle = (style / FL_SHADOW_STYLE) * FL_SHADOW_STYLE;
+    int spstyle = ( style / FL_SHADOW_STYLE ) * FL_SHADOW_STYLE;
 
-    strcpy(buf, pure_style_name(lstyle));
-    if (spstyle)
-		strcat(strcat(buf, "+"), pure_style_name(spstyle));
+    strcpy( buf, pure_style_name( lstyle ) );
+    if ( spstyle )
+		strcat( strcat( buf, "+" ), pure_style_name( spstyle ) );
     return buf;
 }
 
@@ -489,30 +490,32 @@ style_name( int style )
 int
 style_val( const char * cc )
 {
-    char lstyle[MAX_TYPE_NAME_LEN], spstyle[MAX_TYPE_NAME_LEN], *p;
+    char lstyle[ MAX_TYPE_NAME_LEN ],
+		 spstyle[ MAX_TYPE_NAME_LEN ],
+		 *p;
 
-    strcpy(lstyle, cc);
-    spstyle[0] = '\0';
-    if ((p = strchr(lstyle, '+')))
+    strcpy( lstyle, cc );
+    spstyle[ 0 ] = '\0';
+    if ( ( p = strchr( lstyle, '+' ) ) )
     {
-		strcpy(spstyle, p + 1);
+		strcpy( spstyle, p + 1 );
 		*p = 0;
     }
-    return pure_style_val(lstyle) + pure_style_val(spstyle);
+    return pure_style_val( lstyle ) + pure_style_val( spstyle );
 }
 
 
 char *
 lsize_name( int val )
 {
-    return get_vn_name(vn_lsize, val);
+    return get_vn_name( vn_lsize, val );
 }
 
 
 int
 lsize_val( const char *cc )
 {
-    return get_vn_val(vn_lsize, cc);
+    return get_vn_val( vn_lsize, cc );
 }
 
 
@@ -526,32 +529,32 @@ gravity_name( int val )
 int
 gravity_val( const char * cc )
 {
-    return get_vn_val(vn_gravity, cc);
+    return get_vn_val( vn_gravity, cc );
 }
 
 
 char *
 resize_name( int val )
 {
-    return get_vn_name(vn_resize, val);
+    return get_vn_name( vn_resize, val );
 }
 
 
 int
 resize_val( const char * cc )
 {
-    return get_vn_val(vn_resize, cc);
+    return get_vn_val( vn_resize, cc );
 }
 
 
 const char *
 align_name( int val )
 {
-    static char buf[128];
+    static char buf[ 128 ];
 
-    strcpy(buf, get_vn_name(vn_align, val % FL_ALIGN_INSIDE));
-    if (val >= FL_ALIGN_INSIDE)
-		strcat(buf, "|FL_ALIGN_INSIDE");
+    strcpy( buf, get_vn_name( vn_align, val % FL_ALIGN_INSIDE ) );
+    if ( val >= FL_ALIGN_INSIDE )
+		strcat( buf, " | FL_ALIGN_INSIDE" );
     return buf;
 }
 
@@ -559,42 +562,43 @@ align_name( int val )
 int
 align_val( const char * cc )
 {
-    char s[128], *p;
+    char s[ 128 ],
+		 *p;
     int val;
 
-    strcpy(s, cc);
-    if ((p = strchr(s, '|')))
+    strcpy( s, cc );
+    if ( ( p = strchr( s, '|' )  ))
 		*p = '\0';
-    val = get_vn_val(vn_align, s);
-    return p ? (val | FL_ALIGN_INSIDE) : val;
+    val = get_vn_val( vn_align, s );
+    return p ? ( val | FL_ALIGN_INSIDE ) : val;
 }
 
 
 char *
 boxtype_name( int val )
 {
-    return get_vn_name(vn_btype, val);
+    return get_vn_name( vn_btype, val );
 }
 
 
 int
 boxtype_val( const char * cc )
 {
-    return get_vn_val(vn_btype, cc);
+    return get_vn_val( vn_btype, cc );
 }
 
 
 char *
 unit_name( int val )
 {
-    return get_vn_name(vn_unit, val);
+    return get_vn_name( vn_unit, val );
 }
 
 
 int
 unit_val( const char * s )
 {
-    return get_vn_val(vn_unit, s);
+    return get_vn_val( vn_unit, s );
 }
 
 
@@ -604,8 +608,8 @@ unit_val( const char * s )
 
 #define MAXARNAME	100
 
-static char *arnames[MAXARNAME];
-static int arsizes[MAXARNAME];
+static char *arnames[ MAXARNAME ];
+static int arsizes[ MAXARNAME ];
 static int anumb = 0;
 
 
@@ -623,38 +627,39 @@ init_array_names( void )
 static int
 check_array_name( char aname[ ] )
 {
-    char tmpstr[MAX_VAR_LEN];
-    int i, j, ind;
+    char tmpstr[ MAX_VAR_LEN ];
+    int i,
+		j,
+		ind;
 
-    strcpy(tmpstr, aname);
+    strcpy( tmpstr, aname );
 
-    for (i = 0; tmpstr[i] != '[' && tmpstr[i]; i++)
+    for ( i = 0; tmpstr[ i ] != '[' && tmpstr[ i ]; i++ )
 		/* empty */ ;
-    if (!tmpstr[i])
+    if ( ! tmpstr[ i ] )
 		return FALSE;
 
     ind = 0;
-    for (j = i + 1; tmpstr[j] != ']' && tmpstr[j]; j++)
-		if (tmpstr[j] >= '0' && tmpstr[j] <= '9')
-			ind = 10 * ind + tmpstr[j] - '0';
+    for ( j = i + 1; tmpstr[ j ] != ']' && tmpstr[ j ]; j++ )
+		if (tmpstr[ j ] >= '0' && tmpstr[ j ] <= '9' )
+			ind = 10 * ind + tmpstr[ j ] - '0';
 
-    tmpstr[i] = 0;
+    tmpstr[ i ] = 0;
 
-    for (i = 0; i < anumb; i++)
-		if (strcmp(arnames[i], tmpstr) == 0)
+    for ( i = 0; i < anumb; i++ )
+		if ( strcmp( arnames[ i ], tmpstr ) == 0 )
 		{
-			if (ind + 1 > arsizes[i])
-				arsizes[i] = ind + 1;
+			if ( ind + 1 > arsizes[ i ] )
+				arsizes[ i ] = ind + 1;
 			return TRUE;
 		}
 
-    if (anumb == MAXARNAME)
+    if ( anumb == MAXARNAME )
 		return FALSE;
 
-    arnames[anumb] = (char *) malloc(MAX_VAR_LEN);
-    strcpy(arnames[anumb], tmpstr);
-    arsizes[anumb] = ind + 1;
-    anumb++;
+    arnames[ anumb ] = malloc( MAX_VAR_LEN );
+    strcpy( arnames[ anumb ], tmpstr);
+    arsizes[ anumb++ ] = ind + 1;
     return TRUE;
 }
 
@@ -674,17 +679,18 @@ print_array_names( FILE * fn,
 {
     int i;
 
-    for (i = 0; i < anumb; i++)
+    for ( i = 0; i < anumb; i++ )
     {
-		if (!newf)
+		if ( ! newf )
 		{
-			fprintf(fn, "\t*%s[%i]", arnames[i], arsizes[i]);
-			if (i < anumb - 1)
-				fprintf(fn, ",\n");
+			fprintf( fn, "    *%s[ %i ]", arnames[ i ], arsizes[ i ] );
+			if ( i < anumb - 1 )
+				fprintf( fn, ",\n" );
 		}
 		else
 		{
-			fprintf(fn, "\tFL_OBJECT *%s[%i];\n", arnames[i], arsizes[i]);
+			fprintf( fn, "    FL_OBJECT *%s[ %i ];\n",
+					 arnames[ i ], arsizes[ i ] );
 		}
     }
 }
@@ -703,9 +709,9 @@ print_array_names( FILE * fn,
 const char *
 get_fd_name( const char * form_name )
 {
-    static char fdtname[MAX_VAR_LEN];
+    static char fdtname[ MAX_VAR_LEN ];
 
-    sprintf(fdtname, "FD_%s", form_name);
+    sprintf( fdtname, "FD_%s", form_name );
     return fdtname;
 }
 
@@ -715,13 +721,13 @@ get_conversion_factor( void )
 {
     double sc = 1.0;
 
-    if (fdopt.unit == FL_COORD_POINT)
+    if ( fdopt.unit == FL_COORD_POINT )
 		sc = 72.00 / fl_dpi;
-    else if (fdopt.unit == FL_COORD_MM)
+    else if ( fdopt.unit == FL_COORD_MM )
 		sc = 25.40 / fl_dpi;
-    else if (fdopt.unit == FL_COORD_centiPOINT)
+    else if ( fdopt.unit == FL_COORD_centiPOINT )
 		sc = 7200.00 / fl_dpi;
-    else if (fdopt.unit == FL_COORD_centiMM)
+    else if ( fdopt.unit == FL_COORD_centiMM )
 		sc = 2540.00 / fl_dpi;
 
     return sc;
@@ -748,17 +754,16 @@ convert_u( FL_Coord l )
  * emit fl_set_xxxx_shortcut instead of fl_set_object_shortcut
  */
 
-static VN_pair scclass[] =
+static VN_pair scclass[ ] =
 {
-    {FL_BUTTON, "button", 0, 0},
-    {FL_LIGHTBUTTON, "button", 0, 0},
-    {FL_ROUNDBUTTON, "button", 0, 0},
-    {FL_CHECKBUTTON, "button", 0, 0},
-    {FL_BITMAPBUTTON, "button", 0, 0},
-    {FL_PIXMAPBUTTON, "button", 0, 0},
-    {FL_INPUT, "input", 0, 0},
- /* sentinel */
-    {-1, 0, 0, 0}
+    { FL_BUTTON, "button", 0, 0},
+    { FL_LIGHTBUTTON,  "button", 0, 0 },
+    { FL_ROUNDBUTTON,  "button", 0, 0 },
+    { FL_CHECKBUTTON,  "button", 0, 0 },
+    { FL_BITMAPBUTTON, "button", 0, 0 },
+    { FL_PIXMAPBUTTON, "button", 0, 0 },
+    { FL_INPUT,        "input",  0, 0 },
+    { -1,              NULL,     0, 0 }   /* sentinel */
 };
 
 
@@ -766,9 +771,10 @@ static const char *
 supported_shortcut( int objclass )
 {
     VN_pair *vn = scclass;
-    for (; vn->val >= 0; vn++)
-	if (vn->val == objclass)
-	    return vn->name;
+
+    for ( ; vn->val >= 0; vn++ )
+		if ( vn->val == objclass )
+			return vn->name;
     return "object";
 }
 
@@ -847,12 +853,13 @@ print_form_newformat( FILE *       fn,
     fprintf( fn, "    %s *%s = fl_malloc( sizeof *%s );\n\n",
 			 fdtname, fdvname, fdvname );
 
-	fprintf( fn, "    %s->vdata = %s->cdata = NULL;\n"
-			     "    %s->ldata = 0;\n", fdvname, fdvname, fdvname );
-
     /* take care of unit, borderwidth etc that affect the entire form */
 
     pre_form_output( fn );
+
+	fprintf( fn, "\n"
+			     "    %s->vdata = %s->cdata = NULL;\n"
+			     "    %s->ldata = 0;\n\n", fdvname, fdvname, fdvname );
 
     fprintf( fn, "    %s->%s = fl_bgn_form( FL_NO_BOX, %d, %d );\n",
 			 fdvname, fname, convert_u(form->w), convert_u(form->h));

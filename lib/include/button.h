@@ -53,13 +53,14 @@ typedef struct
 				   mask;
 	unsigned int   bits_w,
 				   bits_h;
-	int			   val;			/* whether on */
-	int			   mousebut;	/* mouse button that caused the push	 */
-	int			   timdel;		/* time since last touch (TOUCH buttons) */
-	int			   event;		/* what event triggers redraw			 */
-	int            is_pushed;   /* set while drawn as pushed down        */
-	long		   cspecl;		/* reserved for class specfic stuff		 */
-	void 		 * cspecv;		/* misc. things							 */
+	int			   val;				/* whether on */
+	int			   mousebut;		/* mouse button that caused the push	 */
+	int			   timdel;			/* time since last touch (TOUCH buttons) */
+	int			   event;			/* what event triggers redraw			 */
+	int            is_pushed;   	/* set while drawn as pushed down        */
+	int            react_to[ 5 ];   /* mouse buttons button reacts to        */
+	long		   cspecl;			/* reserved for class specfic stuff		 */
+	void 		 * cspecv;			/* misc. things							 */
 	char 		 * filename;
 	Pixmap		   focus_pixmap,
 				   focus_mask;
@@ -391,5 +392,14 @@ FL_EXPORT void fl_add_button_class(
 		FL_CleanupButton cleanup
 		);
 
+
+FL_EXPORT void fl_set_button_mouse_buttons(
+		FL_OBJECT * ob,
+		int         mouse_buttons
+		);
+
+FL_EXPORT int fl_get_button_mouse_buttons(
+		FL_OBJECT * ob
+		);
 
 #endif /* ! defined FL_BUTTON_H */

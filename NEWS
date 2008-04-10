@@ -15,6 +15,54 @@ V1.1 ???????????
   o Fix possible crash when using popups heavily.
   o Fix compilation on SCO OpenServer, AIX and systems without GNU make.
 ------------------------------------------
+V1.0.91pre5 April xx, 2008
+  o Memory allocation bug in fl_initialize() fixed.
+  o Output of fdesign should now be valid C (ANSI 89)
+  o Number of symbols and length of names not limited anymore.
+  o Public functions added to set or query for buttns to which
+    mouse buttons they react:
+     fl_set_button_mouse_buttons()
+     fl_get_button_mouse_buttons()
+  o Changes to fdesign to set this behaviour.
+------------------------------------------
+V1.0.91pre4 March 31, 2008
+  o Just some minor bug fixes
+------------------------------------------
+V1.0.91pre3 March 26, 2008
+  o If input object has focus and another object gets clicked on
+    the input object loses the focus, resulting in an evaluation
+    of the content of the input object.
+  o Timeouts got a higher priority to make them more precise.
+  o Some reorganization of memory allocation handling in lots
+    of places to be able to really deallocate unused memory.
+  o Buttons now only react to the left mouse button.
+  o Enforcing that always one of a set of radio buttons is
+    active.
+------------------------------------------
+V1.0.91pre2 March 20, 2008
+  o Cleanup of popup code.
+  o Scroll wheel can now be used for dials.
+  o Scrollbars on textbrowsers etc. now have correct size and position.
+  o FL_DROPLIST_CHOICE choice objects now work.
+  o Scroll wheel support to walk through the items of a menu.
+  o New public function:
+      fl_get_choice_item_mode()
+------------------------------------------
+V1.0.91pre1 March 12, 2008
+  o Resizing code rewritten, several redraw bugs removed.
+  o Double clicking on a file in the file selector repaired.
+  o Three new public functions:
+      functions fl_get_object_bw()
+	  fl_get_object_gravity()
+      fl_get_object_resize()
+  o Bugs fixed that resulted in attempts to draw on non-existent
+    windows which then resulted in X errors.
+  o Number of forms that can be created is now not limited anymore.
+  o Object and event queue code rewritten to allow queues that grow
+    dynamically if necessary.
+  o Fixed bug that sometimes resulted in fl_do_forms() return an
+    object when the scroll wheel was used.
+------------------------------------------
 V1.0.90 March 30, 2004
   o Migrate from Imake to the GNU autotools.
   o "Composite" widgets, such as the browser, can now display tooltips.

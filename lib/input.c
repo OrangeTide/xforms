@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.13 2008/03/26 20:08:28 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.14 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1899,7 +1899,7 @@ fl_get_input_selected_range( FL_OBJECT * ob,
 
     if ( n > nselbuf )
     {
-		selbuf = selbuf ? fl_realloc( selbuf, n + 1 ) : fl_malloc( n + 1 );
+		selbuf = fl_realloc( selbuf, n + 1 );
 		nselbuf = n;
     }
 

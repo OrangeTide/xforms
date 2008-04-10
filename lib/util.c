@@ -35,7 +35,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_util = "$Id: util.c,v 1.10 2008/03/25 12:41:29 jtt Exp $";
+char *fl_id_util = "$Id: util.c,v 1.11 2008/04/10 00:05:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -57,8 +57,47 @@ char *fl_id_util = "$Id: util.c,v 1.10 2008/03/25 12:41:29 jtt Exp $";
 void
 fl_set_form_window( FL_FORM * form )
 {
-    if ( form && form->window > 0 )
+    if ( form && form->window != None )
 		flx->win = form->window;
+}
+
+
+/***************************************
+ * remove RCS keywords
+ ***************************************/
+
+const char *
+fl_rm_rcs_kw( const char * s )
+{
+    static unsigned char buf[ 5 ][ 255 ];
+    static int nbuf;
+    unsigned char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
+    int left = 0,
+		lastc = -1;
+
+
+    while ( *s && ( q - buf[ nbuf ] ) < ( int ) sizeof buf[ nbuf ] - 2 )
+    {
+		switch ( *s )
+		{
+			case '$':
+				if ( ( left = ! left ) )
+					while ( *s && *s != ':' )
+						s++;
+				break;
+
+			default:
+				/* copy the char and remove extra space */
+				if ( ! ( lastc == ' ' && *s == ' ' ) )
+					*q++ = lastc = *s;
+				break;
+		}
+		s++;
+    }
+
+    *q = '\0';
+
+    return ( const char * ) buf[ nbuf ];
 }
 
 
