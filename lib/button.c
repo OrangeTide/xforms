@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.13 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.14 2008/04/10 00:58:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -305,6 +305,11 @@ handle_it( FL_OBJECT * ob,
 			break;			/* TODO. Missing labels */
 
 		case FL_LEAVE:
+			if (    key < FL_MBUTTON1
+				 || key > FL_MBUTTON5
+				 || ! sp->react_to[ key - 1 ] )
+				break;
+
 			/* FL_MENU_BUTTON objects never get a FL_RELEASE event,
 			   so we have to "fake" one */
 
@@ -317,6 +322,11 @@ handle_it( FL_OBJECT * ob,
 			/* fall through */
 
 		case FL_ENTER:
+			if (    key < FL_MBUTTON1
+				 || key > FL_MBUTTON5
+				 || ! sp->react_to[ key - 1 ] )
+				break;
+
 			/* Keep active radio buttons from reacting */
 
 			if ( ob->type == FL_RADIO_BUTTON && sp->val == 1 )
@@ -327,7 +337,9 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
-			if ( key > 5 || ! sp->react_to[ key - 1 ] )
+			if (    key < FL_MBUTTON1
+				 || key > FL_MBUTTON5
+				 || ! sp->react_to[ key - 1 ] )
 				break;
 
 			sp->event = FL_PUSH;
@@ -352,6 +364,11 @@ handle_it( FL_OBJECT * ob,
 				   || ob->type == FL_MENU_BUTTON;
 
 		case FL_MOTION:
+			if (    key < FL_MBUTTON1
+				 || key > FL_MBUTTON5
+				 || ! sp->react_to[ key - 1 ] )
+				break;
+
 			if (    ob->type != FL_RADIO_BUTTON
 				 && ob->type != FL_INOUT_BUTTON
 				 && ob->type != FL_MENU_BUTTON )
@@ -379,7 +396,9 @@ handle_it( FL_OBJECT * ob,
 				   && ( sp->timdel & 1 ) == 0;
 
 		case FL_RELEASE:
-			if ( key > 5 || ! sp->react_to[ key - 1 ] )
+			if (    key < FL_MBUTTON1
+				 || key > FL_MBUTTON5
+				 || ! sp->react_to[ key - 1 ] )
 				break;
 
 			sp->event = FL_RELEASE;
