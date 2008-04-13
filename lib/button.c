@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.14 2008/04/10 00:58:18 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.15 2008/04/13 10:44:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -83,13 +83,13 @@ free_pixmap( SPEC * sp )
 static void
 draw_button( FL_OBJECT * ob )
 {
-    FL_COLOR col = ( ( SPEC * ) ( ob->spec ) )->val ? ob->col2 : ob->col1;
     FL_Coord dh,
 		     dw,
 		     ww,
 		     absbw = FL_abs( ob->bw );
     int off2 = 0;
 	SPEC *sp = ob->spec;
+    FL_COLOR col = sp->val ? ob->col2 : ob->col1;
 
     if ( ob->belowmouse && col == FL_BUTTON_COL1 )
 		col = FL_BUTTON_MCOL1;
@@ -106,13 +106,13 @@ draw_button( FL_OBJECT * ob )
     dw = FL_crnd( FL_min( 0.6 * ob->w, dh ) );
 
     ww = FL_crnd( 0.75 * ob->h );
-    if ( ww < ( dw + absbw + 1 + ( ob->bw > 0 ) ) )
+    if ( ww < dw + absbw + 1 + ( ob->bw > 0 ) )
 		ww = dw + absbw + 1 + ( ob->bw > 0 );
 
     if ( ob->type == FL_RETURN_BUTTON )
     {
-		fl_drw_text(0, ob->x + ob->w - ww, FL_crnd( ob->y + 0.2 * ob->h ),
-					dw, dh, ob->lcol, 0, 0, "@returnarrow" );
+		fl_drw_text( 0, ob->x + ob->w - ww, FL_crnd( ob->y + 0.2 * ob->h ),
+					 dw, dh, ob->lcol, 0, 0, "@returnarrow" );
 		off2 = dw - 2;
     }
 
@@ -159,6 +159,7 @@ typedef struct
     int              bclass;			/* button class */
 } ButtonRec;
 
+
 static ButtonRec how_draw[ MAX_BUTCLASS ];
 
 
@@ -169,13 +170,14 @@ static ButtonRec how_draw[ MAX_BUTCLASS ];
 static FL_DrawButton
 lookup_drawfunc( int bclass )
 {
-    ButtonRec *db = how_draw, *dbs;
+    ButtonRec *db  = how_draw,
+		      *dbs = how_draw + MAX_BUTCLASS;
 
-    for ( dbs = db + MAX_BUTCLASS; db < dbs; db++ )
+    for ( ; db < dbs; db++ )
 		if ( db->bclass == bclass )
 			return db->drawbutton;
 
-    return 0;
+    return NULL;
 }
 
 
@@ -185,13 +187,14 @@ lookup_drawfunc( int bclass )
 static FL_CleanupButton
 lookup_cleanupfunc( int bclass )
 {
-    ButtonRec *db = how_draw, *dbs;
+    ButtonRec *db  = how_draw,
+		      *dbs = how_draw + MAX_BUTCLASS;
 
-    for ( dbs = db + MAX_BUTCLASS; db < dbs; db++ )
+    for ( ; db < dbs; db++ )
 		if ( db->bclass == bclass )
 			return db->cleanup;
 
-    return 0;
+    return NULL;
 }
 
 
@@ -206,24 +209,23 @@ fl_add_button_class( int              bclass,
 {
     static int initialized;
     ButtonRec *db = how_draw,
-		      *dbs,
+		      *dbs = how_draw + MAX_BUTCLASS,
 		      *first_avail;
 
     if ( ! initialized )
     {
-		for ( dbs = db + MAX_BUTCLASS; db < dbs; db++ )
+		for ( ; db < dbs; db++ )
 			db->bclass = -1;
 
 		initialized = 1;
     }
 
-    for ( first_avail = 0, db = how_draw, dbs = db + MAX_BUTCLASS; db < dbs;
-		  db++ )
+    for ( db = how_draw, first_avail = NULL; db < dbs; db++ )
     {
 		if ( db->bclass == bclass )
 		{
 			db->drawbutton = drawit;
-			db->cleanup = cleanup;
+			db->cleanup    = cleanup;
 			return;
 		}
 		else if ( db->bclass < 0 && ! first_avail )
@@ -234,14 +236,12 @@ fl_add_button_class( int              bclass,
 
     if ( first_avail )
     {
-		first_avail->bclass = bclass;
+		first_avail->bclass     = bclass;
 		first_avail->drawbutton = drawit;
-		first_avail->cleanup = cleanup;
+		first_avail->cleanup    = cleanup;
     }
     else
-    {
 		M_err( "AddButtonClass", "Exceeding limit: %d", MAX_BUTCLASS );
-    }
 }
 
 
@@ -472,7 +472,7 @@ handle_it( FL_OBJECT * ob,
 			if ( ( cleanup = lookup_cleanupfunc( ob->objclass ) ) )
 				cleanup( sp );
 			free_pixmap( sp );
-			fl_free( ob->spec );
+			fl_safe_free( ob->spec );
 			return 0;
     }
 
@@ -520,6 +520,7 @@ fl_create_generic_button( int          objclass,
 
     if ( fl_cntl.buttonLabelSize )
 		ob->lsize = fl_cntl.buttonLabelSize;
+
     return ob;
 }
 

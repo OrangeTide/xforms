@@ -35,6 +35,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
@@ -46,18 +47,25 @@ static FD_sliderattrib *sl_attrib;
 static SuperSPEC *slider_spec;
 static void show_spec(SuperSPEC *);
 
+
+/***************************************
+ ***************************************/
+
 void *
-get_slider_spec_fdform(void)
+get_slider_spec_fdform( void )
 {
     if (!sl_attrib)
     {
-	sl_attrib = create_form_sliderattrib();
-	fl_clear_choice(sl_attrib->returnsetting);
-	fl_addto_choice(sl_attrib->returnsetting, get_how_return_str());
+		sl_attrib = create_form_sliderattrib();
+		fl_clear_choice(sl_attrib->returnsetting);
+		fl_addto_choice(sl_attrib->returnsetting, get_how_return_str());
     }
     return sl_attrib;
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 slider_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -70,8 +78,12 @@ slider_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
     redraw_the_form(0);
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-show_spec(SuperSPEC * spec)
+show_spec( SuperSPEC * spec )
 {
     set_finput_value(sl_attrib->minval, spec->min, spec->prec);
     set_finput_value(sl_attrib->maxval, spec->max, spec->prec);
@@ -88,11 +100,16 @@ show_spec(SuperSPEC * spec)
 		       get_how_return_str_name(spec->how_return));
 }
 
+
 #define is_vert(t)     (t==FL_VERT_SLIDER || t==FL_VERT_NICE_SLIDER ||\
                         t==FL_VERT_BROWSER_SLIDER||t==FL_VERT_FILL_SLIDER)
 
+
+/***************************************
+ ***************************************/
+
 int
-set_slider_attrib(FL_OBJECT * ob)
+set_slider_attrib( FL_OBJECT * ob )
 {
     sl_attrib->vdata = ob;
     slider_spec = get_superspec(ob);
@@ -100,9 +117,9 @@ set_slider_attrib(FL_OBJECT * ob)
     fl_freeze_form(sl_attrib->sliderattrib);
 
     if (ob->objclass == FL_VALSLIDER)
-	fl_show_object(sl_attrib->prec);
+		fl_show_object(sl_attrib->prec);
     else
-	fl_hide_object(sl_attrib->prec);
+		fl_hide_object(sl_attrib->prec);
 
     fl_set_counter_step(sl_attrib->prec, 1, 2);
     fl_set_counter_precision(sl_attrib->prec, 0);
@@ -111,13 +128,13 @@ set_slider_attrib(FL_OBJECT * ob)
 
     if (is_vert(ob->type))
     {
-	fl_set_object_label(sl_attrib->minval, "Value at top");
-	fl_set_object_label(sl_attrib->maxval, "Value at bottom");
+		fl_set_object_label(sl_attrib->minval, "Value at top");
+		fl_set_object_label(sl_attrib->maxval, "Value at bottom");
     }
     else
     {
-	fl_set_object_label(sl_attrib->minval, "Value at left");
-	fl_set_object_label(sl_attrib->maxval, "Value at right");
+		fl_set_object_label(sl_attrib->minval, "Value at left");
+		fl_set_object_label(sl_attrib->maxval, "Value at right");
     }
 
     show_spec(slider_spec);
@@ -127,16 +144,22 @@ set_slider_attrib(FL_OBJECT * ob)
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-emit_slider_code(FILE * fp, FL_OBJECT * ob)
+emit_slider_code( FILE      * fp,
+				  FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *sp, *defsp;
 
     if (ob->objclass != FL_SLIDER && ob->objclass != FL_VALSLIDER)
-	return;
+		return;
 
     /* create a default object */
+
     defobj = ( ob->objclass == FL_SLIDER ?
 			   fl_create_slider : fl_create_valslider )
 		     ( ob->type, 0, 0, 0, 0, "");
@@ -145,32 +168,36 @@ emit_slider_code(FILE * fp, FL_OBJECT * ob)
     sp = get_superspec(ob);
 
     if (sp->prec != defsp->prec)
-	fprintf(fp, "    fl_set_slider_precision( obj, %d );\n", sp->prec);
+		fprintf(fp, "    fl_set_slider_precision( obj, %d );\n", sp->prec);
 
     if (sp->min != defsp->min || sp->max != defsp->max)
     {
-	fprintf(fp, "    fl_set_slider_bounds( obj, %g, %g );\n",
-		sp->min, sp->max);
+		fprintf(fp, "    fl_set_slider_bounds( obj, %g, %g );\n",
+				sp->min, sp->max);
     }
 
     if (sp->val != defsp->val)
-	fprintf(fp, "    fl_set_slider_value( obj, %g );\n", sp->val);
+		fprintf(fp, "    fl_set_slider_value( obj, %g );\n", sp->val);
 
     if (sp->slsize != defsp->slsize)
-	fprintf(fp, "    fl_set_slider_size( obj, %.2f );\n", sp->slsize);
+		fprintf(fp, "    fl_set_slider_size( obj, %.2f );\n", sp->slsize);
 
     if (sp->step != defsp->step)
-	fprintf(fp, "    fl_set_slider_step( obj, %g );\n", sp->step);
+		fprintf(fp, "    fl_set_slider_step( obj, %g );\n", sp->step);
 
     if (sp->ldelta != defsp->ldelta || sp->rdelta != defsp->rdelta)
-	fprintf(fp, "    fl_set_slider_increment( obj, %g, %g );\n",
-		sp->ldelta, sp->rdelta);
+		fprintf(fp, "    fl_set_slider_increment( obj, %g, %g );\n",
+				sp->ldelta, sp->rdelta);
 
     if (sp->how_return != defsp->how_return)
-	fprintf(fp, "    fl_set_slider_return( obj, %s );\n",
-		get_how_return_name(sp->how_return));
+		fprintf(fp, "    fl_set_slider_return( obj, %s );\n",
+				get_how_return_name(sp->how_return));
 
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 save_slider_attrib(FILE * fp, FL_OBJECT * ob)
@@ -182,8 +209,10 @@ save_slider_attrib(FILE * fp, FL_OBJECT * ob)
 		return;
 
     /* create a default object */
+
     defobj = (ob->objclass == FL_SLIDER ?
-			  fl_create_slider : fl_create_valslider) (ob->type, 0, 0, 0, 0, "");
+			  fl_create_slider : fl_create_valslider)
+		      (ob->type, 0, 0, 0, 0, "");
 
     defsp = get_superspec(defobj);
     sp = get_superspec(ob);
@@ -204,6 +233,10 @@ save_slider_attrib(FILE * fp, FL_OBJECT * ob)
 		fprintf(fp, "return: %s\n", get_how_return_name(sp->how_return));
 }
 
+
+/***************************************
+ ***************************************/
+
 void
 adjust_precision( FL_OBJECT * ob,
 				  long        data  FL_UNUSED_ARG )
@@ -212,8 +245,12 @@ adjust_precision( FL_OBJECT * ob,
 
     fl_set_slider_precision(sl_attrib->vdata, p);
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -224,8 +261,12 @@ minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
     fl_set_slider_bounds(sl_attrib->vdata, min, max);
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -235,8 +276,12 @@ slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
     fl_set_slider_size(sl_attrib->vdata, slsize);
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -246,8 +291,12 @@ step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
     fl_set_slider_step(sl_attrib->vdata, step);
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 increment_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -258,6 +307,10 @@ increment_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
     fl_set_slider_increment(sl_attrib->vdata, l, r);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -270,14 +323,19 @@ initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     set_finput_value(sl_attrib->initial_val, slider_spec->val,
 		     slider_spec->prec);
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 					  long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(sl_attrib->returnsetting);
+
     fl_set_slider_return(sl_attrib->vdata, get_how_return_str_value(s));
 }
 

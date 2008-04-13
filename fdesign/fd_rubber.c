@@ -38,12 +38,16 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 #include "fd_main.h"
 
-extern void color(unsigned long);
-extern GC fd_gc, fd_xorgc, fd_copygc;
+extern void color( unsigned long );
+
+extern GC fd_gc,
+          fd_xorgc,
+           fd_copygc;
 extern Colormap fd_colormap;
 extern Display *fd_display;
 
@@ -51,8 +55,11 @@ extern Display *fd_display;
   ROUNDING
 *****/
 
-static float xmin = 0.0f, ymin = 0.0f, width = 1280.0f, height = 1024.0f;
-static float stepsize = 10.0f;	/* Step size (for alignment) */
+static float xmin   = 0.0,
+             ymin   = 0.0,
+             width  = 1280.0,
+             height = 1024.0;
+static float stepsize = 10.0;	/* Step size (for alignment) */
 
 
 /***************************************
@@ -62,7 +69,7 @@ static float stepsize = 10.0f;	/* Step size (for alignment) */
 void
 set_step_size( float size )
 {
-    stepsize = (size < 1.0f) ? 1.0f : size;
+    stepsize = size < 1.0 ? 1.0 : size;
 }
 
 
@@ -82,11 +89,14 @@ get_step_size( void )
  ***************************************/
 
 void
-set_bounding_box(float x, float y, float w, float h)
+set_bounding_box( float x,
+				  float y,
+				  float w,
+				  float h )
 {
-    xmin = x;
-    ymin = y;
-    width = w;
+    xmin   = x;
+    ymin   = y;
+    width  = w;
     height = h;
 }
 
@@ -103,40 +113,40 @@ round_size( float * x,
 {
     int t;
 
-    if (*w > width)
+    if ( *w > width )
 		*w = width;
-    if (*h > height)
+    if ( *h > height )
 		*h = height;
-    if (stepsize > 0.0f)
+    if ( stepsize > 0.0 )
     {
-		t = (int) (*w / stepsize + 0.5f);
-		if (*w >= 0.0f)
+		t = *w / stepsize + 0.5;
+		if ( *w >= 0.0 )
 			*w = stepsize * t;
 		else
-			*w = stepsize * (t - 1);
-		t = (int) (*h / stepsize + 0.5f);
+			*w = stepsize * ( t - 1 );
+		t = *h / stepsize + 0.5;
 		*h = stepsize * t;
-		if (*h >= 0.0f)
+		if ( *h >= 0.0 )
 			*h = stepsize * t;
 		else
-			*h = stepsize * (t - 1);
+			*h = stepsize * ( t - 1 );
     }
 
-    if (*x + *w > xmin + width)
+    if ( *x + *w > xmin + width )
 		*w = xmin + width - *x;
-    if (*y + *h > ymin + height)
+    if ( *y + *h > ymin + height )
 		*h = ymin + height - *y;
-    if (*x + *w < xmin)
+    if ( *x + *w < xmin )
 		*w = xmin - *x;
-    if (*y + *h < ymin)
+    if ( *y + *h < ymin )
 		*h = ymin - *y;
-    if (*w >= 0.0f && *w < stepsize)
+    if ( *w >= 0.0f && *w < stepsize )
 		*w = stepsize;
-    if (*h >= 0.0f && *h < stepsize)
+    if ( *h >= 0.0 && *h < stepsize )
 		*h = stepsize;
-    if (*w < 0.0f && *w > -stepsize)
+    if ( *w < 0.0 && *w > -stepsize )
 		*w = -stepsize;
-    if (*h < 0.0f && *h > -stepsize)
+    if ( *h < 0.0 && *h > -stepsize )
 		*h = -stepsize;
 }
 
@@ -153,24 +163,25 @@ round_position( float * x,
 {
     int t;
 
-    if (*w > width)
+    if ( *w > width )
 		*w = width;
-    if (*h > height)
+    if ( *h > height )
 		*h = height;
-    if (stepsize > 0.0f)
+    if ( stepsize > 0.0 )
     {
-		t = (int) (*x / stepsize + 0.5f);
+		t = *x / stepsize + 0.5;
 		*x = stepsize * t;
-		t = (int) (*y / stepsize + 0.5f);
+		t = *y / stepsize + 0.5;
 		*y = stepsize * t;
     }
-    if (*x < xmin)
+
+    if ( *x < xmin )
 		*x = xmin;
-    if (*y < ymin)
+    if ( *y < ymin )
 		*y = ymin;
-    if (*x + *w > xmin + width)
+    if ( *x + *w > xmin + width )
 		*x = xmin + width - *w;
-    if (*y + *h > ymin + height)
+    if ( *y + *h > ymin + height )
 		*y = ymin + height - *h;
 }
 
@@ -188,10 +199,10 @@ show_box( float x,
 		  float w,
 		  float h )
 {
-    XSetFunction(fd_display, fd_gc, GXxor);
-    color(fd_col ^ fd_black);
-    rect(x, y, x + w - 1, y + h - 1);
-    XSetFunction(fd_display, fd_gc, GXcopy);
+    XSetFunction( fd_display, fd_gc, GXxor );
+    color( fd_col ^ fd_black );
+    rect( x, y, x + w - 1, y + h - 1 );
+    XSetFunction( fd_display, fd_gc, GXcopy );
 }
 
 #define hide_box show_box
@@ -232,7 +243,8 @@ void
 get_mouse_pos( float * xx,
 			   float * yy )
 {
-    FL_Coord x, y;
+    FL_Coord x,
+		     y;
     unsigned int kmask;
 
     fl_get_win_mouse( main_window, &x, &y, &kmask );
@@ -351,9 +363,9 @@ color( unsigned long n )
 {
     static unsigned long oldcol;
 
-    if (fd_gc && oldcol != n)
+    if ( fd_gc && oldcol != n )
     {
-		XSetForeground(fd_display, fd_gc, n);
+		XSetForeground( fd_display, fd_gc, n );
 		oldcol = n;
     }
 }
@@ -368,10 +380,13 @@ rectf( FL_Coord x1,
 	   FL_Coord x2,
 	   FL_Coord y2 )
 {
-    int x = x1, y = y1, w = (x2 - x1), h = (y2 - y1);
+    int x = x1,
+		y = y1,
+		w = x2 - x1,
+		h = y2 - y1;
 
-    fl_canonicalize_rect(&x, &y, &w, &h);
-    XFillRectangle(fd_display, main_window, fd_gc, x, y, w, h);
+    fl_canonicalize_rect( &x, &y, &w, &h );
+    XFillRectangle( fd_display, main_window, fd_gc, x, y, w, h );
 }
 
 
@@ -384,10 +399,13 @@ rect( FL_Coord x1,
 	  FL_Coord x2,
 	  FL_Coord y2 )
 {
-    FL_Coord x = x1, y = y1, w = (x2 - x1), h = (y2 - y1);
+    FL_Coord x = x1,
+		     y = y1,
+		     w = x2 - x1,
+		     h = y2 - y1;
 
-    fl_canonicalize_rect(&x, &y, &w, &h);
-    XDrawRectangle(fd_display, main_window, fd_gc, x, y, w, h);
+    fl_canonicalize_rect( &x, &y, &w, &h );
+    XDrawRectangle( fd_display, main_window, fd_gc, x, y, w, h );
 }
 
 
@@ -402,13 +420,13 @@ fd_clear( int x,
 {
     static GC blk_gc;
 
-    if (main_window && w >= 0 && h >= 0)
+    if ( main_window && w >= 0 && h >= 0 )
     {
-		if (!blk_gc)
+		if ( ! blk_gc )
 		{
-			blk_gc = XCreateGC(fd_display, main_window, 0, 0);
-			XSetForeground(fd_display, blk_gc, fd_black);
+			blk_gc = XCreateGC( fd_display, main_window, 0, 0 );
+			XSetForeground( fd_display, blk_gc, fd_black );
 		}
-		XFillRectangle(fd_display, main_window, blk_gc, x, y, w, h);
+		XFillRectangle( fd_display, main_window, blk_gc, x, y, w, h );
     }
 }

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_r3dbut = "$Id: round3d.c,v 1.6 2008/01/28 23:22:01 jtt Exp $";
+char *fl_r3dbut = "$Id: round3d.c,v 1.7 2008/04/13 10:44:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -69,7 +69,8 @@ draw_round3dbutton( FL_OBJECT * ob )
     fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw);
 
     rr = 0.3 * FL_min( ob->w, ob->h ) + 0.5;
-    xx = ob->x + 1.5 * ( bw < 2 ? 2 : bw ) + rr + 1.1;
+//    xx = ob->x + 1.5 * ( bw < 2 ? 2 : bw ) + rr + 1.1;
+    xx = ob->x + rr + 4.1;
     yy = ob->y + 0.5 * ob->h;
 
     if ( rr < bw / 2 )
@@ -124,11 +125,13 @@ fl_create_round3dbutton( int          type,
 
     fl_add_button_class( FL_ROUND3DBUTTON, draw_round3dbutton, 0 );
     ob = fl_create_generic_button( FL_ROUND3DBUTTON, type, x, y, w, h, label );
+
     ob->boxtype = FL_ROUND3DBUTTON_BOXTYPE;
     ob->col1    = FL_ROUND3DBUTTON_COL1;
     ob->col2    = FL_ROUND3DBUTTON_COL2;
     ob->align   = FL_ROUND3DBUTTON_ALIGN;
     ob->lcol    = FL_ROUND3DBUTTON_LCOL;
+
     return ob;
 }
 
@@ -145,9 +148,8 @@ fl_add_round3dbutton( int          type,
 					  FL_Coord     h,
 					  const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *ob = fl_create_round3dbutton( type, x, y, w, h, label );
 
-    ob = fl_create_round3dbutton( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
     return ob;
 }

@@ -38,6 +38,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <string.h>
 #include <stdio.h>
 #include "fd_main.h"
@@ -48,46 +49,64 @@
 
 typedef struct
 {
-    FL_OBJECT *obj;		/* The object */
-    char name[MAX_VAR_LEN];	/* Its name (if any) */
-    char cbname[MAX_VAR_LEN];	/* Callback Routine */
-    char argname[MAX_VAR_LEN];	/* The argument */
-}
-OBJ;
+    FL_OBJECT * obj;		                /* The object */
+    char        name[ MAX_VAR_LEN ];	    /* Its name (if any) */
+    char        cbname[ MAX_VAR_LEN ];      /* Callback Routine */
+    char        argname[ MAX_VAR_LEN ];	    /* The argument */
+} OBJ;
 
 #define MAXOBJ  1024
 
-static OBJ objects[MAXOBJ];	/* The stored objects */
+static OBJ objects[ MAXOBJ ];	/* The stored objects */
 static int objnumb = 0;		/* Their number */
 
-/* Returns the number of the object in the list */
+
+/***************************************
+ * Returns the number of the object in the list
+ ***************************************/
+
 static int
-get_object_numb(const FL_OBJECT * obj)
+get_object_numb( const FL_OBJECT * obj )
 {
     int i;
+
     for (i = 0; i < objnumb; i++)
-	if (objects[i].obj == obj)
-	    return i;
+		if (objects[i].obj == obj)
+			return i;
     return -1;
 }
 
-/* Checks whether the names are correct C-names and don't occur already. */
+
+/***************************************
+ * Checks whether the names are correct C-names and don't occur already.
+ ***************************************/
+
 static void
-check_names(int on)
+check_names( int on )
 {
     /* Fill in argument if missing */
+
     if (objects[on].cbname[0] != '\0' && objects[on].argname[0] == '\0')
-	strcpy(objects[on].argname, "0");
+		strcpy(objects[on].argname, "0");
+
     /* HAS TO BE EXTENDED */
 }
+
 
 /****
   ACTUAL ROUTINES
 ****/
 
-/* returns the names of an object */
+
+/***************************************
+ * returns the names of an object
+ ***************************************/
+
 void
-get_object_name(const FL_OBJECT * obj, char *name, char *cbname, char *argname)
+get_object_name( const FL_OBJECT * obj,
+				 char            * name,
+				 char            * cbname,
+				 char            * argname)
 {
     int on = get_object_numb(obj);
 
@@ -95,30 +114,36 @@ get_object_name(const FL_OBJECT * obj, char *name, char *cbname, char *argname)
     cbname[0] = '\0';
     argname[0] = '\0';
     if (on == -1)
-	return;
+		return;
     strcpy(name, objects[on].name);
     strcpy(cbname, objects[on].cbname);
     strcpy(argname, objects[on].argname);
 }
 
-/* returns the names of an object */
+
+/***************************************
+ * returns the names of an object
+ ***************************************/
+
 void
-set_object_name(FL_OBJECT * obj, const char *name,
-		const char *cbname, const char *argname)
+set_object_name( FL_OBJECT  * obj,
+				 const char * name,
+				 const char * cbname,
+				 const char * argname )
 {
     int on = get_object_numb(obj);
 
     if (obj == NULL)
-	return;
+		return;
 
     if (on == -1)
     {
-	if (name[0] == '\0' && cbname[0] == '\0' && argname[0] == '\0')
-	    return;
-	if (objnumb >= MAXOBJ)
-	    return;
-	objects[objnumb].obj = obj;
-	on = objnumb++;
+		if (name[0] == '\0' && cbname[0] == '\0' && argname[0] == '\0')
+			return;
+		if (objnumb >= MAXOBJ)
+			return;
+		objects[objnumb].obj = obj;
+		on = objnumb++;
     }
     strcpy(objects[on].name, name);
     strcpy(objects[on].cbname, cbname);

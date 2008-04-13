@@ -142,11 +142,13 @@ myfgets( char * line,
     while ( tmpstr[ i - 1 ] != '\0' );
 }
 
+
 /*
  * X version changed color systemtically, need to do a translation
  * from old fd files on the fly
  *
  */
+
 typedef struct
 {
     int oldval, newval;
@@ -227,23 +229,35 @@ static Trantable tbtype[] =
     {9, FL_RSHADOW_BOX}
 };
 
+
+/***************************************
+ ***************************************/
+
 static int
-do_trans(Trantable * tab, int n, int old)
+do_trans( Trantable * tab,
+		  int         n,
+		  int         old )
 {
     Trantable *p = tab, *q;
+
     for (q = p + n; p < q; p++)
-	if (p->oldval == old)
-	    return p->newval;
+		if (p->oldval == old)
+			return p->newval;
     return old;
 }
+
 
 #define new_class(o)  do_trans(tclass, sizeof(tclass)/sizeof(tclass[0]),o)
 #define new_color(o)  do_trans(tcolor, sizeof(tcolor)/sizeof(tcolor[0]),o)
 #define new_align(o)  do_trans(talign, sizeof(talign)/sizeof(talign[0]),o)
 #define new_btype(o)  do_trans(tbtype, sizeof(tbtype)/sizeof(tbtype[0]),o)
 
+
+/***************************************
+ ***************************************/
+
 static void
-fd_skip_comment( FILE * fp   FL_UNUSED_ARG )
+fd_skip_comment( FILE * fp  FL_UNUSED_ARG )
 {
 #if 0
     int c, done = 0;
@@ -262,8 +276,12 @@ fd_skip_comment( FILE * fp   FL_UNUSED_ARG )
 #endif
 }
 
-/* Read lines consisting of keyword: value and split. Return -1 if EOF
-   or error */
+
+/***************************************
+ * Read lines consisting of keyword: value and split. Return -1 if EOF
+ * or error
+ ***************************************/
+
 int
 read_key_val( FILE * fp,
 			  char * key,
@@ -298,13 +316,14 @@ read_key_val( FILE * fp,
     return 0;
 }
 
-/*
+/***************************************
  *  Loads an object from the file and returns it.
  *
  *  object coordinates are measured from lower-left corner. fl_add_object
  *  will do the proper conversion but if obj->y is manipulated directly
  *  need to do the transformation manually
- */
+ ***************************************/
+
 static FL_OBJECT *
 load_object( FILE * fl )
 {
@@ -425,9 +444,14 @@ load_object( FILE * fl )
 }
 
 
-/* Saves a form definition to the file. */
+/***************************************
+ * Saves a form definition to the file
+ ***************************************/
+
 void
-write_form(FILE * fl, FL_FORM * form, char fname[])
+write_form( FILE    * fl,
+			FL_FORM * form,
+			char      fname[ ] )
 {
     int onumb;
     FL_OBJECT *obj;
@@ -438,21 +462,26 @@ write_form(FILE * fl, FL_FORM * form, char fname[])
     fprintf(fl, "Height: %d\n", convert_u(form->h));
 
     /* print the object number */
+
     for (onumb = 0, obj = form->first->next; obj; obj = obj->next)
-	onumb += obj->is_child == 0;
+		onumb += obj->is_child == 0;
 
     fprintf(fl, "Number of Objects: %d\n", onumb);
 
     /* print the objects */
+
     obj = form->first->next;
     while (obj != NULL)
     {
-	save_object(fl, obj);
-	obj = obj->next;
+		save_object(fl, obj);
+		obj = obj->next;
     }
 }
 
-/* Loads a form definition from the file */
+
+/***************************************
+ * Loads a form definition from the file
+ ***************************************/
 
 int
 read_form( FILE * fl,
@@ -465,7 +494,7 @@ read_form( FILE * fl,
     /* skip until we get ===, the form seperator */
 
     while (fgets(buf, sizeof(buf) - 1, fl) && strncmp(buf, "===", 3))
-		;
+		/* empty */ ;
 
     myfgets(fname, fl);
     fscanf(fl, "Width: %lf\n", &w);

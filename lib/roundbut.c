@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rbut = "$Id: roundbut.c,v 1.6 2008/01/28 23:22:07 jtt Exp $";
+char *fl_id_rbut = "$Id: roundbut.c,v 1.7 2008/04/13 10:44:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -69,7 +69,7 @@ draw_roundbutton( FL_OBJECT * ob )
     fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
 
     rr = 0.3 * FL_min( ob->w, ob->h ) + 0.5;
-    xx = ob->x + 1.5 * ( bw < 2 ? 2 : bw ) + rr + 1.1;
+	xx = ob->x + rr + 4.1;
     yy = ob->y + 0.5 * ob->h;
 
     fl_circf( xx, yy, rr, ob->col1 );
@@ -78,7 +78,7 @@ draw_roundbutton( FL_OBJECT * ob )
     if ( sp->val )
     {
 		fl_circf( xx, yy, ( int ) ( 0.8 * rr ), ob->col2 );
-		fl_circ( xx, yy, ( int ) ( 0.8 * rr ), FL_BLACK );
+		fl_circ(  xx, yy, ( int ) ( 0.8 * rr ), FL_BLACK );
     }
 
     if ( ob->align == FL_ALIGN_CENTER )
@@ -110,6 +110,7 @@ fl_create_roundbutton( int          type,
 
     fl_add_button_class( FL_ROUNDBUTTON, draw_roundbutton, 0 );
     ob = fl_create_generic_button( FL_ROUNDBUTTON, type, x, y, w, h, label );
+
     ob->boxtype = FL_ROUNDBUTTON_BOXTYPE;
     ob->col1    = FL_ROUNDBUTTON_COL1;
     ob->col2    = FL_ROUNDBUTTON_COL2;
@@ -132,9 +133,8 @@ fl_add_roundbutton( int          type,
 					FL_Coord     h,
 					const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *ob = fl_create_roundbutton( type, x, y, w, h, label );
 
-    ob = fl_create_roundbutton( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
     return ob;
 }

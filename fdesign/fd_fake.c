@@ -233,7 +233,6 @@ fl_add_ntabfolder( int          type,
     FL_OBJECT *ob = fl_create_ntabfolder( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
-
     return ob;
 }
 
@@ -300,6 +299,5 @@ fl_add_nformbrowser( int          type,
     FL_OBJECT *ob = fl_create_nformbrowser( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
-
     return ob;
 }

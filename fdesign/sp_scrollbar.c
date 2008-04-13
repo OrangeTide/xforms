@@ -35,6 +35,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
@@ -46,17 +47,25 @@ static FD_scrollbarattrib *scb_attrib;
 static SuperSPEC *scb_spec;
 static void show_spec(SuperSPEC *);
 
+
+/***************************************
+ ***************************************/
+
 void *
-get_scrollbar_spec_fdform(void)
+get_scrollbar_spec_fdform( void )
 {
     if (!scb_attrib)
     {
-	scb_attrib = create_form_scrollbarattrib();
-	fl_addto_choice(scb_attrib->returnsetting, get_how_return_str());
+		scb_attrib = create_form_scrollbarattrib();
+		fl_addto_choice(scb_attrib->returnsetting, get_how_return_str());
     }
 
     return scb_attrib;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 scrollbar_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -69,8 +78,12 @@ scrollbar_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
     redraw_the_form(0);
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-show_spec(SuperSPEC * spec)
+show_spec( SuperSPEC * spec )
 {
     set_finput_value(scb_attrib->minval, spec->min, -1);
     set_finput_value(scb_attrib->maxval, spec->max, -1);
@@ -81,30 +94,33 @@ show_spec(SuperSPEC * spec)
     set_finput_value(scb_attrib->rdelta, spec->rdelta, -1);
 
     fl_set_choice_text(scb_attrib->returnsetting,
-		       get_how_return_str_name(spec->how_return));
+					   get_how_return_str_name(spec->how_return));
 }
+
 
 #define is_vert(t)     (t==FL_VERT_SCROLLBAR || t==FL_VERT_NICE_SCROLLBAR ||\
                         t==FL_VERT_THIN_SCROLLBAR)
 
-/*
+
+/***************************************
  * Entry point
- */
+ ***************************************/
+
 int
-set_scrollbar_attrib(FL_OBJECT * ob)
+set_scrollbar_attrib( FL_OBJECT * ob )
 {
     scb_attrib->vdata = ob;
     scb_spec = get_superspec(ob);
 
     if (is_vert(ob->type))
     {
-	fl_set_object_label(scb_attrib->minval, "Value at top");
-	fl_set_object_label(scb_attrib->maxval, "Value at bottom");
+		fl_set_object_label(scb_attrib->minval, "Value at top");
+		fl_set_object_label(scb_attrib->maxval, "Value at bottom");
     }
     else
     {
-	fl_set_object_label(scb_attrib->minval, "Value at left");
-	fl_set_object_label(scb_attrib->maxval, "Value at right");
+		fl_set_object_label(scb_attrib->minval, "Value at left");
+		fl_set_object_label(scb_attrib->maxval, "Value at right");
     }
 
     show_spec(scb_spec);
@@ -112,56 +128,65 @@ set_scrollbar_attrib(FL_OBJECT * ob)
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-emit_scrollbar_code(FILE * fp, FL_OBJECT * ob)
+emit_scrollbar_code( FILE      * fp,
+					 FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *spec, *defspec;
 
     if (ob->objclass != FL_SCROLLBAR)
-	return;
+		return;
 
     /* create a default object */
+
     defobj = fl_create_scrollbar(ob->type, 0, 0, 30, 30, "");
 
     defspec = get_superspec(defobj);
     spec = get_superspec(ob);
 
     if (spec->min != defspec->min || spec->max != defspec->max)
-    {
-	fprintf(fp, "    fl_set_scrollbar_bounds( obj, %g, %g );\n",
-		spec->min, spec->max);
-    }
+		fprintf(fp, "    fl_set_scrollbar_bounds( obj, %g, %g );\n",
+				spec->min, spec->max);
 
     if (spec->val != defspec->val)
-	fprintf(fp, "    fl_set_scrollbar_value( obj, %g );\n", spec->val);
+		fprintf(fp, "    fl_set_scrollbar_value( obj, %g );\n", spec->val);
 
     if (spec->slsize != defspec->slsize)
-	fprintf(fp, "    fl_set_scrollbar_size( obj, %.2f );\n", spec->slsize);
+		fprintf(fp, "    fl_set_scrollbar_size( obj, %.2f );\n", spec->slsize);
 
     if (spec->step != defspec->step)
-	fprintf(fp, "    fl_set_scrollbar_step( obj, %g );\n", spec->step);
+		fprintf(fp, "    fl_set_scrollbar_step( obj, %g );\n", spec->step);
 
     if (spec->ldelta != defspec->ldelta || spec->rdelta != defspec->rdelta)
-	fprintf(fp, "    fl_set_scrollbar_increment( obj, %g, %g );\n",
-		spec->ldelta, spec->rdelta);
+		fprintf(fp, "    fl_set_scrollbar_increment( obj, %g, %g );\n",
+				spec->ldelta, spec->rdelta);
 
     if (spec->how_return != defspec->how_return)
-	fprintf(fp, "     fl_set_scrollbar_return( obj, %s );\n",
-		get_how_return_name(spec->how_return));
-
+		fprintf(fp, "     fl_set_scrollbar_return( obj, %s );\n",
+				get_how_return_name(spec->how_return));
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-save_scrollbar_attrib(FILE * fp, FL_OBJECT * ob)
+save_scrollbar_attrib( FILE      * fp,
+					   FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *defsp, *sp;
 
     if (ob->objclass != FL_SCROLLBAR)
-	return;
+		return;
 
     /* create a default object */
+
     defobj = fl_create_scrollbar(ob->type, 0, 0, 50, 50, "");
 
     defsp = get_superspec(defobj);
@@ -169,18 +194,26 @@ save_scrollbar_attrib(FILE * fp, FL_OBJECT * ob)
 
     if (sp->min != defsp->min || sp->max != defsp->max)
 		fprintf(fp, "bounds: %g %g\n", sp->min, sp->max);
+
     if (sp->val != defsp->val)
 		fprintf(fp, "value: %g\n", sp->val);
+
     if (sp->slsize != defsp->slsize)
 		fprintf(fp, "slsize: %.2f\n", sp->slsize);
+
     if (sp->step != defsp->step)
 		fprintf(fp, "step: %.3f\n", sp->step);
+
     if (sp->rdelta != defsp->rdelta || sp->ldelta != defsp->ldelta)
 		fprintf(fp, "increment: %g %g\n", sp->ldelta, sp->rdelta);
+
     if (sp->how_return != defsp->how_return)
 		fprintf(fp, "return: %s\n", get_how_return_name(sp->how_return));
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 scb_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -192,8 +225,12 @@ scb_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_set_scrollbar_bounds(scb_attrib->vdata, min, max);
 
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 scb_delta_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -205,8 +242,12 @@ scb_delta_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_set_scrollbar_increment(scb_attrib->vdata, ldelta, rdelta);
 
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 scb_slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -217,8 +258,12 @@ scb_slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_set_scrollbar_size(scb_attrib->vdata, slsize);
 
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 scb_step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -229,8 +274,12 @@ scb_step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_set_scrollbar_step(scb_attrib->vdata, step);
 
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 scb_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -242,14 +291,19 @@ scb_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     set_finput_value(scb_attrib->initial_val, scb_spec->val, -1);
 
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 scb_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						  long        data  FL_UNUSED_ARG )
 {
     const char *s = fl_get_choice_text(scb_attrib->returnsetting);
+
     fl_set_scrollbar_return(scb_attrib->vdata, get_how_return_str_value(s));
 }
 

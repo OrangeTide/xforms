@@ -38,6 +38,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
@@ -54,23 +55,35 @@ static SuperSPEC *freeobj_spec;
 static void show_spec(SuperSPEC *);
 static FL_OBJECT *edited;
 
+
+/***************************************
+ ***************************************/
+
 void *
-get_freeobj_spec_fdform(void)
+get_freeobj_spec_fdform( void )
 {
     if (!fo_attrib)
-	fo_attrib = create_form_freeobjattrib();
+		fo_attrib = create_form_freeobjattrib();
     return fo_attrib;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 freeobj_spec_restore( FL_OBJECT * ob,
 					  long        data  FL_UNUSED_ARG )
 {
     if (ob->c_vdata)
-	fl_free(ob->c_vdata);
+		fl_free(ob->c_vdata);
     ob->c_vdata = fl_strdup(ori_handle_name);
 
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
 show_spec( SuperSPEC * spec  FL_UNUSED_ARG )
@@ -78,18 +91,26 @@ show_spec( SuperSPEC * spec  FL_UNUSED_ARG )
     fl_set_input(fo_attrib->hname, get_free_handle(edited, 0));
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-set_freeobj_attrib(FL_OBJECT * ob)
+set_freeobj_attrib( FL_OBJECT * ob )
 {
     fo_attrib->vdata = edited = ob;
 
     ori_handle_name[0] = '\0';
     if (ob->c_vdata)
-	strcpy(ori_handle_name, ob->c_vdata);
+		strcpy(ori_handle_name, ob->c_vdata);
 
     show_spec(freeobj_spec);
     return 0;
 }
+
+
+/***************************************
+ ***************************************/
 
 int
 noop_handle( FL_OBJECT * ob,
@@ -101,30 +122,37 @@ noop_handle( FL_OBJECT * ob,
 {
     if (e == FL_DRAW)
     {
-	fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
-	return 0;
+		fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw);
+		return 0;
     }
 
     if (ob->type == FL_INACTIVE_FREE)
-	return 0;
+		return 0;
     if (ob->type == FL_INPUT_FREE)
-	return (e == FL_KEYBOARD);
+		return (e == FL_KEYBOARD);
     return 1;
 }
 
+
+/***************************************
+ ***************************************/
+
 #if 0
 static FL_OBJECT *
-create_a_freeobj(FL_OBJECT * ob)
+create_a_freeobj( FL_OBJECT * ob )
 {
     FL_OBJECT *defobj = 0;
 
     defobj = fl_create_free(ob->type, ob->x, ob->y, ob->w, ob->h,
-			    ob->label, noop_handle);
-
+							ob->label, noop_handle);
     return defobj;
 }
 #endif
 
+
+
+/***************************************
+ ***************************************/
 
 void
 emit_freeobj_code( FILE      * fp  FL_UNUSED_ARG,
@@ -133,12 +161,20 @@ emit_freeobj_code( FILE      * fp  FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-save_freeobj_attrib(FILE * fp, FL_OBJECT * ob)
+save_freeobj_attrib( FILE      * fp,
+					 FL_OBJECT * ob )
 {
     if (ob->c_vdata)
 		fprintf(fp, "handler: %s\n", (char *) ob->c_vdata);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 handler_name_change_cb( FL_OBJECT * ob,
@@ -149,9 +185,15 @@ handler_name_change_cb( FL_OBJECT * ob,
 
 
 /* default free object handler name */
+
 #define MAXFREEOBJ 16
+
+/***************************************
+ ***************************************/
+
 static char *
-get_free_handle(FL_OBJECT * ob, const char *name)
+get_free_handle( FL_OBJECT  * ob,
+				 const char * name )
 {
     static int n;
     static char buf[1024];
@@ -159,25 +201,25 @@ get_free_handle(FL_OBJECT * ob, const char *name)
     int i, k;
 
     if (ob->c_vdata)
-	strcpy(buf, ob->c_vdata);
+		strcpy(buf, ob->c_vdata);
     else if (name && *name)
-	sprintf(buf, "freeobj_%s_handle", name);
+		sprintf(buf, "freeobj_%s_handle", name);
     else if (*ob->label)
-	sprintf(buf, "freeobj_%s_handle", ob->label);
+		sprintf(buf, "freeobj_%s_handle", ob->label);
     else
     {
-	for (k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++)
-	{
-	    if (freeobj[i] == ob)
-		k = i;
-	}
+		for (k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++)
+		{
+			if (freeobj[i] == ob)
+				k = i;
+		}
 
-	if (k < 0)
-	{
-	    k = ++n;
-	    freeobj[k] = ob;
-	}
-	sprintf(buf, "freeobj%d_handle", k);
+		if (k < 0)
+		{
+			k = ++n;
+			freeobj[k] = ob;
+		}
+		sprintf(buf, "freeobj%d_handle", k);
     }
 
     return buf;

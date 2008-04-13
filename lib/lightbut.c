@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_lbut = "$Id: lightbut.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_lbut = "$Id: lightbut.c,v 1.10 2008/04/13 10:44:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -83,7 +83,7 @@ draw_lightbutton( FL_OBJECT * ob )
 	hh = FL_max( ob->h - 3 * absbw - 1, FL_LIGHTBUTTON_MINSIZE );
 
     ww = FL_max( hh / 2, FL_LIGHTBUTTON_MINSIZE );
-    if (ww > ob->w / 6)
+    if ( ww > ob->w / 6 )
 		ww = ob->w / 6;
 
     xx = ob->x + 1.5 * absbw + 1;

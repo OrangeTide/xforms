@@ -37,6 +37,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
@@ -52,22 +53,30 @@ static void show_spec(SuperSPEC *);
 static void get_data_name(FL_OBJECT * ob, IconInfo *);
 static FL_OBJECT *edited;
 
+
+/***************************************
+ ***************************************/
+
 void *
-get_pixmap_spec_fdform(void)
+get_pixmap_spec_fdform( void )
 {
     if (!px_attrib)
     {
-	px_attrib = create_form_pixmapattrib();
-	fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_CENTER));
-	fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_TOP));
-	fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_BOTTOM));
-	fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_LEFT));
-	fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_RIGHT));
-	fl_set_input_return(px_attrib->filename, FL_RETURN_END);
+		px_attrib = create_form_pixmapattrib();
+		fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_CENTER));
+		fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_TOP));
+		fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_BOTTOM));
+		fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_LEFT));
+		fl_addto_choice(px_attrib->pixalign, align_name(FL_ALIGN_RIGHT));
+		fl_set_input_return(px_attrib->filename, FL_RETURN_END);
     }
 
     return px_attrib;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 pixmap_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -80,8 +89,12 @@ pixmap_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
     redraw_the_form(0);
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-show_spec(SuperSPEC * spec)
+show_spec( SuperSPEC * spec )
 {
     info = spec->cspecv;
 
@@ -94,10 +107,12 @@ show_spec(SuperSPEC * spec)
 }
 
 
-int
-set_pixmap_attrib(FL_OBJECT * ob)
-{
+/***************************************
+ ***************************************/
 
+int
+set_pixmap_attrib( FL_OBJECT * ob )
+{
     px_attrib->vdata = edited = ob;
 
     pixmap_spec = get_superspec(ob);
@@ -105,51 +120,63 @@ set_pixmap_attrib(FL_OBJECT * ob)
 
     if (!info)
     {
-	M_err("PixmapAttrib", "internal error");
-	return -1;
+		M_err("PixmapAttrib", "internal error");
+		return -1;
     }
 
     (ob->objclass == FL_PIXMAP ? fl_show_object : fl_hide_object)
-	(px_attrib->pixalign);
+		(px_attrib->pixalign);
 
 
     show_spec(pixmap_spec);
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static FL_OBJECT *
-create_a_pixmap(FL_OBJECT * ob)
+create_a_pixmap( FL_OBJECT * ob )
 {
-    FL_OBJECT *defobj = 0;
+    FL_OBJECT *defobj = NULL;
 
     /* create a default object */
+
     if (ob->objclass == FL_PIXMAP)
-	defobj = fl_create_pixmap(ob->type, 0, 0, 0, 0, "");
+		defobj = fl_create_pixmap(ob->type, 0, 0, 0, 0, "");
     else if (ob->objclass == FL_BITMAP)
-	defobj = fl_create_bitmapbutton(ob->type, 0, 0, 0, 0, "");
+		defobj = fl_create_bitmapbutton(ob->type, 0, 0, 0, 0, "");
     else
-    {
-	fprintf(stderr, "Unknown pixmap/bitmap Class: %d\n", ob->objclass);
-    }
+		fprintf(stderr, "Unknown pixmap/bitmap Class: %d\n", ob->objclass);
+
     return defobj;
 }
 
+
+/***************************************
+ ***************************************/
+
 static char *
-file_tail(const char *full)
+file_tail( const char * full )
 {
     static char tmpbuf[512];
     char *p;
 
     strcpy(tmpbuf, full);
     if ((p = strrchr(tmpbuf, '/')))
-	strcpy(tmpbuf, p + 1);
+		strcpy(tmpbuf, p + 1);
 
     return tmpbuf;
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-emit_pixmap_header(FILE * fp, FL_OBJECT * ob)
+emit_pixmap_header( FILE      * fp,
+					FL_OBJECT * ob )
 {
     SuperSPEC *spec;
     char buf[512];
@@ -159,64 +186,69 @@ emit_pixmap_header(FILE * fp, FL_OBJECT * ob)
 
     if (info->use_data && info->data[0] && info->filename[0])
     {
-	if (info->fullpath)
-	    sprintf(buf, "#include \"%s\"", info->filename);
-	else
-	    sprintf(buf, "#include \"%s\"", file_tail(info->filename));
+		if (info->fullpath)
+			sprintf(buf, "#include \"%s\"", info->filename);
+		else
+			sprintf(buf, "#include \"%s\"", file_tail(info->filename));
 
-	if (!is_duplicate_info(ob, buf))
-	    fprintf(fp, "%s\n", buf);
+		if (!is_duplicate_info(ob, buf))
+			fprintf(fp, "%s\n", buf);
     }
-
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-emit_pixmap_code(FILE * fp, FL_OBJECT * ob)
+emit_pixmap_code( FILE      * fp,
+				  FL_OBJECT * ob )
 {
     SuperSPEC *btspec, *defspec;
     FL_OBJECT *defobj;
     IconInfo *definfo;
 
     if (!(defobj = create_a_pixmap(ob)))
-	return;
+		return;
 
     defspec = get_superspec(defobj);
     btspec = get_superspec(ob);
 
     if (!(info = btspec->cspecv))
-	return;
+		return;
 
     definfo = defspec->cspecv;
 
     if (info->filename[0] && !info->use_data)
-    {
-	fprintf(fp, "    fl_set_%s_file( obj, \"%s\" );\n",
-		ob->objclass == FL_PIXMAP ? "pixmap" : "bitmap",
-		info->filename);
-    }
+		fprintf(fp, "    fl_set_%s_file( obj, \"%s\" );\n",
+				ob->objclass == FL_PIXMAP ? "pixmap" : "bitmap",
+				info->filename);
 
     if (info->align != definfo->align && ob->objclass == FL_PIXMAP)
-    {
-	fprintf(fp, "    fl_set_pixmap_align( obj, %s, %d, %d );\n",
-	     align_name(info->align | FL_ALIGN_INSIDE), info->dx, info->dy);
-    }
+		fprintf(fp, "    fl_set_pixmap_align( obj, %s, %d, %d );\n",
+				align_name(info->align | FL_ALIGN_INSIDE), info->dx, info->dy);
 
     if (info->data[0] && info->use_data && info->filename[0])
     {
-	if (ob->objclass == FL_PIXMAP)
-	    fprintf(fp, "    fl_set_pixmap_data( obj,%s );\n",
-		    info->data);
-	else
-	    fprintf(fp, "    fl_set_bitmap_data( obj,%s, %s, ( unsigned char * ) %s);\n",
-		    info->width, info->height, info->data);
+		if (ob->objclass == FL_PIXMAP)
+			fprintf(fp, "    fl_set_pixmap_data( obj,%s );\n",
+					info->data);
+		else
+			fprintf(fp, "    fl_set_bitmap_data( obj,%s, %s, "
+					"( unsigned char * ) %s);\n",
+					info->width, info->height, info->data);
     }
 
     fl_free_object(defobj);
 }
 
 
+/***************************************
+ ***************************************/
+
 void
-save_pixmap_attrib(FILE * fp, FL_OBJECT * ob)
+save_pixmap_attrib( FILE      * fp,
+					FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *defspec, *btspec;
@@ -249,8 +281,10 @@ save_pixmap_attrib(FILE * fp, FL_OBJECT * ob)
 
     if (info->data[0] && info->filename[0])
 		fprintf(fp, "data: %s\n", info->data);
+
     if (info->width[0])
 		fprintf(fp, "width: %s\n", info->width);
+
     if (info->height[0])
 		fprintf(fp, "height: %s\n", info->height);
 
@@ -258,12 +292,19 @@ save_pixmap_attrib(FILE * fp, FL_OBJECT * ob)
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 pixmapusedata_change( FL_OBJECT * ob,
 					  long        data  FL_UNUSED_ARG )
 {
     info->use_data = fl_get_button(ob);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 pixmapfullpath_cb( FL_OBJECT * ob,
@@ -273,6 +314,9 @@ pixmapfullpath_cb( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 pixmap_filename_change( FL_OBJECT * ob,
 						long        data  FL_UNUSED_ARG )
@@ -281,19 +325,24 @@ pixmap_filename_change( FL_OBJECT * ob,
 
     if (info->filename[0])
     {
-	(edited->objclass == FL_PIXMAP ?
-	 fl_set_pixmap_file : fl_set_bitmap_file)
-	    (edited, info->filename);
+		(edited->objclass == FL_PIXMAP ?
+		 fl_set_pixmap_file : fl_set_bitmap_file)
+			(edited, info->filename);
     }
     else
     {
-	/* show the default crab */
-	set_testing_pixmap(edited);
+		/* show the default crab */
+
+		set_testing_pixmap(edited);
     }
 
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 pixmapalign_change( FL_OBJECT * ob,
@@ -302,28 +351,34 @@ pixmapalign_change( FL_OBJECT * ob,
     const char *s = fl_get_choice_text(ob);
 
     if (!s)
-	return;
+		return;
 
     info->align = align_val(s);
+
     /* don't allow outside align */
+
     fl_set_pixmap_align(edited, info->align | FL_ALIGN_INSIDE,
-			info->dx, info->dy);
+						info->dx, info->dy);
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 static int
 loadfile( const char * file,
 		  void       * data  FL_UNUSED_ARG )
 {
     char buf[512];
-    char *cwd = fl_getcwd(buf, sizeof(buf) - 2);
+    char *cwd = fl_getcwd(buf, sizeof buf - 2);
     const char *s = strstr(file, cwd);
 
     if (!s)
-	s = file;
+		s = file;
     else
-	s = file + strlen(cwd) + 1;
+		s = file + strlen(cwd) + 1;
 
     fl_set_input(px_attrib->filename, s);
     fl_call_object_callback(px_attrib->filename);
@@ -331,45 +386,56 @@ loadfile( const char * file,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 pixmaplookfor_pixmapfile_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 							 long        data  FL_UNUSED_ARG )
 {
-
     fl_use_fselector(XPM_FSELECTOR);
     fl_set_fselector_placement(FL_PLACE_MOUSE);
     fl_set_fselector_callback(loadfile, 0);
     fl_show_fselector("XPM file", "",
-		      edited->objclass == FL_PIXMAP ? "*.xpm" : "*.xbm", "");
+					  edited->objclass == FL_PIXMAP ? "*.xpm" : "*.xbm", "");
 }
 
-/* read the specified xpm/xbm filename, and return the data name
+
+/***************************************
+ * read the specified xpm/xbm filename, and return the data name
  * and size
- */
+ ***************************************/
+
 static void
-get_xpm_stuff(IconInfo * in, FILE * fp)
+get_xpm_stuff( IconInfo * in,
+			   FILE     * fp )
 {
     char buf[128], *p;
     int done = 0;
 
     while (fgets(buf, sizeof(buf) - 1, fp) && !done)
     {
-	if ((p = strstr(buf, "static char")))
-	{
-	    char *q = in->data;
+		if ((p = strstr(buf, "static char")))
+		{
+			char *q = in->data;
 
-	    *p += 11;
-	    while (*p && *++p != '*')
-		;
-	    while (*p && *++p != '[')	/* ] */
-	    {
-		if (!isspace( ( int ) *p))
-		    *q++ = *p;
-	    }
-	    *q = '\0';
-	}
+			*p += 11;
+			while (*p && *++p != '*')
+				/* empty */ ;
+
+			while (*p && *++p != '[')	/* ] */
+			{
+				if (!isspace( ( int ) *p))
+					*q++ = *p;
+			}
+			*q = '\0';
+		}
     }
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
 get_xbm_stuff( IconInfo * in,
@@ -380,49 +446,54 @@ get_xbm_stuff( IconInfo * in,
     strcpy(buf, in->filename);
 
     if ((p = strrchr(buf, '/')))
-	strcpy(buf, ++p);
+		strcpy(buf, ++p);
 
     if ((p = strrchr(buf, '.')))
-	*p = '\0';
+		*p = '\0';
 
     strcat(strcpy(in->width, buf), "_width");
     strcat(strcpy(in->height, buf), "_height");
     strcat(strcpy(in->data, buf), "_bits");
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-get_data_name(FL_OBJECT * ob, IconInfo * inf)
+get_data_name( FL_OBJECT * ob,
+			   IconInfo  * inf )
 {
     FILE *fp;
 
     if (ob->objclass != FL_BITMAP && ob->objclass != FL_PIXMAP)
     {
-	inf->filename[0] = '\0';
-	inf->width[0] = '\0';
-	inf->height[0] = '\0';
-	return;
+		inf->filename[0] = '\0';
+		inf->width[0] = '\0';
+		inf->height[0] = '\0';
+		return;
     }
 
     if (!inf->use_data)
     {
-	inf->data[0] = inf->width[0] = inf->height[0] = '\0';
-	return;
+		inf->data[0] = inf->width[0] = inf->height[0] = '\0';
+		return;
     }
 
     if (!(fp = fopen(inf->filename, "r")) && inf->filename[0])
     {
-	fprintf(stderr, "can't open %s\n", inf->filename);
-	inf->filename[0] = '\0';
-	return;
+		fprintf(stderr, "can't open %s\n", inf->filename);
+		inf->filename[0] = '\0';
+		return;
     }
 
-
     if (ob->objclass == FL_PIXMAP)
-	get_xpm_stuff(inf, fp);
+		get_xpm_stuff(inf, fp);
     else
-	get_xbm_stuff(inf, fp);
+		get_xbm_stuff(inf, fp);
 
     fclose(fp);
 }
+
 
 #include "spec/pixmap_spec.c"

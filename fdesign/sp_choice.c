@@ -35,6 +35,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd_spec.h"
@@ -47,30 +48,38 @@ static FD_choiceattrib *choice_attrib;
 static SuperSPEC *choice_spec;
 static void show_spec(SuperSPEC *);
 
+
+/***************************************
+ ***************************************/
+
 void *
-get_choice_spec_fdform(void)
+get_choice_spec_fdform( void )
 {
     if (!choice_attrib)
     {
-	choice_attrib = create_form_choiceattrib();
-	fl_addto_choice(choice_attrib->mode, get_pupmode_string());
-	fl_addto_choice(choice_attrib->scope, "local|global");
-	fl_set_choice_item_mode(choice_attrib->mode, 3, FL_PUP_GRAY);
-	fl_set_choice_item_mode(choice_attrib->mode, 4, FL_PUP_GRAY);
-	fl_set_choice_item_mode(choice_attrib->mode, 5, FL_PUP_GRAY);
+		choice_attrib = create_form_choiceattrib();
+		fl_addto_choice(choice_attrib->mode, get_pupmode_string());
+		fl_addto_choice(choice_attrib->scope, "local|global");
+		fl_set_choice_item_mode(choice_attrib->mode, 3, FL_PUP_GRAY);
+		fl_set_choice_item_mode(choice_attrib->mode, 4, FL_PUP_GRAY);
+		fl_set_choice_item_mode(choice_attrib->mode, 5, FL_PUP_GRAY);
 
-	fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_CENTER));
-	fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_TOP));
-	fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_BOTTOM));
-	fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_LEFT));
-	fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_RIGHT));
+		fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_CENTER));
+		fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_TOP));
+		fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_BOTTOM));
+		fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_LEFT));
+		fl_addto_choice(choice_attrib->align, align_name(FL_ALIGN_RIGHT));
 
-	fl_set_browser_dblclick_callback(choice_attrib->content_br,
-					 change_choice_item_cb, 0);
+		fl_set_browser_dblclick_callback(choice_attrib->content_br,
+										 change_choice_item_cb, 0);
     }
 
     return choice_attrib;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 choice_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -82,6 +91,10 @@ choice_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
     show_spec(get_superspec(edited));
     redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
 show_spec(SuperSPEC * sp)
@@ -101,70 +114,84 @@ show_spec(SuperSPEC * sp)
     fl_unfreeze_form(choice_attrib->content_br->form);
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-set_choice_attrib(FL_OBJECT * ob)
+set_choice_attrib( FL_OBJECT * ob )
 {
     choice_attrib->vdata = ob;
     choice_spec = get_superspec(ob);
     superspec_to_spec(ob);
 
     fl_set_counter_bounds(choice_attrib->val, 1,
-		      (choice_spec->nlines >= 1 ? choice_spec->nlines : 1));
-
+						  (choice_spec->nlines >= 1 ? choice_spec->nlines : 1));
     show_spec(choice_spec);
-
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-emit_choice_code(FILE * fp, FL_OBJECT * ob)
+emit_choice_code( FILE     * fp,
+				  FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *sp, *defsp;
     int i;
 
     /* create a default object */
+
     defobj = fl_create_choice(ob->type, 0, 0, 0, 0, "");
 
     defsp = get_superspec(defobj);
     sp = get_superspec(ob);
 
     if (sp->align != defsp->align)
-	fprintf(fp, "    fl_set_choice_align( obj, %s );\n", align_name(sp->align));
+		fprintf(fp, "    fl_set_choice_align( obj, %s );\n",
+				align_name(sp->align));
 
     if (sp->nlines < 1)
-	return;
+		return;
 
     if (sp->new_menuapi)
-    {
-	fprintf(fp, "    fl_set_choice_entries( obj, %s );\n", sp->misc_char);
-    }
+		fprintf(fp, "    fl_set_choice_entries( obj, %s );\n", sp->misc_char);
     else
     {
-	for (i = 1; i <= sp->nlines; i++)
-	{
-	    fprintf(fp, "    fl_addto_choice( obj, \"%s\" );\n", sp->content[i]);
-	    if (sp->mode[i] != defsp->mode[i])
-		fprintf(fp, "    fl_set_choice_item_mode( obj, %d, %s );\n",
-			i, get_pupmode_name(sp->mode[i]));
-	    if (sp->shortcut[i] && *sp->shortcut[i])
-		fprintf(fp, "    fl_set_choice_item_shortcut( obj, %d, \"%s\" );\n",
-			i, sp->shortcut[i]);
-	}
+		for (i = 1; i <= sp->nlines; i++)
+		{
+			fprintf(fp, "    fl_addto_choice( obj, \"%s\" );\n",
+					sp->content[i]);
+			if (sp->mode[i] != defsp->mode[i])
+				fprintf(fp, "    fl_set_choice_item_mode( obj, %d, %s );\n",
+						i, get_pupmode_name(sp->mode[i]));
+			if (sp->shortcut[i] && *sp->shortcut[i])
+				fprintf(fp, "    fl_set_choice_item_shortcut( obj, %d, "
+						"\"%s\" );\n", i, sp->shortcut[i]);
+		}
     }
 
     if (sp->int_val != defsp->int_val)
-	fprintf(fp, "    fl_set_choice( obj, %d );\n", sp->int_val);
+		fprintf(fp, "    fl_set_choice( obj, %d );\n", sp->int_val);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-save_choice_attrib(FILE * fp, FL_OBJECT * ob)
+save_choice_attrib( FILE      * fp,
+					FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *defsp, *sp;
     int i;
 
     /* create a default object */
+
     defobj = fl_create_choice(ob->type, 0, 0, 0, 0, "");
 
     defsp = get_superspec(defobj);
@@ -177,23 +204,25 @@ save_choice_attrib(FILE * fp, FL_OBJECT * ob)
 
     for (i = 1; i <= sp->nlines; i++)
     {
-	fprintf(fp, "content: %s\n", sp->content[i]);
-	if (sp->mode[i] != defsp->mode[i])
-	    fprintf(fp, "mode: %s\n", get_pupmode_name(sp->mode[i]));
-	if (sp->shortcut[i] && *sp->shortcut[i])
-	    fprintf(fp, "shortcut: %s\n", sp->shortcut[i]);
+		fprintf(fp, "content: %s\n", sp->content[i]);
+		if (sp->mode[i] != defsp->mode[i])
+			fprintf(fp, "mode: %s\n", get_pupmode_name(sp->mode[i]));
+		if (sp->shortcut[i] && *sp->shortcut[i])
+			fprintf(fp, "shortcut: %s\n", sp->shortcut[i]);
     }
 
     if (sp->int_val != defsp->int_val)
-	fprintf(fp, "value: %d\n", sp->int_val);
+		fprintf(fp, "value: %d\n", sp->int_val);
 }
 
 /*
  * attributes callbacks
  */
 
+/***************************************
+ * callbacks and freeobj handles for form choiceattrib
+ ***************************************/
 
-/* callbacks and freeobj handles for form choiceattrib */
 void
 add_choice_item_cb( FL_OBJECT * ob,
 					long        data  FL_UNUSED_ARG )
@@ -206,21 +235,25 @@ add_choice_item_cb( FL_OBJECT * ob,
 
     if (s && *s)
     {
-	fl_addto_browser(ui->content_br, s);
-	i = fl_addto_choice(ui->vdata, s);
-	fl_set_choice_item_shortcut(ui->vdata, i, sc);
-	fl_set_choice_item_mode(ui->vdata, i, get_pupmode_value(mode));
+		fl_addto_browser(ui->content_br, s);
+		i = fl_addto_choice(ui->vdata, s);
+		fl_set_choice_item_shortcut(ui->vdata, i, sc);
+		fl_set_choice_item_mode(ui->vdata, i, get_pupmode_value(mode));
 
-	if (fl_get_button(ui->auto_clear))
-	    clear_choice_field_cb(ui->auto_clear, 0);
+		if (fl_get_button(ui->auto_clear))
+			clear_choice_field_cb(ui->auto_clear, 0);
 
-	if (auto_apply)
-	    redraw_the_form(0);
+		if (auto_apply)
+			redraw_the_form(0);
 
-	fl_set_counter_bounds(ui->val, 1,
-			      fl_get_choice_maxitems(ui->vdata));
+		fl_set_counter_bounds(ui->val, 1,
+							  fl_get_choice_maxitems(ui->vdata));
     }
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 replace_choice_item_cb( FL_OBJECT * ob,
@@ -234,18 +267,22 @@ replace_choice_item_cb( FL_OBJECT * ob,
 
     if (*s && i > 0)
     {
-	fl_replace_browser_line(ui->content_br, i, s);
-	fl_replace_choice(ui->vdata, i, s);
-	fl_set_choice_item_shortcut(ui->vdata, i, sc);
-	fl_set_choice_item_mode(ui->vdata, i, get_pupmode_value(mode));
+		fl_replace_browser_line(ui->content_br, i, s);
+		fl_replace_choice(ui->vdata, i, s);
+		fl_set_choice_item_shortcut(ui->vdata, i, sc);
+		fl_set_choice_item_mode(ui->vdata, i, get_pupmode_value(mode));
 
-	if (fl_get_button(ui->auto_clear))
-	    clear_choice_field_cb(ui->auto_clear, 0);
+		if (fl_get_button(ui->auto_clear))
+			clear_choice_field_cb(ui->auto_clear, 0);
     }
 
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 delete_choice_item_cb( FL_OBJECT * ob,
@@ -256,12 +293,16 @@ delete_choice_item_cb( FL_OBJECT * ob,
 
     if (i > 0)
     {
-	fl_delete_browser_line(ui->content_br, i);
-	fl_delete_choice(ui->vdata, i);
-	if (auto_apply)
-	    redraw_the_form(0);
+		fl_delete_browser_line(ui->content_br, i);
+		fl_delete_choice(ui->vdata, i);
+		if (auto_apply)
+			redraw_the_form(0);
     }
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 change_choice_item_cb( FL_OBJECT * ob,
@@ -274,12 +315,16 @@ change_choice_item_cb( FL_OBJECT * ob,
 
     if (i > 0)
     {
-	fl_set_input(ui->input, fl_get_browser_line(ui->content_br, i));
-	if (sp->shortcut[i])
-	    fl_set_input(ui->shortcut, sp->shortcut[i]);
-	fl_set_choice_text(ui->mode, get_pupmode_name(sp->mode[i]) + 3);
+		fl_set_input(ui->input, fl_get_browser_line(ui->content_br, i));
+		if (sp->shortcut[i])
+			fl_set_input(ui->shortcut, sp->shortcut[i]);
+		fl_set_choice_text(ui->mode, get_pupmode_name(sp->mode[i]) + 3);
     }
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 clear_choice_field_cb( FL_OBJECT * ob,
@@ -292,6 +337,10 @@ clear_choice_field_cb( FL_OBJECT * ob,
     fl_set_choice(ui->mode, 1);
 }
 
+
+/***************************************
+ ***************************************/
+
 void
 choice_align_cb( FL_OBJECT * ob,
 				 long        data  FL_UNUSED_ARG )
@@ -301,8 +350,12 @@ choice_align_cb( FL_OBJECT * ob,
 
     fl_set_choice_align(ui->vdata, align_val(s));
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 choice_val_cb( FL_OBJECT * ob,
@@ -313,9 +366,13 @@ choice_val_cb( FL_OBJECT * ob,
 
     fl_set_choice(ui->vdata, v);
     if (auto_apply)
-	redraw_the_form(0);
+		redraw_the_form(0);
 
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 use_struct_cb( FL_OBJECT * ob,
@@ -323,6 +380,10 @@ use_struct_cb( FL_OBJECT * ob,
 {
     choice_spec->new_menuapi = fl_get_button(ob);
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 choiceentry_scope_cb( FL_OBJECT * ob,

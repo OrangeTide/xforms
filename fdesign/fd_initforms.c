@@ -31,6 +31,7 @@
  *  create and initialize all control panels
  *
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -205,6 +206,7 @@ init_testform( void )
     fl_fit_object_label( fd_test->stoptesting, 2, 1 );
     fl_set_object_dblbuffer( fd_test->browser, 1 );
 }
+
 
 #include "fd/ui_attrib.c"
 #include "fd/ui_theforms.c"

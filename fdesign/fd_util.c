@@ -34,6 +34,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd_main.h"
 
@@ -42,19 +43,26 @@
 
 typedef struct
 {
-    FL_FORM *form;
-    char buf[MAXLEN + 1];
-}
-CodeInfo;
+    FL_FORM * form;
+    char      buf[ MAXLEN + 1 ];
+} CodeInfo;
 
-static CodeInfo info[MAXREC];
+static CodeInfo info[ MAXREC ];
 static int ninfo;
 
+
+/***************************************
+ ***************************************/
+
 void
-reset_dupinfo_cache(void)
+reset_dupinfo_cache( void )
 {
     ninfo = 0;
 }
+
+
+/***************************************
+ ***************************************/
 
 int
 is_duplicate_info( FL_OBJECT  * ob  FL_UNUSED_ARG,
@@ -62,18 +70,18 @@ is_duplicate_info( FL_OBJECT  * ob  FL_UNUSED_ARG,
 {
     int i;
 
-    for (i = 0; i < ninfo; i++)
-	if (strcmp(s, info[i].buf) == 0)
-	    return 1;
+    for ( i = 0; i < ninfo; i++ )
+		if ( strcmp( s, info[ i ].buf ) == 0 )
+			return 1;
 
-    if (ninfo == MAXREC)
+    if ( ninfo == MAXREC )
     {
-	fprintf(stderr, "dupinfo cache overflown\n");
-	ninfo--;
+		fprintf( stderr, "dupinfo cache overflown\n" );
+		ninfo--;
     }
 
-    strncpy(info[ninfo].buf, s, MAXLEN);
-    info[ninfo].buf[MAXLEN] = '\0';
+    strncpy( info[ ninfo ].buf, s, MAXLEN );
+    info[ ninfo ].buf[ MAXLEN ] = '\0';
 
     ninfo++;
 

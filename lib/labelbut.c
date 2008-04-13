@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fbut = "$Id: labelbut.c,v 1.8 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_fbut = "$Id: labelbut.c,v 1.9 2008/04/13 10:44:18 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -126,10 +126,8 @@ fl_add_labelbutton( int          type,
 					FL_Coord     h,
 					const char * label)
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *ob = fl_create_labelbutton( type, x, y, w, h, label );
 
-    ob = fl_create_labelbutton( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
-
     return ob;
 }

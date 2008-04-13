@@ -35,6 +35,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -48,39 +49,47 @@ int auto_apply = 1;
 
 static void readback_attributes(FL_OBJECT *);
 
-/* Call-back routine to get a color from the user */
+
+/***************************************
+ * Call-back routine to get a color from the user
+ ***************************************/
 
 void
 setcolor_cb( FL_OBJECT * obj,
 			 long        arg  FL_UNUSED_ARG )
 {
     int col1 = fl_show_colormap(obj->col1);
+
     fl_set_object_color(obj, col1, col1);
     auto_apply_cb(0, 0);
 }
 
 
-/* if change attributes automatically */
+/***************************************
+ * if change attributes automatically
+ ***************************************/
 
 void
 auto_apply_cb( FL_OBJECT * ob,
 			   long        arg )
 {
     if (auto_apply)
-	apply_cb(ob, arg);
+		apply_cb(ob, arg);
 }
 
 
-/* the auto-apply setting itself */
+/***************************************
+ * the auto-apply setting itself
+ ***************************************/
 
 void
 autoapply_setting_cb( FL_OBJECT * ob,
 					  long        arg  FL_UNUSED_ARG )
 {
     if (!(auto_apply = fl_get_button(ob)))
-	fl_show_object(fd_attrib->applyobj);
+		fl_show_object(fd_attrib->applyobj);
     else
-	fl_hide_object(fd_attrib->applyobj);
+		fl_hide_object(fd_attrib->applyobj);
 }
 
 /******* For cancel and restore operation *******{*/
@@ -89,15 +98,19 @@ static FL_OBJECT *oldcopy, *curobj;	/* object being changed */
 static char oldname[MAX_VAR_LEN];
 static char oldcbname[MAX_VAR_LEN], oldargname[MAX_VAR_LEN];
 
+
+/***************************************
+ ***************************************/
+
 static void
-save_object(FL_OBJECT * obj)
+save_object( FL_OBJECT * obj )
 {
     char *ol;
     long *os;
 
     get_object_name(obj, oldname, oldcbname, oldargname);
     if (!oldcopy)
-	oldcopy = fl_make_object(0, 0, 0, 0, 0, 0, 0, 0);
+		oldcopy = fl_make_object(0, 0, 0, 0, 0, 0, 0, 0);
     ol = oldcopy->label;
     os = oldcopy->shortcut;
     *oldcopy = *obj;
@@ -106,9 +119,13 @@ save_object(FL_OBJECT * obj)
     fl_set_object_label(oldcopy, obj->label);
 }
 
-/* duplicate everything in oldobj to obj */
+
+/***************************************
+ * duplicate everything in oldobj to obj
+ ***************************************/
+
 static void
-restore_object(FL_OBJECT * obj)
+restore_object( FL_OBJECT * obj )
 {
     char *ol = obj->label;
     long *os = obj->shortcut;
@@ -120,10 +137,13 @@ restore_object(FL_OBJECT * obj)
     fl_set_object_label(obj, oldcopy->label);
 }
 
+
 /********** End of cancel/restore ********}***/
 
 
-/* really change object attributes */
+/***************************************
+ * really change object attributes
+ ***************************************/
 
 void
 apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
@@ -135,7 +155,9 @@ apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
-/* restore from the original copy */
+/***************************************
+ * restore from the original copy
+ ***************************************/
 
 void
 restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -150,39 +172,46 @@ restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 /****************** GLOBAL INITIALIZATION  ************************/
 
 static FL_OBJECT *fnts;
-static void
-add_font_choice(const char *p)
-{
-    fl_addto_choice(fnts, p);
-}
-
-/* font sizes. Need to do this because of symbolic names */
-
-typedef struct
-{
-    int size;
-    char *name, *sc;
-}
-Fsizes;
-
-static Fsizes fsizes[] =
-{
-    {FL_TINY_SIZE, "Tiny", "Tt#t"},
-    {FL_SMALL_SIZE, "Small", "Ss#s"},
-    {FL_NORMAL_SIZE, "Normal", "Nn#n"},
-    {FL_MEDIUM_SIZE, "Medium", "Mm#m"},
-    {FL_LARGE_SIZE, "Large", "Ll#l"},
-    {FL_HUGE_SIZE, "Huge", "Hh#h"},
-    {11, "Variable", ""}
-};
-#define NFSIZE (sizeof(fsizes) / sizeof(fsizes[0]))
 
 
 /***************************************
  ***************************************/
 
 static void
-attrib_init(FD_generic_attrib * ui)
+add_font_choice( const char * p )
+{
+    fl_addto_choice(fnts, p);
+}
+
+
+/* font sizes. Need to do this because of symbolic names */
+
+typedef struct
+{
+    int    size;
+    char * name,
+	     * sc;
+} Fsizes;
+
+static Fsizes fsizes[ ] =
+{
+    { FL_TINY_SIZE,   "Tiny",     "Tt#t" },
+    { FL_SMALL_SIZE,  "Small",    "Ss#s" },
+    { FL_NORMAL_SIZE, "Normal",   "Nn#n" },
+    { FL_MEDIUM_SIZE, "Medium",   "Mm#m" },
+    { FL_LARGE_SIZE,  "Large",    "Ll#l" },
+    { FL_HUGE_SIZE,   "Huge",     "Hh#h" },
+    { 11,             "Variable", ""     }
+};
+
+#define NFSIZE ( sizeof fsizes / sizeof *fsizes )
+
+
+/***************************************
+ ***************************************/
+
+static void
+attrib_init( FD_generic_attrib * ui )
 {
     static int attrib_initialized;
     int i;
@@ -250,16 +279,16 @@ attrib_init(FD_generic_attrib * ui)
 
 /* check for obvious errors */
 
-#define OK_letter(c)  \
-          (*c=='_' || *c=='[' || *c==']' || *c=='.' ||\
-          (*c==':' && *++c==':') || (*c=='-' && *++c=='>'))
+#define OK_letter( c )  \
+          (* c == '_' || *c == '[' || *c == ']' || * c== '.' ||   \
+          (* c == ':' && *++c == ':' ) || (*c == '-' && *++c == '>' ) )
 
 
 /***************************************
  ***************************************/
 
 static int
-valid_c_identifier(const char *s)
+valid_c_identifier( const char * s )
 {
     if (fdopt.lax)
 		return 1;
@@ -284,9 +313,9 @@ valid_c_identifier(const char *s)
  ***************************************/
 
 static int
-validate_cvar_name(FL_OBJECT * ob)
+validate_cvar_name( FL_OBJECT * ob )
 {
-    const char *s = fl_get_input(ob);
+    const char *s = fl_get_input( ob );
 
     if (!valid_c_identifier(s))
     {
@@ -306,7 +335,7 @@ validate_cvar_name(FL_OBJECT * ob)
  ***************************************/
 
 static int
-validate_attributes(void)
+validate_attributes( void )
 {
     return    validate_cvar_name(fd_generic_attrib->nameobj)
 		   && validate_cvar_name(fd_generic_attrib->cbnameobj);
@@ -330,7 +359,7 @@ validate_cvar_name_cb( FL_OBJECT * ob,
  ***************************************/
 
 static void
-readback_attributes(FL_OBJECT * obj)
+readback_attributes( FL_OBJECT * obj )
 {
     int spstyle, warn = 0;
     char name[128], cbname[128];
@@ -344,7 +373,8 @@ readback_attributes(FL_OBJECT * obj)
 
     obj->lstyle = fl_get_choice(fd_generic_attrib->fontobj) - 1;
     spstyle = fl_get_choice(fd_generic_attrib->styleobj) - 1;
-    obj->lstyle += spstyle == 3 ? FL_EMBOSSED_STYLE : (spstyle * FL_SHADOW_STYLE);
+    obj->lstyle +=
+		      spstyle == 3 ? FL_EMBOSSED_STYLE : (spstyle * FL_SHADOW_STYLE);
     obj->col1 = fd_generic_attrib->col1obj->col1;
     obj->col2 = fd_generic_attrib->col2obj->col1;
     obj->lcol = fd_generic_attrib->lcolobj->col1;
@@ -354,7 +384,8 @@ readback_attributes(FL_OBJECT * obj)
                 fl_get_choice_text(fd_generic_attrib->align));
     obj->align = align_val(tmpbuf);
 
-    if (fl_get_choice(fd_generic_attrib->inside) == 1 && obj->align != FL_ALIGN_CENTER)
+    if (    fl_get_choice(fd_generic_attrib->inside) == 1
+		 && obj->align != FL_ALIGN_CENTER)
 		obj->align |= FL_ALIGN_INSIDE;
     else
 		obj->align &= ~FL_ALIGN_INSIDE;
@@ -413,7 +444,7 @@ readback_attributes(FL_OBJECT * obj)
  ***************************************/
 
 void
-show_attributes(const FL_OBJECT * obj)
+show_attributes( const FL_OBJECT * obj )
 {
     char objname[MAX_VAR_LEN], cbname[MAX_VAR_LEN], argname[MAX_VAR_LEN];
     char buf[MAX_VAR_LEN];
@@ -467,8 +498,10 @@ show_attributes(const FL_OBJECT * obj)
     /* gravity stuff */
 
     fl_set_choice_text(fd_generic_attrib->resize, resize_name(obj->resize) + 3);
-    fl_set_choice_text(fd_generic_attrib->nwgravity, gravity_name(obj->nwgravity) + 3);
-    fl_set_choice_text(fd_generic_attrib->segravity, gravity_name(obj->segravity) + 3);
+    fl_set_choice_text(fd_generic_attrib->nwgravity,
+					   gravity_name(obj->nwgravity) + 3);
+    fl_set_choice_text(fd_generic_attrib->segravity,
+					   gravity_name(obj->segravity) + 3);
 
     get_object_name(obj, objname, cbname, argname);
     fl_set_input(fd_generic_attrib->labelobj, get_label(obj, 0));
@@ -491,7 +524,8 @@ show_attributes(const FL_OBJECT * obj)
  ***************************************/
 
 int
-change_object(FL_OBJECT * obj, int all)
+change_object( FL_OBJECT * obj,
+			   int         all )
 {
     FL_OBJECT *retobj;
     FD_generic_attrib *ui = fd_generic_attrib;
@@ -590,8 +624,15 @@ change_object(FL_OBJECT * obj, int all)
  ***************************************/
 
 void
-set_attribs(FL_OBJECT * obj, int boxtype, int col1, int col2,
-			int lcol, int align, float lsize, int lstyle, char label[])
+set_attribs( FL_OBJECT * obj,
+			 int         boxtype,
+			 int         col1,
+			 int         col2,
+			 int         lcol,
+			 int         align,
+			 float       lsize,
+			 int         lstyle,
+			 char        label[ ] )
 {
     obj->boxtype = boxtype;
     obj->col1 = col1;
@@ -609,10 +650,10 @@ set_attribs(FL_OBJECT * obj, int boxtype, int col1, int col2,
  ***************************************/
 
 void
-set_miscattribs( FL_OBJECT * obj,
-				 unsigned int nw,
-				 unsigned int se,
-				 unsigned int re)
+set_miscattribs( FL_OBJECT    * obj,
+				 unsigned int   nw,
+				 unsigned int   se,
+				 unsigned int   re )
 {
     obj->nwgravity = nw;
     obj->segravity = se;
@@ -630,7 +671,8 @@ set_miscattribs( FL_OBJECT * obj,
  ***************************************/
 
 void
-set_label(FL_OBJECT * obj, const char *str)
+set_label( FL_OBJECT  * obj,
+		   const char *str )
 {
     int i = 0, j = 0;
     char tmpstr[STRLEN];	/* Limit on label length introduced here */
@@ -662,7 +704,8 @@ set_label(FL_OBJECT * obj, const char *str)
  ***************************************/
 
 void
-set_shortcut(FL_OBJECT * obj, const char *sc)
+set_shortcut( FL_OBJECT  * obj,
+			  const char * sc )
 {
     if (   obj->type != FL_RETURN_BUTTON
 		&& obj->type != FL_HIDDEN_RET_BUTTON)
@@ -672,7 +715,7 @@ set_shortcut(FL_OBJECT * obj, const char *sc)
 
 /* if \ preceeds c, \ does not need quote */
 
-#define Ok(c) (c=='"'||c=='\\'||c=='t'||c=='n'||isdigit(c))
+#define Ok( c ) ( c== '"' || c== '\\' || c == 't' || c == 'n' || isdigit( c ) )
 
 
 /***************************************
@@ -680,7 +723,8 @@ set_shortcut(FL_OBJECT * obj, const char *sc)
  ***************************************/
 
 static int
-need_quote(const char *s, int i)
+need_quote( const char * s,
+			int          i )
 {
     int c = s[i], p, n;
 
@@ -701,7 +745,8 @@ need_quote(const char *s, int i)
  ***************************************/
 
 char *
-get_label(const FL_OBJECT * obj, int c_source)
+get_label( const FL_OBJECT * obj,
+		   int               c_source )
 {
     int i = 0, j = 0;
     const char *label = obj->label;
@@ -746,7 +791,8 @@ get_label(const FL_OBJECT * obj, int c_source)
  ***************************************/
 
 static int
-special_key(int key, char *outbuf)
+special_key( int    key,
+			 char * outbuf )
 {
     char *start = outbuf;
 
@@ -791,7 +837,7 @@ special_key(int key, char *outbuf)
  ***************************************/
 
 char *
-get_shortcut_string(const FL_OBJECT * obj)
+get_shortcut_string( const FL_OBJECT * obj )
 {
     static char tmps[127];
     char *p = tmps;
@@ -840,7 +886,8 @@ get_shortcut_string(const FL_OBJECT * obj)
  ***************************************/
 
 FL_OBJECT *
-copy_object(FL_OBJECT * obj, int exact)
+copy_object( FL_OBJECT * obj,
+			 int         exact )
 {
     char name[MAX_VAR_LEN], cbname[MAX_VAR_LEN], argname[MAX_VAR_LEN];
     FL_OBJECT *obj2;
@@ -865,18 +912,17 @@ copy_object(FL_OBJECT * obj, int exact)
 }
 
 
-#if 0
-
 /***************************************
  ***************************************/
 
+#if 0
 static void
-copy_class_spec(FL_OBJECT * src, FL_OBJECT * dest)
+copy_class_spec( FL_OBJECT * src,
+				 FL_OBJECT * dest )
 {
     if (src->objclass == dest->objclass && src->spec_size == dest->spec_size)
 		memcpy(dest->spec, src->spec, src->spec_size);
 }
-
 #endif
 
 
@@ -886,7 +932,8 @@ copy_class_spec(FL_OBJECT * src, FL_OBJECT * dest)
  ***************************************/
 
 void
-change_type(FL_OBJECT * obj, int type)
+change_type( FL_OBJECT * obj,
+			 int         type )
 {
     FL_OBJECT *ttt, *defobj;
     int boxtype, reshow = 0, is_focus;
@@ -1020,7 +1067,8 @@ spec_apply_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-folder_switch_cb(FL_OBJECT * ob, long data)
+folder_switch_cb( FL_OBJECT * ob,
+				  long        data )
 {
     FD_attrib *ui = ob->form->fdui;
 

@@ -1,3 +1,13 @@
+2008-04-13 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* fdesign/fd/*.c, fdesign/spec/*.c: Replaced
+	'#include "forms.h"' with '#include "include/forms.h"
+	to avoid compilation problems Peter Peter Galbraith
+	had pointed out.
+
+	* fdesign/fd_printC.c: In created C files we now have
+	'#include <forms.h>' instead of '#include "forms.h"'.
+
 2008-04-10 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/buttons.c: Removed code that enforced on of a
