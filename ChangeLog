@@ -1,9 +1,27 @@
+2008-04-20 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/flresource.c: Removed setting of the machines
+	locale setting as default for the program. This
+	change had already been discussed by Jean-Marc and
+	Angus back in 2004 but never actually done.
+
+	* lib/fselect.c: Programs doesn't crash anymore when
+	fl_set_directory() gets passed a NULL pointer.
+
+	* lib/buttons.c: Bug repaired that kept buttons from
+	becoming highlighted when the mouse was moved nto them
+	(and vice versa).
+
+	* lib/formbrowser.c: Changed the handling of the scroll-
+	bars to hopefully make it work correctly even when the
+	form gets resized.
+
 2008-04-13 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* fdesign/fd/*.c, fdesign/spec/*.c: Replaced
 	'#include "forms.h"' with '#include "include/forms.h"
-	to avoid compilation problems Peter Peter Galbraith
-	had pointed out.
+	to avoid compilation problems Peter Galbraith pointed
+	out.
 
 	* fdesign/fd_printC.c: In created C files we now have
 	'#include <forms.h>' instead of '#include "forms.h"'.

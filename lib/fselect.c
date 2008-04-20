@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.14 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.15 2008/04/20 13:04:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -432,6 +432,12 @@ fl_set_directory( const char * p )
 
 	fselector_init( );
 
+	if ( p == NULL )
+	{
+		Bark( "fl_set_directory", "invalid NULL argument" );
+		return 1;
+	}
+
 	strncpy( tmpdir, p, sizeof tmpdir );
 	tmpdir[ sizeof tmpdir - 1 ] = '\0';
 	fl_de_space_de( tmpdir );
@@ -441,7 +447,7 @@ fl_set_directory( const char * p )
 	fl_fix_dirname( tmpdir );
 	if ( ! fl_is_valid_dir( tmpdir ) )
 	{
-		Bark( "GetDir", "invalid dir: %s", tmpdir );
+		Bark( "fl_set_directory", "invalid directory: %s", tmpdir );
 		return 1;
 	}
 
@@ -1079,12 +1085,12 @@ create_form_fselect( void )
 
 	fl_add_box( FL_UP_BOX, 0, 0, 305, 330, "" );
 
-	fs->patbutt = obj = fl_add_button( FL_NORMAL_BUTTON, 76, 41, 217, 24, "" );
-	fl_set_button_shortcut( obj, "#P#p", 1 );
+	fs->dirlabel = obj = fl_add_text( FL_NORMAL_TEXT, 12, 15, 64, 24,
+									  "D\010irectory" );
 	fl_set_object_boxtype( obj, FL_FRAME_BOX );
-	fl_set_object_resize(  obj, FL_RESIZE_X );
-	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthEast );
-	fl_set_object_callback( obj, pattern_cb, 0 );
+	fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
+	fl_set_object_resize( obj, FL_RESIZE_NONE );
+	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
 
 	fs->dirbutt = obj = fl_add_button( FL_NORMAL_BUTTON, 76, 15, 217, 24, "" );
 	fl_set_button_shortcut( obj, "#D#d", 1 );
@@ -1094,19 +1100,19 @@ create_form_fselect( void )
 	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthEast );
 	fl_set_object_callback( obj, directory_cb, 0 );
 
-	fs->dirlabel = obj = fl_add_text( FL_NORMAL_TEXT, 12, 15, 64, 24,
-									  "D\010irectory" );
-	fl_set_object_boxtype( obj, FL_FRAME_BOX );
-	fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
-	fl_set_object_resize( obj, FL_RESIZE_NONE );
-	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
-
 	fs->patlabel = obj = fl_add_text( FL_NORMAL_TEXT, 12, 41, 64, 24,
 									  "P\010attern" );
 	fl_set_object_boxtype( obj, FL_FRAME_BOX );
 	fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
 	fl_set_object_resize( obj, FL_RESIZE_NONE );
 	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
+
+	fs->patbutt = obj = fl_add_button( FL_NORMAL_BUTTON, 76, 41, 217, 24, "" );
+	fl_set_button_shortcut( obj, "#P#p", 1 );
+	fl_set_object_boxtype( obj, FL_FRAME_BOX );
+	fl_set_object_resize(  obj, FL_RESIZE_X );
+	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthEast );
+	fl_set_object_callback( obj, pattern_cb, 0 );
 
 	fs->resbutt = obj = fl_add_button( FL_NORMAL_BUTTON, 210, 80, 83, 28,
 									   "Rescan" );

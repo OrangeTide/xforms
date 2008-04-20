@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.14 2008/03/28 12:19:07 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.15 2008/04/20 13:04:24 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -58,7 +58,7 @@ char *fl_id_canvas = "$Id: canvas.c,v 1.14 2008/03/28 12:19:07 jtt Exp $";
 
 static int
 handle_keyboard_special( FL_OBJECT * ob,
-						 XEvent *    xev )
+						 XEvent    * xev )
 {
     unsigned char keybuf[ 127 ],
 		          *ch;
@@ -68,19 +68,17 @@ handle_keyboard_special( FL_OBJECT * ob,
 
     kbuflen = XLookupString( ( XKeyEvent * ) xev, ( char * ) keybuf,
 							 sizeof keybuf, &keysym, 0 );
+
     if ( IsModifierKey( keysym ) )
 		/* empty */ ;
     else if ( kbuflen == 0 && keysym != None )
-    {
 		ret = fl_do_shortcut( ob->form, keysym, xev->xkey.x, xev->xkey.y, xev );
-    }
     else
-    {
 		for ( ch = keybuf; ch < keybuf + kbuflen && ob->form; ch++ )
 			ret = fl_do_shortcut( ob->form, *ch,
 								  xev->xkey.x, xev->xkey.y, xev ) || ret;
 
-    }
+
     return ret;
 }
 
@@ -93,13 +91,12 @@ handle_keyboard_special( FL_OBJECT * ob,
  * We have to intercept all events destined for the canvas.
  * Must return 0 if canvas is used just like an arbitary application
  * window. event processing routine calls the preemptive routine
- * and continues dispatching events if preemptive handler
- * returns 0.
+ * and continues dispatching events if preemptive handler returns 0.
  ***************************************/
 
 static int
 canvas_event_intercept( XEvent * xev,
-						void *   vob )
+						void   * vob )
 {
     FL_OBJECT *ob = vob;
     SPEC *sp = ob->spec;
@@ -120,7 +117,7 @@ canvas_event_intercept( XEvent * xev,
 		 && sp->cleanup )
     {
 		sp->cleanup( ob );
-		sp->window = 0;
+		sp->window = None;
     }
 
     if (    xev->type == KeyPress
@@ -163,15 +160,14 @@ free_canvas( FL_OBJECT * ob )
     if ( ob->visible && sp->window && ob->form && ob->form->window )
 		fl_winclose( sp->window );
 
-    sp->window = 0;
+    sp->window = None;
 
     /* don't free the colormap if it is xforms internal one */
 
     if ( ! sp->keep_colormap && sp->colormap != fl_colormap( fl_vmode ) )
 		XFreeColormap( flx->display, sp->colormap );
 
-    fl_free( sp );
-    ob->spec = 0;
+    fl_safe_free( ob->spec );
 }
 
 
@@ -189,12 +185,9 @@ BegWMColormap( SPEC * sp )
        with setting this property. This check simply works around the problem
        (for most cases). */
 
-    if ( sp->colormap != fl_colormap( fl_vmode ) )
-    {
-		if ( ! XSetWMColormapWindows( flx->display, sp->parent,
-									  &sp->window, 1 ) )
-			M_err( "WMColormap", "WM choked" );
-    }
+    if ( sp->colormap != fl_colormap( fl_vmode ) &&
+		 ! XSetWMColormapWindows( flx->display, sp->parent, &sp->window, 1 ) )
+		M_err( "WMColormap", "WM choked" );
 }
 
 
@@ -202,7 +195,7 @@ BegWMColormap( SPEC * sp )
  ***************************************/
 
 void
-fl_set_canvas_attributes( FL_OBJECT *            ob,
+fl_set_canvas_attributes( FL_OBJECT            * ob,
 						  unsigned int           mask,
 						  XSetWindowAttributes * xswa )
 {
@@ -319,7 +312,7 @@ fl_get_canvas_depth( FL_OBJECT * obj )
 
 static void
 init_canvas( FL_OBJECT * ob,
-			 SPEC *      sp )
+			 SPEC      * sp )
 {
     static int nc;		/* number of canvases */
     char name[ 32 ];
@@ -394,7 +387,7 @@ init_canvas( FL_OBJECT * ob,
 		sp->h = ob->h;
     }
 
-    /* check if moved or resized */
+    /* Check if moved or resized */
 
     if ( Moved( ob, sp ) || Resized( ob, sp ) )
     {
@@ -422,10 +415,10 @@ init_canvas( FL_OBJECT * ob,
  ***************************************/
 
 FL_HANDLE_CANVAS
-fl_add_canvas_handler( FL_OBJECT *      ob,
-					   int              ev,
-					   FL_HANDLE_CANVAS h,
-					   void *           udata )
+fl_add_canvas_handler( FL_OBJECT        * ob,
+					   int                ev,
+					   FL_HANDLE_CANVAS   h,
+					   void             * udata )
 {
     FL_HANDLE_CANVAS oldh = NULL;
     SPEC *sp = ob->spec;
@@ -465,9 +458,9 @@ fl_add_canvas_handler( FL_OBJECT *      ob,
  ***************************************/
 
 void
-fl_remove_canvas_handler( FL_OBJECT *      ob,
-						  int              ev,
-						  FL_HANDLE_CANVAS h  FL_UNUSED_ARG )
+fl_remove_canvas_handler( FL_OBJECT        * ob,
+						  int                ev,
+						  FL_HANDLE_CANVAS   h  FL_UNUSED_ARG )
 {
     SPEC *sp = ob->spec;
     unsigned long emask = fl_xevent_to_mask( ev );
@@ -518,7 +511,7 @@ handle_it( FL_OBJECT * ob,
 		   FL_Coord    mx   FL_UNUSED_ARG,
 		   FL_Coord    my   FL_UNUSED_ARG,
 		   int         key  FL_UNUSED_ARG,
-		   void *      xev  FL_UNUSED_ARG )
+		   void      * xev  FL_UNUSED_ARG )
 {
     SPEC *sp = ob->spec;
 
@@ -643,10 +636,10 @@ fl_add_canvas( int          type,
  ***************************************/
 
 void
-fl_modify_canvas_prop( FL_OBJECT *           obj,
-					   FL_MODIFY_CANVAS_PROP init,
-					   FL_MODIFY_CANVAS_PROP activate,
-					   FL_MODIFY_CANVAS_PROP cleanup )
+fl_modify_canvas_prop( FL_OBJECT             * obj,
+					   FL_MODIFY_CANVAS_PROP   init,
+					   FL_MODIFY_CANVAS_PROP   activate,
+					   FL_MODIFY_CANVAS_PROP   cleanup )
 {
     SPEC *sp = obj->spec;
 

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rbut = "$Id: roundbut.c,v 1.7 2008/04/13 10:44:18 jtt Exp $";
+char *fl_id_rbut = "$Id: roundbut.c,v 1.8 2008/04/20 13:04:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -56,8 +56,7 @@ draw_roundbutton( FL_OBJECT * ob )
     int c1;
     FL_Coord xx,
 		     yy,
-		     rr,
-		     bw = FL_abs( ob->bw );
+		     rr;
     SPEC *sp = ob->spec;
 
     if (    ob->boxtype == FL_NO_BOX

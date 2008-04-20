@@ -46,7 +46,7 @@
 #include "private/pformbrowser.h"
 
 
-void check_scrollbar( FL_OBJECT * ob );
+static void check_scrollbar( FL_OBJECT * ob );
 
 #define SPEC     FL_FORMBROWSER_SPEC
 
@@ -187,10 +187,9 @@ fl_get_formbrowser_topform( FL_OBJECT * ob )
     int topline = 0;
 	SPEC *sp = ob->spec;
 
-
     if ( ! IsFormBrowserClass( ob ) )
-		M_err( "GetFormBrowserTop",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_get_formbrowser_topform", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
     else
 		topline = sp->top_form + 1;
 
@@ -206,14 +205,10 @@ fl_set_formbrowser_topform( FL_OBJECT * ob,
 							FL_FORM   * form )
 {
     int n = fl_find_formbrowser_form_number( ob, form );
-    SPEC *sp = ob->spec;
 
     if ( n > 0 )
-    {
-		sp->top_form = n - 1;
-		display_forms( sp );
-		fl_set_scrollbar_value( sp->vsl, ( n - 0.5 ) / ( sp->nforms - 1 ) );
-    }
+		fl_set_formbrowser_topform_bynumber( ob, n );
+
     return n;
 }
 
@@ -230,11 +225,22 @@ fl_set_formbrowser_topform_bynumber( FL_OBJECT * ob,
 
     if ( n > 0 && n <= sp->nforms )
     {
+		int h,
+			f;
+
 		sp->top_form = n - 1;
+		sp->top_edge = 0;
 		form = sp->form[ sp->top_form ];
 		display_forms( sp );
-		fl_set_scrollbar_value( sp->vsl, ( n - 0.5 ) / ( sp->nforms - 1 ) );
+
+		for ( h = f = 0; f < sp->top_form; f++ )
+			h += sp->form[ f ]->h;
+
+		fl_set_scrollbar_value( sp->vsl,
+								( double ) h /
+								( sp->max_height - sp->canvas->h ) );
     }
+
     return form;
 }
 
@@ -250,18 +256,18 @@ fl_addto_formbrowser( FL_OBJECT * ob,
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
-		M_err( "AddtoFormBrowser",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_addto_formbrowser", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
 		return 0;
 	}
     else if ( ! form )
 	{
-		M_err( "AddtoFormBrowser", "Invalid argument" );
+		M_err( "fl_addto_formbrowser", "Invalid argument" );
 		return 0;
 	}
     else if ( form->attached )
 	{
-		M_err( "AddtoFormBrowser", "Already attached ?" );
+		M_err( "fl_addto_formbrowser", "Already attached ?" );
 		return 0;
 	}
 
@@ -304,13 +310,13 @@ fl_find_formbrowser_form_number( FL_OBJECT * ob,
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
-		M_err( "FindFormBrowserIdent",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_find_formbrowser_form_number", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
 		return 0;
 	}
     else if ( ! candidate_form )
 	{
-		M_err( "FindFormBrowserIdent", "Invalid argument" );
+		M_err( "fl_find_formbrowser_form_number", "Invalid argument" );
 		return 0;
 	}
 
@@ -340,13 +346,13 @@ fl_delete_formbrowser( FL_OBJECT * ob,
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
-		M_err( "DeleteFormBrowser",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_delete_formbrowser", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
 		return -1;
 	}
     else if ( ! candidate_form )
 	{
-		M_err( "DeleteFormBrowser", "Invalid argument" );
+		M_err( "fl_delete_formbrowser", "Invalid argument" );
 		return -1;
 	}
 
@@ -383,13 +389,13 @@ fl_delete_formbrowser_bynumber( FL_OBJECT * ob,
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
-		M_err( "DeleteFormByNumber",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_delete_formbrowser_bynumber", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
 		return NULL;
 	}
     else if ( num <= 0 || num > sp->nforms )
     {
-		M_err( "DeleteFormByNumber",
+		M_err( "fl_delete_formbrowser_bynumber",
 			   "Invalid argument -- %d not between 1 and %d",
 			   num, sp->nforms );
 		return NULL;
@@ -416,13 +422,13 @@ fl_replace_formbrowser( FL_OBJECT * ob,
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
-		M_err( "ReplaceFormByNumber",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_replace_formbrowser", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
 		return NULL;
 	}
     else if ( num <= 0 || num > sp->nforms )
     {
-		M_err( "ReplaceFormByNumber",
+		M_err( "fl_replace_formbrowser",
 			   "Invalid argument -- %d not between 1 and %d",
 			   num, sp->nforms );
 		return NULL;
@@ -452,8 +458,8 @@ fl_get_formbrowser_area( FL_OBJECT * ob,
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
-		M_err( "GetFormbrowserArea",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_get_formbrowser_area", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
 		return 0;
 	}
 
@@ -483,14 +489,14 @@ fl_insert_formbrowser( FL_OBJECT * ob,
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
-		M_err( "InsertForm",
-			   "%s not a formbrowser class", ob ? ob->label : "null" );
+		M_err( "fl_insert_formbrowser", "%s not a formbrowser",
+			   ob ? ob->label : "null" );
 		return -1;
 	}
 
 	if ( line <= 0 || line > nforms )
 	{
-		M_err( "InsertForm", "Invalid argument" );
+		M_err( "fl_insert_formbrowser", "Invalid argument" );
 		return -1;
 	}
 
@@ -571,22 +577,24 @@ fl_set_formbrowser_xoffset( FL_OBJECT * ob,
 {
     SPEC *sp = ob->spec;
     int current;
-    double val;
 
     if ( ! IsFormBrowserClass( ob ) )
-		M_err( "FormBrowserXOffset", "%s not a formbrowser class",
+		M_err( "fl_set_formbrowser_xoffset", "%s not a formbrowser",
 			   ob ? ob->label : "null" );
 
     current = sp->left_edge;
 
-    if ( offset > 0 && current != offset && sp->max_width > sp->canvas->w )
-    {
-		sp->left_edge = offset;
-		val = ( double ) sp->left_edge / ( sp->max_width - sp->canvas->w );
-		fl_set_scrollbar_value( sp->hsl, val );
-		fl_redraw_object( sp->hsl );
-		/* fl_call_object_callback( sp->hsl ); */
-    }
+	if ( sp->max_width < sp->canvas->w )
+		offset = 0;
+	if ( offset < 0 )
+		offset = 0;
+	if ( offset > sp->max_width - sp->canvas->w )
+		offset = sp->max_width - sp->canvas->w;
+
+	sp->left_edge = offset;
+	fl_set_scrollbar_value( sp->hsl,
+							( double ) sp->left_edge /
+							( sp->max_width - sp->canvas->w ) );
 
     return current;
 }
@@ -599,7 +607,7 @@ int
 fl_get_formbrowser_xoffset( FL_OBJECT * ob )
 {
     if ( ! IsFormBrowserClass( ob ) )
-		M_err( "FormBrowserXOffset", "%s not a formbrowser class",
+		M_err( "fl_get_formbrowser_xoffset", "%s not a formbrowser",
 			   ob ? ob->label : "null" );
 
     return ( ( SPEC * ) ob->spec )->left_edge;
@@ -613,23 +621,38 @@ int
 fl_set_formbrowser_yoffset( FL_OBJECT * ob,
 							int         offset )
 {
-    SPEC *sp = ob->spec;
+    SPEC *sp;
     int current;
-	double val;
+	int new_top_edge,
+		new_top_form;
+	int h,
+		f;
 
     if ( ! IsFormBrowserClass( ob ) )
-		M_err( "FormBrowserYOffset", "%s not a formbrowser class",
+		M_err( "fl_set_formbrowser_yoffset", "%s not a formbrowser",
 			   ob ? ob->label : "null" );
 
-    current = sp->top_edge;
+	sp = ob->spec;
 
-    if ( offset > 0 || current != offset || sp->max_height > sp->canvas->h )
-    {
-		sp->top_edge = offset;
-		val = ( double ) sp->top_edge / ( sp->max_height - sp->canvas->h );
-		fl_set_scrollbar_value( sp->vsl, val );
-		fl_call_object_callback( sp->vsl );
-    }
+	if ( sp->max_height < sp->canvas->h )
+		offset = 0;
+	if ( offset < 0 )
+		offset = 0;
+	if ( offset > sp->max_height - sp->canvas->h )
+		offset = sp->max_height - sp->canvas->h;
+
+	current = fl_get_formbrowser_yoffset( ob );
+
+	h = sp->max_height;
+	for ( f = sp->nforms - 1; f >= 0 && offset < h; f-- )
+		h -= sp->form[ f ]->h;
+
+	sp->top_form = ++f;
+	sp->top_edge = offset - h;
+
+	fl_set_scrollbar_value( sp->vsl,
+							( double ) offset /
+							( sp->max_height - sp->canvas->h ));
 
     return current;
 }
@@ -641,10 +664,18 @@ fl_set_formbrowser_yoffset( FL_OBJECT * ob,
 int
 fl_get_formbrowser_yoffset( FL_OBJECT * ob )
 {
+    SPEC *sp = ob->spec;
+	int h,
+		f;
+
     if ( ! IsFormBrowserClass( ob ) )
-		M_err( "FormBrowserYOffset", "%s not a formbrowser class",
+		M_err( "fl_get_formbrowser_yoffset", "%s not a formbrowser",
 			   ob ? ob->label : "null" );
-    return ( ( SPEC * ) ob->spec )->top_edge;
+
+	for ( h = f = 0; f < sp->top_form; f++ )
+		h += sp->form[ f ]->h;
+
+    return h + sp->top_edge;
 }
 
 
@@ -656,7 +687,7 @@ fl_get_formbrowser_numforms( FL_OBJECT * ob )
 {
     if ( ! IsFormBrowserClass( ob ) )
 	{
-        M_err( "GetFormbrowserForms", "%s not a formbrowser class",
+        M_err( "fl_get_formbrowser_numforms", "%s not a formbrowser",
 			   ob ? ob->label : "null" );
 		return -1;
 	}
@@ -675,17 +706,17 @@ fl_get_formbrowser_form( FL_OBJECT * ob,
     FL_FORM *form = NULL;
 
     if ( ! IsFormBrowserClass( ob ) )
-        M_err( "GetFormbrowserForm", "%s not a formbrowser class",
+        M_err( "fl_get_formbrowser_form", "%s not a formbrowser",
 			   ob ? ob->label : "null" );
     else
     {
         SPEC *sp = ob->spec;
         int nforms = sp->nforms;
 
-        if ( 1 <= n && n <= nforms )
+        if ( n >= 1 && n <= nforms )
             form = sp->form[ n - 1 ];
         else
-            M_err( "GetFormbrowserForm",
+            M_err( "fl_get_formbrowser_form",
 				   "%d is not an allowable form number", n );
     }
 
@@ -707,7 +738,7 @@ display_forms( SPEC *sp )
     FL_FORM **form    = sp->form;
     int nforms        = sp->nforms;
     int top_form      = sp->top_form;
-    int left_edge     = -sp->left_edge;
+    int left_edge     = - sp->left_edge;
     int height        = canvas->h;	         /* - (2 * absbw); */
 
     if ( ! FL_ObjWin( sp->canvas ) )
@@ -738,7 +769,7 @@ display_forms( SPEC *sp )
 			fl_prepare_form_window( form[ f ], 0, FL_NOBORDER, "Formbrowser" );
 			form[ f ]->parent_obj = sp->parent;
 			XReparentWindow( fl_get_display( ),
-							 ( Window ) form[ f ]->window,
+							 form[ f ]->window,
 							 FL_ObjWin( sp->canvas ),
 							 left_edge, y_pos );
 			fl_show_form_window( form[ f ] );
@@ -776,10 +807,6 @@ handle( FL_OBJECT * ob,
 			fl_set_canvas_decoration( sp->canvas,
 									  fl_boxtype2frametype( ob->boxtype ) );
 			sp->processing_destroy = 0;
-#if 0
-			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-						ob->col1, ob->bw );
-#endif
 			check_scrollbar( ob );
 			if ( ! sp->in_draw && FL_ObjWin( sp->canvas ) )
 			{
@@ -861,7 +888,7 @@ hcb( FL_OBJECT * ob,
     SPEC *sp = ob->parent->spec;
     double val = fl_get_scrollbar_value( sp->hsl );
 
-    sp->left_edge = ( int ) ( ( sp->max_width - sp->canvas->w ) * val );
+    sp->left_edge = ( sp->max_width - sp->canvas->w ) * val;
     fl_freeze_form( ob->form );
     display_forms( sp );
     fl_unfreeze_form( ob->form );
@@ -879,17 +906,18 @@ vcb( FL_OBJECT * ob,
     double val = fl_get_scrollbar_value( sp->vsl );
 
     if ( sp->scroll == FL_JUMP_SCROLL )
-		sp->top_form = ( int ) ( ( ( sp->nforms - 1 ) * val ) + 0.5 );
+		sp->top_form = ( sp->nforms - 1 ) * val;
     else
     {
 		/* do pixel based scrolling */
 
-		int pos = ( sp->max_height - sp->canvas->h + 1 ) * val + 0.4;
+		int pos = ( sp->max_height - sp->canvas->h ) * val;
 		int h = 0,
 			f;
 
 		for ( f = 0; h <= pos && f < sp->nforms; f++ )
 			h += sp->form[ f ]->h;
+
 		sp->top_form = f ? ( f - 1 ) : f;
 		sp->top_edge = sp->form[ sp->top_form ]->h - h + pos;
     }
@@ -944,7 +972,7 @@ parentize_form( FL_FORM   * form,
 /***************************************
  ***************************************/
 
-void
+static void
 check_scrollbar( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
@@ -952,26 +980,26 @@ check_scrollbar( FL_OBJECT * ob )
     int h_on = sp->h_on,
 		v_on = sp->v_on;
 
-    /* inheric the boxtype of parent */
+    /* Inherit the boxtype of parent */
 
     sp->hsl->boxtype = ob->boxtype;
     sp->vsl->boxtype = ob->boxtype;
 
-    /* gravity/resize may screwup the ratios. Recompute */
+    /* Gravity/resize may screwup the ratios. Recompute */
 
     sp->canvas->x = ob->x + absbw;
     sp->canvas->y = ob->y + absbw;
     sp->canvas->w = ob->w - 2 * absbw;
     sp->canvas->h = ob->h - 2 * absbw;
 
-    sp->h_on =    sp->canvas->w - 2 * sp->vw_def > 0 
-		       && sp->canvas->h - 2 * sp->hh_def > 0
+    sp->h_on =    sp->canvas->w - 2 * absbw - sp->vw_def > 0 
+		       && sp->canvas->h - 2 * absbw - sp->hh_def > 0
 		       && (    sp->h_pref == FL_ON
 					|| (    sp->h_pref != FL_OFF
 						 && sp->canvas->w < sp->max_width ) );
 
-    sp->v_on =    sp->canvas->w - ( sp->h_on ? 3 : 2 ) * sp->vw_def > 0 
-		       && sp->canvas->h - 2 * sp->hh_def > 0
+    sp->v_on =    sp->canvas->w - 2 * absbw - sp->vw_def > 0 
+		       && sp->canvas->h - 2 * absbw - sp->hh_def > 0
 		       && (    sp->v_pref == FL_ON
 					|| (    sp->v_pref != FL_OFF
 						 && sp->canvas->h < sp->max_height ) );
@@ -990,7 +1018,8 @@ check_scrollbar( FL_OBJECT * ob )
 		sp->vw = 0;
     }
 
-    sp->canvas->w = ob->w - 2 * absbw - sp->vw;
+    sp->canvas->w =    ob->w - 2 * absbw
+		            - ( sp->v_on ? 2 * absbw + sp->vw_def : 0 );
 
     if ( sp->h_on )
     {
@@ -1008,7 +1037,8 @@ check_scrollbar( FL_OBJECT * ob )
 
     /* make adjustment to the canvas size */
 
-    sp->canvas->h = ob->h - 2 * absbw - sp->hh;
+    sp->canvas->h =    ob->h - 2 * absbw
+		             - ( sp->h_on ? 2 * absbw + sp->hh_def : 0 );
 
     /* recheck vertical */
 
@@ -1028,15 +1058,17 @@ check_scrollbar( FL_OBJECT * ob )
     sp->hsl->w = sp->canvas->w + 2 * absbw;
     sp->vsl->h = sp->canvas->h + 2 * absbw;
 
-    /* if scrollbars are turned-off due to resize, adjust the offsets. */
+    /* If scrollbars get turned off due since the canvas is large enough,
+	   adjust the offsets. */
 
-    if ( ! sp->v_on && v_on )
+    if ( ! sp->v_on && v_on && sp->canvas->h >= sp->max_height )
     {
 		sp->top_edge = 0;
+		sp->top_form = 0;
 		fl_set_scrollbar_value( sp->vsl, 0.0 );
     }
 
-    if ( ! sp->h_on && h_on )
+    if ( ! sp->h_on && h_on && sp->canvas->w >= sp->max_width )
     {
 		sp->left_edge = 0;
 		fl_set_scrollbar_value( sp->hsl, 0.0 );
@@ -1046,12 +1078,18 @@ check_scrollbar( FL_OBJECT * ob )
     sp->hsl->visible = sp->h_on;
 
 	if ( sp->h_on )
+	{
 		fl_set_scrollbar_size( sp->hsl,
 							   ( double ) sp->canvas->w / sp->max_width );
+		fl_set_formbrowser_xoffset( ob, fl_get_formbrowser_xoffset( ob ) );
+	}
 
 	if ( sp->v_on )
+	{
 		fl_set_scrollbar_size( sp->vsl,
 							   ( double ) sp->canvas->h / sp->max_height );
+		fl_set_formbrowser_yoffset( ob, fl_get_formbrowser_yoffset( ob ) );
+	}
 
 	if ( sp->canvas->w > 0 && sp->canvas->h > 0 )
 		fl_winresize( FL_ObjWin( sp->canvas ), sp->canvas->w, sp->canvas->h );

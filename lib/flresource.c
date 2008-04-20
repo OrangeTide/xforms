@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.20 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.21 2008/04/20 13:04:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -49,7 +49,10 @@ char *fl_id_rsc = "$Id: flresource.c,v 1.20 2008/04/10 00:05:50 jtt Exp $";
 #include <X11/Xresource.h>
 #include <ctype.h>
 #include <sys/types.h>
+
+#if 0
 #include <locale.h>
+#endif
 
 #ifdef FL_WIN32
 #include <X11/Xw32defs.h>
@@ -933,7 +936,17 @@ fl_initialize( int        * na,
 		exit( 1 );
     }
 
+	/* The following was introduced in 0.89.5 (as far as I could figure out)
+	   but never was officially documented. Since it can break programs when
+	   run in a different locale then the one the original author used (e.g.
+	   because reading of files with scanf() may not work anymore when, due
+	   to the locale setting a ',' instead of a '.' as the decimal point is
+	   expected) I have thrown it out. Jean-Marc and Angus already planned to
+	   do that back in 2004 but obviously never got around to doing it.  JTT */
+
+#if 0
     setlocale( LC_ALL, "" );
+#endif
 
     fl_internal_init( );
 

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.15 2008/04/13 10:44:18 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.16 2008/04/20 13:04:24 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -199,9 +199,9 @@ lookup_cleanupfunc( int bclass )
 
 
 /***************************************
+ * associate a button class with the drawing function
  ***************************************/
 
-/* associate a button class with the drawing function */
 void
 fl_add_button_class( int              bclass,
 					 FL_DrawButton    drawit,
@@ -305,11 +305,6 @@ handle_it( FL_OBJECT * ob,
 			break;			/* TODO. Missing labels */
 
 		case FL_LEAVE:
-			if (    key < FL_MBUTTON1
-				 || key > FL_MBUTTON5
-				 || ! sp->react_to[ key - 1 ] )
-				break;
-
 			/* FL_MENU_BUTTON objects never get a FL_RELEASE event,
 			   so we have to "fake" one */
 
@@ -322,11 +317,6 @@ handle_it( FL_OBJECT * ob,
 			/* fall through */
 
 		case FL_ENTER:
-			if (    key < FL_MBUTTON1
-				 || key > FL_MBUTTON5
-				 || ! sp->react_to[ key - 1 ] )
-				break;
-
 			/* Keep active radio buttons from reacting */
 
 			if ( ob->type == FL_RADIO_BUTTON && sp->val == 1 )

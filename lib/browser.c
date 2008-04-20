@@ -226,7 +226,7 @@ get_geometry( FL_OBJECT * ob )
 		comp->attrib = 0;
 
 	/* On resize recalculate the slider positions to keep the point in the
-	   left upper corner were it is before (unless the text wouldn't fill the
+	   left upper corner were it was before (unless the text wouldn't fill the
 	   textbox completely anymore) - like we are used to e.g. by web browsers.*/
 
     sp->screenlines = ( double ) sp->h / sp->charheight + 0.001;

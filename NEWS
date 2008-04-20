@@ -8,25 +8,26 @@ V1.1 ???????????
     control the behaviour of the slider and counter widgets.
   o Enable input widgets to (partially) display characters larger than
     the input height.
-  o Repair double clicking on a file in the file selector.
   o Pass the associated (XEvent * xev) to fl_handle_object on an FL_DRAW
     event, allowing an FL_FREE object to make use of this info to
     redraw only the part of the window that has changed.
-  o Fix possible crash when using popups heavily.
   o Fix compilation on SCO OpenServer, AIX and systems without GNU make.
 ------------------------------------------
 V1.0.91pre5 April xx, 2008
   o Memory allocation bug in fl_initialize() fixed.
   o Output of fdesign should now be valid C (ANSI 89)
   o Number of symbols and length of names not limited anymore.
-  o Public functions added to set or query for buttns to which
+  o Public functions added to set or query for buttons to which
     mouse buttons they react:
      fl_set_button_mouse_buttons()
      fl_get_button_mouse_buttons()
+    Per default buttons again react to all mouse buttons.
+  o Removed restriction that required one of a set of radio buttons to
+    be always active active.
   o Changes to fdesign to set this behaviour.
 ------------------------------------------
 V1.0.91pre4 March 31, 2008
-  o Just some minor bug fixes
+  o Just some bug fixes
 ------------------------------------------
 V1.0.91pre3 March 26, 2008
   o If input object has focus and another object gets clicked on
@@ -57,6 +58,7 @@ V1.0.91pre1 March 12, 2008
       fl_get_object_resize()
   o Bugs fixed that resulted in attempts to draw on non-existent
     windows which then resulted in X errors.
+  o Corrections to make sliders on text browsers work correctly
   o Number of forms that can be created is now not limited anymore.
   o Object and event queue code rewritten to allow queues that grow
     dynamically if necessary.

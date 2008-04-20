@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.27 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.28 2008/04/20 13:04:25 jtt Exp $";
 #endif
 
 
@@ -1881,7 +1881,7 @@ fl_handle_form( FL_FORM * form,
 				fl_do_radio_push( obj, x, y, key, xev );
 			break;
 
-		case FL_RELEASE:		/* Mouse was released inside the form */
+		case FL_RELEASE:		/* Mouse button was released inside the form */
 			if ( fl_pushobj )
 			{
 				obj = fl_pushobj;
@@ -2345,6 +2345,7 @@ do_interaction_step( int wait_io )
 			fl_query_age = 0;
 
 			fl_context->mouse_button = st_xev.xbutton.button;
+
 
 			if ( mouseform )
 				fl_handle_form( mouseform, FL_RELEASE,

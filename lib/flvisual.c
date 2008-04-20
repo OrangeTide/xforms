@@ -35,7 +35,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_vi = "$Id: flvisual.c,v 1.6 2008/01/28 23:18:43 jtt Exp $";
+char *fl_id_vi = "$Id: flvisual.c,v 1.7 2008/04/20 13:04:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,7 +47,7 @@ char *fl_id_vi = "$Id: flvisual.c,v 1.6 2008/01/28 23:18:43 jtt Exp $";
 
 
 #ifdef  XlibSpecificationRelease
-#define XlibVersion  ( XlibSpecificationRelease==5 ) ? "R5": \
+#define XlibVersion  ( XlibSpecificationRelease == 5 ) ? "R5": \
                        ( ( XlibSpecificationRelease == 6 ) ? "R6" : "Post-R6" )
 #else
 #define XlibVersion "Pre-R5"

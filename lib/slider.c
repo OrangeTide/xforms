@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.12 2008/03/25 12:41:29 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.13 2008/04/20 13:04:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -167,7 +167,7 @@ draw_motion( FL_OBJECT * ob )
 		fl_drw_box( FL_UP_BOX, sp->x, sp->y,
 					sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
 
-    /* for slider jumps, osb is NOT initialized */
+    /* for slider jumps osb is NOT initialized */
 
     if ( IS_SCROLLBAR( ob->type ) && ! ( sp->draw_type & SLIDER_JUMP ) )
     {
@@ -600,8 +600,11 @@ handle_it( FL_OBJECT * ob,
 
 				if (    IS_VSLIDER( ob->type )
 					 && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 ) )
-					handle_mouse( ob, 0, 0, key,
+				{
+					sp->start_val = sp->val;
+					handle_mouse( ob, mx, my, key,
 								  ( ( XEvent * ) ev )->xbutton.state );
+				}
 
 				if ( ( sp->mouse_pos = fl_slider_mouse_object( ob, mx, my ) )
 					                                          != old_mouse_pos )
