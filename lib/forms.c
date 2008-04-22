@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.28 2008/04/20 13:04:25 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.29 2008/04/22 20:07:11 jtt Exp $";
 #endif
 
 
@@ -2394,7 +2394,7 @@ fl_handle_idling( XEvent * xev,
 {
 	int i;
 
-	/* Sleep a bit while keeping lookout for async IO events */
+	/* Sleep a bit while keeping a lookout for async IO events */
 
 	fl_watch_io( fl_context->io_rec, msec );
 

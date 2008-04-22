@@ -533,18 +533,6 @@ typedef struct fl_io_event_
 } FL_IO_REC;
 
 
-typedef struct fl_freelist_
-{
-    int     nfree;
-    int     avail;
-    void ** data;
-    int   * age;
-} FL_FREE_REC;
-
-extern void fl_addto_freelist( void * );
-
-extern void fl_free_freelist( void );
-
 
 /* signals */
 
@@ -597,7 +585,6 @@ typedef struct fl_context_
     void               * close_data;
     FL_IDLE_REC        * idle_rec;	        /* idle callback record   */
     FL_IO_REC          * io_rec;		    /* async IO      record   */
-    FL_FREE_REC        * free_rec;	        /* stuff need to be freed */
     FL_SIGNAL_REC      * signal_rec;	    /* list of app signals    */
     FL_TIMEOUT_REC     * timeout_rec;       /* timeout callbacks      */
     int                  idle_delta;		/* timer resolution       */

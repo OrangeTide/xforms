@@ -1,3 +1,11 @@
+2008-04-22 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/async_io.c: Removed a bug pointed out by Andrea
+	Scopece that resulted in a segmentation fault in the
+	demo program. This also needed some changes in the
+	files lib/flresource.c and lib/flinternal.h (where
+	also all remains from be.c where removed).
+
 2008-04-20 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/flresource.c: Removed setting of the machines

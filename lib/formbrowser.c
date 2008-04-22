@@ -623,8 +623,6 @@ fl_set_formbrowser_yoffset( FL_OBJECT * ob,
 {
     SPEC *sp;
     int current;
-	int new_top_edge,
-		new_top_form;
 	int h,
 		f;
 

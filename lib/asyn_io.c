@@ -60,20 +60,24 @@
 #endif
 
 
+static fd_set st_rfds,
+              st_wfds,
+              st_efds;
+
+
+static void fl_add_to_freelist( FL_IO_REC * io );
+static void fl_clear_freelist( void );
+
 /***************************************
  * collect all the fd_sets so we don't do it inside the
  * critical select inner loop
  ***************************************/
 
-static fd_set st_rfds,
-              st_wfds,
-              st_efds;
-
 static void
 collect_fd( void )
 {
     FL_IO_REC *p;
-    int nf;
+    int nf = 0;
 
     /* initialize the sets */
 
@@ -83,7 +87,7 @@ collect_fd( void )
 
     /* loop through all requested IOs */
 
-    for ( nf = 0, p = fl_context->io_rec; p; p = p->next )
+    for ( p = fl_context->io_rec; p; p = p->next )
     {
 		if ( p->source < 0 )
 		{
@@ -117,22 +121,18 @@ fl_add_io_callback( int              fd,
 {
     FL_IO_REC *io_rec;
 
-    /* create new record */
+    /* create new record and make it the start of the list */
 
     io_rec = fl_malloc( sizeof *io_rec );
-    io_rec->next     = NULL;
+    io_rec->next     = fl_context->io_rec;
     io_rec->callback = callback;
     io_rec->data     = data;
     io_rec->source   = fd;
     io_rec->mask     = mask;
 
-    /* prepend to the global record */
-
-    if ( fl_context->io_rec )
-		io_rec->next = fl_context->io_rec;
     fl_context->io_rec = io_rec;
 
-    collect_fd( );
+	collect_fd( );
 }
 
 
@@ -144,34 +144,36 @@ fl_remove_io_callback( int            fd,
 					   unsigned       int mask,
 					   FL_IO_CALLBACK cb )
 {
-    FL_IO_REC *io = fl_context->io_rec,
+    FL_IO_REC *io,
 		      *last;
 
-    for ( last = io; io; last = io, io = io->next )
+    for ( last = io = fl_context->io_rec;
+		  io && ! ( io->source == fd && io->callback == cb && io->mask & mask );
+		  last = io, io = io->next )
+		/* empty */ ;
+
+	if ( ! io )
     {
-		if ( io->source == fd && io->callback == cb && io->mask & mask )
-		{
-			io->mask &= ~mask;
+		M_err( "fl_remove_io_callback", "Non-existent handler for %d", fd );
+		return;
+	}
 
-			/* special case: if after removal fd does not do anything
-			   anymore, i.e. mask == 0, remove it from global record */
+	io->mask &= ~mask;
 
-			if ( io->mask == 0 )
-			{
-				if ( io == fl_context->io_rec )
-					fl_context->io_rec = io->next;
-				else
-					last->next = io->next;
+	/* Special case: if after removal fd does not do anything
+	   anymore, i.e. mask == 0, remove it from global record */
 
-				fl_free( io );
-			}
+	if ( io->mask == 0 )
+	{
+		if ( io == fl_context->io_rec )
+			fl_context->io_rec = io->next;
+		else
+			last->next = io->next;
 
-			collect_fd( );
-			return;
-		}
-    }
+		fl_add_to_freelist( io );
+	}
 
-    M_err( "fl_remove_io_callback", "Non-existent handler for %d", fd );
+	collect_fd( );
 }
 
 
@@ -189,6 +191,8 @@ fl_watch_io( FL_IO_REC * io_rec,
     struct timeval timeout;
     FL_IO_REC *p;
     int nf;
+
+	fl_clear_freelist( );
 
     if ( ! io_rec )
     {
@@ -214,9 +218,7 @@ fl_watch_io( FL_IO_REC * io_rec,
     if ( nf < 0 )     /* something is wrong. */
     {
 		if ( errno == EINTR )
-		{
 			M_warn( "WatchIO", "select interrupted by signal" );
-		}
 
 		/* select() on some platforms returns -1 with errno == 0 */
 
@@ -233,7 +235,7 @@ fl_watch_io( FL_IO_REC * io_rec,
 
     for ( p = io_rec; p; p = p->next )
     {
-		if ( ! p->callback || p->source < 0 )
+		if ( ! p->callback || p->source < 0 || p->mask == 0 )
 			continue;
 
 		if ( p->mask & FL_READ && FD_ISSET( p->source, &rfds ) )
@@ -245,6 +247,8 @@ fl_watch_io( FL_IO_REC * io_rec,
 		if ( p->mask & FL_EXCEPT && FD_ISSET( p->source, &efds ) )
 			p->callback( p->source, p->data );
     }
+
+	fl_clear_freelist( );
 }
 
 
@@ -261,4 +265,47 @@ fl_is_watched_io( int fd )
 			return 1;
 
     return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+typedef struct free_list_
+{
+	struct free_list_ * next;
+	FL_IO_REC         * io;
+} Free_List_T;
+
+static Free_List_T *fl = NULL;
+
+
+static void
+fl_add_to_freelist( FL_IO_REC * io )
+{
+	Free_List_T *cur;
+
+    cur = malloc( sizeof *cur );
+	cur->next = fl;
+	cur->io   = io;
+
+	fl = cur;
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+fl_clear_freelist( void )
+{
+	Free_List_T *cur;
+
+	while ( fl )
+	{
+		fl_free( fl->io );
+		cur = fl;
+		fl = fl->next;
+		fl_free( cur );
+	}
 }

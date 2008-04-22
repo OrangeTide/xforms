@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.21 2008/04/20 13:04:25 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.22 2008/04/22 20:07:10 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -881,7 +881,6 @@ fl_init_fl_context( void )
 		fl_context->io_rec        = NULL;
 		fl_context->idle_rec      = NULL;
 		fl_context->atclose       = NULL;
-		fl_context->free_rec      = NULL;
 		fl_context->signal_rec    = NULL;
 		fl_context->idle_delta    = TIMER_RES;
 		fl_context->hscb          = FL_HOR_THIN_SCROLLBAR;
