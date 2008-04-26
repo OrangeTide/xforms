@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.29 2008/04/22 20:07:11 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.30 2008/04/26 16:24:49 jtt Exp $";
 #endif
 
 
@@ -473,13 +473,6 @@ scale_form( FL_FORM * form,
     {
 		double oldw = obj->fl2 - obj->fl1;
 		double oldh = obj->ft2 - obj->ft1;
-
-		/* Resizing of scrollbars and textboxes gets dealt with by their
-		   parent objects on redraw */
-
-		if (    obj->objclass == FL_TEXTBOX
-			 || obj->objclass == FL_SCROLLBAR )
-			continue;
 
 		/* Special case to keep the center of gravity of obejcts that have
 		   no gravity set and aren't to be resized */

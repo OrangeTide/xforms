@@ -32,62 +32,83 @@
 #include "fd/scrollbar_gui.h"   /* from fd/ directory */
 
 
+/***************************************
+ ***************************************/
+
 void hide_cb( FL_OBJECT * ob,
 			  long        data  FL_UNUSED_ARG )
 {
-    FD_scb *fdui = (FD_scb *)ob->form->fdui;
+    FD_scb *fdui = ob->form->fdui;
 
-    if(fdui->hor_thin->visible)
+    if( fdui->hor_thin->visible )
     {
-        fl_set_object_label(fdui->hide,"Show");
-        fl_hide_object(fdui->hor_thin);
+        fl_set_object_label( fdui->hide,"Show" );
+        fl_hide_object( fdui->hor_thin );
     }
     else
     {
-        fl_set_object_label(fdui->hide,"Hide");
-        fl_show_object(fdui->hor_thin);
+        fl_set_object_label( fdui->hide,"Hide" );
+        fl_show_object( fdui->hor_thin );
     }
 
 }
+
+
+/***************************************
+ ***************************************/
 
 void deactivate_cb( FL_OBJECT * ob,
 					long        data  FL_UNUSED_ARG )
 {
-    FD_scb *fdui = (FD_scb *)ob->form->fdui;
+    FD_scb *fdui = ob->form->fdui;
 
-    if(fdui->hor_thin->active == 1)
+    if( fdui->hor_thin->active == 1 )
     {
-        fl_set_object_label(fdui->deactivate,"Activate");
-        fl_deactivate_object(fdui->hor_thin);
+        fl_set_object_label( fdui->deactivate,"Activate" );
+        fl_deactivate_object( fdui->hor_thin );
     }
     else
     {
-        fl_set_object_label(fdui->deactivate,"Deactivate");
-        fl_activate_object(fdui->hor_thin);
+        fl_set_object_label( fdui->deactivate,"Deactivate" );
+        fl_activate_object( fdui->hor_thin );
     }
 }
+
+
+/***************************************
+ ***************************************/
 
 void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
 {
-    exit(0);
+    exit( 0 );
 }
+
+
+/***************************************
+ ***************************************/
 
 void noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
 {
 }
 
-int main(int argc, char *argv[])
+
+/***************************************
+ ***************************************/
+
+int main( int    argc,
+		  char * argv[ ] )
 {
    FD_scb *fd_scb;
 
-   fl_set_border_width(-2);
-   fl_initialize(&argc, argv, 0, 0, 0);
-   fd_scb = create_form_scb();
+   fl_set_border_width( -2 );
+   fl_initialize( &argc, argv, 0, 0, 0 );
+   fd_scb = create_form_scb( );
 
    /* show the first form */
-   fl_show_form(fd_scb->scb,FL_PLACE_CENTERFREE,FL_FULLBORDER,"form0");
-   fl_do_forms();
+
+   fl_show_form( fd_scb->scb, FL_PLACE_CENTERFREE, FL_FULLBORDER, "form0" );
+   fl_do_forms( );
    return 0;
 }

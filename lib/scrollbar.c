@@ -314,10 +314,14 @@ fl_create_scrollbar( int          type,
 
     if ( is_horiz( type ) )
     {
+		fl_set_object_resize( obj, FL_RESIZE_X );
+
 		sp->up = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "6" );
 		sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "4" );
 		fl_set_object_callback( sp->up, up_cb, 0 );
+		fl_set_object_resize( sp->up, FL_RESIZE_NONE );
 		fl_set_object_callback( sp->down, down_cb, 0 );
+		fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
 		if ( type == FL_HOR_SCROLLBAR )
 			sp->slider = fl_create_slider( FL_HOR_BROWSER_SLIDER2,
@@ -331,13 +335,19 @@ fl_create_scrollbar( int          type,
 		else if ( type == FL_HOR_NICE_SCROLLBAR )
 			sp->slider = fl_create_slider( FL_HOR_NICE_SLIDER2,
 										   1, 1, 1, 1, "" );
+
+		fl_set_object_resize( sp->slider, FL_RESIZE_X );
     }
     else
     {
+		fl_set_object_resize( obj, FL_RESIZE_Y );
+
 		sp->up = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "8" );
 		sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "2" );
 		fl_set_object_callback( sp->up, down_cb, 0 );
+		fl_set_object_resize( sp->up, FL_RESIZE_NONE );
 		fl_set_object_callback( sp->down, up_cb, 0 );
+		fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
 		if ( type == FL_VERT_SCROLLBAR )
 			sp->slider = fl_create_slider( FL_VERT_BROWSER_SLIDER2, 1, 1,
@@ -353,6 +363,8 @@ fl_create_scrollbar( int          type,
 										   1, 1, "" );
 		else
 			M_err( "CreateScrollbar", "Unknown type %d", type );
+
+		fl_set_object_resize( sp->slider, FL_RESIZE_Y );
     }
 
     sp->increment = 0.1;
@@ -372,7 +384,7 @@ fl_create_scrollbar( int          type,
  * User routines
  */
 
-#define NOTSCROLLBAR( o )  ( ! ( o ) || ( o )->objclass != FL_SCROLLBAR )
+#define ISSCROLLBAR( o )  ( ( o ) && ( o )->objclass == FL_SCROLLBAR )
 
 
 /***************************************
@@ -401,7 +413,7 @@ fl_get_scrollbar_value( FL_OBJECT * ob )
 {
     SPEC *spec = ob->spec;
 
-    if ( NOTSCROLLBAR( ob ) )
+    if ( ! ISSCROLLBAR( ob ) )
     {
 		M_err( "GetScrollBarVal", "%s not a scrollbar",
 			   ob ? ob->label : "Object" );
@@ -421,7 +433,7 @@ fl_set_scrollbar_value( FL_OBJECT * ob,
 {
     SPEC *spec = ob->spec;
 
-    if ( NOTSCROLLBAR( ob ) )
+    if ( ! ISSCROLLBAR( ob ) )
     {
 		M_err( "fl_set_scrollbar_value", "%s not a scrollbar",
 			   ob ? ob->label : "Object" );
@@ -478,7 +490,7 @@ fl_set_scrollbar_bounds( FL_OBJECT * ob,
 						 double      b1,
 						 double      b2 )
 {
-    if ( NOTSCROLLBAR( ob ) )
+    if ( ! ISSCROLLBAR( ob ) )
     {
 		M_err( "SetScrollBarBounds", "%s not a scrollbar",
 			   ob ? ob->label : "Object" );

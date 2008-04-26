@@ -1,3 +1,18 @@
+2008-04-26 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/flresource.c: Library version information wasn't
+	output when the '-flversion' option was given. Repaired
+	by a patch Andrea Scopece send.
+
+	* lib/forms.c: Scrollbars had been extempt from resizing
+	due to the wrong assumption that they always would be
+	childs of a composite object, which isn't the case.
+	Thanks to Andrea Scopece for finding this problem.
+
+	* lib/scrollbar.c: Horizontal scrollbars now only get	
+	resized in x-direction per default, verticall ones in
+	y-direction only.
+
 2008-04-22 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/async_io.c: Removed a bug pointed out by Andrea

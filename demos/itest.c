@@ -54,6 +54,9 @@ static App app;
 static int testicon = 1;
 
 
+/***************************************
+ ***************************************/
+
 int
 visual_cue( FL_IMAGE   * im,
 			const char * s )
@@ -69,7 +72,9 @@ visual_cue( FL_IMAGE   * im,
 }
 
 
-/* only show image file in file selector */
+/***************************************
+ * only show image file in file selector
+ ***************************************/
 
 static int
 image_file_filter( const char * name,
@@ -79,9 +84,10 @@ image_file_filter( const char * name,
 }
 
 
-/* application initialization. Enable all formats and setup visual_cue
+/***************************************
+ * application initialization. Enable all formats and setup visual_cue
  * and error reporting functions.
- */
+ ***************************************/
 
 static void
 app_init( void )
@@ -110,6 +116,9 @@ app_init( void )
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 doublebuffer_callback( FL_OBJECT * ob,
 					   long        data  FL_UNUSED_ARG )
@@ -119,6 +128,9 @@ doublebuffer_callback( FL_OBJECT * ob,
 		app.image->double_buffer = app.double_buffer;
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 windowlevel_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -136,17 +148,23 @@ windowlevel_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 /*** callbacks and freeobj handles for form is_mainform ***/
 
+/***************************************
+ ***************************************/
+
 void
 vscroll_callback( FL_OBJECT * ob,
 				  long        data  FL_UNUSED_ARG )
 {
     if ( app.image )
     {
-		app.image->wy = (0.5 - fl_get_scrollbar_value( ob ) ) *app.image->h;
+		app.image->wy = ( 0.5 - fl_get_scrollbar_value( ob ) ) * app.image->h;
 		app.image->display( app.image, app.image->win );
     }
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 hscroll_callback( FL_OBJECT * ob,
@@ -159,6 +177,10 @@ hscroll_callback( FL_OBJECT * ob,
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
 outformat_callback( FL_OBJECT * ob,
 					long        data  FL_UNUSED_ARG )
@@ -167,10 +189,10 @@ outformat_callback( FL_OBJECT * ob,
 }
 
 
-/********************************************************************
- * Image Processing callbacks
- ********************************************************************/
+/*** Image Processing callbacks ***/
 
+/***************************************
+ ***************************************/
 
 void
 colorchange_callback( FL_OBJECT * ob,
@@ -182,6 +204,9 @@ colorchange_callback( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 autocrop_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 				   long        data  FL_UNUSED_ARG )
@@ -192,6 +217,10 @@ autocrop_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
     flimage_autocrop( app.image, FLIMAGE_AUTOCOLOR );
     app.image->display( app.image, app.image->win );
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 convolve_callback( FL_OBJECT * ob  FL_UNUSED_ARG,
@@ -223,6 +252,9 @@ convolve_callback( FL_OBJECT * ob  FL_UNUSED_ARG,
 #endif
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 scaling_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -272,6 +304,9 @@ scaling_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
     app.image->display( app.image, app.image->win );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 switchtopixel_callback( FL_OBJECT * ob,
@@ -329,7 +364,9 @@ switchtopixel_callback( FL_OBJECT * ob,
 }
 
 
-/* when a new image is loaded, update the GUI */
+/***************************************
+ * when a new image is loaded, update the GUI
+ ***************************************/
 
 void
 update_process_form( void )
@@ -337,7 +374,11 @@ update_process_form( void )
     switchtopixel_callback( 0, 0 );
 }
 
+
 /******************** END OF PROCESS CALLBACKS ****************************/
+
+/***************************************
+ ***************************************/
 
 void
 reset_scrollbar( FL_IMAGE * im )
@@ -348,6 +389,9 @@ reset_scrollbar( FL_IMAGE * im )
     fl_set_scrollbar_value( fdui->vscroll, 0.5 );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 test_icon( void )
@@ -369,6 +413,9 @@ test_icon( void )
     flimage_free( im );
 }
 
+
+/***************************************
+ ***************************************/
 
 static int
 load_and_show( const char * file,
@@ -422,8 +469,13 @@ load_and_show( const char * file,
     return 0;
 }
 
+
 static int save_file( const char *,
 					  void * );
+
+
+/***************************************
+ ***************************************/
 
 void
 filemenu_callback( FL_OBJECT * ob,
@@ -465,6 +517,9 @@ filemenu_callback( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 progressbar( FL_OBJECT * ob    FL_UNUSED_ARG,
 			 long        data  FL_UNUSED_ARG )
@@ -472,6 +527,9 @@ progressbar( FL_OBJECT * ob    FL_UNUSED_ARG,
     /* fill-in code for callback */
 }
 
+
+/***************************************
+ ***************************************/
 
 static int
 expose_handle( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -491,7 +549,9 @@ expose_handle( FL_OBJECT * ob    FL_UNUSED_ARG,
  * The Save As dialog
  *********************************************************************/
 
-/* SaveAs file selector callback */
+/***************************************
+ * SaveAs file selector callback
+ ***************************************/
 
 static int save_file( const char * file,
 					  void       * data  FL_UNUSED_ARG )
@@ -501,6 +561,9 @@ static int save_file( const char * file,
      return flimage_dump( app.image, file, app.outformat );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void hide_it( FL_OBJECT * ob    FL_UNUSED_ARG,
 					 long        data  FL_UNUSED_ARG )
@@ -521,6 +584,9 @@ static void hide_it( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_hide_form( app.fd_saveAs_form->saveAs_form );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void init_save_as_form( void )
 {
@@ -551,6 +617,7 @@ static void init_save_as_form( void )
     for ( n = flimage_get_number_of_formats( ), i = 1; i <= n; i++ )
     {
         fmtinfo = flimage_get_format_info( i );
+
         if ( fmtinfo->read_write & FLIMAGE_WRITABLE )
             fl_addto_choice( app.fd_saveAs_form->outformat,
 							 fmtinfo->short_name );
@@ -558,6 +625,10 @@ static void init_save_as_form( void )
 
     app.outformat = fl_get_choice_text( app.fd_saveAs_form->outformat );
 }
+
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,

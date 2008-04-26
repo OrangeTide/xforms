@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_ver = "$Id: version.c,v 1.14 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.15 2008/04/26 16:24:49 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -46,7 +46,7 @@ char *fl_id_ver = "$Id: version.c,v 1.14 2008/03/19 21:04:23 jtt Exp $";
 #include "private/flsnprintf.h"
 
 
-static const char *version[] =
+static const char *version[ ] =
 {
     "(Compiled "__DATE__")",
 #ifdef FL_WIN32
@@ -55,6 +55,7 @@ static const char *version[] =
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
 #endif
     "Parts Copyright(c) 1999-2002 by T.C. Zhao and Steve Lamont",
+	"Under LGLP since 2002",
     0
 };
 

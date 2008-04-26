@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.22 2008/04/22 20:07:10 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.23 2008/04/26 16:24:49 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -837,12 +837,12 @@ get_command_name( const char * arg0 )
 #endif
 #endif
 
-    /* remove the extension and the period */
+    /* Remove the extension and the period */
 
     if ( ( p = strrchr( cmd_name, '.' ) ) )
 		*p = '\0';
 
-    /* prevent a valgrind warning about a possible memory leak. */
+    /* Prevent a valgrind warning about a possible memory leak. */
 
     if ( s != cmd_name )
 	{
@@ -868,25 +868,24 @@ static Window GetVRoot( Display *,
 
 
 /***************************************
+ * initialize context
  ***************************************/
 
 void
 fl_init_fl_context( void )
 {
-    if ( ! fl_context )
-    {
-		/* initialize context */
+    if ( fl_context )
+		return;
 
-		fl_context = fl_calloc( 1, sizeof *fl_context );
-		fl_context->io_rec        = NULL;
-		fl_context->idle_rec      = NULL;
-		fl_context->atclose       = NULL;
-		fl_context->signal_rec    = NULL;
-		fl_context->idle_delta    = TIMER_RES;
-		fl_context->hscb          = FL_HOR_THIN_SCROLLBAR;
-		fl_context->vscb          = FL_VERT_THIN_SCROLLBAR;
-        fl_context->navigate_mask = ShiftMask;   /* to navigate input field */
-    }
+	fl_context = fl_calloc( 1, sizeof *fl_context );
+	fl_context->io_rec        = NULL;
+	fl_context->idle_rec      = NULL;
+	fl_context->atclose       = NULL;
+	fl_context->signal_rec    = NULL;
+	fl_context->idle_delta    = TIMER_RES;
+	fl_context->hscb          = FL_HOR_THIN_SCROLLBAR;
+	fl_context->vscb          = FL_VERT_THIN_SCROLLBAR;
+	fl_context->navigate_mask = ShiftMask;   /* to navigate input field */
 }
 
 
@@ -951,18 +950,18 @@ fl_initialize( int        * na,
 
     XrmInitialize( );
 
-    /* save a copy of the command line for later WM hints */
+    /* Save a copy of the command line for later WM hints */
 
     fl_argc = *na;
     dup_argv( arg, *na );
 
-    /* get appname and class, but without any leading paths  */
+    /* Get appname and class, but without any leading paths  */
 
     fl_ori_app_name = fl_app_name = get_command_name( arg[ 0 ] );
     fl_app_class = fl_strdup( ( appclass && *appclass ) ?
 							  appclass : fl_app_name );
 
-    /* make class name upper case if non supplied */
+    /* Make class name upper case if non supplied */
 
     if ( ! appclass || ! *appclass )
     {
@@ -971,7 +970,7 @@ fl_initialize( int        * na,
 			fl_app_class[ 1 ] = toupper( fl_app_class[ 1 ] );
     }
 
-    /* do form internal resouces first */
+    /* Do form internal resouces first */
 
     XrmParseCommand( &cmddb, copt, Ncopt, fl_app_name, na, arg );
 
@@ -981,15 +980,15 @@ fl_initialize( int        * na,
 		XrmParseCommand( &cmddb, appopt, nappopt,
 						 ( char * ) fl_ori_app_name, na, arg );
 
-    /* check version request */
+    /* Check version request */
 
     fl_snprintf( disp_name, sizeof disp_name, "%s.fl_version", fl_app_name );
-    fl_snprintf( disp_cls, sizeof disp_cls, "%s.FLversion", fl_app_name );
+    fl_snprintf( disp_cls, sizeof disp_cls, "%s.flversion", fl_app_name );
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
 		fl_print_version( 0 );
 
-    /* get the display name first before doing anything */
+    /* Get the display name first before doing anything */
 
     fl_snprintf( disp_name, sizeof disp_name, "%s.display", fl_ori_app_name );
     fl_snprintf( disp_cls , sizeof disp_cls , "%s.Display", fl_app_class );
@@ -1002,7 +1001,7 @@ fl_initialize( int        * na,
 		buf[ sizeof buf - 1 ] = '\0';
     }
 
-    /* open display and quit if failure */
+    /* Open display and quit if failure */
 
     if ( ! ( fl_display = XOpenDisplay( buf ) ) )
     {
@@ -1017,7 +1016,7 @@ fl_initialize( int        * na,
     flx->display = fl_display;
     flx->screen  = fl_screen;
 
-    /* get debug level settings since all error reporting will be controled
+    /* Get debug level settings since all error reporting will be controled
        by it */
 
     fl_snprintf( disp_name, sizeof disp_name, "%s.debug", fl_app_name );
@@ -1025,7 +1024,7 @@ fl_initialize( int        * na,
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
 		fl_set_debug_level( atoi( xval.addr ) );
 
-    /* check if -name is present */
+    /* Check if -name is present */
 
     fl_snprintf( disp_name, sizeof disp_name, "%s.name", fl_app_name );
     fl_snprintf( disp_cls,  sizeof disp_cls , "%s.Name", fl_app_class );
@@ -1037,11 +1036,11 @@ fl_initialize( int        * na,
 				fl_app_name );
     }
 
-    /* merge  other resource database */
+    /* Merge  other resource database */
 
     init_resource_database( fl_app_class );
 
-    /* override any options in the database with the command line opt */
+    /* Override any options in the database with the command line opt */
 
     XrmMergeDatabases( cmddb, &fldatabase );
 
