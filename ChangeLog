@@ -1,3 +1,13 @@
+2008-04-27 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/input.c: Correct leap year handling in date input
+	validator. Multi-line input field don't receive a <TAB>
+	anymore (which never did work anyway).
+
+	* lib/forms.c: >TAB> can now also be used to move the
+	focus out of a multi-line input field and into the next
+	input field.
+
 2008-04-26 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/flresource.c: Library version information wasn't
@@ -17,9 +27,9 @@
 
 	* lib/async_io.c: Removed a bug pointed out by Andrea
 	Scopece that resulted in a segmentation fault in the
-	demo program. This also needed some changes in the
+	'demo' program. This also needed some changes in the
 	files lib/flresource.c and lib/flinternal.h (where
-	also all remains from be.c where removed).
+	also all remains from be.c were removed).
 
 2008-04-20 Jens Thoms Toerring    <jtt@toerring.de>
 
