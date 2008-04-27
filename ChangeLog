@@ -8,6 +8,10 @@
 	focus out of a multi-line input field and into the next
 	input field.
 
+	* lib/version.c: The version output now contains the
+	full copyright information, not just the first three
+	lines.
+
 2008-04-26 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/flresource.c: Library version information wasn't

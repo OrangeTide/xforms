@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.14 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.15 2008/04/27 15:18:16 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -125,6 +125,7 @@ typedef struct
     int         field_char;
 } SPEC;
 
+
 static void correct_topline( SPEC *,
 							 int * );
 static void redraw_scrollbar( FL_OBJECT * ob );
@@ -147,21 +148,29 @@ enum
 };
 
 
-#define GetMargin( btype, bw, xm, ym )            \
-    if (    ( btype  ) == FL_FLAT_BOX             \
-         || ( btype  ) == FL_NO_BOX   	          \
-         || ( btype  ) == FL_FRAME_BOX            \
-         || ( btype  ) == FL_EMBOSSED_BOX )       \
-    {                                             \
-        *( xm ) = ( bw ) + 1;			          \
-        *( ym ) = 0.7 * ( bw ) + 1;		          \
-    }								              \
-    else                                          \
-    {                                             \
-        *( xm ) = 2 * ( bw ) + ( ( bw ) == 1 );	  \
-        *( ym ) = ( bw ) + 1 + ( ( bw ) == 1 );	  \
-    }
+/***************************************
+ ***************************************/
 
+static void
+get_margin( int        btype,
+		    int        bw,
+		    FL_Coord * xm,
+		    FL_Coord * ym )
+{
+    if (    btype == FL_FLAT_BOX
+         || btype == FL_NO_BOX
+         || btype == FL_FRAME_BOX
+         || btype == FL_EMBOSSED_BOX )
+    {
+        *xm = bw + 1;
+        *ym = 0.7 * bw + 1;
+    }
+    else
+    {
+        *xm = 2 * bw + ( bw == 1 );
+        *ym = bw + 1 + ( bw == 1 );
+    }
+}
 
 
 /***************************************
@@ -172,9 +181,9 @@ static void
 check_scrollbar_size( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
-    int xmargin,
-		ymargin,
-		bw = FL_abs( ob->bw );
+    FL_Coord xmargin,
+		     ymargin;
+	int bw = FL_abs( ob->bw );
     int delta;
     int h_on = sp->h_on,
 		v_on = sp->v_on;
@@ -188,7 +197,7 @@ check_scrollbar_size( FL_OBJECT * ob )
     sp->input->x = sp->dummy->x;
     sp->input->y = sp->dummy->y;
 
-    GetMargin( sp->input->boxtype, bw, &xmargin, &ymargin );
+    get_margin( sp->input->boxtype, bw, &xmargin, &ymargin );
     sp->charh = fl_get_char_height( sp->input->lstyle, sp->input->lsize, 0, 0 );
 
     /* see how many (potential) lines we can have */
@@ -296,7 +305,7 @@ draw_input( FL_OBJECT * ob )
     int valign;
     FL_Coord xmargin,
 		     ymargin;
-    FL_Coord bw = FL_abs( ob->bw );
+    int bw = FL_abs( ob->bw );
     int cx,
 		cy;
     int max_pixels,
@@ -304,7 +313,7 @@ draw_input( FL_OBJECT * ob )
     static char sbuf[ MAX_SECRET_INPUT_LEN + 1 ],
 		        *saved;
 
-    GetMargin( ob->boxtype, bw, &xmargin, &ymargin );
+    get_margin( ob->boxtype, bw, &xmargin, &ymargin );
     sp->w = sp->input->w - 2 * xmargin;
     sp->h = sp->input->h - 2 * ymargin;
 
@@ -417,7 +426,7 @@ handle_select( FL_Coord    mx,
     /* Compute the mouse position in the string */
 
     valign = ob->type == FL_MULTILINE_INPUT ? FL_ALIGN_TOP : FL_ALIGN_CENTER;
-    GetMargin( ob->boxtype, bw, &xmargin, &ymargin );
+    get_margin( ob->boxtype, bw, &xmargin, &ymargin );
 
     thepos = fl_get_pos_in_string( FL_ALIGN_LEFT, valign,
 								   sp->input->x + xmargin - sp->xoffset,
@@ -725,20 +734,25 @@ handle_movement( FL_OBJECT * ob,
     {
 		wid = get_substring_width( ob, startpos, sp->position );
 		i = sp->position + 1;
+
 		while ( i < slen && sp->str[ i - 1 ] != '\n' )
 			i++;
+
 		if ( i < slen )
 		{
 			oldwid = 0.0;
 			sp->position = i;
 			ready = sp->position == slen || sp->str[ sp->position ] == '\n';
+
 			while ( ! ready )
 			{
 				tt = get_substring_width( ob, i, sp->position + 1 );
 				ready = 0.5 * ( oldwid + tt ) >= wid;
 				oldwid = tt;
+
 				if ( ! ready )
 					sp->position++;
+
 				if ( sp->position == slen || sp->str[ sp->position ] == '\n' )
 					ready = 1;
 			}
@@ -748,6 +762,7 @@ handle_movement( FL_OBJECT * ob,
 			sp->position = slen;
 			sp->xoffset = 0;
 		}
+
 		if ( ++sp->ypos > sp->lines )
 			sp->ypos = sp->lines;
     }
@@ -760,11 +775,13 @@ handle_movement( FL_OBJECT * ob,
     {
 		if ( sp->position > 0 )
 			sp->position--;
+
 		while ( sp->position > 0 && (    sp->str[ sp->position ] == ' '
 									  || sp->str[ sp->position ] == '\n' ) )
 		{
 			if ( sp->str[ sp->position ] == '\n' )
 				sp->ypos--;
+
 			sp->position--;
 		}
 
@@ -779,6 +796,7 @@ handle_movement( FL_OBJECT * ob,
     else if ( key == kmap.moveto_next_word )
     {
 		i = sp->position;
+
 		while ( i < slen && ( sp->str[ i ] == ' ' || sp->str[ i ] == '\n' ) )
 		{
 			if ( sp->str[ i ] == '\n' )
@@ -788,6 +806,7 @@ handle_movement( FL_OBJECT * ob,
 
 		while ( i < slen && sp->str[ i ] != ' ' && sp->str[ i ] != '\n' )
 			i++;
+
 		sp->position = i;
     }
 
@@ -2029,8 +2048,6 @@ fl_get_input_cursorpos( FL_OBJECT * ob,
 #define Control( c ) ( ( c ) - 'a' + 1 )
 #define Meta( c )    ( ( c ) | METAMASK )
 
-#define Dump( a )    fprintf( stderr, "\t%s: %ld(0x%lx)\n", #a,kmap.a, kmap.a )
-
 
 /***************************************
  * really should let the user have a chance to override any of the
@@ -2074,6 +2091,9 @@ set_default_keymap( int force )
     kmap.clear_field = Control( 'u' );
 
 #if FL_DEBUG > ML_WARN
+
+#define Dump( a ) fprintf( stderr, "\t%s: %ld(0x%lx)\n", #a,kmap.a, kmap.a )
+
     if ( fl_cntl.debug > 1 )
     {
 		Dump( moveto_prev_char );
@@ -2152,6 +2172,9 @@ fl_get_input_format( FL_OBJECT * ob,
  * validators for specialized inputs
  ***************************************/
 
+#define IS_LEAP_YEAR( y )   \
+	( ( y ) % 4 == 0 && ( ( y ) % 100 != 0 || ( y ) % 400 == 0 ) )
+
 static int
 date_validator( FL_OBJECT  * ob,
 				const char * oldstr  FL_UNUSED_ARG,
@@ -2216,9 +2239,18 @@ date_validator( FL_OBJECT  * ob,
     if ( ival[ m ] < 1 || ival[ m ] > 12 || ival[ d ] < 1 || ival[ d ] > 31 )
 		return invalid;
 
-    if (    ( ival[ m ] == 2 && ival[ d ] > 29 )
-		 || ( ival[ d ] > 30 && ( ival[ m ] % 2 ) == 0 && ival[ m ] < 8 )
+	if (    ( ival[ d ] > 30 && ( ival[ m ] % 2 ) == 0 && ival[ m ] < 8 )
 		 || ( ival[ d ] > 30 && ( ival[ m ] % 2 ) != 0 && ival[ m ] > 8 ) )
+		return invalid;
+
+	/* Take care: check for leap year can only be done when leaving */
+
+    if (    ival[ m ] == 2
+		 && (    ival[ d ] > 29
+			  || (    i == 3
+				   && newc == 0
+				   && ival[ d ] > 28
+				   && ! IS_LEAP_YEAR( ival[ 2 ] ) ) ) )
 		return invalid;
 
     return FL_VALID;

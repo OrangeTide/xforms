@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.30 2008/04/26 16:24:49 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.31 2008/04/27 15:18:16 jtt Exp $";
 #endif
 
 
@@ -1680,7 +1680,7 @@ fl_keyboard( FL_FORM  * form,
     if ( fl_do_shortcut( form, key, x, y, xev ) )
 		return;
 
-    /* focus policy is done as follows: Input object has the highiest
+    /* Focus policy is done as follows: Input object has the highiest
        priority. Next is the object that wants special keys which is followed
        by mouseobj that has the lowest. Focusobj == FL_INPUT OBJ */
 
@@ -1728,7 +1728,7 @@ fl_keyboard( FL_FORM  * form,
 
 		/* dispatch tab & return switches focus if not FL_KEY_TAB */
 
-		if ( ( key == 9 || key == 13 ) && ! ( focusobj->wantkey & FL_KEY_TAB ) )
+		if ( key == 9 || ( key == 13 && ! ( focusobj->wantkey & FL_KEY_TAB ) ) )
 		{
 			if ( ( ( XKeyEvent * ) xev )->state & fl_context->navigate_mask )
 			{

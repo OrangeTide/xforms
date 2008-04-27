@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_ver = "$Id: version.c,v 1.15 2008/04/26 16:24:49 jtt Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.16 2008/04/27 15:18:16 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -46,18 +46,15 @@ char *fl_id_ver = "$Id: version.c,v 1.15 2008/04/26 16:24:49 jtt Exp $";
 #include "private/flsnprintf.h"
 
 
-static const char *version[ ] =
-{
-    "(Compiled "__DATE__")",
+static const char *version =
+    "(Compiled " __DATE__ ")\n"
 #ifdef FL_WIN32
-    "Copyright (c) 1996-2002 by T.C. Zhao, Gang Li and Mark Overmars",
+    "Copyright (c) 1996-2002 by T.C. Zhao, Gang Li and Mark Overmars\n"
 #else
-    "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
+    "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars\n"
 #endif
-    "Parts Copyright(c) 1999-2002 by T.C. Zhao and Steve Lamont",
-	"Under LGLP since 2002",
-    0
-};
+    "Parts Copyright(c) 1999-2002 by T.C. Zhao and Steve Lamont\n"
+	"GNU Lesser General Public License) since 2002";
 
 
 /***************************************
@@ -82,31 +79,16 @@ fl_library_version( int * ver,
 void
 fl_print_version( int g )
 {
-    char tmp[ 100 ];
-    const char *p[ 5 ],
-		       **q = version;
-    int n;
+	char *msg = fl_malloc(   strlen( version ) + sizeof "FORMS Library Version "
+						   + 30 );
 
-    fl_snprintf( tmp, sizeof tmp, "FORMS Library Version %d.%d.%s",
-				 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
-    p[ 0 ] = tmp;
+	sprintf( msg, "FORMS Library Version %d.%d.%s\n%s",
+			 FL_VERSION, FL_REVISION, FL_FIXLEVEL, version );
 
-    for ( n = 1; *q; n++, q++ )
-		p[ n ] = fl_rm_rcs_kw( *q );
-
-    if ( g ) {
-	if ( n >= 3 )
-	    fl_show_message( p[ 0 ], p[ 1 ], p[ 2 ] );
-	else if ( n == 2 )
-	    fl_show_message( p[ 0 ], "", p[ 1 ] );
+    if ( g )
+		fl_show_messages( msg );
 	else
-	    fl_show_message( "", p[ 0 ], "" );
-    }
-	else
-	{
-		int i = 0;
+		fprintf( stderr, "%s\n", msg );
 
-		for ( ; i<n; ++i )
-			fprintf( stderr, "%s\n", p[ i ] );
-    }
+	fl_free( msg );
 }
