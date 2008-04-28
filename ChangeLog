@@ -4,6 +4,10 @@
 	through a set of input objects now works even if
 	there are non-input objects in between.
 
+	* demos/browserop.c: Bug removed that only surfaced
+	now since clicking onto a button makes an input
+	object lose the focus.
+
 2008-04-27 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/input.c: Correct leap year handling in date input
