@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.15 2008/04/20 13:04:24 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.16 2008/04/28 20:09:39 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -157,12 +157,9 @@ free_canvas( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
 
-    if ( ob->visible && sp->window && ob->form && ob->form->window )
-		fl_winclose( sp->window );
+	unmap_canvas_window( ob );
 
-    sp->window = None;
-
-    /* don't free the colormap if it is xforms internal one */
+    /* Don't free the colormap if it is xforms internal one */
 
     if ( ! sp->keep_colormap && sp->colormap != fl_colormap( fl_vmode ) )
 		XFreeColormap( flx->display, sp->colormap );
@@ -181,7 +178,7 @@ static void
 BegWMColormap( SPEC * sp )
 {
 
-    /* set WM_COLORMAP property. Seems some versions of tvtwm have problems
+    /* Set WM_COLORMAP property. Seems some versions of tvtwm have problems
        with setting this property. This check simply works around the problem
        (for most cases). */
 
@@ -355,7 +352,7 @@ init_canvas( FL_OBJECT * ob,
 				sp->depth, sp->colormap, sp->window );
 #endif
 
-		/* take over event handling */
+		/* Take over event handling */
 
 		fl_set_preemptive_callback( sp->window, canvas_event_intercept, ob );
 
@@ -365,7 +362,7 @@ init_canvas( FL_OBJECT * ob,
 			return;
 		}
 
-		/* record the name of the window */
+		/* Record the name of the window */
 		
 		if ( *ob->label )
 			XStoreName( flx->display, sp->window, ob->label );
@@ -379,7 +376,7 @@ init_canvas( FL_OBJECT * ob,
 
 		XMapWindow( flx->display, sp->window );
 
-		/* save size */
+		/* Save size */
 
 		sp->x = ob->x;
 		sp->y = ob->y;
@@ -697,4 +694,20 @@ fl_clear_canvas( FL_OBJECT * ob )
 		fl_winset( win );
 		fl_rectf( ob->x, ob->y, ob->w, ob->h, FL_BLACK );
     }
+}
+
+
+/***************************************
+ * Called when a form that contains a canvas is getting hidden
+ ***************************************/
+
+void
+unmap_canvas_window( FL_OBJECT * ob )
+{
+    SPEC *sp = ob->spec;
+
+    if ( ob->visible && sp->window && ob->form && ob->form->window )
+		fl_winclose( sp->window );
+
+    sp->window = None;
 }

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.20 2008/04/28 12:32:46 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.21 2008/04/28 20:09:39 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -2196,20 +2196,17 @@ fl_get_real_object_window( FL_OBJECT * ob )
 {
     FL_pixmap *objp = ob->flpixmap;
     FL_pixmap *formp = ob->form->flpixmap;
-    Window win = None;
 
     if ( objp && objp->win ) 
-		win = objp->win;
+		return objp->win;
     else if (    (    ob->objclass == FL_CANVAS
 			       || ob->objclass == FL_GLCANVAS )
 			  && fl_get_canvas_id( ob ) )
-		win = fl_get_canvas_id( ob );
+		return fl_get_canvas_id( ob );
     else if ( formp && formp->win )
-		win = formp->win;
-    else
-		win = ob->form->window;
+		return formp->win;
 
-    return win;
+	return ob->form->window;
 }
 
 

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.32 2008/04/28 12:32:46 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.33 2008/04/28 20:09:39 jtt Exp $";
 #endif
 
 
@@ -1185,6 +1185,7 @@ void
 fl_hide_form( FL_FORM * form )
 {
     Window owin;
+	FL_OBJECT *o;
 
     if ( ! form )
     {
@@ -1232,6 +1233,10 @@ fl_hide_form( FL_FORM * form )
 		fl_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
 		form->focusobj = NULL;
     }
+
+	for ( o = form->first; o; o = o->next )
+		if ( o->objclass == FL_CANVAS || o->objclass == FL_GLCANVAS )
+			unmap_canvas_window( o );
 
 #ifdef DELAYED_ACTION
     fl_object_qflush( form );

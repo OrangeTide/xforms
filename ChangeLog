@@ -8,6 +8,12 @@
 	now since clicking onto a button makes an input
 	object lose the focus.
 
+	* lib/canvas.c, lib/forms.c: On hiding a form it was
+	forgotten to unmap the windows of canvases belonging
+	to that form and to reset the ID of these windows.
+	Resulted in an XError on unhiding the form. Thanks
+	to Andrea Scopece for finding this bug.
+
 2008-04-27 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/input.c: Correct leap year handling in date input

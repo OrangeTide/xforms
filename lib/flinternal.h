@@ -497,6 +497,8 @@ extern void fl_set_form_window( FL_FORM * );
 
 extern void fl_hide_canvas( FL_OBJECT * );
 
+extern void unmap_canvas_window( FL_OBJECT * );
+
 extern FL_APPEVENT_CB fl_set_preemptive_callback( Window,
 												  FL_APPEVENT_CB,
 												  void * );
