@@ -2,7 +2,7 @@
 
 	* lib/forms.c: Jumping backwards with Shift-<TAB>
 	through a set of input objects now works even if
-	there are nn-input objects in between.
+	there are non-input objects in between.
 
 2008-04-27 Jens Thoms Toerring    <jtt@toerring.de>
 
