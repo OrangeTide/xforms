@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.19 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.20 2008/04/28 12:32:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1450,10 +1450,11 @@ fl_get_focus_object( FL_FORM * form )
 -----------------------------------------------------------------------*/
 
 /***************************************
- * returns object in form starting at obj of type find. If
- * find_object() does not return object, the event that triggered
- * the call would be eaten. This is how the deactived and
- * inactive object rejects events. Modify with care!
+ * Returns object in form starting at obj of type find.
+ * If find_object() does not return object, the event
+ * that triggered the call would be eaten. This is how
+ * the deactived and inactive objects reject events.
+ * Modify with care!
  ***************************************/
 
 FL_OBJECT *
@@ -1463,6 +1464,46 @@ fl_find_object( FL_OBJECT * obj,
 				FL_Coord    my )
 {
     for ( ; obj != NULL; obj = obj->next )
+		if (    obj->objclass != FL_BEGIN_GROUP
+			 && obj->objclass != FL_END_GROUP
+			 && obj->visible
+			 && ( ! obj->is_child || obj->parent->visible )
+			 && (     obj->active > 0
+				  || ( obj->posthandle && ! obj->active )
+				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
+		{
+			if ( find == FL_FIND_INPUT && obj->input )
+				return obj;
+
+			if ( find == FL_FIND_AUTOMATIC && obj->automatic )
+				return obj;
+
+			if (    find == FL_FIND_MOUSE
+				 && mx >= obj->x
+				 && mx <= obj->x + obj->w
+				 && my >= obj->y
+				 && my <= obj->y + obj->h )
+				return obj;
+
+			if ( find == FL_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
+				return obj;
+		}
+
+    return NULL;
+}
+
+
+/***************************************
+ * Same as above but going backwards through the linked list of objects.
+ ***************************************/
+
+FL_OBJECT *
+fl_find_object_backwards( FL_OBJECT * obj,
+						  int         find,
+						  FL_Coord    mx,
+						  FL_Coord    my )
+{
+    for ( ; obj != NULL; obj = obj->prev )
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible

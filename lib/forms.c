@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.31 2008/04/27 15:18:16 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.32 2008/04/28 12:32:46 jtt Exp $";
 #endif
 
 
@@ -1672,10 +1672,9 @@ fl_keyboard( FL_FORM  * form,
 			 void     * xev )
 {
     FL_OBJECT *obj,
-		      *obj1,
 		      *special;
 
-    /* always check shortcut first */
+    /* Always check shortcut first */
 
     if ( fl_do_shortcut( form, key, x, y, xev ) )
 		return;
@@ -1685,13 +1684,13 @@ fl_keyboard( FL_FORM  * form,
        by mouseobj that has the lowest. Focusobj == FL_INPUT OBJ */
 
     special = fl_find_first( form, FL_FIND_KEYSPECIAL, 0, 0 );
-    obj1 = special ?
-		   fl_find_object( special->next, FL_FIND_KEYSPECIAL, 0, 0 ) : NULL;
+    obj = special ?
+		      fl_find_object( special->next, FL_FIND_KEYSPECIAL, 0, 0 ) : NULL;
 
-    /* if two or more objects that want keyboard input, none will get it and
+    /* If two or more objects that want keyboard input, none will get it and
        keyboard input will go to mouseobj instead */
 
-    if ( obj1 && obj1 != special )
+    if ( obj && obj != special )
 		special = fl_mouseobj;
 
     if ( form->focusobj )
@@ -1726,16 +1725,19 @@ fl_keyboard( FL_FORM  * form,
 			return;
 		}
 
-		/* dispatch tab & return switches focus if not FL_KEY_TAB */
+		/* dispatch tab & return switches focus (for return only if not
+		   FL_KEY_TAB) */
 
-		if ( key == 9 || ( key == 13 && ! ( focusobj->wantkey & FL_KEY_TAB ) ) )
+		if (    key == '\t'
+			 || ( key == '\r' && ! ( focusobj->wantkey & FL_KEY_TAB ) ) )
 		{
 			if ( ( ( XKeyEvent * ) xev )->state & fl_context->navigate_mask )
 			{
 				if ( focusobj == fl_find_first( form, FL_FIND_INPUT, 0, 0 ) )
 					obj = fl_find_last( form, FL_FIND_INPUT, 0, 0 );
 				else
-					obj = fl_find_object( focusobj->prev, FL_FIND_INPUT, 0, 0 );
+					obj = fl_find_object_backwards( focusobj->prev,
+													FL_FIND_INPUT, 0, 0 );
 			}
 			else
 				obj = fl_find_object( focusobj->next, FL_FIND_INPUT, 0, 0 );
@@ -1743,8 +1745,11 @@ fl_keyboard( FL_FORM  * form,
 			if ( obj == NULL )
 				obj = fl_find_first( form, FL_FIND_INPUT, 0, 0 );
 
-			fl_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev );
-			fl_handle_object( obj, FL_FOCUS, x, y, 0, xev );
+			if ( obj != NULL )
+			{
+				fl_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev );
+				fl_handle_object( obj, FL_FOCUS, x, y, 0, xev );
+			}
 		}
 		else if ( focusobj->wantkey != FL_KEY_SPECIAL )
 			fl_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev );

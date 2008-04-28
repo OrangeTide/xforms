@@ -235,6 +235,11 @@ extern FL_OBJECT *fl_find_object( FL_OBJECT *,
 								  FL_Coord,
 								  FL_Coord );
 
+extern FL_OBJECT *fl_find_object_backwards( FL_OBJECT *,
+											int,
+											FL_Coord,
+											FL_Coord );
+
 extern void fl_insert_object( FL_OBJECT *,
 							  FL_OBJECT * );
 

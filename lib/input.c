@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.15 2008/04/27 15:18:16 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.16 2008/04/28 12:32:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -965,7 +965,7 @@ handle_key( FL_OBJECT *  ob,
 		sp->str = fl_realloc( sp->str, sp->size );
     }
 
-    if ( ob->type == FL_MULTILINE_INPUT && key == 13 )
+    if ( ob->type == FL_MULTILINE_INPUT && key == '\r' )
 		key = '\n';
 
     /* Compute starting position of current line */

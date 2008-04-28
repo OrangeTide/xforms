@@ -1,10 +1,16 @@
+2008-04-28 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/forms.c: Jumping backwards with Shift-<TAB>
+	through a set of input objects now works even if
+	there are nn-input objects in between.
+
 2008-04-27 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/input.c: Correct leap year handling in date input
 	validator. Multi-line input field don't receive a <TAB>
 	anymore (which never did work anyway).
 
-	* lib/forms.c: >TAB> can now also be used to move the
+	* lib/forms.c: <TAB> can now also be used to move the
 	focus out of a multi-line input field and into the next
 	input field.
 

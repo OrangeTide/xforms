@@ -40,8 +40,8 @@
 void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
 {
-   fl_finish();
-   exit(0);
+   fl_finish( );
+   exit( 0 );
 }
 
 
@@ -70,22 +70,24 @@ void hide_show_cb( FL_OBJECT * ob,
 }
 
 
-int main(int argc, char *argv[])
+int main( int    argc,
+		  char * argv[ ] )
 {
 	FD_input *fd_input;
 
-	fl_initialize(&argc, argv, 0, 0, 0);
-	fd_input = create_form_input();
+	fl_initialize( &argc, argv, 0, 0, 0 );
+	fd_input = create_form_input( );
 
 	/* fill-in form initialization code */
 
-	fl_set_object_dblbuffer(fd_input->report,1);
-	fl_set_object_return(fd_input->multiinput,FL_RETURN_ALWAYS);
-	fl_set_object_return(fd_input->norminput,FL_RETURN_ALWAYS);
+	fl_set_object_dblbuffer( fd_input->report, 1 );
+	fl_set_object_return( fd_input->multiinput, FL_RETURN_ALWAYS );
+	fl_set_object_return( fd_input->norminput, FL_RETURN_ALWAYS );
 
 	/* show the first form */
 
-	fl_show_form(fd_input->input,FL_PLACE_CENTERFREE,FL_FULLBORDER,"input");
+	fl_show_form( fd_input->input, FL_PLACE_CENTERFREE, FL_FULLBORDER,
+				  "input" );
 
 	while ( fl_do_forms( ) )
 		/* empty */ ;
