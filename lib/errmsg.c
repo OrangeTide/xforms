@@ -39,7 +39,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.10 2008/03/12 16:00:23 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.11 2008/04/29 13:43:48 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -154,29 +154,28 @@ FL_ERROR_FUNC user_error_function_;  /* hooks for application error handler */
  * generate two strings that contain where and why an error occured
  *********************************************************************/
 
-/* VARARGS2 */
 static void
 P_errmsg( const char * func,
 		  const char * fmt,
 		  ... )
 {
     va_list args;
-    char *where, *why,  line[20];
+    char *where, *why,  line[ 20 ];
     const char *pp;
-    static char emsg[MAXESTR + 1];
+    static char emsg[ MAXESTR + 1 ];
 
-    if (!errlog)
+    if ( ! errlog )
 		errlog = stderr;
 
     /* if there is nothing to do, do nothing ! */
 
 #if 0
-    if (req_level >= threshold && (!gout || !gmout))
+    if ( req_level >= threshold && ( ! gout || !gmout ) )
 #else
     /*
      * by commenting out gout, graphics output is also controled by threshold
      */
-    if (req_level >= threshold)
+    if ( req_level >= threshold )
 #endif
     {
         errno = 0;
@@ -191,9 +190,13 @@ P_errmsg( const char * func,
 	 * If func passed is null, 2 will be used else 1 will be used.
 	 */
 
-    if (func != 0)
+    if ( func != 0 )
     {
-		strcpy(line, lineno > 0 ? fl_itoa(lineno) : "?");
+		if ( lineno > 0 )
+			sprintf( line, "%d", lineno );
+		else
+			strcpy( line, "?" );
+
 		where = *func ?
 			vstrcat( "In ", func, " [", file, " ", line, "] ", ( char * ) 0 ) :
 			vstrcat( "In ", file, "[", line, "]: ", ( char * ) 0 );

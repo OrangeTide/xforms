@@ -7,6 +7,10 @@
 	callback (only a double click in the browser works)
 	so it doesn't make sense to show it.
 
+	* lib/n2a.c: This file isn't needed anymore - the only
+	of its functions used at all, fl_itoa(), was used in only
+	a single place (lib/errmsg.c) and got replaced by sprintf().
+
 2008-04-28 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/forms.c: Jumping backwards with Shift-<TAB>

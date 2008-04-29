@@ -237,7 +237,7 @@ annotate_cb( FL_OBJECT * ob,
 
 	memset( &text, 0, sizeof text );
 	text.align = FL_ALIGN_LEFT;
-	text.str = "qXXd\nqXXd";
+	text.str = ( char * ) "qXXd\nqXXd";
 	text.len = strlen(text.str);
 	text.style = FL_TIMESBOLD_STYLE;
 	text.size = 12;
@@ -254,8 +254,8 @@ annotate_cb( FL_OBJECT * ob,
 
 	for ( j = 0; j < 8; j++)
 	{
-		char *ss[] = {"oval","delta", "rect","cross",
-					  "arrow", "thinarrow","line", "star"};
+		const char *ss[ ] = {"oval","delta", "rect","cross",
+							 "arrow", "thinarrow","line", "star"};
 		for ( i = 0; i < 9; i++)
 		{
 			flimage_add_marker(curr_image, ss[j],
@@ -431,24 +431,24 @@ tint_it( FL_OBJECT * ob,
 		 long        data  FL_UNUSED_ARG )
 {
      FD_ibcanvas *fdui = ob->form->fdui;
-     int subimage = fl_get_button(fdui->subimage);
+     int subimage = fl_get_button( fdui->subimage );
 
      if ( ! curr_image )
 		 return;
 
      if ( subimage )
      {
-		 curr_image->subw = curr_image->w/2;
-		 curr_image->subh = curr_image->h/2;
-		 curr_image->subx = curr_image->w/4;
-		 curr_image->suby = curr_image->h/4;
+		 curr_image->subw = curr_image->w / 2;
+		 curr_image->subh = curr_image->h / 2;
+		 curr_image->subx = curr_image->w / 4;
+		 curr_image->suby = curr_image->h / 4;
      }
      else
 		 curr_image->subw = 0;
 
-     flimage_tint(curr_image, FL_PACK(0,0,200), 0.3);
-     flimage_display(curr_image, FL_ObjWin(fdui->canvas));
-     show_image_info(curr_image);
+     flimage_tint( curr_image, FL_PACK( 0,0,200 ), 0.3 );
+     flimage_display( curr_image, FL_ObjWin( fdui->canvas ) );
+     show_image_info( curr_image );
 }
 
 
@@ -464,10 +464,10 @@ window_level( FL_OBJECT * ob,
      if ( ! curr_image || curr_image->type != FL_IMAGE_GRAY16 )
          return;
 
-     flimage_windowlevel(curr_image, (int)fl_get_slider_value(fdui->level),
-						 (int)fl_get_slider_value(fdui->width));
-     flimage_display(curr_image, FL_ObjWin(fdui->canvas));
-     show_image_info(curr_image);
+     flimage_windowlevel( curr_image, fl_get_slider_value( fdui->level ),
+						  fl_get_slider_value( fdui->width ) );
+     flimage_display( curr_image, FL_ObjWin( fdui->canvas ) );
+     show_image_info( curr_image );
 }
 
 
