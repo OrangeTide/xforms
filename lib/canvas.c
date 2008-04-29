@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.16 2008/04/28 20:09:39 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.17 2008/04/29 10:18:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -184,7 +184,7 @@ BegWMColormap( SPEC * sp )
 
     if ( sp->colormap != fl_colormap( fl_vmode ) &&
 		 ! XSetWMColormapWindows( flx->display, sp->parent, &sp->window, 1 ) )
-		M_err( "WMColormap", "WM choked" );
+		M_err( "BegWMColormap", "WM choked" );
 }
 
 
@@ -203,7 +203,7 @@ fl_set_canvas_attributes( FL_OBJECT            * ob,
 
     if ( mask & CWEventMask )
     {
-		M_err( "CanvasAttributes", "Changing Events not supported" );
+		M_err( "fl_set_canvas_attributes", "Changing Events not supported" );
 		mask &= ~ CWEventMask;
     }
 
@@ -323,13 +323,13 @@ init_canvas( FL_OBJECT * ob,
 
 		if ( sp->parent == None )
 		{
-			M_err( "InitCanvas", "Internal Error" );
+			M_err( "init_canvas", "Internal Error" );
 			exit( 0 );
 		}
 
 		if ( sp->init && sp->init( ob ) < 0 )
 		{
-			M_err( "CanvasInit", "Unable to initialize canvas %s", ob->label );
+			M_err( "init_canvas", "Unable to initialize canvas %s", ob->label );
 			if ( fl_show_question( "Warning\nCan't initialize canvas\nQuit ?",
 								   1 ) )
 				exit( 1 );

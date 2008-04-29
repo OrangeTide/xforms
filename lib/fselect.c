@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.15 2008/04/20 13:04:25 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.16 2008/04/29 10:18:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -651,6 +651,9 @@ void
 fl_set_fselector_callback( FL_FSCB   fscb,
 						   void    * data )
 {
+	double dy;
+	FL_OBJECT *o;
+
 	fselector_init( );
 
 	fs->fselect_cb = fscb;
@@ -660,15 +663,52 @@ fl_set_fselector_callback( FL_FSCB   fscb,
 
 	fl_get_fselector_form( );
 
+	dy = fs->input->y + fs->input->h - fs->browser->y - fs->browser->h;
+
 	if ( fscb )
 	{
-		if ( strcmp( fs->ready->label, "Ready" ) == 0 )
+		if ( strncmp( fs->ready->label, "Ready", 5 ) == 0 )
+		{
 			fl_set_object_label( fs->ready, "Dismiss" );
+			fl_hide_object( fs->prompt );
+			fl_hide_object( fs->input );
+
+			for ( o = fs->fselect->first; o; o = o->next )
+			{
+				if (    ! o->visible
+					 || o->objclass == FL_BEGIN_GROUP
+					 || o->objclass == FL_END_GROUP )
+					continue;
+				o->fb1 -= dy;
+				o->fb2 -= dy;
+			}
+
+			fs->fselect->h_hr -= dy;
+			fs->fselect->h -= FL_crnd( fs->fselect->h_hr );
+		}
 	}
 	else
 	{
 		if ( strncmp( fs->ready->label, "Dismiss", 7 ) == 0 )
+		{
 			fl_set_object_label( fs->ready, "Ready" );
+
+			for ( o = fs->fselect->first; o; o = o->next )
+			{
+				if (    ! o->visible
+					 || o->objclass == FL_BEGIN_GROUP
+					 || o->objclass == FL_END_GROUP )
+					continue;
+				o->fb1 += dy;
+				o->fb2 += dy;
+			}
+
+			fs->fselect->h_hr += dy;
+			fs->fselect->h += FL_crnd( fs->fselect->h_hr );
+
+			fl_show_object( fs->prompt );
+			fl_show_object( fs->input );
+		}
 	}
 }
 
@@ -1081,6 +1121,7 @@ create_form_fselect( void )
 
 	fl_inverted_y = 0;
 	fl_set_coordunit( FL_COORD_PIXEL );
+
 	fs->fselect = fl_bgn_form( FL_NO_BOX, 305, 330 );
 
 	fl_add_box( FL_UP_BOX, 0, 0, 305, 330, "" );
@@ -1135,7 +1176,7 @@ create_form_fselect( void )
 	fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
 
 	fs->prompt = obj = fl_add_text( FL_NORMAL_TEXT, 20, 270, 264, 18,
-									"FileName:" );
+									"File name:" );
 	fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
 	fl_set_object_resize( obj, FL_RESIZE_NONE );
 	fl_set_object_gravity( obj, FL_SouthWest, FL_SouthWest );

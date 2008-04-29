@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.33 2008/04/28 20:09:39 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.34 2008/04/29 10:18:01 jtt Exp $";
 #endif
 
 
@@ -1233,6 +1233,8 @@ fl_hide_form( FL_FORM * form )
 		fl_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
 		form->focusobj = NULL;
     }
+
+	/* Get canvas objects to unmap their windows */
 
 	for ( o = form->first; o; o = o->next )
 		if ( o->objclass == FL_CANVAS || o->objclass == FL_GLCANVAS )

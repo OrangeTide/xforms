@@ -1,3 +1,12 @@
+2008-04-29 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/fselect.c: If a callback for a file selector is
+	installed the prompt line and the input field aren't
+	shown anymore. As Andrea Scopece pointed out the input
+	field can't be used at all for file selectors with a
+	callback (only a double click in the browser works)
+	so it doesn't make sense to show it.
+
 2008-04-28 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/forms.c: Jumping backwards with Shift-<TAB>
