@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.16 2008/04/29 10:18:01 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.17 2008/04/29 12:35:40 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -53,8 +53,6 @@ char *fl_id_fs = "$Id: fselect.c,v 1.16 2008/04/29 10:18:01 jtt Exp $";
 
 #define FL_FLEN	  256
 #define MAXFL	  ( FL_PATH_MAX + FL_FLEN )
-#define MINW	  300
-#define MINH	  330
 
 static int dirmarker	= 'D';	/* directory marker		*/
 static int bdevmarker	= 'b';	/* special file marker	*/
@@ -556,7 +554,7 @@ fill_entries( FL_OBJECT  * br,
 		fl_snprintf( tmpbuf, sizeof tmpbuf, "Can't read %s", lfs->dname );
 		tmpbuf[ sizeof tmpbuf - 1 ] = '\0';
 		fl_show_alert( "ReadDir", tmpbuf, fl_get_syserror_msg( ), 0 );
-		M_err( "ReadDir", "Can't read %s", lfs->dname );
+		M_err( "fill_entries", "Can't read %s", lfs->dname );
 
 		/* backup */
 
@@ -670,21 +668,35 @@ fl_set_fselector_callback( FL_FSCB   fscb,
 		if ( strncmp( fs->ready->label, "Ready", 5 ) == 0 )
 		{
 			fl_set_object_label( fs->ready, "Dismiss" );
+
 			fl_hide_object( fs->prompt );
 			fl_hide_object( fs->input );
 
-			for ( o = fs->fselect->first; o; o = o->next )
+			o = fs->fselect->first;
+			o->h -= dy;
+			o->fb1 -= dy;
+			o->ft2 -= dy;
+
+			o = o->next;
+			o->h -= dy;
+			o->fb1 -= dy;
+			o->ft2 -= dy;
+
+			for ( o = o->next; o; o = o->next )
 			{
 				if (    ! o->visible
-					 || o->objclass == FL_BEGIN_GROUP
+					 || o->objclass == FL_BEGIN_GROUP 
 					 || o->objclass == FL_END_GROUP )
 					continue;
+
 				o->fb1 -= dy;
 				o->fb2 -= dy;
 			}
 
 			fs->fselect->h_hr -= dy;
-			fs->fselect->h -= FL_crnd( fs->fselect->h_hr );
+			fs->fselect->h = FL_crnd( fs->fselect->h_hr );
+
+			fl_set_form_minsize( fs->fselect, fs->fselect->w, fs->fselect->h );
 		}
 	}
 	else
@@ -693,21 +705,34 @@ fl_set_fselector_callback( FL_FSCB   fscb,
 		{
 			fl_set_object_label( fs->ready, "Ready" );
 
-			for ( o = fs->fselect->first; o; o = o->next )
+			o = fs->fselect->first;
+			o->h += dy;
+			o->fb1 += dy;
+			o->ft2 += dy;
+
+			o = o->next;
+			o->h += dy;
+			o->fb1 += dy;
+			o->ft2 += dy;
+
+			for ( o = o->next; o; o = o->next )
 			{
 				if (    ! o->visible
-					 || o->objclass == FL_BEGIN_GROUP
+					 || o->objclass == FL_BEGIN_GROUP 
 					 || o->objclass == FL_END_GROUP )
 					continue;
+
 				o->fb1 += dy;
 				o->fb2 += dy;
 			}
 
 			fs->fselect->h_hr += dy;
-			fs->fselect->h += FL_crnd( fs->fselect->h_hr );
+			fs->fselect->h = FL_crnd( fs->fselect->h_hr );
 
 			fl_show_object( fs->prompt );
 			fl_show_object( fs->input );
+
+			fl_set_form_minsize( fs->fselect, fs->fselect->w, fs->fselect->h );
 		}
 	}
 }
@@ -884,7 +909,7 @@ fl_show_fselector( const char * message,
 
 	if ( ! lfs->fselect->visible )
 	{
-		fl_set_form_minsize( lfs->fselect, MINW, MINH );
+		fl_set_form_minsize( lfs->fselect, lfs->fselect->w, lfs->fselect->w );
 		fl_show_form( lfs->fselect, lfs->place, lfs->border,
 					  lfs->fselect->label );
 	}
@@ -1007,6 +1032,7 @@ fl_refresh_fselector( void )
 {
 	rescan_cb( fs->resbutt, 0 );
 }
+
 
 /******************************************************************
  * Contract dirname from /usr/people/xxx to ~/ to save some length.
