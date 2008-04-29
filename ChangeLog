@@ -11,6 +11,9 @@
 	of its functions used at all, fl_itoa(), was used in only
 	a single place (lib/errmsg.c) and got replaced by sprintf().
 
+	* image/image_proc.c: Bug fixed in flimage_tint() that led
+	to writes past the end of an array.
+
 2008-04-28 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/forms.c: Jumping backwards with Shift-<TAB>

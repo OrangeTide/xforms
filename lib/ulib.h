@@ -112,12 +112,6 @@ extern char *vstrcat( const char *,
 extern void free_vstrcat( void * );
 
 
-/******************** Conversions  ********/
-
-
-extern const char * fl_itoa( int );
-extern const char * fl_ftoa( float, int );
-
 
 /*********************************************************************
  * Basic error handling routines

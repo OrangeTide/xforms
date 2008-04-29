@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: matrix.c,v 1.4 2004/05/18 13:57:40 leeming Exp $
+ * $Id: matrix.c,v 1.5 2008/04/29 21:36:04 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -30,95 +30,85 @@
  *.
  *
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 
+
+/***************************************
+ ***************************************/
+
 void *
-fl_get_matrix(int nrows, int ncols, unsigned int esize)
+fl_get_matrix( int          nrows,
+			   int          ncols,
+			   unsigned int esize )
 {
     char **mat;
-    int i, stride = ncols * esize;
+    int i;
 
-    if (!(mat = fl_malloc((nrows + 1) * sizeof(void *))))
-	  return 0;
+    if ( ! ( mat = fl_malloc( ( nrows + 1 ) * sizeof *mat ) ) )
+		return NULL;
 
-    mat[0] = (char *) FL_GET_MATRIX;
-    if (!(mat[1] = fl_calloc(nrows * ncols, esize)))
+    mat[ 0 ] = ( void * ) FL_GET_MATRIX;
+
+    if ( ! ( mat[ 1 ] = fl_calloc( nrows * ncols, esize ) ) )
     {
-	fl_free(mat);
-	return 0;
+		fl_free( mat );
+		return NULL;
     }
 
-    for (i = 2; i <= nrows; i++)
-	mat[i] = mat[i - 1] + stride;
+    for ( i = 2; i <= nrows; i++ )
+		mat[ i ] = mat[ i - 1 ] + ncols * esize;
 
     return mat + 1;
 }
 
-/* given a piece of memory, make a matrix out of it */
+
+/***************************************
+ * given a piece of memory, make a matrix out of it
+ ***************************************/
+
 void *
-fl_make_matrix(int nrows, int ncols, unsigned int esize, void *mem)
+fl_make_matrix( int            nrows,
+				int            ncols,
+				unsigned int   esize,
+				void         * mem )
 {
-    char **mat = fl_malloc((nrows + 1) * sizeof(void *));
-    int i, stride = ncols * esize;
+    char **mat = fl_malloc( ( nrows + 1 ) * sizeof *mat );
+    int i;
 
-    if (mat)
-    {
-	mat[0] = (char *) FL_MAKE_MATRIX;
-	for (mat[1] = mem, i = 2; i <= nrows; i++)
-	    mat[i] = mat[i - 1] + stride;
-    }
+    if ( ! mat )
+		return NULL;
+
+	mat[ 0 ] = ( char * ) FL_MAKE_MATRIX;
+
+	for ( mat[ 1 ] = mem, i = 2; i <= nrows; i++ )
+		mat[ i ] = mat[ i - 1 ] + ncols * esize;
+
     return mat + 1;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
-fl_free_matrix(void *p)
+fl_free_matrix( void *p )
 {
     char **matrix = p;
 
-    if (!p)
-	return;
+    if ( ! p )
+		return;
 
-    if (matrix[-1] && matrix[0])
+    if ( matrix[ -1 ] && matrix[ 0 ] )
     {
-	if (matrix[-1] == (char *) FL_GET_MATRIX)
-	    fl_free(matrix[0]);
-	matrix[0] = 0;
-	matrix[-1] = (char *) FL_FREE_MATRIX;
-	fl_free(matrix - 1);
+		if ( matrix[ -1 ] == ( char * ) FL_GET_MATRIX )
+			fl_free( matrix[ 0 ] );
+		fl_free( matrix - 1 );
     }
 }
-
-#if 0
-void *
-fl_get_3d(int d1, int d2, int d3, unsigned int es)
-{
-    char **m;
-    int i;
-
-    /* get one more and mark the end with null */
-
-    m = malloc(sizeof(*m) * (d1 + 1));
-    for (i = 0; i < d1; i++)
-	m[i] = fl_get_matrix(d2, d3, es);
-    m[d1] = 0;
-
-    return m;
-}
-
-void
-fl_free_3d(void *p)
-{
-    char **m = p;
-
-    for (; m && *m; m++)
-    {
-	fl_free_matrix(*m);
-	*m = 0;
-    }
-}
-#endif

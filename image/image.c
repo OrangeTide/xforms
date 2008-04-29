@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.11 2008/04/10 00:05:49 jtt Exp $
+ * $Id: image.c,v 1.12 2008/04/29 21:36:04 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -176,29 +176,29 @@ identify_image( const char *file )
     if ( ! file || ! *file )
 		return 0;
 
-    if (!(fp = fopen(file, "rb")))
+    if ( ! ( fp = fopen( file, "rb" ) ) )
     {
-		fprintf(stderr, "Can't open %s\n", file);
-		return 0;
+		fprintf( stderr, "Can't open %s\n", file );
+		return NULL;
     }
 
-    if (!ppm_added)
-		add_default_formats();
+    if ( ! ppm_added )
+		add_default_formats( );
 
-    for (io = flimage_io; io->formal_name; io++)
+    for ( io = flimage_io; io->formal_name; io++ )
     {
-		if (io->identify(fp) > 0)
+		if ( io->identify( fp ) > 0 )
 		{
-			image = flimage_alloc();
+			image = flimage_alloc( );
 			image->image_io = io;
 			image->original_type = io->type;
 			image->fpin = fp;
-			strncpy(image->infile, file, MaxImageFileNameLen-5);
-            image->infile[MaxImageFileNameLen-5] = '\0';
+			strncpy( image->infile, file, MaxImageFileNameLen - 5 );
+            image->infile[ MaxImageFileNameLen - 5 ] = '\0';
 			return image;
 		}
 		else
-			rewind(fp);
+			rewind( fp );
     }
 
     return 0;
@@ -210,30 +210,30 @@ identify_image( const char *file )
  ***************************************/
 
 int
-flimage_is_supported( const char *file )
+flimage_is_supported( const char * file )
 {
     FILE *fp;
     FLIMAGE_IO *io;
     int n;
 
-    if (!file || !(fp = fopen(file, "rb")))
+    if ( ! file || ! ( fp = fopen( file, "rb" ) ) )
 		return 0;
 
-    if (!ppm_added)
-		add_default_formats();
+    if ( ! ppm_added )
+		add_default_formats( );
 
-    for (n = 0, io = flimage_io; io->formal_name; io++, n++)
+    for ( n = 0, io = flimage_io; io->formal_name; io++, n++ )
     {
-		if (io->identify(fp) > 0)
+		if ( io->identify( fp ) > 0 )
 		{
-			fclose(fp);
+			fclose( fp );
 			return n + 1;
 		}
 		else
-			rewind(fp);
+			rewind( fp );
     }
 
-    fclose(fp);
+    fclose( fp );
 
     return 0;
 }
@@ -245,12 +245,12 @@ flimage_is_supported( const char *file )
 
 
 FL_IMAGE *
-flimage_open(const char *file)
+flimage_open( const char * file )
 {
-    FL_IMAGE *im = identify_image(file);
+    FL_IMAGE *im = identify_image( file );
 
-    if (!im)
-		M_err("OpenImage", "%s: Unknown image format", file ? file : "null");
+    if ( ! im )
+		M_err( "OpenImage", "%s: Unknown image format", file ? file : "null" );
 
     return im;
 }
@@ -260,18 +260,18 @@ flimage_open(const char *file)
  ***************************************/
 
 int
-flimage_close(FL_IMAGE * im)
+flimage_close( FL_IMAGE * im )
 {
     int status = 0;
 
-    if (!im)
+    if ( ! im )
 		return -1;
 
-    if (im->fpin)
-		status = fclose(im->fpin);
+    if ( im->fpin )
+		status = fclose( im->fpin );
 
-    if (im->fpout)
-		status = fclose(im->fpout);
+    if ( im->fpout )
+		status = fclose( im->fpout );
 
     im->fpin = 0;
     im->fpout = 0;
@@ -285,58 +285,58 @@ flimage_close(FL_IMAGE * im)
  **********************************************************************{*/
 
 FL_IMAGE *
-flimage_read(FL_IMAGE * im)
+flimage_read( FL_IMAGE * im )
 {
     FL_IMAGE *image = im;
     FLIMAGE_IO *io;
     int error = 0;
-    char buf[256];
+    char buf[ 256 ];
 
-    if (!im || !im->fpin)
-		return 0;
+    if ( ! im || ! im->fpin )
+		return NULL;
 
     io = image->image_io;
-    if (!io->read_description || !io->read_pixels)
-		return 0;
+    if ( ! io->read_description || ! io->read_pixels )
+		return NULL;
 
     /* copy some default info */
 
     image->type = io->type;
     image->fmt_name = io->short_name;
 
-    image->foffset = ftell(image->fpin);
+    image->foffset = ftell( image->fpin );
 
-    if ((error = (io->read_description(image) < 0)))
-		return 0;
+    if ( ( error = io->read_description( image ) < 0 ) )
+		return NULL;
 
     /* image_io can change between description and read_pixels for
        io_filter'ed image */
 
     io = image->image_io;
 
-    if ((error = (flimage_getmem(image) < 0)))
+    if ( ( error = flimage_getmem( image ) < 0 ) )
     {
-		im->error_message(im, "ImageGetMem:Failed to allocate memory");
-		flimage_freemem(im);
-		return 0;
+		im->error_message( im, "ImageGetMem:Failed to allocate memory" );
+		flimage_freemem( im );
+		return NULL;
     }
 
     image->completed = 0;
     image->total = im->h;
-    image->error_message(image, "");
-    error = error || (io->read_pixels(image) < 0);
+    image->error_message( image, "" );
+    error = error || ( io->read_pixels( image ) < 0 );
     image->completed = im->total;
-    sprintf(buf, "Done Reading %s", image->fmt_name);
-    image->visual_cue(image, error ? "Error Reading" : buf);
+    sprintf( buf, "Done Reading %s", image->fmt_name );
+    image->visual_cue( image, error ? "Error Reading" : buf );
 
     image->original_type = image->type;
     image->available_type = image->type;
     image->modified = 1;
 
-    if (error)
+    if ( error )
     {
-		flimage_freemem(image);
-		image = 0;
+		flimage_freemem( image );
+		image = NULL;
     }
 
     return image;
@@ -348,9 +348,9 @@ flimage_read(FL_IMAGE * im)
  ***************************************/
 
 static int
-default_next_frame(FL_IMAGE * im)
+default_next_frame( FL_IMAGE * im )
 {
-    return im->random_frame(im, im->current_frame);
+    return im->random_frame( im, im->current_frame );
 }
 
 
@@ -358,49 +358,50 @@ default_next_frame(FL_IMAGE * im)
  ***************************************/
 
 FL_IMAGE *
-flimage_load(const char *file)
+flimage_load( const char *file )
 {
-    FL_IMAGE *image, *im;
-    int err, tc, total_frames = 1;
-    char buf[256];
+    FL_IMAGE *image,
+		     *im;
+    int err,
+		tc,
+		total_frames = 1;
+    char buf[ 256 ];
 
-    add_default_formats();
+    add_default_formats( );
 
-    if ((image = flimage_open(file)))
+    if ( ( image = flimage_open( file ) ) )
     {
-		if(!(im = flimage_read(image)))
+		if( ! ( im = flimage_read( image ) ) )
         {
-            flimage_free(image);
-            image = 0;
+            flimage_free( image );
+            image = NULL;
         }
         else
 			image = im;
     }
 
-    if (!image)
+    if ( ! image )
 		return image;
 
     /* transparency */
 
     tc = image->tran_index;
-    if (FL_IsCI(image->type) && tc >= 0 && tc < image->map_len)
-		image->tran_rgb = FL_PACK3(image->red_lut[tc],
-								   image->green_lut[tc],
-								   image->blue_lut[tc]);
+    if ( FL_IsCI( image->type ) && tc >= 0 && tc < image->map_len )
+		image->tran_rgb = FL_PACK3( image->red_lut[ tc ],
+								    image->green_lut[ tc ],
+								    image->blue_lut[ tc ] );
 
     /* create a next_frame function on the fly if possible */
 
-    if (!image->next_frame && image->random_frame)
+    if ( ! image->next_frame && image->random_frame )
 		image->next_frame = default_next_frame;
 
-    if (!image->more || !image->next_frame)
+    if ( ! image->more || ! image->next_frame )
     {
-		if (((FLIMAGE_IO *) (image->image_io))->annotation)
-			flimage_read_annotation(image);
-		flimage_close(image);
-		if (image->io_spec)
-			fl_free(image->io_spec);
-		image->io_spec = 0;
+		if ( ( ( FLIMAGE_IO * ) image->image_io )->annotation )
+			flimage_read_annotation( image );
+		flimage_close( image );
+		fl_safe_free( image->io_spec );
         image->spec_size = 0;
 		image->display = flimage_sdisplay;
 		return image;
@@ -410,31 +411,31 @@ flimage_load(const char *file)
 
     /* we have multi-frames */
 
-    for (err = 0, im = image;
-		 !err && im->more && im->current_frame < current_setup.max_frames;)
+    for ( err = 0, im = image;
+		  ! err && im->more && im->current_frame < current_setup.max_frames; )
     {
-		if (!(err = !(im->next = flimage_dup_(im, 0))))
+		if ( ! ( err = ! ( im->next = flimage_dup_( im, 0 ) ) ) )
 		{
 			im = im->next;
 			im->current_frame++;
 		}
-		sprintf(buf, "Done image %d of %d",
-				im->current_frame, current_setup.max_frames);
-		im->visual_cue(im, buf);
-		err = err || (im->next_frame(im) < 0);
-		total_frames += !err;
+		sprintf( buf, "Done image %d of %d",
+				 im->current_frame, current_setup.max_frames );
+		im->visual_cue( im, buf );
+		err = err || ( im->next_frame( im ) < 0 );
+		total_frames += ! err;
     }
 
-    flimage_close(image);
+    flimage_close( image );
 
     image->completed = im->total;
-    sprintf(buf, "Done Reading multi-frame %s", image->fmt_name);
-    image->visual_cue(image, err ? "Error Reading" : buf);
+    sprintf( buf, "Done Reading multi-frame %s", image->fmt_name );
+    image->visual_cue( image, err ? "Error Reading" : buf );
 
     /* multi frame cleanup */
 
-    if (image->cleanup)
-		image->cleanup(image);
+    if ( image->cleanup )
+		image->cleanup( image );
 
     /* update the number of frames */
 
@@ -447,7 +448,8 @@ flimage_load(const char *file)
  * Output routines
  *******************************************************************{**/
 
-static void convert_type(FL_IMAGE * im, FLIMAGE_IO * io);
+static void convert_type( FL_IMAGE *,
+						  FLIMAGE_IO * );
 
 int
 flimage_dump( FL_IMAGE   * image,
@@ -455,78 +457,80 @@ flimage_dump( FL_IMAGE   * image,
 			  const char * fmt )
 {
     FLIMAGE_IO *io = flimage_io;
-    char buf[256], *p;
+    char buf[ 256 ], *p;
     FILE *fp;
-    int status = -1, otype;
+    int status = -1,
+		otype;
     FL_IMAGE *tmpimage;
 
-    if (!image || image->type == FL_IMAGE_NONE)
+    if ( ! image || image->type == FL_IMAGE_NONE )
     {
-		fprintf(stderr, "WriteImage: invalid or null image\n");
+		fprintf( stderr, "WriteImage: invalid or null image\n" );
 		return -1;
     }
 
-    if (!fmt || !*fmt)
+    if ( ! fmt || ! *fmt )
 		fmt = image->fmt_name;
 
-    for (; io->formal_name; io++)
+    for ( ; io->formal_name; io++ )
     {
-		if ((strcasecmp(io->formal_name, fmt) == 0 ||
-			 strcasecmp(io->short_name, fmt) == 0 ||
-			 strcasecmp(io->extension, fmt) == 0) && io->write_image)
+		if (    (    strcasecmp( io->formal_name, fmt ) == 0
+			      || strcasecmp( io->short_name,  fmt ) == 0
+			      || strcasecmp( io->extension,   fmt ) == 0 )
+			 && io->write_image )
 		{
-			strncpy(image->outfile, filename, MaxImageFileNameLen-5);
-            image->outfile[MaxImageFileNameLen-5] = '\0';
+			strncpy( image->outfile, filename, MaxImageFileNameLen - 5 );
+            image->outfile[ MaxImageFileNameLen - 5 ] = '\0';
 
 			/* change extension */
 
-			if (!image->setup->no_auto_extension)
+			if ( ! image->setup->no_auto_extension )
 			{
-				if ((p = strrchr(image->outfile, '.')))
+				if ( ( p = strrchr( image->outfile, '.' ) ) )
 					*p = '\0';
-				strcat(strcat(image->outfile, "."), io->extension);
+				strcat( strcat( image->outfile, "." ), io->extension );
 			}
 
-			if (!(fp = fopen(image->outfile, "wb")))
+			if ( ! ( fp = fopen( image->outfile, "wb" ) ) )
 			{
-				flimage_error(image, "can't open %s", image->outfile);
+				flimage_error( image, "can't open %s", image->outfile );
 				return -1;
 			}
 
 			image->fpout = fp;
 			otype = image->type;
 
-			for (tmpimage = image; tmpimage; tmpimage = tmpimage->next)
-				convert_type(tmpimage, io);
+			for ( tmpimage = image; tmpimage; tmpimage = tmpimage->next )
+				convert_type( tmpimage, io );
 
-			if (image->pre_write && image->pre_write(image) < 0)
+			if ( image->pre_write && image->pre_write( image ) < 0 )
 			{
-				flimage_close(image);
+				flimage_close( image );
 				return FL_CANCEL;
 			}
 
 			image->completed = 0;
 			image->total = image->h;
-			status = io->write_image(image);
+			status = io->write_image( image );
 
-			if (status >= 0 && image->post_write)
-				image->post_write(image);
+			if ( status >= 0 && image->post_write )
+				image->post_write( image );
 			image->type = otype;
 
-			if (io->annotation)
-				flimage_write_annotation(image);
+			if ( io->annotation )
+				flimage_write_annotation( image );
 
-			flimage_close(image);
+			flimage_close( image );
 
 			image->completed = image->total;
-			fl_snprintf(buf, sizeof(buf),
-                        "Done Writing %s(%s)", image->outfile, fmt);
-			image->visual_cue(image, buf);
+			fl_snprintf( buf, sizeof buf,
+						 "Done Writing %s(%s)", image->outfile, fmt );
+			image->visual_cue( image, buf );
 			return status;
 		}
     }
 
-    flimage_error(image, "don't know how to write %s", fmt);
+    flimage_error( image, "don't know how to write %s", fmt );
     return -1;
 }
 
@@ -539,58 +543,62 @@ static void
 convert_type( FL_IMAGE   * im,
 			  FLIMAGE_IO * io )
 {
-    const int types[] =
-    {FL_IMAGE_RGB, FL_IMAGE_PACKED, FL_IMAGE_CI, FL_IMAGE_GRAY, FL_IMAGE_MONO};
+    const int types[ ] = { FL_IMAGE_RGB,
+						   FL_IMAGE_PACKED,
+						   FL_IMAGE_CI,
+						   FL_IMAGE_GRAY,
+						   FL_IMAGE_MONO };
     int ntypes = sizeof types / sizeof *types;
-    int i, done;
+    int i,
+		done;
 
     /* if the output routine can handle the current image type, do nothing */
 
-    if ((im->type & io->type))
+    if ( ( im->type & io->type ) )
 		return;
 
     /* must force the conversion */
 
     im->force_convert = 1;
 
-    if (im->type == FL_IMAGE_CI || im->type == FL_IMAGE_RGB)
+    if ( im->type == FL_IMAGE_CI || im->type == FL_IMAGE_RGB )
     {
-		for (i = done = 0; !done && i < ntypes; i++)
+		for ( i = done = 0; !done && i < ntypes; i++ )
 		{
-			if ((done = (io->type & types[i])))
-				flimage_convert(im, types[i], 256);
+			if ( ( done = io->type & types[ i ] ) )
+				flimage_convert( im, types[ i ], 256 );
 		}
     }
-    else if (im->type == FL_IMAGE_GRAY || im->type == FL_IMAGE_MONO)
+    else if ( im->type == FL_IMAGE_GRAY || im->type == FL_IMAGE_MONO )
     {
-		if ((io->type & FL_IMAGE_CI))
-			flimage_convert(im, FL_IMAGE_CI, 256);
+		if ( io->type & FL_IMAGE_CI )
+			flimage_convert( im, FL_IMAGE_CI, 256 );
 		else
 		{
-			for (i = done = 0; !done && i < ntypes; i++)
+			for ( i = done = 0; !done && i < ntypes; i++ )
 			{
-				if ((done = (io->type & types[i])))
-					flimage_convert(im, types[i], 256);
+				if ( ( done = io->type & types[ i ] ))
+					flimage_convert( im, types[ i ], 256 );
 			}
 		}
     }
-    else if (im->type == FL_IMAGE_GRAY16)
+    else if ( im->type == FL_IMAGE_GRAY16 )
     {
-		if ((io->type & FL_IMAGE_GRAY))
-			flimage_convert(im, FL_IMAGE_GRAY, 0);
+		if ( io->type & FL_IMAGE_GRAY )
+			flimage_convert( im, FL_IMAGE_GRAY, 0 );
 		else
 		{
-			for (i = done = 0; !done && i < ntypes; i++)
+			for ( i = done = 0; !done && i < ntypes; i++ )
 			{
-				if ((done = (io->type & types[i])))
-					flimage_convert(im, types[i], 256);
+				if ( ( done = io->type & types[ i ] ) )
+					flimage_convert( im, types[ i ], 256 );
 			}
 		}
     }
     else
     {
-		M_err("Output", "InternalError: unhandled image type: %s",
-			  flimage_type_name(im->type));
+		M_err( "Output", "InternalError: unhandled image type: %s",
+			   flimage_type_name( im->type ) );
 		im->force_convert = 0;
     }
 }
@@ -604,23 +612,21 @@ convert_type( FL_IMAGE   * im,
  ********************************************************************{**/
 
 int
-flimage_free(FL_IMAGE * image)
+flimage_free( FL_IMAGE * image )
 {
-    FL_IMAGE *im, *imnext;
+    FL_IMAGE *im,
+		     *imnext;
 
-    for (im = image; im; im = imnext)
+    for ( im = image; im; im = imnext)
     {
-		flimage_freemem(im);
+		flimage_freemem( im );
 		if ( im == image )
-			flimage_close(im);
+			flimage_close( im );
 		imnext = im->next;
-		if (im->infile)
-			fl_free(im->infile);
-		if (im->outfile)
-			fl_free(im->outfile);
-		im->infile = im->outfile = 0;
-		im->next = 0;
-		fl_free(im);
+		fl_safe_free( im->infile );
+		fl_safe_free( im->outfile );
+		im->next = NULL;
+		fl_free( im );
     }
 
     return 0;
@@ -631,28 +637,32 @@ flimage_free(FL_IMAGE * image)
  ***************************************/
 
 int
-flimage_get_linearlut(FL_IMAGE * im)
+flimage_get_linearlut( FL_IMAGE * im )
 {
-    if (!im->map_len)
+    if ( ! im->map_len )
     {
 		im->map_len = FL_PCMAX + 1;
-		flimage_getcolormap(im);
+		flimage_getcolormap( im );
     }
 
-    if (!im->llut[0] || im->map_len > im->llut_len)
+	if ( im->map_len > im->llut_len )
+	{
+		fl_safe_free( im->llut[ 0 ] );
+		fl_safe_free( im->llut[ 1 ] );
+		fl_safe_free( im->llut[ 2 ] );
+	}
+
+    if ( ! im->llut[ 0 ] )
     {
-		im->llut[0] = fl_malloc(im->map_len * sizeof(*im->llut[0]));
-		im->llut[1] = fl_malloc(im->map_len * sizeof(*im->llut[0]));
-		im->llut[2] = fl_malloc(im->map_len * sizeof(*im->llut[0]));
+		im->llut[ 0 ] = fl_malloc( im->map_len * sizeof **im->llut );
+		im->llut[ 1 ] = fl_malloc( im->map_len * sizeof **im->llut );
+		im->llut[ 2 ] = fl_malloc( im->map_len * sizeof **im->llut );
     }
 
-    if (!im->llut[2])
+    if ( ! im->llut[ 2 ] )
     {
-		if (im->llut[0])
-			fl_free(im->llut[0]);
-		if (im->llut[1])
-			fl_free(im->llut[1]);
-		im->llut[0] = im->llut[1] = 0;
+		fl_safe_free( im->llut[ 0 ] );
+		fl_safe_free( im->llut[ 1 ]);
 		return -1;
     }
 
@@ -665,16 +675,12 @@ flimage_get_linearlut(FL_IMAGE * im)
  ***************************************/
 
 void
-flimage_free_linearlut(FL_IMAGE * im)
+flimage_free_linearlut( FL_IMAGE * im )
 {
-    if (im->llut[0])
-    {
-		fl_free(im->llut[0]);
-		fl_free(im->llut[1]);
-		fl_free(im->llut[2]);
-    }
+	fl_safe_free( im->llut[ 0 ] );
+	fl_safe_free( im->llut[ 1 ] );
+	fl_safe_free( im->llut[ 2 ] );
 
-    im->llut[0] = 0;
     im->llut_len = 0;
 }
 
@@ -690,99 +696,109 @@ flimage_getmem( FL_IMAGE * im )
 		same_size;
     unsigned int esize;
 
-    if (!im || !im->w || !im->h)
+    if ( ! im || ! im->w || ! im->h )
 		return -1;
 
-    same_size = ((im->w == im->matc) && (im->h == im->matr));
+    same_size = im->w == im->matc && im->h == im->matr;
 
-    switch (im->type)
+    switch ( im->type )
     {
 		case FL_IMAGE_CI:
 		case FL_IMAGE_MONO:
-			if ((nomap = (im->map_len <= 0)))
+			if ( ( nomap = im->map_len <= 0 ) )
 				im->map_len = 2;
 
-			if (flimage_getcolormap(im) < 0)
+			if ( flimage_getcolormap( im ) < 0 )
 			{
-				flimage_error(im, "can't alloc colormap");
+				flimage_error( im, "can't alloc colormap" );
 				return -1;
 			}
 
-			if (im->type == FL_IMAGE_MONO && nomap)
+			if ( im->type == FL_IMAGE_MONO && nomap )
 			{
-				im->red_lut[0] = im->green_lut[0] = im->blue_lut[0] = FL_PCMAX;
-				im->red_lut[1] = im->green_lut[1] = im->blue_lut[1] = 0;
+				im->red_lut[ 0 ] = im->green_lut[ 0 ] = im->blue_lut[ 0 ] =
+					                                                   FL_PCMAX;
+				im->red_lut[ 1 ] = im->green_lut[ 1 ] = im->blue_lut[ 1 ] = 0;
 			}
 
-			if (!same_size || !im->ci)
+			if ( ! same_size || ! im->ci )
 			{
-				if (im->ci)
-					fl_free_matrix(im->ci);
-				err = !(im->ci = fl_get_matrix(im->h, im->w, sizeof(**im->ci)));
+				if ( im->ci )
+					fl_free_matrix( im->ci );
+				err = ! ( im->ci = fl_get_matrix( im->h, im->w,
+												  sizeof **im->ci ) );
 			}
 			break;
 
 		case FL_IMAGE_GRAY:
 		case FL_IMAGE_GRAY16:
-			flimage_getcolormap(im);
-			if (!same_size || !im->gray)
+			flimage_getcolormap( im );
+			if ( ! same_size || ! im->gray )
 			{
-				if (im->gray)
-					fl_free_matrix(im->gray);
-				err = !(im->gray = fl_get_matrix(im->h, im->w,
-												 sizeof(**im->gray)));
+				if ( im->gray )
+					fl_free_matrix( im->gray );
+				err = ! ( im->gray = fl_get_matrix( im->h, im->w,
+													sizeof **im->gray ) );
 			}
 
-			if (!err && (!im->wlut || im->gray_maxval > im->wlut_len))
+			if ( ! err && ( ! im->wlut || im->gray_maxval > im->wlut_len ) )
 			{
-				if (im->wlut)
-					fl_free(im->wlut);
-				if ((im->wlut_len = im->gray_maxval + 1) < 256)
+				fl_safe_free( im->wlut );
+				if ( ( im->wlut_len = im->gray_maxval + 1 ) < 256 )
 					im->wlut_len = 256;
-				err = !(im->wlut = fl_malloc(im->wlut_len * sizeof(*im->wlut)));
+				err = ! ( im->wlut = fl_malloc( im->wlut_len
+												* sizeof *im->wlut ) );
 			}
 			break;
 
 		case FL_IMAGE_PACKED:
-			if (!same_size || !im->packed)
+			if ( ! same_size || ! im->packed )
 			{
-				if (im->packed)
-					fl_free_matrix(im->packed);
-				err = !(im->packed = fl_get_matrix(im->h, im->w,
-												   sizeof(**im->packed)));
+				if ( im->packed )
+					fl_free_matrix( im->packed );
+				err = ! ( im->packed = fl_get_matrix( im->h, im->w,
+													  sizeof **im->packed ) );
 			}
 			break;
+
 		case FL_IMAGE_RGB:
 			/* it's possible for some image format to be RGB yet  * have a
 			   redundant colormap in it (xwd for example) */
-			flimage_getcolormap(im);
-			if (!same_size || !im->red)
+
+			flimage_getcolormap( im );
+			if ( ! same_size || ! im->red )
 			{
-				if (im->red)
+				if ( im->red )
 				{
-					fl_free_matrix(im->red);
-					fl_free_matrix(im->green);
-					fl_free_matrix(im->blue);
-					fl_free_matrix(im->alpha);
+					fl_free_matrix( im->red );
+					fl_free_matrix( im->green );
+					fl_free_matrix( im->blue );
+					fl_free_matrix( im->alpha );
 				}
 
-				esize = sizeof(**im->red);
-				err = !(im->red = fl_get_matrix(im->h, im->w, esize));
-				err = err || !(im->green = fl_get_matrix(im->h, im->w, esize));
-				err = err || !(im->blue = fl_get_matrix(im->h, im->w, esize));
-				err = err || !(im->alpha = fl_get_matrix(im->h, im->w, esize));
-				im->rgba[0] = im->red;
-				im->rgba[1] = im->green;
-				im->rgba[2] = im->blue;
-				im->rgba[3] = im->alpha;
+				esize = sizeof **im->red;
 
-				if (err)
+				err =    ! ( im->red   = fl_get_matrix( im->h, im->w, esize ) )
+				      || ! ( im->green = fl_get_matrix( im->h, im->w, esize ) )
+					  || ! ( im->blue  = fl_get_matrix( im->h, im->w, esize ) )
+					  || ! ( im->alpha = fl_get_matrix( im->h, im->w, esize ) );
+
+				if ( err )
 				{
-					fl_free_matrix(im->red);
-					fl_free_matrix(im->green);
-					fl_free_matrix(im->blue);
-					im->red = 0;
+					fl_free_matrix( im->red );
+					fl_free_matrix( im->green );
+					fl_free_matrix( im->blue );
+					fl_free_matrix( im->alpha );
+					im->red = NULL;
 				}
+				else
+				{
+					im->rgba[ 0 ] = im->red;
+					im->rgba[ 1 ] = im->green;
+					im->rgba[ 2 ] = im->blue;
+					im->rgba[ 3 ] = im->alpha;
+				}
+
 			}
 			break;
 
@@ -790,8 +806,8 @@ flimage_getmem( FL_IMAGE * im )
 			return -1;
     }
 
-    im->matr = im->h;
-    im->matc = im->w;
+	im->matr = im->h;
+	im->matc = im->w;
 
     return err ? -1 : 0;
 }
@@ -801,62 +817,46 @@ flimage_getmem( FL_IMAGE * im )
  ***************************************/
 
 int
-flimage_getcolormap(FL_IMAGE * im)
+flimage_getcolormap( FL_IMAGE * im )
 {
     int len = im->map_len;
 
-    if (len <= 0)
+    if ( len <= 0 )
 		return -1;
 
-    if (len > FLIMAGE_MAXLUT)
+    if ( len > FLIMAGE_MAXLUT )
 		len = im->map_len = FLIMAGE_MAXLUT;
 
-    /* not all C system is ansi */
+	im->red_lut   = fl_realloc( im->red_lut,   len * sizeof *im->red_lut );
+	im->green_lut = fl_realloc( im->green_lut, len * sizeof *im->green_lut );
+	im->blue_lut  = fl_realloc( im->blue_lut,  len * sizeof *im->blue_lut );
+	im->alpha_lut = fl_realloc( im->alpha_lut, len * sizeof *im->alpha_lut );
 
-    if (im->red_lut)
+    if ( ! im->alpha_lut )
     {
-		im->red_lut = fl_realloc(im->red_lut, sizeof(*im->red_lut) * len);
-		im->green_lut = fl_realloc(im->green_lut, sizeof(*im->red_lut) * len);
-		im->blue_lut = fl_realloc(im->blue_lut, sizeof(*im->red_lut) * len);
-		im->alpha_lut = fl_realloc(im->alpha_lut, sizeof(*im->red_lut) * len);
-    }
-    else
-    {
-		im->red_lut = fl_malloc(sizeof(*im->red_lut) * len);
-		im->green_lut = fl_malloc(sizeof(*im->red_lut) * len);
-		im->blue_lut = fl_malloc(sizeof(*im->red_lut) * len);
-		im->alpha_lut = fl_malloc(sizeof(*im->red_lut) * len);
-    }
-
-    if (!im->alpha_lut)
-    {
-		if (im->red_lut)
-			fl_free(im->red_lut);
-		if (im->green_lut)
-			fl_free(im->green_lut);
-		if (im->blue_lut)
-			fl_free(im->blue_lut);
-		im->red_lut = im->green_lut = im->blue_lut = 0;
+		fl_safe_free( im->red_lut );
+		fl_safe_free( im->green_lut );
+		fl_safe_free( im->blue_lut );
 		return -1;
     }
 
-    im->lut[0] = im->red_lut;
-    im->lut[1] = im->green_lut;
-    im->lut[2] = im->blue_lut;
-    im->lut[3] = im->alpha_lut;
+    im->lut[ 0 ] = im->red_lut;
+    im->lut[ 1 ] = im->green_lut;
+    im->lut[ 2 ] = im->blue_lut;
+    im->lut[ 3 ] = im->alpha_lut;
 
-    if (im->map_len > im->wlut_len && FL_IsGray(im->type))
+    if ( im->map_len > im->wlut_len && FL_IsGray( im->type ) )
     {
-		if (im->wlut)
+		im->wlut = fl_realloc( im->wlut, im->map_len * sizeof *im->wlut );
+		if ( ! im->wlut )
 		{
-			fl_free(im->wlut);
 			im->wlut_len = 0;
-		}
-		im->wlut = fl_malloc(im->map_len * sizeof(*im->wlut));
-		if (!im->wlut)
 			return -1;
+		}
+
 		im->wlut_len = im->map_len;
     }
+
     return 0;
 }
 
@@ -869,31 +869,31 @@ flimage_getcolormap(FL_IMAGE * im)
 void
 flimage_invalidate_pixels( FL_IMAGE * im )
 {
-    if (!FL_IsGray(im->type))
+    if ( ! FL_IsGray( im->type ) )
     {
-		fl_free_matrix(im->gray);
-		im->gray = 0;
+		fl_free_matrix( im->gray );
+		im->gray = NULL;
     }
 
-    if (!FL_IsCI(im->type))
+    if ( ! FL_IsCI( im->type ) )
     {
-		fl_free_matrix(im->ci);
-		im->ci = 0;
+		fl_free_matrix( im->ci );
+		im->ci = NULL;
     }
 
-    if (im->type != FL_IMAGE_PACKED)
+    if ( im->type != FL_IMAGE_PACKED )
     {
-		fl_free_matrix(im->packed);
-		im->packed = 0;
+		fl_free_matrix( im->packed );
+		im->packed = NULL;
     }
 
-    if (im->type != FL_IMAGE_RGB)
+    if ( im->type != FL_IMAGE_RGB )
     {
-		fl_free_matrix(im->red);
-		fl_free_matrix(im->green);
-		fl_free_matrix(im->blue);
-		fl_free_matrix(im->alpha);
-		im->red = im->green = im->blue = im->alpha = 0;
+		fl_free_matrix( im->red );
+		fl_free_matrix( im->green );
+		fl_free_matrix( im->blue );
+		fl_free_matrix( im->alpha );
+		im->red = im->green = im->blue = im->alpha = NULL;
     }
 
     im->available_type = im->type;
@@ -908,122 +908,103 @@ void
 flimage_freemem( FL_IMAGE * image )
 {
 
-    if (!image || !image->w || !image->h)
+    if ( ! image || ! image->w || ! image->h )
 		return;
 
-    if (image->ci)
+    if ( image->ci )
     {
-		fl_free_matrix(image->ci);
-		image->ci = 0;
+		fl_free_matrix( image->ci );
+		image->ci = NULL;
     }
 
-    if (image->wlut)
+	fl_safe_free( image->wlut );
+	image->wlut_len = 0;
+
+    if ( image->gray )
     {
-		fl_free(image->wlut);
-		image->wlut = 0;
-		image->wlut_len = 0;
+		fl_free_matrix( image->gray );
+		image->gray = NULL;
     }
 
-    if (image->gray)
+    if ( image->packed )
     {
-		fl_free_matrix(image->gray);
-		image->gray = 0;
+		fl_free_matrix( image->packed );
+		image->packed = NULL;
     }
 
-    if (image->packed)
+    if ( image->red )
     {
-		fl_free_matrix(image->packed);
-		image->packed = 0;
+		fl_free_matrix( image->red );
+		fl_free_matrix( image->green );
+		fl_free_matrix( image->blue );
+		fl_free_matrix( image->alpha );
+		image->red = image->green = image->blue = image->alpha = NULL;
     }
 
-    if (image->red)
+    if ( image->map_len > 0 && image->red_lut )
     {
-		fl_free_matrix(image->red);
-		fl_free_matrix(image->green);
-		fl_free_matrix(image->blue);
-		fl_free_matrix(image->alpha);
-		image->red = image->green = image->blue = image->alpha = 0;
-    }
-
-    if (image->map_len > 0 && image->red_lut)
-    {
-		fl_free(image->red_lut);
-		fl_free(image->green_lut);
-		fl_free(image->blue_lut);
-		fl_free(image->alpha_lut);
-		image->red_lut = image->green_lut = image->blue_lut = 0;
+		fl_free( image->red_lut );
+		fl_free( image->green_lut );
+		fl_free( image->blue_lut );
+		fl_free( image->alpha_lut );
+		image->red_lut = image->green_lut = image->blue_lut = NULL;
 		image->map_len = 0;
     }
 
-    if (image->comments && image->comments_len > 0)
-    {
-		fl_free(image->comments);
-		image->comments = 0;
-		image->comments_len = 0;
-    }
+	fl_safe_free( image->comments );
+	image->comments_len = 0;
 
-    image->free_text(image);
-    image->free_markers(image);
-    flimage_free_linearlut(image);
+    image->free_text( image );
+    image->free_markers( image );
+    flimage_free_linearlut( image );
 
-    if (image->pixmap)
+    if ( image->pixmap )
     {
-		XFreePixmap(image->xdisplay, image->pixmap);
-		image->pixmap = 0;
+		XFreePixmap( image->xdisplay, image->pixmap );
+		image->pixmap = None;
 		image->pixmap_depth = 0;
     }
 
-    if (image->ximage)
+    if ( image->ximage )
     {
 		XDestroyImage( ( XImage * ) image->ximage );
-		image->ximage = 0;
+		image->ximage = NULL;
     }
 
-    if (image->gc)
+    if ( image->gc )
     {
-		XFreeGC(image->xdisplay, image->gc);
-		image->gc = 0;
+		XFreeGC( image->xdisplay, image->gc );
+		image->gc = None;
     }
 
-    if (image->textgc)
+    if ( image->textgc )
     {
-		XFreeGC(image->xdisplay, image->textgc);
-		image->textgc = 0;
+		XFreeGC( image->xdisplay, image->textgc );
+		image->textgc = None;
     }
 
-    if (image->markergc)
+    if ( image->markergc )
     {
-		XFreeGC(image->xdisplay, image->markergc);
-		image->markergc = 0;
+		XFreeGC( image->xdisplay, image->markergc );
+		image->markergc = None;
     }
 
-    if (image->pixels)
+    if ( image->pixels )
     {
-		fl_free_matrix(image->pixels);
-		image->pixels = 0;
+		fl_free_matrix( image->pixels );
+		image->pixels = NULL;
     }
 
-    if (image->io_spec)
-    {
-		fl_free(image->io_spec);
-		image->io_spec = 0;
-        image->spec_size = 0;
-    }
+	fl_safe_free( image->io_spec );
+	image->spec_size = 0;
 
-    if (image->info)
-    {
-		fl_free(image->info);
-		image->info = 0;
-    }
+	fl_safe_free( image->info );
 
     image->w = image->h = 0;
     image->matr = image->matc = 0;
     image->type = FL_IMAGE_NONE;
     image->available_type = FL_IMAGE_NONE;
 }
-
-
-/*}****************************************************************** */
 
 
 /***************************************
@@ -1042,38 +1023,38 @@ flimage_add_format( const char          * formal_name,
     int i, k;
     FLIMAGE_IO *thisIO;
 
-    if ((!formal_name || !*formal_name) || (!short_name || !*short_name))
+    if ( ! formal_name || ! *formal_name || ! short_name || ! *short_name )
 		return -1;
 
-    ppm_added = ppm_added || (extension && strcmp("ppm", extension) == 0);
-    gzip_added = gzip_added || (extension && strcmp("gz", extension) == 0);
+    ppm_added = ppm_added || ( extension && strcmp( "ppm", extension ) == 0 );
+    gzip_added = gzip_added || ( extension && strcmp("gz", extension ) == 0 );
 
-    if (type <= 0 || type > FL_IMAGE_FLEX)
+    if ( type <= 0 || type > FL_IMAGE_FLEX )
 		return -1;
 
-    if (!description || !read_pixels || !identify)
+    if ( ! description || ! read_pixels || ! identify )
 		description = read_pixels = 0;
 
-    if (flimage_io == 0)
+    if ( flimage_io == 0 )
     {
 		nimage = 1;		/* sentinel */
-		flimage_io = fl_calloc(3, sizeof(*flimage_io));
+		flimage_io = fl_calloc( 3, sizeof *flimage_io );
     }
     else
-    {
-		flimage_io = fl_realloc(flimage_io, sizeof(*flimage_io) * (nimage + 2));
-    }
+		flimage_io = fl_realloc( flimage_io,
+								 ( nimage + 2 ) * sizeof *flimage_io );
 
     k = nimage;
 
     /* find out if the image format is already installed. Replace if yes */
 
-    for (i = 0; flimage_io[i].formal_name; i++)
+    for ( i = 0; flimage_io[ i ].formal_name; i++ )
     {
-		if (strcmp(flimage_io[i].formal_name, formal_name) == 0 &&
-			strcmp(flimage_io[i].short_name, short_name) == 0)
+		if (    strcmp( flimage_io[ i ].formal_name, formal_name ) == 0
+			 && strcmp( flimage_io[ i ].short_name, short_name ) == 0 )
 		{
-			M_err("AddFormat", "%s already supported. Replaced", short_name);
+			M_err( "flimage_add_format",
+				   "%s already supported. Replaced", short_name );
 			k = i + 1;
 		}
     }
@@ -1092,12 +1073,12 @@ flimage_add_format( const char          * formal_name,
 
     nimage += k == nimage;
 
-    if (!strcmp(short_name, "ppm") || !strcmp(short_name, "pgm"))
+    if ( ! strcmp( short_name, "ppm" ) || ! strcmp( short_name, "pgm" ) )
 		thisIO->annotation = 1;
 
     /* sentinel */
 
-    ( ++thisIO )->formal_name = 0;
+    ( ++thisIO )->formal_name = NULL;
 
     return k;
 }
@@ -1112,24 +1093,24 @@ flimage_set_annotation_support( int in,
 {
      --in;
 
-     if(in < 0 || in >= nimage)
+     if ( in < 0 || in >= nimage )
 		 return;
-     flimage_io[in].annotation = (flag != 0);
+     flimage_io[ in ].annotation = flag != 0;
 }
 
 
-#define VN(a)  {a,#a}
-static FL_VN_PAIR types[] =
+#define VN( a )  {a,#a}
+static FL_VN_PAIR types[ ] =
 {
-    VN(FL_IMAGE_NONE),
-    VN(FL_IMAGE_CI),
-    VN(FL_IMAGE_MONO),
-    VN(FL_IMAGE_RGB),
-    VN(FL_IMAGE_PACKED),
-    VN(FL_IMAGE_GRAY),
-    VN(FL_IMAGE_GRAY16),
-    VN(FL_IMAGE_FLEX),
-    VN(-1)
+    VN( FL_IMAGE_NONE ),
+    VN( FL_IMAGE_CI ),
+    VN( FL_IMAGE_MONO ),
+    VN( FL_IMAGE_RGB ),
+    VN( FL_IMAGE_PACKED ),
+    VN( FL_IMAGE_GRAY ),
+    VN( FL_IMAGE_GRAY16 ),
+    VN( FL_IMAGE_FLEX ),
+    VN( -1)
 };
 
 
@@ -1137,9 +1118,9 @@ static FL_VN_PAIR types[] =
  ***************************************/
 
 const char *
-flimage_type_name(int type)
+flimage_type_name( int type )
 {
-    return fl_get_vn_name(types, type);
+    return fl_get_vn_name( types, type );
 }
 
 
@@ -1147,9 +1128,9 @@ flimage_type_name(int type)
  ***************************************/
 
 int
-flimage_get_number_of_formats(void)
+flimage_get_number_of_formats( void )
 {
-    add_default_formats();
+    add_default_formats( );
     return nimage - 1;
 }
 
@@ -1162,17 +1143,17 @@ flimage_get_number_of_formats(void)
 const FLIMAGE_FORMAT_INFO *
 flimage_get_format_info( int n )
 {
-    static FLIMAGE_FORMAT_INFO fmt_return[MaxInfoBuffer];
+    static FLIMAGE_FORMAT_INFO fmt_return[ MaxInfoBuffer ];
     static int k;
     FLIMAGE_IO *io;
     FLIMAGE_FORMAT_INFO *fmtinfo;
 
-    add_default_formats();
+    add_default_formats( );
 
-    if (n <= 0 || n > nimage)
+    if ( n <= 0 || n > nimage )
 		return 0;
 
-    fmtinfo = fmt_return + (k++%MaxInfoBuffer);
+    fmtinfo = fmt_return + k++ % MaxInfoBuffer;
     n--;
     io = flimage_io + n;
 
@@ -1181,8 +1162,8 @@ flimage_get_format_info( int n )
     fmtinfo->extension = io->extension;
     fmtinfo->type = io->type;
     fmtinfo->annotation = io->annotation;
-    fmtinfo->read_write =   (io->write_image ? FLIMAGE_WRITABLE : 0)
-             	          | (io->read_pixels ? FLIMAGE_READABLE : 0);
+    fmtinfo->read_write =   ( io->write_image ? FLIMAGE_WRITABLE : 0 )
+             	          | ( io->read_pixels ? FLIMAGE_READABLE : 0 );
 
     return fmtinfo;
 }
@@ -1192,45 +1173,49 @@ flimage_get_format_info( int n )
  ***************************************/
 
 void
-flimage_replace_image(FL_IMAGE * im, int w, int h,
-		      void *r, void *g, void *b)
+flimage_replace_image( FL_IMAGE * im,
+					   int        w,
+					   int        h,
+					   void     * r,
+					   void     * g,
+					   void     * b )
 {
     /* if we replace an image, all old backingstore pixels are invalid. Free
        all images */
 
-    flimage_invalidate_pixels(im);
+    flimage_invalidate_pixels( im );
 
     im->w = w;
     im->h = h;
 
-    if (im->type == FL_IMAGE_RGB)
+    if ( im->type == FL_IMAGE_RGB )
     {
-		fl_free_matrix(im->red);
-		fl_free_matrix(im->green);
-		fl_free_matrix(im->blue);
-		fl_free_matrix(im->alpha);
+		fl_free_matrix( im->red );
+		fl_free_matrix( im->green );
+		fl_free_matrix( im->blue );
+		fl_free_matrix( im->alpha );
 		im->red = r;
 		im->green = g;
 		im->blue = b;
 
 		/* dont' have to preserve the alpha. remember to doc it */
 
-		im->alpha = fl_get_matrix(h, w, sizeof(**im->alpha));
+		im->alpha = fl_get_matrix( h, w, sizeof **im->alpha );
     }
-    else if (FL_IsCI(im->type))
+    else if ( FL_IsCI( im->type ) )
     {
-		fl_free_matrix(im->ci);
+		fl_free_matrix( im->ci );
 		im->ci = r;
     }
-    else if (FL_IsGray(im->type))
+    else if ( FL_IsGray( im->type ) )
     {
-		fl_free_matrix(im->gray);
+		fl_free_matrix( im->gray );
 		im->gray = r;
     }
     else
     {
-		M_err("ReplaceImage", "InternalError: bad type=%s",
-			  flimage_type_name(im->type));
+		M_err( "flimage_replace_image", "InternalError: bad type=%s",
+			   flimage_type_name( im->type ) );
 		return;
     }
 
@@ -1250,24 +1235,21 @@ flimage_replace_image(FL_IMAGE * im, int w, int h,
  ***************************************/
 
 void
-flimage_add_comments(FL_IMAGE * im, const char *s, int len)
+flimage_add_comments( FL_IMAGE   * im,
+					  const char * s,
+					  int          len )
 {
     /* null entry clears comments */
 
-    if (!s || len <= 0)
+    if ( ! s || len <= 0 )
     {
-		if (im->comments)
-			fl_free(im->comments);
-		im->comments = 0;
+		fl_safe_free( im->comments );
 		im->comments_len = 0;
 		return;
     }
 
-    if (im->comments)
-		im->comments = fl_realloc(im->comments, im->comments_len + len + 1);
-    else
-		im->comments = fl_malloc(len + 1);
-    strcpy(im->comments + im->comments_len, s);
+	im->comments = fl_realloc( im->comments, im->comments_len + len + 1 );
+    strcpy( im->comments + im->comments_len, s );
     im->comments_len += len;
 }
 
@@ -1336,7 +1318,7 @@ copy_pixels( FL_IMAGE * dim,
     {
 		case FLIMAGE_RGB:
 			size = sim->w * sim->h * sizeof **sim->red;
-			memcpy( dim->red[ 0 ], sim->red[ 0 ], size );
+			memcpy( dim->red[ 0 ],   sim->red[ 0 ],   size );
 			memcpy( dim->green[ 0 ], sim->green[ 0 ], size );
 			memcpy( dim->blue[ 0 ],  sim->blue[ 0 ],  size );
 			memcpy( dim->alpha[0 ],  sim->alpha[ 0 ], size );
@@ -1355,7 +1337,7 @@ copy_pixels( FL_IMAGE * dim,
 			break;
 
 		default:
-			M_err( "CopyPixel", "Bad type: %d", sim->type );
+			M_err( "copy_pixel", "Bad type: %d", sim->type );
 			break;
     }
 }
@@ -1368,7 +1350,7 @@ FL_IMAGE *
 flimage_dup( FL_IMAGE * sim )
 {
     if ( ! sim || ! sim->w || sim->type == FLIMAGE_NONE )
-		return 0;
+		return NULL;
 
     return flimage_dup_( sim, 1 );
 }
@@ -1400,21 +1382,21 @@ flimage_dup_( FL_IMAGE * sim,
 
     /* reset all pointers */
 
-    im->red = im->green = im->blue = im->alpha = 0;
-    im->red_lut = im->green_lut = im->blue_lut = im->alpha_lut = 0;
-    im->gray = 0;
-    im->ci = 0;
-    im->red16 = im->green16 = im->blue16 = im->alpha16 = 0;
-    im->packed = 0;
-    im->wlut = 0;
-    im->llut[ 0 ] = im->llut[ 1 ] = im->llut[ 2 ] = 0;
-    im->extra_io_info = 0;
-    im->info = 0;
+    im->red = im->green = im->blue = im->alpha = NULL;
+    im->red_lut = im->green_lut = im->blue_lut = im->alpha_lut = NULL;
+    im->gray = NULL;
+    im->ci = NULL;
+    im->red16 = im->green16 = im->blue16 = im->alpha16 = NULL;
+    im->packed = NULL;
+    im->wlut = NULL;
+    im->llut[ 0 ] = im->llut[ 1 ] = im->llut[ 2 ] = NULL;
+    im->extra_io_info = NULL;
+    im->info = NULL;
 
     flimage_getmem( im );
 
     im->available_type = im->type;
-    im->next = 0;
+    im->next = NULL;
     strcpy( im->infile = infile, sim->infile );
     strcpy( im->outfile = outfile, sim->outfile );
 
@@ -1437,7 +1419,7 @@ flimage_dup_( FL_IMAGE * sim,
 		memcpy( im->alpha_lut, sim->alpha_lut, mapsize );
     }
 
-    im->io_spec = 0;
+    im->io_spec = NULL;
     if ( sim->spec_size && sim->io_spec )
     {
 		im->io_spec = fl_malloc( sim->spec_size );
@@ -1452,16 +1434,16 @@ flimage_dup_( FL_IMAGE * sim,
     im->ximage = 0;
     im->visual = 0;
     im->pixels = 0;
-    im->pixmap = 0;
-    im->ximage = 0;
+    im->pixmap = None;
+    im->ximage = NULL;
     im->info = 0;
-    im->win = 0;
-    im->gc = im->textgc = im->markergc = 0;
-    im->text = 0;
+    im->win = None;
+    im->gc = im->textgc = im->markergc = None;
+    im->text = NULL;
     im->ntext = 0;
     im->marker = 0;
     im->nmarkers = 0;
-    im->comments = 0;
+    im->comments = NULL;
     im->comments_len = 0;
 
     return im;
@@ -1514,7 +1496,7 @@ flimage_free_rgb( FL_IMAGE * im )
     fl_free_matrix( im->green );
     fl_free_matrix( im->blue );
     fl_free_matrix( im->alpha );
-    im->red = im->green = im->blue = im->alpha = 0;
+    im->red = im->green = im->blue = im->alpha = NULL;
     im->available_type &= ~FL_IMAGE_RGB;
 }
 
@@ -1526,7 +1508,7 @@ void
 flimage_free_ci( FL_IMAGE * im )
 {
     fl_free_matrix( im->ci );
-    im->ci = 0;
+    im->ci = NULL;
     im->available_type = ~FL_IMAGE_CI;
 }
 
@@ -1538,7 +1520,7 @@ void
 flimage_free_gray( FL_IMAGE * im )
 {
     fl_free_matrix( im->gray );
-    im->gray = 0;
+    im->gray = NULL;
     im->available_type = ~FL_IMAGE_GRAY;
 }
 
@@ -1609,6 +1591,7 @@ fl_value_to_bits( unsigned int val )
 
     for ( i = 1; ( 1u << i ) < val; i++ )
 		/* empty */ ;
+
     return i;
 }
 
@@ -1642,13 +1625,13 @@ flimage_find_imageIO( const char *fmt )
 
     for ( ; io && io->formal_name; io++ )
     {
-		if (    ! strcmp(io->formal_name, fmt)
-			 || ! strcmp(io->short_name, fmt)
-			 || ! strcmp(io->extension, fmt) )
+		if (    ! strcmp( io->formal_name, fmt )
+			 || ! strcmp( io->short_name, fmt )
+			 || ! strcmp( io->extension, fmt ) )
 			return io;
     }
 
-    return 0;
+    return NULL;
 }
 
 
@@ -1670,6 +1653,7 @@ write_marker( FLIMAGE_MARKER * m,
     fprintf( fp, " %d %d %d", r, g, b );
     FL_UNPACK( m->bcolor, r, g, b );
     fprintf( fp, " %d %d %d\n", r, g, b );
+
     return 0;
 }
 
@@ -1795,8 +1779,8 @@ write_text( FLIMAGE_TEXT * t,
     }
     putc( RB, fp );
 
-    fprintf( fp, " %s %d %d %d %s %d %d", get_font_style(t->style), t->size,
-			 t->x, t->y, fl_get_vn_name(align_vn, t->align), t->angle,
+    fprintf( fp, " %s %d %d %d %s %d %d", get_font_style( t->style ), t->size,
+			 t->x, t->y, fl_get_vn_name( align_vn, t->align ), t->angle,
 			 t->nobk );
     FL_UNPACK( t->color, r, g, b );
     fprintf( fp, " %d %d %d", r, g, b );
@@ -1849,6 +1833,7 @@ read_text( FLIMAGE_TEXT * t,
 		t->color = FL_PACK( r, g, b );
 		t->bcolor = FL_PACK( br, bg, bb );
     }
+
     return n == 14 ? 0 : -1;
 }
 
@@ -1868,6 +1853,7 @@ skip_line( FILE * fp )
     }
     else
 		ungetc( c, fp );
+
     return c == '#' && c != EOF;
 }
 
