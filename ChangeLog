@@ -1,3 +1,21 @@
+2008-04-30 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/goodie_msg.c: Added function
+
+	  void fl_show_msg( const char * fmt, ... )
+
+	The first argument is a printf-like format string,
+	followed by as many arguments as required by the
+	format specifiers in the format string. This simplfies
+	outputting freely formatted messages.
+
+	Changed fl_show_message() to avoid an upper limit
+	of 2048 characters on the total length of the three
+	strings passed to it.
+
+	Added #defines for fl_hide_messages and fl_hide_msg -
+	they are just alternative names for fl_hide_message().
+
 2008-04-29 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/fselect.c: If a callback for a file selector is

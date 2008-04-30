@@ -54,22 +54,30 @@ FL_EXPORT void fl_set_goodies_font(
 /*********** messages and questions **************/
 
 FL_EXPORT void fl_show_message(
-		const char * s1,
-		const char * s2,
-		const char * s3
+		const char *,
+		const char *,
+		const char *
 		);
 
 FL_EXPORT void fl_show_messages(
-		const char * str
+		const char *
+		);
+
+FL_EXPORT void fl_show_msg(
+		const char *,
+		...
 		);
 
 FL_EXPORT void fl_hide_message(
 		void
 		);
 
+#define fl_hide_msg       fl_hide_message
+#define fl_hide_messages  fl_hide_message
+
 FL_EXPORT int fl_show_question(
-		const char * str,
-		int			 ans
+		const char *,
+		int
 		);
 
 FL_EXPORT void fl_hide_question(
@@ -77,10 +85,10 @@ FL_EXPORT void fl_hide_question(
 		);
 
 FL_EXPORT void fl_show_alert(
-		const char * title,
-		const char * str1,
-		const char * str2,
-		int			 c
+		const char *,
+		const char *,
+		const char *,
+		int
 		);
 
 FL_EXPORT void fl_hide_alert(
@@ -88,8 +96,8 @@ FL_EXPORT void fl_hide_alert(
 		);
 
 FL_EXPORT const char * fl_show_input(
-		const char * str1,
-		const char * defstr
+		const char *,
+		const char *
 		);
 
 FL_EXPORT void fl_hide_input(
@@ -97,36 +105,36 @@ FL_EXPORT void fl_hide_input(
 		);
 
 FL_EXPORT const char * fl_show_simple_input(
-		const char * str1,
-		const char * defstr
+		const char *,
+		const char *
 		);
 
 
 FL_EXPORT int fl_show_colormap(
-		int oldcol
+		int
 		);
 
 
 /********* choices *****************/
 
 FL_EXPORT int fl_show_choices(
-		const char * msg,
-		int			 numb,
-		const char * c1,
-		const char * c2,
-		const char * c3,
-		int			 def
+		const char *,
+		int,
+		const char *,
+		const char *,
+		const char *,
+		int
 		);
 
 FL_EXPORT int fl_show_choice(
-		const char * m1,
-		const char * m2,
-		const char * m3,
-		int			 numb,
-		const char * c1,
-		const char * c2,
-		const char * c3,
-		int			 def
+		const char *,
+		const char *,
+		const char *,
+		int,
+		const char *,
+		const char *,
+		const char *,
+		int
 		);
 
 FL_EXPORT void fl_hide_choice(
@@ -134,9 +142,9 @@ FL_EXPORT void fl_hide_choice(
 		);
 
 FL_EXPORT void fl_set_choice_shortcut(
-		const char * a,
-		const char * b,
-		const char * c
+		const char *,
+		const char *,
+		const char *
 		);
 
 #define fl_set_choices_shortcut fl_set_choice_shortcut
@@ -145,9 +153,9 @@ FL_EXPORT void fl_set_choice_shortcut(
 /************ one liner ***************/
 
 FL_EXPORT void fl_show_oneliner(
-		const char * s,
-		FL_Coord	 x,
-		FL_Coord	 y
+		const char *,
+		FL_Coord,
+		FL_Coord
 		);
 
 FL_EXPORT void fl_hide_oneliner(
@@ -155,32 +163,32 @@ FL_EXPORT void fl_hide_oneliner(
 		);
 
 FL_EXPORT void fl_set_oneliner_font(
-		int style,
-		int size
+		int,
+		int
 		);
 
 FL_EXPORT void fl_set_oneliner_color(
-		FL_COLOR tc,
-		FL_COLOR bc
+		FL_COLOR,
+		FL_COLOR
 		);
 
 
 FL_EXPORT void fl_set_tooltip_font(
-		int style,
-		int size
+		int,
+		int
 		);
 
 FL_EXPORT void fl_set_tooltip_color(
-		FL_COLOR tc,
-		FL_COLOR bc
+		FL_COLOR,
+		FL_COLOR
 		);
 
 FL_EXPORT void fl_set_tooltip_boxtype(
-		int bt
+		int
 		);
 
 FL_EXPORT void fl_set_tooltip_lalign(
-		int align
+		int
 		);
 
 
@@ -204,25 +212,25 @@ typedef struct
 #endif
 
 FL_EXPORT FL_PID_T fl_exe_command(
-		const char * cmd,
-		int			 block
+		const char *,
+		int
 		);
 
 FL_EXPORT int fl_end_command(
-		FL_PID_T pid
+		FL_PID_T
 		);
 
 FL_EXPORT int fl_check_command(
-		FL_PID_T pid
+		FL_PID_T
 		);
 
 FL_EXPORT FILE * fl_popen(
-		const char * cmd,
-		const char * type
+		const char *,
+		const char *
 		);
 
 FL_EXPORT int fl_pclose(
-		FILE * stream
+		FILE *
 		);
 
 FL_EXPORT int fl_end_all_command(
@@ -230,7 +238,7 @@ FL_EXPORT int fl_end_all_command(
 		);
 
 FL_EXPORT void fl_show_command_log(
-		int border
+		int
 		);
 
 FL_EXPORT void fl_hide_command_log(
@@ -242,12 +250,12 @@ FL_EXPORT void fl_clear_command_log(
 		);
 
 FL_EXPORT void fl_addto_command_log(
-		const char * s
+		const char *
 		);
 
 FL_EXPORT void fl_set_command_log_position(
-		int x,
-		int y
+		int,
+		int
 		);
 
 FL_EXPORT FD_CMDLOG * fl_get_command_log_fdstruct(
@@ -285,14 +293,14 @@ typedef struct
 } FD_FSELECTOR;
 
 FL_EXPORT int fl_use_fselector(
-		int n
+		int
 		);
 
 FL_EXPORT const char * fl_show_fselector(
-		const char * message,
-		const char * dir,
-		const char * pat,
-		const char * fname
+		const char *,
+		const char *,
+		const char *,
+		const char *
 		);
 
 FL_EXPORT void fl_hide_fselector(
@@ -300,19 +308,19 @@ FL_EXPORT void fl_hide_fselector(
 		);
 
 FL_EXPORT void fl_set_fselector_fontsize(
-		int fsize
+		int
 		);
 
 FL_EXPORT void fl_set_fselector_fontstyle(
-		int fstyle
+		int
 		);
 
 FL_EXPORT void fl_set_fselector_placement(
-		int place
+		int
 		);
 
 FL_EXPORT void fl_set_fselector_border(
-		int b
+		int
 		);
 
 
@@ -320,8 +328,8 @@ FL_EXPORT void fl_set_fselector_border(
 			fl_set_fselector_border( ( b ) ? FL_TRANSIENT : FL_FULLBORDER )
 
 FL_EXPORT void fl_set_fselector_callback(
-		FL_FSCB   fscb,
-		void    * data
+		FL_FSCB,
+		void *
 		);
 
 FL_EXPORT const char * fl_get_filename(
@@ -337,11 +345,11 @@ FL_EXPORT const char * fl_get_pattern(
 		);
 
 FL_EXPORT int fl_set_directory(
-		const char * p
+		const char *
 		);
 
 FL_EXPORT void fl_set_pattern(
-		const char * s
+		const char *
 		);
 
 FL_EXPORT void fl_refresh_fselector(
@@ -349,17 +357,17 @@ FL_EXPORT void fl_refresh_fselector(
 		);
 
 FL_EXPORT void fl_add_fselector_appbutton(
-		const char * label,
-		void		 ( * cb )( void * ),
-		void       * data
+		const char *,
+		void ( * )( void * ),
+		void *
 		);
 
 FL_EXPORT void fl_remove_fselector_appbutton(
-		const char * label
+		const char *
 		);
 
 FL_EXPORT void fl_disable_fselector_cache(
-		int yes
+		int
 		);
 
 FL_EXPORT void fl_invalidate_fselector_cache(
@@ -379,11 +387,11 @@ FL_EXPORT void fl_hide_fselector(
 		);
 
 FL_EXPORT void fl_set_fselector_filetype_marker(
-		int dir,
-		int fifo,
-		int sock,
-		int cdev,
-		int bdev
+		int,
+		int,
+		int,
+		int,
+		int
 		);
 
 
@@ -394,8 +402,8 @@ FL_EXPORT void fl_set_fselector_filetype_marker(
 		fl_set_form_title( fl_get_fselector_form( ), s )
 
 FL_EXPORT int fl_goodies_atclose(
-		FL_FORM * form,
-		void    * data
+		FL_FORM *,
+		void *
 		);
 
 

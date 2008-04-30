@@ -111,7 +111,7 @@ fl_show_messages( const char *str )
     if ( ! alreadyon )
 		fl_deactivate_all_forms( );
 
-    fl_show_form(fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "message");
+    fl_show_form( fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Message" );
 
     fl_update_display( 1 );
 
@@ -127,15 +127,75 @@ fl_show_messages( const char *str )
  ***************************************/
 
 void
+fl_show_msg( const char * fmt,
+			 ... )
+{
+	char *buf,
+		 *p;
+	int len;
+	int written;
+	va_list ap;
+
+	if ( ! fmt )
+		return;
+
+	/* Try to come up with an estimate of the length required for the
+	   whole string */
+
+	len = strlen( fmt ) + 1;
+
+	for ( p = strchr( fmt, '%' ); *p; strchr( ++p, '%' ) )
+		len += 15;
+
+	buf = fl_malloc( len );
+
+	while ( 1 )
+	{
+		va_start( ap, fmt );
+		written = fl_vsnprintf( buf, len, fmt, ap );
+		va_end( ap );
+
+		/* Take care: e.g. in older libc versiobs a negative value got
+		   returned if the buffer wasn't large enough while newer ones
+		   follow C99 and return the length of the string that would be
+		   needed (but without the trailing '\0') */
+
+		if ( written > -1 && written < len )
+			break;
+
+		len = written < 0 ? ( 2 * len ) : ( written + 1 );
+		buf = fl_realloc( buf, len );
+	}
+
+	fl_show_messages( buf );
+
+	fl_free( buf );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
 fl_show_message( const char * s1,
 				 const char * s2,
 				 const char * s3 )
 {
-    char buf[ 2048 ];
+	char *buf;
+	size_t len;
 
-    fl_snprintf( buf, sizeof buf, "%s\n%s\n%s",
-				 s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "");
-    fl_show_messages( buf );
+	len =   ( s1 ? strlen( s1 ) : 0 ) + 1
+		  + ( s2 ? strlen( s2 ) : 0 ) + 1
+		  + ( s3 ? strlen( s3 ) : 0 ) + 1;
+
+	buf = fl_malloc( len );
+
+	fl_snprintf( buf, len, "%s\n%s\n%s",
+				 s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "" );
+
+	fl_show_messages( buf );
+
+	fl_free( buf );
 }
 
 
