@@ -56,7 +56,7 @@ typedef struct
 static FD_msg *
 create_msg( void )
 {
-    FD_msg *fdui = fl_calloc(1, sizeof *fdui );
+    FD_msg *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fl_inverted_y;
     int oldu = fl_get_coordunit( );
 
@@ -64,11 +64,16 @@ create_msg( void )
     fl_set_coordunit( FL_COORD_PIXEL );
 
     fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
+
     fdui->str = fl_add_box( FL_FLAT_BOX, 20, 15, 420, 65, "" );
+
     fdui->but = fl_add_button( FL_RETURN_BUTTON, 185, 94, 90, 27, "OK" );
     fl_set_form_hotobject( fdui->form, fdui->but );
+
     fl_end_form( );
+
     fl_register_raw_callback( fdui->form, FL_ALL_EVENT, fl_goodies_preemptive );
+
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
 
     if ( fl_cntl.buttonFontSize != FL_DEFAULT_SIZE )
@@ -144,7 +149,7 @@ fl_show_msg( const char * fmt,
 
 	len = strlen( fmt ) + 1;
 
-	for ( p = strchr( fmt, '%' ); *p; strchr( ++p, '%' ) )
+	for ( p = strchr( fmt, '%' ); p; p = strchr( ++p, '%' ) )
 		len += 15;
 
 	buf = fl_malloc( len );
