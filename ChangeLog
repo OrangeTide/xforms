@@ -1,3 +1,10 @@
+2008-05-01 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/goodies_msg.c: New function fl_show_msg()
+	now works. The window size for fl_show_messages(),
+	fl_show_message() and fl_show_msg() automatically
+	gets adapted to fit the size of the text shown.
+
 2008-04-30 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/goodie_msg.c: Added function

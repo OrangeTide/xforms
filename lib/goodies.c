@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_gds = "$Id: goodies.c,v 1.8 2008/03/12 16:00:24 jtt Exp $";
+char *fl_id_gds = "$Id: goodies.c,v 1.9 2008/05/01 21:36:47 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -126,8 +126,8 @@ fl_get_goodie_title( FL_FORM *    form,
 
 
 
-static int goodie_style = -1,
-           goodie_size;
+static int goodie_style = FL_NORMAL_STYLE,
+           goodie_size = FL_DEFAULT_SIZE;
 
 
 /***************************************

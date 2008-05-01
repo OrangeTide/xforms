@@ -54,20 +54,34 @@ typedef struct
  ***************************************/
 
 static FD_msg *
-create_msg( void )
+create_msg( const char * str )
 {
     FD_msg *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fl_inverted_y;
     int oldu = fl_get_coordunit( );
+	int style,
+		size;
+	int w,
+		h;
+	int bw,
+		bh;
 
     fl_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-    fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
+	fl_get_goodies_font( &style, &size );
+	fl_get_string_dimension( style, size, str, strlen( str ), &w, &h );
 
-    fdui->str = fl_add_box( FL_FLAT_BOX, 20, 15, 420, 65, "" );
+	bw = FL_max( 400, w + 40 );
+	bh = h + 77;
 
-    fdui->but = fl_add_button( FL_RETURN_BUTTON, 185, 94, 90, 27, "OK" );
+    fdui->form = fl_bgn_form( FL_UP_BOX, bw, bh );
+
+    fdui->str = fl_add_box( FL_FLAT_BOX, ( bw - w ) / 2,
+							20, w, h, str );
+
+    fdui->but = fl_add_button( FL_RETURN_BUTTON, ( bw - 90 ) / 2, bh - 37,
+							   90, 27, "Ok" );
     fl_set_form_hotobject( fdui->form, fdui->but );
 
     fl_end_form( );
@@ -90,31 +104,25 @@ static FD_msg *fd_msg;
 
 
 /***************************************
- * Shows a simple message with an OK button
  ***************************************/
 
 void
 fl_show_messages( const char *str )
 {
-    static int first = 1;
-    int alreadyon;
+    if ( fd_msg )
+	{
+		fl_hide_form( fd_msg->form );
+		fl_free_form( fd_msg->form );
+		fd_msg = NULL;
+	}
+	else
+		fl_deactivate_all_forms( );
 
-    if ( ! fd_msg )
-		fd_msg = create_msg( );
+	fd_msg = create_msg( str );
 
-    if ( first )
-    {
-		fl_parse_goodies_label( fd_msg->but, FLOKLabel );
-		first = 0;
-    }
+	fl_parse_goodies_label( fd_msg->but, FLOKLabel );
 
     fl_handle_goodie_font( fd_msg->but, fd_msg->str );
-
-    alreadyon = fd_msg->form->visible;
-    fl_set_object_label( fd_msg->str, str );
-
-    if ( ! alreadyon )
-		fl_deactivate_all_forms( );
 
     fl_show_form( fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Message" );
 
@@ -124,6 +132,8 @@ fl_show_messages( const char *str )
 		/* empty */ ;
 
     fl_hide_form( fd_msg->form );
+	fl_free_form( fd_msg->form );
+	fd_msg = NULL;
     fl_activate_all_forms( );
 }
 
