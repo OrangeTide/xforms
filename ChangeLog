@@ -1,3 +1,22 @@
+2008-05-03 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* fdesign/fd_forms.c: Removed limit on number of
+	forms that can be created or read from a file. Few
+	changes to error handling.
+
+	* fdesign/fd_control.c: Removed limit on number of
+	objects in a form that can be dealt with.
+
+	* fdesign/fd_groups.c: Removed limit on number of
+	groups that can be dealt with.
+
+	* fdesign/fd/ui_theforms.fd: Changed browser for
+	groups to be multi instead of hold browser.
+
+	* lib/events.c: Bug I introduced myself in function
+	fl_handle_event_callbacks() repaired. Thanks to
+	Andrea Scopece for finding the problem.
+
 2008-05-01 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib/goodies_msg.c: New function fl_show_msg()

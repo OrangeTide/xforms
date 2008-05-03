@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.21 2008/04/28 20:09:39 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.22 2008/05/03 12:44:47 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -727,7 +727,7 @@ void
 fl_set_object_label( FL_OBJECT  * ob,
 					 const char * label )
 {
-    if ( ob == NULL )
+    if ( ! ob )
     {
 		fl_error( "fl_set_object_label", "NULL object." );
 		return;

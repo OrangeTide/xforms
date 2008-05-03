@@ -115,19 +115,20 @@ extern FD_Opt fdopt;
 #define FD_V1    13000
 /*#define FD_V2    13001 */
 #if 0
-#define TRANY(obj,form) obj->y = form->h - obj->h - obj->y
+#define TRANY( obj, form ) obj->y = form->h - obj->h - obj->y
 #else
-#define TRANY(obj,form)
+#define TRANY( obj, form )
 #endif
 
 
-#define ShiftIsDown(mask)    (mask & ShiftMask)
+#define ShiftIsDown( mask )    ( mask & ShiftMask )
 
 
 /******** in fd_main.c    *********/
 
 extern long main_window;	/* The identifier of the main window */
-extern FL_Coord winw, winh;
+extern FL_Coord winw,
+                winh;
 extern int changed;		    /* Whether the file has changed. */
 extern char main_name[ ];	/* Main creation routine name */
 
@@ -140,74 +141,89 @@ extern float get_step_size( void );	/* returns the stepsize */
 
 /* sets the bounding box in which the drawing occurs */
 
-extern void set_bounding_box(float, float, float, float);
+extern void set_bounding_box( float,
+							  float,
+							  float,
+							  float );
 
 /* returns the position of the mouse in world coordinates */
 
-extern void get_mouse_pos(float *, float *);
+extern void get_mouse_pos( float *,
+						   float * );
 
 /* drag a box around until the user releases a mouse button */
 
-extern void move_box(float *, float *, float *, float *, int);
+extern void move_box( float *,
+					  float *,
+					  float *,
+					  float *,
+					  int );
 
 /* scales a box until the user releases a left mouse button */
 
-extern void scale_box(float *, float *, float *, float *);
+extern void scale_box( float *,
+					   float *,
+					   float *,
+					   float * );
 
 /******** in fd_select.c *********/
 
 /* Contains the routines that deal with the maintenance of the
    current selection of objects */
 
-extern int is_selected(FL_OBJECT *);	/* Returns whether the object is
+extern int is_selected( FL_OBJECT * );	/* Returns whether the object is
 										   selected. */
-extern void addto_selection(FL_OBJECT *);	/* Adds an object to a
+extern void addto_selection( FL_OBJECT * );	/* Adds an object to a
 											   selection */
-extern void addgroupto_selection(FL_OBJECT *);	/* Adds a group of objects to
-												   a selection */
-extern void deletefrom_selection(FL_OBJECT *);	/* Deletes an object from a
-												   selection */
-extern void clear_selection(void);	/* Clears the current selection */
-extern void resize_selection(FL_Coord, FL_Coord);
-extern void move_selection(FL_Coord, FL_Coord);
-extern void deletegroupfrom_selection(FL_OBJECT *);	/* Deletes a group of
-													   objects from a
+extern void addgroupto_selection( FL_OBJECT * );	/* Adds a group of objects
+													   to a selection */
+extern void deletefrom_selection( FL_OBJECT * );	/* Deletes an object from a
 													   selection */
-extern void draw_selbox(void);	/* Draws the box around the selected objects */
-extern void handle_select(const XEvent *);	/* Change the selection when
-											   user puhed mouse. */
-extern void handle_move(const XEvent *);	/* Moves or scales the
+extern void clear_selection( void );	/* Clears the current selection */
+extern void resize_selection( FL_Coord,
+							  FL_Coord );
+extern void move_selection( FL_Coord,
+							FL_Coord );
+extern void deletegroupfrom_selection( FL_OBJECT * );	/* Deletes a group of
+														   objects from a
+													   selection */
+extern void draw_selbox( void ); /* Draws the box around the selected objects */
+extern void handle_select( const XEvent * );	/* Change the selection when
+												   user puhed mouse. */
+extern void handle_move( const XEvent * );	/* Moves or scales the
 											   selection. */
-extern void select_all(void);	/* Selects all objectsin the form */
-extern void change_selection(void);	/* Changes the atributes of the
+extern void select_all( void );	        /* Selects all objectsin the form */
+extern void change_selection( void );	/* Changes the atributes of the
 									   selection */
-extern void change_selected_objects(FL_OBJECT *);
-extern void align_selection(int);	/* Aligns the objects in the
+extern void change_selected_objects( FL_OBJECT * );
+extern void align_selection( int );	/* Aligns the objects in the
 									   selection */
-extern void show_selection(void);	/* Makes the selection visible. */
-extern void hide_selection(void);	/* Makes the selection invisible. */
-extern void raise_selection(void);	/* Raises the selection */
-extern void lower_selection(void);	/* Lower the selection */
-extern void cut_selection(void);	/* Deletes all objects in the
+extern void show_selection( void );	/* Makes the selection visible. */
+extern void hide_selection( void );	/* Makes the selection invisible. */
+extern void raise_selection( void );	/* Raises the selection */
+extern void lower_selection( void );	/* Lower the selection */
+extern void cut_selection( void );	/* Deletes all objects in the
 									   selection */
-extern void paste_selection(void);	/* Puts elements from buffer into
+extern void paste_selection( void );	/* Puts elements from buffer into
 									   form */
-extern void copy_selection(void);	/* Copies objects in selection to
+extern void copy_selection( void );	/* Copies objects in selection to
 									   buffer */
-extern void *dup_selection(void);
-extern void set_selection(void *);
-extern void free_dupped_selection(void *);
-extern void next_selection(void), prev_selection(void);
-extern void group_selection(void);	/* Turns objects in the selection
-									   into a group. */
-extern void flatten_selection(void);	/* Removes begin and end groups from
+extern void *dup_selection( void );
+extern void set_selection( void * );
+extern void free_dupped_selection( void * );
+extern void next_selection( void );
+extern void prev_selection( void );
+extern void group_selection( void );	/* Turns objects in the selection
+										   into a group. */
+extern void flatten_selection( void );	/* Removes begin and end groups from
 										   the selection. */
 
 /******** in fd_attribs.c **********/
 
 /* Contains routines to set and change attributes of objects. */
 
-int change_object(FL_OBJECT *, int);	/* changes the settings for object */
+int change_object( FL_OBJECT *,		   	/* changes the settings for object */
+				   int );
 
 void change_type(FL_OBJECT *, int);	/* Changes the type of a particular
 									   object. */
@@ -218,7 +234,7 @@ void set_attribs(FL_OBJECT *, int, int, int, int, int, float, int, char[]);
 void set_miscattribs(FL_OBJECT *, unsigned int, unsigned int, unsigned int);
 
 void set_label(FL_OBJECT *, const char *);	/* Sets the object label
-						   (interpreting \n's). */
+											   (interpreting \n's). */
 void set_shortcut(FL_OBJECT *, const char *);
 char *get_label(const FL_OBJECT *, int);	/* Returns the object label
 						   (turning NL's into \n's). */
@@ -251,26 +267,25 @@ void output_callbacks(FILE *, FRM *, int);
 
 /* Contains the routines that maintain the collection of forms. */
 
-#define MAXFRM	   64		/* Maximal number of forms allowed. */
-#define MAXGROUP   64		/* Maximal number of groups in a form. */
-#define MAXOBJS    64		/* max object on a form               */
-
 extern FL_FORM *cur_form;
 
 /* The current form under construction */
 
-extern void redraw_the_form(int);
+extern void redraw_the_form( int );
 
 /* Redraws the current form. The argument indicates whether the background
    should be redrawn. */
 
-extern void reshape_form_background(FL_Coord, FL_Coord);
+extern void reshape_form_background( FL_Coord,
+									 FL_Coord );
 
 /* loads the forms from a file */
 
-extern int load_forms(int, char *, int);
+extern int load_forms( int,
+					   const char *,
+					   int);
 
-extern int save_forms(char *);
+extern int save_forms( const char * );
 
 /* saves the forms to a file, returns whether actually saved */
 

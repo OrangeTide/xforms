@@ -58,7 +58,7 @@ typedef struct
 static FD_alert *
 create_alert( void )
 {
-    FD_alert *fdui = fl_calloc(1, sizeof *fdui );
+    FD_alert *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fl_inverted_y;
     int oldu = fl_get_coordunit( );
     FL_OBJECT *ob;

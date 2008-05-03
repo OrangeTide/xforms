@@ -78,11 +78,13 @@ create_form_input( void )
     int oldu = fl_get_coordunit( );
 
     fl_set_coordunit( FL_COORD_PIXEL );
+
     fdui->form = fl_bgn_form( FL_NO_BOX, 410, 120 );
     fl_set_form_title( fdui->form, "Input" );
 
     obj = fl_add_box( FL_UP_BOX, 0, 0, 410, 120, "" );
     fl_set_object_bw( obj, -2 );
+
     obj = fl_add_frame( FL_ENGRAVED_FRAME, 8, 9, 394, 67, "" );
 
     fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 20, 33, 370, 30, "" );
@@ -101,6 +103,7 @@ create_form_input( void )
     fl_end_form( );
 
     fl_adjust_form_size( fdui->form );
+
     fdui->form->fdui = fdui;
     fl_set_coordunit( oldu );
 
@@ -163,10 +166,9 @@ fl_show_input( const char *str1,
 
     fl_winfocus( fd_input->form->window );
 
-    do
-    {
-		retobj = fl_do_only_forms( );
-    } while ( retobj != fd_input->ok && retobj != fd_input->cancel );
+	while (    ( retobj = fl_do_only_forms( ) ) != fd_input->ok
+			&& retobj != fd_input->cancel )
+		/* empty */ ;
 
     fl_hide_form( fd_input->form );
     fl_activate_all_forms( );

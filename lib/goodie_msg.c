@@ -109,6 +109,12 @@ static FD_msg *fd_msg;
 void
 fl_show_messages( const char *str )
 {
+	if ( ! str || ! * str )
+	{
+		M_warn( "fl_show_messages", "NULL or empty string" );
+		return;
+	}
+
     if ( fd_msg )
 	{
 		fl_hide_form( fd_msg->form );
@@ -151,8 +157,11 @@ fl_show_msg( const char * fmt,
 	int written;
 	va_list ap;
 
-	if ( ! fmt )
+	if ( ! fmt || ! * fmt )
+	{
+		M_warn( "fl_show_msg", "NULL or empty format string" );
 		return;
+	}
 
 	/* Try to come up with an estimate of the length required for the
 	   whole string */
@@ -203,6 +212,12 @@ fl_show_message( const char * s1,
 		  + ( s2 ? strlen( s2 ) : 0 ) + 1
 		  + ( s3 ? strlen( s3 ) : 0 ) + 1;
 
+	if ( len == 3 )
+	{
+		M_warn( "fl_show_message", "Only NULL or empty strings" );
+		return;
+	}
+
 	buf = fl_malloc( len );
 
 	fl_snprintf( buf, len, "%s\n%s\n%s",
@@ -222,4 +237,6 @@ fl_hide_message( void )
 {
     if ( fd_msg && fd_msg->form->visible )
 		fl_object_qenter( fd_msg->but );
+	else
+		M_warn( "fl_hide_message", "No message box is shown" );
 }

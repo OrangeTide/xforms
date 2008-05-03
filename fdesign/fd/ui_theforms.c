@@ -97,7 +97,7 @@ create_form_control( void )
     fl_set_object_lalign( obj, FL_ALIGN_TOP );
     fl_set_object_callback( obj, form_cb, 0 );
 
-    fdui->groupbrowser = obj = fl_add_browser( FL_HOLD_BROWSER, 20, 174, 140, 70, "Groups" );
+    fdui->groupbrowser = obj = fl_add_browser( FL_MULTI_BROWSER, 20, 174, 140, 70, "Groups" );
     fl_set_object_lalign( obj, FL_ALIGN_TOP );
     fl_set_object_callback( obj, group_cb, 0 );
 

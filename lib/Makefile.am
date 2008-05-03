@@ -64,7 +64,6 @@ libforms_la_SOURCES = \
 	goodie_choice.c \
 	goodie_input.c \
 	goodie_msg.c \
-	goodie_salert.c \
 	goodies.c \
 	goodie_sinput.c \
 	goodie_yesno.c \

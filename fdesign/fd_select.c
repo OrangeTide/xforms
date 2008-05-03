@@ -164,7 +164,7 @@ addto_selection( FL_OBJECT * obj )
 {
     if ( backf )
     {
-		M_warn( "", "ignoring backf" );
+		M_warn( "", "ignoring object with backface" );
 		return;			/* Don't add objects with backface */
     }
 

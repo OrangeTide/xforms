@@ -429,7 +429,7 @@ argument: 0
 
 --------------------
 class: FL_BROWSER
-type: HOLD_BROWSER
+type: MULTI_BROWSER
 box: 20 174 140 70
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_YELLOW

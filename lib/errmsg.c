@@ -39,7 +39,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.11 2008/04/29 13:43:48 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.12 2008/05/03 12:44:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -62,7 +62,7 @@ char *id_errm = "$Id: errmsg.c,v 1.11 2008/04/29 13:43:48 jtt Exp $";
 extern int errno;		/* system error no            */
 
 #ifndef HAVE_STRERROR
-extern char *sys_errlist[];
+extern char *sys_errlist[ ];
 #endif
 
 #define MAXESTR 2048		/* maximum error string len   */
@@ -81,8 +81,8 @@ static FILE *errlog;		/* where the msg is going       */
 static int threshold;		/* current threshold            */
 static int req_level;		/* requested message level      */
 static const char *file;	/* source file name             */
-static int lineno;		/* line no. in that file        */
-static int gout;		/* if demand graphics           */
+static int lineno;		    /* line no. in that file        */
+static int gout;		    /* if demand graphics           */
 static Gmsgout_ gmout;
 
 
@@ -116,9 +116,9 @@ const char *fl_get_syserror_msg( void )
     const char  *pp;
 
 #ifdef HAVE_STRERROR
-    pp = errno ? strerror(errno) : "";
+    pp = errno ? strerror( errno ) : "";
 #else
-    pp = errno ? sys_errlist[errno]:"";
+    pp = errno ? sys_errlist[ errno ] : "";
 #endif
     return pp;
 }
@@ -160,7 +160,9 @@ P_errmsg( const char * func,
 		  ... )
 {
     va_list args;
-    char *where, *why,  line[ 20 ];
+    char *where,
+		 *why,
+		 line[ 20 ];
     const char *pp;
     static char emsg[ MAXESTR + 1 ];
 
@@ -170,7 +172,7 @@ P_errmsg( const char * func,
     /* if there is nothing to do, do nothing ! */
 
 #if 0
-    if ( req_level >= threshold && ( ! gout || !gmout ) )
+    if ( req_level >= threshold && ( ! gout || ! gmout ) )
 #else
     /*
      * by commenting out gout, graphics output is also controled by threshold
@@ -198,8 +200,8 @@ P_errmsg( const char * func,
 			strcpy( line, "?" );
 
 		where = *func ?
-			vstrcat( "In ", func, " [", file, " ", line, "] ", ( char * ) 0 ) :
-			vstrcat( "In ", file, "[", line, "]: ", ( char * ) 0 );
+			vstrcat( "In ", func, " [", file, ":", line, "] ", ( char * ) 0 ) :
+			vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
     }
     else
     {
@@ -209,24 +211,24 @@ P_errmsg( const char * func,
 
     /* now find out why */
 
-    emsg[0] = '\0';
+    emsg[ 0 ] = '\0';
     why = 0;
 
     /* parse the fmt */
 
-    if (fmt && *fmt)
+    if ( fmt && *fmt )
 	{
-		va_start(args, fmt);
-		fl_vsnprintf(emsg, sizeof(emsg)-5, fmt, args);
-		va_end(args);
+		va_start( args, fmt );
+		fl_vsnprintf( emsg, sizeof emsg - 5, fmt, args );
+		va_end( args );
 	}
 
     /* check if there is any system errors */
 
-    if((pp = fl_get_syserror_msg()) && *pp)
+    if ( ( pp = fl_get_syserror_msg( ) ) && *pp )
     {
-		strncat(strcat(emsg, "--"), pp, MAXESTR);
-        emsg[MAXESTR-1] = '\0';
+		strncat( strcat( emsg, "--" ), pp, MAXESTR );
+        emsg[ MAXESTR - 1 ] = '\0';
     }
 
     why = emsg;
@@ -236,10 +238,8 @@ P_errmsg( const char * func,
     if ( req_level < threshold )
 		fprintf( errlog, "%s%s\n", where, why );
 
-    if (gout && gmout)
-    {
-		gmout("Warning", where, why,  0);
-    }
+    if ( gout && gmout )
+		gmout( "Warning", where, why,  0 );
 
     free_vstrcat( where );
 

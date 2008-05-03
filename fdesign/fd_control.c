@@ -81,10 +81,10 @@ void
 filemenu_callback( FL_OBJECT * ob,
 				   long        data  FL_UNUSED_ARG )
 {
-    int n = fl_get_menu(ob) - 1;
+    int n = fl_get_menu( ob ) - 1;
 
-    if (n >= 0 && fmenu[n].callback)
-	fmenu[n].callback(0, 0);
+    if ( n >= 0 && fmenu[ n ].callback )
+	fmenu[ n ].callback( 0, 0 );
 }
 
 
@@ -98,22 +98,22 @@ exit_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int rep;
 
-    if (changed)
+    if ( changed )
     {
-		fl_set_choices_shortcut("Ss#s", "Ee#e", "Rr#r");
-		rep = fl_show_choice("WARNING", "", "Changes have not been saved.",
-							 3, "Save", "Exit", "Return", 1);
-		if (rep == 1)
+		fl_set_choices_shortcut( "Ss#s", "Ee#e", "Rr#r" );
+		rep = fl_show_choice( "WARNING", "", "Changes have not been saved.",
+							  3, "Save", "Exit", "Return", 1 );
+		if ( rep == 1 )
 		{
-			if (!save_forms(NULL))
+			if ( ! save_forms( NULL ) )
 				return;
 		}
-		else if (rep == 3)
+		else if ( rep == 3 )
 			return;
     }
 
-    fl_finish();
-    exit(0);
+    fl_finish( );
+    exit( 0 );
 }
 
 
@@ -125,8 +125,8 @@ void
 esc_exit_cb( FL_OBJECT * obj,
 			 long        arg  FL_UNUSED_ARG )
 {
-    if (fl_get_button_numb(obj) > 3)
-		exit_cb(0, 0);
+    if ( fl_get_button_numb( obj ) > 3 )
+		exit_cb( 0, 0 );
 }
 
 
@@ -138,7 +138,7 @@ void
 mergeforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			   long        arg  FL_UNUSED_ARG )
 {
-    load_forms(TRUE, NULL, 0);
+    load_forms( TRUE, NULL, 0 );
     changed = 1;
     loadedfile = 0;
 }
@@ -152,7 +152,7 @@ void
 saveforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			  long        arg  FL_UNUSED_ARG )
 {
-    changed = !save_forms(loadedfile_fullpath);
+    changed = ! save_forms( loadedfile_fullpath );
 }
 
 
@@ -163,7 +163,7 @@ void
 saveforms_as_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 				 long        arg  FL_UNUSED_ARG )
 {
-    changed = !save_forms(0);
+    changed = ! save_forms( NULL );
 }
 
 
@@ -247,10 +247,10 @@ void
 objectmenu_callback( FL_OBJECT * ob,
 					 long        data  FL_UNUSED_ARG )
 {
-    int n = fl_get_menu(ob) - 1;
+    int n = fl_get_menu( ob ) - 1;
 
-    if (n >= 0)
-		func_cb(0, obmenu[n].n);
+    if ( n >= 0 )
+		func_cb( 0, obmenu[ n ].n );
 }
 
 
@@ -273,9 +273,10 @@ void
 formmenu_callback( FL_OBJECT * ob,
 				   long        data  FL_UNUSED_ARG )
 {
-    int n = fl_get_menu(ob) - 1;
-    if (n >= 0 && fmmenu[n].callback)
-		fmmenu[n].callback(0, 0);
+    int n = fl_get_menu( ob ) - 1;
+
+    if ( n >= 0 && fmmenu[ n ].callback )
+		fmmenu[n].callback( 0, 0 );
 }
 
 
@@ -302,15 +303,16 @@ void
 optionmenu_callback( FL_OBJECT * ob,
 					 long        data  FL_UNUSED_ARG )
 {
-    int n = fl_get_menu(ob) - 1;
-    char buf[32];
+    int n = fl_get_menu( ob ) - 1;
+    char buf[ 32 ];
 
-    if (n >= 0)
+    if ( n >= 0 )
     {
-		*(opmenu[n].p) = !*(opmenu[n].p);
-		sprintf(buf, "%s%%%c", opmenu[n].entry, *(opmenu[n].p) ? 'B' : 'b');
-		fl_replace_menu_item(fd_control->optionmenu, n + 1, buf);
-		(fd_show_palette ? show_pallette : hide_pallette) ();
+		* ( opmenu[ n ].p ) = ! * ( opmenu[ n ].p );
+		sprintf( buf, "%s%%%c", opmenu[ n ].entry,
+				 * ( opmenu[ n ].p ) ? 'B' : 'b' );
+		fl_replace_menu_item( fd_control->optionmenu, n + 1, buf );
+		( fd_show_palette ? show_pallette : hide_pallette )( );
     }
 }
 
@@ -321,7 +323,7 @@ optionmenu_callback( FL_OBJECT * ob,
 void
 reset_pallette_menu_status(void)
 {
-    fl_set_menu_item_mode(fd_control->optionmenu, 2, FL_PUP_BOX);
+    fl_set_menu_item_mode( fd_control->optionmenu, 2, FL_PUP_BOX );
     fd_show_palette = 0;
 }
 
@@ -333,10 +335,10 @@ static void
 deactivate_control( FL_FORM * form  FL_UNUSED_ARG,
 					void    * data  FL_UNUSED_ARG )
 {
-    fl_set_object_lcol(fd_control->title, FL_SLATEBLUE);
-    fl_set_object_lcol(fd_control->menubar_group, FL_INACTIVE);
-    fl_set_object_lcol(fd_control->shortcut_group, FL_INACTIVE);
-    fl_set_object_lcol(fd_control->fkey_group, FL_INACTIVE);
+    fl_set_object_lcol( fd_control->title, FL_SLATEBLUE );
+    fl_set_object_lcol( fd_control->menubar_group, FL_INACTIVE );
+    fl_set_object_lcol( fd_control->shortcut_group, FL_INACTIVE );
+    fl_set_object_lcol( fd_control->fkey_group, FL_INACTIVE );
 }
 
 
@@ -347,10 +349,10 @@ static void
 activate_control( FL_FORM * form  FL_UNUSED_ARG,
 				  void    * data  FL_UNUSED_ARG )
 {
-    fl_set_object_lcol(fd_control->title, FL_BLUE);
-    fl_set_object_lcol(fd_control->menubar_group, FL_BLACK);
-    fl_set_object_lcol(fd_control->shortcut_group, FL_BLACK);
-    fl_set_object_lcol(fd_control->fkey_group, FL_BLACK);
+    fl_set_object_lcol( fd_control->title, FL_BLUE );
+    fl_set_object_lcol( fd_control->menubar_group, FL_BLACK );
+    fl_set_object_lcol( fd_control->shortcut_group, FL_BLACK );
+    fl_set_object_lcol( fd_control->fkey_group, FL_BLACK );
 }
 
 
@@ -359,85 +361,84 @@ activate_control( FL_FORM * form  FL_UNUSED_ARG,
  ***************************************/
 
 void
-control_init(FD_control * ui)
+control_init( FD_control * ui )
 {
     static int control_initialized;
-    MenuEntry *m, *me;
-    char buf[32];
+    MenuEntry *m,
+		      *me;
+    char buf[ 32 ];
     int i;
 
-    if (control_initialized)
+    if ( control_initialized )
 		return;
 
     control_initialized = 1;
 
 #ifdef __sgi
-    fl_set_object_lsize(ui->filemenu, FL_SMALL_SIZE);
-    fl_set_object_lsize(ui->formmenu, FL_SMALL_SIZE);
-    fl_set_object_lsize(ui->groupmenu, FL_SMALL_SIZE);
-    fl_set_object_lsize(ui->objectmenu, FL_SMALL_SIZE);
-    fl_set_object_lsize(ui->optionmenu, FL_SMALL_SIZE);
+    fl_set_object_lsize( ui->filemenu, FL_SMALL_SIZE );
+    fl_set_object_lsize( ui->formmenu, FL_SMALL_SIZE );
+    fl_set_object_lsize( ui->groupmenu, FL_SMALL_SIZE );
+    fl_set_object_lsize( ui->objectmenu, FL_SMALL_SIZE );
+    fl_set_object_lsize( ui->optionmenu, FL_SMALL_SIZE );
 #endif
 
-    fl_set_form_atdeactivate(ui->control, deactivate_control, ui);
-    fl_set_form_atactivate(ui->control, activate_control, ui);
+    fl_set_form_atdeactivate( ui->control, deactivate_control, ui );
+    fl_set_form_atactivate( ui->control, activate_control, ui );
 
-    fl_set_object_dblbuffer(ui->selmsg, 1);
-    fl_set_object_dblbuffer(ui->sizestatus, 1);
-    fl_set_object_dblbuffer(ui->oristatus, 1);
+    fl_set_object_dblbuffer( ui->selmsg, 1 );
+    fl_set_object_dblbuffer( ui->sizestatus, 1 );
+    fl_set_object_dblbuffer( ui->oristatus, 1 );
 
-    fl_set_object_color(ui->formbrowser, FL_COL1, FL_WHITE);
+    fl_set_object_color( ui->formbrowser, FL_COL1, FL_WHITE );
 
     /* file menu */
 
-    for (m = fmenu, me = m + NFM, i = 1; m < me; m++, i++)
+    for ( m = fmenu, me = m + NFM, i = 1; m < me; m++, i++ )
     {
-		fl_addto_menu(ui->filemenu, m->entry);
-		fl_set_menu_item_shortcut(ui->filemenu, i, m->sc);
+		fl_addto_menu( ui->filemenu, m->entry );
+		fl_set_menu_item_shortcut( ui->filemenu, i, m->sc );
     }
 
     /* form menu */
 
-    for (m = fmmenu, me = m + NFMM, i = 1; m < me; m++, i++)
+    for ( m = fmmenu, me = m + NFMM, i = 1; m < me; m++, i++ )
     {
-		fl_addto_menu(ui->formmenu, m->entry);
-		fl_set_menu_item_shortcut(ui->formmenu, i, m->sc);
+		fl_addto_menu( ui->formmenu, m->entry );
+		fl_set_menu_item_shortcut( ui->formmenu, i, m->sc );
     }
 
     /* group menu */
 
-    for (m = gmenu, me = m + NGM, i = 1; m < me; m++, i++)
+    for ( m = gmenu, me = m + NGM, i = 1; m < me; m++, i++ )
     {
-		fl_addto_menu(ui->groupmenu, m->entry);
-		fl_set_menu_item_shortcut(ui->groupmenu, i, m->sc);
+		fl_addto_menu( ui->groupmenu, m->entry );
+		fl_set_menu_item_shortcut( ui->groupmenu, i, m->sc );
     }
 
     /* object menu */
 
-    for (m = obmenu, me = m + NOBM, i = 1; m < me; m++, i++)
+    for ( m = obmenu, me = m + NOBM, i = 1; m < me; m++, i++ )
     {
-		fl_addto_menu(ui->objectmenu, m->entry);
-		fl_set_menu_item_shortcut(ui->objectmenu, i, m->sc);
+		fl_addto_menu( ui->objectmenu, m->entry );
+		fl_set_menu_item_shortcut( ui->objectmenu, i, m->sc );
     }
 
     /* option menu.  all are binary items */
 
-    for (m = opmenu, me = m + NOPM, i = 1; m < me; m++, i++)
+    for ( m = opmenu, me = m + NOPM, i = 1; m < me; m++, i++ )
     {
-		if (strncmp(m->entry, "Emit %s", 7) == 0)
+		if ( strncmp( m->entry, "Emit %s", 7 ) == 0 )
 		{
-			static char tmpbuf[128];
+			static char tmpbuf[ 128 ];
 
-			sprintf(tmpbuf, m->entry, convertor[fdopt.language].lang_name);
+			sprintf( tmpbuf, m->entry, convertor[ fdopt.language ].lang_name );
 			m->entry = tmpbuf;
 		}
 
-		sprintf(buf, "%s%%%c", m->entry, *(m->p) ? 'B' : 'b');
-		fl_addto_menu(ui->optionmenu, buf);
-		fl_set_menu_item_shortcut(ui->optionmenu, i, m->sc);
+		sprintf( buf, "%s%%%c", m->entry, * ( m->p ) ? 'B' : 'b' );
+		fl_addto_menu( ui->optionmenu, buf );
+		fl_set_menu_item_shortcut( ui->optionmenu, i, m->sc );
     }
-
-/*    fl_adjust_form_size(ui->objectmenu->form); */
 }
 
 
@@ -453,34 +454,38 @@ show_geometry( const char * s  FL_UNUSED_ARG,
 			   FL_Coord     w,
 			   FL_Coord     h )
 {
-    char buf[128];
-    static FL_Coord lx = -1, ly, lw = -1, lh;
+    char buf[ 128 ];
+    static FL_Coord lx = -1,
+		            ly,
+		            lw = -1,
+		            lh;
 
     /* canonicalize rectangle */
-    if (w < 0)
+
+    if ( w < 0 )
     {
 		x += w;
 		w = -w;
     }
 
-    if (h < 0)
+    if ( h < 0 )
     {
 		y += h;
 		h = -h;
     }
 
-    if (x != lx || y != ly)
+    if ( x != lx || y != ly )
     {
-		sprintf(buf, "(%d %d)", x, y);
-		fl_set_object_label(fd_control->oristatus, buf);
+		sprintf( buf, "(%d %d)", x, y );
+		fl_set_object_label( fd_control->oristatus, buf );
 		lx = x;
 		ly = y;
     }
 
-    if (w != lw || h != lh)
+    if ( w != lw || h != lh )
     {
-		sprintf(buf, "(%d %d)", w, h);
-		fl_set_object_label(fd_control->sizestatus, buf);
+		sprintf( buf, "(%d %d)", w, h );
+		fl_set_object_label( fd_control->sizestatus, buf );
 		lw = w;
 		lh = h;
     }
@@ -491,28 +496,33 @@ show_geometry( const char * s  FL_UNUSED_ARG,
  ***************************************/
 
 void
-show_selmessage(FL_OBJECT * sel[], int n)
+show_selmessage( FL_OBJECT * sel[ ],
+				 int         n )
 {
-    char objname[MAX_VAR_LEN], cbname[MAX_VAR_LEN], argname[MAX_VAR_LEN];
-    char buf[MAX_VAR_LEN];
+    char objname[ MAX_VAR_LEN ],
+		 cbname[ MAX_VAR_LEN ],
+		 argname[ MAX_VAR_LEN ];
+    char buf[ MAX_VAR_LEN ];
 
-    buf[0] = '\0';
-    if (n == 1)
+    buf[ 0 ] = '\0';
+
+    if ( n == 1 )
     {
-		get_object_name(sel[0], objname, cbname, argname);
-		sprintf(buf, "%s Name:%s  %s%s",
-				find_type_name(sel[0]->objclass, sel[0]->type),
-				objname[0] ? objname : "None",
-				cbname[0] ? "Callback: " : "",
-				cbname[0] ? cbname : "");
+		get_object_name( sel[ 0 ], objname, cbname, argname );
+		sprintf( buf, "%s Name:%s  %s%s",
+				 find_type_name( sel[ 0 ]->objclass, sel[ 0 ]->type ),
+				 objname[ 0 ] ? objname : "None",
+				 cbname[ 0 ]  ? "Callback: " : "",
+				 cbname[ 0 ]  ? cbname : "" );
     }
     else
     {
-		if (sel[0]->objclass == FL_BEGIN_GROUP)
+		if ( sel[ 0 ]->objclass == FL_BEGIN_GROUP )
 			n -= 2;
-		sprintf(buf, "%d objects", n);
+		sprintf( buf, "%d objects", n );
     }
-    fl_set_object_label(fd_control->selmsg, buf);
+
+    fl_set_object_label( fd_control->selmsg, buf );
 }
 
 
@@ -534,9 +544,10 @@ typedef struct
 	    h;
 } GEOM;
 
-static short osize[MAXOBJS];
-static GEOM oldgeom[MAXOBJS];
-static FL_Coord formw, formh;	/* original form size */
+static short *osize = NULL;
+static GEOM *oldgeom = NULL;
+static FL_Coord formw,
+                formh;	         /* original form size */
 
 
 /***************************************
@@ -546,26 +557,38 @@ static void
 fix_button_label_size( FL_FORM * form,
 					   int       save )
 {
-    FL_OBJECT *ob = form->first;
+    FL_OBJECT *ob;
     int i;
 
-    if (fd_buttonLabelSize == 0)
+    if ( fd_buttonLabelSize == 0 )
 		return;
 
-    for (i = 0; ob && i < MAXOBJS; ob = ob->next)
+	if ( save )
+	{
+		for ( i = 0, ob = form->first; ob; ob = ob->next )
+			if ( ob->objclass == FL_BUTTON )
+				i++;
+
+		osize = fl_realloc( osize, i * sizeof *osize );
+	}
+
+    for ( i = 0, ob = form->first; ob; ob = ob->next )
     {
-		if (ob->objclass == FL_BUTTON)
+		if ( ob->objclass == FL_BUTTON )
 		{
-			if (save)
+			if ( save )
 			{
-				osize[i++] = ob->lsize;
-				if (ob->lsize == FL_NORMAL_FONT)
+				osize[ i++ ] = ob->lsize;
+				if ( ob->lsize == FL_NORMAL_FONT )
 					ob->lsize = fd_buttonLabelSize;
 			}
 			else
-				ob->lsize = osize[i++];
+				ob->lsize = osize[ i++ ];
 		}
     }
+
+	if ( ! save )
+		fl_safe_free( osize );
 }
 
 
@@ -579,10 +602,10 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int i;
     FL_OBJECT *ob;
-    GEOM *p = oldgeom;
+    GEOM *p;
     int resizeable;
 
-    if (cur_form == NULL)
+    if ( cur_form == NULL )
 		return;
 
     fl_deactivate_form(fd_control->control);
@@ -593,8 +616,12 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     formw = cur_form->w;
     formh = cur_form->h;
 
-    for (i = 0, ob = cur_form->first; ob && i < MAXOBJS;
-		 ob = ob->next, i++, p++)
+    for ( i = 0, ob = cur_form->first; ob; ob = ob->next, i++ )
+		/* empty */ ;
+
+	p = oldgeom = fl_realloc( oldgeom, i * sizeof *oldgeom );
+
+    for ( ob = cur_form->first; ob; ob = ob->next, i++, p++ )
     {
 		p->x = ob->x;
 		p->y = ob->y;
@@ -602,38 +629,35 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		p->h = ob->h;
     }
 
-    if (i >= MAXOBJS)
-		fprintf(stderr, "resizing may cause accumulation errors\n");
-
     /* change button label size to the one requested */
 
-    fix_button_label_size(thetestform, 1);
+    fix_button_label_size( thetestform, 1 );
 
     cur_form = NULL;
-    redraw_the_form(1);
+    redraw_the_form( 1 );
 
-    fl_clear_browser(fd_test->browser);
+    fl_clear_browser( fd_test->browser );
 
-    resizeable = (strstr(get_placement(thetestform), "FREE") != 0);
+    resizeable = strstr( get_placement( thetestform ), "FREE" ) != NULL;
 
-    if (resizeable)
+    if ( resizeable )
     {
-		fl_set_form_minsize(thetestform, formw >= 10 ? formw / 2 : formw,
-							formh >= 10 ? formh / 2 : formh);
-		fl_set_form_maxsize(thetestform, fl_scrw, fl_scrh);
+		fl_set_form_minsize( thetestform, formw >= 10 ? formw / 2 : formw,
+							 formh >= 10 ? formh / 2 : formh );
+		fl_set_form_maxsize( thetestform, fl_scrw, fl_scrh );
     }
     else
     {
-		fl_set_form_minsize(thetestform, formw, formh);
-		fl_set_form_maxsize(thetestform, formw, formh);
+		fl_set_form_minsize( thetestform, formw, formh );
+		fl_set_form_maxsize( thetestform, formw, formh );
     }
 
-    fl_show_form(thetestform,
-				 resizeable ? FL_PLACE_CENTERFREE : FL_PLACE_CENTER,
-				 FL_FULLBORDER, "Test Form");
+    fl_show_form( thetestform,
+				  resizeable ? FL_PLACE_CENTERFREE : FL_PLACE_CENTER,
+				  FL_FULLBORDER, "Test Form" );
 
-    fl_show_form(fd_test->test, FL_PLACE_POSITION | FL_PLACE_FREE,
-				 FL_FULLBORDER, "Test");
+    fl_show_form( fd_test->test, FL_PLACE_POSITION | FL_PLACE_FREE,
+				  FL_FULLBORDER, "Test" );
 }
 
 
@@ -645,34 +669,37 @@ void
 stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			 long        arg  FL_UNUSED_ARG )
 {
-    int i;
     FL_OBJECT *ob;
     GEOM *p = oldgeom;
 
-    if (thetestform == NULL)
+    if ( thetestform == NULL )
 		return;
 
-    fl_hide_form(fd_test->test);
-    fl_hide_form(thetestform);
+    fl_hide_form( fd_test->test );
+    fl_hide_form( thetestform );
 
-    fix_button_label_size(thetestform, 0);
+    fix_button_label_size( thetestform, 0 );
 
     cur_form = thetestform;
     thetestform = NULL;
 
-    fl_set_form_size(cur_form, formw, formh);
+    fl_set_form_size( cur_form, formw, formh );
 
-    for (i = 0, ob = cur_form->first; ob && i < MAXOBJS;
-		 ob = ob->next, i++, p++)
-    {
-		ob->x = p->x;
-		ob->y = p->y;
-		ob->w = p->w;
-		ob->h = p->h;
-    }
+	if ( p )
+	{
+		for ( ob = cur_form->first; ob; ob = ob->next, p++ )
+		{
+			ob->x = p->x;
+			ob->y = p->y;
+			ob->w = p->w;
+			ob->h = p->h;
+		}
 
-    redraw_the_form(0);
-    fl_activate_form(fd_control->control);
+		fl_safe_free( oldgeom );
+	}
+
+    redraw_the_form( 0 );
+    fl_activate_form( fd_control->control );
 }
 
 
