@@ -31,7 +31,7 @@
  *
  *  Handle input other than the X event queue. Mostly maintanance
  *  here. Actual input/output handling is triggered in the main loop
- *  via fl_watch_io.
+ *  via fli_watch_io.
  *
  */
 
@@ -65,7 +65,7 @@ static fd_set st_rfds,
               st_efds;
 
 
-static void fl_add_to_freelist( FL_IO_REC * io );
+static void fl_add_to_freelist( FLI_IO_REC * io );
 static void fl_clear_freelist( void );
 
 /***************************************
@@ -76,7 +76,7 @@ static void fl_clear_freelist( void );
 static void
 collect_fd( void )
 {
-    FL_IO_REC *p;
+    FLI_IO_REC *p;
     int nf = 0;
 
     /* initialize the sets */
@@ -87,7 +87,7 @@ collect_fd( void )
 
     /* loop through all requested IOs */
 
-    for ( p = fl_context->io_rec; p; p = p->next )
+    for ( p = fli_context->io_rec; p; p = p->next )
     {
 		if ( p->source < 0 )
 		{
@@ -105,7 +105,7 @@ collect_fd( void )
 			nf = p->source + 1;
     }
 
-    fl_context->num_io = nf;
+    fli_context->num_io = nf;
 }
 
 
@@ -119,18 +119,18 @@ fl_add_io_callback( int              fd,
 					FL_IO_CALLBACK   callback,
 					void           * data )
 {
-    FL_IO_REC *io_rec;
+    FLI_IO_REC *io_rec;
 
     /* create new record and make it the start of the list */
 
     io_rec = fl_malloc( sizeof *io_rec );
-    io_rec->next     = fl_context->io_rec;
+    io_rec->next     = fli_context->io_rec;
     io_rec->callback = callback;
     io_rec->data     = data;
     io_rec->source   = fd;
     io_rec->mask     = mask;
 
-    fl_context->io_rec = io_rec;
+    fli_context->io_rec = io_rec;
 
 	collect_fd( );
 }
@@ -144,10 +144,10 @@ fl_remove_io_callback( int            fd,
 					   unsigned       int mask,
 					   FL_IO_CALLBACK cb )
 {
-    FL_IO_REC *io,
-		      *last;
+    FLI_IO_REC *io,
+		       *last;
 
-    for ( last = io = fl_context->io_rec;
+    for ( last = io = fli_context->io_rec;
 		  io && ! ( io->source == fd && io->callback == cb && io->mask & mask );
 		  last = io, io = io->next )
 		/* empty */ ;
@@ -165,8 +165,8 @@ fl_remove_io_callback( int            fd,
 
 	if ( io->mask == 0 )
 	{
-		if ( io == fl_context->io_rec )
-			fl_context->io_rec = io->next;
+		if ( io == fli_context->io_rec )
+			fli_context->io_rec = io->next;
 		else
 			last->next = io->next;
 
@@ -182,14 +182,14 @@ fl_remove_io_callback( int            fd,
  ***************************************/
 
 void
-fl_watch_io( FL_IO_REC * io_rec,
-			 long        msec )
+fli_watch_io( FLI_IO_REC * io_rec,
+			  long        msec )
 {
     fd_set rfds,
 		   wfds,
 		   efds;
     struct timeval timeout;
-    FL_IO_REC *p;
+    FLI_IO_REC *p;
     int nf;
 
 	fl_clear_freelist( );
@@ -213,7 +213,7 @@ fl_watch_io( FL_IO_REC * io_rec,
     /* now watch it. HP defines rfds to be ints. Althought compiler will
        bark, it is harmless. */
 
-	nf = select( fl_context->num_io, &rfds, &wfds, &efds, &timeout );
+	nf = select( fli_context->num_io, &rfds, &wfds, &efds, &timeout );
 
     if ( nf < 0 )     /* something is wrong. */
     {
@@ -256,11 +256,11 @@ fl_watch_io( FL_IO_REC * io_rec,
  ***************************************/
 
 int
-fl_is_watched_io( int fd )
+fli_is_watched_io( int fd )
 {
-    FL_IO_REC *p;
+    FLI_IO_REC *p;
 
-    for ( p = fl_context->io_rec; p; p = p->next )
+    for ( p = fli_context->io_rec; p; p = p->next )
 		if ( p->source == fd && p->mask )
 			return 1;
 
@@ -274,14 +274,14 @@ fl_is_watched_io( int fd )
 typedef struct free_list_
 {
 	struct free_list_ * next;
-	FL_IO_REC         * io;
+	FLI_IO_REC         * io;
 } Free_List_T;
 
 static Free_List_T *fl = NULL;
 
 
 static void
-fl_add_to_freelist( FL_IO_REC * io )
+fl_add_to_freelist( FLI_IO_REC * io )
 {
 	Free_List_T *cur;
 

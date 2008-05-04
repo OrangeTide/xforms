@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xwd.c,v 1.5 2004/05/18 13:57:40 leeming Exp $
+ * $Id: image_xwd.c,v 1.6 2008/05/04 21:07:58 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -194,9 +194,9 @@ XWD_description(FL_IMAGE * im)
     if ((sp->swap = need_swap))
 	swap_header(header);
 
-    fl_rgbmask_to_shifts(header->red_mask, &sp->rshifts, &sp->rbits);
-    fl_rgbmask_to_shifts(header->green_mask, &sp->gshifts, &sp->gbits);
-    fl_rgbmask_to_shifts(header->blue_mask, &sp->bshifts, &sp->bbits);
+    fli_rgbmask_to_shifts(header->red_mask, &sp->rshifts, &sp->rbits);
+    fli_rgbmask_to_shifts(header->green_mask, &sp->gshifts, &sp->gbits);
+    fli_rgbmask_to_shifts(header->blue_mask, &sp->bshifts, &sp->bbits);
 
     if (sp->gbits > (unsigned int)FL_PCBITS)
     {

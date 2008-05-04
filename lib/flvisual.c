@@ -35,7 +35,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_vi = "$Id: flvisual.c,v 1.7 2008/04/20 13:04:25 jtt Exp $";
+char *fl_id_vi = "$Id: flvisual.c,v 1.8 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -73,7 +73,7 @@ RGBmode_init( int v )
 {
     FL_State *s = fl_state + v;
 
-    fl_xvisual2flstate( s, s->xvinfo );
+    fli_xvisual2flstate( s, s->xvinfo );
 
 #if FL_DEBUG >= ML_WARN
     M_info( "RGBInit", "%s:bits_per_rgb=%d", fl_vclass_name( v ), s->rgb_bits );
@@ -118,7 +118,7 @@ check_user_preference( int * vmode,
     /* here make a guess if incomplete request is made */
 
     if ( reqv >= 0 && reqd == 0 )
-		reqd = fl_depth( reqv );
+		reqd = fli_depth( reqv );
 
     /* if only depth is requested, select a visual */
 
@@ -138,7 +138,7 @@ check_user_preference( int * vmode,
  * in fl_state structure
  ***************************************/
 
-#define setmode( m, n )  ( fl_depth( m ) >= n && fl_mode_capable( m, n ) )
+#define setmode( m, n )  ( fli_depth( m ) >= n && fl_mode_capable( m, n ) )
 
 
 static int
@@ -201,7 +201,7 @@ select_best_visual( void )
 		for ( j = 0; j < 6; j++ )
 			if ( bestv[ j ] )
 				fprintf( stderr, "Best %11s: Id=0x%lx Depth=%2u RGBbits=%d\n",
-						 fl_vclass_name( fl_class( j ) ), bestv[ j ]->visualid,
+						 fl_vclass_name( fli_class( j ) ), bestv[ j ]->visualid,
 						 bestv[ j ]->depth, bestv[ j ]->bits_per_rgb );
     }
 #endif
@@ -249,7 +249,7 @@ select_best_visual( void )
  ***************************************/
 
 int
-fl_initialize_program_visual( void )
+fli_initialize_program_visual( void )
 {
     int vmode,
 		depth;
@@ -264,8 +264,8 @@ fl_initialize_program_visual( void )
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "BestVisual", "Initial visual: %s(ID=0x%lx) depth=%d",
-			fl_vclass_name( vmode ), fl_visual( vmode )->visualid,
-			fl_depth( vmode ) );
+			fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
+			fli_depth( vmode ) );
 #endif
 
     /* check program default, settable by user fl_vmode, fl_vdepth */
@@ -273,7 +273,7 @@ fl_initialize_program_visual( void )
     if ( fl_vmode >= 0 )
 		vmode = fl_vmode;
 
-    depth = fl_vdepth > 0 ? fl_vdepth : fl_depth(vmode);
+    depth = fl_vdepth > 0 ? fl_vdepth : fli_depth(vmode);
 
     M_warn( "BestVisual", "ProgramDefault: %s %d",
 			fl_vclass_name( vmode ), depth);
@@ -343,17 +343,17 @@ fl_initialize_program_visual( void )
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "ProgamVisual", "SelectedVisual: %s(ID=0x%lx) depth=%d",
-			fl_vclass_name( vmode ), fl_visual( vmode )->visualid,
-			fl_depth( vmode ) );
+			fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
+			fli_depth( vmode ) );
 #endif
 
     /* if RGB Visual is supported, need to find out the masks and shifts
        stuff to be used in RGB -> pixel mapping */
 
-    if ( fl_depth( TrueColor ) )
+    if ( fli_depth( TrueColor ) )
 		RGBmode_init( TrueColor );
 
-    if ( fl_depth(DirectColor ) )
+    if ( fli_depth( DirectColor ) )
 		RGBmode_init( DirectColor );
 
     visual_initialized = 1;

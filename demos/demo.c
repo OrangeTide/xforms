@@ -280,8 +280,6 @@ pop_menu( void )
 extern "C"
 #endif
 
-char **fl_get_cmdline_args( int * );
-
 
 /* handles a button push */
 
@@ -293,7 +291,7 @@ dobut( FL_OBJECT * obj  FL_UNUSED_ARG,
     int n = menus[ men ].numb;
     int bn = but2numb( ( int ) arg, n - 1 );
 
-    if (menus[ men ].icommand[ bn ][ 0 ] == '@' )
+    if ( menus[ men ].icommand[ bn ][ 0 ] == '@' )
 		push_menu( menus[ men ].icommand[ bn ] );
     else
     {
@@ -304,8 +302,8 @@ dobut( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 		vv = fl_get_cmdline_args( &c );
 		strcpy( cmd, menus[ men ].icommand[ bn ] );
-		for (i = 1; i < c; i++)
-			strcat( strcat( cmd, " "), vv[ i ] );
+		for ( i = 1; i < c; i++ )
+			strcat( strcat( cmd, " " ), vv[ i ] );
 
         fl_addto_command_log( "running " );
         fl_addto_command_log( cmd );

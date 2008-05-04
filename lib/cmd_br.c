@@ -126,8 +126,8 @@ check_for_activity( PIDList * cur )
     {
 		if ( fl_check_forms( ) == FL_EVENT )
 			fl_XNextEvent( &xev );
-    } while (    fl_is_watched_io( cur->fd_out )
-			  || fl_is_watched_io( cur->fd_err ) );
+    } while (    fli_is_watched_io( cur->fd_out )
+			  || fli_is_watched_io( cur->fd_err ) );
 
     fl_update_display( 1 );
 }

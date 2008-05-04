@@ -40,7 +40,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sysd = "$Id: sysdep.c,v 1.9 2008/03/25 12:41:29 jtt Exp $";
+char *fl_id_sysd = "$Id: sysdep.c,v 1.10 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -240,7 +240,7 @@ fl_gettime( long * sec,
 /***************************************
  ***************************************/
 
-long fl_getpid( void )
+long fli_getpid( void )
 {
     return getpid( );
 }

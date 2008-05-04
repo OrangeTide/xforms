@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_postscript.c,v 1.9 2008/03/19 21:04:22 jtt Exp $
+ * $Id: image_postscript.c,v 1.10 2008/05/04 21:07:57 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -240,7 +240,7 @@ PS_read_pixels( FL_IMAGE * im )
     /* the tmp file pattern will be /tmp/gs_$InputFile_$pid_pageNO */
 
     fl_snprintf( prefix, sizeof prefix,
-				 "gs_%s_%d", file_tail( im->infile ), ( int ) fl_getpid( ) );
+				 "gs_%s_%d", file_tail( im->infile ), ( int ) fli_getpid( ) );
 
     sp->prefix = strdup( prefix );
 

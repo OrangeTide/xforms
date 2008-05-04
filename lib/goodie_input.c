@@ -135,22 +135,22 @@ fl_show_input( const char *str1,
 		fl_set_form_hotobject( fd_input->form, fd_input->ok );
 		fl_set_form_atclose( fd_input->form, fl_goodies_atclose, fd_input->ok );
 		fl_register_raw_callback( fd_input->form, FL_ALL_EVENT,
-								  fl_goodies_preemptive );
+								  fli_goodies_preemptive );
 		fl_inverted_y = oldy;
     }
 
-    fl_handle_goodie_font( fd_input->ok, fd_input->input );
-    fl_handle_goodie_font( fd_input->cancel, fd_input->clear );
+    fli_handle_goodie_font( fd_input->ok, fd_input->input );
+    fli_handle_goodie_font( fd_input->cancel, fd_input->clear );
 
     if ( first )
     {
-		fl_parse_goodies_label( fd_input->ok, FLOKLabel );
-		fl_parse_goodies_label( fd_input->clear, FLInputClearLabel );
-		fl_parse_goodies_label( fd_input->cancel, FLInputCancelLabel );
+		fli_parse_goodies_label( fd_input->ok, FLOKLabel );
+		fli_parse_goodies_label( fd_input->clear, FLInputClearLabel );
+		fli_parse_goodies_label( fd_input->cancel, FLInputCancelLabel );
 		first = 0;
     }
 
-    fl_get_goodie_title( fd_input->form, FLInputTitle );
+    fli_get_goodie_title( fd_input->form, FLInputTitle );
     fl_set_object_label( fd_input->input, str1 );
     fl_set_input( fd_input->input, defstr );
 
@@ -184,5 +184,5 @@ void
 fl_hide_input( void )
 {
     if ( fd_input && fd_input->form->visible )
-		fl_object_qenter( fd_input->cancel );
+		fli_object_qenter( fd_input->cancel );
 }

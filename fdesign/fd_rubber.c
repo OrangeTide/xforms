@@ -224,7 +224,7 @@ ready( void )
     if ( fl_check_forms( ) == FL_EVENT )
     {
 		fl_XNextEvent( &xev );
-		fl_xevent_name( "ready:", &xev );
+		fli_xevent_name( "ready:", &xev );
 		return (   xev.type == ButtonRelease
 				|| ( is_pasting && xev.type == KeyPress ) );
     }
@@ -385,7 +385,7 @@ rectf( FL_Coord x1,
 		w = x2 - x1,
 		h = y2 - y1;
 
-    fl_canonicalize_rect( &x, &y, &w, &h );
+    fli_canonicalize_rect( &x, &y, &w, &h );
     XFillRectangle( fd_display, main_window, fd_gc, x, y, w, h );
 }
 
@@ -404,7 +404,7 @@ rect( FL_Coord x1,
 		     w = x2 - x1,
 		     h = y2 - y1;
 
-    fl_canonicalize_rect( &x, &y, &w, &h );
+    fli_canonicalize_rect( &x, &y, &w, &h );
     XDrawRectangle( fd_display, main_window, fd_gc, x, y, w, h );
 }
 
@@ -420,13 +420,14 @@ fd_clear( int x,
 {
     static GC blk_gc;
 
-    if ( main_window && w >= 0 && h >= 0 )
+    if ( main_window && w > 0 && h > 0 )
     {
 		if ( ! blk_gc )
 		{
 			blk_gc = XCreateGC( fd_display, main_window, 0, 0 );
 			XSetForeground( fd_display, blk_gc, fd_black );
 		}
+
 		XFillRectangle( fd_display, main_window, blk_gc, x, y, w, h );
     }
 }

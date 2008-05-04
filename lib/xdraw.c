@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: xdraw.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_drw = "$Id: xdraw.c,v 1.10 2008/05/04 21:08:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,8 +47,8 @@ char *fl_id_drw = "$Id: xdraw.c,v 1.9 2008/03/19 21:04:23 jtt Exp $";
 #include "flinternal.h"
 
 
-static int mono_dither( unsigned long );
-static void set_current_gc( GC );
+static int fli_mono_dither( unsigned long );
+static void fli_set_current_gc( GC );
 
 static GC dithered_gc;
 
@@ -72,7 +72,7 @@ fl_rectangle( int	   fill,
 			  FL_Coord h,
 			  FL_COLOR col )
 {
-	int bw = fl_dithered( fl_vmode ) && mono_dither( col );
+	int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
 	GC gc = flx->gc;
 	int ( * draw_as )( Display *,
 					   Drawable,
@@ -85,15 +85,15 @@ fl_rectangle( int	   fill,
 	if ( flx->win == None || w <= 0 || h <= 0 )
 		return;
 
-	fl_canonicalize_rect( &x, &y, &w, &h );
+	fli_canonicalize_rect( &x, &y, &w, &h );
 
 	draw_as = fill ? XFillRectangle : XDrawRectangle;
 
 	if ( bw && fill )
 	{
-		set_current_gc( fl_whitegc );
+		fli_set_current_gc( fl_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h );
-		set_current_gc( dithered_gc );
+		fli_set_current_gc( dithered_gc );
 	}
 
 
@@ -101,7 +101,7 @@ fl_rectangle( int	   fill,
 	draw_as( flx->display, flx->win, flx->gc, x, y, w, h );
 
 	if ( bw )
-		set_current_gc( gc );
+		fli_set_current_gc( gc );
 }
 
 
@@ -125,7 +125,7 @@ fl_polygon( int		   fill,
 			int		   n,
 			FL_COLOR   col )
 {
-	int bw = fl_dithered( fl_vmode ) && mono_dither( col );
+	int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
 	GC gc = flx->gc;
 
 	if ( flx->win == None || n <= 0 )
@@ -182,7 +182,7 @@ fl_oval( int	  fill,
 		 FL_Coord h,
 		 FL_COLOR col )
 {
-	int bw = fl_dithered( fl_vmode ) && mono_dither( col );
+	int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
 	GC gc = flx->gc;
 	int ( * draw_as )( Display *,
 					   Drawable,
@@ -201,9 +201,9 @@ fl_oval( int	  fill,
 
 	if ( bw )
 	{
-		set_current_gc( fl_whitegc );
+		fli_set_current_gc( fl_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
-		set_current_gc( dithered_gc );
+		fli_set_current_gc( dithered_gc );
 	}
 
 	fl_color( bw ? FL_BLACK : col );
@@ -212,7 +212,7 @@ fl_oval( int	  fill,
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
 
 	if ( bw )
-		set_current_gc( gc );
+		fli_set_current_gc( gc );
 }
 
 
@@ -257,7 +257,7 @@ fl_ovalarc( int		 fill,
 			int		 dt,
 			FL_COLOR col )
 {
-	int mono = fl_dithered( fl_vmode ) && mono_dither( col );
+	int mono = fli_dithered( fl_vmode ) && fli_mono_dither( col );
 	int ( * draw_as )( Display *,
 					   Drawable,
 					   GC,
@@ -275,10 +275,10 @@ fl_ovalarc( int		 fill,
 
 	if ( mono )
 	{
-		set_current_gc( fl_whitegc );
+		fli_set_current_gc( fl_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
 				 t0 * 6.4, dt * 6.4 );
-		set_current_gc( dithered_gc );
+		fli_set_current_gc( dithered_gc );
 	}
 
 	fl_color( mono ? FL_BLACK : col );
@@ -288,7 +288,7 @@ fl_ovalarc( int		 fill,
 				 t0 * 6.4, dt * 6.4 );
 
 	if ( mono )
-		set_current_gc( fl_state[ fl_vmode ].gc[ 0 ] );
+		fli_set_current_gc( fl_state[ fl_vmode ].gc[ 0 ] );
 }
 
 
@@ -306,7 +306,7 @@ fl_pieslice( int	  fill,
 			 FL_COLOR col )
 {
 	int delta = a2 - a1,
-		bw = fl_dithered( fl_vmode ) && mono_dither( col );
+		bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
 	GC gc = flx->gc;
 	int ( * draw_as )( Display *,
 					   Drawable,
@@ -325,10 +325,10 @@ fl_pieslice( int	  fill,
 
 	if ( bw )
 	{
-		set_current_gc( fl_whitegc );
+		fli_set_current_gc( fl_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
 				 a1 * 6.4, delta * 6.4 );
-		set_current_gc( dithered_gc );
+		fli_set_current_gc( dithered_gc );
 	}
 
 	fl_color( bw ? FL_BLACK : col );
@@ -337,7 +337,7 @@ fl_pieslice( int	  fill,
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
 				 a1 * 6.4, delta * 6.4 );
 	if ( bw )
-		set_current_gc( gc );
+		fli_set_current_gc( gc );
 }
 
 
@@ -361,11 +361,11 @@ fl_lines( FL_POINT * xp,
 
 	/* we may need to break up the request into smaller pieces */
 
-	if ( fl_context->ext_request_size >= n )
+	if ( fli_context->ext_request_size >= n )
 		XDrawLines( flx->display, flx->win, flx->gc, xp, n, CoordModeOrigin );
 	else
 	{
-		int req = fl_context->ext_request_size;
+		int req = fli_context->ext_request_size;
 		int i,
 			nchunks = ( n + ( n / req ) ) / req,
 			left;
@@ -456,6 +456,7 @@ static int lw     = 0,
 		   ls     = LineSolid,
 		   drmode = GXcopy;
 
+
 /***************************************
  ***************************************/
 
@@ -484,13 +485,18 @@ fl_get_linewidth( void )
 }
 
 
+static void fli_xdashedlinestyle( Display *,
+								  GC,
+								  const char *,
+								  int );
+
 /***************************************
  ***************************************/
 
 void
-fl_xlinestyle( Display * d,
-			   GC		 gc,
-			   int		 n )
+fli_xlinestyle( Display * d,
+				GC		 gc,
+				int		 n )
 {
 	static char dots[ ]    = { 2, 4 };
 	static char dotdash[ ] = { 7, 3, 2, 3 };
@@ -505,11 +511,11 @@ fl_xlinestyle( Display * d,
 
 	gcmask = GCLineStyle;
 	if ( n == FL_DOT )
-		fl_xdashedlinestyle( d, gc, dots, 2 );
+		fli_xdashedlinestyle( d, gc, dots, 2 );
 	else if ( n == FL_DOTDASH )
-		fl_xdashedlinestyle( d, gc, dotdash, 4 );
+		fli_xdashedlinestyle( d, gc, dotdash, 4 );
 	else if ( n == FL_LONGDASH )
-		fl_xdashedlinestyle( d, gc, ldash, 2 );
+		fli_xdashedlinestyle( d, gc, ldash, 2 );
 	if ( n > LineDoubleDash )
 		n = LineOnOffDash;
 
@@ -524,7 +530,7 @@ fl_xlinestyle( Display * d,
 void
 fl_linestyle( int n )
 {
-	fl_xlinestyle( flx->display, flx->gc, n );
+	fli_xlinestyle( flx->display, flx->gc, n );
 }
 
 
@@ -562,11 +568,11 @@ fl_drawmode( int request )
 /***************************************
  ***************************************/
 
-void
-fl_xdashedlinestyle( Display	* d,
-					 GC			  gc,
-					 const char * dash,
-					 int		  ndash )
+static void
+fli_xdashedlinestyle( Display	 * d,
+					  GC		   gc,
+					  const char * dash,
+					  int		   ndash )
 {
 	static char default_dash[ ] = { 4, 4 };
 
@@ -607,8 +613,8 @@ fl_dashedlinestyle( const char * dash,
  *	useful as part of event dispatching
  */
 
-XRectangle fl_perm_xcr;
-int fl_perm_clip;
+XRectangle fli_perm_xcr;
+int fli_perm_clip;
 static FL_RECT cur_clip;	/* not includng perm clip, probably should */
 
 
@@ -616,16 +622,16 @@ static FL_RECT cur_clip;	/* not includng perm clip, probably should */
  ***************************************/
 
 void
-fl_set_perm_clipping( FL_Coord x,
-					  FL_Coord y,
-					  FL_Coord w,
-					  FL_Coord h )
+fli_set_perm_clipping( FL_Coord x,
+					   FL_Coord y,
+					   FL_Coord w,
+					   FL_Coord h )
 {
-	fl_perm_clip       = 1;
-	fl_perm_xcr.x      = x;
-	fl_perm_xcr.y      = y;
-	fl_perm_xcr.width  = w;
-	fl_perm_xcr.height = h;
+	fli_perm_clip       = 1;
+	fli_perm_xcr.x      = x;
+	fli_perm_xcr.y      = y;
+	fli_perm_xcr.width  = w;
+	fli_perm_xcr.height = h;
 }
 
 
@@ -633,9 +639,9 @@ fl_set_perm_clipping( FL_Coord x,
  ***************************************/
 
 void
-fl_unset_perm_clipping( void )
+fli_unset_perm_clipping( void )
 {
-	fl_perm_clip = 0;
+	fli_perm_clip = 0;
 }
 
 
@@ -688,10 +694,10 @@ fl_unset_text_clipping( void )
  ***************************************/
 
 void
-fl_get_clipping( FL_Coord * x,
-				 FL_Coord * y,
-				 FL_Coord * w,
-				 FL_Coord * h )
+fli_get_clipping( FL_Coord * x,
+				  FL_Coord * y,
+				  FL_Coord * w,
+				  FL_Coord * h )
 {
 	*x = cur_clip.x;
 	*y = cur_clip.y;
@@ -704,10 +710,10 @@ fl_get_clipping( FL_Coord * x,
  ***************************************/
 
 void
-fl_set_additional_clipping( FL_Coord x,
-							FL_Coord y,
-							FL_Coord w,
-							FL_Coord h )
+fli_set_additional_clipping( FL_Coord x,
+							 FL_Coord y,
+							 FL_Coord w,
+							 FL_Coord h )
 {
 	FL_RECT rect[ 2 ],
 			*r;
@@ -718,7 +724,7 @@ fl_set_additional_clipping( FL_Coord x,
 	rect[ 1 ].width  = w;
 	rect[ 1 ].height = h;
 
-	r = fl_union_rect( rect, rect + 1 );
+	r = fli_union_rect( rect, rect + 1 );
 
 	if ( r != NULL )
 	{
@@ -765,16 +771,16 @@ fl_set_clippings( FL_RECT * xrect,
 void
 fl_unset_clipping( void )
 {
-	if ( ! fl_perm_clip )
+	if ( ! fli_perm_clip )
 	{
 		XSetClipMask( flx->display, flx->gc, None );
 		cur_clip.x = cur_clip.y = cur_clip.width = cur_clip.height = 0;
 	}
 	else
 	{
-		XSetClipRectangles( flx->display, flx->gc, 0, 0, &fl_perm_xcr, 1,
+		XSetClipRectangles( flx->display, flx->gc, 0, 0, &fli_perm_xcr, 1,
 							Unsorted );
-		cur_clip = fl_perm_xcr;
+		cur_clip = fli_perm_xcr;
 	}
 }
 
@@ -785,10 +791,11 @@ fl_unset_clipping( void )
 void
 fl_unset_gc_clipping( GC gc )
 {
-	if ( ! fl_perm_clip )
+	if ( ! fli_perm_clip )
 		XSetClipMask( flx->display, gc, None );
 	else
-		XSetClipRectangles( flx->display, gc, 0, 0, &fl_perm_xcr, 1, Unsorted );
+		XSetClipRectangles( flx->display, gc, 0, 0, &fli_perm_xcr, 1,
+							Unsorted );
 }
 
 
@@ -796,7 +803,7 @@ fl_unset_gc_clipping( GC gc )
  ***************************************/
 
 static void
-set_current_gc( GC gc )
+fli_set_current_gc( GC gc )
 {
 	if ( flx->gc != gc )
 	{
@@ -812,7 +819,7 @@ set_current_gc( GC gc )
  ***************************************/
 
 static int
-mono_dither( unsigned long col )
+fli_mono_dither( unsigned long col )
 {
 	int bwtrick = 0;
 

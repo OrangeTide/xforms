@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_marker.c,v 1.6 2004/05/18 13:57:40 leeming Exp $
+ * $Id: image_marker.c,v 1.7 2008/05/04 21:07:57 jtt Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -266,7 +266,7 @@ flimage_display_markers(FL_IMAGE * im)
 	    m->x += im->wxd - im->sxd;
 	    m->y += im->wyd - im->syd;
 	    XSetForeground(m->display, m->gc, pixel);
-	    fl_xlinestyle(m->display, m->gc, m->style);
+	    fli_xlinestyle( m->display, m->gc, m->style );
 	    active->draw_marker(m);
 	    m->x -= im->wxd - im->sxd;
 	    m->y -= im->wyd - im->syd;

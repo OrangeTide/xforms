@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.12 2008/05/04 21:08:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -64,13 +64,17 @@ static unsigned int st_wmask;
 static int st_wmborder;
 static unsigned int bwidth = 0;
 
+static int fli_winreparentxy( Window,
+							  Window,
+							  int,
+							  int );
 
 /*********************************************************************
  * Default window attributes. Subject to pref_winsize and its friends
  **********************************************************************/
 
 void
-fl_default_xswa( void )
+fli_default_xswa( void )
 {
     /* OwnerGrab is needed for pop-up to work correctly */
 
@@ -93,7 +97,7 @@ fl_default_xswa( void )
 
     /* for input method */
 
-    if( fl_context->xic )
+    if( fli_context->xic )
        st_xswa.event_mask |= FocusChangeMask;
 
     st_xswa.backing_store = fl_cntl.backingStore;
@@ -663,7 +667,7 @@ wait_mapwin( Window win,
     do
     {
 		XWindowEvent( flx->display, win, mask, &xev );
-		fl_xevent_name( "waiting", &xev );
+		fli_xevent_name( "waiting", &xev );
 
 		if ( xev.type == ReparentNotify && border != FL_NOBORDER )
 		{
@@ -690,7 +694,7 @@ wait_mapwin( Window win,
 		}
 #endif
 		else if ( xev.type == Expose )
-			fl_handle_event_callbacks( &xev );
+			fli_handle_event_callbacks( &xev );
 
     } while ( xev.type != Expose );
 
@@ -760,13 +764,13 @@ get_machine_name( Display * d )
  ***************************************/
 
 void
-fl_set_winproperty( Window       win,
-					unsigned int prop )
+fli_set_winproperty( Window       win,
+					 unsigned int prop )
 {
     char **argv;
     int argc;
 
-    if ( prop & FL_COMMAND_PROP )
+    if ( prop & FLI_COMMAND_PROP )
     {
 		argv = fl_get_cmdline_args( &argc );
 		XSetCommand( flx->display, win, argv, argc );
@@ -778,9 +782,9 @@ fl_set_winproperty( Window       win,
  ***************************************/
 
 Window
-fl_create_window( Window       parent,
-				  Colormap     m,
-				  const char * wname )
+fli_create_window( Window       parent,
+				   Colormap     m,
+				   const char * wname )
 {
     Window win;
     XClassHint clh;
@@ -831,13 +835,13 @@ fl_create_window( Window       parent,
     }
 
 #if FL_DEBUG >= ML_WARN
-    fl_dump_state_info( fl_vmode, "WinOpen" );
+    fli_dump_state_info( fl_vmode, "WinOpen" );
 #endif
 
     win = XCreateWindow( flx->display, parent,
 						 st_xsh.x, st_xsh.y, st_xsh.width, st_xsh.height,
-						 bwidth, fl_depth( fl_vmode ), InputOutput,
-						 fl_visual( fl_vmode ), st_wmask, &st_xswa );
+						 bwidth, fli_depth( fl_vmode ), InputOutput,
+						 fli_visual( fl_vmode ), st_wmask, &st_xswa );
 
     if ( fl_cntl.debug > 3 )
     {
@@ -869,7 +873,7 @@ fl_create_window( Window       parent,
     if ( xtpmachine.value )
 		XFree( xtpmachine.value );
 
-    fl_create_gc( win );
+    fli_create_gc( win );
 
     if ( st_wmborder == FL_TRANSIENT )
     {
@@ -889,11 +893,11 @@ fl_create_window( Window       parent,
  ***************************************/
 
 Window
-fl_cmap_winopen( Window       parent,
+fli_cmap_winopen( Window       parent,
 				 Colormap     m,
 				 const char * label )
 {
-    Window win = fl_create_window( parent, m, label );
+    Window win = fli_create_window( parent, m, label );
     return fl_winshow( win );
 }
 
@@ -904,7 +908,7 @@ fl_cmap_winopen( Window       parent,
 Window
 fl_wincreate( const char * label )
 {
-    return fl_create_window( fl_root, fl_map( fl_vmode ), label) ;
+    return fli_create_window( fl_root, fli_map( fl_vmode ), label) ;
 }
 
 
@@ -914,8 +918,8 @@ fl_wincreate( const char * label )
 Window
 fl_winopen( const char * label )
 {
-    fl_init_colormap( fl_vmode );
-    return fl_cmap_winopen( fl_root, fl_map( fl_vmode ), label );
+    fli_init_colormap( fl_vmode );
+    return fli_cmap_winopen( fl_root, fli_map( fl_vmode ), label );
 }
 
 
@@ -941,7 +945,7 @@ fl_winshow( Window win )
 
     /* re-initialize window defaults  */
 
-    fl_default_xswa( );
+    fli_default_xswa( );
     return win;
 }
 
@@ -950,10 +954,10 @@ fl_winshow( Window win )
  ***************************************/
 
 int
-fl_winreparentxy( Window win,
-				  Window new_parent,
-				  int    x,
-				  int    y )
+fli_winreparentxy( Window win,
+				   Window new_parent,
+				   int    x,
+				   int    y )
 {
 
     if ( ! win || ! new_parent )
@@ -970,7 +974,7 @@ int
 fl_winreparent( Window win,
 				Window new_parent )
 {
-    return fl_winreparentxy( win, new_parent, 0, 0 );
+    return fli_winreparentxy( win, new_parent, 0, 0 );
 }
 
 
@@ -982,40 +986,6 @@ fl_winhide( Window win )
 {
     if ( win )
 		XUnmapWindow( flx->display, win );
-}
-
-
-
-/***************************************
- ***************************************/
-
-#if 0
-
-Window
-fl_swinopen( Window       parent,
-			 const char * name )
-{
-    /* some of default winattribe is not appropriate for subwindows. Change
-       them. */
-
-    st_xswa.override_redirect = 0;
-    st_xswa.save_under = 0;
-    st_wmborder = FL_FULLBORDER;
-
-    return fl_cmap_winopen( parent, fl_map( fl_vmode ), name );
-}
-
-#endif
-
-
-/***************************************
- ***************************************/
-
-Window
-fl_cmap_swinopen( Window   parent,
-				  Colormap map )
-{
-    return fl_cmap_winopen( parent, map, "" );
 }
 
 
@@ -1225,19 +1195,6 @@ fl_winicontitle( Window       win,
 
 
 /***************************************
- ***************************************/
-
-void
-fl_demand_event( int xevent_type  FL_UNUSED_ARG )
-{
-    XEvent xev;
-
-    while ( ! XCheckTypedEvent( flx->display, ReparentNotify, &xev ) )
-		/* empty */ ;
-}
-
-
-/***************************************
  * grab keyboard focus
  ***************************************/
 
@@ -1247,8 +1204,8 @@ fl_winfocus( Window win )
     XSetInputFocus( flx->display, win, RevertToParent, CurrentTime );
 
 #if 0
-    if ( fl_context->xic )
-       XSetICValues( fl_context->xic,
+    if ( fli_context->xic )
+       XSetICValues( fli_context->xic,
 					 XNClientWindow, win, XNFocusWindow, win, 0 );
 #endif
 }

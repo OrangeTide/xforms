@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_r3dbut = "$Id: round3d.c,v 1.7 2008/04/13 10:44:18 jtt Exp $";
+char *fl_r3dbut = "$Id: round3d.c,v 1.8 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -87,7 +87,7 @@ draw_round3dbutton( FL_OBJECT * ob )
     fl_arc( xx, yy, rr - bw / 2, 2250, 3600, FL_TOP_BCOL );
     fl_linewidth( olw );
 
-    if ( fl_dithered( fl_vmode ) )
+    if ( fli_dithered( fl_vmode ) )
 		fl_arc( xx, yy, rr - bw / 2, 0, 3600, FL_BLACK );
 #endif
 

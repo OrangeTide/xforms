@@ -35,7 +35,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_util = "$Id: util.c,v 1.11 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_util = "$Id: util.c,v 1.12 2008/05/04 21:08:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -55,7 +55,7 @@ char *fl_id_util = "$Id: util.c,v 1.11 2008/04/10 00:05:50 jtt Exp $";
  ***************************************/
 
 void
-fl_set_form_window( FL_FORM * form )
+fli_set_form_window( FL_FORM * form )
 {
     if ( form && form->window != None )
 		flx->win = form->window;
@@ -67,7 +67,7 @@ fl_set_form_window( FL_FORM * form )
  ***************************************/
 
 const char *
-fl_rm_rcs_kw( const char * s )
+fli_rm_rcs_kw( const char * s )
 {
     static unsigned char buf[ 5 ][ 255 ];
     static int nbuf;
@@ -102,6 +102,7 @@ fl_rm_rcs_kw( const char * s )
 
 
 /***************************************
+ * Function is kept at the moment only for backward compatibility
  ***************************************/
 
 static int showerrors = 1;
@@ -110,29 +111,6 @@ void
 fl_show_errors( int y )
 {
     showerrors = y;
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_error( const char * where,
-		  const char * why )
-{
-    int resp;
-
-    M_err( where, why );
-
-    if ( ! showerrors )
-		return;
-
-	resp = fl_show_choice( "XForms Error", where, why, 3,
-						   "Continue", "Exit", "HideErrors", 2 );
-	if ( resp == 2 )
-		exit( -1 );
-	else if ( resp == 3 )
-		showerrors = 0;
 }
 
 
@@ -169,7 +147,7 @@ static FL_VN_PAIR flevent[ ] =
  ***************************************/
 
 const char *
-fl_event_name( int ev )
+fli_event_name( int ev )
 {
     return fl_get_vn_name( flevent, ev );
 }
@@ -220,7 +198,7 @@ static FL_VN_PAIR flclass[ ] =
  ***************************************/
 
 const char *
-fl_object_class_name( FL_OBJECT * ob )
+fli_object_class_name( FL_OBJECT * ob )
 {
 	if ( ! ob )
 		return "null";
@@ -228,36 +206,4 @@ fl_object_class_name( FL_OBJECT * ob )
 		return "FL_EVENT";
 
 	return fl_get_vn_name( flclass, ob->objclass );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_print_form_object( FL_FORM *    form,
-					  const char * msg )
-{
-    FL_OBJECT *ob;
-
-    if ( msg && *msg )
-		fprintf( stderr, "**** %s ****\n", msg );
-
-    fprintf( stderr, "dumping form: %s\n",
-			 form ? ( form->label ? form->label : "Unknown" ) : "null" );
-
-    if ( ! form )
-		return;
-
-    for ( ob = form->first; ob; ob = ob->next )
-		fprintf( stderr, "Next: %s (parent: %s)\n",
-				 fl_object_class_name( ob ),
-				 fl_object_class_name( ob->parent ) );
-
-    fprintf( stderr, "\n" );
-
-    for ( ob = form->last; ob; ob = ob->prev )
-		fprintf( stderr, "Prev: %s (parent: %s)\n",
-				 fl_object_class_name( ob ),
-				 fl_object_class_name( ob->parent ) );
 }

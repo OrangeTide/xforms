@@ -45,7 +45,7 @@
  ***************************************/
 
 void *
-fl_init_valuator(FL_OBJECT * ob)
+fli_init_valuator( FL_OBJECT * ob )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
 
@@ -73,8 +73,8 @@ fl_init_valuator(FL_OBJECT * ob)
  ***************************************/
 
 double
-fl_valuator_round_and_clamp( FL_OBJECT * ob,
-							 double      val )
+fli_valuator_round_and_clamp( FL_OBJECT * ob,
+							  double      val )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
     double vmin,
@@ -100,12 +100,12 @@ fl_valuator_round_and_clamp( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_valuator_handle_drag( FL_OBJECT * ob,
-						 double      value )
+fli_valuator_handle_drag( FL_OBJECT * ob,
+						  double      value )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
 
-    value = fl_valuator_round_and_clamp(ob, value);
+    value = fli_valuator_round_and_clamp(ob, value);
 
     if (value != sp->val)
     {
@@ -124,12 +124,12 @@ fl_valuator_handle_drag( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_valuator_handle_release( FL_OBJECT * ob,
-							double      value )
+fli_valuator_handle_release( FL_OBJECT * ob,
+							 double      value )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
 
-    value = fl_valuator_round_and_clamp(ob, value);
+    value = fli_valuator_round_and_clamp(ob, value);
 
     if (value != sp->val)
     {
@@ -152,8 +152,8 @@ fl_valuator_handle_release( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_set_valuator_return( FL_OBJECT * ob,
-						int         n )
+fli_set_valuator_return( FL_OBJECT * ob,
+						 int         n )
 {
     FL_VALUATOR_SPEC *sp = ob->spec;
     int old = sp->how_return;
@@ -168,7 +168,7 @@ fl_set_valuator_return( FL_OBJECT * ob,
  ***************************************/
 
 double
-fl_clamp( double val,
+fli_clamp( double val,
 		  double min,
 		  double max)
 {

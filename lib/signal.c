@@ -45,13 +45,16 @@
 #include <signal.h>
 
 
+void ( * fli_handle_signal )( void ) = NULL;
+
+
 /***************************************
  ***************************************/
 
 static void
 handle_signal( void )
 {
-    FL_SIGNAL_REC *rec = fl_context->signal_rec;
+    FLI_SIGNAL_REC *rec = fli_context->signal_rec;
 
     for ( ; rec; rec = rec->next )
 		while ( rec->caught )
@@ -106,11 +109,11 @@ fl_add_signal_callback( int                 s,
 						FL_SIGNAL_HANDLER   cb,
 						void              * data )
 {
-    FL_SIGNAL_REC *sig_rec,
-		          *rec = fl_context->signal_rec;
+    FLI_SIGNAL_REC *sig_rec,
+		           *rec = fli_context->signal_rec;
 
-    if ( ! fl_handle_signal )
-		fl_handle_signal = handle_signal;
+    if ( ! fli_handle_signal )
+		fli_handle_signal = handle_signal;
 
     for ( ; rec && rec->signum != s; rec = rec->next )
 		/* empty */ ;
@@ -152,9 +155,9 @@ fl_add_signal_callback( int                 s,
 			}
 		}
 
-		if ( fl_context->signal_rec )
-			sig_rec->next = fl_context->signal_rec;
-		fl_context->signal_rec = sig_rec;
+		if ( fli_context->signal_rec )
+			sig_rec->next = fli_context->signal_rec;
+		fli_context->signal_rec = sig_rec;
     }
 }
 
@@ -165,8 +168,8 @@ fl_add_signal_callback( int                 s,
 void
 fl_remove_signal_callback( int s )
 {
-    FL_SIGNAL_REC *last,
-		          *rec = fl_context->signal_rec;
+    FLI_SIGNAL_REC *last,
+		           *rec = fli_context->signal_rec;
 
     for ( last = rec; rec && rec->signum != s; last = rec, rec = rec->next )
 		/* empty */ ;
@@ -178,8 +181,8 @@ fl_remove_signal_callback( int s )
 		return;
 	}
 
-	if ( rec == fl_context->signal_rec )
-		fl_context->signal_rec = rec->next;
+	if ( rec == fli_context->signal_rec )
+		fli_context->signal_rec = rec->next;
 	else
 		last->next = rec->next;
 
@@ -202,7 +205,7 @@ fl_remove_signal_callback( int s )
 void
 fl_signal_caught( int s )
 {
-    FL_SIGNAL_REC *rec = fl_context->signal_rec;
+    FLI_SIGNAL_REC *rec = fli_context->signal_rec;
 
     while ( rec && rec->signum != s )
 		rec = rec->next;
@@ -228,8 +231,8 @@ fl_signal_caught( int s )
 void
 fl_app_signal_direct( int y )
 {
-    if ( ! fl_handle_signal )
-		fl_handle_signal = handle_signal;
+    if ( ! fli_handle_signal )
+		fli_handle_signal = handle_signal;
     sig_direct = y;
 }
 
@@ -240,6 +243,6 @@ fl_app_signal_direct( int y )
 void
 fl_remove_all_signal_callbacks( void )
 {
-	while ( fl_context->signal_rec )
-		fl_remove_signal_callback( fl_context->signal_rec->signum );
+	while ( fli_context->signal_rec )
+		fl_remove_signal_callback( fli_context->signal_rec->signum );
 }

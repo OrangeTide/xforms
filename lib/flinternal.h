@@ -99,13 +99,6 @@
 #define DELAYED_ACTION
 #endif
 
-typedef void ( * FL_DRAW_BOX )( int,
-								FL_Coord,
-								FL_Coord,
-								FL_Coord,
-								FL_Coord,
-								FL_COLOR,
-								int );
 
 /*
  * If we want to have gamma correction as a built-in feature.
@@ -114,430 +107,380 @@ typedef void ( * FL_DRAW_BOX )( int,
 
 #define DO_GAMMA_CORRECTION
 
+
 /* XForms internal colormap */
 
 typedef struct
 {
     const char     * name;
     FL_COLOR         index;
-    unsigned short   r,
-	                 g,
-	                 b,
-	                 a;
+    unsigned short   r;
+	unsigned short   g;
+	unsigned short   b;
+	unsigned short   a;
     int              grayval;
-} FL_IMAP;
+} FLI_IMAP;
 
 
-#define BadPixel        FL_NoColor
+#define BadPixel  FL_NoColor
 
 
-#define Clamp( v, vmin, vmax ) ( ( v ) < (vmin ) ? \
+#define Clamp( v, vmin, vmax ) ( ( v ) < ( vmin ) ? \
 								 ( vmin ) : ( ( v ) > ( vmax ) ? \
 											  ( vmax ) :( v ) ) )
 
 #define IsValidClass( o, c ) ( ( o ) && ( o )->objclass == ( c ) )
 
-#define fl_safe_free( p ) do { if ( p ) { fl_free( p ); p = NULL; } } while( 0 )
-#define fl_class( i )     fl_state[ i ].vclass
-#define fl_depth( i )     fl_state[ i ].depth
-#define fl_visual( i )    fl_state[ i ].xvinfo->visual
-#define fl_colormap( i )  fl_state[ i ].colormap
-#define fl_map( i )       fl_state[ i ].colormap
-#define fl_dithered( i )  fl_state[ i ].dithered
+#define fl_safe_free( p )    \
+	do { if ( p ) {          \
+             fl_free( p );   \
+             p = NULL;       \
+          }                  \
+       } while( 0 )
 
-#define fl_rgbmode      (    fl_class( fl_vmode) == TrueColor    \
-                          || fl_class( fl_vmode) == DirectColor )
-
-#define ringbell( )     XBell( fl_display, 0 )
+#define fli_class( i )     fl_state[ i ].vclass
+#define fli_depth( i )     fl_state[ i ].depth
+#define fli_visual( i )    fl_state[ i ].xvinfo->visual
+#define fli_colormap( i )  fl_state[ i ].colormap
+#define fli_map( i )       fl_state[ i ].colormap
+#define fli_dithered( i )  fl_state[ i ].dithered
 
 
 /* events.c or event related */
 
-extern void fl_obj_queue_delete( void );
+extern void fli_obj_queue_delete( void );
 
-extern void fl_event_queue_delete( void );
+extern void fli_event_queue_delete( void );
 
-extern void fl_object_qenter( FL_OBJECT * );
+extern void fli_object_qenter( FL_OBJECT * );
 
-extern FL_OBJECT *fl_object_qread( void );
+extern FL_OBJECT * fli_object_qread( void );
 
-extern void fl_object_qflush( FL_FORM * );
+extern void fli_object_qflush( FL_FORM * );
 
-extern void fl_object_qflush_object( FL_OBJECT * );
+extern void fli_object_qflush_object( FL_OBJECT * );
 
-extern void fl_treat_user_events( void );
+extern FL_OBJECT *fli_object_qtest( void );
 
-extern void fl_treat_interaction_events( int );
+extern void fli_treat_user_events( void );
 
-extern void fl_compress_event( XEvent *,
-							   unsigned long );
+extern void fli_treat_interaction_events( int );
 
-extern const char *fl_event_name( int );
+extern void fli_compress_event( XEvent *,
+								unsigned long );
 
-extern XEvent *fl_xevent_name( const char *,
-							   const XEvent * );
+extern const char *fli_event_name( int );
 
-extern void fl_handle_idling( XEvent * xev,
-							  long     msec,
-							  int      do_idle_cb );
+extern XEvent * fli_xevent_name( const char *,
+								 const XEvent * );
 
-extern FL_FORM *fl_get_fselector_form( void );
+extern void fli_handle_idling( XEvent * xev,
+							   long     msec,
+							   int      do_idle_cb );
 
 
 /* misc. utilitnes */
 
-extern void fl_set_no_connection( int );
+extern void fli_set_no_connection( int );
 
-extern void fl_print_version( int );
+extern void fli_print_version( int );
 
-extern const char *fl_rm_rcs_kw( const char * );
-
-extern void fl_set_debug_level( int );
+extern const char *fli_rm_rcs_kw( const char * );
 
 
 /* from forms.c and object.c */
 
-extern FL_FORM *fl_make_form( FL_Coord,
-							  FL_Coord );
+extern FL_FORM *fli_make_form( FL_Coord,
+							   FL_Coord );
 
-extern void fl_detach_form( FL_FORM * );
+extern void fli_handle_form( FL_FORM *,
+							 int, int,
+							 XEvent * );
 
-extern void fl_handle_form( FL_FORM *,
-							int, int,
-							XEvent * );
+extern void fli_handle_object( FL_OBJECT *,
+							   int,
+							   FL_Coord,
+							   FL_Coord,
+							   int,
+							   XEvent * );
 
-extern void fl_handle_object( FL_OBJECT *,
-							  int,
-							  FL_Coord,
-							  FL_Coord,
-							  int,
-							  XEvent * );
+extern int fli_handle_object_direct( FL_OBJECT *,
+									 int,
+									 FL_Coord,
+									 FL_Coord,
+									 int,
+									 XEvent * );
 
-extern int fl_handle_object_direct( FL_OBJECT *,
-									int,
-									FL_Coord,
-									FL_Coord,
-									int,
-									XEvent * );
-
-extern FL_OBJECT *fl_find_first( FL_FORM *,
-								 int,
-								 FL_Coord,
-								 FL_Coord );
-
-extern FL_OBJECT *fl_find_last( FL_FORM *,
-								int,
-								FL_Coord,
-								FL_Coord );
-
-extern FL_OBJECT *fl_find_object( FL_OBJECT *,
+extern FL_OBJECT *fli_find_first( FL_FORM *,
 								  int,
 								  FL_Coord,
 								  FL_Coord );
 
-extern FL_OBJECT *fl_find_object_backwards( FL_OBJECT *,
-											int,
-											FL_Coord,
-											FL_Coord );
+extern FL_OBJECT *fli_find_last( FL_FORM *,
+								 int,
+								 FL_Coord,
+								 FL_Coord );
 
-extern void fl_insert_object( FL_OBJECT *,
-							  FL_OBJECT * );
+extern FL_OBJECT *fli_find_object( FL_OBJECT *,
+								   int,
+								   FL_Coord,
+								   FL_Coord );
+
+extern FL_OBJECT *fli_find_object_backwards( FL_OBJECT *,
+											 int,
+											 FL_Coord,
+											 FL_Coord );
+
+extern void fli_insert_object( FL_OBJECT *,
+							   FL_OBJECT * );
 
 
 /* double buffering etc. */
 
-extern void fl_free_flpixmap( FL_pixmap * );
+extern void fli_free_flpixmap( FL_pixmap * );
 
-extern void fl_create_object_pixmap( FL_OBJECT * );
+extern void fli_create_object_pixmap( FL_OBJECT * );
 
-extern void fl_show_object_pixmap( FL_OBJECT * );
+extern void fli_show_object_pixmap( FL_OBJECT * );
 
-extern void fl_create_form_pixmap( FL_FORM * );
+extern void fli_create_form_pixmap( FL_FORM * );
 
-extern void fl_show_form_pixmap( FL_FORM * );
+extern void fli_show_form_pixmap( FL_FORM * );
 
 
 /* windowing support */
 
-extern void fl_default_xswa( void );
+extern void fli_default_xswa( void );
 
-extern Window fl_cmap_winopen( Window,
-							   Colormap,
-							   const char * );
-
-extern Window fl_create_window( Window,
+extern Window fli_cmap_winopen( Window,
 								Colormap,
 								const char * );
 
-extern void fl_create_gc( Window );
+extern Window fli_create_window( Window,
+								 Colormap,
+								 const char * );
 
-extern void fl_demand_event( int );
-
-extern Window fl_get_win_mouse( Window win,
-								FL_Coord *,
-								FL_Coord *,
-								unsigned int * );
+extern void fli_create_gc( Window );
 
 
 enum
 {
-    FL_COMMAND_PROP = 1,
-    FL_MACHINE_PROP,
-    FL_PROP_SET    = ( 1 << 10 )	/* really set */
+    FLI_COMMAND_PROP = 1,
+    FLI_PROP_SET     = ( 1 << 10 )	/* really set */
 };
 
-extern FL_FORM *fl_property_set( unsigned int );
-
-extern void fl_set_winproperty( Window,
-								unsigned int );
-
-
-#define fl_set_property  fl_set_winproperty
+extern void fli_set_winproperty( Window,
+								 unsigned int );
 
 
 /* timer stuff */
 
-#define FL_NTIMER  5
-
 enum
 {
-    FL_MAIN_T,
-	FL_FS_T,
-	FL_PUP_T
+	FLI_FS_TIMER,
+	FLI_PUP_TIMER,
+	FLI_NTIMER       /* must always be last */      
 };
 
-extern double fl_time_passed( int );
+extern double fli_time_passed( int );
 
-extern void fl_reset_time( int );
+extern void fli_reset_time( int );
 
 
 /* graphics related */
 
-extern int fl_mode_capable( int,
-							int );
+extern int fli_doublebuffer_capable( int );
 
-extern int fl_doublebuffer_capable( int );
+extern void fli_init_colormap( int );
 
-extern void fl_init_colormap( int );
+extern void fli_dump_state_info( int,
+								 const char * );
 
-extern void fl_dump_state_info( int,
-								const char * );
-
-extern void fl_init_stipples( void );
+extern void fli_init_stipples( void );
 
 
 /* for fdesign */
 
-const char *fl_query_colorname( FL_COLOR );
+const char *fli_query_colorname( FL_COLOR );
 
-extern long fl_query_namedcolor( const char *s );
+extern long fli_query_namedcolor( const char *s );
 
-extern void fl_error( const char *,
-					  const char * );
+void fli_free_xtext_workmem( void );
 
-void fl_free_xtext_workmem( void );
-
-extern int fl_get_pos_in_string( int,
-								 int,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 int,
-								 int,
-								 FL_Coord,
-								 FL_Coord,
-								 const char *,
-								 int *,
-								 int * );
-
-extern int fl_drw_stringTAB( Window,
-							 GC,
-							 int,
-							 int,
-							 int,
-							 int,
-							 const char *,
-							 int,
-							 int );
-
-extern int fl_drw_string( int,
-						  int,
-						  FL_Coord,
-						  FL_Coord,
-						  FL_Coord,
-						  FL_Coord,
-						  int,
-						  FL_COLOR,
-						  FL_COLOR,
-						  FL_COLOR,
-						  int,
-						  int,
-						  int,
-						  int,
-						  int,
-						  const char *,
-						  int,
-						  int,
-						  int,
-						  FL_COLOR );
-
-extern int fl_get_maxpixel_line( void );
-
-extern int fl_get_string_widthTABfs( XFontStruct *,
-									 const char *,
-									 int );
-
-extern void fl_init_font( void );
-
-extern void fl_canonicalize_rect( FL_Coord *,
-								  FL_Coord *,
-								  FL_Coord *,
-								  FL_Coord * );
-
-extern void fl_init_goodies( void );
-
-extern void fl_get_goodie_title( FL_FORM *,
-								 const char * );
-
-extern void fl_init_pup( void );
-
-extern void fl_add_q_icon( FL_Coord,
-						   FL_Coord,
-						   FL_Coord,
-						   FL_Coord );
-
-extern void fl_add_warn_icon( FL_Coord,
-							  FL_Coord,
-							  FL_Coord,
-							  FL_Coord );
-
-extern void fl_check_key_focus( const char *,
-								Window );
-
-extern Pixmap fl_read_bitmapfile( Window,
+extern int fli_get_pos_in_string( int,
+								  int,
+								  FL_Coord,
+								  FL_Coord,
+								  FL_Coord,
+								  FL_Coord,
+								  int,
+								  int,
+								  FL_Coord,
+								  FL_Coord,
 								  const char *,
-								  unsigned int *,
-								  unsigned int *,
 								  int *,
 								  int * );
 
-extern char **fl_get_cmdline_args( int * );
-extern void fl_free_cmdline_args( void );
+extern int fli_drw_stringTAB( Window,
+							  GC,
+							  int,
+							  int,
+							  int,
+							  int,
+							  const char *,
+							  int,
+							  int );
+
+extern int fli_drw_string( int,
+						   int,
+						   FL_Coord,
+						   FL_Coord,
+						   FL_Coord,
+						   FL_Coord,
+						   int,
+						   FL_COLOR,
+						   FL_COLOR,
+						   FL_COLOR,
+						   int,
+						   int,
+						   int,
+						   int,
+						   int,
+						   const char *,
+						   int,
+						   int,
+						   int,
+						   FL_COLOR );
+
+extern int fli_get_maxpixel_line( void );
+
+extern int fli_get_string_widthTABfs( XFontStruct *,
+									  const char *,
+									  int );
+
+extern void fli_init_font( void );
+
+extern void fli_canonicalize_rect( FL_Coord *,
+								   FL_Coord *,
+								   FL_Coord *,
+								   FL_Coord * );
+
+extern void fli_init_goodies( void );
+
+extern void fli_get_goodie_title( FL_FORM *,
+								  const char * );
+
+extern void fli_add_q_icon( FL_Coord,
+							FL_Coord,
+							FL_Coord,
+							FL_Coord );
+
+extern void fli_add_warn_icon( FL_Coord,
+							   FL_Coord,
+							   FL_Coord,
+							   FL_Coord );
+
+extern void fli_check_key_focus( const char *,
+								 Window );
 
 
-extern XRectangle *fl_get_underline_rect( XFontStruct *,
-										  FL_Coord,
-										  FL_Coord,
-										  const char *,
-										  int );
+extern void fli_free_cmdline_args( void );
+
+
+extern XRectangle *fli_get_underline_rect( XFontStruct *,
+										   FL_Coord,
+										   FL_Coord,
+										   const char *,
+										   int );
 
 
 /* Routines in sldraw.c. */
 
 typedef struct
 {
-    FL_Coord x,
-	         y,
-	         w,
-	         h;
-} FL_SCROLLBAR_KNOB;
+    FL_Coord x;
+	FL_Coord y;
+	FL_Coord w;
+	FL_Coord h;
+} FLI_SCROLLBAR_KNOB;
 
-extern void fl_calc_slider_size( FL_OBJECT *,
-								 FL_SCROLLBAR_KNOB * );
+extern void fli_calc_slider_size( FL_OBJECT *,
+								  FLI_SCROLLBAR_KNOB * );
 
-extern int fl_slider_mouse_object( FL_OBJECT *,
+extern int fli_slider_mouse_object( FL_OBJECT *,
+									FL_Coord,
+									FL_Coord );
+
+extern void fli_drw_slider( FL_OBJECT  * ob,
+							FL_COLOR     col1,
+							FL_COLOR     col2,
+							const char * str,
+							int          d );
+
+extern void fli_set_perm_clipping( FL_Coord,
+								   FL_Coord,
 								   FL_Coord,
 								   FL_Coord );
 
-extern void fl_drw_slider( FL_OBJECT  * ob,
-						   FL_COLOR     col1,
-						   FL_COLOR     col2,
-						   const char * str,
-						   int          d );
-
-extern void fl_getimcolor( FL_COLOR,
-						   int *,
-						   int *,
-						   int * );
-
-extern void fl_set_perm_clipping( FL_Coord,
-								  FL_Coord,
-								  FL_Coord,
-								  FL_Coord );
-
-extern void fl_unset_perm_clipping( void );
+extern void fli_unset_perm_clipping( void );
 
 
-extern int fl_perm_clip;
+extern int fli_perm_clip;
 
-extern XRectangle fl_perm_xcr;
+extern XRectangle fli_perm_xcr;
 
 
 /* Application windows */
 
-typedef struct fl_win_
+typedef struct fli_win_
 {
-    struct fl_win_ * next;
-    Window           win;
-    FL_APPEVENT_CB   pre_emptive;	    /* always gets called first if set */
-    FL_APPEVENT_CB   callback[ LASTEvent ];
-    void           * pre_emptive_data;
-    void           * user_data[ LASTEvent ];
-    FL_APPEVENT_CB   default_callback;
-    unsigned long    mask;
-} FL_WIN;
+    struct fli_win_ * next;
+    Window            win;
+    FL_APPEVENT_CB    pre_emptive;	    /* always gets called first if set */
+    FL_APPEVENT_CB    callback[ LASTEvent ];
+    void            * pre_emptive_data;
+    void            * user_data[ LASTEvent ];
+    FL_APPEVENT_CB    default_callback;
+    unsigned long     mask;
+} FLI_WIN;
 
-extern FL_WIN * fl_app_win;
+extern FLI_WIN * fl_app_win;
 
-extern void fl_set_object_bw( FL_OBJECT *,
-							  int );
+extern void fli_set_form_window( FL_FORM * );
 
-extern void fl_set_form_window( FL_FORM * );
+extern void fli_unmap_canvas_window( FL_OBJECT * );
 
-extern void fl_hide_canvas( FL_OBJECT * );
+extern FL_APPEVENT_CB fli_set_preemptive_callback( Window,
+												   FL_APPEVENT_CB,
+												   void * );
 
-extern void unmap_canvas_window( FL_OBJECT * );
+extern unsigned long fli_xevent_to_mask( int );
 
-extern FL_APPEVENT_CB fl_set_preemptive_callback( Window,
-												  FL_APPEVENT_CB,
-												  void * );
-
-extern Window fl_swinopen( Window,
-						   const char * );
-
-extern Window fl_cmap_swinopen( Window,
-								Colormap );
-extern unsigned long fl_xevent_to_mask( int );
-
-extern void fl_dump_state_info( int,
-								const char * );
-
-extern int fl_initialize_program_visual( void );
+extern int fli_initialize_program_visual( void );
 
 
-#define TIMER_RES           50	/* resolution of FL_STEP event */
+#define FLI_TIMER_RES           50	/* resolution of FL_STEP event */
 
 
 /* currently only one idle procedure is permitted, so the next
  * field is of no much use */
 
-typedef struct fl_idle_cb_
+typedef struct fli_idle_cb_
 {
-    struct fl_idle_cb_ * next;
-    FL_APPEVENT_CB       callback;
-    void               * data;
-} FL_IDLE_REC;
-
-
-typedef struct fl_io_event_
-{
-    struct fl_io_event_ * next;
-    FL_IO_CALLBACK        callback;
+    struct fli_idle_cb_ * next;
+    FL_APPEVENT_CB        callback;
     void                * data;
-    unsigned int          mask;
-    int                   source;
-} FL_IO_REC;
+} FLI_IDLE_REC;
+
+
+typedef struct fli_io_event_
+{
+    struct fli_io_event_ * next;
+    FL_IO_CALLBACK         callback;
+    void                 * data;
+    unsigned int           mask;
+    int                    source;
+} FLI_IO_REC;
 
 
 
@@ -546,19 +489,19 @@ typedef struct fl_io_event_
 
 typedef RETSIGTYPE ( * FL_OSSIG_HANDLER )( int );
 
-typedef struct fl_signallist_
+typedef struct fli_signallist_
 {
-    struct fl_signallist_ * next;
-    FL_SIGNAL_HANDLER       callback;
+    struct fli_signallist_ * next;
+    FL_SIGNAL_HANDLER        callback;
 #if defined HAVE_SIGACTION
-	struct sigaction        old_sigact;
+	struct sigaction         old_sigact;
 #else
-    FL_OSSIG_HANDLER        ocallback;	/* default OS signal handler */
+    FL_OSSIG_HANDLER         ocallback;	/* default OS signal handler */
 #endif
-    void                  * data;
-    int                     signum;
-    int                     caught;
-} FL_SIGNAL_REC;
+    void                   * data;
+    int                      signum;
+    int                      caught;
+} FLI_SIGNAL_REC;
 
 
 extern void fl_remove_all_signal_callbacks( void );
@@ -566,17 +509,17 @@ extern void fl_remove_all_signal_callbacks( void );
 
 /* timeouts */
 
-typedef struct fl_timeout_
+typedef struct fli_timeout_
 {
-    int                   id;
-    struct fl_timeout_  * next;
-    struct fl_timeout_  * prev;
-    long                  start_sec,
-	                      start_usec;
-    long                  ms_to_wait;
-    FL_TIMEOUT_CALLBACK   callback;
-    void                * data;
-} FL_TIMEOUT_REC;
+    int                    id;
+    struct fli_timeout_  * next;
+    struct fli_timeout_  * prev;
+    long                   start_sec,
+	                       start_usec;
+    long                   ms_to_wait;
+    FL_TIMEOUT_CALLBACK    callback;
+    void                 * data;
+} FLI_TIMEOUT_REC;
 
 
 extern void fl_remove_all_timeouts( void );
@@ -586,14 +529,14 @@ extern void fl_remove_all_timeouts( void );
  *  Intenal controls.
  */
 
-typedef struct fl_context_
+typedef struct fli_context_
 {
     FL_FORM_ATCLOSE      atclose;	        /* what to do if WM_DELETE_WINDOW */
     void               * close_data;
-    FL_IDLE_REC        * idle_rec;	        /* idle callback record   */
-    FL_IO_REC          * io_rec;		    /* async IO      record   */
-    FL_SIGNAL_REC      * signal_rec;	    /* list of app signals    */
-    FL_TIMEOUT_REC     * timeout_rec;       /* timeout callbacks      */
+    FLI_IDLE_REC       * idle_rec;	        /* idle callback record   */
+    FLI_IO_REC         * io_rec;		    /* async IO      record   */
+    FLI_SIGNAL_REC     * signal_rec;	    /* list of app signals    */
+    FLI_TIMEOUT_REC    * timeout_rec;       /* timeout callbacks      */
     int                  idle_delta;		/* timer resolution       */
     long                 mouse_button;		/* push/release record    */
     int                  pup_id;			/* current active pup id  */
@@ -613,7 +556,7 @@ typedef struct fl_context_
 #endif
     unsigned int         navigate_mask;     /* input field            */
     long                 reserverd[ 6 ];
-} FL_CONTEXT;
+} FLI_CONTEXT;
 
 
 /* some X info that helps to make the windowing system independent
@@ -639,78 +582,42 @@ typedef struct
     unsigned long   textcolor;	    /* last textcolor. cache */
     unsigned long   bkcolor;
     int             screen;
-} FL_TARGET;
+} FLI_TARGET;
 
 
-/* compatibility stuff */
-
-extern int fl_fdesc_( void );
-
-extern int fl_fheight_( void );
-
-extern int fl_fasc_( void );
-
-extern Window fl_cur_win_( void );
-
-extern XFontStruct * fl_cur_fs_( void );
-
-extern GC fl_gc_( void );
-
-extern GC fl_textgc_( void );
-
-extern void fl_init_fl_context( void );
-
-extern void fl_free_newpixel( unsigned long pixel );
+extern void fli_init_context( void );
 
 
 #include "extern.h"
 
-extern Window fl_winshow( Window );
 
+extern void fli_watch_io( FLI_IO_REC *,
+						  long );
 
-#define fl_mapwindow fl_winshow
+extern int fli_do_shortcut( FL_FORM *,
+							int,
+							FL_Coord,
+							FL_Coord,
+							XEvent * );
 
-extern void fl_watch_io( FL_IO_REC *,
-						 long );
+extern void fli_get_hv_align( int,
+							  int *,
+							  int *);
 
-extern int fl_is_valid_window( Window );
+extern void fli_get_outside_align( int,
+								   int,
+								   int,
+								   int,
+								   int,
+								   int *,
+								   int *,
+								   int * );
 
-extern int fl_wildmat( const char *,
-					   const char * );
+extern void fli_init_symbols( void );
 
-extern int fl_do_shortcut( FL_FORM *,
-						   int,
-						   FL_Coord,
-						   FL_Coord,
-						   XEvent * );
+extern void fli_release_symbols( void );
 
-extern void fl_draw_object_label( FL_OBJECT * );
-
-extern void fl_set_object_clip( FL_OBJECT *,
-								int );
-
-extern void fl_get_hv_align( int,
-							 int *,
-							 int *);
-
-extern void fl_get_outside_align( int,
-								  int,
-								  int,
-								  int,
-								  int,
-								  int *,
-								  int *,
-								  int * );
-
-extern void fl_init_symbols( void );
-
-extern void fl_release_symbols( void );
-
-extern unsigned long fl_fmtime( const char * );
-
-extern char *fix_dirname( char * );
-
-extern int fl_handle_event_callbacks( XEvent * );
+extern int fli_handle_event_callbacks( XEvent * );
 
 
 
@@ -812,95 +719,76 @@ extern int fl_handle_event_callbacks( XEvent * );
 
 #endif
 
-#define FL_HALFPAGE_UP         0x10000000
-#define FL_HALFPAGE_DOWN       0x20000000
-#define FL_NLINES_UP           0x30000000
-#define FL_NLINES_DOWN         0x40000000
-#define FL_1LINE_UP            0x50000000
-#define FL_1LINE_DOWN          0x60000000
-#define IsHalfPageUp( k )      ( ( k ) == FL_HALFPAGE_UP )
-#define IsHalfPageDown( k )    ( ( k ) == FL_HALFPAGE_DOWN )
-#define IsNLinesUp( k )        ( ( k ) == FL_NLINES_UP )
-#define IsNLinesDown( k )      ( ( k ) == FL_NLINES_DOWN )
-#define Is1LineUp( k )         ( ( k ) == FL_1LINE_UP )
-#define Is1LineDown( k )       ( ( k ) == FL_1LINE_DOWN )
+#define FLI_HALFPAGE_UP        0x10000000
+#define FLI_HALFPAGE_DOWN      0x20000000
+#define FLI_NLINES_UP          0x30000000
+#define FLI_NLINES_DOWN        0x40000000
+#define FLI_1LINE_UP           0x50000000
+#define FLI_1LINE_DOWN         0x60000000
+#define IsHalfPageUp( k )      ( ( k ) == FLI_HALFPAGE_UP )
+#define IsHalfPageDown( k )    ( ( k ) == FLI_HALFPAGE_DOWN )
+#define IsNLinesUp( k )        ( ( k ) == FLI_NLINES_UP )
+#define IsNLinesDown( k )      ( ( k ) == FLI_NLINES_DOWN )
+#define Is1LineUp( k )         ( ( k ) == FLI_1LINE_UP )
+#define Is1LineDown( k )       ( ( k ) == FLI_1LINE_DOWN )
 
 
-extern int fl_convert_shortcut( const char *,
+extern int fli_convert_shortcut( const char *,
 							    long * );
 
-extern int fl_get_underline_pos( const char *,
-								 const char * );
+extern int fli_get_underline_pos( const char *,
+								  const char * );
 
-extern void fl_get_object_bbox_rect( FL_OBJECT *,
-									 XRectangle * );
+extern void fli_scale_length( FL_Coord *,
+							  FL_Coord *,
+							  double );
 
-extern const XRectangle *fl_bounding_rect( const XRectangle *,
-										   const XRectangle * );
+extern int fli_get_visible_forms_index( FL_FORM * );
 
-extern void fl_scale_length( FL_Coord *,
-							 FL_Coord *,
-							 double );
+extern void fli_recount_auto_object( void );
 
-extern int fl_get_visible_forms_index( FL_FORM * );
+extern int fli_get_tabpixels( XFontStruct * );
 
-extern void fl_recount_auto_object( void );
+extern int fli_get_default_scrollbarsize( FL_OBJECT * );
 
-extern FL_OBJECT *fl_object_qtest( void );
+extern void fli_set_app_name( const char *,
+							  const char * );
 
-extern void ( * fl_handle_signal )( void );
+extern void fli_hide_composite( FL_OBJECT * );
 
-extern int fl_get_tabpixels( XFontStruct * );
+extern void fli_show_composite( FL_OBJECT * );
 
-extern void fl_delete_group( FL_OBJECT * );
+extern void fli_deactivate_composite( FL_OBJECT * );
 
-extern int fl_get_default_scrollbarsize( FL_OBJECT * );
+extern void fli_activate_composite( FL_OBJECT * );
 
-extern void fl_set_app_name( const char *,
-							 const char * );
+extern void fli_free_composite( FL_OBJECT * ob );
 
-extern void fl_hide_composite( FL_OBJECT * );
+extern void fli_set_composite_gravity( FL_OBJECT *,
+									   unsigned int,
+									   unsigned int );
 
-extern void fl_show_composite( FL_OBJECT * );
-
-extern void fl_deactivate_composite( FL_OBJECT * );
-
-extern void fl_activate_composite( FL_OBJECT * );
-
-extern void fl_delete_composite( FL_OBJECT * );
-
-extern void fl_free_composite( FL_OBJECT * ob );
-
-extern void fl_set_composite_gravity( FL_OBJECT *,
-									  unsigned int,
-									  unsigned int );
-
-extern void fl_set_composite_resize( FL_OBJECT *,
+extern void fli_set_composite_resize( FL_OBJECT *,
 									 unsigned int );
 
-extern void fl_add_child( FL_OBJECT *,
-						  FL_OBJECT * );
+extern void fli_add_child( FL_OBJECT *,
+						   FL_OBJECT * );
 
-extern void fl_delete_child( FL_OBJECT * );
+extern void fli_parse_goodies_label( FL_OBJECT *,
+									 const char * );
 
-extern void fl_parse_goodies_label( FL_OBJECT *,
-									const char * );
+extern int fli_goodies_preemptive( FL_FORM *,
+								   void * );
 
-extern int fl_goodies_preemptive( FL_FORM *,
-								  void * );
+extern void fli_get_goodies_font( int *,
+								  int * );
 
-extern int fl_goodies_atclose( FL_FORM *,
-							   void * );
+extern void fli_handle_goodie_font( FL_OBJECT *,
+									FL_OBJECT * );
 
-extern void fl_get_goodies_font( int *,
-								 int * );
+extern void fli_init_alert( void );
 
-extern void fl_handle_goodie_font( FL_OBJECT *,
-								   FL_OBJECT * );
-
-extern void fl_init_alert( void );
-
-extern void fl_handle_timeouts( long * );
+extern void fli_handle_timeouts( long * );
 
 
 #define FL_IS_NONSQRBOX( t ) (    t == FL_SHADOW_BOX          \
@@ -911,230 +799,159 @@ extern void fl_handle_timeouts( long * );
 							   || t == FL_ROUNDED3D_UPBOX     \
 							   || t == FL_ROUNDED3D_DOWNBOX )
 
-extern void fl_set_additional_clipping( FL_Coord,
-										FL_Coord,
+extern void fli_set_additional_clipping( FL_Coord,
+										 FL_Coord,
 										FL_Coord,
 										FL_Coord );
-extern FL_RECT *fl_union_rect( const FL_RECT *,
-							   const FL_RECT * );
 
-extern void fl_reparent_pup( int,
-							 Window );
+extern FL_RECT *fli_union_rect( const FL_RECT *,
+								const FL_RECT * );
 
-extern void fl_getpup_window( int,
-							  Window *,
-							  Window * );
+extern void fli_reparent_pup( int,
+							  Window );
 
-extern void fl_draw_object_outside_label( FL_OBJECT * );
+extern void fli_getpup_window( int,
+							   Window *,
+							   Window * );
 
+extern void fli_xyplot_nice_label( float,
+								   int,
+								   float,
+								   char * );
 
-/* temporary stuff */
+extern void fli_xyplot_compute_data_bounds( FL_OBJECT *,
+											int *,
+											int *,
+											int );
 
-extern FL_OBJECT *fl_create_menubar( int,
-									 FL_Coord,
-									 FL_Coord,
-									 FL_Coord,
-									 FL_Coord,
-									 const char * );
+extern int fli_xyplot_interpolate( FL_OBJECT *,
+								   int,
+								   int,
+								   int );
 
-extern FL_OBJECT *fl_add_menubar( int,
-								  FL_Coord,
-								  FL_Coord,
-								  FL_Coord,
-								  FL_Coord,
-								  const char *);
-
-
-extern void fl_set_focuswin( Window );
-
-extern void fl_xyplot_nice_label( float,
-								  int,
-								  float,
-								  char * );
-
-extern void fl_xyplot_compute_data_bounds( FL_OBJECT *,
-										   int *,
-										   int *,
-										   int );
-
-extern int fl_xyplot_interpolate( FL_OBJECT *,
-								  int,
-								  int,
-								  int );
-
-extern void fl_insert_composite_after( FL_OBJECT *,
-									   FL_OBJECT * );
-
-extern void fl_change_composite_parent( FL_OBJECT *,
+extern void fli_insert_composite_after( FL_OBJECT *,
 										FL_OBJECT * );
 
-extern void fl_add_composite( FL_FORM *,
-							  FL_OBJECT * );
+extern void fli_change_composite_parent( FL_OBJECT *,
+										 FL_OBJECT * );
 
-extern FL_OBJECT *fl_get_component( FL_OBJECT *,
-									int,
-									int,
-									int );
+extern void fli_add_composite( FL_FORM *,
+							   FL_OBJECT * );
 
-extern int fl_is_watched_io( int );
+extern int fli_is_watched_io( int );
 
-extern char *fl_del_tail_slash( char * );
+extern const char *fli_object_class_name( FL_OBJECT * );
 
-extern const char *fl_object_class_name( FL_OBJECT * );
-
-extern void fl_print_form_object( FL_FORM *,
-								  const char * );
-
-extern void fl_mark_composite_for_redraw( FL_OBJECT * );
+extern void fli_mark_composite_for_redraw( FL_OBJECT * );
 
 
 #include "private/textbox.h"
 
-extern int ( * fl_handle_clipboard )( void *event );
+extern void fli_set_form_icon_data( FL_FORM *,
+									char ** );
 
-extern void fl_set_form_icon_data( FL_FORM *,
-								   char ** );
+extern char *fli_getcwd( char *,
+						 int );
 
-extern char *fl_getcwd( char *,
-						int );
+extern void fli_get_clipping( FL_Coord *,
+							  FL_Coord *,
+							  FL_Coord *,
+							  FL_Coord * );
 
-extern void fl_get_clipping( FL_Coord *,
-							 FL_Coord *,
-							 FL_Coord *,
-							 FL_Coord * );
+extern void fli_replacepup_text( int,
+								 int,
+								 const char * );
 
-extern FL_OBJECT *fl_get_real_focusobj( FL_OBJECT * );
-
-extern void fl_replacepup_text( int,
-								int,
-								const char * );
-
-extern int fl_handle_mouse_wheel( FL_OBJECT *,
-								  int *,
-								  int *,
-								  void * );
+extern int fli_handle_mouse_wheel( FL_OBJECT *,
+								   int *,
+								   int *,
+								   void * );
 
 
 #include "private/pvaluator.h"
 
-extern int fl_valuator_handle_drag( FL_OBJECT *,
-									double );
+extern int fli_valuator_handle_drag( FL_OBJECT *,
+									 double );
 
-extern int fl_valuator_handle_release( FL_OBJECT *,
-									   double );
+extern int fli_valuator_handle_release( FL_OBJECT *,
+										double );
 
-extern void *fl_init_valuator( FL_OBJECT * );
+extern void *fli_init_valuator( FL_OBJECT * );
 
-extern double fl_valuator_round_and_clamp( FL_OBJECT *,
-										   double );
+extern double fli_valuator_round_and_clamp( FL_OBJECT *,
+											double );
 
-extern int fl_set_valuator_return( FL_OBJECT *,
-								   int );
+extern int fli_set_valuator_return( FL_OBJECT *,
+									int );
 
-extern double fl_clamp( double,
-						double,
-						double );
+extern double fli_clamp( double,
+						 double,
+						 double );
 
-extern void fl_inherit_attributes( FL_OBJECT *,
-								   FL_OBJECT * );
+extern void fli_inherit_attributes( FL_OBJECT *,
+									FL_OBJECT * );
 
-extern int fl_winreparentxy( Window,
-							 Window,
-							 int,
-							 int );
+extern int fli_boxtype2frametype( int );
 
-extern int fl_boxtype2frametype( int );
+extern void fli_xvisual2flstate( FL_State *,
+								 XVisualInfo * );
 
-extern void fl_drw_broken_box( int,
-							   int,
-							   int,
-							   int,
-							   int,
-							   FL_COLOR,
-							   int );
+extern int fli_find_closest_color( int,
+								   int,
+								   int,
+								   XColor *,
+								   int,
+								   unsigned long * );
 
-extern void fl_xvisual2flstate( FL_State *,
-								XVisualInfo * );
+extern void fli_rgbmask_to_shifts( unsigned long,
+								   unsigned int *,
+								   unsigned int * );
 
-extern int fl_find_closest_color( int,
-								  int,
-								  int,
-								  XColor *,
-								  int,
-								  unsigned long * );
-
-extern void fl_rgbmask_to_shifts( unsigned long,
-								  unsigned int *,
-								  unsigned int * );
-
-extern char *fl_basename( char[ ] );
-
-extern void fl_show_tooltip( const char *,
-							 int,
-							 int );
-
-extern void fl_hide_tooltip( void );
-
-extern void fl_do_radio_push( FL_OBJECT *,
-							  FL_Coord,
-							  FL_Coord,
+extern void fli_show_tooltip( const char *,
 							  int,
-							  void * );
+							  int );
 
-extern long fl_getpid( void );
+extern void fli_hide_tooltip( void );
 
-extern void fl_xlinestyle( Display *,
-						   GC,
-						   int );
+extern void fli_do_radio_push( FL_OBJECT *,
+							   FL_Coord,
+							   FL_Coord,
+							   int,
+							   void * );
 
-extern void fl_xdashedlinestyle( Display *,
-								 GC,
-								 const char *,
-								 int );
+extern long fli_getpid( void );
 
+extern void fli_xlinestyle( Display *,
+							GC,
+							int );
 
-#define FL_BROKEN_BOX  ( 1 << 10 )
+#define FLI_BROKEN_BOX  ( 1 << 10 )
 
-extern FL_TARGET *fl_internal_init( void );
+extern FLI_TARGET *fli_internal_init( void );
 
-extern void fl_switch_target( FL_TARGET * );
+extern void fli_switch_target( FLI_TARGET * );
 
-extern void fl_restore_target( void );
+extern void fli_restore_target( void );
 
-extern void fl_draw_text_inside( int align,
+extern void fli_draw_text_inside( int align,
+								  FL_Coord,
 								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 const char *,
-								 int,
-								 int,
-								 int,
-								 FL_COLOR,
-								 FL_COLOR,
-								 int,
-								 int);
+								  FL_Coord,
+								  FL_Coord,
+								  const char *,
+								  int,
+								  int,
+								  int,
+								  FL_COLOR,
+								  FL_COLOR,
+								  int,
+								  int);
 
-extern void fl_draw_text_cursor( int,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 FL_Coord,
-								 const char *,
-								 int,
-								 int,
-								 int,
-								 FL_COLOR,
-								 FL_COLOR,
-								 FL_COLOR,
-								 int,
-								 int );
+extern const char * fli_get_xevent_name( const XEvent * );
 
-extern const char *fl_get_xevent_name( const XEvent * );
+extern void fli_set_input_navigate( unsigned int mask );
 
-extern void fl_set_input_navigate( unsigned int mask );
-
-extern void fl_adjust_browser_scrollbar( FL_OBJECT * );
+extern void fli_adjust_browser_scrollbar( FL_OBJECT * );
 
 
 #if XlibSpecificationRelease == 6

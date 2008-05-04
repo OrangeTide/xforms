@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.17 2008/04/29 12:35:40 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.18 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -289,8 +289,8 @@ cmplt_name( void )
 /***************************************
  ***************************************/
 
-char *
-fl_del_tail_slash( char * d )
+static char *
+fli_del_tail_slash( char * d )
 {
 	int i = strlen( d ) - 1;
 
@@ -333,10 +333,10 @@ select_cb( FL_OBJECT * ob,
 	memmove( seltext, seltext + 2, strlen( seltext + 2 ) + 1 );
 
 	dblclick =	  lastline == thisline
-			   && fl_time_passed( FL_FS_T ) < 1.0e-3 * ob->click_timeout;
+			   && fli_time_passed( FLI_FS_TIMEr ) < 1.0e-3 * ob->click_timeout;
 
 	lastline = thisline;
-	fl_reset_time( FL_FS_T );
+	fli_reset_time( FLI_FS_TIMER );
 
 	if ( dir )
 	{
@@ -345,7 +345,7 @@ select_cb( FL_OBJECT * ob,
 			strcat( append_slash( lfs->dname ), seltext );
 			fl_fix_dirname( lfs->dname );
 			if ( fill_entries( lfs->browser, 0, 0 ) < 0 )
-				fl_del_tail_slash( lfs->dname );
+				fli_del_tail_slash( lfs->dname );
 			seltext[ 0 ] = '\0';
 		}
 		fl_set_input( lfs->input, seltext );
@@ -395,7 +395,7 @@ select_cb( FL_OBJECT * ob,
 			strcat( append_slash( lfs->dname ), seltext );
 			fl_fix_dirname( lfs->dname );
 			if ( fill_entries( lfs->browser, 0, 0 ) < 0 )
-				fl_del_tail_slash( lfs->dname );
+				fli_del_tail_slash( lfs->dname );
 			seltext[ 0 ] = '\0';
 		}
 		fl_set_input( lfs->input, seltext );
@@ -413,7 +413,7 @@ select_cb( FL_OBJECT * ob,
 				return;
 			}
 			else
-				fl_object_qenter( lfs->ready );
+				fli_object_qenter( lfs->ready );
 		}
 	}
 }
@@ -451,7 +451,7 @@ fl_set_directory( const char * p )
 
 	strcpy( fs->dname, tmpdir );
 	if ( fill_entries( fs->browser, 0, 1 ) < 0 )
-		fl_del_tail_slash( fs->dname );
+		fli_del_tail_slash( fs->dname );
 	else
 		fl_set_object_label( fs->dirbutt, contract_dirname( fs->dname, 38 ) );
 
@@ -802,7 +802,7 @@ fl_hide_fselector( void )
 	FD_FSELECTOR *fd = fl_get_fselector_fdstruct( );
 
 	if ( fd->fselect && fd->fselect->visible )
-		fl_object_qenter( fd->cancel );
+		fli_object_qenter( fd->cancel );
 }
 
 

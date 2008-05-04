@@ -45,9 +45,9 @@ Display *fl_display;
  ***************************************/
 
 void
-fl_rgbmask_to_shifts( unsigned long   mask,
-					  unsigned int  * shift,
-					  unsigned int  * bits )
+fli_rgbmask_to_shifts( unsigned long   mask,
+					   unsigned int  * shift,
+					   unsigned int  * bits )
 {
     unsigned int val;
 
@@ -70,15 +70,15 @@ fl_rgbmask_to_shifts( unsigned long   mask,
  ***************************************/
 
 void
-fl_xvisual2flstate( FL_State    * s,
-					XVisualInfo * xvinfo )
+fli_xvisual2flstate( FL_State    * s,
+					 XVisualInfo * xvinfo )
 {
     s->rgb_bits = xvinfo->bits_per_rgb;
     s->rmask = xvinfo->red_mask;
     s->gmask = xvinfo->green_mask;
     s->bmask = xvinfo->blue_mask;
 
-    fl_rgbmask_to_shifts( s->rmask, &s->rshift, &s->rbits );
-    fl_rgbmask_to_shifts( s->gmask, &s->gshift, &s->gbits );
-    fl_rgbmask_to_shifts( s->bmask, &s->bshift, &s->bbits );
+    fli_rgbmask_to_shifts( s->rmask, &s->rshift, &s->rbits );
+    fli_rgbmask_to_shifts( s->gmask, &s->gshift, &s->gbits );
+    fli_rgbmask_to_shifts( s->bmask, &s->bshift, &s->bbits );
 }

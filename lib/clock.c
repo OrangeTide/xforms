@@ -192,7 +192,7 @@ draw_clock( int      type  FL_UNUSED_ARG,
 		ROTxy( xp[ 2 ].x, xp[ 2 ].y, xc + f1, yc + f3, ra );
 		ROTxy( xp[ 3 ].x, xp[ 3 ].y, xc - f1, yc + f3, ra );
 
-		fl_polygon( 1, xp, 4, FL_LEFT_BCOL );
+		fl_polyf( xp, 4, FL_LEFT_BCOL );
     }
 
     show_hands( x + 2 + 0.02 * w, y + 2 + 0.02 * h,

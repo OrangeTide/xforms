@@ -57,31 +57,42 @@ typedef struct
 static FD_yesno *
 create_yesno( void )
 {
-    FD_yesno *fdui = fl_calloc(1, sizeof *fdui );
+    FD_yesno *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fl_inverted_y;
-    int oldu = fl_get_coordunit();
+    int oldu = fl_get_coordunit( );
 
     fl_inverted_y = 0;
-    fl_set_coordunit(FL_COORD_PIXEL);
+    fl_set_coordunit( FL_COORD_PIXEL );
 
-    fdui->form = fl_bgn_form(FL_UP_BOX, 460, 130);
-    fl_set_form_title(fdui->form, "Question");
-    fdui->str = fl_add_box(FL_FLAT_BOX, 20, 15, 420, 65, "");
-    fdui->yes = fl_add_button(FL_NORMAL_BUTTON, 85, 90, 80, 27, "Yes");
-    fl_set_button_shortcut(fdui->yes, "Yy", 1);
-    fdui->no = fl_add_button(FL_NORMAL_BUTTON, 295, 90, 80, 27, "No");
-    fl_set_button_shortcut(fdui->no, "Nn", 1);
-    fl_add_q_icon(10, 20, 33, 33);
-    fl_end_form();
-    fl_register_raw_callback(fdui->form, FL_ALL_EVENT, fl_goodies_preemptive);
-    fl_set_form_atclose(fdui->form, fl_goodies_atclose, fdui->no);
-    if (fl_cntl.buttonFontSize != FL_DEFAULT_SIZE)
-	fl_fit_object_label(fdui->no, 22, 2);
+    fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
+    fl_set_form_title( fdui->form, "Question" );
+
+    fdui->str = fl_add_box( FL_FLAT_BOX, 20, 15, 420, 65, "" );
+
+    fdui->yes = fl_add_button( FL_NORMAL_BUTTON, 85, 90, 80, 27, "Yes" );
+    fl_set_button_shortcut( fdui->yes, "Yy", 1 );
+
+    fdui->no = fl_add_button( FL_NORMAL_BUTTON, 295, 90, 80, 27, "No" );
+    fl_set_button_shortcut( fdui->no, "Nn", 1 );
+
+    fli_add_q_icon( 10, 20, 33, 33 );
+
+    fl_end_form( );
+
+    fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
+							  fli_goodies_preemptive );
+
+    fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->no );
+
+    if ( fl_cntl.buttonFontSize != FL_DEFAULT_SIZE )
+		fl_fit_object_label( fdui->no, 22, 2 );
 
     fl_inverted_y = oldy;
-    fl_set_coordunit(oldu);
+    fl_set_coordunit( oldu );
+
     return fdui;
 }
+
 
 static FD_yesno *fd_yesno;
 static int default_ans;
@@ -109,8 +120,8 @@ fl_show_question(const char * str,
 		int k = 0;
 
 		first = 1;		        /* force parsing every time - why? JTT */
-		fl_parse_goodies_label( fd_yesno->yes, FLQuestionYesLabel );
-		fl_parse_goodies_label( fd_yesno->no, FLQuestionNoLabel );
+		fli_parse_goodies_label( fd_yesno->yes, FLQuestionYesLabel );
+		fli_parse_goodies_label( fd_yesno->no, FLQuestionNoLabel );
 
 		/* We don't set a shortcut if the first letter of the "yesy" label
 		   is identical to all letters in the "no" label */
@@ -135,9 +146,9 @@ fl_show_question(const char * str,
 		}
     }
 
-    fl_get_goodie_title( fd_yesno->form, FLQuestionTitle );
-    fl_handle_goodie_font( fd_yesno->yes, fd_yesno->str );
-    fl_handle_goodie_font( fd_yesno->no, 0 );
+    fli_get_goodie_title( fd_yesno->form, FLQuestionTitle );
+    fli_handle_goodie_font( fd_yesno->yes, fd_yesno->str );
+    fli_handle_goodie_font( fd_yesno->no, 0 );
 
     fl_set_object_label( fd_yesno->str, str );
 
@@ -172,5 +183,5 @@ void
 fl_hide_question( void )
 {
     if ( fd_yesno && fd_yesno->form->visible )
-		fl_object_qenter( default_ans == 1 ? fd_yesno->yes : fd_yesno->no );
+		fli_object_qenter( default_ans == 1 ? fd_yesno->yes : fd_yesno->no );
 }

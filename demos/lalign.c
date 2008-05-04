@@ -113,7 +113,6 @@ FD_form0 *create_form_form0(void)
   fl_set_pixmap_file(obj,"crab.xpm");
   fl_set_object_boxtype(obj,FL_UP_BOX);
 #endif
-  /*  fl_set_object_clip(obj, 1); */
   fdui->inside = obj = fl_add_lightbutton(FL_PUSH_BUTTON,20,120,90,30,"Inside");
     fl_set_object_callback(obj,inside_cb,0);
  fl_bgn_group();

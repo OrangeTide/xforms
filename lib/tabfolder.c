@@ -122,14 +122,14 @@ handle( FL_OBJECT * ob,
 
 				/* Don't forget nested folders */
 
-				fl_handle_form( folder, FL_MOVEORIGIN, 0, ev );
+				fli_handle_form( folder, FL_MOVEORIGIN, 0, ev );
 			}
 			break;
 
 		case FL_ATTRIB:
 		case FL_DRAW:
 			fl_set_canvas_decoration( sp->canvas,
-									  fl_boxtype2frametype( ob->boxtype ) );
+									  fli_boxtype2frametype( ob->boxtype ) );
 			sp->processing_destroy = 0;
 #if 0
 			/* for size testing */
@@ -259,7 +259,8 @@ fl_create_tabfolder( int          type,
 
     sp->canvas->u_vdata = sp;
     fl_modify_canvas_prop( sp->canvas, 0, 0, canvas_cleanup );
-    fl_set_canvas_decoration( sp->canvas, fl_boxtype2frametype( ob->boxtype ) );
+    fl_set_canvas_decoration( sp->canvas,
+							  fli_boxtype2frametype( ob->boxtype ) );
     fl_add_canvas_handler( sp->canvas, Expose, canvas_handler, 0 );
 
     fl_set_object_color( sp->canvas, ob->col1, ob->col2 );
@@ -285,10 +286,25 @@ fl_add_tabfolder( int          type,
     FL_OBJECT *ob = fl_create_tabfolder( type, x, y, w, h, l );
     SPEC *sp = ob->spec;
 
-    fl_add_child( ob, sp->canvas );
+    fli_add_child( ob, sp->canvas );
     fl_add_object( fl_current_form, ob );
 
     return ob;
+}
+
+
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_detach_form( FL_FORM * form )
+{
+    form->attached = 0;
+    if ( form->parent && form->parent->child == form )
+		form->parent->child = 0;
+    form->parent = NULL;
 }
 
 
@@ -380,11 +396,11 @@ switch_folder( FL_OBJECT * ob,
 			int last;
 
 			shift_tabs( ob, active == sp->offset ? -1 : 1 );
-			sp->title[ active ]->boxtype &= ~FL_BROKEN_BOX;
+			sp->title[ active ]->boxtype &= ~ FLI_BROKEN_BOX;
 			sp->title[ active ]->align = FL_ALIGN_CENTER;
 			last = sp->num_visible + sp->offset + 1;
 			last = FL_clamp( last, 0, sp->nforms - 1 );
-			sp->title[ last ]->boxtype |= FL_BROKEN_BOX;
+			sp->title[ last ]->boxtype |= FLI_BROKEN_BOX;
 			sp->title[ last ]->align = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
 			fl_redraw_form( ob->form );
 		}
@@ -500,7 +516,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     sp->nforms++;
     compute_position( ob );
 
-    fl_add_child( ob, tab );
+    fli_add_child( ob, tab );
     fl_add_object( ob->form, tab );
 
     if ( sp->nforms == 1 )
@@ -606,7 +622,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
     if ( i >= 0 && i < sp->nforms )
     {
 		deleted = sp->title[ i ];
-		fl_detach_form( theform = sp->forms[ i ] );
+		fli_detach_form( theform = sp->forms[ i ] );
 
 		for ( j = i + 1; j < sp->nforms; j++ )
 		{
@@ -1010,18 +1026,18 @@ compute_top_position( FL_OBJECT * ob )
 			max_h = tab->h;
 		tab->x = sp->x;
 		tab->y = sp->y;
-		fl_inherit_attributes( ob, tab );
+		fli_inherit_attributes( ob, tab );
 		sp->x += tab->w + ( ob->bw > 0 );
 		if ( sp->x < sp->canvas->x + sp->canvas->w - 2 )
 		{
 			sp->num_visible = i;
-			tab->boxtype &= ~FL_BROKEN_BOX;
+			tab->boxtype &= ~ FLI_BROKEN_BOX;
 			tab->align = FL_ALIGN_CENTER;
 			tab->visible = 1;
 		}
 		else if ( ( tab->w -= sp->x - sp->canvas->x - sp->canvas->w ) > 0 )
 		{
-			tab->boxtype |= FL_BROKEN_BOX;
+			tab->boxtype |= FLI_BROKEN_BOX;
 			tab->align = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
 			tab->visible = 1;
 		}
@@ -1082,7 +1098,7 @@ compute_bottom_position( FL_OBJECT * ob )
 		if ( tab->h > max_h )
 			max_h = tab->h;
 		tab->x = sp->x;
-		fl_inherit_attributes( ob, tab );
+		fli_inherit_attributes( ob, tab );
 		sp->x += tab->w + ( ob->bw > 0 );
     }
 
@@ -1155,17 +1171,4 @@ shift_tabs( FL_OBJECT * ob,
     sp->offset = newp;
 
     compute_position( ob );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_detach_form( FL_FORM * form )
-{
-    form->attached = 0;
-    if ( form->parent && form->parent->child == form )
-		form->parent->child = 0;
-    form->parent = 0;
 }

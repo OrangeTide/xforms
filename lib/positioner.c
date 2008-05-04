@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_posi = "$Id: positioner.c,v 1.10 2008/03/25 12:41:28 jtt Exp $";
+char *fl_id_posi = "$Id: positioner.c,v 1.11 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -154,8 +154,8 @@ handle_mouse( FL_OBJECT * ob,
 
     /* make sure the position is in bounds */
 
-    sp->xval = fl_clamp( sp->xval, sp->xmin, sp->xmax );
-    sp->yval = fl_clamp( sp->yval, sp->ymin, sp->ymax );
+    sp->xval = fli_clamp( sp->xval, sp->xmin, sp->xmax );
+    sp->yval = fli_clamp( sp->yval, sp->ymin, sp->ymax );
 
     if ( sp->xval != oldx || sp->yval != oldy )
     {
@@ -185,7 +185,7 @@ handle_it( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info("HandlePositioner", fl_event_name(event));
+    M_info("HandlePositioner", fli_event_name(event));
 #endif
 
     switch ( event )
@@ -307,7 +307,7 @@ fl_set_positioner_xvalue(FL_OBJECT * ob, double val)
 {
     SPEC *sp = ob->spec;
 
-    val = fl_clamp( val, sp->xmin, sp->xmax );
+    val = fli_clamp( val, sp->xmin, sp->xmax );
 
     if ( sp->xval != val )
     {
@@ -327,7 +327,7 @@ fl_set_positioner_yvalue( FL_OBJECT * ob,
 {
     SPEC *sp = ob->spec;
 
-    val = fl_clamp( val, sp->ymin, sp->ymax );
+    val = fli_clamp( val, sp->ymin, sp->ymax );
 
     if ( sp->yval != val )
     {
@@ -352,7 +352,7 @@ fl_set_positioner_xbounds( FL_OBJECT * ob,
     {
 		sp->xmin = min;
 		sp->xmax = max;
-		sp->xval = fl_clamp( sp->xval, sp->xmin, sp->xmax );
+		sp->xval = fli_clamp( sp->xval, sp->xmin, sp->xmax );
 		fl_redraw_object( ob );
     }
 }
@@ -372,7 +372,7 @@ fl_set_positioner_ybounds( FL_OBJECT * ob,
     {
 		sp->ymin = min;
 		sp->ymax = max;
-		sp->yval = fl_clamp( sp->yval, sp->ymin, sp->ymax );
+		sp->yval = fli_clamp( sp->yval, sp->ymin, sp->ymax );
 		fl_redraw_object( ob );
     }
 }

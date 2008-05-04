@@ -1040,11 +1040,6 @@ FL_EXPORT void fl_set_form_title(
 		const char * name
 		);
 
-FL_EXPORT void fl_set_form_property(
-		FL_FORM		 * form,
-		unsigned int   prop
-		);
-
 FL_EXPORT void fl_set_app_mainform(
 		FL_FORM * form
 		);
@@ -1324,7 +1319,11 @@ FL_EXPORT void fl_for_all_objects(
 
 
 #define fl_draw_object_outside_label fl_draw_object_label_outside
-#define	 fl_set_object_dblclick(ob, timeout)  (ob)->click_timeout = (timeout);
+
+#define	fl_set_object_dblclick( ob, timeout )  \
+	do {                                       \
+		( ob )->click_timeout = ( timeout );   \
+	} while ( 0 )
 
 FL_EXPORT void fl_set_object_geometry(
 		FL_OBJECT * obj,
@@ -1799,6 +1798,10 @@ FL_EXPORT void fl_set_err_logfp(
 
 FL_EXPORT void fl_set_error_handler(
 		FL_ERROR_FUNC user_func
+		);
+
+FL_EXPORT char ** fl_get_cmdline_args(
+		int *
 		);
 
 

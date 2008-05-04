@@ -1,4 +1,4 @@
-2008-05-03 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-04 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* fdesign/fd_forms.c: Removed limit on number of
 	forms that can be created or read from a file. Few
@@ -11,11 +11,19 @@
 	groups that can be dealt with.
 
 	* fdesign/fd/ui_theforms.fd: Changed browser for
-	groups to be multi instead of hold browser.
+	groups to be a multi instead of hold browser.
 
-	* lib/events.c: Bug I introduced myself in function
+	* lib/events.c: Bug I had ontroduced in function
 	fl_handle_event_callbacks() repaired. Thanks to
-	Andrea Scopece for finding the problem.
+	Andrea Scopece for pointing out the problem.
+
+	* everywhere: started attempt to distinguish clearly
+	between functions, variables, and macros belonging to
+	the API and those only used internally to the library
+	by having API names start with 'fl_' (or 'FL_') while
+	internal names start with 'fli_' (or FLI_'). Also
+	removed doubly declared or non-existent functions
+	in lib/flinternal.h.
 
 2008-05-01 Jens Thoms Toerring    <jtt@toerring.de>
 

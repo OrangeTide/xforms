@@ -39,7 +39,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_syml = "$Id: symbols.c,v 1.7 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_syml = "$Id: symbols.c,v 1.8 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 
@@ -165,7 +165,7 @@ fl_draw_symbol( const char * label,
     if ( ! label || *label != '@' )
 		return 0;
 
-    fl_init_symbols( );
+    fli_init_symbols( );
 
     pos = 1;
     while (    ( label[ pos ] == '-' && isdigit( ( int ) label[ pos + 1 ] ) )
@@ -913,10 +913,10 @@ draw_uparrow( FL_Coord x,
 		dx = w / 2;
 		dy = h / 2;
 		fl_line( xc - dx, yc - dy, xc + dx, yc,
-				 fl_dithered( fl_vmode ) ? FL_BLACK : FL_TOP_BCOL );
+				 fli_dithered( fl_vmode ) ? FL_BLACK : FL_TOP_BCOL );
 		fl_line( xc - dx, yc + dy, xc + dx, yc, FL_RIGHT_BCOL );
 		fl_line( xc - dx, yc - dy, xc - dx, yc + dy,
-				 fl_dithered( fl_vmode ) ? FL_BLACK : FL_LEFT_BCOL );
+				 fli_dithered( fl_vmode ) ? FL_BLACK : FL_LEFT_BCOL );
     }
 }
 
@@ -1233,7 +1233,7 @@ draw_bararrowhead0( FL_Coord x,
  ***************************************/
 
 void
-fl_init_symbols( void )
+fli_init_symbols( void )
 {
 	if ( symbols )
 		return;
@@ -1277,7 +1277,7 @@ fl_init_symbols( void )
  ***************************************/
 
 void
-fl_release_symbols( void )
+fli_release_symbols( void )
 {
 	size_t i;
 

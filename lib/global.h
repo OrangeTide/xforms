@@ -70,19 +70,20 @@ int fl_inverted_y;
 long fl_requested_vid;
 FL_IOPT fl_cntl;
 
-FL_CONTEXT *fl_context;
+FLI_CONTEXT *fli_context;
 char fl_curfnt[ 127 ];
 FL_FORM *fl_current_form;
 FL_OBJECT *fl_current_group;
 int fl_no_connection;
-FL_WIN *fl_app_win;
+FLI_WIN *fl_app_win;
 
 FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;	  /* The special event object */
 
 /* to improve link profile */
 
-void ( * fl_xyplot_return )( FL_OBJECT * ob, int );
+void ( * fl_xyplot_return )( FL_OBJECT * ob,
+							 int );
 
-FL_TARGET *flx;
+FLI_TARGET *flx;
 
 #endif /* ! def GLOBAL_H */

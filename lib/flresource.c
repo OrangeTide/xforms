@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.23 2008/04/26 16:24:49 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.24 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -65,7 +65,8 @@ static char *fl_app_name,
             *fl_app_class,
             *fl_ori_app_name;
 
-static void fl_init_resources( void );
+static void fli_init_resources( void );
+static void fli_set_debug_level( int );
 
 
 /* Command line options */
@@ -196,9 +197,8 @@ static FL_resource internal_resources[ ] =
 
 #define Niopt ( sizeof internal_resources / sizeof *internal_resources )
 
-/*
- * Program can set its own default, overriding XForms default
- */
+
+/* Program can set its own default, overriding XForms default */
 
 #define SetMember( a )   fl_cntl.a = cntl->a
 #define GetMember( a )   cntl->a
@@ -317,7 +317,7 @@ fl_set_defaults( unsigned long mask,
 		fl_set_coordunit( cntl->coordUnit );
 
     if ( mask & FL_PDDebug )
-		fl_set_debug_level( cntl->debug );
+		fli_set_debug_level( cntl->debug );
 }
 
 
@@ -412,8 +412,8 @@ fl_get_coordunit( void )
 /***************************************
  ***************************************/
 
-void
-fl_set_debug_level( int l )
+static void
+fli_set_debug_level( int l )
 {
     fl_cntl.debug = l;
     sprintf( OpDebug, "%d", fl_cntl.debug );
@@ -724,7 +724,7 @@ fl_set_resource( const char * str,
  ***************************************/
 
 static void
-fl_init_resources( void )
+fli_init_resources( void )
 {
     char res[ 256 ],
 		 cls[ 256 ],
@@ -752,7 +752,7 @@ fl_init_resources( void )
     {
 		XSynchronize( fl_display, 1 );
 		M_err( 0, "**** Synchronous Mode ********" );
-		fl_set_debug_level( 4 );
+		fli_set_debug_level( 4 );
     }
 }
 
@@ -798,7 +798,7 @@ fl_get_cmdline_args( int *n )
  ***************************************/
 
 void
-fl_free_cmdline_args( void )
+fli_free_cmdline_args( void )
 {
 	size_t i;
 
@@ -863,8 +863,8 @@ get_command_name( const char * arg0 )
 #define DumpS( a )    fprintf( stderr,"\t%s:%s\n", #a, fl_cntl.a )
 #define DumpF( a )    fprintf( stderr,"\t%s:%.3f\n", #a, fl_cntl.a )
 
-static Window GetVRoot( Display *,
-						int );
+static Window fli_GetVRoot( Display *,
+							int );
 
 
 /***************************************
@@ -872,20 +872,20 @@ static Window GetVRoot( Display *,
  ***************************************/
 
 void
-fl_init_fl_context( void )
+fli_init_context( void )
 {
-    if ( fl_context )
+    if ( fli_context )
 		return;
 
-	fl_context = fl_calloc( 1, sizeof *fl_context );
-	fl_context->io_rec        = NULL;
-	fl_context->idle_rec      = NULL;
-	fl_context->atclose       = NULL;
-	fl_context->signal_rec    = NULL;
-	fl_context->idle_delta    = TIMER_RES;
-	fl_context->hscb          = FL_HOR_THIN_SCROLLBAR;
-	fl_context->vscb          = FL_VERT_THIN_SCROLLBAR;
-	fl_context->navigate_mask = ShiftMask;   /* to navigate input field */
+	fli_context = fl_calloc( 1, sizeof *fli_context );
+	fli_context->io_rec        = NULL;
+	fli_context->idle_rec      = NULL;
+	fli_context->atclose       = NULL;
+	fli_context->signal_rec    = NULL;
+	fli_context->idle_delta    = FLI_TIMER_RES;
+	fli_context->hscb          = FL_HOR_THIN_SCROLLBAR;
+	fli_context->vscb          = FL_VERT_THIN_SCROLLBAR;
+	fli_context->navigate_mask = ShiftMask;   /* to navigate input field */
 }
 
 
@@ -893,12 +893,12 @@ fl_init_fl_context( void )
  ***************************************/
 
 void
-fl_set_input_navigate( unsigned int mask )
+fli_set_input_navigate( unsigned int mask )
 {
-     fl_init_fl_context( );
+     fli_init_context( );
 
      if ( mask == ShiftMask || mask == Mod1Mask || mask == ControlMask )
-		 fl_context->navigate_mask = mask;
+		 fli_context->navigate_mask = mask;
 }
 
 
@@ -946,7 +946,7 @@ fl_initialize( int        * na,
     setlocale( LC_ALL, "" );
 #endif
 
-    fl_internal_init( );
+    fli_internal_init( );
 
     XrmInitialize( );
 
@@ -986,7 +986,7 @@ fl_initialize( int        * na,
     fl_snprintf( disp_cls, sizeof disp_cls, "%s.flversion", fl_app_name );
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
-		fl_print_version( 0 );
+		fli_print_version( 0 );
 
     /* Get the display name first before doing anything */
 
@@ -1022,7 +1022,7 @@ fl_initialize( int        * na,
     fl_snprintf( disp_name, sizeof disp_name, "%s.debug", fl_app_name );
     fl_snprintf( disp_cls , sizeof disp_cls , "%s.Debug", fl_app_class );
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
-		fl_set_debug_level( atoi( xval.addr ) );
+		fli_set_debug_level( atoi( xval.addr ) );
 
     /* Check if -name is present */
 
@@ -1046,7 +1046,7 @@ fl_initialize( int        * na,
 
     /* load FL resources */
 
-    fl_init_resources( );
+    fli_init_resources( );
 
     fl_cntl.vclass = fl_vclass_val( fl_cntl.vname );
     fl_cntl.coordUnit = fl_get_vn_value( vn_coordunit, OpCoordUnit );
@@ -1104,7 +1104,7 @@ fl_initialize( int        * na,
 
     fl_screen = DefaultScreen( fl_display );
     fl_root = RootWindow( fl_display, fl_screen );
-    fl_vroot = GetVRoot( fl_display, fl_screen );
+    fl_vroot = fli_GetVRoot( fl_display, fl_screen );
     fl_wmstuff.pos_request = USPosition;
     flx->screen  = fl_screen;
 
@@ -1132,10 +1132,10 @@ fl_initialize( int        * na,
 
     M_info( 0, "screen DPI=%f", fl_dpi );
 
-    fl_vmode = fl_initialize_program_visual( );
-    fl_init_colormap( fl_vmode );
-    fl_init_font( );
-    fl_init_fl_context( );
+    fl_vmode = fli_initialize_program_visual( );
+    fli_init_colormap( fl_vmode );
+    fli_init_font( );
+    fli_init_context( );
 
 #ifdef XlibSpecificationRelease
     if ( XSupportsLocale( ) )
@@ -1144,24 +1144,24 @@ fl_initialize( int        * na,
 
         /* use the same input method throughout xforms */
 
-        fl_context->xim = XOpenIM( fl_display, 0, 0, 0 );
+        fli_context->xim = XOpenIM( fl_display, 0, 0, 0 );
 
         /* also use the same input context */
 
-        if ( fl_context->xim )
+        if ( fli_context->xim )
         {
             int style =  XIMPreeditNothing | XIMStatusNothing;
 
-            fl_context->xic = XCreateIC( fl_context->xim,
-										 XNInputStyle, style,
-										 ( char * ) NULL );
+            fli_context->xic = XCreateIC( fli_context->xim,
+										  XNInputStyle, style,
+										  ( char * ) NULL );
 
 	    /* Clean-up on failure */
 
-			if ( ! fl_context->xic )
+			if ( ! fli_context->xic )
 			{
 				M_err( "fl_initialize", "Could not create an input context" );
-				XCloseIM( fl_context->xim );
+				XCloseIM( fli_context->xim );
 			}
         }
 		else
@@ -1169,8 +1169,8 @@ fl_initialize( int        * na,
     }
 #endif
 
-    fl_default_xswa( );
-    fl_init_stipples( );
+    fli_default_xswa( );
+    fli_init_stipples( );
     set_err_msg_func( fl_show_alert );
 
     /* if using non-default visual or private colormap, need a window with
@@ -1178,64 +1178,65 @@ fl_initialize( int        * na,
 
     fl_state[ fl_vmode ].trailblazer = fl_root;
 
-    if (    fl_visual( fl_vmode ) != DefaultVisual( fl_display, fl_screen )
+    if (    fli_visual( fl_vmode ) != DefaultVisual( fl_display, fl_screen )
 		 || fl_state[ fl_vmode ].pcm )
     {
 		fl_state[ fl_vmode ].trailblazer =
-			fl_create_window( fl_root, fl_colormap( fl_vmode ), "trailblazer" );
+		   fli_create_window( fl_root, fli_colormap( fl_vmode ),
+							  "trailblazer" );
     }
 
     if ( strcmp( OpSCBT, "plain" ) == 0 )
     {
-		fl_context->hscb = FL_HOR_PLAIN_SCROLLBAR;
-		fl_context->vscb = FL_VERT_PLAIN_SCROLLBAR;
+		fli_context->hscb = FL_HOR_PLAIN_SCROLLBAR;
+		fli_context->vscb = FL_VERT_PLAIN_SCROLLBAR;
     }
     else if ( strcmp( OpSCBT, "normal" ) == 0 )
     {
-		fl_context->hscb = FL_HOR_SCROLLBAR;
-		fl_context->vscb = FL_VERT_SCROLLBAR;
+		fli_context->hscb = FL_HOR_SCROLLBAR;
+		fli_context->vscb = FL_VERT_SCROLLBAR;
     }
     else if ( strcmp( OpSCBT, "thin" ) == 0 )
     {
-		fl_context->hscb = FL_HOR_THIN_SCROLLBAR;
-		fl_context->vscb = FL_VERT_THIN_SCROLLBAR;
+		fli_context->hscb = FL_HOR_THIN_SCROLLBAR;
+		fli_context->vscb = FL_VERT_THIN_SCROLLBAR;
     }
     else if ( strcmp( OpSCBT, "nice" ) == 0 )
     {
-		fl_context->hscb = FL_HOR_NICE_SCROLLBAR;
-		fl_context->vscb = FL_VERT_NICE_SCROLLBAR;
+		fli_context->hscb = FL_HOR_NICE_SCROLLBAR;
+		fli_context->vscb = FL_VERT_NICE_SCROLLBAR;
     }
 
-    fl_context->max_request_size = XMaxRequestSize( fl_display );
+    fli_context->max_request_size = XMaxRequestSize( fl_display );
 
-    if ( fl_context->max_request_size < 4096 )
+    if ( fli_context->max_request_size < 4096 )
     {
 		M_err( "init", "Something is wrong with max_request_size:%ld",
-			   fl_context->max_request_size );
-		fl_context->max_request_size = 4096;
+			   fli_context->max_request_size );
+		fli_context->max_request_size = 4096;
     }
 
 
 #if XlibSpecificationRelease >= 6
-    fl_context->ext_request_size = XExtendedMaxRequestSize( fl_display );
+    fli_context->ext_request_size = XExtendedMaxRequestSize( fl_display );
 #else
-    fl_context->ext_request_size = 0;
+    fli_context->ext_request_size = 0;
 #endif
 
-    if ( fl_context->ext_request_size == 0 )
-		fl_context->ext_request_size = fl_context->max_request_size;
+    if ( fli_context->ext_request_size == 0 )
+		fli_context->ext_request_size = fli_context->max_request_size;
 
-    fl_context->max_request_size -= 8;
-    fl_context->ext_request_size -= 8;
-    fl_context->tooltip_time = 600;
+    fli_context->max_request_size -= 8;
+    fli_context->ext_request_size -= 8;
+    fli_context->tooltip_time = 600;
 
     fl_add_io_callback( ConnectionNumber( fl_display ), FL_READ, 0, 0 );
 
     /* has to be here, otherwise fl_add_symbol won't be able to replace the
        built-in */
 
-    fl_init_symbols( );
-    fl_init_goodies( );
+    fli_init_symbols( );
+    fli_init_goodies( );
 
     /* hang the database on the display so application can get it */
 
@@ -1252,8 +1253,8 @@ fl_initialize( int        * na,
 #include <X11/Xatom.h>
 
 static Window
-GetVRoot( Display * dpy,
-		  int       scr )
+fli_GetVRoot( Display * dpy,
+			  int       scr )
 {
     Window       rootReturn;
 	Window	     parentReturn;
@@ -1300,15 +1301,15 @@ GetVRoot( Display * dpy,
  ***************************************/
 
 static void
-get_app_resource( FL_resource * appresource,
-				  int           n )
+fli_get_app_resource( FL_resource * appresource,
+					  int           n )
 {
     FL_resource *flr = appresource,
 		        *flrs = flr + n;
 
     for ( ; flr < flrs; flr++ )
 		if ( flr->type == FL_STRING && flr->nbytes == 0 )
-			M_err( "AppResource", "%s: buflen==0", flr->res_name );
+			M_err( "fl_get_app_resources", "%s: buflen==0", flr->res_name );
 	else
 	    fl_get_resource( flr->res_name, flr->res_class,
 						 flr->type, flr->defval, flr->var, flr->nbytes );
@@ -1325,12 +1326,12 @@ fl_get_app_resources( FL_resource * appresource,
     char *tmp = fl_app_name;
 
     fl_app_name = fl_ori_app_name;
-    get_app_resource( appresource, n );
+    fli_get_app_resource( appresource, n );
 
     if ( fl_app_name != tmp )
     {
 		fl_app_name = tmp;
-		get_app_resource( appresource, n );
+		fli_get_app_resource( appresource, n );
     }
 }
 
@@ -1344,7 +1345,7 @@ fl_flip_yorigin( void )
     if ( ! fl_display )
 		fl_inverted_y = 1;
     else
-		M_err( "YCoord", "Only supported before fl_initialize" );
+		M_err( "fl_flip_yorigin", "Only supported before fl_initialize" );
 }
 
 
@@ -1352,24 +1353,11 @@ fl_flip_yorigin( void )
  ***************************************/
 
 void
-fl_set_app_name( const char * n,
-				 const char * c )
+fli_set_app_name( const char * n,
+				  const char * c )
 {
     if ( n )
 		fl_app_name = fl_strdup( n );
     if ( c )
 		fl_app_class = fl_strdup( c );
-}
-
-
-/***************************************
- ***************************************/
-
-Display *
-fl_init( void )
-{
-    int argc = 1;
-    static char *tmp = "random_command";
-
-    return fl_initialize( &argc, &tmp, 0, 0, 0 );
 }

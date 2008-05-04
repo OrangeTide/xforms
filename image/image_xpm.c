@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xpm.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_xpm.c,v 1.5 2008/05/04 21:07:58 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -369,30 +369,38 @@ XPM_dump(FL_IMAGE * im)
 
 
 static char *
-get_xpm_pixel_name(char str[])
+get_xpm_pixel_name( char *str )
 {
-    char *name = fl_basename(str), *q, *p;
+    char *name,
+		 *q,
+		 *p;
+
+	if ( ! ( name = strrchr( str, '/' ) ) )
+		 name = str;
 
     /* get rid of extension */
-    if ((q = strchr(name, '.')))
-	*q = '\0';
+
+    if ( ( q = strchr( name, '.' ) ) )
+		*q = '\0';
 
     /* make sure it's a legal C name */
-    if (!isalpha( ( int ) name[0]))
-	name[0] = 'A';
 
-    for (p = name + 1; *p; p++)
-	if (!isalnum( ( int ) *p) && *p != '_')
-	    *p = '_';
+	if ( ! isalpha( ( int ) *name ) )
+		*name = 'A';
+
+    for ( p = name + 1; *p; p++ )
+		if ( ! isalnum( ( int ) *p ) && *p != '_' )
+			*p = '_';
 
     return name;
 }
 
+
 void
-flimage_enable_xpm(void)
+flimage_enable_xpm( void )
 {
-    flimage_add_format("XPM format", "xpm", "xpm",
-		       FL_IMAGE_CI,
-		       XPM_identify, XPM_description,
-		       XPM_load, XPM_dump);
+    flimage_add_format( "XPM format", "xpm", "xpm",
+						FL_IMAGE_CI,
+						XPM_identify, XPM_description,
+						XPM_load, XPM_dump );
 }

@@ -43,8 +43,8 @@
  ***************************************/
 
 void
-fl_add_child( FL_OBJECT * parent,
-			  FL_OBJECT * child )
+fli_add_child( FL_OBJECT * parent,
+			   FL_OBJECT * child )
 {
     FL_OBJECT *t;
 
@@ -80,27 +80,7 @@ fl_add_child( FL_OBJECT * parent,
  ***************************************/
 
 void
-fl_delete_child( FL_OBJECT * child )
-{
-    FL_OBJECT *obj;
-
-    for ( obj = child->parent->child; obj && obj->nc != child; obj = obj->nc )
-		/* empty */ ;
-
-    if ( obj )
-    {
-		obj->nc = child->nc;
-		child->is_child = 0;
-		child->nc = 0;
-    }
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_hide_composite( FL_OBJECT * ob )
+fli_hide_composite( FL_OBJECT * ob )
 {
     for ( ob = ob->child; ob; ob = ob->nc )
     {
@@ -115,30 +95,7 @@ fl_hide_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_delete_composite( FL_OBJECT * ob )
-{
-    for ( ob = ob->child; ob; ob = ob->nc )
-	{
-		if ( ! ob->form )
-		{
-			M_err( "fl_delete_composite", "Deleting object without form" );
-			return;
-		}
-
-		if ( ob->child )
-			fl_delete_composite( ob );
-
-		ob->child = NULL;
-		fl_delete_object( ob) ;
-	}
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_free_composite( FL_OBJECT * ob )
+fli_free_composite( FL_OBJECT * ob )
 {
     FL_OBJECT *next;
 
@@ -146,12 +103,12 @@ fl_free_composite( FL_OBJECT * ob )
 	{
 		if ( ! ob->form )
 		{
-			M_err( "fl_free_composite", "Freeing object without form" );
+			M_err( "fli_free_composite", "Freeing object without form" );
 			return;
 		}
 
 		if ( ob->child )
-			fl_free_composite( ob );
+			fli_free_composite( ob );
 		ob->child = NULL;
 		next = ob->next;
 		fl_free_object( ob ) ;
@@ -163,7 +120,7 @@ fl_free_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_show_composite( FL_OBJECT * ob )
+fli_show_composite( FL_OBJECT * ob )
 {
     FL_OBJECT *tmp;
 
@@ -176,7 +133,7 @@ fl_show_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_deactivate_composite( FL_OBJECT * ob )
+fli_deactivate_composite( FL_OBJECT * ob )
 {
     ob->parent->active = DEACTIVATED;
     for ( ob = ob->child; ob; ob = ob->nc )
@@ -188,7 +145,7 @@ fl_deactivate_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_activate_composite( FL_OBJECT * ob )
+fli_activate_composite( FL_OBJECT * ob )
 {
     ob->parent->active = 1;
     for ( ob = ob->child; ob; ob = ob->nc )
@@ -200,8 +157,8 @@ fl_activate_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_composite_resize( FL_OBJECT *  ob,
-						 unsigned int resize )
+fli_set_composite_resize( FL_OBJECT *  ob,
+						  unsigned int resize )
 {
     for ( ob = ob->child; ob; ob = ob->nc )
 		ob->resize = resize;
@@ -212,9 +169,9 @@ fl_set_composite_resize( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_set_composite_gravity( FL_OBJECT *  ob,
-						  unsigned int nw,
-						  unsigned int se )
+fli_set_composite_gravity( FL_OBJECT *  ob,
+						   unsigned int nw,
+						   unsigned int se )
 {
     for ( ob = ob->child; ob; ob = ob->nc )
     {
@@ -228,8 +185,8 @@ fl_set_composite_gravity( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_insert_composite_after( FL_OBJECT * comp,
-						   FL_OBJECT * node )
+fli_insert_composite_after( FL_OBJECT * comp,
+							FL_OBJECT * node )
 {
     FL_OBJECT *next,
 		      *tmp,
@@ -238,13 +195,13 @@ fl_insert_composite_after( FL_OBJECT * comp,
 
     if ( ! comp || !node )
     {
-		M_err( "fl_insert_composite_after", "Bad argument" );
+		M_err( "fli_insert_composite_after", "Bad argument" );
 		return;
     }
 
     if ( ! ( form = node->form ) )
     {
-		M_err( "fl_insert_composite_after", "Null form" );
+		M_err( "fli_insert_composite_after", "Null form" );
 		return;
     }
 
@@ -281,8 +238,8 @@ fl_insert_composite_after( FL_OBJECT * comp,
  ***************************************/
 
 void
-fl_change_composite_parent( FL_OBJECT * comp,
-							FL_OBJECT * newparent )
+fli_change_composite_parent( FL_OBJECT * comp,
+							 FL_OBJECT * newparent )
 {
     FL_OBJECT *tmp;
 
@@ -297,8 +254,8 @@ fl_change_composite_parent( FL_OBJECT * comp,
  ***************************************/
 
 void
-fl_add_composite( FL_FORM *   form,
-				  FL_OBJECT * ob )
+fli_add_composite( FL_FORM *   form,
+				   FL_OBJECT * ob )
 {
     FL_OBJECT *tmp,
 		      *tmp1 = ob;
@@ -340,7 +297,7 @@ fl_get_object_component( FL_OBJECT * composite,
  ***************************************/
 
 void
-fl_mark_composite_for_redraw( FL_OBJECT * ob )
+fli_mark_composite_for_redraw( FL_OBJECT * ob )
 {
     FL_OBJECT *tmp;
 
@@ -352,12 +309,12 @@ fl_mark_composite_for_redraw( FL_OBJECT * ob )
 
 /***************************************
  * copy the parent attributes. gravity stuff is taken care of by
- * fl_add_child()
+ * fli_add_child()
  ***************************************/
 
 void
-fl_inherit_attributes( FL_OBJECT * parent,
-					   FL_OBJECT * child )
+fli_inherit_attributes( FL_OBJECT * parent,
+						FL_OBJECT * child )
 {
     child->bw = parent->bw;
     child->lcol = parent->lcol;

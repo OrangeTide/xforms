@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.11 2008/03/19 21:04:23 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.12 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -105,12 +105,12 @@ do_menu( FL_OBJECT * ob )
 		Window oparent,
 			   win;
 
-		fl_getpup_window( sp->extern_menu, &oparent, &win );
+		fli_getpup_window( sp->extern_menu, &oparent, &win );
 
 		if ( ob->label && *ob->label && ob->type != FL_PULLDOWN_MENU )
 			fl_setpup_title( sp->extern_menu, ob->label );
 
-		fl_reparent_pup( sp->extern_menu, FL_ObjWin( ob ) );
+		fli_reparent_pup( sp->extern_menu, FL_ObjWin( ob ) );
 		val = fl_dopup( sp->extern_menu );
 
 		if ( val > 0 )
@@ -118,7 +118,7 @@ do_menu( FL_OBJECT * ob )
 
 		/* menu might go away, need to restore old parent */
 
-		fl_reparent_pup( sp->extern_menu, oparent );
+		fli_reparent_pup( sp->extern_menu, oparent );
 		return val;
     }
 
@@ -209,7 +209,7 @@ handle_menu( FL_OBJECT * ob,
     FL_COLOR col;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "handle_menu", fl_event_name( event ) );
+    M_info2( "handle_menu", fli_event_name( event ) );
 #endif
 
     switch ( event )
@@ -520,7 +520,7 @@ fl_replace_menu_item( FL_OBJECT *  ob,
     SPEC *sp = ob->spec;
 
     if ( ISPUP( sp ) )
-		fl_replacepup_text( sp->extern_menu, numb, str );
+		fli_replacepup_text( sp->extern_menu, numb, str );
     else
     {
 		if ( numb < 1 || numb > sp->numitems )

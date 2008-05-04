@@ -13,7 +13,23 @@ V1.1 ???????????
     redraw only the part of the window that has changed.
   o Fix compilation on SCO OpenServer, AIX and systems without GNU make.
 ------------------------------------------
-V1.0.91pre5 April xx, 2008
+V1.0.91pre7 May xx, 2008
+  o New function fl_show_msg() that takes a printf()-like format
+    string an then as many arguments as there are format specifiers
+    in the format string.
+  o Message boxes created via fl_show_message(), fl_show_messages(0
+    and fl_show_nsg() automatically have a size that allows all text
+    to be shown. Amount of text isn't limited anymore.
+  o Vertical scrollbars only ge resized in y-direction, horizontal
+    ones only in x-direction.
+  o Date input fields now handle leap years correctly.
+  o <TAB> can now also be used to "jump" out of multi-line input
+    objects.
+  o In file selectors that have a callback the input box for entering
+    a file name isnt shown anymore - the text entered there could
+    never be used.
+------------------------------------------
+V1.0.91pre5 April 9, 2008
   o Memory allocation bug in fl_initialize() fixed.
   o Output of fdesign should now be valid C (ANSI 89)
   o Number of symbols and length of names not limited anymore.

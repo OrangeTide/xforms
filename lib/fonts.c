@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.9 2008/03/19 21:04:22 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.10 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -60,7 +60,7 @@ static char *get_fname( const char *str,
  * the availability of the fonts and capabilities of the server, the
  * font may or may not be scalable.
  *
- * Resolution field is purposely left blank as the resolution reported
+ * Resolution field is left blank on purpose as the resolution reported
  * by the server is not reliable thus the program can't force the
  * resolution. This way the admins can set the proper font path.
  *
@@ -69,7 +69,7 @@ static char *get_fname( const char *str,
  *
  */
 
-static const char *fnts[FL_MAXFONTS] =
+static const char *fnts[ FL_MAXFONTS ] =
 {
     "-*-helvetica-medium-r-*-*-*-?-*-*-p-*-*-*",
     "-*-helvetica-bold-r-*-*-*-?-*-*-p-*-*-*",
@@ -94,7 +94,7 @@ static const char *fnts[FL_MAXFONTS] =
     "-*-symbol-medium-r-*-*-*-?-*-*-*-*-*-*",
 };
 
-static FL_FONT fl_fonts[FL_MAXFONTS];
+static FL_FONT fl_fonts[ FL_MAXFONTS ];
 
 static const char *cv_fname( const char * );
 
@@ -104,7 +104,7 @@ static const char *cv_fname( const char * );
 
 /***************************************
  * Global initialization routine. Must be called before any font
- * routine can be used. We can place fl_init_font in all font switching
+ * routine can be used. We can place fli_init_font in all font switching
  * and string size query routines so a seperate initialization is not
  * needed, and it has the added bonus that startup *may* be faster,
  * but we pay a function call overhead in every call to any of these
@@ -112,7 +112,7 @@ static const char *cv_fname( const char * );
  ***************************************/
 
 void
-fl_init_font( void )
+fli_init_font( void )
 {
     FL_FONT *flf = fl_fonts;
     const char *const *f = fnts;
@@ -130,15 +130,13 @@ fl_init_font( void )
 		if ( ! flf->fname[ 0 ])
 			strcpy( flf->fname, *f );
 
-    /* load a default font */
+    /* Load a default font */
 
     if (    ! defaultfs
 		 && !( defaultfs = XLoadQueryFont( flx->display, DEFAULTF1 ) ) )
 		defaultfs = XLoadQueryFont( flx->display, DEFAULTF2 );
 
-    M_warn("InitFont", "Done" );
-
-    /* load a couple of fonts at normal size to prevent the caching code from
+    /* Load a couple of fonts at normal size to prevent the caching code from
        using bad looking replacement if strange sizes are requested */
 
     fl_get_font_struct( FL_NORMAL_STYLE, FL_DEFAULT_SIZE );
@@ -248,7 +246,8 @@ fl_enumerate_fonts( void ( * output )( const char *s ),
 		{
 			output( shortform ? cv_fname( flf->fname ) : flf->fname );
 			n++;
-	}
+		}
+
     return n;
 }
 
@@ -282,7 +281,7 @@ fl_try_get_font_struct( int numb,
 			 * loadable or not, so need not be a fatal condition if
 			 * it fails. Issue a message for information therefore. */
 
-			M_info( "SetFont", "Bad FontStyle request %d: %s",
+			M_info( "SetFont", "Bad FontStyle requested: %d: %s",
 					numb, flf->fname );
 		}
 
@@ -353,7 +352,7 @@ fl_try_get_font_struct( int numb,
 			}
 		}
 
-		fs = ( k == -1 ) ? ( flx->fs ? flx->fs : defaultfs ) : flf->fs[ k ];
+		fs = k == -1 ? ( flx->fs ? flx->fs : defaultfs ) : flf->fs[ k ];
 
 		/* if we did not get it this time, we won't get it next time either,
 		   so replace it with whatever we found  */
@@ -381,31 +380,6 @@ fl_get_font_struct( int style,
 }
 
 
-#if 0
-/***************************************
-* Similar to enumerate_font, but also prints out the sizes cached
- * primarily for debugging
- ***************************************/
-void
-fl_enumerate_loaded_font( void )
-{
-    FL_FONT *flf = fl_fonts,
-		    *fe = flf + FL_MAXFONTS;
-    int i;
-
-    for ( ; flf < fe; flf++ )
-    {
-		if ( flf->fname[ 0 ] )
-			printf( "\n%s: ", cv_fname( flf->fname ) );
-		for ( i = 0; flf->fname[ 0 ] && i < flf->nsize; i++ )
-			printf( "%d ", flf->size[ i ] );
-    }
-    printf("\n");
-}
-
-#endif
-
-
 /***************************************
  * Similar to fl_get_string_xxxGC except that there is no side effects.
  * Must not free the fontstruct as structure FL_FONT caches the
@@ -428,12 +402,11 @@ fl_get_string_width( int          style,
  ***************************************/
 
 int
-fl_get_string_widthTABfs( XFontStruct * fs,
-						  const char *  s,
-						  int           len )
+fli_get_string_widthTABfs( XFontStruct * fs,
+						   const char *  s,
+						   int           len )
 {
     int w,
-		tmpw,
 		tab;
     const char *p,
 		       *q;
@@ -441,19 +414,16 @@ fl_get_string_widthTABfs( XFontStruct * fs,
     if ( fl_no_connection )
 		return 12 * len;
 
-    tab = fl_get_tabpixels( fs );
+    tab = fli_get_tabpixels( fs );
 
     for ( w = 0, q = s; *q && ( p = strchr( q, '\t' ) ) && ( p - s ) < len;
 		  q = p + 1 )
     {
-		tmpw = XTextWidth( fs, q, p - q );
-		w += tmpw;
+		w += XTextWidth( fs, q, p - q );
 		w = ( ( w / tab ) + 1 ) * tab;
     }
 
-    tmpw = XTextWidth( fs, q, len - ( q - s ) );
-    w += tmpw;
-    return w;
+    return w += XTextWidth( fs, q, len - ( q - s ) );
 }
 
 
@@ -468,7 +438,7 @@ fl_get_string_widthTAB( int          style,
 {
     XFontStruct *fs = fl_get_font_struct( style, size );
 
-    return fl_get_string_widthTABfs( fs, s, len );
+    return fli_get_string_widthTABfs( fs, s, len );
 }
 
 
@@ -498,8 +468,6 @@ fl_get_string_height( int          style,
 		*asc = a;
     if ( desc )
 		*desc = d;
-
-    /* in case asc == desc */
 
     return a + d;
 }
@@ -561,9 +529,10 @@ fl_get_string_dimension( int          fntstyle,
 											  q, len - ( q - s ) ) );
     maxh += h;
 
-    *width = maxw;
+    *width  = maxw;
     *height = maxh;
 }
+
 
 /*
  * Tab handling. Currently only one tab
@@ -621,7 +590,7 @@ fl_set_tabstops( int          n,
  ***************************************/
 
 int
-fl_get_tabpixels( XFontStruct * fs )
+fli_get_tabpixels( XFontStruct * fs )
 {
     return   XTextWidth( fs, tabstop[ 0 ], tabstopNchar[ 0 ] )
 		   + XTextWidth( fs, " ", 1 );
@@ -642,22 +611,23 @@ cv_fname( const char *f )
     char *q,
 		 *p;
 
-    /* remove all the garbages from head */
+    /* Remove all the garbages from head */
 
     for ( q = strcpy( fname, f ); *q && is_garb( *q ); q++ )
 		/* empty */ ;
 
-    /* remove all the garbage from the end, starting from ? */
+    /* Remove all the garbage from the end, starting from ? */
 
     if ( ( p = strchr( fname, '?' ) ) )
 		*--p = '\0';
 
-    /* remove all remaining garbages */
+    /* Remove all remaining garbages */
 
     for ( p = fname + strlen( fname ) - 1; p > q && is_garb( *p ); p-- )
 		/* empty */ ;
 
     *++p = '\0';
+
     return q;
 }
 

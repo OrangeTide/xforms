@@ -41,7 +41,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.11 2008/03/25 12:41:30 jtt Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.12 2008/05/04 21:08:01 jtt Exp $";
 #endif
 
 
@@ -306,10 +306,10 @@ draw_points( FL_OBJECT * ob  FL_UNUSED_ARG,
  ***************************************/
 
 int
-fl_xyplot_interpolate( FL_OBJECT * ob,
-					   int         id,
-					   int         n1,
-					   int         n2 )
+fli_xyplot_interpolate( FL_OBJECT * ob,
+						int         id,
+						int         n1,
+						int         n2 )
 {
     SPEC *sp = ob->spec;
     int newn;
@@ -436,10 +436,10 @@ mapw2s( SPEC *     sp,
  ***************************************/
 
 void
-fl_xyplot_compute_data_bounds( FL_OBJECT * ob,
-							   int *       n1,
-							   int *       n2,
-							   int         id )
+fli_xyplot_compute_data_bounds( FL_OBJECT * ob,
+								int *       n1,
+								int *       n2,
+								int         id )
 {
     SPEC *sp = ob->spec;
     int i;
@@ -536,7 +536,7 @@ draw_curve_only( FL_OBJECT * ob )
 		   desired, get rid of them so actual data that get plotted are bound
 		   by (n1, n2) */
 
-		fl_xyplot_compute_data_bounds( ob, &n1, &n2, nplot );
+		fli_xyplot_compute_data_bounds( ob, &n1, &n2, nplot );
 
 		/* convert data */
 
@@ -544,7 +544,7 @@ draw_curve_only( FL_OBJECT * ob )
 
 		if (    sp->interpolate[ nplot ] > 1
 			 && n2 - n1 > 3
-			 && ( newn = fl_xyplot_interpolate( ob, nplot, n1, n2 ) ) >= 0 )
+			 && ( newn = fli_xyplot_interpolate( ob, nplot, n1, n2 ) ) >= 0 )
 		{
 			x = sp->wx;
 			y = sp->wy;
@@ -721,10 +721,10 @@ draw_curve_only( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_xyplot_nice_label( float tic,
-					  int   minor,
-					  float f,
-					  char  label[ ] )
+fli_xyplot_nice_label( float tic,
+					   int   minor,
+					   float f,
+					   char  label[ ] )
 {
     float crit = tic * minor;
 
@@ -1038,8 +1038,8 @@ add_xtics( FL_OBJECT * ob )
 		fl_line( xr, yi, xr, yf, ob->col2 );
 
 		if ( ! sp->axtic[ 0 ] )
-			fl_xyplot_nice_label( tic, sp->xminor,
-								  sp->xmajor_val[ i ], label = buf );
+			fli_xyplot_nice_label( tic, sp->xminor,
+								   sp->xmajor_val[ i ], label = buf );
 		else
 		{
 			char *p;
@@ -1205,8 +1205,8 @@ add_ytics( FL_OBJECT * ob )
 		fl_line( sp->xi - ticl, yr, sp->xi, yr, ob->col2 );
 
 		if ( ! sp->aytic[ 0 ] )
-			fl_xyplot_nice_label( tic, sp->yminor,
-								  sp->ymajor_val[ i ], label = buf );
+			fli_xyplot_nice_label( tic, sp->yminor,
+								   sp->ymajor_val[ i ], label = buf );
 		else
 		{
 			if ( ( p = strchr( sp->aytic[ i ], '@' ) ) )
@@ -1257,7 +1257,8 @@ convert_coord( FL_OBJECT * ob,
 		extray2 += ticl + fh + ( sp->xscale == FL_LOG );
 
 		if ( ! sp->axtic[ 0 ] )
-			fl_xyplot_nice_label( sp->xtic, sp->xminor, sp->xmax, label = buf );
+			fli_xyplot_nice_label( sp->xtic, sp->xminor, sp->xmax,
+								   label = buf );
 		else
 			label = sp->axtic[ sp->xmajor - 1 ];
 
@@ -1270,8 +1271,8 @@ convert_coord( FL_OBJECT * ob,
 		if ( sp->ytic < 0 )
 		{
 			if ( ! sp->axtic[ 0 ] )
-				fl_xyplot_nice_label( sp->xtic, sp->xminor, sp->xmin,
-									  label = buf );
+				fli_xyplot_nice_label( sp->xtic, sp->xminor, sp->xmin,
+									   label = buf );
 			else
 				label = sp->axtic[ 0 ];
 
@@ -1299,10 +1300,12 @@ convert_coord( FL_OBJECT * ob,
 			}
 			else
 			{
-				fl_xyplot_nice_label( sp->ytic, sp->yminor, sp->yscmax, label );
+				fli_xyplot_nice_label( sp->ytic, sp->yminor, sp->yscmax,
+									   label );
 				w = fl_get_string_width( sp->lstyle, sp->lsize, label,
 										 strlen( label ) );
-				fl_xyplot_nice_label( sp->ytic, sp->yminor, sp->yscmin, label );
+				fli_xyplot_nice_label( sp->ytic, sp->yminor, sp->yscmin,
+									   label );
 				tmpw = fl_get_string_width( sp->lstyle, sp->lsize, label,
 											strlen( label ) );
 			}
@@ -1992,7 +1995,7 @@ handle_it( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleXYPlot", fl_event_name( event ) );
+    M_info2( "HandleXYPlot", fli_event_name( event ) );
 #endif
 
     sp->lsize = ob->lsize;

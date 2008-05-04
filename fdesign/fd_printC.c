@@ -822,8 +822,7 @@ convert_u( FL_Coord l )
     FL_Coord len = l,
 		     t = 0;
 
-
-    fl_scale_length( &t, &len, get_conversion_factor( ) );
+    fli_scale_length( &t, &len, get_conversion_factor( ) );
     return len;
 }
 
@@ -1551,13 +1550,13 @@ output_object( FILE      * fn,
 	{
 	    if ( obj->objclass != FL_CANVAS )
 			fprintf( fn, "    fl_set_object_color( obj, %s, %s );\n",
-					 fl_query_colorname( obj->col1 ),
-					 fl_query_colorname( obj->col2 ) );
+					 fli_query_colorname( obj->col1 ),
+					 fli_query_colorname( obj->col2 ) );
 	}
 
 	if ( obj->lcol != defobj->lcol )
 	    fprintf( fn, "    fl_set_object_lcolor( obj, %s );\n",
-				 fl_query_colorname( obj->lcol ) );
+				 fli_query_colorname( obj->lcol ) );
 
 	if ( obj->lsize != defobj->lsize )
 	    emit_attrib( fn, obj->lsize, vn_lsize, "fl_set_object_lsize" );

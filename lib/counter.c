@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.11 2008/03/25 12:41:27 jtt Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.12 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -294,7 +294,7 @@ handle_mouse( FL_OBJECT * ob,
 		if ( sp->mouseobj == OB3 )
 			sp->val += sp->lstep;
 
-		sp->val = fl_clamp( sp->val, sp->min, sp->max );
+		sp->val = fli_clamp( sp->val, sp->min, sp->max );
 
 		if ( sp->val != oval )
 		{
@@ -359,7 +359,7 @@ handle_counter( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleCounter", fl_event_name( event ) );
+    M_info2( "HandleCounter", fli_event_name( event ) );
 #endif
 
     switch ( event )
@@ -509,7 +509,7 @@ fl_set_counter_value( FL_OBJECT * ob,
     }
 #endif
 
-    val = fl_clamp( val, sp->min, sp->max );
+    val = fli_clamp( val, sp->min, sp->max );
     if ( sp->val != val )
     {
 		sp->val = val;
@@ -556,7 +556,7 @@ fl_set_counter_bounds( FL_OBJECT * ob,
     {
 		sp->min = min;
 		sp->max = max;
-		sp->val = fl_clamp( sp->val, sp->min, sp->max );
+		sp->val = fli_clamp( sp->val, sp->min, sp->max );
 		fl_redraw_object( ob );
     }
 }

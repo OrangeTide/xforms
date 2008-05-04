@@ -39,7 +39,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_dlist = "$Id: listdir.c,v 1.12 2008/03/12 16:00:25 jtt Exp $";
+char *fl_id_dlist = "$Id: listdir.c,v 1.13 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -84,6 +84,7 @@ char *fl_id_dlist = "$Id: listdir.c,v 1.12 2008/03/12 16:00:25 jtt Exp $";
 #include "flinternal.h"
 #include "local.h"
 #include "ulib.h"
+
 
 
 /******** limits and macros *********/
@@ -189,8 +190,8 @@ static char fname[ MAXFL + 2 ];
 
 /******* local function forward dec **********/
 
-extern int fl_wildmat( const char *,
-					   const char * );
+static int fli_wildmat( const char *, 
+						const char * );
 static int tc_sort( const void *,
 					const void * );
 static int tc_scandir( const char *,
@@ -266,7 +267,7 @@ fselect( const char  * d_name,
 
 		ret =    S_ISDIR(mode)
 			  || (    ( S_ISREG( mode ) || S_ISLNK( mode ) )
-				   && fl_wildmat( d_name, cpat ) );
+				   && fli_wildmat( d_name, cpat ) );
     }
     else
     {
@@ -274,9 +275,9 @@ fselect( const char  * d_name,
 
         if ( ! filter_directory )
            ret = *type == FT_DIR
-			     || ( fl_wildmat( d_name, cpat ) && ffilter( fname, *type ) );
+			     || ( fli_wildmat( d_name, cpat ) && ffilter( fname, *type ) );
         else
-			ret =    ( *type == FT_DIR || fl_wildmat( d_name, cpat ) )
+			ret =    ( *type == FT_DIR || fli_wildmat( d_name, cpat ) )
 				  && ffilter( fname, *type );
     }
     return ret;
@@ -303,13 +304,14 @@ fselect( struct _finddata_t * c_file,
 		ret = 1;
     else if ( ffilter == default_filter )
     {				/* always keep directory and links */
-		ret = type == FT_DIR || fl_wildmat( c_file->name, cpat );
+		ret = type == FT_DIR || fli_wildmat( c_file->name, cpat );
     }
     else
     {
 		strcat( strcpy( fname, cdir ), c_file->name );
 		ret =    type == FT_DIR
-			  || ( fl_wildmat( c_file->name, cpat ) && ffilter( fname, type ) );
+			  || (    flo_wildmat( c_file->name, cpat )
+				   && ffilter( fname, type ) );
     }
 
     if ( ret )
@@ -692,11 +694,11 @@ fl_fix_dirname( char *dir )
 
     if ( ! *dir )    /* Here's some bullshit going one, what's ldir set to ? */
     {
-		return fl_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );
+		return fli_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );
     }
     else if ( dir[ 0 ] == '.' && dir[ 1 ] == '.' && dir[ 2 ] == '\0' )
     {
-		fl_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );
+		fli_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );
 		if ( ( p = strrchr( dir ? dir : ldir, '/' ) ) )
 			*p = '\0';
 		return dir ? dir : ldir;
@@ -732,7 +734,7 @@ fl_fix_dirname( char *dir )
     else
 #endif
 		if ( ldir[ 0 ] != '/' && ldir[ 0 ] != '~' )
-			fl_getcwd( dir, FL_PATH_MAX - 2 );
+			fli_getcwd( dir, FL_PATH_MAX - 2 );
 		else
 			dir[ 0 ] = '\0';
 
@@ -942,9 +944,9 @@ match_star( const char * s,
  * check if s matches pattern p
  ***************************************/
 
-int
-fl_wildmat( const char * s,
-			const char * p )
+static int
+fli_wildmat( const char * s,
+			 const char * p )
 {
     if ( *p == '\0' && *s != '.' )
 		return 1;
@@ -1070,7 +1072,7 @@ fl_set_dirlist_sort( int method )
  ***************************************/
 
 char *
-fl_getcwd( char * buf,
+fli_getcwd( char * buf,
 		   int    len )
 {
 #ifdef FL_WIN32
@@ -1080,16 +1082,4 @@ fl_getcwd( char * buf,
 #endif
 
 
-}
-
-
-/***************************************
- ***************************************/
-
-char *
-fl_basename( char name[ ] )
-{
-    char *p = strrchr( name, '/' );
-
-    return p ? p : name;
 }

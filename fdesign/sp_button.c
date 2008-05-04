@@ -615,7 +615,7 @@ loadfile( const char * file,
 		  void       * data )
 {
     char buf[ 512 ];
-    char *cwd = fl_getcwd( buf, sizeof buf - 2 );
+    char *cwd = fli_getcwd( buf, sizeof buf - 2 );
     const char *s = strstr( file, cwd );
     FL_OBJECT *ob;
 

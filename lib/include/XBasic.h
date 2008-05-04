@@ -250,8 +250,10 @@ FL_EXPORT void fl_polygon(
 
 #define fl_polyf( p, n, c )		  fl_polygon( 1, p, n, c )
 #define fl_polyl( p, n, c )		  fl_polygon( 0, p, n, c )
-#define fl_polybound( p, n, c )	  \
-	do { fl_polyf( p, n, c );fl_polyl( p, n, FL_BLACK ); } while( 0 )
+#define fl_polybound( p, n, c )	      \
+    do { fl_polygon( 1, p, n, c );			  \
+	     fl_polygon( 0, p, n, FL_BLACK );	  \
+       } while( 0 )
 
 FL_EXPORT void fl_lines(
 		FL_POINT * xp,
@@ -733,12 +735,12 @@ FL_EXPORT void fl_get_wingeometry(
 #define FL_FormDisplay( form )		 fl_display
 #define FL_ObjectDisplay( object )	 fl_display
 #define FL_IS_CANVAS( o )	\
-( ( o )->objclass == FL_CANVAS || ( o )->objclass == FL_GLCANVAS )
+    ( ( o )->objclass == FL_CANVAS || ( o )->objclass == FL_GLCANVAS )
 
 /* the window an object belongs. For drawing */
 
 #define FL_ObjWin( o )	 \
-( FL_IS_CANVAS( o ) ? fl_get_canvas_id( o ): ( o )->form->window )
+    ( FL_IS_CANVAS( o ) ? fl_get_canvas_id( o ): ( o )->form->window )
 
 
 FL_EXPORT Window fl_get_real_object_window(
@@ -759,10 +761,8 @@ FL_EXPORT Window fl_get_real_object_window(
 						| ButtonMotionMask	 \
 						| PointerMotionMask )
 
-/* Timer related */
 
-#define FL_TIMER_EVENT 0x40000000L
-
+/* Replacements for X functions that access the event queue*/
 
 FL_EXPORT int fl_XNextEvent(
 		XEvent * xev
@@ -783,6 +783,7 @@ FL_EXPORT void fl_XPutBackEvent(
 FL_EXPORT const XEvent *fl_last_event(
 		void
 		);
+
 
 typedef int ( * FL_APPEVENT_CB )( XEvent *, void * );
 
@@ -813,9 +814,7 @@ FL_EXPORT void fl_set_idle_delta(
 		);
 
 
-/*
- * Group some WM stuff into a structure for easy maintainance
- */
+/* Group some WM stuff into a structure for easy maintainance */
 
 enum
 {
@@ -851,7 +850,6 @@ FL_EXPORT void fl_activate_event_callbacks(
 		Window win
 		);
 
-
 FL_EXPORT XEvent *fl_print_xevent_name(
 		const char   * where,
 		const XEvent * xev
@@ -871,8 +869,6 @@ FL_EXPORT XEvent *fl_print_xevent_name(
 #define fl_keypressed			 fl_keysym_pressed
 
 /****************** Resources ***************/
-
-/* bool is int. */
 
 typedef enum
 {
@@ -929,7 +925,6 @@ FL_EXPORT void fl_set_resource(
 		const char * val
 		);
 
-
 FL_EXPORT void fl_get_app_resources(
 		FL_RESOURCE * appresource,
 		int			  n
@@ -953,42 +948,41 @@ FL_EXPORT int fl_keysym_pressed(
 #define sliderLabelSize	 sliderFontSize
 #define inputLabelSize	 inputFontSize
 
+
 /* All Form control variables. Named closely as its resource name */
 
 typedef struct
 {
-	float rgamma,
-		  ggamma,
-		  bgamma;
-	int	  debug,
-		  sync;
-	int	  depth,
-		  vclass,
-		  doubleBuffer;
-	int	  ulPropWidth,			/* underline stuff		 */
-		  ulThickness;
-	int	  buttonFontSize;
-	int	  sliderFontSize;
-	int	  inputFontSize;
-	int	  browserFontSize;
-	int	  menuFontSize;
-	int	  choiceFontSize;
-	int	  labelFontSize;		/* all other labels fonts */
-	int	  pupFontSize,			/* font for pop-up menus  */
-		  pupFontStyle;
-	int	  privateColormap;
-	int	  sharedColormap;
-	int	  standardColormap;
-	int	  scrollbarType;
-	int	  backingStore;
-	int	  coordUnit;
-	int	  borderWidth;
-	int	  safe;
+	float  rgamma,
+		   ggamma,
+		   bgamma;
+	int	   debug,
+		   sync;
+	int	   depth,
+		   vclass,
+		   doubleBuffer;
+	int	   ulPropWidth,			/* underline stuff		 */
+		   ulThickness;
+	int	   buttonFontSize;
+	int	   sliderFontSize;
+	int	   inputFontSize;
+	int	   browserFontSize;
+	int	   menuFontSize;
+	int	   choiceFontSize;
+	int	   labelFontSize;		/* all other labels fonts */
+	int	   pupFontSize,			/* font for pop-up menus  */
+		   pupFontStyle;
+	int	   privateColormap;
+	int	   sharedColormap;
+	int	   standardColormap;
+	int	   scrollbarType;
+	int	   backingStore;
+	int	   coordUnit;
+	int	   borderWidth;
+	int	   safe;
 	char * rgbfile;				/* where RGB file is	 */
 	char   vname[ 24 ];
 } FL_IOPT;
-
-#define FL_SBIT( n )   ( 1 << ( n ) )
 
 #define FL_PDButtonLabelSize  FL_PDButtonFontSize
 #define FL_PDSliderLabelSize  FL_PDSliderFontSize
@@ -998,30 +992,30 @@ typedef struct
 
 enum
 {
-	FL_PDDepth			 = FL_SBIT(	 1 ),
-	FL_PDClass			 = FL_SBIT(	 2 ),
-	FL_PDDouble			 = FL_SBIT(	 3 ),
-	FL_PDSync			 = FL_SBIT(	 4 ),
-	FL_PDPrivateMap		 = FL_SBIT(	 5 ),
-	FL_PDScrollbarType	 = FL_SBIT(	 6 ),
-	FL_PDPupFontSize	 = FL_SBIT(	 7 ),
-	FL_PDButtonFontSize	 = FL_SBIT(	 8 ),
-	FL_PDInputFontSize	 = FL_SBIT(	 9 ),
-	FL_PDSliderFontSize	 = FL_SBIT( 10 ),
-	FL_PDVisual			 = FL_SBIT( 11 ),
-	FL_PDULThickness	 = FL_SBIT( 12 ),
-	FL_PDULPropWidth	 = FL_SBIT( 13 ),
-	FL_PDBS				 = FL_SBIT( 14 ),
-	FL_PDCoordUnit		 = FL_SBIT( 15 ),
-	FL_PDDebug			 = FL_SBIT( 16 ),
-	FL_PDSharedMap		 = FL_SBIT( 17 ),
-	FL_PDStandardMap	 = FL_SBIT( 18 ),
-	FL_PDBorderWidth	 = FL_SBIT( 19 ),
-	FL_PDSafe			 = FL_SBIT( 20 ),
-	FL_PDMenuFontSize	 = FL_SBIT( 21 ),
-	FL_PDBrowserFontSize = FL_SBIT( 22 ),
-	FL_PDChoiceFontSize	 = FL_SBIT( 23 ),
-	FL_PDLabelFontSize	 = FL_SBIT( 24 )
+	FL_PDDepth			 = ( 1 <<  1 ),
+	FL_PDClass			 = ( 1 <<  2 ),
+	FL_PDDouble			 = ( 1 <<  3 ),
+	FL_PDSync			 = ( 1 <<  4 ),
+	FL_PDPrivateMap		 = ( 1 <<  5 ),
+	FL_PDScrollbarType	 = ( 1 <<  6 ),
+	FL_PDPupFontSize	 = ( 1 <<  7 ),
+	FL_PDButtonFontSize	 = ( 1 <<  8 ),
+	FL_PDInputFontSize	 = ( 1 <<  9 ),
+	FL_PDSliderFontSize	 = ( 1 << 10 ),
+	FL_PDVisual			 = ( 1 << 11 ),
+	FL_PDULThickness	 = ( 1 << 12 ),
+	FL_PDULPropWidth	 = ( 1 << 13 ),
+	FL_PDBS				 = ( 1 << 14 ),
+	FL_PDCoordUnit		 = ( 1 << 15 ),
+	FL_PDDebug			 = ( 1 << 16 ),
+	FL_PDSharedMap		 = ( 1 << 17 ),
+	FL_PDStandardMap	 = ( 1 << 18 ),
+	FL_PDBorderWidth	 = ( 1 << 19 ),
+	FL_PDSafe			 = ( 1 << 20 ),
+	FL_PDMenuFontSize	 = ( 1 << 21 ),
+	FL_PDBrowserFontSize = ( 1 << 22 ),
+	FL_PDChoiceFontSize	 = ( 1 << 23 ),
+	FL_PDLabelFontSize	 = ( 1 << 24 )
 };
 
 #define FL_PDButtonLabel   FL_PDButtonLabelSize

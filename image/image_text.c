@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_text.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_text.c,v 1.5 2008/05/04 21:07:57 jtt Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -137,15 +137,15 @@ static void
 display_text(FL_IMAGE * im)
 {
     FLIMAGE_TEXT *t, *tend;
-    FL_TARGET target;
+    FLI_TARGET target;
 
-    if (im->dont_display_text || im->ntext == 0)
-	return;
+    if ( im->dont_display_text || im->ntext == 0 )
+		return;
 
-    if (!im->textgc)
-	im->textgc = XCreateGC(im->xdisplay, im->win, 0, 0);
+    if ( ! im->textgc )
+		im->textgc = XCreateGC(im->xdisplay, im->win, 0, 0);
 
-    memcpy(&target, fl_internal_init(), sizeof(target));
+    memcpy( &target, fli_internal_init( ), sizeof target );
 
     target.display = im->xdisplay;
     target.win = im->win;
@@ -153,17 +153,15 @@ display_text(FL_IMAGE * im)
     target.textgc = im->textgc;
     target.gc = im->gc;
 
-    fl_switch_target(&target);
+    fli_switch_target( &target );
 
-    for (t = im->text, tend = t + im->ntext; t < tend; t++)
-    {
-	fl_draw_text_inside(t->align,
-                            t->x + im->wxd - im->sxd -1,
-                            t->y + im->wyd - im->syd -1,
-                            2, 2, t->str, t->len,
-			    t->style, t->size, t->color, t->bcolor, !t->nobk,
-                            t->angle);
-    }
+    for ( t = im->text, tend = t + im->ntext; t < tend; t++ )
+		fli_draw_text_inside(t->align,
+							 t->x + im->wxd - im->sxd -1,
+							 t->y + im->wyd - im->syd -1,
+							 2, 2, t->str, t->len,
+							 t->style, t->size, t->color, t->bcolor, !t->nobk,
+							 t->angle);
 
-    fl_restore_target();
+    fli_restore_target( );
 }

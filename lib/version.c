@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_ver = "$Id: version.c,v 1.16 2008/04/27 15:18:16 jtt Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.17 2008/05/04 21:08:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -77,7 +77,7 @@ fl_library_version( int * ver,
  ***************************************/
 
 void
-fl_print_version( int g )
+fli_print_version( int in_window )
 {
 	char *msg = fl_malloc(   strlen( version ) + sizeof "FORMS Library Version "
 						   + 30 );
@@ -85,7 +85,7 @@ fl_print_version( int g )
 	sprintf( msg, "FORMS Library Version %d.%d.%s\n%s",
 			 FL_VERSION, FL_REVISION, FL_FIXLEVEL, version );
 
-    if ( g )
+    if ( in_window )
 		fl_show_messages( msg );
 	else
 		fprintf( stderr, "%s\n", msg );

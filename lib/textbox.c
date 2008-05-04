@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.15 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.16 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -537,7 +537,7 @@ prepare_redraw( FL_OBJECT * ob,
 
 	/* selectGC is used to mark the current selection */
 
-	xgcv.foreground = fl_get_flcolor( fl_dithered(fl_vmode ) ?
+	xgcv.foreground = fl_get_flcolor( fli_dithered(fl_vmode ) ?
 									  FL_BLACK : ob->col2 );
 	sp->selectGC = XCreateGC( flx->display, FL_ObjWin( ob ), gcvm, &xgcv );
 	fl_set_gc_clipping( sp->selectGC, cx, sp->y, cw, sp->h );
@@ -737,7 +737,7 @@ draw_textline( FL_OBJECT * ob,
     if ( has_special )
     {
 		XFontStruct *xfs = fl_get_fntstruct( style, size );
-		int sw = fl_get_string_widthTABfs( xfs, str, len );
+		int sw = fli_get_string_widthTABfs( xfs, str, len );
 		int tmpw = sp->maxpixels >= ww ? ( sp->maxpixels + 5 ) : ww;
 
 		XSetForeground( flx->display, activeGC, fl_get_flcolor( lcol ) );
@@ -750,16 +750,17 @@ draw_textline( FL_OBJECT * ob,
 
     /* exception for B&W */
 
-    if ( fl_dithered( fl_vmode ) && sp->text[ line ]->selected )
+    if ( fli_dithered( fl_vmode ) && sp->text[ line ]->selected )
     {
 		XFontStruct *xfs = fl_get_fntstruct( style, size );
+
 		activeGC = sp->specialGC;
 		XSetFont( flx->display, activeGC, xfs->fid );
 		XSetForeground( flx->display, activeGC, fl_get_flcolor( FL_WHITE ) );
     }
 
-    fl_drw_stringTAB( FL_ObjWin( ob ), activeGC, xx - dx, yy, style, size,
-					  str, len, 0 );
+    fli_drw_stringTAB( FL_ObjWin( ob ), activeGC, xx - dx, yy, style, size,
+					   str, len, 0 );
 }
 
 
@@ -968,8 +969,8 @@ handle_missed_selection( FL_OBJECT * ob,
 			ns = sp->text[ k ]->non_selectable;
 			sp->text[ k ]->selected = ! ns;
 			sp->selectline = k;
-			fl_object_qenter( ob );
-			fl_object_qread( );
+			fli_object_qenter( ob );
+			fli_object_qread( );
 		}
     }
     else
@@ -979,8 +980,8 @@ handle_missed_selection( FL_OBJECT * ob,
 			ns = sp->text[ k ]->non_selectable;
 			sp->text[ k ]->selected = ! ns;
 			sp->selectline = k;
-			fl_object_qenter( ob );
-			fl_object_qread( );
+			fli_object_qenter( ob );
+			fli_object_qread( );
 		}
     }
 }
@@ -1003,8 +1004,8 @@ handle_missed_deselection( FL_OBJECT * ob,
 			sp->text[ k ]->selected = 0;
 			sp->selectline = - k;
 			sp->desel_mark = k;
-			fl_object_qenter( ob );
-			fl_object_qread( );
+			fli_object_qenter( ob );
+			fli_object_qread( );
 		}
     }
     else
@@ -1014,8 +1015,8 @@ handle_missed_deselection( FL_OBJECT * ob,
 			sp->text[ k ]->selected = 0;
 			sp->selectline = - k;
 			sp->desel_mark = k;
-			fl_object_qenter( ob );
-			fl_object_qread( );
+			fli_object_qenter( ob );
+			fli_object_qread( );
 		}
     }
 }
@@ -1109,8 +1110,8 @@ handle_mouse( FL_OBJECT *    ob,
 		/* this is not exactly correct as we are (potentially) throwing
 		   away events */
 
-		if ( fl_object_qtest( ) == ob )
-			fl_object_qread( );
+		if ( fli_object_qtest( ) == ob )
+			fli_object_qread( );
 
 		if (    ob->type == FL_MULTI_TEXTBOX
 				&& last_select
@@ -1132,8 +1133,8 @@ handle_mouse( FL_OBJECT *    ob,
 			return 0;
 
 		sp->drawtype = SELECTION;
-		if ( fl_object_qtest( ) == ob )
-			fl_object_qread( );
+		if ( fli_object_qtest( ) == ob )
+			fli_object_qread( );
 
 		if (    ob->type == FL_MULTI_TEXTBOX
 			 && last_deselect
@@ -1227,7 +1228,7 @@ handle_keyboard( FL_OBJECT * ob,
 		}
     }
 
-    fl_adjust_browser_scrollbar( ob );
+    fli_adjust_browser_scrollbar( ob );
 
     return old != sp->selectline;
 }
@@ -1248,13 +1249,13 @@ handle_textbox( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleBrowser", fl_event_name( ev ) );
+    M_info2( "HandleBrowser", fli_event_name( ev ) );
 #endif
 
     /* wheel mouse hack */
 
     if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-		 && fl_handle_mouse_wheel( ob, &ev, &key, xev ) == 0 )
+		 && fli_handle_mouse_wheel( ob, &ev, &key, xev ) == 0 )
 		return 0;
 
     switch ( ev )
@@ -2129,10 +2130,10 @@ textwidth( SPEC *       sp,
  ***************************************/
 
 int
-fl_handle_mouse_wheel( FL_OBJECT * ob   FL_UNUSED_ARG,
-					   int *       ev,
-					   int *       key,
-					   void *      xev )
+fli_handle_mouse_wheel( FL_OBJECT * ob   FL_UNUSED_ARG,
+						int *       ev,
+						int *       key,
+						void *      xev )
 {
     if ( *ev == FL_PUSH && *key >= FL_MBUTTON4 )
 		return 0;
@@ -2145,7 +2146,7 @@ fl_handle_mouse_wheel( FL_OBJECT * ob   FL_UNUSED_ARG,
 		{
 			( ( XButtonEvent * ) xev )->state &= ~ ShiftMask;
 			( ( XKeyEvent * ) xev )->state &= ~ ShiftMask;
-			*key = *key == FL_MBUTTON4 ? FL_1LINE_UP : FL_1LINE_DOWN;
+			*key = *key == FL_MBUTTON4 ? FLI_1LINE_UP : FLI_1LINE_DOWN;
 		}
 		else if ( xev && controlkey_down( ( ( XButtonEvent * ) xev )->state ) )
 		{
@@ -2154,7 +2155,7 @@ fl_handle_mouse_wheel( FL_OBJECT * ob   FL_UNUSED_ARG,
 			*key = *key == FL_MBUTTON4 ? XK_Prior : XK_Next;
 		}
 		else
-			*key = *key == FL_MBUTTON4 ? FL_HALFPAGE_UP : FL_HALFPAGE_DOWN;
+			*key = *key == FL_MBUTTON4 ? FLI_HALFPAGE_UP : FLI_HALFPAGE_DOWN;
     }
 
     return 1;

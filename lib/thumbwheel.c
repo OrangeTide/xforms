@@ -271,7 +271,7 @@ handle( FL_OBJECT * ob,
 			value = sp->val + step * ( cur_pos - old_pos );
 			sp->oldmx = mx;
 			sp->oldmy = my;
-			return fl_valuator_handle_drag( ob, value );
+			return fli_valuator_handle_drag( ob, value );
 
 		case FL_KEYPRESS:
 			value = sp->val;
@@ -285,7 +285,7 @@ handle( FL_OBJECT * ob,
 				value = sp->val + step;
 			else if ( IsLeft( key ) && ob->type == FL_HOR_THUMBWHEEL )
 				value = sp->val - step;
-			return fl_valuator_handle_release( ob, value );
+			return fli_valuator_handle_release( ob, value );
 
 		case FL_RELEASE:
 			if (    ! ( key == FL_MBUTTON1
@@ -299,7 +299,7 @@ handle( FL_OBJECT * ob,
 				value = sp->val + ( key == FL_MBUTTON4 ? step : -step );
 			else
 				value = sp->val;
-			return fl_valuator_handle_release( ob, value );
+			return fli_valuator_handle_release( ob, value );
     }
 
     return 0;
@@ -458,7 +458,7 @@ int
 fl_set_thumbwheel_return( FL_OBJECT * ob,
 						  int         how )
 {
-    return fl_set_valuator_return( ob, how );
+    return fli_set_valuator_return( ob, how );
 }
 
 
@@ -486,7 +486,7 @@ fl_create_thumbwheel( int          type,
     ob->wantkey = FL_KEY_SPECIAL;
     fl_set_object_dblbuffer( ob, 1 );
 
-    sp = fl_init_valuator( ob );
+    sp = fli_init_valuator( ob );
     sp->how_return = FL_RETURN_CHANGED;
     sp->step = DEFSTEP;
 

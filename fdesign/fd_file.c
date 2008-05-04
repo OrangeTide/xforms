@@ -89,12 +89,12 @@ save_object( FILE      * fl,
 			 fake_obj.w, fake_obj.h );
 
     fprintf( fl, "boxtype: %s\n", boxtype_name( obj->boxtype ) );
-    fprintf( fl, "colors: %s %s\n", fl_query_colorname( obj->col1 ),
-			 fl_query_colorname( obj->col2 ) );
+    fprintf( fl, "colors: %s %s\n", fli_query_colorname( obj->col1 ),
+			 fli_query_colorname( obj->col2 ) );
     fprintf( fl, "alignment: %s\n", align_name( obj->align ) );
     fprintf( fl, "style: %s\n", style_name( obj->lstyle ) );
     fprintf( fl, "size: %s\n", lsize_name( obj->lsize ) );
-    fprintf( fl, "lcol: %s\n", fl_query_colorname( obj->lcol ) );
+    fprintf( fl, "lcol: %s\n", fli_query_colorname( obj->lcol ) );
     fprintf( fl, "label: %s\n", get_label( obj, 0 ) );
     fprintf( fl, "shortcut: %s\n", get_shortcut_string( obj ) );
     fprintf( fl, "resize: %s\n", resize_name( obj->resize ) );
@@ -105,7 +105,7 @@ save_object( FILE      * fl,
     fprintf( fl, "callback: %s\n", cbname );
     fprintf( fl, "argument: %s\n", argname );
 
-    save_objclass_spec_info(fl, obj);
+    save_objclass_spec_info( fl, obj );
 }
 
 
@@ -379,8 +379,8 @@ load_object( FILE * fl )
 		{
 			cn1[0] = cn2[0] = '\0';
 			sscanf(val, "%s %s", cn1, cn2);
-			obj->col1 = fl_query_namedcolor(cn1);
-			obj->col2 = fl_query_namedcolor(cn2);
+			obj->col1 = fli_query_namedcolor(cn1);
+			obj->col2 = fli_query_namedcolor(cn2);
 			if (obj->col1 == 0x8fffffff)
 				obj->col1 = FL_NoColor;
 		}
@@ -391,7 +391,7 @@ load_object( FILE * fl )
 		else if (strcmp(key, "size") == 0 || strcmp(key, "lsize") == 0)
 			obj->lsize = lsize_val(val);
 		else if (strcmp(key, "lcol") == 0)
-			obj->lcol = fl_query_namedcolor(val);
+			obj->lcol = fli_query_namedcolor(val);
 		else if (strcmp(key, "resize") == 0)
 			obj->resize = resize_val(val);
 		else if (strcmp(key, "label") == 0)

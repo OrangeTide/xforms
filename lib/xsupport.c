@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.12 2008/04/10 00:05:51 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.13 2008/05/04 21:08:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -53,8 +53,8 @@ char *fl_id_xsupt = "$Id: xsupport.c,v 1.12 2008/04/10 00:05:51 jtt Exp $";
  ***************************************/
 
 void
-fl_check_key_focus( const char * s,
-					Window       win )
+fli_check_key_focus( const char * s,
+					 Window       win )
 {
     int r;
     Window w;
@@ -137,7 +137,7 @@ fl_get_form_mouse( FL_FORM      * fm,
 	Window win = None;
 	FL_pixmap *flp = fm->flpixmap;
 
-    if ( fl_get_visible_forms_index( fm ) >= 0 )
+    if ( fli_get_visible_forms_index( fm ) >= 0 )
     {
 		win = ( flp && flp->win != None ) ? flp->win : fm->window;
 		fl_get_win_mouse( win, x, y, keymask );
@@ -188,7 +188,7 @@ static unsigned char gray60_bits[] =
  ***************************************/
 
 void
-fl_init_stipples( void )
+fli_init_stipples( void )
 {
     if ( ! fl_gray_pattern[ 0 ] )
     {
@@ -276,7 +276,7 @@ static int ( * oldhandler )( Display *,
  ***************************************/
 
 void
-fl_create_object_pixmap( FL_OBJECT * ob )
+fli_create_object_pixmap( FL_OBJECT * ob )
 {
     Window root;
     unsigned int junk;
@@ -301,8 +301,8 @@ fl_create_object_pixmap( FL_OBJECT * ob )
     if (    p->pixmap
 		 && ( int ) p->w == ob->w
 		 && ( int ) p->h == ob->h
-		 && p->depth == fl_depth( fl_vmode )
-		 && p->visual == fl_visual( fl_vmode )
+		 && p->depth == fli_depth( fl_vmode )
+		 && p->visual == fli_visual( fl_vmode )
 		 && p->dbl_background == ob->dbl_background
 		 && p->pixel == fl_get_pixel( ob->dbl_background ) )
     {
@@ -319,13 +319,13 @@ fl_create_object_pixmap( FL_OBJECT * ob )
     oldhandler = XSetErrorHandler( fl_xerror_handler );
 
     p->pixmap = XCreatePixmap( flx->display, FL_ObjWin( ob ), ob->w, ob->h,
-							   fl_depth( fl_vmode ) );
+							   fli_depth( fl_vmode ) );
 
     fl_winset( p->pixmap );
     fl_rectf( 0, 0, ob->w, ob->h, ob->dbl_background );
 
     M_info( "ObjPixmap", "Creating depth=%d for %s",
-			fl_depth( fl_vmode ), ob->label );
+			fli_depth( fl_vmode ), ob->label );
 
     /* make sure it succeeds by forcing a two way request */
 
@@ -341,8 +341,8 @@ fl_create_object_pixmap( FL_OBJECT * ob )
 
     p->w = ob->w;
     p->h = ob->h;
-    p->depth = fl_depth( fl_vmode );
-    p->visual = fl_visual( fl_vmode );
+    p->depth = fli_depth( fl_vmode );
+    p->visual = fli_visual( fl_vmode );
     p->dbl_background = ob->dbl_background;
     p->pixel = fl_get_pixel( ob->dbl_background );
     change_drawable( p, ob );
@@ -353,7 +353,7 @@ fl_create_object_pixmap( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_show_object_pixmap( FL_OBJECT * ob )
+fli_show_object_pixmap( FL_OBJECT * ob )
 {
     FL_pixmap *p = ob->flpixmap;
 
@@ -370,7 +370,7 @@ fl_show_object_pixmap( FL_OBJECT * ob )
 
 	/* now handle the label */
 
-	fl_handle_object( ob, FL_DRAWLABEL, 0, 0, 0, 0 );
+	fli_handle_object( ob, FL_DRAWLABEL, 0, 0, 0, 0 );
 }
 
 
@@ -378,12 +378,12 @@ fl_show_object_pixmap( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_free_flpixmap( FL_pixmap * p )
+fli_free_flpixmap( FL_pixmap * p )
 {
     if ( p && p->pixmap )
     {
 		XFreePixmap( flx->display, p->pixmap );
-		p->pixmap = 0;
+		p->pixmap = None;
     }
 }
 
@@ -428,7 +428,7 @@ form_pixmapable( FL_FORM * fm )
  ***************************************/
 
 void
-fl_create_form_pixmap( FL_FORM * fm )
+fli_create_form_pixmap( FL_FORM * fm )
 {
     Window root;
     unsigned int junk;
@@ -445,8 +445,8 @@ fl_create_form_pixmap( FL_FORM * fm )
     if (    p->pixmap
 		 && ( int ) p->w == fm->w
 		 && ( int ) p->h == fm->h
-		 && p->depth == fl_depth( fl_vmode )
-		 && p->visual == fl_visual( fl_vmode ) )
+		 && p->depth == fli_depth( fl_vmode )
+		 && p->visual == fli_visual( fl_vmode ) )
     {
 		change_form_drawable( p, fm );
 		return;
@@ -462,7 +462,7 @@ fl_create_form_pixmap( FL_FORM * fm )
 
     p->pixmap = XCreatePixmap( flx->display, fm->window,
 							   fm->w, fm->h,
-							   fl_depth( fl_vmode ) );
+							   fli_depth( fl_vmode ) );
 
     M_info( "FormPixmap", "creating(w=%d h=%d)", fm->w, fm->h );
 
@@ -480,8 +480,8 @@ fl_create_form_pixmap( FL_FORM * fm )
 
     p->w = fm->w;
     p->h = fm->h;
-    p->depth = fl_depth( fl_vmode );
-    p->visual = fl_visual( fl_vmode );
+    p->depth = fli_depth( fl_vmode );
+    p->visual = fli_visual( fl_vmode );
     change_form_drawable( p, fm );
 
     M_info( "FormPixmap", "Creation Done" );
@@ -492,14 +492,14 @@ fl_create_form_pixmap( FL_FORM * fm )
  ***************************************/
 
 void
-fl_show_form_pixmap( FL_FORM * fm )
+fli_show_form_pixmap( FL_FORM * fm )
 {
     FL_pixmap *p;
 
     if (    ! form_pixmapable( fm )
 		 || ! ( p = fm->flpixmap )
 		 || ! p->pixmap
-			|| ( p->win == None )
+		 || ! p->win
 		 || p->w <= 0
 		 || p->h <= 0 )
 		return;
@@ -519,7 +519,7 @@ fl_show_form_pixmap( FL_FORM * fm )
  ***************************************/
 
 int
-fl_doublebuffer_capable( int warn  FL_UNUSED_ARG )
+fli_doublebuffer_capable( int warn  FL_UNUSED_ARG )
 {
     return 1;
 }

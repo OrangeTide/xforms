@@ -61,6 +61,8 @@ typedef struct
 static ClipBoard clipboard,
                  *cp;
 
+int ( * fli_handle_clipboard )( void * ) = NULL;
+
 static int handle_clipboard_event( void * );
 
 
@@ -87,7 +89,7 @@ fl_stuff_clipboard( FL_OBJECT *          ob,
 {
     Window win = FL_ObjWin( ob );
 
-    fl_handle_clipboard = handle_clipboard_event;
+    fli_handle_clipboard = handle_clipboard_event;
     cp = &clipboard;
 
     if ( ! win )
@@ -142,7 +144,7 @@ fl_request_clipboard( FL_OBJECT *     ob,
     if ( ! clipboard_prop )
     {
 		clipboard_prop = XInternAtom( flx->display, "FL_CLIPBOARD", False );
-		fl_handle_clipboard = handle_clipboard_event;
+		fli_handle_clipboard = handle_clipboard_event;
     }
 
     cp->got_it_callback = got_it_callback;
@@ -235,7 +237,7 @@ handle_clipboard_event( void * event )
 
 		/* X gurantees 16K request size */
 
-		long chunksize = fl_context->max_request_size,
+		long chunksize = fli_context->max_request_size,
 			 offset = 0;
 		char *buf = NULL;
         int buflen = 0;
@@ -267,8 +269,8 @@ handle_clipboard_event( void * event )
 			offset += ret_len * ret_format / 32;
 			chunksize = ( ret_after + 3 ) / 4;
 
-			if ( chunksize > fl_context->max_request_size )
-				chunksize = fl_context->max_request_size;
+			if ( chunksize > fli_context->max_request_size )
+				chunksize = fli_context->max_request_size;
 		} while ( ret_after );
 
 		if ( buflen )

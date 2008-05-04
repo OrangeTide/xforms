@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG 
-char *fl_id_evt = "$Id: appwin.c,v 1.10 2008/03/28 11:48:02 jtt Exp $";
+char *fl_id_evt = "$Id: appwin.c,v 1.11 2008/05/04 21:07:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -64,9 +64,9 @@ handle_mapping_notify( XEvent * xev,
  ***************************************/
 
 static void
-remove_app_win( FL_WIN * appwin )
+remove_app_win( FLI_WIN * appwin )
 {
-    FL_WIN *fwin;
+    FLI_WIN *fwin;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info( "RemoveAppwin", "deleting 0x%lx", appwin->win );
@@ -93,11 +93,11 @@ remove_app_win( FL_WIN * appwin )
  * given a window, find the correct structure, create if necessary
  ***************************************/
 
-static FL_WIN *
+static FLI_WIN *
 find_fl_win_struct( Window win )
 {
-    FL_WIN *fwin = fl_app_win,
-		   *lwin = fl_app_win;
+    FLI_WIN *fwin = fl_app_win,
+		    *lwin = fl_app_win;
 	size_t i;
 
     for ( ; fwin && fwin->win != win; lwin = fwin, fwin = fwin->next )
@@ -147,11 +147,11 @@ find_fl_win_struct( Window win )
  ***************************************/
 
 FL_APPEVENT_CB
-fl_set_preemptive_callback( Window           win,
-							FL_APPEVENT_CB   pcb,
-							void           * data )
+fli_set_preemptive_callback( Window           win,
+							 FL_APPEVENT_CB   pcb,
+							 void           * data )
 {
-    FL_WIN *fwin;
+    FLI_WIN *fwin;
     FL_APPEVENT_CB old = NULL;
 
     if ( ! ( fwin = find_fl_win_struct( win ) ) )
@@ -175,7 +175,7 @@ fl_add_event_callback( Window           win,
 					   FL_APPEVENT_CB   wincb,
 					   void *           user_data )
 {
-    FL_WIN *fwin;
+    FLI_WIN *fwin;
     int i,
 		nev;
     FL_APPEVENT_CB old = NULL;
@@ -216,7 +216,7 @@ void
 fl_remove_event_callback( Window win,
 						  int    ev )
 {
-    FL_WIN *fwin;
+    FLI_WIN *fwin;
 
     if ( ev < 0 || ev >= LASTEvent )
 		return;
@@ -290,7 +290,7 @@ static EMS ems[ ] =
  ***************************************/
 
 unsigned long
-fl_xevent_to_mask( int event )
+fli_xevent_to_mask( int event )
 {
     EMS *em = ems,
 		*eme = ems + sizeof ems / sizeof *ems;
@@ -309,7 +309,7 @@ fl_xevent_to_mask( int event )
 void
 fl_activate_event_callbacks( Window win )
 {
-    FL_WIN *fwin = fl_app_win;
+    FLI_WIN *fwin = fl_app_win;
     int i;
     unsigned long mask;
 
@@ -326,7 +326,7 @@ fl_activate_event_callbacks( Window win )
 
     for ( mask = i = 0; i < LASTEvent; i++ )
 		if ( fwin->callback[ i ] )
-			mask |= fl_xevent_to_mask( i );
+			mask |= fli_xevent_to_mask( i );
 
     XSelectInput( flx->display, win, mask );
 }
@@ -346,7 +346,7 @@ fl_winclose( Window win )
     XSync( flx->display, 0 );
 
     while ( XCheckWindowEvent( flx->display, win, AllEventsMask, &xev ) )
-		fl_xevent_name( "Eaten", &xev );
+		fli_xevent_name( "Eaten", &xev );
 
     fl_remove_event_callback( win, 0 );
 }

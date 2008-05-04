@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chrt = "$Id: chart.c,v 1.9 2008/03/12 16:00:23 jtt Exp $";
+char *fl_id_chrt = "$Id: chart.c,v 1.10 2008/05/04 21:07:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -570,7 +570,7 @@ handle_chart( FL_OBJECT * ob,
 			  void *      ev   FL_UNUSED_ARG )
 {
 #if FL_DEBUG >= ML_DEBUG
-    M_info( "HandleMenu", fl_event_name( event ) );
+    M_info( "HandleMenu", fli_event_name( event ) );
 #endif
 
     switch ( event )

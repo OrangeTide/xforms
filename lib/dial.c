@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.12 2008/03/25 12:41:27 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.13 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -151,7 +151,7 @@ draw_dial( FL_OBJECT * ob )
 		rotate_it( xp + 1, x + iradius - 1 - r, y - 2, dangle );
 		rotate_it( xp + 2, x + iradius - 1 - r, y + 2, dangle );
 		rotate_it( xp + 3, x + iradius - 1,     y + 2, dangle );
-		fl_polygon( 1, xp, 4, ob->col2 );
+		fl_polyf( xp, 4, ob->col2 );
     }
     else if ( ob->type == FL_LINE_DIAL )
     {
@@ -163,8 +163,7 @@ draw_dial( FL_OBJECT * ob )
 		rotate_it( xp + 2, x + iradius - 2, y,      dangle );
 		rotate_it( xp + 3, x + dx,          y + dy, dangle );
 
-		fl_polygon( 1, xp, 4, ob->col2 );
-		fl_polygon( 0, xp, 4, FL_BLACK );
+		fl_polybound( xp, 4, ob->col2 );
     }
     else if ( ob->type == FL_FILL_DIAL )
     {
@@ -253,7 +252,7 @@ handle_mouse( FL_OBJECT * ob,
     while ( angle > 360.0 )
 		angle -= 360.0;
 
-    val = fl_clamp( sp->a * angle + sp->b, sp->min, sp->max );
+    val = fli_clamp( sp->a * angle + sp->b, sp->min, sp->max );
 
     /* check if crossed boundary. Fix it if it did. Fixing is necessary
        otherwise might be unable to reach thetaf(360) */
@@ -356,7 +355,7 @@ handle_dial( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info( "HandleDial", fl_event_name( event ) );
+    M_info( "HandleDial", fli_event_name( event ) );
 #endif
 
     switch ( event )
@@ -518,7 +517,7 @@ fl_set_dial_bounds( FL_OBJECT * ob,
 		sp->min = min;
 		sp->max = max;
 		get_mapping( sp );
-		sp->val = fl_clamp( sp->val, sp->min, sp->max );
+		sp->val = fli_clamp( sp->val, sp->min, sp->max );
 		fl_redraw_object( ob );
     }
 }

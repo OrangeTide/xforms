@@ -33,53 +33,15 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.10 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.11 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
-
-
-#if 0
-
-#define MAXBOXTYPE 25
-
-typedef void ( * FL_DRAW_BOX )( int,
-								FL_Coord,
-								FL_Coord,
-								FL_Coord,
-								FL_Coord,
-								FL_COLOR,
-								int );
-
-static FL_DRAW_BOX **drawbox;
-
-
-/***************************************
- ***************************************/
-
-void
-fl_add_boxtype( int     style1,
-				int     style2,
-				DrawBox draw )
-{
-    if ( ! drawbox )
-		drawbox = fl_calloc( MAXBOXTYPE, sizeof *drawbox );
-
-    if ( style1 < 0 || style2 >= MAXBOXTYPE )
-    {
-		M_err( "AddBoxtype", "internal error" );
-		return;
-    }
-
-    for ( i = style1; i <= style2; i++ )
-		drawbox[ i ] = draw;
-}
-
-#endif
 
 
 static void fl_foldertab_box( int,
@@ -100,10 +62,10 @@ static void fl_foldertab_box( int,
  ***************************************/
 
 void
-fl_canonicalize_rect( FL_Coord * x,
-					  FL_Coord * y,
-					  FL_Coord * w,
-					  FL_Coord * h )
+fli_canonicalize_rect( FL_Coord * x,
+					   FL_Coord * y,
+					   FL_Coord * w,
+					   FL_Coord * h )
 {
     if ( *w < 0 )
     {
@@ -133,7 +95,7 @@ fl_rectbound( FL_Coord x,
 			  FL_Coord h,
 			  FL_COLOR col )
 {
-    fl_canonicalize_rect( &x, &y, &w, &h );
+    fli_canonicalize_rect( &x, &y, &w, &h );
 
     /* 0 width has special meaning in Xlib */
 
@@ -280,10 +242,10 @@ fl_rounded3dbox( int      style,
 
     fl_linewidth( olw );
 
-    if ( bw > 0 && fl_dithered( fl_vmode ) )
+    if ( bw > 0 && fli_dithered( fl_vmode ) )
     {
 		n = compute_round_corners( x, y, w, h, point );
-		fl_polygon( 0, point, n, FL_BLACK );
+		fl_polyl( point, n, FL_BLACK );
     }
 }
 
@@ -359,7 +321,7 @@ fl_oval3dbox( int      style,
 
     fl_linewidth( olw );
 
-    if ( fl_dithered( fl_vmode ) )
+    if ( fli_dithered( fl_vmode ) )
 		fl_pieslice( 0, x, y, w, h, 0, 3600, FL_BLACK );
 }
 
@@ -393,7 +355,7 @@ fl_drw_box( int      style,
 		     *fp;
     int border,
 		B,
-		dp = fl_dithered( fl_vmode ),
+		dp = fli_dithered( fl_vmode ),
 		bw = bw_in;
     FL_Coord cx,
 		     cy,
@@ -452,12 +414,12 @@ fl_drw_box( int      style,
 			AddVertex( fp, x + bw + B, y + bw + B );
 			fl_polyf( vert, 4, FL_LEFT_BCOL );
 
-			if ( border || fl_dithered( fl_vmode ) )
+			if ( border || fli_dithered( fl_vmode ) )
 				fl_rect( x, y, w - 1, h - 1, FL_RIGHT_BCOL );
 
 			/* special hack for B&W */
 
-			if ( fl_dithered( fl_vmode ) )
+			if ( fli_dithered( fl_vmode ) )
 			{
 				if ( bw > 2 )
 				{
@@ -499,7 +461,7 @@ fl_drw_box( int      style,
 
 			/* special hack for B&W */
 
-			if ( fl_dithered( fl_vmode ) )
+			if ( fli_dithered( fl_vmode ) )
 			{
 				fp = vert;
 				AddVertex( fp, x + B, y + h - 1 );
@@ -556,23 +518,23 @@ fl_drw_box( int      style,
 		case FL_RSHADOW_BOX:
 			if ( w > 70 && h > 70 )
 				bw++;
-			fl_get_clipping( &cx, &cy, &cw, &ch );
+			fli_get_clipping( &cx, &cy, &cw, &ch );
 
 			/* draw the shadow.  draw it several times with clipping */
 #if 0
-			fl_set_additional_clipping( x + bw - 1, y + h - bw,
-										w - bw + 1, bw );
+			fli_set_additional_clipping( x + bw - 1, y + h - bw,
+										 w - bw + 1, bw );
 			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, fl_shadow_col );
-			fl_set_additional_clipping( x + w - bw, y + bw, bw, h - bw );
+			fli_set_additional_clipping( x + w - bw, y + bw, bw, h - bw );
 			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, fl_shadow_col );
-			fl_set_additional_clipping( x + w + bw - RS - 2, y + h - RS,
-										RS + 2, RS + 2 );
+			fli_set_additional_clipping( x + w + bw - RS - 2, y + h - RS,
+										 RS + 2, RS + 2 );
 #endif
 			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, fl_shadow_col );
 
 			/* draw the box */
 
-			fl_set_additional_clipping( x, y, w, h );
+			fli_set_additional_clipping( x, y, w, h );
 			fl_roundrectf( x + 1, y + 1, w - 1 - bw, h - 1 - bw, c );
 			fl_roundrect( x, y, w - bw, h - bw, FL_BLACK );
 			fl_set_clipping( cx, cy, cw, ch );
@@ -602,7 +564,7 @@ fl_drw_box( int      style,
 			break;
 
 		default:
-			if ( style & FL_BROKEN_BOX )
+			if ( style & FLI_BROKEN_BOX )
 				fl_foldertab_box( style, x, y, w, h, c, bw_in );
 			else
 				M_err( "DrawBox", "Unkonwn boxtype:%d", style );
@@ -688,7 +650,7 @@ fl_drw_checkbox( int      type,
 #if 1
     /* add a border. destructive as polyl uses the allp[ 5 ] */
 
-    if ( fl_dithered( fl_vmode ) /* || tbw > 0 */ )
+    if ( fli_dithered( fl_vmode ) /* || tbw > 0 */ )
 		fl_polyl( allp, 4, FL_BLACK );
 #endif
 
@@ -714,7 +676,7 @@ fl_drw_frame( int      style,
 		     *fp;
     int border,
 		B,
-		dp = fl_dithered( fl_vmode );
+		dp = fli_dithered( fl_vmode );
 
     if ( w <= 0 || h <= 0 )
 		return;
@@ -758,12 +720,12 @@ fl_drw_frame( int      style,
 			AddVertex( fp, x + bw + B, y + bw + B     );
 			fl_polyf( vert, 4, FL_LEFT_BCOL );
 
-			if ( border || fl_dithered( fl_vmode ) )
+			if ( border || fli_dithered( fl_vmode ) )
 				fl_rect( x, y, w - 1, h - 1, FL_BLACK );
 
 			/* special hack for B&W */
 
-			if ( fl_dithered( fl_vmode ) )
+			if ( fli_dithered( fl_vmode ) )
 			{
 				if ( bw > 2 )
 				{
@@ -811,7 +773,7 @@ fl_drw_frame( int      style,
 
 			/* special hack for B&W */
 
-			if ( fl_dithered( fl_vmode ) )
+			if ( fli_dithered( fl_vmode ) )
 			{
 				fp = vert;
 				AddVertex( fp, x + B,     y + h - 1 );
@@ -1003,12 +965,12 @@ fl_foldertab_box( int      style,
     int absbw = FL_abs( bw ),
 		i;
     int C = Corner;
-    int isbroken = style & FL_BROKEN_BOX;
+    int isbroken = style & FLI_BROKEN_BOX;
 
     if ( ! ( border = bw > 0 ) )
 		bw = -bw;
 
-    style &= ~ FL_BROKEN_BOX;
+    style &= ~ FLI_BROKEN_BOX;
 
     /* for foldertab box, actual h is pre-enlarged by absbw pixels so the
        label is draw centered. Here we recover the pixels */
@@ -1066,7 +1028,7 @@ fl_foldertab_box( int      style,
 
 			fl_set_linewidth( 0 );
 
-			if ( border || fl_dithered( fl_vmode ) )
+			if ( border || fli_dithered( fl_vmode ) )
 			{
 				for ( i = 0; i < 8; i++ )
 				{
@@ -1096,7 +1058,7 @@ fl_foldertab_box( int      style,
 			fl_lines( vert + 5, 3, FL_BOTTOM_BCOL );
 			fl_set_linewidth( 0 );
 
-			if ( border || fl_dithered( fl_vmode ) )
+			if ( border || fli_dithered( fl_vmode ) )
 			{
 				for ( i = 0; i < 8; i++ )
 				{
@@ -1128,7 +1090,7 @@ fl_foldertab_box( int      style,
 			fl_lines( vert + 5, 3, FL_RIGHT_BCOL );
 			fl_linewidth( 0 );
 
-			if ( border || fl_dithered( fl_vmode ) )
+			if ( border || fli_dithered( fl_vmode ) )
 			{
 				for ( i = 0; i < 8; i++ )
 				{
@@ -1157,7 +1119,7 @@ fl_foldertab_box( int      style,
 			fl_lines( vert + 5, 3, FL_RIGHT_BCOL  );
 			fl_linewidth( 0 );
 
-			if ( border || fl_dithered( fl_vmode ) )
+			if ( border || fli_dithered( fl_vmode ) )
 			{
 				for ( i = 0; i < 8; i++ )
 				{
@@ -1194,7 +1156,7 @@ fl_drw_tbox( int      style,
 {
     FL_POINT vert[ 4 ],          /* need one extra for closing of polygon! */
 		     *fp;
-    int dp = fl_dithered( fl_vmode ),
+    int dp = fli_dithered( fl_vmode ),
 		bw = bw_in;
     int xc = x + w / 2,
 		yc = y + h / 2;
@@ -1350,25 +1312,8 @@ fl_drw_tbox( int      style,
 /***************************************
  ***************************************/
 
-void
-fl_drw_broken_box( int      style  FL_UNUSED_ARG,
-				   int      x,
-				   int      y,
-				   int      w,
-				   int      h,
-				   FL_COLOR c,
-				   int      bw )
-{
-    fl_drw_box( FL_UP_BOX, x, y, w, h, c, bw );
-    fl_line( x + w - 1, y, x + w - 6, y + 6, FL_RIGHT_BCOL );
-}
-
-
-/***************************************
- ***************************************/
-
 int
-fl_boxtype2frametype( int btype )
+fli_boxtype2frametype( int btype )
 {
     if ( btype <= FL_EMBOSSED_BOX )
 		return btype;

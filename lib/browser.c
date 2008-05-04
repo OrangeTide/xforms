@@ -110,7 +110,7 @@ attrib_change( FL_OBJECT * ob )
 
     if ( ! sp->user_set && sp->br->boxtype != FL_DOWN_BOX )
 		sp->vw = sp->vw_def = sp->hh = sp->hh_def =
-			                                 fl_get_default_scrollbarsize( ob );
+			                                fli_get_default_scrollbarsize( ob );
 }
 
 
@@ -443,7 +443,7 @@ tbcb( FL_OBJECT * ob,
     if ( sp->tb->type == FL_MULTI_TEXTBOX )
 		fl_call_object_callback( sp->br );
     else
-		fl_object_qenter( sp->br );
+		fli_object_qenter( sp->br );
 }
 
 
@@ -506,7 +506,7 @@ tbpre( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_get_default_scrollbarsize( FL_OBJECT * ob )
+fli_get_default_scrollbarsize( FL_OBJECT * ob )
 {
     int delta = ( FL_abs( ob->bw ) + 3 * ( ob->bw > 0 ) );
     int flat = IS_FLATBOX( ob->boxtype ) ? 2 : 0;
@@ -567,17 +567,17 @@ fl_create_browser( int          type,
 
     /* scrollbars */
 
-    D = sp->vw_def = sp->hh_def = fl_get_default_scrollbarsize( ob );
+    D = sp->vw_def = sp->hh_def = fli_get_default_scrollbarsize( ob );
     sp->v_pref = sp->h_pref = FL_AUTO;
 
-    sp->hsl = fl_create_scrollbar( fl_context->hscb, x, y + h - D,
+    sp->hsl = fl_create_scrollbar( fli_context->hscb, x, y + h - D,
 								   w - D, D, "" );
     sp->hsl->visible = sp->h_pref == FL_ON;
     fl_set_object_callback( sp->hsl, hcb, 0 );
     fl_set_scrollbar_value( sp->hsl, 0.0 );
     sp->hsl->resize = FL_RESIZE_NONE;
 
-    sp->vsl = fl_create_scrollbar( fl_context->vscb, x + w - D, y,
+    sp->vsl = fl_create_scrollbar( fli_context->vscb, x + w - D, y,
 								   D, h - D, "" );
     sp->vsl->visible = sp->v_pref == FL_ON;
     fl_set_scrollbar_value( sp->vsl, 0.0 );
@@ -603,9 +603,9 @@ fl_add_browser( int          type,
     FL_OBJECT *ob = fl_create_browser( type, x, y, w, h, l );
     SPEC *sp = ob->spec;
 
-    fl_add_child( sp->br, sp->tb );
-    fl_add_child( sp->br, sp->hsl );
-    fl_add_child( sp->br, sp->vsl );
+    fli_add_child( sp->br, sp->tb );
+    fli_add_child( sp->br, sp->hsl );
+    fli_add_child( sp->br, sp->vsl );
     fl_add_object( fl_current_form, sp->br );
 
     return ob;
@@ -701,7 +701,7 @@ fl_get_browser_vscroll_callback( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_adjust_browser_scrollbar( FL_OBJECT * ob )
+fli_adjust_browser_scrollbar( FL_OBJECT * ob )
 {
       Comp *comp = GetSpec( ob );
 

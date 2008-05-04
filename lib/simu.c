@@ -58,7 +58,7 @@ fl_set_object_return( FL_OBJECT * ob,
 		case FL_SLIDER:
 		case FL_VALSLIDER:
 		case FL_THUMBWHEEL:
-			fl_set_valuator_return( ob, when );
+			fli_set_valuator_return( ob, when );
 			break;
 
 		case FL_INPUT:

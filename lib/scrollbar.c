@@ -372,9 +372,9 @@ fl_create_scrollbar( int          type,
     fl_set_object_callback( sp->slider, slider_cb, 0 );
     get_geom( obj );
 
-    fl_add_child( obj, sp->slider );
-    fl_add_child( obj, sp->down );
-    fl_add_child( obj, sp->up );
+    fli_add_child( obj, sp->slider );
+    fli_add_child( obj, sp->down );
+    fli_add_child( obj, sp->up );
 
     return obj;
 }

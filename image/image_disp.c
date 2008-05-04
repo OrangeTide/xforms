@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_disp.c,v 1.8 2008/03/19 21:04:21 jtt Exp $
+ * $Id: image_disp.c,v 1.9 2008/05/04 21:07:57 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -141,9 +141,9 @@ get_all_colors(FL_IMAGE * im, unsigned long newpix[], int *npix, XColor xc[])
 		for (i = 0; i < im->map_len; i++)
 		{
 			if (xc[i].pixel == FL_NoColor)
-				fl_find_closest_color(xc[i].red >> 8, xc[i].green >> 8,
-									  xc[i].blue >> 8, mapentry, max_colors,
-									  &(xc[i].pixel));
+				fli_find_closest_color(xc[i].red >> 8, xc[i].green >> 8,
+									   xc[i].blue >> 8, mapentry, max_colors,
+									   &(xc[i].pixel));
 		}
 		fl_free(mapentry);
     }
@@ -781,7 +781,8 @@ flimage_color_to_pixel(FL_IMAGE * im, int r, int g, int b, int *newpix)
 			XQueryColors(im->xdisplay, im->xcolormap, xcolor, max_col);
 			lastcolormap = im->xcolormap;
 		}
-		fl_find_closest_color(r, g, b, xcolor, max_col, &pixel);
+
+		fli_find_closest_color(r, g, b, xcolor, max_col, &pixel);
     }
 
     return pixel;
@@ -864,9 +865,9 @@ adapt_image_to_window(FL_IMAGE *im, XWindowAttributes *xwa)
 	im->vclass = xwa->visual->class;
 	im->visual = xwa->visual;
 	im->xcolormap = xwa->colormap;
-	fl_rgbmask_to_shifts(rgb2p->rmask, &rgb2p->rshift, &rgb2p->rbits);
-	fl_rgbmask_to_shifts(rgb2p->gmask, &rgb2p->gshift, &rgb2p->gbits);
-	fl_rgbmask_to_shifts(rgb2p->bmask, &rgb2p->bshift, &rgb2p->bbits);
+	fli_rgbmask_to_shifts(rgb2p->rmask, &rgb2p->rshift, &rgb2p->rbits);
+	fli_rgbmask_to_shifts(rgb2p->gmask, &rgb2p->gshift, &rgb2p->gbits);
+	fli_rgbmask_to_shifts(rgb2p->bmask, &rgb2p->bshift, &rgb2p->bbits);
 }
 
 
@@ -1293,9 +1294,9 @@ convert_ximage(FL_IMAGE * im, XImage * ximage)
        using the red_mask of some arbirary window!
     */
 
-    fl_rgbmask_to_shifts(ximage->red_mask, &rshift, &rbits);
-    fl_rgbmask_to_shifts(ximage->green_mask, &gshift, &gbits);
-    fl_rgbmask_to_shifts(ximage->blue_mask, &bshift, &bbits);
+    fli_rgbmask_to_shifts(ximage->red_mask, &rshift, &rbits);
+    fli_rgbmask_to_shifts(ximage->green_mask, &gshift, &gbits);
+    fli_rgbmask_to_shifts(ximage->blue_mask, &bshift, &bbits);
 #else
     ximage->red_mask = im->rgb2p.rmask;
     ximage->green_mask = im->rgb2p.gmask;

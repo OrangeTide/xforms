@@ -67,8 +67,8 @@ extern float fl_dpi;
 extern FL_IOPT fl_cntl;
 extern int fl_inverted_y;
 
-extern FL_CONTEXT *fl_context;
-extern FL_TARGET  *flx;
+extern FLI_CONTEXT *fli_context;
+extern FLI_TARGET  *flx;
 extern long fl_requested_vid;
 extern int fl_no_connection;
 extern char fl_curfnt[ 127 ];

@@ -46,11 +46,13 @@ Window  main_win;
 /*------------ Color Part --------------------*/
 
 FL_FORM *colorform;
-FL_OBJECT *redsl, *greensl, *bluesl, *colorobj;
+FL_OBJECT *redsl,
+          *greensl,
+          *bluesl, *colorobj;
 
-int r= 128,
+int r = 128,
     g = 128,
-    b= 128 ;
+    b = 128;
 
 
 /***************************************
@@ -79,17 +81,24 @@ create_colorform( void )
 
 	if ( colorform )
       return;
-	colorform = fl_bgn_form(FL_NO_BOX,315,190);
-	obj = fl_add_box(FL_UP_BOX,0,0,315,190,"");
-	bluesl = obj = fl_add_slider(FL_HOR_SLIDER,20,25,220,35,"");
-	fl_set_object_color(obj,FL_COL1,FL_BLUE);
-	redsl = obj = fl_add_slider(FL_HOR_SLIDER,20,135,220,35,"");
-	fl_set_object_color(obj,FL_COL1,FL_RED);
-	greensl = obj = fl_add_slider(FL_HOR_SLIDER,20,80,220,35,"");
-	fl_set_object_color(obj,FL_COL1,FL_GREEN);
-	colorobj = obj = fl_add_box(FL_BORDER_BOX,250,25,50,145,"");
-	fl_set_object_color(obj,FL_FREE_COL1,FL_FREE_COL1);
-	fl_end_form();
+
+	colorform = fl_bgn_form( FL_NO_BOX, 315, 190 );
+
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 315, 190, "" );
+
+	bluesl = obj = fl_add_slider( FL_HOR_SLIDER, 20, 25, 220, 35, "" );
+	fl_set_object_color( obj, FL_COL1, FL_BLUE );
+
+	redsl = obj = fl_add_slider( FL_HOR_SLIDER, 20, 135, 220, 35, "" );
+	fl_set_object_color( obj, FL_COL1, FL_RED );
+
+	greensl = obj = fl_add_slider( FL_HOR_SLIDER, 20, 80, 220, 35, "" );
+	fl_set_object_color( obj, FL_COL1, FL_GREEN );
+
+	colorobj = obj = fl_add_box( FL_BORDER_BOX, 250, 25, 50, 145, "" );
+	fl_set_object_color( obj, FL_FREE_COL1, FL_FREE_COL1 );
+
+	fl_end_form( );
 }
 
 
@@ -144,10 +153,10 @@ void
 control_callback( FL_OBJECT * obj,
 				  void      * d  FL_UNUSED_ARG )
 {
-   if (obj == sizeobj)
-       cursize = (int)(40 * fl_get_slider_value(sizeobj));
-   else if (obj == exitobj)
-       exit(0);
+   if ( obj == sizeobj )
+       cursize = 40 * fl_get_slider_value( sizeobj );
+   else if ( obj == exitobj )
+       exit( 0 );
 }
 
 
@@ -159,31 +168,34 @@ create_controlform( void )
 {
 	FL_OBJECT *obj;
 
-	controlform = fl_bgn_form(FL_UP_BOX,260,230);
+	controlform = fl_bgn_form( FL_UP_BOX, 260, 230 );
 
-	fl_bgn_group();
+	fl_bgn_group( );
 
-	squareobj = obj = fl_add_button(FL_RADIO_BUTTON,20,150,60,60,"@square");
-	fl_set_object_lcol(obj,FL_YELLOW);
-	fl_set_object_callback(obj, select_object, 1);
+	squareobj = obj = fl_add_button( FL_RADIO_BUTTON, 20, 150, 60, 60,
+									 "@square" );
+	fl_set_object_lcol( obj, FL_YELLOW );
+	fl_set_object_callback( obj, select_object, 1 );
 
-	obj = fl_add_button(FL_RADIO_BUTTON,20,90,60,60,"@circle");
-	fl_set_object_lcol(obj,FL_YELLOW);
-	fl_set_object_callback(obj, select_object, 2);
+	obj = fl_add_button( FL_RADIO_BUTTON, 20, 90, 60, 60, "@circle" );
+	fl_set_object_lcol( obj, FL_YELLOW );
+	fl_set_object_callback( obj, select_object, 2 );
 
-	obj = fl_add_button(FL_RADIO_BUTTON,20,30,60,60,"@8>");
-	fl_set_object_lcol(obj,FL_YELLOW);
-	fl_set_object_callback(obj, select_object, 3);
+	obj = fl_add_button( FL_RADIO_BUTTON, 20, 30, 60, 60, "@8>" );
+	fl_set_object_lcol( obj, FL_YELLOW );
+	fl_set_object_callback( obj, select_object, 3 );
 
-	fl_end_group();
+	fl_end_group( );
 
-	exitobj = fl_add_button(FL_NORMAL_BUTTON,160,30,80,30,"Exit");
+	exitobj = fl_add_button( FL_NORMAL_BUTTON, 160, 30, 80, 30, "Exit" );
 
-	obj = fl_add_button(FL_NORMAL_BUTTON,160,180,80,30,"Clear");
-	fl_set_object_callback(obj,clearit,0);
-	sizeobj = fl_add_slider(FL_VERT_SLIDER,100,30,40,180,"size");
+	obj = fl_add_button( FL_NORMAL_BUTTON, 160, 180, 80, 30, "Clear" );
+	fl_set_object_callback( obj, clearit, 0 );
 
-	fl_end_form();
+	sizeobj = fl_add_slider( FL_VERT_SLIDER, 100, 30, 40, 180, "size" );
+	fl_set_slider_bounds( sizeobj, 0.025, 1.0 );
+
+	fl_end_form( );
 }
 
 
@@ -194,11 +206,11 @@ create_controlform( void )
 void
 init_controlpart( void )
 {
-	create_controlform();
-	fl_set_form_callback(controlform,control_callback, 0);
-	fl_set_button(squareobj,1);
-	fl_set_initial_placement(controlform, 20, -controlform->h - 40,
-							 controlform->w, controlform->h);
+	create_controlform( );
+	fl_set_form_callback( controlform, control_callback, 0 );
+	fl_set_button( squareobj, 1 );
+	fl_set_initial_placement( controlform, 20, -controlform->h - 40,
+							  controlform->w, controlform->h );
 	fl_show_form( controlform, FL_PLACE_SIZE, FL_TRANSIENT, "Control" );
 }
 
@@ -225,21 +237,25 @@ int onumb = 0;
 void
 drawit( OBJ * obj )
 {
-	fl_winset(main_win);
-	fl_mapcolor(FL_FREE_COL1,obj->r, obj->g, obj->b);
-	if (obj->type == 1)
-		fl_rectf(obj->x - obj->size, obj->y - obj->size,
-				 obj->size * 2, obj->size *2, FL_FREE_COL1);
-	else if (obj->type == 2)
-		fl_circf(obj->x, obj->y, obj->size, FL_FREE_COL1);
-	else if (obj->type == 3)
-	{
-		FL_POINT point[4];
+	fl_winset( main_win );
+	fl_mapcolor( FL_FREE_COL1, obj->r, obj->g, obj->b );
 
-		point[0].x = obj->x - obj->size; point[0].y = obj->y + obj->size;
-		point[1].x = obj->x + obj->size; point[1].y = obj->y + obj->size;
-		point[2].x = obj->x ; point[2].y = obj->y - obj->size;
-		fl_polyf(point, 3, FL_FREE_COL1);
+	if ( obj->type == 1 )
+		fl_rectf( obj->x - obj->size, obj->y - obj->size,
+				  obj->size * 2, obj->size *2, FL_FREE_COL1 );
+	else if ( obj->type == 2 )
+		fl_circf( obj->x, obj->y, obj->size, FL_FREE_COL1 );
+	else if ( obj->type == 3 )
+	{
+		FL_POINT point[ 4 ];
+
+		point[ 0 ].x = obj->x - obj->size;
+		point[ 0 ].y = obj->y + obj->size;
+		point[ 1 ].x = obj->x + obj->size;
+		point[ 1 ].y = obj->y + obj->size;
+		point[ 2 ].x = obj->x;
+		point[ 2 ].y = obj->y - obj->size;
+		fl_polyf( point, 3, FL_FREE_COL1 );
 	}
 }
 
@@ -256,7 +272,7 @@ drawobject( void )
 	unsigned int km;
 	OBJ *cur_obj = ob + onumb;
 
-	fl_get_win_mouse(main_win, &x0,&y0,&km);
+	fl_get_win_mouse( main_win, &x0, &y0, &km );
 	cur_obj->x = x0 ;
 	cur_obj->y = y0 ;
 	cur_obj->r = r;
@@ -264,7 +280,7 @@ drawobject( void )
 	cur_obj->b = b;
 	cur_obj->type = curobj;
 	cur_obj->size = cursize;
-	drawit(cur_obj);
+	drawit( cur_obj );
 	onumb++;
 }
 

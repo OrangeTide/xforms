@@ -59,7 +59,7 @@ handle_simu_canvas( FL_OBJECT * ob,
 		case FL_DRAW:
 			fl_drw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h,
 						ob->col1, ob->bw );
-			ftype = fl_boxtype2frametype( ob->boxtype );
+			ftype = fli_boxtype2frametype( ob->boxtype );
 			fl_drw_frame( ftype, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
 			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
 						 ob->lcol, ob->lstyle, ob->lsize, ob->label );

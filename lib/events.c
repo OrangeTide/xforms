@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.19 2008/05/03 12:44:46 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.20 2008/05/04 21:07:59 jtt Exp $";
 #endif
 
 
@@ -46,7 +46,7 @@ char *fl_id_evt = "$Id: events.c,v 1.19 2008/05/03 12:44:46 jtt Exp $";
 #include "private/flsnprintf.h"
 
 
-static void handle_object( FL_OBJECT * obj );
+static void fli_handle_input_object( FL_OBJECT * obj );
 
 /*** Global event handlers for all windows ******/
 
@@ -60,10 +60,10 @@ static void *fl_user_data;
  ***************************************/
 
 int
-fl_handle_event_callbacks( XEvent * xev )
+fli_handle_event_callbacks( XEvent * xev )
 {
     Window win = ( ( XAnyEvent * ) xev )->window;
-    FL_WIN *fwin;
+    FLI_WIN *fwin;
 
     for ( fwin = fl_app_win; fwin && fwin->win != win; fwin = fwin->next )
 		/* empty */ ;
@@ -72,10 +72,10 @@ fl_handle_event_callbacks( XEvent * xev )
     {
 		if ( ! fl_event_callback )
 		{
-			M_warn( "fl_handle_event_callbacks", "Unknown window = 0x%lx",
+			M_warn( "fli_handle_event_callbacks", "Unknown window = 0x%lx",
 					xev->xany.window );
 		}
-		fl_xevent_name( "Ignored", xev );
+		fli_xevent_name( "Ignored", xev );
 		return 0;
     }
 
@@ -146,7 +146,7 @@ static FL_OBJECT_QUEUE obj_queue = { NULL, NULL, NULL, NULL };
  ***************************************************/
 
 static void
-extend_obj_queue( void )
+fli_extend_obj_queue( void )
 {
 	FL_OBJECT_QUEUE_ENTRY *p = fl_malloc( ( FL_QSIZE + 1 ) * sizeof *p );
 	size_t i;
@@ -174,7 +174,7 @@ extend_obj_queue( void )
  ******************************************************/
 
 void
-fl_obj_queue_delete( void )
+fli_obj_queue_delete( void )
 {
 	FL_OBJECT_QUEUE_ENTRY *b;
 
@@ -193,13 +193,13 @@ fl_obj_queue_delete( void )
  ***********************************************************/
 
 static void
-add_to_obj_queue( FL_OBJECT * obj )
+fli_add_to_obj_queue( FL_OBJECT * obj )
 {
 	if ( obj == NULL )
 		return;
 
 	if ( obj_queue.empty == NULL )
-		extend_obj_queue( );
+		fli_extend_obj_queue( );
 
 	if ( obj_queue.head )
 		obj_queue.head = obj_queue.head->next = obj_queue.empty;
@@ -218,7 +218,7 @@ add_to_obj_queue( FL_OBJECT * obj )
  *****************************************************************/
 
 static FL_OBJECT *
-get_from_obj_queue( void )
+fli_get_from_obj_queue( void )
 {
 	FL_OBJECT_QUEUE_ENTRY *t = obj_queue.tail;
 
@@ -243,13 +243,13 @@ get_from_obj_queue( void )
  *************************************************************************/
 
 void
-fl_object_qflush_object( FL_OBJECT * obj )
+fli_object_qflush_object( FL_OBJECT * obj )
 {
 	FL_OBJECT_QUEUE_ENTRY *c,
 		                  *p;
 
 	while ( obj_queue.tail && obj_queue.tail->obj == obj )
-		get_from_obj_queue( );
+		fli_get_from_obj_queue( );
 
 	if ( ! obj_queue.tail )
 		return;
@@ -280,7 +280,7 @@ fl_object_qflush_object( FL_OBJECT * obj )
  **********************************************************************/
 
 void
-fl_object_qflush( FL_FORM * form )
+fli_object_qflush( FL_FORM * form )
 {
 	FL_OBJECT_QUEUE_ENTRY *c,
 		                  *p;
@@ -290,8 +290,8 @@ fl_object_qflush( FL_FORM * form )
 			&& obj_queue.tail->obj->form == form )
 	{
 		if ( obj_queue.tail->obj->objclass == FL_INPUT )
-			handle_object( obj_queue.tail->obj );
-		get_from_obj_queue( );
+			fli_handle_input_object( obj_queue.tail->obj );
+		fli_get_from_obj_queue( );
 	}
 
 	if ( ! obj_queue.tail )
@@ -301,7 +301,7 @@ fl_object_qflush( FL_FORM * form )
 		if ( c->obj != FL_EVENT && c->obj->form == form )
 		{
 			if ( c->obj->objclass == FL_INPUT )
-				handle_object( c->obj );
+				fli_handle_input_object( c->obj );
 
 			p->next = c->next;
 			c->next = obj_queue.empty;
@@ -317,7 +317,7 @@ fl_object_qflush( FL_FORM * form )
  ***************************************/
 
 void
-fl_object_qenter( FL_OBJECT * obj )
+fli_object_qenter( FL_OBJECT * obj )
 {
 	if ( ! obj )
 	{
@@ -353,7 +353,7 @@ fl_object_qenter( FL_OBJECT * obj )
     }
 #endif /* ! DELAYED_ACTION */
 
-	add_to_obj_queue( obj );
+	fli_add_to_obj_queue( obj );
 }
 
 
@@ -361,7 +361,7 @@ fl_object_qenter( FL_OBJECT * obj )
  ***************************************/
 
 FL_OBJECT *
-fl_object_qtest( void )
+fli_object_qtest( void )
 {
     if ( obj_queue.tail == NULL )
 		return NULL;
@@ -374,9 +374,9 @@ fl_object_qtest( void )
  ***************************************/
 
 FL_OBJECT *
-fl_object_qread( void )
+fli_object_qread( void )
 {
-    FL_OBJECT *obj = get_from_obj_queue( );
+    FL_OBJECT *obj = fli_get_from_obj_queue( );
 
 	if ( ! obj || obj == FL_EVENT )
 		return obj;
@@ -405,7 +405,7 @@ fl_object_qread( void )
  ***************************************/
 
 static void
-handle_object( FL_OBJECT * obj )
+fli_handle_input_object( FL_OBJECT * obj )
 {
 	if ( obj != FL_EVENT || ! obj->form )
 		return;
@@ -417,19 +417,18 @@ handle_object( FL_OBJECT * obj )
 }
 
 
-/** End of object flush ************* */
-
-
-/***************** End of object Q *****************/
+/***************** End of object queue handling *****************/
 
 
 
 /**************** Normal Events ********************/
 
+
 typedef struct FL_EVENT_QUEUE_ENTRY_ {
 	XEvent                         xev;
 	struct FL_EVENT_QUEUE_ENTRY_ * next;
 } FL_EVENT_QUEUE_ENTRY;
+
 
 typedef struct FL_EVENT_QUEUE_ {
 	FL_EVENT_QUEUE_ENTRY * head;       /* here events get added to */
@@ -450,7 +449,7 @@ static FL_EVENT_QUEUE event_queue = { NULL, NULL, NULL, NULL, 0 };
  ***************************************************/
 
 static void
-extend_event_queue( void )
+fli_extend_event_queue( void )
 {
 	FL_EVENT_QUEUE_ENTRY *p = fl_malloc( ( FL_QSIZE + 1 ) * sizeof *p );
 	size_t i;
@@ -478,7 +477,7 @@ extend_event_queue( void )
  ******************************************************/
 
 void
-fl_event_queue_delete( void )
+fli_event_queue_delete( void )
 {
 	FL_EVENT_QUEUE_ENTRY *b;
 
@@ -497,10 +496,10 @@ fl_event_queue_delete( void )
  ***********************************************************/
 
 static void
-add_to_event_queue( XEvent *xev )
+fli_add_to_event_queue( XEvent *xev )
 {
 	if ( event_queue.empty == NULL )
-		extend_event_queue( );
+		fli_extend_event_queue( );
 
 	if ( event_queue.head )
 		event_queue.head = event_queue.head->next = event_queue.empty;
@@ -520,7 +519,7 @@ add_to_event_queue( XEvent *xev )
  ****************************************************************/
 
 static XEvent
-get_from_event_queue( void )
+fli_get_from_event_queue( void )
 {
 	FL_EVENT_QUEUE_ENTRY *t = event_queue.tail;
 
@@ -546,7 +545,7 @@ fl_XPutBackEvent( XEvent * xev )
 {
     static int mm;
 
-    if ( fl_handle_event_callbacks( xev ) )
+    if ( fli_handle_event_callbacks( xev ) )
 		return;
 
     if ( fl_event_callback )
@@ -564,8 +563,8 @@ fl_XPutBackEvent( XEvent * xev )
 		return;
     }
 
-    fl_xevent_name( "fl_XPutBackEvent", xev );
-	add_to_event_queue( xev );
+    fli_xevent_name( "fl_XPutBackEvent", xev );
+	fli_add_to_event_queue( xev );
 }
 
 
@@ -579,8 +578,8 @@ fl_XEventsQueued( int mode  FL_UNUSED_ARG )
 {
     if ( event_queue.tail == NULL )
     {
-		fl_treat_interaction_events( 0 );
-		fl_treat_user_events( );
+		fli_treat_interaction_events( 0 );
+		fli_treat_user_events( );
     }
 
     return event_queue.tail != NULL;
@@ -598,11 +597,11 @@ fl_XNextEvent( XEvent * xev )
 {
     while ( event_queue.tail == NULL )
     {
-		fl_treat_interaction_events( 1 );
-		fl_treat_user_events( );
+		fli_treat_interaction_events( 1 );
+		fli_treat_user_events( );
     }
 
-	*xev = get_from_event_queue( );
+	*xev = fli_get_from_event_queue( );
 	return 1;
 }
 
@@ -618,8 +617,8 @@ fl_XPeekEvent( XEvent * xev )
 {
     while ( event_queue.tail == NULL )
     {
-		fl_treat_interaction_events( 1 );
-		fl_treat_user_events( );
+		fli_treat_interaction_events( 1 );
+		fli_treat_user_events( );
     }
 
 	*xev = event_queue.tail->xev;
@@ -634,7 +633,7 @@ fl_XPeekEvent( XEvent * xev )
  ***************************************/
 
 void
-fl_treat_user_events( void )
+fli_treat_user_events( void )
 {
     XEvent xev;
 
@@ -646,7 +645,7 @@ fl_treat_user_events( void )
 			fl_event_callback( &xev, fl_user_data );
 		}
 		else
-			fl_object_qenter( FL_EVENT );
+			fli_object_qenter( FL_EVENT );
 
 		event_queue.count--;
 	}
@@ -709,7 +708,7 @@ static ev_name evname[ ] =
  ***************************************/
 
 const char *
-fl_get_xevent_name( const XEvent *xev )
+fli_get_xevent_name( const XEvent *xev )
 {
       size_t i;
       static char buf[ 128 ];
@@ -783,7 +782,7 @@ fl_print_xevent_name( const char *   where,
  ***************************************/
 
 XEvent *
-fl_xevent_name( const char *   where,
+fli_xevent_name( const char *   where,
 				const XEvent * xev )
 {
 
@@ -798,11 +797,11 @@ fl_xevent_name( const char *   where,
  ***************************************/
 
 static int
-badwin_handler( Display *     dpy  FL_UNUSED_ARG,
-				XErrorEvent * xev )
+fli_badwin_handler( Display *     dpy  FL_UNUSED_ARG,
+					XErrorEvent * xev )
 {
 	if ( xev->type != BadWindow && xev->type != BadDrawable )
-		M_err( "badwin_handler",
+		M_err( "fli_badwin_handler",
 			   "X error happened when expecting only BadWindow/Drawable\n" );
 	return 0;
 }
@@ -817,7 +816,7 @@ badwin_handler( Display *     dpy  FL_UNUSED_ARG,
  ************************************************************************/
 
 static void
-compress_redraw( XEvent * ev )
+fli_compress_redraw( XEvent * ev )
 {
 	XEvent expose_ev;
     Window win = ev->xexpose.window;
@@ -899,7 +898,7 @@ compress_redraw( XEvent * ev )
  ***************************************/
 
 static void
-fl_compress_motion( XEvent * xme )
+fli_compress_motion( XEvent * xme )
 {
     Window win = xme->xmotion.window;
     unsigned long evm = PointerMotionMask | ButtonMotionMask;
@@ -925,7 +924,7 @@ fl_compress_motion( XEvent * xme )
          * looked for Motion events, and there could be a Destroy event
          * which makes the XQueryPointer fail as the window is deleted. */
 
-        old = XSetErrorHandler( badwin_handler );
+        old = XSetErrorHandler( fli_badwin_handler );
 		fl_get_win_mouse( xme->xmotion.window,
 						  &xme->xmotion.x, &xme->xmotion.y,
 						  &xme->xmotion.state );
@@ -939,14 +938,14 @@ fl_compress_motion( XEvent * xme )
  ***************************************/
 
 void
-fl_compress_event( XEvent *      xev,
+fli_compress_event( XEvent *      xev,
 				   unsigned long mask )
 {
     if ( xev->type == Expose && mask & ExposureMask )
-		compress_redraw( xev );
+		fli_compress_redraw( xev );
     else if (    xev->type == MotionNotify
 			  && mask & ( PointerMotionMask | ButtonMotionMask ) )
-		fl_compress_motion( xev );
+		fli_compress_motion( xev );
 }
 
 

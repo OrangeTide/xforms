@@ -49,7 +49,7 @@
 
 #define PREVIEW
 
-static FL_IMAP fl_imap[] =
+static FLI_IMAP fl_imap[ ] =
 {
     {NV(FL_BLACK), 0, 0, 0, 0, 0},
     {NV(FL_WHITE), 255, 255, 255, 0, 0},
@@ -100,7 +100,7 @@ static FL_IMAP fl_imap[] =
 void
 apply_gamma(float gamma)
 {
-    FL_IMAP *fm = fl_imap, *fs;
+    FLI_IMAP *fm = fl_imap, *fs;
     float lastgamma = 1.0;
 
     if (FL_abs(gamma) < 1.0e-3)
@@ -127,7 +127,7 @@ apply_gamma(float gamma)
 void
 fl_query_imap(long col, int *r, int *g, int *b)
 {
-    FL_IMAP *flmap = fl_imap, *flmape = flmap + builtin;
+    FLI_IMAP *flmap = fl_imap, *flmape = flmap + builtin;
 
     for (; flmap < flmape; flmap++)
 	if (col == (long)flmap->index)
@@ -178,7 +178,8 @@ get_gray255(long color)
 int
 fl_get_namedcolor(const char *s)
 {
-    FL_IMAP *flmap = fl_imap, *flmape = flmap + builtin;
+    FLI_IMAP *flmap = fl_imap,
+		     *flmape = flmap + builtin;
 
     for (; s && flmap < flmape; flmap++)
 	if (strcmp(s, flmap->name) == 0)

@@ -56,7 +56,7 @@ fl_add_timeout( long                msec,
 				FL_TIMEOUT_CALLBACK callback,
 				void *              data )
 {
-    FL_TIMEOUT_REC *rec;
+    FLI_TIMEOUT_REC *rec;
     static int id = 1;
 
     rec = fl_malloc( sizeof *rec );
@@ -70,10 +70,10 @@ fl_add_timeout( long                msec,
 
 	/* Make it the start of the (doubly) linked list */
 
-    rec->next = fl_context->timeout_rec;
-	if ( fl_context->timeout_rec )
-		fl_context->timeout_rec->prev = rec;
-    fl_context->timeout_rec = rec;
+    rec->next = fli_context->timeout_rec;
+	if ( fli_context->timeout_rec )
+		fli_context->timeout_rec->prev = rec;
+    fli_context->timeout_rec = rec;
 
 	/* Deal with wrap around of IDs- rather unlikely to happen but if it does
 	   it's not a 100% safe way to do it, we can only bet on the chance that
@@ -92,13 +92,13 @@ fl_add_timeout( long                msec,
  ***************************************/
 
 static void
-remove_timeout( FL_TIMEOUT_REC * rec )
+remove_timeout( FLI_TIMEOUT_REC * rec )
 {
-	if ( rec == fl_context->timeout_rec )
+	if ( rec == fli_context->timeout_rec )
 	{
-		fl_context->timeout_rec = rec->next;
+		fli_context->timeout_rec = rec->next;
 		if ( rec->next )
-			fl_context->timeout_rec->prev = NULL;
+			fli_context->timeout_rec->prev = NULL;
 	}
 	else
 	{
@@ -118,7 +118,7 @@ remove_timeout( FL_TIMEOUT_REC * rec )
 void
 fl_remove_timeout( int id )
 {
-    FL_TIMEOUT_REC *rec = fl_context->timeout_rec;
+    FLI_TIMEOUT_REC *rec = fli_context->timeout_rec;
 
 	while ( rec && rec->id != id )
 		rec = rec->next;
@@ -138,16 +138,16 @@ fl_remove_timeout( int id )
  ***************************************/
 
 void
-fl_handle_timeouts( long * msec )
+fli_handle_timeouts( long * msec )
 {
-    FL_TIMEOUT_REC *rec,
-		           *next;
+    FLI_TIMEOUT_REC *rec,
+		            *next;
     long sec = 0,
 		 usec,
 		 elapsed,
 		 diff;
 
-    if ( ! fl_context->timeout_rec )
+    if ( ! fli_context->timeout_rec )
 		return;
 
 	fl_gettime( &sec, &usec );
@@ -156,7 +156,7 @@ fl_handle_timeouts( long * msec )
 	   removing them, while also keeping looking for the time the next
 	   one is going to expire */
 
-    for ( rec = fl_context->timeout_rec; rec; rec = next )
+    for ( rec = fli_context->timeout_rec; rec; rec = next )
 	{
 		next = rec->next;
 
@@ -186,6 +186,6 @@ fl_handle_timeouts( long * msec )
 void
 fl_remove_all_timeouts( void )
 {
-	while ( fl_context->timeout_rec )
-		fl_remove_timeout( fl_context->timeout_rec->id );
+	while ( fli_context->timeout_rec )
+		fl_remove_timeout( fli_context->timeout_rec->id );
 }

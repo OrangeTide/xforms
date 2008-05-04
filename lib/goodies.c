@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_gds = "$Id: goodies.c,v 1.9 2008/05/01 21:36:47 jtt Exp $";
+char *fl_id_gds = "$Id: goodies.c,v 1.10 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -66,8 +66,8 @@ fl_update_display( int block )
  ***************************************/
 
 int
-fl_goodies_preemptive( FL_FORM * form,
-					   void *    ev )
+fli_goodies_preemptive( FL_FORM * form,
+						void *    ev )
 {
     if ( ( ( XEvent * ) ev )->type == UnmapNotify )
     {
@@ -98,8 +98,8 @@ fl_goodies_atclose( FL_FORM * form,
  ***************************************/
 
 void
-fl_parse_goodies_label( FL_OBJECT *  ob,
-						const char * name )
+fli_parse_goodies_label( FL_OBJECT *  ob,
+						 const char * name )
 {
     char s[ 256 ];
 
@@ -115,8 +115,8 @@ fl_parse_goodies_label( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_get_goodie_title( FL_FORM *    form,
-					 const char * res )
+fli_get_goodie_title( FL_FORM *    form,
+					  const char * res )
 {
     char s[ 256 ];
 
@@ -146,8 +146,8 @@ fl_set_goodies_font( int style,
  ***************************************/
 
 void
-fl_get_goodies_font( int * style,
-					 int * size )
+fli_get_goodies_font( int * style,
+					  int * size )
 {
     *style = goodie_style;
     *size = goodie_size;
@@ -158,8 +158,8 @@ fl_get_goodies_font( int * style,
  ***************************************/
 
 void
-fl_handle_goodie_font( FL_OBJECT * ob1,
-					   FL_OBJECT * ob2 )
+fli_handle_goodie_font( FL_OBJECT * ob1,
+						FL_OBJECT * ob2 )
 {
     if ( goodie_style < 0 )
 		return;
@@ -183,9 +183,9 @@ fl_handle_goodie_font( FL_OBJECT * ob1,
  ***************************************/
 
 void
-fl_init_goodies( void )
+fli_init_goodies( void )
 {
-    fl_init_alert( );
+    fli_init_alert( );
 }
 
 
@@ -193,10 +193,10 @@ fl_init_goodies( void )
  ***************************************/
 
 static void
-box_vert( FL_Coord x,
-		  FL_Coord y,
-		  FL_Coord w,
-		  FL_Coord h )
+fli_box_vert( FL_Coord x,
+			  FL_Coord y,
+			  FL_Coord w,
+			  FL_Coord h )
 {
     int xy[ 2 ];
     int halfh = 0.5 * h,
@@ -235,18 +235,18 @@ draw_box( FL_OBJECT * ob,
 
 	fl_winset( FL_ObjWin( ob ) );
 
-	if ( ! fl_dithered( fl_vmode ) )
+	if ( ! fli_dithered( fl_vmode ) )
 	{
 		fl_color( FL_YELLOW );
 		fl_bgnpolygon( );
-		box_vert( ob->x, ob->y, p, p );
+		fli_box_vert( ob->x, ob->y, p, p );
 		fl_endpolygon( );
 	}
 
 	fl_linewidth( 2 );
 	fl_color( FL_BLACK );
 	fl_bgnclosedline( );
-	box_vert( ob->x, ob->y, ob->w, ob->h );
+	fli_box_vert( ob->x, ob->y, ob->w, ob->h );
 	fl_endclosedline( );
 	fl_linewidth( 0 );
 
@@ -258,7 +258,7 @@ draw_box( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_add_q_icon( FL_Coord x,
+fli_add_q_icon( FL_Coord x,
 			   FL_Coord y,
 			   FL_Coord w,
 			   FL_Coord h )
@@ -277,10 +277,10 @@ fl_add_q_icon( FL_Coord x,
  ***************************************/
 
 void
-fl_add_warn_icon( FL_Coord x,
-				  FL_Coord y,
-				  FL_Coord w,
-				  FL_Coord h )
+fli_add_warn_icon( FL_Coord x,
+				   FL_Coord y,
+				   FL_Coord w,
+				   FL_Coord h )
 {
     FL_OBJECT *obj;
 

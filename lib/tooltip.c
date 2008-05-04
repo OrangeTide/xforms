@@ -106,9 +106,9 @@ fl_set_tooltip_boxtype( int bt )
  ***************************************/
 
 void
-fl_show_tooltip( const char * s,
-				 int          x,
-				 int          y )
+fli_show_tooltip( const char * s,
+				  int          x,
+				  int          y )
 {
     int maxw = 0,
 		maxh = 0,
@@ -149,7 +149,7 @@ fl_show_tooltip( const char * s,
  ***************************************/
 
 void
-fl_hide_tooltip( void )
+fli_hide_tooltip( void )
 {
     if ( tip && tip->tooltipper->visible )
 		fl_hide_form( tip->tooltipper );

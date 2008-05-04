@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: postscript.c,v 1.4 2003/04/24 09:35:34 leeming Exp $
+ * $Id: postscript.c,v 1.5 2008/05/04 21:07:58 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -372,8 +372,8 @@ add_xtics(FL_OBJECT * ob)
 	flps_line(xr, yi, xr, yf, ob->col2);
 
 	if (!sp->axtic[0])
-	    fl_xyplot_nice_label(tic, sp->xminor,
-				 sp->xmajor_val[i], label = buf);
+	    fli_xyplot_nice_label( tic, sp->xminor,
+							   sp->xmajor_val[ i ], label = buf );
 	else
 	{
 	    if ((p = strchr(sp->axtic[i], '@')))
@@ -466,8 +466,8 @@ add_ytics(FL_OBJECT * ob)
 	flps_line(sp->xi - ticl, yr, sp->xi, yr, ob->col2);
 
 	if (!sp->aytic[0])
-	    fl_xyplot_nice_label(tic, sp->yminor,
-				 sp->ymajor_val[i], label = buf);
+	    fli_xyplot_nice_label( tic, sp->yminor,
+							   sp->ymajor_val[ i ], label = buf );
 	else
 	{
 	    if ((p = strchr(sp->aytic[i], '@')))
@@ -701,7 +701,7 @@ ps_draw_xyplot(FL_OBJECT * ob)
 	if (sp->n[nplot] == 0)
 	    continue;
 
-	fl_xyplot_compute_data_bounds(ob, &n1, &n2, nplot);
+	fli_xyplot_compute_data_bounds(ob, &n1, &n2, nplot);
 
 	noline = 0;
 	drawsymbol = 0;
@@ -712,7 +712,7 @@ ps_draw_xyplot(FL_OBJECT * ob)
 	flps_linewidth(sp->thickness[nplot] ? sp->thickness[nplot] : 1);
 
 	if (sp->interpolate[nplot] > 1 && (n2 - n1) > 3 &&
-	    (newn = fl_xyplot_interpolate(ob, nplot, n1, n2)) >= 0)
+	    (newn = fli_xyplot_interpolate(ob, nplot, n1, n2)) >= 0)
 	{
 	    x = sp->wx;
 	    y = sp->wy;

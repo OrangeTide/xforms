@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sldr = "$Id: sldraw.c,v 1.10 2008/03/25 12:41:29 jtt Exp $";
+char *fl_id_sldr = "$Id: sldraw.c,v 1.11 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -77,8 +77,8 @@ flinear( double val,
  ***************************************/
 
 void
-fl_calc_slider_size( FL_OBJECT         * ob,
-					 FL_SCROLLBAR_KNOB * slb )
+fli_calc_slider_size( FL_OBJECT         * ob,
+					  FLI_SCROLLBAR_KNOB * slb )
 {
 	SPEC *sp = ob->spec;
 	FL_COORD x = sp->x,
@@ -184,7 +184,7 @@ fl_calc_slider_size( FL_OBJECT         * ob,
 		return;
     }
 
-	M_err( "fl_calc_slider_size", "Bad slider type:%d", sltype );
+	M_err( "fli_calc_slider_size", "Bad slider type:%d", sltype );
 }
 
 
@@ -192,14 +192,14 @@ fl_calc_slider_size( FL_OBJECT         * ob,
  ***************************************/
 
 int
-fl_slider_mouse_object( FL_OBJECT * ob,
-						FL_Coord    mx,
-						FL_Coord    my )
+fli_slider_mouse_object( FL_OBJECT * ob,
+						 FL_Coord    mx,
+						 FL_Coord    my )
 {
-    FL_SCROLLBAR_KNOB slb;
+    FLI_SCROLLBAR_KNOB slb;
 	SPEC *sp = ob->spec;
 
-    fl_calc_slider_size( ob, &slb );
+    fli_calc_slider_size( ob, &slb );
 
     if ( IS_VSLIDER( ob->type ) )
 	{
@@ -246,11 +246,11 @@ fl_slider_mouse_object( FL_OBJECT * ob,
  * val is normalized betweew 0 and 1
  ***************************************/
 
-void fl_drw_slider( FL_OBJECT  * ob,
-					FL_COLOR     col1,
-					FL_COLOR     col2,
-					const char * str,
-					int          d )
+void fli_drw_slider( FL_OBJECT  * ob,
+					 FL_COLOR     col1,
+					 FL_COLOR     col2,
+					 const char * str,
+					 int          d )
 {
 	SPEC *sp = ob->spec;
 	FL_COORD x = sp->x,
@@ -267,9 +267,9 @@ void fl_drw_slider( FL_OBJECT  * ob,
 		     bw2,
 		     absbw2;
     int slbox;
-    FL_SCROLLBAR_KNOB slb;
+    FLI_SCROLLBAR_KNOB slb;
 
-    fl_calc_slider_size( ob, &slb );
+    fli_calc_slider_size( ob, &slb );
 
     xsl = slb.x;
     ysl = slb.y;

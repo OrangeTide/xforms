@@ -49,7 +49,7 @@
 void
 fl_addto_freelist( void *data )
 {
-    FL_FREE_REC *rec = fl_context->free_rec;
+    FL_FREE_REC *rec = fli_context->free_rec;
     int n;
 
     if ( ! data )
@@ -57,7 +57,7 @@ fl_addto_freelist( void *data )
 
     if ( ! rec )
     {
-		rec = fl_context->free_rec = fl_malloc( sizeof *rec );
+		rec = fli_context->free_rec = fl_malloc( sizeof *rec );
 		rec->nfree = 0;
 		rec->avail = 10;
 		rec->data = fl_malloc( rec->avail * sizeof *rec->data );
@@ -97,7 +97,7 @@ fl_free_freelist( void )
     FL_FREE_REC *rec;
     int n;
 
-    if ( ! ( rec = fl_context->free_rec ) || ! rec->nfree )
+    if ( ! ( rec = fli_context->free_rec ) || ! rec->nfree )
 		return;
 
     /* scan the list for objects eligible for deletion and delete those

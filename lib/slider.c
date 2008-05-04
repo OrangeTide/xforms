@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.13 2008/04/20 13:04:25 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.14 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -72,8 +72,8 @@ enum
 #define VAL_BOXW   FL_max( 35, 0.18 * ob->w )	/* reporting boxsize */
 #define VAL_BOXH   25		                    /* vertical RBW      */
 
-static FL_SCROLLBAR_KNOB osb;
-static FL_SCROLLBAR_KNOB slb;
+static FLI_SCROLLBAR_KNOB osb;
+static FLI_SCROLLBAR_KNOB slb;
 
 
 /***************************************
@@ -123,7 +123,7 @@ draw_motion( FL_OBJECT * ob )
 		 && ob->type != FL_HOR_BROWSER_SLIDER2
 		 && ob->type != FL_HOR_THIN_SLIDER )
     {
-		fl_calc_slider_size( ob, &slb );
+		fli_calc_slider_size( ob, &slb );
 
 		if ( IS_HSLIDER( ob->type ) )
 		{
@@ -181,7 +181,7 @@ draw_motion( FL_OBJECT * ob )
 
     col = ( IS_SCROLLBAR( ob->type ) && sp->mouse == FL_SLIDER_KNOB ) ?
 		  FL_MCOL : ob->col2;
-    fl_drw_slider( ob, ob->col1, col, "", FL_SLIDER_KNOB );
+    fli_drw_slider( ob, ob->col1, col, "", FL_SLIDER_KNOB );
 }
 
 
@@ -235,26 +235,26 @@ draw_slider( FL_OBJECT * ob )
 
     if ( ob->align == FL_ALIGN_CENTER )
     {
-		fl_drw_slider( ob, ob->col1, ob->col2,
-					   IS_FILL( ob->type ) ? "" : ob->label,
-					   FL_SLIDER_ALL & ~sp->mouse );
+		fli_drw_slider( ob, ob->col1, ob->col2,
+						IS_FILL( ob->type ) ? "" : ob->label,
+						FL_SLIDER_ALL & ~sp->mouse );
 		
         /* added 10/21/00 TCZ: need this to get the inside label right
-		   otherwise fl_drw_sliders draw lable centered on the filled part!*/
+		   otherwise fli_drw_slider() draw lable centered on the filled part!*/
 
         if ( IS_FILL( ob->type ) )
             fl_draw_object_label( ob );
     }
     else
     {
-		fl_drw_slider( ob, ob->col1, ob->col2, "",
-					   FL_SLIDER_ALL & ~sp->mouse );
+		fli_drw_slider( ob, ob->col1, ob->col2, "",
+						FL_SLIDER_ALL & ~sp->mouse );
 		fl_draw_object_label_outside( ob );
     }
 
     if ( sp->mouse != FL_SLIDER_NONE )
-		fl_drw_slider( ob, ob->col1, sp->mouse ? FL_MCOL : ob->col2,
-					   "", sp->mouse );
+		fli_drw_slider( ob, ob->col1, sp->mouse ? FL_MCOL : ob->col2,
+						"", sp->mouse );
 }
 
 
@@ -352,7 +352,7 @@ handle_mouse( FL_OBJECT    * ob,
 	else
 		return 0;
 
-	newval = fl_valuator_round_and_clamp( ob, newval );
+	newval = fli_valuator_round_and_clamp( ob, newval );
 	
     if ( sp->val == newval )
 		return 0;
@@ -411,7 +411,7 @@ handle_it( FL_OBJECT * ob,
 			if ( IS_SCROLLBAR( ob->type ) )
 			{
 				ob->want_motion = 1;
-				sp->mouse_pos = fl_slider_mouse_object( ob, mx, my );
+				sp->mouse_pos = fli_slider_mouse_object( ob, mx, my );
 				if ( sp->mouse_pos == ON_TOP_OF_KNOB )
 				{
 					sp->mouse = FL_SLIDER_KNOB;
@@ -454,7 +454,7 @@ handle_it( FL_OBJECT * ob,
 			{
 				int old_state = sp->mouse_pos;
 
-				sp->mouse_pos = fl_slider_mouse_object( ob, mx, my );
+				sp->mouse_pos = fli_slider_mouse_object( ob, mx, my );
 				if ( old_state != sp->mouse_pos )
 				{
 					if ( sp->mouse_pos == ON_TOP_OF_KNOB )
@@ -523,7 +523,7 @@ handle_it( FL_OBJECT * ob,
 
 			/* Check were the mouse button was clicked */
 
-			sp->mouse_pos = fl_slider_mouse_object( ob, mx, my );
+			sp->mouse_pos = fli_slider_mouse_object( ob, mx, my );
 
 			/* If the object is a scrollbar and the mouse is on its knob
 			   nothing happens yet and we're just going to wait for mouse
@@ -606,7 +606,7 @@ handle_it( FL_OBJECT * ob,
 								  ( ( XEvent * ) ev )->xbutton.state );
 				}
 
-				if ( ( sp->mouse_pos = fl_slider_mouse_object( ob, mx, my ) )
+				if ( ( sp->mouse_pos = fli_slider_mouse_object( ob, mx, my ) )
 					                                          != old_mouse_pos )
 				{
 					if ( sp->mouse_pos == ON_TOP_OF_KNOB )

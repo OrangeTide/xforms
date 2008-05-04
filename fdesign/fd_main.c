@@ -66,7 +66,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.18 $ of $Date: 2008/04/10 00:05:47 $",
+    "$State: Exp $  $Revision: 1.19 $ of $Date: 2008/05/04 21:07:57 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -80,7 +80,7 @@ print_version( int die )
     const char **p = fd_version;
 
     for ( ; *p; p++ )
-		fprintf( stderr, "%s\n", fl_rm_rcs_kw( *p ) );
+		fprintf( stderr, "%s\n", fli_rm_rcs_kw( *p ) );
     if ( die )
 		exit( 0 );
 }
@@ -334,7 +334,7 @@ process_xevent( int no_add  FL_UNUSED_ARG )
     XEvent xev;
 
     fl_XNextEvent( &xev );
-    fl_xevent_name( "fd_main", &xev );
+    fli_xevent_name( "fd_main", &xev );
     fl_winset( main_window );
 
     switch ( xev.type )
@@ -626,7 +626,7 @@ pre_connect( int    ac,
 			fd_bwidth = atoi( av[ ++i ] );
 		else if ( strncmp( av[ i ] + 1, "convert", 1 ) == 0 )
 		{
-			fl_set_no_connection( 1 );
+			fli_set_no_connection( 1 );
 			fdopt.conv_only = 1;
 		}
 		else if ( strncmp( av[ i ] + 1, "dir", 3 ) == 0 && i + 1 < ac )
@@ -658,8 +658,8 @@ pre_connect( int    ac,
 
     if ( fdopt.conv_only )
     {
-		fl_set_app_name( av[ 0 ], "Fdesign" ); /* resource routine wants this */
-		fl_init_fl_context( );
+		fli_set_app_name( av[ 0 ], "Fdesign" );/* resource routine wants this */
+		fli_init_context( );
 		create_the_forms( );
 		init_classes( );
 
@@ -933,7 +933,7 @@ main( int    ac,
     fl_set_form_position( fd_control->control, x, y );
 
     fl_set_app_mainform( fd_control->control );
-    fl_set_form_icon_data( fd_control->control, fd_logo_pixels );
+    fli_set_form_icon_data( fd_control->control, fd_logo_pixels );
     fl_show_form(fd_control->control, FL_PLACE_GEOMETRY,
 				 ( 1 || fd_cntlborder ) ? FL_FULLBORDER : FL_TRANSIENT,
 				 "Control" );
@@ -976,7 +976,7 @@ main( int    ac,
     fd_black = fl_get_flcolor( FL_BLACK );
     fd_col = fl_get_flcolor( FL_COL1 );
 
-    main_window = fl_cmap_winopen( fl_root, fd_colormap, "Form Design" );
+    main_window = fli_cmap_winopen( fl_root, fd_colormap, "Form Design" );
 
     /* set default constraint for the window and snap */
 

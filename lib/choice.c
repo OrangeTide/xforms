@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.15 2008/03/25 12:41:27 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.16 2008/05/04 21:07:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -316,7 +316,7 @@ handle_choice( FL_OBJECT * ob,
     int val;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "handle_choice", fl_event_name( event ) );
+    M_info2( "handle_choice", fli_event_name( event ) );
 #endif
 
     switch ( event )

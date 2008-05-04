@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.16 2008/04/20 13:04:24 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.17 2008/05/04 21:07:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -134,7 +134,7 @@ draw_button( FL_OBJECT * ob )
 		fl_draw_object_label( ob );
 		ob->w += off2;
     }
-    else if ( ob->boxtype & FL_BROKEN_BOX || ISTABBOX( ob->boxtype ) )
+    else if ( ob->boxtype & FLI_BROKEN_BOX || ISTABBOX( ob->boxtype ) )
     {
 		fl_set_text_clipping( ob->x + 3, ob->y, ob->w - 6, ob->h );
 		fl_draw_object_label( ob );
@@ -283,7 +283,7 @@ handle_it( FL_OBJECT * ob,
     FL_CleanupButton cleanup;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleButton", "Handling %s", fl_event_name( event ) );
+    M_info2( "HandleButton", "Handling %s", fli_event_name( event ) );
 #endif
 
     switch ( event )
@@ -534,7 +534,7 @@ fl_set_button( FL_OBJECT * ob,
 			if ( ! pushed )
 				return;
 
-			fl_do_radio_push( ob, ob->x, ob->y, FL_MBUTTON1, NULL );
+			fli_do_radio_push( ob, ob->x, ob->y, FL_MBUTTON1, NULL );
 		}			
 
 		sp->val = pushed;

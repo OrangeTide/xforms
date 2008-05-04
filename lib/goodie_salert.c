@@ -82,13 +82,14 @@ create_alert( void )
 
     fdui->but = fl_add_button( FL_RETURN_BUTTON, 185, 90, 90, 27, "Dismiss" );
 
-    fl_add_warn_icon( 8, 15, 35, 35 );
+    fli_add_warn_icon( 8, 15, 35, 35 );
 
     fl_set_form_hotobject( fdui->form, fdui->but );
 
     fl_end_form( );
 
-    fl_register_raw_callback( fdui->form, FL_ALL_EVENT, fl_goodies_preemptive );
+    fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
+							  fli_goodies_preemptive );
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
     fdui->form->fdui = fdui;
 
@@ -117,10 +118,10 @@ fl_show_stacked_alert( const char * title,
     FD_alert *fd_alert;
 
     fd_alert = create_alert( );
-    fl_parse_goodies_label( fd_alert->but, FLAlertDismissLabel );
+    fli_parse_goodies_label( fd_alert->but, FLAlertDismissLabel );
 
-    fl_get_goodie_title( fd_alert->form, FLAlertTitle );
-    fl_handle_goodie_font( fd_alert->but, fd_alert->str );
+    fli_get_goodie_title( fd_alert->form, FLAlertTitle );
+    fli_handle_goodie_font( fd_alert->but, fd_alert->str );
 
     fl_set_object_label( fd_alert->title, title );
     fl_snprintf( buf, sizeof buf, "%s\n%s",

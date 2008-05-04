@@ -103,9 +103,9 @@ mode_cb( FL_OBJECT * ob,
       return;
 
    fl_hide_form (form);
-   if (!fl_mode_capable (gmode[val].val, 0))
+   if ( ! fl_mode_capable( gmode[ val ].val, 0 ) )
    {
-       fl_set_choice(ob, lval);
+       fl_set_choice( ob, lval );
        val = lval;
    }
 

@@ -69,7 +69,7 @@ create_msg( const char * str )
     fl_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-	fl_get_goodies_font( &style, &size );
+	fli_get_goodies_font( &style, &size );
 	fl_get_string_dimension( style, size, str, strlen( str ), &w, &h );
 
 	bw = FL_max( 400, w + 40 );
@@ -86,7 +86,8 @@ create_msg( const char * str )
 
     fl_end_form( );
 
-    fl_register_raw_callback( fdui->form, FL_ALL_EVENT, fl_goodies_preemptive );
+    fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
+							  fli_goodies_preemptive );
 
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
 
@@ -126,9 +127,9 @@ fl_show_messages( const char *str )
 
 	fd_msg = create_msg( str );
 
-	fl_parse_goodies_label( fd_msg->but, FLOKLabel );
+	fli_parse_goodies_label( fd_msg->but, FLOKLabel );
 
-    fl_handle_goodie_font( fd_msg->but, fd_msg->str );
+    fli_handle_goodie_font( fd_msg->but, fd_msg->str );
 
     fl_show_form( fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Message" );
 
@@ -236,7 +237,7 @@ void
 fl_hide_message( void )
 {
     if ( fd_msg && fd_msg->form->visible )
-		fl_object_qenter( fd_msg->but );
+		fli_object_qenter( fd_msg->but );
 	else
 		M_warn( "fl_hide_message", "No message box is shown" );
 }

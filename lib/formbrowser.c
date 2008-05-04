@@ -112,7 +112,7 @@ fl_create_formbrowser( int          type,
 
     sp->scroll = FL_SMOOTH_SCROLL;
 
-    sp->vw_def = sp->hh_def = D = fl_get_default_scrollbarsize( ob );
+    sp->vw_def = sp->hh_def = D = fli_get_default_scrollbarsize( ob );
     sp->canvas = fl_create_canvas( FL_SCROLLED_CANVAS,
 								   ob->x + absbw, ob->y + absbw,
 								   ob->w - 2 * absbw - sp->vw_def,
@@ -127,7 +127,7 @@ fl_create_formbrowser( int          type,
     fl_set_object_bw( sp->canvas, ob->bw );
 
     fl_set_canvas_decoration( sp->canvas,
-							  fl_boxtype2frametype( ob->boxtype ) );
+							  fli_boxtype2frametype( ob->boxtype ) );
     fl_add_canvas_handler( sp->canvas, Expose, canvas_handler, NULL );
 
     sp->v_pref = sp->h_pref = FL_AUTO;
@@ -168,9 +168,9 @@ fl_add_formbrowser( int          type,
     FL_OBJECT *ob = fl_create_formbrowser( type, x, y, w, h, label );
     SPEC *sp = ob->spec;
 
-    fl_add_child( ob, sp->canvas );
-    fl_add_child( ob, sp->hsl );
-    fl_add_child( ob, sp->vsl );
+    fli_add_child( ob, sp->canvas );
+    fli_add_child( ob, sp->hsl );
+    fli_add_child( ob, sp->vsl );
 
     fl_add_object( fl_current_form, ob );
 
@@ -742,15 +742,15 @@ display_forms( SPEC *sp )
     if ( ! FL_ObjWin( sp->canvas ) )
 		return;
 
-    fl_inherit_attributes( sp->parent, sp->canvas );
+    fli_inherit_attributes( sp->parent, sp->canvas );
 
     for ( f = 0; f < top_form; f++ )
 		if ( form[ f ]->visible )
 			fl_hide_form( form[ f ] );
 
     y_pos = 0;
-    fl_inherit_attributes( sp->parent, sp->vsl );
-    fl_inherit_attributes( sp->parent, sp->hsl );
+    fli_inherit_attributes( sp->parent, sp->vsl );
+    fli_inherit_attributes( sp->parent, sp->hsl );
 
     /* I prefer to keep scrollbar umresizable */
 
@@ -803,7 +803,7 @@ handle( FL_OBJECT * ob,
 
 		case FL_DRAW:
 			fl_set_canvas_decoration( sp->canvas,
-									  fl_boxtype2frametype( ob->boxtype ) );
+									  fli_boxtype2frametype( ob->boxtype ) );
 			sp->processing_destroy = 0;
 			check_scrollbar( ob );
 			if ( ! sp->in_draw && FL_ObjWin( sp->canvas ) )

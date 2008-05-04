@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.17 2008/04/29 10:18:00 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.18 2008/05/04 21:07:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -72,11 +72,12 @@ handle_keyboard_special( FL_OBJECT * ob,
     if ( IsModifierKey( keysym ) )
 		/* empty */ ;
     else if ( kbuflen == 0 && keysym != None )
-		ret = fl_do_shortcut( ob->form, keysym, xev->xkey.x, xev->xkey.y, xev );
+		ret = fli_do_shortcut( ob->form, keysym,
+							   xev->xkey.x, xev->xkey.y, xev );
     else
 		for ( ch = keybuf; ch < keybuf + kbuflen && ob->form; ch++ )
-			ret = fl_do_shortcut( ob->form, *ch,
-								  xev->xkey.x, xev->xkey.y, xev ) || ret;
+			ret = fli_do_shortcut( ob->form, *ch,
+								   xev->xkey.x, xev->xkey.y, xev ) || ret;
 
 
     return ret;
@@ -101,7 +102,7 @@ canvas_event_intercept( XEvent * xev,
     FL_OBJECT *ob = vob;
     SPEC *sp = ob->spec;
 
-    fl_xevent_name( "CanvasIntercept", xev );
+    fli_xevent_name( "CanvasIntercept", xev );
 
     if ( ! sp )
     {
@@ -157,11 +158,11 @@ free_canvas( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
 
-	unmap_canvas_window( ob );
+	fli_unmap_canvas_window( ob );
 
     /* Don't free the colormap if it is xforms internal one */
 
-    if ( ! sp->keep_colormap && sp->colormap != fl_colormap( fl_vmode ) )
+    if ( ! sp->keep_colormap && sp->colormap != fli_colormap( fl_vmode ) )
 		XFreeColormap( flx->display, sp->colormap );
 
     fl_safe_free( ob->spec );
@@ -182,7 +183,7 @@ BegWMColormap( SPEC * sp )
        with setting this property. This check simply works around the problem
        (for most cases). */
 
-    if ( sp->colormap != fl_colormap( fl_vmode ) &&
+    if ( sp->colormap != fli_colormap( fl_vmode ) &&
 		 ! XSetWMColormapWindows( flx->display, sp->parent, &sp->window, 1 ) )
 		M_err( "BegWMColormap", "WM choked" );
 }
@@ -354,7 +355,7 @@ init_canvas( FL_OBJECT * ob,
 
 		/* Take over event handling */
 
-		fl_set_preemptive_callback( sp->window, canvas_event_intercept, ob );
+		fli_set_preemptive_callback( sp->window, canvas_event_intercept, ob );
 
 		if ( sp->activate && sp->activate( ob ) < 0 )
 		{
@@ -403,7 +404,7 @@ init_canvas( FL_OBJECT * ob,
     if ( ob->col1 != FL_NoColor )
 		XClearWindow( flx->display, sp->window );
 
-    sp->dec_type = fl_boxtype2frametype( ob->boxtype );
+    sp->dec_type = fli_boxtype2frametype( ob->boxtype );
     fl_drw_frame( sp->dec_type, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
 }
 
@@ -419,7 +420,7 @@ fl_add_canvas_handler( FL_OBJECT        * ob,
 {
     FL_HANDLE_CANVAS oldh = NULL;
     SPEC *sp = ob->spec;
-    unsigned long emask = fl_xevent_to_mask( ev );
+    unsigned long emask = fli_xevent_to_mask( ev );
 
     if ( ! IsValidCanvas( ob ) )
     {
@@ -460,7 +461,7 @@ fl_remove_canvas_handler( FL_OBJECT        * ob,
 						  FL_HANDLE_CANVAS   h  FL_UNUSED_ARG )
 {
     SPEC *sp = ob->spec;
-    unsigned long emask = fl_xevent_to_mask( ev );
+    unsigned long emask = fli_xevent_to_mask( ev );
 
     if ( ev < 0 || ev >= LASTEvent )
 	{
@@ -512,7 +513,7 @@ handle_it( FL_OBJECT * ob,
 {
     SPEC *sp = ob->spec;
 
-    M_warn( "Canvas", fl_event_name( event ) );
+    M_warn( "Canvas", fli_event_name( event ) );
 
     switch ( event )
     {
@@ -570,9 +571,9 @@ fl_create_generic_canvas( int          canvas_class,
 
     if ( ! fl_no_connection )
     {
-		sp->visual = fl_visual( vmode );
-		sp->depth = fl_depth( vmode );
-		sp->colormap = sp->xswa.colormap = fl_colormap( vmode );
+		sp->visual = fli_visual( vmode );
+		sp->depth = fli_depth( vmode );
+		sp->colormap = sp->xswa.colormap = fli_colormap( vmode );
 		sp->gc = fl_state[ vmode ].gc[ 7 ];		/* NOT USED */
     }
 
@@ -702,7 +703,7 @@ fl_clear_canvas( FL_OBJECT * ob )
  ***************************************/
 
 void
-unmap_canvas_window( FL_OBJECT * ob )
+fli_unmap_canvas_window( FL_OBJECT * ob )
 {
     SPEC *sp = ob->spec;
 

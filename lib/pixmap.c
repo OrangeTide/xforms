@@ -333,7 +333,7 @@ handle_pixmap( FL_OBJECT * ob,
 	SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
-	M_info( "handle_pixmap", fl_event_name( event ) );
+	M_info( "handle_pixmap", fli_event_name( event ) );
 #endif
 
 	switch ( event )
@@ -644,7 +644,8 @@ draw_pixmapbutton( FL_OBJECT * ob )
 			{
 				if ( absbw > 1 )
 				{
-					fl_color( fl_depth( fl_vmode ) == 1 ? FL_BLACK : ob->col2 );
+					fl_color( fli_depth( fl_vmode ) == 1 ?
+							  FL_BLACK : ob->col2 );
 					XDrawRectangle( flx->display, FL_ObjWin( ob ), flx->gc,
 									ob->x, ob->y, ob->w - 1, ob->h - 1 );
 				}
@@ -705,7 +706,8 @@ draw_pixmapbutton( FL_OBJECT * ob )
 							   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 				if ( ob->belowmouse && psp->show_focus && absbw > 1 )
 				{
-					fl_color( fl_depth( fl_vmode ) == 1 ? FL_BLACK : ob->col2 );
+					fl_color( fli_depth( fl_vmode ) == 1 ?
+							  FL_BLACK : ob->col2 );
 					XDrawRectangle( flx->display, FL_ObjWin( ob ), flx->gc,
 									ob->x, ob->y, ob->w - 1, ob->h - 1 );
 				}
@@ -1009,8 +1011,8 @@ fl_free_pixmap_pixmap( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_form_icon_data( FL_FORM * form,
-					   char *	 data[ ] )
+fli_set_form_icon_data( FL_FORM * form,
+						char *	 data[ ] )
 {
 	Pixmap p,
 		   s = None;

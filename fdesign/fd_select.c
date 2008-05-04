@@ -336,7 +336,7 @@ find_mouseobj( void )
 		return NULL;
 
     find_mousepos( &xx, &yy );
-    return fl_find_last( cur_form, FL_FIND_MOUSE, xx, yy );
+    return fli_find_last( cur_form, FL_FIND_MOUSE, xx, yy );
 }
 
 
@@ -1159,7 +1159,7 @@ lower_selection( void )
 		if ( selobj[ i ] != BackOBJ( )->next )
 		{
 			fl_delete_object( selobj[ i ] );
-			fl_insert_object( selobj[ i ], BackOBJ( )->next );
+			fli_insert_object( selobj[ i ], BackOBJ( )->next );
 		}
     }
 

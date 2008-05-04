@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.16 2008/04/28 12:32:46 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.17 2008/05/04 21:08:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -301,7 +301,7 @@ draw_input( FL_OBJECT * ob )
     SPEC *sp = ob->spec;
     FL_COLOR col,
 		     textcol;
-    FL_COLOR curscol = fl_dithered( fl_vmode ) ? FL_BLACK : sp->curscol;
+    FL_COLOR curscol = fli_dithered( fl_vmode ) ? FL_BLACK : sp->curscol;
     int valign;
     FL_Coord xmargin,
 		     ymargin;
@@ -355,25 +355,25 @@ draw_input( FL_OBJECT * ob )
 
     fl_set_text_clipping( cx, cy, sp->w, sp->h );
 
-    max_pixels = fl_drw_string( FL_ALIGN_LEFT,
-								valign,					/* Align left cent. */
-								cx - sp->xoffset,		/* Bounding box */
-								cy - sp->yoffset,
-								sp->w + sp->xoffset,
-								sp->h + sp->yoffset,
-								-1,						/* Do clipping */
-								col, textcol, curscol,
-								ob->lstyle, ob->lsize,	/* Size and style */
+    max_pixels = fli_drw_string( FL_ALIGN_LEFT,
+								 valign,   				/* Align left cent. */
+								 cx - sp->xoffset,		/* Bounding box */
+								 cy - sp->yoffset,
+								 sp->w + sp->xoffset,
+								 sp->h + sp->yoffset,
+								 -1,					/* Do clipping */
+								 col, textcol, curscol,
+								 ob->lstyle, ob->lsize,	/* Size and style */
 														/* Cursor position */
-								sp->no_cursor ? -1 : sp->position,
-								sp->beginrange,			/* selection begin */
-								sp->endrange,			/* Selection end */
-								sp->str,
-								sp->drawtype != COMPLETE,
-								sp->topline,
-								sp->topline + sp->screenlines, 0 );
+								 sp->no_cursor ? -1 : sp->position,
+								 sp->beginrange,		/* selection begin */
+								 sp->endrange,			/* Selection end */
+								 sp->str,
+								 sp->drawtype != COMPLETE,
+								 sp->topline,
+								 sp->topline + sp->screenlines, 0 );
 
-    max_pixels_line = fl_get_maxpixel_line( ) + 1;
+    max_pixels_line = fli_get_maxpixel_line( ) + 1;
 
     if (    max_pixels > sp->max_pixels
 		 || (    sp->max_pixels_line >= sp->topline
@@ -428,14 +428,14 @@ handle_select( FL_Coord    mx,
     valign = ob->type == FL_MULTILINE_INPUT ? FL_ALIGN_TOP : FL_ALIGN_CENTER;
     get_margin( ob->boxtype, bw, &xmargin, &ymargin );
 
-    thepos = fl_get_pos_in_string( FL_ALIGN_LEFT, valign,
-								   sp->input->x + xmargin - sp->xoffset,
-								   sp->input->y + ymargin - sp->yoffset,
-								   sp->w + sp->xoffset,
-								   sp->h + sp->yoffset,
-								   ob->lstyle, ob->lsize,
-								   mx, my, sp->str,
-								   &sp->xpos, &sp->ypos );
+    thepos = fli_get_pos_in_string( FL_ALIGN_LEFT, valign,
+									sp->input->x + xmargin - sp->xoffset,
+									sp->input->y + ymargin - sp->yoffset,
+									sp->w + sp->xoffset,
+									sp->h + sp->yoffset,
+									ob->lstyle, ob->lsize,
+									mx, my, sp->str,
+									&sp->xpos, &sp->ypos );
 
     if ( what == WORD_SELECT )
     {
@@ -1023,7 +1023,7 @@ handle_key( FL_OBJECT *  ob,
 
 		if ( sp->maxchars > 0 && slen >= sp->maxchars )
 		{
-			ringbell( );
+			fl_ringbell( 0 );
 			return 0;
 		}
 
@@ -1059,7 +1059,7 @@ handle_key( FL_OBJECT *  ob,
 		{
 			ok = sp->validate( ob, tmpbuf, sp->str, key );
 
-			if ( ( ok & ~FL_RINGBELL ) != FL_VALID )
+			if ( ( ok & ~ FL_RINGBELL ) != FL_VALID )
 			{
 				strcpy( sp->str, tmpbuf );
 				sp->position = tmppos;
@@ -1072,7 +1072,7 @@ handle_key( FL_OBJECT *  ob,
 			}
 
 			if ( ( ok & FL_RINGBELL ) )
-				ringbell( );
+				fl_ringbell( 0 );
 			fl_free( tmpbuf );
 		}
     }
@@ -1304,7 +1304,7 @@ handle_it( FL_OBJECT * ob,
     int ret = 0,
 		val;
 
-    if ( fl_handle_mouse_wheel( ob, &event, &key, ev ) == 0 )
+    if ( fli_handle_mouse_wheel( ob, &event, &key, ev ) == 0 )
 		return 0;
 
     switch ( event )
@@ -1437,7 +1437,7 @@ handle_it( FL_OBJECT * ob,
 		ret = 0;
 		if ( val & FL_RINGBELL )
 		{
-			ringbell( );
+			fl_ringbell( 0 );
 			fl_reset_focus_object( ob );
 		}
     }
@@ -1529,7 +1529,7 @@ input_cb( FL_OBJECT * ob,
 		if ( sp->dummy->object_callback )
 			fl_call_object_callback( sp->dummy );
 		else
-			fl_object_qenter( sp->dummy );
+			fli_object_qenter( sp->dummy );
     }
 }
 
@@ -1684,15 +1684,16 @@ fl_add_input( int          type,
 		sp->dummy->handle = fake_handle;
 		sp->dummy->spec = sp;
 
-		fl_add_child( sp->dummy, ob );
+		fli_add_child( sp->dummy, ob );
 
-		sp->hh_def = sp->vw_def = fl_get_default_scrollbarsize( ob );
+		sp->hh_def = sp->vw_def = fli_get_default_scrollbarsize( ob );
 		sp->h_pref = sp->v_pref = FL_AUTO;
-		sp->vscroll = fl_create_scrollbar( fl_context->vscb, x + w - sp->vw_def,
+		sp->vscroll = fl_create_scrollbar( fli_context->vscb,
+										   x + w - sp->vw_def,
 										   y, sp->vw_def, h, "" );
 		fl_set_object_resize( sp->vscroll, FL_RESIZE_NONE );
 
-		sp->hscroll = fl_create_scrollbar( fl_context->hscb, x,
+		sp->hscroll = fl_create_scrollbar( fli_context->hscb, x,
 										   y + h - sp->hh_def,
 										   w, sp->hh_def, "" );
 
@@ -1703,8 +1704,8 @@ fl_add_input( int          type,
 		fl_set_scrollbar_value( sp->hscroll, 0.0 );
 		fl_set_object_callback( sp->hscroll, hsl_cb, 0 );
 
-		fl_add_child( sp->dummy, sp->hscroll );
-		fl_add_child( sp->dummy, sp->vscroll );
+		fli_add_child( sp->dummy, sp->hscroll );
+		fli_add_child( sp->dummy, sp->vscroll );
 		fl_set_object_callback( sp->input, input_cb, 0 );
     }
 

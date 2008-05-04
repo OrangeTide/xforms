@@ -45,9 +45,9 @@
  ***************************************/
 
 void
-fl_get_hv_align( int   align,
-				 int * halign,
-				 int * valign )
+fli_get_hv_align( int   align,
+				  int * halign,
+				  int * valign )
 {
     align &= ~ FL_ALIGN_INSIDE;
 
@@ -99,7 +99,7 @@ fl_get_hv_align( int   align,
 			break;
 
 		default:
-			Bark( "fl_get_hv_align", "bad request: %d\n", align );
+			Bark( "fli_get_hv_align", "bad request: %d\n", align );
 			*halign = FL_ALIGN_CENTER;
 			*valign = FL_ALIGN_CENTER;
 			break;
@@ -111,14 +111,14 @@ fl_get_hv_align( int   align,
  ***************************************/
 
 void
-fl_get_outside_align( int   align,
-					  int   x,
-					  int   y,
-					  int   w,
-					  int   h,
-					  int * new_align,
-					  int * newx,
-					  int * newy )
+fli_get_outside_align( int   align,
+					   int   x,
+					   int   y,
+					   int   w,
+					   int   h,
+					   int * new_align,
+					   int * newx,
+					   int * newy )
 {
     *newx = x;
     *newy = y;
@@ -191,7 +191,7 @@ get_align_inside( int   align,
 {
     int hor, vert;
 
-    fl_get_hv_align( align, &hor, &vert );
+    fli_get_hv_align( align, &hor, &vert );
 
     x += xoff;
     y += yoff;
@@ -250,7 +250,7 @@ get_align_outside( int   align,
 {
     int newx, newy, new_align;
 
-    fl_get_outside_align( align, x, y, w, h, &new_align, &newx, &newy );
+    fli_get_outside_align( align, x, y, w, h, &new_align, &newx, &newy );
     get_align_inside( new_align, newx, newy, w, h,
 					  xsize, ysize, xoff, yoff, xx, yy );
 }

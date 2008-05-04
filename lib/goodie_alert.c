@@ -72,16 +72,23 @@ create_alert( void )
     fl_set_object_bw( ob, -2 );
 
     fl_add_box( FL_FLAT_BOX, 50, 30, 380, 5, "@DnLine" );
+
     fdui->title = fl_add_box( FL_FLAT_BOX, 50, 10, 380, 20, "" );
     fl_set_object_lstyle( fdui->title, FL_BOLD_STYLE );
     fl_set_object_lsize( fdui->title, FL_NORMAL_SIZE );
+
     fdui->str = fl_add_text( FL_FLAT_BOX, 50, 36, 380, 45, "" );
     fl_set_object_lalign( fdui->str, FL_ALIGN_CENTER );
+
     fdui->but = fl_add_button( FL_RETURN_BUTTON, 185, 90, 90, 27, "Dismiss" );
-    fl_add_warn_icon( 8, 15, 35, 35 );
+    fli_add_warn_icon( 8, 15, 35, 35 );
+
     fl_set_form_hotobject( fdui->form, fdui->but );
+
     fl_end_form( );
-    fl_register_raw_callback( fdui->form, FL_ALL_EVENT, fl_goodies_preemptive );
+
+    fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
+							  fli_goodies_preemptive );
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
     fdui->form->fdui = fdui;
 
@@ -113,12 +120,12 @@ fl_show_alert( const char * title,
 
     if ( first )
     {
-		fl_parse_goodies_label( fd_alert->but, FLAlertDismissLabel );
+		fli_parse_goodies_label( fd_alert->but, FLAlertDismissLabel );
 		first = 0;
     }
 
-    fl_get_goodie_title( fd_alert->form, FLAlertTitle );
-    fl_handle_goodie_font( fd_alert->but, fd_alert->str );
+    fli_get_goodie_title( fd_alert->form, FLAlertTitle );
+    fli_handle_goodie_font( fd_alert->but, fd_alert->str );
 
     fl_set_object_label( fd_alert->title, title );
     fl_snprintf( buf, sizeof buf,"%s\n%s", str1 ? str1 : "", str2 ? str2 : "" );
@@ -144,7 +151,7 @@ fl_show_alert( const char * title,
  ***************************************/
 
 void
-fl_init_alert( void )
+fli_init_alert( void )
 {
     fd_alert = create_alert( );
 }
@@ -157,5 +164,5 @@ void
 fl_hide_alert( void )
 {
     if ( fd_alert && fd_alert->form->visible )
-		fl_object_qenter( fd_alert->but );
+		fli_object_qenter( fd_alert->but );
 }

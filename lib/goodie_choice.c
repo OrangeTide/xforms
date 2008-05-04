@@ -104,8 +104,8 @@ fl_show_choices( const char * msg,
     if ( ! fd_choice )
 		fd_choice = create_choice( );
 
-    fl_handle_goodie_font( fd_choice->but[ 1 ], fd_choice->but[ 2 ] );
-    fl_handle_goodie_font( fd_choice->but[ 3 ], fd_choice->str );
+    fli_handle_goodie_font( fd_choice->but[ 1 ], fd_choice->but[ 2 ] );
+    fli_handle_goodie_font( fd_choice->but[ 3 ], fd_choice->str );
     fl_set_object_label( fd_choice->str, msg );
 
     fl_hide_object( fd_choice->but[ 1 ] );
@@ -155,7 +155,7 @@ fl_show_choices( const char * msg,
 			return 0;
     }
 
-    fl_get_goodie_title( fd_choice->form, FLChoiceTitle );
+    fli_get_goodie_title( fd_choice->form, FLChoiceTitle );
 
     if ( ! fd_choice->form->visible )
 		fl_deactivate_all_forms( );
@@ -240,6 +240,6 @@ fl_hide_choice( void )
     {
 		if ( default_choice <= 0 || default_choice > 3 )
 			default_choice = 1;
-		fl_object_qenter( fd_choice->but[ default_choice ] );
+		fli_object_qenter( fd_choice->but[ default_choice ] );
     }
 }

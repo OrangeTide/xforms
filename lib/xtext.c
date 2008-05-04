@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.13 2008/04/10 00:05:51 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.14 2008/05/04 21:08:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -90,7 +90,7 @@ extend_workmem( int nl )
  ***************************************/
 
 void
-fl_free_xtext_workmem( void )
+fli_free_xtext_workmem( void )
 {
 	fl_safe_free( lines );
 	fl_safe_free( start );
@@ -104,7 +104,7 @@ fl_free_xtext_workmem( void )
  ***************************************/
 
 int
-fl_get_maxpixel_line( void )
+fli_get_maxpixel_line( void )
 {
     return max_pixelline;
 }
@@ -130,26 +130,26 @@ typedef int ( * DrawString )( Display *,
  ***************************************/
 
 int
-fl_drw_string( int           horalign,
-			   int           vertalign,
-			   FL_Coord      x,
-			   FL_Coord      y,
-			   FL_Coord      w,
-			   FL_Coord      h,
-			   int           clip,
-			   FL_COLOR      backcol,
-			   FL_COLOR      forecol,
-			   FL_COLOR      curscol,
-			   int           style,
-			   int           size,
-			   int           curspos,
-			   int           selstart,
-			   int           selend,
-			   const char *  istr,
-			   int           img,
-			   int           topline,
-			   int           endline,
-			   FL_COLOR      bkcol )
+fli_drw_string( int           horalign,
+				int           vertalign,
+				FL_Coord      x,
+				FL_Coord      y,
+				FL_Coord      w,
+				FL_Coord      h,
+				int           clip,
+				FL_COLOR      backcol,
+				FL_COLOR      forecol,
+				FL_COLOR      curscol,
+				int           style,
+				int           size,
+				int           curspos,
+				int           selstart,
+				int           selend,
+				const char *  istr,
+				int           img,
+				int           topline,
+				int           endline,
+				FL_COLOR      bkcol )
 {
     int i;
     int width;			/* string width of the lines  */
@@ -410,19 +410,19 @@ fl_drw_string( int           horalign,
  ***************************************/
 
 int
-fl_get_pos_in_string( int          horalign,
-					  int          vertalign,
-					  FL_Coord     x,
-					  FL_Coord     y,
-					  FL_Coord     w,
-					  FL_Coord     h,
-					  int          style,
-					  int          size,
-					  FL_Coord     xpos,
-					  FL_Coord     ypos,
-					  const char * str,
-					  int *        xp,
-					  int *        yp )
+fli_get_pos_in_string( int          horalign,
+					   int          vertalign,
+					   FL_Coord     x,
+					   FL_Coord     y,
+					   FL_Coord     w,
+					   FL_Coord     h,
+					   int          style,
+					   int          size,
+					   FL_Coord     xpos,
+					   FL_Coord     ypos,
+					   const char * str,
+					   int *        xp,
+					   int *        yp )
 {
     int i,
 		i0,
@@ -541,63 +541,63 @@ fl_drw_text_cursor( int          align,
 		vertalign;
 
     flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
-    fl_get_hv_align( align, &horalign, &vertalign );
-    fl_drw_string( horalign, vertalign, x, y, w, h, 0, FL_WHITE, c, cc,
-				   style, size, pos, 0, -1, str, 0, 0, 0, 0 );
+    fli_get_hv_align( align, &horalign, &vertalign );
+    fli_drw_string( horalign, vertalign, x, y, w, h, 0, FL_WHITE, c, cc,
+					style, size, pos, 0, -1, str, 0, 0, 0, 0 );
 }
 
 
 /***************************************
  ***************************************/
 
-void
-fl_draw_text_cursor( int          align,
-					 FL_Coord     x,
-					 FL_Coord     y,
-					 FL_Coord     w,
-					 FL_Coord     h,
-					 const char * str,
-					 int          len   FL_UNUSED_ARG,
-					 int          style,
-					 int          size,
-					 FL_COLOR     c,
-					 FL_COLOR     bc,
-					 FL_COLOR     cc,
-					 int          bk,
-					 int          pos )
+static void
+fli_draw_text_cursor( int          align,
+					  FL_Coord     x,
+					  FL_Coord     y,
+					  FL_Coord     w,
+					  FL_Coord     h,
+					  const char * str,
+					  int          len   FL_UNUSED_ARG,
+					  int          style,
+					  int          size,
+					  FL_COLOR     c,
+					  FL_COLOR     bc,
+					  FL_COLOR     cc,
+					  int          bk,
+					  int          pos )
 {
     int horalign,
 		vertalign;
 
     flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
-    fl_get_hv_align( align, &horalign, &vertalign );
-    fl_drw_string( horalign, vertalign, x, y, w, h, 0, FL_WHITE, c, cc,
-				   style, size, pos, 0, -1, str, bk, 0, 0, bc );
+    fli_get_hv_align( align, &horalign, &vertalign );
+    fli_drw_string( horalign, vertalign, x, y, w, h, 0, FL_WHITE, c, cc,
+					style, size, pos, 0, -1, str, bk, 0, 0, bc );
 }
 
 
 #define D( x, y, c )                                      \
-	fl_draw_text_cursor( align, x, y, w, h, str, len,     \
-						 style,size, c, bc, 0, bk, -1 )
+	fli_draw_text_cursor( align, x, y, w, h, str, len,     \
+						  style,size, c, bc, 0, bk, -1 )
 
 
 /***************************************
  ***************************************/
 
 void
-fl_draw_text_inside( int          align,
-					 FL_Coord     x,
-					 FL_Coord     y,
-					 FL_Coord     w,
-					 FL_Coord     h,
-					 const char * istr,
-					 int          len,
-					 int          style,
-					 int          size,
-					 FL_COLOR     c,
-					 FL_COLOR     bc,
-					 int          bk,
-					 int          angle  FL_UNUSED_ARG )
+fli_draw_text_inside( int          align,
+					  FL_Coord     x,
+					  FL_Coord     y,
+					  FL_Coord     w,
+					  FL_Coord     h,
+					  const char * istr,
+					  int          len,
+					  int          style,
+					  int          size,
+					  FL_COLOR     c,
+					  FL_COLOR     bc,
+					  int          bk,
+					  int          angle  FL_UNUSED_ARG )
 {
     int special = 0;
     int xoff,
@@ -671,8 +671,8 @@ fl_draw_text_inside( int          align,
 		D( x + 1, y + 1, FL_RIGHT_BCOL );
     }
 
-    fl_draw_text_cursor( align, x, y, w, h, str, len, style, size,
-						 c, bc, 0, special ? 0 : bk, -1 );
+    fli_draw_text_cursor( align, x, y, w, h, str, len, style, size,
+						  c, bc, 0, special ? 0 : bk, -1 );
 
 	fl_free( str );
 }
@@ -693,8 +693,8 @@ fl_drw_text( int            align,
 			 int            size,
 			 const char *   istr )
 {
-    fl_draw_text_inside( align, x, y, w, h, istr, strlen( istr ),
-						 style, size, c, 0, 0, 0 );
+    fli_draw_text_inside( align, x, y, w, h, istr, strlen( istr ),
+						  style, size, c, 0, 0, 0 );
 }
 
 
@@ -752,9 +752,9 @@ fl_draw_text_beside( int      align,
     x += dx;
     y += dy;
 
-    fl_get_outside_align( align, x, y, w, h, &newa, &newx, &newy );
-    fl_draw_text_inside( align, x, y, w, h, str, len, style, size,
-						 c, bc, bk,0 );
+    fli_get_outside_align( align, x, y, w, h, &newa, &newx, &newy );
+    fli_draw_text_inside( align, x, y, w, h, str, len, style, size,
+						  c, bc, bk,0 );
 }
 #endif
 
@@ -808,7 +808,7 @@ fl_drw_text_beside( int          align,
     x += dx;
     y += dy;
 
-    fl_get_outside_align( align, x, y, w, h, &newa, &newx, &newy );
+    fli_get_outside_align( align, x, y, w, h, &newa, &newx, &newy );
     fl_drw_text( newa, newx, newy, w, h, c, style, size, str );
 }
 
@@ -835,11 +835,11 @@ fl_set_ul_property( int prop,
  ***************************************/
 
 XRectangle *
-fl_get_underline_rect( XFontStruct * fs,
-					   FL_Coord      x,
-					   FL_Coord      y,
-					   const char *  cstr,
-					   int           n )
+fli_get_underline_rect( XFontStruct * fs,
+						FL_Coord      x,
+						FL_Coord      y,
+						const char *  cstr,
+						int           n )
 {
     static XRectangle xr;
     int ul_width,
@@ -871,7 +871,7 @@ fl_get_underline_rect( XFontStruct * fs,
 
     pre = str[ 0 ] == *fl_ul_magic_char;
 
-    xoff = fl_get_string_widthTABfs( fs, str + pre, n - pre );
+    xoff = fli_get_string_widthTABfs( fs, str + pre, n - pre );
 
     /* try to center the underline on the correct character */
 
@@ -897,7 +897,7 @@ do_underline( FL_Coord     x,
 			  const char * cstr,
 			  int          n )
 {
-    XRectangle *xr = fl_get_underline_rect( flx->fs, x, y, cstr, n );
+    XRectangle *xr = fli_get_underline_rect( flx->fs, x, y, cstr, n );
 
 	if ( flx->win == None || xr->width <= 0 ||  xr->height <= 0 )
 		return;
@@ -958,15 +958,15 @@ do_underline_all( FL_Coord     x,
  ***************************************/
 
 int
-fl_drw_stringTAB( Window       win,
-				  GC           gc,
-				  int          x,
-				  int          y,
-				  int          style,
-				  int          size,
-				  const char * s,
-				  int          len,
-				  int          img )
+fli_drw_stringTAB( Window       win,
+				   GC           gc,
+				   int          x,
+				   int          y,
+				   int          style,
+				   int          size,
+				   const char * s,
+				   int          len,
+				   int          img )
 {
     int w, tab;
     const char *p,
@@ -977,7 +977,7 @@ fl_drw_stringTAB( Window       win,
 	if ( win == 0 )
 		return 0;
 
-    tab = fl_get_tabpixels( fs );
+    tab = fli_get_tabpixels( fs );
     XdrawString = img ? XDrawImageString : XDrawString;
 
     XSetFont( flx->display, gc, fs->fid );

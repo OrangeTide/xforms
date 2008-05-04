@@ -71,7 +71,8 @@ create_input( void )
     fdui->but = fl_add_button(FL_RETURN_BUTTON, 185, 94, 90, 27, "OK");
     fl_set_form_hotobject(fdui->form, fdui->but);
     fl_end_form();
-    fl_register_raw_callback(fdui->form, FL_ALL_EVENT, fl_goodies_preemptive);
+    fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
+							  fli_goodies_preemptive );
     fl_set_form_atclose(fdui->form, fl_goodies_atclose, fdui->but);
     fl_inverted_y = oldy;
     fl_set_coordunit(oldu);
@@ -94,13 +95,13 @@ fl_show_simple_input( const char * str1,
     if (!fd_input)
 		fd_input = create_input();
 
-    if (first)
+    if ( first )
     {
-		fl_parse_goodies_label(fd_input->but, FLOKLabel);
+		fli_parse_goodies_label(fd_input->but, FLOKLabel);
 		first = 0;
     }
 
-    fl_handle_goodie_font(fd_input->but, fd_input->input);
+    fli_handle_goodie_font(fd_input->but, fd_input->input);
 
     fl_set_object_label( fd_input->str1, str1 );
     fl_set_input( fd_input->input, defstr );

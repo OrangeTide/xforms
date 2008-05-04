@@ -111,7 +111,7 @@ init_colors( int cc,
 			fl_set_object_label( cs->col[ i ], "@9plus" );
     }
 
-    cn = fl_query_colorname( thecol );
+    cn = fli_query_colorname( thecol );
     fl_set_object_label( cs->cindex, cn + ( cn[ 0 ] == 'F' ? 3 : 0 ) );
     fl_unfreeze_form( cs->colorform );
 }
