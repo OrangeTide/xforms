@@ -79,19 +79,12 @@ typedef struct
     int           repeat_ms;
     int           timeout_id;
     int           mouse_pos;	/* < 0 below knob, 0 on knob, > 0 above knob */
-} FL_VALUATOR_SPEC;
+} FLI_VALUATOR_SPEC;
 
 enum
 {
     COMPLETE_DRAW  = 1,
     VALUE_DRAW     = 2,
-    FOCUS_DRAW     = 4,
-    VALUATOR_DRAWS = 4
 };
-
-#define IsGoodReturn( f )  (    f == FL_RETURN_END          \
-							 || f == FL_RETURN_END_CHANGED  \
-							 || f == FL_RETURN_ALWAYS       \
-							 || f == FL_RETURN_CHANGED)
 
 #endif /* PVALUTOR_H */

@@ -76,6 +76,7 @@ typedef struct
 	                         sy,
 	                         sw,
 	                         sh;			/* scrolled window size          */
-} FL_CANVAS_SPEC;
+} FLI_CANVAS_SPEC;
+
 
 #endif /* PCANVAS_H */

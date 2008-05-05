@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.7 2008/01/28 23:43:02 jtt Exp $
+ * $Id: image_tiff.c,v 1.8 2008/05/05 14:21:49 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -461,15 +461,15 @@ initialize_tiff_io( SPEC * sp,
     sp->readit[ ASCII ] = fgetc;
     sp->writeit[ ASCII ] = fputc;
 
-    sp->readit[ kShort ] = endian == MSBFirst ? fl_fget2MSBF : fl_fget2LSBF;
-    sp->readit[ kUShort ] = endian == MSBFirst ? fl_fget2MSBF : fl_fget2LSBF;
-    sp->writeit[ kUShort ] = endian == MSBFirst ? fl_fput2MSBF : fl_fput2LSBF;
-    sp->writeit[ kShort ] = endian == MSBFirst ? fl_fput2MSBF : fl_fput2LSBF;
+    sp->readit[ kShort ] = endian == MSBFirst ? fli_fget2MSBF : fli_fget2LSBF;
+    sp->readit[ kUShort ] = endian == MSBFirst ? fli_fget2MSBF : fli_fget2LSBF;
+    sp->writeit[ kUShort ] = endian == MSBFirst ? fli_fput2MSBF : fli_fput2LSBF;
+    sp->writeit[ kShort ] = endian == MSBFirst ? fli_fput2MSBF : fli_fput2LSBF;
 
-    sp->readit[ kULong ] = endian == MSBFirst ? fl_fget4MSBF : fl_fget4LSBF;
-    sp->readit[ kLong ] = endian == MSBFirst ? fl_fget4MSBF : fl_fget4LSBF;
-    sp->writeit[ kULong ] = endian == MSBFirst ? fl_fput4MSBF : fl_fput4LSBF;
-    sp->writeit[ kLong ] = endian == MSBFirst ? fl_fput4MSBF : fl_fput4LSBF;
+    sp->readit[ kULong ] = endian == MSBFirst ? fli_fget4MSBF : fli_fget4LSBF;
+    sp->readit[ kLong ] = endian == MSBFirst ? fli_fget4MSBF : fli_fget4LSBF;
+    sp->writeit[ kULong ] = endian == MSBFirst ? fli_fput4MSBF : fli_fput4LSBF;
+    sp->writeit[ kLong ] = endian == MSBFirst ? fli_fput4MSBF : fli_fput4LSBF;
 
     sp->read2bytes = sp->readit[ kShort ];
     sp->read4bytes = sp->readit[ kLong ];
@@ -1081,7 +1081,7 @@ write_pixels(FL_IMAGE * im, SPEC *sp)
 		/* tiff spec 6.0 did not define 16 bits samples. libtiff
 		   seems to use MSB always for this. We do the same */
 		for (k = 0; k < im->w; k++)
-		    fl_fput2MSBF(im->gray[row][k], fp);
+		    fli_fput2MSBF(im->gray[row][k], fp);
 		/* sp->write2bytes(im->gray[row][k], fp); */
 	    }
 	}

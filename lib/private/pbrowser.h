@@ -32,19 +32,15 @@
 #ifndef PBROWSER_H_
 #define PBROWSER_H_
 
-#ifndef FL_BROWSER_SCROLL_CALLBACKt
-#define FL_BROWSER_SCROLL_CALLBACKt
+#include "private/ptextbox.h"
 
-typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *, int, void * );
-
-#endif /* ! defined FL_BROWSER_SCROLL_CALLBACKt */
 
 typedef struct
 {
-    FL_OBJECT                   * br;			/* the browser - container    */
-    FL_OBJECT                   * tb;			/* the textbox                */
-    FL_OBJECT                   * hsl;			/* horizontal scrollbar       */
-    FL_OBJECT                   * vsl;			/* vertical scrollbar         */
+    FL_OBJECT                  * br;			/* the browser - container    */
+    FL_OBJECT                  * tb;			/* the textbox                */
+    FL_OBJECT                  * hsl;			/* horizontal scrollbar       */
+    FL_OBJECT                  * vsl;			/* vertical scrollbar         */
     FL_CALLBACKPTR               callback;
     long                         callback_data;
     double                       hsize,
@@ -70,6 +66,6 @@ typedef struct
 	                             vcb;
     void                       * hcb_data,
 	                           * vcb_data;
-} FL_BROWSER_SPEC;
+} FLI_BROWSER_SPEC;
 
 #endif

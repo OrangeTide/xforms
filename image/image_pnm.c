@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_pnm.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_pnm.c,v 1.5 2008/05/05 14:21:49 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -104,13 +104,13 @@ PNM_description(FL_IMAGE * im)
     im->io_spec = sp;
     s[2] = '\0';
 
-    if ((sp->w = fl_readpint(im->fpin)) <= 0 ||
-	(sp->h = fl_readpint(im->fpin)) <= 0)
+    if ((sp->w = fli_readpint(im->fpin)) <= 0 ||
+		(sp->h = fli_readpint(im->fpin)) <= 0)
     {
-	flimage_error(im, "%s: can't get image size", im->infile);
-	fl_free(sp);
-	im->io_spec = 0;
-	return -1;
+		flimage_error(im, "%s: can't get image size", im->infile);
+		fl_free(sp);
+		im->io_spec = 0;
+		return -1;
     }
 
     im->w = sp->w;
@@ -121,7 +121,7 @@ PNM_description(FL_IMAGE * im)
     sp->pbm = (s[1] == '4' || s[1] == '1');
 
     if (!sp->pbm)
-	sp->maxval = fl_readpint(im->fpin);
+	sp->maxval = fli_readpint(im->fpin);
     else
 	sp->maxval = 1;
 
@@ -155,87 +155,81 @@ PNM_read_pixels(FL_IMAGE * im)
 
     if (im->type == FL_IMAGE_RGB)
     {
-	unsigned char *r = im->red[0];
-	unsigned char *g = im->green[0];
-	unsigned char *b = im->blue[0];
+		unsigned char *r = im->red[0];
+		unsigned char *g = im->green[0];
+		unsigned char *b = im->blue[0];
 
-	if (sp->raw)
-	{
-	    for (i = 0; i < npix; i++)
-	    {
-		*r++ = getc(im->fpin);
-		*g++ = getc(im->fpin);
-		*b++ = getc(im->fpin);
-	    }
-	}
-	else
-	{
-	    for (i = 0; i < npix; i++)
-	    {
-		*r++ = (unsigned char)(fl_readpint(im->fpin) * sp->fnorm);
-		*g++ = (unsigned char)(fl_readpint(im->fpin) * sp->fnorm);
-		*b++ = (unsigned char)(fl_readpint(im->fpin) * sp->fnorm);
-	    }
-
-	    if (sp->maxval != FL_PCMAX)
-	    {
-		r = im->red[0];
-		g = im->green[0];
-		b = im->blue[0];
-		for (i = 0; i > npix; i++)
+		if (sp->raw)
 		{
-		    r[i] = (unsigned char)(r[i] * sp->fnorm);
-		    g[i] = (unsigned char)(g[i] * sp->fnorm);
-		    b[i] = (unsigned char)(b[i] * sp->fnorm);
+			for (i = 0; i < npix; i++)
+			{
+				*r++ = getc(im->fpin);
+				*g++ = getc(im->fpin);
+				*b++ = getc(im->fpin);
+			}
 		}
-	    }
-	}
+		else
+		{
+			for (i = 0; i < npix; i++)
+			{
+				*r++ = (unsigned char)(fli_readpint(im->fpin) * sp->fnorm);
+				*g++ = (unsigned char)(fli_readpint(im->fpin) * sp->fnorm);
+				*b++ = (unsigned char)(fli_readpint(im->fpin) * sp->fnorm);
+			}
+
+			if (sp->maxval != FL_PCMAX)
+			{
+				r = im->red[0];
+				g = im->green[0];
+				b = im->blue[0];
+				for (i = 0; i > npix; i++)
+				{
+					r[i] = (unsigned char)(r[i] * sp->fnorm);
+					g[i] = (unsigned char)(g[i] * sp->fnorm);
+					b[i] = (unsigned char)(b[i] * sp->fnorm);
+				}
+			}
+		}
     }
     else if (FL_IsGray(im->type))
     {
-	unsigned short *gray = im->gray[0];
+		unsigned short *gray = im->gray[0];
 
-	if (sp->raw)
-	{
-	    for (i = 0; i < npix; i++)
-		gray[i] = getc(im->fpin);
-	}
-	else
-	{
-	    for (i = 0; i < npix; i++)
-		gray[i] = fl_readpint(im->fpin);
-	}
+		if (sp->raw)
+			for (i = 0; i < npix; i++)
+				gray[i] = getc(im->fpin);
+		else
+			for (i = 0; i < npix; i++)
+				gray[i] = fli_readpint(im->fpin);
     }
     else if (im->type == FL_IMAGE_MONO)
     {
-	unsigned short *ci = im->ci[0], *cend = ci + npix;
-	int bit, k;
+		unsigned short *ci = im->ci[0], *cend = ci + npix;
+		int bit, k;
 
-	if (sp->raw)
-	{
-	    for (i = 0; i < im->h; i++)
-	    {
-		cend = (ci = im->ci[i]) + im->w;
-		for (k = bit = err = 0; !err && ci < cend; ci++, bit++)
+		if (sp->raw)
 		{
-		    if (!(bit &= 7))
-			k = getc(im->fpin);
-		    err = k == EOF;
-		    *ci = (k & 0x80) ? 1 : 0;
-		    k <<= 1;
+			for (i = 0; i < im->h; i++)
+			{
+				cend = (ci = im->ci[i]) + im->w;
+				for (k = bit = err = 0; !err && ci < cend; ci++, bit++)
+				{
+					if (!(bit &= 7))
+						k = getc(im->fpin);
+					err = k == EOF;
+					*ci = (k & 0x80) ? 1 : 0;
+					k <<= 1;
+				}
+			}
 		}
-	    }
-	}
-	else
-	{
-	    for (; ci < cend; ci++)
-		*ci = (fl_readpint(im->fpin) > 0);
-	}
+		else
+		{
+			for (; ci < cend; ci++)
+				*ci = fli_readpint(im->fpin) > 0;
+		}
     }
     else
-    {
-	im->error_message(im, "Unsupported PNM image");
-    }
+		im->error_message(im, "Unsupported PNM image");
 
     return 1;
 }

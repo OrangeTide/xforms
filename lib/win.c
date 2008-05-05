@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.12 2008/05/04 21:08:01 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.13 2008/05/05 14:21:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -729,7 +729,7 @@ fl_label_to_res_name( const char * label )
 
     strncpy( res, label ? label : "", sizeof res );
     res[ sizeof res - 1 ] = '\0';
-    fl_nuke_all_non_alnum( res );
+    fli_nuke_all_non_alnum( res );
     if ( res[ 0 ] && isupper( ( int ) res[ 0 ] ) )
 		res[ 0 ] = tolower( ( int ) res[ 0 ] );
     return res;

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sldr = "$Id: sldraw.c,v 1.11 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_sldr = "$Id: sldraw.c,v 1.12 2008/05/05 14:21:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -41,10 +41,12 @@ char *fl_id_sldr = "$Id: sldraw.c,v 1.11 2008/05/04 21:08:00 jtt Exp $";
 
 #include "include/forms.h"
 #include "flinternal.h"
-#include "private/pslider.h"		/* for FL_MINKNOB */
+#include "private/pslider.h"
 
 
-typedef FL_SLIDER_SPEC SPEC;
+#define IS_FLATORDOWN( t )  ( IS_FLATBOX( t ) || t == FL_DOWN_BOX )
+
+#define IS_FLATORUPBOX( t ) ( IS_FLATBOX( t ) || t == FL_UP_BOX )
 
 
 /***************************************
@@ -62,17 +64,6 @@ flinear( double val,
 }
 
 
-/* minimum knob size */
-
-#define MINKNOB_SB    FL_MINKNOB_SB
-#define MINKNOB_SL    FL_MINKNOB_SL
-
-
-#define IS_FLATORDOWN( t )  ( IS_FLATBOX( t ) || t == FL_DOWN_BOX )
-
-#define IS_FLATORUPBOX( t ) ( IS_FLATBOX( t ) || t == FL_UP_BOX )
-
-
 /***************************************
  ***************************************/
 
@@ -80,7 +71,7 @@ void
 fli_calc_slider_size( FL_OBJECT         * ob,
 					  FLI_SCROLLBAR_KNOB * slb )
 {
-	SPEC *sp = ob->spec;
+	FLI_SLIDER_SPEC *sp = ob->spec;
 	FL_COORD x = sp->x,
 		     y = sp->y,
 		     w = sp->w,
@@ -120,7 +111,8 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 	
 		if ( IS_SCROLLBAR( sltype ) && slb->h < MINKNOB_SB )
 			slb->h = MINKNOB_SB;
-		else if ( ! IS_SCROLLBAR( sltype ) && slb->h < 2 * absbw + MINKNOB_SL )
+		else if (    ! IS_SCROLLBAR( sltype )
+				  && slb->h < 2 * absbw + MINKNOB_SL )
 			slb->h = 2 * absbw + MINKNOB_SL;
 
 		if ( sltype == FL_VERT_BROWSER_SLIDER2 )
@@ -155,7 +147,8 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 
 		if ( IS_SCROLLBAR( sltype ) && slb->w < MINKNOB_SB )
 			slb->w = MINKNOB_SB;
-		else if ( ! IS_SCROLLBAR( sltype ) && slb->w < 2 * absbw + MINKNOB_SL )
+		else if (    ! IS_SCROLLBAR( sltype )
+				  && slb->w < 2 * absbw + MINKNOB_SL )
 			slb->w = 2 * absbw + MINKNOB_SL;
 
 		if ( sltype == FL_HOR_BROWSER_SLIDER2 )
@@ -197,7 +190,7 @@ fli_slider_mouse_object( FL_OBJECT * ob,
 						 FL_Coord    my )
 {
     FLI_SCROLLBAR_KNOB slb;
-	SPEC *sp = ob->spec;
+	FLI_SLIDER_SPEC *sp = ob->spec;
 
     fli_calc_slider_size( ob, &slb );
 
@@ -252,7 +245,7 @@ void fli_drw_slider( FL_OBJECT  * ob,
 					 const char * str,
 					 int          d )
 {
-	SPEC *sp = ob->spec;
+	FLI_SLIDER_SPEC *sp = ob->spec;
 	FL_COORD x = sp->x,
 		     y = sp->y,
 		     w = sp->w,

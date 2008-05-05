@@ -37,6 +37,6 @@
 
 #include "pvaluator.h"
 
-typedef FL_VALUATOR_SPEC FL_THUMBWHEEL_SPEC;
+typedef FLI_VALUATOR_SPEC FLI_THUMBWHEEL_SPEC;
 
 #endif /* PTWHEEL_H */

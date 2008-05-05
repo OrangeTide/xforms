@@ -34,6 +34,7 @@ typedef struct
 	FL_OBJECT * down;
     double      increment;
     long        reserve[ 10 ];
-} FL_SCROLLBAR_SPEC;
+} FLI_SCROLLBAR_SPEC;
+
 
 #endif

@@ -30,7 +30,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_2lsb = "$Id: read2lsbf.c,v 1.6 2008/01/28 23:21:32 jtt Exp $";
+char *id_2lsb = "$Id: read2lsbf.c,v 1.7 2008/05/05 14:21:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,7 +47,7 @@ char *id_2lsb = "$Id: read2lsbf.c,v 1.6 2008/01/28 23:21:32 jtt Exp $";
  ***************************************/
 
 int
-fl_fget2LSBF( FILE * fp )
+fli_fget2LSBF( FILE * fp )
 {
     int ret = getc( fp );
 
@@ -59,7 +59,8 @@ fl_fget2LSBF( FILE * fp )
  ***************************************/
 
 int
-fl_fput2LSBF( int code, FILE * fp )
+fli_fput2LSBF( int code, FILE * fp )
 {
-    return put2LSBF( code, fp );
+	putc( code & 0xff, fp );
+	return putc( ( code >> 8 ) & 0xff, fp );
 }

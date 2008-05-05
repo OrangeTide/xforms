@@ -41,7 +41,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.12 2008/05/04 21:08:01 jtt Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.13 2008/05/05 14:21:55 jtt Exp $";
 #endif
 
 
@@ -53,9 +53,6 @@ char *fl_id_xyp = "$Id: xyplot.c,v 1.12 2008/05/04 21:08:01 jtt Exp $";
 #include "flinternal.h"
 #include <math.h>
 #include "private/pxyplot.h"
-
-
-#define SPEC FL_XYPLOT_SPEC
 
 
 #define XMAJOR       5
@@ -82,20 +79,20 @@ static float gen_logtic( float,
 						 int );
 
 static void convert_coord( FL_OBJECT *,
-						   SPEC * );
+						   FLI_XYPLOT_SPEC * );
 
-static void find_xbounds( SPEC * );
+static void find_xbounds( FLI_XYPLOT_SPEC * );
 
-static void find_ybounds( SPEC * );
+static void find_ybounds( FLI_XYPLOT_SPEC * );
 
-static int allocate_spec( SPEC *,
+static int allocate_spec( FLI_XYPLOT_SPEC *,
 						  int );
 
 static void add_xgrid( FL_OBJECT * );
 
 static void add_ygrid( FL_OBJECT * );
 
-static void free_spec_dynamic_mem( SPEC * );
+static void free_spec_dynamic_mem( FLI_XYPLOT_SPEC * );
 
 static void w2s_draw( FL_OBJECT *,
 					  double,
@@ -126,8 +123,8 @@ static void fl_xyplot_gen_ytic( FL_OBJECT * ob );
  ***************************************/
 
 static void
-free_overlay_data( SPEC * sp,
-				   int   id )
+free_overlay_data( FLI_XYPLOT_SPEC * sp,
+				   int               id )
 {
     if ( sp->n[ id ] )
     {
@@ -142,8 +139,8 @@ free_overlay_data( SPEC * sp,
  ***************************************/
 
 static void
-free_inset_text( SPEC * sp,
-				 int    i )
+free_inset_text( FLI_XYPLOT_SPEC * sp,
+				 int               i )
 {
     fl_safe_free( sp->text[ i ] );
 }
@@ -167,8 +164,8 @@ free_atic( char * atic[ ] )
  ***************************************/
 
 static void
-extend_screen_data( SPEC * sp,
-					int    n )
+extend_screen_data( FLI_XYPLOT_SPEC * sp,
+					int               n )
 {
     if ( n > sp->cur_nxp )
     {
@@ -188,7 +185,7 @@ extend_screen_data( SPEC * sp,
 static void
 free_xyplot( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     fl_clear_xyplot( ob );
 
@@ -311,7 +308,7 @@ fli_xyplot_interpolate( FL_OBJECT * ob,
 						int         n1,
 						int         n2 )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int newn;
     float *x = sp->x[ id ],
 		  *y = sp->y[ id ];
@@ -377,12 +374,12 @@ fli_xyplot_interpolate( FL_OBJECT * ob,
  ***************************************/
 
 static void
-mapw2s( SPEC *     sp,
-		FL_POINT * p,
-		int        n1,
-		int        n2,
-		float *    x,
-		float *    y )
+mapw2s( FLI_XYPLOT_SPEC * sp,
+		FL_POINT        * p,
+		int               n1,
+		int               n2,
+		float           * x,
+		float           * y )
 {
     int i,
 		tmp;
@@ -441,7 +438,7 @@ fli_xyplot_compute_data_bounds( FL_OBJECT * ob,
 								int *       n2,
 								int         id )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int i;
     float *x = sp->x[ id ];
     float xmin = FL_min( sp->xmin, sp->xmax );
@@ -487,7 +484,7 @@ fli_xyplot_compute_data_bounds( FL_OBJECT * ob,
 static void
 draw_curve_only( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int i,
 		n1,
 		n2,
@@ -747,7 +744,7 @@ fli_xyplot_nice_label( float tic,
 static void
 fl_xyplot_gen_xtic( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float tic = sp->xtic;
     float xmin,
 		  xmax = sp->xmax, xw;
@@ -844,7 +841,7 @@ fl_xyplot_gen_xtic( FL_OBJECT * ob )
 static void
 fl_xyplot_gen_ytic( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float ymin,
 		  ymax,
 		  mymin,
@@ -937,7 +934,7 @@ fl_xyplot_gen_ytic( FL_OBJECT * ob )
 static void
 add_xgrid( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int yi,
 		yf,
 		xr,
@@ -971,7 +968,7 @@ add_xgrid( FL_OBJECT * ob )
 static void
 add_ygrid( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int yr,
 		i,
 		xi,
@@ -1005,7 +1002,7 @@ add_ygrid( FL_OBJECT * ob )
 static void
 add_xtics( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float tic = sp->xtic;
     int xr,
 		ticl = 6,
@@ -1065,7 +1062,7 @@ add_xtics( FL_OBJECT * ob )
 static void
 add_logxtics( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float tic = sp->xtic,
 		  xw;
     int xr,
@@ -1129,7 +1126,7 @@ add_logxtics( FL_OBJECT * ob )
 static void
 add_logytics( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float yw;
     int yr,
 		ticl = 6,
@@ -1181,7 +1178,7 @@ add_logytics( FL_OBJECT * ob )
 static void
 add_ytics( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float tic = sp->ytic;
     int yr,
 		ticl = 6,
@@ -1228,8 +1225,8 @@ add_ytics( FL_OBJECT * ob )
  ***************************************/
 
 static void
-convert_coord( FL_OBJECT * ob,
-			   SPEC *      sp )
+convert_coord( FL_OBJECT       * ob,
+			   FLI_XYPLOT_SPEC * sp )
 {
     float extrax1,
 		  extray1;
@@ -1457,7 +1454,7 @@ fl_drw_text_point( int      lalign,
 static void
 draw_inset( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int i;
     float tx,
 		  ty;
@@ -1478,7 +1475,7 @@ draw_inset( FL_OBJECT * ob )
 static void
 compute_key_position( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int w = 0,
 		i,
 		h,
@@ -1537,8 +1534,8 @@ compute_key_position( FL_OBJECT * ob )
  ***************************************/
 
 static void
-add_border( SPEC *   sp,
-			FL_COLOR c )
+add_border( FLI_XYPLOT_SPEC * sp,
+			FL_COLOR          c )
 {
     if ( sp->xtic > 0 && sp->ytic > 0 )
 		fl_rect( sp->xi, sp->yi, sp->xf - sp->xi, sp->yf - sp->yi, c );
@@ -1554,7 +1551,7 @@ add_border( SPEC *   sp,
  ***************************************/
 
 static void
-round_xminmax( SPEC * sp )
+round_xminmax( FLI_XYPLOT_SPEC * sp )
 {
     if ( sp->xscale != FL_LOG )
     {
@@ -1607,7 +1604,7 @@ round_xminmax( SPEC * sp )
  ***************************************/
 
 static void
-round_yminmax( SPEC * sp )
+round_yminmax( FLI_XYPLOT_SPEC * sp )
 {
 
     if ( sp->yscale != FL_LOG )
@@ -1656,7 +1653,7 @@ round_yminmax( SPEC * sp )
 static void
 draw_xyplot( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     FL_Coord bw = FL_abs( ob->bw );
 
     fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
@@ -1762,7 +1759,7 @@ static void draw_curve_only( FL_OBJECT * );
 static void
 update_xyplot( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int n = sp->update - 1;
     float x,
 		  y;
@@ -1805,7 +1802,7 @@ find_data( FL_OBJECT * ob,
 		   int         my,
 		   int *       n )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int found,
 		i,
 		dist,
@@ -1858,7 +1855,7 @@ handle_mouse( FL_OBJECT * ob,
 			  FL_Coord    mx,
 			  FL_Coord    my )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     static FL_Coord lmx,
 		            lmy;
     int i;
@@ -1992,7 +1989,7 @@ handle_it( FL_OBJECT * ob,
 		   void *      ev   FL_UNUSED_ARG )
 {
     int ret = 0;
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info2( "HandleXYPlot", fli_event_name( event ) );
@@ -2073,8 +2070,8 @@ handle_it( FL_OBJECT * ob,
  ***************************************/
 
 static int
-allocate_spec( SPEC * sp,
-			   int    n )
+allocate_spec( FLI_XYPLOT_SPEC * sp,
+			   int               n )
 {
     int i,
 		i0,
@@ -2149,7 +2146,7 @@ allocate_spec( SPEC * sp,
  ***************************************/
 
 static void
-free_spec_dynamic_mem( SPEC * sp )
+free_spec_dynamic_mem( FLI_XYPLOT_SPEC * sp )
 {
     fl_free( sp->text );
     fl_free( sp->xt );
@@ -2172,8 +2169,8 @@ free_spec_dynamic_mem( SPEC * sp )
  ***************************************/
 
 static void
-init_spec( FL_OBJECT * ob,
-		   SPEC *      sp )
+init_spec( FL_OBJECT       * ob,
+		   FLI_XYPLOT_SPEC * sp )
 {
     allocate_spec( sp, FL_MAX_XYPLOTOVERLAY );
 
@@ -2225,7 +2222,7 @@ fl_create_xyplot( int          t,
 				  const char * l )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_XYPLOT_SPEC *sp;
 
     ob = fl_make_object( FL_XYPLOT, t, x, y, w, h, l, handle_it );
 
@@ -2261,7 +2258,7 @@ fl_get_xyplot_data( FL_OBJECT * ob,
 					float *     y,
 					int *       n )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     *n = 0;
     if ( sp->n[ 0 ] > 0 )
@@ -2283,7 +2280,7 @@ fl_replace_xyplot_point( FL_OBJECT * ob,
 						 double      x,
 						 double      y )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( i < 0 || i >= sp->n[ 0 ] )
 		return;
@@ -2307,7 +2304,7 @@ fl_replace_xyplot_point_in_overlay( FL_OBJECT * ob,
 									double       x,
 									double       y )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( ID < 0 || ID > sp->maxoverlay )
 		return;
@@ -2333,7 +2330,7 @@ fl_get_xyplot( FL_OBJECT * ob,
 			   float *     y,
 			   int *       i )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     *i = FL_abs( sp->inside ) - 1;
 
@@ -2389,7 +2386,7 @@ fl_set_xyplot_return( FL_OBJECT * ob,
 					  int         when )
 {
     if ( ob->type == FL_ACTIVE_XYPLOT )
-		( ( SPEC * ) ob->spec )->how_return = when;
+		( ( FLI_XYPLOT_SPEC * ) ob->spec )->how_return = when;
 }
 
 
@@ -2400,7 +2397,7 @@ void
 fl_set_xyplot_symbolsize( FL_OBJECT * ob,
 						  int         n )
 {
-    ( ( SPEC * ) ob->spec )->ssize = n;
+    ( ( FLI_XYPLOT_SPEC * ) ob->spec )->ssize = n;
 }
 
 
@@ -2412,7 +2409,7 @@ fl_set_xyplot_symbol( FL_OBJECT *      ob,
 					  int              id,
 					  FL_XYPLOT_SYMBOL symbol )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     FL_XYPLOT_SYMBOL old = 0;
     int i;
 
@@ -2447,7 +2444,7 @@ void
 fl_set_xyplot_inspect( FL_OBJECT * ob,
 					   int         yes )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( sp->inspect != yes )
     {
@@ -2474,7 +2471,7 @@ fl_set_xyplot_xtics( FL_OBJECT * ob,
 					 int         major,
 					 int         minor )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int ma = major ? major : XMAJOR;
     int mi = minor ? minor : XMINOR;
 
@@ -2511,7 +2508,7 @@ void
 fl_set_xyplot_xgrid( FL_OBJECT * ob,
 					 int         xgrid )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( sp->xgrid != xgrid )
     {
@@ -2528,7 +2525,7 @@ void
 fl_set_xyplot_ygrid( FL_OBJECT * ob,
 					 int         ygrid )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( sp->ygrid != ygrid )
     {
@@ -2545,7 +2542,7 @@ int
 fl_set_xyplot_grid_linestyle( FL_OBJECT * ob,
 							  int         style )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int ostyle = sp->grid_linestyle;
 
     if ( sp->grid_linestyle != style )
@@ -2566,7 +2563,7 @@ fl_set_xyplot_xbounds( FL_OBJECT * ob,
 					   double      xmin,
 					   double      xmax )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int xs = xmax == xmin;
 
     if ( sp->xautoscale != xs || sp->xmin != xmin || sp->xmax != xmax )
@@ -2593,7 +2590,7 @@ fl_get_xyplot_xbounds( FL_OBJECT * ob,
 					   float *     xmin,
 					   float *     xmax )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     *xmin = sp->xmin;
     *xmax = sp->xmax;
@@ -2608,7 +2605,7 @@ fl_get_xyplot_ybounds( FL_OBJECT * ob,
 					   float *     ymin,
 					   float *     ymax )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     *ymin = sp->ymin;
     *ymax = sp->ymax;
@@ -2623,7 +2620,7 @@ fl_set_xyplot_ybounds( FL_OBJECT * ob,
 					   double      ymin,
 					   double      ymax )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int ys = ymax == ymin;
 
     if ( sp->yautoscale != ys || sp->ymin != ymin || sp->ymax != ymax )
@@ -2645,7 +2642,7 @@ fl_set_xyplot_ytics( FL_OBJECT * ob,
 					 int         major,
 					 int         minor )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int yma = major ? major : YMAJOR;
     int ymi = minor ? minor : YMINOR;
 
@@ -2701,7 +2698,7 @@ get_min_max( float * x,
  ***************************************/
 
 static void
-find_xbounds( SPEC * sp )
+find_xbounds( FLI_XYPLOT_SPEC * sp )
 {
     if ( sp->xautoscale )
 		get_min_max( sp->x[ 0 ], sp->n[ 0 ], &sp->xmin, &sp->xmax );
@@ -2718,7 +2715,7 @@ find_xbounds( SPEC * sp )
  ***************************************/
 
 static void
-find_ybounds( SPEC * sp )
+find_ybounds( FLI_XYPLOT_SPEC * sp )
 {
     if ( sp->yautoscale )
 		get_min_max( sp->y[ 0 ], sp->n[ 0 ], &sp->ymin, &sp->ymax );
@@ -2744,13 +2741,13 @@ fl_set_xyplot_data_double( FL_OBJECT *  ob,
 						   const char * xlabel,
 						   const char * ylabel )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int i;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_XYPLOT ) )
     {
-		Bark( "AddXyplotData", "%s not an xyplot", ob ? ob->label : "" );
+		M_err( "AddXyplotData", "%s not an xyplot", ob ? ob->label : "" );
 		return FL_BAD_OBJECT;
     }
 #endif
@@ -2806,12 +2803,12 @@ fl_set_xyplot_data( FL_OBJECT *  ob,
 					const char * xlabel,
 					const char * ylabel )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_XYPLOT ) )
     {
-		Bark( "AddXyplotData", "%s not an xyplot", ob ? ob->label : "" );
+		M_err( "AddXyplotData", "%s not an xyplot", ob ? ob->label : "" );
 		return FL_BAD_OBJECT;
     }
 #endif
@@ -2861,7 +2858,7 @@ fl_insert_xyplot_data( FL_OBJECT * ob,
 					   double      x,
 					   double      y )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float *xx,
 		  *yy;
 
@@ -2928,12 +2925,12 @@ fl_add_xyplot_overlay( FL_OBJECT * ob,
 					   FL_COLOR    col )
 {
 
-    SPEC *sp;
+    FLI_XYPLOT_SPEC *sp;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_XYPLOT ) )
     {
-		Bark( "XYPlotOverlay", "%s not XYPLOT class", ob ? ob->label : "" );
+		M_err( "XYPlotOverlay", "%s not XYPLOT class", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -2995,7 +2992,7 @@ load_data( const char * f,
 
     if ( ! f || !( fp = fopen( f, "r" ) ) )
     {
-		Bark( "XYplotFile", "can't open datafile %s", f ? f : "null" );
+		M_err( "XYplotFile", "can't open datafile %s", f ? f : "null" );
 		return 0;
     }
 
@@ -3072,7 +3069,7 @@ fl_set_xyplot_overlay_type( FL_OBJECT * ob,
 							int         id,
 							int         type )
 {
-    SPEC *sp;
+    FLI_XYPLOT_SPEC *sp;
 
     if ( id < 0 || ! ob || id > ( sp = ob->spec )->maxoverlay )
 		return;
@@ -3092,7 +3089,7 @@ int
 fl_get_xyplot_numdata( FL_OBJECT * ob,
 					   int         id )
 {
-    SPEC *sp;
+    FLI_XYPLOT_SPEC *sp;
 
     if ( id < 0 || ! ob || id > ( sp = ob->spec )->maxoverlay )
 		return 0;
@@ -3107,7 +3104,7 @@ void
 fl_delete_xyplot_overlay( FL_OBJECT * ob,
 						  int         id )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( id > 0 && id <= sp->maxoverlay && sp->n[ id ] )
     {
@@ -3128,7 +3125,7 @@ fl_get_xyplot_overlay_data( FL_OBJECT * ob,
 							float *     y,
 							int *       n )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( id >= 0 && id <= sp->maxoverlay && sp->n[ id ] )
     {
@@ -3149,7 +3146,7 @@ fl_get_xyplot_data_pointer( FL_OBJECT * ob,
 							float **    y,
 							int *       n )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     *n = 0;
     if ( id >= 0 && id <= sp->maxoverlay && sp->n[ id ] )
@@ -3169,7 +3166,7 @@ fl_set_xyplot_linewidth( FL_OBJECT * ob,
 						 int         id,
 						 int         lw )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( id >= 0 && id <= sp->maxoverlay && lw != sp->thickness[ id ] )
     {
@@ -3196,7 +3193,7 @@ fl_set_xyplot_file( FL_OBJECT *  ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_XYPLOT ) )
     {
-		Bark( "AddXyplotDataFile", "%s not an xyplot", ob ? ob->label : "" );
+		M_err( "AddXyplotDataFile", "%s not an xyplot", ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -3223,13 +3220,13 @@ fl_add_xyplot_text( FL_OBJECT *  ob,
 					int          al,
 					FL_COLOR     col )
 {
-    SPEC *sp;
+    FLI_XYPLOT_SPEC *sp;
     int i;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_XYPLOT ) )
     {
-		Bark( "AddXyplotText", "%s not an xyplot", ob ? ob->label : "" );
+		M_err( "AddXyplotText", "%s not an xyplot", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -3260,13 +3257,13 @@ void
 fl_delete_xyplot_text( FL_OBJECT *  ob,
 					   const char * text )
 {
-    SPEC *sp;
+    FLI_XYPLOT_SPEC *sp;
     int i;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_XYPLOT ) )
     {
-		Bark( "RemoveXYplotText", "%s not an xyplot", ob ? ob->label : "" );
+		M_err( "RemoveXYplotText", "%s not an xyplot", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -3291,9 +3288,9 @@ fl_set_xyplot_interpolate( FL_OBJECT * ob,
 						   double      grid )
 {
     int intpl;
-    SPEC *sp;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
-    if ( id < 0 || ! ob || id > ( ( SPEC * ) ob->spec )->maxoverlay )
+    if ( id < 0 || ! ob || id > sp->maxoverlay )
 		return;
 
     if ( deg >= 2 && grid <= 0.0 )
@@ -3301,7 +3298,6 @@ fl_set_xyplot_interpolate( FL_OBJECT * ob,
 
     intpl = deg <= 1 ? 0 : ( ( deg < 2 || deg > 7 ) ? 2 : deg );
 
-    sp = ob->spec;
     if ( sp->interpolate[ id ] != intpl )
     {
 		sp->interpolate[ id ] = intpl;
@@ -3498,8 +3494,8 @@ fl_get_xyplot_xmapping( FL_OBJECT * ob,
 						float *     a,
 						float *     b )
 {
-    *a = ( ( SPEC * ) ob->spec )->ax;
-    *b = ( ( SPEC * ) ob->spec )->bxm;
+    *a = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->ax;
+    *b = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->bxm;
 }
 
 
@@ -3511,8 +3507,8 @@ fl_get_xyplot_ymapping( FL_OBJECT * ob,
 						float *     a,
 						float *     b )
 {
-    *a = ( ( SPEC * ) ob->spec )->ay;
-    *b = ( ( SPEC * ) ob->spec )->bym;
+    *a = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->ay;
+    *b = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->bym;
 }
 
 
@@ -3526,7 +3522,7 @@ fl_xyplot_s2w( FL_OBJECT * ob,
 			   float *     wx,
 			   float *     wy )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     *wx = ( sx - sp->bxm ) / sp->ax;
     *wy = ( sy - sp->bym ) / sp->ay;
@@ -3550,7 +3546,7 @@ w2s_draw( FL_OBJECT * ob,
 		  float *     sx,
 		  float *     sy )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     float sbx = sp->bxm,
 		  sby = sp->bym;
 
@@ -3573,7 +3569,7 @@ fl_xyplot_w2s( FL_OBJECT * ob,
 			   float *     sx,
 			   float *     sy )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( sp->xscale == FL_LOG )
 		*sx = log10( wx ) / sp->lxbase * sp->ax + sp->bxm + 0.5;
@@ -3595,7 +3591,7 @@ fl_set_xyplot_xscale( FL_OBJECT * ob,
 					  int         scale,
 					  double      base )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( scale == FL_LOG && ( base <= 0.0 || base == 1.0 ) )
     {
@@ -3624,7 +3620,7 @@ fl_set_xyplot_yscale( FL_OBJECT * ob,
 					  int         scale,
 					  double      base )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( scale == FL_LOG && ( base <= 0.0 || base == 1.0 ) )
     {
@@ -3653,7 +3649,7 @@ fl_set_xyplot_fixed_xaxis( FL_OBJECT *  ob,
 						   const char * lm,
 						   const char * rm )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     fl_safe_free( sp->xmargin1 );
     fl_safe_free( sp->xmargin2 );
@@ -3676,7 +3672,7 @@ fl_set_xyplot_fixed_yaxis( FL_OBJECT *  ob,
 						   const char * bm,
 						   const char * tm )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     fl_safe_free( sp->ymargin1 );
     fl_safe_free( sp->ymargin1 );
@@ -3699,7 +3695,7 @@ fl_set_xyplot_alphaxtics( FL_OBJECT *  ob,
 						  const char * m,
 						  const char * s   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     char *tmps,
 		 *item;
     int n;
@@ -3724,7 +3720,7 @@ fl_set_xyplot_alphaytics( FL_OBJECT *  ob,
 						  const char * m,
 						  const char * s   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     char *tmps,
 		 *item;
     int n;
@@ -3748,7 +3744,7 @@ void
 fl_clear_xyplot( FL_OBJECT * ob )
 {
     int i;
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
 
     for ( i = 0; i <= sp->maxoverlay; i++ )
@@ -3769,7 +3765,7 @@ fl_set_xyplot_key( FL_OBJECT *  ob,
 				   int          id,
 				   const char * key )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( id >= 0 && id < sp->maxoverlay )
     {
@@ -3789,7 +3785,7 @@ fl_set_xyplot_key_position( FL_OBJECT * ob,
 							float       y,
 							int         align )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     sp->key_x = x;
     sp->key_y = y;
@@ -3809,7 +3805,7 @@ fl_set_xyplot_keys( FL_OBJECT * ob,
 					int         align )
 {
     int i;
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     for ( i = 0; i < sp->maxoverlay && keys[ i ]; i++ )
 		fl_set_xyplot_key( ob, i, keys[ i ] );
@@ -3826,7 +3822,7 @@ fl_set_xyplot_key_font( FL_OBJECT * ob,
 						int         style,
 						int         size )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( sp->key_lstyle != style || sp->key_lsize != size )
     {
@@ -3844,7 +3840,7 @@ int
 fl_set_xyplot_mark_active( FL_OBJECT * ob,
 						   int         y )
 {
-    SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
     int old = sp->mark_active;
 
     if ( old != y )

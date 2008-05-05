@@ -32,7 +32,7 @@
  */
 
 #if ! defined lint && defined F_ID
-char *id_vstrcat = "$Id: vstrcat.c,v 1.7 2008/03/12 16:00:28 jtt Exp $";
+char *id_vstrcat = "$Id: vstrcat.c,v 1.8 2008/05/05 14:21:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,8 +52,8 @@ char *id_vstrcat = "$Id: vstrcat.c,v 1.7 2008/03/12 16:00:28 jtt Exp $";
  ***************************************/
 
 char *
-vstrcat( const char * s1,
-		 ... )
+fli_vstrcat( const char * s1,
+			 ... )
 {
     size_t total = 0;
     char *ret,
@@ -90,7 +90,7 @@ vstrcat( const char * s1,
  ***************************************/
 
 void
-free_vstrcat( void * p )
+fli_free_vstrcat( void * p )
 {
-    fl_free( p );
+    fl_safe_free( p );
 }

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.12 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.13 2008/05/05 14:21:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -46,9 +46,6 @@ char *fl_id_cntr = "$Id: counter.c,v 1.12 2008/05/04 21:07:59 jtt Exp $";
 
 #include <string.h>
 #include <stdlib.h>
-
-
-#define SPEC FL_COUNTER_SPEC
 
 
 /* Give each component a name. parts are numbered 01 4 23, i.e.
@@ -79,7 +76,7 @@ draw_counter( FL_OBJECT * ob )
     char str[ 64 ];
     int i,
 		btype[ 5 ];
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
     /* Compute boxtypes if pushed */
 
@@ -184,7 +181,7 @@ calc_mouse_obj( FL_OBJECT * ob,
 				FL_Coord    mx,
 				FL_Coord    my )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
     sp->mouseobj = NONE;
 
@@ -225,7 +222,7 @@ calc_mouse_obj( FL_OBJECT * ob,
 
 int fl_get_counter_repeat( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->repeat_ms;
+    return ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms;
 }
 
 
@@ -235,7 +232,7 @@ int fl_get_counter_repeat( FL_OBJECT * ob )
 void fl_set_counter_repeat( FL_OBJECT * ob,
 							int         millisec )
 {
-    ( ( SPEC * ) ob->spec )->repeat_ms = millisec;
+    ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms = millisec;
 }
 
 
@@ -246,7 +243,7 @@ static void
 timeoutCB( int    val  FL_UNUSED_ARG,
 		   void * data )
 {
-    ( ( SPEC * ) data )->timeout_id = -1;
+    ( ( FLI_COUNTER_SPEC * ) data )->timeout_id = -1;
 }
 
 
@@ -260,7 +257,7 @@ handle_mouse( FL_OBJECT * ob,
 			  FL_Coord    mx,
 			  FL_Coord    my )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
     int changeval = 0;
 
     if ( event == FL_RELEASE )
@@ -316,7 +313,7 @@ show_focus_obj( FL_OBJECT * ob,
 				FL_Coord    mx,
 				FL_Coord    my )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
     unsigned int oldobj = sp->mouseobj;
 
     calc_mouse_obj( ob, mx, my );
@@ -356,7 +353,7 @@ handle_counter( FL_OBJECT * ob,
 				int         key  FL_UNUSED_ARG,
 				void *      ev   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info2( "HandleCounter", fli_event_name( event ) );
@@ -437,7 +434,7 @@ fl_create_counter( int          type,
 				   const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_COUNTER_SPEC *sp;
 
     ob = fl_make_object( FL_COUNTER, type, x, y, w, h, label, handle_counter );
     ob->boxtype     = FL_COUNTER_BOXTYPE;
@@ -499,12 +496,12 @@ void
 fl_set_counter_value( FL_OBJECT * ob,
 					  double      val )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		Bark( "SetCounterValue", "%s not a counter", ob ? ob->label : "" );
+		M_err( "SetCounterValue", "%s not a counter", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -527,7 +524,7 @@ fl_get_counter_bounds( FL_OBJECT * ob,
 					   double *    min,
 					   double *    max )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
     *min = sp->min;
     *max = sp->max;
@@ -542,12 +539,12 @@ fl_set_counter_bounds( FL_OBJECT * ob,
 					   double      min,
 					   double      max )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		Bark( "CounterBounds", "%s not a counter", ob ? ob->label : "" );
+		M_err( "CounterBounds", "%s not a counter", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -570,7 +567,7 @@ fl_set_counter_step( FL_OBJECT * ob,
 					 double      s,
 					 double      l )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
     if ( sp->sstep != s || sp->lstep != l )
     {
@@ -589,7 +586,7 @@ fl_get_counter_step( FL_OBJECT * ob,
 					 double *    s,
 					 double *    l )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
     *s = sp->sstep;
     *l = sp->lstep;
@@ -603,7 +600,7 @@ void
 fl_set_counter_precision( FL_OBJECT * ob,
 						  int         prec )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
     if ( sp->prec != prec )
     {
@@ -622,12 +619,12 @@ fl_get_counter_value( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		Bark( "GetCounterValue", "%s not a counter", ob ? ob->label : "" );
+		M_err( "GetCounterValue", "%s not a counter", ob ? ob->label : "" );
 		return 0;
     }
 #endif
 
-    return ( ( SPEC * ) ob->spec )->val;
+    return ( ( FLI_COUNTER_SPEC * ) ob->spec )->val;
 }
 
 
@@ -639,7 +636,7 @@ void
 fl_set_counter_return( FL_OBJECT * ob,
 					   int         how )
 {
-    SPEC *sp = ob->spec;
+    FLI_COUNTER_SPEC *sp = ob->spec;
 
     sp->how_return = how;
     if ( sp->how_return == FL_RETURN_END )
@@ -656,5 +653,5 @@ void
 fl_set_counter_filter( FL_OBJECT *   ob,
 					   FL_VAL_FILTER filter )
 {
-    ( ( SPEC * ) ob->spec )->filter = filter;
+    ( ( FLI_COUNTER_SPEC * ) ob->spec )->filter = filter;
 }

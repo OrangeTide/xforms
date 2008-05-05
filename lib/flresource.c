@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.24 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.25 2008/05/05 14:21:52 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -417,7 +417,7 @@ fli_set_debug_level( int l )
 {
     fl_cntl.debug = l;
     sprintf( OpDebug, "%d", fl_cntl.debug );
-    set_msg_threshold( fl_cntl.debug );
+    fli_set_msg_threshold( fl_cntl.debug );
 }
 
 
@@ -922,7 +922,7 @@ fl_initialize( int        * na,
 
     if ( fl_display )
     {
-		Bark( "fl_initialize", "XForms: already initialized" );
+		M_warn( "fl_initialize", "XForms: already initialized" );
 		return fl_display;
     }
 
@@ -1171,7 +1171,7 @@ fl_initialize( int        * na,
 
     fli_default_xswa( );
     fli_init_stipples( );
-    set_err_msg_func( fl_show_alert );
+    fli_set_err_msg_func( fl_show_alert );
 
     /* if using non-default visual or private colormap, need a window with
        correct visual/colormap and depth */

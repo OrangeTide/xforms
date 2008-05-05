@@ -151,6 +151,7 @@ typedef struct
     short              ytic_major[ MAX_MAJOR ];
     short              mark_active;
     short              external_data;
-} FL_XYPLOT_SPEC;
+} FLI_XYPLOT_SPEC;
+
 
 #endif /* PXYPLOT.H */

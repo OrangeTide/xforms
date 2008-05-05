@@ -30,7 +30,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_4msb = "$Id: read4msb.c,v 1.7 2008/01/28 23:21:50 jtt Exp $";
+char *id_4msb = "$Id: read4msb.c,v 1.8 2008/05/05 14:21:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,7 +47,7 @@ char *id_4msb = "$Id: read4msb.c,v 1.7 2008/01/28 23:21:50 jtt Exp $";
  ***************************************/
 
 int
-fl_fget4MSBF( FILE * fp )
+fli_fget4MSBF( FILE * fp )
 {
     int ret = getc(fp);
 
@@ -62,8 +62,8 @@ fl_fget4MSBF( FILE * fp )
  ***************************************/
 
 int
-fl_fput4MSBF( int    n,
-			  FILE * fp )
+fli_fput4MSBF( int    n,
+			   FILE * fp )
 {
      putc( ( n >> 24 ) & 0xff, fp );
      putc( ( n >> 16 ) & 0xff, fp );

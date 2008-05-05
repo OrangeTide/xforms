@@ -49,6 +49,7 @@ typedef struct
     short  cross_over;
     short  changed;
     short  direction;		/* not currently used            */
-} FL_DIAL_SPEC;
+} FLI_DIAL_SPEC;
+
 
 #endif /* pdial_h */

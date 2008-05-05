@@ -223,7 +223,7 @@ fli_watch_io( FLI_IO_REC * io_rec,
 		/* select() on some platforms returns -1 with errno == 0 */
 
 		else if ( errno != 0 )
-			M_err( "select", fl_get_syserror_msg( ) );
+			M_err( "select", fli_get_syserror_msg( ) );
     }
 
     /* time expired */

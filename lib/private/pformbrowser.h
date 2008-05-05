@@ -57,7 +57,7 @@ typedef struct
     int          processing_destroy;
     int          in_draw;
     int          scroll;			/* either pixel based or form based */
-} FL_FORMBROWSER_SPEC;
+} FLI_FORMBROWSER_SPEC;
 
 #define IsFormBrowserClass( ob )  \
 	( ( ob ) && ( ob )->objclass == FL_FORMBROWSER )

@@ -387,7 +387,7 @@ change_menu_item_cb( FL_OBJECT * ob,
     FD_menuattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
     FL_OBJECT *edited = ui->vdata;
-    FL_MENU_SPEC *sp = edited->spec;
+    FLI_MENU_SPEC *sp = edited->spec;
 
     if (i > 0)
     {

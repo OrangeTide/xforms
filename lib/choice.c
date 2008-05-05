@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.16 2008/05/04 21:07:58 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.17 2008/05/05 14:21:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -48,14 +48,13 @@ char *fl_id_chc = "$Id: choice.c,v 1.16 2008/05/04 21:07:58 jtt Exp $";
 #include <string.h>
 #include <stdlib.h>
 
-#define SPEC   FL_CHOICE_SPEC
 
 
 /***************************************
  ***************************************/
 
 static void
-free_choice( SPEC * sp )
+free_choice( FLI_CHOICE_SPEC * sp )
 {
     int i;
 
@@ -77,7 +76,7 @@ static void
 draw_choice( FL_OBJECT * ob )
 {
     FL_COLOR c1;
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
     int absbw = FL_abs(ob->bw);
     int off1 = 0,
 		off2 = 0;
@@ -138,7 +137,7 @@ static void
 draw_droplist_choice( FL_OBJECT * ob )
 {
     FL_COLOR c1;
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
     FL_Coord dw = ob->h,
 		     dx = ob->w - dw,
 		     bw;
@@ -193,8 +192,8 @@ draw_droplist_choice( FL_OBJECT * ob )
  ***************************************/
 
 static int
-set_next_entry( SPEC * sp,
-				 int    dir )
+set_next_entry( FLI_CHOICE_SPEC * sp,
+				int               dir )
 {
 	int target = 0;
 	int min = 1,
@@ -229,7 +228,7 @@ set_next_entry( SPEC * sp,
 		if ( ! ( sp->mode[ target ] & FL_PUP_GREY ) )
 			return sp->val = target;
 
-    Bark( "set_next_entry", "No valid entries" );
+    M_err( "set_next_entry", "No valid entries" );
     return -1;
 }
 
@@ -241,7 +240,7 @@ static int
 do_pup( FL_OBJECT * ob )
 {
     int popup_id;
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
     int i,
 		val;
 
@@ -312,7 +311,7 @@ handle_choice( FL_OBJECT * ob,
 			   int         key,
 			   void *      ev   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
     int val;
 
 #if FL_DEBUG >= ML_DEBUG
@@ -465,7 +464,7 @@ fl_create_choice( int          type,
 {
     FL_OBJECT *ob;
     int i;
-    SPEC *sp;
+    FLI_CHOICE_SPEC *sp;
 
     ob = fl_make_object( FL_CHOICE, type, x, y, w, h, label, handle_choice );
 
@@ -519,13 +518,13 @@ fl_add_choice( int          type,
 void
 fl_clear_choice( FL_OBJECT * ob )
 {
-	SPEC *sp = ob->spec;
+	FLI_CHOICE_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark( "fl_clear_choice", "%s is not choice class",
-			  ob ? ob->label : "" );
+		M_err( "fl_clear_choice", "%s is not choice class",
+			   ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -546,7 +545,7 @@ static void
 addto_choice( FL_OBJECT *  ob,
 			  const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( sp->numitems >= FL_CHOICE_MAXITEMS )
 		return;
@@ -574,15 +573,15 @@ int
 fl_addto_choice( FL_OBJECT *  ob,
 				 const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
     char *t,
 		 *c;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark( "fl_addto_choice", "%s is not choice class",
-			  ob ? ob->label : "" );
+		M_err( "fl_addto_choice", "%s is not choice class",
+			   ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -615,7 +614,7 @@ fl_replace_choice( FL_OBJECT *  ob,
 				   int          numb,
 				   const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( numb < 1 || numb > sp->numitems )
 		return;
@@ -638,7 +637,7 @@ fl_delete_choice( FL_OBJECT * ob,
 				  int         numb )
 {
     int i;
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( numb < 1 || numb > sp->numitems )
 		return;
@@ -677,7 +676,7 @@ void
 fl_set_choice( FL_OBJECT * ob,
 			   int         choice )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if (    choice < 1
 		 || choice > sp->numitems
@@ -697,14 +696,14 @@ void
 fl_set_choice_text( FL_OBJECT *  ob,
 					const char * txt )
 {
-    SPEC *sp;
+    FLI_CHOICE_SPEC *sp;
     int i;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark( "fl_set_choice_text", "%s not choice class",
-			  ob ? ob->label : "" );
+		M_err( "fl_set_choice_text", "%s not choice class",
+			   ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -728,7 +727,7 @@ int
 fl_get_choice_item_mode( FL_OBJECT *  ob,
 						 int          item )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( item < 1 || item > sp->numitems )
     {
@@ -750,7 +749,7 @@ fl_set_choice_item_mode( FL_OBJECT *  ob,
 						 int          item,
 						 unsigned int mode )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( item < 1 || item > sp->numitems )
     {
@@ -771,7 +770,7 @@ fl_set_choice_item_shortcut( FL_OBJECT *  ob,
 							 int          item,
 							 const char * sc )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( item < 1 || item > sp->numitems )
     {
@@ -795,12 +794,12 @@ fl_get_choice( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark( "fl_get_choice", "%s is not choice class", ob ? ob->label : "" );
+		M_err( "fl_get_choice", "%s is not choice class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
 
-    return ( ( SPEC * ) ob->spec )->val;
+    return ( ( FLI_CHOICE_SPEC * ) ob->spec )->val;
 }
 
 
@@ -810,7 +809,7 @@ fl_get_choice( FL_OBJECT * ob )
 int
 fl_get_choice_maxitems( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->numitems;
+    return ( ( FLI_CHOICE_SPEC * ) ob->spec )->numitems;
 }
 
 
@@ -821,13 +820,13 @@ fl_get_choice_maxitems( FL_OBJECT * ob )
 const char *
 fl_get_choice_text( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHOICE ) )
     {
-		Bark( "fl_get_choice_text", "%s is not choice class",
-			  ob ? ob->label : "" );
+		M_err( "fl_get_choice_text", "%s is not choice class",
+			   ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -845,7 +844,7 @@ const char *
 fl_get_choice_item_text( FL_OBJECT * ob,
 						 int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( n < 1 || n > sp->numitems )
 		return NULL;
@@ -862,7 +861,7 @@ void
 fl_set_choice_fontsize( FL_OBJECT * ob,
 						int         size )
 {
-	SPEC *sp = ob->spec;
+	FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( sp->fontsize != size )
     {
@@ -880,7 +879,7 @@ void
 fl_set_choice_fontstyle( FL_OBJECT * ob,
 						 int         style )
 {
-	SPEC *sp = ob->spec;
+	FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( sp->fontstyle != style )
     {
@@ -897,7 +896,7 @@ void
 fl_set_choice_align( FL_OBJECT * ob,
 					 int         align )
 {
-	SPEC *sp = ob->spec;
+	FLI_CHOICE_SPEC *sp = ob->spec;
 
     if ( sp->align != align )
     {
@@ -938,7 +937,7 @@ int
 fl_set_choice_notitle( FL_OBJECT * ob,
 					   int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHOICE_SPEC *sp = ob->spec;
     int old = sp->no_title;
 
     sp->no_title = n;

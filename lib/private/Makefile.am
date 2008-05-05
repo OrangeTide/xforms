@@ -16,5 +16,4 @@ EXTRA_DIST = \
 	ptextbox.h \
 	ptwheel.h \
 	pvaluator.h \
-	pxyplot.h \
-	textbox.h
+	pxyplot.h

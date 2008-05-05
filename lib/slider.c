@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.14 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.15 2008/05/05 14:21:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,9 +47,6 @@ char *fl_id_slid = "$Id: slider.c,v 1.14 2008/05/04 21:08:00 jtt Exp $";
 #include <stdlib.h>
 
 
-typedef FL_SLIDER_SPEC SPEC;
-
-
 #define IS_NORMAL( t )  (    t == FL_HOR_SLIDER            \
                           || t == FL_VERT_SLIDER )
 
@@ -57,7 +54,6 @@ typedef FL_SLIDER_SPEC SPEC;
                           || t == FL_VERT_NICE_SLIDER2     \
                           || t == FL_HOR_NICE_SLIDER       \
                           || t == FL_HOR_NICE_SLIDER2 )
-
 
 
 enum
@@ -83,7 +79,7 @@ static FLI_SCROLLBAR_KNOB slb;
 static void
 compute_bounds( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
 
 	sp->x = ob->x;
 	sp->y = ob->y;
@@ -113,7 +109,7 @@ compute_bounds( FL_OBJECT * ob )
 static void
 draw_motion( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
     XRectangle xrec[ 2 ];
     int abbw = FL_abs( ob->bw );
     FL_COLOR col;
@@ -192,7 +188,7 @@ draw_motion( FL_OBJECT * ob )
 static void
 draw_slider( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
     char valstr[ 64 ];
     double val;
     FL_Coord bx = ob->x,	/* value box */
@@ -267,7 +263,7 @@ get_newvalue( FL_OBJECT    * ob,
 			  FL_Coord       mx,
 			  FL_Coord       my )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
     double newval = 0.0;
 	int absbw = FL_abs( ob->bw );
 
@@ -309,7 +305,7 @@ static void
 scrollbar_timeout( int    val   FL_UNUSED_ARG,
 				   void * data )
 {
-    ( ( SPEC * ) data )->timeout_id = -1;
+    ( ( FLI_SLIDER_SPEC * ) data )->timeout_id = -1;
 }
 
 
@@ -324,7 +320,7 @@ handle_mouse( FL_OBJECT    * ob,
 			  int            key,
 	          unsigned int   state )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
     double newval;
 
 	if ( key == FL_MBUTTON4 )
@@ -384,7 +380,7 @@ handle_it( FL_OBJECT * ob,
 		   int         key,
 		   void      * ev )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
 	static FL_Coord mx_start,
 		            my_start;
 	int ret;
@@ -653,7 +649,7 @@ create_it( int          objclass,
 		   const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_SLIDER_SPEC *sp;
 
     ob = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
     ob->boxtype = FL_SLIDER_BOXTYPE;
@@ -771,15 +767,15 @@ void
 fl_set_slider_value( FL_OBJECT * ob,
 					 double      val )
 {
-    SPEC *sp;
+    FLI_SLIDER_SPEC *sp;
     double smin,
 		   smax;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_SLIDER ) && ! IsValidClass( ob, FL_VALSLIDER ) )
     {
-		Bark( "fl_set_slider_value", "%s is not a slider",
-			  ob ? ob->label : "" );
+		M_err( "fl_set_slider_value", "%s is not a slider",
+			   ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -807,13 +803,13 @@ fl_set_slider_bounds( FL_OBJECT * ob,
 					  double      min,
 					  double      max )
 {
-    SPEC *sp;
+    FLI_SLIDER_SPEC *sp;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_SLIDER ) && ! IsValidClass( ob, FL_VALSLIDER ) )
     {
-		Bark( "fl_set_slider_bounds", "%s is not a slider",
-			  ob ? ob->label : "" );
+		M_err( "fl_set_slider_bounds", "%s is not a slider",
+			   ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -846,11 +842,11 @@ fl_get_slider_value( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_SLIDER ) && ! IsValidClass( ob, FL_VALSLIDER ) )
     {
-		Bark( "GetSliderValue", "%s is not a slider", ob ? ob->label : "" );
+		M_err( "GetSliderValue", "%s is not a slider", ob ? ob->label : "" );
 		return 0;
     }
 #endif
-    return ( ( SPEC * ) ob->spec )->val;
+    return ( ( FLI_SLIDER_SPEC * ) ob->spec )->val;
 }
 
 
@@ -863,8 +859,8 @@ fl_get_slider_bounds( FL_OBJECT * ob,
 					  double *    min,
 					  double *    max )
 {
-    *min = ( ( SPEC * ) ob->spec )->min;
-    *max = ( ( SPEC * ) ob->spec )->max;
+    *min = ( ( FLI_SLIDER_SPEC * ) ob->spec )->min;
+    *max = ( ( FLI_SLIDER_SPEC * ) ob->spec )->max;
 }
 
 
@@ -876,7 +872,7 @@ void
 fl_set_slider_return( FL_OBJECT * ob,
 					  int         value )
 {
-    ( ( SPEC * ) ob->spec )->how_return = value;
+    ( ( FLI_SLIDER_SPEC * ) ob->spec )->how_return = value;
 }
 
 
@@ -888,7 +884,7 @@ void
 fl_set_slider_step( FL_OBJECT * ob,
 				    double      value )
 {
-    ( ( SPEC * ) ob->spec )->step = value;
+    ( ( FLI_SLIDER_SPEC * ) ob->spec )->step = value;
 }
 
 
@@ -901,8 +897,8 @@ fl_set_slider_increment( FL_OBJECT * ob,
 						 double      l,
 						 double      r )
 {
-    ( ( SPEC * ) ob->spec )->ldelta = l;
-    ( ( SPEC * ) ob->spec )->rdelta = r;
+    ( ( FLI_SLIDER_SPEC * ) ob->spec )->ldelta = l;
+    ( ( FLI_SLIDER_SPEC * ) ob->spec )->rdelta = r;
 }
 
 
@@ -914,8 +910,8 @@ fl_get_slider_increment( FL_OBJECT * ob,
 						 double *    l,
 						 double *    r )
 {
-    *l = ( ( SPEC * ) ob->spec )->ldelta;
-    *r = ( ( SPEC * ) ob->spec )->rdelta;
+    *l = ( ( FLI_SLIDER_SPEC * ) ob->spec )->ldelta;
+    *r = ( ( FLI_SLIDER_SPEC * ) ob->spec )->rdelta;
 }
 
 
@@ -927,10 +923,10 @@ void
 fl_set_slider_size( FL_OBJECT * ob,
 					double      size )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
 	double psize,
 	 	   dim;
-	int min_knob = IS_SCROLLBAR( ob->type ) ? FL_MINKNOB_SB : FL_MINKNOB_SL;
+	int min_knob = IS_SCROLLBAR( ob->type ) ? MINKNOB_SB : MINKNOB_SL;
 
     if ( size <= 0.0 )
 		size = 0.0;
@@ -961,7 +957,7 @@ void
 fl_set_slider_precision( FL_OBJECT * ob,
 						 int         prec )
 {
-    SPEC *sp = ob->spec;
+    FLI_SLIDER_SPEC *sp = ob->spec;
 
 
 	if ( prec > 10 )
@@ -982,7 +978,7 @@ void
 fl_set_slider_filter( FL_OBJECT *   ob,
 					  FL_VAL_FILTER filter )
 {
-    ( ( SPEC * ) ob->spec )->filter = filter;
+    ( ( FLI_SLIDER_SPEC * ) ob->spec )->filter = filter;
 }
 
 
@@ -991,7 +987,7 @@ fl_set_slider_filter( FL_OBJECT *   ob,
 
 int fl_get_slider_repeat( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->repeat_ms;
+    return ( ( FLI_SLIDER_SPEC * ) ob->spec )->repeat_ms;
 }
 
 
@@ -1002,5 +998,5 @@ void fl_set_slider_repeat( FL_OBJECT * ob,
                            int         millisec )
 {
 	if ( millisec > 0 )
-		( ( SPEC * ) ob->spec )->repeat_ms = millisec;
+		( ( FLI_SLIDER_SPEC * ) ob->spec )->repeat_ms = millisec;
 }

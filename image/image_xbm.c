@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xbm.c,v 1.3 2003/04/24 09:35:34 leeming Exp $
+ * $Id: image_xbm.c,v 1.4 2008/05/05 14:21:49 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -108,7 +108,7 @@ XBM_load(FL_IMAGE * im)
 	for (i = ct = 0; i < im->w && !err; i++, ct = (ct + 1) & 7, c >>= 1)
 	{
 	    if (!ct)
-		err = (c = fl_readhexint(im->fpin)) < 0;
+		err = (c = fli_readhexint(im->fpin)) < 0;
 	    *bits++ = (c & 1);
 	}
     }

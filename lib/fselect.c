@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.18 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.19 2008/05/05 14:21:52 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -184,8 +184,8 @@ fl_add_fselector_appbutton( const char * label,
 		}
 
 	if ( ! ok )
-		Bark( "fl_add_fselector_appbutton", "Only %d allowd. %s ignored",
-			  MAX_APPBUTT, label );
+		M_err( "fl_add_fselector_appbutton", "Only %d allowd. %s ignored",
+			   MAX_APPBUTT, label );
 }
 
 
@@ -432,20 +432,20 @@ fl_set_directory( const char * p )
 
 	if ( p == NULL )
 	{
-		Bark( "fl_set_directory", "invalid NULL argument" );
+		M_err( "fl_set_directory", "invalid NULL argument" );
 		return 1;
 	}
 
 	strncpy( tmpdir, p, sizeof tmpdir );
 	tmpdir[ sizeof tmpdir - 1 ] = '\0';
-	fl_de_space_de( tmpdir );
+	fli_de_space_de( tmpdir );
 	if ( strcmp( tmpdir, fs->dname ) == 0 )
 		return 0;
 
 	fl_fix_dirname( tmpdir );
 	if ( ! fl_is_valid_dir( tmpdir ) )
 	{
-		Bark( "fl_set_directory", "invalid directory: %s", tmpdir );
+		M_err( "fl_set_directory", "invalid directory: %s", tmpdir );
 		return 1;
 	}
 
@@ -553,7 +553,7 @@ fill_entries( FL_OBJECT  * br,
 
 		fl_snprintf( tmpbuf, sizeof tmpbuf, "Can't read %s", lfs->dname );
 		tmpbuf[ sizeof tmpbuf - 1 ] = '\0';
-		fl_show_alert( "ReadDir", tmpbuf, fl_get_syserror_msg( ), 0 );
+		fl_show_alert( "ReadDir", tmpbuf, fli_get_syserror_msg( ), 0 );
 		M_err( "fill_entries", "Can't read %s", lfs->dname );
 
 		/* backup */

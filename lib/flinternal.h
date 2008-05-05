@@ -845,8 +845,6 @@ extern const char *fli_object_class_name( FL_OBJECT * );
 extern void fli_mark_composite_for_redraw( FL_OBJECT * );
 
 
-#include "private/textbox.h"
-
 extern void fli_set_form_icon_data( FL_FORM *,
 									char ** );
 
@@ -866,9 +864,6 @@ extern int fli_handle_mouse_wheel( FL_OBJECT *,
 								   int *,
 								   int *,
 								   void * );
-
-
-#include "private/pvaluator.h"
 
 extern int fli_valuator_handle_drag( FL_OBJECT *,
 									 double );

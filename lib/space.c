@@ -33,7 +33,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_OK
-static char *id_space = "$Id: space.c,v 1.6 2008/01/28 23:22:55 jtt Exp $";
+static char *id_space = "$Id: space.c,v 1.7 2008/05/05 14:21:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -57,7 +57,7 @@ static int es = '\\';     /* escape character */
  ***************************************/
 
 char *
-fl_de_space( char * s )
+fli_de_space( char * s )
 {
     char *p;
 
@@ -75,7 +75,7 @@ fl_de_space( char * s )
  ***************************************/
 
 char *
-fl_space_de( char * s )
+fli_space_de( char * s )
 {
 	char *p,
 		 *q;
@@ -101,9 +101,9 @@ fl_space_de( char * s )
  ***************************************/
 
 char *
-fl_de_space_de( char * p )
+fli_de_space_de( char * p )
 {
-    return fl_space_de( fl_de_space( p ) );
+    return fli_space_de( fli_de_space( p ) );
 }
 
 
@@ -113,7 +113,7 @@ fl_de_space_de( char * p )
  ***************************************/
 
 char *
-fl_nuke_all_spaces( char * s )
+fli_nuke_all_spaces( char * s )
 {
     char *p = s,
 		 *q = s + strlen( s ),
@@ -133,7 +133,7 @@ fl_nuke_all_spaces( char * s )
  ***************************************/
 
 char *
-fl_nuke_all_non_alnum( char * s )
+fli_nuke_all_non_alnum( char * s )
 {
     char *p = s,
 		 *q = s + strlen( s ),

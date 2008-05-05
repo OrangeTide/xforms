@@ -32,56 +32,17 @@
  *
  */
 
+
 #ifndef PSLIDER_H
 #define PSLIDER_H
 
-#if 0
-
-typedef const char * ( * SL_FILTER )( FL_OBJECT *, double, int );
-
-
-/* The special information for sliders. */
-
-typedef struct
-{
-    double    min;			/* minimal value of slider */
-    double    max;			/* maximal value of slider */
-    double    val;			/* current value of slider */
-    int       prec;			/* precision when printing value */
-    int       how_return;	/* whether always returning value */
-    double    step;			/* step size             */
-    double    ldelta;		/* "left mouse" step   */
-    double    rdelta;		/* "right mouse " step   */
-    double    slsize;		/* size of the slider    */
-    double    oldval;
-    double    norm_val;		/* normalized value between 0 & 1 */
-    double    oldnorm_val;	/* normalized value between 0 & 1 */
-    int       drawtype;
-    SL_FILTER filter;
-    FL_Coord  offx;
-    FL_Coord  offy;
-    FL_Coord  x,	        /* draw (dbl buffer): adjustment report box */
-	          y,
-	          w,
-	          h;
-    FL_Coord  mx,
-	          my,
-	          mw,
-	          mh;	        /* mouse: after adjustment for report box   */
-    int       mouse,		/* part the mouse is on                     */
-	          lmouse;
-} FL_SLIDER_SPEC;
-
-#else
-
 #include "pvaluator.h"
 
-typedef FL_VALUATOR_SPEC FL_SLIDER_SPEC;
+typedef FLI_VALUATOR_SPEC FLI_SLIDER_SPEC;
 
-#endif
 
-#define FL_MINKNOB_SB   16		/* scrollbar        */
-#define FL_MINKNOB_SL   10		/* regular sliders  */
+#define MINKNOB_SB     16		/* scrollbar        */
+#define MINKNOB_SL     10		/* regular sliders  */
 
 #define ON_TOP_OF_KNOB  0
 #define LEFT_OF_KNOB   -1

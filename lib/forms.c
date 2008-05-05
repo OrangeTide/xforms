@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.35 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.36 2008/05/05 14:21:52 jtt Exp $";
 #endif
 
 
@@ -92,9 +92,9 @@ extern int ( * fli_handle_clipboard )( void * );
    information is. They're not defined as static since they are\
    also needed in xpopup.c */
 
-FL_Coord fl_mousex,
-         fl_mousey;
-unsigned int fl_keymask;
+FL_Coord fli_mousex,
+         fli_mousey;
+unsigned int fli_keymask;
 unsigned int fli_query_age = UINT_MAX;
 
 
@@ -907,7 +907,7 @@ fl_prepare_form_window( FL_FORM    * form,
     screenw = fl_scrw;
     screenh = fl_scrh;
 
-    fl_get_mouse( &mx, &my, &fl_keymask );
+    fl_get_mouse( &mx, &my, &fli_keymask );
 
     if ( ( dont_fix_size = place & FL_FREE_SIZE ) )
 		place &= ~ FL_FREE_SIZE;
@@ -1817,14 +1817,14 @@ fli_handle_form( FL_FORM * form,
 
 	if ( fli_query_age > 0 )
 	{
-		fl_get_form_mouse( form, &fl_mousex, &fl_mousey, &fl_keymask );
+		fl_get_form_mouse( form, &fli_mousex, &fli_mousey, &fli_keymask );
 		if ( event != FL_KEYBOARD )
-			key = fli_xmask2key( fl_keymask );
+			key = fli_xmask2key( fli_keymask );
 		fli_query_age = 0;
 	}
 
-	x = fl_mousex;
-	y = fl_mousey;
+	x = fli_mousex;
+	y = fli_mousey;
 
     if ( event != FL_STEP && event != FL_DRAW )
 		obj = fli_find_last( form, FL_FIND_MOUSE, x, y );
@@ -2016,9 +2016,9 @@ fli_do_keyboard( XEvent * xev,
 	unsigned char keybuf[ 227 ];
     int kbuflen;
 
-	fl_mousex  = xev->xkey.x;
-	fl_mousey  = xev->xkey.y;
-	fl_keymask = xev->xkey.state;
+	fli_mousex  = xev->xkey.x;
+	fli_mousey  = xev->xkey.y;
+	fli_keymask = xev->xkey.state;
 	fli_query_age = 0;
 
     /* Before doing anything save the current modifier key for the handlers */
@@ -2331,14 +2331,14 @@ fli_do_interaction_step( int wait_io )
 			break;
 
 		case ButtonPress:
-			fl_mousex = st_xev.xbutton.x;
-			fl_mousey = st_xev.xbutton.y;
-			fl_keymask =   st_xev.xbutton.state
+			fli_mousex = st_xev.xbutton.x;
+			fli_mousey = st_xev.xbutton.y;
+			fli_keymask =   st_xev.xbutton.state
 				         | ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
 			fli_query_age = 0;
 
 			fli_context->mouse_button = st_xev.xbutton.button;
-			if ( metakey_down( fl_keymask ) && st_xev.xbutton.button == 2 )
+			if ( metakey_down( fli_keymask ) && st_xev.xbutton.button == 2 )
 				fli_print_version( 1 );
 			else
 				fli_handle_form( mouseform, FL_PUSH,
@@ -2346,9 +2346,9 @@ fli_do_interaction_step( int wait_io )
 			break;
 
 		case ButtonRelease:
-			fl_mousex = st_xev.xbutton.x;
-			fl_mousey = st_xev.xbutton.y;
-			fl_keymask =   st_xev.xbutton.state
+			fli_mousex = st_xev.xbutton.x;
+			fli_mousey = st_xev.xbutton.y;
+			fli_keymask =   st_xev.xbutton.state
 				         & ~ ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
 			fli_query_age = 0;
 
@@ -2416,7 +2416,7 @@ fli_handle_idling( XEvent * xev,
 
 	if ( fli_query_age != 0 && mouseform )
 	{
-		fl_get_form_mouse( mouseform, &fl_mousex, &fl_mousey, &fl_keymask );
+		fl_get_form_mouse( mouseform, &fli_mousex, &fli_mousey, &fli_keymask );
 		fli_query_age = 0;
 		st_xev.xmotion.time = CurrentTime;
 	}
@@ -2429,20 +2429,20 @@ fli_handle_idling( XEvent * xev,
 	st_xev.type            = MotionNotify;
 	st_xev.xany.window     = mouseform ? mouseform->window : None;
 	st_xev.xany.send_event = 1;
-	st_xev.xmotion.state   = fl_keymask;
-	st_xev.xmotion.x       = fl_mousex;
-	st_xev.xmotion.y       = fl_mousey;
+	st_xev.xmotion.state   = fli_keymask;
+	st_xev.xmotion.x       = fli_mousex;
+	st_xev.xmotion.y       = fli_mousey;
 	st_xev.xmotion.is_hint = 0;
 
 	/* We need to send an FL_UPDATE while a mouse button is down to "pushable"
 	   objects that want it (currently touch buttons, slider, choice, textbox
 	   and counter objects) */
 
-	if (    button_down( fl_keymask )
+	if (    button_down( fli_keymask )
 		 && ( fl_pushobj  && fl_pushobj->want_update )
 		 && mouseform )
 		fli_handle_form( mouseform, FL_UPDATE,
-						 fli_xmask2key( fl_keymask ), &st_xev );
+						 fli_xmask2key( fli_keymask ), &st_xev );
 
 	/* Handle automatic tasks */
 
@@ -2536,18 +2536,18 @@ fli_handle_EnterNotify_event( FL_FORM * evform )
 {
     Window win = st_xev.xany.window;
 
-	fl_mousex = st_xev.xcrossing.x;
-	fl_mousey = st_xev.xcrossing.y;
-	fl_keymask = st_xev.xcrossing.state;
+	fli_mousex = st_xev.xcrossing.x;
+	fli_mousey = st_xev.xcrossing.y;
+	fli_keymask = st_xev.xcrossing.state;
 	fli_query_age = 0;
 
-	if (    button_down( fl_keymask )
+	if (    button_down( fli_keymask )
 		 && st_xev.xcrossing.mode != NotifyUngrab )
 		return;
 
 	if ( mouseform )
 		fli_handle_form( mouseform, FL_LEAVE,
-						 fli_xmask2key( fl_keymask ), &st_xev );
+						 fli_xmask2key( fli_keymask ), &st_xev );
 
 	if ( evform )
 	{
@@ -2565,7 +2565,7 @@ fli_handle_EnterNotify_event( FL_FORM * evform )
 		}
 
 		fli_handle_form( mouseform, FL_ENTER,
-						 fli_xmask2key( fl_keymask ), &st_xev );
+						 fli_xmask2key( fli_keymask ), &st_xev );
 	}
 #if FL_DEBUG >= ML_DEBUG
 	else
@@ -2581,12 +2581,12 @@ fli_handle_EnterNotify_event( FL_FORM * evform )
 static void
 fli_handle_LeaveNotify_event( void )
 {
-	fl_mousex = st_xev.xcrossing.x;
-	fl_mousey = st_xev.xcrossing.y;
-	fl_keymask = st_xev.xcrossing.state;
+	fli_mousex = st_xev.xcrossing.x;
+	fli_mousey = st_xev.xcrossing.y;
+	fli_keymask = st_xev.xcrossing.state;
 	fli_query_age = 0;
 
-	if (    button_down( fl_keymask )
+	if (    button_down( fli_keymask )
 		 && st_xev.xcrossing.mode == NotifyNormal )
 		return;
 
@@ -2603,7 +2603,7 @@ fli_handle_LeaveNotify_event( void )
 	if ( ! mouseform )
 		return;
 
-	fli_handle_form( mouseform, FL_LEAVE, fli_xmask2key( fl_keymask ),
+	fli_handle_form( mouseform, FL_LEAVE, fli_xmask2key( fli_keymask ),
 					 &st_xev );
 }
 
@@ -2617,9 +2617,9 @@ fli_handle_MotionNotify_event( FL_FORM * evform )
 {
     Window win = st_xev.xany.window;
 
-	fl_keymask = st_xev.xmotion.state;
-	fl_mousex = st_xev.xmotion.x;
-	fl_mousey = st_xev.xmotion.y;
+	fli_keymask = st_xev.xmotion.state;
+	fli_mousex = st_xev.xmotion.x;
+	fli_mousey = st_xev.xmotion.y;
 	fli_query_age = 0;
 
 	if ( ! mouseform )
@@ -2632,12 +2632,12 @@ fli_handle_MotionNotify_event( FL_FORM * evform )
 	{
 		M_warn( "fli_handle_MotionNotify_event", "mousewin=0x%ld evwin=0x%ld",
 				mouseform->window, win );
-		fl_mousex += evform->x - mouseform->x;
-		fl_mousey += evform->y - mouseform->y;
+		fli_mousex += evform->x - mouseform->x;
+		fli_mousey += evform->y - mouseform->y;
 	}
 
 	fli_handle_form( mouseform, FL_MOTION,
-					 fli_xmask2key( fl_keymask ), &st_xev );
+					 fli_xmask2key( fli_keymask ), &st_xev );
 }
 
 
@@ -2891,7 +2891,7 @@ fl_register_raw_callback( FL_FORM         * form,
 
     if ( ! form )
     {
-		Bark( "fl_register_raw_callback", "Null form" );
+		M_err( "fl_register_raw_callback", "Null form" );
 		return NULL;
     }
 
@@ -2936,7 +2936,7 @@ fl_register_raw_callback( FL_FORM         * form,
     }
 
     if ( ! valid )			/* unsupported mask */
-		Bark( "fl_register_raw_callback", "Unsupported mask 0x%x", mask );
+		M_err( "fl_register_raw_callback", "Unsupported mask 0x%x", mask );
 
     return old_rcb;
 }

@@ -279,7 +279,7 @@ skip_spec_info( FILE      * fp,
     while ( ungetc(c = getc( fp ), fp ) != '-' && c != '=' && c != EOF )
     {
 		read_key_val( fp, key, val );
-		if (strlen( fl_de_space( key ) ) > 2 && ! warned )
+		if (strlen( fli_de_space( key ) ) > 2 && ! warned )
 		{
 			M_err( "SpecInfo", "Skipped object class %d(%s)",
 				   ob->objclass, ob->label);
@@ -313,7 +313,7 @@ load_objclass_spec_info( FILE      * fp,
 		{
 			read_key_val( fp, key, val );
 
-			if ( strlen( fl_de_space( key ) ) < 2 )
+			if ( strlen( fli_de_space( key ) ) < 2 )
 				/* empty */ ;
 			else if ( strcmp( key, "bounds" ) == 0 )
 				sscanf( val, "%f %f", &sp->min, &sp->max );
@@ -427,7 +427,7 @@ load_objclass_spec_info( FILE      * fp,
 				sp->direction = get_direction_value( val );
 			else if ( strcmp( key, "return" ) == 0 )
 			{
-				fl_de_space_de( val );
+				fli_de_space_de( val );
 				sp->how_return = get_how_return_value( val );
 			}
 			else if ( strcmp( key, "??" ) )

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_bmp.c,v 1.4 2003/09/09 00:28:25 leeming Exp $
+ * $Id: image_bmp.c,v 1.5 2008/05/05 14:21:48 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -127,10 +127,10 @@ BMP_description(FL_IMAGE * im)
     int i;
 
     fread(buf, 1, 2, im->fpin);
-    sp->fsize = fl_fget4LSBF(im->fpin);
+    sp->fsize = fli_fget4LSBF(im->fpin);
     fread(buf, 1, 4, im->fpin);
-    sp->offset = fl_fget4LSBF(im->fpin);
-    sp->infosize = fl_fget4LSBF(im->fpin);
+    sp->offset = fli_fget4LSBF(im->fpin);
+    sp->infosize = fli_fget4LSBF(im->fpin);
 
     if (sp->infosize != 40 && sp->infosize != 64)
     {
@@ -140,16 +140,16 @@ BMP_description(FL_IMAGE * im)
     }
 
     im->io_spec = sp;
-    sp->w = fl_fget4LSBF(im->fpin);
-    sp->h = fl_fget4LSBF(im->fpin);
-    sp->planes = fl_fget2LSBF(im->fpin);
-    sp->bpp = fl_fget2LSBF(im->fpin);
-    sp->encode = fl_fget4LSBF(im->fpin);
-    sp->isize = fl_fget4LSBF(im->fpin);
-    sp->xres = fl_fget4LSBF(im->fpin);
-    sp->yres = fl_fget4LSBF(im->fpin);
-    sp->col_used = fl_fget4LSBF(im->fpin);
-    sp->col_important = fl_fget4LSBF(im->fpin);
+    sp->w = fli_fget4LSBF(im->fpin);
+    sp->h = fli_fget4LSBF(im->fpin);
+    sp->planes = fli_fget2LSBF(im->fpin);
+    sp->bpp = fli_fget2LSBF(im->fpin);
+    sp->encode = fli_fget4LSBF(im->fpin);
+    sp->isize = fli_fget4LSBF(im->fpin);
+    sp->xres = fli_fget4LSBF(im->fpin);
+    sp->yres = fli_fget4LSBF(im->fpin);
+    sp->col_used = fli_fget4LSBF(im->fpin);
+    sp->col_important = fli_fget4LSBF(im->fpin);
 
     if (bad_bpp(sp->bpp))
     {
@@ -457,20 +457,20 @@ write_bmp_header(FL_IMAGE * im, SPEC *sp)
 
     /* start writing */
     fputc('B', fp), fputc('M', fp);
-    fl_fput4LSBF(sp->fsize, fp);
-    fl_fput4LSBF(0, fp);
-    fl_fput4LSBF(sp->offset, fp);
-    fl_fput4LSBF(sp->infosize, fp);
-    fl_fput4LSBF(sp->w, fp);
-    fl_fput4LSBF(sp->h, fp);
-    fl_fput2LSBF(1, fp);
-    fl_fput2LSBF(sp->bpp, fp);
-    fl_fput4LSBF(E_RGB, fp);
-    fl_fput4LSBF(0, fp);	/* encoded size */
-    fl_fput4LSBF(96 * 36, fp);
-    fl_fput4LSBF(96 * 36, fp);
-    fl_fput4LSBF(sp->col_used, fp);	/* actual colors   */
-    fl_fput4LSBF(sp->col_important, fp);	/* important colors */
+    fli_fput4LSBF(sp->fsize, fp);
+    fli_fput4LSBF(0, fp);
+    fli_fput4LSBF(sp->offset, fp);
+    fli_fput4LSBF(sp->infosize, fp);
+    fli_fput4LSBF(sp->w, fp);
+    fli_fput4LSBF(sp->h, fp);
+    fli_fput2LSBF(1, fp);
+    fli_fput2LSBF(sp->bpp, fp);
+    fli_fput4LSBF(E_RGB, fp);
+    fli_fput4LSBF(0, fp);	/* encoded size */
+    fli_fput4LSBF(96 * 36, fp);
+    fli_fput4LSBF(96 * 36, fp);
+    fli_fput4LSBF(sp->col_used, fp);	/* actual colors   */
+    fli_fput4LSBF(sp->col_important, fp);	/* important colors */
     if (sp->bpp != 24)
     {
 	char junk[] =

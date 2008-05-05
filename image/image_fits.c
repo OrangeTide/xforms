@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_fits.c,v 1.7 2004/05/18 13:57:28 leeming Exp $
+ * $Id: image_fits.c,v 1.8 2008/05/05 14:21:48 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -348,7 +348,7 @@ parse_fits_header(FILE * fp, SPEC *h, FL_IMAGE * im)
 	buf[79] = '\n';
 	buf[80] = '\0';
 	sscanf(buf, "%[A-Z0-9]%*[ =]%s", key, val);
-	fl_space_de(val);
+	fli_space_de(val);
 	if (key[0])
 	    flimage_add_comments(im, buf, 80);
 #if FITS_DEBUG
@@ -397,11 +397,11 @@ parse_fits_header(FILE * fp, SPEC *h, FL_IMAGE * im)
 
 	    sprintf(buf, "CTYPE%d", i);
 	    if (strcmp(buf, key) == 0)
-		strcpy(h->label[i - 1], fl_space_de(val));
+		strcpy(h->label[i - 1], fli_space_de(val));
 
 	    sprintf(buf, "TTYPE%d", i);
 	    if (strcmp(buf, key) == 0)
-		strcpy(h->label[i - 1], fl_space_de(val));
+		strcpy(h->label[i - 1], fli_space_de(val));
 
 	    sprintf(buf, "CDELT%d", i);
 	    if (strcmp(buf, key) == 0)
@@ -675,16 +675,12 @@ FITS_dump(FL_IMAGE * im)
     dump_space(fp, 80 - fprintf(fp, "END "));
     dump_space(fp, RECORD_LEN - 80 * 6);
 
-    if (bits == 8)
-    {
-	for (n = im->w * im->h; --n >= 0; ras++)
-	    putc(*ras & 0xff, fp);
-    }
+    if ( bits == 8 )
+		for (n = im->w * im->h; --n >= 0; ras++)
+			putc( *ras & 0xff, fp );
     else
-    {
-	for (n = im->w * im->h; --n >= 0; ras++)
-	    put2MSBF(*ras, fp);
-    }
+		for (n = im->w * im->h; --n >= 0; ras++)
+			fli_fput2MSBF( *ras, fp );
 
     return fflush(fp);
 }

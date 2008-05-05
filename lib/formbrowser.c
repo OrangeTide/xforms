@@ -48,33 +48,41 @@
 
 static void check_scrollbar( FL_OBJECT * ob );
 
-#define SPEC     FL_FORMBROWSER_SPEC
 
 static int canvas_cleanup( FL_OBJECT * ob );
+
 static int canvas_handler( FL_OBJECT * ob,
 						   Window      win,
 						   int         w,
 						   int         h,
 						   XEvent    * ev,
 						   void      * data );
-static void delete_form( SPEC * sp,
-						 int    f );
-static void display_forms( SPEC * sp );
+
+static void delete_form( FLI_FORMBROWSER_SPEC * sp,
+						 int                    f );
+
+static void display_forms( FLI_FORMBROWSER_SPEC * sp );
+
 static void form_callback( FL_OBJECT * ob,
 						   void      * data );
+
 static int handle( FL_OBJECT * ob,
 				   int         event,
 				   FL_Coord    mx,
 				   FL_Coord    my,
 				   int         key,
 				   void      * ev );
+
 static void hcb( FL_OBJECT * ob,
 				 long        data );
+
 static void parentize_form( FL_FORM   * form,
 							FL_OBJECT * ob );
+
 static void set_form_position( FL_FORM * form,
 							   int       x,
 							   int       y );
+
 static void vcb( FL_OBJECT * ob,
 				 long        data );
 
@@ -91,7 +99,7 @@ fl_create_formbrowser( int          type,
 					   const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_FORMBROWSER_SPEC *sp;
     int absbw, oldu = fl_get_coordunit( );
     int D;
 
@@ -166,7 +174,7 @@ fl_add_formbrowser( int          type,
 {
 
     FL_OBJECT *ob = fl_create_formbrowser( type, x, y, w, h, label );
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     fli_add_child( ob, sp->canvas );
     fli_add_child( ob, sp->hsl );
@@ -185,7 +193,7 @@ FL_FORM *
 fl_get_formbrowser_topform( FL_OBJECT * ob )
 {
     int topline = 0;
-	SPEC *sp = ob->spec;
+	FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     if ( ! IsFormBrowserClass( ob ) )
 		M_err( "fl_get_formbrowser_topform", "%s not a formbrowser",
@@ -220,7 +228,7 @@ FL_FORM *
 fl_set_formbrowser_topform_bynumber( FL_OBJECT * ob,
 									 int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
     FL_FORM *form = NULL;
 
     if ( n > 0 && n <= sp->nforms )
@@ -252,7 +260,7 @@ int
 fl_addto_formbrowser( FL_OBJECT * ob,
 					  FL_FORM   * form )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
@@ -302,7 +310,7 @@ int
 fl_find_formbrowser_form_number( FL_OBJECT * ob,
 								 FL_FORM   * candidate_form )
 {
-	SPEC *sp = ob->spec;
+	FLI_FORMBROWSER_SPEC *sp = ob->spec;
 	int f;
 	FL_FORM **form = sp->form;
 	int nforms = sp->nforms;
@@ -340,7 +348,7 @@ int
 fl_delete_formbrowser( FL_OBJECT * ob,
 					   FL_FORM   * candidate_form )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 	int f = fl_find_formbrowser_form_number( ob, candidate_form );
 
 
@@ -385,7 +393,7 @@ fl_delete_formbrowser_bynumber( FL_OBJECT * ob,
 								int         num )
 {
     FL_FORM *form = NULL;
-	SPEC *sp = ob->spec;
+	FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
@@ -417,7 +425,7 @@ fl_replace_formbrowser( FL_OBJECT * ob,
 						FL_FORM   * form )
 {
     FL_FORM *old_form = NULL;
-	SPEC *sp = ob->spec;
+	FLI_FORMBROWSER_SPEC *sp = ob->spec;
 	int i = num - 1;
 
     if ( ! IsFormBrowserClass( ob ) )
@@ -454,7 +462,7 @@ fl_get_formbrowser_area( FL_OBJECT * ob,
 						 int       * w,
 						 int       * h )
 {
-	SPEC *sp = ob->spec;
+	FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     if ( ! IsFormBrowserClass( ob ) )
 	{
@@ -482,7 +490,7 @@ fl_insert_formbrowser( FL_OBJECT * ob,
 					   FL_FORM   * new_form )
 {
     int status = -1;
-	SPEC *sp = ob->spec;
+	FLI_FORMBROWSER_SPEC *sp = ob->spec;
 	int nforms = sp->nforms;
 	FL_FORM **form = sp->form;
 	int n = line - 1;
@@ -523,7 +531,7 @@ void
 fl_set_formbrowser_hscrollbar( FL_OBJECT * ob,
 							   int         how )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     if ( sp->h_pref != how )
     {
@@ -540,7 +548,7 @@ void
 fl_set_formbrowser_vscrollbar( FL_OBJECT * ob,
 							   int         how )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     if ( sp->v_pref != how )
     {
@@ -557,7 +565,7 @@ void
 fl_set_formbrowser_scroll( FL_OBJECT * ob,
 						   int         how )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     if ( sp->scroll != how )
     {
@@ -575,7 +583,7 @@ int
 fl_set_formbrowser_xoffset( FL_OBJECT * ob,
 							int         offset )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
     int current;
 
     if ( ! IsFormBrowserClass( ob ) )
@@ -610,7 +618,7 @@ fl_get_formbrowser_xoffset( FL_OBJECT * ob )
 		M_err( "fl_get_formbrowser_xoffset", "%s not a formbrowser",
 			   ob ? ob->label : "null" );
 
-    return ( ( SPEC * ) ob->spec )->left_edge;
+    return ( ( FLI_FORMBROWSER_SPEC * ) ob->spec )->left_edge;
 }
 
 
@@ -621,7 +629,7 @@ int
 fl_set_formbrowser_yoffset( FL_OBJECT * ob,
 							int         offset )
 {
-    SPEC *sp;
+    FLI_FORMBROWSER_SPEC *sp;
     int current;
 	int h,
 		f;
@@ -662,7 +670,7 @@ fl_set_formbrowser_yoffset( FL_OBJECT * ob,
 int
 fl_get_formbrowser_yoffset( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 	int h,
 		f;
 
@@ -690,7 +698,7 @@ fl_get_formbrowser_numforms( FL_OBJECT * ob )
 		return -1;
 	}
 
-	return ( ( SPEC * ) ob->spec )->nforms;
+	return ( ( FLI_FORMBROWSER_SPEC * ) ob->spec )->nforms;
 }
 
 
@@ -708,7 +716,7 @@ fl_get_formbrowser_form( FL_OBJECT * ob,
 			   ob ? ob->label : "null" );
     else
     {
-        SPEC *sp = ob->spec;
+        FLI_FORMBROWSER_SPEC *sp = ob->spec;
         int nforms = sp->nforms;
 
         if ( n >= 1 && n <= nforms )
@@ -728,7 +736,7 @@ fl_get_formbrowser_form( FL_OBJECT * ob,
  ***************************************/
 
 static void
-display_forms( SPEC *sp )
+display_forms( FLI_FORMBROWSER_SPEC * sp )
 {
     int f;
     int y_pos;
@@ -793,7 +801,7 @@ handle( FL_OBJECT * ob,
 		int         key  FL_UNUSED_ARG,
 		void      * ev   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
     switch ( event )
     {
@@ -835,7 +843,7 @@ canvas_handler( FL_OBJECT * ob,
 				XEvent    * ev    FL_UNUSED_ARG,
 				void      * data  FL_UNUSED_ARG )
 {
-    display_forms( ( SPEC * ) ob->u_vdata );
+    display_forms( ( FLI_FORMBROWSER_SPEC * ) ob->u_vdata );
     return 0;
 }
 
@@ -849,7 +857,7 @@ static int
 canvas_cleanup( FL_OBJECT * ob )
 {
 
-    SPEC *sp = ob->u_vdata;
+    FLI_FORMBROWSER_SPEC *sp = ob->u_vdata;
     int i;
 
     sp->processing_destroy = 1;
@@ -883,7 +891,7 @@ static void
 hcb( FL_OBJECT * ob,
 	 long        data  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->parent->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->parent->spec;
     double val = fl_get_scrollbar_value( sp->hsl );
 
     sp->left_edge = ( sp->max_width - sp->canvas->w ) * val;
@@ -900,7 +908,7 @@ static void
 vcb( FL_OBJECT * ob,
 	 long        data  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->parent->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->parent->spec;
     double val = fl_get_scrollbar_value( sp->vsl );
 
     if ( sp->scroll == FL_JUMP_SCROLL )
@@ -942,8 +950,8 @@ set_form_position( FL_FORM * form,
  ***************************************/
 
 static void
-delete_form( SPEC *sp,
-			 int   f )
+delete_form( FLI_FORMBROWSER_SPEC * sp,
+			 int                    f )
 {
     fl_hide_form( sp->form[ f ] );
     sp->form[ f ]->attached = 0;
@@ -973,7 +981,7 @@ parentize_form( FL_FORM   * form,
 static void
 check_scrollbar( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_FORMBROWSER_SPEC *sp = ob->spec;
     int absbw = FL_abs( ob->bw );
     int h_on = sp->h_on,
 		v_on = sp->v_on;

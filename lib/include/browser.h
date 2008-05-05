@@ -235,7 +235,9 @@ FL_EXPORT int fl_set_default_browser_maxlinelength(
 
 #ifndef FL_BROWSER_SCROLL_CALLBACKt
 #define FL_BROWSER_SCROLL_CALLBACKt
-typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *ob, int, void * );
+typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *ob,
+											   int,
+											   void * );
 #endif
 
 FL_EXPORT void fl_set_browser_hscroll_callback(

@@ -40,11 +40,10 @@
 #include "private/pscrollbar.h"
 
 
-#define SPEC FL_SCROLLBAR_SPEC
-
-
 static void get_geom( FL_OBJECT * );
+
 static void attrib_change( FL_OBJECT * );
+
 
 #define IsVThin( t )  (    t == FL_VERT_THIN_SCROLLBAR    \
                         || t == FL_VERT_PLAIN_SCROLLBAR )
@@ -104,7 +103,7 @@ handle( FL_OBJECT * ob,
 static void
 attrib_change( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
 
     sp->slider->col1 = ob->col1;
     sp->slider->col2 = ob->col2;
@@ -126,7 +125,7 @@ attrib_change( FL_OBJECT * ob )
 static void
 get_geom( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
     FL_OBJECT *up     = sp->up,
 		      *down   = sp->down,
 		      *slider = sp->slider;
@@ -223,7 +222,9 @@ static void
 slider_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
 {
-    fl_call_object_callback( ( ( SPEC * ) ob->parent->spec )->scrollbar );
+    FLI_SCROLLBAR_SPEC *sp = ob->parent->spec;
+
+    fl_call_object_callback( sp->scrollbar );
 }
 
 
@@ -234,24 +235,24 @@ static void
 up_cb( FL_OBJECT * ob,
 	   long        data  FL_UNUSED_ARG )
 {
-    SPEC *spec = ob->parent->spec;
-    double oval = fl_get_slider_value( spec->slider ),
+    FLI_SCROLLBAR_SPEC *sp = ob->parent->spec;
+    double oval = fl_get_slider_value( sp->slider ),
 		   nval;
     double slmax,
 		   slmin;
 
-    fl_get_slider_bounds( spec->slider, &slmin, &slmax );
+    fl_get_slider_bounds( sp->slider, &slmin, &slmax );
 
     if ( slmax > slmin )
-		nval = oval + spec->increment;
+		nval = oval + sp->increment;
     else
-		nval = oval - spec->increment;
+		nval = oval - sp->increment;
 
-    fl_set_slider_value( spec->slider, nval );
-    nval = fl_get_slider_value( spec->slider );
+    fl_set_slider_value( sp->slider, nval );
+    nval = fl_get_slider_value( sp->slider );
 
     if ( nval != oval )
-		fl_call_object_callback( spec->scrollbar );
+		fl_call_object_callback( sp->scrollbar );
 }
 
 
@@ -262,24 +263,24 @@ static void
 down_cb( FL_OBJECT * ob,
 		 long        data  FL_UNUSED_ARG )
 {
-    SPEC *spec = ob->parent->spec;
-    double oval = fl_get_slider_value( spec->slider ),
+    FLI_SCROLLBAR_SPEC *sp = ob->parent->spec;
+    double oval = fl_get_slider_value( sp->slider ),
 		   nval;
     double slmax,
 		   slmin;
 
-    fl_get_slider_bounds( spec->slider, &slmin, &slmax );
+    fl_get_slider_bounds( sp->slider, &slmin, &slmax );
 
     if ( slmax > slmin )
-		nval = oval - spec->increment;
+		nval = oval - sp->increment;
     else
-		nval = oval + spec->increment;
+		nval = oval + sp->increment;
 
-    fl_set_slider_value( spec->slider, nval );
-    nval = fl_get_slider_value( spec->slider );
+    fl_set_slider_value( sp->slider, nval );
+    nval = fl_get_slider_value( sp->slider );
 
     if ( nval != oval )
-		fl_call_object_callback( spec->scrollbar );
+		fl_call_object_callback( sp->scrollbar );
 }
 
 
@@ -294,7 +295,7 @@ fl_create_scrollbar( int          type,
 					 FL_Coord     h,
 					 const char * l )
 {
-    SPEC *sp;
+    FLI_SCROLLBAR_SPEC *sp;
     FL_OBJECT *obj;
 
     obj = fl_make_object( FL_SCROLLBAR, type, x, y, w, h, l, handle );
@@ -411,7 +412,7 @@ fl_add_scrollbar( int          type,
 double
 fl_get_scrollbar_value( FL_OBJECT * ob )
 {
-    SPEC *spec = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
 
     if ( ! ISSCROLLBAR( ob ) )
     {
@@ -420,7 +421,7 @@ fl_get_scrollbar_value( FL_OBJECT * ob )
 		return -1000;
     }
 
-    return fl_get_slider_value( spec->slider );
+    return fl_get_slider_value( sp->slider );
 }
 
 
@@ -431,7 +432,7 @@ void
 fl_set_scrollbar_value( FL_OBJECT * ob,
 						double      val )
 {
-    SPEC *spec = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
 
     if ( ! ISSCROLLBAR( ob ) )
     {
@@ -440,7 +441,7 @@ fl_set_scrollbar_value( FL_OBJECT * ob,
 		return;
     }
 
-    fl_set_slider_value( spec->slider, val );
+    fl_set_slider_value( sp->slider, val );
 }
 
 
@@ -451,7 +452,9 @@ void
 fl_set_scrollbar_size( FL_OBJECT * ob,
 					   double      val )
 {
-    fl_set_slider_size( ( ( SPEC * ) ob->spec )->slider, val );
+	FLI_SCROLLBAR_SPEC *sp = ob->spec;
+
+    fl_set_slider_size( sp->slider, val );
 }
 
 
@@ -463,10 +466,10 @@ fl_set_scrollbar_increment( FL_OBJECT * ob,
 							double      l,
 							double      r )
 {
-    SPEC *spec = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
 
-    fl_set_slider_increment( spec->slider, l, r );
-    spec->increment = r;
+    fl_set_slider_increment( sp->slider, l, r );
+    sp->increment = r;
 }
 
 
@@ -478,7 +481,9 @@ fl_get_scrollbar_increment( FL_OBJECT * ob,
 						    double *    a,
 							double *    b )
 {
-    fl_get_slider_increment( ( ( SPEC * ) ob->spec )->slider, a, b );
+	FLI_SCROLLBAR_SPEC *sp = ob->spec;
+
+    fl_get_slider_increment( sp->slider, a, b );
 }
 
 
@@ -490,6 +495,8 @@ fl_set_scrollbar_bounds( FL_OBJECT * ob,
 						 double      b1,
 						 double      b2 )
 {
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
+
     if ( ! ISSCROLLBAR( ob ) )
     {
 		M_err( "SetScrollBarBounds", "%s not a scrollbar",
@@ -497,7 +504,7 @@ fl_set_scrollbar_bounds( FL_OBJECT * ob,
 		return;
     }
 
-    fl_set_slider_bounds( ( ( SPEC * ) ob->spec )->slider, b1, b2 );
+    fl_set_slider_bounds( sp->slider, b1, b2 );
 }
 
 
@@ -509,7 +516,9 @@ fl_get_scrollbar_bounds( FL_OBJECT * ob,
 						 double *    b1,
 						 double *    b2 )
 {
-    fl_get_slider_bounds( ( ( SPEC * ) ob->spec )->slider, b1, b2 );
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
+
+    fl_get_slider_bounds( sp->slider, b1, b2 );
 }
 
 
@@ -520,7 +529,9 @@ void
 fl_set_scrollbar_return( FL_OBJECT * ob,
 						 int         ret )
 {
-    fl_set_slider_return( ( ( SPEC * ) ob->spec )->slider, ret );
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
+
+    fl_set_slider_return( sp->slider, ret );
 }
 
 
@@ -531,5 +542,7 @@ void
 fl_set_scrollbar_step( FL_OBJECT * ob,
 					   double      step )
 {
-    fl_set_slider_step( ( ( SPEC * ) ob->spec )->slider, step );
+    FLI_SCROLLBAR_SPEC *sp = ob->spec;
+
+    fl_set_slider_step( sp->slider, step );
 }

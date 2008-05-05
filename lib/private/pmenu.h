@@ -28,9 +28,10 @@
 
 #define MAXITEMS  ( FL_MENU_MAXITEMS + 1 )	/* index 0 unused */
 
+
 /* make sure that the first 5 elements are the same as FL_CHOICE.
- * fdesign assumes this
- */
+ * fdesign assumes this */
+
 
 typedef struct
 {
@@ -47,6 +48,6 @@ typedef struct
     char            modechange[ MAXITEMS ];
     char            cur_val;				/* a counter for the value      */
 	int             no_title;
-} FL_MENU_SPEC;
+} FLI_MENU_SPEC;
 
 #endif

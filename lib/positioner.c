@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_posi = "$Id: positioner.c,v 1.11 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_posi = "$Id: positioner.c,v 1.12 2008/05/05 14:21:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -49,8 +49,6 @@ char *fl_id_posi = "$Id: positioner.c,v 1.11 2008/05/04 21:08:00 jtt Exp $";
 
 /* The special information for positioners.
  * ymin is the value at the bottom and ymax is the value at the top */
-
-#define SPEC FL_POSITIONER_SPEC
 
 
 /***************************************
@@ -78,7 +76,7 @@ flinear( double val,
 static void
 draw_positioner( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = ob->spec;
     FL_Coord absbw = FL_abs(ob->bw);
     FL_Coord x1 = ob->x + absbw + 1,
 		     y1 = ob->y + absbw + 1;
@@ -135,7 +133,7 @@ handle_mouse( FL_OBJECT * ob,
 			  FL_Coord    mx,
 			  FL_Coord    my )
 {
-    SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = ob->spec;
     FL_Coord absbw = FL_abs(ob->bw);
     FL_Coord x1 = ob->x + absbw + 1,
 		     y1 = ob->y + absbw + 1;
@@ -182,7 +180,7 @@ handle_it( FL_OBJECT * ob,
 		   int         key  FL_UNUSED_ARG,
 		   void *      ev   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info("HandlePositioner", fli_event_name(event));
@@ -248,7 +246,7 @@ fl_create_positioner( int          type,
 					  const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_POSITIONER_SPEC *sp;
 
     ob = fl_make_object( FL_POSITIONER, type, x, y, w, h, label, handle_it );
     ob->boxtype = FL_POSITIONER_BOXTYPE;
@@ -305,7 +303,7 @@ fl_add_positioner( int          type,
 void
 fl_set_positioner_xvalue(FL_OBJECT * ob, double val)
 {
-    SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = ob->spec;
 
     val = fli_clamp( val, sp->xmin, sp->xmax );
 
@@ -325,7 +323,7 @@ void
 fl_set_positioner_yvalue( FL_OBJECT * ob,
 						  double      val )
 {
-    SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = ob->spec;
 
     val = fli_clamp( val, sp->ymin, sp->ymax );
 
@@ -346,7 +344,7 @@ fl_set_positioner_xbounds( FL_OBJECT * ob,
 						   double      min,
 						   double      max )
 {
-    SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = ob->spec;
 
     if ( sp->xmin != min || sp->xmax != max )
     {
@@ -366,7 +364,7 @@ fl_set_positioner_ybounds( FL_OBJECT * ob,
 						   double      min,
 						   double     max )
 {
-    SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = ob->spec;
 
     if ( sp->ymin != min || sp->ymax != max )
     {
@@ -384,7 +382,7 @@ fl_set_positioner_ybounds( FL_OBJECT * ob,
 double
 fl_get_positioner_xvalue( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->xval;
+    return ( ( FLI_POSITIONER_SPEC * ) ob->spec )->xval;
 }
 
 
@@ -394,7 +392,7 @@ fl_get_positioner_xvalue( FL_OBJECT * ob )
 double
 fl_get_positioner_yvalue( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->yval;
+    return ( ( FLI_POSITIONER_SPEC * ) ob->spec )->yval;
 }
 
 
@@ -406,8 +404,8 @@ fl_get_positioner_xbounds( FL_OBJECT * ob,
 						   double *    min,
 						   double *    max )
 {
-    *min = ( ( SPEC * ) ob->spec)->xmin;
-    *max = ( ( SPEC * ) ob->spec)->xmax;
+    *min = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->xmin;
+    *max = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->xmax;
 }
 
 void
@@ -415,8 +413,8 @@ fl_get_positioner_ybounds( FL_OBJECT * ob,
 						   double *    min,
 						   double *    max)
 {
-    *min = ( ( SPEC * ) ob->spec)->ymin;
-    *max = ( ( SPEC * ) ob->spec)->ymax;
+    *min = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->ymin;
+    *max = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->ymax;
 }
 
 
@@ -428,7 +426,7 @@ void
 fl_set_positioner_xstep( FL_OBJECT * ob,
 						 double      value )
 {
-    ( ( SPEC * ) ob->spec )->xstep = value;
+    ( ( FLI_POSITIONER_SPEC * ) ob->spec )->xstep = value;
 }
 
 
@@ -440,7 +438,7 @@ void
 fl_set_positioner_ystep( FL_OBJECT * ob,
 						 double      value )
 {
-    ( ( SPEC * ) ob->spec )->ystep = value;
+    ( ( FLI_POSITIONER_SPEC * ) ob->spec )->ystep = value;
 }
 
 
@@ -452,5 +450,5 @@ void
 fl_set_positioner_return( FL_OBJECT * ob,
 						  int         value )
 {
-    ( ( SPEC * ) ob->spec )->how_return = value;
+    ( ( FLI_POSITIONER_SPEC * ) ob->spec )->how_return = value;
 }

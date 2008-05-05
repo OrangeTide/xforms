@@ -40,7 +40,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sysd = "$Id: sysdep.c,v 1.10 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_sysd = "$Id: sysdep.c,v 1.11 2008/05/05 14:21:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,6 +52,7 @@ char *fl_id_sysd = "$Id: sysdep.c,v 1.10 2008/05/04 21:08:00 jtt Exp $";
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <time.h>
 
 #ifndef FL_WIN32
 #include <sys/time.h>

@@ -39,7 +39,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.12 2008/05/03 12:44:46 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.13 2008/05/05 14:21:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -111,7 +111,7 @@ fl_set_error_handler( FL_ERROR_FUNC user_func)
 /***************************************
  ***************************************/
 
-const char *fl_get_syserror_msg( void )
+const char *fli_get_syserror_msg( void )
 {
     const char  *pp;
 
@@ -129,7 +129,7 @@ const char *fl_get_syserror_msg( void )
  ***************************************/
 
 void
-set_msg_threshold( int mlevel )
+fli_set_msg_threshold( int mlevel )
 {
     threshold = mlevel;
 }
@@ -140,7 +140,7 @@ set_msg_threshold( int mlevel )
  ***************************************/
 
 void
-set_err_msg_func( Gmsgout_ errf )
+fli_set_err_msg_func( Gmsgout_ errf )
 {
     gmout = errf;
 }
@@ -200,8 +200,9 @@ P_errmsg( const char * func,
 			strcpy( line, "?" );
 
 		where = *func ?
-			vstrcat( "In ", func, " [", file, ":", line, "] ", ( char * ) 0 ) :
-			vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
+			fli_vstrcat( "In ", func, " [", file, ":", line, "] ",
+						 ( char * ) 0 ) :
+			fli_vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
     }
     else
     {
@@ -225,7 +226,7 @@ P_errmsg( const char * func,
 
     /* check if there is any system errors */
 
-    if ( ( pp = fl_get_syserror_msg( ) ) && *pp )
+    if ( ( pp = fli_get_syserror_msg( ) ) && *pp )
     {
 		strncat( strcat( emsg, "--" ), pp, MAXESTR );
         emsg[ MAXESTR - 1 ] = '\0';
@@ -241,7 +242,7 @@ P_errmsg( const char * func,
     if ( gout && gmout )
 		gmout( "Warning", where, why,  0 );
 
-    free_vstrcat( where );
+    fli_free_vstrcat( where );
 
     /* reset system errors */
 
@@ -256,14 +257,15 @@ P_errmsg( const char * func,
  ********************************************************************/
 
 FL_ERROR_FUNC
-whereError( int          gui,
-			int          level,
-			const char * f,
-			int          l )
+fli_whereError( int          gui,
+				int          level,
+				const char * f,
+				int          l )
 {
     file = f;
     lineno = l;
     req_level = level;
     gout = gui;
+
     return user_error_function_ ? user_error_function_ : P_errmsg;
 }

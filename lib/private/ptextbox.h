@@ -81,6 +81,115 @@ typedef struct
     int               lastmx,
 	                  lastmy;
 	int               status_changed;
-} FL_TEXTBOX_SPEC;
+} FLI_TEXTBOX_SPEC;
+
+
+/***** Types    *****/
+
+enum
+{
+    FLI_NORMAL_TEXTBOX = FL_NORMAL_BROWSER,
+    FLI_SELECT_TEXTBOX = FL_SELECT_BROWSER,
+    FLI_HOLD_TEXTBOX   = FL_HOLD_BROWSER,
+    FLI_MULTI_TEXTBOX  = FL_MULTI_BROWSER
+};
+
+
+/***** Defaults *****/
+
+#define FLI_TEXTBOX_BOXTYPE	     FL_DOWN_BOX
+#define FLI_TEXTBOX_COL1	     FL_COL1
+#define FLI_TEXTBOX_COL2	     FL_YELLOW
+#define FLI_TEXTBOX_LCOL	     FL_LCOL
+#define FLI_TEXTBOX_ALIGN	     FL_ALIGN_BOTTOM
+#define FLI_TEXTBOX_LINELENGTH	2048
+#define FLI_TEXTBOX_FONTSIZE     FL_SMALL_FONT
+
+
+/***** Routines *****/
+
+extern FL_OBJECT * fli_create_textbox( int,
+									   FL_Coord,
+									   FL_Coord,
+									   FL_Coord,
+									   FL_Coord,
+									   const char * );
+
+extern void fli_clear_textbox( FL_OBJECT * );
+
+extern int fli_set_textbox_topline( FL_OBJECT *,
+									int );
+
+extern int fli_set_textbox_xoffset( FL_OBJECT *,
+									FL_Coord );
+
+extern FL_Coord fli_get_textbox_xoffset( FL_OBJECT * );
+
+extern int fli_get_textbox_longestline( FL_OBJECT * );
+
+extern void fli_calc_textbox_size( FL_OBJECT * );
+
+extern void fli_add_textbox_line( FL_OBJECT *,
+								  const char * );
+
+extern void fli_addto_textbox( FL_OBJECT *,
+							   const char * );
+
+extern void fli_addto_textbox_chars( FL_OBJECT *,
+									 const char * );
+
+extern const char * fli_get_textbox_line( FL_OBJECT *,
+										  int );
+
+extern int fli_get_textbox( FL_OBJECT * );
+
+extern void fli_set_textbox_fontsize( FL_OBJECT *,
+									  int );
+
+extern void fli_set_textbox_fontstyle( FL_OBJECT *,
+									   int );
+
+extern int fli_load_textbox( FL_OBJECT *,
+							 const char * );
+
+extern void fli_select_textbox_line( FL_OBJECT *,
+									 int,
+									 int );
+
+extern int fli_isselected_textbox_line( FL_OBJECT *,
+										int );
+
+extern void fli_deselect_textbox_line( FL_OBJECT *,
+									   int );
+
+extern void fli_deselect_textbox( FL_OBJECT * );
+
+extern void fli_delete_textbox_line( FL_OBJECT *,
+									 int );
+
+extern void fli_replace_textbox_line( FL_OBJECT *,
+									  int,
+									  const char * );
+
+extern void fli_insert_textbox_line( FL_OBJECT *,
+									 int,
+									 const char * );
+
+extern void fli_set_textbox_dblclick_callback( FL_OBJECT *,
+											   FL_CALLBACKPTR,
+											   long );
+
+extern void fli_get_textbox_dimension( FL_OBJECT *,
+									   int *,
+									   int *,
+									   int *,
+									   int * );
+
+extern void fli_set_textbox_line_selectable( FL_OBJECT *,
+											 int,
+											 int );
+
+extern int fli_set_textbox_maxlinelength( int );
+
 
 #endif

@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chrt = "$Id: chart.c,v 1.10 2008/05/04 21:07:58 jtt Exp $";
+char *fl_id_chrt = "$Id: chart.c,v 1.11 2008/05/05 14:21:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -733,7 +733,7 @@ fl_add_chart_value( FL_OBJECT *  ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
     {
-		Bark( "fl_add_chart_value", "%s not a chart", ob ? ob->label : "" );
+		M_err( "fl_add_chart_value", "%s not a chart", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -781,7 +781,7 @@ fl_insert_chart_value( FL_OBJECT *  ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
     {
-		Bark( "AddChartValue", "%s not a chart", ob ? ob->label : "" );
+		M_err( "AddChartValue", "%s not a chart", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -855,7 +855,7 @@ fl_set_chart_bounds( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
     {
-		Bark( "SetChartBounds", "%s not a chart", ob ? ob->label : "" );
+		M_err( "SetChartBounds", "%s not a chart", ob ? ob->label : "" );
 		return;
     }
 #endif

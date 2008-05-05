@@ -43,7 +43,6 @@
 
 #include <math.h>
 #include "private/ptwheel.h"
-#define SPEC   FL_THUMBWHEEL_SPEC
 
 #ifndef M_PI
 #define M_PI    3.14159265359
@@ -66,7 +65,7 @@ draw( FL_OBJECT * ob )
 		w2 = ob->w / 2;
     int absbw = FL_abs( ob->bw );
     double delta = GRID - ( ( h2 + w2 ) > 300 ? 0.02 : 0.0 );
-    SPEC *sp = ob->spec;
+    FLI_THUMBWHEEL_SPEC *sp = ob->spec;
     double yo = ob->y + h2;
     double x0 = ob->x + w2;
     int x,
@@ -235,7 +234,7 @@ handle( FL_OBJECT * ob,
 		int         key,
 		void *      xev  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_THUMBWHEEL_SPEC *sp = ob->spec;
     int cur_pos,
 		old_pos;
     double value;
@@ -315,13 +314,13 @@ fl_get_thumbwheel_value( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_THUMBWHEEL ) )
     {
-		Bark( "GetThumbWheelValue", "%s is not a thumbwheel",
-			  ob ? ob->label : "null" );
+		M_err( "GetThumbWheelValue", "%s is not a thumbwheel",
+			   ob ? ob->label : "null" );
 		return 1.0;
     }
 #endif
 
-    return ( ( SPEC * ) ob->spec )->val;
+    return ( ( FLI_THUMBWHEEL_SPEC * ) ob->spec )->val;
 }
 
 
@@ -332,14 +331,14 @@ double
 fl_set_thumbwheel_value( FL_OBJECT * ob,
 						 double      value )
 {
-    SPEC *sp;
+    FLI_THUMBWHEEL_SPEC *sp;
     double oldval;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_THUMBWHEEL ) )
     {
-		Bark( "SetThumbWheelValue", "%s is not a thumbwheel",
-			  ob ? ob->label : "null" );
+		M_err( "SetThumbWheelValue", "%s is not a thumbwheel",
+			   ob ? ob->label : "null" );
 		return 1.0;
     }
 #endif
@@ -366,13 +365,13 @@ fl_set_thumbwheel_bounds( FL_OBJECT * ob,
 						  double      min,
 						  double      max )
 {
-    SPEC *sp;
+    FLI_THUMBWHEEL_SPEC *sp;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_THUMBWHEEL ) )
     {
-		Bark( "SetThumbWheelBounds", "%s is not a thumbwheel",
-			  ob ? ob->label : "null" );
+		M_err( "SetThumbWheelBounds", "%s is not a thumbwheel",
+			   ob ? ob->label : "null" );
 		return;
     }
 #endif
@@ -397,7 +396,7 @@ fl_get_thumbwheel_bounds( FL_OBJECT * ob,
 						  double *    min,
 						  double *    max )
 {
-    SPEC *sp = ob->spec;
+    FLI_THUMBWHEEL_SPEC *sp = ob->spec;
 
     *min = sp->min;
     *max = sp->max;
@@ -410,7 +409,7 @@ fl_get_thumbwheel_bounds( FL_OBJECT * ob,
 double
 fl_get_thumbwheel_step( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->step;
+    return ( ( FLI_THUMBWHEEL_SPEC * ) ob->spec )->step;
 }
 
 
@@ -421,7 +420,7 @@ double
 fl_set_thumbwheel_step( FL_OBJECT * ob,
 						double      step )
 {
-    SPEC *sp = ob->spec;
+    FLI_THUMBWHEEL_SPEC *sp = ob->spec;
     double old = sp->step;
 
     if ( sp->step != step )
@@ -438,7 +437,7 @@ fl_set_thumbwheel_step( FL_OBJECT * ob,
 int fl_set_thumbwheel_crossover( FL_OBJECT * ob,
 								 int         flag )
 {
-     SPEC *sp;
+     FLI_THUMBWHEEL_SPEC *sp;
      int old;
 
      if ( ! ob || ! ( ob->objclass != FL_THUMBWHEEL ) )
@@ -475,7 +474,7 @@ fl_create_thumbwheel( int          type,
 					  const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_THUMBWHEEL_SPEC *sp;
 
     ob = fl_make_object( FL_THUMBWHEEL, type, x, y, w, h, label, handle );
     ob->col1 = FL_THUMBWHEEL_COL1;

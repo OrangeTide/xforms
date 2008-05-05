@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.9 2008/01/28 23:42:24 jtt Exp $
+ * $Id: image_gif.c,v 1.10 2008/05/05 14:21:49 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -208,12 +208,12 @@ read_descriptor_block(FL_IMAGE * im)
     }
 
     /* offset relative to lsx and lsy */
-    im->wx = fl_fget2LSBF(fp);
-    im->wy = fl_fget2LSBF(fp);
+    im->wx = fli_fget2LSBF(fp);
+    im->wy = fli_fget2LSBF(fp);
 
     /* True image size */
-    im->w = fl_fget2LSBF(fp);
-    im->h = fl_fget2LSBF(fp);
+    im->w = fli_fget2LSBF(fp);
+    im->h = fli_fget2LSBF(fp);
 
     if (sp->lsx < im->w || sp->lsy < im->h)
     {
@@ -386,10 +386,10 @@ readextension(FILE * fp, FL_IMAGE * im)
 	    return EOF;
 	}
 
-	t->x = fl_fget2LSBF(fp);	/* left wrt left edge of ls  */
-	t->y = fl_fget2LSBF(fp);
-	t->tw = fl_fget2LSBF(fp);	/* total width  */
-	t->th = fl_fget2LSBF(fp);	/* total width  */
+	t->x = fli_fget2LSBF(fp);	/* left wrt left edge of ls  */
+	t->y = fli_fget2LSBF(fp);
+	t->tw = fli_fget2LSBF(fp);	/* total width  */
+	t->th = fli_fget2LSBF(fp);	/* total width  */
 	t->cw = fgetc(fp);	/* cell width   */
 	t->ch = fgetc(fp);	/* cell height  */
 	t->tc = fgetc(fp);	/* text color   */
@@ -908,8 +908,8 @@ write_descriptor(FL_IMAGE * im)
 	return -1;
 
     /* raster dimensions */
-    put2LSBF(im->w, ffp);
-    put2LSBF(im->h, ffp);
+    fli_fput2LSBF(im->w, ffp);
+    fli_fput2LSBF(im->h, ffp);
 
     /* local_gifmap, interlace, etc. only set interlace if requested */
     putc(interlace ? 0x40 : 0, ffp);
@@ -940,8 +940,8 @@ write_desc(FL_IMAGE * im, FILE * ffp)
     }
 
     /* always write the same logical screen/image size  */
-    put2LSBF(im->w, ffp);
-    put2LSBF(im->h, ffp);
+    fli_fput2LSBF(im->w, ffp);
+    fli_fput2LSBF(im->h, ffp);
 
     packed = 0x80		/* always output global map */
 	+ ((bpp - 1) << 4)	/* cr. does not mean much   */

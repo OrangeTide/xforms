@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.23 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.24 2008/05/05 14:21:52 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -2725,53 +2725,6 @@ fl_set_object_automatic( FL_OBJECT * ob,
 
 		fli_recount_auto_object( );
     }
-}
-
-
-/***************************************
- ***************************************/
-
-#include "private/pcanvas.h"
-
-void
-fl_hide_canvas( FL_OBJECT * ob )
-{
-    FL_CANVAS_SPEC *sp = ob->spec;
-
-    if ( sp->window && sp->cleanup )
-		sp->cleanup( ob );
-
-    /* if parent is unmapped, sp->window is also unmapped */
-
-    if ( ob->visible && sp->window && ob->form && ob->form->window )
-    {
-		/* must cleanup canvas specific stuff before closing window */
-
-		fl_winclose( sp->window );
-    }
-
-    sp->window = None;
-}
-
-
-/***************************************
- ***************************************/
-
-Window
-fl_get_canvas_id( FL_OBJECT * ob )
-{
-    FL_CANVAS_SPEC *sp = ob->spec;
-
-#if FL_DEBUG >= ML_DEBUG
-    if ( ! IsValidCanvas( ob ) )
-    {
-		M_err( "fl_get_canvas_id", "%s not a canvas",
-			   ( ob && ob->label ) ? ob->label : "" );
-		return None;
-    }
-#endif
-
-    return sp->window;
 }
 
 

@@ -311,7 +311,7 @@ change_choice_item_cb( FL_OBJECT * ob,
     FD_choiceattrib *ui = ob->form->fdui;
     int i = fl_get_browser(ui->content_br);
     FL_OBJECT *edited = ui->vdata;
-    FL_CHOICE_SPEC *sp = edited->spec;
+    FLI_CHOICE_SPEC *sp = edited->spec;
 
     if (i > 0)
     {

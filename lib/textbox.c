@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.16 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.17 2008/05/05 14:21:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -44,10 +44,11 @@ char *fl_id_brw = "$Id: textbox.c,v 1.16 2008/05/04 21:08:00 jtt Exp $";
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/ptextbox.h"
+#include "private/pbrowser.h"
+
 #include <string.h>
 #include <sys/types.h>
 #include <stdlib.h>
-#include "private/pbrowser.h"
 
 
 #define LMARGIN   3		/* left margin */
@@ -63,14 +64,11 @@ typedef enum
     COMPLETE,			/* non-conditional complete redraw     */
     VSLIDER,			/* slider moved, copyarea can be used  */
     SELECTION,			/* selection/deselection change        */
-    FULL = 4,			/* draw without drawing the box/slider */
-    HSLIDER = FULL
+    FULL = 4			/* draw without drawing the box/slider */
 } DrawType;
 
 
-#define SPEC FL_TEXTBOX_SPEC
-
-static int textwidth( SPEC *,
+static int textwidth( FLI_TEXTBOX_SPEC *,
 					  int,
 					  int,
 					  const char *,
@@ -84,7 +82,7 @@ static int textwidth( SPEC *,
  ***************************************/
 
 static void
-free_spec( SPEC * sp )
+free_spec( FLI_TEXTBOX_SPEC * sp )
 {
     int i;
 
@@ -120,7 +118,7 @@ static void
 find_longest_line( FL_OBJECT * ob,
 				   int         recompute )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     LINE **tt = sp->text;
     int i;
 
@@ -148,7 +146,7 @@ static void
 delete_line( FL_OBJECT * ob,
 			 int         linenumb )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     LINE *ttt;
     int i;
 
@@ -175,7 +173,7 @@ delete_line( FL_OBJECT * ob,
 static void
 extend_textbox( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     int i,
 		newline;
 
@@ -210,7 +208,7 @@ insert_line( FL_OBJECT  * ob,
 			 int          linenumb,
 			 const char * newtext )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     LINE *currline;
     int i;
 
@@ -260,7 +258,7 @@ insert_line( FL_OBJECT  * ob,
 
 /* this is only the working line length. */
 
-static int maxlen = FL_TEXTBOX_LINELENGTH;
+static int maxlen = FLI_TEXTBOX_LINELENGTH;
 
 
 /***************************************
@@ -310,7 +308,7 @@ insert_lines( FL_OBJECT  * ob,
  ***************************************/
 
 int
-fl_set_textbox_maxlinelength( int n )
+fli_set_textbox_maxlinelength( int n )
 {
     int old = maxlen;
 
@@ -330,7 +328,7 @@ replace_line( FL_OBJECT  * ob,
 			  int          linenumb,
 			  const char * newtext )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     LINE *currline = sp->text[ linenumb ];
     char *s;
 
@@ -376,8 +374,8 @@ replace_line( FL_OBJECT  * ob,
  ***************************************/
 
 static void
-fixup( FL_OBJECT * ob,
-	   SPEC *      sp )
+fixup( FL_OBJECT        * ob,
+	   FLI_TEXTBOX_SPEC * sp )
 {
     FL_Coord ascend = sp->charheight - sp->chardesc;
     int y = sp->y + ascend + ( sp->screenlines - 1 ) * sp->charheight;
@@ -392,9 +390,9 @@ fixup( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_calc_textbox_size( FL_OBJECT * ob )
+fli_calc_textbox_size( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     int bw = FL_abs( ob->bw ),
 		junk;
 
@@ -416,7 +414,7 @@ fl_calc_textbox_size( FL_OBJECT * ob )
 static void
 calc_textarea( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     FL_Coord bw = FL_abs( ob->bw );
 
     /* total textbox drawing area, to be adjusted for scrollbars */
@@ -440,8 +438,8 @@ calc_textarea( FL_OBJECT * ob )
  ***************************************/
 
 static void
-prepare_redraw( FL_OBJECT * ob,
-				SPEC *      sp )
+prepare_redraw( FL_OBJECT        * ob,
+				FLI_TEXTBOX_SPEC * sp )
 {
     FL_Coord x,
 		     y,
@@ -493,8 +491,8 @@ prepare_redraw( FL_OBJECT * ob,
 
 	if ( ! ( xfs = fl_get_fntstruct( sp->fontstyle, sp->fontsize ) ) )
 	{
-		Bark( "Font", "Can't find style %d at size=%d",
-			  sp->fontstyle, sp->fontsize );
+		M_err( "Font", "Can't find style %d at size=%d",
+			   sp->fontstyle, sp->fontsize );
 		xfs = fl_state[ fl_vmode ].cur_fnt;
 	}
 
@@ -566,8 +564,8 @@ prepare_redraw( FL_OBJECT * ob,
 static void
 correct_topline( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
-	FL_BROWSER_SPEC *br = ob->parent->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
+	FLI_BROWSER_SPEC *br = ob->parent->spec;
 
 	if ( ! br->v_on )
 		sp->topline = 1;
@@ -590,7 +588,7 @@ draw_textline( FL_OBJECT * ob,
 			   FL_Coord    ww,
 			   int         back )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     char *str;			            /* Start of actual string */
     int style = sp->fontstyle;	    /* Actual font style used */
     FL_Coord size = sp->fontsize;	/* Actual font size used */
@@ -621,7 +619,7 @@ draw_textline( FL_OBJECT * ob,
 
     /* Check for special lines */
 
-    if ( sp->text[ line ]->non_selectable && ob->type != FL_NORMAL_TEXTBOX )
+    if ( sp->text[ line ]->non_selectable && ob->type != FLI_NORMAL_TEXTBOX )
     {
 		activeGC = sp->specialGC;
 		has_special = 1;
@@ -726,7 +724,7 @@ draw_textline( FL_OBJECT * ob,
 
 			case 'N':
 				sp->text[ line ]->non_selectable = 1;
-				if ( ob->type != FL_NORMAL_TEXTBOX )
+				if ( ob->type != FLI_NORMAL_TEXTBOX )
 					lcol = FL_INACTIVE;
 				break;
 		}
@@ -773,7 +771,7 @@ draw_textline( FL_OBJECT * ob,
 static void
 draw_textbox( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     FL_Coord charheight = sp->charheight;
     FL_Coord ascend = charheight - sp->chardesc;	/* character height */
     int i,
@@ -815,7 +813,7 @@ draw_textbox( FL_OBJECT * ob )
 static void
 draw_slider_motion( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     FL_Coord charheight,
 		     ascend;	    /* character height */
     int screenlines;		/* lines on screen */
@@ -916,7 +914,7 @@ draw_slider_motion( FL_OBJECT * ob )
 static void
 draw_selection( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     FL_Coord charh;		    /* character height */
     FL_Coord yy = sp->y;	/* text position */
     int sel;
@@ -956,7 +954,7 @@ static void
 handle_missed_selection( FL_OBJECT * ob,
 						 int         line )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     int k, ns;
 
     if ( sp->selectline < 0 )
@@ -994,7 +992,7 @@ static void
 handle_missed_deselection( FL_OBJECT * ob,
 						   int         line )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     int k;
 
     if ( line > FL_abs( sp->selectline ) )
@@ -1045,7 +1043,7 @@ handle_mouse( FL_OBJECT *    ob,
 			  FL_Coord       my,
 			  XMotionEvent * xev  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     float charheight = sp->charheight;
     int screenlines;		/* lines on screen */
     int line;			    /* new number of lines */
@@ -1060,7 +1058,7 @@ handle_mouse( FL_OBJECT *    ob,
     correct_topline( ob );
     screenlines = sp->screenlines;
 
-	if ( ob->type == FL_NORMAL_TEXTBOX )
+	if ( ob->type == FLI_NORMAL_TEXTBOX )
 		return 0;
 
     /* Determine the type of event */
@@ -1069,7 +1067,7 @@ handle_mouse( FL_OBJECT *    ob,
     {
 		event_type = SELECTEVENT;
 		line = sp->topline + ( my - ob->y - FLTopMargin ) / charheight;
-		if (    ob->type == FL_MULTI_TEXTBOX
+		if (    ob->type == FLI_MULTI_TEXTBOX
 			 && line >= 1 && line <= sp->lines
 			 && line < sp->topline + screenlines
 			 && sp->text[line]->selected )
@@ -1093,7 +1091,7 @@ handle_mouse( FL_OBJECT *    ob,
 		/* if select a line that is already been selected, do nothing */
 
 		if ( sp->text[ line ]->selected )
-			return ob->type != FL_MULTI_TEXTBOX;
+			return ob->type != FLI_MULTI_TEXTBOX;
 		if (sp->text[ line ]->non_selectable )
 			return 0;
 
@@ -1101,7 +1099,7 @@ handle_mouse( FL_OBJECT *    ob,
 
 		/* mark selected and deselected lines */
 
-		if ( ob->type != FL_MULTI_TEXTBOX && sp->selectline > 0 )
+		if ( ob->type != FLI_MULTI_TEXTBOX && sp->selectline > 0 )
 		{
 			sp->text[ sp->selectline ]->selected = 0;
 			sp->desel_mark = sp->selectline;
@@ -1113,7 +1111,7 @@ handle_mouse( FL_OBJECT *    ob,
 		if ( fli_object_qtest( ) == ob )
 			fli_object_qread( );
 
-		if (    ob->type == FL_MULTI_TEXTBOX
+		if (    ob->type == FLI_MULTI_TEXTBOX
 				&& last_select
 				&& FL_abs( line - sp->selectline ) > 1 )
 		{
@@ -1126,7 +1124,7 @@ handle_mouse( FL_OBJECT *    ob,
 	}
 	else
 	{
-		/* event_type == DESELECTEVENT && ob->type == FL_MULTI_TEXTBOX */
+		/* event_type == DESELECTEVENT && ob->type == FLI_MULTI_TEXTBOX */
 
 		if (    ! sp->text[ line ]->selected
 			 || sp->text[ line ]->non_selectable )
@@ -1136,7 +1134,7 @@ handle_mouse( FL_OBJECT *    ob,
 		if ( fli_object_qtest( ) == ob )
 			fli_object_qread( );
 
-		if (    ob->type == FL_MULTI_TEXTBOX
+		if (    ob->type == FLI_MULTI_TEXTBOX
 			 && last_deselect
 			 && FL_abs( -sp->selectline - line ) > 1 )
 		{
@@ -1165,7 +1163,7 @@ handle_keyboard( FL_OBJECT * ob,
 				 int         key,
 				 XKeyEvent * xev  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     int old = sp->selectline;
 
     if ( IsHome( key ) )
@@ -1190,13 +1188,13 @@ handle_keyboard( FL_OBJECT * ob,
 		fl_set_browser_xoffset( ob, sp->xoffset + 3 );
     else if ( IsUp( key ) )
     {
-		if (    ob->type == FL_NORMAL_TEXTBOX
-			 || ob->type == FL_SELECT_TEXTBOX
-			 || ob->type == FL_MULTI_TEXTBOX )
+		if (    ob->type == FLI_NORMAL_TEXTBOX
+			 || ob->type == FLI_SELECT_TEXTBOX
+			 || ob->type == FLI_MULTI_TEXTBOX )
 			fl_set_browser_topline( ob, sp->topline - 1 );
-		else if ( ob->type == FL_HOLD_TEXTBOX )
+		else if ( ob->type == FLI_HOLD_TEXTBOX )
 		{
-			fl_select_textbox_line( ob, sp->selectline - 1, 1 );
+			fli_select_textbox_line( ob, sp->selectline - 1, 1 );
 
 			/* bring the selection into view if necessary */
 
@@ -1209,13 +1207,13 @@ handle_keyboard( FL_OBJECT * ob,
     }
     else if ( IsDown( key ) )
     {
-		if (    ob->type == FL_NORMAL_TEXTBOX
-			 || ob->type == FL_SELECT_TEXTBOX
-			 || ob->type == FL_MULTI_TEXTBOX )
+		if (    ob->type == FLI_NORMAL_TEXTBOX
+			 || ob->type == FLI_SELECT_TEXTBOX
+			 || ob->type == FLI_MULTI_TEXTBOX )
 			fl_set_browser_topline( ob, sp->topline + 1 );
-		else if ( ob->type == FL_HOLD_TEXTBOX )
+		else if ( ob->type == FLI_HOLD_TEXTBOX )
 		{
-			fl_select_textbox_line( ob, sp->selectline + 1, 1 );
+			fli_select_textbox_line( ob, sp->selectline + 1, 1 );
 
 			/* bring the selection into view if necessary */
 			
@@ -1246,7 +1244,7 @@ handle_textbox( FL_OBJECT * ob,
 				int         key,
 				void *      xev )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info2( "HandleBrowser", fli_event_name( ev ) );
@@ -1329,11 +1327,11 @@ handle_textbox( FL_OBJECT * ob,
 
 		case FL_RELEASE:
 			sp->lastmy = -1;
-			if ( ob->type == FL_SELECT_TEXTBOX )
+			if ( ob->type == FLI_SELECT_TEXTBOX )
 			{
 				sp->drawtype = SELECTION;
 				sp->desel_mark = sp->selectline;
-				fl_deselect_textbox( ob );
+				fli_deselect_textbox( ob );
 			}
 			return sp->status_changed;
 
@@ -1373,30 +1371,30 @@ handle_textbox( FL_OBJECT * ob,
  ***************************************/
 
 FL_OBJECT *
-fl_create_textbox( int          type,
-				   FL_Coord     x,
-				   FL_Coord     y,
-				   FL_Coord     w,
-				   FL_Coord     h,
-				   const char * label )
+fli_create_textbox( int          type,
+					FL_Coord     x,
+					FL_Coord     y,
+					FL_Coord     w,
+					FL_Coord     h,
+					const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_TEXTBOX_SPEC *sp;
     int junk;
 
     ob = fl_make_object( FL_TEXTBOX, type, x, y, w, h, label, handle_textbox );
-    ob->boxtype = FL_TEXTBOX_BOXTYPE;
-    ob->lcol    = FL_TEXTBOX_LCOL;
-    ob->align   = FL_TEXTBOX_ALIGN;
-    ob->col1    = FL_TEXTBOX_COL1;
-    ob->col2    = FL_TEXTBOX_COL2;
+    ob->boxtype = FLI_TEXTBOX_BOXTYPE;
+    ob->lcol    = FLI_TEXTBOX_LCOL;
+    ob->align   = FLI_TEXTBOX_ALIGN;
+    ob->col1    = FLI_TEXTBOX_COL1;
+    ob->col2    = FLI_TEXTBOX_COL2;
     ob->wantkey = FL_KEY_SPECIAL;
 	ob->want_update = 1;
 
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
 
     sp->fontsize = fl_cntl.browserFontSize ?
-		           fl_cntl.browserFontSize : FL_TEXTBOX_FONTSIZE;
+		           fl_cntl.browserFontSize : FLI_TEXTBOX_FONTSIZE;
     sp->fontstyle = FL_NORMAL_STYLE;
 
     sp->charheight = fl_get_char_height( sp->fontstyle, sp->fontsize,
@@ -1417,40 +1415,20 @@ fl_create_textbox( int          type,
 
 
 /***************************************
- * Adds an object
- ***************************************/
-
-FL_OBJECT *
-fl_add_textbox( int          type,
-				FL_Coord     x,
-				FL_Coord     y,
-				FL_Coord     w,
-				FL_Coord     h,
-				const char * label )
-{
-    FL_OBJECT *ob;
-
-    ob = fl_create_textbox( type, x, y, w, h, label );
-    fl_add_object( fl_current_form, ob );
-    return ob;
-}
-
-
-/***************************************
  * Sets the topline for the textbox.
  ***************************************/
 
 int
-fl_set_textbox_topline( FL_OBJECT * ob,
-						int         line )
+fli_set_textbox_topline( FL_OBJECT * ob,
+						 int         line )
 {
-    SPEC *sp = ob->spec;
-	FL_BROWSER_SPEC *br = ob->parent->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
+	FLI_BROWSER_SPEC *br = ob->parent->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
     {
-		Bark( "SetBRTopLine", "%s not a browser", ob ? ob->label : "" );
+		M_err( "SetBRTopLine", "%s not a browser", ob ? ob->label : "" );
 		return sp->topline;
     }
 #endif
@@ -1479,10 +1457,10 @@ fl_set_textbox_topline( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_clear_textbox( FL_OBJECT * ob )
+fli_clear_textbox( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
-	FL_BROWSER_SPEC *br = ob->parent->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
+	FLI_BROWSER_SPEC *br = ob->parent->spec;
     int i;
 
     /* if already empty, do nothing */
@@ -1518,10 +1496,10 @@ fl_clear_textbox( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_add_textbox_line( FL_OBJECT *  ob,
-					 const char * newtext )
+fli_add_textbox_line( FL_OBJECT *  ob,
+					  const char * newtext )
 {
-    insert_lines( ob, ( ( SPEC * ) ob->spec )->lines + 1, newtext );
+    insert_lines( ob, ( ( FLI_TEXTBOX_SPEC * ) ob->spec )->lines + 1, newtext );
     fl_redraw_object( ob );
 }
 
@@ -1531,10 +1509,10 @@ fl_add_textbox_line( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_addto_textbox( FL_OBJECT *  ob,
-				  const char * newtext )
+fli_addto_textbox( FL_OBJECT *  ob,
+				   const char * newtext )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
     sp->drawtype = sp->lines < sp->screenlines ? FULL : VSLIDER;
     insert_lines( ob, sp->lines + 1, newtext );
@@ -1549,10 +1527,10 @@ fl_addto_textbox( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_addto_textbox_chars( FL_OBJECT *  ob,
-						const char * str )
+fli_addto_textbox_chars( FL_OBJECT *  ob,
+						 const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     char *s, *p, *news;
     LINE *cur_line;
 
@@ -1598,14 +1576,15 @@ fl_addto_textbox_chars( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_insert_textbox_line( FL_OBJECT *  ob,
-						int          linenumb,
-						const char * newtext )
+fli_insert_textbox_line( FL_OBJECT *  ob,
+						 int          linenumb,
+						 const char * newtext )
 {
-    if (    linenumb > ( ( SPEC * ) ob->spec )->lines
-		 || ( ( SPEC * ) ob->spec )->lines == 0 )
+	FLI_TEXTBOX_SPEC *sp = ob->spec;
+
+    if ( linenumb > sp->lines || sp->lines == 0 )
     {
-		fl_add_textbox_line( ob, newtext );
+		fli_add_textbox_line( ob, newtext );
 		return;
     }
 
@@ -1622,10 +1601,10 @@ fl_insert_textbox_line( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_delete_textbox_line( FL_OBJECT * ob,
-						int         linenumb )
+fli_delete_textbox_line( FL_OBJECT * ob,
+						 int         linenumb )
 {
-    if ( linenumb < 1 || linenumb > ( ( SPEC * ) ob->spec )->lines )
+    if ( linenumb < 1 || linenumb > ( ( FLI_TEXTBOX_SPEC * ) ob->spec )->lines )
 		return;
     delete_line( ob, linenumb );
     fl_redraw_object( ob );
@@ -1637,11 +1616,11 @@ fl_delete_textbox_line( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_replace_textbox_line( FL_OBJECT *  ob,
-						 int          linenumb,
-						 const char * newtext )
+fli_replace_textbox_line( FL_OBJECT *  ob,
+						  int          linenumb,
+						  const char * newtext )
 {
-    if ( linenumb < 1 || linenumb > ( ( SPEC * ) ob->spec )->lines )
+    if ( linenumb < 1 || linenumb > ( ( FLI_TEXTBOX_SPEC * ) ob->spec )->lines )
 		return;
     replace_line( ob, linenumb, newtext );
     fl_redraw_object( ob );
@@ -1653,20 +1632,22 @@ fl_replace_textbox_line( FL_OBJECT *  ob,
  ***************************************/
 
 const char *
-fl_get_textbox_line( FL_OBJECT * ob,
-					 int         linenumb )
+fli_get_textbox_line( FL_OBJECT * ob,
+					  int         linenumb )
 {
+	FLI_TEXTBOX_SPEC *sp =  ob->spec;
+
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
     {
-		Bark( "GetBRLine", "%s not a browser", ob ? ob->label : "" );
+		M_err( "GetBRLine", "%s not a browser", ob ? ob->label : "" );
 		return 0;
     }
 #endif
 
-    if ( linenumb < 1 || linenumb > ( ( SPEC * ) ob->spec )->lines )
-		return 0;
-    return ( ( SPEC * ) ob->spec )->text[ linenumb ]->txt;
+    if ( linenumb < 1 || linenumb > sp->lines )
+		return NULL;
+    return sp->text[ linenumb ]->txt;
 }
 
 
@@ -1675,10 +1656,10 @@ fl_get_textbox_line( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_load_textbox( FL_OBJECT *  ob,
-				 const char * filename )
+fli_load_textbox( FL_OBJECT *  ob,
+				  const char * filename )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     FILE *fl;
     char *newtext;
     int c, i;
@@ -1686,7 +1667,7 @@ fl_load_textbox( FL_OBJECT *  ob,
     if ( ob == NULL || ob->objclass != FL_TEXTBOX )
 		return 0;
 
-    fl_clear_textbox( ob );
+    fli_clear_textbox( ob );
 
     /* LOAD THE FILE */
 
@@ -1730,11 +1711,11 @@ fl_load_textbox( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_select_textbox_line( FL_OBJECT * ob,
-						int         line,
-						int         slide )
+fli_select_textbox_line( FL_OBJECT * ob,
+						 int         line,
+						 int         slide )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
     if ( line < 1 || line > sp->lines )
 		return;
@@ -1779,10 +1760,10 @@ fl_select_textbox_line( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_deselect_textbox_line( FL_OBJECT * ob,
-						  int         line )
+fli_deselect_textbox_line( FL_OBJECT * ob,
+						   int         line )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
     if ( line < 1 || line > sp->lines )
 		return;
@@ -1811,9 +1792,9 @@ fl_deselect_textbox_line( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_deselect_textbox( FL_OBJECT * ob )
+fli_deselect_textbox( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     int i;
 
     for ( i = 1; i <= sp->lines; i++ )
@@ -1839,12 +1820,14 @@ fl_deselect_textbox( FL_OBJECT * ob )
  ***************************************/
 
 int
-fl_isselected_textbox_line( FL_OBJECT * ob,
-							int         line )
+fli_isselected_textbox_line( FL_OBJECT * ob,
+							 int         line )
 {
-    if ( line < 1 || line > ( ( SPEC * ) ob->spec )->lines )
+	FLI_TEXTBOX_SPEC *sp = ob->spec;
+
+    if ( line < 1 || line > sp->lines )
 		return 0;
-    return ( ( SPEC * ) ob->spec )->text[ line ]->selected;
+    return sp->text[ line ]->selected;
 }
 
 
@@ -1853,14 +1836,14 @@ fl_isselected_textbox_line( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_get_textbox( FL_OBJECT * ob )
+fli_get_textbox( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
     {
-		Bark( "GetTB", "%s not a textbox", ob ? ob->label : "" );
+		M_err( "GetTB", "%s not a textbox", ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -1874,15 +1857,15 @@ fl_get_textbox( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_textbox_fontsize( FL_OBJECT * ob,
-						 int         size )
+fli_set_textbox_fontsize( FL_OBJECT * ob,
+						  int         size )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
     {
-		Bark( "SetBRFont", "%s not a browser", ob ? ob->label : "" );
+		M_err( "SetBRFont", "%s not a browser", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -1902,10 +1885,10 @@ fl_set_textbox_fontsize( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_textbox_fontstyle( FL_OBJECT * ob,
-						  int         style )
+fli_set_textbox_fontstyle( FL_OBJECT * ob,
+						   int         style )
 {
-    SPEC *sp = ob->spec;;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;;
 
     if ( sp->fontstyle == style )
 		return;
@@ -1921,11 +1904,11 @@ fl_set_textbox_fontstyle( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_textbox_line_selectable( FL_OBJECT * ob,
-								int         linenumb,
-								int         flag )
+fli_set_textbox_line_selectable( FL_OBJECT * ob,
+								 int         linenumb,
+								 int         flag )
 {
-    SPEC *sp = ob->spec;;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;;
 
     if (    linenumb < 1
 		 || linenumb > sp->lines
@@ -1944,19 +1927,19 @@ fl_set_textbox_line_selectable( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_get_textbox_dimension( FL_OBJECT * ob,
-						  FL_Coord *  x,
-						  FL_Coord *  y,
-						  FL_Coord *  w,
-						  FL_Coord *  h )
+fli_get_textbox_dimension( FL_OBJECT * ob,
+						   FL_Coord *  x,
+						   FL_Coord *  y,
+						   FL_Coord *  w,
+						   FL_Coord *  h )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
     int junk;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
     {
-		Bark( "GetBrowserSize", "%s not a browser", ob ? ob->label : "" );
+		M_err( "GetBrowserSize", "%s not a browser", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -1976,9 +1959,9 @@ fl_get_textbox_dimension( FL_OBJECT * ob,
  ***************************************/
 
 FL_Coord
-fl_get_textbox_xoffset( FL_OBJECT * ob )
+fli_get_textbox_xoffset( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->xoffset;
+    return ( ( FLI_TEXTBOX_SPEC * ) ob->spec )->xoffset;
 }
 
 
@@ -1986,15 +1969,15 @@ fl_get_textbox_xoffset( FL_OBJECT * ob )
  ***************************************/
 
 int
-fl_set_textbox_xoffset( FL_OBJECT * ob,
-						FL_Coord    npixels )
+fli_set_textbox_xoffset( FL_OBJECT * ob,
+						 FL_Coord    npixels )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_TEXTBOX ) )
     {
-		Bark( "set_textbox_xoffset", "%s not a textbox", ob ? ob->label : "" );
+		M_err( "set_textbox_xoffset", "%s not a textbox", ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -2021,11 +2004,11 @@ fl_set_textbox_xoffset( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_textbox_dblclick_callback( FL_OBJECT *    ob,
-								  FL_CALLBACKPTR cb,
-								  long           a )
+fli_set_textbox_dblclick_callback( FL_OBJECT *    ob,
+								   FL_CALLBACKPTR cb,
+								   long           a )
 {
-    SPEC *sp = ob->spec;
+    FLI_TEXTBOX_SPEC *sp = ob->spec;
 
     sp->callback = cb;
     sp->callback_data = a;
@@ -2037,9 +2020,9 @@ fl_set_textbox_dblclick_callback( FL_OBJECT *    ob,
  ***************************************/
 
 int
-fl_get_textbox_longestline( FL_OBJECT * ob )
+fli_get_textbox_longestline( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->maxpixels + 8;
+    return ( ( FLI_TEXTBOX_SPEC * ) ob->spec )->maxpixels + 8;
 }
 
 
@@ -2048,11 +2031,11 @@ fl_get_textbox_longestline( FL_OBJECT * ob )
  ***************************************/
 
 static int
-textwidth( SPEC *       sp,
-		   int          style,
-		   int          size,
-		   const char * str,
-		   int          len )
+textwidth( FLI_TEXTBOX_SPEC * sp,
+		   int                style,
+		   int                size,
+		   const char       * str,
+		   int                len )
 {
     int lcol;
 

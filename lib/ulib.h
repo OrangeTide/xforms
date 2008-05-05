@@ -30,7 +30,6 @@
 #define TC_ULIB_H
 
 #include <stdio.h>		/* for FILE */
-#include <time.h>		/* time_t */
 
 
 #ifndef FL_EXPORT
@@ -46,71 +45,39 @@
 #endif     /* !def FL_EXPORT */
 
 
-/*  Some utility stuff */
-
-#ifndef FL_VN_PAIR_STRUCT
-#  define FL_VN_PAIR_STRUCT
-typedef struct
-{
-	int val;
-	const char *name;
-} FL_VN_PAIR;
-#endif
-
-
 /***************** Portable IO operations *******************{**/
 
-extern int fl_readint( FILE * );
-extern int fl_readpint( FILE * );
-extern int fl_readhexint( FILE * );
-extern int fl_fget4MSBF( FILE * );
-extern int fl_fput4MSBF( int,
+extern int fli_readint( FILE * );
+extern int fli_readpint( FILE * );
+extern int fli_readhexint( FILE * );
+extern int fli_fget4MSBF( FILE * );
+extern int fli_fput4MSBF( int,
 						 FILE * );
-extern int fl_fget2LSBF( FILE * );
-extern int fl_fput2LSBF( int,
+extern int fli_fget2LSBF( FILE * );
+extern int fli_fput2LSBF( int,
 						 FILE * );
-extern int fl_fget2MSBF( FILE * );
-extern int fl_fput2MSBF( int,
+extern int fli_fget2MSBF( FILE * );
+extern int fli_fput2MSBF( int,
 						 FILE * );
-extern int fl_fget4LSBF( FILE *);
-extern int fl_fput4LSBF( int,
+extern int fli_fget4LSBF( FILE *);
+extern int fli_fput4LSBF( int,
 						 FILE * );
-
-#define put2LSBF( c, f ) \
-	( putc( ( c ) & 0xff, f ), putc( ( ( c ) >> 8 ) & 0xff, f ) )	
-
-#define put2MSBF( c, f ) \
-	( putc( ( ( c ) >> 8 ) & 0xff, f ), putc( ( c ) & 0xff, f ) )
-
-#define put4LSBF( c, f ) \
-	( put2LSBF( c, f ), put2LSBF( ( c ) >> 16, f ) )
-
-#define put4MSBF( c, f ) \
-	( put2MSBF( ( c ) >> 16, f ), put2MSBF( c, f ) )
 
 
 /********** End of  Portable IO *******************}**/
 
-
-FL_EXPORT int fl_get_vn_value( FL_VN_PAIR *,
-							   const char * );
-FL_EXPORT const char * fl_get_vn_name( FL_VN_PAIR *,
-									   int );
-
-
-extern char * fl_de_space( char * );
-extern char * fl_space_de( char * );
-extern char * fl_de_space_de( char * );
-extern char * fl_nuke_all_spaces( char * );
-extern char * fl_nuke_all_non_alnum( char * );
+extern char * fli_de_space( char * );
+extern char * fli_space_de( char * );
+extern char * fli_de_space_de( char * );
+extern char * fli_nuke_all_spaces( char * );
+extern char * fli_nuke_all_non_alnum( char * );
 
 
 /********* Variable number arguments strcat ******************/
 
-extern char *vstrcat( const char *,
+extern char *fli_vstrcat( const char *,
 					  ... );
-extern void free_vstrcat( void * );
-
+extern void fli_free_vstrcat( void * );
 
 
 /*********************************************************************
@@ -135,10 +102,10 @@ extern void free_vstrcat( void * );
 # define ML_DEBUG   3
 # define ML_TRACE   4
 
-extern FL_ERROR_FUNC whereError( int,
-								 int,
-								 const char *,
-								 int );
+extern FL_ERROR_FUNC fli_whereError( int,
+									 int,
+									 const char *,
+									 int );
 extern FL_ERROR_FUNC efp_;
 extern FL_ERROR_FUNC user_error_function_;
 
@@ -147,19 +114,12 @@ extern FL_ERROR_FUNC user_error_function_;
  * define the actual names that will be used
  */
 
-# define M_err    ( efp_ = whereError( 0, ML_ERR,   __FILE__, __LINE__ ) ), efp_
-# define M_warn   ( efp_ = whereError( 0, ML_WARN,  __FILE__, __LINE__ ) ), efp_
-# define M_info   ( efp_ = whereError( 0, ML_INFO1, __FILE__, __LINE__ ) ), efp_
-# define M_info2  ( efp_ = whereError( 0, ML_INFO2, __FILE__, __LINE__ ) ), efp_
-# define M_debug  ( efp_ = whereError( 0, ML_DEBUG, __FILE__, __LINE__ ) ), efp_
-# define M_trace  ( efp_ = whereError( 0, ML_TRACE, __FILE__, __LINE__ ) ), efp_
-
-# define M_msg( a, b, c ) ( efp_ = whereError( 0, a, b, c ) ), efp_
-
-/* graphics    */
-
-#define Bark      ( efp_= whereError( 1, ML_ERR, __FILE__, __LINE__ ) ), efp_
-#define GM_msg( a, b, c ) ( efp_ =  whereError( 1, a, b, c ) ), efp_
+# define M_err    ( efp_ = fli_whereError( 0, ML_ERR,   __FILE__, __LINE__ ) ), efp_
+# define M_warn   ( efp_ = fli_whereError( 0, ML_WARN,  __FILE__, __LINE__ ) ), efp_
+# define M_info   ( efp_ = fli_whereError( 0, ML_INFO1, __FILE__, __LINE__ ) ), efp_
+# define M_info2  ( efp_ = fli_whereError( 0, ML_INFO2, __FILE__, __LINE__ ) ), efp_
+# define M_debug  ( efp_ = fli_whereError( 0, ML_DEBUG, __FILE__, __LINE__ ) ), efp_
+# define M_trace  ( efp_ = fli_whereError( 0, ML_TRACE, __FILE__, __LINE__ ) ), efp_
 
 
 /*
@@ -174,13 +134,12 @@ typedef void ( * Gmsgout_ )( const char *,
 
 /****** Misc. control routines **********/
 
-extern void set_err_msg_func( Gmsgout_ );
+extern void fli_set_err_msg_func( Gmsgout_ );
 
-extern void set_msg_threshold( int );
-extern const char *fl_get_syserror_msg( void );
+extern void fli_set_msg_threshold( int );
 
+extern const char *fli_get_syserror_msg( void );
 
-#define to_be_written( a )   Bark( a, "To be written" );
 
 #endif /* ERROR_H */
 

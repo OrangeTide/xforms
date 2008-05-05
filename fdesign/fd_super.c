@@ -85,7 +85,7 @@ spec_to_superspec( FL_OBJECT * ob )
 
     if ( ob->objclass == FL_BROWSER )
     {
-		FL_BROWSER_SPEC *sp = ob->spec;
+		FLI_BROWSER_SPEC *sp = ob->spec;
 		int n;
 
 		spp->h_pref = sp->h_pref;
@@ -102,7 +102,7 @@ spec_to_superspec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_CHOICE )
     {
-		FL_CHOICE_SPEC *sp = ob->spec;
+		FLI_CHOICE_SPEC *sp = ob->spec;
 
 		spp->nlines = sp->numitems;
 		spp->align = sp->align;
@@ -126,7 +126,7 @@ spec_to_superspec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_MENU )
     {
-		FL_MENU_SPEC *sp = ob->spec;
+		FLI_MENU_SPEC *sp = ob->spec;
 
 		spp->nlines = sp->numitems;
 
@@ -150,7 +150,7 @@ spec_to_superspec( FL_OBJECT * ob )
 			  || ob->objclass == FL_VALSLIDER
 			  || ob->objclass == FL_THUMBWHEEL )
     {
-		FL_SLIDER_SPEC *sp = ob->spec;
+		FLI_SLIDER_SPEC *sp = ob->spec;
 
 		spp->val = sp->val;
 		spp->min = sp->min;
@@ -209,7 +209,7 @@ spec_to_superspec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_POSITIONER )
     {
-		FL_POSITIONER_SPEC *sp = ob->spec;
+		FLI_POSITIONER_SPEC *sp = ob->spec;
 
 		spp->xstep = sp->xstep;
 		spp->ystep = sp->ystep;
@@ -223,7 +223,7 @@ spec_to_superspec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_COUNTER )
     {
-		FL_COUNTER_SPEC *sp = ob->spec;
+		FLI_COUNTER_SPEC *sp = ob->spec;
 
 		spp->val   = sp->val;
 		spp->lstep = sp->lstep;
@@ -235,7 +235,7 @@ spec_to_superspec( FL_OBJECT * ob )
     }
     else if (ob->objclass == FL_DIAL)
     {
-		FL_DIAL_SPEC *sp = ob->spec;
+		FLI_DIAL_SPEC *sp = ob->spec;
 
 		spp->min        = sp->min;
 		spp->max        = sp->max;
@@ -248,7 +248,7 @@ spec_to_superspec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_XYPLOT )
     {
-		FL_XYPLOT_SPEC *sp = ob->spec;
+		FLI_XYPLOT_SPEC *sp = ob->spec;
 
 		spp->xmajor = sp->xmajor;
 		spp->xminor = sp->xminor;
@@ -265,8 +265,8 @@ spec_to_superspec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_SCROLLBAR )
     {
-		FL_SCROLLBAR_SPEC *scbsp = ob->spec;
-		FL_SLIDER_SPEC *sp = scbsp->slider->spec;
+		FLI_SCROLLBAR_SPEC *scbsp = ob->spec;
+		FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
 		spp->val    = sp->val;
 		spp->min    = sp->min;
@@ -298,7 +298,7 @@ superspec_to_spec( FL_OBJECT * ob )
 
     if ( ob->objclass == FL_BROWSER )
     {
-		FL_BROWSER_SPEC *sp = ob->spec;
+		FLI_BROWSER_SPEC *sp = ob->spec;
 
 		sp->h_pref = spp->h_pref;
 		sp->v_pref = spp->v_pref;
@@ -311,7 +311,7 @@ superspec_to_spec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_CHOICE )
     {
-		FL_CHOICE_SPEC *sp = ob->spec;
+		FLI_CHOICE_SPEC *sp = ob->spec;
 
 		sp->numitems = spp->nlines;
 		sp->align    = spp->align;
@@ -333,7 +333,7 @@ superspec_to_spec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_MENU )
     {
-		FL_MENU_SPEC *sp = ob->spec;
+		FLI_MENU_SPEC *sp = ob->spec;
 
 		sp->numitems = spp->nlines;
 
@@ -353,7 +353,7 @@ superspec_to_spec( FL_OBJECT * ob )
 			  || ob->objclass == FL_VALSLIDER
 			  || ob->objclass == FL_THUMBWHEEL)
     {
-		FL_SLIDER_SPEC *sp = ob->spec;
+		FLI_SLIDER_SPEC *sp = ob->spec;
 
 		sp->val    = spp->val;
 		sp->min    = spp->min;
@@ -427,7 +427,7 @@ superspec_to_spec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_POSITIONER )
     {
-		FL_POSITIONER_SPEC *sp = ob->spec;
+		FLI_POSITIONER_SPEC *sp = ob->spec;
 
 		sp->xstep = spp->xstep;
 		sp->ystep = spp->ystep;
@@ -441,7 +441,7 @@ superspec_to_spec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_COUNTER )
     {
-		FL_COUNTER_SPEC *sp = ob->spec;
+		FLI_COUNTER_SPEC *sp = ob->spec;
 
 		sp->val   = spp->val;
 		sp->sstep = spp->sstep;
@@ -453,7 +453,7 @@ superspec_to_spec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_DIAL )
     {
-		FL_DIAL_SPEC *sp = ob->spec;
+		FLI_DIAL_SPEC *sp = ob->spec;
 
 		sp->min = spp->min;
 		sp->max = spp->max;
@@ -466,7 +466,7 @@ superspec_to_spec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_XYPLOT )
     {
-		FL_XYPLOT_SPEC *sp = ob->spec;
+		FLI_XYPLOT_SPEC *sp = ob->spec;
 
 		sp->xmajor = spp->xmajor;
 		sp->xminor = spp->xminor;
@@ -483,8 +483,8 @@ superspec_to_spec( FL_OBJECT * ob )
     }
     else if ( ob->objclass == FL_SCROLLBAR )
     {
-		FL_SCROLLBAR_SPEC *scbsp = ob->spec;
-		FL_SLIDER_SPEC *sp = scbsp->slider->spec;
+		FLI_SCROLLBAR_SPEC *scbsp = ob->spec;
+		FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
 		sp->val = spp->val;
 		sp->min = spp->min;

@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.12 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.13 2008/05/05 14:21:52 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -57,7 +57,7 @@ char *fl_id_menu = "$Id: menu.c,v 1.12 2008/05/04 21:08:00 jtt Exp $";
 #include <string.h>
 #include <stdlib.h>
 
-#define SPEC          FL_MENU_SPEC
+
 #define ISPUP( sp )   ( ( sp )->extern_menu >= 0 )
 
 
@@ -70,8 +70,8 @@ extern Window fl_popup_parent_window;
  ***************************************/
 
 static int
-val_to_index( SPEC * sp,
-			  int    val )
+val_to_index( FLI_MENU_SPEC * sp,
+			  int             val )
 {
     int i;
 
@@ -93,7 +93,7 @@ do_menu( FL_OBJECT * ob )
     int popup_id,
 		i,
 		val;
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
     if ( sp->numitems == 0 && sp->extern_menu < 0 )
 		return 0;
@@ -203,7 +203,7 @@ handle_menu( FL_OBJECT * ob,
 			 int         key  FL_UNUSED_ARG,
 			 void *      ev   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
     int val,
 		boxtype = ob->boxtype;
     FL_COLOR col;
@@ -357,7 +357,7 @@ fl_create_menu( int          type,
 				const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_MENU_SPEC *sp;
 
     ob = fl_make_object( FL_MENU, type, x, y, w, h, label, handle_menu );
 
@@ -408,7 +408,7 @@ void
 fl_clear_menu( FL_OBJECT * ob )
 {
     int i;
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
     sp->val = 0;
     sp->cur_val = 0;
@@ -441,7 +441,7 @@ static void
 addto_menu( FL_OBJECT  * ob,
 			const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
     int n;
 
     if ( sp->numitems >= FL_MENU_MAXITEMS )
@@ -480,14 +480,14 @@ int
 fl_addto_menu( FL_OBJECT  * ob,
 			   const char * menustr )
 {
-    SPEC *sp= ob->spec;
+    FLI_MENU_SPEC *sp= ob->spec;
     char *t,
 		 *c;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "fl_addto_menu", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "fl_addto_menu", "%s is not Menu class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -517,7 +517,7 @@ fl_replace_menu_item( FL_OBJECT *  ob,
 					  int          numb,
 					  const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
     if ( ISPUP( sp ) )
 		fli_replacepup_text( sp->extern_menu, numb, str );
@@ -541,7 +541,7 @@ fl_replace_menu_item( FL_OBJECT *  ob,
 static void
 gen_index( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
     int i;
 
     sp->cur_val = 0;
@@ -562,7 +562,7 @@ fl_delete_menu_item( FL_OBJECT * ob,
 					 int         numb )
 {
     int i;
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
     if ( numb < 1 || numb > sp->numitems )
 		return;
@@ -597,7 +597,7 @@ fl_set_menu_item_shortcut( FL_OBJECT *  ob,
 						   int          numb,
 						   const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
 	if ( sp->shortcut[ numb ] )
 		fl_free( sp->shortcut[ numb ] );
@@ -614,7 +614,7 @@ fl_set_menu_item_mode( FL_OBJECT *  ob,
 					   int          numb,
 					   unsigned int mode )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
     if ( ISPUP( sp ) )
 		fl_setpup_mode( sp->extern_menu, numb, mode );
@@ -640,7 +640,7 @@ void
 fl_show_menu_symbol( FL_OBJECT * ob,
 					 int         show )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
     sp->showsymbol = show;
     fl_redraw_object( ob );
@@ -657,12 +657,12 @@ fl_get_menu( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "GetMenu", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "GetMenu", "%s is not Menu class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
 
-    return ( ( SPEC * ) ob->spec )->val;
+    return ( ( FLI_MENU_SPEC * ) ob->spec )->val;
 }
 
 
@@ -672,12 +672,12 @@ fl_get_menu( FL_OBJECT * ob )
 int
 fl_get_menu_maxitems( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "GetMenuMaxitems", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "GetMenuMaxitems", "%s is not Menu class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -693,13 +693,13 @@ fl_get_menu_maxitems( FL_OBJECT * ob )
 const char *
 fl_get_menu_text( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
     const char *s;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "GetMenuText", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "GetMenuText", "%s is not Menu class", ob ? ob->label : "" );
 		return NULL;
     }
 #endif
@@ -720,13 +720,13 @@ const char *
 fl_get_menu_item_text( FL_OBJECT * ob,
 					   int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
     const char *s;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "GetMenuItemText", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "GetMenuItemText", "%s is not Menu class", ob ? ob->label : "" );
 		return NULL;
     }
 #endif
@@ -746,12 +746,12 @@ unsigned int
 fl_get_menu_item_mode( FL_OBJECT * ob,
 					   int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "GetMenuItemMode", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "GetMenuItemMode", "%s is not Menu class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -773,12 +773,12 @@ fl_set_menu_popup( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		Bark( "setmenuPup", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "setmenuPup", "%s is not Menu class", ob ? ob->label : "" );
 		return;
     }
 #endif
 
-    ( ( SPEC * ) ob->spec )->extern_menu = pup;
+    ( ( FLI_MENU_SPEC * ) ob->spec )->extern_menu = pup;
     if ( ob->type == FL_PULLDOWN_MENU )
 		fl_setpup_shadow( pup, 0 );
 }
@@ -814,7 +814,7 @@ fl_set_menu_entries( FL_OBJECT *    ob,
 int
 fl_get_menu_popup( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
 
     return ISPUP( sp ) ? sp->extern_menu : -1;
 }
@@ -827,7 +827,7 @@ int
 fl_set_menu_notitle( FL_OBJECT * ob,
 					 int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_MENU_SPEC *sp = ob->spec;
     int old = sp->no_title;
 
     sp->no_title = n;

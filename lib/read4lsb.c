@@ -33,10 +33,10 @@
  ***************************************/
 
 int
-fl_fget4LSBF( FILE * fp )
+fli_fget4LSBF( FILE * fp )
 {
-    int ret;
-    ret = getc(fp);
+    int ret  = getc(fp);
+
     ret |= getc(fp) << 8;
     ret |= getc(fp) << 16;
     ret |= getc(fp) << 24;
@@ -48,7 +48,7 @@ fl_fget4LSBF( FILE * fp )
  ***************************************/
 
 int
-fl_fput4LSBF( int    code,
+fli_fput4LSBF( int    code,
 			  FILE * fp )
 {
     putc(code & 0xff, fp);

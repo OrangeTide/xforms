@@ -48,8 +48,8 @@
 	if (    ! IsValidClass( ( ob ), FL_PIXMAP )				        \
 		 && ! IsValidClass( ( ob ), FL_PIXMAPBUTTON ) )		        \
 	{														        \
-		Bark( f, "%s is not Pixmap/pixmapbutton class",	            \
-			  ( ( ob ) && ( ob )->label ) ? ( ob )->label : "" );	\
+		M_err( f, "%s is not Pixmap/pixmapbutton class",	            \
+			   ( ( ob ) && ( ob )->label ) ? ( ob )->label : "" );		\
 		return;												        \
 	}
 #else
@@ -501,8 +501,8 @@ fl_get_pixmap_pixmap( FL_OBJECT * ob,
 	if (	! IsValidClass( ob, FL_PIXMAP )
 		 && ! IsValidClass( ob, FL_PIXMAPBUTTON ) )
 	{
-		Bark( "fl_get_pixmap_pixmap", "%s is not Pixmap/pixmapbutton class",
-			  ( ob && ob->label ) ? ob->label : "" );
+		M_err( "fl_get_pixmap_pixmap", "%s is not Pixmap/pixmapbutton class",
+			   ( ob && ob->label ) ? ob->label : "" );
 		return None;
 	}
 

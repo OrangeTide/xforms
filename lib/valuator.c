@@ -47,7 +47,7 @@
 void *
 fli_init_valuator( FL_OBJECT * ob )
 {
-    FL_VALUATOR_SPEC *sp = ob->spec;
+    FLI_VALUATOR_SPEC *sp = ob->spec;
 
     if ( ! sp )
 	{
@@ -76,7 +76,7 @@ double
 fli_valuator_round_and_clamp( FL_OBJECT * ob,
 							  double      val )
 {
-    FL_VALUATOR_SPEC *sp = ob->spec;
+    FLI_VALUATOR_SPEC *sp = ob->spec;
     double vmin,
 		   vmax;
 
@@ -103,7 +103,7 @@ int
 fli_valuator_handle_drag( FL_OBJECT * ob,
 						  double      value )
 {
-    FL_VALUATOR_SPEC *sp = ob->spec;
+    FLI_VALUATOR_SPEC *sp = ob->spec;
 
     value = fli_valuator_round_and_clamp(ob, value);
 
@@ -111,7 +111,7 @@ fli_valuator_handle_drag( FL_OBJECT * ob,
     {
 		sp->val = value;
 		sp->draw_type = VALUE_DRAW;
-		fl_redraw_object(ob);
+		fl_redraw_object( ob );
 		return    sp->how_return == FL_RETURN_CHANGED
 			   || sp->how_return == FL_RETURN_ALWAYS;
     }
@@ -127,7 +127,7 @@ int
 fli_valuator_handle_release( FL_OBJECT * ob,
 							 double      value )
 {
-    FL_VALUATOR_SPEC *sp = ob->spec;
+    FLI_VALUATOR_SPEC *sp = ob->spec;
 
     value = fli_valuator_round_and_clamp(ob, value);
 
@@ -155,7 +155,7 @@ int
 fli_set_valuator_return( FL_OBJECT * ob,
 						 int         n )
 {
-    FL_VALUATOR_SPEC *sp = ob->spec;
+    FLI_VALUATOR_SPEC *sp = ob->spec;
     int old = sp->how_return;
 
     sp->how_return = n;

@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.13 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.14 2008/05/05 14:21:51 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -52,14 +52,13 @@ char *fl_id_dial = "$Id: dial.c,v 1.13 2008/05/04 21:07:59 jtt Exp $";
 #include <stdlib.h>
 
 
-#define SPEC FL_DIAL_SPEC
-
 #ifndef M_PI
 #define M_PI 3.14159265359
 #endif
 
 
-static double xo, yo;
+static double xo,
+              yo;
 
 
 /***************************************
@@ -92,7 +91,7 @@ draw_dial( FL_OBJECT * ob )
 		     h,
 		     radius;
     double dangle;
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
     FL_POINT xp[ 5 ];             /* need one extra for closing of polygon! */
     int boxtype,
 		iradius;
@@ -216,7 +215,7 @@ handle_mouse( FL_OBJECT * ob,
 			  FL_Coord    mousex,
 			  FL_Coord    mousey )
 {
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
     double oldv,
 		   val,
 		   olda;
@@ -291,7 +290,7 @@ handle_mouse_wheel( FL_OBJECT * ob,
 					XEvent *    xev,
 					int         key )
 {
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
     double val,
 		   step,
 		   oldv = sp->val,
@@ -352,7 +351,7 @@ handle_dial( FL_OBJECT * ob,
 			 int         key  FL_UNUSED_ARG,
 			 void *      ev )
 {
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info( "HandleDial", fli_event_name( event ) );
@@ -418,7 +417,7 @@ handle_dial( FL_OBJECT * ob,
  ***************************************/
 
 static void
-get_mapping( SPEC *sp )
+get_mapping( FLI_DIAL_SPEC *sp )
 {
     sp->a = ( sp->max - sp->min ) / ( sp->thetaf - sp->thetai );
     sp->b = sp->max - sp->a * sp->thetaf;
@@ -438,7 +437,7 @@ fl_create_dial( int          type,
 				const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_DIAL_SPEC *sp;
 
     ob = fl_make_object( FL_DIAL, type, x, y, w, h, label, handle_dial );
     ob->col1 = FL_DIAL_COL1;
@@ -492,7 +491,7 @@ void
 fl_set_dial_value( FL_OBJECT * ob,
 				   double      val )
 {
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
 
     if ( sp->val != val )
     {
@@ -510,7 +509,7 @@ fl_set_dial_bounds( FL_OBJECT * ob,
 					double      min,
 					double      max )
 {
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
 
     if ( sp->min != min || sp->max != max )
     {
@@ -531,7 +530,7 @@ fl_set_dial_angles( FL_OBJECT * ob,
 					double      amin,
 					double      amax )
 {
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
 
     while ( amin < 0.0 )
 		amin += 360.0;
@@ -560,7 +559,7 @@ void
 fl_set_dial_cross( FL_OBJECT * ob,
 				   int         flag )
 {
-    ( ( SPEC * ) ob->spec )->cross_over = flag;
+    ( ( FLI_DIAL_SPEC * ) ob->spec )->cross_over = flag;
 }
 
 
@@ -570,7 +569,7 @@ fl_set_dial_cross( FL_OBJECT * ob,
 double
 fl_get_dial_value( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->val;
+    return ( ( FLI_DIAL_SPEC * ) ob->spec )->val;
 }
 
 
@@ -582,8 +581,8 @@ fl_get_dial_bounds( FL_OBJECT * ob,
 					double *    min,
 					double *    max )
 {
-    *min = ( ( SPEC * ) ob->spec )->min;
-    *max = ( ( SPEC * ) ob->spec )->max;
+    *min = ( ( FLI_DIAL_SPEC * ) ob->spec )->min;
+    *max = ( ( FLI_DIAL_SPEC * ) ob->spec )->max;
 }
 
 
@@ -595,7 +594,7 @@ void
 fl_set_dial_return( FL_OBJECT * ob,
 				    int         value )
 {
-    ( ( SPEC * ) ob->spec )->how_return = value;
+    ( ( FLI_DIAL_SPEC * ) ob->spec )->how_return = value;
 }
 
 
@@ -607,7 +606,7 @@ void
 fl_set_dial_step( FL_OBJECT * ob,
 				  double      value )
 {
-    ( ( SPEC * ) ob->spec )->step = value;
+    ( ( FLI_DIAL_SPEC * ) ob->spec )->step = value;
 }
 
 
@@ -618,7 +617,7 @@ void
 fl_set_dial_direction( FL_OBJECT * ob,
 					   int         dir )
 {
-    SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = ob->spec;
 
     if ( sp->direction != dir )
     {

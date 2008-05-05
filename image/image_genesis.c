@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_genesis.c,v 1.5 2008/01/28 23:42:20 jtt Exp $
+ * $Id: image_genesis.c,v 1.6 2008/05/05 14:21:49 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -75,14 +75,14 @@ GENESIS_description(FL_IMAGE * im)
     im->spec_size = sizeof(*sp);
 
     rewind(fp);
-    sp->magic = fl_fget4MSBF(fp);
-    sp->hdr_len = fl_fget4MSBF(fp);
-    sp->width = fl_fget4MSBF(fp);
-    sp->height = fl_fget4MSBF(fp);
-    sp->depth = fl_fget4MSBF(fp);
-    sp->compress = fl_fget4MSBF(fp);
-    sp->windoww = fl_fget4MSBF(fp);
-    sp->windowl = fl_fget4MSBF(fp);
+    sp->magic = fli_fget4MSBF(fp);
+    sp->hdr_len = fli_fget4MSBF(fp);
+    sp->width = fli_fget4MSBF(fp);
+    sp->height = fli_fget4MSBF(fp);
+    sp->depth = fli_fget4MSBF(fp);
+    sp->compress = fli_fget4MSBF(fp);
+    sp->windoww = fli_fget4MSBF(fp);
+    sp->windowl = fli_fget4MSBF(fp);
 
     if (sp->depth < 8 || sp->compress != 1)
 	return -1;

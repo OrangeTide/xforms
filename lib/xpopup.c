@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.22 2008/05/04 21:08:01 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.23 2008/05/05 14:21:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -178,9 +178,9 @@ static int pup_subreturn;
 static int pup_using_keys = 0;
 static int pup_internal_showpup_call = 0;
 
-extern FL_Coord fl_mousex,	                    /* defined in forms.c */
-                fl_mousey;
-extern unsigned int fl_keymask;
+extern FL_Coord fli_mousex,	                    /* defined in forms.c */
+                fli_mousey;
+extern unsigned int fli_keymask;
 extern unsigned int fli_query_age;
 
 
@@ -1272,9 +1272,9 @@ pup_interact( PopUP * m )
 			case ButtonPress:
 				/* taking adv. of xbutton.x == xcrossing.x */
 
-				fl_mousex  = ev.xmotion.x;
-				fl_mousey  = ev.xmotion.y;
-				fl_keymask = ev.xmotion.state;
+				fli_mousex  = ev.xmotion.x;
+				fli_mousey  = ev.xmotion.y;
+				fli_keymask = ev.xmotion.state;
 				fli_query_age = 0;
 
 				pup_using_keys = 0;
@@ -1298,9 +1298,9 @@ pup_interact( PopUP * m )
 				break;
 
 			case ButtonRelease:
-				fl_mousex  = ev.xbutton.x;
-				fl_mousey  = ev.xbutton.y;
-				fl_keymask = ev.xbutton.state;
+				fli_mousex  = ev.xbutton.x;
+				fli_mousey  = ev.xbutton.y;
+				fli_keymask = ev.xbutton.state;
 				fli_query_age = 0;
 
 				item = handle_motion( m, ev.xbutton.x, ev.xbutton.y, &val );
@@ -1311,9 +1311,9 @@ pup_interact( PopUP * m )
 				break;
 
 			case KeyPress:
-				fl_mousex  = ev.xkey.x;
-				fl_mousey  = ev.xkey.y;
-				fl_keymask = ev.xkey.state;
+				fli_mousex  = ev.xkey.x;
+				fli_mousey  = ev.xkey.y;
+				fli_keymask = ev.xkey.state;
 				fli_query_age = 0;
 
 				pup_using_keys = 1;

@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.18 2008/05/04 21:07:58 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.19 2008/05/05 14:21:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,8 +47,6 @@ char *fl_id_canvas = "$Id: canvas.c,v 1.18 2008/05/04 21:07:58 jtt Exp $";
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/pcanvas.h"
-
-#define SPEC FL_CANVAS_SPEC
 
 
 /***************************************
@@ -100,7 +98,7 @@ canvas_event_intercept( XEvent * xev,
 						void   * vob )
 {
     FL_OBJECT *ob = vob;
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
 
     fli_xevent_name( "CanvasIntercept", xev );
 
@@ -156,7 +154,7 @@ canvas_event_intercept( XEvent * xev,
 static void
 free_canvas( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
 
 	fli_unmap_canvas_window( ob );
 
@@ -169,6 +167,27 @@ free_canvas( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
+Window
+fl_get_canvas_id( FL_OBJECT * ob )
+{
+    FLI_CANVAS_SPEC *sp = ob->spec;
+
+#if FL_DEBUG >= ML_DEBUG
+    if ( ! IsValidCanvas( ob ) )
+    {
+		M_err( "fl_get_canvas_id", "%s not a canvas",
+			   ( ob && ob->label ) ? ob->label : "" );
+		return None;
+    }
+#endif
+
+    return sp->window;
+}
+
+
 /****** End of data struct. maint.*************  }********/
 
 
@@ -176,7 +195,7 @@ free_canvas( FL_OBJECT * ob )
  ***************************************/
 
 static void
-BegWMColormap( SPEC * sp )
+BegWMColormap( FLI_CANVAS_SPEC * sp )
 {
 
     /* Set WM_COLORMAP property. Seems some versions of tvtwm have problems
@@ -197,7 +216,7 @@ fl_set_canvas_attributes( FL_OBJECT            * ob,
 						  unsigned int           mask,
 						  XSetWindowAttributes * xswa )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
 
     /* Must not allow adding/removing events. We take care of soliciting
        events via canvas handler registrations */
@@ -230,7 +249,7 @@ void
 fl_set_canvas_colormap( FL_OBJECT * ob,
 						Colormap    colormap )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
 
     sp->colormap = sp->xswa.colormap = colormap;
     sp->mask |= CWColormap;
@@ -252,7 +271,7 @@ void
 fl_share_canvas_colormap( FL_OBJECT * ob,
 						  Colormap    colormap )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
 
     sp->keep_colormap = 1;
     fl_set_canvas_colormap( ob, colormap );
@@ -265,7 +284,7 @@ fl_share_canvas_colormap( FL_OBJECT * ob,
 Colormap
 fl_get_canvas_colormap( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ( ob->spec ) )->colormap;
+    return ( ( FLI_CANVAS_SPEC * ) ( ob->spec ) )->colormap;
 }
 
 
@@ -276,7 +295,7 @@ void
 fl_set_canvas_visual( FL_OBJECT * obj,
 					  Visual *    vi )
 {
-    ( ( SPEC * ) ( obj->spec ) )->visual = vi;
+    ( ( FLI_CANVAS_SPEC * ) ( obj->spec ) )->visual = vi;
 }
 
 
@@ -287,7 +306,7 @@ void
 fl_set_canvas_depth( FL_OBJECT * obj,
 					 int         depth )
 {
-    ( ( SPEC * ) ( obj->spec ) )->depth = depth;
+    ( ( FLI_CANVAS_SPEC * ) ( obj->spec ) )->depth = depth;
 }
 
 
@@ -297,7 +316,7 @@ fl_set_canvas_depth( FL_OBJECT * obj,
 int
 fl_get_canvas_depth( FL_OBJECT * obj )
 {
-    return ( ( SPEC * ) ( obj->spec ) )->depth;
+    return ( ( FLI_CANVAS_SPEC * ) ( obj->spec ) )->depth;
 }
 
 
@@ -309,8 +328,8 @@ fl_get_canvas_depth( FL_OBJECT * obj )
  ***************************************/
 
 static void
-init_canvas( FL_OBJECT * ob,
-			 SPEC      * sp )
+init_canvas( FL_OBJECT       * ob,
+			 FLI_CANVAS_SPEC * sp )
 {
     static int nc;		/* number of canvases */
     char name[ 32 ];
@@ -359,7 +378,7 @@ init_canvas( FL_OBJECT * ob,
 
 		if ( sp->activate && sp->activate( ob ) < 0 )
 		{
-			Bark( "InitCanvas", "Can't initialize canvas %s", ob->label );
+			M_err( "InitCanvas", "Can't initialize canvas %s", ob->label );
 			return;
 		}
 
@@ -419,13 +438,13 @@ fl_add_canvas_handler( FL_OBJECT        * ob,
 					   void             * udata )
 {
     FL_HANDLE_CANVAS oldh = NULL;
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
     unsigned long emask = fli_xevent_to_mask( ev );
 
     if ( ! IsValidCanvas( ob ) )
     {
-		Bark( "fl_add_canvas_handler", "%s not canvas class",
-			  ob ? ob->label : "" );
+		M_err( "fl_add_canvas_handler", "%s not canvas class",
+			   ob ? ob->label : "" );
 		return NULL;
     }
 
@@ -460,7 +479,7 @@ fl_remove_canvas_handler( FL_OBJECT        * ob,
 						  int                ev,
 						  FL_HANDLE_CANVAS   h  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
     unsigned long emask = fli_xevent_to_mask( ev );
 
     if ( ev < 0 || ev >= LASTEvent )
@@ -511,7 +530,7 @@ handle_it( FL_OBJECT * ob,
 		   int         key  FL_UNUSED_ARG,
 		   void      * xev  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
 
     M_warn( "Canvas", fli_event_name( event ) );
 
@@ -544,6 +563,30 @@ handle_it( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
+void
+fl_hide_canvas( FL_OBJECT * ob )
+{
+    FLI_CANVAS_SPEC *sp = ob->spec;
+
+    if ( sp->window && sp->cleanup )
+		sp->cleanup( ob );
+
+    /* if parent is unmapped, sp->window is also unmapped */
+
+    if ( ob->visible && sp->window && ob->form && ob->form->window )
+    {
+		/* must cleanup canvas specific stuff before closing window */
+
+		fl_winclose( sp->window );
+    }
+
+    sp->window = None;
+}
+
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
 fl_create_generic_canvas( int          canvas_class,
 						  int          type,
@@ -554,7 +597,7 @@ fl_create_generic_canvas( int          canvas_class,
 						  const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_CANVAS_SPEC *sp;
     int vmode = fl_vmode;
 	int i;
 
@@ -639,7 +682,7 @@ fl_modify_canvas_prop( FL_OBJECT             * obj,
 					   FL_MODIFY_CANVAS_PROP   activate,
 					   FL_MODIFY_CANVAS_PROP   cleanup )
 {
-    SPEC *sp = obj->spec;
+    FLI_CANVAS_SPEC *sp = obj->spec;
 
     sp->init = init;
     sp->activate = activate;
@@ -654,7 +697,7 @@ void
 fl_canvas_yield_to_shortcut( FL_OBJECT * ob,
 							 int         yes )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
     unsigned int emask = KeyPressMask;
 
     if ( ( sp->yield_to_shortcut = yes ) )
@@ -705,7 +748,7 @@ fl_clear_canvas( FL_OBJECT * ob )
 void
 fli_unmap_canvas_window( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_CANVAS_SPEC *sp = ob->spec;
 
     if ( ob->visible && sp->window && ob->form && ob->form->window )
 		fl_winclose( sp->window );

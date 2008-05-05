@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.15 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.16 2008/05/05 14:21:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -832,7 +832,7 @@ fl_get_pixel( FL_COLOR col )
     {
 		if ( col >= FL_MAX_COLS )
 		{
-			Bark( "FLGetPixel", "Bad request %lu", col );
+			M_err( "FLGetPixel", "Bad request %lu", col );
 			return 0;
 		}
 
@@ -1119,7 +1119,7 @@ fl_mapcolor( FL_COLOR col,
     if ( ! cur_mapvals[ fl_vmode ] )
     {
 		totalcols = FL_min( FL_MAX_COLS, 1L << fli_depth( fl_vmode ) );
-		M_err( "MapColor", "ColormapFull. Using substitutions" );
+		M_warn( "MapColor", "ColormapFull. Using substitutions" );
 		cur_map = fl_calloc( totalcols + 1, sizeof *cur_map );
 		cur_mapvals[ fl_vmode ] = cur_map;
 
@@ -1387,15 +1387,16 @@ fl_mode_capable( int mode,
 
     if ( mode < 0 || mode > 5 )
     {
-		Bark( "GraphicsMode", "Bad mode=%d", mode );
+		M_err( "GraphicsMode", "Bad mode=%d", mode );
 		return 0;
     }
 
     cap = fli_depth( mode ) >= FL_MINDEPTH && fli_visual( mode );
 
     if ( ! cap && warn )
-		M_err( "CheckGMode", "Not capable of %s at depth=%d",
-			   fl_vclass_name( mode ), fli_depth( mode ) );
+		M_warn( "CheckGMode", "Not capable of %s at depth=%d",
+				fl_vclass_name( mode ), fli_depth( mode ) );
+
     return cap;
 }
 

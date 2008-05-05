@@ -50,6 +50,7 @@ typedef struct
     int    how_return;			/* whether always returning value  */
     int    partial;
     int    changed;
-} FL_POSITIONER_SPEC;
+} FLI_POSITIONER_SPEC;
+
 
 #endif

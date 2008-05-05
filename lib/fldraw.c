@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.11 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.12 2008/05/05 14:21:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -882,7 +882,10 @@ void
 fl_endline( void )
 {
     if ( npt >= MAX_BUF_POINT )
-		Bark( "DoLine", "Vertices Out of bounds" );
+	{
+		M_err( "DoLine", "Vertices Out of bounds" );
+		return;
+	}
 
     fl_lines( xpbuf, npt, flx->color );
 }
@@ -895,7 +898,10 @@ void
 fl_endclosedline( void )
 {
     if ( npt >= MAX_BUF_POINT )
-		Bark( "DoPolyLine", "Vertices Out of bounds" );
+	{
+		M_err( "DoPolyLine", "Vertices Out of bounds" );
+		return;
+	}
 
     fl_polyl( xpbuf, npt, pcol );
 }
@@ -908,7 +914,10 @@ void
 fl_endpolygon( void )
 {
     if ( npt >= MAX_BUF_POINT )
-		Bark( "DoPoly", "Vertices Out of bounds" );
+	{
+		M_err( "DoPoly", "Vertices Out of bounds" );
+		return;
+	}
 
     fl_polyf( xpbuf, npt, flx->color );
 }

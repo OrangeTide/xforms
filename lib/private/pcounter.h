@@ -35,6 +35,8 @@
 
 #include "pvaluator.h"
 
-typedef FL_VALUATOR_SPEC FL_COUNTER_SPEC;
+
+typedef FLI_VALUATOR_SPEC FLI_COUNTER_SPEC;
+
 
 #endif /* PCOUNTER_H */

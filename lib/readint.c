@@ -35,7 +35,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_rdint = "$Id: readint.c,v 1.6 2008/01/28 23:21:55 jtt Exp $";
+char *id_rdint = "$Id: readint.c,v 1.7 2008/05/05 14:21:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -50,7 +50,7 @@ char *id_rdint = "$Id: readint.c,v 1.6 2008/01/28 23:21:55 jtt Exp $";
 
 
 #define IS_FS( c )     \
-	( ( c )==' ' || ( c ) == '\t' || ( c )== '\n' || ( c ) == ',' )
+	( ( c ) == ' ' || ( c ) == '\t' || ( c ) == '\n' || ( c ) == ',' )
 #define IS_COMMENT( c )  ( ( c ) == '#' )
 
 static int yell = 0;
@@ -86,7 +86,7 @@ skip_comment( FILE * fp )
  ***************************************/
 
 int
-fl_readint( FILE * fp )
+fli_readint( FILE * fp )
 {
     int c,
 		num = 0,
@@ -126,7 +126,7 @@ fl_readint( FILE * fp )
  ***************************************/
 
 int
-fl_readpint( FILE * fp )
+fli_readpint( FILE * fp )
 {
     int c,
 		num = 0;
@@ -159,7 +159,7 @@ fl_readpint( FILE * fp )
  ***************************************/
 
 int
-fl_readhexint( FILE * fp )
+fli_readhexint( FILE * fp )
 {
     int num = 0, i, c;
     static short hextab[ 256 ];

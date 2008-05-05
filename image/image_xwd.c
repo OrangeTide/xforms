@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xwd.c,v 1.6 2008/05/04 21:07:58 jtt Exp $
+ * $Id: image_xwd.c,v 1.7 2008/05/05 14:21:50 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -276,13 +276,13 @@ XWD_read_pixels(FL_IMAGE * im)
 
     if (h->byte_order == MSBFirst)
     {
-	get32 = fl_fget4MSBF;
-	get16 = fl_fget2MSBF;
+		get32 = fli_fget4MSBF;
+		get16 = fli_fget2MSBF;
     }
     else
     {
-	get32 = fl_fget4LSBF;
-	get16 = fl_fget2LSBF;
+		get32 = fli_fget4LSBF;
+		get16 = fli_fget2LSBF;
     }
 
     /* read the colormap */
@@ -517,13 +517,13 @@ XWD_write_image(FL_IMAGE * im)
 
     if (h->byte_order == MSBFirst)
     {
-	write32 = fl_fput4MSBF;
-	write16 = fl_fput2MSBF;
+	write32 = fli_fput4MSBF;
+	write16 = fli_fput2MSBF;
     }
     else
     {
-	write32 = fl_fput4LSBF;
-	write16 = fl_fput2LSBF;
+	write32 = fli_fput4LSBF;
+	write16 = fli_fput2LSBF;
     }
 
     /* write the header */

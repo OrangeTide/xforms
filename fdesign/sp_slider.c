@@ -54,11 +54,11 @@ static void show_spec(SuperSPEC *);
 void *
 get_slider_spec_fdform( void )
 {
-    if (!sl_attrib)
+    if ( ! sl_attrib )
     {
-		sl_attrib = create_form_sliderattrib();
-		fl_clear_choice(sl_attrib->returnsetting);
-		fl_addto_choice(sl_attrib->returnsetting, get_how_return_str());
+		sl_attrib = create_form_sliderattrib( );
+		fl_clear_choice( sl_attrib->returnsetting );
+		fl_addto_choice( sl_attrib->returnsetting, get_how_return_str( ) );
     }
     return sl_attrib;
 }
@@ -71,11 +71,10 @@ void
 slider_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
 					 long        data  FL_UNUSED_ARG )
 {
-    FL_OBJECT *edit_obj;
+    FL_OBJECT *edit_obj = sl_attrib->vdata;
 
-    edit_obj = sl_attrib->vdata;
-    superspec_to_spec(edit_obj);
-    redraw_the_form(0);
+    superspec_to_spec( edit_obj );
+    redraw_the_form( 0 );
 }
 
 
@@ -85,24 +84,25 @@ slider_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
 static void
 show_spec( SuperSPEC * spec )
 {
-    set_finput_value(sl_attrib->minval, spec->min, spec->prec);
-    set_finput_value(sl_attrib->maxval, spec->max, spec->prec);
-    set_finput_value(sl_attrib->initial_val, spec->val, spec->prec);
-    set_finput_value(sl_attrib->slsize, spec->slsize, 2);
-    set_finput_value(sl_attrib->step, spec->step, 3);
-    set_finput_value(sl_attrib->ldelta, spec->ldelta, -1);
-    set_finput_value(sl_attrib->rdelta, spec->rdelta, -1);
+    set_finput_value( sl_attrib->minval, spec->min, spec->prec );
+    set_finput_value( sl_attrib->maxval, spec->max, spec->prec );
+    set_finput_value( sl_attrib->initial_val, spec->val, spec->prec );
+    set_finput_value( sl_attrib->slsize, spec->slsize, 2 );
+    set_finput_value( sl_attrib->step, spec->step, 3 );
+    set_finput_value( sl_attrib->ldelta, spec->ldelta, -1 );
+    set_finput_value( sl_attrib->rdelta, spec->rdelta, -1 );
 
-    fl_set_counter_value(sl_attrib->prec, spec->prec);
-    /* fl_call_object_callback(sl_attrib->prec); */
+    fl_set_counter_value( sl_attrib->prec, spec->prec );
 
-    fl_set_choice_text(sl_attrib->returnsetting,
-		       get_how_return_str_name(spec->how_return));
+    fl_set_choice_text( sl_attrib->returnsetting,
+						get_how_return_str_name( spec->how_return ) );
 }
 
 
-#define is_vert(t)     (t==FL_VERT_SLIDER || t==FL_VERT_NICE_SLIDER ||\
-                        t==FL_VERT_BROWSER_SLIDER||t==FL_VERT_FILL_SLIDER)
+#define is_vert(t)     (    t == FL_VERT_SLIDER          \
+                         || t == FL_VERT_NICE_SLIDER     \
+                         ||	t == FL_VERT_BROWSER_SLIDER  \
+                         || t == FL_VERT_FILL_SLIDER )
 
 
 /***************************************
@@ -112,7 +112,7 @@ int
 set_slider_attrib( FL_OBJECT * ob )
 {
     sl_attrib->vdata = ob;
-    slider_spec = get_superspec(ob);
+    slider_spec = get_superspec( ob );
 
     fl_freeze_form(sl_attrib->sliderattrib);
 
