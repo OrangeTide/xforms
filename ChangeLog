@@ -1,3 +1,8 @@
+2008-05-05 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* further clean-up of header files and renaming
+	of functions and macros usied only internally.
+
 2008-05-04 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* fdesign/fd_forms.c: Removed limit on number of
