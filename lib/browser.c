@@ -292,7 +292,7 @@ handle( FL_OBJECT * ob,
 		void      * ev   FL_UNUSED_ARG )
 {
     FLI_BROWSER_SPEC *comp = GetSpec( ob );
-	FLI_TEXTBOX_SPEC *sp = comp->tb->spec;
+	FLI_TEXTBOX_SPEC *sp = event == FL_FREEMEM ? NULL : comp->tb->spec;
 	FL_Coord np = 0;
 
     switch ( event )

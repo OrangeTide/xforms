@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.24 2008/05/05 14:21:52 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.25 2008/05/07 20:43:38 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -44,8 +44,8 @@ char *fl_id_obj = "$Id: objects.c,v 1.24 2008/05/05 14:21:52 jtt Exp $";
 #include <string.h>
 
 
-extern FL_OBJECT * fl_mouseobj,          /* defined in forms.c */
-                 * fl_pushobj;
+extern FL_OBJECT * fli_mouseobj,          /* defined in forms.c */
+                 * fli_pushobj;
 
 
 #define PointToPixel( a )     FL_crnd( ( a ) * fl_dpi / 72.0   )
@@ -53,13 +53,13 @@ extern FL_OBJECT * fl_mouseobj,          /* defined in forms.c */
 #define CMMToPixel( a )       FL_crnd( ( a ) * fl_dpi / 2540.0 )
 #define CPointToPixel( a )    FL_crnd( ( a ) * fl_dpi / 7200.0 )
 
-#define TRANY( ob, form )      ( form->h - ob->h - ob->y )
+#define TRANY( obj, form )    ( form->h - obj->h - obj->y )
 
 #define LInside( a )    \
                ( ( ( a ) == FL_ALIGN_CENTER ) || ( ( a ) & FL_ALIGN_INSIDE ) )
 
 
-static void lose_focus( FL_OBJECT * ob );
+static void lose_focus( FL_OBJECT * );
 static void fli_get_object_bbox_rect( FL_OBJECT *,
 									  XRectangle * );
 
@@ -156,27 +156,28 @@ fl_make_object( int            objclass,
 				const char   * label,
 				FL_HANDLEPTR   handle )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 #ifdef FL_WIN32
     int def = -2;
 #else
     int def = FL_BOUND_WIDTH;
 #endif
 
-    ob = fl_calloc( 1, sizeof *ob );
+    obj = fl_calloc( 1, sizeof *obj );
 
-    ob->objclass = objclass;
-    ob->type = type;
-    ob->resize = FL_RESIZE_ALL;
-    ob->nwgravity = ob->segravity = FL_NoGravity;
-    ob->boxtype = FL_NO_BOX;
-    ob->bw = ( fl_cntl.borderWidth && FL_abs( fl_cntl.borderWidth ) <= 10 ) ?
-		     fl_cntl.borderWidth : def;
+    obj->objclass = objclass;
+    obj->type      = type;
+    obj->resize    = FL_RESIZE_ALL;
+    obj->nwgravity = obj->segravity = FL_NoGravity;
+    obj->boxtype   = FL_NO_BOX;
+    obj->bw        = (    fl_cntl.borderWidth
+					   && FL_abs( fl_cntl.borderWidth ) <= 10 ) ?
+		             fl_cntl.borderWidth : def;
 
-    ob->x = x;
-    ob->y = y;
-    ob->w = w;
-    ob->h = h;
+    obj->x         = x;
+    obj->y         = y;
+    obj->w         = w;
+    obj->h         = h;
 
 	switch ( fl_cntl.coordUnit )
 	{
@@ -184,19 +185,19 @@ fl_make_object( int            objclass,
 			break;
 
 		case FL_COORD_MM :
-			fl_scale_object( ob, fl_dpi / 25.4, fl_dpi / 25.4 );
+			fl_scale_object( obj, fl_dpi / 25.4, fl_dpi / 25.4 );
 			break;
 
 		case FL_COORD_POINT :
-			fl_scale_object( ob, fl_dpi / 72.0, fl_dpi / 72.0 );
+			fl_scale_object( obj, fl_dpi / 72.0, fl_dpi / 72.0 );
 			break;
 
 		case FL_COORD_centiPOINT :
-			fl_scale_object( ob, fl_dpi / 7200.0, fl_dpi / 7200.0 );
+			fl_scale_object( obj, fl_dpi / 7200.0, fl_dpi / 7200.0 );
 			break;
 
 		case FL_COORD_centiMM :
-			fl_scale_object( ob, fl_dpi / 2540.0, fl_dpi / 2540.0 );
+			fl_scale_object( obj, fl_dpi / 2540.0, fl_dpi / 2540.0 );
 			break;
 
 		default:
@@ -205,50 +206,52 @@ fl_make_object( int            objclass,
 			fl_cntl.coordUnit = FL_COORD_PIXEL;
     }
 
-    ob->wantkey = FL_KEY_NORMAL;
+    obj->wantkey  = FL_KEY_NORMAL;
 
-    ob->flpixmap = None;
+    obj->flpixmap = NULL;
 
-    ob->label  = fl_strdup( label ? label : "" );
-    ob->handle = handle;
-    ob->align  = FL_ALIGN_CENTER;
-    ob->lcol   = FL_BLACK;
-    ob->col1   = FL_COL1;
-    ob->col2   = FL_MCOL;
+    obj->label    = fl_strdup( label ? label : "" );
+    obj->handle   = handle;
+    obj->align    = FL_ALIGN_CENTER;
+    obj->lcol     = FL_BLACK;
+    obj->col1     = FL_COL1;
+    obj->col2     = FL_MCOL;
 
     if ( BUTTON_CLASS( objclass ) && fl_cntl.buttonFontSize )
-		ob->lsize = fl_cntl.buttonFontSize;
+		obj->lsize = fl_cntl.buttonFontSize;
     else if ( objclass == FL_MENU && fl_cntl.menuFontSize )
-		ob->lsize = fl_cntl.menuFontSize;
+		obj->lsize = fl_cntl.menuFontSize;
     else if ( objclass == FL_CHOICE && fl_cntl.choiceFontSize )
-		ob->lsize = fl_cntl.choiceFontSize;
+		obj->lsize = fl_cntl.choiceFontSize;
     else if ( objclass == FL_INPUT && fl_cntl.inputFontSize )
-		ob->lsize = fl_cntl.inputFontSize;
+		obj->lsize = fl_cntl.inputFontSize;
     else if ( objclass == FL_SLIDER && fl_cntl.sliderFontSize )
-		ob->lsize = fl_cntl.sliderFontSize;
+		obj->lsize = fl_cntl.sliderFontSize;
 #if 0
     else if ( objclass == FL_BROWSER && fl_cntl.browserFontSize )
-		ob->lsize = fl_cntl.browserFontSize;
+		obj->lsize = fl_cntl.browserFontSize;
 #endif
     else if ( fl_cntl.labelFontSize )
-		ob->lsize = fl_cntl.labelFontSize;
+		obj->lsize = fl_cntl.labelFontSize;
     else
-		ob->lsize = FL_DEFAULT_SIZE;
+		obj->lsize = FL_DEFAULT_SIZE;
 
-    ob->lstyle             = FL_NORMAL_STYLE;
-    ob->shortcut           = fl_calloc( 1, sizeof *ob->shortcut );
-    ob->shortcut[ 0 ]      = 0;
-    ob->active             = 1;
-    ob->visible            = FL_VISIBLE;
-    ob->object_callback    = NULL;
-    ob->spec               = NULL;
-    ob->next = ob->prev    = NULL;
-    ob->form               = NULL;
-    ob->dbl_background     = FL_COL1;
-	ob->parent = ob->child = ob->nc = NULL;
-	ob->is_child           = 0;
+    obj->lstyle             = FL_NORMAL_STYLE;
+    obj->shortcut           = fl_calloc( 1, sizeof( long ) );
+    obj->shortcut[ 0 ]      = 0;
+    obj->active             = 1;
+    obj->visible            = FL_VISIBLE;
+    obj->object_callback    = NULL;
+    obj->spec               = NULL;
+    obj->next = obj->prev   = NULL;
+    obj->form               = NULL;
+    obj->dbl_background     = FL_COL1;
+	obj->parent             = NULL;
+	obj->child              = NULL;
+	obj->nc                 = NULL;
+	obj->is_child           = 0;
 
-    return ob;
+    return obj;
 }
 
 
@@ -269,10 +272,34 @@ fl_free_object( FL_OBJECT * obj )
 
     fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
 
+	/* If this is a parent object free the cjilds first */
+
+	if ( obj->child )
+		fli_free_composite( obj );
+
+	/* If it's a child object remove it from the linked list of childs
+	   of the parent object */
+
+	if ( obj->is_child )
+	{
+		FL_OBJECT *o = obj->parent->child;
+
+		if ( o == obj )
+			obj->parent->child = obj->nc;
+		else
+		{
+			while ( o->nc != obj )
+				o = o->nc;
+			o->nc = obj->nc;
+		}
+	}
+
+	/* If the object hasn't been unlinked from its form do that know */
+
     if ( obj->form != NULL )
 		fl_delete_object( obj );
 
-    /* free object */
+    /* Finally free all memory allocated for the object */
 
 	fl_safe_free( obj->label );
 	fl_safe_free( obj->tooltip );
@@ -281,8 +308,7 @@ fl_free_object( FL_OBJECT * obj )
     if ( obj->flpixmap )
     {
 		fli_free_flpixmap( obj->flpixmap ) ;
-		fl_free( obj->flpixmap );
-		obj->flpixmap = NULL;
+		fl_safe_free( obj->flpixmap );
     }
 
     fl_free( obj );
@@ -307,9 +333,8 @@ fl_add_object( FL_FORM   * form,
 
     if ( form == NULL )
     {
-		M_err( "fl_add_object", "%s", fli_object_class_name( obj ) );
-		M_err( "fl_add_object", "NULL form." );
-		return;
+		M_err( "fl_add_object", "NULL form for %s",
+			   fli_object_class_name( obj ) );
     }
 
     if ( obj->automatic )
@@ -337,8 +362,8 @@ fl_add_object( FL_FORM   * form,
     /* If adding to a group, set objects group ID, then find the end of the
 	   group or the end of the object list on this form */
 
-    if ( fl_current_group )
-    {
+	if ( fl_current_group )
+	{
 		FL_OBJECT *end = fl_current_group;
 
 		obj->group_id = fl_current_group->group_id;
@@ -357,21 +382,23 @@ fl_add_object( FL_FORM   * form,
 			fl_redraw_object( obj );
 			return;
 		}
-    }
+	}
 
-    if ( form->first == NULL )
+	if ( form->first == NULL )
 		form->first = form->last = obj;
-    else
-    {
+	else
+	{
 		obj->prev = form->last;
 		form->last->next = obj;
 		form->last = obj;
-    }
+	}
 
-    if ( obj->input && form->focusobj == NULL )
+    if ( obj->input && ! form->focusobj )
 		fl_set_focus_object( form, obj );
 
-    if ( obj->child && ! obj->is_child )
+	/* If the object has child objects also add them to the form */
+
+    if ( obj->child )
 		fli_add_composite( form, obj );
 
     fl_redraw_object( obj );
@@ -426,15 +453,21 @@ fli_insert_object( FL_OBJECT * obj,
 
     before->prev = obj;
     obj->form = form;
+
     if ( obj->input && form->focusobj == NULL )
 		fl_set_focus_object( form, obj );
+
+	/* If the object has child objects also add them to the form */
+
+    if ( obj->child )
+		fli_add_composite( form, obj );
 
     fl_redraw_form( form );
 }
 
 
 /***************************************
- * Deletes an object from its form.
+ * Unlinks an object from its form
  ***************************************/
 
 void
@@ -455,6 +488,11 @@ fl_delete_object( FL_OBJECT * obj )
 		return;
     }
 
+    /* if this object has childs also unlink them */
+
+    if ( obj->child )
+		fli_delete_composite( obj );
+
     form = obj->form;
 
     if ( obj->automatic )
@@ -466,10 +504,10 @@ fl_delete_object( FL_OBJECT * obj )
     if ( obj->focus )
 		fl_set_focus_object( form, NULL );
 
-    if ( obj == fl_pushobj )
-		fl_pushobj = NULL;
-    if ( obj == fl_mouseobj )
-		fl_mouseobj = NULL;
+    if ( obj == fli_pushobj )
+		fli_pushobj = NULL;
+    if ( obj == fli_mouseobj )
+		fli_mouseobj = NULL;
 
 #ifdef DELAYED_ACTION
     fli_object_qflush_object( obj );
@@ -494,12 +532,9 @@ fl_delete_object( FL_OBJECT * obj )
 		fl_set_focus_object( form, fli_find_first( form, FL_FIND_INPUT,
 												   0, 0 ) );
 
-    /* if this object is a parent of a group, remove the entire group */
-
-    if ( obj->child )
-		fli_free_composite( obj );
-
-    if ( obj->visible && form && form->visible == FL_VISIBLE )
+    if (    obj->visible
+		 && ( ! obj->child || obj->parent->visible )
+		 && form && form->visible == FL_VISIBLE )
 		fl_redraw_form( form );
 }
 
@@ -513,21 +548,21 @@ fl_delete_object( FL_OBJECT * obj )
  ***************************************/
 
 void
-fl_set_object_boxtype( FL_OBJECT * ob,
+fl_set_object_boxtype( FL_OBJECT * obj,
 					   int         boxtype )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_boxtype", "NULL object." );
 		return;
     }
 
-    if ( ob->boxtype != boxtype )
+    if ( obj->boxtype != boxtype )
     {
-		ob->boxtype = boxtype;
-        if( ob->child )
-            fli_handle_object( ob, FL_ATTRIB, 0, 0, 0, NULL );
-		fl_redraw_object( ob );
+		obj->boxtype = boxtype;
+        if ( obj->child )
+            fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL );
+		fl_redraw_object( obj );
     }
 }
 
@@ -536,30 +571,30 @@ fl_set_object_boxtype( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_resize( FL_OBJECT    * ob,
+fl_set_object_resize( FL_OBJECT    * obj,
 					  unsigned int   what )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_resize", "NULL object." );
 		return;
     }
 
-    ob->resize = what;
+    obj->resize = what;
 
 	/* Check if object has childs, if so also change all of them */
 
-    if ( ob->child )
-		fli_set_composite_resize( ob, what );
+    if ( obj->child )
+		fli_set_composite_resize( obj, what );
 
     /* Check if object is a group, if so also change all members */
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
-		for ( ; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
-	{
-	    ob->resize = what;
-	    fli_set_composite_resize( ob, what );
-	}
+    if ( obj->objclass == FL_BEGIN_GROUP )
+		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+		{
+			obj->resize = what;
+			fli_set_composite_resize( obj, what );
+		}
 }
 
 
@@ -567,17 +602,17 @@ fl_set_object_resize( FL_OBJECT    * ob,
  ***************************************/
 
 void
-fl_get_object_resize( FL_OBJECT *    ob,
+fl_get_object_resize( FL_OBJECT *    obj,
 					  unsigned int * what )
 
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_get_object_resize", "NULL object." );
 		return;
     }
 
-	*what = ob->resize;
+	*what = obj->resize;
 }
 
 
@@ -585,32 +620,32 @@ fl_get_object_resize( FL_OBJECT *    ob,
  ***************************************/
 
 void
-fl_set_object_gravity( FL_OBJECT    * ob,
+fl_set_object_gravity( FL_OBJECT    * obj,
 					   unsigned int   nw,
 					   unsigned int   se )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_gravity", "NULL object." );
 		return;
     }
 
-    ob->nwgravity = nw;
-    ob->segravity = se;
+    obj->nwgravity = nw;
+    obj->segravity = se;
 
 	/* Check if object has childs, if so also change all of them */
 
-    if ( ob->child )
-		fli_set_composite_gravity( ob, nw, se );
+    if ( obj->child )
+		fli_set_composite_gravity( obj, nw, se );
 
     /* Check if object is a group, if so change also all members */
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
-		for ( ; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
+    if ( obj->objclass == FL_BEGIN_GROUP )
+		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
 		{
-			ob->nwgravity = nw;
-			ob->segravity = se;
-			fli_set_composite_gravity( ob, nw, se );
+			obj->nwgravity = nw;
+			obj->segravity = se;
+			fli_set_composite_gravity( obj, nw, se );
 		}
 }
 
@@ -618,18 +653,18 @@ fl_set_object_gravity( FL_OBJECT    * ob,
 /***************************************
  ***************************************/
 void
-fl_get_object_gravity( FL_OBJECT *    ob,
+fl_get_object_gravity( FL_OBJECT *    obj,
 					   unsigned int * nw,
 					   unsigned int * se )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_get_object_gravity", "NULL object." );
 		return;
     }
 
-	*nw = ob->nwgravity;
-	*se = ob->segravity;
+	*nw = obj->nwgravity;
+	*se = obj->segravity;
 }
 
 
@@ -638,21 +673,21 @@ fl_get_object_gravity( FL_OBJECT *    ob,
  ***************************************/
 
 void
-fl_set_object_color( FL_OBJECT * ob,
+fl_set_object_color( FL_OBJECT * obj,
 					 FL_COLOR    col1,
 					 FL_COLOR    col2 )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_color", "NULL object." );
 		return;
     }
 
-    if ( ob->col1 != col1 || ob->col2 != col2 )
+    if ( obj->col1 != col1 || obj->col2 != col2 )
     {
-		ob->col1 = col1;
-		ob->col2 = col2;
-		fl_redraw_object( ob );
+		obj->col1 = col1;
+		obj->col2 = col2;
+		fl_redraw_object( obj );
     }
 }
 
@@ -661,12 +696,12 @@ fl_set_object_color( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_dblbuffer( FL_OBJECT * ob,
+fl_set_object_dblbuffer( FL_OBJECT * obj,
 						 int         y )
 {
     FL_COLOR bkcol;
 
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_dblbuffer", "NULL object." );
 		return;
@@ -674,31 +709,32 @@ fl_set_object_dblbuffer( FL_OBJECT * ob,
 
     /* never bother with composite object */
 
-    if ( ob->parent == ob )
+    if ( obj->child || obj->is_child )
 		return;
 
-    if ( ob->use_pixmap == y )
+    if ( obj->use_pixmap == y )
 		return;
 
-    if ( ( ob->use_pixmap = y ) && ! ob->flpixmap )
-		ob->flpixmap = fl_calloc( 1, sizeof( FL_pixmap ) );
+    if ( ( obj->use_pixmap = y ) && ! obj->flpixmap )
+		obj->flpixmap = fl_calloc( 1, sizeof( FL_pixmap ) );
 
     /* figure out the double buffer background */
 
-    if ( ob->form && ob->form->first )
+    if ( obj->form && obj->form->first )
     {
-		bkcol = ob->form->first->col1;
-		if ( ob->form->first->boxtype == FL_NO_BOX && ob->form->first->next )
-			bkcol = ob->form->first->next->col1;
-		ob->dbl_background = bkcol;
+		bkcol = obj->form->first->col1;
+		if ( obj->form->first->boxtype == FL_NO_BOX && obj->form->first->next )
+			bkcol = obj->form->first->next->col1;
+		obj->dbl_background = bkcol;
     }
 }
 
 
 /* really visible */
-#define ObjIsVisible( ob )   (    ( ob )->visible                        \
-                               && ( ob )->form                           \
-							   && ( ob )->form->visible == FL_VISIBLE )
+
+#define ObjIsVisible( obj )  (    ( obj )->visible                        \
+                               && ( obj )->form                           \
+							   && ( obj )->form->visible == FL_VISIBLE )
 
 
 /***************************************
@@ -706,10 +742,10 @@ fl_set_object_dblbuffer( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_label( FL_OBJECT  * ob,
+fl_set_object_label( FL_OBJECT  * obj,
 					 const char * label )
 {
-    if ( ! ob )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_label", "NULL object." );
 		return;
@@ -718,27 +754,27 @@ fl_set_object_label( FL_OBJECT  * ob,
     if ( ! label )
 		label = "";
 
-    if ( ! strcmp( ob->label, label )  )
+    if ( ! strcmp( obj->label, label )  )
 		return;
 
-    if ( LInside( ob->align ) )
+    if ( LInside( obj->align ) )
     {
-		ob->label = fl_realloc( ob->label, strlen( label ) + 1 );
-		strcpy( ob->label, label );
-		fl_redraw_object( ob );
+		obj->label = fl_realloc( obj->label, strlen( label ) + 1 );
+		strcpy( obj->label, label );
+		fl_redraw_object( obj );
     }
     else
     {
-		int visible = ObjIsVisible( ob );
+		int visible = ObjIsVisible( obj );
 
 		if ( visible )
-			fl_hide_object( ob );
+			fl_hide_object( obj );
 
-		ob->label = fl_realloc( ob->label, strlen( label ) + 1 );
-		strcpy( ob->label, label );
+		obj->label = fl_realloc( obj->label, strlen( label ) + 1 );
+		strcpy( obj->label, label );
 
 		if ( visible )
-			fl_show_object( ob );
+			fl_show_object( obj );
     }
 }
 
@@ -748,35 +784,35 @@ fl_set_object_label( FL_OBJECT  * ob,
  ***************************************/
 
 void
-fl_set_object_lcol( FL_OBJECT * ob,
+fl_set_object_lcol( FL_OBJECT * obj,
 					FL_COLOR    lcol )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_lcol", "NULL object." );
 		return;
     }
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
+    if ( obj->objclass == FL_BEGIN_GROUP )
     {
-		fl_freeze_form( ob->form );
+		fl_freeze_form( obj->form );
 
-		for ( ; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
+		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
 		{
-			if ( ob->lcol != lcol )
+			if ( obj->lcol != lcol )
 			{
-				ob->lcol = lcol;
-				if ( ob->objclass != FL_BEGIN_GROUP )
-					fl_redraw_object( ob );
+				obj->lcol = lcol;
+				if ( obj->objclass != FL_BEGIN_GROUP )
+					fl_redraw_object( obj );
 			}
 		}
 
-		fl_unfreeze_form( ob->form );
+		fl_unfreeze_form( obj->form );
     }
-    else if ( ob->lcol != lcol )
+    else if ( obj->lcol != lcol )
     {
-		ob->lcol = lcol;
-		fl_redraw_object( ob );
+		obj->lcol = lcol;
+		fl_redraw_object( obj );
     }
 }
 
@@ -786,10 +822,10 @@ fl_set_object_lcol( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_lsize( FL_OBJECT * ob,
+fl_set_object_lsize( FL_OBJECT * obj,
 					 int         lsize )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_lsize", "NULL object." );
 		return;
@@ -797,30 +833,31 @@ fl_set_object_lsize( FL_OBJECT * ob,
 
     /* no nested groups */
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
+    if ( obj->objclass == FL_BEGIN_GROUP )
     {
-		ob->lsize = lsize;
-		for ( ob = ob->next; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
-			fl_set_object_lsize( ob, lsize );
+		obj->lsize = lsize;
+		for ( obj = obj->next; obj && obj->objclass != FL_END_GROUP;
+			  obj = obj->next )
+			fl_set_object_lsize( obj, lsize );
     }
-    else if ( ob->lsize != lsize )
+    else if ( obj->lsize != lsize )
     {
-		if ( LInside( ob->align ) )
+		if ( LInside( obj->align ) )
 		{
-			ob->lsize = lsize;
-			fl_redraw_object( ob );
+			obj->lsize = lsize;
+			fl_redraw_object( obj );
 		}
 		else
 		{
-			int visible = ObjIsVisible( ob );
+			int visible = ObjIsVisible( obj );
 
 			if ( visible )
-				fl_hide_object( ob );
+				fl_hide_object( obj );
 
-			ob->lsize = lsize;
+			obj->lsize = lsize;
 
 			if ( visible )
-				fl_show_object( ob );
+				fl_show_object( obj );
 		}
     }
 }
@@ -831,39 +868,40 @@ fl_set_object_lsize( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_lstyle( FL_OBJECT * ob,
+fl_set_object_lstyle( FL_OBJECT * obj,
 					  int         lstyle )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_lstyle", "NULL object." );
 		return;
     }
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
+    if ( obj->objclass == FL_BEGIN_GROUP )
     {
-		ob->lstyle = lstyle;
-		for ( ob = ob->next; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
-			fl_set_object_lstyle( ob, lstyle );
+		obj->lstyle = lstyle;
+		for ( obj = obj->next; obj && obj->objclass != FL_END_GROUP;
+			  obj = obj->next )
+			fl_set_object_lstyle( obj, lstyle );
     }
-    else if ( ob->lstyle != lstyle )
+    else if ( obj->lstyle != lstyle )
     {
-		if ( LInside( ob->align ) )
+		if ( LInside( obj->align ) )
 		{
-			ob->lstyle = lstyle;
-			fl_redraw_object( ob );
+			obj->lstyle = lstyle;
+			fl_redraw_object( obj );
 		}
 		else
 		{
-			int visible = ObjIsVisible( ob );
+			int visible = ObjIsVisible( obj );
 
 			if ( visible )
-				fl_hide_object( ob );
+				fl_hide_object( obj );
 
-			ob->lstyle = lstyle;
+			obj->lstyle = lstyle;
 
 			if ( visible )
-				fl_show_object( ob );
+				fl_show_object( obj );
 		}
     }
 }
@@ -874,36 +912,36 @@ fl_set_object_lstyle( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_object_lalign( FL_OBJECT * ob,
+fl_set_object_lalign( FL_OBJECT * obj,
 					  int         align )
 {
     int visible;
 
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_align", "NULL object." );
 		return;
     }
 
-    if ( ob->align == align )
+    if ( obj->align == align )
 		return;
 
-    visible = ObjIsVisible( ob );
+    visible = ObjIsVisible( obj );
 
-    if ( LInside( ob->align ) && LInside( align ) )
+    if ( LInside( obj->align ) && LInside( align ) )
     {
-		ob->align = align;
-		fl_redraw_object( ob );
+		obj->align = align;
+		fl_redraw_object( obj );
     }
     else
     {
 		if ( visible )
-			fl_hide_object( ob );
+			fl_hide_object( obj );
 
-		ob->align = align;
+		obj->align = align;
 
 		if ( visible )
-			fl_show_object( ob );
+			fl_show_object( obj );
     }
 }
 
@@ -914,54 +952,57 @@ fl_set_object_lalign( FL_OBJECT * ob,
 #if 0
 
 void
-fl_set_object_dragndrop( FL_OBJECT * ob,
+fl_set_object_dragndrop( FL_OBJECT * obj,
 						 int         yes )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_set_object_dragndrop", "NULL object." );
 		return;
     }
-    ob->dnd = yes;
+
+    obj->dnd = yes;
 }
 
 #endif
 
 
 /***************************************
- * makes an object active if it was deactivated by fl_deactivate_object
+ * makes an object active
+ ***************************************/
+
+static void
+activate_object( FL_OBJECT * obj )
+{
+	if ( obj->active )
+		return;
+
+	obj->active = 1;
+	if ( obj->input && ! obj->form->focusobj )
+		fl_set_focus_object( obj->form, obj );
+	if ( obj->child )
+		fli_activate_composite( obj );
+}
+
+
+/***************************************
+ * Public function for makin an object active
  ***************************************/
 
 void
-fl_activate_object( FL_OBJECT * ob )
+fl_activate_object( FL_OBJECT * obj )
 {
-    if ( ob == NULL )
+    if ( obj == NULL )
     {
 		M_err( "fl_activate_object", "NULL object." );
 		return;
     }
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
-		while ( ob != NULL && ob->objclass != FL_END_GROUP )
-		{
-			if ( ob->active == DEACTIVATED )
-				ob->active = 1;
-			if ( ob->input && ob->form->focusobj == NULL )
-				fl_set_focus_object( ob->form, ob );
-			if ( ob->child )
-				fli_activate_composite( ob );
-
-			ob = ob->next;
-		}
+    if ( obj->objclass == FL_BEGIN_GROUP )
+		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+			activate_object( obj );
     else
-    {
-		if ( ob->active == DEACTIVATED )
-			ob->active = 1;
-		if ( ob->input && ob->form->focusobj == NULL )
-			fl_set_focus_object( ob->form, ob );
-		if ( ob->child )
-			fli_activate_composite( ob );
-    }
+		activate_object( obj );
 }
 
 
@@ -969,40 +1010,41 @@ fl_activate_object( FL_OBJECT * ob )
  * Deactivates an object
  ***************************************/
 
-void
-fl_deactivate_object( FL_OBJECT * ob )
+static void
+deactivate_object( FL_OBJECT * obj )
 {
-    if ( ob == NULL )
+	if ( ! obj->active )
+		return;
+
+	obj->active = 0;
+
+	if ( obj == obj->form->focusobj )
+		fl_set_focus_object( obj->form,
+							 fli_find_first( obj->form, FL_FIND_INPUT,
+											 0, 0 ) );
+	if ( obj->child )
+		fli_deactivate_composite( obj );
+}
+
+
+/***************************************
+ * Public function for deactivating an object
+ ***************************************/
+
+void
+fl_deactivate_object( FL_OBJECT * obj )
+{
+    if ( obj == NULL )
     {
 		M_err( "fl_deactive_object", "NULL object." );
 		return;
     }
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
-		while ( ob != NULL && ob->objclass != FL_END_GROUP )
-		{
-			if ( ob->active > 0 )
-				ob->active = DEACTIVATED;
-			if ( ob == ob->form->focusobj )
-				fl_set_focus_object( ob->form,
-									 fli_find_first( ob->form, FL_FIND_INPUT,
-													 0, 0 ) );
-			if ( ob->child )
-				fli_deactivate_composite( ob );
-
-			ob = ob->next;
-	}
+    if ( obj->objclass == FL_BEGIN_GROUP )
+		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+			deactivate_object( obj );
     else
-    {
-		if ( ob->active > 0 )
-			ob->active = DEACTIVATED;
-		if ( ob == ob->form->focusobj )
-			fl_set_focus_object( ob->form,
-								 fli_find_first( ob->form, FL_FIND_INPUT,
-												 0, 0 ) );
-		if ( ob->child )
-			fli_deactivate_composite( ob );
-    }
+		deactivate_object( obj );
 }
 
 
@@ -1010,37 +1052,42 @@ fl_deactivate_object( FL_OBJECT * ob )
  * Makes an object visible and sets the visible flag to 1
  ***************************************/
 
-void
-fl_show_object( FL_OBJECT * ob )
+static void
+show_object( FL_OBJECT * obj )
 {
-    FL_OBJECT *obj = ob;
+	if ( obj->visible )
+		return;
 
-    if ( ob == NULL )
+	obj->visible = 1;
+	if ( obj->child )
+		fli_show_composite( obj );
+	if ( obj->input && obj->form->focusobj == NULL )
+		fl_set_focus_object( obj->form, obj );
+}
+
+
+/***************************************
+ * Public function for making an object visible
+ ***************************************/
+
+void
+fl_show_object( FL_OBJECT * obj )
+{
+    FL_OBJECT *o = obj;
+
+    if ( obj == NULL )
     {
 		M_err( "fl_show_object", "NULL object." );
 		return;
     }
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
-		while ( ob != NULL && ob->objclass != FL_END_GROUP )
-		{
-			ob->visible = 1;
-			if ( ob->child )
-				fli_show_composite( ob );
-			if ( ob->input && ob->form->focusobj == NULL )
-				fl_set_focus_object( ob->form, ob );
-
-			ob = ob->next;
-		}
+    if ( obj->objclass == FL_BEGIN_GROUP )
+		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+			show_object( obj );
     else
-    {
-		ob->visible = 1;
-		fli_show_composite( ob );
-		if ( ob->input && ob->form->focusobj == NULL )
-			fl_set_focus_object( ob->form, ob );
-    }
+		show_object( obj );
 
-    fl_redraw_object( obj );
+    fl_redraw_object( o );
 }
 
 
@@ -1135,10 +1182,10 @@ fl_hide_object( FL_OBJECT * ob )
 
 		ob->visible = 0;
 
-		if ( ob == fl_pushobj )
-			fl_pushobj = NULL;
-		if ( ob == fl_mouseobj )
-			fl_mouseobj = NULL;
+		if ( ob == fli_pushobj )
+			fli_pushobj = NULL;
+		if ( ob == fli_mouseobj )
+			fli_mouseobj = NULL;
 
 #ifdef DELAYED_ACTION
 		fli_object_qflush_object( ob );
@@ -1450,7 +1497,7 @@ fli_find_object( FL_OBJECT * obj,
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible
 			 && ( ! obj->is_child || obj->parent->visible )
-			 && (     obj->active > 0
+			 && (     obj->active
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
 		{
@@ -1490,7 +1537,7 @@ fli_find_object_backwards( FL_OBJECT * obj,
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible
 			 && ( ! obj->is_child || obj->parent->visible )
-			 && (     obj->active > 0
+			 && (     obj->active
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
 		{
@@ -1681,7 +1728,9 @@ fl_redraw_object( FL_OBJECT * obj )
 
     /* if composite object, flag all children */
 
-    if ( obj->child && obj->parent->visible && obj->visible )
+    if (    obj->child
+		 && ( ! obj->is_child || obj->parent->visible )
+		 && obj->visible )
 		fli_mark_composite_for_redraw( obj );
 
     /* if obj is a child object and the parent is not visible, do nothing */
@@ -2352,7 +2401,7 @@ fl_trigger_object( FL_OBJECT * obj )
 		 && obj != FL_EVENT
 		 && obj->form
 		 && obj->visible
-		 && obj->active > 0 )
+		 && obj->active )
 		fli_object_qenter( obj );
 }
 

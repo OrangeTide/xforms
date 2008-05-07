@@ -51,28 +51,35 @@ fli_add_child( FL_OBJECT * parent,
     if ( child->form )
 		fl_delete_object( child );
 
-    if ( child->child || ! child->parent )
-		child->parent = parent;
-
-    parent->parent = parent;
+	child->parent = parent;
     child->is_child = 1;
 
     /* copy gravity attributes */
 
     child->nwgravity = parent->nwgravity;
     child->segravity = parent->segravity;
-    child->resize = parent->resize;
+    child->resize    = parent->resize;
 
     if ( parent->child == NULL )
 		parent->child = child;
     else
     {
-		for ( t = parent->child; t && t->nc; t = t->nc )
+		for ( t = parent->child; t->nc; t = t->nc )
 			/* empty */ ;
 		t->nc = child;
     }
 
-    child->nc = child->child;
+	if ( ! child->child )
+		return;
+
+	parent = child;
+
+	for ( child = child->child; child; child = child->nc )
+	{
+		fli_set_composite_gravity( child, parent->nwgravity,
+								   parent->segravity );
+		fli_set_composite_resize( child, parent->resize );
+	}
 }
 
 
@@ -84,8 +91,12 @@ fli_hide_composite( FL_OBJECT * ob )
 {
     for ( ob = ob->child; ob; ob = ob->nc )
     {
+		if ( ob->child )
+			fli_hide_composite( ob );
+
 		if ( ob->objclass == FL_CANVAS )
 			fl_hide_canvas( ob );
+
 		ob->visible = 0;
     }
 }
@@ -95,24 +106,29 @@ fli_hide_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fli_free_composite( FL_OBJECT * ob )
+fli_delete_composite( FL_OBJECT * obj )
 {
-    FL_OBJECT *next;
+	for ( obj = obj->child; obj; obj = obj->nc )
+		fl_delete_object( obj );
+}
 
-    for ( ob = ob->child; ob; ob = next )
+
+/***************************************
+ ***************************************/
+
+void
+fli_free_composite( FL_OBJECT * obj )
+{
+    FL_OBJECT *next,
+		      *parent = obj;
+
+    for ( obj = obj->child; obj; obj = next )
 	{
-		if ( ! ob->form )
-		{
-			M_err( "fli_free_composite", "Freeing object without form" );
-			return;
-		}
-
-		if ( ob->child )
-			fli_free_composite( ob );
-		ob->child = NULL;
-		next = ob->next;
-		fl_free_object( ob ) ;
+		next = obj->nc;
+		fl_free_object( obj ) ;
 	}
+
+	parent->child = NULL;
 }
 
 
@@ -125,7 +141,11 @@ fli_show_composite( FL_OBJECT * ob )
     FL_OBJECT *tmp;
 
     for ( tmp = ob->child; tmp; tmp = tmp->nc )
+	{
+		if ( tmp->child )
+			fli_show_composite( tmp );
 		tmp->visible = 1;
+	}
 }
 
 
@@ -135,9 +155,13 @@ fli_show_composite( FL_OBJECT * ob )
 void
 fli_deactivate_composite( FL_OBJECT * ob )
 {
-    ob->parent->active = DEACTIVATED;
     for ( ob = ob->child; ob; ob = ob->nc )
-		ob->active = DEACTIVATED;;
+	{
+		if ( ob->child )
+			fli_deactivate_composite( ob );
+
+		ob->active = 0;
+	}
 }
 
 
@@ -147,9 +171,12 @@ fli_deactivate_composite( FL_OBJECT * ob )
 void
 fli_activate_composite( FL_OBJECT * ob )
 {
-    ob->parent->active = 1;
     for ( ob = ob->child; ob; ob = ob->nc )
+	{
+		if ( ob->child )
+			fli_activate_composite( ob );
 		ob->active = 1;
+	}
 }
 
 
@@ -157,11 +184,15 @@ fli_activate_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fli_set_composite_resize( FL_OBJECT *  ob,
+fli_set_composite_resize( FL_OBJECT *  obj,
 						  unsigned int resize )
 {
-    for ( ob = ob->child; ob; ob = ob->nc )
-		ob->resize = resize;
+    for ( obj = obj->child; obj; obj = obj->nc )
+	{
+		if ( obj->child )
+			fli_set_composite_resize( obj, resize );
+		obj->resize = resize;
+	}
 }
 
 
@@ -169,14 +200,17 @@ fli_set_composite_resize( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fli_set_composite_gravity( FL_OBJECT *  ob,
+fli_set_composite_gravity( FL_OBJECT *  obj,
 						   unsigned int nw,
 						   unsigned int se )
 {
-    for ( ob = ob->child; ob; ob = ob->nc )
-    {
-		ob->nwgravity = nw;
-		ob->segravity = se;
+    for ( obj = obj->child; obj; obj = obj->nc )
+	{
+		if ( obj->child )
+			fli_set_composite_gravity( obj, nw, se );
+
+		obj->nwgravity = nw;
+		obj->segravity = se;
     }
 }
 
@@ -207,12 +241,12 @@ fli_insert_composite_after( FL_OBJECT * comp,
 
     comp->form = form;
 
-    next = node->next;
-    node->next = comp;
-    comp->prev = node;
+    next              = node->next;
+    node->next        = comp;
+    comp->prev        = node;
     comp->child->form = form;
-    comp->next = comp->child;
-    comp->next->prev = comp;
+    comp->next        = comp->child;
+    comp->next->prev  = comp;
 
     prev = comp;
 
@@ -233,24 +267,6 @@ fli_insert_composite_after( FL_OBJECT * comp,
 
 
 /***************************************
- * change the parent of a composite. Need to take care for
- * composite of composite
- ***************************************/
-
-void
-fli_change_composite_parent( FL_OBJECT * comp,
-							 FL_OBJECT * newparent )
-{
-    FL_OBJECT *tmp;
-
-    comp->parent = newparent;
-    for ( tmp = comp->child; tmp; tmp = tmp->nc )
-		if ( tmp->parent == comp )
-			tmp->parent = newparent;
-}
-
-
-/***************************************
  ***************************************/
 
 void
@@ -262,9 +278,6 @@ fli_add_composite( FL_FORM *   form,
 
     for ( tmp = ob->child; tmp; tmp1 = tmp, tmp = tmp->nc )
 		fl_add_object( form, tmp );
-
-    if ( form->last == ob )
-		form->last = tmp1;
 }
 
 
@@ -287,9 +300,9 @@ fl_get_object_component( FL_OBJECT * composite,
 				return tmp;
 		}
 
-    M_err( "fl_get_object_component", "requested object not found" );
+    M_err( "fl_get_object_component", "Requested object not found" );
 
-    return 0;
+    return NULL;
 }
 
 
@@ -302,8 +315,15 @@ fli_mark_composite_for_redraw( FL_OBJECT * ob )
     FL_OBJECT *tmp;
 
     for ( tmp = ob->child; tmp; tmp = tmp->nc )
-		if ( tmp->objclass != FL_BEGIN_GROUP && tmp->objclass != FL_END_GROUP )
-			tmp->redraw = 1;
+	{
+		if ( tmp->objclass == FL_BEGIN_GROUP || tmp->objclass == FL_END_GROUP )
+			continue;
+
+		if ( tmp->child && tmp->child->visible )
+			fli_mark_composite_for_redraw( tmp );
+
+		tmp->redraw = 1;
+	}
 }
 
 
@@ -316,9 +336,17 @@ void
 fli_inherit_attributes( FL_OBJECT * parent,
 						FL_OBJECT * child )
 {
-    child->bw = parent->bw;
-    child->lcol = parent->lcol;
-    child->col1 = parent->col1;
-    child->lsize = parent->lsize;
+    child->bw     = parent->bw;
+    child->lcol   = parent->lcol;
+    child->col1   = parent->col1;
+    child->lsize  = parent->lsize;
     child->lstyle = parent->lstyle;
+
+	if ( ! child->child )
+		return;
+
+	parent = child;
+
+	for ( child = child->child; child; child = child->nc )
+		fli_inherit_attributes( parent, child );
 }

@@ -70,10 +70,7 @@
 #define AllEventsMask   ( ( OwnerGrabButtonMask << 1 ) - 1 )
 
 
-#define DEACTIVATED   -1	/* must be none zero and negative */
-
-/*
- * There are two ways to handle interaction. One is to process object
+/* There are two ways to handle interaction. One is to process object
  * Q only if there are no more event pending. This can result in
  * an event entered into object Q more than once if the connection
  * is slow and clicking is rapid. If subsequently the object is
@@ -91,19 +88,16 @@
  * when the callback is evoked. To fix this, an explicit flush
  * is needed. This can be time consuming. Also objects that do
  * not have callbacks may be handled out of order (after the one's
- * having callbacks).
- *
- */
+ * having callbacks). */
+
 
 #if 1
 #define DELAYED_ACTION
 #endif
 
 
-/*
- * If we want to have gamma correction as a built-in feature.
- * Probably useless
- */
+/* If we want to have gamma correction as a built-in feature.
+ * Probably useless */
 
 #define DO_GAMMA_CORRECTION
 
@@ -762,6 +756,8 @@ extern void fli_deactivate_composite( FL_OBJECT * );
 
 extern void fli_activate_composite( FL_OBJECT * );
 
+extern void fli_delete_composite( FL_OBJECT * ob );
+
 extern void fli_free_composite( FL_OBJECT * ob );
 
 extern void fli_set_composite_gravity( FL_OBJECT *,
@@ -831,9 +827,6 @@ extern int fli_xyplot_interpolate( FL_OBJECT *,
 
 extern void fli_insert_composite_after( FL_OBJECT *,
 										FL_OBJECT * );
-
-extern void fli_change_composite_parent( FL_OBJECT *,
-										 FL_OBJECT * );
 
 extern void fli_add_composite( FL_FORM *,
 							   FL_OBJECT * );

@@ -5,7 +5,6 @@
 #include "positioner_spec.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_posattrib( void )
     FD_posattrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->posattrib = fl_bgn_form( FL_NO_BOX, 540, 280 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 540, 280, "" );
 
     fdui->background = obj = fl_add_box( FL_FLAT_BOX, 0, 0, 540, 280, "" );
 
@@ -71,6 +67,7 @@ create_form_posattrib( void )
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, pos_ystepchange_cb, 0 );
+
     fl_end_form( );
 
     fdui->posattrib->fdui = fdui;

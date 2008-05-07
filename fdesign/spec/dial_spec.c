@@ -5,7 +5,6 @@
 #include "dial_spec.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_dialattrib( void )
     FD_dialattrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->dialattrib = fl_bgn_form( FL_NO_BOX, 540, 280 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 540, 280, "" );
 
     fdui->background = obj = fl_add_box( FL_FLAT_BOX, 0, 0, 540, 280, "" );
 
@@ -65,6 +61,7 @@ create_form_dialattrib( void )
     fl_set_object_lcolor( obj, FL_DARKVIOLET );
     fl_set_object_lsize( obj, FL_MEDIUM_SIZE );
     fl_set_object_lstyle( obj, FL_TIMESBOLD_STYLE+FL_EMBOSSED_STYLE );
+
     fl_end_form( );
 
     fdui->dialattrib->fdui = fdui;

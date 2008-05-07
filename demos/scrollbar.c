@@ -50,7 +50,6 @@ void hide_cb( FL_OBJECT * ob,
         fl_set_object_label( fdui->hide,"Hide" );
         fl_show_object( fdui->hor_thin );
     }
-
 }
 
 
@@ -81,6 +80,7 @@ void deactivate_cb( FL_OBJECT * ob,
 void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
 {
+	fl_finish( );
     exit( 0 );
 }
 
@@ -109,6 +109,8 @@ int main( int    argc,
    /* show the first form */
 
    fl_show_form( fd_scb->scb, FL_PLACE_CENTERFREE, FL_FULLBORDER, "form0" );
+
    fl_do_forms( );
+
    return 0;
 }

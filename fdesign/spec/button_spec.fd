@@ -5,7 +5,7 @@ Internal Form Definition File
 
 Number of forms: 1
 Unit of measure: FL_COORD_PIXEL
-Border Width: -2
+Border Width: -1
 
 =============== FORM ===============
 Name: buttonattrib

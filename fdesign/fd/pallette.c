@@ -5,7 +5,6 @@
 #include "pallette.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_pmain( void )
     FD_pmain *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->pmain = fl_bgn_form( FL_NO_BOX, 380, 210 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 380, 210, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 380, 210, "" );
 
@@ -33,6 +29,7 @@ create_form_pmain( void )
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 311, 183, 62, 23, " Dismiss " );
     fl_set_object_callback( obj, dismiss_pallete, 0 );
+
     fl_end_form( );
 
     fdui->pmain->fdui = fdui;
@@ -61,15 +58,12 @@ create_form_buttform( void )
     FD_buttform *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->buttform = fl_bgn_form( FL_NO_BOX, 360, 150 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 360, 150, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 360, 150, "" );
 
@@ -111,6 +105,7 @@ create_form_buttform( void )
     fl_set_button_shortcut( obj, "P#p", 1 );
     fl_set_object_callback( obj, pallette_entry_callback, FL_PIXMAPBUTTON );
     fl_set_pixmapbutton_data( obj, xconq );
+
     fl_end_form( );
 
     fdui->buttform->fdui = fdui;
@@ -139,15 +134,12 @@ create_form_staticform( void )
     FD_staticform *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->staticform = fl_bgn_form( FL_NO_BOX, 360, 150 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 360, 150, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 360, 150, "" );
 
@@ -188,6 +180,7 @@ create_form_staticform( void )
     fl_set_button_shortcut( obj, "P#P", 1 );
     fl_set_object_callback( obj, pallette_entry_callback, FL_PIXMAP );
     fl_set_pixmapbutton_data( obj, xconq1 );
+
     fl_end_form( );
 
     fdui->staticform->fdui = fdui;
@@ -216,15 +209,12 @@ create_form_valuatorform( void )
     FD_valuatorform *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->valuatorform = fl_bgn_form( FL_NO_BOX, 360, 150 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 360, 150, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 360, 150, "" );
 
@@ -264,6 +254,7 @@ create_form_valuatorform( void )
     fl_set_button_shortcut( obj, "t#t", 1 );
     fl_set_object_callback( obj, pallette_entry_callback, FL_THUMBWHEEL );
     fl_set_pixmapbutton_data( obj, twheel );
+
     fl_end_form( );
 
     fdui->valuatorform->fdui = fdui;
@@ -288,15 +279,12 @@ create_form_choiceform( void )
     FD_choiceform *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->choiceform = fl_bgn_form( FL_NO_BOX, 360, 150 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 360, 150, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 360, 150, "" );
 
@@ -316,6 +304,7 @@ create_form_choiceform( void )
     fl_set_button_shortcut( obj, "B#B", 1 );
     fl_set_object_callback( obj, pallette_entry_callback, FL_BROWSER );
     fl_set_pixmapbutton_data( obj, br_pixels );
+
     fl_end_form( );
 
     fdui->choiceform->fdui = fdui;
@@ -341,15 +330,12 @@ create_form_miscform( void )
     FD_miscform *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->miscform = fl_bgn_form( FL_NO_BOX, 360, 150 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 360, 150, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 360, 150, "" );
 
@@ -378,6 +364,7 @@ create_form_miscform( void )
     fl_set_button_shortcut( obj, "f#f", 1 );
     fl_set_object_callback( obj, pallette_entry_callback, FL_NTABFOLDER );
     fl_set_pixmapbutton_data( obj, tabfolder_pixels );
+
     fl_end_form( );
 
     fdui->miscform->fdui = fdui;

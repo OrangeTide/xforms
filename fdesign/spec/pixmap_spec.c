@@ -5,7 +5,6 @@
 #include "pixmap_spec.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -15,14 +14,13 @@ create_form_pixmapattrib( void )
     FL_OBJECT *obj;
     FD_pixmapattrib *fdui = fl_malloc( sizeof *fdui );
 
-
+    int old_bw = fl_get_border_width( );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->pixmapattrib = fl_bgn_form( FL_NO_BOX, 540, 280 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 540, 280, "" );
 
     fdui->background = obj = fl_add_box( FL_FLAT_BOX, 0, 0, 540, 280, "" );
 
@@ -47,9 +45,11 @@ create_form_pixmapattrib( void )
     fdui->fullpath = obj = fl_add_checkbutton( FL_PUSH_BUTTON, 275, 155, 30, 30, "Full Path" );
     fl_set_object_lalign( obj, FL_ALIGN_LEFT );
     fl_set_object_callback( obj, pixmapfullpath_cb, 0 );
+
     fl_end_form( );
 
     fdui->pixmapattrib->fdui = fdui;
+    fl_set_border_width( old_bw );
 
     return fdui;
 }

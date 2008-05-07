@@ -5,7 +5,6 @@
 #include "xyplot_spec.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_xyplotattrib( void )
     FD_xyplotattrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->xyplotattrib = fl_bgn_form( FL_NO_BOX, 520, 270 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 520, 270, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 520, 270, "" );
 
@@ -88,6 +84,7 @@ create_form_xyplotattrib( void )
 
     fdui->mark_active = obj = fl_add_checkbutton( FL_PUSH_BUTTON, 230, 80, 100, 25, "MarkActive" );
     fl_set_object_callback( obj, markactive_change_cb, 0 );
+
     fl_end_form( );
 
     fdui->xyplotattrib->fdui = fdui;

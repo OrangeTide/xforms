@@ -31,63 +31,76 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd/folder_gui.h"
 #include <stdlib.h>
 
+
 /* callback routines */
-void hide_show_cb(FL_OBJECT *ob, long data)
-{
-   FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
 
-   (data ? fl_show_object:fl_hide_object)(fdui->folder);
+void
+hide_show_cb( FL_OBJECT * ob,
+			  long        data)
+{
+   FD_mainform *fdui = ob->form->fdui;
+
+   ( data ? fl_show_object : fl_hide_object )( fdui->folder );
 }
 
-void reshow_cb( FL_OBJECT * ob,
-				long        data  FL_UNUSED_ARG )
+
+void
+reshow_cb( FL_OBJECT * ob,
+		   long        data  FL_UNUSED_ARG )
 {
-   fl_hide_form(ob->form);
-   fl_show_form(ob->form,FL_PLACE_MOUSE|FL_FREE_SIZE,FL_FULLBORDER,"TabFolder");
+   fl_hide_form( ob->form );
+   fl_show_form( ob->form, FL_PLACE_MOUSE | FL_FREE_SIZE,
+				 FL_FULLBORDER, "TabFolder" );
 
 }
 
-void set_cb( FL_OBJECT * ob,
-			 long        data  FL_UNUSED_ARG )
-{
-    FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
-    int n = fl_get_active_folder_number(fdui->folder);
 
-    fl_set_folder_bynumber(fdui->folder, (n%5)+1);
+void
+set_cb( FL_OBJECT * ob,
+		long        data  FL_UNUSED_ARG )
+{
+    FD_mainform *fdui = ob->form->fdui;
+    int n = fl_get_active_folder_number( fdui->folder );
+
+    fl_set_folder_bynumber( fdui->folder, n % 5 + 1 );
 }
 
-void deactivate_cb( FL_OBJECT * ob,
-					long        data  FL_UNUSED_ARG )
+
+void
+deactivate_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
 {
     FD_mainform *fdui = ob->form->fdui;
 
-
-    if(fdui->folder->active > 0)
+    if ( fdui->folder->active )
     {
-        fl_set_object_label(ob,"Activate");
-        fl_deactivate_object(fdui->folder);
+        fl_set_object_label( ob, "Activate" );
+        fl_deactivate_object( fdui->folder );
     }
     else
     {
-        fl_set_object_label(ob,"Deactivate");
-        fl_activate_object(fdui->folder);
+        fl_set_object_label( ob, "Deactivate" );
+        fl_activate_object( fdui->folder );
     }
 }
 
-void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			  long        data  FL_UNUSED_ARG )
+
+void
+done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
 #if 0
-    fl_hide_form(ob->form);
-    fl_free_form(ob->form);
-    if(fl_show_question("Do you want to quit ?",0))
-      exit(0);
-    fprintf(stderr,"will quit after 5 seconds\n");
-    fl_msleep(5000);
+    fl_hide_form( ob->form );
+    fl_free_form( ob->form );
+    if ( fl_show_question( "Do you want to quit ?", 0 ) )
+		exit( 0 );
+    fprintf( stderr, "will quit after 5 seconds\n" );
+    fl_msleep( 5000 );
 #endif
     fl_finish( );
     exit( 0 );
@@ -95,30 +108,35 @@ void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 static void make_folder( FL_OBJECT * );
 
-int main(int argc, char *argv[])
+int
+main( int    argc,
+	  char *argv[ ] )
 {
-   FD_mainform *fd_mainform;
+	FD_mainform *fd_mainform;
 
-   fl_set_border_width(-2);
-   fl_initialize(&argc, argv, 0, 0, 0);
-   fd_mainform = create_form_mainform();
+	fl_set_border_width( -2 );
+	fl_initialize( &argc, argv, 0, 0, 0 );
+	fd_mainform = create_form_mainform( );
 
-   make_folder( fd_mainform->folder );
+	make_folder( fd_mainform->folder );
 
-   /* show the first form */
+	/* show the first form */
 
-   fl_show_form( fd_mainform->mainform, FL_PLACE_ASPECT, FL_FULLBORDER,
-				 "TabFolder");
+	fl_show_form( fd_mainform->mainform, FL_PLACE_ASPECT, FL_FULLBORDER,
+				  "TabFolder");
 
-   while ( fl_do_forms( ) )
-	   /* empty */ ;
+	while ( fl_do_forms( ) )
+		/* empty */ ;
+
    return 0;
 }
 
-void folder_change( FL_OBJECT * ob   FL_UNUSED_ARG,
-					long        val  FL_UNUSED_ARG )
+void
+folder_change( FL_OBJECT * ob   FL_UNUSED_ARG,
+			   long        val  FL_UNUSED_ARG )
 {
 }
+
 
 static void make_folder( FL_OBJECT *folder )
 {
@@ -146,7 +164,7 @@ static void make_folder( FL_OBJECT *folder )
 	/* fill-in form initialization code */
 
 	for ( i = 0; i < sizeof y / sizeof *y; i++)
-		fl_add_chart_value( fd_staticform->chart,y[ i ],label[ i ], i + 1 );
+		fl_add_chart_value( fd_staticform->chart, y[ i ],label[ i ], i + 1 );
 
 	fl_addto_menu( fd_choiceform->pulldown,
 				   "MenuEntry1|MenuEntry2|MenuEntry3|MenuEntry4" );

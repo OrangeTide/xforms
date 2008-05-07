@@ -1,3 +1,23 @@
+2008-05-07 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/objects.c, lib/child.c: Handling of child
+	objects corrected - valgrind was reporting an
+	error with the old code (access to already re-
+	leased memory) and the code as rather buggy
+	and inconsistent anyway.
+
+	* lib/xpopup.c: Changed a XFhlush() to XSync()
+	after a popup was opened - without it an Map-
+	Notify was sometimes passed back to the user
+	program (happened due to a fix to a different
+	bug in lib/events.c).
+
+	* fdesign: Tried to make the fdesign GUI look a
+	bit nicer (thinner borders etc.). Some changes to
+	generated output files (format, call of fl_free()
+	on the different fdui's at the end of the main()
+	function etc.).
+
 2008-05-05 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* further clean-up of header files and renaming

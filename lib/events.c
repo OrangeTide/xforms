@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.20 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.21 2008/05/07 20:43:38 jtt Exp $";
 #endif
 
 
@@ -50,8 +50,8 @@ static void fli_handle_input_object( FL_OBJECT * obj );
 
 /*** Global event handlers for all windows ******/
 
-static FL_APPEVENT_CB fl_event_callback;
-static void *fl_user_data;
+static FL_APPEVENT_CB fli_event_callback;
+static void *fli_user_data;
 
 
 /***************************************
@@ -70,12 +70,14 @@ fli_handle_event_callbacks( XEvent * xev )
 
     if ( ! fwin )
     {
-		if ( ! fl_event_callback )
+		if ( ! fli_event_callback )
 		{
 			M_warn( "fli_handle_event_callbacks", "Unknown window = 0x%lx",
 					xev->xany.window );
 		}
+
 		fli_xevent_name( "Ignored", xev );
+
 		return 0;
     }
 
@@ -101,10 +103,10 @@ FL_APPEVENT_CB
 fl_set_event_callback( FL_APPEVENT_CB callback,
 					   void *         user_data )
 {
-    FL_APPEVENT_CB old = fl_event_callback;
+    FL_APPEVENT_CB old = fli_event_callback;
 
-    fl_event_callback = callback;
-    fl_user_data = user_data;
+    fli_event_callback = callback;
+    fli_user_data = user_data;
     return old;
 }
 
@@ -548,9 +550,9 @@ fl_XPutBackEvent( XEvent * xev )
     if ( fli_handle_event_callbacks( xev ) )
 		return;
 
-    if ( fl_event_callback )
+    if ( fli_event_callback )
     {
-		fl_event_callback( xev, fl_user_data );
+		fli_event_callback( xev, fli_user_data );
 		return;
     }
 
@@ -639,10 +641,10 @@ fli_treat_user_events( void )
 
 	while ( event_queue.count )
 	{
-		if ( fl_event_callback )
+		if ( fli_event_callback )
 		{
 			fl_XNextEvent( &xev );
-			fl_event_callback( &xev, fl_user_data );
+			fli_event_callback( &xev, fli_user_data );
 		}
 		else
 			fli_object_qenter( FL_EVENT );

@@ -5,7 +5,6 @@
 #include "ui_objs.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -15,14 +14,13 @@ create_form_buttonform( void )
     FL_OBJECT *obj;
     FD_buttonform *fdui = fl_malloc( sizeof *fdui );
 
-
+    int old_bw = fl_get_border_width( );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->buttonform = fl_bgn_form( FL_NO_BOX, 581, 51 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 581, 51, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 581, 51, "" );
 
@@ -41,9 +39,11 @@ create_form_buttonform( void )
     obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 260, 3, 30, 30, "pixmap" );
 
     obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 300, 3, 30, 30, "scroll" );
+
     fl_end_form( );
 
     fdui->buttonform->fdui = fdui;
+    fl_set_border_width( old_bw );
 
     return fdui;
 }
@@ -58,14 +58,13 @@ create_form_valuatorform( void )
     FL_OBJECT *obj;
     FD_valuatorform *fdui = fl_malloc( sizeof *fdui );
 
-
+    int old_bw = fl_get_border_width( );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->valuatorform = fl_bgn_form( FL_NO_BOX, 581, 51 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 581, 51, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 581, 51, "" );
 
@@ -80,9 +79,11 @@ create_form_valuatorform( void )
     obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 204, 5, 30, 30, "counter" );
 
     obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 250, 5, 30, 30, "positioner" );
+
     fl_end_form( );
 
     fdui->valuatorform->fdui = fdui;
+    fl_set_border_width( old_bw );
 
     return fdui;
 }
@@ -97,14 +98,13 @@ create_form_staticform( void )
     FL_OBJECT *obj;
     FD_staticform *fdui = fl_malloc( sizeof *fdui );
 
-
+    int old_bw = fl_get_border_width( );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->staticform = fl_bgn_form( FL_NO_BOX, 581, 51 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 581, 51, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 581, 51, "" );
 
@@ -123,9 +123,11 @@ create_form_staticform( void )
     obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 320, 3, 30, 30, "chart" );
 
     obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 370, 3, 30, 30, "clock" );
+
     fl_end_form( );
 
     fdui->staticform->fdui = fdui;
+    fl_set_border_width( old_bw );
 
     return fdui;
 }

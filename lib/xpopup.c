@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.23 2008/05/05 14:21:55 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.24 2008/05/07 20:43:38 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -935,9 +935,11 @@ wait_for_close( Window win )
     long emask = AllEventsMask;
     XEvent xev;
 
-	/* Drop all events for the window */
+	/* Drop all events for the window. We need to do sync before to be
+	   sure all events are already in the event queue */
 
-    XSync( flx->display, 0 );
+    XSync( flx->display, False );
+
     while ( XCheckWindowEvent( flx->display, win, emask, &xev ) )
 		/* empty */ ;
 #else
@@ -1392,9 +1394,9 @@ fl_dopup( int n )
 	pup_internal_showpup_call = 1;
     fl_showpup( n );
 
-	/* If one opens a touch menu but is fast enough to move the mouse out
-	   and back into the window before the grab is active an extra EnterNotify
-	   event comes in that results in the touch menu getting opened again after
+	/* If one opens a touch menu and is fast enough to move the mouse out
+	   of the window before the grab is active an extra EnterNotify event
+	   comes in that results in the touch menu getting opened again after
 	   closing it, so delete all such events for the form the touch menu
 	   belongs to. */
 
@@ -2236,9 +2238,10 @@ fl_showpup( int n )
 
 	/* The function gets either called directly from a user program or via
 	   the fl_dopup() function. In the first case we need to draw the pupup
-	   and then remove all events the creation of the window produced.
-	   Otherwise we can leave the drawing to the routine dealing with the
-	   events for the window and just grab pointer and keyboard. */
+	   and then remove all events the creation of the window produced (after
+	   a sync so that we can be sure all events are already on the event
+	   queue). Otherwise we can leave the drawing to the routine dealing
+	   with the events for the window and just grab pointer and keyboard. */
 
 	if ( ! pup_internal_showpup_call )
 	{
@@ -2246,7 +2249,7 @@ fl_showpup( int n )
 
 		fl_winset( m->win );
 		draw_popup( m );
-		XFlush( flx->display );
+		XSync( flx->display, False );
 
 		while ( XCheckWindowEvent( flx->display, m->win, AllEventsMask, &ev) )
 			/* empty */ ;

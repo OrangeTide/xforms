@@ -5,7 +5,6 @@
 #include "scrollbar_spec.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_scrollbarattrib( void )
     FD_scrollbarattrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->scrollbarattrib = fl_bgn_form( FL_NO_BOX, 525, 280 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 525, 280, "" );
 
     fdui->background = obj = fl_add_box( FL_FLAT_BOX, 0, 0, 525, 280, "" );
 
@@ -63,6 +59,7 @@ create_form_scrollbarattrib( void )
     fdui->rdelta = obj = fl_add_input( FL_FLOAT_INPUT, 191, 215, 82, 25, "Rightmouse Increment" );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_callback( obj, scb_delta_change, 0 );
+
     fl_end_form( );
 
     fdui->scrollbarattrib->fdui = fdui;

@@ -5,6 +5,7 @@ Internal Form Definition File
 
 Number of forms: 3
 Unit of measure: FL_COORD_PIXEL
+Border Width: -1
 
 =============== FORM ===============
 Name: buttonform

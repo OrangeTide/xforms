@@ -5,7 +5,6 @@
 #include "ui_attrib.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_attrib( void )
     FD_attrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->attrib = fl_bgn_form( FL_NO_BOX, 630, 310 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 630, 310, "" );
 
     fdui->background = obj = fl_add_box( FL_FLAT_BOX, 0, 0, 630, 310, "" );
 
@@ -51,6 +47,7 @@ create_form_attrib( void )
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
     fl_set_object_resize( obj, FL_RESIZE_ALL );
     fl_set_object_callback( obj, folder_switch_cb, 0 );
+
     fl_end_form( );
 
     fdui->attrib->fdui = fdui;
@@ -70,15 +67,12 @@ create_form_generic_attrib( void )
     FD_generic_attrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->generic_attrib = fl_bgn_form( FL_NO_BOX, 534, 278 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 534, 278, "" );
 
     fdui->background = obj = fl_add_box( FL_FLAT_BOX, 0, 0, 534, 278, "" );
 
@@ -177,6 +171,7 @@ create_form_generic_attrib( void )
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
     fl_end_group( );
 
+
     fl_end_form( );
 
     fdui->generic_attrib->fdui = fdui;
@@ -196,20 +191,18 @@ create_form_nullattrib( void )
     FD_nullattrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->nullattrib = fl_bgn_form( FL_NO_BOX, 540, 280 );
 
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 540, 280, "" );
-
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 540, 280, "" );
 
-    obj = fl_add_box( FL_UP_BOX, 90, 100, 350, 50, "Not Implemented (or not interesting)" );
+    obj = fl_add_box( FL_UP_BOX, 90, 100, 350, 50, "Not implemented (or not interesting)" );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
+
     fl_end_form( );
 
     fdui->nullattrib->fdui = fdui;

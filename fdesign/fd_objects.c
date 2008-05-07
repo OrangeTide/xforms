@@ -972,7 +972,7 @@ add_an_object( int      objclass,
     if ( ! nosuper )
 		get_superspec( obj );
 
-    obj->active = TRUE;
+    obj->active = 1;
 
     return obj;
 }

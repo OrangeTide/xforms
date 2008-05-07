@@ -467,7 +467,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: PUSH_BUTTON
 box: 217 249 79 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -475,7 +475,7 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: Jump/Smooth
+label: Jump
 shortcut: 
 resize: FL_RESIZE_NONE
 gravity: FL_NoGravity FL_NoGravity

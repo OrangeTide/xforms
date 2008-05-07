@@ -28,6 +28,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include <stdlib.h>
 
@@ -40,7 +41,6 @@ FL_OBJECT *done,
           *menu;
 void create_form_pup( void );
 void init_menu( void );
-
 int post( FL_OBJECT *, 
 		  int,
 		  FL_Coord,
@@ -48,7 +48,9 @@ int post( FL_OBJECT *,
 		  int,
 		  void * );
 
-int main( int argc,char *argv[ ] )
+int
+main( int    argc,
+	  char * argv[ ] )
 {
     FL_IOPT aa;
     unsigned int mask = FL_PDVisual;
@@ -70,12 +72,14 @@ int main( int argc,char *argv[ ] )
     init_menu( );
 
     fl_do_forms( );
+
     return 0;
 }
 
 static int subm = -1,
            m = -1,
            ssm;
+
 
 /* post-handler */
 
@@ -198,7 +202,9 @@ do_pup( FL_OBJECT * ob,
    fl_setpup_cursor( m, n ? XC_hand2 : XC_sb_right_arrow );
 }
 
-void init_menu( void )
+
+void
+init_menu( void )
 {
     int mm,
 		smm;
@@ -238,8 +244,10 @@ void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 long        data  FL_UNUSED_ARG )
 {
-   exit( 0 );
+	fl_finish( );
+	exit( 0 );
 }
+
 
 void create_form_pup( void )
 {

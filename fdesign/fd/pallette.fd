@@ -5,7 +5,7 @@ Internal Form Definition File
 
 Number of forms: 6
 Unit of measure: FL_COORD_PIXEL
-Border Width: -2
+Border Width: -1
 
 =============== FORM ===============
 Name: pmain
@@ -854,7 +854,7 @@ argument: FL_TIMER
 file: /home/zhao/xforms/DESIGN/xpm/timer.xpm
 focus_file: 
 fullpath: 0
-data: rtime_pixels
+data: timer_pixels
 focus_data: 
 
 --------------------

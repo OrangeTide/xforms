@@ -5,7 +5,6 @@
 #include "ui_theforms.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_control( void )
     FD_control *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->control = fl_bgn_form( FL_NO_BOX, 580, 280 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 580, 280, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 580, 280, "" );
 
@@ -170,6 +166,7 @@ create_form_control( void )
     fl_set_object_callback( obj, groupmenu_callback, 0 );
     fl_end_group( );
 
+
     fl_end_form( );
 
     fdui->control->fdui = fdui;
@@ -189,15 +186,12 @@ create_form_align( void )
     FD_align *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->align = fl_bgn_form( FL_NO_BOX, 286, 126 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 286, 126, "" );
 
     obj = fl_add_box( FL_UP_BOX, 0, 0, 286, 126, "" );
 
@@ -244,6 +238,7 @@ create_form_align( void )
     fdui->dismiss = obj = fl_add_button( FL_NORMAL_BUTTON, 195, 95, 70, 25, "Dismiss" );
     fl_set_button_shortcut( obj, "Dd#d", 1 );
     fl_set_object_callback( obj, exitalign_cb, 0 );
+
     fl_end_form( );
 
     fdui->align->fdui = fdui;
@@ -263,15 +258,12 @@ create_form_test( void )
     FD_test *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->test = fl_bgn_form( FL_NO_BOX, 272, 291 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 272, 291, "" );
 
     obj = fl_add_box( FL_FLAT_BOX, 0, 0, 272, 291, "" );
     fl_set_object_color( obj, FL_INDIANRED, FL_COL1 );
@@ -295,6 +287,7 @@ create_form_test( void )
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
     fl_set_object_callback( obj, clearlog_cb, 0 );
+
     fl_end_form( );
 
     fdui->test->fdui = fdui;
@@ -314,15 +307,12 @@ create_form_helpform( void )
     FD_helpform *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->helpform = fl_bgn_form( FL_NO_BOX, 536, 321 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 536, 321, "" );
 
     obj = fl_add_box( FL_UP_BOX, 0, 0, 536, 321, "" );
     fl_set_object_color( obj, FL_SLATEBLUE, FL_COL1 );
@@ -360,6 +350,7 @@ create_form_helpform( void )
     obj = fl_add_button( FL_NORMAL_BUTTON, 471, 286, 50, 26, "Hide" );
     fl_set_button_shortcut( obj, "Hh#h", 1 );
     fl_set_object_callback( obj, exithelp_cb, 0 );
+
     fl_end_form( );
 
     fdui->helpform->fdui = fdui;

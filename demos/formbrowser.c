@@ -23,97 +23,139 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include <stdlib.h>
 #include "fd/formbrowser_gui.h"
 
-void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			  long        data  FL_UNUSED_ARG )
+
+/***************************************
+ ***************************************/
+
+void
+done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
+	fl_finish( );
     exit(0);
 }
 
-void hide_show_cb( FL_OBJECT * ob,
-				   long        data )
+
+/***************************************
+ ***************************************/
+
+void
+hide_show_cb( FL_OBJECT * ob,
+			  long        data )
 {
     FD_mainform *fdui = ob->form->fdui;
 
     ( data ? fl_show_object : fl_hide_object )( fdui->formbrowser );
 }
 
-void reshow_cb( FL_OBJECT * ob,
-				long        data  FL_UNUSED_ARG )
-{
-   fl_hide_form(ob->form);
-   fl_show_form(ob->form,FL_PLACE_POSITION,FL_FULLBORDER,"formbrowser");
 
+/***************************************
+ ***************************************/
+
+void
+reshow_cb( FL_OBJECT * ob,
+		   long        data  FL_UNUSED_ARG )
+{
+	fl_hide_form( ob->form );
+	fl_show_form( ob->form, FL_PLACE_POSITION, FL_FULLBORDER, "formbrowser" );
 }
 
-void scroll_cb( FL_OBJECT * ob,
-				long        data  FL_UNUSED_ARG )
+
+/***************************************
+ ***************************************/
+
+void
+scroll_cb( FL_OBJECT * ob,
+		   long        data  FL_UNUSED_ARG )
 {
      static int n;
      FD_mainform *fdui = ob->form->fdui;
 
-     fl_set_formbrowser_scroll(fdui->formbrowser, ++n%2);
+	 fl_set_object_label( ob, n % 2 ? "Jump" : "Smooth" );
+     fl_set_formbrowser_scroll( fdui->formbrowser, ++n % 2 );
 }
 
-void deactivate_cb( FL_OBJECT * ob,
-					long        data  FL_UNUSED_ARG )
-{
-   FD_mainform *fdui = (FD_mainform *)ob->form->fdui;
 
-   if(fdui->formbrowser->active > 0)
-   {
-       fl_set_object_label(ob,"Activate");
-       fl_deactivate_object(fdui->formbrowser);
-   }
-   else
-   {
-       fl_set_object_label(ob,"Deactivate");
-       fl_activate_object(fdui->formbrowser);
-   }
+/***************************************
+ ***************************************/
+
+void
+deactivate_cb( FL_OBJECT * ob,
+			   long        data  FL_UNUSED_ARG )
+{
+	FD_mainform *fdui = ob->form->fdui;
+
+	if ( fdui->formbrowser->active )
+	{
+		fl_set_object_label( ob, "Activate" );
+		fl_deactivate_object( fdui->formbrowser );
+	}
+	else
+	{
+		fl_set_object_label( ob,"Deactivate" );
+		fl_activate_object( fdui->formbrowser );
+	}
 }
 
-int main(int argc, char *argv[])
+
+/***************************************
+ ***************************************/
+
+int main( int    argc,
+		  char * argv[ ] )
 {
-   FD_buttonform *fd_buttonform;
-   FD_staticform *fd_staticform;
-   FD_mainform *fd_mainform;
-   FD_valuatorform *fd_valuatorform;
-   FD_choiceform *fd_choiceform;
-   FD_inputform *fd_inputform;
-   FD_big *fd_big;
+	FD_buttonform *fd_buttonform;
+	FD_staticform *fd_staticform;
+	FD_mainform *fd_mainform;
+	FD_valuatorform *fd_valuatorform;
+	FD_choiceform *fd_choiceform;
+	FD_inputform *fd_inputform;
+	FD_big *fd_big;
 
-   fl_set_border_width(-2);
-   fl_initialize(&argc, argv, 0, 0, 0);
+	fl_set_border_width( -2 );
+	fl_initialize( &argc, argv, 0, 0, 0 );
 
-   fd_buttonform = create_form_buttonform();
-   fd_staticform = create_form_staticform();
-   fd_mainform = create_form_mainform();
-   fd_valuatorform = create_form_valuatorform();
-   fd_choiceform = create_form_choiceform();
-   fd_inputform = create_form_inputform();
+	fd_buttonform = create_form_buttonform( );
+	fd_staticform = create_form_staticform( );
+	fd_mainform = create_form_mainform( );
+	fd_valuatorform = create_form_valuatorform( );
+	fd_choiceform = create_form_choiceform( );
+	fd_inputform = create_form_inputform( );
 
-   fd_big = create_form_big();
-   {
-       float xx[5] = { 1,2,3,4,5};
-       float yy[5] = { 1,2,3,4,5};
-       fl_set_xyplot_data(fd_big->xyplot, xx, yy,5, "title","x","y");
-   }
+	fd_big = create_form_big( );
+	{
+		float xx[ 5 ] = { 1, 2, 3, 4, 5 };
+		float yy[ 5 ] = { 1, 2, 3, 4, 5 };
 
-   /* fill-in form initialization code */
+		fl_set_xyplot_data( fd_big->xyplot, xx, yy,5, "title", "x", "y" );
+	}
 
-/*   fl_set_object_boxtype(fd_mainform->formbrowser, FL_SHADOW_BOX); */
-   fl_addto_formbrowser(fd_mainform->formbrowser,fd_buttonform->buttonform);
-   fl_addto_formbrowser(fd_mainform->formbrowser,fd_valuatorform->valuatorform);
-   fl_addto_formbrowser(fd_mainform->formbrowser,fd_big->big);
-   fl_addto_formbrowser(fd_mainform->formbrowser,fd_choiceform->choiceform);
-   fl_addto_formbrowser(fd_mainform->formbrowser,fd_staticform->staticform);
+	/* fill-in form initialization code */
 
-   /* show the first form */
-   fl_show_form(fd_mainform->mainform,
-                FL_PLACE_CENTERFREE,FL_FULLBORDER,"buttonform");
-   fl_do_forms();
-   return 0;
+/*   fl_set_object_boxtype( fd_mainform->formbrowser, FL_SHADOW_BOX ); */
+
+	fl_addto_formbrowser( fd_mainform->formbrowser, fd_buttonform->buttonform );
+	fl_addto_formbrowser( fd_mainform->formbrowser,
+						  fd_valuatorform->valuatorform);
+	fl_addto_formbrowser( fd_mainform->formbrowser, fd_big->big);
+	fl_addto_formbrowser( fd_mainform->formbrowser, fd_choiceform->choiceform );
+	fl_addto_formbrowser( fd_mainform->formbrowser, fd_staticform->staticform );
+
+	/* show the first form */
+
+	fl_show_form( fd_mainform->mainform,
+				  FL_PLACE_CENTERFREE, FL_FULLBORDER, "buttonform" );
+
+
+	fprintf( stderr, "%p\n", fl_do_forms( ) );
+
+//	while ( fl_do_forms( ) )
+//		/* empty */ ;
+
+	return 0;
 }

@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.19 2008/05/05 14:21:50 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.20 2008/05/07 20:43:38 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -127,7 +127,7 @@ canvas_event_intercept( XEvent * xev,
     if (    xev->type != Expose
          && xev->type != GraphicsExpose
          && xev->type != ClientMessage
-		 && ( ob->active == DEACTIVATED || ob->form->deactivated ) )
+		 && ( ! ob->active || ob->form->deactivated ) )
 		return FL_PREEMPT;
 
     if ( sp->canvas_handler[ xev->type ] )

@@ -142,6 +142,7 @@ C_output( const char * filename,
     }
 
     make_backup( fname );
+
     if ( ! ( fn = fopen( fname, "w" ) ) )
     {
 		if ( ! fdopt.conv_only )
@@ -185,6 +186,7 @@ C_output( const char * filename,
     }
 
     make_backup( fname );
+
     if ( ! ( fn = fopen( fname, "w" ) ) )
     {
 		fl_show_alert( "Cannot create C-code file!", "", "", 1 );
@@ -206,7 +208,7 @@ C_output( const char * filename,
 		for ( i = j + 1; fname[ i - 1 ]; i++ )
 			fname[ i - j - 1 ] = fname[ i ];
 
-    fprintf( fn, "#include \"%s.h\"\n\n", fname );
+    fprintf( fn, "#include \"%s.h\"\n", fname );
 
     reset_dupinfo_cache( );
 
@@ -946,10 +948,12 @@ print_form_newformat( FILE       * fn,
     fprintf( fn, "    %s->%s = fl_bgn_form( FL_NO_BOX, %d, %d );\n",
 			 fdvname, fname, convert_u(form->w), convert_u(form->h));
 
-    for ( obj = form->first; obj; obj = obj->next )
+	/* Don;t output the first object, it's an unnecessary box */
+
+    for ( obj = form->first->next; obj; obj = obj->next )
 		output_object( fn, obj, 0 );
 
-    fprintf( fn, "    fl_end_form( );\n\n");
+    fprintf( fn, "\n    fl_end_form( );\n\n");
 
     if ( fdopt.compensate )
 		fprintf(fn, "    fl_adjust_form_size( %s->%s );\n", fdvname, fname );
@@ -1203,29 +1207,34 @@ print_header_newformat( FILE       * fn,
 						const char * fname)
 {
     FL_OBJECT *obj;
-    char name[MAX_VAR_LEN], cbname[MAX_VAR_LEN];
-    char argname[MAX_VAR_LEN], fdtname[MAX_VAR_LEN];
+    char name[ MAX_VAR_LEN ],
+		 cbname[ MAX_VAR_LEN ],
+         argname[ MAX_VAR_LEN ],
+         fdtname[ MAX_VAR_LEN ];
 
-    sprintf(fdtname, "FD_%s", fname);
-    fprintf(fn, "typedef struct {\n\tFL_FORM *%s;\n", fname);
-    fprintf(fn, "\tvoid *vdata;\n\tchar *cdata;\n\tlong  ldata;\n");
+    sprintf( fdtname, "FD_%s", fname );
+    fprintf( fn, "typedef struct {\n"
+			     "    FL_FORM   * %s;\n", fname );
+    fprintf( fn, "    void      * vdata;\n"
+			     "    char      * cdata;\n"
+			     "    long        ldata;\n");
 
-    init_array_names();
+    init_array_names( );
 
-    for (obj = form->first; obj; obj = obj->next)
+    for ( obj = form->first; obj; obj = obj->next )
     {
-		get_object_name(obj, name, cbname, argname);
-		if (name[0] && !check_array_name(name))
-			fprintf(fn, "\tFL_OBJECT *%s;\n", name);
+		get_object_name( obj, name, cbname, argname );
+		if ( name[ 0 ] && !check_array_name( name ) )
+			fprintf( fn, "    FL_OBJECT * %s;\n", name );
     }
 
-    if (arethere_array_names())
-		print_array_names(fn, 1);
+    if ( arethere_array_names( ) )
+		print_array_names( fn, 1 );
 
-    fprintf(fn, "} %s;\n", fdtname);
+    fprintf( fn, "} %s;\n", fdtname );
 
-    fprintf(fn, "\nextern %s * create_form_%s(void);\n",
-	    fdtname, fname);
+    fprintf( fn, "\nextern %s * create_form_%s( void );\n",
+			 fdtname, fname );
 }
 
 
@@ -1371,12 +1380,16 @@ output_main_newformat( FILE * fn,
     fprintf( fn, "\n    /* fill-in form initialization code */\n\n" );
 
     fprintf( fn, "    /* show the first form */\n\n" );
-    fprintf( fn, "    fl_show_form( fd_%s->%s, %s, FL_FULLBORDER, \"%s\" );\n",
+    fprintf( fn, "    fl_show_form( fd_%s->%s, %s, FL_FULLBORDER, "
+			     "\"%s\" );\n\n",
 			 fdform[ 0 ].fname, fdform[ 0 ].fname,
 			 get_placement( fdform[ 0 ].form),
 			 fdform[ 0 ].fname );	/* { */
 
-    fprintf(fn, "    fl_do_forms( );\n    return 0;\n}\n" );
+    fprintf(fn, "    fl_do_forms( );\n    fl_finish( );\n" );
+    for ( i = 0; i < nform; i++ )
+		fprintf(fn, "    fl_free( fd_%s );\n", fdform[ i ].fname );
+    fprintf(fn, "\n    return 0;\n}\n" );
 }
 
 
@@ -1442,7 +1455,10 @@ pre_form_output( FILE * fn )
     if ( fd_bwidth != FL_BOUND_WIDTH && fd_bwidth != 0 )
 		fprintf( fn, "    fl_set_border_width( %d );\n", fd_bwidth );
 
-    fprintf( fn, "\n" );
+    if (    fdopt.unit != FL_COORD_PIXEL
+		 || ( fd_bwidth != FL_BOUND_WIDTH && fd_bwidth != 0 )
+		 || ( fd_bwidth != FL_BOUND_WIDTH && fd_bwidth != 0 ) )
+		fprintf( fn, "\n" );
 }
 
 

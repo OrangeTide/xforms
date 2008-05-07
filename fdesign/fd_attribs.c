@@ -43,6 +43,7 @@
 #include "fd_main.h"
 #include "private/flsnprintf.h"
 
+
 /****************** FORMS AND CALL-BACKS ************************/
 
 int auto_apply = 1;
@@ -223,56 +224,56 @@ attrib_init( FD_generic_attrib * ui )
 
     attrib_initialized = 1;
 
-    fl_clear_choice(ui->boxobj);
-    for (i = 1, vp = vn_btype; vp->val >= 0; vp++, i++)
+    fl_clear_choice( ui->boxobj );
+    for ( i = 1, vp = vn_btype; vp->val >= 0; vp++, i++ )
     {
-		fl_addto_choice(ui->boxobj, vp->shown);
-		fl_set_choice_item_shortcut(ui->boxobj, i, vp->hotkey);
+		fl_addto_choice( ui->boxobj, vp->shown );
+		fl_set_choice_item_shortcut( ui->boxobj, i, vp->hotkey );
     }
 
-    fl_set_object_return(ui->nameobj, FL_RETURN_END);
-    fl_set_object_return(ui->cbnameobj, FL_RETURN_END);
+    fl_set_object_return( ui->nameobj, FL_RETURN_END );
+    fl_set_object_return( ui->cbnameobj, FL_RETURN_END );
 
     /* resize */
 
-    fl_set_choice_fontsize(ui->resize, fd_align_fontsize);
-    for (vp = vn_resize; vp->val >= 0; vp++)
-		fl_addto_choice(ui->resize, vp->name + 3);
+    fl_set_choice_fontsize( ui->resize, fd_align_fontsize );
+    for ( vp = vn_resize; vp->val >= 0; vp++ )
+		fl_addto_choice( ui->resize, vp->name + 3 );
 
     /* gravity. Due to compatibilities issues, there are more than need in
        vn_gravity */
 
-    for (i = 0, vp = vn_gravity; vp->val >= 0 && i < 9; vp++, i++)
+    for ( i = 0, vp = vn_gravity; vp->val >= 0 && i < 9; vp++, i++ )
     {
-		fl_addto_choice(ui->nwgravity, vp->name + 3);
-		fl_addto_choice(ui->segravity, vp->name + 3);
+		fl_addto_choice( ui->nwgravity, vp->name + 3 );
+		fl_addto_choice( ui->segravity, vp->name + 3 );
     }
 
     /* align */
 
-    fl_set_choice_fontsize(ui->align, fd_align_fontsize);
-    for (vp = vn_align; vp->val >= 0; vp++)
-		fl_addto_choice(ui->align, vp->name + 9);
-    fl_addto_choice(ui->inside, "Inside|Outside");
+    fl_set_choice_fontsize( ui->align, fd_align_fontsize );
+    for ( vp = vn_align; vp->val >= 0; vp++ )
+		fl_addto_choice( ui->align, vp->name + 9 );
+    fl_addto_choice( ui->inside, "Inside|Outside" );
 
     /* font stuff */
 
     fnts = ui->fontobj;
-    fl_enumerate_fonts(add_font_choice, 1);
-    fl_addto_choice(ui->styleobj, "Normal|Shadow|Engraved|Embossed");
+    fl_enumerate_fonts( add_font_choice, 1 );
+    fl_addto_choice( ui->styleobj, "Normal|Shadow|Engraved|Embossed" );
 
     /* size */
 
-    for (i = 0; i < (int)NFSIZE; i++)
+    for ( i = 0; i < ( int ) NFSIZE; i++ )
     {
-		if (fsizes[i].size == FL_NORMAL_SIZE)
+		if ( fsizes[ i ].size == FL_NORMAL_SIZE )
 		{
-			fsizes[i].name = "Normal";
-			fsizes[i].sc = "Nn#n";
+			fsizes[ i ].name = "Normal";
+			fsizes[ i ].sc = "Nn#n";
 		}
-		sprintf(buf, "%2d  %s%%r1", fsizes[i].size, fsizes[i].name);
-		fl_addto_choice(ui->sizeobj, buf);
-		fl_set_choice_item_shortcut(ui->sizeobj, i + 1, fsizes[i].sc);
+		sprintf( buf, "%2d  %s%%r1", fsizes[ i ].size, fsizes[ i ].name );
+		fl_addto_choice( ui->sizeobj, buf );
+		fl_set_choice_item_shortcut( ui->sizeobj, i + 1, fsizes[ i ].sc );
     }
 
 }
@@ -295,14 +296,14 @@ valid_c_identifier( const char * s )
 
     /* empty is considered to be valid */
 
-    if (!s || !*s || (*s == ' ' && *(s + 1) == '\0'))
+    if ( ! s || ! *s || ( *s == ' ' && *( s + 1 ) == '\0' ) )
 		return 1;
 
-    if (!isalpha( ( int ) *s) && *s != '_')
+    if ( !isalpha( ( int ) *s ) && *s != '_' )
 		return 0;
 
-    for (s++; *s; s++)
-		if (!isalnum( ( int ) *s) && !OK_letter(s))
+    for ( s++; *s; s++ )
+		if ( ! isalnum( ( int ) *s ) && ! OK_letter( s ) )
 			return 0;
 
     return 1;
@@ -317,13 +318,14 @@ validate_cvar_name( FL_OBJECT * ob )
 {
     const char *s = fl_get_input( ob );
 
-    if (!valid_c_identifier(s))
+    if ( ! valid_c_identifier( s ) )
     {
-		char buf[256];
+		char buf[ 256 ];
 
-		sprintf(buf, "Invalid C identifier specified for object %s", ob->label);
-		fl_show_alert("Error", buf, s, 0);
-		fl_set_focus_object(ob->form, ob);
+		sprintf( buf, "Invalid C identifier specified for object %s",
+				 ob->label );
+		fl_show_alert( "Error", buf, s, 0 );
+		fl_set_focus_object( ob->form, ob );
 		return 0;
     }
 
@@ -337,8 +339,8 @@ validate_cvar_name( FL_OBJECT * ob )
 static int
 validate_attributes( void )
 {
-    return    validate_cvar_name(fd_generic_attrib->nameobj)
-		   && validate_cvar_name(fd_generic_attrib->cbnameobj);
+    return    validate_cvar_name( fd_generic_attrib->nameobj )
+		   && validate_cvar_name( fd_generic_attrib->cbnameobj );
 }
 
 
@@ -362,12 +364,13 @@ static void
 readback_attributes( FL_OBJECT * obj )
 {
     int spstyle, warn = 0;
-    char name[128], cbname[128];
-    char tmpbuf[128];
-    static char *m[] =
-    {"object name", "callback", "object name & callback"};
+    char name[ 128],
+		 cbname[128 ];
+    char tmpbuf[ 128 ];
+    static char *m[ ] =
+		{"object name", "callback", "object name & callback"};
 
-    obj->boxtype = fl_get_choice(fd_generic_attrib->boxobj) - 1;
+    obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
 
     /* label style consists of two parts */
 
@@ -446,10 +449,16 @@ readback_attributes( FL_OBJECT * obj )
 void
 show_attributes( const FL_OBJECT * obj )
 {
-    char objname[MAX_VAR_LEN], cbname[MAX_VAR_LEN], argname[MAX_VAR_LEN];
+    char objname[MAX_VAR_LEN],
+		 cbname[MAX_VAR_LEN],
+		 argname[MAX_VAR_LEN];
     char buf[MAX_VAR_LEN];
-    int i, lstyle, spstyle, oksize, align = obj->align & ~FL_ALIGN_INSIDE;
-    static char othersize[32];
+    int i,
+		lstyle,
+		spstyle,
+		oksize,
+		align = obj->align & ~FL_ALIGN_INSIDE;
+    static char othersize[ 32 ];
 
     fl_freeze_form(fd_generic_attrib->generic_attrib);
 
@@ -1005,7 +1014,6 @@ change_type( FL_OBJECT * obj,
     {
 		clear_selection();
 		fl_delete_object(obj);
-		fli_change_composite_parent(ttt, obj);
 		ttt->parent = obj;
 		ttt->form = form;
 		*obj = *ttt;

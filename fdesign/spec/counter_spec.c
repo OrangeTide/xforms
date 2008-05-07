@@ -5,7 +5,6 @@
 #include "counter_spec.h"
 
 
-
 /***************************************
  ***************************************/
 
@@ -16,15 +15,12 @@ create_form_counterattrib( void )
     FD_counterattrib *fdui = fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
-
-    fl_set_border_width( -2 );
+    fl_set_border_width( -1 );
 
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
     fdui->counterattrib = fl_bgn_form( FL_NO_BOX, 540, 280 );
-
-    obj = fl_add_box( FL_NO_BOX, 0, 0, 540, 280, "" );
 
     fdui->background = obj = fl_add_box( FL_FLAT_BOX, 0, 0, 540, 280, "" );
 
@@ -60,6 +56,7 @@ create_form_counterattrib( void )
     fdui->step2 = obj = fl_add_input( FL_FLOAT_INPUT, 340, 192, 92, 24, "Lg. Step Size" );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_callback( obj, cnt_stepchange_cb, 1 );
+
     fl_end_form( );
 
     fdui->counterattrib->fdui = fdui;

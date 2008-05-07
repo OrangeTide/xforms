@@ -5,7 +5,7 @@ Internal Form Definition File
 
 Number of forms: 3
 Unit of measure: FL_COORD_PIXEL
-Border Width: -2
+Border Width: -1
 
 =============== FORM ===============
 Name: attrib
@@ -647,7 +647,7 @@ alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLACK
-label: Not Implemented (or not interesting)
+label: Not implemented (or not interesting)
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
