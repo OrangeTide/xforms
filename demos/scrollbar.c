@@ -100,17 +100,15 @@ void noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 int main( int    argc,
 		  char * argv[ ] )
 {
-   FD_scb *fd_scb;
+	FD_scb *fd_scb;
 
-   fl_set_border_width( -2 );
-   fl_initialize( &argc, argv, 0, 0, 0 );
-   fd_scb = create_form_scb( );
+	fl_initialize( &argc, argv, 0, 0, 0 );
+	fd_scb = create_form_scb( );
 
-   /* show the first form */
+	fl_show_form( fd_scb->scb, FL_PLACE_CENTERFREE, FL_FULLBORDER, "form0" );
 
-   fl_show_form( fd_scb->scb, FL_PLACE_CENTERFREE, FL_FULLBORDER, "form0" );
+	fl_do_forms( );
+	fl_finish( );
 
-   fl_do_forms( );
-
-   return 0;
+	return 0;
 }

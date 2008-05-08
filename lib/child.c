@@ -48,17 +48,29 @@ fli_add_child( FL_OBJECT * parent,
 {
     FL_OBJECT *t;
 
-    if ( child->form )
+	/* If the child is already linked to a form that's not the one of the
+	   parent unlink it from that form and then add it to the parents
+	   form (if the parent already belongs to one) */
+
+    if ( child->form && child->form != parent->form )
 		fl_delete_object( child );
+
+	if ( ! child->form && parent->form )
+		fl_add_object( parent->form, child );
+
+	/* Now set up the parent-child relationship */
 
 	child->parent = parent;
     child->is_child = 1;
 
-    /* copy gravity attributes */
+    /* Child has same gravity and resize attributes as the parent */
 
     child->nwgravity = parent->nwgravity;
     child->segravity = parent->segravity;
     child->resize    = parent->resize;
+
+	/* Append the new child to the linked list of objects that are
+	   children of the parent */
 
     if ( parent->child == NULL )
 		parent->child = child;
@@ -69,51 +81,52 @@ fli_add_child( FL_OBJECT * parent,
 		t->nc = child;
     }
 
+	/* If the child itself has children set their gravity and resizing
+	   behaviour to that of the parent */
+
 	if ( ! child->child )
-		return;
-
-	parent = child;
-
-	for ( child = child->child; child; child = child->nc )
 	{
-		fli_set_composite_gravity( child, parent->nwgravity,
-								   parent->segravity );
-		fli_set_composite_resize( child, parent->resize );
+		parent = child;
+
+		for ( child = child->child; child; child = child->nc )
+		{
+			fli_set_composite_gravity( child, parent->nwgravity,
+									   parent->segravity );
+			fli_set_composite_resize( child, parent->resize );
+		}
 	}
 }
 
 
 /***************************************
+ * Adds all children of an object to its form
  ***************************************/
 
 void
-fli_hide_composite( FL_OBJECT * ob )
+fli_add_composite( FL_OBJECT * obj )
 {
-    for ( ob = ob->child; ob; ob = ob->nc )
-    {
-		if ( ob->child )
-			fli_hide_composite( ob );
+	FL_FORM *form = obj->form;
 
-		if ( ob->objclass == FL_CANVAS )
-			fl_hide_canvas( ob );
-
-		ob->visible = 0;
-    }
+	for ( obj = obj->child; obj; obj = obj->nc )
+		fl_add_object( form, obj );
 }
 
 
 /***************************************
+ * Unlinks all children of an object from its form
  ***************************************/
 
 void
 fli_delete_composite( FL_OBJECT * obj )
 {
 	for ( obj = obj->child; obj; obj = obj->nc )
-		fl_delete_object( obj );
+		if ( obj->form )
+			fl_delete_object( obj );
 }
 
 
 /***************************************
+ * Irrevocably deletes all children of an object 
  ***************************************/
 
 void
@@ -136,15 +149,41 @@ fli_free_composite( FL_OBJECT * obj )
  ***************************************/
 
 void
-fli_show_composite( FL_OBJECT * ob )
+fli_show_composite( FL_OBJECT * obj )
 {
-    FL_OBJECT *tmp;
+    for ( obj = obj->child; obj; obj = obj->nc )
+		fli_show_object( obj );
+}
 
-    for ( tmp = ob->child; tmp; tmp = tmp->nc )
+
+/***************************************
+ ***************************************/
+
+void
+fli_hide_composite( FL_OBJECT * obj,
+					Region    * reg )
+{
+    for ( obj = obj->child; obj; obj = obj->nc )
+    {
+		if ( obj->child )
+			fli_hide_composite( obj, reg );
+
+		fli_hide_and_get_region( obj, reg );
+    }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_activate_composite( FL_OBJECT * ob )
+{
+    for ( ob = ob->child; ob; ob = ob->nc )
 	{
-		if ( tmp->child )
-			fli_show_composite( tmp );
-		tmp->visible = 1;
+		if ( ob->child )
+			fli_activate_composite( ob );
+		ob->active = 1;
 	}
 }
 
@@ -169,21 +208,6 @@ fli_deactivate_composite( FL_OBJECT * ob )
  ***************************************/
 
 void
-fli_activate_composite( FL_OBJECT * ob )
-{
-    for ( ob = ob->child; ob; ob = ob->nc )
-	{
-		if ( ob->child )
-			fli_activate_composite( ob );
-		ob->active = 1;
-	}
-}
-
-
-/***************************************
- ***************************************/
-
-void
 fli_set_composite_resize( FL_OBJECT *  obj,
 						  unsigned int resize )
 {
@@ -197,6 +221,8 @@ fli_set_composite_resize( FL_OBJECT *  obj,
 
 
 /***************************************
+ * Sets the gravity property for the children of an object
+ * (and their children in turn)
  ***************************************/
 
 void
@@ -216,6 +242,8 @@ fli_set_composite_gravity( FL_OBJECT *  obj,
 
 
 /***************************************
+ * Sets the resize property for the children of an object
+ * (and their children in turn)
  ***************************************/
 
 void
@@ -263,21 +291,6 @@ fli_insert_composite_after( FL_OBJECT * comp,
 
     if ( form->last == node )
 		form->last = tmp;
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fli_add_composite( FL_FORM *   form,
-				   FL_OBJECT * ob )
-{
-    FL_OBJECT *tmp,
-		      *tmp1 = ob;
-
-    for ( tmp = ob->child; tmp; tmp1 = tmp, tmp = tmp->nc )
-		fl_add_object( form, tmp );
 }
 
 

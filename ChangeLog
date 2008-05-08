@@ -1,4 +1,4 @@
-2008-05-07 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-08 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib.objects.c, lib/childs.c: Rewrite of the
 	functions for hidding an object. Some adjustments

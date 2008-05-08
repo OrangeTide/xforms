@@ -350,8 +350,8 @@ handle_pixmap( FL_OBJECT * ob,
 			free_pixmap( ob->spec );
 			if ( ( ( PixmapSPEC * ) sp->cspecv )->gc )
 				XFreeGC( flx->display, ( ( PixmapSPEC * ) sp->cspecv )->gc );
-			fl_free( sp->cspecv );
-			fl_free( ob->spec );
+			fl_safe_free( sp->cspecv );
+			fl_safe_free( ob->spec );
 			break;
 	}
 

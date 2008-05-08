@@ -210,6 +210,8 @@ extern FL_OBJECT *fli_find_first( FL_FORM *,
 								  FL_Coord,
 								  FL_Coord );
 
+void fli_show_object( FL_OBJECT * );
+
 extern FL_OBJECT *fli_find_last( FL_FORM *,
 								 int,
 								 FL_Coord,
@@ -727,6 +729,9 @@ extern int fli_handle_event_callbacks( XEvent * );
 #define Is1LineDown( k )       ( ( k ) == FLI_1LINE_DOWN )
 
 
+void fli_hide_and_get_region( FL_OBJECT *,
+							  Region    * );
+
 extern int fli_convert_shortcut( const char *,
 							    long * );
 
@@ -748,7 +753,8 @@ extern int fli_get_default_scrollbarsize( FL_OBJECT * );
 extern void fli_set_app_name( const char *,
 							  const char * );
 
-extern void fli_hide_composite( FL_OBJECT * );
+void fli_hide_composite( FL_OBJECT *,
+						 Region    * );
 
 extern void fli_show_composite( FL_OBJECT * );
 
@@ -828,8 +834,7 @@ extern int fli_xyplot_interpolate( FL_OBJECT *,
 extern void fli_insert_composite_after( FL_OBJECT *,
 										FL_OBJECT * );
 
-extern void fli_add_composite( FL_FORM *,
-							   FL_OBJECT * );
+extern void fli_add_composite( FL_OBJECT * );
 
 extern int fli_is_watched_io( int );
 

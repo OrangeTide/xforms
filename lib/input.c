@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.17 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.18 2008/05/08 22:40:20 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1422,11 +1422,11 @@ handle_it( FL_OBJECT * ob,
 			fl_free( ( ( SPEC * ) ob->spec )->str );
 			fl_free( ob->spec );
 			ob->spec = NULL;
-			break;
+			return 0;
 
 		case FL_OTHER:
 			M_warn( "input", "handle special" );
-			break;
+			return 0;
     }
 
     if (    sp

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.21 2008/05/07 20:43:38 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.22 2008/05/08 22:40:20 jtt Exp $";
 #endif
 
 
@@ -241,7 +241,7 @@ fli_get_from_obj_queue( void )
 
 /*************************************************************************
  * Function for removing all entries for a certain object from the queue.
- * This routine is called as part of the deletion of an object.
+ * This routine is called as part of hiding an deletion of an object.
  *************************************************************************/
 
 void

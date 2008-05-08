@@ -517,7 +517,6 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     compute_position( ob );
 
     fli_add_child( ob, tab );
-    fl_add_object( ob->form, tab );
 
     if ( sp->nforms == 1 )
     {

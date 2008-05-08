@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.25 2008/05/05 14:21:52 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.26 2008/05/08 22:40:20 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -73,8 +73,9 @@ static void fli_set_debug_level( int );
 
 static XrmOptionDescRec copt[ ] =
 {
-    { "-debug",     "*debug",            XrmoptionSepArg, ( caddr_t ) "0" },
+    { "-fldebug",   "*fldebug",          XrmoptionSepArg, ( caddr_t ) "0" },
     { "-flversion", "*flversion",        XrmoptionNoArg,  ( caddr_t ) "1" },
+    { "-flhelp",    "*flhelp",           XrmoptionNoArg,  ( caddr_t ) "1" },
     { "-name",      ".name",             XrmoptionSepArg, ( caddr_t ) 0   },
     { "-display",   ".display",          XrmoptionSepArg, ( caddr_t ) 0   },
     { "-sync",      "*sync",             XrmoptionNoArg,  ( caddr_t ) "1" },
@@ -1019,10 +1020,37 @@ fl_initialize( int        * na,
     /* Get debug level settings since all error reporting will be controled
        by it */
 
-    fl_snprintf( disp_name, sizeof disp_name, "%s.debug", fl_app_name );
-    fl_snprintf( disp_cls , sizeof disp_cls , "%s.Debug", fl_app_class );
+    fl_snprintf( disp_name, sizeof disp_name, "%s.fldebug", fl_app_name );
+    fl_snprintf( disp_cls , sizeof disp_cls , "%s.flDebug", fl_app_class );
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
 		fli_set_debug_level( atoi( xval.addr ) );
+
+    /* print help */
+
+    fl_snprintf( disp_name, sizeof disp_name, "%s.flhelp", fl_app_name );
+    fl_snprintf( disp_cls , sizeof disp_cls , "%s.flhelp", fl_app_class );
+
+    if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
+    {
+		size_t i = 0;
+
+		while ( i < Ncopt )
+		{
+			if ( i == 0 )
+				fprintf( stderr, "%s: ", fl_argv[ 0 ] );
+			else
+				fprintf( stderr, "%*s  ", strlen( fl_argv[ 0 ] ), "" );
+
+			fprintf( stderr, " %s", copt[ i ].option );
+
+			if ( copt[ i ].argKind == XrmoptionSepArg )
+				fprintf( stderr, " \t[arg]" );
+			fprintf( stderr, "\n" );
+			i++;
+		}
+
+		exit(1);
+    }
 
     /* Check if -name is present */
 

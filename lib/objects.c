@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.25 2008/05/07 20:43:38 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.26 2008/05/08 22:40:21 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -60,12 +60,14 @@ extern FL_OBJECT * fli_mouseobj,          /* defined in forms.c */
 
 
 static void lose_focus( FL_OBJECT * );
-static void fli_get_object_bbox_rect( FL_OBJECT *,
-									  XRectangle * );
+static void get_object_bbox_rect( FL_OBJECT *,
+								  XRectangle * );
+
+static FL_OBJECT *refocus;
 
 
 /***************************************
- * Creates an empty form. NOT FOR USER.
+ * Creates an empty form
  ***************************************/
 
 FL_FORM *
@@ -256,66 +258,6 @@ fl_make_object( int            objclass,
 
 
 /***************************************
- * Frees the memory used by an object.
- ***************************************/
-
-void
-fl_free_object( FL_OBJECT * obj )
-{
-    /* check whether ok to free it */
-
-    if ( obj == NULL )
-    {
-		M_err( "fl_free_object", "NULL object." );
-		return;
-    }
-
-    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
-
-	/* If this is a parent object free the cjilds first */
-
-	if ( obj->child )
-		fli_free_composite( obj );
-
-	/* If it's a child object remove it from the linked list of childs
-	   of the parent object */
-
-	if ( obj->is_child )
-	{
-		FL_OBJECT *o = obj->parent->child;
-
-		if ( o == obj )
-			obj->parent->child = obj->nc;
-		else
-		{
-			while ( o->nc != obj )
-				o = o->nc;
-			o->nc = obj->nc;
-		}
-	}
-
-	/* If the object hasn't been unlinked from its form do that know */
-
-    if ( obj->form != NULL )
-		fl_delete_object( obj );
-
-    /* Finally free all memory allocated for the object */
-
-	fl_safe_free( obj->label );
-	fl_safe_free( obj->tooltip );
-	fl_safe_free( obj->shortcut );
-
-    if ( obj->flpixmap )
-    {
-		fli_free_flpixmap( obj->flpixmap ) ;
-		fl_safe_free( obj->flpixmap );
-    }
-
-    fl_free( obj );
-}
-
-
-/***************************************
  * Adds an object to the form.
 ***************************************/
 
@@ -325,13 +267,13 @@ fl_add_object( FL_FORM   * form,
 {
     /* Checking for correct behaviour. */
 
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_add_object", "NULL object." );
 		return;
     }
 
-    if ( form == NULL )
+    if ( ! form )
     {
 		M_err( "fl_add_object", "NULL form for %s",
 			   fli_object_class_name( obj ) );
@@ -384,7 +326,7 @@ fl_add_object( FL_FORM   * form,
 		}
 	}
 
-	if ( form->first == NULL )
+	if ( ! form->first )
 		form->first = form->last = obj;
 	else
 	{
@@ -399,14 +341,14 @@ fl_add_object( FL_FORM   * form,
 	/* If the object has child objects also add them to the form */
 
     if ( obj->child )
-		fli_add_composite( form, obj );
+		fli_add_composite( obj );
 
     fl_redraw_object( obj );
 }
 
 
 /***************************************
- * Insert object 'obj' in front of the object 'before'.
+ * Inserts object 'obj' in front of the object 'before'.
  ***************************************/
 
 void
@@ -417,19 +359,13 @@ fli_insert_object( FL_OBJECT * obj,
 
     /* Checking for correct behaviour. */
 
-    if ( obj == NULL )
+    if ( ! obj || ! before )
     {
 		M_err( "fli_insert_object", "NULL object." );
 		return;
     }
 
-    if ( before == NULL )
-    {
-		M_err( "fli_insert_object", "Trying to insert before NULL object." );
-		return;
-    }
-
-    if ( before->form == NULL )
+    if ( ! before->form  )
     {
 		M_err( "fli_insert_object", "Trying to insert object into NULL "
 				  "form." );
@@ -454,13 +390,13 @@ fli_insert_object( FL_OBJECT * obj,
     before->prev = obj;
     obj->form = form;
 
-    if ( obj->input && form->focusobj == NULL )
+    if ( obj->input && ! form->focusobj )
 		fl_set_focus_object( form, obj );
 
 	/* If the object has child objects also add them to the form */
 
     if ( obj->child )
-		fli_add_composite( form, obj );
+		fli_add_composite( obj );
 
     fl_redraw_form( form );
 }
@@ -475,20 +411,20 @@ fl_delete_object( FL_OBJECT * obj )
 {
     FL_FORM *form;
 
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_delete_object", "NULL object." );
 		return;
     }
 
-    if ( obj->form == NULL )
+    if ( ! obj->form )
     {
 		M_err( "fl_delete_object", "delete %s from NULL form.",
 			   ( obj->label && *obj->label ) ? obj->label : "object" );
 		return;
     }
 
-    /* if this object has childs also unlink them */
+    /* If this object has childs also unlink them */
 
     if ( obj->child )
 		fli_delete_composite( obj );
@@ -501,9 +437,7 @@ fl_delete_object( FL_OBJECT * obj )
 		fli_recount_auto_object( );
 	}
 
-    if ( obj->focus )
-		fl_set_focus_object( form, NULL );
-
+	lose_focus( obj ); 
     if ( obj == fli_pushobj )
 		fli_pushobj = NULL;
     if ( obj == fli_mouseobj )
@@ -518,24 +452,82 @@ fl_delete_object( FL_OBJECT * obj )
 
     obj->form = NULL;
 
-    if ( obj->prev != NULL )
+    if ( obj->prev )
 		obj->prev->next = obj->next;
     else
 		form->first = obj->next;
 
-    if ( obj->next != NULL )
+    if ( obj->next )
 		obj->next->prev = obj->prev;
     else
 		form->last = obj->prev;
-
-    if ( form->focusobj == NULL )
-		fl_set_focus_object( form, fli_find_first( form, FL_FIND_INPUT,
-												   0, 0 ) );
 
     if (    obj->visible
 		 && ( ! obj->child || obj->parent->visible )
 		 && form && form->visible == FL_VISIBLE )
 		fl_redraw_form( form );
+}
+
+
+/***************************************
+ * Frees the memory used by an object
+ ***************************************/
+
+void
+fl_free_object( FL_OBJECT * obj )
+{
+    /* Check whether it's ok to free it */
+
+    if ( ! obj )
+    {
+		M_err( "fl_free_object", "NULL object." );
+		return;
+    }
+
+	/* If this is a parent object free the children first */
+
+	if ( obj->child )
+		fli_free_composite( obj );
+
+	/* If it's a child object remove it from the linked list of childs
+	   of the parent object */
+
+	if ( obj->is_child )
+	{
+		FL_OBJECT *o = obj->parent->child;
+
+		if ( o == obj )
+			obj->parent->child = obj->nc;
+		else
+		{
+			while ( o->nc != obj )
+				o = o->nc;
+			o->nc = obj->nc;
+		}
+	}
+
+	/* If the object hasn't yet been unlinked from its form do it know */
+
+    if ( obj->form )
+		fl_delete_object( obj );
+
+	/* Make the object release memory it may have allocated */
+
+    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
+
+    /* Finally free all memory allocated for the object */
+
+	fl_safe_free( obj->label );
+	fl_safe_free( obj->tooltip );
+	fl_safe_free( obj->shortcut );
+
+    if ( obj->flpixmap )
+    {
+		fli_free_flpixmap( obj->flpixmap ) ;
+		fl_safe_free( obj->flpixmap );
+    }
+
+    fl_free( obj );
 }
 
 
@@ -551,7 +543,7 @@ void
 fl_set_object_boxtype( FL_OBJECT * obj,
 					   int         boxtype )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_boxtype", "NULL object." );
 		return;
@@ -568,13 +560,14 @@ fl_set_object_boxtype( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the resize property of an object
  ***************************************/
 
 void
 fl_set_object_resize( FL_OBJECT    * obj,
 					  unsigned int   what )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_resize", "NULL object." );
 		return;
@@ -599,6 +592,7 @@ fl_set_object_resize( FL_OBJECT    * obj,
 
 
 /***************************************
+ * Returns the resize setting of an object
  ***************************************/
 
 void
@@ -606,7 +600,7 @@ fl_get_object_resize( FL_OBJECT *    obj,
 					  unsigned int * what )
 
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_get_object_resize", "NULL object." );
 		return;
@@ -617,6 +611,7 @@ fl_get_object_resize( FL_OBJECT *    obj,
 
 
 /***************************************
+ * Sets the gravity properties of an object
  ***************************************/
 
 void
@@ -624,7 +619,7 @@ fl_set_object_gravity( FL_OBJECT    * obj,
 					   unsigned int   nw,
 					   unsigned int   se )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_gravity", "NULL object." );
 		return;
@@ -651,20 +646,23 @@ fl_set_object_gravity( FL_OBJECT    * obj,
 
 
 /***************************************
+ * Returns the gravity settings for an object
  ***************************************/
 void
 fl_get_object_gravity( FL_OBJECT *    obj,
 					   unsigned int * nw,
 					   unsigned int * se )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_get_object_gravity", "NULL object." );
 		return;
     }
 
-	*nw = obj->nwgravity;
-	*se = obj->segravity;
+	if ( nw )
+		*nw = obj->nwgravity;
+	if ( se )
+		*se = obj->segravity;
 }
 
 
@@ -677,7 +675,7 @@ fl_set_object_color( FL_OBJECT * obj,
 					 FL_COLOR    col1,
 					 FL_COLOR    col2 )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_color", "NULL object." );
 		return;
@@ -701,7 +699,7 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
 {
     FL_COLOR bkcol;
 
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_dblbuffer", "NULL object." );
 		return;
@@ -730,7 +728,7 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
 }
 
 
-/* really visible */
+/* Test if an object is really visible */
 
 #define ObjIsVisible( obj )  (    ( obj )->visible                        \
                                && ( obj )->form                           \
@@ -738,7 +736,24 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
 
 
 /***************************************
- * sets the label of an object
+ * Returns a pointer to the label of an object
+ ***************************************/
+
+const char *
+fl_get_object_label( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+		M_err( "fl_get_object_label", "NULL object." );
+		return NULL;
+    }
+
+    return obj->label;
+}
+
+
+/***************************************
+ * Sets the label of an object
  ***************************************/
 
 void
@@ -780,14 +795,14 @@ fl_set_object_label( FL_OBJECT  * obj,
 
 
 /***************************************
- * sets the label color of an object
+ * Sets the label color of an object
  ***************************************/
 
 void
 fl_set_object_lcol( FL_OBJECT * obj,
 					FL_COLOR    lcol )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_lcol", "NULL object." );
 		return;
@@ -818,14 +833,14 @@ fl_set_object_lcol( FL_OBJECT * obj,
 
 
 /***************************************
- * sets the label size of an object
+ * Sets the label size of an object
  ***************************************/
 
 void
 fl_set_object_lsize( FL_OBJECT * obj,
 					 int         lsize )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_lsize", "NULL object." );
 		return;
@@ -864,14 +879,14 @@ fl_set_object_lsize( FL_OBJECT * obj,
 
 
 /***************************************
- * sets the label style of an object
+ * Sets the label style of an object
  ***************************************/
 
 void
 fl_set_object_lstyle( FL_OBJECT * obj,
 					  int         lstyle )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_lstyle", "NULL object." );
 		return;
@@ -908,7 +923,7 @@ fl_set_object_lstyle( FL_OBJECT * obj,
 
 
 /***************************************
- * sets the label alignment of an object
+ * Sets the label alignment of an object
  ***************************************/
 
 void
@@ -917,7 +932,7 @@ fl_set_object_lalign( FL_OBJECT * obj,
 {
     int visible;
 
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_align", "NULL object." );
 		return;
@@ -947,28 +962,7 @@ fl_set_object_lalign( FL_OBJECT * obj,
 
 
 /***************************************
- ***************************************/
-
-#if 0
-
-void
-fl_set_object_dragndrop( FL_OBJECT * obj,
-						 int         yes )
-{
-    if ( obj == NULL )
-    {
-		M_err( "fl_set_object_dragndrop", "NULL object." );
-		return;
-    }
-
-    obj->dnd = yes;
-}
-
-#endif
-
-
-/***************************************
- * makes an object active
+ * Makes an object active
  ***************************************/
 
 static void
@@ -986,13 +980,13 @@ activate_object( FL_OBJECT * obj )
 
 
 /***************************************
- * Public function for makin an object active
+ * Public function for making an object active
  ***************************************/
 
 void
 fl_activate_object( FL_OBJECT * obj )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_activate_object", "NULL object." );
 		return;
@@ -1018,10 +1012,7 @@ deactivate_object( FL_OBJECT * obj )
 
 	obj->active = 0;
 
-	if ( obj == obj->form->focusobj )
-		fl_set_focus_object( obj->form,
-							 fli_find_first( obj->form, FL_FIND_INPUT,
-											 0, 0 ) );
+	lose_focus( obj );
 	if ( obj->child )
 		fli_deactivate_composite( obj );
 }
@@ -1034,7 +1025,7 @@ deactivate_object( FL_OBJECT * obj )
 void
 fl_deactivate_object( FL_OBJECT * obj )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_deactive_object", "NULL object." );
 		return;
@@ -1052,16 +1043,18 @@ fl_deactivate_object( FL_OBJECT * obj )
  * Makes an object visible and sets the visible flag to 1
  ***************************************/
 
-static void
-show_object( FL_OBJECT * obj )
+void
+fli_show_object( FL_OBJECT * obj )
 {
 	if ( obj->visible )
 		return;
 
 	obj->visible = 1;
+
 	if ( obj->child )
 		fli_show_composite( obj );
-	if ( obj->input && obj->form->focusobj == NULL )
+
+	if ( obj->input && ! obj->form->focusobj )
 		fl_set_focus_object( obj->form, obj );
 }
 
@@ -1075,7 +1068,7 @@ fl_show_object( FL_OBJECT * obj )
 {
     FL_OBJECT *o = obj;
 
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_show_object", "NULL object." );
 		return;
@@ -1083,146 +1076,143 @@ fl_show_object( FL_OBJECT * obj )
 
     if ( obj->objclass == FL_BEGIN_GROUP )
 		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
-			show_object( obj );
+			fli_show_object( obj );
     else
-		show_object( obj );
+		fli_show_object( obj );
 
     fl_redraw_object( o );
 }
 
 
 /***************************************
- * makes an object invisible
+ * Sets an object up for being hidden and
+ * adds the area it covers to a region
  ***************************************/
 
 void
-fl_hide_object( FL_OBJECT * ob )
+fli_hide_and_get_region( FL_OBJECT * obj,
+						 Region    * reg )
 {
-    FL_OBJECT *obj = ob;
+    FL_RECT xrect;	
+	int extra;
+
+#ifdef DELAYED_ACTION
+	/* Remove all entries for the object from the object queue */
+
+	fli_object_qflush_object( obj );
+#endif
+
+	/* The object can't be the object anymore that has the focus or be
+	   the pushed object or the object the mouse is on */
+
+	lose_focus( obj );
+	if ( obj == fli_pushobj )
+		fli_pushobj = NULL;
+	if ( obj == fli_mouseobj )
+		fli_mouseobj = NULL;
+
+	/* Mark it as invisible */
+
+	obj->visible = 0;
+
+	/* Get the area the object covers and add that to the region passed 
+	   to the function */
+
+	if ( obj->objclass == FL_CANVAS || obj->objclass == FL_GLCANVAS )
+	{
+		fl_hide_canvas( obj );
+		extra = 3;
+		xrect.x = obj->x - extra;
+		xrect.y = obj->y - extra;
+		xrect.width = obj->w + 2 * extra + 1;
+		xrect.height = obj->h + 2 * extra + 1;
+	}
+	else
+	{
+		get_object_bbox_rect( obj, &xrect );
+	
+		if ( obj->objclass == FL_FRAME )
+		{
+			extra = FL_abs( obj->bw );
+			xrect.x -= extra;
+			xrect.y -= extra;
+			xrect.width  += 2 * extra + 1;
+			xrect.height += 2 * extra + 1;
+		}
+	}
+
+	XUnionRectWithRegion( &xrect, *reg, *reg );
+}
+
+
+/***************************************
+ * Makes an object (and all its children) invisible
+ ***************************************/
+
+void fl_hide_object( FL_OBJECT * obj )
+{
+	FL_OBJECT *tmp;
     FL_RECT xrect;
     Region reg;
-    int doclip,
-		has_frame = 0;
 
-    if ( ob == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_hide_object", "NULL object." );
 		return;
     }
 
-    if ( ! ob->visible )
+    if ( ! obj->visible )
     {
 		M_warn( "fl_hide_object", "%s already invisible",
-				ob->label ? ob->label : "Object" );
+				obj->label ? obj->label : "Object" );
 		return;
     }
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
-    {
-		reg = XCreateRegion( );
+	reg = XCreateRegion( );
 
-		ob->visible = has_frame = 0;
+	/* If this is an object that marks the start of a group hide all
+	   objects that belong to the group */
 
-		/* need to start after group leader as group has bogus size */
-
-		for ( ob = ob->next; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
+    if ( obj->objclass == FL_BEGIN_GROUP )
+		for ( tmp = obj->next; tmp && tmp->objclass != FL_END_GROUP;
+			  tmp = tmp->next )
 		{
-			if ( ob->objclass == FL_CANVAS || ob->objclass == FL_GLCANVAS )
-			{
-				int extra = 3;
+			if ( tmp->child )
+				fli_hide_composite( tmp, &reg );
 
-				fl_hide_canvas( ob );
-				xrect.x = ob->x - extra;
-				xrect.y = ob->y - extra;
-				xrect.width = ob->w + 2 * extra + 1;
-				xrect.height = ob->h + 2 * extra + 1;
-			}
-			else
-				fli_get_object_bbox_rect( ob, &xrect );
-
-			if ( ob->child )
-				fli_hide_composite( ob );
-
-			has_frame = has_frame || ob->objclass == FL_FRAME;
-
-			XUnionRectWithRegion( &xrect, reg, reg );
-
-			if ( ob == ob->form->focusobj )
-				lose_focus( ob );
-			ob->visible = 0;
+			fli_hide_and_get_region( tmp, &reg );
 		}
+	else
+	{
+		if ( obj->child )
+			fli_hide_composite( obj, &reg );
 
-		XClipBox( reg, &xrect );
-		XDestroyRegion( reg );
-    }
-    else if ( ob->objclass == FL_CANVAS || ob->objclass == FL_GLCANVAS )
-    {
-		int extra = 3;
+		fli_hide_and_get_region( obj, &reg );
+	}
 
-		fl_hide_canvas( ob );
-		ob->visible = 0;
-		xrect.x = ob->x - extra;
-		xrect.y = ob->y - extra;
-		xrect.width = ob->w + 2 * extra + 1;
-		xrect.height = ob->h + 2 * extra + 1;
-    }
-    else
-    {
-		if ( ob->child )
-			fli_hide_composite( ob );
+	/* Determine the rectangle that covers the area of the object */
 
-		/* in addition to being expensive, also may cause fdesign -convert to
-		   fail if not checked */
+	XClipBox( reg, &xrect );
+	XDestroyRegion( reg );
 
-		if ( ob->form->visible )
-			fli_get_object_bbox_rect( ob, &xrect );
+	/* No redraw needed if the form isn't shown */
 
-		if ( ob == ob->form->focusobj )
-			lose_focus( ob );
-
-		ob->visible = 0;
-
-		if ( ob == fli_pushobj )
-			fli_pushobj = NULL;
-		if ( ob == fli_mouseobj )
-			fli_mouseobj = NULL;
-
-#ifdef DELAYED_ACTION
-		fli_object_qflush_object( ob );
-#endif
-    }
-
-    if ( ! ob->form->visible )
+	if ( obj->form->visible != FL_VISIBLE )
 		return;
 
-    doclip = 1;
+	/* Redraw only the area covered by the object (take care with the
+	   order the different clipping types are set and unset, changing
+	   them has strange effects) */
 
-    /* frame is drawn OUTSIDE of the bounding box */
-
-    if ( obj->objclass == FL_FRAME || has_frame )
-    {
-		int extra = FL_abs( ob->bw );
-
-		xrect.x -= extra;
-		xrect.y -= extra;
-		xrect.width  += 2 * extra + 1;
-		xrect.height += 2 * extra + 1;
-    }
-
-    if ( doclip )
-    {
-		fli_set_perm_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
-		fl_set_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
-    }
+	fli_set_perm_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
+	fl_set_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
+	fl_set_text_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
 
     fl_redraw_form( obj->form );
 
-    if ( doclip )
-    {
-		fli_unset_perm_clipping( );
-		fl_unset_clipping( );
-		fl_unset_text_clipping( );
-    }
+	fli_unset_perm_clipping( );
+	fl_unset_clipping( );
+	fl_unset_text_clipping( );
 }
 
 
@@ -1368,18 +1358,14 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
     long sc[ MAX_SHORTCUTS + 1 ];	   /* converted shortcuts - we need one
 										  more than max for trailing 0 */
 
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_shortcut", "NULL object." );
 		return;
     }
 
     if ( ! obj->active )
-    {
-		M_err( "fl_set_object_shortcut",
-			   "Setting shortcut for inactive object." );
 		return;
-    }
 
     if ( ! sstr || ! *sstr )
     {
@@ -1413,7 +1399,7 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 
 
 /***************************************
- * set a shortcut with keysyms directly
+ * Set a shortcut with keysyms directly
  ***************************************/
 
 void
@@ -1435,14 +1421,14 @@ fl_set_object_shortcutkey( FL_OBJECT    * obj,
 
 
 /***************************************
- * Sets the object in the form on which the input is focussed.
+ * Sets the object in the form on which the gets keyboard input.
  ***************************************/
 
 void
 fl_set_focus_object( FL_FORM   * form,
 					 FL_OBJECT * obj )
 {
-    if ( form == NULL )
+    if ( ! form )
     {
 		M_err( "fl_set_focus_object", "NULL form." );
 		return;
@@ -1451,12 +1437,13 @@ fl_set_focus_object( FL_FORM   * form,
     if ( obj == form->focusobj )
 		return;
 
-    fli_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
+	fli_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
     fli_handle_object_direct( obj, FL_FOCUS, 0, 0, 0, NULL );
 }
 
 
 /***************************************
+ * Returns the object that has the focus
  ***************************************/
 
 FL_OBJECT *
@@ -1492,7 +1479,7 @@ fli_find_object( FL_OBJECT * obj,
 				 FL_Coord    mx,
 				 FL_Coord    my )
 {
-    for ( ; obj != NULL; obj = obj->next )
+    for ( ; obj; obj = obj->next )
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible
@@ -1532,7 +1519,7 @@ fli_find_object_backwards( FL_OBJECT * obj,
 						   FL_Coord    mx,
 						   FL_Coord    my )
 {
-    for ( ; obj != NULL; obj = obj->prev )
+    for ( ; obj; obj = obj->prev )
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible
@@ -1563,7 +1550,7 @@ fli_find_object_backwards( FL_OBJECT * obj,
 
 
 /***************************************
- * returns the first object of type find
+ * Returns the first object of type find
  ***************************************/
 
 FL_OBJECT *
@@ -1577,7 +1564,7 @@ fli_find_first( FL_FORM  * form,
 
 
 /***************************************
- * returns the last object of the type find
+ * Returns the last object of the type find
  ***************************************/
 
 FL_OBJECT *
@@ -1591,7 +1578,7 @@ fli_find_last( FL_FORM * form,
 
     last = obj = fli_find_first( form, find, mx, my );
 
-    while ( obj != NULL )
+    while ( obj )
     {
 		last = obj;
 		obj = fli_find_object( obj->next, find, mx, my );
@@ -1616,7 +1603,7 @@ object_is_clipped( FL_OBJECT * ob )
 		    *xc;
     int extra = 1;
 
-    fli_get_object_bbox_rect( ob, &xr );
+    get_object_bbox_rect( ob, &xr );
 
     xr.x      -= extra;
     xr.y      -= extra;
@@ -1625,7 +1612,7 @@ object_is_clipped( FL_OBJECT * ob )
 
 	xc = fli_union_rect( &xr, &fli_perm_xcr );
 
-	if ( xc == NULL )
+	if ( ! xc )
 		return 1;
 
 	fl_free( xc );
@@ -1707,13 +1694,13 @@ redraw_marked( FL_FORM * form,
 void
 fl_redraw_object( FL_OBJECT * obj )
 {
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_redraw_object", "NULL object." );
 		return;
     }
 
-    if ( obj->form == NULL )
+    if ( ! obj->form )
 		return;
 
     if ( obj->objclass == FL_BEGIN_GROUP )
@@ -1733,7 +1720,7 @@ fl_redraw_object( FL_OBJECT * obj )
 		 && obj->visible )
 		fli_mark_composite_for_redraw( obj );
 
-    /* if obj is a child object and the parent is not visible, do nothing */
+    /* If obj is a child object and the parent is not visible, do nothing */
 
     if ( obj->visible && ( ! obj->is_child || obj->parent->visible ) )
 		redraw_marked( obj->form, 0, NULL );
@@ -1749,7 +1736,7 @@ mark_for_redraw( FL_FORM * form )
 {
     FL_OBJECT *ob;
 
-    if ( form == NULL )
+    if ( ! form )
     {
 		M_err( "mark_for_redraw", "Drawing NULL form." );
 		return;
@@ -1794,7 +1781,7 @@ fli_redraw_form_using_xevent( FL_FORM * form,
 void
 fl_freeze_form( FL_FORM * form )
 {
-    if ( form == NULL )
+    if ( ! form )
     {
 		M_err( "fl_freeze_form", "NULL form." );
 		return;
@@ -1805,13 +1792,13 @@ fl_freeze_form( FL_FORM * form )
 
 
 /***************************************
- * Enable drawing of form
+ * Enables drawing of form
  ***************************************/
 
 void
 fl_unfreeze_form( FL_FORM * form )
 {
-    if ( form == NULL )
+    if ( ! form )
     {
 		M_err( "fl_unfreeze_form", "NULL form." );
 		return;
@@ -1833,22 +1820,20 @@ fl_unfreeze_form( FL_FORM * form )
    Handling Routines.
 -----------------------------------------------------------------------*/
 
-static FL_OBJECT *refocus;
-
-
 /***************************************
  * should only be used as a response to FL_UNFOCOS
  ***************************************/
 
 void
-fl_reset_focus_object( FL_OBJECT * ob )
+fl_reset_focus_object( FL_OBJECT * obj )
 {
-    refocus = ob;
+    refocus = obj;
 }
+
+/*** handle tooltips ***/
 
 
 /***************************************
- * handle tooltips
  ***************************************/
 
 static
@@ -1940,7 +1925,7 @@ void unconditional_hide_tooltip( FL_OBJECT * obj )
 
 
 /***************************************
- * handles an event for an object
+ * Handles an event for an object
  ***************************************/
 
 static int
@@ -1963,7 +1948,7 @@ fl_handle_it( FL_OBJECT * obj,
 		return 0;
 
 #if FL_DEBUG >= ML_WARN
-    if ( obj->form == NULL && event != FL_FREEMEM )
+    if ( ! obj->form && event != FL_FREEMEM )
     {
 		M_err( "fl_handle_it", "Bad object %s. Event=%s",
 			   obj->label ? obj->label : "", fli_event_name( event ) );
@@ -2036,7 +2021,12 @@ fl_handle_it( FL_OBJECT * obj,
 			break;
 
 		case FL_FOCUS:
-			if ( refocus && refocus->form )  /* ?? from Lyx patch */
+			/* 'refocus' is set if on the last FL_UNFOCUS it was found
+			   that the text in the input field did't validate. In that
+			   case the focus has to go back to that field instead to a
+			   different one */
+
+			if ( refocus && refocus->form )
 			{
 				obj = refocus;
 				refocus = NULL;
@@ -2098,7 +2088,7 @@ fl_handle_it( FL_OBJECT * obj,
 
 
 /***************************************
- * handle and store if successfull
+ * Handle and store object in object queue if handler returns non-zero
  ***************************************/
 
 void
@@ -2118,7 +2108,7 @@ fli_handle_object( FL_OBJECT * obj,
 
 
 /***************************************
- * handle but returns whether successful
+ * Handle but returns whether successful
  ***************************************/
 
 int
@@ -2144,7 +2134,7 @@ fl_set_object_callback( FL_OBJECT      * obj,
 {
     FL_CALLBACKPTR old;
 
-    if ( obj == NULL )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_callback", "NULL object." );
 		return NULL;
@@ -2159,6 +2149,7 @@ fl_set_object_callback( FL_OBJECT      * obj,
 
 
 /***************************************
+ * Sets the borderwidth of an object
  ***************************************/
 
 void
@@ -2203,6 +2194,7 @@ fl_set_object_bw( FL_OBJECT * ob,
 
 
 /***************************************
+ * Returns the borderwidth of an object
  ***************************************/
 
 void
@@ -2330,7 +2322,7 @@ fl_scale_object( FL_OBJECT * ob,
     if ( xs == 1.0 && ys == 1.0 )
 		return;
 
-	if ( ob->form == NULL )
+	if ( ! ob->form )
 	{
 		ob->x = FL_crnd( xs * ob->x );
 		ob->y = FL_crnd( ys * ob->y );
@@ -2364,7 +2356,7 @@ fl_scale_object( FL_OBJECT * ob,
 
 
 /***************************************
- * register a preemptive object handler
+ * Register a preemptive object handler
  ***************************************/
 
 FL_HANDLEPTR
@@ -2476,6 +2468,7 @@ fl_move_object( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the position of an object
  ***************************************/
 
 void
@@ -2489,6 +2482,7 @@ fl_get_object_position( FL_OBJECT * ob,
 
 
 /***************************************
+ * Sets the position of an object
  ***************************************/
 
 void
@@ -2540,6 +2534,7 @@ fl_set_object_position( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the size of an object
  ***************************************/
 
 void
@@ -2553,6 +2548,7 @@ fl_get_object_size( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the size of an object
  ***************************************/
 
 void
@@ -2634,6 +2630,7 @@ fl_set_object_size( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the position and size of an object
  ***************************************/
 
 void
@@ -2649,6 +2646,7 @@ fl_get_object_geometry( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the position and size of an object
  ***************************************/
 
 void
@@ -2665,7 +2663,7 @@ fl_set_object_geometry( FL_OBJECT * obj,
 
 
 /***************************************
- * compute object geometry also takes into account the label
+ * Computes object geometry also taking the label into account
  ***************************************/
 
 void
@@ -2736,8 +2734,8 @@ fl_get_object_bbox( FL_OBJECT * obj,
  ***************************************/
 
 static void
-fli_get_object_bbox_rect( FL_OBJECT * obj,
-						  FL_RECT   * xr )
+get_object_bbox_rect( FL_OBJECT * obj,
+					  FL_RECT   * xr )
 {
 	FL_Coord  x,
 		      y,
@@ -2781,11 +2779,28 @@ fl_set_object_automatic( FL_OBJECT * ob,
  ***************************************/
 
 static void
-lose_focus( FL_OBJECT * ob )
+lose_focus( FL_OBJECT * obj )
 {
-    if (    fli_handle_object_direct( ob, FL_UNFOCUS, 0, 0, 0, NULL )
-		 && ob->object_callback )
-		ob->object_callback( ob, ob->argument );
+	FL_FORM *form = obj->form;
+
+	if ( ! form || ! obj->focus || obj != form->focusobj )
+		return;
+
+	obj->focus = 0;
+
+	/* Try to find some input object to give it the focus */
+
+	obj->input = 0;
+	form->focusobj = fli_find_first( obj->form, FL_FIND_INPUT,
+									 0, 0 );
+	obj->input = 1;
+
+	if ( obj == refocus )
+		refocus = form->focusobj ? form->focusobj : NULL;
+
+	if ( form->focusobj )
+		fli_handle_object_direct( form->focusobj, FL_FOCUS, 0, 0, 0, NULL );
+
 }
 
 
@@ -2809,22 +2824,6 @@ fl_for_all_objects( FL_FORM * form,
 
     for ( ob = form->first; ob && ! cb( ob, v ); ob = ob->next )
 		/* empty */ ;
-}
-
-
-/***************************************
- ***************************************/
-
-const char *
-fl_get_object_label( FL_OBJECT * ob )
-{
-    if ( ! ob )
-    {
-		M_err( "fl_get_object_label", "NULL object." );
-		return NULL;
-    }
-
-    return ob->label;
 }
 
 

@@ -48,7 +48,7 @@
 
 int auto_apply = 1;
 
-static void readback_attributes(FL_OBJECT *);
+static void readback_attributes( FL_OBJECT * );
 
 
 /***************************************
@@ -59,10 +59,10 @@ void
 setcolor_cb( FL_OBJECT * obj,
 			 long        arg  FL_UNUSED_ARG )
 {
-    int col1 = fl_show_colormap(obj->col1);
+    int col1 = fl_show_colormap( obj->col1 );
 
-    fl_set_object_color(obj, col1, col1);
-    auto_apply_cb(0, 0);
+    fl_set_object_color( obj, col1, col1 );
+    auto_apply_cb( 0, 0 );
 }
 
 
@@ -74,8 +74,8 @@ void
 auto_apply_cb( FL_OBJECT * ob,
 			   long        arg )
 {
-    if (auto_apply)
-		apply_cb(ob, arg);
+    if ( auto_apply )
+		apply_cb( ob, arg );
 }
 
 
@@ -87,17 +87,20 @@ void
 autoapply_setting_cb( FL_OBJECT * ob,
 					  long        arg  FL_UNUSED_ARG )
 {
-    if (!(auto_apply = fl_get_button(ob)))
-		fl_show_object(fd_attrib->applyobj);
+    if ( ! ( auto_apply = fl_get_button( ob ) ) )
+		fl_show_object( fd_attrib->applyobj );
     else
-		fl_hide_object(fd_attrib->applyobj);
+		fl_hide_object( fd_attrib->applyobj );
 }
+
 
 /******* For cancel and restore operation *******{*/
 
-static FL_OBJECT *oldcopy, *curobj;	/* object being changed */
-static char oldname[MAX_VAR_LEN];
-static char oldcbname[MAX_VAR_LEN], oldargname[MAX_VAR_LEN];
+static FL_OBJECT *oldcopy,  	/* object being changed */
+                 *curobj;
+static char oldname[ MAX_VAR_LEN ];
+static char oldcbname[ MAX_VAR_LEN ],
+            oldargname[ MAX_VAR_LEN ];
 
 
 /***************************************
@@ -109,15 +112,16 @@ save_object( FL_OBJECT * obj )
     char *ol;
     long *os;
 
-    get_object_name(obj, oldname, oldcbname, oldargname);
-    if (!oldcopy)
-		oldcopy = fl_make_object(0, 0, 0, 0, 0, 0, 0, 0);
+    get_object_name( obj, oldname, oldcbname, oldargname );
+
+    if ( ! oldcopy )
+		oldcopy = fl_make_object( 0, 0, 0, 0, 0, 0, NULL, NULL );
     ol = oldcopy->label;
     os = oldcopy->shortcut;
     *oldcopy = *obj;
     oldcopy->label = ol;
     oldcopy->shortcut = os;
-    fl_set_object_label(oldcopy, obj->label);
+    fl_set_object_label( oldcopy, obj->label );
 }
 
 
@@ -131,11 +135,11 @@ restore_object( FL_OBJECT * obj )
     char *ol = obj->label;
     long *os = obj->shortcut;
 
-    set_object_name(obj, oldname, oldcbname, oldargname);
+    set_object_name( obj, oldname, oldcbname, oldargname );
     *obj = *oldcopy;
     obj->label = ol;
     obj->shortcut = os;
-    fl_set_object_label(obj, oldcopy->label);
+    fl_set_object_label( obj, oldcopy->label );
 }
 
 
@@ -150,9 +154,9 @@ void
 apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		  long        arg  FL_UNUSED_ARG )
 {
-    readback_attributes(curobj);
-    change_selected_objects(curobj);
-    redraw_the_form(0);
+    readback_attributes( curobj );
+    change_selected_objects( curobj );
+    redraw_the_form( 0 );
 }
 
 
@@ -164,11 +168,12 @@ void
 restore_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			long        data  FL_UNUSED_ARG )
 {
-    restore_object(curobj);
-    show_attributes(curobj);
-    change_selected_objects(curobj);
-    redraw_the_form(0);
+    restore_object( curobj );
+    show_attributes( curobj );
+    change_selected_objects( curobj );
+    redraw_the_form( 0 );
 }
+
 
 /****************** GLOBAL INITIALIZATION  ************************/
 
@@ -181,7 +186,7 @@ static FL_OBJECT *fnts;
 static void
 add_font_choice( const char * p )
 {
-    fl_addto_choice(fnts, p);
+    fl_addto_choice( fnts, p );
 }
 
 
@@ -216,10 +221,10 @@ attrib_init( FD_generic_attrib * ui )
 {
     static int attrib_initialized;
     int i;
-    char buf[64];
+    char buf[ 64 ];
     VN_pair *vp;
 
-    if (attrib_initialized)
+    if ( attrib_initialized )
 		return;
 
     attrib_initialized = 1;
@@ -291,7 +296,7 @@ attrib_init( FD_generic_attrib * ui )
 static int
 valid_c_identifier( const char * s )
 {
-    if (fdopt.lax)
+    if ( fdopt.lax )
 		return 1;
 
     /* empty is considered to be valid */
@@ -299,7 +304,7 @@ valid_c_identifier( const char * s )
     if ( ! s || ! *s || ( *s == ' ' && *( s + 1 ) == '\0' ) )
 		return 1;
 
-    if ( !isalpha( ( int ) *s ) && *s != '_' )
+    if ( ! isalpha( ( int ) *s ) && *s != '_' )
 		return 0;
 
     for ( s++; *s; s++ )
@@ -367,79 +372,82 @@ readback_attributes( FL_OBJECT * obj )
     char name[ 128],
 		 cbname[128 ];
     char tmpbuf[ 128 ];
-    static char *m[ ] =
-		{"object name", "callback", "object name & callback"};
+    static char *m[ ] = { "object name",
+						  "callback",
+						  "object name & callback" };
 
     obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
 
     /* label style consists of two parts */
 
-    obj->lstyle = fl_get_choice(fd_generic_attrib->fontobj) - 1;
-    spstyle = fl_get_choice(fd_generic_attrib->styleobj) - 1;
+    obj->lstyle = fl_get_choice( fd_generic_attrib->fontobj ) - 1;
+    spstyle = fl_get_choice( fd_generic_attrib->styleobj ) - 1;
     obj->lstyle +=
-		      spstyle == 3 ? FL_EMBOSSED_STYLE : (spstyle * FL_SHADOW_STYLE);
+		      spstyle == 3 ? FL_EMBOSSED_STYLE : ( spstyle * FL_SHADOW_STYLE );
     obj->col1 = fd_generic_attrib->col1obj->col1;
     obj->col2 = fd_generic_attrib->col2obj->col1;
     obj->lcol = fd_generic_attrib->lcolobj->col1;
 
 
-    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_ALIGN_%s",
-                fl_get_choice_text(fd_generic_attrib->align));
-    obj->align = align_val(tmpbuf);
+    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_ALIGN_%s",
+				 fl_get_choice_text( fd_generic_attrib->align ) );
+    obj->align = align_val( tmpbuf );
 
-    if (    fl_get_choice(fd_generic_attrib->inside) == 1
+    if (    fl_get_choice( fd_generic_attrib->inside ) == 1
 		 && obj->align != FL_ALIGN_CENTER)
 		obj->align |= FL_ALIGN_INSIDE;
     else
 		obj->align &= ~FL_ALIGN_INSIDE;
 
-    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
-                fl_get_choice_text(fd_generic_attrib->resize));
-    obj->resize = resize_val(tmpbuf);
+    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
+				 fl_get_choice_text( fd_generic_attrib->resize ) );
+    obj->resize = resize_val( tmpbuf );
 
-    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
-                fl_get_choice_text(fd_generic_attrib->segravity));
-    obj->segravity = gravity_val(tmpbuf);
+    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
+				 fl_get_choice_text( fd_generic_attrib->segravity ) );
+    obj->segravity = gravity_val( tmpbuf );
 
-    fl_snprintf(tmpbuf,sizeof(tmpbuf),"FL_%s",
-                fl_get_choice_text(fd_generic_attrib->nwgravity));
-    obj->nwgravity = gravity_val(tmpbuf);
+    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
+				 fl_get_choice_text( fd_generic_attrib->nwgravity ) );
+    obj->nwgravity = gravity_val( tmpbuf );
 
-    obj->lsize = fsizes[fl_get_choice(fd_generic_attrib->sizeobj) - 1].size;
+    obj->lsize = fsizes[ fl_get_choice( fd_generic_attrib->sizeobj ) - 1 ].size;
 
-    set_label(obj, fl_get_input(fd_generic_attrib->labelobj));
-    set_shortcut(obj, fl_get_input(fd_generic_attrib->scobj));
+    set_label( obj, fl_get_input( fd_generic_attrib->labelobj ) );
+    set_shortcut( obj, fl_get_input( fd_generic_attrib->scobj ) );
 
-    strncpy(name, fl_get_input(fd_generic_attrib->nameobj),sizeof(name));
-    name[sizeof(name)-1] = '\0';
+    strncpy( name, fl_get_input( fd_generic_attrib->nameobj ), sizeof name );
+    name[ sizeof name - 1 ] = '\0';
 
-    strncpy(cbname, fl_get_input(fd_generic_attrib->cbnameobj),sizeof(cbname));
-    cbname[sizeof(cbname)-1] = '\0';
+    strncpy( cbname, fl_get_input( fd_generic_attrib->cbnameobj ),
+			 sizeof cbname );
+    cbname[ sizeof cbname - 1 ] = '\0';
 
-    if (!valid_c_identifier(name))
+    if ( ! valid_c_identifier( name ) )
     {
-		name[0] = '\0';
+		name[ 0 ] = '\0';
 		warn = 1;
     }
 
-    if (!valid_c_identifier(cbname))
+    if ( ! valid_c_identifier( cbname ) )
     {
-		cbname[0] = '\0';
+		cbname[ 0 ] = '\0';
 		warn += 2;
     }
 
-    if (warn)
-		fl_show_alert("Error", "Invalid C identifier specified for",
-					  m[warn - 1], 0);
-    set_object_name(obj, name, cbname, fl_get_input(fd_generic_attrib->argobj));
+    if ( warn )
+		fl_show_alert( "Error", "Invalid C identifier specified for",
+					   m[ warn - 1 ], 0 );
+    set_object_name( obj, name, cbname,
+					 fl_get_input( fd_generic_attrib->argobj ) );
 
     /* change type need to be the last call as it may create objects based on
        the current object, which need to have the latest attributes */
 
-    if (obj->objclass == FL_BOX)
-		change_type(obj, obj->boxtype);
+    if ( obj->objclass == FL_BOX )
+		change_type( obj, obj->boxtype );
     else
-		change_type(obj, fl_get_choice(fd_generic_attrib->typeobj) - 1);
+		change_type( obj, fl_get_choice( fd_generic_attrib->typeobj ) - 1 );
 }
 
 
@@ -449,10 +457,10 @@ readback_attributes( FL_OBJECT * obj )
 void
 show_attributes( const FL_OBJECT * obj )
 {
-    char objname[MAX_VAR_LEN],
-		 cbname[MAX_VAR_LEN],
-		 argname[MAX_VAR_LEN];
-    char buf[MAX_VAR_LEN];
+    char objname[ MAX_VAR_LEN ],
+		 cbname[ MAX_VAR_LEN ],
+		 argname[ MAX_VAR_LEN ];
+    char buf[ MAX_VAR_LEN ];
     int i,
 		lstyle,
 		spstyle,
@@ -460,70 +468,72 @@ show_attributes( const FL_OBJECT * obj )
 		align = obj->align & ~FL_ALIGN_INSIDE;
     static char othersize[ 32 ];
 
-    fl_freeze_form(fd_generic_attrib->generic_attrib);
+    fl_freeze_form( fd_generic_attrib->generic_attrib );
 
     /* Fill in list of types */
 
-    fl_clear_choice(fd_generic_attrib->typeobj);
-    fl_set_choice_fontsize(fd_generic_attrib->typeobj, fd_type_fontsize);
-    if (obj->objclass != FL_BOX)
+    fl_clear_choice( fd_generic_attrib->typeobj );
+    fl_set_choice_fontsize( fd_generic_attrib->typeobj, fd_type_fontsize );
+
+    if ( obj->objclass != FL_BOX )
     {
-		for (i = 0; i < find_class_maxtype(obj->objclass); i++)
+		for ( i = 0; i < find_class_maxtype( obj->objclass ); i++ )
 		{
-			strcat(strcpy(buf, find_type_name(obj->objclass, i)), "%r1");
-			fl_addto_choice(fd_generic_attrib->typeobj, buf);
+			strcat( strcpy( buf, find_type_name( obj->objclass, i ) ), "%r1" );
+			fl_addto_choice( fd_generic_attrib->typeobj, buf );
 		}
-		fl_set_choice(fd_generic_attrib->typeobj, obj->type + 1);
+		fl_set_choice( fd_generic_attrib->typeobj, obj->type + 1 );
     }
 
     /* Fil in settings */
 
-    fl_set_choice(fd_generic_attrib->boxobj, obj->boxtype + 1);
-    fl_set_choice_text(fd_generic_attrib->align, align_name(align) + 9);
-    fl_set_choice(fd_generic_attrib->inside, (obj->align == align) + 1);
+    fl_set_choice( fd_generic_attrib->boxobj, obj->boxtype + 1 );
+    fl_set_choice_text( fd_generic_attrib->align, align_name( align ) + 9 );
+    fl_set_choice( fd_generic_attrib->inside, ( obj->align == align ) + 1 );
 
     lstyle = obj->lstyle % FL_SHADOW_STYLE;
     spstyle = (obj->lstyle / FL_SHADOW_STYLE);
 
-    if (spstyle >= 3)
+    if ( spstyle >= 3 )
 		spstyle = 3;
 
-    fl_set_choice(fd_generic_attrib->fontobj, lstyle + 1);
-    fl_set_choice(fd_generic_attrib->styleobj, spstyle + 1);
+    fl_set_choice( fd_generic_attrib->fontobj, lstyle + 1 );
+    fl_set_choice( fd_generic_attrib->styleobj, spstyle + 1 );
 
-    for (oksize = i = 0; !oksize && i < (int)NFSIZE; i++)
-		if ((oksize = obj->lsize == fsizes[i].size))
-			fl_set_choice(fd_generic_attrib->sizeobj, i + 1);
+    for ( oksize = i = 0; !oksize && i < ( int ) NFSIZE; i++ )
+		if ( ( oksize = obj->lsize == fsizes[ i ].size ))
+			fl_set_choice( fd_generic_attrib->sizeobj, i + 1 );
 
-    if (!oksize)
+    if ( ! oksize )
     {
-		sprintf(othersize, "%d (Variable)", obj->lsize);
-		fsizes[NFSIZE - 1].size = obj->lsize;
-		fsizes[NFSIZE - 1].name = othersize;
-		fl_replace_choice(fd_generic_attrib->sizeobj, NFSIZE, othersize);
-		fl_set_choice(fd_generic_attrib->sizeobj, NFSIZE);
+		sprintf( othersize, "%d (Variable)", obj->lsize );
+		fsizes[ NFSIZE - 1 ].size = obj->lsize;
+		fsizes[ NFSIZE - 1 ].name = othersize;
+		fl_replace_choice( fd_generic_attrib->sizeobj, NFSIZE, othersize );
+		fl_set_choice( fd_generic_attrib->sizeobj, NFSIZE );
     }
 
     /* gravity stuff */
 
-    fl_set_choice_text(fd_generic_attrib->resize, resize_name(obj->resize) + 3);
-    fl_set_choice_text(fd_generic_attrib->nwgravity,
-					   gravity_name(obj->nwgravity) + 3);
-    fl_set_choice_text(fd_generic_attrib->segravity,
-					   gravity_name(obj->segravity) + 3);
+    fl_set_choice_text( fd_generic_attrib->resize,
+						resize_name( obj->resize ) + 3 );
+    fl_set_choice_text( fd_generic_attrib->nwgravity,
+						gravity_name( obj->nwgravity ) + 3 );
+    fl_set_choice_text( fd_generic_attrib->segravity,
+						gravity_name( obj->segravity ) + 3 );
 
-    get_object_name(obj, objname, cbname, argname);
-    fl_set_input(fd_generic_attrib->labelobj, get_label(obj, 0));
-    fl_set_input(fd_generic_attrib->nameobj, objname);
-    fl_set_input(fd_generic_attrib->cbnameobj, cbname);
-    fl_set_input(fd_generic_attrib->argobj, argname);
+    get_object_name( obj, objname, cbname, argname );
+    fl_set_input( fd_generic_attrib->labelobj, get_label( obj, 0 ) );
+    fl_set_input( fd_generic_attrib->nameobj, objname );
+    fl_set_input( fd_generic_attrib->cbnameobj, cbname );
+    fl_set_input( fd_generic_attrib->argobj, argname );
 
-    fl_set_input(fd_generic_attrib->scobj, get_shortcut_string(obj));
+    fl_set_input(fd_generic_attrib->scobj, get_shortcut_string( obj ) );
 
-    fl_set_object_color(fd_generic_attrib->col1obj, obj->col1, obj->col1);
-    fl_set_object_color(fd_generic_attrib->col2obj, obj->col2, obj->col2);
-    fl_set_object_color(fd_generic_attrib->lcolobj, obj->lcol, obj->lcol);
-    fl_unfreeze_form(fd_generic_attrib->generic_attrib);
+    fl_set_object_color( fd_generic_attrib->col1obj, obj->col1, obj->col1 );
+    fl_set_object_color( fd_generic_attrib->col2obj, obj->col2, obj->col2 );
+    fl_set_object_color( fd_generic_attrib->lcolobj, obj->lcol, obj->lcol );
+    fl_unfreeze_form( fd_generic_attrib->generic_attrib );
 }
 
 
@@ -944,30 +954,33 @@ void
 change_type( FL_OBJECT * obj,
 			 int         type )
 {
-    FL_OBJECT *ttt, *defobj;
-    int boxtype, reshow = 0, is_focus;
+    FL_OBJECT *ttt,
+		      *defobj;
+    int boxtype,
+		reshow = 0,
+		is_focus;
     FL_FORM *form = obj->form;
     FL_OBJECT *prev;
 
-    if (obj->type == type)
+    if ( obj->type == type )
 		return;
 
     /* Create the new object. */
 
-    ttt = add_an_object(obj->objclass, type, obj->x, obj->y, obj->w, obj->h);
+    ttt = add_an_object( obj->objclass, type, obj->x, obj->y, obj->w, obj->h );
 
     /* Remove it from the form */
 
-    fl_delete_object(ttt);
+    fl_delete_object( ttt );
 
-    /* create a default object from which we obtain info on if the user has
+    /* Create a default object from which we obtain info on if the user has
        changed boxtype and other attributes. This is done primarily to get
        around the type change problem with types having different default
        boxtype. */
 
-    defobj = find_class_default(obj->objclass, obj->type);
+    defobj = find_class_default( obj->objclass, obj->type );
 
-    if (defobj->boxtype != obj->boxtype)
+    if ( defobj->boxtype != obj->boxtype )
 		boxtype = obj->boxtype;
     else
     {
@@ -975,34 +988,34 @@ change_type( FL_OBJECT * obj,
 		reshow = 1;
     }
 
-    /* don't need to free the defobj as it is managed by find_class_default */
+    /* Don't need to free the defobj as it is managed by find_class_default */
 
     /* Set the attributes */
 
-    set_attribs(ttt, boxtype, obj->col1, obj->col2,
-				obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label);
+    set_attribs( ttt, boxtype, obj->col1, obj->col2,
+				 obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label );
 
-    set_miscattribs(ttt, obj->nwgravity, obj->segravity, obj->resize);
+    set_miscattribs( ttt, obj->nwgravity, obj->segravity, obj->resize );
 
     obj->type = ttt->type;
     prev = obj->prev;
     is_focus = obj->focus;
 
-    if (!ttt->child)
+    if ( ! ttt->child )
     {
 		ttt->form = form;
-		if (obj->child)
+		if ( obj->child )
 		{
-			clear_selection();
+			clear_selection( );
 			obj->focus = 0;
-			fl_delete_object(obj);
+			fl_delete_object( obj );
 			ttt->prev = prev;
-			ttt->next = prev ? prev->next : 0;
-			if (prev)
+			ttt->next = prev ? prev->next : NULL;
+			if ( prev )
 				prev->next = ttt;
 			*obj = *ttt;
-			fli_handle_object(obj, FL_ATTRIB, 0, 0, 0, 0);
-			addto_selection(obj);
+			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, 0 );
+			addto_selection( obj );
 		}
 		else
 		{
@@ -1012,32 +1025,32 @@ change_type( FL_OBJECT * obj,
     }
     else
     {
-		clear_selection();
-		fl_delete_object(obj);
+		clear_selection( );
+		fl_delete_object( obj );
 		ttt->parent = obj;
 		ttt->form = form;
 		*obj = *ttt;
 		prev->form = form;
-		fli_insert_composite_after(obj, prev);
-		fli_handle_object(obj, FL_ATTRIB, 0, 0, 0, 0);
-		addto_selection(obj);
+		fli_insert_composite_after( obj, prev );
+		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, 0 );
+		addto_selection( obj );
     }
 
     /* Correct the object focus if required. */
 
-    if (is_focus)
-		fl_set_object_focus(obj->form, ttt);
+    if ( is_focus )
+		fl_set_object_focus( obj->form, ttt );
 
-    if (ttt->child)
-		redraw_the_form(0);
+    if ( ttt->child )
+		redraw_the_form( 0 );
     else
     {
-		copy_superspec(ttt, obj);
+		copy_superspec( ttt, obj );
 		*obj = *ttt;
     }
 
-    if (reshow)
-		show_attributes(obj);
+    if ( reshow )
+		show_attributes( obj );
 }
 
 
@@ -1050,11 +1063,11 @@ accept_spec( FL_OBJECT * ob    FL_UNUSED_ARG,
 {
     long tmp;
 
-    spec_to_superspec(curobj);
-    fl_set_folder_bynumber(fd_attrib->attrib_folder, 1);
+    spec_to_superspec( curobj );
+    fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
     tmp = fd_attrib->attrib_folder->argument;
     fd_attrib->attrib_folder->argument = -1;
-    fl_call_object_callback(fd_attrib->attrib_folder);
+    fl_call_object_callback( fd_attrib->attrib_folder );
     fd_attrib->attrib_folder->argument = tmp;
 }
 
@@ -1066,7 +1079,7 @@ static void
 spec_apply_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			   long        data  FL_UNUSED_ARG )
 {
-    redraw_the_form(0);
+    redraw_the_form( 0 );
 }
 
 
@@ -1080,28 +1093,29 @@ folder_switch_cb( FL_OBJECT * ob,
 {
     FD_attrib *ui = ob->form->fdui;
 
-    int active = fl_get_active_folder_number(ui->attrib_folder);
+    int active = fl_get_active_folder_number( ui->attrib_folder );
 
-    if (active == 1)
+    if ( active == 1 )
     {
-		if (data != -1)		/* -1 indicates manual call */
-			fl_call_object_callback(fd_attrib->readyobj);
-		fd_attrib->readyobj->type = FL_RETURN_BUTTON;	/* yuk! */
-		fl_set_object_shortcut(fd_attrib->readyobj, "^M", 0);
-		fl_redraw_object(fd_attrib->readyobj);
-		fl_set_object_callback(fd_attrib->readyobj, 0, 0);
-		fl_set_object_callback(fd_attrib->applyobj, apply_cb, 0);
-		fl_set_object_callback(fd_attrib->restoreobj, restore_cb, 0);
-		cleanup_spec(curobj);
+		if ( data != -1 )		/* -1 indicates manual call */
+			fl_call_object_callback( fd_attrib->readyobj );
+
+		fd_attrib->readyobj->type = FL_RETURN_BUTTON;	  /* yuk! */
+		fl_set_object_shortcut( fd_attrib->readyobj, "^M", 0 );
+		fl_redraw_object( fd_attrib->readyobj );
+		fl_set_object_callback( fd_attrib->readyobj, NULL, 0 );
+		fl_set_object_callback( fd_attrib->applyobj, apply_cb, 0 );
+		fl_set_object_callback( fd_attrib->restoreobj, restore_cb, 0 );
+		cleanup_spec( curobj );
     }
     else
     {
 		fd_attrib->readyobj->type = FL_NORMAL_BUTTON;	/* yuk! */
-		fl_set_object_shortcut(fd_attrib->readyobj, "", 0);
-		fl_redraw_object(fd_attrib->readyobj);
-		fl_redraw_object(fd_attrib->readyobj);
-		fl_set_object_callback(fd_attrib->readyobj, accept_spec, 0);
-		fl_set_object_callback(fd_attrib->applyobj, spec_apply_cb, 0);
-		set_objclass_spec_attributes(curobj, 0);
+		fl_set_object_shortcut( fd_attrib->readyobj, "", 0 );
+		fl_redraw_object( fd_attrib->readyobj );
+		fl_redraw_object( fd_attrib->readyobj );
+		fl_set_object_callback( fd_attrib->readyobj, accept_spec, 0 );
+		fl_set_object_callback( fd_attrib->applyobj, spec_apply_cb, 0 );
+		set_objclass_spec_attributes( curobj, 0 );
     }
 }
