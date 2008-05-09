@@ -1,4 +1,4 @@
-2008-05-09 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-09 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c: Removed bug that kept canvases
 	from being hidden and tabfolders from being
@@ -28,7 +28,7 @@
 	* everywhere: further clean up (getting internal
 	stuff separated from stuff that belongs to API)
 
-2008-05-08 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-08 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib.objects.c, lib/childs.c: Rewrite of the
 	functions for hidding an object. Some adjustments
@@ -45,7 +45,7 @@
 	that XForms accepts and then calls exit(1). Thanks to
 	Andrea Scopece for contributing this.
 
-2008-05-07 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-07 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c, lib/child.c: Handling of child
 	objects corrected - valgrind was reporting an
@@ -65,12 +65,12 @@
 	on the different fdui's at the end of the main()
 	function etc.).
 
-2008-05-05 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	* further clean-up of header files and renaming
 	of functions and macros usied only internally.
 
-2008-05-04 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_forms.c: Removed limit on number of
 	forms that can be created or read from a file. Few
@@ -97,14 +97,14 @@
 	removed doubly declared or non-existent functions
 	in lib/flinternal.h.
 
-2008-05-01 Jens Thoms Toerring    <jtt@toerring.de>
+2008-05-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/goodies_msg.c: New function fl_show_msg()
 	now works. The window size for fl_show_messages(),
 	fl_show_message() and fl_show_msg() automatically
 	gets adapted to fit the size of the text shown.
 
-2008-04-30 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-30 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/goodie_msg.c: Added function
 
@@ -122,7 +122,7 @@
 	Added #defines for fl_hide_messages and fl_hide_msg -
 	they are just alternative names for fl_hide_message().
 
-2008-04-29 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-29 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/fselect.c: If a callback for a file selector is
 	installed the prompt line and the input field aren't
@@ -138,7 +138,7 @@
 	* image/image_proc.c: Bug fixed in flimage_tint() that led
 	to writes past the end of an array.
 
-2008-04-28 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-28 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c: Jumping backwards with Shift-<TAB>
 	through a set of input objects now works even if
@@ -154,7 +154,7 @@
 	Resulted in an XError on unhiding the form. Thanks
 	to Andrea Scopece for finding this bug.
 
-2008-04-27 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-27 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c: Correct leap year handling in date input
 	validator. Multi-line input field don't receive a <TAB>
@@ -168,7 +168,7 @@
 	full copyright information, not just the first three
 	lines.
 
-2008-04-26 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-26 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/flresource.c: Library version information wasn't
 	output when the '-flversion' option was given. Repaired
@@ -183,7 +183,7 @@
 	resized in x-direction per default, verticall ones in
 	y-direction only.
 
-2008-04-22 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/async_io.c: Removed a bug pointed out by Andrea
 	Scopece that resulted in a segmentation fault in the
@@ -191,7 +191,7 @@
 	files lib/flresource.c and lib/flinternal.h (where
 	also all remains from be.c were removed).
 
-2008-04-20 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/flresource.c: Removed setting of the machines
 	locale setting as default for the program. This
@@ -209,7 +209,7 @@
 	bars to hopefully make it work correctly even when the
 	form gets resized.
 
-2008-04-13 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd/*.c, fdesign/spec/*.c: Replaced
 	'#include "forms.h"' with '#include "include/forms.h"
@@ -219,7 +219,7 @@
 	* fdesign/fd_printC.c: In created C files we now have
 	'#include <forms.h>' instead of '#include "forms.h"'.
 
-2008-04-10 Jens Thoms Toerring    <jtt@toerring.de>
+2008-04-10 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/buttons.c: Removed code that enforced on of a
 	set of radio buttons to be set - thus led to problems
@@ -262,7 +262,7 @@
 	* fdesign/fd/*.[ch], fdesign/spec/*.[ch]: Newly
 	generated using the newest fdesign version.
 
-2008-03-27 Jens Thoms Toerring    <jtt@toerring.de>
+2008-03-27 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/button.c: Most buttons now again react only
 	to the release of the left mouse button, I had
@@ -271,7 +271,7 @@
 	* fdesign/sp_*.c: Some cosmetic correction to the
 	output format of the files generated by fdesign.
 
-2008-03-26 Jens Thoms Toerring    <jtt@toerring.de>
+2008-03-26 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c: Clicking on a "pushable" object now
 	leads to an input object currently having the focus
@@ -283,7 +283,7 @@
 	input objects on the form in the window that lost
 	the focus, a FocusIn event restores it.
 
-2008-03-25 Jens Thoms Toerring    <jtt@toerring.de>
+2008-03-25 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c: Further restructuring of event handling.
 	All memory for objects of a form now (hopefully) gets
@@ -335,7 +335,7 @@
 	by fl_malloc() when writing out C files - there's no
 	good reason to spend time on zeroing out the memory.
 
-2008-03-20 Jens Thoms Toerring    <jtt@toerring.de>
+2008-03-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	* textbox.c: Textboxes didn't get regular update
 	events that are needed for scrolling with the
@@ -350,7 +350,7 @@
 	* lib/dial.c: Corrected return behaviour on mouse
 	button release.
 
-2008-03-19 Jens Thoms Toerring    <jtt@toerring.de>
+2008-03-19 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c: Further cleanup and removal of cruft that
 	was hard to understand but actually was unnecessary or
@@ -405,7 +405,7 @@
 	* lib/fldraw.c: Issues with memory handling checked
 	and corrected.
 
-2008-03-12 Jens Thoms Toerring    <jtt@toerring.de>
+2008-03-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c: Removed code injecting fake FL_RELEASE
 	events that led to problems with double click selections
@@ -422,7 +422,7 @@
 	bugs that may lead to segmentation faults or memory
 	or X resources leaks.
 
-2008-02-04 Jens Thoms Toerring    <jtt@toerring.de>
+2008-02-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Resizing code again changed since I hadn't understood all
 	the interdepencies between gravity and resize settings.
@@ -470,7 +470,7 @@
 	results can sometimes be a bit surprising at a first glance
 	but I hope to have gotten it right;-)
 
-2008-01-28 Jens Thoms Toerring    <jtt@toerring.de>
+2008-01-28 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Resizing behaviour got rewritten to get it to work correctly
 	even if a window gets resized to a very small size and then
