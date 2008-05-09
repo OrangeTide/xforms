@@ -73,6 +73,7 @@ noinst_PROGRAMS = arrowbutton \
 	minput2 \
 	multilabel \
 	ndial \
+	newbutton \
 	objinactive \
 	objpos \
 	objreturn \
@@ -226,6 +227,7 @@ minput_SOURCES = minput.c
 minput2_SOURCES = minput2.c
 multilabel_SOURCES = multilabel.c
 ndial_SOURCES = ndial.c
+newbutton_SOURCES = newbutton.c crossbut.c
 objinactive_SOURCES = objinactive.c
 objpos_SOURCES = objpos.c
 objreturn_SOURCES = objreturn.c

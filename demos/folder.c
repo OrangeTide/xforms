@@ -59,11 +59,6 @@ void
 reshow_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
 {
-	int x,
-		y,
-		w,
-		h;
-
 	fl_hide_form( ob->form );
 	fl_show_form( ob->form, FL_PLACE_POSITION,
 				  FL_FULLBORDER, "TabFolder" );

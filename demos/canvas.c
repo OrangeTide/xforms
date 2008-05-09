@@ -205,7 +205,7 @@ hide_it( FL_OBJECT * ob,
 	{
 		fl_hide_form( fd_canvasform->canvasform );
 		fl_show_form( fd_canvasform->canvasform,
-					  FL_PLACE_CENTER, FL_TRANSIENT, "canvas" );
+					  FL_PLACE_POSITION, FL_FULLBORDER, "canvas" );
 #if 0
 		fl_remove_selected_xevent( fd_canvasform->canvasform->window,
 								   OwnerGrabButtonMask );
