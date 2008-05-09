@@ -1,3 +1,30 @@
+2008-05-09 Jens Thoms Toerring    <jtt@toerring.de>
+
+	* lib/objects.c: Removed bug that kept canvases
+	from being hidden and tabfolders from being
+	re-shown correctly.
+
+	* lib/forms.c: Added a new function
+
+	int
+	fl_get_decoration_sizes( FL_FORM * form,
+	                         int     * top,
+	                         int     * right,
+                                 int     * bottom,
+                                 int     * left );
+
+	which returns the widths of the additional
+	decorations the window manager puts around
+	a forms window. This function can be useful
+	if e.g. one wants to store the position of a
+	window in a file and use the position the
+	next time the program is started. If one
+	stores the forms position and uses that to
+	place the window it will appear to be shifted
+	by the size of the top and left decoration.
+	So instead storing the forms position one has
+	to correct it for the decoration sizes.
+
 2008-05-08 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib.objects.c, lib/childs.c: Rewrite of the

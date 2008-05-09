@@ -510,6 +510,11 @@ FL_EXPORT void fl_set_form_icon(
 		Pixmap	  m
 		);
 
+FL_EXPORT int fl_get_decoration_sizes( FL_FORM * form,
+									   int     * top,
+									   int     * right,
+									   int     * bottom,
+									   int     * left );
 
 #define fl_raise_form( f )							 \
 	do { if ( f->window )							 \

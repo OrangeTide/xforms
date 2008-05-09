@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.20 2008/05/07 20:43:38 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.21 2008/05/09 09:11:34 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -571,7 +571,7 @@ fl_hide_canvas( FL_OBJECT * ob )
     if ( sp->window && sp->cleanup )
 		sp->cleanup( ob );
 
-    /* if parent is unmapped, sp->window is also unmapped */
+    /* If parent is unmapped, sp->window is also unmapped */
 
     if ( ob->visible && sp->window && ob->form && ob->form->window )
     {

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.26 2008/05/08 22:40:21 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.27 2008/05/09 09:11:35 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1111,10 +1111,6 @@ fli_hide_and_get_region( FL_OBJECT * obj,
 	if ( obj == fli_mouseobj )
 		fli_mouseobj = NULL;
 
-	/* Mark it as invisible */
-
-	obj->visible = 0;
-
 	/* Get the area the object covers and add that to the region passed 
 	   to the function */
 
@@ -1142,6 +1138,11 @@ fli_hide_and_get_region( FL_OBJECT * obj,
 	}
 
 	XUnionRectWithRegion( &xrect, *reg, *reg );
+
+	/* Mark it as invisible (must be last, fl_hide_canvas() tests for
+	   visibility and doesn't do anything if already marked as invisible) */
+
+	obj->visible = 0;
 }
 
 

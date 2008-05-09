@@ -31,55 +31,68 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 
-FL_OBJECT *xval, *yval;
+FL_OBJECT *xval,
+          *yval;
+
 
 /* callback routine */
+
 void
 positioner_cb( FL_OBJECT * ob,
 			   long        q   FL_UNUSED_ARG )
 {
-    char str[30];
-    sprintf(str,"%f",fl_get_positioner_xvalue(ob));
-    fl_set_object_label(xval,str);
-    sprintf(str,"%f",fl_get_positioner_yvalue(ob));
-    fl_set_object_label(yval,str);
+    char str[ 30 ];
+
+    sprintf( str, "%f", fl_get_positioner_xvalue( ob ) );
+    fl_set_object_label( xval, str );
+
+    sprintf( str, "%f", fl_get_positioner_yvalue( ob ) );
+    fl_set_object_label( yval, str );
 }
 
+
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char  * argv[ ] )
 {
-  FL_FORM *form;
-  FL_OBJECT *pos, *button, *ob;
+	FL_FORM *form;
+	FL_OBJECT *pos,
+		      *ob;
 
-  fl_set_border_width(-2);
-  fl_initialize(&argc, argv, "FormDemo", 0, 0);
+	fl_set_border_width( -2 );
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-  form = fl_bgn_form(FL_UP_BOX,350,250);
+	form = fl_bgn_form( FL_UP_BOX, 350, 250 );
 
-     ob = fl_add_pixmap(FL_NORMAL_PIXMAP, 60, 70, 100, 100, "");
-     fl_set_object_boxtype(ob, FL_DOWN_BOX);
-     fl_set_pixmap_file(ob, "porsche.xpm");
+	ob = fl_add_pixmap( FL_NORMAL_PIXMAP, 60, 70, 100, 100, "" );
+	fl_set_object_boxtype( ob, FL_DOWN_BOX );
+	fl_set_pixmap_file( ob, "porsche.xpm" );
 
-     pos = fl_add_positioner(FL_OVERLAY_POSITIONER,60,70,100,100,"");
+	pos = fl_add_positioner( FL_OVERLAY_POSITIONER, 60, 70, 100, 100, "" );
+	fl_set_positioner_xbounds( pos, 0, 1 );
+	fl_set_positioner_ybounds( pos, 0, 1 );
+	fl_set_object_callback( pos, positioner_cb, 0 );
 
-     fl_set_positioner_xbounds(pos,0,1);
-     fl_set_positioner_ybounds(pos,0,1);
-     fl_set_object_callback(pos,positioner_cb,0);
-     xval = fl_add_box(FL_DOWN_BOX,230,40,100,30,"");
-     yval = fl_add_box(FL_DOWN_BOX,230,90,100,30,"");
-     fl_set_object_color(xval,FL_COL1,FL_COL1);
-     fl_set_object_color(yval,FL_COL1,FL_COL1);
-     button = fl_add_button(FL_NORMAL_BUTTON,230,200,100,30,"Exit");
-  fl_end_form();
+	xval = fl_add_box( FL_DOWN_BOX, 230, 40, 100, 30, "" );
+	fl_set_object_color( xval, FL_COL1, FL_COL1 );
 
-  fl_show_form(form,FL_PLACE_CENTER,FL_TRANSIENT,"XOR Positioner");
+	yval = fl_add_box( FL_DOWN_BOX, 230, 90, 100, 30, "" );
+	fl_set_object_color( yval, FL_COL1, FL_COL1 );
 
-  positioner_cb(pos,0);
-  fl_do_forms();
-  fl_hide_form(form);
+	fl_add_button( FL_NORMAL_BUTTON, 230, 200, 100, 30, "Exit" );
 
-  return 0;
+	fl_end_form( );
+
+	fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "XOR Positioner" );
+
+	positioner_cb( pos, 0 );
+	fl_do_forms( );
+	fl_hide_form( form );
+	fl_finish( );
+
+	return 0;
 }

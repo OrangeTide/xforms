@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.38 2008/05/08 22:40:20 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.39 2008/05/09 09:11:34 jtt Exp $";
 #endif
 
 
@@ -1212,16 +1212,11 @@ fl_hide_form( FL_FORM * form )
     form->visible = FL_BEING_HIDDEN;
     fli_set_form_window( form );
 
-    /* checking mouseobj->form is necessary as it might be deleted from a
+    /* Checking mouseobj->form is necessary as it might be deleted from a
        form */
 
     if ( fli_mouseobj != NULL && fli_mouseobj->form == form )
     {
-#if FL_DEBUG >= ML_WARN
-		if ( ! fli_mouseobj->visible )
-			M_err( "fl_hide_form", "Outdated mouseobj %s",
-				   fli_mouseobj->label ? fli_mouseobj->label : "" );
-#endif
 		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, 0 );
 		fli_mouseobj = NULL;
     }
@@ -1235,10 +1230,12 @@ fl_hide_form( FL_FORM * form )
     if ( form->focusobj != NULL )
 		form->focusobj = NULL;
 
-	/* Get canvas objects to unmap their windows */
+	/* Get canvas objects to unmap their windows (but only for those that
+	   aren't childs, those will be dealt with by their parents) */
 
 	for ( o = form->first; o; o = o->next )
-		if ( o->objclass == FL_CANVAS || o->objclass == FL_GLCANVAS )
+		if (    ( o->objclass == FL_CANVAS || o->objclass == FL_GLCANVAS )
+			 && ! o->is_child )
 			fli_unmap_canvas_window( o );
 
 #ifdef DELAYED_ACTION
@@ -3491,4 +3488,45 @@ fli_XLookupString( XKeyEvent * xkey,
 	}
 
     return len;
+}
+
+
+/***************************************
+ * Returns the sizes of the "descorations" the window manager
+ * puts around a forms window. Returns 0 on success and 1 if
+ * the form isn't visisble.
+ ***************************************/
+
+int
+fl_get_decoration_sizes( FL_FORM * form,
+						 int     * top,
+						 int     * right,
+						 int     * bottom,
+						 int     * left )
+{
+    XWindowAttributes attr;
+    Window root,
+           parent,
+           *children;
+    unsigned int nchilds;
+
+	if ( ! form || form->visible != FL_VISIBLE )
+		return 1;
+
+    XQueryTree( flx->display, form->window, &root, &parent, &children,
+                &nchilds );
+    XQueryTree( flx->display, parent, &root, &parent, &children,
+                &nchilds );
+    XGetWindowAttributes( flx->display, parent, &attr );
+
+	if ( top )
+		*top = form->y - attr.y;
+	if ( left )
+		*left = form->x - attr.x;
+	if ( right )
+		*right = attr.x + attr.width - form->x - form->w;
+	if ( bottom )
+		*bottom = attr.y + attr.height - form->y - form->h;
+
+	return 0;
 }

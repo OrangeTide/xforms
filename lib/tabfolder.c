@@ -43,9 +43,9 @@
 #define TBDEBUG    0
 
 typedef struct {
-    FL_OBJECT *  canvas;
-    FL_OBJECT *  parent;			/* the tabfolder object         */
-    FL_FORM **   forms;				/* the folders                  */
+    FL_OBJECT  * canvas;
+    FL_OBJECT  * parent;			/* the tabfolder object         */
+    FL_FORM   ** forms;				/* the folders                  */
     FL_OBJECT ** title;				/* the associted tab            */
     int          nforms;			/* number of folders            */
     int          active_folder;		/* current active folder        */
@@ -131,11 +131,6 @@ handle( FL_OBJECT * ob,
 			fl_set_canvas_decoration( sp->canvas,
 									  fli_boxtype2frametype( ob->boxtype ) );
 			sp->processing_destroy = 0;
-#if 0
-			/* for size testing */
-
-			fl_drw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h, FL_RED, 0 );
-#endif
 			compute_position( ob );
 			break;
 
@@ -191,7 +186,7 @@ canvas_cleanup( FL_OBJECT * ob )
     if ( sp->active_folder >= 0 && sp->active_folder < sp->nforms )
     {
 		sp->processing_destroy = 1;
-		if ( sp->forms[ sp->active_folder ]->visible )
+		if ( sp->forms[ sp->active_folder ]->visible == FL_VISIBLE )
 			fl_hide_form( sp->forms[ sp->active_folder ] );
 
 		sp->last_active = sp->active_folder;
@@ -337,7 +332,7 @@ program_switch( FL_OBJECT * ob,
 
 		/* this handles set_folder while hidden */
 
-		if ( ! ob->visible || ! ob->form->visible )
+		if ( ! ob->visible || ! ob->form->visible == FL_VISIBLE )
 			sp->last_active = folder;
     }
 }
@@ -387,7 +382,7 @@ switch_folder( FL_OBJECT * ob,
 			fl_set_form_size( form, sp->canvas->w, sp->canvas->h );
     }
 
-    /* we have more tabs than that can be shown */
+    /* We have more tabs than that can be shown */
 
     if ( sp->num_visible < sp->nforms - 1 || sp->offset )
     {
@@ -416,7 +411,8 @@ switch_folder( FL_OBJECT * ob,
 
     /* need to redraw the last selected folder tab */
 
-    if ( sp->active_folder >= 0 && sp->forms[ sp->active_folder ]->visible )
+    if (    sp->active_folder >= 0
+		 && sp->forms[ sp->active_folder ]->visible == FL_VISIBLE )
     {
 		FL_OBJECT *actobj;
 
@@ -437,7 +433,7 @@ switch_folder( FL_OBJECT * ob,
     form->parent = ob->form;
     ob->form->child = form;
 
-    /* find out the color of the new form */
+    /* Find out the color of the new form */
 
     if ( ( bkob = form->first ) && bkob->type == FL_NO_BOX )
 		bkob = bkob->next;
@@ -525,7 +521,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
 		program_switch( sp->title[ sp->last_active ], sp->last_active );
     }
 
-    /* if first time and the canvas is visible, refresh */
+    /* If first time and the canvas is visible, refresh */
 
     if ( sp->nforms == 1 && ob->visible )
 		fl_redraw_form( ob->form );
@@ -585,25 +581,6 @@ fl_delete_folder_byname( FL_OBJECT  * ob,
 /***************************************
  ***************************************/
 
-#if TBDEBUG
-void
-fl_print_tabfolder( FL_OBJECT  * ob,
-					const char * s )
-{
-    SPEC *sp = ob->spec;
-    int i;
-
-    fprintf( stderr, "%s*************\n", s );
-    for ( i = 0; i < sp->nforms; i++ )
-		fprintf( stderr, "folder%d: title=%s form=%p\n",
-				 i, sp->title[ i ]->label, sp->forms[ i ] );
-}
-#endif
-
-
-/***************************************
- ***************************************/
-
 void
 fl_delete_folder_bynumber( FL_OBJECT * ob,
 						   int         num )
@@ -613,10 +590,6 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
     SPEC *sp = ob->spec;
     FL_OBJECT *deleted = NULL;
     FL_FORM *theform = NULL;
-
-#if TBDEBUG
-    fl_print_tabfolder( ob, "before deletion" );
-#endif
 
     if ( i >= 0 && i < sp->nforms )
     {
@@ -635,10 +608,6 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 		sp->title = fl_realloc( sp->title, sp->nforms * sizeof *sp->title );
     }
 
-#if TBDEBUG
-    fl_print_tabfolder( ob, "after deletion" );
-#endif
-
     if ( deleted )
     {
 		deleted->visible = 0;
@@ -646,7 +615,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 		if ( theform->form_callback == form_callback )
 			theform->form_callback = NULL;
 
-		if ( theform->visible )
+		if ( theform->visible == FL_VISIBLE )
 			fl_hide_form( theform );
 
 		/* change active folder if need to */
@@ -1050,7 +1019,7 @@ compute_top_position( FL_OBJECT * ob )
     for ( i = 0; i < sp->nforms; i++ )
 		sp->title[ i ]->h = max_h;
 
-    /* this will be the canvas location */
+    /* This will be the canvas location */
 
     if ( ob->objclass == FL_TABFOLDER )
     {
@@ -1121,14 +1090,6 @@ compute_bottom_position( FL_OBJECT * ob )
 static void
 compute_position( FL_OBJECT * ob )
 {
-#if 0
-    if ( ( ( SPEC * ) ob->spec ) ->nforms == 0 )
-		return;
-#endif
-#if TBDEBUG
-    fl_print_tabfolder( ob, "computing position" );
-#endif
-
     if ( ob->type == FL_BOTTOM_TABFOLDER )
 		compute_bottom_position( ob );
     else
