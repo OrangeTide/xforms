@@ -78,7 +78,7 @@ fl_set_object_return( FL_OBJECT * ob,
 			break;
 
 		case FL_XYPLOT:
-			fl_xyplot_return( ob, when );
+			fli_xyplot_return( ob, when );
 			break;
 	}
 }

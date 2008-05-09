@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.13 2008/05/04 21:08:01 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.14 2008/05/09 12:33:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,7 +59,7 @@ fli_check_key_focus( const char * s,
     int r;
     Window w;
 
-    if ( fl_cntl.debug > 1 )
+    if ( fli_cntl.debug > 1 )
     {
 		XGetInputFocus( flx->display, &w, &r );
 		M_info( "KBDFocus", "%s:%s FWin=%lu ReqW=%lu",
@@ -162,9 +162,9 @@ fl_set_mouse( FL_Coord mx,
 /*** End of pointer query routines ******************/
 
 
-Pixmap fl_gray_pattern[ 3 ];
-GC fl_bwgc[ 3 ];
-GC fl_whitegc;
+Pixmap fli_gray_pattern[ 3 ];
+GC fli_bwgc[ 3 ];
+GC fli_whitegc;
 GC fl_drawgc[ 18 ];
 
 
@@ -190,15 +190,15 @@ static unsigned char gray60_bits[] =
 void
 fli_init_stipples( void )
 {
-    if ( ! fl_gray_pattern[ 0 ] )
+    if ( ! fli_gray_pattern[ 0 ] )
     {
-		fl_gray_pattern[ 0 ] =
+		fli_gray_pattern[ 0 ] =
 			XCreateBitmapFromData( flx->display, fl_root,
 								   ( char * ) gray40_bits, 8, 8 );
-		fl_gray_pattern[ 1 ] =
+		fli_gray_pattern[ 1 ] =
 			XCreateBitmapFromData( flx->display, fl_root,
 								   ( char * ) gray50_bits, 8, 8 );
-		fl_gray_pattern[ 2 ] =
+		fli_gray_pattern[ 2 ] =
 			XCreateBitmapFromData( flx->display, fl_root,
 								   ( char * ) gray60_bits, 8, 8 );
     }
@@ -329,8 +329,8 @@ fli_create_object_pixmap( FL_OBJECT * ob )
 
     /* make sure it succeeds by forcing a two way request */
 
-    if ( fl_cntl.safe && ! XGetGeometry( flx->display, p->pixmap, &root, &i, &i,
-										 &junk, &junk, &junk, &junk ) )
+    if ( fli_cntl.safe && ! XGetGeometry( flx->display, p->pixmap, &root, &i,
+										  &i, &junk, &junk, &junk, &junk ) )
     {
 		M_err( "ObjPixmap", "Can't create" );
 		p->pixmap = 0;

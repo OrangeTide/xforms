@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.27 2008/05/09 09:11:35 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.28 2008/05/09 12:33:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -48,10 +48,10 @@ extern FL_OBJECT * fli_mouseobj,          /* defined in forms.c */
                  * fli_pushobj;
 
 
-#define PointToPixel( a )     FL_crnd( ( a ) * fl_dpi / 72.0   )
-#define MMToPixel( a )        FL_crnd( ( a ) * fl_dpi / 25.4   )
-#define CMMToPixel( a )       FL_crnd( ( a ) * fl_dpi / 2540.0 )
-#define CPointToPixel( a )    FL_crnd( ( a ) * fl_dpi / 7200.0 )
+#define PointToPixel( a )     FL_crnd( ( a ) * fli_dpi / 72.0   )
+#define MMToPixel( a )        FL_crnd( ( a ) * fli_dpi / 25.4   )
+#define CMMToPixel( a )       FL_crnd( ( a ) * fli_dpi / 2540.0 )
+#define CPointToPixel( a )    FL_crnd( ( a ) * fli_dpi / 7200.0 )
 
 #define TRANY( obj, form )    ( form->h - obj->h - obj->y )
 
@@ -80,7 +80,7 @@ fli_make_form( FL_Coord w,
 
     /* convert non-pixel unit into pixles */
 
-	switch ( fl_cntl.coordUnit )
+	switch ( fli_cntl.coordUnit )
 	{
 		case FL_COORD_PIXEL :
 			break;
@@ -107,8 +107,8 @@ fli_make_form( FL_Coord w,
 
 		default :
 			M_err( "fli_make_form", "Unknown unit: %d. Reset to pixel",
-				   fl_cntl.coordUnit );
-			fl_cntl.coordUnit = FL_COORD_PIXEL;
+				   fli_cntl.coordUnit );
+			fli_cntl.coordUnit = FL_COORD_PIXEL;
     }
 
     /* initialize pointers and non-zero defaults */
@@ -124,7 +124,7 @@ fli_make_form( FL_Coord w,
     form->focusobj       = NULL;
     form->first          = form->last           = NULL;
     form->hotx           = form->hoty = -1;
-    form->use_pixmap     = fl_cntl.doubleBuffer;
+    form->use_pixmap     = fli_cntl.doubleBuffer;
     form->label          = NULL;
     form->u_vdata        = NULL;
     form->close_callback = NULL;
@@ -172,40 +172,40 @@ fl_make_object( int            objclass,
     obj->resize    = FL_RESIZE_ALL;
     obj->nwgravity = obj->segravity = FL_NoGravity;
     obj->boxtype   = FL_NO_BOX;
-    obj->bw        = (    fl_cntl.borderWidth
-					   && FL_abs( fl_cntl.borderWidth ) <= 10 ) ?
-		             fl_cntl.borderWidth : def;
+    obj->bw        = (    fli_cntl.borderWidth
+					   && FL_abs( fli_cntl.borderWidth ) <= 10 ) ?
+		             fli_cntl.borderWidth : def;
 
     obj->x         = x;
     obj->y         = y;
     obj->w         = w;
     obj->h         = h;
 
-	switch ( fl_cntl.coordUnit )
+	switch ( fli_cntl.coordUnit )
 	{
 		case FL_COORD_PIXEL :
 			break;
 
 		case FL_COORD_MM :
-			fl_scale_object( obj, fl_dpi / 25.4, fl_dpi / 25.4 );
+			fl_scale_object( obj, fli_dpi / 25.4, fli_dpi / 25.4 );
 			break;
 
 		case FL_COORD_POINT :
-			fl_scale_object( obj, fl_dpi / 72.0, fl_dpi / 72.0 );
+			fl_scale_object( obj, fli_dpi / 72.0, fli_dpi / 72.0 );
 			break;
 
 		case FL_COORD_centiPOINT :
-			fl_scale_object( obj, fl_dpi / 7200.0, fl_dpi / 7200.0 );
+			fl_scale_object( obj, fli_dpi / 7200.0, fli_dpi / 7200.0 );
 			break;
 
 		case FL_COORD_centiMM :
-			fl_scale_object( obj, fl_dpi / 2540.0, fl_dpi / 2540.0 );
+			fl_scale_object( obj, fli_dpi / 2540.0, fli_dpi / 2540.0 );
 			break;
 
 		default:
 			M_err( "fl_make_object", "Unknown unit: %d. Reset",
-				   fl_cntl.coordUnit );
-			fl_cntl.coordUnit = FL_COORD_PIXEL;
+				   fli_cntl.coordUnit );
+			fli_cntl.coordUnit = FL_COORD_PIXEL;
     }
 
     obj->wantkey  = FL_KEY_NORMAL;
@@ -219,22 +219,22 @@ fl_make_object( int            objclass,
     obj->col1     = FL_COL1;
     obj->col2     = FL_MCOL;
 
-    if ( BUTTON_CLASS( objclass ) && fl_cntl.buttonFontSize )
-		obj->lsize = fl_cntl.buttonFontSize;
-    else if ( objclass == FL_MENU && fl_cntl.menuFontSize )
-		obj->lsize = fl_cntl.menuFontSize;
-    else if ( objclass == FL_CHOICE && fl_cntl.choiceFontSize )
-		obj->lsize = fl_cntl.choiceFontSize;
-    else if ( objclass == FL_INPUT && fl_cntl.inputFontSize )
-		obj->lsize = fl_cntl.inputFontSize;
-    else if ( objclass == FL_SLIDER && fl_cntl.sliderFontSize )
-		obj->lsize = fl_cntl.sliderFontSize;
+    if ( BUTTON_CLASS( objclass ) && fli_cntl.buttonFontSize )
+		obj->lsize = fli_cntl.buttonFontSize;
+    else if ( objclass == FL_MENU && fli_cntl.menuFontSize )
+		obj->lsize = fli_cntl.menuFontSize;
+    else if ( objclass == FL_CHOICE && fli_cntl.choiceFontSize )
+		obj->lsize = fli_cntl.choiceFontSize;
+    else if ( objclass == FL_INPUT && fli_cntl.inputFontSize )
+		obj->lsize = fli_cntl.inputFontSize;
+    else if ( objclass == FL_SLIDER && fli_cntl.sliderFontSize )
+		obj->lsize = fli_cntl.sliderFontSize;
 #if 0
-    else if ( objclass == FL_BROWSER && fl_cntl.browserFontSize )
-		obj->lsize = fl_cntl.browserFontSize;
+    else if ( objclass == FL_BROWSER && fli_cntl.browserFontSize )
+		obj->lsize = fli_cntl.browserFontSize;
 #endif
-    else if ( fl_cntl.labelFontSize )
-		obj->lsize = fl_cntl.labelFontSize;
+    else if ( fli_cntl.labelFontSize )
+		obj->lsize = fli_cntl.labelFontSize;
     else
 		obj->lsize = FL_DEFAULT_SIZE;
 
@@ -298,17 +298,17 @@ fl_add_object( FL_FORM   * form,
 	obj->ft2 = obj->y + obj->h;
 	obj->fb2 = form->h - obj->ft2;
 
-    if ( fl_inverted_y )
+    if ( fli_inverted_y )
 		obj->y = TRANY( obj, form );
 
     /* If adding to a group, set objects group ID, then find the end of the
 	   group or the end of the object list on this form */
 
-	if ( fl_current_group )
+	if ( fli_current_group )
 	{
-		FL_OBJECT *end = fl_current_group;
+		FL_OBJECT *end = fli_current_group;
 
-		obj->group_id = fl_current_group->group_id;
+		obj->group_id = fli_current_group->group_id;
 
 		for ( ; end && end->objclass != FL_END_GROUP; end = end->next )
 			/* empty */ ;
@@ -2350,7 +2350,7 @@ fl_scale_object( FL_OBJECT * ob,
 		ob->w    = FL_crnd( new_w );
 		ob->h    = FL_crnd( new_h );
 
-		if ( fl_inverted_y )
+		if ( fli_inverted_y )
 			ob->y = TRANY( ob, ob->form );
 	}
 }
@@ -2478,7 +2478,7 @@ fl_get_object_position( FL_OBJECT * ob,
 						FL_Coord  * y )
 {
     *x = ob->x;
-    *y = fl_inverted_y ? TRANY( ob, ob->form ) : ob->y;
+    *y = fli_inverted_y ? TRANY( ob, ob->form ) : ob->y;
 }
 
 
@@ -2497,7 +2497,7 @@ fl_set_object_position( FL_OBJECT * obj,
     if ( obj->x == x && obj->y == y )
 		return;
 
-    if ( fl_inverted_y )
+    if ( fli_inverted_y )
 		y = obj->form->h - obj->h - y;
 
     if ( obj->x == x && obj->y == y )
@@ -2526,7 +2526,7 @@ fl_set_object_position( FL_OBJECT * obj,
 		obj->y = y;
 	}
 
-	if ( fl_inverted_y )
+	if ( fli_inverted_y )
 		obj->y = TRANY( obj, obj->form );
 
     if ( visible )
@@ -2620,7 +2620,7 @@ fl_set_object_size( FL_OBJECT * obj,
 		obj->h = FL_crnd( obj->ft2 - obj->ft1 );
 	}
 
-	if ( fl_inverted_y )
+	if ( fli_inverted_y )
 		obj->y = TRANY( obj, obj->form );
 
 	fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, NULL );

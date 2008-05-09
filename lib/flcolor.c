@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.16 2008/05/05 14:21:51 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.17 2008/05/09 12:33:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -412,7 +412,7 @@ fill_map( void )
     }
 
     if (    fl_state[ fl_vmode ].pcm
-		 || fl_cntl.sharedColormap
+		 || fli_cntl.sharedColormap
 		 || fli_dithered( fl_vmode ) )
     {
 		if ( ! ok && fm > fli_imap )
@@ -569,7 +569,7 @@ get_shared_cmap( int vmode )
 		fprintf( stderr, "DefaultVisual=%s CurrentVisual=%s\n",			 \
 				 #v, fl_vclass_name( fli_class( vmode ) ) );
 
-    if ( fl_cntl.debug )
+    if ( fli_cntl.debug )
     {
 		PD( TrueColor );
 		PD( PseudoColor );
@@ -638,7 +638,7 @@ fli_create_gc( Window win )
 
     M_warn( "CreateGC", "For %s", fl_vclass_name( fl_vmode ) );
 
-    if ( ! fl_gray_pattern[ 1 ] )
+    if ( ! fli_gray_pattern[ 1 ] )
     {
 		M_err( "CreateGC", "gray pattern not initialized" );
 		exit( 1 );
@@ -649,7 +649,7 @@ fli_create_gc( Window win )
     for ( ; flgcs < flgce; flgcs++ )
     {
 		*flgcs = XCreateGC( flx->display, win, 0, 0 );
-		XSetStipple( flx->display, *flgcs, fl_inactive_pattern );
+		XSetStipple( flx->display, *flgcs, FLI_INACTIVE_PATTERN );
 		XSetGraphicsExposures( flx->display, *flgcs, 0 );
     }
 
@@ -662,7 +662,7 @@ fli_create_gc( Window win )
     for ( ; flgcs < flgce; flgcs++ )
     {
 		*flgcs = XCreateGC( flx->display, win, 0, 0 );
-		XSetStipple( flx->display, *flgcs, fl_inactive_pattern );
+		XSetStipple( flx->display, *flgcs, FLI_INACTIVE_PATTERN );
 		XSetGraphicsExposures( flx->display, *flgcs, 0 );
     }
     flx->textgc = fl_state[ fl_vmode ].textgc[ 0 ];
@@ -671,7 +671,7 @@ fli_create_gc( Window win )
 
     fl_state[ fl_vmode ].dimmedGC = XCreateGC( flx->display, win, 0, 0 );
     XSetStipple( flx->display, fl_state[ fl_vmode ].dimmedGC,
-				 fl_inactive_pattern );
+				 FLI_INACTIVE_PATTERN );
     XSetGraphicsExposures( flx->display, fl_state[ fl_vmode ].dimmedGC, 0 );
     XSetFillStyle( flx->display, fl_state[ fl_vmode ].dimmedGC, FillStippled );
 
@@ -679,23 +679,18 @@ fli_create_gc( Window win )
 
     if ( fli_dithered( fl_vmode ) )
     {
-		fl_whitegc = XCreateGC( flx->display, win, 0, 0 );
-		XSetForeground( flx->display, fl_whitegc, fl_get_flcolor( FL_WHITE ) );
+		int i;
 
-		fl_bwgc[ 0 ] = XCreateGC( flx->display, win, 0, 0 );
-		XSetStipple( flx->display, fl_bwgc[ 0 ], fl_gray_pattern[ 0 ] );
-		XSetGraphicsExposures( flx->display, fl_bwgc[ 0 ], 0 );
-		XSetFillStyle( flx->display, fl_bwgc[ 0 ], FillStippled );
+		fli_whitegc = XCreateGC( flx->display, win, 0, 0 );
+		XSetForeground( flx->display, fli_whitegc, fl_get_flcolor( FL_WHITE ) );
 
-		fl_bwgc[ 1 ] = XCreateGC( flx->display, win, 0, 0 );
-		XSetStipple( flx->display, fl_bwgc[ 1 ], fl_gray_pattern[ 1 ] );
-		XSetGraphicsExposures( flx->display, fl_bwgc[ 1 ], 0 );
-		XSetFillStyle( flx->display, fl_bwgc[ 1 ], FillStippled );
-
-		fl_bwgc[ 2 ] = XCreateGC( flx->display, win, 0, 0 );
-		XSetStipple( flx->display, fl_bwgc[ 2 ], fl_gray_pattern[ 2 ] );
-		XSetGraphicsExposures( flx->display, fl_bwgc[ 2 ], 0 );
-		XSetFillStyle( flx->display, fl_bwgc[ 2 ], FillStippled );
+		for ( i = 0; i < 3; i++ )
+		{
+			fli_bwgc[ i ] = XCreateGC( flx->display, win, 0, 0 );
+			XSetStipple( flx->display, fli_bwgc[ i ], fli_gray_pattern[ i ] );
+			XSetGraphicsExposures( flx->display, fli_bwgc[ i ], 0 );
+			XSetFillStyle( flx->display, fli_bwgc[ i ], FillStippled );
+		}
     }
 
     if ( fl_state[ fl_vmode ].cur_fnt )
@@ -775,9 +770,9 @@ fli_init_colormap( int vmode )
 
     ok = 0;
 
-    if ( fl_cntl.privateColormap )
+    if ( fli_cntl.privateColormap )
 		ok = get_private_cmap( vmode );
-    else if ( fl_cntl.standardColormap )
+    else if ( fli_cntl.standardColormap )
 		ok = get_standard_cmap( vmode );
 
     if ( ! ok && ! ( ok = get_shared_cmap( vmode ) ) )
@@ -789,7 +784,7 @@ fli_init_colormap( int vmode )
 		ok = get_private_cmap( vmode );
 #else
 		ok = 1;
-		fl_cntl.sharedColormap = 1;
+		fli_cntl.sharedColormap = 1;
 		get_shared_cmap( vmode );
 #endif
     }
@@ -1294,7 +1289,7 @@ fl_set_graphics_mode( int mode,
 				fl_vclass_name( mode ) );
     }
 
-    fl_cntl.doubleBuffer = doublebuf && fli_doublebuffer_capable( 0 );
+    fli_cntl.doubleBuffer = doublebuf && fli_doublebuffer_capable( 0 );
 
 #if 0
     if ( ! fl_state[ mode ].trailblazer )
@@ -1331,7 +1326,7 @@ fli_dump_state_info( int          mode,
     FL_State *fs = fl_state + mode;
     XVisualInfo xvi;
 
-    if ( fl_cntl.debug )
+    if ( fli_cntl.debug )
     {
 		fprintf( stderr, "In %s", where );
 		fprintf( stderr, " VClass:%s", fl_vclass_name( fli_class( mode ) ) );

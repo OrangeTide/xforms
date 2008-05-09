@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_core.c,v 1.9 2008/05/04 21:07:58 jtt Exp $
+ * $Id: ps_core.c,v 1.10 2008/05/09 12:33:00 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -48,7 +48,7 @@
 FLPSInfo *flps;
 
 FLPS_CONTROL *
-flps_init(void)
+flps_init( void )
 {
     static FLPSInfo *local_flps;
 
@@ -63,7 +63,7 @@ flps_init(void)
 	local_flps->xscale = local_flps->yscale = 1.0f;
 	/* driver will fill-in appropriate vals for minus */
 	local_flps->drawbox = -1;
-	local_flps->xdpi = local_flps->ydpi = fl_dpi;
+	local_flps->xdpi = local_flps->ydpi = fli_dpi;
 	local_flps->pack = 1;
 	/* cache */
 	local_flps->cur_color = FL_NoColor;

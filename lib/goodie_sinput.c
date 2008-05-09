@@ -59,10 +59,10 @@ static FD_input *
 create_input( void )
 {
     FD_input *fdui = fl_calloc(1, sizeof *fdui );
-    int oldy = fl_inverted_y;
+    int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit();
 
-    fl_inverted_y = 0;
+    fli_inverted_y = 0;
     fl_set_coordunit(FL_COORD_PIXEL);
 
     fdui->form = fl_bgn_form(FL_UP_BOX, 460, 130);
@@ -74,7 +74,7 @@ create_input( void )
     fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
 							  fli_goodies_preemptive );
     fl_set_form_atclose(fdui->form, fl_goodies_atclose, fdui->but);
-    fl_inverted_y = oldy;
+    fli_inverted_y = oldy;
     fl_set_coordunit(oldu);
 
     return fdui;

@@ -59,11 +59,11 @@ static FD_alert *
 create_alert( void )
 {
     FD_alert *fdui = fl_calloc( 1, sizeof *fdui );
-    int oldy = fl_inverted_y;
+    int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit( );
     FL_OBJECT *ob;
 
-    fl_inverted_y = 0;
+    fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
     fdui->form = fl_bgn_form( FL_NO_BOX, 460, 130 );
@@ -92,10 +92,10 @@ create_alert( void )
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
     fdui->form->fdui = fdui;
 
-    if ( fl_cntl.buttonFontSize != FL_DEFAULT_SIZE )
+    if ( fli_cntl.buttonFontSize != FL_DEFAULT_SIZE )
 		fl_fit_object_label( fdui->but, 20, 2 );
 
-    fl_inverted_y = oldy;
+    fli_inverted_y = oldy;
     fl_set_coordunit( oldu );
 
     return fdui;

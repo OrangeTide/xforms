@@ -150,7 +150,7 @@ init_controlform( void )
 {
     /* sort of auto-resizing depending on the font size */
 
-    if ( fl_cntl.buttonFontSize > FL_DEFAULT_SIZE )
+    if ( fli_cntl.buttonFontSize > FL_DEFAULT_SIZE )
     {
 		fd_align_fontsize = FL_SMALL_SIZE;
 		fd_type_fontsize = FL_SMALL_SIZE;

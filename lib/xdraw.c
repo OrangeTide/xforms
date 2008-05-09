@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: xdraw.c,v 1.10 2008/05/04 21:08:01 jtt Exp $";
+char *fl_id_drw = "$Id: xdraw.c,v 1.11 2008/05/09 12:33:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -91,7 +91,7 @@ fl_rectangle( int	   fill,
 
 	if ( bw && fill )
 	{
-		fli_set_current_gc( fl_whitegc );
+		fli_set_current_gc( fli_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h );
 		fli_set_current_gc( dithered_gc );
 	}
@@ -201,7 +201,7 @@ fl_oval( int	  fill,
 
 	if ( bw )
 	{
-		fli_set_current_gc( fl_whitegc );
+		fli_set_current_gc( fli_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
 		fli_set_current_gc( dithered_gc );
 	}
@@ -275,7 +275,7 @@ fl_ovalarc( int		 fill,
 
 	if ( mono )
 	{
-		fli_set_current_gc( fl_whitegc );
+		fli_set_current_gc( fli_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
 				 t0 * 6.4, dt * 6.4 );
 		fli_set_current_gc( dithered_gc );
@@ -325,7 +325,7 @@ fl_pieslice( int	  fill,
 
 	if ( bw )
 	{
-		fli_set_current_gc( fl_whitegc );
+		fli_set_current_gc( fli_whitegc );
 		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
 				 a1 * 6.4, delta * 6.4 );
 		fli_set_current_gc( dithered_gc );
@@ -831,7 +831,7 @@ fli_mono_dither( unsigned long col )
 		case FL_PALEGREEN:
 		case FL_DARKGOLD:
 		case FL_INACTIVE_COL:
-			dithered_gc = fl_bwgc[ 1 ];
+			dithered_gc = fli_bwgc[ 1 ];
 			bwtrick     = 1;
 			break;
 
@@ -839,12 +839,12 @@ fli_mono_dither( unsigned long col )
 		case FL_CYAN:
 		case FL_INDIANRED:
 		case FL_GREEN:
-			dithered_gc = fl_bwgc[ 2 ];
+			dithered_gc = fli_bwgc[ 2 ];
 			bwtrick     = 1;
 			break;
 
 		case FL_BLUE:
-			dithered_gc = fl_bwgc[ 0 ];
+			dithered_gc = fli_bwgc[ 0 ];
 			bwtrick     = 1;
 			break;
 
@@ -857,7 +857,7 @@ fli_mono_dither( unsigned long col )
 
 				fl_get_icm_color( col, &r, &g, &b );
 				if ( ( bwtrick = ( r > 70 && r <= 210 ) ) )
-					dithered_gc = fl_bwgc[ r / 70 - 1 ];
+					dithered_gc = fli_bwgc[ r / 70 - 1 ];
 			}
 			break;
 	}

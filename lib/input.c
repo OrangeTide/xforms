@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.18 2008/05/08 22:40:20 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.19 2008/05/09 12:33:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1567,8 +1567,8 @@ fl_create_input( int          type,
     ob->col2 = FL_INPUT_COL2;
     ob->align = FL_INPUT_ALIGN;
     ob->lcol = FL_INPUT_LCOL;
-    ob->lsize = fl_cntl.inputFontSize ?
-		        fl_cntl.inputFontSize : FL_DEFAULT_SIZE;
+    ob->lsize = fli_cntl.inputFontSize ?
+		        fli_cntl.inputFontSize : FL_DEFAULT_SIZE;
 
     fl_set_object_prehandler( ob, input_pre );
     fl_set_object_posthandler( ob, input_post );
@@ -2095,7 +2095,7 @@ set_default_keymap( int force )
 
 #define Dump( a ) fprintf( stderr, "\t%s: %ld(0x%lx)\n", #a,kmap.a, kmap.a )
 
-    if ( fl_cntl.debug > 1 )
+    if ( fli_cntl.debug > 1 )
     {
 		Dump( moveto_prev_char );
 		Dump( moveto_next_char );

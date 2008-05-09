@@ -61,10 +61,10 @@ static FD_choice *
 create_choice( void )
 {
     FD_choice *fdui = fl_calloc(1, sizeof *fdui );
-    int oldy = fl_inverted_y;
+    int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit();
 
-    fl_inverted_y = 0;
+    fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
     fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
     fl_set_form_title( fdui->form, "Choice" );
@@ -76,7 +76,7 @@ create_choice( void )
     fdui->sc[ 2 ] = fl_strdup( "2" );
     fdui->sc[ 3 ] = fl_strdup( "3" );
     fl_end_form( );
-    fl_inverted_y = oldy;
+    fli_inverted_y = oldy;
     fl_set_coordunit( oldu );
     return fdui;
 }

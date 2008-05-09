@@ -25,6 +25,9 @@
 	So instead storing the forms position one has
 	to correct it for the decoration sizes.
 
+	* everywhere: further clean up (getting internal
+	stuff separated from stuff that belongs to API)
+
 2008-05-08 Jens Thoms Toerring    <jtt@toerring.de>
 
 	* lib.objects.c, lib/childs.c: Rewrite of the

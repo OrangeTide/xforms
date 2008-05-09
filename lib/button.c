@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.17 2008/05/04 21:07:58 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.18 2008/05/09 12:33:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -508,8 +508,8 @@ fl_create_generic_button( int          objclass,
 	for ( i = 0; i < 5; i++ )
 		sp->react_to[ i ] = 1;
 
-    if ( fl_cntl.buttonLabelSize )
-		ob->lsize = fl_cntl.buttonLabelSize;
+    if ( fli_cntl.buttonLabelSize )
+		ob->lsize = fli_cntl.buttonLabelSize;
 
     return ob;
 }

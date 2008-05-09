@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.39 2008/05/09 09:11:34 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.40 2008/05/09 12:33:01 jtt Exp $";
 #endif
 
 
@@ -110,7 +110,7 @@ static size_t auto_count = 0;
 void
 fli_set_no_connection( int yes )
 {
-    if ( ( fl_no_connection = yes ) )
+    if ( ( fli_no_connection = yes ) )
       fli_internal_init( );
 }
 
@@ -252,7 +252,7 @@ fl_bgn_form( int      type,
 			 FL_Coord w,
 			 FL_Coord h )
 {
-    if ( ! fl_no_connection && ! flx->display )
+    if ( ! fli_no_connection && ! flx->display )
     {
 		M_err( "fl_bgn_form", "Missing or failed fl_initialize()" );
 		exit( 1 );
@@ -289,7 +289,7 @@ fl_end_form( void )
     if ( ! fl_current_form )
 		M_err( "fl_end_form", "NULL form." );
 
-    if ( fl_current_group )
+    if ( fli_current_group )
     {
 		M_err( "fl_end_form", "You forgot to call fl_end_group." );
 		fl_end_group( );
@@ -334,18 +334,18 @@ fl_bgn_group( void )
 		return NULL;
     }
 
-    if ( fl_current_group )
+    if ( fli_current_group )
     {
 		M_err( "fl_bgn_group", "You forgot to call fl_end_group." );
 		fl_end_group( );
     }
 
-    fl_current_group = fl_make_object( FL_BEGIN_GROUP, 0, 0, 10, 10, 0,
+    fli_current_group = fl_make_object( FL_BEGIN_GROUP, 0, 0, 10, 10, 0,
 									   "", NULL );
-    fl_current_group->group_id = id++;
-    fl_add_object( fl_current_form, fl_current_group );
+    fli_current_group->group_id = id++;
+    fl_add_object( fl_current_form, fli_current_group );
 
-    return fl_current_group;
+    return fli_current_group;
 }
 
 
@@ -356,7 +356,7 @@ fl_bgn_group( void )
 FL_OBJECT *
 fl_end_group( void )
 {
-    FL_OBJECT *ob = fl_current_group;
+    FL_OBJECT *ob;
     int id;
 
     if ( fl_current_form == NULL )
@@ -365,14 +365,14 @@ fl_end_group( void )
 		return NULL;
     }
 
-    if ( fl_current_group == NULL )
+    if ( fli_current_group == NULL )
     {
 		M_err( "fl_end_group", "NULL group." );
 		return NULL;
     }
 
-    id = fl_current_group->group_id;
-    fl_current_group = NULL;
+    id = fli_current_group->group_id;
+    fli_current_group = NULL;
 
     if ( ! reopened_group )
     {
@@ -578,7 +578,7 @@ scale_form( FL_FORM * form,
 		obj->w = FL_crnd( obj->fl2 - obj->fl1 );
 		obj->h = FL_crnd( obj->ft2 - obj->ft1 );
 
-		if ( fl_inverted_y )
+		if ( fli_inverted_y )
 			obj->y = form->h - obj->h - obj->y;
 
 		fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, 0 );
@@ -895,7 +895,7 @@ fl_prepare_form_window( FL_FORM    * form,
 
     if ( border != FL_NOBORDER )
     {
-		FL_WM_STUFF *fb = &fl_wmstuff;
+		FLI_WM_STUFF *fb = &fli_wmstuff;
 
 		itx = fb->bw + ( border == FL_TRANSIENT ? fb->trpx : fb->rpx );
 		ity = fb->bw + ( border == FL_TRANSIENT ? fb->trpy : fb->rpy );
@@ -919,7 +919,7 @@ fl_prepare_form_window( FL_FORM    * form,
 		fl_winaspect( 0, form->w, form->h );
     else if ( place == FL_PLACE_POSITION )
     {
-		if ( fl_wmstuff.rep_method == FL_WM_SHIFT && border != FL_NOBORDER )
+		if ( fli_wmstuff.rep_method == FLI_WM_SHIFT && border != FL_NOBORDER )
 		{
 			form->x -= itx;
 			form->y -= ity;
@@ -986,7 +986,7 @@ fl_prepare_form_window( FL_FORM    * form,
 
 		/* take care of reparenting stuff */
 
-		if ( fl_wmstuff.rep_method == FL_WM_SHIFT && border != FL_NOBORDER )
+		if ( fli_wmstuff.rep_method == FLI_WM_SHIFT && border != FL_NOBORDER )
 		{
 			form->x -= itx;
 			form->y -= ity;
@@ -1002,7 +1002,8 @@ fl_prepare_form_window( FL_FORM    * form,
 		fl_initial_winsize( form->w, form->h );
 		if ( has_initial )
 		{
-			if ( fl_wmstuff.rep_method == FL_WM_SHIFT && border != FL_NOBORDER )
+			if (    fli_wmstuff.rep_method == FLI_WM_SHIFT
+				 && border != FL_NOBORDER )
 			{
 				form->x -= itx;
 				form->y -= ity;
@@ -1622,7 +1623,7 @@ do_shortcut( FL_FORM  * form,
 				/* this is not exactly correct as shortcut might quit,
 				   fl_finish will restore the keyboard state */
 
-				if ( fl_keybdcontrol.auto_repeat_mode == AutoRepeatModeOn )
+				if ( fli_keybdcontrol.auto_repeat_mode == AutoRepeatModeOn )
 					XAutoRepeatOn( flx->display );
 			}
 
@@ -2259,7 +2260,7 @@ do_interaction_step( int wait_io )
 	/* got an event for one of the forms */
 
 #if FL_DEBUG >= ML_WARN
-	if ( st_xev.type != MotionNotify || fl_cntl.debug > 2 )
+	if ( st_xev.type != MotionNotify || fli_cntl.debug > 2 )
 		fli_xevent_name( "MainLoop", &st_xev );
 #endif
 
@@ -3025,7 +3026,8 @@ fl_finish( void )
 
     if ( flx->display )
     {
-		XChangeKeyboardControl( flx->display, fl_keybdmask, &fl_keybdcontrol );
+		XChangeKeyboardControl( flx->display, fli_keybdmask,
+								&fli_keybdcontrol );
 
 		fl_remove_all_signal_callbacks( );
 		fl_remove_all_timeouts( );
@@ -3229,7 +3231,7 @@ fl_fit_object_label( FL_OBJECT * obj,
 		   xfactor,
 		   yfactor;
 
-    if ( fl_no_connection )
+    if ( fli_no_connection )
 		return;
 
     fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
@@ -3297,7 +3299,7 @@ fl_addto_group( FL_OBJECT * group )
 		return;
     }
 
-    if ( fl_current_group && fl_current_group != group )
+    if ( fli_current_group && fli_current_group != group )
     {
 		M_err( "fl_addto_group", "You forgot to call fl_end_group" );
 		fl_end_group( );
@@ -3306,7 +3308,7 @@ fl_addto_group( FL_OBJECT * group )
     reopened_group = 1;
     reopened_group += fl_current_form ? 0 : 2;
     fl_current_form = group->form;
-    fl_current_group = group;
+    fli_current_group = group;
 }
 
 
@@ -3341,7 +3343,7 @@ fl_adjust_form_size( FL_FORM * form )
 		   ym = 0.5;
     int bw;
 
-    if ( fl_no_connection )
+    if ( fli_no_connection )
 		return 1.0;
 
     max_factor = factor = 1.0;

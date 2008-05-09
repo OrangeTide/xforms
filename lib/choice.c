@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.17 2008/05/05 14:21:51 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.18 2008/05/09 12:33:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -476,8 +476,8 @@ fl_create_choice( int          type,
 	ob->want_update = 1;
     ob->spec = sp   = fl_calloc( 1, sizeof *sp );
 
-    sp->fontsize  = fl_cntl.choiceFontSize ?
-		            fl_cntl.choiceFontSize : FL_DEFAULT_FONT;
+    sp->fontsize  = fli_cntl.choiceFontSize ?
+		            fli_cntl.choiceFontSize : FL_DEFAULT_FONT;
     sp->fontstyle = FL_NORMAL_STYLE;
     sp->align     = FL_ALIGN_CENTER;
 

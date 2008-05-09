@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.13 2008/05/05 14:21:55 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.14 2008/05/09 12:33:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -100,7 +100,7 @@ fli_default_xswa( void )
     if( fli_context->xic )
        st_xswa.event_mask |= FocusChangeMask;
 
-    st_xswa.backing_store = fl_cntl.backingStore;
+    st_xswa.backing_store = fli_cntl.backingStore;
     st_wmask = CWEventMask | CWBackingStore;
 
     /* border_pixel must be set for 24bit TrueColor displays */
@@ -282,7 +282,7 @@ fl_winposition( FL_Coord x,
 {
     st_xsh.x = x;
     st_xsh.y = y;
-    st_xsh.flags |= fl_wmstuff.pos_request;
+    st_xsh.flags |= fli_wmstuff.pos_request;
 }
 
 
@@ -627,10 +627,10 @@ get_wm_reparent_method( int reqx   FL_UNUSED_ARG,
 						int x      FL_UNUSED_ARG,
 						int y )
 {
-    int trueb = FL_max( fl_wmstuff.rpx, fl_wmstuff.trpx );
+    int trueb = FL_max( fli_wmstuff.rpx, fli_wmstuff.trpx );
     int ydiff = FL_abs( reqy - y );
 
-    fl_wmstuff.rep_method = ydiff > trueb ? FL_WM_SHIFT : FL_WM_NORMAL;
+    fli_wmstuff.rep_method = ydiff > trueb ? FLI_WM_SHIFT : FLI_WM_NORMAL;
     M_warn( "WMReparent", "%s: reqy=%d y=%d",
 			ydiff > trueb ? "Shift" : "Normal", reqy, y );
 }
@@ -657,7 +657,7 @@ wait_mapwin( Window win,
     }
 
     if ( ! reparent_method && ! tran_method )
-		fl_wmstuff.rep_method = FL_WM_SHIFT;
+		fli_wmstuff.rep_method = FLI_WM_SHIFT;
 
     /* obtain window manager's decoration size for normal and transient
        windows */
@@ -671,7 +671,7 @@ wait_mapwin( Window win,
 
 		if ( xev.type == ReparentNotify && border != FL_NOBORDER )
 		{
-			FL_WM_STUFF *fb = &fl_wmstuff;
+			FLI_WM_STUFF *fb = &fli_wmstuff;
 
 			if ( border == FL_FULLBORDER && ! fb->rpy )
 				get_wm_decoration( "Full", &xev, &fb->rpx, &fb->rpy, &fb->bw );
@@ -702,7 +702,7 @@ wait_mapwin( Window win,
        can do about it for now. TODO */
 
     if (    ! reparent_method
-		 && st_xsh.flags & fl_wmstuff.pos_request
+		 && st_xsh.flags & fli_wmstuff.pos_request
 		 && border != FL_NOBORDER )
     {
 		int px,
@@ -800,7 +800,8 @@ fli_create_window( Window       parent,
     /* no decoration means unmanagered windows */
 
     if (    st_wmborder == FL_NOBORDER
-		 && ( st_xsh.flags & fl_wmstuff.pos_request) == fl_wmstuff.pos_request )
+		 && ( st_xsh.flags & fli_wmstuff.pos_request)
+			                                        == fli_wmstuff.pos_request )
     {
 		/* turning this on will make the window truely unmananged, might have
 		   problems with the input focus and colormaps */
@@ -843,7 +844,7 @@ fli_create_window( Window       parent,
 						 bwidth, fli_depth( fl_vmode ), InputOutput,
 						 fli_visual( fl_vmode ), st_wmask, &st_xswa );
 
-    if ( fl_cntl.debug > 3 )
+    if ( fli_cntl.debug > 3 )
     {
 		XFlush( flx->display );
 		fprintf( stderr, "****CreateWin OK**** sleeping 1 seconds\n" );

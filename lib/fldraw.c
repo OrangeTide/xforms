@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.12 2008/05/05 14:21:51 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.13 2008/05/09 12:33:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -42,6 +42,9 @@ char *fl_id_drw = "$Id: fldraw.c,v 1.12 2008/05/05 14:21:51 jtt Exp $";
 
 #include "include/forms.h"
 #include "flinternal.h"
+
+
+#define FLI_SHADOW_COL   FL_RIGHT_BCOL
 
 
 static void fl_foldertab_box( int,
@@ -510,8 +513,8 @@ fl_drw_box( int      style,
 			break;
 
 		case FL_SHADOW_BOX:
-			fl_rectf( x + bw, y + h - bw, w - bw, bw, fl_shadow_col );
-			fl_rectf( x + w - bw, y + bw, bw, h - bw, fl_shadow_col );
+			fl_rectf( x + bw, y + h - bw, w - bw, bw, FLI_SHADOW_COL );
+			fl_rectf( x + w - bw, y + bw, bw, h - bw, FLI_SHADOW_COL );
 			fl_rectbound( x, y, w - bw, h - bw, c );
 			break;
 
@@ -524,13 +527,13 @@ fl_drw_box( int      style,
 #if 0
 			fli_set_additional_clipping( x + bw - 1, y + h - bw,
 										 w - bw + 1, bw );
-			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, fl_shadow_col );
+			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, FLI_SHADOW_COL );
 			fli_set_additional_clipping( x + w - bw, y + bw, bw, h - bw );
-			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, fl_shadow_col );
+			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, FLI_SHADOW_COL );
 			fli_set_additional_clipping( x + w + bw - RS - 2, y + h - RS,
 										 RS + 2, RS + 2 );
 #endif
-			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, fl_shadow_col );
+			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, FLI_SHADOW_COL );
 
 			/* draw the box */
 
@@ -790,8 +793,8 @@ fl_drw_frame( int      style,
 					bw = 5;
 			}
 
-			fl_rectf( x + bw, y + h,  w,     bw,    fl_shadow_col );
-			fl_rectf( x + w,  y + bw, bw,    h,     fl_shadow_col );
+			fl_rectf( x + bw, y + h,  w,     bw,    FLI_SHADOW_COL );
+			fl_rectf( x + w,  y + bw, bw,    h,     FLI_SHADOW_COL );
 			fl_rect(  x - 1,  y - 1,  w + 1, h + 1, FL_BLACK      );
 			break;
 
@@ -1155,13 +1158,13 @@ fl_foldertab_box( int      style,
  ***************************************/
 
 void
-fl_drw_tbox( int      style,
-			 FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 FL_COLOR c,
-			 int bw_in )
+fli_drw_tbox( int      style,
+			  FL_Coord x,
+			  FL_Coord y,
+			  FL_Coord w,
+			  FL_Coord h,
+			  FL_COLOR c,
+			  int bw_in )
 {
     FL_POINT vert[ 4 ],          /* need one extra for closing of polygon! */
 		     *fp;

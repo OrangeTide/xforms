@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG 
-char *fl_id_evt = "$Id: appwin.c,v 1.11 2008/05/04 21:07:58 jtt Exp $";
+char *fl_id_evt = "$Id: appwin.c,v 1.12 2008/05/09 12:33:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -72,11 +72,11 @@ remove_app_win( FLI_WIN * appwin )
     M_info( "RemoveAppwin", "deleting 0x%lx", appwin->win );
 #endif
 
-    if ( fl_app_win == appwin )
-		fl_app_win = appwin->next;
+    if ( fli_app_win == appwin )
+		fli_app_win = appwin->next;
     else
     {
-		for ( fwin = fl_app_win; fwin && fwin->next != appwin;
+		for ( fwin = fli_app_win; fwin && fwin->next != appwin;
 			  fwin = fwin->next )
 			/* empty */ ;
 
@@ -96,8 +96,8 @@ remove_app_win( FLI_WIN * appwin )
 static FLI_WIN *
 find_fl_win_struct( Window win )
 {
-    FLI_WIN *fwin = fl_app_win,
-		    *lwin = fl_app_win;
+    FLI_WIN *fwin = fli_app_win,
+		    *lwin = fli_app_win;
 	size_t i;
 
     for ( ; fwin && fwin->win != win; lwin = fwin, fwin = fwin->next )
@@ -134,8 +134,8 @@ find_fl_win_struct( Window win )
 	fwin->default_callback = NULL;
 	fwin->mask = 0;
 
-	if ( ! fl_app_win )
-		fl_app_win = fwin;
+	if ( ! fli_app_win )
+		fli_app_win = fwin;
 	else
 		lwin->next = fwin;
 
@@ -309,7 +309,7 @@ fli_xevent_to_mask( int event )
 void
 fl_activate_event_callbacks( Window win )
 {
-    FLI_WIN *fwin = fl_app_win;
+    FLI_WIN *fwin = fli_app_win;
     int i;
     unsigned long mask;
 

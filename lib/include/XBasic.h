@@ -819,26 +819,6 @@ FL_EXPORT void fl_set_idle_delta(
 		);
 
 
-/* Group some WM stuff into a structure for easy maintainance */
-
-enum
-{
-	FL_WM_SHIFT	 = 1,
-	FL_WM_NORMAL = 2
-};
-
-typedef struct
-{
-	int			 rpx,			/* reparenting offset for full border */
-				 rpy;
-	int			 trpx,			/* reparenting offset for transient	  */
-				 trpy;
-	int			 bw;			/* additional border				  */
-	int			 rep_method;	/* 1 for shifting, 2 for normal		  */
-	unsigned int pos_request;	/* USPOSITION or PPOSITION			  */
-} FL_WM_STUFF;
-
-
 FL_EXPORT FL_APPEVENT_CB fl_add_event_callback(
 		Window		     win,
 		int			     ev,

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rbut = "$Id: scrollbut.c,v 1.8 2008/04/10 00:05:50 jtt Exp $";
+char *fl_id_rbut = "$Id: scrollbut.c,v 1.9 2008/05/09 12:33:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -96,8 +96,8 @@ draw_sbbutton( FL_OBJECT * ob )
 		btype = sp->val ? FL_TRIANGLE_DOWNBOX8 : FL_TRIANGLE_UPBOX8;
 
     c1 = ( ob->belowmouse && sp->event != FL_RELEASE ) ? FL_MCOL : ob->col2;
-    fl_drw_tbox( btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,
-				 c1, abw );
+    fli_drw_tbox( btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,
+				  c1, abw );
 }
 
 

@@ -35,7 +35,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_vi = "$Id: flvisual.c,v 1.8 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_vi = "$Id: flvisual.c,v 1.9 2008/05/09 12:33:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -56,7 +56,7 @@ char *fl_id_vi = "$Id: flvisual.c,v 1.8 2008/05/04 21:07:59 jtt Exp $";
 
 /******************* Local variables ************************/
 
-static int max_server_depth;	/* max server depth                 */
+static int max_server_depth;
 
 /********************************************************************
  * Setup the most appropriate visual for FORMS
@@ -86,7 +86,7 @@ RGBmode_init( int v )
 /***************************************
  * User has the option to select visual class/depth independently
  * fl_set_defaults or through resource/command lines. The request is
- * stored in fl_cntl. This routine just checks if the request itself
+ * stored in fli_cntl. This routine just checks if the request itself
  * is valid or not. It is possible both visual and depth are valid
  * but the combination is not. So need to follow this routine
  * with XMatchVisual
@@ -99,8 +99,8 @@ check_user_preference( int * vmode,
     int reqv = -1,
 		reqd = 0;
 
-    reqv = fl_cntl.vclass;
-    reqd = fl_cntl.depth;
+    reqv = fli_cntl.vclass;
+    reqd = fli_cntl.depth;
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "ReqVisual", "UserRequest: %s %d",
@@ -193,10 +193,10 @@ select_best_visual( void )
     }
 
 #if FL_DEBUG >= ML_DEBUG
-    if ( fl_cntl.debug )
+    if ( fli_cntl.debug )
     {
 		M_warn( 0, "XlibVersion: %s", XlibVersion );
-		M_info( "FlInit", "DPI=%d", fl_dpi );
+		M_info( "FlInit", "DPI=%d", fli_dpi );
 		M_warn( 0, "No. of Visuals: %d", xvn );
 		for ( j = 0; j < 6; j++ )
 			if ( bestv[ j ] )
@@ -268,12 +268,12 @@ fli_initialize_program_visual( void )
 			fli_depth( vmode ) );
 #endif
 
-    /* check program default, settable by user fl_vmode, fl_vdepth */
+    /* check program default, settable by user fl_vmode */
 
     if ( fl_vmode >= 0 )
 		vmode = fl_vmode;
 
-    depth = fl_vdepth > 0 ? fl_vdepth : fli_depth(vmode);
+    depth = fli_depth( vmode );
 
     M_warn( "BestVisual", "ProgramDefault: %s %d",
 			fl_vclass_name( vmode ), depth);
@@ -287,16 +287,16 @@ fli_initialize_program_visual( void )
 
     /* if requested a visualID directly, honor it here */
 
-    if ( fl_requested_vid > 0 )
+    if ( fli_requested_vid > 0 )
     {
 		XVisualInfo xv,
 			        *retxv;
 		int nv;
 
 		M_warn( "ProgramVisual", "UserRequestedVID: 0x%lx",
-				fl_requested_vid );
+				fli_requested_vid );
 
-		xv.visualid = fl_requested_vid;
+		xv.visualid = fli_requested_vid;
 
 		if ( ( retxv = XGetVisualInfo( fl_display, VisualIDMask, &xv, &nv ) ) )
 		{
@@ -311,14 +311,14 @@ fli_initialize_program_visual( void )
 		else
 		{
 			M_err( "ProgramVisual", "Can't find visualID 0x%lx",
-				   fl_requested_vid );
-			fl_requested_vid = 0;
+				   fli_requested_vid );
+			fli_requested_vid = 0;
 		}
     }
 
     /* Make sure the stuff flies. */
 
-    if (    ! fl_requested_vid
+    if (    ! fli_requested_vid
 		 && XMatchVisualInfo( fl_display, fl_screen, depth, vmode, &xvt ) )
     {
 		FL_State *fs = fl_state + xvt.class;
@@ -329,7 +329,7 @@ fli_initialize_program_visual( void )
 		fs->vclass = xvt.class;
 		fs->rgb_bits = xvt.bits_per_rgb;
     }
-    else if ( ! fl_requested_vid )
+    else if ( ! fli_requested_vid )
     {
 		/* bogus request. Revert to the best visual we have found */
 

@@ -37,7 +37,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.21 2008/05/09 09:11:34 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.22 2008/05/09 12:33:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -612,7 +612,7 @@ fl_create_generic_canvas( int          canvas_class,
     sp->xswa.do_not_propagate_mask = 0;
     sp->mask = CWColormap | CWEventMask | CWBorderPixel | CWDontPropagate;
 
-    if ( ! fl_no_connection )
+    if ( ! fli_no_connection )
     {
 		sp->visual = fli_visual( vmode );
 		sp->depth = fli_depth( vmode );

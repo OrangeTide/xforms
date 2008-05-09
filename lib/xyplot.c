@@ -41,7 +41,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.13 2008/05/05 14:21:55 jtt Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.14 2008/05/09 12:33:03 jtt Exp $";
 #endif
 
 
@@ -2237,8 +2237,8 @@ fl_create_xyplot( int          t,
 
     init_spec( ob, sp );
 
-    if ( ! fl_xyplot_return )
-		fl_xyplot_return = fl_set_xyplot_return;
+    if ( ! fli_xyplot_return )
+		fli_xyplot_return = fl_set_xyplot_return;
 
     return ob;
 }

@@ -58,10 +58,10 @@ static FD_yesno *
 create_yesno( void )
 {
     FD_yesno *fdui = fl_calloc( 1, sizeof *fdui );
-    int oldy = fl_inverted_y;
+    int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit( );
 
-    fl_inverted_y = 0;
+    fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
     fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
@@ -84,10 +84,10 @@ create_yesno( void )
 
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->no );
 
-    if ( fl_cntl.buttonFontSize != FL_DEFAULT_SIZE )
+    if ( fli_cntl.buttonFontSize != FL_DEFAULT_SIZE )
 		fl_fit_object_label( fdui->no, 22, 2 );
 
-    fl_inverted_y = oldy;
+    fli_inverted_y = oldy;
     fl_set_coordunit( oldu );
 
     return fdui;

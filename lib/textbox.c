@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.17 2008/05/05 14:21:54 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.18 2008/05/09 12:33:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -505,14 +505,14 @@ prepare_redraw( FL_OBJECT        * ob,
 	   always correct since although server is capable of backing store
 	   it can run out resources. */
 
-	if ( fl_cntl.safe )
+	if ( fli_cntl.safe )
 		xgcv.graphics_exposures = 1;
 	else
 	{
 		Screen *scr = ScreenOfDisplay( flx->display, fl_screen );
 
 		xgcv.graphics_exposures =    ! DoesBackingStore( scr )
-			                      || ! fl_cntl.backingStore;
+			                      || ! fli_cntl.backingStore;
 	}
 
 	gcvm = GCGraphicsExposures | GCForeground;
@@ -1393,8 +1393,8 @@ fli_create_textbox( int          type,
 
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
 
-    sp->fontsize = fl_cntl.browserFontSize ?
-		           fl_cntl.browserFontSize : FLI_TEXTBOX_FONTSIZE;
+    sp->fontsize = fli_cntl.browserFontSize ?
+		           fli_cntl.browserFontSize : FLI_TEXTBOX_FONTSIZE;
     sp->fontstyle = FL_NORMAL_STYLE;
 
     sp->charheight = fl_get_char_height( sp->fontstyle, sp->fontsize,

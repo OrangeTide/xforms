@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.19 2008/05/05 14:21:52 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.20 2008/05/09 12:33:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1142,10 +1142,10 @@ static FD_fselect *
 create_form_fselect( void )
 {
 	FL_OBJECT *obj;
-	int oldy = fl_inverted_y;
+	int oldy = fli_inverted_y;
 	int oldunit = fl_get_coordunit( );
 
-	fl_inverted_y = 0;
+	fli_inverted_y = 0;
 	fl_set_coordunit( FL_COORD_PIXEL );
 
 	fs->fselect = fl_bgn_form( FL_NO_BOX, 305, 330 );
@@ -1237,7 +1237,7 @@ create_form_fselect( void )
 
 	fl_set_form_atclose( fs->fselect, fl_goodies_atclose, fs->cancel );
 
-	fl_inverted_y = oldy;
+	fli_inverted_y = oldy;
 	fl_set_coordunit( oldunit );
 
 	/* These labels sometimes don't fit the above set sizes, so we

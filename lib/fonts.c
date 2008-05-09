@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.10 2008/05/04 21:07:59 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.11 2008/05/09 12:33:01 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -165,7 +165,7 @@ fl_set_font( int numb,
     if ( fl_state[ fl_vmode ].cur_fnt == fs )
     {
 #if FL_DEBUG >= ML_DEBUG
-		M_debug( "SetFont", "current", fl_curfnt );
+		M_debug( "SetFont", "current", fli_curfnt );
 #endif
 		return;
     }
@@ -186,7 +186,7 @@ fl_set_font( int numb,
     XSetFont( flx->display, flx->textgc, flx->fs->fid );
     flx->fheight = flx->fasc + flx->fdesc;
 
-    if ( fl_cntl.debug > 1 )
+    if ( fli_cntl.debug > 1 )
     {
 		unsigned long res = 0;
 
@@ -275,7 +275,7 @@ fl_try_get_font_struct( int numb,
 
     if ( numb < 0 || numb >= FL_MAXFONTS || ! flf->fname[ 0 ] )
     {
-		if ( ! fl_no_connection ) {
+		if ( ! fli_no_connection ) {
 
 			/*This function is typically used to test whether a font is
 			 * loadable or not, so need not be a fatal condition if
@@ -291,7 +291,7 @@ fl_try_get_font_struct( int numb,
 		return fl_state[ fl_vmode ].cur_fnt;
     }
 
-    strcpy( fl_curfnt, get_fname( flf->fname, size ) );
+    strcpy( fli_curfnt, get_fname( flf->fname, size ) );
 
     /* search for requested size */
 
@@ -320,7 +320,7 @@ fl_try_get_font_struct( int numb,
     if ( ! fs )
     {
 		n = flf->nsize;
-		flf->fs[ n ] = XLoadQueryFont( flx->display, fl_curfnt );
+		flf->fs[ n ] = XLoadQueryFont( flx->display, fli_curfnt );
 
 		if ( ( fs = flf->fs[ n ] ) )
 		{
@@ -339,7 +339,7 @@ fl_try_get_font_struct( int numb,
 		int mdiff = 1000,
 			k = -1;
 
-		M_warn( "SetFont", "can't load %s", fl_curfnt );
+		M_warn( "SetFont", "can't load %s", fli_curfnt );
 
 		/* search for a replacement */
 
@@ -394,7 +394,7 @@ fl_get_string_width( int          style,
 {
     XFontStruct *fs = fl_get_font_struct( style, size );
 
-    return fl_no_connection ? ( len * size ) : XTextWidth( fs, s, len );
+    return fli_no_connection ? ( len * size ) : XTextWidth( fs, s, len );
 }
 
 
@@ -411,7 +411,7 @@ fli_get_string_widthTABfs( XFontStruct * fs,
     const char *p,
 		       *q;
 
-    if ( fl_no_connection )
+    if ( fli_no_connection )
 		return 12 * len;
 
     tab = fli_get_tabpixels( fs );
@@ -459,7 +459,7 @@ fl_get_string_height( int          style,
 		a,
 		d;
 
-    if ( fl_no_connection )
+    if ( fli_no_connection )
 		a = d = size / 2;
     else
 		XTextExtents( fs, s, len, &dh, &a, &d, &overall );

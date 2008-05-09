@@ -57,7 +57,7 @@ static FD_msg *
 create_msg( const char * str )
 {
     FD_msg *fdui = fl_calloc( 1, sizeof *fdui );
-    int oldy = fl_inverted_y;
+    int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit( );
 	int style,
 		size;
@@ -66,7 +66,7 @@ create_msg( const char * str )
 	int bw,
 		bh;
 
-    fl_inverted_y = 0;
+    fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
 	fli_get_goodies_font( &style, &size );
@@ -91,10 +91,10 @@ create_msg( const char * str )
 
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
 
-    if ( fl_cntl.buttonFontSize != FL_DEFAULT_SIZE )
+    if ( fli_cntl.buttonFontSize != FL_DEFAULT_SIZE )
 		fl_fit_object_label( fdui->but, 18, 2 );
 
-    fl_inverted_y = oldy;
+    fli_inverted_y = oldy;
     fl_set_coordunit( oldu );
 
     return fdui;

@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.24 2008/05/07 20:43:38 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.25 2008/05/09 12:33:02 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -582,8 +582,8 @@ fli_init_pup( void )
 			mr->enter_data = mr->leave_data = NULL;
 		}
 
-		fl_setpup_default_fontsize( fl_cntl.pupFontSize ?
-									fl_cntl.pupFontSize : -2 );
+		fl_setpup_default_fontsize( fli_cntl.pupFontSize ?
+									fli_cntl.pupFontSize : -2 );
     }
 }
 
@@ -703,7 +703,7 @@ fl_newpup( Window win )
 
 	if ( ! pup_bw_is_set )
 	{
-		pup_bw = fl_cntl.borderWidth ? fl_cntl.borderWidth : -2;
+		pup_bw = fli_cntl.borderWidth ? fli_cntl.borderWidth : -2;
 		pup_bw_is_set = 1;
 	}
 
@@ -784,7 +784,7 @@ fl_defpup( Window       win,
     va_end( ap );
 
 #if FL_DEBUG > ML_WARN
-    if ( fl_cntl.debug > 1 )
+    if ( fli_cntl.debug > 1 )
     {
 		PopUP *m = menu_rec + n;
 		int i;
@@ -2136,7 +2136,7 @@ fl_showpup( int n )
 			xgcv.foreground     = fl_get_flcolor( pup_text_color );
 			xgcv.font           = pup_font_struct->fid;
 			xgcv.subwindow_mode = IncludeInferiors;
-			xgcv.stipple        = fl_inactive_pattern;
+			xgcv.stipple        = FLI_INACTIVE_PATTERN;
 			vmask = GCForeground | GCFont | GCSubwindowMode | GCStipple;
 
 #if USE_SHADOW

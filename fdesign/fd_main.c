@@ -66,7 +66,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.19 $ of $Date: 2008/05/04 21:07:57 $",
+    "$State: Exp $  $Revision: 1.20 $ of $Date: 2008/05/09 12:32:59 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -663,7 +663,7 @@ pre_connect( int    ac,
 		create_the_forms( );
 		init_classes( );
 
-		fl_dpi = 95;
+		fli_dpi = 95;
 
 		if ( i > ac - 1 )
 		{
@@ -859,7 +859,7 @@ main( int    ac,
 		usage( av[ 0 ], 1 );
     }
 
-    fl_cntl.coordUnit = FL_COORD_PIXEL;
+    fli_cntl.coordUnit = FL_COORD_PIXEL;
     fdopt.unit = unit_val( fd_sunit );
     fdopt.language = lang_val( fd_slanguage );
 
@@ -874,7 +874,7 @@ main( int    ac,
     if ( convertor[ fdopt.language ].init )
 		convertor[ fdopt.language ].init( );
 
-    fd_bwidth = fl_cntl.borderWidth;
+    fd_bwidth = fli_cntl.borderWidth;
     M_warn( "fdesign", "UNIT=%s BW=%d", unit_name( fdopt.unit ), fd_bwidth );
 
     create_the_forms( );
@@ -883,8 +883,8 @@ main( int    ac,
     /* must suspend user requested button label font throughout fdesign and
        enable it only when testing */
 
-    fd_buttonLabelSize = fl_cntl.buttonFontSize;
-    fl_cntl.buttonFontSize = 0;
+    fd_buttonLabelSize = fli_cntl.buttonFontSize;
+    fli_cntl.buttonFontSize = 0;
 
     /* Initialize stuff */
 

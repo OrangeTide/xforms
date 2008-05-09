@@ -50,39 +50,34 @@ void   ( * fl_free    )( void * )         = free;
 
 
 FL_State fl_state[ 6 ];
-int fl_vmode = -1,
-    fl_vdepth;
-int fl_bestvmode,
-    fl_mostdepth;
+int fl_vmode = -1;
 
 int fl_scrh,
     fl_scrw;
-int fl_safe;
 char *fl_ul_magic_char = "\b";
 
-FL_COLOR fl_shadow_col = FL_RIGHT_BCOL;
-XKeyboardControl fl_keybdcontrol;
-unsigned long fl_keybdmask = ( 1L << 8 ) - 1;
+XKeyboardControl fli_keybdcontrol;
+unsigned long fli_keybdmask = ( 1L << 8 ) - 1;
 
-FL_WM_STUFF fl_wmstuff;
-float fl_dpi = 80.0;
-int fl_inverted_y;
-long fl_requested_vid;
-FL_IOPT fl_cntl;
+FLI_WM_STUFF fli_wmstuff;
+float fli_dpi = 80.0;
+int fli_inverted_y;
+long fli_requested_vid;
+FL_IOPT fli_cntl;
 
 FLI_CONTEXT *fli_context;
-char fl_curfnt[ 127 ];
+char fli_curfnt[ 127 ];
 FL_FORM *fl_current_form;
-FL_OBJECT *fl_current_group;
-int fl_no_connection;
-FLI_WIN *fl_app_win;
+FL_OBJECT *fli_current_group;
+int fli_no_connection;
+FLI_WIN *fli_app_win;
 
 FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;	  /* The special event object */
 
 /* to improve link profile */
 
-void ( * fl_xyplot_return )( FL_OBJECT * ob,
-							 int );
+void ( * fli_xyplot_return )( FL_OBJECT * ob,
+							  int );
 
 FLI_TARGET *flx;
 

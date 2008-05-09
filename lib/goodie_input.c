@@ -128,15 +128,15 @@ fl_show_input( const char *str1,
 
     if ( ! fd_input )
     {
-		int oldy = fl_inverted_y;
+		int oldy = fli_inverted_y;
 
-		fl_inverted_y = 0;
+		fli_inverted_y = 0;
 		fd_input = create_form_input( );
 		fl_set_form_hotobject( fd_input->form, fd_input->ok );
 		fl_set_form_atclose( fd_input->form, fl_goodies_atclose, fd_input->ok );
 		fl_register_raw_callback( fd_input->form, FL_ALL_EVENT,
 								  fli_goodies_preemptive );
-		fl_inverted_y = oldy;
+		fli_inverted_y = oldy;
     }
 
     fli_handle_goodie_font( fd_input->ok, fd_input->input );

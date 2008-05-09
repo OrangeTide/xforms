@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.14 2008/05/04 21:08:01 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.15 2008/05/09 12:33:03 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -857,7 +857,7 @@ fli_get_underline_rect( XFontStruct * fs,
 		ul_thickness = UL_thickness;
 
     if ( ul_thickness == 0 || ul_thickness > 100 )
-		ul_thickness = strstr( fl_curfnt, "bold" ) ? 2 : 1;
+		ul_thickness = strstr( fli_curfnt, "bold" ) ? 2 : 1;
 
     if ( ! XGetFontProperty( fs, XA_UNDERLINE_POSITION, &ul_pos ) )
 		ul_pos = DESC( ch ) ? ( 1 + flx->fdesc ) : 1;
@@ -938,7 +938,7 @@ do_underline_all( FL_Coord     x,
 		ul_thickness = UL_thickness;
 
     if ( ul_thickness == 0 || ul_thickness > 100 )
-		ul_thickness = strstr( fl_curfnt, "bold" ) ? 2 : 1;
+		ul_thickness = strstr( fli_curfnt, "bold" ) ? 2 : 1;
 
     if ( ! XGetFontProperty( flx->fs, XA_UNDERLINE_POSITION, &ul_pos ) )
 		ul_pos = has_desc( str ) ? ( 1 + flx->fdesc ) : 1;

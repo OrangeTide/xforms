@@ -428,7 +428,7 @@ load_forms( int          merge,
 		{
 			sscanf( buf, "Unit of measure: %s", ubuf );
 			fdopt.unit = unit_val( ubuf );
-			fl_cntl.coordUnit = fdopt.unit;	    /* make_obj uses this */
+			fli_cntl.coordUnit = fdopt.unit;	    /* make_obj uses this */
 			M_warn( "LoadForm", "unit=%s %d", ubuf, fdopt.unit );
 		}
 		else if ( strncmp( buf, "Border", 6 ) == 0 )
@@ -496,7 +496,7 @@ load_forms( int          merge,
 
     /* reset active coordinate system to pixel */
 
-    fl_cntl.coordUnit = FL_COORD_PIXEL;
+    fli_cntl.coordUnit = FL_COORD_PIXEL;
 
     /* force output the same as input when converting directly. The reason is
        we don't know the screen DPI. */

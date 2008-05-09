@@ -174,16 +174,16 @@ create_logger( void )
 {
     if ( ! logger )
     {
-		int oldy = fl_inverted_y;
+		int oldy = fli_inverted_y;
 		int oldu = fl_get_coordunit( );
-		fl_inverted_y = 0;
+		fli_inverted_y = 0;
 		fl_set_coordunit( FL_COORD_PIXEL );
 		logger = create_form_cmd( );
 		fl_set_object_bw( logger->backface, 2 );
 		fl_set_form_minsize( logger->cmd, 250, 100 );
 		fl_set_form_atclose( logger->cmd, atclose, 0 );
 		fl_set_form_position( logger->cmd, -logger->cmd->w - 5, 3 );
-		fl_inverted_y = oldy;
+		fli_inverted_y = oldy;
 		fl_set_coordunit( oldu );
     }
 }

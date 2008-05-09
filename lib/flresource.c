@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.26 2008/05/08 22:40:20 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.27 2008/05/09 12:33:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -104,8 +104,8 @@ static XrmOptionDescRec copt[ ] =
 
 /* Other resources */
 
-#define PV( a )  &( fl_cntl.a )
-#define PS( a )  ( fl_cntl.a )
+#define PV( a )  &( fli_cntl.a )
+#define PS( a )  ( fli_cntl.a )
 #define NS( a )  #a
 
 
@@ -158,7 +158,7 @@ static FL_VN_PAIR vn_coordunit[] =
 
 
 #define SetR( name, rclass, type, deft, buflen ) \
-       { #name, rclass, type, &fl_cntl.name, deft, buflen }
+       { #name, rclass, type, &fli_cntl.name, deft, buflen }
 
 
 static FL_resource internal_resources[ ] =
@@ -193,7 +193,7 @@ static FL_resource internal_resources[ ] =
     SetR( backingStore, "BackingStore", FL_INT, OpBS, 0 ),
     SetR( safe, "Safe", FL_INT, OpSafe, 0 ),
     {"coordUnit", "CoordUnit", FL_STRING, OpCoordUnit, OpCoordUnit, 32 },
-    {"visualID", "VisualID", FL_LONG, &fl_requested_vid, OpVisualID, 0 }
+    {"visualID", "VisualID", FL_LONG, &fli_requested_vid, OpVisualID, 0 }
 };
 
 #define Niopt ( sizeof internal_resources / sizeof *internal_resources )
@@ -201,7 +201,7 @@ static FL_resource internal_resources[ ] =
 
 /* Program can set its own default, overriding XForms default */
 
-#define SetMember( a )   fl_cntl.a = cntl->a
+#define SetMember( a )   fli_cntl.a = cntl->a
 #define GetMember( a )   cntl->a
 
 
@@ -245,7 +245,7 @@ fl_set_defaults( unsigned long mask,
     if ( mask & FL_PDVisual )
     {
 		SetMember( vclass );
-		strcpy( fl_cntl.vname, fl_vclass_name( cntl->vclass ) );
+		strcpy( fli_cntl.vname, fl_vclass_name( cntl->vclass ) );
     }
 
     if ( mask & FL_PDButtonFontSize )
@@ -334,7 +334,7 @@ fl_get_defaults( FL_IOPT * cntl )
 		exit( 1 );
     }
 
-    *cntl = fl_cntl;
+    *cntl = fli_cntl;
 }
 
 
@@ -345,8 +345,8 @@ fl_get_defaults( FL_IOPT * cntl )
 void
 fl_set_coordunit( int u )
 {
-    fl_cntl.coordUnit = u;
-    strcpy( OpCoordUnit, fl_get_vn_name( vn_coordunit, fl_cntl.coordUnit ) );
+    fli_cntl.coordUnit = u;
+    strcpy( OpCoordUnit, fl_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
 }
 
 
@@ -356,7 +356,7 @@ fl_set_coordunit( int u )
 void
 fl_set_border_width( int bw )
 {
-    fl_cntl.borderWidth = bw;
+    fli_cntl.borderWidth = bw;
     sprintf( OpIBW, "%d", bw );
 }
 
@@ -367,7 +367,7 @@ fl_set_border_width( int bw )
 void
 fl_set_scrollbar_type( int t )
 {
-    fl_cntl.scrollbarType = t;
+    fli_cntl.scrollbarType = t;
     if ( t == FL_NORMAL_SCROLLBAR )
 		strcpy( OpSCBT, "normal" );
     else if ( t == FL_NICE_SCROLLBAR )
@@ -385,7 +385,7 @@ fl_set_scrollbar_type( int t )
 void
 fl_set_visualID( long id )
 {
-    fl_requested_vid = id;
+    fli_requested_vid = id;
     sprintf( OpVisualID, "0x%lx", id );
 }
 
@@ -396,7 +396,7 @@ fl_set_visualID( long id )
 int
 fl_get_border_width( void )
 {
-    return fl_cntl.borderWidth;
+    return fli_cntl.borderWidth;
 }
 
 
@@ -406,7 +406,7 @@ fl_get_border_width( void )
 int
 fl_get_coordunit( void )
 {
-    return fl_cntl.coordUnit;
+    return fli_cntl.coordUnit;
 }
 
 
@@ -416,9 +416,9 @@ fl_get_coordunit( void )
 static void
 fli_set_debug_level( int l )
 {
-    fl_cntl.debug = l;
-    sprintf( OpDebug, "%d", fl_cntl.debug );
-    fli_set_msg_threshold( fl_cntl.debug );
+    fli_cntl.debug = l;
+    sprintf( OpDebug, "%d", fli_cntl.debug );
+    fli_set_msg_threshold( fli_cntl.debug );
 }
 
 
@@ -749,7 +749,7 @@ fli_init_resources( void )
     fl_app_class = appclass;
     fl_ori_app_name = ori_appname;
 
-    if ( fl_cntl.sync )
+    if ( fli_cntl.sync )
     {
 		XSynchronize( fl_display, 1 );
 		M_err( 0, "**** Synchronous Mode ********" );
@@ -860,9 +860,9 @@ get_command_name( const char * arg0 )
  *
  */
 
-#define DumpD( a )    fprintf( stderr,"\t%s:%d\n", #a, fl_cntl.a )
-#define DumpS( a )    fprintf( stderr,"\t%s:%s\n", #a, fl_cntl.a )
-#define DumpF( a )    fprintf( stderr,"\t%s:%.3f\n", #a, fl_cntl.a )
+#define DumpD( a )    fprintf( stderr,"\t%s:%d\n", #a, fli_cntl.a )
+#define DumpS( a )    fprintf( stderr,"\t%s:%s\n", #a, fli_cntl.a )
+#define DumpF( a )    fprintf( stderr,"\t%s:%.3f\n", #a, fli_cntl.a )
 
 static Window fli_GetVRoot( Display *,
 							int );
@@ -1076,19 +1076,19 @@ fl_initialize( int        * na,
 
     fli_init_resources( );
 
-    fl_cntl.vclass = fl_vclass_val( fl_cntl.vname );
-    fl_cntl.coordUnit = fl_get_vn_value( vn_coordunit, OpCoordUnit );
+    fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
+    fli_cntl.coordUnit = fl_get_vn_value( vn_coordunit, OpCoordUnit );
 
 
 #if FL_DEBUG >= ML_WARN	/* { */
-    if ( fl_cntl.debug )
+    if ( fli_cntl.debug )
     {
 		fprintf( stderr, "Options Set\n" );
 		DumpD( debug );
 		fprintf( stderr, "\tVisual:%s (%d)\n",
-				 fl_cntl.vclass >= 0 ?
-				 fl_vclass_name( fl_cntl.vclass ) : "To be set",
-				 fl_cntl.vclass );
+				 fli_cntl.vclass >= 0 ?
+				 fl_vclass_name( fli_cntl.vclass ) : "To be set",
+				 fli_cntl.vclass );
 		DumpD( depth );
 		DumpD( privateColormap );
 		DumpD( sharedColormap );
@@ -1099,8 +1099,8 @@ fl_initialize( int        * na,
 		DumpD( scrollbarType );
 		DumpD( backingStore );
 		fprintf( stderr, "\t%s:%s\n", "coordUnit",
-				 fl_get_vn_name( vn_coordunit, fl_cntl.coordUnit ) );
-		fprintf( stderr, "\t%s:0x%lx\n", "VisualId", fl_requested_vid );
+				 fl_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
+		fprintf( stderr, "\t%s:0x%lx\n", "VisualId", fli_requested_vid );
 
 #ifdef DO_GAMMA_CORRECTION
 		DumpF( rgamma );
@@ -1111,12 +1111,12 @@ fl_initialize( int        * na,
 #endif /* DEBUG *} */
 
 #ifdef DO_GAMMA_CORRECTION
-    fl_set_gamma( fl_cntl.rgamma, fl_cntl.ggamma, fl_cntl.bgamma );
+    fl_set_gamma( fli_cntl.rgamma, fli_cntl.ggamma, fli_cntl.bgamma );
 #endif
 
-    fl_set_ul_property( fl_cntl.ulPropWidth, fl_cntl.ulThickness );
+    fl_set_ul_property( fli_cntl.ulPropWidth, fli_cntl.ulThickness );
 
-    fl_cntl.vclass = fl_vclass_val( fl_cntl.vname );
+    fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
 
     /* get the current keyboard state */
 
@@ -1124,8 +1124,8 @@ fl_initialize( int        * na,
 		XKeyboardState xks;
 
 		XGetKeyboardControl( fl_display, &xks );
-		fl_keybdcontrol.auto_repeat_mode = xks.global_auto_repeat;
-		fl_keybdmask = KBAutoRepeatMode;
+		fli_keybdcontrol.auto_repeat_mode = xks.global_auto_repeat;
+		fli_keybdmask = KBAutoRepeatMode;
     }
 
     /* other initializations */
@@ -1133,7 +1133,7 @@ fl_initialize( int        * na,
     fl_screen = DefaultScreen( fl_display );
     fl_root = RootWindow( fl_display, fl_screen );
     fl_vroot = fli_GetVRoot( fl_display, fl_screen );
-    fl_wmstuff.pos_request = USPosition;
+    fli_wmstuff.pos_request = USPosition;
     flx->screen  = fl_screen;
 
     if ( fl_root != fl_vroot )
@@ -1143,7 +1143,7 @@ fl_initialize( int        * na,
 		/* tvtwm requires this to position a window relative to the current
 		   desktop */
 
-		fl_wmstuff.pos_request = PPosition;
+		fli_wmstuff.pos_request = PPosition;
     }
 
     fl_scrh = DisplayHeight( fl_display, fl_screen );
@@ -1155,10 +1155,10 @@ fl_initialize( int        * na,
     if ( xdpi / ydpi > 1.05 || ydpi / xdpi < 0.95 )
 		M_warn( "FlInit", "NonSquarePixel %.1f %.1f", xdpi, ydpi );
 
-    fl_dpi = ( xdpi + ydpi ) / 2;
-    fl_dpi = ( ( int ) ( fl_dpi * 10.0 + 0.3 ) ) * 0.1;
+    fli_dpi = ( xdpi + ydpi ) / 2;
+    fli_dpi = ( ( int ) ( fli_dpi * 10.0 + 0.3 ) ) * 0.1;
 
-    M_info( 0, "screen DPI=%f", fl_dpi );
+    M_info( 0, "screen DPI=%f", fli_dpi );
 
     fl_vmode = fli_initialize_program_visual( );
     fli_init_colormap( fl_vmode );
@@ -1371,7 +1371,7 @@ void
 fl_flip_yorigin( void )
 {
     if ( ! fl_display )
-		fl_inverted_y = 1;
+		fli_inverted_y = 1;
     else
 		M_err( "fl_flip_yorigin", "Only supported before fl_initialize" );
 }

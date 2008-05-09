@@ -37,54 +37,49 @@
 #ifndef FL_EXTERN_H_MAKING_FORMS_ONLY
 #define FL_EXTERN_H_MAKING_FORMS_ONLY
 
-extern Pixmap fl_gray_pattern[ ];
-extern GC fl_bwgc[ ];
-extern GC fl_whitegc;
-extern int fl_safe;
-extern FL_COLOR fl_shadow_col;
-extern XKeyboardControl fl_keybdcontrol;
-extern unsigned long fl_keybdmask;
+extern Pixmap fli_gray_pattern[ ];
+extern GC fli_bwgc[ ];
+extern GC fli_whitegc;
+extern XKeyboardControl fli_keybdcontrol;
+extern unsigned long fli_keybdmask;
 
-extern FL_OBJECT *fl_current_group;
+extern FL_OBJECT *fli_current_group;
 
-#define fl_inactive_pattern fl_gray_pattern[ 1 ]
+#define FLI_INACTIVE_PATTERN fli_gray_pattern[ 1 ]
 
 extern Display *fl_display;
 extern Window fl_root,
               fl_vroot;
 extern int fl_screen;
 
-extern int fl_vmode,
-           fl_vdepth;
-extern int fl_bestvmode,
-           fl_mostdepth;
+extern int fl_vmode;
 
 extern int fl_scrh,
            fl_scrw;
 
-extern FL_WM_STUFF fl_wmstuff;
-extern float fl_dpi;
-extern FL_IOPT fl_cntl;
-extern int fl_inverted_y;
+extern FLI_WM_STUFF fli_wmstuff;
+extern float fli_dpi;
+extern FL_IOPT fli_cntl;
+extern int fli_inverted_y;
 
 extern FLI_CONTEXT *fli_context;
 extern FLI_TARGET  *flx;
-extern long fl_requested_vid;
-extern int fl_no_connection;
-extern char fl_curfnt[ 127 ];
+extern long fli_requested_vid;
+extern int fli_no_connection;
+extern char fli_curfnt[ 127 ];
+extern FLI_WIN *fli_app_win;
 
-extern int fl_canvas_boxtype2frame( int );
-
-extern void fl_drw_tbox( int,
-						 FL_Coord,
-						 FL_Coord,
-						 FL_Coord,
-						 FL_Coord,
-						 FL_COLOR,
-						 int );
+extern void fli_drw_tbox( int,
+						  FL_Coord,
+						  FL_Coord,
+						  FL_Coord,
+						  FL_Coord,
+						  FL_COLOR,
+						  int );
 
 
-extern void ( * fl_xyplot_return )( FL_OBJECT *, int );
+extern void ( * fli_xyplot_return )( FL_OBJECT *,
+									 int );
 
 
 #endif /* !def EXTERN.H */
