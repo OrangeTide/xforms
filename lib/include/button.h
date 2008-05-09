@@ -394,12 +394,13 @@ FL_EXPORT void fl_add_button_class(
 
 
 FL_EXPORT void fl_set_button_mouse_buttons(
-		FL_OBJECT * ob,
-		int         mouse_buttons
+		FL_OBJECT *,
+		unsigned int
 		);
 
-FL_EXPORT int fl_get_button_mouse_buttons(
-		FL_OBJECT * ob
+FL_EXPORT void fl_get_button_mouse_buttons(
+		FL_OBJECT *,
+		unsigned int *
 		);
 
 #endif /* ! defined FL_BUTTON_H */

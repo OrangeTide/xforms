@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.13 2008/05/05 14:21:52 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.14 2008/05/09 16:32:19 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -825,11 +825,11 @@ fl_get_menu_popup( FL_OBJECT * ob )
 
 int
 fl_set_menu_notitle( FL_OBJECT * ob,
-					 int         n )
+					 int         off )
 {
     FLI_MENU_SPEC *sp = ob->spec;
     int old = sp->no_title;
 
-    sp->no_title = n;
+    sp->no_title = off;
     return old;
 }

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.40 2008/05/09 12:33:01 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.41 2008/05/09 16:32:19 jtt Exp $";
 #endif
 
 
@@ -3512,7 +3512,7 @@ fl_get_decoration_sizes( FL_FORM * form,
            *children;
     unsigned int nchilds;
 
-	if ( ! form || form->visible != FL_VISIBLE )
+	if ( ! form || form->visible != FL_VISIBLE || form->parent )
 		return 1;
 
     XQueryTree( flx->display, form->window, &root, &parent, &children,

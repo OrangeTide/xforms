@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.28 2008/05/09 12:33:01 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.29 2008/05/09 16:32:19 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -597,8 +597,7 @@ fl_set_object_resize( FL_OBJECT    * obj,
 
 void
 fl_get_object_resize( FL_OBJECT *    obj,
-					  unsigned int * what )
-
+					  unsigned int * resize )
 {
     if ( ! obj )
     {
@@ -606,7 +605,8 @@ fl_get_object_resize( FL_OBJECT *    obj,
 		return;
     }
 
-	*what = obj->resize;
+	if ( resize )
+		*resize = obj->resize;
 }
 
 
@@ -2199,16 +2199,16 @@ fl_set_object_bw( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_get_object_bw( FL_OBJECT * ob,
+fl_get_object_bw( FL_OBJECT * obj,
 				  int *       bw )
 {
-    if ( ! ob )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_bw", "NULL object." );
 		return;
     }
 
-	*bw = ob->bw;
+	*bw = obj->bw;
 }
 
 

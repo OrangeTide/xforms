@@ -10,8 +10,8 @@
 	fl_get_decoration_sizes( FL_FORM * form,
 	                         int     * top,
 	                         int     * right,
-                                 int     * bottom,
-                                 int     * left );
+	                         int     * bottom,
+	                         int     * left );
 
 	which returns the widths of the additional
 	decorations the window manager puts around

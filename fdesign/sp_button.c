@@ -456,7 +456,9 @@ void
 react_to_button( FL_OBJECT * ob,
 				 long        data )
 {
-	int mb = fl_get_button_mouse_buttons( edited );
+	unsigned int mb;
+
+	fl_get_button_mouse_buttons( edited, &mb );
 
 	if ( fl_get_button( ob ) )
 		mb |= 1 << data;

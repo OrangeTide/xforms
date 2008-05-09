@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.18 2008/05/09 12:33:00 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.19 2008/05/09 16:32:19 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -615,14 +615,14 @@ fl_add_button( int          type,
  ***************************************/
 
 void
-fl_set_button_mouse_buttons( FL_OBJECT * ob,
-							 int         mouse_buttons )
+fl_set_button_mouse_buttons( FL_OBJECT    * obj,
+							 unsigned int   mouse_buttons )
 {
-	SPEC *sp = ob->spec;
+	SPEC *sp = obj->spec;
 	int i,
 		j;
 
-	if ( mouse_buttons < 0 || mouse_buttons > 31 )
+	if ( mouse_buttons < 0 || mouse_buttons > ( i << 5 ) - 1 )
 		return;
 
 	for ( i = 0, j = 1; i < 5; i++, j <<= 1 )
@@ -633,15 +633,24 @@ fl_set_button_mouse_buttons( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-int
-fl_get_button_mouse_buttons( FL_OBJECT * ob )
+void
+fl_get_button_mouse_buttons( FL_OBJECT    * obj,
+							 unsigned int * mouse_buttons )
 {
-	SPEC *sp = ob->spec;
-	int i,
-		ret;
+	SPEC *sp;
+	int i;
 
-	for ( i = 0, ret = 0; i < 5; i++ )
-		ret |= sp->react_to[ i ] ? 1 << i : 0;
+	if ( ! obj )
+	{
+		M_err( "fl_get_button_mouse_buttons", "NULL object" );
+		return;
+	}
 
-	return ret;
+	if ( ! mouse_buttons )
+		return;
+
+	sp = obj->spec;
+
+	for ( *mouse_buttons = 0, i = 0; i < 5; i++ )
+		*mouse_buttons |= sp->react_to[ i ] ? 1 << i : 0;
 }
