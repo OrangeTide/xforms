@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.41 2008/05/09 16:32:19 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.42 2008/05/10 19:29:36 jtt Exp $";
 #endif
 
 
@@ -1061,6 +1061,8 @@ fl_prepare_form_window( FL_FORM    * form,
 long
 fl_show_form_window( FL_FORM * form )
 {
+	FL_OBJECT *obj;
+
     if ( ! form  )
     {
 		M_err( "fl_show_form_window", "NULL form." );
@@ -1074,6 +1076,14 @@ fl_show_form_window( FL_FORM * form )
     form->visible = FL_VISIBLE;
     reshape_form( form );
 	fl_redraw_form( form );
+
+	if ( ! form->focusobj )
+		for ( obj = form->first; obj; obj = obj->next )
+			if ( obj->input )
+			{
+				fl_set_focus_object( form, obj );
+				break;
+			}
 
     return form->window;
 }
