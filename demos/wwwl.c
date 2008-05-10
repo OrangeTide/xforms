@@ -468,7 +468,6 @@ FD_www *create_form_www( void )
 	fdui->file = obj = fl_add_menu( FL_PULLDOWN_MENU, 15, 5, 42, 20, "File" );
     fl_set_object_shortcut( obj, "Ff#f",1 );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );
-    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
     fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
     fl_set_object_callback( obj, do_file_menu, 0 );
 

@@ -121,7 +121,8 @@ menu_cb(FL_OBJECT *ob, long m)
 
 			/* disable the currently selected color for other menus */
 
-			fl_set_menu_item_mode( menu[ i ], item, FL_PUP_GRAY | FL_PUP_RADIO );
+			fl_set_menu_item_mode( menu[ i ], item,
+								   FL_PUP_GRAY | FL_PUP_RADIO );
 		}
     }
 
@@ -159,7 +160,6 @@ create_form( void )
 	menu[0] = obj = fl_add_menu( FL_PUSH_MENU, 0, 0, 110, 30, "Color 1" );
     fl_set_menu_notitle( obj, 1 );
     fl_set_object_shortcut( obj, "1#1", 1 );
-    fl_set_object_boxtype( obj, FL_UP_BOX );
     fl_set_object_callback( obj, menu_cb, 0 );
 
 	menu[1] = obj = fl_add_menu( FL_PUSH_MENU, 110, 0, 110, 30, "Color 2" );

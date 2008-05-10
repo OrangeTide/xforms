@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.14 2008/05/09 16:32:19 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.15 2008/05/10 17:46:10 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -88,7 +88,7 @@ val_to_index( FLI_MENU_SPEC * sp,
  ***************************************/
 
 static int
-do_menu( FL_OBJECT * ob )
+do_menu_low_level( FL_OBJECT * ob )
 {
     int popup_id,
 		i,
@@ -192,6 +192,32 @@ do_menu( FL_OBJECT * ob )
 
 
 /***************************************
+ ***************************************/
+
+static int
+do_menu( FL_OBJECT *ob )
+{
+    FLI_MENU_SPEC *sp = ob->spec;
+	int val;
+
+	ob->pushed = 1;
+	fl_redraw_object( ob );
+
+	if (    ob->type == FL_PULLDOWN_MENU
+		 || ( ob->type == FL_PUSH_MENU && sp->no_title ) )
+		fl_setpup_position( ob->form->x + ob->x + 2,
+							ob->form->y + ob->y + ob->h + 2 * FL_PUP_PADH + 1 );
+
+	val = do_menu_low_level( ob ) > 0;
+
+	ob->pushed = 0;
+	fl_redraw_object( ob );
+
+	return val > 0;
+}
+
+
+/***************************************
  * Handles an event, return non-zero if an item has been selected.
  ***************************************/
 
@@ -217,13 +243,13 @@ handle_menu( FL_OBJECT * ob,
 		case FL_DRAW:
 			/* Draw the object */
 
-			if ( ob->pushed || ob->belowmouse )
+			if ( ob->pushed )
+			{
+				boxtype = FL_UP_BOX;
 				col = ob->col2;
+			}
 			else
 				col = ob->col1;
-
-			if ( ob->type == FL_PULLDOWN_MENU && ob->pushed )
-				boxtype = FL_UP_BOX;
 
 			fl_drw_box( boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
 			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
@@ -239,31 +265,10 @@ handle_menu( FL_OBJECT * ob,
 			break;
 
 		case FL_ENTER:
-			/* Everything except touch menus just get shown as highlighted
-			   when the mouse is getting on top of them while for touch
-			   menus interaction gets started */
-
-			if ( ob->type == FL_PULLDOWN_MENU )
-				ob->belowmouse = 1;
-			else
-				ob->pushed = 1;
-			fl_redraw_object( ob );
-
 			if ( ob->type != FL_TOUCH_MENU )
 				break;
 
-			val = do_menu( ob ) > 0;
-			ob->pushed = ob->belowmouse = 0;
-			fl_redraw_object( ob );
-			return val > 0;
-
-		case FL_LEAVE:
-			if ( ob->type != FL_TOUCH_MENU )
-			{
-				ob->pushed = 0;
-				fl_redraw_object( ob );
-			}
-			break;
+			return do_menu( ob );
 
 		case FL_PUSH:
 			/* Touch menus and push menus without a title don't do anything
@@ -274,18 +279,7 @@ handle_menu( FL_OBJECT * ob,
 				 || ( ob->type == FL_PUSH_MENU && sp->no_title ) )
 				break;
 
-			/* Popup for pulldown menus appears directly below the menu,
-			   all others get their position from where the mouse is */
-
-			if ( ob->type == FL_PULLDOWN_MENU )
-			{
-				ob->pushed = 1;
-				fl_redraw_object( ob );
-				fl_setpup_position( ob->form->x + ob->x + 2,
-									ob->form->y + ob->y + ob->h
-									+ 2 * FL_PUP_PADH + 1 );
-			}
-			return do_menu( ob ) > 0;
+			return do_menu( ob );
 
 		case FL_RELEASE :
 			/* Button release is only important for push menus without a
@@ -298,16 +292,10 @@ handle_menu( FL_OBJECT * ob,
 				 || mx < ob->x
 				 || mx > ob->x + ob->w
 				 || my < ob->y
-				 || my > ob->y + ob->h  )
+				 || my > ob->y + ob->h )
 				break;
 
-			/* Push menus without a title only: position the popup exactly
-			   below the menu and do interaction */
-
-			fl_setpup_position( ob->form->x + ob->x + 2,
-								ob->form->y + ob->y + ob->h
-								+ 2 * FL_PUP_PADH + 1 );
-			return do_menu( ob ) > 0;
+			return do_menu( ob );
 
 		case FL_SHORTCUT:
 			/* Show menu as highlighted */
@@ -361,15 +349,12 @@ fl_create_menu( int          type,
 
     ob = fl_make_object( FL_MENU, type, x, y, w, h, label, handle_menu );
 
-    if ( type == FL_PULLDOWN_MENU )
-		ob->boxtype = FL_FLAT_BOX;
-    else
-		ob->boxtype = FL_MENU_BOXTYPE;
+	ob->boxtype = FL_FLAT_BOX;
 
     ob->col1   = FL_MENU_COL1;
     ob->col2   = FL_MENU_COL2;
     ob->lcol   = FL_MENU_LCOL;
-    ob->lstyle = FL_BOLD_STYLE;
+    ob->lstyle = FL_NORMAL_STYLE;
     ob->align  = FL_MENU_ALIGN;
 
     sp = ob->spec = fl_calloc( 1, sizeof *sp );

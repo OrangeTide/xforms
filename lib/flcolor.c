@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.17 2008/05/09 12:33:00 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.18 2008/05/10 17:46:10 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -86,14 +86,14 @@ static FLI_IMAP fli_imap[ FL_MAX_COLS ] =
     { NV( FL_BLACK ),          0,   0,   0, 0, 0 },
     { NV( FL_WHITE ),        255, 255, 255, 0, 0 },
 
-    { NV( FL_COL1 ),         161, 161, 161, 0, 0 }, /* default color, gray63 */
+    { NV( FL_COL1 ),         173, 173, 173, 0, 0 }, /* default color, gray86 */
     { NV( FL_BOTTOM_BCOL ),   89,  89,  89, 0, 0 },	/* bottom  gray35 */
     { NV( FL_RIGHT_BCOL ),    41,  41,  41, 0, 0 },	/* right  gray16  */
     { NV( FL_MCOL ),         191, 191, 191, 0, 0 }, /* used as magic, gray75 */
     { NV( FL_LEFT_BCOL ),    222, 222, 222, 0, 0 },	/* left color  gray87 */
 
-    { NV( FL_LIGHTER_COL1 ), 172, 172, 172, 0, 0 },	/* left color  gray87 */
-    { NV( FL_DARKER_COL1 ),  150, 150, 150, 0, 0 },	/* left color  gray87 */
+    { NV( FL_LIGHTER_COL1 ), 204, 204, 204, 0, 0 },	/* left color  gray80 */
+    { NV( FL_DARKER_COL1 ),  161, 161, 161, 0, 0 },	/* left color  gray63 */
 
     { NV( FL_SLATEBLUE ),    113, 113, 198, 0, 0 },
     { NV( FL_INDIANRED ),    198, 113, 113, 0, 0 },

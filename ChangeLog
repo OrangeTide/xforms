@@ -1,3 +1,17 @@
+2008-05-10 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/menu.c: Changed the default font style of
+	menus from FL_BOLD_STYLE to FL_NORMAL_STYLE and
+	menu entries from FL_BOLDITALIC_STYLE also to
+	FL_NORMAL_STYLE.
+
+	* lib/xpopup.c: Changed the default font style
+	of both popup entries as well as the title from
+	FL_BOLDITALIC_STYLE to FL_NORMAL_STYLE.
+
+	* lib/flcolor.c: Made the default background
+	color a bit lighter.
+
 2008-05-09 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c: Removed bug that kept canvases

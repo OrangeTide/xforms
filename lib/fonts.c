@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.11 2008/05/09 12:33:01 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.12 2008/05/10 17:46:10 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -127,13 +127,13 @@ fli_init_font( void )
        the change */
 
     for ( ; *f; f++, flf++ )
-		if ( ! flf->fname[ 0 ])
+		if ( ! *flf->fname )
 			strcpy( flf->fname, *f );
 
     /* Load a default font */
 
     if (    ! defaultfs
-		 && !( defaultfs = XLoadQueryFont( flx->display, DEFAULTF1 ) ) )
+		 && ! ( defaultfs = XLoadQueryFont( flx->display, DEFAULTF1 ) ) )
 		defaultfs = XLoadQueryFont( flx->display, DEFAULTF2 );
 
     /* Load a couple of fonts at normal size to prevent the caching code from
@@ -215,17 +215,19 @@ fl_set_font_name( int          n,
 		return -1;
     }
 
-    if ( flf->fname[ 0 ] )
+    if ( *flf->fname )
     {
 		for ( i = 0; i < flf->nsize; i++ )
 			XFreeFont( flx->display, flf->fs[ i ] );
-		flf->fname[ 0 ] = '\0';
+		*flf->fname = '\0';
     }
 
     flf->nsize = 0;
     strcpy( flf->fname, name );
+
     if ( ! flx->display )
 		return 1;
+
     return fl_try_get_font_struct( n, FL_DEFAULT_SIZE, 1 ) ? 0 : -1;
 }
 
@@ -242,7 +244,7 @@ fl_enumerate_fonts( void ( * output )( const char *s ),
     int n = 0;
 
     for ( ; output && flf < fe; flf++ )
-		if ( flf->fname[ 0 ])
+		if ( *flf->fname )
 		{
 			output( shortform ? cv_fname( flf->fname ) : flf->fname );
 			n++;
@@ -273,7 +275,7 @@ fl_try_get_font_struct( int numb,
 
     flf = fl_fonts + numb;
 
-    if ( numb < 0 || numb >= FL_MAXFONTS || ! flf->fname[ 0 ] )
+    if ( numb < 0 || numb >= FL_MAXFONTS || ! *flf->fname )
     {
 		if ( ! fli_no_connection ) {
 
@@ -555,9 +557,9 @@ fl_set_tabstop( const char *s )
     if ( s )
     {
 		if ( set )
-			fl_free( tabstop[ 0 ] );
-		tabstop[ 0 ] = fl_strdup( s );
-		tabstopNchar[ 0 ] = strlen( tabstop[ 0 ] );
+			fl_free( *tabstop );
+		*tabstop = fl_strdup( s );
+		*tabstopNchar = strlen( *tabstop );
 		set = 1;
     }
 }
@@ -592,8 +594,7 @@ fl_set_tabstops( int          n,
 int
 fli_get_tabpixels( XFontStruct * fs )
 {
-    return   XTextWidth( fs, tabstop[ 0 ], tabstopNchar[ 0 ] )
-		   + XTextWidth( fs, " ", 1 );
+    return XTextWidth( fs, *tabstop, *tabstopNchar ) + XTextWidth( fs, " ", 1 );
 }
 
 

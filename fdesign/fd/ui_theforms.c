@@ -138,31 +138,31 @@ create_form_control( void )
     fdui->optionmenu = obj = fl_add_menu( FL_PULLDOWN_MENU, 365, 4, 60, 20, "Options" );
     fl_set_object_shortcut( obj, "#p", 1 );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-    fl_set_object_lstyle( obj, FL_BOLDITALIC_STYLE );
+    fl_set_object_lstyle( obj, FL_NORMAL_STYLE );
     fl_set_object_callback( obj, optionmenu_callback, 0 );
 
     fdui->filemenu = obj = fl_add_menu( FL_PULLDOWN_MENU, 7, 4, 35, 20, "File" );
     fl_set_object_shortcut( obj, "#F", 1 );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-    fl_set_object_lstyle( obj, FL_BOLDITALIC_STYLE );
+    fl_set_object_lstyle( obj, FL_NORMAL_STYLE );
     fl_set_object_callback( obj, filemenu_callback, 0 );
 
     fdui->formmenu = obj = fl_add_menu( FL_PULLDOWN_MENU, 58, 4, 40, 20, "Form" );
     fl_set_object_shortcut( obj, "#m", 1 );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-    fl_set_object_lstyle( obj, FL_BOLDITALIC_STYLE );
+    fl_set_object_lstyle( obj, FL_NORMAL_STYLE );
     fl_set_object_callback( obj, formmenu_callback, 0 );
 
     fdui->objectmenu = obj = fl_add_menu( FL_PULLDOWN_MENU, 180, 4, 53, 20, "Object" );
     fl_set_object_shortcut( obj, "#O", 1 );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-    fl_set_object_lstyle( obj, FL_BOLDITALIC_STYLE );
+    fl_set_object_lstyle( obj, FL_NORMAL_STYLE );
     fl_set_object_callback( obj, objectmenu_callback, 0 );
 
     fdui->groupmenu = obj = fl_add_menu( FL_PULLDOWN_MENU, 115, 4, 48, 20, "Group" );
     fl_set_object_shortcut( obj, "#G", 1 );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-    fl_set_object_lstyle( obj, FL_BOLDITALIC_STYLE );
+    fl_set_object_lstyle( obj, FL_NORMAL_STYLE );
     fl_set_object_callback( obj, groupmenu_callback, 0 );
     fl_end_group( );
 

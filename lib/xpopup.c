@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.25 2008/05/09 12:33:02 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.26 2008/05/10 17:46:10 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -139,8 +139,8 @@ static void reset_radio( PopUP *,
 
 /* Resources that control the fontsize and other things */
 
-static int pup_font_style = FL_BOLDITALIC_STYLE;
-static int pup_title_font_style = FL_BOLDITALIC_STYLE;
+static int pup_font_style = FL_NORMAL_STYLE;
+static int pup_title_font_style = FL_NORMAL_STYLE;
 
 #ifdef __sgi
 static int pup_font_size = FL_SMALL_FONT,

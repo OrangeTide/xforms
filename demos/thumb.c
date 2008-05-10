@@ -82,16 +82,17 @@ void menu_callback(FL_OBJECT *ob, long data)
 }
 
 /** menu initialization entries. No callbacks for the item */
-FL_PUP_ENTRY menu_entries[] =
+
+FL_PUP_ENTRY menu_entries[ ] =
 {
      {"Menu Item1"},
      {"Menu Item2"},
      {"_Menu Item3"},
      {"/_Menu Item 4"},
-        {"Menu Item 5"},
-        {"Menu Item 6"},
-        {"Menu Item 7"},
-        {"Menu Item 8"},
+	 {"Menu Item 5"},
+	 {"Menu Item 6"},
+	 {"Menu Item 7"},
+	 {"Menu Item 8"},
      {0},
      {"Menu Item10"},
      {"menu Item11"},
@@ -99,14 +100,15 @@ FL_PUP_ENTRY menu_entries[] =
 };
 
 static void
-menuitem_entercb(int n, void *data)
+menuitem_entercb( int    n,
+				  void * data )
 {
-      char buf[128];
-      FD_pupform *fdui = data;
+	char buf[ 128 ];
+	FD_pupform *fdui = data;
 
-     fprintf(stderr,"pupId=%d\n",fl_current_pup());
-      sprintf(buf,"Entered %d (%s)", n, fl_get_menu_item_text(fdui->menu, n));
-      fl_set_object_label(fdui->status, buf);
+	fprintf( stderr,"pupId=%d\n",fl_current_pup( ) );
+	sprintf(buf,"Entered %d (%s)", n, fl_get_menu_item_text(fdui->menu, n));
+	fl_set_object_label(fdui->status, buf);
 }
 
 
@@ -143,16 +145,16 @@ pupitem_cb(int selected)
      return selected;
 }
 
-FL_PUP_ENTRY pup_entries[] =
+FL_PUP_ENTRY pup_entries[ ] =
 {
      {"Popup Item1", pupitem_cb, "1", FL_PUP_RADIO},
      {"Popup Item2", pupitem_cb, "2", FL_PUP_RADIO},
      {"Popup Item3", pupitem_cb, "3", FL_PUP_RADIO},
      {"/Popup Item 4", pupitem_cb},
-        {"Popup Item 5", pupitem_cb},
-        {"Popup Item 6", pupitem_cb},
-        {"Popup Item 7", pupitem_cb},
-        {"Popup Item 8", pupitem_cb},
+	 {"Popup Item 5", pupitem_cb},
+	 {"Popup Item 6", pupitem_cb},
+	 {"Popup Item 7", pupitem_cb},
+	 {"Popup Item 8", pupitem_cb},
      {0},
      {"Popup Item10", pupitem_cb, 0, FL_PUP_GRAY},
      {"Popup Item11", pupitem_cb},

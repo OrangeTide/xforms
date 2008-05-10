@@ -57,7 +57,7 @@ typedef struct {
 extern FD_timerform * create_form_timerform( void );
 
 
-#define T  80
+#define T  20
 
 FD_timerform *fd_timerform;
 
