@@ -1,3 +1,26 @@
+2008-05-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/goodie_alert.c: Removed restriction on the
+	maximum length of the alert message. Alert window
+	now gets resized accoding to the amount of text.
+
+	Added new function
+
+	void
+	fl_show_alert2( int          c,
+	                const char * fmt,
+	                ... )
+
+	The first argument is the same as the last of
+	fl_show_alert(), indicating if the alert box is to be
+	centered on the screen. The second one is a printf()-
+	like format string, followed by as many further
+	arguments as there are format specifiers in the 'fmt'
+	argument. The title and the alert message are taken
+	from the resulting string, where the first form-feed
+	character ('\f') embedded in the string is used as the
+	separator between the title and the message.
+
 2008-05-10 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/menu.c: Changed the default font style of

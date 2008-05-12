@@ -65,12 +65,12 @@ main( int    argc,
 	if( fl_show_question( "Do you want bold font ?",1 ) )
 		fl_set_goodies_font( FL_BOLD_STYLE, FL_NORMAL_SIZE );
 
-	fl_show_messages( "This is a test program for the goodies of the"
+	fl_show_messages( "This is a test program for the goodies of the "
 					  "forms library" );
 
 	fl_add_timeout( 5000, timeout_remove_alert, 0 );
 	fl_show_alert( "Alert", "Alert form can be used to inform",
-				   "recoverable errors", 0 );
+				   "about recoverable errors", 0 );
 
 	if ( fl_show_question( "Do you want to quit?", 0 ) )
 		exit( 0 );

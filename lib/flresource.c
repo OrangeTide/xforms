@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.27 2008/05/09 12:33:00 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.28 2008/05/12 12:07:40 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1264,7 +1264,6 @@ fl_initialize( int        * na,
        built-in */
 
     fli_init_symbols( );
-    fli_init_goodies( );
 
     /* hang the database on the display so application can get it */
 

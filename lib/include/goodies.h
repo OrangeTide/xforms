@@ -91,6 +91,12 @@ FL_EXPORT void fl_show_alert(
 		int
 		);
 
+FL_EXPORT void fl_show_alert2(
+		int c,
+		const char * fmt,
+		...
+		);
+
 FL_EXPORT void fl_hide_alert(
 		void
 		);

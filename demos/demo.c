@@ -45,6 +45,10 @@ extern void create_the_forms( void );
 static int load_the_menu( const char * );
 static void push_menu( const char * );
 
+
+/***************************************
+ ***************************************/
+
 int
 main( int    argc,
 	  char * argv[ ] )
@@ -113,7 +117,9 @@ MENU menus[ MAXMENU ];
 int mennumb = 0;
 
 
-/* Returns the number of a given menu name. */
+/***************************************
+ * Returns the number of a given menu name.
+ ***************************************/
 
 int
 find_menu( const char * nnn )
@@ -127,7 +133,9 @@ find_menu( const char * nnn )
 }
 
 
-/* Creates a new menu with name nnn */
+/***************************************
+ * Creates a new menu with name nnn
+ ***************************************/
 
 static void
 create_menu( char nnn[ ] )
@@ -140,7 +148,9 @@ create_menu( char nnn[ ] )
 }
 
 
-/* Adds an item to a menu */
+/***************************************
+ * Adds an item to a menu
+ ***************************************/
 
 static void
 addto_menu( char men[ ],
@@ -194,8 +204,10 @@ int n2b[ ][ 9 ] =
 };
 
 
-/* Transforms a button number to an item number when there are
-   maxnumb items in total. -1 if the button should not exist. */
+/***************************************
+ * Transforms a button number to an item number when there are
+ * maxnumb items in total. -1 if the button should not exist.
+ ***************************************/
 
 static int
 but2numb( int bnumb,
@@ -205,8 +217,10 @@ but2numb( int bnumb,
 }
 
 
-/* Transforms an item number to a button number when there are
-   maxnumb items in total. -1 if the item should not exist. */
+/***************************************
+ * Transforms an item number to a button number when there are
+ * maxnumb items in total. -1 if the item should not exist.
+ ***************************************/
 
 static int
 numb2but( int inumb,
@@ -222,7 +236,9 @@ char stack[ 64 ][ 32 ];
 int stsize = 0;
 
 
-/* Pushes a menu to be visible */
+/***************************************
+ * Pushes a menu to be visible
+ ***************************************/
 
 static void
 push_menu( const char * nnn )
@@ -262,7 +278,9 @@ push_menu( const char * nnn )
 }
 
 
-/* Pops a menu */
+/***************************************
+ * Pops a menu
+ ***************************************/
 
 static void
 pop_menu( void )
@@ -274,14 +292,18 @@ pop_menu( void )
 }
 
 
-/* The callback Routines */
+/***************************************
+ * The callback Routines
+ ***************************************/
 
 #if defined __cplusplus
 extern "C"
 #endif
 
 
-/* handles a button push */
+/***************************************
+ * handles a button push
+ ***************************************/
 
 void
 dobut( FL_OBJECT * obj  FL_UNUSED_ARG,
@@ -315,7 +337,9 @@ dobut( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
-/* Go up a level in the menu tree */
+/***************************************
+ * Go up a level in the menu tree
+ ***************************************/
 
 void
 doback( FL_OBJECT * obj  FL_UNUSED_ARG,
@@ -325,7 +349,9 @@ doback( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
-/* Exit the program */
+/***************************************
+ * Exit the program
+ ***************************************/
 
 void
 doexit( FL_OBJECT * obj  FL_UNUSED_ARG,
@@ -337,6 +363,9 @@ doexit( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 showlog( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 long        arg  FL_UNUSED_ARG )
@@ -345,7 +374,9 @@ showlog( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
-/* Loads the menu file. Returns whether successful. */
+/***************************************
+ * Loads the menu file. Returns whether successful.
+ ***************************************/
 
 static int
 load_the_menu( const char * fname )
@@ -409,6 +440,9 @@ load_the_menu( const char * fname )
     return 1;
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 create_form_form( void )
@@ -496,6 +530,9 @@ create_form_form( void )
     fl_adjust_form_size( form );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 create_the_forms( void )

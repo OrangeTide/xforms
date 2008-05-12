@@ -73,9 +73,24 @@ box
 It expects a printf()-like format string 'fmt' and as many
 more arguments as there are format specifiers in the format
 string. The resulting string can have arbitrary length and
-embedded newline characters ('\n') produce a line break. The
+embedded newline characters ('\n') produce line breaks. The
 size of the message box gets set in a way that the whole text
 fits into it.
+
+Also the alert boxes got changed so that they automatically
+get a size that all text will fit. And there's another new
+function 
+
+   void fl_show_alert2( int c, const char * fmt, ... )
+
+The first argument is the same as the one for fl_show_alert(),
+i.e. it tells if the alert box is to be centered on the scrren.
+The second argument is a printf()-like format string 'fmt',
+followed by as many more arguments as there are format specifiers
+in the format string. The resulting string can have arbitrary
+length and the first embedded form-feed character is used as the
+separator between the title string and the message of the alert
+box. Embedded newline characters ('\n') produce lines break.
 
 
 The new function

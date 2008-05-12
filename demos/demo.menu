@@ -105,3 +105,4 @@
 	@Misc:Object\nActivation:objreturn
 	@Misc:Move\nObject:objpos
 	@Misc:Object\nGroups:group
+    @Misc:Form\nResizing:grav

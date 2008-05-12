@@ -361,8 +361,6 @@ extern void fli_canonicalize_rect( FL_Coord *,
 								   FL_Coord *,
 								   FL_Coord * );
 
-extern void fli_init_goodies( void );
-
 extern void fli_get_goodie_title( FL_FORM *,
 								  const char * );
 
@@ -807,8 +805,6 @@ extern void fli_get_goodies_font( int *,
 
 extern void fli_handle_goodie_font( FL_OBJECT *,
 									FL_OBJECT * );
-
-extern void fli_init_alert( void );
 
 extern void fli_handle_timeouts( long * );
 

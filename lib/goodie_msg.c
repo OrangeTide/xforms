@@ -140,7 +140,7 @@ fl_show_messages( const char *str )
 
     fl_hide_form( fd_msg->form );
 	fl_free_form( fd_msg->form );
-	fd_msg = NULL;
+	fl_safe_free( fd_msg );
     fl_activate_all_forms( );
 }
 
@@ -180,7 +180,7 @@ fl_show_msg( const char * fmt,
 		written = fl_vsnprintf( buf, len, fmt, ap );
 		va_end( ap );
 
-		/* Take care: e.g. in older libc versiobs a negative value got
+		/* Take care: e.g. in older libc versions a negative value got
 		   returned if the buffer wasn't large enough while newer ones
 		   follow C99 and return the length of the string that would be
 		   needed (but without the trailing '\0') */
