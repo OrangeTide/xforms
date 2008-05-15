@@ -1,3 +1,11 @@
+2008-05-15 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/textbox.c: The functions fl_addto_browser()
+	and fl_addto_browser_chars() didn't worlk correctly
+	anymore, when lines where appended the browser
+	wasn't shifted to display the new line. Thanks to
+	Werner Heisch for pointing out the problem.
+
 2008-05-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/goodie_alert.c: Removed restriction on the

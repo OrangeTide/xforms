@@ -39,7 +39,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.13 2008/05/05 14:21:51 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.14 2008/05/15 13:33:26 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -206,8 +206,8 @@ P_errmsg( const char * func,
     }
     else
     {
-		line[0] = '\0';
-		where = strdup("");
+		line[ 0 ] = '\0';
+		where = strdup( "" );
     }
 
     /* now find out why */

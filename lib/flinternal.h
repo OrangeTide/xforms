@@ -874,8 +874,7 @@ extern void fli_replacepup_text( int,
 								 int,
 								 const char * );
 
-extern int fli_handle_mouse_wheel( FL_OBJECT *,
-								   int *,
+extern int fli_handle_mouse_wheel( int *,
 								   int *,
 								   void * );
 

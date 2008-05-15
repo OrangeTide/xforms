@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.19 2008/05/09 12:33:01 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.20 2008/05/15 13:33:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -610,11 +610,6 @@ static void set_default_keymap( int );
 
 #define set_to_eol( p )  while ( ( p ) < slen && sp->str[ p ] != '\n' ) ( p )++
 
-static void
-expand_tab( FL_OBJECT * ob  FL_UNUSED_ARG )
-{
-}
-
 
 /***************************************
  * cursor moved. No editing.
@@ -654,9 +649,7 @@ handle_movement( FL_OBJECT * ob,
 		fl_set_input_topline( ob, sp->topline - sp->screenlines / 2 );
     else if ( Is1LineUp( key ) )
 		fl_set_input_topline( ob, sp->topline - 1 );
-    else if ( key == '\t' )
-		expand_tab( ob );
-    else if ( key == 12 )
+    else if ( key == '\t' || key == 12 )
 		/* empty */ ;
     else if ( IsEnd( key ) )
     {
@@ -1304,7 +1297,7 @@ handle_it( FL_OBJECT * ob,
     int ret = 0,
 		val;
 
-    if ( fli_handle_mouse_wheel( ob, &event, &key, ev ) == 0 )
+    if ( fli_handle_mouse_wheel( &event, &key, ev ) == 0 )
 		return 0;
 
     switch ( event )

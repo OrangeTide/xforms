@@ -642,9 +642,9 @@ fl_set_browser_hscrollbar( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_browser_hscroll_callback( FL_OBJECT *                ob,
-                                 FL_BROWSER_SCROLL_CALLBACK cb,
-								 void *                     data )
+fl_set_browser_hscroll_callback( FL_OBJECT                  * ob,
+                                 FL_BROWSER_SCROLL_CALLBACK   cb,
+								 void                       * data )
 {
       FLI_BROWSER_SPEC *comp = GetSpec( ob );
 
@@ -667,9 +667,9 @@ fl_get_browser_hscroll_callback( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_browser_vscroll_callback( FL_OBJECT *                ob,
-								 FL_BROWSER_SCROLL_CALLBACK cb,
-								 void *                     data )
+fl_set_browser_vscroll_callback( FL_OBJECT                  * ob,
+								 FL_BROWSER_SCROLL_CALLBACK   cb,
+								 void                       * data )
 {
       FLI_BROWSER_SPEC *comp = GetSpec( ob );
 
@@ -784,10 +784,10 @@ fl_select_browser_line( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_addto_browser( FL_OBJECT *  ob,
-				  const char * newtext )
+fl_addto_browser( FL_OBJECT  * ob,
+				  const char * text )
 {
-    fli_addto_textbox( GetSpec( ob )->tb, newtext );
+    fli_addto_textbox( GetSpec( ob )->tb, text );
     fl_redraw_scrollbar( ob );
 }
 
@@ -796,7 +796,7 @@ fl_addto_browser( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_insert_browser_line( FL_OBJECT *  ob,
+fl_insert_browser_line( FL_OBJECT  * ob,
 						int          linenumb,
 						const char * newtext )
 {
@@ -821,7 +821,7 @@ fl_delete_browser_line( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_replace_browser_line( FL_OBJECT *  ob,
+fl_replace_browser_line( FL_OBJECT  * ob,
 						 int          linenumb,
 						 const char * newtext )
 {
@@ -947,7 +947,7 @@ fl_get_browser_topline( FL_OBJECT * ob )
  ***************************************/
 
 int
-fl_load_browser( FL_OBJECT *  ob,
+fl_load_browser( FL_OBJECT  * ob,
 				 const char * f )
 {
     int status = fli_load_textbox( GetSpec( ob )->tb, f );
@@ -961,7 +961,7 @@ fl_load_browser( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_add_browser_line( FL_OBJECT *  ob,
+fl_add_browser_line( FL_OBJECT  * ob,
 					 const char * newtext )
 {
     fli_add_textbox_line( GetSpec( ob )->tb, newtext );
@@ -973,9 +973,9 @@ fl_add_browser_line( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_set_browser_dblclick_callback( FL_OBJECT *    ob,
-								  FL_CALLBACKPTR cb,
-								  long           a )
+fl_set_browser_dblclick_callback( FL_OBJECT      * ob,
+								  FL_CALLBACKPTR   cb,
+								  long             a )
 {
     FLI_BROWSER_SPEC *comp = ob->spec;
 
@@ -1023,10 +1023,10 @@ fl_set_browser_scrollbarsize( FL_OBJECT * ob,
 
 void
 fl_get_browser_dimension( FL_OBJECT * ob,
-						  FL_Coord *  x,
-						  FL_Coord *  y,
-						  FL_Coord *  w,
-						  FL_Coord *  h )
+						  FL_Coord  * x,
+						  FL_Coord  * y,
+						  FL_Coord  * w,
+						  FL_Coord  * h )
 {
     fli_get_textbox_dimension( GetSpec( ob )->tb, x, y, w, h );
 }
@@ -1048,7 +1048,7 @@ fl_set_browser_line_selectable( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_addto_browser_chars( FL_OBJECT *  ob,
+fl_addto_browser_chars( FL_OBJECT  * ob,
 						const char * str )
 {
     fli_addto_textbox_chars( GetSpec( ob )->tb, str );

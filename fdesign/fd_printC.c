@@ -94,25 +94,18 @@ build_fname( char       * fname,
 			 char const * filename,
 			 char const * ext )
 {
-    char const * const only_filename = filename_only(filename);
-    char const null = '\0';
-    char const *dname = &null;
-    char const *slash = &null;
     int npc;
 
     if ( fdopt.output_dir )
-	{
-		size_t const l = strlen( fdopt.output_dir );
+		npc = fl_snprintf( fname, fname_capacity, "%s%s%s%s",
+						   fdopt.output_dir,
+						   fdopt.output_dir[ strlen( fdopt.output_dir ) - 1 ]
+						                                      != '/' ? "/" : "",
+						   filename_only( filename ), ext );
+	else
+		npc = fl_snprintf( fname, fname_capacity, "%s%s", filename, ext );
 
-		if ( fdopt.output_dir[ l - 1 ] != '/' )
-			slash = "/";
-		dname = fdopt.output_dir;
-    }
-
-    npc = fl_snprintf( fname, fname_capacity, "%s%s%s%s",
-					   dname, slash, only_filename, ext );
-
-    /* npc==-1 is glibc <= 2.0.6 and npc >= fname_capacity is C99 */
+    /* npc == -1 is glibc <= 2.0.6 and npc >= fname_capacity is C99 */
 
     return ( npc == -1 || ( ptrdiff_t )npc >= ( ptrdiff_t ) fname_capacity ) ?
 		   0 : 1;

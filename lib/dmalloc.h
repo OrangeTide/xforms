@@ -74,7 +74,7 @@ extern void tc_mem_stat( int );
 #define fl_calloc( a, b )     tc_dbg_calloc( a, b, __FILE__, __LINE__ )
 #define fl_realloc( a, b )    tc_dbg_realloc( a, b, __FILE__, __LINE__ )
 #define fl_free( a )          tc_dbg_free( a, __FILE__, __LINE__ )
-#define strdup( a )           tc_dbg_strdup( a, __FILE__, __LINE__ )
+#define fl_strdup( a )        tc_dbg_strdup( a, __FILE__, __LINE__ )
 #endif /* TC_MEMDBG_OWNER */
 
 #else /* if not debug, tfree becomes free */

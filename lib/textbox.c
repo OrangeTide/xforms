@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.18 2008/05/09 12:33:02 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.19 2008/05/15 13:33:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -567,6 +567,17 @@ correct_topline( FL_OBJECT * ob )
     FLI_TEXTBOX_SPEC *sp = ob->spec;
 	FLI_BROWSER_SPEC *br = ob->parent->spec;
 
+	/* Special case: if topline is set to the number of lines than
+	   fl_addt_browser() or fl_addto_browser_chars() has been
+	   called and the last line is supposed to be shown at the
+	   end of the browser */
+
+	if ( sp->topline == sp->lines && sp->lines > sp->screenlines )
+	{
+		sp->topline = sp->lines - sp->screenlines + 1;
+		return;
+	}
+
 	if ( ! br->v_on )
 		sp->topline = 1;
 	else
@@ -1038,7 +1049,7 @@ static int last_select,
  ***************************************/
 
 static int
-handle_mouse( FL_OBJECT *    ob,
+handle_mouse( FL_OBJECT    * ob,
 			  FL_Coord       mx   FL_UNUSED_ARG,
 			  FL_Coord       my,
 			  XMotionEvent * xev  FL_UNUSED_ARG )
@@ -1242,7 +1253,7 @@ handle_textbox( FL_OBJECT * ob,
 				FL_Coord    mx,
 				FL_Coord    my,
 				int         key,
-				void *      xev )
+				void      * xev )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
 
@@ -1253,7 +1264,7 @@ handle_textbox( FL_OBJECT * ob,
     /* wheel mouse hack */
 
     if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-		 && fli_handle_mouse_wheel( ob, &ev, &key, xev ) == 0 )
+		 && fli_handle_mouse_wheel( &ev, &key, xev ) == 0 )
 		return 0;
 
     switch ( ev )
@@ -1496,10 +1507,10 @@ fli_clear_textbox( FL_OBJECT * ob )
  ***************************************/
 
 void
-fli_add_textbox_line( FL_OBJECT *  ob,
-					  const char * newtext )
+fli_add_textbox_line( FL_OBJECT  * ob,
+					  const char * text )
 {
-    insert_lines( ob, ( ( FLI_TEXTBOX_SPEC * ) ob->spec )->lines + 1, newtext );
+    insert_lines( ob, ( ( FLI_TEXTBOX_SPEC * ) ob->spec )->lines + 1, text );
     fl_redraw_object( ob );
 }
 
@@ -1509,13 +1520,13 @@ fli_add_textbox_line( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fli_addto_textbox( FL_OBJECT *  ob,
-				   const char * newtext )
+fli_addto_textbox( FL_OBJECT  * ob,
+				   const char * text )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
 
     sp->drawtype = sp->lines < sp->screenlines ? FULL : VSLIDER;
-    insert_lines( ob, sp->lines + 1, newtext );
+    insert_lines( ob, sp->lines + 1, text );
     sp->topline = sp->lines;
     fl_redraw_object( ob );
     sp->drawtype = COMPLETE;
@@ -1527,11 +1538,13 @@ fli_addto_textbox( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fli_addto_textbox_chars( FL_OBJECT *  ob,
+fli_addto_textbox_chars( FL_OBJECT  * ob,
 						 const char * str )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
-    char *s, *p, *news;
+    char *s,
+		 *p,
+		 *news;
     LINE *cur_line;
 
     if ( ! str )
@@ -1546,28 +1559,25 @@ fli_addto_textbox_chars( FL_OBJECT *  ob,
 
     /* Create new line if required */
 
-    if ( sp->text[ sp->lines ] == NULL )
+	if ( sp->text[ sp->lines ] == NULL )
 		sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
 
-    cur_line = sp->text[ sp->lines ];
-    cur_line->len += strlen( s );
-    news = fl_malloc( cur_line->len + 1 );
-    strcpy( news, cur_line->txt ? cur_line->txt : "" );
-    strcat( news, s );
-    replace_line( ob, sp->lines, news );
+	cur_line = sp->text[ sp->lines ];
+	cur_line->len += strlen( s );
+	news = fl_malloc( cur_line->len + 1 );
+	strcpy( news, cur_line->txt ? cur_line->txt : "" );
+	strcat( news, s );
+	replace_line( ob, sp->lines, news );
+    fl_free( news );
 
     if ( p )
     {
-		if ( *++p )
-			insert_lines( ob, sp->lines + 1, p );
-		else
-			insert_line( ob, sp->lines + 1, "" );
+		insert_lines( ob, sp->lines + 1, *++p ? p : "" );
 		sp->topline = sp->lines;
     }
 
-    fl_redraw_object( ob );
-    fl_free( news );
     fl_free( s );
+    fl_redraw_object( ob );
 }
 
 
@@ -1576,22 +1586,22 @@ fli_addto_textbox_chars( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fli_insert_textbox_line( FL_OBJECT *  ob,
+fli_insert_textbox_line( FL_OBJECT  * ob,
 						 int          linenumb,
-						 const char * newtext )
+						 const char * text )
 {
 	FLI_TEXTBOX_SPEC *sp = ob->spec;
 
     if ( linenumb > sp->lines || sp->lines == 0 )
     {
-		fli_add_textbox_line( ob, newtext );
+		fli_add_textbox_line( ob, text );
 		return;
     }
 
     if ( linenumb < 1 )
 		return;
 
-    insert_line( ob, linenumb, newtext );
+    insert_line( ob, linenumb, text );
     fl_redraw_object( ob );
 }
 
@@ -1616,7 +1626,7 @@ fli_delete_textbox_line( FL_OBJECT * ob,
  ***************************************/
 
 void
-fli_replace_textbox_line( FL_OBJECT *  ob,
+fli_replace_textbox_line( FL_OBJECT  * ob,
 						  int          linenumb,
 						  const char * newtext )
 {
@@ -1656,7 +1666,7 @@ fli_get_textbox_line( FL_OBJECT * ob,
  ***************************************/
 
 int
-fli_load_textbox( FL_OBJECT *  ob,
+fli_load_textbox( FL_OBJECT  * ob,
 				  const char * filename )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
@@ -1677,7 +1687,7 @@ fli_load_textbox( FL_OBJECT *  ob,
     if ( ! ( fl = fopen( filename, "r" ) ) )
 		return 0;
 
-    newtext = fl_malloc( sizeof *newtext * maxlen );
+    newtext = fl_malloc( maxlen * sizeof *newtext );
 
     i = 0;
     do
@@ -1928,10 +1938,10 @@ fli_set_textbox_line_selectable( FL_OBJECT * ob,
 
 void
 fli_get_textbox_dimension( FL_OBJECT * ob,
-						   FL_Coord *  x,
-						   FL_Coord *  y,
-						   FL_Coord *  w,
-						   FL_Coord *  h )
+						   FL_Coord  * x,
+						   FL_Coord  * y,
+						   FL_Coord  * w,
+						   FL_Coord  * h )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
     int junk;
@@ -2004,9 +2014,9 @@ fli_set_textbox_xoffset( FL_OBJECT * ob,
  ***************************************/
 
 void
-fli_set_textbox_dblclick_callback( FL_OBJECT *    ob,
-								   FL_CALLBACKPTR cb,
-								   long           a )
+fli_set_textbox_dblclick_callback( FL_OBJECT      * ob,
+								   FL_CALLBACKPTR   cb,
+								   long             a )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
 
@@ -2113,10 +2123,9 @@ textwidth( FLI_TEXTBOX_SPEC * sp,
  ***************************************/
 
 int
-fli_handle_mouse_wheel( FL_OBJECT * ob   FL_UNUSED_ARG,
-						int *       ev,
-						int *       key,
-						void *      xev )
+fli_handle_mouse_wheel( int       * ev,
+						int       * key,
+						void      * xev )
 {
     if ( *ev == FL_PUSH && *key >= FL_MBUTTON4 )
 		return 0;
