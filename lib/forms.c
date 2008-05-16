@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.43 2008/05/16 18:08:44 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.44 2008/05/16 18:47:56 jtt Exp $";
 #endif
 
 
@@ -1240,9 +1240,9 @@ fl_hide_form( FL_FORM * form )
 		fli_pushobj = NULL;
     }
 
-    if ( form->focusobj != NULL )
+    if ( form->focusobj )
 	{
-		form->focusobj->focus = 0;
+		fli_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
 		form->focusobj = NULL;
 	}
 

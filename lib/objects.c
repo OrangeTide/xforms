@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.30 2008/05/16 18:08:45 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.31 2008/05/16 18:47:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1443,7 +1443,7 @@ fl_set_object_shortcutkey( FL_OBJECT    * obj,
 
 
 /***************************************
- * Sets the object in the form on which the gets keyboard input.
+ * Sets the object in the form that gets keyboard input.
  ***************************************/
 
 void
@@ -1459,7 +1459,8 @@ fl_set_focus_object( FL_FORM   * form,
     if ( obj == form->focusobj )
 		return;
 
-	fli_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
+	if ( form->focusobj )
+		fli_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
     fli_handle_object_direct( obj, FL_FOCUS, 0, 0, 0, NULL );
 }
 

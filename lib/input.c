@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.20 2008/05/15 13:33:28 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.21 2008/05/16 18:47:57 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1352,11 +1352,20 @@ handle_it( FL_OBJECT * ob,
 				sp->position = -1;
 				sp->endrange = -1;
 				fl_redraw_object( sp->input );
-				if (    sp->how_return == FL_RETURN_END
-					 || sp->how_return == FL_RETURN_ALWAYS )
-					ret = 1;
-				else
-					ret = sp->changed;
+
+				/* If the event is set to NULL don't validate or report
+				   any changes - the call came from either closing the
+				   form or from the user changing the focus with the
+				   fl_set_focus_object() function. */
+
+				if ( ev )
+				{
+					if (    sp->how_return == FL_RETURN_END
+							|| sp->how_return == FL_RETURN_ALWAYS )
+						ret = 1;
+					else
+						ret = sp->changed;
+				}
 			}
 			break;
 
