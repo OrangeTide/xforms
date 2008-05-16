@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.42 2008/05/10 19:29:36 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.43 2008/05/16 18:08:44 jtt Exp $";
 #endif
 
 
@@ -583,6 +583,8 @@ scale_form( FL_FORM * form,
 
 		fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, 0 );
     }
+
+	fli_recalc_intersections( form );
 }
 
 
@@ -1239,7 +1241,10 @@ fl_hide_form( FL_FORM * form )
     }
 
     if ( form->focusobj != NULL )
+	{
+		form->focusobj->focus = 0;
 		form->focusobj = NULL;
+	}
 
 	/* Get canvas objects to unmap their windows (but only for those that
 	   aren't childs, those will be dealt with by their parents) */

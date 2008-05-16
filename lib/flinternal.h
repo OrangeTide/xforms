@@ -212,6 +212,8 @@ extern FL_OBJECT *fli_find_first( FL_FORM *,
 
 void fli_show_object( FL_OBJECT * );
 
+void fli_recalc_intersections( FL_FORM * );
+
 extern FL_OBJECT *fli_find_last( FL_FORM *,
 								 int,
 								 FL_Coord,

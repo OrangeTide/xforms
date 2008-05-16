@@ -129,7 +129,7 @@ fl_show_choices( const char * msg,
 				fl_set_object_label( fd_choice->but[ i ], c[ i ] );
 				fl_set_object_shortcut( fd_choice->but[ i ],
 										fd_choice->sc[ i ], 1 );
-//				fl_show_object( fd_choice->but[ i ] );
+				fl_show_object( fd_choice->but[ i ] );
 				fl_fit_object_label( fd_choice->but[ i ], 1, 1 );
 			}
 			break;
@@ -220,8 +220,8 @@ fl_show_choice( const char * m1,
 
 	buf = fl_malloc( len );
 
-    fl_snprintf( buf, sizeof buf, "%s\n%s\n%s",
-				 m1 ? m1 : "", m2 ? m2 : "", m3 ? m3 : "" );
+    sprintf( buf, "%s\n%s\n%s",
+			 m1 ? m1 : "", m2 ? m2 : "", m3 ? m3 : "" );
 
     ret = fl_show_choices( buf, numb, c1, c2, c3, def );
 

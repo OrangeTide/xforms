@@ -231,10 +231,10 @@ emit_pixmap_code( FILE      * fp,
     if (info->data[0] && info->use_data && info->filename[0])
     {
 		if (ob->objclass == FL_PIXMAP)
-			fprintf(fp, "    fl_set_pixmap_data( obj,%s );\n",
+			fprintf(fp, "    fl_set_pixmap_data( obj, %s );\n",
 					info->data);
 		else
-			fprintf(fp, "    fl_set_bitmap_data( obj,%s, %s, "
+			fprintf(fp, "    fl_set_bitmap_data( obj, %s, %s, "
 					"( unsigned char * ) %s);\n",
 					info->width, info->height, info->data);
     }

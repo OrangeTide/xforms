@@ -1,8 +1,25 @@
+2008-05-16 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c: Removed a bug that has been
+	pointed out by Werner Heisch with a small demo
+	program: if an object is partially or even fully
+	hidden by another object and gets redrawn it got
+	drawn above the object it was supposed to be
+	(more or less) hidden by, thus obscuring the
+	"upper" object.
+
+	* lib/pixmap.c: It could happen that parts of a
+	pixmap got drawn outside of the object that it
+	belongs to. That in turn could mess up redrawing
+	(e.g. if the pixmap object got hidden). Thus now
+	only that part of a pixmap that fits inside the	
+	object gets drawn.
+
 2008-05-15 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/textbox.c: The functions fl_addto_browser()
 	and fl_addto_browser_chars() didn't worlk correctly
-	anymore, when lines where appended the browser
+	anymore. When lines where appended the browser
 	wasn't shifted to display the new line. Thanks to
 	Werner Heisch for pointing out the problem.
 

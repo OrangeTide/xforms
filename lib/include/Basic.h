@@ -663,6 +663,7 @@ typedef struct flobjs_
 	int				 automatic;
 	int				 redraw;
 	int				 visible;
+	int              is_under;       /* if (partially) hidden by other object */
 	int				 clip;
 	unsigned long	 click_timeout;
 	void		   * c_vdata;		 /* for class use */

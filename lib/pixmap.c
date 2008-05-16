@@ -215,8 +215,12 @@ show_pixmap( FL_OBJECT * ob,
 {
 	SPEC *sp = ob->spec;
 	PixmapSPEC *psp = sp->cspecv;
-	int xx,			/* position of bitmap */
-		yy;
+	int dest_x,
+		dest_y,
+		dest_w,
+		dest_h,
+		src_x,
+		src_y;
 	Pixmap pixmap, mask;
 	int bits_w,
 		bits_h,
@@ -236,19 +240,48 @@ show_pixmap( FL_OBJECT * ob,
 		return;
 	}
 
-	fl_get_align_xy( psp->align, ob->x, ob->y, ob->w, ob->h, bits_w, bits_h,
-					 FL_abs( ob->bw ) + psp->dx, FL_abs( ob->bw ) + psp->dy,
-					 &xx, &yy );
+	dest_x = ob->x + FL_abs( ob->bw ) + psp->dx;
+	dest_y = ob->y + FL_abs( ob->bw ) + psp->dy;
+	dest_w = ob->w - 2 * FL_abs( ob->bw ) - 2 * psp->dx;
+	dest_h = ob->h - 2 * FL_abs( ob->bw ) - 2 * psp->dy;
 
-#if !defined USE_OVERRIDE
-	/* hopefully, XSetClipMask is smart */
+	src_x = 0;
+	src_y = 0;
 
-	XSetClipMask( flx->display, psp->gc, mask );
-	XSetClipOrigin( flx->display, psp->gc, xx, yy );
-#endif
+	if ( dest_w > bits_w )
+	{
+		if ( ! ( psp->align & ( FL_ALIGN_LEFT | FL_ALIGN_RIGHT ) ) )
+			dest_x += ( dest_w - bits_w ) / 2;
+		else if ( psp->align & FL_ALIGN_RIGHT )
+			dest_x += dest_w - bits_w;
+		dest_w = bits_w;
+	}
+	else
+	{
+		if ( ! ( psp->align & ( FL_ALIGN_LEFT | FL_ALIGN_RIGHT ) ) )
+			src_x = ( bits_w - dest_w ) / 2;
+		else if ( psp->align & FL_ALIGN_RIGHT )
+			src_x = bits_w - dest_w;
+	}
+
+	if ( dest_h > bits_h )
+	{
+		if ( ! ( psp->align & ( FL_ALIGN_TOP | FL_ALIGN_BOTTOM ) ) )
+			dest_y += ( dest_h - bits_h ) / 2;
+		else if ( psp->align & FL_ALIGN_BOTTOM )
+			dest_y += dest_h - bits_h;
+		dest_h = bits_h;
+	}
+	else
+	{
+		if ( ! ( psp->align & ( FL_ALIGN_TOP | FL_ALIGN_BOTTOM ) ) )
+			src_y = ( bits_h - dest_h ) / 2;
+		else if ( psp->align & FL_ALIGN_BOTTOM )
+			src_y = bits_h - dest_h;
+	}
 
 	XCopyArea( flx->display, pixmap, FL_ObjWin( ob ),
-			   psp->gc, 0, 0, bits_w, bits_h, xx, yy );
+			   psp->gc, src_x, src_y, dest_w, dest_h, dest_x, dest_y );
 }
 
 

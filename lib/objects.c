@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.29 2008/05/09 16:32:19 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.30 2008/05/16 18:08:45 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -62,6 +62,9 @@ extern FL_OBJECT * fli_mouseobj,          /* defined in forms.c */
 static void lose_focus( FL_OBJECT * );
 static void get_object_bbox_rect( FL_OBJECT *,
 								  XRectangle * );
+static int objects_intersect( FL_OBJECT *,
+							  FL_OBJECT * );
+static int object_is_under( FL_OBJECT * );
 
 static FL_OBJECT *refocus;
 
@@ -265,6 +268,8 @@ void
 fl_add_object( FL_FORM   * form,
 			   FL_OBJECT * obj )
 {
+	FL_OBJECT *o;
+
     /* Checking for correct behaviour. */
 
     if ( ! obj )
@@ -338,10 +343,24 @@ fl_add_object( FL_FORM   * form,
     if ( obj->input && ! form->focusobj )
 		fl_set_focus_object( form, obj );
 
-	/* If the object has child objects also add them to the form */
+	/* If the object has child objects also add them to the form,
+	   otherwise check if the object partialy or completely hiddes
+	   other objects. */
 
     if ( obj->child )
 		fli_add_composite( obj );
+	else
+		for ( o = form->first; o != obj; o = o->next )
+		{
+			if (    o->is_under
+				 || o->is_child
+				 || o->objclass == FL_BEGIN_GROUP
+				 || o->objclass == FL_END_GROUP )
+				continue;
+
+			if ( objects_intersect( o, obj ) )
+				 o->is_under = 1;
+		}
 
     fl_redraw_object( obj );
 }
@@ -461,6 +480,8 @@ fl_delete_object( FL_OBJECT * obj )
 		obj->next->prev = obj->prev;
     else
 		form->last = obj->prev;
+
+	fli_recalc_intersections( form );
 
     if (    obj->visible
 		 && ( ! obj->child || obj->parent->visible )
@@ -1634,13 +1655,47 @@ redraw_marked( FL_FORM * form,
 			   int       key,
 			   XEvent  * xev )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *ob,
+		      *o;
 
     if ( form->visible != FL_VISIBLE || form->frozen > 0 )
 		return;
 
     fli_set_form_window( form );
     fli_create_form_pixmap( form );
+
+	/* Check if there are any objects that partially or fully hide one of
+	   the objects to be redrawn and mark those also for redrawing */
+
+	for ( ob = form->first; ob && ob->next; ob = ob->next )
+	{
+		if (    ! ob->visible
+             || ! ob->redraw
+             || ! ob->is_under
+			 || ob->objclass == FL_BEGIN_GROUP
+			 || ob->objclass == FL_END_GROUP
+			 || ob->is_child )
+			continue;
+
+		for ( o = ob->next; o; o = o->next )
+		{
+			if (    ! o->visible
+				 || o->redraw
+			     || o->objclass == FL_BEGIN_GROUP
+			     || o->objclass == FL_END_GROUP
+				 || o->is_child )
+				continue;
+
+			if ( objects_intersect( ob, o ) )
+			{
+				 o->redraw = 1;
+				 if ( o->child )
+					 fli_mark_composite_for_redraw( o );
+			}
+		}
+	}
+
+	/* Now redraw all marked objects */
 
     for ( ob = form->first; ob; ob = ob->next )
     {
@@ -1725,6 +1780,86 @@ fl_redraw_object( FL_OBJECT * obj )
 
     if ( obj->visible && ( ! obj->is_child || obj->parent->visible ) )
 		redraw_marked( obj->form, 0, NULL );
+}
+
+
+/***************************************
+ * Function to test if the areas of 'obj1' and 'obj2' intersect
+ ***************************************/
+
+static int
+objects_intersect( FL_OBJECT * obj1,
+				   FL_OBJECT * obj2 )
+{
+	FL_OBJECT *ob[ ] = { obj1, obj2 };
+	int i;
+    FL_RECT xrect;
+    Region reg;
+	int extra;
+
+	reg = XCreateRegion( );
+
+	for ( i = 0; i < 2; i++ )
+	{
+		if (    ob[ i ]->objclass == FL_CANVAS
+			 || ob[ i ]->objclass == FL_GLCANVAS )
+		{
+			extra = 3;
+			xrect.x      = ob[ i ]->x - extra;
+			xrect.y      = ob[ i ]->y - extra;
+			xrect.width  = ob[ i ]->w + 2 * extra + 1;
+			xrect.height = ob[ i ]->h + 2 * extra + 1;
+		}
+		else
+		{
+			get_object_bbox_rect( ob[ i ], &xrect );
+	
+			if ( ob[ i ]->objclass == FL_FRAME )
+			{
+				extra = FL_abs( ob[ i ]->bw );
+				xrect.x      -= extra;
+				xrect.y      -= extra;
+				xrect.width  += 2 * extra + 1;
+				xrect.height += 2 * extra + 1;
+			}
+		}
+
+		XUnionRectWithRegion( &xrect, reg, reg );
+	}
+
+	XClipBox( reg, &xrect );
+	XDestroyRegion( reg );
+
+	return xrect.width > 0 && xrect.height > 0;
+}
+
+
+/***************************************
+ * Function to test if the areas of 'obj1' and 'obj2' intersect
+ ***************************************/
+
+static int
+object_is_under( FL_OBJECT * obj )
+{
+	FL_OBJECT *o;
+
+	if (    obj->is_child
+		 || obj->objclass == FL_BEGIN_GROUP 
+		 || obj->objclass == FL_END_GROUP )
+		return 0;
+
+	for ( o = obj->next; o; o = o->next )
+	{
+		if (    o->is_child
+			 || o->objclass == FL_BEGIN_GROUP 
+			 || o->objclass == FL_END_GROUP )
+			continue;
+
+		if ( objects_intersect( obj, o ) )
+			return 1;
+	}
+
+	return 0;
 }
 
 
@@ -2352,6 +2487,8 @@ fl_scale_object( FL_OBJECT * ob,
 
 		if ( fli_inverted_y )
 			ob->y = TRANY( ob, ob->form );
+
+		fli_recalc_intersections( ob->form );
 	}
 }
 
@@ -2439,6 +2576,21 @@ fl_call_object_callback( FL_OBJECT * ob )
 
 
 /***************************************
+ * Rechecks for all objects of a form if they are
+ * partially or fully hidden by another object
+ ***************************************/
+
+void
+fli_recalc_intersections( FL_FORM * form )
+{
+	FL_OBJECT *ob;
+
+	for ( ob = form->first; ob && ob->next; ob = ob->next )
+		ob->is_under = object_is_under( ob );
+}
+
+
+/***************************************
  ***************************************/
 
 void
@@ -2453,11 +2605,13 @@ fl_move_object( FL_OBJECT * obj,
     if ( obj->objclass == FL_BEGIN_GROUP )
     {
         fl_freeze_form( obj->form );
+
         for ( ob = obj->next;  ob->objclass != FL_END_GROUP; ob=ob->next )
         {
 			fl_get_object_position( ob, &x, &y );
 			fl_set_object_position( ob, x + dx, y + dy );
         }
+
         fl_unfreeze_form( obj->form );
     }
     else
@@ -2528,6 +2682,9 @@ fl_set_object_position( FL_OBJECT * obj,
 
 	if ( fli_inverted_y )
 		obj->y = TRANY( obj, obj->form );
+
+	if ( ! obj->is_child )
+		fli_recalc_intersections( obj->form );
 
     if ( visible )
 		fl_show_object( obj );
@@ -2623,6 +2780,9 @@ fl_set_object_size( FL_OBJECT * obj,
 	if ( fli_inverted_y )
 		obj->y = TRANY( obj, obj->form );
 
+	if ( ! obj->is_child )
+		fli_recalc_intersections( obj->form );
+
 	fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, NULL );
 
     if ( visible )
@@ -2659,7 +2819,6 @@ fl_set_object_geometry( FL_OBJECT * obj,
 {
 	fl_set_object_size( obj, w, h );
 	fl_set_object_position( obj, x, y );
-
 }
 
 
