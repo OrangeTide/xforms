@@ -61,28 +61,56 @@ create_msg( const char * str )
     int oldu = fl_get_coordunit( );
 	int style,
 		size;
-	int w,
-		h;
-	int bw,
-		bh;
+	int w_msg,
+		h_msg,
+		w_but,
+		h_but;
+	int box_w,
+		box_h,
+		but_w;
+	char but_text[ 256 ] = "Ok";
 
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
 	fli_get_goodies_font( &style, &size );
-	fl_get_string_dimension( style, size, str, strlen( str ), &w, &h );
 
-	bw = FL_max( 400, w + 40 );
-	bh = h + 77;
+	/* Get size of box that fits the message. The message will have 20 px
+	   around spacing it (and the box a minimum width of 400 px) */
 
-    fdui->form = fl_bgn_form( FL_UP_BOX, bw, bh );
+	fl_get_string_dimension( style, size, str, strlen( str ), &w_msg, &h_msg );
 
-    fdui->str = fl_add_box( FL_FLAT_BOX, ( bw - w ) / 2,
-							20, w, h, str );
+	box_w = FL_max( 400, w_msg + 40 );
+	box_h = h_msg + 40;
 
-    fdui->but = fl_add_button( FL_RETURN_BUTTON, ( bw - 90 ) / 2, bh - 37,
-							   90, 27, "Ok" );
+	/* Get the text for the button (default is "Ok") and the size needed for
+	   it. The button should have at least 20 px space to the left and right
+	   and 10 px inner horizontal margins (and a minimum width of 90 px).
+	   Vertical inner margins are 5 px and the button should have 10 px
+	   spacing to the lower border of the box. */
+
+    fl_get_resource( FLOKLabel, NULL, FL_STRING, NULL, but_text, 256 );
+
+	fl_get_string_dimension( style, size, but_text, strlen( but_text ),
+							 &w_but, &h_but );
+
+	but_w = FL_max( 90, w_but + 20 );
+
+	box_w = FL_max( box_w, but_w + 40 );
+	box_h += h_but + 20;
+
+    fdui->form = fl_bgn_form( FL_UP_BOX, box_w, box_h );
+
+    fdui->str = fl_add_box( FL_FLAT_BOX, ( box_w - w_msg ) / 2, 20,
+							w_msg, h_msg, str );
+	fl_set_object_lstyle( fdui->str, style );
+	fl_set_object_lsize( fdui->str, size );
+
+    fdui->but = fl_add_button( FL_RETURN_BUTTON, ( box_w - but_w ) / 2,
+							   box_h - h_but - 20, but_w, h_but + 10, "Ok" );
     fl_set_form_hotobject( fdui->form, fdui->but );
+	fl_set_object_lstyle( fdui->but, style );
+	fl_set_object_lsize( fdui->but, size );
 
     fl_end_form( );
 
@@ -91,9 +119,6 @@ create_msg( const char * str )
 
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
 
-    if ( fli_cntl.buttonFontSize != FL_DEFAULT_SIZE )
-		fl_fit_object_label( fdui->but, 18, 2 );
-
     fli_inverted_y = oldy;
     fl_set_coordunit( oldu );
 
@@ -101,7 +126,7 @@ create_msg( const char * str )
 }
 
 
-static FD_msg *fd_msg;
+static FD_msg *fd_msg = NULL;
 
 
 /***************************************
@@ -120,16 +145,12 @@ fl_show_messages( const char *str )
 	{
 		fl_hide_form( fd_msg->form );
 		fl_free_form( fd_msg->form );
-		fd_msg = NULL;
+		fl_safe_free( fd_msg );
 	}
 	else
 		fl_deactivate_all_forms( );
 
 	fd_msg = create_msg( str );
-
-	fli_parse_goodies_label( fd_msg->but, FLOKLabel );
-
-    fli_handle_goodie_font( fd_msg->but, fd_msg->str );
 
     fl_show_form( fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Message" );
 
@@ -236,8 +257,18 @@ fl_show_message( const char * s1,
 void
 fl_hide_message( void )
 {
-    if ( fd_msg && fd_msg->form->visible )
+    if ( fd_msg )
 		fli_object_qenter( fd_msg->but );
 	else
 		M_warn( "fl_hide_message", "No message box is shown" );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_msg_cleanup( void )
+{
+	fl_safe_free( fd_msg );
 }

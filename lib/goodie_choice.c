@@ -101,12 +101,8 @@ fl_show_choices( const char * msg,
 				 int          def )
 {
     FL_OBJECT *retobj;
-    const char *c[ 3 ];
+    const char *c[ ] = { c0, c1, c2 };
     int i;
-
-    c[ 0 ] = c0;
-    c[ 1 ] = c1;
-    c[ 2 ] = c2;
 
     if ( ! fd_choice )
 		fd_choice = create_choice( );
@@ -177,11 +173,7 @@ fl_show_choices( const char * msg,
 
     fl_update_display( 0 );
 
-    do
-		retobj = fl_do_only_forms( );
-    while (    retobj != fd_choice->but[ 0 ]
-		    && retobj != fd_choice->but[ 1 ]
-			&& retobj != fd_choice->but[ 2 ] );
+	retobj = fl_do_only_forms( );
 
     fl_hide_form( fd_choice->form );
     fl_activate_all_forms( );
@@ -215,7 +207,7 @@ fl_show_choice( const char * m1,
 	if ( len == 3 )
 	{
 		M_warn( "fl_show_choice", "Only NULL or empty strings" );
-		return;
+		return 0;
 	}
 
 	buf = fl_malloc( len );
@@ -243,15 +235,15 @@ fl_set_choices_shortcut( const char * a,
 		fd_choice = create_choice( );
 
 	if ( fd_choice->sc[ 0 ] )
-		fl_free( fd_choice->sc[ 0 ] );
+		fl_free( ( char * ) fd_choice->sc[ 0 ] );
 	fd_choice->sc[ 0 ] = ( a && *a ) ? fl_strdup( a ) : NULL;
 
 	if ( fd_choice->sc[ 1 ] )
-		fl_free( fd_choice->sc[ 1 ] );
+		fl_free( ( char * ) fd_choice->sc[ 1 ] );
 	fd_choice->sc[ 1 ] = ( b && *b ) ? fl_strdup( b ) : NULL;
 
 	if ( fd_choice->sc[ 2 ] )
-		fl_free( fd_choice->sc[ 2 ] );
+		fl_free( ( char * ) fd_choice->sc[ 2 ] );
 	fd_choice->sc[ 2 ] = ( c && *c ) ? fl_strdup( c ) : NULL;
 }
 
@@ -268,4 +260,14 @@ fl_hide_choice( void )
 			default_choice = 1;
 		fli_object_qenter( fd_choice->but[ default_choice ] );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_choice_cleanup( void )
+{
+	fl_safe_free( fd_choice );
 }

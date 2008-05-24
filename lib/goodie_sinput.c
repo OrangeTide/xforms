@@ -56,29 +56,44 @@ typedef struct
  ***************************************/
 
 static FD_input *
-create_input( void )
+create_input( const char * str1,
+			  const char * defstr )
 {
-    FD_input *fdui = fl_calloc(1, sizeof *fdui );
+    FD_input *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fli_inverted_y;
-    int oldu = fl_get_coordunit();
+    int oldu = fl_get_coordunit( );
 
     fli_inverted_y = 0;
-    fl_set_coordunit(FL_COORD_PIXEL);
+    fl_set_coordunit( FL_COORD_PIXEL );
 
-    fdui->form = fl_bgn_form(FL_UP_BOX, 460, 130);
-    fdui->str1 = fl_add_box(FL_NO_BOX, 20, 15, 420, 20, "");
-    fdui->input = fl_add_input(FL_NORMAL_INPUT, 30, 50, 400, 30, "");
-    fdui->but = fl_add_button(FL_RETURN_BUTTON, 185, 94, 90, 27, "OK");
-    fl_set_form_hotobject(fdui->form, fdui->but);
-    fl_end_form();
+    fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
+
+    fdui->str1 = fl_add_box( FL_NO_BOX, 20, 15, 420, 20, "" );
+
+    fdui->input = fl_add_input( FL_NORMAL_INPUT, 30, 50, 400, 30, str1 );
+    fl_set_input( fdui->input, defstr );
+
+    fdui->but = fl_add_button( FL_RETURN_BUTTON, 185, 94, 90, 27, "OK" );
+	fli_parse_goodies_label( fdui->but, FLOKLabel );
+
+    fl_set_form_hotobject( fdui->form, fdui->but );
+
+    fl_end_form( );
+
+    fli_handle_goodie_font( fdui->but, fdui->input );
+
     fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
 							  fli_goodies_preemptive );
-    fl_set_form_atclose(fdui->form, fl_goodies_atclose, fdui->but);
+    fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
+
     fli_inverted_y = oldy;
-    fl_set_coordunit(oldu);
+    fl_set_coordunit( oldu );
 
     return fdui;
 }
+
+static FD_input *fd_input = NULL;
+static char *ret_str = NULL;
 
 
 /***************************************
@@ -89,25 +104,18 @@ const char *
 fl_show_simple_input( const char * str1,
 					  const char * defstr )
 {
-    static int first = 1;
-    static FD_input *fd_input;
-
-    if (!fd_input)
-		fd_input = create_input();
-
-    if ( first )
-    {
-		fli_parse_goodies_label(fd_input->but, FLOKLabel);
-		first = 0;
-    }
-
-    fli_handle_goodie_font(fd_input->but, fd_input->input);
-
-    fl_set_object_label( fd_input->str1, str1 );
-    fl_set_input( fd_input->input, defstr );
-
-    if ( ! fd_input->form->visible )
+	if ( fd_input )
+	{
+		fl_hide_form( fd_input->form );
+		fl_free_form( fd_input->form );
+		fl_safe_free( fd_input );
+	}
+	else
 		fl_deactivate_all_forms( );
+
+	fl_safe_free( ret_str );
+
+	fd_input = create_input( str1, defstr );
 
     fl_show_form( fd_input->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Input" );
     fl_update_display( 0 );
@@ -115,8 +123,24 @@ fl_show_simple_input( const char * str1,
     while ( fl_do_only_forms( ) != fd_input->but )
 		/* empty */ ;
 
+	ret_str = fl_strdup( fl_get_input( fd_input->input ) );
+
     fl_hide_form( fd_input->form );
+    fl_free_form( fd_input->form );
+	fl_safe_free( fd_input );
+
     fl_activate_all_forms( );
 
-    return fl_get_input( fd_input->input );
+    return ret_str;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_sinput_cleanup( void )
+{
+	fl_safe_free( fd_input );
+	fl_safe_free( ret_str );
 }

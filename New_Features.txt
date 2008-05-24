@@ -12,6 +12,14 @@ only documented here.
 New functions:
 --------------
 
+The first one isn't really a new function, it already exists
+for some time but wasn't documented. It's called
+
+   int fl_set_directory( const char * path )
+
+and allows to set a new path for the file selector. 
+
+
 There are three new functions for determining properties of
 an object:
 

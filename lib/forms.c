@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.44 2008/05/16 18:47:56 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.45 2008/05/24 14:38:20 jtt Exp $";
 #endif
 
 
@@ -359,19 +359,20 @@ fl_end_group( void )
     FL_OBJECT *ob;
     int id;
 
-    if ( fl_current_form == NULL )
+    if ( ! fl_current_form )
     {
 		M_err( "fl_end_group", "NULL form." );
 		return NULL;
     }
 
-    if ( fli_current_group == NULL )
+    if ( ! fli_current_group )
     {
 		M_err( "fl_end_group", "NULL group." );
 		return NULL;
     }
 
-    id = fli_current_group->group_id;
+	ob = fli_current_group;
+    id = ob->group_id;
     fli_current_group = NULL;
 
     if ( ! reopened_group )
@@ -3066,6 +3067,10 @@ fl_finish( void )
 		/* Release memory used for symbols */
 
 		fli_release_symbols( );
+
+		/* Release memory allocated in goodies */
+
+		fli_goodies_cleanup( );
 
 		/* Release memory used for the copy of the command line arguments */
 

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_gds = "$Id: goodies.c,v 1.11 2008/05/12 12:07:41 jtt Exp $";
+char *fl_id_gds = "$Id: goodies.c,v 1.12 2008/05/24 14:38:21 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -279,4 +279,19 @@ fli_add_warn_icon( FL_Coord x,
     fl_set_bitmap_data( obj, warn_width, warn_height, warn_bits );
     fl_set_object_color( obj, FL_YELLOW, FL_YELLOW );
     fl_set_object_lcol( obj, FL_BLACK );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_goodies_cleanup( void )
+{
+	fli_msg_cleanup( );
+	fli_alert_cleanup( );
+	fli_choice_cleanup( );	
+	fli_question_cleanup( );
+	fli_input_cleanup( );
+	fli_sinput_cleanup( );
 }

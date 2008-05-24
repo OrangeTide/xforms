@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.13 2008/05/09 12:33:00 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.14 2008/05/24 14:38:20 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -441,7 +441,7 @@ fl_drw_box( int      style,
 
 		case FL_DOWN_BOX:
 			fl_rectf( x + bw, y + bw, w - 2 * bw, h - 2 * bw, c );
-			fl_rectf( x, y + h - bw, w, bw - dp, FL_LEFT_BCOL );
+			fl_rectf( x, y + h - bw, w, bw - dp, FL_TOP_BCOL );
 			fl_rectf( x, y, w, bw, FL_BOTTOM_BCOL );
 
 			/* right trapzoid */
@@ -513,6 +513,7 @@ fl_drw_box( int      style,
 			break;
 
 		case FL_SHADOW_BOX:
+			bw++;
 			fl_rectf( x + bw, y + h - bw, w - bw, bw, FLI_SHADOW_COL );
 			fl_rectf( x + w - bw, y + bw, bw, h - bw, FLI_SHADOW_COL );
 			fl_rectbound( x, y, w - bw, h - bw, c );
@@ -524,15 +525,7 @@ fl_drw_box( int      style,
 			fli_get_clipping( &cx, &cy, &cw, &ch );
 
 			/* draw the shadow.  draw it several times with clipping */
-#if 0
-			fli_set_additional_clipping( x + bw - 1, y + h - bw,
-										 w - bw + 1, bw );
-			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, FLI_SHADOW_COL );
-			fli_set_additional_clipping( x + w - bw, y + bw, bw, h - bw );
-			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, FLI_SHADOW_COL );
-			fli_set_additional_clipping( x + w + bw - RS - 2, y + h - RS,
-										 RS + 2, RS + 2 );
-#endif
+
 			fl_roundrectf( x + bw, y + bw, w - bw, h - bw, FLI_SHADOW_COL );
 
 			/* draw the box */
@@ -754,7 +747,7 @@ fl_drw_frame( int      style,
 			/* top and bottom section */
 
 			fl_rectf( x, y, w, bw, FL_BOTTOM_BCOL );	            /* top */
-			fl_rectf( x, y + h - bw, w, bw - dp, FL_LEFT_BCOL );	/* bottom */
+			fl_rectf (x, y + h - bw, w, bw - dp, FL_TOP_BCOL); 	    /* bottom */
 
 			/* right trapzoid */
 

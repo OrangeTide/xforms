@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.31 2008/05/16 18:47:58 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.32 2008/05/24 14:38:21 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -139,12 +139,13 @@ fli_make_form( FL_Coord w,
 }
 
 
-#define BUTTON_CLASS( i )   (    i == FL_BUTTON         \
-							  || i == FL_ROUNDBUTTON    \
-							  || i == FL_LIGHTBUTTON    \
-							  || i == FL_CHECKBUTTON    \
-							  || i == FL_BITMAPBUTTON   \
-							  || i == FL_PIXMAPBUTTON )
+#define IS_BUTTON_CLASS( i )   (    i == FL_BUTTON           \
+							     || i == FL_ROUNDBUTTON      \
+							     || i == FL_ROUND3DBUTTON    \
+							     || i == FL_LIGHTBUTTON      \
+							     || i == FL_CHECKBUTTON      \
+							     || i == FL_BITMAPBUTTON     \
+							     || i == FL_PIXMAPBUTTON )
 
 
 /***************************************
@@ -222,7 +223,7 @@ fl_make_object( int            objclass,
     obj->col1     = FL_COL1;
     obj->col2     = FL_MCOL;
 
-    if ( BUTTON_CLASS( objclass ) && fli_cntl.buttonFontSize )
+    if ( IS_BUTTON_CLASS( objclass ) && fli_cntl.buttonFontSize )
 		obj->lsize = fli_cntl.buttonFontSize;
     else if ( objclass == FL_MENU && fli_cntl.menuFontSize )
 		obj->lsize = fli_cntl.menuFontSize;

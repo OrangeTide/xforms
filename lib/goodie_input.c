@@ -42,8 +42,6 @@
 #include <stdlib.h>
 
 
-/* simple input form */
-
 typedef struct
 {
     FL_FORM   * form;
@@ -55,15 +53,14 @@ typedef struct
 
 
 /***************************************
+ * Callback for "Clear" button
  ***************************************/
 
 static void
 clear_cb( FL_OBJECT * ob,
 		  long        data  FL_UNUSED_ARG )
 {
-    FD_input *fd = ob->form->fdui;
-
-    fl_set_input( fd->input, "" );
+    fl_set_input( ( ( FD_input * ) ob->form->fdui )->input, "" );
 }
 
 
@@ -71,12 +68,15 @@ clear_cb( FL_OBJECT * ob,
  ***************************************/
 
 static FD_input *
-create_form_input( void )
+create_form_input( const char *str1,
+				   const char *defstr )
 {
     FL_OBJECT *obj;
     FD_input *fdui = fl_calloc( 1, sizeof *fdui );
+	int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit( );
 
+	fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
     fdui->form = fl_bgn_form( FL_NO_BOX, 410, 120 );
@@ -87,31 +87,48 @@ create_form_input( void )
 
     obj = fl_add_frame( FL_ENGRAVED_FRAME, 8, 9, 394, 67, "" );
 
-    fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 20, 33, 370, 30, "" );
+    fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 20, 33, 370, 30, str1 );
     fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_input( obj, defstr );
 
     fdui->cancel = obj = fl_add_button( FL_NORMAL_BUTTON, 30, 85, 80, 26,
 										"Cancel" );
+	fli_parse_goodies_label( obj, FLInputCancelLabel );
     fl_set_button_shortcut( obj, "^[", 1 );
 
     fdui->clear = obj = fl_add_button( FL_NORMAL_BUTTON, 300, 85, 80, 26,
 									   "Clear" );
+	fli_parse_goodies_label( obj, FLInputClearLabel );
     fl_set_object_callback( obj, clear_cb, 0 );
 
-    fdui->ok = fl_add_button( FL_RETURN_BUTTON, 165, 85, 80, 26, "OK" );
+    fdui->ok = obj = fl_add_button( FL_RETURN_BUTTON, 165, 85, 80, 26, "Ok" );
+	fli_parse_goodies_label( obj, FLOKLabel );
 
     fl_end_form( );
 
     fl_adjust_form_size( fdui->form );
 
     fdui->form->fdui = fdui;
+
+	fl_set_form_hotobject( fdui->form, fdui->ok );
+	fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->ok );
+	fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
+							  fli_goodies_preemptive );
+
+    fli_handle_goodie_font( fdui->ok, fdui->input );
+    fli_handle_goodie_font( fdui->cancel, fdui->clear );
+
+    fli_get_goodie_title( fdui->form, FLInputTitle );
+
+	fli_inverted_y = oldy;
     fl_set_coordunit( oldu );
 
     return fdui;
 }
 
 
-static FD_input *fd_input;
+static FD_input *fd_input = NULL;
+static char *ret_str = NULL;
 
 
 /***************************************
@@ -122,47 +139,27 @@ const char *
 fl_show_input( const char *str1,
 			   const char *defstr )
 {
-    static int first = 1;
     FL_OBJECT *retobj;
 
-
-    if ( ! fd_input )
-    {
-		int oldy = fli_inverted_y;
-
-		fli_inverted_y = 0;
-		fd_input = create_form_input( );
-		fl_set_form_hotobject( fd_input->form, fd_input->ok );
-		fl_set_form_atclose( fd_input->form, fl_goodies_atclose, fd_input->ok );
-		fl_register_raw_callback( fd_input->form, FL_ALL_EVENT,
-								  fli_goodies_preemptive );
-		fli_inverted_y = oldy;
-    }
-
-    fli_handle_goodie_font( fd_input->ok, fd_input->input );
-    fli_handle_goodie_font( fd_input->cancel, fd_input->clear );
-
-    if ( first )
-    {
-		fli_parse_goodies_label( fd_input->ok, FLOKLabel );
-		fli_parse_goodies_label( fd_input->clear, FLInputClearLabel );
-		fli_parse_goodies_label( fd_input->cancel, FLInputCancelLabel );
-		first = 0;
-    }
-
-    fli_get_goodie_title( fd_input->form, FLInputTitle );
-    fl_set_object_label( fd_input->input, str1 );
-    fl_set_input( fd_input->input, defstr );
-
-    if ( ! fd_input->form->visible )
+    if ( fd_input )
+	{
+		fl_hide_form( fd_input->form );
+		fl_free_form( fd_input->form );
+		fl_safe_free( fd_input );
+	}
+	else
 		fl_deactivate_all_forms( );
+
+	fl_safe_free( ret_str );
+
+	fd_input = create_form_input( str1, defstr );
 
     fl_show_form( fd_input->form, FL_PLACE_HOTSPOT, FL_TRANSIENT,
 				  fd_input->form->label );
 
     fl_update_display( 0 );
 
-    /* grab keyboard focus */
+    /* Grab keyboard focus */
 
     fl_winfocus( fd_input->form->window );
 
@@ -170,10 +167,16 @@ fl_show_input( const char *str1,
 			&& retobj != fd_input->cancel )
 		/* empty */ ;
 
+	if ( retobj == fd_input->ok )
+		ret_str = fl_strdup( fl_get_input( fd_input->input ) );
+
     fl_hide_form( fd_input->form );
+	fl_free_form( fd_input->form );
+	fl_safe_free( fd_input );
+
     fl_activate_all_forms( );
 
-    return retobj == fd_input->ok ? fl_get_input( fd_input->input ) : NULL;
+    return ret_str;
 }
 
 
@@ -183,6 +186,19 @@ fl_show_input( const char *str1,
 void
 fl_hide_input( void )
 {
-    if ( fd_input && fd_input->form->visible )
+    if ( fd_input )
 		fli_object_qenter( fd_input->cancel );
+	else
+		M_warn( "fl_hide_input", "No input box is shown" );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_input_cleanup( void )
+{
+	fl_safe_free( fd_input );
+	fl_safe_free( ret_str );
 }

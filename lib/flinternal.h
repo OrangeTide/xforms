@@ -808,8 +808,21 @@ extern void fli_get_goodies_font( int *,
 extern void fli_handle_goodie_font( FL_OBJECT *,
 									FL_OBJECT * );
 
-extern void fli_handle_timeouts( long * );
+extern void fli_goodies_cleanup( void );
 
+extern void fli_msg_cleanup( void );
+
+extern void fli_alert_cleanup( void );
+
+extern void fli_choice_cleanup( void );
+
+extern void fli_question_cleanup( void );
+
+extern void fli_input_cleanup( void );
+
+extern void fli_sinput_cleanup( void );
+
+extern void fli_handle_timeouts( long * );
 
 #define FL_IS_NONSQRBOX( t ) (    t == FL_SHADOW_BOX          \
 							   || t == FL_NO_BOX	          \

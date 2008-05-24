@@ -2,6 +2,12 @@
 
 	* Reasons for some compiler warnings removed.
 
+	* lib/fldraw.c: As Andrea Scopece pointed out
+	colors of box borders weren't correct and the
+	shadow wasn't drawn for for shadow boxes with
+	a border width of 1 or -1. Added his proposed
+	patches.
+
 2008-05-17 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/goodies.c, lib/goodie_*.c: Some code cleanup

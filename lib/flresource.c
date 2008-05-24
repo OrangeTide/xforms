@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.28 2008/05/12 12:07:40 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.29 2008/05/24 14:38:20 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -658,11 +658,12 @@ fl_get_resource( const char * rname,	/* resource name */
 		 || strcmp( type, "String" )
 		 || ! entry.addr )
 	{
-		M_warn( "GetResource", "%s (%s): not found", res_name, res_class );
+		M_warn( "fl_get_resource", "%s (%s): not found", res_name, res_class );
 		entry.addr = ( XPointer ) defval;
 	}
 	else
-		M_info( "GetResource", "%s (%s): %s", res_name, res_class, entry.addr );
+		M_info( "fl_get_resource", "%s (%s): %s", res_name, res_class,
+				entry.addr );
 
     if ( dtype == FL_NONE || ! entry.addr )
 		return entry.addr;
@@ -1149,8 +1150,8 @@ fl_initialize( int        * na,
     fl_scrh = DisplayHeight( fl_display, fl_screen );
     fl_scrw = DisplayWidth( fl_display, fl_screen );
 
-    xdpi = fl_scrh * 25.4 / DisplayHeightMM( fl_display, fl_screen );
-    ydpi = fl_scrw * 25.4 / DisplayWidthMM( fl_display, fl_screen );
+    xdpi = fl_scrw * 25.4 / DisplayWidthMM( fl_display, fl_screen );
+    ydpi = fl_scrh * 25.4 / DisplayHeightMM( fl_display, fl_screen );
 
     if ( xdpi / ydpi > 1.05 || ydpi / xdpi < 0.95 )
 		M_warn( "FlInit", "NonSquarePixel %.1f %.1f", xdpi, ydpi );

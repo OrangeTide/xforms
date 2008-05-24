@@ -65,51 +65,69 @@ create_alert( const char * title,
     int oldu = fl_get_coordunit( );
 	int style,
 		size;
-	int w1 = 0,
-		h1 = 0,
-		w2 = 0,
-		h2 = 0;
-	int bw,
-		bh;
+	int w_tit = 0,
+		h_tit = 0,
+		w_msg = 0,
+		h_msg = 0,
+		w_but = 0,
+		h_but;
+	int box_w,
+		box_h,
+		but_w;
     FL_OBJECT *ob;
+	char but_text[ 256 ] = "Dismiss";
 
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
 	fli_get_goodies_font( &style, &size );
+
 	if ( title )
-		fl_get_string_dimension( style, size, title, strlen( title ),
-								 &w1, &h1 );
+		fl_get_string_dimension( FL_BOLD_STYLE, FL_NORMAL_SIZE,
+								 title, strlen( title ), &w_tit, &h_tit );
+
 	if ( msg )
-		fl_get_string_dimension( style, size, msg, strlen( msg ), &w2, &h2 );
+		fl_get_string_dimension( style, size, msg, strlen( msg ),
+								 &w_msg, &h_msg );
 
-	bw = FL_max( 400, FL_max( w1, w2 ) + 80 );
-	bh = h1 + h2 + 77;
+    fl_get_resource( FLAlertDismissLabel, NULL, FL_STRING, NULL,
+					 but_text, 256 );
 
-    fdui->form = fl_bgn_form( FL_NO_BOX, bw, bh );
+	fl_get_string_dimension( style, size, but_text, strlen( but_text ),
+							 &w_but, &h_but );
+
+	but_w = FL_max( 90, w_but + 20 );
+
+	box_w = FL_max( 400, FL_max( FL_max( w_tit, w_msg ), but_w ) + 80 );
+	box_h = FL_max( h_tit + 20, 30 ) + 5 + h_msg + 30 + h_but + 20;
+
+    fdui->form = fl_bgn_form( FL_NO_BOX, box_w, box_h );
     fl_set_form_title( fdui->form, "Alert" );
+
     fli_get_goodie_title( fdui->form, FLAlertTitle );
 
-    ob = fl_add_box( FL_UP_BOX, 0, 0, bw, bh, "" );
-    fl_set_object_bw( ob, -2 );
+    ob = fl_add_box( FL_UP_BOX, 0, 0, box_w, box_h, "" );
 
-    fdui->title = fl_add_box( FL_FLAT_BOX, 50, 10, bw - 70, h1,
+    fdui->title = fl_add_box( FL_FLAT_BOX, 60, 10, box_w - 80, h_tit,
 							  title ? title : "" );
     fl_set_object_lstyle( fdui->title, FL_BOLD_STYLE );
     fl_set_object_lsize( fdui->title, FL_NORMAL_SIZE );
 
-    fl_add_box( FL_FLAT_BOX, 50, h1 + 20, bw - 70, 5, "@DnLine" );
+    fli_add_warn_icon( 8, h_tit + 20 - 15, 35, 35 );
 
-    fdui->str = fl_add_text( FL_FLAT_BOX, 50, h1 + 30, bw - 70, h2,
-							 msg ? msg : "" );
+    fl_add_box( FL_FLAT_BOX, 50, h_tit + 20, box_w - 60, 5, "@DnLine" );
+
+    fdui->str = fl_add_text( FL_FLAT_BOX, 60, h_tit + 35,
+							 box_w - 80, h_msg, msg ? msg : "" );
     fl_set_object_lalign( fdui->str, FL_ALIGN_CENTER );
+	fl_set_object_lstyle( fdui->str, style );
+	fl_set_object_lsize( fdui->str, size );
 
-    fdui->but = fl_add_button( FL_RETURN_BUTTON, ( bw - 90 ) / 2, bh - 37,
-							   90, 27, "Dismiss" );
-    fli_add_warn_icon( 8, h1 + 5, 35, 35 );
-	fli_parse_goodies_label( fdui->but, FLAlertDismissLabel );
-
-    fli_handle_goodie_font( fdui->but, fdui->str );
+    fdui->but = fl_add_button( FL_RETURN_BUTTON, ( box_w - but_w ) / 2,
+							   box_h - h_but - 20, but_w, h_but + 10,
+							   but_text );
+	fl_set_object_lstyle( fdui->but, style );
+	fl_set_object_lsize( fdui->but, size );
 
     fl_set_form_hotobject( fdui->form, fdui->but );
 
@@ -119,9 +137,6 @@ create_alert( const char * title,
 							  fli_goodies_preemptive );
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
     fdui->form->fdui = fdui;
-
-    if ( fli_cntl.buttonFontSize != FL_DEFAULT_SIZE )
-		fl_fit_object_label( fdui->but, 20, 2 );
 
     fli_inverted_y = oldy;
     fl_set_coordunit( oldu );
@@ -253,4 +268,14 @@ fl_hide_alert( void )
 		fli_object_qenter( fd_alert->but );
 	else
 		M_warn( "fl_hide_alert", "No alert box is shown" );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_alert_cleanup( void )
+{
+	fl_safe_free( fd_alert );
 }
