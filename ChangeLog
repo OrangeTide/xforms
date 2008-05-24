@@ -1,3 +1,12 @@
+2008-05-24 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Reasons for some compiler warnings removed.
+
+2008-05-17 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/goodies.c, lib/goodie_*.c: Some code cleanup
+	and made sure that memory allocated gets released.
+
 2008-05-16 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c: Removed a bug that has been
@@ -26,8 +35,7 @@
 2008-05-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/goodie_alert.c: Removed restriction on the
-	maximum length of the alert message. Alert window
-	now gets resized accoding to the amount of text.
+	maximum length of the alert message.
 
 	Added new function
 
@@ -64,7 +72,8 @@
 
 	* lib/objects.c: Removed bug that kept canvases
 	from being hidden and tabfolders from being
-	re-shown correctly.
+	re-shown correctly. This was especially annoying
+	with fdesign as Rob Carpenter pointed out.
 
 	* lib/forms.c: Added a new function
 
@@ -94,7 +103,7 @@
 
 	* lib.objects.c, lib/childs.c: Rewrite of the
 	functions for hidding an object. Some adjustments
-	to the code fro freeing objects to set the focus
+	to the code for freeing objects to set the focus
 	correctly.
 
 	* lib/flresource.c: Changed the name of the option
@@ -112,7 +121,7 @@
 	* lib/objects.c, lib/child.c: Handling of child
 	objects corrected - valgrind was reporting an
 	error with the old code (access to already re-
-	leased memory) and the code as rather buggy
+	leased memory) and the code was rather buggy
 	and inconsistent anyway.
 
 	* lib/xpopup.c: Changed a XFhlush() to XSync()
@@ -162,9 +171,7 @@
 2008-05-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/goodies_msg.c: New function fl_show_msg()
-	now works. The window size for fl_show_messages(),
-	fl_show_message() and fl_show_msg() automatically
-	gets adapted to fit the size of the text shown.
+	now works.
 
 2008-04-30 Jens Thoms Toerring    <jt@toerring.de>
 
