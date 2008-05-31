@@ -1,3 +1,19 @@
+2008-05-31 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/pixmap.c: As Werner Heinsch pointed out
+	the display of partially transparent pixmaps
+	was broken due to a bug I had introduced when
+	cleaning up the code for redraw. Moreover,
+	already in 1.0.90 the pixmap of a pixmap button
+	was exchanged for the focus pixmap when the
+	button was pressed, which wasn't what the
+	documentation said. Code changed to avoid that.
+
+	* lib/objects.c: The code for determining if
+	two objects intersect was broken and reported
+	all objects to intersect, which then resulted
+	in a lot of useless redraws. Hopefully fixed.
+
 2008-05-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Reasons for some compiler warnings removed.

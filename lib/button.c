@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.20 2008/05/24 14:38:20 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.21 2008/05/31 17:49:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -622,7 +622,7 @@ fl_set_button_mouse_buttons( FL_OBJECT    * obj,
 	unsigned int i,
 		         j;
 
-	if ( mouse_buttons < 0 || mouse_buttons > ( 1 << 5 ) - 1 )
+	if ( mouse_buttons > ( 1 << 5 ) - 1 )
 		return;
 
 	for ( i = 0, j = 1; i < 5; i++, j <<= 1 )

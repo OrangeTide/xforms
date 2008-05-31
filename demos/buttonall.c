@@ -70,7 +70,6 @@ main( int    argc,
 {
     FD_buttform *fd_buttform;
 
-	fl_set_border_width( 1 );
     fl_initialize( &argc, argv, 0, 0, 0 );
     fd_buttform = create_form_buttform( );
 

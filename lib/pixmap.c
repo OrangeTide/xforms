@@ -221,19 +221,20 @@ show_pixmap( FL_OBJECT * ob,
 		dest_h,
 		src_x,
 		src_y;
-	Pixmap pixmap, mask;
+	Pixmap pixmap,
+		   mask;
 	int bits_w,
 		bits_h,
-		is_focus = focus && sp->focus_pixmap;
+		is_focus = focus && sp->focus_pixmap && psp->show_focus;
 
 	pixmap = is_focus ? sp->focus_pixmap : sp->pixmap;
 	mask   = is_focus ? sp->focus_mask   : sp->mask;
 	bits_w = is_focus ? psp->focus_w     : sp->bits_w;
 	bits_h = is_focus ? psp->focus_h     : sp->bits_h;
 
-	/* do nothing if empty data */
+	/* Do nothing if pixmap has zero size or does not exist */
 
-	if ( sp->bits_w == 0 || pixmap == None )
+	if ( bits_w == 0 || bits_h == 0 || pixmap == None )
 	{
 		fl_drw_text( FL_ALIGN_CENTER, ob->x, ob->y,
 					 ob->w, ob->h, ob->lcol, ob->lstyle, FL_TINY_SIZE, "p" );
@@ -280,8 +281,20 @@ show_pixmap( FL_OBJECT * ob,
 			src_y = bits_h - dest_h;
 	}
 
-	XCopyArea( flx->display, pixmap, FL_ObjWin( ob ),
-			   psp->gc, src_x, src_y, dest_w, dest_h, dest_x, dest_y );
+    fl_get_align_xy( psp->align, ob->x, ob->y, ob->w, ob->h, bits_w, bits_h,
+					 FL_abs( ob->bw ) + psp->dx, FL_abs( ob->bw ) + psp->dy,
+					 &dest_x, &dest_y );
+
+#if !defined(USE_OVERRIDE)
+    /* hopefully, XSetClipMask is smart */
+
+    XSetClipMask( flx->display, psp->gc, mask );
+    XSetClipOrigin( flx->display, psp->gc, dest_x, dest_y );
+#endif
+
+    XCopyArea( flx->display, pixmap, FL_ObjWin( ob ),
+			   psp->gc, src_x, src_y, bits_w, bits_h, dest_x, dest_y );
+
 }
 
 
@@ -1013,7 +1026,7 @@ fl_set_pixmapbutton_focus_file( FL_OBJECT *	 ob,
 
 void
 fl_set_pixmapbutton_focus_outline( FL_OBJECT * ob,
-								   int		   yes )
+								   int		   yes_no )
 {
 	SPEC *sp;
 	PixmapSPEC *psp;
@@ -1022,7 +1035,7 @@ fl_set_pixmapbutton_focus_outline( FL_OBJECT * ob,
 
 	sp = ob->spec;
 	psp = sp->cspecv;
-	psp->show_focus = yes;
+	psp->show_focus = yes_no;
 }
 
 

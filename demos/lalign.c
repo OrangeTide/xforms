@@ -30,123 +30,151 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include <stdlib.h>
 
 /**** Forms and Objects ****/
 
+#define TEST_PIXMAP_ALIGN
+
+
 typedef struct {
-	FL_FORM *form0;
-	void *vdata;
-	long ldata;
-	FL_OBJECT *box;
-	FL_OBJECT *inside;
-	FL_OBJECT *center;
+	FL_FORM   * form0;
+	void      * vdata;
+	long        ldata;
+	FL_OBJECT * box;
+	FL_OBJECT * inside;
+	FL_OBJECT * center;
 } FD_form0;
 
-extern FD_form0 * create_form_form0(void);
+static FD_form0 * create_form_form0( void );
 
 FD_form0 *fd_form0;
-int main(int argc, char *argv[])
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
-   int align;
+	int align;
 
-   fl_initialize(&argc, argv, "FormDemo", 0, 0);
-   fd_form0 = create_form_form0();
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	fd_form0 = create_form_form0( );
 
-   /* fill-in form initialization code */
-   fl_set_form_dblbuffer(fd_form0->form0, 1);
-   align = fd_form0->box->align | FL_ALIGN_INSIDE;
-   if(align != fd_form0->box->align)
-     fl_set_button(fd_form0->inside, 1);
+	/* fill-in form initialization code */
 
-   /* show the first form */
-   fl_show_form(fd_form0->form0,FL_PLACE_FREE,FL_FULLBORDER,"form0");
+	fl_set_form_dblbuffer( fd_form0->form0, 1 );
+	align = fd_form0->box->align | FL_ALIGN_INSIDE;
+	if ( align != fd_form0->box->align )
+		fl_set_button( fd_form0->inside, 1 );
 
-   fl_do_forms();
-   return 0;
+	/* show the first form */
+
+	fl_show_form( fd_form0->form0, FL_PLACE_FREE, FL_FULLBORDER,"form0" );
+
+	fl_do_forms( );
+	return 0;
 }
 
 /* #define TEST_PIXMAP_ALIGN */
 
-void
+static void
 align_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 		  long        n )
 {
-    if(fl_get_button(fd_form0->inside))
-       n |= FL_ALIGN_INSIDE;
+    if ( fl_get_button( fd_form0->inside ) )
+		n |= FL_ALIGN_INSIDE;
 
 
 #ifndef TEST_PIXMAP_ALIGN
-    fl_set_object_lalign(fd_form0->box, n);
+    fl_set_object_lalign( fd_form0->box, n );
 #else
-    fl_set_pixmap_align(fd_form0->box, n, 3, 3);
+    fl_set_pixmap_align( fd_form0->box, n, 3, 3 );
 #endif
 }
 
-void
+static void
 inside_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
 {
-   if(fl_get_button(ob))
-      fd_form0->box->align |= FL_ALIGN_INSIDE;
-   else
-      fd_form0->box->align &= ~FL_ALIGN_INSIDE;
+	if ( fl_get_button( ob ) )
+		fd_form0->box->align |= FL_ALIGN_INSIDE;
+	else
+		fd_form0->box->align &= ~FL_ALIGN_INSIDE;
 #ifdef TEST_PIXMAP_ALIGN
-   fl_set_pixmap_align(fd_form0->box, fd_form0->box->align, 3, 3);
+	fl_set_pixmap_align( fd_form0->box, fd_form0->box->align, 3, 3 );
 #else
-   fl_redraw_form(fd_form0->form0);
+	fl_redraw_form( fd_form0->form0 );
 #endif
 }
 
-FD_form0 *create_form_form0(void)
+static FD_form0 *
+create_form_form0( void )
 {
-  FL_OBJECT *obj;
-  FD_form0 *fdui = (FD_form0 *) fl_calloc(1, sizeof(FD_form0));
+	FL_OBJECT *obj;
+	FD_form0 *fdui = fl_calloc( 1, sizeof *fdui );
 
-  fdui->form0 = fl_bgn_form(FL_NO_BOX, 351, 170);
-  obj = fl_add_box(FL_UP_BOX,0,0,351,170,"");
+	fdui->form0 = fl_bgn_form( FL_NO_BOX, 351, 170 );
+
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 351, 170, "" );
+
 #ifndef TEST_PIXMAP_ALIGN
-  fdui->box = obj = fl_add_box(FL_UP_BOX,190,45,90,45,"abcdefg\nhijklmno");
+	fdui->box = obj = fl_add_box( FL_UP_BOX, 190, 45, 90, 45,
+								  "abcdefg\nhijklmno" );
 #else
-  fdui->box = obj = fl_add_pixmap(FL_NORMAL_PIXMAP,190,35,90,60,"");
-  fl_set_pixmap_file(obj,"crab.xpm");
-  fl_set_object_boxtype(obj,FL_UP_BOX);
+	fdui->box = obj = fl_add_pixmap( FL_NORMAL_PIXMAP, 190, 35, 90, 60, "" );
+	fl_set_pixmap_file( obj, "crab.xpm" );
+	fl_set_object_boxtype( obj,FL_UP_BOX );
 #endif
-  fdui->inside = obj = fl_add_lightbutton(FL_PUSH_BUTTON,20,120,90,30,"Inside");
-    fl_set_object_callback(obj,inside_cb,0);
- fl_bgn_group();
-  obj = fl_add_button(FL_RADIO_BUTTON,20,20,30,30,"@#7->");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_LEFT_TOP);
-  obj = fl_add_button(FL_RADIO_BUTTON,50,20,30,30,"@#8->");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_TOP);
-  obj = fl_add_button(FL_RADIO_BUTTON,80,20,30,30,"@#9->");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_RIGHT_TOP);
-  obj = fl_add_button(FL_RADIO_BUTTON,80,50,30,30,"@#->");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_RIGHT);
-  fdui->center = obj = fl_add_button(FL_RADIO_BUTTON,50,50,30,30,"@circle");
-    fl_set_object_lcol(obj,FL_RED);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_CENTER);
-  obj = fl_add_button(FL_RADIO_BUTTON,20,50,30,30,"@#<-");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_LEFT);
-  obj = fl_add_button(FL_RADIO_BUTTON,20,80,30,30,"@#1->");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_LEFT_BOTTOM);
-  obj = fl_add_button(FL_RADIO_BUTTON,50,80,30,30,"@#2->");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_BOTTOM);
-  obj = fl_add_button(FL_RADIO_BUTTON,80,80,30,30,"@#3->");
-    fl_set_object_lcol(obj,FL_BLUE);
-    fl_set_object_callback(obj,align_cb,FL_ALIGN_RIGHT_BOTTOM);
-  fl_end_group();
 
-  obj = fl_add_button(FL_NORMAL_BUTTON,140,120,70,30,"Done");
-  fl_end_form();
+	fdui->inside = obj = fl_add_lightbutton( FL_PUSH_BUTTON, 20, 120, 90, 30,
+											 "Inside" );
+    fl_set_object_callback( obj, inside_cb, 0 );
 
-  return fdui;
+	fl_bgn_group();
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 20, 20, 30, 30, "@#7->" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_LEFT_TOP );
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 50, 20, 30, 30, "@#8->" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_TOP );
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 80, 20, 30, 30, "@#9->" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_RIGHT_TOP );
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 80, 50, 30, 30, "@#->" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_RIGHT );
+
+	fdui->center = obj = fl_add_button( FL_RADIO_BUTTON, 50, 50, 30, 30,
+										"@circle" );
+    fl_set_object_lcol( obj, FL_RED );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_CENTER );
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 20, 50, 30, 30, "@#<-" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_LEFT );
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 20, 80, 30, 30, "@#1->" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_LEFT_BOTTOM );
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 50, 80, 30, 30, "@#2->" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_BOTTOM );
+
+	obj = fl_add_button( FL_RADIO_BUTTON, 80, 80, 30, 30, "@#3->" );
+    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_callback( obj, align_cb, FL_ALIGN_RIGHT_BOTTOM );
+
+	fl_end_group( );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 140, 120, 70, 30, "Done" );
+
+	fl_end_form( );
+
+	return fdui;
 }

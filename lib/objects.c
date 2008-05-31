@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.32 2008/05/24 14:38:21 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.33 2008/05/31 17:49:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -360,7 +360,7 @@ fl_add_object( FL_FORM   * form,
 				continue;
 
 			if ( objects_intersect( o, obj ) )
-				 o->is_under = 1;
+				o->is_under = 1;
 		}
 
     fl_redraw_object( obj );
@@ -1796,13 +1796,13 @@ objects_intersect( FL_OBJECT * obj1,
 	FL_OBJECT *ob[ ] = { obj1, obj2 };
 	int i;
     FL_RECT xrect;
-    Region reg;
+    Region reg[ 2 ];
 	int extra;
-
-	reg = XCreateRegion( );
 
 	for ( i = 0; i < 2; i++ )
 	{
+		reg[ i ] = XCreateRegion( );
+
 		if (    ob[ i ]->objclass == FL_CANVAS
 			 || ob[ i ]->objclass == FL_GLCANVAS )
 		{
@@ -1826,11 +1826,13 @@ objects_intersect( FL_OBJECT * obj1,
 			}
 		}
 
-		XUnionRectWithRegion( &xrect, reg, reg );
+		XUnionRectWithRegion( &xrect, reg[ i ], reg[ i ] );
 	}
 
-	XClipBox( reg, &xrect );
-	XDestroyRegion( reg );
+	XIntersectRegion( reg[ 0 ], reg[ 1 ], reg[ 0 ] );
+	XClipBox( reg[ 0 ], &xrect );
+	XDestroyRegion( reg[ 1 ] );
+	XDestroyRegion( reg[ 0 ] );
 
 	return xrect.width > 0 && xrect.height > 0;
 }
