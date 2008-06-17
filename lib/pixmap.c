@@ -671,7 +671,6 @@ draw_pixmapbutton( FL_OBJECT * ob )
 {
 	SPEC *sp = ob->spec;
 	PixmapSPEC *psp = sp->cspecv;
-	static int i = 0;
 
 	/* Draw it like a "normal button */
 
