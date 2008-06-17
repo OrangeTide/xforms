@@ -296,6 +296,8 @@ extern void fli_dump_state_info( int,
 
 extern void fli_init_stipples( void );
 
+extern void fli_draw_button( FL_OBJECT * );
+
 
 /* for fdesign */
 

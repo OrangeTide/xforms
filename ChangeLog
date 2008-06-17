@@ -1,3 +1,15 @@
+2008-06-17 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/pixmap.c: Made pixmap buttons behave like
+	normal buttons, just with a pixmap drawn on top
+	of it (which may get changed when the button
+	receives or loses the focus).
+
+	* lib/objects.c: Made some changes to the redraw
+	of objects when a "lower" object gets redrawn
+	and thus an object on top of it also needs to be
+	redrawn.
+
 2008-05-31 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/pixmap.c: As Werner Heinsch pointed out
@@ -16,7 +28,7 @@
 
 2008-05-24 Jens Thoms Toerring    <jt@toerring.de>
 
-	* Reasons for some compiler warnings removed.
+	* Got rid of some compiler warnings removed.
 
 	* lib/fldraw.c: As Andrea Scopece pointed out
 	colors of box borders weren't correct and the

@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.21 2008/05/31 17:49:46 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.22 2008/06/17 13:13:15 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -80,8 +80,8 @@ free_pixmap( SPEC * sp )
  * Draws the object
  ***************************************/
 
-static void
-draw_button( FL_OBJECT * ob )
+void
+fli_draw_button( FL_OBJECT * ob )
 {
     FL_Coord dh,
 		     dw,
@@ -323,7 +323,7 @@ handle_it( FL_OBJECT * ob,
 				ob->belowmouse = 0;
 
 			sp->event = event;
-			fl_redraw_object(ob);
+			fl_redraw_object( ob );
 			break;
 
 		case FL_PUSH:
@@ -580,13 +580,13 @@ fl_create_button( int          type,
 {
     FL_OBJECT *ob;
 
-    fl_add_button_class( FL_BUTTON, draw_button, 0 );
+    fl_add_button_class( FL_BUTTON, fli_draw_button, 0 );
     ob = fl_create_generic_button( FL_BUTTON, type, x, y, w, h, label );
     ob->boxtype = FL_BUTTON_BOXTYPE;
-    ob->col1 = FL_BUTTON_COL1;
-    ob->col2 = FL_BUTTON_COL2;
-    ob->align = FL_BUTTON_ALIGN;
-    ob->lcol = FL_BUTTON_LCOL;
+    ob->col1    = FL_BUTTON_COL1;
+    ob->col2    = FL_BUTTON_COL2;
+    ob->align   = FL_BUTTON_ALIGN;
+    ob->lcol    = FL_BUTTON_LCOL;
     return ob;
 }
 

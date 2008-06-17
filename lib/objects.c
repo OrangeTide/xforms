@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.33 2008/05/31 17:49:46 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.34 2008/06/17 13:13:15 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1669,30 +1669,42 @@ redraw_marked( FL_FORM * form,
 	/* Check if there are any objects that partially or fully hide one of
 	   the objects to be redrawn and mark those also for redrawing */
 
-	for ( ob = form->first; ob && ob->next; ob = ob->next )
-	{
-		if (    ! ob->visible
-             || ! ob->redraw
-             || ! ob->is_under
-			 || ob->objclass == FL_BEGIN_GROUP
-			 || ob->objclass == FL_END_GROUP
-			 || ob->is_child )
-			continue;
+	for ( ob = form->first; ob; ob = ob->next )
+		if (    ob->visible
+			 && ob->redraw
+             && ob->is_under
+			 && ob->objclass != FL_BEGIN_GROUP
+			 && ob->objclass != FL_END_GROUP
+			 && !ob->is_child )
+			break;
 
-		for ( o = ob->next; o; o = o->next )
+	if ( ob && ob->next )
+	{
+		for ( ; ob && ob->next; ob = ob->next )
 		{
-			if (    ! o->visible
-				 || o->redraw
-			     || o->objclass == FL_BEGIN_GROUP
-			     || o->objclass == FL_END_GROUP
-				 || o->is_child )
+			if (    ! ob->visible
+				 || ! ob->redraw
+				 || ! ob->is_under
+				 || ob->objclass == FL_BEGIN_GROUP
+				 || ob->objclass == FL_END_GROUP
+				 || ob->is_child )
 				continue;
 
-			if ( objects_intersect( ob, o ) )
+			for ( o = ob->next; o; o = o->next )
 			{
-				 o->redraw = 1;
-				 if ( o->child )
-					 fli_mark_composite_for_redraw( o );
+				if (    ! o->visible
+					 || o->redraw
+					 || o->objclass == FL_BEGIN_GROUP
+					 || o->objclass == FL_END_GROUP
+					 || o->is_child )
+					continue;
+				 
+				if ( objects_intersect( ob, o ) )
+				{
+					o->redraw = 1;
+					if ( o->child )
+						fli_mark_composite_for_redraw( o );
+				}
 			}
 		}
 	}
@@ -2869,8 +2881,8 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		fl_get_char_height( obj->lstyle, obj->lsize, &a, &d );
 		fl_get_align_xy( obj->align, obj->x, obj->y, obj->w, obj->h,
 						 sw, sh + d, 3, 3, &xx, &yy );
-		lrect.x = xx - 1;
-		lrect.y = yy - 1;
+		lrect.x      = xx - 1;
+		lrect.y      = yy - 1;
 		lrect.width  = sw + 2;
 		lrect.height = sh + d + 2 + a;
     }
@@ -2879,10 +2891,10 @@ fl_get_object_bbox( FL_OBJECT * obj,
 
     for ( tmp = obj->child; tmp; tmp = tmp->nc )
     {
-		lrect = *xr;
-		orect.x = tmp->x;
-		orect.y = tmp->y;
-		orect.width = tmp->w;
+		lrect        = *xr;
+		orect.x      = tmp->x;
+		orect.y      = tmp->y;
+		orect.width  = tmp->w;
 		orect.height = tmp->h;
 		xr = fli_bounding_rect( &lrect, &orect );
     }

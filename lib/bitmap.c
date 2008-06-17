@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID  || defined DEBUG
-char *fl_id_bmp = "$Id: bitmap.c,v 1.8 2008/03/25 12:41:27 jtt Exp $";
+char *fl_id_bmp = "$Id: bitmap.c,v 1.9 2008/06/17 13:13:15 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -346,10 +346,10 @@ fl_create_bitmapbutton( int			 type,
 	fl_add_button_class( FL_BITMAPBUTTON, draw_bitmapbutton, 0 );
 	ob = fl_create_generic_button( FL_BITMAPBUTTON, type, x, y, w, h, label );
 	ob->boxtype = FL_BITMAPBUTTON_BOXTYPE;
-	ob->col1 = FL_BITMAPBUTTON_COL1;
-	ob->col2 = FL_BITMAPBUTTON_COL2;
-	ob->align = FL_BITMAPBUTTON_ALIGN;
-	ob->lcol = FL_BITMAP_LCOL;
+	ob->col1    = FL_BITMAPBUTTON_COL1;
+	ob->col2    = FL_BITMAPBUTTON_COL2;
+	ob->align   = FL_BITMAPBUTTON_ALIGN;
+	ob->lcol    = FL_BITMAP_LCOL;
 	return ob;
 }
 

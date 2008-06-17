@@ -188,7 +188,7 @@ change_pixmap( SPEC * sp,
 
 
 /***************************************
- * Change pixmap/mask. del==true means we want to destroy old pixmaps
+ * Change pixmap/mask. If 'del' is set destroy teh old pixmaps
  ***************************************/
 
 static void
@@ -202,7 +202,7 @@ change_focuspixmap( SPEC * sp,
 		free_focuspixmap( sp );
 
 	sp->focus_pixmap = p;
-	sp->focus_mask = shape_mask;
+	sp->focus_mask   = shape_mask;
 }
 
 
@@ -220,7 +220,9 @@ show_pixmap( FL_OBJECT * ob,
 		dest_w,
 		dest_h,
 		src_x,
-		src_y;
+		src_y,
+		m_dest_x,
+		m_dest_y;
 	Pixmap pixmap,
 		   mask;
 	int bits_w,
@@ -241,8 +243,8 @@ show_pixmap( FL_OBJECT * ob,
 		return;
 	}
 
-	dest_x = ob->x + FL_abs( ob->bw ) + psp->dx;
-	dest_y = ob->y + FL_abs( ob->bw ) + psp->dy;
+	m_dest_x = dest_x = ob->x + FL_abs( ob->bw ) + psp->dx;
+	m_dest_y = dest_y = ob->y + FL_abs( ob->bw ) + psp->dy;
 	dest_w = ob->w - 2 * FL_abs( ob->bw ) - 2 * psp->dx;
 	dest_h = ob->h - 2 * FL_abs( ob->bw ) - 2 * psp->dy;
 
@@ -252,9 +254,9 @@ show_pixmap( FL_OBJECT * ob,
 	if ( dest_w > bits_w )
 	{
 		if ( ! ( psp->align & ( FL_ALIGN_LEFT | FL_ALIGN_RIGHT ) ) )
-			dest_x += ( dest_w - bits_w ) / 2;
+			m_dest_x = dest_x += ( dest_w - bits_w ) / 2;
 		else if ( psp->align & FL_ALIGN_RIGHT )
-			dest_x += dest_w - bits_w;
+			m_dest_x = dest_x += dest_w - bits_w;
 		dest_w = bits_w;
 	}
 	else
@@ -263,14 +265,15 @@ show_pixmap( FL_OBJECT * ob,
 			src_x = ( bits_w - dest_w ) / 2;
 		else if ( psp->align & FL_ALIGN_RIGHT )
 			src_x = bits_w - dest_w;
+		m_dest_x -= src_x;
 	}
 
 	if ( dest_h > bits_h )
 	{
 		if ( ! ( psp->align & ( FL_ALIGN_TOP | FL_ALIGN_BOTTOM ) ) )
-			dest_y += ( dest_h - bits_h ) / 2;
+			m_dest_y = dest_y += ( dest_h - bits_h ) / 2;
 		else if ( psp->align & FL_ALIGN_BOTTOM )
-			dest_y += dest_h - bits_h;
+			m_dest_y = dest_y += dest_h - bits_h;
 		dest_h = bits_h;
 	}
 	else
@@ -279,21 +282,18 @@ show_pixmap( FL_OBJECT * ob,
 			src_y = ( bits_h - dest_h ) / 2;
 		else if ( psp->align & FL_ALIGN_BOTTOM )
 			src_y = bits_h - dest_h;
+		m_dest_y -= src_y;
 	}
-
-    fl_get_align_xy( psp->align, ob->x, ob->y, ob->w, ob->h, bits_w, bits_h,
-					 FL_abs( ob->bw ) + psp->dx, FL_abs( ob->bw ) + psp->dy,
-					 &dest_x, &dest_y );
 
 #if !defined(USE_OVERRIDE)
     /* hopefully, XSetClipMask is smart */
 
     XSetClipMask( flx->display, psp->gc, mask );
-    XSetClipOrigin( flx->display, psp->gc, dest_x, dest_y );
+    XSetClipOrigin( flx->display, psp->gc, m_dest_x, m_dest_y );
 #endif
 
     XCopyArea( flx->display, pixmap, FL_ObjWin( ob ),
-			   psp->gc, src_x, src_y, bits_w, bits_h, dest_x, dest_y );
+			   psp->gc, src_x, src_y, dest_w, dest_h, dest_x, dest_y );
 
 }
 
@@ -334,16 +334,16 @@ init_xpm_attributes( Window			 win,
 	{
 		static XpmColorSymbol xpcm[ 2 ];
 
-		xpcm[ 0 ].name = "None";
+		xpcm[ 0 ].name  = "None";
 		xpcm[ 0 ].value = 0;
 		xpcm[ 0 ].pixel = fl_get_flcolor( tran );
-		xpcm[ 1 ].name = "opaque";
+		xpcm[ 1 ].name  = "opaque";
 		xpcm[ 1 ].value = 0;
 		xpcm[ 1 ].pixel = fl_get_flcolor( FL_BLACK );
 
-		xpma->valuemask |= XpmColorSymbols;
+		xpma->valuemask   |= XpmColorSymbols;
 		xpma->colorsymbols = xpcm;
-		xpma->numsymbols = 2;
+		xpma->numsymbols   = 2;
 	}
 }
 
@@ -430,7 +430,7 @@ fl_create_pixmap( int		   type,
 	sp = ob->spec = fl_calloc( 1, sizeof *sp );
 	sp->bits_w = 0;
 	psp = sp->cspecv = fl_calloc( 1, sizeof *psp );
-	psp->dx = psp->dy = 3;
+	psp->dx = psp->dy = 0;
 	psp->align = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;
 
 	return ob;
@@ -660,7 +660,7 @@ fl_set_pixmap_file( FL_OBJECT *	 ob,
 
 #define IsFlat( t ) (	 ( t ) == FL_FLAT_BOX		\
 					  || ( t ) == FL_FRAME_BOX		\
-					  || ( t ) == FL_BORDER_BOX )	\
+					  || ( t ) == FL_BORDER_BOX )
 
 
 /***************************************
@@ -671,98 +671,32 @@ draw_pixmapbutton( FL_OBJECT * ob )
 {
 	SPEC *sp = ob->spec;
 	PixmapSPEC *psp = sp->cspecv;
-	int absbw = FL_abs( ob->bw );
-	int newbt = ob->boxtype,
-		focus = 0;
+	static int i = 0;
+
+	/* Draw it like a "normal button */
+
+	fli_draw_button( ob );
+
+	/* Add the pixmap on top of it */
 
 	switch ( sp->event )
 	{
 		case FL_ENTER:
-			if ( ! psp->show_focus )
-				break;
-			if ( IsFlat( ob->boxtype ) && ! sp->val )
-			{
-				fl_drw_box( FL_UP_BOX, ob->x, ob->y, ob->w, ob->h,
-							ob->col1, ob->bw );
+			if ( psp->show_focus )
 				show_pixmap( ob, 1 );
-			}
-			else if ( ob->boxtype == FL_UP_BOX )
-			{
-				if ( absbw > 1 )
-				{
-					fl_color( fli_depth( fl_vmode ) == 1 ?
-							  FL_BLACK : ob->col2 );
-					XDrawRectangle( flx->display, FL_ObjWin( ob ), flx->gc,
-									ob->x, ob->y, ob->w - 1, ob->h - 1 );
-				}
-
-				if ( sp->focus_pixmap )
-					show_pixmap( ob, 1 );
-			}
+			else
+				show_pixmap( ob, 0 );
 			break;
 
 		case FL_LEAVE:
-			if ( ! psp->show_focus )
-				break;
-			if ( IsFlat( ob->boxtype ) && ! sp->val )
-			{
-				fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-							ob->col1, ob->bw );
-				show_pixmap( ob, 0 );
-			}
-			else if ( ob->boxtype == FL_UP_BOX )
-			{
-				if ( ob->bw >= 1 )
-				{
-					fl_color( FL_BLACK );
-					XDrawRectangle( flx->display, FL_ObjWin( ob ), flx->gc,
-									ob->x, ob->y, ob->w - 1, ob->h - 1 );
-				}
-				else  /* need to undo the focus outline */
-				{
-					fl_drw_box( sp->val ?
-								FL_TO_DOWNBOX( ob->boxtype ) : ob->boxtype,
-								ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
-				}
-
-				show_pixmap( ob, sp->val );
-			}
+			show_pixmap( ob, 0 );
 			break;
 
 		default:
-			focus = sp->val || ob->belowmouse;
-			if ( IsFlat( ob->boxtype ) )
-			{
-				if ( sp->val )
-					newbt = FL_DOWN_BOX;
-				else if ( ob->belowmouse )
-					newbt = FL_UP_BOX;
-				else
-					newbt = ob->boxtype;
-				fl_drw_box( newbt, ob->x, ob->y, ob->w, ob->h,
-							ob->col1, ob->bw );
-			}
-			else if ( FL_IS_UPBOX( ob->boxtype ) )
-			{
-				if ( sp->val )
-					fl_drw_box( FL_TO_DOWNBOX( ob->boxtype ),
-								ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
-				else
-					fl_drw_box( ob->boxtype,
-							   ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
-				if ( ob->belowmouse && psp->show_focus && absbw > 1 )
-				{
-					fl_color( fli_depth( fl_vmode ) == 1 ?
-							  FL_BLACK : ob->col2 );
-					XDrawRectangle( flx->display, FL_ObjWin( ob ), flx->gc,
-									ob->x, ob->y, ob->w - 1, ob->h - 1 );
-				}
-			}
+			if ( ob->belowmouse && psp->show_focus )
+				show_pixmap( ob, 1 );
 			else
-				fl_drw_box( ob->boxtype,
-							ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
-
-			show_pixmap( ob, focus );
+				show_pixmap( ob, 0 );
 			break;
 	}
 
@@ -823,10 +757,10 @@ fl_create_pixmapbutton( int			 type,
 
 	ob = fl_create_generic_button( FL_PIXMAPBUTTON, type, x, y, w, h, label );
 	ob->boxtype = FL_PIXMAPBUTTON_BOXTYPE;
-	ob->col1 = FL_PIXMAPBUTTON_COL1;
-	ob->col2 = FL_PIXMAPBUTTON_COL2;
-	ob->align = FL_PIXMAPBUTTON_ALIGN;
-	ob->lcol = FL_PIXMAPBUTTON_LCOL;
+	ob->col1    = FL_PIXMAPBUTTON_COL1;
+	ob->col2    = FL_PIXMAPBUTTON_COL2;
+	ob->align   = FL_PIXMAPBUTTON_ALIGN;
+	ob->lcol    = FL_PIXMAPBUTTON_LCOL;
 	psp = ( ( SPEC * ) ob->spec )->cspecv = fl_calloc( 1, sizeof *psp );
 	psp->show_focus = 1;
 	psp->align = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;

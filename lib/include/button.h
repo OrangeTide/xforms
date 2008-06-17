@@ -143,9 +143,11 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 /** bitmap button defaults **/
 
 #define FL_PIXMAPBUTTON_BOXTYPE     FL_UP_BOX
-#define FL_PIXMAPBUTTON_COL1	    FL_COL1			/* box col	  */
-#define FL_PIXMAPBUTTON_COL2	    FL_YELLOW		/* bound rect */
-#define FL_PIXMAPBUTTON_LCOL	    FL_LCOL
+#define FL_PIXMAPBUTTON_COL1	    FL_BUTTON_COL1
+#define FL_PIXMAPBUTTON_COL2	    FL_BUTTON_COL2
+#define FL_PIXMAPBUTTON_LCOL	    FL_BUTTON_LCOL
+#define FL_PIXMAPBUTTON_MCOL1		FL_BUTTON_MCOL1
+#define FL_PIXMAPBUTTON_MCOL2		FL_BUTTON_MCOL2
 #define FL_PIXMAPBUTTON_ALIGN	    FL_ALIGN_BOTTOM
 
 /***** Routines *****/
