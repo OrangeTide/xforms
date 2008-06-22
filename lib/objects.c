@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.35 2008/06/22 19:05:33 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.37 2008/06/22 19:11:05 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -65,7 +65,7 @@ static void get_object_bbox_rect( FL_OBJECT *,
 static int objects_intersect( FL_OBJECT *,
 							  FL_OBJECT * );
 static int object_is_under( FL_OBJECT * );
-static const char * objclass_name( FL_OBJECT * );
+
 
 static FL_OBJECT *refocus;
 
@@ -3029,55 +3029,4 @@ fl_set_object_helper( FL_OBJECT  * ob,
 
 	fl_safe_free( ob->tooltip );
     ob->tooltip = tip ? fl_strdup( tip ) : NULL;
-}
-
-
-/***************************************
- ***************************************/
-
-static const char *
-objclass_name( FL_OBJECT *obj )
-{
-	const char *name[ ] = { "FL_INVALID_CLASS",
-							"FL_BUTTON",
-							"FL_LIGHTBUTTON",
-							"FL_ROUNDBUTTON",
-							"FL_ROUND3DBUTTON",
-							"FL_CHECKBUTTON",
-							"FL_BITMAPBUTTON",
-							"FL_PIXMAPBUTTON",
-							"FL_BITMAP",
-							"FL_PIXMAP",
-							"FL_BOX",
-							"FL_TEXT",
-							"FL_MENU",
-							"FL_CHART",
-							"FL_CHOICE",
-							"FL_COUNTER",
-							"FL_SLIDER",
-							"FL_VALSLIDER",
-							"FL_INPUT",
-							"FL_BROWSER",
-							"FL_DIAL",
-							"FL_TIMER",
-							"FL_CLOCK",
-							"FL_POSITIONER",
-							"FL_FREE",
-							"FL_XYPLOT",
-							"FL_FRAME",
-							"FL_LABELFRAME",
-							"FL_CANVAS",
-							"FL_GLCANVAS",
-							"FL_TABFOLDER",
-							"FL_SCROLLBAR",
-							"FL_SCROLLBUTTON",
-							"FL_MENUBAR",
-							"FL_TEXTBOX",
-							"FL_LABELBUTTON",
-							"FL_COMBOBOX",
-							"FL_IMAGECANVAS",
-							"FL_THUMBWHEEL",
-							"FL_COLORWHEEL",
-							"FL_FORMBROWSER" };
-	return name[ obj->objclass ];
 }
