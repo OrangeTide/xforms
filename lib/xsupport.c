@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.14 2008/05/09 12:33:02 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.15 2008/06/22 19:05:33 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -129,17 +129,17 @@ fl_get_win_mouse( Window         win,
  ***************************************/
 
 Window
-fl_get_form_mouse( FL_FORM      * fm,
+fl_get_form_mouse( FL_FORM      * form,
 				   FL_Coord     * x,
 				   FL_Coord     * y,
 				   unsigned int * keymask )
 {
 	Window win = None;
-	FL_pixmap *flp = fm->flpixmap;
+	FL_pixmap *flp = form->flpixmap;
 
-    if ( fli_get_visible_forms_index( fm ) >= 0 )
+    if ( fli_get_visible_forms_index( form ) >= 0 )
     {
-		win = ( flp && flp->win != None ) ? flp->win : fm->window;
+		win = ( flp && flp->win != None ) ? flp->win : form->window;
 		fl_get_win_mouse( win, x, y, keymask );
     }
 
@@ -229,14 +229,14 @@ change_drawable( FL_pixmap * p,
 
 static void
 change_form_drawable( FL_pixmap * p,
-					  FL_FORM   * fm )
+					  FL_FORM   * form )
 {
-    p->x = fm->x;
-    p->y = fm->y;
-    p->win = fm->window;
-    fm->window = p->pixmap;
-    fm->x = 0;
-    fm->y = 0;
+    p->x = form->x;
+    p->y = form->y;
+    p->win = form->window;
+    form->window = p->pixmap;
+    form->x = 0;
+    form->y = 0;
     fl_winset( p->pixmap );
 }
 
@@ -252,6 +252,7 @@ fl_xerror_handler( Display     * d  FL_UNUSED_ARG,
 		M_err( "XErrorHandler", "XError: can't allocate - ignored " );
     else
 		M_err( "XErrorHandler", "XError: %d", xev->error_code );
+
     return 0;
 
 }
@@ -259,15 +260,7 @@ fl_xerror_handler( Display     * d  FL_UNUSED_ARG,
 
 /* non-square box can't be double buffered */
 
-#if 0
-#define NON_SQB  FL_IS_NONSQRBOX
-#else
-#define NON_SQB( a )  ( a == FL_NO_BOX )
-#endif
-
-static int ( * oldhandler )( Display *,
-							 XErrorEvent * );
-
+#define NON_SQB( a )  ( ( a )->boxtype == FL_NO_BOX )
 
 /* Pixmap support   */
 
@@ -281,18 +274,20 @@ fli_create_object_pixmap( FL_OBJECT * ob )
     Window root;
     unsigned int junk;
     FL_pixmap *p;
-    int i,
-		fdouble;
+    int i;
+	int ( * oldhandler )( Display *, XErrorEvent * );
 
-    /* check to see if we need to create. ShadowBOX can't be used as the left
-       corner is not painted in anyway and it is not easy to figure out the
-       object color beneath the object we are trying to paint */
+    /* Check to see if we need to create a pximap. None-square boxes can't
+	   be used as it is not easy to figure out the object color beneath the
+	   object we are trying to paint */
 
-    fdouble =    ob->form->use_pixmap
-		      && ob->form->flpixmap
-		      && ( ( FL_pixmap * ) ( ob->form->flpixmap ) )->win;
-
-    if ( fdouble || NON_SQB( ob->boxtype ) || !ob->use_pixmap )
+    if (    ob->w <= 0
+		 || ob->h <= 0
+		 || (    ob->form->use_pixmap
+			  && ob->form->flpixmap
+		      && ( ( FL_pixmap * ) ob->form->flpixmap )->win )
+		 || NON_SQB( ob )
+		 || ! ob->use_pixmap )
 		return;
 
     if ( ! ( p = ob->flpixmap ) )
@@ -310,9 +305,6 @@ fli_create_object_pixmap( FL_OBJECT * ob )
 		return;
     }
 
-	if ( ob->w <= 0 || ob->h <= 0 )
-		return;
-
     if ( p->pixmap )
 		XFreePixmap( flx->display, p->pixmap );
 
@@ -327,13 +319,15 @@ fli_create_object_pixmap( FL_OBJECT * ob )
     M_info( "ObjPixmap", "Creating depth=%d for %s",
 			fli_depth( fl_vmode ), ob->label );
 
-    /* make sure it succeeds by forcing a two way request */
+    /* Make sure it succeeds by forcing a two way request */
 
-    if ( fli_cntl.safe && ! XGetGeometry( flx->display, p->pixmap, &root, &i,
-										  &i, &junk, &junk, &junk, &junk ) )
+    if (    fli_cntl.safe
+		 && ! XGetGeometry( flx->display, p->pixmap, &root, &i,
+							&i, &junk, &junk, &junk, &junk ) )
     {
 		M_err( "ObjPixmap", "Can't create" );
-		p->pixmap = 0;
+		p->pixmap = None;
+		XSetErrorHandler( oldhandler );
 		return;
     }
 
@@ -357,18 +351,19 @@ fli_show_object_pixmap( FL_OBJECT * ob )
 {
     FL_pixmap *p = ob->flpixmap;
 
-    if ( ! p || ! p->pixmap || ! p->win || NON_SQB( ob->boxtype ) )
+    if ( ! p || ! p->pixmap || ! p->win || NON_SQB( ob ) )
 		return;
 
 	XCopyArea( flx->display, p->pixmap, p->win, flx->gc,
 			   0, 0, p->w, p->h, p->x, p->y );
+
 	ob->x = p->x;
 	ob->y = p->y;
 	fl_winset( p->win );
 	ob->form->window = p->win;
-	p->win = 0;
+	p->win = None;
 
-	/* now handle the label */
+	/* Now handle the label */
 
 	fli_handle_object( ob, FL_DRAWLABEL, 0, 0, 0, 0 );
 }
@@ -388,39 +383,22 @@ fli_free_flpixmap( FL_pixmap * p )
 }
 
 
-/* Pixmap support   */
-
-
 /***************************************
  ***************************************/
 
 static int
-form_pixmapable( FL_FORM * fm )
+form_pixmapable( FL_FORM * form )
 {
+    /* Check to see if we need to create a pixmap. None-square boxes can't
+	   be used as it is not easy to figure out the object color beneath the
+	   object we are trying to paint. Take care, sometimes a form can have
+	   a fake NO_BOX as the first object */
 
-    FL_OBJECT *first,
-		      *second;
-
-    if ( ! fm->use_pixmap )
-		return 0;
-
-    /* check to see if we need to create. ShadowBOX can't be used as the left
-       corner is not painted in anyway and it is not easy to figure out the
-       object color beneath the object we are trying to paint */
-
-    first = fm->first;
-    second = first ? first->next : 0;
-
-    /* some times a form can have a fake NO_BOX as the first object */
-
-    if (    ! first
-		 || ( first->boxtype != FL_NO_BOX && NON_SQB( first->boxtype ) ) )
-		return 0;
-
-    if ( first->boxtype == FL_NO_BOX && second && NON_SQB( second->boxtype ) )
-		return 0;
-
-    return 1;
+	return form->use_pixmap
+		   && (    form->first
+				&& (    ! NON_SQB( form->first )
+					 || (    form->first->next
+					      && ! NON_SQB( form->first->next ) ) ) );
 }
 
 
@@ -428,61 +406,59 @@ form_pixmapable( FL_FORM * fm )
  ***************************************/
 
 void
-fli_create_form_pixmap( FL_FORM * fm )
+fli_create_form_pixmap( FL_FORM * form )
 {
     Window root;
     unsigned int junk;
     FL_pixmap *p;
     int i;
+	int ( * oldhandler )( Display *, XErrorEvent * );
 
-
-    if ( ! form_pixmapable( fm ) )
+    if ( form->w <= 0 || form->h <= 0 || ! form_pixmapable( form ) )
 		return;
 
-    if ( ! ( p = fm->flpixmap ) )
-		p = fm->flpixmap = fl_calloc( 1, sizeof *p );
+    if ( ! ( p = form->flpixmap ) )
+		p = form->flpixmap = fl_calloc( 1, sizeof *p );
 
     if (    p->pixmap
-		 && ( int ) p->w == fm->w
-		 && ( int ) p->h == fm->h
+		 && ( int ) p->w == form->w
+		 && ( int ) p->h == form->h
 		 && p->depth == fli_depth( fl_vmode )
 		 && p->visual == fli_visual( fl_vmode ) )
     {
-		change_form_drawable( p, fm );
+		change_form_drawable( p, form );
 		return;
     }
-
-	if ( fm->w <= 0 || fm->h <= 0 )
-		return;
 
     if ( p->pixmap )
 		XFreePixmap( flx->display, p->pixmap );
 
     oldhandler = XSetErrorHandler( fl_xerror_handler );
 
-    p->pixmap = XCreatePixmap( flx->display, fm->window,
-							   fm->w, fm->h,
+    p->pixmap = XCreatePixmap( flx->display, form->window,
+							   form->w, form->h,
 							   fli_depth( fl_vmode ) );
 
-    M_info( "FormPixmap", "creating(w=%d h=%d)", fm->w, fm->h );
+    M_info( "FormPixmap", "creating(w=%d h=%d)", form->w, form->h );
 
-    /* make sure it succeeds by forcing a two way request */
+    /* Make sure it succeeds by forcing a two way request */
 
     if ( ! XGetGeometry( flx->display, p->pixmap, &root, &i, &i,
 						 &junk, &junk, &junk, &junk ) )
     {
 		M_warn( "FormPixmap", "Can't create pixmap" );
-		p->pixmap = 0;
+		p->pixmap = None;
+		XSetErrorHandler( oldhandler );
 		return;
     }
 
     XSetErrorHandler( oldhandler );
 
-    p->w = fm->w;
-    p->h = fm->h;
+    p->w = form->w;
+    p->h = form->h;
     p->depth = fli_depth( fl_vmode );
     p->visual = fli_visual( fl_vmode );
-    change_form_drawable( p, fm );
+    change_form_drawable( p, form );
 
     M_info( "FormPixmap", "Creation Done" );
 }
@@ -492,12 +468,12 @@ fli_create_form_pixmap( FL_FORM * fm )
  ***************************************/
 
 void
-fli_show_form_pixmap( FL_FORM * fm )
+fli_show_form_pixmap( FL_FORM * form )
 {
-    FL_pixmap *p;
+    FL_pixmap *p = form->flpixmap;
 
-    if (    ! form_pixmapable( fm )
-		 || ! ( p = fm->flpixmap )
+    if (    ! form_pixmapable( form )
+		 || ! p
 		 || ! p->pixmap
 		 || ! p->win
 		 || p->w <= 0
@@ -507,21 +483,11 @@ fli_show_form_pixmap( FL_FORM * fm )
     XCopyArea( flx->display, p->pixmap, p->win, flx->gc,
 			   0, 0, p->w, p->h, 0, 0 );
 
-    fm->x = p->x;
-    fm->y = p->y;
-    fm->window = p->win;
+    form->x = p->x;
+    form->y = p->y;
+    form->window = p->win;
     fl_winset( p->win );
-    p->win = 0;
-}
-
-
-/***************************************
- ***************************************/
-
-int
-fli_doublebuffer_capable( int warn  FL_UNUSED_ARG )
-{
-    return 1;
+    p->win = None;
 }
 
 

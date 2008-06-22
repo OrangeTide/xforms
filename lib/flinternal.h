@@ -287,8 +287,6 @@ extern void fli_reset_time( int );
 
 /* graphics related */
 
-extern int fli_doublebuffer_capable( int );
-
 extern void fli_init_colormap( int );
 
 extern void fli_dump_state_info( int,

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.34 2008/06/17 13:13:15 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.36 2008/06/22 19:10:17 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -65,6 +65,7 @@ static void get_object_bbox_rect( FL_OBJECT *,
 static int objects_intersect( FL_OBJECT *,
 							  FL_OBJECT * );
 static int object_is_under( FL_OBJECT * );
+static const char * objclass_name( FL_OBJECT * );
 
 static FL_OBJECT *refocus;
 
@@ -1667,7 +1668,8 @@ redraw_marked( FL_FORM * form,
     fli_create_form_pixmap( form );
 
 	/* Check if there are any objects that partially or fully hide one of
-	   the objects to be redrawn and mark those also for redrawing */
+	   the objects to be redrawn and mark those also for redrawing (and, of
+	   course, also those that are "above" this newly added object etc.) */
 
 	for ( ob = form->first; ob; ob = ob->next )
 		if (    ob->visible
@@ -1895,8 +1897,17 @@ mark_for_redraw( FL_FORM * form )
     }
 
     for ( ob = form->first; ob; ob = ob->next )
+	{
+		if ( ! ob->visible || ob->is_child )
+			continue;
+
 		if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
+		{
 			ob->redraw = 1;
+			if ( ob->child )
+				fli_mark_composite_for_redraw( ob );
+		}
+	}
 }
 
 

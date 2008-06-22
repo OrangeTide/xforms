@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.26 2008/05/10 17:46:10 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.27 2008/06/22 19:05:33 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1421,9 +1421,9 @@ fl_dopup( int n )
 	if ( fl_popup_form )
 	{
 		fl_winset( fl_popup_form->window );
-		fl_set_clipping( m->win_x - fl_popup_form->x,
-						 m->win_y - fl_popup_form->y,
-						 m->w, m->h );
+        fl_set_clipping( m->win_x - fl_popup_form->x,
+                         m->win_y - fl_popup_form->y,
+                         m->w, m->h );
 		fl_redraw_form( fl_popup_form );
 		fl_set_clipping( 0, 0, 0, 0 );
 	}

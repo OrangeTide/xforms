@@ -1,3 +1,20 @@
+2008-06-22 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xsupport.c: Code cleanup.
+
+	* lib/pixmap.c: Changed code for drawing a pixmap
+	to take the current clipping setting unto account.
+	Many thanks To Werner Heisch for explaining the
+	problem with a lot of screentshots and several
+	example programs that did show what went wrong!
+
+	* lib/bitmap.c: Made bitmap buttons behave like
+	normal buttons, just with a bitmap drawn on top
+	of it. The foreground color of the bitmap is
+	the same as the label color (and never changes).
+	Also changed the code for drawing a bitmap to
+	take account fo the current clipping setting.
+
 2008-06-17 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/pixmap.c: Made pixmap buttons behave like

@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.18 2008/05/10 17:46:10 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.19 2008/06/22 19:05:32 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1289,18 +1289,7 @@ fl_set_graphics_mode( int mode,
 				fl_vclass_name( mode ) );
     }
 
-    fli_cntl.doubleBuffer = doublebuf && fli_doublebuffer_capable( 0 );
-
-#if 0
-    if ( ! fl_state[ mode ].trailblazer )
-    {
-		fli_init_colormap( fl_vmode );
-		fl_get_font_struct( FL_NORMAL_STYLE, FL_DEFAULT_FONT );
-		fl_state[ mode ].trailblazer =
-			   fli_create_window( fl_root, fli_map( fl_vmode ), "trailblazer" );
-		XSync( flx->display, 1 );
-    }
-#endif
+    fli_cntl.doubleBuffer = doublebuf;
 }
 
 

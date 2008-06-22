@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID  || defined DEBUG
-char *fl_id_bmp = "$Id: bitmap.c,v 1.9 2008/06/17 13:13:15 jtt Exp $";
+char *fl_id_bmp = "$Id: bitmap.c,v 1.10 2008/06/22 19:05:32 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -69,13 +69,66 @@ drawit( Window	 win,
 		FL_Coord y,
 		FL_Coord w,
 		FL_Coord h,
+		FL_Coord src_x,
+		FL_Coord src_y,
 		FL_COLOR fcol,
 		FL_COLOR bcol,
 		Pixmap	 bitmap )
 {
+	FL_Coord clip_x,
+		     clip_y,
+		     clip_w,
+		     clip_h;
+
+	/* Get the currently set clipping */
+
+	fli_get_clipping( &clip_x, &clip_y, &clip_w, &clip_h );
+	if ( clip_w > 0 && clip_h > 0 )
+	{
+		/* If the bitmap is not within the clipping region nothing is
+		   to be drawn */
+
+		if (    x + w < clip_x
+			 || x > clip_x + clip_w
+             || y + h < clip_y
+			 || y > clip_y + clip_h )
+			return;
+
+		/* If the bitmap isn't completely within the clipping region
+		   recalculate what to draw */
+
+		if (    x <= clip_x
+			 || x + w >= clip_x + clip_w
+			 || y <= clip_y
+			 || y + h >= clip_y + clip_h )
+		{
+			if ( x < clip_x )
+			{
+				src_x  += clip_x - x;
+				w -= clip_x - x;
+				x = clip_x;
+			}
+
+			if ( x + w > clip_x + clip_w )
+				w = clip_x + clip_w - x;
+
+			if ( y < clip_y )
+			{
+				src_y  += clip_y - y;
+				h -= clip_y - y;
+				y = clip_y;
+			}
+
+			if ( y + h > clip_y + clip_h )
+				h = clip_y + clip_h - y;
+		}
+	}
+
 	fl_color( fcol );
 	fl_bk_color( bcol );
-	XCopyPlane( flx->display, bitmap, win, flx->gc, 0, 0, w, h, x, y, 1 );
+
+	XCopyPlane( flx->display, bitmap, win, flx->gc, src_x, src_y,
+				w, h, x, y, 1 );
 }
 
 
@@ -103,7 +156,7 @@ draw_bitmap( FL_OBJECT * ob )
 	xx = ob->x + ( ob->w - sp->bits_w ) / 2;
 	yy = ob->y + ( ob->h - sp->bits_h ) / 2;
 
-	drawit( FL_ObjWin( ob ), xx, yy, sp->bits_w, sp->bits_h,
+	drawit( FL_ObjWin( ob ), xx, yy, sp->bits_w, sp->bits_h, 0, 0,
 			ob->lcol, ob->col1, sp->pixmap );
 }
 
@@ -305,24 +358,57 @@ static void
 draw_bitmapbutton( FL_OBJECT * ob )
 {
 	SPEC *sp = ob->spec;
-	unsigned long fcol;
-	FL_Coord x,
-			 y;
 
-	if ( FL_IS_UPBOX( ob->boxtype ) && sp->val )
-		fl_drw_box( FL_TO_DOWNBOX( ob->boxtype ), ob->x, ob->y, ob->w, ob->h,
-					ob->col1, ob->bw );
-	else
-		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+	fli_draw_button( ob );
 
-	if ( sp->pixmap != None )
+	if ( sp->pixmap != None && sp->bits_w > 0 && sp->bits_h > 0 )
 	{
-		x = ob->x + ( ob->w - sp->bits_w ) / 2;
-		y = ob->y + ( ob->h - sp->bits_h ) / 2;
+		int dest_x,
+			dest_y,
+			dest_w,
+			dest_h,
+			src_x,
+			src_y;
+		FL_COLOR col;
 
-		fcol = ob->belowmouse ? ob->col2 : ob->lcol;
-		drawit( FL_ObjWin( ob ), x, y, sp->bits_w, sp->bits_h,
-				fcol, ob->col1, sp->pixmap );
+		/* Make sure the bitmap gets clipped to the maximum size fitting
+		   into the button */
+
+		if ( ob->w - 2 * FL_abs( ob->bw ) > ( int ) sp->bits_w )
+		{
+			dest_x = ob->x + ( ob->w - sp->bits_w ) / 2;
+			dest_w = sp->bits_w;
+			src_x  = 0;
+		}
+		else
+		{
+			dest_x = ob->x + FL_abs( ob->bw );
+			dest_w = ob->w - 2 * FL_abs( ob->bw );
+			src_x  = ( sp->bits_w - dest_w ) / 2;
+		}
+
+		if ( ob->h - 2 * FL_abs( ob->bw ) > ( int ) sp->bits_h )
+		{
+			dest_y = ob->y + ( ob->h - sp->bits_h ) / 2;
+			dest_h = sp->bits_h;
+			src_y  = 0;
+		}
+		else
+		{
+			dest_y = ob->y + FL_abs( ob->bw );
+			dest_h = ob->h - 2 * FL_abs( ob->bw );
+			src_y  = ( sp->bits_h - dest_h ) / 2;
+		}
+
+		col = sp->val ? ob->col2 : ob->col1;
+
+		if ( ob->belowmouse && col == FL_BUTTON_COL1 )
+			col = FL_BUTTON_MCOL1;
+		if ( ob->belowmouse && col == FL_BUTTON_COL2 )
+			col = FL_BUTTON_MCOL2;
+
+		drawit( FL_ObjWin( ob ), dest_x, dest_y, dest_w,  dest_h,
+				src_x, src_y, ob->lcol, col, sp->pixmap );
 	}
 
 	fl_draw_object_label( ob );

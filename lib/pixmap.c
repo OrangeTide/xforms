@@ -57,12 +57,6 @@
 #endif
 
 
-/*
- * Define this to use override instead of clipping. Slight performace
- * gain, but no as general as clipping
- */
-/* #define USE_OVERRIDE */
-
 typedef FL_BUTTON_STRUCT SPEC;
 
 typedef struct {
@@ -180,10 +174,7 @@ change_pixmap( SPEC * sp,
 		XSetGraphicsExposures( flx->display, psp->gc, False );
 	}
 
-#if ! defined USE_OVERRIDE
 	XSetClipMask( flx->display, psp->gc, sp->mask );
-#endif
-
 }
 
 
@@ -223,6 +214,10 @@ show_pixmap( FL_OBJECT * ob,
 		src_y,
 		m_dest_x,
 		m_dest_y;
+	FL_Coord clip_x,
+		     clip_y,
+		     clip_w,
+		     clip_h;
 	Pixmap pixmap,
 		   mask;
 	int bits_w,
@@ -234,9 +229,9 @@ show_pixmap( FL_OBJECT * ob,
 	bits_w = is_focus ? psp->focus_w     : sp->bits_w;
 	bits_h = is_focus ? psp->focus_h     : sp->bits_h;
 
-	/* Do nothing if pixmap has zero size or does not exist */
+	/* Do nothing if pixmap does not exist or has zero size */
 
-	if ( bits_w == 0 || bits_h == 0 || pixmap == None )
+	if ( pixmap == None || bits_w == 0 || bits_h == 0 )
 	{
 		fl_drw_text( FL_ALIGN_CENTER, ob->x, ob->y,
 					 ob->w, ob->h, ob->lcol, ob->lstyle, FL_TINY_SIZE, "p" );
@@ -285,12 +280,54 @@ show_pixmap( FL_OBJECT * ob,
 		m_dest_y -= src_y;
 	}
 
-#if !defined(USE_OVERRIDE)
+	/* Get the currently set clipping */
+
+	fli_get_clipping( &clip_x, &clip_y, &clip_w, &clip_h );
+	if ( clip_w > 0 && clip_h > 0 )
+	{
+		/* If the pixmap is not within the clipping region nothing is
+		   to be drawn */
+
+		if (    dest_x + dest_w < clip_x
+			 || dest_x > clip_x + clip_w
+             || dest_y + dest_h < clip_y
+			 || dest_y > clip_y + clip_h )
+			return;
+
+		/* If the pixmap isn't completely within the clipping region
+		   recalculate what to draw */
+
+		if (    dest_x <= clip_x
+			 || dest_x + dest_w >= clip_x + clip_w
+			 || dest_y <= clip_y
+			 || dest_y + dest_h >= clip_y + clip_h )
+		{
+			if ( dest_x < clip_x )
+			{
+				src_x  += clip_x - dest_x;
+				dest_w -= clip_x - dest_x;
+				dest_x = clip_x;
+			}
+
+			if ( dest_x + dest_w > clip_x + clip_w )
+				dest_w = clip_x + clip_w - dest_x;
+
+			if ( dest_y < clip_y )
+			{
+				src_y  += clip_y - dest_y;
+				dest_h -= clip_y - dest_y;
+				dest_y = clip_y;
+			}
+
+			if ( dest_y + dest_h > clip_y + clip_h )
+				dest_h = clip_y + clip_h - dest_y;
+		}
+	}
+
     /* hopefully, XSetClipMask is smart */
 
     XSetClipMask( flx->display, psp->gc, mask );
     XSetClipOrigin( flx->display, psp->gc, m_dest_x, m_dest_y );
-#endif
 
     XCopyArea( flx->display, pixmap, FL_ObjWin( ob ),
 			   psp->gc, src_x, src_y, dest_w, dest_h, dest_x, dest_y );

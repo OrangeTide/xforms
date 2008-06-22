@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: xdraw.c,v 1.11 2008/05/09 12:33:02 jtt Exp $";
+char *fl_id_drw = "$Id: xdraw.c,v 1.12 2008/06/22 19:05:33 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -654,9 +654,9 @@ fl_set_clipping( FL_Coord x,
 				 FL_Coord w,
 				 FL_Coord h )
 {
-	cur_clip.x     = x;
-	cur_clip.y     = y;
-	cur_clip.width = w;
+	cur_clip.x      = x;
+	cur_clip.y      = y;
+	cur_clip.width  = w;
 	cur_clip.height = h;
 
 	if ( w > 0 && h > 0 )
