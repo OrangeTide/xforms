@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.45 2008/05/24 14:38:20 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.46 2008/07/02 18:51:41 jtt Exp $";
 #endif
 
 
@@ -81,6 +81,9 @@ extern void ( * fli_handle_signal )( void );
 extern int ( * fli_handle_clipboard )( void * );
 
 
+int fli_fast_free_object = 0;    /* exported to objects.c */
+
+
 /* Waiting time (in ms) for fl_check_forms() and fl_check_only_forms().
    Originally this value was 10 ms. */
 
@@ -98,9 +101,16 @@ unsigned int fli_keymask;
 unsigned int fli_query_age = UINT_MAX;
 
 
+/* 'forms' is a pointer to an array of form addresses. Visible forms
+   are at the start of the array (there are 'formnumb' of them), hidden
+   form are at the end ('hidden_formnumb' elements). When a new form
+   gets created the list is extended and when a form gets deleted the
+   list shrinks again. */
+
 static FL_FORM **forms = NULL;	    /* All existing forms */
 static int formnumb = 0;	        /* Number of visible forms */
 static int hidden_formnumb = 0;  	/* Number of hidden forms */
+
 static size_t auto_count = 0;
 
 
@@ -116,6 +126,7 @@ fli_set_no_connection( int yes )
 
 
 /***************************************
+ * Returns the index of a form in the list of visible forms
  ***************************************/
 
 int
@@ -132,6 +143,7 @@ fli_get_visible_forms_index( FL_FORM * form )
 
 
 /***************************************
+ * Returns the index of a form in the list of hidden forms
  ***************************************/
 
 static int
@@ -148,17 +160,25 @@ get_hidden_forms_index( FL_FORM * form )
 
 
 /***************************************
+ * Adds a new form to the list of hidden forms, extending
+ * the list in the process.
  ***************************************/
 
 static void
 add_form_to_hidden_list( FL_FORM *form )
 {
-	forms = realloc( forms, ( formnumb + ++hidden_formnumb ) * sizeof *forms );
-	forms[ formnumb + hidden_formnumb - 1 ] = form;
+	/* Extend the list of visible and hidden forms by one element
+	   and put the new forms address into the new element */
+
+	forms = realloc( forms,
+					 ( formnumb + hidden_formnumb + 1 ) * sizeof *forms );
+	forms[ formnumb + hidden_formnumb++ ] = form;
 }
 
 
 /***************************************
+ * Moves a form from the list of hidden forms
+ * to the list of visible forms
  ***************************************/
 
 static int
@@ -166,27 +186,35 @@ move_form_to_visible_list( FL_FORM *form )
 {
 	int i;
 
-	if ( ( i = get_hidden_forms_index( form ) ) < 0 )
+	/* Find the index of the hidden form */
+
+	if ( hidden_formnumb == 0 || ( i = get_hidden_forms_index( form ) ) < 0 )
 	{
 		M_err( "move_form_to_visble_list", "Form not on hidden list" );
 		return -1;
 	}
 		
+	/* If it's not at the very start of the hidden list exchange it
+	   with the one at the start */
+
 	if ( i != formnumb )
 	{
 		forms[ i ] = forms[ formnumb ];
 		forms[ formnumb ] = form;
 	}
+
 	hidden_formnumb--;
 
     if ( form->has_auto )
-			auto_count++;
+		auto_count++;
 
-	return formnumb++;
+	return ++formnumb;
 }
 
 
 /***************************************
+ * Moves a form from the list of visible forms
+ * to the list of hidden forms
  ***************************************/
 
 static int
@@ -194,15 +222,20 @@ move_form_to_hidden_list( FL_FORM *form )
 {
 	int i;
 
-	if ( ( i = fli_get_visible_forms_index( form ) ) < 0 )
+	/* Find the index of the form to be moved to the hidden list */
+
+	if ( formnumb == 0 || ( i = fli_get_visible_forms_index( form ) ) < 0 )
 	{
-		M_err( "move_form_to_hidden_list", "Form not onvisible list" );
+		M_err( "move_form_to_hidden_list", "Form not on visible list" );
 		return -1;
 	}
 
-	if ( formnumb > 0 )
+	/* Unless the form is the very last in the visible list exchange it
+	   with the form at the end of the visible list */
+
+	if ( i != --formnumb )
 	{
-		forms[ i ] = forms[ --formnumb ];
+		forms[ i ] = forms[ formnumb ];
 		forms[ formnumb ] = form;
 	}
 
@@ -221,6 +254,8 @@ move_form_to_hidden_list( FL_FORM *form )
 
 
 /***************************************
+ * Removes a form from the list of hidden forms,
+ * shortening the list in the process
  ***************************************/
 
 int
@@ -228,14 +263,22 @@ remove_form_from_hidden_list( FL_FORM *form )
 {
 	int i;
 
-	if ( ( i = get_hidden_forms_index( form ) ) < 0 )
+	/* Find the index of the form to be removed completely from the
+	   hidden list */
+
+	if ( hidden_formnumb == 0 || ( i = get_hidden_forms_index( form ) ) < 0 )
 	{
 		M_err( "remove_form_from_hidden_list", "Form not on hidden list" );
 		return -1;
 	}
 
+	/* If it's not the form at the very end of the hidden list exchange
+	   it with the one at the end */
+
 	if ( i != formnumb + --hidden_formnumb )
 		forms[ i ] = forms[ formnumb + hidden_formnumb ];
+
+	/* Shorten the list of visible and hidden forms by one element */
 
 	forms = fl_realloc( forms, ( formnumb + hidden_formnumb ) * sizeof *forms );
 
@@ -1335,8 +1378,12 @@ fl_free_form( FL_FORM * form )
 
     /* Free all objects of the form */
 
+	fli_fast_free_object = 1;
+
 	while ( form->first )
 		fl_free_object( form->first );
+
+	fli_fast_free_object = 0;
 
     if ( form->flpixmap )
     {
@@ -2268,7 +2315,6 @@ do_interaction_step( int wait_io )
 {
     FL_FORM *evform = NULL;
 	static FL_FORM *redraw_form = NULL;
-
 
     if ( ! get_next_event_or_idle( wait_io, &evform, &st_xev ) )
 		return;

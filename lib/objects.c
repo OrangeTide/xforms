@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.37 2008/06/22 19:11:05 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.38 2008/07/02 18:51:41 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,13 +59,14 @@ extern FL_OBJECT * fli_mouseobj,          /* defined in forms.c */
                ( ( ( a ) == FL_ALIGN_CENTER ) || ( ( a ) & FL_ALIGN_INSIDE ) )
 
 
+extern int fli_fast_free_object;     /* defined in forms.c */
+
 static void lose_focus( FL_OBJECT * );
 static void get_object_bbox_rect( FL_OBJECT *,
 								  XRectangle * );
 static int objects_intersect( FL_OBJECT *,
 							  FL_OBJECT * );
 static int object_is_under( FL_OBJECT * );
-
 
 static FL_OBJECT *refocus;
 
@@ -483,7 +484,11 @@ fl_delete_object( FL_OBJECT * obj )
     else
 		form->last = obj->prev;
 
-	fli_recalc_intersections( form );
+	/* Unless the whole form is getting free'd recalculate the
+	   intersections of the other objects */
+
+	if ( ! fli_fast_free_object )
+		fli_recalc_intersections( form );
 
     if (    obj->visible
 		 && ( ! obj->child || obj->parent->visible )
@@ -2173,6 +2178,7 @@ fl_handle_it( FL_OBJECT * obj,
 				 && ! ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
 				 && ! (    FL_abs( last_mx - mx ) > 4
 						|| FL_abs( last_my - my ) > 4 )
+				 && xev
 				 && xev->xbutton.time - last_clicktime < obj->click_timeout )
 				event = last_dblclick ? FL_TRPLCLICK : FL_DBLCLICK;
 
@@ -2862,7 +2868,7 @@ fl_get_object_bbox( FL_OBJECT * obj,
 {
     char *label = obj->label;
     FL_OBJECT *tmp;
-    int extra = 1;
+    int extra = 0;
     XRectangle lrect,
 		       orect;
     const XRectangle *xr;
@@ -2874,9 +2880,9 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		 && obj->objclass <= FL_USER_CLASS_END )
 		extra = FL_abs( obj->bw ) + obj->lsize;
 
-    lrect.x = orect.x = obj->x - extra;
-    lrect.y = orect.y = obj->y - extra;
-    lrect.width = orect.width = obj->w + 2 * extra;
+    lrect.x      = orect.x = obj->x - extra;
+    lrect.y      = orect.y = obj->y - extra;
+    lrect.width  = orect.width = obj->w + 2 * extra;
     lrect.height = orect.height = obj->h + 2 * extra;
 
     /* label position */
@@ -2892,10 +2898,10 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		fl_get_char_height( obj->lstyle, obj->lsize, &a, &d );
 		fl_get_align_xy( obj->align, obj->x, obj->y, obj->w, obj->h,
 						 sw, sh + d, 3, 3, &xx, &yy );
-		lrect.x      = xx - 1;
-		lrect.y      = yy - 1;
-		lrect.width  = sw + 2;
-		lrect.height = sh + d + 2 + a;
+		lrect.x      = xx;
+		lrect.y      = yy;
+		lrect.width  = sw;
+		lrect.height = sh + d;
     }
 
     xr = fli_bounding_rect( &lrect, &orect );
@@ -2907,6 +2913,7 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		orect.y      = tmp->y;
 		orect.width  = tmp->w;
 		orect.height = tmp->h;
+
 		xr = fli_bounding_rect( &lrect, &orect );
     }
 

@@ -138,7 +138,7 @@ init_menu( FL_OBJECT *menu )
 #if 0
 	fl_set_menu_entries( menu, menu_entries );
 #else
-	int n = fl_newpup( 0 );
+	int n = fl_newpup( FL_ObjWin( menu ) );
 
 	fl_setpup_entries( n, menu_entries );
 	fl_setpup_entercb( n, menuitem_entercb, menu->form->fdui );
@@ -203,10 +203,10 @@ dopup_callback( FL_OBJECT * ob,
 {
     if ( pupID < 0 )
     {
-        pupID = fl_newpup( 0 );
+        pupID = fl_newpup( FL_ObjWin( ob ) );
 #if 0
 		int subm;
-		subm = fl_newpup( 0 );
+		subm = fl_newpup( FL_ObjWin( ob ) );
 #else
         fl_setpup_entries( pupID, pup_entries );
 #endif

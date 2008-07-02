@@ -840,9 +840,6 @@ extern void fli_set_additional_clipping( FL_Coord,
 extern FL_RECT *fli_union_rect( const FL_RECT *,
 								const FL_RECT * );
 
-extern void fli_reparent_pup( int,
-							  Window );
-
 extern void fli_getpup_window( int,
 							   Window *,
 							   Window * );

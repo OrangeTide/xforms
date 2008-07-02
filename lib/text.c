@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_txt = "$Id: text.c,v 1.7 2008/03/12 16:00:27 jtt Exp $";
+char *fl_id_txt = "$Id: text.c,v 1.8 2008/07/02 18:51:42 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -94,7 +94,7 @@ fl_create_text( int          type,
     ob->col1 = FL_TEXT_COL1;
     ob->col2 = FL_TEXT_COL2;
     ob->lcol = FL_TEXT_LCOL;
-    ob->align = FL_TEXT_ALIGN;
+    ob->align = FL_TEXT_ALIGN | FL_ALIGN_INSIDE;
     ob->active = 0;
     return ob;
 }
@@ -115,5 +115,6 @@ fl_add_text( int          type,
 
     ob = fl_create_text( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
+
     return ob;
 }

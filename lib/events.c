@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.23 2008/05/09 12:33:00 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.24 2008/07/02 18:51:41 jtt Exp $";
 #endif
 
 
@@ -941,7 +941,7 @@ fli_compress_motion( XEvent * xme )
 
 void
 fli_compress_event( XEvent *      xev,
-				   unsigned long mask )
+				    unsigned long mask )
 {
     if ( xev->type == Expose && mask & ExposureMask )
 		fli_compress_redraw( xev );

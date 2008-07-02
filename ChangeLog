@@ -1,3 +1,35 @@
+2008-07-02 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xpopup.c, lib/menu.c: Tried to fix a bug
+	resulting in artefacts with menus on some machines
+	as Luis Balona pointed out.
+
+2008-06-30 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c: Removed a bug in the calculation
+	of size of the bounding of an object. Thanks to
+	Rob Carpenter for sending me example code that
+	did show the problem nicely.
+
+	* lib/forms.c, lib/objects.c: Added some code to
+	speed up freeing of forms (overlap of objects does
+	not get recalculated anymore, which could take a
+	considerable time for forms with many objects).
+
+2008-06-29 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/object.c, lib/button.c, lib/xpopup.c: Fixed
+	two bugs found by Luis Balona that under certain
+	circumstances led to a segmentation fault.
+
+	* config/ltmain.sh, config/libtool.m4,
+	config/config.guess, config/config.sub:
+	Updated libtool files from version 1.4.3 to 1.5.26
+	since Raphael Straub, the maintainer of the MacPorts
+	port of XForms, pointed out that compilation of
+	fdesign on Mac OSX failed due to a problem with the
+ 	old libtool version.
+
 2008-06-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/xsupport.c: Code cleanup.

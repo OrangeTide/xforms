@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.15 2008/05/10 17:46:10 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.16 2008/07/02 18:51:41 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,9 +59,6 @@ char *fl_id_menu = "$Id: menu.c,v 1.15 2008/05/10 17:46:10 jtt Exp $";
 
 
 #define ISPUP( sp )   ( ( sp )->extern_menu >= 0 )
-
-
-extern Window fl_popup_parent_window;
 
 
 /***************************************
@@ -98,27 +95,14 @@ do_menu_low_level( FL_OBJECT * ob )
     if ( sp->numitems == 0 && sp->extern_menu < 0 )
 		return 0;
 
-	fl_popup_parent_window = FL_ObjWin( ob );
-
     if ( sp->extern_menu >= 0 )
     {
-		Window oparent,
-			   win;
-
-		fli_getpup_window( sp->extern_menu, &oparent, &win );
-
 		if ( ob->label && *ob->label && ob->type != FL_PULLDOWN_MENU )
 			fl_setpup_title( sp->extern_menu, ob->label );
 
-		fli_reparent_pup( sp->extern_menu, FL_ObjWin( ob ) );
-		val = fl_dopup( sp->extern_menu );
-
-		if ( val > 0 )
+		if ( ( val = fl_dopup( sp->extern_menu ) ) > 0 )
 			sp->val = val;
 
-		/* menu might go away, need to restore old parent */
-
-		fli_reparent_pup( sp->extern_menu, oparent );
 		return val;
     }
 
@@ -127,10 +111,7 @@ do_menu_low_level( FL_OBJECT * ob )
     if ( ob->type != FL_PULLDOWN_MENU && ! sp->no_title )
 		fl_setpup_title( popup_id, ob->label );
     else
-    {
-		fl_setpup_shadow( popup_id, 0 );
 		fl_setpup_softedge( popup_id, 1 );
-    }
 
     for ( i = 1; i <= sp->numitems; i++ )
     {
@@ -143,6 +124,17 @@ do_menu_low_level( FL_OBJECT * ob )
 		}
 		fl_setpup_shortcut( popup_id, i, sp->shortcut[ i ] );
     }
+
+	/* Pulldown menus and those without a title appear directly
+	   below the menu itself, the others more or less on top of
+	   the menu */
+
+	if ( ob->type == FL_PULLDOWN_MENU || sp->no_title )
+		fl_setpup_position( ob->form->x + ob->x + 1,
+							ob->form->y + ob->y + ob->h + 1 );
+	else
+		fl_setpup_position( ob->form->x + ob->x + 5,
+							ob->form->y + ob->y + 5 );
 
     val = fl_dopup( popup_id );
 
@@ -197,16 +189,10 @@ do_menu_low_level( FL_OBJECT * ob )
 static int
 do_menu( FL_OBJECT *ob )
 {
-    FLI_MENU_SPEC *sp = ob->spec;
 	int val;
 
 	ob->pushed = 1;
 	fl_redraw_object( ob );
-
-	if (    ob->type == FL_PULLDOWN_MENU
-		 || ( ob->type == FL_PUSH_MENU && sp->no_title ) )
-		fl_setpup_position( ob->form->x + ob->x + 2,
-							ob->form->y + ob->y + ob->h + 2 * FL_PUP_PADH + 1 );
 
 	val = do_menu_low_level( ob ) > 0;
 
@@ -302,18 +288,6 @@ handle_menu( FL_OBJECT * ob,
 
 			ob->pushed = 1;
 			fl_redraw_object( ob );
-
-			/* Pulldown menus and those without a title appear directly
-			   below the menu itself, the others more or less on top of
-			   the menu */
-
-			if ( ob->type == FL_PULLDOWN_MENU || sp->no_title )
-				fl_setpup_position( ob->form->x + ob->x + 2,
-									  ob->form->y + ob->y + ob->h
-									+ 2 * FL_PUP_PADH + 1 );
-			else
-				fl_setpup_position( ob->form->x + ob->x + 5,
-									ob->form->y + ob->y + 5 + 2 * FL_PUP_PADH );
 
 			/* Do interaction and then redraw without highlighting */
 
@@ -780,7 +754,7 @@ fl_set_menu_entries( FL_OBJECT *    ob,
 
     fl_clear_menu( ob );
 
-    n = fl_newpup( 0 );
+    n = fl_newpup( FL_ObjWin( ob ) );
     fl_set_menu_popup( ob, fl_setpup_entries( n, ent ) );
 
     if ( ob->type == FL_PULLDOWN_MENU )

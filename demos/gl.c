@@ -45,14 +45,14 @@
 #include <stdlib.h>
 
 typedef struct {
-	FL_FORM *form;
-	void *vdata;
-	char *cdata;
-	long ldata;
-	FL_OBJECT *canvas;
-	FL_OBJECT *done;
-	FL_OBJECT *menu;
-	FL_OBJECT *butgrp;
+	FL_FORM   * form;
+	void      * vdata;
+	char      * cdata;
+	long        ldata;
+	FL_OBJECT * canvas;
+	FL_OBJECT * done;
+	FL_OBJECT * menu;
+	FL_OBJECT * butgrp;
 } FD_form;
 
 extern FD_form * create_form_form(void);
@@ -62,6 +62,7 @@ FD_form *ui;
 static int prim = GL_POLYGON ;
 
 #define v3f glVertex3f
+
 
 static void draw_cube( void )
 {
@@ -98,6 +99,7 @@ static void draw_cube( void )
 	v3f( -1.0,-1.0, -1.0 ); v3f( -1.0, 1.0, -1.0 );
 	glEnd();
 }
+
 
 int
 idle_cb( XEvent * ev,
@@ -146,7 +148,6 @@ canvas_expose( FL_OBJECT * ob   FL_UNUSED_ARG,
 			   XEvent *    xev  FL_UNUSED_ARG,
 			   void *      ud   FL_UNUSED_ARG )
 {
-
     glViewport( 0, 0, ( GLint ) w, ( GLint ) h );
     glClearColor( 0.0, 0.0, 0.0, 0.0 );
 
@@ -237,6 +238,7 @@ menu_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 {
 }
 
+
 int main( int    argc,
 		  char * argv[ ] )
 {
@@ -257,7 +259,7 @@ int main( int    argc,
 
    /* geometry stuff */
 
-   fl_set_form_minsize( ui->form, 340, 280 );
+//   fl_set_form_minsize( ui->form, 340, 280 );
 
    fl_show_form( ui->form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_FULLBORDER,
 				 "OpenGL Canvas");
@@ -300,42 +302,54 @@ reshow( FL_OBJECT * ob,
 #include <stdlib.h>
 
 
-FD_form *create_form_form( void )
+FD_form * create_form_form( void )
 {
 	FL_OBJECT *obj;
-	FD_form *fdui = (FD_form *) fl_calloc(1, sizeof(*fdui));
+	FD_form *fdui = fl_calloc( 1, sizeof *fdui);
 
-	fdui->form = fl_bgn_form(FL_NO_BOX, 340, 280);
-	obj = fl_add_box(FL_UP_BOX,0,0,340,280,"");
-	fdui->canvas = obj = fl_add_glcanvas(FL_NORMAL_CANVAS,20,45,225,215,"");
-    fl_set_object_gravity(obj, FL_NorthWest, FL_SouthEast);
-	fdui->done = obj = fl_add_button(FL_NORMAL_BUTTON,255,230,70,30,"Done");
-    fl_set_button_shortcut(obj,"Dd#d",1);
-    fl_set_object_gravity(obj, FL_SouthEast, FL_SouthEast);
-	fdui->menu = obj = fl_add_menu(FL_PULLDOWN_MENU,20,15,54,20,"Canvas");
-    fl_set_object_shortcut(obj,"#CcC",1);
-    fl_set_object_boxtype(obj,FL_FLAT_BOX);
-    fl_set_object_lstyle(obj,FL_BOLD_STYLE);
-    fl_set_object_gravity(obj, FL_NorthWest, FL_NorthWest);
-    fl_set_object_callback(obj,menu_cb,0);
+	fdui->form = fl_bgn_form( FL_NO_BOX, 340, 280 );
 
-	fdui->butgrp = fl_bgn_group();
-	obj = fl_add_button(FL_NORMAL_BUTTON,255,45,70,30,"Poly/Line");
-    fl_set_object_gravity(obj, FL_NorthEast, FL_NorthEast);
-    fl_set_object_callback(obj,switch_primitive,0);
-	obj = fl_add_button(FL_NORMAL_BUTTON,255,75,70,30,"Hide");
-    fl_set_button_shortcut(obj,"#HhH",1);
-    fl_set_object_callback(obj,hide_it,0);
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 340, 280, "" );
+
+	fdui->canvas = obj = fl_add_glcanvas( FL_NORMAL_CANVAS, 20, 45, 225, 215,
+										  "" );
+    fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );
+
+	fdui->done = obj = fl_add_button( FL_NORMAL_BUTTON, 255, 230, 70, 30,
+									  "Done");
+    fl_set_button_shortcut( obj, "Dd#d", 1 );
+    fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
+
+	fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 15, 54, 20,
+									"Canvas" );
+    fl_set_object_shortcut( obj, "#CcC", 1 );
+    fl_set_object_boxtype( obj, FL_FLAT_BOX );
+    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
+    fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
+    fl_set_object_callback( obj, menu_cb, 0 );
+
+	fdui->butgrp = fl_bgn_group( );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 255, 45, 70, 30, "Poly/Line" );
+    fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
+    fl_set_object_callback( obj, switch_primitive, 0 );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 255, 75, 70, 30, "Hide" );
+    fl_set_button_shortcut( obj, "#HhH", 1 );
+    fl_set_object_callback( obj,hide_it, 0 );
+
 	obj = fl_add_button( FL_NORMAL_BUTTON, 255, 105, 70, 30, "ReShow" );
     fl_set_button_shortcut( obj, "#RRr", 1 );
     fl_set_object_callback( obj, reshow, 0 );
-	obj = fl_add_button(FL_NORMAL_BUTTON,255,135,70,30,"Single");
-    fl_set_object_callback(obj,buffer_cb,0);
-	fl_end_group();
-	fl_end_form();
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 255, 135, 70, 30, "Single" );
+    fl_set_object_callback( obj, buffer_cb, 0 );
+
+	fl_end_group( );
+
+	fl_end_form( );
 
 	fdui->form->fdui = fdui;
 
 	return fdui;
 }
-

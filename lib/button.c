@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.22 2008/06/17 13:13:15 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.23 2008/07/02 18:51:41 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -45,8 +45,6 @@ char *fl_id_but = "$Id: button.c,v 1.22 2008/06/17 13:13:15 jtt Exp $";
 #include <sys/types.h>
 
 typedef FL_BUTTON_STRUCT SPEC;
-
-extern FL_FORM *fl_popup_form;
 
 #define ISTABBOX( t )   (    t == FL_TOPTAB_UPBOX			       \
 						  || t == FL_SELECTED_TOPTAB_UPBOX	       \
@@ -348,7 +346,6 @@ handle_it( FL_OBJECT * ob,
 			sp->mousebut = key;
 			sp->timdel = 1;
 			fl_redraw_object( ob );
-			fl_popup_form = ob->form;
 			return    ob->type == FL_INOUT_BUTTON
 				   || ob->type == FL_TOUCH_BUTTON
 				   || ob->type == FL_MENU_BUTTON;

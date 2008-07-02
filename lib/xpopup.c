@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.27 2008/06/22 19:05:33 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.28 2008/07/02 18:51:42 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -56,10 +56,6 @@ char *fl_id_xpup = "$Id: xpopup.c,v 1.27 2008/06/22 19:05:33 jtt Exp $";
 #include <stdarg.h>
 
 
-#define ALWAYSROOT 1		     /* true to use root as parent. not working */
-
-#define USE_SHADOW 0             /* shadows never really did work... */
-
 #define FL_MAXPUP  32		     /* default maximum pups */
 #define PADH       FL_PUP_PADH	 /* space between items */
 #define PADW       8	         /* space on each side */
@@ -68,7 +64,6 @@ char *fl_id_xpup = "$Id: xpopup.c,v 1.27 2008/06/22 19:05:33 jtt Exp $";
 
 #define M_TITLE    1
 #define M_ERR      2
-
 
 
 /****************************************************************
@@ -97,9 +92,6 @@ typedef struct
     Window           win;			/* menu window           */
     Window           parent_win;	/* and its parent        */
     Cursor           cursor;		/* cursor for the pup    */
-#if USE_SHADOW
-    GC               gc_shadow;		/* GC for the shadow     */
-#endif
     GC               gc_active;		/* GC for maintext       */
     GC               gc_inactive;	/* GC for inactive text  */
     MenuItem       * item[ FL_MAXPUPI + 1 ];
@@ -113,16 +105,10 @@ typedef struct
 	                 y;
     unsigned int     w,		        /* total dimension       */
 	                 h;
-    int              win_x,
-	                 win_y;
     short            titleh;
     short            nitems;		/* no. of item in menu   */
     short            title_width;	/* title width           */
     short            maxw;
-#if USE_SHADOW
-    short            noshadow;
-	short            shade;
-#endif
     short            bw;
     short            lpad;
     short            rpad;
@@ -130,6 +116,7 @@ typedef struct
     short            cellh;
     short            isEntry;		/* true if menu is setup via entry struct */
 	int              par_y;
+	FL_FORM *        form;
 } PopUP;
 
 
@@ -141,6 +128,7 @@ static void reset_radio( PopUP *,
 
 static int pup_font_style = FL_NORMAL_STYLE;
 static int pup_title_font_style = FL_NORMAL_STYLE;
+
 
 #ifdef __sgi
 static int pup_font_size = FL_SMALL_FONT,
@@ -169,9 +157,6 @@ static XFontStruct *pup_title_font_struct = NULL;  /* popup title text font */
 static int pup_title_ascent = 0,
            pup_title_desc   = 0;
 static Cursor pup_defcursor = 0;
-
-Window fl_popup_parent_window = None;
-FL_FORM *fl_popup_form = NULL;
 
 static int pup_subreturn;
 
@@ -219,28 +204,25 @@ init_pupfont( void )
 static void
 init_pup( PopUP * m )
 {
-    m->menu_cb = NULL;
-    m->enter_cb = m->leave_cb = NULL;
-    m->w = m->h = m->maxw = 0;
-    m->nitems = 0;
+    m->menu_cb     = NULL;
+    m->enter_cb    = m->leave_cb = NULL;
+    m->w = m->h    = m->maxw = 0;
+    m->nitems      = 0;
 	m->title_width = 0;
-    m->parent_win = m->win = None;
-    m->gc_active = m->gc_inactive = None;
-#if USE_SHADOW
-    m->noshadow = 0;
-	m->shade = 2 * FL_abs( pup_bw );
-#endif
-	m->bw = pup_bw;
-    m->title = NULL;
-    m->item[ 0 ] = NULL;
-    m->padh = PADH;
+    m->parent_win  = m->win = None;
+    m->gc_active   = m->gc_inactive = None;
+	m->bw          = pup_bw;
+    m->title       = NULL;
+    m->item[ 0 ]   = NULL;
+    m->padh        = PADH;
     if ( ! pup_defcursor )
 		pup_defcursor = fl_get_cursor_byname( XC_sb_right_arrow );
-    m->cursor = pup_defcursor;
-    m->lpad = m->rpad = PADW;
+    m->cursor      = pup_defcursor;
+    m->lpad        = m->rpad = PADW;
     init_pupfont( );
-    m->cellh = pup_ascent + pup_desc + 2 * m->padh;
-    m->isEntry = 0;
+    m->cellh       = pup_ascent + pup_desc + 2 * m->padh;
+    m->isEntry     = 0;
+	m->form        = NULL;
 }
 
 
@@ -248,7 +230,8 @@ init_pup( PopUP * m )
  ***************************************/
 
 static int
-find_empty_index( Window win )
+find_empty_index( Window    win,
+				  FL_FORM * form )
 {
     PopUP *p;
 
@@ -257,6 +240,7 @@ find_empty_index( Window win )
 		{
 			init_pup( p );
 			p->parent_win = win;
+			p->form = form;
 			return p - menu_rec;
 		}
 
@@ -560,31 +544,27 @@ fli_init_pup( void )
 	PopUP *mr;
 	size_t i;
 
-    if ( ! menu_rec )
-    {
-		menu_rec = fl_calloc( fl_maxpup, sizeof *menu_rec );
+    if ( menu_rec )
+		return;
 
-		for ( mr = menu_rec; mr < menu_rec + fl_maxpup; mr++ )
-		{
-			mr->title = NULL;
-			menu_rec->win = menu_rec->parent_win = None;
-			mr->cursor = None;
-			mr->gc_active = mr->gc_inactive = None;
+	menu_rec = fl_calloc( fl_maxpup, sizeof *menu_rec );
 
-#if USE_SHADOW
-			mr->gc_shadow = None;
-#endif
+	for ( mr = menu_rec; mr < menu_rec + fl_maxpup; mr++ )
+	{
+		mr->title     = NULL;
+		menu_rec->win = menu_rec->parent_win = None;
+		mr->cursor    = None;
+		mr->gc_active = mr->gc_inactive = None;
 
-			for ( i = 0; i <= FL_MAXPUPI; i++ )
-				mr->item[ i ] = NULL;
-			mr->menu_cb = NULL;
-			mr->enter_cb = mr->leave_cb = NULL;
-			mr->enter_data = mr->leave_data = NULL;
-		}
+		for ( i = 0; i <= FL_MAXPUPI; i++ )
+			mr->item[ i ] = NULL;
+		mr->menu_cb    = NULL;
+		mr->enter_cb   = mr->leave_cb = NULL;
+		mr->enter_data = mr->leave_data = NULL;
+	}
 
-		fl_setpup_default_fontsize( fli_cntl.pupFontSize ?
-									fli_cntl.pupFontSize : -2 );
-    }
+	fl_setpup_default_fontsize( fli_cntl.pupFontSize ?
+								fli_cntl.pupFontSize : -2 );
 }
 
 
@@ -690,6 +670,8 @@ fl_setpup_default_pup_checked_color( FL_COLOR col )
 int
 fl_newpup( Window win )
 {
+	FL_FORM *form = NULL;
+
     fli_init_pup( );
 
     if ( pup_level )
@@ -700,6 +682,8 @@ fl_newpup( Window win )
 
     if ( win == None )
 		win = fl_root;
+	else
+		form = fl_win_to_form( win );
 
 	if ( ! pup_bw_is_set )
 	{
@@ -710,18 +694,7 @@ fl_newpup( Window win )
     /* if not private colormap, it does not matter who the popup's parent is
        and root probably makes more sense */
 
-#if ALWAYSROOT
-    return find_empty_index( fl_root );
-#else
-    {
-		FL_State *fs = fl_state + fl_vmode;
-		int nrt =    fs->pcm
-			      || fli_visual( fl_vmode ) != DefaultVisual( flx->display,
-															  fl_screen );
-
-		return find_empty_index( nrt ? win : fl_root );
-    }
-#endif
+    return find_empty_index( fl_root, form );
 }
 
 
@@ -845,7 +818,7 @@ requested_item_is_valid( const char * where,
 
 
 /***************************************
- * change attributes of a popup item
+ * Change attributes of a popup item
  ***************************************/
 
 int
@@ -902,28 +875,6 @@ static void draw_item( PopUP *,
 					   int,
 					   int );
 
-#define TITLEH         ( pup_title_ascent + pup_title_desc + PADTITLE )
-
-#define BLOCK
-
-/***************************************
- ***************************************/
-
-#ifndef BLOCK
-
-static long old_delta = 0;
-
-static int
-popclose( XEvent * xev,
-		  void *   data )
-{
-    if ( xev->type == DestroyNotify )
-		fli_context->idle_delta = old_delta;
-    return 0;
-}
-
-#endif
-
 
 /***************************************
  ***************************************/
@@ -931,7 +882,6 @@ popclose( XEvent * xev,
 static void
 wait_for_close( Window win )
 {
-#ifdef BLOCK
     long emask = AllEventsMask;
     XEvent xev;
 
@@ -942,12 +892,6 @@ wait_for_close( Window win )
 
     while ( XCheckWindowEvent( flx->display, win, emask, &xev ) )
 		/* empty */ ;
-#else
-    fl_add_event_callback( win, DestroyNotify, popclose, 0 );
-    fl_add_event_callback( win, UnmapNotify, popclose, 0 );
-    old_delta = fli_context->idle_delta;
-    fli_context->idle_delta = 10;
-#endif
 }
 
 
@@ -1034,10 +978,19 @@ handle_submenu( PopUP *    m,
 {
     if ( ! ( item->mode & ( FL_PUP_GREY | FL_INACTIVE ) ) && item->subm >= 0 )
     {
-		fl_setpup_position( m->x + m->w,
+		/* Set up the position for the new window (it should appear so
+		   that it's top line is flush with the line of the parent menu
+		   it was started from). Please note: the new window has to overlap
+		   the parent window at least in a single point - otherwise drawing
+		   artefacts often appear! */
+
+		fl_setpup_position( m->x + m->w - 4,
 							m->y + m->cellh * ( *val - 1 )
 							+ ( ( m->title && *m->title ) ?
 								m->titleh - m->padh : 0 ) );
+
+		/* Draw and deal with the submenu */
+
 		if ( ( pup_subreturn = *val = fl_dopup( item->subm ) ) <= 0 )
 			grab_both( m );
 		else
@@ -1101,13 +1054,8 @@ pup_keyboard( XKeyEvent * xev,
     }
     else if ( IsLeft( keysym ) )
     {
-#if 0
-		if ( pup_level > 1 )	/* not allow closing the root menu */
-#endif
-		{
-			*val = -1;
-			keysym = XK_Escape;
-		}
+		*val = -1;
+		keysym = XK_Escape;
     }
     else if ( keysym == XK_Escape || keysym == XK_Cancel )
     {
@@ -1345,14 +1293,14 @@ grab_both( PopUP * m )
 
 	fl_winset( m->win );
 
-    /* get rid of all non-pointer events in event_mask */
+    /* Get rid of all non-pointer events in event_mask */
 
     evmask &= ~ ( ExposureMask | KeyPressMask );
     XSync( flx->display, 0 );
     fl_msleep( 30 );
     XChangeActivePointerGrab( flx->display, evmask, m->cursor, CurrentTime );
 
-    /* do both pointer and keyboard grab */
+    /* Do pointer and keyboard grab */
 
     if ( XGrabPointer( flx->display, m->win, False, evmask, GrabModeAsync,
 					   GrabModeAsync, None, m->cursor, CurrentTime )
@@ -1400,11 +1348,12 @@ fl_dopup( int n )
 	   closing it, so delete all such events for the form the touch menu
 	   belongs to. */
 
-	while ( XCheckWindowEvent( flx->display, fl_popup_parent_window,
-							   EnterWindowMask, &xev ) )
-		/* empty */ ;
+	if ( m->form && m->form->window )
+		while ( XCheckWindowEvent( flx->display, m->form->window,
+								   EnterWindowMask, &xev ) )
+			/* empty */ ;
 
-    /* pup_interact returns the item number */
+    /* pup_interact() returns the item number */
 
     val = pup_interact( m );
 
@@ -1416,21 +1365,23 @@ fl_dopup( int n )
     else
 		M_err( "fl_dopup", "Window already closed" );
 
-	/* The following is necessary because 'save_under' may bot be supported. */
+	/* The following is necessary because 'save_under' may bot be supported.
+	   Unfortunately, this won't do anything if the menu was created without
+	   a window being already open. In that case there's no way we could
+	   figure out which form the popup belongs to. To get that right we would
+	   need a change of the puplic interface... */
 
-	if ( fl_popup_form )
+	if ( m->form && m->form->window )
 	{
-		fl_winset( fl_popup_form->window );
-        fl_set_clipping( m->win_x - fl_popup_form->x,
-                         m->win_y - fl_popup_form->y,
-                         m->w, m->h );
-		fl_redraw_form( fl_popup_form );
+		fl_winset( m->form->window );
+        fl_set_clipping( m->x, m->y, m->w, m->h );
+		fl_redraw_form( m->form );
 		fl_set_clipping( 0, 0, 0, 0 );
 	}
 
     if ( pup_level > 1 )
     {
-		/* need to remove all MotionNotify otherwise wrong coord */
+		/* Need to remove all MotionNotify otherwise wrong coord */
 
 		while ( XCheckMaskEvent( flx->display, ButtonMotionMask, &xev ) )
 			/* empty */ ;
@@ -1736,20 +1687,8 @@ void
 fl_setpup_shadow( int n,
 				  int y  FL_UNUSED_ARG )
 {
-#if USE_SHADOW
-    PopUP *m = menu_rec + n;
-    int i;
-#endif
-
     if ( n < 0 || n >= fl_maxpup )
 		return;
-
-#if USE_SHADOW
-	m->noshadow = ! y;
-	for ( i = 0; i < m->nitems; i++ )
-		if ( m->item[ i ]->subm )
-			fl_setpup_shadow( m->item[ i ]->subm, y );
-#endif
 }
 
 
@@ -1856,8 +1795,8 @@ draw_item( PopUP * m,
 {
     int j = i - 1;
     int bw = FL_abs( m->bw );
-    int y = m->titleh + m->cellh * j + 1,
-		dy = m->cellh - 2;
+    int y = m->titleh + m->cellh * j,
+		dy = m->cellh;
     char *str;
     MenuItem *item;
     GC gc;
@@ -1870,7 +1809,7 @@ draw_item( PopUP * m,
     str = item->str;
 
     if ( ! ( item->mode & FL_PUP_GREY ) )
-		fl_drw_box( style, bw + 1, m->titleh + m->cellh * j + 1,
+		fl_drw_box( style, bw + 1, y,
 					m->w - 2 * bw - 2, dy, pup_color,
 					m->bw == -1 ? -1 : -2 );
 
@@ -1880,7 +1819,8 @@ draw_item( PopUP * m,
 		int bbw = item->radio ? -2 : -1;
 
 		( item->radio ? fl_drw_checkbox : fl_drw_box )
-			( FL_UP_BOX, 2 * bw + ( m->lpad - w ) / 2, y + ( dy - CHECKW ) / 2,
+			( FL_UP_BOX, 2 * bw + ( m->lpad - w ) / 2,
+			  y + ( dy - CHECKW ) / 2 - 2,
 			  w, w, pup_color, bbw );
     }
 
@@ -1891,7 +1831,7 @@ draw_item( PopUP * m,
 
 		( item->radio ? fl_drw_checkbox : fl_drw_box )
 			( FL_DOWN_BOX, 2 * bw + ( m->lpad - w ) / 2,
-			  y + ( dy - CHECKW ) / 2, w, w,
+			  y + ( dy - CHECKW ) / 2 - 2, w, w,
 			  fli_depth( fl_vmode ) == 1 ? FL_BLACK : pup_checked_color, bbw );
     }
 
@@ -1925,7 +1865,7 @@ draw_item( PopUP * m,
 								 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) ) ?
 						"@DnArrow" : "@UpArrow",
 						m->w - 2 * bw - 9 - m->rpad / 2,
-						y + dy / 2 - 7,
+						y + dy / 2 - 10,
 						16, 16, FL_BLACK );
 }
 
@@ -1988,9 +1928,9 @@ void
 fl_setpup_position( int x,
 					int y )
 {
-    extpos = ! ( x == -1 && y == -1 );
-    extx = x;
-    exty = y;
+	extpos = 1;
+    extx   = x;
+    exty   = y;
 }
 
 
@@ -2003,27 +1943,15 @@ draw_popup( PopUP * m )
     int i;
 
     if ( m->title && *m->title )
-		m->titleh = TITLEH;
+		m->titleh = pup_title_ascent + pup_title_desc + PADTITLE;
     else
 		m->titleh = m->padh;
 
-#if USE_SHADOW
-    if ( ! m->noshadow )
-    {
-        /** create the shadow  ***/
-
-		XFillRectangle( flx->display, m->win, m->gc_shadow,
-						m->w, m->shade, m->shade, m->h );
-		XFillRectangle( flx->display, m->win, m->gc_shadow,
-						m->shade, m->h, m->w - m->shade, m->shade );
-    }
-#endif
-
-	/*** make the popup box  ***/
+	/* make the popup box  */
 
     fl_drw_box( FL_UP_BOX, 0, 0, m->w, m->h, pup_color, m->bw );
 
-	/*** title box ***/
+	/* title box */
 
     if ( m->title && *m->title )
     {
@@ -2044,16 +1972,9 @@ draw_popup( PopUP * m )
 void
 fl_showpup( int n )
 {
-    int x,
-		y;
-    FL_Coord px = 1,
-		     py = 1,
-		     pw = fl_scrw,
-		     ph = fl_scrh,
-		     mw,
-		     mh;
     PopUP *m = menu_rec + n;
 	int req_y = exty;
+	unsigned int dummy;
 
     if ( n < 0 || n >= fl_maxpup )
     {
@@ -2061,25 +1982,72 @@ fl_showpup( int n )
 		return;
     }
 
+	/* Calculate the height of the title */
+
     if ( m->title )
-		m->titleh = TITLEH;
+		m->titleh = pup_title_ascent + pup_title_desc + PADTITLE;
     else
 		m->titleh = m->padh;
 
-    if ( ! m->win )
+	/* Calculate the total width and height of the popup */
+
+	m->maxw = FL_max( m->title_width, m->maxw );
+	m->w = m->maxw + m->rpad + m->lpad + 4 * FL_abs( m->bw );
+	m->h =   m->nitems * m->cellh + m->titleh + 1 + ( m->padh > 1 )
+		   + 2 * ( FL_abs( m->bw ) > 2 );
+
+	/* If no external coordinates are set open the popup at the mouse
+	   position, otherwise take care that negative coordinates specify
+	   the lower right hand corner of the popup */
+
+    if ( ! extpos )
+		fl_get_mouse( &m->x, &m->y, &dummy );
+    else
+	{
+		if ( extx >= 0 )
+			m->x = extx;
+		else
+			m->x = - extx - m->w;
+
+		if ( exty >= 0 )
+			m->y = exty;
+		else
+			m->y = - exty - m->h;
+	}
+
+    /* Try to make sure the popup is within the root window */
+
+    if ( m->x + m->w > ( unsigned int ) fl_scrw )
+		m->x = fl_scrw - m->w;
+    if ( m->y + m->h > ( unsigned int ) fl_scrh )
+		m->y = fl_scrh - m->h;
+
+    /* If the root window is too small show whatever we can */
+
+    if ( m->x < 0 )
+		m->x = 0;
+    if ( m->y < 0 )
+		m->y = 0;
+
+    /* Warp the mouse to the upper left hand corner of the popup unless
+	   external coordinates are specified */
+
+    if ( ! extpos && ( m->x != extx || m->y != exty ) )
+		XWarpPointer( flx->display, None, fl_root, 0, 0, 0, 0,
+					  m->x + FL_abs( m->bw ), m->y + FL_abs( m->bw ) );
+
+	/* Forget that an external position had been set so it won;t get
+	   reused for another popup */
+
+    extpos = 0;
+
+	/* If the window doesn't exist yet create it, otherwise move it to the
+	   requested position and, if necessary, resize it */
+
+    if ( m->win == None)
     {
-		int bw = 0,
-			w,
-			h;
 		XSetWindowAttributes xswa;
 		unsigned long int vmask;
-		unsigned int depth = fli_depth( fl_vmode );
-		Visual *visual = fli_visual( fl_vmode );
-
-		m->maxw = FL_max( m->title_width, m->maxw );
-		m->w = m->maxw + m->rpad + m->lpad + 4 * FL_abs( m->bw );
-		m->h = m->nitems * m->cellh + m->titleh + 1 + ( m->padh > 1 )
-			   + 2 * ( FL_abs( m->bw ) > 2 );
 
 		m->event_mask =   ExposureMask
 			            | ButtonPressMask
@@ -2094,37 +2062,20 @@ fl_showpup( int n )
 		xswa.event_mask            = m->event_mask;
 		xswa.save_under            = True;
 		xswa.backing_store         = WhenMapped;
+		xswa.override_redirect     = True;
 		xswa.cursor                = m->cursor;
 		xswa.border_pixel          = 0;
 		xswa.colormap              = fli_colormap( fl_vmode );
 		xswa.do_not_propagate_mask = ButtonPress | ButtonRelease | KeyPress;
-		vmask =   CWEventMask   | CWSaveUnder | CWBackingStore  | CWCursor
-			    | CWBorderPixel | CWColormap  | CWDontPropagate;
 
-		/* Setting the transient hint (done after the window is created)
-		   does not do the trick if parent is the root window */
-
-		if ( m->parent_win == fl_root )
-		{
-			xswa.override_redirect = True;
-			vmask |= CWOverrideRedirect;
-		}
-
-		w = m->w;
-		h = m->h;
-
-#if USE_SHADOW
-		if ( ! m->noshadow )
-		{
-			w += m->shade;
-			h += m->shade;
-		}
-#endif
+		vmask =   CWEventMask     | CWSaveUnder   | CWBackingStore
+			    | CWCursor        | CWBorderPixel | CWColormap
+			    | CWDontPropagate | CWOverrideRedirect;
 
 		m->win = XCreateWindow( flx->display, m->parent_win,
-								0, 0, w, h, bw,
-								depth, InputOutput, visual,
-								vmask, &xswa );
+								m->x, m->y, m->w, m->h, 0,
+								fli_depth( fl_vmode ), InputOutput,
+								fli_visual( fl_vmode ), vmask, &xswa );
 
 		XSetTransientForHint( flx->display, m->win, m->parent_win );
 		XStoreName( flx->display, m->win, m->title );
@@ -2135,16 +2086,8 @@ fl_showpup( int n )
 
 			xgcv.foreground     = fl_get_flcolor( pup_text_color );
 			xgcv.font           = pup_font_struct->fid;
-			xgcv.subwindow_mode = IncludeInferiors;
 			xgcv.stipple        = FLI_INACTIVE_PATTERN;
-			vmask = GCForeground | GCFont | GCSubwindowMode | GCStipple;
-
-#if USE_SHADOW
-			/* GC for the shadow */
-
-			m->gc_shadow = XCreateGC( flx->display, m->win, vmask, &xgcv );
-			XSetFillStyle( flx->display, m->gc_shadow, FillStippled );
-#endif
+			vmask               = GCForeground | GCFont | GCStipple;
 
 			/* GC for main text */
 
@@ -2160,95 +2103,37 @@ fl_showpup( int n )
 			if ( fli_dithered( fl_vmode ) )
 				XSetFillStyle( flx->display, m->gc_inactive, FillStippled );
 		}
+
+		XSetWMColormapWindows( flx->display, m->parent_win, &m->win, 1 );
     }
-
-    /* external coord is given relative to root */
-
-    if ( ! extpos )
+	else
 	{
-		unsigned int kmask;
+		Window r;
+		int ax,
+			ay;
+		unsigned int aw,
+			         ah;
 
-		fl_get_mouse( &extx, &exty, &kmask );
+		XGetGeometry( flx->display, m->win, &r, &ax, &ay, &aw, &ah,
+					  &dummy, &dummy );
+
+		if ( m->x != ax || m->y != ay || m->w != aw || m->h != ah )
+			XMoveResizeWindow( flx->display, m->win, m->x, m->y, m->w, m->h );
 	}
-    else if ( extx < 0 )
-		extx = - extx - m->w;
-    else if ( exty < 0 )
-		exty = - exty - m->h;
 
-    /* if parent is not root, need to find its geometry */
-
-    if ( m->parent_win != fl_root )
-		fl_get_win_geometry( m->parent_win, &px, &py, &pw, &ph );
-
-    x = extx;
-    y = exty;
-    mw = m->w;
-    mh = m->h;
-
-#if ! ALWAYSROOT
-    /* check if the stuff is inside the window, if not, make it so  */
-
-    if ( x + mw > px + pw )
-		x = px + pw - mw;
-    if ( y + mh > py + ph )
-		y = py + ph - mh;
-#endif
-
-    /* parent might out of sight */
-
-    if ( x + mw > fl_scrw )
-		x = fl_scrw - mw;
-    if ( y + mh > fl_scrh )
-		y = fl_scrh - mh;
-
-    /* if window is too small, show whatever we can */
-
-    if ( x < 1 )
-		x = 1;
-    if ( y < 1 )
-		y = 1;
-
-    /* see if we need to warp mouse. If external coord, don't do it */
-
-    if ( ! extpos && ( x != extx || y != exty ) )
-		XWarpPointer( flx->display, None, None, 0, 0, 0, 0,
-					  x - extx, y - exty );
-
-    extpos = 0;
-    m->x = x;
-    m->y = y;
-
-    /* Calculate where the window is supposed to appear */
-
-	m->win_x = x - px;
-	m->win_y = y - 2 * m->padh - py;
-
-	/* Normally, one would move the window first and only then map it.
-	   Unfortuantely, this results in some strange effect for submenu
-	   windows if the window had been mapped before: if the old position
-	   of the submenu window intersects with the new position of the
-	   parent window this part of the parent window becomes transparent,
-	   i.e the background suddenly is visible. Mapping first and only
-	   then moving the window seems to get rid of the problem. Unfortunately
-	   I haven't found a reason and start to susect it's a bug in X.   JTT */
-
-	XMapWindow( flx->display, m->win );
-	XMoveWindow( flx->display, m->win, m->win_x, m->win_y );
-	XSetWMColormapWindows( flx->display, m->parent_win, &m->win, 1 );
+	XMapRaised( flx->display, m->win );
 
 	/* The function gets either called directly from a user program or via
 	   the fl_dopup() function. In the first case we need to draw the pupup
 	   and then remove all events the creation of the window produced (after
 	   a sync so that we can be sure all events are already on the event
-	   queue). Otherwise we can leave the drawing to the routine dealing
-	   with the events for the window and just grab pointer and keyboard. */
+	   queue). */
 
 	if ( ! pup_internal_showpup_call )
 	{
 		XEvent ev;
 
 		fl_winset( m->win );
-		draw_popup( m );
 		XSync( flx->display, False );
 
 		while ( XCheckWindowEvent( flx->display, m->win, AllEventsMask, &ev) )
@@ -2256,10 +2141,16 @@ fl_showpup( int n )
 	}
 	else
 	{
-		m->par_y = m->padh + req_y - ( y - py );
+		m->par_y = m->padh + req_y - m->y;
 		grab_both( m );
 		pup_internal_showpup_call = 0;
 	}
+
+	/* In principle explicitely drawing the popiup should only be needed
+	   when this an "external call" and leave it otherwise to the following
+	   Expose event but some users reported problems... */
+
+	draw_popup( m );
 }
 
 
@@ -2349,10 +2240,6 @@ fl_setpup_maxpup( int n )
 		menu_rec[ i ].title = NULL;
 		menu_rec[ i ].parent_win = menu_rec[ i ].win = None;
 		menu_rec[ i ].cursor = None;
-
-#if USE_SHADOW
-		menu_rec[ i ].gc_shadow = None;
-#endif
 
 		menu_rec[ i ].gc_active = menu_rec[ i ].gc_inactive = None;
 
@@ -2474,45 +2361,6 @@ fl_setpup_entries( int            nm,
 				   FL_PUP_ENTRY * entries )
 {
     return generate_menu( nm, entries, 1 );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fli_reparent_pup( int    n,
-				  Window newwin )
-{
-    FL_State *fs = fl_state + fl_vmode;
-    int nrt =    fs->pcm
-		      || fli_visual( fl_vmode ) != DefaultVisual( flx->display,
-														  fl_screen );
-
-    if ( newwin == 0 )
-		newwin = fl_root;
-
-    /* if we are using default visual/depth, root is a good choice */
-
-    if ( ! nrt )
-		newwin = fl_root;
-#if ALWAYSROOT
-    newwin = fl_root;
-#endif
-
-    if ( n >= 0 && n < fl_maxpup )
-    {
-		if ( menu_rec[ n ].win )
-		{
-			XEvent xev;
-
-			XReparentWindow( flx->display, menu_rec[ n ].win, newwin, 0, 0 );
-			while ( ! XCheckTypedEvent( flx->display, ReparentNotify, &xev ) )
-				/* empty */ ;
-		}
-		else
-			menu_rec[ n ].parent_win = newwin;
-    }
 }
 
 
