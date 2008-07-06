@@ -151,7 +151,7 @@ AC_LANG_COMPILER(C)
 ### We might want to get or shut warnings.
 AC_ARG_ENABLE(warnings,
   [  --enable-warnings       tell the compiler to display more warnings],,
-  [ if test $xforms_devel_version = yes && test $ac_cv_prog_gcc = yes ; then
+  [ if test $xforms_devel_version = yes && test $ac_cv_c_compiler_gnu = yes ; then
 	enable_warnings=yes;
     else
 	enable_warnings=no;
@@ -167,7 +167,7 @@ fi
 ### We might want to disable debug
 AC_ARG_ENABLE(debug,
   [  --enable-debug          enable debug information],,
-  [ if test $xforms_devel_version = yes && test $ac_cv_prog_gcc = yes ; then
+  [ if test $xforms_devel_version = yes && test $ac_cv_c_compiler_gnu = yes ; then
 	enable_debug=yes;
     else
 	enable_debug=no;
@@ -237,7 +237,7 @@ AC_DEFUN([XFORMS_ADD_LIB_DIR],[
 $1="${$1} -L$2"
 if test "`(uname) 2>/dev/null`" = SunOS &&
     uname -r | grep '^5' >/dev/null; then
-  if test $ac_cv_prog_gxx = yes ; then
+  if test $ac_cv_cxx_compiler_gnu = yes ; then
     $1="${$1} -Wl[,]-R$2"
   else
     $1="${$1} -R$2"

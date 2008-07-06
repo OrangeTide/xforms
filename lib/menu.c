@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.16 2008/07/02 18:51:41 jtt Exp $";
+char *fl_id_menu = "$Id: menu.c,v 1.17 2008/07/06 23:15:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -56,27 +56,31 @@ char *fl_id_menu = "$Id: menu.c,v 1.16 2008/07/02 18:51:41 jtt Exp $";
 
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 
 #define ISPUP( sp )   ( ( sp )->extern_menu >= 0 )
 
 
 /***************************************
- * Due to the possibility of %t %x present in the item str, an item's
- * value and its index may be different.
+ * Returns the index into the array of items from the items menu ID
  ***************************************/
 
 static int
-val_to_index( FLI_MENU_SPEC * sp,
-			  int             val )
+val_to_index( FL_OBJECT * ob,
+			  int         val )
 {
     int i;
+	FLI_MENU_SPEC *sp = ob->spec;
+
+	if ( ISPUP( sp ) )
+		return val;
 
     for ( i = 1; i <= sp->numitems; i++ )
 		if ( val == sp->mval[ i ] )
 			return i;
 
-    return 0;
+    return -1;
 }
 
 
@@ -89,13 +93,18 @@ do_menu_low_level( FL_OBJECT * ob )
 {
     int popup_id,
 		i,
-		val;
+		val,
+		k;
     FLI_MENU_SPEC *sp = ob->spec;
 
-    if ( sp->numitems == 0 && sp->extern_menu < 0 )
+	/* The number of items can be 0 only if the menu is an external popup */
+
+    if ( sp->numitems == 0 && ! ISPUP( sp ) )
 		return 0;
 
-    if ( sp->extern_menu >= 0 )
+	/* If it's an external popup let the xpopup code deal with everything */
+
+    if ( ISPUP( sp ) )
     {
 		if ( ob->label && *ob->label && ob->type != FL_PULLDOWN_MENU )
 			fl_setpup_title( sp->extern_menu, ob->label );
@@ -106,6 +115,8 @@ do_menu_low_level( FL_OBJECT * ob )
 		return val;
     }
 
+	/* Create a new popup */
+
     popup_id = fl_newpup( FL_ObjWin( ob ) );
 
     if ( ob->type != FL_PULLDOWN_MENU && ! sp->no_title )
@@ -115,14 +126,31 @@ do_menu_low_level( FL_OBJECT * ob )
 
     for ( i = 1; i <= sp->numitems; i++ )
     {
-		fl_addtopup( popup_id, sp->items[ i ] );
-		if (    ( sp->modechange[ i ] || sp->mode[ i ] != FL_PUP_NONE )
-			 && sp->mval[ i ] )
+		if ( sp->mval[ i ] == i && ! sp->cb[ i ] )
+			fl_addtopup( popup_id, sp->items[ i ] );
+		else
+		{
+			char *s = fl_malloc(   strlen( sp->items[ i ] )
+								 + 6 + log10( INT_MAX ) );
+
+			sprintf( s, "%s%%x%d%s", sp->items[ i ], sp->mval[ i ],
+					 sp->cb[ i ] ? "%f" : "" );
+
+			if ( ! sp->cb[ i ] )
+				fl_addtopup( popup_id, s );
+			else
+				fl_addtopup( popup_id, s, sp->cb[ i ] );
+
+			fl_free( s );
+		}
+
+		if ( sp->modechange[ i ] || sp->mode[ i ] != FL_PUP_NONE )
 		{
 			fl_setpup_mode( popup_id, sp->mval[ i ], sp->mode[ i ] );
 			sp->modechange[ i ] = 0;
 		}
-		fl_setpup_shortcut( popup_id, i, sp->shortcut[ i ] );
+
+		fl_setpup_shortcut( popup_id, sp->mval[ i ], sp->shortcut[ i ] );
     }
 
 	/* Pulldown menus and those without a title appear directly
@@ -136,13 +164,16 @@ do_menu_low_level( FL_OBJECT * ob )
 		fl_setpup_position( ob->form->x + ob->x + 5,
 							ob->form->y + ob->y + 5 );
 
+	/* Now do the user interaction */
+
     val = fl_dopup( popup_id );
 
-    if ( val > 0 )
+	/* Deal with whatever is needed according to the return value */
+
+    if ( val > 0 && ( k = val_to_index( ob, val ) ) > 0 )
     {
-		/* if shown for the first time, need to get all mode right as the
-		   menu item string may have embedded mode setting strings in it
-		   (e.g., R1 etc) */
+		/* If shown for the first time, need to get all mode right as the
+		   menu item string may have embedded mode setting strings in it */
 
 		if ( sp->shown == 0 )
 		{
@@ -157,25 +188,24 @@ do_menu_low_level( FL_OBJECT * ob )
 		}
 		else
 		{
-			int k = val_to_index( sp, val );
-
 			sp->mode[ k ] = fl_getpup_mode( popup_id, val );
 			sp->modechange[ k ] = 1;
 
-			/* old val also might change mode if binary */
+			/* Old val also might change mode if binary */
 
 			if ( sp->val > 0 )
 			{
-				int m = fl_getpup_mode( popup_id, sp->val );
+				int m = fl_getpup_mode( popup_id, sp->mval[ sp->val ] );
 
-				k = val_to_index( sp, sp->val );
-				sp->modechange[ k ] = sp->mode[ k ] != m;
-				sp->mode[ k ] = m;
+				sp->modechange[ sp->val ] = sp->mode[ sp->val ] != m;
+				sp->mode[ sp->val ] = m;
 			}
 		}
 
-		sp->val = val;
+		sp->val = k;
     }
+
+	/* Get rid of the popup */
 
     fl_freepup( popup_id );
 
@@ -251,10 +281,9 @@ handle_menu( FL_OBJECT * ob,
 			break;
 
 		case FL_ENTER:
-			if ( ob->type != FL_TOUCH_MENU )
-				break;
-
-			return do_menu( ob );
+			if ( ob->type == FL_TOUCH_MENU )
+				return do_menu( ob );
+			break;
 
 		case FL_PUSH:
 			/* Touch menus and push menus without a title don't do anything
@@ -307,7 +336,7 @@ handle_menu( FL_OBJECT * ob,
 
 
 /***************************************
- * creates an object
+ * Creates a menu object
  ***************************************/
 
 FL_OBJECT *
@@ -339,7 +368,7 @@ fl_create_menu( int          type,
 
 
 /***************************************
- * Adds an object
+ * Adds a menu object
  ***************************************/
 
 FL_OBJECT *
@@ -369,9 +398,6 @@ fl_clear_menu( FL_OBJECT * ob )
     int i;
     FLI_MENU_SPEC *sp = ob->spec;
 
-    sp->val = 0;
-    sp->cur_val = 0;
-
     if ( ISPUP( sp ) )
     {
 		fl_freepup( sp->extern_menu );
@@ -379,13 +405,15 @@ fl_clear_menu( FL_OBJECT * ob )
 		return;
     }
 
+    sp->val = 0;
+    sp->cur_val = 0;
+
     for ( i = 1; i <= sp->numitems; i++ )
     {
-		if ( sp->items[ i ] )
-			fl_free( sp->items[ i ] );
-		if ( sp->shortcut[ i ] )
-			fl_free( sp->shortcut[ i ] );
+		fl_safe_free( sp->items[ i ] );
+		fl_safe_free( sp->shortcut[ i ] );
 		sp->mode[ i ] = FL_PUP_NONE;
+		sp->cb[ i ] = NULL;
     }
 
     sp->numitems = 0;
@@ -398,23 +426,61 @@ fl_clear_menu( FL_OBJECT * ob )
 
 static void
 addto_menu( FL_OBJECT  * ob,
-			const char * str )
+			const char * str,
+			... )
 {
     FLI_MENU_SPEC *sp = ob->spec;
     int n;
+	char *p;
 
-    if ( sp->numitems >= FL_MENU_MAXITEMS )
+    if (    ISPUP( sp )
+		 || sp->numitems >= FL_MENU_MAXITEMS
+	     || sp->cur_val == INT_MAX )
 		return;
 
     n = ++sp->numitems;
-    sp->items[ n ] = fl_strdup( str );
+
+    sp->items[ n ]    = fl_strdup( str );
     sp->shortcut[ n ] = fl_strdup( "" );
-    sp->mode[ n ] = FL_PUP_NONE;
+    sp->mode[ n ]     = FL_PUP_NONE;
+	sp->cb[ n ]       = NULL;
 
-    /* If we want to support %x, need to parse the string */
+	/* Check if a callback function needs to be set */
 
-    if ( ! strstr( sp->items[ n ], "%t" ) )
+	if ( ( p = strstr( sp->items[ n ], "%f" ) ) )
+	{
+		va_list ap;
+
+		va_start( ap, str );
+		sp->cb[ n ] = va_arg( ap, FL_PUP_CB );
+		va_end( ap );
+		memmove( p, p + 2, strlen( p ) - 1 );
+	}
+
+    /* Set the value for the menu (either the index or extract it from "%xn" */
+
+    if ( ! ( p = strstr( sp->items[ n ], "%x" ) ) )
 		sp->mval[ n ] = ++sp->cur_val;
+	else
+	{
+		if ( ! isdigit( ( int ) p[ 2 ] ) )
+		{
+			M_err( "addto_menu", "Missing number after %%x" );
+			sp->mval[ n ] = ++sp->cur_val;
+		}
+		else
+		{
+			char *eptr;
+
+			sp->mval[ n ] = strtol( p + 2, &eptr, 10 );
+			while ( *eptr && isspace( ( int ) *eptr ) )
+				eptr++;
+			if ( *eptr )
+				memmove( p, eptr, strlen( eptr ) + 1 );
+			else
+				*p = '\0';
+		}
+	}
 }
 
 
@@ -424,10 +490,49 @@ addto_menu( FL_OBJECT  * ob,
 
 void
 fl_set_menu( FL_OBJECT *  ob,
-			 const char * menustr )
+			 const char * menustr,
+			 ... )
 {
+    char *t,
+		 *c;
+	va_list ap;
+    FLI_MENU_SPEC *sp = ob->spec;
+
+#if FL_DEBUG >= ML_ERR
+    if ( ! IsValidClass( ob, FL_MENU ) )
+    {
+		M_err( "fl_set_menu", "%s is not Menu class", ob ? ob->label : "" );
+		return;
+    }
+#endif
+
     fl_clear_menu( ob );
-    fl_addto_menu( ob, menustr );
+
+	/* Split up menu string at '|' chars and create an entry for each part */
+
+	va_start( ap, menustr );
+
+	t = fl_strdup( menustr );
+
+    for ( c = strtok( t, "|" );
+		  c && sp->numitems < FL_CHOICE_MAXITEMS;
+		  c = strtok( NULL, "|" ) )
+	{
+		FL_PUP_CB cb;
+
+		if ( strstr( c, "%f" ) )
+		{
+			cb = va_arg( ap, FL_PUP_CB );
+			addto_menu( ob, c, cb );
+		}
+		else
+			addto_menu( ob, c );
+	}
+
+	if ( t )
+		fl_free( t );
+
+	va_end( ap );
 }
 
 
@@ -437,11 +542,13 @@ fl_set_menu( FL_OBJECT *  ob,
 
 int
 fl_addto_menu( FL_OBJECT  * ob,
-			   const char * menustr )
+			   const char * menustr,
+			   ... )
 {
     FLI_MENU_SPEC *sp= ob->spec;
     char *t,
 		 *c;
+	va_list ap;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
@@ -453,15 +560,29 @@ fl_addto_menu( FL_OBJECT  * ob,
 
 	/* Split up menu string at '|' chars and create an entry for each part */
 
+	va_start( ap, menustr );
+
 	t = fl_strdup( menustr );
 
     for ( c = strtok( t, "|" );
 		  c && sp->numitems < FL_CHOICE_MAXITEMS;
 		  c = strtok( NULL, "|" ) )
-		addto_menu( ob, c );
+	{
+		FL_PUP_CB cb;
+
+		if ( strstr( c, "%f" ) )
+		{
+			cb = va_arg( ap, FL_PUP_CB );
+			addto_menu( ob, c, cb );
+		}
+		else
+			addto_menu( ob, c );
+	}
 
 	if ( t )
 		fl_free( t );
+
+	va_end( ap );
 
     return sp->numitems;
 }
@@ -474,42 +595,60 @@ fl_addto_menu( FL_OBJECT  * ob,
 void
 fl_replace_menu_item( FL_OBJECT *  ob,
 					  int          numb,
-					  const char * str )
+					  const char * str,
+					  ... )
 {
     FLI_MENU_SPEC *sp = ob->spec;
-
+	char *s,
+		 *p,
+		 *eptr;
+		 
     if ( ISPUP( sp ) )
+	{
 		fli_replacepup_text( sp->extern_menu, numb, str );
-    else
-    {
-		if ( numb < 1 || numb > sp->numitems )
-			return;
+		return;
+	}
 
-		if ( sp->items[ numb ] )
-			fl_free( sp->items[ numb ] );
-		sp->items[ numb ] = fl_strdup( str );
-    }
+	if ( ( numb = val_to_index( ob, numb ) ) <= 0 )
+		return;
+
+	if ( sp->items[ numb ] )
+		fl_free( sp->items[ numb ] );
+	sp->cb[ numb ] = NULL;
+
+	s = strdup( str );
+
+	if ( ( p = strstr( s, "%f" ) ) )
+	{
+		va_list ap;
+
+		va_start( ap, str );
+		sp->cb[ numb ] = va_arg( ap, FL_PUP_CB );
+		va_end( ap );
+		memmove( p, p + 2, strlen( p ) - 1 );
+	}
+
+	if ( ( p = strstr( s, "%x" ) ) )
+	{
+		if ( isdigit( ( int ) p[ 2 ] ) )
+		{
+			sp->mval[ numb ] = strtol( p + 2, &eptr, 10 );
+			while ( *eptr && isspace( ( int ) *eptr ) )
+				eptr++;
+			if ( *eptr )
+				memmove( p, eptr, strlen( eptr ) + 1 );
+			else
+				*p = '\0';
+		}
+		else
+		{
+			M_err( "addto_menu", "Missing number after %%x" );
+			memmove( p, p + 2, strlen( p ) - 1 );
+		}
+	}
+
+	sp->items[ numb ] = s;
 }
-
-
-/***************************************
- * assign menu item values. Currently %x is not supported
- ***************************************/
-
-#if 0
-static void
-gen_index( FL_OBJECT * ob )
-{
-    FLI_MENU_SPEC *sp = ob->spec;
-    int i;
-
-    sp->cur_val = 0;
-
-    for ( i = 1; i <= sp->numitems; i++ )
-		if ( ! strstr( sp->items[ i ], "%t" ) )
-			sp->mval[ i ] = ++sp->cur_val;
-}
-#endif
 
 
 /***************************************
@@ -523,32 +662,59 @@ fl_delete_menu_item( FL_OBJECT * ob,
     int i;
     FLI_MENU_SPEC *sp = ob->spec;
 
-    if ( numb < 1 || numb > sp->numitems )
+	if ( ISPUP( sp ) || ( numb = val_to_index( ob, numb ) ) <= 0 )
 		return;
 
-	if ( sp->items[ numb ] )
-		fl_free( sp->items[ numb ] );
-	if ( sp->shortcut[ numb ] )
-		fl_free( sp->shortcut[ numb ] );
+	fl_safe_free( sp->items[ numb ] );
+	fl_safe_free( sp->shortcut[ numb ] );
 
     for ( i = numb; i < sp->numitems; i++ )
     {
 		sp->items[ i ]      = sp->items[ i + 1 ];
 		sp->mode[ i ]       = sp->mode[ i + 1 ];
 		sp->modechange[ i ] = sp->modechange[ i + 1 ];
-		sp->mval[ i ]       = sp->mval[ i + 1 ] - 1;
+		sp->mval[ i ]       = sp->mval[ i + 1 ];
 		sp->shortcut[ i ]   = sp->shortcut[ i + 1 ];
+		sp->cb[ i ]         = sp->cb[ i + 1 ];
     }
 
-    sp->mode[ sp->numitems ] = FL_PUP_NONE;
-    sp->items[ sp->numitems ] = NULL;
-	sp->shortcut[ sp->numitems ] = NULL;
+	if ( sp->val == numb )
+		sp->val = -1;
+
+    sp->items[ sp->numitems ]      = NULL;
+	sp->shortcut[ sp->numitems ]   = NULL;
+    sp->mode[ sp->numitems ]       = FL_PUP_NONE;
+    sp->modechange[ sp->numitems ] = 0;
+	sp->mval[ sp->numitems ]       = 0;
+	sp->cb[ sp->numitems ]         = NULL;
+
     sp->numitems--;
-    sp->cur_val--;
 }
 
 
 /***************************************
+ * Sets a callback function for a menu item
+ ***************************************/
+
+FL_PUP_CB
+fl_set_menu_item_callback( FL_OBJECT *  ob,
+						   int          numb,
+						   FL_PUP_CB    cb )
+{
+    FLI_MENU_SPEC *sp = ob->spec;
+	FL_PUP_CB old_cb;
+
+	if ( ISPUP( sp ) || ( numb = val_to_index( ob, numb ) ) <= 0 )
+		return NULL;
+
+	old_cb = sp->cb[ numb ];
+	sp->cb[ numb ] = cb;
+	return old_cb;
+}
+
+
+/***************************************
+ * Sets a shortcut for a menu item
  ***************************************/
 
 void
@@ -558,8 +724,10 @@ fl_set_menu_item_shortcut( FL_OBJECT *  ob,
 {
     FLI_MENU_SPEC *sp = ob->spec;
 
-	if ( sp->shortcut[ numb ] )
-		fl_free( sp->shortcut[ numb ] );
+	if ( ISPUP( sp ) || ( numb = val_to_index( ob, numb ) ) <= 0 )
+		return;
+
+	fl_safe_free( sp->shortcut[ numb ] );
 	sp->shortcut[ numb ] = fl_strdup( str ? str : "" );
 }
 
@@ -579,15 +747,36 @@ fl_set_menu_item_mode( FL_OBJECT *  ob,
 		fl_setpup_mode( sp->extern_menu, numb, mode );
     else
     {
-		if ( numb < 1 || numb > sp->numitems )
+		if ( ( numb = val_to_index( ob, numb ) ) <= 0 )
 			return;
 
 		sp->mode[ numb ] = mode;
 		sp->modechange[ numb ] = 1;
 
-		if ( ( mode & FL_PUP_CHECK ) )
+		if ( mode & FL_PUP_CHECK )
 			sp->val = numb;
     }
+}
+
+
+/***************************************
+ * Sets the display mode for the menu item
+ ***************************************/
+
+int
+fl_set_menu_item_id( FL_OBJECT * ob,
+					 int         index,
+					 int         id )
+{
+    FLI_MENU_SPEC *sp = ob->spec;
+	int old_id;
+
+    if ( ISPUP( sp ) || id < 1 || index < 1 || index > sp->numitems )
+		return -1;
+
+	old_id = sp->mval[ index ];
+	sp->mval[ index ] = id;
+	return old_id;
 }
 
 
@@ -601,6 +790,9 @@ fl_show_menu_symbol( FL_OBJECT * ob,
 {
     FLI_MENU_SPEC *sp = ob->spec;
 
+	if ( ISPUP( sp ) )
+		 return;
+
     sp->showsymbol = show;
     fl_redraw_object( ob );
 }
@@ -613,6 +805,8 @@ fl_show_menu_symbol( FL_OBJECT * ob,
 int
 fl_get_menu( FL_OBJECT * ob )
 {
+    FLI_MENU_SPEC *sp = ob->spec;
+
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
@@ -621,11 +815,12 @@ fl_get_menu( FL_OBJECT * ob )
     }
 #endif
 
-    return ( ( FLI_MENU_SPEC * ) ob->spec )->val;
+    return val_to_index( ob, sp->val );
 }
 
 
 /***************************************
+ * Returns rhe number of items in a menu
  ***************************************/
 
 int
@@ -653,76 +848,82 @@ const char *
 fl_get_menu_text( FL_OBJECT * ob )
 {
     FLI_MENU_SPEC *sp = ob->spec;
-    const char *s;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		M_err( "GetMenuText", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "fl_get_menu_text", "%s is not Menu class",
+			   ob ? ob->label : "" );
 		return NULL;
     }
 #endif
 
     if ( ISPUP( sp ) )
-		s = fl_getpup_text( sp->extern_menu, sp->val );
-    else
-		s = ( sp->val < 1 || sp->val > sp->numitems ) ?
+		return fl_getpup_text( sp->extern_menu, sp->val );
+
+	return ( sp->val < 1 || sp->val > sp->numitems ) ?
 			NULL : sp->items[ sp->val ];
-    return s;
 }
 
 
 /***************************************
+ * Returns a string with the menu items text
  ***************************************/
 
 const char *
 fl_get_menu_item_text( FL_OBJECT * ob,
-					   int         n )
+					   int         numb )
 {
     FLI_MENU_SPEC *sp = ob->spec;
-    const char *s;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		M_err( "GetMenuItemText", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "fl_get_menu_item_text", "%s is not Menu class",
+			   ob ? ob->label : "" );
 		return NULL;
     }
 #endif
 
     if ( ISPUP(sp ) )
-		s = fl_getpup_text( sp->extern_menu, n );
-    else
-		s = ( n < 1 || n > sp->numitems ) ? NULL : sp->items[ n ];
-    return s;
+		return fl_getpup_text( sp->extern_menu, numb );
+
+	numb = val_to_index( ob, numb );
+
+	return numb <= 0 ? NULL : sp->items[ numb ];
 }
 
 
 /***************************************
+ * Returns the mode of a menu item
  ***************************************/
 
 unsigned int
 fl_get_menu_item_mode( FL_OBJECT * ob,
-					   int         n )
+					   int         numb )
 {
     FLI_MENU_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		M_err( "GetMenuItemMode", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "fl_get_menu_item_mode", "%s is not Menu class",
+			   ob ? ob->label : "" );
 		return 0;
     }
 #endif
 
     if ( ISPUP( sp ) )
-		return fl_getpup_mode( sp->extern_menu, n );
-    else
-		return ( n > 0 && n <= sp->numitems ) ? sp->mode[ n ] : 0;
+		return fl_getpup_mode( sp->extern_menu, numb );
+
+	numb = val_to_index( ob, numb );
+
+	return numb <= 0 ? 0 : sp->mode[ numb ];
 }
 
 
 /***************************************
+ * Makes an already existing popup a menu
  ***************************************/
 
 void
@@ -732,22 +933,25 @@ fl_set_menu_popup( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		M_err( "setmenuPup", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "fl_set_menu_popup", "%s is not Menu class",
+			   ob ? ob->label : "" );
 		return;
     }
 #endif
 
     ( ( FLI_MENU_SPEC * ) ob->spec )->extern_menu = pup;
+
     if ( ob->type == FL_PULLDOWN_MENU )
 		fl_setpup_shadow( pup, 0 );
 }
 
 
 /***************************************
+ * Creates a popup and makes that a menu
  ***************************************/
 
 int
-fl_set_menu_entries( FL_OBJECT *    ob,
+fl_set_menu_entries( FL_OBJECT    * ob,
 					 FL_PUP_ENTRY * ent )
 {
     int n;
@@ -768,6 +972,7 @@ fl_set_menu_entries( FL_OBJECT *    ob,
 
 
 /***************************************
+ * If the menu is really a popup in disguise returns the popups number
  ***************************************/
 
 int
@@ -780,6 +985,7 @@ fl_get_menu_popup( FL_OBJECT * ob )
 
 
 /***************************************
+ * Allows to change the no-title attribute of a menu
  ***************************************/
 
 int

@@ -40,6 +40,7 @@
 #include "private/flsnprintf.h"
 #include "flinternal.h"
 #include "fd_main.h"
+#include "fd_spec.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -57,16 +58,16 @@
 void
 make_backup( const char *s )
 {
-    char buf[1024];
+    char buf[ 1024 ];
 
-    if (access((char *) s, R_OK) == 0)
+    if ( access( ( char * ) s, R_OK ) == 0 )
     {
-	sprintf(buf, "%s.bak", s);
+		sprintf( buf, "%s.bak", s );
 #ifdef  __EMX__
-	unlink(buf);
+		unlink( buf );
 #endif
-	if (rename(s, buf))
-	    M_err("MakeBackup", "%s write failed", buf);
+		if ( rename( s, buf ) )
+			M_err( "MakeBackup", "%s write failed", buf );
     }
 }
 
@@ -80,7 +81,7 @@ filename_only( char const * filename )
     char const * ptr = strrchr( filename, '/' );
 
     if ( ptr )
-		return ptr+1;
+		return ptr + 1;
     return filename;
 }
 
@@ -1158,29 +1159,35 @@ print_callbacks_and_globals( FILE    * fn,
 						 get_free_handle( obj, name ) );
 			}
 			else
+			{
+				fprintf( fn, "/***************************************\n"
+						 " ***************************************/\n\n" );
 				fprintf( fn, "int %s( FL_OBJECT *ob, int ev, FL_Coord mx, "
 						 "FL_Coord my, int key, void *xev )\n"
 						 "{\n    /* free obj handler code */\n    "
-						 "return 0;\n}\n\n",
+						 "return 0;\n}\n\n\n",
 						 get_free_handle( obj, name ) );
+			}
 		}
-
 
 		if (    cbname[ 0 ] != '\0'
 			 && ! strstr( cbname, "::" )
 			 && ! already_emitted( form->first, obj, cbname ) )
 		{
 			if ( ! code )
-			{
 				fprintf( fn, "extern void %s( FL_OBJECT *, long );\n", cbname );
-			}
 			else
 			{
+				fprintf( fn, "/***************************************\n"
+						 " ***************************************/\n\n" );
 				fprintf( fn, "void %s( FL_OBJECT *ob, long data )\n{\n",
 						 cbname );
-				fprintf( fn, "    /* fill-in code for callback */\n}\n\n" );
+				fprintf( fn, "    /* fill-in code for callback */\n}\n\n\n" );
 			}
 		}
+
+		if ( obj->objclass == FL_MENU )
+			emit_menu_item_callback_headers( fn, obj, code );
 
 		if ( ! code )
 			emit_objclass_spec_global( fn, obj );
@@ -1302,12 +1309,12 @@ output_callbacks( FILE * fn,
 				  int    nform )
 {
     int i;
-    for (i = 0; i < nform; i++)
+    for ( i = 0; i < nform; i++ )
     {
-		fprintf(fn, "/*** callbacks and freeobj handles for form %s ***/\n",
-				fdform[i].fname);
-		print_callbacks_and_globals(fn, fdform[i].form, 1);
-		fprintf(fn, "\n");
+		fprintf( fn, "/*** callbacks and freeobj handles for form %s ***/\n\n",
+				 fdform[ i ].fname );
+		print_callbacks_and_globals( fn, fdform[i].form, 1 );
+		fprintf( fn, "\n" );
     }
 }
 

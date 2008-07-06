@@ -106,6 +106,9 @@ extern void emit_menu_header( FILE *,
 							  FL_OBJECT * );
 extern void emit_menu_global( FILE *,
 							  FL_OBJECT * );
+extern void emit_menu_item_callback_headers( FILE      * fn,
+											 FL_OBJECT * ob,
+											 int         code );
 
 /* counters */
 

@@ -43,11 +43,12 @@ typedef struct
     int             align;				    /* onle here to mirror FL_CHOICE */
     int             extern_menu;			/* if external pop is used */
     short           showsymbol;			    /* whether symbol is to be shown */
-    short           shown;				    /* if shown                     */
+    short           shown;				    /* if shown                    */
     char            mval[ MAXITEMS ];		/* entry value, position based */
     char            modechange[ MAXITEMS ];
-    char            cur_val;				/* a counter for the value      */
+    int             cur_val;				/* counter for the value       */
 	int             no_title;
+	FL_PUP_CB       cb[ MAXITEMS ];         /* item callback functions     */
 } FLI_MENU_SPEC;
 
 #endif

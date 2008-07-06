@@ -573,6 +573,7 @@ typedef struct
 	                 ygrid;
     char          ** content;
     char          ** shortcut;
+	char          ** callback;
     unsigned char  * mode;
     int              new_menuapi;
     int              global_scope;
@@ -582,6 +583,7 @@ typedef struct
     int              grid_linestyle;
     int              no_title;
     int              mark_active;
+	int            * mval;
     char             helper[512];
     int              reserverd[12];
 } SuperSPEC;

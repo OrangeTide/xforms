@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.28 2008/07/02 18:51:42 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.29 2008/07/06 23:15:51 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -145,7 +145,7 @@ static FL_COLOR pup_checked_color = FL_BLUE;
 static int pup_level = 0;
 static int fl_maxpup = FL_MAXPUP;
 
-static int pup_bw = -2;
+static int pup_bw = -1;
 static int pup_bw_is_set = 0;
 
 static PopUP *menu_rec = NULL;
@@ -984,7 +984,7 @@ handle_submenu( PopUP *    m,
 		   the parent window at least in a single point - otherwise drawing
 		   artefacts often appear! */
 
-		fl_setpup_position( m->x + m->w - 4,
+		fl_setpup_position( m->x + m->w - 3,
 							m->y + m->cellh * ( *val - 1 )
 							+ ( ( m->title && *m->title ) ?
 								m->titleh - m->padh : 0 ) );
@@ -1795,8 +1795,10 @@ draw_item( PopUP * m,
 {
     int j = i - 1;
     int bw = FL_abs( m->bw );
-    int y = m->titleh + m->cellh * j,
-		dy = m->cellh;
+    int x = bw,
+		w = m->w - 2 * bw,
+		y = m->titleh + m->cellh * j,
+		h = m->cellh;
     char *str;
     MenuItem *item;
     GC gc;
@@ -1809,9 +1811,8 @@ draw_item( PopUP * m,
     str = item->str;
 
     if ( ! ( item->mode & FL_PUP_GREY ) )
-		fl_drw_box( style, bw + 1, y,
-					m->w - 2 * bw - 2, dy, pup_color,
-					m->bw == -1 ? -1 : -2 );
+		fl_drw_box( style, x + 1, y, w - 2, h - 1,
+					pup_color, m->bw == -1 ? -1 : -2 );
 
     if ( item->mode & FL_PUP_BOX && ! ( item->mode & FL_PUP_CHECK ) )
     {
@@ -1820,7 +1821,7 @@ draw_item( PopUP * m,
 
 		( item->radio ? fl_drw_checkbox : fl_drw_box )
 			( FL_UP_BOX, 2 * bw + ( m->lpad - w ) / 2,
-			  y + ( dy - CHECKW ) / 2 - 2,
+			  y + ( h - CHECKW ) / 2 - 2,
 			  w, w, pup_color, bbw );
     }
 
@@ -1831,7 +1832,7 @@ draw_item( PopUP * m,
 
 		( item->radio ? fl_drw_checkbox : fl_drw_box )
 			( FL_DOWN_BOX, 2 * bw + ( m->lpad - w ) / 2,
-			  y + ( dy - CHECKW ) / 2 - 2, w, w,
+			  y + ( h - CHECKW ) / 2 - 2, w, w,
 			  fli_depth( fl_vmode ) == 1 ? FL_BLACK : pup_checked_color, bbw );
     }
 
@@ -1839,7 +1840,7 @@ draw_item( PopUP * m,
 
     j = str[ 0 ] == '\010';
     fli_drw_stringTAB( m->win, gc,
-					   m->lpad + 2 * bw, y + m->padh + pup_ascent - 1,
+					   m->lpad + 2 * bw, y + m->padh + pup_ascent,
 					   pup_font_style, pup_font_size, str + j,
 					   strlen( str ) - j, 0 );
 
@@ -1850,14 +1851,15 @@ draw_item( PopUP * m,
 		XRectangle *xr;
 
 		xr = fli_get_underline_rect( pup_font_struct, m->lpad + 2 * bw,
-									 y + m->padh + pup_ascent - 1,
+									 y + m->padh + pup_ascent,
 									 str, item->ulpos );
 		XFillRectangle( flx->display, m->win, gc,
 						xr->x, xr->y, xr->width, xr->height );
     }
 
     if ( j )
-		fl_draw_symbol( "@DnLine", 2 * bw, y + dy, m->w - 4 * bw, 1, FL_COL1 );
+		fl_draw_symbol( "@DnLine", 2 * bw, y + h - 2, m->w - 4 * bw, 1,
+						FL_COL1 );
 
     if ( item->subm >= 0 )
 		fl_draw_symbol( (    style == FL_UP_BOX
@@ -1865,7 +1867,7 @@ draw_item( PopUP * m,
 								 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) ) ?
 						"@DnArrow" : "@UpArrow",
 						m->w - 2 * bw - 9 - m->rpad / 2,
-						y + dy / 2 - 10,
+						y + h / 2 - 8,
 						16, 16, FL_BLACK );
 }
 
@@ -2304,7 +2306,7 @@ generate_menu( int                  n,
 			w += 2;
 		}
 
-		if ( *t != '/' )
+		if ( *t != '/' )          /* regular entry */
 		{
 			if ( *t == '_' )
 				*t = '\010';
@@ -2322,7 +2324,7 @@ generate_menu( int                  n,
 			if ( p->callback )
 				fl_setpup_itemcb( n, val, p->callback );
 		}
-		else
+		else                      /* start of submenu */
 		{
 			int m = fl_newpup( menu->parent_win );
 
@@ -2347,8 +2349,6 @@ generate_menu( int                  n,
 		fl_free( t );
     }
 
-	val--;
-
     return n;
 }
 
@@ -2357,10 +2357,10 @@ generate_menu( int                  n,
  ***************************************/
 
 int
-fl_setpup_entries( int            nm,
+fl_setpup_entries( int            n,
 				   FL_PUP_ENTRY * entries )
 {
-    return generate_menu( nm, entries, 1 );
+    return generate_menu( n, entries, 1 );
 }
 
 

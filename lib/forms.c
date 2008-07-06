@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.46 2008/07/02 18:51:41 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.47 2008/07/06 23:15:50 jtt Exp $";
 #endif
 
 
@@ -1581,7 +1581,7 @@ fli_do_radio_push( FL_OBJECT * obj,
 {
 	FL_OBJECT *o = obj;
 
-	if ( ! obj || ! obj->radio || fl_get_button( obj ) )
+	if ( ! obj || ! obj->radio )
 		return;
 
     /* If this radio button does not belong to any group we have to search

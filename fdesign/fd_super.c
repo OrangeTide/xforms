@@ -72,13 +72,15 @@ spec_to_superspec( FL_OBJECT * ob )
     SuperSPEC *spp;
     int i;
 
-    if (!ob->u_vdata)
+    if ( ! ob->u_vdata )
     {
 		ob->u_vdata = spp = fl_calloc( 1, sizeof *spp );
 		spp->content = fl_calloc( MAX_CONTENT + 1, sizeof *spp->content );
 		spp->shortcut = fl_calloc( MAX_CONTENT + 1, sizeof *spp->shortcut );
+		spp->callback = fl_calloc( MAX_CONTENT + 1, sizeof *spp->callback );
 		spp->mode = fl_calloc(MAX_CONTENT + 1, sizeof *spp->mode );
-		spp->new_menuapi = 1;
+		spp->mval = fl_calloc(MAX_CONTENT + 1, sizeof *spp->mval );
+		spp->new_menuapi = 0;
     }
 
     spp = ob->u_vdata;
@@ -95,8 +97,7 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->nlines = n;
 		for ( i = 1; i <= n && i <= MAX_CONTENT; i++ )
 		{
-			if ( spp->content[ i ] )
-				fl_free( spp->content[ i ] );
+			fl_safe_free( spp->content[ i ] );
 			spp->content[ i ] = fl_strdup( fl_get_browser_line( ob, i ) );
 		}
     }
@@ -112,15 +113,11 @@ spec_to_superspec( FL_OBJECT * ob )
 		{
 			spp->mode[ i ] = sp->mode[ i ];
 
-			if ( spp->shortcut[ i ] )
-				fl_free( spp->shortcut[ i ] );
-
+			fl_safe_free( spp->shortcut[ i ] );
 			if ( sp->shortcut[ i ] )
 				spp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
 
-			if ( spp->content[ i ] )
-				fl_free( spp->content[ i ] );
-
+			fl_safe_free( spp->content[ i ] );
 			spp->content[ i ] = fl_strdup( fl_get_choice_item_text( ob, i ) );
 		}
     }
@@ -132,18 +129,22 @@ spec_to_superspec( FL_OBJECT * ob )
 
 		for ( i = 1; i <= spp->nlines; i++ )
 		{
+			int k = sp->mval[ i ];
+
 			spp->mode[ i ] = sp->mode[ i ];
 
-			if ( spp->shortcut[ i ] )
-				fl_free( spp->shortcut[ i ] );
+			spp->mval[ i ] = k;
 
+			fl_safe_free( spp->shortcut[ i ] );
 			if ( sp->shortcut[ i ] )
 				spp->shortcut[ i ] = fl_strdup( sp->shortcut[ i ] );
 
-			if ( spp->content[ i ] )
-				fl_free( spp->content[ i ] );
+			fl_safe_free( spp->content[ i ] );
+			spp->content[ i ] = fl_strdup( fl_get_menu_item_text( ob, k ) );
 
-			spp->content[ i ] = fl_strdup( fl_get_menu_item_text( ob, i ) );
+			fl_safe_free( spp->callback[ i ] );
+			if ( sp->cb[ i ] )
+				spp->callback[ i ] = fl_strdup( ( char * ) sp->cb[ i ] );
 		}
     }
     else if (    ob->objclass == FL_SLIDER
@@ -346,6 +347,11 @@ superspec_to_spec( FL_OBJECT * ob )
 				fl_set_menu_item_mode( ob, i, spp->mode[ i ] );
 				if ( spp->shortcut[ i ] )
 					fl_set_menu_item_shortcut( ob, i, spp->shortcut[ i ] );
+				if ( spp->callback[ i ] )
+					fl_set_menu_item_callback( ob, i,
+								( FL_PUP_CB ) fl_strdup( spp->callback[ i ] ) );
+				if ( spp->mval[ i ] != i )
+					fl_set_menu_item_id( ob, i, spp->mval[ i ] );
 			}
 		}
     }

@@ -366,11 +366,17 @@ load_objclass_spec_info( FILE      * fp,
 			{
 				sp->content[ ++sp->nlines ] = fl_strdup( val );
 				sp->shortcut[ sp->nlines ] = NULL;
+				sp->callback[ sp->nlines ] = NULL;
+				sp->mval[ sp->nlines ] = sp->nlines;
 			}
 			else if ( strcmp( key, "mode" ) == 0 )
 				sp->mode[ sp->nlines ] = get_pupmode_value( val );
 			else if ( strcmp( key, "shortcut" ) == 0 )
 				sp->shortcut[ sp->nlines ] = fl_strdup( val );
+			else if ( strcmp( key, "callback" ) == 0 )
+				sp->callback[ sp->nlines ] = fl_strdup( val );
+			else if ( strcmp( key, "id" ) == 0 )
+				sscanf( val, "%d", sp->mval + sp->nlines );
 			else if ( strcmp( key, "file" ) == 0 )
 				strcpy( sp->filename, val );
 			else if ( strcmp( key, "focus_file" ) == 0 )

@@ -1,13 +1,13 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
-AC_PREREQ(2.52)
-AC_INIT(xforms, 1.0.91pre12, xforms@bob.usuhs.mil)
+AC_PREREQ(2.61)
+AC_INIT([xforms],[1.0.91pre12],[xforms@bob.usuhs.mil])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
 
 AC_CANONICAL_TARGET
-AM_CONFIG_HEADER([lib/config.h])
+AC_CONFIG_HEADERS([lib/config.h])
 AM_INIT_AUTOMAKE($PACKAGE_NAME, $PACKAGE_VERSION)
 AM_MAINTAINER_MODE
 
@@ -24,7 +24,7 @@ for file in config/install-sh config/mkinstalldirs ; do
   chmod 755 ${srcdir}/${file}
 done
 
-AC_ARG_ENABLE(demos, [AC_HELP_STRING([--enable-demos], [Build demo programs])])
+AC_ARG_ENABLE(demos, [AS_HELP_STRING([--enable-demos],[Build demo programs])])
 AM_CONDITIONAL(BUILD_DEMOS, test x$enable_demos = xyes)
 
 ### Check for programs
@@ -83,7 +83,7 @@ AC_CHECK_HEADERS([sys/select.h])
 
 # Check whether we want to build the gl code
 AC_ARG_ENABLE(gl,
-  [AC_HELP_STRING([--disable-gl], [Do not build GL support library])])
+  [AS_HELP_STRING([--disable-gl],[Do not build GL support library])])
 if test x$enable_gl != xno ; then
   AC_CHECK_HEADER([GL/glx.h],, [enable_gl=no])
 fi

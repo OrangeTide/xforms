@@ -11,7 +11,7 @@ Border Width: -1
 Name: menuattrib
 Width: 520
 Height: 270
-Number of Objects: 16
+Number of Objects: 18
 
 --------------------
 class: FL_BOX
@@ -52,7 +52,7 @@ argument:
 --------------------
 class: FL_LABELFRAME
 type: ENGRAVED_FRAME
-box: 25 65 190 115
+box: 25 65 190 170
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
 alignment: FL_ALIGN_TOP_LEFT
@@ -106,7 +106,7 @@ argument:
 --------------------
 class: FL_INPUT
 type: NORMAL_INPUT
-box: 35 92 170 25
+box: 35 90 170 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_TOP_LEFT
@@ -178,7 +178,7 @@ argument: 0
 --------------------
 class: FL_BUTTON
 type: NORMAL_BUTTON
-box: 115 212 82 24
+box: 320 220 82 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -196,7 +196,7 @@ argument: 0
 --------------------
 class: FL_CHECKBUTTON
 type: PUSH_BUTTON
-box: 30 210 24 27
+box: 230 220 24 27
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_BLUE
 alignment: FL_ALIGN_CENTER
@@ -210,7 +210,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: auto_clear
 callback: 
 argument: 
-	value: 1
+value: 1
 
 --------------------
 class: FL_BUTTON
@@ -233,7 +233,7 @@ argument: 0
 --------------------
 class: FL_CHOICE
 type: NORMAL_CHOICE2
-box: 106 140 98 25
+box: 106 133 98 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
 alignment: FL_ALIGN_TOP_LEFT
@@ -251,7 +251,7 @@ argument: 0
 --------------------
 class: FL_INPUT
 type: NORMAL_INPUT
-box: 35 140 70 25
+box: 35 133 70 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_TOP_LEFT
@@ -263,6 +263,24 @@ shortcut: #S
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: shortcut
+callback: 
+argument: 0
+
+--------------------
+class: FL_INPUT
+type: NORMAL_INPUT
+box: 35 176 170 25
+boxtype: FL_DOWN_BOX
+colors: FL_COL1 FL_MCOL
+alignment: FL_ALIGN_TOP_LEFT
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Callback
+shortcut: #b
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: item_cb
 callback: 
 argument: 0
 
@@ -301,6 +319,28 @@ gravity: FL_NoGravity FL_NoGravity
 name: scope
 callback: menuentry_scope_cb
 argument: 0
+
+--------------------
+class: FL_COUNTER
+type: NORMAL_COUNTER
+box: 90 210 110 20
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_BLUE
+alignment: FL_ALIGN_LEFT
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: MenuID
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: id
+callback: 
+argument: 0
+bounds: 1.0 1000000.0
+value: 1.0
+sstep: 1.0
+lstep: 10.0
 
 ==============================
 create_the_forms

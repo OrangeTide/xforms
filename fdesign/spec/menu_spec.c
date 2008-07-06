@@ -28,7 +28,7 @@ create_form_menuattrib( void )
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
 
-    obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 25, 65, 190, 115, "Item Attributes" );
+    obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 25, 65, 190, 170, "Item Attributes" );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
 
     obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 225, 67, 111, 140, "Action" );
@@ -36,7 +36,7 @@ create_form_menuattrib( void )
     fdui->content_br = obj = fl_add_browser( FL_HOLD_BROWSER, 353, 70, 120, 140, "CurrentItems:" );
     fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
 
-    fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 35, 92, 170, 25, "EditItem" );
+    fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 35, 90, 170, 25, "EditItem" );
     fl_set_input_shortcut( obj, "#E", 1 );
     fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
 
@@ -52,10 +52,10 @@ create_form_menuattrib( void )
     fl_set_button_shortcut( obj, "#C", 1 );
     fl_set_object_callback( obj, change_menu_item_cb, 0 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 115, 212, 82, 24, "ClearField" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 320, 220, 82, 24, "ClearField" );
     fl_set_object_callback( obj, clear_menu_field_cb, 0 );
 
-    fdui->auto_clear = obj = fl_add_checkbutton( FL_PUSH_BUTTON, 30, 210, 24, 27, "AutoClear" );
+    fdui->auto_clear = obj = fl_add_checkbutton( FL_PUSH_BUTTON, 230, 220, 24, 27, "AutoClear" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
     fl_set_button( obj, 1 );
 
@@ -63,12 +63,16 @@ create_form_menuattrib( void )
     fl_set_button_shortcut( obj, "#R", 1 );
     fl_set_object_callback( obj, replace_menu_item_cb, 0 );
 
-    fdui->mode = obj = fl_add_choice( FL_NORMAL_CHOICE2, 106, 140, 98, 25, "Mode" );
+    fdui->mode = obj = fl_add_choice( FL_NORMAL_CHOICE2, 106, 133, 98, 25, "Mode" );
     fl_set_object_shortcut( obj, "#M", 1 );
     fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
 
-    fdui->shortcut = obj = fl_add_input( FL_NORMAL_INPUT, 35, 140, 70, 25, "Shortcut" );
+    fdui->shortcut = obj = fl_add_input( FL_NORMAL_INPUT, 35, 133, 70, 25, "Shortcut" );
     fl_set_input_shortcut( obj, "#S", 1 );
+    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+
+    fdui->item_cb = obj = fl_add_input( FL_NORMAL_INPUT, 35, 176, 170, 25, "Callback" );
+    fl_set_input_shortcut( obj, "#b", 1 );
     fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
 
     fdui->new_menuapi = obj = fl_add_checkbutton( FL_PUSH_BUTTON, 280, 21, 35, 30, "Use Struct" );
@@ -77,6 +81,12 @@ create_form_menuattrib( void )
 
     fdui->scope = obj = fl_add_choice( FL_NORMAL_CHOICE2, 365, 25, 75, 22, "" );
     fl_set_object_callback( obj, menuentry_scope_cb, 0 );
+
+    fdui->id = obj = fl_add_counter( FL_NORMAL_COUNTER, 90, 210, 110, 20, "MenuID" );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT );
+    fl_set_counter_bounds( obj, 1.0, 1000000.0 );
+    fl_set_counter_value( obj, 1.0 );
+    fl_set_counter_step( obj, 1.0, 10.0 );
 
     fl_end_form( );
 

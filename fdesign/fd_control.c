@@ -40,6 +40,7 @@
 #include "include/forms.h"
 #include "fd_main.h"
 #include "fd/ui_theforms.h"
+#include "private/pmenu.h"
 
 /* All control panel menus, File Object Options etc. have this
  * common structures
@@ -593,6 +594,43 @@ fix_button_label_size( FL_FORM * form,
 
 
 /***************************************
+ ***************************************/
+
+static void
+fix_menu_item_callbacks( FL_FORM * form,
+						 int       save )
+{
+    FL_OBJECT *ob;
+	int i;
+
+	for ( ob = form->first; ob; ob = ob->next )
+	{
+		if ( ob->objclass != FL_MENU )
+			continue;
+
+		if ( save )
+		{
+			FLI_MENU_SPEC *sp = ob->spec;
+
+			for ( i = 1; i <= sp->numitems; i++ )
+				fl_safe_free( sp->cb[ i ] );
+		}
+		else
+		{
+			SuperSPEC *ssp = get_superspec( ob );
+			FLI_MENU_SPEC *sp = ob->spec;
+
+			for ( i = 1; i <= sp->numitems; i++ )
+			{
+				if ( ssp->callback[ i ] )
+					sp->cb[ i ] = ( FL_PUP_CB ) fl_strdup( ssp->callback[ i ] );
+			}
+		}
+	}
+}
+
+
+/***************************************
  * testing
  ***************************************/
 
@@ -611,7 +649,7 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     fl_deactivate_form(fd_control->control);
     thetestform = cur_form;
 
-    /* during test, accumulation error might result. Save the old size */
+    /* During test, accumulation error might result. Save the old size */
 
     formw = cur_form->w;
     formh = cur_form->h;
@@ -629,9 +667,11 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		p->h = ob->h;
     }
 
-    /* change button label size to the one requested */
+    /* Change button label size to the one requested */
 
     fix_button_label_size( thetestform, 1 );
+
+	fix_menu_item_callbacks( thetestform, 1 );
 
     cur_form = NULL;
     redraw_the_form( 1 );
@@ -679,6 +719,8 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     fl_hide_form( thetestform );
 
     fix_button_label_size( thetestform, 0 );
+
+	fix_menu_item_callbacks( thetestform, 0 );
 
     cur_form = thetestform;
     thetestform = NULL;

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.38 2008/07/02 18:51:41 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.39 2008/07/06 23:15:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -959,10 +959,11 @@ fl_set_object_lalign( FL_OBJECT * obj,
 					  int         align )
 {
     int visible;
+	int need_overlap_check = ( obj->align ^ align ) & FL_ALIGN_INSIDE;
 
     if ( ! obj )
     {
-		M_err( "fl_set_object_align", "NULL object." );
+		M_err( "fl_set_object_lalign", "NULL object." );
 		return;
     }
 
@@ -982,6 +983,9 @@ fl_set_object_lalign( FL_OBJECT * obj,
 			fl_hide_object( obj );
 
 		obj->align = align;
+
+		if ( need_overlap_check )
+			fli_recalc_intersections( obj->form );
 
 		if ( visible )
 			fl_show_object( obj );
@@ -2898,9 +2902,9 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		fl_get_char_height( obj->lstyle, obj->lsize, &a, &d );
 		fl_get_align_xy( obj->align, obj->x, obj->y, obj->w, obj->h,
 						 sw, sh + d, 3, 3, &xx, &yy );
-		lrect.x      = xx;
+		lrect.x      = xx - 1;
 		lrect.y      = yy;
-		lrect.width  = sw;
+		lrect.width  = sw + 1;
 		lrect.height = sh + d;
     }
 

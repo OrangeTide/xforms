@@ -79,18 +79,21 @@ FL_EXPORT void fl_clear_menu(
 
 FL_EXPORT void fl_set_menu(
 		FL_OBJECT  * ob,
-		const char * menustr
+		const char * menustr,
+		...
 		);
 
 FL_EXPORT int fl_addto_menu(
 		FL_OBJECT  * ob,
-		const char * menustr
+		const char * menustr,
+		...
 		);
 
 FL_EXPORT void fl_replace_menu_item(
 		FL_OBJECT  * ob,
 		int			 numb,
-		const char * str
+		const char * str,
+		...
 		);
 
 FL_EXPORT void fl_delete_menu_item(
@@ -98,6 +101,11 @@ FL_EXPORT void fl_delete_menu_item(
 		int			numb
 		);
 
+FL_EXPORT FL_PUP_CB fl_set_menu_item_callback(
+		FL_OBJECT *  ob,
+		int          numb,
+		FL_PUP_CB    cb
+		);
 
 FL_EXPORT void fl_set_menu_item_shortcut(
 		FL_OBJECT  * ob,
@@ -132,7 +140,7 @@ FL_EXPORT int fl_get_menu(
 
 FL_EXPORT const char * fl_get_menu_item_text(
 		FL_OBJECT * ob,
-		int			n
+		int			numb
 		);
 
 FL_EXPORT int fl_get_menu_maxitems(
@@ -141,7 +149,7 @@ FL_EXPORT int fl_get_menu_maxitems(
 
 FL_EXPORT unsigned int fl_get_menu_item_mode(
 		FL_OBJECT * ob,
-		int			n
+		int			numb
 		);
 
 FL_EXPORT const char *fl_get_menu_text(
@@ -155,7 +163,13 @@ FL_EXPORT int fl_set_menu_entries(
 
 FL_EXPORT int fl_set_menu_notitle(
 		FL_OBJECT * ob,
-		int         n
+		int         off
+		);
+
+FL_EXPORT int fl_set_menu_item_id(
+		FL_OBJECT * ob,
+		int         item,
+		int         id
 		);
 
 

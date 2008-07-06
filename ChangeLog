@@ -1,3 +1,41 @@
+2008-07-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/menu.c: Thanks to a lot of input from Jason
+	Cipriani several changes were made concerning the
+	ability to set menu item IDs and callback functions
+	for menu items. This includes slight changes to the
+	prototype of the three functions fl_set_menu(),
+	fl_addto_menu() and fl_replace_menu_item(). All of
+	them now accept in addition to their traditional
+	arguments an unspecified number of extra arguments.
+	Also tow new functions were added:
+
+	fl_set_menu_item_callback( )
+	fl_set_menu_item_id( )
+
+	Please see the file 'New_Features.txt' for a more
+	complete description.
+
+	* fdesign:  Support for setting menu item IDs and
+	menu item callbacks has been added.
+
+2008-07-03 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/forms.c: for radio buttons an associated
+	callback function wasn't called on a click on an
+	already pressed radio button as Luis Balona found
+	out. Since this isn't the bahaviour of older
+	XForms version this could lead to problems for
+	applictaions that expect the old behaviour, so
+	the behaviour was switched back to the old one.
+
+	* config/: on "make maintainer-mode the scripts
+	install-sh, missing and mkinstalldirs got deleted.
+	While the first two were generated automatically
+	during the autoconf process the last wasn't which
+	led to a warning when running configure. Thus the
+	'mkinstalldirs' (from automake 1.10) was added.
+
 2008-07-02 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/xpopup.c, lib/menu.c: Tried to fix a bug

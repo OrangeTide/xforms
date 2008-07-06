@@ -96,25 +96,25 @@ menu_callback( FL_OBJECT * ob,
 
 FL_PUP_ENTRY menu_entries[ ] =
 {
-    { "Menu Item 1", NULL, NULL, 0, { 0, 0 } },
-    { "Menu Item 2", NULL, NULL, 0, { 0, 0 } },
-    { "_Menu Item 3", NULL, NULL, 0, { 0, 0 } },
+    { "Menu Item 1",   NULL, NULL, 0, { 0, 0 } },
+    { "Menu Item 2",   NULL, NULL, 0, { 0, 0 } },
+    { "_Menu Item 3",  NULL, NULL, 0, { 0, 0 } },
     { "/_Menu Item 4", NULL, NULL, 0, { 0, 0 } },
-        { "Menu Item 5", NULL, NULL, 0, { 0, 0 } },
-        { "Menu Item 6", NULL, NULL, 0, { 0, 0 } },
+        { "Menu Item 5",  NULL, NULL, 0, { 0, 0 } },
+        { "Menu Item 6",  NULL, NULL, 0, { 0, 0 } },
         { "/Menu Item 7", NULL, NULL, 0, { 0, 0 } },
-            { "Menu Item 8", NULL, NULL, 0, { 0, 0 } },
+            { "Menu Item 8",  NULL, NULL, 0, { 0, 0 } },
 	        { "/Menu Item 9", NULL, NULL, 0, { 0, 0 } },
 	            { "Menu Item 10", NULL, NULL, 0, { 0, 0 } },
 	            { "Menu Item 11", NULL, NULL, 0, { 0, 0 } },
-                { NULL, NULL, NULL, 0, { 0, 0 } },
-            { NULL, NULL, NULL, 0, { 0, 0 } },
-            { "Menu Item 12", NULL, NULL, 0, { 0, 0 } },
-        { NULL, NULL, NULL, 0, { 0, 0 } },
-    { "Menu Item 13", NULL, NULL, 0, { 0, 0 } },
-    { "menu Item 14", NULL, NULL, 0, { 0, 0 } },
-    { "menu Item 15", NULL, NULL, 0, { 0, 0 } },
-    { NULL, NULL, NULL, 0, { 0, 0 } }
+                { NULL,           NULL, NULL, 0, { 0, 0 } },
+            { "Menu Item 13",  NULL, NULL, 0, { 0, 0 } },
+            { NULL,            NULL, NULL, 0, { 0, 0 } },
+        { NULL,           NULL, NULL, 0, { 0, 0 } },
+    { "Menu Item 15",  NULL, NULL, 0, { 0, 0 } },
+    { "menu Item 16",  NULL, NULL, 0, { 0, 0 } },
+    { "menu Item 17",  NULL, NULL, 0, { 0, 0 } },
+    { NULL,            NULL, NULL, 0, { 0, 0 } }
 };
 
 
@@ -170,18 +170,18 @@ pupitem_cb( int selected )
 
 FL_PUP_ENTRY pup_entries[ ] =
 {
-    { "Popup item 1", pupitem_cb, "1", FL_PUP_RADIO, { 0, 0 } },
-    { "Popup Item 2", pupitem_cb, "2", FL_PUP_RADIO, { 0, 0 } },
-    { "Popup Item 3", pupitem_cb, "3", FL_PUP_RADIO, { 0, 0 } },
-    { "/Popup Item 4", pupitem_cb, "4", 0, { 0, 0 } },
+    { "Popup item 1",  pupitem_cb, "1",  FL_PUP_RADIO, { 0, 0 } },
+    { "Popup Item 2",  pupitem_cb, "2",  FL_PUP_RADIO, { 0, 0 } },
+    { "Popup Item 3",  pupitem_cb, "3",  FL_PUP_RADIO, { 0, 0 } },
+    { "/Popup Item 4", pupitem_cb, "4",  0,            { 0, 0 } },
         { "Popup Item 5", pupitem_cb, NULL, FL_PUP_GRAY, { 0, 0 } },
-        { "Popup Item 6", pupitem_cb, NULL, 0, { 0, 0 } },
-        { "Popup Item 7", pupitem_cb, NULL, 0, { 0, 0 } },
+        { "Popup Item 6", pupitem_cb, NULL, 0,           { 0, 0 } },
+        { "Popup Item 7", pupitem_cb, NULL, 0,           { 0, 0 } },
         { "Popup Item 8", pupitem_cb, NULL, 0, { 0, 0 } },
-        { NULL, NULL, NULL, 0, { 0, 0 } },
-    { "Popup Item 9", pupitem_cb, NULL, FL_PUP_GRAY, { 0, 0 } },
-    { "Popup Item 10", pupitem_cb, NULL, 0, { 0, 0 } },
-    { NULL, NULL, NULL, 0, { 0, 0 } }
+        { NULL,       NULL,        NULL, 0,              { 0, 0 } },
+    { "Popup Item 10", pupitem_cb, NULL, FL_PUP_GRAY, { 0, 0 } },
+    { "Popup Item 11", pupitem_cb, NULL, 0, { 0, 0 } },
+    { NULL,            NULL,       NULL, 0, { 0, 0 } }
 };
 
 
