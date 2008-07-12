@@ -33,20 +33,28 @@
 #include <stdlib.h>
 
 FL_FORM *pup;
+
 FL_OBJECT *done,
           *pret,
           *b1,
           *b2,
           *b3,
           *menu;
+
 void create_form_pup( void );
+
 void init_menu( void );
+
 int post( FL_OBJECT *, 
 		  int,
 		  FL_Coord,
 		  FL_Coord,
 		  int,
 		  void * );
+
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -76,12 +84,16 @@ main( int    argc,
     return 0;
 }
 
+
 static int subm = -1,
            m = -1,
            ssm;
 
 
 /* post-handler */
+
+/***************************************
+ ***************************************/
 
 int
 post( FL_OBJECT * ob,
@@ -131,6 +143,9 @@ post( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 show_return_val( int i )
 {
@@ -144,11 +159,20 @@ show_return_val( int i )
     fl_set_object_label( pret, buf );
 }
 
-int ssm_cb( int a )
+
+/***************************************
+ ***************************************/
+
+int
+ssm_cb( int a )
 {
    show_return_val( a );
    return a;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 do_pup( FL_OBJECT * ob,
@@ -203,6 +227,9 @@ do_pup( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 init_menu( void )
 {
@@ -225,6 +252,9 @@ init_menu( void )
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 do_menu( FL_OBJECT * ob,
 		 long        data  FL_UNUSED_ARG )
@@ -240,6 +270,9 @@ do_menu( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 long        data  FL_UNUSED_ARG )
@@ -248,6 +281,9 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 	exit( 0 );
 }
 
+
+/***************************************
+ ***************************************/
 
 void create_form_pup( void )
 {

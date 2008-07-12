@@ -39,7 +39,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.29 2008/07/06 23:15:51 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.30 2008/07/12 20:33:13 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -88,9 +88,9 @@ typedef struct
 
 typedef struct
 {
+	int              used;
     char           * title;		    /* Menu title            */
     Window           win;			/* menu window           */
-    Window           parent_win;	/* and its parent        */
     Cursor           cursor;		/* cursor for the pup    */
     GC               gc_active;		/* GC for maintext       */
     GC               gc_inactive;	/* GC for inactive text  */
@@ -209,7 +209,7 @@ init_pup( PopUP * m )
     m->w = m->h    = m->maxw = 0;
     m->nitems      = 0;
 	m->title_width = 0;
-    m->parent_win  = m->win = None;
+    m->win         = None;
     m->gc_active   = m->gc_inactive = None;
 	m->bw          = pup_bw;
     m->title       = NULL;
@@ -230,17 +230,16 @@ init_pup( PopUP * m )
  ***************************************/
 
 static int
-find_empty_index( Window    win,
-				  FL_FORM * form )
+find_empty_index( Window    win )
 {
     PopUP *p;
 
     for ( p = menu_rec; p < menu_rec + fl_maxpup; p++ )
-		if ( ! p->title && ! *p->item && ! p->parent_win )
+		if ( ! p->used )
 		{
 			init_pup( p );
-			p->parent_win = win;
-			p->form = form;
+			p->used = 1;
+			p->form = win != None ? fl_win_to_form( win ) : NULL;
 			return p - menu_rec;
 		}
 
@@ -254,6 +253,7 @@ static void convert_shortcut( const char *,
 							  const char *,
 							  MenuItem *,
 							  int );
+
 
 static void wait_for_close( Window );
 
@@ -270,7 +270,7 @@ reset_max_width( PopUP * m )
 		 *b;
 
 
-    if ( ! m->parent_win || m->nitems <= 0 )
+    if ( ! m->used || m->nitems <= 0 )
 		return;
 
 	m->maxw = 0;
@@ -322,7 +322,7 @@ parse_entry( int          n,
     unsigned int flags = 0;
 	long num;
 
-    if ( n < 0 || n >= fl_maxpup || ! str )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used || ! str )
 		return -1;
 
     s = fl_strdup( str );
@@ -551,16 +551,17 @@ fli_init_pup( void )
 
 	for ( mr = menu_rec; mr < menu_rec + fl_maxpup; mr++ )
 	{
-		mr->title     = NULL;
-		menu_rec->win = menu_rec->parent_win = None;
-		mr->cursor    = None;
-		mr->gc_active = mr->gc_inactive = None;
-
-		for ( i = 0; i <= FL_MAXPUPI; i++ )
-			mr->item[ i ] = NULL;
+		mr->used       = 0;
+		mr->title      = NULL;
+		mr->win        = None;
+		mr->cursor     = None;
+		mr->gc_active  = mr->gc_inactive = None;
 		mr->menu_cb    = NULL;
 		mr->enter_cb   = mr->leave_cb = NULL;
 		mr->enter_data = mr->leave_data = NULL;
+
+		for ( i = 0; i <= FL_MAXPUPI; i++ )
+			mr->item[ i ] = NULL;
 	}
 
 	fl_setpup_default_fontsize( fli_cntl.pupFontSize ?
@@ -574,16 +575,13 @@ fli_init_pup( void )
 int
 fl_setpup_default_fontsize( int size )
 {
-    PopUP *pup,
-		  *pups;
+	int i;
     int old_pup_font_size = pup_font_size;
-
 
     if ( size <= 0 )
 		return old_pup_font_size;
 
     fli_init_pup( );
-    pup = menu_rec;
 
     pup_font_size = size;
     pup_title_font_size = size;
@@ -595,10 +593,10 @@ fl_setpup_default_fontsize( int size )
 
     init_pupfont( );
 
-    for ( pups = pup + fl_maxpup; pup < pups; pup++ )
+    for ( i = 0; i < fl_maxpup; i++ )
     {
-		reset_max_width( pup );
-		close_pupwin( pup );
+		reset_max_width( menu_rec + i );
+		close_pupwin( menu_rec + i );
     }
 
     return old_pup_font_size;
@@ -611,8 +609,7 @@ fl_setpup_default_fontsize( int size )
 int
 fl_setpup_default_fontstyle( int style )
 {
-    PopUP *pup,
-		  *pups;
+	int i;
     int old_pup_font_style = pup_font_style;
 
     if ( ! flx->display )
@@ -622,16 +619,15 @@ fl_setpup_default_fontstyle( int style )
 		return pup_font_style;
 
     fli_init_pup( );
-    pup = menu_rec;
 
-    pup_font_style = style;
+    pup_font_style       = style;
     pup_title_font_style = style;
-    pup_font_struct = pup_title_font_struct = NULL;
+    pup_font_struct      = pup_title_font_struct = NULL;
 
     init_pupfont( );
 
-    for ( pups = menu_rec + fl_maxpup; pup < pups; pup++ )
-		reset_max_width( pup );
+    for ( i = 0; i < fl_maxpup; i++ )
+		reset_max_width( menu_rec + i );
 
     return old_pup_font_style;
 }
@@ -644,7 +640,7 @@ void
 fl_setpup_default_color( FL_COLOR fg,
 						 FL_COLOR bg )
 {
-    pup_color = fg;
+    pup_color      = fg;
     pup_text_color = bg;
 }
 
@@ -670,8 +666,6 @@ fl_setpup_default_pup_checked_color( FL_COLOR col )
 int
 fl_newpup( Window win )
 {
-	FL_FORM *form = NULL;
-
     fli_init_pup( );
 
     if ( pup_level )
@@ -679,11 +673,6 @@ fl_newpup( Window win )
 		M_warn( "fl_newpup", "Inconsistent pup_level %d", pup_level );
 		pup_level = 0;
     }
-
-    if ( win == None )
-		win = fl_root;
-	else
-		form = fl_win_to_form( win );
 
 	if ( ! pup_bw_is_set )
 	{
@@ -694,7 +683,7 @@ fl_newpup( Window win )
     /* if not private colormap, it does not matter who the popup's parent is
        and root probably makes more sense */
 
-    return find_empty_index( fl_root, form );
+    return find_empty_index( win );
 }
 
 
@@ -710,7 +699,7 @@ fl_addtopup( int          n,
     va_list ap;
 	int ret;
 
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
 		return -1;
 
 #if FL_DEBUG >= ML_DEBUG
@@ -807,7 +796,7 @@ requested_item_is_valid( const char * where,
 						 int          nm,
 						 int          ni )
 {
-    if ( nm < 0 || nm >= fl_maxpup )
+    if ( nm < 0 || nm >= fl_maxpup || ! menu_rec[ nm ].used )
     {
 		M_err( where, "Bad popup index %d", nm );
 		return NULL;
@@ -1317,6 +1306,7 @@ grab_both( PopUP * m )
 
 
 /***************************************
+ * Main routine for creating, doing interaction and removing a popup window
  ***************************************/
 
 int
@@ -1327,7 +1317,7 @@ fl_dopup( int n )
     MenuItem *item = 0;
 	XEvent xev;
 
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
     {
 		M_err( "fl_dopup", "bad pupID: %d\n", n );
 		return -1;
@@ -1365,19 +1355,23 @@ fl_dopup( int n )
     else
 		M_err( "fl_dopup", "Window already closed" );
 
-	/* The following is necessary because 'save_under' may bot be supported.
-	   Unfortunately, this won't do anything if the menu was created without
+#if 0
+	/* The following is necessary because 'save_under' may not be supported.
+	   Unfortunately, this won't do anything if the popup was created without
 	   a window being already open. In that case there's no way we could
 	   figure out which form the popup belongs to. To get that right we would
-	   need a change of the puplic interface... */
+	   need a change of the public interface... */
 
-	if ( m->form && m->form->window )
+	if (    ! DoesSaveUnders( ScreenOfDisplay( flx->display, fl_screen ) )
+		 && m->form
+		 && m->form->window )
 	{
 		fl_winset( m->form->window );
         fl_set_clipping( m->x, m->y, m->w, m->h );
 		fl_redraw_form( m->form );
 		fl_set_clipping( 0, 0, 0, 0 );
 	}
+#endif
 
     if ( pup_level > 1 )
     {
@@ -1437,12 +1431,12 @@ fl_freepup( int n )
     PopUP *p = menu_rec + n;
     int i;
 
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
 		return;
 
-    if ( ! p->parent_win )
+    if ( ! p->used )
     {
-		M_warn( "freepup", "freeing a unallocated/free'ed popup %d\n", n );
+		M_warn( "freepup", "freeing an unallocated/free'ed popup %d\n", n );
 		return;
     }
 
@@ -1459,7 +1453,7 @@ fl_freepup( int n )
 		fl_safe_free( p->item[ i ] );
     }
 
-    p->parent_win = None;
+    p->used = 0;
 
 	if ( p->gc_active != None )
 		XFreeGC( flx->display, p->gc_active );
@@ -1492,21 +1486,22 @@ fl_setpup_shortcut( int          nm,
 
 
 /***************************************
+ * 
  ***************************************/
 
 FL_PUP_CB
 fl_setpup_menucb( int       nm,
 				  FL_PUP_CB cb )
 {
-    PopUP *m = menu_rec + nm;
-    FL_PUP_CB oldcb = NULL;
+    PopUP *m;
+    FL_PUP_CB oldcb;
 
-    if ( nm >= 0 && nm < fl_maxpup && m->parent_win )
-    {
-		oldcb = m->menu_cb;
-		m->menu_cb = cb;
-    }
+    if ( nm < 0 || nm >= fl_maxpup || ! menu_rec[ nm ].used )
+		return NULL;
 
+	m = menu_rec + nm;
+	oldcb = m->menu_cb;
+	m->menu_cb = cb;
     return oldcb;
 }
 
@@ -1524,7 +1519,7 @@ fl_setpup_entercb( int            nm,
     int n,
 		subm;
 
-    if ( nm < 0 || nm >= fl_maxpup )
+    if ( nm < 0 || nm >= fl_maxpup || ! menu_rec[ nm ].used )
 		return NULL;
 
 	m = menu_rec + nm;
@@ -1552,7 +1547,7 @@ fl_setpup_leavecb( int            nm,
     int n,
 		subm;
 
-    if ( nm < 0 || nm >= fl_maxpup )
+    if ( nm < 0 || nm >= fl_maxpup || ! menu_rec[ nm ].used )
 		return NULL;
 
 	m = menu_rec + nm;
@@ -1599,7 +1594,7 @@ fl_setpup_title( int          nm,
 	char *t,
 		 *b;
 
-    if ( nm < 0 || nm >= fl_maxpup || ! title )
+    if ( nm < 0 || nm >= fl_maxpup || ! menu_rec[ nm ].used || ! title )
 		return;
 
 	fl_safe_free( m->title );
@@ -1619,12 +1614,13 @@ Cursor
 fl_setpup_cursor( int nm,
 				  int cursor )
 {
-    PopUP *m = menu_rec + nm;
+    PopUP *m;
     Cursor old;
 
-    if ( nm < 0 || nm >= fl_maxpup )
-		return 0;
+    if ( nm < 0 || nm >= fl_maxpup || ! menu_rec[ nm ].used )
+		return None;
 
+	m = menu_rec + nm;
 	old = m->cursor;
 	m->cursor = cursor ? fl_get_cursor_byname( cursor ) : pup_defcursor;
 
@@ -1653,11 +1649,12 @@ fl_setpup_pad( int n,
 			   int padw,
 			   int padh )
 {
-    PopUP *m = menu_rec + n;
+    PopUP *m;
 
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
 		return;
 
+	m = menu_rec + n;
 	m->padh = padh;
 	m->rpad = m->lpad = padw;
 	m->cellh = pup_ascent + pup_desc + 2 * m->padh;
@@ -1687,7 +1684,7 @@ void
 fl_setpup_shadow( int n,
 				  int y  FL_UNUSED_ARG )
 {
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
 		return;
 }
 
@@ -1702,7 +1699,7 @@ fl_setpup_bw( int n,
     PopUP *m = menu_rec + n;
     int i;
 
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
 		return;
 
 	m->bw = bw;
@@ -1719,11 +1716,12 @@ void
 fl_setpup_softedge( int n,
 					int y )
 {
-    PopUP *m = menu_rec + n;
+    PopUP *m;
 
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
 		return;
 
+	m = menu_rec + n;
 	m->bw = y ? - FL_abs( m->bw ) : FL_abs( m->bw );
 	recurse( m, fl_setpup_softedge, y );
 }
@@ -1978,9 +1976,9 @@ fl_showpup( int n )
 	int req_y = exty;
 	unsigned int dummy;
 
-    if ( n < 0 || n >= fl_maxpup )
+    if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
     {
-		fprintf( stderr, "bad pupID: %d\n", n );
+		M_err( "fl_showpup", "bad pupID: %d\n", n );
 		return;
     }
 
@@ -2074,12 +2072,12 @@ fl_showpup( int n )
 			    | CWCursor        | CWBorderPixel | CWColormap
 			    | CWDontPropagate | CWOverrideRedirect;
 
-		m->win = XCreateWindow( flx->display, m->parent_win,
+		m->win = XCreateWindow( flx->display, fl_root,
 								m->x, m->y, m->w, m->h, 0,
 								fli_depth( fl_vmode ), InputOutput,
 								fli_visual( fl_vmode ), vmask, &xswa );
 
-		XSetTransientForHint( flx->display, m->win, m->parent_win );
+		XSetTransientForHint( flx->display, m->win, fl_root );
 		XStoreName( flx->display, m->win, m->title );
 
 		if ( ! m->gc_active && ! m->gc_inactive )
@@ -2106,7 +2104,7 @@ fl_showpup( int n )
 				XSetFillStyle( flx->display, m->gc_inactive, FillStippled );
 		}
 
-		XSetWMColormapWindows( flx->display, m->parent_win, &m->win, 1 );
+		XSetWMColormapWindows( flx->display, fl_root, &m->win, 1 );
     }
 	else
 	{
@@ -2147,10 +2145,6 @@ fl_showpup( int n )
 		grab_both( m );
 		pup_internal_showpup_call = 0;
 	}
-
-	/* In principle explicitely drawing the popiup should only be needed
-	   when this an "external call" and leave it otherwise to the following
-	   Expose event but some users reported problems... */
 
 	draw_popup( m );
 }
@@ -2239,8 +2233,9 @@ fl_setpup_maxpup( int n )
     menu_rec = fl_realloc( menu_rec, n * sizeof *menu_rec );
     for ( i = fl_maxpup; i < n; i++ )
     {
-		menu_rec[ i ].title = NULL;
-		menu_rec[ i ].parent_win = menu_rec[ i ].win = None;
+		menu_rec[ i ].used   = 0;
+		menu_rec[ i ].title  = NULL;
+		menu_rec[ i ].win    = None;
 		menu_rec[ i ].cursor = None;
 
 		menu_rec[ i ].gc_active = menu_rec[ i ].gc_inactive = None;
@@ -2326,7 +2321,7 @@ generate_menu( int                  n,
 		}
 		else                      /* start of submenu */
 		{
-			int m = fl_newpup( menu->parent_win );
+			int m = fl_newpup( menu->form ? menu->form->window : None );
 
 			if ( t[ 1 ] == '_' )
 				t[ 1 ] = '\010';
@@ -2367,24 +2362,6 @@ fl_setpup_entries( int            n,
 /***************************************
  ***************************************/
 
-void
-fli_getpup_window( int      n,
-				   Window * parent_win,
-				   Window * win )
-{
-    if ( n >= 0 && n < fl_maxpup )
-    {
-		*parent_win = menu_rec[ n ].parent_win;
-		*win = menu_rec[ n ].win;
-    }
-    else
-		*parent_win = *win = None;
-}
-
-
-/***************************************
- ***************************************/
-
 int
 fl_getpup_items( int n )
 {
@@ -2392,7 +2369,7 @@ fl_getpup_items( int n )
 		k,
 		i;
 
-    if ( n >= 0 && n < fl_maxpup )
+    if ( n >= 0 && n < fl_maxpup && menu_rec[ n ].used )
     {
 		m = k = menu_rec[ n ].nitems;
 

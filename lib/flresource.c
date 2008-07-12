@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.29 2008/05/24 14:38:20 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.30 2008/07/12 20:33:13 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1131,11 +1131,10 @@ fl_initialize( int        * na,
 
     /* other initializations */
 
-    fl_screen = DefaultScreen( fl_display );
-    fl_root = RootWindow( fl_display, fl_screen );
-    fl_vroot = fli_GetVRoot( fl_display, fl_screen );
+    fl_screen = flx->screen = DefaultScreen( fl_display );
+    fl_root                 = RootWindow( fl_display, fl_screen );
+    fl_vroot                = fli_GetVRoot( fl_display, fl_screen );
     fli_wmstuff.pos_request = USPosition;
-    flx->screen  = fl_screen;
 
     if ( fl_root != fl_vroot )
     {

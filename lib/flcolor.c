@@ -43,7 +43,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.19 2008/06/22 19:05:32 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.20 2008/07/12 20:33:13 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -60,7 +60,7 @@ static unsigned long max_server_cols;	/* max cols in current visual       */
 static long cols_in_default_visual;
 static long predefined_cols;	/* min(max_server_col, built_in_col) */
 static int allow_leakage;
-static FL_COLOR lastmapped;	/* so fl_textcolor can refresh its cache */
+static FL_COLOR lastmapped;	    /* so fl_textcolor can refresh its cache */
 
 
 static void fli_free_newpixel( unsigned long );
@@ -72,7 +72,7 @@ static FL_COLOR rgb2pixel( unsigned int, unsigned int, unsigned int );
 #define FL_RGB2GRAY( r, g, b )  \
 	( ( 78 * ( r ) + 150 * ( g ) + 28 * ( b ) ) >> 8 )
 #endif
-#define NV( a )    #a,a
+#define NV( a )  #a,a
 
 
 /* Default colormap entry for FORMS, subject to gamma corrections.
@@ -131,7 +131,7 @@ static FLI_IMAP fli_imap[ FL_MAX_COLS ] =
     { NV( FL_FREE_COL6 ),      0,   0,   0, 0, 0 },
 };
 
-#define flmapsize ( int ) ( sizeof fli_imap / sizeof *fli_imap )
+#define flmapsize ( ( int ) ( sizeof fli_imap / sizeof *fli_imap ) )
 #define builtin   FL_BUILT_IN_COLS
 
 
@@ -192,13 +192,13 @@ fli_query_namedcolor( const char *s )
 }
 
 
-#ifdef DO_GAMMA_CORRECTION	/* { */
+/***************************************
+ ***************************************/
+
+#ifdef DO_GAMMA_CORRECTION
 
 #include <math.h>
 
-
-/***************************************
- ***************************************/
 
 void
 fl_set_gamma( double r,
@@ -1074,17 +1074,17 @@ fl_mapcolor( FL_COLOR col,
 		 && lut[ col ] )
 		return lut[ col ];
 
-    fli_imap[ j ].r = r;
-    fli_imap[ j ].g = g;
-    fli_imap[ j ].b = b;
+    fli_imap[ j ].r       = r;
+    fli_imap[ j ].g       = g;
+    fli_imap[ j ].b       = b;
     fli_imap[ j ].grayval = FL_RGB2GRAY( r, g, b );
-    fli_imap[ j ].index = col;
+    fli_imap[ j ].index   = col;
 
     lastmapped = col;
 
     M_warn( "fl_mapcolor", "mapping %ld (%d,%d,%d)", col, r, g, b );
 
-    pixel = lut[ col ];
+    pixel       = lut[ col ];
     exact.red   = ( r << 8 ) | 0xff;
     exact.green = ( g << 8 ) | 0xff;
     exact.blue  = ( b << 8 ) | 0xff;
@@ -1113,8 +1113,9 @@ fl_mapcolor( FL_COLOR col,
 
     if ( ! cur_mapvals[ fl_vmode ] )
     {
-		totalcols = FL_min( FL_MAX_COLS, 1L << fli_depth( fl_vmode ) );
 		M_warn( "MapColor", "ColormapFull. Using substitutions" );
+
+		totalcols = FL_min( FL_MAX_COLS, 1L << fli_depth( fl_vmode ) );
 		cur_map = fl_calloc( totalcols + 1, sizeof *cur_map );
 		cur_mapvals[ fl_vmode ] = cur_map;
 
@@ -1607,12 +1608,11 @@ fl_free_colors( FL_COLOR * c,
 }
 
 
-#define LINEAR_COLOR_DISTANCE  0
-
-
 /***************************************
  * (r,g,b) input should be 8bit each
  ***************************************/
+
+#define LINEAR_COLOR_DISTANCE  0
 
 int
 fli_find_closest_color( int             r,
@@ -1645,7 +1645,7 @@ fli_find_closest_color( int             r,
 #endif
 
 		if ( diff < 0 )
-			fprintf( stderr, "dr=%d dg=%d db=%d diff = %ld\n",
+			fprintf( stderr, "dr = %d dg = %d db = %d diff = %ld\n",
 					 dr, dg, db, diff );
 
 		if ( diff < mindiff )

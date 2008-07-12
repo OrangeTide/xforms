@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.47 2008/07/06 23:15:50 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.48 2008/07/12 20:33:13 jtt Exp $";
 #endif
 
 
@@ -107,9 +107,9 @@ unsigned int fli_query_age = UINT_MAX;
    gets created the list is extended and when a form gets deleted the
    list shrinks again. */
 
-static FL_FORM **forms = NULL;	    /* All existing forms */
-static int formnumb = 0;	        /* Number of visible forms */
-static int hidden_formnumb = 0;  	/* Number of hidden forms */
+static FL_FORM **forms = NULL;	   /* all existing forms, visible and hidden */
+static int formnumb = 0;	       /* number of visible forms */
+static int hidden_formnumb = 0;    /* number of hidden forms */
 
 static size_t auto_count = 0;
 

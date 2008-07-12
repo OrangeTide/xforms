@@ -840,10 +840,6 @@ extern void fli_set_additional_clipping( FL_Coord,
 extern FL_RECT *fli_union_rect( const FL_RECT *,
 								const FL_RECT * );
 
-extern void fli_getpup_window( int,
-							   Window *,
-							   Window * );
-
 extern void fli_xyplot_nice_label( float,
 								   int,
 								   float,
