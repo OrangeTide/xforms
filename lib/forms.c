@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.48 2008/07/12 20:33:13 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.49 2008/08/03 11:47:33 jtt Exp $";
 #endif
 
 
@@ -1125,7 +1125,7 @@ fl_show_form_window( FL_FORM * form )
 
 	if ( ! form->focusobj )
 		for ( obj = form->first; obj; obj = obj->next )
-			if ( obj->input )
+			if ( obj->input && obj->active )
 			{
 				fl_set_focus_object( form, obj );
 				break;
@@ -1786,8 +1786,7 @@ handle_keyboard( FL_FORM  * form,
 			return;
 		}
 
-		/* dispatch tab & return switches focus (for return only if not
-		   FL_KEY_TAB) */
+		/* tab & return switches focus (for return only if not FL_KEY_TAB) */
 
 		if (    key == '\t'
 			 || ( key == '\r' && ! ( focusobj->wantkey & FL_KEY_TAB ) ) )
@@ -1913,30 +1912,30 @@ fli_handle_form( FL_FORM * form,
 
 				fli_handle_object( form->focusobj, FL_UNFOCUS, x, y, key, xev );
 
-				if ( ! obj->input )
+				if ( ! obj->input || ! obj->active )
 					fli_handle_object( old_focusobj, FL_FOCUS, x, y, key, xev );
-
-				if ( ! obj->active )
-					break;
 			}
 
-			if ( obj && obj->input )
+			if ( obj && obj->input && obj->active )
 				fli_handle_object( obj, FL_FOCUS, x, y, key, xev );
 
 			if ( form->focusobj )
 				keyform = form;
 
+			if ( ! obj || ! obj->active )
+				break;
+
 			/* Radio button only get handled on button release, other objects
 			   get the button press unless focus is overriden  */
 
-			if (    obj
-				 && ! obj->radio
-				 && ( ! obj->input || ( obj->input && obj->focus ) ) )
+			if (    ! obj->radio
+				 && (    ! obj->input
+					  || ( obj->input && obj->active && obj->focus ) ) )
 			{
 				fli_handle_object( obj, FL_PUSH, x, y, key, xev );
 				fli_pushobj = obj;
 			}
-			else if ( obj && obj->radio )
+			else if ( obj->radio )
 				fli_do_radio_push( obj, x, y, key, xev );
 			break;
 

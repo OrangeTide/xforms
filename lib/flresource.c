@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.30 2008/07/12 20:33:13 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.31 2008/08/03 11:47:33 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -808,7 +808,7 @@ fli_free_cmdline_args( void )
 		return;
 
 	for ( i = 0; fl_argv[ i ]; i++ )
-		fl_free( fl_argv[ i ] );
+		fl_safe_free( fl_argv[ i ] );
 
 	fl_safe_free( fl_argv );
 }

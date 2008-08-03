@@ -134,12 +134,30 @@ restore_object( FL_OBJECT * obj )
 {
     char *ol = obj->label;
     long *os = obj->shortcut;
+	FL_OBJECT *child,
+		      *prev,
+		      *next,
+		      *old_parent;
+
+	if ( obj->type != oldcopy->type )
+		change_type( obj, oldcopy->type );
+
+	child = obj->child;
+	prev  = obj->prev;
+	next  = obj->next;
 
     set_object_name( obj, oldname, oldcbname, oldargname );
-    *obj = *oldcopy;
-    obj->label = ol;
+    *obj          = *oldcopy;
+	obj->child    = child;
+	obj->prev     = prev;
+	obj->next     = next;
+	obj->label    = ol;
     obj->shortcut = os;
     fl_set_object_label( obj, oldcopy->label );
+
+	if ( child && ( old_parent = child->parent ) != obj )
+		for ( ; child && child->parent == old_parent; child = child->next )
+			child->parent = obj;
 }
 
 
@@ -388,7 +406,6 @@ readback_attributes( FL_OBJECT * obj )
     obj->col2 = fd_generic_attrib->col2obj->col1;
     obj->lcol = fd_generic_attrib->lcolobj->col1;
 
-
     fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_ALIGN_%s",
 				 fl_get_choice_text( fd_generic_attrib->align ) );
     obj->align = align_val( tmpbuf );
@@ -619,20 +636,20 @@ change_object( FL_OBJECT * obj,
 
     no_selection = 0;
 
-    if (retobj == fd_attrib->cancelobj)
+    if ( retobj == fd_attrib->cancelobj )
     {
-		restore_object(obj);
+		restore_object( obj );
 
-		/* change_selected_objects(obj); */
+		/* change_selected_objects( obj ); */
 
-		redraw_the_form(0);
+		redraw_the_form( 0 );
 		return FALSE;
     }
     else
     {
 		/* Read back form. Caller will do change_selected_objects */
 
-		readback_attributes(obj);
+		readback_attributes( obj );
 		return TRUE;
     }
 }
@@ -908,24 +925,26 @@ FL_OBJECT *
 copy_object( FL_OBJECT * obj,
 			 int         exact )
 {
-    char name[MAX_VAR_LEN], cbname[MAX_VAR_LEN], argname[MAX_VAR_LEN];
+    char name[ MAX_VAR_LEN ],
+		 cbname[ MAX_VAR_LEN ],
+		 argname[ MAX_VAR_LEN ];
     FL_OBJECT *obj2;
 
-    obj2 = add_an_object(obj->objclass, obj->type, obj->x, obj->y,
-						 obj->w, obj->h);
-    get_object_name(obj, name, cbname, argname);
-    set_object_name(obj2, exact ? name : "", cbname, argname);
+    obj2 = add_an_object( obj->objclass, obj->type, obj->x, obj->y,
+						  obj->w, obj->h );
+    get_object_name( obj, name, cbname, argname );
+    set_object_name( obj2, exact ? name : "", cbname, argname );
 
-    set_attribs(obj2, obj->boxtype, obj->col1, obj->col2,
-				obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label);
+    set_attribs( obj2, obj->boxtype, obj->col1, obj->col2,
+				 obj->lcol, obj->align, obj->lsize, obj->lstyle, obj->label );
 
-    set_miscattribs(obj2, obj->nwgravity, obj->segravity, obj->resize);
+    set_miscattribs( obj2, obj->nwgravity, obj->segravity, obj->resize );
 
     /* also copy the object specific info */
 
-    copy_superspec(obj2, obj);
+    copy_superspec( obj2, obj );
 
-    fl_delete_object(obj2);
+    fl_delete_object( obj2 );
 
     return obj2;
 }
@@ -1027,10 +1046,10 @@ change_type( FL_OBJECT * obj,
     {
 		clear_selection( );
 		fl_delete_object( obj );
-		ttt->parent = obj;
+		ttt->parent = obj->parent;
 		ttt->form = form;
 		*obj = *ttt;
-		prev->form = form;
+//		prev->form = form;
 		fli_insert_composite_after( obj, prev );
 		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, 0 );
 		addto_selection( obj );

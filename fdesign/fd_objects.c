@@ -77,7 +77,7 @@ typedef struct {
     const char *default_label;
 } CDEF;
 
-static CDEF classes[MAXCLASS];
+static CDEF classes[ MAXCLASS ];
 static int cnumb = 0;
 
 typedef FL_OBJECT * ( *FL_ADDFREEPTR )( int, FL_Coord, FL_Coord, FL_Coord,
@@ -97,22 +97,22 @@ add_class_def( int       numb,
 {
     int i;
 
-    if (cnumb == MAXCLASS)
+    if ( cnumb == MAXCLASS )
     {
-		fprintf(stderr, "exceeding maxclass allowed\n");
+		fprintf( stderr, "exceeding maxclass allowed\n" );
 		return;
     }
 
-    classes[cnumb].cn = numb;
-    strcpy(classes[cnumb].cname, name);
-    strcpy(classes[cnumb].formal_cname, formal_name);
-    if (createit)
-		classes[cnumb].defobj = createit(1, 0, 0, 1, 1, "");
-    classes[cnumb].createit = createit;
-    classes[cnumb].addit = addit;
+    classes[ cnumb ].cn = numb;
+    strcpy( classes[ cnumb ].cname, name);
+    strcpy( classes[ cnumb ].formal_cname, formal_name );
+    if ( createit )
+		classes[ cnumb ].defobj = createit( 1, 0, 0, 1, 1, "" );
+    classes[ cnumb ].createit = createit;
+    classes[ cnumb ].addit = addit;
 
-    for (i = 0; i < MAXTYPE; i++)
-		classes[cnumb].types[i].defined = FALSE;
+    for ( i = 0; i < MAXTYPE; i++ )
+		classes[ cnumb ].types[ i ].defined = FALSE;
     cnumb++;
 }
 
@@ -125,12 +125,12 @@ find_class_struct( int n )
 {
     int i;
 
-    for (i = 0; i < cnumb; i++)
+    for ( i = 0; i < cnumb; i++ )
     {
-		if (classes[i].cn == n)
+		if ( classes[ i ].cn == n )
 			return classes + i;
     }
-    M_err("FindClassStruct", "Can't find class %d", n);
+    M_err( "find_class_struct", "Can't find class %d", n );
     return 0;
 }
 
@@ -146,20 +146,18 @@ add_type_def( int  cn,
 {
     int i;
 
-    if (tn >= MAXTYPE || tn < 0)
+    if ( tn >= MAXTYPE || tn < 0 )
     {
-		M_err("AddTypeDef", "Bad type: %%d", tn);
+		M_err( "add_type_def", "Bad type: %%d", tn );
 		return;
     }
 
-    for (i = 0; i < cnumb; i++)
-    {
-		if (classes[i].cn == cn)
+    for ( i = 0; i < cnumb; i++ )
+		if ( classes[i].cn == cn )
 		{
-			classes[i].types[tn].defined = TRUE;
-			strcpy(classes[i].types[tn].tname, name);
+			classes[ i ].types[ tn ].defined = TRUE;
+			strcpy( classes[ i ].types[ tn ].tname, name );
 		}
-    }
 }
 
 
@@ -626,14 +624,14 @@ class_val( const char * name )
 {
     int i;
 
-    for (i = 0; i < cnumb; i++)
+    for ( i = 0; i < cnumb; i++ )
     {
-		if (strcmp(classes[i].cname, name) == 0 ||
-			strcmp(classes[i].formal_cname, name) == 0)
-			return classes[i].cn;
+		if (    strcmp( classes[ i ].cname, name ) == 0
+			 || strcmp( classes[ i ].formal_cname, name ) == 0 )
+			return classes[ i ].cn;
     }
 
-    return atoi(name);
+    return atoi( name );
 }
 
 
@@ -649,18 +647,19 @@ find_class_default( int cln,
     int i;
     CDEF *c = classes;
 
-    for (i = 0; i < cnumb; i++, c++)
-		if (c->cn == cln)
+    for ( i = 0; i < cnumb; i++, c++ )
+		if ( c->cn == cln )
 		{
-			if (c->var_boxtype)
+			if ( c->var_boxtype )
 			{
-				if (c->defobj1)
-					fl_free_object(c->defobj1);
-				return c->defobj1 = c->createit(t, 0, 0, 1, 1, "");
+				if ( c->defobj1 )
+					fl_free_object( c->defobj1 );
+				return c->defobj1 = c->createit( t, 0, 0, 1, 1, "" );
 			}
 			else
 				return c->defobj;
 		}
+
     return NULL;
 }
 

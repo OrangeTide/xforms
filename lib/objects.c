@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.39 2008/07/06 23:15:50 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.40 2008/08/03 11:47:33 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -343,7 +343,7 @@ fl_add_object( FL_FORM   * form,
 		form->last = obj;
 	}
 
-    if ( obj->input && ! form->focusobj )
+    if ( obj->input && obj->active && ! form->focusobj )
 		fl_set_focus_object( form, obj );
 
 	/* If the object has child objects also add them to the form,
@@ -412,7 +412,7 @@ fli_insert_object( FL_OBJECT * obj,
     before->prev = obj;
     obj->form = form;
 
-    if ( obj->input && ! form->focusobj )
+    if ( obj->input && obj->active && ! form->focusobj )
 		fl_set_focus_object( form, obj );
 
 	/* If the object has child objects also add them to the form */
@@ -491,7 +491,7 @@ fl_delete_object( FL_OBJECT * obj )
 		fli_recalc_intersections( form );
 
     if (    obj->visible
-		 && ( ! obj->child || obj->parent->visible )
+		 && ( ! obj->is_child || obj->parent->visible )
 		 && form && form->visible == FL_VISIBLE )
 		fl_redraw_form( form );
 }
@@ -1004,7 +1004,7 @@ activate_object( FL_OBJECT * obj )
 		return;
 
 	obj->active = 1;
-	if ( obj->input && ! obj->form->focusobj )
+	if ( obj->input && obj->active && ! obj->form->focusobj )
 		fl_set_focus_object( obj->form, obj );
 	if ( obj->child )
 		fli_activate_composite( obj );
@@ -1043,8 +1043,8 @@ deactivate_object( FL_OBJECT * obj )
 		return;
 
 	obj->active = 0;
-
 	lose_focus( obj );
+
 	if ( obj->child )
 		fli_deactivate_composite( obj );
 }
@@ -1086,7 +1086,7 @@ fli_show_object( FL_OBJECT * obj )
 	if ( obj->child )
 		fli_show_composite( obj );
 
-	if ( obj->input && ! obj->form->focusobj )
+	if ( obj->input && obj->active && ! obj->form->focusobj )
 		fl_set_focus_object( obj->form, obj );
 }
 
@@ -1522,7 +1522,7 @@ fli_find_object( FL_OBJECT * obj,
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
 		{
-			if ( find == FL_FIND_INPUT && obj->input )
+			if ( find == FL_FIND_INPUT && obj->input && obj->active )
 				return obj;
 
 			if ( find == FL_FIND_AUTOMATIC && obj->automatic )
@@ -1562,7 +1562,7 @@ fli_find_object_backwards( FL_OBJECT * obj,
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
 		{
-			if ( find == FL_FIND_INPUT && obj->input )
+			if ( find == FL_FIND_INPUT && obj->input && obj->active )
 				return obj;
 
 			if ( find == FL_FIND_AUTOMATIC && obj->automatic )
@@ -2195,7 +2195,7 @@ fl_handle_it( FL_OBJECT * obj,
 
 		case FL_FOCUS:
 			/* 'refocus' is set if on the last FL_UNFOCUS it was found
-			   that the text in the input field did't validate. In that
+			   that the text in the input field didn't validate. In that
 			   case the focus has to go back to that field instead to a
 			   different one */
 
@@ -2984,13 +2984,15 @@ lose_focus( FL_OBJECT * obj )
 	if ( ! form || ! obj->focus || obj != form->focusobj )
 		return;
 
+	if ( obj == form->focusobj )
+		fli_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
+
 	obj->focus = 0;
 
 	/* Try to find some input object to give it the focus */
 
 	obj->input = 0;
-	form->focusobj = fli_find_first( obj->form, FL_FIND_INPUT,
-									 0, 0 );
+	form->focusobj = fli_find_first( obj->form, FL_FIND_INPUT, 0, 0 );
 	obj->input = 1;
 
 	if ( obj == refocus )
@@ -2998,7 +3000,6 @@ lose_focus( FL_OBJECT * obj )
 
 	if ( form->focusobj )
 		fli_handle_object_direct( form->focusobj, FL_FOCUS, 0, 0, 0, NULL );
-
 }
 
 

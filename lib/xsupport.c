@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.15 2008/06/22 19:05:33 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.16 2008/08/03 11:47:34 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -277,7 +277,7 @@ fli_create_object_pixmap( FL_OBJECT * ob )
     int i;
 	int ( * oldhandler )( Display *, XErrorEvent * );
 
-    /* Check to see if we need to create a pximap. None-square boxes can't
+    /* Check to see if we need to create a pixmap. None-square boxes can't
 	   be used as it is not easy to figure out the object color beneath the
 	   object we are trying to paint */
 

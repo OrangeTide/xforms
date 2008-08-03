@@ -1,3 +1,17 @@
+2008-08-03 Jens Thoms Toerring    <jt@toerring.de>
+
+	*lib/forms.c, lib/objects.c: Removed bug pointed out
+	by J. P. Mellor that allowed selecting and editing
+	input objects even when the were deactivated.
+
+	* fdesign/fd_attribs.c: Removed a bug pointed out
+	by Werner Heisch that crashed fdesign if the type
+	of an object was changed.
+
+	* fdesign/fd_attribs.c: Bug in fdesign fixed that
+	led to crash when the type of a composite object
+	was changed and then Restore or Cancel was clicked.
+
 2008-07-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/menu.c: Thanks to a lot of input from Jason
