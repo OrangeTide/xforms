@@ -1,6 +1,31 @@
+2008-09-17 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c: Added removal of tooltip when
+	object gets deleted.
+
+2008-09-16 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/win.c, lib/forms.c: Code for showing a form
+	was changed. The previous code made the assumption
+	that all window managers would reparent the form
+	window withing a window with the decorations, but
+	this is not necessary the case (e.g. metacity, the
+	default window manager of Gnome). This led to
+	inconsistencies in the positioning of forms with
+	different window managers. Also positioning forms
+	with negative values for x and y (to position a
+	window with its right or bottom border relative
+	to the right or bottom of the screen didn't work
+	correctly.
+
+2008-08-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/goodie_choice.c: Bug in setting the buttons
+	texts removed.
+
 2008-08-03 Jens Thoms Toerring    <jt@toerring.de>
 
-	*lib/forms.c, lib/objects.c: Removed bug pointed out
+	* lib/forms.c, lib/objects.c: Removed bug pointed out
 	by J. P. Mellor that allowed selecting and editing
 	input objects even when the were deactivated.
 

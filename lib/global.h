@@ -59,7 +59,6 @@ char *fl_ul_magic_char = "\b";
 XKeyboardControl fli_keybdcontrol;
 unsigned long fli_keybdmask = ( 1L << 8 ) - 1;
 
-FLI_WM_STUFF fli_wmstuff;
 float fli_dpi = 80.0;
 int fli_inverted_y;
 long fli_requested_vid;

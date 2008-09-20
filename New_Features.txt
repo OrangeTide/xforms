@@ -129,7 +129,7 @@ manager puts around the window 'form' is displazed in. The
 function returns 0 if it was successful, 1 otherwise. 'form'
 must be a form that is currently displayed and it can't be
 a form embedded in another form (like e.g. forms that are
-part of a tabfolder).
+part of a tab-folder).
 
 
 Changes in Menu handling

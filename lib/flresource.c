@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.31 2008/08/03 11:47:33 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.32 2008/09/20 19:30:26 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -59,6 +59,7 @@ char *fl_id_rsc = "$Id: flresource.c,v 1.31 2008/08/03 11:47:33 jtt Exp $";
 #endif
 
 
+FLI_WM_STUFF fli_wmstuff;       /* also used in win.c */
 static XrmDatabase fldatabase;	/* final merged database */
 static XrmDatabase cmddb;	    /* command line database */
 static char *fl_app_name,

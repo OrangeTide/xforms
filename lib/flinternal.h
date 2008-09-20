@@ -392,20 +392,8 @@ extern XRectangle *fli_get_underline_rect( XFontStruct *,
 
 /* Group some WM stuff into a structure for easy maintainance */
 
-enum
-{
-	FLI_WM_SHIFT	 = 1,
-	FLI_WM_NORMAL = 2
-};
-
 typedef struct
 {
-	int			 rpx,			/* reparenting offset for full border */
-				 rpy;
-	int			 trpx,			/* reparenting offset for transient	  */
-				 trpy;
-	int			 bw;			/* additional border				  */
-	int			 rep_method;	/* 1 for shifting, 2 for normal		  */
 	unsigned int pos_request;	/* USPOSITION or PPOSITION			  */
 } FLI_WM_STUFF;
 

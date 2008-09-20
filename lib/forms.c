@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.49 2008/08/03 11:47:33 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.50 2008/09/20 19:30:26 jtt Exp $";
 #endif
 
 
@@ -48,9 +48,7 @@ char *fl_id_fm = "$Id: forms.c,v 1.49 2008/08/03 11:47:33 jtt Exp $";
 
 
 static FL_FORM * fli_find_event_form( XEvent * );
-static void force_visible( FL_FORM *,
-						   int,
-						   int );
+static void force_visible( FL_FORM * );
 static int fli_XLookupString( XKeyEvent *,
 							 char *,
 							 int,
@@ -476,10 +474,42 @@ static void
 reshape_form( FL_FORM * form )
 {
     FL_Coord w,
-		     h;
+		     h,
+		     dummy;
+	int t,
+		r,
+		b,
+		l;
 
-    fl_get_wingeometry( form->window, &form->x, &form->y, &w, &h );
-    fl_set_form_size( form, w, h );
+	if (    ( ! form->handle_dec_x && ! form->handle_dec_y )
+		 || form->wm_border == FL_NOBORDER )
+	{
+		fl_get_wingeometry( form->window, &form->x, &form->y, &w, &h );
+		fl_set_form_size( form, w, h );
+		return;
+	}
+
+	fl_get_decoration_sizes( form, &t, &r, &b, &l );
+
+	if ( form->handle_dec_x && ! form->handle_dec_y )
+	{
+		fl_get_wingeometry( form->window, &dummy, &form->y, &w, &h );
+		form->x -= l;
+	}
+	else if ( ! form->handle_dec_x && form->handle_dec_y )
+	{
+		fl_get_wingeometry( form->window, &form->x, &dummy, &w, &h );
+		form->y -= b;
+	}
+	else
+	{
+		fl_get_wingeometry( form->window, &dummy, &dummy, &w, &h );
+		form->x -= l;
+		form->y -= b;
+	}
+
+	XMoveWindow( flx->display, form->window, form->x, form->y );
+	fl_set_form_size( form, w, h );
 }
 
 
@@ -734,8 +764,7 @@ fl_set_form_size( FL_FORM * form,
 
 
 /***************************************
- * Sets the position of the form on the screen. Note that the location
- * is specified relative to lower-left corner
+ * Sets the position of the form on the screen.
  ***************************************/
 
 void
@@ -754,12 +783,55 @@ fl_set_form_position( FL_FORM * form,
 
     oldx = form->x;
     oldy = form->y;
-    form->x = x >= 0 ? x : ( fl_scrw + x );
-    form->y = y >= 0 ? y : ( fl_scrh + y );
 
-    if (    form->visible == FL_VISIBLE
-		 && ( oldx != form->x || oldy != form->y ) )
-		XMoveWindow( flx->display, form->window, form->x, form->y );
+	if ( x >= 0 )
+	{
+		form->x = x;
+		form->handle_dec_x = 0;
+	}
+	else
+	{
+		form->x = fl_scrw - form->w + x;
+		form->handle_dec_x = 1;
+	}
+
+	if ( y >= 0 )
+	{
+		form->y = y;
+		form->handle_dec_y = 0;
+	}
+	else
+	{
+		form->y = fl_scrh - form->h + y;
+		form->handle_dec_y = 1;
+	}
+
+	/* If the form is already shown move it */
+
+    if ( form->visible == FL_VISIBLE )
+	{
+		int t = 0,
+			r = 0,
+			b = 0,
+			l = 0;
+
+		if (    ( form->handle_dec_x || form->handle_dec_y )
+			 && form->wm_border != FL_NOBORDER )
+		{
+			fl_get_decoration_sizes( form, &t, &r, &b, &l );
+
+			if ( form->handle_dec_x )
+				form->x -= l;
+
+			if ( form->handle_dec_y )
+				form->y -= b;
+		}
+
+		form->handle_dec_x = form->handle_dec_y = 0;
+
+		if ( oldx != form->x || oldy != form->y )
+			XMoveWindow( flx->display, form->window, form->x, form->y );
+	}
 }
 
 
@@ -808,39 +880,23 @@ fl_set_form_hotobject( FL_FORM   * form,
 
 
 /***************************************
- * make sure a form is completely visible
+ * Try to make sure a form is completely visible
  ***************************************/
 
 static void
-force_visible( FL_FORM * form,
-			   int       itx,
-			   int       ity )
+force_visible( FL_FORM * form )
 {
-    if ( form->x < itx )
-		form->x = itx;
+    if ( form->x > fl_scrw - form->w )
+		form->x = fl_scrw - form->w;
 
-    if ( form->x > fl_scrw - form->w - 2 * itx )
-		form->x = fl_scrw - form->w - 2 * itx;
+    if ( form->x < 0 )
+		form->x = 0;
 
-    if ( form->y < ity )
-		form->y = ity;
+    if ( form->y > fl_scrh - form->h )
+		form->y = fl_scrh - form->h;
 
-    if ( form->y > fl_scrh - form->h - itx )
-		form->y = fl_scrh - form->h - 2 * itx;
-
-    /* be a paranoid */
-    if ( form->x < 0 || form->x > fl_scrw - form->w )
-    {
-		if ( form->w < fl_scrw - 20 )
-			M_err( "force_visible", "Can't happen x=%d", form->x );
-		form->x = 10;
-    }
-
-    if ( form->y < 0 || form->y > fl_scrh - form->h )
-    {
-		M_warn( "force_visible", "Can't happen y=%d", form->y );
-		form->y = 20;
-    }
+    if ( form->y < 0 )
+		form->y = 0;
 }
 
 
@@ -883,10 +939,8 @@ fl_prepare_form_window( FL_FORM    * form,
 						const char * name )
 {
     long screenw,
-		 screenh;
-    int itx = 0,
-		ity = 0,
-		dont_fix_size = 0;
+		 screenh,
+		 dont_fix_size = 0;
     FL_Coord mx,
 		     my,
 		     nmx,
@@ -923,30 +977,7 @@ fl_prepare_form_window( FL_FORM    * form,
 		form->label = fl_strdup( name ? name : "" );
     }
 
-    /* if we are using private colormap or non-default visual, unmanaged
-       window will not get correct colormap installed by the WM
-       automatically. Make life easier by forcing a managed window. fl_vroot
-       stuff is a workaround for tvtwm */
-
-#if 0
-    if (    border != FL_FULLBORDER
-		 && (    fl_state[fl_vmode].pcm
-			  || fli_visual( fl_vmode ) !=
-				                    DefaultVisual( flx->display, fl_screen ) ) )
-/*            || fl_root != fl_vroot ) )  */
-    {
-		border = FL_TRANSIENT;
-    }
-#endif
-
-    if ( border != FL_NOBORDER )
-    {
-		FLI_WM_STUFF *fb = &fli_wmstuff;
-
-		itx = fb->bw + ( border == FL_TRANSIENT ? fb->trpx : fb->rpx );
-		ity = fb->bw + ( border == FL_TRANSIENT ? fb->trpy : fb->rpy );
-    }
-    else
+    if ( border == FL_NOBORDER )
 		unmanaged_count++;
 
     form->wm_border = border;
@@ -965,11 +996,6 @@ fl_prepare_form_window( FL_FORM    * form,
 		fl_winaspect( 0, form->w, form->h );
     else if ( place == FL_PLACE_POSITION )
     {
-		if ( fli_wmstuff.rep_method == FLI_WM_SHIFT && border != FL_NOBORDER )
-		{
-			form->x -= itx;
-			form->y -= ity;
-		}
 		fl_pref_winposition( form->x, form->y );
 		fl_initial_winsize( form->w, form->h );
     }
@@ -1005,38 +1031,31 @@ fl_prepare_form_window( FL_FORM    * form,
 				nmy = my;
 				form->x = mx - form->hotx;
 				form->y = my - form->hoty;
-				force_visible( form, itx, ity );
+				force_visible( form );
 				nmx = form->x + form->hotx;
 				nmy = form->y + form->hoty;
 				if ( nmx != mx || nmy != my )
 					fl_set_mouse( nmx, nmy );
 				break;
-		}
 
-		if ( place == FL_PLACE_GEOMETRY )
-		{
-			/* Correct form position. X < 0 means measure from right */
-
-			if ( form->x < 0 )
-				form->x = screenw + form->x - 2 - itx;
-
-			/* y < 0 means from right */
-
-			if ( form->y < 0 )
-				form->y = screenh + form->y - 2 - ity;
+			case FL_PLACE_GEOMETRY :
+				if ( form->x < 0 )
+				{
+					form->x = screenw - form->w + form->x;
+					form->handle_dec_x = 1;
+				}
+				if ( form->y < 0 )
+				{
+					form->y = screenh - form->h + form->y;
+					form->handle_dec_y = 1;
+				}
+				break;
 		}
 
 		/* final check. Make sure form is visible */
 
-		force_visible( form, itx, ity );
-
-		/* take care of reparenting stuff */
-
-		if ( fli_wmstuff.rep_method == FLI_WM_SHIFT && border != FL_NOBORDER )
-		{
-			form->x -= itx;
-			form->y -= ity;
-		}
+		if ( place != FL_PLACE_GEOMETRY )
+			force_visible( form );
 
 		if ( dont_fix_size && place != FL_PLACE_GEOMETRY )
 			fl_initial_wingeometry( form->x, form->y, form->w, form->h );
@@ -1047,15 +1066,7 @@ fl_prepare_form_window( FL_FORM    * form,
     {
 		fl_initial_winsize( form->w, form->h );
 		if ( has_initial )
-		{
-			if (    fli_wmstuff.rep_method == FLI_WM_SHIFT
-				 && border != FL_NOBORDER )
-			{
-				form->x -= itx;
-				form->y -= ity;
-			}
 			fl_initial_wingeometry( form->x, form->y, form->w, form->h );
-		}
     }
     else
     {
@@ -1071,7 +1082,7 @@ fl_prepare_form_window( FL_FORM    * form,
 		{
 			form->x = mx - form->w / 2;
 			form->y = my - form->h / 2;
-			force_visible( form, itx, ity );
+			force_visible( form );
 			fl_initial_winposition( form->x, form->y );
 		}
 
@@ -2790,7 +2801,7 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
 	if ( st_xev.xconfigure.send_event )
 		return;
 
-	/* can't just set form->{w,h}. Need to take care of obj gravity */
+	/* Can't just set form->{w,h}. Need to take care of obj gravity */
 
 	scale_form( evform, ( double ) st_xev.xconfigure.width  / evform->w,
 				( double ) st_xev.xconfigure.height / evform->h );
@@ -3559,9 +3570,15 @@ fli_XLookupString( XKeyEvent * xkey,
 
 
 /***************************************
- * Returns the sizes of the "descorations" the window manager
- * puts around a forms window. Returns 0 on success and 1 if
- * the form isn't visisble.
+ * Returns the sizes of the "descorations" the window manager puts around
+ * a forms window. Returns 0 on success and 1 if the form isn't visisble.
+ * This first tries to use the "_NET_FRAME_EXTENTS" atom which window
+ * manager in principle should set for windows that have decorations.
+ * For those that don't have that atom we try it with the old trick of
+ * searching up for the parent window that's either Null or is a direct
+ * child of the root window and using this window's geometry (but note:
+ * this doesn't work with window managers that don't reparent the windows
+ * they manage).
  ***************************************/
 
 int
@@ -3571,29 +3588,111 @@ fl_get_decoration_sizes( FL_FORM * form,
 						 int     * bottom,
 						 int     * left )
 {
-    XWindowAttributes attr;
-    Window root,
-           parent,
-           *children;
-    unsigned int nchilds;
+	Atom a;
 
-	if ( ! form || form->visible != FL_VISIBLE || form->parent )
+	if (    ! form
+		 || ! form->window
+		 || form->visible != FL_VISIBLE
+		 || form->parent )
 		return 1;
 
-    XQueryTree( flx->display, form->window, &root, &parent, &children,
-                &nchilds );
-    XQueryTree( flx->display, parent, &root, &parent, &children,
-                &nchilds );
-    XGetWindowAttributes( flx->display, parent, &attr );
+	*top = *right = *bottom = *left = 0;
 
-	if ( top )
-		*top = form->y - attr.y;
-	if ( left )
-		*left = form->x - attr.x;
-	if ( right )
-		*right = attr.x + attr.width - form->x - form->w;
-	if ( bottom )
-		*bottom = attr.y + attr.height - form->y - form->h;
+	/* If the window manager knows about the '_NET_FRAME_EXTENTS' ask for
+	   the settings for the form's window (if there are none the window
+	   probably has no decorations) */
+
+    if ( ( a = XInternAtom( fl_get_display( ), "_NET_FRAME_EXTENTS", True ) )
+                                                                       != None )
+	{
+		Atom actual_type;
+		int actual_format;
+		unsigned long nitems;
+		unsigned long bytes_after;
+		static unsigned char *prop;
+
+        XGetWindowProperty( fl_get_display( ), form->window, a, 0,
+                            4, False, XA_CARDINAL,
+                            &actual_type, &actual_format, &nitems,
+                            &bytes_after, &prop );
+
+		if (    actual_type == XA_CARDINAL
+			 && actual_format == 32
+			 && nitems == 4 )
+		{
+			*top    = ( ( long * ) prop )[ 2 ];
+			*right  = ( ( long * ) prop )[ 1 ];
+			*bottom = ( ( long * ) prop )[ 3 ];
+			*left   = ( ( long * ) prop )[ 0 ];
+		}
+	}
+	else
+	{
+		/* The window manager doesn't have the _NET_FRAME_EXTENDS atom so we
+		   have to try with the traditional method (which assumes that the
+           window manager reparents the windows it manages) */
+
+		Window cur_win = form->window;
+		Window root;
+		Window parent;
+		Window *childs = NULL;
+		XWindowAttributes win_attr;
+		XWindowAttributes frame_attr;
+		Window wdummy;
+		unsigned int udummy;
+
+
+        /* Get the coordinates and size of the form's window */
+
+		XGetWindowAttributes( fl_get_display( ), cur_win, &win_attr );
+
+        /* Check try to get its parent window */
+
+		XQueryTree( fl_get_display( ), cur_win, &root, &parent, &childs,
+                    &udummy );
+		if ( childs )
+		{
+			XFree( childs );
+			childs = NULL;
+		}
+
+		/* If there's no parent or the parent window is the root window
+		   itself we've got to assume that there are no decorations */
+
+		if ( ! parent || parent == root )
+			return 0;
+
+        /* Now translate the form window's coordiates (that are relative to
+		   its parent) to that relative to the root window and then find the
+		   top-most parent that isn't the root window itself */
+
+		XTranslateCoordinates( fl_get_display( ), parent, root,
+							   win_attr.x, win_attr.y,
+							   &win_attr.x, &win_attr.y, &wdummy );
+
+		while ( parent && parent != root )
+		{
+			cur_win = parent;
+			XQueryTree( fl_get_display( ), cur_win, &root, &parent, &childs,
+						&udummy );
+			if ( childs )
+			{
+				XFree( childs );
+				childs = NULL;
+			}
+		}
+
+        /* Get the cordinates and sizes of that top-most window... */
+
+		XGetWindowAttributes( fl_get_display( ), cur_win, &frame_attr );
+
+        /* ...and finally calculate the decoration sizes */
+
+		*top    = win_attr.y - frame_attr.y;
+		*left   = win_attr.x - frame_attr.x;
+		*bottom = frame_attr.height - win_attr.height - *top;
+		*right  = frame_attr.width - win_attr.width - *left;
+	}
 
 	return 0;
 }

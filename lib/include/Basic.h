@@ -750,6 +750,8 @@ typedef struct forms_
 						 y,
 						 w,
 						 h;
+	int                  handle_dec_x,
+	                     handle_dec_y;
 	FL_Coord			 hotx,			 /* hot-spot of the form */
 						 hoty;
 	double				 w_hr,			 /* high resolution width and height */

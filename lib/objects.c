@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.40 2008/08/03 11:47:33 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.41 2008/09/20 19:30:26 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -67,6 +67,8 @@ static void get_object_bbox_rect( FL_OBJECT *,
 static int objects_intersect( FL_OBJECT *,
 							  FL_OBJECT * );
 static int object_is_under( FL_OBJECT * );
+static void checked_hide_tooltip( FL_OBJECT * obj,
+								  XEvent    * xev );
 
 static FL_OBJECT *refocus;
 
@@ -120,6 +122,9 @@ fli_make_form( FL_Coord w,
 
     form->w_hr = form->w = w;
     form->h_hr = form->h = h;
+
+	form->handle_dec_x = 0;
+	form->handle_dec_y = 0;
 
     form->deactivated    = 1;
     form->form_callback  = NULL;
@@ -445,6 +450,8 @@ fl_delete_object( FL_OBJECT * obj )
 			   ( obj->label && *obj->label ) ? obj->label : "object" );
 		return;
     }
+
+	checked_hide_tooltip( obj, NULL );
 
     /* If this object has childs also unlink them */
 
@@ -1397,9 +1404,6 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 		return;
     }
 
-    if ( ! obj->active )
-		return;
-
     if ( ! sstr || ! *sstr )
     {
 		obj->shortcut[ 0 ] = 0;
@@ -1500,10 +1504,10 @@ fl_get_focus_object( FL_FORM * form )
 -----------------------------------------------------------------------*/
 
 /***************************************
- * Returns object in form starting at obj of type find.
- * If find_object() does not return object, the event
- * that triggered the call would be eaten. This is how
- * the deactived and inactive objects reject events.
+ * Returns an object of type 'find' in a form , starting at 'obj'.
+ * If find_object() does not return an object the event that
+ * triggered the call will be eaten. This is how the deactived
+ * and inactive objects reject events.
  * Modify with care!
  ***************************************/
 
@@ -1513,7 +1517,8 @@ fli_find_object( FL_OBJECT * obj,
 				 FL_Coord    mx,
 				 FL_Coord    my )
 {
-    for ( ; obj; obj = obj->next )
+    while ( obj )
+	{
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible
@@ -1538,6 +1543,9 @@ fli_find_object( FL_OBJECT * obj,
 			if ( find == FL_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
 				return obj;
 		}
+
+		obj = obj->next;
+	}
 
     return NULL;
 }
@@ -2046,36 +2054,27 @@ void checked_hide_tooltip( FL_OBJECT * obj,
     FL_OBJECT * const parent = get_parent( obj );
     char const * const tooltip = parent->tooltip;
 
-    if ( tooltip && *tooltip )
+    if ( ! tooltip || ! *tooltip )
+		return;
+
+	/* If obj is part of a composite widget, it may well be that we're
+	   leaving a child widget but are still within the parent.
+	   If that is the case, we don't want to hide the tooltip at all. */
+
+	if (    parent != obj
+		 && xev
+		 && xev->xmotion.x >= parent->x
+		 && xev->xmotion.x <= parent->x + parent->w
+		 && xev->xmotion.y >= parent->y
+		 && xev->xmotion.y <= parent->y + parent->h )
+		return;
+
+	fli_hide_tooltip( );
+	if ( parent->tipID )
 	{
-		/* If obj is part of a composite widget, it may well be that we're
-		   leaving a child widget but are still within the parent.
-		   If that is the case, we don't want to hide the tooltip at all. */
-
-		int outside_parent = 1;
-
-		if ( parent != obj && xev )
-		{
-			int const pointer_x = xev->xmotion.x;
-			int const pointer_y = xev->xmotion.y;
-
-			if (    pointer_x >= parent->x
-				 && pointer_x <= parent->x + parent->w
-				 && pointer_y >= parent->y
-				 && pointer_y <= parent->y + parent->h )
-				outside_parent = 0;
-		}
-
-		if ( outside_parent )
-		{
-			fli_hide_tooltip( );
-			if ( parent->tipID )
-			{
-				fl_remove_timeout( parent->tipID );
-				parent->tipID = 0;
-			}
-		}
-    }
+		fl_remove_timeout( parent->tipID );
+		parent->tipID = 0;
+	}
 }
 
 
@@ -3004,8 +3003,7 @@ lose_focus( FL_OBJECT * obj )
 
 
 /***************************************
- * Seems to be part of the public interface but isn't used anywhere
- * within the library...
+ * Part of the public interface, not used within the library
  ***************************************/
 
 void
@@ -3013,7 +3011,7 @@ fl_for_all_objects( FL_FORM * form,
 					int       ( * cb )( FL_OBJECT *, void * ),
 					void    * v )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
     if ( ! form )
     {
@@ -3021,7 +3019,7 @@ fl_for_all_objects( FL_FORM * form,
 		return;
     }
 
-    for ( ob = form->first; ob && ! cb( ob, v ); ob = ob->next )
+    for ( obj = form->first; obj && ! cb( obj, v ); obj = obj->next )
 		/* empty */ ;
 }
 

@@ -139,7 +139,7 @@ fl_show_choices( const char * msg,
 			fl_show_object( fd_choice->but[ 0 ] );
 			fl_fit_object_label( fd_choice->but[ 0 ], 1, 1 );
 
-			fl_set_object_label( fd_choice->but[ 2 ], c[ 2 ] );
+			fl_set_object_label( fd_choice->but[ 2 ], c[ 1 ] );
 			fl_set_object_shortcut( fd_choice->but[ 2 ],
 									fd_choice->sc[ 2 ], 1 );
 			fl_show_object( fd_choice->but[ 2 ] );

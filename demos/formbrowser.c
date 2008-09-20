@@ -61,8 +61,11 @@ void
 reshow_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
 {
+	fprintf( stderr, "hiding: %d %d\n", ob->form->x, ob->form->y );
 	fl_hide_form( ob->form );
+	fprintf( stderr, "hidden: %d %d\n", ob->form->x, ob->form->y );
 	fl_show_form( ob->form, FL_PLACE_POSITION, FL_FULLBORDER, "formbrowser" );
+	fprintf( stderr, "shown: %d %d\n", ob->form->x, ob->form->y );
 }
 
 
@@ -151,8 +154,10 @@ int main( int    argc,
 	fl_show_form( fd_mainform->mainform,
 				  FL_PLACE_CENTERFREE, FL_FULLBORDER, "buttonform" );
 
+	fprintf( stderr, "first shown: %d %d\n", fd_mainform->mainform->x,
+			 fd_mainform->mainform->y );
 
-	fprintf( stderr, "%p\n", fl_do_forms( ) );
+	fl_do_forms( );
 
 //	while ( fl_do_forms( ) )
 //		/* empty */ ;

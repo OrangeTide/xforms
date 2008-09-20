@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.14 2008/05/09 12:33:02 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.15 2008/09/20 19:30:27 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -68,6 +68,9 @@ static int fli_winreparentxy( Window,
 							  Window,
 							  int,
 							  int );
+
+extern FLI_WM_STUFF fli_wmstuff;       /* defined in flresource.c */
+
 
 /*********************************************************************
  * Default window attributes. Subject to pref_winsize and its friends
@@ -121,9 +124,9 @@ fli_default_xswa( void )
 
     /* keyboard focus. Need window manager's help  */
 
-    st_xwmh.input = True;
+    st_xwmh.input         = True;
     st_xwmh.initial_state = NormalState;
-    st_xwmh.flags = InputHint | StateHint;
+    st_xwmh.flags         = InputHint | StateHint;
 }
 
 
@@ -149,8 +152,8 @@ fl_initial_winsize( FL_Coord w,
 void
 fl_initial_winstate( int state )
 {
-    st_xwmh.initial_state = state;
-    st_xwmh.flags |= StateHint;
+    st_xwmh.initial_state  = state;
+    st_xwmh.flags         |= StateHint;
 }
 
 
@@ -188,9 +191,9 @@ fl_winsize( FL_Coord w,
 
     /* try to disable interactive resizing */
 
-    st_xsh.min_width  = st_xsh.max_width  = w;
-    st_xsh.min_height = st_xsh.max_height = h;
-    st_xsh.flags |= PMinSize | PMaxSize;
+    st_xsh.min_width   = st_xsh.max_width  = w;
+    st_xsh.min_height  = st_xsh.max_height = h;
+    st_xsh.flags      |= PMinSize | PMaxSize;
 }
 
 
@@ -507,7 +510,7 @@ fl_get_wingeometry( Window     win,
 
 
 /***************************************
- * if one of the form is destoryed, we want to know about it
+ * If one of the forms is destoryed we want to know about it
  * All window notices the Close window manager command
  ***************************************/
 
@@ -529,114 +532,6 @@ setup_catch_destroy( Window win )
 
 
 /***************************************
- * get window manager's decoration size. Caller should check to make sure
- * not to call it when the size is already known as XGetGeometry is used
- * everytime here
- ***************************************/
-
-static void
-get_wm_decoration( const char * what,
-				   XEvent *     xrp,
-				   FL_Coord *   x,
-				   FL_Coord *   y,
-				   FL_Coord *   bw )
-{
-    Window junk;
-    unsigned int uj,
-		         rbw;
-
-    if ( ! *y )
-    {
-		*x = xrp->xreparent.x;
-		*y = xrp->xreparent.y;
-		if ( *y )
-		{
-			int xx,
-				yy;
-
-			XGetGeometry( flx->display, xrp->xreparent.parent, &junk,
-						  &xx, &yy, &uj, &uj, &rbw, &uj );
-			*bw = rbw;
-		}
-    }
-
-    M_warn( "Reparent", "%s x=%d y=%d bw=%d", what,
-			( int ) *x, ( int ) *y, *bw );
-
-    /* window manager tends to lie about reparenting. Can't trust them */
-
-    if ( ! *y && ! *bw )
-    {
-		/* Querying the geometry of xreparent.window really should work, but
-		   it does not, resulting in x, y == 0 most of the time. Maybe WM
-		   decorates with multiple windows. Anyway, querying with
-		   xrp->xreparent.parent works most of the time. If it does not
-		   work (single parent ?), the last resort using two origins should
-		   work.  */
-
-		XGetGeometry( flx->display, xrp->xreparent.parent, &junk,
-					  x, y, &uj, &uj, &rbw, &uj );
-		*bw = rbw;
-
-		M_warn("Reparent", "%s x=%d y=%d bw=%d", what,
-			   ( int ) *x, ( int ) *y, *bw );
-    }
-
-    /* last resort. Could get into trouble under some WMs */
-
-    if ( ( ! *y && ! *bw ) || *x > 20 || *y > 40 )
-    {
-		int px, py;
-
-		fl_get_winorigin( xrp->xreparent.parent, &px, &py );
-		fl_get_winorigin( xrp->xreparent.window, x, y );
-		*x -= px;
-		*y -= py;
-
-		M_warn( "Reparent", "x=%d y=%d bw=%d", ( int ) *x, ( int ) *y, *bw );
-    }
-
-    /* can't get them. Take a wild guess */
-
-    if ( *x > 20 || *x < 0 || *y > 40 || *y < 0 )
-    {
-		M_warn( "Reparent", "Can't find reparent geometry" );
-
-		if ( strcmp( what, "Full" ) == 0 )
-		{
-			*x = 3;
-			*y = 22;
-			*bw = 1;
-		}
-		else
-		{
-			*x = 2;
-			*y = 10;
-			*bw = 1;
-		}
-    }
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-get_wm_reparent_method( int reqx   FL_UNUSED_ARG,
-						int reqy,
-						int x      FL_UNUSED_ARG,
-						int y )
-{
-    int trueb = FL_max( fli_wmstuff.rpx, fli_wmstuff.trpx );
-    int ydiff = FL_abs( reqy - y );
-
-    fli_wmstuff.rep_method = ydiff > trueb ? FLI_WM_SHIFT : FLI_WM_NORMAL;
-    M_warn( "WMReparent", "%s: reqy=%d y=%d",
-			ydiff > trueb ? "Shift" : "Normal", reqy, y );
-}
-
-
-/***************************************
  * Wait until we know for sure the newly mapped window is visible
  ***************************************/
 
@@ -646,76 +541,20 @@ wait_mapwin( Window win,
 {
     XEvent xev;
     unsigned int mask;
-    static int reparent_method,
-		       tran_method,
-		       tran_done;
 
-    if ( ! ( st_xswa.event_mask & ExposureMask ) )
+    if ( ! ( st_xswa.event_mask & StructureNotifyMask ) )
     {
-		M_err( "WinMap", "XForms Improperly initialized" );
+		M_err( "wait_mapwin", "XForms improperly initialized" );
 		exit( 1 );
     }
 
-    if ( ! reparent_method && ! tran_method )
-		fli_wmstuff.rep_method = FLI_WM_SHIFT;
-
-    /* obtain window manager's decoration size for normal and transient
-       windows */
-
-    mask = ExposureMask | StructureNotifyMask;
+    /* wait for the window to become mapped */
 
     do
     {
-		XWindowEvent( flx->display, win, mask, &xev );
+		XWindowEvent( flx->display, win, StructureNotifyMask, &xev );
 		fli_xevent_name( "waiting", &xev );
-
-		if ( xev.type == ReparentNotify && border != FL_NOBORDER )
-		{
-			FLI_WM_STUFF *fb = &fli_wmstuff;
-
-			if ( border == FL_FULLBORDER && ! fb->rpy )
-				get_wm_decoration( "Full", &xev, &fb->rpx, &fb->rpy, &fb->bw );
-			else if ( border == FL_TRANSIENT && ! fb->trpy && ! tran_done )
-			{
-				get_wm_decoration( "Tran", &xev
-								   , &fb->trpx, &fb->trpy, &fb->bw );
-				tran_done = 1;
-				if (    fb->trpx < 0
-					 || fb->trpy < 0
-					 || fb->trpx > 30
-					 || fb->trpy > 30 )
-					fb->trpx = fb->trpy = fb->bw ? 0 : 1;
-			}
-		}
-#if 0
-		else if ( xev.type == ConfigureNotify && xev.xconfigure.send_event )
-		{
-			/* not all WMs send this event, bloody shame */
-		}
-#endif
-		else if ( xev.type == Expose )
-			fli_handle_event_callbacks( &xev );
-
-    } while ( xev.type != Expose );
-
-    /* this might still leave a a couple of pixels off, but it is the best we
-       can do about it for now. TODO */
-
-    if (    ! reparent_method
-		 && st_xsh.flags & fli_wmstuff.pos_request
-		 && border != FL_NOBORDER )
-    {
-		int px,
-			py;
-
-		if ( border == FL_FULLBORDER || !tran_method )
-		{
-			fl_get_winorigin( xev.xexpose.window, &px, &py );
-			get_wm_reparent_method( st_xsh.x, st_xsh.y, px, py );
-			tran_method = 1;
-			reparent_method = border == FL_FULLBORDER;
-		}
-    }
+	} while ( xev.type != MapNotify );
 }
 
 
@@ -930,11 +769,7 @@ fl_winopen( const char * label )
 Window
 fl_winshow( Window win )
 {
-#if 1
     XMapRaised( flx->display, win );
-#else
-    XMapSubwindows( flx->display, win );
-#endif
 
     /* wait until the newly mapped win shows up */
 

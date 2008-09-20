@@ -57,7 +57,6 @@ extern int fl_vmode;
 extern int fl_scrh,
            fl_scrw;
 
-extern FLI_WM_STUFF fli_wmstuff;
 extern float fli_dpi;
 extern FL_IOPT fli_cntl;
 extern int fli_inverted_y;
