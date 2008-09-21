@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.41 2008/09/20 19:30:26 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.42 2008/09/21 13:33:12 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -294,8 +294,8 @@ fl_add_object( FL_FORM   * form,
 
     if ( obj->automatic )
 	{
-		form->has_auto++;
-		fli_recount_auto_object( );
+		form->has_auto_objects++;
+		fli_recount_auto_objects( );
 	}
 
     obj->prev = obj->next = NULL;
@@ -462,8 +462,8 @@ fl_delete_object( FL_OBJECT * obj )
 
     if ( obj->automatic )
 	{
-		form->has_auto--;
-		fli_recount_auto_object( );
+		form->has_auto_objects--;
+		fli_recount_auto_objects( );
 	}
 
 	lose_focus( obj ); 
@@ -2962,12 +2962,12 @@ fl_set_object_automatic( FL_OBJECT * ob,
 		if ( ob->form )
 		{
 			if ( flag )
-				ob->form->has_auto++;
+				ob->form->has_auto_objects++;
 			else
-				ob->form->has_auto--;
+				ob->form->has_auto_objects--;
 		}
 
-		fli_recount_auto_object( );
+		fli_recount_auto_objects( );
     }
 }
 
@@ -3016,6 +3016,12 @@ fl_for_all_objects( FL_FORM * form,
     if ( ! form )
     {
 		M_err( "fl_for_all_objects", "NULL form." );
+		return;
+    }
+
+    if ( ! cb )
+    {
+		M_err( "fl_for_all_objects", "NULL callback function." );
 		return;
     }
 

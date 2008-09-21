@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.50 2008/09/20 19:30:26 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.51 2008/09/21 13:33:12 jtt Exp $";
 #endif
 
 
@@ -88,10 +88,9 @@ int fli_fast_free_object = 0;    /* exported to objects.c */
 #define SHORT_PAUSE   1
 
 
-/* The following variables store the last recorded mouse position
-   and state of buttons and modifier keys as well as how old the
-   information is. They're not defined as static since they are\
-   also needed in xpopup.c */
+/* The following variables store the last recorded mouse position, state of
+   buttons and modifier keys as well as how old the information is. They're
+   not defined as static since they are also needed in xpopup.c */
 
 FL_Coord fli_mousex,
          fli_mousey;
@@ -113,18 +112,8 @@ static size_t auto_count = 0;
 
 
 /***************************************
- ***************************************/
-
-void
-fli_set_no_connection( int yes )
-{
-    if ( ( fli_no_connection = yes ) )
-      fli_internal_init( );
-}
-
-
-/***************************************
  * Returns the index of a form in the list of visible forms
+ * or -1 if the form isn't in this list
  ***************************************/
 
 int
@@ -142,6 +131,7 @@ fli_get_visible_forms_index( FL_FORM * form )
 
 /***************************************
  * Returns the index of a form in the list of hidden forms
+ * or -1 if the form isn't in this list
  ***************************************/
 
 static int
@@ -188,7 +178,7 @@ move_form_to_visible_list( FL_FORM *form )
 
 	if ( hidden_formnumb == 0 || ( i = get_hidden_forms_index( form ) ) < 0 )
 	{
-		M_err( "move_form_to_visble_list", "Form not on hidden list" );
+		M_err( "move_form_to_visble_list", "Form not in hidden list" );
 		return -1;
 	}
 		
@@ -203,7 +193,7 @@ move_form_to_visible_list( FL_FORM *form )
 
 	hidden_formnumb--;
 
-    if ( form->has_auto )
+    if ( form->has_auto_objects )
 		auto_count++;
 
 	return ++formnumb;
@@ -224,7 +214,7 @@ move_form_to_hidden_list( FL_FORM *form )
 
 	if ( formnumb == 0 || ( i = fli_get_visible_forms_index( form ) ) < 0 )
 	{
-		M_err( "move_form_to_hidden_list", "Form not on visible list" );
+		M_err( "move_form_to_hidden_list", "Form not in visible list" );
 		return -1;
 	}
 
@@ -239,7 +229,7 @@ move_form_to_hidden_list( FL_FORM *form )
 
 	hidden_formnumb++;
 
-    if ( form->has_auto )
+    if ( form->has_auto_objects )
     {
 		if ( auto_count == 0 )
 			M_err( "move_form_to_hidden_list", "Bad auto count" );
@@ -266,7 +256,7 @@ remove_form_from_hidden_list( FL_FORM *form )
 
 	if ( hidden_formnumb == 0 || ( i = get_hidden_forms_index( form ) ) < 0 )
 	{
-		M_err( "remove_form_from_hidden_list", "Form not on hidden list" );
+		M_err( "remove_form_from_hidden_list", "Form not in hidden list" );
 		return -1;
 	}
 
@@ -299,20 +289,26 @@ fl_bgn_form( int      type,
 		exit( 1 );
     }
 
+	/* Check that we're not already in a form definition - an error actually
+	   is serious and can't be fixed easily as it might be due to a bad
+	   recursion */
+
     if ( fl_current_form )
     {
-		/* error actually is serious and can't be fixed easily as it might
-		   be due to a bad recursion */
-
 		M_err( "fl_bgn_form", "You forgot to call fl_end_form" );
 		exit( 1 );
     }
 
+	/* Create a new form */
+
     fl_current_form = fli_make_form( w, h );
 
-	/* Add the new form to the list of still hidden forms */
+	/* Add it to the list of still hidden forms */
 
 	add_form_to_hidden_list( fl_current_form );
+
+	/* Each form has a empty box, covering the whole form as its first
+	   object */
 
     fl_add_box( type, 0, 0, w, h, "" );
 
@@ -347,14 +343,17 @@ fl_end_form( void )
 void
 fl_addto_form( FL_FORM * form )
 {
-    if ( fl_current_form )
-		M_err( "fl_addto_form", "You forgot to call fl_end_form" );
-
     if ( ! form )
     {
 		M_err( "fl_addto_form", "NULL form." );
 		return;
     }
+
+	/* Can't open a form for adding objects when another form is already
+	   opened for the same purpose */
+
+    if ( fl_current_form )
+		M_err( "fl_addto_form", "You forgot to call fl_end_form" );
 
     fl_current_form = form;
 }
@@ -441,6 +440,7 @@ FL_OBJECT * fli_mouseobj = NULL;	    /* object under the mouse */
 
 
 /***************************************
+ * Function for "freezing" all (shown) forms
  ***************************************/
 
 void
@@ -454,6 +454,7 @@ fl_freeze_all_forms( void )
 
 
 /***************************************
+ * Function for "unfreezing" all (shown) forms
  ***************************************/
 
 void
@@ -476,10 +477,10 @@ reshape_form( FL_FORM * form )
     FL_Coord w,
 		     h,
 		     dummy;
-	int t,
-		r,
-		b,
-		l;
+	int top,
+		right,
+		bottom,
+		left;
 
 	if (    ( ! form->handle_dec_x && ! form->handle_dec_y )
 		 || form->wm_border == FL_NOBORDER )
@@ -489,23 +490,23 @@ reshape_form( FL_FORM * form )
 		return;
 	}
 
-	fl_get_decoration_sizes( form, &t, &r, &b, &l );
+	fl_get_decoration_sizes( form, &top, &right, &bottom, &left );
 
 	if ( form->handle_dec_x && ! form->handle_dec_y )
 	{
 		fl_get_wingeometry( form->window, &dummy, &form->y, &w, &h );
-		form->x -= l;
+		form->x -= left;
 	}
 	else if ( ! form->handle_dec_x && form->handle_dec_y )
 	{
 		fl_get_wingeometry( form->window, &form->x, &dummy, &w, &h );
-		form->y -= b;
+		form->y -= bottom;
 	}
 	else
 	{
 		fl_get_wingeometry( form->window, &dummy, &dummy, &w, &h );
-		form->x -= l;
-		form->y -= b;
+		form->x -= left;
+		form->y -= bottom;
 	}
 
 	XMoveWindow( flx->display, form->window, form->x, form->y );
@@ -784,6 +785,11 @@ fl_set_form_position( FL_FORM * form,
     oldx = form->x;
     oldy = form->y;
 
+	/* Negative values for x or y are interpreted as meaning that the
+	   position is that of the right or bottom side of the form relative
+	   to the right or bottom side to the screen. May have to be corrected
+	   for the right or bottom border decoration widths. */
+
 	if ( x >= 0 )
 	{
 		form->x = x;
@@ -810,21 +816,20 @@ fl_set_form_position( FL_FORM * form,
 
     if ( form->visible == FL_VISIBLE )
 	{
-		int t = 0,
-			r = 0,
-			b = 0,
-			l = 0;
+		int bottom = 0,
+			left = 0,
+			dummy;
 
 		if (    ( form->handle_dec_x || form->handle_dec_y )
 			 && form->wm_border != FL_NOBORDER )
 		{
-			fl_get_decoration_sizes( form, &t, &r, &b, &l );
+			fl_get_decoration_sizes( form, &dummy, &dummy, &bottom, &left );
 
 			if ( form->handle_dec_x )
-				form->x -= l;
+				form->x -= left;
 
 			if ( form->handle_dec_y )
-				form->y -= b;
+				form->y -= bottom;
 		}
 
 		form->handle_dec_x = form->handle_dec_y = 0;
@@ -2509,7 +2514,7 @@ fli_handle_idling( XEvent * xev,
 
 	if ( auto_count )
 		for ( i = 0; i < formnumb; i++ )
-			if ( forms[ i ]->has_auto )
+			if ( forms[ i ]->has_auto_objects )
 				fli_handle_form( forms[ i ], FL_STEP, 0, xev );
 
 	/* If asked to also execute user idle callbacks */
@@ -2651,14 +2656,13 @@ handle_LeaveNotify_event( void )
 		 && st_xev.xcrossing.mode == NotifyNormal )
 		return;
 
-	/* olvwm sends LeaveNotify with NotifyGrab whenever button is clicked.
-	   Ignore it. Due to Xpoup grab, (maybe Wm bug ?), end grab can also
-	   generate this event. we can tell these two situations by doing a real
+	/* olvwm sends LeaveNotify with NotifyGrab whenever button is clicked,
+	   ignore it. Due to Xpopup grab, (maybe Wm bug ?), end grab can also
+	   generate this event. We can tell these two situations by doing a real
 	   button_down test (as opposed to relying on the keymask in event) */
 
 	if ( st_xev.xcrossing.mode == NotifyGrab && button_is_really_down( ) )
 		return;
-
 
 	if ( ! mouseform )
 		return;
@@ -2735,7 +2739,7 @@ handle_Expose_event( FL_FORM  * evform,
 	fl_set_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
 					 st_xev.xexpose.width, st_xev.xexpose.height );
 
-	/* run into trouble by ignoring configure notify */
+	/* Run into trouble by ignoring configure notify */
 
 	if ( ignored_fake_configure )
 	{
@@ -2928,7 +2932,7 @@ fl_set_initial_placement( FL_FORM  * form,
     fl_set_form_position( form, x, y );
     fl_set_form_size( form, w, h );
 
-    /* this alters the windowing defaults */
+    /* This alters the windowing defaults */
 
     fl_initial_wingeometry( form->x, form->y, form->w, form->h );
     has_initial = 1;
@@ -3292,7 +3296,7 @@ simple_form_rescale( FL_FORM * form,
 
 
 /***************************************
- * never shrinks a form, margin is the minimum margin to leave
+ * Never shrinks a form, margin is the minimum margin to leave
  ***************************************/
 
 void
@@ -3330,7 +3334,7 @@ fl_fit_object_label( FL_OBJECT * obj,
     if ( factor > 1.5 )
 		factor = 1.5;
 
-    /* scale all objects without taking care of gravity etc. */
+    /* Scale all objects without taking care of gravity etc. */
 
 	simple_form_rescale( obj->form, factor );
 }
@@ -3340,17 +3344,18 @@ fl_fit_object_label( FL_OBJECT * obj,
  ***************************************/
 
 void
-fli_recount_auto_object( void )
+fli_recount_auto_objects( void )
 {
     int i;
 
     for ( auto_count = i = 0; i < formnumb; i++ )
-		if ( forms[ i ]->has_auto )
+		if ( forms[ i ]->has_auto_objects )
 			auto_count++;
 }
 
 
 /***************************************
+ * Function for adding an object to the (currently open) group
  ***************************************/
 
 void
@@ -3399,7 +3404,7 @@ fl_form_is_visible( FL_FORM * form )
 
 
 /***************************************
- * similar to fit_object_label, but will do it for all objects and has
+ * Similar to fit_object_label, but will do it for all objects and has
  * a smaller threshold. Mainly intended for compensation for font size
  * variations
  ***************************************/
@@ -3571,14 +3576,15 @@ fli_XLookupString( XKeyEvent * xkey,
 
 /***************************************
  * Returns the sizes of the "descorations" the window manager puts around
- * a forms window. Returns 0 on success and 1 if the form isn't visisble.
+ * a forms window. Returns 0 on success and 1 if the form isn't visisble
+ * or is a form embedded into another form.
  * This first tries to use the "_NET_FRAME_EXTENTS" atom which window
  * manager in principle should set for windows that have decorations.
- * For those that don't have that atom we try it with the old trick of
- * searching up for the parent window that's either Null or is a direct
- * child of the root window and using this window's geometry (but note:
- * this doesn't work with window managers that don't reparent the windows
- * they manage).
+ * For those window managers that don't have that atom we try it with the
+ * old trick of searching up for the parent window that's either Null or
+ * is a direct child of the root window and using this window's geometry
+ * (but note: this doesn't work with window managers that don't reparent
+ * the windows they manage).
  ***************************************/
 
 int

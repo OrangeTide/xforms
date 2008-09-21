@@ -796,7 +796,7 @@ typedef struct forms_
 	int					 visible;		 /* true if mapped */
 	int					 wm_border;		 /* window manager info */
 	unsigned int		 prop;			 /* other attributes */
-	int					 has_auto;
+	int					 has_auto_objects;
 	int					 top;
 	int					 sort_of_modal;	 /* internal use */
 	struct forms_	   * parent;

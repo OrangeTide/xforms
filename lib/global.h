@@ -38,37 +38,47 @@
 
 Window fl_root,
        fl_vroot;
+
 int fl_screen;
 
 /* memory routines */
-
 
 void * ( * fl_calloc  )( size_t, size_t ) = calloc;
 void * ( * fl_malloc  )( size_t )         = malloc;
 void * ( * fl_realloc )( void *, size_t ) = realloc;
 void   ( * fl_free    )( void * )         = free;
 
-
 FL_State fl_state[ 6 ];
+
 int fl_vmode = -1;
 
 int fl_scrh,
     fl_scrw;
+
 char *fl_ul_magic_char = "\b";
 
 XKeyboardControl fli_keybdcontrol;
+
 unsigned long fli_keybdmask = ( 1L << 8 ) - 1;
 
 float fli_dpi = 80.0;
+
 int fli_inverted_y;
+
 long fli_requested_vid;
+
 FL_IOPT fli_cntl;
 
 FLI_CONTEXT *fli_context;
+
 char fli_curfnt[ 127 ];
+
 FL_FORM *fl_current_form;
+
 FL_OBJECT *fli_current_group;
-int fli_no_connection;
+
+int fli_no_connection = 0;        /* Set only when fdesign is run with
+									 the '-convert' option */
 FLI_WIN *fli_app_win;
 
 FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;	  /* The special event object */

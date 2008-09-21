@@ -66,7 +66,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.20 $ of $Date: 2008/05/09 12:32:59 $",
+    "$State: Exp $  $Revision: 1.21 $ of $Date: 2008/09/21 13:33:12 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -626,7 +626,8 @@ pre_connect( int    ac,
 			fd_bwidth = atoi( av[ ++i ] );
 		else if ( strncmp( av[ i ] + 1, "convert", 1 ) == 0 )
 		{
-			fli_set_no_connection( 1 );
+			fli_no_connection = 1;
+			fli_internal_init( );
 			fdopt.conv_only = 1;
 		}
 		else if ( strncmp( av[ i ] + 1, "dir", 3 ) == 0 && i + 1 < ac )

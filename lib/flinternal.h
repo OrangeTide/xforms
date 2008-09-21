@@ -175,8 +175,6 @@ extern void fli_handle_idling( XEvent * xev,
 
 /* misc. utilitnes */
 
-extern void fli_set_no_connection( int );
-
 extern void fli_print_version( int );
 
 extern const char *fli_rm_rcs_kw( const char * );
@@ -752,7 +750,7 @@ extern void fli_scale_length( FL_Coord *,
 
 extern int fli_get_visible_forms_index( FL_FORM * );
 
-extern void fli_recount_auto_object( void );
+extern void fli_recount_auto_objects( void );
 
 extern int fli_get_tabpixels( XFontStruct * );
 

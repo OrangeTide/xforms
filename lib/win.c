@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.15 2008/09/20 19:30:27 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.16 2008/09/21 13:33:12 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -64,10 +64,10 @@ static unsigned int st_wmask;
 static int st_wmborder;
 static unsigned int bwidth = 0;
 
-static int fli_winreparentxy( Window,
-							  Window,
-							  int,
-							  int );
+static int fli_winreparentxy( Window win,
+							  Window new_parent,
+							  int    x,
+							  int    y );
 
 extern FLI_WM_STUFF fli_wmstuff;       /* defined in flresource.c */
 
@@ -106,23 +106,22 @@ fli_default_xswa( void )
     st_xswa.backing_store = fli_cntl.backingStore;
     st_wmask = CWEventMask | CWBackingStore;
 
-    /* border_pixel must be set for 24bit TrueColor displays */
+    /* Border_pixel must be set for 24bit TrueColor displays */
 
     st_xswa.border_pixel = 0;
     st_wmask |= CWBorderPixel;
-
     st_xsh.flags = 0;
 
-    /* default size */
+    /* Default size */
 
     st_xsh.width = st_xsh.base_width   = 320;
     st_xsh.height = st_xsh.base_height = 200;
 
-    /* border */
+    /* Border */
 
     st_wmborder = FL_FULLBORDER;
 
-    /* keyboard focus. Need window manager's help  */
+    /* Keyboard focus. Need window manager's help  */
 
     st_xwmh.input         = True;
     st_xwmh.initial_state = NormalState;
@@ -199,8 +198,8 @@ fl_winsize( FL_Coord w,
 
 /***************************************
  * Set a limit to the minimum size a window can take. Can be used
- * while a window is visible. If window is not visible, we take
- * the request to mean a constraint for future windows.
+ * while a window is visible. If window is not given, we take the
+ * request to mean a constraint for future windows.
  ***************************************/
 
 void
@@ -211,7 +210,7 @@ fl_winminsize( Window   win,
     XSizeHints mxsh,
 		       *sh;
 
-    /* copy current constraints */
+    /* Copy current constraints */
 
     mxsh = st_xsh;
     mxsh.flags = 0;
@@ -328,7 +327,7 @@ fl_wingeometry( FL_Coord x,
 
 
 /***************************************
- * try to fix the aspect ration
+ * Try to fix the aspect ration
  ***************************************/
 
 void
@@ -339,7 +338,7 @@ fl_winaspect( Window   win,
     double fact;
     XSizeHints lxsh, *xsh;
 
-    if ( x == 0 || y == 0 )
+    if ( x <= 0 || y <= 0 )
     {
 		M_err( "Aspect", "Bad aspect ratio" );
 		return;
@@ -365,7 +364,7 @@ fl_winaspect( Window   win,
     }
 
     if ( win )
-		XSetNormalHints( flx->display, win, xsh );
+		XSetWMNormalHints( flx->display, win, xsh );
 }
 
 
@@ -536,11 +535,9 @@ setup_catch_destroy( Window win )
  ***************************************/
 
 static void
-wait_mapwin( Window win,
-			 int    border )
+wait_mapwin( Window win )
 {
     XEvent xev;
-    unsigned int mask;
 
     if ( ! ( st_xswa.event_mask & StructureNotifyMask ) )
     {
@@ -548,7 +545,7 @@ wait_mapwin( Window win,
 		exit( 1 );
     }
 
-    /* wait for the window to become mapped */
+    /* Wait for the window to become mapped */
 
     do
     {
@@ -774,12 +771,12 @@ fl_winshow( Window win )
     /* wait until the newly mapped win shows up */
 
     if ( st_xwmh.initial_state == NormalState )
-		wait_mapwin( win, st_wmborder );
+		wait_mapwin( win );
 
     setup_catch_destroy( win );
     fl_winset( win );
 
-    /* re-initialize window defaults  */
+    /* Re-initialize window defaults  */
 
     fli_default_xswa( );
     return win;
@@ -876,7 +873,8 @@ fl_iconify( Window win )
 
 
 /***************************************
- * relax window constraints: minsize, maxsize, aspect ratio
+ * Inform window manager about window constraints: minsize, maxsize,
+ * aspect ratio
  ***************************************/
 
 void
@@ -902,7 +900,7 @@ fl_winresize( Window   win,
     if ( ! win )
 		return;
 
-    /* if sizes are the same, don't have to do anything. some window managers
+    /* If sizes are the same we don't have to do anything. Some window managers
        are too dumb to optimize this. */
 
     fl_get_winsize( win, &curww, &curwh );
@@ -953,7 +951,7 @@ fl_winresize( Window   win,
 
 
 /***************************************
- * check if a given window is valid. At the moment only used by
+ * Check if a given window is valid. At the moment only used by
  * canvas. A dirty hack. *****TODO *****
  * If the main event loop is correct, we don't need to do this stuff
  ***************************************/

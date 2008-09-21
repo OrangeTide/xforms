@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.32 2008/09/20 19:30:26 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.33 2008/09/21 13:33:12 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -937,11 +937,11 @@ fl_initialize( int        * na,
 		exit( 1 );
     }
 
-	/* The following was introduced in 0.89.5 (as far as I could figure out)
-	   but never was officially documented. Since it can break programs when
-	   run in a different locale then the one the original author used (e.g.
-	   because reading of files with scanf() may not work anymore when, due
-	   to the locale setting a ',' instead of a '.' as the decimal point is
+	/* Setting the locale was introduced in 0.89.5 (as far as I could figure
+	   out) but never was officially documented. Since it can break programs
+	   when run in a different locale then the one the original author used
+	   (e.g. because reading of files with scanf() may not work anymore when,
+	   due to the locale setting a ',' instead of a '.' as the decimal point is
 	   expected) I have thrown it out. Jean-Marc and Angus already planned to
 	   do that back in 2004 but obviously never got around to doing it.  JTT */
 
@@ -1041,7 +1041,7 @@ fl_initialize( int        * na,
 			if ( i == 0 )
 				fprintf( stderr, "%s: ", fl_argv[ 0 ] );
 			else
-				fprintf( stderr, "%*s  ", strlen( fl_argv[ 0 ] ), "" );
+				fprintf( stderr, "%*s  ", ( int ) strlen( fl_argv[ 0 ] ), "" );
 
 			fprintf( stderr, " %s", copt[ i ].option );
 
