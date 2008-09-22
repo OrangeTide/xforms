@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.8 2008/05/05 14:21:49 jtt Exp $
+ * $Id: image_tiff.c,v 1.9 2008/09/22 22:31:26 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -38,6 +38,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "ulib.h"
 #include "flimage.h"
@@ -51,18 +52,20 @@ int fputc( int c, FILE *stream );
 #define TIFF_DEBUG    0
 
 static int get_image_info_from_ifd( FL_IMAGE * im );
-typedef int ( * ReadIT ) ( FILE * );
-typedef int ( * WriteIT ) ( int, FILE * );
+
+typedef int ( * ReadIT )( FILE * );
+
+typedef int ( * WriteIT )( int, FILE * );
 
 typedef struct
 {
-    int tag_value;
-    char *tag_name;
-    int type;
-    int *value;
-    int count;
-    int offset;
-    char *svalue;
+    int    tag_value;
+    char * tag_name;
+    int    type;
+    int  * value;
+    int    count;
+    int    offset;
+    char * svalue;
 } TIFFTag;
 
 

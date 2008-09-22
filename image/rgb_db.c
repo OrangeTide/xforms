@@ -21,7 +21,7 @@
 
 
 /*
- *  $Id: rgb_db.c,v 1.7 2008/01/29 13:59:09 jtt Exp $
+ *  $Id: rgb_db.c,v 1.8 2008/09/22 22:31:27 jtt Exp $
  *
  *  Copyright (c) 1999-2002 T.C. Zhao
  *
@@ -37,6 +37,8 @@
 
 
 /***************************************
+ * This function is retained for compatibility reasons only.
+ * It returns 1 always.
  ***************************************/
 
 int

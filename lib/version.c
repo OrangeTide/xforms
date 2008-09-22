@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_ver = "$Id: version.c,v 1.17 2008/05/04 21:08:01 jtt Exp $";
+char *fl_id_ver = "$Id: version.c,v 1.18 2008/09/22 22:31:28 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -54,7 +54,7 @@ static const char *version =
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars\n"
 #endif
     "Parts Copyright(c) 1999-2002 by T.C. Zhao and Steve Lamont\n"
-	"GNU Lesser General Public License) since 2002";
+	"GNU Lesser General Public License since 2002";
 
 
 /***************************************

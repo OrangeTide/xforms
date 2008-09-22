@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_fits.c,v 1.8 2008/05/05 14:21:48 jtt Exp $
+ * $Id: image_fits.c,v 1.9 2008/09/22 22:31:26 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -147,6 +147,8 @@ init_fits(SPEC *sp)
 
 
 
+/***************************************
+ ***************************************/
 
 static char **
 FITS_header_info(const void *p)
@@ -157,14 +159,14 @@ FITS_header_info(const void *p)
     int i, j;
 
     for (i = 0; i < 15; i++)
-	buf[i] = hbuf[i];
+		buf[i] = hbuf[i];
 
     i = 0;
     sprintf(buf[i++], "SIMPLE\t= %c", h->simple == 1 ? 'Y' : 'N');
     sprintf(buf[i++], "NAXIS\t= %d", h->ndim);
     for (j = 0; j < h->ndim; j++)
-	sprintf(buf[i++], "   NAXIS%d=%d\t%s", j + 1, h->dim[j],
-		h->label[j] ? h->label[j] : "");
+		sprintf(buf[i++], "   NAXIS%d=%d\t%s", j + 1, h->dim[j],
+				h->label[j] ? h->label[j] : "");
     sprintf(buf[i++], "PSIZE\t= %d", h->bpp);
     sprintf(buf[i++], "BSCALE\t= %g", h->bscale);
     sprintf(buf[i++], "BZERO\t= %g", h->bzero);
@@ -173,6 +175,7 @@ FITS_header_info(const void *p)
     sprintf(buf[i++], "BUNIT\t=%s", h->bunit);
     sprintf(buf[i++], "BLANK\t=%d", h->blank);
     buf[i] = 0;
+
     return buf;
 }
 
@@ -189,8 +192,10 @@ generate_fits_header_info(FL_IMAGE *im)
       strcat(strcat(im->info, *q),"\n");
 }
 
+
 #if FITS_DEBUG
 static int verbose = 4;
+
 
 static void
 echo_FITS_header(SPEC *h)

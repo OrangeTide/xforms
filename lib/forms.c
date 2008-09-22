@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.51 2008/09/21 13:33:12 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.52 2008/09/22 22:31:27 jtt Exp $";
 #endif
 
 
@@ -153,7 +153,7 @@ get_hidden_forms_index( FL_FORM * form )
  ***************************************/
 
 static void
-add_form_to_hidden_list( FL_FORM *form )
+add_form_to_hidden_list( FL_FORM * form )
 {
 	/* Extend the list of visible and hidden forms by one element
 	   and put the new forms address into the new element */
@@ -170,7 +170,7 @@ add_form_to_hidden_list( FL_FORM *form )
  ***************************************/
 
 static int
-move_form_to_visible_list( FL_FORM *form )
+move_form_to_visible_list( FL_FORM * form )
 {
 	int i;
 
@@ -206,7 +206,7 @@ move_form_to_visible_list( FL_FORM *form )
  ***************************************/
 
 static int
-move_form_to_hidden_list( FL_FORM *form )
+move_form_to_hidden_list( FL_FORM * form )
 {
 	int i;
 
@@ -247,7 +247,7 @@ move_form_to_hidden_list( FL_FORM *form )
  ***************************************/
 
 int
-remove_form_from_hidden_list( FL_FORM *form )
+remove_form_from_hidden_list( FL_FORM * form )
 {
 	int i;
 

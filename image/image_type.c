@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_type.c,v 1.5 2008/01/28 23:43:06 jtt Exp $
+ * $Id: image_type.c,v 1.6 2008/09/22 22:31:26 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -36,6 +36,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
@@ -49,71 +50,106 @@
  * to rgba image
  *********************************************************************{*/
 
-static int
-packed_to_rgba(FL_IMAGE * im)
-{
-    FL_PACKED *packed = im->packed[0];
-    unsigned char *r, *g, *b, *a;
-    int i, npix;
+/***************************************
+ ***************************************/
 
-    r = im->red[0];
-    g = im->green[0];
-    b = im->blue[0];
-    a = im->alpha[0];
-    for (i = 0, npix = im->w * im->h; i < npix; i++)
-	FL_UNPACK4(packed[i], r[i], g[i], b[i], a[i]);
+static int
+packed_to_rgba( FL_IMAGE * im )
+{
+    FL_PACKED *packed = im->packed[ 0 ];
+    unsigned char *r,
+		          *g,
+		          *b,
+		          *a;
+    int i,
+		npix;
+
+    r = im->red[   0 ];
+    g = im->green[ 0 ];
+    b = im->blue[  0 ];
+    a = im->alpha[ 0 ];
+
+    for ( i = 0, npix = im->w * im->h; i < npix; i++ )
+		FL_UNPACK4( packed[ i ], r[ i ], g[ i ], b[ i ], a[ i ] );
 
     return 0;
 }
 
-static int
-gray_to_rgba(FL_IMAGE * im)
-{
-    unsigned short *gray = im->gray[0];
-    unsigned char *r, *g, *b;
-    int i, npix;
 
-    r = im->red[0];
-    g = im->green[0];
-    b = im->blue[0];
-    for (i = 0, npix = im->w * im->h; i < npix; i++)
-	r[i] = g[i] = b[i] = gray[i];
+/***************************************
+ ***************************************/
+
+static int
+gray_to_rgba( FL_IMAGE * im )
+{
+    unsigned short *gray = im->gray[ 0 ];
+    unsigned char *r,
+		          *g,
+		          *b;
+    int i,
+		npix;
+
+    r = im->red[   0 ];
+    g = im->green[ 0 ];
+    b = im->blue[  0 ];
+
+    for ( i = 0, npix = im->w * im->h; i < npix; i++ )
+		r[ i ] = g[ i ] = b[ i ] = gray[ i ];
+
     return 0;
 }
 
-static int
-gray16_to_rgba(FL_IMAGE * im)
-{
-    unsigned short *gray = im->gray[0];
-    unsigned char *r, *g, *b;
-    float scale = (FL_PCMAX + 0.001f) / im->gray_maxval;
-    int i, npix;
 
-    r = im->red[0];
-    g = im->green[0];
-    b = im->blue[0];
-    for (i = 0, npix = im->w * im->h; i < npix; i++)
-	r[i] = g[i] = b[i] = gray[i] * scale;
+/***************************************
+ ***************************************/
+
+static int
+gray16_to_rgba( FL_IMAGE * im )
+{
+    unsigned short *gray = im->gray[ 0 ];
+    unsigned char *r,
+		          *g,
+		          *b;
+    float scale = ( FL_PCMAX + 0.001 ) / im->gray_maxval;
+    int i,
+		npix;
+
+    r = im->red[   0 ];
+    g = im->green[ 0];
+    b = im->blue[  0 ];
+
+    for ( i = 0, npix = im->w * im->h; i < npix; i++ )
+		r[ i ] = g[ i ] = b[ i ] = gray[ i ] * scale;
+
     return 0;
 }
 
-static int
-ci_to_rgba(FL_IMAGE * im)
-{
-    unsigned short *ci = im->ci[0];
-    unsigned char *r, *g, *b;
-    int k, i;
 
-    r = im->red[0];
-    g = im->green[0];
-    b = im->blue[0];
-    for (i = im->w * im->h; --i >= 0;)
+/***************************************
+ ***************************************/
+
+static int
+ci_to_rgba( FL_IMAGE * im )
+{
+    unsigned short *ci = im->ci[ 0 ];
+    unsigned char *r,
+		          *g,
+		          *b;
+    int k,
+		i;
+
+    r = im->red[   0 ];
+    g = im->green[ 0 ];
+    b = im->blue[ 0 ];
+
+    for ( i = im->w * im->h; --i >= 0; )
     {
-	k = ci[i];
-	r[i] = im->red_lut[k];
-	g[i] = im->green_lut[k];
-	b[i] = im->blue_lut[k];
+		k = ci[ i ];
+		r[ i ] = im->red_lut[   k ];
+		g[ i ] = im->green_lut[ k ];
+		b[ i ] = im->blue_lut[  k ];
     }
+
     return 0;
 }
 
@@ -121,321 +157,438 @@ ci_to_rgba(FL_IMAGE * im)
  * to grayscale
  *********************************************************************{*/
 
-static int
-packed_to_gray(FL_IMAGE * im)
-{
-    FL_PACKED *packed = im->packed[0];
-    int i, total = im->w * im->h;
-    unsigned short *gray;
 
-    gray = im->ci[0];
-    for (i = 0; i < total; i++)
-	gray[i] = FL_RGB2GRAY(FL_GETR(packed[i]),
-			      FL_GETG(packed[i]),
-			      FL_GETB(packed[i]));
-    return 0;
-}
+/***************************************
+ ***************************************/
 
 static int
-rgba_to_gray(FL_IMAGE * im)
+packed_to_gray( FL_IMAGE * im )
 {
-    int i, total;
-    unsigned char *r, *g, *b;
+    FL_PACKED *packed = im->packed[ 0 ];
+    int i,
+		total = im->w * im->h;
     unsigned short *gray;
 
-    gray = im->gray[0];
-    r = im->red[0];
-    g = im->green[0];
-    b = im->blue[0];
-    for (i = 0, total = im->w * im->h; i < total; i++)
-	gray[i] = FL_RGB2GRAY(r[i], g[i], b[i]);
+    gray = im->ci[ 0 ];
+
+    for ( i = 0; i < total; i++ )
+		gray[ i ] = FL_RGB2GRAY( FL_GETR( packed[ i ] ),
+								 FL_GETG( packed[ i ] ),
+								 FL_GETB( packed[ i ] ) );
 
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-ci_to_gray(FL_IMAGE * im)
+rgba_to_gray( FL_IMAGE * im )
 {
-    unsigned short *ci = im->ci[0];
-    unsigned short *gray = im->gray[0];
+    int i,
+		total;
+    unsigned char *r,
+		          *g,
+		          *b;
+    unsigned short *gray;
+
+    gray = im->gray[ 0 ];
+
+    r = im->red[   0 ];
+    g = im->green[ 0 ];
+    b = im->blue[  0 ];
+
+    for ( i = 0, total = im->w * im->h; i < total; i++ )
+		gray[ i ] = FL_RGB2GRAY( r[ i ], g[ i ], b[ i ] );
+
+    return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ci_to_gray( FL_IMAGE * im )
+{
+    unsigned short *ci = im->ci[ 0 ];
+    unsigned short *gray = im->gray[ 0 ];
     int i;
 
-    for (i = im->w * im->h; --i >= 0;)
-	gray[i] = FL_RGB2GRAY(im->red_lut[ci[i]],
-			      im->green_lut[ci[i]],
-			      im->blue_lut[ci[i]]);
+    for ( i = im->w * im->h; --i >= 0; )
+		gray[i] = FL_RGB2GRAY( im->red_lut[   ci[ i ] ],
+							   im->green_lut[ ci[ i ] ],
+							   im->blue_lut[  ci[ i ] ] );
 
     return 0;
 }
+
 
 /*}*********************************************************************
  * Pack an image
  *********************************************************************{*/
 
+/***************************************
+ ***************************************/
+
 static int
-rgba_to_packed(FL_IMAGE * im)
+rgba_to_packed( FL_IMAGE * im )
 {
     int npix, i;
     FL_PACKED *p;
-    unsigned char *r, *g, *b, *a;
+    unsigned char *r,
+		          *g,
+		          *b,
+		          *a;
 
-    r = im->red[0];
-    g = im->green[0];
-    b = im->blue[0];
-    a = im->alpha[0];
-    p = im->packed[0];
-    for (i = 0, npix = im->w * im->h; i < npix; i++)
-	p[i] = FL_PACK4(r[i], g[i], b[i], a[i]);
+    r = im->red[   0 ];
+    g = im->green[ 0 ];
+    b = im->blue[  0 ];
+    a = im->alpha[ 0 ];
+
+    p = im->packed[ 0 ];
+
+    for ( i = 0, npix = im->w * im->h; i < npix; i++ )
+		p[ i ] = FL_PACK4( r[ i ], g[ i ], b[ i ], a[ i ] );
 
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-ci_to_packed(FL_IMAGE * im)
+ci_to_packed( FL_IMAGE * im )
 {
     int i;
     FL_PACKED *p;
     unsigned short *ci;
 
-    p = im->packed[0];
-    ci = im->ci[0];
-    for (i = im->w * im->h; --i >= 0;)
-	p[i] = FL_PACK4(im->red_lut[ci[i]],
-			im->green_lut[ci[i]],
-			im->blue_lut[ci[i]], 0);
+    p = im->packed[ 0 ];
+    ci = im->ci[ 0 ];
+
+    for ( i = im->w * im->h; --i >= 0; )
+		p[ i ] = FL_PACK4( im->red_lut[   ci[ i ] ],
+						   im->green_lut[ ci[ i ] ],
+						   im->blue_lut[  ci[ i ] ], 0 );
+
     return 0;
 }
+
 
 /*}*******************************************************************
  * convert to color index
  *********************************************************************/
+
+/***************************************
+ ***************************************/
+
 static int
-rgb_to_ci(FL_IMAGE * im)
+rgb_to_ci( FL_IMAGE * im )
 {
-    return flimage_quantize_rgb(im->red, im->green, im->blue,
-				im->w, im->h,
-				im->map_len,
-				im->ci, &im->map_len,
-			      im->red_lut, im->green_lut, im->blue_lut, im);
+    return flimage_quantize_rgb( im->red, im->green, im->blue,
+								 im->w, im->h,
+								 im->map_len,
+								 im->ci, &im->map_len,
+								 im->red_lut, im->green_lut, im->blue_lut, im );
 }
 
-static int
-packed_to_ci(FL_IMAGE * im)
-{
 
-    return flimage_quantize_packed(im->packed,
-				   im->w, im->h, im->map_len,
-				   im->ci, &im->map_len,
-			      im->red_lut, im->green_lut, im->blue_lut, im);
+/***************************************
+ ***************************************/
+
+static int
+packed_to_ci( FL_IMAGE * im )
+{
+	
+    return flimage_quantize_packed( im->packed,
+									im->w, im->h, im->map_len,
+									im->ci, &im->map_len,
+									im->red_lut, im->green_lut, im->blue_lut,
+									im );
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-gray_to_ci(FL_IMAGE * im)
+gray_to_ci( FL_IMAGE * im )
 {
     int i;
-    float fact = (FL_PCMAX + .001f) / (im->map_len - 1.0f);
-    float scale = (im->map_len - 1.0) / 254.999f;
+    float fact = ( FL_PCMAX + 0.001 ) / ( im->map_len - 1.0 );
+    float scale = ( im->map_len - 1.0 ) / 254.999;
 
-    for (i = 0; i < im->map_len; i++)
-	im->red_lut[i] = im->green_lut[i] = im->blue_lut[i] = i * fact;
+    for ( i = 0; i < im->map_len; i++ )
+		im->red_lut[ i ] = im->green_lut[ i ] = im->blue_lut[ i ] = i * fact;
 
-    if (im->map_len != 256)
-    {
-	for (i = im->w * im->h; --i >= 0;)
-	    im->ci[0][i] = im->gray[0][i] * scale;
-    }
+    if ( im->map_len != 256 )
+ 		for ( i = im->w * im->h; --i >= 0; )
+			im->ci[ 0 ][ i ] = im->gray[ 0 ][ i ] * scale;
     else
-    {
-	for (i = im->w * im->h; --i >= 0;)
-	    im->ci[0][i] = im->gray[0][i];
-    }
+		for ( i = im->w * im->h; --i >= 0; )
+			im->ci[ 0 ][ i ] = im->gray[ 0 ][ i ];
+
     return 0;
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
-scale_gray16(unsigned short *g16, unsigned short *g, int maxval, int len)
+scale_gray16( unsigned short * g16,
+			  unsigned short * g,
+			  int              maxval,
+			  int              len )
 {
-    float scale = (FL_PCMAX + 0.001f) / maxval;
-    for (; --len >= 0;)
-	g[len] = g16[len] * scale;
+    float scale = ( FL_PCMAX + 0.001 ) / maxval;
+
+    while ( --len >= 0 )
+		g[ len ] = g16[ len ] * scale;
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-gray16_to_gray(FL_IMAGE * im)
+gray16_to_gray( FL_IMAGE * im )
 {
-    scale_gray16(im->gray[0], im->gray[0], im->gray_maxval, im->w * im->h);
+    scale_gray16( im->gray[ 0 ], im->gray[ 0 ], im->gray_maxval,
+				  im->w * im->h );
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-gray_to_gray16(FL_IMAGE * im)
+gray_to_gray16( FL_IMAGE * im )
 {
     im->type = FL_IMAGE_GRAY16;
     im->gray_maxval = 255;
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-gray16_to_ci(FL_IMAGE * im)
+gray16_to_ci( FL_IMAGE * im )
 {
     int i;
-    float fact = (FL_PCMAX + .001f) / (im->map_len - 1.0f);
+    float fact = ( FL_PCMAX + 0.001 ) / ( im->map_len - 1.0 );
 
-    for (i = 0; i < im->map_len; i++)
-	im->red_lut[i] = im->green_lut[i] = im->blue_lut[i] = i * fact;
-    scale_gray16(im->gray[0], im->ci[0], im->gray_maxval, im->w * im->h);
+    for ( i = 0; i < im->map_len; i++ )
+		im->red_lut[ i ] = im->green_lut[ i ] = im->blue_lut[ i ] = i * fact;
+
+    scale_gray16( im->gray[ 0 ], im->ci[ 0 ], im->gray_maxval, im->w * im->h );
+
     return 0;
 }
+
+
 /*}*********************************************************************
  * Convert an image to B&W (half-toning)
  **********************************************************************/
 
 enum
 {
-    FS_DITHER, ORDERED8, DITHER_THRESHOLD
+    FS_DITHER,
+	ORDERED8,
+	DITHER_THRESHOLD
 };
 
 static int dither_method = FS_DITHER;
-static int dither_threshold = (1 << FL_PCBITS) / 2;
+static int dither_threshold = ( 1 << FL_PCBITS ) / 2;
 
-/* do floyd-steinberg dithering */
+
+/***************************************
+ * do floyd-steinberg dithering
+ ***************************************/
+
 static int
-fs_dither(unsigned short **mat, int h, int w, unsigned short **mm)
+fs_dither( unsigned short ** mat,
+		   int               h,
+		   int               w,
+		   unsigned short ** mm )
 {
-    unsigned short *m, *ras;
-    int **tmp, *curr, *next = 0;
-    int i, j, n, err, dither2, lut[(1 << FL_PCBITS)];
-    static int x[4] =
-    {0, 15, 240, 255};
-    static int y[4] =
-    {0, 5, 250, 255};
+    unsigned short *m,
+		           *ras;
+    int **tmp,
+		 *curr,
+		 *next = NULL;
+    int i,
+		j,
+		n,
+		err,
+		dither2,
+		lut[ 1 << FL_PCBITS ];
+    static int x[ 4 ] =  { 0, 15, 240, 255 };
+    static int y[ 4 ] =  { 0,  5, 250, 255 };
 
     /* to preserve the errors on the edge, has to get one more row */
-    tmp = fl_get_matrix(h + 1, w, sizeof(**tmp));
 
-    fl_spline_int_interpolate(x, y, 4, 1, lut);
+    tmp = fl_get_matrix( h + 1, w, sizeof **tmp );
 
-    for (ras = mat[0], curr = tmp[0], n = h * w; --n >= 0; ras++, curr++)
-	*curr = lut[*ras];
+    fl_spline_int_interpolate( x, y, 4, 1, lut );
 
-    /*
-     * because we have the raster in a consecutive array, we got the edge
-     * errors right for free
-     */
+    for ( ras = mat[ 0 ], curr = tmp[ 0 ], n = h * w; --n >= 0; ras++, curr++ )
+		*curr = lut[ *ras ];
 
-    dither2 = (1 << FL_PCBITS) - 1;
-    for (i = 0; i < h; i++)
+    /* because we have the raster in a consecutive array, we got the edge
+     * errors right for free */
+
+    dither2 = ( 1 << FL_PCBITS ) - 1;
+
+    for ( i = 0; i < h; i++ )
     {
-	curr = tmp[i];
-	/* can't have it run to h 'cause nextrow[j+1] will be wrong */
-	if (i < h - 1)
-	    next = tmp[i + 1];
+		curr = tmp[ i ];
 
-	for (m = mm[i], j = 0; j < w; j++, m++)
-	{
-	    /* the value of *m depends on how the colormap is assigned */
-	    err = curr[j] - ((*m = curr[j] <= dither_threshold) ? 0 : dither2);
-	    curr[j + 1] += (err * 7) / 16;
-	    next[j - 1] += (err * 3) / 16;
-	    next[j] += (err * 5) / 16;
-	    next[j + 1] += err / 16;
-	}
+		/* can't have it run to h 'cause nextrow[j+1] will be wrong */
+
+		if ( i < h - 1 )
+			next = tmp[ i + 1 ];
+
+		for ( m = mm[ i ], j = 0; j < w; j++, m++ )
+		{
+			/* the value of *m depends on how the colormap is assigned */
+
+			err =   curr[ j ]
+				  - ( ( *m = curr[ j ] <= dither_threshold ) ? 0 : dither2 );
+			curr[ j + 1 ] += ( err * 7 ) / 16;
+
+			next[ j - 1 ] += ( err * 3 ) / 16;
+			next[ j     ] += ( err * 5 ) / 16;
+			next[ j + 1 ] += err / 16;
+		}
     }
-    fl_free_matrix(tmp);
+
+    fl_free_matrix( tmp );
+
     return 0;
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-gray_to_mono(FL_IMAGE * im)
+gray_to_mono( FL_IMAGE * im )
 {
-    unsigned short **outm = fl_get_matrix(im->h, im->w, sizeof(**outm));
-    unsigned short *in, *out, *end;
+    unsigned short **outm = fl_get_matrix( im->h, im->w, sizeof **outm );
+    unsigned short *in,
+		           *out,
+		           *end;
     int status = 0;
 
-    if (dither_threshold <= 0)
-	dither_threshold = (1 << FL_PCBITS) / 2;
+    if ( dither_threshold <= 0 )
+		dither_threshold = ( 1 << FL_PCBITS ) / 2;
 
-    if (dither_method == FS_DITHER)
-	status = fs_dither(im->gray, im->h, im->w, outm);
-    else if (dither_method == DITHER_THRESHOLD)
+    if ( dither_method == FS_DITHER )
+		status = fs_dither( im->gray, im->h, im->w, outm );
+    else if ( dither_method == DITHER_THRESHOLD )
     {
-	in = im->gray[0];
-	for (out = outm[0], end = in + im->w * im->h; in < end;)
-	    *out++ = *in++ >= dither_threshold;
+		in = im->gray[ 0 ];
+		for ( out = outm[ 0 ], end = in + im->w * im->h; in < end; )
+			*out++ = *in++ >= dither_threshold;
     }
 
-
-    if (status >= 0)
+    if ( status >= 0 )
     {
-	fl_free_matrix(im->ci);
-	im->ci = outm;
-	im->map_len = 2;
-	flimage_getcolormap(im);
-	im->red_lut[0] = im->green_lut[0] = im->blue_lut[0] = FL_PCMAX;
-	im->red_lut[1] = im->green_lut[1] = im->blue_lut[1] = 0;
+		fl_free_matrix( im->ci );
+		im->ci = outm;
+		im->map_len = 2;
+		flimage_getcolormap( im );
+
+		im->red_lut[ 0 ] = im->green_lut[ 0 ] = im->blue_lut[ 0 ] = FL_PCMAX;
+		im->red_lut[ 1 ] = im->green_lut[ 1 ] = im->blue_lut[ 1 ] = 0;
     }
 
     return status;
 }
 
-/* need to keep the original resolution */
+
+/***************************************
+ * need to keep the original resolution
+ ***************************************/
+
 static int
-gray16_to_mono(FL_IMAGE * im)
+gray16_to_mono( FL_IMAGE * im )
 {
     int status;
-    unsigned short **gray, **save = im->gray;
+    unsigned short **gray,
+		           **save = im->gray;
 
-    if (!(gray = fl_get_matrix(im->h, im->w, sizeof(**gray))))
-	return -1;
+    if ( ! ( gray = fl_get_matrix( im->h, im->w, sizeof **gray ) ) )
+		return -1;
 
-    scale_gray16(save[0], gray[0], im->gray_maxval, im->w * im->h);
+    scale_gray16( save[ 0 ], gray[ 0 ], im->gray_maxval, im->w * im->h );
 
     im->gray = gray;
-    status = gray_to_mono(im);
-    fl_free_matrix(gray);
+    status = gray_to_mono( im );
+    fl_free_matrix( gray );
     im->gray = save;
 
     return status;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-rgba_to_mono(FL_IMAGE * im)
+rgba_to_mono( FL_IMAGE * im )
 {
     int otype = im->type;
 
     im->type = FL_IMAGE_GRAY;
-    flimage_getmem(im);
-    rgba_to_gray(im);
+    flimage_getmem( im );
+    rgba_to_gray( im );
     im->type = otype;
-    gray_to_mono(im);
+    gray_to_mono( im );
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-packed_to_mono(FL_IMAGE * im)
+packed_to_mono( FL_IMAGE * im )
 {
     int otype = im->type;
 
     im->type = FL_IMAGE_GRAY;
-    flimage_getmem(im);
-    packed_to_gray(im);
+    flimage_getmem( im );
+    packed_to_gray( im );
     im->type = otype;
-    gray_to_mono(im);
+    gray_to_mono( im );
+
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-ci_to_mono(FL_IMAGE * im)
+ci_to_mono( FL_IMAGE * im )
 {
     int otype = im->type;
 
     im->type = FL_IMAGE_GRAY;
-    flimage_getmem(im);
-    ci_to_gray(im);
+    flimage_getmem( im );
+    ci_to_gray( im );
     im->type = otype;
-    gray_to_mono(im);
+    gray_to_mono( im );
+
     return 0;
 }
 
@@ -447,115 +600,136 @@ ci_to_mono(FL_IMAGE * im)
 typedef struct
 {
     int from, to;
-    int (*cnvt) (FL_IMAGE *);
-}
-Cnvt;
+    int ( * cnvt )( FL_IMAGE * );
+} Cnvt;
+
+
+/***************************************
+ ***************************************/
 
 static int
-noop( FL_IMAGE * im  FL_UNUSED_ARG)
+noop( FL_IMAGE * im  FL_UNUSED_ARG )
 {
     return 0;
 }
 
-static Cnvt cnvt[] =
+static Cnvt cnvt[ ] =
 {
     /* to gray */
-    {FL_IMAGE_PACKED, FL_IMAGE_GRAY, packed_to_gray},
-    {FL_IMAGE_RGB, FL_IMAGE_GRAY, rgba_to_gray},
-    {FL_IMAGE_CI, FL_IMAGE_GRAY, ci_to_gray},
-    {FL_IMAGE_MONO, FL_IMAGE_GRAY, ci_to_gray},
-    {FL_IMAGE_GRAY16, FL_IMAGE_GRAY, gray16_to_gray},
-    {FL_IMAGE_GRAY, FL_IMAGE_GRAY16, gray_to_gray16},
-   /* to rgb */
-    {FL_IMAGE_PACKED, FL_IMAGE_RGB, packed_to_rgba},
-    {FL_IMAGE_GRAY, FL_IMAGE_RGB, gray_to_rgba},
-    {FL_IMAGE_GRAY16, FL_IMAGE_RGB, gray16_to_rgba},
-    {FL_IMAGE_CI, FL_IMAGE_RGB, ci_to_rgba},
-    {FL_IMAGE_MONO, FL_IMAGE_RGB, ci_to_rgba},
-  /* to packed */
-    {FL_IMAGE_RGB, FL_IMAGE_PACKED, rgba_to_packed},
-    {FL_IMAGE_CI, FL_IMAGE_PACKED, ci_to_packed},
-    {FL_IMAGE_MONO, FL_IMAGE_PACKED, ci_to_packed},
-   /* to ci    */
-    {FL_IMAGE_RGB, FL_IMAGE_CI, rgb_to_ci},
-    {FL_IMAGE_PACKED, FL_IMAGE_CI, packed_to_ci},
-    {FL_IMAGE_GRAY16, FL_IMAGE_CI, gray16_to_ci},
-    {FL_IMAGE_GRAY, FL_IMAGE_CI, gray_to_ci},
-    {FL_IMAGE_GRAY, FL_IMAGE_CI, gray_to_ci},
-    {FL_IMAGE_MONO, FL_IMAGE_CI, noop},
-   /* to mono */
-    {FL_IMAGE_RGB, FL_IMAGE_MONO, rgba_to_mono},
-    {FL_IMAGE_PACKED, FL_IMAGE_MONO, packed_to_mono},
-    {FL_IMAGE_GRAY, FL_IMAGE_MONO, gray_to_mono},
-    {FL_IMAGE_GRAY16, FL_IMAGE_MONO, gray16_to_mono},
-    {FL_IMAGE_CI, FL_IMAGE_MONO, ci_to_mono},
 
-   /* sentinel */
-    {FL_IMAGE_NONE, FL_IMAGE_NONE, 0}
+    { FL_IMAGE_PACKED, FL_IMAGE_GRAY,   packed_to_gray },
+    { FL_IMAGE_RGB,    FL_IMAGE_GRAY,   rgba_to_gray },
+    { FL_IMAGE_CI,     FL_IMAGE_GRAY,   ci_to_gray },
+    { FL_IMAGE_MONO,   FL_IMAGE_GRAY,   ci_to_gray },
+    { FL_IMAGE_GRAY16, FL_IMAGE_GRAY,   gray16_to_gray },
+    { FL_IMAGE_GRAY,   FL_IMAGE_GRAY16, gray_to_gray16 },
+
+	/* to rgb */
+
+    { FL_IMAGE_PACKED, FL_IMAGE_RGB, packed_to_rgba },
+    { FL_IMAGE_GRAY,   FL_IMAGE_RGB, gray_to_rgba },
+    { FL_IMAGE_GRAY16, FL_IMAGE_RGB, gray16_to_rgba },
+    { FL_IMAGE_CI,     FL_IMAGE_RGB, ci_to_rgba },
+    { FL_IMAGE_MONO,   FL_IMAGE_RGB, ci_to_rgba },
+
+	/* to packed */
+
+    { FL_IMAGE_RGB,  FL_IMAGE_PACKED, rgba_to_packed },
+    { FL_IMAGE_CI,   FL_IMAGE_PACKED, ci_to_packed },
+    { FL_IMAGE_MONO, FL_IMAGE_PACKED, ci_to_packed },
+
+	/* to ci    */
+
+    { FL_IMAGE_RGB,    FL_IMAGE_CI, rgb_to_ci },
+    { FL_IMAGE_PACKED, FL_IMAGE_CI, packed_to_ci },
+    { FL_IMAGE_GRAY16, FL_IMAGE_CI, gray16_to_ci },
+    { FL_IMAGE_GRAY,   FL_IMAGE_CI, gray_to_ci },
+    { FL_IMAGE_GRAY,   FL_IMAGE_CI, gray_to_ci },
+    { FL_IMAGE_MONO,   FL_IMAGE_CI, noop },
+
+	/* to mono */
+
+    { FL_IMAGE_RGB,    FL_IMAGE_MONO, rgba_to_mono },
+    { FL_IMAGE_PACKED, FL_IMAGE_MONO, packed_to_mono },
+    { FL_IMAGE_GRAY,   FL_IMAGE_MONO, gray_to_mono },
+    { FL_IMAGE_GRAY16, FL_IMAGE_MONO, gray16_to_mono },
+    { FL_IMAGE_CI,     FL_IMAGE_MONO, ci_to_mono },
+
+	/* sentinel */
+
+    { FL_IMAGE_NONE, FL_IMAGE_NONE, 0 }
 };
 
 
+/***************************************
+ ***************************************/
+
 int
-flimage_convert(FL_IMAGE * image, int newtype, int ncolors)
+flimage_convert( FL_IMAGE * image,
+				 int        newtype,
+				 int        ncolors )
 {
-    int found, status, otype;
+    int found,
+		status,
+		otype;
     Cnvt *p = cnvt;
 
-    if (!image || image->w <= 0 || image->type == FL_IMAGE_NONE)
-	return -1;
+    if ( ! image || image->w <= 0 || image->type == FL_IMAGE_NONE )
+		return -1;
 
-    if (image->type == newtype)
-	return 0;
+    if ( image->type == newtype )
+		return 0;
 
-    if (image->type == FL_IMAGE_MONO)
-	ncolors = 2;
+    if ( image->type == FL_IMAGE_MONO )
+		ncolors = 2;
 
     otype = image->type;
-    if ((image->available_type & newtype) && !image->force_convert)
+
+    if ( image->available_type & newtype && ! image->force_convert )
     {
-	/* if CI, we also need to verify the map_len is the same */
-	if (newtype != FL_IMAGE_CI || image->map_len == ncolors)
-	{
-	    image->type = newtype;
-	    image->modified = 1;
-	    return 0;
-	}
+		/* if CI, we also need to verify the map_len is the same */
+
+		if ( newtype != FL_IMAGE_CI || image->map_len == ncolors )
+		{
+			image->type = newtype;
+			image->modified = 1;
+			return 0;
+		}
     }
 
-    for (p = cnvt, found = 0; p->from != FL_IMAGE_NONE && !found; p++)
-	found = (p->from == image->type) && (p->to == newtype);
+    for ( p = cnvt, found = 0; p->from != FL_IMAGE_NONE && !found; p++ )
+		found = p->from == image->type && p->to == newtype;
 
-
-    if (!found)
+    if ( ! found )
     {
-	fprintf(stderr, "requested conversion (%d to %d) not defined\n",
-		image->type, newtype);
-	return -1;
+		fprintf( stderr, "requested conversion (%d to %d) not defined\n",
+				 image->type, newtype );
+		return -1;
     }
 
-    if (newtype == FL_IMAGE_CI)
+    if ( newtype == FL_IMAGE_CI )
     {
-	image->map_len = (ncolors <= 1 ? 256 : ncolors);
-	flimage_getcolormap(image);
+		image->map_len = ncolors <= 1 ? 256 : ncolors;
+		flimage_getcolormap( image );
     }
 
     image->type = newtype;
 
-    if (flimage_getmem(image) < 0)
+    if ( flimage_getmem( image ) < 0 )
     {
-	image->error_message(image, "Convert: can't get memory");
-	return -1;
+		image->error_message( image, "Convert: can't get memory" );
+		return -1;
     }
 
-    if ((status = (--p)->cnvt(image)) >= 0)
+    if ( ( status = ( --p )->cnvt( image ) ) >= 0 )
     {
-	image->available_type |= otype;
-	image->modified = 1;
+		image->available_type |= otype;
+		image->modified = 1;
     }
     else
     {
-	image->type = p->from;
-	image->error_message(image, "conversion failed");
+		image->type = p->from;
+		image->error_message( image, "conversion failed" );
     }
 
     image->force_convert = 0;

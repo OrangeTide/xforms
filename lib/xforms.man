@@ -1,5 +1,5 @@
 .\"
-.\" $Id: xforms.man,v 1.2 2003/09/09 00:28:25 leeming Exp $
+.\" $Id: xforms.man,v 1.3 2008/09/22 22:31:28 jtt Exp $
 .\"
 .\" Man page for XFORMS.
 .\" Use the following command to generate viewable man page
@@ -9,7 +9,7 @@
 .\"   ul | more -fsk to view
 .\"
 .\"
-.TH XFORMS 5 "June 2000" "Version 0.89" "Forms Library"
+.TH XFORMS 5 "September 2008" "Version 1.0.91" "Forms Library"
 .SH NAME
 xforms \-   A GUI Toolkit for X Window Systems
 .\"
@@ -79,7 +79,7 @@ always selects the visual that has the most depth.
 .BI \-depth " depth"
 requests a specific depth.
 .TP
-.BI \-debug " level"
+.BI \-fldebug " level"
 generates some info about the state of the
 .B XForms.
 where
@@ -115,12 +115,13 @@ fdesign(1L), fd2ps(1L)
 .SH AUTHOR
 Copyright
 .Cr
-1996-2000
-T.C. Zhao (tc_zhao@yahoo.com)
-and Mark Overmars (markov@cs.ruu.nl).
+1996-2002
+T.C. Zhao, Mark Overmars and Steve Lamont
 .br
-Parts also Copyright
-.Cr
-1999-2000 T.C. Zhao and Steve Lamont (spl@ucsd.edu)
+GNU Lesser General Public License since 2002
+.br
+Maintainers: Jean-Marc Lasgouttes, Angus Leeming and Jens Thoms Toerring
+<jt@toerring.de>
+
 .SH HOME PAGE
-http://world.std.com/~xforms
+https://savannah.nongnu.org/projects/xforms/
