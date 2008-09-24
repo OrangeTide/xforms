@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gzip.c,v 1.4 2008/01/28 23:42:28 jtt Exp $
+ * $Id: image_gzip.c,v 1.5 2008/09/24 18:31:57 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -35,32 +35,41 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 
-static int
-GZIP_identify(FILE * fp)
-{
-    char buf[2];
 
-    fread(buf, 1, 2, fp);
-    return (buf[0] == '\037' && buf[1] == '\213') ||
-	(buf[0] == '\037' && buf[1] == '\235');
-}
+/***************************************
+ ***************************************/
 
 static int
-GZIP_description(FL_IMAGE * im)
+GZIP_identify( FILE * fp )
 {
-    static char *cmds[] =
-    {
-	"gzip -dc %s > %s",
-	0
-    };
+    char buf[ 2 ];
 
-    return flimage_description_via_filter(im, cmds, "reading gzip ...", 0);
+    if ( fread( buf, 1, 2, fp ) != 2 )
+		return 0;
+	return    buf[ 0 ] == '\037'
+		   && ( buf[ 1 ] == '\213' || buf[ 1 ] == '\235' );
 }
 
+
+/***************************************
+ ***************************************/
+
+static int
+GZIP_description( FL_IMAGE * im )
+{
+    static char *cmds[ ] = { "gzip -dc %s > %s", NULL };
+
+    return flimage_description_via_filter( im, cmds, "reading gzip ...", 0 );
+}
+
+
+/***************************************
+ ***************************************/
 
 static int
 GZIP_load( FL_IMAGE * im  FL_UNUSED_ARG )
@@ -70,23 +79,28 @@ GZIP_load( FL_IMAGE * im  FL_UNUSED_ARG )
 }
 
 
+/***************************************
+ ***************************************/
+
 static int
-GZIP_dump(FL_IMAGE * im)
+GZIP_dump( FL_IMAGE * im )
 {
-    static char *cmds[] =
-    {"gzip %s > %s", 0};
-    static char *formats[] =
-    {"ppm", "pgm", "pbm", 0};
-    return flimage_write_via_filter(im, cmds, formats, 0);
+    static char *cmds[ ] = {"gzip %s > %s", NULL };
+    static char *formats[ ] = { "ppm", "pgm", "pbm", NULL };
+	return flimage_write_via_filter( im, cmds, formats, 0 );
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-flimage_enable_gzip(void)
+flimage_enable_gzip( void )
 {
-    flimage_add_format("GZIP format", "gzip", "gz",
-		       FL_IMAGE_FLEX,
-		       GZIP_identify,
-		       GZIP_description,
-		       GZIP_load,
-		       GZIP_dump);
+    flimage_add_format( "GZIP format", "gzip", "gz",
+						FL_IMAGE_FLEX,
+						GZIP_identify,
+						GZIP_description,
+						GZIP_load,
+						GZIP_dump );
 }

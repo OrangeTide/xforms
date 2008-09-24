@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_sgi.c,v 1.4 2008/01/28 23:42:58 jtt Exp $
+ * $Id: image_sgi.c,v 1.5 2008/09/24 18:31:58 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -34,57 +34,74 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 
-static int
-IRIS_identify(FILE * fp)
-{
-    char buf[2];
 
-    fread(buf, 1, 2, fp);
-    return ((buf[0] == '\001' && buf[1] == '\332') ||
-	    (buf[0] == '\332' && buf[1] == '\001'));
-}
+/***************************************
+ ***************************************/
 
 static int
-IRIS_description(FL_IMAGE * im)
+IRIS_identify( FILE * fp )
 {
-    static char *cmds[] =
-    {
-	"sgitopnm %s > %s",
-	0
-    };
+    char buf[ 2 ];
 
-    return flimage_description_via_filter(im, cmds, "reading iris ...", 0);
+    if ( fread( buf, 1, 2, fp ) != 2 )
+		return 0;
+
+    return    ( buf[ 0 ] == '\001' && buf[ 1 ] == '\332' )
+		   || ( buf[ 0 ] == '\332' && buf[ 1 ] == '\001' );
 }
+
+
+/***************************************
+ ***************************************/
+
+static int
+IRIS_description( FL_IMAGE * im )
+{
+    static char *cmds[ ] = { "sgitopnm %s > %s", NULL };
+
+    return flimage_description_via_filter( im, cmds, "reading iris ...", 0 );
+}
+
+
+/***************************************
+ ***************************************/
 
 static int
 IRIS_load( FL_IMAGE * im  FL_UNUSED_ARG )
 {
-    fprintf(stderr, "should never been here\n");
+    fprintf( stderr, "should never been here\n" );
     return -1;
 }
 
-static int
-IRIS_dump(FL_IMAGE * im)
-{
-    static char *cmds[] =
-    {"pnmtosgi %s > %s", 0};
-    static char *formats[] =
-    {"ppm", "pgm", "pbm", 0};
 
-    return flimage_write_via_filter(im, cmds, formats, 0);
+/***************************************
+ ***************************************/
+
+static int
+IRIS_dump( FL_IMAGE * im )
+{
+    static char *cmds[ ] = { "pnmtosgi %s > %s", NULL };
+    static char *formats[ ] = { "ppm", "pgm", "pbm", NULL };
+
+    return flimage_write_via_filter( im, cmds, formats, 0 );
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-flimage_enable_sgi(void)
+flimage_enable_sgi( void )
 {
-    flimage_add_format("SGI Iris", "iris", "rgb",
-		       FL_IMAGE_RGB | FL_IMAGE_GRAY | FL_IMAGE_MONO,
-		       IRIS_identify,
-		       IRIS_description,
-		       IRIS_load,
-		       IRIS_dump);
+    flimage_add_format( "SGI Iris", "iris", "rgb",
+						FL_IMAGE_RGB | FL_IMAGE_GRAY | FL_IMAGE_MONO,
+						IRIS_identify,
+						IRIS_description,
+						IRIS_load,
+						IRIS_dump);
 }

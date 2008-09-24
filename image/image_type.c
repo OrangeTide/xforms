@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_type.c,v 1.6 2008/09/22 22:31:26 jtt Exp $
+ * $Id: image_type.c,v 1.7 2008/09/24 18:31:58 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -115,7 +115,7 @@ gray16_to_rgba( FL_IMAGE * im )
 		npix;
 
     r = im->red[   0 ];
-    g = im->green[ 0];
+    g = im->green[ 0 ];
     b = im->blue[  0 ];
 
     for ( i = 0, npix = im->w * im->h; i < npix; i++ )

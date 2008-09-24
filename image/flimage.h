@@ -22,7 +22,7 @@
 /********************** crop here for forms.h **********************/
 
 /*
- * $Id: flimage.h,v 1.7 2008/04/29 21:36:04 jtt Exp $
+ * $Id: flimage.h,v 1.8 2008/09/24 18:31:56 jtt Exp $
  *
  * Image related routines
  *
@@ -41,7 +41,13 @@ extern "C"
 #endif
 
 
-#define fl_safe_free( p ) do { if ( p ) { fl_free( p ); p = NULL; } } while( 0 )
+#define fl_safe_free( p )     do {                   \
+	                              if ( p )           \
+								  {                  \
+									  fl_free( p );  \
+									  p = NULL;      \
+								  }                  \
+                              } while( 0 )
 
 #define FL_RGB2GRAY( r, g, b )  \
 	( ( unsigned int )( ( 78 * ( r ) + 150 * ( g ) + 28 * ( b ) ) >> 8 ) )
@@ -90,10 +96,10 @@ typedef unsigned int      FL_PACKED4;
 
 /* if PCBITS is not 8, we need to apply the RGBmask */
 
-#define FL_GETR( packed ) (   ( packed )               & FL_RMASK )
-#define FL_GETG( packed ) ( ( ( packed )>> FL_GSHIFT ) & FL_PCMAX )
-#define FL_GETB( packed ) ( ( ( packed )>> FL_BSHIFT ) & FL_PCMAX )
-#define FL_GETA( packed ) ( ( ( packed )>> FL_ASHIFT ) & FL_PCMAX )
+#define FL_GETR( packed ) (   ( packed )                & FL_RMASK )
+#define FL_GETG( packed ) ( ( ( packed ) >> FL_GSHIFT ) & FL_PCMAX )
+#define FL_GETB( packed ) ( ( ( packed ) >> FL_BSHIFT ) & FL_PCMAX )
+#define FL_GETA( packed ) ( ( ( packed ) >> FL_ASHIFT ) & FL_PCMAX )
 
 #define FL_PACK3( r, g, b )   \
 	( ( ( r ) << FL_RSHIFT ) | ( ( g ) << FL_GSHIFT ) | ( ( b ) << FL_BSHIFT ) )

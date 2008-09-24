@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.9 2008/03/19 21:04:21 jtt Exp $
+ * $Id: image_jpeg.c,v 1.10 2008/09/24 18:31:57 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -37,10 +37,13 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
+
+
 /* jpeglib.h includes jconfig.h which has a old-style definition of
  * HAVE_STDLIB_H. This breaks compilation with compilers like IBM's
  * xlc. */
@@ -99,18 +102,14 @@ JPEG_identify( FILE * fp )
      * A 'raw' JPEG will not have the JFIF (JPEG file interchange format)
      * header but is still readable
      */
-    if (    buf[ 0 ] == ( unsigned char ) 0xff
-		 && buf[ 1 ] == ( unsigned char ) 0xd8
-		 && buf[ 2 ] == ( unsigned char ) 0xff )
+
+    if ( buf[ 0 ] == 0xff && buf[ 1 ] == 0xd8 && buf[ 2 ] == 0xff )
 		return 1;
 
     for ( i = 0; i < sizeof buf - 3 && buf[ i ] != 'J'; i++ )
-		;
+		/* empty */ ;
 
-    return    buf[ i     ] == 'J'
-		   && buf[ i + 1 ] == 'F'
-		   && buf[ i + 2 ] == 'I'
-		   && buf[ i + 3 ] == 'F';
+    return strncmp( ( char * ) buf, "JFIF", 4 );
 }
 
 
@@ -356,82 +355,83 @@ JPEG_read_pixels( FL_IMAGE * im )
 static int
 JPEG_write( FL_IMAGE * im )
 {
-    SPEC *spec = fl_calloc(1, sizeof(*spec));
+    SPEC *spec = fl_calloc( 1, sizeof *spec );
     struct jpeg_compress_struct *cinfo;
-/*    JSAMPROW rowptr[1]; */
+/*    JSAMPROW rowptr[ 1 ]; */
     JSAMPARRAY rowptr;
     unsigned char *buf;
     int i;
 
     cinfo = &spec->cinfo;
-    cinfo->err = jpeg_std_error(&spec->pub);
+    cinfo->err = jpeg_std_error( &spec->pub );
     spec->pub.error_exit = error_exit;
 
-    if (setjmp(spec->jmp_buffer))
+    if ( setjmp( spec->jmp_buffer ) )
     {
-		jpeg_destroy_compress(cinfo);
-		fl_free(spec);
+		jpeg_destroy_compress( cinfo );
+		fl_free( spec );
 		return -1;
     }
 
-    jpeg_create_compress(cinfo);
-    jpeg_stdio_dest(cinfo, im->fpout);
+    jpeg_create_compress( cinfo );
+    jpeg_stdio_dest( cinfo, im->fpout );
 
     cinfo->image_width = im->w;
     cinfo->image_height = im->h;
 
-    if (im->type == FL_IMAGE_RGB)
+    if ( im->type == FL_IMAGE_RGB )
     {
 		cinfo->input_components = 3;
 		cinfo->in_color_space = JCS_RGB;
     }
-    else if (im->type == FL_IMAGE_GRAY)
+    else if ( im->type == FL_IMAGE_GRAY )
     {
 		cinfo->input_components = 1;
 		cinfo->in_color_space = JCS_GRAYSCALE;
     }
 
-    jpeg_set_defaults(cinfo);
-    jpeg_set_quality(cinfo, quality_factor, TRUE);
+    jpeg_set_defaults( cinfo );
+    jpeg_set_quality( cinfo, quality_factor, TRUE );
     cinfo->smoothing_factor = smoothing_factor;
 
-    jpeg_start_compress(cinfo, TRUE);
+    jpeg_start_compress( cinfo, TRUE );
 
-    if (im->comments)
-		jpeg_write_marker(cinfo, JPEG_COM, (void *) im->comments,
-						  im->comments_len);
+    if ( im->comments )
+		jpeg_write_marker( cinfo, JPEG_COM, (void *) im->comments,
+						   im->comments_len );
 
-    rowptr = cinfo->mem->alloc_sarray((j_common_ptr) cinfo, JPOOL_IMAGE,
-									  cinfo->input_components * im->w, 1);
+    rowptr = cinfo->mem->alloc_sarray( ( j_common_ptr ) cinfo, JPOOL_IMAGE,
+									   cinfo->input_components * im->w, 1 );
 
-    while (cinfo->next_scanline < cinfo->image_height)
+    while ( cinfo->next_scanline < cinfo->image_height )
     {
-		if (!(cinfo->next_scanline & FLIMAGE_REPFREQ))
+		if ( ! ( cinfo->next_scanline & FLIMAGE_REPFREQ ) )
         {
 			im->completed = cinfo->next_scanline;
-			im->visual_cue(im, "Writing JPEG ");
+			im->visual_cue( im, "Writing JPEG " );
         }
 
-		for (buf = rowptr[0], i = 0; i < im->w; i++)
+		for ( buf = rowptr[ 0 ], i = 0; i < im->w; i++ )
 		{
-			if (cinfo->input_components == 3)
+			if ( cinfo->input_components == 3 )
 			{
-			*buf++ = im->red[cinfo->next_scanline][i];
-			*buf++ = im->green[cinfo->next_scanline][i];
-			*buf++ = im->blue[cinfo->next_scanline][i];
+				*buf++ = im->red[   cinfo->next_scanline ][ i ];
+				*buf++ = im->green[ cinfo->next_scanline ][ i ];
+				*buf++ = im->blue[  cinfo->next_scanline ][ i ];
 			}
 			else
-				*buf++ = (unsigned char)im->gray[cinfo->next_scanline][i];
+				*buf++ =
+					    ( unsigned char ) im->gray[ cinfo->next_scanline ][ i ];
 		}
 
-		jpeg_write_scanlines(cinfo, rowptr, 1);
+		jpeg_write_scanlines( cinfo, rowptr, 1 );
     }
 
-    jpeg_finish_compress(cinfo);
-    fflush(im->fpout);
+    jpeg_finish_compress( cinfo );
+    fflush( im->fpout );
 
-    jpeg_destroy_compress(cinfo);
-    fl_free(spec);
+    jpeg_destroy_compress( cinfo );
+    fl_free( spec );
 
     return 1;
 }
@@ -447,10 +447,13 @@ jpeg_getc( j_decompress_ptr cinfo )
 
     if (datasrc->bytes_in_buffer == 0)
     {
+
 	if (!datasrc->fill_input_buffer(cinfo))
 	    ERREXIT(cinfo, JERR_CANT_SUSPEND);
     }
+
     datasrc->bytes_in_buffer--;
+
     return GETJOCTET(*datasrc->next_input_byte++);
 }
 

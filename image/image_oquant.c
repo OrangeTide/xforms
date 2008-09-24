@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_oquant.c,v 1.5 2008/04/10 00:05:50 jtt Exp $
+ * $Id: image_oquant.c,v 1.6 2008/09/24 18:31:57 jtt Exp $
  *
  * Copyright (c)  1998-2002 T.C. Zhao
  *
@@ -43,12 +43,18 @@
 #include "quantize.h"
 
 
+/***************************************
+ ***************************************/
+
 void fl_select_octree_quantizer( void )
 {
    flimage_quantize_rgb = fl_octree_quantize_rgb;
    flimage_quantize_packed  = fl_octree_quantize_packed;
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 fl_octree_quantize_rgb( unsigned char  ** red,
@@ -86,14 +92,14 @@ fl_octree_quantize_rgb( unsigned char  ** red,
 
     for ( i = 0; i < *actual_color; i++ )
     {
-		red_lut[ i ]   = rlut[ i ];
+		red_lut[   i ] = rlut[ i ];
 		green_lut[ i ] = glut[ i ];
-		blue_lut[ i ]  = blut[ i ];
+		blue_lut[  i ] = blut[ i ];
     }
 
-    free(rlut);
-    free(glut);
-    free(blut);
+    free( rlut );
+    free( glut );
+    free( blut );
 
     for ( i = 0; i < h; i++ )
 		for ( j = 0; j < w; j++ )
@@ -113,17 +119,20 @@ fl_octree_quantize_rgb( unsigned char  ** red,
 }
 
 
+/***************************************
+ ***************************************/
+
 int
-fl_octree_quantize_packed(unsigned int   ** packed,
-						  int               w,
-						  int               h,
-						  int               max_color,
-						  unsigned short ** ci,
-						  int             * actual_color,
-						  int             * red_lut,
-						  int             * green_lut,
-						  int             * blue_lut,
-						  FL_IMAGE        * im )
+fl_octree_quantize_packed( unsigned int   ** packed,
+						   int               w,
+						   int               h,
+						   int               max_color,
+						   unsigned short ** ci,
+						   int             * actual_color,
+						   int             * red_lut,
+						   int             * green_lut,
+						   int             * blue_lut,
+						   FL_IMAGE        * im )
 {
     int i,
 		n = h * w;
@@ -146,9 +155,9 @@ fl_octree_quantize_packed(unsigned int   ** packed,
     QuantizeCreateLUT( database, actual_color, &rlut, &glut, &blut );
     for ( i = 0; i < *actual_color; i++ )
     {
-		red_lut[ i ]   = rlut[ i ];
+		red_lut[   i ] = rlut[ i ];
 		green_lut[ i ] = glut[ i ];
-		blue_lut[ i ]  = blut[ i ];
+		blue_lut[  i ] = blut[ i ];
     }
 
     free( rlut );

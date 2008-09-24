@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.14 2008/05/24 14:38:20 jtt Exp $";
+char *fl_id_drw = "$Id: fldraw.c,v 1.15 2008/09/24 18:31:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -615,31 +615,39 @@ fl_drw_checkbox( int      type,
 	if ( type == FL_UP_BOX || type == FL_DOWN_BOX )
 	{
 		xp = xpoint;
+
 		AddVertex( xp, allp[ 0 ].x, allp[ 0 ].y );
 		AddVertex( xp, allp[ 1 ].x, allp[ 1 ].y );
 		AddVertex( xp, allp[ 5 ].x, allp[ 5 ].y );
 		AddVertex( xp, allp[ 4 ].x, allp[ 4 ].y );
+
 		fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_LEFT_BCOL : FL_RIGHT_BCOL );
 
 		xp = xpoint;
+
 		AddVertex( xp, allp[ 0 ].x, allp[ 0 ].y );
 		AddVertex( xp, allp[ 4 ].x, allp[ 4 ].y );
 		AddVertex( xp, allp[ 7 ].x, allp[ 7 ].y );
 		AddVertex( xp, allp[ 3 ].x, allp[ 3 ].y );
+
 		fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_TOP_BCOL : FL_BOTTOM_BCOL );
 
 		xp = xpoint;
+
 		AddVertex( xp, allp[ 6 ].x, allp[ 6 ].y );
 		AddVertex( xp, allp[ 2 ].x, allp[ 2 ].y );
 		AddVertex( xp, allp[ 3 ].x, allp[ 3 ].y );
 		AddVertex( xp, allp[ 7 ].x, allp[ 7 ].y );
+
 		fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_RIGHT_BCOL : FL_LEFT_BCOL );
 
 		xp = xpoint;
+
 		AddVertex( xp, allp[ 1 ].x, allp[ 1 ].y );
 		AddVertex( xp, allp[ 2 ].x, allp[ 2 ].y );
 		AddVertex( xp, allp[ 6 ].x, allp[ 6 ].y );
 		AddVertex( xp, allp[ 5 ].x, allp[ 5 ].y );
+
 		fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_BOTTOM_BCOL : FL_TOP_BCOL );
     }
 

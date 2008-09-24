@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_png.c,v 1.4 2008/01/28 23:42:37 jtt Exp $
+ * $Id: image_png.c,v 1.5 2008/09/24 18:31:57 jtt Exp $
  *
  *   Copyright (c) 2001-2002 T.C. Zhao
  *
@@ -31,62 +31,76 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 
-static int
-PNG_identify(FILE * fp)
-{
-    char buf[9];
-    static unsigned char sig[9] =
-    {137, 80, 78, 71, 13, 10, 26, 10};
 
-    fread(buf, 1, 8, fp);
-    buf[8] = '\0';
-    return strcmp((char *) sig, buf) == 0;
+/***************************************
+ ***************************************/
+
+static int
+PNG_identify( FILE * fp )
+{
+    char buf[ 9 ];
+    static unsigned char sig[ 9 ] = { 137, 80, 78, 71, 13, 10, 26, 10 };
+
+    if ( fread( buf, 1, 8, fp ) != 8 )
+		return 0;
+    return strncmp( ( char * ) sig, buf, 8 ) == 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static int
-PNG_description(FL_IMAGE * im)
+PNG_description( FL_IMAGE * im )
 {
     int status;
 
-    static char *cmds[] =
-    {
-	"pngtopnm %s > %s",
-	0
-    };
+    static char *cmds[] = { "pngtopnm %s > %s", NULL };
 
-    status = flimage_description_via_filter(im, cmds, "reading png ...", 1);
+    status = flimage_description_via_filter( im, cmds, "reading png ...", 1 );
     return status;
 }
+
+
+/***************************************
+ ***************************************/
 
 static int
 PNG_load( FL_IMAGE * im  FL_UNUSED_ARG )
 {
-    fprintf(stderr, "should never been here\n");
+    fprintf( stderr, "should never been here\n" );
     return -1;
 }
 
-static int
-PNG_dump(FL_IMAGE * im)
-{
-    char *cmds[] =
-    {"pnmtopng %s  > %s", 0};
-    char *formats[] =
-    {"ppm", "pgm", "pbm", 0};
 
-    return flimage_write_via_filter(im, cmds, formats, 1);
+/***************************************
+ ***************************************/
+
+static int
+PNG_dump( FL_IMAGE * im )
+{
+    char *cmds[ ] = { "pnmtopng %s  > %s", NULL };
+    char *formats[ ] = { "ppm", "pgm", "pbm", NULL };
+
+    return flimage_write_via_filter( im, cmds, formats, 1 );
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-flimage_enable_png(void)
+flimage_enable_png( void )
 {
-    flimage_add_format("Portable Network Graphics", "png", "png",
-		       FL_IMAGE_RGB | FL_IMAGE_GRAY,
-		       PNG_identify,
-		       PNG_description,
-		       PNG_load,
-		       PNG_dump);
+    flimage_add_format( "Portable Network Graphics", "png", "png",
+						FL_IMAGE_RGB | FL_IMAGE_GRAY,
+						PNG_identify,
+						PNG_description,
+						PNG_load,
+						PNG_dump);
 }

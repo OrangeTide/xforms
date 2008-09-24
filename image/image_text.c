@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_text.c,v 1.5 2008/05/04 21:07:57 jtt Exp $
+ * $Id: image_text.c,v 1.6 2008/09/24 18:31:58 jtt Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -34,39 +34,52 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include "flimage.h"
 #include "flimage_int.h"
 #include <stdlib.h>
 
-static void display_text(FL_IMAGE * im);
+
+static void display_text( FL_IMAGE * im );
+
+
+/***************************************
+ ***************************************/
 
 int
-flimage_add_text(FL_IMAGE * im, const char *str, int len,
-		 int style, int size,
-		 unsigned int tcol, unsigned int bcol,
-		 int tran, double tx, double ty, int rot)
+flimage_add_text( FL_IMAGE     * im,
+				  const char   * str,
+				  int            len,
+				  int            style,
+				  int            size,
+				  unsigned int   tcol,
+				  unsigned int   bcol,
+				  int            tran,
+				  double         tx,
+				  double         ty,
+				  int            rot )
 {
     FLIMAGE_TEXT *text;
 
-    if (!str || !*str || !len || !size || !im)
-	return -1;
+    if ( ! str || ! *str || ! len || ! size || ! im )
+		return -1;
 
-    if (im->text)
-	im->text = fl_realloc(im->text, sizeof(*im->text) * (im->ntext + 1));
+    if ( im->text )
+		im->text = fl_realloc( im->text, sizeof *im->text * ( im->ntext + 1 ) );
     else
-	im->text = fl_malloc(sizeof(*im->text) * (im->ntext + 1));
+		im->text = fl_malloc( sizeof *im->text * ( im->ntext + 1 ) );
 
-    if (!im->text)
+    if ( ! im->text )
     {
-	flimage_error(im, "AddText: malloc failed");
-	return -1;
+		flimage_error( im, "AddText: malloc failed" );
+		return -1;
     }
 
     text = im->text + im->ntext;
-    memset(text, 0, sizeof(*text));
-    text->str = fl_strdup(str);
+    memset( text, 0, sizeof *text );
+    text->str = fl_strdup( str );
     text->len = len;
     text->angle = rot;
     text->size = size;
@@ -83,33 +96,38 @@ flimage_add_text(FL_IMAGE * im, const char *str, int len,
     return ++im->ntext;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-flimage_add_text_struct(FL_IMAGE * im, const FLIMAGE_TEXT * txt)
+flimage_add_text_struct( FL_IMAGE           * im,
+						 const FLIMAGE_TEXT * txt )
 {
     FLIMAGE_TEXT *text;
 
-    if (!txt || !im || !txt->str)
-	return -1;
+    if ( ! txt || ! im || ! txt->str )
+		return -1;
 
-    if (txt->len <= 0)
+    if ( txt->len <= 0 )
     {
-	flimage_error(im, "AddTextStruct: bad text length (%d)", txt->len);
-	return -1;
+		flimage_error( im, "AddTextStruct: bad text length (%d)", txt->len );
+		return -1;
     }
 
-    if (im->text)
-	im->text = fl_realloc(im->text, sizeof(*im->text) * (im->ntext + 1));
+    if ( im->text )
+		im->text = fl_realloc( im->text, sizeof *im->text * ( im->ntext + 1 ) );
     else
-	im->text = fl_malloc(sizeof(*im->text) * (im->ntext + 1));
+		im->text = fl_malloc( sizeof *im->text * ( im->ntext + 1 ) );
 
-    if (!im->text)
-	return -1;
+    if ( ! im->text)
+		return -1;
 
     text = im->text + im->ntext;
-    memcpy(text, txt, sizeof(*text));
-    text->str = fl_malloc(txt->len + 1);
-    memcpy(text->str, txt->str, txt->len);
-    text->str[txt->len] = '\0';
+    memcpy( text, txt, sizeof *text );
+    text->str = fl_malloc( txt->len + 1 );
+    memcpy( text->str, txt->str, txt->len );
+    text->str[ txt->len ] = '\0';
 
     im->free_text = flimage_delete_all_text;
     im->display_text = display_text;
@@ -117,33 +135,42 @@ flimage_add_text_struct(FL_IMAGE * im, const FLIMAGE_TEXT * txt)
     return ++im->ntext;
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-flimage_delete_all_text(FL_IMAGE * im)
+flimage_delete_all_text( FL_IMAGE * im )
 {
     int i;
 
-    if (!im || !im->ntext || !im->text)
-	return;
+    if ( ! im || ! im->ntext || ! im->text )
+		return;
 
-    for (i = 0; i < im->ntext; i++)
-	fl_free(im->text[i].str);
+    for ( i = 0; i < im->ntext; i++ )
+		fl_free( im->text[ i ].str );
 
-    fl_free(im->text);
+    fl_free( im->text );
     im->ntext = 0;
     im->text = 0;
 }
 
+
+/***************************************
+ ***************************************/
+
 static void
-display_text(FL_IMAGE * im)
+display_text( FL_IMAGE * im )
 {
-    FLIMAGE_TEXT *t, *tend;
+    FLIMAGE_TEXT *t,
+		         *tend;
     FLI_TARGET target;
 
     if ( im->dont_display_text || im->ntext == 0 )
 		return;
 
     if ( ! im->textgc )
-		im->textgc = XCreateGC(im->xdisplay, im->win, 0, 0);
+		im->textgc = XCreateGC( im->xdisplay, im->win, 0, 0 );
 
     memcpy( &target, fli_internal_init( ), sizeof target );
 
@@ -156,12 +183,12 @@ display_text(FL_IMAGE * im)
     fli_switch_target( &target );
 
     for ( t = im->text, tend = t + im->ntext; t < tend; t++ )
-		fli_draw_text_inside(t->align,
-							 t->x + im->wxd - im->sxd -1,
-							 t->y + im->wyd - im->syd -1,
-							 2, 2, t->str, t->len,
-							 t->style, t->size, t->color, t->bcolor, !t->nobk,
-							 t->angle);
+		fli_draw_text_inside (t->align,
+							  t->x + im->wxd - im->sxd -1,
+							  t->y + im->wyd - im->syd -1,
+							  2, 2, t->str, t->len,
+							  t->style, t->size, t->color, t->bcolor, !t->nobk,
+							  t->angle );
 
     fli_restore_target( );
 }

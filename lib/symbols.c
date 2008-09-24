@@ -39,7 +39,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_syml = "$Id: symbols.c,v 1.8 2008/05/04 21:08:00 jtt Exp $";
+char *fl_id_syml = "$Id: symbols.c,v 1.9 2008/09/24 18:31:58 jtt Exp $";
 #endif
 
 
@@ -350,22 +350,25 @@ draw_returnarrow( FL_Coord x,
 		   hm = h * 0.5;
     int xc = FL_nint( x + wm ),
 		yc = FL_nint( y + hm );
-    FL_POINT xpoint[ 10 ],
+    FL_POINT xpoint[ 8 ],
 		     *xp;
 
     xp = xpoint;
+
     AddPoint( xp, xc - 0.8 * wm, yc );
     AddPoint( xp, xc - 0.1 * wm, yc - 0.6 * hm );
     AddPoint( xp, xc - 0.1 * wm, yc + 0.6 * hm );
 
+    fl_polyf( xpoint, 3, col );
+
     /* trailing line */
 
     xp = xpoint + 4;
+
     AddPoint( xp, xc - 0.1 * wm, yc );
     AddPoint( xp, xc + 0.8 * wm, yc );
     AddPoint( xp, xc + 0.8 * wm, yc - 0.7 * hm );
 
-    fl_polyf( xpoint, 3, col );
     fl_lines( xpoint + 4, 3, col );
 
     fl_polyl( xpoint, 3, FL_BLACK );
@@ -405,7 +408,9 @@ draw_arrow( FL_Coord x,
     AddPoint( xp, xc + dx, yc - dy );
     AddPoint( xp, x + w - 1, yc );
     AddPoint( xp, xc + dx, yc + dy );
+
     rotate_it( xc, yc, xpoint, 3, angle );
+
     fl_polyf( xpoint, 3, col );
     fl_polyl( xpoint, 3, FL_BLACK );
 
@@ -414,7 +419,9 @@ draw_arrow( FL_Coord x,
     AddPoint( xp, xc + dx, yc );
     AddPoint( xp, xc + dx, yc + 2 );
     AddPoint( xp, x, yc + 2 );
+
     rotate_it( xc, yc, xpoint, 4, angle );
+
     fl_polyf( xpoint, 4, FL_BLACK );
 }
 
@@ -435,7 +442,7 @@ draw_arrow1( FL_Coord x,
 		   hm = ( h - 4 ) * 0.5;
     int xc = x + w / 2,
 		yc = y + h / 2;
-    FL_POINT xpoint[ 10 ],
+    FL_POINT xpoint[ 8 ],
 		     *xp;
     double pl = 0.8,
 		   ps = 0.4;
@@ -444,6 +451,7 @@ draw_arrow1( FL_Coord x,
 		plhm = pl * hm + 0.1;
 
     xp = xpoint;
+
     AddPoint( xp, xc - plwm, yc + pshm );
     AddPoint( xp, xc - plwm, yc - pshm );
     AddPoint( xp, xc, yc - pshm );
@@ -451,6 +459,7 @@ draw_arrow1( FL_Coord x,
     AddPoint( xp, xc + plwm, yc );
     AddPoint( xp, xc, yc + plhm );
     AddPoint( xp, xc, yc + pshm );
+
     rotate_it( xc, yc, xpoint, 7, angle );
 
     fl_polyf( xpoint, 7, col );
@@ -472,7 +481,7 @@ draw_arrow2( FL_Coord x,
 {
     int xc = x + w / 2,
 		yc = y + h / 2;
-    FL_POINT xpoint[ 5 ],
+    FL_POINT xpoint[ 4 ],
 		     *xp;
     double wm = ( w - 4 ) * 0.5,
 		   hm = ( h - 4 ) * 0.5;
@@ -482,9 +491,11 @@ draw_arrow2( FL_Coord x,
 		plhm = pl * hm + 0.1;
 
     xp = xpoint;
+
     AddPoint( xp, xc - pswm, yc - plhm );
     AddPoint( xp, xc + 0.5 * wm, yc );
     AddPoint( xp, xc - pswm, yc + plhm );
+
     rotate_it( xc, yc, xpoint, 3, angle );
 
     fl_polyf( xpoint, 3, col );
@@ -506,7 +517,7 @@ draw_arrow3( FL_Coord x,
 {
     int xc = x + w / 2 - 1,
 		yc = y + h / 2;
-    FL_POINT xpoint[ 10 ],
+    FL_POINT xpoint[ 9 ],
 		     *xp;
     double wm = ( w - 4 ) * 0.5,
 		   hm = ( h - 4 ) * 0.5;
@@ -516,16 +527,20 @@ draw_arrow3( FL_Coord x,
 		plhm = pl * hm + 0.1;
 
     xp = xpoint;
+
     AddPoint( xp, xc + pswm, yc - plhm );
     AddPoint( xp, xc + 0.82 * wm, yc );
     AddPoint( xp, xc + pswm, yc + plhm );
+
     rotate_it( xc, yc, xpoint, 3, angle );
 
     pswm = 0.55 * wm + 0.1;
     xp = xpoint + 5;
+
     AddPoint( xp, xc - pswm, yc - plhm );
     AddPoint( xp, xc + 0.12 * wm, yc );
     AddPoint( xp, xc - pswm, yc + plhm );
+
     rotate_it( xc, yc, xpoint + 5, 3, angle );
 
     fl_polyf( xpoint, 3, col );
@@ -603,8 +618,10 @@ draw_circle( FL_Coord x,
 		s = 3 + 0.04 * ( w + h );
 
     ShrinkBox( x, y, w, h, s );
+
     if ( ( rr = 0.5 * FL_min( w, h ) ) <= 0 )
 		rr = 1;
+
     fl_circf( xo, yo, rr, col );
     fl_circ( xo, yo, rr, FL_BLACK );
 }
@@ -624,10 +641,13 @@ draw_square( FL_Coord x,
     int s = ( 0.09 * w ) + 3;
 
     ShrinkBox( x, y, w, h, s );
+
     if ( w <= 1 )
 		w = 2;
+
     if ( h <= 1 )
 		h = 2;
+
     fl_rectbound( x, y, w - 1, h - 1, col );
 }
 
@@ -655,6 +675,7 @@ draw_plus( FL_Coord x,
 		     *xp;
 
     xp = xpoint;
+
     AddPoint( xp, xc - plw, yc + psh );
     AddPoint( xp, xc - plw, yc - psh );
     AddPoint( xp, xc - psw, yc - psh );
@@ -667,7 +688,9 @@ draw_plus( FL_Coord x,
     AddPoint( xp, xc + psw, yc + plh );
     AddPoint( xp, xc - psw, yc + plh );
     AddPoint( xp, xc - psw, yc + psh );
+
     rotate_it( xc, yc, xpoint, 12, angle );
+
     fl_polyf( xpoint, 12, col );
     fl_polyl( xpoint, 12, FL_BLACK );
 }
@@ -696,6 +719,7 @@ draw_menu( FL_Coord x,
 
     cur_x = xc - dx;
     fl_rectbound( cur_x, yc - hm + 1, 2 * dx, t, col );
+
     cur_y = yc - hm + t + t;
     fl_rectf( cur_x + shadow, cur_y + shadow, 2 * dx, 1.6 * hm, FL_RIGHT_BCOL );
     fl_rectbound( cur_x, cur_y, 2 * dx, 1.6 * hm, col );
@@ -718,11 +742,15 @@ draw_line( FL_Coord x,
     FL_Coord xc = x + w / 2,
 		     yc = y + h / 2;
 
-    ShrinkBox( x, y, w, h, 3 /* FL_abs( FL_BOUND_WIDTH ) */ );
+    ShrinkBox( x, y, w, h, 3     /* FL_abs( FL_BOUND_WIDTH ) */ );
+
     xp = xpoint;
+
     AddPoint( xp, x, yc );
     AddPoint( xp, x + w - 1, yc );
+
     rotate_it( xc, yc, xpoint, 2, angle );
+
     fl_line( xpoint[ 0 ].x, xpoint[ 0 ].y, xpoint[ 1 ].x, xpoint[ 1 ].y, col );
 }
 
@@ -794,17 +822,24 @@ draw_dnline( FL_Coord x,
     FL_Coord yc = y + h / 2;
 
     ShrinkBox( x, y, w, h, 3 );
+
     xp = xpnt;
+
     AddPoint( xp, x, yc );
     AddPoint( xp, x + w - 1, yc );
+
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
+
     fl_line( xpnt[ 0 ].x, xpnt[ 0 ].y, xpnt[ 1 ].x, xpnt[ 1 ].y,
 			 FL_RIGHT_BCOL );
 
     xp = xpnt;
+
     AddPoint( xp, x, yc + 1 );
     AddPoint( xp, x + w - 1, yc + 1 );
+
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
+
     fl_line( xpnt[ 0 ].x, xpnt[ 0 ].y, xpnt[ 1 ].x, xpnt[ 1 ].y, FL_LEFT_BCOL );
 }
 
@@ -827,15 +862,21 @@ draw_upline( FL_Coord x,
     ShrinkBox( x, y, w, h, 3 );
 
     xp = xpnt;
+
     AddPoint( xp, x, yc );
     AddPoint( xp, x + w - 1, yc );
+
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
+
     fl_line( xpnt[ 0 ].x, xpnt[ 0 ].y, xpnt[ 1 ].x, xpnt[ 1 ].y, FL_LEFT_BCOL );
 
     xp = xpnt;
+
 	AddPoint( xp, x, yc + 1 );
     AddPoint( xp, x + w - 1, yc + 1 );
+
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
+
     fl_line( xpnt[ 0 ].x, xpnt[ 0 ].y, xpnt[ 1 ].x, xpnt[ 1 ].y,
 			 FL_RIGHT_BCOL );
 }
@@ -874,13 +915,6 @@ draw_uparrow( FL_Coord x,
 
 		y++;
 		h -= 2;
-
-#if 0
-		AddPoint( p, xc, yc - dy );
-		AddPoint( p, xc - dx, yc + dy );
-		AddPoint( p, xc + dx, yc + dy );
-		fl_polyf( point, 3, col );
-#endif
 
 		fl_line( xc, yc - dy, xc - dx, yc + dy, FL_LEFT_BCOL );
 		fl_line( xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
@@ -1010,10 +1044,11 @@ draw_doublearrow( FL_Coord x,
 		dx2 = 0.9 * wm + 0.2;
     int dy1 = 0.3 * hm + 0.2,
 		dy2 = 0.7 * hm + 0.2;
-    FL_POINT xpoint[ 12 ],
+    FL_POINT xpoint[ 11 ],
 		     *xp;
 
     xp = xpoint;
+
     AddPoint( xp, xc - dx1, yc - dy1 );
     AddPoint( xp, xc + dx1, yc - dy1 );
     AddPoint( xp, xc + dx1, yc - dy2 );
@@ -1024,7 +1059,9 @@ draw_doublearrow( FL_Coord x,
     AddPoint( xp, xc - dx1, yc + dy2 );
     AddPoint( xp, xc - dx2, yc );
     AddPoint( xp, xc - dx1, yc - dy2 );
+
     rotate_it( xc, yc, xpoint, 10, angle );
+
     fl_polyf( xpoint, 10, col );
     fl_polyl( xpoint, 10, FL_BLACK );
 }
@@ -1047,7 +1084,7 @@ draw_arrowbar( FL_Coord x,
 		   hm = ( h - 6 ) * 0.5;
     int xc = x + w / 2,
 		yc = y + h / 2;
-    FL_POINT xpoint[ 10 ],
+    FL_POINT xpoint[ 8 ],
 		     *xp;
     double pl = 0.8,
 		   ps = 0.4;
@@ -1058,6 +1095,7 @@ draw_arrowbar( FL_Coord x,
     xp = xpoint;
 
     xc--;
+
     AddPoint( xp, xc - plwm, yc + pshm );
     AddPoint( xp, xc - plwm, yc - pshm );
     AddPoint( xp, xc, yc - pshm );
@@ -1065,17 +1103,22 @@ draw_arrowbar( FL_Coord x,
     AddPoint( xp, xc + plwm, yc );
     AddPoint( xp, xc, yc + plhm );
     AddPoint( xp, xc, yc + pshm );
+
     rotate_it( xc, yc, xpoint, 7, angle );
+
     fl_polyf( xpoint, 7, col );
     fl_polyl( xpoint, 7, FL_BLACK );
 
     xp = xpoint;
     xc++;
+
     AddPoint( xp, xc + plwm + 1, yc + plhm );
     AddPoint( xp, xc + plwm + 1, yc - plhm );
     AddPoint( xp, xc + ( 0.9 * plwm ), yc - plhm );
     AddPoint( xp, xc + ( 0.9 * plwm ), yc + plhm );
+
     rotate_it( xc, yc, xpoint, 4, angle );
+
     fl_polyf( xpoint, 4, col );
     fl_polyl( xpoint, 4, FL_BLACK );
 }
@@ -1129,15 +1172,19 @@ draw_arrowheadbar( FL_Coord x,
     AddPoint( xp, xc + pswm, yc );
     AddPoint( xp, xc - pswm, yc + plhm );
     rotate_it( xc, yc, xpoint, 3, angle );
+
     fl_polyf( xpoint, 3, col );
     fl_polyl( xpoint, 3, FL_BLACK );
 
     xp = xpoint;
+
     AddPoint( xp, xc + pswm + 2, yc + plhm );
     AddPoint( xp, xc + pswm + 2, yc - plhm );
     AddPoint( xp, xc + 0.9 * pswm, yc - plhm );
     AddPoint( xp, xc + 0.9 * pswm, yc + plhm );
+
     rotate_it( xc, yc, xpoint, 4, angle );
+
     fl_polyf( xpoint, 4, col );
     fl_polyl( xpoint, 4, FL_BLACK );
 }
@@ -1192,19 +1239,23 @@ draw_bararrowhead( FL_Coord x,
     xl = xc - dx + 1.1 * mar;
 
     p = point;
+
     AddPoint( p, xl, yc - dy );
     AddPoint( p, xl + dbar, yc - dy );
     AddPoint( p, xl + dbar, yc + dy );
     AddPoint( p, xl, yc + dy );
+
     rotate_it( xc, yc, point, 4, angle );
 
     fl_polyf( point, 4, col );
     fl_polyl( point, 4, FL_RIGHT_BCOL );
 
     p = point;
+
     AddPoint( p, xc - mar, yc - dy );
     AddPoint( p, xc - mar + dx, yc );
     AddPoint( p, xc - mar, yc + dy );
+
     rotate_it( xc, yc, point, 3, angle );
 
     fl_polyf( point, 3, col );

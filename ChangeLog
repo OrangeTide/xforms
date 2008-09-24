@@ -1,7 +1,11 @@
+2008-09-24 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/clock.c: FL_POINT array in draw_hand() was
+	one element too short.
+
 2008-09-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Further code cleanup
-
 	* Update of man page
 
 2008-09-21 Jens Thoms Toerring    <jt@toerring.de>

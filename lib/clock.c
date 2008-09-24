@@ -80,13 +80,13 @@ static double sechand[ 4 ][ 2 ] =
 };
 
 
-#define ROTxy( xx, yy, x, y, a )                                        \
-	do                                                                  \
-	{							                                        \
-		double s = sin( a );                                            \
-		double c = cos( a );                                            \
-        xx = FL_crnd( xc + ( ( x ) - xc ) * c + ( ( y ) - yc ) * s );	\
-		yy = FL_crnd( yc - ( ( x ) - xc ) * s + ( ( y ) - yc ) * c );	\
+#define ROTxy( xx, yy, x, y, a )										 \
+	do                                                                   \
+	{							                                         \
+		double s = sin( a );                                             \
+		double c = cos( a );                                             \
+        xx = FL_crnd( xc + ( ( x ) - xc ) * c + ( ( y ) - yc ) * s );	 \
+		yy = FL_crnd( yc - ( ( x ) - xc ) * s + ( ( y ) - yc ) * c );	 \
 	} while ( 0 )
 
 
@@ -107,7 +107,7 @@ draw_hand( FL_Coord x,
     double ccp[ 4 ][ 2 ];
     double xc = x + 0.5 * w,
 		   yc = y + 0.5 * h;
-    FL_POINT xp[ 4 ];
+    FL_POINT xp[ 5 ];            /* Needs one extra point! */
 
     for ( i = 0; i < 4; i++ )
     {
@@ -124,6 +124,7 @@ draw_hand( FL_Coord x,
 static int hours,		/* hr: 0-23, minutes:0-59 */
            minutes,
            seconds;
+
 static int updating;
 
 
@@ -172,7 +173,7 @@ draw_clock( int      type  FL_UNUSED_ARG,
 		   f3;
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info( "DrawClock", "entering" );
+    M_info( "draw_clock", "entering" );
 #endif
 
     w -= 4;
@@ -200,7 +201,7 @@ draw_clock( int      type  FL_UNUSED_ARG,
     show_hands( x, y, w, h, col2, FL_LEFT_BCOL );
 
 #if FL_DEBUG >= ML_DEBUG
-    M_info( "DrawClock", "done" );
+    M_info( "draw_clock", "done" );
 #endif
 }
 
@@ -242,17 +243,17 @@ handle_clock( FL_OBJECT * ob,
 
     switch ( event )
     {
-		case FL_DRAW:
+		case FL_DRAW :
 			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
 						ob->col1, ob->bw );
 			if ( ob->type == FL_DIGITAL_CLOCK )
-				draw_digitalclock(ob);
+				draw_digitalclock( ob );
 			else
 				draw_clock( ob->type, ob->x, ob->y, ob->w, ob->h,
 							ob->col1, ob->col2 );
 			/* fall through */
 
-		case FL_DRAWLABEL:
+		case FL_DRAWLABEL :
 			if ( ! updating )
 				fl_drw_text_beside( ob->align & ~FL_ALIGN_INSIDE,
 									ob->x, ob->y, ob->w, ob->h,

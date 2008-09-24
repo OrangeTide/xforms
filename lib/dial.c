@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.14 2008/05/05 14:21:51 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.15 2008/09/24 18:31:58 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -146,10 +146,12 @@ draw_dial( FL_OBJECT * ob )
 		FL_Coord r;
 
 		r = FL_min( 0.5 * iradius, 15 );
+
 		rotate_it( xp,     x + iradius - 1,     y - 2, dangle );
 		rotate_it( xp + 1, x + iradius - 1 - r, y - 2, dangle );
 		rotate_it( xp + 2, x + iradius - 1 - r, y + 2, dangle );
 		rotate_it( xp + 3, x + iradius - 1,     y + 2, dangle );
+
 		fl_polyf( xp, 4, ob->col2 );
     }
     else if ( ob->type == FL_LINE_DIAL )
