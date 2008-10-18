@@ -915,6 +915,8 @@ extern void fli_show_tooltip( const char *,
 
 extern void fli_hide_tooltip( void );
 
+extern int fli_is_tooltip_form( FL_FORM * );
+
 extern void fli_do_radio_push( FL_OBJECT *,
 							   FL_Coord,
 							   FL_Coord,

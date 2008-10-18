@@ -1,3 +1,9 @@
+2008-10-18 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/forms.c, lib/tooltip.c: Bug removed that
+	led to multiple deletes of tooltip form in the
+	fl_finish() function.
+
 2008-09-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/clock.c: FL_POINT array in draw_hand() was

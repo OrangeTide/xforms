@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.52 2008/09/22 22:31:27 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.53 2008/10/18 14:30:37 jtt Exp $";
 #endif
 
 
@@ -1278,7 +1278,7 @@ fl_hide_form( FL_FORM * form )
 
     if ( form->visible == FL_BEING_HIDDEN )
     {
-		M_err( "fl_hide_form", "recursive call ?" );
+		M_err( "fl_hide_form", "Recursive call?" );
 		return;
     }
 
@@ -1355,7 +1355,7 @@ fl_hide_form( FL_FORM * form )
 		}
     }
 
-    /* need to re-establish command property */
+    /* Need to re-establish command property */
 
     if ( formnumb && form->prop & FLI_COMMAND_PROP )
 		set_form_property( forms[ 0 ], FLI_COMMAND_PROP );
@@ -2153,7 +2153,7 @@ fl_set_form_atclose( FL_FORM         * form,
 					 FL_FORM_ATCLOSE   fmclose,
 					 void            * data )
 {
-    FL_FORM_ATCLOSE old = form->close_callback;
+    FL_FORM_ATCLOSE old;
 
     if ( ! form  )
     {
@@ -2161,6 +2161,7 @@ fl_set_form_atclose( FL_FORM         * form,
 		return NULL;
     }
 
+	old = form->close_callback;
     form->close_callback = fmclose;
     form->close_data = data;
 
@@ -3091,56 +3092,67 @@ fl_get_form_event_cmask( FL_FORM * form )
 
 /***************************************
  * Cleanup everything. At the moment, only need to restore the keyboard
- * settings and dealloctae memory used for the object and event queue.
+ * settings and deallocate memory used for the object and event queue.
  * This routine is registered as an atexit in fl_initialize in flresource.c
  ***************************************/
 
 void
 fl_finish( void )
 {
-    /* make sure the connection is alive */
+    /* Make sure the connection is alive */
 
-    if ( flx->display )
-    {
-		XChangeKeyboardControl( flx->display, fli_keybdmask,
-								&fli_keybdcontrol );
+    if ( ! flx->display )
+		return;
 
-		fl_remove_all_signal_callbacks( );
-		fl_remove_all_timeouts( );
+	XChangeKeyboardControl( flx->display, fli_keybdmask,
+							&fli_keybdcontrol );
 
-		/* Get rid of all forms */
+	fl_remove_all_signal_callbacks( );
+	fl_remove_all_timeouts( );
 
-		while ( formnumb > 0 )
-			fl_hide_form( *forms );
-		while ( hidden_formnumb > 0 )
+	/* Get rid of all forms, first hide all of them */
+
+	while ( formnumb > 0 )
+		fl_hide_form( *forms );
+
+	/* Now also delete them (to deallocate memory) - problem is that the
+	   tooltip form may only be deleted as the very last one since the objects
+	   that have a tooltip (and that get deleted in the process of deleting
+	   the form they belong to) still try to access the tooltip form */
+
+	while ( hidden_formnumb > 0 )
+	{
+		if ( hidden_formnumb > 1 && fli_is_tooltip_form( *forms ) )
+			fl_free_form( forms[ 1 ] );
+		else
 			fl_free_form( *forms );
+	}
 
-		/* Delete the object and event queue */
+	/* Delete the object and event queue */
 
-		fli_obj_queue_delete( );
-		fli_event_queue_delete( );
+	fli_obj_queue_delete( );
+	fli_event_queue_delete( );
 
-		/* Free memory allocated in xtext.c */
+	/* Free memory allocated in xtext.c */
 
-		fli_free_xtext_workmem( );
+	fli_free_xtext_workmem( );
 
-		/* Release memory used for symbols */
+	/* Release memory used for symbols */
 
-		fli_release_symbols( );
+	fli_release_symbols( );
 
-		/* Release memory allocated in goodies */
+	/* Release memory allocated in goodies */
 
-		fli_goodies_cleanup( );
+	fli_goodies_cleanup( );
 
-		/* Release memory used for the copy of the command line arguments */
+	/* Release memory used for the copy of the command line arguments */
 
-		fli_free_cmdline_args( );
+	fli_free_cmdline_args( );
 
-		/* Close the display */
+	/* Close the display */
 
-		XCloseDisplay( flx->display );
-		flx->display = fl_display = None;
-    }
+	XCloseDisplay( flx->display );
+	flx->display = fl_display = None;
 }
 
 
@@ -3229,13 +3241,13 @@ fl_set_form_icon( FL_FORM * form,
 				  Pixmap    p,
 				  Pixmap    m )
 {
-    if ( form )
-    {
-		form->icon_pixmap = p;
-		form->icon_mask = m;
-		if ( form->window )
-			fl_winicon( form->window, p, m );
-    }
+    if ( ! form )
+		return;
+
+	form->icon_pixmap = p;
+	form->icon_mask = m;
+	if ( form->window )
+		fl_winicon( form->window, p, m );
 }
 
 

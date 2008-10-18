@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.42 2008/09/21 13:33:12 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.43 2008/10/18 14:30:37 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -2070,6 +2070,7 @@ void checked_hide_tooltip( FL_OBJECT * obj,
 		return;
 
 	fli_hide_tooltip( );
+
 	if ( parent->tipID )
 	{
 		fl_remove_timeout( parent->tipID );

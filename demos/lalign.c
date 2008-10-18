@@ -36,7 +36,7 @@
 
 /**** Forms and Objects ****/
 
-#define TEST_PIXMAP_ALIGN
+#undef TEST_PIXMAP_ALIGN
 
 
 typedef struct {
@@ -51,6 +51,10 @@ typedef struct {
 static FD_form0 * create_form_form0( void );
 
 FD_form0 *fd_form0;
+
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -76,7 +80,9 @@ main( int    argc,
 	return 0;
 }
 
-/* #define TEST_PIXMAP_ALIGN */
+
+/***************************************
+ ***************************************/
 
 static void
 align_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
@@ -85,13 +91,16 @@ align_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
     if ( fl_get_button( fd_form0->inside ) )
 		n |= FL_ALIGN_INSIDE;
 
-
 #ifndef TEST_PIXMAP_ALIGN
     fl_set_object_lalign( fd_form0->box, n );
 #else
     fl_set_pixmap_align( fd_form0->box, n, 3, 3 );
 #endif
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
 inside_cb( FL_OBJECT * ob,
@@ -101,6 +110,7 @@ inside_cb( FL_OBJECT * ob,
 		fd_form0->box->align |= FL_ALIGN_INSIDE;
 	else
 		fd_form0->box->align &= ~FL_ALIGN_INSIDE;
+
 #ifdef TEST_PIXMAP_ALIGN
 	fl_set_pixmap_align( fd_form0->box, fd_form0->box->align, 3, 3 );
 #else
@@ -108,26 +118,30 @@ inside_cb( FL_OBJECT * ob,
 #endif
 }
 
+
+/***************************************
+ ***************************************/
+
 static FD_form0 *
 create_form_form0( void )
 {
 	FL_OBJECT *obj;
 	FD_form0 *fdui = fl_calloc( 1, sizeof *fdui );
 
-	fdui->form0 = fl_bgn_form( FL_NO_BOX, 351, 170 );
+	fdui->form0 = fl_bgn_form( FL_NO_BOX, 351, 180 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 351, 170, "" );
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 351, 180, "" );
 
 #ifndef TEST_PIXMAP_ALIGN
-	fdui->box = obj = fl_add_box( FL_UP_BOX, 190, 45, 90, 45,
-								  "abcdefg\nhijklmno" );
+	fdui->box = obj = fl_add_box( FL_UP_BOX, 190, 40, 90, 55,
+								  "This is\na label" );
 #else
 	fdui->box = obj = fl_add_pixmap( FL_NORMAL_PIXMAP, 190, 35, 90, 60, "" );
 	fl_set_pixmap_file( obj, "crab.xpm" );
 	fl_set_object_boxtype( obj,FL_UP_BOX );
 #endif
 
-	fdui->inside = obj = fl_add_lightbutton( FL_PUSH_BUTTON, 20, 120, 90, 30,
+	fdui->inside = obj = fl_add_lightbutton( FL_PUSH_BUTTON, 20, 125, 90, 30,
 											 "Inside" );
     fl_set_object_callback( obj, inside_cb, 0 );
 
@@ -172,7 +186,7 @@ create_form_form0( void )
 
 	fl_end_group( );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 140, 120, 70, 30, "Done" );
+	obj = fl_add_button( FL_NORMAL_BUTTON, 200, 135, 70, 30, "Done" );
 
 	fl_end_form( );
 

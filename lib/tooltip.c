@@ -78,14 +78,15 @@ create_it( void )
 	tip->background  = FL_YELLOW;
 
 	tip->tooltipper  = fl_bgn_form( FL_NO_BOX, 5, 5 );
-	tip->text = text = fl_add_box( tip->boxtype, 0, 0, 5, 5, "" );
 
+	tip->text = text = fl_add_box( tip->boxtype, 0, 0, 5, 5, "" );
 	fl_set_object_bw( text, -1 );
 	fl_set_object_lstyle( text, tip->fntstyle );
 	fl_set_object_lsize( text, tip->fntsize );
 	fl_set_object_lcol( text, tip->textcolor );
 	fl_set_object_lalign( text, tip->lalign );
 	fl_set_object_color( text, tip->background, tip->background );
+
 	fl_end_form( );
 }
 
@@ -153,6 +154,16 @@ fli_hide_tooltip( void )
 {
     if ( tip && tip->tooltipper->visible )
 		fl_hide_form( tip->tooltipper );
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fli_is_tooltip_form( FL_FORM * form )
+{
+	return tip && tip->tooltipper == form;
 }
 
 
