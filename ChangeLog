@@ -1,3 +1,8 @@
+2008-10-20 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/forms.c: Added function fl_form_is_iconified()
+	that returns if a forms window is in iconfied state.
+
 2008-10-18 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c, lib/tooltip.c: Bug removed that

@@ -1157,6 +1157,9 @@ FL_EXPORT int fl_form_is_visible(
 		FL_FORM * form
 		);
 
+FL_EXPORT int fl_form_is_iconified(
+		FL_FORM * form
+		);
 
 FL_EXPORT FL_RAW_CALLBACK fl_register_raw_callback(
 		FL_FORM			* form,

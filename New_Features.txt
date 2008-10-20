@@ -4,9 +4,9 @@ http://download.savannah.gnu.org/releases/xforms/forms.ps.gz
 
 has become a bit outdated. Unfortunately, the sources for the
 documentation aren't available anymore, so it will have to be
-rewritten from scratch sometime in (hopefully not too far)
-future. Since there have been a few additions they are only
-documented here.
+rewritten from scratch sometime in the (hopefully not too far)
+future. Since there have been a few additions they are documen-
+ted here.
 
 
 New functions:
@@ -116,20 +116,27 @@ appear just below the menu button (just like in the case
 of FL_PULLDOWN_MENU objects).
 
 
-A final new function is
+The function
 
    void fl_get_decoration_sizes( FL_FORM * form,
                                  int     * top,
                                  int     * right,
                                  int     * bottom,
-                                 int     * left );
+                                 int     * left )
 
-It tries to determine the widths of the decorations the window
+tries to determine the widths of the decorations the window
 manager puts around the window 'form' is displazed in. The
 function returns 0 if it was successful, 1 otherwise. 'form'
 must be a form that is currently displayed and it can't be
 a form embedded in another form (like e.g. forms that are
 part of a tab-folder).
+
+
+Finally
+
+   int fl_form_is_isconified( FL_FORM *form )
+
+allows to query if a form's (visible) window is in iconified state.
 
 
 Changes in Menu handling

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.53 2008/10/18 14:30:37 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.54 2008/10/20 11:00:46 jtt Exp $";
 #endif
 
 
@@ -324,7 +324,7 @@ void
 fl_end_form( void )
 {
     if ( ! fl_current_form )
-		M_err( "fl_end_form", "NULL form." );
+		M_err( "fl_end_form", "No current form." );
 
     if ( fli_current_group )
     {
@@ -1380,16 +1380,16 @@ fl_free_form( FL_FORM * form )
 		return;
     }
 
+    if ( form->visible == FL_VISIBLE )
+    {
+		M_warn( "fl_free_form", "Freeing visible form." );
+		fl_hide_form( form );
+    }
+
     if ( get_hidden_forms_index( form ) < 0 )
     {
 		M_err( "fl_free_form", "Freeing unknown form" );
 		return;
-    }
-
-    if ( form->visible == FL_VISIBLE )
-    {
-		M_err( "fl_free_form", "Freeing visible form." );
-		fl_hide_form( form );
     }
 
     /* Free all objects of the form */
@@ -2783,8 +2783,9 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
 	{
 		evform->x = st_xev.xconfigure.x;
 		evform->y = st_xev.xconfigure.y;
-		M_warn( "handle_ConfigureNotify_event", "WMConfigure:x=%d y=%d",
-				evform->x, evform->y );
+		M_warn( "handle_ConfigureNotify_event", "WMConfigure:x=%d y=%d "
+				"w=%d h=%d", evform->x, evform->y, st_xev.xconfigure.width,
+				st_xev.xconfigure.height );
 	}
 
 	/* mwm sends bogus ConfigureNotify randomly without following up with a
@@ -3411,7 +3412,13 @@ fl_addto_group( FL_OBJECT * group )
 int
 fl_form_is_visible( FL_FORM * form )
 {
-    return ( form && form->window ) ? form->visible : FL_INVISIBLE;
+	if ( ! form )
+	{
+		M_warn( "fl_form_is_visible", "NULL form" );
+		return FL_INVISIBLE;
+	}
+
+    return form->window ? form->visible : FL_INVISIBLE;
 }
 
 
@@ -3713,4 +3720,28 @@ fl_get_decoration_sizes( FL_FORM * form,
 	}
 
 	return 0;
+}
+
+
+/***************************************
+ * Function returns if a form's window is in iconified state
+ ***************************************/
+
+int
+fl_form_is_iconified( FL_FORM * form )
+{
+	XWindowAttributes xwa;
+
+	if ( ! form )
+	{
+		M_err( "fl_form_is_iconified", "NULL form" );
+		return 0;
+	}
+
+	if ( ! form->window || form->visible == FL_INVISIBLE )
+		return 0;
+
+	XGetWindowAttributes( fl_get_display( ), form->window, &xwa );
+
+	return xwa.map_state != IsViewable;
 }

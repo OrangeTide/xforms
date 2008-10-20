@@ -39,7 +39,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.14 2008/05/15 13:33:26 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.15 2008/10/20 11:00:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -192,7 +192,7 @@ P_errmsg( const char * func,
 	 * If func passed is null, 2 will be used else 1 will be used.
 	 */
 
-    if ( func != 0 )
+    if ( func )
     {
 		if ( lineno > 0 )
 			sprintf( line, "%d", lineno );
@@ -200,9 +200,9 @@ P_errmsg( const char * func,
 			strcpy( line, "?" );
 
 		where = *func ?
-			fli_vstrcat( "In ", func, " [", file, ":", line, "] ",
-						 ( char * ) 0 ) :
-			fli_vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
+				fli_vstrcat( "In ", func, " [", file, ":", line, "] ",
+							 ( char * ) 0 ) :
+				fli_vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
     }
     else
     {
@@ -228,7 +228,7 @@ P_errmsg( const char * func,
 
     if ( ( pp = fli_get_syserror_msg( ) ) && *pp )
     {
-		strncat( strcat( emsg, "--" ), pp, MAXESTR );
+		strncat( strcat( emsg, " -- " ), pp, MAXESTR );
         emsg[ MAXESTR - 1 ] = '\0';
     }
 

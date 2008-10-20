@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.23 2008/07/02 18:51:41 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.24 2008/10/20 11:00:45 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -69,7 +69,6 @@ free_pixmap( SPEC * sp )
 		sp->pixmap = None;
 	}
 }
-
 
 
 /********** DRAWING *************/
@@ -502,6 +501,8 @@ fl_create_generic_button( int          objclass,
 	sp->cspecv    = NULL;
 	sp-> filename = sp->focus_filename = NULL;
 
+	/* Per default a button reacts to all mouse buttons */
+
 	for ( i = 0; i < 5; i++ )
 		sp->react_to[ i ] = 1;
 
@@ -609,6 +610,8 @@ fl_add_button( int          type,
 
 
 /***************************************
+ * Function allows to set up to which
+ * mouse buttons a button will react.
  ***************************************/
 
 void
@@ -616,18 +619,16 @@ fl_set_button_mouse_buttons( FL_OBJECT    * obj,
 							 unsigned int   mouse_buttons )
 {
 	SPEC *sp = obj->spec;
-	unsigned int i,
-		         j;
+	unsigned int i;
 
-	if ( mouse_buttons > ( 1 << 5 ) - 1 )
-		return;
-
-	for ( i = 0, j = 1; i < 5; i++, j <<= 1 )
-		sp->react_to[ i ] = ( mouse_buttons & j ) != 0;
+	for ( i = 0; i < 5; i++, mouse_buttons >> 1 )
+		sp->react_to[ i ] = mouse_buttons & 1;
 }
 
 
 /***************************************
+ * Function returns value indicating which
+ * mouse buttons a button will react to.
  ***************************************/
 
 void
@@ -636,6 +637,7 @@ fl_get_button_mouse_buttons( FL_OBJECT    * obj,
 {
 	SPEC *sp;
 	int i;
+	unsigned int k;
 
 	if ( ! obj )
 	{
@@ -648,6 +650,7 @@ fl_get_button_mouse_buttons( FL_OBJECT    * obj,
 
 	sp = obj->spec;
 
-	for ( *mouse_buttons = 0, i = 0; i < 5; i++ )
-		*mouse_buttons |= sp->react_to[ i ] ? 1 << i : 0;
+	*mouse_buttons = 0;
+	for ( i = 0, k = 1; i < 5; i++, k << 1 )
+		*mouse_buttons |= sp->react_to[ i ] ? k : 0;
 }

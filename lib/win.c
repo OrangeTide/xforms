@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.16 2008/09/21 13:33:12 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.17 2008/10/20 11:00:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -868,7 +868,7 @@ fl_winget( void )
 int
 fl_iconify( Window win )
 {
-   return XIconifyWindow( flx->display, win, flx->screen );
+	return XIconifyWindow( flx->display, win, flx->screen );
 }
 
 
