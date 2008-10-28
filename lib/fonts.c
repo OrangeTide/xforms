@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.12 2008/05/10 17:46:10 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.13 2008/10/28 12:27:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -279,7 +279,7 @@ fl_try_get_font_struct( int numb,
     {
 		if ( ! fli_no_connection ) {
 
-			/*This function is typically used to test whether a font is
+			/* This function is typically used to test whether a font is
 			 * loadable or not, so need not be a fatal condition if
 			 * it fails. Issue a message for information therefore. */
 
