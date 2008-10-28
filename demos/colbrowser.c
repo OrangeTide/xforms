@@ -85,7 +85,12 @@ main( int    argc,
     if ( load_browser( dbname ) )
 		fl_set_object_label( dbobj, dbname );
     else
-		fl_set_object_label( dbobj, "None" );
+	{
+		if ( load_browser( "/usr/share/X11/rgb.txt" ) )
+			fl_set_object_label( dbobj, dbname );
+		else
+			fl_set_object_label( dbobj, "None" );
+	}
 
     fl_set_form_minsize( cl, cl->w , cl->h );
     fl_set_form_maxsize( cl, 2 * cl->w , 2 * cl->h );

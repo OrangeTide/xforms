@@ -1,3 +1,8 @@
+2008-10-27 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/button.c: Bug in function for selecting which
+	mouse buttons a button reacts to fixed.
+
 2008-10-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c: Added function fl_form_is_iconified()

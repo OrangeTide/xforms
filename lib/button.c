@@ -33,7 +33,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.24 2008/10/20 11:00:45 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.25 2008/10/28 11:19:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -621,7 +621,7 @@ fl_set_button_mouse_buttons( FL_OBJECT    * obj,
 	SPEC *sp = obj->spec;
 	unsigned int i;
 
-	for ( i = 0; i < 5; i++, mouse_buttons >> 1 )
+	for ( i = 0; i < 5; i++, mouse_buttons >>= 1 )
 		sp->react_to[ i ] = mouse_buttons & 1;
 }
 
