@@ -1,3 +1,11 @@
+2008-11-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c: Rob Carpenter pointed out another bug
+	that resulted in extremely slow redraws of objects and
+	was due to a off-by-one error in the calculation of the
+	bounding box of objects (which in turn made non-overlap-
+	ping objects appear to overlap.
+
 2008-10-27 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/button.c: Bug in function for selecting which
@@ -7,6 +15,8 @@
 
 	* lib/forms.c: Added function fl_form_is_iconified()
 	that returns if a forms window is in iconfied state.
+	Thanks to Serge Bromow for propose a function like
+	that.
 
 2008-10-18 Jens Thoms Toerring    <jt@toerring.de>
 

@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.43 2008/10/18 14:30:37 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.44 2008/11/04 01:08:46 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -2441,7 +2441,7 @@ fli_union_rect( const FL_RECT * r1,
  ***************************************/
 
 static const FL_RECT *
-fli_bounding_rect( const FL_RECT * r1,
+get_bounding_rect( const FL_RECT * r1,
 				   const FL_RECT * r2 )
 {
     static FL_RECT rect;
@@ -2452,11 +2452,11 @@ fli_bounding_rect( const FL_RECT * r1,
 
     xi = rect.x = FL_min( r1->x, r2->x );
     yi = rect.y = FL_min( r1->y, r2->y );
-    xf = FL_max( r1->x + r1->width, r2->x + r2->width ) + 1;
-    yf = FL_max( r1->y + r1->height, r2->y + r2->height ) + 1;
+    xf = FL_max( r1->x + r1->width, r2->x + r2->width );
+    yf = FL_max( r1->y + r1->height, r2->y + r2->height );
 
-    rect.width  = xf - xi + 1;
-    rect.height = yf - yi + 1;
+    rect.width  = xf - xi;
+    rect.height = yf - yi;
 
     return &rect;
 }
@@ -2870,7 +2870,6 @@ fl_get_object_bbox( FL_OBJECT * obj,
 					FL_Coord  * w,
 					FL_Coord  * h )
 {
-    char *label = obj->label;
     FL_OBJECT *tmp;
     int extra = 0;
     XRectangle lrect,
@@ -2884,20 +2883,20 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		 && obj->objclass <= FL_USER_CLASS_END )
 		extra = FL_abs( obj->bw ) + obj->lsize;
 
-    lrect.x      = orect.x = obj->x - extra;
-    lrect.y      = orect.y = obj->y - extra;
-    lrect.width  = orect.width = obj->w + 2 * extra;
+    lrect.x      = orect.x      = obj->x - extra;
+    lrect.y      = orect.y      = obj->y - extra;
+    lrect.width  = orect.width  = obj->w + 2 * extra;
     lrect.height = orect.height = obj->h + 2 * extra;
 
     /* label position */
 
-    if ( label && *label )
+    if ( obj->label && *obj->label )
     {
-		int len = strlen( label );
+		int len = strlen( obj->label );
 		int sw, sh;
 		int xx, yy, a, d;
 
-		fl_get_string_dimension( obj->lstyle, obj->lsize, label, len,
+		fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label, len,
 								 &sw, &sh );
 		fl_get_char_height( obj->lstyle, obj->lsize, &a, &d );
 		fl_get_align_xy( obj->align, obj->x, obj->y, obj->w, obj->h,
@@ -2908,7 +2907,7 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		lrect.height = sh + d;
     }
 
-    xr = fli_bounding_rect( &lrect, &orect );
+    xr = get_bounding_rect( &lrect, &orect );
 
     for ( tmp = obj->child; tmp; tmp = tmp->nc )
     {
@@ -2918,7 +2917,7 @@ fl_get_object_bbox( FL_OBJECT * obj,
 		orect.width  = tmp->w;
 		orect.height = tmp->h;
 
-		xr = fli_bounding_rect( &lrect, &orect );
+		xr = get_bounding_rect( &lrect, &orect );
     }
 
     *x = xr->x;
