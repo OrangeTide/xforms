@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.19 2008/05/15 13:33:29 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.20 2008/11/10 17:51:47 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -581,8 +581,12 @@ correct_topline( FL_OBJECT * ob )
 	if ( ! br->v_on )
 		sp->topline = 1;
 	else
+	{
 		sp->topline = FL_nint( fl_get_scrollbar_value( br->vsl ) 
 							   * ( sp->lines - sp->screenlines ) ) + 1;
+		if ( sp->topline < 1 )
+			sp->topline = 1;
+	}
 }
 
 
@@ -849,7 +853,7 @@ draw_slider_motion( FL_OBJECT * ob )
     M_info( "SliderMotion", "Delta=%d", delta );
 #endif
 
-    /* since the user can influence the topline, blit is not always faster
+    /* Since the user can influence the topline, blit is not always faster
 	   or appropriate. Set threshold to about 2/3 of the visible lines */
 
     if ( FL_abs( delta ) > 2 * screenlines / 3 )

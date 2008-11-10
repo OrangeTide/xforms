@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.13 2008/10/28 12:27:22 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.14 2008/11/10 17:51:47 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -55,7 +55,7 @@ static char *get_fname( const char *str,
 						int size );
 
 /*
- * question marks indicate the sizes in tenth of a point. It will be
+ * Question marks indicate the sizes in tenth of a point. It will be
  * replaced on the fly by the font requesting routines. Depending on
  * the availability of the fonts and capabilities of the server, the
  * font may or may not be scalable.
@@ -123,7 +123,7 @@ fli_init_font( void )
 
     initialized = 1;
 
-    /* if fl_set_font_name is called before fl_initialize, we need to keep
+    /* If fl_set_font_name is called before fl_initialize, we need to keep
        the change */
 
     for ( ; *f; f++, flf++ )
@@ -173,11 +173,12 @@ fl_set_font( int numb,
     fl_state[ fl_vmode ].cur_fnt = flx->fs = fs;
 
 #if 1
-    /* basic font info */
+    /* Basic font info */
 
     XTextExtents( flx->fs, "gbjQ", 4, &dh, &flx->fasc, &flx->fdesc, &overall );
 #else
-    /* this is theorectically correct, but looks bad */
+
+    /* This is theorectically correct, but looks bad */
 
     fl->fdesc = flx->fs->max_bounds.descent;
     fl->fasc = flx->fs->max_bounds.ascent;
@@ -198,22 +199,30 @@ fl_set_font( int numb,
 
 /***************************************
  * Add a new font (indexed by n) or change an existing font.
- * preferably the font name constains a ? in the size position
- * so different sizes can be used.
+ * preferably the font name constains a '?' in the size
+ * position so different sizes can be used.
  ***************************************/
 
 int
 fl_set_font_name( int          n,
 				  const char * name )
 {
-    FL_FONT *flf = fl_fonts + n;
+    FL_FONT *flf;
     int i;
 
-    if ( n < 0 || n >= FL_MAXFONTS || !name )
+    if ( n < 0 || n >= FL_MAXFONTS )
     {
-		M_warn( "SetFont", "bad number(%d) or fontname", n );
+		M_warn( "fl_set_font_name", "bad font number (%d)", n );
 		return -1;
     }
+
+	if ( ! name )
+	{
+		M_warn( "fl_set_font_name", "bad font name" );
+		return -1;
+    }
+
+	flf = fl_fonts + n;
 
     if ( *flf->fname )
     {
@@ -240,7 +249,8 @@ int
 fl_enumerate_fonts( void ( * output )( const char *s ),
 					int  shortform)
 {
-    FL_FONT *flf = fl_fonts, *fe = flf + FL_MAXFONTS;
+    FL_FONT *flf = fl_fonts,
+		    *fe = flf + FL_MAXFONTS;
     int n = 0;
 
     for ( ; output && flf < fe; flf++ )
@@ -266,7 +276,7 @@ fl_try_get_font_struct( int numb,
 						int with_fail )
 {
     FL_FONT *flf = fl_fonts;
-    XFontStruct *fs = 0;
+    XFontStruct *fs = NULL;
     int n = 0,
 		i;
 
@@ -283,12 +293,12 @@ fl_try_get_font_struct( int numb,
 			 * loadable or not, so need not be a fatal condition if
 			 * it fails. Issue a message for information therefore. */
 
-			M_info( "SetFont", "Bad FontStyle requested: %d: %s",
+			M_info( "fl_try_get_font_struct", "Bad FontStyle requested: %d: %s",
 					numb, flf->fname );
 		}
 
 		if ( ! fl_state[ fl_vmode ].cur_fnt )
-			M_warn( "FontStruct", "bad font returned" );
+			M_warn( "fl_try_get_font_struct", "bad font returned" );
 
 		return fl_state[ fl_vmode ].cur_fnt;
     }
@@ -303,7 +313,8 @@ fl_try_get_font_struct( int numb,
 		{
 			fs = flf->fs[ i ];
 #if FL_DEBUG >= ML_DEBUG
-			M_debug( "SetFont", "Cache hit: %s", fl_cur_fontname );
+			M_debug( "fl_try_get_font_struct", "Cache hit: %s",
+					 fl_cur_fontname );
 #endif
 		}
     }
@@ -334,14 +345,14 @@ fl_try_get_font_struct( int numb,
     if ( ! fs && with_fail )
 		return 0;
 
-    /* didn't get it. Try to find a substitute */
+    /* Didn't get it. Try to find a substitute */
 
     if ( ! fs )
     {
 		int mdiff = 1000,
 			k = -1;
 
-		M_warn( "SetFont", "can't load %s", fli_curfnt );
+		M_warn( "fl_try_get_font_struct", "can't load %s", fli_curfnt );
 
 		/* search for a replacement */
 
@@ -356,7 +367,7 @@ fl_try_get_font_struct( int numb,
 
 		fs = k == -1 ? ( flx->fs ? flx->fs : defaultfs ) : flf->fs[ k ];
 
-		/* if we did not get it this time, we won't get it next time either,
+		/* If we did not get it this time, we won't get it next time either,
 		   so replace it with whatever we found  */
 
 		flf->size[ flf->nsize ] = size;
@@ -364,7 +375,7 @@ fl_try_get_font_struct( int numb,
 		flf->nsize++;
     }
 
-    /* here we are guranteed a valid font handle although there is no
+    /* Here we are guranteed a valid font handle although there is no
        gurantee the font handle corresponds to the font requested */
 
     return fs;
@@ -617,7 +628,7 @@ cv_fname( const char *f )
     for ( q = strcpy( fname, f ); *q && is_garb( *q ); q++ )
 		/* empty */ ;
 
-    /* Remove all the garbage from the end, starting from ? */
+    /* Remove all the garbage from the end, starting from '?' */
 
     if ( ( p = strchr( fname, '?' ) ) )
 		*--p = '\0';
