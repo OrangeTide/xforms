@@ -151,18 +151,19 @@ read_entry( FILE * fp,
     char buf[ 512 ],
 		 *p;
 
-    if ( ! fgets( buf, sizeof buf - 1, fp ) )
+    if ( ! fgets( buf, sizeof buf, fp ) )
 		return 0;
 
     if ( *buf == '!' )
-		fgets( buf, sizeof buf - 1, fp );
+		if ( ! fgets( buf, sizeof buf, fp ) )
+			 return 0;
 
-    if ( sscanf( buf, " %d %d %d %n", r, g, b, &n ) < 3 )
+    if ( sscanf( buf, " %d %d %d %n", r, g, b, &n ) != 3 )
 		return 0;
 
     p = buf + n;
 
-    /* squeeze out all spaces */
+    /* Remove all spaces */
 
     while ( *p )
     {
@@ -172,7 +173,7 @@ read_entry( FILE * fp,
     }
     *name = '\0';
 
-    return ( feof( fp ) || ferror( fp ) ) ? 0 : 1;
+    return ! ( feof( fp ) || ferror( fp ) );
 }
 
 

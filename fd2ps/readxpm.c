@@ -237,35 +237,44 @@ read_xpm(const char *file, int *w, int *h, int *ncol,
  * read the standard RGB file and get rid of the spaces in color names
  * return 1 for success.
  */
+
 static int
-read_entry(FILE * fp, int *r, int *g, int *b, char *name)
+read_entry( FILE * fp,
+			int  * r,
+			int  * g,
+			int  * b,
+			char * name )
 {
     int n;
-    char buf[512], *p;
+    char buf[ 512 ],
+		 *p;
 
-    if (!fgets(buf, sizeof(buf) - 1, fp))
-	return 0;
+    if ( ! fgets( buf, sizeof buf, fp ) )
+		return 0;
 
-    while (buf[0] == '!')
-	fgets(buf, sizeof(buf) - 1, fp);
+    while ( buf[ 0 ] == '!' )
+		if ( fgets( buf, sizeof buf, fp ) )
+			return 0;
 
-    if (sscanf(buf, " %d %d %d %n", r, g, b, &n) < 3)
-	return 0;
+    if ( sscanf( buf, " %d %d %d %n", r, g, b, &n ) != 3 )
+		return 0;
 
     p = buf + n;
 
-    /* squeeze out all spaces */
-    while (*p)
+    /* Remove all spaces */
+
+    while ( *p )
     {
-	if (*p != ' ' && *p != '\n')
-	    *name++ = *p;
-	p++;
+		if ( *p != ' ' && *p != '\n' )
+			*name++ = *p;
+		p++;
     }
 
-    *name = 0;
+    *name = '\0';
 
-    return (feof(fp) || ferror(fp)) ? 0 : 1;
+    return ! ( feof( fp ) || ferror( fp ) );
 }
+
 
 #define MAXDBSIZE  1024
 

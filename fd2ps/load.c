@@ -188,64 +188,73 @@ flps_make_object( int          objclass,
 }
 
 static void
-myfgets(char *line, FILE * fl)
+myfgets( char * line,
+		 FILE * fl )
 {
-    char tmpstr[10000];		/* Maximal label length is limited here. */
-    int i = 0, j, ch;
+    char tmpstr[ 10000 ];		/* Maximal label length is limited here. */
+    int i = 0,
+		j,
+		ch;
 
-    ch = fgetc(fl);
-    while (ch != '\n' && ch != EOF)
+    ch = fgetc( fl );
+    while ( ch != '\n' && ch != EOF )
     {
-	tmpstr[i++] = ch;
-	ch = fgetc(fl);
+		tmpstr[i++] = ch;
+		ch = fgetc(fl);
     }
 
     tmpstr[i] = '\0';
 
     i = 0;
-    while (tmpstr[i] != ':' && tmpstr[i + 1] != ' ')
-	i++;
+    while ( tmpstr[ i ] != ':' && tmpstr[ i + 1 ] != ' ')
+		i++;
 
     i += 2;
     j = 0;
 
     do
-	line[j++] = tmpstr[i++];
-    while (tmpstr[i - 1] != '\0');
+		line[ j++ ] = tmpstr[ i++ ];
+    while ( tmpstr[ i - 1 ] != '\0' );
 }
 
+
 static int
-read_key_val(FILE * fp, char *key, char *val)
+read_key_val(FILE * fp,
+			 char * key,
+			 char * val )
 {
-    char buf[1024], *p;
+    char buf[ 1024 ],
+		 *p;
 
-    if (!fgets(buf, 1024, fp) || ferror(fp))
-	return EOF;
+    if ( ! fgets( buf, 1024, fp ) || ferror( fp ) )
+		return EOF;
 
-    buf[1023] = 0;
-    val[0] = key[0] = 0;
+    buf[ 1023 ] = 0;
+    val[ 0 ] = key[ 0 ] = '\0';
 
     /* nuke the new line */
+
     if ((p = strchr(buf, '\n')))
-	*p = '\0';
+		*p = '\0';
 
     if (!(p = strchr(buf, ':')))
     {
-	strcpy(key, "?");
-	return EOF;
+		strcpy(key, "?");
+		return EOF;
     }
 
     *p = '\0';
-    strcpy(key, buf);
+    strcpy( key, buf );
 
-    if (*(p + 1))
-	strcpy(val, p + 2);
+    if ( *( p + 1 ) )
+		strcpy( val, p + 2 );
+
     return 0;
 }
 
 
-
 /* Adds an object to the form. */
+
 static void
 flps_add_object(FL_FORM * form, FL_OBJECT * obj)
 {
@@ -422,27 +431,39 @@ load_objclass_spec_info(FILE * fp, FL_OBJECT * ob)
 	    ;
 	else
 	    fprintf(stderr, "%s: Unknown spec (%s=%s) -- Ignored\n",
-		    find_class_name(ob->objclass), key, val);
+				find_class_name(ob->objclass), key, val);
     }
 }
 
 
 static FL_OBJECT *
-load_object(FL_FORM * form, FILE * fl)
+load_object(FL_FORM * form,
+			FILE    * fl )
 {
     FL_OBJECT *obj;
     int objclass, type;
-    float x, y, w, h;
-    char name[64], cbname[64];
-    char cn1[64], cn2[64];
-    char objcls[64];
-    char key[64], val[10000];
+    float x,
+		  y,
+		  w,
+		  h;
+    char name[ 64 ],
+		 cbname[ 64 ];
+    char cn1[ 64 ],
+		 cn2[ 64 ];
+    char objcls[ 64 ];
+    char key[ 64 ],
+		 val[ 10000 ];
 
     /* Must demand the vital info */
-    fscanf(fl, "\n--------------------\n");
-    fscanf(fl, "class: %s\n", objcls);
-    fscanf(fl, "type: %s\n", val);
-    fscanf(fl, "box: %f %f %f %f\n", &x, &y, &w, &h);
+
+	if (    fgetc( fl ) != '\n'
+		 || ! fgets( val, sizeof val, fl )
+		 || strcmp( val, "--------------------\n" ) 
+		 || fscanf( fl, "type: %s\n", val ) != 1
+		 || fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h ) != 4 )
+	{
+		/* This is an error and should be handled JTT*/
+	}
 
     objclass = find_class_val(objcls);
     type = find_type_val(objclass, val);
@@ -450,37 +471,43 @@ load_object(FL_FORM * form, FILE * fl)
     flps_add_object(form, obj);
 
     /* now parse the attributes */
-    while (read_key_val(fl, key, val) != EOF)
+
+    while ( read_key_val( fl, key, val ) != EOF )
     {
-	if (strcmp(key, "boxtype") == 0)
-	    obj->boxtype = boxtype_val(val);
-	else if (strcmp(key, "colors") == 0)
-	{
-	    cn1[0] = cn2[0] = '\0';
-	    sscanf(val, "%s %s", cn1, cn2);
-	    obj->col1 = fl_get_namedcolor(cn1);
-	    obj->col2 = fl_get_namedcolor(cn2);
-	}
-	else if (strcmp(key, "alignment") == 0)
-	    obj->align = align_val(val);
-	else if (strcmp(key, "style") == 0 || strcmp(key, "lstyle") == 0)
-	    obj->lstyle = style_val(val);
-	else if (strcmp(key, "size") == 0 || strcmp(key, "lsize") == 0)
-	    obj->lsize = lsize_val(val);
-	else if (strcmp(key, "lcol") == 0)
-	    obj->lcol = fl_get_namedcolor(val);
-	else if (strcmp(key, "label") == 0)
-	    set_label(obj, val);
-	else if (strcmp(key, "shortcut") == 0)
-	    flps_set_object_shortcut(obj, val, 1);
-	else if (strcmp(key, "callback") == 0)
-	    strcpy(cbname, val);
-	else if (strcmp(key, "name") == 0)
-	    strcpy(name, val);
-	else if (strcmp(key, "argument") == 0)
-	    goto done;
-	/* ignore uninteresting keywords */
+		if ( strcmp( key, "boxtype" ) == 0 )
+			obj->boxtype = boxtype_val( val );
+		else if ( strcmp(key, "colors" ) == 0 )
+		{
+			cn1[ 0 ] = cn2[ 0 ] = '\0';
+			if ( sscanf( val, "%s %s", cn1, cn2 ) != 2 )
+			{
+				/* This is an error and should be handled JTT*/
+			}
+			obj->col1 = fl_get_namedcolor(cn1);
+			obj->col2 = fl_get_namedcolor(cn2);
+		}
+		else if (strcmp(key, "alignment") == 0)
+			obj->align = align_val(val);
+		else if (strcmp(key, "style") == 0 || strcmp(key, "lstyle") == 0)
+			obj->lstyle = style_val(val);
+		else if (strcmp(key, "size") == 0 || strcmp(key, "lsize") == 0)
+			obj->lsize = lsize_val(val);
+		else if (strcmp(key, "lcol") == 0)
+			obj->lcol = fl_get_namedcolor(val);
+		else if (strcmp(key, "label") == 0)
+			set_label(obj, val);
+		else if (strcmp(key, "shortcut") == 0)
+			flps_set_object_shortcut(obj, val, 1);
+		else if (strcmp(key, "callback") == 0)
+			strcpy(cbname, val);
+		else if (strcmp(key, "name") == 0)
+			strcpy(name, val);
+		else if (strcmp(key, "argument") == 0)
+			goto done;
+
+		/* ignore uninteresting keywords */
     }
+
   done:
     load_objclass_spec_info(fl, obj);
     return obj;
@@ -494,94 +521,136 @@ read_form(FILE * fl)
     double w, h;
     int onumb;
     FL_FORM *cur_form = 0;
-    char fname[1024];
+    char fname[ 1024 ];
 
-    fscanf(fl, "\n=============== FORM ===============\n");
+	if (    fgetc( fl ) != '\n'
+		 || ! fgets( fname, sizeof fname, fl )
+		 || strcmp( fname, "=============== FORM ===============\n" ) )
+	{
+		/* This is an error and should be handled JTT*/
+	}
+
     fname[0] = '\0';
-    myfgets(fname, fl);
-    fscanf(fl, "Width: %lf\n", &w);
-    fscanf(fl, "Height: %lf\n", &h);
+    myfgets( fname, fl );
+
+    if (    fscanf( fl, "Width: %lf\n", &w ) != 1
+		 || fscanf( fl, "Height: %lf\n", &h ) != 1 )
+	{
+		/* This is an error and should be handled JTT*/
+	}
 
     cur_form = make_form(FL_NO_BOX, w, h);
     cur_form->label = fl_strdup(fname);
 
-    fscanf(fl, "Number of Objects: %d\n", &onumb);
+    if ( fscanf( fl, "Number of Objects: %d\n", &onumb ) != 1 )
+	{
+		/* This is an error and should be handled JTT*/
+	}
 
-    for (; --onumb >= 0;)
-	load_object(cur_form, fl);
+	/* Here should be checked if as many objects could be loaded as expected
+	   JTT */
+
+	while ( --onumb >= 0 )
+		load_object( cur_form, fl );
 
     return cur_form;
 }
 
+
 int
-load_form_definition(const char *filename)
+load_form_definition( const char * filename )
 {
-    FILE *fp = fopen(filename, "r");
+    FILE *fp = fopen( filename, "r" );
     int fd_magic, nf;
     FL_FORM *form;
-    char buf[256], ubuf[32];
+    char buf[ 256 ],
+		 ubuf[ 32 ];
 
-    if (!fp)
+    if ( ! fp )
     {
-	perror(filename);
-	return -1;
+		perror( filename );
+		return -1;
     };
 
-    fscanf(fp, "Magic: %d\n\n", &fd_magic);
-
-    if (fd_magic != MAGIC3 && fd_magic != MAGIC4)
+    if (    fscanf( fp, "Magic: %d\n\n", &fd_magic ) != 1
+		 || ( fd_magic != MAGIC3 && fd_magic != MAGIC4 ) )
     {
-	fprintf(stderr, "Unknown file %s (magic %d)\n", filename, fd_magic);
-	return -1;
+		fclose( fp );
+		fprintf( stderr, "Unknown file %s (magic %d)\n", filename, fd_magic );
+		return -1;
     }
 
-    psinfo.inverted = (fd_magic == MAGIC4);
+    psinfo.inverted = ( fd_magic == MAGIC4 );
 
-    fscanf(fp, "Internal Form Definition File\n");
-    fscanf(fp, "    (do not change)\n\n");
-    fscanf(fp, "Number of forms: %d\n", &nf);
+	if (    ! fgets( buf, sizeof buf, fp )
+		 || strcmp( buf, "Internal Form Definition File\n" )
+		 || ! fgets( buf, sizeof buf, fp )
+		 || strcmp( buf, "    (do not change)\n" )
+		 || fgetc( fp ) != '\n'
+		 || fscanf( fp, "Number of forms: %d\n", &nf ) != 1 )
+    {
+		fclose(fp);
+		fprintf( stderr, "Failure to read file %s\n", filename );
+		return -1;
+    }
+
     psinfo.pages = nf;
 
     if (nf > 1 && psinfo.eps)
     {
-	fprintf(stderr, "Requesting EPS output with more than one form.\n");
+		fprintf(stderr, "Requesting EPS output with more than one form.\n");
     }
 
     if (psinfo.verbose)
-	fprintf(stderr, "%d forms will be converted\n", nf);
+		fprintf(stderr, "%d forms will be converted\n", nf);
 
     /* read until we hit a seperator line */
-    while (fgets(buf, sizeof(buf) - 1, fp) && buf[0] != '\n')
+
+    while ( fgets(buf, sizeof buf, fp) && buf[0] != '\n')
     {
-	if (strncmp(buf, "Unit", 4) == 0)
-	{
-	    float xs, ys;
-	    sscanf(buf, "Unit of measure: %s", ubuf);
-	    psinfo.unit = unit_val(ubuf);
-	    get_scale_unit(psinfo.unit, &xs, &ys);
-	}
-	else if (strncmp(buf, "Border", 6) == 0)
-	{
-	    sscanf(buf, "Border Width: %s", ubuf);
-	    psinfo.bw = atoi(ubuf);
-	}
-	else if (strncmp(buf, "Snap", 4) == 0)
-	{
-	    ;
-	}
-	else
-	{
-	    fprintf(stderr, "Unknown token: %s", buf);
-	}
+		if ( strncmp(buf, "Unit", 4) == 0 )
+		{
+			float xs,
+				  ys;
+
+			if ( sscanf( buf, "Unit of measure: %s", ubuf ) != 1 )
+			{
+				fclose(fp);
+				fprintf( stderr, "Failure to read file %s\n", filename );
+				return -1;
+			}
+
+			psinfo.unit = unit_val(ubuf);
+			get_scale_unit(psinfo.unit, &xs, &ys);
+		}
+		else if (strncmp(buf, "Border", 6) == 0)
+		{
+			if ( sscanf(buf, "Border Width: %s", ubuf) != 1 )
+			{
+				fclose(fp);
+				fprintf( stderr, "Failure to read file %s\n", filename );
+				return -1;
+			}
+
+			psinfo.bw = atoi(ubuf);
+		}
+		else if (strncmp(buf, "Snap", 4) == 0)
+		{
+			;
+		}
+		else
+		{
+			fprintf( stderr, "Unknown token: %s", buf );
+		}
     }
 
     if (psinfo.user_bw)
-	psinfo.bw = psinfo.user_bw;
+		psinfo.bw = psinfo.user_bw;
 
     for (; --nf >= 0;)
     {
-	form = read_form(fp);
-	ps_show_form(form);
+		form = read_form(fp);
+		ps_show_form(form);
     }
 
     fclose(fp);

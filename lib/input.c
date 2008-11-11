@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.21 2008/05/16 18:47:57 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.22 2008/11/11 01:54:13 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -2274,6 +2274,7 @@ float_int_validator( FL_OBJECT  * ob,
     char *ptr = NULL;
     int slen,
 		c;
+	double dummy;
 
     /* empty string is considered valid */
 
@@ -2288,9 +2289,9 @@ float_int_validator( FL_OBJECT  * ob,
 		return FL_INVALID | FL_RINGBELL;
 
     if ( ob->type == FL_FLOAT_INPUT )
-		strtod( str, &ptr );
+		dummy = strtod( str, &ptr );
     else
-		strtol( str, &ptr, 10 );
+		dummy = strtol( str, &ptr, 10 );
 
     lc = str + slen - 1;
     llc = lc - 1;

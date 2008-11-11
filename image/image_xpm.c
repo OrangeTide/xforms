@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xpm.c,v 1.6 2008/09/22 22:31:26 jtt Exp $
+ * $Id: image_xpm.c,v 1.7 2008/11/11 01:54:13 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -190,12 +190,18 @@ XPM_load( FL_IMAGE * im )
     {
         while ( fgets( buf, buflen, fp ) && strncmp( buf, "/*", 2 ) == 0 )
         {
-            while ( strstr( buf, "*/" ) == 0 )
-				fgets( buf, buflen, fp );
+            while ( strstr( buf, "*/" ) == NULL )
+				if ( fgets( buf, buflen, fp ) == NULL )
+				{
+					fl_free( buf );
+					flimage_error( im, "Failure to read xpm file" );
+					return -1;
+				}
         }
 
 		if ( ( head = strchr( buf, '"' ) ) == 0 )
 		{
+			fl_free( buf );
 			flimage_error( im, "Bad ColorLine: %s", buf );
 			return -1;
 		}

@@ -351,9 +351,13 @@ load_object( FILE * fl )
 		return 0;
     }
 
-    fscanf( fl, "class: %s\n", objcls );
-    fscanf( fl, "type: %s\n", val );
-    fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h );
+    if (    fscanf( fl, "class: %s\n", objcls ) != 1
+		 || fscanf( fl, "type: %s\n", val ) != 1
+		 || fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h ) != 4 )
+    {
+		M_err( "LoadObject", "Error reading input file" );
+		return 0;
+    }
 
     objclass = class_val( objcls );
     type = find_type_value( objclass, val );
@@ -501,14 +505,18 @@ read_form( FILE * fl,
     char buf[ 256 ],
 		 *s;
 
-    /* skip until we get ===, the form seperator */
+    /* Skip until we get ===, the form seperator */
 
     while ( fgets( buf, sizeof buf - 1, fl ) && strncmp( buf, "===", 3 ) )
 		/* empty */ ;
 
     myfgets( fname, fl );
-    fscanf( fl, "Width: %lf\n", &w );
-    fscanf( fl, "Height: %lf\n", &h );
+    if (    fscanf( fl, "Width: %lf\n", &w ) != 1
+			|| fscanf( fl, "Height: %lf\n", &h ) != 1 )
+    {
+		M_err( "LoadForm", " Can't read Width or Height" );
+		return -1;
+    }
 
     if ( w <= 0.0 || h <= 0.0 || feof( fl ) )
     {

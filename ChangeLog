@@ -1,3 +1,10 @@
+2008-11-11 Jens Thoms Toerring    <jt@toerring.de>
+
+	Cosmetic chnages to a numbr od files to pacify the
+	newest gcc/libc combination about issues with disre-
+	garded return values of standard input/ouput func-
+	tions (fgets(), fread(), fwrite(), sscanf() etc.)
+
 2008-11-10 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/textbox.c: Another bug Rob Carpenter found: when

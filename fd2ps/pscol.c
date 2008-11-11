@@ -151,28 +151,36 @@ ps_invalidate_color_cache(void)
 }
 
 void
-ps_color(long color)
+ps_color( long color )
 {
-    int r, g, b;
+    int r = 0,
+		g = 0,
+		b = 0;
 
-    if (color == cur_color)
-	return;
-    fl_query_imap(color, &r, &g, &b);
+    if ( color == cur_color )
+		return;
 
-    if (psinfo.colorps && (r != g || r != b))
-	ps_output("%.3g %.3g %.3g RGB ", C2NC(r), C2NC(g), C2NC(b));
+    fl_query_imap( color, &r, &g, &b );
+
+    if ( psinfo.colorps && ( r != g || r != b ) )
+		ps_output( "%.3g %.3g %.3g RGB ", C2NC( r), C2NC( g ), C2NC( b ) );
     else
-	ps_output("%.3g G ", C2NC(rgb2gray(r, g, b)));
+		ps_output( "%.3g G ", C2NC( rgb2gray( r, g, b ) ) );
 
     cur_color = color;
 }
 
+
 int
-get_gray255(long color)
+get_gray255( long color )
 {
-    int r, g, b;
-    fl_query_imap(color, &r, &g, &b);
-    return rgb2gray(r, g, b) + 0.1;
+    int r = 0,
+		g = 0,
+		b = 0;
+
+    fl_query_imap( color, &r, &g, &b );
+
+    return rgb2gray( r, g, b ) + 0.1;
 }
 
 int

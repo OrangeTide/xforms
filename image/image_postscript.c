@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_postscript.c,v 1.11 2008/05/09 12:32:59 jtt Exp $
+ * $Id: image_postscript.c,v 1.12 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -102,10 +102,11 @@ static int
 PS_identify( FILE * fp )
 {
     char buf[ 2 ];
+	size_t c;
 
-    fread( buf, 1, 2, fp );
+    c = fread( buf, 1, 2, fp );
     rewind( fp );
-    return buf[ 0 ] == '%' && buf[ 1 ] == '!';
+    return c == 2 && buf[ 0 ] == '%' && buf[ 1 ] == '!';
 }
 
 

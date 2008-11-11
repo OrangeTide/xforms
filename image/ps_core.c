@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: ps_core.c,v 1.11 2008/09/22 22:31:27 jtt Exp $
+ * $Id: ps_core.c,v 1.12 2008/11/11 01:54:13 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -626,7 +626,7 @@ flps_query_imap( long   col,
 
 #ifndef FL_PACK
 #define FL_PACK( r, g, b )        ( ( b ) << 16 | ( g ) << 8 | ( r ) )
-#define FL_UNPACK(p,r,g,b)       do {                            \
+#define FL_UNPACK( p, r, g, b )  do {                            \
 	                                 r = ( p ) & 0xff;           \
                                      g = ( ( p ) >>  8 ) &0xff;	 \
                                      b = ( ( p ) >> 16 ) &0xff;  \
@@ -650,7 +650,9 @@ flps_invalidate_color_cache( void )
 void
 flps_color( long color )
 {
-    int r, g, b;
+    int r = 0,
+		g = 0,
+		b = 0;
 
     if ( color == FL_NoColor )
 		return;
@@ -695,9 +697,9 @@ flps_rgbcolor( int r,
 int
 flps_get_gray255( long color )
 {
-    int r,
-		g,
-		b;
+    int r = 0,
+		g = 0,
+		b = 0;
 
     if ( flps->isRGBColor )
 		FL_UNPACK( color, r, g, b );

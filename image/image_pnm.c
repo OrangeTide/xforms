@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_pnm.c,v 1.6 2008/09/24 18:31:57 jtt Exp $
+ * $Id: image_pnm.c,v 1.7 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -129,7 +129,14 @@ PNM_description( FL_IMAGE * im )
     SPEC *sp = fl_malloc( sizeof *sp );
     char s[ 3 ];
 
-    fread( s, 1, 2, im->fpin );
+    if ( fread( s, 1, 2, im->fpin ) != 2 )
+	{
+		flimage_error( im, "%s: error reading pnm file", im->infile );
+		fl_free( sp );
+		im->io_spec = 0;
+		return -1;
+    }
+
     im->io_spec = sp;
     s[ 2 ] = '\0';
 

@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_bmp.c,v 1.6 2008/09/22 22:31:25 jtt Exp $
+ * $Id: image_bmp.c,v 1.7 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -80,11 +80,12 @@ static int
 BMP_identify( FILE * fp )
 {
     char buf[ 2 ];
+	size_t c;
 
-    fread( buf, 1, 2, fp );
+    c = fread( buf, 1, 2, fp );
     rewind( fp );
 
-    return buf[ 0 ] == 'B' && buf[ 1 ] == 'M';
+    return c == 2 && buf[ 0 ] == 'B' && buf[ 1 ] == 'M';
 }
 
 
@@ -152,9 +153,22 @@ BMP_description( FL_IMAGE * im )
     char buf[ 40 ];
     int i;
 
-    fread( buf, 1, 2, im->fpin );
+    if ( fread( buf, 1, 2, im->fpin ) != 2 )
+    {
+		im->error_message( im, "error while readin bmp file" );
+		fl_free( sp );
+		return -1;
+    }
+
     sp->fsize = fli_fget4LSBF( im->fpin );
-    fread( buf, 1, 4, im->fpin );
+
+    if ( fread( buf, 1, 4, im->fpin ) != 4 )
+    {
+		im->error_message( im, "error while reading bmp file" );
+		fl_free( sp );
+		return -1;
+    }
+
     sp->offset = fli_fget4LSBF( im->fpin );
     sp->infosize = fli_fget4LSBF( im->fpin );
 
@@ -189,7 +203,15 @@ BMP_description( FL_IMAGE * im )
     {
 		int skip = sp->infosize - 40;
 
-		fread( buf, 1, skip, im->fpin );
+		if (    skip < 0
+			 || fread( buf, 1, skip, im->fpin ) != ( size_t ) skip )
+		{
+			flimage_error( im, "%s: error while reading bmp file",
+						   im->infile );
+			fl_free( im->io_spec );
+			im->io_spec = 0;
+			return -1;
+		}
     }
 
     im->w = sp->w;
@@ -487,13 +509,18 @@ load_1bit_bmp( FL_IMAGE * im,
 
     for ( i = im->h; --i >= 0 && ! feof( im->fpin ); )
     {
-		fread( buf, 1, totalbpl, im->fpin );
+		if ( fread( buf, 1, totalbpl, im->fpin ) != ( size_t ) totalbpl )
+		{
+			fl_free( buf );
+			im->error_message( im, "malloc() failed" );
+			return -1;
+		}
 		fl_unpack_bits( im->ci[ i ], buf, im->w );
     }
 
     fl_free( buf );
 
-    return ( i < im->h / 2 ) ? 1 : -1;
+    return i < im->h / 2 ? 1 : -1;
 }
 
 
@@ -578,7 +605,11 @@ write_bmp_header( FL_IMAGE * im,
 	}
 
 		for ( ; i < 1 << sp->bpp; i++ )
-			fwrite( junk, 1, 4, fp );
+		{
+			size_t dummy;
+
+			dummy = fwrite( junk, 1, 4, fp );
+		}
     }
 
     return 0;
@@ -672,8 +703,10 @@ BMP_write_image( FL_IMAGE * im )
 
 		for ( i = im->h; --i >= 0; )
 		{
+			size_t dummy;
+
 			fl_pack_bits( tmpbuf, im->ci[ i ], im->w );
-			fwrite( tmpbuf, 1, totalbpl, fp );
+			dummy = fwrite( tmpbuf, 1, totalbpl, fp );
 		}
 
 		fl_free( tmpbuf );

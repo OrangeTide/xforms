@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.11 2008/09/24 18:31:56 jtt Exp $
+ * $Id: image_gif.c,v 1.12 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -143,9 +143,13 @@ GIF_description( FL_IMAGE * im )
 
     /* identify should've already checked signature. */
 
-    fread( buf, 1, 6, fp );
+    if (    fread( buf, 1, 6, fp ) != 6
+		 || fread( buf, 1, 7, fp ) != 7 )
+	{
+		flimage_error( im, "%s: error while reading gif file", im->infile );
+		return -1;
+	}
 
-    fread( buf, 1, 7, fp );
     sp->lsx = buf[ 0 ] + ( buf[ 1 ] << 8 );
     sp->lsy = buf[ 2 ] + ( buf[ 3 ] << 8 );
 
@@ -510,10 +514,12 @@ readextension( FILE     * fp,
 			M_info( 0, "%s:ApplicationExtension", im->infile );
 			if ( getc( fp ) != 11 )	/* block length */
 				M_warn( "GifExt", "wrong block length" );
-			fread( buf, 1, 8, fp );
+			if ( fread( buf, 1, 8, fp ) != 8 )
+				return EOF;
 			buf[ 8 ] = '\0';
 			M_info( 0, buf );
-			fread( buf, 1, 3, fp );
+			if ( fread( buf, 1, 3, fp ) != 3 )
+				return EOF;
 			while ( ( count = getblock( fp, buf ) ) != 0 && count != EOF )
 			{
 				buf[ count ] = '\0';
@@ -653,7 +659,8 @@ GIF_load( FL_IMAGE * im )
 			ungetc( IMAGESEP, fp );
 		}
 		else if (    code != EOF
-				  && ( ( fread( buf, 1, 50, fp ), getc( fp ) ) ) != EOF )
+				  && fread( buf, 1, 50, fp )
+				  && getc( fp ) != EOF )
 		{
 			M_info( func, "%s: Garbage(> 50bytes) at end", im->infile );
 		}
@@ -1035,13 +1042,15 @@ write_gif_comments( FILE       * fp,
 
     for ( len = 0; p < str + k; p += len )
     {
+		size_t dummy;
+
 		strncpy( s, p, 255 );
 		s[ 255 ] = '\0';
 		len = strlen( s );
 		putc( EXTENSION, fp );
 		fputc( GIFEXT_COM, fp );
 		putc( len, fp );
-		fwrite( s, 1, len, fp );
+		dummy = fwrite( s, 1, len, fp );
 		putc( 0, fp );
     }
 }
@@ -1059,6 +1068,7 @@ write_descriptor( FL_IMAGE * im )
     if ( im->app_background >= 0 )
     {
 		int tran = flimage_get_closest_color_from_map( im, im->app_background );
+		size_t dummy;
 
 		buf[ 0 ] = GIFEXT_GC;
 		buf[ 1 ] = 4;		/* count */
@@ -1068,7 +1078,7 @@ write_descriptor( FL_IMAGE * im )
 		buf[ 5 ] = tran;
 		buf[ 6 ] = 0;		/* end of block */
 		putc( EXTENSION, ffp );
-		fwrite( buf, 1, 7, ffp );
+		dummy = fwrite( buf, 1, 7, ffp );
     }
 
     /* image descriptions  */
@@ -1315,6 +1325,8 @@ output_lzw_code( unsigned int   code,
 
     if ( bytes >= 254 || ( int ) code == EOFCode )
     {
+		size_t dummy;
+
 		if ( ( int ) code == EOFCode && bits )
 		{
 			*ch = ( unsigned char ) ( accum & 255 );
@@ -1323,7 +1335,7 @@ output_lzw_code( unsigned int   code,
 		}
 
 		putc(bytes, fp);
-		fwrite( bbuf, 1, bytes, fp );
+		dummy = fwrite( bbuf, 1, bytes, fp );
 		bytes = 0;
     }
 }

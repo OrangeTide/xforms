@@ -381,22 +381,32 @@ load_forms( int          merge,
 		fl_clear_browser( fd_control->formbrowser );
     }
 
-    fscanf( fn, "Magic: %d\n\n", &fd_magic );
+    if ( fscanf( fn, "Magic: %d\n\n", &fd_magic ) != 1 )
+	{
+		if ( ! fdopt.conv_only )
+			fl_show_alert( "Can't read from file %s", fname, "", 0 );
+		else
+			M_err( "LoadForm", "can't read from file %s", fname );
+		return -1;
+    }
 
     if ( fd_magic != MAGIC2 && fd_magic != MAGIC3 && fd_magic != FD_V1 )
     {
 		if ( ! fdopt.conv_only )
-			fl_show_alert( "Wrong type of file!!", "", "", 1 );
+			fl_show_alert( "Wrong type of file!", "", "", 1 );
 		else
 			M_err( "LoadForm", "wrong type of file ID=%d", fd_magic );
 		return -1;
     }
 
-    fscanf( fn, "Internal Form Definition File\n" );
-    fscanf( fn, "    (do not change)\n\n" );
-    fgets( buf, sizeof buf - 1, fn );
-
-    if ( sscanf( buf, "Number of forms: %d", &nforms ) != 1 || nforms <= 0 )
+	if (    ! fgets( buf, sizeof buf, fn )
+		 || strcmp( buf, "Internal Form Definition File\n" )
+		 || ! fgets( buf, sizeof buf, fn )
+		 || strcmp( buf, "    (do not change)\n" )
+		 || fgetc( fn ) != '\n' 
+		 || ! fgets( buf, sizeof buf, fn )
+		 || sscanf( buf, "Number of forms: %d", &nforms ) != 1
+		 || nforms <= 0 )
     {
 		if ( ! fdopt.conv_only )
 			fl_show_alert( "Can't load input file", "Invalid format of file",
@@ -470,8 +480,16 @@ load_forms( int          merge,
 
     if ( ok && ! merge && ! feof( fn ) )
     {
-		fscanf( fn, "\n==============================\n" );
-		fgets( main_name, MAX_VAR_LEN, fn );
+		if (    fgetc( fn ) != '\n'
+			 || ! fgets( buf, sizeof buf, fn )
+			 || strcmp( buf, "==============================\n" )
+			 || ! fgets( main_name, MAX_VAR_LEN, fn ) )
+		{
+			if ( ! fdopt.conv_only )
+				fl_show_alert( "Failure to read file", NULL, NULL, 1 );
+			else
+				M_err( 0, "Failure to read file" );
+		}
 		main_name[ strlen( main_name ) - 1 ] = '\0';
     }
 

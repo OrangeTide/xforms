@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_genesis.c,v 1.7 2008/09/24 18:31:56 jtt Exp $
+ * $Id: image_genesis.c,v 1.8 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -63,11 +63,12 @@ static int
 GENESIS_identify( FILE * fp )
 {
     char buf[ 4 ];
+	size_t c;
 
-    fread( buf, 1, 4, fp );
+    c = fread( buf, 1, 4, fp );
     rewind( fp );
 
-    return strncmp( buf, "IMGF", 4 ) == 0;
+    return c == 4 && strncmp( buf, "IMGF", 4 ) == 0;
 }
 
 
@@ -132,8 +133,9 @@ GENESIS_load( FL_IMAGE * im )
     SPEC *sp = im->io_spec;
 
     fseek( fp, sp->hdr_len, SEEK_SET );
-    fread( im->gray[ 0 ], sp->depth / 8, im->w * im->h, fp );
-    convert_msbf( im->gray[ 0 ], im->w * im->h );
+    if ( fread( im->gray[ 0 ], sp->depth / 8, im->w * im->h, fp )
+		                                         != ( size_t ) im->w * im->h )
+		convert_msbf( im->gray[ 0 ], im->w * im->h );
 
     return 0;
 }

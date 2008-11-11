@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_fits.c,v 1.10 2008/09/24 18:31:56 jtt Exp $
+ * $Id: image_fits.c,v 1.11 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -96,12 +96,12 @@ typedef union
 static int
 FITS_identify( FILE * fp )
 {
-    char buf[ 7 ];
+    char buf[ 7 ] = { '\0' };
+	size_t c;
 
-    fread( buf, 1, 6, fp );
-    buf[ 6 ] = '\0';
+    c = fread( buf, 1, 6, fp );
     rewind( fp );
-    return strcmp( buf, "SIMPLE" ) == 0;
+    return c == 2 && strcmp( buf, "SIMPLE" ) == 0;
 }
 
 
@@ -416,7 +416,8 @@ parse_fits_header( FILE     * fp,
 
 		/* each rec is 80 characters long */
 
-		fgets( buf, 81, fp );
+		if ( ! fgets( buf, 81, fp ) )
+			buf[ 0 ] = '\0';
 		buf[ 79 ] = '\n';
 		buf[ 80 ] = '\0';
 		sscanf( buf, "%[A-Z0-9]%*[ =]%s", key, val );

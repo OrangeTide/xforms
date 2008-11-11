@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.10 2008/09/24 18:31:58 jtt Exp $
+ * $Id: image_tiff.c,v 1.11 2008/11/11 01:54:13 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -106,11 +106,13 @@ static int
 TIFF_identify( FILE * fp )
 {
     char c[ 4 ];
+	size_t i;
 
-    fread( c, 1, 4, fp );
+    i = fread( c, 1, 4, fp );
     rewind( fp );
-    return    ( c[ 0 ] == 'I' && c[ 1 ] == 'I' )
-		   || ( c[ 0 ] == 'M' && c[ 1 ] == 'M' );
+    return    i == 4
+		   && (    ( c[ 0 ] == 'I' && c[ 1 ] == 'I' )
+			    || ( c[ 0 ] == 'M' && c[ 1 ] == 'M' ) );
 }
 
 static int read_tiff_ifd( FILE * fp,
@@ -131,7 +133,15 @@ TIFF_description( FL_IMAGE * im )
     im->spec_size = sizeof *sp;
     sp->image = im;
 
-    fread( buf, 1, 4, fp );
+    if ( fread( buf, 1, 4, fp ) != 4 )
+    {
+		flimage_error( im, "Failure to read TIFF file" );
+		fl_free( sp );
+		im->io_spec = NULL;
+		im->spec_size = 0;
+		return -1;
+    }
+
     sp->endian = buf[ 0 ] == 'M' ? MSBFirst : LSBFirst;
 
     initialize_tiff_io( sp, sp->endian );
@@ -141,13 +151,21 @@ TIFF_description( FL_IMAGE * im )
     if ( ! sp->ifd_offset )
     {
 		flimage_error( im, "Invalid TIFF: no IFD" );
+		fl_free( sp );
+		im->io_spec = NULL;
+		im->spec_size = 0;
 		return -1;
     }
 
     read_tiff_ifd( fp, sp );
 
     if ( get_image_info_from_ifd( im ) < 0 )
+	{
+		fl_free( sp );
+		im->io_spec = NULL;
+		im->spec_size = 0;
 		return -1;
+	}
 
     return 0;
 }
@@ -235,6 +253,7 @@ TIFF_write( FL_IMAGE * image )
     int err,
 		t;
     SPEC *sp;
+	size_t dummy;
 
     /* we do not touch im->io_spec. Use this local copy */
 
@@ -254,7 +273,7 @@ TIFF_write( FL_IMAGE * image )
 
     initialize_tiff_io( sp, sp->endian );
 
-    fwrite( sp->endian == LSBFirst ? "II" : "MM", 1, 2, fp );
+    dummy = fwrite( sp->endian == LSBFirst ? "II" : "MM", 1, 2, fp );
     sp->write2bytes( 42, fp );
     sp->next_pos = 4;
     sp->max_tags = 15;

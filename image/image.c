@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image.c,v 1.12 2008/04/29 21:36:04 jtt Exp $
+ * $Id: image.c,v 1.13 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -1675,8 +1675,10 @@ read_marker( FLIMAGE_MARKER * m,
 		bg,
 		bb;
 
-    fgets( buf, sizeof buf - 1, fp );
-    buf[ sizeof buf - 1 ] = '\0';
+    if ( fgets( buf, sizeof buf - 1, fp ) )
+		buf[ sizeof buf - 1 ] = '\0';
+	else
+		return -1;
 
     n = sscanf( buf, "%s %d %d %d %d %d %d %d %d %d %d %d %d %d %d", name,
 				&m->x, &m->y, &m->w, &m->h, &m->fill, &m->angle, &m->thickness,
@@ -1812,8 +1814,10 @@ read_text( FLIMAGE_TEXT * t,
 		 *s = name,
 		 *ss = name + sizeof name - 1;
 
-    fgets( buf, sizeof buf - 1, fp );
-    buf[ sizeof buf - 1 ] = '\0';
+    if ( fgets( buf, sizeof buf - 1, fp ) )
+		buf[ sizeof buf - 1 ] = '\0';
+	else
+		buf[ 0 ] = '\0';
 
     for ( ; s < ss && *p && ( *p != ')' || *( p - 1 ) == '\\' ); p++ )
 		*s++ = *p;
@@ -1924,15 +1928,19 @@ flimage_read_annotation( FL_IMAGE * im )
 
     fp = im->fpin;
 
-    /* load the markers */
+    /* Load the markers */
 
-    for ( done = 0; ! done; )
+    for ( done = 0; ! done; /* empty */ )
     {
 		while ( ( c = getc( fp ) ) != EOF && c != '#' )
 			/* empty */ ;
 		done = c == EOF;
-		fgets( buf, sizeof buf - 1, fp );
-		buf[ sizeof buf - 1 ] = '\0';
+
+		if ( fgets( buf, sizeof buf - 1, fp ) )
+			buf[ sizeof buf - 1 ] = '\0';
+		else
+			buf[ 0 ] = '\0';
+
 		if ( strstr( buf, "#marker" ) )
 		{
 			sscanf( buf, "%*s %d %d", &nmarkers, &v );

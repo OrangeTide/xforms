@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_xwd.c,v 1.8 2008/09/22 22:31:27 jtt Exp $
+ * $Id: image_xwd.c,v 1.9 2008/11/11 01:54:13 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -151,7 +151,8 @@ XWD_identify( FILE * fp )
 {
     XWDFileHeader h;
 
-    fread( &h, 1, sizeof h, fp );
+    if ( fread( &h, 1, sizeof h, fp ) != sizeof h )
+		return 0;
     rewind( fp );
 
     need_swap = ( h.file_version != XWD_FILE_VERSION );
@@ -216,7 +217,8 @@ XWD_description( FL_IMAGE * im )
     im->io_spec = sp;
     im->spec_size = sizeof *sp;
 
-    fread( header, 1, sizeof *header, fp );
+    if ( fread( header, 1, sizeof *header, fp ) != sizeof *header )
+		M_err( "ImageXWD", "failure to read from file" );
 
     if ( ( sp->swap = need_swap ) )
 		swap_header( header );
@@ -332,8 +334,9 @@ XWD_read_pixels( FL_IMAGE * im )
     {
 		XWDColor *xwdcolor = fl_malloc( h->ncolors * sizeof *xwdcolor );
 
-		fread( xwdcolor, sizeof *xwdcolor, h->ncolors, fp );
-		if ( h->visual_class != TrueColor && h->visual_class != DirectColor )
+		if (    fread( xwdcolor, sizeof *xwdcolor, h->ncolors, fp )
+				                                                 == h->ncolors
+			 && h->visual_class != TrueColor && h->visual_class != DirectColor )
 		{
 			for ( i = 0; i < ( int ) h->ncolors; i++ )
 			{
@@ -462,7 +465,7 @@ XWD_read_pixels( FL_IMAGE * im )
 					for ( x = 0; x < im->w; x++ )
 						im->ci[ y ][ x ] = get16( fp );
 
-					for (n = im->w * 2; x < ( int ) h->bytes_per_line; x++ )
+					for ( n = im->w * 2; x < ( int ) h->bytes_per_line; x++ )
 						getc( fp );
 
 					err = feof( fp ) || ferror( fp );
@@ -474,7 +477,14 @@ XWD_read_pixels( FL_IMAGE * im )
 			uc = fl_malloc( h->bytes_per_line );
 			for ( y = 0; y < im->h; y++ )
 			{
-				fread( uc, 1, h->bytes_per_line, fp );
+				if ( fread( uc, 1, h->bytes_per_line, fp )
+					                                     != h->bytes_per_line )
+				{
+					M_err( "LoadXWD", "failure to read from file" );
+					err = 1;
+					break;
+				}
+
 				fl_unpack_bits( im->ci[y], uc, h->bytes_per_line );
 			}
 			fl_free( uc );
@@ -528,6 +538,7 @@ XWD_write_image( FL_IMAGE * im )
 		( * write16 )( int, FILE * );
     unsigned char *uc;
     static int machine_endian = -1;
+	size_t dummy;
 
     if ( machine_endian < 0 )
 		machine_endian = detect_endian( );
@@ -615,7 +626,7 @@ XWD_write_image( FL_IMAGE * im )
     for ( n = 0; ( size_t ) n < sizeof *h / sizeof h->file_version; n++, c32++ )
 		write32( *c32, fp );
 
-    fwrite( im->outfile, 1, strlen( im->outfile ) + 1, fp );
+    dummy = fwrite( im->outfile, 1, strlen( im->outfile ) + 1, fp );
 
     if ( h->ncolors )
     {
@@ -663,7 +674,7 @@ XWD_write_image( FL_IMAGE * im )
 		{
 			for ( x = 0; x < im->w; x++ )
 				uc[ x ] = im->ci[ y ][ x ];
-			fwrite( uc, 1, h->bytes_per_line, fp );
+			dummy = fwrite( uc, 1, h->bytes_per_line, fp );
 		}
 
 		fl_free( uc );
@@ -681,7 +692,7 @@ XWD_write_image( FL_IMAGE * im )
 		for ( y = 0; y < im->h; y++ )
 		{
 			fl_pack_bits( uc, im->ci[ y ], im->w );
-			fwrite( uc, 1, h->bytes_per_line, fp );
+			dummy = fwrite( uc, 1, h->bytes_per_line, fp );
 		}
 
 		fl_free( uc );

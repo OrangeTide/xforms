@@ -21,7 +21,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.10 2008/09/24 18:31:57 jtt Exp $
+ * $Id: image_jpeg.c,v 1.11 2008/11/11 01:54:12 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -89,12 +89,12 @@ static unsigned int jpeg_getc( j_decompress_ptr cinfo );
 static int
 JPEG_identify( FILE * fp )
 {
-    unsigned char buf[ 128 ];
+    unsigned char buf[ 129 ];
     size_t i;
 
-    fread( buf, 1, sizeof buf, fp );
+    i = fread( buf, 1, sizeof buf - 1, fp );
     rewind( fp );
-    buf[ sizeof buf - 1 ] = '\0';
+    buf[ i ] = '\0';
 
     /* Clive Stubbings.
      * Test for a JPEG SOI code (0xff, 0xd8) followed by the start of
