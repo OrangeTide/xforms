@@ -99,7 +99,7 @@ fli_get_hv_align( int   align,
 			break;
 
 		default:
-			M_err( "fli_get_hv_align", "bad request: %d\n", align );
+			M_err( "fli_get_hv_align", "Bad request: %d\n", align );
 			*halign = FL_ALIGN_CENTER;
 			*valign = FL_ALIGN_CENTER;
 			break;
@@ -142,7 +142,6 @@ fli_get_outside_align( int   align,
 			*new_align = FL_ALIGN_BOTTOM;
 			*newy = y - h;
 			break;
-
 
 		case FL_ALIGN_BOTTOM:
 			*new_align = FL_ALIGN_TOP;

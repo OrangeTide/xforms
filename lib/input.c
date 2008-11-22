@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_inp = "$Id: input.c,v 1.22 2008/11/11 01:54:13 jtt Exp $";
+char *fl_id_inp = "$Id: input.c,v 1.23 2008/11/22 18:44:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -452,9 +452,10 @@ handle_select( FL_Coord    mx,
     }
     else if ( what == LINE_SELECT )
     {
-		for ( n = thepos; sp->str[n] && sp->str[n] != '\n'; n++ )
+		for ( n = thepos; sp->str[ n ] && sp->str[ n ] != '\n'; n++ )
 			/* empty */ ;
 		sp->endrange = n;
+
 		for ( n = thepos; n >= 0 && sp->str[ n ] != '\n'; n-- )
 			/* empty */ ;
 		sp->beginrange = n + 1;

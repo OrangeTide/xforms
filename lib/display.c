@@ -57,12 +57,15 @@ fli_rgbmask_to_shifts( unsigned long   mask,
 		return;
     }
 
-    for ( *shift = 0; ! ( ( 1 << *shift ) & mask ); )
+	*shift = 0;
+    while ( ! ( ( 1 << *shift ) & mask ) )
 		( *shift )++;
 
     val = mask >> *shift;
-    for ( *bits = 0; ( 1 << *bits ) & val; ( *bits )++ )
-		/* empty */ ;
+
+	*bits = 0;
+    while ( ( 1 << *bits ) & val )
+		( *bits )++;
 }
 
 

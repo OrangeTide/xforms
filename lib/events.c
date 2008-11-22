@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.24 2008/07/02 18:51:41 jtt Exp $";
+char *fl_id_evt = "$Id: events.c,v 1.25 2008/11/22 18:44:55 jtt Exp $";
 #endif
 
 
@@ -63,10 +63,10 @@ int
 fli_handle_event_callbacks( XEvent * xev )
 {
     Window win = ( ( XAnyEvent * ) xev )->window;
-    FLI_WIN *fwin;
+    FLI_WIN *fwin = fli_app_win;
 
-    for ( fwin = fli_app_win; fwin && fwin->win != win; fwin = fwin->next )
-		/* empty */ ;
+    while ( fwin && fwin->win != win )
+		fwin = fwin->next;
 
     if ( ! fwin )
     {

@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.15 2008/09/24 18:31:58 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.16 2008/11/22 18:44:55 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1
@@ -466,7 +466,7 @@ fl_create_dial( int          type,
 
 
 /*************************************** 
- * Adds an object
+ * Add an object
 ***************************************/
 
 FL_OBJECT *

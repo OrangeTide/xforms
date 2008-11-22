@@ -37,7 +37,7 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 long        data  FL_UNUSED_ARG )
 {
 	fl_finish( );
-    exit(0);
+    exit( 0 );
 }
 
 
@@ -61,11 +61,8 @@ void
 reshow_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
 {
-	fprintf( stderr, "hiding: %d %d\n", ob->form->x, ob->form->y );
 	fl_hide_form( ob->form );
-	fprintf( stderr, "hidden: %d %d\n", ob->form->x, ob->form->y );
 	fl_show_form( ob->form, FL_PLACE_POSITION, FL_FULLBORDER, "formbrowser" );
-	fprintf( stderr, "shown: %d %d\n", ob->form->x, ob->form->y );
 }
 
 
@@ -135,7 +132,7 @@ int main( int    argc,
 		float xx[ 5 ] = { 1, 2, 3, 4, 5 };
 		float yy[ 5 ] = { 1, 2, 3, 4, 5 };
 
-		fl_set_xyplot_data( fd_big->xyplot, xx, yy,5, "title", "x", "y" );
+		fl_set_xyplot_data( fd_big->xyplot, xx, yy, 5, "title", "x", "y" );
 	}
 
 	/* fill-in form initialization code */
@@ -154,13 +151,7 @@ int main( int    argc,
 	fl_show_form( fd_mainform->mainform,
 				  FL_PLACE_CENTERFREE, FL_FULLBORDER, "buttonform" );
 
-	fprintf( stderr, "first shown: %d %d\n", fd_mainform->mainform->x,
-			 fd_mainform->mainform->y );
-
 	fl_do_forms( );
-
-//	while ( fl_do_forms( ) )
-//		/* empty */ ;
 
 	return 0;
 }

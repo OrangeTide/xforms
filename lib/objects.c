@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.44 2008/11/04 01:08:46 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.45 2008/11/22 18:44:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -323,8 +323,8 @@ fl_add_object( FL_FORM   * form,
 
 		obj->group_id = fli_current_group->group_id;
 
-		for ( ; end && end->objclass != FL_END_GROUP; end = end->next )
-			/* empty */ ;
+		while ( end && end->objclass != FL_END_GROUP )
+			end = end->next;
 
 		/* If 'end' exists must've opened the group with fl_addto_group */
 

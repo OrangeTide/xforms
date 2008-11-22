@@ -1,16 +1,24 @@
+2008-11-22 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/appwin.c, lib/events.c: Small changes to clean
+	up a few things that did look a it confusing.
+
+	* demos/colbrowser.c: Small bug fixed in showing name
+	of RG database.
+
 2008-11-11 Jens Thoms Toerring    <jt@toerring.de>
 
 	Cosmetic chnages to a numbr od files to pacify the
 	newest gcc/libc combination about issues with disre-
-	garded return values of standard input/ouput func-
+	garded return values of standard input/output func-
 	tions (fgets(), fread(), fwrite(), sscanf() etc.)
 
 2008-11-10 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/textbox.c: Another bug Rob Carpenter found: when
-	trying to scroll in an empty browser the library crashed
-	with a segmentation fault due to a miscalculated number
-	of the topmost line of text.
+	trying to scroll in an empty browser the program crashed
+	with a segmentation fault due to miscalculation of the
+	number of the topmost line of text.
 
 2008-11-04 Jens Thoms Toerring    <jt@toerring.de>
 

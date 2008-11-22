@@ -66,7 +66,7 @@ typedef struct { int r,
 	                 b;
 } RGBdb;
 
-static RGBdb rgbdb [MAX_RGB ];
+static RGBdb rgbdb[ MAX_RGB ];
 
 
 /***************************************
@@ -76,7 +76,6 @@ int
 main( int    argc,
 	  char * argv[ ] )
 {
-
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
     create_form_cl( );
@@ -84,20 +83,14 @@ main( int    argc,
 
     if ( load_browser( dbname ) )
 		fl_set_object_label( dbobj, dbname );
-    else
-	{
-		if ( load_browser( "/usr/share/X11/rgb.txt" ) )
-			fl_set_object_label( dbobj, dbname );
-		else
-			fl_set_object_label( dbobj, "None" );
-	}
+	else
+		fl_set_object_label( dbobj, "None" );
 
     fl_set_form_minsize( cl, cl->w , cl->h );
     fl_set_form_maxsize( cl, 2 * cl->w , 2 * cl->h );
     fl_show_form( cl, FL_PLACE_FREE, FL_TRANSIENT, "RGB Browser" );
 
-    while ( fl_do_forms( ) )
-		/* empty */ ;
+	fl_do_forms( );
 
     return 0;
 }
@@ -202,7 +195,7 @@ load_browser( char * fname )
     if ( ! ( fp = fopen( fname, "r" ) ) )
 #endif
     {
-		fl_show_alert( "Load", fname, "Can't open", 0 );
+		fl_show_alert( "Load", fname, "Can't open database file", 0 );
 		return 0;
     }
 
@@ -243,6 +236,7 @@ load_browser( char * fname )
     fl_select_browser_line( colbr, 1 );
     set_entry( 0 );
     fl_unfreeze_form( cl );
+
     return 1;
 }
 
@@ -332,7 +326,7 @@ static void
 db_cb( FL_OBJECT * ob,
 	   long        q   FL_UNUSED_ARG )
 {
-    const char *p = fl_show_input( "Enter New Database Name", dbname );
+    const char *p = fl_show_input( "Enter new database name", dbname );
     char buf[ 512 ];
 
     if ( ! p || strcmp( p, dbname ) == 0 )
@@ -340,9 +334,10 @@ db_cb( FL_OBJECT * ob,
 
     strcpy( buf, p );
     if ( load_browser( buf ) )
+	{
 		strcpy( dbname, buf );
-    else
 		fl_set_object_label( ob, dbname );
+	}
 }
 
 
@@ -393,7 +388,7 @@ create_form_cl( void )
     rescol = obj = fl_add_box( FL_FLAT_BOX, 225, 90, 90, 35, "" );
     fl_set_object_color( obj, FL_FREE_COL4, FL_FREE_COL4 );
     fl_set_object_boxtype( obj, FL_BORDER_BOX );
-	fl_set_object_resize( obj, FL_RESIZE_Y );
+	fl_set_object_resize( obj, FL_RESIZE_NONE );
 	fl_set_object_gravity( obj, FL_NorthEast, FL_East );
 
     rs = obj = fl_add_valslider( FL_VERT_FILL_SLIDER, 225, 130, 30, 200, "" );
@@ -403,7 +398,7 @@ create_form_cl( void )
     fl_set_object_callback( obj, search_rgb, 0 );
     fl_set_slider_return( obj, 0 );
 	fl_set_object_resize( obj, FL_RESIZE_Y );
-	fl_set_object_gravity( obj, FL_East, FL_SouthEast );
+	fl_set_object_gravity( obj, FL_NorthEast, FL_SouthEast );
 	fl_set_object_return( obj, FL_RETURN_CHANGED );
 
     gs = obj = fl_add_valslider( FL_VERT_FILL_SLIDER, 255, 130, 30, 200, "" );
@@ -413,7 +408,7 @@ create_form_cl( void )
     fl_set_object_callback( obj, search_rgb, 1 );
     fl_set_slider_return( obj, 0 );
 	fl_set_object_resize( obj, FL_RESIZE_Y );
-	fl_set_object_gravity( obj, FL_East, FL_SouthEast );
+	fl_set_object_gravity( obj, FL_NorthEast, FL_SouthEast );
 	fl_set_object_return( obj, FL_RETURN_CHANGED );
 
     bs = obj = fl_add_valslider( FL_VERT_FILL_SLIDER, 285, 130, 30, 200, "" );
@@ -423,7 +418,7 @@ create_form_cl( void )
     fl_set_object_callback( obj, search_rgb, 2 );
     fl_set_slider_return( obj, 0 );
 	fl_set_object_resize( obj, FL_RESIZE_Y );
-	fl_set_object_gravity( obj, FL_East, FL_SouthEast );
+	fl_set_object_gravity( obj, FL_NorthEast, FL_SouthEast );
 	fl_set_object_return( obj, FL_RETURN_CHANGED );
 
     colbr = obj = fl_add_browser( FL_HOLD_BROWSER, 10, 90, 205, 240, "" );

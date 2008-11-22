@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cur = "$Id: cursor.c,v 1.7 2008/01/28 23:17:46 jtt Exp $";
+char *fl_id_cur = "$Id: cursor.c,v 1.8 2008/11/22 18:44:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -99,11 +99,11 @@ static CurStruct *
 add_cursor( int    name,
 			Cursor cur )
 {
-    CurStruct *c;
+    CurStruct *c = cursors;
     static int warned;
 
-    for ( c = cursors; c->name && c->name != name; c++ )
-		/* empty */ ;
+    while ( c->name && c->name != name )
+		c++;
 
     if ( c < cursors + MAX_CURSORS )
     {

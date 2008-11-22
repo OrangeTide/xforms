@@ -36,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.17 2008/10/20 11:00:46 jtt Exp $";
+char *fl_id_xsupt = "$Id: win.c,v 1.18 2008/11/22 18:44:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -639,7 +639,7 @@ fli_create_window( Window       parent,
 		 && ( st_xsh.flags & fli_wmstuff.pos_request)
 			                                        == fli_wmstuff.pos_request )
     {
-		/* turning this on will make the window truely unmananged, might have
+		/* Turning this on will make the window truely unmananged, might have
 		   problems with the input focus and colormaps */
 
 		st_xswa.override_redirect = True;

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG 
-char *fl_id_evt = "$Id: appwin.c,v 1.12 2008/05/09 12:33:00 jtt Exp $";
+char *fl_id_evt = "$Id: appwin.c,v 1.13 2008/11/22 18:44:54 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -66,35 +66,38 @@ handle_mapping_notify( XEvent * xev,
 static void
 remove_app_win( FLI_WIN * appwin )
 {
-    FLI_WIN *fwin;
-
 #if FL_DEBUG >= ML_DEBUG
-    M_info( "RemoveAppwin", "deleting 0x%lx", appwin->win );
+    M_info( "remove_app_win", "deleting 0x%lx", appwin->win );
 #endif
 
     if ( fli_app_win == appwin )
 		fli_app_win = appwin->next;
     else
     {
-		for ( fwin = fli_app_win; fwin && fwin->next != appwin;
-			  fwin = fwin->next )
-			/* empty */ ;
+		FLI_WIN *fwin = fli_app_win;
+
+		while ( fwin && fwin->next != appwin )
+			fwin = fwin->next;
 
 		if ( fwin )
 			fwin->next = fwin->next->next;
+		else
+		{
+			M_err( "remove_app_win", "Invalid argument" );
+			return;
+		}
     }
 
-    appwin->win = 0;
     fl_free( appwin );
 }
 
 
 /***************************************
- * given a window, find the correct structure, create if necessary
+ * Given a window find the correct structure or create one
  ***************************************/
 
 static FLI_WIN *
-find_fl_win_struct( Window win )
+get_fl_win_struct( Window win )
 {
     FLI_WIN *fwin = fli_app_win,
 		    *lwin = fli_app_win;
@@ -103,16 +106,16 @@ find_fl_win_struct( Window win )
     for ( ; fwin && fwin->win != win; lwin = fwin, fwin = fwin->next )
 		/* empty */ ;
 
-	/* if we found it we're done */
+	/* If we found it we're done */
 
     if ( fwin )
 		return fwin;
 
 #if FL_DEBUG >= ML_DEBUG
-	M_info( "AppwinFind", "Creating for 0x%lx", win );
+	M_info( "get_fl_win_struct", "Creating FLI_WIN struct for 0x%lx", win );
 #endif
 
-	/* otherwise create a new structure and append it to the end */
+	/* Otherwise create a new structure and append it to the end */
 
 	if ( ( fwin = fl_malloc( sizeof *fwin ) ) == NULL )
 		return NULL;
@@ -127,7 +130,7 @@ find_fl_win_struct( Window win )
 		fwin->user_data[ i ] = NULL;
 	}
 
-	/* default handlers */
+	/* Default handlers */
 
 	fwin->callback[ MappingNotify ] = handle_mapping_notify;
 
@@ -154,8 +157,11 @@ fli_set_preemptive_callback( Window           win,
     FLI_WIN *fwin;
     FL_APPEVENT_CB old = NULL;
 
-    if ( ! ( fwin = find_fl_win_struct( win ) ) )
+    if ( ! ( fwin = get_fl_win_struct( win ) ) )
+	{
+        M_err( "fli_set_preemptive_callback", "Memory allocation failure" );
 		return NULL;
+	}
 
     old = fwin->pre_emptive;
     fwin->pre_emptive = pcb;
@@ -166,7 +172,7 @@ fli_set_preemptive_callback( Window           win,
 
 
 /***************************************
- * add an event handler for window
+ * Add an event handler for a window
  ***************************************/
 
 FL_APPEVENT_CB
@@ -183,11 +189,11 @@ fl_add_event_callback( Window           win,
     if ( ev < 0 || ev >= LASTEvent )
 		return NULL;
 
-    if ( ! ( fwin = find_fl_win_struct( win ) ) )
-    {
-		M_err( "AddEventCallback", "Bad Window x%lx", win );
+    if ( ! ( fwin = get_fl_win_struct( win ) ) )
+	{
+        M_err( "fl_add_event_callback", "Memory allocation failure" );
 		return NULL;
-    }
+	}
 
     /* ev < KeyPress means all events */
 
@@ -210,18 +216,24 @@ fl_add_event_callback( Window           win,
 
 
 /***************************************
+ * Removes one or all event callbacks for a window. May be
+ * called with for a window for which no event callbacks
+ * have been set, so handle also that case gracefully.
  ***************************************/
 
 void
 fl_remove_event_callback( Window win,
 						  int    ev )
 {
-    FLI_WIN *fwin;
+    FLI_WIN *fwin = fli_app_win;
 
     if ( ev < 0 || ev >= LASTEvent )
 		return;
 
-    if ( ! ( fwin = find_fl_win_struct( win ) ) )
+	while ( fwin && fwin->win != win )
+		fwin = fwin->next;
+
+    if ( ! fwin )
 		return;
 
     if ( ev >= KeyPress )
@@ -229,11 +241,8 @@ fl_remove_event_callback( Window win,
 		fwin->callback[ ev ] = NULL;
 		fwin->user_data[ ev ] = NULL;
     }
-    else
-    {
-		fwin->win = None;		/* window deactivated */
+    else                         /* ev < KeyPress means all events */
 		remove_app_win( fwin );
-    }
 }
 
 
@@ -278,7 +287,7 @@ static EMS ems[ ] =
  /* non-maskable events */
     { MappingNotify,    0 },
     { SelectionNotify,  0 },
-    { SelectionRequest, 0},
+    { SelectionRequest, 0 },
     { SelectionClear,   0 },
     { ClientMessage,    0 },
     { GraphicsExpose,   0 },
@@ -313,16 +322,16 @@ fl_activate_event_callbacks( Window win )
     int i;
     unsigned long mask;
 
-    for ( ; fwin && fwin->win != win; fwin = fwin->next )
-		/* empty */ ;
+    while ( fwin && fwin->win != win )
+		fwin = fwin->next;
 
     if ( ! fwin )
     {
-		M_err( "ActiveEventCB", "Unknown window 0x%lx", win );
+		M_err( "fl_activate_event_callbacks", "Unknown window 0x%lx", win );
 		return;
     }
 
-    /* solicit all registered events */
+    /* Solicit all registered events */
 
     for ( mask = i = 0; i < LASTEvent; i++ )
 		if ( fwin->callback[ i ] )

@@ -115,8 +115,8 @@ fl_add_signal_callback( int                 s,
     if ( ! fli_handle_signal )
 		fli_handle_signal = handle_signal;
 
-    for ( ; rec && rec->signum != s; rec = rec->next )
-		/* empty */ ;
+    while ( rec && rec->signum != s )
+		rec = rec->next;
 
     if ( rec )
     {

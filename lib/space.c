@@ -33,7 +33,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_OK
-static char *id_space = "$Id: space.c,v 1.7 2008/05/05 14:21:54 jtt Exp $";
+static char *id_space = "$Id: space.c,v 1.8 2008/11/22 18:44:55 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -47,9 +47,6 @@ static char *id_space = "$Id: space.c,v 1.7 2008/05/05 14:21:54 jtt Exp $";
 #include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
-
-
-static int es = '\\';     /* escape character */
 
 
 /***************************************
@@ -87,7 +84,7 @@ fli_space_de( char * s )
 
     /* maybe replace \ with space ? */
 
-    for ( q--; p >= s && isspace( ( int ) *p ) && ( q < s || *q != es );
+    for ( q--; p >= s && isspace( ( int ) *p ) && ( q < s || *q != '\\' );
 		  p--,q-- )
         /* empty */ ;
 
@@ -144,6 +141,7 @@ fli_nuke_all_non_alnum( char * s )
         if ( isalnum( ( int ) *p ) )
 			*b++ = *p;
     *b = '\0';
+
     return strcpy( s, buf );
 }
 
@@ -154,7 +152,7 @@ int main( void )
     char buf[ 100 ],
 		 *p;
 
-    while ( fgets( buf, 100, stdin ) )
+    while ( fgets( buf, sizeof buf, stdin ) )
 	{
 		buf[ 99 ] = '\0';
 		if ( ( p = strchr( buf,'\n' ) ) )
