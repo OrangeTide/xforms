@@ -1,5 +1,8 @@
 2008-12-01 Jens Thoms Toerring    <jt@toerring.de>
 
+	* doc: New dirctory with first parts of rewrite of docu-
+	mentation in texi format.
+
 	* lib/counter.c: Rob Carpenter noticed that it sometimes
 	can be difficult to use a counter to just change it by a
 	single step. Thus, according to his suggstions, the first

@@ -1,0 +1,48 @@
+\input texinfo
+
+@setfilename xforms.info
+@settitle xforms
+
+
+@node XForms, , (dir), (dir)
+@top XForms
+
+
+@ifnottex
+
+@menu
+* Introduction::         Part I: Introduction
+* Getting Started::      Part I: Getting Started
+* Defining Forms::       Part I: Defining Forms
+* Doing Interaction::    Part I: Doing Interaction
+* Free Objects::         Part I: Free Objects
+* Goodies::              Part I: Goodies
+* Introduction::         Part II: Introduction
+* Function Index::       Function Index
+* Constants Index::      Constants Index
+@end menu
+
+@end ifnottex
+
+@contents
+
+@include part1_introduction.texi
+@include part1_getting_started.texi
+@include part1_defining_forms.texi
+@include part1_doing_interaction.texi
+@include part1_free_objects.texi
+@include part1_goodies.texi
+
+@include part2_introduction.texi
+
+@node Function Index
+@unnumbered Function Index
+
+@printindex fn
+
+@node Constants Index
+@unnumbered Constants Index
+
+@printindex tp
+
+@bye
