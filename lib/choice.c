@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.18 2008/05/09 12:33:00 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.19 2008/12/01 22:53:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -339,6 +339,15 @@ handle_choice( FL_OBJECT * ob,
 			break;
 
 		case FL_PUSH:
+			if ( key == FL_MBUTTON2 || key == FL_MBUTTON3 )
+			{
+				sp->counter = 0;
+				val = set_next_entry( sp, key == FL_MBUTTON3 ? 1 : -1 );
+				sp->pushed = 0;
+				fl_redraw_object( ob );
+				return val > 0;
+			}
+
 			if ( key != FL_MBUTTON1 || sp->numitems == 0 )
 				break;
 

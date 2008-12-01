@@ -59,6 +59,7 @@ main( int    argc,
 	  char * argv[ ] )
 {
 	fl_initialize( &argc, argv, 0, 0, 0 );
+
 	fd_pupform = create_form_pupform( );
 
 	/* fill-in form initialization code */

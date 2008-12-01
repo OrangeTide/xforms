@@ -139,6 +139,34 @@ Finally
 allows to query if a form's (visible) window is in iconified state.
 
 
+Handling of counter objects has been changed. Before counters
+changed values with a constant (normally rather fast) repeat rate.
+This lead to some problems when one wanted to only change a
+counters value by a single step. Now the default is that the
+first step takes a longer time and the times betwen following
+steps get shorter and shorter until a minumum delay is reached.
+The function fl_set_counter_repeat(), that previously allowed
+to set the delay between steps now conrols the delay for the
+first step. The final, short delay between step can be set and
+queried by the functions
+
+void fl_set_counter_min_repeat( FL_OBJECT * ob, int millisec );
+int fl_get_counter_min_repeat( FL_OBJECT * ob );
+
+In case the old behaviour is desired speed up can be controlled
+(and it's state asked for) via the functions
+
+void fl_set_counter_speedup( FL_OBJECT * ob, int speedup );
+int fl_get_counter_speedup( FL_OBJECT * ob );
+
+accepting or returning a boolean value. For the old behaviour
+both the initial as well as the final repat time have to be set
+to the same value (whic used to be 100 ms). If speed up is switched
+off and the initial repeat value is larger than the final one
+the first step takes as long s the initial value and all following
+steps as long as the minimum repeat time.
+
+
 Changes in Menu handling
 ------------------------
 

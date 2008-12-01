@@ -129,4 +129,23 @@ FL_EXPORT void fl_set_counter_repeat(
 		int			millisec
 		);
 
+FL_EXPORT int fl_get_counter_min_repeat(
+		FL_OBJECT * ob
+		);
+
+FL_EXPORT void fl_set_counter_min_repeat(
+		FL_OBJECT * ob,
+		int         millisec
+		);
+
+FL_EXPORT int fl_get_counter_speedup(
+		FL_OBJECT * ob
+		);
+
+FL_EXPORT void fl_set_counter_sppedup(
+		FL_OBJECT * ob,
+		int         speedup
+		);
+
+
 #endif /* ! defined FL_COUNTER_H */

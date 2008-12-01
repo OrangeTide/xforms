@@ -64,7 +64,7 @@ create_form( void )
 
    fl_add_input( FL_NORMAL_INPUT, 70, 180, 320, 30, "Country" );
 
-   sexobj = fl_add_choice( FL_NORMAL_CHOICE , 70, 130, 110, 30, "Sex");
+   sexobj = fl_add_choice( FL_NORMAL_CHOICE, 70, 130, 110, 30, "Sex");
    fl_set_choice_notitle( sexobj, 1 );
 
    childobj = fl_add_choice( FL_NORMAL_CHOICE2, 280, 130, 110, 30, "Children" );
@@ -72,12 +72,10 @@ create_form( void )
    licenceobj = fl_add_choice( FL_NORMAL_CHOICE, 280, 80, 110, 30, "Licence" );
 
    marriedobj = fl_add_choice( FL_DROPLIST_CHOICE, 70, 80, 110, 27, "Married" );
-
    fl_set_object_callback( marriedobj, cb, 0 );
-
    fl_set_object_boxtype( marriedobj, FL_UP_BOX );
 
-   readyobj = fl_add_button( FL_NORMAL_BUTTON, 150, 20, 140, 30, "Ready" );
+   readyobj = fl_add_button( FL_NORMAL_BUTTON, 150, 20, 140, 30, "Quit" );
 
    fl_end_form( );
 }

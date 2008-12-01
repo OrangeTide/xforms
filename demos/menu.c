@@ -37,8 +37,9 @@
 
 extern FL_FORM *create_form(void);
 
-FL_OBJECT *menu[4], *abox[4];
-int set[4];
+FL_OBJECT *menu[ 4 ],
+          *abox[ 4 ];
+int set[ 4 ];
 
 /***************************************
  ***************************************/

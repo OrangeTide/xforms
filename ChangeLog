@@ -1,14 +1,39 @@
+2008-12-01 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/counter.c: Rob Carpenter noticed that it sometimes
+	can be difficult to use a counter to just change it by a
+	single step. Thus, according to his suggstions, the first
+	step now takes longer and the time between following
+	steps gets smaller and smaller until a final minimum
+	timeout is reached (initial timeout is 600 ms and final
+	is 50 ms per default). The fl_get_counter_repeat() and
+	fl_set_counter_repeat() are now for the initial timeout
+	and the final timeout can be controlled vianew functions
+	fl_set_counter_min_repeat()/fl_get_counter_min_repeat().
+	To switch back to the old behaviour use the functions
+	fl_set_counter_speedup()/fl_get_counter_speedup() and
+	set the initial and final rate to the same value. If
+	speed-up is switched off but initial and final timeouts
+	differ the initial timeout is used for the first step and
+	the final timeout for all following steps.
+
+	* lib/choice.c: Choices didn't react immediately to a click
+	with the middle or left mouse button. Now the selected entry
+	will change immediately and continue to change slowly when
+	the mouse button is kept pressed down.
+
+	* fdesign/fd_forms.c: Rob Carpenter found that while loading
+	a .fd file a spurious "Failure to read file" warning gets
+	emitted.
+
 2008-11-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/appwin.c, lib/events.c: Small changes to clean
-	up a few things that did look a it confusing.
-
-	* demos/colbrowser.c: Small bug fixed in showing name
-	of RG database.
+	up a few things that did look a bit confusing.
 
 2008-11-11 Jens Thoms Toerring    <jt@toerring.de>
 
-	Cosmetic chnages to a numbr od files to pacify the
+	Cosmetic changes to a numbr of files to pacify the
 	newest gcc/libc combination about issues with disre-
 	garded return values of standard input/output func-
 	tions (fgets(), fread(), fwrite(), sscanf() etc.)

@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.13 2008/05/05 14:21:51 jtt Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.14 2008/12/01 22:53:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -48,12 +48,11 @@ char *fl_id_cntr = "$Id: counter.c,v 1.13 2008/05/05 14:21:51 jtt Exp $";
 #include <stdlib.h>
 
 
-/* Give each component a name. parts are numbered 01 4 23, i.e.
-   OB0 is the button for reducing the counter value in large steps,
-   OB1 the one for reducing the value in small steps, OB2 the one
-   for increasing the value in small steps, OB3 the one for increasing
-   the value in large steps and finally OB4 the field with the counters
-   value. */
+/* Give each component a name. parts are numbered 01 4 23, i.e. OB0 is the
+   button for reducing the counter value in large steps, OB1 the one for
+   reducing the value in small steps, OB2 the one for increasing the value in
+   small steps, OB3 the one for increasing the value in large steps and
+   finally OB4 the field with the counters value. */
 
 enum {
     NONE,
@@ -96,7 +95,7 @@ draw_counter( FL_OBJECT * ob )
 
     if ( ob->type == FL_NORMAL_COUNTER )
     {
-		/* button is numbered 01 4 23 */
+		/* Button is numbered 01 4 23 */
 
 		sp->ww[ 0 ] = sp->ww[ 1 ] = sp->ww[ 2 ] = sp->ww[ 3 ] =
 												 FL_min( 0.18 * ob->w, ob->h );
@@ -222,7 +221,7 @@ calc_mouse_obj( FL_OBJECT * ob,
 
 int fl_get_counter_repeat( FL_OBJECT * ob )
 {
-    return ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms;
+	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms;
 }
 
 
@@ -232,7 +231,57 @@ int fl_get_counter_repeat( FL_OBJECT * ob )
 void fl_set_counter_repeat( FL_OBJECT * ob,
 							int         millisec )
 {
-    ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms = millisec;
+	if ( millisec <= 0 )
+	{
+		M_warn( "fl_set_counter_repeat", "Invalid argument, disregarded" );
+		return;
+	}
+
+	( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms = millisec;
+}
+
+
+/***************************************
+ ***************************************/
+
+int fl_get_counter_min_repeat( FL_OBJECT * ob )
+{
+	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->min_repeat_ms;
+}
+
+
+/***************************************
+ ***************************************/
+
+void fl_set_counter_min_repeat( FL_OBJECT * ob,
+								int         millisec )
+{
+	if ( millisec <= 0 )
+	{
+		M_warn( "fl_set_counter_min_repeat", "Invalid argument, disregarded" );
+		return;
+	}
+
+	( ( FLI_COUNTER_SPEC * ) ob->spec )->min_repeat_ms = millisec;
+}
+
+
+/***************************************
+ ***************************************/
+
+int fl_get_counter_speedup( FL_OBJECT * ob )
+{
+	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speed_up;
+}
+
+
+/***************************************
+ ***************************************/
+
+void fl_set_counter_speedup( FL_OBJECT * ob,
+							 int         speedup )
+{
+	( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speed_up = speedup != 0;
 }
 
 
@@ -248,7 +297,7 @@ timeoutCB( int    val  FL_UNUSED_ARG,
 
 
 /***************************************
- * handles an event on ob
+ * Handles an event on ob
  ***************************************/
 
 static int
@@ -262,12 +311,18 @@ handle_mouse( FL_OBJECT * ob,
 
     if ( event == FL_RELEASE )
     {
+		if ( sp->timeout_id != -1 )
+		{
+			fl_remove_timeout( sp->timeout_id );
+			sp->timeout_id = -1;
+		}
 		sp->mouseobj = NONE;
 		fl_redraw_object( ob );
 		return 0;
     }
     else if ( event == FL_PUSH )
     {
+		sp->cur_repeat_ms = sp->repeat_ms;
 		calc_mouse_obj( ob, mx, my );
 		if ( sp->mouseobj != NONE )
 			changeval = 1;
@@ -280,7 +335,26 @@ handle_mouse( FL_OBJECT * ob,
     {
 		double oval = sp->val;
 
-		sp->timeout_id = fl_add_timeout( sp->repeat_ms, timeoutCB, sp );
+		sp->timeout_id = fl_add_timeout( sp->cur_repeat_ms, timeoutCB, sp );
+
+		/* If speed-up hasn't been switched off and we didn't reach the final
+		   speed reduce the timeout value by a third of the remaining
+		   difference (the extra substraction of 2 makes sure we can reach
+		   it in all circumstances) */
+
+		if ( sp->do_speed_up && sp->cur_repeat_ms > sp->min_repeat_ms )
+		{
+			sp->cur_repeat_ms -=
+				             ( sp->cur_repeat_ms - sp->min_repeat_ms ) / 3 + 2;
+			sp->cur_repeat_ms = FL_max( sp->cur_repeat_ms, sp->min_repeat_ms );
+		}
+
+		/* If speed-up has been switched off but initial and final speed aren't
+		   identical it means that we have a long delay at the start and then
+		   short timeouts afterwards */
+
+		if ( ! sp->do_speed_up && sp->cur_repeat_ms > sp->min_repeat_ms )
+			sp->cur_repeat_ms = sp->min_repeat_ms;
 
 		if ( sp->mouseobj == OB0 )
 			sp->val -= sp->lstep;
@@ -305,7 +379,7 @@ handle_mouse( FL_OBJECT * ob,
 
 
 /***************************************
- * show which button is active by highlighting the button
+ * Show which button is active by highlighting the button
  ***************************************/
 
 static void
@@ -318,7 +392,7 @@ show_focus_obj( FL_OBJECT * ob,
 
     calc_mouse_obj( ob, mx, my );
 
-    /* if same object, do nothing */
+    /* If same object, do nothing */
 
     if ( sp->mouseobj == oldobj )
 		return;
@@ -382,6 +456,19 @@ handle_counter( FL_OBJECT * ob,
 			}
 			break;
 
+		case FL_RELEASE:
+			if ( key != FL_MBUTTON1 )
+				break;
+
+			handle_mouse( ob, event, mx, my );
+			if ( sp->how_return == FL_RETURN_END_CHANGED && sp->changed )
+			{
+				show_focus_obj( ob, mx, my );
+				return 1;
+			}
+			show_focus_obj( ob, mx, my );
+			break;
+
 		case FL_UPDATE:
 			if ( handle_mouse( ob, event, mx, my ) )
 				sp->changed = 1;
@@ -390,20 +477,6 @@ handle_counter( FL_OBJECT * ob,
 				sp->changed = 0;
 				return 1;
 			}
-			break;
-
-		case FL_RELEASE:
-			if ( key != FL_MBUTTON1 )
-				break;
-
-			if ( handle_mouse( ob, event, mx, my ) )
-				sp->changed = 1;
-			else if ( sp->how_return == FL_RETURN_END_CHANGED && sp->changed )
-			{
-				show_focus_obj( ob, mx, my );
-				return 1;
-			}
-			show_focus_obj( ob, mx, my );
 			break;
 
 		case FL_MOTION:
@@ -422,7 +495,7 @@ handle_counter( FL_OBJECT * ob,
 
 
 /***************************************
- * creates an object
+ * Creates an object
  ***************************************/
 
 FL_OBJECT *
@@ -445,25 +518,27 @@ fl_create_counter( int          type,
 	ob->want_motion = 1;
 	ob->want_update = 1;
 
-    /* counter has a different default */
+    /* Counter has a different default */
 
     if ( ob->bw == FL_BOUND_WIDTH && ob->bw == 3 )
 		ob->bw = FL_COUNTER_BW;
 
-    ob->spec_size = sizeof *sp;
-    sp = ob->spec  = fl_calloc( 1, sizeof *sp );
-    sp->min        = -1000000.0;
-    sp->max        = 1000000.0;
-    sp->sstep      = 0.1;
-    sp->lstep      = 1.0;
-    sp->val        = 0.0;
-    sp->prec       = 1;
-    sp->mouseobj   = NONE;
-    sp->draw_type  = ALL;
-    sp->how_return = FL_RETURN_END_CHANGED;
-	sp->filter     = NULL;
-    sp->repeat_ms  = 100;
-    sp->timeout_id = -1;
+    ob->spec_size     = sizeof *sp;
+    sp = ob->spec     = fl_calloc( 1, sizeof *sp );
+    sp->min           = -1000000.0;
+    sp->max           = 1000000.0;
+    sp->sstep         = 0.1;
+    sp->lstep         = 1.0;
+    sp->val           = 0.0;
+    sp->prec          = 1;
+    sp->mouseobj      = NONE;
+    sp->draw_type     = ALL;
+    sp->how_return    = FL_RETURN_END_CHANGED;
+	sp->filter        = NULL;
+	sp->min_repeat_ms = 50;
+    sp->repeat_ms     = 600;
+	sp->do_speed_up   = 1;
+    sp->timeout_id    = -1;
 
     return ob;
 }

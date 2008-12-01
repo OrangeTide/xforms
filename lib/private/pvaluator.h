@@ -77,6 +77,9 @@ typedef struct
     unsigned int  mouseobj;
     int           cross_over;   /* allow cross over                        */
     int           repeat_ms;
+	int           cur_repeat_ms;
+	int           min_repeat_ms;
+	int           do_speed_up;
     int           timeout_id;
     int           mouse_pos;	/* < 0 below knob, 0 on knob, > 0 above knob */
 } FLI_VALUATOR_SPEC;

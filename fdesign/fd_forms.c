@@ -480,8 +480,7 @@ load_forms( int          merge,
 
     if ( ok && ! merge && ! feof( fn ) )
     {
-		if (    fgetc( fn ) != '\n'
-			 || ! fgets( buf, sizeof buf, fn )
+		if (    ! fgets( buf, sizeof buf, fn )
 			 || strcmp( buf, "==============================\n" )
 			 || ! fgets( main_name, MAX_VAR_LEN, fn ) )
 		{

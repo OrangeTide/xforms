@@ -33,19 +33,20 @@
 #include "include/forms.h"
 #include <stdlib.h>
 
-char *symbols[] =
+char *symbols[ ] =
 {
-    "@>", "@<-", "@9->", "@DnLine", "@8>", "@circle", "@->|",
-    "@>>", "@square", "@4->|", "@8->|", "@<->",
-    "@UpArrow", "@9+", "@->", "@<", "@DnArrow", "@+", "@-->",
-    "@line", "@3->", "@UpLine", "@>|", "@2-->", "@4>|", "@8>|",
-    "@=", "@menu", "@8=", "@|>", "@2|>", "@-32|>", "@+32|>",
-    "@-2circle",
-    NULL
+   "@>",      "@<-",     "@9->",     "@DnLine", "@8>",    "@circle",   "@->|",
+   "@>>",     "@square", "@4->|",    "@8->|",   "@<->",   "@UpArrow",  "@9+",
+   "@->",     "@<",      "@DnArrow", "@+",      "@-->",   "@line",     "@3->",
+   "@UpLine", "@>|",     "@2-->",    "@4>|",    "@8>|",   "@=",        "@menu",
+   "@8=",     "@|>",     "@2|>",     "@-32|>",  "@+32|>", "@-2circle", NULL
 };
 
-#define N  ( sizeof symbols / sizeof * symbols - 1)
+#define N  ( sizeof symbols / sizeof * symbols - 1 )
 
+
+/***************************************
+ ***************************************/
 
 static void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -55,8 +56,11 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ ***************************************/
+
 FL_FORM *
-make_symbols(void)
+make_symbols( void )
 {
     char **p,
 		 buf[ 32 ];
@@ -111,6 +115,9 @@ make_symbols(void)
 	 return form;
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,

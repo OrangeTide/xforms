@@ -32,7 +32,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.45 2008/11/22 18:44:55 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.46 2008/12/01 22:53:59 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -178,7 +178,7 @@ fl_make_object( int            objclass,
 
     obj = fl_calloc( 1, sizeof *obj );
 
-    obj->objclass = objclass;
+    obj->objclass  = objclass;
     obj->type      = type;
     obj->resize    = FL_RESIZE_ALL;
     obj->nwgravity = obj->segravity = FL_NoGravity;
