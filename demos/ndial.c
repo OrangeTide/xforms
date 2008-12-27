@@ -39,45 +39,54 @@ FL_OBJECT *button,
           *bluetext,
           *result;
 
+
+/***************************************
+ ***************************************/
+
 void
 makeform( void )
 {
-	form = fl_bgn_form(FL_UP_BOX,300,330);
+	form = fl_bgn_form( FL_UP_BOX, 300, 330 );
 
-    button = fl_add_button(FL_NORMAL_BUTTON,45,15,210,45,"A Color Editor");
-    fl_set_object_lsize(button,FL_LARGE_SIZE);
+    button = fl_add_button( FL_NORMAL_BUTTON, 45, 15, 210, 45,
+							"A Color Editor" );
+    fl_set_object_lsize( button, FL_LARGE_SIZE );
 
-    red = fl_add_dial(FL_NORMAL_DIAL,30,240,60,60,"Red");
-    fl_set_object_boxtype(red, FL_UP_BOX);
-    fl_set_dial_bounds(red,0.0,255.0);
-    fl_set_dial_value(red,128.0);
-    fl_set_object_color(red,FL_RED,FL_DIAL_COL2);
+    red = fl_add_dial( FL_NORMAL_DIAL, 30, 240, 60, 60, "Red" );
+    fl_set_object_boxtype( red, FL_UP_BOX );
+    fl_set_dial_bounds( red, 0.0, 255.0 );
+    fl_set_dial_value( red, 128.0 );
+    fl_set_object_color( red, FL_RED, FL_DIAL_COL2 );
 
-    redtext = fl_add_box(FL_DOWN_BOX,105,255,50,25,"");
+    redtext = fl_add_box( FL_DOWN_BOX, 105, 255, 50, 25, "" );
 
-    green = fl_add_dial(FL_NORMAL_DIAL,30,155,60,60,"Green");
-    fl_set_object_boxtype(green, FL_FRAME_BOX);
-    fl_set_dial_bounds(green,0.0,255.0);
+    green = fl_add_dial( FL_NORMAL_DIAL, 30, 155, 60, 60, "Green" );
+    fl_set_object_boxtype( green, FL_FRAME_BOX );
+    fl_set_dial_bounds( green, 0.0, 255.0 );
     fl_set_dial_angles( green, 45.0, 315.0 );
-    fl_set_dial_value(green,128.0);
-    fl_set_object_color(green,FL_GREEN,FL_DIAL_COL2);
+    fl_set_dial_value( green, 128.0 );
+    fl_set_object_color( green, FL_GREEN, FL_DIAL_COL2 );
 
-    greentext = fl_add_box(FL_DOWN_BOX,105,170,50,25,"");
+    greentext = fl_add_box( FL_DOWN_BOX, 105, 170, 50, 25, "" );
 
-    blue = fl_add_dial(FL_NORMAL_DIAL,30,70,60,60,"Blue");
-    fl_set_object_boxtype(blue, FL_UP_BOX);
-    fl_set_dial_bounds(blue,0.0,255.0);
-    fl_set_dial_value(blue,128);
-    fl_set_object_color(blue,FL_BLUE,FL_DIAL_COL2);
+    blue = fl_add_dial( FL_NORMAL_DIAL, 30, 70, 60, 60, "Blue" );
+    fl_set_object_boxtype( blue, FL_UP_BOX );
+    fl_set_dial_bounds( blue, 0.0, 255.0 );
+    fl_set_dial_value( blue, 128 );
+    fl_set_object_color( blue, FL_BLUE, FL_DIAL_COL2 );
 
-    bluetext = fl_add_box(FL_DOWN_BOX,105,90,50,25,"");
+    bluetext = fl_add_box( FL_DOWN_BOX, 105, 90, 50, 25, "" );
 
-    result = fl_add_box(FL_DOWN_BOX,180,70,90,245,"");
-    fl_set_object_color(result,FL_FREE_COL1,FL_FREE_COL1);
-    fl_set_object_dblbuffer(result, 1); /* to avoid flicker */
+    result = fl_add_box( FL_DOWN_BOX, 180, 70, 90, 245, "" );
+    fl_set_object_color( result, FL_FREE_COL1, FL_FREE_COL1 );
+    fl_set_object_dblbuffer( result, 1 );     /* to avoid flicker */
 
-	fl_end_form();
+	fl_end_form( );
 }
+
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,

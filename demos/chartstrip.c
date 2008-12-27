@@ -48,6 +48,9 @@ FL_OBJECT *chartobj,
 static void create_form_form(void);
 
 
+/***************************************
+ ***************************************/
+
 static void
 set_function( FL_OBJECT * obj  FL_UNUSED_ARG,
 			  long        arg )
@@ -58,65 +61,83 @@ set_function( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 set_step( FL_OBJECT * obj  FL_UNUSED_ARG,
 		  long        arg  FL_UNUSED_ARG )
 {
-     step = fl_get_slider_value( stepobj );
+	step = fl_get_slider_value( stepobj );
 }
 
+
+/***************************************
+ ***************************************/
 
 static double
 next_step( void )
 {
-   double res = 0.0;
+	double res = 0.0;
 
-   switch ( func)
-   {
-	   case 1:
-		   res = sin( x );
-		   break;
+	switch ( func)
+	{
+		case 1:
+			res = sin( x );
+			break;
 
-	   case 2:
-		   res = sin( 2 * x ) * cos( x );
-		   break;
+		case 2:
+			res = sin( 2 * x ) * cos( x );
+			break;
 
-	   case 3:
-		   res = sin( 2 * x ) + cos( x );
-		   break;
+		case 3:
+			res = sin( 2 * x ) + cos( x );
+			break;
 
-	   case 4:
-		   res = sin( 3 * x ) + cos( x );
-		   break;
+		case 4:
+			res = sin( 3 * x ) + cos( x );
+			break;
 
-	   case 5:
-		   res = sin( x ) * sin( x ) + cos( x );
-		   break;
+		case 5:
+			res = sin( x ) * sin( x ) + cos( x );
+			break;
 
-	   case 6:
-		   res = sin( x ) * sin( x ) * sin( x );
-		   break;
+		case 6:
+			res = sin( x ) * sin( x ) * sin( x );
+			break;
     }
 
     x += 0.2 * step;
+
     return res;
 }
 
 
-int idle_cb( XEvent * xev  FL_UNUSED_ARG,
-			 void   * d    FL_UNUSED_ARG )
+/***************************************
+ ***************************************/
+
+int
+idle_cb( XEvent * xev  FL_UNUSED_ARG,
+		 void   * d    FL_UNUSED_ARG )
 {
-    fl_insert_chart_value( chartobj,1,next_step( ), "", 1 );
+    fl_insert_chart_value( chartobj, 1, next_step( ), "", 1 );
     return 0;
 }
 
 
-void add_value( void * xev  FL_UNUSED_ARG,
-				void * a    FL_UNUSED_ARG )
+/***************************************
+ ***************************************/
+
+void
+add_value( void * xev  FL_UNUSED_ARG,
+		   void * a    FL_UNUSED_ARG )
 {
 	fl_insert_chart_value( chartobj, 1, next_step( ), "", 1 );
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -147,6 +168,9 @@ main( int    argc,
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 create_form_form( void )

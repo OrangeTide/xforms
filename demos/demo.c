@@ -82,20 +82,20 @@ main( int    argc,
 
 	 fl_set_border_width( 1 );
 
-    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-    fl_clear_command_log( );
+	 fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	 fl_clear_command_log( );
 
-    create_the_forms( );
+	 create_the_forms( );
 
-    if ( ! load_the_menu( "demo.menu" ) )
-		exit( -1 );
+	 if ( ! load_the_menu( "demo.menu" ) )
+		 exit( -1 );
 
-    push_menu( "@main" );
+	 push_menu( "@main" );
 
-    fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Demo" );
-    fl_do_forms( );
+	 fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Demo" );
+	 fl_do_forms( );
 
-    return 0;
+	 return 0;
 }
 
 
@@ -235,7 +235,6 @@ numb2but( int inumb,
 char stack[ 64 ][ 32 ];
 int stsize = 0;
 
-
 /***************************************
  * Pushes a menu to be visible
  ***************************************/
@@ -272,6 +271,7 @@ push_menu( const char * nnn )
 		else
 			fl_set_object_color( but[ bn], bc_term, FL_BLUE );
     }
+
     fl_unfreeze_form( form );
     strcpy( stack[ stsize ], nnn );
     stsize++;
@@ -287,6 +287,7 @@ pop_menu( void )
 {
     if ( stsize <= 1 )
 		return;
+
     stsize -= 2;
     push_menu( stack[ stsize ] );
 }

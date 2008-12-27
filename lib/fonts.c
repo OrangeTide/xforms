@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -34,7 +31,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.14 2008/11/10 17:51:47 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.15 2008/12/27 22:20:49 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -48,9 +45,9 @@ char *fl_id_fnt = "$Id: fonts.c,v 1.14 2008/11/10 17:51:47 jtt Exp $";
 
 static XFontStruct *defaultfs;
 
-static XFontStruct *fl_try_get_font_struct( int,
-											int,
-											int );
+static XFontStruct *try_get_font_struct( int,
+										 int,
+										 int );
 static char *get_fname( const char *str,
 						int size );
 
@@ -237,7 +234,7 @@ fl_set_font_name( int          n,
     if ( ! flx->display )
 		return 1;
 
-    return fl_try_get_font_struct( n, FL_DEFAULT_SIZE, 1 ) ? 0 : -1;
+    return try_get_font_struct( n, FL_DEFAULT_SIZE, 1 ) ? 0 : -1;
 }
 
 
@@ -271,9 +268,9 @@ fl_enumerate_fonts( void ( * output )( const char *s ),
  ***************************************/
 
 static XFontStruct *
-fl_try_get_font_struct( int numb,
-						int size,
-						int with_fail )
+try_get_font_struct( int numb,
+					 int size,
+					 int with_fail )
 {
     FL_FONT *flf = fl_fonts;
     XFontStruct *fs = NULL;
@@ -293,12 +290,12 @@ fl_try_get_font_struct( int numb,
 			 * loadable or not, so need not be a fatal condition if
 			 * it fails. Issue a message for information therefore. */
 
-			M_info( "fl_try_get_font_struct", "Bad FontStyle requested: %d: %s",
+			M_info( "try_get_font_struct", "Bad FontStyle requested: %d: %s",
 					numb, flf->fname );
 		}
 
 		if ( ! fl_state[ fl_vmode ].cur_fnt )
-			M_warn( "fl_try_get_font_struct", "bad font returned" );
+			M_warn( "try_get_font_struct", "bad font returned" );
 
 		return fl_state[ fl_vmode ].cur_fnt;
     }
@@ -313,7 +310,7 @@ fl_try_get_font_struct( int numb,
 		{
 			fs = flf->fs[ i ];
 #if FL_DEBUG >= ML_DEBUG
-			M_debug( "fl_try_get_font_struct", "Cache hit: %s",
+			M_debug( "try_get_font_struct", "Cache hit: %s",
 					 fl_cur_fontname );
 #endif
 		}
@@ -352,7 +349,7 @@ fl_try_get_font_struct( int numb,
 		int mdiff = 1000,
 			k = -1;
 
-		M_warn( "fl_try_get_font_struct", "can't load %s", fli_curfnt );
+		M_warn( "try_get_font_struct", "can't load %s", fli_curfnt );
 
 		/* search for a replacement */
 
@@ -389,7 +386,7 @@ XFontStruct *
 fl_get_font_struct( int style,
 					int size )
 {
-    return fl_try_get_font_struct( style, size, 0 );
+    return try_get_font_struct( style, size, 0 );
 }
 
 
@@ -413,6 +410,7 @@ fl_get_string_width( int          style,
 
 /***************************************
  ***************************************/
+
 
 int
 fli_get_string_widthTABfs( XFontStruct * fs,

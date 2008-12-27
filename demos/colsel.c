@@ -21,14 +21,26 @@
 
 
 /* default color chooser from the internal/built-in colormap */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
+
+
+
+/***************************************
+ ***************************************/
+
 int
-main(int argc, char **argv)
+main( int    argc,
+	  char * argv[ ] )
 {
-   fl_initialize(&argc, argv, "FormDemo", 0, 0);
-   fl_show_colormap(0);
-   return 0;
+	int i = 0;
+
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	while ( 1 )
+		i = fl_show_colormap( i );
+	return 0;
 }

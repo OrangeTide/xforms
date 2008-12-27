@@ -1,0 +1,2 @@
+@node Part IV
+@unnumbered @emph{Part IV - Designing Object Classes}

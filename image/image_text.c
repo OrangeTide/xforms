@@ -12,16 +12,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
 /*
- * $Id: image_text.c,v 1.6 2008/09/24 18:31:58 jtt Exp $
+ * $Id: image_text.c,v 1.7 2008/12/27 22:20:45 jtt Exp $
  *
  *  .
  *  This file is part of the XForms library package.
@@ -186,9 +183,9 @@ display_text( FL_IMAGE * im )
 		fli_draw_text_inside (t->align,
 							  t->x + im->wxd - im->sxd -1,
 							  t->y + im->wyd - im->syd -1,
-							  2, 2, t->str, t->len,
-							  t->style, t->size, t->color, t->bcolor, !t->nobk,
-							  t->angle );
+							  2, 2, t->str,
+							  t->style, t->size, t->color, t->bcolor,
+							  ! t->nobk );
 
     fli_restore_target( );
 }

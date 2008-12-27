@@ -48,6 +48,9 @@ FD_axypform *xypui;
 
 /* callbacks for form axypform */
 
+/***************************************
+ ***************************************/
+
 void
 xyplot_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
@@ -66,6 +69,9 @@ xyplot_cb( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 alwaysreturn_cb( FL_OBJECT * ob,
 				 long        data  FL_UNUSED_ARG )
@@ -73,6 +79,9 @@ alwaysreturn_cb( FL_OBJECT * ob,
 	fl_set_xyplot_return( xypui->xyplot, fl_get_button( ob ) );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 interpolate_cb( FL_OBJECT * ob,
@@ -88,6 +97,9 @@ interpolate_cb( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 inspect_cb( FL_OBJECT * ob,
 			long        data  FL_UNUSED_ARG )
@@ -95,6 +107,9 @@ inspect_cb( FL_OBJECT * ob,
 	fl_set_xyplot_inspect( xypui->xyplot, fl_get_button( ob ) );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 notic_cb( FL_OBJECT * ob,
@@ -114,6 +129,9 @@ notic_cb( FL_OBJECT * ob,
 	}
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -150,6 +168,10 @@ main( int    argc,
 	fl_finish( );
 	return 0;
 }
+
+
+/***************************************
+ ***************************************/
 
 FD_axypform *
 create_form_axypform( void )

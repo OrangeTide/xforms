@@ -34,66 +34,82 @@
 #include "bm1.xbm"
 #include "bm2.xbm"
 
-int animated;
-
 typedef struct {
-	FL_FORM *menubar;
-	void *vdata;
-	long ldata;
+	FL_FORM * menubar;
+	void    * vdata;
+	long      ldata;
 } FD_menubar;
 
-extern FD_menubar * create_form_menubar(void);
+extern FD_menubar *create_form_menubar( void );
 
 
-void done_cb(FL_OBJECT *ob, long data)
+/***************************************
+ ***************************************/
+
+void
+done_cb( FL_OBJECT * ob,
+		 long        data )
 {
-    fl_finish();
-    exit(0);
+    fl_finish( );
+    exit( 0 );
 }
 
 
-int main(int argc, char *argv[])
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
-   FD_menubar *fd_menubar;
+	FD_menubar *fd_menubar;
 
-   fl_initialize(&argc, argv, "FormDemo", 0, 0);
-   fd_menubar = create_form_menubar();
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	fd_menubar = create_form_menubar( );
 
-   fl_show_form(fd_menubar->menubar,FL_PLACE_CENTER,FL_FULLBORDER,"menubar");
+	fl_show_form( fd_menubar->menubar, FL_PLACE_CENTER, FL_FULLBORDER,
+				  "menubar" );
 
-   while (fl_do_forms())
-     ;
+	while ( fl_do_forms( ) )
+		/* empty */ ;
 
-   return 0;
+	return 0;
 }
 
 
 FL_PUP_ENTRY file_menu[] =
 {
-    {"_Open"},
-    {"Save"},
-    {"_Save As ..."},
-    {"Exit"},
-    {0}
+    { "_Open" },
+    { "Save" },
+    { "_Save As ..." },
+    { "Exit" },
+    { NULL }
 };
 
 
-FD_menubar *create_form_menubar(void)
+/***************************************
+ ***************************************/
+
+FD_menubar *
+create_form_menubar( void )
 {
-  FL_OBJECT *obj;
-  FD_menubar *fdui = (FD_menubar *) fl_calloc(1, sizeof(*fdui));
+	FL_OBJECT *obj;
+	FD_menubar *fdui = fl_calloc( 1, sizeof *fdui );
 
-  fdui->menubar = fl_bgn_form(FL_NO_BOX, 325, 175);
-  obj = fl_add_box(FL_UP_BOX,0,0,325,175,"");
-  obj = fl_add_button(FL_NORMAL_BUTTON,250,140,60,25,"Done");
-    fl_set_object_callback(obj,done_cb,0);
-  obj = fl_add_menubar(0, 0, 0, 325, 30, "test");
-  fl_end_form();
+	fdui->menubar = fl_bgn_form( FL_NO_BOX, 325, 175 );
 
-   fl_set_menubar(obj, "File|Message|Find");
-   fl_set_menubar_entries(obj,"File",file_menu);
+	fl_add_box( FL_UP_BOX, 0, 0, 325, 175, "" );
 
-  return fdui;
+	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 140, 60, 25, "Done" );
+    fl_set_object_callback( obj, done_cb, 0 );
+
+	fl_add_menubar( 0, 0, 0, 325, 30, "test" );
+
+	fl_end_form( );
+
+   fl_set_menubar( obj, "File|Message|Find" );
+   fl_set_menubar_entries( obj,"File", file_menu );
+
+   return fdui;
 }
 /*---------------------------------------*/
-

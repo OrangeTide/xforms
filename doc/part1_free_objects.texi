@@ -1,13 +1,13 @@
-@node Free Objects
-@chapter Part I: Free Objects
+@node Part I Free Objects
+@chapter Free Objects
 
 In some applications the standard object classes as provided by the
 Forms Library may not be enough for your task. There are three ways of
-solving this problem. First of all, the appl cation program can also
+solving this problem. First of all, the application program can also
 open its own window or use a canvas (the preferred way) in which it
-does interaction with the user chapter 4). A second way is to add your
-own object classes (see Part IV). This is especially useful when your
-new type of objects is of general use.
+does interaction with the user). A second way is to add your own
+object classes (see Part IV). This is especially useful when your new
+type of objects is of general use.
 
 The third way is to add free objects to your form. Free objects are
 objects for which the application program handles the drawing and
@@ -84,8 +84,9 @@ several routines that will help you to tackle the trickiest (also the
 most tedious) part of X programming. In particular, the return value
 of @code{fl_get_vclass()} can be used as an index into a table of
 structures, @code{FL_STATE fl_state[]}, from which all information
-about current active visual can be obtained. See chapter 27 for
-details on drawing objects and the routines.
+about current active visual can be obtained. @xref{Part IV Drawing
+Objects, , Drawing Objects}, for details on drawing objects and the
+routines.
 @tindex @code{FL_DRAWLABEL}
 @item FL_DRAWLABEL
 This event is not always generated. It typically follows
@@ -192,10 +193,10 @@ Same as @code{FL_NORMAL_FREE} but the object also receives
 @code{FL_FOCUS}, @code{FL_UNFOCUS} and @code{FL_KEYBOARD} events. The
 @code{obj->wantkey} is by default set to @code{FL_KEY_NORMAL}, i.e.,
 the free object will receive all normal keys (0-255) except
-@code{<TAB>} and @code{<RETURN>} key. If you're interested in
-@code{<TAB>} or @code{<RETURN>} key, you need to change
-@code{obj->wantkey} to @code{FL_KEY_TAB} or @code{FL_KEY_ALL}. See
-chapter 25 for details.
+@code{<Tab>} and @code{<Return>} key. If you're interested in
+@code{<Tab>} or @code{<Return>} key, you need to change
+@code{obj->wantkey} to @code{FL_KEY_TAB} or @code{FL_KEY_ALL}.
+@xref{Part IV Events, , Events}, for details.
 @tindex @code{FL_CONTINUOUS_FREE}
 @item FL_CONTINUOUS_FREE
 Same as @code{FL_NORMAL_FREE} but the object also receives
@@ -229,10 +230,11 @@ the squares etc. are to be drawn; a group of objects that control what
 figure to draw and with what size; and a group of objects that control
 the color with which the figure is to be drawn.
 
-The entire UI (see Fig. 5.1) is designed interactively using the GUI
-builder fdesign with most objects having their own callbacks. fdesign
-writes two files, one is a header file containing forward declarations
-of callback functions and other function prototypes:
+The entire UI is designed interactively using the GUI builder
+@code{fdesign} with most objects having their own callbacks.
+@code{fdesign} writes two files, one is a header file containing
+forward declarations of callback functions and other function
+prototypes:
 @example
 #ifndef FD_drawfree_h_ #define FD_drawfree_h_
 
@@ -291,15 +293,15 @@ itself. In this case, the first object on the form is a box of type
 
     obj = fl_add_button(FL_RADIO_BUTTON, 50, 60, 40, 40,
                         "@@#square");
-	fl_set_object_lcol(obj, FL_YELLOW);
+    fl_set_object_lcol(obj, FL_YELLOW);
     fl_set_object_callback(obj, switch_figure, 1);
 
-	obj = fl_add_button(FL_RADIO_BUTTON, 90, 60, 40, 40,
+    obj = fl_add_button(FL_RADIO_BUTTON, 90, 60, 40, 40,
                         "@@#8*>");
-	fl_set_object_lcol(obj, FL_YELLOW);
-	fl_set_object_callback(obj, switch_figure, 2);
+    fl_set_object_lcol(obj, FL_YELLOW);
+    fl_set_object_callback(obj, switch_figure, 2);
 
-	fl_end_group();
+    fl_end_group();
 @end example
 
 This creates three buttons that control what figures are to be drawn.
@@ -435,23 +437,23 @@ drawing function as well as object attributes such as size and color:
 @example
 #define MAX_FIGURES 500
 
-typedef void (*DrawFunc)(int /*fill */,
-                          int, int, int, int, /* x,y,w,h */
-                          FL_COLOR /* color */ );
+typedef void (*DrawFunc)(int                  /* fill */,
+                         int, int, int, int,  /* x,y,w,h */
+                         FL_COLOR             /* color */ );
 
 typedef struct @{
-    DrawFunc drawit;   /* how to draw this figure */
-    int      fill,
-             x,y,w,h;  /* geometry */
-    int      pc[3];    /* primary color R,G,B */
-    int      newfig;   /* indicate a new figure */
-    FL_COLOR col;      /* FL color index */
+    DrawFunc drawit;      /* how to draw this figure */
+    int      fill,        /* is it to be filled? */
+             x, y, w, h;  /* position and sizes */
+    int      pc[3];       /* primary color R,G,B */
+    int      newfig;      /* indicate a new figure */
+    FL_COLOR col;         /* color index */
 @} DrawObject;
 
 static DrawFigure saved_figure[MAX_FIGURES],
                   *cur_fig;
 static FD_drawfree *drawui;
-int max_w = 30,     /* max size of figures */
+int max_w = 30,               /* max size of figures */
     max_h = 30;
 @end example
 @noindent
@@ -528,7 +530,7 @@ void switch_object(FL_OBJECT *obj, long which) @{
 So this takes care of the drawing functions. Similarly, the color
 callback function can be written as follows
 @example
-void change_color(FL_OBJECT * ob, long which) @{
+void change_color(FL_OBJECT *obj, long which) @{
     cur_fig->c[which] = 255 * fl_get_slider_value(ob);
     fl_mapcolor(cur_fig->col,
                 cur_fig->c[0], cur_fig->c[1], cur_fig->c[2]);
@@ -547,7 +549,7 @@ visual feedback.
 Object size is taken care of in a similar fashion by using a callback
 function bound to both size sliders:
 @example
-void change_size(FL_OBJECT * ob, long which) @{
+void change_size(FL_OBJECT * obj, long which) @{
     if (which == 0)
         cur_fig->w = fl_get_slider_value(ob);
     else
@@ -558,8 +560,8 @@ void change_size(FL_OBJECT * ob, long which) @{
 Lastly, we toggle the fill/outline option by querying the state of the
 push button
 @example
-void outline_callback(FL_OBJECT *ob, long data) @{
-    cur_fig->fill = !fl_get_button(ob);
+void outline_callback(FL_OBJECT *obj, long data) @{
+    cur_fig->fill = !fl_get_button(obj);
 @}
 @end example
 
@@ -586,7 +588,7 @@ write the free object handler. The user can issue a drawing command
 inside the free object by clicking either the left or right mouse
 button.
 @example
-int freeobject_handler(FL_OBJECT * ob, int event,
+int freeobject_handler(FL_OBJECT *obj, int event,
                        FL_Coord mx, FL_Coord my,
                        int key, void *xev) @{
     DrawFigure *dr;
@@ -595,19 +597,19 @@ int freeobject_handler(FL_OBJECT * ob, int event,
         case FL_DRAW:
             if (cur_fig->newfig == 1)
                  cur_fig->drawit(cur_fig->fill,
-                                 cur_fig->x + ob->x,
-                                 cur_fig->y + ob->y,
+                                 cur_fig->x + obj->x,
+                                 cur_fig->y + obj->y,
                                  cur_fig->w, cur_fig->h,
                                  cur_fig->col);
             else @{
-                fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w,
-                           ob->h, ob->col1, ob->bw);
-		    
+                fl_drw_box(obj->boxtype, obj->x, obj->y, obj->w,
+                           obj->h, obj->col1, obj->bw);
+            
                 for (dr = saved_figure; dr < cur_fig; dr++) @{
                     fl_mapcolor(FL_FREE_COL1,
                                 dr->c[0], dr->c[1], dr->c[2]);
-                    dr->drawit(dr->fill,dr->x + ob->x,
-                               dr->y + ob->y,
+                    dr->drawit(dr->fill,dr->x + obj->x,
+                               dr->y + obj->y,
                                dr->w, dr->h, dr->col);
                 @}
             @}
@@ -622,8 +624,8 @@ int freeobject_handler(FL_OBJECT * ob, int event,
             cur_fig->y = my - cur_fig->h / 2;
 
             /* convert figure center to relative to the object*/
-            cur_fig->x -= ob->x;
-            cur_fig->y -= ob->y;
+            cur_fig->x -= obj->x;
+            cur_fig->y -= obj->y;
 
             cur_fig->newfig = 1;
             fl_redraw_object(ob);
@@ -692,7 +694,7 @@ void draw_initialize(FD_drawfree *ui) @{
     cur_fig->drawit = fl_oval;
     cur_fig->col = FL_FREE_COL1 + 1;
     cur_fig->fill = 1;
-    fl_set_button(ui->drobj[0], 1); /* show current selection */
+    fl_set_button(ui->drobj[0], 1);  /* show current selection */
 
     fl_mapcolor(cur_fig->col, cur_fig->pc[0],
                 cur->fig->pc[1], cur->fig->pc[2]);

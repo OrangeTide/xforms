@@ -53,8 +53,8 @@ each button can be controlled via the function
                                      int         mouse_buttons )
 
 The 'mouse_button' argument is the inclusive or of the numbers
-1 for the left mouse button, 2 for the middle and 3 for the
-right mouse button, 4 for moving the scroll wheel up and 5
+1 for the left mouse button, 2 for the middle and 4 for the
+right mouse button, 8 for moving the scroll wheel up and 16
 for scrolling down.
 
 The corresponding function to find out to which mouse buttons
@@ -153,18 +153,21 @@ queried by the functions
 void fl_set_counter_min_repeat( FL_OBJECT * ob, int millisec );
 int fl_get_counter_min_repeat( FL_OBJECT * ob );
 
-In case the old behaviour is desired speed up can be controlled
-(and it's state asked for) via the functions
+In case the old behaviour is desired simply set the times set by
+fl_set_counter_repeat() and fl_set_counter_min_repeat() to the
+same value.
 
-void fl_set_counter_speedup( FL_OBJECT * ob, int speedup );
-int fl_get_counter_speedup( FL_OBJECT * ob );
+It's also possible to hav just the very first delay being different
+from the others. To achieve this set the the first delay time via
+fl_set_counter_repeat() and the time for all other delays by
+fl_get_counter_min_repeat() and then call the function
 
-accepting or returning a boolean value. For the old behaviour
-both the initial as well as the final repat time have to be set
-to the same value (whic used to be 100 ms). If speed up is switched
-off and the initial repeat value is larger than the final one
-the first step takes as long s the initial value and all following
-steps as long as the minimum repeat time.
+void fl_set_counter_sppedjump( FL_OBJECT * ob, int yes_no );
+
+with a true value for the argument 'yes_no'. The actual value
+for this setting can be queried by using
+
+int fl_get_counter_speedjump( FL_OBJECT * ob );
 
 
 Changes in Menu handling
@@ -242,11 +245,11 @@ invokation now is
 fl_set_menu( obj, "Item1|Item2|Item3%f|Item4", item3_cb );
 
 This creates a menu with 4 items and at the same time sets the
-fucntion 'item3_cb' as the callback function for menu item3.
+function 'item3_cb' as the callback function for menu item3.
 
-Like it was already possible for popups now also the menu item ID
-can be set when a menu item gets created. The above invokation may
-thus become
+As it was already possible for popups now also the menu item ID
+can be set when a menu item gets created. The above invokation
+may thus become
 
 fl_set_menu( obj, "Item1|Item2|Item3%f%x10|Item4", item3_cb );
 
@@ -323,7 +326,7 @@ object and moved into another window keyboard input now goes
 to the new window instead of to the one that had been left.
 
 Multi-line inpput object now also can be left by pressing the
-<TAB> (or <Shift><Tab>) keys.
+<Tab> (or <Shift><Tab>) keys.
 
 Date input fields handle verification of leap years correctly. 
 
@@ -334,7 +337,7 @@ and led to trouble in several cases. This has now been removed.
 
 When a file selector has a callback installed the field for
 manually entering a file name isn't shown anymore - that field
-could not be used anyway. 
+could not be used anyway.
 
 Message boxes created by fl_show_message() and fl_show_messages()
 now can display an unlimited amount of text and they automatically

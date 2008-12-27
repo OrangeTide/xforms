@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -277,12 +274,14 @@ fl_convert_shortcut(const char *str, long sc[])
 {
     int i, j, offset, key;
 
-    /* sstr might be obj->shortcut */
+    /* str might be obj->shortcut */
+
     i = j = offset = 0;
+
     while (str[i] != '\0')
     {
 	if (str[i] == ALT_CHAR)
-	    offset = FL_ALT_VAL;
+	    offset = FL_ALT_MASK;
 	else if (str[i] == CNTL_CHAR)
 	{
 	    i++;
@@ -296,7 +295,7 @@ fl_convert_shortcut(const char *str, long sc[])
 		sc[j++] = str[i] + offset;
 	    offset = 0;
 	}
-	else if (str[i] == FKEY_CHAR)	/* special characters */
+	else if ( str[ i ] == FKEY_CHAR )	/* special characters */
 	{
 	    i++;
 	    if (str[i] == FKEY_CHAR)

@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.	 If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/

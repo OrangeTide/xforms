@@ -49,8 +49,9 @@ typedef struct {
 /***************************************
  ***************************************/
 
-void load_file( FL_OBJECT * ob,
-				long        arg  FL_UNUSED_ARG )
+void
+load_file( FL_OBJECT * ob,
+		   long        arg  FL_UNUSED_ARG )
 {
     const char *fname;
     FD_form *fdui = ob->form->fdui;
@@ -66,8 +67,9 @@ void load_file( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void set_size( FL_OBJECT * ob,
-			   long        arg)
+void
+set_size( FL_OBJECT * ob,
+		  long        arg)
 {
 	FD_form *fdui = ob->form->fdui;
 
@@ -78,9 +80,11 @@ void set_size( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void exit_program( FL_OBJECT * ob    FL_UNUSED_ARG,
-				   long        data  FL_UNUSED_ARG )
+void
+exit_program( FL_OBJECT * ob    FL_UNUSED_ARG,
+			  long        data  FL_UNUSED_ARG )
 {
+	fl_finish( );
     exit( 0 );
 }
 
@@ -88,8 +92,9 @@ void exit_program( FL_OBJECT * ob    FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-void hide_show( FL_OBJECT * ob,
-				long        data  FL_UNUSED_ARG )
+void
+hide_show( FL_OBJECT * ob,
+		   long        data  FL_UNUSED_ARG )
 {
     FD_form *fdui = ob->form->fdui;
 
@@ -103,7 +108,8 @@ void hide_show( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-FD_form * create_form(void)
+FD_form *
+create_form( void )
 {
 	FL_OBJECT *obj;
 	FL_Coord x  = 20,

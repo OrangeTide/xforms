@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -39,7 +36,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.15 2008/10/20 11:00:46 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.16 2008/12/27 22:20:48 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

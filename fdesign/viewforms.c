@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -78,48 +75,49 @@ FD_main *
 create_form_main( void )
 {
 	FL_OBJECT *obj;
-	FD_main *fdui = fl_calloc(1, sizeof *fdui );
-	int old_bw = fl_get_border_width();
+	FD_main *fdui = fl_calloc( 1, sizeof *fdui );
+	int old_bw = fl_get_border_width( );
 
-	fl_set_border_width(1);
+	fl_set_border_width( 1 );
 
-	fdui->main = fl_bgn_form(FL_NO_BOX, 620, 672);
+	fdui->main = fl_bgn_form( FL_NO_BOX, 620, 672 );
 
-	obj = fl_add_box(FL_UP_BOX,0,0,620,672,"");
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 620, 672, "" );
 
-	obj = fl_add_labelframe(FL_ENGRAVED_FRAME,85,640,70,25,"Frame");
-    fl_set_object_lsize(obj,FL_TINY_SIZE);
-    fl_set_object_gravity(obj, FL_SouthWest, FL_SouthWest);
+	obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 85, 640, 70, 25, "Frame" );
+    fl_set_object_lsize( obj, FL_TINY_SIZE );
+    fl_set_object_gravity( obj, FL_SouthWest, FL_SouthWest);
 
-	obj = fl_add_labelframe(FL_ENGRAVED_FRAME,10,640,70,25,"Structure");
-    fl_set_object_lsize(obj,FL_TINY_SIZE);
-    fl_set_object_gravity(obj, FL_SouthWest, FL_SouthWest);
+	obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 10, 640, 70, 25, "Structure" );
+    fl_set_object_lsize( obj, FL_TINY_SIZE );
+    fl_set_object_gravity( obj, FL_SouthWest, FL_SouthWest );
 
-	obj = fl_add_frame(FL_ENGRAVED_FRAME,565,37,46,53,"");
-    fl_set_object_color(obj,FL_COL1,FL_COL1);
-    fl_set_object_gravity(obj, FL_NorthEast, FL_NorthEast);
+	obj = fl_add_frame( FL_ENGRAVED_FRAME, 565, 37, 46, 53, "" );
+    fl_set_object_color( obj,FL_COL1, FL_COL1 );
+    fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
-	obj = fl_add_frame(FL_ENGRAVED_FRAME,347,37,46,53,"");
-    fl_set_object_color(obj,FL_COL1,FL_COL1);
-    fl_set_object_gravity(obj, FL_NorthWest, FL_NorthWest);
+	obj = fl_add_frame( FL_ENGRAVED_FRAME, 347, 37, 46, 53, "" );
+    fl_set_object_color( obj, FL_COL1, FL_COL1 );
+    fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
 
-	obj = fl_add_labelframe(FL_ENGRAVED_FRAME,160,640,451,25,"Comment");
-    fl_set_object_lsize(obj,FL_TINY_SIZE);
-    fl_set_object_gravity(obj, FL_SouthWest, FL_SouthEast);
+	obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 160, 640, 451, 25, "Comment" );
+    fl_set_object_lsize( obj, FL_TINY_SIZE );
+    fl_set_object_gravity( obj, FL_SouthWest, FL_SouthEast );
 
-	fdui->timeout = obj = fl_add_timer(FL_HIDDEN_TIMER,560,10,30,20,"Timer");
-    fl_set_object_callback(obj,text_timeout_cb,0);
+	fdui->timeout = obj = fl_add_timer( FL_HIDDEN_TIMER, 560, 10, 30, 20,
+										"Timer" );
+    fl_set_object_callback( obj, text_timeout_cb, 0 );
 
-	obj = fl_add_frame(FL_ENGRAVED_FRAME,6,6,610,25,"");
-    fl_set_object_color(obj,FL_COL1,FL_COL1);
-    fl_set_object_gravity(obj, FL_NorthWest, FL_NorthEast);
+	obj = fl_add_frame( FL_ENGRAVED_FRAME, 6, 6, 610, 25, "" );
+    fl_set_object_color( obj, FL_COL1, FL_COL1 );
+    fl_set_object_gravity( obj, FL_NorthWest, FL_NorthEast );
 
-	fdui->file = obj = fl_add_menu(FL_PULLDOWN_MENU,10,8,40,20,"File");
-    fl_set_object_shortcut(obj,"#f",1);
-    fl_set_object_lstyle(obj,FL_NORMAL_STYLE);
-    fl_set_object_gravity(obj, FL_NorthWest, FL_NorthWest);
-    fl_set_object_callback(obj,file_mnu_cb,0);
-    fl_set_menu_entries(obj, fdmenu_file_0);
+	fdui->file = obj = fl_add_menu( FL_PULLDOWN_MENU, 10, 8, 40, 20, "File" );
+    fl_set_object_shortcut( obj, "#f", 1 );
+    fl_set_object_lstyle( obj, FL_NORMAL_STYLE );
+    fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
+    fl_set_object_callback( obj, file_mnu_cb, 0 );
+    fl_set_menu_entries( obj, fdmenu_file_0 );
 
 	obj = fl_add_text(FL_NORMAL_TEXT,478,10,88,18,"RNA Movies");
     fl_set_object_boxtype(obj,FL_NO_BOX);

@@ -32,54 +32,76 @@
 #include <string.h>
 #include "include/forms.h"
 
+
+/***************************************
+ ***************************************/
+
 void timeout_remove_alert( int    id    FL_UNUSED_ARG,
 						   void * data  FL_UNUSED_ARG )
 {
     fl_hide_alert();
 }
 
-int
-main(int argc, char *argv[])
-{
-  int choice;
-  char str1[100],str2[100];
-  const char *s;
 
-  fl_initialize(&argc, argv, "FormDemo", 0, 0);
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
+{
+	int choice;
+	char str1[ 100 ],
+		 str2[ 100 ];
+	const char *s;
+
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
 #if 0
-  fl_set_resource(FLOKLabel,"Go");
+	fl_set_resource( FLOKLabel, "Go" );
 #endif
 
-  if( fl_show_question("Do you want bold font ?",1))
-     fl_set_goodies_font(FL_BOLD_STYLE,FL_NORMAL_SIZE);
+	if ( fl_show_question( "Do you want bold font ?", 1 ) )
+		fl_set_goodies_font( FL_BOLD_STYLE, FL_NORMAL_SIZE );
 
-  fl_show_messages("This is a test program for the goodies of the"
-		"forms library");
+	fl_show_messages( "This is a test program for the goodies of the"
+					  "forms library" );
 
-  fl_add_timeout(5000, timeout_remove_alert, 0);
-  fl_show_alert("Alert", "Alert form can be used to inform",
-               "recoverable errors", 0);
+	fl_add_timeout( 5000, timeout_remove_alert, 0 );
+	fl_show_alert( "Alert", "Alert form can be used to inform",
+				   "recoverable errors", 0 );
 
-  if (fl_show_question("Do you want to quit?", 0))
-      exit(0);
+	if (fl_show_question( "Do you want to quit?", 0 ) )
+		exit( 0 );
 
-  strcpy(str1,(s=fl_show_input("Give a string:","")) ? s:"");
-  fl_show_message("You typed:","",str1);
-  choice = fl_show_choices("Pick a choice",2,"One","Two","Three",2);
+	strcpy(str1, ( s = fl_show_input( "Give a string:", "" ) ) ? s: "" );
+	fl_show_message( "You typed:", "", str1 );
+	choice = fl_show_choices( "Pick a choice", 2, "One", "Two", "Three", 2 );
 
-  switch(choice)
-  {
-    case 1: fl_show_message("You typed: One","",""); break;
-    case 2: fl_show_message("You typed: Two","",""); break;
-    case 3: fl_show_message("You typed: Three","",""); break;
-    default: fl_show_message("An error occured!","",""); break;
-  }
+	switch ( choice )
+	{
+		case 1 :
+			fl_show_message( "You typed: One", "", "" );
+			break;
 
-  strcpy(str2,(s=fl_show_input("Give another string:",str1)) ? s:"<Cancel>");
-  fl_show_message("You typed:","",str2);
-  fl_show_messages("Good Bye");
+		case 2 :
+			fl_show_message( "You typed: Two", "", "" );
+			break;
 
-  fl_finish();
-  return 0;
+		case 3 :
+			fl_show_message( "You typed: Three", "", "" );
+			break;
+
+		default :
+			fl_show_message( "An error occured!", "", "" );
+			break;
+	}
+
+	strcpy( str2, ( s = fl_show_input( "Give another string:", str1 ) ) ?
+			        s : "<Cancel>" );
+	fl_show_message( "You typed:", "", str2 );
+	fl_show_messages( "Good Bye" );
+
+	fl_finish( );
+	return 0;
 }

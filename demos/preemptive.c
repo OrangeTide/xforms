@@ -32,32 +32,35 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include <stdlib.h>
 
 typedef struct {
-	FL_FORM *form0;
-	void *vdata;
-	char *cdata;
-	long ldata;
-	FL_OBJECT *butt;
-	FL_OBJECT *enter;
-	FL_OBJECT *leave;
-	FL_OBJECT *push;
-	FL_OBJECT *release;
-	FL_OBJECT *peek;
-	FL_OBJECT *override;
-	FL_OBJECT *event;
-	FL_OBJECT *done;
+	FL_FORM   * form0;
+	void      * vdata;
+	char      * cdata;
+	long        ldata;
+	FL_OBJECT * butt;
+	FL_OBJECT * enter;
+	FL_OBJECT * leave;
+	FL_OBJECT * push;
+	FL_OBJECT * release;
+	FL_OBJECT * peek;
+	FL_OBJECT * override;
+	FL_OBJECT * event;
+	FL_OBJECT * done;
 } FD_form0;
 
-extern FD_form0 * create_form_form0( void );
+extern FD_form0 *create_form_form0( void );
 
 FD_form0 *fd_form0;
 
-/* which event to take over is better kept in a state varible even though
-   query the status via fl_get_button is cheap
- */
+
+/***************************************
+ * which event to take over is better kept in a state varible even though
+ * query the status via fl_get_button is cheap
+ ***************************************/
 
 int
 preemptive_handler( FL_OBJECT * ob   FL_UNUSED_ARG,
@@ -119,6 +122,9 @@ preemptive_handler( FL_OBJECT * ob   FL_UNUSED_ARG,
 #define INTERVAL  800  /* wait this long before show tip */
 static int timeoutID;  /* we can also use ob->u_ldata to hold it */
 
+/***************************************
+ ***************************************/
+
 static void
 do_tips( int    id  FL_UNUSED_ARG,
 		 void * p )
@@ -131,11 +137,11 @@ do_tips( int    id  FL_UNUSED_ARG,
 }
 
 
-/*
+/***************************************
  * use the post handler as a tipper
- */
-int
+ ***************************************/
 
+int
 post_handler( FL_OBJECT * ob,
 			  int         event,
 			  FL_Coord    mx   FL_UNUSED_ARG,
@@ -162,6 +168,9 @@ post_handler( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 set_tip( FL_OBJECT * ob,
 		 char *      s )
@@ -170,6 +179,9 @@ set_tip( FL_OBJECT * ob,
     fl_set_object_posthandler( ob, post_handler );
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -207,31 +219,53 @@ main( int    argc,
 
 /* Form definition file generated with fdesign. */
 
+/***************************************
+ ***************************************/
+
 FD_form0 *
 create_form_form0( void )
 {
-  FL_OBJECT *obj;
-  FD_form0 *fdui = (FD_form0 *) fl_calloc(1, sizeof(FD_form0));
+	FL_OBJECT *obj;
+	FD_form0 *fdui = fl_calloc(1, sizeof *fdui );
 
-  fdui->form0 = fl_bgn_form(FL_NO_BOX, 320, 250);
-  obj = fl_add_box(FL_UP_BOX,0,0,320,250,"");
-  obj = fl_add_frame(FL_ENGRAVED_FRAME,200,70,95,100,"");
-  fdui->butt = obj = fl_add_button(FL_NORMAL_BUTTON,20,70,170,100,"A Button");
-  fdui->enter = obj = fl_add_checkbutton(FL_PUSH_BUTTON,210,70,45,30,"Enter");
-  fdui->leave = obj = fl_add_checkbutton(FL_PUSH_BUTTON,210,95,40,30,"Leave");
-  fdui->push = obj = fl_add_checkbutton(FL_PUSH_BUTTON,210,120,50,30,"Push");
-  fdui->release = obj = fl_add_checkbutton(FL_PUSH_BUTTON,210,140,60,30,"Release");
-  obj = fl_add_text(FL_NORMAL_TEXT,55,15,220,30,"Pre-emptive Handler");
-    fl_set_object_lsize(obj,FL_MEDIUM_SIZE);
-    fl_set_object_lalign(obj,FL_ALIGN_CENTER);
-    fl_set_object_lstyle(obj,FL_BOLD_STYLE);
-  fdui->peek = obj = fl_add_checkbutton(FL_RADIO_BUTTON,190,40,35,30,"Peek");
-    fl_set_object_color(obj,FL_COL1,FL_BLUE);
-  fdui->override = obj = fl_add_checkbutton(FL_RADIO_BUTTON,240,40,35,30,"Override");
-    fl_set_object_color(obj,FL_COL1,FL_BLUE);
-  fdui->event = obj = fl_add_box(FL_FLAT_BOX,40,180,245,25,"");
-  fdui->done = obj = fl_add_button(FL_NORMAL_BUTTON,170,210,100,30,"Done");
-  fl_end_form();
+	fdui->form0 = fl_bgn_form(FL_NO_BOX, 320, 250);
 
-  return fdui;
+	fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
+
+	fl_add_frame( FL_ENGRAVED_FRAME, 200, 70, 95, 100, "" );
+
+	fdui->butt = fl_add_button( FL_NORMAL_BUTTON, 20, 70, 170, 100,
+								"A Button" );
+
+	fdui->enter = fl_add_checkbutton( FL_PUSH_BUTTON, 210, 70, 45, 30,
+									  "Enter" );
+
+	fdui->leave = fl_add_checkbutton( FL_PUSH_BUTTON, 210, 95, 40, 30,
+									  "Leave" );
+
+	fdui->push = fl_add_checkbutton( FL_PUSH_BUTTON, 210, 120, 50, 30, "Push" );
+
+	fdui->release = fl_add_checkbutton( FL_PUSH_BUTTON, 210, 140, 60, 30,
+										"Release" );
+
+	obj = fl_add_text( FL_NORMAL_TEXT, 55, 15, 220, 30, "Pre-emptive Handler" );
+    fl_set_object_lsize( obj, FL_MEDIUM_SIZE );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
+    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
+
+	fdui->peek = obj = fl_add_checkbutton( FL_RADIO_BUTTON, 190, 40, 35, 30,
+										   "Peek" );
+    fl_set_object_color( obj, FL_COL1, FL_BLUE );
+
+	fdui->override = obj = fl_add_checkbutton( FL_RADIO_BUTTON, 240, 40, 35, 30,
+											   "Override" );
+    fl_set_object_color( obj, FL_COL1, FL_BLUE );
+
+	fdui->event = fl_add_box( FL_FLAT_BOX, 40, 180, 245, 25, "" );
+
+	fdui->done = fl_add_button( FL_NORMAL_BUTTON, 170, 210, 100, 30, "Done" );
+
+	fl_end_form( );
+
+	return fdui;
 }

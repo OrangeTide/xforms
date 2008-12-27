@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -79,7 +76,7 @@ typedef struct
     int           repeat_ms;
 	int           cur_repeat_ms;
 	int           min_repeat_ms;
-	int           do_speed_up;
+	int           do_speedjump;
     int           timeout_id;
     int           mouse_pos;	/* < 0 below knob, 0 on knob, > 0 above knob */
 } FLI_VALUATOR_SPEC;

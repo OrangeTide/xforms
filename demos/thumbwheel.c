@@ -23,44 +23,61 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "fd/twheel_gui.h"
 
 /* callbacks and freeobj handles for form twheelform */
-void valchange_cb( FL_OBJECT * ob,
-				   long        data  FL_UNUSED_ARG )
+
+/***************************************
+ ***************************************/
+
+void
+valchange_cb( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
-     FD_twheelform *fdui = (FD_twheelform *)ob->form->fdui;
-     char buf[128];
+	FD_twheelform *fdui = ( FD_twheelform * ) ob->form->fdui;
+	char buf[ 128 ];
 
-     sprintf(buf,"%.3f",fl_get_thumbwheel_value(ob));
-     fl_set_object_label(fdui->report,buf);
-}
-
-void returnchange_cb( FL_OBJECT * ob,
-					  long        data  FL_UNUSED_ARG )
-{
-     FD_twheelform *fdui = (FD_twheelform *)ob->form->fdui;
-     int n = fl_get_choice(ob)-1;
-
-     fl_set_thumbwheel_return(fdui->vert, n);
-     fl_set_thumbwheel_return(fdui->hor, n);
+	sprintf( buf, "%.3f", fl_get_thumbwheel_value( ob ) );
+	fl_set_object_label( fdui->report, buf );
 }
 
 
-int main(int argc, char *argv[])
+/***************************************
+ ***************************************/
+
+void
+returnchange_cb( FL_OBJECT * ob,
+				 long        data  FL_UNUSED_ARG )
 {
-   FD_twheelform *fd_twheelform;
+     FD_twheelform *fdui = ( FD_twheelform * ) ob->form->fdui;
+     int n = fl_get_choice( ob ) - 1;
 
-   fl_initialize(&argc, argv, 0, 0, 0);
-   fd_twheelform = create_form_twheelform();
+     fl_set_thumbwheel_return( fdui->vert, n );
+     fl_set_thumbwheel_return( fdui->hor, n );
+}
 
-   /* fill-in form initialization code */
 
-   /* show the first form */
-   fl_show_form(fd_twheelform->twheelform,
-                FL_PLACE_CENTERFREE,FL_FULLBORDER,"twheelform");
+/***************************************
+ ***************************************/
 
-   fl_do_forms();
-   return 0;
+int
+main( int    argc,
+	  char * argv[ ] )
+{
+	FD_twheelform *fd_twheelform;
+
+	fl_initialize( &argc, argv, 0, 0, 0 );
+	fd_twheelform = create_form_twheelform( );
+
+	/* fill-in form initialization code */
+
+	/* show the first form */
+
+	fl_show_form( fd_twheelform->twheelform,
+				  FL_PLACE_CENTERFREE, FL_FULLBORDER, "twheelform" );
+
+	fl_do_forms( );
+	return 0;
 }

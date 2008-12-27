@@ -110,7 +110,7 @@ app_init( void )
     setup.visual_cue = visual_cue;
     setup.header_info = 1;
     setup.app_data = &app;
-    flimage_setup(&setup);
+    flimage_setup( &setup );
 
     fl_set_dirlist_filter( image_file_filter );
 }

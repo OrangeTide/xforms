@@ -1,3 +1,23 @@
+2008-12-27 Jens Thoms Toerring    <jt@toerring.de>
+
+	* doc: Reassembly of documentation in texinfo format more
+	or less complete. Still missing are most of the figures.
+
+	* lib/include/popup.h: File has been renamed xpopup.h.
+
+	* lib/popup.c, lib/include/popup.h, demo/new_popup.c: New
+	implementation of popups, supposed to replace old Xpopups.
+	Still missing: reimplementation of menu and choice objects
+	based on the new Popup class.
+
+	* lib/forms.c: fl_end_group() now returns void instead of
+	a pseudo-object that never should be used by the user.
+
+2008-12-10 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xpopup.c: Found that FL_PUP_GREY and FL_PUP_INACTIVE
+	are actually the same, so removed all uses of FL_PUP_INACTIVE.
+
 2008-12-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	* doc: New dirctory with first parts of rewrite of docu-
@@ -25,9 +45,9 @@
 	will change immediately and continue to change slowly when
 	the mouse button is kept pressed down.
 
-	* fdesign/fd_forms.c: Rob Carpenter found that while loading
-	a .fd file a spurious "Failure to read file" warning gets
-	emitted.
+	* fdesign/fd_forms.c: Rob Carpenter and Werner Heisch found
+	that while loading .fd file a spurious "Failure to read file"
+	warning gets emitted.
 
 2008-11-22 Jens Thoms Toerring    <jt@toerring.de>
 
@@ -271,7 +291,7 @@
 	pixmap got drawn outside of the object that it
 	belongs to. That in turn could mess up redrawing
 	(e.g. if the pixmap object got hidden). Thus now
-	only that part of a pixmap that fits inside the	
+	only that part of a pixmap that fits inside the
 	object gets drawn.
 
 2008-05-15 Jens Thoms Toerring    <jt@toerring.de>
@@ -498,7 +518,7 @@
 	childs of a composite object, which isn't the case.
 	Thanks to Andrea Scopece for finding this problem.
 
-	* lib/scrollbar.c: Horizontal scrollbars now only get	
+	* lib/scrollbar.c: Horizontal scrollbars now only get
 	resized in x-direction per default, verticall ones in
 	y-direction only.
 
@@ -576,7 +596,7 @@
 	in fl_finish().
 
 	* fdesign/fd_printC.c: Output wasn't correct ANSI-C89
-	when the pre_form_output() function was called. 
+	when the pre_form_output() function was called.
 
 	* fdesign/fd/*.[ch], fdesign/spec/*.[ch]: Newly
 	generated using the newest fdesign version.
@@ -702,7 +722,7 @@
 	of the sometimes ugly menu popup titles. This leads to
 	an important change in the behaviour of FL_PUSH_MENU
 	objects: if the title is switched off they only get
-	opened on button release and stay directly below the	
+	opened on button release and stay directly below the
 	menu button (like FL_PULLDOWN_MENU objects).
 
 	There's a lot of code identical to that in choice.c,
@@ -751,7 +771,7 @@
 	gravity set and all resizing switched off (in which case
 	the center of gravity is moved when the enclosing form is
 	resized) seems to be a bit strange. Why is not the same
-	behaviour used for e.g. the  x-direction if an object 
+	behaviour used for e.g. the  x-direction if an object
 	isn't fixed in x-direction by its gravity setting and it
 	isn't to be resized in horizontal direction (same for y)?
 
@@ -759,7 +779,7 @@
 	did lead to missed redraws under e.g. KDE or Gnome if they are
 	set up to update a window also during resizing and the mouse is
 	moved around a lot in the process.
-	
+
 	* lib/textbox.c: Hopefully fixed a bug (perhaps it's the one
 	that Michal Szymanski reported on 2005/3/11 in the XForms
 	mailing list) that resulted under certain circumstances in e.g.
@@ -772,7 +792,7 @@
 	text area of a browser from being redrawn correctly following
 	the resizing of its window when sliders were on and not in
 	the left- or top-most position.
-	
+
 	* lib/objects.c: Added three functions fl_get_object_bw(),
 	fl_get_object_gravity() and fl_get_object_resize() (to be
 	added to the public interface).
@@ -1031,7 +1051,7 @@
 
 2004-05-13  Angus Leeming  <angus.leeming@btopenworld.com>
 
-	* image/Makefile.am (libflimage_la_LDFLAGS): 
+	* image/Makefile.am (libflimage_la_LDFLAGS):
 	* gl/Makefile.am (libformsGL_la_LDFLAGS): change the -version-info
 	data to '@SO_VERSION@' so that all get updated automatically.
 
@@ -1044,9 +1064,9 @@
 
 2004-05-12  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
-	* gl/Makefile.am (INCLUDES): 
-	* demos/Makefile.am (INCLUDES): 
-	* fd2ps/Makefile.am (INCLUDES): 
+	* gl/Makefile.am (INCLUDES):
+	* demos/Makefile.am (INCLUDES):
+	* fd2ps/Makefile.am (INCLUDES):
 	* fdesign/Makefile.am (INCLUDES): add X_CFLAGS
 
 2004-05-07  Angus Leeming  <angus.leeming@btopenworld.com>
@@ -1103,7 +1123,7 @@
 
 	* fdesign/fd_spec.c: initialization of the FL_CHOICE component of
 	the objspec struct used 'emit_menu_header' and 'emit_menu_global',
-	a cut-n-paste typo from the following FL_MENU component. 
+	a cut-n-paste typo from the following FL_MENU component.
 	They have both been reset to '0'.
 
 2004-05-04  Angus Leeming  <angus.leeming@btopenworld.com>
@@ -1126,8 +1146,8 @@
 	Pass the associated (XEvent * xev) to fl_handle_object on an FL_DRAW
 	event. This XEvent * is not used at all by any of xforms' "native"
 	widgets, but an FL_FREE object is able to make use of this info to
-	redraw only the part of the window that has changed. 
- 
+	redraw only the part of the window that has changed.
+
 	* forms.c (fl_handle_form): pass the XEvent on an FL_DRAW event.
 
 	* objects.c (redraw_marked): pass the XEvent to fl_handle_object.
@@ -1178,15 +1198,15 @@
 	got forgotten
 
 2004-03-30  Hans J. Johnson <hjohnson@mail.psychiatry.uiowa.edu>
-	
+
 	* lib/pixmap.c (cleanup_xpma_struct): use a better check for
 	libXpm version
 
 2004-03-30  Jean-Marc Lasgouttes  <lasgouttes@lyx.org>
 
 	* XForms 1.0.90 released
-	
-	* NEWS: 
+
+	* NEWS:
 	* README: update for 1.0.90
 
 	* configure.ac: set version to 1.0.90. Use XFORMS_CHECK_VERSION
@@ -1200,7 +1220,7 @@
 	* README: small update
 
 	* configure.ac: add new define RETSIGTYPE_IS_VOID
-	
+
 	* lib/signal.c: fix handling of RETSIGTYPE
 
 2003-12-02  Angus Leeming  <angus.leeming@btopenworld.com>

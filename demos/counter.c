@@ -45,13 +45,14 @@ void
 color_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
 {
-    int r = fl_get_counter_value( co[ 0 ] );
-    int g = fl_get_counter_value( co[ 1 ] );
-    int b = fl_get_counter_value( co[ 2 ] );
+	int c[ 3 ];
+	int i;
 
-    fl_mapcolor( FL_FREE_COL1, r, g, b );
+	for ( i = 0; i < 3; i++ )
+		c[ i ] = fl_get_counter_value( co[ i ] );
+
+    fl_mapcolor( FL_FREE_COL1, c[ 0 ], c[ 1 ], c[ 2 ] );
     fl_redraw_object( result );
-
 }
 
 
@@ -71,7 +72,7 @@ create_form_form( void )
    fl_set_object_dblbuffer( result, 1 );
 
    co[ 0 ] = obj = fl_add_counter( FL_NORMAL_COUNTER, 20, 20, 270, 30, "" );
-   fl_set_object_color( obj, FL_INDIANRED,FL_RED );
+   fl_set_object_color( obj, FL_INDIANRED, FL_RED );
    fl_set_object_callback( obj, color_change, 0 );
 
    co[ 1 ] = obj = fl_add_counter( FL_NORMAL_COUNTER, 20, 60, 270, 30, "" );
@@ -98,6 +99,7 @@ main( int    argc,
    int i;
 
    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+
    create_form_form( );
    fl_set_object_color( result, FL_FREE_COL1, FL_FREE_COL1 );
 
@@ -112,6 +114,7 @@ main( int    argc,
    fl_call_object_callback( co[ 0 ] );
 
    fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Counter" );
+
    fl_do_forms( );
 
    return 0;

@@ -79,6 +79,7 @@ libforms_la_SOURCES = \
 	objects.c \
 	oneliner.c \
 	pixmap.c \
+	popup.c \
 	positioner.c \
 	read2lsbf.c \
 	read2msbf.c \

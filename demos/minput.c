@@ -25,6 +25,10 @@
 #endif
 #include "include/forms.h"
 
+
+/***************************************
+ ***************************************/
+
 void
 input_cb( FL_OBJECT * ob,
 		  long        data  FL_UNUSED_ARG )
@@ -35,24 +39,38 @@ input_cb( FL_OBJECT * ob,
     fprintf(stderr,"x=%d y=%d\n",x,y);
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char * argv[ ] )
 {
-  FL_FORM *form;
-  FL_OBJECT *but, *obj;
+	FL_FORM *form;
+	FL_OBJECT *but,
+		      *obj;
 
-  fl_initialize(&argc, argv, "FormDemo", 0, 0);
-  form = fl_bgn_form(FL_UP_BOX,400,450);
-    obj = fl_add_input(FL_MULTILINE_INPUT,30,270,340,150,"");
-    obj =  fl_add_input(FL_MULTILINE_INPUT,30,90,340,150,"");
-    fl_set_object_lsize(obj, FL_NORMAL_SIZE);
-  but = fl_add_button(FL_NORMAL_BUTTON,160,30,80,30,"Exit");
-  fl_end_form();
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-  fl_show_form(form,FL_PLACE_CENTERFREE,FL_FULLBORDER,"MultiLineInput");
+	form = fl_bgn_form( FL_UP_BOX, 400, 450 );
 
-  do  obj = fl_do_forms(); while (obj != but);
+    fl_add_input( FL_MULTILINE_INPUT, 30, 270, 340, 150, "" );
 
-  fl_finish();
-  return 0;
+    obj =  fl_add_input( FL_MULTILINE_INPUT, 30, 90, 340, 150, "" );
+    fl_set_object_lsize( obj, FL_NORMAL_SIZE );
+
+	but = fl_add_button( FL_NORMAL_BUTTON, 160, 30, 80, 30, "Exit" );
+
+	fl_end_form( );
+
+	fl_show_form( form, FL_PLACE_CENTERFREE, FL_FULLBORDER, "MultiLineInput" );
+
+	do
+		obj = fl_do_forms( );
+	while ( obj != but );
+
+	fl_finish( );
+
+	return 0;
 }

@@ -35,6 +35,7 @@ noinst_HEADERS = \
 	text.h \
 	thumbwheel.h \
 	timer.h \
+	xpopup.h \
 	xyplot.h \
 	zzz.h
 

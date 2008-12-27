@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.	 If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -36,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fs = "$Id: fselect.c,v 1.20 2008/05/09 12:33:01 jtt Exp $";
+char *fl_id_fs = "$Id: fselect.c,v 1.21 2008/12/27 22:20:49 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -300,75 +297,11 @@ fli_del_tail_slash( char * d )
 }
 
 
-#define ATTACHABLE 1
-
-#if ! ATTACHABLE
-
 /***************************************
  * A file is selected from the browser. Return 1 if valid selection
  * i.e., double-clicked. Note that if a call back is defined,
  * always return 0
  ***************************************/
-
-static int
-select_cb( FL_OBJECT * ob,
-		   long		   arg )
-{
-	int dir;
-	char seltext[ FL_PATH_MAX ];
-	static int lastline = -1;
-	int dblclick,
-		thisline;
-	FD_fselect *lfs = ob->form->fdui;
-
-	thisline = fl_get_browser( ob );
-
-	if ( thisline <= 0 )
-		return 0;
-
-	strncpy( seltext, fl_get_browser_line( ob, thisline ), sizeof seltext );
-	seltext[ sizeof seltext - 1 ] = '\0';
-	dir = seltext[ 0 ] == dirmarker && seltext[ 1 ] == ' ';
-
-	memmove( seltext, seltext + 2, strlen( seltext + 2 ) + 1 );
-
-	dblclick =	  lastline == thisline
-			   && fli_time_passed( FLI_FS_TIMEr ) < 1.0e-3 * ob->click_timeout;
-
-	lastline = thisline;
-	fli_reset_time( FLI_FS_TIMER );
-
-	if ( dir )
-	{
-		if ( dblclick )
-		{
-			strcat( append_slash( lfs->dname ), seltext );
-			fl_fix_dirname( lfs->dname );
-			if ( fill_entries( lfs->browser, 0, 0 ) < 0 )
-				fli_del_tail_slash( lfs->dname );
-			seltext[ 0 ] = '\0';
-		}
-		fl_set_input( lfs->input, seltext );
-		return 0;
-	}
-	else
-	{
-		fl_set_input( lfs->input, seltext );
-		strcpy( lfs->filename, seltext );
-
-		if ( dblclick )
-		{
-			if ( lfs->fselect_cb )
-				lfs->fselect_cb( cmplt_name( ), lfs->callback_data );
-			else
-				return 1;
-		}
-	}
-
-	return 0;
-}
-
-#else
 
 static void
 select_cb( FL_OBJECT * ob,
@@ -417,7 +350,6 @@ select_cb( FL_OBJECT * ob,
 		}
 	}
 }
-#endif
 
 
 /***************************************
@@ -919,10 +851,7 @@ fl_show_fselector( const char * message,
 	do
 	{
 		obj = fl_do_only_forms( );
-#if ! ATTACHABLE
-		if ( obj == lfs->browser && select_cb( obj, 0 ) )
-			break;
-#endif
+
 		/* can you say ugly */
 
 		if ( obj == lfs->ready && ( tmp = fl_get_input( lfs->input ) ) && *tmp )
@@ -1214,10 +1143,8 @@ create_form_fselect( void )
 	fl_set_object_callback( obj, input_cb, 0 );
 
 	fs->browser = obj = fl_add_browser( FL_HOLD_BROWSER, 15, 80, 185, 180, "" );
-#if ATTACHABLE
 	fl_set_object_callback( obj, select_cb, 0 );
 	fl_set_browser_dblclick_callback( obj, select_cb, 1 );
-#endif
 	fl_set_object_resize( obj, FL_RESIZE_ALL );
 	fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );
 	obj->click_timeout = FL_CLICK_TIMEOUT;

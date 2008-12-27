@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -399,10 +396,10 @@ fl_add_scrollbar( int          type,
 				  FL_Coord     h,
 				  const char * l )
 {
-    FL_OBJECT *ob = fl_create_scrollbar( type, x, y, w, h, l );
+    FL_OBJECT *obj = fl_create_scrollbar( type, x, y, w, h, l );
 
-    fl_add_object( fl_current_form, ob );
-    return ob;
+    fl_add_object( fl_current_form, obj );
+    return obj;
 }
 
 

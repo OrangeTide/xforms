@@ -65,6 +65,9 @@ static int max_w = 150,
 static Display *dpy;
 
 
+/***************************************
+ ***************************************/
+
 int
  main( int    argc,
 	   char * argv[ ] )
@@ -81,9 +84,13 @@ int
     return 0;
 }
 
+
 /* Structure mantainace */
 
 typedef void ( *DrawFunc )( int, int, int, int, int, unsigned long );
+
+/***************************************
+ ***************************************/
 
 void
 draw_triangle( int           fill,
@@ -141,40 +148,46 @@ typedef struct
 static DrawFigure saved_figure[ 800 ],
                   *cur_fig;
 
-void draw_initialize( FD_drawfree *ui )
+/***************************************
+ ***************************************/
+
+void draw_initialize( FD_drawfree * ui )
 {
-    fl_set_form_minsize(ui->drawfree, 530, 490);
-    fl_set_object_gravity(ui->colgrp, WestGravity, WestGravity);
-    fl_set_object_gravity(ui->sizegrp, SouthWestGravity, SouthWestGravity);
-    fl_set_object_gravity(ui->figgrp, NorthWestGravity, NorthWestGravity);
-    fl_set_object_gravity(ui->miscgrp, SouthGravity, SouthGravity);
-    fl_set_object_resize(ui->miscgrp, FL_RESIZE_NONE);
+    fl_set_form_minsize( ui->drawfree, 530, 490);
+    fl_set_object_gravity( ui->colgrp, WestGravity, WestGravity );
+    fl_set_object_gravity( ui->sizegrp, SouthWestGravity, SouthWestGravity );
+    fl_set_object_gravity( ui->figgrp, NorthWestGravity, NorthWestGravity );
+    fl_set_object_gravity( ui->miscgrp, SouthGravity, SouthGravity );
+    fl_set_object_resize( ui->miscgrp, FL_RESIZE_NONE );
 
     cur_fig = saved_figure;
-    cur_fig->c[0] = cur_fig->c[1] = cur_fig->c[2] = 127,
+    cur_fig->c[ 0 ] = cur_fig->c[ 1 ] = cur_fig->c[ 2 ] = 127,
     cur_fig->w = cur_fig->h = 30;
     cur_fig->drawit = fl_oval;
     cur_fig->fill = 1;
     cur_fig->col = FL_FREE_COL1 + 1;
 
-    fl_mapcolor(FL_FREE_COL1, cur_fig->c[0], cur_fig->c[1], cur_fig->c[2]);
-    fl_mapcolor(cur_fig->col, cur_fig->c[0], cur_fig->c[1], cur_fig->c[2]);
+    fl_mapcolor( FL_FREE_COL1,
+				 cur_fig->c[ 0 ], cur_fig->c[ 1 ], cur_fig->c[ 2 ] );
+    fl_mapcolor( cur_fig->col,
+				 cur_fig->c[ 0 ], cur_fig->c[ 1 ], cur_fig->c[ 2 ] );
 
-    fl_set_slider_bounds(ui->wsli, 1, max_w);
-    fl_set_slider_bounds(ui->hsli, 1, max_h);
-    fl_set_slider_precision(ui->wsli, 0);
-    fl_set_slider_precision(ui->hsli, 0);
-    fl_set_slider_value(ui->wsli, cur_fig->w);
-    fl_set_slider_value(ui->hsli, cur_fig->h);
+    fl_set_slider_bounds( ui->wsli, 1, max_w );
+    fl_set_slider_bounds( ui->hsli, 1, max_h );
+    fl_set_slider_precision( ui->wsli, 0 );
+    fl_set_slider_precision( ui->hsli, 0 );
+    fl_set_slider_value( ui->wsli, cur_fig->w );
+    fl_set_slider_value( ui->hsli, cur_fig->h );
 
     /* color sliders */
-    fl_set_slider_bounds(ui->rsli, 1.0, 0);
-    fl_set_slider_bounds(ui->gsli, 1.0, 0);
-    fl_set_slider_bounds(ui->bsli, 1.0, 0);
+
+    fl_set_slider_bounds( ui->rsli, 1.0, 0 );
+    fl_set_slider_bounds( ui->gsli, 1.0, 0 );
+    fl_set_slider_bounds( ui->bsli, 1.0, 0 );
 
     /* intial drawing function */
 
-    fl_set_button(ui->drobj[0], 1);
+    fl_set_button( ui->drobj[ 0 ], 1 );
 
     /* setup the color slider so we can find out colorobject from
        the callback funtions. This is not necessary as drawui
@@ -187,49 +200,86 @@ void draw_initialize( FD_drawfree *ui )
 }
 
 
-void switch_object( FL_OBJECT * ob  FL_UNUSED_ARG,
-					long        which )
+/***************************************
+ ***************************************/
+
+void
+switch_object( FL_OBJECT * ob  FL_UNUSED_ARG,
+			   long        which )
 {
     cur_fig->drawit = drawfunc[ which ];
 }
 
-void change_color(FL_OBJECT * ob, long which)
+
+/***************************************
+ ***************************************/
+
+void
+change_color( FL_OBJECT * ob,
+			  long        which )
 {
-    cur_fig->c[which] = (int)(fl_get_slider_value(ob) * 255.01);
-    fl_mapcolor(cur_fig->col, cur_fig->c[0], cur_fig->c[1], cur_fig->c[2]);
-    fl_mapcolor(FL_FREE_COL1, cur_fig->c[0], cur_fig->c[1], cur_fig->c[2]);
-    fl_redraw_object(((FD_drawfree *)ob->u_vdata)->colorobj);
+    cur_fig->c[ which ] = fl_get_slider_value(ob) * 255.01;
+    fl_mapcolor( cur_fig->col,
+				 cur_fig->c[ 0 ], cur_fig->c[ 1 ], cur_fig->c[ 2 ] );
+    fl_mapcolor( FL_FREE_COL1,
+				 cur_fig->c[ 0 ], cur_fig->c[ 1 ], cur_fig->c[ 2 ] );
+    fl_redraw_object( ( ( FD_drawfree * ) ob->u_vdata )->colorobj );
 }
 
-void fill_cb( FL_OBJECT * ob,
-			  long        notused  FL_UNUSED_ARG )
+
+/***************************************
+ ***************************************/
+
+void
+fill_cb( FL_OBJECT * ob,
+		 long        notused  FL_UNUSED_ARG )
 {
-    cur_fig->fill = !fl_get_button(ob);
+    cur_fig->fill = !fl_get_button( ob );
 }
 
-void change_size(FL_OBJECT * ob, long which)
+
+/***************************************
+ ***************************************/
+
+void
+change_size( FL_OBJECT * ob,
+			 long        which )
 {
-    if (which == 0)
-	cur_fig->w = (int)fl_get_slider_value(ob);
+    if ( which == 0 )
+		cur_fig->w = fl_get_slider_value( ob );
     else
-	cur_fig->h = (int)fl_get_slider_value(ob);
+		cur_fig->h = fl_get_slider_value( ob );
 }
 
-void refresh_cb( FL_OBJECT * ob     FL_UNUSED_ARG,
-				 long        which  FL_UNUSED_ARG )
+
+/***************************************
+ ***************************************/
+
+void
+refresh_cb( FL_OBJECT * ob     FL_UNUSED_ARG,
+			long        which  FL_UNUSED_ARG )
 {
-    fl_redraw_object(drawui->freeobj);
+    fl_redraw_object( drawui->freeobj );
 }
 
-void clear_cb( FL_OBJECT * ob       FL_UNUSED_ARG,
-			   long        notused  FL_UNUSED_ARG )
+
+/***************************************
+ ***************************************/
+
+void
+clear_cb( FL_OBJECT * ob       FL_UNUSED_ARG,
+		  long        notused  FL_UNUSED_ARG )
 {
-    saved_figure[0] = *cur_fig;
+    saved_figure[ 0 ] = *cur_fig;
     cur_fig = saved_figure;
-    fl_redraw_object(drawui->freeobj);
+    fl_redraw_object( drawui->freeobj );
 }
 
-/*  The routine that does drawing */
+
+/***************************************
+ * The routine that does drawing
+ ***************************************/
+
 int freeobject_handler( FL_OBJECT * ob,
 						int         event,
 						FL_Coord    mx,
@@ -239,15 +289,15 @@ int freeobject_handler( FL_OBJECT * ob,
 {
     DrawFigure *dr;
 
-    switch (event)
+    switch ( event )
     {
 		case FL_DRAW:
-			if (cur_fig->newfig == 1)
+			if ( cur_fig->newfig == 1 )
 			{
 				cur_fig->drawit( cur_fig->fill,
 								 cur_fig->x + ob->x,
 								 cur_fig->y + ob->y,
-								 cur_fig->w, cur_fig->h, cur_fig->col);
+								 cur_fig->w, cur_fig->h, cur_fig->col );
 			}
 			else
 			{
@@ -289,7 +339,12 @@ int freeobject_handler( FL_OBJECT * ob,
     return 0;
 }
 
-FD_drawfree *create_form_drawfree(void)
+
+/***************************************
+ ***************************************/
+
+FD_drawfree *
+create_form_drawfree( void )
 {
 	FL_OBJECT *obj;
 	FD_drawfree *fdui = fl_calloc(1, sizeof *fdui );
@@ -385,4 +440,3 @@ FD_drawfree *create_form_drawfree(void)
 
 	return fdui;
 }
-

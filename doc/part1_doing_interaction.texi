@@ -1,5 +1,5 @@
-@node Doing Interaction
-@chapter Part I: Doing Interaction
+@node Part I Doing Interaction
+@chapter Doing Interaction
 
 After having defined the forms the application program can use them to
 interact with the user. As a first step the program has to display the
@@ -102,13 +102,13 @@ void fl_set_form_position(FL_FORM *form, FL_Coord x, FL_Coord y);
 @end example
 @noindent
 and
-@findex fl_set_form_size(
+@findex fl_set_form_size()
 @example
 void fl_set_form_size(FL_FORM *form, FL_Coord w, FL_Coord h);
 @end example
 @noindent
 or, more conveniently,
-@findex fl_set_form_geometry(
+@findex fl_set_form_geometry()
 @example
 void fl_set_form_geometry(FL_FORM form*, FL_Coord x, FL_Coord y,
                           FL_Coord w, FL_Coord h);
@@ -136,7 +136,7 @@ one of the following two routines to set the "hotspot"
 @findex fl_set_form_hotobject()
 @example
 void fl_set_form_hotspot(FL_FORM *form, FL_Coord x, FL_Coord y);
-void fl_set_form_hotobject(FL_FORM *form, FL_OBJECT *ob);
+void fl_set_form_hotobject(FL_FORM *form, FL_OBJECT *obj);
 @end example
 @noindent
 and use @code{FL_PLACE_HOTSPOT} in @code{fl_show_form()} to realize. The
@@ -167,16 +167,17 @@ around. If a form is transient or has no border, it is normally more
 difficult (or even impossible) to move the form. A transient form
 typically should have less decoration , but not necessarily so. It
 depends on window mangers as well as their options. @code{FL_NOBORDER}
-is guaranteed to have no border@footnote{Provided the window manager is
-compliant. If the window manager is not compliant, all bets are off.}
-and is immune to iconification request. Because of this, borderless
-forms can be hostile to other applications@footnote{Actually, they are
-also hostile to their sibling forms. See Appendix A.}, so use this only
-if absolutely necessary.
+is guaranteed to have no border@footnote{Provided the window manager
+is compliant. If the window manager is not compliant, all bets are
+off.} and is immune to iconification request. Because of this,
+borderless forms can be hostile to other
+applications@footnote{Actually, they are also hostile to their sibling
+forms. @xref{Part V Overview of Main Functions, , Overview of Main
+Functions}.}, so use this only if absolutely necessary.
 
 There are other subtle differences between the different decoration
 requests. For instance, (small) transient forms always have
-@code{save_under} (See @code{XSetWindowAttributes(3X11)}) set to true by
+@code{save_under} (see @code{XSetWindowAttributes()}) set to true by
 default. Some window properties, @code{WM_COMMAND} in particular, are
 only set for full-bordered forms and will only migrate to other
 full-bordered forms when the original form having the property becomes
@@ -188,7 +189,7 @@ full-bordered form shown becomes the main form of the application. All
 transient windows shown afterwards will stay on top of the main form.
 The application can set or change the main form anytime using the
 following routine
-@findex fl_set_app_mainform(
+@findex fl_set_app_mainform()
 @example
 void fl_set_app_mainform(FL_FORM *form);
 @end example
@@ -235,9 +236,9 @@ control is needed. To this end, the following routines can be used
 @findex fl_set_object_gravity()
 @findex fl_set_object_resize()
 @example
-void fl_set_object_gravity(FL_OBJECT *ob,
+void fl_set_object_gravity(FL_OBJECT *obj,
                            unsigned NWgravity, unsigned SEgravity);
-void fl_set_object_resize(FL_OBJECT *ob, unsigned howresize);
+void fl_set_object_resize(FL_OBJECT *obj, unsigned howresize);
 @end example
 @noindent
 where @code{howresize} can be one of
@@ -253,7 +254,7 @@ meanings. An alias
 make both dimension scalable. 
 
 @code{NWgravity} and @code{SEgravity} control
-respectively the positioning of the upper-left and lower-right corner of
+the positioning of the upper-left and lower-right corner of
 the object and work analogously to the @code{win_gravity} in
 Xlib. The details are as follows: Let @code{P} be the corner
 the gravity applies to, @code{(dx1,dy1)} the distance to the
@@ -304,15 +305,25 @@ center of gravity of the object constant relative to the form.
 
 Again, since all sizing requests go though the window manager, there is
 no guarantee that your request will be honored. If a form is placed with
-@code{Fl_PLACE_GEOMETRY} or other size-restricting options, resizing
+@code{FL_PLACE_GEOMETRY} or other size-restricting options, resizing it
 later via @code{fl_set_form_size()} will likely be rejected.
+
+To determine the gravity and resize settings for an object use the
+functions
+@findex fl_get_object_gravity()
+@findex fl_get_object_resize()
+@example
+void fl_get_object_gravity(FL_OBJECT *obj,
+                           unsigned int *nw, unsigned int *se);
+void fl_get_object_resize(FL_OBJECT *obj, unsigned int *resize );
+@end example
 
 Sometimes, you may want to change an attribute for all objects on a
 particular form, to this end, the following iterator is available
 @findex fl_for_all_objects()
 @example
 void fl_for_all_objects(FL_FORM *form,
-                        int (*operate)(FL_OBJECT *ob, void *data),
+                        int (*operate)(FL_OBJECT *obj, void *data),
                         void *data);
 @end example
 @noindent
@@ -327,7 +338,7 @@ The graphical mode in which the form is shown depends on the type of
 machine. In general, the visual chosen by XForms is the one that has the
 most colors. Application programs have many ways to change this default,
 either through command line options, resources or programmatically. See
-the appendices for details.
+the Part V for details.
 
 If for any reason, you would like to change the form title (as well as
 its associated icon) after it is shown, the following call can be used
@@ -338,16 +349,16 @@ void fl_set_form_title(FL_FORM *form, const char *name)
 
 To set or change the icon shown when a form is iconified, use the
 following routine
-@findex fl_set_form_icon(
+@findex fl_set_form_icon()
 @example
 void fl_set_form_icon(FL_FORM *form, Pixmap icon, Pixmap mask);
 @end example
 @noindent
 where @code{icon} and @code{mask} can be any valid Pixmap ID. (See
-Sections 15.5 and 15.6 for some of the routines that can be used to
-create Pixmaps.) Note that an @code{icon} previously setvia this
-function (if it exists) is not freed or modified in anyway. See the demo
-program @file{iconify.c} for an example.
+@ref{Other Pixmap Routines} for some of the routines that can be used
+to create Pixmaps.) Note that an @code{icon} previously setvia this
+function (if it exists) is not freed or modified in anyway. See the
+demo program @file{iconify.c} for an example.
 
 If the application program wants to stop interacting with a form and
 remove it from the screen, it has to use the call
@@ -412,17 +423,17 @@ callback function.
 @ifnottex
 
 @menu
-* Simple::           Simple Interaction
-* Periodic::         Periodic Events and Non-blocking Interaction
-* Dealing::          Dealing With Multiple Mindows::
-* Using Callbacks::  Using Callback Functions
-* Handling::         Handling Other Input Sources
+* Simple Interaction::
+* Periodic Events and Non-blocking Interaction::
+* Dealing With Multiple Windows::
+* Using Callback Functions::
+* Handling Other Input Sources::
 @end menu
 
 @end ifnottex
 
 
-@node Simple
+@node Simple Interaction
 @section Simple Interaction
 
 Once one or more forms are shown it is time to give the control to the
@@ -448,7 +459,7 @@ Also a text never changes state.
 A button is returned when the user presses a mouse button on it and then
 releases the button. The change is not reported before the user releases
 the mouse button, except with touch buttons which are returned all the
-time as long as the user keeps the mouse pressed on it. (See e.g.
+time as long as the user keeps the mouse pressed on it. (See e.g.@:
 @file{touchbutton.c} for the use of touch buttons.)
 @item slider
 A slider is returned whenever it changes value, so whenever the user
@@ -456,7 +467,7 @@ moves his mouse after having pressed the slider.
 @item input
 An input field is returned when it is deactivated, i.e., the user has
 selected it and then selected another input field for input (e.g. by
-pressing the @code{<TAB>} key).
+pressing the @code{<Tab>} key).
 @end table
 
 When the object is returned by @code{fl_do_forms()} the application
@@ -483,11 +494,11 @@ For such programs, the global structure looks something like the
 following
 @example
 /* define callbacks */
-void callback(FL_OBJECT *ob, long data) @{
+void callback(FL_OBJECT *obj, long data) @{
     /* perform tasks */
 @}
 
-void terminate_callback(FL_OBJECT *ob, long data) @{
+void terminate_callback(FL_OBJECT *obj, long data) @{
     /* cleanup application */
     fl_finish();
     exit(0);
@@ -505,7 +516,7 @@ In this case, @code{fl_do_forms()} handles the interaction indefinitely
 and never returns. The program exits via one of the callback functions.
 
 
-@node Periodic
+@node Periodic Events and Non-blocking Interaction
 @section Periodic Events and Non-blocking Interaction
 
 The interaction mentioned above is adequate for many application
@@ -557,7 +568,7 @@ have more than one timeout callbacks.
 
 To add a timeout callback, use the following routine
 @tindex @code{FL_TIMEOUT_CALLBACK}
-@findex fl_add_timeout(
+@findex fl_add_timeout()
 @example
 typedef void (*FL_TIMEOUT_CALLBACK)(int, void *);
 int fl_add_timeout(long msec, FL_TIMEOUT_CALLBACK callback,
@@ -581,11 +592,11 @@ void fl_remove_timeout(int id);
 @noindent
 where @code{id} is the timeout ID returned by @code{fl_add_timeout()}.
 There is also an @code{FL_OBJECT}, the @code{FL_TIMER} object,
-especially the invisible type, that can be used to do timeout. Since it
-is a proper Forms Library object, it may be easier to use simply because
-it has the same API as any other GUI elements and is supported by the
-Form Designer. See Part III for complete information on @code{FL_TIMER}
-object.
+especially the invisible type, that can be used to do timeout. Since
+it is a proper Forms Library object, it may be easier to use simply
+because it has the same API as any other GUI elements and is supported
+by the Form Designer. @xref{Timer Object}, for complete information on
+the @code{FL_TIMER} object.
 
 Note that idle callback and timeout are not appropriate for tasks that
 block or take a long time to finish because during the busy or blocked
@@ -639,11 +650,11 @@ thread). Be creative and have fun.
 
 For running external executables while maintaining responsiveness of the
 interface, see @code{fl_exe_command()} and @code{fl_popen()} documented
-later in Section 6.2(73).
+later in @ref{Command Log}.
 
 
-@node Dealing
-@section Dealing With Multiple Mindows
+@node Dealing With Multiple Windows
+@section Dealing With Multiple Windows
 
 It is not atypical that an application program may need to take
 interaction from more than one form at the same time, Forms Library
@@ -658,13 +669,13 @@ because of that but you also don't want the user to be able to press
 buttons, etc. in this form. The user first has to give the confirmation.
 So you want to temporarily deactivate the main form. This can be done
 using the call
-@findex fl_deactivate_form(
+@findex fl_deactivate_form()
 @example
 void fl_deactivate_form(FL_FORM *form);
 @end example
 
 To reactivate the form later again use
-@findex fl_activate_form(
+@findex fl_activate_form()
 @example
 void fl_activate_form(FL_FORM *form);
 @end example
@@ -794,8 +805,10 @@ function returns one of the constants @code{FL_LEFT_MOUSE},
 @code{FL_MIDDLE_MOUSE} and @code{FL_RIGHT_MOUSE} indicating the physical
 location of the mouse button on the mouse that was pushed or released.
 If the callback is triggered by a shortcut, the function returns the
-keysym (ascii value if ASCII) of the key plus @code{FL_SHORTCUT}. For
-example, if a button has a shortcut @code{<CNTRL>C} (ASCII value is 3),
+keysym (ascii value if ASCII) of the key plus
+@tindex @code{FL_SHORTCUT}
+@code{FL_SHORTCUT}. For
+example, if a button has a shortcut @code{<Ctrl>C} (ASCII value is 3),
 the button number returned upon activation of the shortcut would be
 @code{FL_SHORTCUT + 3}. @code{FL_SHORTCUT} can be used to determine if
 the callback is triggered by a shortcut or not
@@ -869,7 +882,7 @@ fl_print_xevent_name("In tricky.c", &xevent);
 @end example
 
 
-@node Using Callbacks
+@node Using Callback Functions
 @section Using Callback Functions
 
 As stated earlier, the recommended method of interaction is to use
@@ -887,7 +900,7 @@ To bind a callback routine to an object, use the following
 @tindex @code{FL_CALLBACKPTR}
 @findex fl_set_object_callback()
 @example
-typedef void (*FL_CALLBACKPTR)(FL_OBJECT *ob, long argument);
+typedef void (*FL_CALLBACKPTR)(FL_OBJECT *obj, long argument);
 FL_CALLBACKPTR fl_set_object_callback(FL_OBJECT *obj,
                                       FL_CALLBACKPTR callback,
                                       long argument);
@@ -966,7 +979,7 @@ add an event callback routine. This routine will be called whenever an
 XEvent is pending for the application's own window. To setup an event
 callback routine use the call
 @tindex FL_APPEVENT_CB
-@findex fl_set_event_callback(
+@findex fl_set_event_callback()
 @example
 FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev,
                                                      void *data),
@@ -1001,13 +1014,13 @@ this function only works for windows created directly by the application
 program (i.e., it won't work for forms' windows or windows created by
 the canvas object). It is possible to access the raw events that happen
 on a form's window via @code{fl_register_raw_callback()} discussed in
-Chapter D.
+@ref{Form Events}.
 
 @code{fl_add_event_callback()} does not alter the window's event mask
-nor solicit events for you. This is so mainly for the reason that an
-event type does not always correspond to a unique event mask, also in
-this way, the user can solicit events at window's creation and use 0 to
-register all the event handlers.
+nor does it solicit events for you. This is so mainly for the reason
+that an event type does not always correspond to a unique event mask,
+also in this way, the user can solicit events at window's creation and
+use 0 to register all the event handlers.
 
 To let XForms handle solicitation for you, call the following routine
 @findex fl_activate_event_callbacks()
@@ -1114,7 +1127,7 @@ window is handled automatically by the internal event processing
 mechanism just like any other forms.
 
 
-@node Handling
+@node Handling Other Input Sources
 @section Handling Other Input Sources
 
 It is not uncommon that X applications may require input from sources

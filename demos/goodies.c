@@ -37,8 +37,9 @@
 /***************************************
  ***************************************/
 
-void timeout_remove_alert( int    id    FL_UNUSED_ARG,
-						   void * data  FL_UNUSED_ARG )
+void
+timeout_remove_alert( int    id    FL_UNUSED_ARG,
+					  void * data  FL_UNUSED_ARG )
 {
     fl_hide_alert( );
 }

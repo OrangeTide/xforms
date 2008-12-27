@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -36,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.33 2008/09/21 13:33:12 jtt Exp $";
+char *fl_id_rsc = "$Id: flresource.c,v 1.34 2008/12/27 22:20:48 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1269,6 +1266,10 @@ fl_initialize( int        * na,
     /* hang the database on the display so application can get it */
 
     XrmSetDatabase( fl_display, fldatabase );
+
+	/* Initialize popup system */
+
+	fli_popup_init( );
 
     return fl_display;
 }

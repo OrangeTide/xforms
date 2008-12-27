@@ -35,7 +35,11 @@
 #include "fd/buttons_gui.h"   /* from fd/ directory */
 #include <stdlib.h>
 
+
 /* callbacks for form buttform */
+
+/***************************************
+ ***************************************/
 
 void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
@@ -44,6 +48,9 @@ void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
     exit( 0 );
 }
 
+
+/***************************************
+ ***************************************/
 
 void bw_cb( FL_OBJECT * ob,
 		    long        data  FL_UNUSED_ARG )
@@ -63,6 +70,9 @@ void bw_cb( FL_OBJECT * ob,
     fl_unfreeze_form( ob->form );
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,

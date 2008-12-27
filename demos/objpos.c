@@ -30,15 +30,24 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
+
+
+/***************************************
+ ***************************************/
 
 void
 move_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 		 long        data )
 {
-	static FL_Coord dx = 8, dy = 8;
+	static FL_Coord dx = 8,
+                    dy = 8;
 	FL_OBJECT *but = ( FL_OBJECT * ) data;
-	FL_Coord x, y, w, h;
+	FL_Coord x,
+             y,
+		     w,
+		     h;
 
 	fl_get_object_geometry( but, &x, &y, &w, &h );
 
@@ -51,6 +60,10 @@ move_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 
     fl_set_object_position( but, x, y );
 }
+
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,

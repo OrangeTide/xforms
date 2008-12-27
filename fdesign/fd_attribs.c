@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -882,10 +879,10 @@ get_shortcut_string( const FL_OBJECT * obj )
 
     for (*p = '\0'; sc && *sc; sc++)
     {
-		if (*sc >= FL_ALT_VAL)
+		if ( *sc >= FL_ALT_MASK )
 		{
 			*p++ = '#';
-			n = special_key((*sc - FL_ALT_VAL), p);
+			n = special_key( *sc - FL_ALT_MASK, p );
 			p += n;
 		}
 		else if (*sc == '#' || *sc == '&' || *sc == '^')	/* prefixed w/ ^ */

@@ -28,40 +28,51 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include <stdlib.h>
+
 /* Header file generated with fdesign. */
 
 typedef struct {
-	FL_FORM *drawfree;
-	void *vdata;
-	char *cdata;
-	long ldata;
-	FL_OBJECT *freeobj;
-	FL_OBJECT *colorobj;
-	FL_OBJECT *hsli;
-	FL_OBJECT *wsli;
-	FL_OBJECT *rsli;
-	FL_OBJECT *gsli;
-	FL_OBJECT *bsli;
-	FL_OBJECT *drobj[3];
+	FL_FORM   * drawfree;
+	void      * vdata;
+	char      * cdata;
+	long        ldata;
+	FL_OBJECT * freeobj;
+	FL_OBJECT * colorobj;
+	FL_OBJECT * hsli;
+	FL_OBJECT * wsli;
+	FL_OBJECT * rsli;
+	FL_OBJECT * gsli;
+	FL_OBJECT * bsli;
+	FL_OBJECT * drobj[ 3 ];
 } FD_drawfree;
 
-extern FD_drawfree * create_form_drawfree(void);
-static FD_drawfree * drawui;
-extern void draw_initialize(FD_drawfree *);
+extern FD_drawfree *create_form_drawfree( void );
+static FD_drawfree *drawui;
+extern void draw_initialize( FD_drawfree * );
 
-static int max_w = 150, max_h = 150;
+static int max_w = 150,
+           max_h = 150;
 static Display *dpy;
 
-int main(int argc, char *argv[])
+
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
-    dpy = fl_initialize(&argc, argv, "FormDemo", 0, 0);
-    drawui = create_form_drawfree();
-    fl_set_color_leak(1);
-    draw_initialize(drawui);
-    fl_show_form(drawui->drawfree, FL_PLACE_CENTER, FL_TRANSIENT, "FreeObject");
-    fl_do_forms();
+    dpy = fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    drawui = create_form_drawfree( );
+    fl_set_color_leak( 1 );
+    draw_initialize( drawui );
+    fl_show_form( drawui->drawfree, FL_PLACE_CENTER, FL_TRANSIENT,
+				  "FreeObject");
+    fl_do_forms( );
+
     return 0;
 }
 

@@ -48,7 +48,11 @@ static void usage( const char *,
 static int parse_command_line( int *,
 							   char ** );
 
-static char *version="$Id: iconvert.c,v 1.6 2008/05/15 13:33:17 jtt Exp $";
+static char *version="$Id: iconvert.c,v 1.7 2008/12/27 22:20:31 jtt Exp $";
+
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -70,6 +74,9 @@ main( int    argc,
     return flimage_dump( im, args[ 2 ], fmt ) < 0 ? 3 : 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 usage( const char * cmd,
@@ -110,6 +117,9 @@ usage( const char * cmd,
 
 /* shut up visual_cue */
 
+/***************************************
+ ***************************************/
+
 static int
 noop( FL_IMAGE   * im  FL_UNUSED_ARG,
 	  const char * s   FL_UNUSED_ARG )
@@ -117,6 +127,9 @@ noop( FL_IMAGE   * im  FL_UNUSED_ARG,
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 static int
 parse_command_line( int  * argc,
@@ -153,6 +166,9 @@ parse_command_line( int  * argc,
     return i - 1;
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 initialize( void )

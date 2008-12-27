@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -34,7 +31,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.15 2008/05/09 12:33:03 jtt Exp $";
+char *fl_id_xtxt = "$Id: xtext.c,v 1.16 2008/12/27 22:20:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -195,21 +192,20 @@ fli_drw_string( int           horalign,
     lines[ 0 ] = str;
     start[ 0 ] = 0;
     slen[ 0 ] = 0;
-
     lnumb = 1;
     i = 0;
 
   redo:
 
-    for ( ; str[ i ] != '\0' && lnumb < nlines - 1; i++ )
+    while ( str[ i ] != '\0' && lnumb < nlines - 1 )
     {
 		slen[ lnumb - 1 ]++;
-		if ( str[ i ] == '\n' )
+		if ( str[ i++ ] == '\n' )
 		{
-			str[ i ] = '\0';
+			str[ i - 1 ] = '\0';
 			slen[ lnumb - 1 ]--;	/* remove '\0'. from spl */
-			lines[ lnumb ] = str + i + 1;
-			start[ lnumb ] = i + 1;
+			lines[ lnumb ] = str + i;
+			start[ lnumb ] = i;
 			slen[ lnumb ] = 0;
 			lnumb++;
 		}
@@ -300,34 +296,8 @@ fli_drw_string( int           horalign,
 
 		fl_textcolor( forecol );
 
-#if 2
 		XdrawString( flx->display, flx->win, flx->textgc,
 					 startx[ i ], starty[ i ], lines[ i ], slen[ i ] );
-#else
-		{
-			static XFontSet fset = 0;
-			static int junk;
-			char **missing_charset;
-			int num_missing;
-			static char *dd;
-
-			if ( fset == 0 )
-			{
-				fset = XCreateFontSet( flx->display,
-									   "-adobe-helvetica-*-r-*--*-100-*-*-*-*-*-1",
-									   &missing_charset, &num_missing, &dd );
-            }
-
-            if ( fset == 0 )
-            {
-				M_err( "DrawString", "Bad fontset" );
-				exit( 0 );
-            }
-
-            XmbDrawString( flx->display, flx->win, fset, flx->textgc,
-						   startx[ i ], starty[ i ], lines[ i ], slen[ i ] );
-        }
-#endif
 
 		/* setup correct underline color in proper GC */
 
@@ -557,7 +527,6 @@ fli_draw_text_cursor( int          align,
 					  FL_Coord     w,
 					  FL_Coord     h,
 					  const char * str,
-					  int          len   FL_UNUSED_ARG,
 					  int          style,
 					  int          size,
 					  FL_COLOR     c,
@@ -577,7 +546,7 @@ fli_draw_text_cursor( int          align,
 
 
 #define D( x, y, c )                                      \
-	fli_draw_text_cursor( align, x, y, w, h, str, len,     \
+	fli_draw_text_cursor( align, x, y, w, h, str,         \
 						  style,size, c, bc, 0, bk, -1 )
 
 
@@ -591,13 +560,11 @@ fli_draw_text_inside( int          align,
 					  FL_Coord     w,
 					  FL_Coord     h,
 					  const char * istr,
-					  int          len,
 					  int          style,
 					  int          size,
 					  FL_COLOR     c,
 					  FL_COLOR     bc,
-					  int          bk,
-					  int          angle  FL_UNUSED_ARG )
+					  int          bk )
 {
     int special = 0;
     int xoff,
@@ -671,7 +638,7 @@ fli_draw_text_inside( int          align,
 		D( x + 1, y + 1, FL_RIGHT_BCOL );
     }
 
-    fli_draw_text_cursor( align, x, y, w, h, str, len, style, size,
+    fli_draw_text_cursor( align, x, y, w, h, str, style, size,
 						  c, bc, 0, special ? 0 : bk, -1 );
 
 	fl_free( str );
@@ -693,8 +660,7 @@ fl_drw_text( int            align,
 			 int            size,
 			 const char *   istr )
 {
-    fli_draw_text_inside( align, x, y, w, h, istr, strlen( istr ),
-						  style, size, c, 0, 0, 0 );
+    fli_draw_text_inside( align, x, y, w, h, istr, style, size, c, 0, 0 );
 }
 
 
@@ -753,8 +719,7 @@ fl_draw_text_beside( int      align,
     y += dy;
 
     fli_get_outside_align( align, x, y, w, h, &newa, &newx, &newy );
-    fli_draw_text_inside( align, x, y, w, h, str, len, style, size,
-						  c, bc, bk,0 );
+    fli_draw_text_inside( align, x, y, w, h, str, style, size, c, bc, bk );
 }
 #endif
 
@@ -829,7 +794,7 @@ fl_set_ul_property( int prop,
 
 
 #define DESC( c )   ( c == 'g' || c == 'j' || c == 'q' || c == 'y' || c == 'p' )
-#define NARROW( c ) ( c == 'i' || c == 'j' || c == 'l' || c == 'f' )
+#define NARROW( c ) ( c == 'i' || c == 'j' || c == 'l' || c == 'f' || c == '1' )
 
 /***************************************
  ***************************************/

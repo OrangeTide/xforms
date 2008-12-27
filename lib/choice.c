@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -34,7 +31,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.19 2008/12/01 22:53:59 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.20 2008/12/27 22:20:47 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -447,7 +444,9 @@ handle_choice( FL_OBJECT * ob,
 
 			fl_setpup_position( ob->form->x + ob->x + 10,
 								ob->form->y + ob->y + ob->h / 2 );
-			return do_pup( ob ) > 0;
+			val = do_pup( ob );
+			fl_redraw_object( ob );
+			return val > 0;
 
 		case FL_FREEMEM:
 			free_choice( ob->spec );

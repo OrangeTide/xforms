@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -53,35 +50,36 @@
 #include <stdio.h>
 #include <math.h>
 
-#define VN(a)        a,#a
-#define OBJNAME(a)   #a,fl_create_##a,fl_add_##a
+#define VN( a )        a,#a
+#define OBJNAME( a )   #a,fl_create_##a,fl_add_##a
 
 typedef struct {
     int defined;
-    char tname[MAX_TYPE_NAME_LEN];
+    char tname[ MAX_TYPE_NAME_LEN ];
 } TDEF;
 
-typedef FL_OBJECT *(*FL_ADDPTR) (int, FL_Coord, FL_Coord, FL_Coord,
-								 FL_Coord, const char *);
+typedef FL_OBJECT * ( * FL_ADDPTR ) ( int, FL_Coord, FL_Coord, FL_Coord,
+									  FL_Coord, const char * );
 
 typedef struct {
-    int cn;
-    FL_OBJECT *defobj;		/* default          */
-    TDEF types[MAXTYPE];
-    char cname[MAX_CLASS_NAME_LEN];	/* add_XXX    */
-    char formal_cname[MAX_CLASS_NAME_LEN];
-    FL_OBJECT *defobj1;		/* to specific type */
-    FL_ADDPTR createit, addit;
-    int var_boxtype;		/* means default boxtype may depend on type */
-    int default_type;
-    const char *default_label;
+    int          cn;
+    FL_OBJECT *  defobj;		/* default          */
+    TDEF         types[ MAXTYPE ];
+    char         cname[ MAX_CLASS_NAME_LEN ];	/* add_XXX    */
+    char         formal_cname[ MAX_CLASS_NAME_LEN ];
+    FL_OBJECT *  defobj1;		/* to specific type */
+    FL_ADDPTR    createit,
+	             addit;
+    int          var_boxtype;	/* means default boxtype may depend on type */
+    int          default_type;
+    const char * default_label;
 } CDEF;
 
 static CDEF classes[ MAXCLASS ];
 static int cnumb = 0;
 
-typedef FL_OBJECT * ( *FL_ADDFREEPTR )( int, FL_Coord, FL_Coord, FL_Coord,
-										FL_Coord, const char *, FL_HANDLEPTR );
+typedef FL_OBJECT * ( * FL_ADDFREEPTR )( int, FL_Coord, FL_Coord, FL_Coord,
+										 FL_Coord, const char *, FL_HANDLEPTR );
 
 
 /***************************************
@@ -758,7 +756,7 @@ set_testing_pixmap( FL_OBJECT * ob )
 
 
 /***************************************
- * adds an object to the current form  type = -1 means default type
+ * Adds an object to the current form  type = -1 means default type
  ***************************************/
 
 FL_OBJECT *
@@ -798,7 +796,7 @@ add_an_object( int      objclass,
 			break;
 
 		case FL_END_GROUP:
-			obj = fl_end_group( );
+			obj = fli_end_group( );
 			break;
 
 		case FL_BITMAP:

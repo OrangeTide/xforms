@@ -1,5 +1,5 @@
-@node Introduction
-@chapter Part I: Part I: Introduction
+@node Part I Introduction
+@chapter Introduction
 
 The Forms Library is a library of C-routines that allows you to build up
 interaction forms with buttons, sliders, input fields, dials, etc. in a
@@ -41,13 +41,14 @@ these demos is a good way of learning the system.
 
 If you only have very simple applications for the Forms Library, e.g.,
 to ask the user for a file name, or ask him a question or give him a
-short message, chapter 6 contains some even more simple routines for
-this. So, e.g., a form with the question "Do you want to quit?" can be
-made with one line of code.
+short message, @ref{Part I Goodies, , Goodies} contains some even more
+simple routines for this. So, e.g., a form with the question "Do you
+want to quit?" can be made with one line of code.
 
-To make designing forms even easier a Form Designer is provided. As its
-name implies, this is a program that lets you interactively design forms
-and generate the corresponding C-code. See Part II for its use.
+To make designing forms even easier a Form Designer is provided. As
+its name implies, this is a program that lets you interactively design
+forms and generate the corresponding C-code. @xref{Part II
+Introduction, , Introduction}, and the following chapters for its use.
 
 The current version of the software is already quite extended but we are
 working on further improvements. In particular, we plan on designing new
@@ -55,17 +56,20 @@ classes of objects that can be placed on the forms. Adding classes to
 the system is not very complicated. Part IV of this document describes
 in detail how to do this yourself.
 
-The following chapters will describe the basic application programmer's
-interface to the FormsLibrary and lead you through the different aspects
-of designing and using forms. In chapter 2 we give some small and easy
-examples of the design and use of forms. In chapter 3 we describe how to
-define forms. This chapter just contains the basic classes of objects
-that can be placed on forms. Also, for some classes only the basic types
-are described and not all. For an overview of all classes and types of
-objects see Part III of this document. Chapter 4 describes how to set up
-interaction with forms. A very specific class of objects are free
-objects and canvases. The application program has full control over
-their appearance and interaction. They can be used to place anything on
-forms that is not supported by the standard objects. Chapter 5 describes
-their use. Finally chapter 6 describes some built-in routines for simple
+The following chapters will describe the basic application
+programmer's interface to the FormsLibrary and lead you through the
+different aspects of designing and using forms. In @ref{Part I Getting
+Started} we give some small and easy examples of the design and use of
+forms. In @ref{Part I Defining Forms, , Defining Forms} we describe
+how to define forms. This chapter just contains the basic classes of
+objects that can be placed on forms. Also, for some classes only the
+basic types are described and not all. For an overview of all classes
+and types of objects see Part III of this document. @ref{Part I Doing
+Interaction, , Doing Interaction} describes how to set up interaction
+with forms. A very specific class of objects are free objects and
+canvases. The application program has full control over their
+appearance and interaction. They can be used to place anything on
+forms that is not supported by the standard objects. @ref{Part I Free
+Objects, , Free Objects} describes their use. Finally, @ref{Part I
+Goodies, , Goodies} describes some built-in routines for simple
 interaction like asking questions and prompting for choices etc.

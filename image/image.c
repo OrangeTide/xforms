@@ -12,16 +12,13 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
 /*
- * $Id: image.c,v 1.13 2008/11/11 01:54:12 jtt Exp $
+ * $Id: image.c,v 1.14 2008/12/27 22:20:44 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.

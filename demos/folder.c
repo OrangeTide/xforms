@@ -147,7 +147,7 @@ make_folder( FL_OBJECT * folder )
 	float x[ ] = { 0, 1, 2, 3, 4, 5 };
 #endif
 	float y[ ] = { 5.5, 4, 4.5, 3.8, 4, 5 };
-	const char *label[ ] = { "Mon","Tue","Wed", "Thur","Fri","Sat" };
+	const char *label[ ] = { "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
 	size_t i;
 #if 0
 	FL_OBJECT *ob;

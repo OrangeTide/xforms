@@ -1,0 +1,392 @@
+@node Part III Button-like Objects
+@chapter Button-like Objects
+
+A very important class of objects are the buttons. Buttons are placed
+on the form such that the user can push them with the mouse. Different
+types of buttons exist: buttons that return to their normal position
+when the user releases the mouse, buttons that stay pushed until the
+user pushes them again and radio buttons that make other buttons be
+released.
+
+Also different shapes of buttons exist. Normal buttons are rectangles
+that come out of the background. When the user pushes them they go
+into the background (and possibly change color). Lightbuttons have a
+small light inside them. Pushing the button switches the light on.
+Round buttons are simple circles. When pushed, a colored circle
+appears inside them. Bitmap and pixmap buttons are buttons whose
+labels are graphics rather than text.
+
+@ifnottex
+
+@menu
+* Adding Button Objects:   Adding Button Objects
+* Button Types:            Button Types
+* Button Interaction:      Button Interaction
+* Other Button Routines:   Other Button Routines
+* Button Attributes:       Button Attributes
+* Remarks:                 Button Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Button Objects
+@section Adding Button Objects
+
+Adding an object To add buttons use one of the following routines:
+@findex fl_add_button()
+@findex fl_add_lightbutton()
+@findex fl_add_roundbutton()
+@findex fl_add_round3dbutton()
+@findex fl_add_checkbutton()
+@findex fl_add_bitmapbutton()
+@findex fl_add_pximapbutton()
+@findex fl_add_labelbutton()
+@findex fl_add_scrollbutton()
+@example
+FL_OBJECT *fl_add_button(int type, FL_Coord x, FL_Coord y,
+                         FL_Coord w, FL_Coord h,
+                         const char *label);
+FL_OBJECT *fl_add_lightbutton(int type, FL_Coord x, FL_Coord y,
+                              FL_Coord w,FL_Coord h,
+                              const char *label);
+FL_OBJECT *fl_add_roundbutton(int type, FL_Coord x, FL_Coord y,
+                              FL_Coord w,FL_Coord h,
+                              const char *label);
+FL_OBJECT *fl_add_round3dbutton(int type, FL_Coord x, FL_Coord y,
+                                FL_Coord w,FL_Coord h,
+                                const char *label);
+FL_OBJECT *fl_add_checkbutton(int type, FL_Coord x, FL_Coord y,
+                              FL_Coord w,FL_Coord h,
+                              const char *label);
+FL_OBJECT *fl_add_bitmapbutton(int type, FL_Coord x, FL_Coord y,
+                               FL_Coord w,FL_Coord h,
+                               const char *label);
+FL_OBJECT *fl_add_pixmapbutton(int type, FL_Coord x, FL_Coord y,
+                               FL_Coord w,FL_Coord h,
+                               const char *label);
+FL_OBJECT *fl_add_labelbutton(int type, FL_Coord x, FL_Coord y,
+                              FL_Coord w,FL_Coord h,
+                              const char *label);
+FL_OBJECT *fl_add_scrollbutton(int type, FL_Coord x, FL_Coord y,
+                               FL_Coord w,FL_Coord h,
+                               const char *label);
+@end example
+
+The meaning of the parameters is as usual. The label is by default
+placed inside the button for button and lightbutton. For roundbutton,
+round3dbutton, bitmapbutton and pixmapbutton, it is placed to the
+right of the circle and to the bottom of the bitmap/pixmap
+respectively. For scrollbutton, the label must be of some
+pre-determined string that indicates the direction of the scroll
+arrow.
+
+@node Button Types
+@section Button Types
+
+The following types of buttons are available:
+@table @code
+@tindex @code{FL_NORMAL_BUTTON}
+@item FL_NORMAL_BUTTON
+Returns value when released.
+@tindex @code{FL_PUSH_BUTTON}
+@item FL_PUSH_BUTTON
+Stays pushed until user pushes it again.
+@tindex @code{FL_MENU_BUTTON}
+@item FL_MENU_BUTTON
+Returns value when pushed, useful e.g.@: for opening a popup when
+pushed.
+@tindex @code{FL_TOUCH_BUTTON}
+@item FL_TOUCH_BUTTON
+Returns value as long as the user pushes it.
+@tindex @code{FL_RADIO_BUTTON}
+@item FL_RADIO_BUTTON
+Push button that switches off other radio buttons.
+@tindex @code{FL_HIDDEN_BUTTON}
+@item FL_HIDDEN_BUTTON
+Invisible normal button.
+@tindex @code{FL_INOUT_BUTTON}
+@item FL_INOUT_BUTTON
+Returns value both when pushed and when released.
+@tindex @code{FL_RETURN_BUTTON}
+@item FL_RETURN_BUTTON
+Like a normal button but reacts on the @code{<Return>} key.
+@tindex @code{FL_HIDDEN_RET_BUTTON}
+@item FL_HIDDEN_RET_BUTTON
+Invisible return button.
+@end table
+
+Except for the @code{FL_HIDDEN_BUTTON} and
+@code{FL_HIDDEN_RET_BUTTON}, which are invisible, all types of button
+look similar on the screen but their function is quite different. Each
+of these buttons gets pushed down when the user presses the mouse on
+top of it. What actually happens when the user does so depends on the
+type of the button. An @code{FL_NORMAL_BUTTON}, @code{FL_TOUCH_BUTTON}
+and @code{FL_INOUT_BUTTON} gets released when the user releases the
+mouse button. Their difference lies in the moment at which the
+interaction routines return them (see below). A @code{FL_PUSH_BUTTON}
+remains pushed and is only released when the user pushes it again. A
+@code{FL_RADIO_BUTTON} is a push button with the following extra
+property: whenever the user pushes a radio button, all other pushed
+radio buttons in the same form (or in the same group) are released. In
+this way the user can make its choice among several possibilities. A
+@code{FL_RETURN_BUTTON} behaves like a normal button, but it also
+reacts when the @code{<Return>} key on the keyboard is pressed. When a
+form contains such a button (of course there can only be one) the
+@code{<Return>} key can no longer be used to move between input
+fields. For this the @code{<Tab>} key must be used.
+
+A @code{FL_HIDDEN_BUTTON} behaves like a normal button but is
+invisible. A @code{FL_HIDDEN_RET_BUTTON} is like a hidden button but
+also reacts to @code{<Return>} key presses.
+
+
+@node Button Interaction
+@section Button Interaction
+
+@code{FL_NORMAL_BUTTON}s, @code{FL_PUSH_BUTTON}s,
+@code{FL_RADIO_BUTTON}s, @code{FL_RETURN_BUTTON}s and
+@code{FL_HIDDEN_BUTTON}s are returned at the moment the user releases
+the mouse after having pressed it on the button. An
+@code{FL_INOUT_BUTTON} is returned both when the user presses it and
+when the user releases it. A @code{FL_TOUCH_BUTTON} is returned all
+the time as long as the user keeps the mouse button pressed while the
+mouse is on top of it. A @code{FL_RETURN_BUTTON} and a
+@code{FL_HIDDEN_RET_BUTTON} are also returned when the user presses
+the @code{<Return>} key.
+
+See demo @file{butttypes.c} for a feel of the different button types.
+
+
+@node Other Button Routines
+@section Other Button Routines
+
+ The application program can also set a button to be pushed or not
+itself without a user action. To this end use the routine
+@findex fl_set_button()
+@example
+void fl_set_button(FL_OBJECT *obj, int pushed);
+@end example
+@noindent
+@code{pushed} indicates whether the button should be pushed (1) or
+released (0). When setting a @code{FL_RADIO_BUTTON} to be pushed this
+automatically releases the a currently pushed radio button in the same
+form (or group). Also note that, while this routine only simulates the
+visual appearance and perhaps some internal states, it does not affect
+the program flow in any way, i.e.@: setting a button being pushed does
+not invoke its callback or results in the button returned to the
+program. For that, @code{fl_trigger_object()} is to be used or, more
+conveniently, follow @code{fl_set_button()} with a call of
+@code{fl_call_object_callback()}.
+
+To figure out whether a button is pushed1 or not use@footnote{@code{fl
+mouse button()} can also be used.}
+@findex fl_get_button()
+@example
+int fl_get_button(FL_OBJECT *obj);
+@end example
+
+Sometimes you want to give the button a different meaning depending on
+which mouse button gets pressed on it. To find out which mouse button
+was used at the last push (or release) use the routine
+@findex fl_get_button_numb()
+@example
+int fl_get_button_numb(FL_OBJECT *obj);
+@end example
+@noindent
+It returns one of the constants @code{FL_LEFT_MOUSE},
+@code{FL_MIDDLE_MOUSE}, @code{FL_RIGHT_MOUSE},
+@code{FL_SCROLLUP_MOUSE} or @code{FL_SCROLLDOWN_MOUSE} indicating the
+physical location of the mouse button on the mouse. If the last push
+was triggered by a shortcut (see below), the function returns the
+@code{keysym} (ascii value if ASCII) of the key plus
+@tindex @code{FL_SHORTCUT}
+@code{FL_SHORTCUT}. For example, if a button has a shortcut
+@code{<Ctrl>C}, the button number returned upon activation of the
+shortcut would be @code{FL_SHORTCUT + 3} (the ASCII value of
+@code{<Ctrl>C} is 3).
+
+It can also be controlled which mouse buttons a buttons reacts to at
+all. To set which mouse buttons the button reacts to use
+@findex fl_set_button_mouse_buttons()
+@example
+void fl_set_button_mouse_buttons(FL_OBJECT *obj, int mbuttons);
+@end example
+@noindent
+@code{mbuttons} is the inclusive OR of the numbers 1 for the left
+mouse button, 2 for the middle, 4 for the right mouse button, 8 for
+moving the scroll wheel up "button" and 16 for scrolling down
+"button". Unless set differently a button reacts to all mouse buttons.
+
+To determine which mouse buttons a button is reacting to use
+@findex fl_set_button_mouse_buttons()
+@example
+void fl_get_button_mouse_buttons(FL_OBJECT *obj,
+                                 unsigned int *mbuttons);
+@end example
+@noindent
+The value returned via @code{mbuttons} is the same value as would
+be used in @code{fl_set_button_mouse_buttons()}.
+
+If more information is desired about the last event, use
+@findex fl_last_event()
+@example
+const XEvent *fl_last_event(void);
+@end example
+
+In a number of situations it is useful to define a keyboard equivalent
+to a button. E.g.@: you might want to define that @code{<Ctrl>Q} has
+the same meaning as pressing the "Quit" button. This can be achieved
+using the following call:
+@findex fl_set_button_shortcut()
+@example
+void fl_set_button_shortcut(FL_OBJECT *obj, const char *str,
+                            int showUL);
+@end example
+@noindent
+Note that @code{str} is a string, not a character. This string should
+contain all the characters that correspond to this button. So, e.g.@:
+if you use string "^QQq" the button will react on the keys @code{q},
+@code{Q} and @code{<Ctrl>Q}. (As you see you should use the symbol
+@code{^} to indicate the control key. Similarly you can use the symbol
+@code{#} to indicate the @code{<Alt>} key.) Be careful with your
+choices. When the form also contains input fields you probably don't
+want to use the normal printable characters because they can no longer
+be used for input in the input fields. Shortcuts are always evaluated
+before input fields. Other special keys, such as @code{<F1>} etc., can
+also be used as shortcuts. @xref{Shortcuts}, for details. Finally
+realize that a return button is in fact a normal button with the
+@code{<Return>} key as a shortcut. So don't change the shortcuts for
+such a button.
+
+If the third parameter @code{showUL} is true, and one of the letters
+in the object label matches the shortcut, the matching letter will be
+underlined. This applies to non-printable characters (such as
+@code{#A}) as well as in the sense that if the label contains letter
+@code{a} or @code{A}, it will be underlined (i.e.@: special characters
+such as @code{#} and @code{^} are ignored when matching). A false
+value (0) for @code{showUL} turns off the underline without affecting
+the shortcut. Note that although the entire object label is searched
+for matching character to underline, the shortcut string itself is not
+searched, thus shortcut @code{"Yy"} for label @code{"Yes"} will result
+in the underlining of the letter @code{Y} while @code{"yY"} will not.
+
+To set the bitmap to use for the bitmap button, the following routines
+can be used:
+@findex fl_set_bitmapbutton_data()
+@findex fl_set_bitmapbutton_file()
+@example
+void fl_set_bitmapbutton_data(FL_OBJECT *obj, int w, int h,
+                              unsigned char *bits);
+void fl_set_bitmapbutton_file(FL_OBJECT *obj, const char *filename);
+@end example
+
+Similarly, to set the pixmap to use for the pixmap button, the
+following routines can be used:
+@findex fl_set_pixmapbutton_data()
+@findex fl_set_pixmapbutton_file()
+@findex fl_set_pixmapbutton_pixmap()
+@example
+void fl_set_pixmapbutton_data(FL_OBJECT *obj, unsigned char **bits);
+void fl_set_pixmapbutton_file(FL_OBJECT *obj, const char *file);
+void fl_set_pixmapbutton_pixmap(FL_OBJECT *obj, Pixmap id,
+                                 Pixmap mask);
+@end example
+@noindent
+In the first routine, you @code{#include} the pixmap file into your
+source code and use the pixmap definition data (an array of char
+pointers) directly. In the second routine, the filename @code{file}
+that contains the pixmap defination is used to specify the pixmap. The
+last routine assumes that you already have X Pixmap resource ID for
+the pixmap you want to use. Note that these routines do not free the
+pixmaps already associated with the button. To free the pixmaps, use
+the routine
+@findex fl_free_pixmapbutton_pixmap()
+@example
+void fl_free_pixmapbutton_pixmap(FL_OBJECT *obj);
+@end example
+@noindent
+This function frees the pixmap and mask together with all the colors
+they allocated. To get the pixmap and mask that is currently being
+displayed, use the following routine
+@findex fl_get_pixmapbutton_pixmap()
+@example
+Pixmap fl_get_pixmapbutton_pixmap(FL_OBJECT *obj,
+                                  Pixmap &pixmap, Pixmap &mask);
+@end example
+
+Pixmaps are by default displayed centered inside the bounding box.
+However, this can be changed using the following routine
+@findex fl_set_pixmapbutton_align()
+@example
+void fl_set_pixmapbutton_align(FL_OBJECT *obj, int align,
+                               int xmargin, int ymargin);
+@end example
+@noindent
+where @code{align} is the same as that used for labels. @xref{Label
+Attributes and Fonts}, for a list. @code{xmargin} and @code{ymargin}
+are extra margins to leave in addition to the object border width.
+Note that although you can place a pixmap outside of the bounding box,
+it probably is not a good idea.
+
+When the mouse enters a pixmap button, an outline of the button is
+shown. If required, a different pixmap (the focus pixmap) can also be
+shown. To set such a focus pixmap, the following routines are
+available:
+@findex fl_set_pixmapbutton_focus_data()
+@findex fl_set_pixmapbutton_focus_file()
+@findex fl_set_pixmapbutton_focus_pixmap()
+@example
+void fl_set_pixmapbutton_focus_data(FL_OBJECT *obj,
+                                     unsigned char **bits);
+void fl_set_pixmapbutton_focus_file(FL_OBJECT *obj,
+                                    const char *file);
+void fl_set_pixmapbutton_focus_pixmap(FL_OBJECT *obj, Pixmap id,
+                                      Pixmap mask);
+@end example
+@noindent
+The meanings of the parameter are the same as that in the regular
+pixmap routines.
+
+Finally there is routine that can be used to enable or disable the
+focus outline and the focus pixmap
+@findex fl_set_pixmapbutton_focus_outline()
+@example
+void fl_set_pixmapbutton_focus_outline(FL_OBJECT *obj, int yes_no);
+@end example
+@noindent
+See also @ref{Pixmap Object}, for pixmap color and transparency
+handling.
+
+
+
+@node Button Attributes
+@section Button Attributes
+
+
+For normal buttons the first color argument (@code{col1}) to
+@code{fl_set_object_color()} controls the normal color and the second
+(@code{col2}) the color the button has when pushed. For lightbuttons
+@code{col1} is the color of the light when off and @code{col2} the
+color when on. For round buttons, @code{col1} is the color of the
+circle and @code{col2} the color of the circle that is placed inside
+it when pushed. For round3dbutton, @code{col1} is the color of the
+inside of the circle and @code{col2} the color of the embedded circle.
+For bitmapbuttons, @code{col1} is the normal box color (or bitmap
+background if boxtype is not @code{FL_NO_BOX}) and @code{col2} is used
+to indicate the focus color. The foreground color of the bitmap is
+controlled by label color (as set via @code{fl_set_object_lcol()}. For
+scrollbutton, @code{col1} is the overall boundbox color (if boxtype is
+not @code{FL_NO_BOX}), @code{col2} is the arrow color. The label of a
+scrollbutton must be a string with a number between 1 and 9 (except
+5), indicating the arrow direciton like on the numerical key pad. The
+label can have an optional prefix @code{#} to indicate uniform
+scaling. For example, the label @code{"#9"} tells that the arrow
+should be pointing up-right and the arrow has the identical width and
+height regardless the overall bounding box size.
+
+@node Button Remarks
+@section Remarks
+
+See all demo programs, in particular @file{pushbutton.c} and
+@file{buttonall.c} for the use of buttons.

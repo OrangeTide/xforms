@@ -64,50 +64,59 @@ static int prim = GL_POLYGON ;
 #define v3f glVertex3f
 
 
-static void draw_cube( void )
+/***************************************
+ ***************************************/
+
+static
+void draw_cube( void )
 {
 	glColor3f( 1.0, 0.0, 0.0 );
 	glBegin( prim );
 	v3f( 1.0, 1.0, 1.0 );   v3f( 1.0, -1.0, 1.0 );
 	v3f( 1.0, -1.0, -1.0 ); v3f( 1.0, 1.0, -1.0 );
-	glEnd();
+	glEnd( );
 
 	glBegin( prim );
 	v3f( -1.0, 1.0, 1.0 );   v3f( -1.0, 1.0, -1.0 );
 	v3f( -1.0, -1.0, -1.0 ); v3f( -1.0, -1.0, 1.0 );
-	glEnd();
+	glEnd( );
 
 	glColor3f( 0.0, 1.0, 0.0 );
 	glBegin( prim );
 	v3f(  1.0, 1.0,  1.0 ); v3f(  1.0, 1.0, -1.0 );
 	v3f( -1.0, 1.0, -1.0 ); v3f( -1.0, 1.0,  1.0 );
-	glEnd();
+	glEnd( );
 
 	glBegin( prim );
 	v3f(  1.0, -1.0,  1.0 ); v3f( -1.0, -1.0,  1.0 );
 	v3f( -1.0, -1.0, -1.0 ); v3f(  1.0, -1.0, -1.0 );
-	glEnd();
+	glEnd( );
 
 	glColor3f( 0.0, 0.0, 1.0 );
 	glBegin( prim );
 	v3f(  1.0,  1.0,  1.0 ); v3f( -1.0,  1.0,  1.0 );
 	v3f( -1.0, -1.0,  1.0 ); v3f(  1.0, -1.0,  1.0 );
-	glEnd();
+	glEnd( );
 
 	glBegin( prim );
 	v3f(  1.0, 1.0, -1.0 ); v3f(  1.0,-1.0, -1.0 );
 	v3f( -1.0,-1.0, -1.0 ); v3f( -1.0, 1.0, -1.0 );
-	glEnd();
+	glEnd( );
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 idle_cb( XEvent * ev,
 		 void   * data  FL_UNUSED_ARG )
 {
-    static GLfloat xrot, yrot, zrot;
+    static GLfloat xrot,
+		           yrot,
+		           zrot;
 
-    if( ! ui->form->visible  || ! ui->canvas->visible )
+    if ( ! ui->form->visible  || ! ui->canvas->visible )
 		return 0;
 
     fl_activate_glcanvas(ui->canvas);
@@ -140,6 +149,9 @@ idle_cb( XEvent * ev,
 }
 
 
+/***************************************
+ ***************************************/
+
 int
 canvas_expose( FL_OBJECT * ob   FL_UNUSED_ARG,
 			   Window      win  FL_UNUSED_ARG,
@@ -170,6 +182,9 @@ canvas_expose( FL_OBJECT * ob   FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ ***************************************/
+
 int
 buttonpress_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
 				Window      win  FL_UNUSED_ARG,
@@ -186,6 +201,9 @@ buttonpress_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
    return 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 switch_primitive( FL_OBJECT * ob    FL_UNUSED_ARG,
@@ -219,6 +237,9 @@ static int dbuf[ ]= { GLX_RGBA,
 					  None};
 
 
+/***************************************
+ ***************************************/
+
 void
 buffer_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
@@ -232,12 +253,18 @@ buffer_cb( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 menu_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 long        data  FL_UNUSED_ARG )
 {
 }
 
+
+/***************************************
+ ***************************************/
 
 int main( int    argc,
 		  char * argv[ ] )
@@ -272,6 +299,9 @@ int main( int    argc,
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 hide_it( FL_OBJECT * ob,
 		 long        data  FL_UNUSED_ARG )
@@ -289,6 +319,9 @@ hide_it( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 reshow( FL_OBJECT * ob,
 		long        data  FL_UNUSED_ARG )
@@ -302,7 +335,11 @@ reshow( FL_OBJECT * ob,
 #include <stdlib.h>
 
 
-FD_form * create_form_form( void )
+/***************************************
+ ***************************************/
+
+FD_form *
+create_form_form( void )
 {
 	FL_OBJECT *obj;
 	FD_form *fdui = fl_calloc( 1, sizeof *fdui);

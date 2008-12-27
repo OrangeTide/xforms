@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -189,6 +186,10 @@ extern void fli_handle_form( FL_FORM *,
 							 int, int,
 							 XEvent * );
 
+extern FL_OBJECT *fli_end_group(
+		void
+		);
+
 extern void fli_handle_object( FL_OBJECT *,
 							   int,
 							   FL_Coord,
@@ -267,20 +268,6 @@ enum
 
 extern void fli_set_winproperty( Window,
 								 unsigned int );
-
-
-/* timer stuff */
-
-enum
-{
-	FLI_FS_TIMER,
-	FLI_PUP_TIMER,
-	FLI_NTIMER       /* must always be last */      
-};
-
-extern double fli_time_passed( int );
-
-extern void fli_reset_time( int );
 
 
 /* graphics related */
@@ -939,23 +926,45 @@ extern void fli_restore_target( void );
 
 extern void fli_draw_text_inside( int align,
 								  FL_Coord,
-								 FL_Coord,
+								  FL_Coord,
 								  FL_Coord,
 								  FL_Coord,
 								  const char *,
 								  int,
 								  int,
-								  int,
 								  FL_COLOR,
 								  FL_COLOR,
-								  int,
-								  int);
+								  int );
 
 extern const char * fli_get_xevent_name( const XEvent * );
 
 extern void fli_set_input_navigate( unsigned int mask );
 
 extern void fli_adjust_browser_scrollbar( FL_OBJECT * );
+
+
+extern FL_POPUP *fli_popup_add( Window,
+								const char *,
+								const char * );
+
+extern FL_POPUP_ENTRY *fli_popup_add_entries( FL_POPUP *,
+											  const char *,
+											  va_list,
+											  const char * );
+
+extern FL_POPUP_ENTRY *fli_popup_insert_entries( FL_POPUP *,
+												 FL_POPUP_ENTRY *,
+												 const char *,
+												 va_list,
+												 const char * );
+
+extern void fli_popup_init( void );
+
+extern void fli_popup_finish( void );
+
+extern int fli_check_popup_exists( FL_POPUP * );
+
+extern int fli_check_popup_entry_exists( FL_POPUP_ENTRY * );
 
 
 #if XlibSpecificationRelease == 6

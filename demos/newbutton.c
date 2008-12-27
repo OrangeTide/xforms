@@ -35,9 +35,6 @@
 #include "crossbut.h"
 #include <stdlib.h>
 
-#ifndef FD_newbut_h_
-#define FD_newbut_h
-
 /**** Forms and Objects ****/
 
 typedef struct {
@@ -48,10 +45,13 @@ typedef struct {
 
 extern FD_newbut *create_form_newbut(void);
 
-#endif /* FD_newbut_h_ */
 
-int main( int    argc,
-		  char * argv[ ] )
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
       FD_newbut *cbform ;
 
@@ -67,6 +67,9 @@ int main( int    argc,
       return 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 FD_newbut *
 create_form_newbut( void )

@@ -95,5 +95,6 @@ main( int    argc,
     fl_show_form( fclock, FL_PLACE_CENTER, FL_TRANSIENT,"clocks" );
     fl_do_forms( );
 	fl_finish( );
+
     return 0;
 }

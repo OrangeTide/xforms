@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.	 If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -143,13 +140,14 @@ typedef enum
 	FL_SCROLLBAR,		   /* 31 */
 	FL_SCROLLBUTTON,	   /* 32 */
 	FL_MENUBAR,			   /* 33 */
-	FL_TEXTBOX,			   /* 34, for internal use only	  */
+	FL_TEXTBOX,			   /* 34, for internal use only	*/
 	FL_LABELBUTTON,		   /* 35 */
 	FL_COMBOBOX,		   /* 36 */
 	FL_IMAGECANVAS,		   /* 37 */
 	FL_THUMBWHEEL,		   /* 38 */
 	FL_COLORWHEEL,		   /* 39 */
 	FL_FORMBROWSER,		   /* 40 */
+	FL_SELECTOR,           /* 41 */
 	FL_CLASS_END		   /* sentinel */
 } FL_CLASS;
 
@@ -159,6 +157,10 @@ typedef enum
 #define FL_USER_CLASS_START	  1001	/* min. user class	value */
 #define FL_USER_CLASS_END	  9999	/* max. user class	value */
 
+
+/* Maximum border width (in pixel) */
+
+#define FL_MAX_BW          10
 
 /* how to display a form onto screen */
 
@@ -179,7 +181,6 @@ typedef enum
 
 	FL_FREE_SIZE		= ( 1 << 14 ),
 	FL_FIX_SIZE			= ( 1 << 15 )
-
 } FL_PLACE;
 
 #define FL_PLACE_FREE_CENTER ( FL_PLACE_CENTER | FL_FREE_SIZE )
@@ -287,11 +288,11 @@ enum
 #define FL_LEFTMOUSE		 FL_LEFT_MOUSE
 #define FL_MIDDLEMOUSE		 FL_MIDDLE_MOUSE
 #define FL_RIGHTMOUSE		 FL_RIGHT_MOUSE
-#define FL_SCROLLUPMOUSE	 FL_FL_SCROLLUP_MOUSE
-#define FL_SCROLLDOWNMOUSE	 FL_FL_SCROLLDOWN_MOUSE
+#define FL_SCROLLUPMOUSE	 FL_SCROLLUP_MOUSE
+#define FL_SCROLLDOWNMOUSE	 FL_SCROLLDOWN_MOUSE
 
 
-/* control when to reutrn input, slider and dial object. */
+/* control when to return input, slider and dial object. */
 
 enum
 {
@@ -454,6 +455,8 @@ typedef enum
 #define FL_SHIFT_MASK	 ( 1L << 27 )
 #define FL_ALT_VAL		 FL_ALT_MASK
 
+#define MAX_SHORTCUTS    8
+
 
 /* Internal use */
 
@@ -484,9 +487,9 @@ enum
 #define FL_PUP_INACTIVE	 FL_PUP_GREY
 
 
-/* popup and menu entries */
+/* Popup and menu entries */
 
-typedef int ( * FL_PUP_CB )( int );		   /* call back prototype  */
+typedef int ( * FL_PUP_CB )( int );		   /* callback prototype  */
 
 typedef struct
 {
@@ -494,7 +497,6 @@ typedef struct
 	FL_PUP_CB	 callback;		/* the callback function		 */
 	const char * shortcut;		/* hotkeys						 */
 	int			 mode;			/* FL_PUP_GRAY, FL_PUP_CHECK etc */
-	long		 reserved[ 2 ];
 } FL_PUP_ENTRY;
 
 #define FL_MENU_ENTRY  FL_PUP_ENTRY
@@ -679,7 +681,6 @@ typedef struct flobjs_
 	int				 group_id;
 	int              want_motion;
 	int              want_update;
-	int				 reserved[ 5 ];	 /* for future use */
 } FL_OBJECT;
 
 
@@ -806,7 +807,6 @@ typedef struct forms_
 	void				 ( * pre_attach )( struct forms_ * );
 	void			   * attach_data;
 	int					 no_tooltip;
-	int					 reserved[ 10 ]; /* future use */
 } FL_FORM;
 
 
@@ -1174,11 +1174,11 @@ FL_EXPORT FL_OBJECT * fl_bgn_group(
 		void
 		);
 
-FL_EXPORT FL_OBJECT * fl_end_group(
+FL_EXPORT void fl_end_group(
 		void
 		);
 
-FL_EXPORT void fl_addto_group(
+FL_EXPORT FL_OBJECT *fl_addto_group(
 		FL_OBJECT * group
 		);
 
@@ -1727,7 +1727,7 @@ FL_EXPORT void fl_add_object(
 		FL_OBJECT * obj
 		);
 
-FL_EXPORT void fl_addto_form(
+FL_EXPORT FL_FORM *fl_addto_form(
 		FL_FORM * form
 		);
 

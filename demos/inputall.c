@@ -37,16 +37,24 @@
 
 /* callbacks for form input */
 
-void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			  long        data  FL_UNUSED_ARG )
+/***************************************
+ ***************************************/
+
+void
+done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
-   fl_finish( );
-   exit( 0 );
+	fl_finish( );
+	exit( 0 );
 }
 
 
-void input_cb( FL_OBJECT * ob,
-			   long        data  FL_UNUSED_ARG )
+/***************************************
+ ***************************************/
+
+void
+input_cb( FL_OBJECT * ob,
+		  long        data  FL_UNUSED_ARG )
 {
 	int cx,
 		cy;
@@ -58,8 +66,12 @@ void input_cb( FL_OBJECT * ob,
 }
 
 
-void hide_show_cb( FL_OBJECT * ob,
-				   long        data  FL_UNUSED_ARG )
+/***************************************
+ ***************************************/
+
+void
+hide_show_cb( FL_OBJECT * ob,
+			  long        data  FL_UNUSED_ARG )
 {
     FD_input *fd = ob->form->fdui;
 
@@ -70,8 +82,12 @@ void hide_show_cb( FL_OBJECT * ob,
 }
 
 
-int main( int    argc,
-		  char * argv[ ] )
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
 	FD_input *fd_input;
 

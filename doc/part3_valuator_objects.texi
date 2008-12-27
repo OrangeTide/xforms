@@ -1,0 +1,1185 @@
+@node Part III Valuator Objects
+@chapter Valuator Objects
+
+@ifnottex
+
+@menu
+* Slider Object:      Slider Object
+* Scrollbar Object:   Scrollbar Object
+* Dial Object:        Dial Object
+* Positioner Object:  Positioner Object
+* Counter Object:     Counter Object
+* Thumbwheel Object:  Thumbwheel Object
+@end menu
+
+@end ifnottex
+
+
+@node Slider Object
+@section Slider Object
+
+Sliders are useful for letting the user indicate a value between some
+fixed bounds. Both horizontal and vertical sliders exist. They have a
+minimum, a maximum and a current value (all floating point values).
+The user can change the current value by shifting the slider with the
+mouse. Whenever the value changes, this is reported to the application
+program.
+
+@ifnottex
+
+@menu
+* Adding Slider Objects:   Adding Slider Objects
+* Slider Types:            Slider Types
+* Slider Interaction:      Slider Interaction
+* Other Slider Routines:   Other Slider Routines
+* Slider Attributes:       Slider Attributes
+* Remarks:                 Slider Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Slider Objects
+@subsection Adding Slider Objects
+
+Adding an object To add a slider to a form use
+@findex fl_add_slider()
+@example
+FL_OBJECT *fl_add_slider(int type, FL_Coord x, FL_Coord y,
+                         FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+or
+@findex fl_add_valslider()
+@example
+FL_OBJECT *fl_add_valslider(int type, FL_Coord x, FL_Coord y,
+                            FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+The meaning of the parameters is as usual. The label is by default
+placed below the slider. The difference between a normal slider and a
+valslider is that for the second type its value is displayed above or
+to the left of the slider.
+
+
+@node Slider Types
+@subsection Slider Types
+
+The following types of sliders are available:
+@table @code
+@tindex @code{FL_VERT_SLIDER}
+@item FL_VERT_SLIDER
+A vertical slider.
+@tindex @code{FL_HOR_SLIDER}
+@item FL_HOR_SLIDER
+A horizontal slider.
+@tindex @code{FL_VERT_FILL_SLIDER}
+@item FL_VERT_FILL_SLIDER
+A vertical slider, filled from the bottom.
+@tindex @code{FL_HOR_FILL_SLIDER}
+@item FL_HOR_FILL_SLIDER
+A horizontal slider, filled from the left.
+@tindex @code{FL_VERT_NICE_SLIDER}
+@item FL_VERT_NICE_SLIDER
+A nice looking vertical slider.
+@tindex @code{FL_HOR_NICE_SLIDER}
+@item FL_HOR_NICE_SLIDER
+A nice looking horizontal slider.
+@tindex @code{FL_VERT_BROWSER_SLIDER}
+@item FL_VERT_BROWSER_SLIDER
+A different looking vertical slider.
+@tindex @code{FL_HOR_BROWSER_SLIDER}
+@item FL_HOR_BROWSER_SLIDER
+A different looking horizontal slider.
+@end table
+
+
+@node Slider Interaction
+@subsection Slider Interaction
+
+Whenever the user changes the value of the slider using the mouse, the
+slider is returned (or the associated callback function is called) by
+the interaction routines. The slider position is changed by moving the
+mouse inside the slider area. For fine control, hold down the left or
+right @code{<Shift>} key while moving the slider. Depending on the
+object size (pixels) and the slider value range, dragging the sliding
+bar might not always get the value you want, even with the
+@code{<Shift>} fine control, if the range is larger than the number of
+pixels (for example, if you use 100 pixels to represent 150 values, no
+matter how you control the motion, you will not get all the values).
+In these situations, you should use the right or middle mouse button
+with appropriate increments (see @code{fl_set_slider_increment()}
+below). The interaction with increment is that it updates the value
+first (as opposed to reading off the pixel position) then maps the
+value back into pixel position, thus all values of multiples of the
+increments are obtainable.
+
+In some applications you might not want the slider to be returned all
+the time. To change the default, call the following routine:
+@findex fl_set_slider_return()
+@example
+void fl_set_slider_return(FL_OBJECT *obj, int when)
+@end example
+@noindent
+where the parameter @code{when} can be one of the four values:
+@table @code
+@tindex @code{FL_RETURN_END_CHANGED}
+@item FL_RETURN_END_CHANGED
+Return at end (mouse release) if value is changed (since last return).
+@tindex @code{FL_RETURN_CHANGED}
+@item FL_RETURN_CHANGED
+Return whenever the slider value is changed.
+@tindex @code{FL_RETURN_END}
+@item FL_RETURN_END
+Return at end (mouse release) regardless if the value is changed or
+not.
+@tindex @code{FL_RETURN_ALWAYS}
+@item FL_RETURN_ALWAYS
+return all the time. Usually not very useful.
+@end table
+
+See the demo program @file{objreturn.c} for an example use of this.
+
+
+@node Other Slider Routines
+@subsection Other Slider Routines
+
+To change the value and bounds of a slider use the following routines
+@findex fl_set_slider_value()
+@findex fl_set_slider_bounds()
+@example
+void fl_set_slider_value(FL_OBJECT *obj, double val);
+void fl_set_slider_bounds(FL_OBJECT *obj, double min, double max);
+@end example
+@noindent
+By default, the minimum value for a slider is 0.0, the maximum is 1.0
+and the value is 0.5. For vertical sliders the slider position for the
+minimum value is at the left, for horizontal sliders at the top of the
+slider. By setting @code{nin} to a larger value than @code{max} in a
+call of @code{fl_set_slider_bounds()} this can be reversed.
+
+If in a call of @code{fl_set_slider_bounds()} the actual value of a
+slider isn't within the range of the new bounds, it's value gets
+adjusted to the nearest limit. When the requested new slider value in
+a call of @code{fl_set_slider_value()} is outside the range of bounds
+it gets adjusted to the nearest boundary value.
+
+To obtain the current value or bounds of a slider use
+@findex fl_get_slider_value()
+@example
+double fl_get_slider_value(FL_OBJECT *obj);
+void fl_get_slider_bounds(FL_OBJECT *obj, double *min, double *max);
+@end example
+
+In a number of situations you may like slider values to be rounded to
+some values, e.g. to integer values. To this end use the routine
+@findex fl_set_slider_step()
+@example
+void fl_set_slider_step(FL_OBJECT *obj, double step);
+@end example
+@noindent
+After this call slider values will be rounded to multiples of @code{step}.
+Use the value 0.0 for @code{step} to switch off rounding.
+
+By default, if the mouse is pressed below or above the the sliding
+bar, the sliding bar jumps to the location where the mouse got pressed.
+You can, however, use the following routine to change this default so
+the jumps are made is discrete increments:
+@findex fl_set_slider_increment()
+@example
+void fl_set_slider_increment(FL_OBJECT *obj, double lj, double rj);
+@end example
+@noindent
+where @code{lj} indicates how much to jump if the left mouse button is
+pressed and @code{rj} indicates how much to increment if right/middle
+mouse buttons pressed. This routine can be used if finer control of
+the slider value is needed or to assign different meanings to different
+mouse buttons. For example, for the slider in the browser class, the
+left mouse jump is made to be one page and right jump is made to be
+one line.
+
+To obtain the current increment, use the following routine
+@findex fl_get_slider_increment()
+@example
+void fl_get_slider_increment(FL_OBJECT *obj, double *lj, double *rj);
+@end example
+
+
+@node Slider Attributes
+@subsection Slider Attributes
+
+Never use @code{FL_NO_BOX} as the boxtype for a slider. For
+@code{FL_VERT_NICE_SLIDER}s and @code{FL_HOR_NICE_SLIDER}s it's best
+to use a @code{FL_FLAT_BOX} in the color of the background to get the
+nicest effect.
+
+The first color argument (@code{col1}) to @code{fl_set_object_color()}
+controls the color of the background of the slider, the second
+(@code{col2}) the color of the slider itself.
+
+You can control the size of the slider inside the box using the routine
+@findex fl_set_slider_size()
+@example
+void fl_set_slider_size(FL_OBJECT *obj, double size);
+@end example
+@noindent
+@code{size} should be a floating point value between 0.0 and 1.0. The
+default is
+@tindex @code{FL_SLIDER_WIDTH}
+@code{FL_SLIDER_WIDTH}, which is 0.1 for regular sliders and 0.15 for
+browser sliders. With a value for @code{size} of 1.0, the slider
+covers the box completely and can no longer be moved. This function
+does nothing if applied to sliders of type @code{NICE_SLIDER} and
+@code{FILL_SLIDER}.
+
+The routine
+@findex fl_set_slider_precision()
+@example
+void fl_set_slider_precision(FL_OBJECT *obj, int prec);
+@end example
+@noindent
+sets the precision with which the value of the slider is shown. This
+only applies to sliders showing their value, i.e.@: valsliders.
+
+By default, the value shown by a valslider is the slider value in
+floating point format. You can override the default by registering a
+filter function using the following routine
+@findex fl_set_slider_filter()
+@example
+void fl_set_slider_filter(FL_OBJECT *obj,
+                          const char *(*filter)(FL_OBJECT *,
+                                                double value,
+                                                int prec));
+@end example
+@noindent
+where @code{value} and @code{prec} are the slider value and precision
+respectively. The filter function @code{filter} should return a string
+that is to be shown. The default filter is equivalent to the following
+@example
+const char *filter(FL_OBJECT *obj, double value, int prec) @{
+    static char buf[32];
+
+     sprintf(buf, "%.*f", prec, value);
+     return buf;
+@}
+@end example
+
+@node Slider Remarks
+@subsection Remarks
+
+See the demo program @file{demo05.c} for an example of the use of
+sliders. See demo programs @file{sldsize.c} and @file{sliderall.c}
+for the effect of setting slider sizes and the different types of
+sliders.
+
+
+@node Scrollbar Object
+@section Scrollbar Object
+
+Scrollbars are similar to sliders (as a matter of fact, scrollbars are
+made with sliders and scrollbuttons), and useful in letting the user
+indicate a value between some fixed bounds. Both horizontal and
+vertical scrollbars exist. They have a minimum, maximum and current
+value (all floating point values). The user can change this value by
+dragging the sliding bar with the mouse or press the scroll buttons.
+Whenever the value changes, it is reported to the application program
+via the callback function.
+
+@ifnottex
+
+@menu
+* Adding Scrollbar Objects:   Adding Scrollbar Objects
+* Scrollbar Types:            Scrollbar Types
+* Scrollbar Interaction:      Scrollbar Interaction
+* Other Scrollbar Routines:   Other Scrollbar Routines
+* Scrollbar Attributes:       Scrollbar Attributes
+* Remarks:                    Scrollbar Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Scrollbar Objects
+@subsection Adding Scrollbar Objects
+
+To add a scrollbar to a form use
+@findex fl_add_scrollbar()
+@example
+FL_OBJECT *fl_add_scrollbar(int type, FL_Coord x, FL_Coord y,
+                            FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+The meaning of the parameters is as usual. The label is by default
+placed below the scrollbar.
+
+
+@node Scrollbar Types
+@subsection Scrollbar Types
+
+The following types of scrollbar are available:
+@table @code
+@tindex @code{FL_VERT_SCROLLBAR}
+@item FL_VERT_SCROLLBAR
+A vertical scrollbar.
+@tindex @code{FL_HOR_SCROLLBAR}
+@item FL_HOR_SCROLLBAR
+A horizontal scrollbar.
+@tindex @code{FL_VERT_THIN_SCROLLBAR}
+@item FL_VERT_THIN_SCROLLBAR
+A different looking vertical scrollbar.
+@tindex @code{FL_HOR_THIN_SCROLLBAR}
+@item FL_HOR_THIN_SCROLLBAR
+A different looking horizontal scrollbar.
+@tindex @code{FL_VERT_NICE_SCROLLBAR}
+@item FL_VERT_NICE_SCROLLBAR
+A vertical scrollbar using @code{FL_NICE_SLIDER}.
+@tindex @code{FL_HOR_NICE_SCROLLBAR}
+@item FL_HOR_NICE_SCROLLBAR
+A horizontal scrollbar using @code{FL_NICE_SLIDER}.
+@tindex @code{FL_VERT_PLAIN_SCROLLBAR}
+@item FL_VERT_PLAIN_SCROLLBAR
+Similar to @code{FL_THIN_SCROLLBAR}.
+@tindex @code{FL_HOR_PLAIN_SCROLLBAR}
+@item FL_HOR_PLAIN_SCROLLBAR
+Similar to @code{FL_THIN_SCROLLBAR}.
+@end table
+
+
+@node Scrollbar Interaction
+@subsection Scrollbar Interaction
+
+Whenever the user changes the value of the scrollbar using the mouse,
+the scrollbar's callback is called. The scrollbar position is changed
+by moving the mouse inside the scrollbar area. For fine control, hold
+down the left or right @code{<Shift>} key while moving the slider.
+
+In some applications you might not want the scrollbar to be returned
+all the time. To change the default, call the following routine:
+@findex fl_set_scrollbar_return()
+@example
+void fl_set_scrollbar_return(FL_OBJECT *obj, int when);
+@end example
+@noindent
+where the parameter @code{when} can be one of the following four
+values:
+@table @code
+@tindex @code{FL_RETURN_END_CHANGED}
+@item FL_RETURN_END_CHANGED
+Return at end (mouse release) if value is changed (since last return).
+@tindex @code{FL_RETURN_CHANGED}
+@item FL_RETURN_CHANGED
+Return whenever the scrollbar value is changed.
+@tindex @code{FL_RETURN_END}
+@item FL_RETURN_END
+Return at end (mouse release) regardless if the value is changed or
+not.
+@tindex @code{FL_RETURN_ALWAYS}
+@item FL_RETURN_ALWAYS
+Return all the time. Usually not very useful.
+@end table
+
+See demo program @file{objreturn.c} for an example use of this.
+
+
+@node Other Scrollbar Routines
+@subsection Other Scrollbar Routines
+
+To change the value and bounds of a scrollbar use the following
+routines:
+@findex fl_set_scrollbar_value()
+@findex fl_set_scrollbar_bounds()
+@example
+void fl_set_scrollbar_value(FL_OBJECT *obj, double val);
+void fl_set_scrollbar_bounds(FL_OBJECT *obj, double min, double max);
+@end example
+By default, the minimum value for a slider is 0.0, the maximum is 1.0
+and the value is 0.5. For vertical sliders the slider position for the
+minimum value is at the left, for horizontal sliders at the top of the
+slider. By setting @code{nin} to a larger value than @code{max} in a
+call of @code{fl_set_slider_bounds()} this can be reversed.
+
+If in a call of @code{fl_set_scrollbar_bounds()} the actual value of a
+scrollbar isn't within the range of the new bounds, it's value gets
+adjusted to the nearest limit. When the requested new scrollbar value
+in a call of @code{fl_set_scrollbar_value()} is outside the range of
+bounds it gets adjusted to the nearest boundary value.
+
+
+To obtain the current value and bounds of a scrollbar use
+@findex fl_get_scrollbar_value()
+@findex fl_get_scrollbar_bounds()
+@example
+double fl_get_scrollbar_value(FL_OBJECT *obj);
+void fl_get_scrollbar_bounds(FL_OBJECT *obj, double *min, double *max);
+@end example
+
+In a number of situations you would like scrollbar values to be
+rounded to some values, e.g. to integer values. To this end use the
+routine
+@findex fl_set_scrollbar_step()
+@example
+void fl_set_scrollbar_step(FL_OBJECT *obj, double step);
+@end example
+@noindent
+After this call the scrollbar values will be rounded to multiples of
+@code{step}. Use the value 0.0 for @code{step} to switch off rounding.
+This should not be confused with the increment/decrement value when
+the scroll buttons are pressed. Use
+@code{fl_set_scrollbar_increment()} to change the increment value.
+
+By default, if the mouse is pressed below or above the the sliding
+bar, the bar jumps to the location where the mouse is pressed. You
+can, however, use the following routine to change this default so the
+jumps are made is discrete increments:
+@findex fl_set_scrollbar_increment()
+@example
+void fl_set_scrollbar_increment(FL_OBJECT *obj, double lj, double rj);
+@end example
+@noindent
+where @code{lj} indicates how much to increment if the left mouse
+button is pressed and @code{rj} indicates how much to jump if the
+right/middle mouse button pressed. For example, for the scrollbar in
+the browser class, the left mouse jump is made to be one page and
+right/middle mouse jump is made to be one line. The increment
+(decrement) value when the scrollbuttons are pressed is set to the
+value of the right jump.
+
+To obtain the current increment settings, use the following routine
+@findex fl_get_scrollbar_increment()
+@example
+void fl_get_scrollbar_increment(FL_OBJECT *obj, double *lj, double *sj);
+@end example
+
+
+@node Scrollbar Attributes
+@subsection Scrollbar Attributes
+
+Never use @code{FL_NO_BOX} as the boxtype for a scrollbar. For
+@code{FL_VERT_NICE_SCROLLBAR}s and @code{FL_HOR_NICE_SCROLLBAR}s it's
+best to use a @code{FL_FLAT_BOX} boxtype in the color of the
+background to get the nicest effect.
+
+The first color argument (@code{col1} to @code{fl_set_object_color()}
+controls the color of the background of the scrollbar, the second
+(@code{col2}) the color of the sliding bar itself.
+
+You can control the size of the sliding bar inside the box using the
+routine
+@findex fl_set_scrollbar_size()
+@example
+void fl_set_scrollbar_size(FL_OBJECT *obj, double size);
+@end example
+@noindent
+@code{size} should be a value between 0.0 and 1.0. The default is
+@tindex @code{FL_SLIDER_WIDTH}
+@code{FL_SLIDER_WIDTH}, which is 0.15 for all scrollbars With
+@code{size} set to 1.0, the scrollbar covers the box completely and
+can no longer be moved. This function does nothing if applied to
+scrollbars of type @code{FL_NICE_SCROLLBAR}.
+
+
+@node Scrollbar Remarks
+@subsection Remarks
+
+See the demo program @file{scrollbar.c} for an example of the use of
+scrollbars.
+
+
+@node Dial Object
+@section Dial Object
+
+Dial objects are dials that the user can put in a particular position
+using the mouse. They have a minimum, maximum and current value (all
+floating point values). The user can change this value by turning the
+dial with the mouse. Whenever the value changes, this is reported to
+the application program.
+
+@ifnottex
+
+@menu
+* Adding Dial Objects:    Adding Dial Objects
+* Dial Types:             Dial Types
+* Dial Interaction:       Dial Interaction
+* Other Dial Routines:    Other Dial Routines
+* Dial Attributes:        Dial Attributes
+* Remarks:                Dial Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Dial Objects
+@subsection Adding Dial Objects
+
+To add a dial to a form use
+@findex fl_add_dial()
+@example
+FL_OBJECT *fl_add_dial(int type, FL_Coord x, FL_Coord y,
+                       FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+The meaning of the parameters is as usual. The label is by default
+placed below the dial.
+
+@node Dial Types
+@subsection Dial Types
+
+The following types of dials are available:
+@table @code
+@tindex @code{FL_NORMAL_DIAL}
+@item FL_NORMAL_DIAL
+A dial with a knob indicating the position.
+@tindex @code{FL_LINE_DIAL}
+@item FL_LINE_DIAL
+A dial with a line indicating the position.
+@tindex @code{FL_FILL_DIAL}
+@item FL_FILL_DIAL
+The area between initial and current is filled.
+@end table
+
+
+@node Dial Interaction
+@subsection Dial Interaction
+
+By default, the dial value is returned to the application when the
+user releases the mouse. It is possible to change this behavior using
+the following routine
+@findex fl_set_dial_return()
+@example
+void fl_set_dial_return(FL_OBJECT *obj, int when);
+@end example
+@noindent
+where @code{when} can be one of the following
+@table @code
+@tindex @code{FL_RETURN_END_CHANGED}
+@item FL_RETURN_END_CHANGED
+Return at end (mouse release) and only if the dial value is changed.
+This is the default setting.
+@tindex @code{FL_RETURN_CHANGED}
+@item FL_RETURN_CHANGED
+Return whenever the dial value is changed.
+@tindex @code{FL_RETURN_END}
+@item FL_RETURN_END
+Return at the end regardless if the dial value is changed or not.
+@end table
+
+
+@node Other Dial Routines
+@subsection Other Dial Routines
+
+To change the value of the dial and its bounds use
+@findex fl_set_dial_value()
+@findex fl_set_dial_bounds()
+@example
+void fl_set_dial_value(FL_OBJECT *obj, double val);
+void fl_set_dial_bounds(FL_OBJECT *obj, double min, double max);
+@end example
+@noindent
+By default, the minimum value is 0.0, the maximum is 1.0 and the value
+is 0.5.
+
+To obtain the current values of the dial and its bounds use
+@findex fl_get_dial_value()
+@findex fl_get_dial_bounds()
+@example
+double fl_get_dial_value(FL_OBJECT *obj);
+void fl_get_dial_bounds(FL_OBJECT *obj, double *min, double *max);
+@end example
+
+Sometimes, it might be desirable to limit the angular range a dial can
+take or choose an angle other than 0 to represent the minimum value.
+For this purpose, use the following routine
+@findex fl_set_dial_angles()
+@example
+void fl_set_dial_angles(FL_OBJECT *obj, double thetai, double thetaf)
+@end example
+@noindent
+where @code{thetai} maps to the minimum value of the dial and
+@code{thetaf} to its maximum value. The angles are relative to the
+origin of the dial, which is by default at 6 o'clock and rotates
+clock-wise. By default, the minimum angle is 0 and the maximum angle
+is 360.
+
+By default, crossing from 359.9 to 0 or from 0 to 359.9 is not
+allowed. To allowing crossing over, use the following routine
+@findex fl_set_dial_crossover()
+@example
+void fl_set_dial_crossover(FL_OBJECT *obj, int yes_no);
+@end example
+@noindent
+where a true value for @code{yes_no} indicates that cross-over is
+allowed.
+
+In a number of situations you might want dial values to be rounded to
+some values, e.g. to integer values. To this end use the routine
+@findex fl_set_dial_step()
+@example
+void fl_set_dial_step(FL_OBJECT *obj, double step);
+@end example
+@noindent
+After this call dial values will be rounded to multiples of
+@code{step}. Use a value of 0.0 for @code{step} to switch off
+rounding.
+
+By default, clock-wise rotation increases the dial value. To change,
+use the following routine
+@findex fl_set_dial_direction()
+@example
+void fl_set_dial_direction(FL_OBJECT *obj, int dir);
+@end example
+@noindent
+where @code{dir} can be either
+@tindex @code{FL_DIAL_CCW}
+@code{FL_DIAL_CCW} or
+@tindex @code{FL_DIAL_CW}
+@code{FL_DIAL_CW}.
+
+
+@node Dial Attributes
+@subsection Dial Attributes
+
+You can use any boxtype you like, but the final dial face always
+appears to be circular although certain correlation between the
+requested boxtype and actual boxtype exists (for example,
+@code{FL_FRAME_BOX} is translated into a circular frame box.)
+
+The first color argument (@code{col1} to @code{fl_set_object_color()}
+controls the color of the background of the dial, the second
+@code{col2}) the color of the knob or the line or the fill color.
+
+
+@node Dial Remarks
+@subsection Remarks
+
+The resolution of a dial is about 0.2 degrees, i.e., there are only
+about 2000 steps per 360 degrees and, depending on the size of the
+dial, it is typically less.
+
+The dial is always drawn with a circular box. If you specify a
+@code{FL_UP_BOX}, a @code{FL_OVAL3D_UPBOX} will be used.
+
+See the demo programs @file{ldial.c}, @file{ndial.c} and
+@file{fdial.c} for examples of the use of dials.
+
+
+@node Positioner Object
+@section Positioner Object
+
+A positioner is an object in which the user can indicate a position
+with an x- and a y-coordinate. It displays a box with a cross-hair
+cursor in it. Clicking the mouse inside the box changes the position
+of the cross-hair cursor and, hence, the x- and y-values.
+
+@ifnottex
+
+@menu
+* Adding Positioner Objects:   Adding Positioner Objects
+* Positioner Types:            Positioner Types
+* Positioner Interaction:      Positioner Interaction
+* Other Positioner Routines:   Other Positioner Routines
+* Positioner Attributes:       Positioner Attributes
+* Remarks:                     Positioners Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Positioner Objects
+@subsection Adding Positioner Objects
+
+A positioner can be added to a form using the call
+@findex fl_add_positioner()
+@example
+FL_OBJECT *fl_add_positioner(int type, FL_Coord x, FL_Coord y,
+                             FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+The meaning of the parameters is as usual. The label is placed below
+the box by default.
+
+
+@node Positioner Types
+@subsection Positioner Types
+
+The following types of positioner exist:
+@table @code
+@tindex @code{FL_NORMAL_POSITIONER}
+@item FL_NORMAL_POSITIONER
+Cross-hair inside a box.
+@tindex @code{FL_OVERLAY_POSITIONER}
+@item FL_OVERLAY_POSITIONER
+Cross-hair inside a transparent box (i.e.@{ drawn in in XOR mode).
+@end table
+
+
+@node Positioner Interaction
+@subsection Positioner Interaction
+
+The user changes the setting of the positioner using the mouse inside
+the box. Whenever the values change, the object is returned by the
+interaction routines.
+
+In some applications you may only want the positioner to be returned
+to the application program when the user releases the mouse, i.e., not
+all the time. To achieve this call the routine
+@findex fl_set_positioner_return()
+@example
+void fl_set_positioner_return(FL_OBJECT *obj, int always);
+@end example
+@noindent
+Set @code{always} to 0 to achieve this goal.
+
+
+@node Other Positioner Routines
+@subsection Other Positioner Routines
+
+To set the value of the positioner and the boundary values use the
+routines:
+@findex fl_set_positioner_xvalue()
+@findex fl_set_positioner_xbounds()
+@findex fl_set_positioner_yvalue()
+@findex fl_set_positioner_ybounds()
+@example
+void fl_set_positioner_xvalue(FL_OBJECT *obj, double val);
+void fl_set_positioner_xbounds(FL_OBJECT *obj, double min, double max);
+void fl_set_positioner_yvalue(FL_OBJECT *obj, double val);
+void fl_set_positioner_ybounds(FL_OBJECT *obj, double min, double max);
+@end example
+@noindent
+By default the minimum values are 0.0, the maximum values are 1.0 and
+the actual values are 0.5. For boundaries in x-direction @code{min}
+and @code{max} should be taken to mean the left- and right-most
+position, respectively, and for the y-boundaries @code{min} and @code{max}
+should be taken to mean the value at the bottom and value at the top
+of the positioner.
+
+To obtain the current values of the positioner and the bounds use
+@findex fl_get_positioner_xvalue()
+@findex fl_get_positioner_xbounds()
+@findex fl_get_positioner_yvalue()
+@findex fl_get_positioner_ybounds()
+@example
+double fl_get_positioner_xvalue(FL_OBJECT *obj);
+void fl_get_positioner_xbounds(FL_OBJECT *obj,
+                               double *min, double *max);
+double fl_get_positioner_yvalue(FL_OBJECT *obj);
+void fl_get_positioner_ybounds(FL_OBJECT *obj,
+                               double *min, double *max);
+@end example
+@noindent
+
+In a number of situations you might like positioner values to be
+rounded to some values, e.g. to integer values. To this end use the
+routines
+@findex fl_set_positioner_xstep()
+@findex fl_set_positioner_ystep()
+@example
+void fl_set_positioner_xstep(FL_OBJECT *obj, double step);
+void fl_set_positioner_ystep(FL_OBJECT *obj, double step);
+@end example
+@noindent
+After these calls positioner values will be rounded to multiples of
+@code{step}. Use a value of 0.0 for @code{step} to switch off rounding.
+
+Sometimes, it makes more sense for a positioner to have an icon/pixmap
+as the background that represents a minified version of the area where
+the positioner's values apply. Type @code{FL_OVERLAY_POSITIONER} is
+specifically designed for this by drawing the moving cross-hair in XOR
+mode as not to erase the background. A typical creation procedure
+might look something like the following
+@example
+obj = fl_add_pixmap(FL_NORMAL_PIXMAP, x, y, w, h, label);
+fl_set_pixmap_file(obj, iconfile);
+pos = fl_add_positioner(FL_OVERLAY_POSITIONER, x, y, w, h, label);
+@end example
+@noindent
+Of course, you can overlay this type of positioner on objects other
+than a pixmap. See the demo program @file{positionerXOR.c} for an
+example.
+
+
+@node Positioner Attributes
+@subsection Positioner Attributes
+
+Never use @code{FL_NO_BOX} as the boxtype for a positioner. 
+
+The first color argument (@code{col1}) t @code{fl_set_object_color()}
+controls the color of the box, the second (@code{col2}) the color of
+the cross-hair.
+
+
+@node Positioners Remarks
+@subsection Remarks
+
+A demo can be found in @file{positioner.c}.
+
+
+@node Counter Object
+@section Counter Object
+
+A counter provides a different mechanism for the user to indicate a
+value. In consists of a box displaying a value and two or four
+buttons, two at the left and two at the right side. The user can press
+these buttons to change the value. If the counter has four buttons,
+the left-most and right-most button make the value change in large
+steps, the other buttons make it change in small steps. As long as the
+user keeps the mouse pressed, the value changes.
+
+
+@ifnottex
+
+@menu
+* Adding Counter Objects:   Adding Counter Objects
+* Counter Types:            Counter Types
+* Counter Interaction:      Counter Interaction
+* Other Counter Routines:   Other Counter Routines
+* Counter Attributes:       Counter Attributes
+* Remarks:                  Counter Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Counter Objects
+@subsection Adding Counter Objects
+
+To add a counter to a form use
+@findex fl_add_counter()
+@example
+FL_OBJECT *fl_add_counter(int type, FL_Coord x, FL_Coord y,
+                          FL_Coord w, FL_Coord h, const char *label)
+@end example
+@noindent
+The meaning of the parameters is as usual. The label is by default
+placed below the counter.
+
+@node Counter Types
+@subsection Counter Types
+
+The following types of counters are available:
+@table @code
+@tindex @code{FL_NORMAL_COUNTER}
+@item FL_NORMAL_COUNTER
+A counter with two buttons on each side.
+@tindex @code{FL_SIMPLE_COUNTER}
+@item FL_SIMPLE_COUNTER
+A counter with one button on each side.
+@end table
+
+@node Counter Interaction
+@subsection Counter Interaction
+
+The user changes the value of the counter by keeping his mouse pressed
+on one of the buttons. Whenever he releases the mouse the counter is
+returned to the application program.
+
+In some applications you might want the counter to be returned to the
+application program whenever the value changes. To this end, the
+following routine is available
+@findex fl_set_counter_return()
+@example
+void fl_set_counter_return(FL_OBJECT *obj, int when);
+@end example
+@noindent
+where @code{when} can be either @code{FL_RETURN_END_CHANGED} (the
+default) or @code{FL_RETURN_CHANGED}.
+
+
+@node Other Counter Routines
+@subsection Other Counter Routines
+
+To change the value of the counter, it's bounds and stp size use the
+routines
+@findex fl_set_counter_value()
+@findex fl_set_counter_bounds()
+@findex fl_set_counter_step()
+@example
+void fl_set_counter_value(FL_OBJECT *obj, double val);
+void fl_set_counter_bounds(FL_OBJECT *obj, double min, double max);
+void fl_set_counter_step(FL_OBJECT *obj, double small, double large);
+@end example
+@noindent
+The first routine sets the value (default is 0) of the counter, the
+second routine sets the minimum and maximum values that the counter
+will take (default are -1000000 and 1000000, respectively) and the
+third routine sets the sizes of the small and large steps (defaults to 0.1
+and 1). (For simple counters only the small step is used.)
+
+For conflicting settings, bounds take precedence over value, i.e., if
+setting a value that is outside of the current bounds, it is clamped.
+Also changing the bounds in a way that the current counter value isn't
+within the new bounds range anymore will result in its value being
+adjusted to the nearest of the new limits.
+
+To obtain the current value of the counter use
+@findex fl_get_counter_value()
+@example
+double fl_get_counter_value(FL_OBJECT *obj);
+@end example
+
+To obtain the current bounds and steps, use the following functions
+@findex fl_get_counter_bounds()
+@findex fl_get_counter_step()
+@example 
+void fl_get_counter_bounds(FL_OBJECT *obj, double *min, double *max);
+void fl_get_counter_step(FL_OBJECT *obj, double *small, double *large);
+@end example
+
+To set the precision (number of digits after the dot) with which the
+counter value is displayed use the routine
+@findex fl_set_counter_precision()
+@example
+void fl_set_counter_precision(FL_OBJECT *obj, int prec);
+@end example
+
+To determine the current value of the precision use
+@findex fl_get_counter_precision()
+@example
+int fl_get_counter_precision(FL_OBJECT *obj);
+@end example
+
+By default, the value shown is the counter value in floating point
+format. You can override the default by registering a filter function
+using the following routine
+@findex fl_set_counter_filter()
+@example
+void fl_set_counter_filter(FL_OBJECT *obj,
+                           const char *(*filter)(FL_OBJECT *,
+                                                 double value,
+                                                 int prec));
+@end example
+@noindent
+where @code{value} and @code{prec} are the counter value and precision
+respectively. The filter function @code{filter} should return a string
+that is to be shown. Note that the default filter is equivalent to the
+following
+@example
+const char *filter(FL_OBJECT *obj, double value, int prec) @{
+    static char buf[32];
+
+     sprintf(buf, "%.*f",prec,value);
+     return buf;
+@}
+@end example
+
+By default the counter value changes first slowly and the rate of
+change then accelerates until a final speed is reached. The default delay
+between the value changing is @w{600 ms} at the start and the final
+delay is @w{50 ms}. You can change the initial delay by a call of
+the function
+@findex fl_set_counter_repeat()
+@example
+void fl_set_counter_repeat(FL_OBJECT *obj, int millisec);
+@end example
+@noindent
+and the final delay by using
+@findex fl_set_counter_min_repeat()
+@example
+void fl_set_counter_min_repeat(FL_OBJECT *obj, int millisec);
+@end example
+@noindent
+where in both cases the argument @code{millisec} is the delay in
+milli-seconds. The current settings for the initial and final delay
+can be obtained by calling the functions
+@findex fl_get_counter_repeat()
+@findex fl_get_counter_min_repeat()
+@example
+int fl_get_counter_repeat(FL_OBJECT *obj);
+int fl_get_counter_min_repeat(FL_OBJECT *obj);
+@end example
+
+Until version 1.0.91 of the library the delay between changes of a
+counter was constant (with a default value of @w{100 ms}). To obtain
+this traditional behaviour simple set the initial and final delay to
+the same value.
+
+As a third alternative you can also request that only the first change
+of the counter has a different delay from all the following ones. To
+achieve this call
+@findex fl_set_counter_speedjump()
+@example
+void fl_set_counter_speedjump(FL_OBJECT *obj, int yes_no);
+@end example
+@noindent
+with a true value for @code{yes_no}. The delay for the first change of
+the counter value will then be the one set by
+@code{fl_set_counter_repeat()} and the following delays last as long
+as set by @code{fl_set_counter_min_repeat()}.
+
+To determine the setting for "speedjumping" call
+@findex fl_get_counter_speedjump()
+@example
+int fl_get_counter_speedjump(FL_OBJECT *obj);
+@end example
+
+
+@node Counter Attributes
+@subsection Counter Attributes
+
+Never use @code{FL_NO_BOX} as the boxtype for a counter.
+
+The first color argument (@code{col1}) t @code{fl_set_object_color()}
+controls the color of the background of the counter, the second
+(@code{col2}) sets the color of the arrow buttons of the counter.
+
+
+@node Counter Remarks
+@subsection Remarks
+
+See demo program @file{counter.c} for an example of the use of
+counters.
+
+
+@node Thumbwheel Object
+@section Thumbwheel Object
+
+Thumbwheel is another valuator that can be useful for letting the user
+indicate a value between some fixed bounds. Both horizontal and
+vertical thumbwheels exist. They have a minimum, a maximum and a
+current value (all floating point values). The user can change the
+current value by rolling the wheel.
+
+@ifnottex
+
+@menu
+* Adding Thumbwheel Objects:   Adding Thumbwheel Objects
+* Thumbwheel Types:            Thumbwheel Types
+* Thumbwheel Interaction:      Thumbwheel Interaction
+* Other Thumbwheel Routines:   Other Thumbwheel Routines
+* Thumbwheel Attributes:       Thumbwheel Attributes
+* Remarks:                     Thumbwheel Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Thumbwheel Objects
+@subsection Adding Thumbwheel Objects
+
+Adding an object To add a thumbwheel to a form use
+@findex fl_add_thumbwheel()
+@example
+FL_OBJECT *fl_add_thumbwheel(int type, FL_Coord x, FL_Coord y,
+                             FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+The meaning of the parameters is as usual. The label is by default
+placed below the thumbwheel.
+
+
+@node Thumbwheel Types
+@subsection Thumbwheel Types
+
+The following types of thumbwheels are available:
+@table @code
+@tindex @code{FL_VERT_THUMBWHEEL}
+@item FL_VERT_THUMBWHEEL
+A vertical thumbwheel.
+@tindex @code{FL_HOR_THUMBWHEEL}
+@item FL_HOR_THUMBWHEEL
+A horizontal thumbwheel.
+@end table
+
+
+@node Thumbwheel Interaction
+@subsection Thumbwheel Interaction
+
+Whenever the user changes the value of the thumbwheel using the mouse
+or keyboard, the thumbwheel is returned (or the callback called) by
+the interaction routines. You change the value of a thumbwheel by
+dragging the mouse inside the wheel area or, for vertical thubwheels
+also by using the scroll wheel of the mouse. Each pixel of movement
+changes the value of the thumbwheel by 0.005, which you can change
+using the @code{fl_set_thumbwheel_step()} function.
+
+The keyboard can be used to change the value of a thumbwheel.
+Specifically, the @code{<Up>} and @code{<Down>} cursor keys can be
+used to increment or decrement the value of a vertical thumbwheel and
+the @code{<Right>} and @code{<Left>} cursor keys can be used to
+increment or decrement the value of horizontal thumbwheel. Each
+pressing of the cursor key changes the thumbwheel value by the current
+step value. The @code{<Home>} key can be used to set the thumbwheel to
+a known value, which is the average of the minimum and the maximum
+value of the thumbwheel.
+
+In some applications you might not want the thumbwheel to be returned
+all the time. To change the default, call the following routine:
+@findex fl_set_thumbwheel_return()
+@example
+void fl_set_thumbwheel_return(FL_OBJECT *obj, int when);
+@end example
+where the parameter @code{when} can be one of the four values
+@table @code
+@tindex @code{FL_RETURN_END_CHANGED}
+@item FL_RETURN_END_CHANGED
+Return at end (mouse release) if value is changed since last return.
+@tindex @code{FL_RETURN_CHANGED}
+@item FL_RETURN_CHANGED
+Return whenever the thumbwheel value is changed.
+@tindex @code{FL_RETURN_END}
+@item FL_RETURN_END
+Return at end (mouse release) regardless if the value is changed or
+not.
+@tindex @code{FL_RETURN_ALWAYS}
+@item FL_RETURN_ALWAYS
+Return whenever there is mouse event. usualy not very useful.
+@end table
+
+See demo program @file{thumbwheel.c} for an example use of this.
+
+
+@node Other Thumbwheel Routines
+@subsection Other Thumbwheel Routines
+
+To change the value and bounds of a thumbwheel use the following routines
+@findex fl_set_thumbwheel_value()
+@findex fl_set_thumbwheel_bounds()
+@example
+double fl_set_thumbwheel_value(FL_OBJECT *obj, double val);
+void fl_set_thumbwheel_bounds(FL_OBJECT *obj, double min, double max);
+@end example
+@noindent
+By default, the minimum value is 0.0, the maximum is 1.0 and the value
+is 0.5.
+
+To obtain the current value or bounds of a thumbwheel use
+@findex fl_get_thumbwheel_value()
+@findex fl_get_thumbwheel_bounds()
+@example
+double fl_get_thumbwheel_value(FL_OBJECT *obj);
+void fl_get_thumbwheel_bounds(FL_OBJECT *obj, double *min, double *max);
+@end example
+
+By default, the bounds are "hard", i.e., once you reach the minimum or
+maximum, the wheel would not turn further in this direction. However,
+if desired, you can make the bounds to turn over such that it crosses
+over from the minimum to the maximum value and vice versa. To this
+end, the following routine is available
+@findex fl_set_thumbwheel_crossover()
+@example
+int fl_set_thumbwheel_crossover(FL_OBJECT *obj, int yes_no);
+@end example
+
+In a number of situations you might like thumbwheel values to be
+rounded to some values, e.g. to integer values. To this end use the
+routine
+@findex fl_set_thumbwheel_step()
+@example
+void fl_set_thumbwheel_step(FL_OBJECT *obj, double step);
+@end example
+@noindent
+After this call thumbwheel values will be rounded to multiples of
+@code{step}. Use a value 0.0 for @code{step} to switch off rounding.
+
+
+@node Thumbwheel Attributes
+@subsection Thumbwheel Attributes
+
+Setting colors via @code{fl_set_object_color()} has no effect on thmbwheels.
+
+
+@node Thumbwheel Remarks
+@subsection Remarks
+
+See the demo program @file{thumbwheel.c} for an example of the use of
+thumbwheels.

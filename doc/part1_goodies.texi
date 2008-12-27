@@ -1,20 +1,22 @@
-@node Goodies
-@chapter Part I: Goodies
+@node Part I Goodies
+@chapter Goodies
 
 A number of special routines are provided that make working with simple
 forms even simpler. All these routines build simple forms and handle the
 interaction with the user.
 
+
 @ifnottex
 
 @menu
-Messages and Questions::         Messages and Questions
-Command Log::                    Command Log
-Colormap::                       Colormap
-File Selector::                  File Selector
+* Messages and Questions::
+* Command Log::
+* Colormap::
+* File Selector::
 @end menu
 
 @end ifnottex
+
 
 @node Messages and Questions
 @section Messages and Questions
@@ -39,11 +41,24 @@ void fl_show_messages(const char *str);
 when the message is a single line or when you know the message in
 advance. Embed newlines in @code{str} to get multi-line messages.
 
+As a third alternative you can also use
+@findex fl_show_msg()
+@example
+void fl_show_msg(const char * fmt, ...);
+@end example
+@noindent
+The only required argument @code{fmt} is a format string as you would
+use it for e.g.@: @code{printf(3)}, which then is followed by as many
+arguments as there are format specifiers in the format string. The
+string resulting from expansion of the format string using the
+remaining arguments can have arbitrary length and embedded newline
+characters (@code{'\n'}), producinf line breaks. The size of the
+message box gets set in a way that the whole text fits into it.
 
 Both of the message routines blocks execution and does not return
 immediately (but idle callback and asynchronous IO continue being run
 and checked). Execution continues when the OK button is pressed or
-@code{<RETURN>} is hit or when the message form is removed from the
+@code{<Return>} is hit or when the message form is removed from the
 screen by the following routine (for example, triggered by a timeout or
 idle callback):
 @findex fl_hide_message()
@@ -80,8 +95,6 @@ A similar routine exists to change the font style and size
 void fl_set_oneliner_font(int style, int size);
 @end example
 @noindent
-See also Section 21.3 for similar but potentially (different) multi-line
-message routines.
 
 @findex fl_show_alert()
 @findex fl_hide_alert()
@@ -95,6 +108,22 @@ work the same as @code{fl_show_messages()} goodie except that an alert
 icon (!) is added and the first string is shown bold-faced. The extra
 parameter @code{centered} controls whether to display the form centered
 on the screen.
+
+As in te case of messages also another function is avaialble
+@findex fl_show_alert2()
+@example
+void fl_show_alert2(int centered, const char *fmt, ...);
+@end example
+@noindent
+@code{centered} controls if the alert message is centered and
+@code{fmt} must be a fornat string as e.g.@: used for
+@code{printf(3)}. After the format string as many further arguments
+are required as there are format specifiers in the format string. The
+string resulting from expansion of the format string using the rest of
+the arguents can have arbitrary length and the first embedded
+form-feed character (@code{'\f'}) is used as the separator between the
+title string and the message of the alert box. Embedded newline
+characters (@code{'\n'}) produce lines break.
 
 In combination with @code{fl_add_timeout()}, it is easy to develop a
 timed alert routine that goes away when the user pushes the OK button or
@@ -201,7 +230,7 @@ three buttons. If the choice goodie is removed by
 @code{fl_hide_choice()}, the default @code{def} is retuned.
 
 To change the font used in all messages, use the following routine
-@findex fl_set_goodies_font(
+@findex fl_set_goodies_font()
 @example
 void fl_set_goodies_font(int style, int size);
 @end example
@@ -220,7 +249,7 @@ is the default input string placed in the input box. In addition, three
 buttons, labeled @code{Cancel}, @code{OK} and @code{Clear} respectively,
 are added. The button labeled @code{Clear} deletes the string in the
 input field. The routine returns the string in the input field when the
-user presses the @code{OK} button or the @code{<RETURN?>} key. The
+user presses the @code{OK} button or the @code{<Return>} key. The
 function also returns when button @code{Cancel} is pressed. In this
 case, instead of returning the text in the input field, @code{NULL} is
 returned. This routine can be used to have the user provide all kinds of
@@ -376,7 +405,7 @@ These two routines can be called anytime anywhere after
 
 The command log is by default placed at the top-right corner of the
 screen. To change the default placement, use the following routine
-@findex fl_set_command_log_position(
+@findex fl_set_command_log_position()
 @example
 void fl_set_command_log_position(int x, int y);
 @end example
@@ -385,7 +414,7 @@ where @code{x} and @code{y} are the coordinates of the upper-left corner
 of the form relative to the root window. The logging of the output is
 accumulative, i.e.@: @code{fl_exe_command()} does not clear the browser. To
 clear the browser, use the following routine
-@findex fl_clear_command_log(
+@findex fl_clear_command_log()
 @example
 void fl_clear_command_log(void);
 @end example
@@ -431,7 +460,7 @@ entries of the colormap. The user can scroll through the colormap to see
 more entries. Once the user presses the mouse one of the entries the
 corresponding index is returned and the colormap is removed from the
 screen. To display the colormap use the routine
-@findex fl_show_colormap(
+@findex fl_show_colormap()
 @example
 int fl_show_colormap(int oldcol);
 @end example
@@ -491,7 +520,7 @@ pushing the @code{Cancel} button. There are total of
 having its own current directory and content cache. All the file
 selector functions documented manipulate the currently active file
 selector, which can be set using the following routine
-@findex fl_use_fselector(
+@findex fl_use_fselector()
 @example
 int fl_use_fselector(int n);
 @end example
@@ -539,11 +568,11 @@ it. Note that directories are shown independent of whether they satisfy
 the pattern. He can also type in a file name directly.
 
 Complete keyboard navigation is built-in. E.g., you can use
-@code{<ALT>d} to change the directory instead of using the mouse.
+@code{<Alt>d} to change the directory instead of using the mouse.
 
 When the user is satisfied, i.e., found the correct directory and
 indicated the file name required, he can press the button labeled
-@code{Ready} or press the @code{<RETURN>} key. He can also double click
+@code{Ready} or press the @code{<Return>} key. He can also double click
 on the file name in the browser. The full path to the filename is
 returned by the procedure. If the user presses the @code{Cancel} button
 @code{NULL} is returned.
@@ -562,6 +591,9 @@ where the second argument of the callback is the @code{user data}. The
 return value of the callback function is currently not used. Note that
 the behavior of the file selector is slightly different when a callback
 is present. Without the callback, a file selector is always modal.
+
+Please note that when a file selector has a callback installed the
+field for manually entering a file name isn't shown.
 
 The placement of the file selector is by default centered on the screen,
 which can be changed by the following routine
@@ -719,7 +751,7 @@ To facilitate alternative implementations of file selectors, the
 following (internal) routines can be freely used:
 
 To get a directory listing, the following routine can be used
-@tindex @code{FL Dirlist}
+@tindex @code{FL_Dirlist}
 @findex fl_get_dirlist()
 @example
 const FL_Dirlist *fl_get_dirlist(const char *dirname,
@@ -737,7 +769,7 @@ otherwise. By default, directory entries are cached. Passing the
 function a true (non-zero) value for the @code{rescan} argument requests
 a re-read.
 
-@code{FL Dirlist} is a structure defined as follows
+@code{FL_Dirlist} is a structure defined as follows
 @example
 typedef struct @{
     char *name;             /* file name */
@@ -749,28 +781,28 @@ typedef struct @{
 @noindent
 where @code{type} is one of the following file types
 @table @code
-@tindex @code{FT FILE}
-@item FT FILE
+@tindex @code{FT_FILE}
+@item FT_FILE
 a regular file
-@tindex @code{FT DIR}
-@item FT DIR
+@tindex @code{FT_DIR}
+@item FT_DIR
 a directory
-@tindex @code{FT SOCK}
-@item FT SOCK
+@tindex @code{FT_SOCK}
+@item FT_SOCK
 a socket
-@tindex @code{FT FIFO}
-@item FT FIFO
+@tindex @code{FT_FIFO}
+@item FT_FIFO
 a pipe or FIFO
-@tindex @code{FT LINK}
-@item FT LINK
+@tindex @code{FT_LINK}
+@item FT_LINK
 a symbolic link
-@tindex @code{FT BLK}
-@item FT BLK
+@tindex @code{FT_BLK}
+@item FT_BLK
 a block device
-@tindex @code{FT CHR}
-@item FT CHR
+@tindex @code{FT_CHR}
+@item FT_CHR
 a character device
-@item FT OTHER
+@item FT_OTHER
 ?
 @end table
 
@@ -832,33 +864,33 @@ int fl_set_dirlist_sort(int method);
 @noindent
 where @code{method} can be one of the following
 @table @code
-@tindex @code{FL NONE}
-@item FL NONE
+@tindex @code{FL_NONE}
+@item FL_NONE
 Don't sort the entries
-@tindex @code{FL ALPHASORT}
-@item FL ALPHASORT
+@tindex @code{FL_ALPHASORT}
+@item FL_ALPHASORT
 Sort the entries in alphabetic order - this is the default
-@tindex @code{FL RALPHASORT}
-@item FL RALPHASORT
+@tindex @code{FL_RALPHASORT}
+@item FL_RALPHASORT
 Sort the entries in reverse alphabetic order
-@tindex @code{FL MTIMESORT}
-@item FL MTIMESORT
+@tindex @code{FL_MTIMESORT}
+@item FL_MTIMESORT
 Sort the entries according to the modification time
-@tindex @code{FL RMTIMESORT}
-@item FL RMTIMESORT
+@tindex @code{FL_RMTIMESORT}
+@item FL_RMTIMESORT
 Sort the entries according to the modification time, but reverse the
 order, i.e., latest first.
-@tindex @code{FL SIZESORT}
-@item FL SIZESORT
+@tindex @code{FL_SIZESORT}
+@item FL_SIZESORT
 Sort the entries in increasing size order
-@tindex @code{FL RSIZESORT}
-@item FL RSIZESORT
+@tindex @code{FL_RSIZESORT}
+@item FL_RSIZESORT
 Sort the entries in decreasing size order
-@tindex @code{FL CASEALPHASORT}
-@item FL CASEALPHASORT
+@tindex @code{FL_CASEALPHASORT}
+@item FL_CASEALPHASORT
 Sort the entries in alphabetic order with no regard to case
-@tindex @code{FL RCASEALPHASORT}
-@item FL RCASEALPHASORT
+@tindex @code{FL_RCASEALPHASORT}
+@item FL_RCASEALPHASORT
 Sort the entries in reverse alphabetic order with no regard to case.
 @end table
 

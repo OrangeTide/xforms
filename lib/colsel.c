@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -69,7 +66,6 @@ create_colorform( void )
     cs->colorform = fl_bgn_form( FL_UP_BOX, 240, 220 );
 
     for ( i = 0; i < 8; i++ )
-    {
 		for ( j = 0; j < 8; j++ )
 		{
 			cs->col[ 8 * i + j ] = fl_add_button( FL_NORMAL_BUTTON, 40 + j * 20,
@@ -77,7 +73,6 @@ create_colorform( void )
 			fl_set_object_boxtype( cs->col[ 8 * i + j ], FL_BORDER_BOX );
 			fl_set_object_lcol( cs->col[ 8 * i + j ], 7 );
 		}
-    }
 
     cs->prev = fl_add_button( FL_NORMAL_BUTTON, 10, 10, 30, 160, "@4" );
     cs->next = fl_add_button( FL_NORMAL_BUTTON, 200, 10, 30, 160, "@6" );
@@ -154,7 +149,7 @@ fl_show_colormap( int oldcol )
     create_colorform( );
     cs->colorform->u_vdata = cs->cancel;
     fl_set_form_atclose( cs->colorform, atclose, 0 );
-    init_colors(cc, thecol);
+    init_colors( cc, thecol );
     fl_set_object_color( cs->cancel, thecol, thecol );
     fl_deactivate_all_forms( );
 

@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -39,7 +36,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.30 2008/07/12 20:33:13 jtt Exp $";
+char *fl_id_xpup = "$Id: xpopup.c,v 1.31 2008/12/27 22:20:53 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -230,7 +227,7 @@ init_pup( PopUP * m )
  ***************************************/
 
 static int
-find_empty_index( Window    win )
+find_empty_index( Window win )
 {
     PopUP *p;
 
@@ -244,7 +241,6 @@ find_empty_index( Window    win )
 		}
 
     M_err( "fl_newpup", "Too many popups (maximum is %d)", fl_maxpup );
-
     return -1;
 }
 
@@ -332,13 +328,16 @@ parse_entry( int          n,
 		  c = strtok( NULL, "|" ) )
     {
 		flags = 0;
-		m->item[ m->nitems ] = item = fl_calloc( 1, sizeof *item );
-		item->str = NULL;
-		item->icb = NULL;
+		m->item[ m->nitems ] = item = fl_malloc( sizeof *item );
+		item->str      = NULL;
+		item->icb      = NULL;
 		item->shortcut = NULL;
-		item->ret = m->nitems + 1;
-		item->ulpos = -1;
-		item->subm = -1;
+		item->subm     = -1;
+		item->mode     = 0;
+		item->ret      = m->nitems + 1;
+		item->ulpos    = -1;
+		item->radio    = 0;
+		item->len      = 0;
 
 		p = c;
 		while ( ( p = strchr( p, '%' ) ) && ! ( flags & M_ERR ) )
@@ -365,16 +364,6 @@ parse_entry( int          n,
 					MV( p, p + 2 );
 					break;
 
-				case 'e' :
-					m->enter_cb = va_arg( ap, FL_PUP_ENTERCB );
-					MV( p, p + 2 );
-					break;
-
-				case 'E' :
-					fl_setpup_entries( n, va_arg( ap, FL_PUP_ENTRY * ) );
-					MV( p, p + 2 );
-					break;
-
 				case 'm' :
 					item->subm = va_arg( ap, int );
 					MV( p, p + 2 );
@@ -388,10 +377,6 @@ parse_entry( int          n,
 					break;
 
 				case 'i' :
-					item->mode |= FL_PUP_INACTIVE;
-					MV( p, p + 2 );
-					break;
-
 				case 'd' :
 					item->mode |= FL_PUP_GREY;
 					MV( p, p + 2 );
@@ -403,6 +388,13 @@ parse_entry( int          n,
 					{
 						flags |= M_ERR;
 						M_err( "parse_entry", "Missing number after %%x" );
+						break;
+					}
+					if ( num <= 0 )
+					{
+						flags |= M_ERR;
+						M_err( "parse_entry", "Invalid zero or negative "
+							   "number after %%x" );
 						break;
 					}
 					item->ret = num;
@@ -427,6 +419,12 @@ parse_entry( int          n,
 				case 'r' :
 					item->mode |= FL_PUP_BOX;
 					num = strtol( p + 2, &e, 10 );
+					if ( num <= 0 )
+					{
+						flags |= M_ERR;
+						M_err( "parse_entry", "Zero or negative group number" );
+						break;
+					}
 					if ( e == p + 2 )
 					{
 						flags |= M_ERR;
@@ -437,6 +435,19 @@ parse_entry( int          n,
 					item->radio = num;
 					while ( isspace( ( int ) *e ) )
 						e++;
+
+					/* if the item is to be in on state all other items
+					   belonging to the same group must be in off state */
+
+					if ( p[ 1 ] == 'R' )
+					{
+						int k;
+
+						for ( k = m->nitems - 1; k >= 0; k-- )
+							if ( m->item[ k ]->radio == item->radio )
+								m->item[ k ]->mode &= ~ FL_PUP_CHECK;
+					}
+
 					MV( p, e );
 					break;
 
@@ -455,7 +466,6 @@ parse_entry( int          n,
 
 		if ( flags & M_ERR )
 		{
-			M_err( "parse_entry", "Error while parsing pup entry" );
 			fl_free( item );
 			m->item[ m->nitems ] = NULL;
 			break;
@@ -680,10 +690,7 @@ fl_newpup( Window win )
 		pup_bw_is_set = 1;
 	}
 
-    /* if not private colormap, it does not matter who the popup's parent is
-       and root probably makes more sense */
-
-    return find_empty_index( win );
+    return find_empty_index( win == None ? fl_root : win );
 }
 
 
@@ -701,18 +708,6 @@ fl_addtopup( int          n,
 
     if ( n < 0 || n >= fl_maxpup || ! menu_rec[ n ].used )
 		return -1;
-
-#if FL_DEBUG >= ML_DEBUG
-	{
-		char *q = fl_strdup( str ),
-			 *p;
-
-		while ( ( p = strchr( q, '%' ) ) )
-			*p = 'P';	/* % can cause problems */
-		M_info( "fl_addtopup", q );
-		fl_free( q );
-	}
-#endif
 
 	va_start( ap, str );
 	ret = parse_entry( n, str, ap );
@@ -736,36 +731,21 @@ fl_defpup( Window       win,
     va_list ap;
 
     if ( ( n = fl_newpup( win ) ) < 0 )
-    {
-		M_err( "fl_defpup", "Can't Allocate" );
+		return -1;
+
+	if ( str == 0 )
 		return n;
-    }
 
     va_start( ap, str );
     ret = parse_entry( n, str, ap );
     va_end( ap );
-
-#if FL_DEBUG > ML_WARN
-    if ( fli_cntl.debug > 1 )
-    {
-		PopUP *m = menu_rec + n;
-		int i;
-
-		fprintf( stderr, "Defpup for string: %s\n", str );
-		for ( i = 0; i < m->nitems; i++ )
-			fprintf( stderr, "%i %s ret=%d %s %s\n",
-					 i, m->item[ i ]->str, m->item[ i ]->ret,
-					 m->item[ i ]->shortcut ? "shortcut" : "",
-					 m->item[ i ]->icb ? "callback" : "" );
-    }
-#endif
 
     return ret == 0 ? n : -1;
 }
 
 
 /***************************************
- * check to see if the requested value exists in popup m
+ * Check to see if the requested value exists in popup m
  ***************************************/
 
 static MenuItem *
@@ -827,7 +807,7 @@ fl_setpup_mode( int          nm,
 	{
 		item->mode |= FL_PUP_BOX;
 		if ( ! item->radio )
-			item->radio = 255;
+			item->radio = -1;
 	}
 
 	if ( item->mode & FL_PUP_BOX )
@@ -837,7 +817,7 @@ fl_setpup_mode( int          nm,
 }
 
 
-#define AltMask  FL_ALT_VAL
+#define AltMask  FL_ALT_MASK
 
 /***************************************
  ***************************************/
@@ -903,8 +883,7 @@ get_valid_entry( PopUP * m,
 		target = dir < 0 ? m->nitems : 1;
 
     for ( ; target > 0 && target <= m->nitems; target += dir )
-		if ( ! (   m->item[ target - 1 ]->mode
-				 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) )
+		if ( ! ( m->item[ target - 1 ]->mode & FL_PUP_GREY ) )
 			return target;
 
     /* wrap */
@@ -915,8 +894,7 @@ get_valid_entry( PopUP * m,
 		target = dir < 0 ? m->nitems : 1;
 
     for ( ; target > 0 && target <= m->nitems; target += dir )
-		if ( ! (   m->item[ target - 1 ]->mode
-				 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) )
+		if ( ! ( m->item[ target - 1 ]->mode & FL_PUP_GREY ) )
 			return target;
 
     M_err( "get_valid_entry", "No valid entries among total of %d", m->nitems );
@@ -942,8 +920,7 @@ handle_shortcut( PopUP *      m,
 
     for ( i = 0; i < m->nitems; i++ )
     {
-		if (    ! ( mi[ i ]->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) )
-			 && mi[ i ]->shortcut )
+		if ( ! ( mi[ i ]->mode & FL_PUP_GREY ) && mi[ i ]->shortcut )
 			for ( j = 0; j < NSC && mi[ i ]->shortcut[ j ]; j++ )
 			{
 				sc = mi[ i ]->shortcut[ j ];
@@ -1112,7 +1089,7 @@ handle_motion( PopUP * m,
 		*val = cval;
     }
 
-    if ( item && item->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) )
+    if ( item && item->mode & FL_PUP_GREY )
 		item = NULL;
 
     if ( lastitem && item != lastitem && m->leave_cb )
@@ -1138,17 +1115,15 @@ pup_interact( PopUP * m )
 {
     XEvent ev;
     int val       = 0,
-		timeout   = 0,
 		done      = 0,
 		timer_cnt = 0;
     MenuItem *item;
 
-    fli_reset_time( FLI_PUP_TIMER );
     m->event_mask |= KeyPressMask;
     ev.xmotion.time = 0;
 
-	/* If the new popup was opened due to a kreypress mark the first
-	   active entry as currently selected */
+	/* If the new popup was opened due to a key press mark the first active
+	   entry as currently selected */
 
 	if ( pup_using_keys )
 	{
@@ -1156,7 +1131,7 @@ pup_interact( PopUP * m )
 
 		for ( i = 1; i < m->nitems; i++ )
 		{
-			if ( m->item[ i - 1 ]->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) )
+			if ( m->item[ i - 1 ]->mode & FL_PUP_GREY )
 				continue;
 			draw_item( m, i, FL_UP_BOX );
 			val = i;
@@ -1164,14 +1139,12 @@ pup_interact( PopUP * m )
 		}
 	}
 
-    while ( ! ( done || timeout ) )
+    while ( ! done )
     {
 		long msec = fli_context->idle_delta;
 
 		if ( fli_context->timeout_rec )
 			fli_handle_timeouts( &msec );
-
-		timeout = fli_time_passed( FLI_PUP_TIMER ) > 40.0;
 
 		if ( ! XCheckWindowEvent( flx->display, m->win, m->event_mask, &ev ) )
 		{
@@ -1266,7 +1239,7 @@ pup_interact( PopUP * m )
 		}
     }
 
-    return timeout ? -1 : val;
+    return val;
 }
 
 
@@ -1355,23 +1328,34 @@ fl_dopup( int n )
     else
 		M_err( "fl_dopup", "Window already closed" );
 
-#if 0
 	/* The following is necessary because 'save_under' may not be supported.
-	   Unfortunately, this won't do anything if the popup was created without
-	   a window being already open. In that case there's no way we could
-	   figure out which form the popup belongs to. To get that right we would
-	   need a change of the public interface... */
+	   Both the forms under the closed popup window and higher level popup
+	   window may require a redraw if the had become (partially) hidden. */
 
-	if (    ! DoesSaveUnders( ScreenOfDisplay( flx->display, fl_screen ) )
-		 && m->form
-		 && m->form->window )
+	if (    pup_level > 1
+		 && ! DoesSaveUnders( ScreenOfDisplay( flx->display, fl_screen ) ) )
 	{
-		fl_winset( m->form->window );
-        fl_set_clipping( m->x, m->y, m->w, m->h );
-		fl_redraw_form( m->form );
-		fl_set_clipping( 0, 0, 0, 0 );
+		FL_FORM *form;
+
+		while ( XCheckMaskEvent( flx->display, ExposureMask, &xev ) != False )
+			if ( ( form = fl_win_to_form( ( ( XAnyEvent * ) &xev )->window ) )
+				                                                       != NULL )
+			{
+				fl_winset( form->window );
+				fl_redraw_form( form );
+			}
+			else
+			{
+				int i;
+
+				for ( i = 0; i < fl_maxpup; i++ )
+					if ( menu_rec[ i ].win == ( ( XAnyEvent * ) &xev )->window )
+					{
+						fl_winset( menu_rec[ i ].win );
+						draw_popup( menu_rec + i );
+					}
+			}
 	}
-#endif
 
     if ( pup_level > 1 )
     {
@@ -1381,7 +1365,7 @@ fl_dopup( int n )
 			/* empty */ ;
     }
 
-    /* handle callback if any  */
+    /* Handle callback if any  */
 
     pup_level--;
     if (    val > 0
@@ -1389,11 +1373,16 @@ fl_dopup( int n )
 		 && ( pup_subreturn < 0 || ( pup_subreturn > 0 && pup_level > 0 ) ) )
     {
 		item = m->item[ val - 1 ];
-		if ( item->mode & ( FL_PUP_GREY | FL_PUP_INACTIVE ) )
-			return -1;
 
-		if ( item->subm >= 0 )
+		/* If we ended up on a disabled item or one that points to a
+		   submenu return -1 to indicate nothing got selected */
+
+		if (    item->mode & FL_PUP_GREY
+			 || item->subm >= 0 )
+		{
+			fli_context->pup_id = -1;
 			return -1;
+		}
 
 		if ( item->radio )
 			reset_radio( m, item );
@@ -1861,8 +1850,7 @@ draw_item( PopUP * m,
 
     if ( item->subm >= 0 )
 		fl_draw_symbol( (    style == FL_UP_BOX
-						  && ! (   item->mode
-								 & ( FL_PUP_GREY | FL_PUP_INACTIVE ) ) ) ?
+						  && ! ( item->mode & FL_PUP_GREY ) ) ?
 						"@DnArrow" : "@UpArrow",
 						m->w - 2 * bw - 9 - m->rpad / 2,
 						y + h / 2 - 8,
@@ -2036,7 +2024,7 @@ fl_showpup( int n )
 		XWarpPointer( flx->display, None, fl_root, 0, 0, 0, 0,
 					  m->x + FL_abs( m->bw ), m->y + FL_abs( m->bw ) );
 
-	/* Forget that an external position had been set so it won;t get
+	/* Forget that an external position had been set so it won't get
 	   reused for another popup */
 
     extpos = 0;

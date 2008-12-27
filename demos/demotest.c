@@ -39,12 +39,18 @@
 
 /* callback routines */
 
+/***************************************
+ ***************************************/
+
 void
 menu_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 			   long        data  FL_UNUSED_ARG )
 {
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 hide_show_cb( FL_OBJECT * ob,
@@ -56,6 +62,9 @@ hide_show_cb( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 reshow_cb( FL_OBJECT * ob,
 		   long        data  FL_UNUSED_ARG )
@@ -64,6 +73,9 @@ reshow_cb( FL_OBJECT * ob,
    fl_show_form( ob->form, FL_PLACE_CENTER, FL_FULLBORDER, "TabFolder" );
 
 }
+
+/***************************************
+ ***************************************/
 
 void
 set_cb( FL_OBJECT * ob,
@@ -75,6 +87,9 @@ set_cb( FL_OBJECT * ob,
     fl_set_folder_bynumber( fdui->folder, n % 5 + 1 );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 deactivate_cb( FL_OBJECT * ob,
@@ -95,6 +110,9 @@ deactivate_cb( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 long        data  FL_UNUSED_ARG )
@@ -112,6 +130,10 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 }
 
 static void make_folder( FL_OBJECT * );
+
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -136,6 +158,9 @@ main( int    argc,
    return 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 static
 void make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )

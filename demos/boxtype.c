@@ -34,6 +34,7 @@
 
 #include "include/forms.h"
 
+
 static int border = FL_TRANSIENT;
 
 typedef struct {
@@ -87,6 +88,10 @@ FL_OBJECT *tobj[ 18 ],
           *btypeob,
           *modeob;
 
+
+/***************************************
+ ***************************************/
+
 void
 boxtype_cb( FL_OBJECT * ob,
 			long        arg  FL_UNUSED_ARG )
@@ -106,6 +111,9 @@ boxtype_cb( FL_OBJECT * ob,
 	}
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 mode_cb( FL_OBJECT * ob,
@@ -133,6 +141,9 @@ mode_cb( FL_OBJECT * ob,
 
 
 /*************** Creation Routines *********************/
+
+/***************************************
+ ***************************************/
 
 void
 create_form( void )
@@ -224,6 +235,9 @@ char *browserlines[ ] = {
    0
 };
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,

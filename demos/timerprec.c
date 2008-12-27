@@ -49,6 +49,9 @@ typedef struct {
 static FD_form0 * create_form_form0( void );
 
 
+/***************************************
+ ***************************************/
+
 static void
 exit_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
@@ -58,6 +61,9 @@ exit_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ ***************************************/
+
 static long start_sec,
             start_usec;
 static long end_sec,
@@ -65,6 +71,9 @@ static long end_sec,
 
 
 /* timer expired */
+
+/***************************************
+ ***************************************/
 
 static void
 timer_cb( FL_OBJECT * ob,
@@ -87,6 +96,9 @@ timer_cb( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 start_timer( FL_OBJECT * ob,
 			 long        data  FL_UNUSED_ARG )
@@ -101,6 +113,9 @@ start_timer( FL_OBJECT * ob,
    fl_set_timer( fd->timer, fd->ldata * 0.001 );
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,
@@ -127,8 +142,11 @@ main( int    argc,
 
 /* Form definition file generated with fdesign. */
 
+/***************************************
+ ***************************************/
+
 static FD_form0 *
-create_form_form0(void)
+create_form_form0( void )
 {
 	FL_OBJECT *obj;
 	FD_form0 *fdui = fl_calloc( 1, sizeof *fdui );

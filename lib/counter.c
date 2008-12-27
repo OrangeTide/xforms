@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -33,7 +30,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.14 2008/12/01 22:53:59 jtt Exp $";
+char *fl_id_cntr = "$Id: counter.c,v 1.15 2008/12/27 22:20:48 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -269,19 +266,19 @@ void fl_set_counter_min_repeat( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-int fl_get_counter_speedup( FL_OBJECT * ob )
+int fl_get_counter_speedjump( FL_OBJECT * ob )
 {
-	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speed_up;
+	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speedjump;
 }
 
 
 /***************************************
  ***************************************/
 
-void fl_set_counter_speedup( FL_OBJECT * ob,
-							 int         speedup )
+void fl_set_counter_speedjump( FL_OBJECT * ob,
+							   int         yes_no )
 {
-	( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speed_up = speedup != 0;
+	( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speedjump = yes_no != 0;
 }
 
 
@@ -337,23 +334,23 @@ handle_mouse( FL_OBJECT * ob,
 
 		sp->timeout_id = fl_add_timeout( sp->cur_repeat_ms, timeoutCB, sp );
 
-		/* If speed-up hasn't been switched off and we didn't reach the final
+		/* If speedjump hasn't been switched on and we didn't reach the final
 		   speed reduce the timeout value by a third of the remaining
 		   difference (the extra substraction of 2 makes sure we can reach
 		   it in all circumstances) */
 
-		if ( sp->do_speed_up && sp->cur_repeat_ms > sp->min_repeat_ms )
+		if ( ! sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
 		{
 			sp->cur_repeat_ms -=
 				             ( sp->cur_repeat_ms - sp->min_repeat_ms ) / 3 + 2;
 			sp->cur_repeat_ms = FL_max( sp->cur_repeat_ms, sp->min_repeat_ms );
 		}
 
-		/* If speed-up has been switched off but initial and final speed aren't
+		/* If speedjump has been switched om but initial and final speed aren't
 		   identical it means that we have a long delay at the start and then
 		   short timeouts afterwards */
 
-		if ( ! sp->do_speed_up && sp->cur_repeat_ms > sp->min_repeat_ms )
+		if ( sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
 			sp->cur_repeat_ms = sp->min_repeat_ms;
 
 		if ( sp->mouseobj == OB0 )
@@ -537,7 +534,7 @@ fl_create_counter( int          type,
 	sp->filter        = NULL;
 	sp->min_repeat_ms = 50;
     sp->repeat_ms     = 600;
-	sp->do_speed_up   = 1;
+	sp->do_speedjump  = 0;
     sp->timeout_id    = -1;
 
     return ob;
@@ -682,6 +679,16 @@ fl_set_counter_precision( FL_OBJECT * ob,
 		sp->prec = prec;
 		fl_redraw_object( ob );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_get_counter_precision( FL_OBJECT * ob )
+{
+	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->prec;
 }
 
 

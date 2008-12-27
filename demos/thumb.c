@@ -111,18 +111,18 @@ menu_callback( FL_OBJECT * ob,
 
 FL_PUP_ENTRY menu_entries[ ] =
 {
-	{ "Menu Item1", NULL, NULL, 0, { 0, 0 } },
-	{ "Menu Item2", NULL, NULL, 0, { 0, 0 } },
-	{ "_Menu Item3", NULL, NULL, 0, { 0, 0 } },
-	{ "/_Menu Item 4", NULL, NULL, 0, { 0, 0 } },
-	{ "Menu Item 5", NULL, NULL, 0, { 0, 0 } },
-	{ "Menu Item 6", NULL, NULL, 0, { 0, 0 } },
-	{ "Menu Item 7", NULL, NULL, 0, { 0, 0 } },
-	{ "Menu Item 8", NULL, NULL, 0, { 0, 0 } },
-	{ NULL, NULL, NULL, 0, { 0, 0 } },
-	{ "Menu Item10", NULL, NULL, 0, { 0, 0 } },
-	{ "menu Item11", NULL, NULL, 0, { 0, 0 } },
-	{ NULL, NULL, NULL, 0, { 0, 0 } }
+	{ "Menu Item1",    NULL, NULL, 0 },
+	{ "Menu Item2",    NULL, NULL, 0 },
+	{ "_Menu Item3",   NULL, NULL, 0 },
+	{ "/_Menu Item 4", NULL, NULL, 0 },
+	  { "Menu Item 5", NULL, NULL, 0 },
+	  { "Menu Item 6", NULL, NULL, 0 },
+	  { "Menu Item 7", NULL, NULL, 0 },
+	  { "Menu Item 8", NULL, NULL, 0 },
+	  { NULL,          NULL, NULL, 0 },
+	{ "Menu Item10", NULL, NULL, 0 },
+	{ "menu Item11", NULL, NULL, 0 },
+	{ NULL,          NULL, NULL, 0 }
 };
 
 
@@ -315,4 +315,3 @@ create_form_pupform( void )
 
 	return fdui;
 }
-

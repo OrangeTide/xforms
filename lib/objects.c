@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -32,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.46 2008/12/01 22:53:59 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.47 2008/12/27 22:20:50 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -67,8 +64,8 @@ static void get_object_bbox_rect( FL_OBJECT *,
 static int objects_intersect( FL_OBJECT *,
 							  FL_OBJECT * );
 static int object_is_under( FL_OBJECT * );
-static void checked_hide_tooltip( FL_OBJECT * obj,
-								  XEvent    * xev );
+static void checked_hide_tooltip( FL_OBJECT *,
+								  XEvent    * );
 
 static FL_OBJECT *refocus;
 
@@ -184,7 +181,7 @@ fl_make_object( int            objclass,
     obj->nwgravity = obj->segravity = FL_NoGravity;
     obj->boxtype   = FL_NO_BOX;
     obj->bw        = (    fli_cntl.borderWidth
-					   && FL_abs( fli_cntl.borderWidth ) <= 10 ) ?
+					   && FL_abs( fli_cntl.borderWidth ) <= FL_MAX_BW ) ?
 		             fli_cntl.borderWidth : def;
 
     obj->x         = x;
@@ -263,6 +260,7 @@ fl_make_object( int            objclass,
 	obj->child              = NULL;
 	obj->nc                 = NULL;
 	obj->is_child           = 0;
+	obj->group_id           = 0;
 
     return obj;
 }
@@ -290,7 +288,21 @@ fl_add_object( FL_FORM   * form,
     {
 		M_err( "fl_add_object", "NULL form for %s",
 			   fli_object_class_name( obj ) );
+		return;
     }
+
+	if ( obj->form )
+	{
+		M_err( "fl_add_object", "Object already belongs to a form" );
+		return;
+	}
+
+	if ( obj->objclass == FL_BEGIN_GROUP || obj->objclass == FL_END_GROUP )
+	{
+		M_err( "fl_add_object", "Can't add an pseudo-object that marks the "
+			   "start or end of a group" );
+		return;
+	}
 
     if ( obj->automatic )
 	{
@@ -446,12 +458,46 @@ fl_delete_object( FL_OBJECT * obj )
 
     if ( ! obj->form )
     {
-		M_err( "fl_delete_object", "delete %s from NULL form.",
+		M_err( "fl_delete_object", "Delete %s from NULL form.",
 			   ( obj->label && *obj->label ) ? obj->label : "object" );
 		return;
     }
 
 	checked_hide_tooltip( obj, NULL );
+
+	/* If object is the pseudo-object starting a group delete the
+	   complete group */
+
+	if ( obj->objclass == FL_BEGIN_GROUP )
+	{
+		FL_OBJECT *o;
+
+		for ( o = obj->next; o != NULL; o = o->next )
+		{
+			fl_delete_object( o );
+			if ( o->objclass == FL_END_GROUP )
+				break;
+		}
+	}
+
+	/* Avoid deleting an object that represents the end of a group if
+	   the group isn't empty */
+
+	if ( obj->objclass == FL_END_GROUP )
+	{
+		FL_OBJECT *o;
+
+		for ( o = obj->form->first; o != NULL && o != obj; o = o->next )
+			if ( o->group_id == obj->group_id && o->objclass != FL_BEGIN_GROUP )
+				break;
+
+		if ( o != obj )
+		{
+			M_err( "fl_delete_object", "Can't delete end of group object "
+				   "while the group still has members" );
+			return;
+		}
+	}
 
     /* If this object has childs also unlink them */
 
@@ -475,6 +521,8 @@ fl_delete_object( FL_OBJECT * obj )
 #ifdef DELAYED_ACTION
     fli_object_qflush_object( obj );
 #endif
+
+	/* Object also loses its group membership */
 
     if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
 		obj->group_id = 0;
@@ -519,6 +567,52 @@ fl_free_object( FL_OBJECT * obj )
 		return;
     }
 
+	/* If the object is the pseudo-object starting a group free the
+	   complete group */
+
+	if ( obj->objclass == FL_BEGIN_GROUP )
+	{
+		FL_OBJECT *o,
+			      *on;
+
+		for ( o = obj->next; o && o->objclass != FL_END_GROUP; o = on )
+		{
+			on = o->next;
+			fl_free_object( o );
+		}
+
+		if ( o )
+			fl_free_object( o );
+	}
+
+	/* Avoid deleting an object that represents the end of a group if
+	   the group isn't empty */
+
+	if ( obj->objclass == FL_END_GROUP )
+	{
+		FL_OBJECT *o;
+
+		for ( o = obj->form->first; o != NULL && o != obj; o = o->next )
+			if ( o->group_id == obj->group_id && o->objclass != FL_BEGIN_GROUP )
+				break;
+
+		if ( o != obj )
+		{
+			M_err( "fl_free_object", "Can't free end of group object "
+				   "while the group still has members" );
+			return;
+		}
+	}
+
+	/* If the object hasn't yet been unlinked from its form do it know */
+
+    if ( obj->form )
+		fl_delete_object( obj );
+
+	/* Make the object release memory it may have allocated */
+
+    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
+
 	/* If this is a parent object free the children first */
 
 	if ( obj->child )
@@ -540,15 +634,6 @@ fl_free_object( FL_OBJECT * obj )
 			o->nc = obj->nc;
 		}
 	}
-
-	/* If the object hasn't yet been unlinked from its form do it know */
-
-    if ( obj->form )
-		fl_delete_object( obj );
-
-	/* Make the object release memory it may have allocated */
-
-    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
 
     /* Finally free all memory allocated for the object */
 
@@ -715,6 +800,12 @@ fl_set_object_color( FL_OBJECT * obj,
 		M_err( "fl_set_object_color", "NULL object." );
 		return;
     }
+
+	if ( col1 >= FL_MAX_COLORS || col2 >= FL_MAX_COLORS )
+	{
+		M_err( "fl_set_object_color", "Invalid color" );
+		return;
+	}
 
     if ( obj->col1 != col1 || obj->col2 != col2 )
     {
@@ -1258,89 +1349,115 @@ void fl_hide_object( FL_OBJECT * obj )
 
 /***************************************
  * Sets the list of shortcuts for the object. Shortcuts are specified
- * with a string. #x means Alt_x and ^x means Cntl_x. ^ can be
- * used as an escape, i.e., ^# means #.
+ * with a string with the following special sequences:
+ * '^x'  stands for  Ctrl-x (for a-z case doesn't matter)
+ * '#x'  stands for  Alt-x (case matters!)
+ * '&n'  with n = 1,...,34 stands for function key n
+ * '&A', '&B', '&C' '&D'  stand for up down, right and left cursor keys
+ * '^[' stand for escape key
+ * '^^  stand for '^'
+ * '^#' stand for '#'
+ * '^&' stand for '&'
+ * Note: '&' followed by anything else than the above will be skipped,
+ * e.g. '&E' or '&0'. If '&' is followed by a number larger than 34
+ * only the first digit of the number is used.
+ * Not escapable are Crtl-^, Crtl-# and Ctrl-&.
  ***************************************/
 
 #include <ctype.h>
-
-#define ALT_CHAR       '#'
-#define CNTL_CHAR      '^'
-#define FKEY_CHAR      '&'
-
-#define MAX_SHORTCUTS   16
-
 
 int
 fli_convert_shortcut( const char * str,
 					  long         sc[ ] )
 {
-    int i,
-		j,
-		offset,
-		key;
+    int i = 0;
+	long offset = 0;
+	const char *c;
 
-    /* sstr might be obj->shortcut */
+	for ( c = str; *c && i < MAX_SHORTCUTS; c++ )
+	{
+		switch ( *c )
+		{
+			case '^' :
+				if ( offset & FL_CONTROL_MASK && c[ -1 ] == '^' )
+				{
+					sc[ i++ ] = '^' + offset - FL_CONTROL_MASK;
+					offset = 0;
+				}
+				else
+				{
+					if ( c[ 1 ] == '[' )
+					{
+						sc[ i++ ] = 0x1b + offset - FL_CONTROL_MASK;
+						c++;
+						offset = 0;
+					}
+					else
+						offset += FL_CONTROL_MASK;
+				}
+				break;
 
-    i = j = offset = 0;
+			case '#' :
+				if ( offset & FL_CONTROL_MASK && c[ -1 ] == '^' )
+				{
+					sc[ i++ ] = '#' + offset - FL_CONTROL_MASK;
+					offset = 0;
+				}
+				else
+					offset += FL_ALT_MASK;
+				break;
 
-    while ( str[ i ] != '\0' && j < MAX_SHORTCUTS )
+			case '&' :
+				if ( offset & FL_CONTROL_MASK && c[ -1 ] == '^' )
+				{
+					sc[ i++ ] = '&' + offset - FL_CONTROL_MASK;
+					offset = 0;
+					break;
+				}
+				else if ( c[ 1 ] == 'A' )
+					sc[ i++ ] = XK_Up + offset;
+				else if ( c[ 1 ] == 'B' )
+					sc[ i++ ] = XK_Down + offset;
+				else if ( c[ 1 ] == 'C' )
+					sc[ i++ ] = XK_Right + offset;
+				else if ( c[ 1 ] == 'D' )
+					sc[ i++ ] = XK_Left + offset;
+				else if ( isdigit( ( int ) c[ 1 ] ) && c[ 1 ] > '0' )
+				{
+					long j = c[ 1 ]  - '0';
+
+					if (    isdigit( ( int ) c[ 2 ] )
+						 && 10 * j + c[ 2 ] - '0' <= 35 )
+					{
+						 j = 10 * c[ 2 ] - '0';
+						 c++;
+					}
+					sc[ i++ ] = offset + XK_F1 + j - 1;
+				}
+				offset = 0;
+				c++;
+				break;
+
+			default :
+				if (    offset & ( FL_CONTROL_MASK | FL_ALT_MASK )
+					 && *c >= 'a' && *c <= 'z' )
+					sc[ i++ ] = toupper( ( int ) *c ) + offset;
+				else
+					sc[ i++ ] = *c + offset;
+				offset = 0;
+				break;
+		}
+	}
+
+	sc[ i ] = 0;
+
+	if ( *c != '\0' )
     {
-		if ( str[ i ] == ALT_CHAR )
-			offset = FL_ALT_VAL;
-		else if ( str[ i ] == CNTL_CHAR )
-		{
-			i++;
-			if ( str[ i ] >= 'A' && str[ i ] <= 'Z' )
-				sc[ j++ ] = str[ i ] - 'A' + 1 + offset;
-			else if ( str[ i ] >= 'a' && str[ i ] <= 'z' )
-				sc[ j++ ] = str[ i ] - 'a' + 1 + offset;
-			else if ( str[ i ] == '[' )
-				sc[ j++ ] = 27 + offset;
-			else
-				sc[ j++ ] = str[ i ] + offset;
-			offset = 0;
-		}
-		else if ( str[ i ] == FKEY_CHAR )	/* special characters */
-		{
-			i++;
-			if ( str[ i ] == FKEY_CHAR )
-				sc[ j++ ] = FKEY_CHAR + offset;
-			else if ( str[ i ] == 'A' )
-				sc[ j++ ] = offset + XK_Up;
-			else if ( str[ i ] == 'B' )
-				sc[ j++ ] = offset + XK_Down;
-			else if ( str[ i ] == 'C' )
-				sc[ j++ ] = offset + XK_Right;
-			else if ( str[ i ] == 'D' )
-				sc[ j++ ] = offset + XK_Left;
-			else if (    isdigit( ( int ) str[ i ] )
-					  && ( key = atoi( str + i ) ) < 35 )
-			{
-				i += key >= 10;
-				sc[ j++ ] = offset + XK_F1 + key - 1;
-			}
-			offset = 0;
-		}
-		else
-		{
-			sc[ j++ ] = str[ i ] + offset;
-			offset = 0;
-		}
-
-		i++;
-    }
-
-    if ( j >= MAX_SHORTCUTS )
-    {
-		j = MAX_SHORTCUTS;
 		M_err( "fli_convert_shortcut", "Too many shortcuts (>%d)",
 			   MAX_SHORTCUTS );
     }
 
-    sc[ j ] = 0;
-
-    return j;
+    return i;
 }
 
 
@@ -1354,16 +1471,15 @@ fli_get_underline_pos( const char * label,
     int c;
     const char *p;
 
-    /* find the first non-special char in shortcut str */
+    /* Find the first non-special char in the shortcut string */
 
-    for ( c = 0, p = sc; ! c && *p; p++ )
+    for ( c = '\0', p = sc; ! c && *p; p++ )
     {
 		if ( isalnum( ( int ) *p ) )
 		{
 			if ( p == sc )
 				c = *p;
-			else if (    * ( p - 1 ) != FKEY_CHAR
-					  && ! isdigit( ( int ) * ( p - 1 ) ) )
+			else if ( * ( p - 1 ) != '&' && ! isdigit( ( int ) * ( p - 1 ) ) )
 				c = *p;
 		}
     }
@@ -1371,7 +1487,7 @@ fli_get_underline_pos( const char * label,
     if ( ! c )
 		return -1;
 
-    /* find where the matches occur */
+    /* Find where the matches occur */
 
     if ( c == sc[ 0 ] )
 		p = strchr( label, c );
@@ -1639,13 +1755,13 @@ fli_find_last( FL_FORM * form,
  ***************************************/
 
 static int
-object_is_clipped( FL_OBJECT * ob )
+object_is_clipped( FL_OBJECT * obj )
 {
     FL_RECT xr,
 		    *xc;
     int extra = 1;
 
-    get_object_bbox_rect( ob, &xr );
+    get_object_bbox_rect( obj, &xr );
 
     xr.x      -= extra;
     xr.y      -= extra;
@@ -1675,7 +1791,7 @@ redraw_marked( FL_FORM * form,
 			   int       key,
 			   XEvent  * xev )
 {
-    FL_OBJECT *ob,
+    FL_OBJECT *obj,
 		      *o;
 
     if ( form->visible != FL_VISIBLE || form->frozen > 0 )
@@ -1688,28 +1804,28 @@ redraw_marked( FL_FORM * form,
 	   the objects to be redrawn and mark those also for redrawing (and, of
 	   course, also those that are "above" this newly added object etc.) */
 
-	for ( ob = form->first; ob; ob = ob->next )
-		if (    ob->visible
-			 && ob->redraw
-             && ob->is_under
-			 && ob->objclass != FL_BEGIN_GROUP
-			 && ob->objclass != FL_END_GROUP
-			 && !ob->is_child )
+	for ( obj = form->first; obj; obj = obj->next )
+		if (    obj->visible
+			 && obj->redraw
+             && obj->is_under
+			 && obj->objclass != FL_BEGIN_GROUP
+			 && obj->objclass != FL_END_GROUP
+			 && !obj->is_child )
 			break;
 
-	if ( ob && ob->next )
+	if ( obj && obj->next )
 	{
-		for ( ; ob && ob->next; ob = ob->next )
+		for ( ; obj && obj->next; obj = obj->next )
 		{
-			if (    ! ob->visible
-				 || ! ob->redraw
-				 || ! ob->is_under
-				 || ob->objclass == FL_BEGIN_GROUP
-				 || ob->objclass == FL_END_GROUP
-				 || ob->is_child )
+			if (    ! obj->visible
+				 || ! obj->redraw
+				 || ! obj->is_under
+				 || obj->objclass == FL_BEGIN_GROUP
+				 || obj->objclass == FL_END_GROUP
+				 || obj->is_child )
 				continue;
 
-			for ( o = ob->next; o; o = o->next )
+			for ( o = obj->next; o; o = o->next )
 			{
 				if (    ! o->visible
 					 || o->redraw
@@ -1718,7 +1834,7 @@ redraw_marked( FL_FORM * form,
 					 || o->is_child )
 					continue;
 				 
-				if ( objects_intersect( ob, o ) )
+				if ( objects_intersect( obj, o ) )
 				{
 					o->redraw = 1;
 					if ( o->child )
@@ -1730,45 +1846,45 @@ redraw_marked( FL_FORM * form,
 
 	/* Now redraw all marked objects */
 
-    for ( ob = form->first; ob; ob = ob->next )
+    for ( obj = form->first; obj; obj = obj->next )
     {
-		if (    ob->visible
-			 && ob->redraw
-			 && ( ! ob->is_child || ob->parent->visible ) )
+		if (    obj->visible
+			 && obj->redraw
+			 && ( ! obj->is_child || obj->parent->visible ) )
 		{
-			ob->redraw = 0;
+			obj->redraw = 0;
 
 			/* no point redrawing unexposed object */
 
-			if ( fli_perm_clip && object_is_clipped( ob ) )
+			if ( fli_perm_clip && object_is_clipped( obj ) )
 			{
 #if FL_DEBUG >= ML_WARN
-				M_warn( "redraw_marked", "%s is clipped", ob->label );
+				M_warn( "redraw_marked", "%s is clipped", obj->label );
 #endif
 				continue;
 			}
 
-			fli_create_object_pixmap( ob );
+			fli_create_object_pixmap( obj );
 
 			/* Will not allow free object draw outside of its box. Check
 			   perm_clip so we don't have draw regions we don't have to
 			   (Expose etc.) */
 
-			if ( ( ob->objclass == FL_FREE || ob->clip ) && ! fli_perm_clip )
+			if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
 			{
-				fl_set_clipping( ob->x, ob->y, ob->w, ob->h );
-				fl_set_text_clipping( ob->x, ob->y, ob->w, ob->h );
+				fl_set_clipping( obj->x, obj->y, obj->w, obj->h );
+				fl_set_text_clipping( obj->x, obj->y, obj->w, obj->h );
 			}
 
-			fli_handle_object( ob, FL_DRAW, 0, 0, key, xev );
+			fli_handle_object( obj, FL_DRAW, 0, 0, key, xev );
 
-			if ( ( ob->objclass == FL_FREE || ob->clip ) && ! fli_perm_clip )
+			if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
 			{
 				fl_unset_clipping( );
 				fl_unset_text_clipping( );
 			}
 
-			fli_show_object_pixmap( ob );
+			fli_show_object_pixmap( obj );
 		}
     }
 
@@ -1905,7 +2021,7 @@ object_is_under( FL_OBJECT * obj )
 static void
 mark_for_redraw( FL_FORM * form )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
     if ( ! form )
     {
@@ -1913,16 +2029,16 @@ mark_for_redraw( FL_FORM * form )
 		return;
     }
 
-    for ( ob = form->first; ob; ob = ob->next )
+    for ( obj = form->first; obj; obj = obj->next )
 	{
-		if ( ! ob->visible || ob->is_child )
+		if ( ! obj->visible || obj->is_child )
 			continue;
 
-		if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
+		if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
 		{
-			ob->redraw = 1;
-			if ( ob->child )
-				fli_mark_composite_for_redraw( ob );
+			obj->redraw = 1;
+			if ( obj->child )
+				fli_mark_composite_for_redraw( obj );
 		}
 	}
 }
@@ -2326,16 +2442,18 @@ fl_set_object_callback( FL_OBJECT      * obj,
  ***************************************/
 
 void
-fl_set_object_bw( FL_OBJECT * ob,
+fl_set_object_bw( FL_OBJECT * obj,
 				  int         bw )
 {
-    if ( FL_abs( bw ) > 10 )
-		return;
+	/* Clamp border width to a reasonable range */
+
+    if ( FL_abs( bw ) > FL_MAX_BW )
+		bw = bw > 0 ? FL_MAX_BW : - FL_MAX_BW;
 
     if ( bw == 0 )
 		bw = -1;
 
-    if ( ! ob )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_bw", "NULL object." );
 		return;
@@ -2343,25 +2461,25 @@ fl_set_object_bw( FL_OBJECT * ob,
 
     /* check if this object is a group, if so, change all members */
 
-    if ( ob->objclass == FL_BEGIN_GROUP )
+    if ( obj->objclass == FL_BEGIN_GROUP )
     {
-		fl_freeze_form( ob->form );
-		for ( ; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
+		fl_freeze_form( obj->form );
+		for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
 		{
-			if ( ob->bw != bw )
+			if ( obj->bw != bw )
 			{
-				ob->bw = bw;
-				if ( ob->objclass != FL_BEGIN_GROUP )
-					fl_redraw_object( ob );
+				obj->bw = bw;
+				if ( obj->objclass != FL_BEGIN_GROUP )
+					fl_redraw_object( obj );
 			}
 		}
 
-		fl_unfreeze_form( ob->form );
+		fl_unfreeze_form( obj->form );
     }
-    else if ( ob->bw != bw )
+    else if ( obj->bw != bw )
     {
-		ob->bw = bw;
-		fl_redraw_object( ob );
+		obj->bw = bw;
+		fl_redraw_object( obj );
     }
 }
 
@@ -2388,21 +2506,21 @@ fl_get_object_bw( FL_OBJECT * obj,
  ***************************************/
 
 Window
-fl_get_real_object_window( FL_OBJECT * ob )
+fl_get_real_object_window( FL_OBJECT * obj )
 {
-    FL_pixmap *objp = ob->flpixmap;
-    FL_pixmap *formp = ob->form->flpixmap;
+    FL_pixmap *objp = obj->flpixmap;
+    FL_pixmap *formp = obj->form->flpixmap;
 
     if ( objp && objp->win ) 
 		return objp->win;
-    else if (    (    ob->objclass == FL_CANVAS
-			       || ob->objclass == FL_GLCANVAS )
-			  && fl_get_canvas_id( ob ) )
-		return fl_get_canvas_id( ob );
+    else if (    (    obj->objclass == FL_CANVAS
+			       || obj->objclass == FL_GLCANVAS )
+			  && fl_get_canvas_id( obj ) )
+		return fl_get_canvas_id( obj );
     else if ( formp && formp->win )
 		return formp->win;
 
-	return ob->form->window;
+	return obj->form->window;
 }
 
 
@@ -2488,44 +2606,44 @@ fli_scale_length( FL_Coord * x,
  ***************************************/
 
 void
-fl_scale_object( FL_OBJECT * ob,
+fl_scale_object( FL_OBJECT * obj,
 				 double      xs,
 				 double      ys )
 {
     if ( xs == 1.0 && ys == 1.0 )
 		return;
 
-	if ( ! ob->form )
+	if ( ! obj->form )
 	{
-		ob->x = FL_crnd( xs * ob->x );
-		ob->y = FL_crnd( ys * ob->y );
-		ob->w = FL_crnd( xs * ob->w );
-		ob->h = FL_crnd( ys * ob->h );
+		obj->x = FL_crnd( xs * obj->x );
+		obj->y = FL_crnd( ys * obj->y );
+		obj->w = FL_crnd( xs * obj->w );
+		obj->h = FL_crnd( ys * obj->h );
 	}
 	else
 	{
-		double new_w = xs * ( ob->fl2 - ob->fl1 ),
-			   new_h = ys * ( ob->ft2 - ob->ft1 );
+		double new_w = xs * ( obj->fl2 - obj->fl1 ),
+			   new_h = ys * ( obj->ft2 - obj->ft1 );
 
-		ob->fl1 *= xs;
-		ob->fr1  = ob->form->w_hr - ob->fl1;
-		ob->ft1 *= ys;
-		ob->fb1  = ob->form->h_hr - ob->ft1;
+		obj->fl1 *= xs;
+		obj->fr1  = obj->form->w_hr - obj->fl1;
+		obj->ft1 *= ys;
+		obj->fb1  = obj->form->h_hr - obj->ft1;
 
-		ob->fl2  = ob->fl1 + new_w;
-		ob->fr2  = ob->form->w_hr - ob->fl2;
-		ob->ft2  = ob->ft1 + new_h;;
-		ob->fb2  = ob->form->h_hr - ob->ft2;;
+		obj->fl2  = obj->fl1 + new_w;
+		obj->fr2  = obj->form->w_hr - obj->fl2;
+		obj->ft2  = obj->ft1 + new_h;;
+		obj->fb2  = obj->form->h_hr - obj->ft2;;
 
-		ob->x    = FL_crnd( ob->fl1 );
-		ob->y    = FL_crnd( ob->ft1 );
-		ob->w    = FL_crnd( new_w );
-		ob->h    = FL_crnd( new_h );
+		obj->x    = FL_crnd( obj->fl1 );
+		obj->y    = FL_crnd( obj->ft1 );
+		obj->w    = FL_crnd( new_w );
+		obj->h    = FL_crnd( new_h );
 
 		if ( fli_inverted_y )
-			ob->y = TRANY( ob, ob->form );
+			obj->y = TRANY( obj, obj->form );
 
-		fli_recalc_intersections( ob->form );
+		fli_recalc_intersections( obj->form );
 	}
 }
 
@@ -2535,12 +2653,12 @@ fl_scale_object( FL_OBJECT * ob,
  ***************************************/
 
 FL_HANDLEPTR
-fl_set_object_prehandler( FL_OBJECT *  ob,
+fl_set_object_prehandler( FL_OBJECT *  obj,
 						  FL_HANDLEPTR phandler )
 {
-    FL_HANDLEPTR oldh = ob->prehandle;
+    FL_HANDLEPTR oldh = obj->prehandle;
 
-    ob->prehandle = phandler;
+    obj->prehandle = phandler;
     return oldh;
 }
 
@@ -2549,11 +2667,11 @@ fl_set_object_prehandler( FL_OBJECT *  ob,
  ***************************************/
 
 FL_HANDLEPTR
-fl_set_object_posthandler( FL_OBJECT    * ob,
+fl_set_object_posthandler( FL_OBJECT    * obj,
 						   FL_HANDLEPTR   post )
 {
-    FL_HANDLEPTR oldh = ob->posthandle;
-    ob->posthandle = post;
+    FL_HANDLEPTR oldh = obj->posthandle;
+    obj->posthandle = post;
     return oldh;
 }
 
@@ -2577,16 +2695,16 @@ fl_trigger_object( FL_OBJECT * obj )
  ***************************************/
 
 void
-fl_draw_object_label( FL_OBJECT * ob )
+fl_draw_object_label( FL_OBJECT * obj )
 {
-    int align = ob->align % FL_ALIGN_INSIDE;
+    int align = obj->align % FL_ALIGN_INSIDE;
 
-	if ( align != ob->align )
-		fl_drw_text( align, ob->x, ob->y, ob->w, ob->h,
-					 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+	if ( align != obj->align )
+		fl_drw_text( align, obj->x, obj->y, obj->w, obj->h,
+					 obj->lcol, obj->lstyle, obj->lsize, obj->label );
 	else
-		fl_drw_text_beside( align, ob->x, ob->y, ob->w, ob->h,
-							ob->lcol, ob->lstyle, ob->lsize, ob->label );
+		fl_drw_text_beside( align, obj->x, obj->y, obj->w, obj->h,
+							obj->lcol, obj->lstyle, obj->lsize, obj->label );
 }
 
 
@@ -2594,10 +2712,11 @@ fl_draw_object_label( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_draw_object_label_outside( FL_OBJECT * ob )
+fl_draw_object_label_outside( FL_OBJECT * obj )
 {
-    fl_drw_text_beside( ob->align & ~FL_ALIGN_INSIDE, ob->x, ob->y, ob->w,
-						ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label );
+    fl_drw_text_beside( obj->align & ~FL_ALIGN_INSIDE, obj->x, obj->y, obj->w,
+						obj->h, obj->lcol, obj->lstyle, obj->lsize,
+						obj->label );
 }
 
 
@@ -2605,10 +2724,16 @@ fl_draw_object_label_outside( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_call_object_callback( FL_OBJECT * ob )
+fl_call_object_callback( FL_OBJECT * obj )
 {
-    if ( ob && ob->object_callback )
-		ob->object_callback( ob, ob->argument );
+    if ( ! obj )
+    {
+		M_err( "fl_call_object_callback", "NULL object." );
+		return;
+    }
+
+    if ( obj->object_callback )
+		obj->object_callback( obj, obj->argument );
 }
 
 
@@ -2620,10 +2745,10 @@ fl_call_object_callback( FL_OBJECT * ob )
 void
 fli_recalc_intersections( FL_FORM * form )
 {
-	FL_OBJECT *ob;
+	FL_OBJECT *obj;
 
-	for ( ob = form->first; ob && ob->next; ob = ob->next )
-		ob->is_under = object_is_under( ob );
+	for ( obj = form->first; obj && obj->next; obj = obj->next )
+		obj->is_under = object_is_under( obj );
 }
 
 
@@ -2637,16 +2762,17 @@ fl_move_object( FL_OBJECT * obj,
 {
      FL_Coord x,
 		      y;
-     FL_OBJECT *ob;
 
     if ( obj->objclass == FL_BEGIN_GROUP )
     {
+		FL_OBJECT *o;
+
         fl_freeze_form( obj->form );
 
-        for ( ob = obj->next;  ob->objclass != FL_END_GROUP; ob=ob->next )
+        for ( o = obj->next;  o->objclass != FL_END_GROUP; o = o->next )
         {
-			fl_get_object_position( ob, &x, &y );
-			fl_set_object_position( ob, x + dx, y + dy );
+			fl_get_object_position( o, &x, &y );
+			fl_set_object_position( o, x + dx, y + dy );
         }
 
         fl_unfreeze_form( obj->form );
@@ -2664,12 +2790,12 @@ fl_move_object( FL_OBJECT * obj,
  ***************************************/
 
 void
-fl_get_object_position( FL_OBJECT * ob,
+fl_get_object_position( FL_OBJECT * obj,
 						FL_Coord  * x,
 						FL_Coord  * y )
 {
-    *x = ob->x;
-    *y = fli_inverted_y ? TRANY( ob, ob->form ) : ob->y;
+    *x = obj->x;
+    *y = fli_inverted_y ? TRANY( obj, obj->form ) : obj->y;
 }
 
 
@@ -2952,19 +3078,19 @@ get_object_bbox_rect( FL_OBJECT * obj,
  ***************************************/
 
 void
-fl_set_object_automatic( FL_OBJECT * ob,
+fl_set_object_automatic( FL_OBJECT * obj,
 						 int         flag )
 {
-    if ( ob->automatic != flag )
+    if ( obj->automatic != flag )
     {
-		ob->automatic = flag;
+		obj->automatic = flag;
 
-		if ( ob->form )
+		if ( obj->form )
 		{
 			if ( flag )
-				ob->form->has_auto_objects++;
+				obj->form->has_auto_objects++;
 			else
-				ob->form->has_auto_objects--;
+				obj->form->has_auto_objects--;
 		}
 
 		fli_recount_auto_objects( );
@@ -3034,15 +3160,15 @@ fl_for_all_objects( FL_FORM * form,
  ***************************************/
 
 void
-fl_set_object_helper( FL_OBJECT  * ob,
+fl_set_object_helper( FL_OBJECT  * obj,
 					  const char * tip )
 {
-    if ( ! ob )
+    if ( ! obj )
     {
 		M_err( "fl_set_object_helper", "NULL object." );
 		return;
     }
 
-	fl_safe_free( ob->tooltip );
-    ob->tooltip = tip ? fl_strdup( tip ) : NULL;
+	fl_safe_free( obj->tooltip );
+    obj->tooltip = tip ? fl_strdup( tip ) : NULL;
 }

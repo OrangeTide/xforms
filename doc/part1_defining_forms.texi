@@ -1,40 +1,40 @@
-@node Defining Forms
-@chapter Part I: Defining Forms
+@node Part I Defining Forms
+@chapter Defining Forms
 
 In this chapter we will describe the basics of defining forms. Not all
-possible classes of objects are described here, only the most important
+possible classes of objects are described here, only the most common
 ones. Also, for most classes only a subset of the available types are
 described. See Part III for a complete overview of all object classes
 currently available.
 
-Normally you will almost never write the code to define forms yourself
-because the package includes a Form Designer that does this for you
-(see Part II). Still it is useful to read through this chapter because
-it explains what the different object classes are and how to work with
-them.
+Normally you will almost never have to write the code to define forms
+yourself because the package includes a Form Designer that does this
+for you (see Part II). Still it is useful to read through this chapter
+because it explains what some of the different object classes are and
+how to work with them.
 
 @ifnottex
 
 @menu
-* Starting and Ending::  Starting and Ending a Form Definition
-* Boxes::                Boxes
-* Text::                 Text
-* Buttons::              Buttons
-* Sliders::              Sliders
-* ValSliders::           ValSliders
-* Inputs::               Input Fields
-* Grouping::             Grouping Objects
-* Hiding and Showing::   Hiding and Showing Objects
-* Deactivating::         Deactivating, Reactivating and Triggering Objects
-* Changing Attributes::  Changing Attributes
-* Adding and Deleting::  Adding and Deleting Objects
-* Freeing::              Freeing Objects
+* Starting and Ending a Form Definition::
+* Boxes::
+* Texts::
+* Buttons::
+* Sliders::
+* ValSliders::
+* Input Fields::
+* Grouping Objects::
+* Hiding and Showing::
+* Deactivating and Triggering Objects::
+* Changing Attributes::
+* Adding and Deleting::
+* Freeing Objects::
 @end menu
 
 @end ifnottex
 
 
-@node Starting and Ending
+@node Starting and Ending a Form Definition
 @section Starting and Ending a Form Definition
 
 A form consists of a collection of objects. A form definition is started
@@ -63,8 +63,8 @@ Between these two calls objects are added to the form. The following
 sections describe some of the more common classes of objects that can
 be added to a form.
 
-Many different forms can be defined and displayed when required. It is a
-good habit to first define all your forms before starting the actual
+Many different forms can be defined and displayed when required. It is
+a good habit to first define all your forms before starting the actual
 work.
 
 
@@ -143,9 +143,9 @@ pointer. The label can be either one line or multiple lines. To obtain
 multi-line labels, insert newline characters (@code{\n}) in the label
 string. It is also possible to underline the label or one of the
 characters in the label. This is accomplished by embedding
-@code{<CNTRL>H} (@code{\010}) after the letter that needs to be
+@code{<CNTRL> H} (@code{\010}) after the letter that needs to be
 underlined. If the very first character of the label is
-@code{<CNTRL>H}, the entire label is underlined.
+@code{<Ctrl>H}, the entire label is underlined.
 
 The routine @code{fl_add_box()} returns a pointer to the box object.
 (All routines that add objects return a pointer to the object.) This
@@ -153,11 +153,11 @@ pointer can be used for later references to the object.
 
 It is possible to change the appearance of a box in a form. First of
 all, it is possible to change the color of the box and secondly, it is
-possible to change color, size and position of the label inside the box.
-Details on changing attributes of objects can be found in section 3.11.
-Just a simple example has to suffice here. Assume we want to create a
-red box, coming out of the screen with the large words "I am a Box" in
-green in the center:
+possible to change color, size and position of the label inside the
+box. Details on changing attributes of objects can be found in
+@ref{Changing Attributes}. Just a simple example has to suffice here.
+Assume we want to create a red box, coming out of the screen with the
+large words "I am a Box" in green in the center:
 @example
 FL_OBJECT *thebox;
 
@@ -170,8 +170,8 @@ fl_set_object_lsize(thebox, FL_LARGE_SIZE); /* make label large */
 Of course, this has to be placed inside a form definition.
 
 
-@node Text
-@section Text
+@node Texts
+@section Texts
 
 A second type of object is text. Text can be placed at any place on the
 form in any color you like. Placing a text object is done with the
@@ -186,20 +186,21 @@ where @code{type} indicates the shape of the text. The Forms Library at
 the moment supports only one type of text: @code{FL_NORMAL_TEXT}.
 
 The text can be placed inside a box using the routine
-@code{fl_set_object_boxtype()} to be described in section 3.11. Again,
-the text can be multi-lined or underlined by embedding respectively the
-newline (@code{\n}) or @code{<CNTRL>H} (@code{\010}) in the
-label. The style, size and color of the text can be controlled and
-changed in many ways. See section 3.11.
+@code{fl_set_object_boxtype()} to be described in @ref{Changing
+Attributes}. Again, the text can be multi-lined or underlined by
+embedding respectively the newline (@code{\n}) or @code{<Ctrl>H}
+(@code{\010}) in the label. The style, size and color of the text can
+be controlled and changed in many ways. @xref{Label Attributes and
+Fonts}.
 
-Note that there is almost no difference between a box with a label and a
-text. The only difference lies in the position where the text is placed.
-Text is normally placed inside the box at the left side. This helps you
-put different lines of text below each other. Labels inside boxes are by
-default centered in the box. You can change the position of the text
-inside the box using the routines in section 3.11. Note that, when not
-using any box around the text there is no need to specify a width and
-height of the box; they can both be 0.
+Note that there is almost no difference between a box with a label and
+a text. The only difference lies in the position where the text is
+placed. Text is normally placed inside the box at the left side. This
+helps you put different lines of text below each other. Labels inside
+boxes are by default centered in the box. You can change the position
+of the text inside the box using the routines in @ref{Label Attributes
+and Fonts}. Note that, when not using any box around the text there is
+no need to specify a width and height of the box; they can both be 0.
 
 
 @node Buttons
@@ -245,8 +246,9 @@ A push button remains pushed and is only released when the user pushes
 it again.
 
 A touch button is like a normal button except that as long as the user
-keeps the mouse pressed it is returned to the application program (see
-chapter 4 on the interaction).
+keeps the mouse pressed it is returned to the application program.
+(@xref{Part I Doing Interaction, , Doing Interaction}, on the details
+of interaction.)
 
 A radio button is a push button with additional extra property:
 Whenever the user pushes a radio button, all other pushed radio
@@ -262,8 +264,9 @@ invoked. In either case, the application program knows that the button
 was pushed and can take action accordingly. In the first case, control
 will have to be returned to @code{fl_do_forms()} again after the
 appropriate action is performed; and in the latter,
-@code{fl_do_forms()} would never return. See chapter 4 for details on
-the interaction with forms.
+@code{fl_do_forms()} would never return. @xref{Part I Doing
+Interaction, , Doing Interaction}, for details on the interaction with
+forms.
 
 Different types of buttons are used in all the example programs
 provided. The application program can also set a button to be pushed
@@ -287,7 +290,7 @@ See the program @file{pushbutton.c} for an example of the
 use of push buttons and setting and getting button information.
 
 The color and label of buttons can again be changed using the routines
-in section 3.11.
+in @ref{Changing Attributes}.
 
 There are other classes of buttons available that behave the same way as
 buttons but only look different.
@@ -298,7 +301,8 @@ switches the light on, and releasing the button switches it off. To
 add a light button use @code{fl_add_lightbutton()} with the same
 parameters as for normal buttons. The other routines are exactly the
 same as for normal buttons. The color of the light can be controlled
-with the routine @code{fl_set_object_color()}. See section 3.11.
+with the routine @code{fl_set_object_color()}. @xref{Changing
+Attributes}.
 @item Round buttons
 are buttons that are round. Use @code{fl_add_roundbutton()} to add a
 round button to a form.
@@ -379,7 +383,7 @@ For all other interaction with a valslider the same function as for
 normal sliders can be used.
 
 
-@node Inputs
+@node Input Fields
 @section Input Fields
 
 It is often required to obtain textual input from the user, e.g. a file
@@ -395,16 +399,16 @@ FL_OBJECT *fl_add_input(int type, FL_Coord x, FL_Coord y,
 The main type of input field available is @code{FL_NORMAL_INPUT}. The
 input field normally looks like an @code{FL_DOWN_BOX}. This can be
 changed using the routine @code{fl_set_object_boxtype()} to be described
-in section 3.11.
+in @ref{Changing Attributes}.
 
 Whenever the user presses the mouse inside an input field a cursor will
 appear in it (and it will change color). Further input will appear
 inside this field. Full emacs(1) style editing is supported. When the
-user presses @code{<RETURN>} or @code{<TAB>} the input field is returned
+user presses @code{<Return>} or @code{<Tab>} the input field is returned
 to the application program and further input is directed to the next
-input field. (The @code{<RETURN>} key only works if there are no default
+input field. (The @code{<Return>} key only works if there are no default
 buttons in the form. See the overview of object classes. The
-@code{<TAB>} key always works.)
+@code{<Tab>} key always works.)
 
 The user can use the mouse to select parts of the input field which will
 be removed when the user types the erase character or replaced by any
@@ -461,7 +465,7 @@ See the program @file{demo06.c} for an example of the use of input
 fields.
 
 
-@node Grouping
+@node Grouping Objects
 @section Grouping Objects
 
 Objects inside a form definition can be grouped together. To this end we
@@ -472,33 +476,41 @@ FL_OBJECT *fl_bgn_group(void);
 @end example
 @noindent
 and
-@findex fl_end_group(
+@findex fl_end_group()
 @example
-FL_OBJECT *fl_end_group(void);
+void fl_end_group(void);
 @end example
+@noindent
+The first function returns a pointer to a pseudo-object that
+represents the start of the group (its class is
+@code{FL_BEGIN_GROUP}). It can be used in a number of functions to
+work on the whole group at once. Also the second creates a
+pseudo-object (of class @code{FL_END_GROUP}), marking the groups end,
+but since this object can't be used its address isn't returned.
 
-Groups should never be nested. Groups are useful for two reasons. First
-of all it is possible to hide groups of objects (see section 3.9 below).
-This is often very handy. We can, for example, display part of a form
-only when the user asks for it (see demo program @file{group.c}. Some
-attributes are naturally multi-objects, e.g., to glue several objects
-together using the gravity attribute. Instead of setting the gravity for
-each object, you can place all related objects inside a group and set
-the resize/gravity attribute of the group.
+Groups can't be nested. Groups are useful for two reasons. First of
+all it is possible to hide groups of objects. (@xref{Hiding and
+Showing}, below.) This is often very handy. We can, for example,
+display part of a form only when the user asks for it (see demo
+program @file{group.c}. Some attributes are naturally multi-objects,
+e.g., to glue several objects together using the gravity attribute.
+Instead of setting the gravity for each object, you can place all
+related objects inside a group and set the resize/gravity attribute of
+the group.
 
 The second reason is for using radio buttons. As indicated in section
 3.4 pushing a radio button makes the currently pushed radio button
 released. In fact, this happens only with radio buttons in the
 particular group. So to make two pairs (or more) of radio buttons,
 simply put each pair in a different group so that they won't interfere
-with each other. See, e.g., the example program buttonall.c. It is a
-good idea to always put radio buttons in a group, even if you have only
-one set of them.
+with each other. See, e.g., the example program @file{buttonall.c}. It
+is a good idea to always put radio buttons in a group, even if you
+have only one set of them.
 
 It is possible to add objects to an existing group
 @findex fl_addto_group()
 @example
-void fl_addto_group(FL_OBJECT *group);
+FL_OBJECT *fl_addto_group(FL_OBJECT *group);
 @end example
 @noindent
 where @code{group} is the object returned by @code{fl_bgn_group()}.
@@ -509,7 +521,7 @@ the end of the group. When through with adding, use
 
 
 @node Hiding and Showing
-@section Hiding and Showing Objects
+@section Hiding and Showing
 
 It is possible to temporarily hide certain objects or groups of objects.
 To this end, use the routine
@@ -530,9 +542,8 @@ appearance of a form depending on particular information provided by the
 user. You can also make overlapping groups in the form and take care
 that only one of them is visible.
 
-
-@node Deactivating
-@section Deactivating, Reactivating and Triggering Objects
+@node Deactivating and Triggering Objects
+@section Deactivating and Triggering Objects
 
 Sometimes you might want a particular object to be temporarily inactive,
 e.g., you want to make it impossible for the user to press a particular
@@ -551,7 +562,7 @@ void fl_activate_object(FL_OBJECT *obj);
 
 Normally you also want to give the user a visual indication that the
 object is not active. This can, for example, be done by changing the
-label color to grey (see below.)
+label color to grey (see below).
 
 It is possible to simulate the action of an object being triggered from
 within the program by using the following routine
@@ -576,13 +587,13 @@ appearance of any object.
 @ifnottex
 
 @menu
-* Color::              Color
-* Bounding Boxes::     Bounding Boxes
-* Label Attributes::   Label Attributes
-* Tool Tips::          Tool Tips
-* Redrawing::          Redrawing Objects
-* Changing Many::      Changing many attributes
-* Symbols::            Symbols
+* Color::
+* Bounding Boxes::
+* Label Attributes and Fonts::
+* Tool Tips::
+* Redrawing::
+* Changing Many Attributes::
+* Symbols::
 @end menu
 
 @end ifnottex
@@ -592,6 +603,7 @@ appearance of any object.
 @subsection Color
 
 To change the color of a particular object use the routine
+@findex fl_set_object_color()
 @example
 void fl_set_object_color(FL_OBJECT *obj,
                          FL_COLOR col1, FL_COLOR col2);
@@ -604,129 +616,159 @@ the box in which the text is placed. For buttons, @code{col1} is the
 color of the button when released and @code{col2} is the color of the
 button when pushed. (Note that when changing the color of a button the
 nice property that the color of a button changes when the mouse moves
-over it disappears.) For light buttons the two colors indicate the color
-of the light when off and when on. For bitmap buttons, @code{col1} is
-the color of the box and @code{col2} is the color of the bitmap. For
-sliders @code{col1} is the color of the background of the slider and
-@code{col2} is the color of the slider itself. Finally, for input
-objects @code{col1} is the color of the input field when it is not
-selected and @code{col2} is the color when it is selected. For all types
-of objects, the default colors can be found in the file @file{forms.h}.
-For example, for input fields the default colors are
-@code{FL_INPUT_COL1} and @code{FL_INPUT_COL2}. Form Designer comes in
-very handy in familiarizing you with various attributes since you can
-change all attributes of an object and immediately see the difference by
+over it disappears.) For light buttons the two colors indicate the
+color of the light when off and when on. For bitmap buttons,
+@code{col1} is the color of the box and @code{col2} is the color of
+the bitmap. For sliders @code{col1} is the color of the background of
+the slider and @code{col2} is the color of the slider itself. Finally,
+for input objects @code{col1} is the color of the input field when it
+is not selected and @code{col2} is the color when it has input focus,
+i.e.@: the user can enter text. For all types of objects, the default
+colors can be found in the file @file{forms.h}. For example, for input
+fields the default colors are @code{FL_INPUT_COL1} and
+@code{FL_INPUT_COL2}. Form Designer comes in very handy in
+familiarizing you with various attributes since you can change all
+attributes of an object and immediately see the difference by
 "test"ing the object.
 
 The following pre-defined color symbols can be used in all color change
 requests. If the workstation does not support this many colors,
-substitutions with the closest color will be made.
-
-@multitable @columnfractions 0.5 0.5
-@headitem Name @tab RGB triple
+substitution by the closest color will happen.
+@multitable @columnfractions 0.4 0.5
+@headitem Name
+@tab RGB triple
 @tindex @code{FL_BLACK}
 @item @code{FL_BLACK}
 @tab @code{(  0,   0,   0)}
+@tindex @code{FL_WHITE}
+@item @code{FL_WHITE}
+@tab @code{(255, 255, 255)},
+@tindex @code{FL_COL1}
+@item @code{FL_COL1}
+@tab @code{(173, 173, 173)}
+@tindex @code{FL_BOTTOM_BCOL}
+@item @code{FL_BOTTOM_BCOL}
+@tab @code{(  89,  89,  89)}
+@tindex @code{FL_RIGHT_BCOL}
+@item @code{FL_RIGHT_BCOL}
+@tab @code{(  41,  41,  41)}
+@tindex @code{FL_MCOL}
+@item @code{FL_MCOL}
+@tab @code{(191, 191, 191)}
+@tindex @code{FL_LEFT_BCOL}
+@item @code{FL_LEFT_BCOL}
+@tab @code{(222, 222, 222)}
+@tindex @code{FL_LIGHTER_COL1}
+@item @code{FL_LIGHTER_COL1}
+@tab @code{(204, 204, 204)}
+@tindex @code{FL_DARKER_COL1}
+@item @code{FL_DARKER_COL1}
+@tab @code{(161, 161, 161)}
+@tindex @code{FL_SLATEBLUE}
+@item @code{FL_SLATEBLUE}
+@tab @code{(113, 113, 198)}
+@tindex @code{FL_INDIANRED}
+@item @code{FL_INDIANRED}
+@tab @code{(198, 113, 113)}
 @tindex @code{FL_RED}
 @item @code{FL_RED}
 @tab @code{(255,   0,   0)}
+@tindex @code{FL_BLUE}
+@item @code{FL_BLUE}
+@tab @code{(  0,   0, 255)}
 @tindex @code{FL_GREEN}
 @item @code{FL_GREEN}
 @tab @code{(  0, 255,   0)}
 @tindex @code{FL_YELLOW}
 @item @code{FL_YELLOW}
 @tab @code{(255, 255,   0)}
-@tindex @code{FL_BLUE}
-@item @code{FL_BLUE}
-@tab @code{(  0,   0, 255)}
-@tindex @code{FL_CYAN}
-@item @code{FL_CYAN}
-@tab @code{(  0, 255, 255)}
 @tindex @code{FL_MAGENTA}
 @item @code{FL_MAGENTA}
 @tab @code{(255,   0, 255)}
-@tindex @code{FL_WHITE}
-@item @code{FL_WHITE}
-@tab @code{(255, 255, 255)}
-@tindex @code{FL_COL1}
-@item @code{FL_COL1}
-@tab @code{(161, 161, 161)}
-@tindex @code{FL_MCOL}
-@item @code{FL_MCOL}
-@tab @code{(191, 191, 191)}
+@tindex @code{FL_CYAN}
+@item @code{FL_CYAN}
+@tab @code{(  0, 255, 255)}
+@tindex @code{FL_TOMATO}
+@item @code{FL_TOMATO}
+@tab @code{       255,  99,  71}
+@tindex @code{FL_INACTIVE}
+@item @code{FL_INACTIVE}
+@tab @code{(110, 110, 110)}
 @tindex @code{FL_TOP_BCOL}
 @item @code{FL_TOP_BCOL}
 @tab @code{(204, 204, 204)}
-@tindex @code{FL_BOTTOM_BCOL}
-@item @code{FL_BOTTOM_BCOL}
-@tab @code{( 89,  89,  89)}
-@tindex @code{FL_RIGHT_BCOL}
-@item @code{FL_RIGHT_BCOL}
-@tab @code{( 51,  51,  51)}
-@tindex @code{FL_LEFT_BCOL}
-@item @code{FL_LEFT_BCOL}
-@tab @code{(222, 222, 222)}
-@tindex @code{FL_INACTIVE_COL}
-@item @code{FL_INACTIVE_COL}
-@tab @code{(110, 110, 110)}
-@tindex @code{FL_TOMATO}
-@item @code{FL_TOMATO}
-@tab @code{(255,  99,  71)}
-@tindex @code{FL_INDIANRED}
-@item @code{FL_INDIANRED}
-@tab @code{(198, 113, 113)}
-@tindex @code{FL_SLATEBLUE}
-@item @code{FL_SLATEBLUE}
-@tab @code{(113, 113, 198)}
-@tindex @code{FL_DARKGOLD}
-@item @code{FL_DARKGOLD}
-@tab @code{(205, 149,  10)}
 @tindex @code{FL_PALEGREEN}
 @item @code{FL_PALEGREEN}
 @tab @code{(113, 198, 113)}
+@tindex @code{FL_DARKGOLD}
+@item @code{FL_DARKGOLD}
+@tab @code{(205, 149,  10)}
 @tindex @code{FL_ORCHID}
 @item @code{FL_ORCHID}
 @tab @code{(205, 105, 201)}
 @tindex @code{FL_DARKCYAN}
 @item @code{FL_DARKCYAN}
-@tab @code{( 40, 170, 175)}
+@tab @code{(40, 170, 175)}
 @tindex @code{FL_DARKTOMATO}
 @item @code{FL_DARKTOMATO}
 @tab @code{(139,  54,  38)}
 @tindex @code{FL_WHEAT}
 @item @code{FL_WHEAT}
 @tab @code{(255, 231, 155)}
+@tindex @code{FL_DARKORANGE}
+@item @code{FL_DARKORANGE}
+@tab @code{(255, 128,   0)}
+@tindex @code{FL_DEEPPINK}
+@item @code{FL_DEEPPINK}
+@tab @code{(255,   0, 128)}
+@tindex @code{FL_CHARTREUSE}
+@item @code{FL_CHARTREUSE}
+@tab @code{(128, 255,   0)}
+@tindex @code{FL_DARKVIOLET}
+@item @code{FL_DARKVIOLET}
+@tab @code{(128,   0, 255)}
+@tindex @code{FL_SPRINGGREEN}
+@item @code{FL_SPRINGGREEN}
+@tab @code{(  0, 255, 128)}
+@tindex @code{FL_DODGERBLUE}
+@item @code{FL_DODGERBLUE}
+@tab @code{(  0, 128, 255)}
 @tindex @code{FL_FREE_COL1}
 @item @code{FL_FREE_COL1}
 @tab @code{(  ?,   ?,   ?)}
 @end multitable
 
-In table 3.11.1, @code{FL_FREE_COL1} has the largest numerical value,
-and all color indices smaller than that are used (or can potentially be
-used) by the Forms Library although if you wish, they can also be
-changed using the following routine prior to @code{fl_initialize()}:
+Of all the colors listed in the table @code{FL_FREE_COL1} has the
+largest numerical value, and all color with indices smaller than that
+are used (or can potentially be used) by the Forms Library although,
+if you wish, they can also be changed using the following routine
+prior to @code{fl_initialize()}:
 @example
 void fl_set_icm_color(FL_COLOR index, int r, int g, int b);
 @end example
 
 Note that although the color of an object is indicated by a single
-index, it is not necessarily true that the Forms Library is operating in
-PseudoColor. Forms Library is capable of operating in all visuals and as
-a matter of fact the Forms Library will always select TrueColor or
-DirectColor if the hardware is capable of it. The actual color is
-handled by an internal colormap
-of @code{FL_MAX_COLS} entries (default 1024).
-To change or query the values of this internal colormap use the call
+index, it is not necessarily true that the Forms Library is operating
+in PseudoColor. Forms Library is capable of operating in all visuals
+and as a matter of fact the Forms Library will always select TrueColor
+or DirectColor if the hardware is capable of it.
+
+The actual color is
+handled by an internal colormap of
+@tindex @code{FL_MAX_COLORS}
+@code{FL_MAX_COLORS} entries (default
+1024). To change or query the values of this internal colormap use the
+call
 @example
 void fl_set_icm_color(FL_COLOR index, int r, int g, int b);
 void fl_get_icm_color(FL_COLOR index, int *r, int *g, int *b);
 @end example
 
 Call @code{fl_set_icm_color()} before @code{fl_initialize()} to change
-XForms's default colormap. Note these two routines do not communicate
-with the X server, they only populate/return information about the
-internal colormap, which is made known to the X server by the
-initialization routine @code{fl_initialize()}.
+XForms's default colormap. Note that these two routines do not
+communicate with the X server, they only populate/return information
+about the internal colormap, which is made known to the X server by
+the initialization routine @code{fl_initialize()}.
 
 To change the colormap and make a color index active so that it can be
 used in various drawing routines after fl_initialize() initialization,
@@ -828,23 +870,31 @@ border width attribute
 @example
 void fl_set_object_bw(FL_OBJECT *obj, int bw);
 @end example
+@noindent
+To find out about the current setting for the border width of an
+object call
+@findex fl_get_object_bw()
+@example
+int fl_get_object_bw(FL_OBJECT *obj);
+@end example
 
-Border width controls the "height" of an object, e.g., a button having a
-border width of 3 pixels appears more pronounced than one having a
-border width of 2 (see Fig 3.4). The Forms Library's default is
-@code{FL_BOUND_WIDTH} (1) pixels (before version 1.0.91 the default was
-3). Note that the border width can be negative. Negative border width
-does not make a down box, rather, it makes the object having an upbox
-appear less pronounced and "softer". See program @file{borderwidth.c}
-for the effect of border width on different objects. All applications
-developed using XForms accept a command line option @samp{-bw}, followed
-by an integer number, the user can use to select the preferred border
-width. It is recommended that you document this flag in your application
-documentation. If you prefer a certain border width, use
-@code{fl_set_defaults()} or @code{fl_set_border_width()} before
-@code{fl_initialize()} to set the border width instead of hard-coding it
-on a per form or per object basis so the user has the option to change
-it at run time via the @samp{-bw} flag.
+Border width controls the "height" of an object, e.g., a button having
+a border width of 3 pixels appears more pronounced than one having a
+border width of 2. The Forms Library's default is
+@code{FL_BOUND_WIDTH} (1) pixels (before version 1.0.91 the default
+was 3). Note that the border width can be negative. Negative border
+width does not make a down box, rather, it makes the object having an
+upbox appear less pronounced and "softer". See program
+@file{borderwidth.c} for the effect of border width on different
+objects. All applications developed using XForms accept a command line
+option @samp{-bw}, followed by an integer number, the user can use to
+select the preferred border width. It is recommended that you document
+this flag in your application documentation. If you prefer a certain
+border width, use @code{fl_set_defaults()} or
+@code{fl_set_border_width()} before @code{fl_initialize()} to set the
+border width instead of hard-coding it on a per form or per object
+basis so the user has the option to change it at run time via the
+@samp{-bw} flag.
 
 There also exists a call that changes the object border width for the
 entire application
@@ -853,8 +903,8 @@ void fl_set_border_width(int border_width);
 @end example
 
 
-@node Label Attributes
-@subsection Label Attributes
+@node Label Attributes and Fonts
+@subsection Label Attributes and Fonts
 
 There are also a number of routines to change the appearance of the
 label. The first one is
@@ -1050,7 +1100,7 @@ is to be run/displayed on different servers.
 See @file{fonts.c} for a demonstration of all the built-in font styles
 available.
 
-You cqan change the alignment of the label with respect to the bounding
+You can change the alignment of the label with respect to the bounding
 box of the object. For this you use the routine
 @example
 void fl_set_object_lalign(FL_OBJECT *obj, int align);
@@ -1103,7 +1153,7 @@ void fl_set_object_label(FL_OBJECT *obj, const char *label);
 changes the label of a given object. An internal copy of the parameter
 @code{label} is made. As mentioned earlier, newline (@code{\n}) can be
 embedded in the label to generate multiple lines. By embedding
-@code{<CNTRL>H} (@code{\010}) in the label, the entire label or one of
+@code{<Ctrl>H} (@code{\010}) in the label, the entire label or one of
 the characters in the label can be underlined.
 
 
@@ -1119,7 +1169,7 @@ the mouse leaves the object or when the mouse is pressed.
 
 To set the text, use the following routine
 @example
-void fl_set_object_helper(FL_OBJECT *ob, const char *helpmsg);
+void fl_set_object_helper(FL_OBJECT *obj, const char *helpmsg);
 @end example
 where @code{helpmsg} is a text string (with possible embedded newlines
 in it) that will be shown when the mouse enters the object, after about
@@ -1167,8 +1217,8 @@ Use of these routines is normally not necessary and should be kept to an
 absolute minimum.
 
 
-@node Changing Many
-@subsection Changing many attributes
+@node Changing Many Attributes
+@subsection Changing Many Attributes
 
 Whenever you change an attribute of an object in a visible form the
 object is redrawn immediately to make the change visible. This can be
@@ -1235,7 +1285,7 @@ symbol. A number of pre-defined symbols are available:
 @item @code{arrow}
 @tab Same as @code{-->}.
 @item @code{returnarrow}
-@tab @code{<RETURN>} key symbol.
+@tab @code{<Return>} key symbol.
 @item @code{square}
 @tab A square.
 @item @code{circle}
@@ -1279,6 +1329,13 @@ indicates increase the symbol size and - indicates decrease the symbol
 size. The digit following the prefixes indicates the increment
 (decrement) in pixels. For example, to draw a circle that is 3 pixels
 smaller in radius than the default size, use @code{@@-3square}.
+
+@ifhtml
+@center @image{symbols}
+@end ifhtml
+@ifnothtml
+@center @image{images/symbols}
+@end ifnothtml
 
 In addition to using symbol as object labels, symbols can also be drawn
 directly using
@@ -1330,36 +1387,42 @@ tasks.
 In some situations you might want to add an object to an existing form.
 This can be done using the call
 @example
-void fl_addto_form(FL_FORM *form);
+FL_FORM *fl_addto_form(FL_FORM *form);
 @end example
 @noindent
-After this call you can start adding objects to the form using
-@code{fl_add_button()} etc. To stop adding objects to the form use
-@code{fl_end_form()} as before. It is possible to add objects to forms
-that are being displayed, but this is not always a good idea because not
-everything behaves well (e.g. strange things might happen when a group
-is started but not yet finished).
+After this call you can continue adding objects to the form with the
+usual functions for adding objects like @code{fl_add_button()} etc. To
+stop adding objects to the form again use @code{fl_end_form()}. It is
+possible to add objects to forms that are being displayed, but this is
+not always a good idea because not everything behaves well (e.g.@:
+strange things might happen when a group is started but not yet
+finished).
 
 To delete an object from a form simply use
 @example
 void fl_delete_object(FL_OBJECT *obj);
 @end example
 
-It deletes the object from the form it currently belongs to. The object
-remains available and can be added to the same or another form later
-using
+It deletes the object from the form it currently belongs to and also
+from a group it may belong to. The argument can also be the
+pseudo-object starting a group (i.e.@: the return value of
+@code{fl_bgn_group()})in which case the whole group of objects will be
+removed from the form.
+
+The object remains available (except if it's an object that marks the
+start or end of a group) and can be added again to the same or another
+form later using
+@findex fl_add_object()
 @example
 void fl_add_object(FL_FORM *form, FL_OBJECT *obj);
 @end example
 @noindent
-Use of these calls is discouraged because some have side effects. (E.g.
-adding the same object to multiple forms will most likely result in a
-memory fault.) Also watch out with deleting group objects. Not the whole
-group is deleted, only the object that marks its start is, which gives
-strange effects.
+Normally, this function is used in object classes to add a newly
+created object to a form. It may not be used for objects representing
+the start or end of a group.
 
 
-@node Freeing
+@node Freeing Objects
 @section Freeing Objects
 
 If the application program does not need an object anymore, it can free
@@ -1367,14 +1430,15 @@ the memory used by the object using the call
 @example
 void fl_free_object(FL_OBJECT *obj);
 @end example
-After this the object can no longer be used. Take care that you delete
-the object from the form it is in before freeing it.
+@noindent
+After this the object can no longer be used. If you hadn't deleted the
+object from the form it did belong to before this will happen
+automatically.
 
 To free the memory used by an entire form use the call
 @example
 void fl_free_form(FL_FORM *form);
 @end example
 @noindent
-This will free all the objects on the form and the form itself. A freed
-form may not be referenced.
-
+This will delete and free all the objects on the form and the form
+itself. A freed form may not be referenced anymore.

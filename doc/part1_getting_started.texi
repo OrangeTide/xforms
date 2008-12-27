@@ -1,12 +1,17 @@
-@node Getting Started
-@chapter Part I: Getting Started
+@node Part I Getting Started
+@chapter Getting Started
+
+This chapter introduces the typographical conventions used throughout
+the manual and then continues with showing a few, simple examples on
+using the Forms Library. It concludes with a short resumee of the
+programming model typically found in programs using the library.
 
 @ifnottex
 
 @menu
-* Naming Conventions::    Naming Conventions
-* Some Examples::         Some Examples
-* Programming Model::     Programming Model
+* Naming Conventions::
+* Some Examples::
+* Programming Model::
 @end menu
 
 @end ifnottex
@@ -27,13 +32,18 @@ fl_show_form()
 @end example
 
 All Forms Library macros, constants and types also follow this
-convention, except that the first two letters are capitalized. For
-example,
+convention, except that (at least) the first two letters are
+capitalized. For example,
 @example
 FL_min()
-FL_NORMAL
-BUTTON FL_OBJECT
+FL_NORMAL_BUTTON
+FL_OBJECT
 @end example
+
+The term "form" often can be taken to mean a window of your
+application. But be aware that there are also can be forms that
+themselves contain further forms, so "form" and "window" aren't
+necessarily synonyms.
 
 
 @node Some Examples
@@ -54,19 +64,23 @@ fl_end_form();
 The first line indicates the start of the form definition.
 @code{simpleform} will later be used to identify the form. The type of
 the form is @code{FL_UP_BOX}. This means that the background of the
-form is a raised box that looks like it is coming out of the screen
-(See Fig. 2.1). The form has a size of 230 by 160 pixels1. Next we add
-a button to the form. The type of the button is
-@code{FL_NORMAL_BUTTON} which will be explained below in detail. It is
-centered in the form by the virtue of the button geometry supplied and
-has as a label "Push Me". After having defined the form we can display
-it using the call
+form is a raised box that looks like it is coming out of the screen.
+The form has a size of 230 by 160 pixels1. Next we add a button to the
+form. The type of the button is @code{FL_NORMAL_BUTTON} which will be
+explained below in detail. It is centered in the form by the virtue of
+the button geometry supplied and has as a label "Push Me". After
+having defined the form we can display it using the call
 @example
 fl_show_form(simpleform, FL_PLACE_MOUSE, FL_NOBORDER,
              "SimpleForm");
 @end example
 
+@ifhtml
 @center @image{pushme}
+@end ifhtml
+@ifnothtml
+@center @image{images/pushme}
+@end ifnothtml
 
 This will show the form on the screen at the mouse position. (The
 third argument indicates whether the form gets window manager's
@@ -105,7 +119,6 @@ This simple example is, of course, of little use. Let us look at a
 slightly more complicated one (the program can be found
 in @file{yesno.c}.)
 @example
-<programlisting>
 #include <forms.h>
 
 int main(int argc, char *argv[]) @{
@@ -132,11 +145,13 @@ int main(int argc, char *argv[]) @{
 @}
 @end example
 @noindent
-It creates a form with a simple text and two buttons (See Fig 2.2).
+It creates a form with a simple text and two buttons.
 After displaying the form @code{fl_do_forms()}
 is called. This routine returns the object being pushed. Simply checking
 whether this is object @code{yes} determines
 whether we should quit.
+
+@center @image{images/yesno}
 
 As you see, the program starts by calling the routine
 @code{fl_initialize()}. This routine should be called before any other
@@ -185,9 +200,10 @@ automatically recognizes the following command line options
 @end multitable
 
 Note that the executable name @code{argv[0]} should not contain period
-or @code{*}. See Appendix A for further details. The above program can
-in fact be made a lot simpler, using the goodies described in chapter
-6. You can simply write:
+or @code{*}. @xref{Part V Overview of Main Functions, , Overview of
+Main Functions}, for further details. The above program can in fact be
+made a lot simpler, using the goodies described in @ref{Part I
+Goodies, , Goodies}. You can simply write:
 @example
 while (! fl_show_question("Do you want to Quit?", 0))
     /* empty */ ;
@@ -220,13 +236,13 @@ question example looks as follows:
 #include <stdlib.h>
 #include <forms.h>
 
-void yes_callback(FL_OBJECT * ob, long user_data) @{
+void yes_callback(FL_OBJECT *obj, long user_data) @{
     printf("Yes is pushed\n");
     fl_finish();
     exit(0);
 @}
 
-void no_callback(FL_OBJECT * ob, long user_data) @{
+void no_callback(FL_OBJECT *obj, long user_data) @{
     printf("No is pushed\n");
 @}
 
@@ -292,14 +308,15 @@ sliders etc.
 This step makes the designed user interface visible by creating and
 mapping the window (and subwindows) used by the forms.
 @item Main loop
-Most Forms Library applications are completely event-driven, and are
+Most Forms Library applications are completely event-driven and are
 designed to respond to user events indefinitely. The Forms Library
-main loop, @code{fl_do_forms()}, retrieves events from the X event
-queue, dispatches the retrieved event through appropriate objects, and
-notifies the application of what action, if any, should be taken. The
-actual notification methods depend on how the interaction is set up,
-which could be object callback or by returning to the application
-program the object whose status has changed.
+main loop, usually invoked by calling @code{fl_do_forms()}, retrieves
+events from the X event queue, dispatches them to the appropriate
+objects and notifies the application of what action, if any, should be
+taken. The actual notification method depends on how the interaction
+is set up, which could be done by calling an object callback or by
+returning the object whose status has changed to the application
+program.
 @end table
 
 The following chapters will lead you through each step of the process

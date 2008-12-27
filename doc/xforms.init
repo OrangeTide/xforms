@@ -17,15 +17,6 @@ $DOCTYPE = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http
 
 @EXPAND = ( 'html' );
 
-# -invisible
-# This seems obsolete and is not used anywhere.
-# This was a workaround for a known bug of many WWW browsers, including 
-# netscape. This was used to create invisible destination in anchors.
-# $INVISIBLE_MARK = '&#160;';
-
-$INVISIBLE_MARK = '';
-
-
 # -iso
 # if this value is true, ISO8859 characters are used for special symbols 
 # (like copyright, etc).
@@ -90,13 +81,13 @@ $NUMBER_SECTIONS = 1;
 # if this is set the nodes are used as sectionning elements. 
 # Otherwise the nodes are incorporated in sections.
 
-$USE_NODES = 1;
+$USE_NODES = 0;
 
 # -node-files
 # if this is set one file per node is generated, which can be a target for 
 # cross manual references.
 
-$NODE_FILES = 1;
+$NODE_FILES = 0;
 
 # -split section|chapter|node|none
 # if $SPLIT is set to 'section' (resp. 'chapter') one html file per section 
@@ -106,7 +97,7 @@ $NODE_FILES = 1;
 # Otherwise a monolithic html file that contains the whole document is 
 # created.
 
-$SPLIT = 'section';
+$SPLIT = 'chapter';
 
 # -sec-nav|-nosec-nav
 # if this is set then navigation panels are printed at the beginning of each 
@@ -120,7 +111,7 @@ $SPLIT = 'section';
 # with -split chapter. There will be chapter navigation panel at the 
 # beginning and at the end of chapters anyway.
 
-$SECTION_NAVIGATION = 1;
+$SECTION_NAVIGATION = 0;
 
 # -separated-footnotes
 # if this is set footnotes are on a separated page. Otherwise they are at
@@ -138,7 +129,7 @@ $TOC_LINKS = 0;
 # If not set, then result files are put into the current directory.
 #$SUBDIR = 'html';
 
-$SUBDIR = '';
+$SUBDIR = '.';
 
 # -short-extn
 # If this is set, then all HTML files will have extension ".htm" instead of
@@ -155,7 +146,7 @@ $PREFIX = '';
 # -o filename
 # If this is set a monolithic document is outputted into $filename.
 
-$OUT = '.';
+$OUT = '';
 
 # -no-validate
 # suppress node cross-reference validation
@@ -165,7 +156,7 @@ $NOVALIDATE = 0;
 # -short-ref
 # if this is set cross-references are given without section numbers.
 
-$SHORT_REF = '';
+$SHORT_REF = 0;
 
 # -idx-sum
 # if value is set, then for each @printindex <index name>

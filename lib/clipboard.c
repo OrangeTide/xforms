@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -214,7 +211,7 @@ handle_clipboard_event( void * event )
 
     if ( ! cp->req_window && !cp->window )
     {
-		M_warn( "ClipBoard", "InternalError" );
+		M_warn( "handle_clipboard_event", "InternalError" );
 		return -1;
     }
 
@@ -290,7 +287,7 @@ handle_clipboard_event( void * event )
 
 		if ( sreq->owner != cp->window )
 		{
-			M_err( "ClipBoard", "Wrong owner" );
+			M_err( "handle_clipboard_event", "Wrong owner" );
 			return -1;
 		}
 
@@ -330,7 +327,8 @@ handle_clipboard_event( void * event )
 				/* if we have other types, conversion routine should be
 				   called here */
 
-				M_err( "ClipBoard", "Unknown target: %d\n", sreq->target );
+				M_err( "handle_clipboard_event", "Unknown target: %d\n",
+					   sreq->target );
 			}
 
 			XSendEvent( flx->display, sreq->requestor, False, 0,
@@ -340,7 +338,7 @@ handle_clipboard_event( void * event )
 		{
 			/* not XA_PRIMARY request */
 
-			M_warn( "ClipBoard", "Unknown selection request: %d",
+			M_warn( "handle_clipboard_event", "Unknown selection request: %d",
 					sreq->selection );
 			return -1;
 		}

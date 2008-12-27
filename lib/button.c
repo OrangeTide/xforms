@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -33,7 +30,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.26 2008/10/28 12:27:22 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.27 2008/12/27 22:20:47 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -51,10 +48,10 @@ typedef FL_BUTTON_STRUCT SPEC;
 						  || t == FL_BOTTOMTAB_UPBOX			   \
 						  || t == FL_SELECTED_BOTTOMTAB_UPBOX    )
 
-#define WITHIN( o, mx, my )   (    ( mx ) >= ( ob )->x                \
-                                && ( mx ) <= ( ob )->x + ( ob )->w    \
-					            && ( my ) >= ( ob )->y                \
-					            && ( my ) <= ( ob )->y + ( ob )->h )
+#define WITHIN( obj, mx, my )   (    ( mx ) >= ( obj )->x                 \
+                                  && ( mx ) <  ( obj )->x + ( obj )->w    \
+					              && ( my ) >= ( obj )->y                 \
+					              && ( my ) <  ( obj )->y + ( obj )->h )
 
 
 /***************************************
@@ -78,67 +75,68 @@ free_pixmap( SPEC * sp )
  ***************************************/
 
 void
-fli_draw_button( FL_OBJECT * ob )
+fli_draw_button( FL_OBJECT * obj )
 {
     FL_Coord dh,
 		     dw,
 		     ww,
-		     absbw = FL_abs( ob->bw );
+		     absbw = FL_abs( obj->bw );
     int off2 = 0;
-	SPEC *sp = ob->spec;
-    FL_COLOR col = sp->val ? ob->col2 : ob->col1;
+	SPEC *sp = obj->spec;
+    FL_COLOR col = sp->val ? obj->col2 : obj->col1;
 
-    if ( ob->belowmouse && col == FL_BUTTON_COL1 )
+    if ( obj->belowmouse && col == FL_BUTTON_COL1 )
 		col = FL_BUTTON_MCOL1;
-    if ( ob->belowmouse && col == FL_BUTTON_COL2 )
+    if ( obj->belowmouse && col == FL_BUTTON_COL2 )
 		col = FL_BUTTON_MCOL2;
 
-    if ( FL_IS_UPBOX( ob->boxtype ) && ( sp->val || sp->is_pushed ) )
-		fl_drw_box( FL_TO_DOWNBOX( ob->boxtype ), ob->x, ob->y, ob->w,
-					ob->h, col, ob->bw );
+    if ( FL_IS_UPBOX( obj->boxtype ) && ( sp->val || sp->is_pushed ) )
+		fl_drw_box( FL_TO_DOWNBOX( obj->boxtype ), obj->x, obj->y, obj->w,
+					obj->h, col, obj->bw );
     else
-		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
+		fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, col,
+					obj->bw );
 
-    dh = FL_crnd( 0.6 * ob->h );
-    dw = FL_crnd( FL_min( 0.6 * ob->w, dh ) );
+    dh = FL_crnd( 0.6 * obj->h );
+    dw = FL_crnd( FL_min( 0.6 * obj->w, dh ) );
 
-    ww = FL_crnd( 0.75 * ob->h );
-    if ( ww < dw + absbw + 1 + ( ob->bw > 0 ) )
-		ww = dw + absbw + 1 + ( ob->bw > 0 );
+    ww = FL_crnd( 0.75 * obj->h );
+    if ( ww < dw + absbw + 1 + ( obj->bw > 0 ) )
+		ww = dw + absbw + 1 + ( obj->bw > 0 );
 
-    if ( ob->type == FL_RETURN_BUTTON )
+    if ( obj->type == FL_RETURN_BUTTON )
     {
-		fl_drw_text( 0, ob->x + ob->w - ww, FL_crnd( ob->y + 0.2 * ob->h ),
-					 dw, dh, ob->lcol, 0, 0, "@returnarrow" );
+		fl_drw_text( 0, obj->x + obj->w - ww, FL_crnd( obj->y + 0.2 * obj->h ),
+					 dw, dh, obj->lcol, 0, 0, "@returnarrow" );
 		off2 = dw - 2;
     }
 
-    if ( ob->type == FL_MENU_BUTTON && ob->boxtype == FL_UP_BOX )
+    if ( obj->type == FL_MENU_BUTTON && obj->boxtype == FL_UP_BOX )
     {
 		int dbh = FL_max( absbw - 1, 1 );
 
-		dw = FL_max( 0.11 * ob->w, 13 );
-		dh = FL_max( 6 + (ob->bw > 0 ), ob->h * 0.1 );
+		dw = FL_max( 0.11 * obj->w, 13 );
+		dh = FL_max( 6 + (obj->bw > 0 ), obj->h * 0.1 );
 
-		fl_drw_box( FL_UP_BOX, ob->x + ob->w - dw - absbw - 2,
-					ob->y + ( ob->h - dh ) / 2, dw, dh, ob->col1, -dbh );
+		fl_drw_box( FL_UP_BOX, obj->x + obj->w - dw - absbw - 2,
+					obj->y + ( obj->h - dh ) / 2, dw, dh, obj->col1, -dbh );
 		off2 = dw - 1;
     }
 
-    if ( ob->type == FL_MENU_BUTTON || ob->type == FL_RETURN_BUTTON )
+    if ( obj->type == FL_MENU_BUTTON || obj->type == FL_RETURN_BUTTON )
     {
-		ob->w -= off2;
-		fl_draw_object_label( ob );
-		ob->w += off2;
+		obj->w -= off2;
+		fl_draw_object_label( obj );
+		obj->w += off2;
     }
-    else if ( ob->boxtype & FLI_BROKEN_BOX || ISTABBOX( ob->boxtype ) )
+    else if ( obj->boxtype & FLI_BROKEN_BOX || ISTABBOX( obj->boxtype ) )
     {
-		fl_set_text_clipping( ob->x + 3, ob->y, ob->w - 6, ob->h );
-		fl_draw_object_label( ob );
+		fl_set_text_clipping( obj->x + 3, obj->y, obj->w - 6, obj->h );
+		fl_draw_object_label( obj );
 		fl_unset_text_clipping( );
     }
     else
-		fl_draw_object_label( ob );
+		fl_draw_object_label( obj );
 }
 
 
@@ -266,7 +264,7 @@ wait_for_release( XKeyEvent * ev )
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * ob,
+handle_it( FL_OBJECT * obj,
 		   int         event,
 		   FL_Coord    mx,
 		   FL_Coord    my,
@@ -275,7 +273,7 @@ handle_it( FL_OBJECT * ob,
 {
     static int oldval;
     int newval;
-    SPEC *sp = ob->spec;
+    SPEC *sp = obj->spec;
     FL_DrawButton drawit;
     FL_CleanupButton cleanup;
 
@@ -286,13 +284,13 @@ handle_it( FL_OBJECT * ob,
     switch ( event )
     {
 		case FL_DRAW:
-			if (    ob->type != FL_HIDDEN_BUTTON
-				 && ob->type != FL_HIDDEN_RET_BUTTON )
+			if (    obj->type != FL_HIDDEN_BUTTON
+				 && obj->type != FL_HIDDEN_RET_BUTTON )
 			{
-				if ( ( drawit = lookup_drawfunc( ob->objclass ) ) )
-					drawit( ob );
+				if ( ( drawit = lookup_drawfunc( obj->objclass ) ) )
+					drawit( obj );
 				else
-					M_err( "ButtonDraw", "Unknown class: %d", ob->objclass );
+					M_err( "ButtonDraw", "Unknown class: %d", obj->objclass );
 			}
 			sp->event = FL_DRAW;
 			break;
@@ -305,7 +303,7 @@ handle_it( FL_OBJECT * ob,
 			/* FL_MENU_BUTTON objects never get a FL_RELEASE event,
 			   so we have to "fake" one */
 
-			if ( ob->type == FL_MENU_BUTTON )
+			if ( obj->type == FL_MENU_BUTTON )
 			{
 				sp->event = FL_RELEASE;
 				sp->is_pushed = 0;
@@ -316,11 +314,11 @@ handle_it( FL_OBJECT * ob,
 		case FL_ENTER:
 			/* Keep active radio buttons from reacting */
 
-			if ( ob->type == FL_RADIO_BUTTON && sp->val == 1 )
-				ob->belowmouse = 0;
+			if ( obj->type == FL_RADIO_BUTTON && sp->val == 1 )
+				obj->belowmouse = 0;
 
 			sp->event = event;
-			fl_redraw_object( ob );
+			fl_redraw_object( obj );
 			break;
 
 		case FL_PUSH:
@@ -332,11 +330,11 @@ handle_it( FL_OBJECT * ob,
 			sp->event = FL_PUSH;
 			sp->is_pushed = 1;
 
-			if ( ob->type == FL_RADIO_BUTTON )
+			if ( obj->type == FL_RADIO_BUTTON )
 			{
-				ob->belowmouse = 0;
+				obj->belowmouse = 0;
 				sp->val = 1;
-				fl_redraw_object( ob );
+				fl_redraw_object( obj );
 				return 1;
 			}
 
@@ -344,10 +342,10 @@ handle_it( FL_OBJECT * ob,
 			sp->val = ! sp->val;
 			sp->mousebut = key;
 			sp->timdel = 1;
-			fl_redraw_object( ob );
-			return    ob->type == FL_INOUT_BUTTON
-				   || ob->type == FL_TOUCH_BUTTON
-				   || ob->type == FL_MENU_BUTTON;
+			fl_redraw_object( obj );
+			return    obj->type == FL_INOUT_BUTTON
+				   || obj->type == FL_TOUCH_BUTTON
+				   || obj->type == FL_MENU_BUTTON;
 
 		case FL_MOTION:
 			if (    key < FL_MBUTTON1
@@ -355,29 +353,29 @@ handle_it( FL_OBJECT * ob,
 				 || ! sp->react_to[ key - 1 ] )
 				break;
 
-			if (    ob->type != FL_RADIO_BUTTON
-				 && ob->type != FL_INOUT_BUTTON
-				 && ob->type != FL_MENU_BUTTON )
+			if (    obj->type != FL_RADIO_BUTTON
+				 && obj->type != FL_INOUT_BUTTON
+				 && obj->type != FL_MENU_BUTTON )
 			{
-				if ( WITHIN( ob, mx, my ) )
+				if ( WITHIN( obj, mx, my ) )
 				{
-					ob->belowmouse = 1;
+					obj->belowmouse = 1;
 					newval = ! oldval;
 				}
 				else
 				{
-					ob->belowmouse = 0;
+					obj->belowmouse = 0;
 					newval = oldval;
 				}
 
 				if ( sp->val != newval )
 				{
 					sp->val = newval;
-					fl_redraw_object( ob );
+					fl_redraw_object( obj );
 				}
 			}
 			return    sp->val
-				   && ob->type == FL_TOUCH_BUTTON
+				   && obj->type == FL_TOUCH_BUTTON
 				   && sp->timdel++ > 10
 				   && ( sp->timdel & 1 ) == 0;
 
@@ -390,40 +388,40 @@ handle_it( FL_OBJECT * ob,
 			sp->event = FL_RELEASE;
 			sp->is_pushed = 0;
 
-			if ( ob->type == FL_INOUT_BUTTON
-				 && ! WITHIN( ob, mx, my ) )
-				ob->belowmouse = 0;
+			if ( obj->type == FL_INOUT_BUTTON
+				 && ! WITHIN( obj, mx, my ) )
+				obj->belowmouse = 0;
 
-			if ( ob->type == FL_PUSH_BUTTON )
+			if ( obj->type == FL_PUSH_BUTTON )
 			{
-				fl_redraw_object( ob );
+				fl_redraw_object( obj );
 				return sp->val != oldval;
 			}
-			else if ( sp->val == 0 && ob->type != FL_MENU_BUTTON )
+			else if ( sp->val == 0 && obj->type != FL_MENU_BUTTON )
 			{
-				fl_redraw_object( ob );
+				fl_redraw_object( obj );
 				return 0;
 			}
 			sp->val = 0;
-			fl_redraw_object( ob );
-			return ob->type != FL_TOUCH_BUTTON && ob->type != FL_MENU_BUTTON;
+			fl_redraw_object( obj );
+			return obj->type != FL_TOUCH_BUTTON && obj->type != FL_MENU_BUTTON;
 
 		case FL_UPDATE:
 			sp->event = FL_UPDATE;
-			if ( ob->type != FL_RADIO_BUTTON && ob->type != FL_INOUT_BUTTON )
+			if ( obj->type != FL_RADIO_BUTTON && obj->type != FL_INOUT_BUTTON )
 			{
-				if ( ! WITHIN( ob, mx, my ) )
+				if ( ! WITHIN( obj, mx, my ) )
 					newval = oldval;
 				else
 					newval = ! oldval;
 				if ( sp->val != newval )
 				{
 					sp->val = newval;
-					fl_redraw_object( ob );
+					fl_redraw_object( obj );
 				}
 			}
 			return    sp->val
-				   && ob->type == FL_TOUCH_BUTTON
+				   && obj->type == FL_TOUCH_BUTTON
 				   && sp->timdel++ > 10
 				   && ( sp->timdel & 1 ) == 0;
 
@@ -432,33 +430,33 @@ handle_it( FL_OBJECT * ob,
 
 			/* this is a horrible hack */
 
-			if ( ob->type == FL_PUSH_BUTTON || ob->type == FL_RADIO_BUTTON )
+			if ( obj->type == FL_PUSH_BUTTON || obj->type == FL_RADIO_BUTTON )
 			{
 				sp->val = ! sp->val;
-				ob->pushed = ob->type == FL_RADIO_BUTTON;
-				fl_redraw_object( ob );
+				obj->pushed = obj->type == FL_RADIO_BUTTON;
+				fl_redraw_object( obj );
 				wait_for_release( ev );
 			}
-			else if (    ob->type == FL_NORMAL_BUTTON
-					  || ob->type == FL_RETURN_BUTTON )
+			else if (    obj->type == FL_NORMAL_BUTTON
+					  || obj->type == FL_RETURN_BUTTON )
 			{
-				int obl = ob->belowmouse;
+				int obl = obj->belowmouse;
 
-				sp->val = ob->belowmouse = 1;
-				fl_redraw_object( ob );
+				sp->val = obj->belowmouse = 1;
+				fl_redraw_object( obj );
 				wait_for_release( ev );
 				sp->val = 0;
-				ob->belowmouse = obl;
-				fl_redraw_object( ob );
+				obj->belowmouse = obl;
+				fl_redraw_object( obj );
 			}
 			sp->mousebut = FL_SHORTCUT + key;
 			return 1;
 
 		case FL_FREEMEM:
-			if ( ( cleanup = lookup_cleanupfunc( ob->objclass ) ) )
+			if ( ( cleanup = lookup_cleanupfunc( obj->objclass ) ) )
 				cleanup( sp );
 			free_pixmap( sp );
-			fl_safe_free( ob->spec );
+			fl_safe_free( obj->spec );
 			return 0;
     }
 
@@ -479,27 +477,27 @@ fl_create_generic_button( int          objclass,
 						  FL_Coord     h,
 						  const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 	SPEC *sp;
 	int i;
 
-    ob = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
+    obj = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
     if ( type == FL_RADIO_BUTTON )
-		ob->radio = 1;
+		obj->radio = 1;
     if ( type == FL_RETURN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
-		fl_set_object_shortcut( ob, "^M", 0 );
+		fl_set_object_shortcut( obj, "^M", 0 );
     if ( type == FL_HIDDEN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
-		ob->boxtype = FL_NO_BOX;
+		obj->boxtype = FL_NO_BOX;
 	if ( type == FL_TOUCH_BUTTON )
-		ob->want_update = 1;
+		obj->want_update = 1;
 
-    ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
-    sp->event     = FL_DRAW;
-	sp->is_pushed = 0;
-    sp->pixmap    = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
-	sp->cspecv    = NULL;
-	sp-> filename = sp->focus_filename = NULL;
+    obj->spec_size = sizeof *sp;
+    sp = obj->spec = fl_calloc( 1, obj->spec_size );
+    sp->event      = FL_DRAW;
+	sp->is_pushed  = 0;
+    sp->pixmap     = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
+	sp->cspecv     = NULL;
+	sp-> filename  = sp->focus_filename = NULL;
 
 	/* Per default a button reacts to all mouse buttons */
 
@@ -507,9 +505,9 @@ fl_create_generic_button( int          objclass,
 		sp->react_to[ i ] = 1;
 
     if ( fli_cntl.buttonLabelSize )
-		ob->lsize = fli_cntl.buttonLabelSize;
+		obj->lsize = fli_cntl.buttonLabelSize;
 
-    return ob;
+    return obj;
 }
 
 
@@ -518,25 +516,25 @@ fl_create_generic_button( int          objclass,
  ***************************************/
 
 void
-fl_set_button( FL_OBJECT * ob,
+fl_set_button( FL_OBJECT * obj,
 			   int         pushed )
 {
-	SPEC *sp = ob->spec;
+	SPEC *sp = obj->spec;
 
 	pushed = pushed ? 1 : 0;     /* button can only be on or off */
 
     if ( sp->val != pushed )
     {
-		if ( ob->type == FL_RADIO_BUTTON )
+		if ( obj->type == FL_RADIO_BUTTON )
 		{
 			if ( ! pushed )
 				return;
 
-			fli_do_radio_push( ob, ob->x, ob->y, FL_MBUTTON1, NULL );
+			fli_do_radio_push( obj, obj->x, obj->y, FL_MBUTTON1, NULL );
 		}			
 
 		sp->val = pushed;
-		fl_redraw_object( ob );
+		fl_redraw_object( obj );
     }
 }
 
@@ -546,9 +544,9 @@ fl_set_button( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_get_button( FL_OBJECT * ob )
+fl_get_button( FL_OBJECT * obj )
 {
-    return ( ( SPEC * ) ob->spec )->val;
+    return ( ( SPEC * ) obj->spec )->val;
 }
 
 
@@ -558,9 +556,9 @@ fl_get_button( FL_OBJECT * ob )
  ***************************************/
 
 int
-fl_get_button_numb( FL_OBJECT * ob )
+fl_get_button_numb( FL_OBJECT * obj )
 {
-    return ( ( SPEC * ) ob->spec )->mousebut;
+    return ( ( SPEC * ) obj->spec )->mousebut;
 }
 
 
@@ -576,16 +574,16 @@ fl_create_button( int          type,
 				  FL_Coord     h,
 				  const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
     fl_add_button_class( FL_BUTTON, fli_draw_button, 0 );
-    ob = fl_create_generic_button( FL_BUTTON, type, x, y, w, h, label );
-    ob->boxtype = FL_BUTTON_BOXTYPE;
-    ob->col1    = FL_BUTTON_COL1;
-    ob->col2    = FL_BUTTON_COL2;
-    ob->align   = FL_BUTTON_ALIGN;
-    ob->lcol    = FL_BUTTON_LCOL;
-    return ob;
+    obj = fl_create_generic_button( FL_BUTTON, type, x, y, w, h, label );
+    obj->boxtype = FL_BUTTON_BOXTYPE;
+    obj->col1    = FL_BUTTON_COL1;
+    obj->col2    = FL_BUTTON_COL2;
+    obj->align   = FL_BUTTON_ALIGN;
+    obj->lcol    = FL_BUTTON_LCOL;
+    return obj;
 }
 
 
@@ -601,11 +599,11 @@ fl_add_button( int          type,
 			   FL_Coord     h,
 			   const char * label)
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
-    ob = fl_create_button( type, x, y, w, h, label );
-    fl_add_object( fl_current_form, ob );
-    return ob;
+    obj = fl_create_button( type, x, y, w, h, label );
+    fl_add_object( fl_current_form, obj );
+    return obj;
 }
 
 

@@ -74,12 +74,12 @@ main( int    argc,
 	   fl_set_menu_item_shortcut( menu[ i ], 6, "Cc#C#c" );
 	   fl_set_menu_item_shortcut( menu[ i ], 7, "Ww#W#w" );
 
-	   /* initially the last three entries are enabled */
+	   /* Initially the last three entries are enabled */
 
 	   for ( j = 5; j <= 7; j++ )
 		   fl_set_menu_item_mode( menu[ i ], j, FL_PUP_RADIO );
 
-	   /* the first four are disabled except the item (i+1) */
+	   /* The first four are disabled except the item (i+1) */
 
 	   for ( j = 1; j <= 4; j++ )
 		   fl_set_menu_item_mode( menu[ i ], j, FL_PUP_GREY | FL_PUP_RADIO );

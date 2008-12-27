@@ -121,7 +121,9 @@ init_colorpart( void )
 /*--------------- Control Part -------------------*/
 
 FL_FORM *controlform;
-FL_OBJECT *squareobj, *exitobj, *sizeobj;
+FL_OBJECT *squareobj,
+          *exitobj,
+          *sizeobj;
 
 int curobj = 1,
     cursize = 20;
@@ -138,11 +140,7 @@ select_object( FL_OBJECT * ob  FL_UNUSED_ARG,
 }
 
 
-/***************************************
- ***************************************/
-
-void clearit( FL_OBJECT *,
-			  long );
+void clearit( FL_OBJECT *, long );
 
 
 /***************************************
@@ -156,7 +154,10 @@ control_callback( FL_OBJECT * obj,
    if ( obj == sizeobj )
        cursize = 40 * fl_get_slider_value( sizeobj );
    else if ( obj == exitobj )
+   {
+	   fl_finish( );
        exit( 0 );
+   }
 }
 
 

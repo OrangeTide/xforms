@@ -39,7 +39,9 @@ FL_OBJECT *xval,
           *yval;
 
 
-/* callback routine */
+/***************************************
+ * callback routine
+ ***************************************/
 
 void
 positioner_cb( FL_OBJECT * ob,
@@ -54,6 +56,9 @@ positioner_cb( FL_OBJECT * ob,
     fl_set_object_label( yval, str );
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 main( int    argc,

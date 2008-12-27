@@ -49,35 +49,46 @@ char *label3="And now back to the first one:\n\n"
              "for such long labels should guarantee that\n"
              "all of this works without any problem.";
 
+
+/***************************************
+ ***************************************/
+
 int
-main(int argc, char *argv[])
+main( int    argc,
+	  char * argv[ ] )
 {
-   FL_FORM *form;
-   FL_OBJECT *strobj, *but;
+	FL_FORM *form;
+	FL_OBJECT *strobj, *but;
 
-  fl_initialize(&argc, argv, "FormDemo", 0, 0);
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-  form = fl_bgn_form(FL_UP_BOX,400,300);
-    strobj = fl_add_box(FL_DOWN_BOX,10,10,380,240,"Press Next");
-    fl_set_object_lsize(strobj,FL_NORMAL_SIZE);
-    but = fl_add_button(FL_NORMAL_BUTTON,160,260,80,30,"Next");
-  fl_end_form();
+	form = fl_bgn_form( FL_UP_BOX, 400, 300 );
 
-  fl_set_form_hotobject(form, but);
-  fl_show_form(form,FL_PLACE_HOTSPOT,FL_TRANSIENT,"longlabel");
+    strobj = fl_add_box( FL_DOWN_BOX, 10, 10, 380, 240, "Press Next" );
+    fl_set_object_lsize( strobj, FL_NORMAL_SIZE );
 
-  fl_do_forms();
-  fl_set_object_label(strobj,label1);
+    but = fl_add_button( FL_NORMAL_BUTTON, 160, 260, 80, 30, "Next" );
 
-  fl_do_forms();
-  fl_set_object_label(strobj,label2);
+	fl_end_form( );
 
-  fl_do_forms();
-  fl_set_object_label(strobj, "Now we turn to a short label");
-  fl_do_forms();
-  fl_set_object_label(strobj,label3);
+	fl_set_form_hotobject( form, but );
 
-  fl_set_object_label(but,"Quit");
-  fl_do_forms();
-  return 0;
+	fl_show_form( form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "longlabel" );
+	fl_do_forms( );
+
+	fl_set_object_label( strobj,label1 );
+	fl_do_forms( );
+
+	fl_set_object_label( strobj,label2 );
+	fl_do_forms( );
+
+	fl_set_object_label( strobj, "Now we turn to a short label" );
+	fl_do_forms( );
+
+	fl_set_object_label( strobj,label3 );
+	fl_set_object_label( but,"Quit" );
+	fl_do_forms( );
+
+	fl_finish( );
+	return 0;
 }

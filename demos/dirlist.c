@@ -35,61 +35,87 @@
 #include <stdlib.h>
 #include "fd/fbtest_gui.h"
 
+
+/***************************************
+ ***************************************/
+
 static void
-fill_browser(FL_OBJECT *ob)
+fill_browser( FL_OBJECT * ob )
 {
-    FD_fbform *fdui = (FD_fbform *)ob->form->fdui;
+    FD_fbform *fdui = ( FD_fbform * ) ob->form->fdui;
     int nfiles = 0;
-    const FL_Dirlist *dl = fl_get_dirlist(".","*", &nfiles, 0), *ds;
+    const FL_Dirlist *dl = fl_get_dirlist( ".", "*", &nfiles, 0 );
+	FL_Dirlist *ds;
     const FL_Dirlist *dlend = dl + nfiles;
-    char buf[2048];
+    char buf[ 2048 ];
 
-    fl_freeze_form(ob->form);
-    sprintf(buf,"Total %d files", nfiles);
-    fl_set_object_label(fdui->total, buf);
-    fl_clear_browser(fdui->browser);
+    fl_freeze_form( ob->form );
+    sprintf( buf,"Total %d files", nfiles );
+    fl_set_object_label( fdui->total, buf );
+    fl_clear_browser( fdui->browser );
 
-    for (ds = dl; dl < dlend; dl++)
+    for ( ds = dl; dl < dlend; dl++ )
     {
-      sprintf(buf, "%-10s\t\t%5ldK\t%s",dl->name, (dl->dl_size >> 10),
-                 ctime(&dl->dl_mtime)+3);
-      fl_addto_browser_chars(fdui->browser, buf);
+		sprintf( buf, "%-10s\t\t%5ldK\t%s", dl->name, dl->dl_size >> 10,
+                 ctime( &dl->dl_mtime ) + 3 );
+		fl_addto_browser_chars(fdui->browser, buf);
     }
 
-    fl_unfreeze_form(ob->form);
+    fl_unfreeze_form( ob->form );
 
-    fl_free_dirlist((FL_Dirlist*)ds);
-
+    fl_free_dirlist( ds );
 }
+
 
 /* callbacks and freeobj handles for form fbform */
-void sort_method_cb(FL_OBJECT *ob, long data)
+
+/***************************************
+ ***************************************/
+
+void
+sort_method_cb( FL_OBJECT * ob,
+				long        data )
 {
-    fl_set_dirlist_sort(data);
-    fill_browser(ob);
+    fl_set_dirlist_sort( data );
+    fill_browser( ob );
 }
 
-void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			  long        data  FL_UNUSED_ARG )
+
+/***************************************
+ ***************************************/
+
+void
+done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
-    fl_finish();
-    exit(0);
+    fl_finish( );
+    exit( 0 );
 }
 
 
-int main(int argc, char *argv[])
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
-   FD_fbform *fd_fbform;
+	FD_fbform *fd_fbform;
 
-   fl_initialize(&argc, argv, 0, 0, 0);
-   fd_fbform = create_form_fbform();
-   fl_set_browser_fontstyle(fd_fbform->browser, FL_FIXED_STYLE);
+	fl_initialize( &argc, argv, 0, 0, 0 );
+	fd_fbform = create_form_fbform( );
+	fl_set_browser_fontstyle( fd_fbform->browser, FL_FIXED_STYLE );
 
-   /* fill-in form initialization code */
-   fill_browser(fd_fbform->browser);
+	/* fill-in form initialization code */
 
-   /* show the first form */
-   fl_show_form(fd_fbform->fbform,FL_PLACE_CENTERFREE,FL_FULLBORDER,"fbform");
-   fl_do_forms();
-   return 0;
+	fill_browser( fd_fbform->browser );
+
+	/* show the first form */
+
+	fl_show_form( fd_fbform->fbform, FL_PLACE_CENTERFREE, FL_FULLBORDER,
+				  "fbform" );
+
+	fl_do_forms( );
+
+	return 0;
 }

@@ -133,7 +133,7 @@ post( FL_OBJECT * ob,
     }
     else if ( ev == FL_LEAVE )
     {
-		if( ob==b3 )
+		if ( ob == b3 )
 			fl_hide_oneliner( );
 		else
 			fl_hidepup( ob == b1 ? n1 : n2 );
@@ -186,7 +186,7 @@ do_pup( FL_OBJECT * ob,
       subm = fl_newpup( FL_ObjWin( ob ) );
       m    = fl_newpup( FL_ObjWin( ob ) );
 
-/*      fl_addtopup(ssm,"SubSubM%F%t",ssm_cb);*/
+/*      fl_addtopup( ssm, "SubSubM%F%t", ssm_cb );*/
       fl_addtopup( ssm, "SSMItem20%x20%R1" );
       fl_addtopup( ssm, "SSMItem21%x21%r1" );
       fl_addtopup( ssm, "SSMItem22%x22%r1%l" );
@@ -194,7 +194,7 @@ do_pup( FL_OBJECT * ob,
       fl_addtopup( ssm, "SSMItem31%x31%r2" );
       fl_addtopup( ssm, "SSMItem32%x32%b" );
 
-/*      fl_addtopup(subm,"SubMenu%t");*/
+/*      fl_addtopup( subm, "SubMenu%t" );*/
       fl_addtopup( subm, "SMItemA\tAlt-A%x10%h","#a" );
       fl_addtopup( subm, "SMItemB\tAlt-B%x11%h","#b" );
       fl_addtopup( subm, "SM%%ItemC\tAlt-C%x12%h","#c" );
@@ -244,7 +244,6 @@ init_menu( void )
 
     fl_addtopup( mm, "MenuItem1|MenuItem2%m|MenuItem3", smm );
     fl_addtopup( smm, "SubItem1%x11|SubItem2%x12|SubItem3%x13" );
-
 
     /* attach pup to menu */
 
@@ -296,12 +295,12 @@ void create_form_pup( void )
 
 	fl_add_box( FL_UP_BOX, 0, 0, 260, 210, "" );
 
-	done = obj = fl_add_button(FL_NORMAL_BUTTON,150,150,90,35,"Done");
-    fl_set_object_callback(obj,done_cb, 0);
+	done = obj = fl_add_button( FL_NORMAL_BUTTON, 150, 150, 90, 35, "Done" );
+    fl_set_object_callback( obj, done_cb, 0 );
 
-	obj = fl_add_button(FL_MENU_BUTTON,30,90,100,30,"PopUp");
-	fl_set_button_shortcut(obj,"Pp#p",1);
-	fl_set_object_callback(obj, do_pup, 0);
+	obj = fl_add_button( FL_MENU_BUTTON, 30, 90, 100, 30, "PopUp" );
+	fl_set_button_shortcut( obj, "Pp#p",1 );
+	fl_set_object_callback( obj, do_pup, 0 );
 
 	menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 160, 95, 60, 25, "Menu" );
 	fl_set_object_callback( obj, do_menu, 0 );
@@ -313,5 +312,5 @@ void create_form_pup( void )
 	b2 = fl_add_button( FL_NORMAL_BUTTON,  90, 10, 60, 30, "Button2" );
 	b3 = fl_add_button( FL_NORMAL_BUTTON,  160, 10, 60, 30, "Button3" );
 
-	fl_end_form();
+	fl_end_form( );
 }

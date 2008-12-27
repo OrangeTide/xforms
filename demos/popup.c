@@ -54,6 +54,10 @@ static void init_choice( FL_OBJECT * );
 
 FD_pupform *fd_pupform;
 
+
+/***************************************
+ ***************************************/
+
 int
 main( int    argc,
 	  char * argv[ ] )
@@ -80,6 +84,9 @@ main( int    argc,
 
 /********* MENU ***********************************************/
 
+/***************************************
+ ***************************************/
+
 void
 menu_callback( FL_OBJECT * ob,
 			   long        data  FL_UNUSED_ARG )
@@ -97,27 +104,30 @@ menu_callback( FL_OBJECT * ob,
 
 FL_PUP_ENTRY menu_entries[ ] =
 {
-    { "Menu Item 1",   NULL, NULL, 0, { 0, 0 } },
-    { "Menu Item 2",   NULL, NULL, 0, { 0, 0 } },
-    { "_Menu Item 3",  NULL, NULL, 0, { 0, 0 } },
-    { "/_Menu Item 4", NULL, NULL, 0, { 0, 0 } },
-        { "Menu Item 5",  NULL, NULL, 0, { 0, 0 } },
-        { "Menu Item 6",  NULL, NULL, 0, { 0, 0 } },
-        { "/Menu Item 7", NULL, NULL, 0, { 0, 0 } },
-            { "Menu Item 8",  NULL, NULL, 0, { 0, 0 } },
-	        { "/Menu Item 9", NULL, NULL, 0, { 0, 0 } },
-	            { "Menu Item 10", NULL, NULL, 0, { 0, 0 } },
-	            { "Menu Item 11", NULL, NULL, 0, { 0, 0 } },
-                { NULL,           NULL, NULL, 0, { 0, 0 } },
-            { "Menu Item 13",  NULL, NULL, 0, { 0, 0 } },
-            { NULL,            NULL, NULL, 0, { 0, 0 } },
-        { NULL,           NULL, NULL, 0, { 0, 0 } },
-    { "Menu Item 15",  NULL, NULL, 0, { 0, 0 } },
-    { "menu Item 16",  NULL, NULL, 0, { 0, 0 } },
-    { "menu Item 17",  NULL, NULL, 0, { 0, 0 } },
-    { NULL,            NULL, NULL, 0, { 0, 0 } }
+    { "Menu Item 1",   NULL, NULL, 0 },
+    { "Menu Item 2",   NULL, NULL, 0 },
+    { "_Menu Item 3",  NULL, NULL, 0 },
+    { "/_Menu Item 4", NULL, NULL, 0 },
+        { "Menu Item 5",  NULL, NULL, 0 },
+        { "Menu Item 6",  NULL, NULL, 0 },
+        { "/Menu Item 7", NULL, NULL, 0 },
+            { "Menu Item 8",  NULL, NULL, 0 },
+	        { "/Menu Item 9", NULL, NULL, 0 },
+	            { "Menu Item 10", NULL, NULL, 0 },
+	            { "Menu Item 11", NULL, NULL, 0 },
+                { NULL,           NULL, NULL, 0 },
+            { "Menu Item 13",  NULL, NULL, 0 },
+            { NULL,            NULL, NULL, 0 },
+        { NULL,           NULL, NULL, 0 },
+    { "Menu Item 15",  NULL, NULL, 0 },
+    { "menu Item 16",  NULL, NULL, 0 },
+    { "menu Item 17",  NULL, NULL, 0 },
+    { NULL,            NULL, NULL, 0 }
 };
 
+
+/***************************************
+ ***************************************/
 
 static void
 menuitem_entercb( int    n,
@@ -131,6 +141,9 @@ menuitem_entercb( int    n,
 	fl_set_object_label( fdui->status, buf );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 init_menu( FL_OBJECT *menu )
@@ -157,6 +170,9 @@ init_menu( FL_OBJECT *menu )
 static int pupID = -1;
 
 
+/***************************************
+ ***************************************/
+
 static int
 pupitem_cb( int selected )
 {
@@ -171,20 +187,23 @@ pupitem_cb( int selected )
 
 FL_PUP_ENTRY pup_entries[ ] =
 {
-    { "Popup item 1",  pupitem_cb, "1",  FL_PUP_RADIO, { 0, 0 } },
-    { "Popup Item 2",  pupitem_cb, "2",  FL_PUP_RADIO, { 0, 0 } },
-    { "Popup Item 3",  pupitem_cb, "3",  FL_PUP_RADIO, { 0, 0 } },
-    { "/Popup Item 4", pupitem_cb, "4",  0,            { 0, 0 } },
-        { "Popup Item 5", pupitem_cb, NULL, FL_PUP_GRAY, { 0, 0 } },
-        { "Popup Item 6", pupitem_cb, NULL, 0,           { 0, 0 } },
-        { "Popup Item 7", pupitem_cb, NULL, 0,           { 0, 0 } },
-        { "Popup Item 8", pupitem_cb, NULL, 0, { 0, 0 } },
-        { NULL,       NULL,        NULL, 0,              { 0, 0 } },
-    { "Popup Item 10", pupitem_cb, NULL, FL_PUP_GRAY, { 0, 0 } },
-    { "Popup Item 11", pupitem_cb, NULL, 0, { 0, 0 } },
-    { NULL,            NULL,       NULL, 0, { 0, 0 } }
+    { "Popup item 1",  pupitem_cb, "1",  FL_PUP_RADIO },
+    { "Popup Item 2",  pupitem_cb, "2",  FL_PUP_RADIO },
+    { "Popup Item 3",  pupitem_cb, "3",  FL_PUP_RADIO },
+    { "/Popup Item 4", pupitem_cb, "4",  FL_PUP_NONE  },
+        { "Popup Item 5", pupitem_cb, NULL, FL_PUP_GRAY },
+        { "Popup Item 6", pupitem_cb, NULL, 0 },
+        { "Popup Item 7", pupitem_cb, NULL, 0 },
+        { "Popup Item 8", pupitem_cb, NULL, 0 },
+        { NULL,           NULL,       NULL, 0 },
+    { "Popup Item 10", pupitem_cb, NULL, FL_PUP_GRAY },
+    { "Popup Item 11", pupitem_cb, NULL, 0 },
+    { NULL,            NULL,       NULL, 0 }
 };
 
+
+/***************************************
+ ***************************************/
 
 static void
 pup_entercb( int    n,
@@ -197,6 +216,9 @@ pup_entercb( int    n,
 	fl_set_object_label( fdui->status, buf );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 dopup_callback( FL_OBJECT * ob,
@@ -238,6 +260,9 @@ dopup_callback( FL_OBJECT * ob,
 
 /********* End of pup *****************/
 
+/***************************************
+ ***************************************/
+
 static void
 init_choice( FL_OBJECT *ob )
 {
@@ -246,6 +271,9 @@ init_choice( FL_OBJECT *ob )
     fl_addto_choice( ob,"Choice7|Choice8|Choice9" );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 choice_callback( FL_OBJECT * ob,
@@ -265,6 +293,9 @@ choice_callback( FL_OBJECT * ob,
 #include <stdlib.h>
 
 
+/***************************************
+ ***************************************/
+
 FD_pupform *
 create_form_pupform( void )
 {
@@ -273,7 +304,7 @@ create_form_pupform( void )
 
 	fdui->pupform = fl_bgn_form( FL_NO_BOX, 320, 250 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
+	fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
 
 	fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 90, 60, 30, "Menu" );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );

@@ -43,16 +43,16 @@
 /* Header file generated with fdesign. */
 
 typedef struct {
-	FL_FORM *www;
-	void *vdata;
-	long ldata;
-	FL_OBJECT *listbr;
-	FL_OBJECT *cat;
-	FL_OBJECT *file;
-	FL_OBJECT *shown;
+	FL_FORM   * www;
+	void      * vdata;
+	long        ldata;
+	FL_OBJECT * listbr;
+	FL_OBJECT * cat;
+	FL_OBJECT * file;
+	FL_OBJECT * shown;
 } FD_www;
 
-extern FD_www * create_form_www(void);
+extern FD_www *create_form_www( void );
 
 /* Application program begins */
 
@@ -61,198 +61,200 @@ extern FD_www * create_form_www(void);
 typedef struct
 {
     char *cat;
-    char *sites[MAX_SITES][2];
+    char *sites[ MAX_SITES ][ 2 ];
 } WWW;
 
 /* real program should have these on disks */
 
-static WWW www_sites[] =
+static WWW www_sites[ ] =
 {
     {
-      "XForms App.",
-      {
-	  {
-	      "@b@C4XForms Home Page",
-	      "http://world.std.com/~xforms"
-	  },
-	  {
-	      "UnixCockpit - File Manager",
-	      "ftp://ftp.uni-wuppertal.de/pub/unix/cockpit"
-	  },
-	  {
-	      "xfmail - mailer ",
-	      "http://Burka.NetVision.net.il/xfmail/xfmail.html"
-	  },
-	  {
-	      "XRPlay - RPlay audio",
-	      "ftp://ftp.sdsu.edu/pub/rplay"
-	  },
-	  {
-	      "Lyx - LaTeX Frontend",
-	      "http://www.lehigh.edu/~dlj0/LyriX.html"
-	  },
-	  {
-	      "XWatch - Sys Monitor",
-	      "http://www.icce.rug.nl/docs/programs/xwatch/xwatch.html"
-	  },
-	  {
-	      "xamixer - Sound mixer",
-	      "ftp://sunsite.unc.edu/pub/Linux/apps/sound/mixers"
-	  },
-	  {
-	      "pyxforms - A Python binding to xforms",
-	      "ftp://ultra7.unl.edu.ar/pub/pyxforms"
-	  },
-	  {
-	      "xirc - An IRC client with GUI",
-	      "http://www.bitgate.com/xirc"
-	  },
-	  {
-	      "xdata - An appointment manager",
-	      "ftp://jurassic.upr.clu.edu/pub/xforms"
-	  },
-	  {
-	      "xfmixer - Audio mixer",
-	      "http://linux.ms.mff.cuni.cz/~rdou3187/xfmix/xfmix.html"
-	  },
-	  {
-	      "CaXmix - Audio mixer",
-	      "http://synergy.caltech.edu/~john/programs.html"
-	  },
-	  {
-	      NULL,
-	      NULL,
-	  }
-      }
+		"XForms App.",
+		{
+			{
+				"@b@C4XForms Home Page",
+				"http://world.std.com/~xforms"
+			},
+			{
+				"UnixCockpit - File Manager",
+				"ftp://ftp.uni-wuppertal.de/pub/unix/cockpit"
+			},
+			{
+				"xfmail - mailer ",
+				"http://Burka.NetVision.net.il/xfmail/xfmail.html"
+			},
+			{
+				"XRPlay - RPlay audio",
+				"ftp://ftp.sdsu.edu/pub/rplay"
+			},
+			{
+				"Lyx - LaTeX Frontend",
+				"http://www.lehigh.edu/~dlj0/LyriX.html"
+			},
+			{
+				"XWatch - Sys Monitor",
+				"http://www.icce.rug.nl/docs/programs/xwatch/xwatch.html"
+			},
+			{
+				"xamixer - Sound mixer",
+				"ftp://sunsite.unc.edu/pub/Linux/apps/sound/mixers"
+			},
+			{
+				"pyxforms - A Python binding to xforms",
+				"ftp://ultra7.unl.edu.ar/pub/pyxforms"
+			},
+			{
+				"xirc - An IRC client with GUI",
+				"http://www.bitgate.com/xirc"
+			},
+			{
+				"xdata - An appointment manager",
+				"ftp://jurassic.upr.clu.edu/pub/xforms"
+			},
+			{
+				"xfmixer - Audio mixer",
+				"http://linux.ms.mff.cuni.cz/~rdou3187/xfmix/xfmix.html"
+			},
+			{
+				"CaXmix - Audio mixer",
+				"http://synergy.caltech.edu/~john/programs.html"
+			},
+			{
+				NULL,
+				NULL,
+			}
+		}
     },
 
     {
-	"X related",
-	{
-	    {
-		"@b@C4XForms Home Page",
-		"http://bragg.phys.uwm.edu/xforms"
-	    },
-	    {
-		"X Journal",
-		"http://landru.unx.com/SIGS/TXJ/docs/txjhome.html"
-	    },
-	    {
-		"X Archive Site",
-		"ftp://ftp.x.org"
-	    },
-	    {
-		"OpenGL and X",
-		"http://www.sgi.com/Technology/openGL/opengl.html",
-	    },
-	    {
-		NULL,
-		NULL
-	    }
-	}
+		"X related",
+		{
+			{
+				"@b@C4XForms Home Page",
+				"http://bragg.phys.uwm.edu/xforms"
+			},
+			{
+				"X Journal",
+				"http://landru.unx.com/SIGS/TXJ/docs/txjhome.html"
+			},
+			{
+				"X Archive Site",
+				"ftp://ftp.x.org"
+			},
+			{
+				"OpenGL and X",
+				"http://www.sgi.com/Technology/openGL/opengl.html",
+			},
+			{
+				NULL,
+				NULL
+			}
+		}
     },
 
     /* useful FAQS */
 
     {
-	"All FAQs",
-	{
-	    {
-		"Usenet FAQs",
-		"http://www.cis.ohio-state.edu/hypertext/faq/usenet"
-	    },
-	    {
-		NULL,
-		NULL
-	    }
-	}
+		"All FAQs",
+		{
+			{
+				"Usenet FAQs",
+				"http://www.cis.ohio-state.edu/hypertext/faq/usenet"
+			},
+			{
+				NULL,
+				NULL
+			}
+		}
     },
 
     /* Sports related www sites */
 
     {
-	"Sports",
-	{
-	    {
-		"SatchelSports",
-		"http://www.starwave.com/SatchelSports.html"
-	    },
-	    {
-		"Game Recap",
-		"http://www.starwave.com/SatchelSports.html"
-	    },
-	    {
-		"Patricia's NBA Daily News",
-		"http://www.primenet.com/~terra/news.html"
-	    },
-	    {
-		"Houston Rockets",
-		"http://hyrax.med.uth.tmc.edu/misc/rockets.html"
-	    },
-	    {
-		NULL,
-		NULL
-	    }
-	}
+		"Sports",
+		{
+			{
+				"SatchelSports",
+				"http://www.starwave.com/SatchelSports.html"
+			},
+			{
+				"Game Recap",
+				"http://www.starwave.com/SatchelSports.html"
+			},
+			{
+				"Patricia's NBA Daily News",
+				"http://www.primenet.com/~terra/news.html"
+			},
+			{
+				"Houston Rockets",
+				"http://hyrax.med.uth.tmc.edu/misc/rockets.html"
+			},
+			{
+				NULL,
+				NULL
+			}
+		}
     },
 
     /* money */
 
     {
-	"Financial",
-	{
-	    {
-		"@f Holt Report",
-		"ftp://ftp.netcom.com/pub/ge/geoholt/holt_rpt.htm"
-	    },
-	    {
-		NULL,
-		NULL,
-	    }
-	}
+		"Financial",
+		{
+			{
+				"@f Holt Report",
+				"ftp://ftp.netcom.com/pub/ge/geoholt/holt_rpt.htm"
+			},
+			{
+				NULL,
+				NULL,
+			}
+		}
     },
 
     {
-       "Travel",
-       {
-	   {
-	       "New York",
-	       "http://www.panix.com/clay/nyc.html"
-	   },
-	   {
-	       NULL,
-	       NULL
-	   }
-       }
+		"Travel",
+		{
+			{
+				"New York",
+				"http://www.panix.com/clay/nyc.html"
+			},
+			{
+				NULL,
+				NULL
+			}
+		}
     },
 
     /* things that do not belong to any of the above */
 
     {
-	"Misc",
-	{
-	    {
-		"Star Trek: Voyager",
-		"http://voyager.paramount.com"
-	    },
-	    {
-		"Linux Journal",
-		"http://www.ssc.com/lj/mags.html"
-	    },
-	    {
-		NULL,
-		NULL
-	    }
-	}
+		"Misc",
+		{
+			{
+				"Star Trek: Voyager",
+				"http://voyager.paramount.com"
+			},
+			{
+				"Linux Journal",
+				"http://www.ssc.com/lj/mags.html"
+			},
+			{
+				NULL,
+				NULL
+			}
+		}
     },
 
     /* sentinel */
-    {0, {{0, 0}}}
+
+    { NULL, { { NULL, NULL } } }
 };
 
 
 FD_www *ui;
 static int show_sites;
+
 
 /***************************************
  * initialize and show how many categories we have got
@@ -274,7 +276,7 @@ init_cat( void )
  ***************************************/
 
 void
-init_file_menu(void)
+init_file_menu( void )
 {
     fl_fit_object_label( ui->file, 1, 0 );
 	fl_addto_menu( ui->file, "Save|Load|Quit" );

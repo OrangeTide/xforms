@@ -30,6 +30,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "crossbut.h"
 #include <stdlib.h>
@@ -38,75 +39,96 @@
 #endif
 
 
-#ifndef FD_newbut_h_
-#define FD_newbut_h
-
 /**** Forms and Objects ****/
+
 typedef struct {
-	FL_FORM *newbut;
-	void *vdata;
-	long ldata;
-	FL_OBJECT *bexit;
+	FL_FORM   * newbut;
+	void      * vdata;
+	long        ldata;
+	FL_OBJECT * bexit;
 } FD_newbut;
 
-extern FD_newbut *create_form_newbut(void);
-#endif /* FD_newbut_h_ */
+extern FD_newbut *create_form_newbut( void );
 
-int main(int argc, char *argv[])
+
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
-      FD_newbut *cbform ;
+	FD_newbut *cbform ;
 
-      fl_initialize(&argc, argv, "FormDemo", 0, 0);
-      cbform = create_form_newbut();
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	cbform = create_form_newbut( );
 
-      fl_show_form(cbform->newbut, FL_PLACE_CENTER, FL_TRANSIENT, "test");
+	fl_show_form( cbform->newbut, FL_PLACE_CENTER, FL_TRANSIENT, "test" );
 
-      while(fl_do_forms() != cbform->bexit)
-          ;
-      fl_hide_form(cbform->newbut);
-      fl_free_form(cbform->newbut);
-      free(cbform);
+	while( fl_do_forms( ) != cbform->bexit )
+		/* empty */ ;
 
-      fprintf(stderr,"sleeping\n");
-      sleep(2);
+	fl_hide_form( cbform->newbut );
+	fl_free_form( cbform->newbut );
+	free( cbform );
 
-      cbform = create_form_newbut();
-      fl_show_form(cbform->newbut, FL_PLACE_CENTER, 0, 0);
-      while(fl_do_forms() != cbform->bexit)
-          ;
-      return 0;
+	fprintf( stderr,"sleeping\n" );
+	sleep( 2 );
+
+	cbform = create_form_newbut( );
+	fl_show_form( cbform->newbut, FL_PLACE_CENTER, 0, 0 );
+	while( fl_do_forms() != cbform->bexit )
+		/* empty */;
+
+	fl_finish( );
+	return 0;
 }
 
 
-FD_newbut *create_form_newbut(void)
+/***************************************
+ ***************************************/
+
+FD_newbut *
+create_form_newbut( void )
 {
-  FL_OBJECT *obj;
-  FD_newbut *fdui = calloc(1, sizeof(FD_newbut));
+	FL_OBJECT *obj;
+	FD_newbut *fdui = calloc( 1, sizeof *fdui );
 
-  fdui->newbut = fl_bgn_form(FL_NO_BOX, 310, 190);
-  obj = fl_add_box(FL_UP_BOX,0,0,310,190,"");
-  obj = fl_add_box(FL_FRAME_BOX,40,45,100,120,"");
-  obj = fl_add_text(FL_NORMAL_TEXT,50,155,50,20,"CrossB");
-    fl_set_object_boxtype(obj,FL_FLAT_BOX);
-    fl_set_object_lstyle(obj,FL_BOLD_STYLE);
-  obj = fl_add_crossbutton(FL_RADIO_BUTTON,50,115,80,30,"cross1");
-    fl_set_object_color(obj,FL_COL1,FL_RED);
-  obj = fl_add_crossbutton(FL_RADIO_BUTTON,50,85,80,30,"Button");
-    fl_set_object_color(obj,FL_COL1,FL_GREEN);
-  obj = fl_add_crossbutton(FL_RADIO_BUTTON,50,55,80,30,"Button");
-    fl_set_object_color(obj,FL_COL1,FL_BLUE);
-  obj = fl_add_box(FL_FRAME_BOX,180,45,100,120,"");
-  obj = fl_add_text(FL_NORMAL_TEXT,190,155,50,20,"CrossB");
-    fl_set_object_boxtype(obj,FL_FLAT_BOX);
-    fl_set_object_lstyle(obj,FL_BOLD_STYLE);
-  obj = fl_add_crossbutton(FL_PUSH_BUTTON,190,115,80,30,"Button");
-    fl_set_object_color(obj,FL_COL1,FL_RED);
-  obj = fl_add_crossbutton(FL_PUSH_BUTTON,190,85,90,30,"Button");
-    fl_set_object_color(obj,FL_COL1,FL_GREEN);
-  obj = fl_add_crossbutton(FL_PUSH_BUTTON,190,55,80,30,"Button");
-    fl_set_object_color(obj,FL_COL1,FL_BLUE);
-  fdui->bexit = obj = fl_add_button(FL_NORMAL_BUTTON,125,10,65,25,"Exit");
-  fl_end_form();
+	fdui->newbut = fl_bgn_form( FL_NO_BOX, 310, 190 );
 
-  return fdui;
+	fl_add_box( FL_UP_BOX, 0, 0, 310, 190, "" );
+	fl_add_box( FL_FRAME_BOX, 40, 45, 100, 120, "" );
+
+	obj = fl_add_text( FL_NORMAL_TEXT, 50, 155, 50, 20, "CrossB" );
+    fl_set_object_boxtype( obj, FL_FLAT_BOX );
+    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
+
+	obj = fl_add_crossbutton( FL_RADIO_BUTTON, 50, 115, 80, 30, "cross1" );
+    fl_set_object_color( obj, FL_COL1, FL_RED );
+
+	obj = fl_add_crossbutton( FL_RADIO_BUTTON, 50, 85, 80, 30, "Button" );
+    fl_set_object_color( obj, FL_COL1, FL_GREEN );
+
+	obj = fl_add_crossbutton( FL_RADIO_BUTTON, 50, 55, 80, 30, "Button" );
+    fl_set_object_color( obj, FL_COL1, FL_BLUE );
+
+	obj = fl_add_box( FL_FRAME_BOX, 180, 45, 100, 120, "" );
+
+	obj = fl_add_text( FL_NORMAL_TEXT, 190, 155, 50, 20, "CrossB" );
+    fl_set_object_boxtype( obj, FL_FLAT_BOX );
+    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
+
+	obj = fl_add_crossbutton( FL_PUSH_BUTTON, 190, 115, 80, 30, "Button" );
+    fl_set_object_color( obj, FL_COL1, FL_RED );
+
+	obj = fl_add_crossbutton( FL_PUSH_BUTTON, 190, 85, 90, 30, "Button" );
+    fl_set_object_color( obj, FL_COL1, FL_GREEN );
+
+	obj = fl_add_crossbutton( FL_PUSH_BUTTON, 190, 55, 80, 30, "Button" );
+    fl_set_object_color( obj, FL_COL1, FL_BLUE );
+
+	fdui->bexit = fl_add_button( FL_NORMAL_BUTTON, 125, 10, 65, 25, "Exit" );
+	fl_end_form( );
+
+	return fdui;
 }

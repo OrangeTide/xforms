@@ -31,6 +31,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdlib.h>
 #include "include/forms.h"
 #include "bm1.xbm"
@@ -39,101 +40,137 @@
 int animated;
 
 typedef struct {
-	FL_FORM *cursor;
-	void *vdata;
-	char *cdata;
-	long ldata;
+	FL_FORM * cursor;
+	void    * vdata;
+	char    * cdata;
+	long      ldata;
 } FD_cursor;
 
-extern FD_cursor * create_form_cursor(void);
+extern FD_cursor * create_form_cursor( void );
 
 /* callbacks for form cursor */
-void setcursor_cb(FL_OBJECT *ob, long data)
+
+/***************************************
+ ***************************************/
+
+void
+setcursor_cb( FL_OBJECT * ob,
+			  long        data )
 {
-   fl_set_cursor(FL_ObjWin(ob), data);
-}
-
-void setbitmapcursor_cb( FL_OBJECT * ob,
-						 long        data  FL_UNUSED_ARG )
-{
-   static int bitmapcur;
-
-   if(!bitmapcur)
-      bitmapcur = fl_create_bitmap_cursor((char *)bm1_bits, (char *)bm2_bits,
-                                          bm1_width, bm1_height,
-                                          bm1_width/2, bm1_height/2);
-   fl_set_cursor(FL_ObjWin(ob), bitmapcur);
-
+	fl_set_cursor( FL_ObjWin( ob ), data );
 }
 
 
-void setanimatedcursor_cb( FL_OBJECT * ob,
-						   long        data  FL_UNUSED_ARG )
+/***************************************
+ ***************************************/
+
+void
+setbitmapcursor_cb( FL_OBJECT * ob,
+					long        data  FL_UNUSED_ARG )
 {
-    fl_set_cursor(FL_ObjWin(ob), animated);
+	static int bitmapcur;
+
+	if ( ! bitmapcur )
+		bitmapcur = fl_create_bitmap_cursor( ( char * ) bm1_bits,
+											 ( char * ) bm2_bits,
+											 bm1_width, bm1_height,
+											 bm1_width / 2, bm1_height / 2 );
+	fl_set_cursor( FL_ObjWin( ob ), bitmapcur );
+
 }
+
+
+/***************************************
+ ***************************************/
+
+void
+setanimatedcursor_cb( FL_OBJECT * ob,
+					  long        data  FL_UNUSED_ARG )
+{
+    fl_set_cursor( FL_ObjWin(ob), animated );
+}
+
+
+/***************************************
+ ***************************************/
 
 void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 			  long        data  FL_UNUSED_ARG )
 {
-    fl_finish();
-    exit(0);
+    fl_finish( );
+    exit( 0 );
 }
 
 
-int curs[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,-1};
 
-int main(int argc, char *argv[])
+int curs[ ] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, -1 };
+
+
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
-   FD_cursor *fd_cursor;
+	FD_cursor *fd_cursor;
 
-   fl_set_border_width(-2);
-   fl_initialize(&argc, argv, "FormDemo", 0, 0);
-   fd_cursor = create_form_cursor();
+	fl_set_border_width( -2 );
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	fd_cursor = create_form_cursor( );
 
-   /* fill-in form initialization code */
-   fl_set_cursor_color(XC_watch,FL_BLACK, FL_RED);
+	/* fill-in form initialization code */
 
-   animated = fl_create_animated_cursor(curs, 100);
+	fl_set_cursor_color( XC_watch, FL_BLACK, FL_RED );
 
-   fl_show_form(fd_cursor->cursor,FL_PLACE_CENTER,FL_FULLBORDER,"cursor");
-   fl_do_forms();
-   return 0;
+	animated = fl_create_animated_cursor( curs, 100 );
+
+	fl_show_form( fd_cursor->cursor, FL_PLACE_CENTER, FL_FULLBORDER, "cursor" );
+	fl_do_forms( );
+	return 0;
 }
 
 
-FD_cursor *create_form_cursor(void)
+/***************************************
+ ***************************************/
+
+FD_cursor *
+create_form_cursor( void )
 {
-  FL_OBJECT *obj;
-  FD_cursor *fdui = (FD_cursor *) fl_calloc(1, sizeof(*fdui));
+	FL_OBJECT *obj;
+	FD_cursor *fdui = fl_calloc(1, sizeof *fdui );
 
-  fdui->cursor = fl_bgn_form(FL_NO_BOX, 325, 175);
-  obj = fl_add_box(FL_UP_BOX,0,0,325,175,"");
-  obj = fl_add_frame(FL_EMBOSSED_FRAME,10,10,305,120,"");
+	fdui->cursor = fl_bgn_form( FL_NO_BOX, 325, 175 );
 
-  obj = fl_add_button(FL_NORMAL_BUTTON,20,20,50,25,"Hand");
-    fl_set_object_callback(obj,setcursor_cb,XC_hand2);
-  obj = fl_add_button(FL_NORMAL_BUTTON,70,20,50,25,"Watch");
-    fl_set_object_callback(obj,setcursor_cb,XC_watch);
-  obj = fl_add_button(FL_NORMAL_BUTTON,120,20,60,25,"Invisible");
-    fl_set_object_callback(obj,setcursor_cb,FL_INVISIBLE_CURSOR);
-  obj = fl_add_button(FL_NORMAL_BUTTON,180,20,62,25,"Animated");
-    fl_set_object_callback(obj,setanimatedcursor_cb,0);
-  obj = fl_add_button(FL_NORMAL_BUTTON,242,20,62,25,"BitmapCur");
-    fl_set_object_callback(obj,setbitmapcursor_cb,0);
+	fl_add_box( FL_UP_BOX, 0 ,0, 325, 175, "" );
+	fl_add_frame( FL_EMBOSSED_FRAME, 10, 10, 305, 120, "" );
 
-  obj = fl_add_button(FL_NORMAL_BUTTON,90,70,140,50,"DefaultCursor");
-    fl_set_button_shortcut(obj,"Dd#d",1);
-    fl_set_object_callback(obj,setcursor_cb,FL_DEFAULT_CURSOR);
+	obj = fl_add_button( FL_NORMAL_BUTTON, 20, 20, 50, 25, "Hand" );
+    fl_set_object_callback( obj, setcursor_cb, XC_hand2 );
 
-  obj = fl_add_button(FL_NORMAL_BUTTON,250,140,60,25,"Done");
-    fl_set_object_callback(obj,done_cb,0);
-  fl_end_form();
+	obj = fl_add_button( FL_NORMAL_BUTTON, 70, 20, 50, 25, "Watch" );
+    fl_set_object_callback( obj, setcursor_cb, XC_watch );
 
-  fl_adjust_form_size(fdui->cursor);
+	obj = fl_add_button( FL_NORMAL_BUTTON, 120, 20, 60, 25, "Invisible" );
+    fl_set_object_callback( obj, setcursor_cb, FL_INVISIBLE_CURSOR );
 
-  return fdui;
+	obj = fl_add_button( FL_NORMAL_BUTTON, 180, 20, 62, 25, "Animated" );
+    fl_set_object_callback( obj, setanimatedcursor_cb, 0 );
 
+	obj = fl_add_button( FL_NORMAL_BUTTON, 242, 20, 62, 25, "BitmapCur" );
+    fl_set_object_callback( obj, setbitmapcursor_cb, 0 );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 90, 70, 140, 50, "DefaultCursor" );
+    fl_set_button_shortcut( obj, "Dd#d", 1);
+    fl_set_object_callback( obj, setcursor_cb, FL_DEFAULT_CURSOR );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 140, 60, 25, "Done" );
+    fl_set_object_callback( obj, done_cb, 0 );
+
+	fl_end_form( );
+
+	fl_adjust_form_size( fdui->cursor );
+
+	return fdui;
 }
 /*---------------------------------------*/
-

@@ -47,7 +47,11 @@ FL_OBJECT *barchart,
 
 void create_form_form( void );
 
-void fill_in( FL_OBJECT *ob )
+/***************************************
+ ***************************************/
+
+void
+fill_in( FL_OBJECT * ob )
 {
    int c = FL_BLACK;
 
@@ -59,12 +63,17 @@ void fill_in( FL_OBJECT *ob )
    fl_add_chart_value( ob, 12.0, "item 6", ++c );
 }
 
+
+/***************************************
+ ***************************************/
+
 int
 main( int    argc,
 	  char * argv[ ] )
 {
 
    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+
    create_form_form( );
    fill_in( barchart );
    fill_in( horbarchart );
@@ -74,47 +83,58 @@ main( int    argc,
    fill_in( spikechart );
    fill_in( piechart );
    fill_in( specialpiechart );
+
    fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Charts" );
+
    fl_do_forms( );
+
    return 0;
 }
 
-void create_form_form( void )
+
+/***************************************
+ ***************************************/
+
+void
+create_form_form( void )
 {
-  FL_OBJECT *obj;
+	FL_OBJECT *obj;
 
-  form = fl_bgn_form( FL_NO_BOX, 940, 360 );
+	form = fl_bgn_form( FL_NO_BOX, 940, 360 );
 
-  obj = fl_add_box( FL_UP_BOX, 0, 0, 940, 360, "" );
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 940, 360, "" );
 
-  barchart = obj = fl_add_chart( FL_BAR_CHART, 20, 20, 210, 140, "BAR_CHART" );
-  fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
+	barchart = obj = fl_add_chart( FL_BAR_CHART, 20, 20, 210, 140,
+								   "BAR_CHART" );
+	fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
 
-  linechart = obj = fl_add_chart( FL_LINE_CHART, 250, 20, 210, 140,
-								  "LINE_CHART" );
-  fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
+	linechart = obj = fl_add_chart( FL_LINE_CHART, 250, 20, 210, 140,
+									"LINE_CHART" );
+	fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
 
-  filledchart = obj = fl_add_chart( FL_FILLED_CHART, 250, 190, 210, 140,
-									"FILLED_CHART" );
-  fl_set_object_boxtype( obj ,FL_RSHADOW_BOX );
+	filledchart = obj = fl_add_chart( FL_FILLED_CHART, 250, 190, 210, 140,
+									  "FILLED_CHART" );
+	fl_set_object_boxtype( obj ,FL_RSHADOW_BOX );
 
-  piechart = obj = fl_add_chart( FL_PIE_CHART, 480, 190, 210, 140,
-								 "PIE_CHART" );
-  fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
+	piechart = obj = fl_add_chart( FL_PIE_CHART, 480, 190, 210, 140,
+								   "PIE_CHART" );
+	fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
 
-  specialpiechart = obj = fl_add_chart( FL_SPECIALPIE_CHART, 710, 20, 210, 140,
-										"SPECIALPIE_CHART" );
-  fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
+	specialpiechart = obj = fl_add_chart( FL_SPECIALPIE_CHART,
+										  710, 20, 210, 140,
+										  "SPECIALPIE_CHART" );
+	fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
 
-  horbarchart = obj = fl_add_chart( FL_HORBAR_CHART, 20, 190, 210, 140,
-									"HORBAR_CHART" );
-  fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
+	horbarchart = obj = fl_add_chart( FL_HORBAR_CHART, 20, 190, 210, 140,
+									  "HORBAR_CHART" );
+	fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
 
-  spikechart = obj = fl_add_chart( FL_SPIKE_CHART, 480, 20, 210, 140,
-								   "SPIKE_CHART" );
-  fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
+	spikechart = obj = fl_add_chart( FL_SPIKE_CHART, 480, 20, 210, 140,
+									 "SPIKE_CHART" );
+	fl_set_object_boxtype( obj, FL_RSHADOW_BOX );
 
-  exitbut = obj = fl_add_button( FL_NORMAL_BUTTON, 750, 260, 140, 30, "Exit" );
+	exitbut = obj = fl_add_button( FL_NORMAL_BUTTON, 750, 260, 140, 30,
+								   "Exit" );
 
-  fl_end_form( );
+	fl_end_form( );
 }

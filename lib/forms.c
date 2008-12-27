@@ -12,11 +12,8 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -33,7 +30,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.54 2008/10/20 11:00:46 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.55 2008/12/27 22:20:49 jtt Exp $";
 #endif
 
 
@@ -340,22 +337,28 @@ fl_end_form( void )
  * Reopens a form for input
  ***************************************/
 
-void
+FL_FORM *
 fl_addto_form( FL_FORM * form )
 {
     if ( ! form )
     {
 		M_err( "fl_addto_form", "NULL form." );
-		return;
+		return NULL;
     }
 
 	/* Can't open a form for adding objects when another form is already
 	   opened for the same purpose */
 
-    if ( fl_current_form )
+    if ( fl_current_form && fl_current_form != form )
+	{
 		M_err( "fl_addto_form", "You forgot to call fl_end_form" );
+		return NULL;
+	}
 
-    fl_current_form = form;
+	if ( fl_current_form )
+		M_warn( "fl_addto_form", "Form was never closed." );
+
+    return fl_current_form = form;
 }
 
 
@@ -381,9 +384,15 @@ fl_bgn_group( void )
     }
 
     fli_current_group = fl_make_object( FL_BEGIN_GROUP, 0, 0, 10, 10, 0,
-									   "", NULL );
+										"", NULL );
     fli_current_group->group_id = id++;
+
+	/* Temporarily set the object class to something invalid since
+	   fl_add_object() will not add objects of class FL_BEGIN_GROUP */
+
+	fli_current_group->objclass = FL_INVALID_CLASS;
     fl_add_object( fl_current_form, fli_current_group );
+	fli_current_group->objclass = FL_BEGIN_GROUP;
 
     return fli_current_group;
 }
@@ -394,9 +403,9 @@ fl_bgn_group( void )
  ***************************************/
 
 FL_OBJECT *
-fl_end_group( void )
+fli_end_group( void )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
     int id;
 
     if ( ! fl_current_form )
@@ -411,15 +420,21 @@ fl_end_group( void )
 		return NULL;
     }
 
-	ob = fli_current_group;
-    id = ob->group_id;
+	obj = fli_current_group;
+    id = obj->group_id;
     fli_current_group = NULL;
 
     if ( ! reopened_group )
     {
-		ob = fl_make_object( FL_END_GROUP, 0, 0, 0, 0, 0, "", NULL );
-		ob->group_id = id;
-		fl_add_object( fl_current_form, ob );
+		obj = fl_make_object( FL_END_GROUP, 0, 0, 0, 0, 0, "", NULL );
+		obj->group_id = id;
+
+		/* Temporarily set the object class to something invalid since
+		   fl_add_object() will not add objects of class FL_END_GROUP */
+
+		obj->objclass = FL_INVALID_CLASS;
+		fl_add_object( fl_current_form, obj );
+		obj->objclass = FL_END_GROUP;
     }
 
     if ( reopened_group == 3 )
@@ -427,7 +442,14 @@ fl_end_group( void )
 
     reopened_group = 0;
 
-    return ob;
+	return obj;
+}
+
+
+void
+fl_end_group( void )
+{
+	fli_end_group( );
 }
 
 
@@ -1657,12 +1679,12 @@ do_shortcut( FL_FORM  * form,
 		{
 			/* always a good idea to make Alt_k case insensitive */
 
-			key1 = FL_ALT_VAL
+			key1 = FL_ALT_MASK
 				   + ( islower( key ) ? toupper( key ) : tolower( key ) );
-			key2 = key + FL_ALT_VAL;
+			key2 = key + FL_ALT_MASK;
 		}
 		else
-			key1 = key2 = key + FL_ALT_VAL;
+			key1 = key2 = key + FL_ALT_MASK;
     }
 
     M_info( "do_shortcut", "win=%lu key=%d %d %d",
@@ -1913,7 +1935,7 @@ fli_handle_form( FL_FORM * form,
 			fli_mouseobj = NULL;
 			break;
 
-		case FL_PUSH:		/* Mouse was pushed inside the form */
+		case FL_PUSH:		/* Mouse button was pushed inside the form */
 
 			/* Change focus: If an input object has the focus make it lose it
 			   (and thus report changes) and then set the focus to either the
@@ -1942,7 +1964,7 @@ fli_handle_form( FL_FORM * form,
 				break;
 
 			/* Radio button only get handled on button release, other objects
-			   get the button press unless focus is overriden  */
+			   get the button press unless focus is overriden */
 
 			if (    ! obj->radio
 				 && (    ! obj->input
@@ -2015,7 +2037,7 @@ fli_handle_form( FL_FORM * form,
 
 		case FL_MOVEORIGIN:
 		case FL_OTHER:
-			/* need to dispatch it thru all objects and monitor the status of
+			/* Need to dispatch it thru all objects and monitor the status of
 			   forms as it may get closed */
 
 			for ( obj = form->first; obj && form->visible == FL_VISIBLE;
@@ -2024,49 +2046,6 @@ fli_handle_form( FL_FORM * form,
 					fli_handle_object( obj, event, x, y, key, xev );
 			break;
     }
-}
-
-
-static long lastsec[ FLI_NTIMER ];
-static long lastusec[ FLI_NTIMER ];
-
-typedef struct
-{
-    long sec;
-    long usec;
-} TimeVal;
-
-static TimeVal tp;
-
-
-/***************************************
- * Resets the timer
- ***************************************/
-
-void
-fli_reset_time( int n )
-{
-	if ( n >= 0 )
-	{
-		n %= FLI_NTIMER;
-		fl_gettime( lastsec + n, lastusec + n );
-	}
-}
-
-
-/***************************************
- * Returns the time passed since the last call
- ***************************************/
-
-double
-fli_time_passed( int n )
-{
-	if ( n < 0 )
-		return -1.0;
-
-    n %= FLI_NTIMER;
-    fl_gettime( &tp.sec, &tp.usec );
-    return tp.sec - lastsec[ n ] + 1.0e-6 * ( tp.usec - lastusec[ n ] );
 }
 
 
@@ -2485,31 +2464,31 @@ fli_handle_idling( XEvent * xev,
 	{
 		fl_get_form_mouse( mouseform, &fli_mousex, &fli_mousey, &fli_keymask );
 		fli_query_age = 0;
-		st_xev.xmotion.time = CurrentTime;
+		xev->xmotion.time = CurrentTime;
 	}
 	else
-		st_xev.xmotion.time += msec;
+		xev->xmotion.time += msec;
 
 	/* FL_UPDATE and automatic handlers as well as idle callbacks can expect
 	   a synthetic MotionNotify event, make it up, then call the handler */
 
-	st_xev.type            = MotionNotify;
-	st_xev.xany.window     = mouseform ? mouseform->window : None;
-	st_xev.xany.send_event = 1;
-	st_xev.xmotion.state   = fli_keymask;
-	st_xev.xmotion.x       = fli_mousex;
-	st_xev.xmotion.y       = fli_mousey;
-	st_xev.xmotion.is_hint = 0;
+	xev->type            = MotionNotify;
+	xev->xany.window     = mouseform ? mouseform->window : None;
+	xev->xany.send_event = 1;
+	xev->xmotion.state   = fli_keymask;
+	xev->xmotion.x       = fli_mousex;
+	xev->xmotion.y       = fli_mousey;
+	xev->xmotion.is_hint = 0;
 
 	/* We need to send an FL_UPDATE while a mouse button is down to "pushable"
-	   objects that want it (currently touch buttons, slider, choice, textbox
+	   objects that want it (currently touch button, slider, choice, textbox
 	   and counter objects) */
 
 	if (    button_down( fli_keymask )
 		 && ( fli_pushobj  && fli_pushobj->want_update )
 		 && mouseform )
 		fli_handle_form( mouseform, FL_UPDATE,
-						 xmask2key( fli_keymask ), &st_xev );
+						 xmask2key( fli_keymask ), xev );
 
 	/* Handle automatic tasks */
 
@@ -3146,6 +3125,10 @@ fl_finish( void )
 
 	fli_goodies_cleanup( );
 
+	/* Release memory used by the popup system */
+
+	fli_popup_finish( );
+
 	/* Release memory used for the copy of the command line arguments */
 
 	fli_free_cmdline_args( );
@@ -3371,38 +3354,41 @@ fli_recount_auto_objects( void )
  * Function for adding an object to the (currently open) group
  ***************************************/
 
-void
+FL_OBJECT *
 fl_addto_group( FL_OBJECT * group )
 {
     if ( group == NULL )
     {
 		M_err( "fl_addto_group", "NULL group." );
-		return;
+		return NULL;
     }
 
     if ( group->objclass != FL_BEGIN_GROUP )
     {
 		M_err( "fl_addto_group", "Parameter is not a group object." );
-		return;
+		return NULL;
     }
 
     if ( fl_current_form && fl_current_form != group->form )
     {
 		M_err( "fl_addto_group",
 			   "Can't switch to a group on different form." );
-		return;
+		return NULL;
     }
 
     if ( fli_current_group && fli_current_group != group )
     {
 		M_err( "fl_addto_group", "You forgot to call fl_end_group" );
-		fl_end_group( );
+		return NULL;
     }
+
+	if ( fli_current_group )
+		M_warn( "fl_addto_group", "Group was never closed" );
 
     reopened_group = 1;
     reopened_group += fl_current_form ? 0 : 2;
     fl_current_form = group->form;
-    fli_current_group = group;
+    return fli_current_group = group;
 }
 
 

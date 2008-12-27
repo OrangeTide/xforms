@@ -27,8 +27,12 @@
 #include "include/forms.h"
 
 
-int main( int    argc,
-		  char * argv[ ] )
+/***************************************
+ ***************************************/
+
+int
+main( int    argc,
+	  char * argv[ ] )
 {
 	FL_FORM *simpleform;
 

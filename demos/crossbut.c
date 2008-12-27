@@ -37,9 +37,10 @@
 #include "crossbut.h"
 
 
-/** How to draw it */
 
-typedef FL_BUTTON_STRUCT SPEC;
+/***************************************
+ * How to draw it
+ ***************************************/
 
 static void
 draw_crossbutton( FL_OBJECT * ob )
@@ -48,9 +49,9 @@ draw_crossbutton( FL_OBJECT * ob )
 		     yy,
 		     ww,
 		     hh;
-	SPEC *sp = ob->spec;
+	FL_BUTTON_STRUCT *sp = ob->spec;
 
-   /* if redraw is demanded by FL_ENTER, ignore it */
+	/* if redraw is demanded by FL_ENTER, ignore it */
 
    if ( sp->event == FL_ENTER )
       return;
@@ -77,6 +78,7 @@ draw_crossbutton( FL_OBJECT * ob )
       fl_drw_box( FL_UP_BOX, xx, yy, ww, hh, ob->col1, ob->bw );
 
     /* label */
+
     if ( ob->align == FL_ALIGN_CENTER )
 		fl_drw_text( FL_ALIGN_LEFT, xx + ww + 3, ob->y, 0, ob->h,
 					 ob->lcol, ob->lstyle, ob->lsize, ob->label );
@@ -91,7 +93,9 @@ draw_crossbutton( FL_OBJECT * ob )
 }
 
 
-/* creation */
+/***************************************
+ * creation
+ ***************************************/
 
 FL_OBJECT *
 fl_create_crossbutton( int          type,
@@ -110,6 +114,9 @@ fl_create_crossbutton( int          type,
      return ob;
 }
 
+
+/***************************************
+ ***************************************/
 
 FL_OBJECT *
 fl_add_crossbutton( int          type,
