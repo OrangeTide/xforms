@@ -1059,7 +1059,7 @@ fl_set_font_name(Pretty, fontname);
 fl_set_font_name(PrettyBold, boldfontname);
 fl_set_font_name(PrettyItalic, italicfontname);
 ...
-fl_set_object_lstyle(ob, PrettyBold);
+fl_set_object_lstyle(obj, PrettyBold);
 @end example
 The function returns a negative value if the requested font is invalid
 or otherwise can't be loaded. Note however, if this routine is called

@@ -136,7 +136,7 @@ FL_OBJECT *fl_create_NEW(int type, FL_Coord x, FL_Coord y,
     /* allocate instance-specific storage and fill it with defaults */
     obj->spec_size = sizeof SPEC;
     obj->spec = fl_calloc(1, obj->spec_size);
-    return ob;
+    return obj;
 @}
 @end example
 
@@ -156,11 +156,11 @@ note that these functions are actually function pointers, and if
 desired, the application is free to assign these pointers to its own
 memory allocation routines.
 
-The pointer ob returned by @code{fl_make_object()} will have all of
-its fields set to some defaults (@pxref{Part IV The Type FL_OBJECT, ,
-The Type @code{FL_OBJECT}}). In other words, the newly created object
-inherits many attributes of a generic one. Any class specific defaults
-that are different from the generic one can be changed after
+The object pointer returned by @code{fl_make_object()} will have all
+of its fields set to some defaults (@pxref{Part IV The Type FL_OBJECT,
+, The Type @code{FL_OBJECT}}). In other words, the newly created
+object inherits many attributes of a generic one. Any class specific
+defaults that are different from the generic one can be changed after
 @code{fl_make_object()}. Conversion of units, if different from the
 default pixel, is performed within @code{fl_make_object()} and a class
 module never needs to know what the prevailing unit is. After the

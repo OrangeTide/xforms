@@ -531,7 +531,7 @@ So this takes care of the drawing functions. Similarly, the color
 callback function can be written as follows
 @example
 void change_color(FL_OBJECT *obj, long which) @{
-    cur_fig->c[which] = 255 * fl_get_slider_value(ob);
+    cur_fig->c[which] = 255 * fl_get_slider_value(obj);
     fl_mapcolor(cur_fig->col,
                 cur_fig->c[0], cur_fig->c[1], cur_fig->c[2]);
     fl_mapcolor(FL_FREE_COL1,
@@ -551,9 +551,9 @@ function bound to both size sliders:
 @example
 void change_size(FL_OBJECT * obj, long which) @{
     if (which == 0)
-        cur_fig->w = fl_get_slider_value(ob);
+        cur_fig->w = fl_get_slider_value(obj);
     else
-        cur_fig->h = fl_get_slider_value(ob);
+        cur_fig->h = fl_get_slider_value(obj);
 @}
 @end example
 
@@ -628,7 +628,7 @@ int freeobject_handler(FL_OBJECT *obj, int event,
             cur_fig->y -= obj->y;
 
             cur_fig->newfig = 1;
-            fl_redraw_object(ob);
+            fl_redraw_object(obj);
             *(cur_fig + 1) = *cur_fig;
             fl_mapcolor(cur_fig->col + 1, cur_fig->c[0],
                         cur_fig->c[1], cur_fig->c[2] );

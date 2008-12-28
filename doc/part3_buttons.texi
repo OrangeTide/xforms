@@ -147,11 +147,12 @@ also reacts to @code{<Return>} key presses.
 @code{FL_NORMAL_BUTTON}s, @code{FL_PUSH_BUTTON}s,
 @code{FL_RADIO_BUTTON}s, @code{FL_RETURN_BUTTON}s and
 @code{FL_HIDDEN_BUTTON}s are returned at the moment the user releases
-the mouse after having pressed it on the button. An
-@code{FL_INOUT_BUTTON} is returned both when the user presses it and
-when the user releases it. A @code{FL_TOUCH_BUTTON} is returned all
-the time as long as the user keeps the mouse button pressed while the
-mouse is on top of it. A @code{FL_RETURN_BUTTON} and a
+the mouse after having pressed it on the button. A
+@code{FL_MENU_BUTTON}, in contrast, is returned already on a mouse
+press. A @code{FL_INOUT_BUTTON} is returned both when the user presses
+it and when the user releases it. A @code{FL_TOUCH_BUTTON} is returned
+all the time as long as the user keeps the mouse button pressed while
+the mouse is on top of it. A @code{FL_RETURN_BUTTON} and a
 @code{FL_HIDDEN_RET_BUTTON} are also returned when the user presses
 the @code{<Return>} key.
 
@@ -161,7 +162,7 @@ See demo @file{butttypes.c} for a feel of the different button types.
 @node Other Button Routines
 @section Other Button Routines
 
- The application program can also set a button to be pushed or not
+The application program can also set a button to be pushed or not
 itself without a user action. To this end use the routine
 @findex fl_set_button()
 @example
@@ -173,11 +174,11 @@ released (0). When setting a @code{FL_RADIO_BUTTON} to be pushed this
 automatically releases the a currently pushed radio button in the same
 form (or group). Also note that, while this routine only simulates the
 visual appearance and perhaps some internal states, it does not affect
-the program flow in any way, i.e.@: setting a button being pushed does
-not invoke its callback or results in the button returned to the
-program. For that, @code{fl_trigger_object()} is to be used or, more
-conveniently, follow @code{fl_set_button()} with a call of
-@code{fl_call_object_callback()}.
+the program flow in any way, i.e.@: setting a button as being pushed
+does not invoke its callback or results in the button becoming
+returned to the program. For that @code{fl_trigger_object()} is to be
+used or, more conveniently, just follow up @code{fl_set_button()} with
+a call of @code{fl_call_object_callback()}.
 
 To figure out whether a button is pushed1 or not use@footnote{@code{fl
 mouse button()} can also be used.}
@@ -196,15 +197,16 @@ int fl_get_button_numb(FL_OBJECT *obj);
 @noindent
 It returns one of the constants @code{FL_LEFT_MOUSE},
 @code{FL_MIDDLE_MOUSE}, @code{FL_RIGHT_MOUSE},
-@code{FL_SCROLLUP_MOUSE} or @code{FL_SCROLLDOWN_MOUSE} indicating the
-physical location of the mouse button on the mouse. If the last push
-was triggered by a shortcut (see below), the function returns the
-@code{keysym} (ascii value if ASCII) of the key plus
+@code{FL_SCROLLUP_MOUSE} or @code{FL_SCROLLDOWN_MOUSE} (the latter two
+are from the scroll wheel of the mouse). If the last push was
+triggered by a shortcut (see below), the function returns the
+@code{keysym} (ASCII value if the key used has is between 0 and 127)
+of the key plus
 @tindex @code{FL_SHORTCUT}
-@code{FL_SHORTCUT}. For example, if a button has a shortcut
-@code{<Ctrl>C}, the button number returned upon activation of the
-shortcut would be @code{FL_SHORTCUT + 3} (the ASCII value of
-@code{<Ctrl>C} is 3).
+@code{FL_SHORTCUT}. For example, if a button has @code{<Ctrl>C} as its
+shortcut the button number returned upon activation of the shortcut
+will be @code{FL_SHORTCUT + 3} (the ASCII value of @code{<Ctrl>C} is
+3).
 
 It can also be controlled which mouse buttons a buttons reacts to at
 all. To set which mouse buttons the button reacts to use
@@ -244,34 +246,36 @@ void fl_set_button_shortcut(FL_OBJECT *obj, const char *str,
                             int showUL);
 @end example
 @noindent
-Note that @code{str} is a string, not a character. This string should
-contain all the characters that correspond to this button. So, e.g.@:
-if you use string "^QQq" the button will react on the keys @code{q},
-@code{Q} and @code{<Ctrl>Q}. (As you see you should use the symbol
-@code{^} to indicate the control key. Similarly you can use the symbol
-@code{#} to indicate the @code{<Alt>} key.) Be careful with your
-choices. When the form also contains input fields you probably don't
-want to use the normal printable characters because they can no longer
-be used for input in the input fields. Shortcuts are always evaluated
-before input fields. Other special keys, such as @code{<F1>} etc., can
-also be used as shortcuts. @xref{Shortcuts}, for details. Finally
-realize that a return button is in fact a normal button with the
-@code{<Return>} key as a shortcut. So don't change the shortcuts for
-such a button.
+Note that @code{str} is a string, not a single character. This string
+is a list of all the characters to become keyboard shortcuts for the
+button. E.g.@: if you use string "^QQq" the button will react on the
+keys @code{q}, @code{Q} and @code{<Ctrl>Q}. (As you see you can use
+the symbol @code{^} to indicate the control key. Similarly you can use
+the symbol @code{#} to indicate the @code{<Alt>} key.) Be careful with
+your choices. When the form also contains input fields you probably
+don't want to use the normal printable characters because they can no
+longer be used for input in the input fields. Shortcuts are always
+evaluated before input fields. Other special keys, such as @code{<F1>}
+etc., can also be used as shortcuts. @xref{Shortcuts}, for details.
+Finally, keep in mind that a button of type @code{FL_RETURN_BUTTON} is
+in fact nothing more than a normal button, just with the
+@code{<Return>} key set as the shortcut. So don't change the shortcuts
+for such a button.
 
-If the third parameter @code{showUL} is true, and one of the letters
-in the object label matches the shortcut, the matching letter will be
+If the third parameter @code{showUL} is true and one of the letters in
+the object label matches the shortcut the matching letter will be
 underlined. This applies to non-printable characters (such as
-@code{#A}) as well as in the sense that if the label contains letter
-@code{a} or @code{A}, it will be underlined (i.e.@: special characters
+@code{#A}) as well in the sense that if the label contains the letter
+@code{a} or @code{A} it will be underlined (i.e.@: special characters
 such as @code{#} and @code{^} are ignored when matching). A false
-value (0) for @code{showUL} turns off the underline without affecting
+value (0) for @code{showUL} turns off underlining without affecting
 the shortcut. Note that although the entire object label is searched
-for matching character to underline, the shortcut string itself is not
-searched, thus shortcut @code{"Yy"} for label @code{"Yes"} will result
-in the underlining of the letter @code{Y} while @code{"yY"} will not.
+for matching character to underline of the shortcut string itself only
+the first (non-special) character is considered, thus a shortcut
+string of @code{"Yy"} for the label @code{"Yes"} will result in the
+letter @code{Y} becoming underlined while for @code{"yY"} it won't.
 
-To set the bitmap to use for the bitmap button, the following routines
+To set the bitmap to use for a bitmap button the following functions
 can be used:
 @findex fl_set_bitmapbutton_data()
 @findex fl_set_bitmapbutton_file()
@@ -281,8 +285,8 @@ void fl_set_bitmapbutton_data(FL_OBJECT *obj, int w, int h,
 void fl_set_bitmapbutton_file(FL_OBJECT *obj, const char *filename);
 @end example
 
-Similarly, to set the pixmap to use for the pixmap button, the
-following routines can be used:
+Similarly, to set the pixmap to use for a pixmap button the following
+routines can be used:
 @findex fl_set_pixmapbutton_data()
 @findex fl_set_pixmapbutton_file()
 @findex fl_set_pixmapbutton_pixmap()
@@ -293,22 +297,24 @@ void fl_set_pixmapbutton_pixmap(FL_OBJECT *obj, Pixmap id,
                                  Pixmap mask);
 @end example
 @noindent
-In the first routine, you @code{#include} the pixmap file into your
-source code and use the pixmap definition data (an array of char
-pointers) directly. In the second routine, the filename @code{file}
-that contains the pixmap defination is used to specify the pixmap. The
-last routine assumes that you already have X Pixmap resource ID for
-the pixmap you want to use. Note that these routines do not free the
-pixmaps already associated with the button. To free the pixmaps, use
-the routine
+To use the first routine, you @code{#include} the pixmap file into
+your source code and use the pixmap definition data (an array of char
+pointers) directly. for the second routine the filename @code{file}
+that contains the pixmap definition is used to specify the pixmap. The
+last routine assumes that you already have a X Pixmap resource ID for
+the pixmap you want to use. Note that these routines do not free a
+pixmap already associated with the button. To free the pixmaps use
+the function
 @findex fl_free_pixmapbutton_pixmap()
 @example
 void fl_free_pixmapbutton_pixmap(FL_OBJECT *obj);
 @end example
 @noindent
 This function frees the pixmap and mask together with all the colors
-they allocated. To get the pixmap and mask that is currently being
-displayed, use the following routine
+allocated for then.
+
+To get the pixmap and mask that is currently being displayed, use the
+following routine
 @findex fl_get_pixmapbutton_pixmap()
 @example
 Pixmap fl_get_pixmapbutton_pixmap(FL_OBJECT *obj,
@@ -329,9 +335,9 @@ are extra margins to leave in addition to the object border width.
 Note that although you can place a pixmap outside of the bounding box,
 it probably is not a good idea.
 
-When the mouse enters a pixmap button, an outline of the button is
+When the mouse enters a pixmap button an outline of the button is
 shown. If required, a different pixmap (the focus pixmap) can also be
-shown. To set such a focus pixmap, the following routines are
+shown. To set such a focus pixmap the following functions are
 available:
 @findex fl_set_pixmapbutton_focus_data()
 @findex fl_set_pixmapbutton_focus_file()
@@ -345,11 +351,11 @@ void fl_set_pixmapbutton_focus_pixmap(FL_OBJECT *obj, Pixmap id,
                                       Pixmap mask);
 @end example
 @noindent
-The meanings of the parameter are the same as that in the regular
+The meanings of the parameters are the same as that in the regular
 pixmap routines.
 
-Finally there is routine that can be used to enable or disable the
-focus outline and the focus pixmap
+Finally, there's a function that can be used to enable or disable the
+focus outline
 @findex fl_set_pixmapbutton_focus_outline()
 @example
 void fl_set_pixmapbutton_focus_outline(FL_OBJECT *obj, int yes_no);

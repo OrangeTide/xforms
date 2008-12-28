@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.47 2008/12/27 22:20:50 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.48 2008/12/28 17:20:40 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -1487,7 +1487,7 @@ fli_get_underline_pos( const char * label,
     if ( ! c )
 		return -1;
 
-    /* Find where the matches occur */
+    /* Find where the match occurs */
 
     if ( c == sc[ 0 ] )
 		p = strchr( label, c );

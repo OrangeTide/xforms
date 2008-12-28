@@ -118,8 +118,8 @@ structure is invisible outside of @file{colbox.c}, the following
 routine should be provided to return the total number of times the
 colbox was pushed:
 @example
-int fl_get_colbox(FL_OBJECT *ob) @{
-    if (!ob || obj->objclass != FL_COLBOX) @{
+int fl_get_colbox(FL_OBJECT *obj) @{
+    if (!obj || obj->objclass != FL_COLBOX) @{
         fprintf(stderr, "fl_get_colbox: Bad argument or wrong type);
         return -1;
     @}

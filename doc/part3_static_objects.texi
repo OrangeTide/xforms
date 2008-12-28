@@ -95,7 +95,7 @@ No box at all, only a centered label.
 @node Box Attributes
 @subsection Box Attributes
 
-The first color argument (@code{col1} to @code{fl_set_object_color()}
+The first color argument (@code{col1}) to @code{fl_set_object_color()}
 controls the color of the box, the second (@code{col2}) is not used.
 
 
