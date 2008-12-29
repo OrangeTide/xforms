@@ -51,9 +51,9 @@ static void get_data_name( FL_OBJECT *,
 						   IconInfo * );
 static FL_OBJECT *edited;
 
+
 /***************************************
  ***************************************/
-
 
 void *
 get_button_spec_fdform( void )
@@ -118,7 +118,7 @@ show_spec( SuperSPEC * spec )
 
 
 #define IsIconButton( cls ) \
-( ( cls ) == FL_BITMAPBUTTON || ( cls ) == FL_PIXMAPBUTTON )
+	( ( cls ) == FL_BITMAPBUTTON || ( cls ) == FL_PIXMAPBUTTON )
 
 /***************************************
  ***************************************/
@@ -126,7 +126,6 @@ show_spec( SuperSPEC * spec )
 int
 set_button_attrib( FL_OBJECT * ob )
 {
-
     bt_attrib->vdata = edited = ob;
 
     button_spec = get_superspec( ob );
@@ -467,6 +466,7 @@ react_to_button( FL_OBJECT * ob,
     if ( auto_apply )
 		redraw_the_form( 0 );
 }
+
 
 /***************************************
  ***************************************/
