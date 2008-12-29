@@ -574,10 +574,10 @@ get_helper( char * s )
  ***************************************/
 
 void
-helper_change_cb( FL_OBJECT * ob,
+helper_change_cb( FL_OBJECT * obj,
 				  long        data  FL_UNUSED_ARG )
 {
-    strcpy( info->helper, fl_get_input( ob ) );
+    strcpy( info->helper, fl_get_input( obj ) );
     if ( info->helper[ 0 ] )
 		fl_set_object_helper( edited, get_helper( info->helper ) );
 }
@@ -587,17 +587,17 @@ helper_change_cb( FL_OBJECT * ob,
  ***************************************/
 
 void
-pixalign_change( FL_OBJECT * ob,
+pixalign_change( FL_OBJECT * obj,
 				 long        data  FL_UNUSED_ARG )
 {
-    const char *s = fl_get_choice_text( ob );
+    const char *s = fl_get_choice_text( obj );
 
     if ( ! s )
 		return;
 
-    info->align = align_val(s);
+    info->align = align_val( s );
 
-    /* don't allow outside align */
+    /* Don't allow outside align */
 
     fl_set_pixmap_align( edited, info->align | FL_ALIGN_INSIDE,
 						 info->dx, info->dy );
