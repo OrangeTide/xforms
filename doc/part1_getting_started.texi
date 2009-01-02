@@ -145,23 +145,23 @@ int main(int argc, char *argv[]) @{
 @}
 @end example
 @noindent
-It creates a form with a simple text and two buttons.
-After displaying the form @code{fl_do_forms()}
-is called. This routine returns the object being pushed. Simply checking
-whether this is object @code{yes} determines
-whether we should quit.
+It creates a form with a simple text and two buttons. After displaying
+the form @code{@ref{fl_do_forms()}} is called. This routine returns
+the object being pushed. Simply checking whether this is object
+@code{yes} determines whether we should quit.
 
 @center @image{images/yesno}
 
 As you see, the program starts by calling the routine
-@code{fl_initialize()}. This routine should be called before any other
-calls to the library are made (except for @code{fl_set_defaults()}).
-One of the things this routine does is to establish a connection to
-the X server and initialize a resource database used by the X resource
-manager. It also does many other things, such as parsing command line
-options and initializing internal Forms Library structures. For now,
-it suffices to know that by calling this routine, a program
-automatically recognizes the following command line options
+@code{@ref{fl_initialize()}}. This routine should be called before any
+other calls to the library are made (except for
+@code{@ref{fl_set_defaults()}}). One of the things this routine does
+is to establish a connection to the X server and initialize a resource
+database used by the X resource manager. It also does many other
+things, such as parsing command line options and initializing internal
+Forms Library structures. For now, it suffices to know that by calling
+this routine, a program automatically recognizes the following command
+line options
 @multitable @columnfractions 0.3 0.3 0.4
 @headitem Option
 @tab Value type
@@ -225,9 +225,10 @@ some glue that combines the UI and the program.
 
 To use callbacks, a typical procedure would be to define all the
 callback functions first, then register them with the system using
-@code{fl_set_object_callback()}. After the form is realized (shown),
-control is handed to Forms Library's main loop @code{fl_do_forms()},
-which responds to user events indefinitely and never returns.
+@code{@ref{fl_set_object_callback()}}. After the form is realized
+(shown), control is handed to Forms Library's main loop
+@code{@ref{fl_do_forms()}}, which responds to user events indefinitely
+and never returns.
 
 After modifications are made to utilize object callbacks, the simple
 question example looks as follows:
@@ -269,12 +270,12 @@ int main(int argc, char *argv[]) @{
 
 In this example, callback routines for both the yes and no buttons are
 first defined. Then they are registered with the system using
-@code{fl_set_object_callback()}. After the form is shown, the event
-handling is again handed to the main loop in Forms Library via
-@code{fl_do_forms()}. In this case, whenever the buttons are pushed,
-the callback routine is invoked with the object being pushed as the
-first argument to the callback function, and @code{fl_do_forms()}
-never returns.
+@code{@ref{fl_set_object_callback()}}. After the form is shown, the
+event handling is again handed to the main loop in Forms Library via
+@code{@ref{fl_do_forms()}}. In this case, whenever the buttons are
+pushed, the callback routine is invoked with the object being pushed
+as the first argument to the callback function, and
+@code{@ref{fl_do_forms()}} never returns.
 
 You might also notice that in this example, both buttons are made
 anonymous, that is, it is not possible to reference the buttons
@@ -310,13 +311,13 @@ mapping the window (and subwindows) used by the forms.
 @item Main loop
 Most Forms Library applications are completely event-driven and are
 designed to respond to user events indefinitely. The Forms Library
-main loop, usually invoked by calling @code{fl_do_forms()}, retrieves
-events from the X event queue, dispatches them to the appropriate
-objects and notifies the application of what action, if any, should be
-taken. The actual notification method depends on how the interaction
-is set up, which could be done by calling an object callback or by
-returning the object whose status has changed to the application
-program.
+main loop, usually invoked by calling @code{@ref{fl_do_forms()}},
+retrieves events from the X event queue, dispatches them to the
+appropriate objects and notifies the application of what action, if
+any, should be taken. The actual notification method depends on how
+the interaction is set up, which could be done by calling an object
+callback or by returning the object whose status has changed to the
+application program.
 @end table
 
 The following chapters will lead you through each step of the process

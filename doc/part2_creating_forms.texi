@@ -253,16 +253,16 @@ program. This name must be a valid C (or simple C++) variable
 identifier and can be set via the input field labeled "Name". You
 need to make sure that there are no objects with the same name!
 
-If instead of having e.g.@: the function @code{fl_do_forms()} return
-when an object is triggered a callback is to be called you can set the
-name of the callback function in the input field labelded "Callback".
-Obviously, this must be a valid C or C++ function name. If a callback
-function is set you must also specify a argument passed to the callback
-function together with the objects address via the input field labeled
-"Argument". This norally will be a (long) integer (defaulting to 0
-if not specified). Using this value it's e.g.@: possible to
-distinguish between different objects all using the same callback
-function.
+If instead of having e.g.@: the function @code{@ref{fl_do_forms()}}
+return when an object is triggered a callback is to be called you can
+set the name of the callback function in the input field labelded
+"Callback". Obviously, this must be a valid C or C++ function name. If
+a callback function is set you must also specify a argument passed to
+the callback function together with the objects address via the input
+field labeled "Argument". This norally will be a (long) integer
+(defaulting to 0 if not specified). Using this value it's e.g.@:
+possible to distinguish between different objects all using the same
+callback function.
 
 
 @node Font
@@ -350,18 +350,18 @@ a little more explanation as the setting of button labeled "Use data"
 has no effect on the appearance of the button but nonetheless affects
 the generated code. By default, the "Use data" button is off,
 indicating the pixmap/bitmap file specified is to be loaded
-dynamically at run time via @code{fl_set_pixmapbutton_file()} (or the
-bitmap counterpart). If "Use data" is on, the specified file and its
-associated data will be @code{#include}'d at compile time so the data
-becomes part of the code. Depending on the application setup, you may
-choose one method over the other. In general, including the data in
-the code will make the code slightly larger, but it avoids problems
-with not finding the specified file at runtime. The button labeled
-"Full Path" only applies if "Use Data" is on. If "Full Path" is also
-on, the pixmap file will be @code{#include}'d using the full path,
-otherwise only the filename is used, presumably the compile process
-will take care of the path via @code{-I} flag in some system dependent
-way. In general, not using the full path is more flexible.
+dynamically at run time via @code{@ref{fl_set_pixmapbutton_file()}}
+(or the bitmap counterpart). If "Use data" is on, the specified file
+and its associated data will be @code{#include}'d at compile time so
+the data becomes part of the code. Depending on the application setup,
+you may choose one method over the other. In general, including the
+data in the code will make the code slightly larger, but it avoids
+problems with not finding the specified file at runtime. The button
+labeled "Full Path" only applies if "Use Data" is on. If "Full Path"
+is also on, the pixmap file will be @code{#include}'d using the full
+path, otherwise only the filename is used, presumably the compile
+process will take care of the path via @code{-I} flag in some system
+dependent way. In general, not using the full path is more flexible.
 
 
 @node Copy and Paste

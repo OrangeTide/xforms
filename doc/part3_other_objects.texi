@@ -49,6 +49,7 @@ actual accuracy measurement.
 
 Adding an object To add a timer to a form you use the routine
 @findex fl_add_timer()
+@anchor{fl_add_timer()}
 @example
 FL_OBJECT *fl_add_timer(int type, FL_Coord x, FL_Coord y,
                         FL_Coord w, FL_Coord h, const char *label);
@@ -62,14 +63,14 @@ The meaning of the parameters is as usual.
 
 There are at the moment three types of timers:
 @table @code
-@tindex @code{FL_NORMAL_TIMER}
+@tindex FL_NORMAL_TIMER
 @item FL_NORMAL_TIMER
 Visible, Shows alabel in a box. Blinks if time expires.
-@tindex @code{FL_VALUE_TIMER}
+@tindex FL_VALUE_TIMER
 @item FL_VALUE_TIMER
 Visible, showing the time left or elapsed time. Blinks if time
 expires.
-@tindex @code{FL_HIDDEN_TIMER}
+@tindex FL_HIDDEN_TIMER
 @item FL_HIDDEN_TIMER
 Not visible.
 @end table
@@ -89,6 +90,7 @@ callback called at the moment the time expires.
 
 To set the timer to a particular value use
 @findex fl_set_timer()
+@anchor{fl_set_timer()}
 @example
 void fl_set_timer(FL_OBJECT *obj, double delay);
 @end example
@@ -98,6 +100,7 @@ Use 0.0 to reset/de-blink the timer.
 
 To obtain the time left in the timer use
 @findex fl_get_timer()
+@anchor{fl_get_timer()}
 @example
 double fl_get_timer(FL_OBJECT *obj);
 @end example
@@ -107,6 +110,7 @@ double fl_get_timer(FL_OBJECT *obj);
 can change this default so the timer counts up and shows elapsed time
 by calling
 @findex fl_set_timer_countup()
+@anchor{fl_set_timer_countup()}
 @example
 void fl_set_timer_countup(FL_OBJECT *obj, int yes_no);
 @end example
@@ -116,32 +120,35 @@ with a true value for the argument @code{yes_no}.
  A timer can be temporarily suspended (stopwatch) using the following
 routine
 @findex fl_suspend_timer()
+@anchor{fl_suspend_timer()}
 @example
 void fl_suspend_timer(FL_OBJECT *obj);
 @end example
 @noindent
 and later be resumed by
 @findex fl_resume_timer()
+@anchor{fl_resume_timer()}
 @example
 void fl_resume_timer(FL_OBJECT *obj);
 @end example
 @noindent
-Unlike @code{fl_set_timer()} a suspended timer keeps its internal
-state (total delay, time left etc.), so when it is resumed, it starts
-from where it was suspended.
+Unlike @code{@ref{fl_set_timer()}} a suspended timer keeps its
+internal state (total delay, time left etc.), so when it is resumed,
+it starts from where it was suspended.
 
 Finally there is a routine that allows the application program to
 change the way the time is presented in @code{FL_VALUE_TIMER}:
 @tindex FL_TIMER_FILTER
 @findex fl_set_timer_filter()
+@anchor{fl_set_timer_filter()}
 @example
 typedef char *(FL_TIMER_FILTER)(FL_OBJECT *obj, double secs);
 FL_TIMER_FILTER fl_set_timer_filter(FL_OBJECT *obj,
                                     FL_TIMER_FILTER filter);
 @end example
 @noindent
-The function @code{filter} is receives the timer ID and the time left
-for count-down timers and the elapsed time for up-counting timers in
+The function @code{filter} receives the timer ID and the time left for
+count-down timers and the elapsed time for up-counting timers in
 seconds and should return a string representation of the time. The
 default filter returns the time in a
 @code{hour:minutes:seconds.fraction} format.
@@ -152,9 +159,9 @@ default filter returns the time in a
 
 Never use @code{FL_NO_BOX} as the boxtype for @code{FL_VALUE_TIMER}s.
 
-The first color argument (@code{col1}) to @code{fl_set_object_color()}
-controls the color of the timer, the second (@code{col2}) is the
-blinking color.
+The first color argument (@code{col1}) to
+@code{@ref{fl_set_object_color()}} controls the color of the timer,
+the second (@code{col2}) is the blinking color.
 
 
 @node Timer Remarks
@@ -198,6 +205,7 @@ is also available to model and/or change a function.
 
 To add an xyplot object to a form use the routine
 @findex fl_add_xyplot()
+@anchor{fl_add_xyplot()}
 @example
 FL_OBJECT *fl_add_xyplot(int type, FL_Coord x, FL_Coord y,
                          FL_Coord w, FL_Coord h, const char *label);
@@ -211,41 +219,41 @@ It shows an empty box on the screen with the label per default below it.
 
 The following types are available:
 @table @code
-@tindex @code{FL_NORMAL_XYPLOT}
+@tindex FL_NORMAL_XYPLOT
 @item FL_NORMAL_XYPLOT
 A solid line is drawn through the data points.
-@tindex @code{FL_SQUARE_XYPLOT}
+@tindex FL_SQUARE_XYPLOT
 @item FL_SQUARE_XYPLOT
 Data drawn as a solid line plus squares at data points.
-@tindex @code{FL_CIRCLE_XYPLOT}
+@tindex FL_CIRCLE_XYPLOT
 @item FL_CIRCLE_XYPLOT
 Data drawn as a solid line plus circles at data points.
-@tindex @code{FL_FILL_XYPLOT}
+@tindex FL_FILL_XYPLOT
 @item FL_FILL_XYPLOT
 Data drawn as a solid line with the area under the curve filled.
-@tindex @code{FL_POINTS_XYPLOT}
+@tindex FL_POINTS_XYPLOT
 @item FL_POINTS_XYPLOT
 Only data points are drawn with. per default, stars.
-@tindex @code{FL_LINEPOINTS_XYPLOT}
+@tindex FL_LINEPOINTS_XYPLOT
 @item FL_LINEPOINTS_XYPLOT
 Data drawn as a solid line plus, per default, stars at data point.
-@tindex @code{FL_DASHED_XYPLOT}
+@tindex FL_DASHED_XYPLOT
 @item FL_DASHED_XYPLOT
 Data drawn as a dashed line.
-@tindex @code{FL_DOTTED_XYPLOT}
+@tindex FL_DOTTED_XYPLOT
 @item FL_DOTTED_XYPLOT
 Data drawn as a dotted line.
-@tindex @code{FL_DOTDASHED_XYPLOT}
+@tindex FL_DOTDASHED_XYPLOT
 @item FL_DOTDASHED_XYPLOT
 Data drawn as a dash-dot-dash line.
-@tindex @code{FL_IMPULSE_XYPLOT}
+@tindex FL_IMPULSE_XYPLOT
 @item FL_IMPULSE_XYPLOT
 Data drawn by vertical lines.
-@tindex @code{FL_ACTIVE_XYPLOT}
+@tindex FL_ACTIVE_XYPLOT
 @item FL_ACTIVE_XYPLOT
 Data drawn as a solid line plus squares at data points, accepting
 manipulations.
-@tindex @code{FL_EMPTY_XYPLOT}
+@tindex FL_EMPTY_XYPLOT
 @item FL_EMPTY_XYPLOT
 Only the axes are drawn.
 @end table
@@ -272,6 +280,7 @@ some situations, reporting changes as soon as they happen might be
 desirable, and in that case, use the following routine with
 @code{when} set to @code{FL_RETURN_CHANGED} to force this behavior:
 @findex fl_set_xyplot_return()
+@anchor{fl_set_xyplot_return()}
 @example
 void fl_set_xyplot_return(FL_OBJECT *obj, int when);
 @end example
@@ -279,6 +288,7 @@ void fl_set_xyplot_return(FL_OBJECT *obj, int when);
 To obtain the current value of the point that has changed, use the
 routine
 @findex fl_get_xyplot()
+@anchor{fl_get_xyplot()}
 @example
 void fl_get_xyplot(FL_OBJECT *obj, float *x, float *y, int *i);
 @end example
@@ -290,6 +300,7 @@ where via @code{i} the data index (starting from 0) is returned while
 It is possible to not to draw the squares that mark an active plot
 using the following routine
 @findex fl_set_xyplot_mark_active()
+@anchor{fl_set_xyplot_mark_active()}
 @example
 void fl_set_xyplot_mark_active(FL_OBJECT *obj, int yes_no);
 @end example
@@ -298,6 +309,7 @@ with @code{yes_no} being set to false (0).
 
 To set or replace the data for an xyplot, use
 @findex fl_set_xyplot_data()
+@anchor{fl_set_xyplot_data()}
 @example
 void fl_set_xyplot_data(FL_OBJECT *obj, float *x, float *y, int n,
                         const char *title, const char *xlabel,
@@ -315,6 +327,7 @@ title that is drawn above the XYPlot and @code{xlabel} and
 You can also load a tabulated function from a file using the following
 routine
 @findex fl_set_xyplot_file()
+@anchor{fl_set_xyplot_file()}
 @example
 int fl_set_xyplot_file(FL_OBJECT *obj, const char *filename,
                        const char *title, const char *xlabel,
@@ -330,6 +343,7 @@ points succesfully read or 0 if the file can't be opened/
 
 To get a copy of the current XYPLot data, use
 @findex fl_get_xyplot_data()
+@anchor{fl_get_xyplot_data()}
 @example
 void fl_get_xyplot_data(FL_OBJECT *obj, float x[], float y[], int *n);
 @end example
@@ -339,6 +353,7 @@ The caller must supply the space for the data.
 All XYPlot objects can be made aware of mouse clicks by using the
 following routine
 @findex fl_set_xyplot_inspect()
+@anchor{fl_set_xyplot_inspect()}
 @example
 void fl_set_xyplot_inspect(FL_OBJECT *obj, int yes_no);
 @end example
@@ -346,8 +361,8 @@ void fl_set_xyplot_inspect(FL_OBJECT *obj, int yes_no);
 Once an XYPlot is in inspect mode, whenever the mouse is clicked and
 the mouse position is on one of the data point, the object is returned
 to the caller or it's callback is invoked. You can use
-@code{fl_get_xyplot()} to find out which point the mouse was clicked
-on.
+@code{@ref{fl_get_xyplot()}} to find out which point the mouse was
+clicked on.
 
 Another, perhaps even more general, way to read-off the values from an
 XYPlot is to use a posthandler or an overlay positioner. See demo
@@ -363,7 +378,9 @@ There are several routines to change the appearance of an XYPlot.
 First of all, you can change the number of tic marks using the
 following routine
 @findex fl_set_xyplot_xtics()
+@anchor{fl_set_xyplot_xtics()}
 @findex fl_set_xyplot_ytics()
+@anchor{fl_set_xyplot_ytics()}
 @example
 void fl_set_xyplot_xtics(FL_OBJECT *obj, int major, int minor);
 void fl_set_xyplot_ytics(FL_OBJECT *obj, int major, int minor);
@@ -385,7 +402,9 @@ It is possible to label the major tic marks with alphanumerical
 characters instead of numerical values. To this end, use the following
 routines
 @findex fl_set_xyplot_alphaxtics()
+@anchor{fl_set_xyplot_alphaxtics()}
 @findex fl_set_xyplot_alphaytics()
+@anchor{fl_set_xyplot_alphaytics()}
 @example
 void fl_set_xyplot_alphaxtics(FL_OBJECT *obj, const char *major,
                               const char *minor);
@@ -399,9 +418,9 @@ label a plot with Monday, Tuesday etc, @code{major} should be given as
 @code{Monday|Tuesday|...}. Parameter @code{minor} is currently unused
 and the minor divisions are set to 1, i.e, no divisions between major
 tic marks. Naturally the number of major/minor divisions set by this
-routine and @code{fl_set_xyplot_xtics()} and
-@code{fl_set_xyplot_ytics()} can't be active at the same time and the
-one that gets used is the one that was set last.
+routine and @code{@ref{fl_set_xyplot_xtics()}} and
+@code{@ref{fl_set_xyplot_ytics()}} can't be active at the same time
+and the one that gets used is the one that was set last.
 
 The above two functions can be used to specify non-uniform and
 arbitary major divisions. To achieve this, you should embed the major
@@ -414,6 +433,7 @@ marks at 0.75, 1.0, and 1.9 and labeled "3/4", "begin", and "1.9".
 
 To get a gridded XYPlot, use the following routine
 @findex fl_set_xyplot_xgrid()
+@anchor{fl_set_xyplot_xgrid()}
 ffindex fl_set_xyplot_ygrid()
 @example
 void fl_set_xyplot_xgrid(FL_OBJECT *obj, int xgrid);
@@ -422,13 +442,13 @@ void fl_set_xyplot_ygrid(FL_OBJECT *obj, int ygrid);
 @noindent
 where @code{xgrid} and @code{ygrid} can be one of the following
 @table @code
-@tindex @code{FL_GRID_NONE}
+@tindex FL_GRID_NONE
 @item FL_GRID_NONE
 No grid.
-@tindex @code{FL_GRID_MAJOR}
+@tindex FL_GRID_MAJOR
 @item FL_GRID_MAJOR
 Grid for the major divisions.
-@tindex @code{FL_GRID_MINOR}
+@tindex FL_GRID_MINOR
 @item FL_GRID_MINOR
 Grid for the major and minor divisions.
 @end table
@@ -436,6 +456,7 @@ Grid for the major and minor divisions.
 The grid line by default is drawn using a dotted line, which you can
 change using the following routine
 @findex fl_set_xyplot_grid_linestyle()
+@anchor{fl_set_xyplot_grid_linestyle()}
 @example
 int fl_set_xyplot_grid_linestyle(FL_OBJECT *obj, int style);
 @end example
@@ -449,7 +470,9 @@ and titles so that a maximum plotting area results. This can be
 undesirable in certain situations. To control the plotting area
 manually, the following routines can be used
 @findex fl_set_xyplot_fixed_xaxis()
+@anchor{fl_set_xyplot_fixed_xaxis()}
 @findex fl_set_xyplot_fixed_yaxis()
+@anchor{fl_set_xyplot_fixed_yaxis()}
 @example
 void fl_set_xyplot_fixed_xaxis(FL_OBJECT *obj, const char *lm,
                                const char *rm)
@@ -471,6 +494,7 @@ To restore automatic margin computation, set all margins to
 To change the size of the symbols drawn at data points, use the
 following routine
 @findex fl_set_xyplot_symbolsize()
+@anchor{fl_set_xyplot_symbolsize()}
 @example
 void fl_set_xyplot_symbolsize(FL_OBJECT *obj, int size);
 @end example
@@ -480,8 +504,9 @@ where @code{size} should be given in pixels. The default is 4.
 For @code{FL_POINTS_XYPLOT} and @code{FL_LINEPOINTS_XYPLOT} (main
 plot or overlay), the applicaiton program can change the symbol using
 the following routine
-@tindex @code{FL_XYPLOT_SYMBOL}
+@tindex FL_XYPLOT_SYMBOL
 @findex fl_set_xyplot_symbol()
+@anchor{fl_set_xyplot_symbol()}
 @example
 typedef void (*FL_XYPLOT_SYMBOL)(FL_OBJECT *, int id,
                                  FL_POINT *p, int n, int w, int h);
@@ -518,15 +543,17 @@ fl_set_xyplot_symbol(xyplot, 0, drawsymbol);
 @end example
 
 If a Xlib drawing routine is used it should use the current active
-window (@code{FL_ObjWin(ob)}) and the current gc (@code{fl_get_gc()}).
-Take care not to call routines inside the @code{drawsymbol} function
-that could trigger a redraw of the XYPlot (such as
-@code{fl_set_object_color()}, @code{fl_set_xyplot_data()} etc.).
+window (@code{FL_ObjWin(obj)}) and the current GC.. Take care not to
+call routines inside the @code{drawsymbol} function that could trigger
+a redraw of the XYPlot (such as @code{@ref{fl_set_object_color()}},
+@code{@ref{fl_set_xyplot_data()}} etc.).
 
 To use absolute bounds as opposed to actual bounds in data, use the
 following routines
 @findex fl_set_xyplot_xbounds()
+@anchor{fl_set_xyplot_xbounds()}
 @findex fl_set_xyplot_ybounds()
+@anchor{fl_set_xyplot_ybounds()}
 @example
 void fl_set_xyplot_xbounds(FL_OBJECT *obj, double min, double max);
 void fl_set_xyplot_ybounds(FL_OBJECT *obj, double min, double max);
@@ -539,7 +566,9 @@ at right and @code{max} at left), set @code{min > max} for that axis.
 
 To get the current bounds, use the following routines
 @findex fl_get_xyplot_xbounds()
+@anchor{fl_get_xyplot_xbounds()}
 @findex fl_get_xyplot_ybounds()
+@anchor{fl_get_xyplot_ybounds()}
 @example
 void fl_get_xyplot_xbounds(FL_OBJECT *obj, float *min, float *max);
 void fl_get_xyplot_ybounds(FL_OBJECT *obj, float *min, float *max);
@@ -551,6 +580,7 @@ world/screen mapping due to tic rounding.
 
 To replace the value of a particular point use the routine
 @findex fl_replace_xyplot_point()
+@anchor{fl_replace_xyplot_point()}
 @example
 void fl_replace_xyplot_point(FL_OBJECT *obj, int index,
                              double x, double y);
@@ -562,19 +592,21 @@ value has an index of 0.
 It is possible to overlay several plots together using the following
 call
 @findex fl_add_xyplot_overlay()
+@anchor{fl_add_xyplot_overlay()}
 @example
 void fl_add_xyplot_overlay(FL_OBJECT *obj, int id, float *x, float *y,
                            int npoints, FL_COLOR col);
 @end example
 @noindent
 where @code{id} must be between 1 and
-@tindex @code{FL_MAX_XYPLOTOVERLAY}
+@tindex FL_MAX_XYPLOTOVERLAY
 @code{FL_MAX_XYPLOTOVERLAY} (currently 32). Again, the data is copied to
 an internal buffer (old data are freed if necessary).
 
 As for the base data, a data file can be used to specify the (x,y)
 function
 @findex fl_add_xyplot_overlay_file()
+@anchor{fl_add_xyplot_overlay_file()}
 @example
 int fl_add_xyplot_overlay_file(FL_OBJECT *obj, int ID,
                                const char *file, FL_COLOR col);
@@ -585,6 +617,7 @@ type (@code{FL_NORMAL_XYPLOT} etc.) used in overlay plot is the same
 as the object itself. To change an overlay style, use the following
 call
 @findex fl_set_xyplot_overlay_type()
+@anchor{fl_set_xyplot_overlay_type()}
 @example
 void fl_set_xyplot_overlay_type(FL_OBJECT *obj, int id, int type);
 @end example
@@ -595,6 +628,7 @@ property of an already existing XYPlot object.
 
 To get the data of an overlay, use the following routine
 @findex fl_get_xyplot_overlay_data()
+@anchor{fl_get_xyplot_overlay_data()}
 @example
 void fl_get_xyplot_overlay_data(FL_OBJECT *obj, int id,
                                 float x[], float y[], int *n);
@@ -602,7 +636,7 @@ void fl_get_xyplot_overlay_data(FL_OBJECT *obj, int id,
 @noindent
 where @code{id} specifies the overlay number between 1 and
 @code{FL_MAX_XYPLOTOVERLAY} or the number set via
-@code{fl_set_xyplot_maxoverlay()} (see below). (Actually, when
+@code{@ref{fl_set_xyplot_maxoverlays()}} (see below). (Actually, when
 @code{id} is zero, this function returns the base data). The caller
 must supply the storage space for the data. Upon function return,
 @code{n} will be set to the number of data points retrieved.
@@ -611,6 +645,7 @@ Sometimes it may be more convenient and efficient to get the pointer
 to the data rather than a copy of the data. To this end, the following
 routine is available
 @findex fl_get_xyplot_data_pointer()
+@anchor{fl_get_xyplot_data_pointer()}
 @example 
 void fl_get_xyplot_data_pointer(FL_OBJECT *obj, int id,
                                 float **x, float **y, int *n);
@@ -618,12 +653,13 @@ void fl_get_xyplot_data_pointer(FL_OBJECT *obj, int id,
 @noindent
 Upon function return, @code{x} and @code{y} are set to point to the
 data storage. You're free to modify the data and redraw the XYPlot
-(via @code{fl_redraw_object()}). The pointers returned may not be
-freed.
+(via @code{@ref{fl_redraw_object()}}). The pointers returned may not
+be freed.
 
 If needed, the maximum number of overlays an object can have (which by
 default is 32) can be changed using the following routine
 @findex fl_set_xyplot_maxoverlays()
+@anchor{fl_set_xyplot_maxoverlays()}
 @example
 int fl_set_xyplot_maxoverlays(FL_OBJECT *obj, int maxoverlays);
 @end example
@@ -632,6 +668,7 @@ The function returns the previous maximum number of overlays.
 
 To obtain the number of data points, use the following routine
 @findex fl_get_xyplot_numdata()
+@anchor{fl_get_xyplot_numdata()}
 @example
 int fl_get_xyplot_numdata(FL_OBJECT *obj, int id);
 @end example
@@ -640,6 +677,7 @@ where @code{id} is the overlay ID with 0 being the base data set.
 
 To insert a point into an xyplot, use the following routine
 @findex fl_insert_xyplot_data()
+@anchor{fl_insert_xyplot_data()}
 @example
 void fl_insert_xyplot_data(FL_OBJECT *obj, int id, int n,
                            double x, double y);
@@ -653,15 +691,17 @@ value of @code{fl_get_xyplot_numdata(obj, id)}.
 
 To delete an overlay, use the following routine
 @findex fl_delete_xyplot_overlay()
+@anchor{fl_delete_xyplot_overlay()}
 @example
 void fl_delete_xyplot_overlay(FL_OBJECT *obj, int id);
 @end example
 
 It is possible to place inset texts on an XYPlot using the following
 routine (up to @code{FL_MAX_XYPLOTOVERLAY} or the value set via
-@code{fl_set_xyplot_maxoverlays()} of such insets can be
+@code{@ref{fl_set_xyplot_maxoverlays()}} of such insets can be
 accommodated):
 @findex fl_add_xyplot_text()
+@anchor{fl_add_xyplot_text()}
 @example
 void fl_add_xyplot_text(FL_OBJECT *obj, double x, double y,
                         const char *text, int align, FL_COLOR col);
@@ -669,16 +709,17 @@ void fl_add_xyplot_text(FL_OBJECT *obj, double x, double y,
 @noindent
 where @code{x} and @code{y} are the coordinates where text is to be
 placed and align specifies the placement options relative to the
-specified point (See @code{fl_set_object_lalign()} for valid options).
-If you for example specify @code{FL_ALIGN_LEFT}, the text will appear
-on the left of the point and flushed toward the point (see Fig. 21.1).
-This is mostly consistent with the label alignment except that now the
-bounding box (of the point) is of zero dimension. Normal text
-interpretation applies, i.e., if text starts with @code{@@} a symbol
-is drawn.
+specified point (See @code{@ref{fl_set_object_lalign()}} for valid
+options). If you for example specify @code{FL_ALIGN_LEFT}, the text
+will appear on the left of the point and flushed toward the point (see
+Fig. 21.1). This is mostly consistent with the label alignment except
+that now the bounding box (of the point) is of zero dimension. Normal
+text interpretation applies, i.e., if text starts with @code{@@} a
+symbol is drawn.
 
 To remove an inset text, use the following routine
 @findex fl_delete_xyplot_text()
+@anchor{fl_delete_xyplot_text()}
 @example
 void fl_delete_xyplot_text(FL_OBJECT *obj, const char *text);
 @end example
@@ -690,6 +731,7 @@ Obviously, keys are most useful when you have more than one plot
 (i.e.@: overlays). To add a key to a particular plot, use the
 following routine
 @findex fl_set_xyplot_key()
+@anchor{fl_set_xyplot_key()}
 @example
 void fl_set_xyplot_key(FL_OBJECT *obj, int id, const char *keys);
 @end example
@@ -698,6 +740,7 @@ where @code{id} again is the overlay ID. To remove a key, set the key
 to @code{NULL}. All the keys will be drawn together inside a box. The
 position of the keys can be set via
 @findex fl_set_xyplot_key_position()
+@anchor{fl_set_xyplot_key_position()}
 @example
 void fl_set_xyplot_key_position(FL_OBJECT *obj, float x, float y,
                                 int align)
@@ -710,6 +753,7 @@ relative to the given position (see Fig.21.1).
 The following routine combines the above two functions and may be more
 convenient to use
 @findex fl_set_xyplot_keys()
+@anchor{fl_set_xyplot_keys()}
 @example
 void fl_set_xyplot_keys(FL_OBJECT *obj, char *keys[],
                          float x, float y, int align);
@@ -722,12 +766,14 @@ is the plot id, i.e., @code{key[0]} is the key for the base plot,
 
 To change the font the key text uses, the following routine is available
 @findex fl_set_xyplot_key_font()
+@anchor{fl_set_xyplot_key_font()}
 @example
 void fl_set_xyplot_key_font(FL_OBJECT *obj, int style, int size);
 @end example
 
 Data may be interpolated using an nth order Lagrangian polynomial:
 @findex fl_set_xyplot_interpolate()
+@anchor{fl_set_xyplot_interpolate()}
 @example
 void fl_set_xyplot_interpolate(FL_OBJECT *obj, int id, int degree,
                                double grid);
@@ -742,6 +788,7 @@ or 1.
 To change the line thickness of an xyplot (base data or overlay), the
 follow routine is available:
 @findex fl_set_xyplot_linewidth()
+@anchor{fl_set_xyplot_linewidth()}
 @example
 void fl_set_xyplot_linewidth(FL_OBJECT *obj, int id, int width);
 @end example
@@ -752,21 +799,24 @@ fastest.
 By default, a linear scale in both the x and y direction is used. To
 change the scaling, use the following call
 @findex fl_set_xyplot_xscale()
+@anchor{fl_set_xyplot_xscale()}
 @findex fl_set_xyplot_yscale()
+@anchor{fl_set_xyplot_yscale()}
 @example
 void fl_set_xyplot_xscale(FL_OBJECT *obj, int scale, double base);
 void fl_set_xyplot_yscale(FL_OBJECT *obj, int scale, double base);
 @end example
 @noindent
 where the valid scaling options for scale are
-@tindex @code{FL_LINEAR}
-@tindex @code{FL_LOG}
+@tindex FL_LINEAR
+@tindex FL_LOG
 @code{FL_LINEAR} and @code{FL_LOG}, and @code{base} is used only for
 @code{FL_LOG} and in that case it is the base of the logarithm to be
 used.
 
 Use the following routine to clear an xyplot
 @findex fl_clear_xyplot()
+@anchor{fl_clear_xyplot()}
 @example
 void fl_clear_xyplot(FL_OBJECT *obj);
 @end example
@@ -775,12 +825,14 @@ This routine frees all data associated with an XYPlot, including all
 overlays and all inset texts. This routine does not reset all plotting
 options, such as line thickness, major/minor divisions etc.@: nor does
 it free all memories associated with the XYPqlot, for this
-@code{fl_free_object()} is needed.
+@code{@ref{fl_free_object()}} is needed.
 
 The mapping between the screen coordinates and data can be obtained
 using the following routines
 @findex fl_get_xyplot_xmapping()
+@anchor{fl_get_xyplot_xmapping()}
 @findex fl_get_xyplot_ymapping()
+@anchor{fl_get_xyplot_ymapping()}
 @example
 void fl_get_xyplot_xmapping(FL_OBJECT *obj, float *a, float *b);
 void fl_get_xyplot_xmapping(FL_OBJECT *obj, float *a, float *b);
@@ -799,6 +851,7 @@ If you need to do conversions only occasionally (for example,
 converting the position of a mouse click to a data point or vice
 versa) the following routines might be more convenient
 @findex fl_xyplot_s2w()
+@anchor{fl_xyplot_s2w()}
 @example
 void fl_xyplot_s2w(FL_OBJECT *obj, double sx, double sy,
                    float *wx, float *wy);
@@ -815,12 +868,12 @@ and @code{wy} are the world coordinates.
 
 Don't use @code{FL_NO_BOX} as the boxtyppe of an XYPlot object that is
 to be changed dynamically. To change the font size and style for the
-tic labels, inset text etc., use @code{fl_set_object_lsize()} and
-@code{fl_set_object_lstyle()}.
+tic labels, inset text etc., use @code{@ref{fl_set_object_lsize()}}
+and @code{@ref{fl_set_object_lstyle()}}.
 
-The first color argument (@code{col1}) to @code{fl_set_object_color()}
-controls the color of the box and the second (@code{col2}) yhe actual
-XYPlot color.
+The first color argument (@code{col1}) to
+@code{@ref{fl_set_object_color()}} controls the color of the box and
+the second (@code{col2}) yhe actual XYPlot color.
 
 
 @node XYPlot Remarks
@@ -830,6 +883,7 @@ XYPlot color.
 The interpolation routine is public and can be used in the application
 program
 @findex fl_interpolate()
+@anchor{fl_interpolate()}
 @example
 int fl_interpolate(const float *inx, const float *iny, int num_in,
                    float *outx, float *outy, double grid, int ndeg);
@@ -847,8 +901,8 @@ use of XYPlot objects. There is also an example program called
 @code{xyplotall.c} shows a way of getting all mouse clicks without
 necessarily using an active XYPlot.
 
-It is possible to generate a PostScript output of an XYPlot. See
-the function @code{fl_object_ps_dump()} documented in Part V.
+It is possible to generate a PostScript output of an XYPlot. See the
+function @code{@ref{fl_object_ps_dump()}} documented in Part V.
 
 
 
@@ -863,8 +917,8 @@ program has more freedom in utilizing a canvas, such as using its own
 colormap or rendering double-buffered OpenGL in it etc. A canvas is
 also different from a raw application window because a canvas is
 decorated differently and its geometry is managed, e.g., you can use
-@code{fl_set_object_resize()} to control its position and size after
-its parent form is resized.
+@code{@ref{fl_set_object_resize()}} to control its position and size
+after its parent form is resized.
 
 @ifnottex
 
@@ -885,6 +939,7 @@ its parent form is resized.
 
 Adding an object To add a canvas to a form you use the routine
 @findex fl_add_canvas()
+@anchor{fl_add_canvas()}
 @example
 FL_OBJECT *fl_add_canvas(int type, FL_Coord x, FL_Coord y,
                          FL_Coord w, FL_Coord h, const char *label);
@@ -899,7 +954,7 @@ If label is empty, the window name will be generated on the fly as
 @subsection Canvas Types
 
 The only types of canvases currently available is
-@tindex @code{FL_NORMAL_CANVAS}
+@tindex FL_NORMAL_CANVAS
 @code{FL_NORMAL_CANVAS}.
 
 
@@ -912,14 +967,15 @@ enough. With canvases, the programmer has complete control over
 everything that can happen to a window. By default, the only event a
 canvas will receive is @code{Expose}. To receive other events, the
 application program has to select them via
-@code{fl_add_selected_xevent()} or @code{XSelectInput()} or by adding
-a canvas handler.
+@code{@ref{fl_addto_selected_xevent()}} or @code{XSelectInput()} or by
+adding a canvas handler.
 
 The interaction with a canvas is typically set up as follows. First,
 you register the events you're interested in and their handlers using
 the following routine
 @tindex FL_HANDLE_CANVAS
 @findex fl_add_canvas_handler()
+@anchor{fl_add_canvas_handler()}
 @example
 typedef int (*FL_HANDLE_CANVAS)(FL_OBJECT *obj, Window win,
                                 int win_width, int win_height,
@@ -929,11 +985,11 @@ void fl_add_canvas_handler(FL_OBJECT *obj, int event,
 @end example
 @noindent
 where @code{event} is the XEvent type, e.g. @code{Expose} etc. The
-@code{fl_add_canvas_handler()} function first registers a procedure
-with the event dispatching system of the Forms Library, then it
-figures out the event masks corresponding to the event @code{event}
-and invokes @code{fl_addto_selected_xevent()} to solicit the event
-from the server. Other book keeping (e.g.@: drawing the box that
+@code{@ref{fl_add_canvas_handler()}} function first registers a
+procedure with the event dispatching system of the Forms Library, then
+it figures out the event masks corresponding to the event @code{event}
+and invokes @code{@ref{fl_addto_selected_xevent()}} to solicit the
+event from the server. Other book keeping (e.g.@: drawing the box that
 encloses the canvas, etc.) is done by the object handler.
 
 Since translation from an Xevent to a Xevent mask is not unique,
@@ -955,16 +1011,17 @@ motion is reported, you need to call fl_remove_selected_xevent() with
 mask set to @code{PointerMotionHintMask}. Furthermore, the mouse
 motion is reported regardless if a mouse button is pressed or not. If
 the application is interested in mouse motion only when a mouse button
-is pressed, @code{fl_remove_selected_xevent()} should be called with a
-mask of @code{PointerMotionMask | PointerMotionHintMask}.
+is pressed, @code{@ref{fl_remove_selected_xevent()}} should be called
+with a mask of @code{PointerMotionMask | PointerMotionHintMask}.
 
 With @code{ButtonPress} events you need to call
-@code{fl_addto_selected_xevent()} with a mask of
+@code{@ref{fl_addto_selected_xevent()}} with a mask of
 @code{OwnerGrabButtonMask} if you are to add or remove other canvas
 handlers in the button press handler.
 
 To remove a registered handler, use
 @findex fl_remove_canvas_handler()
+@anchor{fl_remove_canvas_handler()}
 @example
 void fl_remove_canvas_handler(FL_OBJECT *obj, int event,
                               FL_CANVAS_HANDLER handler);
@@ -975,12 +1032,14 @@ After this function call the canvas ceases to receive the events for
 
 To obtain the window ID of a canvas, use
 @findex fl_get_canvas_id()
+@anchor{fl_get_canvas_id()}
 @example
 Window fl_get_canvas_id(FL_OBJECT *obj);
 @end example
 @noindent
 or use the generic function (macro) (recommended)
 @findex FL_ObjWin()
+@anchor{FL_ObjWin()}
 @example
 Window FL_ObjWin(FL_OBJECT *obj);
 @end example
@@ -988,20 +1047,21 @@ Window FL_ObjWin(FL_OBJECT *obj);
 
 Of course, the window ID only has a meaning after the form/canvas is
 shown. When the canvas or the form the canvas is on is hidden (via
-@code{fl_hide_object()} or @code{fl_hide_form()}), the canvas window
-may be destroyed. If the canvas is shown again, a new window ID for
-the canvas may be created. Thus recording the canvas window ID in a
-static variable is not the right thing to do. It is much safer (and it
-doesn't add any run-time overhead) to obtain the canvas window ID via
-@code{FL_ObjWin()} whenever it's needed. If your application must show
-and hide the canvas/form repeatedly, you might consider to "unmap" the
-window, a way of removing the window from the screen without actually
-destroying it and later re-mapping the window to show it. The Xlib API
-functions for doing this are @code{XUnmapWindow()}  and
-@code{XMapWindow()}. Both require two arguments. the display, which
-you can determine by calling @code{fl_get_display()} and the window ID,
-which can be obtained by using @code{form->window} if you want to
-(un)map a form or @code{FL_ObjWin(obj)} for a canvas.
+@code{@ref{fl_hide_object()}} or @code{@ref{fl_hide_form()}}), the
+canvas window may be destroyed. If the canvas is shown again, a new
+window ID for the canvas may be created. Thus recording the canvas
+window ID in a static variable is not the right thing to do. It is
+much safer (and it doesn't add any run-time overhead) to obtain the
+canvas window ID via @code{@ref{FL_ObjWin()}} whenever it's needed. If
+your application must show and hide the canvas/form repeatedly, you
+might consider to "unmap" the window, a way of removing the window
+from the screen without actually destroying it and later re-mapping
+the window to show it. The Xlib API functions for doing this are
+@code{XUnmapWindow()} and @code{XMapWindow()}. Both require two
+arguments. the display, which you can determine by calling
+@code{@ref{fl_get_display()}} and the window ID, which can be obtained
+by using @code{form->window} if you want to (un)map a form or
+@code{FL_ObjWin(obj)} for a canvas.
 
 
 @node Other Canvas Routines
@@ -1012,6 +1072,7 @@ visual, depth and colormap etc., are inherited from its parent (i.e.@:
 the window of the form the canvas belongs to). To modify any
 attributes of the canvas, use the following routine
 @findex fl_set_canvas_attributes()
+@anchor{fl_set_canvas_attributes()}
 @example
 void fl_set_canvas_attributes(FL_OBJECT *obj, unsigned mask,
                               XSetWindowAttributes *xswa);
@@ -1024,10 +1085,15 @@ events.
 Other functions exists that can be used to modify the color/visual
 property of a canvas:
 @findex fl_set_canvas_colormap()
+@anchor{fl_set_canvas_colormap()}
 @findex fl_get_canvas_colormap()
+@anchor{fl_get_canvas_colormap()}
 @findex fl_set_canvas_visual()
+@anchor{fl_set_canvas_visual()}
 @findex fl_set_canvas_depth()
+@anchor{fl_set_canvas_depth()}
 @findex fl_get_canvas_depth()
+@anchor{fl_get_canvas_depth()}
 @example
 void fl_set_canvas_colormap(FL_OBJECT *obj, Colormap map);
 Colormap fl_get_canvas_colormap(FL_OBJECT *obj);
@@ -1041,24 +1107,25 @@ the canvas window is created (which happens when the parent form is
 shown). Also, typically if you change the canvas visual, you probably
 should also change the canvas depth to match the visual.
 
-Caution should also applied when usin @code{fl_set_canvas_colormap()}:
-when the canvas window goes away, e.g.@: as a result of a call of
-@code{fl_hide_canvas()} or @code{fl_hide_form()}, the colormap
-associated with the canvas is freed (destroyed). This likely will
-cause problems if a single colormap is used for multiple canvases as
-each canvase will attemp to free the same colormap, resulting in an X
-error. If your application works this way, i.e.@: the same colormap is
-used on multiple canvases (via @code{fl_set_canvas_colormap()}), you
-should use the following routine to prevent the canvas from freeing
-the colormap:
+Caution should also applied when usin
+@code{@ref{fl_set_canvas_colormap()}}: when the canvas window goes
+away, e.g.@: as a result of a call of @code{@ref{fl_hide_form()}}, the
+colormap associated with the canvas is freed (destroyed). This likely
+will cause problems if a single colormap is used for multiple canvases
+as each canvase will attemp to free the same colormap, resulting in an
+X error. If your application works this way, i.e.@: the same colormap
+is used on multiple canvases (via
+@code{@ref{fl_set_canvas_colormap()}}), you should use the following
+routine to prevent the canvas from freeing the colormap:
 @findex fl_share_canvas_colormap()
+@anchor{fl_share_canvas_colormap()}
 @example
 void fl_share_canvas_colormap(FL_OBJECT *obj, Colormap colormap);
 @end example
 @noindent
-This function works the same as @code{fl_set_canvas_colormap()} except
-that it also sets a intenal flag so the colormap isn't freed when the
-canvas goes away.
+This function works the same as @code{@ref{fl_set_canvas_colormap()}}
+except that it also sets a intenal flag so the colormap isn't freed
+when the canvas goes away.
 
 By default, canvases are decorated with an @code{FL_DOWN_FRAME}. To
 change the decoration, change the the boxtype of the canvas and the
@@ -1070,6 +1137,7 @@ types are appropriate for decorations.
 The following routine is provided to facilitate the creation of a
 colormap appropriate for a given visual to be used with a canvas:
 @findex fl_create_colormap()
+@anchor{fl_create_colormap()}
 @example
 Colormap fl_create_colormap(XVisualInfo *xvinfo, int n_colors);
 @end example
@@ -1092,6 +1160,7 @@ canvas will "steal" keyboard inputs if they match the shortcuts. To
 disable this feature, use the following routine with a false (0)
 value for @code{yes_no}:
 @findex fl_canvas_yield_to_shortcut()
+@anchor{fl_canvas_yield_to_shortcut()}
 @example
 void fl_canvas_yield_to_shortcut(FL_OBJECT *obj, int yes_no);
 @end example
@@ -1103,10 +1172,11 @@ void fl_canvas_yield_to_shortcut(FL_OBJECT *obj, int yes_no);
 Some of the attributes, such as boxtype, do not apply to the canvas
 class.
 
-The first color argument (@code{col1}) to @code{fl_set_object_color()}
-can be used to set the background color of the canvas (by default, a
-canvas has no background color). The second argument (@code{col2})
-controls the decoration color (if applicable).
+The first color argument (@code{col1}) to
+@code{@ref{fl_set_object_color()}} can be used to set the background
+color of the canvas (by default, a canvas has no background color).
+The second argument (@code{col2}) controls the decoration color (if
+applicable).
 
 
 @node OpenGL Canvas
@@ -1119,6 +1189,7 @@ Mesa, a free OpenGL clone.
 
 To add an OpenGL canvas to a form, use the following routine
 @findex fl_add_glcanvas()
+@anchor{fl_add_glcanvas()}
 @example
 FL_OBJECT *fl_add_glcanvas(int type, FL_Coord x, FL_Coord y,
                            FL_Coord w, FL_Coord h, const char *label);
@@ -1136,6 +1207,7 @@ GLX_DOUBLEBUFFER
 The application program can modify these defaults using the following
 routine (before the creation of glcanvases)
 @findex fl_set_glcanvas_defaults()
+@anchor{fl_set_glcanvas_defaults()}
 @example
 void fl_set_glcanvas_defaults(const int *attributes);
 @end example
@@ -1144,6 +1216,7 @@ See @code{glXChooseVisual()} for a list of valid attributes.
 
 To get the current defaults use
 @findex fl_get_glcanvas_defaults()
+@anchor{fl_get_glcanvas_defaults()}
 @example
 void fl_get_glcanvas_defaults(int *attributes);
 @end example
@@ -1151,6 +1224,7 @@ void fl_get_glcanvas_defaults(int *attributes);
 It is also possible to change the attributes on a canvas by canvas
 basis by utilizing the following routine:
 @findex fl_set_glcanvas_attributes()
+@anchor{fl_set_glcanvas_attributes()}
 @example
 void fl_set_glcanvas_attributes(FL_OBJECT *obj, const int *attributes);
 @end example
@@ -1160,6 +1234,7 @@ the fly even if the canvas is already visible and active.
 
 To obtain the attributes of a particular canvas, use the following routine
 @findex fl_get_glcanvas_attributes()
+@anchor{fl_get_glcanvas_attributes()}
 @example
 void fl_get_glcanvas_attributes(FL_OBJECT *obj, int attributes[]);
 @end example
@@ -1168,6 +1243,7 @@ The caller must supply the space for the attribute values.
 
 To obtain the the glx context (for whatever purposes), use
 @findex fl_get_glcanvas_context()
+@anchor{fl_get_glcanvas_context()}
 @example
 GLXContext fl_get_glcanvas_context(FL_OBJECT *obj);
 @end example
@@ -1177,6 +1253,7 @@ direct rendering (i.e., by-passing the Xserver). To change this
 default, i.e.@: to always render through the Xserver, use the following
 routine:
 @findex fl_set_glcanvas_direct()
+@anchor{fl_set_glcanvas_direct()}
 @example
 void fl_set_glcanvas_direct(FL_OBJECT *obj, int yes_no);
 @end example
@@ -1191,6 +1268,7 @@ handler. In some cases, the application may want to draw into canvases
 actively. In this case, explicit drawing context switching may be
 required. To this end, use the following routine
 @findex fl_activate_glcanvas()
+@anchor{fl_activate_glcanvas()}
 @example
 void fl_activate_glcanvas(FL_OBJECT *obj);
 @end example
@@ -1200,6 +1278,7 @@ before drawing into glcanvas object.
 Finally there is a routine that can be used to obtain the @code{XVisual}
 information that is used to create the context
 @findex fl_get_glcanvas_xvisualinfo()
+@anchor{fl_get_glcanvas_xvisualinfo()}
 @example
 XVisualInfo *fl_get_glcanvas_xvisualinfo(FL_OBJECT *obj);
 @end example

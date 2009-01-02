@@ -1,3 +1,15 @@
+2009-01-02 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/select.c, lib/include/select.h, lib/private/pselect.h:
+	Files for the new select object added that is supposed to
+	replace the old choice object and is based on the new popup
+	code recently added.
+
+	* doc/part3_choice_objects.texi, doc/part3_deprecated_objects.texi:
+	Documentation of choice objects moved from that for choice
+	objects to that for deprecated objects and documenttation for
+	the new select object was added to that for choice objects.
+
 2008-12-28 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_printC.c: Applied a patch Werner Heisch send

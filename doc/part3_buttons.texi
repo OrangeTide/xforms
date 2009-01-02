@@ -35,14 +35,23 @@ labels are graphics rather than text.
 
 Adding an object To add buttons use one of the following routines:
 @findex fl_add_button()
+@anchor{fl_add_button()}
 @findex fl_add_lightbutton()
+@anchor{fl_add_lightbutton()}
 @findex fl_add_roundbutton()
+@anchor{fl_add_roundbutton()}
 @findex fl_add_round3dbutton()
+@anchor{fl_add_round3dbutton()}
 @findex fl_add_checkbutton()
+@anchor{fl_add_checkbutton()}
 @findex fl_add_bitmapbutton()
-@findex fl_add_pximapbutton()
+@anchor{fl_add_bitmapbutton()}
+@findex fl_add_pixmapbutton()
+@anchor{fl_add_pixmapbutton()}
 @findex fl_add_labelbutton()
+@anchor{fl_add_labelbutton()}
 @findex fl_add_scrollbutton()
+@anchor{fl_add_scrollbutton()}
 @example
 FL_OBJECT *fl_add_button(int type, FL_Coord x, FL_Coord y,
                          FL_Coord w, FL_Coord h,
@@ -86,32 +95,32 @@ arrow.
 
 The following types of buttons are available:
 @table @code
-@tindex @code{FL_NORMAL_BUTTON}
+@tindex FL_NORMAL_BUTTON
 @item FL_NORMAL_BUTTON
 Returns value when released.
-@tindex @code{FL_PUSH_BUTTON}
+@tindex FL_PUSH_BUTTON
 @item FL_PUSH_BUTTON
 Stays pushed until user pushes it again.
-@tindex @code{FL_MENU_BUTTON}
+@tindex FL_MENU_BUTTON
 @item FL_MENU_BUTTON
 Returns value when pushed, useful e.g.@: for opening a popup when
 pushed.
-@tindex @code{FL_TOUCH_BUTTON}
+@tindex FL_TOUCH_BUTTON
 @item FL_TOUCH_BUTTON
 Returns value as long as the user pushes it.
-@tindex @code{FL_RADIO_BUTTON}
+@tindex FL_RADIO_BUTTON
 @item FL_RADIO_BUTTON
 Push button that switches off other radio buttons.
-@tindex @code{FL_HIDDEN_BUTTON}
+@tindex FL_HIDDEN_BUTTON
 @item FL_HIDDEN_BUTTON
 Invisible normal button.
-@tindex @code{FL_INOUT_BUTTON}
+@tindex FL_INOUT_BUTTON
 @item FL_INOUT_BUTTON
 Returns value both when pushed and when released.
-@tindex @code{FL_RETURN_BUTTON}
+@tindex FL_RETURN_BUTTON
 @item FL_RETURN_BUTTON
 Like a normal button but reacts on the @code{<Return>} key.
-@tindex @code{FL_HIDDEN_RET_BUTTON}
+@tindex FL_HIDDEN_RET_BUTTON
 @item FL_HIDDEN_RET_BUTTON
 Invisible return button.
 @end table
@@ -165,6 +174,7 @@ See demo @file{butttypes.c} for a feel of the different button types.
 The application program can also set a button to be pushed or not
 itself without a user action. To this end use the routine
 @findex fl_set_button()
+@anchor{fl_set_button()}
 @example
 void fl_set_button(FL_OBJECT *obj, int pushed);
 @end example
@@ -176,13 +186,15 @@ form (or group). Also note that, while this routine only simulates the
 visual appearance and perhaps some internal states, it does not affect
 the program flow in any way, i.e.@: setting a button as being pushed
 does not invoke its callback or results in the button becoming
-returned to the program. For that @code{fl_trigger_object()} is to be
-used or, more conveniently, just follow up @code{fl_set_button()} with
-a call of @code{fl_call_object_callback()}.
+returned to the program. For that @code{@ref{fl_trigger_object()}} is
+to be used or, more conveniently, just follow up
+@code{@ref{fl_set_button()}} with a call of
+@code{@ref{fl_call_object_callback()}}.
 
-To figure out whether a button is pushed1 or not use@footnote{@code{fl
-mouse button()} can also be used.}
+To figure out whether a button is pushed1 or not
+use@footnote{@code{@ref{fl_mouse_button()}} can also be used.}
 @findex fl_get_button()
+@anchor{fl_get_button()}
 @example
 int fl_get_button(FL_OBJECT *obj);
 @end example
@@ -191,6 +203,7 @@ Sometimes you want to give the button a different meaning depending on
 which mouse button gets pressed on it. To find out which mouse button
 was used at the last push (or release) use the routine
 @findex fl_get_button_numb()
+@anchor{fl_get_button_numb()}
 @example
 int fl_get_button_numb(FL_OBJECT *obj);
 @end example
@@ -202,7 +215,7 @@ are from the scroll wheel of the mouse). If the last push was
 triggered by a shortcut (see below), the function returns the
 @code{keysym} (ASCII value if the key used has is between 0 and 127)
 of the key plus
-@tindex @code{FL_SHORTCUT}
+@tindex FL_SHORTCUT
 @code{FL_SHORTCUT}. For example, if a button has @code{<Ctrl>C} as its
 shortcut the button number returned upon activation of the shortcut
 will be @code{FL_SHORTCUT + 3} (the ASCII value of @code{<Ctrl>C} is
@@ -211,26 +224,29 @@ will be @code{FL_SHORTCUT + 3} (the ASCII value of @code{<Ctrl>C} is
 It can also be controlled which mouse buttons a buttons reacts to at
 all. To set which mouse buttons the button reacts to use
 @findex fl_set_button_mouse_buttons()
+@anchor{fl_set_button_mouse_buttons()}
 @example
 void fl_set_button_mouse_buttons(FL_OBJECT *obj, int mbuttons);
 @end example
 @noindent
-@code{mbuttons} is the inclusive OR of the numbers 1 for the left
+@code{mbuttons} is the bitwise OR of the numbers 1 for the left
 mouse button, 2 for the middle, 4 for the right mouse button, 8 for
 moving the scroll wheel up "button" and 16 for scrolling down
 "button". Unless set differently a button reacts to all mouse buttons.
 
 To determine which mouse buttons a button is reacting to use
-@findex fl_set_button_mouse_buttons()
+@findex fl_get_button_mouse_buttons()
+@anchor{fl_get_button_mouse_buttons()}
 @example
 void fl_get_button_mouse_buttons(FL_OBJECT *obj,
                                  unsigned int *mbuttons);
 @end example
 @noindent
 The value returned via @code{mbuttons} is the same value as would
-be used in @code{fl_set_button_mouse_buttons()}.
+be used in @code{@ref{fl_set_button_mouse_buttons()}}.
 
 If more information is desired about the last event, use
+@code{@ref{fl_last_event()}}
 @findex fl_last_event()
 @example
 const XEvent *fl_last_event(void);
@@ -241,6 +257,7 @@ to a button. E.g.@: you might want to define that @code{<Ctrl>Q} has
 the same meaning as pressing the "Quit" button. This can be achieved
 using the following call:
 @findex fl_set_button_shortcut()
+@anchor{fl_set_button_shortcut()}
 @example
 void fl_set_button_shortcut(FL_OBJECT *obj, const char *str,
                             int showUL);
@@ -278,7 +295,9 @@ letter @code{Y} becoming underlined while for @code{"yY"} it won't.
 To set the bitmap to use for a bitmap button the following functions
 can be used:
 @findex fl_set_bitmapbutton_data()
+@anchor{fl_set_bitmapbutton_data()}
 @findex fl_set_bitmapbutton_file()
+@anchor{fl_set_bitmapbutton_file()}
 @example
 void fl_set_bitmapbutton_data(FL_OBJECT *obj, int w, int h,
                               unsigned char *bits);
@@ -288,8 +307,11 @@ void fl_set_bitmapbutton_file(FL_OBJECT *obj, const char *filename);
 Similarly, to set the pixmap to use for a pixmap button the following
 routines can be used:
 @findex fl_set_pixmapbutton_data()
+@anchor{fl_set_pixmapbutton_data()}
 @findex fl_set_pixmapbutton_file()
+@anchor{fl_set_pixmapbutton_file()}
 @findex fl_set_pixmapbutton_pixmap()
+@anchor{fl_set_pixmapbutton_pixmap()}
 @example
 void fl_set_pixmapbutton_data(FL_OBJECT *obj, unsigned char **bits);
 void fl_set_pixmapbutton_file(FL_OBJECT *obj, const char *file);
@@ -306,6 +328,7 @@ the pixmap you want to use. Note that these routines do not free a
 pixmap already associated with the button. To free the pixmaps use
 the function
 @findex fl_free_pixmapbutton_pixmap()
+@anchor{fl_free_pixmapbutton_pixmap()}
 @example
 void fl_free_pixmapbutton_pixmap(FL_OBJECT *obj);
 @end example
@@ -316,6 +339,7 @@ allocated for then.
 To get the pixmap and mask that is currently being displayed, use the
 following routine
 @findex fl_get_pixmapbutton_pixmap()
+@anchor{fl_get_pixmapbutton_pixmap()}
 @example
 Pixmap fl_get_pixmapbutton_pixmap(FL_OBJECT *obj,
                                   Pixmap &pixmap, Pixmap &mask);
@@ -324,6 +348,7 @@ Pixmap fl_get_pixmapbutton_pixmap(FL_OBJECT *obj,
 Pixmaps are by default displayed centered inside the bounding box.
 However, this can be changed using the following routine
 @findex fl_set_pixmapbutton_align()
+@anchor{fl_set_pixmapbutton_align()}
 @example
 void fl_set_pixmapbutton_align(FL_OBJECT *obj, int align,
                                int xmargin, int ymargin);
@@ -340,8 +365,11 @@ shown. If required, a different pixmap (the focus pixmap) can also be
 shown. To set such a focus pixmap the following functions are
 available:
 @findex fl_set_pixmapbutton_focus_data()
+@anchor{fl_set_pixmapbutton_focus_data()}
 @findex fl_set_pixmapbutton_focus_file()
+@anchor{fl_set_pixmapbutton_focus_file()}
 @findex fl_set_pixmapbutton_focus_pixmap()
+@anchor{fl_set_pixmapbutton_focus_pixmap()}
 @example
 void fl_set_pixmapbutton_focus_data(FL_OBJECT *obj,
                                      unsigned char **bits);
@@ -357,6 +385,7 @@ pixmap routines.
 Finally, there's a function that can be used to enable or disable the
 focus outline
 @findex fl_set_pixmapbutton_focus_outline()
+@anchor{fl_set_pixmapbutton_focus_outline()}
 @example
 void fl_set_pixmapbutton_focus_outline(FL_OBJECT *obj, int yes_no);
 @end example
@@ -371,25 +400,26 @@ handling.
 
 
 For normal buttons the first color argument (@code{col1}) to
-@code{fl_set_object_color()} controls the normal color and the second
-(@code{col2}) the color the button has when pushed. For lightbuttons
-@code{col1} is the color of the light when off and @code{col2} the
-color when on. For round buttons, @code{col1} is the color of the
-circle and @code{col2} the color of the circle that is placed inside
-it when pushed. For round3dbutton, @code{col1} is the color of the
-inside of the circle and @code{col2} the color of the embedded circle.
-For bitmapbuttons, @code{col1} is the normal box color (or bitmap
-background if boxtype is not @code{FL_NO_BOX}) and @code{col2} is used
-to indicate the focus color. The foreground color of the bitmap is
-controlled by label color (as set via @code{fl_set_object_lcol()}. For
-scrollbutton, @code{col1} is the overall boundbox color (if boxtype is
-not @code{FL_NO_BOX}), @code{col2} is the arrow color. The label of a
-scrollbutton must be a string with a number between 1 and 9 (except
-5), indicating the arrow direciton like on the numerical key pad. The
-label can have an optional prefix @code{#} to indicate uniform
-scaling. For example, the label @code{"#9"} tells that the arrow
-should be pointing up-right and the arrow has the identical width and
-height regardless the overall bounding box size.
+@code{@ref{fl_set_object_color()}} controls the normal color and the
+second (@code{col2}) the color the button has when pushed. For
+lightbuttons @code{col1} is the color of the light when off and
+@code{col2} the color when on. For round buttons, @code{col1} is the
+color of the circle and @code{col2} the color of the circle that is
+placed inside it when pushed. For round3dbutton, @code{col1} is the
+color of the inside of the circle and @code{col2} the color of the
+embedded circle. For bitmapbuttons, @code{col1} is the normal box
+color (or bitmap background if boxtype is not @code{FL_NO_BOX}) and
+@code{col2} is used to indicate the focus color. The foreground color
+of the bitmap is controlled by label color (as set via
+@code{@ref{fl_set_object_lcol()}}. For scrollbutton, @code{col1} is
+the overall boundbox color (if boxtype is not @code{FL_NO_BOX}),
+@code{col2} is the arrow color. The label of a scrollbutton must be a
+string with a number between 1 and 9 (except 5), indicating the arrow
+direciton like on the numerical key pad. The label can have an
+optional prefix @code{#} to indicate uniform scaling. For example, the
+label @code{"#9"} tells that the arrow should be pointing up-right and
+the arrow has the identical width and height regardless the overall
+bounding box size.
 
 @node Button Remarks
 @section Remarks

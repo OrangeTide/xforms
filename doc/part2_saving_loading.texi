@@ -226,11 +226,12 @@ maintainable.
 
 There still is another difficulty that might arise with the current
 setup. For example, in @code{f1obj1}'s callback we change the state of
-some other objects , say, @code{f1obj2} via @code{fl_set_button()} or
-@code{fl_set_input()}. Now the state of @code{f1obj2} is changed and
-it needs to be handled. You probably don't want to put too much of
-code for handling @code{f1obj2} in @code{f1obj1}'s callback. In this
-situation, the following function comes in handy
+some other objects , say, @code{f1obj2} via
+@code{@ref{fl_set_button()}} or @code{@ref{fl_set_input()}}. Now the
+state of @code{f1obj2} is changed and it needs to be handled. You
+probably don't want to put too much of code for handling @code{f1obj2}
+in @code{f1obj1}'s callback. In this situation, the following function
+comes in handy
 @example
 void fl_call_object_callback(FL_OBJECT *obj);
 @end example

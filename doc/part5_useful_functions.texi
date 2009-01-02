@@ -18,6 +18,7 @@
 The following routine can be used to sound the keyboard bell (if
 capable):
 @findex fl_ringbell()
+@anchor{fl_ringbell()}
 @example
 void fl_ringbell(int percent);
 @end example
@@ -30,6 +31,7 @@ all keyboards support volume variations.
 To get the user name who's running the application you can use the
 routine
 @findex fl_whoami()
+@anchor{fl_whoami()}
 @example
 const char *fl_whoami(void);
 @end example
@@ -37,6 +39,7 @@ const char *fl_whoami(void);
 To get a string form of the current date and time, the following
 routine is available:
 @findex fl_now()
+@anchor{fl_now()}
 @example
 const char *fl_now(void);
 @end example
@@ -46,6 +49,7 @@ The format of the string is of the form @code{"Wed Jun 30 21:49:08
 
 The following time related routine might come in handy
 @findex fl_gettime()
+@anchor{fl_gettime()}
 @example
 void fl_gettime(unsigned long *sec, unsigned long *usec);
 @end example
@@ -65,34 +69,37 @@ to changes, both in their API and/or functionality.
 
 You can create and show a window with the following routines
 @findex fl_wincreate()
+@anchor{fl_wincreate()}
 @findex fl_winshow()
+@anchor{fl_winshow()}
 @example
 Window fl_wincreate(const char *name);
 Window fl_winshow(Window win);
 @end example
 @noindent
-where parameter @code{win} in @code{fl_winshow()} is the window ID
-returned by @code{fl_wincreate()}. The title of the window is set
-by the @code{name} argument.
+where parameter @code{win} in @code{@ref{fl_winshow()}} is the window
+ID returned by @code{@ref{fl_wincreate()}}. The title of the window is
+set by the @code{name} argument.
 
 Between the creation and showing of the window, other attributes of
 the window can be set. Note that a window opened this way is always a
 top level window and uses all the Forms Library'f defaults (visual,
-depth etc.). Another thing about @code{fl_winshow()} is that it will
-wait for and gobble up the first @code{Expose} event, and you can
+depth etc.). Another thing about @code{@ref{fl_winshow()}} is that it
+will wait for and gobble up the first @code{Expose} event, and you can
 drawing into the window immediately after the function returns.
 
 It is sometimes more convenient to create and show a window in a
 single call using
 @findex fl_winopen()
+@anchor{fl_winopen()}
 @example
 Window fl_winopen(const char *name);
 @end example
 @noindent
 This will open a (top-level) window with the title @code{name}. A
 window so opened can be drawn into as soon as the function returns,
-i.e.@: @code{fl_winopen()} waits until the window is ready to be drawn
-to.
+i.e.@: @code{@ref{fl_winopen()}} waits until the window is ready to be
+drawn to.
 
 The newly opened window will have the following default attributes
 @table @code
@@ -115,6 +122,7 @@ same as Forms Library's default
 To make a top-level window a sub-window of another window use the
 following routine
 @findex fl_winreparent()
+@anchor{fl_winreparent()}
 @example
 int fl_winreparent(Window win, Window new_parent);
 @end example
@@ -126,9 +134,11 @@ both the window and the parent window must be valid windows.
 By default, a newly opened window will have a size of 320 by 200
 pixels and no other constraints. You can modify the default or
 constraints using the following routines prior to calling
-@code{fl_winopen()}:
+@code{@ref{fl_winopen()}}:
 @findex fl_initial_winsize()
+@anchor{fl_initial_winsize()}
 @findex fl_winsize()
+@anchor{fl_winsize()}
 @example
 void fl_initial_winsize(FL_Coord w, FL_Coord h);
 void fl_winsize(FL_Coord w, FL_Coord h);
@@ -136,18 +146,20 @@ void fl_winsize(FL_Coord w, FL_Coord h);
 @noindent
 These two routines set the preferred window size. @code{w} and
 @code{h} are the width and height of the window in pixels.
-@code{fl_winsize()} in addition will make the window non-resizeable
-(but you can still resize the window programmatically) by setting the
-minimum and maximum window size to the requested size via
-@code{WMHints}. The effect of a window having this property is that it
-can't be interactively resized (provided the window manager
+@code{@ref{fl_winsize()}} in addition will make the window
+non-resizeable (but you can still resize the window programmatically)
+by setting the minimum and maximum window size to the requested size
+via @code{WMHints}. The effect of a window having this property is
+that it can't be interactively resized (provided the window manager
 cooperates).
 
 It is sometimes desirable to have a window that is resizeable but only
 within a useful range. To set such a constraint, use the following
 functions:
 @findex fl_winminsize()
+@anchor{fl_winminsize()}
 @findex fl_winmaxsize()
+@anchor{fl_winmaxsize()}
 @example
 void fl_winminsize(Window window, FL_Coord minw, FL_Coord minh);
 void fl_winmaxsize(Window window, FL_Coord maxw, FL_Coord maxh);
@@ -168,6 +180,7 @@ win = fl_winopen("MyWin");
 In addition to window size preference, you can also set preferred
 position of a window to be opened:
 @findex fl_winposition()
+@anchor{fl_winposition()}
 @example
 void fl_winposition(FL_Coord x, FL_Coord y);
 @end example
@@ -178,6 +191,9 @@ corner of the window relative to the root window.
 Alternatively, you can set the geometry (position and size) in a
 single function call:
 @findex fl_initial_wingeometry()
+@anchor{fl_initial_wingeometry()}
+@findex fl_wingeometry()
+@anchor{fl_wingeometry()}
 @example
 void fl_initial_wingeometry(FL_Coord x, FL_Coord y,
                             FL_Coord w, FL_Coord h);
@@ -185,12 +201,13 @@ void fl_wingeometry(FL_Coord x, FL_Coord y,
                     FL_Coord w, FL_Coord h);
 @end example
 @noindent
-Again, the @code{fl_wingeometry()} will deny later interactive
+Again, the @code{@ref{fl_wingeometry()}} will deny later interactive
 resizing.
 
 There are further routines that can be used to change other aspects of
 the window to be created:
 @findex fl_winaspect()
+@anchor{fl_winaspect()}
 @example
 void fl_winaspect(Window win, FL_Coord x, FL_Coord y);
 @end example
@@ -200,18 +217,21 @@ resizing.
 
 To change the window title (and its associated icon title) use
 @findex fl_wintitle()
+@anchor{fl_wintitle()}
 @example
 void fl_wintitle(Window win, const char *title);
 @end example
 
 To change the icon title only use the routine
 @findex fl_winicontitle()
+@anchor{fl_winicontitle()}
 @example
 void fl_winicontitle(Window win, const char *title);
 @end example
 
 To install an icon for the window use
 @findex fl_winicon()
+@anchor{fl_winicon()}
 @example
 void fl_winicon(Window win, Pixmap icon, Pixmap mask);
 @end example
@@ -220,7 +240,9 @@ You can suppress the window manager's decoration or make a window a
 transient one by using the following routines prior to creating the
 window
 @findex fl_noborder()
+@anchor{fl_noborder()}
 @findex fl_transient()
+@anchor{fl_transient()}
 @example
 void fl_noborder(void);
 void fl_transient(void);
@@ -229,6 +251,7 @@ void fl_transient(void);
 You can also set the background of the window to a certain color using
 the following call
 @findex fl_winbackground()
+@anchor{fl_winbackground()}
 @example
 void fl_winbackground(Window win, unsigned long pixel);
 @end example
@@ -236,6 +259,7 @@ void fl_winbackground(Window win, unsigned long pixel);
 It is possible to set the steps by which the size of a window can be
 changed by using
 @findex fl_winstepsize()
+@anchor{fl_winstepsize()}
 @example
 void fl_winstepsize(Window win, int xunit, int yunit);
 @end example
@@ -248,6 +272,7 @@ Note that this only applies to interactive resizing.
 To change constraints (size and aspect ratio) on an active window, you
 can use the following routine
 @findex fl_reset_winconstraints()
+@anchor{fl_reset_winconstraints()}
 @example
 void fl_reset_winconstraints(Window win);
 @end example
@@ -255,8 +280,11 @@ void fl_reset_winconstraints(Window win);
 The following routines are available to get information about an
 active window win:
 @findex fl_get_winsize()
+@anchor{fl_get_winsize()}
 @findex fl_get_winorigin()
+@anchor{fl_get_winorigin()}
 @findex fl_get_wingeometry()
+@anchor{fl_get_wingeometry()}
 @example
 void fl_get_winsize(Window win, FL_Coord *w, FL_Coord *h);
 void fl_get_winorigin(Window win, FL_Coord *x, FL_Coord *y);
@@ -270,6 +298,7 @@ from the upper left corner of the root window.
 To change the size of window programmatically the following routine
 is available:
 @findex fl_winresize()
+@anchor{fl_winresize()}
 @example
 int fl_winresize(Window win, FL_Coord neww, FL_Coord newh);
 @end example
@@ -282,12 +311,14 @@ window.
 
 To move a window without resizing it, use the following call
 @findex fl_winmove()
+@anchor{fl_winmove()}
 @example
 void fl_winmove(Window win, FL_Coord newx, FL_Coord newy);
 @end example
 
  To move and resize a window, use the following routine
 @findex fl_winreshape()
+@anchor{fl_winreshape()}
 @example
 void fl_winreshape(Window win, FL_Coord newx, FL_Coord newy,
                    FL_Coord neww, FL_Coord newh);
@@ -295,32 +326,36 @@ void fl_winreshape(Window win, FL_Coord newx, FL_Coord newy,
 
 The following routine is available to iconify a window
 @findex fl_iconify()
+@anchor{fl_iconify()}
 @example
 void fl_iconify(Window win);
 @end example
 
 To make a window invisible use
 @findex fl_winhide()
+@anchor{fl_winhide()}
 @example
 void fl_winhide(Window win);
 @end example
 @noindent
 A window hidden this way can be shown again later using
-@code{fl_winshow()}.
+@code{@ref{fl_winshow()}}.
 
 To hide and destroy a window, use the following calls
 @findex fl_winclose()
+@anchor{fl_winclose()}
 @example
 void fl_winclose(Window win);
 @end example
 @noindent
-There will be no events generated from @code{fl_winclose()}, i.e., the
-function waits and gobbles up all events for window @code{win}. In addition,
-this routine also removes all callbacks associated with the closed
-window.
+There will be no events generated from @code{@ref{fl_winclose()}},
+i.e.@: the function waits and gobbles up all events for window
+@code{win}. In addition, this routine also removes all callbacks
+associated with the closed window.
 
 The following routine can be used to check if a window ID is valid or not
 @findex fl_winisvalid()
+@anchor{fl_winisvalid()}
 @example
 int fl_winisvalid(Window win);
 @end example
@@ -333,6 +368,7 @@ the keyboard focus assignment. In some special situations, explicit
 override of the keyboard focus might be warranted. To this end, the
 following routine exists:
 @findex fl_winfocus()
+@anchor{fl_winfocus()}
 @example
 void fl_winfocus(Window win);
 @end example
@@ -344,14 +380,15 @@ After this call keyboard input is directed to window @code{win}.
 
 XForms provides a convenience function to change the cursor shapes:
 @findex fl_set_cursor()
+@anchor{fl_set_cursor()}
 @example
 void fl_set_cursor(Window win, int name);
 @end example
 @noindent
 where @code{win} must be a valid window identifier and @code{name} is
 one of the symbolic cursor names (shapes) defined by standard X or the
-integer values returned by @code{fl_create_bitmap_cursor()} or one of the
-Forms Library's pre-defined symbolic names.
+integer values returned by @code{@ref{fl_create_bitmap_cursor()}} or
+one of the Forms Library's pre-defined symbolic names.
 
 The X standard symbolic cursor names (all starts with @code{XC_}) are
 defined in @code{<X11/cursorfont.h>} (you don't need to explicitly
@@ -363,7 +400,7 @@ fl_set_cursor(form->window, XC_watch);
 @end example
 
 The Forms Library defines a special symbolic constants,
-@tindex @code{FL_INVISIBLE_CURSOR}
+@tindex FL_INVISIBLE_CURSOR
 @code{FL_INVISIBLE_CURSOR} that can be used to hide the cursor for
 window @code{win}:
 @example
@@ -372,17 +409,19 @@ fl_set_cursor(win, FL_INVISIBLE_CURSOR);
 
 Depending on the structure of the application program, a call of
 @code{XFlush(fl_get_display());} may be required following
-@code{fl_set_cursor()}.
+@code{@ref{fl_set_cursor()}}.
 
 To reset the cursor to the XForms's default (an arrow pointing
 northwest), use the following routine
 @findex fl_reset_cursor()
+@anchor{fl_reset_cursor()}
 @example
 void fl_reset_cursor(Window win);
 @end example
 
 To change the color of a cursor use the following routine
 @findex fl_set_cursor_color()
+@anchor{fl_set_cursor_color()}
 @example
 void fl_set_cursor_color(int name, FL_COLOR fg, FL_COLOR bg);
 @end example
@@ -394,6 +433,7 @@ color change is visible immediately.
 It is possible to use cursors other than those defined by the standard
 cursor font by creating a bitmap cursor with
 @findex fl_create_bitmap_cursor()
+@anchor{fl_create_bitmap_cursor()}
 @example
 int fl_create_bitmap_cursor(const char *source, const char *mask,
                             int w, int h, int hotx, int hoty);
@@ -405,19 +445,21 @@ define which source pixels are displayed. If @code{mask} is
 @code{NULL} all bits in @code{source} are displayed. @code{hotx} and
 @code{hoty} are the hotspot of the cursor (relative to the source's
 origin). The function returns the cursor ID which can be used in calls
-of @code{fl_set_cursor()} and @code{fl_set_cursor_color()} etc.
+of @code{@ref{fl_set_cursor()}} and @code{@ref{fl_set_cursor_color()}}
+etc.
 
 Finally, there is a routine to create animated cursors where several
 cursors are displayed one after another:
 @findex fl_create_animated_cursor()
+@anchor{fl_create_animated_cursor()}
 @example
 int fl_create_animated_cursor(int *cur_names, int interval);
 @end example
 @noindent
 The function returns the cursor name (ID) that can be shown later via
-@code{fl_set_cursor()}. In the function call @code{cur_names} is an
-array of cursor names (either X standard cursors or cursor names
-returned by @code{fl_create_bitmap_cursor()}), terminated by -1.
+@code{@ref{fl_set_cursor()}}. In the function call @code{cur_names} is
+an array of cursor names (either X standard cursors or cursor names
+returned by @code{@ref{fl_create_bitmap_cursor()}}), terminated by -1.
 Parameter @code{interval} indicates the time each cursor is displayed
 before it is replaced by the next in the array. An interval about
 @w{150 msec} is a good value for typical uses. Note that there is
@@ -457,8 +499,9 @@ ability to post data onto the clipboard and request the content of the
 clipboard.
 
 To post data onto the clipboard, use the following routine
-@tindex @code{FL_LOSE_SELECTION_CB}
+@tindex FL_LOSE_SELECTION_CB
 @findex fl_stuff_clipboard()
+@anchor{fl_stuff_clipboard()}
 @example
 typedef int (*FL_LOSE_SELECTION_CB)(FL_OBJECT *obj, long type);
 
@@ -481,8 +524,9 @@ also unused. The data posted onto the clipboard are available to all
 applications that manipulate @code{XA_PRIMARY}, such as xterm etc.
 
 To request the current clipboard content use the following routine
-@tindex @code{FL_SELECTION_CB}
+@tindex FL_SELECTION_CB
 @findex fl_request_clipboard()
+@anchor{fl_request_clipboard()}
 @example
 typedef int (*FL_SELECTION_CB)(FL_OBJECT *obj, long type,
                                const void * data, long size);
@@ -513,4 +557,4 @@ returned) and 0 otherwise.
 
 If there is no selection the selection callback is called with an
 empty buffer and the length of the buffer is set to 0. In that case
-@code{fl_request_clipboard()} returns -1.
+@code{@ref{fl_request_clipboard()}} returns -1.

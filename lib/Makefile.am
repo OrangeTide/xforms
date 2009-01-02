@@ -90,6 +90,7 @@ libforms_la_SOURCES = \
 	roundbut.c \
 	scrollbar.c \
 	scrollbut.c \
+	select.c \
 	signal.c \
 	simu.c \
 	sldraw.c \

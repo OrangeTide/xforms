@@ -42,8 +42,9 @@ machinery gets to it.
 
 Use the following routines to register such a preemptive processing
 routine
-@tindex @code{FL_RAW_CALLBACK}
-@findex fl_register_raw_callback)
+@tindex FL_RAW_CALLBACK
+@findex fl_register_raw_callback()
+@anchor{fl_register_raw_callback()}
 @example
 typedef int (*FL_RAW_CALLBACK)(FL_FORM *, void *xevent);
 FL_RAW_CALL_BACK fl_register_raw_callback(FL_FORM *form,
@@ -79,12 +80,12 @@ random.
 
 A special constant, @code{FL_ALL_EVENT}, is defined so that the
 handler registered will received all events that are selected. To
-select events, use @code{fl_addto_selected_xevent()}.
+select events, use @code{@ref{fl_addto_selected_xevent()}}.
 
 Once an event handler is registered and the event is detected, then
 instead of doing the default processing by the dispatcher, the
 registered handler is invoked. The handler must return
-@tindex @code{FL_PREEMPT}
+@tindex FL_PREEMPT
 @code{FL_PREEMPT} if the event is consumed) and 0 otherwise so that
 the internal process can continue. See the demo program
 @file{minput2.c} for an example.
@@ -102,12 +103,13 @@ object. The pre-handler will be called before the built-in object
 handler. By electing to handle some of the events, a pre-handler can,
 in effect, replace part of the built-in handler.
 
-In chapter 30.1 the API was already discussed in detail, so here we
-just repeat the discussion for completeness as any use of pre-emptive
-handler is considered "dirty tricks".
+In @ref{Part IV Using a Pre-empive Handler, , the chapter about
+pre-emptive handlers} the API was already discussed in detail, so here
+we just repeat the discussion for completeness as any use of
+pre-emptive handler is considered "dirty tricks".
 
 To register a pre-handler, use the following routine
-@tindex @code{FL_HANDLEPTR}
+@tindex FL_HANDLEPTR
 @findex fl_set_object_prehandler()
 @example
 typedef int (*FL_HANDLEPTR)(FL_OBJECT *obj, int event,
@@ -140,10 +142,11 @@ a post-handler should be used instead of a pre-handler.
 @node Other
 @section Other
 
-As stated earlier, @code{fl_set_defaults()} can be used to modify the
-Forms Library's defaults prior to calling @code{fl_initialize()}.
-Actually, this routine can also be used after @code{fl_initialize()}
-to override the values set on the command line or in the application
-databases. However, overriding users' preferences should be done with
-discretion. Further, setting @code{privateColormap} after
-@code{fl_initialize()} has no effect.
+As stated earlier, @code{@ref{fl_set_defaults()}} can be used to
+modify the Forms Library's defaults prior to calling
+@code{@ref{fl_initialize()}}. Actually, this routine can also be used
+after @code{@ref{fl_initialize()}} to override the values set on the
+command line or in the application databases. However, overriding
+users' preferences should be done with discretion. Further, setting
+@code{privateColormap} after @code{@ref{fl_initialize()}} has no
+effect.

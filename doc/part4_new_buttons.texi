@@ -11,13 +11,14 @@ this scheme behave consistently. Within this scheme, the programmer
 only has to write a drawing function that draws the button. There is
 no need to handle events or messages from the main module and all
 types of buttons, radio, pushed or normal are completely taken care of
-by the generic button class. Further, @code{fl_get_button()} and
-@code{fl_set_button()} work automatically without adding any code for
-them.
+by the generic button class. Further, @code{@ref{fl_get_button()}} and
+@code{@ref{fl_set_button()}} work automatically without adding any
+code for them.
 
 Forms Library provides two routines to facilitate the creation of new
 button object classes. One of the routines is
 @findex fl_create_generic_button()
+@anchor{fl_create_generic_button()}
 @example
 FL_OBJECT *fl_create_generic_button(int objclass, int type,
                                     FL_Coord x, FL_Coord y,
@@ -28,13 +29,13 @@ FL_OBJECT *fl_create_generic_button(int objclass, int type,
 which can be used to create a generic button that has all the
 properties of a real button except that this generic button does not
 know what the real button looks like. The other routine
-@code{fl_add_button_class()}, discussed below, can be used to register
+@code{@ref{fl_add_button_class()}}, discussed below, can be used to register
 a drawing routine that completes the creation of a new button.
 
 All button or button-like objects have the following instance-specific
 structure, defined in @file{forms.h}, that can be used to obtain
 information about the current status of the button:
-@tindex @code{FL_BUTTON_STRUCT}
+@tindex FL_BUTTON_STRUCT
 @example
 typedef struct @{
     Pixmap         pixmap;   /* for bitmap/pixmap button only */
@@ -78,6 +79,7 @@ routine to place the newly created button onto a form.
 After creating the generic button, the new button class should be made
 known to the button driver via the following function
 @findex fl_add_button_class()
+@anchor{fl_add_button_class()}
 @example
 void fl_add_button_class(int objclass, void (*draw)(FL_OBJECT *), void
 (*cleanup)(FL_BUTTON_SPEC *));
@@ -158,7 +160,7 @@ static void draw_nbutton(FL_OBJECT *obj) @{
 @end example
 
 Note that when drawing symbols, the style and size are irrelevent and
-set to zero in @code{fl_drw_text()} above.
+set to zero in @code{@ref{fl_drw_text()}} above.
 
 Since we don't use the @code{cspecv} field to point to dynamically
 allocated memory we don't have to write a clean-up function.
@@ -208,15 +210,15 @@ class developers.
 We choose to use @code{obj->col1} as the color of the box and
 @code{obj->col2} as the color of the cross (remember these two colors
 are changeable by the application program via
-@code{fl_set_object_color()}). Note that this decision on color use is
-somewhat arbitrary, we could have easily made @code{obj->col2} the
-color of the button when pushed and use @code{obj->spec->cspecl} for
-the cross color (another routine named e.g.@:
+@code{@ref{fl_set_object_color()}}). Note that this decision on color
+use is somewhat arbitrary, we could have easily made @code{obj->col2}
+the color of the button when pushed and use @code{obj->spec->cspecl}
+for the cross color (another routine named e.g.@:
 @code{fl_set_crossbutton_crosscol()} should be provided to change the
 cross color in this case).
 
 We start by defining the class ID and declaring the utility routine
-prototypes in the header file (@file{crossbut.h}):
+prototypes in the header file @file{crossbut.h}:
 @example
 #ifndef CROSSBUTTON_H_
 #define CROSSBUTTON_H_

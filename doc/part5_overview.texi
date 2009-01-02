@@ -25,13 +25,13 @@ specific object classes see Part III.
 The header file @file{forms.h} defines three symbolic constants which
 you can use to conditionally compile your application. They are
 @table @code
-@tindex @code{FL_VERSION}
+@tindex FL_VERSION
 @item FL_VERSION
 The major version number.
-@tindex @code{FL_REVISION}
+@tindex FL_REVISION
 @item FL_REVISION
 Revision number.
-@tindex @code{FL_INCLUDE_VERSION}
+@tindex FL_INCLUDE_VERSION
 @item FL_INCLUDE_VERSION
 @code{1000 * FL_VERSION + FL_REVISION}
 @end table
@@ -39,6 +39,7 @@ Revision number.
 There is also a routine that can be used to obtain the library version
 at run time:
 @findex fl_library_version()
+@anchor{fl_library_version()}
 @example
 int fl_library_version(int *version, int *revision)
 @end example
@@ -63,7 +64,9 @@ complete version information.
 
 The routines
 @findex fl_init()
+@anchor{fl_init()}
 @findex fl_initialize()
+@anchor{fl_initialize()}
 @example
 Display *fl_init(void);
 Display *fl_initialize(int *argc, char *argv[], const char *appclass,
@@ -73,9 +76,9 @@ Display *fl_initialize(int *argc, char *argv[], const char *appclass,
 initializes the Forms Library and returns a pointer to the
 @code{Display} structure if a connection could be made, otherwise
 @code{NULL}. One of the two functions should always be called before
-any other calls to the Forms Library (except @code{fl_set_defaults()}
-and a few other functions that alter some of the defaults of the
-library).
+any other calls to the Forms Library (except
+@code{@ref{fl_set_defaults()}} and a few other functions that alter
+some of the defaults of the library).
 
 The first function is useful for quick "throw-away" prototypes or
 applications that parse their own command line parameters.
@@ -101,12 +104,12 @@ Specifies how to parse the application-specific resources.
 Number of entries in the option list.
 @end table
 
-The @code{fl_initialize()} function builds the resource database,
-calls the Xlib @code{XrmParseCommand()} function to parse the command
-line arguments, and performs other per display initialization. After
-the creation of the database, it is associated with the display via
-@code{XrmSetDatabase()}, so the application can get at it if
-necessary.
+The @code{@ref{fl_initialize()}} function builds the resource
+database, calls the Xlib @code{XrmParseCommand()} function to parse
+the command line arguments, and performs other per display
+initialization. After the creation of the database, it is associated
+with the display via @code{XrmSetDatabase()}, so the application can
+get at it if necessary.
 
 All recognized options are removed from the argument list and their
 corresponding values set. Forms Library provides appropriate defaults
@@ -187,9 +190,10 @@ which may or may not be the servers default. There is a special
 command option @code{-visual Default} that sets both the visual and
 depth to the X servers default. If a visual ID is requested, it
 overrides depth or visual if specified. The visual ID can also be
-requested programmatically (before @code{fl_initialize()} is called)
-via the function
+requested programmatically (before @code{@ref{fl_initialize()}} is
+called) via the function
 @findex fl_set_visualID()
+@anchor{fl_set_visualID()}
 @example
 void fl_set_visualID(long id);
 @end example
@@ -215,9 +219,10 @@ provide an application specific resource database distributed with
 your program. The easiest way, however, is to set up your own program
 defaults programmatically without affecting the users' ability to
 override them with command line options. For this, you can use the
-following routine before calling @code{fl_initialize()}:
+following routine before calling @code{@ref{fl_initialize()}}:
 @findex fl_set_defaults()
-@tindex @code{FL_IOPT}
+@anchor{fl_set_defaults()}
+@tindex FL_IOPT
 @example
 void fl_set_defaults(unsigned long mask, FL_IOPT *flopt);
 @end example
@@ -313,18 +318,20 @@ Coordinate units can be in pixels, points (1/72 inch), mm
 (centi-millimeter). The the type of unit in use can be queried or
 set via the functions
 @findex fl_get_coordunit()
+@anchor{fl_get_coordunit()}
 @findex fl_set_coordunit()
+@anchor{fl_set_coordunit()}
 @example
 int fl_get_coordunit(void);
 void fl_set_coordunit(int coordUnit);
 @end example
 @noindent
 @code{coordUnit} can have the following values:
-@tindex @code{FL_COORD_PIXEL}
-@tindex @code{FL_COORD_POINT}
-@tindex @code{FL_COORD_MM}
-@tindex @code{FL_COORD_centiPOINT}
-@tindex @code{FL_COORD_centiMM}
+@tindex FL_COORD_PIXEL
+@tindex FL_COORD_POINT
+@tindex FL_COORD_MM
+@tindex FL_COORD_centiPOINT
+@tindex FL_COORD_centiMM
 @code{FL_COORD_PIXEL}, @code{FL_COORD_POINT}, @code{FL_COORD_MM},
 @code{FL_COORD_centiPOINT} and @code{FL_COORD_centiMM}.
 
@@ -347,6 +354,7 @@ default is 1 for normal fonts and 2 for bold fonts.
 There exists a convenience function to set the application default
 border width
 @findex fl_set_border_width()
+@anchor{fl_set_border_width()}
 @example
 void fl_set_border_width(int border_width)
 @end example
@@ -359,13 +367,14 @@ fl_set_defaults(FL_PDBorderWidth, &fl_cntl);
 @end example
 
 Typically this function, if used, should appear before
-@code{fl_initialize()} is called so the user has the option to
+@code{@ref{fl_initialize()}} is called so the user has the option to
 override the default via resource or command line options.
 
 To change the default scrollbar type (which is @code{THIN_SCROLLBAR})
 used in browser and input object, the following convenience function
 can be used:
 @findex fl_set_scrollbar_type()
+@anchor{fl_set_scrollbar_type()}
 @example
 void fl_set_scrollbar_type(int type);
 @end example
@@ -381,8 +390,8 @@ Nice scrollbar
 Similar to thin scrollbar, but not as fancy
 @end table
 
-Setting the scrollbar type before calling @code{fl_initialize()} is
-equivalent to
+Setting the scrollbar type before calling @code{@ref{fl_initialize()}}
+is equivalent to
 @example
 FL_IOPT fl_cntl;
 fl_cntl.scrollbarType = type;
@@ -390,8 +399,8 @@ fl_set_defaults(FL_PDScrollbarType, &fl_cntl);
 @end example
 
 It is recommended that this function be used before
-@code{fl_initialize()} so the user has the option to override the
-default through application resources.
+@code{@ref{fl_initialize()}} so the user has the option to override
+the default through application resources.
 
 Prior to version 0.80, the origin of XForms's coordinate system was at
 the lower-left corner of the form. The new Form Designer will convert
@@ -401,12 +410,13 @@ required. To help those who lost the @code{.fd} files or otherwise
 can't use a newer version of @code{fdesign}, a compatibility function
 is provided
 @findex fl_flip_yorigin()
+@anchor{fl_flip_yorigin()}
 @example
 void fl_flip_yorigin(void);
 @end example
 @noindent
 Note however that this function must be called prior to
-@code{fl_initialize()} and is a no-op after that.
+@code{@ref{fl_initialize()}} and is a no-op after that.
 
 For proportional font, substituting tabs with spaces is not always
 appropriate because this most likely will fail to align text properly.
@@ -415,6 +425,7 @@ pixels, and a tab stop will always end at multiples of this distance.
 Application program can adjust this distance by setting the tab stops
 using the following routine
 @findex fl_set_tabstop()
+@anchor{fl_set_tabstop()}
 @example
 void fl_set_tabstop(const char *s);
 @end example
@@ -437,7 +448,9 @@ In addition to using double buffering throughout an application, it is
 also possible to use double buffering on a per-form or per-object
 basis by using the following routines:
 @findex fl_set_form_dblbuffer()
+@anchor{fl_set_form_dblbuffer()}
 @findex fl_set_object_dblbuffer()
+@anchor{fl_set_object_dblbuffer()}
 @example
 void fl_set_form_dblbuffer(FL_FORM *form, int yes);
 void fl_set_object_dblbuffer(FL_OBJECT *obj, int yes);
@@ -455,6 +468,7 @@ changing @code{obj->dbl_background} after switching to double buffer.
 Normally the Forms Library reports errors to @code{stderr}. This can
 be avoided or modified by registering an error handling function
 @findex fl_set_error_handler()
+@anchor{fl_set_error_handler()}
 @example
 void fl_set_error_handler(void (*user_handler)(const char *where,
                                                const char *fmt,...));
@@ -470,6 +484,7 @@ times as you wish.
 You can also instruct the default message handler to log the error to
 a file instead of printing to @code{stderr}
 @findex fl_set_error_logfp()
+@anchor{fl_set_error_logfp()}
 @example
 void fl_set_error_logfp(FILE *fp);
 @end example
@@ -486,6 +501,7 @@ addition to being printed to stderr, a dialog box were shown that
 requires actions from the user. This could be turned off and on
 with the function
 @findex fl_show_errors()
+@anchor{fl_show_errors()}
 @example
 void fl_show_errors(int show);
 @end example
@@ -496,6 +512,7 @@ no effect.
 
 The fonts used in all forms can be changed using the routine
 @findex fl_set_font_name()
+@anchor{fl_set_font_name()}
 @example
 void fl_set_font_name(int n, const char *name);
 @end example
@@ -542,6 +559,7 @@ Given all these uncertainties regarding fonts, as a workaround, XForms
 provides a function that can be used to adjust the object size
 dynamically according to the actual fonts loaded:
 @findex fl_adjust_form_size()
+@anchor{fl_adjust_form_size()}
 @example
 double fl_adjust_form_size(FL_FORM *form);
 @end example
@@ -567,6 +585,7 @@ There is a similar function that works the same way, but on an
 object-by-object basis and further allows explicit margin
 specifications:
 @findex fl_fit_object_label()
+@anchor{fl_fit_object_label()}
 @example
 void fl_fit_object_label(FL_OBJECT *obj, FL_Coord hm, FL_Coord vm);
 @end example
@@ -582,19 +601,39 @@ function will not shrink a form. You can use this function on as many
 objects as you choose. Of course the object has to have a label inside
 the object for this function to work.
 
+All colors with indices smaller than @code{FL_FREE_COL1} are used (or
+can potentially be used) by the Forms Library. If you wish they can be
+changed using the function prior to @code{@ref{fl_initialize()}}:
+@findex fl_set_icm_color()
+@anchor{fl_set_icm_color()}
+@example
+void fl_set_icm_color(FL_COLOR index, int r, int g, int b);
+@end example
+@noindent
+Using this function you can actually change all entries in the
+internal coloormap (with @code{index} going up to
+@code{FL_MAX_COLORS-1}). You may also inspect the internal colormap
+using
+@findex fl_get_icm_color()
+@anchor{fl_get_icm_color()}
+@example
+void fl_get_icm_color(FL_COLOR index, int *r, int *g, int *b);
+@end example
+
 In some situations Forms Library may modify some of the server
 defaults. All modified defaults are restored as early as possible by
 the main loop and in general, when the application exits, all server
 defaults are restored. The only exception is when exiting from a
 callback that is activated by shortcuts. Thus it is recommended that
-the cleanup routine @code{fl_finish()} is called prior to exiting an
-application or register it via @code{atexit()}.
+the cleanup routine @code{@ref{fl_finish()}} is called prior to
+exiting an application or register it via @code{atexit()}.
 @findex fl_finish()
+@anchor{fl_finish()}
 @example
 void fl_finish(void);
 @end example
-In addition to restoring all server defaults, @code{fl_finish()} also
-shuts down the connection and frees dynamically allocated memory.
+In addition to restoring all server defaults, @code{@ref{fl_finish()}}
+also shuts down the connection and frees dynamically allocated memory.
 
 
 @node Creating Forms
@@ -602,6 +641,7 @@ shuts down the connection and frees dynamically allocated memory.
 
 To start the definition of a form call
 @findex fl_bgn_form()
+@anchor{fl_bgn_form()}
 @example
 FL_FORM *fl_bgn_form(int type, FL_Coord w, FL_Coord h);
 @end example
@@ -612,6 +652,7 @@ function returns a pointer to the form created.
 
 Once all objects required have been added to a form call
 @findex fl_end_form();
+@anchor{fl_end_form()}
 @example
 void fl_end_form(void);
 @end example
@@ -619,19 +660,21 @@ void fl_end_form(void);
 Between these two calls objects and groups of objects are added to the
 form. To start a new group of objects use
 @findex fl_bgn_group()
+@anchor{fl_bgn_group()}
 @example
 FL_OBJECT *fl_bgn_group(void);
 @end example
 @noindent
 The function returns a pointer to the group (actually to an invsible
 object of class
-@tindex @code{FL_BEGIN_GROUP}
+@tindex FL_BEGIN_GROUP
 @code{FL_BEGIN_GROUP}). Groups can't be nested.
 
 When all objects that are supposed to belong to the group are added
 call
-@tindex @code{FL_END_GROUP}
+@tindex FL_END_GROUP
 @findex fl_end_group()
+@anchor{fl_end_group()}
 @example
 void fl_end_group(void);
 @end example
@@ -655,10 +698,13 @@ are considered related only if they belong to the same group. Using
 groups is the only way to place unrelated groups of radio buttons on a
 single form without interference from each other.
 
-Both forms and groups that have been ended by @code{fl_end_form()} or
-@code{fl_end_group()} can be "reopened" by using
+Both forms and groups that have been ended by
+@code{@ref{fl_end_form()}} or @code{@ref{fl_end_group()}} can be
+"reopened" by using
 @findex fl_addto_form()
+@anchor{fl_addto_form()}
 @findex fl_addto_group()
+@anchor{fl_addto_group()}
 @example
 FL_FORM *fl_addto_form(FL_FORM *form)
 FL_OBJECT *fl_addto_group(FL_OBJECT *group);
@@ -670,6 +716,7 @@ On success further objects can be appened to the form or group.
 
 To remove an object from a form use
 @findex fl_delete_object()
+@anchor{fl_delete_object()}
 @example
 void fl_delete_object(FL_OBJECT *obj);
 @end example
@@ -679,12 +726,13 @@ the form it did belong to, so it can still be referenced.
 
 To finally destroy an object use
 @findex fl_free_object()
+@anchor{fl_free_object()}
 @example
 void fl_free_object(FL_OBJECT *obj);
 @end example
 @noindent
-If @code{fl_delete_object()} hadn't been called for the object this
-will happen now. The object receives a final event of type
+If @code{@ref{fl_delete_object()}} hadn't been called for the object
+this will happen now. The object receives a final event of type
 @code{FL_FREEMEM} to allow it to free memory it did allocate and do
 whatever other clean-up required. Finally all memory allocated for the
 object is freed. After being freed an object should not be referenced.
@@ -692,6 +740,7 @@ object is freed. After being freed an object should not be referenced.
 A form as a whole, together with all the objects it contains can be
 deleted by calling
 @findex fl_free_form()
+@anchor{fl_free_form()}
 @example
 void fl_free_form(FL_FORM *form);
 @end example
@@ -710,6 +759,7 @@ appearance or geometry of the object immediately if the object is
 visible.
 
 @findex fl_set_object_color()
+@anchor{fl_set_object_color()}
 @example
 void fl_set_object_color(FL_OBJECT *obj, FL_COLOR col1, FL_COLOR col2);
 @end example
@@ -717,6 +767,7 @@ void fl_set_object_color(FL_OBJECT *obj, FL_COLOR col1, FL_COLOR col2);
 Sets the two colors that influence the appearance of the object.
 
 @findex fl_set_object_boxtype()
+@anchor{fl_set_object_boxtype()}
 @example
 void fl_set_object_boxtype(FL_OBJECT *obj, int boxtype);
 @end example
@@ -725,7 +776,9 @@ Changes the shape of the bounding box of the object.
 
 There are also functions to change or query the border width of an object:
 @findex fl_set_object_bw()
+@anchor{fl_set_object_bw()}
 @findex fl_get_object_bw()
+@anchor{fl_get_object_bw()}
 @example
 void fl_set_object_bw(FL_OBJECT *obj, int bw);
 void fl_get_object_bw(FL_OBJECT *obj, int *bw);
@@ -737,7 +790,9 @@ If the requested border width is 0, -1 is used.
 To change or inquire the objects position (relative to the form it
 belongs to) the functions
 @findex fl_set_object_position()
+@anchor{fl_set_object_position()}
 @findex fl_get_object_position()
+@anchor{fl_get_object_position()}
 @example
 void fl_set_object_position(FL_OBJECT *obj, FL_Coord x, FL_Cood y);
 void fl_get_object_position(FL_OBJECT *obj, FL_Coord *x, FL_Cood *y);
@@ -747,7 +802,9 @@ exist. If the object is visible it's redrawn at the new position.
 
 To change or inquire the size of an object use
 @findex fl_set_object_size()
+@anchor{fl_set_object_size()}
 @findex fl_get_object_size()
+@anchor{fl_get_object_size()}
 @example
 void fl_set_object_size(FL_OBJECT *obj, FL_Coord w, FL_Coord h);
 void fl_get_object_size(FL_OBJECT *obj, FL_Coord *w, FL_Coord *h);
@@ -759,7 +816,9 @@ the object remains unchanged.
 To set or query both the position and size of an object the
 functions
 @findex fl_set_object_geometry()
+@anchor{fl_set_object_geometry()}
 @findex fl_get_object_geometry()
+@anchor{fl_get_object_geometry()}
 @example
 void fl_set_object_geometry(FL_OBJECT *obj, FL_Coord x, FL_Coord y,
                             FL_Coord w, FL_Coord h);
@@ -779,21 +838,23 @@ the objects structure would interfer with this.
 
 There's a second function for calculation an objects geometry:
 @findex fl_get_object_bbox()
+@anchor{fl_get_object_bbox()}
 @example
 void fl_get_object_bbox(FL_OBJECT *obj, FL_Coord *x, FL_Coord *y,
                         FL_Coord *w, FL_Coord *h);
 @end example
 @noindent
 The difference between this functions and
-@code{fl_get_object_geometry()} is that @code{fl_get_object_bbox()}
-returns the bounding box size that has the label, which could be drawn
-outside of the object figured in.
+@code{@ref{fl_get_object_geometry()}} is that
+@code{@ref{fl_get_object_bbox()}} returns the bounding box size that
+has the label, which could be drawn outside of the object figured in.
 
 Some objects in the library are composite objects that consist of
 other objects. For example, the scrollbar object is made of a slider
 and two scroll buttons. To get a handle to one of the components of
 the composite object, the following routine is available:
 @findex fl_get_object_component()
+@anchor{fl_get_object_component()}
 @example
 FL_OBJECT *fl_get_object_component(FL_OBJECT *obj, int objclass,
                                    int type, int number);
@@ -816,10 +877,15 @@ hscrollbar = fl_get_object_component(browser, FL_SCROLLBAR,
 To influence change the color, font size, font style, alignment and
 text of the label of an object use
 @findex fl_set_object_lcol()
+@anchor{fl_set_object_lcol()}
 @findex fl_set_object_lsize()
+@anchor{fl_set_object_lsize()}
 @findex fl_set_object_lstyle()
+@anchor{fl_set_object_lstyle()}
 @findex fl_set_object_lalign()
+@anchor{fl_set_object_lalign()}
 @findex fl_set_object_label()
+@anchor{fl_set_object_label()}
 @example
 void fl_set_object_lcol(FL_OBJECT *obj, int lcol);
 void fl_set_object_lsize(FL_OBJECT *obj, int lsize);
@@ -830,6 +896,7 @@ void fl_set_object_label(FL_OBJECT *obj, const char *label);
 
 To set a tool-tip text for an object use the following routine
 @findex fl_set_object_helper()
+@anchor{fl_set_object_helper()}
 @example
 void fl_set_object_helper(FL_OBJECT *obj, const char *helpmsg);
 @end example
@@ -841,8 +908,11 @@ nore than about @w{600 msec}. A copy of the string is made internally.
 The boxtype, color and font for the tool-tip message displayed can be
 customized further using the following routines:
 @findex fl_set_tooltip_boxtype()
+@anchor{fl_set_tooltip_boxtype()}
 @findex fl_set_tooltip_color()
+@anchor{fl_set_tooltip_color()}
 @findex fl_set_tooltip_font()
+@anchor{fl_set_tooltip_font()}
 @example
 void fl_set_tooltip_boxtype(int boxtype);
 void fl_set_tooltip_color(FL_COLOR textcolor, FL_COLOR background);
@@ -860,9 +930,13 @@ There are four function for controlling how an object reacts to
 resizing the form it belongs to or to find out what its current
 settings are:
 @findex fl_set_object_resize()
+@anchor{fl_set_object_resize()}
 @findex fl_get_object_resize()
+@anchor{fl_get_object_resize()}
 @findex fl_set_object_gravity()
+@anchor{fl_set_object_gravity()}
 @findex fl_get_object_gravity()
+@anchor{fl_get_object_gravity()}
 @example
 void fl_set_object_resize(FL_OBJECT *obj, unsigned int howresize);
 void fl_get_object_resize(FL_OBJECT *obj, unsigned int *howresize);
@@ -879,7 +953,9 @@ If you change many attributes of a single object or many objects in a
 visible form, the changed object is redrawn after each change. To
 avoid this, put the changes between calls of the two functions
 @findex fl_freeze_form()
+@anchor{fl_freeze_form()}
 @findex fl_unfreeze_form()
+@anchor{fl_unfreeze_form()}
 @example
 void fl_freeze_form(FL_FORM *form);
 void fl_unfreeze_form(FL_FORM *form);
@@ -893,6 +969,7 @@ These routines should not be used on the built-in ones.
 To enable or disable an object to receive the @code{FL_STEP} event,
 use the following routine
 @findex fl_set_object_automatic()
+@anchor{fl_set_object_automatic()}
 @example
 void fl_set_object_automatic(FL_OBJECT *obj, int yes);
 @end example
@@ -900,6 +977,7 @@ void fl_set_object_automatic(FL_OBJECT *obj, int yes);
 To enable or disable an object to receive the FL_DBLCLICK event, use
 the following routine
 @findex fl_set_object_dblclick()
+@anchor{fl_set_object_dblclick()}
 @example
 void fl_set_object_dblclick(FL_OBJECT *obj, unsigned long timeout);
 @end example
@@ -910,16 +988,20 @@ disables double-click detection).
 To make an object or a group invisible or visible use the following
 two functions
 @findex fl_hide_object()
+@anchor{fl_hide_object()}
 @findex fl_show_object()
+@anchor{fl_show_object()}
 @example
 void fl_hide_object(FL_OBJECT *obj);
 void fl_show_object(FL_OBJECT *obj);
 @end example
 @noindent
-@code{obj} can be the pseudo-object returned by @code{fl_bgn_group()}
-and then allows to hide or show whole groups of objects.
+@code{obj} can be the pseudo-object returned by
+@code{@ref{fl_bgn_group()}} and then allows to hide or show whole
+groups of objects.
 
 @findex fl_trigger_object()
+@anchor{fl_trigger_object()}
 @example
 void fl_trigger_object(FL_OBJECT *obj);
 @end example
@@ -928,6 +1010,7 @@ returns @code{obj} to the application program after calling its
 callback if one exists.
 
 @findex fl_set_focus_object()
+@anchor{fl_set_focus_object()}
 @example
 void fl_set_focus_object(FL_FORM *form, FL_OBJECT *obj);
 @end example
@@ -941,6 +1024,7 @@ object event handler, which undoes the focus change inside the event
 handler. To override the @code{FL_UNFOCUS} event the following routine
 should be used:
 @findex fl_reset_focus_object()
+@anchor{fl_reset_focus_object()}
 @example
 void fl_reset_focus_object(FL_OBJECT *obj);
 @end example
@@ -948,12 +1032,14 @@ void fl_reset_focus_object(FL_OBJECT *obj);
 Use the following routine to obtain the object that has the focus on a
 form
 @findex fl_get_focus_object()
+@anchor{fl_get_focus_object()}
 @example
 FL_OBJECT *fl_get_focus_object(FL_FORM *form);
 @end example
 
 The routine
 @findex fl_set_object_callback()
+@anchor{fl_set_object_callback()}
 @example
 void fl_set_object_callback(FL_OBJECT *obj,
                             void (*callback)(FL_OBJECT *, long),
@@ -965,6 +1051,7 @@ binds a callback routine to an object.
  To invoke the callback manually (as opposed to invocation by the main
 loop), use the following function
 @findex fl_call_object_callback()
+@anchor{fl_call_object_callback()}
 @example
 void fl_call_object_callback(FL_OBJECT *obj);
 @end example
@@ -973,6 +1060,7 @@ If the object @code{obj} does not have a callback associated with it,
 this call has not effect.
 
 @findex fl_set_form_callback()
+@anchor{fl_set_form_callback()}
 @example
 void fl_set_form_callback(FL_FORM *form,
                           void (*callback)(FL_OBJECT *, void *),
@@ -986,6 +1074,7 @@ function, e.g., to implement different functionalities depending on
 which button triggers the callback. For this, the following routine
 can be used from within a callback function.
 @findex fl_last_event()
+@anchor{fl_last_event()}
 @example
 const XEvent *fl_last_event(void);
 @end example
@@ -996,6 +1085,7 @@ in a what-you-see-is-what-you-get (WYSISYG) way, especially those that
 are dynamic and of vector-graphics in nature. To this end, the
 following routine exists:
 @findex fl_object_ps_dump()
+@anchor{fl_object_ps_dump()}
 @example
 int fl_object_ps_dump(FL_OBJECT *obj, const char *fname);
 @end example
@@ -1019,15 +1109,17 @@ black&white mode, all curves are drawn in black. See demo program
 It is possible to customerize the output by changing the postscript
 output control parameters via the function
 @findex flps_init()
-@tindex @code{FLPS_CONTROL}
+@anchor{flps_init()}
+@tindex FLPS_CONTROL
 @example
 FLPS_CONTROL *flps_init(void);
 @end example
 @noindent
 A typical use is to call this routine to obtain a handle to the
 PostScript output control structure and change the control structure
-members to suit your needs before calling @code{fl_object_ps_dump()}.
-You should not free the returned buffer.
+members to suit your needs before calling
+@code{@ref{fl_object_ps_dump()}}. You should not free the returned
+buffer.
 
 The control structure has the following members
 @table @code
@@ -1069,6 +1161,7 @@ program documented in Chapter 13.
 
 To display the form @code{form} on the screen use
 @findex fl_show_form()
+@anchor{fl_show_form()}
 @example
 long fl_show_form(FL_FORM *form, int place, int border,
                   const char *title);
@@ -1086,52 +1179,53 @@ and the first character lower-cased. E.g., if a form has a title
 For the The location and size of the window controlled by @code{place}
 the following possibilities exist:
 @table @code
-@tindex @code{FL_PLACE_SIZE}
+@tindex FL_PLACE_SIZE
 @item FL_PLACE_SIZE
 The user can control the position but the size is fixed. Interactive
 resizing is not allowed once the form becomes visible.
-@tindex @code{FL_PLACE_POSITION}
+@tindex FL_PLACE_POSITION
 @item FL_PLACE_POSITION
 Initial position used will be the one set via
-@code{fl_set_form_position()}. Interactive resizing is possible.
-@tindex @code{FL_PLACE GEOMETRY}
+@code{@ref{fl_set_form_position()}}. Interactive resizing is possible.
+@tindex FL_PLACE GEOMETRY
 @item FL_PLACE GEOMETRY
 Place at the latest position and size (see also below) or the geometry
-set via @code{fl_set_form_geometry()}. A form so shown will have a fixed
-size and interactive resizing is not allowed.
-@tindex @code{FL_PLACE_ASPECT}
+set via @code{@ref{fl_set_form_geometry()}} etc. A form so shown will
+have a fixed size and interactive resizing is not allowed.
+@tindex FL_PLACE_ASPECT
 @item FL_PLACE_ASPECT
 Allows interactive resizing but any new size will have the aspect ratio
 as that of the initial size.
-@tindex @code{FL_PLACE_MOUSE}
+@tindex FL_PLACE_MOUSE
 @item FL_PLACE_MOUSE
 The form is placed centered below the mouse. Interactive resizing will
 not be allowed unless this option is accompanied by @code{FL_FREE_SIZE}
 as in @code{FL_PLACE_MOUSE | FL_FREE_SIZE}.
-@tindex @code{FL_PLACE_CENTER}
+@tindex FL_PLACE_CENTER
 @item FL_PLACE_CENTER
 The form is placed in the center of the screen. If @code{FL_FREE_SIZE}
 is also specified, interactive resizing will be allowed.
-@tindex @code{FL_PLACE_FULLSCREEN}
+@tindex FL_PLACE_FULLSCREEN
 @item FL_PLACE_FULLSCREEN
 The form is scaled to cover the full screen. If @code{FL_FREE_SIZE} is
 also specified, interative resizing will be allowed.
-@tindex @code{FL_PLACE_FREE}
+@tindex FL_PLACE_FREE
 @item FL_PLACE_FREE
-Both the position and size are completely free. The initial size used is
-the designed size. Initial position, if setvia
-@code{fl_set_form_position()}, will be used otherwise interactive
-positioning may be possible if the window manager allows it.
-@tindex @code{FL_PLACE_HOTSPOT}
+Both the position and size are completely free. The initial size used
+is the designed size. Initial position, if setvia
+@code{@ref{fl_set_form_position()}}, will be used otherwise
+interactive positioning may be possible if the window manager allows
+it.
+@tindex FL_PLACE_HOTSPOT
 @item FL_PLACE_HOTSPOT
 The form is so placed that mouse is on the "hotspot". If
 @code{FL_FREE_SIZE} is also specified, interactive resizing will be
 allowed.
-@tindex @code{FL_PLACE_CENTERFREE}
+@tindex FL_PLACE_CENTERFREE
 @item FL_PLACE_CENTERFREE
 Same as @code{FL_PLACE_CENTER | FL_FREE_SIZE}, i.e., place the form at
 the center of the screen and allow resizing.
-@tindex @code{FL_PLACE ICONIC}
+@tindex FL_PLACE ICONIC
 @item FL_PLACE ICONIC
 The form is shown initially iconified. The size and location used are
 the window manager's default.
@@ -1144,14 +1238,14 @@ the windows and some will not.
 
 There are three values that can be passed for @code{border}:
 @table @code
-@tindex @code{FL_FULLBORDER}
+@tindex FL_FULLBORDER
 @item FL_FULLBORDER
 Draw full border with title
-@tindex @code{FL_TRANSIENT}
+@tindex FL_TRANSIENT
 @item FL_TRANSIENT
 Draw borders with possibly less decoration (depends on the window
 managers behaviour)
-@tindex @code{FL_NOBORDER}
+@tindex FL_NOBORDER
 @item FL_NOBORDER
 Draw no border at all
 @end table
@@ -1174,6 +1268,7 @@ One additional property (under almost all window managers) of a
 transient window is that it will stay on top of the main form, which
 the application program can designate using
 @findex fl_set_app_mainform()
+@anchor{fl_set_app_mainform()}
 @example
 void fl_set_app_mainform(FL_FORM *form);
 @end example
@@ -1183,6 +1278,7 @@ first full-bordered form shown.
 
 To obtain the current main form, use the following routine
 @findex fl_get_app_mainform()
+@anchor{fl_get_app_mainform()}
 @example
 FL_FORM *fl_get_app_mainform(void);
 @end example
@@ -1195,6 +1291,7 @@ workaround these, the following routine can be used to disable the
 designation of a main form (must be called before any full-bordered
 form is shown):
 @findex fl_set_app_nomainform()
+@anchor{fl_set_app_nomainform()}
 @example
 void fl_set_app_nomainform(int yes);
 @end example
@@ -1206,39 +1303,75 @@ All visible forms will have the properties @code{WM_CLASS},
 first full-bordered form will have the @code{WM_COMMAND} property set
 and is by default the applications main form.
 
+Sometimes it is necessary to have access to the window resource ID
+before the window is mapped (shown). For this, the following routine
+can be used
+@findex fl_prepare_form_window()
+@anchor{fl_prepare_form_window()}
+@example
+Window fl_prepare_form_window(FL_FORM *form, int place, int border,
+const char *name);
+@end example
+@noindent
+This routine creates a window that obeys any and all constraints just
+as @code{@ref{fl_show_form()}} does but remains unmapped. To map such
+a window, the following must be used
+@findex fl_show_form_window()
+@anchor{fl_show_form_window()}
+@example
+Window fl_show_form_window(FL_FORM *form);
+@end example
+@noindent
+Between these two calls, the application program has full access to
+the window and can set all attributes, such as icon pixmaps etc., that
+are not set by @code{@ref{fl_show_form()}}.
+
 The application program can raise a form to the top of the screen so
 no other forms obscures it by calling
 @findex fl_raise_form()
+@anchor{fl_raise_form()}
 @example
 void fl_raise_form(FL_FORM *form);
 @end example
 
 To instead lower a form to the bottom of the stack use
 @findex fl_lower_form()
+@anchor{fl_lower_form()}
 @example
 void fl_lower_form(FL_FORM *form);
 @end example
 
 When placing a form on the screen using @code{FL_PLACE_GEOMETRY} for
-the @code{place} argument to @code{fl_show_form()} the position and
-size can be set before by using the routines
+the @code{place} argument to @code{@ref{fl_show_form()}} the position
+and size can be set before by using the routines
 @findex fl_set_form_position()
+@anchor{fl_set_form_position()}
 @findex fl_set_form_size()
+@anchor{fl_set_form_size()}
+@findex fl_set_form_geometry()
+@anchor{fl_set_form_geometry()}
 @findex fl_scale_form()
+@anchor{fl_scale_form()}
 @example
 void fl_set_form_position(FL_FORM *form, FL_Coord x, FL_Coord y);
 void fl_set_form_size(FL_FORM *form, FL_Coord w, FL_Coord h);
+void fl_set_form_geometry(FL_FORM form*, FL_Coord x, FL_Coord y,
+                          FL_Coord w, FL_Coord h);
 void fl_scale_form(FL_FORM *form, double xsc, double ysc);
 @end example
 @noindent
-where the last routine scales the form in horizontal and vertical
-direction by the factors passed to the function. These routines can
-also be used when the form is visible.
+where @code{@ref{fl_set_form_geometry()}} combines the functionality
+of @code{@ref{fl_set_form_position()}} and
+@code{@ref{fl_set_form_size()}} and the last routine,
+@code{@ref{fl_scale_form()}}, scales the form in horizontal and
+vertical direction by the factors passed to the function. These
+routines can also be used when the form is visible.
 
 Sometimes it is desirable to know how large the decoration are the
 window manager puts around a forms window. They can be obtained by a
 call of
 @findex fl_get_decoration_sizes()
+@anchor{fl_get_decoration_sizes()}
 @example
 void fl_get_decoration_sizes(FL_FORM *form, int *top, int *right,
                              int *bottom, int *left);
@@ -1252,6 +1385,7 @@ function can't be used for forms that are embedded into another form.
 
 The function
 @findex fl_form_is_isconified()
+@anchor{fl_form_is_isconified()}
 @example
 int fl_form_is_isconified(FL_FORM *form);
 @end example
@@ -1263,7 +1397,9 @@ shown using @code{FL_PLACE_FREE}), it can be useful to limit the range
 the size of a form can take. To this end, the following functions are
 available
 @findex fl_set_form_minsize()
+@anchor{fl_set_form_minsize()}
 @findex fl_set_form_maxsize()
+@anchor{fl_set_form_maxsize()}
 @example
 void fl_set_form_minsize(FL_FORM *form, FL_Coord minw, FL_Coord minh);
 void fl_set_form_maxsize(FL_FORM *form, FL_Coord maxw, FL_Coord maxh);
@@ -1272,11 +1408,12 @@ void fl_set_form_maxsize(FL_FORM *form, FL_Coord maxw, FL_Coord maxh);
 Although these two routines can be used before or after a form becomes
 visible, not all window managers honor such requests once the window
 is visible. Also note that the constraints only applies to the next
-call of @code{fl_show_form()} for the form.
+call of @code{@ref{fl_show_form()}} for the form.
 
 To set or change the icon shown when a form is iconified use the
 following routine
 @findex fl_set_form_icon()
+@anchor{fl_set_form_icon()}
 @example
 void fl_set_form_icon(FL_FORM *form, Pixmap icon, Pixmap mask);
 @end example
@@ -1289,12 +1426,14 @@ If for any reason, you would like to change the form title after it is
 shown, the following call can be used (this will also change the icon
 title)
 @findex fl_set_form_title()
+@anchor{fl_set_form_title()}
 @example
 void fl_set_form_title(FL_FORM *form, const char *name);
 @end example
 
 The routine
 @findex fl_hide_form()
+@anchor{fl_hide_form()}
 @example
 void fl_hide_form(FL_FORM *form);
 @end example
@@ -1303,13 +1442,14 @@ hides the particular form, i.e., closes its window and all subwindows.
 
 To check if a form is visible or not, the following function can be used
 @findex fl_form_is_visible()
+@anchor{fl_form_is_visible()}
 @example
 int fl_form_is_visible(FL_FORM *form)'
 @end example
 @noindent
-@tindex @code{FL VISIBLE}
-@tindex @code{FL INSIBILE}
-@tindex @code{FL BEING HIDDEN}
+@tindex FL VISIBLE
+@tindex FL INSIBILE
+@tindex FL BEING HIDDEN
 The function can return that the form is visible (@code{FL VISIBLE}),
 is invisible (@code{FL INSIBILE}) or in the processing of becoming
 invisible (@code{FL BEING HIDDEN}).
@@ -1317,6 +1457,7 @@ invisible (@code{FL BEING HIDDEN}).
 The most important function for doing the actual ineraction with forms
 is
 @findex fl_do_forms()
+@anchor{fl_do_forms()}
 @example
 FL_OBJECT *fl_do_forms(void);
 @end example
@@ -1328,6 +1469,7 @@ this object is then returned.
 A second way of doing interaction with the currently displayed forms
 exists by using 
 @findex fl_check_forms()
+@anchor{fl_check_forms()}
 @example
 FL_OBJECT *fl_check_forms(void);
 @end example
@@ -1337,20 +1479,24 @@ the object (without a callback bound to it) changed. In tha case a
 pointer to this object gets returned.
 
 @findex fl_do_only_forms()
+@anchor{fl_do_only_forms()}
 @findex fl_check_only_forms()
+@anchor{fl_check_only_forms()}
 @example
 FL_OBJECT *fl_do_only_forms(void);
 FL_OBJECT *fl_check_only_forms(void);
 @end example
 @noindent
-Both functiosn are the same as @code{fl_do_forms()} and
-@code{fl_check_forms()} except that these routines do not handle user
-events generated by application windows opened via @code{fl_winopen()}
-or similar routines.
+Both functiosn are the same as @code{@ref{fl_do_forms()}} and
+@code{@ref{fl_check_forms()}} except that these routines do not handle
+user events generated by application windows opened via
+@code{@ref{fl_winopen()}} or similar routines.
 
 To activate or deactivate a form for user interaction you can use
 @findex fl_activate_form()
+@anchor{fl_activate_form()}
 @findex fl_deactivate_form()
+@anchor{fl_deactivate_form()}
 @example
 void fl_activate_form(FL_FORM *form);
 void fl_deactivate_form(FL_FORM *form);
@@ -1358,32 +1504,41 @@ void fl_deactivate_form(FL_FORM *form);
 
 The same can also be done for all forms at once using
 @findex fl_deactivate_all_forms()
+@anchor{fl_deactivate_all_forms()}
 @findex fl_activate_all_forms()
+@anchor{fl_activate_all_forms()}
 @example
 void fl_deactivate_all_forms(void)
 void fl_activate_all_forms(void)
 @end example
 
-You can also register for a form callbacks that are invoked whenever
+You can also register callbacks for a form that are invoked whenever
 the activation status of the form is changed:
-@tindex @code{FL_FORM_ATACTIVATE}
+@tindex FL_FORM_ATACTIVATE
+@tindex FL_FORM_ATDEACTIVATE
 @findex fl_set_form_atactivate()
+@anchor{fl_set_form_atactivate()}
+@findex fl_set_form_atdeactivate()
+@anchor{fl_set_form_atdeactivate()}
 @example
 typedef void (*FL_FORM_ATACTIVATE)(FL_FORM *, void *);
-
 FL_FORM_ACTIVATE fl_set_form_atactivate(FL_FORM *form,
                                         FL_FORM_ATACTIVATE callback,
                                         void *data);
+
+typedef void (*FL_FORM_ATDEACTIVATE)(FL_FORM *, void *);
 FL_FORM_ACTIVATE fl_set_form_atdeactivate(FL_FORM *form,
                                           FL_FORM_ATACTIVATE callback,
                                           void *data);
 @end example
 
 Also individual objects (or whole groups of objects if the argument of
-the function is an object returned by @code{fl_gbn_group()}) can be
-activated and deactivated to enable or disable user interaction:
+the function is an object returned by @code{@ref{fl_bgn_group()}}) can
+be activated and deactivated to enable or disable user interaction:
 @findex fl_activate_object()
+@anchor{fl_activate_object()}
 @findex fl_deactivate_object()
+@anchor{fl_deactivate_object()}
 @example
 void fl_activate_object(FL_OBJECT *obj);
 void fl_deactivate_object(FL_OBJECT *obj);
@@ -1393,6 +1548,7 @@ It is nrmally useful to give the user a visual clue when an object
 getsdeactivated, e.g.@: by graying out its label etc.
 
 @findex fl_redraw_object()
+@anchor{fl_redraw_object()}
 @example
 void fl_redraw_object(FL_OBJECT *obj);
 @end example
@@ -1405,18 +1561,20 @@ redraw is required.
 
 To redraw an entire form use
 @findex fl_redraw_form()
+@anchor{fl_redraw_form()}
 @example
 void fl_redraw_form(FL_FORM *form);
 @end example
 
-For non-form windows, i.e., those created with @code{fl_winopen()} or
-similar routines by the application program, the following means of
-interaction are provided (note that these do not work on form windows,
-for which a different set of functions exist. @xref{Windowing
-Support}, for details.)
+For non-form windows, i.e., those created with
+@code{@ref{fl_winopen()}} or similar routines by the application
+program, the following means of interaction are provided (note that
+these do not work on form windows, for which a different set of
+functions exist. @xref{Windowing Support}, for details.)
 
 You may set up a callback routine for all user events using
 @findex fl_set_event_callback()
+@anchor{fl_set_event_callback()}
 @example
 void fl_set_event_callback(void (*callback)(void *xevent,
                                             void *data));
@@ -1424,9 +1582,11 @@ void fl_set_event_callback(void (*callback)(void *xevent,
 
 It is also possible to set up callback functions on a per window/event
 basis using the following routines:
-@tindex @code{FL_APPEVENT_CB}
+@tindex FL_APPEVENT_CB
 @findex fl_add_event_callback()
+@anchor{fl_add_event_callback()}
 @findex fl_remove_event_callback()
+@anchor{fl_remove_event_callback()}
 @example
 typedef int (*FL_APPEVENT_CB)(XEvent *xev, void *user_data);
 
@@ -1447,6 +1607,7 @@ solicits all events before calling these routines.
 To let the Forms Library handle event solicitation, the following
 function may be used
 @findex fl_activate_event_callbacks()
+@anchor{fl_activate_event_callbacks()}
 @example
 void fl_activate_event_callbacks(Window win);
 @end example
@@ -1467,8 +1628,9 @@ limitations on what a signal handler can do.
 The application program can elect to handle the receipt of a signal by
 registering a callback function that gets called when a signal is
 caught
-@tindex @code{FL_SIGNAL_HANDLER}
+@tindex FL_SIGNAL_HANDLER
 @findex fl_add_signal_callback()
+@anchor{fl_add_signal_callback()}
 @example
 typedef void (*FL_SIGNAL_HANDLER)(int, void *);
 
@@ -1477,14 +1639,14 @@ void fl_add_signal_callback(int signal, FL_SIGNAL_HANDLER sh,
 @end example
 
 Only one callback per signal is permitted. By default,
-@code{fl_add_signal_callback()} will store the callback function and
-initiate a mechanism for the OS to deliver the signal when it occurs.
-When the signal is received by the library, the main loop will invoke
-the registered callback function when it is appropriate to do so. The
-callback function can make use of all of XForms's functions as well as
-Xlib functions as if they were reentrant. Further, a signal callback
-registered his way is persistent and will cease to function only when
-explicitly removed.
+@code{@ref{fl_add_signal_callback()}} will store the callback function
+and initiate a mechanism for the OS to deliver the signal when it
+occurs. When the signal is received by the library, the main loop will
+invoke the registered callback function when it is appropriate to do
+so. The callback function can make use of all of XForms's functions as
+well as Xlib functions as if they were reentrant. Further, a signal
+callback registered his way is persistent and will cease to function
+only when explicitly removed.
 
 It is very simple to use this routine. For example, to prevent a
 program from exiting prematurely due to signals, a code fragment
@@ -1503,6 +1665,7 @@ After this, whenever a @code{SIGINT} signal is received,
 
 To remove a signal callback, the following routine should be used
 @findex fl_remove_signal_callback()
+@anchor{fl_remove_signal_callback()}
 @example
 void fl_remove_signal_callback(int signal);
 @end example
@@ -1510,7 +1673,7 @@ void fl_remove_signal_callback(int signal);
 Although very easy to use, there are limitations with the default
 behavior outlined above. For example on some platforms there is no
 blocking of signals of any kind while handling a signal. In addition,
-use of @code{fl_add_signal_callback()} prevents the application
+use of @code{@ref{fl_add_signal_callback()}} prevents the application
 program from using any, potentially more flexible, system signal
 handling routines on some platforms. Also there might be perceptible
 delays from the time a signal is delivered by the OS and the time its
@@ -1526,27 +1689,30 @@ To change the default behavior of the built-in signal facilities, the
 following routine should be called prior to any use of
 @code{fl_add_signal_callback(}) with a true value for @code{flag}:
 @findex fl_app_signal_direct()
+@anchor{fl_app_signal_direct()}
 @example
 void fl_app_signal_direct(int flag);
 @end example
 @noindent
-After this call, @code{fl_add_signal_callback()} will not initiate any
-actions to receive a signal. The application program should handle the
-receipt and blocking of signals (via e.g.@: @code{signal()},
-@code{sigaction()}, @code{sigprocmask(d2}) etc.) When the signal is
-received by the application program, it should call the following
-routine to inform the main loop of the delivery of the signal
-@code{signum}, possibly after performing some timing sensitive tasks:
+After this call, @code{@ref{fl_add_signal_callback()}} will not
+initiate any actions to receive a signal. The application program
+should handle the receipt and blocking of signals (via e.g.@:
+@code{signal()}, @code{sigaction()}, @code{sigprocmask(d2}) etc.) When
+the signal is received by the application program, it should call the
+following routine to inform the main loop of the delivery of the
+signal @code{signum}, possibly after performing some timing sensitive
+tasks:
 @findex fl_signal_caught()
+@anchor{fl_signal_caught()}
 @example
 void fl_signal_caught(int signum);
 @end example
 @noindent
 This routine is the only one in the library that can be safely called
 from within a direct application signal handler. If multiple
-invocations of @code{fl_signal_caught()} occur before the main loop is
-able to call the registered callback, the callback is called only
-once.
+invocations of @code{@ref{fl_signal_caught()}} occur before the main
+loop is able to call the registered callback, the callback is called
+only once.
 
 The following example illustrates how to handle a timing critical
 situition (for most application, idle callback, timeouts or
@@ -1601,8 +1767,9 @@ semi-continuous or periodic tasks, idle callback and timeouts (also
 @code{FL_TIMER} objects) can be utilized.
 
 To register an idle callback with the system, use the following routine
-@tindex @code{FL_APPEVENT_CB}
+@tindex FL_APPEVENT_CB
 @findex fl_set_idle_callback()
+@anchor{fl_set_idle_callback()}
 @example
 typedef int (*FL_APPEVENT_CB)(XEvent *, void *);
 
@@ -1620,6 +1787,7 @@ It is possible to change the the condition (intervals of inactivity)
 based on which the main loop determines the idleness of the interface.
 To this end, the following function is available
 @findex fl_set_idle_delta()
+@anchor{fl_set_idle_delta()}
 @example
 void fl_set_idle_delta(long msec);
 @end example
@@ -1635,8 +1803,9 @@ before the callback is called. Moreover, the precision of timeouts
 tends to be quite a bit better than that of idle callbacks since they
 internally get prefered treatent. To register a timeout callback, the
 following routine can be used
-@tindex @code{FL_TIMEOUT_CALLBACK}
+@tindex FL_TIMEOUT_CALLBACK
 @findex fl_add_timeout()
+@anchor{fl_add_timeout()}
 @example
 typedef void (*FL_TIMEOUT_CALLBACK)(int, void *);
 
@@ -1656,11 +1825,12 @@ but can also be much worse, occasionally up to @w{150 ms}.
 
 To remove a timeout before it triggers, use the following routine
 @findex fl_remove_timeout()
+@anchor{fl_remove_timeout()}
 @example
 void fl_remove_timeout(int id);
 @end example
 @noindent
-where @code{id} is the timeout ID returned by @code{fl_add_timeout()}.
-@xref{Timer Object}, for the usage of @code{FL_TIMER} object. For
-tasks that need more accurate timing the use of signal should be
-considered.
+where @code{id} is the timeout ID returned by
+@code{@ref{fl_add_timeout()}}. @xref{Timer Object}, for the usage of
+@code{FL_TIMER} object. For tasks that need more accurate timing the
+use of signal should be considered.

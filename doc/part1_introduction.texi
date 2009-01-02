@@ -21,13 +21,13 @@ placed on them and where. Types of objects that can be placed on the
 forms include: boxes, texts, sliders, buttons, dials, input fields and
 many more. Even a clock can be placed on a form with one command.
 After the form has been defined it is displayed on the screen and
-control is given to a library call @code{fl_do_forms()}. This routine
-takes care of the interaction between the user and the form and
-returns as soon as some change occurs in the status of the form due to
-some user action. In this case control is returned to the program
-(indicating that the object changed) and the program can take action
-accordingly, after which control is returned again to the
-@code{fl_do_forms()} routine. Multiple forms can be handled
+control is given to a library call @code{@ref{fl_do_forms()}}. This
+routine takes care of the interaction between the user and the form
+and returns as soon as some change occurs in the status of the form
+due to some user action. In this case control is returned to the
+program (indicating that the object changed) and the program can take
+action accordingly, after which control is returned again to the
+@code{@ref{fl_do_forms()}} routine. Multiple forms can be handled
 simultaneously by the library and can be combined with windows of the
 application program. More advanced event handling via object callbacks
 is also supported.

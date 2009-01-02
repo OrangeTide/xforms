@@ -30,6 +30,7 @@ noinst_HEADERS = \
 	popup.h \
 	positioner.h \
 	scrollbar.h \
+	select.h \
 	slider.h \
 	tabfolder.h \
 	text.h \

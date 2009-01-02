@@ -950,13 +950,15 @@ extern FL_POPUP *fli_popup_add( Window,
 extern FL_POPUP_ENTRY *fli_popup_add_entries( FL_POPUP *,
 											  const char *,
 											  va_list,
-											  const char * );
+											  const char *,
+											  int );
 
 extern FL_POPUP_ENTRY *fli_popup_insert_entries( FL_POPUP *,
 												 FL_POPUP_ENTRY *,
 												 const char *,
 												 va_list,
-												 const char * );
+												 const char *,
+												 int );
 
 extern void fli_popup_init( void );
 
@@ -966,6 +968,7 @@ extern int fli_check_popup_exists( FL_POPUP * );
 
 extern int fli_check_popup_entry_exists( FL_POPUP_ENTRY * );
 
+extern FL_POPUP_RETURN *fli_set_popup_return( FL_POPUP_ENTRY * );
 
 #if XlibSpecificationRelease == 6
 

@@ -15,7 +15,7 @@ the best approach. Here are some details about graphics state in case
 such information is needed.
 
 All state information is kept in a global structure of type
-@tindex @code{FL_State}
+@tindex FL_State
 @code{FL_State} and there is a total of six such structures,
 @code{fl_state[6]}, each for every visual class.
 
@@ -37,7 +37,8 @@ This is a valid window resource ID created in the current visual with
 the colormap mentioned above. This member is useful if you have to
 call, before the form becomes active (thus don't have a window ID),
 some Xlib routines that require a valid window. A macro,
-@findex @code{fl_default_window()}
+@findex fl_default_window()
+@anchor{fl_default_window()}
 @code{fl_default_window()}, is defined to return this member and use
 of the macro is encouraged.
 @item GC gc[16 ]
@@ -56,7 +57,9 @@ The currently active visual class (@code{TrueColor},
 @code{PseudoColor} etc.) can be obtained by the following
 function/macro:
 @findex fl_get_form_vclass()
+@anchor{fl_get_form_vclass()}
 @findex fl_get_vclass()
+@anchor{fl_get_vclass()}
 @example
 int fl_get_form_vclass(FL_FORM *form);
 int fl_get_vclass(void);
@@ -64,8 +67,9 @@ int fl_get_vclass(void);
 @noindent
 The value returned can be used as an index into the array
 @code{fl_state} of @code{FL_State} structures. Note that
-@code{fl_get_vclass()} should only be used within a class/new object
-module where there can be no confusion what the "current" form is.
+@code{@ref{fl_get_vclass()}} should only be used within a class/new
+object module where there can be no confusion what the "current" form
+is.
 
 Other information about the graphics mode can be obtained by using
 visual class as an index into the @code{fl_state} structure array. For
@@ -85,25 +89,23 @@ only maintains a single connection, the global variable
 @w{@code{Display *fl_display}} can be used where required. However, it
 is recommended that you use
 @findex fl_get_display()
+@anchor{fl_get_display()}
 @code{fl_get_display()} or
 @findex FL_FormDisplay(form)
+@anchor{FL_FormDisplay(form)}
 @code{FL_FormDisplay(form)} instead since the function/macro version
 has the advantage that your program will remain compatible with future
 (possibly multi-connection) versions of the Forms Library.
 
 There are a couple of ways to find out the "current" window ID,
 defined as the window ID the object receiving dispatcher's messages
-like @code{FL_DRAW} etc.@: belongs to. If the objects address is available,
-@code{FL_ObjWin(obj)} will suffice. Otherwise the function
-@findex fl_winget()
-@example
-Window fl_winget(void);
-@end example
-@noindent
-can be used.
+like @code{FL_DRAW} etc.@: belongs to. If the objects address is
+available, @code{FL_ObjWin(obj)} will suffice. Otherwise the function
+@code{@ref{fl_winget()}} (see below) can be used.
 
 There are other routines that might be useful:
 @findex fl_win_to_form()
+@anchor{fl_win_to_form()}
 @example
 FL_FORM *fl_win_to_form(Window win);
 @end example
@@ -118,6 +120,7 @@ the colormap. Therefore, they can't be used in any of the @code{GC}
 altering or Xlib routines. To get the actual pixel value the X server
 understands, use the following routine
 @findex fl_get_pixel()
+@anchor{fl_get_pixel()}
 @example
 FL_COLOR fl_get_pixel(FL_COLOR color);
 @end example
@@ -131,12 +134,14 @@ red_pixel = fl_get_pixel(FL_RED);
 To change the foreground color in the Forms Library's default
 @code{GC} (@code{gc[0]}) use
 @findex fl_color()
+@anchor{fl_color()}
 @example
 void fl_color(FL_COLOR col);
 @end example
 
 To set the background color in the default @code{GC} use instead
 @findex fl_bk_color()
+@anchor{fl_bk_color()}
 @example
 void fl_bk_color(FL_COLOR color);
 @end example
@@ -144,7 +149,9 @@ void fl_bk_color(FL_COLOR color);
 To set foreground or background in @code{GC}s other than the Forms
 Library's default, the following functions exist:
 @findex fl_set_foreground()
+@anchor{fl_set_foreground()}
 @findex fl_set_background()
+@anchor{fl_set_background()}
 @example
 void fl_set_foreground(GC gc, FL_COLOR color);
 void fl_set_background(GC gc, FL_COLOR color);
@@ -159,6 +166,7 @@ XSetBackground(fl_display, gc, fl_get_pixel(color));
 To free allocated colors from the default colormap, use the following
 routine
 @findex fl_free_colors()
+@anchor{fl_free_colors()}
 @example
 void fl_free_colors(FL_COLOR *cols, int n);
 @end example
@@ -171,6 +179,7 @@ In case the pixel values (instead of the index into the colormap) are
 known, the following routine can be used to free the colors from the
 default colormap
 @findex fl_free_pixels()
+@anchor{fl_free_pixels()}
 @example
 void fl_free_pixels(unsigned long *pixels, int n);
 @end example
@@ -180,8 +189,11 @@ updated. This is in general harmless.
 
 To modify or query the internal colormap, use the following routines:
 @findex fl_mapcolor()
+@anchor{fl_mapcolor()}
 @findex fl_mapcolorname()
+@anchor{fl_mapcolorname()}
 @findex fl_getmcolor()
+@anchor{fl_getmcolor()}
 @example
 unsigned long fl_mapcolor(FL_COLOR color, int red, int green, int blue)
 long fl_mapcolorname(FL_COLOR color, const char *name);
@@ -189,17 +201,18 @@ unsigned long fl_getmcolor(FL_COLOR color,
                            int *red, int *green, int *blue);
 @end example
 @noindent
-The first function, @code{fl_mapcolor()} sets a the color indexed by
-@code{color} to the color given by the @code{red}, @code{green} and
-@code{blue}, returning the colors pixel value.
+The first function, @code{@ref{fl_mapcolor()}} sets a the color
+indexed by @code{color} to the color given by the @code{red},
+@code{green} and @code{blue}, returning the colors pixel value.
 
-The second function, @code{fl_mapcolorname()}, sets the color in the
-colormap indexed by @code{color} to the color named @code{name}, where
-@code{name} must be a valid name from the systems color database file
-@file{rgb.txt}. It also returns the colors pixel value or -1 on failure.
+The second function, @code{@ref{fl_mapcolorname()}}, sets the color in
+the colormap indexed by @code{color} to the color named @code{name},
+where @code{name} must be a valid name from the systems color database
+file @file{rgb.txt}. It also returns the colors pixel value or -1 on
+failure.
 
-The last function, @code{fl_getmcolor()}, returns the RGB values of
-the color indexed by @code{color} in the second to third argument
+The last function, @code{@ref{fl_getmcolor()}}, returns the RGB values
+of the color indexed by @code{color} in the second to third argument
 pointers and the pixel value as the return value (or -1, cast to
 @code{unsigned long}, on failure).
 
@@ -211,7 +224,9 @@ form the object belongs to.
 To obtain the position of the mouse relative to a certain form or
 window, use the routines
 @findex fl_get_form_mouse()
+@anchor{fl_get_form_mouse()}
 @findex fl_get_win_mouse()
+@anchor{fl_get_win_mouse()}
 @example
 Window fl_get_form_mouse(FL_FORM *form, FL_Coord *x, FL_Coord *y,
                          unsigned *keymask)
@@ -227,6 +242,7 @@ keys (same as the the corresponding @code{XQueryPointer()} argument).
 A similar routine exists that can be used to obtain the mouse location
 relative to the root window
 @findex fl_get_mouse()
+@anchor{fl_get_mouse()}
 @example
 Window fl_get_mouse(FL_Coord *x, FL_Coord *y, unsigned *keymask);
 @end example
@@ -236,6 +252,7 @@ The function returns the ID of the window the mouse is in.
 To move the mouse to a specific location relative to the root window,
 use the following routine
 @findex fl_set_mouse()
+@anchor{fl_set_mouse()}
 @example
 void fl_set_mouse(FL_Coord x, FL_Coord y);
 @end example
@@ -245,6 +262,7 @@ if the mouse position is changed by a program.
 
 To avoid drawing outside a box the following routine exists:
 @findex fl_set_clipping()
+@anchor{fl_set_clipping()}
 @example
 void fl_set_clipping(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h);
 @end example
@@ -256,6 +274,7 @@ to. In this way you can prevent drawing over other objects.
 
 When finished with drawing always use
 @findex fl_unset_clipping()
+@anchor{fl_unset_clipping()}
 @example
 void fl_unset_clipping(void);
 @end example
@@ -264,7 +283,9 @@ to stop clipping.
 
 Similar functions are available to set the clipping for a specific @code{GC}:
 @findex fl_set_gc_clipping()
+@anchor{fl_set_gc_clipping()}
 @findex fl_unset_gc_clipping()
+@anchor{fl_unset_gc_clipping()}
 @example
 void fl_set_gc_clipping(GC gc, FL_Coord x, FL_Coord y,
                         FL_Coord w, FL_Coord h);
@@ -273,7 +294,7 @@ void fl_unset_gc_clipping(GC gc);
 
 To obtain the bounding box of an object with the dimension and
 location of the label taken into account (compare with
-@code{fl_get_object_geometry()} the following routine exists:
+@code{@ref{fl_get_object_geometry()}} the following routine exists:
 @findex fl_get_object_bbox()
 @example
 void fl_get_object_bbox(FL_OBJECT *obj, FL_Coord *x, FL_Coord *y,
@@ -283,7 +304,9 @@ void fl_get_object_bbox(FL_OBJECT *obj, FL_Coord *x, FL_Coord *y,
 To set clippings for text, which uses a different GC, the following
 routine should be used
 @findex fl_set_text_clipping()
-@findex fl_set_text_clipping()
+@anchor{fl_set_text_clipping()}
+@findex fl_set_untext_clipping()
+@anchor{fl_set_untext_clipping()}
 @example
 void fl_set_text_clipping(FL_Coord x,FL_Coord y,FL_Coord w,FL_Coord h);
 void wfl_unset_text_clipping(void);
@@ -293,7 +316,9 @@ For drawing text at the correct places you will need some information
 about the sizes of characters and strings. The following routines are
 provided:
 @findex fl_get_char_height()
+@anchor{fl_get_char_height()}
 @findex fl_get_char_width()
+@anchor{fl_get_char_width()}
 @example
 int fl_get_char_height(int style, int size, int *ascend, int *descend)
 int fl_get_char_width(int style, int size);
@@ -302,14 +327,17 @@ int fl_get_char_width(int style, int size);
 These two routines return the maximum height and width of the font
 used, where size indicates the point size for the font and style is
 the style in which the text is to be drawn. The first function,
-@code{fl_get_char_height()}, also returns the height above and below
-the baseline of the font via the @code{ascend} and @code{descend}
-arguments. A list of valid styles can be found in Section 3.11.3.
+@code{@ref{fl_get_char_height()}}, also returns the height above and
+below the baseline of the font via the @code{ascend} and
+@code{descend} arguments. A list of valid styles can be found in
+Section 3.11.3.
 
 To obtain the width and height information on a specific string, use
 the following routines
 @findex fl_get_string_width()
+@anchor{fl_get_string_width()}
 @findex fl_get_string_height()
+@anchor{fl_get_string_height()}
 @example
 int fl_get_string_width(int style, int size, const char *str,
                         int len);
@@ -326,6 +354,7 @@ embedded newline characters @code{'\n'} and the routine will make
 proper adjustment so the values returned are (just) large enough to
 contain the multiple lines of text
 @findex fl_get_string_dimension()
+@anchor{fl_get_string_dimension()}
 @example
 void fl_get_string_dimension(int style, int size, const char *str,
                              int len, int *width, int *height);
@@ -335,6 +364,7 @@ Sometimes it can be useful to get the X font structure for a
 particular size and style as used in the Forms Library. For this
 purpose, the following routine exists:
 @findex fl_get_fontstruct()
+@anchor{fl_get_fontstruct()}
 @example
 [const] XFontStruct *fl_get_fontstruct(int style, int size);
 @end example
@@ -347,7 +377,7 @@ XSetFont(fl_get_display(), mygc, xfs->fid);
 @end example
 @noindent
 The caller should not free the structure returned by
-@code{fl_get_fontstruct()}.
+@code{@ref{fl_get_fontstruct()}}.
 
 There are a number of routines that help you draw objects on the
 screen. All XForms's internal drawing routine draws into the "current
@@ -355,25 +385,30 @@ window", defined as the window the object that uses the drawing
 routine belongs to. If that's not what you need, the following
 routines can be used to set or query the current window:
 @findex fl_winset()
+@anchor{fl_winset()}
 @findex fl_winget()
+@anchor{fl_winget()}
 @example
 void fl_winset(Window win);
 Window fl_winget(void);
 @end example
 @noindent
-One caveat about @code{fl_winget()} is that it can return @code{None}
-if called outside of an object's event handler, depending on where the
-mouse is. Thus, the return value of this function should be checked
-when called outside of an object handler.
+One caveat about @code{@ref{fl_winget()}} is that it can return
+@code{None} if called outside of an object's event handler, depending
+on where the mouse is. Thus, the return value of this function should
+be checked when called outside of an object handler.
 
 It is important to remember that unless the following drawing commands
 are issued while handling the @code{FL_DRAW} or @code{FL_DRAWLABEL}
 event (which is not generally recommended), it is the application's
-responsibility to set the proper drawable using @code{fl_winset()}.
+responsibility to set the proper drawable using
+@code{@ref{fl_winset()}}.
 
 The most basic drawing routines are for drawing rectangles:
 @findex fl_rectf()
+@anchor{fl_rectf()}
 @findex fl_rect()
+@anchor{fl_rect()}
 @example
 void fl_rectf(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
               FL_COLOR c);
@@ -382,11 +417,12 @@ void fl_rect(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 @end example
 @noindent
 Both draw a rectangle on the screen in color @code{col}. The
-difference is that @code{fl_rectf()} draws a filled rectangle while
-@code{fl_rect()} just draws an outline.
+difference is that @code{@ref{fl_rectf()}} draws a filled rectangle
+while @code{@ref{fl_rect()}} just draws an outline.
 
 To draw a filled rectangle with a black border use
 @findex fl_rectbound()
+@anchor{fl_rectbound()}
 @example
 void fl_rectbound(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
                   FL_COLOR c);
@@ -395,7 +431,9 @@ void fl_rectbound(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 To draw a rectangle with rounded corners (filled or just the outline)
 employ
 @findex fl_roundrectf()
+@anchor{fl_roundrectf()}
 @findex fl_roundrect()
+@anchor{fl_roundrect()}
 @example
 void fl_roundrectf(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
                    FL_COLOR col);
@@ -405,10 +443,13 @@ void fl_roundrect(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 
 
 To draw a general polygon, use one of the following routines
-@tindex @code{FL_POINT}
+@tindex FL_POINT
 @findex fl_polyf()
+@anchor{fl_polyf()}
 @findex fl_polyl()
+@anchor{fl_polyl()}
 @findex fl_polybound()
+@anchor{fl_polybound()}
 @example
 typedef struct @{
     short x,
@@ -420,17 +461,20 @@ void fl_polyl(FL_POINT *xpoint, int n, FL_COLOR col);
 void fl_polybound(FL_POINT *xpoint, int n, FL_COLOR col);
 @end example
 @noindent
-@code{fl_polyf()} draws a filled polygon defined by @code{n} points,
-@code{fl_polyl()} the ouline of a polygon and @code{fl_polybound()} a
-filled polygon with a black outline. Note all polygon routines require
-that the array @code{xpoint} has to have enough spaces to hold
-@code{n+1} points!
+@code{@ref{fl_polyf()}} draws a filled polygon defined by @code{n}
+points, @code{@ref{fl_polyl()}} the ouline of a polygon and
+@code{@ref{fl_polybound()}} a filled polygon with a black outline.
+Note all polygon routines @strong{require} that the array
+@code{xpoint} has to have enough spaces to hold @code{n+1} points!
 
 To draw an ellipse. either filled or open, the following routines can
 be used (use @code{w} equal to @code{h} to get a circle):
 @findex fl_ovalf()
+@anchor{fl_ovalf()}
 @findex fl_ovall()
+@anchor{fl_ovall()}
 @findex fl_ovalbound()
+@anchor{fl_ovalbound()}
 @example
 void fl_ovalf(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
               FL_COLOR c);
@@ -443,7 +487,9 @@ void fl_ovalbound(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 To draw circular arcs, either open or filled, the following routines
 can be used
 @findex fl_arc()
+@anchor{fl_arc()}
 @findex fl_arcf()
+@anchor{fl_arcf()}
 @example
 void fl_arc(FL_Coord x, FL_Coord y, FL_Coord radius,
             int start_theta, int end_theta, FL_COLOR col);
@@ -459,6 +505,7 @@ than 3600 (360 degrees), drawing is truncated to 360 degrees.
 
 To draw elliptical arcs the following routine should be used:
 @findex fl_pieslice()
+@anchor{fl_pieslice()}
 @example
 void fl_pieslice(int fill, FL_Coord x, FL_Coord y, FL_Coord w,
                  FL_Coord h, int start_theta, int end_theta,
@@ -474,6 +521,7 @@ starting and ending angles measured from zero degrees (3 o'clock).
 Depending on circumstance, elliptical arc may be more easily drawn
 using the following routine
 @findex fl_ovalarc(
+@anchor{fl_ovalarc(}
 @example
 void fl_ovalarc(int fill, FL_Coord x, FL_Coord y, FL_Coord w,
                 FL_Coord h, int theta, int dtheta, FL_COLOR col);
@@ -489,6 +537,7 @@ truncated to 3600.
 
 To connect two points with a straight line, use
 @findex fl_line()
+@anchor{fl_line()}
 @example
 void fl_line(FL_Coord x1, FL_Coord y1,
              FL_Coord x2, FL_Coord y2, FL_COLOR col);
@@ -497,6 +546,7 @@ void fl_line(FL_Coord x1, FL_Coord y1,
 There is also a routine to draw a line along the diagonal of a box (to
 draw a horizontal line set @code{h} to 1, not to 0):
 @findex fl_diagline()
+@anchor{fl_diagline()}
 @example
 void fl_diagline(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
                  FL_COLOR col);
@@ -504,6 +554,7 @@ void fl_diagline(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 
 To draw connected line segments between @code{n} points use
 @findex fl_lines()
+@anchor{fl_lines()}
 @example
 void fl_lines(FL_POINT *points, int n, FL_COLOR col);
 @end example
@@ -512,7 +563,9 @@ All coordinates in points are relative to the origin of the drawable.
 
 There are also routines to draw one or more pixels
 @findex fl_point()
+@anchor{fl_point()}
 @findex fl_points()
+@anchor{fl_points()}
 @example
 void fl_point(FL_Coord x, FL_Coord y, FL_COLOR col);
 void fl_points(FL_POINT *p, int np, FL_COLOR col);
@@ -530,7 +583,9 @@ program has to pre-sort and group the pixels of the same color.
 To change the line width or style, the following convenience functions
 are available
 @findex fl_linewidth()
+@anchor{fl_linewidth()}
 @findex fl_linestyle()
+@anchor{fl_linestyle()}
 @example
 void fl_linewidth(int lw);
 void fl_linestyle(int style);
@@ -540,36 +595,37 @@ Set @code{lw} to 0 to reset the line width to the servers default.
 Line styles can take on the following values (also see
 @code{XChangeGC(3)})
 @table @code
-@tindex @code{FL SOLID}
+@tindex FL SOLID
 @item FL SOLID
 Solid line. Default and most efficient.
-@tindex @code{FL DOT}
+@tindex FL DOT
 @item FL DOT
 Dotted line.
-@tindex @code{FL DASH}
+@tindex FL DASH
 @item FL DASH
 Dashed line.
-@tindex @code{FL DOTDASH}
+@tindex FL DOTDASH
 @item FL DOTDASH
 Dash-dot-dash line.
-@tindex @code{FL LONGDASH}
+@tindex FL LONGDASH
 @item FL LONGDASH
 Long dashed line.
-@tindex @code{FL USERDASH}
+@tindex FL USERDASH
 @item FL USERDASH
 Dashed line, but the dash pattern is user definable via
-@code{fl_dashedlinestyle()}. Only the odd numbered segments are drawn
-with the foreground color.
-@tindex @code{FL USERDOUBLEDASH}
+@code{@ref{fl_dashedlinestyle()}}. Only the odd numbered segments are
+drawn with the foreground color.
+@tindex FL USERDOUBLEDASH
 @item FL USERDOUBLEDASH
 Similar to @code{FL_LINE_USERDASH} but both even and odd numbered
 segments are drawn, with the even numbered segments drawn in the
-background color (as set by @code{fl_bk_color()}).
+background color (as set by @code{@ref{fl_bk_color()}}).
 @end table
 
 The following routine can be used to change the dash pattern
 for @code{FL_USERDASH} and @code{FL USERDOUBLEDASH}:
 @findex fl_dashedlinestyle()
+@anchor{fl_dashedlinestyle()}
 @example
 void fl_dashedlinestyle(const char *dash, int ndashes)
 @end example
@@ -587,16 +643,17 @@ char ldash_sdash[] = @{9, 3, 2, 3@};
 fl_dashedlinestyle(ldash_sdash, 4);
 @end example
 
-It is important to remember to call @code{fldashedlinestyle()}
+It is important to remember to call @code{@ref{fl_dashedlinestyle()}}
 whenever @code{FL_USERDASH} is used to set the dash pattern, otherwise
 whatever the last pattern was will be used. To use the default dash
 pattern you can pass @code{NULL} as the dash parameter to
-@code{fl_dashedlinestyle()}.
+@code{@ref{fl_dashedlinestyle()}}.
 
 By default, all lines are drawn so they overwrite the destination
 pixel values. It is possible to change the drawing mode so the
 destination pixel values play a role in the final pixel value.
 @findex fl_drawmode()
+@anchor{fl_drawmode()}
 @example
 void fl_drawmode(int mode);
 @end example
@@ -623,8 +680,11 @@ Just invert the pixel values already on the screen.
 To obtain the current settings of the line drawing attributes use the
 following routines
 @findex fl_get_linewidth()
+@anchor{fl_get_linewidth()}
 @findex fl_get_linestyle(()
+@anchor{fl_get_linestyle(()}
 @findex fl_get_drawmode(()
+@anchor{fl_get_drawmode(()}
 @example
 int fl_get_linewidth(void);
 int fl_get_linestyle(void);
@@ -635,6 +695,7 @@ There are also a number of high-level drawing routines available. To
 draw boxes the following routine exists. Almost any object class will
 use it to draw the bounding box of the object.
 @findex fl_drw_box()
+@anchor{fl_drw_box()}
 @example
 void fl_drw_box(int style, FL_Coord x, FL_Coord y,
                 FL_Coord w, FL_Coord h,
@@ -651,6 +712,7 @@ visual effect of different border widths.
 
 There is also a routine for drawing a frame:
 @findex fl_drw_frame()
+@anchor{fl_drw_frame()}
 @example
 void fl_drw_frame(int style, FL_Coord x, FL_Coord y,
                   FL_Coord w, FL_Coord h, FL_COLOR col, int bw)
@@ -661,6 +723,7 @@ outside of the bounding box specified.
 
 To draw a slider of various types and shapes use
 @findex fl_drw_slider)
+@anchor{fl_drw_slider)}
 @example
 void fl_drw_slider(int boxtype, FL_Coord x, FL_Coord y,
                    FL_Coord w, FL_Coord h, FL_COLOR col1,
@@ -686,7 +749,9 @@ Draw the entire slider.
 
 For drawing text there are two routines:
 @findex fl_drw_text()
+@anchor{fl_drw_text()}
 @findex fl_drw_text_beside()
+@anchor{fl_drw_text_beside()}
 @example
 void fl_drw_text(int align, FL_Coord x, FL_Coord y, FL_Coord w,
                  FL_Coord h, FL_COLOR col, int style, int size,
@@ -704,18 +769,20 @@ indicate the bounding box, @code{col} is the color of the text,
 and Fonts}, for valid styles). Finally, @code{str} is the string
 itself, possibly containing embedded newline characters.
 
-@code{fl_drw_text()} draws the text inside the bounding box according
-to the alignment requested while @code{fl_drw_text_beside()} draws the
-text aligned outside of the box. These two routines interpret a text
-string starting with the character @code{@@} differently in drawing
-some symbols instead. Note that @code{fl_drw_text()} puts a padding of
-5 pixels in vertical direction and 4 in horizontal around the text.
-Thus the bounding box should be 10 pixels wider and 8 pixels higher
-than required for the text to be drawn.
+@code{@ref{fl_drw_text()}} draws the text inside the bounding box
+according to the alignment requested while
+@code{@ref{fl_drw_text_beside()}} draws the text aligned outside of
+the box. These two routines interpret a text string starting with the
+character @code{@@} differently in drawing some symbols instead. Note
+that @code{@ref{fl_drw_text()}} puts a padding of 5 pixels in vertical
+direction and 4 in horizontal around the text. Thus the bounding box
+should be 10 pixels wider and 8 pixels higher than required for the
+text to be drawn.
 
 The following routine can also be used to draw text and, in addition, a
 cursor can optionally be drawn
 @findex fl_drw_text_cursor()
+@anchor{fl_drw_text_cursor()}
 @example
 void fl_drw_text_cursor(int align, FL_Coord x, FL_Coord y,
                         FL_Coord w, FL_Coord h, FL_COLOR col,
@@ -733,6 +800,7 @@ Given a bounding box and the size of an object (e.g.@: a label) to
 draw, the following routine can be used to obtain the position of
 where to draw it with a certain alignment and including padding:
 @findex fl_get_align_xy()
+@anchor{fl_get_align_xy()}
 @example
 void fl_get_align_xy(int align, int x, int y, int w, int h,
                      int obj_xsize, int obj_ysize,
@@ -749,7 +817,9 @@ and height of the object to be drawn and @code{xmargin} and
 
 For drawing object labels the following routines might be more convenient:
 @findex fl_draw_object_label()
+@anchor{fl_draw_object_label()}
 @findex fl_draw_object_label_outside()
+@anchor{fl_draw_object_label_outside()}
 @example
 void fl_draw_object_label(FL_OBJECT *obj)
 void fl_draw_object_label_outside(FL_OBJECT *obj);

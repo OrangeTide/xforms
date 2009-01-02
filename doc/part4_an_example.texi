@@ -72,9 +72,9 @@ FL_OBJECT *fl_add_colbox(int type, FL_Coord x, FL_Coord y,
 
 The fields @code{col1} and @code{col2} are used to store the two
 colors red and blue such that the user can change them when required
-with the routine @code{fl_set_object_color()}. What remains is to
-write the handling routine @code{handle_colbox()}. It has to react to
-three types of events: @code{FL_DRAW}, @code{FL_PUSH} and
+with the routine @code{@ref{fl_set_object_color()}}. What remains is
+to write the handling routine @code{handle_colbox()}. It has to react
+to three types of events: @code{FL_DRAW}, @code{FL_PUSH} and
 @code{FL_RELEASE}. Also, when the box is pushed, the counter should be
 incremented to keep a total count. Note that whether or not the mouse
 is pushed on the object is indicated in the field @code{obj->pushed}.

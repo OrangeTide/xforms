@@ -112,7 +112,7 @@ static int popup_cursor;
  ***************************************/
 
 static FL_POPUP_ENTRY *parse_entries( FL_POPUP *, char *, va_list,
-                                      const char * );
+                                      const char *, int );
 static FL_POPUP_ENTRY * failed_add( FL_POPUP_ENTRY * );
 static int check_sub( FL_POPUP_ENTRY * );
 static void radio_check( FL_POPUP_ENTRY * );
@@ -304,7 +304,8 @@ fl_popup_add_entries( FL_POPUP   * popup,
 
     va_start( ap, entries );
     new_entries = fli_popup_add_entries( popup, entries, ap,
-										 "fl_popup_add_entries" );
+										 "fl_popup_add_entries",
+										 0 );
     va_end( ap );
 
 	return new_entries;
@@ -319,7 +320,8 @@ FL_POPUP_ENTRY *
 fli_popup_add_entries( FL_POPUP   * popup,
 					   const char * entries,
 					   va_list      ap,
-					   const char * caller )
+					   const char * caller,
+					   int          simple )
 {
     FL_POPUP_ENTRY *new_entries,
                    *e;
@@ -350,7 +352,7 @@ fli_popup_add_entries( FL_POPUP   * popup,
         return NULL;
     }
 
-    new_entries = parse_entries( popup, str, ap, caller );
+    new_entries = parse_entries( popup, str, ap, caller, simple );
     fl_free( str );
 
     /* A return value of NULL says something went wrong (warning was altready
@@ -418,7 +420,8 @@ fli_popup_insert_entries( FL_POPUP       * popup,
 						  FL_POPUP_ENTRY * after,
 						  const char     * entries,
 						  va_list          ap,
-						  const char     * caller )
+						  const char     * caller,
+	                      int              simple)
 {
     FL_POPUP_ENTRY *new_entries,
                    *new_last,
@@ -463,7 +466,8 @@ fli_popup_insert_entries( FL_POPUP       * popup,
         return NULL;
     }
 
-    new_entries = parse_entries( popup, str, ap, "fl_popup_insert_entries" );
+    new_entries = parse_entries( popup, str, ap, "fl_popup_insert_entries",
+								 simple );
     fl_free( str );
 
     /* A return value of NULL says something went wrong (warning was altready
@@ -908,6 +912,27 @@ fl_popup_set_position( FL_POPUP * popup,
 
 
 /***************************************
+ * Returns the policy set for a popup or the default policy if called
+ * with a NULL pointer
+ ***************************************/
+
+int
+fl_popup_get_policy( FL_POPUP * popup )
+{
+	if ( popup == NULL )
+		return popup_policy;
+
+    if ( fli_check_popup_exists( popup ) )
+    {
+        M_err( "fl_popup_get_title_font", "Invalid popup" );
+        return -1;
+    }
+
+	return popup->top_parent->policy;
+}
+
+
+/***************************************
  * Set policy of handling the popup (i.e. does it get closed when the
  * user releases the mouse button outside an active entry or not?)
  ***************************************/
@@ -917,12 +942,6 @@ fl_popup_set_policy( FL_POPUP * popup,
                      int        policy )
 {
     int old_policy;
-
-    if ( fli_check_popup_exists( popup ) )
-    {
-        M_err( "fl_popup_set_position", "Invalid popup" );
-        return -1;
-    }
 
     if ( policy < FL_POPUP_NORMAL_SELECT || policy > FL_POPUP_DRAG_SELECT )
     {
@@ -1100,14 +1119,31 @@ fl_popup_set_callback( FL_POPUP    * popup,
  * Set a new title for a popup
  ***************************************/
 
-void
+const char *
+fl_popup_get_title( FL_POPUP   * popup )
+{
+    if ( fli_check_popup_exists( popup ) )
+    {
+        M_err( "fl_popup_set_title", "Invalid popup" );
+        return NULL;
+    }
+
+	return popup->title;
+}
+
+
+/***************************************
+ * Set a new title for a popup
+ ***************************************/
+
+FL_POPUP *
 fl_popup_set_title( FL_POPUP   * popup,
                     const char * title )
 {
     if ( fli_check_popup_exists( popup ) )
     {
         M_err( "fl_popup_set_title", "Invalid popup" );
-        return;
+        return NULL;
     }
 
     fl_safe_free( popup->title );
@@ -1116,10 +1152,15 @@ fl_popup_set_title( FL_POPUP   * popup,
     {
         popup->title = fl_strdup( title );
         if ( popup->title == NULL )
+		{
             M_err( "fl_popup_set_title", "Running out of memory" );
+			return NULL;
+		}
     }
 
     popup->need_recalc = 1;
+
+	return popup;
 }
 
 
@@ -2158,14 +2199,17 @@ fl_popup_set_min_width( FL_POPUP * popup,
 /***************************************
  * Set up a linked list of entries for a popup according to a string
  * and optional arguments. The resulting list then can be merged into
- * an already existing list of entries of the popup.
+ * an already existing list of entries of the popup. The 'simple'
+ * argument, when set, says that the new entry can't be a sub-entry,
+ * a toggle, line or radio entry.
  ***************************************/
 
 static FL_POPUP_ENTRY *
 parse_entries( FL_POPUP   * popup,
                char       * str,
                va_list      ap,
-               const char * caller )
+               const char * caller,
+			   int          simple )
 {
     FL_POPUP_ENTRY *entry,
                    *entry_first = NULL;
@@ -2280,14 +2324,20 @@ parse_entries( FL_POPUP   * popup,
 
                     entry->sub = va_arg( ap, FL_POPUP * );
 
-                    if ( check_sub( entry ) )
-                    {
-                        M_err( caller, "Invalid submenu popup" );
-                        return failed_add( entry_first );
-                    }
+					if ( ! simple )
+					{
+						if ( check_sub( entry ) )
+						{
+							M_err( caller, "Invalid submenu popup" );
+							return failed_add( entry_first );
+						}
 
-                    entry->type = FL_POPUP_SUB;
-                    entry->sub->parent = popup;
+						entry->type = FL_POPUP_SUB;
+						entry->sub->parent = popup;
+					}
+					else
+						entry->sub = NULL;
+
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
 
@@ -2299,7 +2349,6 @@ parse_entries( FL_POPUP   * popup,
                         return failed_add( entry_first );
                     }
 
-                    entry->type = FL_POPUP_LINE;
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
                     
@@ -2312,9 +2361,12 @@ parse_entries( FL_POPUP   * popup,
                         return failed_add( entry_first );
                     }
 
-                    entry->type = FL_POPUP_TOGGLE;
-                    if ( s[ 1 ] == 'T' )
-                        entry->state |= FL_POPUP_CHECKED;
+					if ( ! simple )
+					{
+						entry->type = FL_POPUP_TOGGLE;
+						if ( s[ 1 ] == 'T' )
+							entry->state |= FL_POPUP_CHECKED;
+					}
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
 
@@ -2328,9 +2380,14 @@ parse_entries( FL_POPUP   * popup,
                     }
 
                     entry->group = va_arg( ap, int );
-                    entry->type = FL_POPUP_RADIO;
-                    if ( s[ 1 ] == 'R' )
-                        entry->state |= FL_POPUP_CHECKED;
+
+					if ( ! simple )
+					{
+						entry->type = FL_POPUP_RADIO;
+						if ( s[ 1 ] == 'R' )
+							entry->state |= FL_POPUP_CHECKED;
+					}
+
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
 
@@ -2365,6 +2422,22 @@ parse_entries( FL_POPUP   * popup,
                     return failed_add( entry_first );
             }
         }
+
+		/* If we're asked to create simple popup (for a FL_SELECT object)
+		   remove the entry again if it's a line entry */
+
+		if ( simple && entry->type == FL_POPUP_LINE )
+		{
+			if ( entry->prev != NULL )
+				entry->prev->next = NULL;
+			else
+				entry_first = NULL;
+			fl_free( entry );
+
+			popup->counter--;
+
+			continue;
+		}
 
         /* Now all flags should be removed from text string, so we can set
            the entries label and accelerator key text after also removing
@@ -2947,7 +3020,7 @@ calculate_window_position( FL_POPUP * popup )
 
     /* If no position has been requested use the mouse position, otherwise
        the requested coordinates. Negatve positions mean relative to right
-       edge or botton of screen. */
+       edge or botton of the screen. */
 
     fl_get_mouse( &x, &y, &dummy );
 
@@ -3349,15 +3422,10 @@ handle_selection( FL_POPUP_ENTRY *entry )
         entry->state |= FL_POPUP_CHECKED;
     }
 
-    /* Call the entries callback function */
+    /* Set up the structure to be returned and call the entries callback
+	   function */
 
-    entry->popup->top_parent->ret.text      = entry->text;
-    entry->popup->top_parent->ret.label     = entry->label;
-    entry->popup->top_parent->ret.accel     = entry->accel;
-    entry->popup->top_parent->ret.val       = entry->val;
-    entry->popup->top_parent->ret.user_data = entry->user_data;
-    entry->popup->top_parent->ret.entry     = entry;
-    entry->popup->top_parent->ret.popup     = entry->popup;
+	fli_set_popup_return( entry );
 
     if ( entry->callback )
         cb_result = entry->callback( &entry->popup->top_parent->ret );
@@ -3958,13 +4026,7 @@ enter_leave( FL_POPUP_ENTRY * entry,
          || ( ! act && entry->leave_callback == NULL ) )
         return;
 
-    entry->popup->top_parent->ret.text      = entry->text;
-    entry->popup->top_parent->ret.label     = entry->label;
-    entry->popup->top_parent->ret.accel     = entry->accel;
-    entry->popup->top_parent->ret.val       = entry->val;
-    entry->popup->top_parent->ret.user_data = entry->user_data;
-    entry->popup->top_parent->ret.entry     = entry;
-    entry->popup->top_parent->ret.popup     = entry->popup;
+	fli_set_popup_return( entry );
 
     if ( act )
         entry->enter_callback( &entry->popup->top_parent->ret );
@@ -4194,4 +4256,23 @@ fli_check_popup_entry_exists( FL_POPUP_ENTRY * entry )
             return 0;
 
     return 1;
+}
+
+
+/***************************************
+ * Set up the return structure of a popup for a certain entry
+ ***************************************/
+
+FL_POPUP_RETURN *
+fli_set_popup_return( FL_POPUP_ENTRY * entry )
+{
+    entry->popup->top_parent->ret.text      = entry->text;
+    entry->popup->top_parent->ret.label     = entry->label;
+    entry->popup->top_parent->ret.accel     = entry->accel;
+    entry->popup->top_parent->ret.val       = entry->val;
+    entry->popup->top_parent->ret.user_data = entry->user_data;
+    entry->popup->top_parent->ret.entry     = entry;
+    entry->popup->top_parent->ret.popup     = entry->popup;
+
+	return &entry->popup->top_parent->ret;
 }

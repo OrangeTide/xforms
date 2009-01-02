@@ -38,6 +38,7 @@ be selected.
 
 To add a tabbed folders to a form use the routine
 @findex fl_add_tabfolder()
+@anchor{fl_add_tabfolder()}
 @example
 FL_OBJECT *fl_add_tabfolder(int type, FL_Coord x, FL_Coord y,
                             FL_Coord w, FL_Coord h, const char *label);
@@ -52,16 +53,16 @@ the tab riders.
 
 The following types are available:
 @table @code
-@tindex @code{FL_TOP_TABFOLDER}
+@tindex FL_TOP_TABFOLDER
 @item FL_TOP_TABFOLDER
 Tabs on top of the folders.
-@tindex @code{FL_BOTTOM_TABFOLDER}
+@tindex FL_BOTTOM_TABFOLDER
 @item FL_BOTTOM_TABFOLDER
 Tabs at the bottom of the folders.
-@tindex @code{FL_LEFT_TABFOLDER}
+@tindex FL_LEFT_TABFOLDER
 @item FL_LEFT_TABFOLDER
 Tabs on the left of the folders (not yet functional).
-@tindex @code{FL_RIGHT_TABFOLDER}
+@tindex FL_RIGHT_TABFOLDER
 @item FL_RIGHT_TABFOLDER
 Tabs on the righ of the folders (not yet functional).
 @end table
@@ -83,8 +84,11 @@ take appropriate actions.
 To find out which folder is currently active, the following routines
 the tab ridersare available
 @findex fl_get_active_folder()
+@anchor{fl_get_active_folder()}
 @findex fl_get_active_folder_number()
+@anchor{fl_get_active_folder_number()}
 @findex fl_get_active_folder_name()
+@anchor{fl_get_active_folder_name()}
 @example 
 FL_FORM *fl_get_active_folder(FL_OBJECT *obj);
 int fl_get_active_folder_number(FL_OBJECT *obj);
@@ -102,8 +106,11 @@ two.
 To find out what the last active folder is (which may be of greater
 interest than the currently active one) the following can be used:
 @findex fl_get_folder()
+@anchor{fl_get_folder()}
 @findex fl_get_folder_number()
+@anchor{fl_get_folder_number()}
 @findex fl_get_folder_name()
+@anchor{fl_get_folder_name()}
 @example
 FL_FORM *fl_get_folder(FL_OBJECT *obj)
 int fl_get_folder_number(FL_OBJECT *obj)
@@ -119,6 +126,7 @@ the other two.
 
 To populate a tabbed folder, use the following routine
 @findex fl_addto_tabfolder()
+@anchor{fl_addto_tabfolder()}
 @example
 FL_OBJECT *fl_addto_tabfolder(FL_OBJECT *obj, const char *tab_name,
                               FL_FORM *folder)
@@ -126,10 +134,10 @@ FL_OBJECT *fl_addto_tabfolder(FL_OBJECT *obj, const char *tab_name,
 @noindent
 where @code{tab_name} is a string (with possible embedded newlines in
 it) indicating the text of the tab rider and @code{folder} is a
-regular form created between calls of @code{fl_bgn_form()} and
-@code{fl_end_form()}. Only the pointer to the form is required. This
-means that the application program should not destroy a form that has
-been added to a tabbed folder. The function returns the folder tab
+regular form created between calls of @code{@ref{fl_bgn_form()}} and
+@code{@ref{fl_end_form()}}. Only the pointer to the form is required.
+This means that the application program should not destroy a form that
+has been added to a tabbed folder. The function returns the folder tab
 object, which is an object of class @code{FL_BUTTON}. The initial
 object color, label color, and other attributes (gravities, for
 example) of the tab button is inherited from the tabbed folder object
@@ -149,7 +157,9 @@ you can create copies of a form and use these copies.
 To access the individual forms on the tabfolder, e.g.@: in order to
 modify something on it, use the following routines
 @findex fl_get_tabfolder_folder_bynumber()
+@anchor{fl_get_tabfolder_folder_bynumber()}
 @findex fl_get_tabfolder_folder_byname()
+@anchor{fl_get_tabfolder_folder_byname()}
 @example
 FL_FORM *fl_get_tabfolder_folder_bynumber(FL_OBJECT *obj, int num);
 FL_FORM *fl_get_tabfolder_folder_byname(FL_OBJECT *obj,
@@ -172,26 +182,30 @@ Although a regular form (top-level) and a form used as a folder behave
 almost identically, there are some differences. In a top-level form,
 objects that do not have callbacks bound to them will be returned,
 when their states change, to the application program via
-@code{fl_do_forms()} or @code{fl_check_forms()}. When a form is used
-as a folder, objects that do not have a callback are ignored even when
-their states changes. The reason for this behavior is that presumely
-the application does not care while the changes take place and they
-only become relevant when the the folder is switched off and at that
-time the application program can decide what to do with these objects'
-states (apply or ignore for example). If immediate reaction is
-desired, just use callback functions for these objects.
+@code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}}. When a
+form is used as a folder, objects that do not have a callback are
+ignored even when their states changes. The reason for this behavior
+is that presumely the application does not care while the changes take
+place and they only become relevant when the the folder is switched
+off and at that time the application program can decide what to do
+with these objects' states (apply or ignore for example). If immediate
+reaction is desired, just use callback functions for these objects.
 
 To obtain the number of folders in the tabfolder, the following
 routine can be used
 @findex fl_get_tabfolder_numfolders()
+@anchor{fl_get_tabfolder_numfolders()}
 @example
 int fl_get_tabfolder_numfolders(FL_OBJECT *obj);
 @end example
 
 To remove a folder, the following routine is available
 @findex fl_delete_folder()
+@anchor{fl_delete_folder()}
 @findex fl_delete_folder_bynumber()
+@anchor{fl_delete_folder_bynumber()}
 @findex fl_delete_folder_byname()
+@anchor{fl_delete_folder_byname()}
 @example
 void fl_delete_folder(FL_OBJECT *obj, FL_FORM *folder);
 void fl_delete_folder_bynumber(FL_OBJECT *obj, int num);
@@ -206,8 +220,11 @@ deleting the third folder repeatedly.
 The application program can select which folder to show by using the
 following routines
 @findex fl_set_folder()
+@anchor{fl_set_folder()}
 @findex fl_set_folder_bynumber()
+@anchor{fl_set_folder_bynumber()}
 @findex fl_set_folder_byname()
+@anchor{fl_set_folder_byname()}
 @example
 void fl_set_folder(FL_OBJECT *obj, FL_FORM *folder);
 void fl_set_folder_bynumber(FL_OBJECT *obj, int num);
@@ -218,6 +235,7 @@ Since the area occupied by the tabbed folder contains the space for
 tabs, the following routine is available to obtain the actual folder
 size
 @findex fl_get_folder_area()
+@anchor{fl_get_folder_area()}
 @example
 void fl_get_folder_area(FL_OBJECT *obj, FL_Coord *x, FL_Coord *y,
                         FL_OBJECT *w, FL_OBJECT *h)
@@ -235,19 +253,20 @@ in general not possible to design the forms (folders) so they fit
 exactly into the folder area. To dynamically adjust the sizes of the
 folders so they fit, the following routine is available
 @findex fl_set_tabfolder_autofit()
+@anchor{fl_set_tabfolder_autofit()}
 @example
 int fl_set_tabfolder_autofit(FL_OBJECT *obj, int how);
 @end example
 @noindent
 where @code{how} can be one of the following constants:
 @table @code
-@tindex @code{FL_NO}
+@tindex FL_NO
 @item FL_NO
 Do not scale the form.
-@tindex @code{FL_FIT}
+@tindex FL_FIT
 @item FL_FIT
 Always scale the form.
-@tindex @code{FL_ENLARGE_ONLY}
+@tindex FL_ENLARGE_ONLY
 @item FL_ENLARGE_ONLY
 Scale the form only if it is smaller than the folder area.
 @end table
@@ -263,6 +282,7 @@ so it appears to be a trapzoid rather than a square. To change the
 appearance of the tabs, you can adjust the corner pixels using the
 following routine
 @findex fl_set_default_tabfolder_corner()
+@anchor{fl_set_default_tabfolder_corner()}
 @example
 int fl_set_default_tabfolder_corner(int n);
 @end example
@@ -316,6 +336,7 @@ Research (@email{spl@@ucsd.edu}).
 
 Adding an object To add a formbrowser object to a form use the routine
 @findex fl_add_formbrowser()
+@anchor{fl_add_formbrowser()}
 @example
 FL_OBJECT *fl_add_formbrowser(int type, FL_Coord x, FL_Coord y,
                               FL_Coord w, FL_Coord h,
@@ -330,7 +351,7 @@ the total area of the formbrowser, including scrollbars.
 @subsection FormBrowser Types
 
 There's only a single type of formbrowser available, the
-@tindex @code{FL_NORMAL_FORMBROWSER}
+@tindex FL_NORMAL_FORMBROWSER
 @code{FL_NORMAL_FORMBROWSER}.
 
 
@@ -340,35 +361,37 @@ There's only a single type of formbrowser available, the
 Once a formbrowser is populated with forms, you can scroll the forms
 with the scrollbars and interact with any of the forms. All objects on
 the forms act, for the most part, the same way as they would if they
-were on separate forms, i.e., if there are callback functions bound
-to the objects, they will be invoked by the main loop when the states
-of the objects change. However, objects on the form that do not have
-callbacks bound to them will not be returned by @code{fl_do_forms()}
-or @code{fl_check_forms()}.
+were on separate forms, i.e., if there are callback functions bound to
+the objects, they will be invoked by the main loop when the states of
+the objects change. However, objects on the form that do not have
+callbacks bound to them will not be returned by
+@code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}}.
 
 @node Other FormBrowser Routines
 @subsection Other FormBrowser Routines
 
 To populate a formbrowser, use the following routine
 @findex fl_addto_formbrowser()
+@anchor{fl_addto_formbrowser()}
 @example
 int fl_addto_formbrowser(FL_OBJECT *obj, FL_FORM *form);
 @end example
 @noindent
 where @code{form} is a pointer to a regular form created between calls
-of @code{fl_bgn_form()} and @code{fl_end_form()}. Only the form
-pointer is passed to the function, which means that the form should be
-valid for the duration of the formbrowser and the application program
-should not destroy a form that is added to a formbrowser before
-deleting the form from the formbrowser first. The function returns the
-total number of forms in the formbrowser. Note that although there is
-no specific requirement on what the backface of the form should be,
-not all boxtypes look nice.
+of @code{@ref{fl_bgn_form()}} and @code{@ref{fl_end_form()}}. Only the
+form pointer is passed to the function, which means that the form
+should be valid for the duration of the formbrowser and the
+application program should not destroy a form that is added to a
+formbrowser before deleting the form from the formbrowser first. The
+function returns the total number of forms in the formbrowser. Note
+that although there is no specific requirement on what the backface of
+the form should be, not all boxtypes look nice.
 
 The form so added is appended to the list of forms that are already in
 the formbrowser. You can also use the following routine to obtain the
 total number of forms in a formbrowser
 @findex fl_get_formbrowser_numforms()
+@anchor{fl_get_formbrowser_numforms()}
 @example
 int fl_get_formbrowser_numforms(FL_OBJECT *formbrowser);
 @end example
@@ -377,13 +400,15 @@ Although a regular form (top-level) and a form used inside a
 formbrowser behave almost identically, there are some differences. In
 a top-level form, objects that do not have callbacks bound to them
 will be returned to the application program when their states change
-via @code{fl_do_forms()} or @code{fl_check_forms()}. When a form is
-used as member of a formbrowser those objects that do not have
-callbacks are ignored even when their states change.
+via @code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}}. When
+a form is used as member of a formbrowser those objects that do not
+have callbacks are ignored even when their states change.
 
 To remove a form from the formbrowser, the following routine is available
 @findex fl_delete_formbrowser()
+@anchor{fl_delete_formbrowser()}
 @findex fl_delete_formbrowser_bynumber()
+@anchor{fl_delete_formbrowser_bynumber()}
 @example
 int fl_delete_formbrowser(FL_OBJECT *obj, FL_FORM *form);
 FL_FORM* fl_delete_formbrowser_bynumber(FL_OBJECT *obj, int num);
@@ -404,6 +429,7 @@ address of the form that is removed.
 
 To replace a form in formbrowser, the following routine is available
 @findex fl_replace_formbrowser()
+@anchor{fl_replace_formbrowser()}
 @example
 FL_FORM *fl_replace_formbrowser(FL_OBJECT *obj, int num,
                                 FL_FORM *form);
@@ -418,6 +444,7 @@ function returns the form that has been replaced on success, otherwise
 You can also insert a form into a formbrowser at arbitrary locations
 using the following routine
 @findex fl_insert_formbrowser()
+@anchor{fl_insert_formbrowser()}
 @example
 int fl_insert_formbrowser(FL_OBJECT *obj, int num, FL_FORM *form);
 @end example
@@ -429,6 +456,7 @@ returns the number of forms in the formbrowser, otherwise -1.
 To find out the sequence number of a particular form, the following
 routine is available
 @findex fl_find_formbrowser_form_number()
+@anchor{fl_find_formbrowser_form_number()}
 @example
 int fl_find_formbrowser_form_number(FL_OBJECT *obj, FL_FORM *form);
 @end example
@@ -436,6 +464,7 @@ int fl_find_formbrowser_form_number(FL_OBJECT *obj, FL_FORM *form);
 To obtain the form handle from the sequence number, use the following
 routine
 @findex fl_get_formbrowser_form()
+@anchor{fl_get_formbrowser_form()}
 @example
 int fl_get_formbrowser_form(FL_OBJECT *obj, int num);
 @end example
@@ -444,7 +473,9 @@ By default, if the size of the forms exceeds the size of the
 formbrowser, scrollbars are added automatically. You can use the
 following routines to control the scrollbars
 @findex fl_set_formbrowser_hscrollbar()
+@anchor{fl_set_formbrowser_hscrollbar()}
 @findex fl_set_formbrowser_vscrollbar()
+@anchor{fl_set_formbrowser_vscrollbar()}
 @example
 void fl_set_formbrowser_hscrollbar(FL_OBJECT *obj, int how);
 void fl_set_formbrowser_vscrollbar(FL_OBJECT *obj, int how);
@@ -452,13 +483,13 @@ void fl_set_formbrowser_vscrollbar(FL_OBJECT *obj, int how);
 @noindent
 where how can be one of the following
 @table @code
-@tindex @code{FL_ON}
+@tindex FL_ON
 @item FL_ON
 Always on.
-@tindex @code{FL_OFF}
+@tindex FL_OFF
 @item FL_OFF
 Always off.
-@tindex @code{FL_AUTO}
+@tindex FL_AUTO
 @item FL_AUTO
 On when needed. This is the default.
 @end table
@@ -467,16 +498,17 @@ The Vertical scrollbar by default scrolls a fixed number of pixels. To
 change it so each action of the scrollbar scrolls to the next forms,
 the following routine is available
 @findex fl_set_formbrowser_scroll()
+@anchor{fl_set_formbrowser_scroll()}
 @example
 void fl_set_formbrowser_scroll(FL_OBJECT *how)
 @end example
 @noindent
 where @code{how} can be one of the following
 @table @code
-@tindex @code{FL_SMOOTH_SCROLL}
+@tindex FL_SMOOTH_SCROLL
 @item FL_SMOOTH_SCROLL
 The default.
-@tindex @code{FL_JUMP_SCROLL}
+@tindex FL_JUMP_SCROLL
 @item FL_JUMP_SCROLL
 Scrolls in form increments.
 @end table
@@ -484,6 +516,7 @@ Scrolls in form increments.
 To obtain the the form that is currently the first form in the
 formbrowser visible to the user, the following can be used
 @findex fl_get_formbrowser_topform()
+@anchor{fl_get_formbrowser_topform()}
 @example
 FL_FORM *fl_get_formbrowser_topform(FL_OBJECT *obj);
 @end example
@@ -491,7 +524,9 @@ FL_FORM *fl_get_formbrowser_topform(FL_OBJECT *obj);
 You can also set which form to show by setting the top form using
 the following routine
 @findex fl_set_formbrowser_topform()
+@anchor{fl_set_formbrowser_topform()}
 @findex fl_set_formbrowser_topform_bynumber()
+@anchor{fl_set_formbrowser_topform_bynumber()}
 @example
 int fl_set_formbrowser_topform(FL_OBJECT *obj, FL_FORM *form);
 FL_FORM* fl_set_formbrowser_topform_bynumber(FL_OBJECT *obj, int num);
@@ -504,6 +539,7 @@ Since the area occupied by the formbrowser contains the space for the
 scrollbars, the following routine is available to obtain the actual
 size of the forms area
 @findex fl_get_formbrowser_area()
+@anchor{fl_get_formbrowser_area()}
 @example
 void fl_get_formbrowser_area(FL_OBJECT *obj, int *x, int *y,
                              int *w, int *h);
@@ -515,7 +551,9 @@ formbrowser beongs to.
 To programatically scroll within a formbrowser in horizontal
 and vertical direction, the following routines are available
 @findex fl_set_formbrowser_xoffset()
+@anchor{fl_set_formbrowser_xoffset()}
 @findex fl_set_formbrowser_yoffset()
+@anchor{fl_set_formbrowser_yoffset()}
 @example
 int fl_set_formbrowser_xoffset(FL_OBJECT *obj, int offset);
 int fl_set_formbrowser_yoffset(FL_OBJECT *obj, int offset);
@@ -530,7 +568,9 @@ the content is scrolled by 10 pixels upwards.
 
 To obtain the current offsets, use the following routines
 @findex fl_get_formbrowser_xoffset()
+@anchor{fl_get_formbrowser_xoffset()}
 @findex fl_get_formbrowser_yoffset()
+@anchor{fl_get_formbrowser_yoffset()}
 @example
 int fl_get_formbrowser_xoffset(FL_OBJECT *obj);
 int fl_get_formbrowser_yoffset(FL_OBJECT *obj);
@@ -540,7 +580,7 @@ int fl_get_formbrowser_yoffset(FL_OBJECT *obj);
 @node FormBrowser Remarks
 @subsection Remarks
 
-a call of @code{fl_free_object(formbrowser)} does not free the
+A call of @code{fl_free_object(formbrowser)} does not free the
 individual forms, it only frees the formbrowser object itself.
 
 See demo program @file{formbrowser.c} for an example use of

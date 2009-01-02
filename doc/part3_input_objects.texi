@@ -25,6 +25,7 @@ edited by the user using the keyboard.
 
 Adding an object To add an input field to a form you use the routine
 @findex fl_add_input()
+@anchor{fl_add_input()}
 @example
 FL_OBJECT *fl_add_input(int type, FL_Coord x, FL_Coord y,
                         FL_Coord w, FL_Coord h, const char *label)
@@ -39,25 +40,25 @@ placed in front of the input field.
 
 The following types of input fields exist:
 @table @code
-@tindex @code{FL_NORMAL_INPUT}
+@tindex FL_NORMAL_INPUT
 @item FL_NORMAL_INPUT
 Any type of text can be typed into this field.
-@tindex @code{FL_FLOAT_INPUT}
+@tindex FL_FLOAT_INPUT
 @item FL_FLOAT_INPUT
 Only a float value can be typed in (e.g. -23.2e12).
-@tindex @code{FL_INT_INPUT}
+@tindex FL_INT_INPUT
 @item FL_INT_INPUT
 Only an integer value can be typed in (e.g. -86).
-@tindex @code{FL_DATE_INPUT}
+@tindex FL_DATE_INPUT
 @item FL_DATE_INPUT
 Only a date (MM/DD/YY) can be typed in.
-@tindex @code{FL_MULTILINE_INPUT}
+@tindex FL_MULTILINE_INPUT
 @item FL_MULTILINE_INPUT
 An input field allowing for multiple lines.
-@tindex @code{FL_SECRET_INPUT}
+@tindex FL_SECRET_INPUT
 @item FL_SECRET_INPUT
 A normal input field that does not show the text.
-@tindex @code{FL_HIDDEN_INPUT}
+@tindex FL_HIDDEN_INPUT
 @item FL_HIDDEN_INPUT
 A normal input field but invisible.
 @end table
@@ -167,23 +168,24 @@ Depending on the application, other options might be useful. To change
 the precise condition for the object to be returned (or its callback
 to becone invoked), the following function can be used:
 @findex fl_set_input_return()
+@anchor{fl_set_input_return()}
 @example
 void fl_set_input_return(FL_OBJECT *obj, int when);
 @end example
 @noindent
 Where @code{when} can take one of the following values:
 @table @code
-@tindex @code{FL_RETURN_END_CHANGED}
+@tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 The default. Callback is called at the end if the field is modified.
-@tindex @code{FL_RETURN_CHANGED}
+@tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
 Invoke the callback function whenever the field is changed.
-@tindex @code{FL_RETURN_END}
+@tindex FL_RETURN_END
 @item FL_RETURN_END
 Invoke the callback function at the end regardless if the field was
 modified or not.
-@tindex @code{FL_RETURN_ALWAYS}
+@tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
 Invoke the callback function upon each keystroke.
 @end table
@@ -194,6 +196,7 @@ There is a
 routine that can be used to limit the number of characters per line
 for input fields of type @code{FL_NORMAL_INPUT}
 @findex fl_set_input_maxchars()
+@anchor{fl_set_input_maxchars()}
 @example
 void fl_set_input_maxchars(FL_OBJECT *obj, int maxchars);
 @end example
@@ -204,8 +207,9 @@ Although an input of type @code{FL_RETURN_ALWAYS} can be used in
 combination with the callback function to check the validity of
 characters that are entered into the input field, use of the following
 is typically more appropriate
-@tindex @code{FL_INPUTVALIDATOR}
+@tindex FL_INPUTVALIDATOR
 @findex fl_set_input_filter()
+@anchor{fl_set_input_filter()}
 @example
 typedef int (*FL_INPUTVALIDATOR)(FL_OBJECT *obj, const char *old,
                                  const char *cur, int c);
@@ -218,16 +222,16 @@ character is entered. @code{old} is the string in the input field
 before the newly typed character @code{c} was added to form the new
 strin @code{cur}. If the new character is not an acceptable character
 for the input field, the filter function should return
-@tindex @code{FL_INVALID}
+@tindex FL_INVALID
 @code{FL_INVALID}
 otherwise
-@tindex @code{FL_VALID}
+@tindex FL_VALID
 @code{FL_VALID}. If @code{FL_INVALID} is returned, the new character
 is discarded and the input field remains unmodified. The function
 returns the old filter. Unlike the built-in filters, keyboard bell is
 not sounded when @code{FL_INVALID} is received. To sound the bell,
 return
-@tindex @code{FL_RINGBELL}
+@tindex FL_RINGBELL
 @code{FL_INVALID | FL_RINGBELL}.
 
 This still leaves the possibility that the input is valid for every
@@ -246,7 +250,9 @@ Further, the input focus is not changed.
 To facilitate specialized input fields using validators, the following
 validator dependent routines are available
 @findex fl_set_input_format()
+@anchor{fl_set_input_format()}
 @findex fl_get_input_format()
+@anchor{fl_get_input_format()}
 @example
 void fl_set_input_format(FL_OBJECT *obj, int attrib1, int attrib2);
 void fl_get_input_format(FL_OBJECT *obj, int *attrib1, int *attrib2);
@@ -258,9 +264,9 @@ state dependent information. @code{attrib1} and @code{attrib2} can be
 any validator defined variables. For the built-in class, only the one
 of type @code{FL_DATE_INPUT} utilizes these to store the date format:
 for @code{attrib1}, it can take
-@tindex @code{FL_INPUT_MMDD}
+@tindex FL_INPUT_MMDD
 @code{FL_INPUT_MMDD} or
-@tindex @code{FL_INPUT_DDMM}
+@tindex FL_INPUT_DDMM
 @code{FL_INPUT_DDMM} and @code{attrib2} is the separator between month
 and day. For example, to set the date format to @code{dd/mm}, use
 @example
@@ -279,6 +285,7 @@ month and day.
 Note that the label is not the default text in the input field. To set
 the contents of the input field use the routine
 @findex fl_set_input()
+@anchor{fl_set_input()}
 @example
 void fl_set_input(FL_OBJECT *obj, const char *str);
 @end example
@@ -288,8 +295,8 @@ field. Use an empty string to clear an input field.
 
 Setting the content of an input field does not trigger object event,
 i.e., the object callback is not called. In some situations you might
-want to have the callback invoked. For this, use the following the
-routine
+want to have the callback invoked. For this, use the the function
+@code{@ref{fl_call_object_callback()}}
 @findex fl_call_object_callback()
 @example
 void fl_call_object_callback(FL_OBJECT *obj);
@@ -297,6 +304,7 @@ void fl_call_object_callback(FL_OBJECT *obj);
 
 To obtain the string in the field (when the user has changed it) use:
 @findex fl_get_input()
+@anchor{fl_get_input()}
 @example
 const char *fl_get_input(FL_OBJECT *obj);
 @end example
@@ -312,24 +320,27 @@ to by the returned pointer, it points to the internal buffer.
 To select or deselect the current input or part of it, the following
 two routines can be used
 @findex fl_set_input_selected()
+@anchor{fl_set_input_selected()}
 @findex fl_set_input_selected_range()
+@anchor{fl_set_input_selected_range()}
 @example
 void fl_set_input_selected(FL_OBJECT *obj, int flag);
 void fl_set_input_selected_range(FL_OBJECT *obj, int start, int end);
 @end example
 where @code{start} and @code{end} are measured in characters. When
 @code{start} is 0 and @code{end} equals the number of characters in
-the string, @code{fl_set_input_selected()} makes the entire input
-field selected. However, there is a subtle difference between this
-routine and @code{fl_set_input_selected()} when called with
-@code{flag} set to 1: @code{fl_set_input_selected()} always places the
-cursor at the end of the string while
-@code{fl_set_input_selected_range()} places the cursor at the
+the string, @code{@ref{fl_set_input_selected()}} makes the entire
+input field selected. However, there is a subtle difference between
+this routine and @code{@ref{fl_set_input_selected()}} when called with
+@code{flag} set to 1: @code{@ref{fl_set_input_selected()}} always
+places the cursor at the end of the string while
+@code{@ref{fl_set_input_selected_range()}q} places the cursor at the
 beginning of the selection.
 
 To obtain the currently selected range, either selected by the
 application or by the user, use the following routine
 @findex fl_get_input_selected_range()
+@anchor{fl_get_input_selected_range()}
 @example
 const char *fl_get_input_selected_range(FL_OBJECT *obj,
                                         int *start, int *end);
@@ -351,6 +362,7 @@ call.
 It is possible to obtain the cursor position using the following
 routine
 @findex fl_get_input_cursorpos()
+@anchor{fl_get_input_cursorpos()}
 @example
 int fl_get_input_cursorpos(FL_OBJECT *obj, int *xpos, int *ypos);
 @end example
@@ -368,6 +380,7 @@ measured from the beginning of the current line as indicated by
 It is possible to move the cursor within the input field
 programmatically using the following routine
 @findex fl_set_input_cursorpos()
+@anchor{fl_set_input_cursorpos()}
 @example
 void fl_set_input_cursorpos(FL_OBJECT *obj, int xpos, int ypos);
 @end example
@@ -384,6 +397,7 @@ places the the cursor after the first character of the word
 Shortcut keys can be associated with an input field to switch input
 focus. To this end, use the following routine
 @findex fl_set_input_shortcut()
+@anchor{fl_set_input_shortcut()}
 @example
 void fl_set_input_shortcut(FL_OBJECT *obj, const char *sc,
                            int showit);
@@ -396,7 +410,9 @@ contains more text than can be shown, scrollbars will appear with
 which the user can scroll the text around horizontally or vertically.
 To change this default, use the following routines
 @findex fl_set_input_hscrollbar()
+@anchor{fl_set_input_hscrollbar()}
 @findex fl_set_input_vscrollbar()
+@anchor{fl_set_input_vscrollbar()}
 @example
 void fl_set_input_hscrollbar(FL_OBJECT *obj, int how);
 void fl_set_input_vscrollbar(FL_OBJECT *obj, int how);
@@ -404,13 +420,13 @@ void fl_set_input_vscrollbar(FL_OBJECT *obj, int how);
 @noindent
 where @code{how} can be one of the following values
 @table @code
-@tindex @code{FL_AUTO}
+@tindex FL_AUTO
 @item FL_AUTO
 The default. Shows the scrollbar only if needed.
-@tindex @code{FL_ON}
+@tindex FL_ON
 @item FL_ON
 Always shows the scrollbar.
-@tindex @code{FL_OFF}
+@tindex FL_OFF
 @item FL_OFF
 Never show scrollbar.
 @end table
@@ -423,6 +439,7 @@ To completely turn off scrolling for an input field (for both
 multiline and single line input field), use the following routine with
 a false value for @code{yes_no}
 @findex fl_set_input_scroll()
+@anchor{fl_set_input_scroll()}
 @example
 void fl_set_input_scroll(FL_OBJECT *obj, int yes_no);
 @end example
@@ -431,6 +448,7 @@ There are also routines that can scroll the input field
 programmatically. To scroll vertically (for input fields of type
 @code{FL_MULTILINE_INPUT}  only), use
 @findex fl_set_input_topline()
+@anchor{fl_set_input_topline()}
 @example
 void fl_set_input_topline(FL_OBJECT *obj, int line);
 @end example
@@ -438,6 +456,7 @@ void fl_set_input_topline(FL_OBJECT *obj, int line);
 where @code{line} is the new top line (starting from 1) in the input
 field. To programmatically scroll horizontally, use the following routine
 @findex fl_set_input_xoffset()
+@anchor{fl_set_input_xoffset()}
 @example
 void fl_set_input_xoffset(FL_OBJECT *obj, int pixels);
 @end example
@@ -448,6 +467,7 @@ the text lines.
 
 To obtain the current xoffset, use
 @findex fl_get_input_xoffset()
+@anchor{fl_get_input_xoffset()}
 @example
 int fl_get_input_xoffset(FL_OBJECT *obj);
 @end example
@@ -455,24 +475,28 @@ int fl_get_input_xoffset(FL_OBJECT *obj);
 It is possible to turn off the cursor of the input field using the
 following routine with a false value for @code{yes_no}:
 @findex fl_set_input_cursor_visible()
+@anchor{fl_set_input_cursor_visible()}
 @example
 void fl_set_input_cursor_visible(FL_OBJECT *obj, int yes_no);
 @end example
 
 To obtain the number of lines in the input field, call
 @findex fl_get_input_numberoflines()
+@anchor{fl_get_input_numberoflines()}
 @example
 int fl_get_input_numberoflines(FL_OBJECT *obj);
 @end example
 
 To obtain the current topline in the input field, use
 @findex fl_get_input_topline()
+@anchor{fl_get_input_topline()}
 @example
 int fl_get_input_topline(FL_OBJECT *obj);
 @end example
 
 To obtain the number of lines that fit inside the input box, use
 @findex fl_get_input_screenlines()
+@anchor{fl_get_input_screenlines()}
 @example
 int fl_get_input_screenlines(FL_OBJECT *obj);
 @end example
@@ -481,6 +505,7 @@ For secret input field, the default is to draw the text using spaces.
 To change the character used to draw the text, the following function
 can be used
 @findex fl_set_input_fieldchar()
+@anchor{fl_set_input_fieldchar()}
 @example
 int fl_set_input_fieldchar(FL_OBJECT *obj, int field_char);
 @end example
@@ -493,12 +518,14 @@ The function returns the old field char.
 
 Never use @code{FL_NO_BOX} as the boxtype.
 
-The first color argument (@code{col1}) to @code{fl_set_object_color()}
-controls the color of the input field when it is not selected and the
-second (@code{col2}) is the color when selected.
+The first color argument (@code{col1}) to
+@code{@ref{fl_set_object_color()}} controls the color of the input
+field when it is not selected and the second (@code{col2}) is the
+color when selected.
 
 To change the color of the input text or the cursor use
 @findex fl_set_input_color()
+@anchor{fl_set_input_color()}
 @example
 void fl_set_input_color(FL_OBJECT *obj, int tcol, int ccol);
 @end example
@@ -510,6 +537,7 @@ By default, the scrollbar size is dependent on the initial size of the
 input box. To change the size of the scrollbars, use the following
 routine
 @findex fl_set_input_scrollbarsize()
+@anchor{fl_set_input_scrollbarsize()}
 @example
 void fl_set_input_scrollbarsize(FL_OBJECT *obj, int hh, int vw);
 @end example
@@ -517,14 +545,10 @@ void fl_set_input_scrollbarsize(FL_OBJECT *obj, int hh, int vw);
 where @code{hh} is the horizontal scrollbar height and @code{vw} is
 the vertical scrollbar width in pixels. The default scrollbar type is
 @code{FL_THIN_SCROLLBAR}. There are two ways you can change the
-default. One way is to use
-@findex fl_set_defaults()
-@code{fl_set_defaults()} or
-@findex fl_set_scrollbar_type()
-@code{fl_set_scrollbar_type()} to set the application wide default
-(preferred); another way is to use
-@findex fl_get_object_component()
-@code{fl_get_object_component()} to get the object handle to the
+default. One way is to use @code{@ref{fl_set_defaults()}} or
+@code{@ref{fl_set_scrollbar_type()}} to set the application wide
+default (preferred); another way is to use
+@code{@ref{fl_get_object_component()}} to get the object handle to the
 scrollbars and change the the object type forcibly. Although the
 second method of changing the scrollbar type is not recommended, the
 object handle obtained can be useful in changing the scrollbar colors
@@ -533,7 +557,7 @@ etc.
 As mentioned earlier, it is possible for the application program to
 change the default edit keymaps. The editing key assignment is held in
 a structure of type
-@tindex @code{FL_EditKeymap}
+@tindex FL_EditKeymap
 @code{FL_EditKeymap} defined as follows:
 @example
 typedef struct @{
@@ -565,6 +589,7 @@ typedef struct @{
 
 To change the default edit keymaps, the following routine is available:
 @findex fl_set_input_editkeymap()
+@anchor{fl_set_input_editkeymap()}
 @example
 void fl_set_input_editkeymap(FL_EditKeymap *km);
 @end example
@@ -574,7 +599,7 @@ unfilled members must be set to 0 so the default mapping is retained.
 Change of edit keymap is global and affects all input field within the
 application.
 
-Calling @code{fl_set_input_editkeymap()} with @code{km} set to
+Calling @code{@ref{fl_set_input_editkeymap()}} with @code{km} set to
 @code{NULL} restores the default. All cursor keys (@code{<Left>},
 @code{<Home>} etc.) are reserved and their meanings hard-coded, thus
 can't be used in the mapping. For example, if you try to set
@@ -586,9 +611,9 @@ with values below 128, including the control characters with values
 below 32) should be specified by their ASCII codes (@code{<Ctrl> C}
 is 3 etc.), while all others by their @code{Keysym}s (@code{XK_F1}
 etc.). Control and special character combinations can be obtained by adding
-@tindex @code{FL_CONTROL_MASK}
+@tindex FL_CONTROL_MASK
 @code{FL_CONTROL_MASK} to the @code{Keysym}. To specify @code{Meta} add
-@tindex @code{FL_ALT_MASK}
+@tindex FL_ALT_MASK
 @code{FL_ALT_MASK} to the key value.
 
 @example

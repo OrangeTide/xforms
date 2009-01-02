@@ -120,6 +120,6 @@ in Part V.
 
 When appropriate, the effect of certain (generic) attributes of the
 objects on the specific object is discussed. In particular, it is
-described what effect the routine @code{fl_set_object_color()} has on
-the appearance of the object. Also some remarks on possible boxtypes
-are made.
+described what effect the routine @code{@ref{fl_set_object_color()}}
+has on the appearance of the object. Also some remarks on possible
+boxtypes are made.

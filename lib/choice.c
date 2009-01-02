@@ -31,7 +31,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chc = "$Id: choice.c,v 1.20 2008/12/27 22:20:47 jtt Exp $";
+char *fl_id_chc = "$Id: choice.c,v 1.21 2009/01/02 17:58:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -91,7 +91,7 @@ draw_choice( FL_OBJECT * ob )
 
 		fl_drw_box( FL_UP_BOX,
 					ob->x + ob->w - dw - absbw - 2, ob->y + ( ob->h - dh ) / 2,
-					dw, dh, ob->col1, -dbh);
+					dw, dh, ob->col1, - dbh );
 
 		off1 = align == FL_ALIGN_CENTER ? ( dw / 2 ) : 0;
 		off2 = align == FL_ALIGN_RIGHT ? dw : 0;

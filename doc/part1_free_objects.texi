@@ -30,6 +30,7 @@ and use free objects.
 
 To add a free object to a form use the call
 @findex fl_add_free()
+@anchor{fl_add_free()}
 @example
 FL_OBJECT *fl_add_free(int type,FL_Coord x,FL_Coord y,
                        FL_Coord w,FL_Coord h,
@@ -57,14 +58,14 @@ position of the mouse (only meaningful with mouse related events)
 relative to the form origin and @code{key} is the KeySym of the key
 typed in by the user (only for @code{FL_KEYBOARD} events). @code{xev}
 is the (cast) XEvent that causes the invocation of this handler.
-@code{event} and @code{xev->type} can both be used to obtain the
-event types. The routine should return whether the status of the
-object has changed, i.e., whether @code{fl_do_forms()} or
-@code{fl_check_forms()} should return this object.
+@code{event} and @code{xev->type} can both be used to obtain the event
+types. The routine should return whether the status of the object has
+changed, i.e., whether @code{@ref{fl_do_forms()}} or
+@code{@ref{fl_check_forms()}} should return this object.
 
 The following types of events exist for which the routine must take action:
 @table @code
-@tindex @code{FL_DRAW}
+@tindex FL_DRAW
 @item FL_DRAW
 The object has to be redrawn. To figure out the size of the object you
 can use the fields @code{obj->x}, @code{obj->y}, @code{obj->w} and
@@ -82,12 +83,12 @@ works correctly in the visual/depth the current form is in. Complete
 information is available on the state of the current form as well as
 several routines that will help you to tackle the trickiest (also the
 most tedious) part of X programming. In particular, the return value
-of @code{fl_get_vclass()} can be used as an index into a table of
-structures, @code{FL_STATE fl_state[]}, from which all information
+of @code{@ref{fl_get_vclass()}} can be used as an index into a table
+of structures, @code{FL_STATE fl_state[]}, from which all information
 about current active visual can be obtained. @xref{Part IV Drawing
 Objects, , Drawing Objects}, for details on drawing objects and the
 routines.
-@tindex @code{FL_DRAWLABEL}
+@tindex FL_DRAWLABEL
 @item FL_DRAWLABEL
 This event is not always generated. It typically follows
 @code{FL_DRAW} and indicates the object label needs to be (re)drawn.
@@ -95,7 +96,7 @@ You can ignore this event if (a) the object handler always draws the
 label upon receiving @code{FL_DRAW} or (b) the object label is not
 drawn at all@footnote{Label for free objects can't be drawn outside of
 the bounding box because of the clippings by the dispatcher.}.
-@tindex @code{FL_ENTER}
+@tindex FL_ENTER
 @item FL_ENTER
 This event is sent when the mouse has entered the bounding box. This
 might require some action. Note that also the
@@ -106,65 +107,65 @@ routine @code{fl_redraw_object()}. It will
 send an @code{FL_DRAW} event to the object but also does
 some other things (like setting window id's, taking care of double
 buffering and some other bookkeeping tasks).
-@tindex @code{FL_LEAVE}
+@tindex FL_LEAVE
 @item FL_LEAVE
 The mouse has left the bounding box. Again, normally a redraw is
 enough (or nothing at all).
-@tindex @code{FL_MOTION}
+@tindex FL_MOTION
 @item FL_MOTION
 A motion event is sent between @code{FL_ENTER} and @code{FL_LEAVE}
 events when the mouse position changes on the object. The mouse
 position is given with the routine.
-@tindex @code{FL_PUSH}
+@tindex FL_PUSH
 @item FL_PUSH
 The user has pushed a mouse button in the object. Normally this
 requires some action.
-@tindex @code{FL_RELEASE}
+@tindex FL_RELEASE
 @item FL_RELEASE
 The user has released the mouse button. This event is only sent if a
 @code{FL_PUSH} event was sent earlier.
-@tindex @code{FL_DBLCLICK}
+@tindex FL_DBLCLICK
 @item FL_DBLCLICK
 The user has pushed a mouse button twice within a certain time limit
 (@code{FL_CLICK_TIMEOUT}), which by default is about @w{400 msec}.
-@tindex @code{FL_TRPLCLICK}
+@tindex FL_TRPLCLICK
 @item FL_TRPLCLICK
 The user has pushed a mouse button three times within a certain time
 window between each push. This event is sent after a
 @code{FL_DBLCLICK}, @code{FL_PUSH}, @code{FL_RELEASE} sequence.
-@tindex @code{FL_MOUSE}
+@tindex FL_MOUSE
 @item FL_MOUSE
 The mouse position has changed. This event is sent to an object
 between an @code{FL_PUSH} and an @code{FL_RELEASE} event (actually
 this event is sent periodically, even if mouse has not moved). The
 mouse position is given as the parameter @code{mx} and @code{my} and
 action can be taken based on the position.
-@tindex @code{FL_FOCUS}
+@tindex FL_FOCUS
 @item FL_FOCUS
 Input got focussed to this object. This event and the next two are
 only sent to a free object of type @code{FL_INPUT_FREE} (see below).
-@tindex @code{FL_UNFOCUS}
+@tindex FL_UNFOCUS
 @item FL_UNFOCUS
 Input is no longer focussed on this object.
-@tindex @code{FL_KEYBOARD}
+@tindex FL_KEYBOARD
 @item FL_KEYBOARD
 A key was pressed. The KeySym is given with the routine. This event
 only happens between @code{FL_FOCUS} and @code{FL_UNFOCUS} events.
-@tindex @code{FL_STEP}
+@tindex FL_STEP
 @item FL_STEP
 A step event is sent all the time (at most 50 times per second but
 often less because of time consuming redraw operations) to a free
 object of type @code{FL_CONTINUOUS_FREE} such that it can update its
 state or appearance.
-@tindex @code{FL_SHORTCUT}
+@tindex FL_SHORTCUT
 @item FL_SHORTCUT
 Hotkeys for the object have been triggered. Typically this should
 result in the returning of the free object.
-@tindex @code{FL_FREEMEM}
+@tindex FL_FREEMEM
 @item FL_FREEMEM
 Upon receiving this event, the handler should free all object class
 specific memory allocated.
-@tindex @code{FL_OTHER}
+@tindex FL_OTHER
 @item FL_OTHER
 Some other events typically caused by window manager events or
 inter-client events. All information regarding the details of the
@@ -172,22 +173,23 @@ events is in @code{xev}.
 @end table
 @noindent
 Many of these events might make it necessary to (partially) redraw the
-object. Always do this using the routine @code{fl_redraw_object()}.
+object. Always do this using the routine
+@code{@ref{fl_redraw_object()}}.
 
 As indicated above not all events are sent to all free objects. It
 depends on their types. The following types exist (all objects are sent
 @code{FL_OTHER} when it occurs):
 @table @code
-@tindex @code{FL_NORMAL_FREE}
+@tindex FL_NORMAL_FREE
 @item FL_NORMAL_FREE
 The object will receive the events @code{FL_DRAW}, @code{FL_ENTER},
 @code{FL_LEAVE}, @code{FL_MOTION}, @code{FL_PUSH}, @code{FL_RELEASE}
 and @code{FL_MOUSE}.
-@tindex @code{FL_INACTIVE_FREE}
+@tindex FL_INACTIVE_FREE
 @item FL_INACTIVE_FREE
 The object only receives @code{FL_DRAW} events. This should be used
 for objects without interaction (e.g. a picture).
-@tindex @code{FL_INPUT_FREE}
+@tindex FL_INPUT_FREE
 @item FL_INPUT_FREE
 Same as @code{FL_NORMAL_FREE} but the object also receives
 @code{FL_FOCUS}, @code{FL_UNFOCUS} and @code{FL_KEYBOARD} events. The
@@ -197,12 +199,12 @@ the free object will receive all normal keys (0-255) except
 @code{<Tab>} or @code{<Return>} key, you need to change
 @code{obj->wantkey} to @code{FL_KEY_TAB} or @code{FL_KEY_ALL}.
 @xref{Part IV Events, , Events}, for details.
-@tindex @code{FL_CONTINUOUS_FREE}
+@tindex FL_CONTINUOUS_FREE
 @item FL_CONTINUOUS_FREE
 Same as @code{FL_NORMAL_FREE} but the object also receives
 @code{FL_STEP} events. This should be used for objects that change
 themselves continuously.
-@tindex @code{FL_ALL_FREE}
+@tindex FL_ALL_FREE
 @item FL_ALL_FREE
 The object receives all types of events.
 @end table
@@ -395,8 +397,9 @@ user data (0 and 1 in this case):
 
 The rest of the UI consists of some buttons the user can use to exit
 the program, elect to draw outline instead of filled figures etc. Form
-definition ends with @code{fl_end_form()}. The structure that holds
-the form as well as all the objects on them is returned to the caller:
+definition ends with @code{@ref{fl_end_form()}}. The structure that
+holds the form as well as all the objects on them is returned to the
+caller:
 @example
     fdui->miscgrp = fl_bgn_group();
 
@@ -493,13 +496,14 @@ void draw_triangle(int fill, int x, int y,
 @end example
 @noindent
 Although more or less standard stuff, some explanation is in order. As
-you have probably guessed, @code{fl_winget()} returns the current
-"active" window, defined to be the window the object receiving
+you have probably guessed, @code{@ref{fl_winget()}} returns the
+current "active" window, defined to be the window the object receiving
 dispatcher's messages (@code{FL_DRAW} e.g.) belongs to@footnote{If
-@code{fl winget()} is called while not handling messages, the return
-value must be checked.}. Similarly the routine @code{fl_get_display()}
-returns the current connection to the X server. Part IV has more
-details on the utility functions in the Forms Library.
+@code{@ref{fl_winget()}} is called while not handling messages, the
+return value must be checked.}. Similarly the routine
+@code{@ref{fl_get_display()}} returns the current connection to the X
+server. Part IV has more details on the utility functions in the Forms
+Library.
 
 The structure @code{fl_state[]} keeps much "inside" information on the
 state of the Forms Library. For simplicity, we choose to use the Forms
@@ -540,11 +544,11 @@ void change_color(FL_OBJECT *obj, long which) @{
 @}
 @end example
 @noindent
-The first call of @code{fl mapcolor()} defines the RGB components for
-index @code{cur_fig->col} and the second @code{fl mapcolor()} call
-defines the RGB component for index @code{FL_FREE_COL1}, which is the
-color index used by @code{colorobj} that serves as current color
-visual feedback.
+The first call of @code{@ref{fl_mapcolor()}} defines the RGB
+components for index @code{cur_fig->col} and the second
+@code{@ref{fl_mapcolor()}} call defines the RGB component for index
+@code{FL_FREE_COL1}, which is the color index used by @code{colorobj}
+that serves as current color visual feedback.
 
 Object size is taken care of in a similar fashion by using a callback
 function bound to both size sliders:
@@ -661,12 +665,12 @@ However, it is a (common) mistake to do this. The reason is that much
 bookkeeping is performed prior to sending @code{FL_DRAW}, such as
 clipping, double buffer preparation and possibly active window setting
 etc. All of these is not done if the message is other than
-@code{FL_DRAW}. So always use @code{fl_redraw_object()} to draw unless
-it is a response to @code{FL_DRAW}. Internally
-@code{fl_redraw_object()} calls the handler with @code{FL_DRAW} (after
-some bookkeeping), so we only need to mark @code{FL_PUSH} with a flag
-@code{newfig} and let the drawing part of the handler draw the newly
-added figure.
+@code{FL_DRAW}. So always use @code{@ref{fl_redraw_object()}} to draw
+unless it is a response to @code{FL_DRAW}. Internally
+@code{@ref{fl_redraw_object()}} calls the handler with @code{FL_DRAW}
+(after some bookkeeping), so we only need to mark @code{FL_PUSH} with
+a flag @code{newfig} and let the drawing part of the handler draw the
+newly added figure.
 
 @code{FL_DRAW} has two parts. One is simply to add a figure indicated
 by @code{newfig} being true and in this case, we only need to draw the
@@ -725,6 +729,6 @@ int main(int argc, char *argv[]) @{
 @end example
 
 Since the only object that does not have a callback is the Quit
-button, @code{fl_do_forms()} will return only if that button is
+button, @code{@ref{fl_do_forms()}} will return only if that button is
 pushed. Full source code to this simple drawing program can be found
 in @file{demos/freedraw.c}.

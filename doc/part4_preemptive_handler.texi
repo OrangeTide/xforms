@@ -21,9 +21,11 @@ finished its tasks and thus does not offer the capability of
 overriding the built-in handler. It is much safer, however.
 
 The API to install a pre- or post-handler for an object is as follows
-@tindex @code{FL_HANDLEPTR}
+@tindex FL_HANDLEPTR
 @findex fl_set_object_prehandler()
+@anchor{fl_set_object_prehandler()}
 @findex fl_set_object_posthandler()
+@anchor{fl_set_object_posthandler()}
 @example
 typedef int (*FL_HANDLEPTR)(FL_OBJECT *obj, int event,
                             FL_Coord mx, FL_Coord my,
@@ -48,7 +50,7 @@ of @code{xev} should only be done after making sure it is not
 Notice that the pre- and post-handler have the same function prototype
 as the built-in handler. Actually they are called with exactly the
 same parameters by the event dispatcher. The pre-handler should return
-@tindex @code{FL_PREEMPT}
+@tindex FL_PREEMPT
 @code{FL_PREEMPT} to prevent the dispatcher from calling the normal
 object handler for events and @code{!FL_PREEMPT} if the objects
 handler for is to be invoked next. The post-handler is free to return

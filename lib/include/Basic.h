@@ -147,7 +147,7 @@ typedef enum
 	FL_THUMBWHEEL,		   /* 38 */
 	FL_COLORWHEEL,		   /* 39 */
 	FL_FORMBROWSER,		   /* 40 */
-	FL_SELECTOR,           /* 41 */
+	FL_SELECT,             /* 41 */
 	FL_CLASS_END		   /* sentinel */
 } FL_CLASS;
 

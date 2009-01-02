@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.48 2008/12/28 17:20:40 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.49 2009/01/02 17:58:25 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -231,7 +231,8 @@ fl_make_object( int            objclass,
 		obj->lsize = fli_cntl.buttonFontSize;
     else if ( objclass == FL_MENU && fli_cntl.menuFontSize )
 		obj->lsize = fli_cntl.menuFontSize;
-    else if ( objclass == FL_CHOICE && fli_cntl.choiceFontSize )
+    else if (    ( objclass == FL_CHOICE || objclass == FL_SELECT )
+			  && fli_cntl.choiceFontSize )
 		obj->lsize = fli_cntl.choiceFontSize;
     else if ( objclass == FL_INPUT && fli_cntl.inputFontSize )
 		obj->lsize = fli_cntl.inputFontSize;
@@ -3019,8 +3020,12 @@ fl_get_object_bbox( FL_OBJECT * obj,
     if ( obj->label && *obj->label )
     {
 		int len = strlen( obj->label );
-		int sw, sh;
-		int xx, yy, a, d;
+		int sw,
+			sh;
+		int xx,
+			yy,
+			a,
+			d;
 
 		fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label, len,
 								 &sw, &sh );
@@ -3081,9 +3086,9 @@ void
 fl_set_object_automatic( FL_OBJECT * obj,
 						 int         flag )
 {
-    if ( obj->automatic != flag )
+    if ( obj->automatic != ( flag ? 1 : 0 ) )
     {
-		obj->automatic = flag;
+		obj->automatic = flag ? 1 : 0;
 
 		if ( obj->form )
 		{

@@ -12,6 +12,7 @@ EXTRA_DIST = \
 	pmenu.h \
 	ppositioner.h \
 	pscrollbar.h \
+	pselect.h \
 	pslider.h \
 	ptextbox.h \
 	ptwheel.h \

@@ -214,6 +214,10 @@ FL_EXPORT void fl_popup_set_position(
 		int
 		);
 
+FL_EXPORT int fl_popup_get_policy(
+		FL_POPUP *
+		);
+
 FL_EXPORT int fl_popup_set_policy(
 		FL_POPUP *,
 		int
@@ -273,8 +277,12 @@ FL_EXPORT void fl_popup_set_cursor(
 		int
 		);
 
-FL_EXPORT void fl_popup_set_title(
-		FL_POPUP   *,
+FL_EXPORT const char *fl_popup_get_title(
+		FL_POPUP   *
+		);
+
+FL_EXPORT FL_POPUP *fl_popup_set_title(
+		FL_POPUP *,
 		const char *
 		);
 

@@ -43,31 +43,32 @@ position prior to resizing.
 @item FL_COLOR col1, col2
 These are two color indices in the internal color lookup table. The
 class routines are free to use them or not. The user can change them
-using the routine @code{fl_set_object_color()}. The routine
+using the routine @code{@ref{fl_set_object_color()}}. The routine
 @code{fl_add_NEW()} should fill in defaults.
 @item char *label
 This is a pointer to a text string. This can be used by class routines
 to provide a label for the object. The class routines can freely use
 this. (Don't forget allocating storage for it when you want to set it
-yourself, i.e., when you don't use @code{fl_set_object_label()}.) The
-user can change it using the routine @code{fl_set_object_label()}. The
-label must be drawn by the routine handling the object when it
-receives a @code{FL_DRAWLABEL} event (or it could be part of the code
-for @code{FL_DRAW} event). (The system does not draw the label
-automatically because it does not know where to draw it.) For
-non-offsetted labels, i.e., the alignment is relative to the entire
-bounding box, simply calling @code{fl_draw_object_label()} should be
-enough.
+yourself, i.e., when you don't use
+@code{@ref{fl_set_object_label()}}.) The user can change it using the
+routine @code{@ref{fl_set_object_label()}}. The label must be drawn by
+the routine handling the object when it receives a @code{FL_DRAWLABEL}
+event (or it could be part of the code for @code{FL_DRAW} event). (The
+system does not draw the label automatically because it does not know
+where to draw it.) For non-offsetted labels, i.e., the alignment is
+relative to the entire bounding box, simply calling
+@code{@ref{fl_draw_object_label()}} should be enough.
 @item FL_COLOR lcol
 The color of the label. The class routines can freely use this. The
-user sets it with @code{fl_set_object_lcol()}.
+user sets it with @code{@ref{fl_set_object_lcol()}}.
 @item int lsize
 The size of the font used to draw the label. The class routines can
-freely use this. The user sets it with @code{fl_set_object_lsize()}.
+freely use this. The user sets it with
+@code{@ref{fl_set_object_lsize()}}.
 @item int lstyle
 The style of the font the label os drawn in, i.e. the number of the
 font in which it should be drawn. The class routines can freely use
-this. The user sets it with @code{fl_set_object_lstyle()}.
+this. The user sets it with @code{@ref{fl_set_object_lstyle()}}.
 @item int align
 The alignment of the label with respect to the object. Again it is up
 to the class routines to do something useful with this. The possible
@@ -77,12 +78,12 @@ values are @code{FL_ALIGN_LEFT}, @code{FL_ALIGN_RIGHT},
 @code{FL_ALIGN_BOTTOM_LEFT} and @code{FL_ALIGN_BOTTOM_RIGHT}. The
 value should be bitwise ORed with @code{FL_ALIGN_INSIDE} if the label
 will be within the bounding box of the object. The user can set this
-using the routine @code{fl_set_object_align()}.
+using the routine @code{@ref{fl_set_object_lalign()}}.
 @item int bw
 An integer indicating the border width of the object. Negative values
 indicate the up box should look "softer" (in which case no black line
 of 1 pixel width is drawn around the objects box). The user can set a
-different border width using @code{fl_object_set_bw()}.
+different border width using @code{@ref{fl_set_object_bw()}}.
 @item long *shortcut
 A pointer to long containing all shortcuts (as keysyms) defined for
 the object (also see the previous chapter). You should never need them
@@ -102,7 +103,7 @@ main routine will never try to draw it or send events to it. By
 default objects are visible. Note that a true visible does not
 guarantee the object is visible on the screen, for that also the form
 the object beongs to need to be visible, in which case
-@code{fl_form_is_visible()} returns true.
+@code{@ref{fl_form_is_visible()}} returns true.
 @item int active
 Indicates whether the object is active, i.e., wants to receive events
 other than @code{FL_DRAW}.
@@ -206,8 +207,9 @@ responsibility of the application program to set.
 @end table
 
 The generic object construction routine
-@tindex @code{FL_HANDLEPTR}
+@tindex FL_HANDLEPTR
 @findex fl_make_object()
+@anchor{fl_make_object()}
 @example
 typedef int (*FL_HANDLEPTR)(FL_OBJECT *obj, int event,
                             FL_Coord mx, FL_Coord my,
@@ -249,7 +251,7 @@ window resource ID of the window thhe object belongs to. Beware that
 an object window ID may be shared with other objects@footnote{The only
 exception is the canvas class where the window ID is guaranteed to be
 non-shared.}. Always remove an object from the screen with
-@code{fl_hide_object()}.
+@code{@ref{fl_hide_object()}}.
 
 The class routine/application may reference the following members of
 the @code{FL FORM} structure to obtain information on the status of
@@ -257,11 +259,12 @@ the form, but should not modify them directly:
 @table @code
 @item int visible
 Indicates if the form is visible on the screen (mapped). Never change
-it directly, use @code{fl_show_form()} or @code{fl_hide_form()}
-instead.
+it directly, use @code{@ref{fl_show_form()}} or
+@code{@ref{fl_hide_form()}} instead.
 @item int deactivated
 Indicates if the form is deactivated. Never change it directly, use
-@code{fl_activate_form()} or @code{fl_deactivate_form()} instead.
+@code{@ref{fl_activate_form()}} or @code{@ref{fl_deactivate_form()}}
+instead.
 @item FL OBJECT *focusobj
 This pointer points to the object on the form that has the
 input focus.

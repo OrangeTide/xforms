@@ -11,80 +11,82 @@ Window fl_show_form(FL_FORM *form, int place, int border,
                     const char *name);
 @end example
 @noindent
-It opens a (top-level) window on the screen in which the form is shown.
-The parameter @code{name} is the title of the form (and its associated
-icon if any). The routine returns the window resource ID of the form.
-You normally never need this. Immediately after the form becomes
-visible, a full draw of all objects on the form is performed. Due to the
-two way buffering mechanism of Xlib, if @code{fl_show_form()} is
-followed by something that blocks (e.g., waiting for a device other than
-X devices to come online), the output buffer might not be properly
-flushed, resulting in the form only being partially drawn. If your
-program works this way, use the following function after
-@code{fl_show_form()}
+It opens a (top-level) window on the screen in which the form is
+shown. The parameter @code{name} is the title of the form (and its
+associated icon if any). The routine returns the window resource ID of
+the form. You normally never need this. Immediately after the form
+becomes visible, a full draw of all objects on the form is performed.
+Due to the two way buffering mechanism of Xlib, if
+@code{@ref{fl_show_form()}} is followed by something that blocks
+(e.g., waiting for a device other than X devices to come online), the
+output buffer might not be properly flushed, resulting in the form
+only being partially drawn. If your program works this way, use the
+following function after @code{@ref{fl_show_form()}}
 @findex fl_update_display()
+@anchor{fl_update_display()}
 @example
 void fl_update_display(int blocking);
 @end example
 @noindent
-where @code{blocking} is false (0), the function flushes the X buffer so
-the drawing requests are on their way to the server. When
+where @code{blocking} is false (0), the function flushes the X buffer
+so the drawing requests are on their way to the server. When
 @code{blocking} is true (1), the function flushes the buffer and waits
 until all the events are received and processed by the server. For
-typical programs that use @code{fl_do_forms()} or
-@code{fl_check_forms()} after @code{fl_show_form()}, flushing is not
-necessary as the output buffer is flushed automatically. Excessive call
-to @code{fl_update_display()} degrades performace.
+typical programs that use @code{@ref{fl_do_forms()}} or
+@code{@ref{fl_check_forms()}} after @code{@ref{fl_show_form()}},
+flushing is not necessary as the output buffer is flushed
+automatically. Excessive call to @code{@ref{fl_update_display()}}
+degrades performace.
 
 The location and size of the window are determined
 by @code{place}. The following possibilities exist:
 @table @code
-@tindex @code{FL_PLACE_SIZE}
+@tindex FL_PLACE_SIZE
 @item FL_PLACE_SIZE
 The user can control the position but the size is fixed. Interactive
 resizing is not allowed once the form becomes visible.
-@tindex @code{FL_PLACE_POSITION}
+@tindex FL_PLACE_POSITION
 @item FL_PLACE_POSITION
 Initial position used will be the one set via
-@code{fl_set_form_position()}. Interactive resizing is possible.
-@tindex @code{FL_PLACE GEOMETRY}
+@code{@ref{fl_set_form_position()}}. Interactive resizing is possible.
+@tindex FL_PLACE GEOMETRY
 @item FL_PLACE GEOMETRY
 Place at the latest position and size (see also below) or the geometry
-set via @code{fl_set_form_geometry()}. A form so shown will have a fixed
-size and interactive resizing is not allowed.
-@tindex @code{FL_PLACE_ASPECT}
+set via @code{@ref{fl_set_form_geometry()}}. A form so shown will have
+a fixed size and interactive resizing is not allowed.
+@tindex FL_PLACE_ASPECT
 @item FL_PLACE_ASPECT
 Allows interactive resizing but any new size will have the aspect ratio
 as that of the initial size.
-@tindex @code{FL_PLACE_MOUSE}
+@tindex FL_PLACE_MOUSE
 @item FL_PLACE_MOUSE
 The form is placed centered below the mouse. Interactive resizing will
 not be allowed unless this option is accompanied by @code{FL_FREE_SIZE}
 as in @code{FL_PLACE_MOUSE | FL_FREE_SIZE}.
-@tindex @code{FL_PLACE_CENTER}
+@tindex FL_PLACE_CENTER
 @item FL_PLACE_CENTER
 The form is placed in the center of the screen. If @code{FL_FREE_SIZE}
 is also specified, interactive resizing will be allowed.
-@tindex @code{FL_PLACE_FULLSCREEN}
+@tindex FL_PLACE_FULLSCREEN
 @item FL_PLACE_FULLSCREEN
 The form is scaled to cover the full screen. If @code{FL_FREE_SIZE} is
 also specified, interative resizing will be allowed.
-@tindex @code{FL_PLACE_FREE}
+@tindex FL_PLACE_FREE
 @item FL_PLACE_FREE
 Both the position and size are completely free. The initial size used is
 the designed size. Initial position, if setvia
-@code{fl_set_form_position()}, will be used otherwise interactive
+@code{@ref{fl_set_form_position()}}, will be used otherwise interactive
 positioning may be possible if the window manager allows it.
-@tindex @code{FL_PLACE_HOTSPOT}
+@tindex FL_PLACE_HOTSPOT
 @item FL_PLACE_HOTSPOT
 The form is so placed that mouse is on the "hotspot". If
 @code{FL_FREE_SIZE} is also specified, interactive resizing will be
 allowed.
-@tindex @code{FL_PLACE_CENTERFREE}
+@tindex FL_PLACE_CENTERFREE
 @item FL_PLACE_CENTERFREE
 Same as @code{FL_PLACE_CENTER | FL_FREE_SIZE}, i.e., place the form at
 the center of the screen and allow resizing.
-@tindex @code{FL_PLACE ICONIC}
+@tindex FL_PLACE ICONIC
 @item FL_PLACE ICONIC
 The form is shown initially iconified. The size and location used are
 the window manager's default.
@@ -107,7 +109,7 @@ and
 void fl_set_form_size(FL_FORM *form, FL_Coord w, FL_Coord h);
 @end example
 @noindent
-or, more conveniently,
+or, more combining the two functions,
 @findex fl_set_form_geometry()
 @example
 void fl_set_form_geometry(FL_FORM form*, FL_Coord x, FL_Coord y,
@@ -133,27 +135,29 @@ fl_show_form(form, FL_PLACE_GEOMETRY, FL_TRANSIENT, "formName");
 To show a form so that a particular object or point is on the mouse, use
 one of the following two routines to set the "hotspot"
 @findex fl_set_form_hotspot()
+@anchor{fl_set_form_hotspot()}
 @findex fl_set_form_hotobject()
+@anchor{fl_set_form_hotobject()}
 @example
 void fl_set_form_hotspot(FL_FORM *form, FL_Coord x, FL_Coord y);
 void fl_set_form_hotobject(FL_FORM *form, FL_OBJECT *obj);
 @end example
 @noindent
-and use @code{FL_PLACE_HOTSPOT} in @code{fl_show_form()} to realize. The
-coordinates @code{x} and @code{y} are relative to the upper-left corner
-of the form.
+and use @code{FL_PLACE_HOTSPOT} in @code{@ref{fl_show_form()}} to
+realize. The coordinates @code{x} and @code{y} are relative to the
+upper-left corner of the form.
 
-In the call @code{fl_show_form()} the argument @code{border} indicates
-whether or not to request window manager's decoration. border should
-take one of the following values:
+In the call @code{@ref{fl_show_form()}} the argument @code{border}
+indicates whether or not to request window manager's decoration.
+border should take one of the following values:
 @table @code
-@tindex @code{FL_FULLBORDER}
+@tindex FL_FULLBORDER
 @item FL_FULLBORDER
 full borders
-@tindex @code{FL_TRANSIENT}
+@tindex FL_TRANSIENT
 @item FL_TRANSIENT
 borders with (possibly) less decoration
-@tindex @code{FL_NOBORDER}
+@tindex FL_NOBORDER
 @item FL_NOBORDER
 no decoration at all
 @end table
@@ -198,17 +202,17 @@ Setting the main form of an application will cause the @code{WM_COMMAND}
 property set for the form if no other form has this property.
 
 Sometimes, it is necessary to have access to the window resource ID
-before the window is mapped (shown). For this, the following routine can
-be used
+before the window is mapped (shown). For this, the following routine
+can be used
 @findex fl_prepare_form_window()
 @example
-Window fl_prepare_form_window(FL_FORM *form, int place,
-                              int border, const char *name);
+Window fl_prepare_form_window(FL_FORM *form, int place, int border,
+const char *name);
 @end example
 @noindent
-This routine creates a window that obeys any and all constraints just as
-@code{fl_show_form()} does but remains
-unmapped. To map such a window, the following must be used
+This routine creates a window that obeys any and all constraints just
+as @code{@ref{fl_show_form()}} does but remains unmapped. To map such
+a window, the following must be used
 @findex fl_show_form_window()
 @example
 Window fl_show_form_window(FL_FORM *form);
@@ -216,7 +220,7 @@ Window fl_show_form_window(FL_FORM *form);
 @noindent
 Between these two calls, the application program has full access to the
 window and can set all attributes, such as icon pixmaps etc., that are
-not set by @code{fl_show_form()}.
+not set by @code{@ref{fl_show_form()}}.
 
 You can also scale the form and all objects on it programmatically using
 the following routine
@@ -242,14 +246,14 @@ void fl_set_object_resize(FL_OBJECT *obj, unsigned howresize);
 @end example
 @noindent
 where @code{howresize} can be one of
-@tindex @code{FL_RESIZE_NONE}
+@tindex FL_RESIZE_NONE
 @code{FL_RESIZE_NONE},
-@tindex @code{FL_RESIZE_X}
+@tindex FL_RESIZE_X
 @code{FL_RESIZE_X} or
-@tindex @code{FL_RESIZE_Y}
+@tindex FL_RESIZE_Y
 @code{FL_RESIZE_Y} with obvious
 meanings. An alias
-@tindex @code{FL_RESIZE_ALL}
+@tindex FL_RESIZE_ALL
 @code{FL_RESIZE_ALL} @code{FL_RESIZE_X | FL_RESIZE_Y}, can be used to
 make both dimension scalable. 
 
@@ -263,31 +267,31 @@ to the lower-right corner of the form, then,
 @multitable @columnfractions 0.5 0.5
 @headitem Value
 @tab Effect
-@tindex @code{FL_NoGravity}
+@tindex FL_NoGravity
 @item @code{FL_NoGravity}
 @tab Default linear scaling, see below
-@tindex @code{FL_NorthWest}
+@tindex FL_NorthWest
 @item @code{FL_NorthWest}
 @tab @code{dx1}, @code{dy1} constant
-@tindex @code{FL_North}
+@tindex FL_North
 @item @code{FL_North}
 @tab @code{dy1} constant
-@tindex @code{FL_NorthEast}
+@tindex FL_NorthEast
 @item @code{FL_NorthEast}
 @tab @code{dy1}, @code{dx2} constant
-@tindex @code{FL_West}
+@tindex FL_West
 @item @code{FL_West}
 @tab @code{dx1} constant
-@tindex @code{FL_East}
+@tindex FL_East
 @item @code{FL_East}
 @tab @code{dx2} constant
-@tindex @code{FL_SouthWest}
+@tindex FL_SouthWest
 @item @code{FL_SouthWest}
 @tab @code{dx1}, @code{dy2} constant
-@tindex @code{FL_South}
+@tindex FL_South
 @item @code{FL_South}
 @tab @code{dy2} constant
-@tindex @code{FL_SouthEast}
+@tindex FL_SouthEast
 @item @code{FL_SouthEast}
 @tab @code{dx2}, @code{dy2} constant
 @end multitable
@@ -303,10 +307,11 @@ both gravities are set to @code{ForgetGravity}, the object is left
 un-scaled, but the object is moved so that the new position keeps the
 center of gravity of the object constant relative to the form.
 
-Again, since all sizing requests go though the window manager, there is
-no guarantee that your request will be honored. If a form is placed with
-@code{FL_PLACE_GEOMETRY} or other size-restricting options, resizing it
-later via @code{fl_set_form_size()} will likely be rejected.
+Again, since all sizing requests go though the window manager, there
+is no guarantee that your request will be honored. If a form is placed
+with @code{FL_PLACE_GEOMETRY} or other size-restricting options,
+resizing it later via @code{@ref{fl_set_form_size()}} will likely be
+rejected.
 
 To determine the gravity and resize settings for an object use the
 functions
@@ -321,6 +326,7 @@ void fl_get_object_resize(FL_OBJECT *obj, unsigned int *resize );
 Sometimes, you may want to change an attribute for all objects on a
 particular form, to this end, the following iterator is available
 @findex fl_for_all_objects()
+@anchor{fl_for_all_objects()}
 @example
 void fl_for_all_objects(FL_FORM *form,
                         int (*operate)(FL_OBJECT *obj, void *data),
@@ -374,16 +380,16 @@ int fl_form_is_visible(FL_FORM *form);
 @end example
 @noindent
 The function returns
-@tindex @code{FL_INVISIBLE}
+@tindex FL_INVISIBLE
 @code{FL_INVISIBLE} (0) if the form is not visible,
-@tindex @code{FL_VISIBLE}
+@tindex FL_VISIBLE
 @code{FL_VISIBLE} (1) if the form is visible and
-@tindex @code{FL_BEING_HIDDEN}
+@tindex FL_BEING_HIDDEN
 @code{FL_BEING_HIDDEN} (-1) if the form is visible but is in the process
 of being hidden.
 
-Note that if you don't need a form anymore you can deallocate its memory
-using the call @code{fl_free_form()} described earlier.
+Note that if you don't need a form anymore you can deallocate its
+memory using the call @code{@ref{fl_free_form()}} described earlier.
 
 Window managers typically have a menu entry labeled "delete" or "close"
 meant to terminate an application program gently by informing the
@@ -394,6 +400,7 @@ application has to do some record keeping before exiting. To perform
 record keeping or to elect to ignore this message, register a callback
 function using the following routine
 @findex fl_set_atclose()
+@anchor{fl_set_atclose()}
 @example
 int fl_set_atclose(int (*at_close)(FL_FORM *, void *), void *data);
 @end example
@@ -408,6 +415,7 @@ application.
 
 Similar mechanism exists for individual forms
 @findex fl_set_form_atclose()
+@anchor{fl_set_form_atclose()}
 @example
 int fl_set_form_atclose(FL_FORM *,
                         int (*at_close)(FL_FORM *, void *),
@@ -452,7 +460,7 @@ A change occurs in the following cases:
 @table @asis
 @item box
 A box never changes state and, hence, is never returned by
-@code{fl_do_forms()}.
+@code{@ref{fl_do_forms()}}.
 @item text
 Also a text never changes state.
 @item button
@@ -470,12 +478,12 @@ selected it and then selected another input field for input (e.g. by
 pressing the @code{<Tab>} key).
 @end table
 
-When the object is returned by @code{fl_do_forms()} the application
-program can check what the change is and take action accordingly. See
-some of the demo programs for examples of use. Normally, after the
-action is taken by the application program @code{fl_do_forms()} is
-called again to continue the interaction. Hence, most programs have the
-following global form:
+When the object is returned by @code{@ref{fl_do_forms()}} the
+application program can check what the change is and take action
+accordingly. See some of the demo programs for examples of use.
+Normally, after the action is taken by the application program
+@code{@ref{fl_do_forms()}} is called again to continue the
+interaction. Hence, most programs have the following global form:
 @example
 /* define the forms */
 /* display the forms */
@@ -512,8 +520,9 @@ main(int argc, char *argv[]) @{
 @}
 @end example
 @noindent
-In this case, @code{fl_do_forms()} handles the interaction indefinitely
-and never returns. The program exits via one of the callback functions.
+In this case, @code{@ref{fl_do_forms()}} handles the interaction
+indefinitely and never returns. The program exits via one of the
+callback functions.
 
 
 @node Periodic Events and Non-blocking Interaction
@@ -542,21 +551,21 @@ FL_APPEVENT_CB fl_set_idle_callback(FL_APPEVENT_CB callback,
                                     void *user_data);
 @end example
 
-After the registration, whenever the main loop (@code{fl_do_forms()}) is
-idle, i.e., no user action or light user action, the callback function
-is called as
+After the registration, whenever the main loop
+(@code{@ref{fl_do_forms()}}) is idle, i.e., no user action or light
+user action, the callback function is called as
 @example
 int callback(xev, user_data);
 @end example
 @noindent
 where @code{user_data} is the void pointer passed to the system in
-@code{fl_set_idle_callback()} through which some information about the
-application can be passed. The return value of the callback function is
-currently not used. @code{xev} is a pointer to a synthetic@footnote{I.e.
-@code{xev->xmotion.send_event} is true.} @code{MotionNotify} event from
-which some information about mouse position etc. can be obtained. To
-remove the idle callback, use @code{fl_set_idle_callback()} with
-callback set to @code{NULL}.
+@code{@ref{fl_set_idle_callback()}} through which some information
+about the application can be passed. The return value of the callback
+function is currently not used. @code{xev} is a pointer to a
+synthetic@footnote{I.e. @code{xev->xmotion.send_event} is true.}
+@code{MotionNotify} event from which some information about mouse
+position etc. can be obtained. To remove the idle callback, use
+@code{@ref{fl_set_idle_callback()}} with callback set to @code{NULL}.
 
 Timeouts are similar to idle callbacks but with somewhat more accurate
 timing. Idle callbacks are called whenever the system is idle, the time
@@ -567,7 +576,7 @@ think of timeouts as regularized idle callbacks, and further you can
 have more than one timeout callbacks.
 
 To add a timeout callback, use the following routine
-@tindex @code{FL_TIMEOUT_CALLBACK}
+@tindex FL_TIMEOUT_CALLBACK
 @findex fl_add_timeout()
 @example
 typedef void (*FL_TIMEOUT_CALLBACK)(int, void *);
@@ -582,7 +591,7 @@ specified by @code{msec} (in milli-second) is elapsed, the timeout is
 removed, then the callback function is called. The timeout ID is passed
 to the callback function as the first parameter. The second parameter of
 the callback function is passed the data pointer that was passed to
-@code{fl_add_timeout()}.
+@code{@ref{fl_add_timeout()}}.
 
 To remove a timeout before it triggers, use the following routine
 @findex fl_remove_timeout()
@@ -590,13 +599,13 @@ To remove a timeout before it triggers, use the following routine
 void fl_remove_timeout(int id);
 @end example
 @noindent
-where @code{id} is the timeout ID returned by @code{fl_add_timeout()}.
-There is also an @code{FL_OBJECT}, the @code{FL_TIMER} object,
-especially the invisible type, that can be used to do timeout. Since
-it is a proper Forms Library object, it may be easier to use simply
-because it has the same API as any other GUI elements and is supported
-by the Form Designer. @xref{Timer Object}, for complete information on
-the @code{FL_TIMER} object.
+where @code{id} is the timeout ID returned by
+@code{@ref{fl_add_timeout()}}. There is also an @code{FL_OBJECT}, the
+@code{FL_TIMER} object, especially the invisible type, that can be
+used to do timeout. Since it is a proper Forms Library object, it may
+be easier to use simply because it has the same API as any other GUI
+elements and is supported by the Form Designer. @xref{Timer Object},
+for complete information on the @code{FL_TIMER} object.
 
 Note that idle callback and timeout are not appropriate for tasks that
 block or take a long time to finish because during the busy or blocked
@@ -615,19 +624,20 @@ In these situations, the following routine can be used:
 FL_OBJECT *fl_check_forms(void);
 @end example
 @noindent
-This function is similar to @code{fl_do_forms()} in that it takes care
-of handling the events and appropriate callbacks, but it does not block.
-It always returns to the application program immediately. If a change
-has occurred in some object the object is returned as with
-@code{fl_do_forms()}. But when no change has occurred control is also
-returned but this time a @code{NULL} object is returned. Thus, by
-inserting this statement in the middle of the computation in appropriate
-places in effect "polls" the user interface. The downside of using this
-function is that if used excessively, as with all excessive polls, it
-can chew up considerable CPU cycles. Therefore, it should only be used
-outside the inner most loops of the computation. If all objects have
-callbacks bound to them, @code{fl_check_forms()} always returns
-@code{NULL}, otherwise, code similar to the following is needed:
+This function is similar to @code{@ref{fl_do_forms()}} in that it
+takes care of handling the events and appropriate callbacks, but it
+does not block. It always returns to the application program
+immediately. If a change has occurred in some object the object is
+returned as with @code{@ref{fl_do_forms()}}. But when no change has
+occurred control is also returned but this time a @code{NULL} object
+is returned. Thus, by inserting this statement in the middle of the
+computation in appropriate places in effect "polls" the user
+interface. The downside of using this function is that if used
+excessively, as with all excessive polls, it can chew up considerable
+CPU cycles. Therefore, it should only be used outside the inner most
+loops of the computation. If all objects have callbacks bound to them,
+@code{@ref{fl_check_forms()}} always returns @code{NULL}, otherwise,
+code similar to the following is needed:
 @example
 obj = fl_check_forms();
 if (obj == obj1)
@@ -638,7 +648,7 @@ if (obj == obj1)
 Depending on the applications, it may be possible to partition the
 computation into smaller tasks that can be performed within an idle
 callback one after another, thus eliminating the need of using
-@code{fl_check_forms()}.
+@code{@ref{fl_check_forms()}}.
 
 Handling intensive computation while maintaining user interface
 responsiveness can be tricky and by no means the above methods are the
@@ -648,9 +658,9 @@ both of which can be handled with library routines documented later, or
 use multi-thread (but be careful to limit Xserver access within one
 thread). Be creative and have fun.
 
-For running external executables while maintaining responsiveness of the
-interface, see @code{fl_exe_command()} and @code{fl_popen()} documented
-later in @ref{Command Log}.
+For running external executables while maintaining responsiveness of
+the interface, see @code{@ref{fl_exe_command()}} and
+@code{@ref{fl_popen()}} documented later in @ref{Command Log}.
 
 
 @node Dealing With Multiple Windows
@@ -660,7 +670,7 @@ It is not atypical that an application program may need to take
 interaction from more than one form at the same time, Forms Library
 provides a mechanism with which precise control can be exercised.
 
-By default, @code{fl_do_forms()} takes
+By default, @code{@ref{fl_do_forms()}} takes
 interaction from all forms that are shown. In certain situations, you
 might not want to have interaction with all of them. For example, when
 the user presses a quit button in a form you might want to ask a
@@ -682,15 +692,16 @@ void fl_activate_form(FL_FORM *form);
 
 It is a good idea to give the user a visual clue that a form is
 deactivated. This is not automatically done mainly for performance
-reasons. Experience shows that graying out some important objects on the
-form is in general adequate. Graying out an object can be accomplished
-by using @code{fl_set_object_lcol()} (see @file{objinactive.c}. What
-objects to gray out is obviously application dependent.
+reasons. Experience shows that graying out some important objects on
+the form is in general adequate. Graying out an object can be
+accomplished by using @code{@ref{fl_set_object_lcol()}} (see
+@file{objinactive.c}. What objects to gray out is obviously
+application dependent.
 
 The following two functions can be used to register two callbacks that
 are called whenever the activation status of a form is changed:
-@tindex @code{FL_FORM_ATACTIVATE}
-@tindex @code{FL_FORM_ATDEACTIVATE}
+@tindex FL_FORM_ATACTIVATE
+@tindex FL_FORM_ATDEACTIVATE
 @findex fl_set_form_atactivate()
 @findex fl_set_form_atdeactivate()
 @example
@@ -720,23 +731,28 @@ again.
 
 One problem remains. Mouse actions etc. are presented to a program in
 the form of events in an event queue. The library routines
-@code{fl_do_forms()} and @code{fl_check_forms()} read this queue and
-handle the events. When the application program itself also opens
-windows, these windows should receive events as well. Unfortunately,
-there is only one event queue. When both the application program and the
-library routines read events from this one queue problems occur and
-events are missed. Hence, the application program should not read the
-event queue while displaying forms. To solve this problem, the package
-maintains (or appears to maintain) a separate event queue for the user.
-This queue behaves in exactly the same way as the normal event queue. To
-access it, the application program should use replacements for the usual
-Xlib routines. Instead of using @code{XNextEvent()}, the program should
-use @code{fl_XNextEvent()}, with the same parameters except the
+@code{@ref{fl_do_forms()}} and @code{@ref{fl_check_forms()}} read this
+queue and handle the events. When the application program itself also
+opens windows, these windows should receive events as well.
+Unfortunately, there is only one event queue. When both the
+application program and the library routines read events from this one
+queue problems occur and events are missed. Hence, the application
+program should not read the event queue while displaying forms. To
+solve this problem, the package maintains (or appears to maintain) a
+separate event queue for the user. This queue behaves in exactly the
+same way as the normal event queue. To access it, the application
+program should use replacements for the usual Xlib routines. Instead
+of using @code{XNextEvent()}, the program should use
+@code{@ref{fl_XNextEvent()}}, with the same parameters except the
 @code{Display *} . The following is a list of all new routines:
 @findex fl_XNextEvent()
+@anchor{fl_XNextEvent()}
 @findex fl_XPeekEvent()
+@anchor{fl_XPeekEvent()}
 @findex fl_XEventsQueued()
+@anchor{fl_XEventsQueued()}
 @findex fl_XPutbackEvent()
+@anchor{fl_XPutbackEvent()}
 @example
 int fl_XNextEvent(XEvent *xev);
 int fl_XPeekEvent(XEvent *xev);
@@ -750,13 +766,13 @@ removed. These routines include @code{XWindowEvent()},
 @code{XCheckWindowEvent()} etc.
 
 To help find out when an event has occurred, whenever
-@code{fl_do_forms()} and @code{fl_check_forms()} encounter an event that
-is not meant for them but for the application program they return a
-special object
-@tindex @code{FL_EVENT}
-@code{FL_EVENT}. Upon receiving this special event, the
-application program can and must remove the pending event from the queue
-using @code{fl_XNextEvent()}.
+@code{@ref{fl_do_forms()}} and @code{@ref{fl_check_forms()}} encounter
+an event that is not meant for them but for the application program
+they return a special object
+@tindex FL_EVENT
+@code{FL_EVENT}. Upon receiving this special event, the application
+program can and must remove the pending event from the queue using
+@code{@ref{fl_XNextEvent()}}.
 
 So the basis of a program with its own windows would look as follows:
 @example
@@ -780,15 +796,16 @@ while (! ready) @{
 
 In some situations you don't want to see the user events. For example,
 you might want to write a function that pops up a form to change some
-settings. This routine might not want to be concerned with any redrawing
-of the main window, etc., but you also don't want to discard any events.
-In this case you can use the routines @code{fl_do_only_forms()} and
-@code{fl_check_only_forms()} that will never return @code{FL_EVENT}. The
-events don't disappear. They will be returned at later calls to the
-normal routines @code{fl_do_forms()}.
+settings. This routine might not want to be concerned with any
+redrawing of the main window, etc., but you also don't want to discard
+any events. In this case you can use the routines
+@code{@ref{fl_do_only_forms()}} and @code{@ref{fl_check_only_forms()}}
+that will never return @code{FL_EVENT}. The events don't disappear.
+They will be returned at later calls to the normal routines
+@code{@ref{fl_do_forms()}}.
 
 It can't be over-emphasized that it is an error to ignore
-@code{FL_EVENT} or use @code{fl_XNextEvent()} without seeing
+@code{FL_EVENT} or use @code{@ref{fl_XNextEvent()}} without seeing
 @code{FL_EVENT}.
 
 Sometimes an application program might need to find out more information
@@ -796,6 +813,7 @@ on the event that triggered a callback, e.g., to implement button number
 sensitive functionalities. To this end, the following routines may be
 called
 @findex fl_mouse_button()
+@anchor{fl_mouse_button()}
 @example
 long fl_mouse_button(void);
 @end example
@@ -806,7 +824,7 @@ function returns one of the constants @code{FL_LEFT_MOUSE},
 location of the mouse button on the mouse that was pushed or released.
 If the callback is triggered by a shortcut, the function returns the
 keysym (ascii value if ASCII) of the key plus
-@tindex @code{FL_SHORTCUT}
+@tindex FL_SHORTCUT
 @code{FL_SHORTCUT}. For
 example, if a button has a shortcut @code{<Ctrl>C} (ASCII value is 3),
 the button number returned upon activation of the shortcut would be
@@ -870,6 +888,7 @@ Window fl_get_win_mouse(Window win, FL_Coord *x, FL_Coord *y,
 
 To print the name of an XEvent, the following routine can be used:
 @findex fl_print_xevent_name()
+@anchor{fl_print_xevent_name()}
 @example
 XEvent *fl_print_xevent_name(const char *where, const XEvent *xev);
 @end example
@@ -891,13 +910,13 @@ library by the application program that binds a specific condition
 (e.g., a button is pushed) to the invocation of the function by the
 system.
 
-The application program can bind a callback routine to any object. Once
-a callback function is bound and the specified condition is met,
-@code{fl_do_forms()} or @code{fl_check_forms()} invokes the callback
-function instead of returning the object.
+The application program can bind a callback routine to any object.
+Once a callback function is bound and the specified condition is met,
+@code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}} invokes
+the callback function instead of returning the object.
 
 To bind a callback routine to an object, use the following
-@tindex @code{FL_CALLBACKPTR}
+@tindex FL_CALLBACKPTR
 @findex fl_set_object_callback()
 @example
 typedef void (*FL_CALLBACKPTR)(FL_OBJECT *obj, long argument);
@@ -918,9 +937,10 @@ The callback routine should have the form
 void callback(FL_OBJECT *obj, long argument);
 @end example
 @noindent
-The first argument to every callback function is the object to which the
-callback is bound. The second parameter is the argument specified by the
-application program in the call to @code{fl_set_object_callback()}.
+The first argument to every callback function is the object to which
+the callback is bound. The second parameter is the argument specified
+by the application program in the call to
+@code{@ref{fl_set_object_callback()}}.
 
 See program @file{yesno_cb.c} for an example of the use of callback
 routines. Note that callback routines can be combined with normal
@@ -939,12 +959,12 @@ documentation where all objects on a form is are grouped into a single
 structure which can then be "hang" off of @code{u_vdata} or some field
 in the @code{FL_FORM} structure.
 
-Another communication problem might arise when the callback function is
-called and, from within the callback function, some other objects' state
-is explicitly changed, say, via @code{fl_set_button()},
-@code{fl_set_input()} etc. You probably don't want to put the state
-change handling code of these objects in another object's callback. To
-handle this situation, you can simply call
+Another communication problem might arise when the callback function
+is called and, from within the callback function, some other objects'
+state is explicitly changed, say, via @code{@ref{fl_set_button()}},
+@code{@ref{fl_set_input()}} etc. You probably don't want to put the
+state change handling code of these objects in another object's
+callback. To handle this situation, you can simply call
 @findex fl_call_object_callback()
 @example
 void fl_call_object_callback(FL_OBJECT *obj);
@@ -960,9 +980,9 @@ void fl_set_form_callback(FL_FORM *form,
                           void *data);
 @end example
 
-Whenever @code{fl_do_forms()} or @code{fl_check_forms()} would return an
-object in form they call the routine callback instead, with the object
-as an argument. So callback should have the form
+Whenever @code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}}
+would return an object in form they call the routine callback instead,
+with the object as an argument. So callback should have the form
 @example
 void callback(FL_OBJECT *obj, void *data);
 @end example
@@ -1006,21 +1026,22 @@ FL_APPEVENT_CB fl_add_event_callback(Window window, int xev_type,
 @end example
 @noindent
 where @code{window} is the window for which the callback routine is to
-be registered. @code{xev_type} is the XEvent type you're interested in,
-e.g., @code{Expose} etc. If @code{xev_type} is 0, it is taken to mean
-the callback routine will handle all events for the window. The newly
-installed callback replaces the callback already installed. Note that
-this function only works for windows created directly by the application
-program (i.e., it won't work for forms' windows or windows created by
-the canvas object). It is possible to access the raw events that happen
-on a form's window via @code{fl_register_raw_callback()} discussed in
-@ref{Form Events}.
+be registered. @code{xev_type} is the XEvent type you're interested
+in, e.g., @code{Expose} etc. If @code{xev_type} is 0, it is taken to
+mean the callback routine will handle all events for the window. The
+newly installed callback replaces the callback already installed. Note
+that this function only works for windows created directly by the
+application program (i.e., it won't work for forms' windows or windows
+created by the canvas object). It is possible to access the raw events
+that happen on a form's window via
+@code{@ref{fl_register_raw_callback()}} discussed in @ref{Form
+Events}.
 
-@code{fl_add_event_callback()} does not alter the window's event mask
-nor does it solicit events for you. This is so mainly for the reason
-that an event type does not always correspond to a unique event mask,
-also in this way, the user can solicit events at window's creation and
-use 0 to register all the event handlers.
+@code{@ref{fl_add_event_callback()}} does not alter the window's event
+mask nor does it solicit events for you. This is so mainly for the
+reason that an event type does not always correspond to a unique event
+mask, also in this way, the user can solicit events at window's
+creation and use 0 to register all the event handlers.
 
 To let XForms handle solicitation for you, call the following routine
 @findex fl_activate_event_callbacks()
@@ -1040,7 +1061,9 @@ It is possible to control precisely the masks you want by using the
 following function, which can also be used to add or remove solicited
 event masks on the fly without altering other masks already selected:
 @findex fl_addto_selected_xevent()
+@anchor{fl_addto_selected_xevent()}
 @findex fl_remove_selected_xevent()
+@anchor{fl_remove_selected_xevent()}
 @example
 long fl_addto_selected_xevent(Window win, long mask);
 long fl_remove_selected_xevent(Window win, long mask);
@@ -1048,18 +1071,19 @@ long fl_remove_selected_xevent(Window win, long mask);
 
 Both functions return the resulting event masks that are currently
 selected. If event callback functions are registered via both
-@code{fl_set_event_callback()} and @code{fl_add_event_callback()}, the
-callback via the latter is invoked first and the callback registered via
-@code{fl_set_event_callback()} is called only if the first attempt is
-unsuccessful, that is, the handler for the event is not present. For
-example, after the following sequence
+@code{fl_set_event_callback()} and
+@code{@ref{fl_add_event_callback()}}, the callback via the latter is
+invoked first and the callback registered via
+@code{@ref{fl_set_event_callback()}} is called only if the first
+attempt is unsuccessful, that is, the handler for the event is not
+present. For example, after the following sequence
 @example
 fl_add_event_callback(winID, Expose, expose_cb, 0);
 fl_set_event_callback(event_callback);
 @end example
 All @code{Expose} events on window @code{winID} are consumed by
-@code{expose_cb}, thus @code{event_callback()} would never be invoked as
-a result of an @code{Expose} event.
+@code{expose_cb}, thus @code{event_callback()} would never be
+invoked as a result of an @code{Expose} event.
 
 To remove a callback, use the following routine
 @findex fl_remove_event_callback()
@@ -1070,11 +1094,11 @@ void fl_remove_event_callback(Window win, int xev_type);
 All parameters have the usual meaning. Again, this routine does not
 modify the window's event mask. If you like to change the events the
 window is sensitive to after removing the callback, use
-@code{fl_activate_event_callbacks()}. If @code{xev_type} is 0, all
-callbacks for window @code{win} are removed. This routine is called
-automatically if @code{fl_winclose()} is called to unmap and destroy a
-window. Otherwise, you must call this routine explicitly to remove all
-event callbacks before destroying a window using
+@code{@ref{fl_activate_event_callbacks()}}. If @code{xev_type} is 0,
+all callbacks for window @code{win} are removed. This routine is
+called automatically if @code{@ref{fl_winclose()}} is called to unmap
+and destroy a window. Otherwise, you must call this routine explicitly
+to remove all event callbacks before destroying a window using
 @code{XDestroyWindow()}.
 
 A program using all of these has the following basic form:
@@ -1112,8 +1136,8 @@ main(int argc, char *argv[]) @{
 @}
 @end example
 @noindent
-The routine @code{fl_do_forms()} will never return in this case. See
-@file{demo27.c} for a program that works this way.
+The routine @code{@ref{fl_do_forms()}} will never return in this case.
+See @file{demo27.c} for a program that works this way.
 
 It is recommended that you set up your programs using callback routines
 (either for the objects or for entire forms). This ensures that no
@@ -1139,25 +1163,26 @@ invoked when input is available from a specified file descriptor.
 The function
 @tindex FL_IO_CALLBACK
 @findex fl_add_io_callback()
+@anchor{fl_add_io_callback()}
 @example
 typedef void (*FL_IO_CALLBACK)(int fd, void *data);
 void fl_add_io_callback(int fd, unsigned condition,
                         FL_IO_CALLBACK callback, void *data);
 @end example
 @noindent
-registers an input callback with the system. The argument @code{fd} must
-be a valid file descriptor on a UNIX-based system or other operating
-system dependent device specification while @code{condition} indicates
-under what circumstance the input callback should be invoked. The
-condition must be one of the following constants
+registers an input callback with the system. The argument @code{fd}
+must be a valid file descriptor on a UNIX-based system or other
+operating system dependent device specification while @code{condition}
+indicates under what circumstance the input callback should be
+invoked. The condition must be one of the following constants
 @table @code
-@tindex @code{FL_READ}
+@tindex FL_READ
 @item FL_READ
 File descriptor has data available.
-@tindex @code{FL_WRITE}
+@tindex FL_WRITE
 @item FL_WRITE
 File descriptor is available for writing.
-@tindex @code{FL_EXCEPT}
+@tindex FL_EXCEPT
 @item FL_EXCEPT
 an I/O error has occurred.
 @end table
@@ -1172,6 +1197,7 @@ To remove a callback that is no longer needed or to stop the Forms
 Library's main loop from watching the file descriptor, use the following
 function
 @findex fl_remove_io_callback()
+@anchor{fl_remove_io_callback()}
 @example
 void fl_remove_io_callback(int fd, unsigned condition,
                            FL_IO_CALLBACK callback);
