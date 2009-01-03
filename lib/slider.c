@@ -30,7 +30,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.16 2008/12/27 22:20:51 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.17 2009/01/03 02:55:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -624,7 +624,7 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-			fl_free( ob->spec );
+			fl_safe_free( ob->spec );
 			break;
     }
 

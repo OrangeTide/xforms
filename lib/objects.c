@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_obj = "$Id: objects.c,v 1.49 2009/01/02 17:58:25 jtt Exp $";
+char *fl_id_obj = "$Id: objects.c,v 1.50 2009/01/03 02:55:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -576,9 +576,16 @@ fl_free_object( FL_OBJECT * obj )
 		FL_OBJECT *o,
 			      *on;
 
-		for ( o = obj->next; o && o->objclass != FL_END_GROUP; o = on )
+		for ( o = obj->next; o != NULL && o->objclass != FL_END_GROUP; o = on )
 		{
 			on = o->next;
+
+			/* Skip child objects, they get removed automatically when the
+			   parent gets deleted */
+
+			while ( on->is_child )
+				on = on->next;
+
 			fl_free_object( o );
 		}
 

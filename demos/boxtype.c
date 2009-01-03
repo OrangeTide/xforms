@@ -56,24 +56,24 @@ static VN_struct gmode[ ] =
 
 static VN_struct btypes[ ]=
 {
-   { FL_NO_BOX,            "no box"            },
-   { FL_UP_BOX,            "up box"            },
-   { FL_DOWN_BOX,          "down box"          },
-   { FL_BORDER_BOX,        "border box"        },
-   { FL_SHADOW_BOX,        "shadow box"        },
-   { FL_FLAT_BOX,          "flat box"          },
-   { FL_FRAME_BOX,         "frame box"         },
-   { FL_EMBOSSED_BOX,      "embossed box"      },
-   { FL_ROUNDED_BOX,       "rounded box"       },
-   { FL_RFLAT_BOX,         "rflat box"         },
-   { FL_RSHADOW_BOX,       "rshadow box"       },
-   { FL_OVAL_BOX,          "oval box"          },
-   { FL_ROUNDED3D_UPBOX,   "rounded3d upbox"   },
-   { FL_ROUNDED3D_DOWNBOX, "rounded3d downbox" },
-   { FL_OVAL3D_UPBOX,      "oval3d upbox"      },
-   { FL_OVAL3D_DOWNBOX,    "oval3d downbox"    },
+   { FL_NO_BOX,            "No box"            },
+   { FL_UP_BOX,            "Up box"            },
+   { FL_DOWN_BOX,          "Down box"          },
+   { FL_BORDER_BOX,        "Border box"        },
+   { FL_SHADOW_BOX,        "Shadow box"        },
+   { FL_FLAT_BOX,          "Flat box"          },
+   { FL_FRAME_BOX,         "Frame box"         },
+   { FL_EMBOSSED_BOX,      "Embossed box"      },
+   { FL_ROUNDED_BOX,       "Rounded box"       },
+   { FL_RFLAT_BOX,         "Rflat box"         },
+   { FL_RSHADOW_BOX,       "Rshadow box"       },
+   { FL_OVAL_BOX,          "Oval box"          },
+   { FL_ROUNDED3D_UPBOX,   "Rounded3d upbox"   },
+   { FL_ROUNDED3D_DOWNBOX, "Rounded3d downbox" },
+   { FL_OVAL3D_UPBOX,      "Oval3d upbox"      },
+   { FL_OVAL3D_DOWNBOX,    "Oval3d downbox"    },
    /* sentinel */
-   { -1,                   0                   }
+   { -1,                   NULL                }
 };
 
 
@@ -97,7 +97,7 @@ boxtype_cb( FL_OBJECT * ob,
 			long        arg  FL_UNUSED_ARG )
 {
 	int i,
-		req_bt = fl_get_choice( ob ) - 1;
+		req_bt = fl_get_select_item( ob )->val;
 	static int lastbt = -1;
 
 	if ( lastbt != req_bt )
@@ -120,10 +120,10 @@ mode_cb( FL_OBJECT * ob,
 		 long        arg  FL_UNUSED_ARG )
 {
 	static int lval = -1;
-	int val = fl_get_choice( ob ) -1;
+	int val = fl_get_select_item( ob )->val;
 	int db = 0;
 
-	if ( val == lval || val < 0 )
+	if ( val == lval )
 		return;
 
 	fl_hide_form ( form );
@@ -198,7 +198,7 @@ create_form( void )
 
 	tobj[ 14 ] = fl_add_menu( FL_PUSH_MENU, 400, 240, 100, 30, "Menu" );
 
-	tobj[ 15 ] = fl_add_choice( FL_NORMAL_CHOICE, 580, 250, 110, 30, "Choice" );
+	tobj[ 15 ] = fl_add_select( FL_NORMAL_SELECT, 580, 250, 110, 30, "Select" );
 
 	tobj[ 16 ] = fl_add_timer( FL_VALUE_TIMER, 580, 210, 110, 30, "Timer" );
 	fl_set_object_dblbuffer( tobj[ 16 ], 1 );
@@ -208,10 +208,10 @@ create_form( void )
 
 	exitob = fl_add_button( FL_NORMAL_BUTTON, 590, 30, 100, 30, "Exit" );
 
-	btypeob = fl_add_choice( FL_NORMAL_CHOICE, 110, 30, 130, 30, "Boxtype" );
+	btypeob = fl_add_select( FL_NORMAL_SELECT, 110, 30, 130, 30, "Boxtype" );
 	fl_set_object_callback( btypeob, boxtype_cb, 0 );
 
-	modeob = fl_add_choice( FL_NORMAL_CHOICE, 370, 30, 130, 30,
+	modeob = fl_add_select( FL_NORMAL_SELECT, 370, 30, 130, 30,
 							"Graphics mode" );
 	fl_set_object_callback( modeob, mode_cb, 0 );
 
@@ -264,11 +264,11 @@ main( int    argc,
 
 	fl_set_menu( tobj[ 14 ], "item 1|item 2|item 3|item 4|item 5" );
 
-	fl_addto_choice( tobj[ 15 ], "item 1" );
-	fl_addto_choice( tobj[ 15 ], "item 2" );
-	fl_addto_choice( tobj[ 15 ], "item 3" );
-	fl_addto_choice( tobj[ 15 ], "item 4" );
-	fl_addto_choice( tobj[ 15 ], "item 5" );
+	fl_add_select_items( tobj[ 15 ], "item 1" );
+	fl_add_select_items( tobj[ 15 ], "item 2" );
+	fl_add_select_items( tobj[ 15 ], "item 3" );
+	fl_add_select_items( tobj[ 15 ], "item 4" );
+	fl_add_select_items( tobj[ 15 ], "item 5" );
 
 	fl_set_timer( tobj[ 16 ], 1000.0 );
 
@@ -276,18 +276,20 @@ main( int    argc,
 		fl_add_browser_line( tobj[ 17 ], *p );
 
 	for ( vn = btypes; vn->val >= 0; vn++ )
-		fl_addto_choice( btypeob, vn->name );
+		fl_add_select_items( btypeob, vn->name );
 
 	for ( i = 1; g < gs; g++, i++ )
 	{
-        fl_addto_choice( modeob, g->name );
-        if(!fl_mode_capable( g->val, 0 ))
-			fl_set_choice_item_mode( modeob, i, FL_PUP_GRAY );
+        FL_POPUP_ENTRY *item = fl_add_select_items( modeob, g->name );
+        if ( ! fl_mode_capable( g->val, 0 ))
+			fl_set_select_item_state( modeob, item, FL_POPUP_DISABLED );
 	}
 
-	fl_set_choice( modeob, fl_vmode + 1 );
+	fl_set_select_item( modeob, fl_get_select_item_by_value( modeob,
+															 fl_vmode ) );
 
-	fl_set_choice( btypeob, 2 );
+	fl_set_select_item( btypeob, fl_get_select_item_by_value( btypeob, 1 ) );
+	fl_set_select_popup_title( btypeob, "Boxtype" );
 	boxtype_cb( btypeob, 0 );
 
 	fl_show_form ( form, FL_PLACE_MOUSE, border, "Box types" );

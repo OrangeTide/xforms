@@ -177,4 +177,15 @@ FL_EXPORT int fl_set_select_policy(
 		int
 		);
 
+unsigned int fl_get_select_item_state(
+		FL_OBJECT *,
+		FL_POPUP_ENTRY *
+		);
+
+unsigned int fl_set_select_item_state(
+		FL_OBJECT *,
+		FL_POPUP_ENTRY *,
+		unsigned int
+		);
+
 #endif /* ! defined FL_SELECT_H */

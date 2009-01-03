@@ -297,6 +297,38 @@ FL_POPUP_RETURN *fl_set_select_item(FL_OBJECT *obj,
 					                FL_POPUP_ENTRY *entry);
 @end example
 
+Another place where the result of such a search comes handy is for
+teh functions
+@findex fl_set_select_item_mode()
+@anchor{fl_set_select_item_mode()}
+@findex fl_get_select_item_mode()
+@anchor{fl_get_select_item_mode()}
+@example
+int fl_set_select_item_mode(FL_OBJECT *obj, FLK_POPUP_ENTRY *item,
+                            unsiged state);
+int fl_get_select_item_mode(FL_OBJECT *obj, FLK_POPUP_ENTRY *item);
+@end example
+@noindent
+The first function lets you set the state of an item where
+@code{state} can be one of
+@table @code
+@item FL_POPUP_DISABLED
+Makes the item disabled (and normally shown in a different color)
+so it can't be selected anymore. Setting an item to disabled that
+was currently selected also results in the next available and
+selectable item to become selected.
+@item FL_POPUP_HIDDEN
+Completely hides an item. Again, setting an item to disabled that
+was currently disabled results  in the next available and
+selectable item to become selected.
+@end table
+To re-enable a disabled or hidden ite, call
+@code{@ref{fl_set_select_item_mode()}} with 0 as the @code{state}
+argument.
+
+Obviosuly, @code{@ref{fl_get_select_item_mode()}} returns the state
+of the item under consideration.
+
 Or you could use the result to delete an item:
 @findex fl_delete_select_item()
 @anchor{fl_delete_select_item()}
@@ -922,7 +954,7 @@ selected, depending on the type of the browser.
 @node Adding Browser Objects
 @subsection Adding Browser Objects
 
-Adding an object To add a browser to a form use the routine
+To add a browser to a form use the routine
 @findex fl_add_browser()
 @anchor{fl_add_browser()}
 @example

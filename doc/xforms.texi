@@ -2,7 +2,7 @@
 
 @setfilename xforms.info
 @settitle XForms
-@set lastupdate Dezember 26, 2008
+@set lastupdate January 2, 2009
 @paragraphindent 0
 
 @titlepage
@@ -14,7 +14,7 @@
 @sp 8
 @center Library Version 1.0.92
 @sp 2
-@center December 2008
+@center January 2009
 @sp 8
 @end titlepage
 

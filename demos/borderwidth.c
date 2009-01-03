@@ -46,7 +46,7 @@ typedef struct {
 	char      * cdata;
 	long        ldata;
 	FL_OBJECT * done;
-	FL_OBJECT * bw_choice;
+	FL_OBJECT * bw_select;
 	FL_OBJECT * bwgroup;
 	FL_OBJECT * pmobj;
 } FD_bwform;
@@ -80,14 +80,14 @@ bw_callback( FL_OBJECT * ob,
 	/* fill-in code for callback */
 
 	static int bws[ ] = { -5, -4, -3, -2, -1, 1, 2, 3, 4, 5 };
-	int bw = bws[ fl_get_choice( ob ) - 1 ];
+	int bw = bws[ fl_get_select_item( ob )->val ];
 
 	fl_set_object_bw( fd_bwform->bwgroup, bw );
 
 	/* since bwgroup includes the backface, it wipes out the done button*/
 
 	fl_redraw_object( fd_bwform->done );
-	fl_redraw_object( fd_bwform->bw_choice );
+	fl_redraw_object( fd_bwform->bw_select );
 }
 
 
@@ -112,16 +112,18 @@ main( int    argc,
 
 	fl_set_pixmapbutton_file( fd_bwform->pmobj, "crab.xpm" );
 
-	fl_addto_choice( fd_bwform->bw_choice,
-					 "-5 Pixel|-4 Pixel|-3 Pixel|-2 Pixel|-1 Pixel|"
-					 " 1 Pixel| 2 Pixel| 3 Pixel| 4 Pixel| 5 Pixel" );
+	fl_add_select_items( fd_bwform->bw_select,
+						 "-5 Pixel|-4 Pixel|-3 Pixel|-2 Pixel|-1 Pixel|"
+						 " 1 Pixel| 2 Pixel| 3 Pixel| 4 Pixel| 5 Pixel" );
 
 	bw = fl_get_border_width( );
 	if ( bw < -5 || bw == 0 || bw > 5 )
 		fl_set_border_width( bw = -2 );
 
 	sprintf( txt, "%2d Pixel", bw );
-	fl_set_choice_text( fd_bwform->bw_choice, txt );
+	fl_set_select_item( fd_bwform->bw_select,
+						fl_get_select_item_by_label( fd_bwform->bw_select,
+													 txt ) );
 
 	/* show the first form */
 
@@ -180,7 +182,7 @@ create_form_bwform( void )
 
 	fl_add_input( FL_NORMAL_INPUT, 195, 240, 160, 28, "Input" );
 
-	fdui->bw_choice = obj = fl_add_choice( FL_NORMAL_CHOICE2, 105, 20, 80, 28,
+	fdui->bw_select = obj = fl_add_select( FL_MENU_SELECT, 105, 20, 80, 28,
 										   "Border Width" );
     fl_set_object_callback( obj, bw_callback, 0 );
 

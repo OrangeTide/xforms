@@ -20,7 +20,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sel = "$Id: select.c,v 1.1 2009/01/02 17:58:25 jtt Exp $";
+char *fl_id_sel = "$Id: select.c,v 1.2 2009/01/03 02:55:29 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -443,7 +443,6 @@ fl_set_select_popup( FL_OBJECT * obj,
 			M_err( "fl_set_select_popup", "Invalid entries in popup" );
 			return -1;
 		}
-
 
 	/* Delete a popup already associated with the select object */
 
@@ -1039,6 +1038,89 @@ fl_set_select_policy( FL_OBJECT * obj,
 		fl_popup_set_policy( sp->popup, policy );
 
 	return old_policy;
+}
+
+/***************************************
+ ***************************************/
+
+unsigned int
+fl_get_select_item_state( FL_OBJECT      * obj,
+						  FL_POPUP_ENTRY * item )
+{
+	FL_POPUP_ENTRY *e;
+    FLI_SELECT_SPEC *sp;
+
+	if ( obj == NULL )
+	{
+		M_err( "fl_get_select_item_state", "NULL object" );
+		return UINT_MAX;
+	}
+
+	sp = obj->spec;
+
+	if ( sp->popup == NULL )
+	{
+		M_err( "fl_get_select_item_state", "Object has no popup yet" );
+		return UINT_MAX;
+	}
+
+	for ( e = sp->popup->entries; e != NULL; e = e->next )
+		if ( e == item )
+			break;
+
+	if ( e == NULL )
+	{
+		M_err( "fl_get_select_item_state", "Invalid item" );
+		return UINT_MAX;
+	}
+
+	return fl_popup_entry_get_state( item );
+}
+
+
+/***************************************
+ ***************************************/
+
+unsigned int
+fl_set_select_item_state( FL_OBJECT      * obj,
+						  FL_POPUP_ENTRY * item,
+						  unsigned int     state )
+{
+	FL_POPUP_ENTRY *e;
+    FLI_SELECT_SPEC *sp;
+	unsigned int old_state;
+
+	if ( obj == NULL )
+	{
+		M_err( "fl_set_select_item_state", "NULL object" );
+		return UINT_MAX;
+	}
+
+	sp = obj->spec;
+
+	if ( sp->popup == NULL )
+	{
+		M_err( "fl_set_select_item_state", "Object has no popup yet" );
+		return UINT_MAX;
+	}
+
+	for ( e = sp->popup->entries; e != NULL; e = e->next )
+		if ( e == item )
+			break;
+
+	if ( e == NULL )
+	{
+		M_err( "fl_set_select_item_state", "Invalid item" );
+		return UINT_MAX;
+	}
+
+	old_state = fl_popup_entry_set_state( item, state );
+
+	if (    state & FL_POPUP_DISABLED | FL_POPUP_HIDDEN
+		 && sp->sel->entry == item )
+		sp->sel = find_next_item( obj );
+
+	return old_state;
 }
 
 

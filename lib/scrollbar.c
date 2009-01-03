@@ -314,7 +314,7 @@ fl_create_scrollbar( int          type,
     {
 		fl_set_object_resize( obj, FL_RESIZE_X );
 
-		sp->up = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "6" );
+		sp->up   = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "6" );
 		sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "4" );
 		fl_set_object_callback( sp->up, up_cb, 0 );
 		fl_set_object_resize( sp->up, FL_RESIZE_NONE );
