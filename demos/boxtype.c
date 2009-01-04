@@ -56,22 +56,22 @@ static VN_struct gmode[ ] =
 
 static VN_struct btypes[ ]=
 {
-   { FL_NO_BOX,            "No box"            },
-   { FL_UP_BOX,            "Up box"            },
-   { FL_DOWN_BOX,          "Down box"          },
-   { FL_BORDER_BOX,        "Border box"        },
-   { FL_SHADOW_BOX,        "Shadow box"        },
-   { FL_FLAT_BOX,          "Flat box"          },
-   { FL_FRAME_BOX,         "Frame box"         },
-   { FL_EMBOSSED_BOX,      "Embossed box"      },
-   { FL_ROUNDED_BOX,       "Rounded box"       },
-   { FL_RFLAT_BOX,         "Rflat box"         },
-   { FL_RSHADOW_BOX,       "Rshadow box"       },
-   { FL_OVAL_BOX,          "Oval box"          },
-   { FL_ROUNDED3D_UPBOX,   "Rounded3d upbox"   },
-   { FL_ROUNDED3D_DOWNBOX, "Rounded3d downbox" },
-   { FL_OVAL3D_UPBOX,      "Oval3d upbox"      },
-   { FL_OVAL3D_DOWNBOX,    "Oval3d downbox"    },
+   { FL_NO_BOX,            "No box"             },
+   { FL_UP_BOX,            "Up box"             },
+   { FL_DOWN_BOX,          "Down box"           },
+   { FL_BORDER_BOX,        "Border box"         },
+   { FL_SHADOW_BOX,        "Shadow box"         },
+   { FL_FLAT_BOX,          "Flat box"           },
+   { FL_FRAME_BOX,         "Frame box"          },
+   { FL_EMBOSSED_BOX,      "Embossed box"       },
+   { FL_ROUNDED_BOX,       "Rounded box"        },
+   { FL_RFLAT_BOX,         "Rflat box"          },
+   { FL_RSHADOW_BOX,       "Rshadow box"        },
+   { FL_OVAL_BOX,          "Oval box"           },
+   { FL_ROUNDED3D_UPBOX,   "Rounded3d up box"   },
+   { FL_ROUNDED3D_DOWNBOX, "Rounded3d down box" },
+   { FL_OVAL3D_UPBOX,      "Oval3d up box"      },
+   { FL_OVAL3D_DOWNBOX,    "Oval3d down box"    },
    /* sentinel */
    { -1,                   NULL                }
 };
@@ -96,15 +96,15 @@ void
 boxtype_cb( FL_OBJECT * ob,
 			long        arg  FL_UNUSED_ARG )
 {
-	int i,
-		req_bt = fl_get_select_item( ob )->val;
+	size_t i;
+	int req_bt = fl_get_select_item( ob )->val;
 	static int lastbt = -1;
 
 	if ( lastbt != req_bt )
 	{
 		fl_freeze_form( form );
 		fl_redraw_form( form );
-		for ( i = 0; i < 18; i++ )
+		for ( i = 0; i < sizeof tobj / sizeof *tobj; i++ )
 			fl_set_object_boxtype( tobj[ i ], btypes[ req_bt ].val );
 		fl_unfreeze_form ( form );
 		lastbt = req_bt;
@@ -121,19 +121,12 @@ mode_cb( FL_OBJECT * ob,
 {
 	static int lval = -1;
 	int val = fl_get_select_item( ob )->val;
-	int db = 0;
 
 	if ( val == lval )
 		return;
 
 	fl_hide_form ( form );
-	if ( ! fl_mode_capable( gmode[ val ].val, 0 ) )
-	{
-		fl_set_choice( ob, lval );
-		val = lval;
-	}
-
-	fl_set_graphics_mode( gmode[ val ].val, db );
+	fl_set_graphics_mode( gmode[ val ].val, 0 );
 	fl_show_form( form, FL_PLACE_GEOMETRY, border, "Box types" );
 
 	lval = val;
@@ -223,7 +216,7 @@ create_form( void )
 
 char *browserlines[ ] = {
    " ", "@C1@c@l@bObjects Demo",    " ",
-   "This demo shows you all",       "objects that currently",
+   "This demo shows you most",       "objects that currently",
    "exist in the Forms Library.",   " ",
    "You can change the boxtype",    "of the different objects",
    "using the buttons at the",      "top of the form. Note that",
@@ -281,6 +274,7 @@ main( int    argc,
 	for ( i = 1; g < gs; g++, i++ )
 	{
         FL_POPUP_ENTRY *item = fl_add_select_items( modeob, g->name );
+
         if ( ! fl_mode_capable( g->val, 0 ))
 			fl_set_select_item_state( modeob, item, FL_POPUP_DISABLED );
 	}

@@ -43,16 +43,6 @@
  ***************************************/
 
 void
-menu_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-			   long        data  FL_UNUSED_ARG )
-{
-}
-
-
-/***************************************
- ***************************************/
-
-void
 hide_show_cb( FL_OBJECT * ob,
 			  long        data )
 {
@@ -170,18 +160,14 @@ void make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )
 	FD_valuatorform *fd_valuatorform;
 	FD_choiceform *fd_choiceform;
 	FD_inputform *fd_inputform;
-#if 0
-	float x[ 6 ] = { 0, 1, 2, 3, 4, 5};
-#endif
-	float y[ 6 ] = { 5.5, 4, 4.5, 3.8, 4, 5};
+	float x[ 6 ] = { 0, 1, 2, 3, 4, 5 };
+	float y[ 6 ] = { 5.5, 4, 4.5, 3.8, 4, 5 };
 	char *label[ ] = { "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
 	size_t i;
-#if 0
 	int xx,
 		yy,
 		ww,
 		hh;
-#endif
 
 	fd_buttonform = create_form_buttonform( );
 	fd_staticform = create_form_staticform( );
@@ -189,7 +175,7 @@ void make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )
 	fd_choiceform = create_form_choiceform( );
 	fd_inputform = create_form_inputform( );
 
-	/* fill-in form initialization code */
+	/* form initialization code */
 
 	for ( i = 0; i < sizeof y / sizeof *y; i++ )
 		fl_add_chart_value( fd_staticform->chart, y[ i ], label[ i ], i + 1 );
@@ -203,15 +189,11 @@ void make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )
 
 	fl_load_browser( fd_choiceform->browser, "01Readme" );
 
-#if 0
-	fl_get_folder_area(folder,&xx, &yy, &ww, &hh);
-	fprintf(stderr,"ww=%d hh=%d\n", ww, hh);
-	fl_addto_tabfolder(folder,"ButtonObj", fd_buttonform->buttonform);
-	fl_addto_tabfolder(folder,"StaticObj", fd_staticform->staticform);
-	fl_addto_tabfolder(folder,"ValuatorObj", fd_valuatorform->valuatorform);
-	fl_addto_tabfolder(folder,"ChoiceObj", fd_choiceform->choiceform);
-	fl_addto_tabfolder(folder,"InputObj", fd_inputform->inputform);
-	fl_get_folder_area(folder,&xx, &yy, &ww, &hh);
-	fprintf(stderr,"ww=%d hh=%d\n", ww, hh);
-#endif
+	fl_get_folder_area( folder, &xx, &yy, &ww, &hh );
+	fl_addto_tabfolder( folder, "ButtonObj", fd_buttonform->buttonform );
+	fl_addto_tabfolder( folder, "StaticObj", fd_staticform->staticform );
+	fl_addto_tabfolder( folder, "ValuatorObj", fd_valuatorform->valuatorform );
+	fl_addto_tabfolder( folder, "ChoiceObj", fd_choiceform->choiceform );
+	fl_addto_tabfolder( folder, "InputObj", fd_inputform->inputform );
+	fl_get_folder_area( folder, &xx, &yy, &ww, &hh );
 }

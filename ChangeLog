@@ -1,3 +1,13 @@
+2009-01-03 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/select.c: Corrections and additions of new functions
+	for select objects.
+
+	* demos: Changes to a number of demo programs to use select
+	instead of choice objects.
+
+	* doc: Updates of some of the files of the documentation.
+
 2009-01-02 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/select.c, lib/include/select.h, lib/private/pselect.h:

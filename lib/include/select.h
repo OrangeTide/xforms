@@ -114,6 +114,11 @@ FL_EXPORT int fl_delete_select_item(
 		FL_POPUP_ENTRY *
 		);
 
+FL_EXPORT long fl_set_select_items(
+		FL_OBJECT *,
+		FL_POPUP_ITEM *
+		);
+
 FL_EXPORT int fl_set_select_popup(
 		FL_OBJECT *,
 		FL_POPUP  *

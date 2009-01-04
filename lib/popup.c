@@ -4276,3 +4276,14 @@ fli_set_popup_return( FL_POPUP_ENTRY * entry )
 
 	return &entry->popup->top_parent->ret;
 }
+
+
+/***************************************
+ * Reset the popups counter to 0
+ ***************************************/
+
+void
+fli_popup_reset_counter( FL_POPUP *popup )
+{
+	popup->counter = 0;
+}

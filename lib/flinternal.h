@@ -970,6 +970,8 @@ extern int fli_check_popup_entry_exists( FL_POPUP_ENTRY * );
 
 extern FL_POPUP_RETURN *fli_set_popup_return( FL_POPUP_ENTRY * );
 
+extern void fli_popup_reset_counter( FL_POPUP * );
+
 #if XlibSpecificationRelease == 6
 
 #  define IsTab( ksym )  ( ksym == XK_ISO_Left_Tab || ksym== XK_Tab )

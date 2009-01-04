@@ -51,6 +51,9 @@ create_form( void )
               *childobj,
               *licenceobj,
               *marriedobj;
+	FL_POPUP_ITEM items[ ] = { { "Male%SM",   cb,   "M",  0, 0 },
+							   { "Female%SF", cb,   "F",  0, 0 },
+							   { NULL,        NULL, NULL, 0, 0 } };
 
     form = fl_bgn_form( FL_NO_BOX, 420, 360 );
 
@@ -65,9 +68,8 @@ create_form( void )
     fl_add_input( FL_NORMAL_INPUT, 70, 180, 320, 30, "Country" );
 
     sexobj = fl_add_select( FL_NORMAL_SELECT, 70, 130, 110, 30, "Sex");
-    fl_add_select_items( sexobj, "Male%f|Female%f", cb, cb );
+    fl_set_select_items( sexobj, items );
     fl_set_object_shortcut( sexobj, "S", 1 );
-    fl_set_select_policy( sexobj, FL_POPUP_DRAG_SELECT );
 
     childobj = fl_add_select( FL_MENU_SELECT, 280, 130, 110, 30,
                               "Children" );
@@ -77,12 +79,11 @@ create_form( void )
 
     licenceobj = fl_add_select( FL_NORMAL_SELECT, 280, 80, 110, 30, "Licence" );
     fl_add_select_items( licenceobj, "Yes|No" );
+    fl_set_select_policy( licenceobj, FL_POPUP_DRAG_SELECT );
 
     marriedobj = fl_add_select( FL_DROPLIST_SELECT, 70, 80, 110, 27,
                                 "Married" );
     fl_add_select_items( marriedobj, "Yes|No" );
-//  fl_set_object_callback( marriedobj, cb, 0 );
-//  fl_set_object_boxtype( marriedobj, FL_UP_BOX );
 
     readyobj = fl_add_button( FL_NORMAL_BUTTON, 150, 20, 140, 30, "Quit" );
 

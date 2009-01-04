@@ -77,17 +77,12 @@ void
 bw_callback( FL_OBJECT * ob,
 			 long        data  FL_UNUSED_ARG )
 {
-	/* fill-in code for callback */
-
 	static int bws[ ] = { -5, -4, -3, -2, -1, 1, 2, 3, 4, 5 };
 	int bw = bws[ fl_get_select_item( ob )->val ];
 
 	fl_set_object_bw( fd_bwform->bwgroup, bw );
-
-	/* since bwgroup includes the backface, it wipes out the done button*/
-
-	fl_redraw_object( fd_bwform->done );
-	fl_redraw_object( fd_bwform->bw_select );
+	fl_set_object_bw( fd_bwform->done, bw );
+	fl_set_select_popup_bw( fd_bwform->bw_select, bw );
 }
 
 
@@ -103,12 +98,12 @@ main( int    argc,
 
 	/* application default. Can be overriden by the command line options */
 
-	fl_set_border_width( -2 );
+	fl_set_border_width( 1 );
 
 	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 	fd_bwform = create_form_bwform( );
 
-	/* fill-in form initialization code */
+	/* form initialization code */
 
 	fl_set_pixmapbutton_file( fd_bwform->pmobj, "crab.xpm" );
 
@@ -125,7 +120,7 @@ main( int    argc,
 						fl_get_select_item_by_label( fd_bwform->bw_select,
 													 txt ) );
 
-	/* show the first form */
+	/* show the form */
 
 	fl_show_form( fd_bwform->bwform, FL_PLACE_CENTER, FL_TRANSIENT, "bwform" );
 
@@ -182,7 +177,7 @@ create_form_bwform( void )
 
 	fl_add_input( FL_NORMAL_INPUT, 195, 240, 160, 28, "Input" );
 
-	fdui->bw_select = obj = fl_add_select( FL_MENU_SELECT, 105, 20, 80, 28,
+	fdui->bw_select = obj = fl_add_select( FL_MENU_SELECT, 105, 20, 100, 28,
 										   "Border Width" );
     fl_set_object_callback( obj, bw_callback, 0 );
 

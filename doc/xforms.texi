@@ -2,7 +2,7 @@
 
 @setfilename xforms.info
 @settitle XForms
-@set lastupdate January 2, 2009
+@set lastupdate January 3, 2009
 @paragraphindent 0
 
 @titlepage

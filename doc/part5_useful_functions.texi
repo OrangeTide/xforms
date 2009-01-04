@@ -58,6 +58,21 @@ Upon function return @code{sec} and @code{usec} are set to the current
 time, expressed in seconds and microseconds since 00:00 GMT January,
 1970. This function is most useful for computing time differences.
 
+Th function
+@findex fl_mode_capable()
+@anchor{fl_mode_capable()}
+@example
+int fl_mode_capable(int mode, int warn);
+@end example
+@noindent
+allows to determine the visual classes the system is capable of.
+@code{mode} must be one of @code{GrayScale}, @code{StaticGray},
+@code{PseudoColor}, @code{StaticColor}, @code{DirectColor} and
+@code{TrueColor} and the function returns 1 if the system is capable
+of displaying in this visual class and 0 otherwise. If @code{warn} is
+set a warning is printed out in case the capability asked for isn't
+available.
+
 
 @node Windowing Support
 @section Windowing Support
@@ -77,16 +92,16 @@ Window fl_wincreate(const char *name);
 Window fl_winshow(Window win);
 @end example
 @noindent
-where parameter @code{win} in @code{@ref{fl_winshow()}} is the window
-ID returned by @code{@ref{fl_wincreate()}}. The title of the window is
-set by the @code{name} argument.
+where the parameter @code{win} of @code{@ref{fl_winshow()}} is the
+window ID returned by @code{@ref{fl_wincreate()}}. The title of the
+window is set by the @code{name} argument.
 
-Between the creation and showing of the window, other attributes of
-the window can be set. Note that a window opened this way is always a
-top level window and uses all the Forms Library'f defaults (visual,
-depth etc.). Another thing about @code{@ref{fl_winshow()}} is that it
-will wait for and gobble up the first @code{Expose} event, and you can
-drawing into the window immediately after the function returns.
+Between the creation and showing of the window other attributes of the
+window can be set. Note that a window opened this way is always a top
+level window and uses all the Forms Library's defaults (visual, depth
+etc.). Another thing about @code{@ref{fl_winshow()}} is that it will
+wait for and gobble up the first @code{Expose} event and you can draw
+into the window immediately after the function returns.
 
 It is sometimes more convenient to create and show a window in a
 single call using
@@ -154,7 +169,7 @@ that it can't be interactively resized (provided the window manager
 cooperates).
 
 It is sometimes desirable to have a window that is resizeable but only
-within a useful range. To set such a constraint, use the following
+within a useful range. To set such a constraint use the following
 functions:
 @findex fl_winminsize()
 @anchor{fl_winminsize()}
@@ -177,8 +192,8 @@ fl_winmaxsize(None, 1024,768)
 win = fl_winopen("MyWin");
 @end example
 
-In addition to window size preference, you can also set preferred
-position of a window to be opened:
+In addition to the window size preference you can also set the
+preferred position of a window to be opened:
 @findex fl_winposition()
 @anchor{fl_winposition()}
 @example
@@ -201,8 +216,8 @@ void fl_wingeometry(FL_Coord x, FL_Coord y,
                     FL_Coord w, FL_Coord h);
 @end example
 @noindent
-Again, the @code{@ref{fl_wingeometry()}} will deny later interactive
-resizing.
+Again, windows for which @code{@ref{fl_wingeometry()}} had been
+created will not allow interactive resizing later on.
 
 There are further routines that can be used to change other aspects of
 the window to be created:

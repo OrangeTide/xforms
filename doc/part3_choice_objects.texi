@@ -153,7 +153,45 @@ the @code{@ref{fl_popup_add_entries()}} function you will find that
 aome are missing. This is because a select object is a simple linear
 list of items that uses only parts of the popups functionalities.
 
-Another way to "populate" a select object is to create a popup
+Another way to set up the popup of a select object is to use the
+function
+@findex fl_set_select_items()
+@anchor{fl_set_select_items()}
+@example
+long fl_set_select_items(FL_OBJECT *obj, FL_POPUP_ITEM *item);
+@end example
+@noindent
+Here @code{item} is an array of structures of type
+@code{FL_POPUP_ITEM}
+@example
+typedef struct @{
+    const char  *text;        /* text of entry */
+    FL_POPUP_CB  callback;    /* (selection) callback */
+    const char  *shortcut;    /* keyboard shortcut description */
+    int          type;        /* not used here */
+    int          state;       /* disabled or hidden */
+@} FL_POPUP_ITEM;
+@end example
+@noindent
+with the @code{text} member of the last element of the array being
+set to @code{NULL}, indicating the end of the array.
+
+The @code{text} member is the text of the item. It may only contain
+one "special sequence", @code{%S} to indicate that the string is to be
+split at that position into the part of the item label to be drawn to
+the left and on the right side (also prepending the string with
+@code{_} or @code{/} has no effect). @code{callback} is a callback
+function to be invoked on selection of the item. @code{shortcut} is a
+string for setting keybord shortcuts for the item. @code{type} has no
+function at all here (there can be only items of type
+@code{FL_POPUP_NORMAL} in a select objects popup) and @code{state} can
+be set to @code{FL_POPUP_DISABLED} and/or @code{Fl_POPUP_HIDDEN}.
+
+Please note: when the select object already had items before the call
+of @code{@ref{fl_set_select_items()}} then they are removed before the
+new ones are set. The values assigned to the items start at 0.
+
+A third way to "populate" a select object is to create a popup
 directly and then associate it with the selecy object using
 @findex fl_set_select_popup()
 @anchor{fl_set_select_popup()}
@@ -161,8 +199,10 @@ directly and then associate it with the selecy object using
 int fl_set_select_popup(FL_OBJECT *obj, FL_POPUP  *popup);
 @end example
 @noindent
-Please note that the popup the argument @code{popup} points to may
-not contain any entries than those of type @code{FL_POPUP_NORMAL}
+If the select object lready had a popup before this will be deleted
+and replaced by the new popup passed as the second argument. Please
+note that the popup the argument @code{popup} points to may not
+contain any entries other than those of type @code{FL_POPUP_NORMAL}
 (and, of course, the popup can't be a sub-popup of another popup).
 
 
@@ -326,8 +366,8 @@ To re-enable a disabled or hidden ite, call
 @code{@ref{fl_set_select_item_mode()}} with 0 as the @code{state}
 argument.
 
-Obviosuly, @code{@ref{fl_get_select_item_mode()}} returns the state
-of the item under consideration.
+Rather obviously, @code{@ref{fl_get_select_item_mode()}} then returns
+the state of the item under consideration.
 
 Or you could use the result to delete an item:
 @findex fl_delete_select_item()
@@ -524,6 +564,8 @@ width, on errors @code{INT_MIN}.
 @node Select Remarks
 @subsection Remarks
 
+See the demo program @file{select.c} for an example of the use of
+select objects.
 
 
 @node Menu Object
@@ -557,7 +599,7 @@ To add a menu to a form use the routine
 @anchor{fl_add_menu()}
 @example
 FL_OBJECT *fl_add_menu(int type, FL_Coord x, FL_Coord y,
-                       FL_Coord w, FL_Coord h, const char *label)
+                       FL_Coord w, FL_Coord h, const char *label);
 @end example
 @noindent
 It shows a box on the screen with the label centered in it.

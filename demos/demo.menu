@@ -52,7 +52,8 @@
 	@objects:Other\nObjects:@other
 		@other:Menus\nAnd\nChoices:@menu
 		  @menu:Menu:menu
-		  @menu:Choice:choice
+		  @menu:Select:select
+		  @menu:Choice\n(deprecated):choice
 		@other:Canvas:@canvas
 		    @canvas:Normal\nCanvas:canvas
 		    @canvas:XMesa\nCanvas:mesa

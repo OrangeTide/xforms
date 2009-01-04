@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Copyright (c) 2008 Jens Thoms Toerring <jt@toerring.de>
+ * Copyright (c) 2009 Jens Thoms Toerring <jt@toerring.de>
  */
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sel = "$Id: select.c,v 1.2 2009/01/03 02:55:29 jtt Exp $";
+char *fl_id_sel = "$Id: select.c,v 1.3 2009/01/04 00:45:22 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -399,6 +399,115 @@ fl_delete_select_item( FL_OBJECT      * obj,
 	
 
 /***************************************
+ * (Re)polulate a select objects popup via an array of FL_POPUP_ITEM structures
+ ***************************************/
+
+long
+fl_set_select_items( FL_OBJECT     * obj,
+					 FL_POPUP_ITEM * items )
+{
+	FLI_SELECT_SPEC *sp;
+	FL_POPUP_ENTRY *e;
+	long count;
+
+	if ( obj == NULL )
+	{
+		M_err( "fl_set_select_items", "NULL object" );
+		return -1;
+	}
+
+	sp = obj->spec;
+
+	/* If no popup is yet associated with the object create one */
+
+	if ( sp->popup == NULL )
+	{
+		if ( ( sp->popup = fli_popup_add( FL_ObjWin( obj ), sp->title,
+										  "fl_set_select_items" ) ) == NULL )
+			return 01;
+
+		fl_popup_set_bw( sp->popup, sp->p_bw );
+		fl_popup_set_title_font( sp->popup, sp->p_title_font_style,
+								 sp->p_title_font_size );
+		fl_popup_entry_set_font( sp->popup, sp->p_entry_font_style,
+								 sp->p_entry_font_size );
+		
+		fl_popup_set_color( sp->popup, FL_POPUP_BACKGROUND_COLOR,
+							sp->p_bg_color );
+		fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_COLOR,
+							sp->p_on_color );
+		fl_popup_set_color( sp->popup, FL_POPUP_TITLE_COLOR,
+							sp->p_title_color );
+		fl_popup_set_color( sp->popup, FL_POPUP_TEXT_COLOR,
+							sp->p_text_color );
+		fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_TEXT_COLOR,
+							sp->p_text_on_color );
+		fl_popup_set_color( sp->popup, FL_POPUP_DISABLED_TEXT_COLOR,
+							sp->p_text_off_color );
+		fl_popup_set_policy( sp->popup, sp->p_policy );
+		if ( sp->p_min_width > 0 )
+			fl_popup_set_min_width( sp->popup, sp->p_min_width );
+
+		if ( sp->title && *sp->title )
+			fl_popup_set_title( sp->popup, sp->title );
+	}
+	
+	/* Remove all existing entries and reset the popups internal counter */
+
+	while ( sp->popup->entries != NULL )
+		fl_popup_entry_delete( sp->popup->entries );
+
+	fli_popup_reset_counter( sp->popup );
+
+	/* Now add the new ones */
+
+	for ( count = 0; items && items->text != NULL; count++, items++ )
+	{
+		size_t i = 9;
+		char *txt;
+		char *t = ( char * ) items->text;
+
+		/* Figure out how many chars we need fot the text */
+
+		while ( ( t = strchr( t, '%' ) ) != NULL )
+			if ( *++t != 'S' )
+				i++;
+
+		t = txt = fl_malloc( i );
+
+		strcpy( txt, items->text );
+		
+		while ( ( t = strchr( t, '%' ) ) != NULL )
+		{
+			if ( *++t == 'S' )
+				continue;
+			memmove( t + 1, t, strlen( t ) + 1 );
+			*t++ = '%';
+		}
+
+		if ( items->state & FL_POPUP_DISABLED )
+			strcat( txt, "%d" );
+		if ( items->state & FL_POPUP_HIDDEN )
+			strcat( txt, "%h" );
+		strcat( txt, "%f%s" );
+
+		e = fl_popup_add_entries( sp->popup, txt, items->callback,
+								  items->shortcut );
+
+		fl_free( txt );
+
+		fl_safe_free( e->text );
+		e->text = fl_strdup( items->text );
+	}
+
+	if ( count > 0 )
+		sp->sel = find_first_item( obj );
+
+	return count;
+}
+
+
+/***************************************
  * Set a (new) popup for a select object
  ***************************************/
 
@@ -716,6 +825,7 @@ fl_get_select_color( FL_OBJECT * obj,
 
 
 /***************************************
+ * Set one of the different colors of the object
  ***************************************/
 
 FL_COLOR
@@ -821,6 +931,7 @@ fl_set_select_color( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns style and size of one of the fonts used for the object
  ***************************************/
 
 int
@@ -879,6 +990,7 @@ fl_get_select_font( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets style and size of one of the fonts used for the object
  ***************************************/
 
 int
@@ -934,6 +1046,8 @@ fl_set_select_font( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the alignment of the text within the box of the object
+ * (that's not the label alignment!)
  ***************************************/
 
 int
@@ -973,6 +1087,7 @@ fl_set_select_text_align( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the border width to be used for the popup of the popup
  ***************************************/
 
 int
@@ -1009,6 +1124,7 @@ fl_set_select_popup_bw( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets how the popup of the object behaves
  ***************************************/
 
 int
@@ -1041,6 +1157,7 @@ fl_set_select_policy( FL_OBJECT * obj,
 }
 
 /***************************************
+ * Returns the state of one of the items of the object
  ***************************************/
 
 unsigned int
@@ -1079,6 +1196,7 @@ fl_get_select_item_state( FL_OBJECT      * obj,
 
 
 /***************************************
+ * Sets the state of one of the items of the object
  ***************************************/
 
 unsigned int
@@ -1114,9 +1232,18 @@ fl_set_select_item_state( FL_OBJECT      * obj,
 		return UINT_MAX;
 	}
 
+	/* Mask out bits that can't be set for a select item */
+
+	state &= FL_POPUP_DISABLED | FL_POPUP_HIDDEN;
+
+	/* Set the new state */
+
 	old_state = fl_popup_entry_set_state( item, state );
 
-	if (    state & FL_POPUP_DISABLED | FL_POPUP_HIDDEN
+	/* If the object we changed was the selected one before and, due to the
+	   new state, it isn't selectable anymore, set a new selected item */
+
+	if (    state & ( FL_POPUP_DISABLED | FL_POPUP_HIDDEN )
 		 && sp->sel->entry == item )
 		sp->sel = find_next_item( obj );
 
@@ -1385,6 +1512,8 @@ draw_select( FL_OBJECT * obj )
 
     color = ( obj->belowmouse && sp->popup ) ? obj->col2 : obj->col1;
 
+	/* Draw the box of the object, possibly lowered if the object is pushed */
+
     if ( FL_IS_UPBOX( obj->boxtype ) && obj->pushed )
 		fl_drw_box( FL_TO_DOWNBOX( obj->boxtype ), obj->x, obj->y, obj->w,
 					obj->h, color, obj->bw );
@@ -1450,6 +1579,10 @@ draw_droplist( FL_OBJECT * obj )
     FLI_SELECT_SPEC *sp = obj->spec;
     int bw = FL_abs( obj->bw ) + ( obj->bw > 0 );
 
+	/* Calculate the size of the box with the arrow - if the object is
+	   higher than wide place it below the text of the currently selected
+	   item */
+
 	if ( obj->w >= obj->h )
 	{
 		button_x = obj->x + obj->w - obj->h;
@@ -1469,8 +1602,13 @@ draw_droplist( FL_OBJECT * obj )
 
     color = ( obj->belowmouse && sp->popup ) ? obj->col2 : obj->col1;
 
+	/* Draw the box for the text of the selected item */
+
 	fl_drw_box( obj->boxtype, box_x, box_y, box_w, box_h, obj->col1,
 				obj->bw );
+
+	/* Draw the box for the arrow button, possibly lowered if the object is
+	   pushed */
 
     if ( FL_IS_UPBOX( obj->boxtype ) && obj->pushed )
 		fl_drw_box( FL_TO_DOWNBOX( obj->boxtype ), button_x, button_y,
@@ -1479,9 +1617,13 @@ draw_droplist( FL_OBJECT * obj )
 		fl_drw_box( obj->boxtype, button_x, button_y, button_w, button_h,
 					color, obj->bw );
 
+	/* Draw the arrow */
+
     fl_drw_text( FL_ALIGN_CENTER, button_x + bw, button_y + bw,
 				 button_w - 2 * bw, button_h - 2 * bw, sp->lcolor, 0, 0,
 				 "@#2->" );
+
+	/* Draw the text of the currently selected item */
 
     if ( sp->sel && sp->sel->label && *sp->sel->label )
     {
