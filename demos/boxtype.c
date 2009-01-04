@@ -56,22 +56,22 @@ static VN_struct gmode[ ] =
 
 static VN_struct btypes[ ]=
 {
-   { FL_NO_BOX,            "No box"             },
-   { FL_UP_BOX,            "Up box"             },
-   { FL_DOWN_BOX,          "Down box"           },
-   { FL_BORDER_BOX,        "Border box"         },
-   { FL_SHADOW_BOX,        "Shadow box"         },
-   { FL_FLAT_BOX,          "Flat box"           },
-   { FL_FRAME_BOX,         "Frame box"          },
-   { FL_EMBOSSED_BOX,      "Embossed box"       },
-   { FL_ROUNDED_BOX,       "Rounded box"        },
-   { FL_RFLAT_BOX,         "Rflat box"          },
-   { FL_RSHADOW_BOX,       "Rshadow box"        },
-   { FL_OVAL_BOX,          "Oval box"           },
-   { FL_ROUNDED3D_UPBOX,   "Rounded3d up box"   },
-   { FL_ROUNDED3D_DOWNBOX, "Rounded3d down box" },
-   { FL_OVAL3D_UPBOX,      "Oval3d up box"      },
-   { FL_OVAL3D_DOWNBOX,    "Oval3d down box"    },
+   { FL_NO_BOX,            "No box"              },
+   { FL_UP_BOX,            "Up box"              },
+   { FL_DOWN_BOX,          "Down box"            },
+   { FL_BORDER_BOX,        "Border box"          },
+   { FL_SHADOW_BOX,        "Shadow box"          },
+   { FL_FLAT_BOX,          "Flat box"            },
+   { FL_FRAME_BOX,         "Frame box"           },
+   { FL_EMBOSSED_BOX,      "Embossed box"        },
+   { FL_ROUNDED_BOX,       "Rounded box"         },
+   { FL_RFLAT_BOX,         "Rflat box"           },
+   { FL_RSHADOW_BOX,       "Rshadow box"         },
+   { FL_OVAL_BOX,          "Oval box"            },
+   { FL_ROUNDED3D_UPBOX,   "Rounded 3D up box"   },
+   { FL_ROUNDED3D_DOWNBOX, "Rounded 3D down box" },
+   { FL_OVAL3D_UPBOX,      "Oval 3D up box"      },
+   { FL_OVAL3D_DOWNBOX,    "Oval 3D down box"    },
    /* sentinel */
    { -1,                   NULL                }
 };
@@ -203,10 +203,12 @@ create_form( void )
 
 	btypeob = fl_add_select( FL_NORMAL_SELECT, 110, 30, 130, 30, "Boxtype" );
 	fl_set_object_callback( btypeob, boxtype_cb, 0 );
+	fl_set_select_popup_title( btypeob, "Boxtype" );
 
 	modeob = fl_add_select( FL_NORMAL_SELECT, 370, 30, 130, 30,
 							"Graphics mode" );
 	fl_set_object_callback( modeob, mode_cb, 0 );
+	fl_set_select_popup_title( modeob, "Graphics mode" );
 
 	fl_end_form ( );
 }
@@ -279,11 +281,11 @@ main( int    argc,
 			fl_set_select_item_state( modeob, item, FL_POPUP_DISABLED );
 	}
 
+	fl_set_select_popup_title( btypeob, "Boxtype" );
 	fl_set_select_item( modeob, fl_get_select_item_by_value( modeob,
 															 fl_vmode ) );
 
 	fl_set_select_item( btypeob, fl_get_select_item_by_value( btypeob, 1 ) );
-	fl_set_select_popup_title( btypeob, "Boxtype" );
 	boxtype_cb( btypeob, 0 );
 
 	fl_show_form ( form, FL_PLACE_MOUSE, border, "Box types" );
