@@ -881,7 +881,6 @@ a popup, @pxref{Popup Attributes}.
 See the demo program @file{menu.c}.
 
 
-
 @node Browser Object
 @section Browser Object
 

@@ -30,7 +30,7 @@
  */
 
 #if defined F_ID  || defined DEBUG
-char *fl_id_bmp = "$Id: bitmap.c,v 1.11 2008/12/27 22:20:47 jtt Exp $";
+char *fl_id_bmp = "$Id: bitmap.c,v 1.12 2009/01/11 16:48:12 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -133,15 +133,16 @@ drawit( Window	 win,
  ***************************************/
 
 static void
-draw_bitmap( FL_OBJECT * ob )
+draw_bitmap( FL_OBJECT * obj )
 {
-	SPEC *sp = ob->spec;
+	SPEC *sp = obj->spec;
 	FL_Coord xx,			/* position of bitmap */
 			 yy;
 
 	/* Draw the box */
 
-	fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+	fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+				obj->col1, obj->bw );
 
 	/* do nothing is not empty data */
 
@@ -150,11 +151,11 @@ draw_bitmap( FL_OBJECT * ob )
 
 	/* Calculate position so the bitmap is centered */
 
-	xx = ob->x + ( ob->w - sp->bits_w ) / 2;
-	yy = ob->y + ( ob->h - sp->bits_h ) / 2;
+	xx = obj->x + ( obj->w - sp->bits_w ) / 2;
+	yy = obj->y + ( obj->h - sp->bits_h ) / 2;
 
-	drawit( FL_ObjWin( ob ), xx, yy, sp->bits_w, sp->bits_h, 0, 0,
-			ob->lcol, ob->col1, sp->pixmap );
+	drawit( FL_ObjWin( obj ), xx, yy, sp->bits_w, sp->bits_h, 0, 0,
+			obj->lcol, obj->col1, sp->pixmap );
 }
 
 
@@ -164,7 +165,7 @@ draw_bitmap( FL_OBJECT * ob )
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * ob,
+handle_it( FL_OBJECT * obj,
 		   int		   event,
 		   FL_Coord	   mx	FL_UNUSED_ARG,
 		   FL_Coord	   my	FL_UNUSED_ARG,
@@ -174,16 +175,16 @@ handle_it( FL_OBJECT * ob,
 	switch ( event )
 	{
 		case FL_DRAW:
-			draw_bitmap( ob );
+			draw_bitmap( obj );
 			/* fall through */
 
 		case FL_DRAWLABEL:
-			fl_draw_object_label( ob );
+			fl_draw_object_label( obj );
 			break;
 
 		case FL_FREEMEM:
-			free_bitmap( ob->spec );
-			fl_free( ob->spec );
+			free_bitmap( obj->spec );
+			fl_free( obj->spec );
 			break;
 	}
 
@@ -203,23 +204,23 @@ fl_create_bitmap( int		   type,
 				  FL_Coord	   h,
 				  const char * label )
 {
-	FL_OBJECT *ob;
+	FL_OBJECT *obj;
 	SPEC *sp;
 
-	ob = fl_make_object( FL_BITMAP, type, x, y, w, h, label, handle_it );
-	ob->boxtype = FL_BITMAP_BOXTYPE;
-	ob->col1 = FL_BITMAP_COL1;
-	ob->col2 = FL_BITMAP_COL2;
-	ob->lcol = FL_BITMAP_LCOL;
-	ob->align = FL_BITMAP_ALIGN;
-	ob->active = type != FL_NORMAL_BITMAP;
+	obj = fl_make_object( FL_BITMAP, type, x, y, w, h, label, handle_it );
+	obj->boxtype = FL_BITMAP_BOXTYPE;
+	obj->col1    = FL_BITMAP_COL1;
+	obj->col2    = FL_BITMAP_COL2;
+	obj->lcol    = FL_BITMAP_LCOL;
+	obj->align   = FL_BITMAP_ALIGN;
+	obj->active  = type != FL_NORMAL_BITMAP;
 
-	sp = ob->spec = fl_calloc( 1, sizeof *sp );
+	sp = obj->spec = fl_calloc( 1, sizeof *sp );
 	sp->pixmap = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
 	sp->cspecv = NULL;
 	sp->filename = sp->focus_filename = NULL;
 
-	return ob;
+	return obj;
 }
 
 
@@ -235,11 +236,10 @@ fl_add_bitmap( int			type,
 			   FL_Coord		h,
 			   const char * label )
 {
-	FL_OBJECT *ob;
+	FL_OBJECT *obj = fl_create_bitmap( type, x, y, w, h, label );
 
-	ob = fl_create_bitmap( type, x, y, w, h, label );
-	fl_add_object( fl_current_form, ob );
-	return ob;
+	fl_add_object( fl_current_form, obj );
+	return obj;
 }
 
 
@@ -248,7 +248,7 @@ fl_add_bitmap( int			type,
  ***************************************/
 
 void
-fl_set_bitmap_data( FL_OBJECT *		ob,
+fl_set_bitmap_data( FL_OBJECT *		obj,
 					int				w,
 					int				h,
 					unsigned char * data )
@@ -256,7 +256,7 @@ fl_set_bitmap_data( FL_OBJECT *		ob,
 	SPEC *sp;
 	Pixmap p;
 
-	if ( ob == NULL || ob->objclass != FL_BITMAP )
+	if ( obj == NULL || obj->objclass != FL_BITMAP )
 		return;
 
 	/* only occurs with fdesign -convert */
@@ -264,10 +264,10 @@ fl_set_bitmap_data( FL_OBJECT *		ob,
 	if ( ! flx->display )
 		return;
 
-	sp = ob->spec;
+	sp = obj->spec;
 
 	p = XCreateBitmapFromData( flx->display,
-							   FL_ObjWin( ob ) ? FL_ObjWin( ob ) : fl_root,
+							   FL_ObjWin( obj ) ? FL_ObjWin( obj ) : fl_root,
 							   ( char * ) data, w, h );
 
 	if ( p == None )
@@ -280,7 +280,7 @@ fl_set_bitmap_data( FL_OBJECT *		ob,
 	sp->bits_h = h;
 	sp->pixmap = p;
 
-	fl_redraw_object( ob );
+	fl_redraw_object( obj );
 }
 
 
@@ -312,25 +312,25 @@ fl_read_bitmapfile( Window		   win,
  ***************************************/
 
 void
-fl_set_bitmap_file( FL_OBJECT *	 ob,
+fl_set_bitmap_file( FL_OBJECT *	 obj,
 					const char * fname )
 {
 	int xhot,
 		yhot;
 	Pixmap p;
-	SPEC *sp = ob->spec;
+	SPEC *sp = obj->spec;
 
 	if ( ! flx->display )
 		return;
 
-	if ( ob == NULL || ob->objclass != FL_BITMAP )
+	if ( obj == NULL || obj->objclass != FL_BITMAP )
 	{
 		M_err( "set_bitmap_file", "object %s not bitmap class",
-			   ob ? ob->label : "null" );
+			   ( obj && obj->label ) ? obj->label : "null" );
 		return;
 	}
 
-	p = fl_read_bitmapfile( FL_ObjWin( ob ) ? FL_ObjWin( ob ) : fl_root,
+	p = fl_read_bitmapfile( FL_ObjWin( obj ) ? FL_ObjWin( obj ) : fl_root,
 							fname, &sp->bits_w, &sp->bits_h, &xhot, &yhot );
 	if ( p != None )
 	{
@@ -338,7 +338,7 @@ fl_set_bitmap_file( FL_OBJECT *	 ob,
 		sp->pixmap = p;
 	}
 
-	fl_redraw_object( ob );
+	fl_redraw_object( obj );
 }
 
 /***** End of static BITMAP ************************/
@@ -352,11 +352,11 @@ fl_set_bitmap_file( FL_OBJECT *	 ob,
  ***************************************/
 
 static void
-draw_bitmapbutton( FL_OBJECT * ob )
+draw_bitmapbutton( FL_OBJECT * obj )
 {
-	SPEC *sp = ob->spec;
+	SPEC *sp = obj->spec;
 
-	fli_draw_button( ob );
+	fli_draw_button( obj );
 
 	if ( sp->pixmap != None && sp->bits_w > 0 && sp->bits_h > 0 )
 	{
@@ -371,44 +371,44 @@ draw_bitmapbutton( FL_OBJECT * ob )
 		/* Make sure the bitmap gets clipped to the maximum size fitting
 		   into the button */
 
-		if ( ob->w - 2 * FL_abs( ob->bw ) > ( int ) sp->bits_w )
+		if ( obj->w - 2 * FL_abs( obj->bw ) > ( int ) sp->bits_w )
 		{
-			dest_x = ob->x + ( ob->w - sp->bits_w ) / 2;
+			dest_x = obj->x + ( obj->w - sp->bits_w ) / 2;
 			dest_w = sp->bits_w;
 			src_x  = 0;
 		}
 		else
 		{
-			dest_x = ob->x + FL_abs( ob->bw );
-			dest_w = ob->w - 2 * FL_abs( ob->bw );
+			dest_x = obj->x + FL_abs( obj->bw );
+			dest_w = obj->w - 2 * FL_abs( obj->bw );
 			src_x  = ( sp->bits_w - dest_w ) / 2;
 		}
 
-		if ( ob->h - 2 * FL_abs( ob->bw ) > ( int ) sp->bits_h )
+		if ( obj->h - 2 * FL_abs( obj->bw ) > ( int ) sp->bits_h )
 		{
-			dest_y = ob->y + ( ob->h - sp->bits_h ) / 2;
+			dest_y = obj->y + ( obj->h - sp->bits_h ) / 2;
 			dest_h = sp->bits_h;
 			src_y  = 0;
 		}
 		else
 		{
-			dest_y = ob->y + FL_abs( ob->bw );
-			dest_h = ob->h - 2 * FL_abs( ob->bw );
+			dest_y = obj->y + FL_abs( obj->bw );
+			dest_h = obj->h - 2 * FL_abs( obj->bw );
 			src_y  = ( sp->bits_h - dest_h ) / 2;
 		}
 
-		col = sp->val ? ob->col2 : ob->col1;
+		col = sp->val ? obj->col2 : obj->col1;
 
-		if ( ob->belowmouse && col == FL_BUTTON_COL1 )
+		if ( obj->belowmouse && col == FL_BUTTON_COL1 )
 			col = FL_BUTTON_MCOL1;
-		if ( ob->belowmouse && col == FL_BUTTON_COL2 )
+		if ( obj->belowmouse && col == FL_BUTTON_COL2 )
 			col = FL_BUTTON_MCOL2;
 
-		drawit( FL_ObjWin( ob ), dest_x, dest_y, dest_w,  dest_h,
-				src_x, src_y, ob->lcol, col, sp->pixmap );
+		drawit( FL_ObjWin( obj ), dest_x, dest_y, dest_w,  dest_h,
+				src_x, src_y, obj->lcol, col, sp->pixmap );
 	}
 
-	fl_draw_object_label( ob );
+	fl_draw_object_label( obj );
 
 }
 
@@ -424,16 +424,16 @@ fl_create_bitmapbutton( int			 type,
 						FL_Coord	 h,
 						const char * label )
 {
-	FL_OBJECT *ob;
+	FL_OBJECT *obj;
 
 	fl_add_button_class( FL_BITMAPBUTTON, draw_bitmapbutton, 0 );
-	ob = fl_create_generic_button( FL_BITMAPBUTTON, type, x, y, w, h, label );
-	ob->boxtype = FL_BITMAPBUTTON_BOXTYPE;
-	ob->col1    = FL_BITMAPBUTTON_COL1;
-	ob->col2    = FL_BITMAPBUTTON_COL2;
-	ob->align   = FL_BITMAPBUTTON_ALIGN;
-	ob->lcol    = FL_BITMAP_LCOL;
-	return ob;
+	obj = fl_create_generic_button( FL_BITMAPBUTTON, type, x, y, w, h, label );
+	obj->boxtype = FL_BITMAPBUTTON_BOXTYPE;
+	obj->col1    = FL_BITMAPBUTTON_COL1;
+	obj->col2    = FL_BITMAPBUTTON_COL2;
+	obj->align   = FL_BITMAPBUTTON_ALIGN;
+	obj->lcol    = FL_BITMAP_LCOL;
+	return obj;
 }
 
 
@@ -448,11 +448,10 @@ fl_add_bitmapbutton( int		  type,
 					 FL_Coord	  h,
 					 const char * label )
 {
-	FL_OBJECT *ob;
+	FL_OBJECT *obj = fl_create_bitmapbutton( type, x, y, w, h, label );
 
-	ob = fl_create_bitmapbutton( type, x, y, w, h, label );
-	fl_add_object( fl_current_form, ob );
-	return ob;
+	fl_add_object( fl_current_form, obj );
+	return obj;
 }
 
 
@@ -460,7 +459,7 @@ fl_add_bitmapbutton( int		  type,
  ***************************************/
 
 void
-fl_set_bitmapbutton_data( FL_OBJECT *	  ob,
+fl_set_bitmapbutton_data( FL_OBJECT *	  obj,
 						  int			  w,
 						  int			  h,
 						  unsigned char * bits )
@@ -468,12 +467,12 @@ fl_set_bitmapbutton_data( FL_OBJECT *	  ob,
 	SPEC *sp;
 	Window win;
 
-	if ( ! ob || ob->objclass != FL_BITMAPBUTTON )
+	if ( ! obj || obj->objclass != FL_BITMAPBUTTON )
 		return;
 
-	win = FL_ObjWin( ob ) ? FL_ObjWin( ob ) : fl_root;
+	win = FL_ObjWin( obj ) ? FL_ObjWin( obj ) : fl_root;
 
-	sp = ob->spec;
+	sp = obj->spec;
 	free_bitmap( sp );
 	sp->bits_w = w;
 	sp->bits_h = h;
@@ -481,7 +480,7 @@ fl_set_bitmapbutton_data( FL_OBJECT *	  ob,
 	sp->pixmap = XCreateBitmapFromData( flx->display, win, ( char * ) bits,
 										sp->bits_w, sp->bits_h );
 
-	fl_redraw_object( ob );
+	fl_redraw_object( obj );
 }
 
 
@@ -489,7 +488,7 @@ fl_set_bitmapbutton_data( FL_OBJECT *	  ob,
  ***************************************/
 
 void
-fl_set_bitmapbutton_file( FL_OBJECT *  ob,
+fl_set_bitmapbutton_file( FL_OBJECT  * obj,
 						  const char * file )
 {
 	SPEC *sp;
@@ -499,12 +498,12 @@ fl_set_bitmapbutton_file( FL_OBJECT *  ob,
 	if ( ! flx->display )
 		return;
 
-	if ( ! ob || ob->objclass != FL_BITMAPBUTTON )
+	if ( ! obj || obj->objclass != FL_BITMAPBUTTON )
 		return;
 
-	sp = ob->spec;
+	sp = obj->spec;
 	sp->pixmap =
-		fl_read_bitmapfile( FL_ObjWin( ob ) ? FL_ObjWin( ob ) : fl_root,
+		fl_read_bitmapfile( FL_ObjWin( obj ) ? FL_ObjWin( obj ) : fl_root,
 							file, &sp->bits_w, &sp->bits_h, &hx, &hy );
-	fl_redraw_object( ob );
+	fl_redraw_object( obj );
 }
