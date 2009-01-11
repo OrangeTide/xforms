@@ -52,7 +52,7 @@ returnchange_cb( FL_OBJECT * ob,
 				 long        data  FL_UNUSED_ARG )
 {
      FD_twheelform *fdui = ( FD_twheelform * ) ob->form->fdui;
-     int n = fl_get_choice( ob ) - 1;
+     int n = fl_get_select_item( ob )->val;
 
      fl_set_thumbwheel_return( fdui->vert, n );
      fl_set_thumbwheel_return( fdui->hor, n );
