@@ -84,9 +84,7 @@ void
 when_cb( FL_OBJECT * ob,
 		 long        data  FL_UNUSED_ARG )
 {
-    int n = fl_get_choice( ob ) - 1;
-    if ( n >= 0 )
-		set_when( n );
+	set_when( fl_get_select_item( ob )->val );
 }
 
 
@@ -117,9 +115,9 @@ main( int    argc,
 
     set_when( 0 );
     fl_set_object_dblbuffer( fd_form0->br, 1);
-    fl_addto_choice( fd_form0->when,
-					 "RETURN_END_CHANGED|RETURN_CHANGED|"
-					 "RETURN_END|RETURN_ALWAYS" );
+    fl_add_select_items( fd_form0->when,
+						 "RETURN_END_CHANGED|RETURN_CHANGED|"
+						 "RETURN_END|RETURN_ALWAYS" );
 
     /* show the first form */
 
@@ -166,7 +164,7 @@ create_form_form0( void )
 
 	fdui->br = obj = fl_add_browser( FL_NORMAL_BROWSER, 170, 55, 140, 160, "" );
 
-	fdui->when = obj = fl_add_choice( FL_NORMAL_CHOICE, 70, 12, 175, 27, "" );
+	fdui->when = obj = fl_add_select( FL_NORMAL_SELECT, 40, 12, 240, 27, "" );
     fl_set_object_callback( obj, when_cb, 0 );
 
 	obj = fl_add_button( FL_NORMAL_BUTTON, 170, 239, 80, 25, "Done" );
