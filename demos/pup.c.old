@@ -85,6 +85,11 @@ main( int    argc,
 }
 
 
+static int subm = -1,
+           m = -1,
+           ssm;
+
+
 /* post-handler */
 
 /***************************************
@@ -142,14 +147,14 @@ post( FL_OBJECT * ob,
  ***************************************/
 
 void
-show_return_val( FL_POPUP_RETURN *r )
+show_return_val( int i )
 {
     char buf[ 128 ];
 
-    if ( r )
-		sprintf( buf, "Returned %ld (%s)", r->val, r->label );
+    if ( i >= 0 )
+       sprintf( buf, "Returned %d (%s)", i, fl_getpup_text( m, i ) );
     else
-       sprintf( buf, "Nothing returned" );
+       sprintf( buf, "Returned %d", i );
 
     fl_set_object_label( pret, buf );
 }
@@ -159,64 +164,10 @@ show_return_val( FL_POPUP_RETURN *r )
  ***************************************/
 
 int
-style_cb( FL_POPUP_RETURN *r )
+ssm_cb( int a )
 {
-	int style,
-		size,
-		mod;
-
-	fl_popup_entry_get_font( r->user_data, &style, &size );
-	mod = style & ( FL_SHADOW_STYLE | FL_ENGRAVED_STYLE | FL_EMBOSSED_STYLE );
-	fl_popup_entry_set_font( r->user_data, r->val | mod, size );
-	return FL_IGNORE;
-}
-
-
-/***************************************
- ***************************************/
-
-int
-size_cb( FL_POPUP_RETURN *r )
-{
-	int style;
-
-	fl_popup_entry_get_font( r->user_data, &style, NULL );
-	fl_popup_entry_set_font( r->user_data, style, r->val );
-	fl_popup_get_title_font( r->user_data, &style, NULL );
-	fl_popup_set_title_font( r->user_data, style, r->val );
-	return FL_IGNORE;
-}
-
-
-/***************************************
- ***************************************/
-
-int
-mod_cb( FL_POPUP_RETURN *r )
-{
-	int style,
-		size;
-
-	fl_popup_entry_get_font( r->user_data, &style, &size );
-	style &= ~ ( FL_SHADOW_STYLE | FL_ENGRAVED_STYLE | FL_EMBOSSED_STYLE );
-	fl_popup_entry_set_font( r->user_data, style | r->val, size );
-	return FL_IGNORE;
-}
-
-
-/***************************************
- ***************************************/
-
-int
-pol_cb( FL_POPUP_RETURN *r )
-{
-	FL_POPUP_ENTRY *e;
-
-	for ( e = r->popup->entries; e != NULL; e = e->next )
-		if ( e != r->entry )
-			fl_popup_entry_clear_state( e, FL_POPUP_CHECKED );
-	fl_popup_set_policy( r->user_data, r->val );
-	return FL_IGNORE;
+   show_return_val( a );
+   return a;
 }
 
 
@@ -227,69 +178,52 @@ void
 do_pup( FL_OBJECT * ob,
 		long        q  FL_UNUSED_ARG )
 {
-	static FL_POPUP *m = NULL,
-		            *sm1,
-		            *sm2,
-		            *sm3,
-		            *sm4;
+   static int n;
 
-	if ( m == NULL )
-	{
-		m   = fl_popup_add( FL_ObjWin( ob ), "Popup" );
-		sm1 = fl_popup_add( FL_ObjWin( ob ), NULL );
-		sm2 = fl_popup_add( FL_ObjWin( ob ), NULL );
-		sm3 = fl_popup_add( FL_ObjWin( ob ), NULL );
-		sm4 = fl_popup_add( FL_ObjWin( ob ), NULL );
+   if ( subm == -1 )
+   {
+      ssm  = fl_newpup( FL_ObjWin( ob ) );
+      subm = fl_newpup( FL_ObjWin( ob ) );
+      m    = fl_newpup( FL_ObjWin( ob ) );
 
-		fl_popup_add_entries( sm4, "FL_POPUP_NORMAL_SELECT%T%x%u%f",
-							  FL_POPUP_NORMAL_SELECT, m, pol_cb );
-		fl_popup_add_entries( sm4, "FL_POPUP_DRAG_SELECT%t%x%u%f",
-							  FL_POPUP_DRAG_SELECT, m, pol_cb );
+/*      fl_addtopup( ssm, "SubSubM%F%t", ssm_cb );*/
+      fl_addtopup( ssm, "SSMItem20%x20%R1" );
+      fl_addtopup( ssm, "SSMItem21%x21%r1" );
+      fl_addtopup( ssm, "SSMItem22%x22%r1%l" );
+      fl_addtopup( ssm, "SSMitem30%x30%R2" );
+      fl_addtopup( ssm, "SSMItem31%x31%r2" );
+      fl_addtopup( ssm, "SSMItem32%x32%b" );
 
-		fl_popup_add_entries( sm3, "None%x%R%u%f",
-							  0, 1, m, mod_cb );
-		fl_popup_add_entries( sm3, "FL_SHADOW_STYLE%x%r%u%f",
-							  FL_SHADOW_STYLE, 1, m, mod_cb );
-		fl_popup_add_entries( sm3, "FL_ENGRAVED_STYLE%x%r%u%f",
-							  FL_ENGRAVED_STYLE, 1, m, mod_cb );
-		fl_popup_add_entries( sm3, "FL_EMBOSSED_STYLE%x%r%u%f",
-							  FL_EMBOSSED_STYLE, 1, m, mod_cb );
+/*      fl_addtopup( subm, "SubMenu%t" );*/
+      fl_addtopup( subm, "SMItemA\tAlt-A%x10%h","#a" );
+      fl_addtopup( subm, "SMItemB\tAlt-B%x11%h","#b" );
+      fl_addtopup( subm, "SM%%ItemC\tAlt-C%x12%h","#c" );
+      fl_addtopup( subm, "SMItemD\tAlt-F5%x13%h%m","#&5", ssm );
+      fl_addtopup( subm, "SMItemE\tAlt-E%x14","#E" );
 
-		fl_popup_add_entries( sm1, "FL_NORMAL_STYLE%Sn%x%R%u%f%s",
-							  FL_NORMAL_STYLE, 1, m, style_cb, "n" );
-		fl_popup_add_entries( sm1, "FL_BOLD_STYLE%Sb%x%r%u%f%s",
-							  FL_BOLD_STYLE, 1, m, style_cb, "b" );
-		fl_popup_add_entries( sm1, "FL_ITALIC_STYLE%Si%x%r%u%f%s",
-							  FL_ITALIC_STYLE, 1, m, style_cb, "i" );
-		fl_popup_add_entries( sm1, "FL_BOLDITALIC_STYLE%SI%x%r%u%f%s",
-							  FL_BOLDITALIC_STYLE, 1, m, style_cb, "I" );
-		fl_popup_add_entries( sm1, "%l|Font modifier%Sm%m%s", sm3, "m" );
+      fl_setpup_mode( subm, 14, FL_PUP_GREY );
 
-		fl_popup_add_entries( sm2, "FL_TINY_SIZE%x%r%u%f",
-							  FL_TINY_SIZE, 1, m, size_cb );
-		fl_popup_add_entries( sm2, "FL_SMALL_SIZE%x%r%u%f",
-							  FL_SMALL_SIZE, 1, m, size_cb );
-		fl_popup_add_entries( sm2, "FL_NORMAL_SIZE%x%R%u%f",
-							  FL_NORMAL_SIZE, 1, m, size_cb );
-		fl_popup_add_entries( sm2, "FL_MEDIUM_SIZE%x%r%u%f",
-							  FL_MEDIUM_SIZE, 1, m, size_cb );
-		fl_popup_add_entries( sm2, "FL_LARGE_SIZE%x%r%u%f",
-							  FL_LARGE_SIZE, 1, m, size_cb );
-		fl_popup_add_entries( sm2, "FL_HUGE_SIZE%x%r%u%f",
-							  FL_HUGE_SIZE, 1, m, size_cb );
+      fl_addtopup( m, "PopUP%t" );
+      fl_addtopup( m, "MenuItem1%h","1#1" );
 
-		fl_popup_add_entries( m, "Font style%m", sm1 );
-		fl_popup_add_entries( m, "Font size%m", sm2 );
-		fl_popup_add_entries( m, "Policy%m", sm4 );
+      fl_addtopup( m, "MenuItem2%h", "2#2" );
+      fl_setpup_submenu( m, 2, subm );
+      fl_addtopup( m, "MenuItem3%h","3#3" );
+      fl_addtopup( m, "MenuItem4%h", "4#4" );
+   }
 
-		fl_popup_set_min_width( m, 100 );
-	}
+   if ( fl_get_button_numb( ob ) >= FL_SHORTCUT )
+	   fl_setpup_position( ob->form->x + ob->x,
+						   ob->form->y + ob->y + ob->h );
 
-	if ( fl_get_button_numb( ob ) >= FL_SHORTCUT )
-		fl_popup_set_position( m, ob->form->x + ob->x,
-							   ob->form->y + ob->y + ob->h );
+   show_return_val( fl_dopup( m ) );
 
-	fl_popup_do( m );
+   /* test if changing size/style ok */
+
+   n = ! n;
+   fl_setpup_fontsize( n ? 14 : 12 );
+   fl_setpup_fontstyle( n ? FL_TIMES_STYLE : FL_BOLDITALIC_STYLE );
+   fl_setpup_cursor( m, n ? XC_hand2 : XC_sb_right_arrow );
 }
 
 
@@ -299,16 +233,21 @@ do_pup( FL_OBJECT * ob,
 void
 init_menu( void )
 {
-	FL_POPUP *mm,
-		     *smm;
+    int mm,
+		smm;
 
-	mm = fl_popup_add( fl_default_win( ), NULL );
-	smm = fl_popup_add( fl_default_win( ), NULL );
+    mm = fl_newpup( fl_default_win( ) );
+    fl_setpup_bw( mm, -2 );
+    fl_setpup_shadow( mm, 0 );
+    smm = fl_newpup( 0 );
+    fl_setpup_shadow( smm, 0 );
 
-	fl_popup_add_entries( smm, "SubItem1%x|SubItem2%x|SubItem3%x", 11, 12, 13 );
-	fl_popup_add_entries( mm, "MenuItem1|MenuItem2%m|MenuItem3", smm );
+    fl_addtopup( mm, "MenuItem1|MenuItem2%m|MenuItem3", smm );
+    fl_addtopup( smm, "SubItem1%x11|SubItem2%x12|SubItem3%x13" );
 
-    fl_set_nmenu_popup( menu, mm );
+    /* attach pup to menu */
+
+    fl_set_menu_popup( menu, mm );
 }
 
 
@@ -360,11 +299,10 @@ void create_form_pup( void )
     fl_set_object_callback( obj, done_cb, 0 );
 
 	obj = fl_add_button( FL_MENU_BUTTON, 30, 90, 100, 30, "PopUp" );
-	fl_set_button_shortcut( obj, "Pp#p", 1 );
+	fl_set_button_shortcut( obj, "Pp#p",1 );
 	fl_set_object_callback( obj, do_pup, 0 );
 
-	menu = obj = fl_add_nmenu( FL_NORMAL_NMENU, 160, 95, 60, 25, "Menu" );
-	fl_set_button_shortcut( obj, "Mm#m", 1 );
+	menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 160, 95, 60, 25, "Menu" );
 	fl_set_object_callback( obj, do_menu, 0 );
 
 	pret = obj = fl_add_text( FL_NORMAL_TEXT, 20, 60, 220, 30, "" );
