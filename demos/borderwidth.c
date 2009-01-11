@@ -78,11 +78,12 @@ bw_callback( FL_OBJECT * ob,
 			 long        data  FL_UNUSED_ARG )
 {
 	static int bws[ ] = { -5, -4, -3, -2, -1, 1, 2, 3, 4, 5 };
-	int bw = bws[ fl_get_select_item( ob )->val ];
+	FL_POPUP_RETURN *r =  fl_get_select_item( ob );
+	int bw = bws[ r->val ];
 
 	fl_set_object_bw( fd_bwform->bwgroup, bw );
 	fl_set_object_bw( fd_bwform->done, bw );
-	fl_set_select_popup_bw( fd_bwform->bw_select, bw );
+	fl_popup_set_bw( r->popup, bw );
 }
 
 

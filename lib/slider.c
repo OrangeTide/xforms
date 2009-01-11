@@ -30,7 +30,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.17 2009/01/03 02:55:29 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.18 2009/01/11 14:34:21 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -633,7 +633,7 @@ handle_it( FL_OBJECT * ob,
 
 
 /***************************************
- * creates an object
+ * Creates an object
  ***************************************/
 
 static FL_OBJECT *

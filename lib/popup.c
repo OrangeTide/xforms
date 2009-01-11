@@ -522,7 +522,7 @@ fli_popup_insert_entries( FL_POPUP       * popup,
 
 
 /***************************************
- * Create a popup and populate it
+ * Create a popup and populate it from a list of FL_POPUP_ITEM structures
  ***************************************/
 
 FL_POPUP *
@@ -2349,6 +2349,7 @@ parse_entries( FL_POPUP   * popup,
                         return failed_add( entry_first );
                     }
 
+					entry->type = FL_POPUP_LINE;
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
                     
@@ -3062,7 +3063,8 @@ calculate_window_position( FL_POPUP * popup )
             popup->x = FL_max( fl_scrw - ( int ) popup->w, 0 );
     }
 
-    if ( ( e = find_entry( popup, x - popup->x, y - popup->y ) ) != NULL )
+    if (    ( e = find_entry( popup, x - popup->x, y - popup->y ) ) != NULL
+		 && ! ( e->state & FL_POPUP_DISABLED ) )
         enter_leave( e, 1 );
 }
 

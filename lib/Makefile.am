@@ -76,6 +76,7 @@ libforms_la_SOURCES = \
 	listdir.c \
 	local.h \
 	menu.c \
+	nmenu.c \
 	objects.c \
 	oneliner.c \
 	pixmap.c \

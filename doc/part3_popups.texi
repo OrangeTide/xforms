@@ -66,20 +66,20 @@ Once you have popup you may add one or more entries by using
 @findex fl_popup_add_entries()
 @anchor{fl_popup_add_entries()}
 @example
-FL_POPUP_ENTRIES *fl_popup_add_entries(FL_POPUP *popup,
-                                       const char *entries, ...);
+FL_POPUP_ENTRY *fl_popup_add_entries(FL_POPUP *popup,
+                                     const char *entries, ...);
 @end example
 @noindent
-The first argument is the popup the new entries are to be added to.
-The second argument, @code{entries}, encodes information about the
-entries to add. In the most simple case it consists ust of the
-entries texts, separated by @code{|} characters, e.g.
-@w{@code{"Item 1|Item 2|Item 3"}}. This would create three simple
-entries in the popup with labels @code{"Item 1"}, @code{"Item 2"}
-and @code{"Item 3"}.
+The first argument, @code{entries}, is a pointer to the popup the new
+entry (or entries) is added to. The second argument, @code{entries},
+encodes information about the entries to add. In the most simple case
+it consists just of the entries texts, separated by @code{|}
+characters, e.g. @w{@code{"Item 1|Item 2|Item 3"}}. This would create
+three simple entries in the popup with labels @code{"Item 1"},
+@code{"Item 2"} and @code{"Item 3"}.
 
-The @code{entries} string may contain newlines which allows to create
-entries that span more than a single line.
+The @code{entries} string may contain newline characters which allows
+to create entries that span more than a single line.
 
 There's no built-in limit to the number of entries than be added to a
 popup. @code{@ref{fl_popup_add_entries()}} can be called repeatedly to
@@ -111,10 +111,10 @@ int callback(FL_POPUP_RETURN *r);
 @end example
 Informaton about the entry etc.@: gets passed to the callback function
 via the @code{FL_POPUP_RETURN} structure (see below) and the return
-value of the function can be used to programatically "undo" the
-selection the user made by returning a value of @code{FL_IGNORE}
-(-1). The functions address must be given in the arguments following
-the @code{entries} string.
+value of the function can be used to keep the selection being reported
+back to the caller of @code{@ref{fl_popup_do()}} by returning a value
+of @code{FL_IGNORE} (-1). The functions address must be given in the
+arguments following the @code{entries} string.
 @item %E
 Set a callback routine that gets called each time the mouse enters the
 entry (as long as the entry isn't disabled or hidden). The type of the
@@ -172,7 +172,7 @@ to visually group other entries. While other properties can be set for
 such an "entry" only the "hidden" property (see below) is taken into
 acount.
 
-Mutually exclusive with @code{%m}, @code{%t}, @code{%T} and @code{%},
+Mutually exclusive with @code{%m}, @code{%t}, @code{%T}, @code{%} and
 @code{%R}.
 @item %d
 Marks the entry as disabled, i.e.@: it can't be selected and its text is
@@ -197,16 +197,16 @@ Use this to get a @code{%} within the text of an entry.
 @end table
 
 Please note that since @code{@ref{fl_popup_add_entries()}} is a
-variadic function (i.e.@: takes a variable number of arguments) only
-very limited error checking is possible and thus it is of importance
-that the arguments passed to the function have exactly the expected
-types!
+variadic function (i.e.@: it takes a variable number of arguments)
+only very limited error checking is possible and thus it is of
+importance that the arguments passed to the function have exactly the
+required types!
 
 The return value of @code{@ref{fl_popup_add_entries()}} is a pointer
 to the first of the entries created. Since entries are stored as a
 linked list this value can be used to iterate over the list (see below
-for more information about @code{FL_POPUP_ENTRY} structures). If the
-function returns @code{NULL} no entires were created.
+for more information about the @code{FL_POPUP_ENTRY} structure). If
+the function returns @code{NULL} no entires were created.
 
 A typical piece of code creating a popup may look like this:
 @example
@@ -285,8 +285,8 @@ typedef struct @{
     long int              val;       /* value assigned to entry */
     void                 *user_data; /* pointer to user data */
     const char           *text;      /* text of selected popup entry */
-    const char           *label;     /* left-flished text */        
-    const char           *accel;     /* right-flushed text */
+    const char           *label;     /* label text drawn on left */        
+    const char           *accel;     /* label text drawn on right */
     const FL_POPUP_ENTRY *entry;     /* selected popup entry */
     const FL_POPUP       *popup;     /* popup we're called for */
 @} FL_POPUP_RETURN;
@@ -712,7 +712,7 @@ There are two values @code{policy} can have:
 @tindex @code{FL_POPUP_NORMAL_SELECT}
 @item FL_POPUP_NORMAL_SELECT
 Default, popup stays open until mouse button is released on a
-selectable entry or button is clicked outsode the popups area.
+selectable entry or button is clicked outside the popups area.
 @tindex @code{FL_POPUP_DRAG_SELECT}
 @item FL_POPUP_DRAG_SELECT
 Popup is closed when the mouse button is released anywhere.
@@ -800,15 +800,15 @@ For an entry all three associated callback functions can be set via
 @anchor{fl_popup_entry_set_callback()}
 @findex fl_popup_entry_set_enter_callback()
 @anchor{fl_popup_entry_set_enter_callback()}
-@findex fl_popup_entry_set__leave_callback()
-@anchor{fl_popup_entry_set__leave_callback()}
+@findex fl_popup_entry_set_leave_callback()
+@anchor{fl_popup_entry_set_leave_callback()}
 @example
-FL_POPUP_CB fl_popup_set_callback(FL_POPUP_ENTRY *entry,
-                                  FL_POPUP_CB cb);
-FL_POPUP_CB fl_popup_set_enter_callback(FL_POPUP_ENTRY *entry,
-                                        FL_POPUP_CB enter_cb)
-FL_POPUP_CB fl_popup_set_leave_callback(FL_POPUP_ENTRY *entry,
-                                        FL_POPUP_CB leave_cb);
+FL_POPUP_CB fl_popup_entry_set_callback(FL_POPUP_ENTRY *entry,
+                                        FL_POPUP_CB cb);
+FL_POPUP_CB fl_popup_entry_set_enter_callback(FL_POPUP_ENTRY *entry,
+                                              FL_POPUP_CB enter_cb)
+FL_POPUP_CB fl_popup_entry_set_leave_callback(FL_POPUP_ENTRY *entry,
+                                              FL_POPUP_CB leave_cb);
 @end example
 @noindent
 The first function sets the callback invoked when the entry is

@@ -17,20 +17,15 @@
  */
 
 
-#ifndef PSELECT_H_
-#define PSELECT_H_
+#ifndef PNMENU_H_
+#define PNMENU_H_
 
 
 typedef struct {
 	FL_POPUP        * popup;
 	FL_POPUP_RETURN * sel;
-	int               align;
-	int               style;
-	int               size;
-	FL_COLOR          color;
-	int               timeout_id;
-	long              repeat_ms;
-} FLI_SELECT_SPEC;
+	FL_COLOR          hl_color;
+} FLI_NMENU_SPEC;
 
 
 #endif

@@ -20,12 +20,7 @@
  */
 
 
-/* This demo shows the use of menu's.
- * The first two are PUSH_MENUs (pop-up).
- * The third one is PULLDOWN_MENU
- * and the last one is TOUCH_MENU
- *
- * a confusing demo, but a good testing program ..
+/* This demo shows the use of all four types of nmenu's.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -35,7 +30,7 @@
 #include "include/forms.h"
 #include <stdlib.h>
 
-extern FL_FORM *create_form(void);
+extern FL_FORM *create_form( void );
 
 FL_OBJECT *menu[ 4 ],
           *abox[ 4 ];
@@ -49,48 +44,29 @@ main( int    argc,
 	  char * argv[ ] )
 {
    FL_FORM *form;
-   int i,
-	   j;
+   int i;
 
    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
    form = create_form( );
 
-   /* fl_setpup_color( FL_SLATEBLUE, FL_BLACK ); */
-
    for ( i = 0; i < 4; i++ )
    {
-	   fl_show_menu_symbol( menu[ i ], 1 );
+	   fl_add_nmenu_items( menu[ i ],
+						   "Red%SR%r%s%d|Green%SG%r%s%d|Yellow%SY%r%s%d|"
+						   "Blue%SB%r%s%d|Purple%SP%r%s|Cyan%SC%r%s|"
+						   "White%SW%r%s",
+						   1, "Rr#R#r", 1, "Gg#G#g", 1, "Yy#Y#y", 1, "Bb#B#b",
+						   1, "Pp#P#p", 1, "Cc#C#c", 1, "Ww#W#w" );
 
-	   fl_set_menu( menu[ i ],
-					"Red%r1|Green%r1|Yellow%r1|Blue%r1|Purple%r1|"
-					"Cyran%r1|White%r1");
+	   fl_popup_entry_set_state( fl_get_nmenu_item_by_value( menu[ i ], i ),
+								 FL_POPUP_CHECKED );
 
-	   fl_set_menu_item_shortcut( menu[ i ], 1, "Rr#R#r" );
-	   fl_set_menu_item_shortcut( menu[ i ], 2, "Gg#G#g" );
-	   fl_set_menu_item_shortcut( menu[ i ], 3, "Yy#Y#y" );
-	   fl_set_menu_item_shortcut( menu[ i ], 4, "Bb#B#b" );
-	   fl_set_menu_item_shortcut( menu[ i ], 5, "Pp#P#p" );
-	   fl_set_menu_item_shortcut( menu[ i ], 6, "Cc#C#c" );
-	   fl_set_menu_item_shortcut( menu[ i ], 7, "Ww#W#w" );
-
-	   /* Initially the last three entries are enabled */
-
-	   for ( j = 5; j <= 7; j++ )
-		   fl_set_menu_item_mode( menu[ i ], j, FL_PUP_RADIO );
-
-	   /* The first four are disabled except the item (i+1) */
-
-	   for ( j = 1; j <= 4; j++ )
-		   fl_set_menu_item_mode( menu[ i ], j, FL_PUP_GREY | FL_PUP_RADIO );
-
-	   set[ i ] = i + 1;
-	   fl_set_object_color( abox[ i ], FL_BLACK + set[ i ], FL_BLACK );
-	   fl_set_menu_item_mode( menu[ i ], set[ i ],
-							  FL_PUP_CHECK | FL_PUP_RADIO );
+	   set[ i ] = i;
+	   fl_set_object_color( abox[ i ], FL_RED + set[ i ], FL_BLACK );
   }
 
-   fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Menu" );
+   fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Nmenu" );
 
    fl_do_forms( );
    fl_hide_form( form );
@@ -107,10 +83,10 @@ static void
 menu_cb( FL_OBJECT * obj,
 		 long        m )
 {
-    int i,
-		item = fl_get_menu( obj );
+    FL_POPUP_RETURN *r = fl_get_nmenu_item( obj );
+	int i;
 
-    if ( item <= 0 || set[ m ] == item )
+    if ( set[ m ] == r->val )
 		return;
 
     for ( i = 0; i < 4; i++)
@@ -119,17 +95,20 @@ menu_cb( FL_OBJECT * obj,
 		{
 			/* enable the old selected color for other menus*/
 
-			fl_set_menu_item_mode( menu[ i ], set[ m ], FL_PUP_RADIO );
+			fl_popup_entry_set_state( fl_get_nmenu_item_by_value( menu[ i ],
+																  set[ m ] ),
+									  0 );
 
 			/* disable the currently selected color for other menus */
 
-			fl_set_menu_item_mode( menu[ i ], item,
-								   FL_PUP_GRAY | FL_PUP_RADIO );
+			fl_popup_entry_set_state( fl_get_nmenu_item_by_value( menu[ i ],
+																  r->val ),
+									  FL_POPUP_DISABLED );
 		}
     }
 
-    set[ m ] = item;
-    fl_set_object_color( abox[ m ], FL_BLACK + item, FL_BLACK );
+    set[ m ] = r->val;
+    fl_set_object_color( abox[ m ], FL_RED + r->val, FL_BLACK );
 }
 
 
@@ -137,7 +116,7 @@ menu_cb( FL_OBJECT * obj,
  ***************************************/
 
 static void
-done_cb( FL_OBJECT * obj   FL_UNUSED_ARG,
+done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 long        data  FL_UNUSED_ARG )
 {
     fl_finish( );
@@ -154,25 +133,29 @@ create_form( void )
 	FL_FORM *form;
 	FL_OBJECT *obj;
 
-	form = fl_bgn_form( FL_NO_BOX, 440, 380 );
+	form = fl_bgn_form( FL_NO_BOX, 444, 380 );
 
-	obj = fl_add_box( FL_BORDER_BOX, 0, 0, 440, 380, "" );
+	obj = fl_add_box( FL_BORDER_BOX, 0, 0, 444, 380, "" );
 	fl_set_object_color( obj, FL_SLATEBLUE, FL_COL1 );
 
-	menu[0] = obj = fl_add_menu( FL_PUSH_MENU, 0, 0, 110, 30, "Color 1" );
-    fl_set_menu_notitle( obj, 1 );
+	obj = fl_add_box( FL_UP_BOX, 0, 0, 444, 29, "" );
+	fl_set_object_color( obj, FL_COL1, FL_COL1 );
+
+	menu[0] = obj = fl_add_nmenu( FL_NORMAL_NMENU, 2, 2, 110, 25, "Color 1" );
     fl_set_object_shortcut( obj, "1#1", 1 );
     fl_set_object_callback( obj, menu_cb, 0 );
 
-	menu[1] = obj = fl_add_menu( FL_PUSH_MENU, 110, 0, 110, 30, "Color 2" );
+	menu[1] = obj = fl_add_nmenu( FL_NORMAL_TOUCH_NMENU, 112, 2, 110, 25,
+								  "Color 2" );
     fl_set_object_shortcut( obj, "2#2", 1 );
     fl_set_object_callback( obj, menu_cb, 1 );
 
-	menu[2] = obj = fl_add_menu( FL_PULLDOWN_MENU, 220, 0, 110, 30, "Color 3" );
+	menu[2] = obj = fl_add_nmenu( FL_BUTTON_NMENU, 222, 2, 110, 25, "Color 3" );
     fl_set_object_shortcut( obj, "3#3", 1 );
     fl_set_object_callback( obj, menu_cb, 2 );
 
-	menu[3] = obj = fl_add_menu( FL_TOUCH_MENU, 330, 0, 110, 30, "Color 4" );
+	menu[3] = obj = fl_add_nmenu( FL_BUTTON_TOUCH_NMENU, 332, 2, 110, 25,
+								  "Color 4" );
     fl_set_object_shortcut( obj, "4#4", 1 );
     fl_set_object_callback( obj, menu_cb, 3 );
 
@@ -186,9 +169,6 @@ create_form( void )
 	fl_set_object_callback( obj, done_cb, 0 );
 
 	fl_end_form( );
-
-	fl_scale_form( form, 0.9, 0.9 );
-	fl_adjust_form_size( form );
 
 	return form;
 }

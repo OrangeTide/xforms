@@ -203,12 +203,12 @@ create_form( void )
 
 	btypeob = fl_add_select( FL_NORMAL_SELECT, 110, 30, 130, 30, "Boxtype" );
 	fl_set_object_callback( btypeob, boxtype_cb, 0 );
-	fl_set_select_popup_title( btypeob, "Boxtype" );
+	fl_popup_set_title( fl_get_select_popup( btypeob ), "Boxtype" );
 
 	modeob = fl_add_select( FL_NORMAL_SELECT, 370, 30, 130, 30,
 							"Graphics mode" );
 	fl_set_object_callback( modeob, mode_cb, 0 );
-	fl_set_select_popup_title( modeob, "Graphics mode" );
+	fl_popup_set_title( fl_get_select_popup( modeob ), "Graphics mode" );
 
 	fl_end_form ( );
 }
@@ -252,18 +252,18 @@ main( int    argc,
 	fl_set_bitmap_data( tobj[ 2 ],
 						sorceress_width, sorceress_height, sorceress_bits );
 
-	fl_add_chart_value( tobj[ 3 ], 15, "item 1",  c++ );
-	fl_add_chart_value( tobj[ 3 ], 5, "item 2", c++ );
-	fl_add_chart_value( tobj[ 3 ], -10, "item 3", c++ );
-	fl_add_chart_value( tobj[ 3 ], 25, "item 4", c++ );
+	fl_add_chart_value( tobj[ 3 ],  15, "Item 1", c++ );
+	fl_add_chart_value( tobj[ 3 ],   5, "Item 2", c++ );
+	fl_add_chart_value( tobj[ 3 ], -10, "Item 3", c++ );
+	fl_add_chart_value( tobj[ 3 ],  25, "Item 4", c++ );
 
-	fl_set_menu( tobj[ 14 ], "item 1|item 2|item 3|item 4|item 5" );
+	fl_set_menu( tobj[ 14 ], "Item 1|Item 2|Item 3|Item 4|item 5" );
 
-	fl_add_select_items( tobj[ 15 ], "item 1" );
-	fl_add_select_items( tobj[ 15 ], "item 2" );
-	fl_add_select_items( tobj[ 15 ], "item 3" );
-	fl_add_select_items( tobj[ 15 ], "item 4" );
-	fl_add_select_items( tobj[ 15 ], "item 5" );
+	fl_add_select_items( tobj[ 15 ], "Item 1" );
+	fl_add_select_items( tobj[ 15 ], "Item 2" );
+	fl_add_select_items( tobj[ 15 ], "Item 3" );
+	fl_add_select_items( tobj[ 15 ], "Item 4" );
+	fl_add_select_items( tobj[ 15 ], "Item 5" );
 
 	fl_set_timer( tobj[ 16 ], 1000.0 );
 
@@ -277,11 +277,10 @@ main( int    argc,
 	{
         FL_POPUP_ENTRY *item = fl_add_select_items( modeob, g->name );
 
-        if ( ! fl_mode_capable( g->val, 0 ))
-			fl_set_select_item_state( modeob, item, FL_POPUP_DISABLED );
+        if ( ! fl_mode_capable( g->val, 0 ) )
+			fl_popup_entry_set_state( item, FL_POPUP_DISABLED );
 	}
 
-	fl_set_select_popup_title( btypeob, "Boxtype" );
 	fl_set_select_item( modeob, fl_get_select_item_by_value( modeob,
 															 fl_vmode ) );
 

@@ -5,7 +5,7 @@
 
 @menu
 * Select Object:   Select Object
-* Menu Object:     Menu Object
+* Nmenu Object:    Nmenu Object
 * Browser Object:  Browser Object
 @end menu
 
@@ -83,8 +83,8 @@ FL_POPUP_ENTRY *fl_add_select_items(FL_OBJECT *obj, const char items,
 @noindent
 @code{items} is a string with the items to add, separated by the
 @code{|} character. In the simplest case you would just use something
-like @code{"Item 1|Item 2|Item 3"} to add three items to the list.
-If there weren't any items before the firs item will be automatically
+like @code{"Item 1|Item 2|Item 3"} to add three items to the list. If
+there weren't any items before the first item will be automatically
 shown as the selected one.
 
 As also described in the docmentation for the similar function
@@ -282,7 +282,7 @@ selectable items.
 @item FL_POPUP_DRAG_SELECT
 Close the popup immediately when the mouse button is released.
 @end table
-
+@noindent
 The function returns on success the previous setting of the "policy"
 and -1 on error.
 
@@ -301,9 +301,9 @@ It returns a pointer to a structure of type @code{FL_POPUP_RETURN} as
 already described directly above, containing all needed information
 about the selected item.
 
-For some actions, e.g.@: deletion of an item etc.; it is necessary to
-knw the popup entry that stands for. Therefore it's possible to search
-the list of items accoring to several criteria:
+For some actions, e.g.@: deletion of an item etc., it is necessary to
+know the popup entry that represents it. Therefore it's possible to
+search the list of items accoring to several criteria:
 @findex fl_get_select_item_by_value()
 @anchor{fl_get_select_item_by_value()}
 @findex fl_get_select_item_by_label()
@@ -334,40 +334,8 @@ set the currently selected item via your program using
 @anchor{fl_set_select_item()}
 @example
 FL_POPUP_RETURN *fl_set_select_item(FL_OBJECT *obj,
-					                FL_POPUP_ENTRY *entry);
+                                    FL_POPUP_ENTRY *entry);
 @end example
-
-Another place where the result of such a search comes handy is for
-teh functions
-@findex fl_set_select_item_mode()
-@anchor{fl_set_select_item_mode()}
-@findex fl_get_select_item_mode()
-@anchor{fl_get_select_item_mode()}
-@example
-int fl_set_select_item_mode(FL_OBJECT *obj, FLK_POPUP_ENTRY *item,
-                            unsiged state);
-int fl_get_select_item_mode(FL_OBJECT *obj, FLK_POPUP_ENTRY *item);
-@end example
-@noindent
-The first function lets you set the state of an item where
-@code{state} can be one of
-@table @code
-@item FL_POPUP_DISABLED
-Makes the item disabled (and normally shown in a different color)
-so it can't be selected anymore. Setting an item to disabled that
-was currently selected also results in the next available and
-selectable item to become selected.
-@item FL_POPUP_HIDDEN
-Completely hides an item. Again, setting an item to disabled that
-was currently disabled results  in the next available and
-selectable item to become selected.
-@end table
-To re-enable a disabled or hidden ite, call
-@code{@ref{fl_set_select_item_mode()}} with 0 as the @code{state}
-argument.
-
-Rather obviously, @code{@ref{fl_get_select_item_mode()}} then returns
-the state of the item under consideration.
 
 Or you could use the result to delete an item:
 @findex fl_delete_select_item()
@@ -385,8 +353,8 @@ To do that use
 @anchor{fl_replace_select_item()}
 @example
 FL_POPUP_ENTRY *fl_replace_select_item(FL_OBJECT *obj,
-               		                   FL_POPUP_ENTRY *old,
-	                                   const char *new_items, ...);
+                                       FL_POPUP_ENTRY *old,
+                                       const char *new_items, ...);
 @end example
 @noindent
 @code{old} designates the item to be removed and @code{new_items} is a
@@ -406,8 +374,8 @@ in the middle of a list of already existing items:
 @anchor{fl_insert_select_item()}
 @example
 FL_POPUP_ENTRY *fl_insert_select_item(FL_OBJECT *obj,
-               		                  FL_POPUP_ENTRY *after,
-	                                  const char *new_items, ...);
+                                      FL_POPUP_ENTRY *after,
+                                      const char *new_items, ...);
 @end example
 @noindent
 @code{after} is the entry after which the new item(s) are to be
@@ -435,111 +403,32 @@ at 0 again.
 @node Select Attributes
 @subsection Select Attributes
 
-Normally, the popup shown for a select object has no title. You can
-set a title to be displayed in the popup by calling the function
-@findex fl_set_select_popup_title()
-@anchor{fl_set_select_popup_title()}
+The two color arguments, @code{clo1} and @code{col2}, of the function
+@code{@ref{fl_set_object_color()}} set the background color of the
+obect normally and when the mouse is hovering over it, respectively.
+
+With the functions
+@findex fl_set_selection_text_color()
+@anchor{fl_set_selection_text_color()}
+@findex fl_get_selection_text_color()
+@anchor{fl_get_selection_text_color()}
 @example
-FL_OBJECT *fl_set_select_popup_title(FL_OBJECT *obj, const char *title);
+FL_COLOR fl_set_selection_text_color(FL_OBJECT *obj, FL_COLOR color);
+FL_COLOR fl_get_selection_text_color(FL_OBJECT *obj);
 @end example
 @noindent
-Calling the function with @code{title} set to @code{NULL} or pointing
-to an empty string display of a title can also be switched off.
+the color of the text of the currenty selected item on top of the
+object can be set or queried.
 
-The various colors used for the select item and its popup can be
-controlled via a single function
-@findex fl_set_select_color()
-@anchor{fl_set_select_color()}
-@example
-FL_COLOR fl_set_select_color(FL_OBJECT *obj, int type, FL_COLOR color);
-@end example
-The @code{type} argument tells which of the different colors is to be
-changed:
-@table @code
-@tindex FL_SELECT_NORMAL_COLOR
-@item FL_SELECT_NORMAL_COLOR
-Color the select item is to be drawn in normally (this can also be set
-via the first color argument to @code{@ref{fl_set_object_color()}}).
-@tindex FL_SELECT_HIGHLIGHT_COLOR
-@item FL_SELECT_HIGHLIGHT_COLOR
-Color the select object is drawn in when the mose is above it (this
-can also be set via the second color argument to
-@tindex FL_SELECT_LABEL_COLOR
-@item FL_SELECT_LABEL_COLOR
-Color the text of the label beside the select object is drawn (this
-can also be set via the @code{@ref{fl_set_object_lcol()}} function).
-@tindex FL_SELECT_TEXT_COLOR
-@item FL_SELECT_TEXT_COLOR
-Color the text on top of the select object with the label of the
-currently selected item is drawn.
-@tindex FL_SELECT_POPUP_BACKGROUND_COLOR
-@item FL_SELECT_POPUP_BACKGROUND_COLOR
-Color to be used for the background of the popup for the select
-object.
-@tindex FL_SELECT_POPUP_HIGHLIGHT_COLOR
-@item FL_SELECT_POPUP_HIGHLIGHT_COLOR
-Color of the item of the popup the mouse is hovering over.
-@tindex FL_SELECT_POPUP_TITLE_COLOR
-@item FL_SELECT_POPUP_TITLE_COLOR
-Color of the text of the title of the popup (if one is shown).
-@tindex FL_SELECT_POPUP_TEXT_COLOR
-@item FL_SELECT_POPUP_TEXT_COLOR
-Color of the texts of the items
-@tindex FL_SELECT_POPUP_HIGHLIGHT_TEXT_COLOR
-@item FL_SELECT_POPUP_HIGHLIGHTTEXT_COLOR
-Color of the texts of the items when the mouse is hovering over the
-item.
-@tindex FL_SELECT_POPUP_DISABLED_TEXT_COLOR
-@item FL_SELECT_POPUP_DISABLED_COLOR
-Color of the text if items that are disabled.
-@end table
-
-The functions returns the previously set color or @code{FL_MAX_COLORS}
-if an error was detected.
-
-You can also query the above listed colors by calling
-@findex fl_get_select_color()
-@anchor{fl_get_select_color()}
-@example
-FL_COLOR fl_get_select_color(FL_OBJECT *obj, int type);
-@end example
-
-Similar functions exist to control or query the fonts used for the
-various elements of a select object:
-@findex fl_set_select_font()
-@anchor{fl_set_select_font()}
-@findex fl_get_select_font()
-@anchor{fl_get_select_font()}
-@example
-int fl_set_select_font(FL_OBJECT *obj, int type, int style, int size);
-int fl_get_select_font(FL_OBJECT *obj, int type, int *style, int *size);
-@end example
-@noindent
-The type argument can be set to one of
-@table @code
-@tindex FL_SELECT_TEXT_FONT
-@item FL_SELECT_TEXT_FONT
-Font used for the text of the currently selected item of the select
-object.
-@tindex FL_SELECT_POPUP_TEXT_FONT
-@item FL_SELECT_POPUP_TEXT_FONT
-Font used for drawing the title of the popup of the select object.
-@tindex FL_SELECT_ITEM_TEXT_FONT
-@item FL_SELECT_ITEM_TEXT_FONT
-Font for the the items in the popup of the select object.
-@tindex FL_SELECT_LABEL_FONT
-@item FL_SELECT_LABEL_FONT
-Font used for the label of the select object (you can as well use
-@code{@ref{fl_set_object_lstyle()}} and
-@code{@ref{fl_set_object_lsize()}} to set the labels font).
-@end table
-
-To control the alignment of the text with the currently selected item
-on top of the select object use
+To control (or determine) the alignment of the text with the currently
+selected item on top of the select object use
 @findex fl_set_select_text_align()
 @anchor{fl_set_select_text_align()}
+@findex fl_get_select_text_align()
+@anchor{fl_get_select_text_align()}
 @example
 int fl_set_select_text_align(FLOBJECT *obj, int align);
+int fl_get_select_text_align(FLOBJECT *obj);
 @end example
 @noindent
 Please note that the @code{FL_ALIGN_INSIDE} flag must be set with
@@ -547,18 +436,71 @@ Please note that the @code{FL_ALIGN_INSIDE} flag must be set with
 boundaries of the object. On success the function return the old
 setting for the alignemnt or -1 on error.
 
-
-Finally, you may change the border width of the popup of the select
-object which per default is set to the same value as the default width
-of popups.
-@findex fl_set_select_popup_bw()
-@anchor{fl_set_select_popup_bw()}
+Finally, the font style and size of the text can be set or obtained
+using
+@findex fl_set_select_font()
+@anchor{fl_set_select_font()}
+@findex fl_get_select_font()
+@anchor{fl_get_select_font()}
 @example
-int fl_set_select_popup_bw( FL_OBJECT *obj, int bw);
+int fl_set_select_font(FL_OBJECT *obj, int style, int size);
+int fl_get_select_font(FL_OBJECT *obj, int *style, int *size);
 @end example
 @noindent
-On success the function returns the previous setting of the border
-width, on errors @code{INT_MIN}.
+
+The rest of the appearance of a select object concerns the popup that
+is used. To avoid bloating the API unnecessarily no functions for
+select objects were added that would just call popup functions. The
+popup belonging to a select object can be easily ound from either
+a @code{FL_POPUP_ENTRY} structure as returned by the functions for
+searching for items or the @code{L_POPUP_RETURN} structure passed
+to all callbacks and also returned by
+@code{@ref{fl_get_select_item()}}. Both structures have a member
+called @code{popup} that is a pointer to the popup associated with the
+select object. For popup functions operation on indiviual items just
+use the poiner to the @code{FL_POPUP_ENTRY} structure itself or the
+@code{entry} member of the @code{L_POPUP_RETURN} structure.
+
+There's also a convenience function for finding out the popup used
+for a select object:
+@findex fl_get_select_popup()
+@anchor{fl_get_select_popup()}
+@example
+FL_POPUP *fl_get_select_popup(FL_OBJECT *obj);
+@end example
+@noindent
+During the lifetime of a select object the popup never changes as long
+as @code{@ref{fl_set_select_popup()}} isn't called.
+
+Per default the popup of a select object does not have a title drawn
+on top of it. To change that use @code{@ref{fl_popup_set_title()}}.
+
+To change the various colors and fonts used when drawing the popup use
+the functions @code{@ref{fl_popup_set_color()}} and
+@code{@ref{fl_popup_entry_set_font()}} (and
+@code{@ref{fl_popup_set_title_font()}}).
+
+To change the border width or minimum width of the popup use
+@code{@ref{fl_popup_set_bw()}} and
+@code{@ref{fl_popup_set_min_width()}}.
+
+To disable or hide (or do the reverse) an item use the functions
+@code{@ref{fl_popup_entry_set_state()}} and
+@code{@ref{fl_popup_entry_get_state()}}.
+
+The keyboard shortcut for an entry can be set via
+@code{@ref{fl_popup_entry_set_shortcut()}}.
+
+The callback functions (selection, enter and leave callback) for
+individual items can be set via
+@code{@ref{fl_popup_entry_set_callback()}},
+@code{@ref{fl_popup_entry_set_enter_callback()}} and
+@code{@ref{fl_popup_entry_set_leave_callback()}}, a callback for the
+whole popup with @code{@ref{fl_popup_set_callback()}}.
+
+Finally, to assign a different (long) value to an item or set a
+pointer to user data use @code{@ref{fl_popup_entry_set_value()}}
+and @code{@ref{fl_popup_entry_set_user_data()}}.
 
 
 @node Select Remarks
@@ -568,400 +510,376 @@ See the demo program @file{select.c} for an example of the use of
 select objects.
 
 
-@node Menu Object
-@section Menu Object
+@node Nmenu Object
+@section Nmenu Object
 
-Also menus can be added to forms. These menus can be used to let the
-user choose from many different possibilities. Each menu object has a
-box with a label in it in the form. Whenever the user presses the
-mouse inside the box (or moves the mouse on top of the box) a pop-up
-menu appears. The user can then make a selection from the menu.
+Another object type that heavily depends on popups is the "nmenu"
+object type. It is meant to be used for menus and the "n" in front of
+the name stands for "new" since this is a re-implementation of the
+old menu object type (which is now deprecated since it is based on
+@ref{XPopup}).
+
 
 @ifnottex
 
 @menu
-* Adding Menu Objects:   Adding Menu Objects
-* Menu Types:            Menu Types
-* Menu Interaction:      Menu Interaction
-* Other Menu Routines:   Other Menu Routines
-* Menu Attributes:       Menu Attributes
-* Remarks:               Menu Remarks
+* Adding Nmenu Objects:   Adding Nmenu Objects
+* Nmenu Interaction:      Nmenu Interaction
+* Other Nmenu Routines:   Other Nmenu Routines
+* Nmenu Attributes:       Nmenu Attributes
+* Remarks:                Nmenu Remarks
 @end menu
 
 @end ifnottex
 
 
-@node Adding Menu Objects
-@subsection Adding Menu Objects
+@node Adding Nmenu Objects
+@subsection Adding Nmenu Objects
 
-To add a menu to a form use the routine
-@findex fl_add_menu()
-@anchor{fl_add_menu()}
+To add a nmenu object use
+@findex fl_add_nmenu()
+@anchor{fl_add_nmenu()}
 @example
-FL_OBJECT *fl_add_menu(int type, FL_Coord x, FL_Coord y,
-                       FL_Coord w, FL_Coord h, const char *label);
+FL_OBJECT *fl_add_nmenu(int type, FL_Coord x, FL_Coord y,
+                        FL_Coord w, FL_Coord h, const char *label);
 @end example
 @noindent
-It shows a box on the screen with the label centered in it.
-
-
-@node Menu Types
-@subsection Menu Types
-
-The following types are available:
+There are currently three types: 
 @table @code
-@tindex FL_PUSH_MENU
-@item FL_PUSH_MENU
-The menu appears when the user presses a mouse button on it.
-@tindex FL_PULLDOWN_MENU
-@item FL_PULLDOWN_MENU
-The menu appears when the user presses a mouse button on it.
-@tindex FL_TOUCH_MENU
-@item FL_TOUCH_MENU
-The menu appears when the user move the mouse inside it.
+@tindex FL_NORMAL_NMENU
+@item FL_NORMAL_NMENU
+Probably the most often used type: shown as text on a borderless
+background, popup gets opened when clicked on.
+@tindex FL_NORMAL_TOUCH_NMENU
+@item FL_NORMAL_TOUCH_NMENU
+Also shown as text on a borderless background, but popup gets opened
+when the mouse is moved on top of it without any further user action
+required.
+@tindex FL_BUTTON_NMENU
+@item FL_BUTTON_NMENU
+When not active shown as text on borderless background, when clicked
+on popup is shown and the object itself being dispayed as a button.
+@tindex FL_BUTTON_TOUCH_NMENU
+@item FL_BUTTON_TOUCH_NMENU
+When not active shown as text on borderless background, when mouse is
+moved onto it the popup is shown and the object itself is dispayed as
+a button.
 @end table
 
-@code{FL_PUSH_MENU} and @code{FL_PULLDOWN_MENU} behave rather similar.
-When you click on a @code{FL_PUSH_MENU} per default a pop-up window
-gets opened on top of the @code{FL_PUSH_MENU} menu's box that has a
-label at the top, indicating the currently selected menu item. The
-pop-up window stays open until you either select an item or press a
-mouse button somewhere outside the pop-up window.
-
-When you click on @code{FL_PULLDOWN_MENU} also a pop-up window is
-shown, but directly below the menu's box. This pop-up window has
-no label and it only stays open until you release the mouse button.
-
-@code{FL_PUSH_MENU} and @code{FL_PULLDOWN_MENU} can be made even more
-similar by using the @code{@ref{fl_set_menu_notitle()}} function (see
-below). This changes it's properties so that the pop-up window also
-appears below the menu's box and that no label is shown in the pop-up
-window. The only remaining difference then is that a
-@code{FL_PUSH_MENU} only gets closed when a menu item is selected or
-the user presses the mouse outside of the pop-up window while a
-@code{FL_PULLDOWN_MENU} also gets closed when the mouse button is
-released.
-
-
-@node Menu Interaction
-@subsection Menu Interaction
-
-When the menu appears the user can make a selection using the left
-mouse button or make no selection by clicking outside the menu (or by
-simply releasing the mouse button in case of a @code{FL_PULLDOWN_MENU}
-type menu. When he makes a selection the menu object is returned by
-the interaction routines.
-
-@node Other Menu Routines
-@subsection Other Menu Routines
-
-There are two ways to populate a menu, i.e.@: add items. The first one
-is a bit more complex but allows for more flexibility, e.g.@: later
-adding and removing items, associating callbacks with individual items
-etc. For the more simple (and in many cases sufficient) method see the
-function @code{@ref{fl_set_menu_entries()}}.
-
-To set the actual menu for a menu object, use the routine
-@findex fl_set_menu()
-@anchor{fl_set_menu()}
+Once a new nmenu object has been created items have to be added to
+it. For this the following function exists:
+@findex fl_add_nmenu_items()
+@anchor{fl_add_nmenu_items()}
 @example
-void fl_set_menu(FL_OBJECT *obj, const char *menustr, ...);
+FL_POPUP_ENTRY *fl_add_nmenu_items(FL_OBJECT *obj, const char items,
+                                   ...);
 @end example
 @noindent
-@code{menustr} describes the menu in the form used by XPopups
-(@pxref{XPopup}). In the simplest case, it just contains the texts fr
-the menu items, separated by a bar (@code{'|'}), e.g.@:
-@code{"First|Second|Third"}. But it's also possible to employ special
-tags (@pxref{Creating XPopups}) that can be used to indicate special
-attributes (radio, toggle and greyed-out, for example). Whenever the
-user selects a menu item, a pointer to the menu object it belongs to
-is returned to the application program.
+@code{items} is a string with the items to add, separated by the
+@code{|} character. In the simplest case you would just use something
+like @code{"Item 1|Item 2|Item 3"} to add three items to the list.
 
-Please note that if you call @code{@ref{fl_set_menu()}} on a menu that
-already contains items those items are removed. The function calls
-@code{@ref{fl_clear_menu()}} internally before the new items are
-added.
+As also described in the docmentation for the similar function
+@code{@ref{fl_popup_add_entries()}} the text for an item may contain
+"special sequences" that start with the character @code{%} and the may
+require an additional argument passed to the function after the
+@code{items} argument. All of those described in detail in the
+documentation for the @code{@ref{fl_popup_add_entries()}} function can
+also be used for nmenus.
 
-If you explicitely assign a menu item ID to a menu using the special
-tag @code{%x} it is your responsibility to make sure that this ID
-isn't already used by a different menu item in the same menu. Failure
-to do so may make it impossible to use the menu properly. All
-functions working on items expect the menu item ID as one of their
-arguments.
-
-In case you don't set menu item IDs they are assigned automatically
-with the first item obtaining the menu item ID 1, the next 2 etc.,
-i.e.@: it directly reflects the position of the item in the menu.
-
-It is also possible to add menu items to an existing menu using a call
-of
-@findex fl_addto_menu()
-@anchor{fl_addto_menu()}
+Another way to set up the popup of a select object, using an array of
+@code{FL_POPUP_ITEM} structures, is via the function
+@findex fl_set_nmenu_items()
+@anchor{fl_set_nmenu_items()}
 @example
-int fl_addto_menu(FL_OBJECT *obj, const char *menustr, ...);
+long fl_set_nmenu_items(FL_OBJECT *obj, FL_POPUP_ITEM *item);
 @end example
-@noindent
-where @code{menustr} is a string of the same form as used in
-@code{@ref{fl_set_menu()}} (you can add one or more new menu items
-this way).
-
-Also routines exist to delete a particular menu item or change it:
-@findex fl_delete_menu_item()
-@anchor{fl_delete_menu_item()}
-@findex fl_replace_menu_item()
-@anchor{fl_replace_menu_item()}
-@example
-void fl_delete_menu_item(FL_OBJECT *obj, int miid);
-void fl_replace_menu_item(FL_OBJECT *obj, int miid,
-                           const char *menustr, ...);
-@end example
-@code{miid} is the menu item ID. @code{menustr} must be a string as
-used in @code{@ref{fl_set_menu()}} with the only difference that only
-a single menu item can be specified.
-
-Please note: when deleting a menu item all other items keep their
-menu item IDs. The menu item ID of the deleted menu item isn't
-re-used when new items are added later. Instead for each menu an
-internal counter exists that gets incremented for each menu item
-added and which value is used for the menu item ID unless one is
-explicitely assigned to the menu item. The counter oly gets reset to 1
-when the menu is cleared used @code{@ref{fl_clear_menu()}}.
-
-The menu item ID of a menu item changed by using
-@code{@ref{fl_replace_menu_item()}} does not change unless the library
-is explicitely asked to via @code{%x} in @code{menustr}.
-
-For most applications, the following routine may be easier to use at
-the expense of somewhat restrictive value a menu item can have as
-well as a loss of the ability to delete menu items or associate
-callbacks with menu items. 
-@findex fl_set_menu_entries()
-@anchor{fl_set_menu_entries()}
-@example
-int fl_set_menu_entries(FL_OBJECT *obj, FL_PUP_ENTRY *ent);
-@end example
-@noindent
-where @code{ent} is a pointer to an array of structure of the
-following type, terminated by an element, where at least the
-@code{text} member is a @code{NULL} pointer:
-@tindex FL_PUP_ENTRY
+A @code{FL_POPUP_ITEM} structures looks like this:
 @example
 typedef struct @{
-    const char *text;
-    FL_PUP_CB callback;
-    const char *shortcut;
-    int mode;
-@} FL_PUP_ENTRY;
-@end example
-The meaning of each member is explained in Section 21.3. For menus,
-item callback function can be @code{NULL} if the menu callback handles
-the interaction results. See demo program @file{popup.c} for an
-example use of @code{@ref{fl_set_menu_entries()}}.
-
-The function @code{@ref{fl_set_menu_entries()}} works by creating and
-associating a popup menu with the menu object. The popup ID is
-returned by the function. Whenever the function is called, the old
-popup associated with the object (if one exists) is freed and a new
-one is created. Although you can manipulate the menu either through
-the menu API (but adding and removing menu items is not supported for
-menus created this way ) or popup API, the application should not free
-the popup directly and use @code{@ref{fl_clear_menu()}} instead.
-
-
-To clear the whole menu use
-@findex fl_clear_menu()
-@anchor{fl_clear_menu()}
-@example
-void fl_clear_menu(FL_OBJECT *obj);
-@end example
-
-To find the menu item selected by the user use
-@findex fl_get_menu()
-@anchor{fl_get_menu()}
-@example
-int fl_get_menu(FL_OBJECT *obj);
+    const char  *text;        /* text of entry */
+    FL_POPUP_CB  callback;    /* (selection) callback */
+    const char  *shortcut;    /* keyboard shortcut description */
+    int          type;        /* type of entry */
+    int          state;       /* disabled, hidden, checked */
+@} FL_POPUP_ITEM;
 @end example
 @noindent
-The the function returns the menu item ID. In the simplest possible
-case this is just the position of the menu item (starting at 1). This
-stops to be true when either IDs have been explicitely assigned to
-items or items have been deleted. In that case the following rules
-apply:
-@enumerate
-@item
-A menu item ID may have been assigned to a menu item using @code{%xn}
-in the string for the text of the menu item.
-@item
-Menu items can get associated with a callback function that is
-executed when the menu item is selected. The callback function is of
-type @code{FL_PUP_CB} and receives the menu item ID of the selected
-menu. If such a callback is set for a menu item the return value of
-@code{@ref{fl_get_menu()}} is the return value of this function
-instead of the menu item ID that would have been returned otherwise.
-@end enumerate
+and the functuon expects an array of those, with the very last element
+having @code{NULL} as the @code{text} member to mark the end of the
+array.
 
-To obtain the text of the item selected
-@findex fl_get_menu_text()
-@anchor{fl_get_menu_text()}
-@example
-const char *fl_get_menu_text(FL_OBJECT *obj);
-@end example
+The @code{text} member of the structure may contain the character
+sequence @code{%S} to have the text drawn for the item split up at
+that position and with everything before @code{%S} drawn left-flushed
+and the rest right-flushed. Moreover, @code{text} may start with the
+character @code{/} and/or @code{_}. If there's an underline a line is
+drawn above the item. And if there's a slash this item marks the begin
+of s sub-menu with all further items belonging to the sub-menu until a
+structure with @code{text} set to @code{NULL} is found in the array.
+(The @code{/} and @code{_} characters are, of course, not drawn.)
 
-To obtain the text of any item, use the following routine
-@findex fl_get_menu_item_text()
-@anchor{fl_get_menu_item_text()}
-@example
-const char *fl_get_menu_item_text(FL_OBJECT *obj, int miid);
-@end example
-@noindent
-where @code{miid} is the menu item ID. If @code{n} isn't a valid menu
-iem ID item @code{NULL} is returned.
-
-To obtain the total number of menu items, use the function
-@findex fl_get_menu_maxitems()
-@anchor{fl_get_menu_maxitems()}
-@example
-int fl_get_menu_maxitems(FL_OBJECT *obj);
-@end example
-
-One can change the appearance of different menu items. In particular,
-it is sometimes desirable to make grey-out menu items and make them
-unselectable or to put boxes with and without checkmarks in front of
-them. This can be done using the routine:
-@findex fl_set_menu_item_mode()
-@anchor{fl_set_menu_item_mode()}
-@example
-void fl_set_menu_item_mode(FL_OBJECT *obj, int miid, unsigned mode);
-@end example
-@noindent
-@code{miid} is the menu index ID of the memu item you want to change.
-@code{mode} represents the special properties you want to apply to the
-chosen item. You can specify more than one at a time by adding or
-bitwise OR-ing these values together. For this parameter, the
-following symbolic constants exist:
+@code{type} indicates the type of the item. It can be
 @table @code
-@tindex FL_PUP_NONE
-@item FL_PUP_NONE
-No special display characteristic, the default.
-@tindex FL_PUP_BOX
-@item FL_PUP_BOX
-"Binary" entry, i.e.@: an entry that stands for a choice that can
-be switched on and off. Displayed with an unchecked box to the
-left.
-@tindex FL_PUP_RADIO
-@item FL_PUP_RADIO
-"Radio" item belonging to a group, so that gets automatically
-switched off when another item of the group is selected. Displayed
-with a diamoned-shaped box at the left.
-@tindex FL_PUP_GREY
-@item FL_PUP_GREY
-To be OR-ed with one of the above to make that item appear
-greyed-out and disable it (i.e.@: not selectable anymore).
-@tindex FL_PUP_CHECK
-@item FL_PUP_CHECK
-To be OR-ed with one of @code{FL_PUP_BOX} and @code{FL_PUP_RADIO}
-to make the box to the left appear checked or pushed.
+@item FL_POPUP_NORMAL
+Just a noral, plain item.
+@item FL_POPUP_TOGGLE
+An item that represents one of tow states and is drawn with a
+check-marker when in "on" state.
+@item FL_POPUP_RADIO
+A radio item, i.e.@: it belongs to a group of items of which only one
+can be in "on" state at a time. The are drawn with a circle to the
+left with circle for the "selected" item being filed with a color.
+@end table
+@noindent
+Please note that if @code{text} starts with a @code{/} the type
+@strong{must} be @code{FL_POPUP_NORMAL}.
+
+The @code{state} member per default is 0. It can be set to
+@table @code
+@item FL_POPUP_DSABLED
+The item is disabled and can't be selected.
+@item FL_POPUP_HIDDEN
+The popup is hidden, i.e.@: does not get shown (and thus can't be
+selected).
+@item FL_POPUP_CHECKED
+Only relevant for toggle or radio items, marks it as in "on" state.
 @end table
 
-There is also a routine that can be used to obtain the current mode of
-an item after interaction, mostly useful for toggle or radio items:
-@findex fl_get_menu_item_mode()
-@anchor{fl_get_menu_item_mode()}
+@code{callback} is a function that will be called if the item is
+selected. The callback function has the following type:
 @example
-unsigned int fl_get_menu_item_mode(FL_OBJECT *obj, int miid);
-@end example
-
-It is often useful to define keyboard shortcuts for particular menu
-items. For example, it would be nice to have @code{<Alt>s} behave like
-selecting "Save" from a menu. This can be done using the following
-routine:
-@findex fl_set_menu_item_shortcut()
-@anchor{fl_set_menu_item_shortcut()}
-@example
-void fl_set_menu_item_shortcut(FL_OBJECT *obj, int miid,
-                               const char *str);
+typedef int (*FL_POPUP_CB)(FL_POPUP_RETURN *);
 @end example
 @noindent
-@code{miid} is the menu item ID of the menu item under consideration.
-@code{str} contains the shortcut for the item. (Actually, it can
-contain more shortcuts for the same item.) @xref{Shortcuts}, for more
-information about shortcuts.
-
-Finally there is the routine:
-@findex fl_show_menu_symbol()
-@anchor{fl_show_menu_symbol()}
+It receives a pointer to a structure that contains all information
+about the item selected by the user:
 @example
-void fl_show_menu_symbol(FL_OBJECT *obj, int yes_no);
+typedef struct @{
+    long int              val;       /* value assigned to entry */
+    void                 *user_data; /* pointer to user data */
+    const char           *text;      /* text of selected popup entry */
+    const char           *label;     /* left-flished text */        
+    const char           *accel;     /* right-flushed text */
+    const FL_POPUP_ENTRY *entry;     /* selected popup entry */
+    const FL_POPUP       *popup;     /* popup we're called for */
+@} FL_POPUP_RETURN;
 @end example
 @noindent
-With this routine you can indicate whether to show a menu symbol at
-the right of the menu label. By default no symbol is shown.
+@code{val} is a value that has been associated with the item and
+@code{user_data} is a pointer that can be used to store the location
+of further information. @code{text} is the text that was used to
+create the item (including all "special" characters), while
+@code{label} and @code{accel} are the texts shown for the item on the
+left and right. @code{entry} is the pointer to the structure for the
+item selected and @code{popup} to the (sub-) popup the item belongs to
+((@pxref{Part III Popups}, for more details on these structures).
+
+If the callback function already does all the work required on
+seletion of the item have it return the value @code{FL_IGNORE} to
+keep the selection from being reported back to the main loop of the
+program.
+
+Finally, @code{shortcut} is a string encoding the keybord shortcut to
+be used for the item.
 
 
-@node Menu Attributes
-@subsection Menu Attributes
-Any boxtype can be used for a menu except for those of type
-@code{FL_PULLDOWN_MENU}, for which @code{FL_NO_BOX} should not be
-used.
-
-The first color argument (@code{col1}) to
-@code{@ref{fl_set_object_color()}} controls the color of the menu's
-box when not open and the second (@code{col2}) is the color when the
-menu is shown.
-
-To change the font style and size used in the popup menus (not the menu
-label), use the following routines
-@findex fl_setpup_default_fontstyle()
-@findex fl_setpup_default_fontsize()
+There'e also a third method to "populate" a menu. If you already
+created a popup than you can set it as the menu's popup via a call of
+@findex fl_set_nmenu_popup()
+@anchor{fl_set_nmenu_popup()}
 @example
-void fl_setpup_default_fontstyle(int style);
-void fl_setpup_default_fontsize(int size);
+int fl_set_nmenu_popup(FL_POPUP *popup);
 @end example
 @noindent
-These settings apply to all menus at once.
+Of course, the popup you associate with the nmenu object this way
+can't be a sub-popup.
 
-If desired, you can attach an external popup to a menu object via the
-following routine
-@findex fl_set_menu_popup()
-@anchor{fl_set_menu_popup()}
+
+@node Nmenu Interaction
+@subsection Nmenu Interaction
+
+There are, if seen interaction-wise, two types of nmenu objects,
+normal ones and touch nmenus. For normal nmenus a popup is opened when
+the user clicks on the area of the nmenu object while for touch nmenus
+the popup already is shown when the user moves the mouse unto the
+area. In other respects they behave identical: the user just selects
+one of the items in the popup (or one of the sub-popups) and then the
+popup is closed again. The selection can now be handled within a
+callback function and/or reported back to the main loop of the
+program.
+
+The most natural way for dealing with a selection is probably via a
+callback for the item that was selected. But also a callback for the
+popup as a whole or the object itself can be used. Item and popup
+callback functions are of type @code{FL_POPUP_CB} described above (and
+in even more detail in @ref{Part III Popups}), while object callbacks
+are "normal" XForms callback functions.
+
+One detail about the interaction that can be adjusted is when the
+nmenu's popup gets closed. Per default, the popup is closed when an
+item is selected or (without a selection) when the user clicks
+somehwere outside of the popups area. This can be changed so that the
+popup also gets closed (without a selection) when the mouse button was
+clicked or released on a non-selectable item (giving the impression of
+a "pull-down" menu). For this purpose there's the
+@findex fl_set_nmenu_policy()
+@anchor{fl_set_nmenu_policy()}
 @example
-void fl_set_menu_popup(FL_OBJECT *obj, int pupID);
+int fl_set_nmenu_policy(FL_OBJECT *obj, int policy);
 @end example
 @noindent
-where @code{pupID} is the ID returned by @code{@ref{fl_newpup()}} or
-@code{@ref{fl_defpup()}}. @xref{XPopup}, for more details on popup
-creation.
+function where @code{policy} can be one of two values:
+@table @code
+@item FL_POPUP_NORMAL_SELECT
+Default, popup stays open until mouse button is released on a
+selectable entry or button is clicked outside the popups area.
+@item FL_POPUP_DRAG_SELECT
+Popup is closed when the mouse button is released anywhere.
+@end table
+@noindent
+The function returns on success the previous setting of the "policy"
+and -1 on error.
 
-For a menu created this way only @code{@ref{fl_get_menu()}} and
-@code{@ref{fl_get_menu_text()}} work as expected. Other services such as
-mode setting and query etc. should be done via the popup routines.
 
-To obtain the popup ID associated with a menu, use the following routine
-@findex fl_get_menu_popup()
-@anchor{fl_get_menu_popup()}
+@node Other Nmenu Routines
+@subsection Other Nmenu Routines
+
+To find out which item of a nmenu object was selected last use
+@findex fl_get_nmenu_item()
+@anchor{fl_get_nmenu_item()}
 @example
-int fl_get_menu_popup(FL_OBJECT *obj);
+FL_POPUP_RETURN *fl_get_nmenu_item(FL_OBJECT *obj);
 @end example
 @noindent
-The function return the popup ID if the menu was created using
-@code{@ref{fl_set_menu_popup()}} or
-@code{@ref{fl_set_menu_entries()}}, otherwise it returns -1.
+The functon returns either a pointer to a @code{FL_POPUP_RETURN}
+structure with informations about the selected item (as already
+discussed above when talking about callbacks) or @code{NULL} if
+no selection was made the last time the nmenu object was used.
 
-Normally in the popup opened for a menu a title is shown. This can be
-switched off (and back on again by using the function
-@findex fl_set_menu_notitle()
-@anchor{fl_set_menu_notitle()}
+For some actions, e.g.@: deletion of an item etc., it is necessary to
+know the popup entry that represents it. Therefore it's possible to
+search the list of items accoring to several criteria:
+@findex fl_get_nmenu_item_by_value()
+@anchor{fl_get_nmenu_item_by_value()}
+@findex fl_get_nmenu_item_by_label()
+@anchor{fl_get_nmenu_item_by_label()}
+@findex fl_get_nmenu_item_by_text()
+@anchor{fl_get_nmenu_item_by_text()}
 @example
-fl_set_menu_notitle(FL_OBJECT *obj, int off);
+FL_POPUP_ENTRY *fl_get_nmenu_item_by_value(FL_OBJECT *obj, long val);
+FL_POPUP_ENTRY *fl_get_nmenu_item_by_label(FL_OBJECT *obj,
+                                           const char *label);
+FL_POPUP_ENTRY *fl_get_nmneu_item_by_label(FL_OBJECT *obj,
+                                           const char *text);
+@end example
+The first function, @code{@ref{fl_get_nmenu_item_by_value()}},
+searches through the list of all items (including items in sub-popups)
+and returns the first one with the @code{val} associated with the item
+(or @code{NULL} if none is found). The second,
+@code{@ref{fl_get_nmenu_item_by_label()}} searches for a certain label
+as displayed for the iten in the popup. The third,
+@code{@ref{fl_get_nmenu_item_by_text()}} searches for the text the
+item was created by (that might be the same as the label text in
+simple cases). Please note that all functions return a structure of
+type @code{FL_POPUP_ENTRY} (and not @code{FL_POPUP_RETURN}, which
+gives you direct access to the entry in the popup for the item.
+
+
+Using e.g.@: the results of the above searches a nmenu item can be
+deleted:
+@findex fl_delete_nmneu_item()
+@anchor{fl_delete_nmneu_item()}
+@example
+int fl_delete_nmneu_item(FL_OBJECT *obj, FL_POPUP_ENTRY *item);
 @end example
 
-@node Menu Remarks
+Alternatively, an item can be replaced by one or more items:
+@findex fl_replace_nmenu_item()
+@anchor{fl_replace_nmenu_item()}
+@example
+FL_POPUP_ENTRY *fl_replace_nmenu_item(FL_OBJECT *obj,
+                                      FL_POPUP_ENTRY *old,
+                                      const char *new_items, ...);
+@end example
+where @code{old} is the item to replace and @code{new_items} is a
+string exactly as used for @code{@ref{fl_add_nmenu_items()}} with
+informations about the new item(s).
+
+One also may insert additional items using
+@findex fl_insert_nmenu_items()
+@anchor{fl_insert_nmenu_items()}
+@example
+FL_POPUP_ENTRY *fl_insert_nmenu_items(FL_OBJECT *obj,
+                                      FL_POPUP_ENTRY *after,
+                                      const char *new_items, ...);
+@end example
+@noindent
+where @code{after} is the item after which the new items are to be
+inserted (use @code{NULL} to insert at the very start) and
+@code{new_items} is a strung just like used with
+@code{@ref{fl_add_nmenu_items()}} with informations about the
+additional item(s).
+
+Finally, there's a function to remove all items from a nmenu object
+at once:
+@findex fl_clear_nmenu()
+@anchor{fl_clear_nmenu()}
+@example
+in fl_clear_nmenu(FL_OBJECT *obj);
+@end example
+
+
+@node Nmenu Attributes
+@subsection Nmenu Attributes
+
+
+While not "active" the background of the nmenu object is drawn in the
+color that can be controlled via the first color argument,
+@code{col1}, of @code{@ref{fl_set_object_color()}}. When "active"
+(i.e.@: while the popup is shown) its background is drawn in the color
+of second color argument, @code{col2}, of the same function. The color
+of the label when "inactive" is controlled via
+@code{@ref{fl_set_object_lcol()}}. When in "active" state the color
+use for the label can be set via the function
+@findex fl_set_nmenu_hl_text_color()
+@anchor{fl_set_nmenu_hl_text_color()}
+@example
+FL_COLOR fl_set_nmenu_hl_text_color(FL_OBJECT *obj, FL_COLOR color);
+@end example
+@noindent
+The function returns the old color on success or @code{FL_MAX_COLORS}
+on failure. Per default this color is @code{FL_BLACK} for nmenus that
+are shown as a button while being "active" while for normal nmenus
+it's the same color that is used items in the popup when the mouse is
+hovering over them.
+
+The size and style of the font used for the label of the nmenu object
+can be set via @code{@ref{fl_set_object_lsize()}} and
+@code{@ref{fl_set_object_lstyle()}}.
+
+The rest of the appearance of a nmenu object is given by the
+appearance of the popup. These can be directly set via the functions
+for setting the popup appearance as described in @ref{Popup
+Attributes}. To find out which popup is associated with the nmenu
+object use the function
+@findex fl_get_nmenu_popup()
+@anchor{fl_get_nmenu_popup()}
+@example
+FL_POPUP *fl_get_nmenu_popup(FL_OBJECT *obj);
+@end example
+@noindent
+and then use the popup specific functions to set the appearance. The
+same also holds for the appearance etc.@: of the items of the popup, a
+lot of functions exist that allow to set the attributes of entries of
+a popup, @pxref{Popup Attributes}.
+
+
+@node Nmenu Remarks
 @subsection Remarks
 
-See @file{menu.c} for an example of the use of menus. You can also use
-@code{FL_MENU_BUTTON} to initiate a callback and use an XPopup
-directly within the callback. See @file{pup.c} for an example of this
-approach.
+See the demo program @file{menu.c}.
+
 
 
 @node Browser Object

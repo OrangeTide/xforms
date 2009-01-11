@@ -267,7 +267,7 @@ main( int    argc,
 
 	init_canvas( fd_canvasform );
 
-	fl_addto_menu( fd_canvasform->menu, "Item1|Item2|Item3|Item4" );
+	fl_add_nmenu_items( fd_canvasform->menu, "Item1|Item2|Item3|Item4" );
 
 	fl_show_form( fd_canvasform->canvasform,
 				  FL_PLACE_FREE, FL_FULLBORDER, "canvasform" );
@@ -316,7 +316,7 @@ create_form_canvasform( void )
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
 
-	fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 10, 45, 22, "Menu" );
+	fdui->menu = obj = fl_add_nmenu( FL_NORMAL_NMENU, 20, 10, 45, 22, "Menu" );
     fl_set_object_shortcut( obj, "#m", 1 );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
 

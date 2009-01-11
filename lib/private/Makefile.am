@@ -10,6 +10,7 @@ EXTRA_DIST = \
 	pflps.h \
 	pformbrowser.h \
 	pmenu.h \
+	pnmenu.h \
 	ppositioner.h \
 	pscrollbar.h \
 	pselect.h \

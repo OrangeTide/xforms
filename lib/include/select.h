@@ -35,30 +35,6 @@ enum {
 	FL_DROPLIST_SELECT
 };
 
-/* Color types */
-
-enum {
-	FL_SELECT_POPUP_BACKGROUND_COLOR       = FL_POPUP_BACKGROUND_COLOR,
-	FL_SELECT_POPUP_HIGHLIGHT_COLOR        = FL_POPUP_HIGHLIGHT_COLOR,
-	FL_SELECT_POPUP_TITLE_COLOR            = FL_POPUP_TITLE_COLOR,
-	FL_SELECT_POPUP_TEXT_COLOR             = FL_POPUP_TEXT_COLOR,
-	FL_SELECT_POPUP_HIGHLIGHT_TEXT_COLOR   = FL_POPUP_HIGHLIGHT_TEXT_COLOR,
-	FL_SELECT_POPUP_DISABLED_TEXT_COLOR    = FL_POPUP_DISABLED_TEXT_COLOR,
-	FL_SELECT_NORMAL_COLOR,
-	FL_SELECT_HIGHLIGHT_COLOR,
-	FL_SELECT_LABEL_COLOR,
-	FL_SELECT_TEXT_COLOR
-};
-
-/* Text types */
-
-enum {
-	FL_SELECT_TEXT_FONT,
-	FL_SELECT_POPUP_TEXT_FONT,
-    FL_SELECT_ITEM_TEXT_FONT,
-	FL_SELECT_LABEL_FONT
-};
-
 /* Defaults */
 
 #define FL_SELECT_COL1		    FL_COL1
@@ -119,6 +95,10 @@ FL_EXPORT long fl_set_select_items(
 		FL_POPUP_ITEM *
 		);
 
+FL_EXPORT FL_POPUP *fl_get_select_popup(
+		FL_OBJECT *
+		);
+
 FL_EXPORT int fl_set_select_popup(
 		FL_OBJECT *,
 		FL_POPUP  *
@@ -148,23 +128,29 @@ FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_text(
 		const char *
 		);
 
-FL_EXPORT FL_OBJECT *fl_set_select_popup_title(
-		FL_OBJECT  *,
-		const char *
+FL_EXPORT FL_COLOR fl_get_select_text_color(
+		FL_OBJECT *
 		);
 
-FL_EXPORT int fl_get_select_font(
+FL_EXPORT FL_COLOR fl_set_select_text_color(
 		FL_OBJECT *,
-		int,
+		FL_COLOR
+		);
+
+FL_EXPORT int fl_get_select_text_font(
+		FL_OBJECT *,
 		int *,
 		int *
 		);
 
-FL_EXPORT int fl_set_select_font(
+FL_EXPORT int fl_set_select_text_font(
 		FL_OBJECT *,
 		int,
-		int,
 		int 
+		);
+
+FL_EXPORT int fl_get_select_text_align(
+		FL_OBJECT *
 		);
 
 FL_EXPORT int fl_set_select_text_align(
@@ -172,25 +158,9 @@ FL_EXPORT int fl_set_select_text_align(
 		int
 		);
 
-FL_EXPORT int fl_set_select_popup_bw(
-		FL_OBJECT *,
-		int
-		);
-
 FL_EXPORT int fl_set_select_policy(
 		FL_OBJECT *,
 		int
-		);
-
-unsigned int fl_get_select_item_state(
-		FL_OBJECT *,
-		FL_POPUP_ENTRY *
-		);
-
-unsigned int fl_set_select_item_state(
-		FL_OBJECT *,
-		FL_POPUP_ENTRY *,
-		unsigned int
 		);
 
 #endif /* ! defined FL_SELECT_H */

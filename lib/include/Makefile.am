@@ -6,6 +6,7 @@ CLEANFILES = forms.h AAA.h stamp-forms
 noinst_HEADERS = \
 	Basic.h \
 	XBasic.h \
+	popup.h \
 	bitmap.h \
 	box.h \
 	browser.h \
@@ -27,7 +28,7 @@ noinst_HEADERS = \
 	input.h \
 	menu.h \
 	menubar.h \
-	popup.h \
+	nmenu.h \
 	positioner.h \
 	scrollbar.h \
 	select.h \

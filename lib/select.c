@@ -20,7 +20,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sel = "$Id: select.c,v 1.3 2009/01/04 00:45:22 jtt Exp $";
+char *fl_id_sel = "$Id: select.c,v 1.4 2009/01/11 14:34:21 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -77,29 +77,12 @@ fl_create_select( int          type,
 
 	sp->popup      = NULL;
 	sp->sel        = NULL;
-	sp->title      = NULL;
     sp->align      = FL_ALIGN_CENTER;
-	sp->lstyle     = FL_NORMAL_STYLE;
-	sp->lsize      = FL_NORMAL_SIZE;
-	sp->lcolor     = FL_BLACK;
+	sp->style      = FL_NORMAL_STYLE;
+	sp->size       = FL_NORMAL_SIZE;
+	sp->color      = FL_BLACK;
 	sp->timeout_id = -1;
 	sp->repeat_ms  = 500;
-
-	sp->p_bw = fl_popup_get_bw( NULL );
-	fl_popup_get_title_font( NULL, &sp->p_title_font_style,
-							 &sp->p_title_font_size );
-	fl_popup_entry_get_font( NULL, &sp->p_entry_font_style,
-							 &sp->p_entry_font_size );
-	sp->p_bg_color = fl_popup_get_color( NULL, FL_POPUP_BACKGROUND_COLOR );
-	sp->p_on_color = fl_popup_get_color( NULL, FL_POPUP_HIGHLIGHT_COLOR );
-	sp->p_title_color = fl_popup_get_color( NULL, FL_POPUP_TITLE_COLOR );
-	sp->p_text_color = fl_popup_get_color( NULL, FL_POPUP_TEXT_COLOR );
-	sp->p_text_on_color =
-		fl_popup_get_color( NULL, FL_POPUP_HIGHLIGHT_TEXT_COLOR );
-	sp->p_text_off_color =
-		fl_popup_get_color( NULL, FL_POPUP_DISABLED_TEXT_COLOR );
-	sp->p_policy = fl_popup_get_policy( NULL );
-	sp->p_min_width = 0;
 
     return obj;
 }
@@ -122,12 +105,18 @@ fl_add_select( int          type,
     obj = fl_create_select( type, x, y, w, h, label );
     fl_add_object( fl_current_form, obj );
 
+	/* Popup can only be created after the object has been added to its form,
+	   otherwise we don't know which window is its parent window... */
+
+	( ( FLI_SELECT_SPEC * ) obj->spec )->popup =
+		              fli_popup_add( FL_ObjWin( obj ), NULL, "fl_add_select" );
+
     return obj;
 }
 
 
 /***************************************
- * Remove the select objects popup
+ * Remove all items from select objects popup
  ***************************************/
 
 int
@@ -143,11 +132,19 @@ fl_clear_select( FL_OBJECT * obj )
 
 	sp = obj->spec;
 
-	if ( sp->popup != NULL && fli_check_popup_exists( sp->popup ) != 1 )
+	/* Remove all existing entries and reset the popups internal counter */
+
+	if ( sp->popup != NULL )
 	{
-		fl_popup_delete( sp->popup );	
-		sp->popup = NULL;
+		while ( sp->popup->entries != NULL )
+			fl_popup_entry_delete( sp->popup->entries );
+
+		fli_popup_reset_counter( sp->popup );
 	}
+	else 
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL, "fl_clear_select" );
+
+	sp->sel = NULL;
 
 	fl_redraw_object( obj );
 
@@ -176,39 +173,9 @@ fl_add_select_items( FL_OBJECT  * obj,
 
 	sp = obj->spec;
 
-	/* If no popup is yet associated with the object create one */
-
 	if ( sp->popup == NULL )
-	{
-		if ( ( sp->popup = fli_popup_add( FL_ObjWin( obj ), sp->title,
-										  "fl_add_select_items" ) ) == NULL )
-			return NULL;
-
-		fl_popup_set_bw( sp->popup, sp->p_bw );
-		fl_popup_set_title_font( sp->popup, sp->p_title_font_style,
-								 sp->p_title_font_size );
-		fl_popup_entry_set_font( sp->popup, sp->p_entry_font_style,
-								 sp->p_entry_font_size );
-		
-		fl_popup_set_color( sp->popup, FL_POPUP_BACKGROUND_COLOR,
-							sp->p_bg_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_COLOR,
-							sp->p_on_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_TITLE_COLOR,
-							sp->p_title_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_TEXT_COLOR,
-							sp->p_text_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_TEXT_COLOR,
-							sp->p_text_on_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_DISABLED_TEXT_COLOR,
-							sp->p_text_off_color );
-		fl_popup_set_policy( sp->popup, sp->p_policy );
-		if ( sp->p_min_width > 0 )
-			fl_popup_set_min_width( sp->popup, sp->p_min_width );
-
-		if ( sp->title && *sp->title )
-			fl_popup_set_title( sp->popup, sp->title );
-	}
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_add_select_items" );
 
 	/* Create and append the new entries to the popup */
 
@@ -250,13 +217,9 @@ fl_insert_select_items( FL_OBJECT      * obj,
 
 	sp = obj->spec;
 
-	/* Check that a popup has been associated with the select object */
-
 	if ( sp->popup == NULL )
-	{
-		M_err( "fl_insert_select_items", "No entries exist yet" );
-		return NULL;
-	}
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_insert_select_items" );
 
 	if ( after != NULL && fli_check_popup_entry_exists( after ) != 0 )
 	{
@@ -308,13 +271,9 @@ fl_replace_select_item( FL_OBJECT      * obj,
 
 	sp = obj->spec;
 
-	/* Check that a popup has been associated with the select */
-
 	if ( sp->popup == NULL )
-	{
-		M_err( "fl_replace_select_items", "No entries exist yet" );
-		return NULL;
-	}
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_replace_select_items" );
 
 	/* Test if the item we're supposed to replace exists */
 
@@ -372,10 +331,8 @@ fl_delete_select_item( FL_OBJECT      * obj,
 	sp = obj->spec;
 
 	if ( sp->popup == NULL )
-	{
-		M_err( "fl_delete_select_item", "No popup defined yet" );
-		return -1;
-	}
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_delete_select_items" );
 
 	if ( fli_check_popup_entry_exists( item ) != 0 )
 	{
@@ -418,40 +375,10 @@ fl_set_select_items( FL_OBJECT     * obj,
 
 	sp = obj->spec;
 
-	/* If no popup is yet associated with the object create one */
-
 	if ( sp->popup == NULL )
-	{
-		if ( ( sp->popup = fli_popup_add( FL_ObjWin( obj ), sp->title,
-										  "fl_set_select_items" ) ) == NULL )
-			return 01;
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_set_select_items" );
 
-		fl_popup_set_bw( sp->popup, sp->p_bw );
-		fl_popup_set_title_font( sp->popup, sp->p_title_font_style,
-								 sp->p_title_font_size );
-		fl_popup_entry_set_font( sp->popup, sp->p_entry_font_style,
-								 sp->p_entry_font_size );
-		
-		fl_popup_set_color( sp->popup, FL_POPUP_BACKGROUND_COLOR,
-							sp->p_bg_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_COLOR,
-							sp->p_on_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_TITLE_COLOR,
-							sp->p_title_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_TEXT_COLOR,
-							sp->p_text_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_TEXT_COLOR,
-							sp->p_text_on_color );
-		fl_popup_set_color( sp->popup, FL_POPUP_DISABLED_TEXT_COLOR,
-							sp->p_text_off_color );
-		fl_popup_set_policy( sp->popup, sp->p_policy );
-		if ( sp->p_min_width > 0 )
-			fl_popup_set_min_width( sp->popup, sp->p_min_width );
-
-		if ( sp->title && *sp->title )
-			fl_popup_set_title( sp->popup, sp->title );
-	}
-	
 	/* Remove all existing entries and reset the popups internal counter */
 
 	while ( sp->popup->entries != NULL )
@@ -508,6 +435,17 @@ fl_set_select_items( FL_OBJECT     * obj,
 
 
 /***************************************
+ * Returns the popup of a select object
+ ***************************************/
+
+FL_POPUP *
+fl_get_select_popup( FL_OBJECT * obj )
+{
+	return ( ( FLI_SELECT_SPEC * ) obj->spec )->popup;
+}
+
+
+/***************************************
  * Set a (new) popup for a select object
  ***************************************/
 
@@ -556,35 +494,12 @@ fl_set_select_popup( FL_OBJECT * obj,
 	/* Delete a popup already associated with the select object */
 
 	old_popup = ( ( FLI_SELECT_SPEC * ) obj->spec )->popup;
-
-	if ( old_popup != NULL && fli_check_popup_exists( old_popup ) != 1 )
+	if ( old_popup != NULL )
 		fl_popup_delete( old_popup );
 
 	/* Set the new popup as the select pbjects popup and redraw */
 
 	sp->popup = popup;
-
-	/* Set all popup properties as they are set for the popup */
-
-	fl_safe_free( sp->title );
-	if ( fl_popup_get_title( sp->popup ) != NULL )
-		sp->title = fl_strdup( fl_popup_get_title( sp->popup ) );
-
-	sp->p_bw = fl_popup_get_bw( sp->popup );
-	fl_popup_get_title_font( sp->popup, &sp->p_title_font_style,
-							 &sp->p_title_font_size );
-	fl_popup_entry_get_font( sp->popup, &sp->p_entry_font_style,
-							 &sp->p_entry_font_size );
-	sp->p_bg_color = fl_popup_get_color( sp->popup, FL_POPUP_BACKGROUND_COLOR );
-	sp->p_on_color = fl_popup_get_color( sp->popup, FL_POPUP_HIGHLIGHT_COLOR );
-	sp->p_title_color = fl_popup_get_color( sp->popup, FL_POPUP_TITLE_COLOR );
-	sp->p_text_color = fl_popup_get_color( sp->popup, FL_POPUP_TEXT_COLOR );
-	sp->p_text_on_color =
-		fl_popup_get_color( sp->popup, FL_POPUP_HIGHLIGHT_TEXT_COLOR );
-	sp->p_text_off_color =
-		fl_popup_get_color( sp->popup, FL_POPUP_DISABLED_TEXT_COLOR );
-	sp->p_policy = fl_popup_get_policy( sp->popup );
-	sp->p_min_width = fl_popup_get_min_width( sp->popup );
 
 	sp->sel = find_first_item( obj );
 
@@ -612,7 +527,7 @@ fl_get_select_item( FL_OBJECT * obj )
 
 
 /***************************************
- * Return currently selected item
+ * Set a new item as currently selected
  ***************************************/
 
 FL_POPUP_RETURN *
@@ -635,6 +550,10 @@ fl_set_select_item( FL_OBJECT      * obj,
 	}
 
 	sp = obj->spec;
+
+	if ( sp->popup == NULL )
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_set_select_items" );
 
 	for ( e = sp->popup->entries; e != NULL; e = e->next )
 		if ( e == entry )
@@ -674,7 +593,8 @@ fl_get_select_item_by_value( FL_OBJECT * obj,
 	sp = obj->spec;
 
 	if ( sp->popup == NULL )
-		return NULL;
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_get_select_item_by_value" );
 
 	return fl_popup_entry_get_by_value( sp->popup, val );
 }
@@ -698,7 +618,8 @@ fl_get_select_item_by_label( FL_OBJECT  * obj,
 	sp = obj->spec;
 
 	if ( sp->popup == NULL )
-		return NULL;
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_get_select_item_by_label" );
 
 	return fl_popup_entry_get_by_label( sp->popup, label );
 }
@@ -722,49 +643,10 @@ fl_get_select_item_by_text( FL_OBJECT  * obj,
 	sp = obj->spec;
 
 	if ( sp->popup == NULL )
-		return NULL;
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_get_select_item_by_text" );
 
 	return fl_popup_entry_get_by_text( sp->popup, text );
-}
-
-
-/***************************************
- * Set a title for the popup of the select object
- ***************************************/
-
-FL_OBJECT *
-fl_set_select_popup_title( FL_OBJECT  * obj,
-						   const char * title )
-{
-    FLI_SELECT_SPEC *sp;
-
-	if ( obj == NULL )
-	{
-		M_err( "fl_set_select_title", "NULL object" );
-		return NULL;
-	}
-
-	sp = obj->spec;
-
-	fl_safe_free( sp->title );
-
-	if ( title == NULL || *title == '\0' )
-		return obj;
-
-	if ( ( sp->title = fl_strdup( title ) ) == NULL )
-	{
-		M_err( "fl_set_select_title", "Running out of memory" );
-		return NULL;
-	}
-
-	if (    sp->popup != NULL
-		 && fl_popup_set_title( sp->popup, sp->title ) == NULL )
-	{
-		fl_safe_free( sp->title );
-		return NULL;
-	}
-
-	return obj;
 }
 
 
@@ -773,8 +655,7 @@ fl_set_select_popup_title( FL_OBJECT  * obj,
  ***************************************/
 
 FL_COLOR
-fl_get_select_color( FL_OBJECT * obj,
-					 int         type )
+fl_get_select_text_color( FL_OBJECT * obj )
 {
     FLI_SELECT_SPEC *sp;
 
@@ -786,41 +667,7 @@ fl_get_select_color( FL_OBJECT * obj,
 
 	sp = obj->spec;
 
-	switch ( type )
-	{
-		case FL_SELECT_NORMAL_COLOR :
-			return obj->col1;
-
-		case FL_SELECT_HIGHLIGHT_COLOR :
-			return obj->col2;
-
-		case FL_SELECT_LABEL_COLOR :
-			return obj->lcol;
-
-		case FL_SELECT_TEXT_COLOR :
-			return sp->lcolor;
-
-		case FL_SELECT_POPUP_BACKGROUND_COLOR :
-			return sp->p_bg_color;
-
-		case FL_SELECT_POPUP_HIGHLIGHT_COLOR :
-			return sp->p_on_color;
-
-		case FL_SELECT_POPUP_TITLE_COLOR :
-			return sp->p_title_color;
-
-		case FL_SELECT_POPUP_TEXT_COLOR :
-			return sp->p_text_color;
-
-		case FL_SELECT_POPUP_HIGHLIGHT_TEXT_COLOR :
-			return sp->p_text_on_color;
-
-		case FL_SELECT_POPUP_DISABLED_TEXT_COLOR :
-			return sp->p_text_off_color;
-	}
-
-	M_err( "fl_set_select_color", "Invalid type of color to set" );
-	return FL_MAX_COLORS;
+	return sp->color;
 }
 
 
@@ -829,9 +676,8 @@ fl_get_select_color( FL_OBJECT * obj,
  ***************************************/
 
 FL_COLOR
-fl_set_select_color( FL_OBJECT * obj,
-					 int         type,
-					 FL_COLOR    color )
+fl_set_select_text_color( FL_OBJECT * obj,
+						  FL_COLOR    color )
 {
     FLI_SELECT_SPEC *sp;
 	FL_COLOR old_color;
@@ -850,95 +696,22 @@ fl_set_select_color( FL_OBJECT * obj,
 
 	sp = obj->spec;
 
-	switch ( type )
-	{
-		case FL_SELECT_NORMAL_COLOR :
-			old_color = obj->col1;
-			fl_set_object_color( obj, color, obj->col2 );
-			break;
-
-		case FL_SELECT_HIGHLIGHT_COLOR :
-			old_color = obj->col2;
-			fl_set_object_color( obj, obj->col1, color );
-			break;
-
-		case FL_SELECT_LABEL_COLOR :
-			old_color = obj->lcol;
-			fl_set_object_lcol( obj, color );
-			break;
-
-		case FL_SELECT_TEXT_COLOR :
-			old_color = sp->lcolor;
-			sp->lcolor = color;
-			fl_redraw_object( obj );
-			break;
-
-		case FL_SELECT_POPUP_BACKGROUND_COLOR :
-			old_color = sp->p_bg_color;
-			sp->p_bg_color = color;
-			if ( sp->popup != NULL )
-				fl_popup_set_color( sp->popup, FL_POPUP_BACKGROUND_COLOR,
-									color );
-			break;
-
-		case FL_SELECT_POPUP_HIGHLIGHT_COLOR :
-			old_color = sp->p_on_color;
-			sp->p_on_color = color;
-			if ( sp->popup != NULL )
-				fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_COLOR,
-									color );
-			break;
-
-		case FL_SELECT_POPUP_TITLE_COLOR :
-			old_color = sp->p_title_color;
-			sp->p_title_color = color;
-			if ( sp->popup != NULL )
-				fl_popup_set_color( sp->popup, FL_POPUP_TITLE_COLOR,
-									color );
-			break;
-
-		case FL_SELECT_POPUP_TEXT_COLOR :
-			old_color = sp->p_text_color;
-			sp->p_text_color = color;
-			if ( sp->popup != NULL )
-				fl_popup_set_color( sp->popup, FL_POPUP_TEXT_COLOR,
-									color );
-			break;
-
-		case FL_SELECT_POPUP_HIGHLIGHT_TEXT_COLOR :
-			old_color = sp->p_text_on_color;
-			sp->p_text_on_color = color;
-			if ( sp->popup != NULL )
-				fl_popup_set_color( sp->popup, FL_POPUP_HIGHLIGHT_TEXT_COLOR,
-									color );
-			break;
-
-		case FL_SELECT_POPUP_DISABLED_TEXT_COLOR :
-			old_color = sp->p_text_off_color;
-			sp->p_text_off_color = color;
-			if ( sp->popup != NULL )
-				fl_popup_set_color( sp->popup, FL_POPUP_DISABLED_TEXT_COLOR,
-									color );
-			break;
-
-		default :
-			M_err( "fl_set_select_color", "Invalid type of color to set" );
-			return FL_MAX_COLORS;
-	}
+	old_color = sp->color;
+	sp->color = color;
+	fl_redraw_object( obj );
 
 	return old_color;
 }
 
 
 /***************************************
- * Returns style and size of one of the fonts used for the object
+ * Returns style and size of the fonts used for the text on the object
  ***************************************/
 
 int
-fl_get_select_font( FL_OBJECT * obj,
-	                int         type,
-					int       * style,
-					int       * size )
+fl_get_select_text_font( FL_OBJECT * obj,
+						 int       * style,
+						 int       * size )
 {
     FLI_SELECT_SPEC *sp;
 
@@ -950,54 +723,23 @@ fl_get_select_font( FL_OBJECT * obj,
 
 	sp = obj->spec;
 
-	switch ( type )
-	{
-		case FL_SELECT_TEXT_FONT :
-			if ( style != NULL )
-				*style = sp->lstyle;
-			if ( size != NULL )
-				*size = sp->lsize;
-			break;
-
-		case FL_SELECT_POPUP_TEXT_FONT :
-			if ( style != NULL )
-				*style = sp->p_title_font_style;
-			if ( size != NULL )
-				*size = sp->p_title_font_size;
-			break;
-
-		case FL_SELECT_ITEM_TEXT_FONT :
-			if ( style != NULL )
-				*style = sp->p_entry_font_style;
-			if ( size != NULL )
-				*size = sp->p_entry_font_size;
-			break;
-
-		case FL_SELECT_LABEL_FONT :
-			if ( style != NULL )
-				*style = obj->lstyle;
-			if ( size != NULL )
-				*size = obj->lsize;
-			break;
-
-		default :
-			M_err( "fl_set_select_font", "Invalid type of font to set" );
-			return -1;
-	}
+	if ( style != NULL )
+		*style = sp->style;
+	if ( size != NULL )
+		*size = sp->size;
 
 	return 0;
 }
 
 
 /***************************************
- * Sets style and size of one of the fonts used for the object
+ * Sets style and size of the fonts used for the text on the object
  ***************************************/
 
 int
-fl_set_select_font( FL_OBJECT * obj,
-	                int         type,
-					int         style,
-					int         size )
+fl_set_select_text_font( FL_OBJECT * obj,
+						 int         style,
+						 int         size )
 {
     FLI_SELECT_SPEC *sp;
 
@@ -1009,45 +751,33 @@ fl_set_select_font( FL_OBJECT * obj,
 
 	sp = obj->spec;
 
-	switch ( type )
-	{
-		case FL_SELECT_TEXT_FONT :
-			sp->lstyle = style;
-			sp->lsize  = size;
-			fl_redraw_object( obj );
-			break;
-
-		case FL_SELECT_POPUP_TEXT_FONT :
-			sp->p_title_font_style = style;
-			sp->p_title_font_size  = size;
-			if ( sp->popup != NULL )
-				fl_popup_set_title_font( sp->popup, style, size );
-			break;
-
-		case FL_SELECT_ITEM_TEXT_FONT :
-			sp->p_entry_font_style = style;
-			sp->p_entry_font_size  = size;
-			if ( sp->popup != NULL )
-				fl_popup_entry_set_font( sp->popup, style, size );
-			break;
-
-		case FL_SELECT_LABEL_FONT :
-			fl_set_object_lstyle( obj, style );
-			fl_set_object_lsize( obj, size );
-			break;
-
-		default :
-			M_err( "fl_set_select_font", "Invalid type of font to set" );
-			return -1;
-	}
+	sp->style = style;
+	sp->size  = size;
+	fl_redraw_object( obj );
 
 	return 0;
 }
 
 
 /***************************************
+ * Gets the alignment of the text within the box of the object
+ ***************************************/
+
+int
+fl_get_select_text_align( FL_OBJECT * obj )
+{
+	if ( obj == NULL )
+	{
+		M_err( "fl_set_select_text_align", "NULL object" );
+		return -1;
+	}
+
+	return ( ( FLI_SELECT_SPEC * ) obj->spec )->align;
+}
+
+
+/***************************************
  * Sets the alignment of the text within the box of the object
- * (that's not the label alignment!)
  ***************************************/
 
 int
@@ -1087,43 +817,6 @@ fl_set_select_text_align( FL_OBJECT * obj,
 
 
 /***************************************
- * Sets the border width to be used for the popup of the popup
- ***************************************/
-
-int
-fl_set_select_popup_bw( FL_OBJECT * obj,
-						int         bw )
-{
-    FLI_SELECT_SPEC *sp;
-    int old_bw;
-
-	if ( obj == NULL )
-	{
-		M_err( "fl_set_select_popup_bw", "NULL object" );
-		return INT_MIN;
-	}
-
-    /* Clamp border width to a reasonable range */
-
-    if ( bw == 0 || FL_abs( bw ) > FL_MAX_BW )
-    {
-        bw = bw == 0 ? -1 : ( bw > 0 ? FL_MAX_BW : - FL_MAX_BW );
-        M_warn( "fl_set_select_popup_bw", "Adjusting invalid border width "
-				"to %d", bw ); 
-    }
-
-	sp = obj->spec;
-
-	old_bw = sp->p_bw;
-	sp->p_bw = bw;
-	if ( sp->popup )
-		fl_popup_set_bw( sp->popup, bw );
-
-	return old_bw;
-}
-
-
-/***************************************
  * Sets how the popup of the object behaves
  ***************************************/
 
@@ -1148,106 +841,14 @@ fl_set_select_policy( FL_OBJECT * obj,
 
 	sp = obj->spec;
 
-	old_policy = sp->p_policy;
-	sp->p_policy = policy;
-	if ( sp->popup != NULL )
-		fl_popup_set_policy( sp->popup, policy );
+	if ( sp->popup == NULL )
+		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+								   "fl_set_select_policy" );
+
+	old_policy = fl_popup_get_policy( sp->popup );
+	fl_popup_set_policy( sp->popup, policy );
 
 	return old_policy;
-}
-
-/***************************************
- * Returns the state of one of the items of the object
- ***************************************/
-
-unsigned int
-fl_get_select_item_state( FL_OBJECT      * obj,
-						  FL_POPUP_ENTRY * item )
-{
-	FL_POPUP_ENTRY *e;
-    FLI_SELECT_SPEC *sp;
-
-	if ( obj == NULL )
-	{
-		M_err( "fl_get_select_item_state", "NULL object" );
-		return UINT_MAX;
-	}
-
-	sp = obj->spec;
-
-	if ( sp->popup == NULL )
-	{
-		M_err( "fl_get_select_item_state", "Object has no popup yet" );
-		return UINT_MAX;
-	}
-
-	for ( e = sp->popup->entries; e != NULL; e = e->next )
-		if ( e == item )
-			break;
-
-	if ( e == NULL )
-	{
-		M_err( "fl_get_select_item_state", "Invalid item" );
-		return UINT_MAX;
-	}
-
-	return fl_popup_entry_get_state( item );
-}
-
-
-/***************************************
- * Sets the state of one of the items of the object
- ***************************************/
-
-unsigned int
-fl_set_select_item_state( FL_OBJECT      * obj,
-						  FL_POPUP_ENTRY * item,
-						  unsigned int     state )
-{
-	FL_POPUP_ENTRY *e;
-    FLI_SELECT_SPEC *sp;
-	unsigned int old_state;
-
-	if ( obj == NULL )
-	{
-		M_err( "fl_set_select_item_state", "NULL object" );
-		return UINT_MAX;
-	}
-
-	sp = obj->spec;
-
-	if ( sp->popup == NULL )
-	{
-		M_err( "fl_set_select_item_state", "Object has no popup yet" );
-		return UINT_MAX;
-	}
-
-	for ( e = sp->popup->entries; e != NULL; e = e->next )
-		if ( e == item )
-			break;
-
-	if ( e == NULL )
-	{
-		M_err( "fl_set_select_item_state", "Invalid item" );
-		return UINT_MAX;
-	}
-
-	/* Mask out bits that can't be set for a select item */
-
-	state &= FL_POPUP_DISABLED | FL_POPUP_HIDDEN;
-
-	/* Set the new state */
-
-	old_state = fl_popup_entry_set_state( item, state );
-
-	/* If the object we changed was the selected one before and, due to the
-	   new state, it isn't selectable anymore, set a new selected item */
-
-	if (    state & ( FL_POPUP_DISABLED | FL_POPUP_HIDDEN )
-		 && sp->sel->entry == item )
-		sp->sel = find_next_item( obj );
-
-	return old_state;
 }
 
 
@@ -1554,7 +1155,7 @@ draw_select( FL_OBJECT * obj )
 							  obj->w - box_w - 2 * bw, obj->h - 2 * bw );
 		fl_drw_text( sp->align, obj->x + bw, obj->y + bw,
 					 obj->w - box_w - 2 * bw, obj->h - 2 * bw,
-					 sp->lcolor, sp->lstyle, sp->lsize, sp->sel->label );
+					 sp->color, sp->style, sp->size, sp->sel->label );
 		fl_unset_text_clipping( );
     }
 }
@@ -1620,7 +1221,7 @@ draw_droplist( FL_OBJECT * obj )
 	/* Draw the arrow */
 
     fl_drw_text( FL_ALIGN_CENTER, button_x + bw, button_y + bw,
-				 button_w - 2 * bw, button_h - 2 * bw, sp->lcolor, 0, 0,
+				 button_w - 2 * bw, button_h - 2 * bw, sp->color, 0, 0,
 				 "@#2->" );
 
 	/* Draw the text of the currently selected item */
@@ -1631,7 +1232,7 @@ draw_droplist( FL_OBJECT * obj )
 							  box_w - 2 * bw, box_h - 2 * bw );
 		fl_drw_text( sp->align, box_x + bw, box_y + bw,
 					 box_w - 2 * bw, box_h - 2 * bw,
-					 sp->lcolor, sp->lstyle, sp->lsize, sp->sel->label );
+					 sp->color, sp->style, sp->size, sp->sel->label );
 		fl_unset_text_clipping( );
     }
 }

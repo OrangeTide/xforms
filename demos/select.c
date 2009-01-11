@@ -75,7 +75,7 @@ create_form( void )
                               "Children" );
     fl_add_select_items( childobj, "Zero|One|Two|Three|Four|Many" );
     fl_set_object_shortcut( childobj, "C", 1 );
-    fl_set_select_popup_title( childobj, "Kids" );
+    fl_popup_set_title( fl_get_select_popup( childobj ), "Kids" );
 
     licenceobj = fl_add_select( FL_NORMAL_SELECT, 280, 80, 110, 30, "Licence" );
     fl_add_select_items( licenceobj, "Yes|No" );

@@ -51,7 +51,7 @@
                 @counter:Normal\nCounter:counter
 	@objects:Other\nObjects:@other
 		@other:Menus\nAnd\nChoices:@menu
-		  @menu:Menu:menu
+		  @menu:Nmenu:nmenu
 		  @menu:Select:select
 		  @menu:Choice\n(deprecated):choice
 		@other:Canvas:@canvas

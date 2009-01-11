@@ -61,11 +61,15 @@ typedef FLI_VALUATOR_SPEC FLI_SLIDER_SPEC;
 #define IS_FILL( t )         (    t == FL_VERT_FILL_SLIDER      \
                                || t == FL_HOR_FILL_SLIDER )
 
-#define IS_SCROLLBAR( t )    (    t == FL_HOR_NICE_SLIDER2      \
+#define IS_SCROLLBAR( t )    (    t == FL_HOR_NICE_SLIDER       \
+						       || t == FL_HOR_NICE_SLIDER2      \
+						       || t == FL_HOR_BROWSER_SLIDER    \
 						       || t == FL_HOR_BROWSER_SLIDER2   \
 						       || t == FL_HOR_THIN_SLIDER       \
 						       || t == FL_HOR_BASIC_SLIDER      \
+						       || t == FL_VERT_NICE_SLIDER      \
 						       || t == FL_VERT_NICE_SLIDER2     \
+						       || t == FL_VERT_BROWSER_SLIDER   \
 						       || t == FL_VERT_BROWSER_SLIDER2  \
 						       || t == FL_VERT_THIN_SLIDER      \
                                || t == FL_VERT_BASIC_SLIDER )

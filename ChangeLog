@@ -1,3 +1,11 @@
+2009-01-11 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/nmenu.c, lib/include/nmenu.h, lib/private/pnmenu.h:
+	New type of menus based on the new popup code.
+
+	* lib/private/pselect.h: Small correction to get the knob
+	of browser sliders drawn correctly.
+
 2009-01-03 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/select.c: Corrections and additions of new functions

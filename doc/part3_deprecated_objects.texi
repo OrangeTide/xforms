@@ -2,7 +2,7 @@
 @chapter Deprecated Objects
 
 In this chapter describes object types that have been replaced by
-newer ones. They may still be in use in older applications and also
+newer ones. They may be in use in older applications and also still
 can be used in new programs (though this isn't recommended). There
 probably will be no more support for these objects in terms of bug
 fixes etc.
@@ -11,6 +11,7 @@ fixes etc.
 @ifnottex
 @menu
 * Choice Object:  Choice Object
+* Menu Object:    Menu Object
 * XPopup:         XPopup
 @end menu
 
@@ -256,6 +257,402 @@ Fonts}, for details on font sizes and styles.
 @subsection Remarks
 
 See @file{choice.c} for an example of the use of choice objects.
+
+
+@node Menu Object
+@section Menu Object
+
+Also menus can be added to forms. These menus can be used to let the
+user choose from many different possibilities. Each menu object has a
+box with a label in it in the form. Whenever the user presses the
+mouse inside the box (or moves the mouse on top of the box) a pop-up
+menu appears. The user can then make a selection from the menu.
+
+@ifnottex
+
+@menu
+* Adding Menu Objects:   Adding Menu Objects
+* Menu Types:            Menu Types
+* Menu Interaction:      Menu Interaction
+* Other Menu Routines:   Other Menu Routines
+* Menu Attributes:       Menu Attributes
+* Remarks:               Menu Remarks
+@end menu
+
+@end ifnottex
+
+
+@node Adding Menu Objects
+@subsection Adding Menu Objects
+
+To add a menu to a form use the routine
+@findex fl_add_menu()
+@anchor{fl_add_menu()}
+@example
+FL_OBJECT *fl_add_menu(int type, FL_Coord x, FL_Coord y,
+                       FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+It shows a box on the screen with the label centered in it.
+
+
+@node Menu Types
+@subsection Menu Types
+
+The following types are available:
+@table @code
+@tindex FL_PUSH_MENU
+@item FL_PUSH_MENU
+The menu appears when the user presses a mouse button on it.
+@tindex FL_PULLDOWN_MENU
+@item FL_PULLDOWN_MENU
+The menu appears when the user presses a mouse button on it.
+@tindex FL_TOUCH_MENU
+@item FL_TOUCH_MENU
+The menu appears when the user move the mouse inside it.
+@end table
+
+@code{FL_PUSH_MENU} and @code{FL_PULLDOWN_MENU} behave rather similar.
+When you click on a @code{FL_PUSH_MENU} per default a pop-up window
+gets opened on top of the @code{FL_PUSH_MENU} menu's box that has a
+label at the top, indicating the currently selected menu item. The
+pop-up window stays open until you either select an item or press a
+mouse button somewhere outside the pop-up window.
+
+When you click on @code{FL_PULLDOWN_MENU} also a pop-up window is
+shown, but directly below the menu's box. This pop-up window has
+no label and it only stays open until you release the mouse button.
+
+@code{FL_PUSH_MENU} and @code{FL_PULLDOWN_MENU} can be made even more
+similar by using the @code{@ref{fl_set_menu_notitle()}} function (see
+below). This changes it's properties so that the pop-up window also
+appears below the menu's box and that no label is shown in the pop-up
+window. The only remaining difference then is that a
+@code{FL_PUSH_MENU} only gets closed when a menu item is selected or
+the user presses the mouse outside of the pop-up window while a
+@code{FL_PULLDOWN_MENU} also gets closed when the mouse button is
+released.
+
+
+@node Menu Interaction
+@subsection Menu Interaction
+
+When the menu appears the user can make a selection using the left
+mouse button or make no selection by clicking outside the menu (or by
+simply releasing the mouse button in case of a @code{FL_PULLDOWN_MENU}
+type menu. When he makes a selection the menu object is returned by
+the interaction routines.
+
+@node Other Menu Routines
+@subsection Other Menu Routines
+
+There are two ways to populate a menu, i.e.@: add items. The first one
+is a bit more complex but allows for more flexibility, e.g.@: later
+adding and removing items, associating callbacks with individual items
+etc. For the more simple (and in many cases sufficient) method see the
+function @code{@ref{fl_set_menu_entries()}}.
+
+To set the actual menu for a menu object, use the routine
+@findex fl_set_menu()
+@anchor{fl_set_menu()}
+@example
+void fl_set_menu(FL_OBJECT *obj, const char *menustr, ...);
+@end example
+@noindent
+@code{menustr} describes the menu in the form used by XPopups
+(@pxref{XPopup}). In the simplest case, it just contains the texts fr
+the menu items, separated by a bar (@code{'|'}), e.g.@:
+@code{"First|Second|Third"}. But it's also possible to employ special
+tags (@pxref{Creating XPopups}) that can be used to indicate special
+attributes (radio, toggle and greyed-out, for example). Whenever the
+user selects a menu item, a pointer to the menu object it belongs to
+is returned to the application program.
+
+Please note that if you call @code{@ref{fl_set_menu()}} on a menu that
+already contains items those items are removed. The function calls
+@code{@ref{fl_clear_menu()}} internally before the new items are
+added.
+
+If you explicitely assign a menu item ID to a menu using the special
+tag @code{%x} it is your responsibility to make sure that this ID
+isn't already used by a different menu item in the same menu. Failure
+to do so may make it impossible to use the menu properly. All
+functions working on items expect the menu item ID as one of their
+arguments.
+
+In case you don't set menu item IDs they are assigned automatically
+with the first item obtaining the menu item ID 1, the next 2 etc.,
+i.e.@: it directly reflects the position of the item in the menu.
+
+It is also possible to add menu items to an existing menu using a call
+of
+@findex fl_addto_menu()
+@anchor{fl_addto_menu()}
+@example
+int fl_addto_menu(FL_OBJECT *obj, const char *menustr, ...);
+@end example
+@noindent
+where @code{menustr} is a string of the same form as used in
+@code{@ref{fl_set_menu()}} (you can add one or more new menu items
+this way).
+
+Also routines exist to delete a particular menu item or change it:
+@findex fl_delete_menu_item()
+@anchor{fl_delete_menu_item()}
+@findex fl_replace_menu_item()
+@anchor{fl_replace_menu_item()}
+@example
+void fl_delete_menu_item(FL_OBJECT *obj, int miid);
+void fl_replace_menu_item(FL_OBJECT *obj, int miid,
+                           const char *menustr, ...);
+@end example
+@code{miid} is the menu item ID. @code{menustr} must be a string as
+used in @code{@ref{fl_set_menu()}} with the only difference that only
+a single menu item can be specified.
+
+Please note: when deleting a menu item all other items keep their
+menu item IDs. The menu item ID of the deleted menu item isn't
+re-used when new items are added later. Instead for each menu an
+internal counter exists that gets incremented for each menu item
+added and which value is used for the menu item ID unless one is
+explicitely assigned to the menu item. The counter oly gets reset to 1
+when the menu is cleared used @code{@ref{fl_clear_menu()}}.
+
+The menu item ID of a menu item changed by using
+@code{@ref{fl_replace_menu_item()}} does not change unless the library
+is explicitely asked to via @code{%x} in @code{menustr}.
+
+For most applications, the following routine may be easier to use at
+the expense of somewhat restrictive value a menu item can have as
+well as a loss of the ability to delete menu items or associate
+callbacks with menu items. 
+@findex fl_set_menu_entries()
+@anchor{fl_set_menu_entries()}
+@example
+int fl_set_menu_entries(FL_OBJECT *obj, FL_PUP_ENTRY *ent);
+@end example
+@noindent
+where @code{ent} is a pointer to an array of structure of the
+following type, terminated by an element, where at least the
+@code{text} member is a @code{NULL} pointer:
+@tindex FL_PUP_ENTRY
+@example
+typedef struct @{
+    const char *text;
+    FL_PUP_CB callback;
+    const char *shortcut;
+    int mode;
+@} FL_PUP_ENTRY;
+@end example
+The meaning of each member is explained in Section 21.3. For menus,
+item callback function can be @code{NULL} if the menu callback handles
+the interaction results. See demo program @file{popup.c} for an
+example use of @code{@ref{fl_set_menu_entries()}}.
+
+The function @code{@ref{fl_set_menu_entries()}} works by creating and
+associating a popup menu with the menu object. The popup ID is
+returned by the function. Whenever the function is called, the old
+popup associated with the object (if one exists) is freed and a new
+one is created. Although you can manipulate the menu either through
+the menu API (but adding and removing menu items is not supported for
+menus created this way ) or popup API, the application should not free
+the popup directly and use @code{@ref{fl_clear_menu()}} instead.
+
+
+To clear the whole menu use
+@findex fl_clear_menu()
+@anchor{fl_clear_menu()}
+@example
+void fl_clear_menu(FL_OBJECT *obj);
+@end example
+
+To find the menu item selected by the user use
+@findex fl_get_menu()
+@anchor{fl_get_menu()}
+@example
+int fl_get_menu(FL_OBJECT *obj);
+@end example
+@noindent
+The the function returns the menu item ID. In the simplest possible
+case this is just the position of the menu item (starting at 1). This
+stops to be true when either IDs have been explicitely assigned to
+items or items have been deleted. In that case the following rules
+apply:
+@enumerate
+@item
+A menu item ID may have been assigned to a menu item using @code{%xn}
+in the string for the text of the menu item.
+@item
+Menu items can get associated with a callback function that is
+executed when the menu item is selected. The callback function is of
+type @code{FL_PUP_CB} and receives the menu item ID of the selected
+menu. If such a callback is set for a menu item the return value of
+@code{@ref{fl_get_menu()}} is the return value of this function
+instead of the menu item ID that would have been returned otherwise.
+@end enumerate
+
+To obtain the text of the item selected
+@findex fl_get_menu_text()
+@anchor{fl_get_menu_text()}
+@example
+const char *fl_get_menu_text(FL_OBJECT *obj);
+@end example
+
+To obtain the text of any item, use the following routine
+@findex fl_get_menu_item_text()
+@anchor{fl_get_menu_item_text()}
+@example
+const char *fl_get_menu_item_text(FL_OBJECT *obj, int miid);
+@end example
+@noindent
+where @code{miid} is the menu item ID. If @code{n} isn't a valid menu
+iem ID item @code{NULL} is returned.
+
+To obtain the total number of menu items, use the function
+@findex fl_get_menu_maxitems()
+@anchor{fl_get_menu_maxitems()}
+@example
+int fl_get_menu_maxitems(FL_OBJECT *obj);
+@end example
+
+One can change the appearance of different menu items. In particular,
+it is sometimes desirable to make grey-out menu items and make them
+unselectable or to put boxes with and without checkmarks in front of
+them. This can be done using the routine:
+@findex fl_set_menu_item_mode()
+@anchor{fl_set_menu_item_mode()}
+@example
+void fl_set_menu_item_mode(FL_OBJECT *obj, int miid, unsigned mode);
+@end example
+@noindent
+@code{miid} is the menu index ID of the memu item you want to change.
+@code{mode} represents the special properties you want to apply to the
+chosen item. You can specify more than one at a time by adding or
+bitwise OR-ing these values together. For this parameter, the
+following symbolic constants exist:
+@table @code
+@tindex FL_PUP_NONE
+@item FL_PUP_NONE
+No special display characteristic, the default.
+@tindex FL_PUP_BOX
+@item FL_PUP_BOX
+"Binary" entry, i.e.@: an entry that stands for a choice that can
+be switched on and off. Displayed with an unchecked box to the
+left.
+@tindex FL_PUP_RADIO
+@item FL_PUP_RADIO
+"Radio" item belonging to a group, so that gets automatically
+switched off when another item of the group is selected. Displayed
+with a diamoned-shaped box at the left.
+@tindex FL_PUP_GREY
+@item FL_PUP_GREY
+To be OR-ed with one of the above to make that item appear
+greyed-out and disable it (i.e.@: not selectable anymore).
+@tindex FL_PUP_CHECK
+@item FL_PUP_CHECK
+To be OR-ed with one of @code{FL_PUP_BOX} and @code{FL_PUP_RADIO}
+to make the box to the left appear checked or pushed.
+@end table
+
+There is also a routine that can be used to obtain the current mode of
+an item after interaction, mostly useful for toggle or radio items:
+@findex fl_get_menu_item_mode()
+@anchor{fl_get_menu_item_mode()}
+@example
+unsigned int fl_get_menu_item_mode(FL_OBJECT *obj, int miid);
+@end example
+
+It is often useful to define keyboard shortcuts for particular menu
+items. For example, it would be nice to have @code{<Alt>s} behave like
+selecting "Save" from a menu. This can be done using the following
+routine:
+@findex fl_set_menu_item_shortcut()
+@anchor{fl_set_menu_item_shortcut()}
+@example
+void fl_set_menu_item_shortcut(FL_OBJECT *obj, int miid,
+                               const char *str);
+@end example
+@noindent
+@code{miid} is the menu item ID of the menu item under consideration.
+@code{str} contains the shortcut for the item. (Actually, it can
+contain more shortcuts for the same item.) @xref{Shortcuts}, for more
+information about shortcuts.
+
+Finally there is the routine:
+@findex fl_show_menu_symbol()
+@anchor{fl_show_menu_symbol()}
+@example
+void fl_show_menu_symbol(FL_OBJECT *obj, int yes_no);
+@end example
+@noindent
+With this routine you can indicate whether to show a menu symbol at
+the right of the menu label. By default no symbol is shown.
+
+
+@node Menu Attributes
+@subsection Menu Attributes
+Any boxtype can be used for a menu except for those of type
+@code{FL_PULLDOWN_MENU}, for which @code{FL_NO_BOX} should not be
+used.
+
+The first color argument (@code{col1}) to
+@code{@ref{fl_set_object_color()}} controls the color of the menu's
+box when not open and the second (@code{col2}) is the color when the
+menu is shown.
+
+To change the font style and size used in the popup menus (not the menu
+label), use the following routines
+@findex fl_setpup_default_fontstyle()
+@findex fl_setpup_default_fontsize()
+@example
+void fl_setpup_default_fontstyle(int style);
+void fl_setpup_default_fontsize(int size);
+@end example
+@noindent
+These settings apply to all menus at once.
+
+If desired, you can attach an external popup to a menu object via the
+following routine
+@findex fl_set_menu_popup()
+@anchor{fl_set_menu_popup()}
+@example
+void fl_set_menu_popup(FL_OBJECT *obj, int pupID);
+@end example
+@noindent
+where @code{pupID} is the ID returned by @code{@ref{fl_newpup()}} or
+@code{@ref{fl_defpup()}}. @xref{XPopup}, for more details on popup
+creation.
+
+For a menu created this way only @code{@ref{fl_get_menu()}} and
+@code{@ref{fl_get_menu_text()}} work as expected. Other services such as
+mode setting and query etc. should be done via the popup routines.
+
+To obtain the popup ID associated with a menu, use the following routine
+@findex fl_get_menu_popup()
+@anchor{fl_get_menu_popup()}
+@example
+int fl_get_menu_popup(FL_OBJECT *obj);
+@end example
+@noindent
+The function return the popup ID if the menu was created using
+@code{@ref{fl_set_menu_popup()}} or
+@code{@ref{fl_set_menu_entries()}}, otherwise it returns -1.
+
+Normally in the popup opened for a menu a title is shown. This can be
+switched off (and back on again by using the function
+@findex fl_set_menu_notitle()
+@anchor{fl_set_menu_notitle()}
+@example
+fl_set_menu_notitle(FL_OBJECT *obj, int off);
+@end example
+
+@node Menu Remarks
+@subsection Remarks
+
+See @file{menu.c} for an example of the use of menus. You can also use
+@code{FL_MENU_BUTTON} to initiate a callback and use an XPopup
+directly within the callback. See @file{pup.c} for an example of this
+approach.
 
 
 @node XPopup
