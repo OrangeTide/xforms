@@ -83,7 +83,7 @@ bw_callback( FL_OBJECT * ob,
 
 	fl_set_object_bw( fd_bwform->bwgroup, bw );
 	fl_set_object_bw( fd_bwform->done, bw );
-	fl_popup_set_bw( r->popup, bw );
+	fl_popup_set_bw( ( FL_POPUP * ) r->popup, bw );
 }
 
 

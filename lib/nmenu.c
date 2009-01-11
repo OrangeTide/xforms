@@ -19,7 +19,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_nmenu = "$Id: nmenu.c,v 1.1 2009/01/11 14:34:21 jtt Exp $";
+char *fl_id_nmenu = "$Id: nmenu.c,v 1.2 2009/01/11 14:58:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -590,7 +590,7 @@ fl_set_nmenu_hl_text_color(FL_OBJECT * obj,
 	if ( obj == NULL )
 	{
 		M_err( "fl_set_nmenu_hl_text_color", "NULL object" );
-		return NULL;
+		return FL_MAX_COLORS;
 	}
 
     if ( color >= FL_MAX_COLORS )

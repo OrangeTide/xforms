@@ -45,7 +45,7 @@ fill_browser( FL_OBJECT * ob )
     FD_fbform *fdui = ( FD_fbform * ) ob->form->fdui;
     int nfiles = 0;
     const FL_Dirlist *dl = fl_get_dirlist( ".", "*", &nfiles, 0 );
-	FL_Dirlist *ds;
+	const FL_Dirlist *ds;
     const FL_Dirlist *dlend = dl + nfiles;
     char buf[ 2048 ];
 
@@ -58,12 +58,12 @@ fill_browser( FL_OBJECT * ob )
     {
 		sprintf( buf, "%-10s\t\t%5ldK\t%s", dl->name, dl->dl_size >> 10,
                  ctime( &dl->dl_mtime ) + 3 );
-		fl_addto_browser_chars(fdui->browser, buf);
+		fl_addto_browser_chars( fdui->browser, buf );
     }
 
     fl_unfreeze_form( ob->form );
 
-    fl_free_dirlist( ds );
+    fl_free_dirlist( ( FL_Dirlist * ) ds );
 }
 
 

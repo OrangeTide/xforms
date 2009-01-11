@@ -160,7 +160,6 @@ void make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )
 	FD_valuatorform *fd_valuatorform;
 	FD_choiceform *fd_choiceform;
 	FD_inputform *fd_inputform;
-	float x[ 6 ] = { 0, 1, 2, 3, 4, 5 };
 	float y[ 6 ] = { 5.5, 4, 4.5, 3.8, 4, 5 };
 	char *label[ ] = { "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
 	size_t i;
