@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image_gif.c,v 1.13 2008/12/27 22:20:44 jtt Exp $
+ * $Id: image_gif.c,v 1.14 2009/01/16 19:28:59 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -241,7 +241,7 @@ read_descriptor_block( FL_IMAGE * im )
     FILE *fp = im->fpin;
     SPEC *sp = im->io_spec;
 
-    /* read the extension if any, and do nothing about it until get the image
+    /* Read the extension if any, and do nothing about it until get the image
        separator */
 
     if ( skip_extension( fp, im ) != IMAGESEP )
@@ -278,7 +278,7 @@ read_descriptor_block( FL_IMAGE * im )
 		/* return -1; *//* might want to continue */
     }
 
-    /* if local map, replace the global map */
+    /* If local map, replace the global map */
 
     if ( local_map )
     {
@@ -288,7 +288,7 @@ read_descriptor_block( FL_IMAGE * im )
 		read_map( im );
     }
 
-    /* handle transparency */
+    /* Handle transparency */
 
     if ( sp->gc.tran && sp->gc.tran_col < im->map_len )
 		im->tran_index = sp->gc.tran_col;

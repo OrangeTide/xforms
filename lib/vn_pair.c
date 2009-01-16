@@ -45,7 +45,7 @@ fl_get_vn_value( FL_VN_PAIR * vn_pair,
         if ( strcmp( vn_pair->name, name ) == 0 )
             return vn_pair->val;
 
-    /* not found. Take a guess */
+    /* Not found. Take a guess */
 
     return atoi( name );
 }

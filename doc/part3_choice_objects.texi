@@ -635,8 +635,11 @@ left with circle for the "selected" item being filed with a color.
 Please note that if @code{text} starts with a @code{/} the type
 @strong{must} be @code{FL_POPUP_NORMAL}.
 
-The @code{state} member per default is 0. It can be set to
+The @code{state} member per default is @code{FL_POPUP_NONE}. It can be
+set to
 @table @code
+@item FL_POPUP_NONE
+No special flags are set for the state of the item.
 @item FL_POPUP_DSABLED
 The item is disabled and can't be selected.
 @item FL_POPUP_HIDDEN
@@ -709,9 +712,13 @@ popup is closed again. The selection can now be handled within a
 callback function and/or reported back to the main loop of the
 program.
 
-The most natural way for dealing with a selection is probably via a
-callback for the item that was selected. But also a callback for the
-popup as a whole or the object itself can be used. Item and popup
+The popup is always shown directly below the nmenu object (except
+for the case that the popup is that long that it wouldn't fit on the
+screen, in that case the popup is drawn above the nmenu's area0>
+
+The most natural way to deal with a selection by the user is probably
+via a callback for the item that was selected. But also a callback for
+the popup as a whole or the object itself can be used. Item and popup
 callback functions are of type @code{FL_POPUP_CB} described above (and
 in even more detail in @ref{Part III Popups}), while object callbacks
 are "normal" XForms callback functions.

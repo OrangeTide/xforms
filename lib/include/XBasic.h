@@ -34,7 +34,8 @@
 #include <X11/keysym.h>
 #include <X11/Xresource.h>
 
-/* draw mode */
+/* Draw mode */
+
 enum
 {
 	FL_XOR	= GXxor,
@@ -49,7 +50,7 @@ enum
 
 enum
 {
-	FL_illegalVisual = -1,
+	FL_IllegalVisual = -1,
 	FL_StaticGray	 = StaticGray,
 	FL_GrayScale	 = GrayScale,
 	FL_StaticColor	 = StaticColor,
@@ -136,7 +137,7 @@ FL_EXPORT int fl_scrh,		/* screen dimension in pixels */
 FL_EXPORT int fl_vmode;
 
 
-/* current version only runs in single visual mode */
+/* Current version only runs in single visual mode */
 
 #define	 fl_get_vclass( )		   fl_vmode
 #define	 fl_get_form_vclass( a )   fl_vmode
@@ -177,7 +178,7 @@ typedef struct
 } FL_pixmap;
 
 
-/* fonts related */
+/* Fonts related */
 
 #define FL_MAX_FONTSIZES   10
 
@@ -197,7 +198,7 @@ typedef struct
 typedef XPoint FL_POINT;
 typedef XRectangle FL_RECT;
 
-/* rectangles */
+/* Rectangles */
 
 FL_EXPORT void fl_rectangle(
 		int		 fill,
@@ -221,7 +222,7 @@ FL_EXPORT void fl_rectbound(
 #define fl_rect( x, y, w, h, c)	   fl_rectangle( 0, x, y, w, h, c )
 
 
-/* rectangle with rounded-corners */
+/* Rectangle with rounded-corners */
 
 FL_EXPORT void fl_roundrectangle(
 		int		 fill,
@@ -236,7 +237,7 @@ FL_EXPORT void fl_roundrectangle(
 #define fl_roundrect( x, y, w, h, c )	fl_roundrectangle( 0, x, y, w, h, c )
 
 
-/* general polygon and polylines */
+/* General polygon and polylines */
 
 FL_EXPORT void fl_polygon(
 		int		   fill,
@@ -294,7 +295,7 @@ FL_EXPORT void fl_update_display(
 	fl_line( x, y, ( x ) + ( w ) - 1, ( y ) + ( h ) - 1, c )
 
 
-/* line attributes */
+/* Line attributes */
 
 enum
 {
@@ -337,7 +338,7 @@ FL_EXPORT int fl_get_drawmode(
 #define fl_set_drawmode		fl_drawmode
 
 
-/** ellipses **/
+/** Ellipses **/
 
 FL_EXPORT void fl_oval(
 		int		 fill,
@@ -373,12 +374,12 @@ FL_EXPORT void fl_ovalarc(
 #define fl_oval_bound				  fl_ovalbound
 
 #define fl_circf( x, y, r, col )   \
-fl_oval( 1, ( x ) - ( r ), ( y ) - ( r ), 2 * ( r ), 2 * ( r ), col )
+	fl_oval( 1, ( x ) - ( r ), ( y ) - ( r ), 2 * ( r ), 2 * ( r ), col )
 #define fl_circ( x, y, r, col )	   \
-fl_oval( 0, ( x ) - ( r ), ( y ) - ( r ), 2 * ( r ), 2 * ( r ), col )
+	fl_oval( 0, ( x ) - ( r ), ( y ) - ( r ), 2 * ( r ), 2 * ( r ), col )
 
 
-/* arcs */
+/* Arcs */
 
 FL_EXPORT void fl_pieslice(
 		int		 fill,
@@ -400,7 +401,7 @@ FL_EXPORT void fl_pieslice(
 	fl_pieslice( 0, ( x ) - ( r ), ( y ) - ( r ), \
 				 2 * ( r ), 2 * ( r ), a1, a2, c )
 
-/* misc. stuff */
+/* Misc. stuff */
 
 FL_EXPORT void fl_add_vertex(
 		FL_Coord x,
@@ -437,7 +438,7 @@ FL_EXPORT void fl_endline(
 #define fl_v2d( v )		   fl_add_float_vertex( v[ 0 ], v[ 1 ] )
 
 
-/* high level drawing routines */
+/* High level drawing routines */
 
 FL_EXPORT void fl_drw_frame(
 		int		 style,
@@ -726,7 +727,7 @@ FL_EXPORT void fl_get_wingeometry(
 		);
 
 
-/* for compatibility */
+/* For compatibility */
 
 #define fl_get_win_size			 fl_get_winsize
 #define fl_get_win_origin		 fl_get_winorigin
@@ -739,7 +740,7 @@ FL_EXPORT void fl_get_wingeometry(
 #define FL_IS_CANVAS( o )	\
     ( ( o )->objclass == FL_CANVAS || ( o )->objclass == FL_GLCANVAS )
 
-/* the window an object belongs. For drawing */
+/* The window an object belongs. For drawing */
 
 #define FL_ObjWin( o )	 \
     ( FL_IS_CANVAS( o ) ? fl_get_canvas_id( o ): ( o )->form->window )
@@ -752,7 +753,7 @@ FL_EXPORT Window fl_get_real_object_window(
 
 #define FL_OBJECT_WID  FL_ObjWin
 
-/*	all registerable events, including Client Message */
+/*	All registerable events, including Client Message */
 
 #define FL_ALL_EVENT  (	  KeyPressMask		 \
 						| KeyReleaseMask	 \
@@ -970,7 +971,7 @@ typedef struct
 #define FL_PDSliderLabelSize  FL_PDSliderFontSize
 #define FL_PDInputLabelSize	  FL_PDInputFontSize
 
-/* program default masks */
+/* Program default masks */
 
 enum
 {
@@ -1072,11 +1073,11 @@ FL_EXPORT void fl_unset_text_clipping(
 		);
 
 
-/* how we pack and unpack colors */
+/* How we pack and unpack colors */
 
 #ifndef FL_PCBITS
-typedef unsigned char FL_PCTYPE;	/* primary color type */
-#define FL_PCBITS		   8	/* primary color bits */
+typedef unsigned char     FL_PCTYPE;	      /* primary color type */
+#define FL_PCBITS		  8	                  /* primary color bits */
 #define FL_PCMAX		  ( ( 1 << FL_PCBITS ) - 1 )
 #define FL_PCCLAMP( a )	  \
 	( ( a ) > ( FL_PCMAX ) ? ( FL_PCMAX ) : ( ( a ) < 0 ? 0 : ( a ) ) )
@@ -1092,7 +1093,7 @@ typedef unsigned int	   FL_PACKED4;
 #define FL_AMASK		   0xff000000
 #define FL_ASHIFT		   24
 
-/* if PCBITS is not 8, we need to apply the RGBmask */
+/* If PCBITS is not 8, we need to apply the RGBmask */
 
 #define FL_GETR( packed )  ( ( packed ) & FL_RMASK )
 #define FL_GETG( packed )  ( ( ( packed ) >> FL_GSHIFT ) & FL_PCMAX )

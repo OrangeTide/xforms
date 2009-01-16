@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image_xpm.c,v 1.8 2008/12/27 22:20:46 jtt Exp $
+ * $Id: image_xpm.c,v 1.9 2009/01/16 19:28:59 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -173,7 +173,7 @@ XPM_load( FL_IMAGE * im )
 
     buflen = ( im->w + 5 ) * sp->char_per_pix;
 
-    /* if comments longer than 256 chars on a single line, this
+    /* If comments longer than 256 chars on a single line, this
        may not work right */
 
     if ( buflen < 256 )
@@ -181,7 +181,7 @@ XPM_load( FL_IMAGE * im )
 
     buf = fl_malloc( buflen );
 
-    /* read the colormap */
+    /* Read the colormap */
 
     for ( icol = 0; icol < im->map_len; icol++ )
     {
@@ -205,20 +205,21 @@ XPM_load( FL_IMAGE * im )
 
 		head++;
 
-		/* the colormap line is char  [mapkey  color]* */
+		/* The colormap line is char  [mapkey  color]* */
 
 		strncpy( key, head, sp->char_per_pix );
 		key[ sp->char_per_pix ] = '\0';
 		head += sp->char_per_pix + 1;
 
-		for ( done = 0; ! done; )
+		done = 0;
+		while ( ! done )
 		{
 			if ( ( done = sscanf( head, " %s %s %n", ckey, val, &n ) < 2 ) )
 				break;
 
 			head += n;
 
-			/* find the color code. We do not handle s currently */
+			/* Find the color code. We do not handle s currently */
 
 			if ( ckey[ 0 ] == 'c' )
 				mapi = CMAP;
@@ -231,22 +232,27 @@ XPM_load( FL_IMAGE * im )
 			else
 				mapi = -1;
 
-			/* ignore the unhandled colormap types */
+			/* Ignore the unhandled colormap types */
 
 			if ( mapi >= 0 )
 			{
-				map = sp->map[mapi];
-				sp->available_maps[mapi] = 1;
+				map = sp->map[ mapi ];
+				sp->available_maps[ mapi ] = 1;
 #if 1
-                for ( len = strlen( val ), p = val + len -1;
+                for ( len = strlen( val ), p = val + len - 1;
 					  p > val && ( *p == ',' || *p == '"' ); p-- )
 					*p = '\0';
 #endif
-				fl_lookup_RGBcolor( val, &r, &g, &b );
 				strcpy( map[ icol ].key, key );
-				map[ icol ].r = r;
-				map[ icol ].g = g;
-				map[ icol ].b = b;
+
+				if ( fl_lookup_RGBcolor( val, &r, &g, &b ) != -1 )
+				{
+					map[ icol ].r = r;
+					map[ icol ].g = g;
+					map[ icol ].b = b;
+				}
+				else
+					map[ icol ].r = map[ icol ].g = map[ icol ].b = -1;
 			}
 		}
     }
@@ -261,12 +267,12 @@ XPM_load( FL_IMAGE * im )
 		map = sp->map[ MMAP ];
     else
     {
-		im->error_message( im, "can't handle XPM colormap" );
+		im->error_message( im, "Can't handle XPM colormap" );
 		fl_free( buf );
 		return -1;
     }
 
-    /* copy local colormap to FLIMAGE colormap */
+    /* Copy local colormap to FLIMAGE colormap */
 
     for ( i = 0; i < im->map_len; i++ )
     {

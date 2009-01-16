@@ -105,7 +105,7 @@ app_init( void )
     flimage_enable_jpeg( );
     flimage_enable_tiff( );
 
-    /* setup visual cue and status reporting */
+    /* Setup visual cue and status reporting */
 
     setup.visual_cue = visual_cue;
     setup.header_info = 1;
@@ -497,7 +497,7 @@ filemenu_callback( FL_OBJECT * ob,
 			{
 				const char *f;
 
-				fl_use_fselector(1);
+				fl_use_fselector( 1 );
 				if ( ( f = fl_show_fselector( "OutputName", 0, "*",
 											  app.image->infile ) ) )
 					save_file( f, 0 );

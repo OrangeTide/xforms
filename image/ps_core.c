@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: ps_core.c,v 1.13 2008/12/27 22:20:46 jtt Exp $
+ * $Id: ps_core.c,v 1.14 2009/01/16 19:28:59 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -623,11 +623,12 @@ flps_query_imap( long   col,
 
 #ifndef FL_PACK
 #define FL_PACK( r, g, b )        ( ( b ) << 16 | ( g ) << 8 | ( r ) )
-#define FL_UNPACK( p, r, g, b )  do {                            \
-	                                 r = ( p ) & 0xff;           \
-                                     g = ( ( p ) >>  8 ) &0xff;	 \
-                                     b = ( ( p ) >> 16 ) &0xff;  \
-                                 } while ( 0 )
+#define FL_UNPACK( p, r, g, b )       \
+	do {							  \
+    	r = ( ( p )       ) & 0xff;	  \
+		g = ( ( p ) >>  8 ) &0xff;	  \
+		b = ( ( p ) >> 16 ) &0xff;	  \
+	} while ( 0 )
 #endif
 
 

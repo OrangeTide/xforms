@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.12 2008/12/27 22:20:45 jtt Exp $
+ * $Id: image_jpeg.c,v 1.13 2009/01/16 19:28:59 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -106,7 +106,7 @@ JPEG_identify( FILE * fp )
     for ( i = 0; i < sizeof buf - 3 && buf[ i ] != 'J'; i++ )
 		/* empty */ ;
 
-    return strncmp( ( char * ) buf, "JFIF", 4 );
+    return ! strncmp( ( char * ) buf + i, "JFIF", 4 );
 }
 
 

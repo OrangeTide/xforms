@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image_combine.c,v 1.5 2008/12/27 22:20:44 jtt Exp $
+ * $Id: image_combine.c,v 1.6 2009/01/16 19:28:59 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -37,22 +37,30 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"
 
 
-FL_IMAGE* flimage_combine(FL_IMAGE *im1, FL_IMAGE *im2, double alpha)
+FL_IMAGE *
+flimage_combine( FL_IMAGE * im1,
+				 FL_IMAGE * im2,
+				 double     alpha )
 {
     FL_IMAGE *ret;
-    int i, w, h, x, y;
+    int i,
+		w,
+		h,
+		x,
+		y;
 
-    if ((!im1 || im1->w <= 0) || (!im2 || im2->w <= 0))
+    if ( ! im1 || im1->w <= 0 || ! im2 || im2->w <= 0 )
        return 0;
 
-    if(!(ret = flimage_alloc()))
+    if ( ! ( ret = flimage_alloc( ) ) )
     {
-        flimage_error(im1, "can't allocate resulting image");
+        flimage_error( im1, "can't allocate resulting image" );
         return 0;
     }
 
@@ -60,51 +68,51 @@ FL_IMAGE* flimage_combine(FL_IMAGE *im1, FL_IMAGE *im2, double alpha)
     ret->h = im1->h;
     ret->type = FLIMAGE_RGB;
 
-    flimage_get_linearlut(ret);
+    flimage_get_linearlut( ret );
 
-    /* convert to RGB */
-    flimage_convert(im1, FLIMAGE_RGB, 0);
-    flimage_convert(im2, FLIMAGE_RGB, 0);
+    /* Convert to RGB */
 
-    /* populate the lut */
-    for ( i = 0; i <= FL_PCMAX; i++)
+    flimage_convert( im1, FLIMAGE_RGB, 0 );
+    flimage_convert( im2, FLIMAGE_RGB, 0 );
+
+    /* Populate the lut */
+
+    for ( i = 0; i <= FL_PCMAX; i++ )
     {
-        ret->llut[0][i] = (i* alpha + 0.5f);
-        ret->llut[1][i] = (i - ret->llut[0][i]);
+        ret->llut[ 0 ][ i ] = i * alpha + 0.5;
+        ret->llut[ 1 ][ i ] = i - ret->llut[ 0 ][ i ];
     }
 
-    w = FL_min(im1->w, im2->w);
-    h = FL_min(im1->h, im2->h);
+    w = FL_min( im1->w, im2->w );
+    h = FL_min( im1->h, im2->h );
+
     for ( y = 0; y < h; y++)
     {
          for ( x = 0; x < w; x++)
          {
-             ret->red[y][x] = ret->llut[0][im1->red[y][x]] +
-                              ret->llut[1][im2->red[y][x]];
-             ret->green[y][x] = ret->llut[0][im1->green[y][x]] +
-                                ret->llut[1][im2->green[y][x]];
-             ret->blue[y][x] = ret->llut[0][im1->blue[y][x]] +
-                               ret->llut[1][im2->blue[y][x]];
+             ret->red[   y ][ x ] =   ret->llut[ 0 ][ im1->red[   y ][ x ] ]
+                                    + ret->llut[ 1 ][ im2->red[   y ][ x ] ];
+             ret->green[ y ][ x ] =   ret->llut[ 0 ][ im1->green[ y ][ x ] ]
+                                    + ret->llut[ 1 ][ im2->green[ y ][ x ] ];
+             ret->blue[  y ][ x ] =   ret->llut[ 0 ][ im1->blue[  y ][ x ] ]
+                                    + ret->llut[ 1 ][ im2->blue[  y ][ x ] ];
          }
 
-         for ( ; x < im1->w; x++)
+         for ( ; x < im1->w; x++ )
          {
-            ret->red[y][x] = im1->red[y][x];
-            ret->green[y][x] = im1->green[y][x];
-            ret->blue[y][x] = im1->blue[y][x];
+            ret->red[   y ][ x ] = im1->red[   y ][ x ];
+            ret->green[ y ][ x ] = im1->green[ y ][ x ];
+            ret->blue[  y ][ x ] = im1->blue[  y ][ x ];
          }
      }
 
-     for ( ; y < im1->h; y++)
-     {
-         for ( x = 0; x < im1->w; x++)
+     for ( ; y < im1->h; y++ )
+         for ( x = 0; x < im1->w; x++ )
          {
-            ret->red[y][x] = im1->red[y][x];
-            ret->green[y][x] = im1->green[y][x];
-            ret->blue[y][x] = im1->blue[y][x];
+            ret->red[   y ][ x ] = im1->red[   y ][ x ];
+            ret->green[ y ][ x ] = im1->green[ y ][ x ];
+            ret->blue[  y ][ x ] = im1->blue[  y ][ x ];
          }
-      }
 
      return ret;
 }
-

@@ -34,7 +34,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.23 2008/12/27 22:20:47 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.24 2009/01/16 19:29:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -101,7 +101,7 @@ canvas_event_intercept( XEvent * xev,
 
     if ( ! sp )
     {
-		/* must be Destroy Event, which is generated after FREEMEM. Probably
+		/* Must be Destroy Event, which is generated after FREEMEM. Probably
 		   should block closewindow and handle the events there. Speed
 		   penalty ? */
 
@@ -199,8 +199,9 @@ BegWMColormap( FLI_CANVAS_SPEC * sp )
        with setting this property. This check simply works around the problem
        (for most cases). */
 
-    if ( sp->colormap != fli_colormap( fl_vmode ) &&
-		 ! XSetWMColormapWindows( flx->display, sp->parent, &sp->window, 1 ) )
+    if (    sp->colormap != fli_colormap( fl_vmode )
+		 && ! XSetWMColormapWindows( flx->display, sp->parent,
+									 &sp->window, 1 ) )
 		M_err( "BegWMColormap", "WM choked" );
 }
 
@@ -233,6 +234,7 @@ fl_set_canvas_attributes( FL_OBJECT            * ob,
     {
 		XChangeWindowAttributes( flx->display, sp->window,
 								 sp->user_mask, &sp->user_xswa );
+
 		if ( mask & CWColormap )
 			BegWMColormap( sp );
     }
@@ -333,7 +335,7 @@ init_canvas( FL_OBJECT       * ob,
 
     if ( ! sp->window || ! fl_winisvalid( sp->window ) )
     {
-		/* find the real parent of the canvas */
+		/* Find the real parent of the canvas */
 
 		sp->parent = fl_get_real_object_window( ob );
 		sp->window = None;
@@ -412,10 +414,10 @@ init_canvas( FL_OBJECT       * ob,
 						   ob->w, ob->h );
     }
 
-    sp->w = ob->w;
-    sp->h = ob->h;
     sp->x = ob->x;
     sp->y = ob->y;
+    sp->w = ob->w;
+    sp->h = ob->h;
 
     if ( ob->col1 != FL_NoColor )
 		XClearWindow( flx->display, sp->window );
@@ -528,8 +530,6 @@ handle_it( FL_OBJECT * ob,
 		   void      * xev  FL_UNUSED_ARG )
 {
     FLI_CANVAS_SPEC *sp = ob->spec;
-
-    M_warn( "Canvas", fli_event_name( event ) );
 
     switch ( event )
     {

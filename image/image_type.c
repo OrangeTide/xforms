@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image_type.c,v 1.8 2008/12/27 22:20:46 jtt Exp $
+ * $Id: image_type.c,v 1.9 2009/01/16 19:28:59 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -684,7 +684,7 @@ flimage_convert( FL_IMAGE * image,
 
     if ( image->available_type & newtype && ! image->force_convert )
     {
-		/* if CI, we also need to verify the map_len is the same */
+		/* If CI, we also need to verify the map_len is the same */
 
 		if ( newtype != FL_IMAGE_CI || image->map_len == ncolors )
 		{

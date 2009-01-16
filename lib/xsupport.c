@@ -34,7 +34,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.17 2008/12/27 22:20:53 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.18 2009/01/16 19:29:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -314,7 +314,7 @@ fli_create_object_pixmap( FL_OBJECT * ob )
     fl_rectf( 0, 0, ob->w, ob->h, ob->dbl_background );
 
     M_info( "ObjPixmap", "Creating depth=%d for %s",
-			fli_depth( fl_vmode ), ob->label );
+			fli_depth( fl_vmode ), ob->label ? ob->label : "unknown");
 
     /* Make sure it succeeds by forcing a two way request */
 
@@ -505,7 +505,7 @@ static FL_VN_PAIR xvclass[ ] =
     { FL_DefaultVisual, "DefaultVisual" },
     { FL_DefaultVisual, "default"       },
     { FL_DefaultVisual, "Default"       },
-    { FL_illegalVisual, "XInvalidClass" },
+    { FL_IllegalVisual, "XInvalidClass" },
     { -1,               "Invalid"       }
 };
 
@@ -522,7 +522,7 @@ fl_vclass_name( int n )
 
 /***************************************
  * fl_get_vn_val can't be used. caller relies on the returning
- * of FL_illegalVisual
+ * of FL_IllegalVisual
  ***************************************/
 
 int
@@ -534,5 +534,5 @@ fl_vclass_val( const char * v )
 		if ( strcmp( vn->name, v ) == 0 )
 			return vn->val;
 
-    return FL_illegalVisual;
+    return FL_IllegalVisual;
 }

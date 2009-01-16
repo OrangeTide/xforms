@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image_scale.c,v 1.6 2008/12/27 22:20:45 jtt Exp $
+ * $Id: image_scale.c,v 1.7 2009/01/16 19:28:59 jtt Exp $
  *.
  *  This file is part of the XForms library package.
  *   Copyright (c) 1993, 1998-2002  T.C. Zhao
@@ -38,7 +38,7 @@
 
 
 /***************************************
- * scale an image without subpixel sampling. Parameter im is strictly
+ * Scale an image without subpixel sampling. Parameter im is strictly
  * for reporting purposes
  ***************************************/
 
@@ -52,7 +52,7 @@ image_zoom( void     * om[ ],
 			int        comp,
 			FL_IMAGE * im  FL_UNUSED_ARG )
 {
-    int *lut = fl_malloc(sizeof *lut * ( nw + 1 ) );
+    int *lut = fl_malloc( ( nw + 1 ) * sizeof *lut );
     unsigned short **ngray = nm[ 0 ],
 		           **ogray = om[ 0 ];
     unsigned char **npc[ 3 ],
@@ -77,6 +77,7 @@ image_zoom( void     * om[ ],
     for ( i = 0; i < nh; i++ )
     {
 		iy = ( i * ( h - 1 ) ) / ( nh - 1 );
+
 		if ( comp == 1 )
 		{
 			for ( j = 0; j < nw; j++ )
@@ -101,7 +102,7 @@ image_zoom( void     * om[ ],
 
 
 /***************************************
- * box averaging. parameter im is strictly for reporting
+ * Box averaging. parameter im is strictly for reporting
  ***************************************/
 
 static int
@@ -218,12 +219,12 @@ flimage_scale( FL_IMAGE * im,
     if ( ! im || im->w <= 0 || im->type == FL_IMAGE_NONE )
 		return -1;
 
-    /* check if null op */
+    /* Check if null op */
 
     if ( im->w == nw && im->h == nh )
 		return 0;
 
-    /* convert to RGB only if subpixel and not gray */
+    /* Convert to RGB only if subpixel and not gray */
 
     if ( option & FLIMAGE_SUBPIXEL )
     {
@@ -239,7 +240,7 @@ flimage_scale( FL_IMAGE * im,
 		}
     }
 
-    /* free all irrelevant pixels */
+    /* Free all irrelevant pixels */
 
     flimage_invalidate_pixels( im );
 
@@ -249,7 +250,7 @@ flimage_scale( FL_IMAGE * im,
 		om[ 1 ] = im->green;
 		om[ 2 ] = im->blue;
 
-		/* for size fitting, we don't need allocate pixels here */
+		/* For size fitting, we don't need allocate pixels here */
 
 		if ( ! ( option & FLIMAGE_ASPECT ) )
 		{

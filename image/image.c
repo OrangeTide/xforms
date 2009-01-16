@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image.c,v 1.14 2008/12/27 22:20:44 jtt Exp $
+ * $Id: image.c,v 1.15 2009/01/16 19:28:59 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -368,7 +368,7 @@ flimage_load( const char *file )
 
     if ( ( image = flimage_open( file ) ) )
     {
-		if( ! ( im = flimage_read( image ) ) )
+		if ( ! ( im = flimage_read( image ) ) )
         {
             flimage_free( image );
             image = NULL;
@@ -1506,7 +1506,7 @@ flimage_free_ci( FL_IMAGE * im )
 {
     fl_free_matrix( im->ci );
     im->ci = NULL;
-    im->available_type = ~FL_IMAGE_CI;
+    im->available_type = ~ FL_IMAGE_CI;
 }
 
 

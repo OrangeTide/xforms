@@ -377,8 +377,11 @@ Not a "real" entry, just indicates that a separator line is to be
 drawn between the previous and the next entry.
 @end table
 
-Finally, the @code{state} member is the logical OR of three properties:
+Finally, the @code{state} member can have the following values:
 @table @code
+@tindex FL_POPUP_NONE
+@item FL_POPUP_NONE
+No special state is set for the entry, the default.
 @tindex FL_POPUP_DISABLED
 @item FL_POPUP_DISABLED
 The entry is disabled, i.e.@: isn't selectable (and normally is drawn in
@@ -392,6 +395,9 @@ Only relevant for toggle and radio entries. Indicates that the state of
 a toggle entry is "on" (drawn with a check-marker) and for a radio entry
 tht it is the one in "on" state of its group.
 @end table
+@noindent
+The state can be a combination of the above constants by using a
+bitwise OR.
 
 The more interesting members of a @code{FL_POPUP} structure are
 @tindex FL_POPUP

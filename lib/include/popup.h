@@ -142,6 +142,7 @@ enum {
 /* Popup states */
 
 enum {
+	FL_POPUP_NONE     = 0,
 	FL_POPUP_DISABLED = 1,             /* entry is disabled */
 	FL_POPUP_HIDDEN   = 2,             /* entry is temporarily hidden */
 	FL_POPUP_CHECKED  = 4              /* tooogle/radio item is in on state */

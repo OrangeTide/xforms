@@ -40,7 +40,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.21 2008/12/27 22:20:48 jtt Exp $";
+char *fl_id_col = "$Id: flcolor.c,v 1.22 2009/01/16 19:29:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -138,17 +138,14 @@ static FLI_IMAP fli_imap[ FL_MAX_COLS ] =
 const char *
 fli_query_colorname( FL_COLOR col )
 {
-    FLI_IMAP *flmap = fli_imap,
-		     *flmape = flmap + builtin + 2;
+    FLI_IMAP *flmap;
     static char buf[ 32 ];
 
-    for ( ; flmap < flmape; flmap++ )
-    {
+    for ( flmap = fli_imap; flmap < fli_imap + builtin + 2; flmap++ )
 		if ( col == flmap->index )
 			return flmap->name;
-    }
 
-    /* not a built-in */
+    /* Not a built-in */
 
     if ( col == FL_NoColor )
 		return "FL_NoColor";
@@ -168,22 +165,19 @@ fli_query_colorname( FL_COLOR col )
 long
 fli_query_namedcolor( const char *s )
 {
-    FLI_IMAP *flmap = fli_imap,
-		     *flmape = flmap + builtin;
+    FLI_IMAP *flmap;
 
-    for ( ; s && flmap < flmape; flmap++ )
+    for ( flmap = fli_imap; s && flmap < fli_imap + builtin; flmap++ )
 		if ( strcmp( s, flmap->name ) == 0 )
 			return flmap->index;
 
-    if ( strstr( s,"FL_FREE_COL" ) )
-    {
+    if ( strstr( s, "FL_FREE_COL" ) )
         return FL_FREE_COL1 + atoi( s + 11 ) - 1;
-    }
 
     if ( strcmp( "FL_NoColor", s ) == 0 )
 		return FL_NoColor;
 
-    /* a wild shot */
+    /* A wild shot */
 
     return atoi( s );
 }
@@ -202,15 +196,14 @@ fl_set_gamma( double r,
 			  double g,
 			  double b )
 {
-    FLI_IMAP *fm = fli_imap,
-		     *fs;
+    FLI_IMAP *fm;
     static double rgamma = 1.0,
 		          ggamma = 1.0,
 		          bgamma = 1.0;
 
-    if ( fm[ 4 ].grayval )
+    if ( fli_imap[ 4 ].grayval )
     {
-		/* too lazy to shuffle colormap around */
+		/* Too lazy to shuffle colormap around */
 
 		M_err( "Gamma", "Ignored. Please call set_gamma before fl_init" );
 		return;
@@ -222,7 +215,7 @@ fl_set_gamma( double r,
 		return;
     }
 
-    for ( fs = fm + builtin; fm < fs; fm++ )
+    for ( fm = fli_imap; fm < fli_imap + builtin; fm++ )
     {
 		fm->r = 0.5 + 255 * pow( fm->r / 255.0, rgamma / r );
 		fm->g = 0.5 + 255 * pow( fm->g / 255.0, ggamma / g );
@@ -275,7 +268,7 @@ be_nice( void )
 			newpixels[ saved++ ] = dc->pixel;
     }
 
-    /* only keep the pixels in the save_index. 0 and 1 are always saved */
+    /* Only keep the pixels in the save_index. 0 and 1 are always saved */
 
     for ( npixels = 0, i = 2; fli_depth( fl_vmode ) > 4 && i < saved; i++ )
     {
@@ -299,7 +292,7 @@ be_nice( void )
 
 		M_warn( "BeNice", "Black=%ld White=%ld", black, white );
 
-		/* as a minimum, we should preserve black & white */
+		/* As a minimum, we should preserve black & white */
 
 		xc.flags = DoRed | DoGreen | DoBlue;
 		if ( black == 0 )
@@ -360,7 +353,7 @@ alloc_direct_color( void )
 
     XStoreColors( flx->display, fli_map( fl_vmode ), xxc, pred );
 
-    /* might want to do rest of the colors ( max_server < col < builtin) */
+    /* Might want to do rest of the colors ( max_server < col < builtin) */
 
     return 1;
 }
@@ -391,7 +384,7 @@ fill_map( void )
 
     for ( ok = 1, fm = fli_imap, fs = fm + pred; ok && fm < fs; fm++ )
     {
-		/* if Xserver is grayscale, we are really walking the "gray" area as
+		/* If Xserver is grayscale, we are really walking the "gray" area as
 		   the server can drive the the display with any of the r, g or b,
 		   need to force a correct value */
 
@@ -417,12 +410,12 @@ fill_map( void )
 		ok = 1;
     }
 
-    /* get approx. for the rest of needed colors */
+    /* Get approx. for the rest of needed colors */
 
     for ( fs = fli_imap + builtin; ok && fm < fs; fm++ )
 		fl_mapcolor( fm->index, fm->r, fm->g, fm->b );
 
-    /* make rest of the entry invalid so we don't accidently free a valid
+    /* Make rest of the entry invalid so we don't accidently free a valid
        pixel */
 
     memset( lut + builtin, 1, ( FL_MAX_COLS - builtin ) * sizeof *lut );
@@ -445,7 +438,7 @@ get_private_cmap( int vmode )
 
     M_warn( "PriavatMap", "getting private colormap" );
 
-    /* get a private colormap */
+    /* Get a private colormap */
 
     fli_map( vmode ) = XCreateColormap( flx->display, fl_root,
 										fli_visual( vmode ),
@@ -461,11 +454,11 @@ get_private_cmap( int vmode )
     if ( vmode == FL_DirectColor )
 		return alloc_direct_color( );
 
-    /* copy some default entries */
+    /* Copy some default entries */
 
     be_nice( );
 
-    /* fill colormap with predetermined colors */
+    /* Fill colormap with predetermined colors */
 
     fl_state[ vmode ].pcm = 1;
     ok = fill_map( );
@@ -481,7 +474,7 @@ get_private_cmap( int vmode )
 
 
 /***************************************
- * use standard colormap only if user explicitly requests it as it
+ * Use standard colormap only if user explicitly requests it as it
  * is the most un-flexible among shared,private and standard.
  ***************************************/
 
@@ -581,7 +574,7 @@ get_shared_cmap( int vmode )
     if ( vmode == FL_DirectColor )
 		return alloc_direct_color( );
 
-    /* copy a few entries from the default colormap if we are using a map
+    /* Copy a few entries from the default colormap if we are using a map
        other than the defaulf */
 
     if ( fli_visual( vmode ) != DefaultVisual( flx->display, fl_screen ) )
@@ -589,7 +582,7 @@ get_shared_cmap( int vmode )
 
     ok = fill_map( );
 
-    /* if we can't do it, free the color we have already allocated so other
+    /* If we can't do it, free the color we have already allocated so other
        applications may have an easier time getting colors */
 
     if ( ! ok )
@@ -614,7 +607,7 @@ fli_create_gc( Window win )
 	   *flgce;
     FL_State *fs = fl_state + fl_vmode;
 
-    /* if gc for this visual exists, do switch */
+    /* If gc for this visual exists, do switch */
 
     if ( fl_state[ fl_vmode ].gc[ 0 ] )
     {
@@ -627,11 +620,11 @@ fli_create_gc( Window win )
 		return;
     }
 
-    /* check if we need to dither */
+    /* Check if we need to dither */
 
     fli_dithered( fl_vmode ) = fli_depth( fl_vmode ) <= 2;
 
-    /* need to create new GCs */
+    /* Need to create new GCs */
 
     M_warn( "CreateGC", "For %s", fl_vclass_name( fl_vmode ) );
 
@@ -652,7 +645,7 @@ fli_create_gc( Window win )
 
     flx->gc = fl_state[ fl_vmode ].gc[ 0 ];
 
-    /* initialize text gc */
+    /* Initialize text gc */
 
     flgcs = fs->textgc;
     flgce = flgcs + sizeof fs->textgc / sizeof *fs->textgc;
@@ -664,7 +657,7 @@ fli_create_gc( Window win )
     }
     flx->textgc = fl_state[ fl_vmode ].textgc[ 0 ];
 
-    /* initialize a dimmed GC */
+    /* Initialize a dimmed GC */
 
     fl_state[ fl_vmode ].dimmedGC = XCreateGC( flx->display, win, 0, 0 );
     XSetStipple( flx->display, fl_state[ fl_vmode ].dimmedGC,
@@ -672,7 +665,7 @@ fli_create_gc( Window win )
     XSetGraphicsExposures( flx->display, fl_state[ fl_vmode ].dimmedGC, 0 );
     XSetFillStyle( flx->display, fl_state[ fl_vmode ].dimmedGC, FillStippled );
 
-    /* special for B&W and 2bits displays */
+    /* Special for B&W and 2bits displays */
 
     if ( fli_dithered( fl_vmode ) )
     {
@@ -709,7 +702,7 @@ fli_init_colormap( int vmode )
     FLI_IMAP *fm = fli_imap;
     Colormap defmap;
 
-    /* if map for this mode already exists, leave it alone, not only
+    /* If map for this mode already exists, leave it alone, not only
        efficient but also necessary as fl_win_open may call init map */
 
     if ( fli_map( vmode ) )
@@ -720,7 +713,7 @@ fli_init_colormap( int vmode )
 		return;
     }
 
-    /* get max colors we can have, take care there are machines where an
+    /* Get max colors we can have, take care there are machines where an
 	   unsigned long isn't large enough to hold the number of colors) */
 
 	if ( ( unsigned int ) fli_depth( vmode ) >=
@@ -738,7 +731,7 @@ fli_init_colormap( int vmode )
     if ( ! defaultc )
 		defaultc = fl_malloc( FL_MAX_COLS * sizeof *defaultc );
 
-    /* initialize secondary lookup table */
+    /* Initialize secondary lookup table */
 
     for ( fm = fli_imap, i = 0; i < FL_MAX_COLS; i++, fm++ )
     {
@@ -748,7 +741,7 @@ fli_init_colormap( int vmode )
 			fm->index = i;
     }
 
-    /* take a snapshot of the default colormap for later use by
+    /* Take a snapshot of the default colormap for later use by
        private_colormap */
 
     defmap = DefaultColormap( flx->display, fl_screen );
@@ -806,7 +799,7 @@ fl_get_rgb_pixel( FL_COLOR packed,
 
 
 /***************************************
- * input col is the color known to the world outside of FORMS,
+ * Input col is the color known to the world outside of FORMS,
  * FL_RED etc. Returned will be the true pixel X understands
  ***************************************/
 
@@ -818,16 +811,14 @@ fl_get_pixel( FL_COLOR col )
 
     if ( flx->isRGBColor )
 		return fl_get_rgb_pixel( col, &flx->newpix );
-    else
-    {
-		if ( col >= FL_MAX_COLS )
-		{
-			M_err( "FLGetPixel", "Bad request %lu", col );
-			return 0;
-		}
 
-		return fl_state[ fl_vmode ].lut[ col ];
-    }
+	if ( col >= FL_MAX_COLS )
+	{
+		M_err( "FLGetPixel", "Bad request %lu", col );
+		return 0;
+	}
+
+	return fl_state[ fl_vmode ].lut[ col ];
 }
 
 
@@ -892,7 +883,7 @@ fl_get_rgb_pixel( FL_COLOR packed,
 		if ( ( *newpix = XAllocColor( flx->display, s->colormap, &xc ) ) )
 			return xc.pixel;
 
-		/* color allocation failed. Search for best match */
+		/* Color allocation failed. Search for best match */
 
 		if ( ( max_col = FL_min( 256, 1 << s->depth ) ) == 0 )
             max_col = 256;
@@ -900,7 +891,7 @@ fl_get_rgb_pixel( FL_COLOR packed,
 		if ( ! xcolor )
 			xcolor = fl_malloc( 256 * sizeof *xcolor );
 
-		/* not theoretically correct as colormap may have changed
+		/* Not theoretically correct as colormap may have changed
 		 * since the last time we asked for colors. Take a chance for
 		 * performace. */
 
@@ -1010,7 +1001,7 @@ fl_bk_textcolor( FL_COLOR col )
 
 
 /***************************************
- * map color: it involves changing the internal colormap as well as
+ * Map color: it involves changing the internal colormap as well as
  * requesting the acutal pixel value. In case a request fails,
  * we subsititute the closest color
  ***************************************/
@@ -1028,12 +1019,12 @@ fl_mapcolor( FL_COLOR col,
 		          *cur_map;
     unsigned long pixel;
 
-    /* if requested color is reserved, warn */
+    /* If requested color is reserved, warn */
 
     if ( col < FL_BUILT_IN_COLS )
 		M_warn( "MapColor", "Changing reserved color" );
 
-    /* must invalidate color cache */
+    /* Must invalidate color cache */
 
     if ( col == flx->color )
 		flx->color = BadPixel;
@@ -1059,7 +1050,7 @@ fl_mapcolor( FL_COLOR col,
     if ( j < 0 )
 		j = flmapsize - 1;
 
-    /* in BW, too many colors collaps together */
+    /* In B&W too many colors collaps together */
 
     if (    fli_imap[ j ].r == r
 		 && fli_imap[ j ].g == g
@@ -1104,7 +1095,7 @@ fl_mapcolor( FL_COLOR col,
 		return lut[ col ];
     }
 
-    /* colormap is full. Warn once and substitute from now on */
+    /* Colormap is full. Warn once and substitute from now on */
 
     if ( ! cur_mapvals[ fl_vmode ] )
     {
@@ -1114,7 +1105,7 @@ fl_mapcolor( FL_COLOR col,
 		cur_map = fl_calloc( totalcols + 1, sizeof *cur_map );
 		cur_mapvals[ fl_vmode ] = cur_map;
 
-		/* take a snapshot of the color map */
+		/* Take a snapshot of the color map */
 
 		for ( i = 0; i < totalcols; i++ )
 			cur_map[ i ].pixel = i;
@@ -1122,7 +1113,7 @@ fl_mapcolor( FL_COLOR col,
 		XQueryColors( flx->display, fli_map( fl_vmode ), cur_map, totalcols );
     }
 
-    /* search for the closest match */
+    /* Search for the closest match */
 
     cur_map = cur_mapvals[ fl_vmode ];
     j = fli_find_closest_color( r, g, b, cur_map, totalcols, &pixel );
@@ -1137,7 +1128,7 @@ fl_mapcolor( FL_COLOR col,
 
     lut[ col ] = cur_map[ j ].pixel;
 
-    /* we still need to allocate the color, otherwise destroying the just
+    /* We still need to allocate the color, otherwise destroying the just
        requested color might accidentally free a reserved pixel */
 
     exact.red   = cur_map[ j ].red;
@@ -1321,7 +1312,7 @@ fli_dump_state_info( int          mode,
 		fprintf( stderr, " Colormap:0x%lx\n", fli_map( mode ) );
     }
 
-    /* some more checks */
+    /* Some more checks */
 
     if ( ! XMatchVisualInfo( flx->display, fl_screen, fli_depth( mode ),
 							 fli_class( mode ), &xvi ) )
@@ -1332,12 +1323,12 @@ fli_dump_state_info( int          mode,
 
     if ( fli_visual( mode )->visualid != xvi.visualid )
     {
-		/* possible on SGI with OpenGL selected visuals */
+		/* Possible on SGI with OpenGL selected visuals */
 
 		M_warn( "StateInfo", "inconsistent visualID, probably OK" );
     }
 
-    /* state info consistency */
+    /* State info consistency */
 
     if ( fli_depth( mode ) != fs->xvinfo->depth )
     {
@@ -1393,7 +1384,7 @@ rgb2pixel( unsigned int r,
 {
     FL_State *s = fl_state + fl_vmode;
 
-    /* this one drops bits and looks bad if primary color resolution is less
+    /* This one drops bits and looks bad if primary color resolution is less
        than 6, but server calculates color this way. A better way  should be
        r = ((float) r * ((1L << s->rbits) - 1) / 255.0 + 0.1); */
 
@@ -1450,7 +1441,7 @@ fl_create_colormap( XVisualInfo * xv,
 							xv->class != FL_DirectColor ?
 							AllocNone : AllocAll );
 
-    /* as a minimum, try to preserve Black or White */
+    /* As a minimum try to preserve Black or White */
 
     xc.flags = DoRed | DoGreen | DoBlue;
     xc.pixel = 0;
@@ -1465,7 +1456,7 @@ fl_create_colormap( XVisualInfo * xv,
 		XAllocColor( flx->display, cmap, &xc );
     }
 
-    /* now if have the same visual, we can do event more */
+    /* Now if have the same visual, we can do event more */
 
     if ( nfill > 0 && fl_vmode == xv->class && fl_vmode != DirectColor )
     {
@@ -1487,7 +1478,7 @@ fl_create_colormap( XVisualInfo * xv,
 				allocated[ k++ ] = dc->pixel;
 		}
 
-		/* now free the non-xforms colors, but keep some non-xforms entries */
+		/* Now free the non-xforms colors, but keep some non-xforms entries */
 
 		for ( k = 0, i = keep; i < maxread; i++ )
 		{
@@ -1572,12 +1563,12 @@ fl_free_colors( FL_COLOR * c,
 
     for ( k = 0; k < n; k++, c++, pix++ )
     {
-		/* if requested color is reserved, warn */
+		/* If requested color is reserved, warn */
 
 		if ( *c < FL_FREE_COL1 )
 			M_warn( "MapColor", "Changing reserved color" );
 
-		/* must invalidate color cache */
+		/* Must invalidate color cache */
 
 		if ( *c == flx->color )
 			flx->color = BadPixel;
@@ -1589,11 +1580,11 @@ fl_free_colors( FL_COLOR * c,
 		if ( j < 0 )
 			j = flmapsize - 1;
 
-		/* pixel value known by the server */
+		/* Pixel value known by the server */
 
 		*pix = lut[ *c ];
 
-		/* mark this pixel bad */
+		/* Mark this pixel as bad */
 
 		lut[ *c ] = BadPixel;
     }
@@ -1631,7 +1622,7 @@ fli_find_closest_color( int             r,
 		dg = g - ( ( map[ i ].green >> 8 ) & 0xff );
 		db = b - ( ( map[ i ].blue  >> 8 ) & 0xff );
 
-		/* correct formula is (.299,.587,.114) */
+		/* Correct formula is (.299,.587,.114) */
 
 #if LINEAR_COLOR_DISTANCE
 		diff = 3 * FL_abs( dr ) + 4 * FL_abs( dg ) + 2 * FL_abs( db );

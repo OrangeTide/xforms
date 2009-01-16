@@ -1,3 +1,14 @@
+2009-01-16 Jens Thoms Toerring    <jt@toerring.de>
+
+	* image/image_disp.c: Tried to correct display of images
+	on machines where the COMPOSITE extension is supported.
+	As Luis Balona noticed on these systems images dispayed
+	with the itest demo program appear half-transparent.
+	Probably not solved but looks a bit better now...
+
+	* image/image_jpeg.c: Bug in identification of JPEG images
+	corrected.
+
 2009-01-11 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/nmenu.c, lib/include/nmenu.h, lib/private/pnmenu.h:

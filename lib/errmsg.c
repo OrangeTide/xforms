@@ -36,7 +36,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.16 2008/12/27 22:20:48 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.17 2009/01/16 19:29:00 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -166,13 +166,13 @@ P_errmsg( const char * func,
     if ( ! errlog )
 		errlog = stderr;
 
-    /* if there is nothing to do, do nothing ! */
+    /* If there is nothing to do, do nothing ! */
 
 #if 0
     if ( req_level >= threshold && ( ! gout || ! gmout ) )
 #else
     /*
-     * by commenting out gout, graphics output is also controled by threshold
+     * By commenting out gout, graphics output is also controled by threshold
      */
     if ( req_level >= threshold )
 #endif
@@ -182,7 +182,7 @@ P_errmsg( const char * func,
     }
 
 	/*
-	 * where comes in two varieties, one is to print everthing, i.e.,
+	 * 'where' comes in two varieties, one is to print everthing, i.e.,
 	 * 1. FUNC [file, lineno]: why an error occured.
 	 * 2. why the mesage is printed
 	 *
@@ -207,12 +207,12 @@ P_errmsg( const char * func,
 		where = strdup( "" );
     }
 
-    /* now find out why */
+    /* Now find out why */
 
     emsg[ 0 ] = '\0';
     why = 0;
 
-    /* parse the fmt */
+    /* Parse the fmt */
 
     if ( fmt && *fmt )
 	{
@@ -221,7 +221,7 @@ P_errmsg( const char * func,
 		va_end( args );
 	}
 
-    /* check if there is any system errors */
+    /* Check if there is any system errors */
 
     if ( ( pp = fli_get_syserror_msg( ) ) && *pp )
     {
@@ -231,7 +231,7 @@ P_errmsg( const char * func,
 
     why = emsg;
 
-	/* have gotten the message, where and why, show it */
+	/* Have gotten the message, where and why, show it */
 
     if ( req_level < threshold )
 		fprintf( errlog, "%s%s\n", where, why );
@@ -241,10 +241,9 @@ P_errmsg( const char * func,
 
     fli_free_vstrcat( where );
 
-    /* reset system errors */
+    /* Reset system errors */
 
     errno = 0;
-    return;
 }
 
 
