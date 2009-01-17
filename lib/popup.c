@@ -497,13 +497,13 @@ fli_popup_insert_entries( FL_POPUP       * popup,
     }
     else
     {
-        if ( e->next )
-            e->next->prev = new_last;
+        if ( after->next )
+            after->next->prev = new_last;
 
-        new_last->next = e->next;
+        new_last->next = after->next;
 
-        new_entries->prev = e;
-        e->next = new_entries;
+        new_entries->prev = after;
+        after->next = new_entries;
     }
 
     /* Make sure all sub-popus are set up correctly */
@@ -539,7 +539,7 @@ fl_popup_create( Window          win,
     int level = 0;
     int need_line = 0;
     int is_sub = 0;
-    FL_POPUP_ENTRY *entry;
+    FL_POPUP_ENTRY *entry = NULL;
 
     if ( ( popup = fl_popup_add( win, title ) ) == NULL )
         return NULL;
@@ -1719,6 +1719,8 @@ fl_popup_entry_clear_state( FL_POPUP_ENTRY * entry,
         return UINT_MAX;
     }
 
+	old_state = entry->state;
+
     for ( i = 0; i < sizeof flags / sizeof *flags; i++ )
         if ( what & flags[ i ] )
             fl_popup_entry_set_state( entry, entry->state & ~ flags[ i ] );
@@ -1747,6 +1749,8 @@ fl_popup_entry_raise_state( FL_POPUP_ENTRY * entry,
         return UINT_MAX;
     }
 
+	old_state = entry->state;
+
     for ( i = 0; i < sizeof flags / sizeof *flags; i++ )
         if ( what & flags[ i ] )
             fl_popup_entry_set_state( entry, entry->state | flags[ i ] );
@@ -1774,6 +1778,8 @@ fl_popup_entry_toggle_state( FL_POPUP_ENTRY * entry,
         M_err( "fl_popup_entry_toggle_state", "Invalid entry argument" );
         return UINT_MAX;
     }
+
+	old_state = entry->state;
 
     for ( i = 0; i < sizeof flags / sizeof *flags; i++ )
         if ( what & flags[ i ] )
@@ -3254,7 +3260,7 @@ static FL_POPUP_RETURN *
 popup_interaction( FL_POPUP * popup )
 {
     FL_POPUP *p;
-    FL_POPUP_ENTRY *e;
+    FL_POPUP_ENTRY *e = NULL;
     XEvent ev;
     int timer_cnt = 0;
 
@@ -3293,9 +3299,9 @@ popup_interaction( FL_POPUP * popup )
                 break;
 
             case MotionNotify :
-                fli_mousex  = ev.xmotion.x;
-                fli_mousey  = ev.xmotion.y;
-                fli_keymask = ev.xmotion.state;
+                fli_mousex    = ev.xmotion.x;
+                fli_mousey    = ev.xmotion.y;
+                fli_keymask   = ev.xmotion.state;
                 fli_query_age = 0;
 
                 fli_compress_event( &ev, PointerMotionMask );
@@ -3304,9 +3310,9 @@ popup_interaction( FL_POPUP * popup )
 
             case ButtonRelease :
             case ButtonPress :
-                fli_mousex  = ev.xbutton.x;
-                fli_mousey  = ev.xbutton.y;
-                fli_keymask = ev.xbutton.state;
+                fli_mousex    = ev.xbutton.x;
+                fli_mousey    = ev.xbutton.y;
+                fli_keymask   = ev.xbutton.state;
                 fli_query_age = 0;
 
 				/* Don't react to mouse wheel buttons */
@@ -3341,9 +3347,9 @@ popup_interaction( FL_POPUP * popup )
                 return handle_selection( e );
 
             case KeyPress :
-                fli_mousex  = ev.xkey.x;
-                fli_mousey  = ev.xkey.y;
-                fli_keymask = ev.xkey.state;
+                fli_mousex    = ev.xkey.x;
+                fli_mousey    = ev.xkey.y;
+                fli_keymask   = ev.xkey.state;
                 fli_query_age = 0;
 
                 if ( ( p = handle_key( popup, ( XKeyEvent * ) &ev, &e ) ) )
@@ -3363,8 +3369,8 @@ popup_interaction( FL_POPUP * popup )
 
 static int
 is_on_popups( FL_POPUP * popup,
-             int        x,
-             int        y )
+			  int        x,
+			  int        y )
 {
     do
     {
@@ -3678,6 +3684,7 @@ handle_key( FL_POPUP        * popup,
     char buf[ 16 ];
     FL_POPUP_ENTRY *e,
                    *ce;
+
     XLookupString( ev, buf, sizeof buf, &keysym, 0 );
 
     /* Start of with checking for shortcut keys, they may have overridden some
@@ -3726,7 +3733,6 @@ handle_key( FL_POPUP        * popup,
     if ( keysym == XK_Escape || keysym == XK_Cancel )
     {
         close_popup( popup, 1 );
-        *entry = NULL;
         return popup->parent;
     }
 
@@ -3751,7 +3757,7 @@ handle_key( FL_POPUP        * popup,
         if ( ce->type == FL_POPUP_SUB )
             return open_subpopup( ce );
 
-        /* Otherwise we got a slection, so close all popups, invoke no leave
+        /* Otherwise we got a selection, so close all popups, invoke no leave
            callbacks (since selection was made) and return the selected entry */
 
         while ( popup )

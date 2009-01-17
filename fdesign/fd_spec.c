@@ -43,15 +43,15 @@
 
 typedef struct
 {
-    int objclass[ MAXOBJCLASS ];
-    void * ( * get_fdform )( void );	            /* spec form     */
-    int ( * set_spec )( FL_OBJECT * );	            /* interaction   */
-    void ( * restore_spec )( FL_OBJECT *, long );	/* how to resotre */
-    void ( * save_attrib )( FILE *, FL_OBJECT * );	/* write to .fd  */
-    void ( * emit_code )( FILE *, FL_OBJECT * );	/* write fl code */
-    void ( * emit_header )( FILE *, FL_OBJECT * );	/* write fl code */
-    void ( * emit_global )( FILE *, FL_OBJECT * );	/* write fl code */
-    void *vdata;
+    int    objclass[ MAXOBJCLASS ];
+    void * ( * get_fdform )( void );	                /* spec form     */
+    int    ( * set_spec )( FL_OBJECT * );	            /* interaction   */
+    void   ( * restore_spec )( FL_OBJECT *, long );	    /* how to resotre */
+    void   ( * save_attrib )( FILE *, FL_OBJECT * );	/* write to .fd  */
+    void   ( * emit_code )( FILE *, FL_OBJECT * );	    /* write fl code */
+    void   ( * emit_header )( FILE *, FL_OBJECT * );	/* write fl code */
+    void   ( * emit_global )( FILE *, FL_OBJECT * );	/* write fl code */
+    void * vdata;
 } ObjSPEC;
 
 static ObjSPEC objspec[ ] =
@@ -59,82 +59,118 @@ static ObjSPEC objspec[ ] =
     {
 		{ FL_SLIDER, FL_VALSLIDER },
 		get_slider_spec_fdform,
-		set_slider_attrib, slider_spec_restore,
-		save_slider_attrib, emit_slider_code,
-		NULL, NULL, NULL
+		set_slider_attrib,
+		slider_spec_restore,
+		save_slider_attrib,
+		emit_slider_code,
+		NULL,
+		NULL, NULL
     },
 
     {
 		{ FL_COUNTER },
 		get_counter_spec_fdform,
-		set_counter_attrib, counter_spec_restore,
-		save_counter_attrib, emit_counter_code,
-		NULL, NULL, NULL
+		set_counter_attrib,
+		counter_spec_restore,
+		save_counter_attrib,
+		emit_counter_code,
+		NULL, NULL,
+		NULL
     },
 
     {
 		{ FL_DIAL },
 		get_dial_spec_fdform,
-		set_dial_attrib, dial_spec_restore,
-		save_dial_attrib, emit_dial_code,
-		NULL, NULL, NULL
+		set_dial_attrib,
+		dial_spec_restore,
+		save_dial_attrib,
+		emit_dial_code,
+		NULL,
+		NULL,
+		NULL
     },
 
     {
 		{ FL_POSITIONER },
 		get_pos_spec_fdform,
-		set_pos_attrib, pos_spec_restore,
-		save_pos_attrib, emit_pos_code,
-		NULL, NULL, NULL
+		set_pos_attrib,
+		pos_spec_restore,
+		save_pos_attrib,
+		emit_pos_code,
+		NULL,
+		NULL,
+		NULL
     },
 
     {
 		{ FL_THUMBWHEEL },
 		get_twheel_spec_fdform,
-		set_twheel_attrib, twheel_spec_restore,
-		save_twheel_attrib, emit_twheel_code,
-		NULL, NULL, NULL
+		set_twheel_attrib,
+		twheel_spec_restore,
+		save_twheel_attrib,
+		emit_twheel_code,
+		NULL,
+		NULL,
+		NULL
     },
 
     {
-		{ FL_PIXMAPBUTTON, FL_BITMAPBUTTON,
-		  FL_BUTTON, FL_CHECKBUTTON, FL_ROUNDBUTTON, FL_LIGHTBUTTON,
-		  FL_ROUND3DBUTTON, FL_LABELBUTTON },
+		{ FL_PIXMAPBUTTON, FL_BITMAPBUTTON, FL_BUTTON, FL_CHECKBUTTON,
+		  FL_ROUNDBUTTON, FL_LIGHTBUTTON, FL_ROUND3DBUTTON, FL_LABELBUTTON },
 		get_button_spec_fdform,
-		set_button_attrib, button_spec_restore,
-		save_button_attrib, emit_button_code, emit_button_header,
-		NULL, NULL
+		set_button_attrib,
+		button_spec_restore,
+		save_button_attrib,
+		emit_button_code,
+		emit_button_header,
+		NULL,
+		NULL
     },
 
     {
 		{ FL_PIXMAP, FL_BITMAP },
 		get_pixmap_spec_fdform,
-		set_pixmap_attrib, pixmap_spec_restore,
-		save_pixmap_attrib, emit_pixmap_code, emit_pixmap_header,
-		NULL, NULL
+		set_pixmap_attrib,
+		pixmap_spec_restore,
+		save_pixmap_attrib,
+		emit_pixmap_code,
+		emit_pixmap_header,
+		NULL,
+		NULL
     },
 
     {
 		{ FL_SCROLLBAR },
 		get_scrollbar_spec_fdform,
-		set_scrollbar_attrib, scrollbar_spec_restore,
-		save_scrollbar_attrib, emit_scrollbar_code,
-		NULL, NULL, NULL
+		set_scrollbar_attrib,
+		scrollbar_spec_restore,
+		save_scrollbar_attrib,
+		emit_scrollbar_code,
+		NULL,
+		NULL,
+		NULL
     },
 
     {
 		{ FL_BROWSER },
 		get_browser_spec_fdform,
-		set_browser_attrib, browser_spec_restore,
-		save_browser_attrib, emit_browser_code,
-		NULL, NULL, NULL
+		set_browser_attrib,
+		browser_spec_restore,
+		save_browser_attrib,
+		emit_browser_code,
+		NULL,
+		NULL,
+		NULL
     },
 
     {
 		{ FL_CHOICE },
 		get_choice_spec_fdform,
-		set_choice_attrib, choice_spec_restore,
-		save_choice_attrib, emit_choice_code, emit_menu_header,
+		set_choice_attrib,
+		choice_spec_restore,
+		save_choice_attrib,
+		emit_choice_code,
+		emit_menu_header,
 		emit_menu_global,
 		NULL
     },
@@ -142,8 +178,11 @@ static ObjSPEC objspec[ ] =
     {
 		{ FL_MENU },
 		get_menu_spec_fdform,
-		set_menu_attrib, menu_spec_restore,
-		save_menu_attrib, emit_menu_code, emit_menu_header,
+		set_menu_attrib,
+		menu_spec_restore,
+		save_menu_attrib,
+		emit_menu_code,
+		emit_menu_header,
 		emit_menu_global,
 		NULL
     },
@@ -151,17 +190,25 @@ static ObjSPEC objspec[ ] =
     {
 		{ FL_XYPLOT },
 		get_xyplot_spec_fdform,
-		set_xyplot_attrib, xyplot_spec_restore,
-		save_xyplot_attrib, emit_xyplot_code,
-		NULL, NULL, NULL
+		set_xyplot_attrib,
+		xyplot_spec_restore,
+		save_xyplot_attrib,
+		emit_xyplot_code,
+		NULL,
+		NULL,
+		NULL
     },
 
     {
 		{ FL_FREE },
 		get_freeobj_spec_fdform,
-		set_freeobj_attrib, freeobj_spec_restore,
-		save_freeobj_attrib, emit_freeobj_code,
-		NULL, NULL, NULL
+		set_freeobj_attrib,
+		freeobj_spec_restore,
+		save_freeobj_attrib,
+		emit_freeobj_code,
+		NULL,
+		NULL,
+		NULL
     },
 
     {
@@ -260,7 +307,7 @@ save_objclass_spec_info( FILE      * fp,
 
 
 /***************************************
- * don't know what to do, skip it. This way, we remian
+ * Don't know what to do, skip it. This way we remain
  * compatible with later versions
  ***************************************/
 
@@ -276,6 +323,7 @@ skip_spec_info( FILE      * fp,
     while ( ungetc(c = getc( fp ), fp ) != '-' && c != '=' && c != EOF )
     {
 		read_key_val( fp, key, val );
+
 		if (strlen( fli_de_space( key ) ) > 2 && ! warned )
 		{
 			M_err( "SpecInfo", "Skipped object class %d(%s)",
@@ -608,7 +656,6 @@ get_how_return_str_value( const char *s )
 
 
 /* this is for output */
-
 
 /***************************************
  ***************************************/

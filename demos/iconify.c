@@ -32,7 +32,7 @@
 #include "include/forms.h"
 #include "crab.xpm"
 
-FL_FORM * create_form_form0(void);
+FL_FORM * create_form_form(void);
 
 
 /***************************************
@@ -42,15 +42,17 @@ int
 main( int    argc,
 	  char * argv[ ] )
 {
-	FL_FORM *form0;
-	Pixmap p, mask;
-	unsigned int w,h;
+	FL_FORM *form;
+	Pixmap p,
+		   mask;
+	unsigned int w,
+		         h;
 
 	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-	form0 = create_form_form0( );
+	form = create_form_form( );
 	p = fl_read_pixmapfile( fl_root, "crab.xpm", &w, &h, &mask, 0, 0, 0 );
-	fl_set_form_icon( form0, p, mask );
-	fl_show_form( form0, FL_PLACE_CENTER, FL_FULLBORDER, "IconTest" );
+	fl_set_form_icon( form, p, mask );
+	fl_show_form( form, FL_PLACE_CENTER, FL_FULLBORDER, "IconTest" );
 	fl_do_forms( );
 	return 0;
 }
@@ -60,15 +62,10 @@ main( int    argc,
  ***************************************/
 
 FL_FORM *
-create_form_form0( void )
+create_form_form( void )
 {
 	FL_OBJECT *obj;
-	static FL_FORM *form;
-
-	if ( form )
-		return form;
-
-	form = fl_bgn_form( FL_NO_BOX, 151, 111 );
+	FL_FORM *form = fl_bgn_form( FL_NO_BOX, 151, 111 );
 
 	obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 0, 0, 151, 111,
 							   "Iconify Me\nvia Window Manager" );
