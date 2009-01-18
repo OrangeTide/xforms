@@ -18,7 +18,7 @@
 
 
 /*
- * $Id: image_disp.c,v 1.12 2009/01/16 19:28:59 jtt Exp $
+ * $Id: image_disp.c,v 1.13 2009/01/18 21:12:50 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.
@@ -653,7 +653,7 @@ fl_display_gray( FL_IMAGE * im,
 									 &im->rgb2p, *ltmp );				 \
                 if (    im->depth == 24 && im->sdepth == 32              \
 					 && i == im->tran_index )                            \
-                    ;/**ltmp &= ~ 0xff000000;*/							\
+                    *ltmp &= ~ 0xff000000;							     \
             }                                                            \
 	    else                                                             \
 	        for ( i = 0; i < total; ltmp++, i++ )                        \
@@ -662,7 +662,7 @@ fl_display_gray( FL_IMAGE * im,
 									 &im->rgb2p, *ltmp );				 \
                 if (    im->depth == 24 && im->sdepth == 32              \
 					 && i == im->tran_index )                            \
-                    ;/**ltmp &= ~ 0xff000000;*/							\
+                    *ltmp &= ~ 0xff000000;							     \
             }                                                            \
 	} while ( 0 )
 
