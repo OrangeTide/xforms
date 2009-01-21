@@ -776,7 +776,7 @@ add_an_object( int      objclass,
     if ( cur_form == NULL )
 		return NULL;
 
-    /* this routine is called with X coordinate system, need to translate to
+    /* This routine is called with X coordinate system, need to translate to
        up-right coordinate system */
 
     if ( ! ( cls = find_class_struct( objclass ) ) )

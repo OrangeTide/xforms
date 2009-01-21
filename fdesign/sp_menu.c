@@ -141,11 +141,9 @@ int
 set_menu_attrib( FL_OBJECT * ob )
 {
     menu_attrib->vdata = ob;
-    menu_spec = get_superspec(ob);
+    menu_spec = get_superspec( ob );
     superspec_to_spec( ob );
-
     show_spec( menu_spec );
-
     return 0;
 }
 
@@ -185,7 +183,7 @@ get_pupentry_name( FL_OBJECT * ob )
 
     n++;
 
-    /* get rid of illegal chars */
+    /* Get rid of illegal chars */
 
     for ( i = 0, p = pupname; *p; p++ )
 		if (isalnum( ( int ) *p ) || *p == '_' )

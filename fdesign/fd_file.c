@@ -257,7 +257,8 @@ static void
 fd_skip_comment( FILE * fp  FL_UNUSED_ARG )
 {
 #if 0
-    int c, done = 0;
+    int c,
+		done = 0;
 
     while ( ! done )
     {
@@ -275,43 +276,46 @@ fd_skip_comment( FILE * fp  FL_UNUSED_ARG )
 
 
 /***************************************
- * Read lines consisting of keyword: value and split. Return -1 if EOF
- * or error
+ * Read lines consisting of keyword: value and split. Return EOF on EOF
+ * or error. On success 'key' is set to an allocated buffer with the
+ * keyword and 'val' points to the value (if any). It is the responsibility
+ * of the caller to free the memory for 'key', but it must be taken into
+ * account that this also frees the memory used for 'val'!
  ***************************************/
 
 int
 read_key_val( FILE * fp,
-			  char * key,
-			  char * val )
+			  char ** key,
+			  char ** val )
 {
-    char buf[ 1024 ], *p;
+    char *p;
+
 
     fd_skip_comment( fp );
 
-    if ( ! fgets( buf, 1024, fp ) || ferror( fp ) )
+	if ( ( *key = fli_read_line( fp ) ) == NULL )
 		return EOF;
 
-    buf[ 1023 ] = '\0';
-    val[ 0 ] = key[ 0 ] = '\0';
+    /* Nuke the new line */
 
-    /* nuke the new line */
-
-    if ( ( p = strchr( buf, '\n' ) ) )
+    if ( ( p = strchr( *key, '\n' ) ) )
 		*p = '\0';
 
-    if ( ! ( p = strchr (buf, ':' ) ) )
-    {
-		strcpy( key, "?" );
+    if ( ! ( p = strchr ( *key, ':' ) ) )
+	{
+		fl_free( *key );
 		return EOF;
-    }
+	}
 
     *p = '\0';
-    strcpy( key, buf );
 
-    if ( * ( p + 1 ) )
-		strcpy( val, p + 2 );
+	*val = p + 1;
+    if ( **val )
+		*val += 1;
+
     return 0;
 }
+
 
 /***************************************
  *  Loads an object from the file and returns it.
@@ -320,6 +324,9 @@ read_key_val( FILE * fp,
  *  will do the proper conversion but if obj->y is manipulated directly
  *  need to do the transformation manually
  ***************************************/
+
+#define Str( x ) #x
+#define XStr( x ) Str( x )
 
 static FL_OBJECT *
 load_object( FILE * fl )
@@ -331,64 +338,68 @@ load_object( FILE * fl )
 		  y,
 		  w,
 		  h;
-    char name[ MAX_VAR_LEN ],
-		 cbname[ MAX_VAR_LEN ],
-		 argname[ MAX_VAR_LEN ];
-    char cn1[ MAX_VAR_LEN ],
-		 cn2[ MAX_VAR_LEN ];
-    char objcls[ MAX_VAR_LEN ];
-    char key[ MAX_VAR_LEN ],
-		 val[ 10000 ];
+    char name[ MAX_VAR_LEN + 1 ],
+		 cbname[ MAX_VAR_LEN + 1 ] = "",
+		 argname[ MAX_VAR_LEN + 1 ] = "";
+    char cn1[ MAX_VAR_LEN + 1 ],
+		 cn2[ MAX_VAR_LEN + 1 ];
+    char objcls[ MAX_VAR_LEN + 1 ];
+    char *key,
+	     *val;
 
     /* Must demand the vital info */
 
     if ( fscanf( fl, "\n--------------------\n" ) == EOF )
     {
-		M_err( "LoadObject", "Error reading input file" );
+		M_err( "load_object", "Error reading input file" );
 		return 0;
     }
 
-    if (    fscanf( fl, "class: %s\n", objcls ) != 1
-		 || fscanf( fl, "type: %s\n", val ) != 1
+    if (    fscanf( fl, "class: %" XStr( MAX_VAR_LEN ) "s\n", objcls ) != 1
+		 || fscanf( fl, "type: %" XStr( MAX_VAR_LEN ) "s\n", name ) != 1
 		 || fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h ) != 4 )
     {
-		M_err( "LoadObject", "Error reading input file" );
+		M_err( "load_object", "Error reading input file" );
 		return 0;
     }
 
+	objcls[ MAX_VAR_LEN - 1 ] = '\0';
+	name[ MAX_VAR_LEN - 1 ] = '\0';
     objclass = class_val( objcls );
-    type = find_type_value( objclass, val );
+    type = find_type_value( objclass, name );
 
     if ( fd_magic == MAGIC2 )
 		objclass = new_class( objclass );
 
+	*name = '\0';
+
     if ( cur_form && fd_magic != FD_V1 )
 		y = cur_form->h - y - h;
 
-    /* create this object */
+    /* Create this object */
 
     obj = add_an_object( objclass, type, x, y, w, h );
 
     if ( obj == NULL )
     {
-		char tmpbuf[ 128 ];
-
-		sprintf( tmpbuf, "Object (class=%s(%d) type=%s) discarded",
-				 objcls, objclass, val );
-		fl_show_alert( "UnknownObject", tmpbuf, "", 1 );
+		fl_show_alert2( 1, "Unknown Object\nObject (class=%s(%d) type=%s) "
+						"discarded", objcls, objclass, val );
 		return NULL;
     }
 
-    /* now parse the attributes */
+    /* Now parse the attributes */
 
-    while ( read_key_val( fl, key, val ) != EOF )
+    while ( read_key_val( fl, &key, &val ) != EOF )
     {
 		if ( strcmp( key, "boxtype") == 0 )
 			obj->boxtype = boxtype_val( val );
-		else if ( strcmp(key, "colors" ) == 0 )
+		else if ( strcmp( key, "colors" ) == 0 )
 		{
 			cn1[ 0 ] = cn2[ 0 ] = '\0';
-			sscanf( val, "%s %s", cn1, cn2 );
+			sscanf( val, "%" XStr( MAX_VAR_LEN ) "s%" XStr( MAX_VAR_LEN ) "s",
+					cn1, cn2 );
+			cn1[ MAX_VAR_LEN - 1 ] = '\0';
+			cn2[ MAX_VAR_LEN - 1 ] = '\0';
 			obj->col1 = fli_query_namedcolor( cn1 );
 			obj->col2 = fli_query_namedcolor( cn2 );
 			if ( obj->col1 == 0x8fffffff )
@@ -409,28 +420,41 @@ load_object( FILE * fl )
 		else if ( strcmp( key, "shortcut" ) == 0 )
 			set_shortcut( obj, val );
 		else if ( strcmp( key, "callback" ) == 0 )
-			strcpy( cbname, val );
-		else if (strcmp( key, "name" ) == 0 )
-			strcpy( name, val );
+		{
+			strncpy( cbname, val, MAX_VAR_LEN - 1 );
+			cbname[ MAX_VAR_LEN - 1 ] = '\0';
+		}
+		else if ( strcmp( key, "name" ) == 0 )
+		{
+			strncpy( name, val, MAX_VAR_LEN - 1 );
+			name[ MAX_VAR_LEN - 1 ] = '\0';
+		}
 		else if ( strcmp( key, "gravity" ) == 0 )
 		{
 			cn1[ 0 ] = cn2[ 0 ] = '\0';
-			sscanf( val, "%s %s", cn1, cn2 );
+			sscanf( val, "%" XStr( MAX_VAR_LEN ) "s %" XStr( MAX_VAR_LEN ) "s",
+					cn1, cn2 );
+			cn1[ MAX_VAR_LEN - 1 ] = '\0';
+			cn2[ MAX_VAR_LEN - 1 ] = '\0';
 			obj->nwgravity = gravity_val( cn1 );
 			obj->segravity = gravity_val( cn2 );
 		}
 		else if ( strcmp( key, "argument" ) == 0 )
 		{
-			strcpy( argname, val );
+			strncpy( argname, val, MAX_VAR_LEN - 1 );
+			argname[ MAX_VAR_LEN - 1 ] = '\0';
+			fl_safe_free( key );
 			goto done;
 		}
 		else
 			fprintf( stderr, "Unknown keyword %s ignored\n", key );
+
+		fl_safe_free( key );
     }
 
  done:
 
-    /* do the translation from old fdesign on the fly */
+    /* Do the translation from old fdesign on the fly */
 
     if ( fd_magic == MAGIC2 )
     {
@@ -443,7 +467,7 @@ load_object( FILE * fl )
 
     set_object_name( obj, name, cbname, argname );
 
-    /* load object specific info */
+    /* Load object specific info */
 
     fd_skip_comment( fl );
     load_objclass_spec_info( fl, obj );

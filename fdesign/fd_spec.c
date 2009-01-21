@@ -241,7 +241,7 @@ find_entry( FL_OBJECT * ob )
 
 
 /***************************************
- * callback function for SEPC folder. Entry point from fd_attrib.c
+ * Callback function for SPEC folder. Entry point from fd_attrib.c
  ***************************************/
 
 void
@@ -256,6 +256,7 @@ set_objclass_spec_attributes( FL_OBJECT * ob,
     if ( ( spec = find_entry( ob ) ) )
     {
 		spec->vdata = fd = spec->get_fdform( );
+
 		if ( spec->set_spec( ob ) >= 0 )
 		{
 			if ( ( spec->set_spec( ob ) >= 0 ) )
@@ -286,7 +287,7 @@ cleanup_spec( FL_OBJECT * ob )
     ObjSPEC *attrib = find_entry( ob );
 
     if ( attrib && attrib->vdata )
-		attrib->vdata = 0;
+		attrib->vdata = NULL;
 }
 
 
@@ -315,21 +316,24 @@ static void
 skip_spec_info( FILE      * fp,
 				FL_OBJECT * ob )
 {
-    char key[ 128 ],
-		 val[ 128 ];
+    char *key,
+		 *val;
     int c,
 		warned = 0;
 
-    while ( ungetc(c = getc( fp ), fp ) != '-' && c != '=' && c != EOF )
-    {
-		read_key_val( fp, key, val );
-
-		if (strlen( fli_de_space( key ) ) > 2 && ! warned )
+    while (    ungetc( c = getc( fp ), fp ) != '-'
+		    && c != '='
+			&& c != EOF
+		    && read_key_val( fp, &key, &val ) != EOF )
+	{
+		if ( strlen( fli_de_space( key ) ) > 2 && ! warned )
 		{
 			M_err( "SpecInfo", "Skipped object class %d(%s)",
 				   ob->objclass, ob->label);
 			warned = 1;
 		}
+
+		fl_free( key );
     }
 }
 
@@ -338,25 +342,28 @@ skip_spec_info( FILE      * fp,
  * maybe should consider a hash for all the strcmps
  ***************************************/
 
+#define Str( x ) #x
+#define XStr( x ) Str( x )
+
+#define TMP_BUF_LEN 128
+
 void
 load_objclass_spec_info( FILE      * fp,
 						 FL_OBJECT * ob )
 {
-    char key[ 128 ],
-		 val[ 128 ],
-		 buf[ 128 ];
+    char *key,
+		 *val,
+		 buf[ TMP_BUF_LEN + 1 ];
     int c;
     SuperSPEC *sp = get_superspec( ob );
-
-    if ( feof( fp ) || ferror( fp ) )
-		return;
 
     if ( find_entry( ob ) )
     {
 		while (    ungetc( ( c = getc( fp ) ), fp ) != '-'
-				&& c != '=' && ! feof( fp ) )
+				&& c != '='
+				&& c != EOF
+				&& read_key_val( fp, &key, &val ) != EOF )
 		{
-			read_key_val( fp, key, val );
 
 			if ( strlen( fli_de_space( key ) ) < 2 )
 				/* empty */ ;
@@ -409,10 +416,23 @@ load_objclass_spec_info( FILE      * fp,
 				sscanf( val, "%f", &sp->val );
 			else if ( strcmp( key, "content" ) == 0 )
 			{
-				sp->content[ ++sp->nlines ] = fl_strdup( val );
+				++sp->nlines;
+				sp->content  = fl_realloc( sp->content,
+									( sp->nlines + 1 ) * sizeof *sp->content );
+				sp->shortcut = fl_realloc( sp->shortcut,
+								   ( sp->nlines + 1 ) * sizeof *sp->shortcut );
+				sp->callback = fl_realloc( sp->callback,
+								   ( sp->nlines + 1 ) * sizeof *sp->callback );
+				sp->mode     = fl_realloc( sp->mode,
+								   ( sp->nlines + 1 ) * sizeof *sp->mode );
+				sp->mval     = fl_realloc( sp->mval,
+								   ( sp->nlines + 1 ) * sizeof *sp->mval );
+
+				sp->content[ sp->nlines ]  = fl_strdup( val );
 				sp->shortcut[ sp->nlines ] = NULL;
 				sp->callback[ sp->nlines ] = NULL;
-				sp->mval[ sp->nlines ] = sp->nlines;
+				sp->mode[ sp->nlines ]     = 0;
+				sp->mval[ sp->nlines ]     = sp->nlines;
 			}
 			else if ( strcmp( key, "mode" ) == 0 )
 				sp->mode[ sp->nlines ] = get_pupmode_value( val );
@@ -454,19 +474,21 @@ load_objclass_spec_info( FILE      * fp,
 				sscanf( val, "%d %d", &sp->ymajor, &sp->yminor );
 			else if ( strcmp( key, "xscale" ) == 0 )
 			{
-				sscanf( val, "%s %g", buf, &sp->xbase );
+				sscanf( val, "%" XStr( TMP_BUF_LEN ) "s %g", buf, &sp->xbase );
 				sp->xscale = get_scale_value( buf );
 			}
 			else if ( strcmp( key, "yscale" ) == 0 )
 			{
-				sscanf( val, "%s %g", buf, &sp->ybase );
+				sscanf( val, "%" XStr( TMP_BUF_LEN ) "s %g", buf, &sp->ybase );
 				sp->yscale = get_scale_value( buf );
 			}
 			else if ( strcmp( key, "grid" ) == 0 )
 			{
-				char buf1[ 32 ];
+				char buf1[ TMP_BUF_LEN + 1 ];
 
-				sscanf( val, "%s %s", buf, buf1 );
+				sscanf( val,
+						"%" XStr( TMP_BUF_LEN ) "s %" XStr( TMP_BUF_LEN ) "s",
+						buf, buf1 );
 				sp->xgrid = get_grid_value( buf );
 				sp->ygrid = get_grid_value( buf1 );
 			}
@@ -481,8 +503,11 @@ load_objclass_spec_info( FILE      * fp,
 				fli_de_space_de( val );
 				sp->how_return = get_how_return_value( val );
 			}
-			else if ( strcmp( key, "??" ) )
-				M_warn( "SlideAttrib", "Unknown key=%s val=%s\n", key, val );
+			else
+				M_warn( "load_objclass_spec_info",
+						"Unknown key = %s val = %s\n", key, val );
+
+			fl_free( key );
 		}
 
 		if ( sp->data[ 0 ] )

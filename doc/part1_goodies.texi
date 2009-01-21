@@ -119,7 +119,7 @@ alert icon (!) is added and the first string is shown bold-faced. The
 extra parameter @code{centered} controls whether to display the form
 centered on the screen.
 
-As in te case of messages also another function is avaialble
+As in the case of messages also another function is avaialble
 @findex fl_show_alert2()
 @anchor{fl_show_alert2()}
 @example

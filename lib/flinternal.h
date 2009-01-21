@@ -837,6 +837,11 @@ extern int fli_is_watched_io( int );
 
 extern const char *fli_object_class_name( FL_OBJECT * );
 
+extern char *fli_print_to_string( const char * fmt,
+								  ... );
+
+extern char *fli_read_line( FILE *fp );
+
 extern void fli_mark_composite_for_redraw( FL_OBJECT * );
 
 

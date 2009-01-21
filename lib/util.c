@@ -32,7 +32,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_util = "$Id: util.c,v 1.13 2008/12/27 22:20:52 jtt Exp $";
+char *fl_id_util = "$Id: util.c,v 1.14 2009/01/21 11:37:12 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -203,4 +203,125 @@ fli_object_class_name( FL_OBJECT * ob )
 		return "FL_EVENT";
 
 	return fl_get_vn_name( flclass, ob->objclass );
+}
+
+
+/***************************************
+ * Function expects a format string as printf() and arguments which
+ * must correspond to the given format string and returns a string
+ * of the right length into which the arguments are written. The
+ * caller of the function is responsible for free-ing the string.
+ * -> 1. printf()-type format string
+ *    2. As many arguments as there are conversion specifiers etc.
+ *       in the format string.
+ * <- Pointer to character array of exactly the right length into
+ *    which the string characterized by the format string has been
+ *    written. On failure, i.e. if there is not enough space, the
+ *    function throws an OUT_OF_MEMORY exception.
+ ***************************************/
+
+#define STRING_TRY_LENGTH 128
+
+char *
+fli_print_to_string( const char * fmt,
+					... )
+{
+    char *c = NULL;
+	char *old_c;
+    size_t len = STRING_TRY_LENGTH;
+    va_list ap;
+    int wr;
+
+
+    while ( 1 )
+    {
+		old_c = c;
+        if ( ( c = fl_realloc( c, len ) ) == NULL )
+		{
+			fl_safe_free( old_c );
+			M_err( "fli_print_to_string", "Running out of memory\n" );
+			return NULL;
+		}
+
+        va_start( ap, fmt );
+        wr = vsnprintf( c, len, fmt, ap );
+        va_end( ap );
+
+        if ( wr < 0 )         /* indicates not enough space with older glibs */
+        {
+            len *= 2;
+            continue;
+        }
+
+        if ( ( size_t ) wr + 1 > len )   /* newer glibs return the number of */
+        {                                /* chars needed, not counting the   */
+            len = wr + 1;                /* trailing '\0'                    */
+            continue;
+        }
+
+        break;
+    }
+
+    /* Trim the string down to the number of required characters */
+
+    if ( ( size_t ) wr + 1 < len )
+	{
+		old_c = c;
+        if ( ( c = fl_realloc( c, ( size_t ) wr + 1 ) ) == NULL )
+			return old_c;
+	}
+
+    return c;
+}
+
+
+/***************************************
+ * Function tries to read a line (of arbirary length) from a file
+ * On failure (either due to read error or missing memory) NULL is
+ * returned, otherwise a pointer to an allocated buffer that must
+ * be freed by the caller.
+ ***************************************/
+
+char *
+fli_read_line( FILE *fp )
+{
+    char *c = NULL;
+	char *old_c = NULL;
+    size_t len = STRING_TRY_LENGTH;
+	size_t old_len = 0;
+
+    while ( 1 )
+    {
+        if ( ( c = fl_realloc( c, len ) ) == NULL )
+		{
+			fl_safe_free( old_c );
+			M_err( "fli_read_line", "Running out of memory\n" );
+			return NULL;
+		}
+
+		if ( ! fgets( c + old_len, len - old_len, fp ) )
+		{
+			if ( ferror( fp ) )
+			{
+				M_err( "fli_read_line", "Failed to read from file" );
+				fl_free( c );
+				return NULL;
+			}
+
+			M_warn( "fli_read_line", "Missing newline at end of line" );
+			break;
+		}
+
+		if ( strchr( c + old_len, '\n' ) )
+			break;
+
+		old_c = c;
+		old_len = len - 1;
+		len *= 2;
+	}
+
+	old_c = c;
+	if ( ( c = fl_realloc( c, strlen( c ) + 1 ) ) == NULL )
+		return old_c;
+	return c;
 }

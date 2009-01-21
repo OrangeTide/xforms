@@ -1,3 +1,14 @@
+2009-01-21 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_spec.c, fdesign/fd_super.c: Removed lots of
+	potential buffer overruns and restriction on number of
+	lines/entries that could be used for browser, menu and
+	choice objects.
+
+	* lib/utils: Added function for reading in lines of
+	arbitrary length from a file and a function with similar
+	functionality as GNUs asprintf().
+
 2009-01-16 Jens Thoms Toerring    <jt@toerring.de>
 
 	* image/image_disp.c: Tried to correct display of images

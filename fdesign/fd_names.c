@@ -128,22 +128,22 @@ set_object_name( FL_OBJECT  * obj,
 				 const char * cbname,
 				 const char * argname )
 {
-    int on = get_object_numb(obj);
+    int on = get_object_numb( obj );
 
-    if (obj == NULL)
+    if ( obj == NULL )
 		return;
 
-    if (on == -1)
+    if ( on == -1 )
     {
-		if (name[0] == '\0' && cbname[0] == '\0' && argname[0] == '\0')
+		if ( name[ 0 ] == '\0' && cbname[ 0 ] == '\0' && argname[ 0 ] == '\0' )
 			return;
-		if (objnumb >= MAXOBJ)
+		if ( objnumb >= MAXOBJ )
 			return;
-		objects[objnumb].obj = obj;
+		objects[ objnumb ].obj = obj;
 		on = objnumb++;
     }
-    strcpy(objects[on].name, name);
-    strcpy(objects[on].cbname, cbname);
-    strcpy(objects[on].argname, argname);
-    check_names(on);
+    strcpy( objects[ on ].name, name );
+    strcpy( objects[ on ].cbname, cbname );
+    strcpy( objects[ on ].argname, argname );
+    check_names( on );
 }
