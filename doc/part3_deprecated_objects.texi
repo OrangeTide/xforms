@@ -183,8 +183,8 @@ nested entries are permitted and the item callback functions are
 ignored. The function returns the number of items added to the choice
 object.
 
-Finally, the application program can set the choice itself using the
-call
+Finally, the application program can set the currently selected entry
+of the choice using a call of
 @findex fl_set_choice()
 @anchor{fl_set_choice()}
 @findex fl_set_choice_text()
