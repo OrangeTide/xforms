@@ -1001,10 +1001,10 @@ default 2048 bytes
 @tindex FL_BROWSER_LINELENGTH
 (@code{FL_BROWSER_LINELENGTH}). However, if desired, the
 application can enlarge this limit using the following routine
-@findex fl_set_default_broswer_maxlinelength()
-@anchor{fl_set_default_broswer_maxlinelength()}
+@findex fl_set_default_browser_maxlinelength()
+@anchor{fl_set_default_browser_maxlinelength()}
 @example
-int fl_set_default_broswer_maxlinelength(int new_length);
+int fl_set_default_browser_maxlinelength(int new_length);
 @end example
 @noindent
 The function returns the old limit. Note that the new length affects
@@ -1402,7 +1402,7 @@ void fl_set_browser_scrollbarsize(FL_OBJECT *obj, int hh, int vw);
 @end example
 @noindent
 where @code{hh} is the horizontal scrollbar height and @code{vw} is
-the vertical scrollbar width. Use reset to the default.
+the vertical scrollbar width. Use 0 to indicate the default.
 
 The default scrollbar type is @code{FL_THIN_SCROLLBAR}. There are two
 ways you can change the default. One way is to use

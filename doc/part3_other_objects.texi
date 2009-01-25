@@ -1112,9 +1112,9 @@ Caution should also applied when usin
 away, e.g.@: as a result of a call of @code{@ref{fl_hide_form()}}, the
 colormap associated with the canvas is freed (destroyed). This likely
 will cause problems if a single colormap is used for multiple canvases
-as each canvase will attemp to free the same colormap, resulting in an
-X error. If your application works this way, i.e.@: the same colormap
-is used on multiple canvases (via
+as each canvase will attempt to free the same colormap, resulting in
+an X error. If your application works this way, i.e.@: the same
+colormap is used on multiple canvases (via
 @code{@ref{fl_set_canvas_colormap()}}), you should use the following
 routine to prevent the canvas from freeing the colormap:
 @findex fl_share_canvas_colormap()
@@ -1123,14 +1123,14 @@ routine to prevent the canvas from freeing the colormap:
 void fl_share_canvas_colormap(FL_OBJECT *obj, Colormap colormap);
 @end example
 @noindent
-This function works the same as @code{@ref{fl_set_canvas_colormap()}}
-except that it also sets a intenal flag so the colormap isn't freed
-when the canvas goes away.
+This function works the same way as
+@code{@ref{fl_set_canvas_colormap()}} except that it also sets a
+intenal flag so the colormap isn't freed when the canvas goes away.
 
 By default, canvases are decorated with an @code{FL_DOWN_FRAME}. To
 change the decoration, change the the boxtype of the canvas and the
 boxtype will be translated into a frame that best approximates the
-appearance of the request boxtype (e.g., a @code{FL_DOWN_BOX} is
+appearance of the request boxtype (e.g.@: a @code{FL_DOWN_BOX} is
 translated into a @code{FL_DOWN_FRAME} etc). Note that not all frame
 types are appropriate for decorations.
 
@@ -1146,7 +1146,7 @@ where @code{n_colors} indicates how many colors in the newly created
 colormap should be filled with XForms' default colors (to avoid
 flashing effects). Note however, that the colormap entry 0 is
 allocated with either black or white even if you specify 0 for
-@code{n_colors}. To prevent this from happening (so you have a
+@code{n_colors}. To prevent this from happening (so you get a
 completely empty colormap), set @code{n_colors} to -1. @xref{Part
 IV Drawing Objects, , Drawing Objects}, on how to obtain the
 @code{XVisualInfo} for the window. Depending on the window manager, a

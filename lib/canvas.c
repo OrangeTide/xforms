@@ -29,12 +29,12 @@
  * Class FL_CANVAS
  *
  *  Not too much different from an app_win except geometry is managed
- *  by forms and has one of the form as its parent.
+ *  by forms and has one of the forms as its parent.
  */
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.24 2009/01/16 19:29:00 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.25 2009/01/25 17:38:16 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -469,7 +469,7 @@ fl_add_canvas_handler( FL_OBJECT        * ob,
 
 
 /***************************************
- * remove a particular handler for event ev. If ev is invalid,
+ * Remove a particular handler for event ev. If ev is invalid,
  * remove all handlers and their corresponding event mask
  ***************************************/
 
@@ -499,7 +499,7 @@ fl_remove_canvas_handler( FL_OBJECT        * ob,
 		return;
     }
 
-    /* knock off the mask. Need to get Expose however */
+    /* Knock off the mask. Need to get Expose however */
 
     if ( emask != 0 )
 		sp->xswa.event_mask = fl_remove_selected_xevent( sp->window, emask );
@@ -535,15 +535,10 @@ handle_it( FL_OBJECT * ob,
     {
 		case FL_DRAW:
 			if ( ob->col1 != FL_NoColor )
-			{
 				sp->xswa.background_pixel = fl_get_pixel( ob->col1 );
-				sp->mask |= CWBackPixel;
-			}
 			else
-			{
 				sp->xswa.background_pixel = None;
-				sp->mask |= CWBackPixel;
-			}
+			sp->mask |= CWBackPixel;
 			init_canvas( ob, sp );
 			break;
 

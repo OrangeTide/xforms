@@ -79,7 +79,7 @@ fl_show_form(simpleform, FL_PLACE_MOUSE, FL_NOBORDER,
 @center @image{pushme}
 @end ifhtml
 @ifnothtml
-@center @image{images/pushme}
+@center @image{images/pushme,5cm}
 @end ifnothtml
 
 This will show the form on the screen at the mouse position. (The
@@ -150,7 +150,12 @@ the form @code{@ref{fl_do_forms()}} is called. This routine returns
 the object being pushed. Simply checking whether this is object
 @code{yes} determines whether we should quit.
 
-@center @image{images/yesno}
+@ifhtml
+@center @image{yesno}
+@end ifhtml
+@ifnothtml
+@center @image{images/yesno,6cm}
+@end ifnothtml
 
 As you see, the program starts by calling the routine
 @code{@ref{fl_initialize()}}. This routine should be called before any

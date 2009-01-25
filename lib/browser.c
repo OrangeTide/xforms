@@ -75,7 +75,7 @@ attrib_change( FL_OBJECT * ob )
     sp->tb->col2 = sp->br->col2;
     sp->tb->bw = sp->br->bw;
 
-    /* scrollbars */
+    /* Scrollbars */
 
     if (    sp->br->boxtype == FL_DOWN_BOX
 		 && sp->hsl->type == FL_HOR_NICE_SCROLLBAR )
@@ -258,7 +258,7 @@ get_geometry( FL_OBJECT * ob )
 
 /***************************************
  * The "dead area" is the small square in the lower right hand corner
- * of the browser (to the right of the vertical slider and blow the
+ * of the browser (to the right of the vertical slider and below the
  * horizontal one) that shows up when both the sliders are displayed.
  ***************************************/
 
@@ -538,7 +538,7 @@ fl_create_browser( int          type,
 	sp->hcb = sp->vcb = NULL;
 	sp->hcb_data = sp->vcb_data = NULL;
 
-    /* copy browser attributes from textbox */
+    /* Copy browser attributes from textbox */
 
     ob->boxtype = sp->tb->boxtype;
     ob->lcol = sp->tb->lcol;
@@ -547,14 +547,14 @@ fl_create_browser( int          type,
     ob->col2 = sp->tb->col2;
     ob->wantkey = sp->tb->wantkey;
 
-    /* textbox handlers */
+    /* Textbox handlers */
  
 	fl_set_object_callback( sp->tb, tbcb, 0 );
     fli_set_textbox_dblclick_callback( sp->tb, tb_dblcallback, 0 );
     fl_set_object_posthandler( sp->tb, tbpost );
     fl_set_object_prehandler( sp->tb, tbpre );
 
-    /* scrollbars */
+    /* Scrollbars */
 
     D = sp->vw_def = sp->hh_def = fli_get_default_scrollbarsize( ob );
     sp->v_pref = sp->h_pref = FL_AUTO;
@@ -741,7 +741,7 @@ fl_set_browser_xoffset( FL_OBJECT * ob,
 {
     FLI_BROWSER_SPEC *sp = ob->parent->spec;
 
-    /* do stuff only if we need to */
+    /* Do stuff only if we need to */
 
     if ( fli_get_textbox_longestline( sp->tb ) > sp->tb->w )
     {
@@ -1088,7 +1088,7 @@ fl_set_browser_specialkey( FL_OBJECT * ob,
 
 
 /***************************************
- * bring a line into view
+ * Bring a line into view
  ***************************************/
 
 void

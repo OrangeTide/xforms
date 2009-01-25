@@ -31,7 +31,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.21 2008/12/27 22:20:52 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.22 2009/01/25 17:38:16 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -52,8 +52,8 @@ char *fl_id_brw = "$Id: textbox.c,v 1.21 2008/12/27 22:20:52 jtt Exp $";
 
 
 /*
- * for efficiency reasons, different redraws are handled by different
- * routines. These are the redraw types (complete must be zero)
+ * For efficiency reasons, different redraws are handled by different
+ * routines. These are the redraw types (COMPLETE must be zero)
  */
 
 typedef enum
@@ -75,7 +75,7 @@ static int textwidth( FLI_TEXTBOX_SPEC *,
 /***************** DATA STRUCTURE MAINTENANCE ************************/
 
 /***************************************
- * free the textbox
+ * Free the textbox
  ***************************************/
 
 static void
@@ -85,13 +85,11 @@ free_spec( FLI_TEXTBOX_SPEC * sp )
 
     for ( i = 1; sp->text[ i ] && i < sp->avail_lines; i++ )
     {
-		fl_free( sp->text[ i ]->txt );
-		fl_free( sp->text[ i ] );
-		sp->text[ i ] = NULL;
+		fl_safe_free( sp->text[ i ]->txt );
+		fl_safe_free( sp->text[ i ] );
     }
 
-    fl_free( sp->text );
-    sp->text = NULL;
+    fl_safe_free( sp->text );
 
     /* It's possible that a textbox that has never been shown is being
        freed, thus the check. */
@@ -102,9 +100,8 @@ free_spec( FLI_TEXTBOX_SPEC * sp )
 		XFreeGC( flx->display, sp->specialGC );
 		XFreeGC( flx->display, sp->bkGC );
 		XFreeGC( flx->display, sp->selectGC );
-		sp->primaryGC = 0;
+		sp->primaryGC = None;
     }
-
 }
 
 
@@ -216,7 +213,7 @@ insert_line( FL_OBJECT  * ob,
     /* Create new line if required */
 
     if ( sp->text[ sp->lines ] == NULL )
-	sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
+		sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
 
     /* Shift lines */
 
@@ -362,12 +359,12 @@ replace_line( FL_OBJECT  * ob,
 /******************************** DRAWING ********************************/
 
 
-#define FLTopMargin      ( FL_abs(ob->bw ) + 2 )
-#define YtoLine( y )     ( ( y - FLTopMargin )/ charheight )
+#define FLTopMargin      ( FL_abs( ob->bw ) + 2 )
+#define YtoLine( y )     ( ( y - FLTopMargin ) / charheight )
 
 
 /***************************************
- * if the last line has large font, the descend may leave some junk
+ * If the last line has large font, the descend may leave some junk
  ***************************************/
 
 static void
@@ -414,7 +411,7 @@ calc_textarea( FL_OBJECT * ob )
     FLI_TEXTBOX_SPEC *sp = ob->spec;
     FL_Coord bw = FL_abs( ob->bw );
 
-    /* total textbox drawing area, to be adjusted for scrollbars */
+    /* Total textbox drawing area, to be adjusted for scrollbars */
 
     sp->x = ob->x + bw + 1;
     sp->y = ob->y + FLTopMargin;
@@ -429,8 +426,8 @@ calc_textarea( FL_OBJECT * ob )
 
 
 /***************************************
- * Before we start drawing, find out some basic info about fontsize,
- * character height etc and most importantly setup the GCs we will
+ * Before we start drawing find out some basic info about fontsize,
+ * character height etc and, most importantly, set up the GCs we will
  * be using to reduce GC changes on the fly.
  ***************************************/
 
@@ -451,7 +448,7 @@ prepare_redraw( FL_OBJECT        * ob,
     sp->charheight = fl_get_char_height( sp->fontstyle, sp->fontsize,
 										 &junk, &sp->chardesc );
 
-    /* from no slider to slider, clip might be wrong. Check that */
+    /* From no slider to slider, clip might be wrong. Check that */
 
     calc_textarea( ob );
 
@@ -498,9 +495,9 @@ prepare_redraw( FL_OBJECT        * ob,
 			sp->fontsize, sp->fontstyle );
 #endif
 
-	/* solicit graphics_exposure only if no backing store  This is not
+	/* Solicit graphics_exposure only if no backing store  This is not
 	   always correct since although server is capable of backing store
-	   it can run out resources. */
+	   it can run out of resources. */
 
 	if ( fli_cntl.safe )
 		xgcv.graphics_exposures = 1;
@@ -517,32 +514,32 @@ prepare_redraw( FL_OBJECT        * ob,
 	cx = sp->x + LMARGIN - 1;
 	cw = sp->w - LMARGIN;
 
-	/* primaryGC. text drawing */
+	/* PrimaryGC. text drawing */
 
 	xgcv.foreground = fl_get_flcolor( ob->lcol );
 	sp->primaryGC = XCreateGC( flx->display, FL_ObjWin( ob ), gcvm, &xgcv );
 	XSetFont( flx->display, sp->primaryGC, xfs->fid );
 	fl_set_gc_clipping( sp->primaryGC, cx, sp->y, cw, sp->h );
 
-	/* background GC is used to redraw deselected lines */
+	/* Background GC is used to redraw deselected lines */
 
 	xgcv.foreground = fl_get_flcolor( ob->col1 );
 	sp->bkGC = XCreateGC( flx->display, FL_ObjWin( ob ), gcvm, &xgcv );
 	fl_set_gc_clipping( sp->bkGC, cx, sp->y, cw, sp->h );
 
-	/* selectGC is used to mark the current selection */
+	/* SelectGC is used to mark the current selection */
 
 	xgcv.foreground = fl_get_flcolor( fli_dithered(fl_vmode ) ?
 									  FL_BLACK : ob->col2 );
 	sp->selectGC = XCreateGC( flx->display, FL_ObjWin( ob ), gcvm, &xgcv );
 	fl_set_gc_clipping( sp->selectGC, cx, sp->y, cw, sp->h );
 
-	/* specialGC is used to handle font/color change on the fly */
+	/* SpecialGC is used to handle font/color change on the fly */
 
 	sp->specialGC = XCreateGC( flx->display, FL_ObjWin( ob ), gcvm, &xgcv );
 	fl_set_gc_clipping( sp->specialGC, cx, sp->y, cw, sp->h );
 
-	/* save color attributes */
+	/* Save color attributes */
 
 	sp->lcol = ob->lcol;
 	sp->col1 = ob->col1;
@@ -564,7 +561,7 @@ correct_topline( FL_OBJECT * ob )
     FLI_TEXTBOX_SPEC *sp = ob->spec;
 	FLI_BROWSER_SPEC *br = ob->parent->spec;
 
-	/* Special case: if topline is set to the number of lines than
+	/* Special case: if topline is set to the number of lines then
 	   fl_addt_browser() or fl_addto_browser_chars() has been
 	   called and the last line is supposed to be shown at the
 	   end of the browser */
@@ -588,8 +585,8 @@ correct_topline( FL_OBJECT * ob )
 
 
 /***************************************
- * Draws the line on the textbox at position xx,yy, with maximal width ww.
- * back indicates whether the background should be drawn
+ * Draws the line on the textbox at position (xx, yy) with maximum width
+ * ww. 'back' indicates whether the background should be drawn
  ***************************************/
 
 static void
@@ -617,17 +614,9 @@ draw_textline( FL_OBJECT * ob,
     if ( line > sp->lines )
 		return;
 
-    if ( line <= sp->lines && sp->text[ line ]->selected )
-		XFillRectangle( flx->display, FL_ObjWin( ob ), sp->selectGC,
-						xx, ( FL_Coord ) ( yy - ascend ), ww, sp->charheight );
-    else if ( back )
-		XFillRectangle( flx->display, FL_ObjWin( ob ), sp->bkGC,
-						xx, ( FL_Coord ) ( yy - ascend ), ww, sp->charheight );
-
+    str = sp->text[ line ]->txt;
     len = sp->text[ line ]->len;
     xx += LMARGIN;
-
-    str = sp->text[ line ]->txt;
 
     /* Check for special lines */
 
@@ -710,6 +699,7 @@ draw_textline( FL_OBJECT * ob,
 
 			case 'C':
 				/* requesting color changes. */
+
 				for ( lcol = 0; str[ 2 ] >= '0' && str[ 2 ] <= '9';
 					  str++, len-- )
 					lcol = 10 * lcol + str[ 2 ] - '0';
@@ -742,7 +732,14 @@ draw_textline( FL_OBJECT * ob,
 		}
     }
 
-    /* take care of special lines */
+	if ( line <= sp->lines && sp->text[ line ]->selected )
+		XFillRectangle( flx->display, FL_ObjWin( ob ), sp->selectGC,
+						xx, yy - ascend, ww, sp->charheight );
+	else if ( back )
+		XFillRectangle( flx->display, FL_ObjWin( ob ), sp->bkGC,
+						xx, yy - ascend, ww, sp->charheight );
+
+    /* Take care of special lines */
 
     if ( has_special )
     {
@@ -758,7 +755,7 @@ draw_textline( FL_OBJECT * ob,
 			xx = tmpw - sw - 1;
     }
 
-    /* exception for B&W */
+    /* Exception for B&W */
 
     if ( fli_dithered( fl_vmode ) && sp->text[ line ]->selected )
     {
@@ -864,7 +861,7 @@ draw_slider_motion( FL_OBJECT * ob )
     {
 		int sl;
 
-		/* calculate the area needs to be blited */
+		/* Calculate the area needs to be blited */
 
 		bh = ( screenlines - delta ) * charheight;
 
@@ -874,7 +871,7 @@ draw_slider_motion( FL_OBJECT * ob )
 
 		fixup( ob, sp );
 
-		/* draw the new lines */
+		/* Draw the new lines */
 
 		for ( yy += ascend, i = 0; i < delta; yy += charheight, i++ )
 			draw_textline( ob, i + sp->topline, xx, yy, ww, 1 );
@@ -891,7 +888,7 @@ draw_slider_motion( FL_OBJECT * ob )
 
 		delta = sp->topline - sp->oldtopline;
 
-		/* calculate the area needs to be blited */
+		/* Calculate the area needs to be blited */
 
 		bh = ( screenlines - delta ) * charheight;
 
@@ -909,7 +906,7 @@ draw_slider_motion( FL_OBJECT * ob )
 		/* Need to take care of special lines that use larger fonts */
 
 		i = start - 1;
-		if ( i > 0 && sp->text[i]->txt[0] == sp->specialkey )
+		if ( i > 0 && sp->text[ i ]->txt[ 0 ] == sp->specialkey )
 		{
 			yy = sp->y + ascend + ( i - sp->topline ) * charheight;
 			draw_textline( ob, i, xx, yy, ww, 0 );
@@ -958,7 +955,7 @@ draw_selection( FL_OBJECT * ob )
 /***************** HANDLING EVENTS **************************/
 
 /***************************************
- * it is possible for multi-browser to miss selections if mouse
+ * It is possible for multi-browser to miss selections if mouse
  * is moved too quickly. A hack to recover the missed lines
  ***************************************/
 
@@ -967,7 +964,8 @@ handle_missed_selection( FL_OBJECT * ob,
 						 int         line )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
-    int k, ns;
+    int k,
+		ns;
 
     if ( sp->selectline < 0 )
 		return;
@@ -1046,7 +1044,7 @@ static int last_select,
 
 
 /***************************************
- * handles a mouse change. returns whether a selection change has occured
+ * Handles a mouse change. returns whether a selection change has occured
  ***************************************/
 
 static int
@@ -1117,7 +1115,7 @@ handle_mouse( FL_OBJECT    * ob,
 			sp->desel_mark = sp->selectline;
 		}
 
-		/* this is not exactly correct as we are (potentially) throwing
+		/* This is not exactly correct as we are (potentially) throwing
 		   away events */
 
 		if ( fli_object_qtest( ) == ob )
@@ -1262,7 +1260,7 @@ handle_textbox( FL_OBJECT * ob,
     M_info2( "HandleBrowser", fli_event_name( ev ) );
 #endif
 
-    /* wheel mouse hack */
+    /* Wheel mouse hack */
 
     if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
 		 && fli_handle_mouse_wheel( &ev, &key, xev ) == 0 )
@@ -1354,7 +1352,7 @@ handle_textbox( FL_OBJECT * ob,
 			return 0;
 
 		case FL_FREEMEM:
-			free_spec( ob->spec );
+			free_spec( sp );
 			fl_free( sp );
 			ob->spec = NULL;
 			break;
@@ -1680,7 +1678,7 @@ fli_load_textbox( FL_OBJECT  * ob,
 
     fli_clear_textbox( ob );
 
-    /* LOAD THE FILE */
+    /* Load the file */
 
     if ( ! filename || ! *filename )
 		return 1;
@@ -1696,7 +1694,7 @@ fli_load_textbox( FL_OBJECT  * ob,
 		c = getc( fl );
 		if ( c == '\n' || c == EOF )
 		{
-			newtext[ i ] = 0;
+			newtext[ i ] = '\0';
 			if ( c != EOF || i != 0 )
 				insert_line( ob, sp->lines + 1, newtext );
 			i = 0;
@@ -2038,7 +2036,7 @@ fli_get_textbox_longestline( FL_OBJECT * ob )
 
 
 /***************************************
- * probably should merge this into fl_get_string_width proper
+ * Probably should merge this into fl_get_string_width proper
  ***************************************/
 
 static int

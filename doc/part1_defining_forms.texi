@@ -135,6 +135,13 @@ An oval box coming out of the screen
 An oval box going into the screen
 @end table
 
+@ifhtml
+@center @image{boxtypes}
+@end ifhtml
+@ifnothtml
+@center @image{images/boxtypes,15cm}
+@end ifnothtml
+
 @code{x} and @code{y} indicate the upper left corner of the box in the
 form. @code{w} and @code{h} are the width and height of the box.
 @code{label} is a text that is placed in the center of the box. If you
@@ -364,6 +371,13 @@ and take action accordingly. See the example program @file{demo05.c} for
 the use of these routines.
 
 
+@ifhtml
+@center @image{slider}
+@end ifhtml
+@ifnothtml
+@center @image{images/slider,8cm}
+@end ifnothtml
+
 @node ValSliders
 @section ValSliders
 
@@ -409,6 +423,13 @@ to the application program and further input is directed to the next
 input field. (The @code{<Return>} key only works if there are no default
 buttons in the form. See the overview of object classes. The
 @code{<Tab>} key always works.)
+
+@ifhtml
+@center @image{input}
+@end ifhtml
+@ifnothtml
+@center @image{images/input,8cm}
+@end ifnothtml
 
 The user can use the mouse to select parts of the input field which will
 be removed when the user types the erase character or replaced by any
@@ -905,6 +926,13 @@ to set the border width instead of hard-coding it on a per form or per
 object basis so the user has the option to change it at run time via
 the @samp{-bw} flag.
 
+@ifhtml
+@center @image{borderwidth}
+@end ifhtml
+@ifnothtml
+@center @image{images/borderwidth,14cm}
+@end ifnothtml
+
 There also exists a call that changes the object border width for the
 entire application
 @example
@@ -961,6 +989,14 @@ default size for XForms is 10pt.
 @tab 24pt
 @tab fl_huge_size
 @end multitable
+
+@ifhtml
+@center @image{fontsize}
+@end ifhtml
+@ifnothtml
+@center @image{images/fontsize,6cm}
+@end ifnothtml
+
 
 Labels can be drawn in many different font styles. The style of the
 label can be controlled with the routine

@@ -1,3 +1,7 @@
+2009-01-25 Jens Thoms Toerring    <jt@toerring.de>
+
+	doc/images/: Some new figures added.
+
 2009-01-21 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_spec.c, fdesign/fd_super.c: Removed lots of
