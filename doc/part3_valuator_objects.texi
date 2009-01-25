@@ -1258,7 +1258,7 @@ After this call thumbwheel values will be rounded to multiples of
 @subsection Thumbwheel Attributes
 
 Setting colors via @code{@ref{fl_set_object_color()}} has no effect on
-thmbwheels.
+thumbwheels.
 
 
 @node Thumbwheel Remarks
