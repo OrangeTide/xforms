@@ -95,6 +95,13 @@ A different looking vertical slider.
 A different looking horizontal slider.
 @end table
 
+@ifhtml
+@center @image{slidertypes}
+@end ifhtml
+@ifnothtml
+@center @image{images/slidertypes,14cm}
+@end ifnothtml
+
 
 @node Slider Interaction
 @subsection Slider Interaction

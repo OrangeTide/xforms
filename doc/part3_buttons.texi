@@ -8,6 +8,14 @@ when the user releases the mouse, buttons that stay pushed until the
 user pushes them again and radio buttons that make other buttons be
 released.
 
+@ifhtml
+@center @image{buttontypes}
+@end ifhtml
+@ifnothtml
+@center @image{images/buttontypes,7cm}
+@end ifnothtml
+
+
 Also different shapes of buttons exist. Normal buttons are rectangles
 that come out of the background. When the user pushes them they go
 into the background (and possibly change color). Lightbuttons have a
