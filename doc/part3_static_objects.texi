@@ -239,6 +239,13 @@ default placed on the upper left hand part of the frame. Its position
 can changed (within limits) via calls of
 @code{@ref{fl_set_object_lalign()}}.
 
+@ifhtml
+@center @image{labelframe}
+@end ifhtml
+@ifnothtml
+@center @image{images/labelframe,7cm}
+@end ifnothtml
+
 
 @node LabelFrame Types
 @subsection LabelFrame Types
