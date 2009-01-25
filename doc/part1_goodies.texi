@@ -543,6 +543,14 @@ it) to enter this directory. All elements of the currently displayed
 directory are cached internally, so if there is the directories contents
 are changed, click on the @code{ReScan} button to force an update.
 
+@ifhtml
+@center @image{fselect}
+@end ifhtml
+@ifnothtml
+@center @image{images/fselect,7cm}
+@end ifnothtml
+
+
 In a typical application, once the file selector goodie is shown, it is
 up to the user when the file selector should be dismissed by pushing
 @code{Ready} or @code{Cancel} button. In some situations the application
