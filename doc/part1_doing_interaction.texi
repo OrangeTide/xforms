@@ -296,6 +296,13 @@ to the lower-right corner of the form, then,
 @tab @code{dx2}, @code{dy2} constant
 @end multitable
 
+@ifhtml
+@center @image{gravity}
+@end ifhtml
+@ifnothtml
+@center @image{images/gravity,7cm}
+@end ifnothtml
+
 Default for all object is @code{FL_RESIZE_ALL} and @code{ForgetGravity}.
 Note that the three parameters are not orthogonal and the positioning
 request will always override the scaling request in case of conflict.
