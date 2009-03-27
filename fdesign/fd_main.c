@@ -63,7 +63,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.22 $ of $Date: 2008/12/27 22:20:41 $",
+    "$State: Exp $  $Revision: 1.23 $ of $Date: 2009/03/27 19:12:30 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars", 0
 };
 
@@ -98,6 +98,7 @@ print_xforms_version( int die )
 
 
 char xform_header[ 128 ] = "forms.h";
+char glcanvas_header[ 128 ] = "glcanvas.h";
 long main_window = 0;		/* The main screen window */
 FL_Coord winw,
          winh;
@@ -389,29 +390,30 @@ main_loop( void )
 
 static FL_CMD_OPT fd_cmdopt[ ] =
 {
-    { "-geometry",   "*geometry",     XrmoptionSepArg, 0 },
-    { "-border",     ".XForm.Border", XrmoptionNoArg, "1" },
-    { "-convert",    ".convert",      XrmoptionNoArg, "1" },
-    { "-dir",        ".dir",          XrmoptionSepArg, 0 },
-    { "-unit",       "*unit",         XrmoptionSepArg, 0 },
-    { "-altformat",  "*altformat",    XrmoptionNoArg, "1" },
-    { "-I",          "*xformHeader",  XrmoptionSepArg, 0 },
-    { "-main",       "*main",         XrmoptionNoArg, "1" },
-    { "-callback",   "*callback",     XrmoptionNoArg, "1" },
-    { "-lax",        "*lax",          XrmoptionNoArg, "1" },
-    { "-nocode",     "*nocode",       XrmoptionNoArg, "0" },
-    { "-version",    ".fdversion",    XrmoptionNoArg, "1" },
-    { "-compensate", ".compensate",   XrmoptionNoArg, "1" },
-    { "-ada",        ".language",     XrmoptionNoArg, "ada95" },
-    { "-ada95",      ".language",     XrmoptionNoArg, "ada95" },
-    { "-perl",       ".language",     XrmoptionNoArg, "perl" },
-    { "-python",     ".language",     XrmoptionNoArg, "python" },
-    { "-fortran",    ".language",     XrmoptionNoArg, "fortran" },
-    { "-pascal",     ".language",     XrmoptionNoArg, "pascal" },
-    { "-scm",        ".language",     XrmoptionNoArg, "scm" },
-    { "-ps",         ".language",     XrmoptionNoArg, "ps" },
-    { "-filter",     ".filter",       XrmoptionSepArg, 0 },
-    { "-help",       ".help",         XrmoptionNoArg, "1" }
+    { "-geometry",   "*geometry",       XrmoptionSepArg, 0 },
+    { "-border",     ".XForm.Border",   XrmoptionNoArg, "1" },
+    { "-convert",    ".convert",        XrmoptionNoArg, "1" },
+    { "-dir",        ".dir",            XrmoptionSepArg, 0 },
+    { "-unit",       "*unit",           XrmoptionSepArg, 0 },
+    { "-altformat",  "*altformat",      XrmoptionNoArg, "1" },
+    { "-I",          "*xformHeader",    XrmoptionSepArg, 0 },
+    { "-G",          "*glcanvasHeader", XrmoptionSepArg, 0 },
+    { "-main",       "*main",           XrmoptionNoArg, "1" },
+    { "-callback",   "*callback",       XrmoptionNoArg, "1" },
+    { "-lax",        "*lax",            XrmoptionNoArg, "1" },
+    { "-nocode",     "*nocode",         XrmoptionNoArg, "0" },
+    { "-version",    ".fdversion",      XrmoptionNoArg, "1" },
+    { "-compensate", ".compensate",     XrmoptionNoArg, "1" },
+    { "-ada",        ".language",       XrmoptionNoArg, "ada95" },
+    { "-ada95",      ".language",       XrmoptionNoArg, "ada95" },
+    { "-perl",       ".language",       XrmoptionNoArg, "perl" },
+    { "-python",     ".language",       XrmoptionNoArg, "python" },
+    { "-fortran",    ".language",       XrmoptionNoArg, "fortran" },
+    { "-pascal",     ".language",       XrmoptionNoArg, "pascal" },
+    { "-scm",        ".language",       XrmoptionNoArg, "scm" },
+    { "-ps",         ".language",       XrmoptionNoArg, "ps" },
+    { "-filter",     ".filter",         XrmoptionSepArg, 0 },
+    { "-help",       ".help",           XrmoptionNoArg, "1" }
 };
 
 #define Ncopt (sizeof fd_cmdopt / sizeof *fd_cmdopt )
@@ -447,6 +449,7 @@ static FL_resource fdres[ ] =
     {"language", "Language", FL_STRING, fd_slanguage, "C", 30},
     {"filter", "Filter", FL_STRING, fd_sfilter, 0, 30},
     {"xformHeader", "XFormHeader", FL_STRING, xform_header, "forms.h", 128},
+    {"glcanvasHeader", "GLCanvasHeader", FL_STRING, glcanvas_header, "glcanvas.h", 128},
     {"altformat", "AltFormat", FL_BOOL, &fdopt.altformat, "0", 0},
     {"helpFontSize", "HelpFontSize", FL_INT, &fd_helpfontsize, "12", 0},
     {"nocode", "NoCode", FL_BOOL, &fdopt.emit_code, "1", 0},
@@ -471,6 +474,7 @@ char *helps[ ] =
     "-compensate               emit font/server compensation code",
     "-lax                      go easy on syntax checking",
     "-I headername             alternate header file (forms.h default)",
+	"-G glcanvas headername    alternate glcanvas header file (glcanvas.h default)",
     "-convert file-list        convert .fd to code non-interactively",
     "-dir destdir              output any generated files in destdir",
     "-geometry geom            initial working area geometry",
@@ -619,6 +623,8 @@ pre_connect( int    ac,
 			strcpy( filter, av[ ++i ] );
 		else if ( strcmp( av[ i ], "-I" ) == 0 && i + 1 < ac )
 			strcpy( xform_header, av[ ++i ] );
+		else if ( strcmp( av[ i ], "-G" ) == 0 && i + 1 < ac )
+			strcpy( glcanvas_header, av[ ++i ] );
 		else if ( strcmp( av[ i ], "-bw" ) == 0 && i + 1 < ac )
 			fd_bwidth = atoi( av[ ++i ] );
 		else if ( strncmp( av[ i ] + 1, "convert", 1 ) == 0 )

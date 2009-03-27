@@ -117,6 +117,9 @@ done
 
 
 %changelog
+* Sa Nov 22 2008 Jens Thoms Toerring <jt@toerring.de> 1.0.91
+- New release 1.0.91 - lots of bug fixes
+
 * Wed Oct 6 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
 - Re-write the 'post' and 'postun' scripts to create the
   symbolic links correctly without requiring the SO_VERSION hack.

@@ -1,6 +1,8 @@
 @node Part II Language Filters
 @chapter Language Filters
 
+@strong{Please note: This chapter is probably completely outdated!}
+
 This chapter discusses the language filter support in Form Designer,
 targeted primarily to the developers of other language bindings to
 Forms Library. As of this writing, the authors are aware of the

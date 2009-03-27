@@ -466,6 +466,7 @@ extern int unit_val( const char * );
 extern int convert_u( int );
 extern double get_conversion_factor( void );
 extern char xform_header[ ];
+extern char glcanvas_header[ ];
 extern void show_geometry( const char *,
 						   int,
 						   int,
