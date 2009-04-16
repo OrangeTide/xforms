@@ -13,6 +13,8 @@ configure
 *.o
 *.lo
 *.la
+.cvsignore
+CVS
 Makefile.in
 demos/.deps/
 demos/.libs/
