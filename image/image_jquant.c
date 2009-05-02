@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: image_jquant.c,v 1.8 2008/12/27 22:20:45 jtt Exp $
+ * $Id: image_jquant.c,v 1.9 2009/05/02 20:11:05 jtt Exp $
  *
  * Copyright (C) 1998  T.C. Zhao
  *

@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID  || defined DEBUG
-char *fl_id_bmp = "$Id: bitmap.c,v 1.12 2009/01/11 16:48:12 jtt Exp $";
+char *fl_id_bmp = "$Id: bitmap.c,v 1.13 2009/05/02 20:11:07 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

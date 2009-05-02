@@ -30,7 +30,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.22 2009/01/25 17:38:16 jtt Exp $";
+char *fl_id_brw = "$Id: textbox.c,v 1.23 2009/05/02 20:11:13 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

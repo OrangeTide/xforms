@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: image_xwd.c,v 1.10 2008/12/27 22:20:46 jtt Exp $
+ * $Id: image_xwd.c,v 1.11 2009/05/02 20:11:07 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.

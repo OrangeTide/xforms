@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_slid = "$Id: slider.c,v 1.18 2009/01/11 14:34:21 jtt Exp $";
+char *fl_id_slid = "$Id: slider.c,v 1.19 2009/05/02 20:11:13 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

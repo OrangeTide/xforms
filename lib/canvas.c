@@ -33,7 +33,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.25 2009/01/25 17:38:16 jtt Exp $";
+char *fl_id_canvas = "$Id: canvas.c,v 1.26 2009/05/02 20:11:08 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

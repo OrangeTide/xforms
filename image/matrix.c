@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: matrix.c,v 1.6 2008/12/27 22:20:46 jtt Exp $
+ * $Id: matrix.c,v 1.7 2009/05/02 20:11:07 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.

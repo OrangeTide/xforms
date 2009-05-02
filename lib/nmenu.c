@@ -16,7 +16,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_nmenu = "$Id: nmenu.c,v 1.2 2009/01/11 14:58:58 jtt Exp $";
+char *fl_id_nmenu = "$Id: nmenu.c,v 1.3 2009/05/02 20:11:10 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

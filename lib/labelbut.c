@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fbut = "$Id: labelbut.c,v 1.10 2008/12/27 22:20:50 jtt Exp $";
+char *fl_id_fbut = "$Id: labelbut.c,v 1.11 2009/05/02 20:11:10 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

@@ -30,7 +30,7 @@
  */
 
 #if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.17 2008/12/27 22:20:48 jtt Exp $";
+char *fl_id_dial = "$Id: dial.c,v 1.18 2009/05/02 20:11:08 jtt Exp $";
 #endif
 
 #define SIX_OCLOCK 1

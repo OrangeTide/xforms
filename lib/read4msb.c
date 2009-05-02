@@ -26,7 +26,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_4msb = "$Id: read4msb.c,v 1.9 2008/12/27 22:20:51 jtt Exp $";
+char *id_4msb = "$Id: read4msb.c,v 1.10 2009/05/02 20:11:12 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

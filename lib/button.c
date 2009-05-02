@@ -29,7 +29,7 @@
  */
 
 #if defined(F_ID) || defined(DEBUG)
-char *fl_id_but = "$Id: button.c,v 1.27 2008/12/27 22:20:47 jtt Exp $";
+char *fl_id_but = "$Id: button.c,v 1.28 2009/05/02 20:11:08 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

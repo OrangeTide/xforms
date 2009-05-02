@@ -31,7 +31,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_util = "$Id: util.c,v 1.14 2009/01/21 11:37:12 jtt Exp $";
+char *fl_id_util = "$Id: util.c,v 1.15 2009/05/02 20:11:14 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: flimage_int.h,v 1.6 2008/12/27 22:20:44 jtt Exp $
+ * $Id: flimage_int.h,v 1.7 2009/05/02 20:11:05 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.

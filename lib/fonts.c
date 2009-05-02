@@ -30,7 +30,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fnt = "$Id: fonts.c,v 1.15 2008/12/27 22:20:49 jtt Exp $";
+char *fl_id_fnt = "$Id: fonts.c,v 1.16 2009/05/02 20:11:09 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

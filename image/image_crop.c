@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: image_crop.c,v 1.5 2008/12/27 22:20:44 jtt Exp $
+ * $Id: image_crop.c,v 1.6 2009/05/02 20:11:05 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.

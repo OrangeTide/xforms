@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: image_png.c,v 1.6 2008/12/27 22:20:45 jtt Exp $
+ * $Id: image_png.c,v 1.7 2009/05/02 20:11:06 jtt Exp $
  *
  *   Copyright (c) 2001-2002 T.C. Zhao
  *

@@ -28,7 +28,7 @@
  */
 
 #if ! defined lint && defined F_ID
-char *id_vstrcat = "$Id: vstrcat.c,v 1.9 2008/12/27 22:20:53 jtt Exp $";
+char *id_vstrcat = "$Id: vstrcat.c,v 1.10 2009/05/02 20:11:14 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

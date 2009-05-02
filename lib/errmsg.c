@@ -35,7 +35,7 @@
  ***********************************************************************/
 
 #if ! defined lint && defined F_ID
-char *id_errm = "$Id: errmsg.c,v 1.17 2009/01/16 19:29:00 jtt Exp $";
+char *id_errm = "$Id: errmsg.c,v 1.18 2009/05/02 20:11:09 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
