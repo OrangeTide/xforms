@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -36,8 +35,7 @@
 
 /* Draw mode */
 
-enum
-{
+enum {
 	FL_XOR	= GXxor,
 	FL_COPY = GXcopy,
 	FL_AND	= GXand
@@ -48,8 +46,7 @@ enum
 
 /* FL_xxx does not do anything anymore, but kept for compatibility */
 
-enum
-{
+enum {
 	FL_IllegalVisual = -1,
 	FL_StaticGray	 = StaticGray,
 	FL_GrayScale	 = GrayScale,
@@ -61,8 +58,7 @@ enum
 };
 
 
-enum
-{
+enum {
 	FL_North		 = NorthGravity,
 	FL_NorthEast	 = NorthEastGravity,
 	FL_NorthWest	 = NorthWestGravity,
@@ -95,8 +91,7 @@ enum
 
 /* FL graphics state information. Some are redundant. */
 
-typedef struct
-{
+typedef struct {
 	XVisualInfo   * xvinfo;
 	XFontStruct   * cur_fnt;			/* current font in default GC */
 	Colormap		colormap;			/* colormap valid for xvinfo */
@@ -163,8 +158,7 @@ FL_EXPORT int fl_mode_capable(
  * the origin of the drawing routines
  */
 
-typedef struct
-{
+typedef struct {
 	Pixmap		   pixmap;
 	Window		   win;
 	Visual       * visual;
@@ -182,18 +176,14 @@ typedef struct
 
 #define FL_MAX_FONTSIZES   10
 
-typedef struct
-{
+typedef struct {
 	XFontStruct * fs[ FL_MAX_FONTSIZES ];	  /* cached fontstruct */
 	short		  size[ FL_MAX_FONTSIZES ];	  /* cached sizes */
 	short		  nsize;					  /* cached so far */
 	char		  fname[ 80 ];				  /* without size info */
 } FL_FONT;
 
-
-/*
- * Some basic drawing routines
- */
+/* Some basic drawing routines */
 
 typedef XPoint FL_POINT;
 typedef XRectangle FL_RECT;
@@ -297,8 +287,7 @@ FL_EXPORT void fl_update_display(
 
 /* Line attributes */
 
-enum
-{
+enum {
 	FL_SOLID		  = LineSolid,
 	FL_USERDASH		  = LineOnOffDash,
 	FL_USERDOUBLEDASH = LineDoubleDash,
@@ -853,8 +842,7 @@ FL_EXPORT XEvent *fl_print_xevent_name(
 
 /****************** Resources ***************/
 
-typedef enum
-{
+typedef enum {
 	FL_NONE,
 	FL_SHORT = 10,
 	FL_BOOL,
@@ -864,8 +852,7 @@ typedef enum
 	FL_STRING
 } FL_RTYPE;
 
-typedef struct
-{
+typedef struct {
 	const char * res_name;		/* resource name						*/
 	const char * res_class;		/* resource class						*/
 	FL_RTYPE	 type;			/* FL_INT, FL_FLOAT, FL_BOOL,FL_STRING	*/
@@ -934,8 +921,7 @@ FL_EXPORT int fl_keysym_pressed(
 
 /* All Form control variables. Named closely as its resource name */
 
-typedef struct
-{
+typedef struct {
 	float  rgamma,
 		   ggamma,
 		   bgamma;
@@ -973,8 +959,7 @@ typedef struct
 
 /* Program default masks */
 
-enum
-{
+enum {
 	FL_PDDepth			 = ( 1 <<  1 ),
 	FL_PDClass			 = ( 1 <<  2 ),
 	FL_PDDouble			 = ( 1 <<  3 ),
@@ -1122,8 +1107,7 @@ typedef unsigned int	   FL_PACKED4;
 
 #endif
 
-typedef struct
-{
+typedef struct {
    unsigned int rshift,
 				rmask,
 				rbits;

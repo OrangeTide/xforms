@@ -59,9 +59,9 @@ change that by setting a different boxtype for the object) with the
 text of the currently selected item in its center.
 @tindex FL_MENU_SELECT
 @item FL_MENU_SELECT
-This select object looks like a button with a little extra box at the
-right (just like a @code{FL_MENU_BUTTON} and the text of the
-currently selected item drawn on the button.
+This select object looks like a button with a little extra box at its
+right side (just like a @code{FL_MENU_BUTTON}) and the text of the
+currently selected item drawn on the button-like object.
 @tindex FL_DROPLIST_SELECT
 @item FL_DROPLIST_SELECT
 This type looks like a button with the text of the currently selected
@@ -107,10 +107,11 @@ The function is of type
 @example
 int callback(FL_POPUP_RETURN *r);
 @end example
+@noindent
 Informaton about the item etc.@: gets passed to the callback function
-via the @code{FL_POPUP_RETURN} structure (see below) and the return
-value of the function can be used to keep the selection being made
-form becoming reported back to the user made by returning a value of
+via the @ref{FL_POPUP_RETURN} structure and the return value of the
+function can be used to keep the selection being made form becoming
+reported back to the user made by returning a value of
 @code{FL_IGNORE} (-1). The functions address must be given in the
 arguments following the @code{items} string.
 @item %E
@@ -161,20 +162,9 @@ function
 long fl_set_select_items(FL_OBJECT *obj, FL_POPUP_ITEM *item);
 @end example
 @noindent
-Here @code{item} is an array of structures of type
-@code{FL_POPUP_ITEM}
-@example
-typedef struct @{
-    const char  *text;        /* text of entry */
-    FL_POPUP_CB  callback;    /* (selection) callback */
-    const char  *shortcut;    /* keyboard shortcut description */
-    int          type;        /* not used here */
-    int          state;       /* disabled or hidden */
-@} FL_POPUP_ITEM;
-@end example
-@noindent
-with the @code{text} member of the last element of the array being
-set to @code{NULL}, indicating the end of the array.
+Here @code{item} is an array of structures of type @ref{FL_POPUP_ITEM}
+with the @code{text} member of the very last element of the array
+being set to @code{NULL}, indicating the end of the array.
 
 The @code{text} member is the text of the item. It may only contain
 one "special sequence", @code{%S} to indicate that the string is to be
@@ -196,7 +186,7 @@ directly and then associate it with the selecy object using
 @findex fl_set_select_popup()
 @anchor{fl_set_select_popup()}
 @example
-int fl_set_select_popup(FL_OBJECT *obj, FL_POPUP  *popup);
+int fl_set_select_popup(FL_OBJECT *obj, FL_POPUP *popup);
 @end example
 @noindent
 If the select object lready had a popup before this will be deleted
@@ -225,21 +215,9 @@ up the previous item).
 On every selection of an item (also if the already selected item is
 re-selected) a callback that may have been associated with the item is
 executed. The callback receives as its argument a pointer to a
-structure of type @code{FL_POPUP_RETURN}
-@tindex FL_POPUP_RETURN
-@example
-typedef struct @{
-    long int              val;       /* value assigned to entry */
-    void                 *user_data; /* pointer to user data */
-    const char           *text;      /* text of selected popup entry */
-    const char           *label;     /* left-flished text */        
-    const char           *accel;     /* right-flushed text */
-    const FL_POPUP_ENTRY *entry;     /* selected popup entry */
-    const FL_POPUP       *popup;     /* popup we're called for */
-@} FL_POPUP_RETURN;
-@end example
-@noindent
-The @code{val} member is a integer value associated with the entry.
+structure of type @ref{FL_POPUP_RETURN}.
+
+Its @code{val} member is a integer value associated with the entry.
 It can be set explicitely on creationg of the item using the @code{%x}
 "special sequence". If not given then first item gets the value 0,
 the next 1 etc. @code{user_data} is a pointer to some user data, which
@@ -255,11 +233,11 @@ entry that represents the item in the select object and, finally,
 Normally, when a new item is selected this is reported back to the
 caller either by calling the select objects callback (if one exists)
 or by returning the onject as the result of a call of e.g.@:
-@code{@ref{fl_do_forms()}}. But if the callback for the item itself returns
-@code{FL_IGNORE} then this doesn't happen. This can be useful for
-cases where all work for a change of the selection can be already done
-with in the item callback and the "main loop" shouldn't get involved
-anymore.
+@code{@ref{fl_do_forms()}}. But if the callback for the item itself
+returns @code{FL_IGNORE} then the latter doesn't happen. This can be
+useful for cases where all work for a change of the selection can
+already be done within the items callback and the "main loop"
+shouldn't get involved anymore.
 
 Per default the popup of a select objects remains shown when the user
 releases the mouse somewhere outside the popup window (or on its title
@@ -297,9 +275,9 @@ To find out which item is currently selected use
 FL_POPUP_RETURN *fl_get_select_item(FL_OBJECT *obj); 
 @end example
 @noindent
-It returns a pointer to a structure of type @code{FL_POPUP_RETURN} as
-already described directly above, containing all needed information
-about the selected item.
+It returns a pointer to a structure of type @ref{FL_POPUP_RETURN} as
+already described above, containing all needed information about the
+selected item.
 
 For some actions, e.g.@: deletion of an item etc., it is necessary to
 know the popup entry that represents it. Therefore it's possible to
@@ -325,7 +303,7 @@ certain label as displayed for the iten in the popup. The third,
 @code{@ref{fl_get_select_item_by_text()}} searches for the text the
 item was created by (that might be the same as the label text in
 simple cases). Please note that all functions return a structure of
-type @code{FL_POPUP_ENTRY} (and not @code{FL_POPUP_RETURN}, which
+type @ref{FL_POPUP_ENTRY} (and not @ref{FL_POPUP_RETURN}, which
 gives you direct access to the entry in the popup for the item.
 
 Using e.g.@: the result of one of the functions above you can also
@@ -361,7 +339,7 @@ FL_POPUP_ENTRY *fl_replace_select_item(FL_OBJECT *obj,
 string exactly like it would be used in @code{@ref{fl_add_select_items()}}
 for the @code{items} argument, that defines the item(s) to replace the
 existing item. Please note that, unless values to be associated with
-the items (see the @code{val} member of the @code{FL_POPUP_RETURN}
+the items (see the @code{val} member of the @ref{FL_POPUP_RETURN}
 structure) there's a twist here. When items get created they per
 default reeive increasing values, starting at 0. This also holds for
 items that get created in the process of replacement. The result is
@@ -452,14 +430,14 @@ The rest of the appearance of a select object concerns the popup that
 is used. To avoid bloating the API unnecessarily no functions for
 select objects were added that would just call popup functions. The
 popup belonging to a select object can be easily ound from either
-a @code{FL_POPUP_ENTRY} structure as returned by the functions for
+a @ref{FL_POPUP_ENTRY} structure as returned by the functions for
 searching for items or the @code{L_POPUP_RETURN} structure passed
 to all callbacks and also returned by
 @code{@ref{fl_get_select_item()}}. Both structures have a member
 called @code{popup} that is a pointer to the popup associated with the
 select object. For popup functions operation on indiviual items just
-use the poiner to the @code{FL_POPUP_ENTRY} structure itself or the
-@code{entry} member of the @code{L_POPUP_RETURN} structure.
+use the poiner to the @ref{FL_POPUP_ENTRY} structure itself or the
+@code{entry} member of the @ref{FL_POPUP_RETURN} structure.
 
 There's also a convenience function for finding out the popup used
 for a select object:
@@ -588,26 +566,16 @@ documentation for the @code{@ref{fl_popup_add_entries()}} function can
 also be used for nmenus.
 
 Another way to set up the popup of a select object, using an array of
-@code{FL_POPUP_ITEM} structures, is via the function
+@ref{FL_POPUP_ITEM} structures, is via the function
 @findex fl_set_nmenu_items()
 @anchor{fl_set_nmenu_items()}
 @example
 long fl_set_nmenu_items(FL_OBJECT *obj, FL_POPUP_ITEM *item);
 @end example
-A @code{FL_POPUP_ITEM} structures looks like this:
-@example
-typedef struct @{
-    const char  *text;        /* text of entry */
-    FL_POPUP_CB  callback;    /* (selection) callback */
-    const char  *shortcut;    /* keyboard shortcut description */
-    int          type;        /* type of entry */
-    int          state;       /* disabled, hidden, checked */
-@} FL_POPUP_ITEM;
-@end example
 @noindent
-and the functuon expects an array of those, with the very last element
-having @code{NULL} as the @code{text} member to mark the end of the
-array.
+The function expects an array of @ref{FL_POPUP_ITEM} structuress, with
+the very last element having @code{NULL} as the @code{text} member to
+mark the end of the array.
 
 The @code{text} member of the structure may contain the character
 sequence @code{%S} to have the text drawn for the item split up at
@@ -759,7 +727,7 @@ To find out which item of a nmenu object was selected last use
 FL_POPUP_RETURN *fl_get_nmenu_item(FL_OBJECT *obj);
 @end example
 @noindent
-The functon returns either a pointer to a @code{FL_POPUP_RETURN}
+The functon returns either a pointer to a @ref{FL_POPUP_RETURN}
 structure with informations about the selected item (as already
 discussed above when talking about callbacks) or @code{NULL} if
 no selection was made the last time the nmenu object was used.
@@ -789,7 +757,7 @@ as displayed for the iten in the popup. The third,
 @code{@ref{fl_get_nmenu_item_by_text()}} searches for the text the
 item was created by (that might be the same as the label text in
 simple cases). Please note that all functions return a structure of
-type @code{FL_POPUP_ENTRY} (and not @code{FL_POPUP_RETURN}, which
+type @ref{FL_POPUP_ENTRY} (and not @ref{FL_POPUP_RETURN}, which
 gives you direct access to the entry in the popup for the item.
 
 

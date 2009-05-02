@@ -33,7 +33,6 @@ extern const char *get_how_return_str( void );
 
 #define get_how_return_string get_how_return_str
 
-
 /* slider and value slider */
 
 extern void *get_slider_spec_fdform( void );

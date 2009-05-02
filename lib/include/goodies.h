@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -41,12 +40,10 @@
 
 #define FLChoiceTitle			"flChoice.title"
 
-
 FL_EXPORT void fl_set_goodies_font(
 		int style,
 		int size
 		);
-
 
 /*********** messages and questions **************/
 
@@ -112,11 +109,9 @@ FL_EXPORT const char * fl_show_simple_input(
 		const char *
 		);
 
-
 FL_EXPORT int fl_show_colormap(
 		int
 		);
-
 
 /********* choices *****************/
 
@@ -152,7 +147,6 @@ FL_EXPORT void fl_set_choice_shortcut(
 
 #define fl_set_choices_shortcut fl_set_choice_shortcut
 
-
 /************ one liner ***************/
 
 FL_EXPORT void fl_show_oneliner(
@@ -175,7 +169,6 @@ FL_EXPORT void fl_set_oneliner_color(
 		FL_COLOR
 		);
 
-
 FL_EXPORT void fl_set_tooltip_font(
 		int,
 		int
@@ -194,14 +187,12 @@ FL_EXPORT void fl_set_tooltip_lalign(
 		int
 		);
 
-
 /************* command log **************/
 
-typedef struct
-{
-	FL_FORM *	form;
-	void *		vdata;
-	char *		cdata;
+typedef struct {
+	FL_FORM   * form;
+	void      *	vdata;
+	char      *	cdata;
 	long		ldata;
 	FL_OBJECT * browser;
 	FL_OBJECT * close_browser;
@@ -265,19 +256,16 @@ FL_EXPORT FD_CMDLOG * fl_get_command_log_fdstruct(
 		void
 		);
 
-
 /* aliases */
 
 #define fl_open_command	   fl_exe_command
 #define fl_close_command   fl_end_command
 
-
 /******* file selector *****************/
 
 #define FL_MAX_FSELECTOR  6
 
-typedef struct
-{
+typedef struct {
 	FL_FORM   * fselect;
 	void      * vdata;
 	void      * cdata;
@@ -325,7 +313,6 @@ FL_EXPORT void fl_set_fselector_placement(
 FL_EXPORT void fl_set_fselector_border(
 		int
 		);
-
 
 #define fl_set_fselector_transient( b )	  \
 			fl_set_fselector_border( ( b ) ? FL_TRANSIENT : FL_FULLBORDER )
@@ -397,7 +384,6 @@ FL_EXPORT void fl_set_fselector_filetype_marker(
 		int
 		);
 
-
 #define fl_show_file_selector	  fl_show_fselector
 #define fl_set_fselector_cb		  fl_set_fselector_callback
 
@@ -408,6 +394,5 @@ FL_EXPORT int fl_goodies_atclose(
 		FL_FORM *,
 		void *
 		);
-
 
 #endif /* ! defined FL_GOODIES_H */

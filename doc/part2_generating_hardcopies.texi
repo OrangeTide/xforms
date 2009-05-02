@@ -63,37 +63,37 @@ page. This option overrides the default.
 This option requests landscape orientation. -gray This option requests
 all colors be converted to gray levels. By default, @code{fd2ps} outputs
 colors as specified in the @code{.fd} file.
-@item -bw n
+@item -bw @i{width}
 This option specifies the object border width. By default, the border
 width specified in the @code{.fd} file is used.
-@item -dpi f
+@item -dpi @i{res}
 This option specifies the screen resolution on which the user
 interface was designed. You can use this flag to enlarge or shrink the
 designed size by giving a DPI value smaller or larger than the actual
 screen resolution. The default DPI is 85. If the @code{.fd} file is
 specified in device independent unit (point, mm etc), this flag has no
 effect. Also this flag does not change text size.
-@item -G f
+@item -G @i{gamma}
 This option specifies a value (gamma) that will be used to adjust the
 builtin colors. Larger the value, bright the colors. The default gamma
 is 1.
-@item -rgb file
+@item -rgb @i{file}
 The option specifies the path to the colorname database
 @file{rgb.txt}. (It is used in parsing the colornames in XPM file).
 The default is @file{/usr/lib/X11/rgb.txt}. The environment variable
 @code{RGBFile} can be used to change this default.
-@item -pw f
+@item -pw @i{width}
 This option changes the paper width used to center the GUI on a
 printed page. By default the width is that of US Letter (i.e.@: 8.5
 inches) unless the environment variable @code{PAPER} is defined.
-@item -ph f
+@item -ph @i{height}
 This option changes the paper height used to center the output on the
 printed page. The default height is that of US Letter (i.e.@: 11
 inches) unless the environment variable @code{PAPER} is defined.
-@item -paper name
+@item -paper @i{format}
 This option specifies one of the standard paper names (thus setting
 the paper width and height simultaneously). The current understood
-papers are listed below.
+paper formats are
 @table @asis
 @item Letter
 8.5 x 11 inch.

@@ -172,16 +172,16 @@ line options
 @tab Value type
 @tab Meaning
 @item 
-@item @code{-display} host:dpy
+@item @code{-display} @i{host:dpy}
 @tab string
 @tab Remote host
-@item @code{-name} appname
+@item @code{-name} @i{appname}
 @tab string
 @tab change application name
-@item @code{-visual} class
+@item @code{-visual} @i{class}
 @tab string
 @tab TrueColor, PseudoColor etc.
-@item @code{-depth} depth
+@item @code{-depth} @i{depth}
 @tab integer
 @tab Preferred visual depth
 @item @code{-private}
@@ -193,7 +193,7 @@ line options
 @item @code{-stdcmap}
 @tab none
 @tab Use standard colormap
-@item @code{-fldebug} level
+@item @code{-fldebug} @i{level}
 @tab integer
 @tab Print some debug information
 @item @code{-flhelp}
@@ -210,7 +210,7 @@ Main Functions}, for further details. The above program can in fact be
 made a lot simpler, using the goodies described in @ref{Part I
 Goodies, , Goodies}. You can simply write:
 @example
-while (! fl_show_question("Do you want to Quit?", 0))
+while (!fl_show_question("Do you want to Quit?", 0))
     /* empty */ ;
 @end example
 @noindent

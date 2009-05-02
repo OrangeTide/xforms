@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -30,8 +29,7 @@
 
 #include <X11/cursorfont.h>
 
-enum
-{
+enum {
 	FL_INVISIBLE_CURSOR = -2,
 	FL_DEFAULT_CURSOR	= -1,
 	FL_BUSY_CURSOR		= XC_watch,
@@ -70,13 +68,10 @@ FL_EXPORT int fl_create_animated_cursor(
 		int	  timeout
 		);
 
-
 FL_EXPORT Cursor fl_get_cursor_byname(
 		int name
 		);
 
-
 #define fl_reset_cursor( win ) fl_set_cursor( win, FL_DEFAULT_CURSOR );
-
 
 #endif /* ! defined FL_CURSOR_H */

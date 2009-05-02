@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -29,8 +28,7 @@
 
 
 /***** Types	*****/
-typedef enum
-{
+typedef enum {
 	FL_NORMAL_BROWSER,
 	FL_SELECT_BROWSER,
 	FL_HOLD_BROWSER,
@@ -229,7 +227,6 @@ FL_EXPORT int fl_set_default_browser_maxlinelength(
 		int n
 		);
 
-
 #ifndef FL_BROWSER_SCROLL_CALLBACKt
 #define FL_BROWSER_SCROLL_CALLBACKt
 typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *ob,
@@ -256,6 +253,5 @@ FL_EXPORT FL_BROWSER_SCROLL_CALLBACK fl_get_browser_hscroll_callback(
 FL_EXPORT FL_BROWSER_SCROLL_CALLBACK fl_get_browser_vscroll_callback(
 		FL_OBJECT * ob
 		);
-
 
 #endif /* ! defined FL_BROWSER_H */

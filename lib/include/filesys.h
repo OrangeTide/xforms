@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -29,8 +28,7 @@
 
 /*	File types */
 
-enum
-{
+enum {
 	FT_FILE,
 	FT_DIR,
 	FT_LINK,
@@ -41,16 +39,14 @@ enum
 	FT_OTHER
 };
 
-typedef struct
-{
+typedef struct {
 	char          * name;			/* entry name			  */
 	int			    type;			/* FILE_TYPE			  */
 	long		    dl_mtime;		/* file modification time */
 	unsigned long   dl_size;		/* file size in bytes	  */
 } FL_Dirlist;
 
-enum
-{
+enum {
 	FL_ALPHASORT = 1,		/* sort in alphabetic order			  */
 	FL_RALPHASORT,			/* sort in reverse alphabetic order	  */
 	FL_MTIMESORT,			/* sort according to modifcation time */
@@ -64,8 +60,7 @@ enum
 typedef int ( * FL_DIRLIST_FILTER )( const char *, int );
 
 /* read dir with pattern filtering. All dirs read might be cached.
- * must not change dirlist in anyway.
- */
+ * must not change dirlist in anyway. */
 
 FL_EXPORT const FL_Dirlist * fl_get_dirlist(
 		const char * dir,
@@ -107,6 +102,5 @@ FL_EXPORT unsigned long fl_fmtime(
 FL_EXPORT char * fl_fix_dirname(
 		char dir[ ]
 		);
-
 
 #endif /* ! defined FL_FILESYS_H */

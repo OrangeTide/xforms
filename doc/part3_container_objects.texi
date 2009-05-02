@@ -20,6 +20,14 @@ utilization of the screen real estate. Each folder has its own tab the
 user can click on to call up a specific folder from which option can
 be selected.
 
+@ifhtml
+@center @image{folders}
+@end ifhtml
+@ifnothtml
+@center @image{images/folders,10cm}
+@end ifnothtml
+
+
 @ifnottex
 
 @menu

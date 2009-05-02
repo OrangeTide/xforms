@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -28,8 +27,7 @@
 
 /*	Class FL_XYPLOT */
 
-typedef enum
-{
+typedef enum {
 	FL_NORMAL_XYPLOT,		/* solid line						 */
 	FL_SQUARE_XYPLOT,		/* with added square				 */
 	FL_CIRCLE_XYPLOT,		/* with added circle				 */
@@ -45,14 +43,12 @@ typedef enum
 	FL_LINEPOINTS_XYPLOT	/* line & points					 */
 } FL_XYPLOT_TYPE;
 
-enum
-{
+enum {
 	FL_LINEAR,
 	FL_LOG
 };
 
-enum
-{
+enum {
 	FL_GRID_NONE  = 0,
 	FL_GRID_MAJOR = 1,
 	FL_GRID_MINOR = 2
@@ -67,7 +63,6 @@ enum
 #define FL_MAX_XYPLOTOVERLAY	32
 
 /***** Others	*****/
-
 
 FL_EXPORT FL_OBJECT * fl_create_xyplot(
 		int			 t,
@@ -122,7 +117,6 @@ FL_EXPORT void fl_insert_xyplot_data(
 		double		x,
 		double		y
 		);
-
 
 #define fl_set_xyplot_datafile	 fl_set_xyplot_file
 
@@ -324,7 +318,6 @@ FL_EXPORT int fl_get_xyplot_numdata(
 		int			id
 		);
 
-
 /* The following two functions will be removed.
  * Use fl_set_object_l[size|style] for the functionalities */
 
@@ -434,7 +427,6 @@ FL_EXPORT int fl_spline_interpolate(
 		double		  grid
 		);
 
-
 typedef void ( * FL_XYPLOT_SYMBOL )( FL_OBJECT *,
 									 int,
 									 FL_POINT *,
@@ -452,6 +444,5 @@ FL_EXPORT int fl_set_xyplot_mark_active(
 		FL_OBJECT * ob,
 		int			y
 		);
-
 
 #endif	/* ! defined FL_XYPLOT_H */

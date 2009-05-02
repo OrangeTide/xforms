@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -29,8 +28,7 @@
 #define FL_BUTTON_H
 
 
-typedef enum
-{
+typedef enum {
 	FL_NORMAL_BUTTON,
 	FL_PUSH_BUTTON,
 	FL_RADIO_BUTTON,
@@ -44,8 +42,7 @@ typedef enum
 
 #define FL_TOGGLE_BUTTON	FL_PUSH_BUTTON
 
-typedef struct
-{
+typedef struct {
 	Pixmap		   pixmap,
 				   mask;
 	unsigned int   bits_w,
@@ -72,9 +69,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_DRAWBUTTON	   FL_DrawButton
 #define FL_CLEANUPBUTTON   FL_CleanupButton
 
-/*
- *	normal button default
- */
+/* normal button default */
 
 #define FL_BUTTON_BOXTYPE	        FL_UP_BOX
 #define FL_BUTTON_COL1		        FL_COL1
@@ -85,9 +80,8 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_BUTTON_MCOL2		        FL_MCOL
 #define FL_BUTTON_BW		        FL_BOUND_WIDTH
 
-/*
- *	light button defaults
- */
+/* light button defaults */
+
 #define FL_LIGHTBUTTON_BOXTYPE	    FL_UP_BOX
 #define FL_LIGHTBUTTON_COL1		    FL_COL1
 #define FL_LIGHTBUTTON_COL2		    FL_YELLOW
@@ -97,7 +91,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_LIGHTBUTTON_MCOL		    FL_MCOL
 #define FL_LIGHTBUTTON_MINSIZE	    ( ( FL_Coord ) 12 )
 
-/** round button defaults ***/
+/* round button defaults */
 
 #define FL_ROUNDBUTTON_BOXTYPE	    FL_NO_BOX
 #define FL_ROUNDBUTTON_COL1		    FL_MCOL
@@ -107,7 +101,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_ROUNDBUTTON_TOPCOL	    FL_COL1
 #define FL_ROUNDBUTTON_MCOL		    FL_MCOL
 
-/* round3d button defaults	 */
+/* round3d button defaults */
 
 #define FL_ROUND3DBUTTON_BOXTYPE	FL_NO_BOX
 #define FL_ROUND3DBUTTON_COL1		FL_COL1
@@ -117,7 +111,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_ROUND3DBUTTON_TOPCOL		FL_COL1
 #define FL_ROUND3DBUTTON_MCOL		FL_MCOL
 
-/** check button defaults ***/
+/* check button defaults */
 
 #define FL_CHECKBUTTON_BOXTYPE	    FL_NO_BOX
 #define FL_CHECKBUTTON_COL1		    FL_COL1
@@ -128,7 +122,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_CHECKBUTTON_TOPCOL	    FL_COL1
 #define FL_CHECKBUTTON_MCOL		    FL_MCOL
 
-/** bitmap button defaults **/
+/* bitmap button defaults */
 
 #define FL_BITMAPBUTTON_BOXTYPE     FL_UP_BOX
 #define FL_BITMAPBUTTON_COL1	    FL_COL1			/* bitmap background  */
@@ -136,7 +130,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_BITMAPBUTTON_LCOL	    FL_LCOL			/* bitmap foreground   */
 #define FL_BITMAPBUTTON_ALIGN	    FL_ALIGN_BOTTOM
 
-/** bitmap button defaults **/
+/* bitmap button defaults */
 
 #define FL_PIXMAPBUTTON_BOXTYPE     FL_UP_BOX
 #define FL_PIXMAPBUTTON_COL1	    FL_BUTTON_COL1
@@ -370,9 +364,7 @@ FL_EXPORT int fl_get_button_numb(
 		FL_OBJECT * ob
 		);
 
-
 #define fl_set_button_shortcut	fl_set_object_shortcut
-
 
 FL_EXPORT FL_OBJECT * fl_create_generic_button(
 		int			 objclass,
@@ -389,7 +381,6 @@ FL_EXPORT void fl_add_button_class(
 		FL_DrawButton	 drawit,
 		FL_CleanupButton cleanup
 		);
-
 
 FL_EXPORT void fl_set_button_mouse_buttons(
 		FL_OBJECT *,

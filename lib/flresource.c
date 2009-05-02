@@ -1,19 +1,18 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -1166,13 +1165,13 @@ fl_initialize( int        * na,
 #ifdef XlibSpecificationRelease
     if ( XSupportsLocale( ) )
     {
-         XSetLocaleModifiers( "" );
+		XSetLocaleModifiers( "" );
 
-        /* use the same input method throughout xforms */
+        /* Use the same input method throughout xforms */
 
         fli_context->xim = XOpenIM( fl_display, 0, 0, 0 );
 
-        /* also use the same input context */
+        /* Also use the same input context */
 
         if ( fli_context->xim )
         {
@@ -1199,7 +1198,7 @@ fl_initialize( int        * na,
     fli_init_stipples( );
     fli_set_err_msg_func( fl_show_alert );
 
-    /* if using non-default visual or private colormap, need a window with
+    /* If using non-default visual or private colormap, need a window with
        correct visual/colormap and depth */
 
     fl_state[ fl_vmode ].trailblazer = fl_root;

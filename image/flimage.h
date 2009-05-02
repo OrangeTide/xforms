@@ -1,19 +1,18 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -37,7 +36,6 @@ extern "C"
 #define FL_EXPORT extern
 #endif
 
-
 #define fl_safe_free( p )     do {                   \
 	                              if ( p )           \
 								  {                  \
@@ -49,8 +47,7 @@ extern "C"
 #define FL_RGB2GRAY( r, g, b )  \
 	( ( unsigned int )( ( 78 * ( r ) + 150 * ( g ) + 28 * ( b ) ) >> 8 ) )
 
-enum
-{
+enum {
     FL_IMAGE_NONE,
     FL_IMAGE_MONO   =    1,		/* b&w. 1bit. 0=white 1=black */
     FL_IMAGE_GRAY   =    2,		/* 8 bit gray image           */
@@ -135,8 +132,7 @@ enum
 
 typedef Window FL_WINDOW;   /* unsigned long */
 
-typedef struct flimage_text_
-{
+typedef struct flimage_text_ {
     char         * str;		  /* the string itself             */
     int            len;		  /* string length                 */
     int            x,		  /* starting location of text (wrt image) */
@@ -151,8 +147,7 @@ typedef struct flimage_text_
     int            reserved[ 6 ];
 } FLIMAGE_TEXT;
 
-typedef struct flimage_marker_
-{
+typedef struct flimage_marker_ {
     const char   * name;      /* marker name                  */
     int           w,          /* size                         */
 	               h ;
@@ -174,13 +169,11 @@ typedef struct flimage_marker_
     int          reserved[ 6 ];
 } FLIMAGE_MARKER;
 
-
 #define FLIMAGE_REPFREQ  0x1f   /* report every 32 lines */
 
 #ifndef FL_RGB2PIXEL
 
-typedef struct
-{
+typedef struct {
    unsigned int rshift,
                 rmask,
                 rbits;
@@ -198,11 +191,9 @@ typedef struct
 #define FL_RGB2PIXEL  FL_RGB2PIXEL_
 #endif
 
-
 typedef struct flimage_setup_ *FLIMAGESETUP;
 
-typedef struct flimage_
-{
+typedef struct flimage_ {
     int               type;			/* image type                    */
     int               w,
 	                  h;			/* image size                    */
@@ -380,8 +371,7 @@ typedef struct flimage_
 
 /* some configuration stuff */
 
-typedef struct flimage_setup_
-{
+typedef struct flimage_setup_ {
     void          * app_data;
     int             ( * visual_cue )( FL_IMAGE *,
 									  const char *);
@@ -410,11 +400,9 @@ FL_EXPORT void flimage_setup(
 		FLIMAGE_SETUP * setup
 		);
 
-
 /* possible errors from the library. Not currently (v0.89) used */
 
-enum
-{
+enum {
    FLIMAGE_ERR_NONE = 0,
    FLIMAGE_ERR_ALLOC = -50,     /* allocation error     */
    FLIMAGE_ERR_INVALID,         /* invalid image        */
@@ -423,7 +411,6 @@ enum
    FLIMAGE_ERR_INTERNAL,        /* bugs                 */
    FLIMAGE_ERR_UNKNOWN
 };
-
 
 typedef int ( * FLIMAGE_Identify )( FILE * );
 typedef int ( * FLIMAGE_Description )( FL_IMAGE * );
@@ -463,7 +450,6 @@ FL_EXPORT int flimage_is_supported(
 		const char *
 		);
 
-
 FL_EXPORT int flimage_description_via_filter(
 		FL_IMAGE *,
 		char *const *,
@@ -477,8 +463,6 @@ FL_EXPORT int flimage_write_via_filter(
 		char * const *,
 		int
 		);
-
-
 
 FL_EXPORT FL_IMAGE * flimage_alloc(
 		void
@@ -531,7 +515,6 @@ FL_EXPORT void flimage_delete_all_text(
 		FL_IMAGE *
 		);
 
-
 FL_EXPORT int flimage_add_marker(
 		FL_IMAGE *,
 		const char *,
@@ -545,7 +528,6 @@ FL_EXPORT int flimage_add_marker(
 		unsigned int,
 		unsigned int
 		);
-
 
 FL_EXPORT int flimage_add_marker_struct(
 		FL_IMAGE *,
@@ -566,7 +548,6 @@ FL_EXPORT int flimage_render_annotation(
 		FL_IMAGE *,
 		FL_WINDOW
 		);
-
 
 FL_EXPORT void flimage_error(
 		FL_IMAGE *,
@@ -619,8 +600,7 @@ enum
 	FLIMAGE_READABLE = FL_READ
 };
 
-typedef struct
-{
+typedef struct {
     const char * formal_name;
     const char * short_name;
     const char * extension;
@@ -637,7 +617,6 @@ FL_EXPORT int flimage_get_number_of_formats(
 FL_EXPORT const FLIMAGE_FORMAT_INFO * flimage_get_format_info(
 		int
 		);
-
 
 FL_EXPORT void * fl_get_matrix(
 		int,
@@ -674,7 +653,6 @@ FL_EXPORT int fl_lookup_RGBcolor(
 		int *
 		);
 
-
 FL_EXPORT int flimage_add_format(
 		const char *,
 		const char *,
@@ -691,11 +669,9 @@ FL_EXPORT void flimage_set_annotation_support(
 		int
 		);
 
-
 FL_EXPORT int flimage_getcolormap(
 		FL_IMAGE *
 		);
-
 
 FL_EXPORT void fl_select_octree_quantizer(
 		void
@@ -712,8 +688,7 @@ FL_EXPORT void fl_select_mediancut_quantizer(
 #define FL_SMOOTH              FLIMAGE_SMOOTH
 #define FL_SHARPEN             FLIMAGE_SHARPEN
 
-enum
-{
+enum {
    FLIMAGE_NOSUBPIXEL =  0,     /* scale with no subpixel sampling */
    FLIMAGE_SUBPIXEL   =  1,     /* scale with  subpixel sampling */
    FLIMAGE_CENTER     =  2,     /* center warped image. default  */
@@ -813,7 +788,6 @@ FL_EXPORT int flimage_enhance(
 		FL_IMAGE *,
 		int
 		);
-
 
 FL_EXPORT int flimage_from_pixmap(
 		FL_IMAGE *,

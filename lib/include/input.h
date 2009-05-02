@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -29,8 +28,7 @@
 
 /***** Types	*****/
 
-typedef enum
-{
+typedef enum {
 	FL_NORMAL_INPUT,
 	FL_FLOAT_INPUT,
 	FL_INT_INPUT,
@@ -42,12 +40,10 @@ typedef enum
 
 /* for date input */
 
-enum
-{
+enum {
 	FL_INPUT_MMDD,
 	FL_INPUT_DDMM
 };
-
 
 /***** Defaults *****/
 
@@ -57,14 +53,12 @@ enum
 #define FL_INPUT_LCOL		FL_LCOL
 #define FL_INPUT_ALIGN		FL_ALIGN_LEFT
 
-
 /***** Others	*****/
 
 #define FL_INPUT_TCOL		FL_LCOL
 #define FL_INPUT_CCOL		FL_BLUE
 
 #define FL_RINGBELL				(1<<4)
-
 
 /***** Routines *****/
 
@@ -176,7 +170,6 @@ FL_EXPORT int fl_set_input_fieldchar(
 		int			fchar
 		);
 
-
 FL_EXPORT int fl_get_input_topline(
 		FL_OBJECT * ob
 		);
@@ -210,7 +203,6 @@ FL_EXPORT const char * fl_get_input(
 		FL_OBJECT * ob
 		);
 
-
 typedef int ( * FL_INPUTVALIDATOR )(FL_OBJECT *,
 									const char *,
 									const char *,
@@ -225,8 +217,7 @@ FL_EXPORT FL_INPUTVALIDATOR fl_set_input_filter(
 
 /* edit keys. */
 
-typedef struct
-{
+typedef struct {
 	/* basic editing */
 
 	long del_prev_char;		/* delete previous char	   */
@@ -264,6 +255,5 @@ typedef struct
 FL_EXPORT void fl_set_input_editkeymap(
 		const FL_EditKeymap * keymap
 		);
-
 
 #endif /* ! defined FL_INPUT_H */

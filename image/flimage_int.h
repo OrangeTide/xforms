@@ -1,19 +1,18 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -34,8 +33,7 @@
 
 #include "ulib.h"
 
-typedef struct flimageIO
-{
+typedef struct flimageIO {
     const char          * formal_name;
     const char          * short_name;
     const char          * signature;
@@ -48,8 +46,7 @@ typedef struct flimageIO
     int annotation;
 } FLIMAGE_IO;
 
-typedef struct
-{
+typedef struct {
     int    w,
 	       h;
     int    type;
@@ -58,8 +55,7 @@ typedef struct
 
 /* subimage for convolve etc */
 
-typedef struct
-{
+typedef struct {
     int    w,
 	       h;
     void * mat[ 3 ];
@@ -70,11 +66,9 @@ extern SubImage * flimage_get_subimage( FL_IMAGE * im,
 										int make );
 
 
-
 #define FL_IsGray( t )        ( t == FL_IMAGE_GRAY || t == FL_IMAGE_GRAY16 )
 #define FL_IsCI( t )          ( t == FL_IMAGE_CI   || t == FL_IMAGE_MONO )
 #define FLIMAGE_MAXLUT        ( 1 << FL_LUTBITS )
-
 
 extern FLIMAGE_IO *flimage_io;
 
@@ -177,12 +171,13 @@ extern int fl_octree_quantize_packed( unsigned int **,
 									  int *,
 									  FL_IMAGE * );
 
-
 /* these numbers can be anything, but should be less than < 128 and may not
    equal 0 */
 
-enum { FL_GET_MATRIX = 100,
-	   FL_MAKE_MATRIX };
+enum {
+	FL_GET_MATRIX = 100,
+	FL_MAKE_MATRIX
+};
 
 extern void * fl_get_submatrix( void *,
 								int,

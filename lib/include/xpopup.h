@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -74,10 +73,8 @@ FL_EXPORT Cursor fl_setpup_default_cursor(
 		int cursor
 		);
 
-
 /* setpup_{colors|fontsize} etc will be removed in next revision
- * use fl_set_default_xxx instead
- */
+ * use fl_set_default_xxx instead */
 
 FL_EXPORT void fl_setpup_color(
 		FL_COLOR fg,
@@ -95,7 +92,6 @@ FL_EXPORT int fl_setpup_fontsize(
 FL_EXPORT int fl_setpup_fontstyle(
 		int style
 		);
-
 
 #define fl_setpup_default_fontsize	  fl_setpup_fontsize
 #define fl_setpup_default_fontstyle	  fl_setpup_fontstyle
@@ -195,7 +191,6 @@ FL_EXPORT int fl_current_pup(
 		void
 		);
 
-
 #define fl_setpup_hotkey	fl_setpup_shortcut
 
 FL_EXPORT FL_PUP_CB fl_setpup_itemcb(
@@ -214,7 +209,6 @@ FL_EXPORT void fl_setpup_submenu(
 		int i,
 		int subm
 		);
-
 
 #define fl_setpup	 fl_setpup_mode
 

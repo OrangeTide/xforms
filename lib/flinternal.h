@@ -1,19 +1,18 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms. If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -101,8 +100,7 @@
 
 /* XForms internal colormap */
 
-typedef struct
-{
+typedef struct {
     const char     * name;
     FL_COLOR         index;
     unsigned short   r;
@@ -112,9 +110,7 @@ typedef struct
     int              grayval;
 } FLI_IMAP;
 
-
 #define BadPixel  FL_NoColor
-
 
 #define Clamp( v, vmin, vmax ) ( ( v ) < ( vmin ) ? \
 								 ( vmin ) : ( ( v ) > ( vmax ) ? \
@@ -136,6 +132,13 @@ typedef struct
 #define fli_map( i )       fl_state[ i ].colormap
 #define fli_dithered( i )  fl_state[ i ].dithered
 
+enum {
+	FLI_FIND_INPUT,
+	FLI_FIND_AUTOMATIC,
+	FLI_FIND_MOUSE,
+	FLI_FIND_CANVAS,
+	FLI_FIND_KEYSPECIAL
+};
 
 /* events.c or event related */
 
@@ -169,13 +172,11 @@ extern void fli_handle_idling( XEvent * xev,
 							   long     msec,
 							   int      do_idle_cb );
 
-
 /* misc. utilitnes */
 
 extern void fli_print_version( int );
 
 extern const char *fli_rm_rcs_kw( const char * );
-
 
 /* from forms.c and object.c */
 
@@ -231,7 +232,6 @@ extern FL_OBJECT *fli_find_object_backwards( FL_OBJECT *,
 extern void fli_insert_object( FL_OBJECT *,
 							   FL_OBJECT * );
 
-
 /* double buffering etc. */
 
 extern void fli_free_flpixmap( FL_pixmap * );
@@ -243,7 +243,6 @@ extern void fli_show_object_pixmap( FL_OBJECT * );
 extern void fli_create_form_pixmap( FL_FORM * );
 
 extern void fli_show_form_pixmap( FL_FORM * );
-
 
 /* windowing support */
 
@@ -259,16 +258,13 @@ extern Window fli_create_window( Window,
 
 extern void fli_create_gc( Window );
 
-
-enum
-{
+enum {
     FLI_COMMAND_PROP = 1,
     FLI_PROP_SET     = ( 1 << 10 )	/* really set */
 };
 
 extern void fli_set_winproperty( Window,
 								 unsigned int );
-
 
 /* graphics related */
 
@@ -280,7 +276,6 @@ extern void fli_dump_state_info( int,
 extern void fli_init_stipples( void );
 
 extern void fli_draw_button( FL_OBJECT * );
-
 
 /* for fdesign */
 
@@ -377,16 +372,14 @@ extern XRectangle *fli_get_underline_rect( XFontStruct *,
 
 /* Group some WM stuff into a structure for easy maintainance */
 
-typedef struct
-{
+typedef struct {
 	unsigned int pos_request;	/* USPOSITION or PPOSITION			  */
 } FLI_WM_STUFF;
 
 
 /* Routines in sldraw.c. */
 
-typedef struct
-{
+typedef struct {
     FL_Coord x;
 	FL_Coord y;
 	FL_Coord w;
@@ -421,8 +414,7 @@ extern XRectangle fli_perm_xcr;
 
 /* Application windows */
 
-typedef struct fli_win_
-{
+typedef struct fli_win_ {
     struct fli_win_ * next;
     Window            win;
     FL_APPEVENT_CB    pre_emptive;	    /* always gets called first if set */
@@ -454,16 +446,13 @@ extern int fli_initialize_program_visual( void );
 /* currently only one idle procedure is permitted, so the next
  * field is of no much use */
 
-typedef struct fli_idle_cb_
-{
+typedef struct fli_idle_cb_ {
     struct fli_idle_cb_ * next;
     FL_APPEVENT_CB        callback;
     void                * data;
 } FLI_IDLE_REC;
 
-
-typedef struct fli_io_event_
-{
+typedef struct fli_io_event_ {
     struct fli_io_event_ * next;
     FL_IO_CALLBACK         callback;
     void                 * data;
@@ -475,11 +464,9 @@ typedef struct fli_io_event_
 
 /* signals */
 
-
 typedef RETSIGTYPE ( * FL_OSSIG_HANDLER )( int );
 
-typedef struct fli_signallist_
-{
+typedef struct fli_signallist_ {
     struct fli_signallist_ * next;
     FL_SIGNAL_HANDLER        callback;
 #if defined HAVE_SIGACTION
@@ -492,14 +479,11 @@ typedef struct fli_signallist_
     int                      caught;
 } FLI_SIGNAL_REC;
 
-
 extern void fl_remove_all_signal_callbacks( void );
-
 
 /* timeouts */
 
-typedef struct fli_timeout_
-{
+typedef struct fli_timeout_ {
     int                    id;
     struct fli_timeout_  * next;
     struct fli_timeout_  * prev;
@@ -510,16 +494,13 @@ typedef struct fli_timeout_
     void                 * data;
 } FLI_TIMEOUT_REC;
 
-
 extern void fl_remove_all_timeouts( void );
-
 
 /*
  *  Intenal controls.
  */
 
-typedef struct fli_context_
-{
+typedef struct fli_context_ {
     FL_FORM_ATCLOSE      atclose;	        /* what to do if WM_DELETE_WINDOW */
     void               * close_data;
     FLI_IDLE_REC       * idle_rec;	        /* idle callback record   */
@@ -547,12 +528,10 @@ typedef struct fli_context_
     long                 reserverd[ 6 ];
 } FLI_CONTEXT;
 
-
 /* some X info that helps to make the windowing system independent
  * API work (fl_color() etc. */
 
-typedef struct
-{
+typedef struct {
     Display       * display;
     Window          win;
     GC              gc,
