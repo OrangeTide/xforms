@@ -1,21 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2008 Jens Thoms Toerring <jt@toerring.de>
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -39,7 +36,6 @@ struct FL_POPUP_RETURN_ {
 	const FL_POPUP_ENTRY * entry;      /* pointer to selected popup entry */
 	const FL_POPUP       * popup;      /* popup we're called for */
 };
-
 
 struct FL_POPUP_ {
 	FL_POPUP         * next;           /* next in linked list */
@@ -86,7 +82,6 @@ struct FL_POPUP_ {
 											and returned on selection */
 };
 
-
 struct FL_POPUP_ENTRY_ {
 	FL_POPUP_ENTRY * prev;               /* next in linked list */
 	FL_POPUP_ENTRY * next;               /* previous in linked list */
@@ -121,7 +116,6 @@ struct FL_POPUP_ENTRY_ {
                      ul_h;
 };
 
-
 typedef struct {
 	const char     * text;         /* text of entry */
 	FL_POPUP_CB      callback;     /* (selection) callback */
@@ -130,14 +124,12 @@ typedef struct {
 	int              state;        /* disabled, hidden, checked */
 } FL_POPUP_ITEM;
 
-
 /* Popup policies */
 
 enum {
 	FL_POPUP_NORMAL_SELECT,
 	FL_POPUP_DRAG_SELECT
 };
-
 
 /* Popup states */
 
@@ -148,7 +140,6 @@ enum {
 	FL_POPUP_CHECKED  = 4              /* tooogle/radio item is in on state */
 };
 
-
 /* Popup entry types */
 
 enum {
@@ -158,7 +149,6 @@ enum {
 	FL_POPUP_SUB,                      /* sub-popup popup entry */
 	FL_POPUP_LINE                      /* line popup entry */
 };
-
 
 /* Popup color types */
 
@@ -171,7 +161,6 @@ enum {
 	FL_POPUP_DISABLED_TEXT_COLOR,
 	FL_POPUP_RADIO_COLOR
 };
-
 
 FL_EXPORT FL_POPUP *fl_popup_add(
 		Window,

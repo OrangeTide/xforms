@@ -119,11 +119,11 @@ for all options. The following are the defaults:
 @tab Type
 @tab Meaning
 @tab Default
-@item @code{-fldebug} @emph{level}
+@item @code{-fldebug} @i{level}
 @tab int
 @tab prints debug information
 @tab 0
-@item @code{-name} @emph{appname}
+@item @code{-name} @i{appname}
 @tab string
 @tab changes application name
 @tab none
@@ -135,19 +135,19 @@ for all options. The following are the defaults:
 @tab
 @tab requests synchronous mode(debug)
 @tab false
-@item @code{-display} @emph{host:dpy}
+@item @code{-display} @i{host:dpy}
 @tab string
 @tab specifies remote host
 @tab @code{$DISPLAY}
-@item @code{-visual} @emph{class}
+@item @code{-visual} @i{class}
 @tab string
 @tab TrueColor, PseudoColor...
 @tab best
-@item @code{-depth} @emph{depth}
+@item @code{-depth} @i{depth}
 @tab int
 @tab specifies prefered visual depth
 @tab best
-@item @code{-vid} @emph{id}
+@item @code{-vid} @i{id}
 @tab long
 @tab specifies prefered visual ID
 @tab
@@ -167,19 +167,19 @@ for all options. The following are the defaults:
 @tab
 @tab enables double buffering
 @tab false
-@item -bw width
+@item -bw @i{width}
 @tab int
 @tab changes border width
 @tab 1
-@item -rgamma gamma
+@item -rgamma @i{gamma}
 @tab float
 @tab specifies red gamma
 @tab 1.0
-@item -ggamma gamma
+@item -ggamma @i{gamma}
 @tab float
 @tab specifies green gamma
 @tab 1.0
-@item -bgamma gamma
+@item -bgamma @i{gamma}
 @tab float
 @tab specifies blue gamma
 @tab 1.0

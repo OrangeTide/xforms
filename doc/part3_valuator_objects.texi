@@ -334,6 +334,14 @@ The meaning of the parameters is as usual. The label is by default
 placed below the scrollbar.
 
 
+@ifhtml
+@center @image{scrollbars}
+@end ifhtml
+@ifnothtml
+@center @image{images/scrollbars,14cm}
+@end ifnothtml
+
+
 @node Scrollbar Types
 @subsection Scrollbar Types
 
@@ -557,6 +565,14 @@ placed below the dial.
 
 @node Dial Types
 @subsection Dial Types
+
+@ifhtml
+@center @image{dials}
+@end ifhtml
+@ifnothtml
+@center @image{images/dials,10cm}
+@end ifnothtml
+
 
 The following types of dials are available:
 @table @code
@@ -913,6 +929,14 @@ placed below the counter.
 @node Counter Types
 @subsection Counter Types
 
+@ifhtml
+@center @image{counters}
+@end ifhtml
+@ifnothtml
+@center @image{images/counters,8cm}
+@end ifnothtml
+
+
 The following types of counters are available:
 @table @code
 @tindex FL_NORMAL_COUNTER
@@ -1144,6 +1168,15 @@ placed below the thumbwheel.
 
 @node Thumbwheel Types
 @subsection Thumbwheel Types
+
+
+@ifhtml
+@center @image{thumbwheels}
+@end ifhtml
+@ifnothtml
+@center @image{images/thumbwheels,7cm}
+@end ifnothtml
+
 
 The following types of thumbwheels are available:
 @table @code

@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -40,8 +39,8 @@
 #endif
 
 /* some general constants */
-enum
-{
+
+enum {
 	FL_ON		   = 1,
 	FL_OK		   = 1,
 	FL_VALID	   = 1,
@@ -59,13 +58,12 @@ enum
 	FL_IGNORE	   = -1,
 	FL_CLOSE	   = -2,
 
-   /* misc. return types */
+	/* misc. return types */
 
 	FL_ARGUMENT	   = -3,
 	FL_ALLOC	   = -4,
 	FL_BAD_OBJECT  = -5
 };
-
 
 /* Max	directory length  */
 
@@ -77,23 +75,20 @@ enum
 #endif
 #endif /* !def FL_PATH_MAX */
 
-
 /* The screen coordinate unit, FL_Coord, must be of signed type.
  * If FL_Coord is float, FL_CoordIsFloat must be defined to be 1 so that
  * round-off error can be checked. **TODO Float not tested */
 
 typedef int FL_Coord;
 
-#define FL_COORD		FL_Coord
-#define FL_CoordIsFloat 0	/* make it 1 if FL_Coord is of type float */
+#define FL_COORD		 FL_Coord
+#define FL_CoordIsFloat  0	/* make it 1 if FL_Coord is of type float */
 
 typedef unsigned long FL_COLOR;
 
-
 /* Coordinates can be in pixels, milli-meters or points (1/72inch) */
 
-typedef enum
-{
+typedef enum {
 	FL_COORD_PIXEL,			/* default, Pixel			*/
 	FL_COORD_MM,			/* milli-meter				*/
 	FL_COORD_POINT,			/* point					*/
@@ -101,11 +96,9 @@ typedef enum
 	FL_COORD_centiPOINT		/* one hundredth of a point */
 } FL_COORD_UNIT;
 
-
 /* All object classes. */
 
-typedef enum
-{
+typedef enum {
 	FL_INVALID_CLASS,	   /*  0 */
 	FL_BUTTON,			   /*  1 */
 	FL_LIGHTBUTTON,		   /*  2 */
@@ -158,15 +151,13 @@ typedef enum
 #define FL_USER_CLASS_START	  1001	/* min. user class	value */
 #define FL_USER_CLASS_END	  9999	/* max. user class	value */
 
-
 /* Maximum border width (in pixel) */
 
 #define FL_MAX_BW          10
 
 /* how to display a form onto screen */
 
-typedef enum
-{
+typedef enum {
 	FL_PLACE_FREE		=	0,		/* size remain resizable	  */
 	FL_PLACE_MOUSE		=	1,		/* mouse centered on form	  */
 	FL_PLACE_CENTER		=	2,		/* center of the screen		  */
@@ -187,22 +178,18 @@ typedef enum
 #define FL_PLACE_FREE_CENTER ( FL_PLACE_CENTER | FL_FREE_SIZE )
 #define FL_PLACE_CENTERFREE	 ( FL_PLACE_CENTER | FL_FREE_SIZE )
 
-
 /* Window manager decoration request and forms attributes */
 
-enum
-{
+enum {
 	FL_FULLBORDER = 1,		/* normal								   */
 	FL_TRANSIENT,			/* set TRANSIENT_FOR property			   */
 	FL_NOBORDER,			/* use override_redirect to supress decor. */
 	FL_MODAL = 1 << 8		/* not implemented yet					   */
 };
 
-
 /* All box types */
 
-typedef enum
-{
+typedef enum {
 	FL_NO_BOX,
 	FL_UP_BOX,
 	FL_DOWN_BOX,
@@ -228,9 +215,7 @@ typedef enum
 	FL_SELECTED_BOTTOMTAB_UPBOX,
 	FL_OSHADOW_BOX,					/* not used */
 	FL_MAX_BOX_STYLES				/* sentinel */
-
 } FL_BOX_TYPE;
-
 
 #define FL_IS_UPBOX( t )	(	 ( t ) == FL_UP_BOX			  \
 							  || ( t ) == FL_OVAL3D_UPBOX	  \
@@ -246,11 +231,9 @@ typedef enum
 								( ( t ) == FL_OVAL3D_UPBOX ?			\
 								  FL_OVAL3D_DOWNBOX : ( t ) ) ) )
 
-
 /* How to place text relative to a box */
 
-typedef enum
-{
+typedef enum {
 	FL_ALIGN_CENTER,
 	FL_ALIGN_TOP		  = 1,
 	FL_ALIGN_BOTTOM		  = 2,
@@ -268,11 +251,9 @@ typedef enum
 	FL_ALIGN_RIGHT_BOTTOM = FL_ALIGN_BOTTOM_RIGHT
 } FL_ALIGN;
 
+/* Mouse buttons. Don't have to be consecutive */
 
-/* mouse buttons. Don't have to be consecutive */
-
-enum
-{
+enum {
 	FL_MBUTTON1 = 1,
 	FL_MBUTTON2,
 	FL_MBUTTON3,
@@ -292,11 +273,9 @@ enum
 #define FL_SCROLLUPMOUSE	 FL_SCROLLUP_MOUSE
 #define FL_SCROLLDOWNMOUSE	 FL_SCROLLDOWN_MOUSE
 
-
 /* control when to return input, slider and dial object. */
 
-enum
-{
+enum {
 	FL_RETURN_END_CHANGED = 0,
 	FL_RETURN_CHANGED	  = 1,
 	FL_RETURN_END		  = 2,
@@ -304,13 +283,11 @@ enum
 	FL_RETURN_DBLCLICK	  = 4
 };
 
-
 /*	Some special color indeces for FL private colormap. It does not matter
  *	what the value of each enum is, but it must start from 0 and be
  *	consecutive. */
 
-typedef enum
-{
+typedef enum {
 	FL_BLACK,
 	FL_RED,
 	FL_GREEN,
@@ -370,11 +347,9 @@ typedef enum
 	FL_NOCOLOR = 0x7fffffffL
 } FL_PD_COL;
 
-
 #define FL_BUILT_IN_COLS  ( FL_DARKER_COL1 + 1 )
 #define FL_INACTIVE_COL	  FL_INACTIVE
 #define FL_DOGERBLUE	  FL_DODGERBLUE
-
 
 /* Some aliases for the color. This is actually backwards ... */
 
@@ -388,11 +363,9 @@ typedef enum
 #define	 FL_LCOL			FL_BLACK
 #define	 FL_NoColor			FL_NOCOLOR
 
-
 /* Events that a form reacts to.  */
 
-typedef enum
-{
+typedef enum {
 	FL_NOEVENT,				   /*  0 */
 	FL_DRAW,				   /*  1 */
 	FL_PUSH,				   /*  2 */
@@ -429,22 +402,18 @@ typedef enum
 
 #define FL_MOVE	  FL_MOTION	   /* for compatibility */
 
-
 /* Resize policies */
 
-typedef enum
-{
+typedef enum {
 	FL_RESIZE_NONE,
 	FL_RESIZE_X,
 	FL_RESIZE_Y,
 	FL_RESIZE_ALL = ( FL_RESIZE_X | FL_RESIZE_Y )
 } FL_RESIZE_T;
 
-
 /* Keyboard focus control */
 
-typedef enum
-{
+typedef enum {
 	FL_KEY_NORMAL  = 1,		/* normal keys(0-255) - tab +left/right */
 	FL_KEY_TAB	   = 2,		/* normal keys + 4 direction cursor		*/
 	FL_KEY_SPECIAL = 4,		/* only needs special keys(>255)		*/
@@ -458,24 +427,10 @@ typedef enum
 
 #define MAX_SHORTCUTS    8
 
-
-/* Internal use */
-
-typedef enum
-{
-	FL_FIND_INPUT,
-	FL_FIND_AUTOMATIC,
-	FL_FIND_MOUSE,
-	FL_FIND_CANVAS,
-	FL_FIND_KEYSPECIAL
-} FL_FIND;
-
-
 /* Pop-up menu item attributes. NOTE if more than 8, need to change
  * choice and menu class where mode is kept by a single byte */
 
-enum
-{
+enum {
 	FL_PUP_NONE,
 	FL_PUP_GREY	 = 1,
 	FL_PUP_BOX	 = 2,
@@ -487,13 +442,11 @@ enum
 #define FL_PUP_TOGGLE	 FL_PUP_BOX		   /* not used anymore */
 #define FL_PUP_INACTIVE	 FL_PUP_GREY
 
-
 /* Popup and menu entries */
 
 typedef int ( * FL_PUP_CB )( int );		   /* callback prototype  */
 
-typedef struct
-{
+typedef struct {
 	const char * text;			/* label of a popup/menu item	 */
 	FL_PUP_CB	 callback;		/* the callback function		 */
 	const char * shortcut;		/* hotkeys						 */
@@ -502,15 +455,13 @@ typedef struct
 
 #define FL_MENU_ENTRY  FL_PUP_ENTRY
 
-
 /*******************************************************************
  * FONTS
  ******************************************************************/
 
 #define FL_MAXFONTS		48	/* max number of fonts */
 
-typedef enum
-{
+typedef enum {
 	FL_INVALID_STYLE = -1,
 	FL_NORMAL_STYLE,
 	FL_BOLD_STYLE,
@@ -539,7 +490,6 @@ typedef enum
 	FL_EMBOSSED_STYLE = ( 1 << 11 )
 } FL_TEXT_STYLE;
 
-
 #define FL_FONT_STYLE FL_TEXT_STYLE
 
 #define special_style( a )	(	 ( a ) >= FL_SHADOW_STYLE					  \
@@ -556,7 +506,6 @@ typedef enum
 
 #define FL_DEFAULT_SIZE	  FL_SMALL_SIZE
 
-
 /* Defines for compatibility */
 
 #define FL_TINY_FONT	  FL_TINY_SIZE
@@ -572,8 +521,6 @@ typedef enum
 
 #define FL_BOUND_WIDTH	( FL_Coord ) 1	   /* Border width of boxes */
 
-
-
 /* Definition of basic struct that holds an object */
 
 #define	 FL_CLICK_TIMEOUT  400	/* double click interval */
@@ -581,8 +528,7 @@ typedef enum
 struct forms_;
 struct fl_pixmap;
 
-typedef struct flobjs_
-{
+typedef struct flobjs_ {
 	struct forms_  * form;			 /* the form this object belongs to */
 	void		   * u_vdata;		 /* anything the user likes */
 	char		   * u_cdata;		 /* anything the user likes */
@@ -684,12 +630,10 @@ typedef struct flobjs_
 	int              want_update;
 } FL_OBJECT;
 
-
 /* callback function for an entire form */
 
 typedef void ( * FL_FORMCALLBACKPTR )( struct flobjs_ *,
 									   void * );
-
 /* object callback function		 */
 
 typedef void ( * FL_CALLBACKPTR )( FL_OBJECT *,
@@ -704,7 +648,6 @@ typedef int ( * FL_RAW_CALLBACK )( struct forms_ *,
 
 typedef int ( * FL_FORM_ATCLOSE )( struct forms_ *,
 								   void * );
-
 /* deactivate/activate callback */
 
 typedef void ( * FL_FORM_ATDEACTIVATE )( struct forms_ *,
@@ -727,7 +670,6 @@ typedef void ( * FL_ERROR_FUNC )( const char *,
 
 FL_EXPORT FL_OBJECT *FL_EVENT;
 
-
 /*** FORM ****/
 
 /* form visibility state: form->visible */
@@ -739,8 +681,7 @@ enum {
   FL_VISIBLE	  = 1
 };
 
-typedef struct forms_
-{
+typedef struct forms_ {
 	void			   * fdui;			 /* for fdesign */
 	void			   * u_vdata;		 /* for application */
 	char			   * u_cdata;		 /* for application */
@@ -814,24 +755,20 @@ typedef struct forms_
 /* All FD_xxx structure emitted by fdesign contains at least the
  * following */
 
-typedef struct
-{
+typedef struct {
 	FL_FORM * form;
 	void	* vdata;
 	char	* cdata;
 	long	  ldata;
 } FD_Any;
 
-
 /* Async IO stuff */
 
-enum
-{
+enum {
 	FL_READ	  = 1,
 	FL_WRITE  = 2,
 	FL_EXCEPT = 4
 };
-
 
 /* IO other than XEvent Q */
 
@@ -850,7 +787,6 @@ FL_EXPORT void fl_remove_io_callback(
 		unsigned int   mask,
 		FL_IO_CALLBACK cb
 		);
-
 
 /* signals */
 
@@ -875,7 +811,6 @@ FL_EXPORT void fl_app_signal_direct(
 		int y
 		);
 
-
 /* timeouts */
 
 typedef void (* FL_TIMEOUT_CALLBACK )( int, void * );
@@ -890,14 +825,12 @@ FL_EXPORT void fl_remove_timeout(
 		int id
 		);
 
-
 /*	Some utility stuff */
 
 #ifndef FL_VN_PAIR_STRUCT
 #define FL_VN_PAIR_STRUCT
 
-typedef struct
-{
+typedef struct {
 	int			 val;
 	const char * name;
 } FL_VN_PAIR;
@@ -918,14 +851,12 @@ FL_EXPORT unsigned long fl_msleep(
 		unsigned long msec
 		);
 
-
 /* Basic public routine prototypes */
 
 FL_EXPORT int fl_library_version(
 		int * ver,
 		int * rev
 		);
-
 
 /** Generic routines that deal with FORMS **/
 
@@ -972,7 +903,6 @@ FL_EXPORT void fl_reset_focus_object(
 		FL_OBJECT * ob
 		);
 
-
 #define fl_set_object_focus	  fl_set_focus_object
 
 FL_EXPORT FL_FORM_ATCLOSE fl_set_form_atclose(
@@ -985,7 +915,6 @@ FL_EXPORT FL_FORM_ATCLOSE fl_set_atclose(
 		FL_FORM_ATCLOSE fmclose,
 		void *			data
 		);
-
 
 FL_EXPORT FL_FORM_ATACTIVATE fl_set_form_atactivate(
 		FL_FORM *		   form,
@@ -1062,7 +991,6 @@ FL_EXPORT void fl_set_form_callback(
 		void			   * d
 		);
 
-
 #define	 fl_set_form_call_back	  fl_set_form_callback
 
 FL_EXPORT void fl_set_form_size(
@@ -1111,7 +1039,6 @@ FL_EXPORT void fl_set_form_geometry(
 		FL_Coord   w,
 		FL_Coord   h
 		);
-
 
 #define fl_set_initial_placement fl_set_form_geometry
 
@@ -1168,7 +1095,6 @@ FL_EXPORT FL_RAW_CALLBACK fl_register_raw_callback(
 		FL_RAW_CALLBACK	  rcb
 		);
 
-
 #define fl_register_call_back fl_register_raw_callback
 
 FL_EXPORT FL_OBJECT * fl_bgn_group(
@@ -1182,7 +1108,6 @@ FL_EXPORT void fl_end_group(
 FL_EXPORT FL_OBJECT *fl_addto_group(
 		FL_OBJECT * group
 		);
-
 
 /****** Routines that deal with FL_OBJECTS ********/
 
@@ -1357,10 +1282,10 @@ FL_EXPORT void fl_fit_object_label(
 
 FL_EXPORT void fl_get_object_geometry(
 		FL_OBJECT * ob,
-		FL_Coord  *	 x,
-		FL_Coord  *	 y,
-		FL_Coord  *	 w,
-		FL_Coord  *	 h
+		FL_Coord  *	x,
+		FL_Coord  *	y,
+		FL_Coord  *	w,
+		FL_Coord  *	h
 		);
 
 FL_EXPORT void fl_get_object_position(
@@ -1383,7 +1308,6 @@ FL_EXPORT void fl_get_object_bbox(
 		FL_Coord  * h
 		);
 
-
 #define fl_compute_object_geometry	 fl_get_object_bbox
 
 FL_EXPORT void fl_call_object_callback(
@@ -1405,7 +1329,6 @@ FL_EXPORT FL_CALLBACKPTR fl_set_object_callback(
 		FL_CALLBACKPTR	 callback,
 		long			 argument
 		);
-
 
 #define fl_set_object_align	  fl_set_object_lalign
 #define fl_set_call_back	  fl_set_object_callback
@@ -1448,7 +1371,6 @@ FL_EXPORT void fl_deactivate_object(
 		FL_OBJECT * ob
 		);
 
-
 FL_EXPORT int fl_enumerate_fonts(
 		void ( * output )( const char * s ),
 		int	 shortform
@@ -1463,7 +1385,6 @@ FL_EXPORT void fl_set_font(
 		int numb,
 		int size
 		);
-
 
 /* routines that facilitate free object */
 
@@ -1511,7 +1432,6 @@ FL_EXPORT void fl_get_string_dimension(
 		int		   * height
 		);
 
-
 #define fl_get_string_size	fl_get_string_dimension
 
 FL_EXPORT void fl_get_align_xy(
@@ -1552,13 +1472,6 @@ FL_EXPORT void fl_drw_text_beside(
 		const char * str
 		);
 
-
-#if 0
-#define fl_draw_text( a, x, y, w, h, c, st, sz, s )						  \
-	  ( ( ( a ) & FL_ALIGN_INSIDE ) ? fl_drw_text : fl_drw_text_beside )  \
-	  ( a, x, y, w, h, c, st, sz, s )
-#endif
-
 FL_EXPORT void fl_drw_text_cursor(
 		int		     align,
 		FL_Coord     x,
@@ -1583,7 +1496,6 @@ FL_EXPORT void fl_drw_box(
 		int		 bw_in
 		);
 
-
 typedef void ( * FL_DRAWPTR )( FL_Coord,
 							   FL_Coord,
 							   FL_Coord,
@@ -1606,8 +1518,7 @@ FL_EXPORT int fl_draw_symbol(
 		FL_COLOR	 col
 		);
 
-enum
-{
+enum {
 	FL_SLIDER_NONE = 0,
 	FL_SLIDER_BOX  = 1,
 	FL_SLIDER_KNOB = 2,
@@ -1627,7 +1538,6 @@ FL_EXPORT long fl_mapcolorname(
 		FL_COLOR	 col,
 		const char * name
 		);
-
 
 #define fl_mapcolor_name  fl_mapcolorname
 
@@ -1655,7 +1565,6 @@ FL_EXPORT unsigned long fl_getmcolor(
 FL_EXPORT unsigned long fl_get_pixel(
 		FL_COLOR col
 		);
-
 
 #define fl_get_flcolor	 fl_get_pixel
 
@@ -1695,11 +1604,9 @@ FL_EXPORT void fl_set_gamma(
 		double b
 		);
 
-
 FL_EXPORT void fl_show_errors(
 		int y
 		);
-
 
 /* Some macros */
 
@@ -1743,7 +1650,6 @@ FL_EXPORT FL_OBJECT * fl_make_object(
 		FL_HANDLEPTR   handle
 		);
 
-
 FL_EXPORT void fl_set_coordunit(
 		int u
 		);
@@ -1770,7 +1676,6 @@ FL_EXPORT int fl_get_coordunit(
 FL_EXPORT int fl_get_border_width(
 		void
 		);
-
 
 /* misc. routines */
 
@@ -1811,13 +1716,11 @@ FL_EXPORT char ** fl_get_cmdline_args(
 		int *
 		);
 
-
 /* This function was called 'fl_set_error_logfp/' in XForms 0.89. */
 
 #define fl_set_error_logfp fl_set_err_logfp
 
 #define fl_mousebutton fl_mouse_button
-
 
 /* these give more flexibility for future changes. Also application
  * can re-assign these pointers to whatever function it wants, e.g.,
@@ -1833,11 +1736,9 @@ FL_EXPORT void * ( * fl_calloc )( size_t,
 FL_EXPORT void * ( * fl_realloc )( void *,
 								   size_t );
 
-
 #define FL_MAX_MENU_CHOICE_ITEMS   128
 
-enum
-{
+enum {
 	FL_TRIANGLE_UPBOX1,
 	FL_TRIANGLE_UPBOX2,
 	FL_TRIANGLE_UPBOX3,

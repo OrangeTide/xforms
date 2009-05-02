@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -27,16 +26,14 @@
 
 /* postscript stuff */
 
-enum
-{
+enum {
    FLPS_AUTO,				   /* switch to landscale if does not fit */
    FLPS_LANDSCAPE,			   /* landscape always					  */
    FLPS_PORTRAIT,			   /* portrait always					  */
    FLPS_BESTFIT				   /* even margins/best fit				  */
 };
 
-enum
-{
+enum {
   FLPS_BW = -1,
   FLPS_GRAYSCALE,
   FLPS_COLOR
@@ -72,6 +69,5 @@ FL_EXPORT int fl_object_ps_dump(
 		FL_OBJECT  * ob,
 		const char * fname
 		);
-
 
 #endif /* ! defined FLPS_H */

@@ -197,7 +197,7 @@ FL_OBJECT *fl_add_nbutton(int type, FL_Coord x, FL_Coord y,
 @}
 @end example
 
-This concludqes the creation of button class @code{FL_NBUTTON}. The
+This concludes the creation of button class @code{FL_NBUTTON}. The
 next example implements a button that might be added to the Forms
 Library in the future. We call this button a crossbutton. Normally,
 this button shows a small up box with a label on the right. When
@@ -206,6 +206,15 @@ of it. This kind of button obviously is best used as a push button or
 a radio button. However, the FormsLibrary does not enforce this. It
 can be enforced, however, by the application program or by the object
 class developers.
+
+
+@ifhtml
+@center @image{crossbutton}
+@end ifhtml
+@ifnothtml
+@center @image{images/crossbutton,8cm}
+@end ifnothtml
+
 
 We choose to use @code{obj->col1} as the color of the box and
 @code{obj->col2} as the color of the cross (remember these two colors

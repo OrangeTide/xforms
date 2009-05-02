@@ -1,19 +1,18 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -1782,9 +1781,9 @@ handle_keyboard( FL_FORM  * form,
        priority. Next is the object that wants special keys which is followed
        by mouseobj that has the lowest. Focusobj == FL_INPUT OBJ */
 
-    special = fli_find_first( form, FL_FIND_KEYSPECIAL, 0, 0 );
+    special = fli_find_first( form, FLI_FIND_KEYSPECIAL, 0, 0 );
     obj = special ?
-		      fli_find_object( special->next, FL_FIND_KEYSPECIAL, 0, 0 ) : NULL;
+		      fli_find_object( special->next, FLI_FIND_KEYSPECIAL, 0, 0 ) : NULL;
 
     /* If two or more objects that want keyboard input, none will get it and
        keyboard input will go to mouseobj instead */
@@ -1831,17 +1830,17 @@ handle_keyboard( FL_FORM  * form,
 		{
 			if ( ( ( XKeyEvent * ) xev )->state & fli_context->navigate_mask )
 			{
-				if ( focusobj == fli_find_first( form, FL_FIND_INPUT, 0, 0 ) )
-					obj = fli_find_last( form, FL_FIND_INPUT, 0, 0 );
+				if ( focusobj == fli_find_first( form, FLI_FIND_INPUT, 0, 0 ) )
+					obj = fli_find_last( form, FLI_FIND_INPUT, 0, 0 );
 				else
 					obj = fli_find_object_backwards( focusobj->prev,
-													 FL_FIND_INPUT, 0, 0 );
+													 FLI_FIND_INPUT, 0, 0 );
 			}
 			else
-				obj = fli_find_object( focusobj->next, FL_FIND_INPUT, 0, 0 );
+				obj = fli_find_object( focusobj->next, FLI_FIND_INPUT, 0, 0 );
 
 			if ( obj == NULL )
-				obj = fli_find_first( form, FL_FIND_INPUT, 0, 0 );
+				obj = fli_find_first( form, FLI_FIND_INPUT, 0, 0 );
 
 			if ( obj != NULL )
 			{
@@ -1915,7 +1914,7 @@ fli_handle_form( FL_FORM * form,
 	y = fli_mousey;
 
     if ( event != FL_STEP && event != FL_DRAW )
-		obj = fli_find_last( form, FL_FIND_MOUSE, x, y );
+		obj = fli_find_last( form, FLI_FIND_MOUSE, x, y );
 
     switch ( event )
     {
@@ -2015,7 +2014,7 @@ fli_handle_form( FL_FORM * form,
 			break;
 
 		case FL_STEP:		/* A simple step */
-			obj = fli_find_first( form, FL_FIND_AUTOMATIC, 0, 0 );
+			obj = fli_find_first( form, FLI_FIND_AUTOMATIC, 0, 0 );
 
 			if ( obj )
 				fli_set_form_window( form );	/* set only if required */
@@ -2023,7 +2022,7 @@ fli_handle_form( FL_FORM * form,
 			while ( obj )
 			{
 				fli_handle_object( obj, FL_STEP, x, y, 0, xev );
-				obj = fli_find_object( obj->next, FL_FIND_AUTOMATIC, 0, 0 );
+				obj = fli_find_object( obj->next, FLI_FIND_AUTOMATIC, 0, 0 );
 			}
 			break;
 

@@ -967,27 +967,21 @@ default size for XForms is 10pt.
 @tindex FL_TINY_SIZE
 @item @code{FL_TINY_SIZE}
 @tab 8pt
-@tab fl_tiny_size
 @tindex FL_SMALL_SIZE
 @item @code{FL_SMALL_SIZE}
 @tab 10pt
-@tab fl_small_size
 @tindex FL_NORMAL_SIZE
 @item @code{FL_NORMAL_SIZE}
 @tab 12pt
-@tab fl_normal_size
 @tindex FL_MEDIUM_SIZE
 @item @code{FL_MEDIUM_SIZE}
 @tab 14pt
-@tab fl_medium_size
 @tindex FL_LARGE_SIZE
 @item @code{FL_LARGE_SIZE}
 @tab 18pt
-@tab fl_large_size
 @tindex FL_HUGE_SIZE
 @item @code{FL_HUGE_SIZE}
 @tab 24pt
-@tab fl_huge_size
 @end multitable
 
 @ifhtml

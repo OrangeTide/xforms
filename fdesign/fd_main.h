@@ -1,19 +1,18 @@
 /*
- *
  * This file is part of XForms.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -40,13 +39,14 @@
 #define MAGIC3   12322
 
 /* general limits */
+
 #define MAX_CLASS_NAME_LEN  64	/* FL_BUTTON etc.                     */
 #define MAX_TYPE_NAME_LEN   64	/* FL_RADIO_BUTTON etc                */
 #define MAX_VAR_LEN        128	/* max. length of a variable/function */
 
 /* various options  of the program */
-typedef struct
-{
+
+typedef struct {
     int    language;
     int    emit_code;		/* if emit UI code */
     int    emit_main;
@@ -60,9 +60,7 @@ typedef struct
     char * output_dir;
 } FD_Opt;
 
-
-enum
-{
+enum {
     FD_C = 1,
 	FD_ADA95,
 	FD_PERL,
@@ -76,8 +74,7 @@ enum
 
 /* We use different file selector for different tasks */
 
-enum
-{
+enum {
     SAVE_FSELECTOR,
 	LOAD_FSELECTOR,
 	XPM_FSELECTOR
@@ -87,14 +84,12 @@ enum
 
 /* Structure that will hole all forms created */
 
-typedef struct
-{
+typedef struct {
     FL_FORM * form;		            /* The form */
     char      fname[ MAX_VAR_LEN ];	/* Its name */
 } FRM;
 
-typedef struct
-{
+typedef struct {
     const char * lang_name;
     int          ( * convert )( const char *,
 								FRM        *,
@@ -105,22 +100,22 @@ typedef struct
     void         ( * init )( void );  /* additional initialization */
 } Conv;
 
-extern Conv convertor[];
+extern Conv convertor[ ];
 extern FD_Opt fdopt;
 
-
 /* since V1, all coordinates are relative to the top-left */
+
 #define FD_V1    13000
+
 /*#define FD_V2    13001 */
+
 #if 0
 #define TRANY( obj, form ) obj->y = form->h - obj->h - obj->y
 #else
 #define TRANY( obj, form )
 #endif
 
-
 #define ShiftIsDown( mask )    ( mask & ShiftMask )
-
 
 /******** in fd_main.c    *********/
 
@@ -437,8 +432,7 @@ extern int boxtype_val( const char * );
 extern char *loadedfile;
 extern char *loadedfile_fullpath;
 
-typedef struct
-{
+typedef struct {
     int    val;			/* value       */
     char * name;		/* formal name */
     char * shown;		/* name shown  */
@@ -475,8 +469,7 @@ extern void show_geometry( const char *,
 extern void show_selmessage( FL_OBJECT *[ ],
 							 int );
 
-enum
-{
+enum {
     FD_LEFT    = 1,
     FD_HCENTER = 2,
     FD_RIGHT   = 3,
@@ -487,8 +480,7 @@ enum
     FD_VEQUAL  = 8
 };
 
-enum
-{
+enum {
     HELP_VERSION,
     HELP_GENERAL,
     HELP_MOUSE,
@@ -636,8 +628,7 @@ extern void reset_pallette( void );
 
 #define MAX_CONTENT  128
 
-typedef struct
-{
+typedef struct {
     float            min,
 	                 max,
 	                 xmin,
@@ -711,8 +702,7 @@ extern void *superspec_to_spec( FL_OBJECT * );
 extern void copy_superspec( FL_OBJECT * dest,
 							FL_OBJECT * src );
 
-typedef struct
-{
+typedef struct {
     int  align;
     int  dx,
 	     dy;
@@ -756,6 +746,5 @@ extern int noop_handle( FL_OBJECT *,
 						int,
 						void * );
 extern char *get_helper( char * );
-
 
 #endif /* FD_MAIN_H */

@@ -1,19 +1,18 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -1651,20 +1650,20 @@ fli_find_object( FL_OBJECT * obj,
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
 		{
-			if ( find == FL_FIND_INPUT && obj->input && obj->active )
+			if ( find == FLI_FIND_INPUT && obj->input && obj->active )
 				return obj;
 
-			if ( find == FL_FIND_AUTOMATIC && obj->automatic )
+			if ( find == FLI_FIND_AUTOMATIC && obj->automatic )
 				return obj;
 
-			if (    find == FL_FIND_MOUSE
+			if (    find == FLI_FIND_MOUSE
 				 && mx >= obj->x
 				 && mx <= obj->x + obj->w
 				 && my >= obj->y
 				 && my <= obj->y + obj->h )
 				return obj;
 
-			if ( find == FL_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
+			if ( find == FLI_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
 				return obj;
 		}
 
@@ -1694,20 +1693,20 @@ fli_find_object_backwards( FL_OBJECT * obj,
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
 		{
-			if ( find == FL_FIND_INPUT && obj->input && obj->active )
+			if ( find == FLI_FIND_INPUT && obj->input && obj->active )
 				return obj;
 
-			if ( find == FL_FIND_AUTOMATIC && obj->automatic )
+			if ( find == FLI_FIND_AUTOMATIC && obj->automatic )
 				return obj;
 
-			if (    find == FL_FIND_MOUSE
+			if (    find == FLI_FIND_MOUSE
 				 && mx >= obj->x
 				 && mx <= obj->x + obj->w
 				 && my >= obj->y
 				 && my <= obj->y + obj->h )
 				return obj;
 
-			if ( find == FL_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
+			if ( find == FLI_FIND_KEYSPECIAL && obj->wantkey & FL_KEY_SPECIAL )
 				return obj;
 		}
 
@@ -3129,7 +3128,7 @@ lose_focus( FL_OBJECT * obj )
 	/* Try to find some input object to give it the focus */
 
 	obj->input = 0;
-	form->focusobj = fli_find_first( obj->form, FL_FIND_INPUT, 0, 0 );
+	form->focusobj = fli_find_first( obj->form, FLI_FIND_INPUT, 0, 0 );
 	obj->input = 1;
 
 	if ( obj == refocus )

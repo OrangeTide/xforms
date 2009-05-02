@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -29,8 +28,7 @@
 
 /************	Object Class: Menu		   ************/
 
-typedef enum
-{
+typedef enum {
 	FL_TOUCH_MENU,
 	FL_PUSH_MENU,
 	FL_PULLDOWN_MENU
@@ -43,7 +41,6 @@ typedef enum
 #define FL_MENU_COL2		FL_MCOL
 #define FL_MENU_LCOL		FL_LCOL
 #define FL_MENU_ALIGN		FL_ALIGN_CENTER
-
 
 /***** Others	*****/
 
@@ -130,7 +127,6 @@ FL_EXPORT int fl_get_menu_popup(
 		FL_OBJECT * ob
 		);
 
-
 FL_EXPORT int fl_get_menu(
 		FL_OBJECT * ob
 		);
@@ -168,6 +164,5 @@ FL_EXPORT int fl_set_menu_item_id(
 		int         item,
 		int         id
 		);
-
 
 #endif /* ! defined FL_MENU_H */

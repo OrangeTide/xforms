@@ -205,7 +205,7 @@ required types!
 The return value of @code{@ref{fl_popup_add_entries()}} is a pointer
 to the first of the entries created. Since entries are stored as a
 linked list this value can be used to iterate over the list (see below
-for more information about the @code{FL_POPUP_ENTRY} structure). If
+for more information about the @ref{FL_POPUP_ENTRY} structure). If
 the function returns @code{NULL} no entires were created.
 
 A typical piece of code creating a popup may look like this:
@@ -278,7 +278,9 @@ callbacks also aren't called). This can be useful when the callback
 function already does everything required and nothing is left to be
 done.
 
-All callbacks receive a pointer to a structure of the following type:
+All callbacks receive a pointer to a structure of the type
+@code{FL_POPUP_RETURN}:
+@anchor{FL_POPUP_RETURN}
 @tindex FL_POPUP_RETURN
 @example
 typedef struct @{
@@ -291,7 +293,7 @@ typedef struct @{
     const FL_POPUP       *popup;     /* popup we're called for */
 @} FL_POPUP_RETURN;
 @end example
-@noindent
+
 @code{val} is the value set by @code{%x}. If @code{%x} wasn't given,
 it's an automatically generated value: when a popup is created with
 @code{@ref{fl_popup_add_entries()}} a counter is initalized to 0.
@@ -300,8 +302,13 @@ the entry and then incremented. Unless a different value is set
 explicitely via @code{%x} the first entry added to a popup thus gets a
 value @code{val} of 0, the second one gets 1 etc. This even holds for
 entries that just stand for separator lines. In simple situations the
-value of @code{val} is probably sufficient to identify which entry is
-meant.
+value of @code{val} is probably sufficient to identify which entry got
+selected.
+
+Please note: it is possible that by setting the @code{val} members two
+or more structures for items of the same popup get the same value. It
+is the programmers responsibility to avoid that (unless, of course,
+that's just what you intended).
 
 The @code{user_data} member of the structure is the @code{user_void}
 pointer set via @code{%u}. It allows to pass more complex data to the
@@ -320,7 +327,7 @@ of these pointers could under some circumstances be @code{NULL}.
 Finally, the two member @code{entry} and @code{popup} are pointers to
 the entry itself and the popup the callback function is invoked for -
 to find out the popup the selected entry itself belongs to use the
-@code{popup} member of the entrys @code{FL_POPUP_ENTRY} structure.
+@code{popup} member of the entrys @ref{FL_POPUP_ENTRY} structure.
 
 Please note: while in a callback you are only allowed to change the
 values of the @code{val} and @code{user_data} members. This can be
@@ -330,8 +337,9 @@ the structure that finally gets passed back to the caller of
 @code{@ref{fl_popup_do()}}) at the end in order to implement more
 complex information interchange between the callbacks involved.
 
-The ements of a @code{FL_POPUP_ENTRY} structure that might be of
-interest are
+The elements of a @code{FL_POPUP_ENTRY} structure that might be of
+interest) are
+@anchor{FL_POPUP_ENTRY}
 @tindex FL_POPUP_ENTRY
 @example
 typedef @{
@@ -345,8 +353,9 @@ typedef @{
 @} FL_POPUP_ENTRY;
 @end example
 @noindent
-Note that you should not change the members of a @code{FL_POPUP_ENTRY}
-structure! Use the functions documented below to modify entries.
+Note that you should not change the members of a @ref{FL_POPUP_ENTRY}
+structure directly! Use the appropriate functions documented below to
+modify them instead.
 
 @code{prev} and @code{next} are pointers to the previous and the
 following popup entry (or @code{NULL} if none exists).
@@ -364,12 +373,12 @@ Normal popup entry with no special properties
 @tindex FL_POPUP_RADIO
 @item FL_POPUP_RADIO
 Radio entry, drawn with a circle to its left (color-filled when "on".
-The @code{group} member of the @code{FL_POPUP_ENTRY} structure
+The @code{group} member of the @ref{FL_POPUP_ENTRY} structure
 determines to which group the entry belongs.
 @tindex FL_POPUP_SUB
 @item FL_POPUP_SUB
 Entry for a sub-popup. The @code{sub} member of its
-@code{FL_POPUP_ENTRY} structure is a pointer to the sub-popup
+@ref{FL_POPUP_ENTRY} structure is a pointer to the sub-popup
 that gets shown when the mouse enters the entry.
 @tindex FL_POPUP_LINE
 @item FL_POPUP_LINE
@@ -432,7 +441,7 @@ while the popup isn't shown, so it can be used to check if the popup
 is currently visible.
 
 The @code{entries} member points to the first element of the list
-of entries of the popup. See the @code{FL_POPUP_ENTRY} structure
+of entries of the popup. See the @ref{FL_POPUP_ENTRY} structure
 documented above on how to iterate over all entries.
 
 Finally, @code{title} is the title shown at the top of the popup (if
@@ -496,6 +505,7 @@ popup (or @code{fl_root} or @code{None}) and the (optional, can be
 
 @code{items} is a pointer to an array of structures of the following
 form:
+@anchor{FL_POPUP_ITEM}
 @tindex FL_POPUP_ITEM
 @example
 typedef struct @{
@@ -508,8 +518,8 @@ typedef struct @{
 @end example
 @noindent
 The array must contain one structure for each entry of the popup and
-must end in a structure where the @code{text} member is set to
-@code{NULL}.
+must end in a structure where at least the @code{text} member is set
+to @code{NULL}.
 
 The @code{text} member describes the text of the entry. If it contains
 the string @code{"%S"} the text is split up at this position and the
@@ -887,7 +897,7 @@ original value of the state.
 You may search for an entry in a popup by different criteria (please
 note that the search also includes sub-popups of the popup, you can
 identufy them by checking the @code{popup} member of the
-@code{FL_POPUP_ENTRY} structure). The search obviously will only
+@ref{FL_POPUP_ENTRY} structure). The search obviously will only
 deliver reasonable results if what you're searching for is unique
 between all the entries.
 
@@ -963,8 +973,8 @@ Using
 @findex fl_popup_get_title()
 @anchor{fl_popup_get_title()}
 @example
-void fl_popup_set_title(FL_POPUP   *popup, const char *title);
-const char *fl_popup_set_title(FL_POPUP   *popup);
+void fl_popup_set_title(FL_POPUP *popup, const char *title);
+const char *fl_popup_set_title(FL_POPUP *popup);
 @end example
 @noindent
 the title of a popup can be changed or the currently set title
@@ -1188,7 +1198,7 @@ queried or changed using the functions
 @example
 FL_POPUP *fl_popup_entry_get_subpopup(FL_POPUP_ENTRY *entry);
 FL_POPUP *fl_popup_entry_get_subpopup(FL_POPUP_ENTRY *entry,
-                                      FL_POPUP       *subpopup);
+                                      FL_POPUP *subpopup);
 @end example
 @noindent
 Obviously, calling these functions only makes sense for sub-popup

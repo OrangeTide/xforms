@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -26,8 +25,7 @@
 #ifndef FL_FOLDER_H
 #define FL_FOLDER_H
 
-enum
-{
+enum {
 	FL_TOP_TABFOLDER,		/* tab on top */
 	FL_BOTTOM_TABFOLDER,
 	FL_LEFT_TABFOLDER,
@@ -35,13 +33,11 @@ enum
 	FL_NORMAL_TABFOLDER = FL_TOP_TABFOLDER
 };
 
-enum
-{
+enum {
 	FL_NO,
 	FL_FIT,
 	FL_ENLARGE_ONLY
 };
-
 
 FL_EXPORT FL_OBJECT * fl_create_tabfolder(
 		int			 type,
@@ -67,7 +63,6 @@ FL_EXPORT FL_OBJECT * fl_addto_tabfolder(
 		FL_FORM *	 form
 		);
 
-
 FL_EXPORT FL_FORM * fl_get_tabfolder_folder_bynumber(
 		FL_OBJECT * ob,
 		int			num
@@ -77,7 +72,6 @@ FL_EXPORT FL_FORM * fl_get_tabfolder_folder_byname(
 		FL_OBJECT  * ob,
 		const char * name
 		);
-
 
 FL_EXPORT void fl_delete_folder(
 		FL_OBJECT * ob,
@@ -93,7 +87,6 @@ FL_EXPORT void fl_delete_folder_byname(
 		FL_OBJECT  * ob,
 		const char * name
 		);
-
 
 FL_EXPORT void fl_set_folder(
 		FL_OBJECT * ob,
@@ -166,6 +159,5 @@ FL_EXPORT int fl_set_tabfolder_offset(
 		FL_OBJECT * ob,
 		int		    offset
 		);
-
 
 #endif /* ! defined FL_FOLDER_H */

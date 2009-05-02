@@ -1,19 +1,18 @@
 /*
- *
  *	This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /********************** crop here for forms.h **********************/
@@ -26,13 +25,11 @@
 #ifndef FL_FORMBROWSER_H
 #define FL_FORMBROWSER_H
 
-enum
-{
+enum {
 	FL_NORMAL_FORMBROWSER
 };
 
-enum
-{
+enum {
    FL_SMOOTH_SCROLL,
    FL_JUMP_SCROLL
 };
@@ -40,7 +37,6 @@ enum
 #define	  FL_FORMBROWSER_BOXTYPE  FL_DOWN_BOX
 #define	  FL_FORMBROWSER_COL1	  FL_COL1
 #define	  FL_FORMBROWSER_ALIGN	  FL_ALIGN_TOP
-
 
 FL_EXPORT int fl_addto_formbrowser(
 		FL_OBJECT * ob,
@@ -151,12 +147,11 @@ FL_EXPORT int fl_get_formbrowser_numforms(
 		FL_OBJECT * ob
 		);
 
-#define	   fl_get_formbrowser_forms	  fl_get_formbrowser_numforms
+#define fl_get_formbrowser_forms  fl_get_formbrowser_numforms
 
 FL_EXPORT FL_FORM * fl_get_formbrowser_form(
 		FL_OBJECT * ob,
 		int			n
 		);
-
 
 #endif /* ! defined FL_FORMBROWSER_H */
