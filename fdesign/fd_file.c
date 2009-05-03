@@ -64,6 +64,7 @@ save_object( FILE      * fl,
     char name[ MAX_VAR_LEN ],
 		 cbname[ MAX_VAR_LEN ],
 		 argname[ MAX_VAR_LEN ];
+	char *label;
     double sc = get_conversion_factor( );
     FL_OBJECT fake_obj;
 
@@ -91,7 +92,9 @@ save_object( FILE      * fl,
     fprintf( fl, "style: %s\n", style_name( obj->lstyle ) );
     fprintf( fl, "size: %s\n", lsize_name( obj->lsize ) );
     fprintf( fl, "lcol: %s\n", fli_query_colorname( obj->lcol ) );
-    fprintf( fl, "label: %s\n", get_label( obj, 0 ) );
+	label = get_label( obj, 0 );
+    fprintf( fl, "label: %s\n", label );
+	fl_free( label );
     fprintf( fl, "shortcut: %s\n", get_shortcut_string( obj ) );
     fprintf( fl, "resize: %s\n", resize_name( obj->resize ) );
     fprintf( fl, "gravity: %s %s\n",

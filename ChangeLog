@@ -1,3 +1,9 @@
+2009-05-03 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_attribs.c: Bug that kept composite
+	objects from being selected after type change in
+	fdesign removed. Length of labels is now unlimited.
+
 2009-05-02 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Some missing figures added to documentation.

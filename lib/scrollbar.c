@@ -87,10 +87,10 @@ handle( FL_OBJECT * ob,
     return 0;
 }
 
-#define is_horiz( t )  (    ( t ) == FL_HOR_SCROLLBAR         \
-						 || ( t ) == FL_HOR_THIN_SCROLLBAR    \
-						 || ( t ) == FL_HOR_NICE_SCROLLBAR    \
-						 || ( t ) == FL_HOR_PLAIN_SCROLLBAR )
+#define is_horiz( t )   (    ( t ) == FL_HOR_SCROLLBAR         \
+						  || ( t ) == FL_HOR_THIN_SCROLLBAR    \
+						  || ( t ) == FL_HOR_NICE_SCROLLBAR    \
+						  || ( t ) == FL_HOR_PLAIN_SCROLLBAR )
 
 
 /***************************************
@@ -109,10 +109,10 @@ attrib_change( FL_OBJECT * ob )
 }
 
 
-#define IS_FLATBOX( b ) (    ( b ) == FL_BORDER_BOX    \
-						  || ( b ) == FL_FRAME_BOX     \
-						  || ( b ) == FL_EMBOSSED_BOX  \
-						  || ( b ) == FL_ROUNDED_BOX )
+#define IS_FLATBOX( b )   (    ( b ) == FL_BORDER_BOX    \
+						    || ( b ) == FL_FRAME_BOX     \
+						    || ( b ) == FL_EMBOSSED_BOX  \
+						    || ( b ) == FL_ROUNDED_BOX )
 
 
 /***************************************

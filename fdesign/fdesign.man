@@ -1,6 +1,4 @@
 .\"
-.\" $Id: fdesign.man,v 1.3 2003/11/27 18:15:00 leeming Exp $
-.\"
 .\" Man page for Forms Designer
 .\" Use the following command to generate viewable man page
 .\"   tbl fdesign.1 | {nt}roff -man
@@ -8,7 +6,7 @@
 .\"   ul | more -fsk to view
 .\"
 .\"
-.TH FDESIGN 1L "May 2000" "Version 0.57" "Forms Library"
+.TH FDESIGN 1L "November 2008" "Version 1.0.91" "Forms Library"
 .SH NAME
 fdesign \-  Forms Library User Interface Designer
 .\"
@@ -190,7 +188,11 @@ xforms(5), fd2ps(1L)
 .SH AUTHOR
 Copyright
 .Cr
-1996-2000 T.C. Zhao (tc_zhao@yahoo.com)
-and Mark Overmars (markov@cs.ruu.nl)
+1996-2002 T.C. Zhao <tc_zhao@yahoo.com> and Mark Overmars <markov@cs.ruu.nl>
+.br
+Since 2002: GNU Lesser General Public License
+.br
+Maintainers: Jean-Marc Lasgouttes, Angus Leeming and Jens Thoms Toerring
+<jt@toerring.de>
 .SH HOME PAGE
-http://world.std.com/~xforms
+http://savannah.nongnu.org/projects/xforms/

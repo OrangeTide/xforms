@@ -1,6 +1,4 @@
 .\"
-.\" $Id: xforms.man,v 1.3 2008/09/22 22:31:28 jtt Exp $
-.\"
 .\" Man page for XFORMS.
 .\" Use the following command to generate viewable man page
 .\"
@@ -43,11 +41,8 @@ writing, perl, ada95, pascal, scheme and Fortran bindings to the
 are in beta.)
 
 The library is efficient and portable and runs on all major
-Unix platforms, including Sun, SGI, HP,
-DEC Alpha/OSF, IBM RS6000, Convex, Cray,
-Linux(i386, alpha, m68k, sparc),
-FreeBSD, NetBSD(i386, m68k, sparc, StrongARM, ppc), SCO, Unixware,
-OpenBSD (i386, pmax), DGUX (m88k, i386), BSDi,
+Unix platforms, including Sun, SGI, HP, DEC Alpha/OSF, IBM RS6000,
+Convex, Cray, Linux, FreeBSD, NetBSD, SCO, Unixware, OpenBSD , BSDi,
 DecSystem(mips)/Ultrix and others.
 Non-unix platforms include OpenVMS, OS/2, and Window/NT.
 
@@ -118,10 +113,10 @@ Copyright
 1996-2002
 T.C. Zhao, Mark Overmars and Steve Lamont
 .br
-GNU Lesser General Public License since 2002
+Since 2002: GNU Lesser General Public License
 .br
 Maintainers: Jean-Marc Lasgouttes, Angus Leeming and Jens Thoms Toerring
 <jt@toerring.de>
 
 .SH HOME PAGE
-https://savannah.nongnu.org/projects/xforms/
+http://savannah.nongnu.org/projects/xforms/

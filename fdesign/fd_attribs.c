@@ -206,8 +206,7 @@ add_font_choice( const char * p )
 
 /* font sizes. Need to do this because of symbolic names */
 
-typedef struct
-{
+typedef struct {
     int    size;
     char * name,
 	     * sc;
@@ -290,6 +289,7 @@ attrib_init( FD_generic_attrib * ui )
 			fsizes[ i ].name = "Normal";
 			fsizes[ i ].sc = "Nn#n";
 		}
+
 		sprintf( buf, "%2d  %s%%r1", fsizes[ i ].size, fsizes[ i ].name );
 		fl_addto_choice( ui->sizeobj, buf );
 		fl_set_choice_item_shortcut( ui->sizeobj, i + 1, fsizes[ i ].sc );
@@ -299,9 +299,12 @@ attrib_init( FD_generic_attrib * ui )
 
 /* check for obvious errors */
 
-#define OK_letter( c )  \
-          (* c == '_' || *c == '[' || *c == ']' || * c== '.' ||   \
-          (* c == ':' && *++c == ':' ) || (*c == '-' && *++c == '>' ) )
+#define OK_letter( c )    (    *c == '_'                       \
+                            || *c == '['                       \
+	                        || *c == ']'                       \
+	                        || * c== '.'                       \
+                            || ( *c == ':' && *++c == ':' )    \
+			                || ( *c == '-' && *++c == '>' ) )
 
 
 /***************************************
@@ -370,7 +373,7 @@ void
 validate_cvar_name_cb( FL_OBJECT * ob,
 					   long        data  FL_UNUSED_ARG )
 {
-    validate_cvar_name(ob);
+    validate_cvar_name( ob );
 }
 
 
@@ -384,7 +387,7 @@ readback_attributes( FL_OBJECT * obj )
 {
     int spstyle, warn = 0;
     char name[ 128],
-		 cbname[128 ];
+		 cbname[ 128 ];
     char tmpbuf[ 128 ];
     static char *m[ ] = { "object name",
 						  "callback",
@@ -474,6 +477,7 @@ show_attributes( const FL_OBJECT * obj )
 		 cbname[ MAX_VAR_LEN ],
 		 argname[ MAX_VAR_LEN ];
     char buf[ MAX_VAR_LEN ];
+	char *label;
     int i,
 		lstyle,
 		spstyle,
@@ -536,7 +540,9 @@ show_attributes( const FL_OBJECT * obj )
 						gravity_name( obj->segravity ) + 3 );
 
     get_object_name( obj, objname, cbname, argname );
-    fl_set_input( fd_generic_attrib->labelobj, get_label( obj, 0 ) );
+	label = get_label( obj, 0 );
+    fl_set_input( fd_generic_attrib->labelobj, label );
+	fl_free( label );
     fl_set_input( fd_generic_attrib->nameobj, objname );
     fl_set_input( fd_generic_attrib->cbnameobj, cbname );
     fl_set_input( fd_generic_attrib->argobj, argname );
@@ -551,8 +557,8 @@ show_attributes( const FL_OBJECT * obj )
 
 
 /***************************************
- * Displays the form to change the attributes. all indicates whether
- * all label, name, etc. should also be changed
+ * Displays the form to change the attributes. 'all' indicates
+ * whether all label, name, etc. should also be changed
  ***************************************/
 
 int
@@ -562,35 +568,35 @@ change_object( FL_OBJECT * obj,
     FL_OBJECT *retobj;
     FD_generic_attrib *ui = fd_generic_attrib;
 
-    attrib_init(fd_generic_attrib);
+    attrib_init( fd_generic_attrib );
 
     /* save current attributes for later restore */
 
     curobj = obj;
-    save_object(obj);
+    save_object( obj );
 
     /* Show only required parts */
 
-    if (all)
+    if ( all )
     {
-		fl_show_object(ui->labelobj);
-		fl_show_object(ui->scobj);
-		fl_show_object(ui->nameobj);
-		fl_show_object(ui->cbnameobj);
-		fl_show_object(ui->argobj);
+		fl_show_object( ui->labelobj );
+		fl_show_object( ui->scobj );
+		fl_show_object( ui->nameobj );
+		fl_show_object( ui->cbnameobj );
+		fl_show_object( ui->argobj );
     }
     else
     {
-		fl_hide_object(ui->labelobj);
-		fl_hide_object(ui->scobj);
-		fl_hide_object(ui->nameobj);
-		fl_hide_object(ui->cbnameobj);
-		fl_hide_object(ui->argobj);
+		fl_hide_object( ui->labelobj );
+		fl_hide_object( ui->scobj );
+		fl_hide_object( ui->nameobj );
+		fl_hide_object( ui->cbnameobj );
+		fl_hide_object( ui->argobj );
     }
 
     /* show attributes of the current object */
 
-    show_attributes(obj);
+    show_attributes( obj );
 
     /* Do interaction */
 
@@ -656,24 +662,24 @@ change_object( FL_OBJECT * obj,
  ***************************************/
 
 void
-set_attribs( FL_OBJECT * obj,
-			 int         boxtype,
-			 int         col1,
-			 int         col2,
-			 int         lcol,
-			 int         align,
-			 float       lsize,
-			 int         lstyle,
-			 char        label[ ] )
+set_attribs( FL_OBJECT  * obj,
+			 int          boxtype,
+			 int          col1,
+			 int          col2,
+			 int          lcol,
+			 int          align,
+			 float        lsize,
+			 int          lstyle,
+			 const char * label )
 {
     obj->boxtype = boxtype;
-    obj->col1 = col1;
-    obj->col2 = col2;
-    obj->lcol = lcol;
-    obj->align = align;
-    obj->lsize = lsize;
-    obj->lstyle = lstyle;
-    fl_set_object_label(obj, label);
+    obj->col1    = col1;
+    obj->col2    = col2;
+    obj->lcol    = lcol;
+    obj->align   = align;
+    obj->lsize   = lsize;
+    obj->lstyle  = lstyle;
+    fl_set_object_label( obj, label );
 }
 
 
@@ -689,46 +695,46 @@ set_miscattribs( FL_OBJECT    * obj,
 {
     obj->nwgravity = nw;
     obj->segravity = se;
-    obj->resize = re;
+    obj->resize    = re;
 }
 
 
 #define NL	10
 
-#define STRLEN  1024
-
 
 /***************************************
- * Sets the label, turning \n in NL
+ * Sets the label, turning \n into NL
  ***************************************/
 
 void
 set_label( FL_OBJECT  * obj,
-		   const char *str )
+		   const char * str )
 {
-    int i = 0, j = 0;
-    char tmpstr[STRLEN];	/* Limit on label length introduced here */
+    int i = 0,
+		j = 0;
+    char *tmpstr = fl_malloc( strlen( str ) + 1 );
 
-    tmpstr[0] = '\0';
+    tmpstr[ 0 ] = '\0';
 
     do
     {
-		if (str[i] == '\\' && str[i + 1] == 'n')
+		if ( str[ i ] == '\\' && str[ i + 1 ] == 'n' )
 		{
-			tmpstr[j++] = NL;
+			tmpstr[ j++ ] = NL;
 			i++;
 		}
-		else if (str[i] == '\\' && strncmp(str + i + 1, "010", 3) == 0)
+		else if ( str[ i ] == '\\' && strncmp( str + i + 1, "010", 3 ) == 0 )
 		{
-			if (!obj->shortcut || !*obj->shortcut)
-				tmpstr[j++] = *fl_ul_magic_char;
+			if ( ! obj->shortcut || ! *obj->shortcut )
+				tmpstr[ j++ ] = *fl_ul_magic_char;
 			i += 3;
 		}
 		else
-			tmpstr[j++] = str[i];
-    } while (str[i++] != 0);
+			tmpstr[ j++ ] = str[ i ];
+    } while ( str[ i++ ] );
 
-    fl_set_object_label(obj, tmpstr);
+    fl_set_object_label( obj, tmpstr );
+	fl_free( tmpstr );
 }
 
 
@@ -739,8 +745,8 @@ void
 set_shortcut( FL_OBJECT  * obj,
 			  const char * sc )
 {
-    if (   obj->type != FL_RETURN_BUTTON
-		&& obj->type != FL_HIDDEN_RET_BUTTON)
+    if (    obj->type != FL_RETURN_BUTTON
+		 && obj->type != FL_HIDDEN_RET_BUTTON )
 		fl_set_object_shortcut(obj, sc, 1);
 }
 
@@ -758,15 +764,15 @@ static int
 need_quote( const char * s,
 			int          i )
 {
-    int c = s[i], p, n;
+    int c = s[ i ], p, n;
 
-    p = i ? s[i - 1] : 0;	/* prev char */
-    n = *s ? s[i + 1] : 0;	/* next char */
+    p =  i ? s[ i - 1 ] : 0;	/* prev char */
+    n = *s ? s[ i + 1 ] : 0;	/* next char */
 
-    if (c == '"' && p != '\\')
+    if ( c == '"' && p != '\\' )
 		return 1;
-    else if (c == '\\' && p != '\\')
-		return (!isdigit(n) && !Ok(n));
+    else if ( c == '\\' && p != '\\' )
+		return ! isdigit( n ) && ! Ok( n );
     else
 		return 0;
 }
@@ -780,38 +786,43 @@ char *
 get_label( const FL_OBJECT * obj,
 		   int               c_source )
 {
-    int i = 0, j = 0;
+    int i = 0,
+		j = 0;
     const char *label = obj->label;
-    int len = strlen(label);
-    static char tmpstr[STRLEN];
+    int len = strlen( label );
+	int tlen = len + 1;
+    char *tmpstr = fl_malloc( tlen );
 
-    for (i = 0; i < len; i++)
+    for ( i = 0; i < len; i++ )
     {
-		if (label[i] == NL)
+		if ( label[ i ] == NL )
 		{
-			tmpstr[j++] = '\\';
-			tmpstr[j++] = 'n';
+			tmpstr = fl_realloc( tmpstr, tlen += 1 );
+			tmpstr[ j++ ] = '\\';
+			tmpstr[ j++ ] = 'n';
 		}
-		else if (label[i] == *fl_ul_magic_char)
+		else if ( label[ i ] == *fl_ul_magic_char )
 		{
-			if (!obj->shortcut || !*obj->shortcut)
+			if ( ! obj->shortcut || ! *obj->shortcut )
 			{
-				tmpstr[j++] = '\\';
-				tmpstr[j++] = '0';
-				tmpstr[j++] = '1';
-				tmpstr[j++] = '0';
+				tmpstr = fl_realloc( tmpstr, tlen += 3 );
+				tmpstr[ j++ ] = '\\';
+				tmpstr[ j++ ] = '0';
+				tmpstr[ j++ ] = '1';
+				tmpstr[ j++ ] = '0';
 			}
 		}
-		else if (c_source && need_quote(label, i))
+		else if ( c_source && need_quote( label, i ) )
 		{
-			tmpstr[j++] = '\\';
-			tmpstr[j++] = label[i];
+			tmpstr = fl_realloc( tmpstr, tlen += 1 );
+			tmpstr[ j++ ] = '\\';
+			tmpstr[ j++ ] = label[ i ];
 		}
 		else
-			tmpstr[j++] = label[i];
+			tmpstr[ j++ ] = label[ i ];
     }
 
-    tmpstr[j] = '\0';
+    tmpstr[ j ] = '\0';
 
     return tmpstr;
 }
@@ -828,31 +839,32 @@ special_key( int    key,
 {
     char *start = outbuf;
 
-    if (key >= XK_F1 && key <= XK_F30)
+    if ( key >= XK_F1 && key <= XK_F30 )
     {
-		int p = (key - XK_F1 + 1) / 10, q = (key - XK_F1 + 1) % 10;
+		int p = ( key - XK_F1 + 1 ) / 10,
+			q = ( key - XK_F1 + 1 ) % 10;
 
 		*outbuf++ = '&';
-		if (p)
+		if ( p )
 			*outbuf++ = '0' + p;
 		*outbuf++ = '0' + q;
     }
-    else if (IsUp(key))
+    else if ( IsUp( key ) )
     {
 		*outbuf++ = '&';
 		*outbuf++ = 'A';
     }
-    else if (IsDown(key))
+    else if ( IsDown( key ) )
     {
 		*outbuf++ = '&';
 		*outbuf++ = 'B';
     }
-    else if (IsRight(key))
+    else if ( IsRight( key ) )
     {
 		*outbuf++ = '&';
 		*outbuf++ = 'C';
     }
-    else if (IsLeft(key))
+    else if ( IsLeft( key ) )
     {
 		*outbuf++ = '&';
 		*outbuf++ = 'D';
@@ -861,6 +873,7 @@ special_key( int    key,
 		*outbuf++ = key;
 
     *outbuf = '\0';
+
     return outbuf - start;
 }
 
@@ -871,12 +884,12 @@ special_key( int    key,
 char *
 get_shortcut_string( const FL_OBJECT * obj )
 {
-    static char tmps[127];
+    static char tmps[ 127 ];
     char *p = tmps;
     long *sc = obj->shortcut;
     int n;
 
-    for (*p = '\0'; sc && *sc; sc++)
+    for ( *p = '\0'; sc && *sc; sc++ )
     {
 		if ( *sc >= FL_ALT_MASK )
 		{
@@ -884,22 +897,22 @@ get_shortcut_string( const FL_OBJECT * obj )
 			n = special_key( *sc - FL_ALT_MASK, p );
 			p += n;
 		}
-		else if (*sc == '#' || *sc == '&' || *sc == '^')	/* prefixed w/ ^ */
+		else if ( *sc == '#' || *sc == '&' || *sc == '^' )	/* prefixed w/ ^ */
 		{
 			*p++ = '^';
 			*p++ = *sc;
 		}
-		else if (*sc < 30)
+		else if ( *sc < 30 )
 		{
 			*p++ = '^';
-			if (*sc <= 'Z')
+			if ( *sc <= 'Z' )
 				*p++ = 'A' + *sc - 1;
-			else if (*sc == 27)	/* Escape */
+			else if ( *sc == 27 )	/* Escape */
 				*p++ = '[';
 		}
-		else if (*sc > 255)
+		else if ( *sc > 255 )
 		{
-			n = special_key(*sc, p);
+			n = special_key( *sc, p );
 			p += n;
 		}
 		else
@@ -936,7 +949,7 @@ copy_object( FL_OBJECT * obj,
 
     set_miscattribs( obj2, obj->nwgravity, obj->segravity, obj->resize );
 
-    /* also copy the object specific info */
+    /* Also copy the object specific info */
 
     copy_superspec( obj2, obj );
 
@@ -954,8 +967,8 @@ static void
 copy_class_spec( FL_OBJECT * src,
 				 FL_OBJECT * dest )
 {
-    if (src->objclass == dest->objclass && src->spec_size == dest->spec_size)
-		memcpy(dest->spec, src->spec, src->spec_size);
+    if ( src->objclass == dest->objclass && src->spec_size == dest->spec_size )
+		memcpy( dest->spec, src->spec, src->spec_size );
 }
 #endif
 
@@ -1013,7 +1026,7 @@ change_type( FL_OBJECT * obj,
     set_miscattribs( ttt, obj->nwgravity, obj->segravity, obj->resize );
 
     obj->type = ttt->type;
-    prev = obj->prev;
+	prev = obj->prev;
     is_focus = obj->focus;
 
     if ( ! ttt->child )
@@ -1041,11 +1054,10 @@ change_type( FL_OBJECT * obj,
     else
     {
 		clear_selection( );
-		fl_delete_object( obj );
 		ttt->parent = obj->parent;
+		fl_delete_object( obj );
 		ttt->form = form;
 		*obj = *ttt;
-//		prev->form = form;
 		fli_insert_composite_after( obj, prev );
 		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, 0 );
 		addto_selection( obj );

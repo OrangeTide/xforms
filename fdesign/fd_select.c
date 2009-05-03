@@ -332,6 +332,7 @@ find_mouseobj( void )
 		return NULL;
 
     find_mousepos( &xx, &yy );
+
     return fli_find_last( cur_form, FLI_FIND_MOUSE, xx, yy );
 }
 

@@ -42,7 +42,7 @@ extern FD_choiceattrib *create_form_choiceattrib( void );
 static FD_choiceattrib *choice_attrib;
 
 static SuperSPEC *choice_spec;
-static void show_spec(SuperSPEC *);
+static void show_spec( SuperSPEC * );
 
 
 /***************************************

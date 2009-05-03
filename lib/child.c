@@ -251,7 +251,7 @@ fli_insert_composite_after( FL_OBJECT * comp,
 		      *prev;
     FL_FORM *form;
 
-    if ( ! comp || !node )
+    if ( ! comp || ! node )
     {
 		M_err( "fli_insert_composite_after", "Bad argument" );
 		return;
@@ -276,9 +276,10 @@ fli_insert_composite_after( FL_OBJECT * comp,
 
     for ( tmp = comp->child; tmp && tmp->nc; prev = tmp, tmp = tmp->nc )
     {
-		tmp->form = form;
-		tmp->next = tmp->nc;
-		tmp->prev = prev;
+		tmp->parent = comp;
+		tmp->form   = form;
+		tmp->next   = tmp->nc;
+		tmp->prev   = prev;
     }
 
     tmp->next = next;

@@ -231,7 +231,7 @@ void set_attribs( FL_OBJECT *,
 				  int,
 				  float,
 				  int,
-				  char[ ] );
+				  const char * );
 
 void set_miscattribs( FL_OBJECT *,
 					  unsigned int,

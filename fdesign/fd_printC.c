@@ -1521,6 +1521,7 @@ output_object( FILE      * fn,
          argname[ MAX_VAR_LEN ];
     char * p,
            fdvname[ MAX_VAR_LEN ];
+	char *label;
     double sc = get_conversion_factor( );
 
     if ( obj->is_child )
@@ -1573,13 +1574,15 @@ output_object( FILE      * fn,
     fakeobj.h = obj->h;
     fl_scale_object( &fakeobj, sc, sc );
 
+	label = get_label( obj, 1 );
     if ( obj->objclass != FL_FREE )
         fprintf( fn, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
-                 fakeobj.w, fakeobj.h, get_label( obj, 1 ) );
+                 fakeobj.w, fakeobj.h, label );
     else
         fprintf( fn, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
                  fakeobj.x, fakeobj.y, fakeobj.w, fakeobj.h,
-                 get_label( obj, 1 ), get_free_handle( obj, name ) );
+                 label, get_free_handle( obj, name ) );
+	fl_free( label );
 
     if  (    ( p = get_shortcut_string( obj ) )
           && *p
