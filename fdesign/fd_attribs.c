@@ -316,7 +316,7 @@ valid_c_identifier( const char * s )
     if ( fdopt.lax )
 		return 1;
 
-    /* empty is considered to be valid */
+    /* Empty is considered to be valid */
 
     if ( ! s || ! *s || ( *s == ' ' && *( s + 1 ) == '\0' ) )
 		return 1;
@@ -336,18 +336,14 @@ valid_c_identifier( const char * s )
  ***************************************/
 
 static int
-validate_cvar_name( FL_OBJECT * ob )
+validate_cvar_name( FL_OBJECT * obj )
 {
-    const char *s = fl_get_input( ob );
+    const char *s = fl_get_input( obj );
 
     if ( ! valid_c_identifier( s ) )
     {
-		char buf[ 256 ];
-
-		sprintf( buf, "Invalid C identifier specified for object %s",
-				 ob->label );
-		fl_show_alert( "Error", buf, s, 0 );
-		fl_set_focus_object( ob->form, ob );
+		fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+		fl_set_focus_object( obj->form, obj );
 		return 0;
     }
 
@@ -370,10 +366,10 @@ validate_attributes( void )
  ***************************************/
 
 void
-validate_cvar_name_cb( FL_OBJECT * ob,
+validate_cvar_name_cb( FL_OBJECT * obj,
 					   long        data  FL_UNUSED_ARG )
 {
-    validate_cvar_name( ob );
+    validate_cvar_name( obj );
 }
 
 
@@ -457,7 +453,7 @@ readback_attributes( FL_OBJECT * obj )
     set_object_name( obj, name, cbname,
 					 fl_get_input( fd_generic_attrib->argobj ) );
 
-    /* change type need to be the last call as it may create objects based on
+    /* Change type need to be the last call as it may create objects based on
        the current object, which need to have the latest attributes */
 
     if ( obj->objclass == FL_BOX )
@@ -502,14 +498,14 @@ show_attributes( const FL_OBJECT * obj )
 		fl_set_choice( fd_generic_attrib->typeobj, obj->type + 1 );
     }
 
-    /* Fil in settings */
+    /* Fill in settings */
 
     fl_set_choice( fd_generic_attrib->boxobj, obj->boxtype + 1 );
     fl_set_choice_text( fd_generic_attrib->align, align_name( align ) + 9 );
     fl_set_choice( fd_generic_attrib->inside, ( obj->align == align ) + 1 );
 
     lstyle = obj->lstyle % FL_SHADOW_STYLE;
-    spstyle = (obj->lstyle / FL_SHADOW_STYLE);
+    spstyle = obj->lstyle / FL_SHADOW_STYLE;
 
     if ( spstyle >= 3 )
 		spstyle = 3;
@@ -570,7 +566,7 @@ change_object( FL_OBJECT * obj,
 
     attrib_init( fd_generic_attrib );
 
-    /* save current attributes for later restore */
+    /* Save current attributes for later restore */
 
     curobj = obj;
     save_object( obj );
@@ -594,7 +590,7 @@ change_object( FL_OBJECT * obj,
 		fl_hide_object( ui->argobj );
     }
 
-    /* show attributes of the current object */
+    /* Show attributes of the current object */
 
     show_attributes( obj );
 
@@ -602,11 +598,11 @@ change_object( FL_OBJECT * obj,
 
     fl_deactivate_all_forms( );
 
-    /* disable selection */
+    /* Disable selection */
 
     no_selection = 1;
 
-    /* always come up with Generic */
+    /* Always come up with Generic */
 
     fl_set_folder_bynumber( fd_attrib->attrib_folder, 1 );
 
@@ -976,6 +972,7 @@ copy_class_spec( FL_OBJECT * src,
 /***************************************
  * Changes the type of an object by reconstructing it. A quite nasty
  * procedure that delves into the form structure in a bad way.
+ * And it looks a lot like a memnory leak...
  ***************************************/
 
 void
@@ -1032,9 +1029,11 @@ change_type( FL_OBJECT * obj,
     if ( ! ttt->child )
     {
 		ttt->form = form;
+
 		if ( obj->child )
 		{
 			clear_selection( );
+
 			obj->focus = 0;
 			fl_delete_object( obj );
 			ttt->prev = prev;

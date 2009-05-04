@@ -8,7 +8,7 @@ Below we consider some of them that are likely to be used in new
 classes.
 @table @code
 @item int objclass
-This indicates the class of the object (e.g., @code{FL_BUTTON},
+This indicates the class of the object (e.g.@: @code{FL_BUTTON},
 @code{FL_SLIDER}, @code{FL_NEW} etc.)
 @item int type
 This indicates the type of the object within the class. Types are
@@ -24,22 +24,34 @@ routine for the object, e.g.@: @code{handle_NEW()}, has to take care
 that this is actually drawn. Note that there is a routine for drawing
 boxes, see below.
 @item FL_Coord x, y, w, h
-These are the coordinates that indicate the bounding box of the
-object. They always have to be provided when adding an object. The
+These are the coordinates and sizes that indicate the bounding box of
+the object. They always have to be provided when adding an object. The
 system uses them e.g.@: to determine if the object is below the mouse.
 The class routines should use them to draw the object in the correct
 size, etc. Note that these values will change when the user resizes
 the form window. So never assume anything about their values but
-always recheck them when drawing the object.
+always recheck them when drawing the object. It's probably best to use
+the routines @code{@ref{fl_get_object_geometry()}},
+@code{@ref{fl_get_object_position()}} and
+@code{@ref{fl_get_object_size()}} to determine position and/or size.
+To change the position and/or size of an object always use
+@code{@ref{fl_set_object_geometry()}},
+@code{@ref{fl_set_object_position()}} and
+@code{@ref{fl_set_object_size()}} and never change the elements of the
+structures directly!
 @item unsigned int resize
 Controls if the object should be resized if the form it is on is
 resized. The options are @code{FL_RESIZE_NONE}, @code{FL_RESIZE_X},
 @code{FL_RESIZE_Y} and @code{FL_RESIZE_ALL}. The default is
 @code{FL_RESIZE_ALL} which is the bitwise OR of @code{FL_RESIZE_X} and
-@code{FL_RESIZE_Y}.
+@code{FL_RESIZE_Y}. Instead of accessing this element dirrectly better
+use the functions @code{@ref{fl_get_object_resize()}} and
+@code{@ref{fl_set_object_resize()}}.
 @item unsigned int nwgravity, segravity
 These two variables control how the object is placed relative to its
-position prior to resizing.
+position prior to resizing. Instead of accessing these elements
+directly use @code{@ref{fl_get_object_gravity()}} and
+@code{@ref{fl_set_object_gravity()}}.
 @item FL_COLOR col1, col2
 These are two color indices in the internal color lookup table. The
 class routines are free to use them or not. The user can change them
@@ -49,13 +61,13 @@ using the routine @code{@ref{fl_set_object_color()}}. The routine
 This is a pointer to a text string. This can be used by class routines
 to provide a label for the object. The class routines can freely use
 this. (Don't forget allocating storage for it when you want to set it
-yourself, i.e., when you don't use
+yourself, i.e.@: when you don't use
 @code{@ref{fl_set_object_label()}}.) The user can change it using the
 routine @code{@ref{fl_set_object_label()}}. The label must be drawn by
 the routine handling the object when it receives a @code{FL_DRAWLABEL}
 event (or it could be part of the code for @code{FL_DRAW} event). (The
 system does not draw the label automatically because it does not know
-where to draw it.) For non-offsetted labels, i.e., the alignment is
+where to draw it.) For non-offsetted labels, i.e.@: the alignment is
 relative to the entire bounding box, simply calling
 @code{@ref{fl_draw_object_label()}} should be enough.
 @item FL_COLOR lcol
@@ -66,7 +78,7 @@ The size of the font used to draw the label. The class routines can
 freely use this. The user sets it with
 @code{@ref{fl_set_object_lsize()}}.
 @item int lstyle
-The style of the font the label os drawn in, i.e. the number of the
+The style of the font the label os drawn in, i.e.@: the number of the
 font in which it should be drawn. The class routines can freely use
 this. The user sets it with @code{@ref{fl_set_object_lstyle()}}.
 @item int align
@@ -105,7 +117,7 @@ guarantee the object is visible on the screen, for that also the form
 the object beongs to need to be visible, in which case
 @code{@ref{fl_form_is_visible()}} returns true.
 @item int active
-Indicates whether the object is active, i.e., wants to receive events
+Indicates whether the object is active, i.e.@: wants to receive events
 other than @code{FL_DRAW}.
 
 Static objects, such as text and boxes are inactive. Changing the
@@ -138,12 +150,12 @@ disables double/triple click detection.
 @c for buttons since it explictely calls fl_get_button(), so one
 @c can't create radio objects of any other sort.
 @c
-@c @item int radio
-@c This indicates whether this object is a radio object. This means that,
-@c whenever it is pushed, other radio objects in the same group in the
-@c form that are pushed are released (and their pushed value is reset).
-@c Radio buttons use this. The default is false. The fl_add_NEW() routine
-@c should set it if required.
+@c @item int radio This indicates whether this object is a radio
+@c object. This means that, whenever it is pushed, other radio objects
+@c in the same group in the form that are pushed are released (and
+@c their pushed value is reset). Radio buttons use this. The default
+@c is false. The @code{fl_add_NEW()} routine should set it if
+@c required.
 @item int automatic
 An object is automatic if it automatically (without user actions) has
 to change its contents. Automatic objects get a @code{FL_STEP} event
@@ -245,7 +257,7 @@ obj->spec = 0;
 
 There is rarely any need for the new object class to know how the
 object is added to a form and how the Forms Library manages the
-geometry, e.g., does an object have its own window etc. Nonetheless if
+geometry, e.g.@: does an object have its own window etc. Nonetheless if
 this information is required, use @code{FL_ObjWin(obj)} to obtain the
 window resource ID of the window thhe object belongs to. Beware that
 an object window ID may be shared with other objects@footnote{The only

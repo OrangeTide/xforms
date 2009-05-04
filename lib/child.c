@@ -276,7 +276,7 @@ fli_insert_composite_after( FL_OBJECT * comp,
 
     for ( tmp = comp->child; tmp && tmp->nc; prev = tmp, tmp = tmp->nc )
     {
-		tmp->parent = comp;
+		tmp->parent = comp;             /* needed for fdesign! */
 		tmp->form   = form;
 		tmp->next   = tmp->nc;
 		tmp->prev   = prev;

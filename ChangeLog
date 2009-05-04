@@ -1,3 +1,12 @@
+2009-05-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/signal.c: in handle_signal() a caught signal
+	could lead to an infinite loop when the handling
+	function did something that put it back into the
+	main loop.
+
+	* Some improvements of teh documentation
+
 2009-05-03 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_attribs.c: Bug that kept composite

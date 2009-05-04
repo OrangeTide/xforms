@@ -68,7 +68,7 @@ buttons (of many different flavors) that the user can push with the
 mouse, sliders with which the user can indicate a particular setting,
 input fields in which the user can provide textual input, menus from
 which the user can make choices, browsers in which the user can scroll
-through large amounts of text (e.g. help files), etc. Whenever the
+through large amounts of text (e.g.@: help files), etc. Whenever the
 user changes the state of a particular object on one of the forms
 displayed the application program is notified and can take action
 accordingly. There are a number of different ways in which the
@@ -87,14 +87,14 @@ a simple way. The routines can be used both in C and in C++ programs.
 The library uses only the services provided by the Xlib and should run
 on all workstations that have X installed on them. The current version
 needs 4bits of color (or grayscale) to look nice, but it will function
-properly on workstations having less depth (e.g., XForms works on B&W
+properly on workstations having less depth (e.g.@: XForms works on B&W
 X-terminals).
 
 The library is easy to use. Defining a form takes a few lines of code
 and interaction is fully handled by the library routines. A number of
 demo programs are provided to show how easy forms are built and used.
 For simple forms and those that may be frequently used in application
-programs, e.g., to ask a question or select a file name, special
+programs, e.g.@: to ask a question or select a file name, special
 routines are provided. For example, to let the user choose a file in a
 graphical way (allowing him/her to walk through the directory
 hierarchy with a few mouse clicks) the application program needs to

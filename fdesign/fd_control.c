@@ -93,19 +93,14 @@ void
 exit_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 long        arg  FL_UNUSED_ARG )
 {
-    int rep;
-
     if ( changed )
     {
+		int rep;
+
 		fl_set_choices_shortcut( "Ss#s", "Ee#e", "Rr#r" );
 		rep = fl_show_choice( "WARNING", "", "Changes have not been saved.",
 							  3, "Save", "Exit", "Return", 1 );
-		if ( rep == 1 )
-		{
-			if ( ! save_forms( NULL ) )
-				return;
-		}
-		else if ( rep == 3 )
+		if ( ( rep == 1 && ! save_forms( NULL ) ) || rep == 3 )
 			return;
     }
 

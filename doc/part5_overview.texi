@@ -115,10 +115,10 @@ All recognized options are removed from the argument list and their
 corresponding values set. Forms Library provides appropriate defaults
 for all options. The following are the defaults:
 @multitable @columnfractions 0.25 0.1 0.45 0.2
-@headitem Option
-@tab Type
-@tab Meaning
-@tab Default
+@item @strong{Option}
+@tab @strong{Type}
+@tab @strong{Meaning}
+@tab @strong{Default}
 @item @code{-fldebug} @i{level}
 @tab int
 @tab prints debug information

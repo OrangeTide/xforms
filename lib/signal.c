@@ -55,8 +55,8 @@ handle_signal( void )
     for ( ; rec; rec = rec->next )
 		while ( rec->caught )
 		{
-			rec->callback( rec->signum, rec->data );
 			rec->caught--;
+			rec->callback( rec->signum, rec->data );
 		}
 }
 
