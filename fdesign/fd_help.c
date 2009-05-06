@@ -49,15 +49,15 @@
  ***************************************/
 
 static void
-load_it( char str[ ][80 ] )
+load_it( char str[ ][ 80 ] )
 {
     int i;
 
-    fl_freeze_form(fd_help->helpform);
-    fl_clear_browser(fd_help->browser);
-    for (i = 0; str[i][0] != '\0'; i++)
-		fl_add_browser_line(fd_help->browser, str[i]);
-    fl_unfreeze_form(fd_help->helpform);
+    fl_freeze_form( fd_help->helpform );
+    fl_clear_browser( fd_help->browser );
+    for ( i = 0; str[ i ][ 0 ] != '\0'; i++ )
+		fl_add_browser_line( fd_help->browser, str[ i ] );
+    fl_unfreeze_form( fd_help->helpform );
 }
 
 
@@ -69,8 +69,8 @@ void
 help_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 long        arg  FL_UNUSED_ARG )
 {
-    fl_show_form(fd_help->helpform,
-				 FL_PLACE_GEOMETRY, FL_FULLBORDER, "fdesign help");
+    fl_show_form( fd_help->helpform,
+				  FL_PLACE_GEOMETRY, FL_FULLBORDER, "fdesign help" );
 }
 
 
@@ -82,13 +82,17 @@ void
 exithelp_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			 long        arg  FL_UNUSED_ARG )
 {
-    fl_hide_form(fd_help->helpform);
+    fl_hide_form( fd_help->helpform );
 }
 
 
-extern char testhelp[ ][80], mainhelp[ ][80], generalhelp[ ][80];
-extern char keyhelp[ ][80], grouphelp[ ][80], savehelp[ ][80];
-extern char mousehelp[ ][80];
+extern char testhelp[    ][ 80 ],
+            mainhelp[    ][ 80 ],
+            generalhelp[ ][ 80 ],
+            keyhelp[     ][ 80 ],
+            grouphelp[   ][ 80 ],
+            savehelp[    ][ 80 ],
+            mousehelp[   ][ 80 ];
 
 
 /***************************************
@@ -99,43 +103,43 @@ void
 showhelp_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			 long        arg )
 {
-    switch (arg)
+    switch ( arg )
     {
 		case HELP_VERSION:
-			load_it(mainhelp);
+			load_it( mainhelp );
 			break;
 
 		case HELP_GENERAL:
-			load_it(generalhelp);
+			load_it( generalhelp );
 			break;
 
 		case HELP_MOUSE:
-			load_it(mousehelp);
+			load_it( mousehelp );
 			break;
 
 		case HELP_KEYBOARD:
-			load_it(keyhelp);
+			load_it( keyhelp );
 			break;
 
 		case HELP_GROUP:
-			load_it(grouphelp);
+			load_it( grouphelp );
 			break;
 
 		case HELP_TEST:
-			load_it(testhelp);
+			load_it( testhelp );
 			break;
 
 		case HELP_SAVE:
-			load_it(savehelp);
+			load_it( savehelp );
 			break;
     }
 }
 
 
-#define S(a)  #a
-#define LIBVERSION(a,b) " (LibraryVersion " S(a) "." S(b) ")"
+#define S( a )  #a
+#define LIBVERSION( a, b ) " (LibraryVersion " S( a ) "." S( b ) ")"
 
-char mainhelp[ ][80] =
+char mainhelp[ ][ 80 ] =
 {
     "  ",
     "@C4@M@b@cForm Designer",
@@ -151,11 +155,11 @@ char mainhelp[ ][80] =
     "For more info on fdesign and xforms, see the complete documentation or visit",
     " the xforms home page",
     " ",
-    "@f@b@chttp://bragg.phys.uwm.edu/xforms         ",
+    "@f@b@chttp://savannah.nongnu.org/projects/xforms/",
     ""
 };
 
-char generalhelp[][80] =
+char generalhelp[ ][ 80 ] =
 {
     "  ",
     "@l@b@cGeneral Information",
@@ -233,7 +237,7 @@ char generalhelp[][80] =
     ""
 };
 
-char mousehelp[][80] =
+char mousehelp[ ][80] =
 {
     "  ",
     "@l@b@cUsing the Mouse",
@@ -265,7 +269,7 @@ char mousehelp[][80] =
     ""
 };
 
-char keyhelp[][80] =
+char keyhelp[ ][ 80 ] =
 {
     " ",
     "@l@b@cCursor Keys",
@@ -349,7 +353,7 @@ char keyhelp[][80] =
     ""
 };
 
-char grouphelp[][80] =
+char grouphelp[ ][ 80 ] =
 {
     "  ",
     "@l@b@cGroups",
@@ -372,9 +376,10 @@ char grouphelp[][80] =
     "@bChanging the name of a group",
     "To change the name of a group, select it (and deselect the others) and",
     "press the button labeled 'Group Name' below the list of groups.",
-    ""};
+    ""
+};
 
-char savehelp[][80] =
+char savehelp[ ][ 80 ] =
 {
     "  ",
     "@l@b@cSaving and Loading",
@@ -389,9 +394,10 @@ char savehelp[][80] =
     "It is also possible to merge the new forms with the current set using",
     "the button labeled 'Merge Forms'.",
     "  ",
-    ""};
+    ""
+};
 
-char testhelp[][80] =
+char testhelp[ ][ 80 ] =
 {
     "  ",
     "@l@b@cTesting Forms",

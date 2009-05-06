@@ -63,7 +63,8 @@ static ObjSPEC objspec[ ] =
 		save_slider_attrib,
 		emit_slider_code,
 		NULL,
-		NULL, NULL
+		NULL,
+		NULL
     },
 
     {
@@ -73,7 +74,8 @@ static ObjSPEC objspec[ ] =
 		counter_spec_restore,
 		save_counter_attrib,
 		emit_counter_code,
-		NULL, NULL,
+		NULL,
+		NULL,
 		NULL
     },
 
@@ -211,8 +213,7 @@ static ObjSPEC objspec[ ] =
     },
 
     {
-		{ -1 },
-		NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL			/* sentinel */
+		{ -1 }, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL	 /* sentinel */
     }
 };
 
@@ -791,7 +792,7 @@ static FL_VN_PAIR grid_vn[ ] =
     VN( FL_GRID_NONE ),
 	VN( FL_GRID_MAJOR ),
 	VN( FL_GRID_MINOR ),
-	VN( -1)
+	VN( -1 )
 };
 
 
@@ -879,7 +880,7 @@ static FL_VN_PAIR pupmode[ ] =
     VN( FL_PUP_BOX ),
     VN( FL_PUP_CHECK ),
     VN( FL_PUP_RADIO ),
-    VN( -1)
+    VN( -1 )
 };
 
 

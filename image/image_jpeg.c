@@ -152,10 +152,7 @@ gather_comments( j_decompress_ptr cinfo )
     length  = jpeg_getc( cinfo ) << 8;
     length += jpeg_getc( cinfo ) - 2;
 
-    if ( image->comments )
-		image->comments = fl_realloc( image->comments, length + 1 );
-    else
-		image->comments = fl_malloc( length + 1 );
+	image->comments = fl_realloc( image->comments, length + 1 );
 
     image->comments[ length ] = '\0';
     image->comments_len = length;

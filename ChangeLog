@@ -1,3 +1,8 @@
+2009-05-06 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Just a bit of code cleanup in fdesign and
+	minor changes of the documentation.
+
 2009-05-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/signal.c: in handle_signal() a caught signal

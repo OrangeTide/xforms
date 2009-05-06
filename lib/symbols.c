@@ -96,7 +96,7 @@ static size_t nsymbols = 0;
  ***************************************/
 
 static SYMBOL *
-find_symbol( const char *name )
+find_symbol( const char * name )
 {
     size_t i;
 

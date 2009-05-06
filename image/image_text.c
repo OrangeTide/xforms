@@ -62,10 +62,7 @@ flimage_add_text( FL_IMAGE     * im,
     if ( ! str || ! *str || ! len || ! size || ! im )
 		return -1;
 
-    if ( im->text )
-		im->text = fl_realloc( im->text, sizeof *im->text * ( im->ntext + 1 ) );
-    else
-		im->text = fl_malloc( sizeof *im->text * ( im->ntext + 1 ) );
+	im->text = fl_realloc( im->text, ( im->ntext + 1 ) * sizeof *im->text );
 
     if ( ! im->text )
     {
@@ -111,10 +108,7 @@ flimage_add_text_struct( FL_IMAGE           * im,
 		return -1;
     }
 
-    if ( im->text )
-		im->text = fl_realloc( im->text, sizeof *im->text * ( im->ntext + 1 ) );
-    else
-		im->text = fl_malloc( sizeof *im->text * ( im->ntext + 1 ) );
+	im->text = fl_realloc( im->text, ( im->ntext + 1 ) * sizeof *im->text );
 
     if ( ! im->text)
 		return -1;

@@ -146,7 +146,7 @@ emit_scrollbar_code( FILE      * fp,
     defspec = get_superspec( defobj );
     spec = get_superspec( ob );
 
-    if ( spec->min != defspec->min || spec->max != defspec->max)
+    if ( spec->min != defspec->min || spec->max != defspec->max )
 		fprintf( fp, "    fl_set_scrollbar_bounds( obj, %g, %g );\n",
 				 spec->min, spec->max );
 

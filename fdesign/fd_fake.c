@@ -93,7 +93,7 @@ fl_create_simu_canvas( int          type,
     ob->lcol    = FL_LCOL;
     ob->align   = FL_ALIGN_CENTER;
     ob->active  = 0;
-    ob->spec    = fl_calloc(1, 160);
+    ob->spec    = fl_calloc( 1, sizeof *ob->spec );
 
     return ob;
 }
@@ -141,7 +141,7 @@ fl_create_simu_glcanvas( int          type,
     ob->lcol    = FL_LCOL;
     ob->align   = FL_ALIGN_CENTER;
     ob->active  = 0;
-    ob->spec = fl_calloc( 1, 160 );     /* og shit, why 160?  JTT */
+    ob->spec = fl_calloc( 1, sizeof *ob->spec );
 
     return ob;
 }
@@ -162,7 +162,6 @@ fl_add_simu_glcanvas( int          type,
 
     ob = fl_create_simu_glcanvas( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
-
     return ob;
 }
 

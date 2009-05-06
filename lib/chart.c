@@ -64,20 +64,20 @@ typedef struct
 
 typedef struct
 {
-    float    min,			/* The boundaries       */
-	         max;
-    int      numb;			/* Number of entries    */
-    int      maxnumb;		/* Maximal number of entries to display */
-    int      autosize;		/* Whether the x-axis should be scaled  */
-    int      lstyle,		/* item label font style & size         */
-	         lsize;
-    int      x,				/* drawing area                         */
-	         y,
-	         w,
-	         h;
-    FL_COLOR lcol;			/* default label color                  */
-    ENTRY *  entries;		/* The entries */
-    int no_baseline;
+    float      min,				/* the boundaries */
+	           max;
+    int        numb;			/* number of entries */
+    int        maxnumb;			/* maximal number of entries to display */
+    int        autosize;		/* whether the x-axis should be scaled */
+    int        lstyle,			/* item label font style & size */
+	           lsize;
+    int        x,				/* drawing area */
+	           y,
+	           w,
+	           h;
+    FL_COLOR   lcol;			/* default label color */
+    ENTRY    * entries;			/* the entries */
+    int        no_baseline;
 } SPEC;
 
 #define vv( x, y )  fl_add_float_vertex( ( float ) x, ( float ) y )
@@ -168,9 +168,9 @@ draw_barchart( SPEC * sp,
  ***************************************/
 
 static void
-draw_horbarchart( SPEC * sp,
-				  float  min,
-				  float  max )
+draw_horbarchart( SPEC  * sp,
+				  float   min,
+				  float   max )
 {
     int x = sp->x,
 		y = sp->y,
@@ -256,10 +256,10 @@ draw_horbarchart( SPEC * sp,
  ***************************************/
 
 static void
-draw_linechart( int    type,
-				SPEC * sp,
-				float  min,
-				float  max )
+draw_linechart( int     type,
+				SPEC  * sp,
+				float   min,
+				float   max )
 {
     int x = sp->x,
 		y = sp->y,
@@ -563,7 +563,7 @@ handle_chart( FL_OBJECT * ob,
 			  FL_Coord    mx   FL_UNUSED_ARG,
 			  FL_Coord    my   FL_UNUSED_ARG,
 			  int         key  FL_UNUSED_ARG,
-			  void *      ev   FL_UNUSED_ARG )
+			  void      * ev   FL_UNUSED_ARG )
 {
 #if FL_DEBUG >= ML_DEBUG
     M_info( "HandleMenu", fli_event_name( event ) );
@@ -718,7 +718,7 @@ fl_clear_chart( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_add_chart_value( FL_OBJECT *  ob,
+fl_add_chart_value( FL_OBJECT  * ob,
 					double       val,
 					const char * str,
 					int          col )
@@ -765,7 +765,7 @@ fl_add_chart_value( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_insert_chart_value( FL_OBJECT *  ob,
+fl_insert_chart_value( FL_OBJECT  * ob,
 					   int          indx,
 					   double       val,
 					   const char * str,
@@ -813,7 +813,7 @@ fl_insert_chart_value( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_replace_chart_value( FL_OBJECT *  ob,
+fl_replace_chart_value( FL_OBJECT  * ob,
 						int          indx,
 						double       val,
 						const char * str,
@@ -871,8 +871,8 @@ fl_set_chart_bounds( FL_OBJECT * ob,
 
 void
 fl_get_chart_bounds( FL_OBJECT * ob,
-					 double *    min,
-					 double *    max )
+					 double    * min,
+					 double    * max )
 {
     SPEC *sp = ob->spec;
 
@@ -958,8 +958,8 @@ fl_set_chart_autosize( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_chart_baseline( FL_OBJECT *ob,
-					   int        iYesNo )
+fl_set_chart_baseline( FL_OBJECT * ob,
+					   int         iYesNo )
 {
     if ( ( ( SPEC * ) ob->spec )->no_baseline != !iYesNo )
     {
@@ -975,10 +975,10 @@ fl_set_chart_baseline( FL_OBJECT *ob,
 #if 0
 void
 fl_get_chart_area( FL_OBJECT * ob,
-				   int *       x,
-				   int *       y,
-				   int *       w,
-				   int *       h )
+				   int       * x,
+				   int       * y,
+				   int       * w,
+				   int       * h )
 {
     SPEC *sp = ob->spec;
 

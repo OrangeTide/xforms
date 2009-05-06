@@ -62,11 +62,11 @@ typedef FL_OBJECT * ( * FL_ADDPTR ) ( int, FL_Coord, FL_Coord, FL_Coord,
 
 typedef struct {
     int          cn;
-    FL_OBJECT *  defobj;		                      /* default */
+    FL_OBJECT  * defobj;		                      /* default */
     TDEF         types[ MAXTYPE ];
     char         cname[ MAX_CLASS_NAME_LEN ];	      /* add_XXX */
     char         formal_cname[ MAX_CLASS_NAME_LEN ];
-    FL_OBJECT *  defobj1;		                      /* to specific type */
+    FL_OBJECT  * defobj1;		                      /* to specific type */
     FL_ADDPTR    createit,
 	             addit;
     int          var_boxtype;	/* means default boxtype may depend on type */
@@ -128,7 +128,7 @@ find_class_struct( int n )
 			return classes + i;
     }
     M_err( "find_class_struct", "Can't find class %d", n );
-    return 0;
+    return NULL;
 }
 
 
@@ -170,7 +170,7 @@ set_class_default( int    cn,
     int i;
 
     for ( i = 0; i < cnumb; i++ )
-		if (classes[ i ].cn == cn)
+		if ( classes[ i ].cn == cn )
 		{
 			classes[ i ].default_type = def_type;
 			classes[ i ].default_label = label;  	/* note: no copy */
@@ -257,14 +257,14 @@ int cur_class = -1;		/* The current class used */
 static void
 add_button_types( int button_class )
 {
-    add_type_def( button_class, FL_NORMAL_BUTTON, "NORMAL_BUTTON" );
-    add_type_def( button_class, FL_PUSH_BUTTON, "PUSH_BUTTON" );
-    add_type_def( button_class, FL_RADIO_BUTTON, "RADIO_BUTTON" );
-    add_type_def( button_class, FL_TOUCH_BUTTON, "TOUCH_BUTTON" );
-    add_type_def( button_class, FL_HIDDEN_BUTTON, "HIDDEN_BUTTON" );
-    add_type_def( button_class, FL_INOUT_BUTTON, "INOUT_BUTTON" );
-    add_type_def( button_class, FL_MENU_BUTTON, "MENU_BUTTON" );
-    add_type_def( button_class, FL_RETURN_BUTTON, "RETURN_BUTTON" );
+    add_type_def( button_class, FL_NORMAL_BUTTON,     "NORMAL_BUTTON" );
+    add_type_def( button_class, FL_PUSH_BUTTON,       "PUSH_BUTTON" );
+    add_type_def( button_class, FL_RADIO_BUTTON,      "RADIO_BUTTON" );
+    add_type_def( button_class, FL_TOUCH_BUTTON,      "TOUCH_BUTTON" );
+    add_type_def( button_class, FL_HIDDEN_BUTTON,     "HIDDEN_BUTTON" );
+    add_type_def( button_class, FL_INOUT_BUTTON,      "INOUT_BUTTON" );
+    add_type_def( button_class, FL_MENU_BUTTON,       "MENU_BUTTON" );
+    add_type_def( button_class, FL_RETURN_BUTTON,     "RETURN_BUTTON" );
     add_type_def( button_class, FL_HIDDEN_RET_BUTTON, "HIDDEN_RET_BUTTON" );
 }
 
@@ -275,15 +275,15 @@ add_button_types( int button_class )
 static void
 add_frame_types( int frame_class )
 {
-    add_type_def( frame_class, FL_NO_FRAME, "NO_FRAME" );
-    add_type_def( frame_class, FL_UP_FRAME, "UP_FRAME" );
-    add_type_def( frame_class, FL_DOWN_FRAME, "DOWN_FRAME" );
-    add_type_def( frame_class, FL_BORDER_FRAME, "BORDER_FRAME" );
+    add_type_def( frame_class, FL_NO_FRAME,       "NO_FRAME" );
+    add_type_def( frame_class, FL_UP_FRAME,       "UP_FRAME" );
+    add_type_def( frame_class, FL_DOWN_FRAME,     "DOWN_FRAME" );
+    add_type_def( frame_class, FL_BORDER_FRAME,   "BORDER_FRAME" );
     add_type_def( frame_class, FL_ENGRAVED_FRAME, "ENGRAVED_FRAME" );
-    add_type_def( frame_class, FL_ROUNDED_FRAME, "ROUNDED_FRAME" );
+    add_type_def( frame_class, FL_ROUNDED_FRAME,  "ROUNDED_FRAME" );
     add_type_def( frame_class, FL_EMBOSSED_FRAME, "EMBOSSED_FRAME" );
-    add_type_def( frame_class, FL_SHADOW_FRAME, "SHADOW_FRAME" );
-    add_type_def( frame_class, FL_OVAL_FRAME, "OVAL_FRAME" );
+    add_type_def( frame_class, FL_SHADOW_FRAME,   "SHADOW_FRAME" );
+    add_type_def( frame_class, FL_OVAL_FRAME,     "OVAL_FRAME" );
 }
 
 
@@ -293,14 +293,14 @@ add_frame_types( int frame_class )
 static void
 add_slider_types( int sclass )
 {
-    add_type_def( sclass, FL_VERT_SLIDER, "VERT_SLIDER" );
-    add_type_def( sclass, FL_HOR_SLIDER, "HOR_SLIDER" );
-    add_type_def( sclass, FL_VERT_FILL_SLIDER, "VERT_FILL_SLIDER" );
-    add_type_def( sclass, FL_HOR_FILL_SLIDER, "HOR_FILL_SLIDER" );
-    add_type_def( sclass, FL_VERT_NICE_SLIDER, "VERT_NICE_SLIDER" );
-    add_type_def( sclass, FL_HOR_NICE_SLIDER, "HOR_NICE_SLIDER" );
+    add_type_def( sclass, FL_VERT_SLIDER,         "VERT_SLIDER" );
+    add_type_def( sclass, FL_HOR_SLIDER,          "HOR_SLIDER" );
+    add_type_def( sclass, FL_VERT_FILL_SLIDER,    "VERT_FILL_SLIDER" );
+    add_type_def( sclass, FL_HOR_FILL_SLIDER,     "HOR_FILL_SLIDER" );
+    add_type_def( sclass, FL_VERT_NICE_SLIDER,    "VERT_NICE_SLIDER" );
+    add_type_def( sclass, FL_HOR_NICE_SLIDER,     "HOR_NICE_SLIDER" );
     add_type_def( sclass, FL_VERT_BROWSER_SLIDER, "VERT_BROWSER_SLIDER" );
-    add_type_def( sclass, FL_HOR_BROWSER_SLIDER, "HOR_BROWSER_SLIDER" );
+    add_type_def( sclass, FL_HOR_BROWSER_SLIDER,  "HOR_BROWSER_SLIDER" );
 }
 
 
@@ -491,20 +491,20 @@ init_classes( void )
     set_class_default( FL_TIMER, FL_NORMAL_TIMER, "timer" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@_xyplot" );
-    add_class_def( VN( FL_XYPLOT ), OBJNAME( xyplot ) );
-    add_type_def( FL_XYPLOT, FL_NORMAL_XYPLOT, "NORMAL_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_ACTIVE_XYPLOT, "ACTIVE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_SQUARE_XYPLOT, "SQUARE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_CIRCLE_XYPLOT, "CIRCLE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_POINTS_XYPLOT, "POINTS_XYPLOT" );
+    add_class_def( VN( FL_XYPLOT ),                OBJNAME( xyplot ) );
+    add_type_def( FL_XYPLOT, FL_NORMAL_XYPLOT,     "NORMAL_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_ACTIVE_XYPLOT,     "ACTIVE_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_SQUARE_XYPLOT,     "SQUARE_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_CIRCLE_XYPLOT,     "CIRCLE_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_POINTS_XYPLOT,     "POINTS_XYPLOT" );
     add_type_def( FL_XYPLOT, FL_LINEPOINTS_XYPLOT, "LINEPOINTS_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_DASHED_XYPLOT, "DASHED_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_DOTTED_XYPLOT, "DOTTED_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_DOTDASHED_XYPLOT, "DOTDASHED_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_DASHED_XYPLOT,     "DASHED_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_DOTTED_XYPLOT,     "DOTTED_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_DOTDASHED_XYPLOT,  "DOTDASHED_XYPLOT" );
     add_type_def( FL_XYPLOT, FL_LONGDASHED_XYPLOT, "LONGDASHED_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_FILL_XYPLOT, "FILL_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_IMPULSE_XYPLOT, "IMPULSE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_EMPTY_XYPLOT, "EMPTY_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_FILL_XYPLOT,       "FILL_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_IMPULSE_XYPLOT,    "IMPULSE_XYPLOT" );
+    add_type_def( FL_XYPLOT, FL_EMPTY_XYPLOT,      "EMPTY_XYPLOT" );
 
     fl_add_browser_line( fd_control->objectbrowser, "canvas" );
     add_class_def( VN( FL_CANVAS ), "canvas",

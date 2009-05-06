@@ -148,9 +148,9 @@ myfgets( char * line,
  *
  */
 
-typedef struct
-{
-    int oldval, newval;
+typedef struct {
+    int oldval,
+	    newval;
 } Trantable;
 
 static Trantable tcolor[ ] =
@@ -266,7 +266,7 @@ fd_skip_comment( FILE * fp  FL_UNUSED_ARG )
     {
 		if ( ( c = getc( fp ) ) == '#' || c == ';' )
 			while ( ( c = getc( fp ) ) != '\n' && c != EOF )
-				;
+				/* empty */ ;
 		else
 		{
 			done = 1;

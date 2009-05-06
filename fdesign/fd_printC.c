@@ -104,7 +104,7 @@ build_fname( char       * fname,
 
     /* npc == -1 is glibc <= 2.0.6 and npc >= fname_capacity is C99 */
 
-    return ( npc == -1 || ( ptrdiff_t )npc >= ( ptrdiff_t ) fname_capacity ) ?
+    return ( npc == -1 || ( ptrdiff_t ) npc >= ( ptrdiff_t ) fname_capacity ) ?
            0 : 1;
 }
 
@@ -709,7 +709,9 @@ static int arsizes[ MAXARNAME ];
 static int anumb = 0;
 
 
-/* Initializes the aray names. */
+/***************************************
+ * Initializes the aray names.
+ ***************************************/
 
 static void
 init_array_names( void )
@@ -791,10 +793,8 @@ print_array_names( FILE * fn,
                 fprintf( fn, ",\n" );
         }
         else
-        {
             fprintf( fn, "    FL_OBJECT *%s[ %i ];\n",
                      arnames[ i ], arsizes[ i ] );
-        }
     }
 }
 
@@ -861,7 +861,7 @@ convert_u( FL_Coord l )
 
 static VN_pair scclass[ ] =
 {
-    { FL_BUTTON, "button", 0, 0},
+    { FL_BUTTON,       "button", 0, 0 },
     { FL_LIGHTBUTTON,  "button", 0, 0 },
     { FL_ROUNDBUTTON,  "button", 0, 0 },
     { FL_CHECKBUTTON,  "button", 0, 0 },
@@ -1144,10 +1144,8 @@ get_free_handle( FL_OBJECT  * ob,
     else
     {
         for ( k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++ )
-        {
             if ( freeobj[ i ] == ob )
                 k = i;
-        }
 
         if ( k < 0 )
         {
@@ -1341,6 +1339,7 @@ output_callbacks( FILE * fn,
                   int    nform )
 {
     int i;
+
     for ( i = 0; i < nform; i++ )
     {
         fprintf( fn, "/*** callbacks and freeobj handles for form %s ***/\n\n",
@@ -1357,14 +1356,14 @@ output_callbacks( FILE * fn,
 const char *
 get_placement( FL_FORM * form )
 {
-    if (!form->first)
+    if ( ! form->first )
         return "FL_PLACE_CENTER";
-    else if (!form->first->next)
+    else if ( ! form->first->next )
         return "FL_PLACE_CENTER";
-    else if (form->first->next->resize)
+    else if ( form->first->next->resize )
         return "FL_PLACE_CENTERFREE";
-    else
-        return "FL_PLACE_CENTER";
+
+	return "FL_PLACE_CENTER";
 }
 
 
@@ -1406,7 +1405,7 @@ output_main_newformat( FILE * fn,
     for ( i = 0; i < nform; i++ )
     {
         fname = fdform[ i ].fname;
-        fprintf(fn, "    fd_%s = create_form_%s( );\n", fname, fname );
+        fprintf( fn, "    fd_%s = create_form_%s( );\n", fname, fname );
     }
 
     fprintf( fn, "\n    /* fill-in form initialization code */\n\n" );
@@ -1418,10 +1417,10 @@ output_main_newformat( FILE * fn,
              get_placement( fdform[ 0 ].form),
              fdform[ 0 ].fname );   /* { */
 
-    fprintf(fn, "    fl_do_forms( );\n    fl_finish( );\n" );
+    fprintf( fn, "    fl_do_forms( );\n    fl_finish( );\n" );
     for ( i = 0; i < nform; i++ )
-        fprintf(fn, "    fl_free( fd_%s );\n", fdform[ i ].fname );
-    fprintf(fn, "\n    return 0;\n}\n" );
+        fprintf( fn, "    fl_free( fd_%s );\n", fdform[ i ].fname );
+    fprintf( fn, "\n    return 0;\n}\n" );
 }
 
 
@@ -1542,7 +1541,7 @@ output_object( FILE      * fn,
         fprintf( fn, " fl_bgn_group( );\n" );
     }
     else if ( obj->objclass == FL_END_GROUP )
-        fprintf(fn, "    fl_end_group( );\n\n");
+        fprintf( fn, "    fl_end_group( );\n\n");
     else
     {
         defobj = find_class_default( obj->objclass, obj->type );

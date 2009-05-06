@@ -156,7 +156,7 @@ fl_set_glcanvas_attributes( FL_OBJECT * ob,
 
 void
 fl_get_glcanvas_attributes( FL_OBJECT * ob,
-							int *       attributes )
+							int       * attributes )
 {
     copy_attributes( attributes, GLPROP( ob )->glconfig );
 }
@@ -249,7 +249,7 @@ glx_init( FL_OBJECT * ob )
     XVisualInfo *vi;
     GLXContext context;
 
-    /* query for openGL capabilities */
+    /* Query for OpenGL capabilities */
 
     if ( ! glXQueryExtension( fl_display, 0, 0 ) )
     {
@@ -266,7 +266,7 @@ glx_init( FL_OBJECT * ob )
 		return -1;
     }
 
-    /* change canvas defaults */
+    /* Change canvas defaults */
 
     fl_set_canvas_visual( ob, vi->visual );
     fl_set_canvas_depth( ob, vi->depth );
@@ -280,13 +280,14 @@ glx_init( FL_OBJECT * ob )
 		return -1;
     }
 
-    /* under some conditions, the parent of the gl canvas might go away,
+    /* Under some conditions, the parent of the gl canvas might go away,
        leaving the old context and vi hanging. */
 
     glx_cleanup( ob );
 
     GLPROP( ob )->context = context;
     GLPROP( ob )->xvinfo = vi;
+
     return 0;
 }
 
@@ -319,6 +320,7 @@ glx_cleanup( FL_OBJECT * ob )
 		GLPROP( ob )->context = 0;
 		GLPROP( ob )->xvinfo = 0;
     }
+
     return 0;
 }
 
@@ -394,5 +396,6 @@ fl_glwinopen( int *        config,
 
     if ( ( win = fl_glwincreate( config, context, w, h ) ) )
 		fl_winshow( win );
+
     return win;
 }

@@ -103,10 +103,10 @@ void
 modify_attrib_basic_color( FL_COLOR col1,
 						   FL_COLOR col2 )
 {
-    fl_set_object_color( fd_generic_attrib->text[0], col1, col2 );
-    fl_set_object_color( fd_generic_attrib->text[1], col1, col2 );
-    fl_set_object_color( fd_generic_attrib->text[2], col1, col2 );
-    fl_set_object_color( fd_generic_attrib->text[3], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->text[ 0 ], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->text[ 1 ], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->text[ 2 ], col1, col2 );
+    fl_set_object_color( fd_generic_attrib->text[ 3 ], col1, col2 );
     fl_set_object_color( fd_generic_attrib->background, col1, col2 );
 }
 

@@ -66,8 +66,8 @@ get_object_numb( const FL_OBJECT * obj )
 {
     int i;
 
-    for (i = 0; i < objnumb; i++)
-		if (objects[i].obj == obj)
+    for ( i = 0; i < objnumb; i++ )
+		if ( objects[ i ].obj == obj )
 			return i;
     return -1;
 }
@@ -82,8 +82,9 @@ check_names( int on )
 {
     /* Fill in argument if missing */
 
-    if (objects[on].cbname[0] != '\0' && objects[on].argname[0] == '\0')
-		strcpy(objects[on].argname, "0");
+    if (    objects[ on ].cbname[  0 ] != '\0'
+		 && objects[ on ].argname[ 0 ] == '\0')
+		strcpy( objects[ on ].argname, "0" );
 
     /* HAS TO BE EXTENDED */
 }
@@ -104,16 +105,16 @@ get_object_name( const FL_OBJECT * obj,
 				 char            * cbname,
 				 char            * argname)
 {
-    int on = get_object_numb(obj);
+    int on = get_object_numb( obj );
 
-    name[0] = '\0';
-    cbname[0] = '\0';
-    argname[0] = '\0';
-    if (on == -1)
+    name[ 0 ] = '\0';
+    cbname[ 0 ] = '\0';
+    argname[ 0 ] = '\0';
+    if ( on == -1 )
 		return;
-    strcpy(name, objects[on].name);
-    strcpy(cbname, objects[on].cbname);
-    strcpy(argname, objects[on].argname);
+    strcpy( name, objects[ on ].name );
+    strcpy( cbname, objects[ on ].cbname );
+    strcpy( argname, objects[ on ].argname );
 }
 
 

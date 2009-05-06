@@ -52,16 +52,16 @@ static int fli_XLookupString( XKeyEvent *,
 void fli_redraw_form_using_xevent( FL_FORM *,
 								   int,
 								   XEvent * );
-static void do_interaction_step( int  );
+static void do_interaction_step( int );
 static int get_next_event_or_idle( int,
 								   FL_FORM **,
-								   XEvent   * );
+								   XEvent * );
 static void handle_EnterNotify_event( FL_FORM * );
 static void handle_LeaveNotify_event( void );
 static void handle_MotionNotify_event( FL_FORM * );
-static void handle_Expose_event( FL_FORM  *,
+static void handle_Expose_event( FL_FORM *,
 								 FL_FORM ** );
-static void handle_ConfigureNotify_event( FL_FORM  *,
+static void handle_ConfigureNotify_event( FL_FORM *,
 										  FL_FORM ** );
 static void set_form_property( FL_FORM *,
 							   unsigned int );

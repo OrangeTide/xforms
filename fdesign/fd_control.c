@@ -42,8 +42,7 @@
  * common structures
  */
 
-typedef struct
-{
+typedef struct {
     const char * entry;		/* label     */
     const char * sc;		/* shortcut  */
     void         ( * callback )( FL_OBJECT *,	/* callback functions */
@@ -81,7 +80,7 @@ filemenu_callback( FL_OBJECT * ob,
     int n = fl_get_menu( ob ) - 1;
 
     if ( n >= 0 && fmenu[ n ].callback )
-	fmenu[ n ].callback( 0, 0 );
+		fmenu[ n ].callback( 0, 0 );
 }
 
 
@@ -167,15 +166,11 @@ void
 loadforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			  long        arg  FL_UNUSED_ARG )
 {
-    if ( changed )
-    {
-		if ( fl_show_question( "Forms have been changed!\n"
-							   "Should I save them?", 1 ) )
-		{
-			if ( ! save_forms( NULL ) )
-				return;
-		}
-    }
+    if (    changed
+		 && fl_show_question( "Forms have been changed!\n"
+							  "Should I save them?", 1 )
+		 && ! save_forms( NULL ) )
+		return;
 
     load_forms(FALSE, NULL, 1);
     changed = 0;
@@ -204,14 +199,14 @@ void
 groupmenu_callback( FL_OBJECT * ob,
 					long        data  FL_UNUSED_ARG )
 {
-    int n = fl_get_menu(ob) - 1;
+    int n = fl_get_menu( ob ) - 1;
 
-    if (n >= 0)
+    if ( n >= 0 )
     {
-		if (gmenu[n].callback)
-			gmenu[n].callback(0, 0);
+		if ( gmenu[ n ].callback )
+			gmenu[ n ].callback( 0, 0 );
 		else
-			func_cb(0, gmenu[n].n);
+			func_cb( 0, gmenu[ n ].n );
     }
 }
 
@@ -367,9 +362,9 @@ control_init( FD_control * ui )
     control_initialized = 1;
 
 #ifdef __sgi
-    fl_set_object_lsize( ui->filemenu, FL_SMALL_SIZE );
-    fl_set_object_lsize( ui->formmenu, FL_SMALL_SIZE );
-    fl_set_object_lsize( ui->groupmenu, FL_SMALL_SIZE );
+    fl_set_object_lsize( ui->filemenu,   FL_SMALL_SIZE );
+    fl_set_object_lsize( ui->formmenu,   FL_SMALL_SIZE );
+    fl_set_object_lsize( ui->groupmenu,  FL_SMALL_SIZE );
     fl_set_object_lsize( ui->objectmenu, FL_SMALL_SIZE );
     fl_set_object_lsize( ui->optionmenu, FL_SMALL_SIZE );
 #endif
@@ -377,9 +372,9 @@ control_init( FD_control * ui )
     fl_set_form_atdeactivate( ui->control, deactivate_control, ui );
     fl_set_form_atactivate( ui->control, activate_control, ui );
 
-    fl_set_object_dblbuffer( ui->selmsg, 1 );
+    fl_set_object_dblbuffer( ui->selmsg,     1 );
     fl_set_object_dblbuffer( ui->sizestatus, 1 );
-    fl_set_object_dblbuffer( ui->oristatus, 1 );
+    fl_set_object_dblbuffer( ui->oristatus,  1 );
 
     fl_set_object_color( ui->formbrowser, FL_COL1, FL_WHITE );
 
@@ -518,18 +513,17 @@ show_selmessage( FL_OBJECT * sel[ ],
 }
 
 
-/********* callback routines for the control panel  ***************/
+/********* Callback routines for the control panel  ***************/
 
 /*
- * form designer itself does not use resource settings, but when testing
+ * Form designer itself does not use resource settings, but when testing
  * the newly created forms, resources are turned on. At the moment, we
  * only allow button label size to be changed
  */
 
 FL_FORM *thetestform;
 
-typedef struct
-{
+typedef struct {
     int x,
 	    y,
 	    w,
@@ -825,62 +819,62 @@ void
 func_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 long        arg )
 {
-    switch (arg)
+    switch ( arg )
     {
 		case 1:
-			change_selection();
-			redraw_the_form(0);
+			change_selection( );
+			redraw_the_form( 0 );
 			break;
 
 		case 2:
-			lower_selection();
-			redraw_the_form(0);
+			lower_selection( );
+			redraw_the_form( 0 );
 			break;
 
 		case 3:
-			raise_selection();
-			redraw_the_form(0);
+			raise_selection( );
+			redraw_the_form( 0 );
 			break;
 
 		case 4:
-			select_all();
-			redraw_the_form(0);
+			select_all( );
+			redraw_the_form( 0 );
 			break;
 
 		case 5:
-			show_selection();
-			redraw_the_form(0);
+			show_selection( );
+			redraw_the_form( 0 );
 			break;
 
 		case 6:
-			hide_selection();
-			redraw_the_form(0);
+			hide_selection( );
+			redraw_the_form( 0 );
 			break;
 
 		case 7:
-			group_selection();
+			group_selection( );
 			break;
 
 		case 8:
-			flatten_selection();
+			flatten_selection( );
 			break;
 
 		case 9:
-			copy_selection();
+			copy_selection( );
 			break;
 
 		case 10:
-			paste_selection();
-			redraw_the_form(0);
+			paste_selection( );
+			redraw_the_form( 0 );
 			break;
 
 		case 11:
-			next_selection();
+			next_selection( );
 			break;
 
 		case 12:
-			cut_selection();
-			redraw_the_form(0);
+			cut_selection( );
+			redraw_the_form( 0 );
 			break;
     }
 }
@@ -895,56 +889,33 @@ func_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 #if defined(USE_SYMBOL)
 
 static void
-draw_centering_symbol(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
-		      int angle, FL_COLOR col)
+draw_centering_symbol( FL_Coord x,
+					   FL_Coord y,
+					   FL_Coord w,
+					   FL_Coord h,
+					   int      angle,
+					   FL_COLOR col )
 {
     int delta = 4;
 
-    if (angle == 0 || angle == 180)
+    if ( angle == 0 || angle == 180 )
     {
-		fl_draw_symbol("@->", x, y, w / 2 + delta, h, col);
-		fl_draw_symbol("@<-", x + w / 2 - delta, y, w / 2 + delta, h, col);
+		fl_draw_symbol( "@->", x, y, w / 2 + delta, h, col );
+		fl_draw_symbol( "@<-", x + w / 2 - delta, y, w / 2 + delta, h, col );
     }
     else
     {
-		fl_draw_symbol("@2->", x, y + 1, w, h / 2 + delta, col);
-		fl_draw_symbol("@8->", x, y + h / 2 - delta - 1,
-					   w, h / 2 + delta - 1, col);
+		fl_draw_symbol( "@2->", x, y + 1, w, h / 2 + delta, col );
+		fl_draw_symbol( "@8->", x, y + h / 2 - delta - 1,
+						w, h / 2 + delta - 1, col );
     }
 }
 
 
-/***************************************
- ***************************************/
-
-#if 0
-
-static void
-draw_equal_symbol( FL_Coord x,
-				   FL_Coord y,
-				   FL_Coord w,
-				   FL_Coord h,
-				   int      angle,
-				   FL_COLOR col )
-{
-    int bw = 3;
-
-    x += bw;
-    y += bw;
-    w -= 2 * bw;
-    h -= 2 * bw;
-
-    if (angle == 0 || angle == 180)
-    {
-    }
-}
-
-#endif
-
 #endif
 
 
-#if !defined(USE_SYMBOL)
+#if ! defined USE_SYMBOL
 #include "left.xbm"
 #include "right.xbm"
 #include "hcenter.xbm"
@@ -957,37 +928,37 @@ draw_equal_symbol( FL_Coord x,
 void
 init_align( void )
 {
-#if defined(USE_SYMBOL)
-    fl_add_symbol("-><-", draw_centering_symbol, 0);
-    fl_set_object_label(fd_align->hcenter, "@-><-");
-    fl_set_object_label(fd_align->vcenter, "@8-><-");
+#if defined( USE_SYMBOL )
+    fl_add_symbol( "-><-", draw_centering_symbol, 0 );
+    fl_set_object_label( fd_align->hcenter, "@-><-" );
+    fl_set_object_label( fd_align->vcenter, "@8-><-" );
 #else
     FL_OBJECT *ob;
 
     ob = fd_align->left;
     ob->objclass = FL_BITMAPBUTTON;
-    fl_set_object_color(ob, FL_COL1, FL_BLUE);
-    fl_set_bitmapbutton_data(ob, left_height, left_width, left_bits);
-    fl_set_object_label(ob, "");
+    fl_set_object_color( ob, FL_COL1, FL_BLUE );
+    fl_set_bitmapbutton_data( ob, left_height, left_width, left_bits );
+    fl_set_object_label( ob, "" );
 
     ob = fd_align->hcenter;
     ob->objclass = FL_BITMAPBUTTON;
-    fl_set_object_color(ob, FL_COL1, FL_BLUE);
-    fl_set_bitmapbutton_data(ob, hcenter_height, hcenter_width, hcenter_bits);
-    fl_set_object_label(ob, "");
+    fl_set_object_color( ob, FL_COL1, FL_BLUE );
+    fl_set_bitmapbutton_data( ob, hcenter_height, hcenter_width, hcenter_bits );
+    fl_set_object_label( ob, "" );
 
     ob = fd_align->right;
     ob->objclass = FL_BITMAPBUTTON;
-    fl_set_object_color(ob, FL_COL1, FL_BLUE);
-    fl_set_bitmapbutton_data(ob, right_height, right_width, right_bits);
-    fl_set_object_label(ob, "");
+    fl_set_object_color( ob, FL_COL1, FL_BLUE );
+    fl_set_bitmapbutton_data( ob, right_height, right_width, right_bits );
+    fl_set_object_label( ob, "" );
 #endif
-    fl_set_object_helper(fd_align->left,    "flush left");
-    fl_set_object_helper(fd_align->hcenter, "center horizontally");
-    fl_set_object_helper(fd_align->hequal,  "Equal distance");
-    fl_set_object_helper(fd_align->right,   "flush right");
-    fl_set_object_helper(fd_align->top,     "flush top");
-    fl_set_object_helper(fd_align->bottom,  "flush bottom");
-    fl_set_object_helper(fd_align->vcenter, "center vertically");
-    fl_set_object_helper(fd_align->vequal,  "Equal distance");
+    fl_set_object_helper( fd_align->left,    "flush left" );
+    fl_set_object_helper( fd_align->hcenter, "center horizontally" );
+    fl_set_object_helper( fd_align->hequal,  "Equal distance" );
+    fl_set_object_helper( fd_align->right,   "flush right" );
+    fl_set_object_helper( fd_align->top,     "flush top" );
+    fl_set_object_helper( fd_align->bottom,  "flush bottom" );
+    fl_set_object_helper( fd_align->vcenter, "center vertically" );
+    fl_set_object_helper( fd_align->vequal,  "Equal distance" );
 }

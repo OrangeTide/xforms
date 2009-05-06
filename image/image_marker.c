@@ -183,10 +183,7 @@ flimage_add_marker( FL_IMAGE     * im,
 		return -1;
     }
 
-    if ( im->marker )
-		im->marker = fl_realloc( im->marker, sizeof *im->marker * ( nm + 1 ) );
-    else
-		im->marker = fl_calloc( ( nm + 1 ), sizeof *im->marker );
+	im->marker = fl_realloc( im->marker, ( nm + 1 ) * sizeof *im->marker );
 
     if ( ! im->marker )
 		return -1;

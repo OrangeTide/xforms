@@ -41,7 +41,7 @@
 #include "private/pdial.h"
 #include "spec/dial_spec.h"
 
-extern FD_dialattrib *create_form_dialattrib(void);
+extern FD_dialattrib *create_form_dialattrib( void );
 
 static FD_dialattrib *dial_attrib;
 static SuperSPEC *dial_spec;
@@ -203,14 +203,19 @@ save_dial_attrib( FILE      * fp,
 
     if ( spec->min != defspec->min || spec->max != defspec->max )
 		fprintf( fp, "bounds: %g %g\n", spec->min, spec->max );
+
     if ( spec->thetai != defspec->thetai || spec->thetaf != defspec->thetaf )
 		fprintf( fp, "angles: %g %g\n", spec->thetai, spec->thetaf );
+
     if ( spec->val != defspec->val )
 		fprintf( fp, "value: %g\n", spec->val );
+
     if ( spec->step != defspec->step )
 		fprintf( fp, "step: %g\n", spec->step );
+
     if ( spec->direction != defspec->direction )
 		fprintf( fp, "dir: %s\n", get_vn_name( dial_dir, spec->direction ) );
+
     if ( spec->how_return != defspec->how_return )
 		fprintf( fp, "return: %s\n", get_how_return_name( spec->how_return ) );
 

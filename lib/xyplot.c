@@ -100,9 +100,9 @@ static void compute_key_position( FL_OBJECT * );
 
 static void draw_inset( FL_OBJECT * );
 
-static void fl_xyplot_gen_xtic( FL_OBJECT * ob );
+static void fl_xyplot_gen_xtic( FL_OBJECT * );
 
-static void fl_xyplot_gen_ytic( FL_OBJECT * ob );
+static void fl_xyplot_gen_ytic( FL_OBJECT * );
 
 
 #ifdef BAD_SPRINTF
@@ -146,7 +146,7 @@ free_inset_text( FLI_XYPLOT_SPEC * sp,
  ***************************************/
 
 static void
-free_atic( char * atic[ ] )
+free_atic( char ** atic )
 {
     for ( ; *atic; atic++ )
     {
@@ -222,7 +222,7 @@ free_xyplot( FL_OBJECT * ob )
 static void
 draw_square( FL_OBJECT * ob  FL_UNUSED_ARG,
 			 int         Id  FL_UNUSED_ARG,
-			 FL_POINT *  p,
+			 FL_POINT  * p,
 			 int         n,
 			 int         w,
 			 int         h )
@@ -246,7 +246,7 @@ draw_square( FL_OBJECT * ob  FL_UNUSED_ARG,
 static void
 draw_circle( FL_OBJECT * ob  FL_UNUSED_ARG,
 			 int         id  FL_UNUSED_ARG,
-			 FL_POINT *  p,
+			 FL_POINT  * p,
 			 int         n,
 			 int         w,
 			 int         h )
@@ -270,7 +270,7 @@ draw_circle( FL_OBJECT * ob  FL_UNUSED_ARG,
 static void
 draw_points( FL_OBJECT * ob  FL_UNUSED_ARG,
 			 int         id  FL_UNUSED_ARG,
-			 FL_POINT *  p,
+			 FL_POINT  * p,
 			 int         n,
 			 int         w,
 			 int         h )
@@ -430,8 +430,8 @@ mapw2s( FLI_XYPLOT_SPEC * sp,
 
 void
 fli_xyplot_compute_data_bounds( FL_OBJECT * ob,
-								int *       n1,
-								int *       n2,
+								int       * n1,
+								int       * n2,
 								int         id )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
@@ -1381,13 +1381,13 @@ convert_coord( FL_OBJECT       * ob,
  ***************************************/
 
 static void
-fl_drw_text_point( int      lalign,
-				   int      x,
-				   int      y,
-				   FL_COLOR col,
-				   int      lstyle,
-				   int      lsize,
-				   char *   str )
+fl_drw_text_point( int        lalign,
+				   int        x,
+				   int        y,
+				   FL_COLOR   col,
+				   int        lstyle,
+				   int        lsize,
+				   char     * str )
 {
     int align = lalign & ~ FL_ALIGN_INSIDE;
     int bbox = 1.4 * lsize + 6;
@@ -1796,7 +1796,7 @@ find_data( FL_OBJECT * ob,
 		   int         deltay,
 		   int         mx,
 		   int         my,
-		   int *       n )
+		   int       * n )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
     int found,
@@ -1982,7 +1982,7 @@ handle_it( FL_OBJECT * ob,
 		   FL_Coord    mx,
 		   FL_Coord    my,
 		   int         key  FL_UNUSED_ARG,
-		   void *      ev   FL_UNUSED_ARG )
+		   void      * ev   FL_UNUSED_ARG )
 {
     int ret = 0;
     FLI_XYPLOT_SPEC *sp = ob->spec;
@@ -2250,9 +2250,9 @@ fl_create_xyplot( int          t,
 
 void
 fl_get_xyplot_data( FL_OBJECT * ob,
-					float *     x,
-					float *     y,
-					int *       n )
+					float     * x,
+					float     * y,
+					int       * n )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -2322,8 +2322,8 @@ fl_replace_xyplot_point_in_overlay( FL_OBJECT * ob,
 
 void
 fl_get_xyplot( FL_OBJECT * ob,
-			   float *     x,
-			   float *     y,
+			   float     * x,
+			   float     * y,
 			   int *       i )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
@@ -2401,9 +2401,9 @@ fl_set_xyplot_symbolsize( FL_OBJECT * ob,
  ***************************************/
 
 FL_XYPLOT_SYMBOL
-fl_set_xyplot_symbol( FL_OBJECT *      ob,
-					  int              id,
-					  FL_XYPLOT_SYMBOL symbol )
+fl_set_xyplot_symbol( FL_OBJECT        * ob,
+					  int                id,
+					  FL_XYPLOT_SYMBOL   symbol )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
     FL_XYPLOT_SYMBOL old = 0;
@@ -2583,8 +2583,8 @@ fl_set_xyplot_xbounds( FL_OBJECT * ob,
 
 void
 fl_get_xyplot_xbounds( FL_OBJECT * ob,
-					   float *     xmin,
-					   float *     xmax )
+					   float     * xmin,
+					   float     * xmax )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -2598,8 +2598,8 @@ fl_get_xyplot_xbounds( FL_OBJECT * ob,
 
 void
 fl_get_xyplot_ybounds( FL_OBJECT * ob,
-					   float *     ymin,
-					   float *     ymax )
+					   float     * ymin,
+					   float     * ymax )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -2729,9 +2729,9 @@ find_ybounds( FLI_XYPLOT_SPEC * sp )
  ***************************************/
 
 int
-fl_set_xyplot_data_double( FL_OBJECT *  ob,
-						   double *     x,
-						   double *     y,
+fl_set_xyplot_data_double( FL_OBJECT  * ob,
+						   double     * x,
+						   double     * y,
 						   int          n,
 						   const char * title,
 						   const char * xlabel,
@@ -2791,9 +2791,9 @@ fl_set_xyplot_data_double( FL_OBJECT *  ob,
  ***************************************/
 
 int
-fl_set_xyplot_data( FL_OBJECT *  ob,
-					float *      x,
-					float *      y,
+fl_set_xyplot_data( FL_OBJECT  * ob,
+					float      * x,
+					float      * y,
 					int          n,
 					const char * title,
 					const char * xlabel,
@@ -2915,8 +2915,8 @@ fl_insert_xyplot_data( FL_OBJECT * ob,
 void
 fl_add_xyplot_overlay( FL_OBJECT * ob,
 					   int         id,
-					   float *     x,
-					   float *     y,
+					   float     * x,
+					   float     * y,
 					   int         n,
 					   FL_COLOR    col )
 {
@@ -2946,10 +2946,10 @@ fl_add_xyplot_overlay( FL_OBJECT * ob,
 
     /* copy data */
 
-    sp->x[ id ] = fl_malloc( n * sizeof( float ) );
-    sp->y[ id ] = fl_malloc( n * sizeof( float ) );
-    memcpy( sp->x[ id ], x, n * sizeof( float ) );
-    memcpy( sp->y[ id ], y, n * sizeof( float ) );
+    sp->x[ id ] = fl_malloc( n * sizeof **sp->x );
+    sp->y[ id ] = fl_malloc( n * sizeof **sp->y );
+    memcpy( sp->x[ id ], x, n * sizeof **sp->x );
+    memcpy( sp->y[ id ], y, n * sizeof **sp->y );
     sp->n[ id ] = n;
 
     /* extend screen points if needed. */
@@ -2974,31 +2974,29 @@ fl_add_xyplot_overlay( FL_OBJECT * ob,
  ***************************************/
 
 static int
-load_data( const char * f,
-		   float **     xx,
-		   float **     yy )
+load_data( const char  * f,
+		   float      ** x,
+		   float      ** y )
 {
-    int n, err;
+    int n = 0,
+		err = 0;
     FILE *fp;
     char buf[ 128 ];
-    float *x,
-		  *y;
     int maxp = MAXP,
 		ncomment = 0;
 
-    if ( ! f || !( fp = fopen( f, "r" ) ) )
+    if ( ! f || ! ( fp = fopen( f, "r" ) ) )
     {
-		M_err( "XYplotFile", "can't open datafile %s", f ? f : "null" );
+		M_err( "XYplotFile", "Can't open datafile '%s'", f ? f : "null" );
 		return 0;
     }
 
-    x = *xx = fl_malloc( maxp * sizeof *x );
-    y = *yy = fl_malloc( maxp * sizeof *x );
+    *x = fl_malloc( maxp * sizeof **x );
+    *y = fl_malloc( maxp * sizeof **y );
 
-    /* comment chars are ; # ! and seperators are spaces and tabs  */
+    /* Comment chars are ; # ! and seperators are spaces and tabs  */
 
-    n = err = 0;
-    while ( fgets( buf, sizeof buf, fp ) && n < maxp && ! err )
+    while ( fgets( buf, sizeof buf, fp ) )
     {
 		if ( *buf == '!' || *buf == '#' || *buf == ';' || *buf == '\n' )
 		{
@@ -3006,27 +3004,28 @@ load_data( const char * f,
 			continue;
 		}
 
-		if ( ! ( err = ( sscanf( buf, "%f%*[ \t,]%f", x + n, y + n ) != 2 ) ) )
+		if ( ( err = sscanf( buf, "%f%*[ \t,]%f", *x + n, *y + n ) != 2 ) )
 		{
-			n++;
-			if ( n >= maxp - 1 )
-			{
-				maxp *= 2;
-				x = *xx = fl_realloc( x, maxp * sizeof *x );
-				y = *yy = fl_realloc( y, maxp * sizeof *x );
-			}
+			M_err( "XyplotFile", "An error occured at line %d",
+				   ++n + ncomment );
+			break;
+		}
+
+		if ( ++n >= maxp )
+		{
+			maxp *= 2;
+			*x = fl_realloc( *x, maxp * sizeof **x );
+			*y = fl_realloc( *y, maxp * sizeof **y );
 		}
     }
 
     fclose( fp );
 
-    if ( err )
-		M_err( "XyplotFile", "An error occured at line %d", n + ncomment );
-
-    if ( n == 0 )
-    {
-		fl_free( *xx );
-		fl_free( *yy );
+    if ( err || n == 0 )
+	{
+		fl_free( *x );
+		fl_free( *y );
+		n = 0;
     }
 
     return n;
@@ -3037,7 +3036,7 @@ load_data( const char * f,
  ***************************************/
 
 int
-fl_add_xyplot_overlay_file( FL_OBJECT *  ob,
+fl_add_xyplot_overlay_file( FL_OBJECT  * ob,
 							int          id,
 							const char * f,
 							FL_COLOR     c )
@@ -3117,9 +3116,9 @@ fl_delete_xyplot_overlay( FL_OBJECT * ob,
 void
 fl_get_xyplot_overlay_data( FL_OBJECT * ob,
 							int         id,
-							float *     x,
-							float *     y,
-							int *       n )
+							float     * x,
+							float     * y,
+							int       * n )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -3136,11 +3135,11 @@ fl_get_xyplot_overlay_data( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_get_xyplot_data_pointer( FL_OBJECT * ob,
-							int         id,
-							float **    x,
-							float **    y,
-							int *       n )
+fl_get_xyplot_data_pointer( FL_OBJECT  * ob,
+							int          id,
+							float     ** x,
+							float     ** y,
+							int        * n )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -3176,7 +3175,7 @@ fl_set_xyplot_linewidth( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_set_xyplot_file( FL_OBJECT *  ob,
+fl_set_xyplot_file( FL_OBJECT  * ob,
 					const char * f,
 					const char * title,
 					const char * xl,
@@ -3209,7 +3208,7 @@ fl_set_xyplot_file( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_add_xyplot_text( FL_OBJECT *  ob,
+fl_add_xyplot_text( FL_OBJECT  * ob,
 					double       x,
 					double       y,
 					const char * text,
@@ -3250,7 +3249,7 @@ fl_add_xyplot_text( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_delete_xyplot_text( FL_OBJECT *  ob,
+fl_delete_xyplot_text( FL_OBJECT  * ob,
 					   const char * text )
 {
     FLI_XYPLOT_SPEC *sp;
@@ -3500,8 +3499,8 @@ fl_get_xyplot_xmapping( FL_OBJECT * ob,
 
 void
 fl_get_xyplot_ymapping( FL_OBJECT * ob,
-						float *     a,
-						float *     b )
+						float     * a,
+						float     * b )
 {
     *a = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->ay;
     *b = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->bym;
@@ -3515,8 +3514,8 @@ void
 fl_xyplot_s2w( FL_OBJECT * ob,
 			   double      sx,
 			   double      sy,
-			   float *     wx,
-			   float *     wy )
+			   float     * wx,
+			   float     * wy )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -3539,8 +3538,8 @@ static void
 w2s_draw( FL_OBJECT * ob,
 		  double      wx,
 		  double      wy,
-		  float *     sx,
-		  float *     sy )
+		  float     * sx,
+		  float     * sy )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
     float sbx = sp->bxm,
@@ -3562,8 +3561,8 @@ void
 fl_xyplot_w2s( FL_OBJECT * ob,
 			   double      wx,
 			   double      wy,
-			   float *     sx,
-			   float *     sy )
+			   float     * sx,
+			   float     * sy )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -3641,7 +3640,7 @@ fl_set_xyplot_yscale( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_xyplot_fixed_xaxis( FL_OBJECT *  ob,
+fl_set_xyplot_fixed_xaxis( FL_OBJECT  * ob,
 						   const char * lm,
 						   const char * rm )
 {
@@ -3664,7 +3663,7 @@ fl_set_xyplot_fixed_xaxis( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_set_xyplot_fixed_yaxis( FL_OBJECT *  ob,
+fl_set_xyplot_fixed_yaxis( FL_OBJECT  * ob,
 						   const char * bm,
 						   const char * tm )
 {
@@ -3687,7 +3686,7 @@ fl_set_xyplot_fixed_yaxis( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_set_xyplot_alphaxtics( FL_OBJECT *  ob,
+fl_set_xyplot_alphaxtics( FL_OBJECT  * ob,
 						  const char * m,
 						  const char * s   FL_UNUSED_ARG )
 {
@@ -3712,7 +3711,7 @@ fl_set_xyplot_alphaxtics( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_set_xyplot_alphaytics( FL_OBJECT *  ob,
+fl_set_xyplot_alphaytics( FL_OBJECT  * ob,
 						  const char * m,
 						  const char * s   FL_UNUSED_ARG )
 {
@@ -3757,7 +3756,7 @@ fl_clear_xyplot( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_xyplot_key( FL_OBJECT *  ob,
+fl_set_xyplot_key( FL_OBJECT  * ob,
 				   int          id,
 				   const char * key )
 {
@@ -3794,11 +3793,11 @@ fl_set_xyplot_key_position( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_xyplot_keys( FL_OBJECT * ob,
-					char **     keys,
-					float       x,
-					float       y,
-					int         align )
+fl_set_xyplot_keys( FL_OBJECT  * ob,
+					char      ** keys,
+					float        x,
+					float        y,
+					int          align )
 {
     int i;
     FLI_XYPLOT_SPEC *sp = ob->spec;

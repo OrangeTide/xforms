@@ -129,7 +129,7 @@ cleanup_selection( void )
 
     tmpnumb = 0;
     for ( obj = cur_form->first; obj != NULL; obj = obj->next )
-		if ( ( tt = find_selobject( obj ) ) != -1 )
+		if ( find_selobject( obj ) != -1 )
 			tmpobj[ tmpnumb++ ] = obj;
 
     for ( i = 0; i < tmpnumb; i++ )
@@ -430,8 +430,8 @@ within_selection( float mx,
 			   && mx <  x + w
 			   && my >= y + h - HS
 			   && my <  y + h;
-    else
-		return mx > x && mx < x + w && my > y && my < y + h;
+
+	return mx > x && mx < x + w && my > y && my < y + h;
 }
 
 
@@ -951,11 +951,15 @@ align_selection( int dir )
     if ( dir == FD_HEQUAL )	/* Horizontal equal distance */
     {
 		gap = 0.0;
+
 		for ( i = 0; i < selnumb; i++ )
 			gap += selobj[ i ]->w;
+
 		gap = ( w - gap ) / ( selnumb - 1 );
+
 		for ( i = 0; i < selnumb; i++ )
 			used[ i ] = 0;
+
 		for ( j = 0; j < selnumb; j++ )
 		{
 			current = -1;
@@ -977,11 +981,15 @@ align_selection( int dir )
     else if ( dir == FD_VEQUAL )	/* Vertical equal distance */
     {
 		gap = 0.0;
+
 		for ( i = 0; i < selnumb; i++ )
 			gap += selobj[ i ]->h;
+
 		gap = ( h - gap ) / ( selnumb - 1 );
+
 		for ( i = 0; i < selnumb; i++ )
 			used[ i ] = 0;
+
 		for ( j = 0; j < selnumb; j++ )
 		{
 			current = -1;
@@ -1364,8 +1372,10 @@ void
 free_dupped_selection( void *a )
 {
     FL_OBJECT **ob = a;
+
     for ( ; *ob; ob++ )
 		fl_free_object( *ob );
+
     fl_free( a );
 }
 
@@ -1465,9 +1475,11 @@ group_selection( void )
 		return;
 
     obj = add_an_object( FL_BEGIN_GROUP, -1, 0, 0, 0, 0 );
+
     for ( i = 0; i < selnumb; i++ )
     {
 		fl_delete_object( selobj[ i ] );
+
 		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
 			 && selobj[ i ]->objclass != FL_END_GROUP)
 		{
@@ -1500,7 +1512,6 @@ flatten_selection( void )
 		return;
 
     for ( i = 0; i < selnumb; i++ )
-    {
 		if (    selobj[ i ]->objclass == FL_BEGIN_GROUP
 			 || selobj[ i ]->objclass == FL_END_GROUP)
 		{
@@ -1510,7 +1521,6 @@ flatten_selection( void )
 
 			selobj[ i ] = NULL;
 		}
-    }
 
     cleanup_selection( );
     changed = 1;

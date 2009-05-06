@@ -37,8 +37,7 @@
 #define MAXREC   80
 #define MAXLEN   79
 
-typedef struct
-{
+typedef struct {
     FL_FORM * form;
     char      buf[ MAXLEN + 1 ];
 } CodeInfo;

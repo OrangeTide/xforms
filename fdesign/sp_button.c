@@ -705,9 +705,9 @@ get_xbm_stuff( IconInfo * in,
     if ( ( p = strrchr( buf, '.' ) ) )
 		*p = '\0';
 
-    strcat( strcpy( in->width, buf ) , "_width" );
+    strcat( strcpy( in->width,  buf ) , "_width" );
     strcat( strcpy( in->height, buf ), "_height" );
-    strcat( strcpy( in->data, buf ), "_bits" );
+    strcat( strcpy( in->data,   buf ), "_bits"   );
 }
 
 

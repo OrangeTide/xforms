@@ -748,10 +748,7 @@ process_lzw_code( FL_IMAGE * im,
 
     if ( code == LZW_INIT )
     {
-		if ( ! lhead )
-			lbuf = lhead = fl_malloc( im->w + 1 + 4096 );
-		else
-			lbuf = lhead = fl_realloc( lhead, im->w + 1 + 4096 );
+		lbuf = lhead = fl_realloc( lhead, im->w + 1 + 4096 );
 
 		bpp = CodeSize;
 		ClearCode = 1 << bpp;

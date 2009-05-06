@@ -101,7 +101,7 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     if ( numb == 0 )
     {
-		fl_show_messages( "No group was selected" );
+		fl_show_messages( "No group is selected" );
 		return;
     }
 
@@ -113,7 +113,6 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     set_object_name( begobj[ numb ], name, cbname, argname );
     fillin_groups( );
     changed = 1;
-    return;
 }
 
 

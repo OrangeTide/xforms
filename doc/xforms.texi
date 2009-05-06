@@ -1,7 +1,7 @@
 \input texinfo
 
 @setfilename xforms.info
-@settitle XForms
+@settitle XForms (Forms Library)@*A Graphical User Interface Toolkit for X
 @set lastupdate May 4, 2009
 @paragraphindent 0
 

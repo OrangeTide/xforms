@@ -37,21 +37,20 @@
 #include "flinternal.h"
 
 
-typedef struct
-{
-    FL_OBJECT *          ob;			/* the object that stuff'ed cp  */
-    FL_OBJECT *          req_ob;		/* the object that requested cp */
-    Window               window;
-    Window               req_window;
-    long                 type,
-	                     size;
-    FL_LOSE_SELECTION_CB lose_callback;
-    FL_SELECTION_CB      got_it_callback;
+typedef struct {
+    FL_OBJECT            * ob;			/* the object that stuff'ed cp  */
+    FL_OBJECT            * req_ob;		/* the object that requested cp */
+    Window                 window;
+    Window                 req_window;
+    long                   type,
+	                       size;
+    FL_LOSE_SELECTION_CB   lose_callback;
+    FL_SELECTION_CB        got_it_callback;
 
     /* the following not really used */
 
-    void *               losecb_data;
-    void *               gotitcb_data;
+    void                 * losecb_data;
+    void                 * gotitcb_data;
 } ClipBoard;
 
 static ClipBoard clipboard,
@@ -77,11 +76,11 @@ noop_lose_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 int
-fl_stuff_clipboard( FL_OBJECT *          ob,
-					long                 type  FL_UNUSED_ARG,
-					const void *         data,
-					long                 size,
-					FL_LOSE_SELECTION_CB lose_callback )
+fl_stuff_clipboard( FL_OBJECT            * ob,
+					long                   type  FL_UNUSED_ARG,
+					const void           * data,
+					long                   size,
+					FL_LOSE_SELECTION_CB   lose_callback )
 {
     Window win = FL_ObjWin( ob );
 
@@ -126,9 +125,9 @@ static Atom targets_prop;
  ***************************************/
 
 int
-fl_request_clipboard( FL_OBJECT *     ob,
-					  long            type  FL_UNUSED_ARG,
-					  FL_SELECTION_CB got_it_callback )
+fl_request_clipboard( FL_OBJECT       * ob,
+					  long              type  FL_UNUSED_ARG,
+					  FL_SELECTION_CB   got_it_callback )
 {
     Window win;
     void *thebuf;
