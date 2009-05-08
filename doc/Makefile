@@ -1,24 +1,29 @@
 TEXI := $(wildcard *.texi)
 
-all:
+all: $(TEXI)
 	make info
 	make html
 	make pdf
 
-info: $(TEXI)
+info: xforms.info
+
+xforms.info: $(TEXI)
 	makeinfo xforms.texi
 
-html: $(TEXI) xforms.init
-	cp images/*.png .
+html: xforms.html
+
+xforms.html: $(TEXI) xforms.init
 	texi2html --init-file xforms.init xforms.texi
 	if [ ! -e xforms ]; then  \
 		mkdir xforms;         \
 	fi
 	ln -s xforms.html index.html
 	mv *.html xforms
-	mv *.png xforms
+	cp -r images xforms
 
-pdf: $(TEXI)
+pdf: xforms.pdf
+
+xforms.pdf: $(TEXI)
 	texi2pdf -c xforms.texi
 
 clean:

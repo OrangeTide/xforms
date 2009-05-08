@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_rbut = "$Id: scrollbut.c,v 1.11 2009/05/02 20:11:13 jtt Exp $";
+char *fl_id_rbut = "$Id: scrollbut.c,v 1.12 2009/05/08 18:00:57 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

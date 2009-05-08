@@ -33,7 +33,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.19 2009/05/02 20:11:14 jtt Exp $";
+char *fl_id_xsupt = "$Id: xsupport.c,v 1.20 2009/05/08 18:00:58 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

@@ -26,12 +26,17 @@ The header file @file{forms.h} defines three symbolic constants which
 you can use to conditionally compile your application. They are
 @table @code
 @tindex FL_VERSION
+@anchor{FL_VERSION}
 @item FL_VERSION
 The major version number.
+
 @tindex FL_REVISION
+@anchor{FL_REVISION}
 @item FL_REVISION
 Revision number.
+
 @tindex FL_INCLUDE_VERSION
+@anchor{FL_INCLUDE_VERSION}
 @item FL_INCLUDE_VERSION
 @code{1000 * FL_VERSION + FL_REVISION}
 @end table
@@ -92,14 +97,17 @@ stripping leading path names and trailing period and extension, if
 any. Due to the way the X resources (and command line argument
 parsing) work, the executable name should not contain a dot @code{.}
 or a star @code{*}.
+
 @item appclass
 The application class name, which typically is the generic name for
 all instances of this application. If no meaningful class name exists,
 it is typically given (or converted to if non given) as the
 application name with the first letter capitalized (second if the
 first letter is an X).
+
 @item app_opt
 Specifies how to parse the application-specific resources.
+
 @item n_app_opt
 Number of entries in the option list.
 @end table
@@ -119,66 +127,82 @@ for all options. The following are the defaults:
 @tab @strong{Type}
 @tab @strong{Meaning}
 @tab @strong{Default}
+
 @item @code{-fldebug} @i{level}
 @tab int
 @tab prints debug information
 @tab 0
+
 @item @code{-name} @i{appname}
 @tab string
 @tab changes application name
 @tab none
+
 @item @code{-flversion}
 @tab
 @tab prints the version of the library
 @tab
+
 @item @code{-sync}
 @tab
 @tab requests synchronous mode(debug)
 @tab false
+
 @item @code{-display} @i{host:dpy}
 @tab string
 @tab specifies remote host
 @tab @code{$DISPLAY}
+
 @item @code{-visual} @i{class}
 @tab string
 @tab TrueColor, PseudoColor...
 @tab best
+
 @item @code{-depth} @i{depth}
 @tab int
 @tab specifies prefered visual depth
 @tab best
+
 @item @code{-vid} @i{id}
 @tab long
 @tab specifies prefered visual ID
 @tab
+
 @item @code{-private}
 @tab
 @tab forces private colormap
 @tab false
+
 @item @code{-shared}
 @tab
 @tab forces shared colormap
 @tab false
+
 @item @code{-stdcmap}
 @tab
 @tab forces standard colormap
 @tab false
+
 @item @code{-double}
 @tab
 @tab enables double buffering
 @tab false
+
 @item -bw @i{width}
 @tab int
 @tab changes border width
 @tab 1
+
 @item -rgamma @i{gamma}
 @tab float
 @tab specifies red gamma
 @tab 1.0
+
 @item -ggamma @i{gamma}
 @tab float
 @tab specifies green gamma
 @tab 1.0
+
 @item -bgamma @i{gamma}
 @tab float
 @tab specifies blue gamma
@@ -223,6 +247,7 @@ following routine before calling @code{@ref{fl_initialize()}}:
 @findex fl_set_defaults()
 @anchor{fl_set_defaults()}
 @tindex FL_IOPT
+@anchor{FL_IOPT}
 @example
 void fl_set_defaults(unsigned long mask, FL_IOPT *flopt);
 @end example
@@ -240,66 +265,86 @@ The following table lists the fields, masks and their meanings of
 @item @code{typedef struct @{}
 @tab
 @tab
+
 @item @code{int debug;}
 @tab @code{FL_PDDebug}
 @tab Debug level (0-5)
+
 @item @code{int depth;}
 @tab @code{FL_PDDepth}
 @tab Preferred visual depth
+
 @item @code{int vclass;}
 @tab @code{FL_PDVisual}
 @tab Prefered visual, @code{TrueColor} etc.
+
 @item @code{int doubleBffer;}
 @tab @code{FL_PDDouble}
 @tab Simulate double buffering
+
 @item @code{int buttonFontSize;}
 @tab @code{FL_PDButtonFontSize}
 @tab Default button label font size
+
 @item @code{int menuFontSize;}
 @tab @code{FL_PDMenuFontSize}
 @tab Menu label font size
+
 @item @code{int choiceFontSize;}
 @tab @code{FL_PDChoiceFontSize}
 @tab Choice label and choice text font size
+
 @item @code{int browserFontSize;}
 @tab @code{FL_PDBrowserFontSize}
 @tab Browser label and text font size
+
 @item @code{int inputFontSize;}
 @tab @code{FL_PDInputFontSize}
 @tab Input label and text font size
+
 @item @code{int labelFontSize;}
 @tab @code{FL_PDLabelFontSize}
 @tab Label font size for all other objects (box, pixmap etc.)
+
 @item @code{int pupFontSize;}
 @tab @code{FL_PDPupFontSize}
 @tab Font size for pop-ups
+
 @item @code{int privateColormap;}
 @tab @code{FL_PDPrivateMap}
 @tab Select private colormap if appropriate
+
 @item @code{int sharedColormap;}
 @tab @code{FL_PDSharedMap}
 @tab Force use of shared colormap
+
 @item @code{int standardColormap;}
 @tab @code{FL_PDStandardMap}
 @tab Force use of standard colormap
 @item @code{int scrollbarType;}
+
 @tab @code{FL_PDScrollbarType}
 @tab Scrollbar type to use for browser and input
 @item @code{int ulThickness;}
+
 @tab @code{FL_PDULThickness}
 @tab Underline thickness
 @item @code{int ulPropWidth;}
+
 @tab @code{FL_PDULPropWidth}
 @tab Underline width, 0 for const. width fonts
 @item @code{int backingStore;}
 @tab @code{FL_PDBS}
 @tab Turn BackingStore on or off
+
 @item @code{int coordUnit;}
 @tab @code{FL_PDCoordUnit}
 @tab Unit of measure: pixel, mm, point
+
 @item @code{int borderWidth;}
 @tab @code{FL_PDBorderWidth}
 @tab Default border width
+
 @item @code{@} FL IOPT;}
 @tab
 @tab
@@ -382,10 +427,13 @@ where @code{type} can be one of the following
 @table @code
 @item FL_NORMAL_SCROLLBAR
 Basic scrollbar
+
 @item FL_THIN_SCROLLBAR
 Thin scrollbar
+
 @item FL_NICE_SCROLLBAR
 Nice scrollbar
+
 @item FL_PLAIN_SCROLLBAR
 Similar to thin scrollbar, but not as fancy
 @end table
@@ -1130,23 +1178,30 @@ for xyplot is black and white. In this mode, all drawings are black,
 on a white background. If @code{drawbox} (see below) is true, the
 drawing color can be either white or black depending on the specified
 color.
+
 @item int orientation
 Valid choices are @code{FLPS_AUTO}, @code{FLPS_PORTRAIT} and
 @code{FLPS_LANDSCAPE}. The default is @code{FLPS_AUTO}.
+
 @item auto_fit
 By defaul, this is true so the object always fits the printed page.
 Set it to false (0) to turn off auto-scaling.
+
 @item int eps
 Set this to 1 if output in EPS format is required.
+
 @item int drawbox
 Set this to 1 if the box of the object is to be drawn.
+
 @item float xdpi, ydpi
 These two are the screen resolution. The default is to use the actual
 resolution of the display. Note by setting a dpi number smaller or
 larger than the actual resolution, the output object is in effect
 being enlarged or shrunken.
+
 @item float paper_w
 The paper width in inches. The default is @w{8.5 in}.
+
 @item float paper_h
 The paper height in inches. The default is @w{11 in}.
 @end table
@@ -1176,39 +1231,46 @@ purposes, the form name is taken to be the title with spaces removed
 and the first character lower-cased. E.g., if a form has a title
 @w{@code{"Foo Bar}} the forms name is derived as @code{"fooBar"}.
 
-For the The location and size of the window controlled by @code{place}
+For the the location and size of the window controlled by @code{place}
 the following possibilities exist:
 @table @code
 @tindex FL_PLACE_SIZE
 @item FL_PLACE_SIZE
 The user can control the position but the size is fixed. Interactive
 resizing is not allowed once the form becomes visible.
+
 @tindex FL_PLACE_POSITION
 @item FL_PLACE_POSITION
 Initial position used will be the one set via
 @code{@ref{fl_set_form_position()}}. Interactive resizing is possible.
+
 @tindex FL_PLACE GEOMETRY
 @item FL_PLACE GEOMETRY
 Place at the latest position and size (see also below) or the geometry
 set via @code{@ref{fl_set_form_geometry()}} etc. A form so shown will
 have a fixed size and interactive resizing is not allowed.
+
 @tindex FL_PLACE_ASPECT
 @item FL_PLACE_ASPECT
 Allows interactive resizing but any new size will have the aspect ratio
 as that of the initial size.
+
 @tindex FL_PLACE_MOUSE
 @item FL_PLACE_MOUSE
 The form is placed centered below the mouse. Interactive resizing will
 not be allowed unless this option is accompanied by @code{FL_FREE_SIZE}
 as in @code{FL_PLACE_MOUSE | FL_FREE_SIZE}.
+
 @tindex FL_PLACE_CENTER
 @item FL_PLACE_CENTER
 The form is placed in the center of the screen. If @code{FL_FREE_SIZE}
 is also specified, interactive resizing will be allowed.
+
 @tindex FL_PLACE_FULLSCREEN
 @item FL_PLACE_FULLSCREEN
 The form is scaled to cover the full screen. If @code{FL_FREE_SIZE} is
 also specified, interative resizing will be allowed.
+
 @tindex FL_PLACE_FREE
 @item FL_PLACE_FREE
 Both the position and size are completely free. The initial size used
@@ -1216,15 +1278,18 @@ is the designed size. Initial position, if setvia
 @code{@ref{fl_set_form_position()}}, will be used otherwise
 interactive positioning may be possible if the window manager allows
 it.
+
 @tindex FL_PLACE_HOTSPOT
 @item FL_PLACE_HOTSPOT
 The form is so placed that mouse is on the "hotspot". If
 @code{FL_FREE_SIZE} is also specified, interactive resizing will be
 allowed.
+
 @tindex FL_PLACE_CENTERFREE
 @item FL_PLACE_CENTERFREE
 Same as @code{FL_PLACE_CENTER | FL_FREE_SIZE}, i.e., place the form at
 the center of the screen and allow resizing.
+
 @tindex FL_PLACE ICONIC
 @item FL_PLACE ICONIC
 The form is shown initially iconified. The size and location used are
@@ -1241,10 +1306,12 @@ There are three values that can be passed for @code{border}:
 @tindex FL_FULLBORDER
 @item FL_FULLBORDER
 Draw full border with title
+
 @tindex FL_TRANSIENT
 @item FL_TRANSIENT
 Draw borders with possibly less decoration (depends on the window
 managers behaviour)
+
 @tindex FL_NOBORDER
 @item FL_NOBORDER
 Draw no border at all

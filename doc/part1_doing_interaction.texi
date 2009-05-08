@@ -45,47 +45,57 @@ by @code{place}. The following possibilities exist:
 @item FL_PLACE_SIZE
 The user can control the position but the size is fixed. Interactive
 resizing is not allowed once the form becomes visible.
+
 @tindex FL_PLACE_POSITION
 @item FL_PLACE_POSITION
 Initial position used will be the one set via
 @code{@ref{fl_set_form_position()}}. Interactive resizing is possible.
+
 @tindex FL_PLACE GEOMETRY
 @item FL_PLACE GEOMETRY
 Place at the latest position and size (see also below) or the geometry
 set via @code{@ref{fl_set_form_geometry()}}. A form so shown will have
 a fixed size and interactive resizing is not allowed.
+
 @tindex FL_PLACE_ASPECT
 @item FL_PLACE_ASPECT
 Allows interactive resizing but any new size will have the aspect ratio
 as that of the initial size.
+
 @tindex FL_PLACE_MOUSE
 @item FL_PLACE_MOUSE
 The form is placed centered below the mouse. Interactive resizing will
 not be allowed unless this option is accompanied by @code{FL_FREE_SIZE}
 as in @code{FL_PLACE_MOUSE | FL_FREE_SIZE}.
+
 @tindex FL_PLACE_CENTER
 @item FL_PLACE_CENTER
 The form is placed in the center of the screen. If @code{FL_FREE_SIZE}
 is also specified, interactive resizing will be allowed.
+
 @tindex FL_PLACE_FULLSCREEN
 @item FL_PLACE_FULLSCREEN
 The form is scaled to cover the full screen. If @code{FL_FREE_SIZE} is
 also specified, interative resizing will be allowed.
+
 @tindex FL_PLACE_FREE
 @item FL_PLACE_FREE
 Both the position and size are completely free. The initial size used is
 the designed size. Initial position, if setvia
 @code{@ref{fl_set_form_position()}}, will be used otherwise interactive
 positioning may be possible if the window manager allows it.
+
 @tindex FL_PLACE_HOTSPOT
 @item FL_PLACE_HOTSPOT
 The form is so placed that mouse is on the "hotspot". If
 @code{FL_FREE_SIZE} is also specified, interactive resizing will be
 allowed.
+
 @tindex FL_PLACE_CENTERFREE
 @item FL_PLACE_CENTERFREE
 Same as @code{FL_PLACE_CENTER | FL_FREE_SIZE}, i.e., place the form at
 the center of the screen and allow resizing.
+
 @tindex FL_PLACE ICONIC
 @item FL_PLACE ICONIC
 The form is shown initially iconified. The size and location used are
@@ -151,12 +161,15 @@ In the call @code{@ref{fl_show_form()}} the argument @code{border}
 indicates whether or not to request window manager's decoration.
 border should take one of the following values:
 @table @code
+
 @tindex FL_FULLBORDER
 @item FL_FULLBORDER
 full borders
+
 @tindex FL_TRANSIENT
 @item FL_TRANSIENT
 borders with (possibly) less decoration
+
 @tindex FL_NOBORDER
 @item FL_NOBORDER
 no decoration at all
@@ -270,27 +283,35 @@ to the lower-right corner of the form, then,
 @tindex FL_NoGravity
 @item @code{FL_NoGravity}
 @tab Default linear scaling, see below
+
 @tindex FL_NorthWest
 @item @code{FL_NorthWest}
 @tab @code{dx1}, @code{dy1} constant
+
 @tindex FL_North
 @item @code{FL_North}
 @tab @code{dy1} constant
+
 @tindex FL_NorthEast
 @item @code{FL_NorthEast}
 @tab @code{dy1}, @code{dx2} constant
+
 @tindex FL_West
 @item @code{FL_West}
 @tab @code{dx1} constant
+
 @tindex FL_East
 @item @code{FL_East}
 @tab @code{dx2} constant
+
 @tindex FL_SouthWest
 @item @code{FL_SouthWest}
 @tab @code{dx1}, @code{dy2} constant
+
 @tindex FL_South
 @item @code{FL_South}
 @tab @code{dy2} constant
+
 @tindex FL_SouthEast
 @item @code{FL_SouthEast}
 @tab @code{dx2}, @code{dy2} constant
@@ -468,17 +489,21 @@ A change occurs in the following cases:
 @item box
 A box never changes state and, hence, is never returned by
 @code{@ref{fl_do_forms()}}.
+
 @item text
 Also a text never changes state.
+
 @item button
 A button is returned when the user presses a mouse button on it and then
 releases the button. The change is not reported before the user releases
 the mouse button, except with touch buttons which are returned all the
 time as long as the user keeps the mouse pressed on it. (See e.g.@:
 @file{touchbutton.c} for the use of touch buttons.)
+
 @item slider
 A slider is returned whenever it changes value, so whenever the user
 moves his mouse after having pressed the slider.
+
 @item input
 An input field is returned when it is deactivated, i.e., the user has
 selected it and then selected another input field for input (e.g. by
@@ -826,17 +851,18 @@ long fl_mouse_button(void);
 @end example
 @noindent
 This function, if needed, should be called from within a callback. The
-function returns one of the constants @code{FL_LEFT_MOUSE},
-@code{FL_MIDDLE_MOUSE} and @code{FL_RIGHT_MOUSE} indicating the physical
-location of the mouse button on the mouse that was pushed or released.
-If the callback is triggered by a shortcut, the function returns the
-keysym (ascii value if ASCII) of the key plus
+function returns one of the constants @code{@ref{FL_LEFT_MOUSE}},
+@code{@ref{FL_MIDDLE_MOUSE}}, @code{@ref{FL_RIGHT_MOUSE}},
+@code{@ref{FL_SCROLLUP_MOUSE}} or @code{@ref{FL_SCROLLDOWN_MOUSE}},
+indicating which mouse button was pushed or released. If the callback
+is triggered by a shortcut, the function returns the keysym (ascii
+value if ASCII) of the key plus
 @tindex FL_SHORTCUT
-@code{FL_SHORTCUT}. For
-example, if a button has a shortcut @code{<Ctrl>C} (ASCII value is 3),
-the button number returned upon activation of the shortcut would be
-@code{FL_SHORTCUT + 3}. @code{FL_SHORTCUT} can be used to determine if
-the callback is triggered by a shortcut or not
+@code{@ref{FL_SHORTCUT}}. For example, if a button has a shortcut
+@code{<Ctrl>C} (ASCII value is 3), the button number returned upon
+activation of the shortcut would be @code{FL_SHORTCUT + 3}.
+@code{@ref{FL_SHORTCUT}} can be used to determine if the callback is
+triggered by a shortcut or not
 @example
 if (fl_mouse_button() >= FL_SHORTCUT)
     /* handle shortcut */
@@ -1186,9 +1212,11 @@ invoked. The condition must be one of the following constants
 @tindex FL_READ
 @item FL_READ
 File descriptor has data available.
+
 @tindex FL_WRITE
 @item FL_WRITE
 File descriptor is available for writing.
+
 @tindex FL_EXCEPT
 @item FL_EXCEPT
 an I/O error has occurred.

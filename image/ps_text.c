@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: ps_text.c,v 1.8 2009/05/02 20:11:07 jtt Exp $
+ * $Id: ps_text.c,v 1.9 2009/05/08 18:00:56 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.

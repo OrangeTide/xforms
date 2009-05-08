@@ -37,7 +37,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.17 2009/05/06 19:33:16 jtt Exp $";
+char *fl_id_xyp = "$Id: xyplot.c,v 1.18 2009/05/08 18:00:58 jtt Exp $";
 #endif
 
 

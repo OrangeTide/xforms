@@ -18,7 +18,7 @@
 /********************** crop here for forms.h **********************/
 
 /*
- * $Id: flimage.h,v 1.10 2009/05/02 20:11:04 jtt Exp $
+ * $Id: flimage.h,v 1.11 2009/05/08 18:00:54 jtt Exp $
  *
  * Image related routines
  *

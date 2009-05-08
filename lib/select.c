@@ -17,7 +17,7 @@
 
 
 #if defined F_ID || defined DEBUG
-char *fl_id_sel = "$Id: select.c,v 1.5 2009/05/02 20:11:13 jtt Exp $";
+char *fl_id_sel = "$Id: select.c,v 1.6 2009/05/08 18:00:57 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
