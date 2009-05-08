@@ -70,36 +70,51 @@ to the left of the slider.
 The following types of sliders are available:
 @table @code
 @tindex FL_VERT_SLIDER
+@anchor{FL_VERT_SLIDER}
 @item FL_VERT_SLIDER
 A vertical slider.
+
 @tindex FL_HOR_SLIDER
+@anchor{FL_HOR_SLIDER}
 @item FL_HOR_SLIDER
 A horizontal slider.
+
 @tindex FL_VERT_FILL_SLIDER
+@anchor{FL_VERT_FILL_SLIDER}
 @item FL_VERT_FILL_SLIDER
 A vertical slider, filled from the bottom.
+
 @tindex FL_HOR_FILL_SLIDER
+@anchor{FL_HOR_FILL_SLIDER}
 @item FL_HOR_FILL_SLIDER
 A horizontal slider, filled from the left.
+
 @tindex FL_VERT_NICE_SLIDER
+@anchor{FL_VERT_NICE_SLIDER}
 @item FL_VERT_NICE_SLIDER
 A nice looking vertical slider.
+
 @tindex FL_HOR_NICE_SLIDER
+@anchor{FL_HOR_NICE_SLIDER}
 @item FL_HOR_NICE_SLIDER
 A nice looking horizontal slider.
+
 @tindex FL_VERT_BROWSER_SLIDER
+@anchor{FL_VERT_BROWSER_SLIDER}
 @item FL_VERT_BROWSER_SLIDER
 A different looking vertical slider.
+
 @tindex FL_HOR_BROWSER_SLIDER
+@anchor{FL_HOR_BROWSER_SLIDER}
 @item FL_HOR_BROWSER_SLIDER
 A different looking horizontal slider.
 @end table
 
 @ifhtml
-@center @image{slidertypes}
+@center @image{images/slidertypes}
 @end ifhtml
 @ifnothtml
-@center @image{images/slidertypes,14cm}
+@center @image{images/slidertypes,12cm}
 @end ifnothtml
 
 
@@ -136,13 +151,16 @@ where the parameter @code{when} can be one of the four values:
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Return at end (mouse release) if value is changed (since last return).
+
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
 Return whenever the slider value is changed.
+
 @tindex FL_RETURN_END
 @item FL_RETURN_END
 Return at end (mouse release) regardless if the value is changed or
 not.
+
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
 return all the time. Usually not very useful.
@@ -335,7 +353,7 @@ placed below the scrollbar.
 
 
 @ifhtml
-@center @image{scrollbars}
+@center @image{images/scrollbars}
 @end ifhtml
 @ifnothtml
 @center @image{images/scrollbars,14cm}
@@ -348,29 +366,44 @@ placed below the scrollbar.
 The following types of scrollbar are available:
 @table @code
 @tindex FL_VERT_SCROLLBAR
+@anchor{FL_VERT_SCROLLBAR}
 @item FL_VERT_SCROLLBAR
 A vertical scrollbar.
+
 @tindex FL_HOR_SCROLLBAR
+@anchor{FL_HOR_SCROLLBAR}
 @item FL_HOR_SCROLLBAR
 A horizontal scrollbar.
+
 @tindex FL_VERT_THIN_SCROLLBAR
+@anchor{FL_VERT_THIN_SCROLLBAR}
 @item FL_VERT_THIN_SCROLLBAR
 A different looking vertical scrollbar.
+
 @tindex FL_HOR_THIN_SCROLLBAR
+@anchor{FL_HOR_THIN_SCROLLBAR}
 @item FL_HOR_THIN_SCROLLBAR
 A different looking horizontal scrollbar.
+
 @tindex FL_VERT_NICE_SCROLLBAR
+@anchor{FL_VERT_NICE_SCROLLBAR}
 @item FL_VERT_NICE_SCROLLBAR
 A vertical scrollbar using @code{FL_NICE_SLIDER}.
+
 @tindex FL_HOR_NICE_SCROLLBAR
+@anchor{FL_HOR_NICE_SCROLLBAR}
 @item FL_HOR_NICE_SCROLLBAR
 A horizontal scrollbar using @code{FL_NICE_SLIDER}.
+
 @tindex FL_VERT_PLAIN_SCROLLBAR
+@anchor{FL_VERT_PLAIN_SCROLLBAR}
 @item FL_VERT_PLAIN_SCROLLBAR
 Similar to @code{FL_THIN_SCROLLBAR}.
+
 @tindex FL_HOR_PLAIN_SCROLLBAR
+@anchor{FL_HOR_PLAIN_SCROLLBAR}
 @item FL_HOR_PLAIN_SCROLLBAR
-Similar to @code{FL_THIN_SCROLLBAR}.
+Similar to @code{FL_HOR_THIN_SCROLLBAR}.
 @end table
 
 
@@ -396,13 +429,16 @@ values:
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Return at end (mouse release) if value is changed (since last return).
+
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
 Return whenever the scrollbar value is changed.
+
 @tindex FL_RETURN_END
 @item FL_RETURN_END
 Return at end (mouse release) regardless if the value is changed or
 not.
+
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
 Return all the time. Usually not very useful.
@@ -567,7 +603,7 @@ placed below the dial.
 @subsection Dial Types
 
 @ifhtml
-@center @image{dials}
+@center @image{images/dials}
 @end ifhtml
 @ifnothtml
 @center @image{images/dials,10cm}
@@ -577,12 +613,17 @@ placed below the dial.
 The following types of dials are available:
 @table @code
 @tindex FL_NORMAL_DIAL
+@anchor{FL_NORMAL_DIAL}
 @item FL_NORMAL_DIAL
 A dial with a knob indicating the position.
+
 @tindex FL_LINE_DIAL
+@anchor{FL_LINE_DIAL}
 @item FL_LINE_DIAL
 A dial with a line indicating the position.
+
 @tindex FL_FILL_DIAL
+@anchor{FL_FILL_DIAL}
 @item FL_FILL_DIAL
 The area between initial and current is filled.
 @end table
@@ -605,11 +646,14 @@ where @code{when} can be one of the following
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Return at end (mouse release) and only if the dial value is changed.
+
 This is the default setting.
 @tindex FL_RETURN_CHANGED
+
 @item FL_RETURN_CHANGED
 Return whenever the dial value is changed.
 @tindex FL_RETURN_END
+
 @item FL_RETURN_END
 Return at the end regardless if the dial value is changed or not.
 @end table
@@ -765,9 +809,12 @@ the box by default.
 The following types of positioner exist:
 @table @code
 @tindex FL_NORMAL_POSITIONER
+@anchor{FL_NORMAL_POSITIONER}
 @item FL_NORMAL_POSITIONER
 Cross-hair inside a box.
+
 @tindex FL_OVERLAY_POSITIONER
+@anchor{FL_OVERLAY_POSITIONER}
 @item FL_OVERLAY_POSITIONER
 Cross-hair inside a transparent box (i.e.@{ drawn in in XOR mode).
 @end table
@@ -930,7 +977,7 @@ placed below the counter.
 @subsection Counter Types
 
 @ifhtml
-@center @image{counters}
+@center @image{images/counters}
 @end ifhtml
 @ifnothtml
 @center @image{images/counters,8cm}
@@ -940,9 +987,12 @@ placed below the counter.
 The following types of counters are available:
 @table @code
 @tindex FL_NORMAL_COUNTER
+@anchor{FL_NORMAL_COUNTER}
 @item FL_NORMAL_COUNTER
 A counter with two buttons on each side.
+
 @tindex FL_SIMPLE_COUNTER
+@anchor{FL_SIMPLE_COUNTER}
 @item FL_SIMPLE_COUNTER
 A counter with one button on each side.
 @end table
@@ -1171,7 +1221,7 @@ placed below the thumbwheel.
 
 
 @ifhtml
-@center @image{thumbwheels}
+@center @image{images/thumbwheels}
 @end ifhtml
 @ifnothtml
 @center @image{images/thumbwheels,7cm}
@@ -1181,9 +1231,12 @@ placed below the thumbwheel.
 The following types of thumbwheels are available:
 @table @code
 @tindex FL_VERT_THUMBWHEEL
+@anchor{FL_VERT_THUMBWHEEL}
 @item FL_VERT_THUMBWHEEL
 A vertical thumbwheel.
+
 @tindex FL_HOR_THUMBWHEEL
+@anchor{FL_HOR_THUMBWHEEL}
 @item FL_HOR_THUMBWHEEL
 A horizontal thumbwheel.
 @end table
@@ -1222,13 +1275,16 @@ where the parameter @code{when} can be one of the four values
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Return at end (mouse release) if value is changed since last return.
+
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
 Return whenever the thumbwheel value is changed.
+
 @tindex FL_RETURN_END
 @item FL_RETURN_END
 Return at end (mouse release) regardless if the value is changed or
 not.
+
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
 Return whenever there is mouse event. usualy not very useful.

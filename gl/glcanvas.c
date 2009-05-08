@@ -38,7 +38,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_gl = "$Id: glcanvas.c,v 1.10 2008/12/27 22:20:44 jtt Exp $";
+char *fl_id_gl = "$Id: glcanvas.c,v 1.11 2009/05/06 19:33:15 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H

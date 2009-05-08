@@ -30,7 +30,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_chrt = "$Id: chart.c,v 1.13 2009/05/02 20:11:08 jtt Exp $";
+char *fl_id_chrt = "$Id: chart.c,v 1.14 2009/05/06 19:33:16 jtt Exp $";
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -79,8 +79,6 @@ typedef struct
     ENTRY    * entries;			/* the entries */
     int        no_baseline;
 } SPEC;
-
-#define vv( x, y )  fl_add_float_vertex( ( float ) x, ( float ) y )
 
 
 /***************************************
@@ -294,20 +292,21 @@ draw_linechart( int     type,
 		if ( type == FL_SPIKE_CHART )
 		{
 			val1 = ( i + 0.5 ) * bwidth;
-			fl_bgnline( );
+			fli_reset_vertex( );
 			fl_color( entries[ i ].col );
-			vv( x + val1, zeroh );
-			vv( x + val1, zeroh - val3 );
-			fl_endline( );
+			fli_add_float_vertex( x + val1, zeroh );
+			fli_add_float_vertex( x + val1, zeroh - val3 );
+			fli_endline( );
 		}
 		else if ( type == FL_LINE_CHART && i != 0 )
 		{
 			e = entries + i - 1;
-			fl_bgnline( );
+			fli_reset_vertex( );
 			fl_color( e->col );
-			vv( x + ( i - 0.5 ) * bwidth, zeroh - e->val * incr );
-			vv( x + ( i + 0.5 ) * bwidth, zeroh - val3 );
-			fl_endline( );
+			fli_add_float_vertex( x + ( i - 0.5 ) * bwidth,
+								  zeroh - e->val * incr );
+			fli_add_float_vertex( x + ( i + 0.5 ) * bwidth, zeroh - val3 );
+			fli_endline( );
 		}
 		else if ( type == FL_FILLED_CHART && i != 0 )
 		{
@@ -315,27 +314,27 @@ draw_linechart( int     type,
 			val1 = ( i - 0.5 ) * bwidth;
 			val2 = ( i + 0.5 ) * bwidth;
 
-			fl_bgnpolygon( );
+			fli_reset_vertex( );
 			fl_color( e->col );
-			vv( x + val1, zeroh );
-			vv( x + val1, zeroh - e->val * incr );
+			fli_add_float_vertex( x + val1, zeroh );
+			fli_add_float_vertex( x + val1, zeroh - e->val * incr );
 			if (    ( e->val > 0.0 && entries[ i ].val < 0.0 )
 				 || ( e->val < 0.0 && entries[ i ].val > 0.0 ) )
 			{
 				ttt = e->val / ( e->val - entries[ i ].val );
-				vv( x + ( i - 0.5 + ttt ) * bwidth, zeroh );
-				vv( x + ( i - 0.5 + ttt ) * bwidth, zeroh );
+				fli_add_float_vertex( x + ( i - 0.5 + ttt ) * bwidth, zeroh );
+				fli_add_float_vertex( x + ( i - 0.5 + ttt ) * bwidth, zeroh );
 			}
 
-			vv( x + val2, zeroh - val3 );
-			vv( x + val2, zeroh );
-			fl_endpolygon( );
+			fli_add_float_vertex( x + val2, zeroh - val3 );
+			fli_add_float_vertex( x + val2, zeroh );
+			fli_endpolygon( );
 
-			fl_bgnline( );
+			fli_reset_vertex( );
 			fl_color( FL_BLACK );
-			vv( x + val1, zeroh - e->val * incr );
-			vv( x + val2, zeroh - val3 );
-			fl_endline( );
+			fli_add_float_vertex( x + val1, zeroh - e->val * incr );
+			fli_add_float_vertex( x + val2, zeroh - val3 );
+			fli_endline( );
 		}
     }
 
@@ -438,11 +437,11 @@ draw_piechart( SPEC * sp,
 			fl_arcf( txc, tyc, rad, curang, tt, e->col );
 			fl_arc( txc, tyc, rad, curang, tt, FL_BLACK );
 
-			fl_bgnline( );
-			vv( txc, tyc );
-			vv( txc + rad * cos( ARCINC * curang ),
-				tyc - rad * sin( ARCINC * curang ) );
-			fl_endline( );
+			fli_reset_vertex( );
+			fli_add_float_vertex( txc, tyc );
+			fli_add_float_vertex( txc + rad * cos( ARCINC * curang ),
+								  tyc - rad * sin( ARCINC * curang ) );
+			fli_endline( );
 
 			curang += 0.5 * incr * e->val;
 			lbox = 16;
@@ -462,11 +461,11 @@ draw_piechart( SPEC * sp,
 									sp->lsize, e->str );
 
 			curang += 0.5 * incr * e->val;
-			fl_bgnline( );
-			vv( txc, tyc );
-			vv( txc + rad * cos( ARCINC * curang ),
-			    tyc - rad * sin( ARCINC * curang ) );
-			fl_endline( );
+			fli_reset_vertex( );
+			fli_add_float_vertex( txc, tyc );
+			fli_add_float_vertex( txc + rad * cos( ARCINC * curang ),
+								  tyc - rad * sin( ARCINC * curang ) );
+			fli_endline( );
 		}
 }
 

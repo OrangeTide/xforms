@@ -320,7 +320,7 @@ example, the 3rd pixel on the 10th row is composed of the following
 RGB elements: @code{(red[9][2],green[9][2],blue[9][2])}. Note however,
 these fields are meaningful only if the image type is
 @code{FL_IMAGE_RGB}. Although it's always allocated for a 24bit image,
-@code{alpha} is currently not used by the FormsLibrary
+@code{alpha} is currently not used by the Forms Library
 @item ci
 The field are the pixel values for a color index image (image type
 @code{FL_IMAGE_CI}). The field is also a 2-dimensional array arranged

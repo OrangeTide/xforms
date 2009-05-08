@@ -19,7 +19,9 @@ The projects home page is
 
 The source package can be downloaded from
 @center @url{https://savannah.nongnu.org/files/?group=xforms}
-while the CVS repository can be accessed at
+while the @code{git} repository can be accessed via
+@center @url{git://git.savannah.nongnu.org/xforms.git}
+and the CVS repository via
 @center @url{https://savannah.nongnu.org/cvs/?group=xforms}
 
 There also exists a mailing list with an archive, going back until
@@ -34,7 +36,7 @@ This document is mostly based on the documentation for version 0.89 of
 the Forms Library. It has been reconstructed from the PDF version (the
 original sources seem to have gone AWOL) and is to be considered work
 in progress towards a documentation that describes the newest version,
-currently 1.0.92.
+the soon to be published version 1.0.92.
 
 In the following the preface for the last available version of the
 documentation (version 0.89 from June 2000) is reproduced. Please note

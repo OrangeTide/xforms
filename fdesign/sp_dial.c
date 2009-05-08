@@ -47,9 +47,9 @@ static FD_dialattrib *dial_attrib;
 static SuperSPEC *dial_spec;
 static void show_spec(SuperSPEC *);
 
-#define VN( a )  { a, #a, 0, 0 }
+#define VN( a )  { a, #a }
 
-static VN_pair dial_dir[ ] =
+static FLI_VN_PAIR dial_dir[ ] =
 {
     VN( FL_DIAL_CW ),
     VN( FL_DIAL_CCW ),
@@ -61,9 +61,9 @@ static VN_pair dial_dir[ ] =
  ***************************************/
 
 int
-get_direction_value( const char *s )
+get_direction_value( const char * s )
 {
-    return get_vn_val( dial_dir, s );
+    return fli_get_vn_value( dial_dir, s );
 }
 
 
@@ -114,7 +114,7 @@ show_spec( SuperSPEC * spec )
     set_finput_value( dial_attrib->step,       spec->step, -1 );
 
     fl_set_choice_text( dial_attrib->dir,
-						get_vn_name( dial_dir, spec->direction ) );
+						fli_get_vn_name( dial_dir, spec->direction ) );
     fl_set_choice_text( dial_attrib->returnsetting,
 						get_how_return_str_name( spec->how_return ) );
 }
@@ -170,7 +170,7 @@ emit_dial_code( FILE      * fp,
 
     if ( sp->direction != defspec->direction )
 		fprintf( fp, "    fl_set_dial_direction( obj, %s );\n",
-				 get_vn_name( dial_dir, sp->direction ) );
+				 fli_get_vn_name( dial_dir, sp->direction ) );
 
     if ( sp->how_return != defspec->how_return )
 		fprintf( fp, "    fl_set_dial_return( obj, %s );\n",
@@ -214,7 +214,8 @@ save_dial_attrib( FILE      * fp,
 		fprintf( fp, "step: %g\n", spec->step );
 
     if ( spec->direction != defspec->direction )
-		fprintf( fp, "dir: %s\n", get_vn_name( dial_dir, spec->direction ) );
+		fprintf( fp, "dir: %s\n",
+				 fli_get_vn_name( dial_dir, spec->direction ) );
 
     if ( spec->how_return != defspec->how_return )
 		fprintf( fp, "return: %s\n", get_how_return_name( spec->how_return ) );

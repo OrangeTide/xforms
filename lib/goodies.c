@@ -184,22 +184,13 @@ fli_box_vert( FL_Coord x,
 			  FL_Coord w,
 			  FL_Coord h )
 {
-    int xy[ 2 ];
     int halfh = 0.5 * h,
 		halfw = 0.5 * w;
 
-    xy[ 0 ] = x;
-    xy[ 1 ] = y + halfh;
-    fl_v2i( xy );
-    xy[ 0 ] = x + halfw;
-    xy[ 1 ] = y;
-    fl_v2i( xy );
-    xy[ 0 ] = x + 2 * halfw;
-    xy[ 1 ] = y + halfh;
-    fl_v2i( xy );
-    xy[ 0 ] = x + halfw;
-    xy[ 1 ] = y + 2 * halfh;
-    fl_v2i( xy );
+	fli_add_vertex( x, y + halfh );
+	fli_add_vertex( x + halfw, y );
+	fli_add_vertex( x + 2 * halfw, y + halfh );
+	fli_add_vertex( x + halfw, y + 2 * halfh );
 }
 
 
@@ -224,16 +215,15 @@ draw_box( FL_OBJECT * ob,
 	if ( ! fli_dithered( fl_vmode ) )
 	{
 		fl_color( FL_YELLOW );
-		fl_bgnpolygon( );
+		fli_reset_vertex( );
 		fli_box_vert( ob->x, ob->y, p, p );
-		fl_endpolygon( );
+		fli_endpolygon( );
 	}
-
 	fl_linewidth( 2 );
 	fl_color( FL_BLACK );
-	fl_bgnclosedline( );
+	fli_reset_vertex( );
 	fli_box_vert( ob->x, ob->y, ob->w, ob->h );
-	fl_endclosedline( );
+	fli_endclosedline( );
 	fl_linewidth( 0 );
 
 	return 0;

@@ -8,7 +8,7 @@ the screen. This is the window in which you can create your forms.
 Next the control panel appears on the screen. No form is shown yet.
 
 @ifhtml
-@center @image{fdesign}
+@center @image{images/fdesign}
 @end ifhtml
 @ifnothtml
 @center @image{images/fdesign,14cm}

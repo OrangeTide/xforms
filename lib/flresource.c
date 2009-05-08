@@ -141,7 +141,7 @@ static char OpBgamma[12] = "1";
 
 static char OpCoordUnit[32];
 
-static FL_VN_PAIR vn_coordunit[] =
+static FLI_VN_PAIR vn_coordunit[] =
 {
 	{ FL_COORD_PIXEL, "pixel" },
     { FL_COORD_MM, "mm" },
@@ -343,7 +343,7 @@ void
 fl_set_coordunit( int u )
 {
     fli_cntl.coordUnit = u;
-    strcpy( OpCoordUnit, fl_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
+    strcpy( OpCoordUnit, fli_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
 }
 
 
@@ -1075,7 +1075,7 @@ fl_initialize( int        * na,
     fli_init_resources( );
 
     fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
-    fli_cntl.coordUnit = fl_get_vn_value( vn_coordunit, OpCoordUnit );
+    fli_cntl.coordUnit = fli_get_vn_value( vn_coordunit, OpCoordUnit );
 
 
 #if FL_DEBUG >= ML_WARN	/* { */
@@ -1097,7 +1097,7 @@ fl_initialize( int        * na,
 		DumpD( scrollbarType );
 		DumpD( backingStore );
 		fprintf( stderr, "\t%s:%s\n", "coordUnit",
-				 fl_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
+				 fli_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
 		fprintf( stderr, "\t%s:0x%lx\n", "VisualId", fli_requested_vid );
 
 #ifdef DO_GAMMA_CORRECTION

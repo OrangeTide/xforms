@@ -2996,7 +2996,7 @@ draw_entry( FL_POPUP_ENTRY * entry )
 
     if ( entry->label != NULL && *entry->label != '\0' )
     {
-        fl_drw_text( FL_ALIGN_TOP_LEFT, x, entry->box_y, w, entry->box_h,
+        fl_drw_text( FL_ALIGN_LEFT_TOP, x, entry->box_y, w, entry->box_h,
                      color, ptp->entry_font_style, ptp->entry_font_size,
                      entry->label );
         if ( entry->ulpos >= 0 )
@@ -3005,7 +3005,7 @@ draw_entry( FL_POPUP_ENTRY * entry )
     }
 
     if ( entry->accel != NULL && *entry->accel != '\0' )
-        fl_drw_text( FL_ALIGN_TOP_RIGHT, x, entry->box_y, w, entry->box_h,
+        fl_drw_text( FL_ALIGN_RIGHT_TOP, x, entry->box_y, w, entry->box_h,
                      color, ptp->entry_font_style, ptp->entry_font_size,
                      entry->accel );
 }

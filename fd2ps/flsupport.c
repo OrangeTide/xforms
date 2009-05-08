@@ -40,12 +40,10 @@
 
 #define MAXTYPES 17
 
-typedef struct
-{
-    int val;
-    const char *name;
-}
-VN_Pair;
+typedef struct {
+    int          val;
+    const char * name;
+} VN_Pair;
 
 #define VN_pair VN_Pair
 

@@ -3,7 +3,7 @@
 
 The Forms Library is a library of C-routines that allows you to build up
 interaction forms with buttons, sliders, input fields, dials, etc. in a
-very simple way. Following the X tradition, FormsLibrary does not
+very simple way. Following the X tradition, Forms Library does not
 enforce the look and feel of objects although in its default state, it
 does provide a consistent look and feel for all objects.
 
@@ -57,7 +57,7 @@ the system is not very complicated. Part IV of this document describes
 in detail how to do this yourself.
 
 The following chapters will describe the basic application
-programmer's interface to the FormsLibrary and lead you through the
+programmer's interface to the Forms Library and lead you through the
 different aspects of designing and using forms. In @ref{Part I Getting
 Started} we give some small and easy examples of the design and use of
 forms. In @ref{Part I Defining Forms, , Defining Forms} we describe

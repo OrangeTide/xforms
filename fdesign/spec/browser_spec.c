@@ -31,10 +31,10 @@ create_form_browserattrib( void )
     obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 225, 57, 111, 140, "Action" );
 
     fdui->content_br = obj = fl_add_browser( FL_HOLD_BROWSER, 353, 55, 120, 150, "CurrentItems:" );
-    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
 
     fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 35, 67, 170, 25, "EditItem" );
-    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
     fl_set_object_callback( obj, add_item_cb, 0 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 235, 72, 84, 26, "Add" );

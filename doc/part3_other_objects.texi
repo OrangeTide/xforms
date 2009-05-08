@@ -543,10 +543,11 @@ fl_set_xyplot_symbol(xyplot, 0, drawsymbol);
 @end example
 
 If a Xlib drawing routine is used it should use the current active
-window (@code{FL_ObjWin(obj)}) and the current GC.. Take care not to
-call routines inside the @code{drawsymbol} function that could trigger
-a redraw of the XYPlot (such as @code{@ref{fl_set_object_color()}},
-@code{@ref{fl_set_xyplot_data()}} etc.).
+window (@code{FL_ObjWin(obj)}) and the current GC. Take care not to
+call routines inside the @code{drawsymbol()} function that could
+trigger a redraw of the XYPlot (such as
+@code{@ref{fl_set_object_color()}}, @code{@ref{fl_set_xyplot_data()}}
+etc.).
 
 To use absolute bounds as opposed to actual bounds in data, use the
 following routines

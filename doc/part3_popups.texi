@@ -99,10 +99,12 @@ The following sequences are recognized:
 Set a value of type @code{long int} that's passed to all callback
 routines for the entry. The value must be given in the arguments
 following the @code{entries} string.
+
 @item %u
 Set a @code{user_void} pointer that's passed to all callbacks of the
 entry. The pointer must be specified in the arguments following the
 @code{entries} string.
+
 @item %f
 Set a callback function that gets called when the entry is selected.
 The function is of type
@@ -115,6 +117,7 @@ value of the function can be used to keep the selection being reported
 back to the caller of @code{@ref{fl_popup_do()}} by returning a value
 of @code{FL_IGNORE} (-1). The functions address must be given in the
 arguments following the @code{entries} string.
+
 @item %E
 Set a callback routine that gets called each time the mouse enters the
 entry (as long as the entry isn't disabled or hidden). The type of the
@@ -122,12 +125,14 @@ function is the same as that of the callback function for the
 selection of the item but it's return value is never used. The
 functions address must be given in the arguments following the
 @code{entries} string.
+
 @item %L
 Set a callback routine that gets called each time the mouse leaves the
 entry. The type of the function is the same as that of the callback
 function for the selection of the entry but it's return value is never
 used. The functions address must be given in the arguments following
 the @code{entries} string.
+
 @item %m
 When this is specified a sub-popup gets opened when the mouse enters the
 entry (the entry itself thus can't be selected). The sub-popup to be
@@ -138,6 +143,7 @@ for a sub-popup.
 
 Mutually exclusive with @code{%t}, @code{%T}, @code{%r}, @code{%R}
 and @code{%l}.
+
 @item %t
 @itemx %T
 This makes the entry a "toggle" entry, an entry that represesents binary
@@ -147,18 +153,19 @@ created with @code{%t} its in "off" state at the start, if created with
 when the entry is selected.
 
 Mutually exclusive with @code{%m}, @code{%r}, @code{%R} and @code{%l}.
+
 @item %r
 @itemx %R
 This makes the entry a "radio" entry, i.e.@: it becomes part of a
-group of entries of which only can be "on" at a time. The group, an
-integer value (don't use @code{INT_MIN} and @code{INT_MIN}), must be
-given in the arguments following the @code{entries} string.
+group of entries of which only one can be "on" at a time. The group,
+an integer value (don't use @code{INT_MIN} and @code{INT_MIN}), must
+be given in the arguments following the @code{entries} string.
 
-Radio entries are drawn with a small circle to the left with the one for
-the entry in "on" state filled with a color (blue per default). When a
-selection is made of a radio entry that was in "off" state all other
-radio entries belonging to the same group are autmatically switched to
-"off" state.
+Radio entries are drawn with a small circle to the left, with the one
+for the entry in "on" state filled with a color (blue per default).
+When a radio entry is selected by the user that was in "off" state the
+entry of the group that was is "on" state before is automatically
+switched to "off" state.
 
 If the entry gets created with @code{%r} the entry is in "off" state,
 if created with @code{%R} it's in "on" state (in that case all entries
@@ -166,6 +173,7 @@ created before in "on" state are reset to "off" state, i.e.@: the
 one created last "wins").
 
 Mutually exclusive with @code{%m}, @code{%t}, @code{%T} and @code{%l}.
+
 @item %l
 This creates not a real entry but indicates that a line is to be drawn 
 to visually group other entries. While other properties can be set for
@@ -174,11 +182,13 @@ acount.
 
 Mutually exclusive with @code{%m}, @code{%t}, @code{%T}, @code{%} and
 @code{%R}.
+
 @item %d
 Marks the entry as disabled, i.e.@: it can't be selected and its text is
 per default drawn in a different color
 @item %h
 Marks the entry as hidden, i.e.@: it is not shown while in this state.
+
 @item %S
 For entries with shortcut keys it's quite common to have them shown on
 the right hand side. Using @code{%S} you can split the entrys text
@@ -186,14 +196,16 @@ into two parts, the first one (before @code{%S}) being drawn flushed
 left and the second part flushed right. Note that using this special
 sequence doesn't automatically sets a shortcut key, this still has to
 be done using @code{%s}.
+
 @item %s
 Sets one or more shortcut keys for an entry. Requires a string with
 the shortcuts in the arguments following the @code{entries} string.
 @xref{Shortcuts}, for details on how to define shortcuts. Please note
 that the character in the label idenical to the shortcut character is
 only shown as underlined if @code{%S} isn't used.
+
 @item %%
-Use this to get a @code{%} within the text of an entry.
+Use this to put a @code{%} character within the text of an entry.
 @end table
 
 Please note that since @code{@ref{fl_popup_add_entries()}} is a

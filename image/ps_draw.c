@@ -33,6 +33,7 @@
 #endif
 
 #include "include/forms.h"
+#include "flinternal.h"
 #include "private/pflps.h"
 
 #if defined __GNUC__
@@ -43,6 +44,7 @@
 
 
 /* rectangle with rounded corners */
+
 #define RS 16
 
 /*
@@ -391,7 +393,7 @@ flps_draw_tbox( int  style,
 
     switch ( style )
     {
-		case FL_TRIANGLE_UPBOX8 :
+		case FLI_TRIANGLE_UPBOX8 :
 			AddVertex( fp, xc, y + h - absbw );
 			AddVertex( fp, x + w - bw, y + absbw );
 			AddVertex( fp, x + bw, y + bw );
@@ -405,7 +407,7 @@ flps_draw_tbox( int  style,
 			flps_reset_linewidth( );
 			break;
 
-		case FL_TRIANGLE_UPBOX2 :
+		case FLI_TRIANGLE_UPBOX2 :
 			AddVertex( fp, xc, y + absbw );
 			AddVertex( fp, xc, y + h - absbw );
 			AddVertex( fp, x + w - absbw, y + h - absbw );
@@ -419,7 +421,7 @@ flps_draw_tbox( int  style,
 			flps_reset_linewidth( );
 			break;
 
-		case FL_TRIANGLE_UPBOX6 :
+		case FLI_TRIANGLE_UPBOX6 :
 			AddVertex( fp, x + bw, y + h - bw );
 			AddVertex( fp, x + w - bw, yc );
 			AddVertex( fp, x + bw, y + bw );
@@ -433,7 +435,7 @@ flps_draw_tbox( int  style,
 			flps_reset_linewidth( );
 			break;
 
-		case FL_TRIANGLE_UPBOX4 :
+		case FLI_TRIANGLE_UPBOX4 :
 			AddVertex( fp, x + bw, yc );
 			AddVertex( fp, x + w - bw, y + h - bw );
 			AddVertex( fp, x + w - bw, y );

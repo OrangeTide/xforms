@@ -27,12 +27,6 @@
 #ifndef FL_XBASIC_H
 #define FL_XBASIC_H
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xatom.h>
-#include <X11/keysym.h>
-#include <X11/Xresource.h>
-
 /* Draw mode */
 
 enum {
@@ -389,42 +383,6 @@ FL_EXPORT void fl_pieslice(
 #define fl_arc( x, y, r, a1, a2, c )	\
 	fl_pieslice( 0, ( x ) - ( r ), ( y ) - ( r ), \
 				 2 * ( r ), 2 * ( r ), a1, a2, c )
-
-/* Misc. stuff */
-
-FL_EXPORT void fl_add_vertex(
-		FL_Coord x,
-		FL_Coord y
-		);
-
-FL_EXPORT void fl_add_float_vertex(
-		float x,
-		float y
-		);
-
-FL_EXPORT void fl_reset_vertex(
-		void
-		);
-
-FL_EXPORT void fl_endpolygon(
-		void
-		);
-
-FL_EXPORT void fl_endclosedline(
-		void
-		);
-
-FL_EXPORT void fl_endline(
-		void
-		);
-
-#define fl_bgnline		   fl_reset_vertex
-#define fl_bgnclosedline   fl_reset_vertex
-#define fl_bgnpolygon	   fl_reset_vertex
-#define fl_v2s( v )		   fl_add_vertex( v[ 0 ], v[ 1 ] )
-#define fl_v2i( v )		   fl_add_vertex( v[ 0 ], v[ 1 ] )
-#define fl_v2f( v )		   fl_add_float_vertex( v[ 0 ], v[ 1 ] )
-#define fl_v2d( v )		   fl_add_float_vertex( v[ 0 ], v[ 1 ] )
 
 
 /* High level drawing routines */

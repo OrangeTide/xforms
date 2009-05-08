@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.14 2009/05/02 20:11:05 jtt Exp $
+ * $Id: image_jpeg.c,v 1.15 2009/05/06 19:33:16 jtt Exp $
  *
  *.
  *  This file is part of the XForms library package.

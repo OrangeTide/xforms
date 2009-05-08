@@ -297,7 +297,7 @@ to the lower-right corner of the form, then,
 @end multitable
 
 @ifhtml
-@center @image{gravity}
+@center @image{images/gravity}
 @end ifhtml
 @ifnothtml
 @center @image{images/gravity,7cm}

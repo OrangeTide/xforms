@@ -75,25 +75,37 @@ typedef struct @{
 @noindent
 and the resource type @code{FL_RTYPE} type is one of the following
 @tindex FL_RTYPE
+@anchor{FL_RTYPE}
 @table @code
 @tindex FL_SHORT
+@anchor{FL_SHORT}
 @item FL_SHORT
 for short variable
 @tindex FL_BOOL
+@anchor{FL_BOOL}
 @item FL_BOOL
 for boolean variable (int)
 @tindex FL_INT
+@anchor{FL_INT}
 @item FL_INT
 for int variable
 @tindex FL_LONG
+@anchor{FL_LONG}
 @item FL_LONG
 for long variable
 @tindex FL_FLOAT
+@anchor{FL_FLOAT}
 @item FL_FLOAT
 for float variable
 @tindex FL_FLOAT
+@tindex FL_STRING
+@anchor{FL_STRING}
 @item FL_STRING
 for char[] variable
+@tindex FL_FLOAT
+@anchor{FL_NONE}
+@item FL_NONE
+for variables not to be used (or not available)
 @end table
 
 Note that the variable for @code{FL_BOOL} must be of type int. It
@@ -298,17 +310,18 @@ read:
 const char *fl_get_resource(const char *res_name,
                             const char *res_class,
                             FL_RTYPE type, char *defval,
-                             void *val, int nbytes);
+                            void *val, int nbytes);
 @end example
 @noindent
 @code{res_name} and @code{res_class} must be complete resource
 specifications (minus the application name) and should not contain
 wildcards of any kind. The resource will be converted according to the
-type and result stored in @code{type}. @code{nbytes} is used only if
-the resource type is @code{FL_STRING}. The function returns the string
-representation of the resource value. If a value of @code{FL_NONE} is
-passed for @code{type} the resource is not converted and the pointer
-@code{val} is not dereferenced.
+type and result stored in @code{type}, which is an integer of type
+@code{@ref{FL_RTYPE}}. @code{nbytes} is used only if the resource type
+is @code{@ref{FL_STRING}}. The function returns the string
+representation of the resource value. If a value of
+@code{@ref{FL_NONE}} is passed for @code{type} the resource is not
+converted and the pointer @code{val} is not dereferenced.
 
 There is also a routine that allows the application program to set
 resources programmatically:

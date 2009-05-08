@@ -1082,22 +1082,22 @@ flps_draw_text_point( int      lalign,
 			yy = y - bbox / 2;
 			break;
 
-		case FL_ALIGN_TOP_LEFT :
+		case FL_ALIGN_LEFT_TOP :
 			xx = x - bbox;
-			align = FL_ALIGN_TOP_RIGHT;
+			align = FL_ALIGN_RIGHT_TOP;
 			break;
 
-		case FL_ALIGN_TOP_RIGHT :
-			align = FL_ALIGN_TOP_LEFT;
+		case FL_ALIGN_RIGHT_TOP :
+			align = FL_ALIGN_LEFT_TOP;
 			break;
 
-		case FL_ALIGN_BOTTOM_RIGHT :
+		case FL_ALIGN_RIGHT_BOTTOM :
 			yy = y - bbox;
-			align = FL_ALIGN_BOTTOM_LEFT;
+			align = FL_ALIGN_LEFT_BOTTOM;
 			break;
 
-		case FL_ALIGN_BOTTOM_LEFT :
-			align = FL_ALIGN_BOTTOM_RIGHT;
+		case FL_ALIGN_LEFT_BOTTOM :
+			align = FL_ALIGN_RIGHT_BOTTOM;
 			yy = y - bbox;
 			xx = x - bbox;
 			break;

@@ -1106,7 +1106,7 @@ box underneath the object is by default not drawn and in the default
 black&white mode, all curves are drawn in black. See demo program
 @file{xyplotover.c} for an example output.
 
-It is possible to customerize the output by changing the postscript
+It is possible to customize the output by changing the PostScript
 output control parameters via the function
 @findex flps_init()
 @anchor{flps_init()}
@@ -1151,8 +1151,8 @@ The paper width in inches. The default is @w{8.5 in}.
 The paper height in inches. The default is @w{11 in}.
 @end table
 
-To generate a PostScripy output of a form or forms, use the fd2ps
-program documented in Chapter 13.
+To generate a PostScript output of a form or forms, use the
+@code{fd2ps} program documented in @ref{Part II Generating Hardcopies}.
 
 
 @node Doing Interaction
@@ -1163,8 +1163,8 @@ To display the form @code{form} on the screen use
 @findex fl_show_form()
 @anchor{fl_show_form()}
 @example
-long fl_show_form(FL_FORM *form, int place, int border,
-                  const char *title);
+Window fl_show_form(FL_FORM *form, int place, int border,
+                    const char *title);
 @end example
 @noindent
 @code{place} controls the position and size of the form. @code{border}

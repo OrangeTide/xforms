@@ -784,6 +784,25 @@ extern void fli_handle_timeouts( long * );
 							   || t == FL_ROUNDED3D_UPBOX     \
 							   || t == FL_ROUNDED3D_DOWNBOX )
 
+enum {
+	FLI_TRIANGLE_UPBOX1,
+	FLI_TRIANGLE_UPBOX2,
+	FLI_TRIANGLE_UPBOX3,
+	FLI_TRIANGLE_UPBOX4,
+	FLI_TRIANGLE_UPBOX6,
+	FLI_TRIANGLE_UPBOX7,
+	FLI_TRIANGLE_UPBOX8,
+	FLI_TRIANGLE_UPBOX9,
+	FLI_TRIANGLE_DOWNBOX1,
+	FLI_TRIANGLE_DOWNBOX2,
+	FLI_TRIANGLE_DOWNBOX3,
+	FLI_TRIANGLE_DOWNBOX4,
+	FLI_TRIANGLE_DOWNBOX6,
+	FLI_TRIANGLE_DOWNBOX7,
+	FLI_TRIANGLE_DOWNBOX8,
+	FLI_TRIANGLE_DOWNBOX9
+};
+
 extern void fli_set_additional_clipping( FL_Coord,
 										 FL_Coord,
 										FL_Coord,
@@ -920,6 +939,22 @@ extern void fli_draw_text_inside( int align,
 								  FL_COLOR,
 								  int );
 
+/* Misc. stuff */
+
+extern void fli_add_vertex( FL_Coord x,
+						   FL_Coord y );
+
+extern void fli_add_float_vertex( float x,
+								  float y );
+
+extern void fli_reset_vertex( void );
+
+extern void fli_endpolygon( void );
+
+extern void fli_endclosedline( void );
+
+extern void fli_endline( void );
+
 extern const char * fli_get_xevent_name( const XEvent * );
 
 extern void fli_set_input_navigate( unsigned int mask );
@@ -955,6 +990,19 @@ extern int fli_check_popup_entry_exists( FL_POPUP_ENTRY * );
 extern FL_POPUP_RETURN *fli_set_popup_return( FL_POPUP_ENTRY * );
 
 extern void fli_popup_reset_counter( FL_POPUP * );
+
+/*	Some utility stuff */
+
+typedef struct {
+	int			 val;
+	const char * name;
+} FLI_VN_PAIR;
+
+extern int fli_get_vn_value( FLI_VN_PAIR * vn_pair,
+							 const char  * name );
+
+extern const char * fli_get_vn_name( FLI_VN_PAIR * vn_pair,
+									 int		   val );
 
 #if XlibSpecificationRelease == 6
 

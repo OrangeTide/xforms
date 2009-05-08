@@ -45,15 +45,14 @@ FL_FORM *fl_bgn_form(int type, FL_Coord w, FL_Coord h);
 @end example
 @noindent
 @code{w} and @code{h} indicate the width and height of the form (in
-pixels by default), i.e., the largest x- and ycoordinate that can be
-used in the form. Positions in the form will be indicated by integers
-between 0 and @code{w-1} or @code{h-1}. The actual size of the form when
-displayed on the screen can still be varied. @code{type} indicates the
-type of the background drawn in the form. The background is a box. See
-the next section for the different types available and their meanings.
-The routine returns a pointer to the form just defined. This pointer
-must be used, for example, when drawing the form or doing interaction
-with it. The form definition ends with
+pixels by default). Positions in the form will be indicated by
+integers between 0 and @code{w-1} or @code{h-1}. The actual size of
+the form when displayed on the screen can still be varied. @code{type}
+indicates the type of the background drawn in the form. The background
+of each form is a box. See the next section for the different types
+available. The routine returns a pointer to the form just defined.
+This pointer must be used, for example, when drawing the form or doing
+interaction with it. The form definition ends with
 @findex fl_end_form()
 @example
 void fl_end_form(void);
@@ -63,9 +62,9 @@ Between these two calls objects are added to the form. The following
 sections describe some of the more common classes of objects that can
 be added to a form.
 
-Many different forms can be defined and displayed when required. It is
-a good habit to first define all your forms before starting the actual
-work.
+Many different forms can be defined and displayed when required.
+Normally you probably will first define all your forms before starting
+the actual work but it's no problem to define new forms also later on.
 
 
 @node Boxes
@@ -87,7 +86,7 @@ Library at the moment supports the following types of boxes:
 @table @code
 @tindex FL_NO_BOX
 @item FL_NO_BOX
-No box at all, only a centered label
+No box at all (it's transparent), just a label
 @tindex FL_UP_BOX
 @item FL_UP_BOX
 A box that comes out of the screen
@@ -111,10 +110,12 @@ A rounded box
 A flat box with an embossed frame
 @tindex FL_FLAT_BOX
 @item FL_FLAT_BOX
-A flat box without a border
+A flat box without a border (normally invisible unless given a
+different color than the surroundings)
 @tindex FL_RFLAT_BOX
 @item FL_RFLAT_BOX
-A rounded box without a border
+A rounded box without a border (normally invisible unless given a
+different color than the surroundings)
 @tindex FL_RSHADOW_BOX
 @item FL_RSHADOW_BOX
 A rounded box with a shadow
@@ -136,7 +137,7 @@ An oval box going into the screen
 @end table
 
 @ifhtml
-@center @image{boxtypes}
+@center @image{images/boxtypes}
 @end ifhtml
 @ifnothtml
 @center @image{images/boxtypes,15cm}
@@ -372,7 +373,7 @@ the use of these routines.
 
 
 @ifhtml
-@center @image{slider}
+@center @image{images/slider}
 @end ifhtml
 @ifnothtml
 @center @image{images/slider,8cm}
@@ -425,7 +426,7 @@ buttons in the form. See the overview of object classes. The
 @code{<Tab>} key always works.)
 
 @ifhtml
-@center @image{input}
+@center @image{images/input}
 @end ifhtml
 @ifnothtml
 @center @image{images/input,8cm}
@@ -596,12 +597,11 @@ within the program by using the following routine
 void fl_trigger_object(FL_OBJECT *obj);
 @end example
 @noindent
-Calling this routine on an object @code{obj} results in the
-object returned to the application program or its callback being called
-if it exists. Note however, there is no visual feedback, i.e.,
-@code{fl_trigger_object(button)} will not make
-the a button object (named @code{button}) appear to be
-pushed.
+Calling this routine on an object @code{obj} results in the object
+returned to the application program or its callback being called if it
+exists. Note however, there is no visual feedback, i.e.@:
+@code{fl_trigger_object(button)} will not make the button object
+named @code{button} appear to be pushed.
 
 
 @node Changing Attributes
@@ -660,105 +660,297 @@ attributes of an object and immediately see the difference by
 The following pre-defined color symbols can be used in all color change
 requests. If the workstation does not support this many colors,
 substitution by the closest color will happen.
-@multitable @columnfractions 0.4 0.5
+@multitable @columnfractions 0.3 0.3 0.3
 @headitem Name
 @tab RGB triple
 @tindex FL_BLACK
 @item @code{FL_BLACK}
 @tab @code{(  0,   0,   0)}
+@ifhtml
+@tab @image{images/FL_BLACK}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_BLACK,2cm,5mm}
+@end ifnothtml
 @tindex FL_WHITE
 @item @code{FL_WHITE}
 @tab @code{(255, 255, 255)},
+@ifhtml
+@tab @image{images/FL_WHITE}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_WHITE,2cm,5mm}
+@end ifnothtml
 @tindex FL_COL1
 @item @code{FL_COL1}
 @tab @code{(173, 173, 173)}
+@ifhtml
+@tab @image{images/FL_COL1}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_COL1,2cm,5mm}
+@end ifnothtml
 @tindex FL_BOTTOM_BCOL
 @item @code{FL_BOTTOM_BCOL}
 @tab @code{(  89,  89,  89)}
+@ifhtml
+@tab @image{images/FL_BOTTOM_BCOL}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_BOTTOM_BCOL,2cm,5mm}
+@end ifnothtml
 @tindex FL_RIGHT_BCOL
 @item @code{FL_RIGHT_BCOL}
 @tab @code{(  41,  41,  41)}
+@ifhtml
+@tab @image{images/FL_RIGHT_BCOL}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_RIGHT_BCOL,2cm,5mm}
+@end ifnothtml
 @tindex FL_MCOL
 @item @code{FL_MCOL}
 @tab @code{(191, 191, 191)}
+@ifhtml
+@tab @image{images/FL_MCOL}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_MCOL,2cm,5mm}
+@end ifnothtml
 @tindex FL_LEFT_BCOL
 @item @code{FL_LEFT_BCOL}
 @tab @code{(222, 222, 222)}
+@ifhtml
+@tab @image{images/FL_LEFT_BCOL}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_LEFT_BCOL,2cm,5mm}
+@end ifnothtml
 @tindex FL_LIGHTER_COL1
 @item @code{FL_LIGHTER_COL1}
 @tab @code{(204, 204, 204)}
+@ifhtml
+@tab @image{images/FL_LIGHTER_COL1}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_LIGHTER_COL1,2cm,5mm}
+@end ifnothtml
 @tindex FL_DARKER_COL1
 @item @code{FL_DARKER_COL1}
 @tab @code{(161, 161, 161)}
+@ifhtml
+@tab @image{images/FL_DARKER_COL1}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DARKER_COL1,2cm,5mm}
+@end ifnothtml
 @tindex FL_SLATEBLUE
 @item @code{FL_SLATEBLUE}
 @tab @code{(113, 113, 198)}
+@ifhtml
+@tab @image{images/FL_SLATEBLUE}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_SLATEBLUE,2cm,5mm}
+@end ifnothtml
 @tindex FL_INDIANRED
 @item @code{FL_INDIANRED}
 @tab @code{(198, 113, 113)}
+@ifhtml
+@tab @image{images/FL_INDIANARED}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_INDIANARED,2cm,5mm}
+@end ifnothtml
 @tindex FL_RED
 @item @code{FL_RED}
 @tab @code{(255,   0,   0)}
+@ifhtml
+@tab @image{images/FL_RED}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_RED,2cm,5mm}
+@end ifnothtml
 @tindex FL_BLUE
 @item @code{FL_BLUE}
 @tab @code{(  0,   0, 255)}
+@ifhtml
+@tab @image{images/FL_BLUE}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_BLUE,2cm,5mm}
+@end ifnothtml
 @tindex FL_GREEN
 @item @code{FL_GREEN}
 @tab @code{(  0, 255,   0)}
+@ifhtml
+@tab @image{images/FL_GREEN}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_GREEN,2cm,5mm}
+@end ifnothtml
 @tindex FL_YELLOW
 @item @code{FL_YELLOW}
 @tab @code{(255, 255,   0)}
+@ifhtml
+@tab @image{images/FL_YELLOW}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_YELLOW,2cm,5mm}
+@end ifnothtml
 @tindex FL_MAGENTA
 @item @code{FL_MAGENTA}
 @tab @code{(255,   0, 255)}
+@ifhtml
+@tab @image{images/FL_MAGENTA}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_MAGENTA,2cm,5mm}
+@end ifnothtml
 @tindex FL_CYAN
 @item @code{FL_CYAN}
 @tab @code{(  0, 255, 255)}
+@ifhtml
+@tab @image{images/FL_CYAN}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_CYAN,2cm,5mm}
+@end ifnothtml
 @tindex FL_TOMATO
 @item @code{FL_TOMATO}
 @tab @code{       255,  99,  71}
+@ifhtml
+@tab @image{images/FL_TOMATO}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_TOMATO,2cm,5mm}
+@end ifnothtml
 @tindex FL_INACTIVE
 @item @code{FL_INACTIVE}
 @tab @code{(110, 110, 110)}
+@ifhtml
+@tab @image{images/FL_INACTIVE}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_INACTIVE,2cm,5mm}
+@end ifnothtml
 @tindex FL_TOP_BCOL
 @item @code{FL_TOP_BCOL}
 @tab @code{(204, 204, 204)}
+@ifhtml
+@tab @image{images/FL_TOP_BCOL}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_TOP_BCOL,2cm,5mm}
+@end ifnothtml
 @tindex FL_PALEGREEN
 @item @code{FL_PALEGREEN}
 @tab @code{(113, 198, 113)}
+@ifhtml
+@tab @image{images/FL_PALEGREEN}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_PALEGREEN,2cm,5mm}
+@end ifnothtml
 @tindex FL_DARKGOLD
 @item @code{FL_DARKGOLD}
 @tab @code{(205, 149,  10)}
+@ifhtml
+@tab @image{images/FL_DARKGOLD}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DARKGOLD,2cm,5mm}
+@end ifnothtml
 @tindex FL_ORCHID
 @item @code{FL_ORCHID}
 @tab @code{(205, 105, 201)}
+@ifhtml
+@tab @image{images/FL_ORCHID}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_ORCHID,2cm,5mm}
+@end ifnothtml
 @tindex FL_DARKCYAN
 @item @code{FL_DARKCYAN}
 @tab @code{(40, 170, 175)}
+@ifhtml
+@tab @image{images/FL_DARKCYAN}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DARKCYAN,2cm,5mm}
+@end ifnothtml
 @tindex FL_DARKTOMATO
 @item @code{FL_DARKTOMATO}
 @tab @code{(139,  54,  38)}
+@ifhtml
+@tab @image{images/FL_DARKTOMATO}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DARKTOMATO,2cm,5mm}
+@end ifnothtml
 @tindex FL_WHEAT
 @item @code{FL_WHEAT}
 @tab @code{(255, 231, 155)}
+@ifhtml
+@tab @image{images/FL_WHEAT}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_WHEAT,2cm,5mm}
+@end ifnothtml
 @tindex FL_DARKORANGE
 @item @code{FL_DARKORANGE}
 @tab @code{(255, 128,   0)}
+@ifhtml
+@tab @image{images/FL_DARKORANGE}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DARKORANGE,2cm,5mm}
+@end ifnothtml
 @tindex FL_DEEPPINK
 @item @code{FL_DEEPPINK}
 @tab @code{(255,   0, 128)}
+@ifhtml
+@tab @image{images/FL_DARKPINK}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DARKPINK,2cm,5mm}
+@end ifnothtml
 @tindex FL_CHARTREUSE
 @item @code{FL_CHARTREUSE}
 @tab @code{(128, 255,   0)}
+@ifhtml
+@tab @image{images/FL_CHARTEUSE}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_CHARTEUSE,2cm,5mm}
+@end ifnothtml
 @tindex FL_DARKVIOLET
 @item @code{FL_DARKVIOLET}
 @tab @code{(128,   0, 255)}
+@ifhtml
+@tab @image{images/FL_DARKVIOLET}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DARKVIOLET,2cm,5mm}
+@end ifnothtml
 @tindex FL_SPRINGGREEN
 @item @code{FL_SPRINGGREEN}
 @tab @code{(  0, 255, 128)}
+@ifhtml
+@tab @image{images/FL_SPRINGGREEN}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_SPRINGGREEN,2cm,5mm}
+@end ifnothtml
 @tindex FL_DODGERBLUE
 @item @code{FL_DODGERBLUE}
 @tab @code{(  0, 128, 255)}
+@ifhtml
+@tab @image{images/FL_DODGERBLUE}
+@end ifhtml
+@ifnothtml
+@tab @image{images/FL_DODGERBLUE,2cm,5mm}
+@end ifnothtml
 @tindex FL_FREE_COL1
 @item @code{FL_FREE_COL1}
 @tab @code{(  ?,   ?,   ?)}
@@ -801,8 +993,8 @@ made known to the X server by the initialization routine
 @code{@ref{fl_initialize()}}.
 
 To change the colormap and make a color index active so that it can be
-used in various drawing routines after fl_initialize() initialization,
-use the following function
+used in various drawing routines after @code{@ref{fl_initialize()}}
+initialization, use the following function
 @example
 unsigned long fl_mapcolor(FL_COLOR i,
                           int red, int green, int blue);
@@ -927,7 +1119,7 @@ object basis so the user has the option to change it at run time via
 the @samp{-bw} flag.
 
 @ifhtml
-@center @image{borderwidth}
+@center @image{images/borderwidth}
 @end ifhtml
 @ifnothtml
 @center @image{images/borderwidth,14cm}
@@ -985,7 +1177,7 @@ default size for XForms is 10pt.
 @end multitable
 
 @ifhtml
-@center @image{fontsize}
+@center @image{images/fontsize}
 @end ifhtml
 @ifnothtml
 @center @image{images/fontsize,6cm}
@@ -1372,7 +1564,7 @@ size. The digit following the prefixes indicates the increment
 smaller in radius than the default size, use @code{@@-3square}.
 
 @ifhtml
-@center @image{symbols}
+@center @image{images/symbols}
 @end ifhtml
 @ifnothtml
 @center @image{images/symbols}

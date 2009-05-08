@@ -1,3 +1,25 @@
+2009-05-08 Jens Thoms Toerring    <jt@toerring.de>
+
+	* configure.ac: check for nanosleep too
+	* lib/sysdep.c (fl_msleep): use HAVE_NONOSLEEP
+
+2009-05-06 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/form.c: Changed return type of the functions
+	fl_show_form(), fl_prepare_form_window() and
+	fl_show_form_window() to 'Window' to reflect what
+	was (mostly) said in the documentation. That also
+	required including X11 header files already in
+	lib/include/Basic.h instead of lib/include/XBasic.h.
+	fl_prepare_form_window() now returns 'None' on
+	failure instead of -1. Also the type of the 'window'
+	member of the FL_FORM structure is now 'Window'
+	instead of 'unsigned long' and that of 'icon_pixmap'
+	and 'icon_mask' is 'Pixmap'.
+
+	FL_TRIANGLE_* macros renamed to FLI_TRIANGLE_* and
+	moved to lib/flinternal.h.
+
 2009-05-06 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Just a bit of code cleanup in fdesign and

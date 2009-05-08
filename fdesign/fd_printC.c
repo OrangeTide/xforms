@@ -323,16 +323,16 @@ VN_pair vn_btype[ ] =
 
 VN_pair vn_align[ ] =
 {
-    VN( FL_ALIGN_TOP ),
-    VN( FL_ALIGN_BOTTOM ),
-    VN( FL_ALIGN_LEFT ),
-    VN( FL_ALIGN_RIGHT ),
-    VN( FL_ALIGN_CENTER ),
-    VN( FL_ALIGN_TOP_RIGHT ),
-    VN( FL_ALIGN_TOP_LEFT ),
-    VN( FL_ALIGN_BOTTOM_RIGHT ),
-    VN( FL_ALIGN_BOTTOM_LEFT ),
-    VN( -1 )
+    VN( FL_ALIGN_TOP          ),
+    VN( FL_ALIGN_BOTTOM       ),
+    VN( FL_ALIGN_LEFT         ),
+    VN( FL_ALIGN_RIGHT        ),
+    VN( FL_ALIGN_CENTER       ),
+    VN( FL_ALIGN_RIGHT_TOP    ),
+    VN( FL_ALIGN_LEFT_TOP     ),
+    VN( FL_ALIGN_RIGHT_BOTTOM ),
+    VN( FL_ALIGN_LEFT_BOTTOM  ),
+    VN( -1                    )
 };
 
 static VN_pair vn_lsize[ ] =

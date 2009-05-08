@@ -45,6 +45,12 @@ application. But be aware that there are also can be forms that
 themselves contain further forms, so "form" and "window" aren't
 necessarily synonyms.
 
+The only exceptions from the above conention are names of functions
+related to image manipulations - they start with @code{flimage_}. And
+then there's a single function called @code{@ref{flps_init()}} that
+allows to customize the way hardcopies are created from an existing
+user interface.
+
 
 @node Some Examples
 @section Some Examples
@@ -76,7 +82,7 @@ fl_show_form(simpleform, FL_PLACE_MOUSE, FL_NOBORDER,
 @end example
 
 @ifhtml
-@center @image{pushme}
+@center @image{images/pushme}
 @end ifhtml
 @ifnothtml
 @center @image{images/pushme,5cm}
@@ -112,7 +118,7 @@ cc -o pushme pushme.c -lX11 -lforms -lXpm -lm
 @end example
 @noindent
 (Of course you need to already have installed the library for that to
-work. Contact your systems administrator or read the @file{README}file
+work. Contact your systems administrator or read the @file{README} file
 in the topmost XForms directory to see how to do this.)
 
 This simple example is, of course, of little use. Let us look at a
@@ -151,7 +157,7 @@ the object being pushed. Simply checking whether this is object
 @code{yes} determines whether we should quit.
 
 @ifhtml
-@center @image{yesno}
+@center @image{images/yesno}
 @end ifhtml
 @ifnothtml
 @center @image{images/yesno,6cm}

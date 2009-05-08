@@ -41,24 +41,35 @@ placed in front of the input field.
 The following types of input fields exist:
 @table @code
 @tindex FL_NORMAL_INPUT
+@anchor{FL_NORMAL_INPUT}
 @item FL_NORMAL_INPUT
 Any type of text can be typed into this field.
+
 @tindex FL_FLOAT_INPUT
+@anchor{FL_FLOAT_INPUT}
 @item FL_FLOAT_INPUT
 Only a float value can be typed in (e.g. -23.2e12).
+
 @tindex FL_INT_INPUT
+@anchor{FL_INT_INPUT}
 @item FL_INT_INPUT
 Only an integer value can be typed in (e.g. -86).
+
 @tindex FL_DATE_INPUT
+@anchor{FL_DATE_INPUT}
 @item FL_DATE_INPUT
 Only a date (MM/DD/YY) can be typed in.
+
 @tindex FL_MULTILINE_INPUT
+@anchor{FL_MULTILINE_INPUT}
 @item FL_MULTILINE_INPUT
 An input field allowing for multiple lines.
 @tindex FL_SECRET_INPUT
 @item FL_SECRET_INPUT
 A normal input field that does not show the text.
+
 @tindex FL_HIDDEN_INPUT
+@anchor{FL_HIDDEN_INPUT}
 @item FL_HIDDEN_INPUT
 A normal input field but invisible.
 @end table
@@ -194,7 +205,7 @@ See demo @file{objreturn.c} for an example use of this.
 
 There is a
 routine that can be used to limit the number of characters per line
-for input fields of type @code{FL_NORMAL_INPUT}
+for input fields of type @code{@ref{FL_NORMAL_INPUT}}
 @findex fl_set_input_maxchars()
 @anchor{fl_set_input_maxchars()}
 @example
@@ -208,6 +219,7 @@ combination with the callback function to check the validity of
 characters that are entered into the input field, use of the following
 is typically more appropriate
 @tindex FL_INPUTVALIDATOR
+@anchor{FL_INPUTVALIDATOR}
 @findex fl_set_input_filter()
 @anchor{fl_set_input_filter()}
 @example
@@ -262,7 +274,7 @@ These two routines more or less provide a means for the validator to
 store and retrieve some information about user preference or other
 state dependent information. @code{attrib1} and @code{attrib2} can be
 any validator defined variables. For the built-in class, only the one
-of type @code{FL_DATE_INPUT} utilizes these to store the date format:
+of type @code{@ref{FL_DATE_INPUT}} utilizes these to store the date format:
 for @code{attrib1}, it can take
 @tindex FL_INPUT_MMDD
 @code{FL_INPUT_MMDD} or
@@ -272,7 +284,7 @@ and day. For example, to set the date format to @code{dd/mm}, use
 @example
 fl_set_input_format(ob, FL_INPUT_DDMM,'/');
 @end example
-For the built-in type @code{FL_DATE_INPUT} the default is
+For the built-in type @code{@ref{FL_DATE_INPUT}} the default is
 @code{FL_INPUT_MMDD} and the separator is @code{'/'}. There is no
 limit on the year other than it must be an integer and appear after
 month and day.
@@ -405,7 +417,7 @@ void fl_set_input_shortcut(FL_OBJECT *obj, const char *sc,
 @noindent
 @c ????
 
-By default, if an input field of type @code{FL_MULTILINE_INPUT}
+By default, if an input field of type @code{@ref{FL_MULTILINE_INPUT}}
 contains more text than can be shown, scrollbars will appear with
 which the user can scroll the text around horizontally or vertically.
 To change this default, use the following routines
@@ -446,7 +458,7 @@ void fl_set_input_scroll(FL_OBJECT *obj, int yes_no);
 
 There are also routines that can scroll the input field
 programmatically. To scroll vertically (for input fields of type
-@code{FL_MULTILINE_INPUT}  only), use
+@code{@ref{FL_MULTILINE_INPUT}} only), use
 @findex fl_set_input_topline()
 @anchor{fl_set_input_topline()}
 @example
@@ -516,7 +528,7 @@ The function returns the old field char.
 @node Input Attributes
 @section Input Attributes
 
-Never use @code{FL_NO_BOX} as the boxtype.
+Never use @code{@ref{FL_NO_BOX}} as the boxtype.
 
 The first color argument (@code{col1}) to
 @code{@ref{fl_set_object_color()}} controls the color of the input
@@ -543,9 +555,10 @@ void fl_set_input_scrollbarsize(FL_OBJECT *obj, int hh, int vw);
 @end example
 @noindent
 where @code{hh} is the horizontal scrollbar height and @code{vw} is
-the vertical scrollbar width in pixels. The default scrollbar type is
-@code{FL_THIN_SCROLLBAR}. There are two ways you can change the
-default. One way is to use @code{@ref{fl_set_defaults()}} or
+the vertical scrollbar width in pixels. The default scrollbar types
+are @code{@ref{FL_HOR_THIN_SCROLLBAR}} and
+@code{@ref{FL_VERT_THIN_SCROLLBAR}}. There are two ways you can change
+the default. One way is to use @code{@ref{fl_set_defaults()}} or
 @code{@ref{fl_set_scrollbar_type()}} to set the application wide
 default (preferred); another way is to use
 @code{@ref{fl_get_object_component()}} to get the object handle to the
@@ -558,6 +571,7 @@ As mentioned earlier, it is possible for the application program to
 change the default edit keymaps. The editing key assignment is held in
 a structure of type
 @tindex FL_EditKeymap
+@anchor{FL_EditKeymap}
 @code{FL_EditKeymap} defined as follows:
 @example
 typedef struct @{
@@ -594,10 +608,10 @@ To change the default edit keymaps, the following routine is available:
 void fl_set_input_editkeymap(FL_EditKeymap *km);
 @end example
 @noindent
-with a filled or partially filled @code{FL_EditKeymap} structure. The
-unfilled members must be set to 0 so the default mapping is retained.
-Change of edit keymap is global and affects all input field within the
-application.
+with a filled or partially filled @code{@ref{FL_EditKeymap}}
+structure. The unfilled members must be set to 0 so the default
+mapping is retained. Change of edit keymap is global and affects all
+input field within the application.
 
 Calling @code{@ref{fl_set_input_editkeymap()}} with @code{km} set to
 @code{NULL} restores the default. All cursor keys (@code{<Left>},
@@ -612,8 +626,10 @@ below 32) should be specified by their ASCII codes (@code{<Ctrl> C}
 is 3 etc.), while all others by their @code{Keysym}s (@code{XK_F1}
 etc.). Control and special character combinations can be obtained by adding
 @tindex FL_CONTROL_MASK
+@anchor{FL_CONTROL_MASK}
 @code{FL_CONTROL_MASK} to the @code{Keysym}. To specify @code{Meta} add
 @tindex FL_ALT_MASK
+@anchor{FL_ALT_MASK}
 @code{FL_ALT_MASK} to the key value.
 
 @example

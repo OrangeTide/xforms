@@ -544,7 +544,7 @@ directory are cached internally, so if there is the directories contents
 are changed, click on the @code{ReScan} button to force an update.
 
 @ifhtml
-@center @image{fselect}
+@center @image{images/fselect}
 @end ifhtml
 @ifnothtml
 @center @image{images/fselect,7cm}

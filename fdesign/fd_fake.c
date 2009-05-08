@@ -208,7 +208,7 @@ fl_create_ntabfolder( int          type,
     ob->resize  = FL_RESIZE_NONE;
     ob->col1    = FL_COL1;
     ob->col2    = FL_COL1;
-    ob->align   = FL_ALIGN_TOP_LEFT;
+    ob->align   = FL_ALIGN_LEFT_TOP;
 
     return ob;
 }

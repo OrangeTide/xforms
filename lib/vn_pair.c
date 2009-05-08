@@ -37,8 +37,8 @@
  ***************************************/
 
 int
-fl_get_vn_value( FL_VN_PAIR * vn_pair,
-				 const char * name )
+fli_get_vn_value( FLI_VN_PAIR * vn_pair,
+				  const char  * name )
 {
     for ( ; vn_pair->val >= 0; vn_pair++ )
         if ( strcmp( vn_pair->name, name ) == 0 )
@@ -54,8 +54,8 @@ fl_get_vn_value( FL_VN_PAIR * vn_pair,
  ***************************************/
 
 const char *
-fl_get_vn_name( FL_VN_PAIR * vn_pair,
-				int          val )
+fli_get_vn_name( FLI_VN_PAIR * vn_pair,
+				 int           val )
 {
     static char buf[ 5 ][ 16 ];
     static int k;

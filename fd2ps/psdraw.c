@@ -525,7 +525,7 @@ ps_draw_tbox(int style, float x, float y, float w, float h,
     fp = point;
     switch (style)
     {
-    case FL_TRIANGLE_UPBOX8:
+    case FLI_TRIANGLE_UPBOX8:
 	AddVertex(fp, xc, y + h - absbw);
 	AddVertex(fp, x + w - bw, y + absbw);
 	AddVertex(fp, x + bw, y + bw);
@@ -538,7 +538,7 @@ ps_draw_tbox(int style, float x, float y, float w, float h,
 	ps_line(x + w - 1, y, x, y, FL_BOTTOM_BCOL);
 	ps_reset_linewidth();
 	break;
-    case FL_TRIANGLE_UPBOX2:
+    case FLI_TRIANGLE_UPBOX2:
 	AddVertex(fp, xc, y + absbw);
 	AddVertex(fp, xc, y + h - absbw);
 	AddVertex(fp, x + w - absbw, y + h - absbw);
@@ -551,7 +551,7 @@ ps_draw_tbox(int style, float x, float y, float w, float h,
 	ps_line(x + w - 1, y + h - 1, xc, y, FL_RIGHT_BCOL);
 	ps_reset_linewidth();
 	break;
-    case FL_TRIANGLE_UPBOX6:
+    case FLI_TRIANGLE_UPBOX6:
 	AddVertex(fp, x + bw, y + h - bw);
 	AddVertex(fp, x + w - bw, yc);
 	AddVertex(fp, x + bw, y + bw);
@@ -563,7 +563,7 @@ ps_draw_tbox(int style, float x, float y, float w, float h,
 	ps_line(x, y, x, y + h - 1, FL_LEFT_BCOL);
 	ps_reset_linewidth();
 	break;
-    case FL_TRIANGLE_UPBOX4:
+    case FLI_TRIANGLE_UPBOX4:
 	AddVertex(fp, x + bw, yc);
 	AddVertex(fp, x + w - bw, y + h - bw);
 	AddVertex(fp, x + w - bw, y);

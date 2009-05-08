@@ -32,6 +32,12 @@
 
 #include <math.h>
 
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/Xatom.h>
+#include <X11/keysym.h>
+#include <X11/Xresource.h>
+
 #if defined __GNUC__
 #define FL_UNUSED_ARG __attribute__ ((unused))
 #else
@@ -184,7 +190,7 @@ enum {
 	FL_FULLBORDER = 1,		/* normal								   */
 	FL_TRANSIENT,			/* set TRANSIENT_FOR property			   */
 	FL_NOBORDER,			/* use override_redirect to supress decor. */
-	FL_MODAL = 1 << 8		/* not implemented yet					   */
+	FL_MODAL      = 1 << 8  /* not implemented yet					   */
 };
 
 /* All box types */
@@ -208,12 +214,15 @@ typedef enum {
 	FL_OVAL3D_DOWNBOX,
 	FL_OVAL3D_FRAMEBOX,
 	FL_OVAL3D_EMBOSSEDBOX,
+
 	/* for internal use only */
+
 	FL_TOPTAB_UPBOX,
 	FL_SELECTED_TOPTAB_UPBOX,
 	FL_BOTTOMTAB_UPBOX,
 	FL_SELECTED_BOTTOMTAB_UPBOX,
 	FL_OSHADOW_BOX,					/* not used */
+
 	FL_MAX_BOX_STYLES				/* sentinel */
 } FL_BOX_TYPE;
 
@@ -239,16 +248,19 @@ typedef enum {
 	FL_ALIGN_BOTTOM		  = 2,
 	FL_ALIGN_LEFT		  = 4,
 	FL_ALIGN_RIGHT		  = 8,
-	FL_ALIGN_TOP_LEFT	  = ( FL_ALIGN_TOP | FL_ALIGN_LEFT ),
-	FL_ALIGN_TOP_RIGHT	  = ( FL_ALIGN_TOP | FL_ALIGN_RIGHT ),
-	FL_ALIGN_BOTTOM_LEFT  = ( FL_ALIGN_BOTTOM | FL_ALIGN_LEFT ),
-	FL_ALIGN_BOTTOM_RIGHT = ( FL_ALIGN_BOTTOM | FL_ALIGN_RIGHT ),
+	FL_ALIGN_LEFT_TOP	  = ( FL_ALIGN_TOP    | FL_ALIGN_LEFT  ),
+	FL_ALIGN_RIGHT_TOP	  = ( FL_ALIGN_TOP    | FL_ALIGN_RIGHT ),
+	FL_ALIGN_LEFT_BOTTOM  = ( FL_ALIGN_BOTTOM | FL_ALIGN_LEFT  ),
+	FL_ALIGN_RIGHT_BOTTOM = ( FL_ALIGN_BOTTOM | FL_ALIGN_RIGHT ),
 	FL_ALIGN_INSIDE		  = ( 1 << 13 ),
 	FL_ALIGN_VERT		  = ( 1 << 14 ),	/* not functional yet  */
-	FL_ALIGN_LEFT_TOP	  = FL_ALIGN_TOP_LEFT,
-	FL_ALIGN_RIGHT_TOP	  = FL_ALIGN_TOP_RIGHT,
-	FL_ALIGN_LEFT_BOTTOM  = FL_ALIGN_BOTTOM_LEFT,
-	FL_ALIGN_RIGHT_BOTTOM = FL_ALIGN_BOTTOM_RIGHT
+
+	/* the rest is for backward compatibility only, don't use! */
+
+	FL_ALIGN_TOP_LEFT	  = FL_ALIGN_LEFT_TOP,
+	FL_ALIGN_TOP_RIGHT	  = FL_ALIGN_RIGHT_TOP,
+	FL_ALIGN_BOTTOM_LEFT  = FL_ALIGN_LEFT_BOTTOM,
+	FL_ALIGN_BOTTOM_RIGHT = FL_ALIGN_RIGHT_BOTTOM
 } FL_ALIGN;
 
 /* Mouse buttons. Don't have to be consecutive */
@@ -283,7 +295,7 @@ enum {
 	FL_RETURN_DBLCLICK	  = 4
 };
 
-/*	Some special color indeces for FL private colormap. It does not matter
+/*	Some special color indices for FL private colormap. It does not matter
  *	what the value of each enum is, but it must start from 0 and be
  *	consecutive. */
 
@@ -344,7 +356,7 @@ typedef enum {
 	FL_FREE_COL14,
 	FL_FREE_COL15,
 	FL_FREE_COL16,
-	FL_NOCOLOR = 0x7fffffffL
+	FL_NOCOLOR = INT_MAX
 } FL_PD_COL;
 
 #define FL_BUILT_IN_COLS  ( FL_DARKER_COL1 + 1 )
@@ -359,7 +371,6 @@ typedef enum {
 #define FL_GRAY90			FL_LEFT_BCOL
 #define FL_GRAY63			FL_COL1
 #define FL_GRAY75			FL_MCOL
-
 #define	 FL_LCOL			FL_BLACK
 #define	 FL_NoColor			FL_NOCOLOR
 
@@ -420,10 +431,10 @@ typedef enum {
 	FL_KEY_ALL	   = 7		/* all keys								*/
 } FL_KEY;
 
-#define FL_ALT_MASK		 ( 1L << 25 )	/* alt + Key --> FL_ALT_VAL + key */
+#define FL_ALT_MASK		 ( 1L << 25 )	/* alt + Key --> FL_ALT_MASK + key */
 #define FL_CONTROL_MASK	 ( 1L << 26 )
 #define FL_SHIFT_MASK	 ( 1L << 27 )
-#define FL_ALT_VAL		 FL_ALT_MASK
+#define FL_ALT_VAL		 FL_ALT_MASK    /* Don' use! */
 
 #define MAX_SHORTCUTS    8
 
@@ -682,73 +693,73 @@ enum {
 };
 
 typedef struct forms_ {
-	void			   * fdui;			 /* for fdesign */
-	void			   * u_vdata;		 /* for application */
-	char			   * u_cdata;		 /* for application */
-	long				 u_ldata;		 /* for application */
+	void			     * fdui;		  /* for fdesign */
+	void			     * u_vdata;		  /* for application */
+	char			     * u_cdata;		  /* for application */
+	long				   u_ldata;		  /* for application */
 
-	char *				 label;			 /* window title */
-	unsigned long		 window;		 /* X resource ID for window */
-	FL_Coord			 x,				 /* current geometry info */
-						 y,
-						 w,
-						 h;
-	int                  handle_dec_x,
-	                     handle_dec_y;
-	FL_Coord			 hotx,			 /* hot-spot of the form */
-						 hoty;
-	double				 w_hr,			 /* high resolution width and height */
-						 h_hr;			 /* (needed for precise scaling) */
+	char *				   label;		  /* window title */
+	Window                 window;		  /* X resource ID for window */
+	FL_Coord			   x,			  /* current geometry info */
+						   y,
+						   w,
+						   h;
+	int                    handle_dec_x,
+	                       handle_dec_y;
+	FL_Coord			   hotx,		  /* hot-spot of the form */
+						   hoty;
+	double				   w_hr,		  /* high resolution width and height */
+						   h_hr;		  /* (needed for precise scaling) */
 
-	struct flobjs_	   * first;
-	struct flobjs_	   * last;
-	struct flobjs_	   * focusobj;
+	struct flobjs_	     * first;
+	struct flobjs_	     * last;
+	struct flobjs_	     * focusobj;
 
-	FL_FORMCALLBACKPTR	 form_callback;
-	FL_FORM_ATACTIVATE	 activate_callback;
-	FL_FORM_ATDEACTIVATE deactivate_callback;
-	void			   * form_cb_data;
-	void			   * activate_data;
-	void			   * deactivate_data;
+	FL_FORMCALLBACKPTR	   form_callback;
+	FL_FORM_ATACTIVATE	   activate_callback;
+	FL_FORM_ATDEACTIVATE   deactivate_callback;
+	void			     * form_cb_data;
+	void			     * activate_data;
+	void			     * deactivate_data;
 
-	FL_RAW_CALLBACK		 key_callback;
-	FL_RAW_CALLBACK		 push_callback;
-	FL_RAW_CALLBACK		 crossing_callback;
-	FL_RAW_CALLBACK		 motion_callback;
-	FL_RAW_CALLBACK		 all_callback;
+	FL_RAW_CALLBACK		   key_callback;
+	FL_RAW_CALLBACK		   push_callback;
+	FL_RAW_CALLBACK		   crossing_callback;
+	FL_RAW_CALLBACK		   motion_callback;
+	FL_RAW_CALLBACK		   all_callback;
 
-	unsigned long		 compress_mask;
-	unsigned long		 evmask;
+	unsigned long		   compress_mask;
+	unsigned long		   evmask;
 
 	/* WM_DELETE_WINDOW message handler */
 
-	FL_FORM_ATCLOSE		 close_callback;
-	void			   * close_data;
+	FL_FORM_ATCLOSE		   close_callback;
+	void			     * close_data;
 
-	void			   * flpixmap;		 /* back buffer */
+	void			     * flpixmap;		 /* back buffer */
 
-	unsigned long		 icon_pixmap;
-	unsigned long		 icon_mask;
+	Pixmap		           icon_pixmap;
+	Pixmap		           icon_mask;
 
 	/* interaction and other flags */
 
-	int					 vmode;			 /* current X visual class */
-	int					 deactivated;	 /* true if sensitive */
-	int					 use_pixmap;	 /* true if dbl buffering */
-	int					 frozen;		 /* true if sync change */
-	int					 visible;		 /* true if mapped */
-	int					 wm_border;		 /* window manager info */
-	unsigned int		 prop;			 /* other attributes */
-	int					 has_auto_objects;
-	int					 top;
-	int					 sort_of_modal;	 /* internal use */
-	struct forms_	   * parent;
-	struct forms_	   * child;
-	struct flobjs_	   * parent_obj;
-	int					 attached;		 /* not independent anymore */
-	void				 ( * pre_attach )( struct forms_ * );
-	void			   * attach_data;
-	int					 no_tooltip;
+	int					   vmode;			 /* current X visual class */
+	int					   deactivated;	 	 /* true if sensitive */
+	int					   use_pixmap;	 	 /* true if dbl buffering */
+	int					   frozen;		 	 /* true if sync change */
+	int					   visible;		 	 /* true if mapped */
+	int					   wm_border;		 /* window manager info */
+	unsigned int		   prop;			 /* other attributes */
+	int					   has_auto_objects;
+	int					   top;
+	int					   sort_of_modal;	 /* internal use */
+	struct forms_	     * parent;
+	struct forms_	     * child;
+	struct flobjs_	     * parent_obj;
+	int					   attached;		 /* not independent anymore */
+	void				   ( * pre_attach )( struct forms_ * );
+	void			     * attach_data;
+	int					   no_tooltip;
 } FL_FORM;
 
 
@@ -776,9 +787,9 @@ typedef void ( * FL_IO_CALLBACK )( int,
 								   void * );
 
 FL_EXPORT void fl_add_io_callback(
-		int				 fd,
+		int			     fd,
 		unsigned int	 mask,
-		FL_IO_CALLBACK	 callback,
+		FL_IO_CALLBACK   callback,
 		void		   * data
 		);
 
@@ -823,32 +834,6 @@ FL_EXPORT int fl_add_timeout(
 
 FL_EXPORT void fl_remove_timeout(
 		int id
-		);
-
-/*	Some utility stuff */
-
-#ifndef FL_VN_PAIR_STRUCT
-#define FL_VN_PAIR_STRUCT
-
-typedef struct {
-	int			 val;
-	const char * name;
-} FL_VN_PAIR;
-
-#endif
-
-FL_EXPORT int fl_get_vn_value(
-		FL_VN_PAIR * vn_pair,
-		const char * name
-		);
-
-FL_EXPORT const char * fl_get_vn_name(
-		FL_VN_PAIR * vn_pair,
-		int			 val
-		);
-
-FL_EXPORT unsigned long fl_msleep(
-		unsigned long msec
 		);
 
 /* Basic public routine prototypes */
@@ -1042,7 +1027,7 @@ FL_EXPORT void fl_set_form_geometry(
 
 #define fl_set_initial_placement fl_set_form_geometry
 
-FL_EXPORT long fl_show_form(
+FL_EXPORT Window fl_show_form(
 		FL_FORM	   * form,
 		int			 place,
 		int			 border,
@@ -1066,14 +1051,14 @@ FL_EXPORT void fl_set_form_dblbuffer(
 		int		  y
 		);
 
-FL_EXPORT long fl_prepare_form_window(
+FL_EXPORT Window fl_prepare_form_window(
 		FL_FORM	   * form,
 		int			 place,
 		int			 border,
 		const char * name
 		);
 
-FL_EXPORT long fl_show_form_window(
+FL_EXPORT Window fl_show_form_window(
 		FL_FORM * form
 		);
 
@@ -1736,26 +1721,11 @@ FL_EXPORT void * ( * fl_calloc )( size_t,
 FL_EXPORT void * ( * fl_realloc )( void *,
 								   size_t );
 
-#define FL_MAX_MENU_CHOICE_ITEMS   128
+FL_EXPORT int fl_msleep(
+		unsigned long msec
+		);
 
-enum {
-	FL_TRIANGLE_UPBOX1,
-	FL_TRIANGLE_UPBOX2,
-	FL_TRIANGLE_UPBOX3,
-	FL_TRIANGLE_UPBOX4,
-	FL_TRIANGLE_UPBOX6,
-	FL_TRIANGLE_UPBOX7,
-	FL_TRIANGLE_UPBOX8,
-	FL_TRIANGLE_UPBOX9,
-	FL_TRIANGLE_DOWNBOX1,
-	FL_TRIANGLE_DOWNBOX2,
-	FL_TRIANGLE_DOWNBOX3,
-	FL_TRIANGLE_DOWNBOX4,
-	FL_TRIANGLE_DOWNBOX6,
-	FL_TRIANGLE_DOWNBOX7,
-	FL_TRIANGLE_DOWNBOX8,
-	FL_TRIANGLE_DOWNBOX9
-};
+#define FL_MAX_MENU_CHOICE_ITEMS   128
 
 typedef const char * ( * FL_VAL_FILTER )( FL_OBJECT *,
 										  double,

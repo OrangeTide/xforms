@@ -53,16 +53,22 @@ There are currently three types which just differ by the way they
 look:
 @table @code
 @tindex FL_NORMAL_SELECT
+@anchor{FL_NORMAL_SELECT}
 @item FL_NORMAL_SELECT
 Per default this type is drawn as a rounded, flat box (but you can
 change that by setting a different boxtype for the object) with the
 text of the currently selected item in its center.
 @tindex FL_MENU_SELECT
+
+@tindex MENU_SELECT
+@anchor{MENU_SELECT}
 @item FL_MENU_SELECT
 This select object looks like a button with a little extra box at its
 right side (just like a @code{FL_MENU_BUTTON}) and the text of the
 currently selected item drawn on the button-like object.
+
 @tindex FL_DROPLIST_SELECT
+@anchor{FL_DROPLIST_SELECT}
 @item FL_DROPLIST_SELECT
 This type looks like a button with the text of the currently selected
 item on top of it and a second square button directly beside it with
@@ -97,10 +103,12 @@ to the function after the @code{items} argument:
 Set a value of type @code{long int} that's passed to all callback
 routines for the item. The value must be given in the arguments
 following the @code{items} string.
+
 @item %u
 Set a @code{user_void} pointer that's passed to all callbacks of the
 item. The pointer must be specified in the arguments following the
 @code{items} string.
+
 @item %f
 Set a callback function that gets called when the item is selected.
 The function is of type
@@ -114,6 +122,7 @@ function can be used to keep the selection being made form becoming
 reported back to the user made by returning a value of
 @code{FL_IGNORE} (-1). The functions address must be given in the
 arguments following the @code{items} string.
+
 @item %E
 Set a callback routine that gets called each time the mouse enters the
 item (as long as the item isn't disabled or hidden). The type of the
@@ -121,17 +130,21 @@ function is the same as that of the callback function for the
 selection of the item but it's return value is never used. The
 functions address must be given in the arguments following the
 @code{items} string.
+
 @item %L
 Set a callback routine that gets called each time the mouse leaves the
 item. The type of the function is the same that as of the callback
 function for the selection of the item but it's return value is never
 used. The functions address must be given in the arguments following
 the @code{items} string.
+
 @item %d
 Marks the item as disabled, i.e.@: it can't be selected and its text
 is per default drawn in a different color
+
 @item %h
 Marks the item as hidden, i.e.@: it is not shown while in this state.
+
 @item %S
 For items with shortcut keys it's quite common to have them shown on
 the right hand side. Using @code{%S} you can split the items text
@@ -139,12 +152,14 @@ into two parts, the first one (before @code{%S}) being drawn flushed
 left and the second part flushed right. Note that using this special
 sequence doesn't automatically sets a shortcut key, this still has to
 be done using @code{%s}.
+
 @item %s
 Sets one or more shortcut keys for an item. Requires a string with the
 shortcuts in the arguments following the @code{items} string.
 @xref{Shortcuts}, for details on how to define shortcuts. Please note
 that the character in the label idenical to the shortcut character is
 only shown as underlined if @code{%S} isn't used.
+
 @item %%
 Use this to get a @code{%} within the text of an item.
 @end table
@@ -253,10 +268,13 @@ the program can switch between these two modes of operation,
 where @code{policy} can be on of two values:
 @table @code
 @tindex FL_POPUP_NORMAL_SELECT
+@anchor{FL_POPUP_NORMAL_SELECT}
 @item FL_POPUP_NORMAL_SELECT
 Keeps the popup opened when the mouse isn't released on one of the
 selectable items.
+
 @tindex FL_POPUP_DRAG_SELECT
+@anchor{FL_POPUP_DRAG_SELECT}
 @item FL_POPUP_DRAG_SELECT
 Close the popup immediately when the mouse button is released.
 @end table
@@ -525,19 +543,26 @@ FL_OBJECT *fl_add_nmenu(int type, FL_Coord x, FL_Coord y,
 There are currently three types: 
 @table @code
 @tindex FL_NORMAL_NMENU
+@anchor{FL_NORMAL_NMENU}
 @item FL_NORMAL_NMENU
 Probably the most often used type: shown as text on a borderless
 background, popup gets opened when clicked on.
+
 @tindex FL_NORMAL_TOUCH_NMENU
+@anchor{FL_NORMAL_TOUCH_NMENU}
 @item FL_NORMAL_TOUCH_NMENU
 Also shown as text on a borderless background, but popup gets opened
 when the mouse is moved on top of it without any further user action
 required.
+
 @tindex FL_BUTTON_NMENU
+@anchor{FL_BUTTON_NMENU}
 @item FL_BUTTON_NMENU
 When not active shown as text on borderless background, when clicked
 on popup is shown and the object itself being dispayed as a button.
+
 @tindex FL_BUTTON_TOUCH_NMENU
+@anchor{FL_BUTTON_TOUCH_NMENU}
 @item FL_BUTTON_TOUCH_NMENU
 When not active shown as text on borderless background, when mouse is
 moved onto it the popup is shown and the object itself is dispayed as
@@ -589,11 +614,19 @@ structure with @code{text} set to @code{NULL} is found in the array.
 
 @code{type} indicates the type of the item. It can be
 @table @code
+@tindex FL_POPUP_NORMAL
+@anchor{FL_POPUP_NORMAL}
 @item FL_POPUP_NORMAL
 Just a noral, plain item.
+
+@tindex FL_POPUP_TOGGLE
+@anchor{FL_POPUP_TOGGLE}
 @item FL_POPUP_TOGGLE
 An item that represents one of tow states and is drawn with a
 check-marker when in "on" state.
+
+@tindex FL_POPUP_RADIO
+@anchor{FL_POPUP_RADIO}
 @item FL_POPUP_RADIO
 A radio item, i.e.@: it belongs to a group of items of which only one
 can be in "on" state at a time. The are drawn with a circle to the
@@ -606,13 +639,24 @@ Please note that if @code{text} starts with a @code{/} the type
 The @code{state} member per default is @code{FL_POPUP_NONE}. It can be
 set to
 @table @code
+@tindex FL_POPUP_NONE
+@anchor{FL_POPUP_NONE}
 @item FL_POPUP_NONE
 No special flags are set for the state of the item.
+
+@tindex FL_POPUP_DSABLED
+@anchor{FL_POPUP_DSABLED}
 @item FL_POPUP_DSABLED
 The item is disabled and can't be selected.
+
+@tindex FL_POPUP_HIDDEN
+@anchor{FL_POPUP_HIDDEN}
 @item FL_POPUP_HIDDEN
 The popup is hidden, i.e.@: does not get shown (and thus can't be
 selected).
+
+@tindex FL_POPUP_CHECKED
+@anchor{FL_POPUP_CHECKED}
 @item FL_POPUP_CHECKED
 Only relevant for toggle or radio items, marks it as in "on" state.
 @end table
@@ -706,9 +750,12 @@ int fl_set_nmenu_policy(FL_OBJECT *obj, int policy);
 @noindent
 function where @code{policy} can be one of two values:
 @table @code
+@tindex FL_POPUP_NORMAL_SELECT
 @item FL_POPUP_NORMAL_SELECT
 Default, popup stays open until mouse button is released on a
 selectable entry or button is clicked outside the popups area.
+
+@tindex FL_POPUP_DRAG_SELECT
 @item FL_POPUP_DRAG_SELECT
 Popup is closed when the mouse button is released anywhere.
 @end table
@@ -907,15 +954,22 @@ The following types of browsers exist (see below for more information
 about them):
 @table @code
 @tindex FL_NORMAL_BROWSER
+@anchor{FL_NORMAL_BROWSER}
 @item FL_NORMAL_BROWSER
 A browser in which no selections can be made.
+
 @tindex FL_SELECT_BROWSER
+@anchor{FL_SELECT_BROWSER}
 @item FL_SELECT_BROWSER
 In this case the user can make single line selections.
+
 @tindex FL_HOLD_BROWSER
+@anchor{FL_HOLD_BROWSER}
 @item FL_HOLD_BROWSER
 Same but the selection remains visible till the next selection.
+
 @tindex FL_MULTI_BROWSER
+@anchor{FL_MULTI_BROWSER}
 @item FL_MULTI_BROWSER
 Multiple selections can be made and remain visible till de-selected.
 @end table
@@ -1235,38 +1289,55 @@ The following possibilities exist at the moment:
 @table @code
 @item f
 Fixed width font.
+
 @item n
 Normal (Helvetica) font.
+
 @item t
 Times-Roman like font.
+
 @item b
 Boldface modifier.
+
 @item i
 Italics modifier.
+
 @item l
 Large (new size is @code{FL LARGE SIZE}).
+
 @item m
 Medium (new size is @code{FL MEDIUM SIZE}).
+
 @item s
 Small (new size is @code{FL SMALL SIZE}).
+
 @item L
 Large (new size = current size + 6)
+
 @item M
 Medium (new size = current size + 4)
+
 @item S
 Small (new size = current size - 2).
+
 @item c
 Centered.
+
 @item r
 Right aligned.
+
 @item _
 Draw underlined text.
+
 @item -
 An engraved separator. Text following @code{-} is ignored.
+
 @item C
 The next number indicates the color index for this line.
+
 @item N
 Non-selectable line (in selectable browsers).
+
 @item @@
 Regular @code{@@} character.
 @end table

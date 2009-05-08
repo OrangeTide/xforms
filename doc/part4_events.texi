@@ -9,8 +9,10 @@ which the event is sent.
 
 The following types of events can be sent to an object:
 @table @code
-@tindex FL DRAW
-@item FL DRAW
+
+@tindex FL_DRAW
+@anchor{FL_DRAW}
+@item FL_DRAW
 The object has to be (re)drawn. To figure out the actual size of the
 object you can use the fields @code{obj->x}, @code{obj->y},
 @code{obj->w} and @code{obj->h}. Many Xlib drawing routines require a
@@ -38,7 +40,7 @@ internal book keeping routines. Attributes modifying routines, such as
 @code{@ref{fl_set_object_color()}} etc.@: are not allowed (using them
 can lead to infinite recursions). In addition, (re)drawing of other
 objects using @code{@ref{fl_redraw_object()}} while handling
-@code{FL_DRAW} will also not work.
+@code{@ref{FL_DRAW}} will also not work.
 
 Due to the way double buffering is handled, @code{FL_ObjWin(obj)} is
 at the time @code{FL_DRAW} is possed as the event to the handling
@@ -55,18 +57,22 @@ real window ID the following routine can be used:
 Window fl_get_real_object_window(FL_OBJECT *)
 @end example
 
-To summarize, use @code{FL_ObjWin(obj)} when drawing and use
+To summarize: use @code{FL_ObjWin(obj)} when drawing and use
 @code{@ref{fl_get_real_object_window()}} for cursor or pointer
 routines. This distinction is important only while handling
 @code{FL_DRAW} and @code{FL_ObjWin(obj)} should be used anywhere else.
-@tindex FL DRAWLABEL
-@item FL DRAWLABEL
+
+@tindex FL_DRAWLABEL
+@anchor{FL_DRAWLABEL}
+@item FL_DRAWLABEL
 This event typically follows @code{FL_DRAW} and indicates that the
 object label needs to be (re)drawn. If the object in question always
 draws its label inside the bounding box and this is taken care of by
 handing @code{FL_DRAW}, you can ignore this event.
-@tindex FL ENTER
-@item FL ENTER
+
+@tindex FL_ENTER
+@anchor{FL_ENTER}
+@item FL_ENTER
 This event is sent when the mouse has entered the bounding box and
 might require some action. Note also that the field
 @code{obj->belowmouse} in the object is being set. If entering an
@@ -75,51 +81,69 @@ suffices. Don't do this directly! Always redraw the object by calling
 @code{@ref{fl_redraw_object()}}. It will send an @code{FL_DRAW} event
 to the object but also does some other things (like setting window IDs
 and taking care of double buffering etc.).
-@tindex FL LEAVE
-@item FL LEAVE
+
+@tindex FL_LEAVE
+@anchor{FL_LEAVE}
+@item FL_LEAVE
 The mouse has left the bounding box. Again, normally a redraw is enough
 (or nothing at all).
-@tindex FL MOTION
-@item FL MOTION
+
+@tindex FL_MOTION
+@anchor{FL_MOTION}
+@item FL_MOTION
 Motion events get sent between @code{FL_ENTER} and @code{FL_LEAVE}
 events when the mouse position changes on the object. The mouse
 position is given as an argument to the handle routine.
-@tindex FL PUSH
-@item FL PUSH
+
+@tindex FL_PUSH
+@anchor{FL_PUSH}
+@item FL_PUSH
 The user has pushed a mouse button on the object. Normally this
 requires some actual action. The number of the mouse button pushed is
 given in the @code{key} parameter, having one of the following
 values:
 @table @code
 @tindex FL_LEFT_MOUSE
+@anchor{FL_LEFT_MOUSE}
 @tindex FL_MBUTTON1
 @item FL_LEFT_MOUSE, FL_MBUTTON1
 Left mouse button was pressed.
+
 @tindex FL_MIDDLE_MOUSE
+@anchor{FL_MIDDLE_MOUSE}
 @tindex FL_MBUTTON2
 @item FL_MIDDLE_MOUSE, FL_MBUTTON2
 Middle mouse button was pressed.
+
 @tindex FL_RIGHT_MOUSE
+@anchor{FL_RIGHT_MOUSE}
 @tindex FL_MBUTTON3
 @item FL_RIGHT_MOUSE, FL_MBUTTON3
 Right mouse button was pressed.
+
 @tindex FL_SCROLLUP_MOUSE
+@anchor{FL_SCROLLUP_MOUSE}
 @tindex FL_MBUTTON4
 @item FL_SCROLLUP_MOUSE, FL_MBUTTON4
 Mouse scroll wheel was rotated in up direction.
+
 @tindex FL_SCROLLDOWN_MOUSE
+@anchor{FL_SCROLLDOWN_MOUSE}
 @tindex FL_MBUTTON5
 @item FL_SCROLLDOWN_MOUSE, FL_MBUTTON5
 Mouse scroll wheel was rotated in down direction.
 @end table
-@tindex FL RELEASE
-@item FL RELEASE
+
+@tindex FL_RELEASE
+@anchor{FL_RELEASE}
+@item FL_RELEASE
 The user has released the mouse button. This event is only sent if a
-@code{FL_PUSH} event was sent before. The number of the mouse button
-released is given in the @code{key} parameter exactly as for the
-@code{FL_PUSH} event.
-@tindex FL DBLCLICK
-@item FL DBLCLICK
+@code{@ref{FL_PUSH}} event was sent before.
+@code{@ref{FL_PUSH}} event.
+
+@tindex FL_DBLCLICK
+@anchor{FL_DBLCLICK}
+@item FL_DBLCLICK
 The user has pushed a mouse button twice within a certain time limit
 @tindex FL_CLICK_TIMEOUT
 (@code{FL_CLICK_TIMEOUT}), which by default is @w{400 msec}. This
@@ -127,62 +151,81 @@ event is sent after two @code{FL_PUSH}, @code{FL_RELEASE} sequence.
 Note that @code{FL_DBLCLICK} is only generated for objects that have
 non-zero @code{obj->click timeout} fields and it will not be generated
 for events from the scroll wheel.
-@tindex FL TRPLCLICK
-@item FL TRPLCLICK
+
+@tindex FL_TRPLCLICK
+@anchor{FL_TRPLCLICK}
+@item FL_TRPLCLICK
 The user has pushed a mouse button three times within a certain time
-window. This event is sent after a @code{FL_DBLCLICK}, @code{FL_PUSH},
-@code{FL_RELEASE} sequence. Set click timeout to none-zero to activate
-@code{FL_TRPLCLICK}.
-@tindex FL FOCUS
-@item FL FOCUS
+window. This event is sent after a @code{@ref{FL_DBLCLICK}},
+@code{@ref{FL_PUSH}}, @code{@ref{FL_RELEASE}} sequence. Set click
+timeout to none-zero to activate @code{FL_TRPLCLICK}.
+
+@tindex FL_FOCUS
+@anchor{FL_FOCUS}
+@item FL_FOCUS
 Input got focussed to this object. This type of event and the next two
 are only sent to objects for which the field @code{obj->input} is set
 to 1 (see below).
-@tindex FL UNFOCUS
-@item FL UNFOCUS
-Input is no longer focussed on this object.
-@tindex FL KEYBOARD
-@item FL KEYBOARD
+
+@tindex FL_UNFOCUS
+@anchor{FL_UNFOCUS}
+@item FL_UNFOCUS
+Input is no longer focussed on the object.
+
+@tindex FL_KEYBOARD
+@anchor{FL_KEYBOARD}
+@item FL_KEYBOARD
 A key was pressed. The ASCII value (or KeySym if non-ASCII) is passed
 to the routine via the @code{key} argument, modiier keys can be
 retrieved from the @code{state} member of the XEvent also passed to
 the function via @code{xev}.
 
-This event only happens between @code{FL_FOCUS} and @code{FL_UNFOCUS}
-events. Not all objects are sent keyboard events, only those that have
-non-zero value in field @code{obj->input} or @code{obj->wantkey}.
-@tindex FL SHORTCUT
-@item FL SHORTCUT
+This event only happens between @code{@ref{FL_FOCUS}} and
+@code{@ref{FL_UNFOCUS}} events. Not all objects are sent keyboard
+events, only those that have non-zero value in field @code{obj->input}
+or @code{obj->wantkey}.
+
+@tindex FL_SHORTCUT
+@anchor{FL_SHORTCUT}
+@item FL_SHORTCUT
 The user used a keyboard shortcut. The shortcut used is given in the
 parameter key. See below for more on shortcuts.
-@tindex FL STEP
-@item FL STEP
-A @code{FL STEP} event is sent all the time (typically about 20 times
+
+@tindex FL_STEP
+@anchor{FL_STEP}
+@item FL_STEP
+A @code{FL_STEP} event is sent all the time (typically about 20 times
 a second but possibly less often because of system delays and other
 time-consuming tasks) to objects for which the field
 @code{obj->automatic} has been set to a non-zero value. The handling
 routine receives a synthetic @code{MotionNotify} event as the XEvent.
 This can be used to make an object change appearance without user
 action. Clock and timer objects use this type of event.
+
 @tindex FL_UPDATE
+@anchor{FL_UPDATE}
 @item FL_UPDATE
-An @code{FL_UPDATE} event, like the @code{FL STEP} event, also gets
+An @code{FL_UPDATE} event, like the @code{@ref{FL_STEP}} event, also gets
 send about every @w{50 msec} (but less often under high load) to
 objects while they are "pushed", i.e.@: between receiving a
-@code{FL_PUSH} and a @code{FL_RELEASE} event if the
+@code{@ref{FL_PUSH}} and a @code{@ref{FL_RELEASE}} event if the
 @code{obj->want_update} field is set for the object. Like for the
 @code{FL_STEP} event the handling routine receives a synthetic
 @code{MotionNotify} event as the XEvent. This is typically used
 by objects that have to perform tasks at regular time intervals while
 they are "pushed" (e.g.@: counters that need to count up or down while
 the mouse is pushed on one of its buttons).
-@tindex FL FREEMEM
-@tindex FL FREEMEM
-@item FL FREEMEM
+
+@tindex FL_FREEMEM
+@anchor{FL_FREEMEM}
+@tindex FL_FREEMEM
+@item FL_FREEMEM
 This event is sent when the object is to be freed. All memory
 allocated for the object must be freed when this event is received.
-@tindex FL OTHER
-@item FL OTHER
+
+@tindex FL_OTHER
+@anchor{FL_OTHER}
+@item FL_OTHER
 Events other than the above. These events currently include
 ClientMessage, Selection and possibly other window manager events. All
 information about the event is contained in @code{xev} parameter and
@@ -269,16 +312,17 @@ specified to the current shortcuts while
 special keys can't be underlined.
 
 Now, whenever the user presses one of these keys, an
-@code{FL_SHORTCUT} event is sent to the object. The key pressed is
-passed to the handle routine (in the argument @code{key}).
+@code{@ref{FL_SHORTCUT}} event is sent to the object. The key pressed
+is passed to the handle routine (in the argument @code{key}).
 Combinations with the @code{<Alt>} key are given by adding
-@code{FL_ALT_MASK} (currently the 25th bit, i.e., @code{0x1000000}) to
-the ASCII value of the key. E.g.@: the key combinations @code{<Alt>E}
-and @code{<Alt>e} are passed as @code{FL_ALT_MASK + 'E'}. The object
-can now take action accordingly. If you use shortcuts to manipulate
-class object specific things, you will need to create a routine to
-communicate with the user, e.g., @code{fl_set_NEW_shortcut()}, and do
-your own internal bookkeeping to track what keys do what and then call
+@code{@ref{FL_ALT_MASK}} (currently the 25th bit, i.e.,
+@code{0x1000000}) to the ASCII value of the key. E.g.@: the key
+combinations @code{<Alt>E} and @code{<Alt>e} are passed as
+@code{@ref{FL_ALT_MASK} + 'E'}. The object can now take action
+accordingly. If you use shortcuts to manipulate class object specific
+things, you will need to create a routine to communicate with the
+user, e.g., @code{fl_set_NEW_shortcut()}, and do your own internal
+bookkeeping to track what keys do what and then call
 @code{@ref{fl_set_object_shortcut()}} to register the shortcut in the
 event dispatching module. The idea is NOT that the user himself calls
 @code{@ref{fl_set_object_shortcut()}} but that the class provides a
@@ -288,42 +332,49 @@ to this effect will suffice. For example
 @code{@ref{fl_set_button_shortcut()}} is defined as
 @code{@ref{fl_set_object_shortcut()}}.
 
-The order in which keys are handled is as follows: First for a key it is
-tested whether any object in the form has the key as a shortcut. If
-yes, the first of those objects gets the shortcut event.
-Otherwise, the key is checked to see if it is @code{<Tab>} or
-@code{<Return>}. If it is, the @code{obj->wantkey} field is checked.
-If the field does not contain @code{FL_ KEY_TAB} bit, input is
-focussed on the next input field. Otherwise the key is sent to the
-current input field. This means that input objects only get a
-@code{<Tab>} or @code{<Return>} key sent to them if in the
-@code{obj->wantkey} field the @code{FL_KEY_TAB} bit is set. This is
-e.g.@: used in multi-line input fields. If the object wants all cursor
-keys (including @code{<PgUp>} etc.), the @code{obj->wantkey} field
-must have the @code{FL_KEY_SPECIAL} bit set.
+The order in which keys are handled is as follows: First for a key it
+is tested whether any object in the form has the key as a shortcut. If
+yes, the first of those objects gets the shortcut event. Otherwise,
+the key is checked to see if it is @code{<Tab>} or @code{<Return>}. If
+it is, the @code{obj->wantkey} field is checked. If the field does not
+contain @code{@ref{FL_KEY_TAB}} bit, input is focussed on the next
+input field. Otherwise the key is sent to the current input field.
+This means that input objects only get a @code{<Tab>} or
+@code{<Return>} key sent to them if in the @code{obj->wantkey} field
+the @code{@ref{FL_KEY_TAB}} bit is set. This is e.g.@: used in
+multi-line input fields. If the object wants all cursor keys
+(including @code{<PgUp>} etc.), the @code{obj->wantkey} field must
+have the @code{@ref{FL_KEY_SPECIAL}} bit set.
 
 To summarize, the @code{obj->wantkey} field can take on the following
 values (or the bit-wise or of them):
 @table @code
 @tindex FL_KEY_NORMAL
-@item FL KEY NORMAL
+@anchor{FL_KEY_NORMAL}
+@item FL_KEY_NORMAL
 The default. The object receives left and right cursor, @code{<Home>}
 and @code{<End>} keys plus all normal keys (0-255) except @code{<Tab>}
 @code{<Return>}.
+
 @tindex FL_KEY_TAB
+@anchor{FL_KEY_TAB}
 @item FL_KEY_TAB
 Object receives the @code{<Tab>}, @code{<Return>} as well as the
 @code{<Up>} and @code{<Down>} cursor keys.
+
 @tindex FL_KEY_SPECIAL
+@anchor{FL_KEY_SPECIAL}
 @item FL_KEY_SPECIAL
 The object receives all keys with a KeySym above 255 which aren't
 already covered by @code{FL_KEY_NORMAL} and @code{FL_KEY_TAB} (e.g.@:
 function keys etc.)
+
 @tindex FL_KEY_ALL
+@anchor{FL_KEY_ALL}
 @item FL_KEY_ALL
 Object receives all keys.
 @end table
 @noindent
 This way it is possible for a non-input object (i.e.@: if
 @code{obj->input} is zero) to obtain special keyboard event by setting
-@code{obj->wantkey} to @code{FL_KEY_SPECIAL}.
+@code{obj->wantkey} to @code{@ref{FL_KEY_SPECIAL}}.

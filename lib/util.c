@@ -116,7 +116,7 @@ fl_show_errors( int y )
 
 #define VN( v )  { v, #v }
 
-static FL_VN_PAIR flevent[ ] =
+static FLI_VN_PAIR flevent[ ] =
 {
     VN( FL_ENTER ),
 	VN( FL_LEAVE ),
@@ -145,11 +145,11 @@ static FL_VN_PAIR flevent[ ] =
 const char *
 fli_event_name( int ev )
 {
-    return fl_get_vn_name( flevent, ev );
+    return fli_get_vn_name( flevent, ev );
 }
 
 
-static FL_VN_PAIR flclass[ ] =
+static FLI_VN_PAIR flclass[ ] =
 {
     VN( FL_BUTTON ),
 	VN( FL_LIGHTBUTTON ),
@@ -201,7 +201,7 @@ fli_object_class_name( FL_OBJECT * ob )
 	else if ( ob == FL_EVENT )
 		return "FL_EVENT";
 
-	return fl_get_vn_name( flclass, ob->objclass );
+	return fli_get_vn_name( flclass, ob->objclass );
 }
 
 

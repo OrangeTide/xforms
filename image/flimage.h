@@ -694,7 +694,7 @@ enum {
    FLIMAGE_CENTER     =  2,     /* center warped image. default  */
    FLIMAGE_RIGHT      =  8,     /* flush right the warped image  */
    FLIMAGE_ASPECT     = 32,     /* fit the size */
-   FLIMAGE_NOCENTER   = FL_ALIGN_TOP_LEFT
+   FLIMAGE_NOCENTER   = FL_ALIGN_LEFT_TOP
 };
 
 FL_EXPORT int flimage_convolve(

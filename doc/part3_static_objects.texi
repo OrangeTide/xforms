@@ -58,36 +58,57 @@ placed in the center of the box.
 The following types are available:
 @table @code
 @tindex FL_UP_BOX
+@anchor{FL_UP_BOX}
 @item FL_UP_BOX
 A box that comes out of the screen.
+
 @tindex FL_DOWN_BOX
+@anchor{FL_DOWN_BOX}
 @item @code{FL_DOWN_BOX}
 A box that goes down into the screen.
+
 @tindex FL_FLAT_BOX
+@anchor{FL_FLAT_BOX}
 @item FL_FLAT_BOX
 A flat box without a border.
+
 @tindex FL_BORDER_BOX
+@anchor{FL_BORDER_BOX}
 @item FL_BORDER_BOX
 A flat box with just a border.
+
 @tindex FL_FRAME_BOX
+@anchor{FL_FRAME_BOX}
 @item FL_FRAME_BOX
 A flat box with an engraved frame.
+
 @tindex FL_SHADOW_BOX
+@anchor{FL_SHADOW_BOX}
 @item FL_SHADOW_BOX
 A flat box with a shadow.
+
 @tindex FL_ROUNDED_BOX
+@anchor{FL_ROUNDED_BOX}
 @item FL_ROUNDED_BOX
 A rounded box.
+
 @tindex FL_RFLAT_BOX
+@anchor{FL_RFLAT_BOX}
 @item FL_RFLAT_BOX
 A rounded box without a border.
+
 @tindex FL_RSHADOW_BOX
+@anchor{FL_RSHADOW_BOX}
 @item FL_RSHADOW_BOX
 A rounded box with a shadow.
+
 @tindex FL_OVAL_BOX
+@anchor{FL_OVAL_BOX}
 @item FL_OVAL_BOX
 An elliptic box.
+
 @tindex FL_NO_BOX
+@anchor{FL_NO_BOX}
 @item FL_NO_BOX
 No box at all, only a centered label.
 @end table
@@ -240,7 +261,7 @@ can changed (within limits) via calls of
 @code{@ref{fl_set_object_lalign()}}.
 
 @ifhtml
-@center @image{labelframe}
+@center @image{images/labelframe}
 @end ifhtml
 @ifnothtml
 @center @image{images/labelframe,7cm}

@@ -419,17 +419,17 @@ flps_draw_text_beside( int          align,
 						str );
     else if ( align == FL_ALIGN_BOTTOM )
 		flps_draw_text( FL_ALIGN_TOP, x, y - h, w, h, col, style, size, str );
-    else if ( align == FL_ALIGN_BOTTOM_LEFT )
-		flps_draw_text( FL_ALIGN_TOP_LEFT, x, y - h, w, h, col, style, size,
+    else if ( align == FL_ALIGN_LEFT_BOTTOM )
+		flps_draw_text( FL_ALIGN_LEFT_TOP, x, y - h, w, h, col, style, size,
 						str );
-    else if ( align == FL_ALIGN_BOTTOM_RIGHT )
-		flps_draw_text( FL_ALIGN_TOP_RIGHT, x, y - h, w, h, col, style, size,
+    else if ( align == FL_ALIGN_RIGHT_BOTTOM )
+		flps_draw_text( FL_ALIGN_RIGHT_TOP, x, y - h, w, h, col, style, size,
 						str );
-    else if ( align == FL_ALIGN_TOP_LEFT )
-		flps_draw_text( FL_ALIGN_BOTTOM_LEFT, x, y + h, w, h, col, style, size,
+    else if ( align == FL_ALIGN_LEFT_TOP )
+		flps_draw_text( FL_ALIGN_LEFT_BOTTOM, x, y + h, w, h, col, style, size,
 						str );
-    else if ( align == FL_ALIGN_TOP_RIGHT )
-		flps_draw_text( FL_ALIGN_BOTTOM_RIGHT, x, y + h, w, h, col, style, size,
+    else if ( align == FL_ALIGN_RIGHT_TOP )
+		flps_draw_text( FL_ALIGN_RIGHT_BOTTOM, x, y + h, w, h, col, style, size,
 						str );
     else if ( align == FL_ALIGN_CENTER )
 		flps_draw_text( FL_ALIGN_CENTER, x, y, w, h, col, style, size, str );

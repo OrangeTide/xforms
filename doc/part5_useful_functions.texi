@@ -74,6 +74,17 @@ set a warning is printed out in case the capability asked for isn't
 available.
 
 
+Finally
+@findex fl_msleep()
+@anchor{fl_msleep()}
+@example
+int fl_msleep(usigned long msec);
+@end example
+@noindent
+allows to wait for a number of milli-seconds (with the best resolution
+possible on your system).
+
+
 @node Windowing Support
 @section Windowing Support
 

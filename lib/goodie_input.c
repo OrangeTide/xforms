@@ -84,7 +84,7 @@ create_form_input( const char *str1,
     obj = fl_add_frame( FL_ENGRAVED_FRAME, 8, 9, 394, 67, "" );
 
     fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 20, 33, 370, 30, str1 );
-    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
     fl_set_input( obj, defstr );
 
     fdui->cancel = obj = fl_add_button( FL_NORMAL_BUTTON, 30, 85, 80, 26,

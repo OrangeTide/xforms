@@ -621,7 +621,7 @@ get_finput_value( FL_OBJECT * ob,
 
 #define VN( v )  { v, #v }
 
-static FL_VN_PAIR howreturn[ ] =
+static FLI_VN_PAIR howreturn[ ] =
 {
     VN( FL_RETURN_END_CHANGED ),
     VN( FL_RETURN_CHANGED ),
@@ -633,7 +633,7 @@ static FL_VN_PAIR howreturn[ ] =
 
 /* this is used in the spec popups */
 
-static FL_VN_PAIR howreturn_str[ ] =
+static FLI_VN_PAIR howreturn_str[ ] =
 {
     { FL_RETURN_END_CHANGED, "End & Changed" },
     { FL_RETURN_CHANGED,     "Whenever Changed" },
@@ -666,7 +666,7 @@ get_how_return_str( void )
 const char *
 get_how_return_str_name( int a )
 {
-    return fl_get_vn_name( howreturn_str, a );
+    return fli_get_vn_name( howreturn_str, a );
 }
 
 
@@ -676,7 +676,7 @@ get_how_return_str_name( int a )
 int
 get_how_return_str_value( const char *s )
 {
-    return fl_get_vn_value( howreturn_str, s );
+    return fli_get_vn_value( howreturn_str, s );
 }
 
 
@@ -688,7 +688,7 @@ get_how_return_str_value( const char *s )
 const char *
 get_how_return_name( int a )
 {
-    return fl_get_vn_name( howreturn, a );
+    return fli_get_vn_name( howreturn, a );
 }
 
 
@@ -698,13 +698,13 @@ get_how_return_name( int a )
 int
 get_how_return_value( const char *s )
 {
-    return fl_get_vn_value( howreturn, s );
+    return fli_get_vn_value( howreturn, s );
 }
 
 
 /*  scrollbar preference settings */
 
-static FL_VN_PAIR scrbpref[ ] =
+static FLI_VN_PAIR scrbpref[ ] =
 {
     VN( FL_OFF ),
 	VN( FL_ON ),
@@ -732,7 +732,7 @@ get_scrollbar_pref_string( void )
 const char *
 get_scrollbar_pref_name( int a )
 {
-    return fl_get_vn_name( scrbpref, a );
+    return fli_get_vn_name( scrbpref, a );
 }
 
 
@@ -742,12 +742,12 @@ get_scrollbar_pref_name( int a )
 int
 get_scrollbar_pref_value( const char * s )
 {
-    return fl_get_vn_value(scrbpref, s);
+    return fli_get_vn_value(scrbpref, s);
 }
 
 /* xyplot scale */
 
-static FL_VN_PAIR scale_vn[ ] =
+static FLI_VN_PAIR scale_vn[ ] =
 {
     VN( FL_LINEAR ),
 	VN( FL_LOG ),
@@ -761,7 +761,7 @@ static FL_VN_PAIR scale_vn[ ] =
 const char *
 get_scale_name( int a )
 {
-    return fl_get_vn_name( scale_vn, a );
+    return fli_get_vn_name( scale_vn, a );
 }
 
 
@@ -771,7 +771,7 @@ get_scale_name( int a )
 int
 get_scale_value( const char * s )
 {
-    return fl_get_vn_value( scale_vn, s );
+    return fli_get_vn_value( scale_vn, s );
 }
 
 
@@ -787,7 +787,7 @@ get_scale_string( void )
 
 /* xyplot grid */
 
-static FL_VN_PAIR grid_vn[ ] =
+static FLI_VN_PAIR grid_vn[ ] =
 {
     VN( FL_GRID_NONE ),
 	VN( FL_GRID_MAJOR ),
@@ -802,7 +802,7 @@ static FL_VN_PAIR grid_vn[ ] =
 const char *
 get_grid_name( int a )
 {
-    return fl_get_vn_name( grid_vn, a );
+    return fli_get_vn_name( grid_vn, a );
 }
 
 
@@ -812,7 +812,7 @@ get_grid_name( int a )
 int
 get_grid_value( const char * s )
 {
-    return fl_get_vn_value( grid_vn, s );
+    return fli_get_vn_value( grid_vn, s );
 }
 
 
@@ -828,7 +828,7 @@ get_grid_string( void )
 
 /* line style string stuff */
 
-static FL_VN_PAIR linestyle[ ] =
+static FLI_VN_PAIR linestyle[ ] =
 {
     VN( FL_SOLID ),
 	VN( FL_USERDASH ),
@@ -857,7 +857,7 @@ get_linestyle_string( void )
 const char *
 get_linestyle_name( int a )
 {
-    return fl_get_vn_name( linestyle, a );
+    return fli_get_vn_name( linestyle, a );
 }
 
 
@@ -867,13 +867,13 @@ get_linestyle_name( int a )
 int
 get_linestyle_value( const char * s )
 {
-    return fl_get_vn_value( linestyle, s );
+    return fli_get_vn_value( linestyle, s );
 }
 
 
 /* popup mode */
 
-static FL_VN_PAIR pupmode[ ] =
+static FLI_VN_PAIR pupmode[ ] =
 {
     VN( FL_PUP_NONE ),
     VN( FL_PUP_GRAY ),
@@ -900,7 +900,7 @@ get_pupmode_string( void )
 const char *
 get_pupmode_name( int a )
 {
-    return fl_get_vn_name( pupmode, a );
+    return fli_get_vn_name( pupmode, a );
 }
 
 
@@ -915,5 +915,5 @@ get_pupmode_value( const char * s )
     strcpy( buf, s );
     if ( buf[ 0 ] != 'F' )
 		strcat( strcpy( buf, "FL_" ), s );
-    return fl_get_vn_value( pupmode, buf );
+    return fli_get_vn_value( pupmode, buf );
 }

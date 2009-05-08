@@ -53,7 +53,7 @@ draw_sbbutton( FL_OBJECT * ob )
     FL_Coord abw = FL_abs( ob->bw );
     FL_Coord extra = abw;
     SPEC *sp = ob->spec;
-    int btype = FL_TRIANGLE_UPBOX8;
+    int btype = FLI_TRIANGLE_UPBOX8;
     char *label = ob->label;
     int x = ob->x,
 		y = ob->y,
@@ -83,13 +83,13 @@ draw_sbbutton( FL_OBJECT * ob )
     }
 
     if ( *label == '2' )
-		btype = sp->val ? FL_TRIANGLE_DOWNBOX2 : FL_TRIANGLE_UPBOX2;
+		btype = sp->val ? FLI_TRIANGLE_DOWNBOX2 : FLI_TRIANGLE_UPBOX2;
     else if ( *label == '4' )
-		btype = sp->val ? FL_TRIANGLE_DOWNBOX4 : FL_TRIANGLE_UPBOX4;
+		btype = sp->val ? FLI_TRIANGLE_DOWNBOX4 : FLI_TRIANGLE_UPBOX4;
     else if ( *label == '6' )
-		btype = sp->val ? FL_TRIANGLE_DOWNBOX6 : FL_TRIANGLE_UPBOX6;
+		btype = sp->val ? FLI_TRIANGLE_DOWNBOX6 : FLI_TRIANGLE_UPBOX6;
     else if ( *label == '8' )
-		btype = sp->val ? FL_TRIANGLE_DOWNBOX8 : FL_TRIANGLE_UPBOX8;
+		btype = sp->val ? FLI_TRIANGLE_DOWNBOX8 : FLI_TRIANGLE_UPBOX8;
 
     c1 = ( ob->belowmouse && sp->event != FL_RELEASE ) ? FL_MCOL : ob->col2;
     fli_drw_tbox( btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,

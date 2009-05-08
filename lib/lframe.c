@@ -100,7 +100,7 @@ handle_lframe( FL_OBJECT * ob,
 			if ( ob->type == FL_UP_FRAME || ob->type == FL_DOWN_FRAME )
 				dy = ( bw + 1 ) / 2;
 
-			if ( align == FL_ALIGN_TOP_RIGHT || align == FL_ALIGN_RIGHT )
+			if ( align == FL_ALIGN_RIGHT_TOP || align == FL_ALIGN_RIGHT )
 			{
 				sx = ob->x + ob->w - margin - sw;
 				sy = ob->y - sh / 2 - dy;
@@ -115,7 +115,7 @@ handle_lframe( FL_OBJECT * ob,
 				sx = ob->x + margin;
 				sy = ob->y + ob->h - sh / 2 + dy;
 			}
-			else if ( align == FL_ALIGN_BOTTOM_RIGHT )
+			else if ( align == FL_ALIGN_RIGHT_BOTTOM )
 			{
 				sx = ob->x + ob->w - margin - sw;
 				sy = ob->y + ob->h - sh / 2 + dy;
@@ -161,7 +161,7 @@ fl_create_labelframe( int          type,
     ob->col1    = FL_FRAME_COL1;
     ob->col2    = FL_FRAME_COL2;
     ob->lcol    = FL_FRAME_LCOL;
-    ob->align   = FL_ALIGN_TOP_LEFT;
+    ob->align   = FL_ALIGN_LEFT_TOP;
     ob->active  = 0;
 
     return ob;

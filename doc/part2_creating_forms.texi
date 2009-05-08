@@ -146,7 +146,7 @@ positions. Default snapping is 10 pixels. Snapping helps in making
 objects of the same size and aligning them nicely.
 
 @ifhtml
-@center @image{fd_align}
+@center @image{images/fd_align}
 @end ifhtml
 @ifnothtml
 @center @image{images/fd_align,9cm}

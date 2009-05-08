@@ -797,7 +797,7 @@ fl_set_select_text_align( FL_OBJECT * obj,
 	}
 
 	if (    align < ( FL_ALIGN_CENTER | FL_ALIGN_INSIDE )
-		 || align > ( FL_ALIGN_BOTTOM_RIGHT | FL_ALIGN_INSIDE ) )
+		 || align > ( FL_ALIGN_RIGHT_BOTTOM | FL_ALIGN_INSIDE ) )
 	{
 		M_err( "fl_set_select_text_align", "Invalid value for align" );
 		return -1;

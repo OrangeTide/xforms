@@ -111,7 +111,7 @@ init_xyplot( FD_fff * fd_fff )
     fl_set_xyplot_key( fd_fff->xyplot, 0, "Original" );
     fl_set_xyplot_key( fd_fff->xyplot, 1, "Overlay" );
     fl_set_xyplot_key_position( fd_fff->xyplot, 9.8, 1.08,
-								FL_ALIGN_BOTTOM_LEFT );
+								FL_ALIGN_LEFT_BOTTOM );
 }
 
 

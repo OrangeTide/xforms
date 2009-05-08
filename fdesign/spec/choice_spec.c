@@ -34,11 +34,11 @@ create_form_choiceattrib( void )
     obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 225, 82, 111, 140, "Action" );
 
     fdui->content_br = obj = fl_add_browser( FL_HOLD_BROWSER, 353, 85, 120, 140, "CurrentItems:" );
-    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
 
     fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 35, 107, 170, 25, "EditItem" );
     fl_set_input_shortcut( obj, "#E", 1 );
-    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 235, 97, 84, 26, "Add" );
     fl_set_button_shortcut( obj, "#A", 1 );
@@ -66,11 +66,11 @@ create_form_choiceattrib( void )
 
     fdui->mode = obj = fl_add_choice( FL_NORMAL_CHOICE2, 106, 155, 98, 25, "Mode" );
     fl_set_object_shortcut( obj, "#M", 1 );
-    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
 
     fdui->shortcut = obj = fl_add_input( FL_NORMAL_INPUT, 35, 155, 70, 25, "Shortcut" );
     fl_set_input_shortcut( obj, "#S", 1 );
-    fl_set_object_lalign( obj, FL_ALIGN_TOP_LEFT );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
 
     fdui->align = obj = fl_add_choice( FL_NORMAL_CHOICE2, 45, 39, 150, 24, "" );
     fl_set_object_callback( obj, choice_align_cb, 0 );

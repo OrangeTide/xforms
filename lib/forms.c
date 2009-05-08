@@ -29,7 +29,7 @@
  */
 
 #if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.56 2009/05/02 20:11:09 jtt Exp $";
+char *fl_id_fm = "$Id: forms.c,v 1.57 2009/05/06 19:33:16 jtt Exp $";
 #endif
 
 
@@ -958,7 +958,7 @@ fl_set_form_title( FL_FORM *    form,
 static int has_initial;
 static int unmanaged_count;
 
-long
+Window
 fl_prepare_form_window( FL_FORM    * form,
 						int          place,
 						int          border,
@@ -985,7 +985,7 @@ fl_prepare_form_window( FL_FORM    * form,
     if ( form == NULL )
     {
 		M_err( "fl_show_form", "NULL form." );
-		return -1;
+		return None;
     }
 
     if ( form->visible != FL_INVISIBLE )
@@ -1141,7 +1141,7 @@ fl_prepare_form_window( FL_FORM    * form,
 /***************************************
  ***************************************/
 
-long
+Window
 fl_show_form_window( FL_FORM * form )
 {
 	FL_OBJECT *obj;
@@ -1175,7 +1175,7 @@ fl_show_form_window( FL_FORM * form )
 /***************************************
  ***************************************/
 
-long
+Window
 fl_show_form( FL_FORM *    form,
 			  int          place,
 			  int          border,

@@ -17,7 +17,7 @@
 
 
 /*
- * $Id: image_marker.c,v 1.10 2009/05/02 20:11:06 jtt Exp $
+ * $Id: image_marker.c,v 1.11 2009/05/06 19:33:16 jtt Exp $
  *
  *  .
  *  This file is part of the XForms library package.

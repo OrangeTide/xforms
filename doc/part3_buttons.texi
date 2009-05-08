@@ -9,7 +9,7 @@ user pushes them again and radio buttons that make other buttons be
 released.
 
 @ifhtml
-@center @image{buttontypes}
+@center @image{images/buttontypes}
 @end ifhtml
 @ifnothtml
 @center @image{images/buttontypes,7cm}
@@ -104,74 +104,93 @@ arrow.
 The following types of buttons are available:
 @table @code
 @tindex FL_NORMAL_BUTTON
+@anchor{FL_NORMAL_BUTTON}
 @item FL_NORMAL_BUTTON
 Returns value when released.
+
 @tindex FL_PUSH_BUTTON
+@anchor{FL_PUSH_BUTTON}
 @item FL_PUSH_BUTTON
 Stays pushed until user pushes it again.
+
 @tindex FL_MENU_BUTTON
+@anchor{FL_MENU_BUTTON}
 @item FL_MENU_BUTTON
 Returns value when pushed, useful e.g.@: for opening a popup when
 pushed.
+
 @tindex FL_TOUCH_BUTTON
+@anchor{FL_TOUCH_BUTTON}
 @item FL_TOUCH_BUTTON
 Returns value as long as the user pushes it.
+
 @tindex FL_RADIO_BUTTON
+@anchor{FL_RADIO_BUTTON}
 @item FL_RADIO_BUTTON
 Push button that switches off other radio buttons.
+
 @tindex FL_HIDDEN_BUTTON
+@anchor{FL_HIDDEN_BUTTON}
 @item FL_HIDDEN_BUTTON
 Invisible normal button.
+
 @tindex FL_INOUT_BUTTON
+@anchor{FL_INOUT_BUTTON}
 @item FL_INOUT_BUTTON
 Returns value both when pushed and when released.
+
 @tindex FL_RETURN_BUTTON
+@anchor{FL_RETURN_BUTTON}
 @item FL_RETURN_BUTTON
 Like a normal button but reacts on the @code{<Return>} key.
+
 @tindex FL_HIDDEN_RET_BUTTON
+@anchor{FL_HIDDEN_RET_BUTTON}
 @item FL_HIDDEN_RET_BUTTON
 Invisible return button.
 @end table
 
-Except for the @code{FL_HIDDEN_BUTTON} and
-@code{FL_HIDDEN_RET_BUTTON}, which are invisible, all types of button
-look similar on the screen but their function is quite different. Each
-of these buttons gets pushed down when the user presses the mouse on
-top of it. What actually happens when the user does so depends on the
-type of the button. An @code{FL_NORMAL_BUTTON}, @code{FL_TOUCH_BUTTON}
-and @code{FL_INOUT_BUTTON} gets released when the user releases the
+Except for the @code{@ref{FL_HIDDEN_BUTTON}} and
+@code{@ref{FL_HIDDEN_RET_BUTTON}}, which are invisible, all types of
+button look similar on the screen but their function is quite
+different. Each of these buttons gets pushed down when the user
+presses the mouse on top of it. What actually happens when the user
+does so depends on the type of the button. An
+@code{@ref{FL_NORMAL_BUTTON}}, @code{@ref{FL_TOUCH_BUTTON}} and
+@code{@ref{FL_INOUT_BUTTON}} gets released when the user releases the
 mouse button. Their difference lies in the moment at which the
-interaction routines return them (see below). A @code{FL_PUSH_BUTTON}
-remains pushed and is only released when the user pushes it again. A
-@code{FL_RADIO_BUTTON} is a push button with the following extra
-property: whenever the user pushes a radio button, all other pushed
-radio buttons in the same form (or in the same group) are released. In
-this way the user can make its choice among several possibilities. A
-@code{FL_RETURN_BUTTON} behaves like a normal button, but it also
-reacts when the @code{<Return>} key on the keyboard is pressed. When a
-form contains such a button (of course there can only be one) the
-@code{<Return>} key can no longer be used to move between input
-fields. For this the @code{<Tab>} key must be used.
+interaction routines return them (see below). A
+@code{@ref{FL_PUSH_BUTTON}} remains pushed and is only released when
+the user pushes it again. A @code{@ref{FL_RADIO_BUTTON}} is a push
+button with the following extra property: whenever the user pushes a
+radio button, all other pushed radio buttons in the same form (or in
+the same group) are released. In this way the user can make its choice
+among several possibilities. A @code{@ref{FL_RETURN_BUTTON}} behaves
+like a normal button, but it also reacts when the @code{<Return>} key
+on the keyboard is pressed. When a form contains such a button (of
+course there can only be one) the @code{<Return>} key can no longer be
+used to move between input fields. For this the @code{<Tab>} key must
+be used.
 
-A @code{FL_HIDDEN_BUTTON} behaves like a normal button but is
-invisible. A @code{FL_HIDDEN_RET_BUTTON} is like a hidden button but
-also reacts to @code{<Return>} key presses.
+A @code{@ref{FL_HIDDEN_BUTTON}} behaves like a normal button but is
+invisible. A @code{@ref{FL_HIDDEN_RET_BUTTON}} is like a hidden button
+but also reacts to @code{<Return>} key presses.
 
 
 @node Button Interaction
 @section Button Interaction
 
-@code{FL_NORMAL_BUTTON}s, @code{FL_PUSH_BUTTON}s,
-@code{FL_RADIO_BUTTON}s, @code{FL_RETURN_BUTTON}s and
-@code{FL_HIDDEN_BUTTON}s are returned at the moment the user releases
-the mouse after having pressed it on the button. A
-@code{FL_MENU_BUTTON}, in contrast, is returned already on a mouse
-press. A @code{FL_INOUT_BUTTON} is returned both when the user presses
-it and when the user releases it. A @code{FL_TOUCH_BUTTON} is returned
-all the time as long as the user keeps the mouse button pressed while
-the mouse is on top of it. A @code{FL_RETURN_BUTTON} and a
-@code{FL_HIDDEN_RET_BUTTON} are also returned when the user presses
-the @code{<Return>} key.
+@code{@ref{FL_NORMAL_BUTTON}}s, @code{@ref{FL_PUSH_BUTTON}}s,
+@code{@ref{FL_RADIO_BUTTON}}s, @code{@ref{FL_RETURN_BUTTON}}s and
+@code{@ref{FL_HIDDEN_BUTTON}}s are returned at the moment the user
+releases the mouse after having pressed it on the button. A
+@code{@ref{FL_MENU_BUTTON}}, in contrast, is returned already on a
+mouse press. A @code{@ref{FL_INOUT_BUTTON}} is returned both when the
+user presses it and when the user releases it. A
+@code{@ref{FL_TOUCH_BUTTON}} is returned all the time as long as the
+user keeps the mouse button pressed while the mouse is on top of it. A
+@code{@ref{FL_RETURN_BUTTON}} and a @code{@ref{FL_HIDDEN_RET_BUTTON}}
+are also returned when the user presses the @code{<Return>} key.
 
 See demo @file{butttypes.c} for a feel of the different button types.
 
@@ -188,15 +207,15 @@ void fl_set_button(FL_OBJECT *obj, int pushed);
 @end example
 @noindent
 @code{pushed} indicates whether the button should be pushed (1) or
-released (0). When setting a @code{FL_RADIO_BUTTON} to be pushed this
-automatically releases the a currently pushed radio button in the same
-form (or group). Also note that, while this routine only simulates the
-visual appearance and perhaps some internal states, it does not affect
-the program flow in any way, i.e.@: setting a button as being pushed
-does not invoke its callback or results in the button becoming
-returned to the program. For that @code{@ref{fl_trigger_object()}} is
-to be used or, more conveniently, just follow up
-@code{@ref{fl_set_button()}} with a call of
+released (0). When setting a @code{@ref{FL_RADIO_BUTTON}} to be pushed
+this automatically releases the a currently pushed radio button in the
+same form (or group). Also note that, while this routine only
+simulates the visual appearance and perhaps some internal states, it
+does not affect the program flow in any way, i.e.@: setting a button
+as being pushed does not invoke its callback or results in the button
+becoming returned to the program. For that
+@code{@ref{fl_trigger_object()}} is to be used or, more conveniently,
+just follow up @code{@ref{fl_set_button()}} with a call of
 @code{@ref{fl_call_object_callback()}}.
 
 To figure out whether a button is pushed1 or not
@@ -216,18 +235,18 @@ was used at the last push (or release) use the routine
 int fl_get_button_numb(FL_OBJECT *obj);
 @end example
 @noindent
-It returns one of the constants @code{FL_LEFT_MOUSE},
-@code{FL_MIDDLE_MOUSE}, @code{FL_RIGHT_MOUSE},
-@code{FL_SCROLLUP_MOUSE} or @code{FL_SCROLLDOWN_MOUSE} (the latter two
-are from the scroll wheel of the mouse). If the last push was
-triggered by a shortcut (see below), the function returns the
+It returns one of the constants @code{@ref{FL_LEFT_MOUSE}},
+@code{@ref{FL_MIDDLE_MOUSE}}, @code{@ref{FL_RIGHT_MOUSE}},
+@code{@ref{FL_SCROLLUP_MOUSE}} or @code{@ref{FL_SCROLLDOWN_MOUSE}}
+(the latter two are from the scroll wheel of the mouse). If the last
+push was triggered by a shortcut (see below), the function returns the
 @code{keysym} (ASCII value if the key used has is between 0 and 127)
 of the key plus
 @tindex FL_SHORTCUT
-@code{FL_SHORTCUT}. For example, if a button has @code{<Ctrl>C} as its
-shortcut the button number returned upon activation of the shortcut
-will be @code{FL_SHORTCUT + 3} (the ASCII value of @code{<Ctrl>C} is
-3).
+@code{@ref{FL_SHORTCUT}}. For example, if a button has @code{<Ctrl>C}
+as its shortcut the button number returned upon activation of the
+shortcut will be @code{FL_SHORTCUT + 3} (the ASCII value of
+@code{<Ctrl>C} is 3).
 
 It can also be controlled which mouse buttons a buttons reacts to at
 all. To set which mouse buttons the button reacts to use

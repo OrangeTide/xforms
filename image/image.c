@@ -33,6 +33,7 @@
 #endif
 
 #include "include/forms.h"
+#include "flinternal.h"
 #include "flimage.h"
 #include "flimage_int.h"
 #include "private/flsnprintf.h"
@@ -57,6 +58,10 @@ static int ppm_added,
            gzip_added;
 
 static void add_default_formats( void );
+
+
+/*********************************************************************
+ *****************************************************************{**/
 
 static void
 null_op( FL_IMAGE * im  FL_UNUSED_ARG )
@@ -1096,7 +1101,7 @@ flimage_set_annotation_support( int in,
 
 
 #define VN( a )  {a,#a}
-static FL_VN_PAIR types[ ] =
+static FLI_VN_PAIR types[ ] =
 {
     VN( FL_IMAGE_NONE ),
     VN( FL_IMAGE_CI ),
@@ -1116,7 +1121,7 @@ static FL_VN_PAIR types[ ] =
 const char *
 flimage_type_name( int type )
 {
-    return fl_get_vn_name( types, type );
+    return fli_get_vn_name( types, type );
 }
 
 
@@ -1694,31 +1699,30 @@ read_marker( FLIMAGE_MARKER * m,
 #define LB '('
 #define RB ')'
 
-static FL_VN_PAIR fonts_vn[ ] =
+static FLI_VN_PAIR fonts_vn[ ] =
 {
-    { FL_NORMAL_STYLE,          "Helvetica" },
-    { FL_ITALIC_STYLE,          "Helvetica-Oblique" },
-    { FL_BOLD_STYLE,            "Helvetica-Bold" },
+    { FL_NORMAL_STYLE,          "Helvetica"              },
+    { FL_ITALIC_STYLE,          "Helvetica-Oblique"      },
+    { FL_BOLD_STYLE,            "Helvetica-Bold"         },
     { FL_BOLDITALIC_STYLE,      " Helvetica-BoldOblique" },
 
-    { FL_FIXED_STYLE,           "Courier" },
-    { FL_FIXEDBOLD_STYLE,       "Courier-Bold" },
-    { FL_FIXEDITALIC_STYLE,     "Courier-Oblique" },
-    { FL_FIXEDBOLDITALIC_STYLE, "Courier-BoldOblique" },
+    { FL_FIXED_STYLE,           "Courier"                },
+    { FL_FIXEDBOLD_STYLE,       "Courier-Bold"           },
+    { FL_FIXEDITALIC_STYLE,     "Courier-Oblique"        },
+    { FL_FIXEDBOLDITALIC_STYLE, "Courier-BoldOblique"    },
 
-    { FL_TIMES_STYLE,           "Times-Roman" },
-    { FL_TIMESBOLD_STYLE,       "Times-Bold" },
-    { FL_TIMESITALIC_STYLE,     "Times-Oblique" },
-    { FL_TIMESBOLDITALIC_STYLE, "Times-BoldOblique" },
+    { FL_TIMES_STYLE,           "Times-Roman"            },
+    { FL_TIMESBOLD_STYLE,       "Times-Bold"             },
+    { FL_TIMESITALIC_STYLE,     "Times-Oblique"          },
+    { FL_TIMESBOLDITALIC_STYLE, "Times-BoldOblique"      },
 
-    { FL_SYMBOL_STYLE,          "Symbol" },
+    { FL_SYMBOL_STYLE,          "Symbol"                 },
 
-    { FL_SHADOW_STYLE,          "Shadow" },
-    { FL_ENGRAVED_STYLE,        "Engraved" },
-    { FL_ENGRAVED_STYLE,        "Enbossed" },
+    { FL_SHADOW_STYLE,          "Shadow"                 },
+    { FL_ENGRAVED_STYLE,        "Engraved"               },
+    { FL_ENGRAVED_STYLE,        "Enbossed"               },
 
-    
-    { -1,                       NULL }    /* sentinel */
+    { -1,                       NULL                     }    /* sentinel */
 };
 
 
@@ -1733,24 +1737,24 @@ get_font_style( int fstyle )
     int spstyle = fstyle / FL_SHADOW_STYLE;
     int style = fstyle % FL_SHADOW_STYLE;
 
-    strcpy( retbuf, fl_get_vn_name( fonts_vn, style ) );
+    strcpy( retbuf, fli_get_vn_name( fonts_vn, style ) );
     if ( spstyle )
-		font_spstyle = fl_get_vn_name( fonts_vn, spstyle * FL_SHADOW_STYLE );
+		font_spstyle = fli_get_vn_name( fonts_vn, spstyle * FL_SHADOW_STYLE );
     return strcat( strcat( retbuf, " " ), font_spstyle );
 }
 
 
-static FL_VN_PAIR align_vn[ ] =
+static FLI_VN_PAIR align_vn[ ] =
 {
-    { FL_ALIGN_CENTER,       "center"},
-    { FL_ALIGN_TOP,          "top" },
-    { FL_ALIGN_LEFT,         "left" },
-    { FL_ALIGN_RIGHT,        "right" },
-    { FL_ALIGN_TOP_LEFT,     "topleft" },
-    { FL_ALIGN_TOP_RIGHT,    "topleft" },
-    { FL_ALIGN_BOTTOM_LEFT,  "bottomleft" },
-    { FL_ALIGN_BOTTOM_RIGHT, "bottomleft" },
-    { -1,                    NULL }      /* sentinel */
+    { FL_ALIGN_CENTER,       "center"      },
+    { FL_ALIGN_TOP,          "top"         },
+    { FL_ALIGN_LEFT,         "left"        },
+    { FL_ALIGN_RIGHT,        "right"       },
+    { FL_ALIGN_LEFT_TOP,     "lefttop"     },
+    { FL_ALIGN_RIGHT_TOP,    "righttop"    },
+    { FL_ALIGN_LEFT_BOTTOM,  "leftbottom"  },
+    { FL_ALIGN_RIGHT_BOTTOM, "rightbottom" },
+    { -1,                    NULL          }      /* sentinel */
 };
 
 
@@ -1778,7 +1782,7 @@ write_text( FLIMAGE_TEXT * t,
     putc( RB, fp );
 
     fprintf( fp, " %s %d %d %d %s %d %d", get_font_style( t->style ), t->size,
-			 t->x, t->y, fl_get_vn_name( align_vn, t->align ), t->angle,
+			 t->x, t->y, fli_get_vn_name( align_vn, t->align ), t->angle,
 			 t->nobk );
     FL_UNPACK( t->color, r, g, b );
     fprintf( fp, " %d %d %d", r, g, b );
@@ -1827,9 +1831,9 @@ read_text( FLIMAGE_TEXT * t,
     {
 		t->str = name;
 		t->len = s - name;
-		t->style = fl_get_vn_value( fonts_vn, fnt );
-		t->style |= fl_get_vn_value( fonts_vn, style );
-		t->align = fl_get_vn_value( align_vn, align );
+		t->style = fli_get_vn_value( fonts_vn, fnt );
+		t->style |= fli_get_vn_value( fonts_vn, style );
+		t->align = fli_get_vn_value( align_vn, align );
 		t->color = FL_PACK( r, g, b );
 		t->bcolor = FL_PACK( br, bg, bb );
     }

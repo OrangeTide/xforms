@@ -61,16 +61,20 @@ current choice (empty in the beginning), centered in the box.
 The following types are available:
 @table @code
 @tindex FL_NORMAL_CHOICE
+@anchor{FL_NORMAL_CHOICE}
 @item FL_NORMAL_CHOICE
 Middle/right mouse button shortcut.
+
 @tindex FL_NORMAL_CHOICE2
+@anchor{FL_NORMAL_CHOICE2}
 @item FL_NORMAL_CHOICE2
 Same as @code{FL_NORMAL_CHOICE} except drawn differently.
+
 @tindex FL_DROPLIST_CHOICE
+@anchor{FL_DROPLIST_CHOICE}
 @item FL_DROPLIST_CHOICE
-Menu is activated only by pressing and releasing on the arrow.
+Menu is activated only by pressing and releasing the mouse on the arrow.
 @end table
-@c ???
 
 @node Choice Interaction
 @subsection Choice Interaction
@@ -302,12 +306,17 @@ It shows a box on the screen with the label centered in it.
 The following types are available:
 @table @code
 @tindex FL_PUSH_MENU
+@anchor{FL_PUSH_MENU}
 @item FL_PUSH_MENU
 The menu appears when the user presses a mouse button on it.
+
 @tindex FL_PULLDOWN_MENU
+@anchor{FL_PULLDOWN_MENU}
 @item FL_PULLDOWN_MENU
 The menu appears when the user presses a mouse button on it.
+
 @tindex FL_TOUCH_MENU
+@anchor{FL_TOUCH_MENU}
 @item FL_TOUCH_MENU
 The menu appears when the user move the mouse inside it.
 @end table
@@ -532,23 +541,32 @@ bitwise OR-ing these values together. For this parameter, the
 following symbolic constants exist:
 @table @code
 @tindex FL_PUP_NONE
+@anchor{FL_PUP_NONE}
 @item FL_PUP_NONE
 No special display characteristic, the default.
+
 @tindex FL_PUP_BOX
+@anchor{FL_PUP_BOX}
 @item FL_PUP_BOX
 "Binary" entry, i.e.@: an entry that stands for a choice that can
 be switched on and off. Displayed with an unchecked box to the
 left.
+
 @tindex FL_PUP_RADIO
+@anchor{FL_PUP_RADIO}
 @item FL_PUP_RADIO
 "Radio" item belonging to a group, so that gets automatically
 switched off when another item of the group is selected. Displayed
 with a diamoned-shaped box at the left.
+
 @tindex FL_PUP_GREY
+@anchor{FL_PUP_GREY}
 @item FL_PUP_GREY
 To be OR-ed with one of the above to make that item appear
 greyed-out and disable it (i.e.@: not selectable anymore).
+
 @tindex FL_PUP_CHECK
+@anchor{FL_PUP_CHECK}
 @item FL_PUP_CHECK
 To be OR-ed with one of @code{FL_PUP_BOX} and @code{FL_PUP_RADIO}
 to make the box to the left appear checked or pushed.
@@ -715,6 +733,7 @@ The following item properties are supported:
 @table @code
 @item %t
 Marks the item text as the XPopup title string.
+
 @item %F
 Binds a callback function to the XPopup as a whole that is called for
 every selection made from this XPopup. You must specify the function
@@ -728,6 +747,7 @@ involve that the item had been assigned a different value. e.g. using
 @code{%x}, see below, or that there's also a callback bound to the
 item itself, in which case the global XPopup callback would receive
 the return value of the items callback function).
+
 @item %f
 Binds a callback to this particular item which is invoked if the item
 is selected. The routine must be supplied in the parameters following
@@ -737,11 +757,14 @@ also bound the entire XPopup to a callback function via @code{%F},
 then the function specified via @code{%f} is called first with the
 items value and its return value is then passed as the parameter to to
 the function bound to the whole XPopup (as set via @code{%F}).
+
 @item %i
 Disables and greys-out the item. @code{%d} can be used instead of @code{%i}.
+
 @item %l
 Adds a line under the current entry. This is useful in providing
 visual clues to groups of entries
+
 @item %m
 Whenever this item is selected another (already defined) XPopup is
 bound to the item so that the sub-XPopup is opened when the user moves
@@ -751,6 +774,7 @@ arguments following @code{str}. It is the programmers responsibility
 to make sure that the item values of the sub-XPopup don't clash with
 those of the higher-level XPopup or it may be impossible to determine
 which item was selected.
+
 @item %h
 Specify a "hotkeys" that can be used to select this item. Hotkeys must
 be given in the arguments following @code{str} as a pointer to a
@@ -759,6 +783,7 @@ with the @code{<Alt>} key, @code{^} for simultanious pressing of
 @code{<Ctrl>} and @code{&n} for the function key @code{Fn}.
 
 @code{%s} can be used instead of @code{%h}.
+
 @item %xn
 Assigns a numerical value to this item. This value must be positive.
 This new value overrides the default position-based value assigned to
@@ -768,14 +793,17 @@ arguments following @code{str} to specify this value!) and must be
 number larger than 0. It is the programmers responsibility to make
 sure that the items value does not clash with those of other items of
 the XPopup or determining which item was selected may be impossible.
+
 @item %b
 Indicates this item is "binary item" (toggle), currently in off state.
 When displayed, binary items will be drawn with a small box to the
 left. See also @code{FL_PUP_BOX}.
+
 @item %B
 Same as @code{%b} except that it also signifies that this item is in
 on or "true" state and consequently is drawn with a checked box on the
 left. See also @code{FL_PUP_BOX | FL_PUP_CHECK}.
+
 @item %rg
 Specifies this menu item is a "radio item" belonging to group with
 number @code{g}, currently not being selected. The group number
@@ -784,11 +812,13 @@ number @code{g}, currently not being selected. The group number
 non-zero, positive number. Radio items are drawn with a small diamond
 box to the left (empty while not active). See also
 @code{FL_PUP_RADIO}.
+
 @item %Rg
 Same as @code{%rg} except that it also sets the state of the radio
 item as selected or "pushed", the item is drawn with a filled diamond
 box to the left. See also @code{@ref{fl_setpup_selection()}}. See also
 @code{FL_PUP_RADIO | FL_PUP_CHECK}.
+
 @item %%
 Use this if you need a @code{%} character in the string.
 @item <Ctrl>H (@code{\010})
@@ -938,6 +968,7 @@ This is the text of a XPopup item. If text is @code{NULL}, it
 signifies the end of this popup menu. The first letter of the text
 string may have a special meaning if it is one of the following:
 @table @code
+
 @item '/'
 This indicates the beginning of a sub-popup, starting with the next
 item and ending with the next item with @code{text} being @code{NULL}.
@@ -945,13 +976,16 @@ item and ending with the next item with @code{text} being @code{NULL}.
 Indicates that a line should be drawn below this item (typically as a
 visual reminder of logical groupings of items).
 @end table
+
 @item callback
 This is the callback function that will be called when this particular
 item is selected by the user. @code{@ref{fl_dopup()}} returns the
 value returned by this callback. If the callback is @code{NULL}, the
 item number will be returned directly by @code{@ref{fl_dopup()}}.
+
 @item shortcut
 Specifies the keyboard shortcut.
+
 @item mode
 Specifies special attributes of this item. This can be one or a
 combination by bitwise OR of one of the following:

@@ -9,7 +9,7 @@ FD_form *create_form_form(void)
   obj = fl_add_box(FL_UP_BOX,0,0,410,120,"");
   obj = fl_add_frame(FL_ENGRAVED_FRAME,8,9,394,67,"");
   fdui->input = obj = fl_add_input(FL_NORMAL_INPUT,20,33,370,30,"");
-    fl_set_object_lalign(obj,FL_ALIGN_TOP_LEFT);
+    fl_set_object_lalign(obj,FL_ALIGN_LEFT_TOP);
   fdui->cancel = obj = fl_add_button(FL_NORMAL_BUTTON,30,85,80,26,"Cancel");
     fl_set_button_shortcut(obj,"^[",1);
   obj = fl_add_button(FL_NORMAL_BUTTON,300,85,80,26,"Clear");

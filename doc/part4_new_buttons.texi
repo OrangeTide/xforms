@@ -203,13 +203,13 @@ Library in the future. We call this button a crossbutton. Normally,
 this button shows a small up box with a label on the right. When
 pushed, the up box becomes a down box and a small cross appears on top
 of it. This kind of button obviously is best used as a push button or
-a radio button. However, the FormsLibrary does not enforce this. It
+a radio button. However, the Forms Library does not enforce this. It
 can be enforced, however, by the application program or by the object
 class developers.
 
 
 @ifhtml
-@center @image{crossbutton}
+@center @image{images/crossbutton}
 @end ifhtml
 @ifnothtml
 @center @image{images/crossbutton,8cm}

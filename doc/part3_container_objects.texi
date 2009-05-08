@@ -21,7 +21,7 @@ user can click on to call up a specific folder from which option can
 be selected.
 
 @ifhtml
-@center @image{folders}
+@center @image{images/folders}
 @end ifhtml
 @ifnothtml
 @center @image{images/folders,10cm}
@@ -62,15 +62,22 @@ the tab riders.
 The following types are available:
 @table @code
 @tindex FL_TOP_TABFOLDER
+@anchor{FL_TOP_TABFOLDER}
 @item FL_TOP_TABFOLDER
 Tabs on top of the folders.
+
 @tindex FL_BOTTOM_TABFOLDER
+@anchor{FL_BOTTOM_TABFOLDER}
 @item FL_BOTTOM_TABFOLDER
 Tabs at the bottom of the folders.
+
 @tindex FL_LEFT_TABFOLDER
+@anchor{FL_LEFT_TABFOLDER}
 @item FL_LEFT_TABFOLDER
 Tabs on the left of the folders (not yet functional).
+
 @tindex FL_RIGHT_TABFOLDER
+@anchor{FL_RIGHT_TABFOLDER}
 @item FL_RIGHT_TABFOLDER
 Tabs on the righ of the folders (not yet functional).
 @end table
@@ -514,9 +521,12 @@ void fl_set_formbrowser_scroll(FL_OBJECT *how)
 where @code{how} can be one of the following
 @table @code
 @tindex FL_SMOOTH_SCROLL
+@anchor{FL_SMOOTH_SCROLL}
 @item FL_SMOOTH_SCROLL
 The default.
+
 @tindex FL_JUMP_SCROLL
+@anchor{FL_JUMP_SCROLL}
 @item FL_JUMP_SCROLL
 Scrolls in form increments.
 @end table

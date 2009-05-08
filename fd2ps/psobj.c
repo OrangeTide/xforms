@@ -717,9 +717,10 @@ flps_draw_lightbutton(FL_OBJECT * ob)
     ps_draw_box(libox, xx, yy, ww, hh, lightcol, bw2);
 
     /* Draw the label */
-    if ((ob->align & ~FL_ALIGN_INSIDE) == FL_ALIGN_CENTER)
-	ps_draw_text(FL_ALIGN_LEFT, xx + ww, ob->y, 0, ob->h,
-		     ob->lcol, ob->lstyle, ob->lsize, ob->label);
+
+    if ( ( ob->align & ~FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER )
+		ps_draw_text(FL_ALIGN_LEFT, xx + ww, ob->y, 0, ob->h,
+					 ob->lcol, ob->lstyle, ob->lsize, ob->label);
     else
 	ps_draw_object_label(ob);
 
@@ -787,27 +788,27 @@ flps_draw_scrollbutton(FL_OBJECT * ob)
 
     if (ob->boxtype != FL_NO_BOX && ob->boxtype != FL_FLAT_BOX)
     {
-	extra += 1 + 0.051 * FL_min(w, h);
-	absbw = 1;
+		extra += 1 + 0.051 * FL_min(w, h);
+		absbw = 1;
     }
 
     if (*label == '8')
-	btype = (sp->int_val != 0) ? FL_TRIANGLE_DOWNBOX8 : FL_TRIANGLE_UPBOX8;
+		btype = sp->int_val ? FLI_TRIANGLE_DOWNBOX8 : FLI_TRIANGLE_UPBOX8;
     else if (*label == '2')
-	btype = (sp->int_val != 0) ? FL_TRIANGLE_DOWNBOX2 : FL_TRIANGLE_UPBOX2;
+		btype = sp->int_val ? FLI_TRIANGLE_DOWNBOX2 : FLI_TRIANGLE_UPBOX2;
     else if (*label == '6')
-	btype = (sp->int_val != 0) ? FL_TRIANGLE_DOWNBOX6 : FL_TRIANGLE_UPBOX6;
+		btype = sp->int_val ? FLI_TRIANGLE_DOWNBOX6 : FLI_TRIANGLE_UPBOX6;
     else if (*label == '4')
-	btype = (sp->int_val != 0) ? FL_TRIANGLE_DOWNBOX4 : FL_TRIANGLE_UPBOX4;
+		btype = sp->int_val ? FLI_TRIANGLE_DOWNBOX4 : FLI_TRIANGLE_UPBOX4;
 
     ps_draw_tbox(btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,
-		 ob->col2, absbw);
+				 ob->col2, absbw);
 
 }
 
 
 static void
-flps_draw_round3dbutton(FL_OBJECT * ob)
+flps_draw_round3dbutton( FL_OBJECT * ob )
 {
     float xx, yy, rr, cr;
     float bw = FL_abs(psinfo.bw);
@@ -1701,7 +1702,7 @@ flps_draw_lframe(FL_OBJECT * ob)
 
     ps_len(ob->label, ob->lstyle, ob->lsize);
 
-    if (align == FL_ALIGN_BOTTOM_LEFT)
+    if (align == FL_ALIGN_LEFT_BOTTOM)
     {
 	ps_output("/x {%d %d add} bind def\n", ob->x, margin);
 	ps_output("/y {%d h -2 div add %d sub} bind def\n", ob->y, dy);
@@ -1711,7 +1712,7 @@ flps_draw_lframe(FL_OBJECT * ob)
 	ps_output("/x {%d %d w sub 2 div add} bind def\n", ob->x, ob->w);
 	ps_output("/y {%d h -2 div add %d sub} bind def\n", ob->y, dy);
     }
-    else if (align == FL_ALIGN_BOTTOM_RIGHT)
+    else if (align == FL_ALIGN_RIGHT_BOTTOM)
     {
 	ps_output("/x {%d %d add w sub %d sub} bind def\n",
 		  ob->x, ob->w, margin);
@@ -1723,7 +1724,7 @@ flps_draw_lframe(FL_OBJECT * ob)
 	ps_output("/y {%d %d add h -2 div add %d add} bind def\n",
 		  ob->y, ob->h, dy);
     }
-    else if (align == FL_ALIGN_TOP_RIGHT || align == FL_ALIGN_RIGHT)
+    else if (align == FL_ALIGN_RIGHT_TOP || align == FL_ALIGN_RIGHT)
     {
 	ps_output("/x {%d %d add w sub %d sub} bind def\n",
 		  ob->x, ob->w, margin);
@@ -1878,7 +1879,7 @@ flps_draw_browser(FL_OBJECT * ob)
 	    strcat(str, "\n");
 	}
 
-	ps_draw_text(FL_ALIGN_TOP_LEFT | FL_ALIGN_INSIDE,
+	ps_draw_text(FL_ALIGN_LEFT_TOP | FL_ALIGN_INSIDE,
 		     tx + m, ty, tw, th, ob->lcol,
 		     sp->fontstyle, sp->fontsize, str);
     }

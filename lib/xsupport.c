@@ -491,7 +491,7 @@ fli_show_form_pixmap( FL_FORM * form )
 
 #define VNP( a )   { a, #a }
 
-static FL_VN_PAIR xvclass[ ] =
+static FLI_VN_PAIR xvclass[ ] =
 {
     VNP( PseudoColor ),
 	VNP( TrueColor ),
@@ -515,19 +515,19 @@ static FL_VN_PAIR xvclass[ ] =
 const char *
 fl_vclass_name( int n )
 {
-    return fl_get_vn_name( xvclass, n );
+    return fli_get_vn_name( xvclass, n );
 }
 
 
 /***************************************
- * fl_get_vn_val can't be used. caller relies on the returning
+ * fli_get_vn_val can't be used. caller relies on the returning
  * of FL_IllegalVisual
  ***************************************/
 
 int
 fl_vclass_val( const char * v )
 {
-    FL_VN_PAIR *vn = xvclass;
+    FLI_VN_PAIR *vn = xvclass;
 
     for ( ; vn->val >= 0 && v; vn++ )
 		if ( strcmp( vn->name, v ) == 0 )

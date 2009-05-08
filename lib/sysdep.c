@@ -113,7 +113,7 @@ fl_now( void )
 #ifdef __VMS
 #include <lib$routines.h>
 
-unsigned long
+int
 fl_msleep( unsigned long msec )
 {
     float wait_time = 1.0e-3 * msec;
@@ -127,8 +127,7 @@ fl_msleep( unsigned long msec )
  * Yielding the processor for msec  milli-seconds
  ***************************************/
 
-
-unsigned long
+int
 fl_msleep( unsigned long msec )
 {
 #ifdef __EMX__
@@ -139,16 +138,24 @@ fl_msleep( unsigned long msec )
     _sleep( msec );
     return 0;
 #else
-#ifdef HAVE_USLEEP
-    usleep( msec * 1000 );
-    return 0;
-#else
-    /* seems everybody has select these days */
+#ifdef HAVE_NANOSLEEP
+    struct timespec timeout;
 
+    timeout.tv_nsec = 1000000 * ( msec % 1000 );
+    timeout.tv_sec = msec / 1000;
+
+    return nanosleep( &timeout, NULL );
+#else
+#ifdef HAVE_USLEEP
+    return usleep( msec * 1000 );
+#else                           /* seems everybody has select these days */
     struct timeval timeout;
+
     timeout.tv_usec = 1000 * ( msec % 1000 );
     timeout.tv_sec = msec / 1000;
+
     return select( 0, NULL, NULL, NULL, &timeout );
+#endif
 #endif
 #endif
 #endif
