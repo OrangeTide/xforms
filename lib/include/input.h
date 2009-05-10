@@ -58,160 +58,106 @@ enum {
 #define FL_INPUT_TCOL		FL_LCOL
 #define FL_INPUT_CCOL		FL_BLUE
 
-#define FL_RINGBELL				(1<<4)
+#define FL_RINGBELL			( 1 << 4 )
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_input(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_input( int			type,
+									   FL_Coord	    x,
+									   FL_Coord	    y,
+									   FL_Coord	    w,
+									   FL_Coord	    h,
+									   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_input(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_input( int			 type,
+									FL_Coord	 x,
+									FL_Coord	 y,
+									FL_Coord	 w,
+									FL_Coord	 h,
+									const char * label );
 
-FL_EXPORT void fl_set_input(
-		FL_OBJECT  * ob,
-		const char * str
-		);
+FL_EXPORT void fl_set_input( FL_OBJECT  * ob,
+							 const char * str );
 
-FL_EXPORT void fl_set_input_return(
-		FL_OBJECT * ob,
-		int			value
-		);
+FL_EXPORT void fl_set_input_return( FL_OBJECT * ob,
+									int			value );
 
-FL_EXPORT void fl_set_input_color(
-		FL_OBJECT * ob,
-		int			textcol,
-		int			curscol
-		);
+FL_EXPORT void fl_set_input_color( FL_OBJECT * ob,
+								   int		   textcol,
+								   int		   curscol );
 
-FL_EXPORT void fl_set_input_scroll(
-		FL_OBJECT * ob,
-		int			yes
-		);
+FL_EXPORT void fl_set_input_scroll( FL_OBJECT * ob,
+									int			yes );
 
-FL_EXPORT void fl_set_input_cursorpos(
-		FL_OBJECT * ob,
-		int			xpos,
-		int			ypos
-		);
+FL_EXPORT void fl_set_input_cursorpos( FL_OBJECT * ob,
+									   int		   xpos,
+									   int		   ypos );
 
-FL_EXPORT void fl_set_input_selected(
-		FL_OBJECT * ob,
-		int			yes
-		);
+FL_EXPORT void fl_set_input_selected( FL_OBJECT * ob,
+									  int		  yes );
 
-FL_EXPORT void fl_set_input_selected_range(
-		FL_OBJECT * ob,
-		int			begin,
-		int			end
-		);
+FL_EXPORT void fl_set_input_selected_range( FL_OBJECT * ob,
+											int			begin,
+											int			end );
 
-FL_EXPORT const char *fl_get_input_selected_range(
-		FL_OBJECT * ob,
-		int       * begin,
-		int       * end
-		);
+FL_EXPORT const char *fl_get_input_selected_range( FL_OBJECT * ob,
+												   int       * begin,
+												   int       * end );
 
-FL_EXPORT void fl_set_input_maxchars(
-		FL_OBJECT * ob,
-		int			maxchars
-		);
+FL_EXPORT void fl_set_input_maxchars( FL_OBJECT * ob,
+									  int		  maxchars );
 
-FL_EXPORT void fl_set_input_format(
-		FL_OBJECT * ob,
-		int			fmt,
-		int			sep
-		);
+FL_EXPORT void fl_set_input_format( FL_OBJECT * ob,
+									int			fmt,
+									int			sep );
 
-FL_EXPORT void fl_set_input_hscrollbar(
-		FL_OBJECT * ob,
-		int			pref
-		);
+FL_EXPORT void fl_set_input_hscrollbar( FL_OBJECT * ob,
+										int			pref );
 
-FL_EXPORT void fl_set_input_vscrollbar(
-		FL_OBJECT * ob,
-		int			pref
-		);
+FL_EXPORT void fl_set_input_vscrollbar( FL_OBJECT * ob,
+										int			pref );
 
-FL_EXPORT void fl_set_input_topline(
-		FL_OBJECT * ob,
-		int			top
-		);
+FL_EXPORT void fl_set_input_topline( FL_OBJECT * ob,
+									 int		 top );
 
-FL_EXPORT void fl_set_input_scrollbarsize(
-		FL_OBJECT * ob,
-		int			hh,
-		int			vw
-		);
+FL_EXPORT void fl_set_input_scrollbarsize( FL_OBJECT * ob,
+										   int		   hh,
+										   int		   vw );
 
-FL_EXPORT void fl_set_input_xoffset(
-		FL_OBJECT * ob,
-		int			xoff
-		);
+FL_EXPORT void fl_set_input_xoffset( FL_OBJECT * ob,
+									 int		 xoff );
 
-FL_EXPORT int fl_get_input_xoffset(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_input_xoffset( FL_OBJECT * ob );
 
-FL_EXPORT int fl_set_input_fieldchar(
-		FL_OBJECT * ob,
-		int			fchar
-		);
+FL_EXPORT int fl_set_input_fieldchar( FL_OBJECT * ob,
+									  int		  fchar );
 
-FL_EXPORT int fl_get_input_topline(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_input_topline( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_input_screenlines(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_input_screenlines( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_input_cursorpos(
-		FL_OBJECT * ob,
-		int       * x,
-		int       * y
-		);
+FL_EXPORT int fl_get_input_cursorpos( FL_OBJECT * ob,
+									  int       * x,
+									  int       * y );
 
-FL_EXPORT void fl_set_input_cursor_visible(
-		FL_OBJECT * ob,
-		int			visible
-		);
+FL_EXPORT void fl_set_input_cursor_visible( FL_OBJECT * ob,
+											int			visible );
 
-FL_EXPORT int fl_get_input_numberoflines(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_input_numberoflines( FL_OBJECT * ob );
 
-FL_EXPORT void fl_get_input_format(
-		FL_OBJECT * ob,
-		int       * fmt,
-		int       * sep
-		);
+FL_EXPORT void fl_get_input_format( FL_OBJECT * ob,
+									int       * fmt,
+									int       * sep );
 
-FL_EXPORT const char * fl_get_input(
-		FL_OBJECT * ob
-		);
+FL_EXPORT const char * fl_get_input( FL_OBJECT * ob );
 
 typedef int ( * FL_INPUTVALIDATOR )(FL_OBJECT *,
 									const char *,
 									const char *,
 									int );
 
-FL_EXPORT FL_INPUTVALIDATOR fl_set_input_filter(
-		FL_OBJECT         * ob,
-		FL_INPUTVALIDATOR   validate
-		);
+FL_EXPORT FL_INPUTVALIDATOR fl_set_input_filter( FL_OBJECT         * ob,
+												 FL_INPUTVALIDATOR   validate );
 
 #define fl_set_input_shortcut	fl_set_object_shortcut
 
@@ -252,8 +198,6 @@ typedef struct {
 	long reserverd[ 4 ];	/* filler				   */
 } FL_EditKeymap;
 
-FL_EXPORT void fl_set_input_editkeymap(
-		const FL_EditKeymap * keymap
-		);
+FL_EXPORT void fl_set_input_editkeymap( const FL_EditKeymap * keymap );
 
 #endif /* ! defined FL_INPUT_H */

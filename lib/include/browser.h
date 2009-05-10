@@ -51,181 +51,114 @@ typedef enum {
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_browser(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_create_browser( int		  type,
+										 FL_Coord	  x,
+										 FL_Coord	  y,
+										 FL_Coord	  w,
+										 FL_Coord	  h,
+										 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_browser(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_add_browser( int		   type,
+									  FL_Coord	   x,
+									  FL_Coord	   y,
+									  FL_Coord	   w,
+									  FL_Coord	   h,
+									  const char * label );
 
-FL_EXPORT void fl_clear_browser(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_clear_browser( FL_OBJECT * ob );
 
-FL_EXPORT void fl_add_browser_line(
-		FL_OBJECT  * ob,
-		const char * newtext
-		);
+FL_EXPORT void fl_add_browser_line( FL_OBJECT  * ob,
+									const char * newtext );
 
-FL_EXPORT void fl_addto_browser(
-		FL_OBJECT  * ob,
-		const char * newtext
-		);
+FL_EXPORT void fl_addto_browser( FL_OBJECT  * ob,
+								 const char * newtext );
 
-FL_EXPORT void fl_addto_browser_chars(
-		FL_OBJECT  * ob,
-		const char * str
-		);
+FL_EXPORT void fl_addto_browser_chars( FL_OBJECT  * ob,
+									   const char * str );
 
 #define fl_append_browser  fl_addto_browser_chars
 
-FL_EXPORT void fl_insert_browser_line(
-		FL_OBJECT  * ob,
-		int			 linenumb,
-		const char * newtext
-		);
+FL_EXPORT void fl_insert_browser_line( FL_OBJECT  * ob,
+									   int		    linenumb,
+									   const char * newtext );
 
-FL_EXPORT void fl_delete_browser_line(
-		FL_OBJECT * ob,
-		int			linenumb
-		);
+FL_EXPORT void fl_delete_browser_line( FL_OBJECT * ob,
+									   int		   linenumb );
 
-FL_EXPORT void fl_replace_browser_line(
-		FL_OBJECT  * ob,
-		int			 linenumb,
-		const char * newtext
-		);
+FL_EXPORT void fl_replace_browser_line( FL_OBJECT  * ob,
+										int			 linenumb,
+										const char * newtext );
 
-FL_EXPORT const char *fl_get_browser_line(
-		FL_OBJECT * ob,
-		int			linenumb
-		);
+FL_EXPORT const char *fl_get_browser_line( FL_OBJECT * ob,
+										   int		   linenumb );
 
-FL_EXPORT int fl_load_browser(
-		FL_OBJECT  * ob,
-		const char * f
-		);
+FL_EXPORT int fl_load_browser( FL_OBJECT  * ob,
+							   const char * filename );
 
-FL_EXPORT void fl_select_browser_line(
-		FL_OBJECT * ob,
-		int			line
-		);
+FL_EXPORT void fl_select_browser_line( FL_OBJECT * ob, 
+									   int		   line );
 
-FL_EXPORT void fl_deselect_browser_line(
-		FL_OBJECT * ob,
-		int			line
-		);
+FL_EXPORT void fl_deselect_browser_line( FL_OBJECT * ob,
+										 int		 line );
 
-FL_EXPORT void fl_deselect_browser(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_deselect_browser( FL_OBJECT * ob );
 
-FL_EXPORT int fl_isselected_browser_line(
-		FL_OBJECT * ob,
-		int			line
-		);
+FL_EXPORT int fl_isselected_browser_line( FL_OBJECT * ob,
+										  int		  line );
 
+FL_EXPORT int fl_get_browser_topline( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_browser_topline(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_browser( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_browser(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_browser_maxline( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_browser_maxline(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_browser_screenlines( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_browser_screenlines(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_set_browser_topline( FL_OBJECT * ob,
+									   int		   topline );
 
-FL_EXPORT void fl_set_browser_topline(
-		FL_OBJECT * ob,
-		int			topline
-		);
+FL_EXPORT void fl_set_browser_fontsize( FL_OBJECT * ob,
+										int			size );
 
-FL_EXPORT void fl_set_browser_fontsize(
-		FL_OBJECT * ob,
-		int			size
-		);
+FL_EXPORT void fl_set_browser_fontstyle( FL_OBJECT * ob,
+										 int		 style );
 
-FL_EXPORT void fl_set_browser_fontstyle(
-		FL_OBJECT * ob,
-		int			style
-		);
+FL_EXPORT void fl_set_browser_specialkey( FL_OBJECT * ob,
+										  int		  specialkey );
 
-FL_EXPORT void fl_set_browser_specialkey(
-		FL_OBJECT * ob,
-		int			specialkey
-		);
+FL_EXPORT void fl_set_browser_vscrollbar( FL_OBJECT * ob,
+										  int		  on );
 
-FL_EXPORT void fl_set_browser_vscrollbar(
-		FL_OBJECT * ob,
-		int			on
-		);
+FL_EXPORT void fl_set_browser_hscrollbar( FL_OBJECT * ob,
+										  int		  on );
 
-FL_EXPORT void fl_set_browser_hscrollbar(
-		FL_OBJECT * ob,
-		int			on
-		);
+FL_EXPORT void fl_set_browser_line_selectable( FL_OBJECT * ob,
+											   int		   line,
+											   int		   flag );
 
-FL_EXPORT void fl_set_browser_line_selectable(
-		FL_OBJECT * ob,
-		int			line,
-		int			flag
-		);
+FL_EXPORT void fl_get_browser_dimension( FL_OBJECT * ob,
+										 FL_Coord  * x,
+										 FL_Coord  * y,
+										 FL_Coord  * w,
+										 FL_Coord  * h );
 
-FL_EXPORT void fl_get_browser_dimension(
-		FL_OBJECT * ob,
-		FL_Coord  * x,
-		FL_Coord  * y,
-		FL_Coord  * w,
-		FL_Coord  * h
-		);
+FL_EXPORT void fl_set_browser_dblclick_callback( FL_OBJECT      * ob,
+												 FL_CALLBACKPTR   cb,
+												 long		      a );
 
-FL_EXPORT void fl_set_browser_dblclick_callback(
-		FL_OBJECT      * ob,
-		FL_CALLBACKPTR   cb,
-		long		     a
-		);
+FL_EXPORT void fl_set_browser_xoffset( FL_OBJECT * ob,
+									   FL_Coord	   npixels );
 
-FL_EXPORT void fl_set_browser_xoffset(
-		FL_OBJECT * ob,
-		FL_Coord	npixels
-		);
+FL_EXPORT FL_Coord fl_get_browser_xoffset( FL_OBJECT * ob );
 
-FL_EXPORT FL_Coord fl_get_browser_xoffset(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_set_browser_scrollbarsize( FL_OBJECT * ob,
+											 int		 hh,
+											 int		 vw );
 
-FL_EXPORT void fl_set_browser_scrollbarsize(
-		FL_OBJECT * ob,
-		int			hh,
-		int			vw
-		);
+FL_EXPORT void fl_show_browser_line( FL_OBJECT * ob,
+									 int         j );
 
-FL_EXPORT void fl_show_browser_line(
-		FL_OBJECT * ob,
-		int j
-		);
-
-FL_EXPORT int fl_set_default_browser_maxlinelength(
-		int n
-		);
+FL_EXPORT int fl_set_default_browser_maxlinelength( int n );
 
 #ifndef FL_BROWSER_SCROLL_CALLBACKt
 #define FL_BROWSER_SCROLL_CALLBACKt
@@ -234,24 +167,20 @@ typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *ob,
 											   void * );
 #endif
 
-FL_EXPORT void fl_set_browser_hscroll_callback(
-		FL_OBJECT                  * ob,
-		FL_BROWSER_SCROLL_CALLBACK   cb,
-		void                       * data
-		);
+FL_EXPORT void
+	fl_set_browser_hscroll_callback( FL_OBJECT                  * ob,
+									 FL_BROWSER_SCROLL_CALLBACK   cb,
+									 void                       * data );
 
-FL_EXPORT void fl_set_browser_vscroll_callback(
-		FL_OBJECT                  * ob,
-		FL_BROWSER_SCROLL_CALLBACK   cb,
-		void                       * data
-		);
+FL_EXPORT void
+	fl_set_browser_vscroll_callback( FL_OBJECT                  * ob,
+									 FL_BROWSER_SCROLL_CALLBACK   cb,
+									 void                       * data );
 
-FL_EXPORT FL_BROWSER_SCROLL_CALLBACK fl_get_browser_hscroll_callback(
-		FL_OBJECT * ob
-		);
+FL_EXPORT FL_BROWSER_SCROLL_CALLBACK
+	fl_get_browser_hscroll_callback( FL_OBJECT * ob );
 
-FL_EXPORT FL_BROWSER_SCROLL_CALLBACK fl_get_browser_vscroll_callback(
-		FL_OBJECT * ob
-		);
+FL_EXPORT FL_BROWSER_SCROLL_CALLBACK
+	fl_get_browser_vscroll_callback( FL_OBJECT * ob );
 
 #endif /* ! defined FL_BROWSER_H */

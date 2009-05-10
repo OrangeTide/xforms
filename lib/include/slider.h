@@ -64,98 +64,68 @@ typedef enum {
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_slider(
-		int          type,
-		FL_Coord     x,
-		FL_Coord     y,
-		FL_Coord     w,
-		FL_Coord     h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_slider( int          type,
+										FL_Coord     x,
+										FL_Coord     y,
+										FL_Coord     w,
+										FL_Coord     h,
+										const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_slider(
-		int          type,
-		FL_Coord     x,
-		FL_Coord     y,
-		FL_Coord     w,
-		FL_Coord     h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_slider( int          type,
+									 FL_Coord     x,
+									 FL_Coord     y,
+									 FL_Coord     w,
+									 FL_Coord     h,
+									 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_valslider(
-		int          type,
-		FL_Coord     x,
-		FL_Coord     y,
-		FL_Coord     w,
-		FL_Coord     h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_valslider( int          type,
+										   FL_Coord     x,
+										   FL_Coord     y,
+										   FL_Coord     w,
+										   FL_Coord     h,
+										   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_valslider(
-		int          type,
-		FL_Coord     x,
-		FL_Coord     y,
-		FL_Coord     w,
-		FL_Coord     h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_valslider( int          type,
+										FL_Coord     x,
+										FL_Coord     y,
+										FL_Coord     w,
+										FL_Coord     h,
+										const char * label );
 
-FL_EXPORT void fl_set_slider_value(
-		FL_OBJECT * ob,
-		double      val
-		);
+FL_EXPORT void fl_set_slider_value( FL_OBJECT * ob,
+									double      val );
 
-FL_EXPORT double fl_get_slider_value(
-		FL_OBJECT * ob
-		);
+FL_EXPORT double fl_get_slider_value( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_slider_bounds(
-		FL_OBJECT * ob,
-		double      min,
-		double      max
-		);
+FL_EXPORT void fl_set_slider_bounds( FL_OBJECT * ob,
+									 double      min,
+									 double      max );
 
-FL_EXPORT void fl_get_slider_bounds(
-		FL_OBJECT * ob,
-		double    * min,
-		double    * max
-		);
+FL_EXPORT void fl_get_slider_bounds( FL_OBJECT * ob,
+									 double    * min,
+									 double    * max );
 
-FL_EXPORT void fl_set_slider_return(
-		FL_OBJECT * ob,
-		int         value
-		);
+FL_EXPORT void fl_set_slider_return( FL_OBJECT * ob,
+									 int         value );
 
-FL_EXPORT void fl_set_slider_step(
-		FL_OBJECT * ob,
-		double      value
-		);
+FL_EXPORT void fl_set_slider_step( FL_OBJECT * ob,
+								   double      value );
 
-FL_EXPORT void fl_set_slider_increment(
-		FL_OBJECT * ob,
-		double      l,
-		double      r
-		);
+FL_EXPORT void fl_set_slider_increment( FL_OBJECT * ob,
+										double      l,
+										double      r );
 
-FL_EXPORT void fl_get_slider_increment(
-		FL_OBJECT * ob,
-		double    * l,
-		double    * r
-		);
+FL_EXPORT void fl_get_slider_increment( FL_OBJECT * ob,
+										double    * l,
+										double    * r );
 
-FL_EXPORT void fl_set_slider_size(
-		FL_OBJECT * ob,
-		double      size
-		);
+FL_EXPORT void fl_set_slider_size( FL_OBJECT * ob,
+								   double      size );
 
-FL_EXPORT void fl_set_slider_precision(
-		FL_OBJECT * ob,
-		int         prec
-		);
+FL_EXPORT void fl_set_slider_precision( FL_OBJECT * ob,
+										int         prec );
 
-FL_EXPORT void fl_set_slider_filter(
-		FL_OBJECT     * ob,
-		FL_VAL_FILTER   filter
-		);
+FL_EXPORT void fl_set_slider_filter( FL_OBJECT     * ob,
+									 FL_VAL_FILTER   filter );
 
 #endif /* ! defined FL_SLIDER_H */

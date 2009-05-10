@@ -61,7 +61,7 @@ typedef struct {
 } FD_Opt;
 
 enum {
-    FD_C = 1,
+    FD_C         = 1,
 	FD_ADA95,
 	FD_PERL,
 	FD_PASCAL,
@@ -106,14 +106,6 @@ extern FD_Opt fdopt;
 /* since V1, all coordinates are relative to the top-left */
 
 #define FD_V1    13000
-
-/*#define FD_V2    13001 */
-
-#if 0
-#define TRANY( obj, form ) obj->y = form->h - obj->h - obj->y
-#else
-#define TRANY( obj, form )
-#endif
 
 #define ShiftIsDown( mask )    ( mask & ShiftMask )
 

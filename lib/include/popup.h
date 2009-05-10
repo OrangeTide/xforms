@@ -162,235 +162,143 @@ enum {
 	FL_POPUP_RADIO_COLOR
 };
 
-FL_EXPORT FL_POPUP *fl_popup_add(
-		Window,
-		const char *
-		);
+FL_EXPORT FL_POPUP *fl_popup_add( Window,
+								  const char * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_popup_add_entries(
-		FL_POPUP *,
-		const char *,
-		...
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_add_entries( FL_POPUP *,
+												const char *,
+												... );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_popup_insert_entries(
-		FL_POPUP *,
-		FL_POPUP_ENTRY *,
-		const char *,
-		...
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_insert_entries( FL_POPUP *,
+												   FL_POPUP_ENTRY *,
+												   const char *,
+												   ... );
 
-FL_EXPORT FL_POPUP *fl_popup_create(
-		Window,
-		const char *,
-		FL_POPUP_ITEM *
-		);
+FL_EXPORT FL_POPUP *fl_popup_create( Window,
+									 const char *,
+									 FL_POPUP_ITEM * );
 
-FL_EXPORT int fl_popup_delete(
-		FL_POPUP *
-		);
+FL_EXPORT int fl_popup_delete( FL_POPUP * );
 
-FL_EXPORT int fl_popup_entry_delete(
-		FL_POPUP_ENTRY *
-		);
+FL_EXPORT int fl_popup_entry_delete( FL_POPUP_ENTRY * );
 
-FL_EXPORT FL_POPUP_RETURN *fl_popup_do(
-		FL_POPUP *
-		);
+FL_EXPORT FL_POPUP_RETURN *fl_popup_do( FL_POPUP * );
 
-FL_EXPORT void fl_popup_set_position(
-		FL_POPUP *,
-		int,
-		int
-		);
+FL_EXPORT void fl_popup_set_position( FL_POPUP *,
+									  int,
+									  int );
 
-FL_EXPORT int fl_popup_get_policy(
-		FL_POPUP *
-		);
+FL_EXPORT int fl_popup_get_policy( FL_POPUP * );
 
-FL_EXPORT int fl_popup_set_policy(
-		FL_POPUP *,
-		int
-		);
+FL_EXPORT int fl_popup_set_policy( FL_POPUP *,
+								   int );
 
-FL_EXPORT FL_POPUP_CB fl_popup_set_callback(
-		FL_POPUP *,
-		FL_POPUP_CB
-		);
+FL_EXPORT FL_POPUP_CB fl_popup_set_callback( FL_POPUP *,
+											 FL_POPUP_CB );
 
-FL_EXPORT void fl_popup_get_title_font(
-		FL_POPUP *,
-		int *,
-		int *
-		);
+FL_EXPORT void fl_popup_get_title_font( FL_POPUP *,
+										int *,
+										int * );
 
-FL_EXPORT void fl_popup_set_title_font(
-		FL_POPUP *,
-		int,
-		int
-		);
+FL_EXPORT void fl_popup_set_title_font( FL_POPUP *,
+										int,
+										int );
 
-FL_EXPORT void fl_popup_entry_get_font(
-		FL_POPUP *,
-		int *,
-		int *
-		);
+FL_EXPORT void fl_popup_entry_get_font( FL_POPUP *,
+										int *,
+										int * );
 
-FL_EXPORT void fl_popup_entry_set_font(
-		FL_POPUP *,
-		int,
-		int
-		);
+FL_EXPORT void fl_popup_entry_set_font( FL_POPUP *,
+										int,
+										int );
 
-FL_EXPORT int fl_popup_get_bw(
-		FL_POPUP *
-		);
+FL_EXPORT int fl_popup_get_bw( FL_POPUP * );
 
-FL_EXPORT int fl_popup_set_bw(
-		FL_POPUP *,
-		int
-		);
+FL_EXPORT int fl_popup_set_bw( FL_POPUP *,
+							   int );
 
-FL_EXPORT FL_COLOR fl_popup_get_color(
-		FL_POPUP *,
-		int
-		);
+FL_EXPORT FL_COLOR fl_popup_get_color( FL_POPUP *,
+									   int );
 
-FL_EXPORT FL_COLOR fl_popup_set_color(
-		FL_POPUP *,
-		int,
-		FL_COLOR
-		);
+FL_EXPORT FL_COLOR fl_popup_set_color( FL_POPUP *,
+									   int,
+									   FL_COLOR );
 
-FL_EXPORT void fl_popup_set_cursor(
-		FL_POPUP *,
-		int
-		);
+FL_EXPORT void fl_popup_set_cursor( FL_POPUP *,
+									int );
 
-FL_EXPORT const char *fl_popup_get_title(
-		FL_POPUP   *
-		);
+FL_EXPORT const char *fl_popup_get_title( FL_POPUP   * );
 
-FL_EXPORT FL_POPUP *fl_popup_set_title(
-		FL_POPUP *,
-		const char *
-		);
+FL_EXPORT FL_POPUP *fl_popup_set_title( FL_POPUP *,
+										const char * );
 
-FL_EXPORT FL_POPUP_CB fl_popup_entry_set_callback(
-		FL_POPUP_ENTRY *,
-		FL_POPUP_CB
-		);
+FL_EXPORT FL_POPUP_CB fl_popup_entry_set_callback( FL_POPUP_ENTRY *,
+												   FL_POPUP_CB );
 
-FL_EXPORT FL_POPUP_CB fl_popup_entry_set_enter_callback(
-		FL_POPUP_ENTRY *,
-		FL_POPUP_CB
-		);
+FL_EXPORT FL_POPUP_CB fl_popup_entry_set_enter_callback( FL_POPUP_ENTRY *,
+														 FL_POPUP_CB );
 
-FL_EXPORT FL_POPUP_CB fl_popup_entry_set_leave_callback(
-		FL_POPUP_ENTRY *,
-		FL_POPUP_CB
-		);
+FL_EXPORT FL_POPUP_CB fl_popup_entry_set_leave_callback( FL_POPUP_ENTRY *,
+														 FL_POPUP_CB );
 
-FL_EXPORT unsigned int fl_popup_entry_get_state(
-		FL_POPUP_ENTRY *
-		);
+FL_EXPORT unsigned int fl_popup_entry_get_state( FL_POPUP_ENTRY * );
 
-FL_EXPORT unsigned int fl_popup_entry_set_state(
-		FL_POPUP_ENTRY *,
-		unsigned int
-		);
+FL_EXPORT unsigned int fl_popup_entry_set_state( FL_POPUP_ENTRY *,
+												 unsigned int );
 
-FL_EXPORT unsigned int fl_popup_entry_clear_state(
-		FL_POPUP_ENTRY *,
-		unsigned int
-		);
+FL_EXPORT unsigned int fl_popup_entry_clear_state( FL_POPUP_ENTRY *,
+												   unsigned int );
 
-FL_EXPORT unsigned int fl_popup_entry_raise_state(
-		FL_POPUP_ENTRY *,
-		unsigned int
-		);
+FL_EXPORT unsigned int fl_popup_entry_raise_state( FL_POPUP_ENTRY *,
+												   unsigned int );
 
-FL_EXPORT unsigned int fl_popup_entry_toggle_state(
-		FL_POPUP_ENTRY *,
-		unsigned int
-		);
+FL_EXPORT unsigned int fl_popup_entry_toggle_state( FL_POPUP_ENTRY *,
+													unsigned int );
 
-FL_EXPORT int fl_popup_entry_set_text(
-		FL_POPUP_ENTRY *,
-		const char     *
-		);
+FL_EXPORT int fl_popup_entry_set_text( FL_POPUP_ENTRY *,
+									   const char * );
 
-FL_EXPORT void fl_popup_entry_set_shortcut(
-		FL_POPUP_ENTRY *,
-		const char *
-		);
+FL_EXPORT void fl_popup_entry_set_shortcut( FL_POPUP_ENTRY *,
+											const char * );
 
-FL_EXPORT long int fl_popup_entry_set_value(
-		FL_POPUP_ENTRY * entry,
-		long int         value
-		);
+FL_EXPORT long int fl_popup_entry_set_value( FL_POPUP_ENTRY *,
+											 long int );
 
-FL_EXPORT void *fl_popup_entry_set_user_data(
-		FL_POPUP_ENTRY * entry,
-		void           * user_data
-		);
+FL_EXPORT void *fl_popup_entry_set_user_data( FL_POPUP_ENTRY *,
+											  void * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_position(
-		FL_POPUP *,
-		int
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_position( FL_POPUP *,
+														  int );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_value(
-		FL_POPUP *,
-		long int
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_value( FL_POPUP *,
+													   long );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_user_data(
-		FL_POPUP *,
-		void *
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_user_data( FL_POPUP *,
+														   void * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_text(
-		FL_POPUP *,
-		const char *
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_text( FL_POPUP *,
+													  const char * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_label(
-		FL_POPUP *,
-		const char *
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_label( FL_POPUP *,
+													   const char * );
 
-FL_EXPORT int fl_popup_entry_get_group(
-		FL_POPUP_ENTRY *
-		);
+FL_EXPORT int fl_popup_entry_get_group( FL_POPUP_ENTRY * );
 
-FL_EXPORT int fl_popup_entry_set_group(
-		FL_POPUP_ENTRY *,
-		int
-		);
+FL_EXPORT int fl_popup_entry_set_group( FL_POPUP_ENTRY *,
+										int );
 
-FL_EXPORT FL_POPUP *fl_popup_entry_get_subpopup(
-		FL_POPUP_ENTRY *
-		);
+FL_EXPORT FL_POPUP *fl_popup_entry_get_subpopup( FL_POPUP_ENTRY * );
 
-FL_EXPORT FL_POPUP *fl_popup_entry_set_subpopup(
-		FL_POPUP_ENTRY *,
-		FL_POPUP       *
-		);
+FL_EXPORT FL_POPUP *fl_popup_entry_set_subpopup( FL_POPUP_ENTRY *,
+												 FL_POPUP * );
 
-FL_EXPORT int fl_popup_get_size(
-		FL_POPUP *,
-		unsigned int *,
-		unsigned int *
-		);
+FL_EXPORT int fl_popup_get_size( FL_POPUP *,
+								 unsigned int *,
+								 unsigned int * );
 
-FL_EXPORT int fl_popup_get_min_width(
-		FL_POPUP *
-		);
+FL_EXPORT int fl_popup_get_min_width( FL_POPUP * );
 
-FL_EXPORT int fl_popup_set_min_width(
-		FL_POPUP *,
-		int
-		);
+FL_EXPORT int fl_popup_set_min_width( FL_POPUP *,
+									  int );
 
 #endif /* ! defined FL_POPUP_H */

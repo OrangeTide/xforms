@@ -44,37 +44,27 @@ enum {
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_menubar(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_menubar( int		  type,
+										 FL_Coord	  x,
+										 FL_Coord	  y,
+										 FL_Coord	  w,
+										 FL_Coord	  h,
+										 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_menubar(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_menubar( int		   type,
+									  FL_Coord	   x,
+									  FL_Coord	   y,
+									  FL_Coord	   w,
+									  FL_Coord	   h,
+									  const char * label );
 
-FL_EXPORT void fl_clear_menubar(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_clear_menubar( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_menubar(
-		FL_OBJECT  * ob,
-		const char * label
-		);
+FL_EXPORT void fl_set_menubar( FL_OBJECT  * ob,
+							   const char * label );
 
-FL_EXPORT void fl_set_menubar_entries(
-		FL_OBJECT    * ob,
-		const char   * label,
-		FL_PUP_ENTRY * pup
-		);
+FL_EXPORT void fl_set_menubar_entries( FL_OBJECT    * ob,
+									   const char   * label,
+									   FL_PUP_ENTRY * pup );
 
 #endif /* ! defined FL_MENUBAR_H */

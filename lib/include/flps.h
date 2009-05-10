@@ -61,13 +61,9 @@ typedef struct {
 	int		     clip;
 } FLPS_CONTROL;
 
-FL_EXPORT FLPS_CONTROL * flps_init(
-		void
-		);
+FL_EXPORT FLPS_CONTROL * flps_init( void );
 
-FL_EXPORT int fl_object_ps_dump(
-		FL_OBJECT  * ob,
-		const char * fname
-		);
+FL_EXPORT int fl_object_ps_dump( FL_OBJECT  * ob,
+								 const char * fname );
 
 #endif /* ! defined FLPS_H */

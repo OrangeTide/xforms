@@ -41,124 +41,80 @@ enum {
 #define FL_SELECT_LCOL		    FL_LCOL
 #define FL_SELECT_ALIGN		    FL_ALIGN_LEFT
 
-FL_EXPORT FL_OBJECT *fl_create_select(
-		int,
-		FL_Coord,
-		FL_Coord,
-		FL_Coord,
-		FL_Coord,
-		const char *
-		);
+FL_EXPORT FL_OBJECT *fl_create_select( int,
+									   FL_Coord,
+									   FL_Coord,
+									   FL_Coord,
+									   FL_Coord,
+									   const char * );
 
-FL_EXPORT FL_OBJECT *fl_add_select(
-		int,
-		FL_Coord,
-		FL_Coord,
-		FL_Coord,
-		FL_Coord,
-		const char *
-		);
+FL_EXPORT FL_OBJECT *fl_add_select( int,
+									FL_Coord,
+									FL_Coord,
+									FL_Coord,
+									FL_Coord,
+									const char * );
 
-FL_EXPORT int fl_clear_select(
-		FL_OBJECT *
-		);
+FL_EXPORT int fl_clear_select( FL_OBJECT * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_add_select_items(
-		FL_OBJECT  *,
-		const char *,
-		...
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_add_select_items( FL_OBJECT  *,
+											   const char *,
+											   ... );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_insert_select_items(
-		FL_OBJECT *,
-		FL_POPUP_ENTRY *,
-		const char     *,
-		...
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_insert_select_items( FL_OBJECT *,
+												  FL_POPUP_ENTRY *,
+												  const char     *,
+												  ... );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_replace_select_item(
-		FL_OBJECT *,
-		FL_POPUP_ENTRY *,
-	    const char *,
-		...
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_replace_select_item( FL_OBJECT *,
+												  FL_POPUP_ENTRY *,
+												  const char *,
+												  ... );
 
-FL_EXPORT int fl_delete_select_item(
-		FL_OBJECT *,
-		FL_POPUP_ENTRY *
-		);
+FL_EXPORT int fl_delete_select_item( FL_OBJECT *,
+									 FL_POPUP_ENTRY * );
 
-FL_EXPORT long fl_set_select_items(
-		FL_OBJECT *,
-		FL_POPUP_ITEM *
-		);
+FL_EXPORT long fl_set_select_items( FL_OBJECT *,
+									FL_POPUP_ITEM * );
 
-FL_EXPORT FL_POPUP *fl_get_select_popup(
-		FL_OBJECT *
-		);
+FL_EXPORT FL_POPUP *fl_get_select_popup( FL_OBJECT * );
 
-FL_EXPORT int fl_set_select_popup(
-		FL_OBJECT *,
-		FL_POPUP  *
-		);
+FL_EXPORT int fl_set_select_popup( FL_OBJECT *,
+								   FL_POPUP  * );
 
-FL_EXPORT FL_POPUP_RETURN *fl_get_select_item(
-		FL_OBJECT *
-		);
+FL_EXPORT FL_POPUP_RETURN *fl_get_select_item( FL_OBJECT * );
 
-FL_EXPORT FL_POPUP_RETURN *fl_set_select_item(
-		FL_OBJECT *,
-		FL_POPUP_ENTRY *
-		);
+FL_EXPORT FL_POPUP_RETURN *fl_set_select_item( FL_OBJECT *,
+											   FL_POPUP_ENTRY * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_value(
-		FL_OBJECT *,
-		long int
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_value( FL_OBJECT *,
+													   long );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_label(
-		FL_OBJECT *,
-		const char *
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_label( FL_OBJECT *,
+													   const char * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_text(
-		FL_OBJECT *,
-		const char *
-		);
+FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_text( FL_OBJECT *,
+													  const char * );
 
-FL_EXPORT FL_COLOR fl_get_select_text_color(
-		FL_OBJECT *
-		);
+FL_EXPORT FL_COLOR fl_get_select_text_color( FL_OBJECT * );
 
-FL_EXPORT FL_COLOR fl_set_select_text_color(
-		FL_OBJECT *,
-		FL_COLOR
-		);
+FL_EXPORT FL_COLOR fl_set_select_text_color( FL_OBJECT *,
+											 FL_COLOR );
 
-FL_EXPORT int fl_get_select_text_font(
-		FL_OBJECT *,
-		int *,
-		int *
-		);
+FL_EXPORT int fl_get_select_text_font( FL_OBJECT *,
+									   int *,
+									   int * );
 
-FL_EXPORT int fl_set_select_text_font(
-		FL_OBJECT *,
-		int,
-		int 
-		);
+FL_EXPORT int fl_set_select_text_font( FL_OBJECT *,
+									   int,
+									   int );
 
-FL_EXPORT int fl_get_select_text_align(
-		FL_OBJECT *
-		);
+FL_EXPORT int fl_get_select_text_align( FL_OBJECT * );
 
-FL_EXPORT int fl_set_select_text_align(
-		FL_OBJECT *,
-		int
-		);
+FL_EXPORT int fl_set_select_text_align( FL_OBJECT *,
+										int );
 
-FL_EXPORT int fl_set_select_policy(
-		FL_OBJECT *,
-		int
-		);
+FL_EXPORT int fl_set_select_policy( FL_OBJECT *,
+									int );
 
 #endif /* ! defined FL_SELECT_H */

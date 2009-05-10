@@ -35,22 +35,18 @@ enum {
 #define FL_TEXT_LCOL	   FL_LCOL
 #define FL_TEXT_ALIGN	   FL_ALIGN_LEFT
 
-FL_EXPORT FL_OBJECT * fl_create_text(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_text( int		   type,
+									  FL_Coord	   x,
+									  FL_Coord	   y,
+									  FL_Coord	   w,
+									  FL_Coord	   h,
+									  const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_text(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_text( int			type,
+								   FL_Coord	    x,
+								   FL_Coord	    y,
+								   FL_Coord	    w,
+								   FL_Coord	    h,
+								   const char * label );
 
 #endif /* ! defined FL_TEXT_H */

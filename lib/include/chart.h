@@ -52,92 +52,64 @@ typedef enum {
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_chart(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_chart( int			type,
+									   FL_Coord	    x,
+									   FL_Coord	    y,
+									   FL_Coord	    w,
+									   FL_Coord	    h,
+									   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_chart(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_chart( int			 type,
+									FL_Coord	 x,
+									FL_Coord	 y,
+									FL_Coord	 w,
+									FL_Coord	 h,
+									const char * label );
 
-FL_EXPORT void fl_clear_chart(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_clear_chart( FL_OBJECT * ob );
 
-FL_EXPORT void fl_add_chart_value(
-		FL_OBJECT  * ob,
-		double		 val,
-		const char * str,
-		int			 col
-		);
+FL_EXPORT void fl_add_chart_value( FL_OBJECT  * ob,
+								   double		val,
+								   const char * str,
+								   int			col );
 
-FL_EXPORT void fl_insert_chart_value(
-		FL_OBJECT  * ob,
-		int			 indx,
-		double		 val,
-		const char * str,
-		int			 col
-		);
+FL_EXPORT void fl_insert_chart_value( FL_OBJECT  * ob,
+									  int		   indx,
+									  double	   val,
+									  const char * str,
+									  int		   col );
 
-FL_EXPORT void fl_replace_chart_value(
-		FL_OBJECT  * ob,
-		int			 indx,
-		double		 val,
-		const char * str,
-		int			 col
-		);
+FL_EXPORT void fl_replace_chart_value( FL_OBJECT  * ob,
+									   int			indx,
+									   double		val,
+									   const char * str,
+									   int			col );
 
-FL_EXPORT void fl_set_chart_bounds(
-		FL_OBJECT * ob,
-		double		min,
-		double		max
-		);
+FL_EXPORT void fl_set_chart_bounds( FL_OBJECT * ob,
+									double		min,
+									double		max );
 
-FL_EXPORT void fl_get_chart_bounds(
-		FL_OBJECT * ob,
-		double    * min,
-		double    * max
-		);
+FL_EXPORT void fl_get_chart_bounds( FL_OBJECT * ob,
+									double    * min,
+									double    * max );
 
-FL_EXPORT int fl_set_chart_maxnumb(
-		FL_OBJECT * ob,
-		int			maxnumb
-		);
+FL_EXPORT int fl_set_chart_maxnumb( FL_OBJECT * ob,
+									int			maxnumb );
 
-FL_EXPORT void fl_set_chart_autosize(
-		FL_OBJECT * ob,
-		int			autosize
-		);
+FL_EXPORT void fl_set_chart_autosize( FL_OBJECT * ob,
+									  int		  autosize );
 
-FL_EXPORT void fl_set_chart_lstyle(
-		FL_OBJECT * ob,
-		int			lstyle
-		);
+FL_EXPORT void fl_set_chart_lstyle( FL_OBJECT * ob,
+									int			lstyle );
 
-FL_EXPORT void fl_set_chart_lsize(
-		FL_OBJECT * ob,
-		int			lsize
-		);
+FL_EXPORT void fl_set_chart_lsize( FL_OBJECT * ob,
+								   int		   lsize );
 
-FL_EXPORT void fl_set_chart_lcolor(
-		FL_OBJECT * ob,
-		FL_COLOR	lcol
-		);
+FL_EXPORT void fl_set_chart_lcolor( FL_OBJECT * ob,
+									FL_COLOR	lcol );
 
-FL_EXPORT void fl_set_chart_baseline(
-		FL_OBJECT * ob,
-		int			iYesNo
-		);
+FL_EXPORT void fl_set_chart_baseline( FL_OBJECT * ob,
+									  int		  iYesNo );
 
 #define fl_set_chart_lcol	fl_set_chart_lcolor
 

@@ -679,7 +679,7 @@ static void add_one( char *,
 					 char * );
 
 char *
-fl_fix_dirname( char *dir )
+fl_fix_dirname( char * dir )
 {
     static char ldir[ FL_PATH_MAX ],
 		        one[ FL_PATH_MAX ];
@@ -689,9 +689,7 @@ fl_fix_dirname( char *dir )
     fl_b2f_slash( dir );
 
     if ( ! *dir )    /* Here's some bullshit going one, what's ldir set to ? */
-    {
 		return fli_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );
-    }
     else if ( dir[ 0 ] == '.' && dir[ 1 ] == '.' && dir[ 2 ] == '\0' )
     {
 		fli_getcwd( dir ? dir : ldir, FL_PATH_MAX - 2 );

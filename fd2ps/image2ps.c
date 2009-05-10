@@ -32,12 +32,17 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "fd2ps.h"
 
 static const char *hexdigits = "0123456789abcdef";
 #define LINELENGTH  37
+
+
+/***************************************
+ ***************************************/
 
 int
 image2colorps( short      * pixels,
@@ -126,6 +131,9 @@ image2colorps( short      * pixels,
 }
 
 
+/***************************************
+ ***************************************/
+
 int
 image2grayps( short      * pixels,
 			  int          w,
@@ -171,6 +179,9 @@ image2grayps( short      * pixels,
     return 0;
 }
 
+
+/***************************************
+ ***************************************/
 
 char *
 ps_literal( const char * s )

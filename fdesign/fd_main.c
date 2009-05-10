@@ -191,7 +191,7 @@ mainname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     const char *s;
 
-    if ( !  (s = fl_show_input( "Main creation routine name:", main_name ) ) )
+    if ( ! ( s = fl_show_input( "Main creation routine name:", main_name ) ) )
 		return;
 
     strcpy( main_name, s );
@@ -291,14 +291,14 @@ handle_keypress( const XKeyEvent * xev )
 {
     KeySym keysym;
     char keybuf[ 128 ];
-    static int stp = 5;
+    int stp = get_snap_size( );
     int shift = ShiftIsDown( xev->state );
 
     XLookupString( ( XKeyEvent * ) xev, keybuf, sizeof keybuf, &keysym, 0 );
 
     if ( keysym >= XK_F1 && keysym <= XK_F12 )
 		func_cb( 0, keysym - XK_F1 + 1 );
-    else if (IsRight( keysym ) )
+    else if ( IsRight( keysym ) )
 		( shift ? resize_selection : move_selection )( stp, 0 );
     else if ( IsLeft( keysym ) )
 		( shift ? resize_selection : move_selection )( -stp, 0 );
@@ -318,7 +318,7 @@ handle_keypress( const XKeyEvent * xev )
     {
 		if ( ( stp = keysym - '0' ) == 0 )
 			stp = 10;
-		/* set_snap_size(stp, 1); */
+		set_snap_size( stp, 1 );
     }
 }
 

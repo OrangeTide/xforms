@@ -25,25 +25,20 @@
 #ifndef FL_BOX_H
 #define FL_BOX_H
 
-
 /* type already defined in Basic.h */
 
-FL_EXPORT FL_OBJECT * fl_create_box(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_box( int		  type,
+									 FL_Coord	  x,
+									 FL_Coord	  y,
+									 FL_Coord	  w,
+									 FL_Coord	  h,
+									 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_box(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_box( int		   type,
+								  FL_Coord	   x,
+								  FL_Coord	   y,
+								  FL_Coord	   w,
+								  FL_Coord	   h,
+								  const char * label );
 
 #endif /* ! defined FL_BOX_H */

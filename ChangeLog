@@ -1,5 +1,12 @@
 2009-05-08 Jens Thoms Toerring    <jt@toerring.de>
 
+	* lib/forms.c, lib/objects.c, lib/flinternals.h:
+	Using the return key to activate a FL_RETURN_BUTTON
+	object in a form with a single input object works
+	again.
+
+2009-05-08 Jens Thoms Toerring    <jt@toerring.de>
+
 	* configure.ac: check for nanosleep too
 	* lib/sysdep.c (fl_msleep): use HAVE_NONOSLEEP
 

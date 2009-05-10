@@ -35,61 +35,86 @@
 #include "include/forms.h"
 #include "fd2ps.h"
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_get_hv_align(int align, int *halign, int *valign)
+fl_get_hv_align( int   align,
+				 int * halign,
+				 int * valign )
 {
 
     align &= ~FL_ALIGN_INSIDE;
 
-    switch (align)
+    switch ( align )
     {
-    case FL_ALIGN_LEFT:
-	*halign = FL_ALIGN_LEFT;
-	*valign = FL_ALIGN_CENTER;
-	break;
-    case FL_ALIGN_RIGHT:
-	*halign = FL_ALIGN_RIGHT;
-	*valign = FL_ALIGN_CENTER;
-	break;
-    case FL_ALIGN_CENTER:
-	*halign = FL_ALIGN_CENTER;
-	*valign = FL_ALIGN_CENTER;
-	break;
-    case FL_ALIGN_TOP:
-	*halign = FL_ALIGN_CENTER;
-	*valign = FL_ALIGN_TOP;
-	break;
-    case FL_ALIGN_BOTTOM:
-	*halign = FL_ALIGN_CENTER;
-	*valign = FL_ALIGN_BOTTOM;
-	break;
-    case FL_ALIGN_LEFT_BOTTOM:
-	*halign = FL_ALIGN_LEFT;
-	*valign = FL_ALIGN_BOTTOM;
-	break;
-    case FL_ALIGN_RIGHT_BOTTOM:
-	*halign = FL_ALIGN_RIGHT;
-	*valign = FL_ALIGN_BOTTOM;
-	break;
-    case FL_ALIGN_LEFT_TOP:
-	*halign = FL_ALIGN_LEFT;
-	*valign = FL_ALIGN_TOP;
-	break;
-    case FL_ALIGN_RIGHT_TOP:
-	*halign = FL_ALIGN_RIGHT;
-	*valign = FL_ALIGN_TOP;
-	break;
-    default:
-	fprintf(stderr, "GetAlign - Bad request: %d\n", align);
-	*halign = FL_ALIGN_CENTER;
-	*valign = FL_ALIGN_CENTER;
-	break;
+		case FL_ALIGN_LEFT :
+			*halign = FL_ALIGN_LEFT;
+			*valign = FL_ALIGN_CENTER;
+			break;
+
+		case FL_ALIGN_RIGHT :
+			*halign = FL_ALIGN_RIGHT;
+			*valign = FL_ALIGN_CENTER;
+			break;
+
+		case FL_ALIGN_CENTER :
+			*halign = FL_ALIGN_CENTER;
+			*valign = FL_ALIGN_CENTER;
+			break;
+
+		case FL_ALIGN_TOP :
+			*halign = FL_ALIGN_CENTER;
+			*valign = FL_ALIGN_TOP;
+			break;
+
+		case FL_ALIGN_BOTTOM :
+			*halign = FL_ALIGN_CENTER;
+			*valign = FL_ALIGN_BOTTOM;
+			break;
+
+		case FL_ALIGN_LEFT_BOTTOM :
+			*halign = FL_ALIGN_LEFT;
+			*valign = FL_ALIGN_BOTTOM;
+			break;
+
+		case FL_ALIGN_RIGHT_BOTTOM :
+			*halign = FL_ALIGN_RIGHT;
+			*valign = FL_ALIGN_BOTTOM;
+			break;
+
+		case FL_ALIGN_LEFT_TOP :
+			*halign = FL_ALIGN_LEFT;
+			*valign = FL_ALIGN_TOP;
+			break;
+
+		case FL_ALIGN_RIGHT_TOP :
+			*halign = FL_ALIGN_RIGHT;
+			*valign = FL_ALIGN_TOP;
+			break;
+
+		default :
+			fprintf( stderr, "GetAlign - Bad request: %d\n", align );
+			*halign = FL_ALIGN_CENTER;
+			*valign = FL_ALIGN_CENTER;
+			break;
     }
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_get_outside_align(int align, int x, int y, int w, int h,
-		     int *new_align, int *newx, int *newy)
+fl_get_outside_align( int   align,
+					  int   x,
+					  int   y,
+					  int   w,
+					  int   h,
+					  int * new_align,
+					  int * newx,
+					  int * newy )
 {
     *newx = x;
     *newy = y;
@@ -97,109 +122,151 @@ fl_get_outside_align(int align, int x, int y, int w, int h,
 
     align &= ~FL_ALIGN_INSIDE;
 
-    if (align == FL_ALIGN_LEFT)
+    if ( align == FL_ALIGN_LEFT )
     {
-	*new_align = FL_ALIGN_RIGHT;
-	*newx = x - w;
+		*new_align = FL_ALIGN_RIGHT;
+		*newx = x - w;
     }
-    else if (align == FL_ALIGN_RIGHT)
+    else if ( align == FL_ALIGN_RIGHT )
     {
-	*new_align = FL_ALIGN_LEFT;
-	*newx = x + w;
+		*new_align = FL_ALIGN_LEFT;
+		*newx = x + w;
     }
-    else if (align == FL_ALIGN_TOP)
+    else if ( align == FL_ALIGN_TOP )
     {
-	*new_align = FL_ALIGN_BOTTOM;
-	*newy = y + h;
+		*new_align = FL_ALIGN_BOTTOM;
+		*newy = y + h;
     }
-    else if (align == FL_ALIGN_BOTTOM)
+    else if ( align == FL_ALIGN_BOTTOM )
     {
-	*new_align = FL_ALIGN_TOP;
-	*newy = y - h;
+		*new_align = FL_ALIGN_TOP;
+		*newy = y - h;
     }
-    else if (align == FL_ALIGN_LEFT_TOP)
+    else if ( align == FL_ALIGN_LEFT_TOP )
     {
-	*new_align = FL_ALIGN_LEFT_BOTTOM;
-	*newy = y + h;
+		*new_align = FL_ALIGN_LEFT_BOTTOM;
+		*newy = y + h;
     }
-    else if (align == FL_ALIGN_RIGHT_TOP)
+    else if ( align == FL_ALIGN_RIGHT_TOP )
     {
-	*new_align = FL_ALIGN_RIGHT_BOTTOM;
-	*newy = y + h;
+		*new_align = FL_ALIGN_RIGHT_BOTTOM;
+		*newy = y + h;
     }
-    else if (align == FL_ALIGN_LEFT_BOTTOM)
+    else if ( align == FL_ALIGN_LEFT_BOTTOM )
     {
-	*new_align = FL_ALIGN_LEFT_TOP;
-	*newy = y - h;
+		*new_align = FL_ALIGN_LEFT_TOP;
+		*newy = y - h;
     }
-    else if (align == FL_ALIGN_RIGHT_BOTTOM)
+    else if ( align == FL_ALIGN_RIGHT_BOTTOM )
     {
-	*new_align = FL_ALIGN_RIGHT_TOP;
-	*newy = y - h;
+		*new_align = FL_ALIGN_RIGHT_TOP;
+		*newy = y - h;
     }
 }
 
 
-static void
-get_align_inside(int align, int x, int y, int w, int h,
-		 int xsize, int ysize, int xoff, int yoff,
-		 int *xx, int *yy)
-{
-    int hor, vert;
+/***************************************
+ ***************************************/
 
-    fl_get_hv_align(align, &hor, &vert);
+static void
+get_align_inside( int   align,
+				  int   x,
+				  int   y,
+				  int   w,
+				  int   h,
+				  int   xsize,
+				  int   ysize,
+				  int   xoff,
+				  int   yoff,
+				  int * xx,
+				  int * yy )
+{
+    int hor,
+		vert;
+
+    fl_get_hv_align( align, &hor, &vert );
 
     x += xoff;
     y += yoff;
     w -= 2 * xoff;
     h -= 2 * yoff;
 
-    switch (hor)
+    switch ( hor )
     {
-    case FL_ALIGN_LEFT:
-	*xx = x;
-	break;
-    case FL_ALIGN_RIGHT:
-	*xx = x + w - xsize;
-	break;
-    case FL_ALIGN_CENTER:
-    default:
-	*xx = x + (w - xsize) / 2;
-	break;
+		case FL_ALIGN_LEFT :
+			*xx = x;
+			break;
+
+		case FL_ALIGN_RIGHT :
+			*xx = x + w - xsize;
+			break;
+
+		case FL_ALIGN_CENTER :
+		default:
+			*xx = x + ( w - xsize ) / 2;
+			break;
     }
 
-    switch (vert)
+    switch ( vert )
     {
-    case FL_ALIGN_TOP:
-	*yy = y + h - ysize;
-	break;
-    case FL_ALIGN_BOTTOM:
-	*yy = y;
-	break;
-    case FL_ALIGN_CENTER:
-    default:
-	*yy = y + (h - ysize) / 2;
-	break;
+		case FL_ALIGN_TOP :
+			*yy = y + h - ysize;
+			break;
+
+		case FL_ALIGN_BOTTOM :
+			*yy = y;
+			break;
+
+		case FL_ALIGN_CENTER :
+		default:
+			*yy = y + ( h - ysize ) / 2;
+			break;
     }
 }
+
+
+/***************************************
+ ***************************************/
 
 static void
-get_align_outside(int align, int x, int y, int w, int h,
-		  int xsize, int ysize, int xoff, int yoff,
-		  int *xx, int *yy)
+get_align_outside( int   align,
+				   int   x,
+				   int   y,
+				   int   w,
+				   int   h,
+				   int   xsize,
+				   int   ysize,
+				   int   xoff,
+				   int   yoff,
+				   int * xx,
+				   int * yy )
 {
-    int newx, newy, new_align;
+    int newx,
+		newy,
+		new_align;
 
-    fl_get_outside_align(align, x, y, w, h, &new_align, &newx, &newy);
-    get_align_inside(new_align, newx, newy, w, h,
-		     xsize, ysize, xoff, yoff, xx, yy);
+    fl_get_outside_align( align, x, y, w, h, &new_align, &newx, &newy );
+    get_align_inside( new_align, newx, newy, w, h,
+					  xsize, ysize, xoff, yoff, xx, yy );
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-fl_get_align_xy(int align, int x, int y, int w, int h,
-		int xsize, int ysize, int xoff, int yoff,
-		int *xx, int *yy)
+fl_get_align_xy( int   align,
+				 int   x,
+				 int   y,
+				 int   w,
+				 int   h,
+				 int   xsize,
+				 int   ysize,
+				 int   xoff,
+				 int   yoff,
+				 int * xx,
+				 int * yy )
 {
-    ((align & FL_ALIGN_INSIDE) ? get_align_inside : get_align_outside)
-	(align, x, y, w, h, xsize, ysize, xoff, yoff, xx, yy);
+    ( ( align & FL_ALIGN_INSIDE ) ? get_align_inside : get_align_outside )
+		( align, x, y, w, h, xsize, ysize, xoff, yoff, xx, yy );
 }

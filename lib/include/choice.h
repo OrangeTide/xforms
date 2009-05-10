@@ -50,111 +50,71 @@ typedef enum {
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_choice(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_choice( int			 type,
+										FL_Coord	 x,
+										FL_Coord	 y,
+										FL_Coord	 w,
+										FL_Coord	 h,
+										const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_choice(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_add_choice( int		  type,
+									 FL_Coord	  x,
+									 FL_Coord	  y,
+									 FL_Coord	  w,
+									 FL_Coord	  h,
+									 const char * label );
 
-FL_EXPORT void fl_clear_choice(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_clear_choice( FL_OBJECT * ob );
 
-FL_EXPORT int fl_addto_choice(
-		FL_OBJECT  * ob,
-		const char * str
-		);
+FL_EXPORT int fl_addto_choice( FL_OBJECT  * ob,
+							   const char * str );
 
-FL_EXPORT void fl_replace_choice(
-		FL_OBJECT  * ob,
-		int			 numb,
-		const char * str
-		);
+FL_EXPORT void fl_replace_choice( FL_OBJECT  * ob,
+								  int		   numb,
+								  const char * str );
 
-FL_EXPORT void fl_delete_choice(
-		FL_OBJECT * ob,
-		int			numb
-		);
+FL_EXPORT void fl_delete_choice( FL_OBJECT * ob,
+								 int		 numb );
 
-FL_EXPORT void fl_set_choice(
-		FL_OBJECT * ob,
-		int			choice
-		);
+FL_EXPORT void fl_set_choice( FL_OBJECT * ob,
+							  int		  choice );
 
-FL_EXPORT void fl_set_choice_text(
-		FL_OBJECT  * ob,
-		const char * txt
-		);
+FL_EXPORT void fl_set_choice_text( FL_OBJECT  * ob,
+								   const char * txt );
 
-FL_EXPORT int fl_get_choice(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_choice( FL_OBJECT * ob );
 
-FL_EXPORT const char * fl_get_choice_item_text(
-		FL_OBJECT * ob,
-		int n
-		);
+FL_EXPORT const char * fl_get_choice_item_text( FL_OBJECT * ob,
+												int         n );
 
-FL_EXPORT int fl_get_choice_maxitems(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_choice_maxitems( FL_OBJECT * ob );
 
-FL_EXPORT const char * fl_get_choice_text(
-		FL_OBJECT * ob
-		);
+FL_EXPORT const char * fl_get_choice_text( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_choice_fontsize(
-		FL_OBJECT * ob,
-		int			size
-		);
+FL_EXPORT void fl_set_choice_fontsize( FL_OBJECT * ob,
+									   int		   size );
 
-FL_EXPORT void fl_set_choice_fontstyle(
-		FL_OBJECT * ob,
-		int			style
-		);
+FL_EXPORT void fl_set_choice_fontstyle( FL_OBJECT * ob,
+										int			style );
 
-FL_EXPORT void fl_set_choice_align(
-		FL_OBJECT * ob,
-		int			align
-		);
+FL_EXPORT void fl_set_choice_align( FL_OBJECT * ob,
+									int			align );
 
-FL_EXPORT int fl_get_choice_item_mode(
-		FL_OBJECT *  ob,
-		int          item
-		);
+FL_EXPORT int fl_get_choice_item_mode( FL_OBJECT *  ob,
+									   int          item );
 
-FL_EXPORT void fl_set_choice_item_mode(
-		FL_OBJECT    * ob,
-		int			   item,
-		unsigned int   mode
-		);
+FL_EXPORT void fl_set_choice_item_mode( FL_OBJECT    * ob,
+										int			   item,
+										unsigned int   mode );
 
-FL_EXPORT void fl_set_choice_item_shortcut(
-		FL_OBJECT  * ob,
-		int			 item,
-		const char * sc
-		);
+FL_EXPORT void fl_set_choice_item_shortcut( FL_OBJECT  * ob,
+											int			 item,
+											const char * sc );
 
-FL_EXPORT int fl_set_choice_entries(
-		FL_OBJECT    * ob,
-		FL_PUP_ENTRY * ent
-		);
+FL_EXPORT int fl_set_choice_entries( FL_OBJECT    * ob,
+									 FL_PUP_ENTRY * ent );
 
-FL_EXPORT int fl_set_choice_notitle(
-		FL_OBJECT * ob,
-		int			n
-		);
+FL_EXPORT int fl_set_choice_notitle( FL_OBJECT * ob,
+									 int		 n );
 
 #endif /* ! defined FL_CHOICE_H */

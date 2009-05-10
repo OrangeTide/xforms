@@ -39,79 +39,53 @@
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_positioner(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_positioner( int			 type,
+											FL_Coord	 x,
+											FL_Coord	 y,
+											FL_Coord	 w,
+											FL_Coord	 h,
+											const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_positioner(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_positioner( int		  type,
+										 FL_Coord	  x,
+										 FL_Coord	  y,
+										 FL_Coord	  w,
+										 FL_Coord	  h,
+										 const char * label );
 
-FL_EXPORT void fl_set_positioner_xvalue(
-		FL_OBJECT * ob,
-		double		val
-		);
+FL_EXPORT void fl_set_positioner_xvalue( FL_OBJECT * ob,
+										 double		 val );
 
-FL_EXPORT double fl_get_positioner_xvalue(
-		FL_OBJECT * ob
-		);
+FL_EXPORT double fl_get_positioner_xvalue( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_positioner_xbounds(
-		FL_OBJECT * ob,
-		double		min,
-		double		max
-		);
+FL_EXPORT void fl_set_positioner_xbounds( FL_OBJECT * ob,
+										  double	  min,
+										  double	  max );
 
-FL_EXPORT void fl_get_positioner_xbounds(
-		FL_OBJECT * ob,
-		double *	min,
-		double *	max
-		);
+FL_EXPORT void fl_get_positioner_xbounds( FL_OBJECT * ob,
+										  double    * min,
+										  double    * max );
 
-FL_EXPORT void fl_set_positioner_yvalue(
-		FL_OBJECT * ob,
-		double		val
-		);
+FL_EXPORT void fl_set_positioner_yvalue( FL_OBJECT * ob,
+										 double		 val );
 
-FL_EXPORT double fl_get_positioner_yvalue(
-		FL_OBJECT * ob
-		);
+FL_EXPORT double fl_get_positioner_yvalue( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_positioner_ybounds(
-		FL_OBJECT * ob,
-		double		min,
-		double		max
-		);
+FL_EXPORT void fl_set_positioner_ybounds( FL_OBJECT * ob,
+										  double	  min,
+										  double	  max );
 
-FL_EXPORT void fl_get_positioner_ybounds(
-		FL_OBJECT * ob,
-		double    * min,
-		double    * max
-		);
+FL_EXPORT void fl_get_positioner_ybounds( FL_OBJECT * ob,
+										  double    * min,
+										  double    * max );
 
-FL_EXPORT void fl_set_positioner_xstep(
-		FL_OBJECT * ob,
-		double		value
-		);
+FL_EXPORT void fl_set_positioner_xstep( FL_OBJECT * ob,
+										double		value );
 
-FL_EXPORT void fl_set_positioner_ystep(
-		FL_OBJECT * ob,
-		double		value
-		);
+FL_EXPORT void fl_set_positioner_ystep( FL_OBJECT * ob,
+										double		value );
 
-FL_EXPORT void fl_set_positioner_return(
-		FL_OBJECT * ob,
-		int			value
-		);
+FL_EXPORT void fl_set_positioner_return( FL_OBJECT * ob,
+										 int		 value );
 
 #endif /* ! defined FL_POSITIONER_H */

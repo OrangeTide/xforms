@@ -445,6 +445,9 @@ fli_end_group( void )
 }
 
 
+/***************************************
+ ***************************************/
+
 void
 fl_end_group( void )
 {
@@ -1795,7 +1798,7 @@ handle_keyboard( FL_FORM  * form,
     {
 		FL_OBJECT *focusobj = form->focusobj;
 
-		/* handle special keys first */
+		/* Handle special keys first */
 
 		if ( key > 255 )
 		{
@@ -1823,7 +1826,7 @@ handle_keyboard( FL_FORM  * form,
 			return;
 		}
 
-		/* tab & return switches focus (for return only if not FL_KEY_TAB) */
+		/* Tab & Return switches focus (for Return only if not FL_KEY_TAB) */
 
 		if (    key == '\t'
 			 || ( key == '\r' && ! ( focusobj->wantkey & FL_KEY_TAB ) ) )
@@ -1842,10 +1845,17 @@ handle_keyboard( FL_FORM  * form,
 			if ( obj == NULL )
 				obj = fli_find_first( form, FLI_FIND_INPUT, 0, 0 );
 
-			if ( obj != NULL )
+			if ( obj != NULL && obj != focusobj )
 			{
 				fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev );
 				fli_handle_object( obj, FL_FOCUS, x, y, 0, xev );
+			}
+			else if (    key == '\r'
+					  && ( obj = fli_find_first( form, FLI_FIND_RETURN,
+												 0, 0 ) ) )
+			{
+				fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev );
+				fli_handle_object( obj, FL_SHORTCUT, x, y, key, xev );
 			}
 		}
 		else if ( focusobj->wantkey != FL_KEY_SPECIAL )
@@ -1853,12 +1863,12 @@ handle_keyboard( FL_FORM  * form,
 		return;
     }
 
-    /* keyboard input is not wanted */
+    /* Keyboard input is not wanted */
 
     if ( ! special || special->wantkey == 0 )
 		return;
 
-    /* space is an exception for browser */
+    /* Space is an exception for browser */
 
     if ( ( key > 255 || key == ' ' ) && special->wantkey & FL_KEY_SPECIAL )
 		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev );

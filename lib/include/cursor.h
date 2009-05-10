@@ -43,35 +43,25 @@ enum {
 #define XC_invisible   FL_INVISIBLE_CURSOR
 #endif
 
-FL_EXPORT void fl_set_cursor(
-		Window win,
-		int	   name
-		);
+FL_EXPORT void fl_set_cursor( Window win,
+							  int	 name );
 
-FL_EXPORT void fl_set_cursor_color(
-		int		 name,
-		FL_COLOR fg,
-		FL_COLOR bg
-		);
+FL_EXPORT void fl_set_cursor_color( int		 name,
+									FL_COLOR fg,
+									FL_COLOR bg );
 
-FL_EXPORT int fl_create_bitmap_cursor(
-		const char * source,
-		const char * mask,
-		int			 w,
-		int			 h,
-		int			 hotx,
-		int			 hoty
-		);
+FL_EXPORT int fl_create_bitmap_cursor( const char * source,
+									   const char * mask,
+									   int			w,
+									   int			h,
+									   int			hotx,
+									   int			hoty );
 
-FL_EXPORT int fl_create_animated_cursor(
-		int * cur_names,
-		int	  timeout
-		);
+FL_EXPORT int fl_create_animated_cursor( int * cur_names,
+										 int   timeout );
 
-FL_EXPORT Cursor fl_get_cursor_byname(
-		int name
-		);
+FL_EXPORT Cursor fl_get_cursor_byname( int name );
 
-#define fl_reset_cursor( win ) fl_set_cursor( win, FL_DEFAULT_CURSOR );
+#define fl_reset_cursor( win )   fl_set_cursor( win, FL_DEFAULT_CURSOR );
 
 #endif /* ! defined FL_CURSOR_H */

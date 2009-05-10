@@ -38,39 +38,29 @@ enum {
 
 #define FL_CLOCK_TOPCOL	 FL_COL1
 
-FL_EXPORT FL_OBJECT * fl_create_clock(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * s
-		);
+FL_EXPORT FL_OBJECT * fl_create_clock( int			type,
+									   FL_Coord	    x,
+									   FL_Coord	    y,
+									   FL_Coord	    w,
+									   FL_Coord	    h,
+									   const char * s );
 
-FL_EXPORT FL_OBJECT * fl_add_clock(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * s
-		);
+FL_EXPORT FL_OBJECT * fl_add_clock( int			 type,
+									FL_Coord	 x,
+									FL_Coord	 y,
+									FL_Coord	 w,
+									FL_Coord	 h,
+									const char * s );
 
-FL_EXPORT void fl_get_clock(
-		FL_OBJECT * ob,
-		int       * h,
-		int       * m,
-		int       * s
-		);
+FL_EXPORT void fl_get_clock( FL_OBJECT * ob,
+							 int       * h,
+							 int       * m,
+							 int       * s );
 
-FL_EXPORT long fl_set_clock_adjustment(
-		FL_OBJECT * ob,
-		long		offset
-		);
+FL_EXPORT long fl_set_clock_adjustment( FL_OBJECT * ob,
+										long		offset );
 
-FL_EXPORT void fl_set_clock_ampm(
-		FL_OBJECT * ob,
-		int			y
-		);
+FL_EXPORT void fl_set_clock_ampm( FL_OBJECT * ob,
+								  int		  y );
 
 #endif /* ! defined FL_CLOCK_H */

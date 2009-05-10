@@ -38,44 +38,34 @@
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_bitmap(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_bitmap( int			 type,
+										FL_Coord	 x,
+										FL_Coord	 y,
+										FL_Coord	 w,
+										FL_Coord	 h,
+										const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_bitmap(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_bitmap( int		  type,
+									 FL_Coord	  x,
+									 FL_Coord	  y,
+									 FL_Coord	  w,
+									 FL_Coord	  h,
+									 const char * label );
 
-FL_EXPORT void fl_set_bitmap_data(
-		FL_OBJECT     * ob,
-		int				w,
-		int				h,
-		unsigned char * data
-		);
+FL_EXPORT void fl_set_bitmap_data( FL_OBJECT     * ob,
+								   int			   w,
+								   int			   h,
+								   unsigned char * data );
 
-FL_EXPORT void fl_set_bitmap_file(
-		FL_OBJECT  * ob,
-		const char * fname
-		);
+FL_EXPORT void fl_set_bitmap_file( FL_OBJECT  * ob,
+								   const char * fname );
 
-FL_EXPORT Pixmap fl_read_bitmapfile(
-		Window		   win,
-		const char   * file,
-		unsigned int * w,
-		unsigned int * h,
-		int          * hotx,
-		int          * hoty
-		);
+FL_EXPORT Pixmap fl_read_bitmapfile( Window		    win,
+									 const char   * file,
+									 unsigned int * w,
+									 unsigned int * h,
+									 int          * hotx,
+									 int          * hoty );
 
 #define fl_create_from_bitmapdata( win, data, w, h )  \
 	XCreateBitmapFromData( fl_get_display( ), win, ( char * ) data, w, h )
@@ -84,89 +74,66 @@ FL_EXPORT Pixmap fl_read_bitmapfile(
 
 #define fl_set_bitmap_datafile	  fl_set_bitmap_file
 
-
 /* PIXMAP stuff */
 
 #define FL_NORMAL_PIXMAP   0
 
-FL_EXPORT FL_OBJECT * fl_create_pixmap(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_pixmap( int			 type,
+										FL_Coord	 x,
+										FL_Coord	 y,
+										FL_Coord	 w,
+										FL_Coord	 h,
+										const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_pixmap(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_pixmap( int		  type,
+									 FL_Coord	  x,
+									 FL_Coord	  y,
+									 FL_Coord	  w,
+									 FL_Coord	  h,
+									 const char * label );
 
-FL_EXPORT void fl_set_pixmap_data(
-		FL_OBJECT  * ob,
-		char      ** bits
-		);
+FL_EXPORT void fl_set_pixmap_data( FL_OBJECT  * ob,
+								   char      ** bits );
 
-FL_EXPORT void fl_set_pixmap_file(
-		FL_OBJECT  * ob,
-		const char * fname
-		);
+FL_EXPORT void fl_set_pixmap_file( FL_OBJECT  * ob,
+								   const char * fname );
 
-FL_EXPORT void fl_set_pixmap_align(
-		FL_OBJECT * ob,
-		int			align,
-		int			xmargin,
-		int			ymargin
-		);
+FL_EXPORT void fl_set_pixmap_align( FL_OBJECT * ob,
+									int			align,
+									int			xmargin,
+									int			ymargin );
 
-FL_EXPORT void fl_set_pixmap_pixmap(
-		FL_OBJECT * ob,
-		Pixmap		id,
-		Pixmap		mask
-		);
+FL_EXPORT void fl_set_pixmap_pixmap( FL_OBJECT * ob,
+									 Pixmap		 id,
+									 Pixmap		 mask );
 
-FL_EXPORT void fl_set_pixmap_colorcloseness(
-		int red,
-		int green,
-		int blue
-		);
+FL_EXPORT void fl_set_pixmap_colorcloseness( int red,
+											 int green,
+											 int blue );
 
-FL_EXPORT void fl_free_pixmap_pixmap(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_free_pixmap_pixmap( FL_OBJECT * ob );
 
-FL_EXPORT Pixmap fl_get_pixmap_pixmap(
-		FL_OBJECT * ob,
-		Pixmap    * p,
-		Pixmap    * m
-		);
+FL_EXPORT Pixmap fl_get_pixmap_pixmap( FL_OBJECT * ob,
+									   Pixmap    * p,
+									   Pixmap    * m );
 
-FL_EXPORT Pixmap fl_read_pixmapfile(
-		Window		   win,
-		const char   * file,
-		unsigned int * w,
-		unsigned int * h,
-		Pixmap       * shape_mask,
-		int          * hotx,
-		int          * hoty,
-		FL_COLOR	   tran
-		);
+FL_EXPORT Pixmap fl_read_pixmapfile( Window		    win,
+									 const char   * file,
+									 unsigned int * w,
+									 unsigned int * h,
+									 Pixmap       * shape_mask,
+									 int          * hotx,
+									 int          * hoty,
+									 FL_COLOR	    tran );
 
-FL_EXPORT Pixmap fl_create_from_pixmapdata(
-		Window		    win,
-		char         ** data,
-		unsigned int  * w,
-		unsigned int  * h,
-		Pixmap        * sm,
-		int           * hotx,
-		int           * hoty,
-		FL_COLOR	    tran
-		);
+FL_EXPORT Pixmap fl_create_from_pixmapdata( Window		    win,
+											char         ** data,
+											unsigned int  * w,
+											unsigned int  * h,
+											Pixmap        * sm,
+											int           * hotx,
+											int           * hoty,
+											FL_COLOR	    tran );
 
 #define fl_free_pixmap( id )				  \
 	do { if ( id != None )					  \

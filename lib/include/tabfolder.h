@@ -39,125 +39,79 @@ enum {
 	FL_ENLARGE_ONLY
 };
 
-FL_EXPORT FL_OBJECT * fl_create_tabfolder(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_tabfolder( int			type,
+										   FL_Coord	    x,
+										   FL_Coord	    y,
+										   FL_Coord	    w,
+										   FL_Coord	    h,
+										   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_tabfolder(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_add_tabfolder( int			 type,
+										FL_Coord	 x,
+										FL_Coord	 y,
+										FL_Coord	 w,
+										FL_Coord	 h,
+										const char * label );
 
-FL_EXPORT FL_OBJECT * fl_addto_tabfolder(
-		FL_OBJECT  * ob,
-		const char * title,
-		FL_FORM *	 form
-		);
+FL_EXPORT FL_OBJECT * fl_addto_tabfolder( FL_OBJECT  * ob,
+										  const char * title,
+										  FL_FORM    * form );
 
-FL_EXPORT FL_FORM * fl_get_tabfolder_folder_bynumber(
-		FL_OBJECT * ob,
-		int			num
-		);
+FL_EXPORT FL_FORM * fl_get_tabfolder_folder_bynumber( FL_OBJECT * ob,
+													  int		  num );
 
-FL_EXPORT FL_FORM * fl_get_tabfolder_folder_byname(
-		FL_OBJECT  * ob,
-		const char * name
-		);
+FL_EXPORT FL_FORM * fl_get_tabfolder_folder_byname( FL_OBJECT  * ob,
+													const char * name );
 
-FL_EXPORT void fl_delete_folder(
-		FL_OBJECT * ob,
-		FL_FORM   * form
-		);
+FL_EXPORT void fl_delete_folder( FL_OBJECT * ob,
+								 FL_FORM   * form );
 
-FL_EXPORT void fl_delete_folder_bynumber(
-		FL_OBJECT * ob,
-		int			num
-		);
+FL_EXPORT void fl_delete_folder_bynumber( FL_OBJECT * ob,
+										  int		  num );
 
-FL_EXPORT void fl_delete_folder_byname(
-		FL_OBJECT  * ob,
-		const char * name
-		);
+FL_EXPORT void fl_delete_folder_byname( FL_OBJECT  * ob,
+										const char * name );
 
-FL_EXPORT void fl_set_folder(
-		FL_OBJECT * ob,
-		FL_FORM   * form
-		);
+FL_EXPORT void fl_set_folder( FL_OBJECT * ob,
+							  FL_FORM   * form );
 
-FL_EXPORT void fl_set_folder_byname(
-		FL_OBJECT  * ob,
-		const char * name
-		);
+FL_EXPORT void fl_set_folder_byname( FL_OBJECT  * ob,
+									 const char * name );
 
-FL_EXPORT void fl_set_folder_bynumber(
-		FL_OBJECT * ob,
-		int			num
-		);
+FL_EXPORT void fl_set_folder_bynumber( FL_OBJECT * ob,
+									   int		   num );
 
-FL_EXPORT FL_FORM * fl_get_folder(
-		FL_OBJECT * ob
-		);
+FL_EXPORT FL_FORM * fl_get_folder( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_folder_number(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_folder_number( FL_OBJECT * ob );
 
-FL_EXPORT const char * fl_get_folder_name(
-		FL_OBJECT * ob
-		);
+FL_EXPORT const char * fl_get_folder_name( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_tabfolder_numfolders(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_tabfolder_numfolders( FL_OBJECT * ob );
 
-FL_EXPORT FL_FORM * fl_get_active_folder(
-		FL_OBJECT * ob
-		);
+FL_EXPORT FL_FORM * fl_get_active_folder( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_active_folder_number(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_active_folder_number( FL_OBJECT * ob );
 
-FL_EXPORT const char * fl_get_active_folder_name(
-		FL_OBJECT * ob
-		);
+FL_EXPORT const char * fl_get_active_folder_name( FL_OBJECT * ob );
 
 
-FL_EXPORT void fl_get_folder_area(
-		FL_OBJECT * ob,
-		FL_Coord  * x,
-		FL_Coord  * y,
-		FL_Coord  * w,
-		FL_Coord  * h
-		);
+FL_EXPORT void fl_get_folder_area( FL_OBJECT * ob,
+								   FL_Coord  * x,
+								   FL_Coord  * y,
+								   FL_Coord  * w,
+								   FL_Coord  * h );
 
-FL_EXPORT void fl_replace_folder_bynumber(
-		FL_OBJECT * ob,
-		int			num,
-		FL_FORM   * form
-		);
+FL_EXPORT void fl_replace_folder_bynumber( FL_OBJECT * ob,
+										   int		   num,
+										   FL_FORM   * form );
 
-FL_EXPORT int fl_set_tabfolder_autofit(
-		FL_OBJECT * ob,
-		int			y
-		);
+FL_EXPORT int fl_set_tabfolder_autofit( FL_OBJECT * ob,
+										int			y );
 
-FL_EXPORT int fl_set_default_tabfolder_corner(
-		int n
-		);
+FL_EXPORT int fl_set_default_tabfolder_corner( int n );
 
-FL_EXPORT int fl_set_tabfolder_offset(
-		FL_OBJECT * ob,
-		int		    offset
-		);
+FL_EXPORT int fl_set_tabfolder_offset( FL_OBJECT * ob,
+									   int		   offset );
 
 #endif /* ! defined FL_FOLDER_H */

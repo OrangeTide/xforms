@@ -48,108 +48,74 @@ typedef int ( * FL_MODIFY_CANVAS_PROP )( FL_OBJECT * );
 
 /************ Interfaces	************************/
 
-FL_EXPORT FL_OBJECT * fl_create_generic_canvas(
-		int			 canvas_class,
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_generic_canvas( int			 canvas_class,
+												int			 type,
+												FL_Coord	 x,
+												FL_Coord	 y,
+												FL_Coord	 w,
+												FL_Coord	 h,
+												const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_canvas(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_canvas( int		  type,
+									 FL_Coord	  x,
+									 FL_Coord	  y,
+									 FL_Coord	  w,
+									 FL_Coord	  h,
+									 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_canvas(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_canvas( int			 type,
+										FL_Coord	 x,
+										FL_Coord	 y,
+										FL_Coord	 w,
+										FL_Coord	 h,
+										const char * label );
 
 /* backward compatibility */
 
 #define fl_set_canvas_decoration fl_set_object_boxtype
 
-FL_EXPORT void fl_set_canvas_colormap(
-		FL_OBJECT * ob,
-		Colormap	colormap
-		);
+FL_EXPORT void fl_set_canvas_colormap( FL_OBJECT * ob,
+									   Colormap	   colormap );
 
-FL_EXPORT void fl_set_canvas_visual(
-		FL_OBJECT * obj,
-		Visual    * vi
-		);
+FL_EXPORT void fl_set_canvas_visual( FL_OBJECT * obj,
+									 Visual    * vi );
 
-FL_EXPORT void fl_set_canvas_depth(
-		FL_OBJECT * obj,
-		int			depth
-		);
+FL_EXPORT void fl_set_canvas_depth( FL_OBJECT * obj,
+									int			depth );
 
-FL_EXPORT void fl_set_canvas_attributes(
-		FL_OBJECT            * ob,
-		unsigned int		   mask,
-		XSetWindowAttributes * xswa
-		);
+FL_EXPORT void fl_set_canvas_attributes( FL_OBJECT            * ob,
+										 unsigned int		    mask,
+										 XSetWindowAttributes * xswa );
 
-FL_EXPORT FL_HANDLE_CANVAS fl_add_canvas_handler(
-		FL_OBJECT        * ob,
-		int				   ev,
-		FL_HANDLE_CANVAS   h,
-		void             * udata
-		);
+FL_EXPORT FL_HANDLE_CANVAS fl_add_canvas_handler( FL_OBJECT        * ob,
+												  int				 ev,
+												  FL_HANDLE_CANVAS   h,
+												  void             * udata );
 
-FL_EXPORT Window fl_get_canvas_id(
-		FL_OBJECT * ob
-		);
+FL_EXPORT Window fl_get_canvas_id( FL_OBJECT * ob );
 
-FL_EXPORT Colormap fl_get_canvas_colormap(
-		FL_OBJECT * ob
-		);
+FL_EXPORT Colormap fl_get_canvas_colormap( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_canvas_depth(
-		FL_OBJECT * obj
-		);
+FL_EXPORT int fl_get_canvas_depth( FL_OBJECT * obj );
 
-FL_EXPORT void fl_remove_canvas_handler(
-		FL_OBJECT        * ob,
-		int				   ev,
-		FL_HANDLE_CANVAS   h
-		);
+FL_EXPORT void fl_remove_canvas_handler( FL_OBJECT        * ob,
+										 int			    ev,
+										 FL_HANDLE_CANVAS   h );
 
-FL_EXPORT void fl_hide_canvas(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_hide_canvas( FL_OBJECT * ob );
 
-FL_EXPORT void fl_share_canvas_colormap(
-		FL_OBJECT * ob,
-		Colormap	colormap
-		);
+FL_EXPORT void fl_share_canvas_colormap( FL_OBJECT * ob,
+										 Colormap	 colormap );
 
-FL_EXPORT void fl_clear_canvas(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_clear_canvas( FL_OBJECT * ob );
 
-FL_EXPORT void fl_modify_canvas_prop(
-		FL_OBJECT             * obj,
-		FL_MODIFY_CANVAS_PROP   init,
-		FL_MODIFY_CANVAS_PROP   activate,
-		FL_MODIFY_CANVAS_PROP   cleanup
-		);
+FL_EXPORT void fl_modify_canvas_prop( FL_OBJECT             * obj,
+									  FL_MODIFY_CANVAS_PROP   init,
+									  FL_MODIFY_CANVAS_PROP   activate,
+									  FL_MODIFY_CANVAS_PROP   cleanup );
 
-FL_EXPORT void fl_canvas_yield_to_shortcut(
-		FL_OBJECT * ob,
-		int			yes
-		);
+FL_EXPORT void fl_canvas_yield_to_shortcut( FL_OBJECT * ob,
+											int			yes );
 
 /* This is an attempt to maintain some sort of backwards compatibility
  * with old code whilst also getting rid of the old, system-specific

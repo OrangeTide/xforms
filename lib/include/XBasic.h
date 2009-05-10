@@ -136,10 +136,8 @@ FL_EXPORT FL_State fl_state[ ];
 
 FL_EXPORT char *fl_ul_magic_char;
 
-FL_EXPORT int fl_mode_capable(
-		int mode,
-		int warn
-		);
+FL_EXPORT int fl_mode_capable( int mode,
+							   int warn );
 
 
 #define fl_default_win( )		( fl_state[ fl_vmode ].trailblazer )
@@ -179,105 +177,82 @@ typedef struct {
 
 /* Some basic drawing routines */
 
-typedef XPoint FL_POINT;
-typedef XRectangle FL_RECT;
+typedef XPoint      FL_POINT;
+typedef XRectangle  FL_RECT;
 
 /* Rectangles */
 
-FL_EXPORT void fl_rectangle(
-		int		 fill,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR col
-		);
+FL_EXPORT void fl_rectangle( int	  fill,
+							 FL_Coord x,
+							 FL_Coord y,
+							 FL_Coord w,
+							 FL_Coord h,
+							 FL_COLOR col );
 
-FL_EXPORT void fl_rectbound(
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR col
-		);
-
+FL_EXPORT void fl_rectbound( FL_Coord x,
+							 FL_Coord y,
+							 FL_Coord w,
+							 FL_Coord h,
+							 FL_COLOR col );
 
 #define fl_rectf( x, y, w, h, c)   fl_rectangle( 1, x, y, w, h, c )
-#define fl_rect( x, y, w, h, c)	   fl_rectangle( 0, x, y, w, h, c )
-
+#define fl_rect( x, y, w, h, c )   fl_rectangle( 0, x, y, w, h, c )
 
 /* Rectangle with rounded-corners */
 
-FL_EXPORT void fl_roundrectangle(
-		int		 fill,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR col
-		);
+FL_EXPORT void fl_roundrectangle( int	   fill,
+								  FL_Coord x,
+								  FL_Coord y,
+								  FL_Coord w,
+								  FL_Coord h,
+								  FL_COLOR col );
 
 #define fl_roundrectf( x, y, w, h, c )	fl_roundrectangle( 1, x, y, w, h, c )
 #define fl_roundrect( x, y, w, h, c )	fl_roundrectangle( 0, x, y, w, h, c )
 
-
 /* General polygon and polylines */
 
-FL_EXPORT void fl_polygon(
-		int		   fill,
-		FL_POINT * xp,
-		int		   n,
-		FL_COLOR   col
-		);
+FL_EXPORT void fl_polygon( int		  fill,
+						   FL_POINT * xp,
+						   int		  n,
+						   FL_COLOR   col );
 
 #define fl_polyf( p, n, c )		  fl_polygon( 1, p, n, c )
 #define fl_polyl( p, n, c )		  fl_polygon( 0, p, n, c )
-#define fl_polybound( p, n, c )	      \
+
+#define fl_polybound( p, n, c )	              \
     do { fl_polygon( 1, p, n, c );			  \
 	     fl_polygon( 0, p, n, FL_BLACK );	  \
        } while( 0 )
 
-FL_EXPORT void fl_lines(
-		FL_POINT * xp,
-		int		   n,
-		FL_COLOR   col
-		);
+FL_EXPORT void fl_lines( FL_POINT * xp,
+						 int		n,
+						 FL_COLOR   col );
 
-FL_EXPORT void fl_line(
-		FL_Coord xi,
-		FL_Coord yi,
-		FL_Coord xf,
-		FL_Coord yf,
-		FL_COLOR c
-		);
+FL_EXPORT void fl_line( FL_Coord xi,
+						FL_Coord yi,
+						FL_Coord xf,
+						FL_Coord yf,
+						FL_COLOR c );
 
-FL_EXPORT void fl_point(
-		FL_Coord x,
-		FL_Coord y,
-		FL_COLOR c
-		);
+FL_EXPORT void fl_point( FL_Coord x,
+						 FL_Coord y,
+						 FL_COLOR c );
 
-FL_EXPORT void fl_points(
-		FL_POINT * p,
-		int		   np,
-		FL_COLOR   c
-		);
+FL_EXPORT void fl_points( FL_POINT * p,
+						  int		 np,
+						  FL_COLOR   c );
 
 #define fl_simple_line fl_line
 
-FL_EXPORT void fl_dashedlinestyle(
-		const char * dash,
-		int			 ndash
-		);
+FL_EXPORT void fl_dashedlinestyle( const char * dash,
+								   int			ndash );
 
-FL_EXPORT void fl_update_display(
-		int block
-		);
+FL_EXPORT void fl_update_display( int block );
 
 
 #define fl_diagline( x, y, w, h, c )  \
 	fl_line( x, y, ( x ) + ( w ) - 1, ( y ) + ( h ) - 1, c )
-
 
 /* Line attributes */
 
@@ -291,66 +266,45 @@ enum {
 	FL_LONGDASH
 };
 
-FL_EXPORT void fl_linewidth(
-		int n
-		);
+FL_EXPORT void fl_linewidth( int n );
 
-FL_EXPORT void fl_linestyle(
-		int n
-		);
+FL_EXPORT void fl_linestyle( int n );
 
-FL_EXPORT void fl_drawmode(
-		int request
-		);
+FL_EXPORT void fl_drawmode( int request );
 
-FL_EXPORT int fl_get_linewidth(
-		void
-		);
+FL_EXPORT int fl_get_linewidth( void );
 
-FL_EXPORT int fl_get_linestyle(
-		void
-		);
+FL_EXPORT int fl_get_linestyle( void );
 
-FL_EXPORT int fl_get_drawmode(
-		void
-		);
-
+FL_EXPORT int fl_get_drawmode( void );
 
 #define fl_set_linewidth	fl_linewidth
 #define fl_set_linestyle	fl_linestyle
 #define fl_set_drawmode		fl_drawmode
 
-
 /** Ellipses **/
 
-FL_EXPORT void fl_oval(
-		int		 fill,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR col
-		);
+FL_EXPORT void fl_oval( int		 fill,
+						FL_Coord x,
+						FL_Coord y,
+						FL_Coord w,
+						FL_Coord h,
+						FL_COLOR col );
 
-FL_EXPORT void fl_ovalbound(
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR col
-		);
+FL_EXPORT void fl_ovalbound( FL_Coord x,
+							 FL_Coord y,
+							 FL_Coord w,
+							 FL_Coord h,
+							 FL_COLOR col );
 
-FL_EXPORT void fl_ovalarc(
-		int		 fill,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		int		 t0,
-		int		 dt,
-		FL_COLOR col
-		);
-
+FL_EXPORT void fl_ovalarc( int		fill,
+						   FL_Coord x,
+						   FL_Coord y,
+						   FL_Coord w,
+						   FL_Coord h,
+						   int		t0,
+						   int		dt,
+						   FL_COLOR col );
 
 #define fl_ovalf( x, y, w, h, c )	  fl_oval( 1, x, y, w, h, c )
 #define fl_ovall( x, y, w, h, c )	  fl_oval( 0, x, y, w, h, c )
@@ -361,99 +315,74 @@ FL_EXPORT void fl_ovalarc(
 #define fl_circ( x, y, r, col )	   \
 	fl_oval( 0, ( x ) - ( r ), ( y ) - ( r ), 2 * ( r ), 2 * ( r ), col )
 
-
 /* Arcs */
 
-FL_EXPORT void fl_pieslice(
-		int		 fill,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		int		 a1,
-		int		 a2,
-		FL_COLOR col
-		);
-
+FL_EXPORT void fl_pieslice( int		 fill,
+							FL_Coord x,
+							FL_Coord y,
+							FL_Coord w,
+							FL_Coord h,
+							int		 a1,
+							int		 a2,
+							FL_COLOR col );
 
 #define fl_arcf( x, y, r, a1, a2, c )  \
 	fl_pieslice( 1, ( x ) - ( r ), ( y ) - ( r ), \
 				 2 * ( r ), 2 * ( r ), a1, a2, c )
-
 #define fl_arc( x, y, r, a1, a2, c )	\
 	fl_pieslice( 0, ( x ) - ( r ), ( y ) - ( r ), \
 				 2 * ( r ), 2 * ( r ), a1, a2, c )
 
-
 /* High level drawing routines */
 
-FL_EXPORT void fl_drw_frame(
-		int		 style,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR c,
-		int		 bw
-		);
+FL_EXPORT void fl_drw_frame( int	  style,
+							 FL_Coord x,
+							 FL_Coord y,
+							 FL_Coord w,
+							 FL_Coord h,
+							 FL_COLOR c,
+							 int	  bw );
 
-FL_EXPORT void fl_drw_checkbox(
-		int		 type,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h,
-		FL_COLOR col,
-		int		 bw
-		);
-
+FL_EXPORT void fl_drw_checkbox( int		 type,
+								FL_Coord x,
+								FL_Coord y,
+								FL_Coord w,
+								FL_Coord h,
+								FL_COLOR col,
+								int		 bw );
 
 /*
  * Interfaces
  */
 
-FL_EXPORT XFontStruct *fl_get_fontstruct(
-		int style,
-		int size
-		);
+FL_EXPORT XFontStruct *fl_get_fontstruct( int style,
+										  int size );
 
 #define fl_get_font_struct	  fl_get_fontstruct
 #define fl_get_fntstruct	  fl_get_font_struct
 
-FL_EXPORT Window fl_get_mouse(
-		FL_Coord	 * x,
-		FL_Coord	 * y,
-		unsigned int * keymask
-		);
+FL_EXPORT Window fl_get_mouse( FL_Coord	 * x,
+							   FL_Coord	 * y,
+							   unsigned int * keymask );
 
-FL_EXPORT void fl_set_mouse(
-		FL_Coord mx,
-		FL_Coord my
-		);
+FL_EXPORT void fl_set_mouse( FL_Coord mx,
+							 FL_Coord my );
 
-FL_EXPORT Window fl_get_win_mouse(
-		Window		   win,
-		FL_Coord     * x,
-		FL_Coord 	 * y,
-		unsigned int * keymask
-		);
+FL_EXPORT Window fl_get_win_mouse( Window		  win,
+								   FL_Coord     * x,
+								   FL_Coord 	* y,
+								   unsigned int * keymask );
 
-FL_EXPORT Window fl_get_form_mouse(
-		FL_FORM      * fm,
-		FL_Coord     * x,
-		FL_Coord     * y,
-		unsigned int * keymask
-		);
+FL_EXPORT Window fl_get_form_mouse( FL_FORM      * fm,
+									FL_Coord     * x,
+									FL_Coord     * y,
+									unsigned int * keymask );
 
-FL_EXPORT FL_FORM * fl_win_to_form(
-		Window win
-		);
+FL_EXPORT FL_FORM * fl_win_to_form( Window win );
 
-FL_EXPORT void fl_set_form_icon(
-		FL_FORM * form,
-		Pixmap	  p,
-		Pixmap	  m
-		);
+FL_EXPORT void fl_set_form_icon( FL_FORM * form,
+								 Pixmap	  p,
+								 Pixmap	  m );
 
 FL_EXPORT int fl_get_decoration_sizes( FL_FORM * form,
 									   int     * top,
@@ -479,200 +408,126 @@ FL_EXPORT int fl_get_decoration_sizes( FL_FORM * form,
 
 /* General windowing support */
 
-FL_EXPORT Window fl_wincreate(
-		const char * label
-		);
+FL_EXPORT Window fl_wincreate( const char * label );
 
-FL_EXPORT Window fl_winshow(
-		Window win
-		);
+FL_EXPORT Window fl_winshow( Window win );
 
-FL_EXPORT Window fl_winopen(
-		const char * label
-		);
+FL_EXPORT Window fl_winopen( const char * label );
 
-FL_EXPORT void fl_winhide(
-		Window win
-		);
+FL_EXPORT void fl_winhide( Window win );
 
-FL_EXPORT void fl_winclose(
-		Window win
-		);
+FL_EXPORT void fl_winclose( Window win );
 
-FL_EXPORT void fl_winset(
-		Window win
-		);
+FL_EXPORT void fl_winset( Window win );
 
-FL_EXPORT int fl_winreparent(
-		Window win,
-		Window new_parent
-		);
+FL_EXPORT int fl_winreparent( Window win,
+							  Window new_parent );
 
-FL_EXPORT void fl_winfocus(
-		Window win
-		);
+FL_EXPORT void fl_winfocus( Window win );
 
-FL_EXPORT Window fl_winget(
-		void
-		);
+FL_EXPORT Window fl_winget( void );
 
-FL_EXPORT int fl_iconify(
-		Window win
-		);
+FL_EXPORT int fl_iconify( Window win );
 
-FL_EXPORT void fl_winresize(
-		Window	 win,
-		FL_Coord neww,
-		FL_Coord newh
-		);
+FL_EXPORT void fl_winresize( Window	  win,
+							 FL_Coord neww,
+							 FL_Coord newh );
 
-FL_EXPORT void fl_winmove(
-		Window	 win,
-		FL_Coord dx,
-		FL_Coord dy
-		);
+FL_EXPORT void fl_winmove( Window	win,
+						   FL_Coord dx,
+						   FL_Coord dy );
 
-FL_EXPORT void fl_winreshape(
-		Window	 win,
-		FL_Coord dx,
-		FL_Coord dy,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_winreshape( Window   win,
+							  FL_Coord dx,
+							  FL_Coord dy,
+							  FL_Coord w,
+							  FL_Coord h );
 
-FL_EXPORT void fl_winicon(
-		Window win,
-		Pixmap p,
-		Pixmap m
-		);
+FL_EXPORT void fl_winicon( Window win,
+						   Pixmap p,
+						   Pixmap m );
 
-FL_EXPORT void fl_winbackground(
-		Window	 win,
-		FL_COLOR bk
-		);
+FL_EXPORT void fl_winbackground( Window	  win,
+								 FL_COLOR bk );
 
-FL_EXPORT void fl_winstepunit(
-		Window	 win,
-		FL_Coord dx,
-		FL_Coord dy
-		);
+FL_EXPORT void fl_winstepunit( Window	win,
+							   FL_Coord dx,
+							   FL_Coord dy );
 
-FL_EXPORT int fl_winisvalid(
-		Window win
-		);
+FL_EXPORT int fl_winisvalid( Window win );
 
-FL_EXPORT void fl_wintitle(
-		Window		 win,
-		const char * title
-		);
+FL_EXPORT void fl_wintitle( Window		 win,
+							const char * title );
 
-FL_EXPORT void fl_winicontitle(
-		Window		 win,
-		const char * title
-		);
+FL_EXPORT void fl_winicontitle( Window		 win,
+								const char * title );
 
-FL_EXPORT void fl_winposition(
-		FL_Coord x,
-		FL_Coord y
-		);
-
+FL_EXPORT void fl_winposition( FL_Coord x,
+							   FL_Coord y );
 
 #define fl_pref_winposition	  fl_winposition
 #define fl_win_background	  fl_winbackground
 #define fl_set_winstepunit	  fl_winstepunit
 
+FL_EXPORT void fl_winminsize( Window   win,
+							  FL_Coord w,
+							  FL_Coord h );
 
-FL_EXPORT void fl_winminsize(
-		Window	 win,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_winmaxsize( Window   win,
+							  FL_Coord w,
+							  FL_Coord h );
 
-FL_EXPORT void fl_winmaxsize(
-		Window	 win,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_winaspect( Window	  win,
+							 FL_Coord x,
+							 FL_Coord y );
 
-FL_EXPORT void fl_winaspect(
-		Window	 win,
-		FL_Coord x,
-		FL_Coord y
-		);
-
-FL_EXPORT void fl_reset_winconstraints(
-		Window win
-		);
+FL_EXPORT void fl_reset_winconstraints( Window win );
 
 
-FL_EXPORT void fl_winsize(
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_winsize( FL_Coord w,
+						   FL_Coord h );
 
-FL_EXPORT void fl_initial_winsize(
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_initial_winsize( FL_Coord w,
+								   FL_Coord h );
 
 #define fl_pref_winsize	 fl_winsize
 
-FL_EXPORT void fl_initial_winstate(
-		int state
-		);
+FL_EXPORT void fl_initial_winstate( int state );
 
-
-FL_EXPORT Colormap fl_create_colormap(
-		XVisualInfo * xv,
-		int			  nfill
-		);
+FL_EXPORT Colormap fl_create_colormap( XVisualInfo * xv,
+									   int			 nfill );
 
 
 
-FL_EXPORT void fl_wingeometry(
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_wingeometry( FL_Coord x,
+							   FL_Coord y,
+							   FL_Coord w,
+							   FL_Coord h );
 
 #define fl_pref_wingeometry	 fl_wingeometry
 
-FL_EXPORT void fl_initial_wingeometry(
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_initial_wingeometry( FL_Coord x,
+									   FL_Coord y,
+									   FL_Coord w,
+									   FL_Coord h );
 
-FL_EXPORT void fl_noborder(
-		void
-		);
+FL_EXPORT void fl_noborder( void );
 
-FL_EXPORT void fl_transient(
-		void
-		);
+FL_EXPORT void fl_transient( void );
 
-FL_EXPORT void fl_get_winsize(
-		Window	   win,
-		FL_Coord * w,
-		FL_Coord * h
-		);
+FL_EXPORT void fl_get_winsize( Window	  win,
+							   FL_Coord * w,
+							   FL_Coord * h );
 
-FL_EXPORT void fl_get_winorigin(
-		Window	   win,
-		FL_Coord * x,
-		FL_Coord * y
-		);
+FL_EXPORT void fl_get_winorigin( Window	    win,
+								 FL_Coord * x,
+								 FL_Coord * y );
 
-FL_EXPORT void fl_get_wingeometry(
-		Window	   win,
-		FL_Coord * x,
-		FL_Coord * y,
-		FL_Coord * w,
-		FL_Coord * h
-		);
-
+FL_EXPORT void fl_get_wingeometry( Window	  win,
+								   FL_Coord * x,
+								   FL_Coord * y,
+								   FL_Coord * w,
+								   FL_Coord * h );
 
 /* For compatibility */
 
@@ -693,10 +548,7 @@ FL_EXPORT void fl_get_wingeometry(
     ( FL_IS_CANVAS( o ) ? fl_get_canvas_id( o ): ( o )->form->window )
 
 
-FL_EXPORT Window fl_get_real_object_window(
-		FL_OBJECT * ob
-		);
-
+FL_EXPORT Window fl_get_real_object_window( FL_OBJECT * ob );
 
 #define FL_OBJECT_WID  FL_ObjWin
 
@@ -714,78 +566,46 @@ FL_EXPORT Window fl_get_real_object_window(
 
 /* Replacements for X functions that access the event queue*/
 
-FL_EXPORT int fl_XNextEvent(
-		XEvent * xev
-		);
+FL_EXPORT int fl_XNextEvent( XEvent * xev );
 
-FL_EXPORT int fl_XPeekEvent(
-		XEvent * xev
-		);
+FL_EXPORT int fl_XPeekEvent( XEvent * xev );
 
-FL_EXPORT int fl_XEventsQueued(
-		int mode
-		);
+FL_EXPORT int fl_XEventsQueued( int mode );
 
-FL_EXPORT void fl_XPutBackEvent(
-		XEvent * xev
-		);
+FL_EXPORT void fl_XPutBackEvent( XEvent * xev );
 
-FL_EXPORT const XEvent *fl_last_event(
-		void
-		);
-
+FL_EXPORT const XEvent *fl_last_event( void );
 
 typedef int ( * FL_APPEVENT_CB )( XEvent *, void * );
 
-FL_EXPORT FL_APPEVENT_CB fl_set_event_callback(
-		FL_APPEVENT_CB callback,
-		void *		   user_data
-		);
+FL_EXPORT FL_APPEVENT_CB fl_set_event_callback( FL_APPEVENT_CB   callback,
+												void           * user_data );
 
-FL_EXPORT FL_APPEVENT_CB fl_set_idle_callback(
-		FL_APPEVENT_CB   callback,
-		void           * user_data
-		);
+FL_EXPORT FL_APPEVENT_CB fl_set_idle_callback( FL_APPEVENT_CB   callback,
+											   void           * user_data );
 
-FL_EXPORT long fl_addto_selected_xevent(
-		Window win,
-		long   mask
-		);
+FL_EXPORT long fl_addto_selected_xevent( Window win,
+										 long   mask );
 
-FL_EXPORT long fl_remove_selected_xevent(
-		Window win,
-		long   mask
-		);
+FL_EXPORT long fl_remove_selected_xevent( Window win,
+										  long   mask );
 
 #define fl_add_selected_xevent	fl_addto_selected_xevent
 
-FL_EXPORT void fl_set_idle_delta(
-		long delta
-		);
+FL_EXPORT void fl_set_idle_delta( long delta );
 
+FL_EXPORT FL_APPEVENT_CB fl_add_event_callback( Window		     win,
+												int			     ev,
+												FL_APPEVENT_CB   wincb,
+												void           * user_data );
 
-FL_EXPORT FL_APPEVENT_CB fl_add_event_callback(
-		Window		     win,
-		int			     ev,
-		FL_APPEVENT_CB   wincb,
-		void           * user_data
-		);
+FL_EXPORT void fl_remove_event_callback( Window win,
+										 int	ev );
 
-FL_EXPORT void fl_remove_event_callback(
-		Window win,
-		int	   ev
-		);
+FL_EXPORT void fl_activate_event_callbacks( Window win );
 
-FL_EXPORT void fl_activate_event_callbacks(
-		Window win
-		);
-
-FL_EXPORT XEvent *fl_print_xevent_name(
-		const char   * where,
-		const XEvent * xev
-		);
-
-
+FL_EXPORT XEvent *fl_print_xevent_name( const char   * where,
+										const XEvent * xev );
 
 #define metakey_down( mask )	 ( ( mask ) & Mod1Mask )
 #define shiftkey_down( mask )	 ( ( mask ) & ShiftMask )
@@ -823,59 +643,39 @@ typedef struct {
 
 #define FL_CMD_OPT	 XrmOptionDescRec
 
-FL_EXPORT Display * fl_initialize(
-		int        * na,
-		char       * arg[ ],
-		const char * appclass,
-		FL_CMD_OPT * appopt,
-		int			 nappopt
-		);
+FL_EXPORT Display * fl_initialize( int        * na,
+								   char       * arg[ ],
+								   const char * appclass,
+								   FL_CMD_OPT * appopt,
+								   int			 nappopt );
 
-FL_EXPORT Display * fl_init(
-		void
-		);
+FL_EXPORT Display * fl_init( void );
 
-FL_EXPORT void fl_finish(
-		void
-		);
+FL_EXPORT void fl_finish( void );
 
-FL_EXPORT const char * fl_get_resource(
-		const char * rname,
-		const char * cname,
-		FL_RTYPE	 dtype,
-		const char * defval,
-		void       * val,
-		int			 size
-		);
+FL_EXPORT const char * fl_get_resource( const char * rname,
+										const char * cname,
+										FL_RTYPE	 dtype,
+										const char * defval,
+										void       * val,
+										int			 size );
 
-FL_EXPORT void fl_set_resource(
-		const char * str,
-		const char * val
-		);
+FL_EXPORT void fl_set_resource( const char * str,
+								const char * val );
 
-FL_EXPORT void fl_get_app_resources(
-		FL_RESOURCE * appresource,
-		int			  n
-		);
+FL_EXPORT void fl_get_app_resources( FL_RESOURCE * appresource,
+									 int		   n );
 
-FL_EXPORT void fl_set_graphics_mode(
-		int mode,
-		int doublebuf
-		);
+FL_EXPORT void fl_set_graphics_mode( int mode,
+									 int doublebuf );
 
-FL_EXPORT void fl_set_visualID(
-		long id
-		);
+FL_EXPORT void fl_set_visualID( long id );
 
-FL_EXPORT int fl_keysym_pressed(
-		KeySym k
-		);
-
+FL_EXPORT int fl_keysym_pressed( KeySym k );
 
 #define buttonLabelSize	 buttonFontSize
 #define sliderLabelSize	 sliderFontSize
 #define inputLabelSize	 inputFontSize
-
 
 /* All Form control variables. Named closely as its resource name */
 
@@ -946,74 +746,46 @@ enum {
 
 #define FL_PDButtonLabel   FL_PDButtonLabelSize
 
-FL_EXPORT void fl_set_defaults(
-		unsigned  long mask,
-		FL_IOPT * cntl
-		);
+FL_EXPORT void fl_set_defaults( unsigned   long mask,
+								FL_IOPT  * cntl );
 
-FL_EXPORT void fl_set_tabstop(
-		const char * s
-		);
+FL_EXPORT void fl_set_tabstop( const char * s );
 
-FL_EXPORT void fl_get_defaults(
-		FL_IOPT * cntl
-		);
+FL_EXPORT void fl_get_defaults( FL_IOPT * cntl );
 
-FL_EXPORT int fl_get_visual_depth(
-		void
-		);
+FL_EXPORT int fl_get_visual_depth( void );
 
-FL_EXPORT const char * fl_vclass_name(
-		int n
-		);
+FL_EXPORT const char * fl_vclass_name( int n );
 
-FL_EXPORT int fl_vclass_val(
-		const char * v
-		);
+FL_EXPORT int fl_vclass_val( const char * v );
 
-FL_EXPORT void fl_set_ul_property(
-		int prop,
-		int thickness
-		);
+FL_EXPORT void fl_set_ul_property( int prop,
+								   int thickness );
 
-FL_EXPORT void fl_set_clipping(
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_set_clipping( FL_Coord x,
+								FL_Coord y,
+								FL_Coord w,
+								FL_Coord h );
 
-FL_EXPORT void fl_set_gc_clipping(
-		GC		 gc,
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_set_gc_clipping( GC		gc,
+								   FL_Coord x,
+								   FL_Coord y,
+								   FL_Coord w,
+								   FL_Coord h );
 
-FL_EXPORT void fl_unset_gc_clipping(
-		GC gc
-		);
+FL_EXPORT void fl_unset_gc_clipping( GC gc );
 
-FL_EXPORT void fl_set_clippings(
-		FL_RECT * xrect,
-		int		  n
-		);
+FL_EXPORT void fl_set_clippings( FL_RECT * xrect,
+								 int	   n );
 
-FL_EXPORT void fl_unset_clipping(
-		void
-		);
+FL_EXPORT void fl_unset_clipping( void );
 
-FL_EXPORT void fl_set_text_clipping(
-		FL_Coord x,
-		FL_Coord y,
-		FL_Coord w,
-		FL_Coord h
-		);
+FL_EXPORT void fl_set_text_clipping( FL_Coord x,
+									 FL_Coord y,
+									 FL_Coord w,
+									 FL_Coord h );
 
-FL_EXPORT void fl_unset_text_clipping(
-		void
-		);
+FL_EXPORT void fl_unset_text_clipping( void );
 
 
 /* How we pack and unpack colors */

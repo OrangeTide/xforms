@@ -38,120 +38,78 @@ enum {
 #define	  FL_FORMBROWSER_COL1	  FL_COL1
 #define	  FL_FORMBROWSER_ALIGN	  FL_ALIGN_TOP
 
-FL_EXPORT int fl_addto_formbrowser(
-		FL_OBJECT * ob,
-		FL_FORM   * form
-		);
+FL_EXPORT int fl_addto_formbrowser( FL_OBJECT * ob,
+									FL_FORM   * form );
 
-FL_EXPORT FL_FORM * fl_delete_formbrowser_bynumber(
-		FL_OBJECT * ob,
-		int			num
-		);
+FL_EXPORT FL_FORM * fl_delete_formbrowser_bynumber( FL_OBJECT * ob,
+													int			num );
 
-FL_EXPORT int fl_delete_formbrowser(
-		FL_OBJECT * ob,
-		FL_FORM   * candidate_form
-		);
+FL_EXPORT int fl_delete_formbrowser( FL_OBJECT * ob,
+									 FL_FORM   * candidate_form );
 
-FL_EXPORT FL_FORM * fl_replace_formbrowser(
-		FL_OBJECT * ob,
-		int			num,
-		FL_FORM   * form
-		);
+FL_EXPORT FL_FORM * fl_replace_formbrowser( FL_OBJECT * ob,
+											int			num,
+											FL_FORM   * form );
 
-FL_EXPORT int fl_insert_formbrowser(
-		FL_OBJECT * ob,
-		int			line,
-		FL_FORM   * new_form
-		);
+FL_EXPORT int fl_insert_formbrowser( FL_OBJECT * ob,
+									 int		 line,
+									 FL_FORM   * new_form );
 
-FL_EXPORT int fl_get_formbrowser_area(
-		FL_OBJECT * ob,
-		int       * x,
-		int       * y,
-		int       * w,
-		int       * h
-		);
+FL_EXPORT int fl_get_formbrowser_area( FL_OBJECT * ob,
+									   int       * x,
+									   int       * y,
+									   int       * w,
+									   int       * h );
 
-FL_EXPORT void fl_set_formbrowser_scroll(
-		FL_OBJECT * ob,
-		int			how
-		);
+FL_EXPORT void fl_set_formbrowser_scroll( FL_OBJECT * ob,
+										  int		  how );
 
-FL_EXPORT void fl_set_formbrowser_hscrollbar(
-		FL_OBJECT * ob,
-		int			how
-		);
+FL_EXPORT void fl_set_formbrowser_hscrollbar( FL_OBJECT * ob,
+											  int		  how );
 
-FL_EXPORT void fl_set_formbrowser_vscrollbar(
-		FL_OBJECT * ob,
-		int			how
-		);
+FL_EXPORT void fl_set_formbrowser_vscrollbar( FL_OBJECT * ob,
+											  int		  how );
 
-FL_EXPORT FL_FORM *fl_get_formbrowser_topform(
-		FL_OBJECT * ob
-		);
+FL_EXPORT FL_FORM *fl_get_formbrowser_topform( FL_OBJECT * ob );
 
-FL_EXPORT int fl_set_formbrowser_topform(
-		FL_OBJECT * ob,
-		FL_FORM   * form
-		);
+FL_EXPORT int fl_set_formbrowser_topform( FL_OBJECT * ob,
+										  FL_FORM   * form );
 
-FL_EXPORT FL_FORM * fl_set_formbrowser_topform_bynumber(
-		FL_OBJECT * ob,
-		int			n
-		);
+FL_EXPORT FL_FORM * fl_set_formbrowser_topform_bynumber( FL_OBJECT * ob,
+														 int		 n );
 
-FL_EXPORT int fl_set_formbrowser_xoffset(
-		FL_OBJECT * ob,
-		int			offset
-		);
+FL_EXPORT int fl_set_formbrowser_xoffset( FL_OBJECT * ob,
+										  int		  offset );
 
-FL_EXPORT int fl_set_formbrowser_yoffset(
-		FL_OBJECT * ob,
-		int			offset
-		);
+FL_EXPORT int fl_set_formbrowser_yoffset( FL_OBJECT * ob,
+										  int		  offset );
 
-FL_EXPORT int fl_get_formbrowser_xoffset(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_formbrowser_xoffset( FL_OBJECT * ob );
 
-FL_EXPORT int fl_get_formbrowser_yoffset(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_formbrowser_yoffset( FL_OBJECT * ob );
 
-FL_EXPORT int fl_find_formbrowser_form_number(
-		FL_OBJECT * ob,
-		FL_FORM   * candidate_form
-		);
+FL_EXPORT int fl_find_formbrowser_form_number( FL_OBJECT * ob,
+											   FL_FORM   * candidate_form );
 
-FL_EXPORT FL_OBJECT * fl_add_formbrowser(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_formbrowser( int		   type,
+										  FL_Coord	   x,
+										  FL_Coord	   y,
+										  FL_Coord	   w,
+										  FL_Coord	   h,
+										  const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_formbrowser(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_formbrowser( int		  type,
+											 FL_Coord	  x,
+											 FL_Coord	  y,
+											 FL_Coord	  w,
+											 FL_Coord	  h,
+											 const char * label );
 
-FL_EXPORT int fl_get_formbrowser_numforms(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_formbrowser_numforms( FL_OBJECT * ob );
 
 #define fl_get_formbrowser_forms  fl_get_formbrowser_numforms
 
-FL_EXPORT FL_FORM * fl_get_formbrowser_form(
-		FL_OBJECT * ob,
-		int			n
-		);
+FL_EXPORT FL_FORM * fl_get_formbrowser_form( FL_OBJECT * ob,
+											 int		 n );
 
 #endif /* ! defined FL_FORMBROWSER_H */

@@ -137,7 +137,8 @@ enum {
 	FLI_FIND_AUTOMATIC,
 	FLI_FIND_MOUSE,
 	FLI_FIND_CANVAS,
-	FLI_FIND_KEYSPECIAL
+	FLI_FIND_KEYSPECIAL,
+	FLI_FIND_RETURN
 };
 
 /* events.c or event related */
@@ -187,9 +188,7 @@ extern void fli_handle_form( FL_FORM *,
 							 int, int,
 							 XEvent * );
 
-extern FL_OBJECT *fli_end_group(
-		void
-		);
+extern FL_OBJECT *fli_end_group( void );
 
 extern void fli_handle_object( FL_OBJECT *,
 							   int,

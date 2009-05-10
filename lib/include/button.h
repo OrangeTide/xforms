@@ -142,183 +142,141 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_button(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_button( int			 type,
+										FL_Coord	 x,
+										FL_Coord	 y,
+										FL_Coord	 w,
+										FL_Coord	 h,
+										const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_roundbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_roundbutton( int		  type,
+											 FL_Coord	  x,
+											 FL_Coord	  y,
+											 FL_Coord	  w,
+											 FL_Coord	  h,
+											 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_round3dbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_round3dbutton( int		  type,
+											   FL_Coord	  x,
+											   FL_Coord	  y,
+											   FL_Coord	  w,
+											   FL_Coord	  h,
+											   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_lightbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_lightbutton( int		  type,
+											 FL_Coord	  x,
+											 FL_Coord	  y,
+											 FL_Coord	  w,
+											 FL_Coord	  h,
+											 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_checkbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_checkbutton( int		  type,
+											 FL_Coord	  x,
+											 FL_Coord	  y,
+											 FL_Coord	  w,
+											 FL_Coord	  h,
+											 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_bitmapbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_bitmapbutton( int		   type,
+											  FL_Coord	   x,
+											  FL_Coord	   y,
+											  FL_Coord	   w,
+											  FL_Coord	   h,
+											  const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_pixmapbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_pixmapbutton( int		   type,
+											  FL_Coord	   x,
+											  FL_Coord	   y,
+											  FL_Coord	   w,
+											  FL_Coord	   h,
+											  const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_scrollbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_scrollbutton( int		   type,
+											  FL_Coord	   x,
+											  FL_Coord	   y,
+											  FL_Coord	   w,
+											  FL_Coord	   h,
+											  const char * label );
 
-FL_EXPORT FL_OBJECT * fl_create_labelbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_labelbutton( int		   type,
+											 FL_Coord	   x,
+											 FL_Coord	   y,
+							 				 FL_Coord	   w,
+											 FL_Coord	   h,
+											 const char * label );
 
-FL_EXPORT FL_OBJECT *fl_add_roundbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT *fl_add_roundbutton( int		  type,
+										 FL_Coord	  x,
+										 FL_Coord	  y,
+										 FL_Coord	  w,
+										 FL_Coord	  h,
+										 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_round3dbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_round3dbutton( int			 type,
+											FL_Coord	 x,
+											FL_Coord	 y,
+											FL_Coord	 w,
+											FL_Coord	 h,
+											const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_lightbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_lightbutton( int		  type,
+										  FL_Coord	  x,
+										  FL_Coord	  y,
+										  FL_Coord	  w,
+										  FL_Coord	  h,
+										  const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_checkbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_checkbutton( int		   type,
+										  FL_Coord	   x,
+										  FL_Coord	   y,
+										  FL_Coord	   w,
+										  FL_Coord	   h,
+										  const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_button(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_button( int		  type,
+									 FL_Coord	  x,
+									 FL_Coord	  y,
+									 FL_Coord	  w,
+									 FL_Coord	  h,
+									 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_bitmapbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_bitmapbutton( int			type,
+										   FL_Coord	    x,
+										   FL_Coord	    y,
+										   FL_Coord	    w,
+										   FL_Coord	    h,
+										   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_scrollbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_scrollbutton( int			type,
+										   FL_Coord	    x,
+										   FL_Coord	    y,
+										   FL_Coord	    w,
+										   FL_Coord	    h,
+										   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_labelbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_labelbutton( int		   type,
+										  FL_Coord	   x,
+										  FL_Coord	   y,
+										  FL_Coord	   w,
+										  FL_Coord	   h,
+										  const char * label );
 
-FL_EXPORT void fl_set_bitmapbutton_file(
-		FL_OBJECT  * ob,
-		const char * file
-		);
+FL_EXPORT void fl_set_bitmapbutton_file( FL_OBJECT  * ob,
+										 const char * file );
 
-FL_EXPORT void fl_set_bitmapbutton_data(
-		FL_OBJECT     * ob,
-		int				w,
-		int				h,
-		unsigned char * bits
-		);
-
+FL_EXPORT void fl_set_bitmapbutton_data( FL_OBJECT     * ob,
+										 int			 w,
+										 int			 h,
+										 unsigned char * bits );
 
 #define fl_set_bitmapbutton_datafile  fl_set_bitmapbutton_file
 
-FL_EXPORT FL_OBJECT * fl_add_pixmapbutton(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
-
+FL_EXPORT FL_OBJECT * fl_add_pixmapbutton( int			type,
+										   FL_Coord	    x,
+										   FL_Coord	    y,
+										   FL_Coord	    w,
+										   FL_Coord	    h,
+										   const char * label );
 
 #define fl_set_pixmapbutton_data	   fl_set_pixmap_data
 #define fl_set_pixmapbutton_file	   fl_set_pixmap_file
@@ -330,66 +288,44 @@ FL_EXPORT FL_OBJECT * fl_add_pixmapbutton(
 #define fl_set_pixmapbutton_show_focus fl_set_pixmapbutton_focus_outline
 
 
-FL_EXPORT void fl_set_pixmapbutton_focus_outline(
-		FL_OBJECT * ob,
-		int			yes
-		);
+FL_EXPORT void fl_set_pixmapbutton_focus_outline( FL_OBJECT * ob,
+												  int		  yes );
 
-FL_EXPORT void fl_set_pixmapbutton_focus_data(
-		FL_OBJECT  * ob,
-		char      ** bits
-		);
+FL_EXPORT void fl_set_pixmapbutton_focus_data( FL_OBJECT  * ob,
+											   char      ** bits );
 
-FL_EXPORT void fl_set_pixmapbutton_focus_file(
-		FL_OBJECT  * ob,
-		const char * fname
-		);
+FL_EXPORT void fl_set_pixmapbutton_focus_file( FL_OBJECT  * ob,
+											   const char * fname );
 
-FL_EXPORT void fl_set_pixmapbutton_focus_pixmap(
-		FL_OBJECT * ob,
-		Pixmap		id,
-		Pixmap		mask
-		);
+FL_EXPORT void fl_set_pixmapbutton_focus_pixmap( FL_OBJECT * ob,
+												 Pixmap		 id,
+												 Pixmap		 mask );
 
-FL_EXPORT int fl_get_button(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_button( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_button(
-		FL_OBJECT * ob,
-		int         pushed
-		);
+FL_EXPORT void fl_set_button( FL_OBJECT * ob,
+							  int         pushed );
 
-FL_EXPORT int fl_get_button_numb(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_button_numb( FL_OBJECT * ob );
 
 #define fl_set_button_shortcut	fl_set_object_shortcut
 
-FL_EXPORT FL_OBJECT * fl_create_generic_button(
-		int			 objclass,
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_generic_button( int			 objclass,
+												int			 type,
+												FL_Coord	 x,
+												FL_Coord	 y,
+												FL_Coord	 w,
+												FL_Coord	 h,
+												const char * label );
 
-FL_EXPORT void fl_add_button_class(
-		int				 bclass,
-		FL_DrawButton	 drawit,
-		FL_CleanupButton cleanup
-		);
+FL_EXPORT void fl_add_button_class( int				 bclass,
+									FL_DrawButton	 drawit,
+									FL_CleanupButton cleanup );
 
-FL_EXPORT void fl_set_button_mouse_buttons(
-		FL_OBJECT *,
-		unsigned int
-		);
+FL_EXPORT void fl_set_button_mouse_buttons( FL_OBJECT    * ob,
+											unsigned int   buttons );
 
-FL_EXPORT void fl_get_button_mouse_buttons(
-		FL_OBJECT *,
-		unsigned int *
-		);
+FL_EXPORT void fl_get_button_mouse_buttons( FL_OBJECT    * ob,
+											unsigned int * buttons );
 
 #endif /* ! defined FL_BUTTON_H */

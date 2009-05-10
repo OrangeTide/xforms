@@ -47,145 +47,95 @@ FL_EXPORT void fl_set_goodies_font(
 
 /*********** messages and questions **************/
 
-FL_EXPORT void fl_show_message(
-		const char *,
-		const char *,
-		const char *
-		);
+FL_EXPORT void fl_show_message( const char *,
+								const char *,
+								const char * );
 
-FL_EXPORT void fl_show_messages(
-		const char *
-		);
+FL_EXPORT void fl_show_messages( const char * );
 
-FL_EXPORT void fl_show_msg(
-		const char *,
-		...
-		);
+FL_EXPORT void fl_show_msg( const char *,
+							... );
 
-FL_EXPORT void fl_hide_message(
-		void
-		);
+FL_EXPORT void fl_hide_message( void );
 
 #define fl_hide_msg       fl_hide_message
 #define fl_hide_messages  fl_hide_message
 
-FL_EXPORT int fl_show_question(
-		const char *,
-		int
-		);
+FL_EXPORT int fl_show_question( const char *,
+								int );
 
-FL_EXPORT void fl_hide_question(
-		void
-		);
+FL_EXPORT void fl_hide_question( void );
 
-FL_EXPORT void fl_show_alert(
-		const char *,
-		const char *,
-		const char *,
-		int
-		);
+FL_EXPORT void fl_show_alert( const char *,
+							  const char *,
+							  const char *,
+							  int );
 
-FL_EXPORT void fl_show_alert2(
-		int c,
-		const char * fmt,
-		...
-		);
+FL_EXPORT void fl_show_alert2( int          c,
+							   const char * fmt,
+							   ... );
 
-FL_EXPORT void fl_hide_alert(
-		void
-		);
+FL_EXPORT void fl_hide_alert( void );
 
-FL_EXPORT const char * fl_show_input(
-		const char *,
-		const char *
-		);
+FL_EXPORT const char * fl_show_input( const char *,
+									  const char * );
 
-FL_EXPORT void fl_hide_input(
-		void
-		);
+FL_EXPORT void fl_hide_input( void );
 
-FL_EXPORT const char * fl_show_simple_input(
-		const char *,
-		const char *
-		);
+FL_EXPORT const char * fl_show_simple_input( const char *,
+											 const char * );
 
-FL_EXPORT int fl_show_colormap(
-		int
-		);
+FL_EXPORT int fl_show_colormap( int );
 
 /********* choices *****************/
 
-FL_EXPORT int fl_show_choices(
-		const char *,
-		int,
-		const char *,
-		const char *,
-		const char *,
-		int
-		);
+FL_EXPORT int fl_show_choices( const char *,
+							   int,
+							   const char *,
+							   const char *,
+							   const char *,
+							   int );
 
-FL_EXPORT int fl_show_choice(
-		const char *,
-		const char *,
-		const char *,
-		int,
-		const char *,
-		const char *,
-		const char *,
-		int
-		);
+FL_EXPORT int fl_show_choice( const char *,
+							  const char *,
+							  const char *,
+							  int,
+							  const char *,
+							  const char *,
+							  const char *,
+							  int );
 
-FL_EXPORT void fl_hide_choice(
-		void
-		);
+FL_EXPORT void fl_hide_choice( void );
 
-FL_EXPORT void fl_set_choice_shortcut(
-		const char *,
-		const char *,
-		const char *
-		);
+FL_EXPORT void fl_set_choice_shortcut( const char *,
+									   const char *,
+									   const char * );
 
 #define fl_set_choices_shortcut fl_set_choice_shortcut
 
 /************ one liner ***************/
 
-FL_EXPORT void fl_show_oneliner(
-		const char *,
-		FL_Coord,
-		FL_Coord
-		);
+FL_EXPORT void fl_show_oneliner( const char *,
+								 FL_Coord,
+								 FL_Coord );
 
-FL_EXPORT void fl_hide_oneliner(
-		void
-		);
+FL_EXPORT void fl_hide_oneliner( void );
 
-FL_EXPORT void fl_set_oneliner_font(
-		int,
-		int
-		);
+FL_EXPORT void fl_set_oneliner_font( int,
+									 int );
 
-FL_EXPORT void fl_set_oneliner_color(
-		FL_COLOR,
-		FL_COLOR
-		);
+FL_EXPORT void fl_set_oneliner_color( FL_COLOR,
+									  FL_COLOR );
 
-FL_EXPORT void fl_set_tooltip_font(
-		int,
-		int
-		);
+FL_EXPORT void fl_set_tooltip_font( int,
+									int );
 
-FL_EXPORT void fl_set_tooltip_color(
-		FL_COLOR,
-		FL_COLOR
-		);
+FL_EXPORT void fl_set_tooltip_color( FL_COLOR,
+									 FL_COLOR );
 
-FL_EXPORT void fl_set_tooltip_boxtype(
-		int
-		);
+FL_EXPORT void fl_set_tooltip_boxtype( int );
 
-FL_EXPORT void fl_set_tooltip_lalign(
-		int
-		);
+FL_EXPORT void fl_set_tooltip_lalign( int );
 
 /************* command log **************/
 
@@ -205,56 +155,32 @@ typedef struct {
 #define FL_PID_T long
 #endif
 
-FL_EXPORT FL_PID_T fl_exe_command(
-		const char *,
-		int
-		);
+FL_EXPORT FL_PID_T fl_exe_command( const char *,
+								   int );
 
-FL_EXPORT int fl_end_command(
-		FL_PID_T
-		);
+FL_EXPORT int fl_end_command( FL_PID_T );
 
-FL_EXPORT int fl_check_command(
-		FL_PID_T
-		);
+FL_EXPORT int fl_check_command( FL_PID_T );
 
-FL_EXPORT FILE * fl_popen(
-		const char *,
-		const char *
-		);
+FL_EXPORT FILE * fl_popen( const char *,
+						   const char * );
 
-FL_EXPORT int fl_pclose(
-		FILE *
-		);
+FL_EXPORT int fl_pclose( FILE * );
 
-FL_EXPORT int fl_end_all_command(
-		void
-		);
+FL_EXPORT int fl_end_all_command( void );
 
-FL_EXPORT void fl_show_command_log(
-		int
-		);
+FL_EXPORT void fl_show_command_log( int );
 
-FL_EXPORT void fl_hide_command_log(
-		void
-		);
+FL_EXPORT void fl_hide_command_log( void );
 
-FL_EXPORT void fl_clear_command_log(
-		void
-		);
+FL_EXPORT void fl_clear_command_log( void );
 
-FL_EXPORT void fl_addto_command_log(
-		const char *
-		);
+FL_EXPORT void fl_addto_command_log( const char * );
 
-FL_EXPORT void fl_set_command_log_position(
-		int,
-		int
-		);
+FL_EXPORT void fl_set_command_log_position( int,
+											int );
 
-FL_EXPORT FD_CMDLOG * fl_get_command_log_fdstruct(
-		void
-		);
+FL_EXPORT FD_CMDLOG * fl_get_command_log_fdstruct( void );
 
 /* aliases */
 
@@ -283,106 +209,62 @@ typedef struct {
 	FL_OBJECT * appbutt[ 3 ];
 } FD_FSELECTOR;
 
-FL_EXPORT int fl_use_fselector(
-		int
-		);
+FL_EXPORT int fl_use_fselector( int );
 
-FL_EXPORT const char * fl_show_fselector(
-		const char *,
-		const char *,
-		const char *,
-		const char *
-		);
+FL_EXPORT const char * fl_show_fselector( const char *,
+										  const char *,
+										  const char *,
+										  const char * );
 
-FL_EXPORT void fl_hide_fselector(
-		void
-		);
+FL_EXPORT void fl_hide_fselector( void );
 
-FL_EXPORT void fl_set_fselector_fontsize(
-		int
-		);
+FL_EXPORT void fl_set_fselector_fontsize( int );
 
-FL_EXPORT void fl_set_fselector_fontstyle(
-		int
-		);
+FL_EXPORT void fl_set_fselector_fontstyle( int );
 
-FL_EXPORT void fl_set_fselector_placement(
-		int
-		);
+FL_EXPORT void fl_set_fselector_placement( int );
 
-FL_EXPORT void fl_set_fselector_border(
-		int
-		);
+FL_EXPORT void fl_set_fselector_border( int );
 
 #define fl_set_fselector_transient( b )	  \
 			fl_set_fselector_border( ( b ) ? FL_TRANSIENT : FL_FULLBORDER )
 
-FL_EXPORT void fl_set_fselector_callback(
-		FL_FSCB,
-		void *
-		);
+FL_EXPORT void fl_set_fselector_callback( FL_FSCB,
+										  void * );
 
-FL_EXPORT const char * fl_get_filename(
-		void
-		);
+FL_EXPORT const char * fl_get_filename( void );
 
-FL_EXPORT const char * fl_get_directory(
-		void
-		);
+FL_EXPORT const char * fl_get_directory( void );
 
-FL_EXPORT const char * fl_get_pattern(
-		void
-		);
+FL_EXPORT const char * fl_get_pattern( void );
 
-FL_EXPORT int fl_set_directory(
-		const char *
-		);
+FL_EXPORT int fl_set_directory( const char * );
 
-FL_EXPORT void fl_set_pattern(
-		const char *
-		);
+FL_EXPORT void fl_set_pattern( const char * );
 
-FL_EXPORT void fl_refresh_fselector(
-		void
-		);
+FL_EXPORT void fl_refresh_fselector( void );
 
-FL_EXPORT void fl_add_fselector_appbutton(
-		const char *,
-		void ( * )( void * ),
-		void *
-		);
+FL_EXPORT void fl_add_fselector_appbutton( const char *,
+										   void ( * )( void * ),
+										   void * );
 
-FL_EXPORT void fl_remove_fselector_appbutton(
-		const char *
-		);
+FL_EXPORT void fl_remove_fselector_appbutton( const char * );
 
-FL_EXPORT void fl_disable_fselector_cache(
-		int
-		);
+FL_EXPORT void fl_disable_fselector_cache( int );
 
-FL_EXPORT void fl_invalidate_fselector_cache(
-		void
-		);
+FL_EXPORT void fl_invalidate_fselector_cache( void );
 
-FL_EXPORT FL_FORM * fl_get_fselector_form(
-		void
-		);
+FL_EXPORT FL_FORM * fl_get_fselector_form( void );
 
-FL_EXPORT FD_FSELECTOR * fl_get_fselector_fdstruct(
-		void
-		);
+FL_EXPORT FD_FSELECTOR * fl_get_fselector_fdstruct( void );
 
-FL_EXPORT void fl_hide_fselector(
-		void
-		);
+FL_EXPORT void fl_hide_fselector( void );
 
-FL_EXPORT void fl_set_fselector_filetype_marker(
-		int,
-		int,
-		int,
-		int,
-		int
-		);
+FL_EXPORT void fl_set_fselector_filetype_marker( int,
+												 int,
+												 int,
+												 int,
+												 int );
 
 #define fl_show_file_selector	  fl_show_fselector
 #define fl_set_fselector_cb		  fl_set_fselector_callback
@@ -390,9 +272,7 @@ FL_EXPORT void fl_set_fselector_filetype_marker(
 #define fl_set_fselector_title( s )	  \
 		fl_set_form_title( fl_get_fselector_form( ), s )
 
-FL_EXPORT int fl_goodies_atclose(
-		FL_FORM *,
-		void *
-		);
+FL_EXPORT int fl_goodies_atclose( FL_FORM *,
+								  void * );
 
 #endif /* ! defined FL_GOODIES_H */

@@ -1656,6 +1656,9 @@ fli_find_object( FL_OBJECT * obj,
 			if ( find == FLI_FIND_AUTOMATIC && obj->automatic )
 				return obj;
 
+			if ( find == FLI_FIND_RETURN && obj->type == FL_RETURN_BUTTON )
+				return obj;
+
 			if (    find == FLI_FIND_MOUSE
 				 && mx >= obj->x
 				 && mx <= obj->x + obj->w

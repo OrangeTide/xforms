@@ -740,11 +740,11 @@ void
 align_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		  long        arg  FL_UNUSED_ARG )
 {
-    if (fd_align->align->visible)
-		fl_hide_form(fd_align->align);
+    if ( fd_align->align->visible )
+		fl_hide_form( fd_align->align );
     else
-		fl_show_form(fd_align->align, FL_PLACE_GEOMETRY, FL_TRANSIENT, "Snap");
-
+		fl_show_form( fd_align->align, FL_PLACE_MOUSE, FL_FULLBORDER,
+					  "Alignments" );
 }
 
 
@@ -756,7 +756,7 @@ void
 exitalign_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			  long        arg  FL_UNUSED_ARG )
 {
-    fl_hide_form(fd_align->align);
+    fl_hide_form( fd_align->align );
 }
 
 
@@ -768,10 +768,10 @@ void
 doalign_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			long        arg )
 {
-    if (fd_align->vdata)
-		free_dupped_selection(fd_align->vdata);
-    fd_align->vdata = dup_selection();
-    align_selection(arg);
+    if ( fd_align->vdata )
+		free_dupped_selection( fd_align->vdata );
+    fd_align->vdata = dup_selection( );
+    align_selection( arg );
 }
 
 
@@ -782,14 +782,13 @@ void
 undoalign_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 			  long        arg  FL_UNUSED_ARG )
 {
-
-    if (fd_align->vdata)
+    if ( fd_align->vdata )
     {
-		set_selection(fd_align->vdata);
+		set_selection( fd_align->vdata );
 
 		/* only allow undo once */
 
-		free_dupped_selection(fd_align->vdata);
+		free_dupped_selection( fd_align->vdata );
 		fd_align->vdata = 0;
     }
 }
@@ -802,10 +801,10 @@ void
 snap_cb( FL_OBJECT * obj,
 		 long        arg  FL_UNUSED_ARG )
 {
-    float u = fl_get_counter_value(obj);
+    float u = fl_get_counter_value( obj );
 
-    set_step_size(u);
-    fl_winstepunit(main_window, (int) (u + 0.1), (int) (u + 0.1));
+    set_step_size( u );
+    fl_winstepunit( main_window, ( int ) ( u + 0.01 ), ( int ) ( u + 0.01 ) );
 }
 
 /***** End of alignment stuff */
@@ -880,13 +879,8 @@ func_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
-#define USE_SYMBOL
-
-
 /***************************************
  ***************************************/
-
-#if defined(USE_SYMBOL)
 
 static void
 draw_centering_symbol( FL_Coord x,
@@ -912,47 +906,16 @@ draw_centering_symbol( FL_Coord x,
 }
 
 
-#endif
-
-
-#if ! defined USE_SYMBOL
-#include "left.xbm"
-#include "right.xbm"
-#include "hcenter.xbm"
-#endif
-
-
 /***************************************
  ***************************************/
 
 void
 init_align( void )
 {
-#if defined( USE_SYMBOL )
     fl_add_symbol( "-><-", draw_centering_symbol, 0 );
     fl_set_object_label( fd_align->hcenter, "@-><-" );
     fl_set_object_label( fd_align->vcenter, "@8-><-" );
-#else
-    FL_OBJECT *ob;
 
-    ob = fd_align->left;
-    ob->objclass = FL_BITMAPBUTTON;
-    fl_set_object_color( ob, FL_COL1, FL_BLUE );
-    fl_set_bitmapbutton_data( ob, left_height, left_width, left_bits );
-    fl_set_object_label( ob, "" );
-
-    ob = fd_align->hcenter;
-    ob->objclass = FL_BITMAPBUTTON;
-    fl_set_object_color( ob, FL_COL1, FL_BLUE );
-    fl_set_bitmapbutton_data( ob, hcenter_height, hcenter_width, hcenter_bits );
-    fl_set_object_label( ob, "" );
-
-    ob = fd_align->right;
-    ob->objclass = FL_BITMAPBUTTON;
-    fl_set_object_color( ob, FL_COL1, FL_BLUE );
-    fl_set_bitmapbutton_data( ob, right_height, right_width, right_bits );
-    fl_set_object_label( ob, "" );
-#endif
     fl_set_object_helper( fd_align->left,    "flush left" );
     fl_set_object_helper( fd_align->hcenter, "center horizontally" );
     fl_set_object_helper( fd_align->hequal,  "Equal distance" );

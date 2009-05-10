@@ -1132,11 +1132,6 @@ raise_selection( void )
     for ( i = 0; i < selnumb; i++ )
     {
 		fl_delete_object( selobj[ i ] );
-
-		/* add_object expects the coordinates of the object measured from
-		   lower-left corner. Translate to conform */
-
-		TRANY( selobj[ i ], cur_form );
 		fl_add_object( cur_form, selobj[ i ] );
     }
 
@@ -1275,7 +1270,6 @@ paste_selection(void)
 			fl_free( t );
 		}
 
-		TRANY( obj, cur_form );
 		fl_add_object( cur_form, obj );
 		selobj[ selnumb++ ] = obj;
     }
@@ -1400,7 +1394,6 @@ set_selection( void *a )
     for ( selnumb = 0; ob[ selnumb ]; selnumb++ )
     {
 		obj = copy_object( ob[ selnumb ], 1 );
-		TRANY( obj, cur_form );
 		fl_add_object( cur_form, obj );
 		selobj[ selnumb ] = obj;
     }
@@ -1471,7 +1464,7 @@ group_selection( void )
     if ( ! cur_form || selnumb == 0 )
 		return;
 
-    if ( ! ( s = fl_show_input( "Give group name", "" ) ) )
+    if ( ! ( s = fl_show_input( "Enter group name", "" ) ) )
 		return;
 
     obj = add_an_object( FL_BEGIN_GROUP, -1, 0, 0, 0, 0 );
@@ -1481,11 +1474,8 @@ group_selection( void )
 		fl_delete_object( selobj[ i ] );
 
 		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
-			 && selobj[ i ]->objclass != FL_END_GROUP)
-		{
-			TRANY( selobj[ i ], cur_form );
+			 && selobj[ i ]->objclass != FL_END_GROUP )
 			fl_add_object( cur_form, selobj[ i ] );
-		}
     }
 
     add_an_object( FL_END_GROUP, -1, 0, 0, 0, 0 );

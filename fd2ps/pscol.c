@@ -32,13 +32,14 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flinternal.h"
 #include <math.h>
 #include "fd2ps.h"
 
-#define VN(a)    a,#a
-#define NV(a)    #a,a
+#define VN( a )    a, #a
+#define NV( a )    #a, a
 
 /* slightly different from XForms' built-in due to the difference
  * between  printer and screen
@@ -90,62 +91,81 @@ static FLI_IMAP fl_imap[ ] =
 
 #define builtin   sizeof(fl_imap)/sizeof(fl_imap[0])
 
-/*
+
+/***************************************
  * do gamma adjustment
- */
+ ***************************************/
 
 void
-apply_gamma(float gamma)
+apply_gamma( float gamma )
 {
-    FLI_IMAP *fm = fl_imap, *fs;
+    FLI_IMAP *fm = fl_imap,
+		     *fs;
     float lastgamma = 1.0;
 
-    if (FL_abs(gamma) < 1.0e-3)
+    if ( FL_abs( gamma ) < 1.0e-3 )
     {
-	fprintf(stderr, "fd2ps: Bad Gamma value %.2f\n", gamma);
-	return;
+		fprintf( stderr, "fd2ps: Bad Gamma value %.2f\n", gamma );
+		return;
     }
 
-    for (fs = fm + builtin; fm < fs; fm++)
+    for ( fs = fm + builtin; fm < fs; fm++ )
     {
-	if (psinfo.verbose)
-	    fprintf(stderr, "fm->r=%d\n", fm->r);
-	fm->r = (0.4 + 255.0 * (pow((double) fm->r / 255.0, lastgamma / gamma)));
-	fm->g = (0.4 + 255.0 * (pow((double) fm->g / 255.0, lastgamma / gamma)));
-	fm->b = (0.4 + 255.0 * (pow((double) fm->b / 255.0, lastgamma / gamma)));
-	if (psinfo.verbose)
-	    fprintf(stderr, "fm->r=%d\n", fm->r);
+		if ( psinfo.verbose )
+			fprintf( stderr, "fm->r=%d\n", fm->r );
+
+		fm->r = 0.4 + 255.0 * pow( fm->r / 255.0, lastgamma / gamma );
+		fm->g = 0.4 + 255.0 * pow( fm->g / 255.0, lastgamma / gamma );
+		fm->b = 0.4 + 255.0 * pow( fm->b / 255.0, lastgamma / gamma );
+
+		if ( psinfo.verbose )
+			fprintf( stderr, "fm->r=%d\n", fm->r );
     }
 
     lastgamma = gamma;
 }
 
 
-void
-fl_query_imap(long col, int *r, int *g, int *b)
-{
-    FLI_IMAP *flmap = fl_imap, *flmape = flmap + builtin;
+/***************************************
+ ***************************************/
 
-    for (; flmap < flmape; flmap++)
-	if (col == (long)flmap->index)
-	{
-	    *r = flmap->r;
-	    *g = flmap->g;
-	    *b = flmap->b;
-	    return;
-	}
+void
+fl_query_imap( long   col,
+			   int  * r,
+			   int  * g,
+			   int  * b )
+{
+    FLI_IMAP *flmap = fl_imap,
+		     *flmape = flmap + builtin;
+
+    for ( ; flmap < flmape; flmap++ )
+		if ( col == ( long ) flmap->index )
+		{
+			*r = flmap->r;
+			*g = flmap->g;
+			*b = flmap->b;
+			return;
+		}
 }
 
 
-#define  C2NC(c)             (1.0/255.0*c)
+#define  C2NC( c )             ( 1.0 / 255.0 * c )
 
 static long cur_color = -1;
 
+
+/***************************************
+ ***************************************/
+
 void
-ps_invalidate_color_cache(void)
+ps_invalidate_color_cache( void )
 {
     cur_color = -1;
 }
+
+
+/***************************************
+ ***************************************/
 
 void
 ps_color( long color )
@@ -168,6 +188,9 @@ ps_color( long color )
 }
 
 
+/***************************************
+ ***************************************/
+
 int
 get_gray255( long color )
 {
@@ -180,15 +203,21 @@ get_gray255( long color )
     return rgb2gray( r, g, b ) + 0.1;
 }
 
+
+/***************************************
+ ***************************************/
+
 int
-fl_get_namedcolor(const char *s)
+fl_get_namedcolor( const char * s )
 {
     FLI_IMAP *flmap = fl_imap,
 		     *flmape = flmap + builtin;
 
-    for (; s && flmap < flmape; flmap++)
-	if (strcmp(s, flmap->name) == 0)
-	    return flmap->index;
+    for ( ; s && flmap < flmape; flmap++ )
+		if ( strcmp(s, flmap->name) == 0 )
+			return flmap->index;
+
     /* a wild shot */
-    return atoi(s);
+
+    return atoi( s );
 }

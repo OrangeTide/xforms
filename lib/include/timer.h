@@ -50,49 +50,33 @@ typedef enum {
 
 typedef char * ( * FL_TIMER_FILTER )( FL_OBJECT *, double );
 
-FL_EXPORT FL_OBJECT * fl_create_timer(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_create_timer( int			type,
+									   FL_Coord	    x,
+									   FL_Coord	    y,
+									   FL_Coord	    w,
+									   FL_Coord	    h,
+									   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_timer(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_add_timer( int			 type,
+									FL_Coord	 x,
+									FL_Coord	 y,
+									FL_Coord	 w,
+									FL_Coord	 h,
+									const char * label );
 
-FL_EXPORT void fl_set_timer(
-		FL_OBJECT * ob,
-		double		total
-		);
+FL_EXPORT void fl_set_timer( FL_OBJECT * ob,
+							 double		 total );
 
-FL_EXPORT double fl_get_timer(
-		FL_OBJECT * ob
-		);
+FL_EXPORT double fl_get_timer( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_timer_countup(
-		FL_OBJECT * ob,
-		int			yes
-		);
+FL_EXPORT void fl_set_timer_countup( FL_OBJECT * ob,
+									 int		 yes );
 
-FL_EXPORT FL_TIMER_FILTER fl_set_timer_filter(
-		FL_OBJECT       * ob,
-		FL_TIMER_FILTER   filter
-		);
+FL_EXPORT FL_TIMER_FILTER fl_set_timer_filter( FL_OBJECT       * ob,
+											   FL_TIMER_FILTER   filter );
 
-FL_EXPORT void fl_suspend_timer(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_suspend_timer( FL_OBJECT * ob );
 
-FL_EXPORT void fl_resume_timer(
-		FL_OBJECT * ob
-		);
+FL_EXPORT void fl_resume_timer( FL_OBJECT * ob );
 
 #endif /* ! defined FL_TIMER_H */

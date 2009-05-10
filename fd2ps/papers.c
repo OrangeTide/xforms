@@ -31,6 +31,7 @@
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include <stdio.h>
 #include <string.h>
 #include "fd2ps.h"
@@ -39,47 +40,57 @@
 #define strcasecmp stricmp
 #endif
 
-struct paper
-{
-    const char *name;
-    const char *size;
-    float w, h;			/* in inches */
+struct paper {
+    const char * name;
+    const char * size;
+    float        w,			/* in inches */
+	             h;
 };
 
-static struct paper papers[] =
+static struct paper papers[ ] =
 {
-    {"Letter", "8.5x11in", 8.5, 11.0},
-    {"Legal", "8.5x14in", 8.5, 14.0},
-    {"A4", "210x295mm", 7.27, 11.61},	/* European  210x295mm */
-    {"B4", "257x364mm", 10.1, 14.33},	/* Janpanese 275x364mm */
-    {"B5", "18x20cm", 7.283, 10.630},
-    {"B", "11x17in", 11.0, 17.0},	/* US tabloid */
-    {"Note", "4x5in", 4.0, 5.0},
- /* sentinel */
-    {0, 0, 0, 0}
+    { "Letter", "8.5x11in",   8.5,   11.0 },
+    { "Legal",  "8.5x14in",   8.5,   14.0 },
+    { "A4",     "210x295mm",  7.27,  11.61 },	/* European  210x295mm */
+    { "B4",     "257x364mm", 10.1,   14.33 },	/* Janpanese 275x364mm */
+    { "B5",     "18x20cm",    7.283, 10.630 },
+    { "B",      "11x17in",   11.0,   17.0   },	/* US tabloid */
+    { "Note",   "4x5in",      4.0,    5.0   },
+	/* sentinel */
+    { NULL,     NULL,         0.0,    0.0   }
 };
+
+
+/***************************************
+ ***************************************/
 
 void
-get_paper_size(const char *name, float *w, float *h)
+get_paper_size( const char * name,
+				float      * w,
+				float      * h )
 {
     struct paper *p = papers;
 
-    for (; p->name; p++)
-	if (strcasecmp(name, p->name) == 0)
-	{
-	    *w = p->w;
-	    *h = p->h;
-	    return;
-	}
+    for ( ; p->name; p++ )
+		if ( strcasecmp( name, p->name ) == 0 )
+		{
+			*w = p->w;
+			*h = p->h;
+			return;
+		}
 
-    fprintf(stderr, "Unknown paper name %s - ignored\n", name);
+    fprintf( stderr, "Unknown paper name %s - ignored\n", name );
 }
 
+
+/***************************************
+ ***************************************/
+
 void
-list_papers(const char *prefix)
+list_papers( const char * prefix )
 {
     struct paper *p = papers;
 
-    for (; p->name; p++)
-	fprintf(stderr, "%s%s\t(%s)\n", prefix, p->name, p->size);
+    for ( ; p->name; p++ )
+		fprintf( stderr, "%s%s\t(%s)\n", prefix, p->name, p->size );
 }

@@ -41,70 +41,48 @@ enum {
    FL_NICE_SCROLLBAR
 };
 
-FL_EXPORT FL_OBJECT * fl_create_scrollbar(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_create_scrollbar( int			type,
+										   FL_Coord	    x,
+										   FL_Coord	    y,
+										   FL_Coord	    w,
+										   FL_Coord	    h,
+										   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_scrollbar(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * l
-		);
+FL_EXPORT FL_OBJECT * fl_add_scrollbar( int			 type,
+										FL_Coord	 x,
+										FL_Coord	 y,
+										FL_Coord	 w,
+										FL_Coord	 h,
+										const char * label );
 
-FL_EXPORT double fl_get_scrollbar_value(
-		FL_OBJECT * ob
-		);
+FL_EXPORT double fl_get_scrollbar_value( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_scrollbar_value(
-		FL_OBJECT * ob,
-		double		val
-		);
+FL_EXPORT void fl_set_scrollbar_value( FL_OBJECT * ob,
+									   double	   val );
 
-FL_EXPORT void fl_set_scrollbar_size(
-		FL_OBJECT * ob,
-		double		val
-		);
+FL_EXPORT void fl_set_scrollbar_size( FL_OBJECT * ob,
+									  double	  val );
 
-FL_EXPORT void fl_set_scrollbar_increment(
-		FL_OBJECT * ob,
-		double		l,
-		double		r
-		);
+FL_EXPORT void fl_set_scrollbar_increment( FL_OBJECT * ob,
+										   double	   l,
+										   double	   r );
 
-FL_EXPORT void fl_get_scrollbar_increment(
-		FL_OBJECT * ob,
-		double    * a,
-		double    * b
-		);
+FL_EXPORT void fl_get_scrollbar_increment( FL_OBJECT * ob,
+										   double    * a,
+										   double    * b );
 
-FL_EXPORT void fl_set_scrollbar_bounds(
-		FL_OBJECT * ob,
-		double		b1,
-		double		b2
-		);
+FL_EXPORT void fl_set_scrollbar_bounds( FL_OBJECT * ob,
+										double		b1,
+										double		b2 );
 
-FL_EXPORT void fl_get_scrollbar_bounds(
-		FL_OBJECT * ob,
-		double    * b1,
-		double    * b2
-		);
+FL_EXPORT void fl_get_scrollbar_bounds( FL_OBJECT * ob,
+										double    * b1,
+										double    * b2 );
 
-FL_EXPORT void fl_set_scrollbar_return(
-		FL_OBJECT * ob,
-		int			ret
-		);
+FL_EXPORT void fl_set_scrollbar_return( FL_OBJECT * ob,
+										int			ret );
 
-FL_EXPORT void fl_set_scrollbar_step(
-		FL_OBJECT * ob,
-		double		step
-		);
+FL_EXPORT void fl_set_scrollbar_step( FL_OBJECT * ob,
+									  double	  step );
 
 #endif /* ! defined FL_SCROLLBAR_H */

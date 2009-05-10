@@ -63,8 +63,7 @@ enum
 
 /* Extra information need for input boxes. */
 
-typedef struct
-{
+typedef struct {
     char *      str;			/* the input text                  */
     FL_COLOR    textcol;		/* text color                      */
     FL_COLOR    curscol;		/* cursor color                    */
@@ -136,8 +135,7 @@ static void make_cursor_visible( FL_OBJECT *,
 								 int,
 								 int );
 
-enum
-{
+enum {
     NORMAL_SELECT,
 	WORD_SELECT,
 	LINE_SELECT
@@ -170,7 +168,7 @@ get_margin( int        btype,
 
 
 /***************************************
- * check the size of scrollbars and input field.  No drawing is allowed
+ * Check the size of scrollbars and input field.  No drawing is allowed
  ***************************************/
 
 static void
@@ -939,8 +937,8 @@ handle_key( FL_OBJECT *  ob,
 {
     int i, ret = 1;
     SPEC *sp = ob->spec;
-    int slen;			/* length of the string */
-    int startpos;		/* position of start of current line */
+    int slen;			       /* length of the string */
+    int startpos;		       /* position of start of current line */
     int oldy = sp->ypos;
     int oldl = sp->lines;
     int oldx = sp->xoffset;
@@ -978,7 +976,7 @@ handle_key( FL_OBJECT *  ob,
 			key = XK_End;
     }
 
-    /* translate all move key to cursor keys so we can distinguish edit/move
+    /* Translate all move key to cursor keys so we can distinguish edit/move
        keys more easily */
 
     if ( key == kmap.moveto_next_line )
@@ -998,7 +996,7 @@ handle_key( FL_OBJECT *  ob,
     else if ( key == kmap.moveto_prev_page )
 		key = XK_PageUp;
 
-    if ( IsRegular( key ) )		/* Normal keys  or new line */
+    if ( IsRegular( key ) )		/* Normal keys and new line */
     {
 		int ok = FL_VALID;
 		char *tmpbuf = 0;
@@ -1024,7 +1022,7 @@ handle_key( FL_OBJECT *  ob,
 			tmpxoffset = sp->xoffset;
 		}
 
-		/* merge the new character */
+		/* Merge the new character */
 
 		for ( i = slen + 1; i > sp->position; i-- )
 			sp->str[ i ] = sp->str[ i - 1 ];

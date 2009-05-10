@@ -43,42 +43,34 @@ enum {
 #define FL_FRAME_COL2	FL_COL1	   /* label background */
 #define FL_FRAME_LCOL	FL_BLACK   /* label color	   */
 
-FL_EXPORT FL_OBJECT * fl_create_frame(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_frame( int			type,
+									   FL_Coord	    x,
+									   FL_Coord	    y,
+									   FL_Coord	    w,
+									   FL_Coord	    h,
+									   const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_frame(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_frame( int			 type,
+									FL_Coord	 x,
+									FL_Coord	 y,
+									FL_Coord	 w,
+									FL_Coord	 h,
+									const char * label );
 
 /* labeld frame */
 
-FL_EXPORT FL_OBJECT * fl_create_labelframe(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_labelframe( int			 type,
+											FL_Coord	 x,
+											FL_Coord	 y,
+											FL_Coord	 w,
+											FL_Coord	 h,
+											const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_labelframe(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_labelframe( int		  type,
+										 FL_Coord	  x,
+										 FL_Coord	  y,
+										 FL_Coord	  w,
+										 FL_Coord	  h,
+										 const char * label );
 
 #endif /* ! defined FL_FRAME_H */

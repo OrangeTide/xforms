@@ -44,104 +44,68 @@ typedef enum {
 
 /***** Routines *****/
 
-FL_EXPORT FL_OBJECT * fl_create_counter(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_create_counter( int		  type,
+										 FL_Coord	  x,
+										 FL_Coord	  y,
+										 FL_Coord	  w,
+										 FL_Coord	  h,
+										 const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_counter(
-		int			 type,
-		FL_Coord	 x,
-		FL_Coord	 y,
-		FL_Coord	 w,
-		FL_Coord	 h,
-		const char * label
-		);
+FL_EXPORT FL_OBJECT * fl_add_counter( int		   type,
+									  FL_Coord	   x,
+									  FL_Coord	   y,
+									  FL_Coord	   w,
+									  FL_Coord	   h,
+									  const char * label );
 
-FL_EXPORT void fl_set_counter_value(
-		FL_OBJECT * ob,
-		double		val
-		);
+FL_EXPORT void fl_set_counter_value( FL_OBJECT * ob,
+									 double		 val );
 
-FL_EXPORT void fl_set_counter_bounds(
-		FL_OBJECT * ob,
-		double		min,
-		double		max
-		);
+FL_EXPORT void fl_set_counter_bounds( FL_OBJECT * ob,
+									  double	  min,
+									  double	  max );
 
-FL_EXPORT void fl_set_counter_step(
-		FL_OBJECT * ob,
-		double		s,
-		double		l
-		);
+FL_EXPORT void fl_set_counter_step( FL_OBJECT * ob,
+									double		s,
+									double		l );
 
-FL_EXPORT void fl_set_counter_precision(
-		FL_OBJECT * ob,
-		int			prec
-		);
+FL_EXPORT void fl_set_counter_precision( FL_OBJECT * ob,
+										 int		 prec );
 
-FL_EXPORT int fl_get_counter_precision(
-	    FL_OBJECT * ob
-	    );
+FL_EXPORT int fl_get_counter_precision( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_counter_return(
-		FL_OBJECT * ob,
-		int			how
-		);
+FL_EXPORT void fl_set_counter_return( FL_OBJECT * ob,
+									  int		  how );
 
-FL_EXPORT double fl_get_counter_value(
-		FL_OBJECT * ob
-		);
+FL_EXPORT double fl_get_counter_value( FL_OBJECT * ob );
 
-FL_EXPORT void fl_get_counter_bounds(
-		FL_OBJECT * ob,
-		double    * min,
-		double    * max
-		);
+FL_EXPORT void fl_get_counter_bounds( FL_OBJECT * ob,
+									  double    * min,
+									  double    * max );
 
-FL_EXPORT void fl_get_counter_step(
-		FL_OBJECT * ob,
-		double    * s,
-		double    * l
-		);
+FL_EXPORT void fl_get_counter_step( FL_OBJECT * ob,
+									double    * s,
+									double    * l );
 
-FL_EXPORT void fl_set_counter_filter(
-		FL_OBJECT     * ob,
-		FL_VAL_FILTER   filter
-		);
+FL_EXPORT void fl_set_counter_filter( FL_OBJECT     * ob,
+									  FL_VAL_FILTER   filter );
 
 /* Functions to set and get the timeout value used by the
  * counter code to control modification of the counter value. */
 
-FL_EXPORT int fl_get_counter_repeat(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_counter_repeat( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_counter_repeat(
-		FL_OBJECT * ob,
-		int			millisec
-		);
+FL_EXPORT void fl_set_counter_repeat( FL_OBJECT * ob,
+									  int		  millisec );
 
-FL_EXPORT int fl_get_counter_min_repeat(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_counter_min_repeat( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_counter_min_repeat(
-		FL_OBJECT * ob,
-		int         millisec
-		);
+FL_EXPORT void fl_set_counter_min_repeat( FL_OBJECT * ob,
+										  int         millisec );
 
-FL_EXPORT int fl_get_counter_speedjump(
-		FL_OBJECT * ob
-		);
+FL_EXPORT int fl_get_counter_speedjump( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_counter_speedjump(
-		FL_OBJECT * ob,
-		int         yes_no
-		);
+FL_EXPORT void fl_set_counter_speedjump( FL_OBJECT * ob,
+										 int         yes_no );
 
 #endif /* ! defined FL_COUNTER_H */
