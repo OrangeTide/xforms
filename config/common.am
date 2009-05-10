@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = foreign
 
-DISTCLEANFILES= *.orig *.rej *~ *.bak core
+DISTCLEANFILES= *.orig *.rej *~ *.bak core makelog
 
-MAINTAINERCLEANFILES = $(srcdir)/Makefile.in
+MAINTAINERCLEANFILES = $(srcdir)/Makefile.in makelog
 
 AM_INSTALL_DATA_FLAGS = $(INSTALL) -m 644 -D
