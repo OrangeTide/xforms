@@ -111,7 +111,7 @@ fl_rectbound( FL_Coord x,
 /****** End of rectangle routines ***********************}***/
 
 
-#define RS     ( FL_Coord ) 18
+#define MAX_RADIUS  18
 
 /*    0.0, 0.034074, 0.1339746, 0.292893, 0.5, 0.741181, 1.0 */
 
@@ -126,45 +126,53 @@ static double offset[ ] =
 /***************************************
  ***************************************/
 
-static int
+static void
 compute_round_corners( FL_Coord   x,
 					   FL_Coord   y,
 					   FL_Coord   w,
 					   FL_Coord   h,
 					   FL_POINT * point )
 {
-    size_t i,
-		   n = 0;
+    size_t i;
     double rs = 0.45 * FL_min( w, h );
+	static double old_rs = -1;
+	static FL_Coord o[ RN ];
 
-    if ( rs > RS )
-		rs = RS;
+    if ( rs > MAX_RADIUS )
+		rs = MAX_RADIUS;
+	if ( rs < 0 )
+		rs = 0;
 
-    for ( i = 0; i < RN; i++, n++, point++ )
+	if ( rs != old_rs )
+	{
+		for ( i = 0; i < RN; i++ )
+			o[ i ] = FL_crnd( offset[ i ] * rs );
+		old_rs = rs;
+	}
+
+    for ( i = 0; i < RN; i++, point++ )
     {
-		point->x = ( short ) FL_nint( x + offset[ RN - i - 1 ] * rs );
-		point->y = ( short ) FL_nint( y + offset[ i ] * rs );
+		point->x = x + o[ RN - i - 1 ];
+		point->y = y + o[ i ];
     }
 
-    for ( i = 0; i < RN; i++, n++, point++ )
+    for ( i = 0; i < RN; i++, point++ )
     {
-		point->x = ( short ) FL_nint( x + offset[ i ] * rs );
-		point->y = ( short ) FL_nint( y + h - 1 - offset[ RN - i - 1 ] * rs );
+		point->x = x + o[ i ];
+		point->y = y + h - 1 - o[ RN - i - 1 ];
     }
 
-    for ( i = 0; i < RN; i++, n++, point++ )
+    for ( i = 0; i < RN; i++, point++ )
     {
-		point->x = ( short )  FL_nint( x + w - 1 - offset[ RN - i - 1 ] * rs );
-		point->y = ( short )  FL_nint( y + h - 1 - offset[ i ] * rs );
+		point->x = x + w - 1 - o[ RN - i - 1 ];
+		point->y = y + h - 1 - o[ i ];
     }
 
-    for ( i = 0; i < RN; i++, n++, point++ )
+    for ( i = 0; i < RN; i++, point++ )
     {
-		point->x = ( short ) FL_nint( x + w - 1 - offset[ i ] * rs );
-		point->y = ( short ) FL_nint( y + offset[ RN - i - 1 ] * rs );
+		point->x = x + w - 1 - o[ i ];
+		point->y = y + o[ RN - i - 1 ];
     }
-
-    return n;
 }
 
 
@@ -180,10 +188,9 @@ fl_roundrectangle( int      fill,
 				   FL_COLOR col )
 {
     FL_POINT point[ 4 * RN + 1 ];  /* need one extra for closing of polygon! */
-    int n;
 
-    n = compute_round_corners( x, y, w, h, point );
-    fl_polygon( fill, point, n, col );
+    compute_round_corners( x, y, w, h, point );
+    fl_polygon( fill, point, 4 * RN, col );
 }
 
 
@@ -207,14 +214,14 @@ fl_rounded3dbox( int      style,
 				 FL_COLOR col,
 				 int bw )
 {
-    FL_POINT point[ 4 *  RN + 1 ];
+    FL_POINT point[ 4 *  RN + 1 ];     /* on extra for closing of curve */
     int lw = FL_abs( bw );
-    int n,
+    int n = 4 * RN,
 		olw;
 
     Shrink( x, y, w, h, ( int ) ( lw / 2 ) );
 
-    n = compute_round_corners( x, y, w, h, point );
+    compute_round_corners( x, y, w, h, point );
     fl_polyf( point, n, col );
 
     olw = fl_get_linewidth( );
@@ -243,7 +250,7 @@ fl_rounded3dbox( int      style,
 
     if ( bw > 0 && fli_dithered( fl_vmode ) )
     {
-		n = compute_round_corners( x, y, w, h, point );
+		compute_round_corners( x, y, w, h, point );
 		fl_polyl( point, n, FL_BLACK );
     }
 }

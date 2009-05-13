@@ -406,7 +406,7 @@ readback_attributes( FL_OBJECT * obj )
     obj->align = align_val( tmpbuf );
 
     if (    fl_get_choice( fd_generic_attrib->inside ) == 1
-		 && obj->align != FL_ALIGN_CENTER)
+		 && obj->align != FL_ALIGN_CENTER )
 		obj->align |= FL_ALIGN_INSIDE;
     else
 		obj->align &= ~FL_ALIGN_INSIDE;

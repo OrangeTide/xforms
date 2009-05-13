@@ -1551,7 +1551,7 @@ fl_create_input( int          type,
 				 FL_Coord     y,
 				 FL_Coord     w,
 				 FL_Coord     h,
-				const char * label )
+				 const char * label )
 {
     FL_OBJECT *ob;
     SPEC *sp;
@@ -1560,12 +1560,12 @@ fl_create_input( int          type,
 
     ob = fl_make_object( FL_INPUT, type, x, y, w, h, label, handle_it );
     ob->boxtype = FL_INPUT_BOXTYPE;
-    ob->col1 = FL_INPUT_COL1;
-    ob->col2 = FL_INPUT_COL2;
-    ob->align = FL_INPUT_ALIGN;
-    ob->lcol = FL_INPUT_LCOL;
-    ob->lsize = fli_cntl.inputFontSize ?
-		        fli_cntl.inputFontSize : FL_DEFAULT_SIZE;
+    ob->col1    = FL_INPUT_COL1;
+    ob->col2    = FL_INPUT_COL2;
+    ob->align   = FL_INPUT_ALIGN;
+    ob->lcol    = FL_INPUT_LCOL;
+    ob->lsize   = fli_cntl.inputFontSize ?
+		          fli_cntl.inputFontSize : FL_DEFAULT_SIZE;
 
     fl_set_object_prehandler( ob, input_pre );
     fl_set_object_posthandler( ob, input_post );
@@ -1594,7 +1594,7 @@ fl_create_input( int          type,
     sp->input = ob;
     sp->field_char = ' ';
 
-    /* can't remember why validated input return is set to RETURN_END
+    /* Can't remember why validated input return is set to RETURN_END
        but probably with some reason. Wait until 1.0 to reset it */
 
     if ( ob->type == FL_FLOAT_INPUT || ob->type == FL_INT_INPUT )
@@ -1744,7 +1744,7 @@ fl_set_input( FL_OBJECT *  ob,
 		len = strlen( sp->str );
     }
 
-    /* if no focus, need to remain so */
+    /* If no focus, need to remain so */
 
     if ( sp->position != -1 )
 		sp->position = len;
@@ -1754,23 +1754,26 @@ fl_set_input( FL_OBJECT *  ob,
     sp->lines = fl_get_input_numberoflines( ob );
     fl_get_input_cursorpos( ob, &sp->xpos, &sp->ypos );
 
-    /* get max string width. It is possible fl_set_input is used before the
-       form is show, draw_object is a no-op, thus we end up with a wrong
-       string size */
+    /* Get max string width. It's possible that fl_set_input() is used before
+	   the form is show, draw_object is a no-op, thus we end up with a wrong
+	   string size */
 
     fl_get_string_dimension( ob->lstyle, ob->lsize,
 							 sp->str, len, &sp->max_pixels, &len );
 
-    fl_freeze_form( ob->form );
+	if ( ob->form )
+		fl_freeze_form( ob->form );
 
 	check_scrollbar_size( ob );
 	make_line_visible( ob, sp->ypos );
 	fl_redraw_object( sp->input );
 	sp->xoffset = 0;
 	check_scrollbar_size( ob );
-	redraw_scrollbar( ob );
+	if ( sp->v_on || sp->h_on )
+		redraw_scrollbar( ob );
 
-    fl_unfreeze_form( ob->form );
+	if ( ob->form )
+		fl_unfreeze_form( ob->form );
 }
 
 

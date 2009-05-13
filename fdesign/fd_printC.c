@@ -332,26 +332,30 @@ VN_pair vn_align[ ] =
     VN( FL_ALIGN_LEFT_TOP     ),
     VN( FL_ALIGN_RIGHT_BOTTOM ),
     VN( FL_ALIGN_LEFT_BOTTOM  ),
+    VN( FL_ALIGN_TOP_RIGHT    ),    /* need them for backward compatibility */
+    VN( FL_ALIGN_TOP_LEFT     ),
+    VN( FL_ALIGN_BOTTOM_RIGHT ),
+    VN( FL_ALIGN_BOTTOM_LEFT  ),
     VN( -1                    )
 };
 
 static VN_pair vn_lsize[ ] =
 {
     VN( FL_DEFAULT_SIZE ),
-    VN( FL_TINY_SIZE ),
-    VN( FL_SMALL_SIZE ),
-    VN( FL_NORMAL_SIZE ),
-    VN( FL_MEDIUM_SIZE ),
-    VN( FL_LARGE_SIZE ),
-    VN( FL_HUGE_SIZE ),
+    VN( FL_TINY_SIZE    ),
+    VN( FL_SMALL_SIZE   ),
+    VN( FL_NORMAL_SIZE  ),
+    VN( FL_MEDIUM_SIZE  ),
+    VN( FL_LARGE_SIZE   ),
+    VN( FL_HUGE_SIZE    ),
 
     VN( FL_DEFAULT_FONT ),
-    VN( FL_TINY_FONT ),
-    VN( FL_SMALL_FONT ),
-    VN( FL_NORMAL_FONT ),
-    VN( FL_MEDIUM_FONT ),
-    VN( FL_LARGE_FONT ),
-    VN( FL_HUGE_FONT ),
+    VN( FL_TINY_FONT    ),
+    VN( FL_SMALL_FONT   ),
+    VN( FL_NORMAL_FONT  ),
+    VN( FL_MEDIUM_FONT  ),
+    VN( FL_LARGE_FONT   ),
+    VN( FL_HUGE_FONT    ),
     { FL_SMALL_FONT,  "FL_NORMAL_FONT1", NULL, NULL },
     { FL_NORMAL_FONT, "FL_NORMAL_FONT2", NULL, NULL },
     VN( -1 )
@@ -481,7 +485,7 @@ emit_attrib( FILE *       fp,
     if ( vn == vn_align )
         s = align_name( a );
     else
-        s = get_vn_name(vn, a);
+        s = get_vn_name( vn, a );
 
     fprintf( fp, "    %s( obj, %s );\n", aname, s);
 }
@@ -632,6 +636,7 @@ align_name( int val )
     strcpy( buf, get_vn_name( vn_align, val % FL_ALIGN_INSIDE ) );
     if ( val >= FL_ALIGN_INSIDE )
         strcat( buf, " | FL_ALIGN_INSIDE" );
+
     return buf;
 }
 

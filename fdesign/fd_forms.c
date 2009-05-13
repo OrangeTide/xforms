@@ -425,7 +425,7 @@ load_forms( int          merge,
 
 	forms = new_forms;
 
-    /* from here until we hit a seperator newline, we are free to do whatever
+    /* From here until we hit a seperator newline, we are free to do whatever
        we want here */
 
     while ( fgets( buf, sizeof buf - 1, fn ) && *buf != '\n' )

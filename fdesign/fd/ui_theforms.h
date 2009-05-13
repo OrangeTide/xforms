@@ -3,7 +3,7 @@
 #ifndef FD_control_h_
 #define FD_control_h_
 
-#include <forms.h>
+#include "include/forms.h"
 
 /** Callbacks, globals and object handlers **/
 

@@ -823,7 +823,7 @@ main( int    argc,
     FL_IOPT cntl;
     unsigned int mask;
 
-    /* before doing anything, check to make sure the library is made
+    /* Before doing anything, check to make sure the library is made
        correctly */
 
     if ( FL_INCLUDE_VERSION != fl_library_version( &version, &revision ) )
@@ -841,7 +841,7 @@ main( int    argc,
 
     pre_connect( argc, argv );
 
-    /* force fdesign to come up in default visual */
+    /* Force fdesign to come up in default visual */
 
     cntl.vclass = FL_DefaultVisual;
     cntl.doubleBuffer = 0;
@@ -886,7 +886,7 @@ main( int    argc,
     create_the_forms( );
     fl_set_atclose( delete_handler, 0 );
 
-    /* must suspend user requested button label font throughout fdesign and
+    /* Must suspend user requested button label font throughout fdesign and
        enable it only when testing */
 
     fd_buttonLabelSize = fli_cntl.buttonFontSize;
