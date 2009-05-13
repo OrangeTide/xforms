@@ -14,6 +14,7 @@ configure
 *.o
 *.lo
 *.la
+*.bak
 .cvsignore
 CVS
 Makefile.in

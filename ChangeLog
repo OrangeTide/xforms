@@ -1,3 +1,10 @@
+2009-05-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/Makefile: Added a few include directories
+	in order to allow fdesign's fd files when newly
+	converted with fdesign to be compiled without
+	manual changes.
+
 2009-05-08 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c, lib/objects.c, lib/flinternals.h:

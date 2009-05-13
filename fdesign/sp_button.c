@@ -224,17 +224,15 @@ create_a_button( FL_OBJECT * ob )
 /***************************************
  ***************************************/
 
-static char *
+static const char *
 file_tail( const char *full )
 {
-    static char tmpbuf[ 512 ];
     char *p;
 
-    strcpy( tmpbuf, full );
-    if ( ( p = strrchr( tmpbuf, '/' ) ) )
-		strcpy( tmpbuf, p + 1 );
+    if ( ( p = strrchr( full, '/' ) ) )
+		return p + 1;
 
-    return tmpbuf;
+    return full;
 }
 
 
