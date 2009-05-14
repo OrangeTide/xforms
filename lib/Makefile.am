@@ -98,6 +98,7 @@ libforms_la_SOURCES = \
 	slider.c \
 	space.c \
 	spline.c \
+	spinner.c \
 	strdup.c \
 	symbols.c \
 	sysdep.c \

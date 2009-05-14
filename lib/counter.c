@@ -550,7 +550,7 @@ fl_add_counter( int          type,
 				FL_Coord     y,
 				FL_Coord     w,
 				FL_Coord     h,
-				const char *label )
+				const char * label )
 {
     FL_OBJECT *ob = fl_create_counter( type, x, y, w, h, label );
 

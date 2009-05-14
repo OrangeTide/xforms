@@ -33,6 +33,7 @@ noinst_HEADERS = \
 	scrollbar.h \
 	select.h \
 	slider.h \
+	spinner.h \
 	tabfolder.h \
 	text.h \
 	thumbwheel.h \

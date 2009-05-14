@@ -64,60 +64,60 @@ enum
 /* Extra information need for input boxes. */
 
 typedef struct {
-    char *      str;			/* the input text                  */
-    FL_COLOR    textcol;		/* text color                      */
-    FL_COLOR    curscol;		/* cursor color                    */
-    int         position;		/* cursor position (in chars)      */
-    int         beginrange;		/* start of the range              */
-    int         endrange;		/* end of the range                */
-    int         size;			/* size of the string              */
-    int         changed;		/* whether the field has changed   */
-    int         how_return;		/* whether to return value always  */
-    int         drawtype;		/* if to draw text with background */
-    int         noscroll;		/* true if no scrollis allowd      */
-    int         maxchars;		/* limit for normal_input          */
-    int         attrib1;
-    int         attrib2;
-    FL_VALIDATE validate;
+    char        * str;			    /* the input text                  */
+    FL_COLOR      textcol;		    /* text color                      */
+    FL_COLOR      curscol;		    /* cursor color                    */
+    int           position;		    /* cursor position (in chars)      */
+    int           beginrange;	    /* start of the range              */
+    int           endrange;		    /* end of the range                */
+    int           size;			    /* size of the string              */
+    int           changed;		    /* whether the field has changed   */
+    int           how_return;	    	/* whether to return value always  */
+    int           drawtype;		    /* if to draw text with background */
+    int           noscroll;		    /* true if no scrollis allowd      */
+    int           maxchars;		    /* limit for normal_input          */
+    int           attrib1;
+    int           attrib2;
+    FL_VALIDATE   validate;
 
     /* scroll stuff. */
 
-    FL_OBJECT * dummy;			/* only for the size of composite */
-    FL_OBJECT * hscroll;
-    FL_OBJECT * vscroll;
-    FL_OBJECT * input;
-    int         xoffset;
-    int         yoffset;
-    int         screenlines;
-    int         topline;
-    int         lines;			/* total number of lines in the field   */
-    int         xpos, ypos;		/* current cursor position in char,line */
-    int         cur_pixels;		/* current line length in pixels        */
-    int         max_pixels;		/* max length of all lines              */
-    int         max_pixels_line;
-    int         charh;			/* character height                     */
-    int         h,				/* text area                              */
-	            w;
-    double      hsize,
-	            vsize;
-    double      hval,
-	            vval;
-    double      hinc1,
-	            hinc2;
-    double      vinc1,
-	            vinc2;
-    int         h_pref,		/* scrollbar preference                 */
-	            v_pref;
-    int         vw,
-	            vw_def;
-    int         hh,
-	            hh_def;
-    int         h_on,
-	            v_on;
-    int         dead_area,
-	            attrib;
-    int         no_cursor;
-    int         field_char;
+    FL_OBJECT     * dummy;			/* only for the size of composite */
+    FL_OBJECT     * hscroll;
+    FL_OBJECT     * vscroll;
+    FL_OBJECT     * input;
+    int             xoffset;
+    int             yoffset;
+    int             screenlines;
+    int             topline;
+    int             lines;			/* total number of lines in the field   */
+    int             xpos, ypos;		/* current cursor position in char,line */
+    int             cur_pixels;		/* current line length in pixels        */
+    int             max_pixels;		/* max length of all lines              */
+    int             max_pixels_line;
+    int             charh;			/* character height                     */
+    int             h,				/* text area                            */
+	                w;
+    double          hsize,
+	                vsize;
+    double          hval,
+	                vval;
+    double          hinc1,
+	                hinc2;
+    double          vinc1,
+	                vinc2;
+    int             h_pref,		    /* scrollbar preference                 */
+	                v_pref;
+    int             vw,
+	                vw_def;
+    int             hh,
+	                hh_def;
+    int             h_on,
+	                v_on;
+    int             dead_area,
+	                attrib;
+    int             no_cursor;
+    int             field_char;
 } SPEC;
 
 
@@ -931,9 +931,9 @@ handle_edit( FL_OBJECT * ob,
  ***************************************/
 
 static int
-handle_key( FL_OBJECT *  ob,
-			int          key,
-			unsigned int kmask )
+handle_key( FL_OBJECT    * ob,
+			int            key,
+			unsigned int   kmask )
 {
     int i, ret = 1;
     SPEC *sp = ob->spec;
@@ -1119,7 +1119,7 @@ handle_key( FL_OBJECT *  ob,
  ***************************************/
 
 static int
-paste_it( FL_OBJECT *           ob,
+paste_it( FL_OBJECT           * ob,
 		  const unsigned char * thebytes,
 		  int                   nb )
 {
@@ -1282,7 +1282,7 @@ handle_it( FL_OBJECT * ob,
 		   FL_Coord    mx,
 		   FL_Coord    my,
 		   int         key,
-		   void *      ev )
+		   void      * ev )
 {
     SPEC *sp = ob->spec;
     static int motion,
@@ -1485,7 +1485,7 @@ input_pre( FL_OBJECT * ob,
 		   FL_Coord    mx,
 		   FL_Coord    my,
 		   int         key,
-		   void *      xev )
+		   void      * xev )
 {
     FL_OBJECT *ext = ob->parent;
 
@@ -1503,7 +1503,7 @@ input_post( FL_OBJECT * ob,
 		    FL_Coord    mx,
 		    FL_Coord    my,
 		    int         key,
-		    void *      xev )
+		    void      * xev )
 {
     FL_OBJECT *ext = ob->parent;
 
@@ -1624,7 +1624,7 @@ fake_handle( FL_OBJECT * ob,
 			 FL_Coord    mx   FL_UNUSED_ARG,
 			 FL_Coord    my   FL_UNUSED_ARG,
 			 int         key  FL_UNUSED_ARG,
-			 void *      ev   FL_UNUSED_ARG )
+			 void      * ev   FL_UNUSED_ARG )
 {
     SPEC *sp = ob->spec;
 
@@ -1718,14 +1718,14 @@ fl_add_input( int          type,
  ***************************************/
 
 void
-fl_set_input( FL_OBJECT *  ob,
+fl_set_input( FL_OBJECT  * ob,
 			  const char * str )
 {
     SPEC *sp = ob->spec;
     int len;
     char *p;
 
-    if ( ! str )
+    if ( ! str || ! *str )
 		str = "";
 
     len = strlen( str );
@@ -1842,8 +1842,8 @@ fl_set_input_return( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_input_scroll( FL_OBJECT *  ob,
-					 int          yes )
+fl_set_input_scroll( FL_OBJECT * ob,
+					 int         yes )
 {
     ( ( SPEC * ) ob->spec )->noscroll = ! yes;
 }
@@ -1892,8 +1892,8 @@ fl_set_input_selected_range( FL_OBJECT * ob,
 
 const char *
 fl_get_input_selected_range( FL_OBJECT * ob,
-							 int *       begin,
-							 int *       end )
+							 int       * begin,
+							 int       * end )
 {
     SPEC *sp = ob->spec;
     static char *selbuf;
@@ -2022,8 +2022,8 @@ fl_set_input_cursorpos( FL_OBJECT * ob,
 
 int
 fl_get_input_cursorpos( FL_OBJECT * ob,
-						int *       x,
-						int *       y )
+						int       * x,
+						int       * y )
 {
     SPEC *sp = ob->spec;
     int i,
@@ -2159,8 +2159,8 @@ fl_set_input_format( FL_OBJECT * ob,
 
 void
 fl_get_input_format( FL_OBJECT * ob,
-					 int *       fmt,
-					 int *       sep )
+					 int       * fmt,
+					 int       * sep )
 {
     SPEC *sp = ob->spec;
 
@@ -2354,7 +2354,7 @@ fl_get_input_xoffset( FL_OBJECT * ob )
 
 static void
 correct_topline( SPEC * sp,
-				 int *  top )
+				 int  * top )
 {
     if ( sp->lines > sp->screenlines )
     {
@@ -2699,7 +2699,7 @@ fl_set_input_cursor_visible( FL_OBJECT * ob,
 
 static void
 make_cursor_visible( FL_OBJECT * ob,
-					 SPEC *      sp,
+					 SPEC      * sp,
 					 int         startpos,
 					 int         prev )
 {

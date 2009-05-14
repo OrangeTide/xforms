@@ -2012,7 +2012,7 @@ fli_handle_form( FL_FORM * form,
 			/* Objects can declare that they want FL_MOTION events even
 			   though they're not "pushable" objects e.g. because they
 			   have some internal structure that depends on the mouse
-			   position (e.g. choice and counter objects) . */
+			   position (e.g. choice and counter objects). */
 
 			if ( obj != fli_pushobj && obj && obj->want_motion )
 				fli_handle_object( obj, FL_MOTION, x, y, key, xev );

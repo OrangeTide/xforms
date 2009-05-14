@@ -61,12 +61,13 @@ handle( FL_OBJECT * ob,
 {
     switch ( event )
     {
-		case FL_ATTRIB:
+		case FL_ATTRIB :
+			fprintf( stderr, "SB\n" );
 			attrib_change( ob );
 			get_geom( ob );
 			break;
 
-		case FL_DRAW:
+		case FL_DRAW :
 			attrib_change( ob );
 			get_geom( ob );
 			if ( IsThin( ob->type ) )
@@ -74,11 +75,11 @@ handle( FL_OBJECT * ob,
 							ob->col1, ob->bw );
 			/* fall through */
 
-		case FL_DRAWLABEL:
+		case FL_DRAWLABEL :
 			fl_draw_object_label_outside( ob );
 			break;
 
-		case FL_FREEMEM:
+		case FL_FREEMEM :
 			/* children will take care of themselves */
 			fl_free( ob->spec );
 			break;
