@@ -1357,6 +1357,9 @@ FL_EXPORT FL_OBJECT * fl_make_object( int			 objclass,
 									  const char   * label,
 									  FL_HANDLEPTR   handle );
 
+FL_EXPORT void fl_add_child( FL_OBJECT *,
+							 FL_OBJECT * );
+
 FL_EXPORT void fl_set_coordunit( int u );
 
 FL_EXPORT void fl_set_border_width( int bw );

@@ -59,8 +59,8 @@ static void delete_form( FLI_FORMBROWSER_SPEC * sp,
 
 static void display_forms( FLI_FORMBROWSER_SPEC * sp );
 
-static void form_callback( FL_OBJECT * ob,
-						   void      * data );
+static void noop_cb( FL_OBJECT * ob,
+					 void      * data );
 
 static int handle( FL_OBJECT * ob,
 				   int         event,
@@ -106,11 +106,13 @@ fl_create_formbrowser( int          type,
     ob->col1 = FL_FORMBROWSER_COL1;
     ob->col2 = FL_BLACK;
 
+	fl_set_object_callback( ob, noop_cb, 0 );
+
     absbw = FL_abs( ob->bw );
 
     ob->spec_size = sizeof *sp;
     sp = ob->spec = fl_calloc( 1, ob->spec_size );
-    sp->form = fl_malloc( 1 );
+    sp->form = NULL;
 
     sp->parent = ob;
 
@@ -152,6 +154,10 @@ fl_create_formbrowser( int          type,
     sp->vsl->resize = FL_RESIZE_Y;
     fl_set_object_callback( sp->vsl, vcb, 0 );
 
+    fl_add_child( ob, sp->canvas );
+    fl_add_child( ob, sp->hsl );
+    fl_add_child( ob, sp->vsl );
+
     fl_set_coordunit( oldu );
     return ob;
 }
@@ -170,14 +176,8 @@ fl_add_formbrowser( int          type,
 {
 
     FL_OBJECT *ob = fl_create_formbrowser( type, x, y, w, h, label );
-    FLI_FORMBROWSER_SPEC *sp = ob->spec;
-
-    fli_add_child( ob, sp->canvas );
-    fli_add_child( ob, sp->hsl );
-    fli_add_child( ob, sp->vsl );
 
     fl_add_object( fl_current_form, ob );
-
     return ob;
 }
 
@@ -279,7 +279,7 @@ fl_addto_formbrowser( FL_OBJECT * ob,
 		fl_hide_form( form );
 
 	if ( ! form->form_callback )
-		fl_set_form_callback( form, form_callback, 0 );
+		fl_set_form_callback( form, noop_cb, 0 );
 
 	parentize_form( form, ob );
 	sp->form = fl_realloc( sp->form, ( sp->nforms + 1 ) * sizeof *sp->form );
@@ -874,8 +874,8 @@ canvas_cleanup( FL_OBJECT * ob )
  ***************************************/
 
 static void
-form_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-			   void      * data  FL_UNUSED_ARG )
+noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 void      * data  FL_UNUSED_ARG )
 {
 }
 

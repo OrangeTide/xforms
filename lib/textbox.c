@@ -29,6 +29,11 @@
  *
  */
 
+/*
+ * Please note: this object is for internal use only (as a child object
+ * of a browser object)!
+ */
+
 #if defined F_ID || defined DEBUG
 char *fl_id_brw = "$Id: textbox.c,v 1.23 2009/05/02 20:11:13 jtt Exp $";
 #endif
@@ -571,15 +576,10 @@ correct_topline( FL_OBJECT * ob )
 		return;
 	}
 
-	if ( ! br->v_on )
+	sp->topline = FL_nint( fl_get_scrollbar_value( br->vsl ) 
+						   * ( sp->lines - sp->screenlines ) ) + 1;
+	if ( sp->topline < 1 )
 		sp->topline = 1;
-	else
-	{
-		sp->topline = FL_nint( fl_get_scrollbar_value( br->vsl ) 
-							   * ( sp->lines - sp->screenlines ) ) + 1;
-		if ( sp->topline < 1 )
-			sp->topline = 1;
-	}
 }
 
 
@@ -1029,8 +1029,7 @@ handle_missed_deselection( FL_OBJECT * ob,
 }
 
 
-enum
-{
+enum {
     NOEVENT,
 	SELECTEVENT,
 	DESELECTEVENT,
@@ -1176,31 +1175,31 @@ handle_keyboard( FL_OBJECT * ob,
     int old = sp->selectline;
 
     if ( IsHome( key ) )
-		fl_set_browser_topline( ob, 1 );
+		fl_set_browser_topline( ob->parent, 1 );
     else if ( IsEnd( key ) )
-		fl_set_browser_topline( ob, sp->lines - sp->screenlines + 1 );
+		fl_set_browser_topline( ob->parent, sp->lines - sp->screenlines + 1 );
     else if ( IsPageUp( key ) )
-		fl_set_browser_topline( ob, sp->topline - sp->screenlines );
+		fl_set_browser_topline( ob->parent, sp->topline - sp->screenlines );
     else if ( IsHalfPageUp( key ) )
-		fl_set_browser_topline( ob, sp->topline - sp->screenlines / 2 );
+		fl_set_browser_topline( ob->parent, sp->topline - sp->screenlines / 2 );
     else if ( Is1LineUp( key ) )
-		fl_set_browser_topline( ob, sp->topline - 1 );
+		fl_set_browser_topline( ob->parent, sp->topline - 1 );
 	else if ( IsPageDown( key ) || key == ' ' )
-		fl_set_browser_topline( ob, sp->topline + sp->screenlines );
+		fl_set_browser_topline( ob->parent, sp->topline + sp->screenlines );
     else if ( IsHalfPageDown( key ) )
-		fl_set_browser_topline( ob, sp->topline + sp->screenlines / 2 );
+		fl_set_browser_topline( ob->parent, sp->topline + sp->screenlines / 2 );
     else if ( Is1LineDown( key ) )
-		fl_set_browser_topline( ob, sp->topline + 1 );
+		fl_set_browser_topline( ob->parent, sp->topline + 1 );
     else if ( IsLeft( key ) )
-		fl_set_browser_xoffset( ob, sp->xoffset - 3 );
+		fl_set_browser_xoffset( ob->parent, sp->xoffset - 3 );
     else if ( IsRight( key ) )
-		fl_set_browser_xoffset( ob, sp->xoffset + 3 );
+		fl_set_browser_xoffset( ob->parent, sp->xoffset + 3 );
     else if ( IsUp( key ) )
     {
 		if (    ob->type == FLI_NORMAL_TEXTBOX
 			 || ob->type == FLI_SELECT_TEXTBOX
 			 || ob->type == FLI_MULTI_TEXTBOX )
-			fl_set_browser_topline( ob, sp->topline - 1 );
+			fl_set_browser_topline( ob->parent, sp->topline - 1 );
 		else if ( ob->type == FLI_HOLD_TEXTBOX )
 		{
 			fli_select_textbox_line( ob, sp->selectline - 1, 1 );
@@ -1208,9 +1207,9 @@ handle_keyboard( FL_OBJECT * ob,
 			/* bring the selection into view if necessary */
 
 			if ( sp->selectline < sp->topline )
-				fl_set_browser_topline( ob, sp->selectline );
+				fl_set_browser_topline( ob->parent, sp->selectline );
 			else if ( sp->selectline - sp->topline >= sp->screenlines )
-				fl_set_browser_topline( ob,
+				fl_set_browser_topline( ob->parent,
 										sp->selectline - sp->screenlines / 2 );
 		}
     }
@@ -1219,7 +1218,7 @@ handle_keyboard( FL_OBJECT * ob,
 		if (    ob->type == FLI_NORMAL_TEXTBOX
 			 || ob->type == FLI_SELECT_TEXTBOX
 			 || ob->type == FLI_MULTI_TEXTBOX )
-			fl_set_browser_topline( ob, sp->topline + 1 );
+			fl_set_browser_topline( ob->parent, sp->topline + 1 );
 		else if ( ob->type == FLI_HOLD_TEXTBOX )
 		{
 			fli_select_textbox_line( ob, sp->selectline + 1, 1 );
@@ -1227,15 +1226,15 @@ handle_keyboard( FL_OBJECT * ob,
 			/* bring the selection into view if necessary */
 			
 			if ( sp->selectline - sp->topline >= sp->screenlines )
-				fl_set_browser_topline( ob,
+				fl_set_browser_topline( ob->parent,
 										sp->selectline - sp->screenlines + 1 );
 			else if ( sp->selectline < sp->topline )
-				fl_set_browser_topline(ob,
-									   sp->selectline - sp->screenlines / 2 );
+				fl_set_browser_topline( ob->parent,
+										sp->selectline - sp->screenlines / 2 );
 		}
     }
 
-    fli_adjust_browser_scrollbar( ob );
+    fli_adjust_browser_scrollbar( ob->parent );
 
     return old != sp->selectline;
 }
@@ -1277,7 +1276,7 @@ handle_textbox( FL_OBJECT * ob,
 				sp->drawtype = COMPLETE;
 			}
 
-			/* due to form freeze, both slider & selection can change */
+			/* Due to form freeze, both slider & selection can change */
 
 			if ( sp->drawtype & VSLIDER )
 				draw_slider_motion( ob );
@@ -1313,9 +1312,9 @@ handle_textbox( FL_OBJECT * ob,
 			if ( event_type == SELECTEVENT || event_type == DESELECTEVENT )
 			{
 				if ( my < ob->y )
-					fl_set_browser_topline( ob, sp->topline - 1 );
+					fl_set_browser_topline( ob->parent, sp->topline - 1 );
 				else if ( my > ob->y + ob->h )
-					fl_set_browser_topline( ob, sp->topline + 1 );
+					fl_set_browser_topline( ob->parent, sp->topline + 1 );
 			}
 
 			if ( handle_mouse( ob, mx, my, xev ) )
@@ -1458,6 +1457,7 @@ fli_set_textbox_topline( FL_OBJECT * ob,
     sp->topline = line;
     fl_redraw_object( ob );
     sp->drawtype = COMPLETE;
+
     return sp->topline;
 }
 

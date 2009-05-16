@@ -134,6 +134,15 @@ static void make_cursor_visible( FL_OBJECT *,
 								 SPEC *,
 								 int,
 								 int );
+static int date_validator( FL_OBJECT *,
+						   const char *,
+						   const char *,
+						   int );
+static int float_int_validator( FL_OBJECT *,
+								const char *,
+								const char *,
+								int );
+
 
 enum {
     NORMAL_SELECT,
@@ -1237,7 +1246,7 @@ lose_selection( FL_OBJECT * ob,
     if ( ! ob->focus )
 		sp->position = -1;
     else if ( sp->position < 0 )
-		sp->position = strlen( sp->str ? sp->str : "" );
+		sp->position = sp->str ? strlen( sp->str ) : 0;
     fl_redraw_object( sp->input );
     fl_update_display( 0 );
     return 0;
@@ -1531,16 +1540,6 @@ input_cb( FL_OBJECT * ob,
 }
 
 
-static int date_validator( FL_OBJECT *,
-						   const char *,
-						   const char *,
-						   int );
-static int float_int_validator( FL_OBJECT *,
-								const char *,
-								const char *,
-								int );
-
-
 /***************************************
  * creates an object
  ***************************************/
@@ -1674,25 +1673,25 @@ fl_add_input( int          type,
 
     if ( ob->type == FL_MULTILINE_INPUT )
     {
-		fl_set_object_label( ob, "" );
+		fl_set_object_label( ob, NULL );
 		sp->dummy = fl_create_box( FL_MULTILINE_INPUT, x, y, w, h, label );
 		sp->dummy->objclass = FL_INPUT;
 		copy_attributes( ob, sp->dummy );
 		sp->dummy->handle = fake_handle;
 		sp->dummy->spec = sp;
 
-		fli_add_child( sp->dummy, ob );
+		fl_add_child( sp->dummy, ob );
 
 		sp->hh_def = sp->vw_def = fli_get_default_scrollbarsize( ob );
 		sp->h_pref = sp->v_pref = FL_AUTO;
 		sp->vscroll = fl_create_scrollbar( fli_context->vscb,
 										   x + w - sp->vw_def,
-										   y, sp->vw_def, h, "" );
+										   y, sp->vw_def, h, NULL );
 		fl_set_object_resize( sp->vscroll, FL_RESIZE_NONE );
 
 		sp->hscroll = fl_create_scrollbar( fli_context->hscb, x,
 										   y + h - sp->hh_def,
-										   w, sp->hh_def, "" );
+										   w, sp->hh_def, NULL );
 
 		fl_set_object_resize( sp->hscroll, FL_RESIZE_NONE );
 
@@ -1701,8 +1700,8 @@ fl_add_input( int          type,
 		fl_set_scrollbar_value( sp->hscroll, 0.0 );
 		fl_set_object_callback( sp->hscroll, hsl_cb, 0 );
 
-		fli_add_child( sp->dummy, sp->hscroll );
-		fli_add_child( sp->dummy, sp->vscroll );
+		fl_add_child( sp->dummy, sp->hscroll );
+		fl_add_child( sp->dummy, sp->vscroll );
 		fl_set_object_callback( sp->input, input_cb, 0 );
     }
 
@@ -1725,7 +1724,7 @@ fl_set_input( FL_OBJECT  * ob,
     int len;
     char *p;
 
-    if ( ! str || ! *str )
+    if ( ! str )
 		str = "";
 
     len = strlen( str );

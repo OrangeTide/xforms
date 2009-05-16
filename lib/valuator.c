@@ -165,8 +165,8 @@ fli_set_valuator_return( FL_OBJECT * ob,
 
 double
 fli_clamp( double val,
-		  double min,
-		  double max)
+		   double min,
+		   double max)
 {
     double vmin = FL_min( min, max ),
 		   vmax = FL_max( min, max );

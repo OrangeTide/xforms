@@ -39,8 +39,8 @@
  ***************************************/
 
 void
-fli_add_child( FL_OBJECT * parent,
-			   FL_OBJECT * child )
+fl_add_child( FL_OBJECT * parent,
+			  FL_OBJECT * child )
 {
     FL_OBJECT *t;
 
@@ -339,7 +339,7 @@ fli_mark_composite_for_redraw( FL_OBJECT * ob )
 
 /***************************************
  * copy the parent attributes. gravity stuff is taken care of by
- * fli_add_child()
+ * fl_add_child()
  ***************************************/
 
 void

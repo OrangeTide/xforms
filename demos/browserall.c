@@ -1,22 +1,20 @@
 /*
+ *  This file is part of XForms.
  *
- * This file is part of XForms.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
- *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with XForms; see the file COPYING.  If not, write to
+ *  the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
+ *  MA 02111-1307, USA.
  */
 
 
@@ -62,7 +60,7 @@ main( int    argc,
 }
 
 
-static char *bnames[ ] =
+static const char *bnames[ ] =
 {
     "NORMAL_BROWSER",
 	"SELECT_BROWSER",
@@ -121,18 +119,23 @@ br_callback( FL_OBJECT * ob,
 			 long        arg )
 {
     char buf[ 1024 ];
-    char *mb[ ] = { "", "left", "middle", "right" };
-    int i,
-		b;
+    const char *mb[ ] = { "left", "middle", "right",
+						  "scroll-up", "scroll-down" };
+    int i;
 
-    if ( ( b = fl_mouse_button( ) ) < FL_SHORTCUT )
-		sprintf( buf, "In %s [%s]: ", bnames[ arg ], mb[ b ] );
+    if (    ( i = fl_mouse_button( ) ) >= FL_LEFT_MOUSE
+		 && i <= FL_SCROLLDOWN_MOUSE )
+		sprintf( buf, "In %s [%s]: ", bnames[ arg ], mb[ i - FL_LEFT_MOUSE ] );
     else
-		sprintf( buf,"In %s: ", bnames[ arg ] );
-    i = fl_get_browser( ob );
-    strcat( buf, fl_get_browser_line( ob, i > 0 ? i : -i ) );
-    strcat( buf, i > 0 ? " was selected" : " was deselected." );
-    fl_set_object_label( readout, buf );
+		sprintf( buf, "In %s: ", bnames[ arg ] );
+
+	if ( ( i = fl_get_browser( ob ) ) )
+	{
+		strcat( buf, fl_get_browser_line( ob, i > 0 ? i : -i ) );
+		strcat( buf, i > 0 ? " was selected" : " was deselected." );
+	}
+
+	fl_set_object_label( readout, buf );
 }
 
 
@@ -159,21 +162,28 @@ link_browsers( FL_OBJECT * ob,
 			   long        data  FL_UNUSED_ARG )
 {
     int sync = fl_get_button( ob );
+	int topline;
+	int i;
 
     fl_set_object_label( ob, sync ? "Unlink": "Link" );
 
     if ( sync )
     {
-       fl_set_browser_vscrollbar( br[ 1 ], FL_OFF );
-       fl_set_browser_vscrollbar( br[ 2 ], FL_OFF );
-       fl_set_browser_vscrollbar( br[ 3 ], FL_OFF );
+		topline = fl_get_browser_topline( br[ 0 ] );
+
+		for ( i = 1; i <= 3; i++ )
+		{
+			fl_set_browser_topline( br[ i ], topline );
+			fl_set_browser_vscrollbar( br[ i ], FL_OFF );
+		}
        fl_set_browser_vscroll_callback( br[ 0 ], vcallback, 0 );
+
+
     }
     else
     {
-       fl_set_browser_vscrollbar( br[ 1 ], FL_ON );
-       fl_set_browser_vscrollbar( br[ 2 ], FL_ON );
-       fl_set_browser_vscrollbar( br[ 3 ], FL_ON );
+		for ( i = 1; i <= 3; i++ )
+			fl_set_browser_vscrollbar( br[ i ], FL_ON );
        fl_set_browser_vscroll_callback( br[ 0 ], NULL, 0 );
     }
 }
@@ -190,7 +200,7 @@ create_form( void )
 	form = fl_bgn_form( FL_UP_BOX, 700, 570 );
 
 	readout = fl_add_text( FL_NORMAL_TEXT, 50, 30, 600, 50, "" );
-	fl_set_object_lsize( readout, FL_LARGE_SIZE );
+	fl_set_object_lsize( readout, FL_NORMAL_SIZE );
 	fl_set_object_lalign( readout, FL_ALIGN_CENTER );
 	fl_set_object_lstyle( readout, FL_BOLD_STYLE );
 	fl_set_object_boxtype( readout, FL_UP_BOX );

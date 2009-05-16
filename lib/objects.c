@@ -2435,7 +2435,7 @@ fl_set_object_callback( FL_OBJECT      * obj,
 
     if ( ! obj )
     {
-		M_err( "fl_set_object_callback", "NULL object." );
+		M_err( "fl_set_object_callback", "NULL object" );
 		return NULL;
     }
 
@@ -2724,7 +2724,7 @@ fl_draw_object_label( FL_OBJECT * obj )
 void
 fl_draw_object_label_outside( FL_OBJECT * obj )
 {
-    fl_drw_text_beside( obj->align & ~FL_ALIGN_INSIDE, obj->x, obj->y, obj->w,
+    fl_drw_text_beside( obj->align & ~ FL_ALIGN_INSIDE, obj->x, obj->y, obj->w,
 						obj->h, obj->lcol, obj->lstyle, obj->lsize,
 						obj->label );
 }

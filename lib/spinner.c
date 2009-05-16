@@ -108,20 +108,18 @@ handle_spinner( FL_OBJECT * obj,
 				int         key  FL_UNUSED_ARG,
 				void *      ev   FL_UNUSED_ARG )
 {
-    FLI_SPINNER_SPEC *sp = obj->spec;
-
 	switch ( event )
 	{
 		case FL_DRAW :
-			/* Why can't this be handled via FL_RESIZED events? */
 			set_geom( obj );
 
 		case FL_DRAWLABEL :
 			fl_draw_object_label_outside( obj );
 			break;
 
-		default :
-			fprintf( stderr, "Got event %d\n", event );
+		case FL_FREEMEM :
+			fl_safe_free( obj->spec );
+			break;
 	}
 
 	return 0;
@@ -140,6 +138,12 @@ spinner_callback( FL_OBJECT * obj,
 	char *eptr;
 	int max_len = 4 + sp->prec + log10( DBL_MAX );
 	char buf[ max_len ];
+
+	/* If one of the buttons was pressed and the input object doesn't have
+	   the focus make it the object that has the focus */
+
+	if ( data != 0 && fl_get_focus_object( obj->parent->form ) != sp->input )
+		fl_set_focus_object( obj->parent->form, sp->input );
 
 	if ( obj->parent->type == FL_INT_SPINNER )
 	{ 
@@ -171,7 +175,7 @@ spinner_callback( FL_OBJECT * obj,
 	{
 		double f_val = strtod( s_val, &eptr );
 
-		if (    *eptr != '\0'
+		if (    ( *eptr != '\0' && *eptr != 'e' && *eptr != 'E' )
 			 || errno == ERANGE
 			 || f_val > sp->f_max
 			 || f_val < sp->f_min )
@@ -273,9 +277,9 @@ fl_create_spinner( int          type,
 	sp->orient = orient;
 	sp->prec = 1;
 
-    fli_add_child( obj, sp->input );
-    fli_add_child( obj, sp->up );
-    fli_add_child( obj, sp->down );
+    fl_add_child( obj, sp->input );
+    fl_add_child( obj, sp->up );
+    fl_add_child( obj, sp->down );
 
 	fl_set_input( sp->input, type == FL_INT_SPINNER ? "0" : "0.0" );
 
@@ -299,4 +303,271 @@ fl_add_spinner( int          type,
     fl_add_object( fl_current_form, obj );
 
     return obj;
+}
+
+
+/***************************************
+ ***************************************/
+
+double
+fl_get_spinner_value( FL_OBJECT * obj )
+{
+	FLI_SPINNER_SPEC *sp = obj->spec;
+	const char *s_val = fl_get_input( sp->input );
+	char *eptr;
+
+	if ( obj->parent->type == FL_INT_SPINNER )
+	{ 
+		long i_val = strtol( s_val, &eptr, 10 );
+
+		if ( *eptr != '\0' || i_val > sp->i_max || i_val < sp->i_min )
+			i_val = sp->i_val;
+
+		return sp->i_val = i_val;
+	}
+	else
+	{
+		double f_val = strtod( s_val, &eptr );
+
+		if (    ( *eptr != '\0' && *eptr != 'e' && *eptr != 'E' )
+			 || errno == ERANGE
+			 || f_val > sp->f_max
+			 || f_val < sp->f_min )
+			f_val = sp->f_val;
+		
+		if ( *eptr != '\0' )
+		{
+			int max_len = 4 + sp->prec + log10( DBL_MAX );
+			char buf[ max_len ];
+
+			sprintf( buf, "%.*f", sp->prec, f_val );
+			fl_set_input( sp->input, buf );
+		}
+
+		return sp->f_val = f_val;
+	}
+}
+
+
+/***************************************
+ ***************************************/
+
+double
+fl_set_spinner_value( FL_OBJECT * obj,
+					  double      val )
+{
+	FLI_SPINNER_SPEC *sp = obj->spec;
+	int max_len = 4 + sp->prec + log10( DBL_MAX );
+	char buf[ max_len ];
+
+	if ( obj->type == FL_INT_SPINNER )
+	{
+		sp->i_val = FL_nint( val );
+
+		if ( val > sp->i_max )
+			sp->i_val = sp->i_max;
+		else if ( val < sp->i_min )
+			sp->i_val = sp->i_min;
+
+		sprintf( buf, "%d", sp->i_val );
+		fl_set_input( sp->input, buf );
+
+		return sp->i_val;
+	}
+
+	sp->f_val = val;
+
+	if ( val > sp->f_max )
+		sp->f_val = sp->f_max;
+	else if ( val < sp->f_min )
+		sp->f_val = sp->f_min;
+
+	sprintf( buf, "%.*f", sp->prec, sp->f_val );
+	fl_set_input( sp->input, buf );
+
+	return sp->f_val;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_spinner_bounds( FL_OBJECT * obj,
+					   double      min,
+					   double      max )
+{
+	FLI_SPINNER_SPEC *sp = obj->spec;
+	double tmp;
+
+	if ( min > max )
+	{
+		tmp = min;
+		min = max;
+		max = min;
+	}
+
+	if ( obj->type == FL_INT_SPINNER )
+	{
+		sp->i_min = FL_nint( min );
+		sp->i_min = FL_nint( max );
+
+		if ( min < INT_MIN )
+			sp->i_min = INT_MIN;
+		else if ( min > INT_MAX )
+			sp->i_min = INT_MAX;
+
+		if ( max < INT_MIN )
+			sp->i_max = INT_MIN;
+		else if ( max > INT_MAX )
+			sp->i_max = INT_MAX;
+
+		fl_get_spinner_value( obj );
+		fl_set_spinner_value( obj, sp->i_val );
+	}
+	else
+	{
+		sp->f_min = min;
+		sp->f_min = max;
+
+		if ( min < - DBL_MAX )
+			sp->f_min = - DBL_MAX;
+		else if ( min > DBL_MAX )
+			sp->f_min = DBL_MAX;
+
+		if ( max < - DBL_MAX )
+			sp->f_max = - DBL_MAX;
+		else if ( max > DBL_MAX )
+			sp->f_max = DBL_MAX;
+
+		fl_get_spinner_value( obj );
+		fl_set_spinner_value( obj, sp->f_val );
+	}
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_get_spinner_bounds( FL_OBJECT * obj,
+					   double    * min,
+					   double    * max )
+{
+	FLI_SPINNER_SPEC *sp = obj->spec;
+
+	if ( obj->type == FL_INT_SPINNER )
+	{
+		*min = sp->i_min;
+		*max = sp->i_max;
+	}
+	else
+	{
+		*min = sp->f_min;
+		*max = sp->f_max;
+	}
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_spinner_step( FL_OBJECT * obj,
+					 double      step )
+{
+	FLI_SPINNER_SPEC *sp = obj->spec;
+
+	if ( step <= 0.0 )
+		return;
+
+	if ( obj->type == FL_INT_SPINNER )
+	{
+		if ( FL_nint( step ) > sp->i_max - sp->i_min )
+			sp->i_incr = sp->i_max - sp->i_min;
+		else
+			sp->i_incr = FL_nint( step );
+	}
+	else
+	{
+		if ( step > sp->f_max - sp->f_min )
+			sp->f_incr = sp->f_max - sp->f_min;
+		else
+			sp->f_incr = step;
+	}
+}
+
+
+/***************************************
+ ***************************************/
+
+double
+fl_get_spinner_step( FL_OBJECT * obj )
+{
+	FLI_SPINNER_SPEC *sp = obj->spec;
+
+	return obj->type == FL_INT_SPINNER ? sp->i_incr : sp->f_incr;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_spinner_precision( FL_OBJECT * obj,
+						  int         prec )
+{
+    FLI_SPINNER_SPEC *sp = obj->spec;
+
+	if ( prec < 0 )
+		return;
+
+	if ( prec > DBL_DIG )
+		prec = DBL_DIG;
+
+    if ( sp->prec != prec )
+    {
+		sp->prec = prec;
+		fl_set_spinner_value( obj, fl_get_spinner_value( obj ) );
+    }
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_get_spinner_precision( FL_OBJECT * obj )
+{
+	return ( ( FLI_SPINNER_SPEC * ) obj->spec )->prec;
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_OBJECT *
+fl_get_spinner_input( FL_OBJECT * obj )
+{
+	return ( ( FLI_SPINNER_SPEC * ) obj->spec )->input;
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_OBJECT *
+fl_get_spinner_up_button( FL_OBJECT * obj )
+{
+	return ( ( FLI_SPINNER_SPEC * ) obj->spec )->up;
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_OBJECT *
+fl_get_spinner_down_button( FL_OBJECT * obj )
+{
+	return ( ( FLI_SPINNER_SPEC * ) obj->spec )->down;
 }

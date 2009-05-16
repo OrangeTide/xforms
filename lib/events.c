@@ -368,7 +368,7 @@ fli_object_qtest( void )
 
 
 /***************************************
- * reads an object from the queue.
+ * Reads an object from the queue
  ***************************************/
 
 FL_OBJECT *
@@ -382,18 +382,71 @@ fli_object_qread( void )
     if ( ! obj->form )
         return NULL;
 
+	/* If the object has a callback execute it and return NULL unless the
+	   object is a child object */
+
     if ( obj->object_callback )
     {
         obj->object_callback( obj, obj->argument );
-        return NULL;
+
+		if ( ! obj->parent )
+			return NULL;
+	}
+
+	/* If the object is a child object check if there is a callback for
+	   the parent and execute that (and return NULL in that case). In
+	   between also check if there are further events for other children
+	   of the parent in the queue and also execute their callbacks. */
+
+	if ( obj->parent )
+	{
+		obj = obj->parent;
+
+		while ( obj->parent )
+		{
+			if ( obj->object_callback )
+				obj->object_callback( obj, obj->argument );
+			obj = obj->parent;
+		}
+
+		while ( 1 )
+		{
+			FL_OBJECT *n, *p;
+
+			if ( ! ( ( n = fli_object_qtest( ) ) && n->parent ) )
+				break;
+
+			p = n->parent;
+			while ( p->parent )
+				p = p->parent;
+
+			if ( p != obj )
+				break;
+
+			n = fli_get_from_obj_queue( );
+			do
+				if ( n->object_callback )
+					n->object_callback( n, n->argument );
+			while ( ( n = n->parent ) != obj );
+		}
+	}
+
+	/* If we arrive here the original object either was a child object 
+	   or it had no callback. Run either the parent callback or the forms
+	   callback (if there's one). */
+
+	if ( obj->object_callback )
+	{
+		obj->object_callback( obj, obj->argument );
+		return NULL;
     }
     else if ( obj->form->form_callback )
     {
         obj->form->form_callback( obj, obj->form->form_cb_data );
         return NULL;
     }
-
-    return obj;
+ 
+   return obj;
 }
 
 

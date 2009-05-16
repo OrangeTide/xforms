@@ -1,3 +1,23 @@
+2009-05-16 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/events.c: Objects consisting just of child objects
+	weren't handled correctly in that they never got returned
+	by fl_do_forms().
+
+	* lib/browser.c, lib/formbrowser.c, lib/scrollbar.c,
+	lib/tabfolder.c: these objects are created with a default
+	callback that does nothing to keep them reported by
+	fl_do_forms() (for backward compatibility reasons).
+	Also quite a bit of cleanup in lib/browser.c
+
+	* lib/spinner.c, lib/include/spinner.h, lib/private/pspinner.h:
+	new widget added, very similar to counter object (but realized
+	just using already existing objects).
+
+	* lib/child.c, lib/include/Basic.h: fl_add_child() is
+	am exported function now (again) since it might be
+	rather useful for creating new, composite widgets.
+
 2009-05-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/Makefile: Added a few include directories

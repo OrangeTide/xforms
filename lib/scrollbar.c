@@ -62,7 +62,6 @@ handle( FL_OBJECT * ob,
     switch ( event )
     {
 		case FL_ATTRIB :
-			fprintf( stderr, "SB\n" );
 			attrib_change( ob );
 			get_geom( ob );
 			break;
@@ -284,6 +283,16 @@ down_cb( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
+static void
+noop_cb( FL_OBJECT * obj   FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
+{
+}
+
+
+/***************************************
+ ***************************************/
+
 FL_OBJECT *
 fl_create_scrollbar( int          type,
 					 FL_Coord     x,
@@ -300,6 +309,8 @@ fl_create_scrollbar( int          type,
     obj->spec = sp = fl_calloc( 1, obj->spec_size );
     obj->col1 = obj->col2 = FL_COL1;
     obj->align = FL_ALIGN_BOTTOM;
+
+	fl_set_object_callback( obj, noop_cb, 0 );
 
     if ( IsThin( type ) )
 		obj->boxtype = FL_DOWN_BOX;
@@ -370,9 +381,9 @@ fl_create_scrollbar( int          type,
     fl_set_object_callback( sp->slider, slider_cb, 0 );
     get_geom( obj );
 
-    fli_add_child( obj, sp->slider );
-    fli_add_child( obj, sp->down );
-    fli_add_child( obj, sp->up );
+    fl_add_child( obj, sp->slider );
+    fl_add_child( obj, sp->down );
+    fl_add_child( obj, sp->up );
 
     return obj;
 }

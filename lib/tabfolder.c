@@ -199,13 +199,13 @@ canvas_cleanup( FL_OBJECT * ob )
 
 
 /***************************************
- * for all the folders, we set a dummy form callback to prevent
- * the object on the form from leaking thru fl_do_forms
+ * For the object itself and all the folders set a dummy form callback
+ * to prevent the objects from leaking thru fl_do_forms
  ***************************************/
 
 static void
-form_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-			   void      * data  FL_UNUSED_ARG )
+noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 void      * data  FL_UNUSED_ARG )
 {
 }
 
@@ -244,6 +244,8 @@ fl_create_tabfolder( int          type,
     sp->v_pad = 5;
     sp->auto_fit = FL_NO;
 
+	fl_set_object_callback( ob, noop_cb, 0 );
+
     sp->canvas = fl_create_canvas( FL_SCROLLED_CANVAS, sp->x, sp->y,
 								   ob->w - 2 * absbw,
 								   ob->h - 2 * absbw, label ? label : "tab" );
@@ -277,7 +279,7 @@ fl_add_tabfolder( int          type,
     FL_OBJECT *ob = fl_create_tabfolder( type, x, y, w, h, l );
     SPEC *sp = ob->spec;
 
-    fli_add_child( ob, sp->canvas );
+    fl_add_child( ob, sp->canvas );
     fl_add_object( fl_current_form, ob );
 
     return ob;
@@ -488,7 +490,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     /* plug the possible object leakage thru fl_do_forms */
 
     if ( ! form->form_callback )
-		fl_set_form_callback( form, form_callback, 0 );
+		fl_set_form_callback( form, noop_cb, 0 );
 
     sp->forms[ sp->nforms ] = form;
     form->attached = 1;
@@ -508,7 +510,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     sp->nforms++;
     compute_position( ob );
 
-    fli_add_child( ob, tab );
+    fl_add_child( ob, tab );
 
     if ( sp->nforms == 1 )
     {
@@ -608,7 +610,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
     {
 		deleted->visible = 0;
 
-		if ( theform->form_callback == form_callback )
+		if ( theform->form_callback == noop_cb )
 			theform->form_callback = NULL;
 
 		if ( theform->visible == FL_VISIBLE )

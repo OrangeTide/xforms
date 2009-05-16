@@ -39,4 +39,34 @@ FL_EXPORT FL_OBJECT * fl_add_spinner( int			 type,
 									  FL_Coord	 h,
 									  const char * label );
 
+FL_EXPORT double fl_get_spinner_value( FL_OBJECT * obj );
+
+FL_EXPORT double fl_set_spinner_value( FL_OBJECT * obj,
+									   double      val );
+
+FL_EXPORT void fl_set_spinner_bounds( FL_OBJECT * obj,
+									  double      min,
+									  double      max );
+
+FL_EXPORT void fl_get_spinner_bounds( FL_OBJECT * obj,
+									  double    * min,
+									  double    * max );
+
+FL_EXPORT void fl_set_spinner_step( FL_OBJECT * obj,
+									double      step );
+
+FL_EXPORT double fl_get_spinner_step( FL_OBJECT * obj );
+
+FL_EXPORT void fl_set_spinner_precision( FL_OBJECT * obj,
+										 int         prec );
+
+FL_EXPORT int fl_get_spinner_precision( FL_OBJECT * obj );
+
+FL_EXPORT FL_OBJECT * fl_get_spinner_input( FL_OBJECT * obj );
+
+FL_EXPORT FL_OBJECT * fl_get_spinner_up_button( FL_OBJECT * obj );
+
+FL_EXPORT FL_OBJECT * fl_get_spinner_down_button( FL_OBJECT * obj );
+
+
 #endif /* ! defined FL_SPINNER_H */
