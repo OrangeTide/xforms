@@ -36,6 +36,8 @@ typedef struct {
 
 	int         orient;
 	int         prec;
+
+	int         need_geom_recalc;
 } FLI_SPINNER_SPEC;
 
 

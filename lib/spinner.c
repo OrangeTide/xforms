@@ -46,7 +46,7 @@ set_geom( FL_OBJECT * obj )
 
 		sp->input->x = obj->x;
 		sp->input->y = obj->y;
-		sp->input->w = obj->w - bwh;
+		sp->input->w = obj->w - bwh - 1;
 		sp->input->h = obj->h;
 
 		sp->up->x = sp->down->x = obj->x + obj->w - bwh - 1;
@@ -75,7 +75,7 @@ set_geom( FL_OBJECT * obj )
 		sp->input->x = obj->x;
 		sp->input->y = obj->y;
 		sp->input->w = obj->w;
-		sp->input->h = obj->h - bwh;
+		sp->input->h = obj->h - bwh - 1;
 
 		sp->up->y = sp->down->y = obj->y + obj->h - bwh - 1;
 		sp->up->x = obj->x + bwh;
@@ -108,10 +108,20 @@ handle_spinner( FL_OBJECT * obj,
 				int         key  FL_UNUSED_ARG,
 				void *      ev   FL_UNUSED_ARG )
 {
+	FLI_SPINNER_SPEC *sp = obj->spec;
+
 	switch ( event )
 	{
+		case FL_RESIZED :
+			sp->need_geom_recalc = 1;
+			break;
+
 		case FL_DRAW :
-			set_geom( obj );
+			if ( sp->need_geom_recalc )
+			{
+				set_geom( obj );
+				sp->need_geom_recalc = 0;
+			}
 
 		case FL_DRAWLABEL :
 			fl_draw_object_label_outside( obj );
@@ -228,7 +238,7 @@ fl_create_spinner( int          type,
 		bwh = h / 2;
 		bwh = FL_max( bwh, 1 );
 		h = ih = 2 * bwh;
-		iw = w - bwh;
+		iw = w - bwh - 1;
 		ux = dx = x + iw - 1;
 		uy = x;
 		dy = uy + bwh;
@@ -276,6 +286,7 @@ fl_create_spinner( int          type,
 
 	sp->orient = orient;
 	sp->prec = 1;
+	sp->need_geom_recalc = 1;
 
     fl_add_child( obj, sp->input );
     fl_add_child( obj, sp->up );
