@@ -204,8 +204,20 @@ canvas_cleanup( FL_OBJECT * ob )
  ***************************************/
 
 static void
-noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+form_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 void      * data  FL_UNUSED_ARG )
+{
+}
+
+
+/***************************************
+ * For the object itself and all the folders set a dummy form callback
+ * to prevent the objects from leaking thru fl_do_forms
+ ***************************************/
+
+static void
+noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
 }
 
@@ -490,7 +502,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     /* plug the possible object leakage thru fl_do_forms */
 
     if ( ! form->form_callback )
-		fl_set_form_callback( form, noop_cb, 0 );
+		fl_set_form_callback( form, form_cb, NULL );
 
     sp->forms[ sp->nforms ] = form;
     form->attached = 1;
@@ -610,7 +622,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
     {
 		deleted->visible = 0;
 
-		if ( theform->form_callback == noop_cb )
+		if ( theform->form_callback == form_cb )
 			theform->form_callback = NULL;
 
 		if ( theform->visible == FL_VISIBLE )

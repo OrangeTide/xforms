@@ -43,42 +43,33 @@
 
 
 static void check_scrollbar( FL_OBJECT * ob );
-
-
 static int canvas_cleanup( FL_OBJECT * ob );
-
 static int canvas_handler( FL_OBJECT * ob,
 						   Window      win,
 						   int         w,
 						   int         h,
 						   XEvent    * ev,
 						   void      * data );
-
 static void delete_form( FLI_FORMBROWSER_SPEC * sp,
-						 int                    f );
-
+					 int                    f );
 static void display_forms( FLI_FORMBROWSER_SPEC * sp );
-
-static void noop_cb( FL_OBJECT * ob,
+static void form_cb( FL_OBJECT * ob,
 					 void      * data );
-
+static void noop_cb( FL_OBJECT * ob,
+					 long        data );
 static int handle( FL_OBJECT * ob,
 				   int         event,
 				   FL_Coord    mx,
 				   FL_Coord    my,
 				   int         key,
 				   void      * ev );
-
 static void hcb( FL_OBJECT * ob,
 				 long        data );
-
 static void parentize_form( FL_FORM   * form,
 							FL_OBJECT * ob );
-
 static void set_form_position( FL_FORM * form,
 							   int       x,
 							   int       y );
-
 static void vcb( FL_OBJECT * ob,
 				 long        data );
 
@@ -279,7 +270,7 @@ fl_addto_formbrowser( FL_OBJECT * ob,
 		fl_hide_form( form );
 
 	if ( ! form->form_callback )
-		fl_set_form_callback( form, noop_cb, 0 );
+		fl_set_form_callback( form, form_cb, NULL );
 
 	parentize_form( form, ob );
 	sp->form = fl_realloc( sp->form, ( sp->nforms + 1 ) * sizeof *sp->form );
@@ -874,8 +865,19 @@ canvas_cleanup( FL_OBJECT * ob )
  ***************************************/
 
 static void
-noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+form_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 void      * data  FL_UNUSED_ARG )
+{
+}
+
+
+/***************************************
+ * Dummy
+ ***************************************/
+
+static void
+noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+		 long        data  FL_UNUSED_ARG )
 {
 }
 
