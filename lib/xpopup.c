@@ -18,12 +18,10 @@
 
 /**
  * \file xpopup.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
- *
  *
  * Implementation of pop-up menus in Xlib. Not quite fit the
  * model of forms library, but it is needed to make other things
@@ -31,12 +29,7 @@
  *
  * These functionalities should be someday rewritten using
  * forms construct rather than Xlib.
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_xpup = "$Id: xpopup.c,v 1.32 2009/05/02 20:11:14 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

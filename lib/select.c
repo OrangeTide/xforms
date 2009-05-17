@@ -15,11 +15,6 @@
  *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#if defined F_ID || defined DEBUG
-char *fl_id_sel = "$Id: select.c,v 1.6 2009/05/08 18:00:57 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

@@ -17,9 +17,9 @@
 
 
 /*
- *  $Id: rgb_db.c,v 1.10 2009/05/02 20:11:07 jtt Exp $
- *
- *  Copyright (c) 1999-2002 T.C. Zhao
+ *  This file is part of the XForms library package.
+ *  Copyright (c) 1997-2002  T.C. Zhao
+ *  All rights reserved.
  *
  *  search the rgb.txt database for a specific color
  */

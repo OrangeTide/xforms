@@ -28,10 +28,6 @@
  *
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_drw = "$Id: fldraw.c,v 1.19 2009/05/13 11:59:08 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

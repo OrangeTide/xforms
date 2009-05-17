@@ -17,12 +17,9 @@
 
 
 /*
- * $Id: image_scale.c,v 1.8 2009/05/02 20:11:06 jtt Exp $
- *.
  *  This file is part of the XForms library package.
  *   Copyright (c) 1993, 1998-2002  T.C. Zhao
  *   All rights reserved.
- *.
  *
  *  Scale an image with or without subpixel sampling.
  */

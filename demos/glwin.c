@@ -22,7 +22,6 @@
  * OpenGL rendering in its own window
  *
  *  T.C. Zhao and M. Overmars
- *
  */
 
 #ifdef HAVE_CONFIG_H

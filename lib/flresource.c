@@ -19,21 +19,14 @@
 /**
  * \file flresource.c
  *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Handle XResources. Only rudimetry support is implemented. However,
  *  using this minimum implementation, more powerful and application
  *  specific resources can be developed easily.
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_rsc = "$Id: flresource.c,v 1.36 2009/05/08 18:00:56 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

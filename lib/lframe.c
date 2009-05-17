@@ -25,13 +25,8 @@
  *  All rights reserved.
  *.
  *
- *  similar to FL_FRAME, but label is drawn On the frame
- *
+ *  similar to FL_FRAME, but label is drawn on the frame
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_lframe = "$Id: lframe.c,v 1.11 2009/05/08 18:00:57 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

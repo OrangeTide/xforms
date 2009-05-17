@@ -22,14 +22,7 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_posi = "$Id: positioner.c,v 1.14 2009/05/02 20:11:12 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -19,11 +19,10 @@
 
 /**
  * \file glcanvas.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  A sample implementation of OpenGL/Mesa canvas class.
  *
@@ -32,14 +31,9 @@
  *  ob->spec is already used by the generic canvas. We use
  *  ob->c_vdata to hang the OpenGL specific stuff.
  *
- *   See ../DEMOS/gl.c for an example use of glcanvas.
- *   See ../DEMOS/glwin.c for an example use of fl_glwinopen
- *
+ *  See ../DEMOS/gl.c for an example use of glcanvas.
+ *  See ../DEMOS/glwin.c for an example use of fl_glwinopen
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_gl = "$Id: glcanvas.c,v 1.11 2009/05/06 19:33:15 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

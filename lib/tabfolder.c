@@ -19,14 +19,11 @@
 /**
  * \file tabfolder.c
  *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  By T.C. Zhao
  *  All rights reserved.
- *.
  *
  * tabbed folder
- *
  */
 
 #ifdef HAVE_CONFIG_H

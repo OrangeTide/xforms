@@ -18,21 +18,13 @@
 
 /**
  * \file util.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
  *
  * X independent utilities
- *
  */
-
-
-#if defined F_ID || defined DEBUG
-char *fl_id_util = "$Id: util.c,v 1.16 2009/05/08 18:00:57 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -23,7 +23,6 @@
  *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
  *
- *
  *  Handle some common valuator tasks.
  *   TODO: move slider and counter handler here
  */

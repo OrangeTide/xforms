@@ -29,10 +29,6 @@
  *  Default 0 is at 6 oclock and clock-wise is positive.
  */
 
-#if defined F_ID || definedDEBUG
-char *fl_id_dial = "$Id: dial.c,v 1.18 2009/05/02 20:11:08 jtt Exp $";
-#endif
-
 #define SIX_OCLOCK 1
 
 #ifdef HAVE_CONFIG_H

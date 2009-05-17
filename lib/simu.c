@@ -18,11 +18,10 @@
 
 /**
  * \file simu.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * temporary routine. Eventually it will be implemented as a
  * real routine that manipulates members of obj

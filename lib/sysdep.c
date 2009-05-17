@@ -22,8 +22,6 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
  *
  *  X independent but system (SysV, BSD) or OS dependent utilities.
  *
@@ -32,12 +30,7 @@
  *
  *  check out local.h, which defines some flags that might affect
  *  this file
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_sysd = "$Id: sysdep.c,v 1.14 2009/05/08 18:00:57 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

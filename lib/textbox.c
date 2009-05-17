@@ -18,25 +18,19 @@
 
 /**
  * \file textbox.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  Object class textbox - part of browser.
  *  X is very visible here because of speed considerations.
- *
  */
 
 /*
  * Please note: this object is for internal use only (as a child object
  * of a browser object)!
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_brw = "$Id: textbox.c,v 1.23 2009/05/02 20:11:13 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

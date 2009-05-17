@@ -31,11 +31,6 @@
  *  by forms and has one of the forms as its parent.
  */
 
-
-#if defined F_ID || defined DEBUG
-char *fl_id_canvas = "$Id: canvas.c,v 1.26 2009/05/02 20:11:08 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

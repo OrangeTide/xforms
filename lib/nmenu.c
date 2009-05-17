@@ -15,10 +15,6 @@
  *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_nmenu = "$Id: nmenu.c,v 1.3 2009/05/02 20:11:10 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

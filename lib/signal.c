@@ -15,21 +15,17 @@
  *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * \file signal.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
- *
  *
  *  Simple minded quick&dirty signal handling.
  *
  *  Only permit a specific signal to have one handler
  */
-
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

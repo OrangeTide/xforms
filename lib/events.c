@@ -28,11 +28,6 @@
  *
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_evt = "$Id: events.c,v 1.27 2009/05/02 20:11:09 jtt Exp $";
-#endif
-
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

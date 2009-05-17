@@ -16,21 +16,14 @@
  */
 
 
-/**
+/*
  * \file space.c
  *
- *.  Copyright(c) 1993,1994 by T.C. Zhao
+ *   Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
- *.
  *
- *
- *  Remove unescaped leadingi/trailing spaces from a string.
- *
- ***********************************************************************/
-
-#if ! defined lint && defined F_OK
-static char *id_space = "$Id: space.c,v 1.10 2009/05/02 20:11:13 jtt Exp $";
-#endif
+ *   Remove unescaped leadingi/trailing spaces from a string.
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -18,12 +18,10 @@
 
 /**
  * \file xyplot.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  T.C. Zhao
  *  All rights reserved.
- *.
- *
  *
  * Class FL_XYPLOT. Simple 2D tabulated function plot.
  *
@@ -35,11 +33,6 @@
  *  The whole thing needs a complete review, lots of things look fishy,
  *  especially memory allocation!                        JTT
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_xyp = "$Id: xyplot.c,v 1.18 2009/05/08 18:00:58 jtt Exp $";
-#endif
-
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

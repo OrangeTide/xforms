@@ -18,22 +18,15 @@
 
 /**
  * \file win.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
- *
  *
  * To isolate dependencies of XForms on the window system, we provide
  * some system-neutual windowing services. It is expected that all
  * XForms internal windowing will be done using these.
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: win.c,v 1.20 2009/05/02 20:11:14 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

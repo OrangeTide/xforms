@@ -19,17 +19,12 @@
 /**
  * \file vstrcat.c
  *
- *.  Copyright(c) 1993,1994 by T.C. Zhao
+ *   Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
- *.
  *
  *   Similar to strcat, but takes variable number of argument
  *
  */
-
-#if ! defined lint && defined F_ID
-char *id_vstrcat = "$Id: vstrcat.c,v 1.10 2009/05/02 20:11:14 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

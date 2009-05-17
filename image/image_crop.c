@@ -17,14 +17,9 @@
 
 
 /*
- * $Id: image_crop.c,v 1.6 2009/05/02 20:11:05 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
- *
  */
 
 #ifdef HAVE_CONFIG_H

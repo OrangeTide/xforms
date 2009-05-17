@@ -17,9 +17,6 @@
 
 
 /*
- * $Id: image_text.c,v 1.9 2009/05/06 19:33:16 jtt Exp $
- *
- *  .
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.

@@ -17,13 +17,9 @@
 
 
 /*
- * $Id: image_gzip.c,v 1.7 2009/05/02 20:11:05 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  handle gzip/compress
  */

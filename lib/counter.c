@@ -28,10 +28,6 @@
  *   only FL_RETURN_END_CHANGED and FL_RETURN_CHANED are meaningful
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_cntr = "$Id: counter.c,v 1.16 2009/05/02 20:11:08 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

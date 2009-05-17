@@ -28,10 +28,6 @@
  *
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_gds = "$Id: goodies.c,v 1.15 2009/05/08 18:00:57 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

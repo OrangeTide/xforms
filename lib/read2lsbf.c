@@ -21,13 +21,9 @@
  *
  *.  Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
- *.
+ *
  *    Read 2bytes LSB first
  ***********************************************************************/
-
-#if ! defined lint && defined F_ID
-char *id_2lsb = "$Id: read2lsbf.c,v 1.9 2009/05/02 20:11:12 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

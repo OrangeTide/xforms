@@ -38,10 +38,6 @@
  *
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_menu = "$Id: menu.c,v 1.19 2009/05/02 20:11:10 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

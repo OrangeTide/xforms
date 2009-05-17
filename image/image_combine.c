@@ -17,20 +17,13 @@
 
 
 /*
- * $Id: image_combine.c,v 1.7 2009/05/02 20:11:05 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
  *
  * combine two images in the following way
  *   IM = IM1 * alpha + IM2 * (1-alpha)
- *
  */
-
 
 /*** UNFINISHED and UNTESTED */
 #ifdef HAVE_CONFIG_H

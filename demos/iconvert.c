@@ -21,12 +21,11 @@
 /*
  * Convert an image file using the image support of Forms Library.
  *
- *
  *  Usage: iconvert [-version][-verbose][-help] inputimage outimage [fmt]
  *     output image format is determined by the extension or
  *     by fmt if present.
  *
- *   Exit status:  0 (success) 1 (bad command line)  3 (conversion failed)
+ *  Exit status:  0 (success) 1 (bad command line)  3 (conversion failed)
  *
  *  T.C. Zhao (03/1999)
  *
@@ -45,8 +44,6 @@ static void usage( const char *,
 				   int );
 static int parse_command_line( int *,
 							   char ** );
-
-static char *version="$Id: iconvert.c,v 1.7 2008/12/27 22:20:31 jtt Exp $";
 
 
 /***************************************
@@ -145,11 +142,6 @@ parse_command_line( int  * argc,
 			setup.visual_cue = 0;
 			i++;
 		}
-		else if ( strncmp( argv[ i ], "-vers", 5 ) == 0 )
-		{
-            fprintf( stderr, "%s\n", version );
-            exit( 0 );
-         }
 		else if ( strncmp( argv[ i ], "-h", 2 ) == 0 )
 		{
 			usage( argv[ 0 ], 1 );

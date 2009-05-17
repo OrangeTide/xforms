@@ -17,15 +17,10 @@
 
 
 /*
- * $Id: image_warp.c,v 1.7 2009/05/02 20:11:07 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
- ******
  * General non-perspective linear image warping.
  */
 

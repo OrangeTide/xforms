@@ -23,11 +23,9 @@
  *	This file is part of the XForms library package.
  *	Copyright (c) 1996-2002	 T.C. Zhao
  *	All rights reserved.
- *.
  *
  * Pixmap support. In order to take advantage of Xpm3.4g features,
  * we need both XpmRevision and XpmLibraryVersion check
- *
  */
 
 #ifdef HAVE_CONFIG_H

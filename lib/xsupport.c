@@ -18,23 +18,16 @@
 
 /**
  * \file xsupport.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
  *
  *  Form initialization and Windowing support.
  *
  *  Further isolation of dependencies of FORMS on underlining window
  *  systems.
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_xsupt = "$Id: xsupport.c,v 1.20 2009/05/08 18:00:58 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

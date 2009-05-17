@@ -17,18 +17,13 @@
 
 
 /*
- * $Id: image_jquant.c,v 1.9 2009/05/02 20:11:05 jtt Exp $
- *
- * Copyright (C) 1998  T.C. Zhao
- *
  * The 2-pass quantizer from the JPEG distribution by the
  * Independent JPEG group. Except for minor interface changes, the code
  * here is almost verbatim copy of the IJG's code, which
  * has the following copyright:
  *
  * Copyright (C) 1991-1996, Thomas G. Lane.
- *  This file is part of the XForms library package.
- *
+ * This file is part of the XForms library package.
  */
 
 #ifdef HAVE_CONFIG_H

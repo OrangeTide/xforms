@@ -17,16 +17,11 @@
 
 
 /*
- * $Id: image_gif.c,v 1.16 2009/05/06 19:33:16 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  By T.C. Zhao
  *  All rights reserved.
- *.
  *
  * BUGS: delay & input not handled
- *
  *
  * "The Graphics Interchange Format(c) is the Copyright property of
  *  CompuServ Incorporated. GIF(sm) is a Service Mark property of

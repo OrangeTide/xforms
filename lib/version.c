@@ -18,19 +18,13 @@
 
 /**
  * \file version.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Version info
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_ver = "$Id: version.c,v 1.20 2009/05/02 20:11:14 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

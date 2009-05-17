@@ -18,15 +18,13 @@
 
 /**
  * \file tooltip.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Show message in a top-level unmanaged window. Used
  * for tooltips
- *
  */
 
 #ifdef HAVE_CONFIG_H

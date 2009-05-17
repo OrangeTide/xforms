@@ -38,10 +38,6 @@
  *
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_col = "$Id: flcolor.c,v 1.23 2009/05/02 20:11:09 jtt Exp $";
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

@@ -17,20 +17,17 @@
 
 
 /*
- * $Id: image_bmp.c,v 1.9 2009/05/02 20:11:05 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993,1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *   MS Windows/OS2  bmp file support
- *
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"

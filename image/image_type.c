@@ -17,16 +17,11 @@
 
 
 /*
- * $Id: image_type.c,v 1.10 2009/05/02 20:11:06 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  By T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  image type conversions
- *
  */
 
 #ifdef HAVE_CONFIG_H

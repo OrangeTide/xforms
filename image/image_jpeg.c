@@ -17,19 +17,17 @@
 
 
 /*
- * $Id: image_jpeg.c,v 1.15 2009/05/06 19:33:16 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
+ *
  *  JFIF file IO support.
  *  Based mostly on Independent JPEG Groups' example code.
  *
  *  Except for a couple of output control parameters, there is no
  *  static variables.
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

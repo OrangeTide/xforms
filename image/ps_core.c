@@ -17,16 +17,11 @@
 
 
 /*
- * $Id: ps_core.c,v 1.15 2009/05/02 20:11:07 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Some primitive drawing routines is PS
- *
  *
  *  (x,y) (w,h) passed to all drawing functions are relative
  *  to PS coordinate system and the unit is pixel/point.

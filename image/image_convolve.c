@@ -17,22 +17,18 @@
 
 
 /*
- * $Id: image_convolve.c,v 1.7 2009/05/02 20:11:05 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *   Copyright (c) 1993, 1998-2002  T.C. Zhao
  *   All rights reserved.
- *.
  *
  *  General colvolution routines for RGB and gray (both 8bit and 16bit)
  *  images. 3x3 and 5x5 kernels are manually unrolled.
- *
  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
 #include "include/forms.h"
 #include "flimage.h"
 #include "flimage_int.h"

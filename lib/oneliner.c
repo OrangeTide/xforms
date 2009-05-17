@@ -22,17 +22,9 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
- *
  *
  * Show message in a top-level unmanaged window.
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_ol = "$Id: oneliner.c,v 1.12 2009/05/02 20:11:11 jtt Exp $$";
-#endif
-
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

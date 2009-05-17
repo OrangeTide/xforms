@@ -28,11 +28,6 @@
  *
  */
 
-#if defined F_ID || defined DEBUG
-char *fl_id_fm = "$Id: forms.c,v 1.59 2009/05/10 12:23:19 jtt Exp $";
-#endif
-
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

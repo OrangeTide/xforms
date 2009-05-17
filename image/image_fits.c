@@ -17,13 +17,9 @@
 
 
 /*
- * $Id: image_fits.c,v 1.13 2009/05/02 20:11:05 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *   NASA/OST Flexble Image Transport Sysmtem suport.
  *   Basic FITS(principle HUD)

@@ -18,20 +18,14 @@
 
 /**
  * \file xtext.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
  *
  * All text routines. There are rooms for speed ups. For one, font
  * switching can be reduced somewhat.
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_xtxt = "$Id: xtext.c,v 1.17 2009/05/02 20:11:14 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

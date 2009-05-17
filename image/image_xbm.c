@@ -17,15 +17,11 @@
 
 
 /*
- * $Id: image_xbm.c,v 1.7 2009/05/02 20:11:07 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  By T.C. Zhao
  *  All rights reserved.
- *.
- *
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

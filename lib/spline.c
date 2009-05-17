@@ -18,15 +18,13 @@
 
 /**
  * \file spline.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  * interpolate_spline interpolates a one-dimensional non-uniform
  * tabulated data onto a working grid, grid, using cubic splines.
- *
  */
 
 #ifdef HAVE_CONFIG_H

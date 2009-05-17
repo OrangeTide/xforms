@@ -17,17 +17,12 @@
 
 
 /*
- * $Id: postscript.c,v 1.10 2009/05/08 18:00:55 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Supports xyplot PostScript dump. Almost a verbatim copy of
  *  xyplot.c
- *
  */
 
 #ifdef HAVE_CONFIG_H

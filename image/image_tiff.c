@@ -17,18 +17,13 @@
 
 
 /*
- * $Id: image_tiff.c,v 1.13 2009/05/02 20:11:06 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 2000-2002  By T.C. Zhao
- *.
  *
  *  TIFF file reader/writer for some tiff files. It is not possible to
  *  develop a tiff reader to handle all possible valid tiffs.
  *
  *  could use some optimization
- *
  */
 
 #ifdef HAVE_CONFIG_H

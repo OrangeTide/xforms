@@ -18,19 +18,13 @@
 
 /**
  * \file scrollbut.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  Buttons for the scrollbar. Maybe of some value in general use.
- *
  */
-
-#if defined F_ID || defined DEBUG
-char *fl_id_rbut = "$Id: scrollbut.c,v 1.12 2009/05/08 18:00:57 jtt Exp $";
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

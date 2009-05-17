@@ -25,10 +25,9 @@
  * the shared library (It it in the static library). You can compile
  * ../FORMS/gl.c and put it in the shared library if you have mesa/OpenGL
  *
- *   Also you might want to make a link libGL.a to libMesaGL.a
+ * Also you might want to make a link libGL.a to libMesaGL.a
  *
- *  T.C. Zhao and M. Overmars
- *
+ * T.C. Zhao and M. Overmars
  */
 
 #ifdef HAVE_CONFIG_H

@@ -17,9 +17,6 @@
 
 
 /*
- * $Id: image_io_filter.c,v 1.9 2009/05/02 20:11:05 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1993, 1998-2002  T.C. Zhao
  *  All rights reserved.

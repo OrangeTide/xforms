@@ -17,15 +17,11 @@
 
 
 /*
- * $Id: ps_draw.c,v 1.10 2009/05/08 18:00:55 jtt Exp $
- *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  T.C. Zhao
  *  All rights reserved.
- *.
- * Some high-level drawing routines
  *
+ *  Some high-level drawing routines
  */
 
 #ifdef HAVE_CONFIG_H
