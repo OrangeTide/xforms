@@ -27,6 +27,10 @@ done
 AC_ARG_ENABLE(demos, [AS_HELP_STRING([--enable-demos],[Build demo programs])])
 AM_CONDITIONAL(BUILD_DEMOS, test x$enable_demos = xyes)
 
+AC_ARG_ENABLE(docs, [AS_HELP_STRING([--enable-docs],[Build documentation])])
+AM_CONDITIONAL(BUILD_DOCS, test x$enable_docs = xyes)
+
+
 ### Check for programs
 XFORMS_PROG_CC
 AC_PROG_CPP
@@ -127,22 +131,22 @@ AC_SUBST(X_PRE_LIBS)
 
 AH_TOP([
 /*
- * This file is part of the XForms library package.
+ *  This file is part of the XForms library package.
  *
- * XForms is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1, or
- * (at your option) any later version.
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
  *
- * XForms is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with XForms; see the file COPYING.  If not, write to
- * the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
- * MA 02111-1307, USA.
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with XForms; see the file COPYING.  If not, write to
+ *  the Free Software Foundation, 59 Temple Place - Suite 330, Boston,
+ *  MA 02111-1307, USA.
  */
 
 /* \file config.h
@@ -184,7 +188,8 @@ AC_CONFIG_FILES([Makefile \
        fd2ps/Makefile \
        fd2ps/test/Makefile \
        demos/Makefile \
-       demos/fd/Makefile
+       demos/fd/Makefile \
+	   doc/Makefile
 ])
 
 AC_OUTPUT

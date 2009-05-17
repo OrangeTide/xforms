@@ -20,7 +20,13 @@ else
 GL =
 endif
 
-SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS)
+if BUILD_DOCS
+DOCS = doc
+else
+DOCS =
+endif
+
+SUBDIRS = config lib image $(GL) fdesign fd2ps $(DEMOS) $(DOCS)
 
 # xforms.spec is needed as well as xforms.spec.in or else 'make rpmdist'
 # will fail.

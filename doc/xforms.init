@@ -50,7 +50,7 @@ $USE_ISO = 0;
 # If empty, <basename of document>.html is used.
 # Typically, you would set this to "index.html".
 
-$TOP_FILE = '';
+$TOP_FILE = 'index.html';
 
 # -toc-file
 # This file name is used for the table of contents.  The
@@ -129,7 +129,7 @@ $TOC_LINKS = 0;
 # If not set, then result files are put into the current directory.
 #$SUBDIR = 'html';
 
-$SUBDIR = '.';
+$SUBDIR = 'xforms.htp';
 
 # -short-extn
 # If this is set, then all HTML files will have extension ".htm" instead of

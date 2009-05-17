@@ -136,13 +136,9 @@ demos/xyplotall
 demos/xyplotover
 demos/yesno
 demos/yesno_cb
-doc/xforms.info
-doc/xforms.info-1
-doc/xforms.info-2
-doc/xforms.info-3
-doc/xforms.info-4
+doc/xforms.info*
+doc/xforms.html/
 doc/xforms.pdf
-doc/xforms/
 fd2ps/.deps/
 fd2ps/.libs/
 fd2ps/Makefile
