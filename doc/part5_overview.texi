@@ -1643,8 +1643,8 @@ You may set up a callback routine for all user events using
 @findex fl_set_event_callback()
 @anchor{fl_set_event_callback()}
 @example
-void fl_set_event_callback(void (*callback)(void *xevent,
-                                            void *data));
+FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev, void *data),
+                                     void *data);
 @end example
 
 It is also possible to set up callback functions on a per window/event

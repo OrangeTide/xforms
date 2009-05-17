@@ -648,6 +648,16 @@ fl_free_object( FL_OBJECT * obj )
     }
 
     fl_free( obj );
+
+	/* We might arrived here due to a callback for the object we just
+	   deleted (or one of it's child objects). The following tests
+	   allow the routine that invoked the callback to check if that
+	   is the case and avoid further uses of the object/parent. */
+
+	if ( obj == fli_handled_obj )
+		fli_handled_obj = NULL;
+	if ( obj == fli_handled_parent )
+		fli_handled_parent = NULL;
 }
 
 

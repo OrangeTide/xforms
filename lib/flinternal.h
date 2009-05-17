@@ -86,7 +86,6 @@
  * not have callbacks may be handled out of order (after the one's
  * having callbacks). */
 
-
 #if 1
 #define DELAYED_ACTION
 #endif
@@ -142,6 +141,9 @@ enum {
 };
 
 /* events.c or event related */
+
+extern FL_OBJECT *fli_handled_obj;
+extern FL_OBJECT *fli_handled_parent;
 
 extern void fli_obj_queue_delete( void );
 

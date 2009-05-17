@@ -1034,8 +1034,7 @@ callback routine use the call
 @tindex FL_APPEVENT_CB
 @findex fl_set_event_callback()
 @example
-FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev,
-                                                     void *data),
+FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev, void *data),
                                      void *data);
 @end example
 @noindent

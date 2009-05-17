@@ -44,6 +44,9 @@ static void fli_handle_input_object( FL_OBJECT * obj );
 static FL_APPEVENT_CB fli_event_callback;
 static void *fli_user_data;
 
+FL_OBJECT *fli_handled_obj = NULL;
+FL_OBJECT *fli_handled_parent = NULL;
+
 
 /***************************************
  * Function returns 1 if the event is consumed so it will never
@@ -319,7 +322,6 @@ fli_object_qenter( FL_OBJECT * obj )
     }
 
 #ifndef DELAYED_ACTION
-
     if (    obj != FL_EVENT
          && ( ! obj->form || ! obj->visible || obj->active <= 0 ) )
     {
@@ -378,20 +380,27 @@ fli_object_qread( void )
         return NULL;
 
 	/* If the object has a callback execute it and return NULL unless the
-	   object is a child object */
+	   object is a child object (in that case we're supposed the parent
+	   object and still have to check for callbacks for the parent). It's
+	   also important to make sure the object didn't get deleted within its
+	   callback - if that's the case it would be catastrophic to check for
+	   the parent... */
 
     if ( obj->object_callback )
     {
+		fli_handled_obj = obj;
         obj->object_callback( obj, obj->argument );
 
-		if ( ! obj->parent )
+		if ( ! fli_handled_obj || ! obj->parent )
 			return NULL;
 	}
 
 	/* If the object is a child object check if there is a callback for
 	   the parent and execute that (and return NULL in that case). In
-	   between also check if there are further events for other children
-	   of the parent in the queue and also execute their callbacks. */
+	   between also check if there are further events for other childs
+	   of the same parent in the queue and also execute their callbacks.
+	   And keep in mind that execution of one of these callbacks may
+	   delete the object and its parent... */
 
 	if ( obj->parent )
 	{
@@ -400,11 +409,18 @@ fli_object_qread( void )
 		while ( obj->parent )
 		{
 			if ( obj->object_callback )
+			{
+				fli_handled_obj = obj;
 				obj->object_callback( obj, obj->argument );
+				if ( ! fli_handled_obj )
+					return NULL;
+			}
 			obj = obj->parent;
 		}
 
-		while ( 1 )
+		fli_handled_parent = obj;
+
+		while ( fli_handled_parent )
 		{
 			FL_OBJECT *n, *p;
 
@@ -421,9 +437,17 @@ fli_object_qread( void )
 			n = fli_get_from_obj_queue( );
 			do
 				if ( n->object_callback )
+				{
+					fli_handled_obj = n;
 					n->object_callback( n, n->argument );
-			while ( ( n = n->parent ) != obj );
+					if ( ! fli_handled_obj )
+						break;
+				}
+			while ( fli_handled_parent && ( n = n->parent ) != obj );
 		}
+
+		if ( ! fli_handled_parent )
+			return NULL;
 	}
 
 	/* If we arrive here the original object either was a child object 
