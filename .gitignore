@@ -15,6 +15,17 @@ configure
 *.lo
 *.la
 *.bak
+*.aux
+*.cp
+*.fn
+*.fns
+*.ky
+*.log
+*.pg
+*.toc
+*.tp
+*.tps
+*.vr
 .cvsignore
 CVS
 Makefile.in

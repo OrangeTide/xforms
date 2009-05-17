@@ -51,3 +51,6 @@ html-local:
 		mkdir xforms.html;         \
 	fi
 	cp -r images xforms.html
+
+clean-local:
+	-rm xforms.info* *~
