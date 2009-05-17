@@ -15,7 +15,7 @@ $DOCTYPE = '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http
 # -expand
 # the @EXPAND array contains the expanded section names.
 
-@EXPAND = ( 'html' );
+#@EXPAND = ( 'html' );
 
 # -iso
 # if this value is true, ISO8859 characters are used for special symbols 
@@ -129,7 +129,7 @@ $TOC_LINKS = 0;
 # If not set, then result files are put into the current directory.
 #$SUBDIR = 'html';
 
-$SUBDIR = 'xforms.htp';
+$SUBDIR = '.';
 
 # -short-extn
 # If this is set, then all HTML files will have extension ".htm" instead of

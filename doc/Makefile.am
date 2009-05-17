@@ -46,11 +46,17 @@ xforms_TEXINFOS = part0_preface.texi \
 				  part6_images.texi \
 				  part6.texi
 
-html-local:
-	if [ ! -e xforms.html ]; then  \
-		mkdir xforms.html;         \
-	fi
+.texi.html:
+	texi2html --init-file xforms.init xforms.texi
+	/bin/mkdir xforms.html
+	mv index.html xforms_*.html xforms.html
 	cp -r images xforms.html
 
 clean-local:
 	-rm xforms.info* *~
+
+install-html:
+	/bin/mkdir -p $(htmldir)/xforms.html
+	/bin/mkdir -p $(htmldir)/xforms.html/images
+	/usr/bin/install -c -m 644 xforms.html/*.html $(htmldir)/xforms.html
+	/usr/bin/install -c -m 644 images/*.png $(htmldir)/xforms.html/images
