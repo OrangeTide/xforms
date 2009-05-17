@@ -331,6 +331,10 @@ fli_object_qenter( FL_OBJECT * obj )
         return;
     }
 
+	/* Please note: if 'DELAYED_ACTION' should ever be switched on don't
+	   forget to deal correctly with also handling callbacks of parent
+	   objects (if the object entered is a child object) */
+
     if ( obj != FL_EVENT )
     {
         if ( obj->object_callback )

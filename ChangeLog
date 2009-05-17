@@ -1,3 +1,10 @@
+2009-05-17 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/events.c: Bug fixed that resulted in crashes when
+	in the callback for an object the object itself got deleted.
+
+	* lib/input.c: fl_validate_input() function added.
+
 2009-05-16 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/events.c: Objects consisting just of child objects
@@ -5,9 +12,9 @@
 	by fl_do_forms().
 
 	* lib/browser.c, lib/formbrowser.c, lib/scrollbar.c,
-	lib/tabfolder.c: these objects are created with a default
-	callback that does nothing to keep them reported by
-	fl_do_forms() (for backward compatibility reasons).
+	lib/tabfolder.c: these objects now get created with a
+	default callback that does nothing to keep them reported
+	by fl_do_forms() (for backward compatibility reasons).
 	Also quite a bit of cleanup in lib/browser.c
 
 	* lib/spinner.c, lib/include/spinner.h, lib/private/pspinner.h:

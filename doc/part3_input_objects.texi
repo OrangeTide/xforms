@@ -229,6 +229,9 @@ FL_INPUTVALIDATOR fl_set_input_filter(FL_OBJECT *obj,
                                       FL_INPUTVALIDATOR filter);
 @end example
 @noindent
+@anchor{FL_VALID}
+@anchor{FL_INVALID}
+@anchor{FL_RINGBELL}
 The function @code{filter} is called whenever a new (regular)
 character is entered. @code{old} is the string in the input field
 before the newly typed character @code{c} was added to form the new
@@ -258,6 +261,7 @@ program, but input focus can change to the next input field. If the
 return value is @code{FL_INVALID | FL_RINGBELL}, the keyboard bell is
 sound and the object is not returned to the application program.
 Further, the input focus is not changed.
+
 
 To facilitate specialized input fields using validators, the following
 validator dependent routines are available
@@ -289,6 +293,17 @@ For the built-in type @code{@ref{FL_DATE_INPUT}} the default is
 limit on the year other than it must be an integer and appear after
 month and day.
 
+The function
+@findex fl_validate_input()
+@anchor{fl_validate_input()}
+@example
+int fl_validate_input( FL_OBJECT * obj);
+@end example
+can be used to test if the value in an input field is valid. It
+returns @code{@ref{FL_VALID}} if the value is valid or if there is no
+validator function set for the input, otherwise
+@code{@ref{FL_INVALID}}.
+
 
 @node Other Input Routines
 @section Other Input Routines
@@ -302,8 +317,8 @@ the contents of the input field use the routine
 void fl_set_input(FL_OBJECT *obj, const char *str);
 @end example
 @noindent
-There is very limited check for the validity of str for the input
-field. Use an empty string to clear an input field.
+There is very limited check for the validity of the string set for the
+input field. Use an empty string to clear an input field.
 
 Setting the content of an input field does not trigger object event,
 i.e., the object callback is not called. In some situations you might
@@ -328,6 +343,7 @@ convert the string to the proper data type you need. For multiline
 input, the returned pointer points to the entire content with possibly
 embedded newlines. The application may not modify the content pointed
 to by the returned pointer, it points to the internal buffer.
+
 
 To select or deselect the current input or part of it, the following
 two routines can be used

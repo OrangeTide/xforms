@@ -159,6 +159,8 @@ typedef int ( * FL_INPUTVALIDATOR )(FL_OBJECT *,
 FL_EXPORT FL_INPUTVALIDATOR fl_set_input_filter( FL_OBJECT         * ob,
 												 FL_INPUTVALIDATOR   validate );
 
+FL_EXPORT int fl_validate_input( FL_OBJECT *obj );
+
 #define fl_set_input_shortcut	fl_set_object_shortcut
 
 /* edit keys. */

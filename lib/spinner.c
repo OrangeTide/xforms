@@ -145,21 +145,31 @@ spinner_callback( FL_OBJECT * obj,
 {
 	FLI_SPINNER_SPEC *sp = obj->parent->spec;
 	const char *s_val = fl_get_input( sp->input );
-	char *eptr;
 	int max_len = 4 + sp->prec + log10( DBL_MAX );
 	char buf[ max_len ];
 
-	/* If one of the buttons was pressed and the input object doesn't have
-	   the focus make it the object that has the focus */
+	/* If one of the buttons was pressed first check if there's not another
+	   input object with an invalid value. Then, if the input object belonging
+	   to the button doesn't have the focus, set it to that input. */
 
-	if ( data != 0 && fl_get_focus_object( obj->parent->form ) != sp->input )
-		fl_set_focus_object( obj->parent->form, sp->input );
+	if ( data != 0 )
+	{
+		FL_OBJECT *fo = fl_get_focus_object( obj->parent->form );
+
+		if (    fo
+			 && fo->objclass == FL_INPUT
+			 && fl_validate_input( fo ) != FL_VALID )
+			return;
+
+		if ( fo !=  sp->input )
+			fl_set_focus_object( obj->parent->form, sp->input );
+	}
 
 	if ( obj->parent->type == FL_INT_SPINNER )
 	{ 
-		long i_val = strtol( s_val, &eptr, 10 );
+		long i_val = strtol( s_val, NULL, 10 );
 
-		if ( *eptr != '\0' || i_val > sp->i_max || i_val < sp->i_min )
+		if ( i_val > sp->i_max || i_val < sp->i_min )
 			i_val = sp->i_val;
 
 		if ( data == 1 )
@@ -183,10 +193,9 @@ spinner_callback( FL_OBJECT * obj,
 	}
 	else
 	{
-		double f_val = strtod( s_val, &eptr );
+		double f_val = strtod( s_val, NULL );
 
-		if (    ( *eptr != '\0' && *eptr != 'e' && *eptr != 'E' )
-			 || errno == ERANGE
+		if (    errno == ERANGE
 			 || f_val > sp->f_max
 			 || f_val < sp->f_min )
 			f_val = sp->f_val;

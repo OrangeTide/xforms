@@ -114,10 +114,10 @@ typedef struct {
 	                attrib;
     int             no_cursor;
     int             field_char;
-} SPEC;
+} FLI_INPUT_SPEC;
 
 
-static void correct_topline( SPEC *,
+static void correct_topline( FLI_INPUT_SPEC *,
 							 int * );
 static void redraw_scrollbar( FL_OBJECT * ob );
 static int make_line_visible( FL_OBJECT * ob,
@@ -127,7 +127,6 @@ static int make_char_visible( FL_OBJECT * ob,
 static void copy_attributes( FL_OBJECT *,
 							 FL_OBJECT * );
 static void make_cursor_visible( FL_OBJECT *,
-								 SPEC *,
 								 int,
 								 int );
 static int date_validator( FL_OBJECT *,
@@ -179,7 +178,7 @@ get_margin( int        btype,
 static void
 check_scrollbar_size( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     FL_Coord xmargin,
 		     ymargin;
 	int bw = FL_abs( ob->bw );
@@ -297,7 +296,7 @@ check_scrollbar_size( FL_OBJECT * ob )
 static void
 draw_input( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     FL_COLOR col,
 		     textcol;
     FL_COLOR curscol = fli_dithered( fl_vmode ) ? FL_BLACK : sp->curscol;
@@ -408,7 +407,7 @@ handle_select( FL_Coord    mx,
 			   int         mouse,
 			   int         what )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int thepos,
 		valign,
 		n;
@@ -514,9 +513,9 @@ static char cutbuf[ MAXCBLEN ];
  ***************************************/
 
 static void
-delete_char( SPEC * sp,
-			 int    dir,
-			 int    slen )
+delete_char( FLI_INPUT_SPEC * sp,
+			 int              dir,
+			 int              slen )
 {
     int i = sp->position - ( dir < 0 );
 
@@ -541,7 +540,7 @@ delete_piece( FL_OBJECT * ob,
 			  int         start,
 			  int         end )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int i = 0;
 
     do
@@ -564,9 +563,9 @@ delete_piece( FL_OBJECT * ob,
  ***************************************/
 
 #if 1
-#define get_substring_width( o, b, e )                              \
-	fl_get_string_width( ( o )->lstyle, ( o )->lsize,               \
-                         ( ( SPEC * ) ( o )->spec )->str + ( b ),   \
+#define get_substring_width( o, b, e )                                       \
+	fl_get_string_width( ( o )->lstyle, ( o )->lsize,                        \
+                         ( ( FLI_INPUT_SPEC * ) ( o )->spec )->str + ( b ),  \
                          ( e ) - ( b ) )
 
 #else
@@ -575,7 +574,7 @@ get_substring_width( FL_OBJECT * ob,
 					 int         startpos,
 					 int         endpos )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     char *str = sp->str + startpos;
     char tmpch = sp->str[endpos];	/* Save end position */
     int wid;		            	/* The required width */
@@ -622,7 +621,7 @@ handle_movement( FL_OBJECT * ob,
 				 int         startpos,
 				 int         kmask )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int ret = 0;
     int ready,
 		wid,
@@ -678,7 +677,7 @@ handle_movement( FL_OBJECT * ob,
 				startpos--;
 		}
 
-		make_cursor_visible( ob, sp, startpos, -1 );
+		make_cursor_visible( ob, startpos, -1 );
     }
     else if ( IsRight( key ) || key == kmap.moveto_eol )
     {
@@ -695,7 +694,7 @@ handle_movement( FL_OBJECT * ob,
 			sp->position++;
 		}
 
-		make_cursor_visible( ob, sp, startpos, 1 );
+		make_cursor_visible( ob, startpos, 1 );
     }
     else if ( IsUp( key ) )		/* Up key */
     {
@@ -817,7 +816,7 @@ handle_edit( FL_OBJECT * ob,
 			 int         slen,
 			 int         startpos )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int ret = 1, i, j;
     int prev = 1;
 
@@ -925,7 +924,7 @@ handle_edit( FL_OBJECT * ob,
 		}
     }
 
-    make_cursor_visible( ob, sp, startpos, prev );
+    make_cursor_visible( ob, startpos, prev );
 
     return ret;
 }
@@ -941,7 +940,7 @@ handle_key( FL_OBJECT    * ob,
 			unsigned int   kmask )
 {
     int i, ret = 1;
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int slen;			       /* length of the string */
     int startpos;		       /* position of start of current line */
     int oldy = sp->ypos;
@@ -1130,7 +1129,7 @@ paste_it( FL_OBJECT           * ob,
 {
     int status = 0;
     const unsigned char *byte;
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int slen, i;
     unsigned char *p;
 
@@ -1211,7 +1210,7 @@ gotit_cb( FL_OBJECT  * ob,
 		  const void * buf,
 		  long         nb )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     sp->changed = paste_it( ob, ( unsigned char * ) buf, nb ) || sp->changed;
     fl_update_display( 0 );
@@ -1236,7 +1235,7 @@ static int
 lose_selection( FL_OBJECT * ob,
 				long        type  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     sp->beginrange = sp->endrange = -1;
     if ( ! ob->focus )
@@ -1257,7 +1256,7 @@ do_XCut( FL_OBJECT * ob,
 		 int         beginrange,
 		 int         endrange )
 {
-    SPEC *sp = ( ( SPEC * ) ob->spec );
+    FLI_INPUT_SPEC *sp = ob->spec;
     char *buff;
     int i = 0,
 		nc;
@@ -1289,7 +1288,7 @@ handle_it( FL_OBJECT * ob,
 		   int         key,
 		   void      * ev )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     static int motion,
 		       lx,
 		       ly,
@@ -1421,7 +1420,7 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-			fl_free( ( ( SPEC * ) ob->spec )->str );
+			fl_free( ( ( FLI_INPUT_SPEC * ) ob->spec )->str );
 			fl_free( ob->spec );
 			ob->spec = NULL;
 			return 0;
@@ -1455,7 +1454,7 @@ static void
 vsl_cb( FL_OBJECT * ob,
 		long        data  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->parent->spec;
+    FLI_INPUT_SPEC *sp = ob->parent->spec;
     double val = fl_get_scrollbar_value( ob );
     int top = val * ( sp->lines - sp->screenlines ) + 1.01;
 
@@ -1471,7 +1470,7 @@ static void
 hsl_cb( FL_OBJECT * ob,
 		long        data  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->parent->spec;
+    FLI_INPUT_SPEC *sp = ob->parent->spec;
     double val = fl_get_scrollbar_value( ob );
     int xoff = val * ( sp->max_pixels - sp->w ) + 0.1;
 
@@ -1524,7 +1523,7 @@ static void
 input_cb( FL_OBJECT * ob,
 		  long        data  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( ob != sp->dummy )
     {
@@ -1549,7 +1548,7 @@ fl_create_input( int          type,
 				 const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_INPUT_SPEC *sp;
 
     set_default_keymap( 0 );
 
@@ -1621,7 +1620,7 @@ fake_handle( FL_OBJECT * ob,
 			 int         key  FL_UNUSED_ARG,
 			 void      * ev   FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     switch ( event )
     {
@@ -1654,7 +1653,7 @@ fl_add_input( int          type,
 			  const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_INPUT_SPEC *sp;
     int oldu = fl_get_coordunit( );
 
     ob = fl_create_input( type, x, y, w, h, label );
@@ -1716,7 +1715,7 @@ void
 fl_set_input( FL_OBJECT  * ob,
 			  const char * str )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int len;
     char *p;
 
@@ -1781,7 +1780,7 @@ fl_set_input_color( FL_OBJECT * ob,
 					int         textcol,
 					int         curscol )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     sp->textcol = textcol;
     sp->curscol = curscol;
     fl_redraw_object( sp->input );
@@ -1795,7 +1794,7 @@ int
 fl_set_input_fieldchar( FL_OBJECT * ob,
 						int         fchar )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int ochar = sp->field_char;
 
     if ( ob->objclass != FL_INPUT )
@@ -1817,7 +1816,7 @@ fl_set_input_fieldchar( FL_OBJECT * ob,
 const char *
 fl_get_input( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->str;
+    return ( ( FLI_INPUT_SPEC * ) ob->spec )->str;
 }
 
 
@@ -1829,7 +1828,7 @@ void
 fl_set_input_return( FL_OBJECT * ob,
 					 int         value )
 {
-    ( ( SPEC * ) ob->spec )->how_return = value;
+    ( ( FLI_INPUT_SPEC * ) ob->spec )->how_return = value;
 }
 
 
@@ -1840,7 +1839,7 @@ void
 fl_set_input_scroll( FL_OBJECT * ob,
 					 int         yes )
 {
-    ( ( SPEC * ) ob->spec )->noscroll = ! yes;
+    ( ( FLI_INPUT_SPEC * ) ob->spec )->noscroll = ! yes;
 }
 
 
@@ -1853,7 +1852,7 @@ fl_set_input_selected_range( FL_OBJECT * ob,
 							 int         begin,
 							 int         end )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int len;
 
     if ( ob->type == FL_HIDDEN_INPUT )
@@ -1890,7 +1889,7 @@ fl_get_input_selected_range( FL_OBJECT * ob,
 							 int       * begin,
 							 int       * end )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     static char *selbuf;
     static int nselbuf;
     int n;
@@ -1934,7 +1933,7 @@ void
 fl_set_input_selected( FL_OBJECT * ob,
 					   int         yes )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( ob->type == FL_HIDDEN_INPUT )
 		return;
@@ -1956,10 +1955,10 @@ fl_set_input_selected( FL_OBJECT * ob,
  ***************************************/
 
 static int
-xytopos( SPEC * sp,
-		 int    xpos,
-		 int    ypos,
-		 int    len )
+xytopos( FLI_INPUT_SPEC * sp,
+		 int              xpos,
+		 int              ypos,
+		 int              len )
 {
     int y;
     char *s = sp->str,
@@ -1981,7 +1980,7 @@ fl_set_input_cursorpos( FL_OBJECT * ob,
 						int         xpos,
 						int         ypos )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int newp,
 		len;
 
@@ -2020,7 +2019,7 @@ fl_get_input_cursorpos( FL_OBJECT * ob,
 						int       * x,
 						int       * y )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int i,
 		j;
     char *s = sp->str;
@@ -2114,7 +2113,7 @@ void
 fl_set_input_maxchars( FL_OBJECT * ob,
 					   int         maxchars )
 {
-    ( ( SPEC * ) ob->spec )->maxchars = maxchars;
+    ( ( FLI_INPUT_SPEC * ) ob->spec )->maxchars = maxchars;
 }
 
 
@@ -2125,9 +2124,10 @@ FL_VALIDATE
 fl_set_input_filter( FL_OBJECT * ob,
 					 FL_VALIDATE validate )
 {
-    FL_VALIDATE old = ( ( SPEC * ) ob->spec )->validate;
+	FLI_INPUT_SPEC *sp = ob->spec;
+    FL_VALIDATE old = sp->validate;
 
-    ( ( SPEC * ) ob->spec )->validate = validate;
+    sp->validate = validate;
     return old;
 }
 
@@ -2140,7 +2140,7 @@ fl_set_input_format( FL_OBJECT * ob,
 					 int         fmt,
 					 int         sep )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( ! isprint( sep ) || isdigit( sep ) )
 		sep = '/';
@@ -2157,10 +2157,26 @@ fl_get_input_format( FL_OBJECT * ob,
 					 int       * fmt,
 					 int       * sep )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     *fmt = sp->attrib1;
     *sep = sp->attrib2;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_validate_input( FL_OBJECT *obj )
+{
+	FLI_INPUT_SPEC *sp = obj->spec;
+
+	if (    ! sp->validate
+		 || sp->validate( obj, sp->str, sp->str, 0 ) == FL_VALID )
+		return FL_VALID;
+
+	return FL_INVALID;
 }
 
 
@@ -2290,7 +2306,9 @@ float_int_validator( FL_OBJECT  * ob,
     llc = lc - 1;
 
     if (    newc == 0
-		 && ( ( c = tolower( *lc ) ) == '+' || c == '-' || c == 'e' ) )
+			&& (    ( c = tolower( ( int ) *lc ) ) == '+'
+				 || c == '-'
+				 || c == 'e' ) )
 		return FL_INVALID | FL_RINGBELL;
 
     /* -+eE at end can cause strtod to fail, but it is in fact valid. The
@@ -2318,7 +2336,7 @@ void
 fl_set_input_xoffset( FL_OBJECT * ob,
 					  int         xoff )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( sp->xoffset != xoff )
     {
@@ -2340,7 +2358,7 @@ fl_set_input_xoffset( FL_OBJECT * ob,
 int
 fl_get_input_xoffset( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->xoffset;
+    return ( ( FLI_INPUT_SPEC * ) ob->spec )->xoffset;
 }
 
 
@@ -2348,8 +2366,8 @@ fl_get_input_xoffset( FL_OBJECT * ob )
  ***************************************/
 
 static void
-correct_topline( SPEC * sp,
-				 int  * top )
+correct_topline( FLI_INPUT_SPEC * sp,
+				 int            * top )
 {
     if ( sp->lines > sp->screenlines )
     {
@@ -2388,7 +2406,7 @@ count_lines( const char *s )
 int
 fl_get_input_numberoflines( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     return sp->lines = count_lines( sp->str );
 }
@@ -2401,7 +2419,7 @@ void
 fl_set_input_topline( FL_OBJECT * ob,
 					  int         top )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     correct_topline( sp, &top );
 
@@ -2428,7 +2446,7 @@ static int
 make_line_visible( FL_OBJECT * ob,
 				   int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int oldtop = sp->topline;
 
     if ( ob->type != FL_MULTILINE_INPUT )
@@ -2452,7 +2470,7 @@ static int
 make_char_visible( FL_OBJECT * ob,
 				   int         n )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
     int startpos = sp->position;
     int oldxoffset = sp->xoffset;
     int tmp;
@@ -2488,7 +2506,7 @@ void
 fl_set_input_vscrollbar( FL_OBJECT * ob,
 						 int         pref )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( sp->v_pref != pref )
     {
@@ -2507,7 +2525,7 @@ void
 fl_set_input_hscrollbar( FL_OBJECT * ob,
 						 int         pref )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( sp->h_pref != pref )
     {
@@ -2527,7 +2545,7 @@ fl_set_input_scrollbarsize( FL_OBJECT * ob,
 							int         hh,
 							int         vw )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( sp->hh_def != hh || sp->vw_def != vw )
     {
@@ -2546,7 +2564,7 @@ fl_set_input_scrollbarsize( FL_OBJECT * ob,
 int
 fl_get_input_topline( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->topline;
+    return ( ( FLI_INPUT_SPEC * ) ob->spec )->topline;
 }
 
 
@@ -2556,7 +2574,7 @@ fl_get_input_topline( FL_OBJECT * ob )
 int
 fl_get_input_screenlines( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->screenlines;
+    return ( ( FLI_INPUT_SPEC * ) ob->spec )->screenlines;
 }
 
 
@@ -2631,7 +2649,7 @@ copy_attributes( FL_OBJECT * src,
 static void
 redraw_scrollbar( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     fl_freeze_form( ob->form );
 
@@ -2679,7 +2697,7 @@ void
 fl_set_input_cursor_visible( FL_OBJECT * ob,
 							 int         visible )
 {
-    SPEC *sp = ob->spec;
+    FLI_INPUT_SPEC *sp = ob->spec;
 
     if ( sp->no_cursor != ! visible )
     {
@@ -2693,11 +2711,11 @@ fl_set_input_cursor_visible( FL_OBJECT * ob,
  ***************************************/
 
 static void
-make_cursor_visible( FL_OBJECT * ob,
-					 SPEC      * sp,
-					 int         startpos,
-					 int         prev )
+make_cursor_visible( FL_OBJECT      * ob,
+					 int              startpos,
+					 int              prev )
 {
+    FLI_INPUT_SPEC *sp = ob->spec;
     int tt = get_substring_width( ob, startpos, sp->position );
 
     if ( prev == -1 )
@@ -2721,5 +2739,5 @@ int
 fl_input_changed( FL_OBJECT *obj )
 {
     return ( obj && ( obj->objclass == FL_INPUT ) ) ?
-		   ( ( SPEC * ) obj->spec )->changed : 0;
+		   ( ( FLI_INPUT_SPEC * ) obj->spec )->changed : 0;
 }
