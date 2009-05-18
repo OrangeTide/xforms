@@ -48,7 +48,7 @@ xforms_TEXINFOS = part0_preface.texi \
 
 .texi.html:
 	texi2html --init-file xforms.init xforms.texi
-	/bin/mkdir xforms.html
+	/bin/mkdir -p xforms.html
 	mv index.html xforms_*.html xforms.html
 	cp -r images xforms.html
 

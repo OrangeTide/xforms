@@ -255,15 +255,34 @@ obj->u_vdata = 0;
 obj->spec = 0;
 @end example
 
+In some situations it can be also useful to make an object a child
+of another object. An example is the scrollbar object. It has three
+child objects, a slider and two buttons, which all three are childs
+of the scrollbar object. To make an object @code{child} a child
+object of an object named @code{parent} use the function
+@findex fl_add_child()
+@anchor{fl_add_child()}
+@example
+void fl_add_child(FL_OBJECT *parent, FL_OBJECT *child);
+@end example
+
+When creating a composite object you will typically add set callbacks
+for the child object that handle what happens on events for these
+child objects (e.g.@: for the scrollbar the buttons have callbacks
+that update the internal state for the scrollbar object and result
+in the slider getting shifted). If such callbacks aren't installed
+an event for the child as well as the parent object will get reported
+by e.g.@: @code{@ref{fl_do_forms()}}!
+
 There is rarely any need for the new object class to know how the
 object is added to a form and how the Forms Library manages the
-geometry, e.g.@: does an object have its own window etc. Nonetheless if
-this information is required, use @code{FL_ObjWin(obj)} to obtain the
-window resource ID of the window thhe object belongs to. Beware that
-an object window ID may be shared with other objects@footnote{The only
-exception is the canvas class where the window ID is guaranteed to be
-non-shared.}. Always remove an object from the screen with
-@code{@ref{fl_hide_object()}}.
+geometry, e.g.@: does an object have its own window etc. Nonetheless
+if this information is required, use @code{@ref{FL_ObjWin()}} on the
+object to obtain the window resource ID of the window thhe object
+belongs to. Beware that an object window ID may be shared with other
+objects@footnote{The only exception is the canvas class where the
+window ID is guaranteed to be non-shared.}. Always remove an object
+from the screen with @code{@ref{fl_hide_object()}}.
 
 The class routine/application may reference the following members of
 the @code{FL FORM} structure to obtain information on the status of
