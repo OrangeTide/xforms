@@ -441,7 +441,7 @@ handle_counter( FL_OBJECT * ob,
 
 			sp->changed = handle_mouse( ob, event, mx, my );
 
-			if ( sp->how_return == FL_RETURN_CHANGED && sp->changed )
+			if ( ob->how_return == FL_RETURN_CHANGED && sp->changed )
 			{
 				sp->changed = 0;
 				return 1;
@@ -453,7 +453,7 @@ handle_counter( FL_OBJECT * ob,
 				break;
 
 			handle_mouse( ob, event, mx, my );
-			if ( sp->how_return == FL_RETURN_END_CHANGED && sp->changed )
+			if ( ob->how_return == FL_RETURN_END_CHANGED && sp->changed )
 			{
 				show_focus_obj( ob, mx, my );
 				return 1;
@@ -464,7 +464,7 @@ handle_counter( FL_OBJECT * ob,
 		case FL_UPDATE:
 			if ( handle_mouse( ob, event, mx, my ) )
 				sp->changed = 1;
-			if ( sp->how_return == FL_RETURN_CHANGED && sp->changed )
+			if ( ob->how_return == FL_RETURN_CHANGED && sp->changed )
 			{
 				sp->changed = 0;
 				return 1;
@@ -509,6 +509,7 @@ fl_create_counter( int          type,
     ob->lcol        = FL_COUNTER_LCOL;
 	ob->want_motion = 1;
 	ob->want_update = 1;
+    ob->how_return  = FL_RETURN_END_CHANGED;
 
     /* Counter has a different default */
 
@@ -525,7 +526,6 @@ fl_create_counter( int          type,
     sp->prec          = 1;
     sp->mouseobj      = NONE;
     sp->draw_type     = ALL;
-    sp->how_return    = FL_RETURN_END_CHANGED;
 	sp->filter        = NULL;
 	sp->min_repeat_ms = 50;
     sp->repeat_ms     = 600;
@@ -713,13 +713,11 @@ void
 fl_set_counter_return( FL_OBJECT * ob,
 					   int         how )
 {
-    FLI_COUNTER_SPEC *sp = ob->spec;
-
-    sp->how_return = how;
-    if ( sp->how_return == FL_RETURN_END )
-		sp->how_return = FL_RETURN_END_CHANGED;
-    else if ( sp->how_return == FL_RETURN_ALWAYS )
-		sp->how_return = FL_RETURN_CHANGED;
+    ob->how_return = how;
+    if ( ob->how_return == FL_RETURN_END )
+		ob->how_return = FL_RETURN_END_CHANGED;
+    else if ( ob->how_return == FL_RETURN_ALWAYS )
+		ob->how_return = FL_RETURN_CHANGED;
 }
 
 

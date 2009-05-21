@@ -259,9 +259,9 @@ handle_clock( FL_OBJECT * ob,
 			break;
 
 		case FL_STEP:
-			/* clock only has resolution about 1 sec. FL_STEP is sent about
-			   every 0.05 sec. If more than 10 clocks, we might run into
-			   trouble   */
+			/* clock has resolution of about 1 sec. FL_STEP is sent about
+			   every 0.05 sec. If there are more than 10 clocks, we might run
+			   into trouble */
 
 			if ( ++sp->nstep & 1 )
 				break;

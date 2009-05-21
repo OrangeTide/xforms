@@ -174,7 +174,7 @@ emit_dial_code( FILE      * fp,
 
     if ( sp->how_return != defspec->how_return )
 		fprintf( fp, "    fl_set_dial_return( obj, %s );\n",
-				 get_how_return_name( sp->how_return ) );
+				 get_how_return_name( ob->how_return ) );
 
     fl_free_object( defobj );
 }

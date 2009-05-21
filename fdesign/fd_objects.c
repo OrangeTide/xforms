@@ -86,11 +86,11 @@ typedef FL_OBJECT * ( * FL_ADDFREEPTR )( int, FL_Coord, FL_Coord, FL_Coord,
  ***************************************/
 
 static void
-add_class_def( int       numb,
-			   char *    formal_name,
-			   char *    name,
-			   FL_ADDPTR createit,
-			   FL_ADDPTR addit )
+add_class_def( int         numb,
+			   char      * formal_name,
+			   char      * name,
+			   FL_ADDPTR   createit,
+			   FL_ADDPTR   addit )
 {
     int i;
 

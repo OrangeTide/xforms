@@ -374,12 +374,12 @@ handle_dial( FL_OBJECT * ob,
 
 			if ( handle_mouse( ob, mx, my ) )
 				sp->changed = 1;
-			if ( sp->changed && sp->how_return == FL_RETURN_CHANGED )
+			if ( sp->changed && ob->how_return == FL_RETURN_CHANGED )
 			{
 				sp->changed = 0;
 				return 1;
 			}
-			else if ( sp->how_return == FL_RETURN_ALWAYS )
+			else if ( ob->how_return == FL_RETURN_ALWAYS )
 				return 1;
 			break;
 
@@ -390,11 +390,11 @@ handle_dial( FL_OBJECT * ob,
 			if ( handle_mouse_wheel( ob, ev, key ) )
 				sp->changed = 1;
 
-			if (    sp->how_return == FL_RETURN_ALWAYS
-				 || sp->how_return == FL_RETURN_END
+			if (    ob->how_return == FL_RETURN_ALWAYS
+				 || ob->how_return == FL_RETURN_END
 				 || (    sp->changed
-					  && (    sp->how_return == FL_RETURN_CHANGED
-						   || sp->how_return == FL_RETURN_END_CHANGED ) ) )
+					  && (    ob->how_return == FL_RETURN_CHANGED
+						   || ob->how_return == FL_RETURN_END_CHANGED ) ) )
 				return 1;
 			break;
 
@@ -434,24 +434,24 @@ fl_create_dial( int          type,
     FLI_DIAL_SPEC *sp;
 
     ob = fl_make_object( FL_DIAL, type, x, y, w, h, label, handle_dial );
-    ob->col1 = FL_DIAL_COL1;
-    ob->col2 = FL_DIAL_COL2;
-    ob->align = FL_DIAL_ALIGN;
-    ob->lcol = FL_DIAL_LCOL;
-    ob->boxtype = FL_DIAL_BOXTYPE;
+    ob->col1       = FL_DIAL_COL1;
+    ob->col2       = FL_DIAL_COL2;
+    ob->align      = FL_DIAL_ALIGN;
+    ob->lcol       = FL_DIAL_LCOL;
+    ob->boxtype    = FL_DIAL_BOXTYPE;
+    ob->how_return = FL_RETURN_END_CHANGED;
+    ob->spec_size  = sizeof *sp;
+    ob->spec       = sp = fl_calloc( 1, ob->spec_size );
 
-    ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
-    sp->min = 0.0;
-    sp->max = 1.0;
-    sp->val = 0.5;
-    sp->step = 0.0;
-    sp->thetai = 0.0;
-    sp->thetaf = 360.0;
-    sp->origin = 270.0;
+    sp->min       = 0.0;
+    sp->max       = 1.0;
+    sp->val       = 0.5;
+    sp->step      = 0.0;
+    sp->thetai    = 0.0;
+    sp->thetaf    = 360.0;
+    sp->origin    = 270.0;
     sp->direction = FL_DIAL_CW;
     get_mapping( sp );
-    sp->how_return = FL_RETURN_END_CHANGED;
 
     return ob;
 }
@@ -585,10 +585,10 @@ fl_get_dial_bounds( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_dial_return( FL_OBJECT * ob,
-				    int         value )
+fl_set_dial_return( FL_OBJECT * obj,
+				    int         when )
 {
-    ( ( FLI_DIAL_SPEC * ) ob->spec )->how_return = value;
+	obj->how_return = when;
 }
 
 

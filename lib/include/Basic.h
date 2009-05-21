@@ -286,15 +286,13 @@ enum {
 #define FL_SCROLLUPMOUSE	 FL_SCROLLUP_MOUSE
 #define FL_SCROLLDOWNMOUSE	 FL_SCROLLDOWN_MOUSE
 
-/* control when to return input, slider and dial object. */
+/* control when to return input, slider and dial etc. object. */
 
-enum {
-	FL_RETURN_END_CHANGED = 0,
-	FL_RETURN_CHANGED	  = 1,
-	FL_RETURN_END		  = 2,
-	FL_RETURN_ALWAYS	  = 3,
-	FL_RETURN_DBLCLICK	  = 4
-};
+#define FL_RETURN_NONE	       0
+#define FL_RETURN_CHANGED      1
+#define FL_RETURN_END          2
+#define FL_RETURN_END_CHANGED  ( FL_RETURN_CHANGED | FL_RETURN_END )
+#define	FL_RETURN_ALWAYS       ~0
 
 /*	Some special color indices for FL private colormap. It does not matter
  *	what the value of each enum is, but it must start from 0 and be
@@ -606,7 +604,7 @@ typedef struct flobjs_ {
 	struct flobjs_ * parent;
 	struct flobjs_ * child;
 	struct flobjs_ * nc;
-	int				 is_child;
+	int              returned;
 
 	void *			 flpixmap;		 /* pixmap double buffering stateinfo */
 	int				 use_pixmap;	 /* true to use pixmap double buffering*/
@@ -1260,15 +1258,6 @@ FL_EXPORT int fl_draw_symbol( const char * label,
 							  FL_Coord	   w,
 							  FL_Coord	   h,
 							  FL_COLOR	   col );
-
-enum {
-	FL_SLIDER_NONE = 0,
-	FL_SLIDER_BOX  = 1,
-	FL_SLIDER_KNOB = 2,
-	FL_SLIDER_UP   = 4,
-	FL_SLIDER_DOWN = 8,
-	FL_SLIDER_ALL  = 15
-};
 
 FL_EXPORT unsigned long fl_mapcolor( FL_COLOR col,
 									 int	  r,

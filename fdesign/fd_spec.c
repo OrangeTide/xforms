@@ -339,7 +339,7 @@ skip_spec_info( FILE      * fp,
 
 
 /***************************************
- * maybe should consider a hash for all the strcmps
+ * Maybe should consider a hash for all the strcmps
  ***************************************/
 
 #define Str( x ) #x
@@ -623,10 +623,11 @@ get_finput_value( FL_OBJECT * ob,
 
 static FLI_VN_PAIR howreturn[ ] =
 {
+    VN( FL_RETURN_NONE        ),
     VN( FL_RETURN_END_CHANGED ),
-    VN( FL_RETURN_CHANGED ),
-    VN( FL_RETURN_END ),
-    VN( FL_RETURN_ALWAYS ),
+    VN( FL_RETURN_CHANGED     ),
+    VN( FL_RETURN_END         ),
+    VN( FL_RETURN_ALWAYS      ),
     VN( -1 ),
 };
 
@@ -635,10 +636,11 @@ static FLI_VN_PAIR howreturn[ ] =
 
 static FLI_VN_PAIR howreturn_str[ ] =
 {
-    { FL_RETURN_END_CHANGED, "End & Changed" },
+    { FL_RETURN_NONE,        "Never"            },
+    { FL_RETURN_END_CHANGED, "End & Changed"    },
     { FL_RETURN_CHANGED,     "Whenever Changed" },
-    { FL_RETURN_END,         "Always at End" },
-    { FL_RETURN_ALWAYS,      "Always" },
+    { FL_RETURN_END,         "At End"           },
+    { FL_RETURN_ALWAYS,      "Always"           },
     { -1,                    NULL }
 };
 
@@ -653,8 +655,7 @@ get_how_return_str( void )
     int i = 0;
 
     for ( i = 1, strcpy( buf, howreturn_str[ 0 ].name );
-		  howreturn_str[ i ].val > 0;
-		  i++)
+		  howreturn_str[ i ].val >= 0; i++ )
 		strcat( strcat( buf, "|" ), howreturn_str[ i ].name );
     return buf;
 }

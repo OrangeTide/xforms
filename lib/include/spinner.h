@@ -68,5 +68,8 @@ FL_EXPORT FL_OBJECT * fl_get_spinner_up_button( FL_OBJECT * obj );
 
 FL_EXPORT FL_OBJECT * fl_get_spinner_down_button( FL_OBJECT * obj );
 
+FL_EXPORT void fl_set_spinner_return( FL_OBJECT * obj,
+									  int         when );
+
 
 #endif /* ! defined FL_SPINNER_H */

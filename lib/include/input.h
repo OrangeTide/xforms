@@ -197,7 +197,6 @@ typedef struct {
 	long del_to_eol;		/* cut to end of line		*/
 	long clear_field;		/* delete everything		*/
 	long del_to_eos;		/* not implemented			*/
-	long reserverd[ 4 ];	/* filler				   */
 } FL_EditKeymap;
 
 FL_EXPORT void fl_set_input_editkeymap( const FL_EditKeymap * keymap );

@@ -66,7 +66,8 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 		     w = sp->w,
 		     h = sp->h;
 	int sltype = ob->type;
-	double val = sp->norm_val;
+	double val  = sp->min == sp->max ?
+		          0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
 	double size = sp->slsize;
 	FL_COORD bw = ob->bw;
     int absbw = FL_abs( bw );
@@ -84,8 +85,7 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 		slb->x = x + absbw;
 		return;
     }
-
-    if ( sltype == FL_HOR_FILL_SLIDER )
+    else if ( sltype == FL_HOR_FILL_SLIDER )
     {
 		slb->w = val * ( w - 2 * absbw );
 		slb->x = x + absbw;
@@ -129,8 +129,7 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 
 		return;
     }
-
-    if ( IS_HSLIDER( sltype ) )
+	else
     {
 		slb->w = size * ( w - 2 * absbw );
 
@@ -171,60 +170,6 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 
 
 /***************************************
- ***************************************/
-
-int
-fli_slider_mouse_object( FL_OBJECT * ob,
-						 FL_Coord    mx,
-						 FL_Coord    my )
-{
-    FLI_SCROLLBAR_KNOB slb;
-	FLI_SLIDER_SPEC *sp = ob->spec;
-
-    fli_calc_slider_size( ob, &slb );
-
-    if ( IS_VSLIDER( ob->type ) )
-	{
-		my -= ob->y;
-		if ( IS_FILL( ob->type ) )
-			sp->mw = 0;
-		else
-			sp->mh = slb.h;
-
-		if ( my < slb.y )
-			return ABOVE_KNOB;
-		else if ( my > slb.y + slb.h )
-			return BELOW_KNOB;
-		else
-			sp->offy = slb.y + slb.h / 2 - my;
-
-		if ( IS_FILL( ob->type ) )
-			 sp->offy = 0;
-	}
-	else
-	{
-		mx -= ob->x;
-		if ( IS_FILL( ob->type ) )
-			sp->mw = 0;
-		else
-			 sp->mw = slb.w;
-
-		if ( mx < slb.x )
-			return LEFT_OF_KNOB;
-		else if ( mx > slb.x + slb.w )
-			return RIGHT_OF_KNOB;
-		else
-			sp->offx = slb.x + slb.w / 2 - mx;
-
-		if ( IS_FILL( ob->type ) )
-			 sp->offx = 0;
-	}
-
-	return ON_TOP_OF_KNOB;
-}
-
-
-/***************************************
  * val is normalized betweew 0 and 1
  ***************************************/
 
@@ -260,7 +205,7 @@ void fli_drw_slider( FL_OBJECT  * ob,
 
     /* Draw the slider */
 
-    if ( d & FL_SLIDER_BOX )
+    if ( d & FLI_SLIDER_BOX )
     {
 		int btype = ob->boxtype;
 		int actual_bw = bw;
@@ -366,7 +311,7 @@ void fli_drw_slider( FL_OBJECT  * ob,
 		if ( sltype == FL_VERT_THIN_SLIDER )
 			sltype = FL_VERT_BROWSER_SLIDER2;
 
-		if ( d & FL_SLIDER_KNOB )
+		if ( d & FLI_SLIDER_KNOB )
 		{
 			fl_drw_box( slbox, xsl, ysl, wsl, hsl, col2, bw2 );
 

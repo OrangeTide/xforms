@@ -48,8 +48,7 @@
 
 #define FL_VALIDATE    FL_INPUTVALIDATOR
 
-enum
-{
+enum {
     COMPLETE,
     PARTIAL,
     VSLIDER,
@@ -68,7 +67,6 @@ typedef struct {
     int           endrange;		    /* end of the range                */
     int           size;			    /* size of the string              */
     int           changed;		    /* whether the field has changed   */
-    int           how_return;	    	/* whether to return value always  */
     int           drawtype;		    /* if to draw text with background */
     int           noscroll;		    /* true if no scrollis allowd      */
     int           maxchars;		    /* limit for normal_input          */
@@ -119,20 +117,27 @@ typedef struct {
 
 static void correct_topline( FLI_INPUT_SPEC *,
 							 int * );
+
 static void redraw_scrollbar( FL_OBJECT * ob );
+
 static int make_line_visible( FL_OBJECT * ob,
 							  int );
+
 static int make_char_visible( FL_OBJECT * ob,
 							  int );
+
 static void copy_attributes( FL_OBJECT *,
 							 FL_OBJECT * );
+
 static void make_cursor_visible( FL_OBJECT *,
 								 int,
 								 int );
+
 static int date_validator( FL_OBJECT *,
 						   const char *,
 						   const char *,
 						   int );
+
 static int float_int_validator( FL_OBJECT *,
 								const char *,
 								const char *,
@@ -1359,8 +1364,8 @@ handle_it( FL_OBJECT * ob,
 
 				if ( ev )
 				{
-					if (    sp->how_return == FL_RETURN_END
-							|| sp->how_return == FL_RETURN_ALWAYS )
+					if (    ob->how_return == FL_RETURN_END
+						 || ob->how_return == FL_RETURN_ALWAYS )
 						ret = 1;
 					else
 						ret = sp->changed;
@@ -1381,10 +1386,10 @@ handle_it( FL_OBJECT * ob,
 			ly = my;
 			if ( key == FL_MBUTTON2 && ( sp->changed = do_XPaste( ob ) ) )
 			{
-				if ( sp->how_return == FL_RETURN_CHANGED )
+				if ( ob->how_return == FL_RETURN_CHANGED )
 					sp->changed = 0;
-				ret =    sp->how_return == FL_RETURN_ALWAYS
-					  || sp->how_return == FL_RETURN_CHANGED;
+				ret =    ob->how_return == FL_RETURN_ALWAYS
+					  || ob->how_return == FL_RETURN_CHANGED;
 				paste = 1;
 			}
 			else if ( handle_select( mx, my, ob, 0, NORMAL_SELECT ) )
@@ -1412,10 +1417,10 @@ handle_it( FL_OBJECT * ob,
 			if ( handle_key( ob, key, ( ( XKeyEvent * ) ev )->state ) )
 			{
 				sp->changed = 1;
-				if ( sp->how_return == FL_RETURN_CHANGED )
+				if ( ob->how_return == FL_RETURN_CHANGED )
 					sp->changed = 0;
-				ret =    sp->how_return == FL_RETURN_ALWAYS
-					  || sp->how_return == FL_RETURN_CHANGED;
+				ret =    ob->how_return == FL_RETURN_ALWAYS
+					  || ob->how_return == FL_RETURN_CHANGED;
 			}
 			break;
 
@@ -1443,7 +1448,7 @@ handle_it( FL_OBJECT * ob,
 		}
     }
 
-    return ret;
+    return ob->how_return != FL_RETURN_NONE ? ret : 0;
 }
 
 
@@ -1564,29 +1569,30 @@ fl_create_input( int          type,
     fl_set_object_prehandler( ob, input_pre );
     fl_set_object_posthandler( ob, input_post );
 
-    ob->wantkey = ob->type == FL_MULTILINE_INPUT ? FL_KEY_ALL : FL_KEY_NORMAL;
-	ob->want_update = 1;
-    ob->input = 1;
+    ob->wantkey       = ob->type == FL_MULTILINE_INPUT ?
+		                FL_KEY_ALL : FL_KEY_NORMAL;
+	ob->want_update   = 1;
+    ob->input         = 1;
     ob->click_timeout = FL_CLICK_TIMEOUT;
+    ob->how_return    = FL_RETURN_END_CHANGED;
 
     sp = ob->spec = fl_calloc( 1, ob->spec_size = sizeof *sp );
 
-    sp->textcol = FL_INPUT_TCOL;
-    sp->curscol = FL_INPUT_CCOL;
+    sp->textcol  = FL_INPUT_TCOL;
+    sp->curscol  = FL_INPUT_CCOL;
     sp->position = -1;
     sp->endrange = -1;
-    sp->size = 8;
-    sp->lines = sp->ypos = 1;
-    sp->str = fl_malloc( sp->size );
+    sp->size     = 8;
+    sp->lines    = sp->ypos = 1;
+    sp->str      = fl_malloc( sp->size );
     sp->str[ 0 ] = '\0';
-    sp->how_return = FL_RETURN_END_CHANGED;
     sp->maxchars = ob->type == FL_DATE_INPUT ?
 		           10 : ( ob->type == FL_SECRET_INPUT ? 16 : 0 );
 
-    sp->dummy = ob;
+    sp->dummy       = ob;
     sp->dummy->spec = sp;
-    sp->input = ob;
-    sp->field_char = ' ';
+    sp->input       = ob;
+    sp->field_char  = ' ';
 
     /* Can't remember why validated input return is set to RETURN_END
        but probably with some reason. Wait until 1.0 to reset it */
@@ -1594,13 +1600,13 @@ fl_create_input( int          type,
     if ( ob->type == FL_FLOAT_INPUT || ob->type == FL_INT_INPUT )
     {
 		sp->validate = float_int_validator;
-		sp->how_return = FL_RETURN_END;
+		ob->how_return = FL_RETURN_END;
     }
     else if ( ob->type == FL_DATE_INPUT )
     {
 		fl_set_input_format( ob, FL_INPUT_MMDD, '/' );
 		sp->validate = date_validator;
-		sp->how_return = FL_RETURN_END;
+		ob->how_return = FL_RETURN_END;
     }
 
     fl_set_object_dblbuffer( ob, type != FL_HIDDEN_INPUT );
@@ -1825,10 +1831,10 @@ fl_get_input( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_input_return( FL_OBJECT * ob,
-					 int         value )
+fl_set_input_return( FL_OBJECT * obj,
+					 int         when )
 {
-    ( ( FLI_INPUT_SPEC * ) ob->spec )->how_return = value;
+    obj->how_return = when;
 }
 
 

@@ -152,7 +152,7 @@ emit_counter_code( FILE      * fp,
 		fprintf( fp, "    fl_set_counter_step( obj, %.*f, %.*f );\n",
 				 spec->prec, spec->sstep, spec->prec, spec->lstep );
 
-    if ( spec->how_return != defspec->how_return )
+    if ( ob->how_return != defspec->how_return )
 		fprintf( fp, "    fl_set_counter_return( obj, %s );\n",
 				 get_how_return_name( spec->how_return ) );
 

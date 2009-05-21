@@ -47,7 +47,7 @@ fli_init_valuator( FL_OBJECT * ob )
     if ( ! sp )
 	{
 		ob->spec_size = sizeof *sp;
-		sp = ob->spec = fl_calloc( 1, sizeof *sp );
+		sp = ob->spec = fl_calloc( 1, ob->spec_size );
 	}
 
     sp->min       = 0.0;
@@ -100,18 +100,18 @@ fli_valuator_handle_drag( FL_OBJECT * ob,
 {
     FLI_VALUATOR_SPEC *sp = ob->spec;
 
-    value = fli_valuator_round_and_clamp(ob, value);
+    value = fli_valuator_round_and_clamp( ob, value );
 
-    if (value != sp->val)
+    if ( value != sp->val )
     {
 		sp->val = value;
 		sp->draw_type = VALUE_DRAW;
 		fl_redraw_object( ob );
-		return    sp->how_return == FL_RETURN_CHANGED
-			   || sp->how_return == FL_RETURN_ALWAYS;
+		return    ob->how_return == FL_RETURN_CHANGED
+			   || ob->how_return == FL_RETURN_ALWAYS;
     }
 
-    return sp->how_return == FL_RETURN_ALWAYS;
+    return ob->how_return == FL_RETURN_ALWAYS;
 }
 
 
@@ -124,22 +124,22 @@ fli_valuator_handle_release( FL_OBJECT * ob,
 {
     FLI_VALUATOR_SPEC *sp = ob->spec;
 
-    value = fli_valuator_round_and_clamp(ob, value);
+    value = fli_valuator_round_and_clamp( ob, value );
 
-    if (value != sp->val)
+    if ( value != sp->val )
     {
 		sp->val = value;
 		sp->draw_type = VALUE_DRAW;
 		fl_redraw_object(ob);
-		if (sp->how_return == FL_RETURN_CHANGED)
+		if ( ob->how_return == FL_RETURN_CHANGED)
 			return 1;
     }
 
-    if (sp->start_val != sp->val && (sp->how_return == FL_RETURN_END_CHANGED))
+    if ( sp->start_val != sp->val && ob->how_return == FL_RETURN_END_CHANGED )
 		return 1;
 
-    return    sp->how_return == FL_RETURN_ALWAYS
-		   || sp->how_return == FL_RETURN_END;
+    return    ob->how_return == FL_RETURN_ALWAYS
+		   || ob->how_return == FL_RETURN_END;
 }
 
 
@@ -147,14 +147,12 @@ fli_valuator_handle_release( FL_OBJECT * ob,
  ***************************************/
 
 int
-fli_set_valuator_return( FL_OBJECT * ob,
-						 int         n )
+fli_set_valuator_return( FL_OBJECT * obj,
+						 int         when )
 {
-    FLI_VALUATOR_SPEC *sp = ob->spec;
-    int old = sp->how_return;
+    int old = obj->how_return;
 
-    sp->how_return = n;
-
+    obj->how_return = when;
     return old;
 }
 

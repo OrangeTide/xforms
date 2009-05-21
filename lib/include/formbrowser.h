@@ -112,4 +112,8 @@ FL_EXPORT int fl_get_formbrowser_numforms( FL_OBJECT * ob );
 FL_EXPORT FL_FORM * fl_get_formbrowser_form( FL_OBJECT * ob,
 											 int		 n );
 
+FL_EXPORT void fl_set_formbrowser_return( FL_OBJECT * obj,
+										  int         when );
+
+
 #endif /* ! defined FL_FORMBROWSER_H */

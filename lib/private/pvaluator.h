@@ -35,13 +35,11 @@
 /* The special information for valuators. the size of this structure
  * probably can be reduced quite a bit. */
 
-typedef struct
-{
+typedef struct {
     double        min;			/* minimal value of slider */
     double        max;			/* maximal value of slider */
     double        val;			/* current value of slider */
     double        step;			/* step size             */
-    int           how_return;
     int           draw_type;
     int           prec;			/* precision when printing value */
     double        start_val;
@@ -54,10 +52,6 @@ typedef struct
 	              w,
 	              h;
     double        slsize;		/* size of the slider             */
-    double        norm_val;		/* normalized value between 0 & 1 */
-    double        oldnorm_val;	/* normalized value between 0 & 1 */
-    int           oldmx,
-	              oldmy;
     FL_VAL_FILTER filter;
     FL_Coord      offx;
     FL_Coord      offy;
@@ -65,6 +59,8 @@ typedef struct
 	              my,
 	              mw,
 	              mh;
+	FL_Coord      old_mx,
+		          old_my;
     int           mouse,		/* part the mouse is on                    */
 	              lmouse;
     FL_Coord      ww[ 5 ],		/* for counter                             */
@@ -77,7 +73,8 @@ typedef struct
 	int           min_repeat_ms;
 	int           do_speedjump;
     int           timeout_id;
-    int           mouse_pos;	/* < 0 below knob, 0 on knob, > 0 above knob */
+    int           mouse_off_knob;
+	int           was_shift;
 } FLI_VALUATOR_SPEC;
 
 enum

@@ -387,18 +387,22 @@ typedef struct {
 	FL_Coord h;
 } FLI_SCROLLBAR_KNOB;
 
+enum {
+	FLI_SLIDER_NONE = 0,
+	FLI_SLIDER_BOX  = 1,
+	FLI_SLIDER_KNOB = 2,
+	FLI_SLIDER_ALL  = 3
+};
+
+
 extern void fli_calc_slider_size( FL_OBJECT *,
 								  FLI_SCROLLBAR_KNOB * );
 
-extern int fli_slider_mouse_object( FL_OBJECT *,
-									FL_Coord,
-									FL_Coord );
-
-extern void fli_drw_slider( FL_OBJECT  * ob,
-							FL_COLOR     col1,
-							FL_COLOR     col2,
-							const char * str,
-							int          d );
+extern void fli_drw_slider( FL_OBJECT *,
+							FL_COLOR,
+							FL_COLOR,
+							const char *,
+							int );
 
 extern void fli_set_perm_clipping( FL_Coord,
 								   FL_Coord,

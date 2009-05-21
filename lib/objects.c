@@ -252,8 +252,9 @@ fl_make_object( int            objclass,
 	obj->parent             = NULL;
 	obj->child              = NULL;
 	obj->nc                 = NULL;
-	obj->is_child           = 0;
 	obj->group_id           = 0;
+	obj->how_return         = FL_RETURN_ALWAYS;
+	obj->returned           = 0;
 
     return obj;
 }
@@ -366,7 +367,7 @@ fl_add_object( FL_FORM   * form,
 		for ( o = form->first; o != obj; o = o->next )
 		{
 			if (    o->is_under
-				 || o->is_child
+				 || o->parent
 				 || o->objclass == FL_BEGIN_GROUP
 				 || o->objclass == FL_END_GROUP )
 				continue;
@@ -539,7 +540,7 @@ fl_delete_object( FL_OBJECT * obj )
 		fli_recalc_intersections( form );
 
     if (    obj->visible
-		 && ( ! obj->is_child || obj->parent->visible )
+		 && ( ! obj->parent || obj->parent->visible )
 		 && form && form->visible == FL_VISIBLE )
 		fl_redraw_form( form );
 }
@@ -575,7 +576,7 @@ fl_free_object( FL_OBJECT * obj )
 			/* Skip child objects, they get removed automatically when the
 			   parent gets deleted */
 
-			while ( on->is_child )
+			while ( on->parent )
 				on = on->next;
 
 			fl_free_object( o );
@@ -609,10 +610,6 @@ fl_free_object( FL_OBJECT * obj )
     if ( obj->form )
 		fl_delete_object( obj );
 
-	/* Make the object release memory it may have allocated */
-
-    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
-
 	/* If this is a parent object free the children first */
 
 	if ( obj->child )
@@ -621,7 +618,7 @@ fl_free_object( FL_OBJECT * obj )
 	/* If it's a child object remove it from the linked list of childs
 	   of the parent object */
 
-	if ( obj->is_child )
+	if ( obj->parent )
 	{
 		FL_OBJECT *o = obj->parent->child;
 
@@ -635,7 +632,11 @@ fl_free_object( FL_OBJECT * obj )
 		}
 	}
 
-    /* Finally free all memory allocated for the object */
+	/* Make the object release memory it may have allocated */
+
+    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
+
+    /* Finally free all other memory we allocated for the object */
 
 	fl_safe_free( obj->label );
 	fl_safe_free( obj->tooltip );
@@ -649,10 +650,10 @@ fl_free_object( FL_OBJECT * obj )
 
     fl_free( obj );
 
-	/* We might arrived here due to a callback for the object we just
-	   deleted (or one of it's child objects). The following tests
-	   allow the routine that invoked the callback to check if that
-	   is the case and avoid further uses of the object/parent. */
+	/* We might have arrived here due to a callback for the object we just
+	   deleted (or one of it's child objects). The following tests allow
+	   the routine that invoked the callback to check if that is the case
+	   and avoid further uses of the object/parent. */
 
 	if ( obj == fli_handled_obj )
 		fli_handled_obj = NULL;
@@ -843,7 +844,7 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
 
     /* never bother with composite object */
 
-    if ( obj->child || obj->is_child )
+    if ( obj->child || obj->parent )
 		return;
 
     if ( obj->use_pixmap == y )
@@ -1648,7 +1649,7 @@ fli_find_object( FL_OBJECT * obj,
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible
-			 && ( ! obj->is_child || obj->parent->visible )
+			 && ( ! obj->parent || obj->parent->visible )
 			 && (     obj->active
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
@@ -1694,7 +1695,7 @@ fli_find_object_backwards( FL_OBJECT * obj,
 		if (    obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
 			 && obj->visible
-			 && ( ! obj->is_child || obj->parent->visible )
+			 && ( ! obj->parent || obj->parent->visible )
 			 && (     obj->active
 				  || ( obj->posthandle && ! obj->active )
 				  || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
@@ -1823,7 +1824,7 @@ redraw_marked( FL_FORM * form,
              && obj->is_under
 			 && obj->objclass != FL_BEGIN_GROUP
 			 && obj->objclass != FL_END_GROUP
-			 && !obj->is_child )
+			 && ! obj->parent )
 			break;
 
 	if ( obj && obj->next )
@@ -1835,7 +1836,7 @@ redraw_marked( FL_FORM * form,
 				 || ! obj->is_under
 				 || obj->objclass == FL_BEGIN_GROUP
 				 || obj->objclass == FL_END_GROUP
-				 || obj->is_child )
+				 || obj->parent )
 				continue;
 
 			for ( o = obj->next; o; o = o->next )
@@ -1844,7 +1845,7 @@ redraw_marked( FL_FORM * form,
 					 || o->redraw
 					 || o->objclass == FL_BEGIN_GROUP
 					 || o->objclass == FL_END_GROUP
-					 || o->is_child )
+					 || o->parent )
 					continue;
 				 
 				if ( objects_intersect( obj, o ) )
@@ -1863,7 +1864,7 @@ redraw_marked( FL_FORM * form,
     {
 		if (    obj->visible
 			 && obj->redraw
-			 && ( ! obj->is_child || obj->parent->visible ) )
+			 && ( ! obj->parent || obj->parent->visible ) )
 		{
 			obj->redraw = 0;
 
@@ -1934,13 +1935,13 @@ fl_redraw_object( FL_OBJECT * obj )
     /* if composite object, flag all children */
 
     if (    obj->child
-		 && ( ! obj->is_child || obj->parent->visible )
+		 && ( ! obj->parent || obj->parent->visible )
 		 && obj->visible )
 		fli_mark_composite_for_redraw( obj );
 
     /* If obj is a child object and the parent is not visible, do nothing */
 
-    if ( obj->visible && ( ! obj->is_child || obj->parent->visible ) )
+    if ( obj->visible && ( ! obj->parent || obj->parent->visible ) )
 		redraw_marked( obj->form, 0, NULL );
 }
 
@@ -2007,14 +2008,14 @@ object_is_under( FL_OBJECT * obj )
 {
 	FL_OBJECT *o;
 
-	if (    obj->is_child
+	if (    obj->parent
 		 || obj->objclass == FL_BEGIN_GROUP 
 		 || obj->objclass == FL_END_GROUP )
 		return 0;
 
 	for ( o = obj->next; o; o = o->next )
 	{
-		if (    o->is_child
+		if (    o->parent
 			 || o->objclass == FL_BEGIN_GROUP 
 			 || o->objclass == FL_END_GROUP )
 			continue;
@@ -2044,7 +2045,7 @@ mark_for_redraw( FL_FORM * form )
 
     for ( obj = form->first; obj; obj = obj->next )
 	{
-		if ( ! obj->visible || obj->is_child )
+		if ( ! obj->visible || obj->parent )
 			continue;
 
 		if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
@@ -2242,18 +2243,18 @@ fl_handle_it( FL_OBJECT * obj,
 		       last_key = 0;
     static FL_Coord last_mx,
 		            last_my;
-    int status = 0;
     int cur_event;
+	FL_OBJECT *p;
 
     if ( ! obj )
-		return 0;
+		return FL_RETURN_NONE;
 
 #if FL_DEBUG >= ML_WARN
     if ( ! obj->form && event != FL_FREEMEM )
     {
 		M_err( "fl_handle_it", "Bad object %s. Event=%s",
 			   obj->label ? obj->label : "", fli_event_name( event ) );
-		return 0;
+		return FL_RETURN_NONE;
     }
 #endif
 
@@ -2261,7 +2262,14 @@ fl_handle_it( FL_OBJECT * obj,
 		return 0;
 
     if ( ! obj->handle )
-		return 0;
+		return FL_RETURN_NONE;
+
+	/* Make sure return states of parents, grandparents etc. of current
+	   object are all set to FL_NO_RETURN */
+
+	p = obj;
+	while ( ( p = p->parent ) )
+		p->returned = FL_RETURN_NONE;
 
     switch ( event )
     {
@@ -2281,6 +2289,7 @@ fl_handle_it( FL_OBJECT * obj,
 					parent->tipID = fl_add_timeout( fli_context->tooltip_time,
 													tooltip_handler, parent );
 			}
+
 			obj->belowmouse = 1;
 			break;
 		}
@@ -2360,12 +2369,30 @@ fl_handle_it( FL_OBJECT * obj,
 		event = FL_RELEASE;
 
  recover:
+
+	/* call a pre-handler if it exists */
+
     if (    obj->prehandle
 		 && event != FL_FREEMEM
 		 && obj->prehandle( obj, event, mx, my, key, xev ) == FL_PREEMPT )
-		return 0;
+		return FL_RETURN_NONE;
 
-    status = obj->handle( obj, event, mx, my, key, xev );
+	/* Now finally call the real object handler */
+
+    obj->returned = obj->handle( obj, event, mx, my, key, xev );
+
+	/* Filter out result bits that don't fit what the object is set up to
+	   return, FL_RETURN_END_CHANGED must handed specially since it requires
+	   that both the flags for FL_RETURN_CHANGED and FL_RETURN_END are set */
+
+	if (    obj->how_return == FL_RETURN_END_CHANGED
+		 && ( obj->returned & ( FL_RETURN_CHANGED | FL_RETURN_END ) ) !=
+			                                          FL_RETURN_END_CHANGED )
+		obj->returned = FL_RETURN_NONE;
+
+	obj->returned &= obj->how_return;
+
+	/* Now call a posthandler if it exists */
 
     if ( obj->posthandle && event != FL_FREEMEM )
 		obj->posthandle( obj, event, mx, my, key, xev );
@@ -2374,7 +2401,7 @@ fl_handle_it( FL_OBJECT * obj,
     {
 		event = cur_event;
 		cur_event = 0;
-		if ( status )
+		if ( obj->returned )
 			fli_object_qenter( obj );
 		goto recover;
     }
@@ -2385,7 +2412,8 @@ fl_handle_it( FL_OBJECT * obj,
 		fl_unset_text_clipping( );
     }
 
-    return ( event == FL_DBLCLICK || event == FL_TRPLCLICK ) ? 0 : status;
+    return ( event == FL_DBLCLICK || event == FL_TRPLCLICK ) ?
+		   FL_RETURN_NONE : obj->returned;
 }
 
 
@@ -2421,7 +2449,10 @@ fli_handle_object_direct( FL_OBJECT * obj,
 						  int         key,
 						  XEvent    * xev )
 {
-    return fl_handle_it( obj, event, mx, my, key, xev );
+	int ret = fl_handle_it( obj, event, mx, my, key, xev );
+
+	obj->returned = FL_RETURN_NONE;
+	return ret;
 }
 
 
@@ -2859,7 +2890,7 @@ fl_set_object_position( FL_OBJECT * obj,
 	if ( fli_inverted_y )
 		obj->y = TRANY( obj, obj->form );
 
-	if ( ! obj->is_child )
+	if ( ! obj->parent )
 		fli_recalc_intersections( obj->form );
 
     if ( visible )
@@ -2956,7 +2987,7 @@ fl_set_object_size( FL_OBJECT * obj,
 	if ( fli_inverted_y )
 		obj->y = TRANY( obj, obj->form );
 
-	if ( ! obj->is_child )
+	if ( ! obj->parent )
 		fli_recalc_intersections( obj->form );
 
 	fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, NULL );
@@ -3188,4 +3219,60 @@ fl_set_object_helper( FL_OBJECT  * obj,
 
 	fl_safe_free( obj->tooltip );
     obj->tooltip = tip ? fl_strdup( tip ) : NULL;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_object_return( FL_OBJECT * ob,
+					  int         when )
+{
+    if ( ! ob )
+		return;
+
+	switch ( ob->objclass )
+	{
+		case FL_SLIDER:
+		case FL_VALSLIDER:
+			fl_set_slider_return( ob, when );
+			break;
+
+		case FL_THUMBWHEEL:
+			fl_set_thumbwheel_return( ob, when );
+			break;
+
+		case FL_INPUT:
+			fl_set_input_return( ob, when );
+			break;
+
+		case FL_COUNTER:
+			fl_set_counter_return( ob, when );
+			break;
+
+		case FL_TABFOLDER :
+			fl_set_tabfolder_return( ob, when );
+			break;
+
+		case FL_FORMBROWSER :
+			fl_set_formbrowser_return( ob, when );
+			break;
+
+		case FL_DIAL:
+			fl_set_dial_return( ob, when );
+			break;
+
+		case FL_POSITIONER:
+			fl_set_positioner_return( ob, when );
+			break;
+
+		case FL_XYPLOT:
+			fli_xyplot_return( ob, when );
+			break;
+
+		default :
+			M_err( "fl_set_object_return", "Don't know how to set return for "
+				   "object of class %d\n", ob->objclass );
+	}
 }

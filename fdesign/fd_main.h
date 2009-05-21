@@ -122,6 +122,7 @@ extern char main_name[ ];	/* Main creation routine name */
 /* Contains routines for drawing rubberband boxes. */
 
 extern void set_step_size( float );	   /* sets the stepsize */
+
 extern float get_step_size( void );	   /* returns the stepsize */
 
 /* Sets the bounding box in which the drawing occurs */
@@ -158,48 +159,76 @@ extern void scale_box( float *,
 
 extern int is_selected( FL_OBJECT * );	    /* Returns whether the object is
 											   selected. */
+
 extern void addto_selection( FL_OBJECT * );	/* Adds an object to a
 											   selection */
+
 extern void addgroupto_selection( FL_OBJECT * );	/* Adds a group of objects
 													   to a selection */
+
 extern void deletefrom_selection( FL_OBJECT * );	/* Deletes an object from a
 													   selection */
+
 extern void clear_selection( void );	/* Clears the current selection */
+
 extern void resize_selection( FL_Coord,
 							  FL_Coord );
+
 extern void move_selection( FL_Coord,
 							FL_Coord );
+
 extern void deletegroupfrom_selection( FL_OBJECT * );	/* Deletes a group of
 														   objects from a
 													   selection */
+
 extern void draw_selbox( void ); /* Draws the box around the selected objects */
+
 extern void handle_select( const XEvent * );	/* Change the selection when
 												   user puhed mouse. */
+
 extern void handle_move( const XEvent * );	/* Moves or scales the
 											   selection. */
+
 extern void select_all( void );	        /* Selects all objectsin the form */
+
 extern void change_selection( void );	/* Changes the atributes of the
 									   selection */
+
 extern void change_selected_objects( FL_OBJECT * );
+
 extern void align_selection( int );	/* Aligns the objects in the
 									   selection */
+
 extern void show_selection( void );	/* Makes the selection visible. */
+
 extern void hide_selection( void );	/* Makes the selection invisible. */
+
 extern void raise_selection( void );	/* Raises the selection */
+
 extern void lower_selection( void );	/* Lower the selection */
+
 extern void cut_selection( void );	/* Deletes all objects in the
 									   selection */
+
 extern void paste_selection( void );	/* Puts elements from buffer into
 									   form */
+
 extern void copy_selection( void );	/* Copies objects in selection to
 									   buffer */
+
 extern void *dup_selection( void );
+
 extern void set_selection( void * );
+
 extern void free_dupped_selection( void * );
+
 extern void next_selection( void );
+
 extern void prev_selection( void );
+
 extern void group_selection( void );	/* Turns objects in the selection
 										   into a group. */
+
 extern void flatten_selection( void );	/* Removes begin and end groups from
 										   the selection. */
 
@@ -357,6 +386,7 @@ extern FL_OBJECT *add_an_object( int,
 /* Returns a pointer to the name of the class */
 
 extern char *find_class_name( int );
+
 extern char *find_class_name( int );
 
 /* Returns the number of types in the class */
@@ -372,55 +402,71 @@ extern FL_OBJECT *find_class_default( int,
 
 extern const char *find_type_name( int,
 								   int );
+
 extern int find_type_value( int,
 							const char * );
 
 extern unsigned long fd_red,
                      fd_black,
                      fd_white, fd_col;
+
 extern int fd_magic;
 extern int fd_border;
 extern int fd_trackgeometry,
            fd_buttonLabelSize,
            fd_testborder;
+
 extern void color( unsigned long );
+
 extern int getbutton( int );
+
 extern void fd_clear( int,
 					  int,
 					  int,
 					  int );
+
 extern void rect( FL_Coord,
 				  FL_Coord,
 				  FL_Coord,
 				  FL_Coord );
+
 extern void rectf( FL_Coord,
 				   FL_Coord,
 				   FL_Coord,
 				   FL_Coord );
+
 extern int fl_qtest( void );
 
 /* attribute query routines */
 
 extern char *class_name( int );
+
 extern int class_val( const char * );
 
 extern char *gravity_name( int );
+
 extern int gravity_val( const char * );
 
 extern char *resize_name( int );
+
 extern int resize_val( const char * );
 
 extern char *style_name( int );
+
 extern int style_val( const char * );
 
 extern const char *align_name( int );
+
 extern int align_val( const char * );
 
 extern char *lsize_name( int );
+
 extern int lsize_val( const char * );
 
 extern char *boxtype_name( int );
+
 extern int boxtype_val( const char * );
+
 extern char *loadedfile;
 extern char *loadedfile_fullpath;
 
@@ -445,19 +491,28 @@ extern int fd_align_fontsize,
            fd_type_fontsize;
 extern int fd_convert,
            fd_show_palette;
+
 extern const char *get_fd_name( const char * );
+
 extern int fd_bwidth;
+
 extern char *unit_name( int );
+
 extern int unit_val( const char * );
+
 extern int convert_u( int );
+
 extern double get_conversion_factor( void );
+
 extern char xform_header[ ];
 extern char glcanvas_header[ ];
+
 extern void show_geometry( const char *,
 						   int,
 						   int,
 						   int,
 						   int );
+
 extern void show_selmessage( FL_OBJECT *[ ],
 							 int );
 
@@ -490,6 +545,7 @@ extern FL_OBJECT *fl_create_simu_canvas( int,
 										 FL_Coord,
 										 FL_Coord,
 										 const char * );
+
 extern FL_OBJECT *fl_add_simu_canvas( int,
 									  FL_Coord,
 									  FL_Coord,
@@ -503,6 +559,7 @@ extern FL_OBJECT *fl_create_simu_glcanvas( int,
 										   FL_Coord,
 										   FL_Coord,
 										   const char * );
+
 extern FL_OBJECT *fl_add_simu_glcanvas( int,
 										FL_Coord,
 										FL_Coord,
@@ -514,20 +571,29 @@ extern FL_OBJECT *fl_add_simu_glcanvas( int,
 
 extern void save_objclass_spec_info( FILE *,
 									 FL_OBJECT * );
+
 extern void load_objclass_spec_info( FILE *,
 									 FL_OBJECT * );
+
 extern void emit_objclass_spec_info( FILE *,
 									 FL_OBJECT * );
+
 extern void emit_objclass_spec_header( FILE *,
 									   FL_OBJECT * );
+
 extern void emit_objclass_spec_global( FILE *,
 									   FL_OBJECT * );
+
 extern void set_objclass_spec_attributes( FL_OBJECT *,
 										  long );
+
 extern int has_class_spec_info( FL_OBJECT * );
+
 extern void modify_attrib_basic_color( FL_COLOR,
 									   FL_COLOR );
+
 extern void show_attributes( const FL_OBJECT * );
+
 extern int read_key_val( FILE * fp,
 						 char **,
 						 char ** );
@@ -538,43 +604,63 @@ extern int read_key_val( FILE * fp,
 #include "fd/ui_attrib.h"
 
 extern FD_control *fd_control;
+
 extern FD_attrib *fd_attrib;
+
 extern FD_generic_attrib *fd_generic_attrib;
+
 extern FD_test *fd_test;
+
 extern FD_align *fd_align;
+
 extern FD_helpform *fd_help;
+
 extern FD_nullattrib *fd_nullattrib;
 
 extern void loadforms_cb( FL_OBJECT *,
 						  long );
+
 extern void saveforms_cb( FL_OBJECT *,
 						  long );
+
 extern void saveforms_as_cb( FL_OBJECT *,
 							 long );
+
 extern void mergeforms_cb( FL_OBJECT *,
 						   long );
+
 extern void exit_cb( FL_OBJECT *,
 					 long );
+
 extern void changegroupname_cb( FL_OBJECT *,
 								long );
+
 extern void mainname_cb( FL_OBJECT *,
 						 long );
 
 extern void create_the_forms( void );
+
 extern void control_init( FD_control * );
 
 extern FL_FORM *thetestform;
 
 extern void process_xevent( int );
+
 extern int within_selection( float,
 							 float );
+
 extern int no_selection;
+
 extern int C_output( const char *,
 					 FRM *,
 					 int );
+
 extern int is_pasting;
+
 extern void init_align( void );
+
 extern int auto_apply;
+
 extern void cleanup_spec( FL_OBJECT * );
 
 /* fake stuff */
@@ -587,35 +673,47 @@ extern FL_OBJECT *fl_add_ntabfolder( int,
 									 FL_Coord,
 									 FL_Coord,
 									 const char *);
+
 extern FL_OBJECT *fl_create_ntabfolder( int,
 										FL_Coord,
 										FL_Coord,
 										FL_Coord,
 										FL_Coord,
 										const char * );
+
 extern FL_OBJECT *fl_add_nformbrowser( int,
 									   FL_Coord,
 									   FL_Coord,
 									   FL_Coord,
 									   FL_Coord,
 									   const char * );
+
 extern FL_OBJECT *fl_create_nformbrowser( int,
 										  FL_Coord,
 										  FL_Coord,
 										  FL_Coord,
 										  FL_Coord,
 										  const char * );
+
 extern void make_backup( const char * );
+
 extern int is_var_boxtype( int cn );
+
 extern void set_testing_pixmap( FL_OBJECT * );
 
 extern void set_snap_size( int,
 						   int );
+
 extern int get_snap_size( void );
+
 extern void show_pallette( void );
+
 extern void hide_pallette( void );
+
 extern void reset_pallette_menu_status( void );
+
 extern void select_pallette_entry( int );
+
 extern void reset_pallette( void );
 
 #define MAX_CONTENT  128
@@ -689,8 +787,11 @@ typedef struct {
 } SuperSPEC;
 
 extern SuperSPEC *get_superspec( FL_OBJECT * );
+
 extern SuperSPEC *spec_to_superspec( FL_OBJECT * );
+
 extern void *superspec_to_spec( FL_OBJECT * );
+
 extern void copy_superspec( FL_OBJECT * dest,
 							FL_OBJECT * src );
 
@@ -725,18 +826,24 @@ typedef struct {
 						   || ( cls ) == FL_BROWSER )
 
 extern void select_object_by_class( int );
+
 extern char *append_fd_suffix( const char * );
+
 extern const char *get_placement( FL_FORM * );
 
 extern void reset_dupinfo_cache( void );
+
 extern int is_duplicate_info( FL_OBJECT *,
 							  const char * );
+
 extern int noop_handle( FL_OBJECT *,
 						int,
 						FL_Coord,
 						FL_Coord,
 						int,
 						void * );
+
 extern char *get_helper( char * );
+
 
 #endif /* FD_MAIN_H */

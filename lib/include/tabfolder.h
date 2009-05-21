@@ -114,4 +114,7 @@ FL_EXPORT int fl_set_default_tabfolder_corner( int n );
 FL_EXPORT int fl_set_tabfolder_offset( FL_OBJECT * ob,
 									   int		   offset );
 
+FL_EXPORT void fl_set_tabfolder_return( FL_OBJECT * obj,
+										int         when );
+
 #endif /* ! defined FL_FOLDER_H */

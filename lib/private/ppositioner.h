@@ -31,8 +31,7 @@
 #ifndef PPOSITION_H
 #define PPOSITION_H
 
-typedef struct
-{
+typedef struct {
     double xmin,				/* minimal values  */
            ymin;
     double xmax,				/* maximal values  */
@@ -43,7 +42,6 @@ typedef struct
 	       lyval;
     double xstep,				/* step size to which values are rounded  */
 	       ystep;
-    int    how_return;			/* whether always returning value  */
     int    partial;
     int    changed;
 } FLI_POSITIONER_SPEC;

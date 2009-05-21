@@ -100,15 +100,15 @@ fl_get_win_mouse( Window         win,
 {
     Window rjunk,
 		   childwin;
-    int xx,
-		yy,
+    int dummy,
 		ix,
 		iy;
 
     XQueryPointer( flx->display, win, &rjunk, &childwin,
-				   &xx, &yy, &ix, &iy, keymask );
-    *x = ix;
-    *y = iy;
+				   &dummy, &dummy, &ix, &iy, keymask );
+
+	*x = ix;
+	*y = iy;
 
     return childwin;
 }
@@ -124,10 +124,11 @@ fl_get_form_mouse( FL_FORM      * form,
 				   unsigned int * keymask )
 {
 	Window win = None;
-	FL_pixmap *flp = form->flpixmap;
 
     if ( fli_get_visible_forms_index( form ) >= 0 )
     {
+		FL_pixmap *flp = form->flpixmap;
+
 		win = ( flp && flp->win != None ) ? flp->win : form->window;
 		fl_get_win_mouse( win, x, y, keymask );
     }
@@ -354,7 +355,7 @@ fli_show_object_pixmap( FL_OBJECT * ob )
 
 	/* Now handle the label */
 
-	fli_handle_object( ob, FL_DRAWLABEL, 0, 0, 0, 0 );
+	fli_handle_object( ob, FL_DRAWLABEL, 0, 0, 0, NULL );
 }
 
 

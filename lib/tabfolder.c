@@ -43,7 +43,6 @@ typedef struct {
     int          nforms;			/* number of folders            */
     int          active_folder;		/* current active folder        */
     int          last_active;		/* the previous active folder   */
-    int          non_interactive;
     int          x,
 	             y;
     int          max_h;
@@ -53,7 +52,7 @@ typedef struct {
     int          auto_fit;
     int          offset;
     int          num_visible;
-} SPEC;
+} FLI_TABFOLDER_SPEC;
 
 
 static void compute_position( FL_OBJECT * );
@@ -68,10 +67,6 @@ static void get_tabsize( FL_OBJECT *,
 						 int );
 static void shift_tabs( FL_OBJECT *,
 						int left );
-#if TBDEBUG
-static void fl_print_tabfolder( FL_OBJECT  *,
-								const char * );
-#endif
 
 
 #define IsFolderClass( ob ) ( ( ob ) && ( ob )->objclass == FL_TABFOLDER )
@@ -92,7 +87,7 @@ handle( FL_OBJECT * ob,
 		void      * ev )
 {
 	FL_FORM *folder;
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
 
     switch ( event )
     {
@@ -150,7 +145,7 @@ canvas_handler( FL_OBJECT * ob,
 				XEvent    * ev    FL_UNUSED_ARG,
 				void      * data  FL_UNUSED_ARG )
 {
-    SPEC *sp = ob->u_vdata;
+    FLI_TABFOLDER_SPEC *sp = ob->u_vdata;
 
     /* sp->nforms can be zero */
 
@@ -174,7 +169,7 @@ canvas_handler( FL_OBJECT * ob,
 static int
 canvas_cleanup( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->u_vdata;
+    FLI_TABFOLDER_SPEC *sp = ob->u_vdata;
 
     if ( sp->active_folder >= 0 && sp->active_folder < sp->nforms )
     {
@@ -196,25 +191,13 @@ canvas_cleanup( FL_OBJECT * ob )
 
 
 /***************************************
- * For the object itself and all the folders set a dummy form callback
- * to prevent the objects from leaking thru fl_do_forms
+ * For all the folders set a dummy form callback to prevent
+ * the contained objects from leaking thru to fl_do_forms
  ***************************************/
 
 static void
 form_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 		 void      * data  FL_UNUSED_ARG )
-{
-}
-
-
-/***************************************
- * For the object itself and all the folders set a dummy form callback
- * to prevent the objects from leaking thru fl_do_forms
- ***************************************/
-
-static void
-noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-		 long        data  FL_UNUSED_ARG )
 {
 }
 
@@ -231,18 +214,19 @@ fl_create_tabfolder( int          type,
 					 const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
     int absbw,
 		oldu = fl_get_coordunit( );;
 
     ob = fl_make_object( FL_TABFOLDER, type, x, y, w, h, label, handle );
     fl_set_coordunit( FL_COORD_PIXEL );
 
-    ob->boxtype = FL_UP_BOX;
-    absbw = FL_abs( ob->bw );
+    ob->boxtype    = FL_UP_BOX;
+	ob->how_return = FL_RETURN_NONE;
+    ob->spec_size  = sizeof *sp;
+    ob->spec = sp  = fl_calloc( 1, ob->spec_size );
 
-    ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
+    absbw = FL_abs( ob->bw );
 
     sp->parent = ob;
     sp->forms = NULL;
@@ -252,8 +236,6 @@ fl_create_tabfolder( int          type,
     sp->h_pad = 12;
     sp->v_pad = 5;
     sp->auto_fit = FL_NO;
-
-	fl_set_object_callback( ob, noop_cb, 0 );
 
     sp->canvas = fl_create_canvas( FL_SCROLLED_CANVAS, sp->x, sp->y,
 								   ob->w - 2 * absbw,
@@ -270,6 +252,8 @@ fl_create_tabfolder( int          type,
     fl_set_object_gravity( sp->canvas, ob->nwgravity, ob->segravity );
     fl_set_coordunit( oldu );
 
+    fl_add_child( ob, sp->canvas );
+
     return ob;
 }
 
@@ -285,16 +269,11 @@ fl_add_tabfolder( int          type,
 				  FL_Coord     h,
 				  const char * l )
 {
-    FL_OBJECT *ob = fl_create_tabfolder( type, x, y, w, h, l );
-    SPEC *sp = ob->spec;
+    FL_OBJECT *obj = fl_create_tabfolder( type, x, y, w, h, l );
 
-    fl_add_child( ob, sp->canvas );
-    fl_add_object( fl_current_form, ob );
-
-    return ob;
+    fl_add_object( fl_current_form, obj );
+    return obj;
 }
-
-
 
 
 /***************************************
@@ -316,30 +295,30 @@ fli_detach_form( FL_FORM * form )
 int
 fl_get_tabfolder_numfolders( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->nforms;
+    return ( ( FLI_TABFOLDER_SPEC * ) ob->spec )->nforms;
 }
 
 
 /***************************************
- * switched by the application. No need to invoke the callback
+ * Tab is switched by the application, no need to invoke the callback
+ * or report bacl to the user
  ***************************************/
 
 static void
-program_switch( FL_OBJECT * ob,
+program_switch( FL_OBJECT * obj,
 				int         folder )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
 
     if ( folder >= 0 )
     {
-		sp = ob->u_vdata;
-		sp->non_interactive = 1;
-		switch_folder( ob, folder );
-		sp->non_interactive = 0;
+		sp = obj->u_vdata;
+		switch_folder( obj, folder );
+		obj->parent->returned = FL_RETURN_NONE;
 
 		/* this handles set_folder while hidden */
 
-		if ( ! ob->visible || ! ob->form->visible == FL_VISIBLE )
+		if ( ! obj->visible || ! obj->form->visible == FL_VISIBLE )
 			sp->last_active = folder;
     }
 }
@@ -352,17 +331,11 @@ static void
 switch_folder( FL_OBJECT * ob,
 			   long        data )
 {
-    SPEC *sp = ob->u_vdata;
+    FLI_TABFOLDER_SPEC *sp = ob->u_vdata;
     FL_FORM *form;
     Window win;
     FL_OBJECT *bkob;
     int active = data;
-
-#if TBDEBUG
-    fl_print_tabfolder( sp->parent, "SwitchFolder" );
-    fprintf( stderr, "data=%ld active=%d lastactive=%d\n",
-			 data, sp->active_folder, sp->last_active );
-#endif
 
 	if ( data < 0 || data >= sp->nforms )
 	{
@@ -371,6 +344,16 @@ switch_folder( FL_OBJECT * ob,
 	}
 
 	form = sp->forms[ data ];
+
+	if (    active == sp->active_folder
+		 && sp->active_folder >= 0
+		 && ! sp->processing_destroy
+		 && (    ob->parent->how_return == FL_RETURN_ALWAYS
+			  || ob->parent->how_return == FL_RETURN_END ) )
+	{
+		fprintf( stderr, "XXX\n" );
+		ob->parent->returned = FL_RETURN_END;
+	}
 
     if ( active == sp->active_folder || sp->processing_destroy )
     {
@@ -416,7 +399,7 @@ switch_folder( FL_OBJECT * ob,
     form->parent_obj = ob;
     fl_show_form_window( form );
 
-    /* need to redraw the last selected folder tab */
+    /* Need to redraw the last selected folder tab */
 
     if (    sp->active_folder >= 0
 		 && sp->forms[ sp->active_folder ]->visible == FL_VISIBLE )
@@ -452,15 +435,16 @@ switch_folder( FL_OBJECT * ob,
 						   FL_SELECTED_TOPTAB_UPBOX :
 						   FL_SELECTED_BOTTOMTAB_UPBOX );
 
-    sp->active_folder = active;
+	if (    sp->active_folder >= 0
+		 && ob->parent->how_return != FL_RETURN_NONE )
+		ob->parent->returned = FL_RETURN_END_CHANGED & ob->parent->how_return;
 
-    if ( ! sp->non_interactive )
-		fl_call_object_callback( ob->parent );
+    sp->active_folder = active;
 }
 
 
 /***************************************
- * add a new folder to the bunch
+ * Add a new folder to the bunch
  ***************************************/
 
 FL_OBJECT *
@@ -468,7 +452,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
 					const char * title,
 					FL_FORM    * form )
 {
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
     FL_OBJECT *tab;
     static const char *func = "AddtoFolder";
 
@@ -496,7 +480,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     sp->forms = fl_realloc( sp->forms, ( sp->nforms + 1 ) * sizeof *sp->forms );
     sp->title = fl_realloc( sp->title, ( sp->nforms + 1 ) * sizeof *sp->title );
 
-    /* plug the possible object leakage thru fl_do_forms */
+    /* Plug the possible object leakage thru fl_do_forms */
 
     if ( ! form->form_callback )
 		fl_set_form_callback( form, form_cb, NULL );
@@ -520,6 +504,8 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     compute_position( ob );
 
     fl_add_child( ob, tab );
+
+	tab->how_return = FL_RETURN_CHANGED;
 
     if ( sp->nforms == 1 )
     {
@@ -550,7 +536,7 @@ get_tabsize( FL_OBJECT  * ob,
     int w,
 		h,
 		absbw = FL_abs( ob->bw );
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
 
     fl_get_string_dimension( ob->lstyle, ob->lsize, label, strlen( label ),
 							 &w, &h );
@@ -571,7 +557,7 @@ void
 fl_delete_folder_byname( FL_OBJECT  * ob,
 						 const char * name )
 {
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
     int i,
 		done;
 
@@ -594,7 +580,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 {
     int i = num - 1,
 		j;
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
     FL_OBJECT *deleted = NULL;
     FL_FORM *theform = NULL;
 
@@ -651,7 +637,7 @@ FL_FORM *
 fl_get_tabfolder_folder_bynumber( FL_OBJECT * ob,
 								  int         num )
 {
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
     int i = num - 1;
 
     return ( i >= 0 && i < sp->nforms ) ? sp->forms[ i ] : NULL;
@@ -666,7 +652,7 @@ fl_get_tabfolder_folder_byname( FL_OBJECT  * ob,
 								const char * name )
 {
     int i;
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
 
     for ( i = 0; i < sp->nforms; i++ )
 		if ( strcmp( sp->title[ i ]->label, name ) == 0 )
@@ -684,7 +670,7 @@ fl_delete_folder( FL_OBJECT * ob,
 				  FL_FORM   * form )
 {
     int i, done;
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
 
     for ( done = i = 0; ! done && i < sp->nforms; i++ )
 		if ( form == sp->forms[ i ] )
@@ -702,7 +688,7 @@ void
 fl_set_folder( FL_OBJECT * ob,
 			   FL_FORM   * form )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
     int i,
 		done;
 
@@ -729,7 +715,7 @@ void
 fl_set_folder_byname( FL_OBJECT  * ob,
 					  const char * name )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
     int i,
 		done;
 
@@ -757,7 +743,7 @@ void
 fl_set_folder_bynumber( FL_OBJECT * ob,
 						int         num )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
     int i = num - 1;
 
     if ( ! IsFolderClass( ob ) )
@@ -781,7 +767,7 @@ fl_replace_folder_bynumber( FL_OBJECT * ob,
 							int         num,
 							FL_FORM   * form )
 {
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
     int i = num - 1;
 
     if ( i >= 0 && i < sp->nforms && sp->forms[ i ] != form )
@@ -809,7 +795,7 @@ fl_get_folder_number( FL_OBJECT * ob )
 		return 0;
     }
 
-    return ( ( SPEC * ) ob->spec )->last_active + 1;
+    return ( ( FLI_TABFOLDER_SPEC * ) ob->spec )->last_active + 1;
 }
 
 
@@ -825,7 +811,7 @@ fl_get_active_folder_number( FL_OBJECT * ob )
 		return 0;
     }
 
-    return ( ( SPEC * ) ob->spec )->active_folder + 1;
+    return ( ( FLI_TABFOLDER_SPEC * ) ob->spec )->active_folder + 1;
 }
 
 
@@ -835,7 +821,7 @@ fl_get_active_folder_number( FL_OBJECT * ob )
 FL_FORM *
 fl_get_folder( FL_OBJECT * ob )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
 
     if ( ! IsFolderClass( ob ) )
     {
@@ -854,7 +840,7 @@ fl_get_folder( FL_OBJECT * ob )
 const char *
 fl_get_folder_name( FL_OBJECT * ob )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
 
     if ( ! IsFolderClass( ob ) )
     {
@@ -874,7 +860,7 @@ fl_get_folder_name( FL_OBJECT * ob )
 FL_FORM *
 fl_get_active_folder( FL_OBJECT * ob )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
 
     if ( ! IsFolderClass( ob ) )
     {
@@ -894,7 +880,7 @@ fl_get_active_folder( FL_OBJECT * ob )
 const char *
 fl_get_active_folder_name( FL_OBJECT * ob )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
 
     if ( ! IsFolderClass( ob ) )
     {
@@ -919,7 +905,7 @@ fl_get_folder_area( FL_OBJECT * ob,
 					FL_Coord  * w,
 					FL_Coord  * h )
 {
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
 
     compute_position( ob );
     *x = sp->canvas->x;
@@ -935,7 +921,7 @@ fl_get_folder_area( FL_OBJECT * ob,
 int
 fl_get_tabfolder_offset( FL_OBJECT * ob )
 {
-    return ( ( SPEC * ) ob->spec )->offset;
+    return ( ( FLI_TABFOLDER_SPEC * ) ob->spec )->offset;
 }
 
 
@@ -946,7 +932,7 @@ int
 fl_set_tabfolder_offset( FL_OBJECT * ob,
 						 int         offset )
 {
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
     int old = sp->offset;
 
     if ( offset < 0 )
@@ -971,7 +957,7 @@ fl_set_tabfolder_offset( FL_OBJECT * ob,
 static void
 compute_top_position( FL_OBJECT * ob )
 {
-    SPEC *sp ;
+    FLI_TABFOLDER_SPEC *sp ;
     FL_OBJECT *tab;
     int i,
 		max_h = 4;
@@ -1051,7 +1037,7 @@ compute_top_position( FL_OBJECT * ob )
 static void
 compute_bottom_position( FL_OBJECT * ob )
 {
-    SPEC *sp;
+    FLI_TABFOLDER_SPEC *sp;
     FL_OBJECT *tab;
     int i,
 		max_h = 4,
@@ -1111,7 +1097,7 @@ int
 fl_set_tabfolder_autofit( FL_OBJECT * ob,
 						  int         y )
 {
-    SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = ob->spec;
     int old = sp->auto_fit;
 
     sp->auto_fit = y;
@@ -1126,7 +1112,7 @@ static void
 shift_tabs( FL_OBJECT * ob,
 			int         left )
 {
-    SPEC *sp = ob->u_vdata;
+    FLI_TABFOLDER_SPEC *sp = ob->u_vdata;
     int newp = sp->offset + left;
 
     if ( newp < 0 )
@@ -1138,4 +1124,15 @@ shift_tabs( FL_OBJECT * ob,
     sp->offset = newp;
 
     compute_position( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_tabfolder_return( FL_OBJECT * obj,
+						 int         when )
+{
+	obj->how_return = when;
 }

@@ -140,8 +140,8 @@ main( int    argc,
 	fl_show_form( fd_mainform->mainform, FL_PLACE_CENTER, FL_FULLBORDER,
 				  "TabFolder" );
 
-   while ( fl_do_forms( ) )
-	   /* empty */;
+	while ( fl_do_forms( ) )
+		/* empty */ ;
 
    return 0;
 }

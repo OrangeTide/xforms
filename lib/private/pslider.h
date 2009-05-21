@@ -46,32 +46,14 @@ typedef FLI_VALUATOR_SPEC FLI_SLIDER_SPEC;
 #define RIGHT_OF_KNOB   1
 #define BELOW_KNOB      1
 
-#define IS_HSLIDER( t )      (    t == FL_HOR_SLIDER          	\
-							   || t == FL_HOR_FILL_SLIDER     	\
-							   || t == FL_HOR_NICE_SLIDER     	\
-							   || t == FL_HOR_NICE_SLIDER2     	\
-							   || t == FL_HOR_BROWSER_SLIDER  	\
-							   || t == FL_HOR_BROWSER_SLIDER2 	\
-							   || t == FL_HOR_THIN_SLIDER     	\
-							   || t == FL_HOR_BASIC_SLIDER )
+#define IS_HSLIDER( t )      ( t & FL_HOR_FLAG )
 
 #define IS_VSLIDER( t )      ( ! IS_HSLIDER( t ) )
 
 #define IS_FILL( t )         (    t == FL_VERT_FILL_SLIDER      \
                                || t == FL_HOR_FILL_SLIDER )
 
-#define IS_SCROLLBAR( t )    (    t == FL_HOR_NICE_SLIDER       \
-						       || t == FL_HOR_NICE_SLIDER2      \
-						       || t == FL_HOR_BROWSER_SLIDER    \
-						       || t == FL_HOR_BROWSER_SLIDER2   \
-						       || t == FL_HOR_THIN_SLIDER       \
-						       || t == FL_HOR_BASIC_SLIDER      \
-						       || t == FL_VERT_NICE_SLIDER      \
-						       || t == FL_VERT_NICE_SLIDER2     \
-						       || t == FL_VERT_BROWSER_SLIDER   \
-						       || t == FL_VERT_BROWSER_SLIDER2  \
-						       || t == FL_VERT_THIN_SLIDER      \
-                               || t == FL_VERT_BASIC_SLIDER )
+#define IS_SCROLLBAR( t )    ( t & FL_SCROLL_FLAG )
 
 #define IS_FLATBOX( t )      (    t == FL_FRAME_BOX        \
 							   || t == FL_EMBOSSED_BOX 	  \

@@ -29,8 +29,7 @@
  * fdesign assumes this */
 
 
-typedef struct
-{
+typedef struct {
     int             numitems;				/* number of items in menu */
     int             val;					/* last menu item selected */
     char          * items[ MAXITEMS ];	    /* individual menu items   */

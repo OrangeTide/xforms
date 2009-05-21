@@ -55,8 +55,6 @@ static void delete_form( FLI_FORMBROWSER_SPEC * sp,
 static void display_forms( FLI_FORMBROWSER_SPEC * sp );
 static void form_cb( FL_OBJECT * ob,
 					 void      * data );
-static void noop_cb( FL_OBJECT * ob,
-					 long        data );
 static int handle( FL_OBJECT * ob,
 				   int         event,
 				   FL_Coord    mx,
@@ -92,29 +90,24 @@ fl_create_formbrowser( int          type,
 
     ob = fl_make_object( FL_FORMBROWSER, type, x, y, w, h, label, handle );
     fl_set_coordunit( FL_COORD_PIXEL );
-    ob->boxtype = FL_FORMBROWSER_BOXTYPE;
-    ob->align = FL_FORMBROWSER_ALIGN;
-    ob->col1 = FL_FORMBROWSER_COL1;
-    ob->col2 = FL_BLACK;
-
-	fl_set_object_callback( ob, noop_cb, 0 );
+    ob->boxtype    = FL_FORMBROWSER_BOXTYPE;
+    ob->align      = FL_FORMBROWSER_ALIGN;
+    ob->col1       = FL_FORMBROWSER_COL1;
+    ob->col2       = FL_BLACK;
+    ob->spec_size = sizeof *sp;
+    ob->spec      = sp = fl_calloc( 1, ob->spec_size );
 
     absbw = FL_abs( ob->bw );
 
-    ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, ob->spec_size );
-    sp->form = NULL;
-
+    sp->form   = NULL;
     sp->parent = ob;
-
     sp->scroll = FL_SMOOTH_SCROLL;
-
     sp->vw_def = sp->hh_def = D = fli_get_default_scrollbarsize( ob );
-    sp->canvas = fl_create_canvas( FL_SCROLLED_CANVAS,
+    sp->canvas = fl_create_canvas( FL_CANVAS,
 								   ob->x + absbw, ob->y + absbw,
 								   ob->w - 2 * absbw - sp->vw_def,
 								   ob->h - 2 * absbw - sp->hh_def,
-								   label ? label : "formbrowser" );
+								   label );
 
     sp->canvas->u_vdata = sp;
 
@@ -131,7 +124,7 @@ fl_create_formbrowser( int          type,
 
     sp->hsl = fl_create_scrollbar( FL_HOR_THIN_SCROLLBAR, ob->x,
 								   y + h - D, w - D, D, "" );
-    fl_set_scrollbar_value( sp->hsl, 0.0 );
+    fl_set_scrollbar_value( sp->hsl, sp->old_hval = 0.0 );
 	fl_set_object_boxtype( sp->hsl, ob->boxtype );
     sp->hsl->visible = sp->h_pref == FL_ON;
     sp->hsl->resize = FL_RESIZE_X;
@@ -141,15 +134,21 @@ fl_create_formbrowser( int          type,
 								   x + w - D, y, D, h - D, "" );
     fl_set_object_boxtype( sp->vsl, ob->boxtype );
     sp->vsl->visible = sp->v_pref == FL_ON;
-    fl_set_scrollbar_value( sp->vsl, 0.0 );
-    sp->vsl->resize = FL_RESIZE_Y;
+    fl_set_scrollbar_value( sp->vsl, sp->old_hval = 0.0 );
+	sp->vsl->resize = FL_RESIZE_Y;
     fl_set_object_callback( sp->vsl, vcb, 0 );
 
     fl_add_child( ob, sp->canvas );
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
 
+	/* This must come after adding the childs since otherwise the childs get
+	   set to the same return behaviour as the parent */
+
+	fl_set_formbrowser_return( ob, FL_RETURN_NONE );
+
     fl_set_coordunit( oldu );
+
     return ob;
 }
 
@@ -231,9 +230,8 @@ fl_set_formbrowser_topform_bynumber( FL_OBJECT * ob,
 		for ( h = f = 0; f < sp->top_form; f++ )
 			h += sp->form[ f ]->h;
 
-		fl_set_scrollbar_value( sp->vsl,
-								( double ) h /
-								( sp->max_height - sp->canvas->h ) );
+		sp->old_vval = ( double ) h / ( sp->max_height - sp->canvas->h );
+		fl_set_scrollbar_value( sp->vsl, sp->old_vval );
     }
 
     return form;
@@ -587,9 +585,8 @@ fl_set_formbrowser_xoffset( FL_OBJECT * ob,
 		offset = sp->max_width - sp->canvas->w;
 
 	sp->left_edge = offset;
-	fl_set_scrollbar_value( sp->hsl,
-							( double ) sp->left_edge /
-							( sp->max_width - sp->canvas->w ) );
+	sp->old_hval = ( double ) sp->left_edge / ( sp->max_width - sp->canvas->w );
+	fl_set_scrollbar_value( sp->hsl, sp->old_hval );
 
     return current;
 }
@@ -643,9 +640,8 @@ fl_set_formbrowser_yoffset( FL_OBJECT * ob,
 	sp->top_form = ++f;
 	sp->top_edge = offset - h;
 
-	fl_set_scrollbar_value( sp->vsl,
-							( double ) offset /
-							( sp->max_height - sp->canvas->h ));
+	sp->old_vval = ( double ) offset / ( sp->max_height - sp->canvas->h );
+	fl_set_scrollbar_value( sp->vsl, sp->old_vval );
 
     return current;
 }
@@ -747,7 +743,7 @@ display_forms( FLI_FORMBROWSER_SPEC * sp )
     fli_inherit_attributes( sp->parent, sp->vsl );
     fli_inherit_attributes( sp->parent, sp->hsl );
 
-    /* I prefer to keep scrollbar umresizable */
+    /* I prefer to keep scrollbar unresizable */
 
     sp->vsl->resize = sp->hsl->resize = FL_RESIZE_NONE;
 
@@ -792,11 +788,11 @@ handle( FL_OBJECT * ob,
 
     switch ( event )
     {
-		case FL_ATTRIB:
+		case FL_ATTRIB :
 			check_scrollbar( ob );
 			/* fall through */
 
-		case FL_DRAW:
+		case FL_DRAW :
 			fl_set_canvas_decoration( sp->canvas,
 									  fli_boxtype2frametype( ob->boxtype ) );
 			sp->processing_destroy = 0;
@@ -809,7 +805,7 @@ handle( FL_OBJECT * ob,
 			}
 			break;
 
-		case FL_FREEMEM:
+		case FL_FREEMEM :
 			fl_free( sp );
 			break;
     }
@@ -872,13 +868,55 @@ form_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 
 /***************************************
- * Dummy
  ***************************************/
 
 static void
-noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-		 long        data  FL_UNUSED_ARG )
+hcb( FL_OBJECT * obj,
+	 long        data  FL_UNUSED_ARG )
 {
+    FLI_FORMBROWSER_SPEC *sp = obj->parent->spec;
+    double nval = fl_get_scrollbar_value( sp->hsl );
+	int old_left_edge = sp->left_edge;
+
+    sp->left_edge = ( sp->max_width - sp->canvas->w ) * nval;
+	if ( old_left_edge != sp->left_edge )
+	{
+		fl_freeze_form( obj->form );
+		display_forms( sp );
+		fl_unfreeze_form( obj->form );
+	}
+
+	switch ( obj->parent->how_return )
+	{
+		case FL_RETURN_END_CHANGED :
+			if ( obj->returned & FL_RETURN_END && sp->old_hval != nval )
+			{
+				obj->parent->returned = FL_RETURN_END_CHANGED;
+				sp->old_hval = nval;
+			}
+			break;
+
+		case FL_RETURN_END :
+			if ( obj->returned & FL_RETURN_END )
+			{
+				sp->old_hval = nval;
+				obj->parent->returned = FL_RETURN_END;
+			}
+			break;
+
+		case FL_RETURN_CHANGED :
+			if ( obj->returned & FL_RETURN_CHANGED )
+			{
+				sp->old_hval = nval;
+				obj->parent->returned = FL_RETURN_CHANGED;
+			}
+			break;
+
+		case FL_RETURN_ALWAYS :
+			sp->old_hval = nval;
+			obj->parent->returned = obj->returned;
+			break;
+	}
 }
 
 
@@ -886,36 +924,19 @@ noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 static void
-hcb( FL_OBJECT * ob,
+vcb( FL_OBJECT * obj,
 	 long        data  FL_UNUSED_ARG )
 {
-    FLI_FORMBROWSER_SPEC *sp = ob->parent->spec;
-    double val = fl_get_scrollbar_value( sp->hsl );
-
-    sp->left_edge = ( sp->max_width - sp->canvas->w ) * val;
-    fl_freeze_form( ob->form );
-    display_forms( sp );
-    fl_unfreeze_form( ob->form );
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-vcb( FL_OBJECT * ob,
-	 long        data  FL_UNUSED_ARG )
-{
-    FLI_FORMBROWSER_SPEC *sp = ob->parent->spec;
-    double val = fl_get_scrollbar_value( sp->vsl );
+    FLI_FORMBROWSER_SPEC *sp = obj->parent->spec;
+    double nval = fl_get_scrollbar_value( sp->vsl );
 
     if ( sp->scroll == FL_JUMP_SCROLL )
-		sp->top_form = ( sp->nforms - 1 ) * val;
+		sp->top_form = ( sp->nforms - 1 ) * nval;
     else
     {
 		/* do pixel based scrolling */
 
-		int pos = ( sp->max_height - sp->canvas->h ) * val;
+		int pos = ( sp->max_height - sp->canvas->h ) * nval;
 		int h = 0,
 			f;
 
@@ -926,9 +947,41 @@ vcb( FL_OBJECT * ob,
 		sp->top_edge = sp->form[ sp->top_form ]->h - h + pos;
     }
 
-    fl_freeze_form( ob->form );
+    fl_freeze_form( obj->form );
     display_forms( sp );
-    fl_unfreeze_form( ob->form );
+    fl_unfreeze_form( obj->form );
+
+	switch ( obj->parent->how_return )
+	{
+		case FL_RETURN_END_CHANGED :
+			if ( obj->returned & FL_RETURN_END && sp->old_vval != nval )
+			{
+				obj->parent->returned = FL_RETURN_END_CHANGED;
+				sp->old_vval = nval;
+			}
+			break;
+
+		case FL_RETURN_END :
+			if ( obj->returned & FL_RETURN_END )
+			{
+				sp->old_vval = nval;
+				obj->parent->returned = FL_RETURN_END;
+			}
+			break;
+
+		case FL_RETURN_CHANGED :
+			if ( obj->returned & FL_RETURN_CHANGED )
+			{
+				sp->old_vval = nval;
+				obj->parent->returned = FL_RETURN_CHANGED;
+			}
+			break;
+
+		case FL_RETURN_ALWAYS :
+			sp->old_vval = nval;
+			obj->parent->returned = obj->returned;
+			break;
+	}
 }
 
 
@@ -1069,13 +1122,13 @@ check_scrollbar( FL_OBJECT * ob )
     {
 		sp->top_edge = 0;
 		sp->top_form = 0;
-		fl_set_scrollbar_value( sp->vsl, 0.0 );
+		fl_set_scrollbar_value( sp->vsl, sp->old_vval = 0.0 );
     }
 
     if ( ! sp->h_on && h_on && sp->canvas->w >= sp->max_width )
     {
 		sp->left_edge = 0;
-		fl_set_scrollbar_value( sp->hsl, 0.0 );
+		fl_set_scrollbar_value( sp->hsl, sp->old_hval = 0.0 );
     }
 
     sp->vsl->visible = sp->v_on;
@@ -1097,4 +1150,28 @@ check_scrollbar( FL_OBJECT * ob )
 
 	if ( sp->canvas->w > 0 && sp->canvas->h > 0 )
 		fl_winresize( FL_ObjWin( sp->canvas ), sp->canvas->w, sp->canvas->h );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_formbrowser_return( FL_OBJECT * obj,
+						   int         when )
+{
+	FLI_FORMBROWSER_SPEC *sp = obj->spec;
+
+	obj->how_return = when;
+
+	if ( when == FL_RETURN_NONE || when == FL_RETURN_CHANGED )
+	{
+		fl_set_scrollbar_return( sp->vsl, FL_RETURN_CHANGED );
+		fl_set_scrollbar_return( sp->hsl, FL_RETURN_CHANGED );
+	}
+	else
+	{
+		fl_set_scrollbar_return( sp->vsl, FL_RETURN_ALWAYS );
+		fl_set_scrollbar_return( sp->hsl, FL_RETURN_ALWAYS );
+	}
 }

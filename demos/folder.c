@@ -190,6 +190,7 @@ main( int    argc,
 	  char *argv[ ] )
 {
 	FD_mainform *fd_mainform;
+	FL_OBJECT *o;
 
 	fl_set_border_width( -2 );
 	fl_initialize( &argc, argv, 0, 0, 0 );
@@ -202,8 +203,7 @@ main( int    argc,
 	fl_show_form( fd_mainform->mainform, FL_PLACE_ASPECT, FL_FULLBORDER,
 				  "TabFolder");
 
-	while ( fl_do_forms( ) )
-		/* empty */ ;
+	fl_do_forms( );
 
    return 0;
 }

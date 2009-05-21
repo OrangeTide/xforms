@@ -31,8 +31,7 @@
 
 /* Canvas specific stuff */
 
-typedef struct
-{
+typedef struct {
     const char            * winname;	/* name of the window                */
     Window                  parent;		/* real parent(needed for dblbuffer) */
     Window                  window;		/* Canvas window                     */

@@ -93,7 +93,6 @@ libforms_la_SOURCES = \
 	scrollbut.c \
 	select.c \
 	signal.c \
-	simu.c \
 	sldraw.c \
 	slider.c \
 	space.c \

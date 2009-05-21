@@ -66,14 +66,14 @@ static void
 draw_positioner( FL_OBJECT * ob )
 {
     FLI_POSITIONER_SPEC *sp = ob->spec;
-    FL_Coord absbw = FL_abs(ob->bw);
+    FL_Coord absbw = FL_abs( ob->bw );
     FL_Coord x1 = ob->x + absbw + 1,
 		     y1 = ob->y + absbw + 1;
     FL_Coord w1 = ob->w - 2 * absbw - 2,
               h1 = ob->h - 2 * absbw - 2;
     FL_Coord xx,
              yy;
-    int oldmode = fl_get_drawmode();
+    int oldmode = fl_get_drawmode( );
     int newmode = ob->type == FL_OVERLAY_POSITIONER ? GXxor : GXcopy;
 
 
@@ -198,20 +198,20 @@ handle_it( FL_OBJECT * ob,
 
 			if ( handle_mouse( ob, mx, my ) )
 				sp->changed = 1;
-			if ( sp->how_return == FL_RETURN_CHANGED && sp->changed )
+			if ( ob->how_return == FL_RETURN_CHANGED && sp->changed )
 			{
 				sp->changed = 0;
 				return 1;
 			}
-			else if ( sp->how_return == FL_RETURN_ALWAYS )
+			else if ( ob->how_return == FL_RETURN_ALWAYS )
 				return 1;
 			break;
 
 		case FL_RELEASE:
 			if ( key != FL_MBUTTON1 )
 				break;
-			return    sp->how_return == FL_RETURN_END
-				   || (    sp->how_return == FL_RETURN_END_CHANGED
+			return    ob->how_return == FL_RETURN_END
+				   || (    ob->how_return == FL_RETURN_END_CHANGED
 						&& sp->changed );
 
 		case FL_FREEMEM:
@@ -238,11 +238,12 @@ fl_create_positioner( int          type,
     FLI_POSITIONER_SPEC *sp;
 
     ob = fl_make_object( FL_POSITIONER, type, x, y, w, h, label, handle_it );
-    ob->boxtype = FL_POSITIONER_BOXTYPE;
-    ob->col1    = FL_POSITIONER_COL1;
-    ob->col2    = FL_POSITIONER_COL2;
-    ob->align   = FL_POSITIONER_ALIGN;
-    ob->lcol    = FL_POSITIONER_LCOL;
+    ob->boxtype    = FL_POSITIONER_BOXTYPE;
+    ob->col1       = FL_POSITIONER_COL1;
+    ob->col2       = FL_POSITIONER_COL2;
+    ob->align      = FL_POSITIONER_ALIGN;
+    ob->lcol       = FL_POSITIONER_LCOL;
+    ob->how_return = FL_RETURN_CHANGED;
 
     if ( ob->type == FL_OVERLAY_POSITIONER )
     {
@@ -260,7 +261,6 @@ fl_create_positioner( int          type,
     sp->xval = sp->lxval = 0.5;
     sp->yval = sp->lyval = 0.5;
 
-    sp->how_return = FL_RETURN_CHANGED;
 
     return ob;
 }
@@ -278,9 +278,8 @@ fl_add_positioner( int          type,
 				   FL_Coord     h,
 				   const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *ob = fl_create_positioner( type, x, y, w, h, label );
 
-    ob = fl_create_positioner( type, x, y, w, h, label );
     fl_add_object( fl_current_form, ob );
     return ob;
 }
@@ -436,8 +435,8 @@ fl_set_positioner_ystep( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_positioner_return( FL_OBJECT * ob,
-						  int         value )
+fl_set_positioner_return( FL_OBJECT * obj,
+						  int         when )
 {
-    ( ( FLI_POSITIONER_SPEC * ) ob->spec )->how_return = value;
+    obj->how_return = when;
 }

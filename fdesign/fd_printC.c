@@ -1528,7 +1528,7 @@ output_object( FILE      * fn,
 	char *label;
     double sc = get_conversion_factor( );
 
-    if ( obj->is_child )
+    if ( obj->parent )
         return;
 
     strcpy( fdvname, "fdui" );

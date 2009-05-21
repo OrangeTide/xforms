@@ -122,24 +122,14 @@ A different looking horizontal slider.
 @subsection Slider Interaction
 
 Whenever the user changes the value of the slider using the mouse, the
-slider is returned (or the associated callback function is called) by
-the interaction routines. The slider position is changed by moving the
-mouse inside the slider area. For fine control, hold down the left or
-right @code{<Shift>} key while moving the slider. Depending on the
-object size (pixels) and the slider value range, dragging the sliding
-bar might not always get the value you want, even with the
-@code{<Shift>} fine control, if the range is larger than the number of
-pixels (for example, if you use 100 pixels to represent 150 values, no
-matter how you control the motion, you will not get all the values).
-In these situations, you should use the right or middle mouse button
-with appropriate increments (see
-@code{@ref{fl_set_slider_increment()}} below). The interaction with
-increment is that it updates the value first (as opposed to reading
-off the pixel position) then maps the value back into pixel position,
-thus all values of multiples of the increments are obtainable.
+slider is returned (unless there's callback function associated with
+the object) by the interaction routines. The slider position is
+changed by moving the mouse inside the slider area. For fine control,
+hold down the @code{<Shift>} key while moving the slider.
 
-In some applications you might not want the slider to be returned all
-the time. To change the default, call the following routine:
+In some cases you might not want the slider to be returned or its
+callback called each time its value changes. To change the default,
+call the following routine:
 @findex fl_set_slider_return()
 @anchor{fl_set_slider_return()}
 @example
@@ -148,13 +138,18 @@ void fl_set_slider_return(FL_OBJECT *obj, int when)
 @noindent
 where the parameter @code{when} can be one of the four values:
 @table @code
+@tindex FL_RETURN_NEVER
+@item FL_RETURN_NEVER
+Never return or invoke callback.
+
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-Return at end (mouse release) if value is changed (since last return).
+Return (or invoke callback) at end (mouse release) if value is changed
+since last return.
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Return whenever the slider value is changed.
+Return whenever the slider value is changed. This is the default.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
@@ -163,7 +158,8 @@ not.
 
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
-return all the time. Usually not very useful.
+Return when the value changed or at end (mouse release). Usually not
+very useful.
 @end table
 
 See the demo program @file{objreturn.c} for an example use of this.
@@ -202,41 +198,49 @@ double fl_get_slider_value(FL_OBJECT *obj);
 void fl_get_slider_bounds(FL_OBJECT *obj, double *min, double *max);
 @end example
 
-In a number of situations you may like slider values to be rounded to
-some values, e.g. to integer values. To this end use the routine
-@findex fl_set_slider_step()
-@anchor{fl_set_slider_step()}
-@example
-void fl_set_slider_step(FL_OBJECT *obj, double step);
-@end example
-@noindent
-After this call slider values will be rounded to multiples of @code{step}.
-Use the value 0.0 for @code{step} to switch off rounding.
+@c -----------------------------------------------------------------
+@c The following function still exist but the description is wrong.
+@c fl_set_slider_step() doesn't do anything and
+@c fl_set_slider_increment() is only used internallyy for sliders
+@c used in scrollbars (and doesn't do anything for normal sliders)
 
-By default, if the mouse is pressed below or above the the sliding
-bar, the sliding bar jumps to the location where the mouse got pressed.
-You can, however, use the following routine to change this default so
-the jumps are made is discrete increments:
-@findex fl_set_slider_increment()
-@anchor{fl_set_slider_increment()}
-@example
-void fl_set_slider_increment(FL_OBJECT *obj, double lj, double rj);
-@end example
-@noindent
-where @code{lj} indicates how much to jump if the left mouse button is
-pressed and @code{rj} indicates how much to increment if right/middle
-mouse buttons pressed. This routine can be used if finer control of
-the slider value is needed or to assign different meanings to different
-mouse buttons. For example, for the slider in the browser class, the
-left mouse jump is made to be one page and right jump is made to be
-one line.
+@c In a number of situations you may like slider values to be rounded to
+@c some values, e.g. to integer values. To this end use the routine
+@c @findex fl_set_slider_step()
+@c @anchor{fl_set_slider_step()}
+@c @example
+@c void fl_set_slider_step(FL_OBJECT *obj, double step);
+@c @end example
+@c @noindent
+@c After this call slider values will be rounded to multiples of @code{step}.
+@c Use the value 0.0 for @code{step} to switch off rounding.
 
-To obtain the current increment, use the following routine
-@findex fl_get_slider_increment()
-@anchor{fl_get_slider_increment()}
-@example
-void fl_get_slider_increment(FL_OBJECT *obj, double *lj, double *rj);
-@end example
+
+@c By default, if the mouse is pressed below or above the the sliding
+@c bar, the sliding bar jumps to the location where the mouse got pressed.
+@c You can, however, use the following routine to change this default so
+@c the jumps are made is discrete increments:
+@c @findex fl_set_slider_increment()
+@c @anchor{fl_set_slider_increment()}
+@c @example
+@c void fl_set_slider_increment(FL_OBJECT *obj, double lj, double rj);
+@c @end example
+@c @noindent
+@c where @code{lj} indicates how much to jump if the left mouse button is
+@c pressed and @code{rj} indicates how much to increment if right/middle
+@c mouse buttons pressed. This routine can be used if finer control of
+@c the slider value is needed or to assign different meanings to different
+@c mouse buttons. For example, for the slider in the browser class, the
+@c left mouse jump is made to be one page and right jump is made to be
+@c one line.
+@c 
+@c To obtain the current increment, use the following routine
+@c @findex fl_get_slider_increment()
+@c @anchor{fl_get_slider_increment()}
+@c @example
+@c void fl_get_slider_increment(FL_OBJECT *obj, double *lj, double *rj);
+@c @end example
+@c -----------------------------------------------------------------
 
 
 @node Slider Attributes
@@ -410,13 +414,15 @@ Similar to @code{FL_HOR_THIN_SCROLLBAR}.
 @node Scrollbar Interaction
 @subsection Scrollbar Interaction
 
-Whenever the user changes the value of the scrollbar using the mouse,
-the scrollbar's callback is called. The scrollbar position is changed
-by moving the mouse inside the scrollbar area. For fine control, hold
-down the left or right @code{<Shift>} key while moving the slider.
+Whenever the user changes the value of the scrollbar, the scrollbar's
+callback is called (if one is associated with the scrollbar). The
+scrollbar position is changed by moving the mouse inside the scrollbar
+area or. For fine control hold down the left or right @code{<Shift>}
+key while moving the slider.
 
-In some applications you might not want the scrollbar to be returned
-all the time. To change the default, call the following routine:
+You can control under which conditions the scrollbar gets returned to
+your application or its callback invoked. To change the default, call
+the following routine:
 @findex fl_set_scrollbar_return()
 @anchor{fl_set_scrollbar_return()}
 @example
@@ -426,13 +432,18 @@ void fl_set_scrollbar_return(FL_OBJECT *obj, int when);
 where the parameter @code{when} can be one of the following four
 values:
 @table @code
+@tindex FL_RETURN_NEVER
+@item FL_RETURN_NEVER
+Never return or invoke callback.
+
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-Return at end (mouse release) if value is changed (since last return).
+Return or nvoke callback at end (mouse release) if value is changed
+(since last return).
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Return whenever the scrollbar value is changed.
+Return whenever the scrollbar value is changed. This is the default.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
@@ -463,8 +474,8 @@ void fl_set_scrollbar_bounds(FL_OBJECT *obj, double min, double max);
 By default, the minimum value for a slider is 0.0, the maximum is 1.0
 and the value is 0.5. For vertical sliders the slider position for the
 minimum value is at the left, for horizontal sliders at the top of the
-slider. By setting @code{nin} to a larger value than @code{max} in a
-call of @code{@ref{fl_set_slider_bounds()}} this can be reversed.
+slider. By setting @code{min} to a larger value than @code{max} in a
+call of @code{@ref{fl_set_scrollbar_bounds()}} this can be reversed.
 
 If in a call of @code{@ref{fl_set_scrollbar_bounds()}} the actual
 value of a scrollbar isn't within the range of the new bounds, it's
@@ -484,26 +495,31 @@ double fl_get_scrollbar_value(FL_OBJECT *obj);
 void fl_get_scrollbar_bounds(FL_OBJECT *obj, double *min, double *max);
 @end example
 
-In a number of situations you would like scrollbar values to be
-rounded to some values, e.g. to integer values. To this end use the
-routine
-@findex fl_set_scrollbar_step()
-@anchor{fl_set_scrollbar_step()}
-@example
-void fl_set_scrollbar_step(FL_OBJECT *obj, double step);
-@end example
-@noindent
-After this call the scrollbar values will be rounded to multiples of
-@code{step}. Use the value 0.0 for @code{step} to switch off rounding.
-This should not be confused with the increment/decrement value when
-the scroll buttons are pressed. Use
-@code{@ref{fl_set_scrollbar_increment()}} to change the increment
-value.
+@c ---------------------------------------------------------------
+@c The function fl_set_scrollbar_step() still exists but doesn't
+@c has any effect!
 
-By default, if the mouse is pressed below or above the the sliding
-bar, the bar jumps to the location where the mouse is pressed. You
-can, however, use the following routine to change this default so the
-jumps are made is discrete increments:
+@c In a number of situations you would like scrollbar values to be
+@c rounded to some values, e.g. to integer values. To this end use the
+@c routine
+@c @findex fl_set_scrollbar_step()
+@c @anchor{fl_set_scrollbar_step()}
+@c @example
+@c void fl_set_scrollbar_step(FL_OBJECT *obj, double step);
+@c @end example
+@c @noindent
+@c After this call the scrollbar values will be rounded to multiples of
+@c @code{step}. Use the value 0.0 for @code{step} to switch off rounding.
+@c This should not be confused with the increment/decrement value when
+@c the scroll buttons are pressed. Use
+@c @code{@ref{fl_set_scrollbar_increment()}} to change the increment
+@c value.
+@c ---------------------------------------------------------------
+
+By default, if the mouse is pressed beside the the sliding bar, the
+bar starts to jumps in the direction of the mouse position. You can
+use the following routine to change this size of the steps being
+made :
 @findex fl_set_scrollbar_increment()
 @anchor{fl_set_scrollbar_increment()}
 @example
@@ -512,11 +528,12 @@ void fl_set_scrollbar_increment(FL_OBJECT *obj, double lj, double rj);
 @noindent
 where @code{lj} indicates how much to increment if the left mouse
 button is pressed and @code{rj} indicates how much to jump if the
-right/middle mouse button pressed. For example, for the scrollbar in
-the browser class, the left mouse jump is made to be one page and
-right/middle mouse jump is made to be one line. The increment
-(decrement) value when the scrollbuttons are pressed is set to the
-value of the right jump.
+middle mouse button pressed. For example, for the scrollbar in the
+browser class, the left mouse jump is made to be one page and middle
+mouse jump is made to be one line. The increment (decrement) value
+when the scrollbuttons are pressed is set to the value of the right
+jump. The default values for @code{lj} and @code{rj} are @code{0.1}
+and @code{0.02}.
 
 To obtain the current increment settings, use the following routine
 @findex fl_get_scrollbar_increment()
@@ -1272,6 +1289,10 @@ void fl_set_thumbwheel_return(FL_OBJECT *obj, int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code
+@tindex FL_RETURN_NEVER
+@item FL_RETURN_NEVER
+Never return, even if no callback is installed for the thumbwheel object.
+
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Return at end (mouse release) if value is changed since last return.

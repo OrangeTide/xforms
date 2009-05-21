@@ -172,7 +172,7 @@ addto_selection( FL_OBJECT * obj )
 
     /* find the real parent */
 
-    while ( obj->is_child )
+    while ( obj->parent )
 		obj = obj->parent;
 
     selobj[ selnumb++ ] = obj;
@@ -826,7 +826,7 @@ select_all( void )
     clear_selection( );
     
     for ( obj = BackOBJ( )->next; obj != NULL; obj = obj->next )
-		if ( ! obj->is_child )
+		if ( ! obj->parent )
 			selobj[ selnumb++ ] = obj;
 
     cleanup_selection( );
@@ -1418,7 +1418,7 @@ next_selection( void )
 		else if ( selnumb && selobj[ 0 ]->next )
 			selobj[ 0 ] = selobj[ 0 ]->next;
 
-    } while ( selobj[ 0 ]->is_child );
+    } while ( selobj[ 0 ]->parent );
 
     selnumb = 1;
     redraw_the_form( 0 );
@@ -1440,7 +1440,7 @@ prev_selection( void )
 			selobj[ 0 ] = BackOBJ( )->prev ? BackOBJ( )->prev : BackOBJ( );
 		else if ( selnumb && selobj[ 0 ]->prev )
 			selobj[ 0 ] = selobj[ 0 ]->prev;
-    } while (selobj[ 0 ]->is_child );
+    } while (selobj[ 0 ]->parent );
 
     selnumb = 1;
     redraw_the_form( 0 );

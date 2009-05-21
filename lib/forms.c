@@ -675,7 +675,7 @@ scale_form( FL_FORM * form,
 		if ( fli_inverted_y )
 			obj->y = form->h - obj->h - obj->y;
 
-		fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, 0 );
+		fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, NULL );
     }
 
 	fli_recalc_intersections( form );
@@ -1309,13 +1309,13 @@ fl_hide_form( FL_FORM * form )
 
     if ( fli_mouseobj != NULL && fli_mouseobj->form == form )
     {
-		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, 0 );
+		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, NULL );
 		fli_mouseobj = NULL;
     }
 
     if ( fli_pushobj != NULL && fli_pushobj->form == form )
     {
-		fli_handle_object( fli_pushobj, FL_RELEASE, 0, 0, 0, 0 );
+		fli_handle_object( fli_pushobj, FL_RELEASE, 0, 0, 0, NULL );
 		fli_pushobj = NULL;
     }
 
@@ -1330,7 +1330,7 @@ fl_hide_form( FL_FORM * form )
 
 	for ( o = form->first; o; o = o->next )
 		if (    ( o->objclass == FL_CANVAS || o->objclass == FL_GLCANVAS )
-			 && ! o->is_child )
+			 && ! o->parent )
 			fli_unmap_canvas_window( o );
 
 #ifdef DELAYED_ACTION
@@ -1486,7 +1486,7 @@ fl_deactivate_form( FL_FORM * form )
     if (    ! form->deactivated
 		 && fli_mouseobj != NULL
 		 && fli_mouseobj->form == form )
-		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, 0 );
+		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, NULL );
 
     if ( ! form->deactivated && form->deactivate_callback )
 		form->deactivate_callback( form, form->deactivate_data );
@@ -1781,7 +1781,7 @@ handle_keyboard( FL_FORM  * form,
 
     special = fli_find_first( form, FLI_FIND_KEYSPECIAL, 0, 0 );
     obj = special ?
-		      fli_find_object( special->next, FLI_FIND_KEYSPECIAL, 0, 0 ) : NULL;
+		  fli_find_object( special->next, FLI_FIND_KEYSPECIAL, 0, 0 ) : NULL;
 
     /* If two or more objects that want keyboard input, none will get it and
        keyboard input will go to mouseobj instead */
@@ -1880,7 +1880,7 @@ handle_keyboard( FL_FORM  * form,
 
 
 /***************************************
- * updates a form according to an event
+ * Updates a form according to an event
  ***************************************/
 
 void
@@ -1907,9 +1907,9 @@ fli_handle_form( FL_FORM * form,
     if ( event != FL_STEP )
 		fli_set_form_window( form );
 
-	if ( fli_query_age > 0 )
+	if ( fli_query_age > 0 && mouseform )
 	{
-		fl_get_form_mouse( form, &fli_mousex, &fli_mousey, &fli_keymask );
+		fl_get_form_mouse( mouseform, &fli_mousex, &fli_mousey, &fli_keymask );
 		if ( event != FL_KEYBOARD )
 			key = xmask2key( fli_keymask );
 		fli_query_age = 0;
@@ -1917,6 +1917,9 @@ fli_handle_form( FL_FORM * form,
 
 	x = fli_mousex;
 	y = fli_mousey;
+
+	/* Except for step and draw events search for the object the event is
+	   for */
 
     if ( event != FL_STEP && event != FL_DRAW )
 		obj = fli_find_last( form, FLI_FIND_MOUSE, x, y );
@@ -2297,8 +2300,8 @@ fli_treat_interaction_events( int wait_io )
 {
     XEvent xev;
 
-    /* if no event, output buffer will be flushed. If event exists,
-       XNextEvent in do_interaction will flush the output buffer */
+    /* If no event are present, output buffer will be flushed. If event
+       exists, XNextEvent in do_interaction will flush the output buffer */
 
     do
 		do_interaction_step( wait_io );
@@ -2404,7 +2407,6 @@ do_interaction_step( int wait_io )
 
 			fli_context->mouse_button = st_xev.xbutton.button;
 
-
 			if ( mouseform )
 				fli_handle_form( mouseform, FL_RELEASE,
 								 st_xev.xbutton.button, &st_xev );
@@ -2464,7 +2466,7 @@ fli_handle_idling( XEvent * xev,
 	/* Make sure we have an up-to-date set of data for the mouse position
 	   and the state of the keyboard and mouse buttons */
 
-	if ( fli_query_age != 0 && mouseform )
+	if ( fli_query_age > 0 && mouseform )
 	{
 		fl_get_form_mouse( mouseform, &fli_mousex, &fli_mousey, &fli_keymask );
 		fli_query_age = 0;
@@ -2489,7 +2491,8 @@ fli_handle_idling( XEvent * xev,
 	   and counter objects) */
 
 	if (    button_down( fli_keymask )
-		 && ( fli_pushobj  && fli_pushobj->want_update )
+		 && fli_pushobj
+		 && fli_pushobj->want_update
 		 && mouseform )
 		fli_handle_form( mouseform, FL_UPDATE,
 						 xmask2key( fli_keymask ), xev );
@@ -3442,7 +3445,7 @@ fl_adjust_form_size( FL_FORM * form )
 		if (    (    ob->align == FL_ALIGN_CENTER
 				  || ob->align & FL_ALIGN_INSIDE
 				  || ob->objclass == FL_INPUT )
-			 && ! ob->is_child
+			 && ! ob->parent
 			 && ob->label[ 0 ] != '\0'
 			 && ob->label[ 0 ] != '@'
 			 && ob->boxtype != FL_NO_BOX

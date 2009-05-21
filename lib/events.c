@@ -369,7 +369,8 @@ fli_object_qtest( void )
 
 
 /***************************************
- * Reads an object from the queue
+ * Reads an object from the queue, calls callbacks for the object if
+ * they exist or passes it on to the user (via fl_do_forms() etc.)
  ***************************************/
 
 FL_OBJECT *
@@ -395,6 +396,9 @@ fli_object_qread( void )
 		fli_handled_obj = obj;
         obj->object_callback( obj, obj->argument );
 
+		if ( fli_handled_obj )
+			obj->returned = FL_RETURN_NONE;
+
 		if ( ! fli_handled_obj || ! obj->parent )
 			return NULL;
 	}
@@ -416,7 +420,9 @@ fli_object_qread( void )
 			{
 				fli_handled_obj = obj;
 				obj->object_callback( obj, obj->argument );
-				if ( ! fli_handled_obj )
+				if ( fli_handled_obj )
+					obj->returned = FL_RETURN_NONE;
+				else
 					return NULL;
 			}
 			obj = obj->parent;
@@ -444,7 +450,9 @@ fli_object_qread( void )
 				{
 					fli_handled_obj = n;
 					n->object_callback( n, n->argument );
-					if ( ! fli_handled_obj )
+					if ( fli_handled_obj )
+						n->returned = FL_RETURN_NONE;
+					else
 						break;
 				}
 			while ( fli_handled_parent && ( n = n->parent ) != obj );
@@ -460,16 +468,26 @@ fli_object_qread( void )
 
 	if ( obj->object_callback )
 	{
+		fli_handled_obj = obj;
 		obj->object_callback( obj, obj->argument );
+		if ( fli_handled_obj )
+			obj->returned = FL_RETURN_NONE;
 		return NULL;
     }
     else if ( obj->form->form_callback )
     {
+		fli_handled_obj = obj;
         obj->form->form_callback( obj, obj->form->form_cb_data );
+		if ( fli_handled_obj )
+			obj->returned = FL_RETURN_NONE;
         return NULL;
     }
  
-   return obj;
+	if ( obj->child && obj->returned == FL_RETURN_NONE)
+		return NULL;
+
+	obj->returned = FL_RETURN_NONE;
+	return obj;
 }
 
 

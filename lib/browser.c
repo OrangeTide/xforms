@@ -530,7 +530,7 @@ fl_create_browser( int          type,
     ob = fl_make_object( FL_BROWSER, type, x, y, w, h, label, handle );
 
     ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
+    sp = ob->spec = fl_calloc( 1, ob->spec_size );
     sp->tb = fli_create_textbox( type, x, y, w, h, NULL );
 
 	sp->callback = NULL;

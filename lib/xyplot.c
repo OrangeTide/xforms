@@ -1894,7 +1894,7 @@ handle_mouse( FL_OBJECT * ob,
 		/* if delayed action, can't keep up with motion event */
 
 #ifndef DELAYED_ACTION
-		return sp->inside && sp->how_return;
+		return sp->inside && ob->how_return;
 #else
 		return 0;
 #endif
@@ -1962,7 +1962,7 @@ handle_mouse( FL_OBJECT * ob,
     sp->x[ 0 ][ i ] = fmx;
     sp->y[ 0 ][ i ] = fmy;
 
-    return sp->how_return;
+    return ob->how_return;
 }
 
 
@@ -2039,7 +2039,7 @@ handle_it( FL_OBJECT * ob,
 			if ( sp->inside > 0 )
 				sp->inside *= -1;
 			fl_reset_cursor( FL_ObjWin( ob ) );
-			ret = ( ! sp->how_return || sp->inspect ) && sp->inside;
+			ret = ( ! ob->how_return || sp->inspect ) && sp->inside;
 			break;
 
 		case FL_FREEMEM:
@@ -2177,7 +2177,6 @@ init_spec( FL_OBJECT       * ob,
     sp->grid_linestyle = FL_DOT;
     sp->wx = fl_malloc( sizeof *sp->wx );
     sp->wy = fl_malloc( sizeof *sp->wy );
-    sp->how_return = FL_RETURN_END_CHANGED;
 
     sp->objx = ob->x;
     sp->objy = ob->y;
@@ -2215,14 +2214,15 @@ fl_create_xyplot( int          t,
 
     ob = fl_make_object( FL_XYPLOT, t, x, y, w, h, l, handle_it );
 
-    ob->boxtype = FL_XYPLOT_BOXTYPE;
-    ob->active = t == FL_ACTIVE_XYPLOT;
-    ob->col2 = ob->lcol = FL_BLACK;
-    ob->col1 = FL_COL1;
-
-    ob->lsize = FL_TINY_FONT;
-    ob->align = FL_XYPLOT_ALIGN;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
+    ob->boxtype    = FL_XYPLOT_BOXTYPE;
+    ob->active     = t == FL_ACTIVE_XYPLOT;
+    ob->col2       = ob->lcol = FL_BLACK;
+    ob->col1       = FL_COL1;
+    ob->how_return = FL_RETURN_END_CHANGED;
+    ob->lsize      = FL_TINY_FONT;
+    ob->align      = FL_XYPLOT_ALIGN;
+	ob->spec_size  = sizeof *sp;
+    ob->spec       = sp =  fl_calloc( 1, ob->spec_size );
 
     init_spec( ob, sp );
 
@@ -2256,7 +2256,6 @@ fl_get_xyplot_data( FL_OBJECT * ob,
 		memcpy( y, sp->y[ 0 ], sp->n[ 0 ] * sizeof *y );
 		*n = sp->n[ 0 ];
     }
-
 }
 
 
@@ -2371,11 +2370,11 @@ fl_add_xyplot( int          t,
  ***************************************/
 
 void
-fl_set_xyplot_return( FL_OBJECT * ob,
+fl_set_xyplot_return( FL_OBJECT * obj,
 					  int         when )
 {
-    if ( ob->type == FL_ACTIVE_XYPLOT )
-		( ( FLI_XYPLOT_SPEC * ) ob->spec )->how_return = when;
+    if ( obj->type == FL_ACTIVE_XYPLOT )
+		obj->how_return = when;
 }
 
 

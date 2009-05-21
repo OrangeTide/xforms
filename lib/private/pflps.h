@@ -33,8 +33,7 @@
  * both regular gui postscript and image_postscript members
  */
 
-typedef struct
-{
+typedef struct {
 	/* The first entries must be identical to the ones of a FLPS_CONTROL
 	   structure defined in flps.h */
 
@@ -57,7 +56,6 @@ typedef struct
 	int		     scale_text;
 	int		     first_page_only;
 	int		     clip;
-	int		     reserved[ 10 ];
 
 	/* Now follow elements not from the FLPS_CONTROL structure */
 
@@ -105,7 +103,6 @@ typedef struct
     int          rotation;
     float        s2px;             /* screen to paper scaling        */
     float        s2py;             /* screen to paper scaling        */
-    int          preserved[ 2 ];
 } FLPSInfo;
 
 extern FLPSInfo *flps;

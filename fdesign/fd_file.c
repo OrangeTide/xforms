@@ -68,7 +68,7 @@ save_object( FILE      * fl,
     double sc = get_conversion_factor( );
     FL_OBJECT fake_obj;
 
-    if ( obj->is_child )
+    if ( obj->parent )
 		return;
 
     get_object_name( obj, name, cbname, argname );
@@ -498,7 +498,7 @@ write_form( FILE    * fl,
     /* print the object number */
 
     for ( onumb = 0, obj = form->first->next; obj; obj = obj->next )
-		onumb += obj->is_child == 0;
+		onumb += obj->parent == NULL;
 
     fprintf( fl, "Number of Objects: %d\n", onumb );
 

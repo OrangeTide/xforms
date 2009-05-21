@@ -30,8 +30,7 @@
 #ifndef PDIAL_H
 #define PDIAL_H
 
-typedef struct
-{
+typedef struct {
     double a,				/* for speed                      */
 	       b;
     double min,				/* min/max value of dial          */
@@ -41,7 +40,6 @@ typedef struct
     double thetai;			/* start angle (degrees)          */
     double thetaf;			/* end angle   (degrees)          */
     double origin;			/* where the origin is            */
-    short  how_return;		/* whether always returning value */
     short  cross_over;
     short  changed;
     short  direction;		/* not currently used            */

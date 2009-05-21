@@ -30,6 +30,10 @@
 
 
 /***************************************
+ * This function got to be called before a redraw, at least if
+ * the form the spinner belongs to has been resized. It calculates
+ * the new positions and sizes of the objectes the spinner widget
+ * is made up from.
  ***************************************/
 
 static void
@@ -98,6 +102,13 @@ set_geom( FL_OBJECT * obj )
 
 
 /***************************************
+ * There aren't many types of events a spinner object must directly
+ * react to. If it got resized the positions and sizes of the child
+ * objects it's made up from need to be recalculated, but that can
+ * be deferred until it's dran anew. Drawing it works mostly auto-
+ * matically except the redraw of the label. And on deletion just
+ * the FLI_SPINNER_SPEC needs to be deallocated (the child objects
+ * referenced there-in have already been deallocated before)
  ***************************************/
 
 static int
@@ -167,6 +178,7 @@ spinner_callback( FL_OBJECT * obj,
 
 	if ( obj->parent->type == FL_INT_SPINNER )
 	{ 
+		int old_val = sp->i_val;
 		long i_val = strtol( s_val, NULL, 10 );
 
 		if ( i_val > sp->i_max || i_val < sp->i_min )
@@ -187,12 +199,32 @@ spinner_callback( FL_OBJECT * obj,
 				i_val = sp->i_min;
 		}
 
-		sp->i_val = i_val;
-		sprintf( buf, "%d", sp->i_val );
-		fl_set_input( sp->input, buf );
+		if ( ( sp->i_val = i_val ) != old_val )
+		{
+			sprintf( buf, "%d", sp->i_val );
+			fl_set_input( sp->input, buf );
+		}
+
+		switch ( obj->parent->how_return )
+		{
+			case FL_RETURN_CHANGED :
+			case FL_RETURN_END_CHANGED :
+				obj->parent->returned =
+									sp->i_val != old_val ?
+									obj->parent->how_return : FL_RETURN_NONE;
+				break;
+
+			case FL_RETURN_END :
+			case FL_RETURN_ALWAYS :
+				obj->parent->returned = 
+						FL_RETURN_END |  ( sp->i_val != old_val ?
+										   FL_RETURN_CHANGED : FL_RETURN_NONE );
+				break;
+		}
 	}
 	else
 	{
+		double old_val = sp->f_val;
 		double f_val = strtod( s_val, NULL );
 
 		if (    errno == ERANGE
@@ -215,9 +247,28 @@ spinner_callback( FL_OBJECT * obj,
 				f_val = sp->f_min;
 		}
 
-		sp->f_val = f_val;
-		sprintf( buf, "%.*f", sp->prec, sp->f_val );
-		fl_set_input( sp->input, buf );
+		if ( ( sp->f_val = f_val ) != old_val )
+		{
+			sprintf( buf, "%.*f", sp->prec, sp->f_val );
+			fl_set_input( sp->input, buf );
+		}
+
+		switch ( obj->parent->how_return )
+		{
+			case FL_RETURN_CHANGED :
+			case FL_RETURN_END_CHANGED :
+				obj->parent->returned =
+									sp->i_val != old_val ?
+									obj->parent->how_return : FL_RETURN_NONE;
+				break;
+
+			case FL_RETURN_END :
+			case FL_RETURN_ALWAYS :
+				obj->parent->returned = 
+						FL_RETURN_END |  ( sp->i_val != old_val ?
+										   FL_RETURN_CHANGED : FL_RETURN_NONE );
+				break;
+		}
 	}
 }
 
@@ -265,8 +316,8 @@ fl_create_spinner( int          type,
 	}
 
     obj = fl_make_object( FL_SPINNER, type, x, y, w, h, label, handle_spinner );
-    obj->boxtype = FL_NO_BOX;
-	obj->align = FL_ALIGN_LEFT;
+    obj->boxtype    = FL_NO_BOX;
+	obj->align      = FL_ALIGN_LEFT;
 
 	obj->spec_size = sizeof *sp;
 	sp = obj->spec = malloc( obj->spec_size );
@@ -278,6 +329,8 @@ fl_create_spinner( int          type,
 							   orient == 0 ? "@8>" : "@6>" );
 	sp->down = fl_create_button( FL_TOUCH_BUTTON, 0, 0, 0, 0,
 								 orient == 0 ? "@2>" : "@4>" );
+
+	fl_set_spinner_return( obj, FL_RETURN_END );
 
 	fl_set_object_callback( sp->input, spinner_callback,  0 );
 	fl_set_object_callback( sp->up,    spinner_callback,  1 );
@@ -590,4 +643,18 @@ FL_OBJECT *
 fl_get_spinner_down_button( FL_OBJECT * obj )
 {
 	return ( ( FLI_SPINNER_SPEC * ) obj->spec )->down;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_spinner_return( FL_OBJECT * obj,
+					   int         when )
+{
+    FLI_SPINNER_SPEC *sp = obj->spec;
+
+	obj->how_return = when;
+	fl_set_input_return( sp->input, when );
 }

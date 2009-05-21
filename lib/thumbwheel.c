@@ -252,8 +252,8 @@ handle( FL_OBJECT * ob,
 			if ( key != FL_MBUTTON1 )
 				break;
 
-			sp->oldmx = mx;
-			sp->oldmy = my;
+			sp->old_mx = mx;
+			sp->old_my = my;
 			sp->start_val = sp->val;
 			/* fall through */
 
@@ -261,11 +261,11 @@ handle( FL_OBJECT * ob,
 			if ( key != FL_MBUTTON1 )
 				break;
 
-			cur_pos = ob->type == FL_VERT_THUMBWHEEL ? sp->oldmy : mx;
-			old_pos = ob->type == FL_VERT_THUMBWHEEL ? my : sp->oldmx;
+			cur_pos = ob->type == FL_VERT_THUMBWHEEL ? sp->old_my : mx;
+			old_pos = ob->type == FL_VERT_THUMBWHEEL ? my : sp->old_mx;
 			value = sp->val + step * ( cur_pos - old_pos );
-			sp->oldmx = mx;
-			sp->oldmy = my;
+			sp->old_mx = mx;
+			sp->old_my = my;
 			return fli_valuator_handle_drag( ob, value );
 
 		case FL_KEYPRESS:
@@ -473,16 +473,16 @@ fl_create_thumbwheel( int          type,
     FLI_THUMBWHEEL_SPEC *sp;
 
     ob = fl_make_object( FL_THUMBWHEEL, type, x, y, w, h, label, handle );
-    ob->col1 = FL_THUMBWHEEL_COL1;
-    ob->col2 = FL_THUMBWHEEL_COL2;
-    ob->lcol = FL_THUMBWHEEL_LCOL;
-    ob->align = FL_THUMBWHEEL_ALIGN;
-    ob->boxtype = FL_THUMBWHEEL_BOXTYPE;
-    ob->wantkey = FL_KEY_SPECIAL;
+    ob->col1       = FL_THUMBWHEEL_COL1;
+    ob->col2       = FL_THUMBWHEEL_COL2;
+    ob->lcol       = FL_THUMBWHEEL_LCOL;
+    ob->align      = FL_THUMBWHEEL_ALIGN;
+    ob->boxtype    = FL_THUMBWHEEL_BOXTYPE;
+    ob->wantkey    = FL_KEY_SPECIAL;
+    ob->how_return = FL_RETURN_CHANGED;
     fl_set_object_dblbuffer( ob, 1 );
 
     sp = fli_init_valuator( ob );
-    sp->how_return = FL_RETURN_CHANGED;
     sp->step = DEFSTEP;
 
     return ob;

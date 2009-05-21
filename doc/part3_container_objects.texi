@@ -86,18 +86,48 @@ Tabs on the righ of the folders (not yet functional).
 @node Folder Interaction
 @subsection Folder Interaction
 
-The folders displeyed by the tabbed folder class are simply regular
+The folders displayed by the tabbed folder class are simply regular
 forms (of type @code{FL_FORM}), which in turn contain objects. Each
 folder is associated with a name (shown on the tab rider). The folder
 interacts with the user just like any other form. Different from other
 top-level forms is that only one folder is active at any time. The
 user selects different folders by clicking on the tab rider associated
-with a folder. When this happens, the tab folder's callback is invoked
-to inform the application of this state change so the application can
-take appropriate actions.
+with a folder.
+
+To set up when either the application is notified about events of the
+tabfolder or the tabfolders callback is invoked (if installed) use the
+function
+@findex fl_set_tabfolder_return()
+@anchor{fl_set_tabfolder_return()}
+@example
+void fl_set_tabfolder_return(FL_OBJECT *obj, int when);
+@end example
+@noindent
+where the @code{when} argument can be one of
+@table @code
+@tindex FL_RETURN_NEVER
+@item FL_RETURN_NEVER
+Never report or invoke callback even if the selected folder has
+changed (this is the default for the tabfolder object)
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Result in a notification whenever the a different folder from the
+currently active one has been selected.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Notify when either a new or the already active folder has been
+selected.
+@end table
+
 
 To find out which folder is currently active, the following routines
-the tab ridersare available
+the tab riders are available
 @findex fl_get_active_folder()
 @anchor{fl_get_active_folder()}
 @findex fl_get_active_folder_number()
@@ -131,7 +161,7 @@ FL_FORM *fl_get_folder(FL_OBJECT *obj)
 int fl_get_folder_number(FL_OBJECT *obj)
 const char *fl_get_folder_name(FL_OBJECT *obj)
 @end example
-noindent
+@noindent
 Again, depending on the application, one might prefer one routine to
 the other two.
 
@@ -381,6 +411,44 @@ the objects, they will be invoked by the main loop when the states of
 the objects change. However, objects on the form that do not have
 callbacks bound to them will not be returned by
 @code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}}.
+
+Your application can be notified about changes of the scrollbars of
+the formbrowser. To set up under which conditions the application is
+notified or the formbrowsers callback is invoked (if installed) use
+the function
+@findex fl_set_formbrowser_return()
+@anchor{fl_set_formbrowser_return()}
+@example
+void fl_set_formbrowser_return(FL_OBJECT *obj, int when);
+@end example
+@noindent
+where the @code{when} argument can be one of
+@table @code
+@tindex FL_RETURN_NEVER
+@item FL_RETURN_NEVER
+Never report or invoke callback (this is the default for the
+formbrowser object)
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Result in a notification whenever the position of one of the
+scrollbars has chnaged.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Notification is sen if the position of a scrollbar has changed and the
+mouse button isn't pressed down anymore.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Notification on release of the mouse button.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Notify if the position of a scrollbar has chanhed or the mouse
+button has been released.
+@end table
+
 
 @node Other FormBrowser Routines
 @subsection Other FormBrowser Routines

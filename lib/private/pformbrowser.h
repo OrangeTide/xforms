@@ -23,9 +23,7 @@
 #ifndef PFORMBROWSER_H
 #define PFORMBROWSER_H
 
-typedef struct
-{
-
+typedef struct {
     FL_OBJECT  * canvas;
     FL_OBJECT  * parent;
     int          nforms;
@@ -40,6 +38,8 @@ typedef struct
 	FL_OBJECT  * vsl;
     int          h_on,
 	             v_on;
+	double       old_vval,
+	             old_hval;
 
     int          x,
 	             y;

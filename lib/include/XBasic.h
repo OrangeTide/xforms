@@ -849,7 +849,6 @@ typedef struct {
 				bbits;
    int			bits_per_rgb;
    int			colormap_size;
-   int			reserved[ 2 ];
 } FL_RGB2PIXEL_;
 
 #define FL_RGB2PIXEL  FL_RGB2PIXEL_

@@ -22,14 +22,12 @@
 #ifndef PSCROLLBAR_H_
 #define PSCROLLBAR_H_
 
-typedef struct
-{
-    FL_OBJECT * scrollbar;
+typedef struct {
     FL_OBJECT * slider;
     FL_OBJECT * up;
 	FL_OBJECT * down;
     double      increment;
-    long        reserve[ 10 ];
+	double      old_val;
 } FLI_SCROLLBAR_SPEC;
 
 

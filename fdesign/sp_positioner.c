@@ -151,7 +151,7 @@ emit_pos_code( FILE      * fp,
     if ( spec->ystep != defspec->ystep )
 		fprintf( fp, "    fl_set_positioner_ystep( obj, %g );\n", spec->ystep );
 
-    if ( spec->how_return != defspec->how_return )
+    if ( ob->how_return != defspec->how_return )
 		fprintf( fp, "    fl_set_positioner_return( obj, %s );\n",
 				 get_how_return_name( spec->how_return ) );
 

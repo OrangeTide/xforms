@@ -40,8 +40,8 @@ have a counter that keeps track of number of times the colbox is
 pushed. They would look as follows:
 @example
 typedef struct @{
-    int counter;
-@} SPEC;         /* no. of times pushed */
+    int counter;         /* no. of times pushed */
+@} COLBOX_SPEC;
 
 FL_OBJECT *fl_create_colbox(int type, FL_Coord x, FL_Coord y,
                             FL_Coord w, FL_Coord h,
@@ -57,8 +57,8 @@ FL_OBJECT *fl_create_colbox(int type, FL_Coord x, FL_Coord y,
     obj->col2 = FL_BLUE;
 
     /* create class specific structures and initialize */
-    obj->spec = fl_malloc(sizeof(SPEC));
-    obj->counter = 0;
+    obj->spec = fl_malloc(sizeof *obj->spec);
+    obj->spec->counter = 0;
     return obj;
 @}
 
@@ -96,7 +96,7 @@ static int handle_colbox(FL_OBJECT *obj, int event,
              break;
 
         case FL_PUSH:
-            ((SPEC *) obj->spec)->counter++;
+            ((COLBOX_SPEC *) obj->spec)->counter++;
             fl_redraw_object(obj);
             break;
 
@@ -113,7 +113,7 @@ static int handle_colbox(FL_OBJECT *obj, int event,
 @}
 @end example
 
-That is the whole piece of code. Of course, since the @code{SPEC}
+That is the whole piece of code. Of course, since the @code{COLBOX_SPEC}
 structure is invisible outside of @file{colbox.c}, the following
 routine should be provided to return the total number of times the
 colbox was pushed:
@@ -124,7 +124,7 @@ int fl_get_colbox(FL_OBJECT *obj) @{
         return -1;
     @}
 
-    return ((SPEC *) obj->spec)->counter;
+    return ((COLBOX_SPEC *) obj->spec)->counter;
 @}
 @end example
 

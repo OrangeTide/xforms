@@ -37,8 +37,7 @@
 #define MAX_TIC           200	/* really should be MAJOR * MINOR */
 
 
-typedef struct
-{
+typedef struct {
     float               xmin,				/* true xbounds                 */
 	                    xmax;
     float               ymin,				/* true ybounds                 */
@@ -101,7 +100,6 @@ typedef struct
     short               xscale;				/* linear or log for x          */
     short               yscale;				/* linear or log for y          */
     short               active;				/* if accepting mouse events    */
-    short               how_return;			/* interaction flags            */
     short               ssize;				/* symbol size                  */
     short               lsize,		        /* font and style for labels    */
 	                    lstyle;

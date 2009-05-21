@@ -1,3 +1,13 @@
+2009-05-21 Jens Thoms Toerring    <jt@toerring.de>
+
+	Lots of changes to the event handling system. The handler
+	routines for objects now are supposed to return information
+	about what happend (changes, end of interaction) instead
+	of just 1 or 0 (which indicated if the user application
+	was to be notified or not. Using the new system makes it
+	easier to use objects that consist of child objects e.g.
+	when delaing with callbacks for these kinds of objects.
+
 2009-05-17 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/events.c: Bug fixed that resulted in crashes when

@@ -31,8 +31,7 @@
 #ifndef  PTEXTBOX_H
 #define  PTEXTBOX_H
 
-typedef struct
-{
+typedef struct {
     char         * txt;				/* text of line                  */
     unsigned int   len;				/* line length                   */
     short          selected;		/* Whether selected              */
@@ -40,8 +39,7 @@ typedef struct
     short          pixels;			/* length in pixels              */
 } LINE;
 
-typedef struct
-{
+typedef struct {
     LINE           ** text;			/* lines of text (NULL if not used) */
     FL_CALLBACKPTR    callback;
     long              callback_data;
@@ -82,8 +80,7 @@ typedef struct
 
 /***** Types    *****/
 
-enum
-{
+enum {
     FLI_NORMAL_TEXTBOX = FL_NORMAL_BROWSER,
     FLI_SELECT_TEXTBOX = FL_SELECT_BROWSER,
     FLI_HOLD_TEXTBOX   = FL_HOLD_BROWSER,

@@ -73,16 +73,19 @@ spec_to_superspec( FL_OBJECT * ob )
     {
 		ob->u_vdata = spp = fl_calloc( 1, sizeof *spp );
 
-		spp->content  =  NULL;
-		spp->shortcut =  NULL;
-		spp->callback =  NULL;
-		spp->mode     =  NULL;
-		spp->mval     =  NULL;
+		spp->content    = NULL;
+		spp->shortcut   = NULL;
+		spp->callback   = NULL;
+		spp->mode       = NULL;
+		spp->mval       = NULL;
+		spp->cspecv     = NULL;
 
 		spp->new_menuapi = 0;
     }
 
     spp = ob->u_vdata;
+
+	spp->how_return = ob->how_return;
 
     if ( ob->objclass == FL_BROWSER )
     {
@@ -208,7 +211,6 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->ldelta     = sp->ldelta;
 		spp->rdelta     = sp->rdelta;
 		spp->slsize     = sp->slsize;
-		spp->how_return = sp->how_return;
     }
     else if (    ISBUTTON( ob->objclass )
 			  || ob->objclass == FL_PIXMAP
@@ -268,7 +270,6 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->ymin       = sp->ymin;
 		spp->ymax       = sp->ymax;
 		spp->yval       = sp->yval;
-		spp->how_return = sp->how_return;
     }
     else if ( ob->objclass == FL_COUNTER )
     {
@@ -280,7 +281,6 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->min        = sp->min;
 		spp->max        = sp->max;
 		spp->prec       = sp->prec;
-		spp->how_return = sp->how_return;
     }
     else if (ob->objclass == FL_DIAL)
     {
@@ -293,7 +293,6 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->thetai     = sp->thetai;
 		spp->thetaf     = sp->thetaf;
 		spp->direction  = sp->direction;
-		spp->how_return = sp->how_return;
     }
     else if ( ob->objclass == FL_XYPLOT )
     {
@@ -325,7 +324,6 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->slsize     = sp->slsize;
 		spp->ldelta     = sp->ldelta;
 		spp->rdelta     = sp->rdelta;
-		spp->how_return = sp->how_return;
     }
 
     return spp;
@@ -405,7 +403,6 @@ superspec_to_spec( FL_OBJECT * ob )
 		sp->ldelta = spp->ldelta;
 		sp->rdelta = spp->rdelta;
 		sp->slsize = spp->slsize;
-		sp->how_return = spp->how_return;
     }
     else if (    ISBUTTON(ob->objclass)
 			  || ob->objclass == FL_PIXMAP
@@ -480,7 +477,6 @@ superspec_to_spec( FL_OBJECT * ob )
 		sp->ymin       = spp->ymin;
 		sp->ymax       = spp->ymax;
 		sp->yval       = spp->yval;
-		sp->how_return = spp->how_return;
     }
     else if ( ob->objclass == FL_COUNTER )
     {
@@ -492,7 +488,6 @@ superspec_to_spec( FL_OBJECT * ob )
 		sp->min        = spp->min;
 		sp->max        = spp->max;
 		sp->prec       = spp->prec;
-		sp->how_return = spp->how_return;
     }
     else if ( ob->objclass == FL_DIAL )
     {
@@ -505,7 +500,6 @@ superspec_to_spec( FL_OBJECT * ob )
 		sp->thetai     = spp->thetai;
 		sp->thetaf     = spp->thetaf;
 		sp->direction  = spp->direction;
-		sp->how_return = spp->how_return;
     }
     else if ( ob->objclass == FL_XYPLOT )
     {
@@ -537,7 +531,6 @@ superspec_to_spec( FL_OBJECT * ob )
 		sp->slsize     = spp->slsize;
 		sp->ldelta     = spp->ldelta;
 		sp->rdelta     = spp->rdelta;
-		sp->how_return = spp->how_return;
     }
 
     return v;

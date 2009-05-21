@@ -58,7 +58,6 @@ fl_add_child( FL_OBJECT * parent,
 	/* Now set up the parent-child relationship */
 
 	child->parent = parent;
-    child->is_child = 1;
 
     /* Child has same gravity and resize attributes as the parent */
 
