@@ -202,7 +202,6 @@ insert_line( FL_OBJECT  * ob,
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
     LINE *currline;
-    int i;
 
     extend_textbox( ob );
 
@@ -216,8 +215,8 @@ insert_line( FL_OBJECT  * ob,
     /* Shift lines */
 
     currline = sp->text[ sp->lines ];
-    for ( i = sp->lines - 1; i >= linenumb; i-- )
-		sp->text[ i + 1 ] = sp->text[ i ];
+	memmove( sp->text + linenumb + 1, sp->text + linenumb,
+			 ( sp->lines - linenumb ) * sizeof *sp->text );
 
     sp->text[ linenumb ] = currline;
 
@@ -230,8 +229,17 @@ insert_line( FL_OBJECT  * ob,
 		 && ( newtext[ 1 ] == '-' || newtext[ 1 ] == 'N' ) )
 		currline->non_selectable = 1;
 
-	currline->txt = fl_realloc( currline->txt, currline->len + 1 );
-    strcpy( currline->txt, newtext );
+	if ( newtext[ currline->len - 1 ] != '\n' )
+	{
+		currline->txt = fl_realloc( currline->txt, currline->len + 1 );
+		strcpy( currline->txt, newtext );
+	}
+	else
+	{
+		currline->txt = fl_realloc( currline->txt, currline->len );
+		strncpy( currline->txt, newtext, --currline->len );
+		currline->txt[ currline->len ] = '\0';
+	}
 
     currline->pixels = textwidth( sp, sp->fontstyle, sp->fontsize,
 								  newtext, currline->len );
@@ -248,11 +256,6 @@ insert_line( FL_OBJECT  * ob,
 }
 
 
-/* this is only the working line length. */
-
-static int maxlen = FLI_TEXTBOX_LINELENGTH;
-
-
 /***************************************
  * insert multiple lines
  ***************************************/
@@ -262,52 +265,22 @@ insert_lines( FL_OBJECT  * ob,
 			  int          linenumb,
 			  const char * text )
 {
-    static int cur_maxlen;
-    static char *newtext;
-    int i,
-		lastc;
-    const char *ori_text = text;
+    char *newtext;
+	char *start = ( char * ) text,
+		 *end;
+	size_t len;
 
-    if ( ! newtext || cur_maxlen < maxlen )
-    {
-		if ( newtext )
-			fl_free( newtext );
-		newtext = fl_malloc( ( cur_maxlen = maxlen ) * sizeof *newtext );
-    }
-
-    for ( i = lastc = 0; *text; text++ )
-    {
-		if ( *text == '\n' )
-		{
-			newtext[ i ] = 0;
-			insert_line( ob, linenumb++, newtext );
-			i = 0;
-		}
-		else if ( i < maxlen - 1 )
-			newtext[ i++ ] = *text;
-
-		lastc = *text;
-    }
-
-    newtext[ i ] = '\0';
-
-    if ( i || lastc == '\n' || ! *ori_text )
-		insert_line( ob, linenumb, newtext );
-}
-
-
-/***************************************
- ***************************************/
-
-int
-fli_set_textbox_maxlinelength( int n )
-{
-    int old = maxlen;
-
-    if ( n > 0 )
-		maxlen = n;
-
-    return old;
+	do
+	{
+		end = strchr( start, '\n' );
+		len = end ? ( size_t ) ( start - end + 1 ) : strlen( start );
+		newtext = fl_malloc( len + 1 );
+		memcpy( newtext, start, len );
+		newtext[ len ] = '\0';
+		insert_line( ob, linenumb++, newtext );
+		fl_free( newtext );
+		start = end + 1;
+	} while ( end );
 }
 
 
@@ -349,8 +322,7 @@ replace_line( FL_OBJECT  * ob,
 		sp->maxpixels_line = linenumb;
     }
 
-    if ( s )
-		fl_free( s );
+	fl_safe_free( s );
 }
 
 
@@ -1030,13 +1002,14 @@ enum {
 	PAGEEVENT
 };
 
+
 static int event_type = NOEVENT;	     /* Type of interaction taking place */
 static int last_select,
            last_deselect;
 
 
 /***************************************
- * Handles a mouse change. returns whether a selection change has occured
+ * Handles a mouse change, returns whether a selection change has occured
  ***************************************/
 
 static int
@@ -1341,7 +1314,7 @@ handle_textbox( FL_OBJECT * ob,
 		case FL_TRPLCLICK:
 			if ( sp->callback )
 				sp->callback( ob, sp->callback_data );
-			return 0;
+			break;
 
 		case FL_FREEMEM:
 			free_spec( sp );
@@ -1385,15 +1358,14 @@ fli_create_textbox( int          type,
     int junk;
 
     ob = fl_make_object( FL_TEXTBOX, type, x, y, w, h, label, handle_textbox );
-    ob->boxtype = FLI_TEXTBOX_BOXTYPE;
-    ob->lcol    = FLI_TEXTBOX_LCOL;
-    ob->align   = FLI_TEXTBOX_ALIGN;
-    ob->col1    = FLI_TEXTBOX_COL1;
-    ob->col2    = FLI_TEXTBOX_COL2;
-    ob->wantkey = FL_KEY_SPECIAL;
+    ob->boxtype     = FLI_TEXTBOX_BOXTYPE;
+    ob->lcol        = FLI_TEXTBOX_LCOL;
+    ob->align       = FLI_TEXTBOX_ALIGN;
+    ob->col1        = FLI_TEXTBOX_COL1;
+    ob->col2        = FLI_TEXTBOX_COL2;
+    ob->wantkey     = FL_KEY_SPECIAL;
 	ob->want_update = 1;
-
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
+    ob->spec        = sp = fl_calloc( 1, sizeof *sp );
 
     sp->fontsize = fli_cntl.browserFontSize ?
 		           fli_cntl.browserFontSize : FLI_TEXTBOX_FONTSIZE;
@@ -1495,7 +1467,7 @@ fli_clear_textbox( FL_OBJECT * ob )
 
 
 /***************************************
- * Adds a line of text to a browser
+ * Adds one or more lines of text to a browser
  ***************************************/
 
 void
@@ -1508,7 +1480,7 @@ fli_add_textbox_line( FL_OBJECT  * ob,
 
 
 /***************************************
- * Adds a line of text to a browser, and changes focus
+ * Adds one or more lines of text to a browser and changes focus
  ***************************************/
 
 void
@@ -1662,9 +1634,8 @@ fli_load_textbox( FL_OBJECT  * ob,
 				  const char * filename )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
-    FILE *fl;
+    FILE *fp;
     char *newtext;
-    int c, i;
 
     if ( ob == NULL || ob->objclass != FL_TEXTBOX )
 		return 0;
@@ -1676,33 +1647,19 @@ fli_load_textbox( FL_OBJECT  * ob,
     if ( ! filename || ! *filename )
 		return 1;
 
-    if ( ! ( fl = fopen( filename, "r" ) ) )
+    if ( ! ( fp = fopen( filename, "r" ) ) )
 		return 0;
 
-    newtext = fl_malloc( maxlen * sizeof *newtext );
+	while ( ( newtext = fli_read_line( fp ) ) && *newtext != '\0' )
+	{
+		insert_line( ob, sp->lines + 1, newtext );
+		fl_free( newtext );
+	}
+	fl_safe_free( newtext );
 
-    i = 0;
-    do
-    {
-		c = getc( fl );
-		if ( c == '\n' || c == EOF )
-		{
-			newtext[ i ] = '\0';
-			if ( c != EOF || i != 0 )
-				insert_line( ob, sp->lines + 1, newtext );
-			i = 0;
-		}
-		else if ( i < maxlen - 1 )
-			newtext[ i++ ] = c;
-    }
-
-    while ( c != EOF && ! ferror( fl ) )
-		/* empty */ ;
-
-    fclose( fl );
+    fclose( fp );
     sp->drawtype = COMPLETE;
     fl_redraw_object( ob );
-    fl_free( newtext );
 
     return 1;
 }

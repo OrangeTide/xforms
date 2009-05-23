@@ -46,7 +46,6 @@ typedef enum {
 /***** Others	*****/
 
 #define FL_BROWSER_SLCOL		FL_COL1
-#define FL_BROWSER_LINELENGTH	2048
 #define FL_BROWSER_FONTSIZE		FL_SMALL_FONT
 
 /***** Routines *****/

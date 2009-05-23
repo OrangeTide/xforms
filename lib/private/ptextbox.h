@@ -95,7 +95,6 @@ enum {
 #define FLI_TEXTBOX_COL2	     FL_YELLOW
 #define FLI_TEXTBOX_LCOL	     FL_LCOL
 #define FLI_TEXTBOX_ALIGN	     FL_ALIGN_BOTTOM
-#define FLI_TEXTBOX_LINELENGTH	2048
 #define FLI_TEXTBOX_FONTSIZE     FL_SMALL_FONT
 
 
@@ -181,8 +180,5 @@ extern void fli_get_textbox_dimension( FL_OBJECT *,
 extern void fli_set_textbox_line_selectable( FL_OBJECT *,
 											 int,
 											 int );
-
-extern int fli_set_textbox_maxlinelength( int );
-
 
 #endif

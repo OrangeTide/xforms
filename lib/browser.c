@@ -1120,7 +1120,7 @@ fl_show_browser_line( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_set_default_browser_maxlinelength( int n )
+fl_set_default_browser_maxlinelength( int n  FL_UNUSED_ARG )
 {
-    return fli_set_textbox_maxlinelength( n );
+    return 0;
 }
