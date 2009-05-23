@@ -45,10 +45,8 @@ fli_init_valuator( FL_OBJECT * ob )
     FLI_VALUATOR_SPEC *sp = ob->spec;
 
     if ( ! sp )
-	{
-		ob->spec_size = sizeof *sp;
-		sp = ob->spec = fl_calloc( 1, ob->spec_size );
-	}
+		ob->spec = sp = fl_calloc( 1, sizeof *sp );
+	ob->how_return = FL_RETURN_CHANGED;
 
     sp->min       = 0.0;
     sp->max       = 1.0;

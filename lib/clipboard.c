@@ -130,7 +130,7 @@ fl_request_clipboard( FL_OBJECT       * ob,
 					  FL_SELECTION_CB   got_it_callback )
 {
     Window win;
-    void *thebuf;
+    void *buf;
     int nb = 0;
 
     cp = &clipboard;
@@ -149,33 +149,33 @@ fl_request_clipboard( FL_OBJECT       * ob,
 
     if ( win == None )
     {
-		nb = -1;
 		XSetSelectionOwner( flx->display, XA_PRIMARY, cp->req_window,
 							CurrentTime );
-		thebuf = XFetchBuffer( flx->display, &nb, 0 );
+		buf = XFetchBuffer( flx->display, &nb, 0 );
 		cp->window = XGetSelectionOwner( flx->display, XA_PRIMARY );
 		cp->ob = NULL;
 		cp->size = nb;
-		cp->got_it_callback( cp->req_ob, XA_STRING, thebuf, nb );
-		XFree( thebuf );
+		cp->got_it_callback( cp->req_ob, XA_STRING, buf, nb );
+		XFree( buf );
     }
     else if ( win != cp->req_window )
     {
-		/* we don't own it. Request it */
+		/* We don't own it, request it */
 
-		M_warn( "clipboard", "Requesting selction from %ld", win );
+		M_warn( "clipboard", "Requesting selection from %ld", win );
 		XConvertSelection( flx->display,
 						   XA_PRIMARY, XA_STRING,
 						   clipboard_prop,
 						   cp->req_window, CurrentTime );
+		nb = -1;
     }
     else if ( win == cp->req_window )
     {
 		/* we own the buffer */
 
-		thebuf = XFetchBuffer( flx->display, &nb, 0 );
-		cp->got_it_callback( cp->req_ob, XA_STRING, thebuf, nb );
-		XFree( thebuf );
+		buf = XFetchBuffer( flx->display, &nb, 0 );
+		cp->got_it_callback( cp->req_ob, XA_STRING, buf, nb );
+		XFree( buf );
     }
 
     return nb;
@@ -183,7 +183,7 @@ fl_request_clipboard( FL_OBJECT       * ob,
 
 
 /***************************************
- * returns a negative number if not known how to handle an event
+ * Returns a negative number if not known how to handle an event
  ***************************************/
 
 static int

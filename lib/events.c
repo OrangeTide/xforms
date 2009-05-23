@@ -416,7 +416,7 @@ fli_object_qread( void )
 
 		while ( obj->parent )
 		{
-			if ( obj->object_callback )
+			if ( obj->object_callback && obj->returned )
 			{
 				fli_handled_obj = obj;
 				obj->object_callback( obj, obj->argument );
@@ -446,7 +446,7 @@ fli_object_qread( void )
 
 			n = fli_get_from_obj_queue( );
 			do
-				if ( n->object_callback )
+				if ( n->object_callback && n->returned )
 				{
 					fli_handled_obj = n;
 					n->object_callback( n, n->argument );
@@ -466,7 +466,7 @@ fli_object_qread( void )
 	   or it had no callback. Run either the parent callback or the forms
 	   callback (if there's one). */
 
-	if ( obj->object_callback )
+	if ( obj->object_callback && obj->returned )
 	{
 		fli_handled_obj = obj;
 		obj->object_callback( obj, obj->argument );
@@ -474,7 +474,7 @@ fli_object_qread( void )
 			obj->returned = FL_RETURN_NONE;
 		return NULL;
     }
-    else if ( obj->form->form_callback )
+    else if ( obj->form->form_callback && obj->returned )
     {
 		fli_handled_obj = obj;
         obj->form->form_callback( obj, obj->form->form_cb_data );

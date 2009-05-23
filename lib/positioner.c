@@ -251,8 +251,7 @@ fl_create_positioner( int          type,
 		ob->boxtype = FL_NO_BOX;
     }
 
-    ob->spec_size = sizeof *sp;
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
+    ob->spec = sp = fl_calloc( 1, sizeof *sp );
 
     sp->xmin = 0.0;
     sp->ymin = 0.0;

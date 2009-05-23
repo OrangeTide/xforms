@@ -441,10 +441,11 @@ handle_counter( FL_OBJECT * ob,
 
 			sp->changed = handle_mouse( ob, event, mx, my );
 
-			if ( ob->how_return == FL_RETURN_CHANGED && sp->changed )
+			if (    ob->how_return != FL_RETURN_END_CHANGED
+				 && sp->changed )
 			{
 				sp->changed = 0;
-				return 1;
+				return FL_RETURN_CHANGED;
 			}
 			break;
 
@@ -453,13 +454,14 @@ handle_counter( FL_OBJECT * ob,
 				break;
 
 			handle_mouse( ob, event, mx, my );
-			if ( ob->how_return == FL_RETURN_END_CHANGED && sp->changed )
-			{
-				show_focus_obj( ob, mx, my );
-				return 1;
-			}
 			show_focus_obj( ob, mx, my );
-			break;
+			if ( ob->how_return & FL_RETURN_CHANGED && sp->changed )
+			{
+				sp->changed = 0;
+				return FL_RETURN_END_CHANGED;
+			}
+			sp->changed = 0;
+			return FL_RETURN_END;
 
 		case FL_UPDATE:
 			if ( handle_mouse( ob, event, mx, my ) )
@@ -467,7 +469,7 @@ handle_counter( FL_OBJECT * ob,
 			if ( ob->how_return == FL_RETURN_CHANGED && sp->changed )
 			{
 				sp->changed = 0;
-				return 1;
+				return FL_RETURN_CHANGED;
 			}
 			break;
 
@@ -482,7 +484,7 @@ handle_counter( FL_OBJECT * ob,
 			break;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -516,7 +518,6 @@ fl_create_counter( int          type,
     if ( ob->bw == FL_BOUND_WIDTH && ob->bw == 3 )
 		ob->bw = FL_COUNTER_BW;
 
-    ob->spec_size     = sizeof *sp;
     sp = ob->spec     = fl_calloc( 1, sizeof *sp );
     sp->min           = -1000000.0;
     sp->max           = 1000000.0;

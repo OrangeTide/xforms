@@ -94,8 +94,7 @@ fl_create_formbrowser( int          type,
     ob->align      = FL_FORMBROWSER_ALIGN;
     ob->col1       = FL_FORMBROWSER_COL1;
     ob->col2       = FL_BLACK;
-    ob->spec_size = sizeof *sp;
-    ob->spec      = sp = fl_calloc( 1, ob->spec_size );
+    ob->spec      = sp = fl_calloc( 1, sizeof *sp );
 
     absbw = FL_abs( ob->bw );
 

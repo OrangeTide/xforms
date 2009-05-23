@@ -93,7 +93,7 @@ like @code{"Item 1|Item 2|Item 3"} to add three items to the list. If
 there weren't any items before the first item will be automatically
 shown as the selected one.
 
-As also described in the docmentation for the similar function
+As also described in the documentation for the similar function
 @code{@ref{fl_popup_add_entries()}} (@pxref{Adding Popups}) the text
 for an item may contain "special sequences" that start with the
 character @code{%} and the may require an additional argument passed
@@ -540,7 +540,7 @@ FL_OBJECT *fl_add_nmenu(int type, FL_Coord x, FL_Coord y,
                         FL_Coord w, FL_Coord h, const char *label);
 @end example
 @noindent
-There are currently three types: 
+There are currently three types:
 @table @code
 @tindex FL_NORMAL_NMENU
 @anchor{FL_NORMAL_NMENU}
@@ -582,7 +582,7 @@ FL_POPUP_ENTRY *fl_add_nmenu_items(FL_OBJECT *obj, const char items,
 @code{|} character. In the simplest case you would just use something
 like @code{"Item 1|Item 2|Item 3"} to add three items to the list.
 
-As also described in the docmentation for the similar function
+As also described in the documentation for the similar function
 @code{@ref{fl_popup_add_entries()}} the text for an item may contain
 "special sequences" that start with the character @code{%} and the may
 require an additional argument passed to the function after the

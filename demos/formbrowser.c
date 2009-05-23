@@ -146,15 +146,12 @@ int main( int    argc,
 	fl_addto_formbrowser( fd_mainform->formbrowser, fd_choiceform->choiceform );
 	fl_addto_formbrowser( fd_mainform->formbrowser, fd_staticform->staticform );
 
-	fl_set_formbrowser_return( fd_mainform->formbrowser, FL_RETURN_END_CHANGED );
-
 	/* show the first form */
 
 	fl_show_form( fd_mainform->mainform,
 				  FL_PLACE_CENTERFREE, FL_FULLBORDER, "buttonform" );
 
-	while ( ( o = fl_do_forms( ) ) )
-		fprintf( stderr, "XXX %d\n", ++cnt );
+	fl_do_forms( );
 
 	return 0;
 }

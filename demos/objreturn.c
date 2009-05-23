@@ -54,11 +54,17 @@ static FD_form0 *fd_form0;
 /***************************************
  ***************************************/
 
+const char *mess[ ] = { "slider returned",
+		                "counter returned",
+		                "input 1 returned",
+		                "input 2 returned" };
+
+
 void
 return_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 		   long        data )
 {
-    fl_addto_browser( fd_form0->br, ( char * ) data );
+    fl_addto_browser( fd_form0->br, mess[ data ] );
 }
 
 
@@ -114,8 +120,10 @@ main( int    argc,
     set_when( 0 );
     fl_set_object_dblbuffer( fd_form0->br, 1);
     fl_add_select_items( fd_form0->when,
-						 "RETURN_END_CHANGED|RETURN_CHANGED|"
-						 "RETURN_END|RETURN_ALWAYS" );
+						 "RETURN_NONE%x|RETURN_CHANGED%x|"
+						 "RETURN_END%x|RETURN_END_CHANGED%x|RETURN_ALWAYS%x",
+						 FL_RETURN_NONE, FL_RETURN_CHANGED, FL_RETURN_END,
+						 FL_RETURN_END_CHANGED, FL_RETURN_ALWAYS );
 
     /* show the first form */
 
@@ -143,24 +151,24 @@ create_form_form0( void )
 	fdui->obj[ 0 ] = obj = fl_add_valslider( FL_HOR_SLIDER, 12, 55, 138, 22,
 											 "" );
     fl_set_object_lalign( obj ,FL_ALIGN_BOTTOM| FL_ALIGN_INSIDE );
-    fl_set_object_callback( obj, return_cb, ( long ) "slider returned" );
+    fl_set_object_callback( obj, return_cb, 0 );
 	fl_set_slider_return( obj, FL_RETURN_CHANGED );
 
 	fdui->obj[ 1 ] = obj = fl_add_counter( FL_NORMAL_COUNTER, 12, 85, 138, 22,
 										   "" );
     fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
-    fl_set_object_callback( obj, return_cb, ( long ) "counter returned" );
-
-	fdui->obj[ 3 ] = obj = fl_add_input( FL_NORMAL_INPUT, 12, 187, 138, 25,
-										 "" );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
-    fl_set_object_callback( obj, return_cb, ( long ) "input2 returned" );
+    fl_set_object_callback( obj, return_cb, 1 );
 
 	fdui->obj[ 2 ] = obj = fl_add_input( FL_NORMAL_INPUT, 12, 150, 138, 25,
 										 "" );
-    fl_set_object_callback( obj, return_cb, ( long ) "input1 returnd" );
+    fl_set_object_callback( obj, return_cb, 2 );
 
 	fdui->br = obj = fl_add_browser( FL_NORMAL_BROWSER, 170, 55, 140, 160, "" );
+
+	fdui->obj[ 3 ] = obj = fl_add_input( FL_INT_INPUT, 12, 187, 138, 25,
+										 "" );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+    fl_set_object_callback( obj, return_cb, 3 );
 
 	fdui->when = obj = fl_add_select( FL_NORMAL_SELECT, 40, 12, 240, 27, "" );
     fl_set_object_callback( obj, when_cb, 0 );

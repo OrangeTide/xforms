@@ -481,8 +481,7 @@ fl_create_generic_button( int          objclass,
 	if ( type == FL_TOUCH_BUTTON )
 		obj->want_update = 1;
 
-    obj->spec_size  = sizeof *sp;
-    sp = obj->spec  = fl_calloc( 1, obj->spec_size );
+    sp = obj->spec  = fl_calloc( 1, sizeof *sp );
 
     sp->event      = FL_DRAW;
 	sp->is_pushed  = 0;

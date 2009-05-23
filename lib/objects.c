@@ -1608,21 +1608,21 @@ fl_set_focus_object( FL_FORM   * form,
 
 
 /***************************************
- * Returns the object that has the focus
+ * Returns the object that has the focus (take care, 'focusobj'
+ * may be set to an input object that's a child of the object
+ * we need to return)
  ***************************************/
 
 FL_OBJECT *
 fl_get_focus_object( FL_FORM * form )
 {
-    if ( form && form->focusobj )
-    {
-		if ( form->focusobj->type == FL_MULTILINE_INPUT )
-			return form->focusobj->parent;
-		else
-			return form->focusobj;
-    }
+	FL_OBJECT *fo = NULL;;
 
-    return NULL;
+	if ( form && ( fo = form->focusobj ) )
+		while ( fo->parent )
+			fo = fo->parent;
+	
+    return fo;
 }
 
 
@@ -2429,10 +2429,12 @@ fli_handle_object( FL_OBJECT * obj,
 				   int         key,
 				   XEvent *    xev )
 {
+	int res;
+
     if ( ! obj )
 		return;
 
-    if ( fl_handle_it( obj, event, mx, my, key, xev ) )
+    if ( ( res = fl_handle_it( obj, event, mx, my, key, xev ) ) )
 		fli_object_qenter( obj );
 }
 

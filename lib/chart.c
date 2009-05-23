@@ -610,7 +610,6 @@ fl_create_chart( int          type,
 
     ob->active = 0;
 
-    ob->spec_size = sizeof *sp;
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
     sp->maxnumb = 512;
 

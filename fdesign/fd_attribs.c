@@ -956,20 +956,6 @@ copy_object( FL_OBJECT * obj,
 
 
 /***************************************
- ***************************************/
-
-#if 0
-static void
-copy_class_spec( FL_OBJECT * src,
-				 FL_OBJECT * dest )
-{
-    if ( src->objclass == dest->objclass && src->spec_size == dest->spec_size )
-		memcpy( dest->spec, src->spec, src->spec_size );
-}
-#endif
-
-
-/***************************************
  * Changes the type of an object by reconstructing it. A quite nasty
  * procedure that delves into the form structure in a bad way.
  * And it looks a lot like a memnory leak...

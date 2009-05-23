@@ -2221,8 +2221,7 @@ fl_create_xyplot( int          t,
     ob->how_return = FL_RETURN_END_CHANGED;
     ob->lsize      = FL_TINY_FONT;
     ob->align      = FL_XYPLOT_ALIGN;
-	ob->spec_size  = sizeof *sp;
-    ob->spec       = sp =  fl_calloc( 1, ob->spec_size );
+    ob->spec       = sp =  fl_calloc( 1, sizeof *sp );
 
     init_spec( ob, sp );
 

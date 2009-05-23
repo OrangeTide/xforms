@@ -363,11 +363,10 @@ fl_create_scrollbar( int          type,
 
     obj = fl_make_object( FL_SCROLLBAR, type, x, y, w, h, l, handle );
 
-    obj->spec_size  = sizeof *sp;
-    obj->spec       = sp = fl_calloc( 1, obj->spec_size );
-    obj->col1       = FL_COL1;
-	obj->col2       = FL_COL1;
-    obj->align      = FL_ALIGN_BOTTOM;
+    obj->spec  = sp = fl_calloc( 1, sizeof *sp );
+    obj->col1  = FL_COL1;
+	obj->col2  = FL_COL1;
+    obj->align = FL_ALIGN_BOTTOM;
 
     if ( IsThin( type ) )
 		obj->boxtype = FL_DOWN_BOX;

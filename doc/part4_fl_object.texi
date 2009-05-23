@@ -10,6 +10,7 @@ classes.
 @item int objclass
 This indicates the class of the object (e.g.@: @code{FL_BUTTON},
 @code{FL_SLIDER}, @code{FL_NEW} etc.)
+
 @item int type
 This indicates the type of the object within the class. Types are
 integer constants that should be defined in a header file named after
@@ -18,11 +19,13 @@ For example, in the slider class the type is used to distinguish
 between horizontal and vertical sliders. At least one type should
 exist and the user should always provide it (just for consistency).
 They should be numbered from 0 upwards.
+
 @item int boxtype
 This is the type of the bounding box for the object. The handling
 routine for the object, e.g.@: @code{handle_NEW()}, has to take care
 that this is actually drawn. Note that there is a routine for drawing
 boxes, see below.
+
 @item FL_Coord x, y, w, h
 These are the coordinates and sizes that indicate the bounding box of
 the object. They always have to be provided when adding an object. The
@@ -34,11 +37,12 @@ always recheck them when drawing the object. It's probably best to use
 the routines @code{@ref{fl_get_object_geometry()}},
 @code{@ref{fl_get_object_position()}} and
 @code{@ref{fl_get_object_size()}} to determine position and/or size.
-To change the position and/or size of an object always use
+To change the position and/or size of an object never change the
+elements of the structures directly but always use
 @code{@ref{fl_set_object_geometry()}},
 @code{@ref{fl_set_object_position()}} and
-@code{@ref{fl_set_object_size()}} and never change the elements of the
-structures directly!
+@code{@ref{fl_set_object_size()}}!
+
 @item unsigned int resize
 Controls if the object should be resized if the form it is on is
 resized. The options are @code{FL_RESIZE_NONE}, @code{FL_RESIZE_X},
@@ -47,16 +51,19 @@ resized. The options are @code{FL_RESIZE_NONE}, @code{FL_RESIZE_X},
 @code{FL_RESIZE_Y}. Instead of accessing this element dirrectly better
 use the functions @code{@ref{fl_get_object_resize()}} and
 @code{@ref{fl_set_object_resize()}}.
+
 @item unsigned int nwgravity, segravity
 These two variables control how the object is placed relative to its
 position prior to resizing. Instead of accessing these elements
 directly use @code{@ref{fl_get_object_gravity()}} and
 @code{@ref{fl_set_object_gravity()}}.
+
 @item FL_COLOR col1, col2
 These are two color indices in the internal color lookup table. The
 class routines are free to use them or not. The user can change them
 using the routine @code{@ref{fl_set_object_color()}}. The routine
 @code{fl_add_NEW()} should fill in defaults.
+
 @item char *label
 This is a pointer to a text string. This can be used by class routines
 to provide a label for the object. The class routines can freely use
@@ -73,14 +80,17 @@ relative to the entire bounding box, simply calling
 @item FL_COLOR lcol
 The color of the label. The class routines can freely use this. The
 user sets it with @code{@ref{fl_set_object_lcol()}}.
+
 @item int lsize
 The size of the font used to draw the label. The class routines can
 freely use this. The user sets it with
 @code{@ref{fl_set_object_lsize()}}.
+
 @item int lstyle
 The style of the font the label os drawn in, i.e.@: the number of the
 font in which it should be drawn. The class routines can freely use
 this. The user sets it with @code{@ref{fl_set_object_lstyle()}}.
+
 @item int align
 The alignment of the label with respect to the object. Again it is up
 to the class routines to do something useful with this. The possible
@@ -91,15 +101,18 @@ values are @code{FL_ALIGN_LEFT}, @code{FL_ALIGN_RIGHT},
 value should be bitwise ORed with @code{FL_ALIGN_INSIDE} if the label
 will be within the bounding box of the object. The user can set this
 using the routine @code{@ref{fl_set_object_lalign()}}.
+
 @item int bw
 An integer indicating the border width of the object. Negative values
 indicate the up box should look "softer" (in which case no black line
 of 1 pixel width is drawn around the objects box). The user can set a
 different border width using @code{@ref{fl_set_object_bw()}}.
+
 @item long *shortcut
 A pointer to long containing all shortcuts (as keysyms) defined for
 the object (also see the previous chapter). You should never need them
 because they are fully handled by the main routines.
+
 @item void *spec
 This is a pointer that points to any class specific information. For
 example, for sliders it stores the minimum, maximum and current value
@@ -108,6 +121,7 @@ and texts) will need this. The function for adding a new object
 (@code{fl_add_NEW()}) has to allocate storage for it. Whenever the
 object receives the event @code{FL_FREEMEM} it should free this
 memory.
+
 @item int visible
 Indicates whether the object is visible. The class routines don't have
 to do anything with this variable. When the object is not visible the
@@ -116,6 +130,7 @@ default objects are visible. Note that a true visible does not
 guarantee the object is visible on the screen, for that also the form
 the object beongs to need to be visible, in which case
 @code{@ref{fl_form_is_visible()}} returns true.
+
 @item int active
 Indicates whether the object is active, i.e.@: wants to receive events
 other than @code{FL_DRAW}.
@@ -123,12 +138,14 @@ other than @code{FL_DRAW}.
 Static objects, such as text and boxes are inactive. Changing the
 status should be done in the @code{fl_add_NEW()} routine if required.
 By default objects are active.
+
 @item int input
 Indicates whether this object can receive keyboard input. If not,
 events related to keyboard input are not sent to the object. The
 default value of @code{input} is false. It should be set by
 @code{fl_add_NEW()} if required. Note that not all keys are sent (see
 member @code{wantkey} below).
+
 @item int wantkey
 An input object normally does not receive @code{<Tab>} or
 @code{<Return>} keystrokes or any other keys except those that have
@@ -145,7 +162,7 @@ be set in @code{wantkey}. By setting @code{wantkey} to
 If non-zero this indicates the the maximum elapsed time (in msec)
 between two mouse clicks to be considered a double click. A zero value
 disables double/triple click detection.
-@c
+
 @c The following is incorrect. The current implementation works only
 @c for buttons since it explictely calls fl_get_button(), so one
 @c can't create radio objects of any other sort.
@@ -156,25 +173,28 @@ disables double/triple click detection.
 @c their pushed value is reset). Radio buttons use this. The default
 @c is false. The @code{fl_add_NEW()} routine should set it if
 @c required.
+
 @item int automatic
 An object is automatic if it automatically (without user actions) has
 to change its contents. Automatic objects get a @code{FL_STEP} event
 about every @w{50 msec}. For example the object class clock is
 automatic. @code{automatic} by default is false.
+
 @item int belowmouse
 This indicates whether the mouse is on this object. It is set and
 reset by the main routine. The class routines should never change it
 but can use it to draw or handle the object differently.
-@c
-@c pushed shouldn't be used in user code
-@c @item int pushed
-@c This indicates whether the mouse is pushed within the bounding box
-@c of the object. It is set and reset by the main routine. Class
-@c routines should never change it but can use it to draw or handle
-@c objects differently.
+
+@item int pushed
+This indicates whether the mouse is pushed within the bounding box
+of the object. It is set and reset by the main routine. Class
+routines should never change it but can use it to draw or handle
+objects differently.
+
 @item int focus
 Indicates whether keyboard input is sent to this object. It is set and
 reset by the main routine. Never change it but you can use its value.
+
 @item FL_HANDLEPTR handle
 This is a pointer to the interaction handling routine for the object.
 @code{fl_add_NEW()} sets this by providing the correct handling
@@ -182,40 +202,110 @@ routine. Normally it is never used (except by the main routine) or
 changed although there might be situations in which you want to change
 the interaction handling routine for an object, due to some user
 action.
+
 @item FL_OBJECT *next, *prev
 @itemx FL_FORM *form
 These are pointers to other objects in the form and to the form
 itself. They are used by the main routines. The class routines should
 not change them.
+
 @item void *c_vdata
 A void pointer for the class routine. The main module does not
 reference or modify this field in any way. The object classes,
 including the built-in ones, may use this field.
+
 @item char *c_cdata
 A char pointer for the class routine. The main module does not
 reference or modify this field in any way. The object classes,
 including the built-in ones, may use this field.
+
 @item long c_ldata
 A long variable for the class routine. The main module does not
 reference or modify this field in any way. The object classes,
 including the built-in ones, may use this field.
+
 @item void *u_vdata
 A void pointer for the application program. The main module does not
 reference or modify this field in any way and neither should the class
 routines.
+
 @item char *u_cdata
 A char pointer for the application program. The main module does not
 reference or modify this field in any way and neither should the class
 routines.
+
 @item long u_ldata
 A long variable provided for the application program.
+
 @item FL_CALLBACKPTR object_callback
-The callback routine that the application program assigns to the
-object. This is the responsibility of the application program and the
-class routines should not use it.
+The callback routine that the application program assigned to the
+object and that the system invokes when the user does something with
+the object.
+
 @item long argument
-The argument to the call-back routine. Again, this is the
-responsibility of the application program to set.
+The argument to be passed to the callback routine when invoked.
+
+@item int how_return
+Determines under what circumstances the object is returned by e.g.@:
+@code{@ref{fl_do_forms()}} or the callback function for the object is
+invoked. This can be either
+@table @code
+@item FL_RETURN_NONE
+@tindex FL_RETURN_NONE
+@anchor{FL_RETURN_NONE}
+object gets never returned or its callback invoked
+
+@item FL_RETURN_CHANGED
+@tindex FL_RETURN_CHANGED
+@anchor{FL_RETURN_CHANGED}
+Return object or invoke callback when object changed.
+
+@item FL_RETURN_END
+@tindex FL_RETURN_END
+@anchor{FL_RETURN_END}
+Return object or invoke callback at end of interaction, normally when
+the mouse key is released or, in the case of input objects, the object
+has lost focus.
+
+@item FL_RETURN_END_CHANGED
+@tindex FL_RETURN_END_CHANGED
+@anchor{FL_RETURN_END_CHANGED}
+Return object or invoke callback only when interaction has ended and
+the state of the object has changed.
+
+@item FL_RETURN_ALWAYS
+@tindex FL_RETURN_ALWAYS
+@anchor{FL_RETURN_ALWAYS}
+Return object or invoke callback whenever interaction has ended or
+the state of the object has changed.
+@end table
+
+Never change this element of the structure directly but use the
+object type specific funtions instead! Especially in the case of
+objects that have child objects also the corresponding settings
+for child objects may need changes.
+
+@item int returned
+Set to what calling the object handling function did return (and
+pruned to what the object is supposed to return according to the
+@code{how_return} element). Can be either
+@table @code
+@item FL_RETURN_NONE
+@tindex FL_RETURN_NONE
+Handling function did @code{FL_RETURN_NONE} (i.e.@: @code{0}).
+
+@item FL_RETURN_CHANGED
+@tindex FL_RETURN_CHANGED
+Handling function detected a change of the objects state.
+
+@item FL_RETURN_END
+@tindex FL_RETURN_END
+Handling function detected end of interaction with object.
+@end table
+
+@code{FL_RETURN_CHANGED} and @code{FL_RETURN_END} are bits that
+can be bitwise ored. If both are set this indicates that the objects
+state was changed and the interaction ended.
 @end table
 
 The generic object construction routine
@@ -252,7 +342,8 @@ obj->visible = 1;
 obj->bw = borderWidth_resource_set ? resource_val : FL_BOUND_WIDTH;
 obj->u_ldata = 0;
 obj->u_vdata = 0;
-obj->spec = 0;
+obj->spec = NULL;
+obj->how_return = FL_RETURN_CHANGED
 @end example
 
 In some situations it can be also useful to make an object a child
@@ -266,13 +357,14 @@ object of an object named @code{parent} use the function
 void fl_add_child(FL_OBJECT *parent, FL_OBJECT *child);
 @end example
 
-When creating a composite object you will typically add set callbacks
+When creating a composite object you will typically add callbacks
 for the child object that handle what happens on events for these
 child objects (e.g.@: for the scrollbar the buttons have callbacks
 that update the internal state for the scrollbar object and result
-in the slider getting shifted). If such callbacks aren't installed
-an event for the child as well as the parent object will get reported
-by e.g.@: @code{@ref{fl_do_forms()}}!
+in the slider getting shifted). Within these callback functions
+the @code{returned} elements of the parent can be changed to
+influence if and what gets reported to the application via
+@code{@ref{fl_do_forms()}}.
 
 There is rarely any need for the new object class to know how the
 object is added to a form and how the Forms Library manages the

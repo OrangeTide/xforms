@@ -786,8 +786,7 @@ create_it( int          objclass,
     ob->lcol       = FL_SLIDER_LCOL;
     ob->lsize      = FL_TINY_SIZE;
     ob->how_return = FL_RETURN_CHANGED;
-    ob->spec_size  = sizeof *sp;
-    ob->spec       = sp =  fl_calloc( 1, ob->spec_size );
+    ob->spec       = sp =  fl_calloc( 1, sizeof *sp );
 
 	sp->min        = 0.0;
     sp->max        = 1.0;

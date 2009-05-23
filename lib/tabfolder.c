@@ -223,8 +223,7 @@ fl_create_tabfolder( int          type,
 
     ob->boxtype    = FL_UP_BOX;
 	ob->how_return = FL_RETURN_NONE;
-    ob->spec_size  = sizeof *sp;
-    ob->spec = sp  = fl_calloc( 1, ob->spec_size );
+    ob->spec       = sp  = fl_calloc( 1, sizeof *sp );
 
     absbw = FL_abs( ob->bw );
 

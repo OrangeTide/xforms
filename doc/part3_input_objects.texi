@@ -58,15 +58,19 @@ Only an integer value can be typed in (e.g. -86).
 @tindex FL_DATE_INPUT
 @anchor{FL_DATE_INPUT}
 @item FL_DATE_INPUT
-Only a date (MM/DD/YY) can be typed in.
+Only a date (MM/DD/YY or DD/MM/YY) can be typed in (and limited per
+default to 10 characters).
 
 @tindex FL_MULTILINE_INPUT
 @anchor{FL_MULTILINE_INPUT}
 @item FL_MULTILINE_INPUT
 An input field allowing for multiple lines.
+
 @tindex FL_SECRET_INPUT
+@anchor{FL_SECRET_INPUT}
 @item FL_SECRET_INPUT
-A normal input field that does not show the text.
+A normal input field that does not show the text (and limited per
+default to a maximum length of 16 characters).
 
 @tindex FL_HIDDEN_INPUT
 @anchor{FL_HIDDEN_INPUT}
@@ -167,17 +171,16 @@ focus order, see @ref{Raising and Lowering}, in Part II for details. If
 the @code{<Shift>} key is pressed down when the @code{<Tab>} is
 pressed, the focus is directed to the previous input field.
 
-Leaving an inut field using the (@code{<Tab>} and @code{<Return>})
-keys does not work for multi-line input fields where the
-@code{<Return>} key is used to start lines and @code{<Tab>} is a
-legitimate input character (not currently handled though). Also when
-the user picks a new input field with the mouse, the current input
-object is returned.
+Leaving an inut field using the @code{<Return>}) key does not work for
+multi-line input fields since the @code{<Return>} key is used to start
+a new line.
 
-The above mechanism is the default behavior of an input field.
-Depending on the application, other options might be useful. To change
-the precise condition for the object to be returned (or its callback
-to becone invoked), the following function can be used:
+Per default the input object gets returned to the application (or the
+callback set for the input object is invoked) when the input field is
+left and has been changed. Depending on the application, other options
+might be useful. To change the precise condition for the object to be
+returned (or its callback to becone invoked), the following function
+can be used:
 @findex fl_set_input_return()
 @anchor{fl_set_input_return()}
 @example
@@ -186,19 +189,28 @@ void fl_set_input_return(FL_OBJECT *obj, int when);
 @noindent
 Where @code{when} can take one of the following values:
 @table @code
+@tindex FL_RETURN_END_NONE
+@item FL_RETURN_END_NONE
+Never return or invoke callback
+
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-The default. Callback is called at the end if the field is modified.
+Default, object is returned or callback is called at the end if the
+field is modified.
+
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Invoke the callback function whenever the field is changed.
+Return or invoke the callback function whenever the field is changed.
+
 @tindex FL_RETURN_END
 @item FL_RETURN_END
-Invoke the callback function at the end regardless if the field was
-modified or not.
+Return or invoke the callback function at the end regardless if the
+field was modified or not.
+
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
-Invoke the callback function upon each keystroke.
+Return or invoke the callback function upon each keystroke and at
+the end (regardless if the field was changed or not)
 @end table
 
 See demo @file{objreturn.c} for an example use of this.
@@ -212,7 +224,10 @@ for input fields of type @code{@ref{FL_NORMAL_INPUT}}
 void fl_set_input_maxchars(FL_OBJECT *obj, int maxchars);
 @end example
 @noindent
-To reset the limit to infinite, set @code{maxchars} to 0.
+To reset the limit to infinite, set @code{maxchars} to 0. Note that
+input objects of types @code{@ref{FL_DATE_INPUT}} are limited to 10
+characters per default and those of type @code{@ref{FL_SECRET_INPUT}}
+to 16.
 
 Although an input of type @code{FL_RETURN_ALWAYS} can be used in
 combination with the callback function to check the validity of

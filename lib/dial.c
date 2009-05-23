@@ -440,8 +440,7 @@ fl_create_dial( int          type,
     ob->lcol       = FL_DIAL_LCOL;
     ob->boxtype    = FL_DIAL_BOXTYPE;
     ob->how_return = FL_RETURN_END_CHANGED;
-    ob->spec_size  = sizeof *sp;
-    ob->spec       = sp = fl_calloc( 1, ob->spec_size );
+    ob->spec       = sp = fl_calloc( 1, sizeof *sp );
 
     sp->min       = 0.0;
     sp->max       = 1.0;

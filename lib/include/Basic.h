@@ -288,11 +288,14 @@ enum {
 
 /* control when to return input, slider and dial etc. object. */
 
-#define FL_RETURN_NONE	       0
-#define FL_RETURN_CHANGED      1
-#define FL_RETURN_END          2
-#define FL_RETURN_END_CHANGED  ( FL_RETURN_CHANGED | FL_RETURN_END )
-#define	FL_RETURN_ALWAYS       ~0
+enum {
+	FL_RETURN_NONE         = 0,
+	FL_RETURN_CHANGED      = 1,
+	FL_RETURN_END          = 2,
+	FL_RETURN_END_CHANGED  = ( FL_RETURN_CHANGED | FL_RETURN_END ),
+    FL_RETURN_SELECTION    = 4,
+	FL_RETURN_ALWAYS       = ~0
+};
 
 /*	Some special color indices for FL private colormap. It does not matter
  *	what the value of each enum is, but it must start from 0 and be
@@ -628,7 +631,6 @@ typedef struct flobjs_ {
 	void		   * c_vdata;		 /* for class use */
 	char		   * c_cdata;		 /* for class use */
 	long			 c_ldata;		 /* for class use */
-	unsigned int	 spec_size;		 /* for internal use */
 	FL_COLOR		 aux_col1,		 /* aux colors */
 					 aux_col2;
 	FL_COLOR		 dbl_background; /* double buffer background */

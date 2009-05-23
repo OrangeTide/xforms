@@ -316,11 +316,9 @@ fl_create_spinner( int          type,
 	}
 
     obj = fl_make_object( FL_SPINNER, type, x, y, w, h, label, handle_spinner );
-    obj->boxtype    = FL_NO_BOX;
-	obj->align      = FL_ALIGN_LEFT;
-
-	obj->spec_size = sizeof *sp;
-	sp = obj->spec = malloc( obj->spec_size );
+    obj->boxtype = FL_NO_BOX;
+	obj->align   = FL_ALIGN_LEFT;
+	obj->spec    = sp = malloc( sizeof *sp );
 
 	sp->input = fl_create_input( type == FL_INT_SPINNER ?
 								 FL_INT_INPUT : FL_FLOAT_INPUT,
