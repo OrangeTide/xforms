@@ -151,6 +151,8 @@ extern void fli_event_queue_delete( void );
 
 extern void fli_object_qenter( FL_OBJECT * );
 
+extern void fli_filter_returns( FL_OBJECT * );
+
 extern FL_OBJECT * fli_object_qread( void );
 
 extern void fli_object_qflush( FL_FORM * );
@@ -197,14 +199,8 @@ extern void fli_handle_object( FL_OBJECT *,
 							   FL_Coord,
 							   FL_Coord,
 							   int,
-							   XEvent * );
-
-extern int fli_handle_object_direct( FL_OBJECT *,
-									 int,
-									 FL_Coord,
-									 FL_Coord,
-									 int,
-									 XEvent * );
+							   XEvent *,
+							   int );
 
 extern FL_OBJECT *fli_find_first( FL_FORM *,
 								  int,
@@ -874,9 +870,6 @@ extern void *fli_init_valuator( FL_OBJECT * );
 
 extern double fli_valuator_round_and_clamp( FL_OBJECT *,
 											double );
-
-extern int fli_set_valuator_return( FL_OBJECT *,
-									int );
 
 extern double fli_clamp( double,
 						 double,

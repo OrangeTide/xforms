@@ -3248,7 +3248,7 @@ close_popup( FL_POPUP * popup,
 
 
 /***************************************
- * Do all the interaction with the popup. also dealing with other
+ * Do all the interaction with the popup, also dealing with other
  * background tasks (taking over from the main event loop in forms.c
  * while the popup is shown)
  ***************************************/

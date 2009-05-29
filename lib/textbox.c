@@ -606,63 +606,63 @@ draw_textline( FL_OBJECT * ob,
 
 		switch ( str[ 1 ] )
 		{
-			case 'l':
+			case 'l' :
 				size = FL_LARGE_FONT;
 				yy += 2.0;
 				break;
 
-			case 'L':
+			case 'L' :
 				size += 6;
 				yy += 2.0;
 				break;
 
-			case 'm':
+			case 'm' :
 				size = FL_MEDIUM_FONT;
 				yy += 1.0;
 				break;
 
-			case 'M':
+			case 'M' :
 				size += 4;
 				yy += 1.0;
 				break;
 
-			case 's':
+			case 's' :
 				size = FL_SMALL_FONT;
 				break;
 
-			case 'S':
+			case 'S' :
 				size -= 2;
 				break;
 
-			case 'b':
+			case 'b' :
 				style += FL_BOLD_STYLE;
 				break;
 
-			case 'i':
+			case 'i' :
 				style += FL_ITALIC_STYLE;
 				break;
 
-			case 'f':
+			case 'f' :
 				style = FL_FIXED_STYLE;
 				break;
 
-			case 'n':
+			case 'n' :
 				style = FL_NORMAL_STYLE;
 				break;
 
-			case 't':
+			case 't' :
 				style = FL_TIMES_STYLE;
 				break;
 
-			case 'c':
+			case 'c' :
 				align = FL_ALIGN_CENTER;
 				break;
 
-			case 'r':
+			case 'r' :
 				align = FL_ALIGN_RIGHT;
 				break;
 
-			case 'C':
+			case 'C' :
 				/* requesting color changes. */
 
 				for ( lcol = 0; str[ 2 ] >= '0' && str[ 2 ] <= '9';
@@ -675,12 +675,12 @@ draw_textline( FL_OBJECT * ob,
 				}
 				break;
 
-			case '_':		/* underline. Up 1 to survive deselect */
+			case '_' :		/* underline. Up 1 to survive deselect */
 				fl_diagline( xx, yy + sp->chardesc - 1, ww - LMARGIN - 2,
 							 1, lcol );
 				break;
 
-			case '-':
+			case '-' :
 				fl_drw_text( 0, xx - 3, yy - ascend, ww + 2, sp->charheight,
 							 FL_COL1, 0, 10, "@DnLine" );
 				str = " ";
@@ -689,7 +689,7 @@ draw_textline( FL_OBJECT * ob,
 				sp->text[ line ]->non_selectable = 1;
 				break;
 
-			case 'N':
+			case 'N' :
 				sp->text[ line ]->non_selectable = 1;
 				if ( ob->type != FLI_NORMAL_TEXTBOX )
 					lcol = FL_INACTIVE;
@@ -961,6 +961,7 @@ handle_missed_selection( FL_OBJECT * ob,
 
 
 /***************************************
+ * Same for deselections
  ***************************************/
 
 static void
@@ -1026,7 +1027,7 @@ handle_mouse( FL_OBJECT    * ob,
     /* Check whether there are any lines */
 
     if ( sp->lines == 0 )
-		return 0;
+		return FL_RETURN_NONE;
 
     /* Compute possible slider position change */
 
@@ -1034,7 +1035,7 @@ handle_mouse( FL_OBJECT    * ob,
     screenlines = sp->screenlines;
 
 	if ( ob->type == FLI_NORMAL_TEXTBOX )
-		return 0;
+		return FL_RETURN_NONE;
 
     /* Determine the type of event */
 
@@ -1063,16 +1064,16 @@ handle_mouse( FL_OBJECT    * ob,
 
 	if ( event_type == SELECTEVENT )
 	{
-		/* if select a line that is already been selected, do nothing */
+		/* If select a line that is already been selected, do nothing */
 
 		if ( sp->text[ line ]->selected )
 			return ob->type != FLI_MULTI_TEXTBOX;
 		if (sp->text[ line ]->non_selectable )
-			return 0;
+			return FL_RETURN_NONE;
 
 		sp->drawtype = SELECTION;
 
-		/* mark selected and deselected lines */
+		/* Mark selected and deselected lines */
 
 		if ( ob->type != FLI_MULTI_TEXTBOX && sp->selectline > 0 )
 		{
@@ -1083,8 +1084,8 @@ handle_mouse( FL_OBJECT    * ob,
 		/* This is not exactly correct as we are (potentially) throwing
 		   away events */
 
-		if ( fli_object_qtest( ) == ob )
-			fli_object_qread( );
+//		if ( fli_object_qtest( ) == ob )
+//			fli_object_qread( );
 
 		if (    ob->type == FLI_MULTI_TEXTBOX
 				&& last_select
@@ -1103,11 +1104,12 @@ handle_mouse( FL_OBJECT    * ob,
 
 		if (    ! sp->text[ line ]->selected
 			 || sp->text[ line ]->non_selectable )
-			return 0;
+			return FL_RETURN_NONE;
 
 		sp->drawtype = SELECTION;
-		if ( fli_object_qtest( ) == ob )
-			fli_object_qread( );
+
+//		if ( fli_object_qtest( ) == ob )
+//			fli_object_qread( );
 
 		if (    ob->type == FLI_MULTI_TEXTBOX
 			 && last_deselect
@@ -1126,7 +1128,7 @@ handle_mouse( FL_OBJECT    * ob,
 	last_select = event_type == SELECTEVENT;
 	last_deselect = event_type == DESELECTEVENT;
 
-	return 1;
+	return FL_RETURN_SELECTION;
 }
 
 
@@ -1135,11 +1137,12 @@ handle_mouse( FL_OBJECT    * ob,
 
 static int
 handle_keyboard( FL_OBJECT * ob,
-				 int         key,
-				 XKeyEvent * xev  FL_UNUSED_ARG )
+				 int         key )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
-    int old = sp->selectline;
+    int old_selectline = sp->selectline;
+	int old_topline = sp->topline;
+	int ret = FL_RETURN_NONE;
 
     if ( IsHome( key ) )
 		fl_set_browser_topline( ob->parent, 1 );
@@ -1203,7 +1206,12 @@ handle_keyboard( FL_OBJECT * ob,
 
     fli_adjust_browser_scrollbar( ob->parent );
 
-    return old != sp->selectline;
+	if ( old_selectline != sp->selectline )
+		ret |= FL_RETURN_SELECTION;
+	if ( old_topline != sp->topline )
+		ret |= FL_RETURN_END_CHANGED;
+
+    return ret;
 }
 
 
@@ -1221,19 +1229,14 @@ handle_textbox( FL_OBJECT * ob,
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
 
-#if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleBrowser", fli_event_name( ev ) );
-#endif
-
     /* Wheel mouse hack */
 
-    if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-		 && fli_handle_mouse_wheel( &ev, &key, xev ) == 0 )
-		return 0;
+    if ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+		return fli_handle_mouse_wheel( &ev, &key, xev );
 
     switch ( ev )
     {
-		case FL_DRAW:
+		case FL_DRAW :
 			ob->align &= ~ FL_ALIGN_INSIDE;
 
 			if ( sp->drawtype == COMPLETE || sp->attrib )
@@ -1261,18 +1264,18 @@ handle_textbox( FL_OBJECT * ob,
 			sp->desel_mark = 0;
 			break;
 
-		case FL_DRAWLABEL:
+		case FL_DRAWLABEL :
 			fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
 								ob->lcol, ob->lstyle, ob->lsize, ob->label );
 			break;
 
-		case FL_PUSH:
+		case FL_PUSH :
 			event_type = NOEVENT;
 			sp->status_changed = 0;
 			last_select = last_deselect = 0;
 			/* fall through */
 
-		case FL_UPDATE:
+		case FL_UPDATE :
 			if ( my == sp->lastmy && my > ob->y && my < ob->y + ob->h - 1 )
 				break;
 
@@ -1297,10 +1300,10 @@ handle_textbox( FL_OBJECT * ob,
 			}
 			break;
 
-		case FL_KEYPRESS:
-			return handle_keyboard( ob, key, xev );
+		case FL_KEYPRESS :
+			return handle_keyboard( ob, key );
 
-		case FL_RELEASE:
+		case FL_RELEASE :
 			sp->lastmy = -1;
 			if ( ob->type == FLI_SELECT_TEXTBOX )
 			{
@@ -1310,19 +1313,19 @@ handle_textbox( FL_OBJECT * ob,
 			}
 			return sp->status_changed;
 
-		case FL_DBLCLICK:
-		case FL_TRPLCLICK:
+		case FL_DBLCLICK :
+		case FL_TRPLCLICK :
 			if ( sp->callback )
 				sp->callback( ob, sp->callback_data );
 			break;
 
-		case FL_FREEMEM:
+		case FL_FREEMEM :
 			free_spec( sp );
 			fl_free( sp );
 			ob->spec = NULL;
 			break;
 
-		case FL_OTHER:
+		case FL_OTHER :
 			if ( ( (XEvent * ) xev )->type == GraphicsExpose )
 			{
 				XGraphicsExposeEvent *xge = xev;
@@ -1331,13 +1334,12 @@ handle_textbox( FL_OBJECT * ob,
 				{
 					sp->drawtype = FULL;
 					fl_redraw_object( ob );
-					M_warn( "Browser", "GraphicsExposeRedraw" );
 				}
 			}
 			break;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -1383,6 +1385,10 @@ fli_create_textbox( int          type,
 
     fl_set_object_dblbuffer( ob, 1 );
     extend_textbox( ob );
+
+	/* Per default the object never gets returned, user must change that */
+
+	fl_set_object_return( ob, FL_RETURN_NONE );
 
     return ob;
 }
@@ -2009,51 +2015,51 @@ textwidth( FLI_TEXTBOX_SPEC * sp,
 
 		switch ( str[ 1 ] )
 		{
-			case 'l':
+			case 'l' :
 				size = FL_LARGE_FONT;
 				break;
 
-			case 'L':
+			case 'L' :
 				size += 6;
 				break;
 
-			case 'm':
+			case 'm' :
 				size = FL_MEDIUM_FONT;
 				break;
 
-			case 'M':
+			case 'M' :
 				size += 4;
 				break;
 
-			case 's':
+			case 's' :
 				size = FL_SMALL_FONT;
 				break;
 
-			case 'S':
+			case 'S' :
 				size -= 2;
 				break;
 
-			case 'b':
+			case 'b' :
 				style += FL_BOLD_STYLE;
 				break;
 
-			case 'i':
+			case 'i' :
 				style += FL_ITALIC_STYLE;
 				break;
 
-			case 'f':
+			case 'f' :
 				style = FL_FIXED_STYLE;
 				break;
 
-			case 'n':
+			case 'n' :
 				style = FL_NORMAL_STYLE;
 				break;
 
-			case 't':
+			case 't' :
 				style = FL_TIMES_STYLE;
 				break;
 
-			case 'C':	   /* done need this, but have to advance the str ptr */
+			case 'C' :   /* done need this, but have to advance the str ptr */
 				/* requesting color changes. */
 
 				for ( lcol = 0; str[ 2 ] >= '0' && str[ 2 ] <= '9';

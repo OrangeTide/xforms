@@ -44,7 +44,7 @@
 #define FL_UNUSED_ARG
 #endif
 
-/* some general constants */
+/* Some general constants */
 
 enum {
 	FL_ON		   = 1,
@@ -289,12 +289,13 @@ enum {
 /* control when to return input, slider and dial etc. object. */
 
 enum {
-	FL_RETURN_NONE         = 0,
-	FL_RETURN_CHANGED      = 1,
-	FL_RETURN_END          = 2,
-	FL_RETURN_END_CHANGED  = ( FL_RETURN_CHANGED | FL_RETURN_END ),
-    FL_RETURN_SELECTION    = 4,
-	FL_RETURN_ALWAYS       = ~0
+	FL_RETURN_NONE         =    0,
+	FL_RETURN_CHANGED      =    1,
+	FL_RETURN_END          =    2,
+	FL_RETURN_END_CHANGED  =    4,
+    FL_RETURN_SELECTION    =    8,
+    FL_RETURN_TRIGGERED    = 1024,
+	FL_RETURN_ALWAYS       = ~ FL_RETURN_END_CHANGED
 };
 
 /*	Some special color indices for FL private colormap. It does not matter
@@ -538,11 +539,12 @@ typedef enum {
 
 #define	 FL_CLICK_TIMEOUT  400	/* double click interval */
 
-struct forms_;
-struct fl_pixmap;
+typedef struct FL_FORM_    FL_FORM;
+typedef struct FL_OBJECT_  FL_OBJECT;
+typedef struct FL_pixmap_  FL_pixmap;
 
-typedef struct flobjs_ {
-	struct forms_  * form;			 /* the form this object belongs to */
+struct FL_OBJECT_ {
+	FL_FORM        * form;			 /* the form this object belongs to */
 	void		   * u_vdata;		 /* anything the user likes */
 	char		   * u_cdata;		 /* anything the user likes */
 	long			 u_ldata;		 /* anything the user likes */
@@ -571,29 +573,31 @@ typedef struct flobjs_ {
 	int				 lsize,			 /* label size and style */
 					 lstyle;
 	long		   * shortcut;
-	int				 ( * handle )( struct flobjs_ *,
+	int				 ( * handle )( FL_OBJECT *,
 								   int,
 								   FL_Coord,
 								   FL_Coord,
 								   int,
 								   void * );
-	void			 ( * object_callback )( struct flobjs_ *,
-											 long );
+	void			 ( * object_callback )( FL_OBJECT *,
+											long );
 	long			 argument;
 	void		   * spec;		 /* instantiation					   */
 
-	int				 ( * prehandle )( struct flobjs_ *,
+	int				 ( * prehandle )( FL_OBJECT *,
 									  int,
 									  FL_Coord,
 									  FL_Coord,
 									  int,
 									  void * );
-	int				 ( * posthandle )( struct flobjs_ *,
+	int				 ( * posthandle )( FL_OBJECT *,
 									   int,
 									   FL_Coord,
 									   FL_Coord,
 									   int,
-									   void *);
+									   void * );
+	void             ( * set_return )( FL_OBJECT *,
+									   int );
 
 	/* re-configure preference */
 
@@ -601,15 +605,15 @@ typedef struct flobjs_ {
 	unsigned int	 nwgravity;		 /* how to re-position top-left corner	  */
 	unsigned int	 segravity;		 /* how to re-position lower-right corner */
 
-	struct flobjs_ * prev;			 /* prev. obj in form */
-	struct flobjs_ * next;			 /* next. obj in form */
+	FL_OBJECT      * prev;			 /* prev. obj in form */
+	FL_OBJECT      * next;			 /* next. obj in form */
 
-	struct flobjs_ * parent;
-	struct flobjs_ * child;
-	struct flobjs_ * nc;
+	FL_OBJECT      * parent;
+	FL_OBJECT      * child;
+	FL_OBJECT      * nc;
 	int              returned;
 
-	void *			 flpixmap;		 /* pixmap double buffering stateinfo */
+	FL_pixmap      * flpixmap;		 /* pixmap double buffering stateinfo */
 	int				 use_pixmap;	 /* true to use pixmap double buffering*/
 
 	/* some interaction flags */
@@ -640,11 +644,17 @@ typedef struct flobjs_ {
 	int				 group_id;
 	int              want_motion;
 	int              want_update;
-} FL_OBJECT;
+}; /* typedef'ed to FL_OBJECT above */;
+
+
+/* Macro for getting at the object handlers return value */
+
+#define fl_object_returned( o )  ( ( o )->returned )
+
 
 /* callback function for an entire form */
 
-typedef void ( * FL_FORMCALLBACKPTR )( struct flobjs_ *,
+typedef void ( * FL_FORMCALLBACKPTR )( FL_OBJECT *,
 									   void * );
 /* object callback function		 */
 
@@ -653,18 +663,18 @@ typedef void ( * FL_CALLBACKPTR )( FL_OBJECT *,
 
 /* preemptive callback function	 */
 
-typedef int ( * FL_RAW_CALLBACK )( struct forms_ *,
+typedef int ( * FL_RAW_CALLBACK )( FL_FORM *,
 								   void * );
 
 /* at close (WM menu delete/close etc.) */
 
-typedef int ( * FL_FORM_ATCLOSE )( struct forms_ *,
+typedef int ( * FL_FORM_ATCLOSE )( FL_FORM *,
 								   void * );
 /* deactivate/activate callback */
 
-typedef void ( * FL_FORM_ATDEACTIVATE )( struct forms_ *,
+typedef void ( * FL_FORM_ATDEACTIVATE )( FL_FORM *,
 										 void * );
-typedef void ( * FL_FORM_ATACTIVATE )( struct forms_ *,
+typedef void ( * FL_FORM_ATACTIVATE )( FL_FORM *,
 									   void * );
 
 typedef int ( * FL_HANDLEPTR )( FL_OBJECT *,
@@ -693,7 +703,7 @@ enum {
   FL_VISIBLE	  = 1
 };
 
-typedef struct forms_ {
+struct FL_FORM_ {
 	void			     * fdui;		  /* for fdesign */
 	void			     * u_vdata;		  /* for application */
 	char			     * u_cdata;		  /* for application */
@@ -712,9 +722,9 @@ typedef struct forms_ {
 	double				   w_hr,		  /* high resolution width and height */
 						   h_hr;		  /* (needed for precise scaling) */
 
-	struct flobjs_	     * first;
-	struct flobjs_	     * last;
-	struct flobjs_	     * focusobj;
+	FL_OBJECT	         * first;
+	FL_OBJECT	         * last;
+	FL_OBJECT	         * focusobj;
 
 	FL_FORMCALLBACKPTR	   form_callback;
 	FL_FORM_ATACTIVATE	   activate_callback;
@@ -737,7 +747,7 @@ typedef struct forms_ {
 	FL_FORM_ATCLOSE		   close_callback;
 	void			     * close_data;
 
-	void			     * flpixmap;		 /* back buffer */
+	FL_pixmap			 * flpixmap;		 /* back buffer */
 
 	Pixmap		           icon_pixmap;
 	Pixmap		           icon_mask;
@@ -754,14 +764,14 @@ typedef struct forms_ {
 	int					   has_auto_objects;
 	int					   top;
 	int					   sort_of_modal;	 /* internal use */
-	struct forms_	     * parent;
-	struct forms_	     * child;
-	struct flobjs_	     * parent_obj;
+	FL_FORM	             * parent;
+	FL_FORM	             * child;
+	FL_OBJECT   	     * parent_obj;
 	int					   attached;		 /* not independent anymore */
-	void				   ( * pre_attach )( struct forms_ * );
+	void				   ( * pre_attach )( FL_FORM * );
 	void			     * attach_data;
 	int					   no_tooltip;
-} FL_FORM;
+};  /* typedef'ed to FL_FORM above */
 
 
 /* All FD_xxx structure emitted by fdesign contains at least the
@@ -1011,8 +1021,8 @@ FL_EXPORT void fl_set_object_lstyle( FL_OBJECT * ob,
 FL_EXPORT void fl_set_object_lcol( FL_OBJECT * ob,
 								   FL_COLOR	   lcol );
 
-FL_EXPORT void fl_set_object_return( FL_OBJECT * ob,
-									 int		 when );
+FL_EXPORT int fl_set_object_return( FL_OBJECT * ob,
+									int		    when );
 
 FL_EXPORT void fl_set_object_lalign( FL_OBJECT * ob,
 									 int		 align );

@@ -150,7 +150,7 @@ FL_EXPORT int fl_mode_capable( int mode,
  * the origin of the drawing routines
  */
 
-typedef struct {
+struct FL_pixmap_ {
 	Pixmap		   pixmap;
 	Window		   win;
 	Visual       * visual;
@@ -161,7 +161,7 @@ typedef struct {
 	int			   depth;
 	FL_COLOR	   dbl_background;
 	FL_COLOR	   pixel;
-} FL_pixmap;
+};  /* typedef'ed to FL_pixmap in Basic.h */
 
 
 /* Fonts related */

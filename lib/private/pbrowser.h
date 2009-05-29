@@ -60,6 +60,8 @@ typedef struct {
 	                             vcb;
     void                       * hcb_data,
 	                           * vcb_data;
+	int                          old_nl;
+	FL_Coord                     old_np;                          
 } FLI_BROWSER_SPEC;
 
 #endif

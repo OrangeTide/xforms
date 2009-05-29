@@ -1,6 +1,22 @@
 @node Part I Doing Interaction
 @chapter Doing Interaction
 
+@ifnottex
+
+@menu
+* Displaying a Form::
+* Simple Interaction::
+* Periodic Events and Non-blocking Interaction::
+* Dealing With Multiple Windows::
+* Using Callback Functions::
+* Handling Other Input Sources::
+@end menu
+
+@end ifnottex
+
+@node Displaying a Form
+@section Displaying a Form
+
 After having defined the forms the application program can use them to
 interact with the user. As a first step the program has to display the
 forms with which it wants the user to interact. This is done using the
@@ -456,26 +472,13 @@ application, you can always call @code{exit(3)} yourself within the
 callback function.
 
 
-@ifnottex
-
-@menu
-* Simple Interaction::
-* Periodic Events and Non-blocking Interaction::
-* Dealing With Multiple Windows::
-* Using Callback Functions::
-* Handling Other Input Sources::
-@end menu
-
-@end ifnottex
-
-
 @node Simple Interaction
 @section Simple Interaction
 
-Once one or more forms are shown it is time to give the control to the
-library to handle the interaction with the forms. There are a number of
-different ways of doing this. The first one, appropriate for simple
-programs, is to call
+Once one or more forms are shown it is time to give control to the
+library to handle the interaction with the forms. There are a number
+of different ways of doing this. The first one, appropriate for simple
+programs, is to call of
 @findex fl_do_forms()
 @example
 FL_OBJECT *fl_do_forms(void);
@@ -501,21 +504,22 @@ time as long as the user keeps the mouse pressed on it. (See e.g.@:
 @file{touchbutton.c} for the use of touch buttons.)
 
 @item slider
-A slider is returned whenever it changes value, so whenever the user
-moves his mouse after having pressed the slider.
+A slider per default is returned whenever its value is changed, so
+whenever the user clicks on it and moves the mouse the slider object
+gets returned.
 
 @item input
-An input field is returned when it is deactivated, i.e., the user has
-selected it and then selected another input field for input (e.g. by
-pressing the @code{<Tab>} key).
+An input field is returned per default when it is deactivated, i.e.,
+the user has selected it and then starts interacting with another
+object that has the ability to get returned.
 @end table
 
-When the object is returned by @code{@ref{fl_do_forms()}} the
-application program can check what the change is and take action
+When the (address of the) object is returned by
+@code{@ref{fl_do_forms()}} the application program can take action
 accordingly. See some of the demo programs for examples of use.
 Normally, after the action is taken by the application program
 @code{@ref{fl_do_forms()}} is called again to continue the
-interaction. Hence, most programs have the following global form:
+interaction. Hence, simpler programs have the following global form:
 @example
 /* define the forms */
 /* display the forms */
@@ -529,9 +533,9 @@ while (! ready) @{
 @}
 @end example
 
-For moderately complex programs, interaction via callbacks is preferred.
-For such programs, the global structure looks something like the
-following
+For more complex programs interaction via callbacks is often
+preferable. For such programs, the global structure looks something
+like the following
 @example
 /* define callbacks */
 void callback(FL_OBJECT *obj, long data) @{
@@ -555,6 +559,52 @@ main(int argc, char *argv[]) @{
 In this case, @code{@ref{fl_do_forms()}} handles the interaction
 indefinitely and never returns. The program exits via one of the
 callback functions.
+
+There is also the possibility to conrol under which exact conditions
+the object gets returned. An application that e.g.@: doesn't want to
+be notified about each change of a slider but instead only want a
+single notification after the mouse button has been released and
+the value of the slider was changed in the process would call
+the function
+@findex fl_set_object_return()
+@anchor{fl_set_object_return()}
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when);
+@end example
+with @code{when} set to @code{FL_RETURN_END_CHANGED}.
+
+There are several values @code{when} can take:
+@table @code
+@tindex FL_RETURN_CHANGED
+Return (or call object callback) whenever there is a change in the
+state of the object
+
+@tindex FL_RETURN_END
+Return (or invoke callback) at the end of the interaction (typically
+when the user releases the mouse button) regardless if the objects
+state was changed or not.
+
+@tindex FL_RETURN_END_CHANGED
+Return (or call object callback) when interaction stops @strong{and}
+the state of the object changed.
+
+@tindex FL_RETURN_SELECTION
+Return when e.g.@: a line in a browser was selected.
+
+@tindex FL_RETURN_ALWAYS
+Return (or invoke callback) when anyof the events happens to the
+object that could lead to it being returned to the application.
+
+@tindex FL_RETURN_NONE
+Never notiy the application about interactions with this object.
+Note: this is not meant for deactivation of an object, it will
+still seem to work as normal, it just doesn't get returned to
+the application nor does is callbak get invoked.
+@end table
+
+Since for different objects only subsets of these conditions
+make sense please read the more detailed descriptions for
+each of the object types in Part 3.
 
 
 @node Periodic Events and Non-blocking Interaction

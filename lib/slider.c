@@ -351,59 +351,9 @@ scrollbar_timeout( int    val   FL_UNUSED_ARG,
 
 
 /***************************************
- * Handle a mouse position change
  ***************************************/
 
-static int
-handle_mouse( FL_OBJECT    * ob,
-			  FL_Coord       mx,
-			  FL_Coord       my,
-			  int            key )
-{
-    FLI_SLIDER_SPEC *sp = ob->spec;
-    double newval;
-
-    if ( sp->mouse_off_knob )
-    {
-		if ( sp->timeout_id == -1 )
-		{
-			if ( key == FL_MBUTTON1 )
-				newval = sp->val + sp->mouse_off_knob * sp->ldelta;
-			else if ( key == FL_MBUTTON2 )
-				newval = sp->val + sp->mouse_off_knob * sp->rdelta;
-			else
-				return FL_RETURN_NONE;
-		}
-		else
-			return FL_RETURN_NONE;
-    }
-    else if ( key == FL_MBUTTON1 )
-		newval = get_newvalue( ob, mx, my );
-	else
-		return FL_RETURN_NONE;
-
-	newval = fli_valuator_round_and_clamp( ob, newval );
-	
-    if ( sp->val == newval )
-		return FL_RETURN_NONE;
-
-	/* When we're still doing jumps in a scrollbar restart the timer */
-
-	if ( sp->mouse_off_knob )
-		sp->timeout_id = fl_add_timeout( sp->repeat_ms, scrollbar_timeout, sp );
-
-	sp->val = newval;
-	sp->draw_type = sp->mouse_off_knob ? SLIDER_JUMP : SLIDER_MOTION;
-	fl_redraw_object( ob );
-
-	return FL_RETURN_CHANGED;
-}
-
-
-/***************************************
- ***************************************/
-
-static int
+static void
 handle_enter( FL_OBJECT * obj,
 			  FL_Coord    mx,
 			  FL_Coord    my )
@@ -426,15 +376,13 @@ handle_enter( FL_OBJECT * obj,
 			fl_redraw_object( obj );
 		}
 	}
-
-	return FL_RETURN_NONE;
 }
 
 
 /***************************************
  ***************************************/
 
-static int
+static void
 handle_leave( FL_OBJECT * obj )
 {
     FLI_SLIDER_SPEC *sp = obj->spec;
@@ -452,8 +400,58 @@ handle_leave( FL_OBJECT * obj )
 			fl_redraw_object( obj );
 		}
 	}
+}
 
-	return FL_RETURN_NONE;
+
+/***************************************
+ * Handle a mouse position change
+ ***************************************/
+
+static int
+handle_mouse( FL_OBJECT    * obj,
+			  FL_Coord       mx,
+			  FL_Coord       my,
+			  int            key )
+{
+    FLI_SLIDER_SPEC *sp = obj->spec;
+    double newval;
+
+    if ( sp->mouse_off_knob )
+    {
+		if ( sp->timeout_id == -1 )
+		{
+			if ( key == FL_MBUTTON1 )
+				newval = sp->val + sp->mouse_off_knob * sp->ldelta;
+			else if ( key == FL_MBUTTON2 )
+				newval = sp->val + sp->mouse_off_knob * sp->rdelta;
+			else
+				return FL_RETURN_NONE;
+		}
+		else
+			return FL_RETURN_NONE;
+    }
+    else if ( key == FL_MBUTTON1 )
+		newval = get_newvalue( obj, mx, my );
+	else
+		return FL_RETURN_NONE;
+
+	newval = fli_valuator_round_and_clamp( obj, newval );
+	
+    if ( sp->val == newval )
+		return FL_RETURN_NONE;
+
+	/* When we're still doing jumps in a scrollbar restart the timer */
+
+	if ( sp->mouse_off_knob )
+		sp->timeout_id = fl_add_timeout( sp->repeat_ms, scrollbar_timeout, sp );
+
+	sp->val = newval;
+	sp->draw_type = sp->mouse_off_knob ? SLIDER_JUMP : SLIDER_MOTION;
+	fl_redraw_object( obj );
+
+	sp->val = newval;
+
+	return FL_RETURN_CHANGED;
 }
 
 
@@ -478,7 +476,7 @@ handle_motion( FL_OBJECT * obj,
 		 && key )
 		return FL_RETURN_NONE;
 
-	/* If we get here without the left mouse button eing pressed we're
+	/* If we get here without the left mouse button being pressed we're
 	   monitoring the mouse movements to change hightlighting of the knob of a
 	   scrollbar */
 
@@ -523,7 +521,7 @@ handle_motion( FL_OBJECT * obj,
 	}
 
 	if (    ( ret = handle_mouse( obj, mx, my, key ) )
-	     && ! ( obj->how_return == FL_RETURN_END_CHANGED ) )
+		 && ! ( obj->how_return & FL_RETURN_END_CHANGED ) )
 		sp->start_val = sp->val;
 
 	return ret;
@@ -596,7 +594,7 @@ handle_push( FL_OBJECT * obj,
 		sp->was_shift = 1;
 	}
 
-	if ( ret && ! ( obj->how_return == FL_RETURN_END_CHANGED ) )
+	if ( ret && ! ( obj->how_return & FL_RETURN_END_CHANGED ) )
 		sp->start_val = sp->val;
 
 	return ret;
@@ -616,7 +614,7 @@ handle_update( FL_OBJECT * obj,
 	int ret;
 
 	if (    ( ret = handle_mouse( obj, mx, my, key ) )
-		 && ! ( obj->how_return == FL_RETURN_END_CHANGED ) )
+		 && ! ( obj->how_return & FL_RETURN_END_CHANGED ) )
 		sp->start_val = sp->val;
 
 	return ret;
@@ -652,7 +650,7 @@ handle_scroll( FL_OBJECT * obj,
 	sp->draw_type = SLIDER_JUMP;
 	fl_redraw_object( obj );
 
-	return FL_RETURN_END_CHANGED;
+	return FL_RETURN_CHANGED | FL_RETURN_END;
 }
 
 
@@ -738,10 +736,12 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_ENTER:
-			return handle_enter( ob, mx, my );
+			handle_enter( ob, mx, my );
+			break;
 
 		case FL_LEAVE:
-			return handle_leave( ob );
+			handle_leave( ob );
+			break;
 
 		case FL_MOTION:
 			return handle_motion( ob, mx, my, key, ev );
@@ -779,14 +779,13 @@ create_it( int          objclass,
     FLI_SLIDER_SPEC *sp;
 
     ob = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
-    ob->boxtype    = FL_SLIDER_BOXTYPE;
-    ob->col1       = FL_SLIDER_COL1;
-    ob->col2       = FL_SLIDER_COL2;
-    ob->align      = FL_SLIDER_ALIGN;
-    ob->lcol       = FL_SLIDER_LCOL;
-    ob->lsize      = FL_TINY_SIZE;
-    ob->how_return = FL_RETURN_CHANGED;
-    ob->spec       = sp =  fl_calloc( 1, sizeof *sp );
+    ob->boxtype = FL_SLIDER_BOXTYPE;
+    ob->col1    = FL_SLIDER_COL1;
+    ob->col2    = FL_SLIDER_COL2;
+    ob->align   = FL_SLIDER_ALIGN;
+    ob->lcol    = FL_SLIDER_LCOL;
+    ob->lsize   = FL_TINY_SIZE;
+    ob->spec    = sp =  fl_calloc( 1, sizeof *sp );
 
 	sp->min        = 0.0;
     sp->max        = 1.0;
@@ -807,6 +806,7 @@ create_it( int          objclass,
 
     fl_set_object_dblbuffer( ob, 1	/* IS_FILL(ob->type) ||
 									   IS_NICE(ob->type) */ );
+
     return ob;
 }
 
@@ -824,10 +824,14 @@ add_it( int          objclass,
 		FL_Coord     h,
 		const char * label )
 {
-    FL_OBJECT *ob = create_it( objclass, type, x, y, w, h, label );
+    FL_OBJECT *obj = create_it( objclass, type, x, y, w, h, label );
 
-    fl_add_object( fl_current_form, ob );
-    return ob;
+	/* Set the default return policy for the object */
+
+	fl_set_object_return( obj, FL_RETURN_CHANGED );
+
+    fl_add_object( fl_current_form, obj );
+    return obj;
 }
 
 
@@ -918,7 +922,7 @@ fl_set_slider_value( FL_OBJECT * ob,
 
     if ( sp->val != val )
     {
-		sp->val = val;
+		sp->val = sp->start_val = val;
 		fl_redraw_object( ob );
     }
 }
@@ -991,14 +995,19 @@ fl_get_slider_bounds( FL_OBJECT * ob,
 
 
 /***************************************
- * Sets whether to return value all the time
+ * Sets under which conditions the object is to be returned to the
+ * application. This function should be regarded as deprecated and
+ * fl_set_object_return() should be used instead.
  ***************************************/
 
 void
 fl_set_slider_return( FL_OBJECT * obj,
 					  int         when )
 {
-	obj->how_return = when;
+	if ( when & FL_RETURN_END_CHANGED )
+		when &= ~ ( FL_RETURN_NONE | FL_RETURN_CHANGED );
+
+	fl_set_object_return( obj, when );
 }
 
 
@@ -1015,7 +1024,7 @@ fl_set_slider_step( FL_OBJECT * ob,
 
 
 /***************************************
- * Set slider incrments for clicks with left and middle mouse button
+ * Set slider increments for clicks with left and middle mouse button
  ***************************************/
 
 void

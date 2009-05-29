@@ -74,8 +74,4 @@ extern void fli_drw_tbox( int,
 						  int );
 
 
-extern void ( * fli_xyplot_return )( FL_OBJECT *,
-									 int );
-
-
 #endif /* !def EXTERN.H */

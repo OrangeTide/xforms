@@ -289,88 +289,6 @@ timeoutCB( int    val  FL_UNUSED_ARG,
 
 
 /***************************************
- * Handles an event on ob
- ***************************************/
-
-static int
-handle_mouse( FL_OBJECT * ob,
-			  int         event,
-			  FL_Coord    mx,
-			  FL_Coord    my )
-{
-    FLI_COUNTER_SPEC *sp = ob->spec;
-    int changeval = 0;
-
-    if ( event == FL_RELEASE )
-    {
-		if ( sp->timeout_id != -1 )
-		{
-			fl_remove_timeout( sp->timeout_id );
-			sp->timeout_id = -1;
-		}
-		sp->mouseobj = NONE;
-		fl_redraw_object( ob );
-		return 0;
-    }
-    else if ( event == FL_PUSH )
-    {
-		sp->cur_repeat_ms = sp->repeat_ms;
-		calc_mouse_obj( ob, mx, my );
-		if ( sp->mouseobj != NONE )
-			changeval = 1;
-		sp->timeout_id = -1;
-    }
-    else if ( event == FL_UPDATE && sp->mouseobj != NONE )
-		changeval = sp->timeout_id == -1;
-
-    if ( changeval )
-    {
-		double oval = sp->val;
-
-		sp->timeout_id = fl_add_timeout( sp->cur_repeat_ms, timeoutCB, sp );
-
-		/* If speedjump hasn't been switched on and we didn't reach the final
-		   speed reduce the timeout value by a third of the remaining
-		   difference (the extra substraction of 2 makes sure we can reach
-		   it in all circumstances) */
-
-		if ( ! sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
-		{
-			sp->cur_repeat_ms -=
-				             ( sp->cur_repeat_ms - sp->min_repeat_ms ) / 3 + 2;
-			sp->cur_repeat_ms = FL_max( sp->cur_repeat_ms, sp->min_repeat_ms );
-		}
-
-		/* If speedjump has been switched om but initial and final speed aren't
-		   identical it means that we have a long delay at the start and then
-		   short timeouts afterwards */
-
-		if ( sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
-			sp->cur_repeat_ms = sp->min_repeat_ms;
-
-		if ( sp->mouseobj == OB0 )
-			sp->val -= sp->lstep;
-		if ( sp->mouseobj == OB1 )
-			sp->val -= sp->sstep;
-		if ( sp->mouseobj == OB2 )
-			sp->val += sp->sstep;
-		if ( sp->mouseobj == OB3 )
-			sp->val += sp->lstep;
-
-		sp->val = fli_clamp( sp->val, sp->min, sp->max );
-
-		if ( sp->val != oval )
-		{
-			sp->draw_type = sp->mouseobj | OB4;
-			fl_redraw_object( ob );
-		}
-    }
-
-    return changeval;
-}
-
-
-/***************************************
  * Show which button is active by highlighting the button
  ***************************************/
 
@@ -408,6 +326,116 @@ show_focus_obj( FL_OBJECT * ob,
 
 
 /***************************************
+ * Handles mouse related events
+ ***************************************/
+
+static int
+handle_mouse( FL_OBJECT * ob,
+			  int         event,
+			  FL_Coord    mx,
+			  FL_Coord    my )
+{
+    FLI_COUNTER_SPEC *sp = ob->spec;
+    int ret = FL_RETURN_NONE;
+
+	switch ( event )
+	{
+		/* On mouse push store the old value of the counter, set up the time
+		   values for speeding up updates while the mouse is pressed down,
+		   check where the mouse is and, if it's on one of the buttons, we're
+		   going to change the counters value. Reset the value for the timeout
+		   just to make sure */
+
+		case FL_PUSH :
+			sp->start_val = sp->val;
+			sp->cur_repeat_ms = sp->repeat_ms;
+			calc_mouse_obj( ob, mx, my );
+			if ( sp->mouseobj != NONE )
+				ret = FL_RETURN_CHANGED;
+			sp->timeout_id = -1;
+			break;
+
+		/* On release stop the update timer (if it's still running), set
+		   flag that indicates we're on a button and return end of inter-
+		   action */
+
+		case FL_RELEASE :
+			if ( sp->timeout_id != -1 )
+			{
+				fl_remove_timeout( sp->timeout_id );
+				sp->timeout_id = -1;
+			}
+
+			sp->mouseobj = NONE;
+			fl_redraw_object( ob );
+			ret = FL_RETURN_END;
+			break;
+
+		/* During an update (and if we're on a button) and the time has
+		   expired a change of the counters value is in order */
+
+		case FL_UPDATE :
+			if ( sp->mouseobj != NONE && sp->timeout_id == -1 )
+				ret = FL_RETURN_CHANGED;
+			break;
+	}
+
+	/* Handle changes of the counter value */
+
+    if ( ret == FL_RETURN_CHANGED )
+    {
+		double oval = sp->val;
+
+		/* (Re)start the timer */
+
+		sp->timeout_id = fl_add_timeout( sp->cur_repeat_ms, timeoutCB, sp );
+
+		/* If 'speedjump' hasn't been switched on and we didn't reach the
+		   final speed reduce the timeout value by a third of the remaining
+		   difference (the extra substraction of 2 makes sure we can reach it
+		   in all circumstances) */
+
+		if ( ! sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
+		{
+			sp->cur_repeat_ms -=
+				             ( sp->cur_repeat_ms - sp->min_repeat_ms ) / 3 + 2;
+			sp->cur_repeat_ms = FL_max( sp->cur_repeat_ms, sp->min_repeat_ms );
+		}
+
+		/* If 'speedjump' has been switched on but initial and final speed
+		   aren't identical it means that we have a long delay at the start
+		   and then short timeouts afterwards */
+
+		if ( sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
+			sp->cur_repeat_ms = sp->min_repeat_ms;
+
+		/* Change the counters value according to which button we're on */
+
+		if ( sp->mouseobj == OB0 )
+			sp->val -= sp->lstep;
+		if ( sp->mouseobj == OB1 )
+			sp->val -= sp->sstep;
+		if ( sp->mouseobj == OB2 )
+			sp->val += sp->sstep;
+		if ( sp->mouseobj == OB3 )
+			sp->val += sp->lstep;
+
+		sp->val = fli_clamp( sp->val, sp->min, sp->max );
+
+		/* Redraw the central field with the new value */
+
+		if ( sp->val != oval )
+		{
+			sp->draw_type = sp->mouseobj | OB4;
+			fl_redraw_object( ob );
+		}
+    }
+
+    return ret;
+}
+
+
+/***************************************
  * Handles an event
  ***************************************/
 
@@ -420,10 +448,7 @@ handle_counter( FL_OBJECT * ob,
 				void *      ev   FL_UNUSED_ARG )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
-
-#if FL_DEBUG >= ML_DEBUG
-    M_info2( "HandleCounter", fli_event_name( event ) );
-#endif
+	int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
@@ -438,39 +463,22 @@ handle_counter( FL_OBJECT * ob,
 		case FL_PUSH:
 			if ( key != FL_MBUTTON1 )
 				break;
+			/* fall through */
 
-			sp->changed = handle_mouse( ob, event, mx, my );
-
-			if (    ob->how_return != FL_RETURN_END_CHANGED
-				 && sp->changed )
-			{
-				sp->changed = 0;
-				return FL_RETURN_CHANGED;
-			}
+		case FL_UPDATE:
+			if (    ( ret = handle_mouse( ob, event, mx, my ) )
+				 && ! ( ob->how_return & FL_RETURN_END_CHANGED ) )
+				sp->start_val = sp->val;
 			break;
 
 		case FL_RELEASE:
 			if ( key != FL_MBUTTON1 )
 				break;
 
-			handle_mouse( ob, event, mx, my );
+			ret = handle_mouse( ob, event, mx, my );
 			show_focus_obj( ob, mx, my );
-			if ( ob->how_return & FL_RETURN_CHANGED && sp->changed )
-			{
-				sp->changed = 0;
-				return FL_RETURN_END_CHANGED;
-			}
-			sp->changed = 0;
-			return FL_RETURN_END;
-
-		case FL_UPDATE:
-			if ( handle_mouse( ob, event, mx, my ) )
-				sp->changed = 1;
-			if ( ob->how_return == FL_RETURN_CHANGED && sp->changed )
-			{
-				sp->changed = 0;
-				return FL_RETURN_CHANGED;
-			}
+			if ( sp->start_val != sp->val )
+				ret |= FL_RETURN_CHANGED;
 			break;
 
 		case FL_MOTION:
@@ -484,7 +492,7 @@ handle_counter( FL_OBJECT * ob,
 			break;
     }
 
-    return FL_RETURN_NONE;
+    return ret;
 }
 
 
@@ -511,7 +519,6 @@ fl_create_counter( int          type,
     ob->lcol        = FL_COUNTER_LCOL;
 	ob->want_motion = 1;
 	ob->want_update = 1;
-    ob->how_return  = FL_RETURN_END_CHANGED;
 
     /* Counter has a different default */
 
@@ -551,6 +558,10 @@ fl_add_counter( int          type,
 {
     FL_OBJECT *ob = fl_create_counter( type, x, y, w, h, label );
 
+	/* Set default return policy for the object */
+
+	fl_set_object_return( ob, FL_RETURN_CHANGED );
+
     fl_add_object( fl_current_form, ob );
 
     return ob;
@@ -577,7 +588,7 @@ fl_set_counter_value( FL_OBJECT * ob,
     val = fli_clamp( val, sp->min, sp->max );
     if ( sp->val != val )
     {
-		sp->val = val;
+		sp->val = sp->start_val = val;
 		sp->draw_type = ( ob->visible && ob->form->visible ) ? OB4 : ALL;
 		fl_redraw_object( ob );
     }
@@ -589,8 +600,8 @@ fl_set_counter_value( FL_OBJECT * ob,
 
 void
 fl_get_counter_bounds( FL_OBJECT * ob,
-					   double *    min,
-					   double *    max )
+					   double    * min,
+					   double    * max )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
@@ -707,18 +718,16 @@ fl_get_counter_value( FL_OBJECT * ob )
 
 
 /***************************************
- * Sets whether to return value all the time
+ * Sets under which conditions the object is to be returned to the
+ * application. This function should be regarded as deprecated and
+ * fl_set_object_return() should be used instead.
  ***************************************/
 
 void
-fl_set_counter_return( FL_OBJECT * ob,
-					   int         how )
+fl_set_counter_return( FL_OBJECT * obj,
+					   int         when )
 {
-    ob->how_return = how;
-    if ( ob->how_return == FL_RETURN_END )
-		ob->how_return = FL_RETURN_END_CHANGED;
-    else if ( ob->how_return == FL_RETURN_ALWAYS )
-		ob->how_return = FL_RETURN_CHANGED;
+	fl_set_object_return( obj, when );
 }
 
 

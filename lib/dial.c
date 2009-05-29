@@ -226,12 +226,12 @@ handle_mouse( FL_OBJECT * ob,
     mx =   mousex - ( ob->x + ob->w * 0.5 );
     my = - mousey + ( ob->y + ob->h * 0.5 );
 
-    /* skip clicks very close to center */
+    /* Don't react to clicks very close to center */
 
     if ( fabs( mx ) < 2 && fabs( my ) < 2 )
-		return 0;
+		return FL_RETURN_NONE;
 
-    /* get angle and normalize to (0,2PI) */
+    /* Get angle and normalize to (0,2PI) */
 
     angle = atan2( my, mx ) * 180.0 / M_PI;
 
@@ -262,16 +262,16 @@ handle_mouse( FL_OBJECT * ob,
     if ( sp->step != 0.0 )
 		val = ( int ) ( val / sp->step + 0.5 ) * sp->step;
 
-    /* allow a resolution about 0.2 degrees */
+    /* Allow a resolution of about 0.2 degrees */
 
     if ( fabs( val - oldv ) > range / 1800.0 )
     {
 		sp->val = val;
 		fl_redraw_object( ob );
-		return 1;
+		return FL_RETURN_CHANGED;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -291,7 +291,7 @@ handle_mouse_wheel( FL_OBJECT * ob,
 		   range = sp->max - sp->min;
 
 	if ( key != FL_MBUTTON4 && key != FL_MBUTTON5 )
-		return 0;
+		return FL_RETURN_NONE;
 
 	step = sp->step > 0.0 ? 10.0 * sp->step : 0.1 * range;
 
@@ -326,10 +326,10 @@ handle_mouse_wheel( FL_OBJECT * ob,
 	{
 		sp->val = val;
 		fl_redraw_object( ob );
-		return 1;
+		return FL_RETURN_CHANGED;
 	}
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -338,72 +338,58 @@ handle_mouse_wheel( FL_OBJECT * ob,
  ***************************************/
 
 static int
-handle_dial( FL_OBJECT * ob,
+handle_dial( FL_OBJECT * obj,
 			 int         event,
 			 FL_Coord    mx,
 			 FL_Coord    my,
 			 int         key  FL_UNUSED_ARG,
 			 void *      ev )
 {
-    FLI_DIAL_SPEC *sp = ob->spec;
-
-#if FL_DEBUG >= ML_DEBUG
-    M_info( "HandleDial", fli_event_name( event ) );
-#endif
+    FLI_DIAL_SPEC *sp = obj->spec;
+	int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
 		case FL_DRAW:
-			draw_dial( ob );
+			draw_dial( obj );
 			break;
 
 		case FL_DRAWLABEL:
-			fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-								ob->lcol, ob->lstyle, ob->lsize, ob->label );
+			fl_drw_text_beside( obj->align, obj->x, obj->y, obj->w, obj->h,
+								obj->lcol, obj->lstyle, obj->lsize,
+								obj->label );
 			break;
 
 		case FL_PUSH:
 			if ( key != FL_MBUTTON1 )
 				break;
-			sp->changed = 0;
+			sp->start_val = sp->val;
 			/* fall through */
 
 		case FL_MOTION:
 			if ( key != FL_MBUTTON1 )
 				break;
 
-			if ( handle_mouse( ob, mx, my ) )
-				sp->changed = 1;
-			if ( sp->changed && ob->how_return == FL_RETURN_CHANGED )
-			{
-				sp->changed = 0;
-				return 1;
-			}
-			else if ( ob->how_return == FL_RETURN_ALWAYS )
-				return 1;
+			if (    ( ret = handle_mouse( obj, mx, my ) )
+				 && ! ( obj->how_return & FL_RETURN_END_CHANGED ) )
+				sp->start_val = sp->val;
 			break;
 
 		case FL_RELEASE:
 			if ( key == FL_MBUTTON2 || key == FL_MBUTTON3 )
 				break;
 
-			if ( handle_mouse_wheel( ob, ev, key ) )
-				sp->changed = 1;
-
-			if (    ob->how_return == FL_RETURN_ALWAYS
-				 || ob->how_return == FL_RETURN_END
-				 || (    sp->changed
-					  && (    ob->how_return == FL_RETURN_CHANGED
-						   || ob->how_return == FL_RETURN_END_CHANGED ) ) )
-				return 1;
+			ret = handle_mouse_wheel( obj, ev, key ) | FL_RETURN_END;
+			if ( sp->start_val != sp->val )
+				ret |= FL_RETURN_CHANGED;
 			break;
 
 		case FL_FREEMEM:
-			fl_free( ob->spec );
+			fl_free( obj->spec );
 			break;
     }
 
-    return 0;
+    return ret;
 }
 
 
@@ -439,7 +425,6 @@ fl_create_dial( int          type,
     ob->align      = FL_DIAL_ALIGN;
     ob->lcol       = FL_DIAL_LCOL;
     ob->boxtype    = FL_DIAL_BOXTYPE;
-    ob->how_return = FL_RETURN_END_CHANGED;
     ob->spec       = sp = fl_calloc( 1, sizeof *sp );
 
     sp->min       = 0.0;
@@ -468,12 +453,16 @@ fl_add_dial( int          type,
 			 FL_Coord     h,
 			 const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj = fl_create_dial( type, x, y, w, h, label );
 
-    ob = fl_create_dial( type, x, y, w, h, label );
-    fl_add_object( fl_current_form, ob );
-    fl_set_object_dblbuffer( ob, 1 );
-    return ob;
+	/* Set default return policy for the object */
+
+	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
+
+    fl_add_object( fl_current_form, obj );
+    fl_set_object_dblbuffer( obj, 1 );
+
+    return obj;
 }
 
 
@@ -488,7 +477,7 @@ fl_set_dial_value( FL_OBJECT * ob,
 
     if ( sp->val != val )
     {
-		sp->val = val;
+		sp->val = sp->start_val = val;
 		fl_redraw_object( ob );
     }
 }
@@ -580,14 +569,16 @@ fl_get_dial_bounds( FL_OBJECT * ob,
 
 
 /***************************************
- * Sets whether to return value all the time
+ * Sets under which conditions the object is to be returned to the
+ * application. This function should be regarded as deprecated and
+ * fl_set_object_return() should be used instead.
  ***************************************/
 
 void
 fl_set_dial_return( FL_OBJECT * obj,
 				    int         when )
 {
-	obj->how_return = when;
+	fl_set_object_return( obj, when );
 }
 
 

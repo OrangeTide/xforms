@@ -32,8 +32,6 @@
 #include "include/forms.h"
 #include "flinternal.h"
 
-typedef FL_BUTTON_STRUCT SPEC;
-
 
 /***************************************
  * Draws a round button
@@ -47,7 +45,7 @@ draw_round3dbutton( FL_OBJECT * ob )
 		     yy,
 		     rr,
 		     bw = FL_abs( ob->bw );
-    SPEC *sp = ob->spec;
+    FL_BUTTON_STRUCT *sp = ob->spec;
 
     if (    ob->boxtype == FL_NO_BOX
 		 && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )

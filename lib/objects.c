@@ -253,6 +253,7 @@ fl_make_object( int            objclass,
 	obj->child              = NULL;
 	obj->nc                 = NULL;
 	obj->group_id           = 0;
+	obj->set_return         = NULL;
 	obj->how_return         = FL_RETURN_ALWAYS;
 	obj->returned           = 0;
 
@@ -632,9 +633,9 @@ fl_free_object( FL_OBJECT * obj )
 		}
 	}
 
-	/* Make the object release memory it may have allocated */
+	/* Make the object release all memory it may have allocated */
 
-    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL );
+    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL, 0 );
 
     /* Finally free all other memory we allocated for the object */
 
@@ -684,7 +685,7 @@ fl_set_object_boxtype( FL_OBJECT * obj,
     {
 		obj->boxtype = boxtype;
         if ( obj->child )
-            fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL );
+            fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 		fl_redraw_object( obj );
     }
 }
@@ -1602,8 +1603,8 @@ fl_set_focus_object( FL_FORM   * form,
 		return;
 
 	if ( form->focusobj )
-		fli_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
-    fli_handle_object_direct( obj, FL_FOCUS, 0, 0, 0, NULL );
+		fli_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL, 0 );
+    fli_handle_object( obj, FL_FOCUS, 0, 0, 0, NULL, 0 );
 }
 
 
@@ -1890,7 +1891,7 @@ redraw_marked( FL_FORM * form,
 				fl_set_text_clipping( obj->x, obj->y, obj->w, obj->h );
 			}
 
-			fli_handle_object( obj, FL_DRAW, 0, 0, key, xev );
+			fli_handle_object( obj, FL_DRAW, 0, 0, key, xev, 0 );
 
 			if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
 			{
@@ -2231,12 +2232,13 @@ void unconditional_hide_tooltip( FL_OBJECT * obj )
  ***************************************/
 
 static int
-fl_handle_it( FL_OBJECT * obj,
-			  int         event,
-			  FL_Coord    mx,
-			  FL_Coord    my,
-			  int         key,
-			  XEvent    * xev )
+handle_it( FL_OBJECT * obj,
+		   int         event,
+		   FL_Coord    mx,
+		   FL_Coord    my,
+		   int         key,
+		   XEvent    * xev,
+		   int         keep_ret )
 {
     static unsigned long last_clicktime = 0;
     static int last_dblclick = 0,
@@ -2252,7 +2254,7 @@ fl_handle_it( FL_OBJECT * obj,
 #if FL_DEBUG >= ML_WARN
     if ( ! obj->form && event != FL_FREEMEM )
     {
-		M_err( "fl_handle_it", "Bad object %s. Event=%s",
+		M_err( "handle_it", "Bad object %s. Event=%s",
 			   obj->label ? obj->label : "", fli_event_name( event ) );
 		return FL_RETURN_NONE;
     }
@@ -2267,9 +2269,12 @@ fl_handle_it( FL_OBJECT * obj,
 	/* Make sure return states of parents, grandparents etc. of current
 	   object are all set to FL_NO_RETURN */
 
-	p = obj;
-	while ( ( p = p->parent ) )
-		p->returned = FL_RETURN_NONE;
+	if ( ! keep_ret )
+	{
+		p = obj;
+		while ( ( p = p->parent ) )
+			p->returned = FL_RETURN_NONE;
+	}
 
     switch ( event )
     {
@@ -2377,20 +2382,16 @@ fl_handle_it( FL_OBJECT * obj,
 		 && obj->prehandle( obj, event, mx, my, key, xev ) == FL_PREEMPT )
 		return FL_RETURN_NONE;
 
-	/* Now finally call the real object handler */
+	/* Now finally call the real object handler and filter the status it
+	   returns (to limit the value to what it expects) */
 
-    obj->returned = obj->handle( obj, event, mx, my, key, xev );
-
-	/* Filter out result bits that don't fit what the object is set up to
-	   return, FL_RETURN_END_CHANGED must handed specially since it requires
-	   that both the flags for FL_RETURN_CHANGED and FL_RETURN_END are set */
-
-	if (    obj->how_return == FL_RETURN_END_CHANGED
-		 && ( obj->returned & ( FL_RETURN_CHANGED | FL_RETURN_END ) ) !=
-			                                          FL_RETURN_END_CHANGED )
-		obj->returned = FL_RETURN_NONE;
-
-	obj->returned &= obj->how_return;
+	if ( ! keep_ret )
+	{
+		obj->returned = obj->handle( obj, event, mx, my, key, xev );
+		fli_filter_returns( obj );
+	}
+	else
+		obj->handle( obj, event, mx, my, key, xev );
 
 	/* Now call a posthandler if it exists */
 
@@ -2401,7 +2402,7 @@ fl_handle_it( FL_OBJECT * obj,
     {
 		event = cur_event;
 		cur_event = 0;
-		if ( obj->returned )
+		if ( ! keep_ret && obj->returned )
 			fli_object_qenter( obj );
 		goto recover;
     }
@@ -2427,34 +2428,26 @@ fli_handle_object( FL_OBJECT * obj,
 				   FL_Coord    mx,
 				   FL_Coord    my,
 				   int         key,
-				   XEvent *    xev )
+				   XEvent *    xev,
+				   int         enter_it )
 {
 	int res;
 
     if ( ! obj )
 		return;
 
-    if ( ( res = fl_handle_it( obj, event, mx, my, key, xev ) ) )
-		fli_object_qenter( obj );
-}
+	/* If 'enter_it' is set the object is inserted into the object queue and
+	   it's 'returned' member is modified. If not just the handler for
+	   the obkect is called, but it doesn't appear in the queue and the
+	   'returned' member remains unmodified. */
 
-
-/***************************************
- * Handle but returns whether successful
- ***************************************/
-
-int
-fli_handle_object_direct( FL_OBJECT * obj,
-						  int         event,
-						  FL_Coord    mx,
-						  FL_Coord    my,
-						  int         key,
-						  XEvent    * xev )
-{
-	int ret = fl_handle_it( obj, event, mx, my, key, xev );
-
-	obj->returned = FL_RETURN_NONE;
-	return ret;
+	if ( enter_it )
+	{
+		if ( ( res = handle_it( obj, event, mx, my, key, xev, 0 ) ) )
+			fli_object_qenter( obj );
+	}
+	else
+		handle_it( obj, event, mx, my, key, xev, 1 );
 }
 
 
@@ -2733,7 +2726,10 @@ fl_trigger_object( FL_OBJECT * obj )
 		 && obj->form
 		 && obj->visible
 		 && obj->active )
+	{
+		obj->returned = FL_RETURN_TRIGGERED;
 		fli_object_qenter( obj );
+	}
 }
 
 
@@ -2992,7 +2988,7 @@ fl_set_object_size( FL_OBJECT * obj,
 	if ( ! obj->parent )
 		fli_recalc_intersections( obj->form );
 
-	fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, NULL );
+	fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
 
     if ( visible )
 		fl_show_object( obj );
@@ -3160,7 +3156,7 @@ lose_focus( FL_OBJECT * obj )
 		return;
 
 	if ( obj == form->focusobj )
-		fli_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
+		fli_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL, 1 );
 
 	obj->focus = 0;
 
@@ -3174,7 +3170,7 @@ lose_focus( FL_OBJECT * obj )
 		refocus = form->focusobj ? form->focusobj : NULL;
 
 	if ( form->focusobj )
-		fli_handle_object_direct( form->focusobj, FL_FOCUS, 0, 0, 0, NULL );
+		fli_handle_object( form->focusobj, FL_FOCUS, 0, 0, 0, NULL, 0 );
 }
 
 
@@ -3225,56 +3221,32 @@ fl_set_object_helper( FL_OBJECT  * obj,
 
 
 /***************************************
+ * Function for setting the conditions under which an object gets
+ * returned (or its callback invoked). If the object has to do
+ * additional work on setting te condition (e.g. it has child
+ * objects that also need to be set) it has to set up it's own
+ * function that then will called in the end. This function should
+ * obly be called once an object has been created completely!
  ***************************************/
 
-void
-fl_set_object_return( FL_OBJECT * ob,
+int
+fl_set_object_return( FL_OBJECT * obj,
 					  int         when )
 {
-    if ( ! ob )
-		return;
+	int old_when;
 
-	switch ( ob->objclass )
-	{
-		case FL_SLIDER:
-		case FL_VALSLIDER:
-			fl_set_slider_return( ob, when );
-			break;
+    if ( ! obj )
+		return FL_RETURN_ALWAYS;
 
-		case FL_THUMBWHEEL:
-			fl_set_thumbwheel_return( ob, when );
-			break;
+	old_when = obj->how_return;
 
-		case FL_INPUT:
-			fl_set_input_return( ob, when );
-			break;
+	if ( when & FL_RETURN_END_CHANGED )
+		when &= ~ ( FL_RETURN_END | FL_RETURN_CHANGED );
 
-		case FL_COUNTER:
-			fl_set_counter_return( ob, when );
-			break;
+	obj->how_return = when;
 
-		case FL_TABFOLDER :
-			fl_set_tabfolder_return( ob, when );
-			break;
+	if ( obj->set_return )
+		obj->set_return( obj, when );
 
-		case FL_FORMBROWSER :
-			fl_set_formbrowser_return( ob, when );
-			break;
-
-		case FL_DIAL:
-			fl_set_dial_return( ob, when );
-			break;
-
-		case FL_POSITIONER:
-			fl_set_positioner_return( ob, when );
-			break;
-
-		case FL_XYPLOT:
-			fli_xyplot_return( ob, when );
-			break;
-
-		default :
-			M_err( "fl_set_object_return", "Don't know how to set return for "
-				   "object of class %d\n", ob->objclass );
-	}
+	return old_when;
 }

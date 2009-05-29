@@ -95,12 +95,10 @@ user selects different folders by clicking on the tab rider associated
 with a folder.
 
 To set up when either the application is notified about events of the
-tabfolder or the tabfolders callback is invoked (if installed) use the
-function
-@findex fl_set_tabfolder_return()
-@anchor{fl_set_tabfolder_return()}
+tabfolder or the tabfolders callback is invoked (if installed) use
+@findex fl_set_object_return()
 @example
-void fl_set_tabfolder_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 @noindent
 where the @code{when} argument can be one of
@@ -415,18 +413,16 @@ callbacks bound to them will not be returned by
 Your application can be notified about changes of the scrollbars of
 the formbrowser. To set up under which conditions the application is
 notified or the formbrowsers callback is invoked (if installed) use
-the function
-@findex fl_set_formbrowser_return()
-@anchor{fl_set_formbrowser_return()}
+@findex fl_set_object_return()
 @example
-void fl_set_formbrowser_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 @noindent
 where the @code{when} argument can be one of
 @table @code
 @tindex FL_RETURN_NEVER
 @item FL_RETURN_NEVER
-Never report or invoke callback (this is the default for the
+Never report or invoke callback (ethis is the default for the
 formbrowser object)
 
 @tindex FL_RETURN_CHANGED
@@ -437,7 +433,7 @@ scrollbars has chnaged.
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Notification is sen if the position of a scrollbar has changed and the
-mouse button isn't pressed down anymore.
+mouse button has been released.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END

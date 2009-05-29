@@ -1027,7 +1027,7 @@ change_type( FL_OBJECT * obj,
 			if ( prev )
 				prev->next = ttt;
 			*obj = *ttt;
-			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, 0 );
+			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 			addto_selection( obj );
 		}
 		else
@@ -1044,7 +1044,7 @@ change_type( FL_OBJECT * obj,
 		ttt->form = form;
 		*obj = *ttt;
 		fli_insert_composite_after( obj, prev );
-		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, 0 );
+		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 		addto_selection( obj );
     }
 

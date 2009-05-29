@@ -80,10 +80,6 @@ FLI_WIN *fli_app_win;
 
 FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;	  /* The special event object */
 
-/* to improve link profile */
-
-void ( * fli_xyplot_return )( FL_OBJECT * ob,
-							  int );
 
 FLI_TARGET *flx;
 

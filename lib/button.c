@@ -269,6 +269,7 @@ handle_it( FL_OBJECT * obj,
     FL_BUTTON_STRUCT *sp = obj->spec;
     FL_DrawButton drawit;
     FL_CleanupButton cleanup;
+	int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
@@ -324,7 +325,7 @@ handle_it( FL_OBJECT * obj,
 				obj->belowmouse = 0;
 				sp->val = 1;
 				fl_redraw_object( obj );
-				return 1;
+				return FL_RETURN_CHANGED | FL_RETURN_END;
 			}
 
 			oldval = sp->val;
@@ -332,9 +333,13 @@ handle_it( FL_OBJECT * obj,
 			sp->mousebut = key;
 			sp->timdel = 1;
 			fl_redraw_object( obj );
-			return    obj->type == FL_INOUT_BUTTON
-				   || obj->type == FL_TOUCH_BUTTON
-				   || obj->type == FL_MENU_BUTTON;
+			if ( obj->type == FL_MENU_BUTTON )
+				ret |= FL_RETURN_END;
+			if (    obj->type == FL_INOUT_BUTTON
+				 || obj->type == FL_TOUCH_BUTTON
+				 || obj->type == FL_MENU_BUTTON )
+				ret |= FL_RETURN_CHANGED;
+			break;
 
 		case FL_MOTION:
 			if (    key < FL_MBUTTON1
@@ -363,10 +368,12 @@ handle_it( FL_OBJECT * obj,
 					fl_redraw_object( obj );
 				}
 			}
-			return    sp->val
-				   && obj->type == FL_TOUCH_BUTTON
-				   && sp->timdel++ > 10
-				   && ( sp->timdel & 1 ) == 0;
+			if (    sp->val
+				 && obj->type == FL_TOUCH_BUTTON
+				 && sp->timdel++ > 10
+				 && ( sp->timdel & 1 ) == 0 )
+				ret |= FL_RETURN_CHANGED;
+			break;
 
 		case FL_RELEASE:
 			if (    key < FL_MBUTTON1
@@ -384,16 +391,22 @@ handle_it( FL_OBJECT * obj,
 			if ( obj->type == FL_PUSH_BUTTON )
 			{
 				fl_redraw_object( obj );
-				return sp->val != oldval;
+				if ( sp->val != oldval )
+					ret |= FL_RETURN_END | FL_RETURN_CHANGED;
 			}
 			else if ( sp->val == 0 && obj->type != FL_MENU_BUTTON )
-			{
 				fl_redraw_object( obj );
-				return 0;
+			else
+			{
+				sp->val = 0;
+				fl_redraw_object( obj );
+				if (    obj->type != FL_MENU_BUTTON
+					 && obj->type != FL_TOUCH_BUTTON )
+					ret |= FL_RETURN_END | FL_RETURN_CHANGED;
+				if ( obj->type == FL_TOUCH_BUTTON )
+					ret |= FL_RETURN_END;
 			}
-			sp->val = 0;
-			fl_redraw_object( obj );
-			return obj->type != FL_MENU_BUTTON;
+			break;
 
 		case FL_UPDATE:
 			sp->event = FL_UPDATE;
@@ -410,10 +423,12 @@ handle_it( FL_OBJECT * obj,
 					fl_redraw_object( obj );
 				}
 			}
-			return    sp->val
-				   && obj->type == FL_TOUCH_BUTTON
-				   && sp->timdel++ > 10
-				   && ( sp->timdel & 1 ) == 0;
+			if (    sp->val
+				 && obj->type == FL_TOUCH_BUTTON
+				 && sp->timdel++ > 10
+				 && ( sp->timdel & 1 ) == 0 )
+				ret |= FL_RETURN_CHANGED;
+			break;
 
 		case FL_SHORTCUT:
 			sp->event = FL_SHORTCUT;
@@ -440,7 +455,7 @@ handle_it( FL_OBJECT * obj,
 				fl_redraw_object( obj );
 			}
 			sp->mousebut = FL_SHORTCUT + key;
-			return 1;
+			ret |= FL_RETURN_END | FL_RETURN_CHANGED;
 
 		case FL_FREEMEM:
 			if ( ( cleanup = lookup_cleanupfunc( obj->objclass ) ) )
@@ -450,7 +465,7 @@ handle_it( FL_OBJECT * obj,
 			break;
     }
 
-    return FL_RETURN_NONE;
+    return ret;
 }
 
 
@@ -553,7 +568,7 @@ fl_get_button_numb( FL_OBJECT * obj )
 
 
 /***************************************
- * creates an object
+ * Creates a button
  ***************************************/
 
 FL_OBJECT *
@@ -573,12 +588,13 @@ fl_create_button( int          type,
     obj->col2    = FL_BUTTON_COL2;
     obj->align   = FL_BUTTON_ALIGN;
     obj->lcol    = FL_BUTTON_LCOL;
+
     return obj;
 }
 
 
 /***************************************
- * Adds an object
+ * Adds a button to the current form
  ***************************************/
 
 FL_OBJECT *
@@ -589,9 +605,8 @@ fl_add_button( int          type,
 			   FL_Coord     h,
 			   const char * label)
 {
-    FL_OBJECT *obj;
+    FL_OBJECT *obj = fl_create_button( type, x, y, w, h, label );
 
-    obj = fl_create_button( type, x, y, w, h, label );
     fl_add_object( fl_current_form, obj );
     return obj;
 }

@@ -253,12 +253,12 @@ invoked. This can be either
 @item FL_RETURN_NONE
 @tindex FL_RETURN_NONE
 @anchor{FL_RETURN_NONE}
-object gets never returned or its callback invoked
+Object gets never returned or its callback invoked
 
 @item FL_RETURN_CHANGED
 @tindex FL_RETURN_CHANGED
 @anchor{FL_RETURN_CHANGED}
-Return object or invoke callback when object changed.
+Return object or invoke callback when state of object changed.
 
 @item FL_RETURN_END
 @tindex FL_RETURN_END

@@ -55,12 +55,12 @@ static void delete_form( FLI_FORMBROWSER_SPEC * sp,
 static void display_forms( FLI_FORMBROWSER_SPEC * sp );
 static void form_cb( FL_OBJECT * ob,
 					 void      * data );
-static int handle( FL_OBJECT * ob,
-				   int         event,
-				   FL_Coord    mx,
-				   FL_Coord    my,
-				   int         key,
-				   void      * ev );
+static int handle_formbrowser( FL_OBJECT * ob,
+							   int         event,
+							   FL_Coord    mx,
+							   FL_Coord    my,
+							   int         key,
+							   void      * ev );
 static void hcb( FL_OBJECT * ob,
 				 long        data );
 static void parentize_form( FL_FORM   * form,
@@ -70,6 +70,8 @@ static void set_form_position( FL_FORM * form,
 							   int       y );
 static void vcb( FL_OBJECT * ob,
 				 long        data );
+static void set_formbrowser_return( FL_OBJECT *,
+									int );
 
 
 /***************************************
@@ -88,12 +90,14 @@ fl_create_formbrowser( int          type,
     int absbw, oldu = fl_get_coordunit( );
     int D;
 
-    ob = fl_make_object( FL_FORMBROWSER, type, x, y, w, h, label, handle );
+    ob = fl_make_object( FL_FORMBROWSER, type, x, y, w, h, label,
+						 handle_formbrowser );
     fl_set_coordunit( FL_COORD_PIXEL );
     ob->boxtype    = FL_FORMBROWSER_BOXTYPE;
     ob->align      = FL_FORMBROWSER_ALIGN;
     ob->col1       = FL_FORMBROWSER_COL1;
     ob->col2       = FL_BLACK;
+	ob->set_return = set_formbrowser_return;
     ob->spec      = sp = fl_calloc( 1, sizeof *sp );
 
     absbw = FL_abs( ob->bw );
@@ -141,11 +145,6 @@ fl_create_formbrowser( int          type,
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
 
-	/* This must come after adding the childs since otherwise the childs get
-	   set to the same return behaviour as the parent */
-
-	fl_set_formbrowser_return( ob, FL_RETURN_NONE );
-
     fl_set_coordunit( oldu );
 
     return ob;
@@ -165,6 +164,10 @@ fl_add_formbrowser( int          type,
 {
 
     FL_OBJECT *ob = fl_create_formbrowser( type, x, y, w, h, label );
+
+	/* Set default return policy for the object */
+
+	fl_set_object_return( ob, FL_RETURN_NONE );
 
     fl_add_object( fl_current_form, ob );
     return ob;
@@ -776,12 +779,12 @@ display_forms( FLI_FORMBROWSER_SPEC * sp )
  ***************************************/
 
 static int
-handle( FL_OBJECT * ob,
-		int         event,
-		FL_Coord    mx   FL_UNUSED_ARG,
-		FL_Coord    my   FL_UNUSED_ARG,
-		int         key  FL_UNUSED_ARG,
-		void      * ev   FL_UNUSED_ARG )
+handle_formbrowser( FL_OBJECT * ob,
+					int         event,
+					FL_Coord    mx   FL_UNUSED_ARG,
+					FL_Coord    my   FL_UNUSED_ARG,
+					int         key  FL_UNUSED_ARG,
+					void      * ev   FL_UNUSED_ARG )
 {
     FLI_FORMBROWSER_SPEC *sp = ob->spec;
 
@@ -809,7 +812,7 @@ handle( FL_OBJECT * ob,
 			break;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -885,37 +888,19 @@ hcb( FL_OBJECT * obj,
 		fl_unfreeze_form( obj->form );
 	}
 
-	switch ( obj->parent->how_return )
-	{
-		case FL_RETURN_END_CHANGED :
-			if ( obj->returned & FL_RETURN_END && sp->old_hval != nval )
-			{
-				obj->parent->returned = FL_RETURN_END_CHANGED;
-				sp->old_hval = nval;
-			}
-			break;
+	if ( obj->returned & FL_RETURN_END )
+		obj->parent->returned |= FL_RETURN_END;
 
-		case FL_RETURN_END :
-			if ( obj->returned & FL_RETURN_END )
-			{
-				sp->old_hval = nval;
-				obj->parent->returned = FL_RETURN_END;
-			}
-			break;
+	if ( nval != sp->old_hval )
+		obj->parent->returned |= FL_RETURN_CHANGED;
 
-		case FL_RETURN_CHANGED :
-			if ( obj->returned & FL_RETURN_CHANGED )
-			{
-				sp->old_hval = nval;
-				obj->parent->returned = FL_RETURN_CHANGED;
-			}
-			break;
+	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+		 && ! (    obj->parent->returned & FL_RETURN_CHANGED
+				&& obj->parent->returned & FL_RETURN_END ) )
+			obj->parent->returned = FL_RETURN_NONE;
 
-		case FL_RETURN_ALWAYS :
-			sp->old_hval = nval;
-			obj->parent->returned = obj->returned;
-			break;
-	}
+	if ( obj->parent->returned & FL_RETURN_END )
+ 		sp->old_hval = nval;
 }
 
 
@@ -950,37 +935,19 @@ vcb( FL_OBJECT * obj,
     display_forms( sp );
     fl_unfreeze_form( obj->form );
 
-	switch ( obj->parent->how_return )
-	{
-		case FL_RETURN_END_CHANGED :
-			if ( obj->returned & FL_RETURN_END && sp->old_vval != nval )
-			{
-				obj->parent->returned = FL_RETURN_END_CHANGED;
-				sp->old_vval = nval;
-			}
-			break;
+	if ( obj->returned & FL_RETURN_END )
+		obj->parent->returned |= FL_RETURN_END;
 
-		case FL_RETURN_END :
-			if ( obj->returned & FL_RETURN_END )
-			{
-				sp->old_vval = nval;
-				obj->parent->returned = FL_RETURN_END;
-			}
-			break;
+	if ( nval != sp->old_vval )
+		obj->parent->returned |= FL_RETURN_CHANGED;
 
-		case FL_RETURN_CHANGED :
-			if ( obj->returned & FL_RETURN_CHANGED )
-			{
-				sp->old_vval = nval;
-				obj->parent->returned = FL_RETURN_CHANGED;
-			}
-			break;
+	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+		 && ! (    obj->parent->returned & FL_RETURN_CHANGED
+				&& obj->parent->returned & FL_RETURN_END ) )
+			obj->parent->returned = FL_RETURN_NONE;
 
-		case FL_RETURN_ALWAYS :
-			sp->old_vval = nval;
-			obj->parent->returned = obj->returned;
-			break;
-	}
+	if ( obj->parent->returned & FL_RETURN_END )
+ 		sp->old_vval = nval;
 }
 
 
@@ -1153,13 +1120,20 @@ check_scrollbar( FL_OBJECT * ob )
 
 
 /***************************************
+ * Sets under which conditions the object is to be returned to the
+ * application. This function is for interal use only, the user
+ * must call fl_set_object_return() (which then will call this
+ * function).
  ***************************************/
 
-void
-fl_set_formbrowser_return( FL_OBJECT * obj,
-						   int         when )
+static void
+set_formbrowser_return( FL_OBJECT * obj,
+						int         when )
 {
 	FLI_FORMBROWSER_SPEC *sp = obj->spec;
+
+	if ( when & FL_RETURN_END_CHANGED )
+		when &= ~ ( FL_RETURN_NONE | FL_RETURN_CHANGED );
 
 	obj->how_return = when;
 

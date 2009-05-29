@@ -64,15 +64,10 @@ fli_handle_event_callbacks( XEvent * xev )
 
     if ( ! fwin )
     {
-        if ( ! fli_event_callback )
-        {
-            M_warn( "fli_handle_event_callbacks", "Unknown window = 0x%lx",
-                    xev->xany.window );
-        }
-
+		M_warn( "fli_handle_event_callbacks", "Unknown window = 0x%lx",
+				xev->xany.window );
         fli_xevent_name( "Ignored", xev );
-
-        return 0;
+        return 1;
     }
 
     if (    fwin->pre_emptive
@@ -117,21 +112,22 @@ fl_set_event_callback( FL_APPEVENT_CB callback,
    instead by the same number of objects we started with, reducing
    the number of calls of malloc() a bit */
 
-#define FL_QSIZE          64            /* chunk size of object queue */
+#define FLI_QSIZE         64            /* chunk size of object queue */
 
-typedef struct FL_OBJECT_QUEUE_ENTRY_ {
-    FL_OBJECT *                     obj;
-    struct FL_OBJECT_QUEUE_ENTRY_ * next;
-} FL_OBJECT_QUEUE_ENTRY;
+typedef struct FLI_OBJECT_QUEUE_ENTRY_ {
+    FL_OBJECT *                      obj;
+	int                              ret;
+    struct FLI_OBJECT_QUEUE_ENTRY_ * next;
+} FLI_OBJECT_QUEUE_ENTRY;
 
-typedef struct FL_OBJECT_QUEUE_ {
-    FL_OBJECT_QUEUE_ENTRY * head;       /* here objects get added to */
-    FL_OBJECT_QUEUE_ENTRY * tail;       /* and here they get removed from */
-    FL_OBJECT_QUEUE_ENTRY * empty;      /* linked list of empty entries */
-    FL_OBJECT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
-} FL_OBJECT_QUEUE;
+typedef struct FLI_OBJECT_QUEUE_ {
+    FLI_OBJECT_QUEUE_ENTRY * head;       /* here objects get added to */
+    FLI_OBJECT_QUEUE_ENTRY * tail;       /* and here they get removed from */
+    FLI_OBJECT_QUEUE_ENTRY * empty;      /* linked list of empty entries */
+    FLI_OBJECT_QUEUE_ENTRY * blocks;     /* pointer to linked list of blocks */
+} FLI_OBJECT_QUEUE;
 
-static FL_OBJECT_QUEUE obj_queue = { NULL, NULL, NULL, NULL };
+static FLI_OBJECT_QUEUE obj_queue = { NULL, NULL, NULL, NULL };
 
 
 /***************************************************
@@ -144,7 +140,7 @@ static FL_OBJECT_QUEUE obj_queue = { NULL, NULL, NULL, NULL };
 static void
 fli_extend_obj_queue( void )
 {
-    FL_OBJECT_QUEUE_ENTRY *p = fl_malloc( ( FL_QSIZE + 1 ) * sizeof *p );
+    FLI_OBJECT_QUEUE_ENTRY *p = fl_malloc( ( FLI_QSIZE + 1 ) * sizeof *p );
     size_t i;
 
     /* The first element of the (new) area is used for book-keeping purposes */
@@ -156,7 +152,7 @@ fli_extend_obj_queue( void )
 
     obj_queue.empty = p;
 
-    for ( i = 0; i < FL_QSIZE - 1; p++, i++ )
+    for ( i = 0; i < FLI_QSIZE - 1; p++, i++ )
         p->next = p + 1;
 
     p->next = NULL;
@@ -172,7 +168,7 @@ fli_extend_obj_queue( void )
 void
 fli_obj_queue_delete( void )
 {
-    FL_OBJECT_QUEUE_ENTRY *b;
+    FLI_OBJECT_QUEUE_ENTRY *b;
 
     while ( ( b = obj_queue.blocks ) != NULL )
     {
@@ -206,6 +202,8 @@ fli_add_to_obj_queue( FL_OBJECT * obj )
 
     obj_queue.head->next = NULL;
     obj_queue.head->obj = obj;
+	if ( obj != FL_EVENT )
+		obj_queue.head->ret = obj->returned;
 }
 
 
@@ -216,7 +214,7 @@ fli_add_to_obj_queue( FL_OBJECT * obj )
 static FL_OBJECT *
 fli_get_from_obj_queue( void )
 {
-    FL_OBJECT_QUEUE_ENTRY *t = obj_queue.tail;
+    FLI_OBJECT_QUEUE_ENTRY *t = obj_queue.tail;
 
     if ( t == NULL )
         return NULL;
@@ -229,20 +227,22 @@ fli_get_from_obj_queue( void )
     t->next = obj_queue.empty;
     obj_queue.empty = t;
 
+	if ( t->obj != FL_EVENT )
+		t->obj->returned = t->ret;
     return t->obj;
 }
     
 
 /*************************************************************************
  * Function for removing all entries for a certain object from the queue.
- * This routine is called as part of hiding an deletion of an object.
+ * This routine is called as part of hiding and deletion of an object.
  *************************************************************************/
 
 void
 fli_object_qflush_object( FL_OBJECT * obj )
 {
-    FL_OBJECT_QUEUE_ENTRY *c,
-                          *p;
+    FLI_OBJECT_QUEUE_ENTRY *c,
+                           *p;
 
     while ( obj_queue.tail && obj_queue.tail->obj == obj )
         fli_get_from_obj_queue( );
@@ -278,7 +278,7 @@ fli_object_qflush_object( FL_OBJECT * obj )
 void
 fli_object_qflush( FL_FORM * form )
 {
-    FL_OBJECT_QUEUE_ENTRY *c,
+    FLI_OBJECT_QUEUE_ENTRY *c,
                           *p;
 
     while (    obj_queue.tail
@@ -357,14 +357,37 @@ fli_object_qenter( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns a pointer to the oldest element in the object queue
  ***************************************/
 
 FL_OBJECT *
 fli_object_qtest( void )
 {
-    if ( obj_queue.tail == NULL )
-        return NULL;
-    return obj_queue.tail->obj;
+    return obj_queue.tail ? obj_queue.tail->obj : NULL;
+}
+
+
+/***************************************
+ * Filter out result bits that don't fit what the object is set up to
+ * return, and make sure the FL_RETURN_END_CHANGED bit is set correctly,
+ * which requires that both FL_RETURN_CHANGED and FL_RETURN_END are set
+ ***************************************/
+
+void
+fli_filter_returns( FL_OBJECT * obj )
+{
+	if (    obj->how_return & FL_RETURN_END_CHANGED
+		 && obj->returned & FL_RETURN_CHANGED
+		 && obj->returned & FL_RETURN_END )
+	{
+		obj->returned |= FL_RETURN_END_CHANGED;
+		obj->returned &= ~ ( FL_RETURN_CHANGED | FL_RETURN_END );
+	}
+
+	if ( obj->how_return != FL_RETURN_NONE )
+		obj->returned &= obj->how_return | FL_RETURN_TRIGGERED;
+	else
+		obj->returned = FL_RETURN_NONE;
 }
 
 
@@ -385,11 +408,10 @@ fli_object_qread( void )
         return NULL;
 
 	/* If the object has a callback execute it and return NULL unless the
-	   object is a child object (in that case we're supposed the parent
-	   object and still have to check for callbacks for the parent). It's
-	   also important to make sure the object didn't get deleted within its
-	   callback - if that's the case it would be catastrophic to check for
-	   the parent... */
+	   object is a child object (in that case we're supposed to also check
+	   the for callbacks for the parent etc.). It's also important to make
+	   sure the object didn't get deleted within its callback - if that's
+	   the case it would be catastrophic to check for the parent... */
 
     if ( obj->object_callback )
     {
@@ -413,10 +435,14 @@ fli_object_qread( void )
 	if ( obj->parent )
 	{
 		obj = obj->parent;
+		fli_filter_returns( obj );
 
 		while ( obj->parent )
 		{
-			if ( obj->object_callback && obj->returned )
+			if ( ! obj->returned )
+				return NULL;
+
+			if ( obj->object_callback )
 			{
 				fli_handled_obj = obj;
 				obj->object_callback( obj, obj->argument );
@@ -426,6 +452,7 @@ fli_object_qread( void )
 					return NULL;
 			}
 			obj = obj->parent;
+			fli_filter_returns( obj );
 		}
 
 		fli_handled_parent = obj;
@@ -446,7 +473,12 @@ fli_object_qread( void )
 
 			n = fli_get_from_obj_queue( );
 			do
-				if ( n->object_callback && n->returned )
+			{
+				fli_filter_returns( n );
+				if ( ! n->returned )
+					break;
+			
+				if ( n->object_callback )
 				{
 					fli_handled_obj = n;
 					n->object_callback( n, n->argument );
@@ -455,7 +487,9 @@ fli_object_qread( void )
 					else
 						break;
 				}
-			while ( fli_handled_parent && ( n = n->parent ) != obj );
+			} while ( fli_handled_parent && ( n = n->parent ) != obj );
+
+			fli_filter_returns( obj );
 		}
 
 		if ( ! fli_handled_parent )
@@ -466,7 +500,9 @@ fli_object_qread( void )
 	   or it had no callback. Run either the parent callback or the forms
 	   callback (if there's one). */
 
-	if ( obj->object_callback && obj->returned )
+	if ( ! obj->returned )
+		return NULL;
+	else if ( obj->object_callback  )
 	{
 		fli_handled_obj = obj;
 		obj->object_callback( obj, obj->argument );
@@ -474,7 +510,7 @@ fli_object_qread( void )
 			obj->returned = FL_RETURN_NONE;
 		return NULL;
     }
-    else if ( obj->form->form_callback && obj->returned )
+    else if ( obj->form->form_callback )
     {
 		fli_handled_obj = obj;
         obj->form->form_callback( obj, obj->form->form_cb_data );
@@ -486,13 +522,12 @@ fli_object_qread( void )
 	if ( obj->child && obj->returned == FL_RETURN_NONE)
 		return NULL;
 
-	obj->returned = FL_RETURN_NONE;
 	return obj;
 }
 
 
 /***************************************
- * this is mainly used to handle the input correctly when a form
+ * This is mainly used to handle the input correctly when a form
  * is being hidden
  ***************************************/
 
@@ -536,14 +571,14 @@ static FL_EVENT_QUEUE event_queue = { NULL, NULL, NULL, NULL, 0 };
 /***************************************************
  * Function for creating/extending the event queue
  * (gets called automatically the first time an
- * event gets pushed on the queue, so no previous
- * call, e.g. from fl_initialize(), is necessary)
+ * event gets pushed onto the queue, so no initia-
+ * lization, e.g. from fl_initialize(), is needed)
  ***************************************************/
 
 static void
 fli_extend_event_queue( void )
 {
-    FL_EVENT_QUEUE_ENTRY *p = fl_malloc( ( FL_QSIZE + 1 ) * sizeof *p );
+    FL_EVENT_QUEUE_ENTRY *p = fl_malloc( ( FLI_QSIZE + 1 ) * sizeof *p );
     size_t i;
 
     /* The first element of the area gets used for book-keeping purposes */
@@ -555,7 +590,7 @@ fli_extend_event_queue( void )
 
     event_queue.empty = p;
 
-    for ( i = 0; i < FL_QSIZE - 1; p++, i++ )
+    for ( i = 0; i < FLI_QSIZE - 1; p++, i++ )
         p->next = p + 1;
 
     p->next = NULL;
@@ -628,8 +663,8 @@ fli_get_from_event_queue( void )
     
 
 /***************************************
- * Replacement for the Xlib XPutBackEvent() function: allows to
- * push back an event onto the queue
+ * Replacement for the Xlib XPutBackEvent() function:
+ * allows to push back an event onto the queue
  ***************************************/
 
 void
@@ -719,9 +754,9 @@ fl_XPeekEvent( XEvent * xev )
 
 
 /***************************************
- * get all user events and treat them: either consume by calling
- * the callback routine or put into FL internal Q for later
- * retrival
+ * Get all user events and treat them: either consume by calling
+ * the callback routine or put into the internal object queue for
+ * later retrival
  ***************************************/
 
 void

@@ -43,7 +43,8 @@ typedef struct {
     double xstep,				/* step size to which values are rounded  */
 	       ystep;
     int    partial;
-    int    changed;
+	double old_x,               /* values at start of ineraction */
+	       old_y;
 } FLI_POSITIONER_SPEC;
 
 

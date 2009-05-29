@@ -53,7 +53,7 @@ void xyplot_cb( FL_OBJECT * ob,
     char buf[ 64 ];
 
     fl_get_xyplot( ob, &x, &y, &i );
-    if( i < 0 )
+    if ( i < 0 )
        return;
 
 	sprintf( buf, "X=%f  Y=%f", x, y );
@@ -68,7 +68,9 @@ void
 alwaysreturn_cb( FL_OBJECT * ob,
 				 long        data  FL_UNUSED_ARG )
 {
-	fl_set_xyplot_return( xypui->xyplot, fl_get_button( ob ) );
+	fl_set_object_return( xypui->xyplot,
+						  fl_get_button( ob ) ?
+						  FL_RETURN_CHANGED : FL_RETURN_END_CHANGED );
 }
 
 

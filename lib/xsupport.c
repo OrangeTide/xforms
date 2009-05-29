@@ -355,7 +355,7 @@ fli_show_object_pixmap( FL_OBJECT * ob )
 
 	/* Now handle the label */
 
-	fli_handle_object( ob, FL_DRAWLABEL, 0, 0, 0, NULL );
+	fli_handle_object( ob, FL_DRAWLABEL, 0, 0, 0, NULL, 0 );
 }
 
 

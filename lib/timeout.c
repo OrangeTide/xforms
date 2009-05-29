@@ -126,7 +126,7 @@ fl_remove_timeout( int id )
 /***************************************
  * Function that periodically gets called to deal with expired
  * timeouts, invoking their handlers and removing them. Via the
- * argument the time untilthe next timeout expires gets returned
+ * argument the time until the next timeout expires gets returned
  * (if this is earlier than the original value).
  ***************************************/
 

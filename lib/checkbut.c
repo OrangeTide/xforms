@@ -35,8 +35,6 @@
 #include "include/forms.h"
 #include "flinternal.h"
 
-typedef FL_BUTTON_STRUCT SPEC;
-
 
 /**************************************************************************
  * Check buttons
@@ -50,7 +48,7 @@ draw_checkbutton( FL_OBJECT * ob )
 		     ww,
 		     hh,
 		     bw = FL_abs( ob->bw );
-	SPEC *sp = ob->spec;
+	FL_BUTTON_STRUCT *sp = ob->spec;
 
     if ( sp->event == FL_ENTER || sp->event == FL_LEAVE )
 		return;

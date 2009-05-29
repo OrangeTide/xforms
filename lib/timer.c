@@ -136,6 +136,7 @@ handle_timer( FL_OBJECT * ob,
     long sec,
 		 usec;
     double lasttime_left;
+	int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
@@ -161,11 +162,11 @@ handle_timer( FL_OBJECT * ob,
 		case FL_RELEASE:
 			if ( ob->type != FL_HIDDEN_TIMER && sp->time_left < 0.0 )
 				fl_set_timer( ob, 0.0 );
-			return 0;
+			break;
 
 		case FL_STEP:
 			if ( ! sp->on )
-				return 0;
+				break;
 			lasttime_left = sp->time_left;
 			fl_gettime( &sec, &usec );
 			sp->time_left = sp->timer - ( sec - sp->sec )
@@ -189,20 +190,22 @@ handle_timer( FL_OBJECT * ob,
 				else
 					fl_redraw_object( ob );
 				update_only = 0;
-				return 1;
+				ret = FL_RETURN_CHANGED | FL_RETURN_END;
+				break;
 			}
 			else if ( ( int ) ( lasttime_left / FL_TIMER_BLINKRATE ) !=
 					            ( int ) ( sp->time_left / FL_TIMER_BLINKRATE ) )
 				fl_redraw_object( ob );
 
 			update_only = 0;
-			return 0;
+			break;
 
 		case FL_FREEMEM:
 			fl_free( ob->spec );
-			return 0;
+			break;
     }
-    return 0;
+
+    return ret;
 }
 
 

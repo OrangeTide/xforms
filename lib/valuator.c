@@ -144,20 +144,6 @@ fli_valuator_handle_release( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-int
-fli_set_valuator_return( FL_OBJECT * obj,
-						 int         when )
-{
-    int old = obj->how_return;
-
-    obj->how_return = when;
-    return old;
-}
-
-
-/***************************************
- ***************************************/
-
 double
 fli_clamp( double val,
 		   double min,

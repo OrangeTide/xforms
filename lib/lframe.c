@@ -59,12 +59,12 @@ handle_lframe( FL_OBJECT * ob,
 
     switch ( event )
     {
-		case FL_DRAW:
+		case FL_DRAW :
 			fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
 						  ob->col1, ob->bw );
 			/* fall through */
 
-		case FL_DRAWLABEL:
+		case FL_DRAWLABEL :
 			if ( ! ( len = strlen( ob->label ) ) )
 				return 0;
 
@@ -133,7 +133,7 @@ handle_lframe( FL_OBJECT * ob,
 			break;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 

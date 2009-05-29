@@ -130,10 +130,9 @@ hold down the @code{<Shift>} key while moving the slider.
 In some cases you might not want the slider to be returned or its
 callback called each time its value changes. To change the default,
 call the following routine:
-@findex fl_set_slider_return()
-@anchor{fl_set_slider_return()}
+@findex fl_set_object_return()
 @example
-void fl_set_slider_return(FL_OBJECT *obj, int when)
+void fl_set_object_return(FL_OBJECT *obj, int when)
 @end example
 @noindent
 where the parameter @code{when} can be one of the four values:
@@ -144,22 +143,23 @@ Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-Return (or invoke callback) at end (mouse release) if value is changed
+Return or invoke callback at end (mouse release) if value is changed
 since last return.
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Return whenever the slider value is changed. This is the default.
+Return or invoke callback whenever the slider value is changed. This
+is the default.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
-Return at end (mouse release) regardless if the value is changed or
-not.
+Return or invoke callback at end (mouse release) regardless if the
+value is changed or not.
 
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
-Return when the value changed or at end (mouse release). Usually not
-very useful.
+Return or invoke callback when the value changed or at end (mouse
+release).
 @end table
 
 See the demo program @file{objreturn.c} for an example use of this.
@@ -422,11 +422,9 @@ key while moving the slider.
 
 You can control under which conditions the scrollbar gets returned to
 your application or its callback invoked. To change the default, call
-the following routine:
-@findex fl_set_scrollbar_return()
-@anchor{fl_set_scrollbar_return()}
+@findex fl_set_object_return()
 @example
-void fl_set_scrollbar_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 @noindent
 where the parameter @code{when} can be one of the following four
@@ -438,21 +436,23 @@ Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-Return or nvoke callback at end (mouse release) if value is changed
+Return or invoke callback at end (mouse release) if value is changed
 (since last return).
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Return whenever the scrollbar value is changed. This is the default.
+Return or invoke callback whenever the scrollbar value is changed.
+This is the default.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
-Return at end (mouse release) regardless if the value is changed or
-not.
+Return or invoke callback at end (mouse release) regardless if the
+value is changed or not.
 
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
-Return all the time. Usually not very useful.
+Return or invoke callback whenever value changed or mouse button was
+released.
 @end table
 
 See demo program @file{objreturn.c} for an example use of this.
@@ -652,29 +652,38 @@ The area between initial and current is filled.
 By default, the dial value is returned to the application when the
 user releases the mouse. It is possible to change this behavior using
 the following routine
-@findex fl_set_dial_return()
-@anchor{fl_set_dial_return()}
+@findex fl_set_object_return()
 @example
-void fl_set_dial_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 @noindent
 where @code{when} can be one of the following
 @table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never report or invoke callback.
+
+@table @code
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-Return at end (mouse release) and only if the dial value is changed.
+Return or invoke callback at end (mouse release) and only if the dial
+value is changed. This is the default setting.
 
-This is the default setting.
 @tindex FL_RETURN_CHANGED
-
 @item FL_RETURN_CHANGED
-Return whenever the dial value is changed.
-@tindex FL_RETURN_END
+Return or invoke callback whenever the dial value is changed.
 
+@tindex FL_RETURN_END
 @item FL_RETURN_END
-Return at the end regardless if the dial value is changed or not.
+Return or invoke callback at the end regardless if the dial value is
+changed or not.
 @end table
 
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return or invoke callback when value has changed or mouse button has
+been released.
+@end table
 
 @node Other Dial Routines
 @subsection Other Dial Routines
@@ -841,19 +850,45 @@ Cross-hair inside a transparent box (i.e.@{ drawn in in XOR mode).
 @subsection Positioner Interaction
 
 The user changes the setting of the positioner using the mouse inside
-the box. Whenever the values change, the object is returned by the
-interaction routines.
+the box. Per default whenever the values changes, the object is
+returned by the interaction routines or its callback invoked (if
+one exists.
 
-In some applications you may only want the positioner to be returned
-to the application program when the user releases the mouse, i.e., not
-all the time. To achieve this call the routine
-@findex fl_set_positioner_return()
-@anchor{fl_set_positioner_return()}
+To change the default use the function
+@findex fl_set_object_return()
 @example
-void fl_set_positioner_return(FL_OBJECT *obj, int always);
+void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 @noindent
-Set @code{always} to 0 to achieve this goal.
+where @code{when} can be one of the following
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never report or invoke callback.
+
+@table @code
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback at end (mouse release) and only when
+the positioner ended in a different postion than the one it
+started from.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever the positioners value is changed,
+default setting.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback at the end only but regardless if the
+positioners value changed or not.
+@end table
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return or invoke callback when value has changed or mouse button has
+been released.
+@end table
 
 
 @node Other Positioner Routines
@@ -1018,20 +1053,45 @@ A counter with one button on each side.
 @subsection Counter Interaction
 
 The user changes the value of the counter by keeping his mouse pressed
-on one of the buttons. Whenever he releases the mouse the counter is
-returned to the application program.
+on one of the buttons. Per default whenever the mouse is relased and
+the counter value is changed the counter is returned to the
+application program or its callback is invoked.
 
 In some applications you might want the counter to be returned to the
-application program whenever the value changes. To this end, the
-following routine is available
-@findex fl_set_counter_return()
-@anchor{fl_set_counter_return()}
+application program (or the callback invoked) e.g.@: whenever the
+value changes and not only wjen the mouse is released. To this end use
+@findex fl_set_object_return()
 @example
-void fl_set_counter_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 @noindent
-where @code{when} can be either @code{FL_RETURN_END_CHANGED} (the
-default) or @code{FL_RETURN_CHANGED}.
+where @code{when} can be either
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never report or invoke callback.
+
+@table @code
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback at end (mouse release) and only if the counter
+value is changed. This is the default setting.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever the counter value is changed.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback at the end regardless if the counter value is
+changed or not.
+@end table
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return or invoke callback when the counter value has changed or mouse
+button has been released.
+@end table
 
 
 @node Other Counter Routines
@@ -1282,33 +1342,34 @@ value of the thumbwheel.
 
 In some applications you might not want the thumbwheel to be returned
 all the time. To change the default, call the following routine:
-@findex fl_set_thumbwheel_return()
-@anchor{fl_set_thumbwheel_return()}
+@findex fl_set_object_return()
 @example
-void fl_set_thumbwheel_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code
 @tindex FL_RETURN_NEVER
 @item FL_RETURN_NEVER
-Never return, even if no callback is installed for the thumbwheel object.
+Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-Return at end (mouse release) if value is changed since last return.
+Return or invoke callback at end (mouse release) if value is changed
+since last return.
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Return whenever the thumbwheel value is changed.
+Return or invoke callback whenever the thumbwheel value is changed.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
-Return at end (mouse release) regardless if the value is changed or
-not.
+Return or invoke callback at end (mouse release) regardless if the
+value is changed or not.
 
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
-Return whenever there is mouse event. usualy not very useful.
+Return or invoke callback whenever the value changes or the mouse
+button is released.
 @end table
 
 See demo program @file{thumbwheel.c} for an example use of this.

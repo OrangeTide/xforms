@@ -65,11 +65,11 @@ There are at the moment three types of timers:
 @table @code
 @tindex FL_NORMAL_TIMER
 @item FL_NORMAL_TIMER
-Visible, Shows alabel in a box. Blinks if time expires.
+Visible, Shows a label in a box which blinks when the timer expires.
 @tindex FL_VALUE_TIMER
 @item FL_VALUE_TIMER
-Visible, showing the time left or elapsed time. Blinks if time
-expires.
+Visible, showing the time left or the elapsed time. Blinks if the
+timer expires.
 @tindex FL_HIDDEN_TIMER
 @item FL_HIDDEN_TIMER
 Not visible.
@@ -81,8 +81,18 @@ Not visible.
 
 When a visible timer expires it starts blinking. The user can stop the
 blinking by pressing the mouse on it or by resetting the timer to 0.
+
 The timer object is returned to the application program or its
-callback called at the moment the time expires.
+callback called when the timer expired per default. You can
+also swich off reporting the expiry of the timer by calling
+@findex fl_set_object_return()
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when)
+@end example
+with @code{when} set to @code{FL_RETURN_NONE}. To re-enable
+reporting call it with one of @code{FL_RETURN_CHANGED},
+@code{FL_RETURN_END}, @code{FL_RETURN_END_CHANGED} or
+@code{FL_RETURN_ALWAYS}.
 
 
 @node Other Timer Routines
@@ -148,9 +158,9 @@ FL_TIMER_FILTER fl_set_timer_filter(FL_OBJECT *obj,
 @end example
 @noindent
 The function @code{filter} receives the timer ID and the time left for
-count-down timers and the elapsed time for up-counting timers in
-seconds and should return a string representation of the time. The
-default filter returns the time in a
+count-down timers and the elapsed time for up-counting timers (in
+units of seconds) and should return a string representation of the
+time. The default filter returns the time in a
 @code{hour:minutes:seconds.fraction} format.
 
 
@@ -171,9 +181,8 @@ Although having different APIs and the appearance of a different
 interaction behaviour, the way timers and timeout callbacks work is
 almost identical with one exception: you can deactivate a timer by
 deactivating the form it belongs to. While the form is deactivated,
-the timers callback will not be called even if it expires while the
-form is inactive. The interaction will only resume when the form is
-activated again.
+the timers callback will not be called, even if it expires. The
+interaction will only resume when the form is activated again.
 
 See @file{timer.c} for the use of timers.
 
@@ -272,18 +281,49 @@ change the symbol drawn on the data point.
 @node XYPlot Interaction
 @subsection XYPlot Interaction
 
-Only @code{FL_ACTIVE_XYPLOT} takes mouse events by default. Clicking
+Only @code{FL_ACTIVE_XYPLOT} report mouse events by default. Clicking
 and dragging the data points (marked with little squares) will change
-the data and result in the object returned to the application. By
-default, the reporting happens only when the mouse is released. In
-some situations, reporting changes as soon as they happen might be
-desirable, and in that case, use the following routine with
-@code{when} set to @code{FL_RETURN_CHANGED} to force this behavior:
-@findex fl_set_xyplot_return()
-@anchor{fl_set_xyplot_return()}
+the data and result in the object getiing returned to the application
+(or the objects calllback getting invoked). By default, the reporting
+happens only when the mouse is released. In some situations, reporting
+changes as soon as they happen might be desirable. To control when
+mouse events are returned use the function
+@findex fl_set_object_return()
 @example
-void fl_set_xyplot_return(FL_OBJECT *obj, int when);
+int fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
+where @code{when} can have the folowing values:
+@table @code
+@tindex FL_RETURN_NEVER
+@item FL_RETURN_NEVER
+Never return or invoke callback.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback at end (mouse release) if one of the points
+has been moved to a different place. This is the default.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever a point has been moved.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback at end (mouse release) regardless if a
+point has been moved is changed or not.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return or invoke callback when a point has been moved or the mouse
+button has been release).
+@end table
+
+Please note: a object can also been in inspect mode (see function
+@code{@ref{fl_set_xyplot_inspect()}} below). In this case the object
+gets returned (or its callback invoked) for all of the obove settings
+except (@code{FL_RETURN_NONE}) when the mouse was released on top of
+such one of the points.
+
 
 To obtain the current value of the point that has changed, use the
 routine
@@ -358,9 +398,9 @@ following routine
 void fl_set_xyplot_inspect(FL_OBJECT *obj, int yes_no);
 @end example
 @noindent
-Once an XYPlot is in inspect mode, whenever the mouse is clicked and
+Once an XYPlot is in inspect mode, whenever the mouse is released and
 the mouse position is on one of the data point, the object is returned
-to the caller or it's callback is invoked. You can use
+to the caller or its callback is invoked. You can use
 @code{@ref{fl_get_xyplot()}} to find out which point the mouse was
 clicked on.
 
@@ -965,15 +1005,19 @@ The only types of canvases currently available is
 The canvas class is designed to maximize the programmers ability to
 deal with situations where standard form classes may not be flexible
 enough. With canvases, the programmer has complete control over
-everything that can happen to a window. By default, the only event a
-canvas will receive is @code{Expose}. To receive other events, the
-application program has to select them via
-@code{@ref{fl_addto_selected_xevent()}} or @code{XSelectInput()} or by
-adding a canvas handler.
+everything that can happen to a window. It thus doesn't work like
+other objects that get returned by @code{@ref{fl_do_forms()}} etc.@:
+or have their callbacks invoked.
+
+Instead the user can request that for specific @code{X} events (not
+XForms object events like @code{FL_PRESS}, @code{FL_KEYBOARD} etc.!)
+callbacks are invoked that receive all information about the
+@code{XEvent} that led to their invocation. This obviously requires
+some understanding of how the X Window system works.
 
 The interaction with a canvas is typically set up as follows. First,
-you register the events you're interested in and their handlers using
-the following routine
+you register the @code{X} events you're interested in and their
+handlers using the following routine
 @tindex FL_HANDLE_CANVAS
 @findex fl_add_canvas_handler()
 @anchor{fl_add_canvas_handler()}
@@ -985,20 +1029,27 @@ void fl_add_canvas_handler(FL_OBJECT *obj, int event,
                            FL_HANDLE_CANVAS handler, void *user_data);
 @end example
 @noindent
-where @code{event} is the XEvent type, e.g. @code{Expose} etc. The
-@code{@ref{fl_add_canvas_handler()}} function first registers a
+where @code{event} is the @code{XEvent} type, e.g. @code{Expose} etc.
+The @code{@ref{fl_add_canvas_handler()}} function first registers a
 procedure with the event dispatching system of the Forms Library, then
 it figures out the event masks corresponding to the event @code{event}
 and invokes @code{@ref{fl_addto_selected_xevent()}} to solicit the
 event from the server. Other book keeping (e.g.@: drawing the box that
 encloses the canvas, etc.) is done by the object handler.
 
-Since translation from an Xevent to a Xevent mask is not unique,
-depending on applications, the default translation of the Xevent to a
-mask may or may not match exactly the intention of the application.
-Two events, namely @code{MotionNotify} and @code{ButtonPress}, are
-likely candidates that need further clarification from the
-application. By default, when a mouse motion handler (i.e.@: for
+When a banvas handler is installed the library tries to set the
+correct mask for the the @code{Xevent} (which then tell the X Window
+system which events to pass on to the Forms Library). But since
+translation from an @code{Xevent} to a @code{Xevent} mask is not
+unique, the default translation of the @code{Xevent} to a mask may or
+may not match exactly the intention of the application. Two events,
+namely @code{MotionNotify} and @code{ButtonPress}, are likely
+candidates that need further clarification from the application. There
+are two funtions to add or delete from the mask,
+@code{@ref{fl_addto_selected_xevent()}} and
+@code{@ref{fl_remove_selected_xevent()}}.
+
+By default, when a mouse motion handler (i.e.@: for the
 @code{MotionNotify} events) is registered, it is assumed that, while
 the application wants to be informed about mouse movements, it's not
 interested in a continous motion monitoring (tracking), thus per
@@ -1008,12 +1059,13 @@ number of events generated. If this is not the case and in fact the
 aplication wants to use the mouse motion as some type of graphics
 control, the default behavior would appear "jerky" as not every mouse
 motion is reported. To change the default behavior so that every mouse
-motion is reported, you need to call fl_remove_selected_xevent() with
-mask set to @code{PointerMotionHintMask}. Furthermore, the mouse
-motion is reported regardless if a mouse button is pressed or not. If
-the application is interested in mouse motion only when a mouse button
-is pressed, @code{@ref{fl_remove_selected_xevent()}} should be called
-with a mask of @code{PointerMotionMask | PointerMotionHintMask}.
+motion is reported, you need to call
+@code{@ref{fl_remove_selected_xevent()}} with mask set to
+@code{PointerMotionHintMask}. Furthermore, the mouse motion is
+reported regardless if a mouse button is pressed or not. If the
+application is interested in mouse motion only when a mouse button is
+pressed @code{@ref{fl_remove_selected_xevent()}} should be called with
+a mask of @code{PointerMotionMask|PointerMotionHintMask}.
 
 With @code{ButtonPress} events you need to call
 @code{@ref{fl_addto_selected_xevent()}} with a mask of
@@ -1029,7 +1081,10 @@ void fl_remove_canvas_handler(FL_OBJECT *obj, int event,
 @end example
 @noindent
 After this function call the canvas ceases to receive the events for
-@code{event}.
+@code{event}. The corresponding default bits in the @code{XEvent} mask
+as theu got set by @code{@ref{fl_add_canvas_handler()}} are cleared.
+Ifyou added extra ones with @code{@ref{fl_addto_selected_xevent()}}
+you should reset them using @code{@ref{fl_remove_selected_xevent()}}.
 
 To obtain the window ID of a canvas, use
 @findex fl_get_canvas_id()

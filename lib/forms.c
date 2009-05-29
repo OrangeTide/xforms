@@ -675,7 +675,7 @@ scale_form( FL_FORM * form,
 		if ( fli_inverted_y )
 			obj->y = form->h - obj->h - obj->y;
 
-		fli_handle_object_direct( obj, FL_RESIZED, 0, 0, 0, NULL );
+		fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
     }
 
 	fli_recalc_intersections( form );
@@ -1309,19 +1309,19 @@ fl_hide_form( FL_FORM * form )
 
     if ( fli_mouseobj != NULL && fli_mouseobj->form == form )
     {
-		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, NULL );
+		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, NULL, 1 );
 		fli_mouseobj = NULL;
     }
 
     if ( fli_pushobj != NULL && fli_pushobj->form == form )
     {
-		fli_handle_object( fli_pushobj, FL_RELEASE, 0, 0, 0, NULL );
+		fli_handle_object( fli_pushobj, FL_RELEASE, 0, 0, 0, NULL, 1 );
 		fli_pushobj = NULL;
     }
 
     if ( form->focusobj )
 	{
-		fli_handle_object_direct( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL );
+		fli_handle_object( form->focusobj, FL_UNFOCUS, 0, 0, 0, NULL, 0 );
 		form->focusobj = NULL;
 	}
 
@@ -1486,7 +1486,7 @@ fl_deactivate_form( FL_FORM * form )
     if (    ! form->deactivated
 		 && fli_mouseobj != NULL
 		 && fli_mouseobj->form == form )
-		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, NULL );
+		fli_handle_object( fli_mouseobj, FL_LEAVE, 0, 0, 0, NULL, 1 );
 
     if ( ! form->deactivated && form->deactivate_callback )
 		form->deactivate_callback( form, form->deactivate_data );
@@ -1630,7 +1630,7 @@ fli_do_radio_push( FL_OBJECT * obj,
 				 && o->group_id == 0
 				 && fl_get_button( o ) )
 			{
-				fli_handle_object_direct( o, FL_RELEASE, x, y, key, xev );
+				fli_handle_object( o, FL_RELEASE, x, y, key, xev, 0 );
 				break;
 			}
 	}
@@ -1642,12 +1642,12 @@ fli_do_radio_push( FL_OBJECT * obj,
 		for ( ; o && o->objclass != FL_END_GROUP; o = o->next )
 			if ( o != obj && o->radio && fl_get_button( o ) )
 			{
-				fli_handle_object_direct( o, FL_RELEASE, x, y, key, xev );
+				fli_handle_object( o, FL_RELEASE, x, y, key, xev, 0 );
 				break;
 			}
     }
 
-	fli_handle_object( obj, FL_PUSH, x, y, key, xev );
+	fli_handle_object( obj, FL_PUSH, x, y, key, xev, 1 );
 }
 
 
@@ -1674,7 +1674,7 @@ do_shortcut( FL_FORM  * form,
     {
 		if ( key < 256 )
 		{
-			/* always a good idea to make Alt_k case insensitive */
+			/* Always a good idea to make Alt_k case insensitive */
 
 			key1 = FL_ALT_MASK
 				   + ( islower( key ) ? toupper( key ) : tolower( key ) );
@@ -1696,7 +1696,7 @@ do_shortcut( FL_FORM  * form,
 
 		for ( s = obj->shortcut; *s; s++ )
 		{
-			if ( ! ( *s == key1 || *s == key2 ) )
+			if ( *s != key1 && *s != key2 )
 				continue;
 
 			if ( obj->objclass == FL_INPUT )
@@ -1704,8 +1704,8 @@ do_shortcut( FL_FORM  * form,
 				if ( obj != form->focusobj )
 				{
 					fli_handle_object( form->focusobj, FL_UNFOCUS,
-									   x, y, 0, xev );
-					fli_handle_object( obj, FL_FOCUS, x, y, 0, xev );
+									   x, y, 0, xev, 1 );
+					fli_handle_object( obj, FL_FOCUS, x, y, 0, xev, 1 );
 				}
 			}
 			else
@@ -1715,7 +1715,7 @@ do_shortcut( FL_FORM  * form,
 
 				XAutoRepeatOff( flx->display );
 				if ( ! obj->radio )
-					fli_handle_object( obj, FL_SHORTCUT, x, y, key1, xev );
+					fli_handle_object( obj, FL_SHORTCUT, x, y, key1, xev, 1 );
 				fli_context->mouse_button = FL_SHORTCUT + key1;
 
 				/* this is not exactly correct as shortcut might quit,
@@ -1801,23 +1801,24 @@ handle_keyboard( FL_FORM  * form,
 				 || IsRight( key )
 				 || IsHome( key )
 				 || IsEnd( key ) )
-				fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev );
+				fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
 			else if (    (    IsUp( key )
 						   || IsDown( key )
 						   || IsPageUp( key )
 						   || IsPageDown( key ) )
 					  && focusobj->wantkey & FL_KEY_TAB )
-				fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev );
+				fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
 			else if ( special && special->wantkey & FL_KEY_SPECIAL )
 			{
 				/* moving the cursor in input field that does not have focus
 				   looks weird */
 
 				if ( special->objclass != FL_INPUT )
-					fli_handle_object( special, FL_KEYBOARD, x, y, key, xev );
+					fli_handle_object( special, FL_KEYBOARD,
+									   x, y, key, xev, 1 );
 			}
 			else if ( key == XK_BackSpace || key == XK_Delete )
-				fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev );
+				fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
 			return;
 		}
 
@@ -1842,19 +1843,19 @@ handle_keyboard( FL_FORM  * form,
 
 			if ( obj != NULL && obj != focusobj )
 			{
-				fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev );
-				fli_handle_object( obj, FL_FOCUS, x, y, 0, xev );
+				fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev, 1 );
+				fli_handle_object( obj, FL_FOCUS, x, y, 0, xev, 1 );
 			}
 			else if (    key == '\r'
 					  && ( obj = fli_find_first( form, FLI_FIND_RETURN,
 												 0, 0 ) ) )
 			{
-				fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev );
-				fli_handle_object( obj, FL_SHORTCUT, x, y, key, xev );
+				fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev, 1 );
+				fli_handle_object( obj, FL_SHORTCUT, x, y, key, xev, 1 );
 			}
 		}
 		else if ( focusobj->wantkey != FL_KEY_SPECIAL )
-			fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev );
+			fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
 		return;
     }
 
@@ -1866,11 +1867,11 @@ handle_keyboard( FL_FORM  * form,
     /* Space is an exception for browser */
 
     if ( ( key > 255 || key == ' ' ) && special->wantkey & FL_KEY_SPECIAL )
-		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev );
+		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
     else if ( key < 255 && special->wantkey & FL_KEY_NORMAL )
-		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev );
+		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
     else if ( special->wantkey == FL_KEY_ALL )
-		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev );
+		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
 
 #if FL_DEBUG >= ML_INFO1
     M_info( "fl_keyboard", "(%d %d)pushing %d to %s\n",
@@ -1932,11 +1933,11 @@ fli_handle_form( FL_FORM * form,
 
 		case FL_ENTER:		/* Mouse did enter the form */
 			fli_mouseobj = obj;
-			fli_handle_object( fli_mouseobj, FL_ENTER, x, y, 0, xev );
+			fli_handle_object( fli_mouseobj, FL_ENTER, x, y, 0, xev, 1 );
 			break;
 
 		case FL_LEAVE:		         /* Mouse left the form */
-			fli_handle_object( fli_mouseobj, FL_LEAVE, x, y, 0, xev );
+			fli_handle_object( fli_mouseobj, FL_LEAVE, x, y, 0, xev, 1 );
 			if ( fli_pushobj == fli_mouseobj )
 				fli_pushobj = NULL;
 			fli_mouseobj = NULL;
@@ -1955,14 +1956,16 @@ fli_handle_form( FL_FORM * form,
 			{
 				FL_OBJECT *old_focusobj = form->focusobj;
 
-				fli_handle_object( form->focusobj, FL_UNFOCUS, x, y, key, xev );
+				fli_handle_object( form->focusobj, FL_UNFOCUS,
+								   x, y, key, xev, 1 );
 
 				if ( ! obj->input || ! obj->active )
-					fli_handle_object( old_focusobj, FL_FOCUS, x, y, key, xev );
+					fli_handle_object( old_focusobj, FL_FOCUS,
+									   x, y, key, xev, 1 );
 			}
 
 			if ( obj && obj->input && obj->active )
-				fli_handle_object( obj, FL_FOCUS, x, y, key, xev );
+				fli_handle_object( obj, FL_FOCUS, x, y, key, xev, 1 );
 
 			if ( form->focusobj )
 				keyform = form;
@@ -1977,7 +1980,7 @@ fli_handle_form( FL_FORM * form,
 				 && (    ! obj->input
 					  || ( obj->input && obj->active && obj->focus ) ) )
 			{
-				fli_handle_object( obj, FL_PUSH, x, y, key, xev );
+				fli_handle_object( obj, FL_PUSH, x, y, key, xev, 1 );
 				fli_pushobj = obj;
 			}
 			else if ( obj->radio )
@@ -1989,7 +1992,7 @@ fli_handle_form( FL_FORM * form,
 			{
 				obj = fli_pushobj;
 				fli_pushobj = NULL;
-				fli_handle_object( obj, FL_RELEASE, x, y, key, xev );
+				fli_handle_object( obj, FL_RELEASE, x, y, key, xev, 1 );
 
 			}
 			break;
@@ -2000,11 +2003,12 @@ fli_handle_form( FL_FORM * form,
 			   "fake" them when an object gets entered or left. */
 
 			if ( fli_pushobj != NULL )
-				fli_handle_object( fli_pushobj, FL_MOTION, x, y, key, xev );
+				fli_handle_object( fli_pushobj, FL_MOTION, x, y, key, xev, 1 );
 			else if ( obj != fli_mouseobj )
 			{
-				fli_handle_object( fli_mouseobj, FL_LEAVE, x, y, 0, xev );
-				fli_handle_object( fli_mouseobj = obj, FL_ENTER, x, y, 0, xev );
+				fli_handle_object( fli_mouseobj, FL_LEAVE, x, y, 0, xev, 1 );
+				fli_handle_object( fli_mouseobj = obj, FL_ENTER,
+								   x, y, 0, xev, 1 );
 			}
 
 			/* Objects can declare that they want FL_MOTION events even
@@ -2013,7 +2017,7 @@ fli_handle_form( FL_FORM * form,
 			   position (e.g. choice and counter objects). */
 
 			if ( obj != fli_pushobj && obj && obj->want_motion )
-				fli_handle_object( obj, FL_MOTION, x, y, key, xev );
+				fli_handle_object( obj, FL_MOTION, x, y, key, xev, 1 );
 
 			break;
 
@@ -2029,7 +2033,7 @@ fli_handle_form( FL_FORM * form,
 
 			while ( obj )
 			{
-				fli_handle_object( obj, FL_STEP, x, y, 0, xev );
+				fli_handle_object( obj, FL_STEP, x, y, 0, xev, 1 );
 				obj = fli_find_object( obj->next, FLI_FIND_AUTOMATIC, 0, 0 );
 			}
 			break;
@@ -2039,7 +2043,7 @@ fli_handle_form( FL_FORM * form,
 			   artificial (but not very precise) timer.*/
 
 			if ( fli_pushobj && fli_pushobj->want_update )
-				fli_handle_object( fli_pushobj, FL_UPDATE, x, y, key, xev );
+				fli_handle_object( fli_pushobj, FL_UPDATE, x, y, key, xev, 1 );
 			break;
 
 		case FL_MOVEORIGIN:
@@ -2050,7 +2054,7 @@ fli_handle_form( FL_FORM * form,
 			for ( obj = form->first; obj && form->visible == FL_VISIBLE;
 				  obj = obj->next )
 				if ( obj->visible )
-					fli_handle_object( obj, event, x, y, key, xev );
+					fli_handle_object( obj, event, x, y, key, xev, 0 );
 			break;
     }
 }

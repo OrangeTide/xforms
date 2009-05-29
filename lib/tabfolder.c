@@ -222,7 +222,6 @@ fl_create_tabfolder( int          type,
     fl_set_coordunit( FL_COORD_PIXEL );
 
     ob->boxtype    = FL_UP_BOX;
-	ob->how_return = FL_RETURN_NONE;
     ob->spec       = sp  = fl_calloc( 1, sizeof *sp );
 
     absbw = FL_abs( ob->bw );
@@ -269,6 +268,10 @@ fl_add_tabfolder( int          type,
 				  const char * l )
 {
     FL_OBJECT *obj = fl_create_tabfolder( type, x, y, w, h, l );
+
+	/* Set the default return policy for the object */
+
+	fl_set_object_return( obj, FL_RETURN_NONE );
 
     fl_add_object( fl_current_form, obj );
     return obj;
@@ -349,10 +352,7 @@ switch_folder( FL_OBJECT * ob,
 		 && ! sp->processing_destroy
 		 && (    ob->parent->how_return == FL_RETURN_ALWAYS
 			  || ob->parent->how_return == FL_RETURN_END ) )
-	{
-		fprintf( stderr, "XXX\n" );
-		ob->parent->returned = FL_RETURN_END;
-	}
+		ob->parent->returned |= FL_RETURN_END;
 
     if ( active == sp->active_folder || sp->processing_destroy )
     {
@@ -434,9 +434,8 @@ switch_folder( FL_OBJECT * ob,
 						   FL_SELECTED_TOPTAB_UPBOX :
 						   FL_SELECTED_BOTTOMTAB_UPBOX );
 
-	if (    sp->active_folder >= 0
-		 && ob->parent->how_return != FL_RETURN_NONE )
-		ob->parent->returned = FL_RETURN_END_CHANGED & ob->parent->how_return;
+	if (    sp->active_folder >= 0 )
+		ob->parent->returned = FL_RETURN_END | FL_RETURN_CHANGED;
 
     sp->active_folder = active;
 }
@@ -1123,15 +1122,4 @@ shift_tabs( FL_OBJECT * ob,
     sp->offset = newp;
 
     compute_position( ob );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_set_tabfolder_return( FL_OBJECT * obj,
-						 int         when )
-{
-	obj->how_return = when;
 }

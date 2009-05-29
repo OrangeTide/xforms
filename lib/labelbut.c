@@ -36,8 +36,6 @@
 #include "include/forms.h"
 #include "flinternal.h"
 
-typedef FL_BUTTON_STRUCT SPEC;
-
 
 /********** DRAWING *************/
 
@@ -58,7 +56,7 @@ draw_labelbutton( FL_OBJECT * ob )
 
     if ( ob->belowmouse )
 		col = ob->col1;
-    if ( ( ( SPEC * ) ob->spec )->val )
+    if ( ( ( FL_BUTTON_STRUCT * ) ob->spec )->val )
 		col = ob->col2;
 
     ob->lcol = col;

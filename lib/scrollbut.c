@@ -34,8 +34,6 @@
 #include "include/forms.h"
 #include "flinternal.h"
 
-typedef FL_BUTTON_STRUCT SPEC;
-
 
 /***************************************
  ***************************************/
@@ -46,7 +44,7 @@ draw_sbbutton( FL_OBJECT * ob )
     FL_COLOR c1;
     FL_Coord abw = FL_abs( ob->bw );
     FL_Coord extra = abw;
-    SPEC *sp = ob->spec;
+    FL_BUTTON_STRUCT *sp = ob->spec;
     int btype = FLI_TRIANGLE_UPBOX8;
     char *label = ob->label;
     int x = ob->x,

@@ -273,12 +273,12 @@ draw_dead_area( FL_OBJECT        * ob,
  ***************************************/
 
 static int
-handle( FL_OBJECT * ob,
-		int         event,
-		FL_Coord    mx   FL_UNUSED_ARG,
-		FL_Coord    my   FL_UNUSED_ARG,
-		int         key  FL_UNUSED_ARG,
-		void      * ev   FL_UNUSED_ARG )
+handle_browser( FL_OBJECT * ob,
+				int         event,
+				FL_Coord    mx   FL_UNUSED_ARG,
+				FL_Coord    my   FL_UNUSED_ARG,
+				int         key  FL_UNUSED_ARG,
+				void      * ev   FL_UNUSED_ARG )
 {
     FLI_BROWSER_SPEC *comp = ob->spec;
 	FLI_TEXTBOX_SPEC *sp = event == FL_FREEMEM ? NULL : comp->tb->spec;
@@ -319,7 +319,7 @@ handle( FL_OBJECT * ob,
 			break;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -370,10 +370,10 @@ redraw_scrollbar( FL_OBJECT * ob )
  ***************************************/
 
 static void
-hcb( FL_OBJECT * ob,
+hcb( FL_OBJECT * obj,
 	 long        data  FL_UNUSED_ARG )
 {
-    FLI_BROWSER_SPEC *comp = ob->parent->spec;
+    FLI_BROWSER_SPEC *comp = obj->parent->spec;
     FLI_TEXTBOX_SPEC *sp = comp->tb->spec;
 	FL_Coord np = 0;
 
@@ -384,7 +384,21 @@ hcb( FL_OBJECT * ob,
     np = fli_set_textbox_xoffset( comp->tb, np );
 
     if ( comp->hcb )
-		comp->hcb( ob->parent, np, comp->hcb_data );
+		comp->hcb( obj->parent, np, comp->hcb_data );
+
+	if ( obj->returned & FL_RETURN_END )
+		obj->parent->returned |= FL_RETURN_END;
+
+	if ( np != comp->old_np )
+		obj->parent->returned |= FL_RETURN_CHANGED;
+
+	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+		 && ! (    obj->parent->returned & FL_RETURN_CHANGED
+				&& obj->parent->returned & FL_RETURN_END ) )
+			obj->parent->returned = FL_RETURN_NONE;
+
+	if ( obj->parent->returned & FL_RETURN_END )
+ 		comp->old_np = np;
 }
 
 
@@ -392,10 +406,10 @@ hcb( FL_OBJECT * ob,
  ***************************************/
 
 static void
-vcb( FL_OBJECT * ob,
+vcb( FL_OBJECT * obj,
 	 long        data  FL_UNUSED_ARG )
 {
-    FLI_BROWSER_SPEC *comp = ob->parent->spec;
+    FLI_BROWSER_SPEC *comp = obj->parent->spec;
     FLI_TEXTBOX_SPEC *sp = comp->tb->spec;
     int nl = 0;
 
@@ -406,25 +420,35 @@ vcb( FL_OBJECT * ob,
     nl = fli_set_textbox_topline( comp->tb, nl );
 
     if ( comp->vcb )
-		comp->vcb( ob->parent, nl, comp->vcb_data );
+		comp->vcb( obj->parent, nl, comp->vcb_data );
+
+	if ( obj->returned & FL_RETURN_END )
+		obj->parent->returned |= FL_RETURN_END;
+
+	if ( nl != comp->old_nl )
+		obj->parent->returned |= FL_RETURN_CHANGED;
+
+	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+		 && ! (    obj->parent->returned & FL_RETURN_CHANGED
+				&& obj->parent->returned & FL_RETURN_END ) )
+			obj->parent->returned = FL_RETURN_NONE;
+
+	if ( obj->parent->returned & FL_RETURN_END )
+ 		comp->old_nl = nl;
 }
 
 
 /***************************************
- * textbox callback routine. If browser has no callbacks,
- * we're screwed
+ * Textbox callback routine, we simply pass the return value of the
+ * textbox on as the parents new return value
  ***************************************/
 
 static void
-tbcb( FL_OBJECT * ob,
+tbcb( FL_OBJECT * obj,
 	  long        data  FL_UNUSED_ARG )
 {
-    FLI_BROWSER_SPEC *sp = ob->parent->spec;
-
-    if ( sp->tb->type == FLI_MULTI_TEXTBOX )
-		fl_call_object_callback( ob->parent );
-    else
-		fli_object_qenter( ob->parent );
+	fprintf( stderr, "tbcb = %d\n", obj->returned );
+	obj->parent->returned = obj->returned;
 }
 
 
@@ -506,9 +530,11 @@ fli_get_default_scrollbarsize( FL_OBJECT * ob )
  ***************************************/
 
 static void
-noop_cb( FL_OBJECT * obj   FL_UNUSED_ARG,
-		 long        data  FL_UNUSED_ARG )
+set_browser_return( FL_OBJECT * obj,
+					int         when )
 {
+    FLI_BROWSER_SPEC *sp = obj->spec;
+
 }
 
 
@@ -527,27 +553,28 @@ fl_create_browser( int          type,
     FLI_BROWSER_SPEC *sp;
 	int D;
 
-    ob = fl_make_object( FL_BROWSER, type, x, y, w, h, label, handle );
+    ob = fl_make_object( FL_BROWSER, type, x, y, w, h, label,
+						 handle_browser );
 
+	ob->set_return = set_browser_return;
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
     sp->tb = fli_create_textbox( type, x, y, w, h, NULL );
 
 	sp->callback = NULL;
-	sp->hsize = sp->vsize = sp->hval = sp->vval =
-	sp->hinc1 = sp->hinc2 = sp->vinc1 = sp->vinc2 = 0.0;
+	sp->hsize    = sp->vsize = sp->hval = sp->vval =
+	sp->hinc1    = sp->hinc2 = sp->vinc1 = sp->vinc2 = 0.0;
 	sp->hcb = sp->vcb = NULL;
 	sp->hcb_data = sp->vcb_data = NULL;
 
     /* Copy browser attributes from textbox */
 
-    ob->boxtype = sp->tb->boxtype;
-    ob->lcol = sp->tb->lcol;
-    ob->align = sp->tb->align;
-    ob->col1 = sp->tb->col1;
-    ob->col2 = sp->tb->col2;
-    ob->wantkey = sp->tb->wantkey;
+    ob->boxtype    = sp->tb->boxtype;
+    ob->lcol       = sp->tb->lcol;
+    ob->align      = sp->tb->align;
+    ob->col1       = sp->tb->col1;
+    ob->col2       = sp->tb->col2;
+    ob->wantkey    = sp->tb->wantkey;
 
-	fl_set_object_callback( ob, noop_cb, 0 );
 
     /* Textbox handlers */
  
@@ -578,6 +605,11 @@ fl_create_browser( int          type,
     fl_add_child( ob, sp->tb );
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
+
+	fl_set_object_return( ob, FL_RETURN_NONE );
+	fl_set_object_return( sp->hsl, FL_RETURN_END | FL_RETURN_CHANGED );
+	fl_set_object_return( sp->vsl, FL_RETURN_END | FL_RETURN_CHANGED );
+	fl_set_object_return( sp->tb, FL_RETURN_SELECTION | FL_RETURN_END_CHANGED );
 
     return ob;
 }

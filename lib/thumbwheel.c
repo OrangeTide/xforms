@@ -345,7 +345,7 @@ fl_set_thumbwheel_value( FL_OBJECT * ob,
     value = FL_clamp( value, sp->min, sp->max );
     if ( sp->val != value )
     {
-		sp->val = value;
+		sp->val = sp->start_val = value;
 		fl_redraw_object( ob );
     }
 
@@ -447,13 +447,16 @@ int fl_set_thumbwheel_crossover( FL_OBJECT * ob,
 
 
 /***************************************
+ * Sets under which conditions the object is to be returned to the
+ * application. This function should be regarded as deprecated and
+ * fl_set_object_return() should be used instead.
  ***************************************/
 
 int
-fl_set_thumbwheel_return( FL_OBJECT * ob,
-						  int         how )
+fl_set_thumbwheel_return( FL_OBJECT * obj,
+						  int         when )
 {
-    return fli_set_valuator_return( ob, how );
+	fl_set_object_return( obj, when );
 }
 
 
@@ -479,8 +482,6 @@ fl_create_thumbwheel( int          type,
     ob->align      = FL_THUMBWHEEL_ALIGN;
     ob->boxtype    = FL_THUMBWHEEL_BOXTYPE;
     ob->wantkey    = FL_KEY_SPECIAL;
-    ob->how_return = FL_RETURN_CHANGED;
-    fl_set_object_dblbuffer( ob, 1 );
 
     sp = fli_init_valuator( ob );
     sp->step = DEFSTEP;
@@ -501,9 +502,14 @@ fl_add_thumbwheel( int          type,
 				   FL_Coord     h,
 				   const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj = fl_create_thumbwheel( type, x, y, w, h, label );
 
-    ob = fl_create_thumbwheel( type, x, y, w, h, label );
-    fl_add_object( fl_current_form, ob );
-    return ob;
+	/* Set default return policy for the object */
+
+	fl_set_object_return( obj, FL_RETURN_CHANGED );
+
+    fl_add_object( fl_current_form, obj );
+    fl_set_object_dblbuffer( obj, 1 );
+
+    return obj;
 }

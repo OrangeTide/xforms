@@ -38,6 +38,9 @@ typedef struct {
 	int         prec;
 
 	int         need_geom_recalc;
+
+	int         old_ival;
+	double      old_fval;
 } FLI_SPINNER_SPEC;
 
 

@@ -123,16 +123,6 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-void
-folder_change( FL_OBJECT * ob   FL_UNUSED_ARG,
-			   long        val  FL_UNUSED_ARG )
-{
-}
-
-
-/***************************************
- ***************************************/
-
 static void
 make_folder( FL_OBJECT * folder )
 {
@@ -172,7 +162,6 @@ make_folder( FL_OBJECT * folder )
 	fl_load_browser( fd_choiceform->browser, "01Readme" );
 
 #if 1
-	fl_set_object_callback( folder, folder_change, 0 );
 	fl_addto_tabfolder( folder,"ButtonObj", fd_buttonform->buttonform );
 	fl_addto_tabfolder( folder,"StaticObj", fd_staticform->staticform );
 	fl_addto_tabfolder( folder,"ValuatorObj", fd_valuatorform->valuatorform );
@@ -190,7 +179,6 @@ main( int    argc,
 	  char *argv[ ] )
 {
 	FD_mainform *fd_mainform;
-	FL_OBJECT *o;
 
 	fl_set_border_width( -2 );
 	fl_initialize( &argc, argv, 0, 0, 0 );
@@ -205,5 +193,5 @@ main( int    argc,
 
 	fl_do_forms( );
 
-   return 0;
+	return 0;
 }

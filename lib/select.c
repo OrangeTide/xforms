@@ -1011,6 +1011,7 @@ handle_push( FL_OBJECT * obj,
 			ret = NULL;
 	}
 	fl_redraw_object( obj );
+
 	return ret != NULL;
 }
 

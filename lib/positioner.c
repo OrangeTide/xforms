@@ -150,10 +150,11 @@ handle_mouse( FL_OBJECT * ob,
 		sp->lxval = oldx;
 		sp->lyval = oldy;
 		fl_redraw_object( ob );
-		return 1;
+		if ( ! ( ob->how_return & FL_RETURN_END_CHANGED ) )
+			return FL_RETURN_CHANGED;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -170,10 +171,7 @@ handle_it( FL_OBJECT * ob,
 		   void *      ev   FL_UNUSED_ARG )
 {
     FLI_POSITIONER_SPEC *sp = ob->spec;
-
-#if FL_DEBUG >= ML_DEBUG
-    M_info("HandlePositioner", fli_event_name(event));
-#endif
+	int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
@@ -189,41 +187,35 @@ handle_it( FL_OBJECT * ob,
 		case FL_PUSH:
 			if ( key != FL_MBUTTON1 )
 				break;
-			sp->changed = 0;
+			sp->old_x = sp->xval;
+			sp->old_y = sp->yval;
 			/* fall through */
 
 		case FL_MOTION:
 			if ( key != FL_MBUTTON1 )
 				break;
-
-			if ( handle_mouse( ob, mx, my ) )
-				sp->changed = 1;
-			if ( ob->how_return == FL_RETURN_CHANGED && sp->changed )
-			{
-				sp->changed = 0;
-				return 1;
-			}
-			else if ( ob->how_return == FL_RETURN_ALWAYS )
-				return 1;
+			ret = handle_mouse( ob, mx, my );
 			break;
 
 		case FL_RELEASE:
 			if ( key != FL_MBUTTON1 )
 				break;
-			return    ob->how_return == FL_RETURN_END
-				   || (    ob->how_return == FL_RETURN_END_CHANGED
-						&& sp->changed );
+			ret = FL_RETURN_END;
+			if (    ob->how_return & FL_RETURN_END_CHANGED
+				 && ( sp->xval != sp->old_x || sp->yval != sp->old_y ) )
+				 ret |= FL_RETURN_CHANGED;
+			break;
 
 		case FL_FREEMEM:
 			fl_free( ob->spec );
 			break;
     }
 
-    return 0;
+    return ret;
 }
 
 /***************************************
- * creates an object
+ * Creates a posiioner object
  ***************************************/
 
 FL_OBJECT *
@@ -243,7 +235,6 @@ fl_create_positioner( int          type,
     ob->col2       = FL_POSITIONER_COL2;
     ob->align      = FL_POSITIONER_ALIGN;
     ob->lcol       = FL_POSITIONER_LCOL;
-    ob->how_return = FL_RETURN_CHANGED;
 
     if ( ob->type == FL_OVERLAY_POSITIONER )
     {
@@ -260,13 +251,14 @@ fl_create_positioner( int          type,
     sp->xval = sp->lxval = 0.5;
     sp->yval = sp->lyval = 0.5;
 
+	fl_set_object_return( ob, FL_RETURN_CHANGED );
 
     return ob;
 }
 
 
 /***************************************
- * Adds an object
+ * Adds a positioner object
  ***************************************/
 
 FL_OBJECT *
@@ -430,12 +422,19 @@ fl_set_positioner_ystep( FL_OBJECT * ob,
 
 
 /***************************************
- * Sets whether to return value all the time
+ * Sets under which conditions the object is to be returned to the
+ * application. This function should be regarded as deprecated and
+ * fl_set_object_return() should be used instead.
+ * Please note that this function doesn't work like the other
+ * object specific functions for setting the return policy!
  ***************************************/
 
 void
 fl_set_positioner_return( FL_OBJECT * obj,
-						  int         when )
+						  int         always )
 {
-    obj->how_return = when;
+	if ( always )
+		fl_set_object_return( obj, FL_RETURN_CHANGED );
+	else
+		fl_set_object_return( obj, FL_RETURN_END );
 }

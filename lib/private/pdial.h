@@ -41,7 +41,7 @@ typedef struct {
     double thetaf;			/* end angle   (degrees)          */
     double origin;			/* where the origin is            */
     short  cross_over;
-    short  changed;
+    double  start_val;
     short  direction;		/* not currently used            */
 } FLI_DIAL_SPEC;
 

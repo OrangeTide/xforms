@@ -59,12 +59,6 @@ extern int gettimeofday( struct timeval  * tv,
 
 #endif /* __VMS */
 
-/* (some) suns do not have strerror, use sys_errlist */
-
-#if ( defined sun || defined __sun__ ) && ! defined SYSV
-#define BAD_SPRINTF		/* returns char * */
-#endif
-
 
 /********* End of Configurable stuff ***********/
 

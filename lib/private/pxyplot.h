@@ -145,6 +145,8 @@ typedef struct {
     short              ytic_major[ MAX_MAJOR ];
     short              mark_active;
     short              external_data;
+	int                start_x;
+	int                start_y;
 } FLI_XYPLOT_SPEC;
 
 

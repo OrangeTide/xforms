@@ -1358,7 +1358,8 @@ handle_it( FL_OBJECT * obj,
 			   fl_set_focus_object() function. */
 
 			if ( ev )
-				ret = sp->changed | FL_RETURN_END;
+				ret =   ( sp->changed ? FL_RETURN_CHANGED : FL_RETURN_NONE )
+		              | FL_RETURN_END;
 			break;
 
 		case FL_MOTION:
@@ -1532,13 +1533,14 @@ fl_create_input( int          type,
     set_default_keymap( 0 );
 
     obj = fl_make_object( FL_INPUT, type, x, y, w, h, label, handle_it );
-    obj->boxtype = FL_INPUT_BOXTYPE;
-    obj->col1    = FL_INPUT_COL1;
-    obj->col2    = FL_INPUT_COL2;
-    obj->align   = FL_INPUT_ALIGN;
-    obj->lcol    = FL_INPUT_LCOL;
-    obj->lsize   = fli_cntl.inputFontSize ?
-		          fli_cntl.inputFontSize : FL_DEFAULT_SIZE;
+    obj->boxtype    = FL_INPUT_BOXTYPE;
+    obj->col1       = FL_INPUT_COL1;
+    obj->col2       = FL_INPUT_COL2;
+    obj->align      = FL_INPUT_ALIGN;
+    obj->lcol       = FL_INPUT_LCOL;
+    obj->lsize      = fli_cntl.inputFontSize ?
+		              fli_cntl.inputFontSize : FL_DEFAULT_SIZE;
+	obj->set_return = fl_set_input_return;
 
     fl_set_object_prehandler( obj, input_pre );
     fl_set_object_posthandler( obj, input_post );
@@ -1548,7 +1550,6 @@ fl_create_input( int          type,
 	obj->want_update   = 1;
     obj->input         = 1;
     obj->click_timeout = FL_CLICK_TIMEOUT;
-    obj->how_return    = FL_RETURN_END_CHANGED;
     obj->spec          = sp = fl_calloc( 1, sizeof *sp );
 
     sp->textcol  = FL_INPUT_TCOL;
@@ -1689,14 +1690,16 @@ fl_add_input( int          type,
 		fl_add_child( sp->dummy, sp->hscroll );
 		fl_add_child( sp->dummy, sp->vscroll );
 
-		fl_set_scrollbar_return( sp->vscroll, FL_RETURN_CHANGED );
-		fl_set_scrollbar_return( sp->hscroll, FL_RETURN_CHANGED );
-
 		fl_set_object_callback( sp->input, input_cb, 0 );
     }
 
     fl_add_object( fl_current_form, sp->dummy );
+
     fl_set_coordunit( oldu );
+
+	/* Set default return policy for the new object */
+
+	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
     return sp->dummy;
 }
@@ -1743,7 +1746,7 @@ fl_set_input( FL_OBJECT  * obj,
     sp->lines = fl_get_input_numberoflines( obj );
     fl_get_input_cursorpos( obj, &sp->xpos, &sp->ypos );
 
-    /* Get max string width. It's possible that fl_set_input() is used before
+    /* Get max string width - it's possible that fl_set_input() is used before
 	   the form is show, draw_object is a no-op, thus we end up with a wrong
 	   string size */
 
@@ -1817,15 +1820,24 @@ fl_get_input( FL_OBJECT * obj )
 
 
 /***************************************
- * Sets whether to return value all the time or only when pressing return
+ * Sets under which conditions the object is to be returned to the
+ * application. This function should be regarded as for internal use
+ * only and fl_set_object_return() should be used instead (which then
+ * will call this function).
  ***************************************/
 
 void
 fl_set_input_return( FL_OBJECT * obj,
 					 int         when )
 {
-	obj->how_return =when;
-	( ( FLI_INPUT_SPEC * ) obj->spec )->input->how_return = when;
+    FLI_INPUT_SPEC *sp = obj->spec;
+
+	if ( when & FL_RETURN_END_CHANGED )
+		when &= ~ ( FL_RETURN_NONE | FL_RETURN_CHANGED );
+
+	obj->how_return = sp->input->how_return = when;
+	fl_set_object_return( sp->vscroll, FL_RETURN_CHANGED );
+	fl_set_object_return( sp->hscroll, FL_RETURN_CHANGED );
 }
 
 

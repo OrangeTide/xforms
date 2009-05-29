@@ -29,6 +29,11 @@
 #include <float.h>
 
 
+static void
+set_spinner_return( FL_OBJECT *,
+					int );
+
+
 /***************************************
  * This function got to be called before a redraw, at least if
  * the form the spinner belongs to has been resized. It calculates
@@ -167,6 +172,9 @@ spinner_callback( FL_OBJECT * obj,
 	{
 		FL_OBJECT *fo = fl_get_focus_object( obj->parent->form );
 
+		if ( obj->returned == FL_RETURN_TRIGGERED )
+			obj->returned = FL_RETURN_CHANGED | FL_RETURN_END;
+
 		if (    fo
 			 && fo->objclass == FL_INPUT
 			 && fl_validate_input( fo ) != FL_VALID )
@@ -199,28 +207,31 @@ spinner_callback( FL_OBJECT * obj,
 				i_val = sp->i_min;
 		}
 
-		if ( ( sp->i_val = i_val ) != old_val )
+		if (    ( sp->i_val = i_val ) != old_val
+			 && ( data != 0 || obj->returned & FL_RETURN_END ) )
 		{
 			sprintf( buf, "%d", sp->i_val );
 			fl_set_input( sp->input, buf );
 		}
 
-		switch ( obj->parent->how_return )
-		{
-			case FL_RETURN_CHANGED :
-			case FL_RETURN_END_CHANGED :
-				obj->parent->returned =
-									sp->i_val != old_val ?
-									obj->parent->how_return : FL_RETURN_NONE;
-				break;
+		if ( obj->returned & FL_RETURN_END )
+			obj->parent->returned |= FL_RETURN_END;
 
-			case FL_RETURN_END :
-			case FL_RETURN_ALWAYS :
-				obj->parent->returned = 
-						FL_RETURN_END |  ( sp->i_val != old_val ?
-										   FL_RETURN_CHANGED : FL_RETURN_NONE );
-				break;
-		}
+		if (    sp->i_val != old_val
+			 && ! ( obj->parent->how_return & FL_RETURN_END_CHANGED ) )
+			obj->parent->returned |= FL_RETURN_CHANGED;
+
+		if (    sp->i_val != sp->old_ival
+			 && obj->parent->how_return & FL_RETURN_END_CHANGED )
+			obj->parent->returned |= FL_RETURN_CHANGED;
+
+		if ( obj->parent->how_return & FL_RETURN_END_CHANGED
+			 && ! (    obj->parent->returned & FL_RETURN_CHANGED
+				    && obj->parent->returned & FL_RETURN_END ) )
+			obj->parent->returned = FL_RETURN_NONE;
+
+		if ( obj->parent->returned & FL_RETURN_END )
+			sp->old_ival = sp->i_val;
 	}
 	else
 	{
@@ -247,28 +258,34 @@ spinner_callback( FL_OBJECT * obj,
 				f_val = sp->f_min;
 		}
 
-		if ( ( sp->f_val = f_val ) != old_val )
+		if (    ( ( sp->f_val = f_val ) != old_val && data != 0 )
+			 || obj->returned & FL_RETURN_END )
 		{
+			int r = obj->returned;
+
 			sprintf( buf, "%.*f", sp->prec, sp->f_val );
 			fl_set_input( sp->input, buf );
+			obj->returned = r;;
 		}
 
-		switch ( obj->parent->how_return )
-		{
-			case FL_RETURN_CHANGED :
-			case FL_RETURN_END_CHANGED :
-				obj->parent->returned =
-									sp->i_val != old_val ?
-									obj->parent->how_return : FL_RETURN_NONE;
-				break;
+		if ( obj->returned & FL_RETURN_END )
+			obj->parent->returned |= FL_RETURN_END;
 
-			case FL_RETURN_END :
-			case FL_RETURN_ALWAYS :
-				obj->parent->returned = 
-						FL_RETURN_END |  ( sp->i_val != old_val ?
-										   FL_RETURN_CHANGED : FL_RETURN_NONE );
-				break;
-		}
+		if (    sp->f_val != old_val
+			 && ! ( obj->parent->how_return & FL_RETURN_END_CHANGED ) )
+			obj->parent->returned |= FL_RETURN_CHANGED;
+
+		if (    sp->f_val != sp->old_fval
+			 && obj->parent->how_return & FL_RETURN_END_CHANGED )
+			obj->parent->returned |= FL_RETURN_CHANGED;
+
+		if ( obj->parent->how_return & FL_RETURN_END_CHANGED
+			 && ! (    obj->parent->returned & FL_RETURN_CHANGED
+				    && obj->parent->returned & FL_RETURN_END ) )
+			obj->parent->returned = FL_RETURN_NONE;
+
+		if ( obj->parent->returned & FL_RETURN_END )
+			sp->old_fval = sp->f_val;
 	}
 }
 
@@ -316,9 +333,10 @@ fl_create_spinner( int          type,
 	}
 
     obj = fl_make_object( FL_SPINNER, type, x, y, w, h, label, handle_spinner );
-    obj->boxtype = FL_NO_BOX;
-	obj->align   = FL_ALIGN_LEFT;
-	obj->spec    = sp = malloc( sizeof *sp );
+    obj->boxtype    = FL_NO_BOX;
+	obj->align      = FL_ALIGN_LEFT;
+	obj->set_return = set_spinner_return;
+	obj->spec       = sp = malloc( sizeof *sp );
 
 	sp->input = fl_create_input( type == FL_INT_SPINNER ?
 								 FL_INT_INPUT : FL_FLOAT_INPUT,
@@ -328,18 +346,16 @@ fl_create_spinner( int          type,
 	sp->down = fl_create_button( FL_TOUCH_BUTTON, 0, 0, 0, 0,
 								 orient == 0 ? "@2>" : "@4>" );
 
-	fl_set_spinner_return( obj, FL_RETURN_END );
-
 	fl_set_object_callback( sp->input, spinner_callback,  0 );
 	fl_set_object_callback( sp->up,    spinner_callback,  1 );
 	fl_set_object_callback( sp->down,  spinner_callback, -1 );
 
-	sp->i_val = 0;
+	sp->i_val = sp->old_ival = 0;
 	sp->i_min = INT_MIN;
 	sp->i_max = INT_MAX;
 	sp->i_incr = 1;
 
-	sp->f_val = 0.0;
+	sp->f_val = sp->old_fval = 0.0;
 	sp->f_min = - DBL_MAX;
 	sp->f_max = DBL_MAX;
 	sp->f_incr = 1.0;
@@ -370,6 +386,10 @@ fl_add_spinner( int          type,
 				const char * label )
 {
     FL_OBJECT *obj = fl_create_spinner( type, x, y, w, h, label );
+
+	/* Set default return policy for a spinner object */
+
+	fl_set_object_return( obj, FL_RETURN_CHANGED );
 
     fl_add_object( fl_current_form, obj );
 
@@ -443,7 +463,7 @@ fl_set_spinner_value( FL_OBJECT * obj,
 		sprintf( buf, "%d", sp->i_val );
 		fl_set_input( sp->input, buf );
 
-		return sp->i_val;
+		return sp->old_ival = sp->i_val;
 	}
 
 	sp->f_val = val;
@@ -456,7 +476,7 @@ fl_set_spinner_value( FL_OBJECT * obj,
 	sprintf( buf, "%.*f", sp->prec, sp->f_val );
 	fl_set_input( sp->input, buf );
 
-	return sp->f_val;
+	return sp->old_fval = sp->f_val;
 }
 
 
@@ -645,14 +665,20 @@ fl_get_spinner_down_button( FL_OBJECT * obj )
 
 
 /***************************************
+ * Sets under which conditions the object is to be returned to the
+ * application. This function is for internal use only and to set
+ * the return policy for a spinner fl_set_object_return() should
+ * be used instead (which then will call this function).
  ***************************************/
 
-void
-fl_set_spinner_return( FL_OBJECT * obj,
-					   int         when )
+static void
+set_spinner_return( FL_OBJECT * obj,
+					int         when )
 {
     FLI_SPINNER_SPEC *sp = obj->spec;
 
 	obj->how_return = when;
-	fl_set_input_return( sp->input, when );
+	fl_set_object_return( sp->input, FL_RETURN_ALWAYS );
+	fl_set_object_return( sp->up, FL_RETURN_CHANGED );
+	fl_set_object_return( sp->down, FL_RETURN_CHANGED );
 }

@@ -36,9 +36,6 @@
 #include "flinternal.h"
 
 
-typedef FL_BUTTON_STRUCT SPEC;
-
-
 /***************************************
  * Draws the lightbutton
  ***************************************/
@@ -55,7 +52,7 @@ draw_lightbutton( FL_OBJECT * ob )
 		     hh,
 		     absbw = FL_abs( ob->bw ),
 		     bw2;
-    SPEC *sp = ob->spec;
+    FL_BUTTON_STRUCT *sp = ob->spec;
 
     c1 = ob->belowmouse ? FL_LIGHTBUTTON_MCOL : FL_LIGHTBUTTON_TOPCOL;
     c2 = sp->val ? ob->col2 : ob->col1;

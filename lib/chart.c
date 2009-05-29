@@ -74,7 +74,7 @@ typedef struct
     FL_COLOR   lcol;			/* default label color */
     ENTRY    * entries;			/* the entries */
     int        no_baseline;
-} SPEC;
+} FLI_CHART_SPEC;
 
 
 /***************************************
@@ -83,9 +83,9 @@ typedef struct
  ***************************************/
 
 static void
-draw_barchart( SPEC * sp,
-			   float  min,
-			   float  max )
+draw_barchart( FLI_CHART_SPEC * sp,
+			   float            min,
+			   float            max )
 {
     int x = sp->x,
 		y = sp->y,
@@ -162,9 +162,9 @@ draw_barchart( SPEC * sp,
  ***************************************/
 
 static void
-draw_horbarchart( SPEC  * sp,
-				  float   min,
-				  float   max )
+draw_horbarchart( FLI_CHART_SPEC  * sp,
+				  float             min,
+				  float             max )
 {
     int x = sp->x,
 		y = sp->y,
@@ -250,10 +250,10 @@ draw_horbarchart( SPEC  * sp,
  ***************************************/
 
 static void
-draw_linechart( int     type,
-				SPEC  * sp,
-				float   min,
-				float   max )
+draw_linechart( int               type,
+				FLI_CHART_SPEC  * sp,
+				float             min,
+				float             max )
 {
     int x = sp->x,
 		y = sp->y,
@@ -364,8 +364,8 @@ draw_linechart( int     type,
  ***************************************/
 
 static void
-draw_piechart( SPEC * sp,
-			   int    special )
+draw_piechart( FLI_CHART_SPEC * sp,
+			   int              special )
 {
     int x = sp->x,
 		y = sp->y,
@@ -473,7 +473,7 @@ draw_piechart( SPEC * sp,
 static void
 draw_chart( FL_OBJECT * ob )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
     FL_Coord absbw = FL_abs( ob->bw );
     float min = sp->min,
 		  max = sp->max;
@@ -575,13 +575,13 @@ handle_chart( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-			if ( ( ( SPEC * ) ob->spec )->entries )
-				fl_free( ( ( SPEC * ) ob->spec )->entries );
+			if ( ( ( FLI_CHART_SPEC * ) ob->spec )->entries )
+				fl_free( ( ( FLI_CHART_SPEC * ) ob->spec )->entries );
 			fl_free( ob->spec );
 			break;
     }
 
-    return 0;
+    return FL_RETURN_NONE;
 }
 
 
@@ -598,7 +598,7 @@ fl_create_chart( int          type,
 				 const char * label )
 {
     FL_OBJECT *ob;
-    SPEC *sp;
+    FLI_CHART_SPEC *sp;
 	int i;
 
     ob = fl_make_object( FL_CHART, type, x, y, w, h, label, handle_chart );
@@ -634,7 +634,7 @@ void
 fl_set_chart_lsize( FL_OBJECT * ob,
 					int         lsize )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
 
     if ( sp->lsize != lsize )
     {
@@ -651,7 +651,7 @@ void
 fl_set_chart_lstyle( FL_OBJECT * ob,
 					 int         lstyle )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
 
     if ( sp->lstyle != lstyle )
     {
@@ -668,7 +668,7 @@ void
 fl_set_chart_lcolor( FL_OBJECT * ob,
 					 FL_COLOR    lcol )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
 
     if ( sp->lcol != lcol )
 		sp->lcol = lcol;
@@ -702,7 +702,7 @@ fl_add_chart( int          type,
 void
 fl_clear_chart( FL_OBJECT * ob )
 {
-    ( ( SPEC * ) ob->spec )->numb = 0;
+    ( ( FLI_CHART_SPEC * ) ob->spec )->numb = 0;
     fl_redraw_object( ob );
 }
 
@@ -717,7 +717,7 @@ fl_add_chart_value( FL_OBJECT  * ob,
 					const char * str,
 					int          col )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
     int i;
 
 #if FL_DEBUG >= ML_ERR
@@ -765,7 +765,7 @@ fl_insert_chart_value( FL_OBJECT  * ob,
 					   const char * str,
 					   int          col )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
     int i;
 
 #if FL_DEBUG >= ML_ERR
@@ -813,7 +813,7 @@ fl_replace_chart_value( FL_OBJECT  * ob,
 						const char * str,
 						int          col )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
 
     if ( indx < 1 || indx > sp->numb )
 		return;
@@ -840,7 +840,7 @@ fl_set_chart_bounds( FL_OBJECT * ob,
 					 double      min,
 					 double      max )
 {
-    SPEC *sp;
+    FLI_CHART_SPEC *sp;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
@@ -868,7 +868,7 @@ fl_get_chart_bounds( FL_OBJECT * ob,
 					 double    * min,
 					 double    * max )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
 
     *min = sp->min;
     *max = sp->max;
@@ -883,7 +883,7 @@ int
 fl_set_chart_maxnumb( FL_OBJECT * ob,
 					  int         maxnumb )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
     int i, curmax;
 
     /* Fill in the new number */
@@ -940,9 +940,9 @@ void
 fl_set_chart_autosize( FL_OBJECT * ob,
 					   int         autosize )
 {
-    if ( ( ( SPEC * ) ob->spec )->autosize != autosize )
+    if ( ( ( FLI_CHART_SPEC * ) ob->spec )->autosize != autosize )
     {
-		( ( SPEC * ) ob->spec )->autosize = autosize;
+		( ( FLI_CHART_SPEC * ) ob->spec )->autosize = autosize;
 		fl_redraw_object( ob );
     }
 }
@@ -955,9 +955,9 @@ void
 fl_set_chart_baseline( FL_OBJECT * ob,
 					   int         iYesNo )
 {
-    if ( ( ( SPEC * ) ob->spec )->no_baseline != !iYesNo )
+    if ( ( ( FLI_CHART_SPEC * ) ob->spec )->no_baseline != !iYesNo )
     {
-        ( ( SPEC * ) ob->spec )->no_baseline = !iYesNo;
+        ( ( FLI_CHART_SPEC * ) ob->spec )->no_baseline = !iYesNo;
         fl_redraw_object( ob );
     }
 }
@@ -974,7 +974,7 @@ fl_get_chart_area( FL_OBJECT * ob,
 				   int       * w,
 				   int       * h )
 {
-    SPEC *sp = ob->spec;
+    FLI_CHART_SPEC *sp = ob->spec;
 
     *x = sp->x;
     *y = sp->y;

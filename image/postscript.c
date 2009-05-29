@@ -35,12 +35,6 @@
 #include "private/pflps.h"
 #include <math.h>
 
-#ifdef BAD_SPRINTF
-#define SPRINTF( a, b, c )   ( sprintf( a, b, c ), strlen( a ) )
-#else
-#define SPRINTF          sprintf
-#endif
-
 static void ps_draw_xyplot( FL_OBJECT * ob );
 
 
@@ -520,11 +514,11 @@ add_logxtics( FL_OBJECT * ob )
 				len2,
 				ll;
 
-			ll = SPRINTF( label, "%g", sp->xbase );
+			ll = sprintf( label, "%g", sp->xbase );
 			flps_draw_text( FL_ALIGN_TOP, xr - 3, yf - 1, 0, 0,
 							ob->col2, sp->lstyle, sp->lsize, label );
 			len1 = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
-			ll = SPRINTF( label, "%d", ( int ) ceil( xw ) );
+			ll = sprintf( label, "%d", ( int ) ceil( xw ) );
 			len2 = fl_get_string_width( sp->lstyle, sp->lsize - 2, label, ll );
 			flps_draw_text( FL_ALIGN_TOP, xr - 3 + len1 / 2 + len2 / 2,
 							yf + 3, 0, 0, ob->col2, sp->lstyle, sp->lsize - 2,
@@ -624,7 +618,7 @@ add_logytics( FL_OBJECT * ob )
 			int len,
 				ll;
 
-			ll = SPRINTF( label, "%d", ( int ) ceil( yw ) );
+			ll = sprintf( label, "%d", ( int ) ceil( yw ) );
 			flps_draw_text( FL_ALIGN_RIGHT, sp->xi - ticl, yr + 3,
 							0, 0, ob->col2, sp->lstyle, sp->lsize - 2, label );
 			len = fl_get_string_width( sp->lstyle, sp->lsize - 2, label, ll );
