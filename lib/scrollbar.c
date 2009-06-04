@@ -211,6 +211,7 @@ get_geom( FL_OBJECT * ob )
 
 
 /***************************************
+ * Callback for the slider in the scrollbar
  ***************************************/
 
 static void
@@ -218,94 +219,72 @@ slider_cb( FL_OBJECT * obj,
 		   long        data  FL_UNUSED_ARG )
 {
 	FLI_SCROLLBAR_SPEC *sp = obj->parent->spec;
-	double nval = fl_get_slider_value( obj );
 
 	if ( obj->returned & FL_RETURN_END )
 		obj->parent->returned |= FL_RETURN_END;
 
-	if ( nval != sp->old_val )
-		obj->parent->returned |= FL_RETURN_CHANGED;
+	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+		 && obj->returned & FL_RETURN_END )
+	{
+		double nval = fl_get_slider_value( obj );
 
-	if ( obj->how_return & FL_RETURN_CHANGED )
+		if ( nval != sp->old_val )
+			obj->parent->returned |= FL_RETURN_CHANGED;
  		sp->old_val = nval;
+	}
+	else if ( obj->returned & FL_RETURN_CHANGED )
+		obj->parent->returned |= FL_RETURN_CHANGED;
 }
 
 
 /***************************************
+ * Callback for the buttons of the scrollbar
  ***************************************/
 
 static void
-up_cb( FL_OBJECT * obj,
-	   long        data  FL_UNUSED_ARG )
+button_cb( FL_OBJECT * obj,
+		   long        data )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->parent->spec;
-	double nval = fl_get_slider_value( sp->slider ),
-           slmax,
+	double ival = fl_get_slider_value( sp->slider ),
+		   nval,
+		   slmax,
 		   slmin;
 
+	/* Update the slider and get the new value */
+
+	fl_get_slider_bounds( sp->slider, &slmin, &slmax );
+
+	if ( slmax > slmin )
+		nval = ival + data * sp->increment;
+	else
+		nval = ival - data * sp->increment;
+
+	fl_set_slider_value( sp->slider, nval );
+
+	nval = fl_get_slider_value( sp->slider );
+
 	if ( obj->returned == FL_RETURN_TRIGGERED )
-		obj->returned = FL_RETURN_CHANGED | FL_RETURN_END;
-
-	if ( obj->returned & FL_RETURN_CHANGED )
-	{
-		fl_get_slider_bounds( sp->slider, &slmin, &slmax );
-
-		if ( slmax > slmin )
-			nval += sp->increment;
-		else
-			nval -= sp->increment;
-
-		fl_set_slider_value( sp->slider, nval );
-		nval = fl_get_slider_value( sp->slider );
-	}
+		obj->returned = FL_RETURN_END;
 
 	if ( obj->returned & FL_RETURN_END )
 		obj->parent->returned |= FL_RETURN_END;
 
-	if ( nval != sp->old_val )
-		obj->parent->returned |= FL_RETURN_CHANGED;
+	/* If we're supposed to return only on end and change check if the
+	   slider value changed since interaction started, if we have to return
+	   on everty change check if if it changed this time round */
 
-	if ( obj->how_return & FL_RETURN_CHANGED )
- 		sp->old_val = nval;
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-down_cb( FL_OBJECT * obj,
-		 long        data  FL_UNUSED_ARG )
-{
-    FLI_SCROLLBAR_SPEC *sp = obj->parent->spec;
-    double nval = fl_get_slider_value( sp->slider ),
-           slmax,
-		   slmin;
-
-	if ( obj->returned == FL_RETURN_TRIGGERED )
-		obj->returned = FL_RETURN_CHANGED | FL_RETURN_END;
-
-	if ( obj->returned & FL_RETURN_CHANGED )
+	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+		 && obj->returned & FL_RETURN_END )
 	{
-		fl_get_slider_bounds( sp->slider, &slmin, &slmax );
-
-		if ( slmax > slmin )
-			nval -= sp->increment;
-		else
-			nval += sp->increment;
-
-		fl_set_slider_value( sp->slider, nval );
-		nval = fl_get_slider_value( sp->slider );
+		if ( nval != sp->old_val )
+		{
+			obj->parent->returned |= FL_RETURN_CHANGED;
+			sp->old_val = nval;
+		}
 	}
-
-	if ( obj->returned & FL_RETURN_END )
-		obj->parent->returned |= FL_RETURN_END;
-
-	if ( nval != sp->old_val )
+	else if ( ival != nval )
 		obj->parent->returned |= FL_RETURN_CHANGED;
-
-	if ( obj->how_return & FL_RETURN_CHANGED )
- 		sp->old_val = nval;
 }
 
 
@@ -344,9 +323,9 @@ fl_create_scrollbar( int          type,
 
 		sp->up   = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "6" );
 		sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "4" );
-		fl_set_object_callback( sp->up, up_cb, 0 );
+		fl_set_object_callback( sp->up, button_cb, 1 );
 		fl_set_object_resize( sp->up, FL_RESIZE_NONE );
-		fl_set_object_callback( sp->down, down_cb, 0 );
+		fl_set_object_callback( sp->down, button_cb, -1 );
 		fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
 		if ( type == FL_HOR_SCROLLBAR )
@@ -370,9 +349,9 @@ fl_create_scrollbar( int          type,
 
 		sp->up = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "8" );
 		sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "2" );
-		fl_set_object_callback( sp->up, down_cb, 0 );
+		fl_set_object_callback( sp->up, button_cb, -1 );
 		fl_set_object_resize( sp->up, FL_RESIZE_NONE );
-		fl_set_object_callback( sp->down, up_cb, 0 );
+		fl_set_object_callback( sp->down, button_cb, 1 );
 		fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
 		if ( type == FL_VERT_SCROLLBAR )

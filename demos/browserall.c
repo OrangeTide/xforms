@@ -171,18 +171,19 @@ link_browsers( FL_OBJECT * ob,
     {
 		topline = fl_get_browser_topline( br[ 0 ] );
 
-		for ( i = 1; i <= 3; i++ )
+		for ( i = 1; i < 4; i++ )
 		{
-			fl_set_browser_topline( br[ i ], topline );
 			fl_set_browser_vscrollbar( br[ i ], FL_OFF );
+			fl_set_browser_topline( br[ i ], topline );
 		}
 
        fl_set_browser_vscroll_callback( br[ 0 ], vcallback, 0 );
     }
     else
     {
-		for ( i = 1; i <= 3; i++ )
+		for ( i = 1; i < 4; i++ )
 			fl_set_browser_vscrollbar( br[ i ], FL_ON );
+
        fl_set_browser_vscroll_callback( br[ 0 ], NULL, 0 );
     }
 }
@@ -215,12 +216,12 @@ create_form( void )
 
 	br[ 2 ] = obj = fl_add_browser( FL_HOLD_BROWSER, 360, 120, 150, 290,
 									bnames[ 2 ] );
-    fl_set_object_color( obj, FL_COL1, FL_GREEN );
+    fl_set_object_color( obj, FL_WHITE, FL_GREEN );
     fl_set_object_callback( obj, br_callback, 2 );
 
 	br[ 3 ] = obj = fl_add_browser( FL_MULTI_BROWSER, 530, 120, 150, 290,
 									bnames[ 3 ] );
-    fl_set_object_color( obj,FL_COL1,FL_CYAN );
+    fl_set_object_color( obj,FL_WHITE, FL_CYAN );
     fl_set_object_callback( obj, br_callback, 3 );
 
 	exitobj = fl_add_button( FL_NORMAL_BUTTON, 560, 510, 120, 30, "Exit" );
@@ -298,6 +299,7 @@ fill_browsers( void )
 				sprintf( buf, "@mLine with qb %3d", j );
 			else
 				sprintf( buf, "Line with qb %3d",j );
+
 			fl_add_browser_line( br[ i ], buf );
 		}
 }

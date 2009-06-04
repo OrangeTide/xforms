@@ -257,12 +257,12 @@ wait_for_release( XKeyEvent * ev )
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * obj,
-		   int         event,
-		   FL_Coord    mx,
-		   FL_Coord    my,
-		   int         key,
-		   void *      ev )
+handle_button( FL_OBJECT * obj,
+			   int         event,
+			   FL_Coord    mx,
+			   FL_Coord    my,
+			   int         key,
+			   void *      ev )
 {
     static int oldval;
     int newval;
@@ -319,6 +319,8 @@ handle_it( FL_OBJECT * obj,
 
 			sp->event = FL_PUSH;
 			sp->is_pushed = 1;
+			if ( obj->type == FL_TOUCH_BUTTON )
+				obj->want_update = 1;
 
 			if ( obj->type == FL_RADIO_BUTTON )
 			{
@@ -336,7 +338,6 @@ handle_it( FL_OBJECT * obj,
 			if ( obj->type == FL_MENU_BUTTON )
 				ret |= FL_RETURN_END;
 			if (    obj->type == FL_INOUT_BUTTON
-				 || obj->type == FL_TOUCH_BUTTON
 				 || obj->type == FL_MENU_BUTTON )
 				ret |= FL_RETURN_CHANGED;
 			break;
@@ -368,11 +369,6 @@ handle_it( FL_OBJECT * obj,
 					fl_redraw_object( obj );
 				}
 			}
-			if (    sp->val
-				 && obj->type == FL_TOUCH_BUTTON
-				 && sp->timdel++ > 10
-				 && ( sp->timdel & 1 ) == 0 )
-				ret |= FL_RETURN_CHANGED;
 			break;
 
 		case FL_RELEASE:
@@ -387,6 +383,9 @@ handle_it( FL_OBJECT * obj,
 			if ( obj->type == FL_INOUT_BUTTON
 				 && ! WITHIN( obj, mx, my ) )
 				obj->belowmouse = 0;
+
+			if ( obj->type == FL_TOUCH_BUTTON )
+				obj->want_update = 0;
 
 			if ( obj->type == FL_PUSH_BUTTON )
 			{
@@ -487,15 +486,13 @@ fl_create_generic_button( int          objclass,
 	FL_BUTTON_STRUCT *sp;
 	int i;
 
-    obj = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
+    obj = fl_make_object( objclass, type, x, y, w, h, label, handle_button );
     if ( type == FL_RADIO_BUTTON )
 		obj->radio = 1;
     if ( type == FL_RETURN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
 		fl_set_object_shortcut( obj, "^M", 0 );
     if ( type == FL_HIDDEN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
 		obj->boxtype = FL_NO_BOX;
-	if ( type == FL_TOUCH_BUTTON )
-		obj->want_update = 1;
 
     sp = obj->spec  = fl_calloc( 1, sizeof *sp );
 

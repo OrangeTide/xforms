@@ -159,10 +159,7 @@ get_geometry( FL_OBJECT * ob )
 		comp->vinc2 = ( double ) sp->def_height / sp->max_height;
 	}
 	else
-	{
-		comp->vval  = 0.0;
 		comp->vsize = 1.0;
-	}
 
     if ( comp->h_on )
     {
@@ -177,10 +174,7 @@ get_geometry( FL_OBJECT * ob )
 		comp->hinc2 = ( sp->def_height - 2.0 ) / sp->max_width;
 	}
 	else
-	{
-		comp->hval  = 0.0;
 		comp->hsize = 1.0;
-	}
 
     if ( h_on != comp->h_on || v_on != comp->v_on )
     {

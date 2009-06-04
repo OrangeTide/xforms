@@ -1616,10 +1616,16 @@ int
 fli_tbox_get_topline( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
-	int i = -1;
+	int i = sp->yoffset / sp->def_height;   /* guess index of topline */
 
-	while ( ++i < sp->num_lines && sp->lines[ i ]->y < sp->yoffset )
-		/* empty */ ;
+	if ( sp->lines[ i ]->y < sp->yoffset )
+		while (    ++i < sp->num_lines
+				&& sp->lines[ i ]->y < sp->yoffset )
+			/* empty */ ;
+	else if ( sp->lines[ i ]->y > sp->yoffset )
+		while (    sp->num_lines && sp->lines[ i - 1 ]->y > sp->yoffset
+				&& i-- > 0  )
+			/* empty */ ;
 
 	return i < sp->num_lines ? i : -1;
 }
