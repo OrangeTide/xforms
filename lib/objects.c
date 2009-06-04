@@ -2720,6 +2720,16 @@ fl_set_object_posthandler( FL_OBJECT    * obj,
 /***************************************
  ***************************************/
 
+int
+fl_get_object_return_state( FL_OBJECT *obj )
+{
+	return obj->returned;
+}
+
+
+/***************************************
+ ***************************************/
+
 void
 fl_trigger_object( FL_OBJECT * obj )
 {

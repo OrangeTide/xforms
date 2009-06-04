@@ -175,6 +175,8 @@ extern void fli_tbox_set_dblclick_callback( FL_OBJECT *,
 
 extern int fli_tbox_get_topline( FL_OBJECT * obj );
 
+extern int fli_tbox_get_bottomline( FL_OBJECT * );
+
 extern void fli_tbox_prepare_drawing( FL_OBJECT * obj );
 
 extern void fli_tbox_react_to_vert( FL_OBJECT *,

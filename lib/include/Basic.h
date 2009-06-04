@@ -1152,6 +1152,8 @@ FL_EXPORT void fl_free_object( FL_OBJECT * obj );
 
 FL_EXPORT void fl_delete_object( FL_OBJECT * obj );
 
+FL_EXPORT int fl_get_object_return_state( FL_OBJECT *obj );
+
 FL_EXPORT void fl_trigger_object( FL_OBJECT * obj );
 
 FL_EXPORT void fl_activate_object( FL_OBJECT * ob );

@@ -114,8 +114,6 @@ int main( int    argc,
 	FD_choiceform *fd_choiceform;
 	FD_inputform *fd_inputform;
 	FD_big *fd_big;
-	FL_OBJECT *o;
-	int cnt = 0;
 
 	fl_set_border_width( -2 );
 	fl_initialize( &argc, argv, 0, 0, 0 );

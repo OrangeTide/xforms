@@ -319,8 +319,6 @@ handle_button( FL_OBJECT * obj,
 
 			sp->event = FL_PUSH;
 			sp->is_pushed = 1;
-			if ( obj->type == FL_TOUCH_BUTTON )
-				obj->want_update = 1;
 
 			if ( obj->type == FL_RADIO_BUTTON )
 			{
@@ -383,9 +381,6 @@ handle_button( FL_OBJECT * obj,
 			if ( obj->type == FL_INOUT_BUTTON
 				 && ! WITHIN( obj, mx, my ) )
 				obj->belowmouse = 0;
-
-			if ( obj->type == FL_TOUCH_BUTTON )
-				obj->want_update = 0;
 
 			if ( obj->type == FL_PUSH_BUTTON )
 			{
@@ -493,6 +488,8 @@ fl_create_generic_button( int          objclass,
 		fl_set_object_shortcut( obj, "^M", 0 );
     if ( type == FL_HIDDEN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
 		obj->boxtype = FL_NO_BOX;
+	if ( obj->type == FL_TOUCH_BUTTON )
+		obj->want_update = 1;
 
     sp = obj->spec  = fl_calloc( 1, sizeof *sp );
 

@@ -192,6 +192,48 @@ user keeps the mouse button pressed while the mouse is on top of it. A
 @code{@ref{FL_RETURN_BUTTON}} and a @code{@ref{FL_HIDDEN_RET_BUTTON}}
 are also returned when the user presses the @code{<Return>} key.
 
+As for other ``active'' objects, you can control under which
+conditions a button object gets returned or its callback invoked
+by using the function
+@findex fl_set_object_return()
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when);
+@end example
+where reasonable values for @code{when} are
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NEVER
+Never return object or invoke callback.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return object or invoke callback when mouse button is released and at
+the same moment the state of the button changed. button was changed.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return object or invoke callback whenever the state of the button
+changes.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return object or invoke callback when mouse button is released
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return object or invoke callback on all of the above condtions.
+@end table
+
+Most buttons will always return @code{@ref{FL_RETURN_END}} and
+@code{@ref{FL_RETURN_CHANGED}} at the same time. Exceptions are
+@code{@ref{FL_INOUT_BUTTON}}s and @code{@ref{FL_TOUCH_BUTTON}}s.
+The former returns @code{@ref{FL_RETURN_CHANGED}} when pushed
+and @code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}}
+together when released. @code{@ref{FL_TOUCH_BUTTON}}s return
+@code{@ref{FL_RETURN_CHANGED}} in regular time intervals while
+its pressed and @code{@ref{FL_RETURN_END}} and
+@code{@ref{FL_RETURN_CHANGED}} when released.
+
 See demo @file{butttypes.c} for a feel of the different button types.
 
 

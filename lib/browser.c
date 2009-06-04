@@ -693,15 +693,25 @@ fl_clear_browser( FL_OBJECT * ob )
 FL_Coord
 fl_get_browser_xoffset( FL_OBJECT * obj )
 {
-	FLI_TBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) obj->spec )->tb->spec;
+	FLI_BROWSER_SPEC *sp = obj->spec;
 
-	return sp->xoffset;
+	return fli_tbox_get_xoffset( sp->tb );
 }
 
 
 /***************************************
- * set_xoffset, set_topline and select_line are kind of nasty in that
- * they might get called from browser's child object!
+ ***************************************/
+
+double
+fl_get_browser_rel_xoffset( FL_OBJECT * obj )
+{
+	FLI_BROWSER_SPEC *sp = obj->spec;
+
+	return fli_tbox_get_rel_xoffset( sp->tb );
+}
+
+
+/***************************************
  ***************************************/
 
 void
@@ -711,6 +721,72 @@ fl_set_browser_xoffset( FL_OBJECT * ob,
     FLI_BROWSER_SPEC *sp = ob->spec;
 
 	fli_tbox_set_xoffset( sp->tb, npixels );
+	redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_browser_rel_xoffset( FL_OBJECT * ob,
+							double      val )
+{
+    FLI_BROWSER_SPEC *sp = ob->spec;
+
+	fli_tbox_set_rel_xoffset( sp->tb, val );
+	redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_Coord
+fl_get_browser_yoffset( FL_OBJECT * obj )
+{
+	FLI_BROWSER_SPEC *sp = obj->spec;
+
+	return fli_tbox_get_yoffset( sp->tb );
+}
+
+
+/***************************************
+ ***************************************/
+
+double
+fl_get_browser_rel_yoffset( FL_OBJECT * obj )
+{
+	FLI_BROWSER_SPEC *sp = obj->spec;
+
+	return fli_tbox_get_rel_yoffset( sp->tb );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_browser_yoffset( FL_OBJECT * ob,
+						FL_Coord    npixels )
+{
+    FLI_BROWSER_SPEC *sp = ob->spec;
+
+	fli_tbox_set_yoffset( sp->tb, npixels );
+	redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_browser_rel_yoffset( FL_OBJECT * ob,
+							double      val )
+{
+    FLI_BROWSER_SPEC *sp = ob->spec;
+
+	fli_tbox_set_rel_yoffset( sp->tb, val );
 	redraw_scrollbar( ob );
 }
 
@@ -996,8 +1072,8 @@ fl_get_browser_dimension( FL_OBJECT * obj,
 {
 	FLI_TBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) obj->spec )->tb->spec;
 
-	*x = sp->x;
-	*y = sp->y;
+	*x = obj->x + sp->x;
+	*y = obj->y + sp->y;
 	*w = sp->w;
 	*h = sp->h;
 }
@@ -1036,9 +1112,15 @@ fl_addto_browser_chars( FL_OBJECT  * ob,
 int
 fl_get_browser_screenlines( FL_OBJECT * ob )
 {
-	FLI_TBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb->spec;
+	FLI_BROWSER_SPEC *sp = ob->spec;
 
-    return sp->h / sp->def_height;
+
+	int t = fli_tbox_get_topline( sp->tb );
+	int b = fli_tbox_get_bottomline( sp->tb );
+
+	if ( t < 0 || b < 0 )
+		return 0;
+	return b - t + 1;
 }
 
 

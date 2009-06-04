@@ -1110,8 +1110,14 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
 
 	sp->lines[ line ]->selected = 0;
 
-	sp->deselect_line = line;
-	sp->select_line = -1;
+	/* Don't mark as deselected for FL_SELECT_BROWSER since otherwise it
+	   would be impossible for the user to retrieve the selection */
+
+	if ( obj->type != FL_SELECT_BROWSER )
+	{
+		sp->deselect_line = line;
+		sp->select_line = -1;
+	}
 
 	if ( ! tbox_do_not_redraw )
 		fl_redraw_object( obj );
@@ -1509,7 +1515,7 @@ draw_tboxline( FL_OBJECT * obj,
 		   subtracting them! */
 
 		fl_drw_text( 0, sp->x - 3, sp->y - sp->yoffset + tl->y + tl->h / 2,
-					 FL_min( sp->w, sp->max_width ) + 6, 1,
+					 sp->w + 6, 1,
 					 FL_COL1, FL_NORMAL_STYLE, sp->def_size, "@DnLine" );
 		return;
 	}

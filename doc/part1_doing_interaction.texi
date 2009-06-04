@@ -575,36 +575,83 @@ with @code{when} set to @code{FL_RETURN_END_CHANGED}.
 
 There are several values @code{when} can take:
 @table @code
+@anchor{FL_RETURN_CHANGED}
 @tindex FL_RETURN_CHANGED
 Return (or call object callback) whenever there is a change in the
-state of the object
+state of the object (button was pressed, input field was changed,
+slider was moved etc.).
 
+@anchor{FL_RETURN_END}
 @tindex FL_RETURN_END
 Return (or invoke callback) at the end of the interaction (typically
 when the user releases the mouse button) regardless if the objects
 state was changed or not.
 
+@anchor{FL_RETURN_END_CHANGED}
 @tindex FL_RETURN_END_CHANGED
 Return (or call object callback) when interaction stops @strong{and}
 the state of the object changed.
 
+@anchor{FL_RETURN_SELECTION}
 @tindex FL_RETURN_SELECTION
 Return when e.g.@: a line in a browser was selected.
 
-@tindex FL_RETURN_ALWAYS
-Return (or invoke callback) when anyof the events happens to the
-object that could lead to it being returned to the application.
+@anchor{FL_RETURN_DESELECTION}
+@tindex FL_RETURN_DESELECTION
+Return when e.g.@: a line in a @code{@ref{FL_MULTI_BROWSER}} browser
+was deselected.
 
+@anchor{FL_RETURN_ALWAYS}
+@tindex FL_RETURN_ALWAYS
+Return (or invoke callback) on any of the events that can happen
+to the object.
+
+@anchor{FL_RETURN_NONE}
 @tindex FL_RETURN_NONE
-Never notiy the application about interactions with this object.
-Note: this is not meant for deactivation of an object, it will
-still seem to work as normal, it just doesn't get returned to
-the application nor does is callbak get invoked.
+Never notiy the application about interactions with this object
+(i.e.@: never return it nor invoke its callback). Note: this is not
+meant for deactivation of an object, it will still seem to work as
+normal, it just doesn't get returned to the application nor does is
+callbak get invoked.
 @end table
 
 Since for different objects only subsets of these conditions
 make sense please read the more detailed descriptions for
 each of the object types in Part 3.
+
+All of the values above, except @code{@ref{FL_RETURN_END_CHANGED}},
+@code{@ref{FL_RETURN_ALWAYS}} and @code{@ref{FL_RETURN_NONE}} can be
+logically @code{OR}'ed. @code{@ref{FL_RETURN_END_CHANGED}} is
+different in that it only can be returned when the conditions for
+@code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}} are
+satisfied at once. If this is request @code{@ref{FL_RETURN_END}} and
+@code{@ref{FL_RETURN_CHANGED}} will automatically deselected. So if
+you want notifications about the conditions that lead to
+@code{@ref{FL_RETURN_END}} or @code{@ref{FL_RETURN_CHANGED}} (or both
+at once) ask instead for the logical @code{OR} of these two.
+
+@code{@ref{FL_RETURN_ALWAYS}} includes all conditions except
+@code{@ref{FL_RETURN_END_CHANGED}}.
+
+Once an object is returned (or its callback invoked) you can determine
+the reason it was returned by calling
+@findex fl_get_object_return_status()
+@anchor{fl_get_object_return_status()}
+@example
+int fl_get_object_return_status(FL_OBBJECT *obj);
+@end example
+The returned value is logical @code{OR} of the conditions that led to
+the object getting returned, where the conditions can be
+@code{@ref{FL_RETURN_CHANGED}}, @code{@ref{FL_RETURN_END}},
+@code{@ref{FL_RETURN_SELECTION}} and @code{@ref{FL_RETURN_DESELECTION}}.
+(The @code{@ref{FL_RETURN_END_CHANGED}} condition is satisfied
+if both @code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}}
+are set.)
+
+Please note that calling this function only makes sense in a callback
+for an object or when the object has been just returned by e.g.@:
+@code{@ref{fl_do_forms()}}. Further interactions with the object
+overwrite the value!
 
 
 @node Periodic Events and Non-blocking Interaction

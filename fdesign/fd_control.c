@@ -376,8 +376,6 @@ control_init( FD_control * ui )
     fl_set_object_dblbuffer( ui->sizestatus, 1 );
     fl_set_object_dblbuffer( ui->oristatus,  1 );
 
-    fl_set_object_color( ui->formbrowser, FL_COL1, FL_WHITE );
-
     /* file menu */
 
     for ( m = fmenu, me = m + NFM, i = 1; m < me; m++, i++ )

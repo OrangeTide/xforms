@@ -214,6 +214,7 @@ create_form_align( void )
     fdui->snapobj = obj = fl_add_counter( FL_NORMAL_COUNTER, 15, 93, 130, 25, "" );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, snap_cb, 0 );
+    fl_set_counter_return( obj, FL_RETURN_CHANGED );
 
     fdui->bottom = obj = fl_add_button( FL_NORMAL_BUTTON, 15, 50, 36, 30, "@#2->" );
     fl_set_object_lcolor( obj, FL_BLUE );

@@ -627,6 +627,8 @@ static FLI_VN_PAIR howreturn[ ] =
     VN( FL_RETURN_END_CHANGED ),
     VN( FL_RETURN_CHANGED     ),
     VN( FL_RETURN_END         ),
+    VN( FL_RETURN_SELECTION   ),
+    VN( FL_RETURN_DESELECTION ),
     VN( FL_RETURN_ALWAYS      ),
     VN( -1 ),
 };
@@ -640,6 +642,8 @@ static FLI_VN_PAIR howreturn_str[ ] =
     { FL_RETURN_END_CHANGED, "End & Changed"    },
     { FL_RETURN_CHANGED,     "Whenever Changed" },
     { FL_RETURN_END,         "At End"           },
+    { FL_RETURN_SELECTION,   "On Selection"     },
+    { FL_RETURN_DESELECTION, "On Deselection"   },
     { FL_RETURN_ALWAYS,      "Always"           },
     { -1,                    NULL }
 };
@@ -707,8 +711,8 @@ get_how_return_value( const char *s )
 
 static FLI_VN_PAIR scrbpref[ ] =
 {
-    VN( FL_OFF ),
-	VN( FL_ON ),
+    VN( FL_OFF  ),
+	VN( FL_ON   ),
 	VN( FL_AUTO ),
 	VN( -1 )
 };

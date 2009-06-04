@@ -252,30 +252,35 @@ invoked. This can be either
 @table @code
 @item FL_RETURN_NONE
 @tindex FL_RETURN_NONE
-@anchor{FL_RETURN_NONE}
 Object gets never returned or its callback invoked
 
 @item FL_RETURN_CHANGED
 @tindex FL_RETURN_CHANGED
-@anchor{FL_RETURN_CHANGED}
 Return object or invoke callback when state of object changed.
 
 @item FL_RETURN_END
 @tindex FL_RETURN_END
-@anchor{FL_RETURN_END}
 Return object or invoke callback at end of interaction, normally when
 the mouse key is released or, in the case of input objects, the object
 has lost focus.
 
 @item FL_RETURN_END_CHANGED
 @tindex FL_RETURN_END_CHANGED
-@anchor{FL_RETURN_END_CHANGED}
 Return object or invoke callback only when interaction has ended and
 the state of the object has changed.
 
+@item FL_RETURN_SELECTION
+@tindex FL_RETURN_SELECTION
+Return object or invoke callback if e.g.@: in a browser a line
+was selected.
+
+@item FL_RETURN_SELECTION
+@tindex FL_RETURN_SELECTION
+Return object or invoke callback if e.g.@: in a browser a line
+was deselected.
+
 @item FL_RETURN_ALWAYS
 @tindex FL_RETURN_ALWAYS
-@anchor{FL_RETURN_ALWAYS}
 Return object or invoke callback whenever interaction has ended or
 the state of the object has changed.
 @end table

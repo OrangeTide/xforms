@@ -456,7 +456,7 @@ int
 fl_set_thumbwheel_return( FL_OBJECT * obj,
 						  int         when )
 {
-	fl_set_object_return( obj, when );
+	return fl_set_object_return( obj, when );
 }
 
 

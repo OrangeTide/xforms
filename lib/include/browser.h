@@ -152,10 +152,25 @@ FL_EXPORT void fl_set_browser_dblclick_callback( FL_OBJECT      * ob,
 												 FL_CALLBACKPTR   cb,
 												 long		      a );
 
+FL_EXPORT FL_Coord fl_get_browser_xoffset( FL_OBJECT * ob );
+
+FL_EXPORT double fl_get_browser_rel_xoffset( FL_OBJECT * ob );
+
 FL_EXPORT void fl_set_browser_xoffset( FL_OBJECT * ob,
 									   FL_Coord	   npixels );
 
-FL_EXPORT FL_Coord fl_get_browser_xoffset( FL_OBJECT * ob );
+FL_EXPORT void fl_set_browser_rel_xoffset( FL_OBJECT * ob,
+										   double      val );
+
+FL_EXPORT FL_Coord fl_get_browser_yoffset( FL_OBJECT * ob );
+
+FL_EXPORT double fl_get_browser_rel_yoffset( FL_OBJECT * ob );
+
+FL_EXPORT void fl_set_browser_yoffset( FL_OBJECT * ob,
+									   FL_Coord	   npixels );
+
+FL_EXPORT void fl_set_browser_rel_yoffset( FL_OBJECT * ob,
+										   double      val );
 
 FL_EXPORT void fl_set_browser_scrollbarsize( FL_OBJECT * ob,
 											 int		 hh,

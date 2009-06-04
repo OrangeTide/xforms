@@ -414,7 +414,6 @@ class: FL_BROWSER
 type: HOLD_BROWSER
 box: 20 89 140 68
 boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
@@ -432,7 +431,6 @@ class: FL_BROWSER
 type: MULTI_BROWSER
 box: 20 174 140 70
 boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
@@ -486,7 +484,6 @@ class: FL_BROWSER
 type: HOLD_BROWSER
 box: 170 89 135 155
 boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
@@ -1038,7 +1035,6 @@ class: FL_BROWSER
 type: NORMAL_BROWSER
 box: 6 22 259 224
 boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_TOP
 style: FL_BOLD_STYLE
 size: FL_NORMAL_SIZE
@@ -1116,7 +1112,6 @@ class: FL_BROWSER
 type: NORMAL_BROWSER
 box: 14 16 505 260
 boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_YELLOW
 alignment: FL_ALIGN_BOTTOM
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE

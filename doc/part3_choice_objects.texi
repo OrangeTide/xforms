@@ -983,9 +983,9 @@ Hence, the differences only lie in how the selection process works.
 The user can change the position of the slider or use keyboard cursor
 keys (including @code{<Home>}, @code{<PageDown>}, etc.) to scroll
 through the text. When he/she presses the left mouse below or above
-the slider, the browser scrolls one page (actually one line less than
-a page) down or up. Any other mouse button scrolls one line at a time.
-When not using an @code{FL_NORMAL_BROWSER}, the user can also make
+the slider, the browser scrolls one page up or down. Any other mouse
+button scrolls one line at a time (except wheel mouse buttons). When
+not using an @code{FL_NORMAL_BROWSER}, the user can also make
 selections with the mouse by pointing to a line or by using the cursor
 keys.
 
@@ -995,7 +995,8 @@ releases the mouse the highlighting disappears and the browser is
 returned to the application program. The application program can now
 figure out which line was selected using a call of
 @code{@ref{fl_get_browser()}} to be described below. It returns the
-number of the last selected line. (Top line is line 1.)
+number of the last selected line (with the topmoset line being line
+1.)
 
 An @code{FL_HOLD_BROWSER} works exactly the same except that, when the
 mouse is released, the selection remains highlighted.
@@ -1013,6 +1014,56 @@ still pressed down, he will select all lines he touches with his mouse
 until he releases it. All these lines will become highlighted. When
 the user starts pressing the mouse on an already selected line he
 de-selects lines rather than selecting them.
+
+
+Per default a browser gets only returned or the associated callback
+invoked on selection of a line (and, in the case of
+@code{@ref{FL_MULTI_BROWSER}}, on deselections). This behaviour can be
+changed by using the function
+@findex fl_set_object_return()
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when)
+@end example
+where when can have the following values
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NEVER
+Never return or invoke callback.
+
+@tindex FL_RETURN_SELECTION
+@item FL_RETURN_SELECTION
+Return or invoke callback on selection of a line. Please note that for
+@code{@ref{FL_MULTI_BROWSER}} the browser may be returned just once
+for a number of lines having been selected.
+
+@tindex FL_RETURN_SELECTION
+@item FL_RETURN_SELECTION
+Return or invoke callback on deselection of a line. This only works
+for @code{@ref{FL_MULTI_BROWSER}} browsers and the browser may be
+returned just once for a number of lines having been deselected.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback at end (mouse release) if the text in the
+browser has been scrolled.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever the text in the browser has been scrolled.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback on end of an interaction for scrolling the
+text in the browser regardless if the text was scrolled or not.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return or invoke callback on selection, deselection or scrolling of
+text or end of scrolling.
+@end table
+
+The default settting for @code{when} for a browser is
+@code{FL_RETURN_SELECTION|FL_RETURN_DESELECTION}.
 
 
 @node Other Browser Routines
@@ -1182,6 +1233,9 @@ browser. To this end, the following call can be used
 @example
 int fl_get_browser_screenlines(FL_OBJECT *obj);
 @end example
+Please note that this count only includes lines that are shown
+completely in the browser, lines that are partially obscured aren't
+counted in.
 
 To obtain the last selection made by the user, e.g. when the browser
 is returned, the application program can use the routine
@@ -1193,7 +1247,7 @@ int fl_get_browser(FL_OBJECT *obj);
 @noindent
 It returns the line number of the last selection being made (0 if no
 selection was made). When the last action was a de-selection (only for
-@code{FL_MULTI_BROWSER}'s) the negative of the de-selected line number
+@code{FL_MULTI_BROWSER}) the negative of the de-selected line number
 is returned.
 
 There are also calls to influence and query the top line shown in the
@@ -1223,24 +1277,47 @@ void fl_set_browser_dblclick_callback(FL_OBJECT *obj,
 Of course, double-click callbacks make most sense for
 @code{FL_HOLD_BROWSER}s.
 
-Finally there is a routine that can be used to programmatically scroll
-the text horizontally
+Finally there are routines that can be used to programmatically scroll
+the text horizontally and vertically:
 @findex fl_set_browser_xoffset()
 @anchor{fl_set_browser_xoffset()}
+@findex fl_set_browser_rel_xoffset()
+@anchor{fl_set_browser_rel_xoffset()}
+@findex fl_set_browser_yoffset()
+@anchor{fl_set_browser_yoffset()}
+@findex fl_set_browser_rel_yoffset()
+@anchor{fl_set_browser_rel_yoffset()}
 @example
 void fl_set_browser_xoffset(FL_OBJECT *obj, FL_Coord xoff);
+void fl_set_browser_rel_xoffset(FL_OBJECT *obj, double xval);
+void fl_set_browser_yoffset(FL_OBJECT *obj, FL_Coord yoff);
+void fl_set_browser_rel_yoffset(FL_OBJECT *obj, double yval);
 @end example
 @noindent
-where @code{xoff} indicates how many pixels to scroll to the left
-relative to the nominal position of the text lines.
+where @code{xoff} and @code{yoff} indicates how many pixels to scroll
+to the left or from the top relative to the nominal position of the
+text lines, while @code{xval} and @code{yval} set the relative
+position relative to the total width or height of all the text and
+thus have to be numbers between @code{0.0} and @code{1.0}.
 
-There is also a function that can be used to obtain the current
-xoffset if needed:
+
+There are also a number of functions that can be used to obtain the
+current position if needed:
 @findex fl_get_browser_xoffset()
 @anchor{fl_get_browser_xoffset()}
+@findex fl_get_browser_rel_xoffset()
+@anchor{fl_get_browser_rel_xoffset()}
+@findex fl_get_browser_yoffset()
+@anchor{fl_get_browser_yoffset()}
+@findex fl_get_browser_rel_yoffset()
+@anchor{fl_get_browser_rel_yoffset()}
 @example
 FL_Coord fl_get_browser_xoffset(FL_OBJECT *obj);
+FL_Coord fl_get_browser_rel_xoffset(FL_OBJECT *obj);
+FL_Coord fl_get_browser_yoffset(FL_OBJECT *obj);
+FL_Coord fl_get_browser_rel_yoffset(FL_OBJECT *obj);
 @end example
+
 
 @node Browser Attributes
 @subsection Browser Attributes
@@ -1250,7 +1327,7 @@ Never use the boxtype @code{FL_NO_BOX} for browsers.
 The first color argument (@code{col1}) to
 @code{@ref{fl_set_object_color()}} controls the color of the browser's
 box, the second (@code{col2}) the color of the selection. The text
-color is the same as the label color.
+color is the same as the label color, @code{obj->lcol}.
 
 To set the font size used inside the browser use
 @findex fl_set_browser_fontsize()
@@ -1341,9 +1418,7 @@ the font change requests accumulate and the order is important, i.e.,
 @code{"@@f@@b@@i"} gives you a fixed bold italic font while
 @code{"@@b@@i@@f"} gives you a (plain) fixed font.
 
-One word of caution is required here: The line spacing inside the
-browser is not changed! Hence, when using a large line, you had better
-take care that there is an empty line above and below it.
+Depending on the font size and style lines may have different heights.
 
 In some cases the character @code{@@} might need to be placed at the
 beginning of the lines without introducing the special meaning
@@ -1385,10 +1460,14 @@ On when needed (i.e., more lines/chars than could be shown)
 @noindent
 @code{FL_AUTO} is the default.
 
+Please note that when you switch the scrollbars off the text can't be
+scrolled by the user anymore at all (i.e.@: also not using methods
+that don't use scrollbars, e.g.@: using the cursor keys).
+
 Sometimes, it may be desirable for the application to obtain the
 scrollbar positions when they change (e.g., to use the scrollbars of
-one browser to control other browsers). To this end, the following
-routines are available
+one browser to control other browsers). There are two ways to achieve
+this. You can use these functions:
 @tindex FL_BROWSER_SCROLL_CALLBACK
 @findex fl_set_browser_hscroll_callback()
 @anchor{fl_set_browser_hscroll_callback()}
@@ -1419,8 +1498,24 @@ function calls to install the callback.
 To uninstall a scroll callback, use a @code{NULL} pointer as the
 callback function.
 
-By default, the scrollbar size is determined based on the initial size
-of the browser. To change the default, use the following routine
+As an alternative you cound request that the browser object gets
+returned (or a callback invoked) when the the scrollbar positions are
+changed. This can be done e.g.@: by passing @code{FL_RETURN_CHANGED}
+(if necessary @code{OR}'ed with flags for also returning on
+selection/deselections). Within the code for ealing with the
+event you could check if this is a change event by using the
+function
+@findex fl_get_object_return_state()
+@example
+int fl_get_object_return_state(FL_OBJECT *obj);
+@end example
+and test if @code{@ref{FL_RETURN_CHANGED}} is set in the return
+value (by just logically @code{AND}'ing both) and then handle
+the change.
+
+By default, the scrollbar size is based on the relation between the
+size of the browser and the size of the text. To change the default,
+use the following routine
 @findex fl_set_browser_scrollbarsize()
 @anchor{fl_set_browser_scrollbarsize()}
 @example
@@ -1436,7 +1531,7 @@ ways you can change the default. One way is to use
 to set the application wide default, another way is to use
 @code{@ref{fl_get_object_component()}} to get the object handle to the
 scrollbars and change the the object type forcibly. The first method
-is preferred because the user can override the setting via resources.
+is preferable because the user can override the setting via resources.
 Although the second method of changing the scrollbar type is not
 recommended, the object handle obtained can be useful in changing the
 scrollbar colors etc.
