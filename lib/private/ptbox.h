@@ -1,0 +1,178 @@
+/*
+ *  This file is part of the XForms library package.
+ *
+ *  XForms is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation; either version 2.1, or
+ *  (at your option) any later version.
+ *
+ *  XForms is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with XForms.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef PTBOX_H
+#define PTBOX_H
+
+
+extern int tbox_do_not_redraw;
+
+typedef struct {
+	char         * fulltext;         /* text of line with flags */
+    char         * text;			 /* text of line without flags */
+    unsigned int   len;				 /* line length */
+    int            selected;		 /* whether line is selected  */
+    int            selectable;	     /* whether line is selectable */
+	int            x;                /* vertical position relative to topline */
+	int            y;                /* horizontal position of text */
+    int            w;			     /* length of text in pixels */
+	int            h;                /* height of text in pixels */
+	int            size;             /* font size */
+	int            style;            /* font style */
+	int            asc;              /* font ascent */
+	int            desc;             /* font descent */
+	FL_COLOR       color;            /* font color */
+	int            align;            /* alignment of text */
+	int            is_underlined;    /* whether to draw underlined */
+    int            is_separator;     /* is this a separator line? */
+	int            is_special;       /* does it need special GC? */
+    GC             specialGC;	     /* GC for if not default font/color */
+} TBOX_LINE;
+
+
+typedef struct {
+    TBOX_LINE      ** lines;		 /* strurctures for lines of text */
+	int               num_lines;     /* number of structures */
+    int               xoffset;		 /* horizontal scroll in pixels    */
+    int               yoffset;		 /* vertical scroll in pixels    */
+	int               x,             /* coordinates and sizes of drawing area */
+	                  y,
+	                  w,
+	                  h;
+	int               select_line;   /* line currently selected */
+	int               max_width;     /* length of longest line in pixels */
+	int               max_height;    /* height of all lines in pixels */
+	int               def_size;      /* default front size */
+	int               def_style;     /* default font style */
+	int               def_align;     /* default alignment */
+	int               def_height;    /* height of line with default font size */
+    GC                defaultGC;	 /* text drawing GC */
+    GC                backgroundGC;  /* background GC */
+    GC                selectGC;	     /* background for selection GC */
+    GC                nonselectGC;   /* for text of non-selectable lines */
+	GC                bw_selectGC;   /* b&w selection text GC */
+    int               specialkey;	/* Key that indicates a special symbol */
+    FL_CALLBACKPTR    callback;      /* double and triple click callback */
+    long              callback_data; /* data for callback */
+	int               last_my;
+} FLI_TBOX_SPEC;
+
+
+/* Defaults */
+
+#define FLI_TBOX_BOXTYPE   FL_DOWN_BOX
+#define FLI_TBOX_COL1	   FL_WHITE
+#define FLI_TBOX_COL2	   FL_YELLOW
+#define FLI_TBOX_LCOL	   FL_LCOL
+#define FLI_TBOX_ALIGN	   FL_ALIGN_BOTTOM
+#define FLI_TBOX_FONTSIZE  FL_SMALL_FONT
+
+
+extern FL_OBJECT * fli_create_tbox( int          type,
+									FL_Coord     x,
+									FL_Coord     y,
+									FL_Coord     w,
+									FL_Coord     h,
+									const char * label );
+
+extern void fli_tbox_delete_line( FL_OBJECT * obj,
+								  int         line );
+
+extern void fli_tbox_insert_line( FL_OBJECT  * obj,
+								  int          line,
+								  const char * new_text );
+
+extern void fli_tbox_add_line( FL_OBJECT  * obj,
+							   const char * text );
+
+extern void fli_tbox_add_chars( FL_OBJECT  * obj,
+								const char * add );
+
+extern const char * fli_tbox_get_line( FL_OBJECT * obj,
+									   int         line );
+
+extern void fli_tbox_replace_line( FL_OBJECT  * obj,
+								   int          line,
+								   const char * text );
+
+extern void fli_tbox_clear( FL_OBJECT * obj );
+
+extern int fli_tbox_load( FL_OBJECT  * obj,
+						  const char * filename );
+
+extern void fli_tbox_set_fontsize( FL_OBJECT * obj,
+								   int         size );
+
+extern void fli_tbox_set_fontstyle( FL_OBJECT * obj,
+									int         style );
+
+extern int fli_tbox_set_xoffset( FL_OBJECT * obj,
+								 int         pixel );
+
+extern double fli_tbox_set_rel_xoffset( FL_OBJECT * obj,
+										double      offset );
+
+extern int fli_tbox_set_yoffset( FL_OBJECT * obj,
+								 int         pixel );
+
+extern double fli_tbox_set_rel_yoffset( FL_OBJECT * obj,
+										double      offset );
+
+extern int fli_tbox_get_xoffset( FL_OBJECT * obj );
+
+extern double fli_tbox_get_rel_xoffset( FL_OBJECT * obj );
+
+extern int fli_tbox_get_yoffset( FL_OBJECT * obj );
+
+extern double fli_tbox_get_rel_yoffset( FL_OBJECT * obj );
+
+extern void fli_tbox_set_topline( FL_OBJECT * obj,
+								  int         line );
+
+extern void fli_tbox_set_bottomline( FL_OBJECT * obj,
+									 int         line );
+
+extern void fli_tbox_set_centerline( FL_OBJECT * obj,
+									 int         line );
+
+extern void fli_tbox_deselect( FL_OBJECT * obj );
+
+extern  void  fli_tbox_deselect_line( FL_OBJECT * obj,
+									  int         line );
+
+extern void fli_tbox_select_line( FL_OBJECT * obj,
+								  int         line );
+
+extern int fli_tbox_is_line_selected( FL_OBJECT * obj,
+									  int         line );
+
+extern int fli_tbox_get_selection( FL_OBJECT *obj );
+
+extern void fli_tbox_make_line_selectable( FL_OBJECT * obj,
+										   int         line,
+										   int         state );
+
+extern void fli_tbox_set_dblclick_callback( FL_OBJECT      * obj,
+											FL_CALLBACKPTR   cb,
+											long             data );
+
+extern int fli_tbox_get_topline( FL_OBJECT * obj );
+
+extern void fli_tbox_prepare_drawing( FL_OBJECT * obj );
+
+#endif
+
