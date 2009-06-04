@@ -25,7 +25,6 @@
  *.
  *
  *  private header info for textbox object (part of browser
- *
  */
 
 #ifndef  PTEXTBOX_H
@@ -34,14 +33,14 @@
 typedef struct {
     char         * txt;				/* text of line                  */
     unsigned int   len;				/* line length                   */
-    short          selected;		/* Whether selected              */
-    short          non_selectable;	/* if non-selectable             */
+    short          selected;		/* whether line is selected      */
+    short          non_selectable;	/* if line is non-selectable     */
     short          pixels;			/* length in pixels              */
 } LINE;
 
 typedef struct {
     LINE           ** text;			/* lines of text (NULL if not used) */
-    FL_CALLBACKPTR    callback;
+    FL_CALLBACKPTR    callback;     /* double and tripple click callback */
     long              callback_data;
     GC                bkGC;			/* background GC             */
     GC                selectGC;		/* selected mark GC          */
@@ -72,8 +71,7 @@ typedef struct {
     int               maxpixels;
     int               attrib;		/* set if there is attrib change */
     int               xoffset;		/* horizontal scroll in pixels    */
-    int               lastmx,
-	                  lastmy;
+    int               lastmy;
 	int               status_changed;
 } FLI_TEXTBOX_SPEC;
 

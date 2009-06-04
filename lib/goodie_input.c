@@ -183,7 +183,7 @@ void
 fl_hide_input( void )
 {
     if ( fd_input )
-		fli_object_qenter( fd_input->cancel );
+		fl_trigger_object( fd_input->cancel );
 	else
 		M_warn( "fl_hide_input", "No input box is shown" );
 }

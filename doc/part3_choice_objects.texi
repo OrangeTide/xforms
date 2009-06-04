@@ -1461,7 +1461,8 @@ text area size.
 @subsection Remarks
 
 Since version 1.0.92 there isn't a limit on the maximum length of
-lines in a browser anymore.
+lines in a browser anymore. (The macro @code{FL_BROWSER_LINELENGTH}
+still exists for backward compatibility but has now function anymore).
 
 See @file{fbrowse1.c} for an example program using a
 @code{FL_NORMAL_BROWSER} to view files. @file{browserall.c} shows all

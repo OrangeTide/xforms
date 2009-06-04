@@ -912,7 +912,7 @@ do_underline_all( FL_Coord     x,
 
 
 /***************************************
- * draw a single string possibly with embedded tabs
+ * Draw a single string possibly with embedded tabs
  ***************************************/
 
 int

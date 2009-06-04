@@ -261,7 +261,7 @@ void
 fl_hide_alert( void )
 {
     if ( fd_alert && fd_alert->form->visible )
-		fli_object_qenter( fd_alert->but );
+		fl_trigger_object( fd_alert->but );
 	else
 		M_warn( "fl_hide_alert", "No alert box is shown" );
 }

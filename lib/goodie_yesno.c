@@ -183,7 +183,7 @@ void
 fl_hide_question( void )
 {
     if ( fd_yesno )
-		fli_object_qenter( default_ans == 1 ? fd_yesno->yes : fd_yesno->no );
+		fl_trigger_object( default_ans == 1 ? fd_yesno->yes : fd_yesno->no );
 	else
 		M_warn( "fl_hide_question", "No question box is shown" );
 }

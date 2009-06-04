@@ -43,10 +43,17 @@ typedef enum {
 #define FL_BROWSER_LCOL		FL_LCOL
 #define FL_BROWSER_ALIGN	FL_ALIGN_BOTTOM
 
+
 /***** Others	*****/
 
 #define FL_BROWSER_SLCOL		FL_COL1
 #define FL_BROWSER_FONTSIZE		FL_SMALL_FONT
+
+
+/* This exists only for backward compatibility and isn't used anymore! */
+
+#define FL_BROWSER_LINELENGTH   2048
+
 
 /***** Routines *****/
 

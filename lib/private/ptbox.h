@@ -53,7 +53,8 @@ typedef struct {
 	                  y,
 	                  w,
 	                  h;
-	int               select_line;   /* line currently selected */
+	int               select_line;   /* last selected line */
+	int               deselect_line; /* last deselected line */
 	int               max_width;     /* length of longest line in pixels */
 	int               max_height;    /* height of all lines in pixels */
 	int               def_size;      /* default front size */
@@ -68,7 +69,9 @@ typedef struct {
     int               specialkey;	/* Key that indicates a special symbol */
     FL_CALLBACKPTR    callback;      /* double and triple click callback */
     long              callback_data; /* data for callback */
-	int               last_my;
+	int               old_yoffset;
+	int               react_to_vert;
+	int               react_to_hori;
 } FLI_TBOX_SPEC;
 
 
@@ -82,97 +85,101 @@ typedef struct {
 #define FLI_TBOX_FONTSIZE  FL_SMALL_FONT
 
 
-extern FL_OBJECT * fli_create_tbox( int          type,
-									FL_Coord     x,
-									FL_Coord     y,
-									FL_Coord     w,
-									FL_Coord     h,
-									const char * label );
+extern FL_OBJECT * fli_create_tbox( int,
+									FL_Coord,
+									FL_Coord,
+									FL_Coord,
+									FL_Coord,
+									const char *);
 
 extern void fli_tbox_delete_line( FL_OBJECT * obj,
 								  int         line );
 
-extern void fli_tbox_insert_line( FL_OBJECT  * obj,
-								  int          line,
-								  const char * new_text );
+extern void fli_tbox_insert_line( FL_OBJECT *,
+								  int,
+								  const char * );
 
-extern void fli_tbox_add_line( FL_OBJECT  * obj,
-							   const char * text );
+extern void fli_tbox_add_line( FL_OBJECT *,
+							   const char * );
 
-extern void fli_tbox_add_chars( FL_OBJECT  * obj,
-								const char * add );
+extern void fli_tbox_add_chars( FL_OBJECT *,
+								const char * );
 
-extern const char * fli_tbox_get_line( FL_OBJECT * obj,
-									   int         line );
+extern const char * fli_tbox_get_line( FL_OBJECT *,
+									   int );
 
-extern void fli_tbox_replace_line( FL_OBJECT  * obj,
-								   int          line,
-								   const char * text );
+extern void fli_tbox_replace_line( FL_OBJECT *,
+								   int,
+								   const char * );
 
-extern void fli_tbox_clear( FL_OBJECT * obj );
+extern void fli_tbox_clear( FL_OBJECT * );
 
-extern int fli_tbox_load( FL_OBJECT  * obj,
-						  const char * filename );
+extern int fli_tbox_load( FL_OBJECT *,
+						  const char * );
 
-extern void fli_tbox_set_fontsize( FL_OBJECT * obj,
-								   int         size );
+extern void fli_tbox_set_fontsize( FL_OBJECT *,
+								   int );
 
-extern void fli_tbox_set_fontstyle( FL_OBJECT * obj,
-									int         style );
+extern void fli_tbox_set_fontstyle( FL_OBJECT *,
+									int );
 
-extern int fli_tbox_set_xoffset( FL_OBJECT * obj,
-								 int         pixel );
+extern int fli_tbox_set_xoffset( FL_OBJECT *,
+								 int );
 
-extern double fli_tbox_set_rel_xoffset( FL_OBJECT * obj,
-										double      offset );
+extern double fli_tbox_set_rel_xoffset( FL_OBJECT *,
+										double );
 
-extern int fli_tbox_set_yoffset( FL_OBJECT * obj,
-								 int         pixel );
+extern int fli_tbox_set_yoffset( FL_OBJECT *,
+								 int );
 
-extern double fli_tbox_set_rel_yoffset( FL_OBJECT * obj,
-										double      offset );
+extern double fli_tbox_set_rel_yoffset( FL_OBJECT *,
+										double );
 
-extern int fli_tbox_get_xoffset( FL_OBJECT * obj );
+extern int fli_tbox_get_xoffset( FL_OBJECT * );
 
-extern double fli_tbox_get_rel_xoffset( FL_OBJECT * obj );
+extern double fli_tbox_get_rel_xoffset( FL_OBJECT * );
 
-extern int fli_tbox_get_yoffset( FL_OBJECT * obj );
+extern int fli_tbox_get_yoffset( FL_OBJECT * );
 
-extern double fli_tbox_get_rel_yoffset( FL_OBJECT * obj );
+extern double fli_tbox_get_rel_yoffset( FL_OBJECT * );
 
-extern void fli_tbox_set_topline( FL_OBJECT * obj,
-								  int         line );
+extern void fli_tbox_set_topline( FL_OBJECT *,
+								  int );
 
-extern void fli_tbox_set_bottomline( FL_OBJECT * obj,
-									 int         line );
+extern void fli_tbox_set_bottomline( FL_OBJECT *,
+									 int );
 
-extern void fli_tbox_set_centerline( FL_OBJECT * obj,
-									 int         line );
+extern void fli_tbox_set_centerline( FL_OBJECT *,
+									 int );
 
 extern void fli_tbox_deselect( FL_OBJECT * obj );
 
-extern  void  fli_tbox_deselect_line( FL_OBJECT * obj,
-									  int         line );
+extern void fli_tbox_deselect_line( FL_OBJECT *,
+									int );
 
-extern void fli_tbox_select_line( FL_OBJECT * obj,
-								  int         line );
+extern void fli_tbox_select_line( FL_OBJECT *,
+								  int );
 
-extern int fli_tbox_is_line_selected( FL_OBJECT * obj,
-									  int         line );
+extern int fli_tbox_is_line_selected( FL_OBJECT *,
+									  int );
 
 extern int fli_tbox_get_selection( FL_OBJECT *obj );
 
-extern void fli_tbox_make_line_selectable( FL_OBJECT * obj,
-										   int         line,
-										   int         state );
+extern void fli_tbox_make_line_selectable( FL_OBJECT *,
+										   int,
+										   int );
 
-extern void fli_tbox_set_dblclick_callback( FL_OBJECT      * obj,
-											FL_CALLBACKPTR   cb,
-											long             data );
+extern void fli_tbox_set_dblclick_callback( FL_OBJECT *,
+											FL_CALLBACKPTR,
+											long );
 
 extern int fli_tbox_get_topline( FL_OBJECT * obj );
 
 extern void fli_tbox_prepare_drawing( FL_OBJECT * obj );
 
+extern void fli_tbox_react_to_vert( FL_OBJECT *,
+									int );
+extern void fli_tbox_react_to_hori( FL_OBJECT *,
+									int );
 #endif
 

@@ -326,6 +326,7 @@ select_cb( FL_OBJECT * ob,
 				fli_del_tail_slash( lfs->dname );
 			seltext[ 0 ] = '\0';
 		}
+
 		fl_set_input( lfs->input, seltext );
 	}
 	else
@@ -336,12 +337,9 @@ select_cb( FL_OBJECT * ob,
 		if ( isdblclick )
 		{
 			if ( lfs->fselect_cb )
-			{
 				lfs->fselect_cb( cmplt_name( ), lfs->callback_data );
-				return;
-			}
 			else
-				fli_object_qenter( lfs->ready );
+				fl_trigger_object( lfs->ready );
 		}
 	}
 }
@@ -729,7 +727,7 @@ fl_hide_fselector( void )
 	FD_FSELECTOR *fd = fl_get_fselector_fdstruct( );
 
 	if ( fd->fselect && fd->fselect->visible )
-		fli_object_qenter( fd->cancel );
+		fl_trigger_object( fd->cancel );
 }
 
 

@@ -77,27 +77,29 @@ fli_create_tbox( int          type,
     obj->col2        = FLI_TBOX_COL2;
     obj->align       = FLI_TBOX_ALIGN;
     obj->wantkey     = FL_KEY_SPECIAL;
-	obj->want_update = 1;
+	obj->want_update = 0;
 	obj->spec        = sp = fl_malloc( sizeof *sp );
 
-	sp->lines        = NULL;
-	sp->num_lines    = 0;
-	sp->callback     = NULL;
-	sp->xoffset      = 0;
-	sp->yoffset      = 0;
-	sp->max_width    = 0;
-	sp->max_height   = 0;
-    sp->def_size     = fli_cntl.browserFontSize ?
-		               fli_cntl.browserFontSize : FLI_TBOX_FONTSIZE;
-    sp->def_style    = FL_NORMAL_STYLE;
-	sp->def_align    = FL_ALIGN_LEFT;
-    sp->defaultGC    = None;
-    sp->backgroundGC = None;
-    sp->selectGC     = None;
-    sp->nonselectGC  = None;
-    sp->bw_selectGC  = None;
-	sp->specialkey   = '@';
-	sp->select_line  = -1;
+	sp->lines         = NULL;
+	sp->num_lines     = 0;
+	sp->callback      = NULL;
+	sp->xoffset       = 0;
+	sp->yoffset       = 0;
+	sp->max_width     = 0;
+	sp->max_height    = 0;
+    sp->def_size      = fli_cntl.browserFontSize ?
+		                fli_cntl.browserFontSize : FLI_TBOX_FONTSIZE;
+    sp->def_style     = FL_NORMAL_STYLE;
+	sp->def_align     = FL_ALIGN_LEFT;
+    sp->defaultGC     = None;
+    sp->backgroundGC  = None;
+    sp->selectGC      = None;
+    sp->nonselectGC   = None;
+    sp->bw_selectGC   = None;
+	sp->specialkey    = '@';
+	sp->select_line   = -1;
+	sp->deselect_line = -1;
+	sp->react_to_vert = sp->react_to_hori = 1;
 
     fl_set_object_dblbuffer( obj, 1 );
 
@@ -128,8 +130,13 @@ fli_tbox_delete_line( FL_OBJECT * obj,
 
 	if ( sp->select_line == line )
 		sp->select_line = -1;
-	if ( sp->select_line > line )
+	else if ( sp->select_line > line )
 		sp->select_line--;
+
+	if ( sp->deselect_line == line )
+		sp->deselect_line = -1;
+	else if ( sp->deselect_line > line )
+		sp->deselect_line--;
 
 	/* Check if recalculation of maximum line length is necessary */
 
@@ -1079,6 +1086,7 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
 		sp->lines[ i ]->selected = 0;
 
 	sp->select_line = -1;
+	sp->deselect_line = -1;
 
 	if ( ! tbox_do_not_redraw )
 		fl_redraw_object( obj );
@@ -1102,8 +1110,8 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
 
 	sp->lines[ line ]->selected = 0;
 
-	if ( sp->select_line == line )
-		sp->select_line = -1;
+	sp->deselect_line = line;
+	sp->select_line = -1;
 
 	if ( ! tbox_do_not_redraw )
 		fl_redraw_object( obj );
@@ -1134,6 +1142,7 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
 	sp->lines[ line ]->selected = 1;
 
 	sp->select_line = line;
+	sp->deselect_line = -1;
 
 	if ( ! tbox_do_not_redraw )
 		fl_redraw_object( obj );
@@ -1179,8 +1188,13 @@ fli_tbox_make_line_selectable( FL_OBJECT * obj,
 	tl = sp->lines[ line ];
 	state = state ? 1 : 0;
 
-	if ( ! state && line == sp->select_line )
-		sp->select_line = -1;
+	if ( ! state )
+	{
+		if ( line == sp->select_line )
+			sp->select_line = -1;
+		if ( line == sp->deselect_line )
+			sp->deselect_line = -1;
+	}
 
 	if ( tl->selectable != state )
 	{
@@ -1209,13 +1223,23 @@ fli_tbox_make_line_selectable( FL_OBJECT * obj,
 
 
 /***************************************
- * Returns the last selected line (or -1 if there's none)
+ * Returns the last selected or deselected line (or 0 if there's none).
+ * Please note: this function returns the index of the selected line
+ * incremented by one and the negative of the index of the deselected
+ * line decremented by 1.
  ***************************************/
 
 int
 fli_tbox_get_selection( FL_OBJECT *obj )
 {
-    return ( ( FLI_TBOX_SPEC * ) obj->spec )->select_line;
+	FLI_TBOX_SPEC *sp = obj->spec;
+
+	if ( sp->select_line >= 0 )
+		return sp->select_line + 1;
+	else if ( sp->deselect_line >= 0 )
+		return - sp->deselect_line - 1;
+	else
+		return 0;
 }
 
 
@@ -1232,6 +1256,7 @@ fli_tbox_set_dblclick_callback( FL_OBJECT      * obj,
 
 	sp->callback = cb;
 	sp->callback_data = data;
+    fl_set_object_dblclick( obj, cb ? FL_CLICK_TIMEOUT : 0 );
 }
 	
 
@@ -1401,6 +1426,7 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 
 
 /***************************************
+ * Frees all resources needed for the FLI_TBOX_SPEC structure
  ***************************************/
 
 static void
@@ -1466,13 +1492,13 @@ draw_tboxline( FL_OBJECT * obj,
 		 || tl->y + tl->h < sp->yoffset )
 		return;
 
-	/* Draw the background */
+	/* Draw the background, either the normal one or the one for selected
+	   lines */
 
 	XFillRectangle( flx->display, FL_ObjWin( obj ),
 					tl->selected ? sp->selectGC : sp->backgroundGC,
 					sp->x - ( LEFT_MARGIN > 0 ), sp->y + tl->y - sp->yoffset,
-					FL_min( sp->w, sp->max_width ) + ( LEFT_MARGIN > 0 ),
-					tl->h );
+					sp->w + ( LEFT_MARGIN > 0 ), tl->h );
 
 	/* Separator lines obviously are to be treated differently from normal
 	   text */
@@ -1525,7 +1551,7 @@ draw_tboxline( FL_OBJECT * obj,
 		activeGC = sp->bw_selectGC;
     }
 
-	/* Now draw the line and underline it if necessary */
+	/* Now draw the line, underlined if necessary */
 
 	if ( tl->is_underlined )
 		fl_diagline( sp->x - sp->xoffset + tl->x,
@@ -1541,6 +1567,8 @@ draw_tboxline( FL_OBJECT * obj,
 
 
 /***************************************
+ * Tries to find the index of the next selectable line following
+ * 'line', returns the total number of lines if none can be found.
  ***************************************/
 
 int find_next_selectable( FL_OBJECT * obj,
@@ -1560,6 +1588,8 @@ int find_next_selectable( FL_OBJECT * obj,
 
 
 /***************************************
+ * Tries to find the index of the next selectable line
+ * before 'line', returns -1 if none can be found.
  ***************************************/
 
 int find_previous_selectable( FL_OBJECT * obj,
@@ -1588,7 +1618,7 @@ fli_tbox_get_topline( FL_OBJECT * obj )
     FLI_TBOX_SPEC *sp = obj->spec;
 	int i = -1;
 
-	while ( ++i < sp->num_lines && sp->lines[ i ]->y - sp->yoffset < 0 )
+	while ( ++i < sp->num_lines && sp->lines[ i ]->y < sp->yoffset )
 		/* empty */ ;
 
 	return i < sp->num_lines ? i : -1;
@@ -1614,6 +1644,7 @@ fli_tbox_get_bottomline( FL_OBJECT * obj )
 
 
 /***************************************
+ * Deals with keyboard input (and indirectly with mouse wheel "clicks")
  ***************************************/
 
 static int
@@ -1626,31 +1657,32 @@ handle_keyboard( FL_OBJECT * obj,
 	int old_xoffset = sp->xoffset;
 	int ret = FL_RETURN_NONE;
 
-    if ( IsHome( key ) )
+    if ( IsHome( key ) && sp->react_to_vert )
 		fli_tbox_set_rel_yoffset( obj, 0.0 );
-    else if ( IsEnd( key ) )
+    else if ( IsEnd( key ) && sp->react_to_vert )
 		fli_tbox_set_rel_yoffset( obj, 1.0 );
-    else if ( IsPageUp( key ) )
+    else if ( IsPageUp( key ) && sp->react_to_vert )
 		fli_tbox_set_yoffset( obj, sp->yoffset - sp->h );
-    else if ( IsHalfPageUp( key ) )
+    else if ( IsHalfPageUp( key ) && sp->react_to_vert )
 		fli_tbox_set_yoffset( obj, sp->yoffset - sp->h / 2 );
-    else if ( Is1LineUp( key ) )
+    else if ( Is1LineUp( key ) && sp->react_to_vert )
 		fli_tbox_set_yoffset( obj, sp->yoffset - sp->def_height );
-	else if ( IsPageDown( key ) || key == ' ' )
+	else if ( ( IsPageDown( key ) || key == ' ' ) && sp->react_to_vert )
 		fli_tbox_set_yoffset( obj, sp->yoffset + sp->h );
-    else if ( IsHalfPageDown( key ) )
+    else if ( IsHalfPageDown( key ) && sp->react_to_vert )
 		fli_tbox_set_yoffset( obj, sp->yoffset + sp->h / 2 );
-    else if ( Is1LineDown( key ) )
+    else if ( Is1LineDown( key ) && sp->react_to_vert )
 		fli_tbox_set_yoffset( obj, sp->yoffset + sp->def_height );
-    else if ( IsLeft( key ) )
+    else if ( IsLeft( key ) && sp->react_to_hori )
 		fli_tbox_set_xoffset( obj, sp->xoffset - 3 );
-    else if ( IsRight( key ) )
+    else if ( IsRight( key ) && sp->react_to_hori )
 		fli_tbox_set_xoffset( obj, sp->xoffset + 3 );
     else if ( IsUp( key ) )
 	{
-		if (    obj->type == FL_NORMAL_BROWSER
-			 || obj->type == FL_SELECT_BROWSER
-			 || obj->type == FL_MULTI_BROWSER )
+		if (    sp->react_to_vert
+			 && (    obj->type == FL_NORMAL_BROWSER
+				  || obj->type == FL_SELECT_BROWSER
+				  || obj->type == FL_MULTI_BROWSER ) )
 		{
 			int topline = fli_tbox_get_topline( obj );
 
@@ -1664,24 +1696,32 @@ handle_keyboard( FL_OBJECT * obj,
 
 			if ( line >= 0 )
 			{
-				fli_tbox_select_line( obj, line );
+				tl = sp->lines[ line ];
 
-				tl = sp->lines[ sp->select_line ];
+				if ( sp->react_to_vert
+					 || ( tl->y + tl->h >= sp->yoffset
+						  && tl->y < sp->h + sp->yoffset ) )
+				{
+					fli_tbox_select_line( obj, line );
 
-				/* Bring the selection into view if necessary */
+					tl = sp->lines[ sp->select_line ];
 
-				if ( tl->y < sp->yoffset )
-					fli_tbox_set_topline( obj, sp->select_line );
-				else if ( tl->y + tl->h - sp->yoffset >= sp->h )
-					fli_tbox_set_bottomline( obj, sp->select_line );
+					/* Bring the selection into view if necessary */
+
+					if ( tl->y < sp->yoffset )
+						fli_tbox_set_topline( obj, sp->select_line );
+					else if ( tl->y + tl->h - sp->yoffset >= sp->h )
+						fli_tbox_set_bottomline( obj, sp->select_line );
+				}
 			}
 		}
     }
     else if ( IsDown( key ) )
 	{
-		if (    obj->type == FL_NORMAL_BROWSER
-			 || obj->type == FL_SELECT_BROWSER
-			 || obj->type == FL_MULTI_BROWSER )
+		if (    sp->react_to_vert
+			 && (    obj->type == FL_NORMAL_BROWSER
+				  || obj->type == FL_SELECT_BROWSER
+				  || obj->type == FL_MULTI_BROWSER ) )
 		{
 			int topline = fli_tbox_get_topline( obj );
 
@@ -1702,16 +1742,23 @@ handle_keyboard( FL_OBJECT * obj,
 
 			if ( line >= 0 )
 			{
-				fli_tbox_select_line( obj, line );
+				tl = sp->lines[ line ];
 
-				tl = sp->lines[ sp->select_line ];
+				if ( sp->react_to_vert
+					 || ( tl->y + tl->h >= sp->yoffset
+						  && tl->y < sp->h + sp->yoffset ) )
+				{
+					fli_tbox_select_line( obj, line );
 
-				/* Bring the selection into view if necessary */
+					tl = sp->lines[ sp->select_line ];
 
-				if ( tl->y + tl->h < sp->yoffset )
-					fli_tbox_set_topline( obj, sp->select_line );
-				else if ( tl->y + tl->h - sp->yoffset >= sp->h )
-					fli_tbox_set_bottomline( obj, sp->select_line );
+					/* Bring the selection into view if necessary */
+
+					if ( tl->y + tl->h < sp->yoffset )
+						fli_tbox_set_topline( obj, sp->select_line );
+					else if ( tl->y + tl->h - sp->yoffset >= sp->h )
+						fli_tbox_set_bottomline( obj, sp->select_line );
+				}
 			}
 		}
     }
@@ -1726,13 +1773,14 @@ handle_keyboard( FL_OBJECT * obj,
 
 
 /***************************************
- * Mouse wheel hack - the (release) event is converted to a key event.
+ * Mouse wheel hack - the (release) event is converted
+ * to a key event (function is also used by input.c)
  ***************************************/
 
-static int
-handle_mouse_wheel( int       * ev,
-					int       * key,
-					void      * xev )
+int
+fli_handle_mouse_wheel( int       * ev,
+						int       * key,
+						void      * xev )
 {
     if ( *ev == FL_PUSH )
         return 0;
@@ -1742,9 +1790,17 @@ handle_mouse_wheel( int       * ev,
 		*ev = FL_KEYBOARD;
 
 		if ( xev && shiftkey_down( ( ( XButtonEvent * ) xev )->state ) )
+		{
+			( ( XButtonEvent * ) xev )->state &= ~ ShiftMask;
+			( ( XKeyEvent * ) xev )->state &= ~ ShiftMask;
 			*key = *key == FL_MBUTTON4 ? FLI_1LINE_UP : FLI_1LINE_DOWN;
+		}
 		else if ( xev && controlkey_down( ( ( XButtonEvent * ) xev )->state ) )
+		{
+			( ( XButtonEvent * ) xev )->state &= ~ ControlMask;
+			( ( XKeyEvent * ) xev )->state &= ~ ControlMask;
 			*key = *key == FL_MBUTTON4 ? XK_Prior : XK_Next;
+		}
 		else
 			*key = *key == FL_MBUTTON4 ? FLI_HALFPAGE_UP : FLI_HALFPAGE_DOWN;
 	}
@@ -1754,6 +1810,8 @@ handle_mouse_wheel( int       * ev,
 
 
 /***************************************
+ * Tries to find the index of the line under the mouse,
+ * returns -1 if there's none
  ***************************************/
 
 static int
@@ -1780,10 +1838,32 @@ find_mouse_line( FL_OBJECT * obj,
 			    && ++line < sp->num_lines )
 			/* empty */ ;
 
-	if ( line < 0 || line >= sp->num_lines || ! sp->lines[ line ]->selectable )
+	if ( line < 0 || line >= sp->num_lines )
 		return -1;
 
 	return line;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_tbox_react_to_vert( FL_OBJECT * obj,
+						int         state )
+{
+    ( ( FLI_TBOX_SPEC * ) obj->spec )->react_to_vert = state ? 1 : 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_tbox_react_to_hori( FL_OBJECT * obj,
+						int         state )
+{
+    ( ( FLI_TBOX_SPEC * ) obj->spec )->react_to_hori = state ? 1 : 0;
 }
 
 
@@ -1803,8 +1883,9 @@ handle_mouse( FL_OBJECT * obj,
     int line;
 	int ret = FL_RETURN_NONE;
 	static int mode;
+	static int last_multi = -1;
 
-    /* Check whether there are any lines */
+    /* Check whether there are any lines at all */
 
     if ( sp->num_lines == 0 )
 		return ret;
@@ -1813,6 +1894,7 @@ handle_mouse( FL_OBJECT * obj,
 	   or above the text area scroll up or down */
 
 	if (    ev == FL_UPDATE
+		 && sp->react_to_vert
 		 && (    my < obj->y + sp->y
 			  || my > obj->y + sp->y + sp-> h ) )
 	{
@@ -1835,7 +1917,7 @@ handle_mouse( FL_OBJECT * obj,
 			}
 		}
 	}
-	else if  ( obj->type != FL_NORMAL_BROWSER )		
+	else if ( obj->type != FL_NORMAL_BROWSER )		
 		line = find_mouse_line( obj, my );
 
 	/* A normal textbox doesn't react to the mouse otherwise */
@@ -1845,6 +1927,9 @@ handle_mouse( FL_OBJECT * obj,
 	else if (    obj->type == FL_SELECT_BROWSER
 		 || obj->type == FL_HOLD_BROWSER )
 	{
+		if ( line < 0 || ! sp->lines[ line ]->selectable )
+			return ret;
+
 		/* For FL_SELECT_BROWSER browsers the selection is undone when the
 		   mouse is released */
 
@@ -1855,7 +1940,7 @@ handle_mouse( FL_OBJECT * obj,
 			return ret;
 		}
 
-		if ( line < 0 || ! sp->lines[ line ]->selectable )
+		if ( line < 0 )
 			return ret;
 
 		if ( ev == FL_PUSH )
@@ -1876,32 +1961,76 @@ handle_mouse( FL_OBJECT * obj,
 	}
 	else  /* FL_MULTI_BROWSER */
 	{
-		if ( line < 0 || ! sp->lines[ line ]->selectable )
+		if ( line < 0 )
 			return ret;
 
 		if ( ev == FL_PUSH )
 		{
-			mode = sp->lines[ line ]->selected ? DESELECT : SELECT;
-			if ( mode == SELECT )
+			if ( ! sp->lines[ line ]->selectable )
+				return ret;
 
+			mode = sp->lines[ line ]->selected ? DESELECT : SELECT;
+
+			if ( mode == SELECT )
 			{
 				fli_tbox_select_line( obj, line );
+				last_multi = line;
 				ret |= FL_RETURN_SELECTION;
 			}
 			else
-				fli_tbox_deselect_line( obj, line );
-		}
-		else if ( ev == FL_UPDATE )
-		{
-			if (    mode == SELECT
-				 && ! sp->lines[ line ]->selected )
 			{
-				fli_tbox_select_line( obj, line );
-				ret |= FL_RETURN_SELECTION;
-			}
-			else if (    mode == DESELECT
-					  && sp->lines[ line ]->selected )
 				fli_tbox_deselect_line( obj, line );
+				last_multi = line;
+				ret |= FL_RETURN_DESELECTION;
+			}
+		}
+		else
+		{
+			/* Mouse may have been moved that fast that one or more lines
+			   got skipped */
+
+			if ( last_multi != -1 && FL_abs( line - last_multi ) > 1 )
+			{
+				int incr = line - last_multi > 1 ? 1 : -1;
+
+				while ( ( last_multi += incr ) != line )
+					if ( sp->lines[ last_multi ]->selectable )
+					{
+						if (    mode == SELECT
+							 && ! sp->lines[ last_multi ]->selected )
+						{
+							fli_tbox_select_line( obj, last_multi );
+							ret |= FL_RETURN_SELECTION;
+						}
+						else if (    mode == DESELECT
+								  && sp->lines[ last_multi ]->selected )
+						{
+							fli_tbox_deselect_line( obj, last_multi );
+							ret |= FL_RETURN_DESELECTION;
+						}
+					}
+			}
+
+			if ( sp->lines[ line ]->selectable )
+			{
+				if (    mode == SELECT
+					 && ! sp->lines[ line ]->selected )
+				{
+					fli_tbox_select_line( obj, line );
+					last_multi = line;
+					ret |= FL_RETURN_SELECTION;
+				}
+				else if (    mode == DESELECT
+						  && sp->lines[ line ]->selected )
+				{
+					fli_tbox_deselect_line( obj, line );
+					ret |= FL_RETURN_DESELECTION;
+					last_multi = line;
+				}
+			}
+
+			if ( ev == FL_RELEASE )
+				last_multi = -1;
 		}
 	}
 
@@ -1925,11 +2054,13 @@ handle_tbox( FL_OBJECT * obj,
 	int ret = FL_RETURN_NONE;
 	int i;
 	static int init_done = 0;
+	static int old_yoffset = -1;
 
     /* Mouse wheel hack */
 
 	if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-		 && ! handle_mouse_wheel( &ev, &key, xev ) )
+		 && ! obj->want_update
+		 && ! fli_handle_mouse_wheel( &ev, &key, xev ) )
 		return ret;
 
     switch ( ev )
@@ -1965,7 +2096,10 @@ handle_tbox( FL_OBJECT * obj,
 			break;
 
 		case FL_PUSH :
-			sp->last_my = -1;
+			if ( key != FL_MBUTTON1 )
+				break;
+			obj->want_update = 1;
+			old_yoffset = sp->yoffset;
 			ret |= handle_mouse( obj, my, ev );
 			break;
 
@@ -1975,6 +2109,15 @@ handle_tbox( FL_OBJECT * obj,
 
 		case FL_RELEASE :
 			ret |= handle_mouse( obj, my, ev ) | FL_RETURN_END;
+			if ( sp->yoffset != old_yoffset )
+				ret |= FL_RETURN_CHANGED;
+			obj->want_update = 0;
+			break;
+
+		case FL_DBLCLICK :
+		case FL_TRPLCLICK :
+			if ( sp->callback )
+				sp->callback( obj, sp->callback_data );
 			break;
 
 		case FL_FREEMEM :

@@ -178,6 +178,7 @@ static FLI_VN_PAIR flclass[ ] =
 	VN( FL_MENUBAR ),
 	VN( FL_IMAGECANVAS ),
     VN( FL_TEXTBOX ),
+    VN( FL_SPINNER ),
     VN( -1 )
 };
 
@@ -276,26 +277,32 @@ fli_print_to_string( const char * fmt,
 char *
 fli_read_line( FILE *fp )
 {
-    char *c = NULL;
-	char *old_c = NULL;
+    char *line = NULL;
+	char *old_line = NULL;
     size_t len = STRING_TRY_LENGTH;
 	size_t old_len = 0;
 
     while ( 1 )
     {
-        if ( ( c = fl_realloc( c, len ) ) == NULL )
+        if ( ( line = fl_realloc( line, len ) ) == NULL )
 		{
-			fl_safe_free( old_c );
+			fl_safe_free( old_line );
 			M_err( "fli_read_line", "Running out of memory\n" );
 			return NULL;
 		}
 
-		if ( ! fgets( c + old_len, len - old_len, fp ) )
+		if ( ! fgets( line + old_len, len - old_len, fp ) )
 		{
 			if ( ferror( fp ) )
 			{
 				M_err( "fli_read_line", "Failed to read from file" );
-				fl_free( c );
+				fl_free( line );
+				return NULL;
+			}
+
+			if ( old_len == 0 )
+			{
+				fl_free( line );
 				return NULL;
 			}
 
@@ -303,16 +310,16 @@ fli_read_line( FILE *fp )
 			break;
 		}
 
-		if ( strchr( c + old_len, '\n' ) )
+		if ( strchr( line + old_len, '\n' ) )
 			break;
 
-		old_c = c;
+		old_line = line;
 		old_len = len - 1;
 		len *= 2;
 	}
 
-	old_c = c;
-	if ( ( c = fl_realloc( c, strlen( c ) + 1 ) ) == NULL )
-		return old_c;
-	return c;
+	old_line = line;
+	if ( ( line = fl_realloc( line, strlen( line ) + 1 ) ) == NULL )
+		return old_line;
+	return line;
 }

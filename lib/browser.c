@@ -58,14 +58,13 @@ attrib_change( FL_OBJECT * ob )
 
     sp->tb->visible = 1;
     sp->tb->input = ob->input;
-    sp->tb->wantkey = ob->wantkey;
 
-    sp->tb->type = ob->type;
+    sp->tb->type    = ob->type;
     sp->tb->boxtype = ob->boxtype;
-    sp->tb->lcol = ob->lcol;
-    sp->tb->col1 = ob->col1;
-    sp->tb->col2 = ob->col2;
-    sp->tb->bw = ob->bw;
+    sp->tb->lcol    = ob->lcol;
+    sp->tb->col1    = ob->col1;
+    sp->tb->col2    = ob->col2;
+    sp->tb->bw      = ob->bw;
 
     /* Scrollbars */
 
@@ -103,54 +102,46 @@ get_geometry( FL_OBJECT * ob )
 {
     FLI_BROWSER_SPEC *comp = ob->spec;
     FL_OBJECT *tb = comp->tb;
-    FLI_TEXTBOX_SPEC *sp = comp->tb->spec;
+    FLI_TBOX_SPEC *sp = comp->tb->spec;
     int h_on = comp->h_on,
 		v_on = comp->v_on;
-	FL_Coord oldw = tb->w;
-	FL_Coord oldh = tb->h;
-	int delta;
+	double old_xrel = fli_tbox_get_rel_xoffset( tb );
+	double old_yrel = fli_tbox_get_rel_yoffset( tb );
 
     comp->hh = comp->vw = 0;
     comp->h_on = comp->v_on = 0;
 
-    tb->w = ob->w;
-    tb->h = ob->h;
-
-    fli_calc_textbox_size( tb );
+	tb->w = ob->w;
+	tb->h = ob->h;
 
 	/* Check if we need a vertical slider */
 
-    if (    ( sp->screenlines < sp->lines && comp->v_pref != FL_OFF )
+    if (    ( sp->max_height > sp->h && comp->v_pref != FL_OFF )
 		 || comp->v_pref == FL_ON )
     {
-		comp->v_on = 1;
-		comp->vw = comp->vw_def;
-		tb->w -= comp->vw;
-		sp->w -= comp->vw;
+		comp->v_on  = 1;
+		comp->vw    = comp->vw_def;
+		tb->w      -= comp->vw;
     }
 
 	/* Check if we need a horizontal slider */
 
-    if (    ( MaxPixels( sp ) > sp->w && comp->h_pref != FL_OFF )
+    if (    ( sp->max_width > sp->w && comp->h_pref != FL_OFF )
 		 || comp->h_pref == FL_ON )
     {
-		comp->h_on = 1;
-		comp->hh = comp->hh_def;
-		tb->h -= comp->hh;
-		sp->h -= comp->hh;
-
-		sp->screenlines = ( double ) sp->h / sp->charheight + 0.001;
+		comp->h_on  = 1;
+		comp->hh    = comp->hh_def;
+		tb->h      -= comp->hh;
     }
 
-	/* Due to the addition of an horizontal slider also a vertical slider
-	   may be needed now, so recheck for its necessity */
+	/* Due to the addition of a horizontal slider also a vertical slider
+	   may now be needed, so recheck for this possibility */
 
-    if ( ! comp->v_on && sp->screenlines < sp->lines && comp->v_pref != FL_OFF )
+    if ( ! comp->v_on && sp->max_height > sp->h && comp->v_pref != FL_OFF )
     {
-		comp->v_on = 1;
-		comp->vw = comp->vw_def;
-		tb->w -= comp->vw;
-		sp->w -= comp->vw;
+		comp->v_on  = 1;
+		comp->vw    = comp->vw_def;
+		tb->w      -= comp->vw;
     }
 
     comp->hsl->visible = comp->h_on;
@@ -158,93 +149,60 @@ get_geometry( FL_OBJECT * ob )
 
     if ( comp->v_on )
     {
-		delta = sp->lines - sp->screenlines;
-
 		comp->vsl->x = ob->x + ob->w - comp->vw;
 		comp->vsl->y = ob->y;
 		comp->vsl->w = comp->vw;
 		comp->vsl->h = ob->h - comp->hh;
 
-		if ( delta > 0 )
-		{
-			comp->vsize = ( double ) sp->screenlines / sp->lines;
-			comp->vinc1 = ( sp->screenlines - 0.99 ) / delta;
-			comp->vinc2 = 1.01 / delta;
-			comp->vval = ( sp->topline - 1.0 ) / delta;
-		}
-		else
-			comp->vsize = 1.0;
-    }
+		comp->vval  = old_yrel;
+		comp->vsize = comp->vinc1 = ( double ) sp->h / sp->max_height;
+		comp->vinc2 = ( double ) sp->def_height / sp->max_height;
+	}
+	else
+	{
+		comp->vval  = 0.0;
+		comp->vsize = 1.0;
+	}
 
     if ( comp->h_on )
     {
-		delta = MaxPixels( sp ) - sp->w;
-
 		comp->hsl->x = ob->x;
 		comp->hsl->y = ob->y + ob->h - comp->hh;
 		comp->hsl->w = ob->w - comp->vw;
 		comp->hsl->h = comp->hh;
 
-		if ( delta > 0 )
-		{
-			comp->hsize = ( double ) sp->w / MaxPixels( sp );
-			comp->hinc1 = ( 8.0 * sp->charheight ) / delta;
-			comp->hinc2 = ( sp->charheight - 2.0 ) / delta;
-			comp->hval = ( double ) sp->xoffset / delta;
-		}
-		else
-			comp->hsize = 1.0;
-    }
+		comp->hval  = old_xrel;
+		comp->hsize = ( double ) sp->w / sp->max_width;
+		comp->hinc1 = ( 8.0 * sp->def_height ) / sp->max_width;
+		comp->hinc2 = ( sp->def_height - 2.0 ) / sp->max_width;
+	}
+	else
+	{
+		comp->hval  = 0.0;
+		comp->hsize = 1.0;
+	}
 
     if ( h_on != comp->h_on || v_on != comp->v_on )
     {
 		comp->attrib = 1;
 		comp->dead_area = ! ( comp->h_on ^ comp->v_on );
 		if ( h_on )
-			fli_set_textbox_xoffset( comp->tb, 0 );
+			fli_tbox_set_xoffset( comp->tb, 0 );
     }
     else
 		comp->attrib = 0;
 
-	/* On resize recalculate the slider positions to keep the point in the
-	   left upper corner were it was before (unless the text wouldn't fill the
-	   textbox completely anymore) - like we are used to e.g. by web browsers.*/
+	/* Recompute size of textbox drawing area */
 
-    sp->screenlines = ( double ) sp->h / sp->charheight + 0.001;
+	fli_tbox_prepare_drawing( comp->tb );
 
-	if ( oldh != tb->h )
-	{
-		delta = sp->lines - sp->screenlines;
+	tbox_do_not_redraw = 1;
+	comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
+	fl_set_scrollbar_value( comp->vsl, comp->vval );
 
-		if ( delta > 0 )
-		{
-			sp->attrib = 1;           /* otherwise parts of textbrowser may
-										 not get redrawn due to clipping JTT */
-			if ( sp->topline - 1 > delta )
-				sp->topline = delta + 1;
-
-			fl_set_scrollbar_value( comp->vsl, ( sp->topline - 1.0 ) / delta );
-		}
-		else
-			fl_set_scrollbar_value( comp->vsl, 0.0 );
-	}
-
-	if ( oldw != tb->w )
-	{
-		delta = MaxPixels( sp ) - sp->w;
-
-		if ( delta > 0 )
-		{
-			sp->attrib = 1;
-
-			if ( sp->xoffset > delta )
-				sp->xoffset = delta;
-
-			fl_set_scrollbar_value( comp->hsl, ( double ) sp->xoffset / delta );
-		}
-		else
-			fl_set_scrollbar_value( comp->hsl, 0.0 );
-	}
+	tbox_do_not_redraw = 1;
+	comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
+	fl_set_scrollbar_value( comp->hsl, comp->hval );
 }
 
 
@@ -281,31 +239,12 @@ handle_browser( FL_OBJECT * ob,
 				void      * ev   FL_UNUSED_ARG )
 {
     FLI_BROWSER_SPEC *comp = ob->spec;
-	FLI_TEXTBOX_SPEC *sp = event == FL_FREEMEM ? NULL : comp->tb->spec;
-	FL_Coord np = 0;
 
     switch ( event )
     {
 		case FL_DRAW:
 			attrib_change( ob );
 			get_geometry( ob );
-			sp->attrib = 1;
-
-			/* initial scrollbar size */
-
-			comp->hsl->visible = 0;
-			comp->vsl->visible = 0;
-			fl_set_scrollbar_size( comp->hsl, comp->hsize );
-			fl_set_scrollbar_size( comp->vsl, comp->vsize );
-
-			comp->hsl->visible = comp->h_on;
-			comp->vsl->visible = comp->v_on;
-
-			if ( comp->h_on )
-				np = FL_crnd(   fl_get_scrollbar_value( comp->hsl )
-							  * ( MaxPixels( sp ) - sp->w ) );
-			fli_set_textbox_xoffset( comp->tb, np );
-
 			draw_dead_area( ob, comp );
 			/* fall through */
 
@@ -314,7 +253,6 @@ handle_browser( FL_OBJECT * ob,
 			break;
 
 		case FL_FREEMEM:
-			/* children take care of themselves */
 			fl_free( comp );
 			break;
     }
@@ -355,7 +293,6 @@ redraw_scrollbar( FL_OBJECT * ob )
 
     if ( comp->attrib )
     {
-		( ( FLI_TEXTBOX_SPEC * ) comp->tb->spec )->attrib = 1;
 		fl_redraw_object( comp->vsl );
 		fl_redraw_object( comp->hsl );
 		fl_redraw_object( comp->tb );
@@ -374,22 +311,13 @@ hcb( FL_OBJECT * obj,
 	 long        data  FL_UNUSED_ARG )
 {
     FLI_BROWSER_SPEC *comp = obj->parent->spec;
-    FLI_TEXTBOX_SPEC *sp = comp->tb->spec;
-	FL_Coord np = 0;
-
-	if ( comp->h_on )
-		np = FL_crnd(   fl_get_scrollbar_value( comp->hsl )
-					  * ( MaxPixels( sp ) - sp->w ) );
-
-    np = fli_set_textbox_xoffset( comp->tb, np );
-
-    if ( comp->hcb )
-		comp->hcb( obj->parent, np, comp->hcb_data );
+	double hp = fli_tbox_set_rel_xoffset( comp->tb,
+										  fl_get_scrollbar_value( comp->hsl ) );
 
 	if ( obj->returned & FL_RETURN_END )
 		obj->parent->returned |= FL_RETURN_END;
 
-	if ( np != comp->old_np )
+	if ( hp != comp->old_hp )
 		obj->parent->returned |= FL_RETURN_CHANGED;
 
 	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
@@ -398,7 +326,11 @@ hcb( FL_OBJECT * obj,
 			obj->parent->returned = FL_RETURN_NONE;
 
 	if ( obj->parent->returned & FL_RETURN_END )
- 		comp->old_np = np;
+ 		comp->old_hp = hp;
+
+	if ( obj->returned & FL_RETURN_CHANGED && comp->hcb )
+		comp->hcb( obj->parent, fli_tbox_get_topline( comp->tb ) + 1,
+				   comp->hcb_data );
 }
 
 
@@ -410,22 +342,13 @@ vcb( FL_OBJECT * obj,
 	 long        data  FL_UNUSED_ARG )
 {
     FLI_BROWSER_SPEC *comp = obj->parent->spec;
-    FLI_TEXTBOX_SPEC *sp = comp->tb->spec;
-    int nl = 0;
-
-	if ( comp->v_on )
-		nl = FL_nint(   fl_get_scrollbar_value( comp->vsl )
-					  * ( sp->lines - sp->screenlines ) ) + 1;
-
-    nl = fli_set_textbox_topline( comp->tb, nl );
-
-    if ( comp->vcb )
-		comp->vcb( obj->parent, nl, comp->vcb_data );
+	double vp = fli_tbox_set_rel_yoffset( comp->tb,
+										  fl_get_scrollbar_value( comp->vsl ) );
 
 	if ( obj->returned & FL_RETURN_END )
 		obj->parent->returned |= FL_RETURN_END;
 
-	if ( nl != comp->old_nl )
+	if ( vp != comp->old_vp )
 		obj->parent->returned |= FL_RETURN_CHANGED;
 
 	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
@@ -434,26 +357,53 @@ vcb( FL_OBJECT * obj,
 			obj->parent->returned = FL_RETURN_NONE;
 
 	if ( obj->parent->returned & FL_RETURN_END )
- 		comp->old_nl = nl;
+ 		comp->old_vp = vp;
+
+	if ( obj->returned & FL_RETURN_CHANGED && comp->vcb )
+		comp->vcb( obj->parent, fli_tbox_get_topline( comp->tb ) + 1,
+				   comp->vcb_data );
 }
 
 
 /***************************************
  * Textbox callback routine, we simply pass the return value of the
- * textbox on as the parents new return value
+ * textbox on as the parents new return value after a readjustment of
+ * the scollbars.
  ***************************************/
 
 static void
 tbcb( FL_OBJECT * obj,
 	  long        data  FL_UNUSED_ARG )
 {
-	fprintf( stderr, "tbcb = %d\n", obj->returned );
+	FLI_BROWSER_SPEC *psp = obj->parent->spec;
+	double vp = fli_tbox_get_rel_yoffset( obj );
+	double hp = fli_tbox_get_rel_xoffset( obj );
+
+	if ( obj->returned & FL_RETURN_CHANGED )
+	{
+		if ( hp != psp->old_hp )
+		{
+			fl_set_scrollbar_value( psp->hsl, psp->old_hp = hp );
+			if ( psp->hcb )
+				psp->hcb( obj->parent, fli_tbox_get_topline( psp->tb ) + 1,
+						  psp->hcb_data );
+		}
+
+		if ( vp != psp->old_vp )
+		{
+			fl_set_scrollbar_value( psp->vsl, psp->old_vp = vp );
+			if ( psp->vcb )
+				psp->vcb( obj->parent, fli_tbox_get_topline( psp->tb ) + 1,
+						  psp->vcb_data );
+		}
+	}	
+
 	obj->parent->returned = obj->returned;
 }
 
 
 /***************************************
- * textbox dblclick callback
+ * Textbox dblclick callback
  ***************************************/
 
 static void
@@ -529,18 +479,6 @@ fli_get_default_scrollbarsize( FL_OBJECT * ob )
 /***************************************
  ***************************************/
 
-static void
-set_browser_return( FL_OBJECT * obj,
-					int         when )
-{
-    FLI_BROWSER_SPEC *sp = obj->spec;
-
-}
-
-
-/***************************************
- ***************************************/
-
 FL_OBJECT *
 fl_create_browser( int          type,
 				   FL_Coord     x,
@@ -556,30 +494,28 @@ fl_create_browser( int          type,
     ob = fl_make_object( FL_BROWSER, type, x, y, w, h, label,
 						 handle_browser );
 
-	ob->set_return = set_browser_return;
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
-    sp->tb = fli_create_textbox( type, x, y, w, h, NULL );
+    sp->tb = fli_create_tbox( type, x, y, w, h, NULL );
 
 	sp->callback = NULL;
 	sp->hsize    = sp->vsize = sp->hval = sp->vval =
 	sp->hinc1    = sp->hinc2 = sp->vinc1 = sp->vinc2 = 0.0;
-	sp->hcb = sp->vcb = NULL;
+	sp->hcb      = sp->vcb = NULL;
 	sp->hcb_data = sp->vcb_data = NULL;
+	sp->old_hp   = sp->old_vp = 0.0;
 
     /* Copy browser attributes from textbox */
 
-    ob->boxtype    = sp->tb->boxtype;
-    ob->lcol       = sp->tb->lcol;
-    ob->align      = sp->tb->align;
-    ob->col1       = sp->tb->col1;
-    ob->col2       = sp->tb->col2;
-    ob->wantkey    = sp->tb->wantkey;
-
+    ob->boxtype  = sp->tb->boxtype;
+    ob->lcol     = sp->tb->lcol;
+    ob->align    = sp->tb->align;
+    ob->col1     = sp->tb->col1;
+    ob->col2     = sp->tb->col2;
 
     /* Textbox handlers */
  
 	fl_set_object_callback( sp->tb, tbcb, 0 );
-    fli_set_textbox_dblclick_callback( sp->tb, tb_dblcallback, 0 );
+    fli_tbox_set_dblclick_callback( sp->tb, tb_dblcallback, 0 );
     fl_set_object_posthandler( sp->tb, tbpost );
     fl_set_object_prehandler( sp->tb, tbpre );
 
@@ -602,14 +538,14 @@ fl_create_browser( int          type,
     fl_set_scrollbar_value( sp->hsl, 0.0 );
     sp->vsl->resize = FL_RESIZE_NONE;
 
-    fl_add_child( ob, sp->tb );
+    fl_add_child( ob, sp->tb  );
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
 
-	fl_set_object_return( ob, FL_RETURN_NONE );
-	fl_set_object_return( sp->hsl, FL_RETURN_END | FL_RETURN_CHANGED );
-	fl_set_object_return( sp->vsl, FL_RETURN_END | FL_RETURN_CHANGED );
-	fl_set_object_return( sp->tb, FL_RETURN_SELECTION | FL_RETURN_END_CHANGED );
+	fl_set_object_return( ob, FL_RETURN_SELECTION | FL_RETURN_DESELECTION );
+	fl_set_object_return( sp->hsl, FL_RETURN_ALWAYS );
+	fl_set_object_return( sp->vsl, FL_RETURN_ALWAYS );
+	fl_set_object_return( sp->tb, FL_RETURN_ALWAYS );
 
     return ob;
 }
@@ -629,6 +565,7 @@ fl_add_browser( int          type,
     FL_OBJECT *ob = fl_create_browser( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
+
     return ob;
 }
 
@@ -637,15 +574,18 @@ fl_add_browser( int          type,
  ***************************************/
 
 void
-fl_set_browser_vscrollbar( FL_OBJECT * ob,
+fl_set_browser_vscrollbar( FL_OBJECT * obj,
 						   int         on )
 {
-    FLI_BROWSER_SPEC *comp = ob->spec;
+    FLI_BROWSER_SPEC *comp = obj->spec;
 
     if ( comp->v_pref != on )
     {
 		comp->v_pref = on;
-		redraw_scrollbar( ob );
+		redraw_scrollbar( obj );
+		fli_tbox_react_to_vert( comp->tb, on != FL_OFF );
+		get_geometry( obj );
+		fl_redraw_object( obj );
     }
 }
 
@@ -654,15 +594,18 @@ fl_set_browser_vscrollbar( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_browser_hscrollbar( FL_OBJECT * ob,
+fl_set_browser_hscrollbar( FL_OBJECT * obj,
 						   int         on )
 {
-    FLI_BROWSER_SPEC *comp = ob->spec;
+    FLI_BROWSER_SPEC *comp = obj->spec;
 
     if ( comp->h_pref != on )
     {
 		comp->h_pref = on;
-		redraw_scrollbar( ob );
+		redraw_scrollbar( obj );
+		fli_tbox_react_to_hori( comp->tb, on != FL_OFF );
+		get_geometry( obj );
+		fl_redraw_object( obj );
     }
 }
 
@@ -703,7 +646,7 @@ fl_set_browser_vscroll_callback( FL_OBJECT                  * ob,
       FLI_BROWSER_SPEC *comp = ob->spec;
 
 	  comp->vcb = cb;
-      comp->hcb_data = data;
+      comp->vcb_data = data;
 }
 
 
@@ -739,7 +682,7 @@ fl_clear_browser( FL_OBJECT * ob )
 {
     FLI_BROWSER_SPEC *comp = ob->spec;
 
-    fli_clear_textbox( comp->tb );
+    fli_tbox_clear( comp->tb );
     fl_freeze_form( ob->form );
     fl_set_scrollbar_value( comp->hsl, 0.0 );
     fl_set_scrollbar_size( comp->hsl, 1.0 );
@@ -754,9 +697,11 @@ fl_clear_browser( FL_OBJECT * ob )
  ***************************************/
 
 FL_Coord
-fl_get_browser_xoffset( FL_OBJECT * ob )
+fl_get_browser_xoffset( FL_OBJECT * obj )
 {
-    return fli_get_textbox_xoffset( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb );
+	FLI_TBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) obj->spec )->tb->spec;
+
+	return sp->xoffset;
 }
 
 
@@ -771,13 +716,8 @@ fl_set_browser_xoffset( FL_OBJECT * ob,
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-    /* Do stuff only if we need to */
-
-    if ( fli_get_textbox_longestline( sp->tb ) > sp->tb->w )
-    {
-		fli_set_textbox_xoffset( sp->tb, npixels );
-		redraw_scrollbar( ob );
-    }
+	fli_tbox_set_xoffset( sp->tb, npixels );
+	redraw_scrollbar( ob );
 }
 
 
@@ -790,7 +730,7 @@ fl_set_browser_topline( FL_OBJECT * ob,
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-    fli_set_textbox_topline( sp->tb, topline );
+    fli_tbox_set_topline( sp->tb, topline - 1 );
 	redraw_scrollbar( ob );
 }
 
@@ -802,7 +742,7 @@ void
 fl_select_browser_line( FL_OBJECT * ob,
 						int         line )
 {
-    fli_select_textbox_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, line, 0 );
+    fli_tbox_select_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, line - 1 );
 }
 
 
@@ -813,7 +753,7 @@ void
 fl_addto_browser( FL_OBJECT  * ob,
 				  const char * text )
 {
-    fli_addto_textbox( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, text );
+    fli_tbox_add_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, text );
     redraw_scrollbar( ob );
 }
 
@@ -826,8 +766,8 @@ fl_insert_browser_line( FL_OBJECT  * ob,
 						int          linenumb,
 						const char * newtext )
 {
-    fli_insert_textbox_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
-							 linenumb, newtext );
+    fli_tbox_insert_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
+						  linenumb - 1, newtext );
     redraw_scrollbar( ob );
 }
 
@@ -839,8 +779,8 @@ void
 fl_delete_browser_line( FL_OBJECT * ob,
 						int         linenumb )
 {
-    fli_delete_textbox_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
-							 linenumb );
+    fli_tbox_delete_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
+						  linenumb - 1 );
     redraw_scrollbar( ob );
 }
 
@@ -853,8 +793,8 @@ fl_replace_browser_line( FL_OBJECT  * ob,
 						 int          linenumb,
 						 const char * newtext )
 {
-    fli_replace_textbox_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
-							  linenumb, newtext );
+    fli_tbox_replace_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
+						   linenumb - 1, newtext );
     redraw_scrollbar( ob );
 }
 
@@ -866,8 +806,8 @@ const char *
 fl_get_browser_line( FL_OBJECT * ob,
 					 int         linenumb )
 {
-    return fli_get_textbox_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
-								 linenumb );
+    return fli_tbox_get_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
+							  linenumb - 1 );
 }
 
 
@@ -875,11 +815,11 @@ fl_get_browser_line( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_get_browser_maxline( FL_OBJECT * ob )
+fl_get_browser_maxline( FL_OBJECT * obj )
 {
-	FLI_BROWSER_SPEC *sp = ob->spec;
+	FLI_BROWSER_SPEC *sp = obj->spec;
 
-    return ( ( FLI_TEXTBOX_SPEC * ) sp->tb->spec )->lines;
+    return ( ( FLI_TBOX_SPEC * ) sp->tb->spec )->num_lines;
 }
 
 
@@ -890,7 +830,7 @@ void
 fl_deselect_browser_line( FL_OBJECT * ob,
 						  int         line )
 {
-    fli_deselect_textbox_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, line );
+    fli_tbox_deselect_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, line - 1 );
 }
 
 
@@ -900,7 +840,7 @@ fl_deselect_browser_line( FL_OBJECT * ob,
 void
 fl_deselect_browser( FL_OBJECT * ob )
 {
-    fli_deselect_textbox( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb );
+    fli_tbox_deselect( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb );
 }
 
 
@@ -911,7 +851,8 @@ int
 fl_isselected_browser_line( FL_OBJECT * ob,
 							int         line )
 {
-    return fli_isselected_textbox_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, line );
+    return fli_tbox_is_line_selected( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
+									  line - 1 );
 }
 
 
@@ -921,11 +862,7 @@ fl_isselected_browser_line( FL_OBJECT * ob,
 int
 fl_get_browser( FL_OBJECT * ob )
 {
-    if ( ! ob || ob->objclass != FL_BROWSER )
-		M_err( "fl_get_browser", "ob %s is not a browser",
-			   ob ? ob->label : "null" );
-
-    return fli_get_textbox( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb );
+    return fli_tbox_get_selection( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb );
 }
 
 
@@ -937,13 +874,10 @@ fl_set_browser_fontsize( FL_OBJECT * ob,
 						 int         size )
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
-    FLI_TEXTBOX_SPEC *tsp = sp->tb->spec;
 
-    if ( tsp->fontsize != size )
-    {
-		fli_set_textbox_fontsize( sp->tb, size );
-		redraw_scrollbar( ob );
-    }
+	fli_tbox_set_fontsize( sp->tb, size );
+	redraw_scrollbar( ob );
+	fl_redraw_object( ob );
 }
 
 
@@ -955,13 +889,10 @@ fl_set_browser_fontstyle( FL_OBJECT * ob,
 						  int         style )
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
-    FLI_TEXTBOX_SPEC *tsp = sp->tb->spec;
 
-    if ( tsp->fontstyle != style )
-    {
-		fli_set_textbox_fontstyle( sp->tb, style );
-		redraw_scrollbar( ob );
-    }
+	fli_tbox_set_fontstyle( sp->tb, style );
+	redraw_scrollbar( ob );
+	fl_redraw_object( ob );
 }
 
 
@@ -972,8 +903,12 @@ int
 fl_get_browser_topline( FL_OBJECT * ob )
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
+	int line = fli_tbox_get_topline( sp->tb );
 
-    return ( ( FLI_TEXTBOX_SPEC * ) sp->tb->spec )->topline;
+	if ( line < fl_get_browser_maxline( sp->tb ) )
+		 line++;
+
+	return line;
 }
 
 
@@ -985,7 +920,7 @@ fl_load_browser( FL_OBJECT  * ob,
 				 const char * f )
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
-    int status = fli_load_textbox( sp->tb, f );
+    int status = fli_tbox_load( sp->tb, f );
 
     redraw_scrollbar( ob );
     return status;
@@ -1001,7 +936,7 @@ fl_add_browser_line( FL_OBJECT  * ob,
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-    fli_add_textbox_line( sp->tb, newtext );
+    fli_tbox_add_line( sp->tb, newtext );
     redraw_scrollbar( ob );
 }
 
@@ -1059,15 +994,18 @@ fl_set_browser_scrollbarsize( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_get_browser_dimension( FL_OBJECT * ob,
+fl_get_browser_dimension( FL_OBJECT * obj,
 						  FL_Coord  * x,
 						  FL_Coord  * y,
 						  FL_Coord  * w,
 						  FL_Coord  * h )
 {
-    FLI_BROWSER_SPEC *sp = ob->spec;
+	FLI_TBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) obj->spec )->tb->spec;
 
-    fli_get_textbox_dimension( sp->tb, x, y, w, h );
+	*x = sp->x;
+	*y = sp->y;
+	*w = sp->w;
+	*h = sp->h;
 }
 
 
@@ -1079,7 +1017,7 @@ fl_set_browser_line_selectable( FL_OBJECT * ob,
 								int         line,
 								int         flag )
 {
-    fli_set_textbox_line_selectable( ob, line, flag );
+    fli_tbox_make_line_selectable( ob, line - 1, flag );
 }
 
 
@@ -1092,26 +1030,21 @@ fl_addto_browser_chars( FL_OBJECT  * ob,
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-    fli_addto_textbox_chars( sp->tb, str );
+    fli_tbox_add_chars( sp->tb, str );
     redraw_scrollbar( ob );
 }
 
 
 /***************************************
- * The following accesses the TEXTBOX spec directly
- ***************************************/
-
-
-/***************************************
- * If the browser is not shown yet, this won't be correct
+ * Returns an approimation of the number of lines shown in the browser
  ***************************************/
 
 int
 fl_get_browser_screenlines( FL_OBJECT * ob )
 {
-    FLI_TEXTBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb->spec;
+	FLI_TBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb->spec;
 
-    return sp->screenlines;
+    return sp->h / sp->def_height;
 }
 
 
@@ -1123,11 +1056,9 @@ void
 fl_set_browser_specialkey( FL_OBJECT * ob,
 						   int         specialkey )
 {
-    FLI_TEXTBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb->spec;
+    FLI_TBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb->spec;
 
-    sp->specialkey = specialkey;
-    sp->attrib = 1;
-    fl_redraw_object( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb );
+	sp->specialkey = specialkey;
 }
 
 
@@ -1137,14 +1068,9 @@ fl_set_browser_specialkey( FL_OBJECT * ob,
 
 void
 fl_show_browser_line( FL_OBJECT * ob,
-					  int         j )
+					  int         line )
 {
-    FLI_TEXTBOX_SPEC *sp = ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb->spec;
-    int top = sp->topline;
-    int total = sp->screenlines;
-
-    if ( j < top || j > top + total - 1 )
-		fl_set_browser_topline( ob, j - total / 2 );
+	fli_tbox_set_centerline( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, line );
 }
 
 

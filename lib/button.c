@@ -456,6 +456,7 @@ handle_it( FL_OBJECT * obj,
 			}
 			sp->mousebut = FL_SHORTCUT + key;
 			ret |= FL_RETURN_END | FL_RETURN_CHANGED;
+			break;
 
 		case FL_FREEMEM:
 			if ( ( cleanup = lookup_cleanupfunc( obj->objclass ) ) )

@@ -254,7 +254,8 @@ fl_hide_choice( void )
     {
 		if ( default_choice <= 0 || default_choice > 3 )
 			default_choice = 1;
-		fli_object_qenter( fd_choice->but[ default_choice ] );
+
+		fl_trigger_object( fd_choice->but[ default_choice ] );
     }
 }
 

@@ -28,7 +28,7 @@
 #ifndef PBROWSER_H_
 #define PBROWSER_H_
 
-#include "private/ptextbox.h"
+#include "private/ptbox.h"
 
 
 typedef struct {
@@ -60,8 +60,8 @@ typedef struct {
 	                             vcb;
     void                       * hcb_data,
 	                           * vcb_data;
-	int                          old_nl;
-	FL_Coord                     old_np;                          
+	double                     old_vp;
+	double                     old_hp;                          
 } FLI_BROWSER_SPEC;
 
 #endif

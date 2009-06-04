@@ -102,7 +102,7 @@ libforms_la_SOURCES = \
 	symbols.c \
 	sysdep.c \
 	tabfolder.c \
-	textbox.c \
+	tbox.c \
 	text.c \
 	thumbwheel.c \
 	timeout.c \

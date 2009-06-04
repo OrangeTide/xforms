@@ -29,7 +29,7 @@
 
 /*
  * Please note: this object is for internal use only (as a child object
- * of a browser object)!
+ * of a browser object)
  */
 
 #ifdef HAVE_CONFIG_H
@@ -160,34 +160,24 @@ delete_line( FL_OBJECT * ob,
 
 
 /***************************************
+ * Allocate memory for a new set of lines
  ***************************************/
+
+#define LINE_INCR 100
 
 static void
 extend_textbox( FL_OBJECT * ob )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
-    int i,
-		newline;
+    int i;
 
-    if ( sp->lines < sp->avail_lines - 1 )
-		return;
+	sp->text = fl_realloc( sp->text,
+						   ( sp->avail_lines + LINE_INCR ) * sizeof *sp->text );
 
-    if ( sp->avail_lines == 0 )
-    {
-		sp->avail_lines = 100;
-		sp->text = fl_malloc( sp->avail_lines * sizeof *sp->text );
+	for ( i = sp->avail_lines; i < sp->avail_lines + LINE_INCR; i++ )
+		sp->text[ i ] = NULL;
 
-		for ( i = 0; i < sp->avail_lines; i++ )
-			sp->text[ i ] = NULL;
-    }
-    else
-    {
-		newline = sp->avail_lines + 200;
-		sp->text = fl_realloc( sp->text, newline * sizeof *sp->text );
-		for ( i = sp->avail_lines; i < newline; i++ )
-			sp->text[i] = NULL;
-		sp->avail_lines = newline;
-    }
+	sp->avail_lines += LINE_INCR;
 }
 
 
@@ -203,14 +193,18 @@ insert_line( FL_OBJECT  * ob,
     FLI_TEXTBOX_SPEC *sp = ob->spec;
     LINE *currline;
 
-    extend_textbox( ob );
+    if ( sp->lines < sp->avail_lines - 1 )
+		extend_textbox( ob );
 
     sp->lines++;
 
-    /* Create new line if required */
+    /* Get memory for the new line if required */
 
-    if ( sp->text[ sp->lines ] == NULL )
+    if ( ! sp->text[ sp->lines ] )
+	{
 		sp->text[ sp->lines ] = fl_calloc( 1, sizeof **sp->text );
+		sp->text[ sp->lines ]->txt = NULL;
+	}
 
     /* Shift lines */
 
@@ -252,7 +246,6 @@ insert_line( FL_OBJECT  * ob,
 
     if ( sp->selectline >= linenumb )
 		sp->selectline++;
-
 }
 
 
@@ -329,8 +322,8 @@ replace_line( FL_OBJECT  * ob,
 /******************************** DRAWING ********************************/
 
 
-#define FLTopMargin      ( FL_abs( ob->bw ) + 2 )
-#define YtoLine( y )     ( ( y - FLTopMargin ) / charheight )
+#define TopMargin        ( FL_abs( ob->bw ) + 2 )
+#define YtoLine( y )     ( ( y - TopMargin ) / charheight )
 
 
 /***************************************
@@ -363,7 +356,7 @@ fli_calc_textbox_size( FL_OBJECT * ob )
     sp->charheight = fl_get_char_height( sp->fontstyle, sp->fontsize,
 										 &junk, &sp->chardesc );
     sp->w = ob->w - 3 * bw - 1;
-    sp->h = ob->h - bw - FLTopMargin - 1;
+    sp->h = ob->h - bw - TopMargin - 1;
 
     if ( sp->h <= 0 )
 		sp->h = 1;
@@ -384,9 +377,9 @@ calc_textarea( FL_OBJECT * ob )
     /* Total textbox drawing area, to be adjusted for scrollbars */
 
     sp->x = ob->x + bw + 1;
-    sp->y = ob->y + FLTopMargin;
+    sp->y = ob->y + TopMargin;
     sp->w = ob->w - 3 * bw - 1;
-    sp->h = ob->h - bw - FLTopMargin - 1;
+    sp->h = ob->h - bw - TopMargin - 1;
 
     if ( sp->h <= 0 )
 		sp->h = 1;
@@ -426,10 +419,6 @@ prepare_redraw( FL_OBJECT        * ob,
     y = sp->y;
     w = sp->w;
     h = sp->h;
-
-#if FL_DEBUG >= ML_DEBUG
-    M_info( "DrawPrepare", "x=%d y=%d w=%d h=%d", sp->x, sp->y, sp->w, sp->h );
-#endif
 
     /* x, y can conceivably change in fdesign */
 
@@ -572,7 +561,6 @@ draw_textline( FL_OBJECT * ob,
     GC activeGC = sp->primaryGC;
     int has_special = 0,
 		len;
-    int dx = sp->xoffset;
 
     /* Draw the selection box if required */
 
@@ -682,7 +670,8 @@ draw_textline( FL_OBJECT * ob,
 
 			case '-' :
 				fl_drw_text( 0, xx - 3, yy - ascend, ww + 2, sp->charheight,
-							 FL_COL1, 0, 10, "@DnLine" );
+							 FL_COL1, FL_NORMAL_STYLE, FL_SMALL_SIZE,
+							 "@DnLine" );
 				str = " ";
 				len = 1;
 				has_special = 0;
@@ -731,14 +720,14 @@ draw_textline( FL_OBJECT * ob,
 		XSetForeground( flx->display, activeGC, fl_get_flcolor( FL_WHITE ) );
     }
 
-    fli_drw_stringTAB( FL_ObjWin( ob ), activeGC, xx - dx, yy, style, size,
-					   str, len, 0 );
+    fli_drw_stringTAB( FL_ObjWin( ob ), activeGC, xx - sp->xoffset, yy,
+					   style, size, str, len, 0 );
 }
 
 
 /***************************************
  * Do a complete redraw of the browser. This only happens with first
- * draw, or when font/size or other attributes changed. Slider movement
+ * draw or when font/size or other attributes changed. Slider movement
  * and selections are handled by other routines
  ***************************************/
 
@@ -779,7 +768,7 @@ draw_textbox( FL_OBJECT * ob )
 
 /***************************************
  * Slider moved. We simple blit the "scroll region" to its new position
- * and redraw only the lines that just come into view. However, special
+ * and redraw only the lines that just came into view. However, special
  * provision should be made where blit might not perform well as this
  * routine is callable by application program via set_topline.
  ***************************************/
@@ -807,10 +796,6 @@ draw_slider_motion( FL_OBJECT * ob )
     correct_topline( ob );
 
     delta = sp->oldtopline - sp->topline;
-
-#if FL_DEBUG >= ML_DEBUG
-    M_info( "SliderMotion", "Delta=%d", delta );
-#endif
 
     /* Since the user can influence the topline, blit is not always faster
 	   or appropriate. Set threshold to about 2/3 of the visible lines */
@@ -896,11 +881,6 @@ draw_selection( FL_OBJECT * ob )
     correct_topline( ob );
     charh = sp->charheight;
 
-#if FL_DEBUG >= ML_DEBUG
-    M_info( "DrawSelect", "selected=%d deselected=%d top=%d",
-			sp->selectline, sp->desel_mark, sp->topline );
-#endif
-
     yy += charh - sp->chardesc;
     sel = sp->selectline - sp->topline;
     if ( sel >= 0 && sel < sp->screenlines )
@@ -942,8 +922,8 @@ handle_missed_selection( FL_OBJECT * ob,
 			ns = sp->text[ k ]->non_selectable;
 			sp->text[ k ]->selected = ! ns;
 			sp->selectline = k;
-			fli_object_qenter( ob );
-			fli_object_qread( );
+//			fli_object_qenter( ob );
+//			fli_object_qread( );
 		}
     }
     else
@@ -953,8 +933,8 @@ handle_missed_selection( FL_OBJECT * ob,
 			ns = sp->text[ k ]->non_selectable;
 			sp->text[ k ]->selected = ! ns;
 			sp->selectline = k;
-			fli_object_qenter( ob );
-			fli_object_qread( );
+//			fli_object_qenter( ob );
+//			fli_object_qread( );
 		}
     }
 }
@@ -978,8 +958,8 @@ handle_missed_deselection( FL_OBJECT * ob,
 			sp->text[ k ]->selected = 0;
 			sp->selectline = - k;
 			sp->desel_mark = k;
-			fli_object_qenter( ob );
-			fli_object_qread( );
+//			fli_object_qenter( ob );
+//			fli_object_qread( );
 		}
     }
     else
@@ -989,8 +969,8 @@ handle_missed_deselection( FL_OBJECT * ob,
 			sp->text[ k ]->selected = 0;
 			sp->selectline = - k;
 			sp->desel_mark = k;
-			fli_object_qenter( ob );
-			fli_object_qread( );
+//			fli_object_qenter( ob );
+//			fli_object_qread( );
 		}
     }
 }
@@ -1000,7 +980,6 @@ enum {
     NOEVENT,
 	SELECTEVENT,
 	DESELECTEVENT,
-	PAGEEVENT
 };
 
 
@@ -1021,8 +1000,7 @@ handle_mouse( FL_OBJECT    * ob,
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
     float charheight = sp->charheight;
-    int screenlines;		/* lines on screen */
-    int line;			    /* new number of lines */
+    int line;
 
     /* Check whether there are any lines */
 
@@ -1032,43 +1010,45 @@ handle_mouse( FL_OBJECT    * ob,
     /* Compute possible slider position change */
 
     correct_topline( ob );
-    screenlines = sp->screenlines;
+
+	/* A normal textbox doesn't react to the mouse at all */
 
 	if ( ob->type == FLI_NORMAL_TEXTBOX )
 		return FL_RETURN_NONE;
 
-    /* Determine the type of event */
+	/* Figure out the index of the line the mouse is on */
+
+	line = sp->topline + ( my - ob->y - TopMargin ) / charheight;
+
+	if ( line < sp->topline )
+		line = sp->topline;
+	if ( line >= sp->topline + sp->screenlines )
+		line = sp->topline + sp->screenlines - 1;
+	if ( line > sp->lines )
+		line = sp->lines;
+
+	/* Nothing to be done if the line isn't selectable */
+
+	if ( sp->text[ line ]->non_selectable )
+		return FL_RETURN_NONE;
+
+    /* Determine the type of event if we arrive here after a mouse push */
 
     if ( event_type == NOEVENT )
     {
-		event_type = SELECTEVENT;
-		line = sp->topline + ( my - ob->y - FLTopMargin ) / charheight;
-		if (    ob->type == FLI_MULTI_TEXTBOX
-			 && line >= 1 && line <= sp->lines
-			 && line < sp->topline + screenlines
-			 && sp->text[line]->selected )
+		if (    (    ob->type == FLI_MULTI_TEXTBOX
+				  || ob->type == FLI_HOLD_TEXTBOX )
+			 && sp->text[ line ]->selected )
 			event_type = DESELECTEVENT;
+		else
+			event_type = SELECTEVENT;
     }
 
     /* Handle the event */
 
-	line = sp->topline + ( my - ob->y - FLTopMargin ) / charheight;
-
-	if ( line < sp->topline )
-		line = sp->topline;
-
-	if ( line >= sp->topline + screenlines )
-		line = sp->topline + screenlines - 1;
-	if ( line > sp->lines )
-		line = sp->lines;
-
 	if ( event_type == SELECTEVENT )
 	{
-		/* If select a line that is already been selected, do nothing */
-
 		if ( sp->text[ line ]->selected )
-			return ob->type != FLI_MULTI_TEXTBOX;
-		if (sp->text[ line ]->non_selectable )
 			return FL_RETURN_NONE;
 
 		sp->drawtype = SELECTION;
@@ -1095,7 +1075,7 @@ handle_mouse( FL_OBJECT    * ob,
 			sp->drawtype = FULL;
 		}
 
-		sp->text[line]->selected = 1;
+		sp->text[ line ]->selected = 1;
 		sp->selectline = line;
 	}
 	else
@@ -1228,11 +1208,13 @@ handle_textbox( FL_OBJECT * ob,
 				void      * xev )
 {
     FLI_TEXTBOX_SPEC *sp = ob->spec;
+	int ret = FL_RETURN_NONE;
 
     /* Wheel mouse hack */
 
-    if ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-		return fli_handle_mouse_wheel( &ev, &key, xev );
+	if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+		 && ! fli_handle_mouse_wheel( &ev, &key, xev ) )
+		return ret;
 
     switch ( ev )
     {
@@ -1276,21 +1258,35 @@ handle_textbox( FL_OBJECT * ob,
 			/* fall through */
 
 		case FL_UPDATE :
+			/* Don't do anything if the mouse is within the textbox and hasn't
+			   changed its position in vertical direction since the last
+			   update event */
+
 			if ( my == sp->lastmy && my > ob->y && my < ob->y + ob->h - 1 )
 				break;
 
+			/* If we're in the process of selecting and the mouse has been
+			   moved above or below the textbox scroll in that direction */
+
 			if ( event_type == SELECTEVENT || event_type == DESELECTEVENT )
 			{
+				int old_selectline = sp->selectline;
+				int old_topline = sp->topline;
+
 				if ( my < ob->y )
 					fl_set_browser_topline( ob->parent, sp->topline - 1 );
 				else if ( my > ob->y + ob->h )
 					fl_set_browser_topline( ob->parent, sp->topline + 1 );
+
+				if ( old_selectline != sp->selectline )
+					ret |= FL_RETURN_SELECTION;
+				if ( old_topline != sp->topline )
+					ret |= FL_RETURN_CHANGED;
 			}
 
 			if ( handle_mouse( ob, mx, my, xev ) )
 				sp->status_changed = 1;
 
-			sp->lastmx = mx;
 			sp->lastmy = my;
 
 			if ( sp->status_changed && ob->type == FL_MULTI_BROWSER )
@@ -1299,9 +1295,6 @@ handle_textbox( FL_OBJECT * ob,
 				return 1;
 			}
 			break;
-
-		case FL_KEYPRESS :
-			return handle_keyboard( ob, key );
 
 		case FL_RELEASE :
 			sp->lastmy = -1;
@@ -1319,10 +1312,13 @@ handle_textbox( FL_OBJECT * ob,
 				sp->callback( ob, sp->callback_data );
 			break;
 
+		case FL_KEYBOARD :
+			ret = handle_keyboard( ob, key );
+			break;
+
 		case FL_FREEMEM :
 			free_spec( sp );
-			fl_free( sp );
-			ob->spec = NULL;
+			fl_safe_free( sp );
 			break;
 
 		case FL_OTHER :
@@ -1339,7 +1335,7 @@ handle_textbox( FL_OBJECT * ob,
 			break;
     }
 
-    return FL_RETURN_NONE;
+    return ret;
 }
 
 
@@ -1376,15 +1372,16 @@ fli_create_textbox( int          type,
     sp->charheight = fl_get_char_height( sp->fontstyle, sp->fontsize,
 										 &junk, &sp->chardesc );
     calc_textarea( ob );
-    sp->lines = 0;
-    sp->topline = 1;
+	sp->text       = NULL;
+    sp->lines      = 0;
+    sp->topline    = 1;
     sp->specialkey = '@';
     sp->avail_lines = 0;
-	sp->primaryGC = 0;
+	sp->primaryGC   = 0;
 	sp->status_changed = 0;
+	sp->lastmy      = -1;
 
     fl_set_object_dblbuffer( ob, 1 );
-    extend_textbox( ob );
 
 	/* Per default the object never gets returned, user must change that */
 
@@ -1449,11 +1446,11 @@ fli_clear_textbox( FL_OBJECT * ob )
     if ( sp->lines == 0 && sp->attrib == 0 )
 		return;
 
-    sp->lines = 0;
-    sp->topline = 1;
+    sp->lines      = 0;
+    sp->topline    = 1;
     sp->selectline = 0;
-    sp->attrib = 1;
-    sp->maxpixels = sp->xoffset = 0;
+    sp->attrib     = 1;
+    sp->maxpixels  = sp->xoffset = 0;
 
 	fl_set_scrollbar_value( br->vsl, 0.0 );
 	fl_set_scrollbar_value( br->hsl, 0.0 );
@@ -1465,8 +1462,12 @@ fli_clear_textbox( FL_OBJECT * ob )
 			fl_free( sp->text[ i ]->txt );
 			fl_free( sp->text[ i ] );
 		}
+
 		sp->text[ i ] = NULL;
     }
+
+	fl_safe_free( sp->text );
+	sp->avail_lines = 0;
 
     fl_redraw_object( ob );
 }
@@ -2074,7 +2075,9 @@ textwidth( FLI_TEXTBOX_SPEC * sp,
 
 
 /***************************************
- * mouse wheel hack
+ * Mouse wheel hack - the (release) event is converted to a
+ * key event that results in the same changes as the mouse
+ * wheel event is to produce
  ***************************************/
 
 int
@@ -2082,12 +2085,12 @@ fli_handle_mouse_wheel( int       * ev,
 						int       * key,
 						void      * xev )
 {
-    if ( *ev == FL_PUSH && *key >= FL_MBUTTON4 )
-		return 0;
+    if ( *ev == FL_PUSH )
+        return 0;
 
-    if ( *ev == FL_RELEASE && *key >= FL_MBUTTON4 )
-    {
-		*ev = FL_KEYPRESS;
+	if ( *ev == FL_RELEASE )
+	{
+		*ev = FL_KEYBOARD;
 
 		if ( xev && shiftkey_down( ( ( XButtonEvent * ) xev )->state ) )
 		{
@@ -2103,7 +2106,7 @@ fli_handle_mouse_wheel( int       * ev,
 		}
 		else
 			*key = *key == FL_MBUTTON4 ? FLI_HALFPAGE_UP : FLI_HALFPAGE_DOWN;
-    }
+	}
 
     return 1;
 }

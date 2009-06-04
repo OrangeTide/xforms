@@ -1295,8 +1295,9 @@ handle_it( FL_OBJECT * obj,
     int ret = FL_RETURN_NONE,
 		val;
 
-    if ( fli_handle_mouse_wheel( &event, &key, ev ) == 0 )
-		return 0;
+	if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+		 && ! fli_handle_mouse_wheel( &event, &key, ev ) )
+		return ret;
 
     switch ( event )
     {

@@ -1620,7 +1620,7 @@ fli_do_radio_push( FL_OBJECT * obj,
 		return;
 
     /* If this radio button does not belong to any group we have to search
-	   the entire form, otherwise just the members of the group */
+	   the entire form, otherwise just treat the members of the group */
 
     if ( obj->group_id == 0 )
 	{

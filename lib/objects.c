@@ -2437,11 +2437,13 @@ fli_handle_object( FL_OBJECT * obj,
 		return;
 
 	/* If 'enter_it' is set the object is inserted into the object queue and
-	   it's 'returned' member is modified. If not just the handler for
-	   the obkect is called, but it doesn't appear in the queue and the
-	   'returned' member remains unmodified. */
+	   it's 'returned' member is modified. If not, just the handler for
+	   the object is called, but it doesn't appear in the queue and the
+	   'returned' member remains unmodified. Also don't enter the object
+	   into the queue if it's form doesn't exist or the forms window isn't
+	   mapped. */
 
-	if ( enter_it )
+	if ( enter_it && obj->form && obj->form->window )
 	{
 		if ( ( res = handle_it( obj, event, mx, my, key, xev, 0 ) ) )
 			fli_object_qenter( obj );

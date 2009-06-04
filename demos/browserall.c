@@ -88,7 +88,7 @@ deselect( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 static void
 set_size( FL_OBJECT * obj  FL_UNUSED_ARG,
-		  long        arg)
+		  long        arg )
 {
 	int i;
 
@@ -102,7 +102,7 @@ set_size( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 static void
 set_style( FL_OBJECT * obj  FL_UNUSED_ARG,
-		   long        arg)
+		   long        arg )
 {
 	int i;
 
@@ -122,8 +122,6 @@ br_callback( FL_OBJECT * ob,
     const char *mb[ ] = { "left", "middle", "right",
 						  "scroll-up", "scroll-down" };
     int i;
-
-	fprintf( stderr, "br_callback with %d\n", ob->returned );
 
     if (    ( i = fl_mouse_button( ) ) >= FL_LEFT_MOUSE
 		 && i <= FL_SCROLLDOWN_MOUSE )
@@ -178,9 +176,8 @@ link_browsers( FL_OBJECT * ob,
 			fl_set_browser_topline( br[ i ], topline );
 			fl_set_browser_vscrollbar( br[ i ], FL_OFF );
 		}
+
        fl_set_browser_vscroll_callback( br[ 0 ], vcallback, 0 );
-
-
     }
     else
     {
@@ -211,24 +208,20 @@ create_form( void )
 	br[ 0 ] = obj = fl_add_browser( FL_NORMAL_BROWSER, 20, 120, 150, 290,
 									bnames[ 0 ] );
     fl_set_object_callback( obj, br_callback, 0 );
-	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
 	br[ 1 ] = obj = fl_add_browser( FL_SELECT_BROWSER, 190, 120, 150, 290,
 									bnames[ 1 ] );
     fl_set_object_callback( obj, br_callback, 1 );
-	fl_set_object_return( obj, FL_RETURN_ALWAYS );
 
 	br[ 2 ] = obj = fl_add_browser( FL_HOLD_BROWSER, 360, 120, 150, 290,
 									bnames[ 2 ] );
     fl_set_object_color( obj, FL_COL1, FL_GREEN );
     fl_set_object_callback( obj, br_callback, 2 );
-	fl_set_object_return( obj, FL_RETURN_ALWAYS );
 
 	br[ 3 ] = obj = fl_add_browser( FL_MULTI_BROWSER, 530, 120, 150, 290,
 									bnames[ 3 ] );
     fl_set_object_color( obj,FL_COL1,FL_CYAN );
     fl_set_object_callback( obj, br_callback, 3 );
-	fl_set_object_return( obj, FL_RETURN_ALWAYS );
 
 	exitobj = fl_add_button( FL_NORMAL_BUTTON, 560, 510, 120, 30, "Exit" );
 
@@ -305,6 +298,6 @@ fill_browsers( void )
 				sprintf( buf, "@mLine with qb %3d", j );
 			else
 				sprintf( buf, "Line with qb %3d",j );
-			fl_add_browser_line( br[ i ],buf );
+			fl_add_browser_line( br[ i ], buf );
 		}
 }

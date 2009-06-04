@@ -254,7 +254,7 @@ void
 fl_hide_message( void )
 {
     if ( fd_msg )
-		fli_object_qenter( fd_msg->but );
+		fl_trigger_object( fd_msg->but );
 	else
 		M_warn( "fl_hide_message", "No message box is shown" );
 }

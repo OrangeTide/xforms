@@ -149,6 +149,7 @@ typedef enum {
 	FL_SELECT,             /* 41 */
 	FL_NMENU,              /* 42 */
 	FL_SPINNER,            /* 43 */
+	FL_TBOX,               /* 44 */
 	FL_CLASS_END		   /* sentinel */
 } FL_CLASS;
 
@@ -294,6 +295,7 @@ enum {
 	FL_RETURN_END          =    2,
 	FL_RETURN_END_CHANGED  =    4,
     FL_RETURN_SELECTION    =    8,
+    FL_RETURN_DESELECTION  =   16,
     FL_RETURN_TRIGGERED    = 1024,
 	FL_RETURN_ALWAYS       = ~ FL_RETURN_END_CHANGED
 };
@@ -1424,5 +1426,6 @@ FL_EXPORT int fl_msleep( unsigned long msec );
 typedef const char * ( * FL_VAL_FILTER )( FL_OBJECT *,
 										  double,
 										  int );
+
 
 #endif /* ! defined FL_BASIC_H */

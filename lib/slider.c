@@ -709,14 +709,15 @@ handle_release( FL_OBJECT * obj,
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * ob,
-		   int         event,
-		   FL_Coord    mx,
-		   FL_Coord    my,
-		   int         key,
-		   void      * ev )
+handle_slider( FL_OBJECT * ob,
+			   int         event,
+			   FL_Coord    mx,
+			   FL_Coord    my,
+			   int         key,
+			   void      * ev )
 {
     FLI_SLIDER_SPEC *sp = ob->spec;
+	int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
@@ -744,21 +745,23 @@ handle_it( FL_OBJECT * ob,
 			break;
 
 		case FL_MOTION:
-			return handle_motion( ob, mx, my, key, ev );
+			ret |= handle_motion( ob, mx, my, key, ev );
+			break;
 
 		case FL_PUSH:
-			return handle_push( ob, mx, my, key, ev );
+			ret |= handle_push( ob, mx, my, key, ev );
+			break;
 
 		case FL_UPDATE:
-			return handle_update( ob, mx, my, key );
+			ret |= handle_update( ob, mx, my, key );
 			break;
 
 		case FL_RELEASE:
-			return handle_release( ob, mx, my, key, ev );
-
+			ret |= handle_release( ob, mx, my, key, ev );
+			break;
     }
 
-    return FL_RETURN_NONE;
+    return ret;
 }
 
 
@@ -778,7 +781,7 @@ create_it( int          objclass,
     FL_OBJECT *ob;
     FLI_SLIDER_SPEC *sp;
 
-    ob = fl_make_object( objclass, type, x, y, w, h, label, handle_it );
+    ob = fl_make_object( objclass, type, x, y, w, h, label, handle_slider );
     ob->boxtype = FL_SLIDER_BOXTYPE;
     ob->col1    = FL_SLIDER_COL1;
     ob->col2    = FL_SLIDER_COL2;
@@ -804,8 +807,7 @@ create_it( int          objclass,
 	sp->ldelta      = 0.1;
 	sp->rdelta      = 0.05;
 
-    fl_set_object_dblbuffer( ob, 1	/* IS_FILL(ob->type) ||
-									   IS_NICE(ob->type) */ );
+    fl_set_object_dblbuffer( ob, 1 );
 
     return ob;
 }
