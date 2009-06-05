@@ -521,7 +521,7 @@ load_objclass_spec_info( FILE      * fp,
 
 
 /***************************************
- * emit (file scope) variable code
+ * Emit (file scope) variable code
  ***************************************/
 
 void
@@ -536,7 +536,7 @@ emit_objclass_spec_header( FILE      * fp,
 
 
 /***************************************
- * emit global variable declarations
+ * Emit global variable declarations
  ***************************************/
 
 void
@@ -577,7 +577,7 @@ has_class_spec_info( FL_OBJECT * ob )
 
 
 
-/* utilities */
+/* Utilities */
 
 /***************************************
  ***************************************/

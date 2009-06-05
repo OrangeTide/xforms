@@ -189,7 +189,7 @@ save_browser_attrib( FILE      * fp,
  */
 
 /***************************************
- * callbacks and freeobj handles for form browserattrib
+ * Callbacks and freeobj handles for form browserattrib
  ***************************************/
 
 void

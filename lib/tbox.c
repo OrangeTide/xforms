@@ -80,6 +80,7 @@ fli_create_tbox( int          type,
 	obj->want_update = 0;
 	obj->spec        = sp = fl_malloc( sizeof *sp );
 
+	sp->attrib        = 1;
 	sp->lines         = NULL;
 	sp->num_lines     = 0;
 	sp->callback      = NULL;
@@ -91,6 +92,9 @@ fli_create_tbox( int          type,
 		                fli_cntl.browserFontSize : FLI_TBOX_FONTSIZE;
     sp->def_style     = FL_NORMAL_STYLE;
 	sp->def_align     = FL_ALIGN_LEFT;
+	sp->def_col1      = obj->col1;
+	sp->def_col2      = obj->col2;
+	sp->def_lcol      = obj->lcol;
     sp->defaultGC     = None;
     sp->backgroundGC  = None;
     sp->selectGC      = None;
@@ -719,11 +723,10 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
 
 	sp->def_size = size;
 
+	sp->attrib = 1;
+
 	if ( sp->num_lines == 0 )
-	{
-		fli_tbox_prepare_drawing( obj );
 		return;
-	}
 
 	old_xrel = fli_tbox_get_rel_xoffset( obj );
 	old_yrel = fli_tbox_get_rel_yoffset( obj );
@@ -772,8 +775,6 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
 	sp->max_height =   sp->lines[ sp->num_lines - 1 ]->y
 		             + sp->lines[ sp->num_lines - 1 ]->h;
 
-	fli_tbox_prepare_drawing( obj );
-
 	tbox_do_not_redraw = 1;
 	fli_tbox_set_rel_xoffset( obj, old_xrel );
 	tbox_do_not_redraw = 1;
@@ -799,11 +800,10 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
 
 	sp->def_style = style;
 
+	sp->attrib = 1;
+
 	if ( sp->num_lines == 0 )
-	{
-		fli_tbox_prepare_drawing( obj );
 		return;
-	}
 
 	old_xrel = fli_tbox_get_rel_xoffset( obj );
 	old_yrel = fli_tbox_get_rel_yoffset( obj );
@@ -853,7 +853,7 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
 	sp->max_height =   sp->lines[ sp->num_lines - 1 ]->y
 		             + sp->lines[ sp->num_lines - 1 ]->h;
 
-	fli_tbox_prepare_drawing( obj );
+	sp->attrib = 1;
 
 	tbox_do_not_redraw = 1;
 	fli_tbox_set_rel_xoffset( obj, old_xrel );
@@ -1305,7 +1305,7 @@ create_gc( FL_OBJECT * obj,
 		XSetFont( flx->display, gc, xfs->fid );
 	}
 
-	fl_set_gc_clipping( gc, clip_x, clip_y, clip_w, clip_h );
+	fl_set_gc_clipping( gc, obj->x + clip_x, obj->y + clip_y, clip_w, clip_h );
 
 	return gc;
 }
@@ -1315,13 +1315,9 @@ create_gc( FL_OBJECT * obj,
  ***************************************/
 
 void
-fli_tbox_prepare_drawing( FL_OBJECT * obj )
+fli_tbox_recalc_area( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
-	int dummy;
-	int i;
-	double old_xrel = fli_tbox_get_rel_xoffset( obj );
-	double old_yrel = fli_tbox_get_rel_xoffset( obj );
 
     sp->x = FL_abs( obj->bw ) + LEFT_MARGIN;
     sp->y = FL_abs( obj->bw ) + TOP_MARGIN;
@@ -1338,6 +1334,22 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 		sp->w -= 2;
 		sp->h -= 2;
 	}
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+fli_tbox_prepare_drawing( FL_OBJECT * obj )
+{
+    FLI_TBOX_SPEC *sp = obj->spec;
+	int dummy;
+	int i;
+	double old_xrel = fli_tbox_get_rel_xoffset( obj );
+	double old_yrel = fli_tbox_get_rel_yoffset( obj );
+
+	fli_tbox_recalc_area( obj );
 
 	/* Calculate height of line with default font */
 
@@ -1363,7 +1375,7 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 	if ( sp->defaultGC )
 		XFreeGC( flx->display, sp->defaultGC );
 
-	sp->defaultGC = create_gc( obj, sp->def_style, sp->def_size, obj->lcol,
+	sp->defaultGC = create_gc( obj, sp->def_style, sp->def_size, sp->def_lcol,
 							   sp->x, sp->y, sp->w, sp->h );
 
 	/* Create background GC for redraw deselected lines */
@@ -1371,7 +1383,7 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 	if ( sp->backgroundGC )
 		XFreeGC( flx->display, sp->backgroundGC );
 
-	sp->backgroundGC = create_gc( obj, -1, 0, obj->col1,
+	sp->backgroundGC = create_gc( obj, -1, 0, sp->def_col1,
 								  sp->x - ( LEFT_MARGIN > 0 ),
 								  sp->y, sp->w + ( LEFT_MARGIN > 0 ), sp->h );
 
@@ -1381,7 +1393,8 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 		XFreeGC( flx->display, sp->selectGC );
 
 	sp->selectGC = create_gc( obj, -1, 0,
-							  fli_dithered( fl_vmode ) ? FL_BLACK : obj->col2,
+							  fli_dithered( fl_vmode ) ?
+							  FL_BLACK : sp->def_col2,
 							  sp->x - ( LEFT_MARGIN > 0 ), sp->y,
 							  sp->w + ( LEFT_MARGIN > 0 ), sp->h );
 
@@ -1503,7 +1516,8 @@ draw_tboxline( FL_OBJECT * obj,
 
 	XFillRectangle( flx->display, FL_ObjWin( obj ),
 					tl->selected ? sp->selectGC : sp->backgroundGC,
-					sp->x - ( LEFT_MARGIN > 0 ), sp->y + tl->y - sp->yoffset,
+					obj->x + sp->x - ( LEFT_MARGIN > 0 ),
+					obj->y + sp->y + tl->y - sp->yoffset,
 					sp->w + ( LEFT_MARGIN > 0 ), tl->h );
 
 	/* Separator lines obviously are to be treated differently from normal
@@ -1514,7 +1528,8 @@ draw_tboxline( FL_OBJECT * obj,
 		/* The extra horizontal pixels here are due to the function called
 		   subtracting them! */
 
-		fl_drw_text( 0, sp->x - 3, sp->y - sp->yoffset + tl->y + tl->h / 2,
+		fl_drw_text( 0, obj->x + sp->x - 3,
+					 obj->y + sp->y - sp->yoffset + tl->y + tl->h / 2,
 					 sp->w + 6, 1,
 					 FL_COL1, FL_NORMAL_STYLE, sp->def_size, "@DnLine" );
 		return;
@@ -1560,14 +1575,15 @@ draw_tboxline( FL_OBJECT * obj,
 	/* Now draw the line, underlined if necessary */
 
 	if ( tl->is_underlined )
-		fl_diagline( sp->x - sp->xoffset + tl->x,
-					 sp->y - sp->yoffset + tl->y + tl->h - 1,
+		fl_diagline( obj->x + sp->x - sp->xoffset + tl->x,
+					 obj->y + sp->y - sp->yoffset + tl->y + tl->h - 1,
 					 FL_min( sp->w + sp->xoffset - tl->x, tl->w ), 1,
 					 ( fli_dithered( fl_vmode ) && tl->selected ) ?
 					 FL_WHITE : tl->color );
 
-    fli_drw_stringTAB( FL_ObjWin( obj ), activeGC, sp->x - sp->xoffset + tl->x,
-					   sp->y - sp->yoffset + tl->y + tl->asc,
+    fli_drw_stringTAB( FL_ObjWin( obj ), activeGC,
+					   obj->x + sp->x - sp->xoffset + tl->x,
+					   obj->y + sp->y - sp->yoffset + tl->y + tl->asc,
 					   tl->style, tl->size, tl->text, tl->len, 0 );
 }
 
@@ -2065,7 +2081,6 @@ handle_tbox( FL_OBJECT * obj,
     FLI_TBOX_SPEC *sp = obj->spec;
 	int ret = FL_RETURN_NONE;
 	int i;
-	static int init_done = 0;
 	static int old_yoffset = -1;
 
     /* Mouse wheel hack */
@@ -2077,27 +2092,41 @@ handle_tbox( FL_OBJECT * obj,
 
     switch ( ev )
     {
+		case FL_RESIZED :
+			sp->attrib = 1;
+			break;
+
 		case FL_DRAW :
-			if ( ! init_done )
+			if ( sp->attrib )
 			{
 				fli_tbox_prepare_drawing( obj );
-				init_done = 1;
-
+				sp->attrib = 0;
 			}
 			else
 			{
-				XSetForeground( flx->display, sp->defaultGC,
-								fl_get_flcolor( obj->lcol ) );
-				XSetForeground( flx->display, sp->backgroundGC,
-								fl_get_flcolor( obj->col1 ) );
-				XSetForeground( flx->display, sp->selectGC,
-								fl_get_flcolor( obj->col2 ) );
-				XSetForeground( flx->display, sp->nonselectGC,
-								fl_get_flcolor( FL_INACTIVE ) );
+				if ( sp->def_lcol != obj->lcol )
+				{
+					sp->def_lcol = obj->lcol;
+					XSetForeground( flx->display, sp->defaultGC,
+									fl_get_flcolor( sp->def_lcol ) );
+				}
+				if ( sp->def_col1 != obj->col1 )
+				{
+					sp->def_col1 = obj->col1;
+					XSetForeground( flx->display, sp->backgroundGC,
+									fl_get_flcolor( sp->def_col1 ) );
+				}
+				if ( sp->def_col2 != obj->col2 )
+				{
+					sp->def_col2 = obj->col2;
+					XSetForeground( flx->display, sp->selectGC,
+									fl_get_flcolor( fli_dithered( fl_vmode ) ?
+													FL_BLACK : sp->def_col2 ) );
+				}
 			}
 
 			fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-						obj->col1, obj->bw );
+						sp->def_col1, obj->bw );
 
 			for ( i = 0; i < sp->num_lines; i++ )
 				draw_tboxline( obj, i );

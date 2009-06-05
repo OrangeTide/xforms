@@ -25,8 +25,8 @@
  *.
  *
  * It contains some routines to deal with attributes of the objects.
- *
  */
+
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -204,7 +204,7 @@ add_font_choice( const char * p )
 }
 
 
-/* font sizes. Need to do this because of symbolic names */
+/* Font sizes. Need to do this because of symbolic names */
 
 typedef struct {
     int    size;
@@ -495,6 +495,7 @@ show_attributes( const FL_OBJECT * obj )
 			strcat( strcpy( buf, find_type_name( obj->objclass, i ) ), "%r1" );
 			fl_addto_choice( fd_generic_attrib->typeobj, buf );
 		}
+
 		fl_set_choice( fd_generic_attrib->typeobj, obj->type + 1 );
     }
 
@@ -1096,7 +1097,7 @@ spec_apply_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 
 /***************************************
- * switch between GENERIC and SPEC
+ * Switch between "Generic" and "Spec" folder
  ***************************************/
 
 void

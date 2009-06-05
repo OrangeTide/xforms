@@ -53,6 +53,7 @@ typedef struct {
 	                  y,
 	                  w,
 	                  h;
+	int               attrib;        /* set when attributes changed */
 	int               select_line;   /* last selected line */
 	int               deselect_line; /* last deselected line */
 	int               max_width;     /* length of longest line in pixels */
@@ -61,6 +62,9 @@ typedef struct {
 	int               def_style;     /* default font style */
 	int               def_align;     /* default alignment */
 	int               def_height;    /* height of line with default font size */
+	FL_COLOR          def_col1;      /* background color */
+	FL_COLOR          def_col2;      /* selection color */
+	FL_COLOR          def_lcol;      /* text color */
     GC                defaultGC;	 /* text drawing GC */
     GC                backgroundGC;  /* background GC */
     GC                selectGC;	     /* background for selection GC */
@@ -116,6 +120,8 @@ extern void fli_tbox_clear( FL_OBJECT * );
 
 extern int fli_tbox_load( FL_OBJECT *,
 						  const char * );
+
+extern void fli_tbox_recalc_area( FL_OBJECT * );
 
 extern void fli_tbox_set_fontsize( FL_OBJECT *,
 								   int );
@@ -176,8 +182,6 @@ extern void fli_tbox_set_dblclick_callback( FL_OBJECT *,
 extern int fli_tbox_get_topline( FL_OBJECT * obj );
 
 extern int fli_tbox_get_bottomline( FL_OBJECT * );
-
-extern void fli_tbox_prepare_drawing( FL_OBJECT * obj );
 
 extern void fli_tbox_react_to_vert( FL_OBJECT *,
 									int );

@@ -1250,14 +1250,11 @@ selection was made). When the last action was a de-selection (only for
 @code{FL_MULTI_BROWSER}) the negative of the de-selected line number
 is returned.
 
-There are also calls to influence and query the top line shown in the
-browser's box (i.e.@: influence the position of the slider).
-@findex fl_set_browser_topline()
-@anchor{fl_set_browser_topline()}
+The following function allows to find out the (unobscured) line that
+is currently shown at the top of the browser:
 @findex fl_get_browser_topline()
 @anchor{fl_get_browser_topline()}
 @example
-void fl_set_browser_topline(FL_OBJECT *obj, int line);
 int fl_get_browser_topline(FL_OBJECT *obj);
 @end example
 @noindent
@@ -1277,8 +1274,22 @@ void fl_set_browser_dblclick_callback(FL_OBJECT *obj,
 Of course, double-click callbacks make most sense for
 @code{FL_HOLD_BROWSER}s.
 
-Finally there are routines that can be used to programmatically scroll
-the text horizontally and vertically:
+The part if the text visible within the browser can be set
+programmatically in a number of ways. With the functions
+@findex fl_set_browser_topline()
+@anchor{fl_set_browser_topline()}
+@findex fl_set_browser_bottomline()
+@anchor{fl_set_browser_bottomline()}
+@example
+void fl_set_browser_topline(FL_OBJECT *obj, int line);
+void fl_set_browser_bottomline(FL_OBJECT *obj, int line);
+@end example
+@noindent
+the line shown at the top or the bottom can be set (note again
+that line numbers start with 1).
+
+Instead of by line number also the amount the text is scrolled in
+horizontal and vertical direction can be set with the functions
 @findex fl_set_browser_xoffset()
 @anchor{fl_set_browser_xoffset()}
 @findex fl_set_browser_rel_xoffset()
@@ -1294,15 +1305,14 @@ void fl_set_browser_yoffset(FL_OBJECT *obj, FL_Coord yoff);
 void fl_set_browser_rel_yoffset(FL_OBJECT *obj, double yval);
 @end example
 @noindent
-where @code{xoff} and @code{yoff} indicates how many pixels to scroll
-to the left or from the top relative to the nominal position of the
-text lines, while @code{xval} and @code{yval} set the relative
-position relative to the total width or height of all the text and
+where @code{xoff} and @code{yoff} indicate how many pixels to scroll
+horizontally (relativ to the left margin) or vertically (relative to
+the top of the text), while @code{xval} and @code{yval} stand for
+positions relative to the total width or height of all of the text and
 thus have to be numbers between @code{0.0} and @code{1.0}.
 
-
 There are also a number of functions that can be used to obtain the
-current position if needed:
+current amount of scrolling:
 @findex fl_get_browser_xoffset()
 @anchor{fl_get_browser_xoffset()}
 @findex fl_get_browser_rel_xoffset()
@@ -1455,7 +1465,8 @@ Always on.
 Always off.
 @tindex FL_AUTO
 @item FL_AUTO
-On when needed (i.e., more lines/chars than could be shown)
+On only when needed (i.e.@: there are more lines/chars than could be
+shown at once in the browser).
 @end table
 @noindent
 @code{FL_AUTO} is the default.

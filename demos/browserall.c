@@ -143,14 +143,15 @@ br_callback( FL_OBJECT * ob,
  ***************************************/
 
 static void
-vcallback( FL_OBJECT * ob    FL_UNUSED_ARG,
-		   int         topline,
-		   void      * data  FL_UNUSED_ARG )
+vcallback( FL_OBJECT * ob       FL_UNUSED_ARG,
+		   int         topline  FL_UNUSED_ARG,
+		   void      * data     FL_UNUSED_ARG )
 {
      int i;
+	 int yoffset = fl_get_browser_yoffset( br[ 0 ] );
 
      for ( i = 1; i < 4; i++ )
-         fl_set_browser_topline( br[ i ], topline );
+		 fl_set_browser_yoffset( br[ i ], yoffset ); 
 }
 
 
@@ -162,19 +163,18 @@ link_browsers( FL_OBJECT * ob,
 			   long        data  FL_UNUSED_ARG )
 {
     int sync = fl_get_button( ob );
-	int topline;
 	int i;
 
     fl_set_object_label( ob, sync ? "Unlink": "Link" );
 
     if ( sync )
     {
-		topline = fl_get_browser_topline( br[ 0 ] );
+		int yoffset = fl_get_browser_yoffset( br[ 0 ] );
 
 		for ( i = 1; i < 4; i++ )
 		{
 			fl_set_browser_vscrollbar( br[ i ], FL_OFF );
-			fl_set_browser_topline( br[ i ], topline );
+			fl_set_browser_yoffset( br[ i ], yoffset );
 		}
 
        fl_set_browser_vscroll_callback( br[ 0 ], vcallback, 0 );

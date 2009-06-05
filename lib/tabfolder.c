@@ -271,7 +271,7 @@ fl_add_tabfolder( int          type,
 
 	/* Set the default return policy for the object */
 
-	fl_set_object_return( obj, FL_RETURN_NONE );
+	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
     fl_add_object( fl_current_form, obj );
     return obj;

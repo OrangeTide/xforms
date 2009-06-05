@@ -122,6 +122,8 @@ get_geometry( FL_OBJECT * ob )
 		comp->v_on  = 1;
 		comp->vw    = comp->vw_def;
 		tb->w      -= comp->vw;
+
+		fli_tbox_recalc_area( tb );
     }
 
 	/* Check if we need a horizontal slider */
@@ -132,6 +134,8 @@ get_geometry( FL_OBJECT * ob )
 		comp->h_on  = 1;
 		comp->hh    = comp->hh_def;
 		tb->h      -= comp->hh;
+
+		fli_tbox_recalc_area( tb );
     }
 
 	/* Due to the addition of a horizontal slider also a vertical slider
@@ -142,6 +146,8 @@ get_geometry( FL_OBJECT * ob )
 		comp->v_on  = 1;
 		comp->vw    = comp->vw_def;
 		tb->w      -= comp->vw;
+
+		fli_tbox_recalc_area( tb );
     }
 
     comp->hsl->visible = comp->h_on;
@@ -159,7 +165,10 @@ get_geometry( FL_OBJECT * ob )
 		comp->vinc2 = ( double ) sp->def_height / sp->max_height;
 	}
 	else
+	{
 		comp->vsize = 1.0;
+		comp->vval = 0.0;
+	}
 
     if ( comp->h_on )
     {
@@ -174,29 +183,28 @@ get_geometry( FL_OBJECT * ob )
 		comp->hinc2 = ( sp->def_height - 2.0 ) / sp->max_width;
 	}
 	else
+	{
 		comp->hsize = 1.0;
+		comp->hval = 1.0;
+	}
 
     if ( h_on != comp->h_on || v_on != comp->v_on )
     {
 		comp->attrib = 1;
 		comp->dead_area = ! ( comp->h_on ^ comp->v_on );
-		if ( h_on )
-			fli_tbox_set_xoffset( comp->tb, 0 );
+
+		tbox_do_not_redraw = 1;
+		comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
+		fl_set_scrollbar_value( comp->vsl, comp->vval );
+
+		tbox_do_not_redraw = 1;
+		comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
+		fl_set_scrollbar_value( comp->hsl, comp->hval );
+
+		sp->attrib = 1;
     }
     else
 		comp->attrib = 0;
-
-	/* Recompute size of textbox drawing area */
-
-	fli_tbox_prepare_drawing( comp->tb );
-
-	tbox_do_not_redraw = 1;
-	comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
-	fl_set_scrollbar_value( comp->vsl, comp->vval );
-
-	tbox_do_not_redraw = 1;
-	comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
-	fl_set_scrollbar_value( comp->hsl, comp->hval );
 }
 
 
@@ -792,6 +800,7 @@ fl_set_browser_rel_yoffset( FL_OBJECT * ob,
 
 
 /***************************************
+ * Move a line to the top of the browser
  ***************************************/
 
 void
@@ -801,6 +810,21 @@ fl_set_browser_topline( FL_OBJECT * ob,
     FLI_BROWSER_SPEC *sp = ob->spec;
 
     fli_tbox_set_topline( sp->tb, topline - 1 );
+	redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ * Move a line to the bottom of the browser
+ ***************************************/
+
+void
+fl_set_browser_bottomline( FL_OBJECT * ob,
+						int         topline )
+{
+    FLI_BROWSER_SPEC *sp = ob->spec;
+
+    fli_tbox_set_bottomline( sp->tb, topline - 1 );
 	redraw_scrollbar( ob );
 }
 
