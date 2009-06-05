@@ -1318,6 +1318,7 @@ void
 fli_tbox_recalc_area( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
+	int dummy;
 
     sp->x = FL_abs( obj->bw ) + LEFT_MARGIN;
     sp->y = FL_abs( obj->bw ) + TOP_MARGIN;
@@ -1334,6 +1335,11 @@ fli_tbox_recalc_area( FL_OBJECT * obj )
 		sp->w -= 2;
 		sp->h -= 2;
 	}
+
+	/* Calculate height of line with default font */
+
+	sp->def_height = fl_get_string_height( sp->def_style, sp->def_size,
+										   "X", 1, &dummy, &dummy );
 }
 
 
@@ -1344,17 +1350,11 @@ static void
 fli_tbox_prepare_drawing( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
-	int dummy;
 	int i;
 	double old_xrel = fli_tbox_get_rel_xoffset( obj );
 	double old_yrel = fli_tbox_get_rel_yoffset( obj );
 
 	fli_tbox_recalc_area( obj );
-
-	/* Calculate height of line with default font */
-
-	sp->def_height = fl_get_string_height( sp->def_style, sp->def_size,
-										   "X", 1, &dummy, &dummy );
 
 	/* Recalculate horizontal positions of all lines */
 

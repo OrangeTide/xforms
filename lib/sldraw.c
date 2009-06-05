@@ -57,14 +57,10 @@ flinear( double val,
  ***************************************/
 
 void
-fli_calc_slider_size( FL_OBJECT         * ob,
+fli_calc_slider_size( FL_OBJECT          * ob,
 					  FLI_SCROLLBAR_KNOB * slb )
 {
 	FLI_SLIDER_SPEC *sp = ob->spec;
-	FL_COORD x = sp->x,
-		     y = sp->y,
-		     w = sp->w,
-		     h = sp->h;
 	int sltype = ob->type;
 	double val  = sp->min == sp->max ?
 		          0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
@@ -79,24 +75,24 @@ fli_calc_slider_size( FL_OBJECT         * ob,
     {
 		int inv = sp->min > sp->max;
 
-		slb->h = ( inv ? 1 - val : val ) * ( h - 2 * absbw );
-		slb->y = inv ? y + h - absbw - slb->h : y + absbw;
-		slb->w = w - 2 * absbw;
-		slb->x = x + absbw;
+		slb->h = ( inv ? 1 - val : val ) * ( sp->h - 2 * absbw );
+		slb->y = inv ? sp->h - absbw - slb->h : absbw;
+		slb->w = sp->w - 2 * absbw;
+		slb->x = absbw;
 		return;
     }
     else if ( sltype == FL_HOR_FILL_SLIDER )
     {
-		slb->w = val * ( w - 2 * absbw );
-		slb->x = x + absbw;
-		slb->h = h - 2 * absbw;
-		slb->y = y + absbw;
+		slb->w = val * ( sp->w - 2 * absbw );
+		slb->x = absbw;
+		slb->h = sp->h - 2 * absbw;
+		slb->y = absbw;
 		return;
     }
 
 	if ( IS_VSLIDER( sltype ) )
     {
-		slb->h = size * ( h - 2 * absbw );
+		slb->h = size * ( sp->h - 2 * absbw );
 	
 		if ( IS_SCROLLBAR( sltype ) && slb->h < MINKNOB_SB )
 			slb->h = MINKNOB_SB;
@@ -106,32 +102,31 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 
 		if ( sltype == FL_VERT_BROWSER_SLIDER2 )
 		{
-			slb->h = size * h;
-			slb->y = flinear( val, 0.0, 1.0, y, y + h - slb->h );
-			slb->x = x + 1 + IS_FLATORDOWN( ob->boxtype );
-			slb->w = w - 2 - 2 * IS_FLATORDOWN( ob->boxtype );
+			slb->h = size * sp->h;
+			slb->y = flinear( val, 0.0, 1.0, 0, sp->h - slb->h );
+			slb->x = 1 + IS_FLATORDOWN( ob->boxtype );
+			slb->w = sp->w - 2 - 2 * IS_FLATORDOWN( ob->boxtype );
 		}
 		else if (    sltype == FL_VERT_THIN_SLIDER
 				  || sltype == FL_VERT_BASIC_SLIDER )
 		{
-			slb->h = size * h;
-			slb->y = flinear( val, 0.0, 1.0, y, y + h - slb->h );
-			slb->w = w + fudge2;
-			slb->x = x - fudge1;
+			slb->h = size * sp->h;
+			slb->y = flinear( val, 0.0, 1.0, 0, sp->h - slb->h );
+			slb->w = sp->w + fudge2;
+			slb->x = - fudge1;
 		}
 		else
 		{
-			slb->y = flinear( val, 0.0, 1.0, y + absbw,
-							  y + h - absbw - slb->h );
-			slb->w = w - 2 * absbw;
-			slb->x = x + absbw;
+			slb->y = flinear( val, 0.0, 1.0, absbw, sp->h - absbw - slb->h );
+			slb->w = sp->w - 2 * absbw;
+			slb->x = absbw;
 		}
 
 		return;
     }
 	else
     {
-		slb->w = size * ( w - 2 * absbw );
+		slb->w = size * ( sp->w - 2 * absbw );
 
 		if ( IS_SCROLLBAR( sltype ) && slb->w < MINKNOB_SB )
 			slb->w = MINKNOB_SB;
@@ -141,25 +136,24 @@ fli_calc_slider_size( FL_OBJECT         * ob,
 
 		if ( sltype == FL_HOR_BROWSER_SLIDER2 )
 		{
-			slb->w = size * w;
-			slb->x = flinear( val, 0.0, 1.0, x, x + w - slb->w );
-			slb->h = h - 2 * ( 1 + IS_FLATORDOWN( ob->boxtype ) );
-			slb->y = y + 1 + IS_FLATORDOWN( ob->boxtype );
+			slb->w = size * sp->w;
+			slb->x = flinear( val, 0.0, 1.0, 0, sp->w - slb->w );
+			slb->h = sp->h - 2 * ( 1 + IS_FLATORDOWN( ob->boxtype ) );
+			slb->y = 1 + IS_FLATORDOWN( ob->boxtype );
 		}
 		else if (    sltype == FL_HOR_THIN_SLIDER
 				  || sltype == FL_HOR_BASIC_SLIDER )
 		{
-			slb->w = size * w;
-			slb->x = flinear( val, 0.0, 1.0, x, x + w - slb->w );
-			slb->h = h + fudge2;	/* - 2 * absbw; */
-			slb->y = y - fudge1;	/* + absbw; */
+			slb->w = size * sp->w;
+			slb->x = flinear( val, 0.0, 1.0, 0, sp->w - slb->w );
+			slb->h = sp->h + fudge2;
+			slb->y = - fudge1;
 		}
 		else
 		{
-			slb->x = flinear( val, 0.0, 1.0, x + absbw,
-							  x + w - absbw - slb->w );
-			slb->h = h - 2 * absbw;
-			slb->y = y + absbw;
+			slb->x = flinear( val, 0.0, 1.0, absbw, sp->w - absbw - slb->w );
+			slb->h = sp->h - 2 * absbw;
+			slb->y = absbw;
 		}
 
 		return;
@@ -180,8 +174,8 @@ void fli_drw_slider( FL_OBJECT  * ob,
 					 int          d )
 {
 	FLI_SLIDER_SPEC *sp = ob->spec;
-	FL_COORD x = sp->x,
-		     y = sp->y,
+	FL_COORD x = ob->x + sp->x,
+		     y = ob->y + sp->y,
 		     w = sp->w,
 		     h = sp->h;
 	int sltype = ob->type;
@@ -198,8 +192,8 @@ void fli_drw_slider( FL_OBJECT  * ob,
 
     fli_calc_slider_size( ob, &slb );
 
-    xsl = slb.x;
-    ysl = slb.y;
+    xsl = ob->x + sp->x + slb.x;
+    ysl = ob->y + sp->y + slb.y;
     wsl = slb.w;
     hsl = slb.h;
 

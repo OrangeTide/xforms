@@ -98,9 +98,9 @@ attrib_change( FL_OBJECT * ob )
  ***************************************/
 
 static void
-get_geometry( FL_OBJECT * ob )
+get_geometry( FL_OBJECT * obj )
 {
-    FLI_BROWSER_SPEC *comp = ob->spec;
+    FLI_BROWSER_SPEC *comp = obj->spec;
     FL_OBJECT *tb = comp->tb;
     FLI_TBOX_SPEC *sp = comp->tb->spec;
     int h_on = comp->h_on,
@@ -111,8 +111,9 @@ get_geometry( FL_OBJECT * ob )
     comp->hh = comp->vw = 0;
     comp->h_on = comp->v_on = 0;
 
-	tb->w = ob->w;
-	tb->h = ob->h;
+	tb->w = obj->w;
+	tb->h = obj->h;
+	fli_tbox_recalc_area( tb );
 
 	/* Check if we need a vertical slider */
 
@@ -121,8 +122,8 @@ get_geometry( FL_OBJECT * ob )
     {
 		comp->v_on  = 1;
 		comp->vw    = comp->vw_def;
-		tb->w      -= comp->vw;
 
+		tb->w      -= comp->vw;
 		fli_tbox_recalc_area( tb );
     }
 
@@ -133,8 +134,8 @@ get_geometry( FL_OBJECT * ob )
     {
 		comp->h_on  = 1;
 		comp->hh    = comp->hh_def;
-		tb->h      -= comp->hh;
 
+		tb->h      -= comp->hh;
 		fli_tbox_recalc_area( tb );
     }
 
@@ -145,8 +146,8 @@ get_geometry( FL_OBJECT * ob )
     {
 		comp->v_on  = 1;
 		comp->vw    = comp->vw_def;
-		tb->w      -= comp->vw;
 
+		tb->w      -= comp->vw;
 		fli_tbox_recalc_area( tb );
     }
 
@@ -155,10 +156,10 @@ get_geometry( FL_OBJECT * ob )
 
     if ( comp->v_on )
     {
-		comp->vsl->x = ob->x + ob->w - comp->vw;
-		comp->vsl->y = ob->y;
+		comp->vsl->x = obj->x + obj->w - comp->vw;
+		comp->vsl->y = obj->y;
 		comp->vsl->w = comp->vw;
-		comp->vsl->h = ob->h - comp->hh;
+		comp->vsl->h = obj->h - comp->hh;
 
 		comp->vval  = old_yrel;
 		comp->vsize = comp->vinc1 = ( double ) sp->h / sp->max_height;
@@ -167,14 +168,14 @@ get_geometry( FL_OBJECT * ob )
 	else
 	{
 		comp->vsize = 1.0;
-		comp->vval = 0.0;
+		comp->vval  = 0.0;
 	}
 
     if ( comp->h_on )
     {
-		comp->hsl->x = ob->x;
-		comp->hsl->y = ob->y + ob->h - comp->hh;
-		comp->hsl->w = ob->w - comp->vw;
+		comp->hsl->x = obj->x;
+		comp->hsl->y = obj->y + obj->h - comp->hh;
+		comp->hsl->w = obj->w - comp->vw;
 		comp->hsl->h = comp->hh;
 
 		comp->hval  = old_xrel;
@@ -185,7 +186,7 @@ get_geometry( FL_OBJECT * ob )
 	else
 	{
 		comp->hsize = 1.0;
-		comp->hval = 1.0;
+		comp->hval  = 1.0;
 	}
 
     if ( h_on != comp->h_on || v_on != comp->v_on )
@@ -531,13 +532,15 @@ fl_create_browser( int          type,
     sp->hsl->visible = sp->h_pref == FL_ON;
     fl_set_object_callback( sp->hsl, hcb, 0 );
     fl_set_scrollbar_value( sp->hsl, 0.0 );
+    fl_set_scrollbar_bounds( sp->hsl, 0.0, 1.0 );
     sp->hsl->resize = FL_RESIZE_NONE;
 
     sp->vsl = fl_create_scrollbar( fli_context->vscb, x + w - D, y,
 								   D, h - D, NULL );
     sp->vsl->visible = sp->v_pref == FL_ON;
     fl_set_object_callback( sp->vsl, vcb, 0 );
-    fl_set_scrollbar_value( sp->hsl, 0.0 );
+    fl_set_scrollbar_value( sp->vsl, 0.0 );
+    fl_set_scrollbar_bounds( sp->hsl, 0.0, 1.0 );
     sp->vsl->resize = FL_RESIZE_NONE;
 
     fl_add_child( ob, sp->tb  );

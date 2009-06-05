@@ -68,8 +68,8 @@ compute_bounds( FL_OBJECT * ob )
 {
     FLI_SLIDER_SPEC *sp = ob->spec;
 
-	sp->x = ob->x;
-	sp->y = ob->y;
+	sp->x = 0;
+	sp->y = 0;
 	sp->w = ob->w;
 	sp->h = ob->h;
 
@@ -90,7 +90,7 @@ compute_bounds( FL_OBJECT * ob )
 
 
 /***************************************
- * reduce flicker by not painting the location the slider is going to be
+ * Reduce flicker by not painting the location the slider is going to be
  ***************************************/
 
 static void
@@ -110,44 +110,45 @@ draw_motion( FL_OBJECT * ob )
 
 		if ( IS_HSLIDER( ob->type ) )
 		{
-			xrec[ 0 ].x = sp->x;
-			xrec[ 0 ].y = sp->y;
-			xrec[ 0 ].width = slb.x - sp->x + 1;
+			xrec[ 0 ].x      = ob->x + sp->x;
+			xrec[ 0 ].y      = ob->y + sp->y;
+			xrec[ 0 ].width  = slb.x + 1;
 			xrec[ 0 ].height = sp->h;
 
-			xrec[ 1 ].x = slb.x + slb.w - 1;
-			xrec[ 1 ].y = sp->y;
-			xrec[ 1 ].width = sp->x + sp->w - 1;
+			xrec[ 1 ].x      = xrec[ 0 ].x + slb.x + slb.w - 1;
+			xrec[ 1 ].y      = xrec[ 0 ].y;
+			xrec[ 1 ].width  = sp->w - slb.x - slb.w + 1;
 			xrec[ 1 ].height = sp->h;
 		}
 		else
 		{
-			xrec[ 0 ].x = sp->x;
-			xrec[ 0 ].y = sp->y;
-			xrec[ 0 ].width = sp->w;
-			xrec[ 0 ].height = slb.y - sp->y;
+			xrec[ 0 ].x      = ob->x + sp->x;
+			xrec[ 0 ].y      = ob->y + sp->y;
+			xrec[ 0 ].width  = sp->w;
+			xrec[ 0 ].height = slb.y + 1;
 
-			xrec[ 1 ].x = sp->x;
-			xrec[ 1 ].y = slb.y + slb.h - 1;
-			xrec[ 1 ].width = sp->w;
-			xrec[ 1 ].height = sp->y + sp->h - 1;
+			xrec[ 1 ].x      = xrec[ 0 ].x;
+			xrec[ 1 ].y      = xrec[ 0 ].y +slb.y + slb.h - 1;
+			xrec[ 1 ].width  = sp->w;
+			xrec[ 1 ].height = sp->h - slb.y - slb.h + 1;
 		}
 
 		fl_set_clippings( xrec, 2 );
-		fl_drw_box( FL_FLAT_BOX, sp->x + abbw, sp->y + abbw,
+		fl_drw_box( FL_FLAT_BOX, ob->x + sp->x + abbw, ob->y + sp->y + abbw,
 					sp->w - 2 * abbw, sp->h - 2 * abbw, ob->col1, 0 );
     }
     else if (    ob->type == FL_HOR_THIN_SLIDER
 			  || ob->type == FL_VERT_THIN_SLIDER
 			  || ob->type == FL_HOR_BASIC_SLIDER
 			  || ob->type == FL_VERT_BASIC_SLIDER )
-		fl_drw_box( FL_FLAT_BOX, sp->x, sp->y, sp->w, sp->h, ob->col1, 1 );
+		fl_drw_box( FL_FLAT_BOX, ob->x + sp->x, ob->y + sp->y,
+					sp->w, sp->h, ob->col1, 1 );
     else if (    ob->type == FL_HOR_BROWSER_SLIDER2
 			  || ob->type == FL_VERT_BROWSER_SLIDER2 )
-		fl_drw_box( ob->boxtype, sp->x, sp->y,
+		fl_drw_box( ob->boxtype, ob->x + sp->x, ob->y + sp->y,
 					sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
     else
-		fl_drw_box( FL_UP_BOX, sp->x, sp->y,
+		fl_drw_box( FL_UP_BOX, ob->x + sp->x, ob->y + sp->y,
 					sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
 
     /* for slider jumps osb is NOT initialized */
@@ -155,6 +156,8 @@ draw_motion( FL_OBJECT * ob )
     if ( IS_SCROLLBAR( ob->type ) && ! ( sp->draw_type & SLIDER_JUMP ) )
     {
 		int knob_depth = IS_FLATBOX( ob->boxtype ) ? 1 : FL_max(abbw - 1, 1 );
+
+		/* WTF gets 'osb' set? JTT 2009/06/05 */
 
 		fl_drw_box( FL_DOWN_BOX, osb.x + 1, osb.y + 1, osb.w - 2, osb.h - 2,
 					FL_INACTIVE, knob_depth > 2 ? 2 : knob_depth );
@@ -245,49 +248,47 @@ draw_slider( FL_OBJECT * ob )
  ***************************************/
 
 static int
-is_off_knob( FL_OBJECT * ob,
+is_off_knob( FL_OBJECT * obj,
 			 FL_Coord    mx,
 			 FL_Coord    my )
 {
     FLI_SCROLLBAR_KNOB slb;
-	FLI_SLIDER_SPEC *sp = ob->spec;
+	FLI_SLIDER_SPEC *sp = obj->spec;
 
-    fli_calc_slider_size( ob, &slb );
+    fli_calc_slider_size( obj, &slb );
 
-    if ( IS_VSLIDER( ob->type ) )
+    if ( IS_VSLIDER( obj->type ) )
 	{
-		my -= ob->y;
-		if ( IS_FILL( ob->type ) )
+		if ( IS_FILL( obj->type ) )
 			sp->mw = 0;
 		else
 			sp->mh = slb.h;
 
 		if ( my < slb.y )
 			return -1;
-		if ( my > slb.y + slb.h )
+		if ( my >= slb.y + slb.h )
 			return 1;
 
 		sp->offy = slb.y + slb.h / 2 - my;
 
-		if ( IS_FILL( ob->type ) )
+		if ( IS_FILL( obj->type ) )
 			 sp->offy = 0;
 	}
 	else
 	{
-		mx -= ob->x;
-		if ( IS_FILL( ob->type ) )
+		if ( IS_FILL( obj->type ) )
 			sp->mw = 0;
 		else
 			 sp->mw = slb.w;
 
 		if ( mx < slb.x )
 			return -1;
-		if ( mx > slb.x + slb.w )
+		if ( mx >= slb.x + slb.w )
 			return 1;
 
 		sp->offx = slb.x + slb.w / 2 - mx;
 
-		if ( IS_FILL( ob->type ) )
+		if ( IS_FILL( obj->type ) )
 			sp->offx = 0;
 	}
 
@@ -310,7 +311,7 @@ get_newvalue( FL_OBJECT    * ob,
 
 	if ( IS_HSLIDER( ob->type ) )
 	{
-		double dmx = mx + sp->offx - ob->x - sp->x;
+		double dmx = mx + sp->offx;
 
 		if ( dmx < 0.5 * sp->mw + absbw )
 			newval = sp->min;
@@ -323,7 +324,7 @@ get_newvalue( FL_OBJECT    * ob,
 	}
 	else
 	{
-		double dmy = my + sp->offy - ob->y - sp->y;
+		double dmy = my + sp->offy;
 
 		if ( dmy < 0.5 * sp->mh + absbw )
 			newval = sp->min;
@@ -468,8 +469,7 @@ handle_motion( FL_OBJECT * obj,
     FLI_SLIDER_SPEC *sp = obj->spec;
 	int ret;
 
-	/* If this is a motion while in "jump mode" for a scrollbar don't do
-	   anything */
+	/* If this is a motion while in "jump mode" for a scrollbar do nothing */
 
 	if (    IS_SCROLLBAR( obj->type )
 		 && sp->mouse_off_knob
@@ -548,13 +548,13 @@ handle_push( FL_OBJECT * obj,
 	sp->timeout_id = -1;
 	sp->offx = sp->offy = 0;
 
-	/* For value sliders we do not want to jump the slider to one of the
+	/* For value sliders we do not want the slider to jump to one of the
 	   extreme positions just because the user clicked on the number field -
 	   they may just be trying if it's possible to edit the number... */
 
 	if (    obj->objclass == FL_VALSLIDER
-		 && (    ( IS_HSLIDER( obj->type ) && mx < obj->x + sp->x )
-			  || ( IS_VSLIDER( obj->type ) && my < obj->y + sp->y ) ) )
+		 && (    ( IS_HSLIDER( obj->type ) && mx < 0 )
+			  || ( IS_VSLIDER( obj->type ) && my < 0 ) ) )
 		return FL_RETURN_NONE;
 
 	/* Check were the mouse button was clicked */
@@ -718,6 +718,9 @@ handle_slider( FL_OBJECT * ob,
 {
     FLI_SLIDER_SPEC *sp = ob->spec;
 	int ret = FL_RETURN_NONE;
+
+	mx -= ob->x + sp->x;
+	my -= ob->y + sp->y;
 
     switch ( event )
     {

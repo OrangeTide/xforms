@@ -375,7 +375,7 @@ fl_create_scrollbar( int          type,
     sp->increment = 0.02;
     fl_set_slider_increment( sp->slider, 5 * sp->increment, sp->increment );
     fl_set_object_callback( sp->slider, slider_cb, 0 );
-	fl_set_slider_bounds( sp->slider, 0, 1.0 );
+	fl_set_slider_bounds( sp->slider, 0.0, 1.0 );
     get_geom( obj );
 
 	sp->old_val = fl_get_slider_value( sp->slider );

@@ -45,7 +45,7 @@ fl_add_child( FL_OBJECT * parent,
 {
     FL_OBJECT *t;
 
-	/* If the child is already linked to a form that's not the one of the
+	/* If the child is already linked to a form that is not the one of the
 	   parent unlink it from that form and then add it to the parents
 	   form (if the parent already belongs to one) */
 
@@ -59,7 +59,7 @@ fl_add_child( FL_OBJECT * parent,
 
 	child->parent = parent;
 
-    /* Child has same gravity and resize attributes as the parent */
+    /* Child gets same gravity and resize attributes as the parent */
 
     child->nwgravity = parent->nwgravity;
     child->segravity = parent->segravity;

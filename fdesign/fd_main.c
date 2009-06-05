@@ -383,7 +383,7 @@ main_loop( void )
 }
 
 
-#define DEFGeom       "320x250+1-293"	/* working area geometry     */
+#define DEFGeom       "320x250+150+420"	/* working area geometry     */
 #define DEFcntlGeom   "+150+1"	        /* control panel position    */
 #define DEFattribGeom "+210+25"	        /* Attributes panel position */
 #define DEFtestGeom   "-275+2"	        /* Test panel position       */
