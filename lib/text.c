@@ -38,12 +38,12 @@
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * ob,
-		   int         event,
-		   FL_Coord    mx   FL_UNUSED_ARG,
-		   FL_Coord    my   FL_UNUSED_ARG,
-		   int         key  FL_UNUSED_ARG,
-		   void *      ev   FL_UNUSED_ARG )
+handle_text( FL_OBJECT * ob,
+			 int         event,
+			 FL_Coord    mx   FL_UNUSED_ARG,
+			 FL_Coord    my   FL_UNUSED_ARG,
+			 int         key  FL_UNUSED_ARG,
+			 void *      ev   FL_UNUSED_ARG )
 {
     switch ( event )
     {
@@ -78,7 +78,7 @@ fl_create_text( int          type,
 {
     FL_OBJECT *ob;
 
-    ob = fl_make_object( FL_TEXT, type, x, y, w, h, label, handle_it );
+    ob = fl_make_object( FL_TEXT, type, x, y, w, h, label, handle_text );
     ob->boxtype = FL_TEXT_BOXTYPE;
     ob->col1 = FL_TEXT_COL1;
     ob->col2 = FL_TEXT_COL2;

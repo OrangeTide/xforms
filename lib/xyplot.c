@@ -1959,12 +1959,12 @@ handle_mouse( FL_OBJECT * ob,
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * ob,
-		   int         event,
-		   FL_Coord    mx,
-		   FL_Coord    my,
-		   int         key  FL_UNUSED_ARG,
-		   void      * ev   FL_UNUSED_ARG )
+handle_xyplot( FL_OBJECT * ob,
+			   int         event,
+			   FL_Coord    mx,
+			   FL_Coord    my,
+			   int         key  FL_UNUSED_ARG,
+			   void      * ev   FL_UNUSED_ARG )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
     int ret = FL_RETURN_NONE;
@@ -2040,7 +2040,7 @@ handle_it( FL_OBJECT * ob,
     }
 
     if ( ret && sp->inside == 0 )
-		M_err( "handle_it", "Something is wrong\n" );
+		M_err( "handle_xyplot", "Something is wrong\n" );
 
     return ret;
 }
@@ -2204,7 +2204,7 @@ fl_create_xyplot( int          t,
     FL_OBJECT *ob;
     FLI_XYPLOT_SPEC *sp;
 
-    ob = fl_make_object( FL_XYPLOT, t, x, y, w, h, l, handle_it );
+    ob = fl_make_object( FL_XYPLOT, t, x, y, w, h, l, handle_xyplot );
 
     ob->boxtype    = FL_XYPLOT_BOXTYPE;
     ob->active     = t == FL_ACTIVE_XYPLOT;

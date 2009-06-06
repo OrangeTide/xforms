@@ -220,15 +220,25 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 	if ( line < 0 || ! new_text )
 		return;
 
-	p = text = strdup( new_text );
-	i = strlen( text );
-	if ( i > 0 && text[ i - 1 ] == '\n' )
-		text[ i - 1 ] = '\0';
-
 	/* If 'line' is too large correct that by appending to the end */
 
 	if ( line >= sp->num_lines )
 		line = sp->num_lines;
+
+	/* Make sure the line marked as selected and deselected stay correct */
+
+	if ( sp->select_line >= line )
+		sp->select_line++;
+	if ( sp->deselect_line >= line )
+		sp->deselect_line++;
+
+	/* Make a copy of the text of the line and remove linefeed that may have
+	   made it through to here */
+
+	p = text = strdup( new_text );
+	i = strlen( text );
+	if ( i > 0 && text[ i - 1 ] == '\n' )
+		text[ i - 1 ] = '\0';
 
 	/* Get memory for one more line */
 
@@ -612,6 +622,9 @@ fli_tbox_clear( FL_OBJECT * obj )
     FLI_TBOX_SPEC *sp = obj->spec;
 	FLI_BROWSER_SPEC *br = obj->parent->spec;
     int i;
+
+
+	sp->select_line = sp->deselect_line = -1;
 
     if ( sp->num_lines == 0 )
 		return;

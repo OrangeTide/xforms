@@ -516,12 +516,12 @@ fl_remove_canvas_handler( FL_OBJECT        * ob,
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * ob,
-		   int         event,
-		   FL_Coord    mx   FL_UNUSED_ARG,
-		   FL_Coord    my   FL_UNUSED_ARG,
-		   int         key  FL_UNUSED_ARG,
-		   void      * xev  FL_UNUSED_ARG )
+handle_canvas( FL_OBJECT * ob,
+			   int         event,
+			   FL_Coord    mx   FL_UNUSED_ARG,
+			   FL_Coord    my   FL_UNUSED_ARG,
+			   int         key  FL_UNUSED_ARG,
+			   void      * xev  FL_UNUSED_ARG )
 {
     FLI_CANVAS_SPEC *sp = ob->spec;
 
@@ -587,7 +587,7 @@ fl_create_generic_canvas( int          canvas_class,
     int vmode = fl_vmode;
 	int i;
 
-    ob = fl_make_object( canvas_class, type, x, y, w, h, label, handle_it );
+    ob = fl_make_object( canvas_class, type, x, y, w, h, label, handle_canvas );
     ob->boxtype = FL_CANVAS_BOXTYPE;
     ob->col1 = FL_NoColor;	     /* indicates no background */
     ob->col2 = FL_BLACK;

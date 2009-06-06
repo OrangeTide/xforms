@@ -2232,13 +2232,13 @@ void unconditional_hide_tooltip( FL_OBJECT * obj )
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * obj,
-		   int         event,
-		   FL_Coord    mx,
-		   FL_Coord    my,
-		   int         key,
-		   XEvent    * xev,
-		   int         keep_ret )
+handle_object( FL_OBJECT * obj,
+			   int         event,
+			   FL_Coord    mx,
+			   FL_Coord    my,
+			   int         key,
+			   XEvent    * xev,
+			   int         keep_ret )
 {
     static unsigned long last_clicktime = 0;
     static int last_dblclick = 0,
@@ -2254,7 +2254,7 @@ handle_it( FL_OBJECT * obj,
 #if FL_DEBUG >= ML_WARN
     if ( ! obj->form && event != FL_FREEMEM )
     {
-		M_err( "handle_it", "Bad object %s. Event=%s",
+		M_err( "handle_object", "Bad object %s. Event=%s",
 			   obj->label ? obj->label : "", fli_event_name( event ) );
 		return FL_RETURN_NONE;
     }
@@ -2445,11 +2445,11 @@ fli_handle_object( FL_OBJECT * obj,
 
 	if ( enter_it && obj->form && obj->form->window )
 	{
-		if ( ( res = handle_it( obj, event, mx, my, key, xev, 0 ) ) )
+		if ( ( res = handle_object( obj, event, mx, my, key, xev, 0 ) ) )
 			fli_object_qenter( obj );
 	}
 	else
-		handle_it( obj, event, mx, my, key, xev, 1 );
+		handle_object( obj, event, mx, my, key, xev, 1 );
 }
 
 

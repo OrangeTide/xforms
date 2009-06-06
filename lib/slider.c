@@ -55,7 +55,7 @@ enum
 #define VAL_BOXW   FL_max( 35, 0.18 * ob->w )	/* reporting boxsize */
 #define VAL_BOXH   25		                    /* vertical RBW      */
 
-static FLI_SCROLLBAR_KNOB osb;
+
 static FLI_SCROLLBAR_KNOB slb;
 
 
@@ -102,8 +102,8 @@ draw_motion( FL_OBJECT * ob )
     FL_COLOR col;
 
     if (    ob->type != FL_VERT_BROWSER_SLIDER2
-		 && ob->type != FL_VERT_THIN_SLIDER
 		 && ob->type != FL_HOR_BROWSER_SLIDER2
+		 && ob->type != FL_VERT_THIN_SLIDER
 		 && ob->type != FL_HOR_THIN_SLIDER )
     {
 		fli_calc_slider_size( ob, &slb );
@@ -151,23 +151,12 @@ draw_motion( FL_OBJECT * ob )
 		fl_drw_box( FL_UP_BOX, ob->x + sp->x, ob->y + sp->y,
 					sp->w, sp->h, ob->col1, ob->bw > 0 ? 1 : -1 );
 
-    /* for slider jumps osb is NOT initialized */
-
-    if ( IS_SCROLLBAR( ob->type ) && ! ( sp->draw_type & SLIDER_JUMP ) )
-    {
-		int knob_depth = IS_FLATBOX( ob->boxtype ) ? 1 : FL_max(abbw - 1, 1 );
-
-		/* WTF gets 'osb' set? JTT 2009/06/05 */
-
-		fl_drw_box( FL_DOWN_BOX, osb.x + 1, osb.y + 1, osb.w - 2, osb.h - 2,
-					FL_INACTIVE, knob_depth > 2 ? 2 : knob_depth );
-    }
-
     fl_unset_clipping( );
 
     col = ( IS_SCROLLBAR( ob->type ) && sp->mouse == FLI_SLIDER_KNOB ) ?
 		  FL_MCOL : ob->col2;
-    fli_drw_slider( ob, ob->col1, col, "", FLI_SLIDER_KNOB );
+
+    fli_drw_slider( ob, ob->col1, col, NULL, FLI_SLIDER_KNOB );
 }
 
 

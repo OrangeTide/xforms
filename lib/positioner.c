@@ -163,12 +163,12 @@ handle_mouse( FL_OBJECT * ob,
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * ob,
-		   int         event,
-		   FL_Coord    mx,
-		   FL_Coord    my,
-		   int         key  FL_UNUSED_ARG,
-		   void *      ev   FL_UNUSED_ARG )
+handle_positioner( FL_OBJECT * ob,
+				   int         event,
+				   FL_Coord    mx,
+				   FL_Coord    my,
+				   int         key  FL_UNUSED_ARG,
+				   void *      ev   FL_UNUSED_ARG )
 {
     FLI_POSITIONER_SPEC *sp = ob->spec;
 	int ret = FL_RETURN_NONE;
@@ -229,7 +229,8 @@ fl_create_positioner( int          type,
     FL_OBJECT *ob;
     FLI_POSITIONER_SPEC *sp;
 
-    ob = fl_make_object( FL_POSITIONER, type, x, y, w, h, label, handle_it );
+    ob = fl_make_object( FL_POSITIONER, type, x, y, w, h, label,
+						 handle_positioner );
     ob->boxtype    = FL_POSITIONER_BOXTYPE;
     ob->col1       = FL_POSITIONER_COL1;
     ob->col2       = FL_POSITIONER_COL2;

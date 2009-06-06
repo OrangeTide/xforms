@@ -158,12 +158,12 @@ draw_bitmap( FL_OBJECT * obj )
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * obj,
-		   int		   event,
-		   FL_Coord	   mx	FL_UNUSED_ARG,
-		   FL_Coord	   my	FL_UNUSED_ARG,
-		   int		   key	FL_UNUSED_ARG,
-		   void		 * ev	FL_UNUSED_ARG )
+handle_bitmap( FL_OBJECT * obj,
+			   int		   event,
+			   FL_Coord	   mx	FL_UNUSED_ARG,
+			   FL_Coord	   my	FL_UNUSED_ARG,
+			   int		   key	FL_UNUSED_ARG,
+			   void		 * ev	FL_UNUSED_ARG )
 {
 	switch ( event )
 	{
@@ -200,7 +200,7 @@ fl_create_bitmap( int		   type,
 	FL_OBJECT *obj;
 	FL_BUTTON_STRUCT *sp;
 
-	obj = fl_make_object( FL_BITMAP, type, x, y, w, h, label, handle_it );
+	obj = fl_make_object( FL_BITMAP, type, x, y, w, h, label, handle_bitmap );
 	obj->boxtype = FL_BITMAP_BOXTYPE;
 	obj->col1    = FL_BITMAP_COL1;
 	obj->col2    = FL_BITMAP_COL2;

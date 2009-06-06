@@ -38,12 +38,12 @@ FL_COLOR cole;
  * The call back routine
  ***************************************/
 
-int handle_it( FL_OBJECT * obj,
-			   int         event,
-			   FL_Coord    mx   FL_UNUSED_ARG,
-			   FL_Coord    my   FL_UNUSED_ARG,
-			   int         key  FL_UNUSED_ARG,
-			   void      * ev   FL_UNUSED_ARG )
+int handle_free1( FL_OBJECT * obj,
+				  int         event,
+				  FL_Coord    mx   FL_UNUSED_ARG,
+				  FL_Coord    my   FL_UNUSED_ARG,
+				  int         key  FL_UNUSED_ARG,
+				  void      * ev   FL_UNUSED_ARG )
 {
 	static int dcol = 1;
 
@@ -103,7 +103,7 @@ main( int    argc,
 	form = fl_bgn_form( FL_UP_BOX, 400, 400 );
 	obj = fl_add_button( FL_NORMAL_BUTTON, 320, 20, 40, 30, "Exit" );
 	fl_set_object_callback( obj, done, 0 );
-	obj = fl_add_free( FL_CONTINUOUS_FREE, 40, 80, 320, 280, "", handle_it );
+	obj = fl_add_free( FL_CONTINUOUS_FREE, 40, 80, 320, 280, "", handle_free1 );
 	fl_end_form( );
 
 	/* Can't do it if less than 4 bit deep... */

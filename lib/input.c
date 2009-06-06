@@ -1280,12 +1280,12 @@ do_XCut( FL_OBJECT * obj,
  ***************************************/
 
 static int
-handle_it( FL_OBJECT * obj,
-		   int         event,
-		   FL_Coord    mx,
-		   FL_Coord    my,
-		   int         key,
-		   void      * ev )
+handle_input( FL_OBJECT * obj,
+			  int         event,
+			  FL_Coord    mx,
+			  FL_Coord    my,
+			  int         key,
+			  void      * ev )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     static int motion,
@@ -1533,7 +1533,7 @@ fl_create_input( int          type,
 
     set_default_keymap( 0 );
 
-    obj = fl_make_object( FL_INPUT, type, x, y, w, h, label, handle_it );
+    obj = fl_make_object( FL_INPUT, type, x, y, w, h, label, handle_input );
     obj->boxtype    = FL_INPUT_BOXTYPE;
     obj->col1       = FL_INPUT_COL1;
     obj->col2       = FL_INPUT_COL2;
