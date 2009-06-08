@@ -247,25 +247,28 @@ button_cb( FL_OBJECT * obj,
 {
     FLI_SCROLLBAR_SPEC *sp = obj->parent->spec;
 	double ival = fl_get_slider_value( sp->slider ),
-		   nval,
+		   nval = ival,
 		   slmax,
 		   slmin;
 
 	/* Update the slider and get the new value */
 
-	fl_get_slider_bounds( sp->slider, &slmin, &slmax );
-
-	if ( slmax > slmin )
-		nval = ival + data * sp->increment;
-	else
-		nval = ival - data * sp->increment;
-
-	fl_set_slider_value( sp->slider, nval );
-
-	nval = fl_get_slider_value( sp->slider );
-
 	if ( obj->returned == FL_RETURN_TRIGGERED )
-		obj->returned = FL_RETURN_END;
+		obj->returned = FL_RETURN_END | FL_RETURN_CHANGED;
+
+	if ( obj->returned & FL_RETURN_CHANGED )
+	{
+		fl_get_slider_bounds( sp->slider, &slmin, &slmax );
+
+		if ( slmax > slmin )
+			nval = ival + data * sp->increment;
+		else
+			nval = ival - data * sp->increment;
+
+		fl_set_slider_value( sp->slider, nval );
+
+		nval = fl_get_slider_value( sp->slider );
+	}
 
 	if ( obj->returned & FL_RETURN_END )
 		obj->parent->returned |= FL_RETURN_END;

@@ -1026,6 +1026,22 @@ fli_tbox_get_rel_yoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ ***************************************/
+
+int
+fli_tbox_get_line_yoffset( FL_OBJECT * obj,
+						   int         line )
+{
+    FLI_TBOX_SPEC *sp = obj->spec;
+
+	if ( line < 0 || line >= sp->num_lines )
+		return -1;
+
+	return sp->lines[ line ]->y;
+}
+
+
+/***************************************
  * Makes a line the topmost shown line (as far as possible)
  ***************************************/
 
@@ -1339,7 +1355,8 @@ fli_tbox_recalc_area( FL_OBJECT * obj )
     sp->h = obj->h - 2 * FL_abs( obj->bw ) - TOP_MARGIN - BOTTOM_MARGIN;
 
 	/* This is necessary because different box types haven't all the same
-	   size - will look still wrong with anything but up and down box */
+	   inside size but will look still wrong with anything but up and down
+	   boxes... */
 
 	if ( obj->boxtype == FL_UP_BOX )
 	{
@@ -2105,6 +2122,7 @@ handle_tbox( FL_OBJECT * obj,
 
     switch ( ev )
     {
+		case FL_ATTRIB :
 		case FL_RESIZED :
 			sp->attrib = 1;
 			break;
@@ -2114,28 +2132,6 @@ handle_tbox( FL_OBJECT * obj,
 			{
 				fli_tbox_prepare_drawing( obj );
 				sp->attrib = 0;
-			}
-			else
-			{
-				if ( sp->def_lcol != obj->lcol )
-				{
-					sp->def_lcol = obj->lcol;
-					XSetForeground( flx->display, sp->defaultGC,
-									fl_get_flcolor( sp->def_lcol ) );
-				}
-				if ( sp->def_col1 != obj->col1 )
-				{
-					sp->def_col1 = obj->col1;
-					XSetForeground( flx->display, sp->backgroundGC,
-									fl_get_flcolor( sp->def_col1 ) );
-				}
-				if ( sp->def_col2 != obj->col2 )
-				{
-					sp->def_col2 = obj->col2;
-					XSetForeground( flx->display, sp->selectGC,
-									fl_get_flcolor( fli_dithered( fl_vmode ) ?
-													FL_BLACK : sp->def_col2 ) );
-				}
 			}
 
 			fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,

@@ -68,11 +68,6 @@ set_geom( FL_OBJECT * obj )
 			sp->orient = 0;
 			fl_set_object_label( sp->up,   "@8>" );
 			fl_set_object_label( sp->down, "@2>" );
-
-			/* This shouldn't be necessary */
-
-			fl_redraw_object( sp->up );
-			fl_redraw_object( sp->down );
 		}
 	}
 	else
@@ -96,11 +91,6 @@ set_geom( FL_OBJECT * obj )
 			sp->orient = 1;
 			fl_set_object_label( sp->up,   "@6>" );
 			fl_set_object_label( sp->down, "@4>" );
-
-			/* This shouldn't be necessary */
-
-			fl_redraw_object( sp->up );
-			fl_redraw_object( sp->down );
 		}
 	}
 }
@@ -128,15 +118,16 @@ handle_spinner( FL_OBJECT * obj,
 
 	switch ( event )
 	{
+		case FL_ATTRIB :
 		case FL_RESIZED :
-			sp->need_geom_recalc = 1;
+			sp->attrib = 1;
 			break;
 
 		case FL_DRAW :
-			if ( sp->need_geom_recalc )
+			if ( sp->attrib )
 			{
 				set_geom( obj );
-				sp->need_geom_recalc = 0;
+				sp->attrib = 0;
 			}
 
 		case FL_DRAWLABEL :
@@ -362,7 +353,7 @@ fl_create_spinner( int          type,
 
 	sp->orient = orient;
 	sp->prec = 1;
-	sp->need_geom_recalc = 1;
+	sp->attrib = 1;
 
     fl_add_child( obj, sp->input );
     fl_add_child( obj, sp->up );

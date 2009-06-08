@@ -336,7 +336,8 @@ handle_button( FL_OBJECT * obj,
 			if ( obj->type == FL_MENU_BUTTON )
 				ret |= FL_RETURN_END;
 			if (    obj->type == FL_INOUT_BUTTON
-				 || obj->type == FL_MENU_BUTTON )
+				 || obj->type == FL_MENU_BUTTON
+				 || obj->type == FL_TOUCH_BUTTON )
 				ret |= FL_RETURN_CHANGED;
 			break;
 
@@ -489,7 +490,10 @@ fl_create_generic_button( int          objclass,
     if ( type == FL_HIDDEN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
 		obj->boxtype = FL_NO_BOX;
 	if ( obj->type == FL_TOUCH_BUTTON )
+	{
 		obj->want_update = 1;
+		obj->how_return = FL_RETURN_CHANGED;
+	}
 
     sp = obj->spec  = fl_calloc( 1, sizeof *sp );
 

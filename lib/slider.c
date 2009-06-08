@@ -499,11 +499,9 @@ handle_motion( FL_OBJECT * obj,
 			}
 			
 			if ( IS_HSLIDER( obj->type ) )
-				mx =   sp->old_mx
-					 + ( mx - sp->old_mx ) * FL_SLIDER_FINE;
+				mx = sp->old_mx + ( mx - sp->old_mx ) * FL_SLIDER_FINE;
 			else
-				my =   sp->old_my
-					 + ( my - sp->old_my ) * FL_SLIDER_FINE;
+				my = sp->old_my + ( my - sp->old_my ) * FL_SLIDER_FINE;
 		}
 		else
 			sp->was_shift = 0;
@@ -574,7 +572,7 @@ handle_push( FL_OBJECT * obj,
 
 	ret = handle_mouse( obj, mx, my, key );
 
-	/* If a shift key is pressed record the mouse position */
+	/* If a shift key is pressed record the current mouse position */
 
 	if ( shiftkey_down( ( ( XEvent * ) ev )->xbutton.state ) )
 	{
@@ -582,6 +580,8 @@ handle_push( FL_OBJECT * obj,
 		sp->old_my = my;
 		sp->was_shift = 1;
 	}
+	else
+		sp->was_shift = 0;
 
 	if ( ret && ! ( obj->how_return & FL_RETURN_END_CHANGED ) )
 		sp->start_val = sp->val;
@@ -671,8 +671,8 @@ handle_release( FL_OBJECT * obj,
 		 && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 ) )
 		return FL_RETURN_NONE;
 
-	/* Take care, 'ev' might be NULL - on hiding form a fake FL_RELEASE
-	   event gets send */
+	/* Take care, 'ev' might be NULL - on hiding the buttons form a fake
+	   FL_RELEASE event gets send */
 
 	if (    ev
 		 && ( ret = handle_scroll( obj, key,

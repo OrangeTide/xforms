@@ -65,6 +65,7 @@ attrib_change( FL_OBJECT * ob )
     sp->tb->col1    = ob->col1;
     sp->tb->col2    = ob->col2;
     sp->tb->bw      = ob->bw;
+	( ( FLI_TBOX_SPEC * ) sp->tb->spec )->attrib = 1;
 
     /* Scrollbars */
 
@@ -204,8 +205,6 @@ get_geometry( FL_OBJECT * obj )
 
 		sp->attrib = 1;
     }
-    else
-		comp->attrib = 0;
 }
 
 
@@ -245,9 +244,19 @@ handle_browser( FL_OBJECT * ob,
 
     switch ( event )
     {
+		case FL_RESIZED :
+		case FL_ATTRIB :
+			comp->attrib = 1;
+			break;
+
 		case FL_DRAW:
-			attrib_change( ob );
-			get_geometry( ob );
+			if ( comp->attrib )
+			{
+				attrib_change( ob );
+				get_geometry( ob );
+				comp->attrib = 0;
+			}
+
 			draw_dead_area( ob, comp );
 			/* fall through */
 
@@ -299,6 +308,8 @@ redraw_scrollbar( FL_OBJECT * ob )
 		fl_redraw_object( comp->vsl );
 		fl_redraw_object( comp->hsl );
 		fl_redraw_object( comp->tb );
+
+		comp->attrib = 0;   /* JTT */
     }
 
     draw_dead_area( ob, comp );
@@ -506,6 +517,7 @@ fl_create_browser( int          type,
 	sp->hcb      = sp->vcb = NULL;
 	sp->hcb_data = sp->vcb_data = NULL;
 	sp->old_hp   = sp->old_vp = 0.0;
+	sp->attrib   = 1;
 
     /* Copy browser attributes from textbox */
 
@@ -799,6 +811,20 @@ fl_set_browser_rel_yoffset( FL_OBJECT * ob,
 
 	fli_tbox_set_rel_yoffset( sp->tb, val );
 	redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ * Returns the y-offset for a certain line (or -1 if line does not exist).
+ ***************************************/
+
+int
+fl_get_browser_line_yoffset( FL_OBJECT * obj,
+							 int         line )
+{
+    FLI_BROWSER_SPEC *sp = obj->spec;
+
+	return fli_tbox_get_line_yoffset( sp->tb, line + 1 );
 }
 
 

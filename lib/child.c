@@ -238,6 +238,21 @@ fli_set_composite_gravity( FL_OBJECT *  obj,
 
 
 /***************************************
+ ***************************************/
+
+void
+fli_composite_has_been_resized( FL_OBJECT * obj )
+{
+    for ( obj = obj->child; obj; obj = obj->nc )
+	{
+		if ( obj->child )
+			fli_composite_has_been_resized( obj );
+		fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
+	}
+}
+
+
+/***************************************
  * Sets the resize property for the children of an object
  * (and their children in turn)
  ***************************************/

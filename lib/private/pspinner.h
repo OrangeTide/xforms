@@ -37,7 +37,7 @@ typedef struct {
 	int         orient;
 	int         prec;
 
-	int         need_geom_recalc;
+	int         attrib;
 
 	int         old_ival;
 	double      old_fval;

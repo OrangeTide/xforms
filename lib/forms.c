@@ -564,7 +564,7 @@ scale_form( FL_FORM * form,
 		form->hoty = form->hoty * ysc;
     }
 
-    /* need to handle different resizing request */
+    /* Need to handle different resizing request */
 
     for ( obj = form->first; obj; obj = obj->next )
     {

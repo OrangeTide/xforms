@@ -746,6 +746,8 @@ extern void fli_set_composite_gravity( FL_OBJECT *,
 extern void fli_set_composite_resize( FL_OBJECT *,
 									 unsigned int );
 
+extern void fli_composite_has_been_resized( FL_OBJECT * );
+
 extern void fli_parse_goodies_label( FL_OBJECT *,
 									 const char * );
 

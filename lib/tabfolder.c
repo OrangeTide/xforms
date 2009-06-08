@@ -868,7 +868,8 @@ fl_get_active_folder( FL_OBJECT * ob )
 
     sp = ob->spec;
 
-    return sp->active_folder >= 0 ? sp->forms[ sp->active_folder ] : NULL;
+    return ( sp->forms && sp->active_folder >= 0 ) ?
+		   sp->forms[ sp->active_folder ] : NULL;
 }
 
 

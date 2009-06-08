@@ -684,8 +684,7 @@ fl_set_object_boxtype( FL_OBJECT * obj,
     if ( obj->boxtype != boxtype )
     {
 		obj->boxtype = boxtype;
-        if ( obj->child )
-            fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 		fl_redraw_object( obj );
     }
 }
@@ -823,6 +822,7 @@ fl_set_object_color( FL_OBJECT * obj,
     {
 		obj->col1 = col1;
 		obj->col2 = col2;
+		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 		fl_redraw_object( obj );
     }
 }
@@ -956,7 +956,10 @@ fl_set_object_lcol( FL_OBJECT * obj,
 			{
 				obj->lcol = lcol;
 				if ( obj->objclass != FL_BEGIN_GROUP )
+				{
+					fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 					fl_redraw_object( obj );
+				}
 			}
 		}
 
@@ -965,6 +968,7 @@ fl_set_object_lcol( FL_OBJECT * obj,
     else if ( obj->lcol != lcol )
     {
 		obj->lcol = lcol;
+		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 		fl_redraw_object( obj );
     }
 }
@@ -998,6 +1002,7 @@ fl_set_object_lsize( FL_OBJECT * obj,
 		if ( LInside( obj->align ) )
 		{
 			obj->lsize = lsize;
+			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 			fl_redraw_object( obj );
 		}
 		else
@@ -1008,6 +1013,7 @@ fl_set_object_lsize( FL_OBJECT * obj,
 				fl_hide_object( obj );
 
 			obj->lsize = lsize;
+			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 
 			if ( visible )
 				fl_show_object( obj );
@@ -1042,6 +1048,7 @@ fl_set_object_lstyle( FL_OBJECT * obj,
 		if ( LInside( obj->align ) )
 		{
 			obj->lstyle = lstyle;
+			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 			fl_redraw_object( obj );
 		}
 		else
@@ -1052,6 +1059,7 @@ fl_set_object_lstyle( FL_OBJECT * obj,
 				fl_hide_object( obj );
 
 			obj->lstyle = lstyle;
+			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 
 			if ( visible )
 				fl_show_object( obj );
@@ -1933,14 +1941,14 @@ fl_redraw_object( FL_OBJECT * obj )
     else
 		obj->redraw = 1;
 
-    /* if composite object, flag all children */
+    /* If composite object, flag all children */
 
     if (    obj->child
 		 && ( ! obj->parent || obj->parent->visible )
 		 && obj->visible )
 		fli_mark_composite_for_redraw( obj );
 
-    /* If obj is a child object and the parent is not visible, do nothing */
+    /* If object is a child object and the parent is not visible, do nothing */
 
     if ( obj->visible && ( ! obj->parent || obj->parent->visible ) )
 		redraw_marked( obj->form, 0, NULL );
@@ -2252,10 +2260,11 @@ handle_object( FL_OBJECT * obj,
 		return FL_RETURN_NONE;
 
 #if FL_DEBUG >= ML_WARN
-    if ( ! obj->form && event != FL_FREEMEM )
+    if ( ! obj->form && ! ( event == FL_FREEMEM || event == FL_ATTRIB ) )
     {
-		M_err( "handle_object", "Bad object %s. Event=%s",
-			   obj->label ? obj->label : "", fli_event_name( event ) );
+		M_err( "handle_object", "Bad object %s, event = %s",
+			   obj->label ? obj->label : "(no label)",
+			   fli_event_name( event ) );
 		return FL_RETURN_NONE;
     }
 #endif
@@ -2500,7 +2509,7 @@ fl_set_object_bw( FL_OBJECT * obj,
 		return;
     }
 
-    /* check if this object is a group, if so, change all members */
+    /* Check if this object is a group, if so, change all members */
 
     if ( obj->objclass == FL_BEGIN_GROUP )
     {
@@ -2511,7 +2520,10 @@ fl_set_object_bw( FL_OBJECT * obj,
 			{
 				obj->bw = bw;
 				if ( obj->objclass != FL_BEGIN_GROUP )
+				{
+					fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 					fl_redraw_object( obj );
+				}
 			}
 		}
 
@@ -2520,6 +2532,7 @@ fl_set_object_bw( FL_OBJECT * obj,
     else if ( obj->bw != bw )
     {
 		obj->bw = bw;
+		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 		fl_redraw_object( obj );
     }
 }
@@ -2535,7 +2548,7 @@ fl_get_object_bw( FL_OBJECT * obj,
 {
     if ( ! obj )
     {
-		M_err( "fl_set_object_bw", "NULL object." );
+		M_err( "fl_get_object_bw", "NULL object." );
 		return;
     }
 
@@ -2683,6 +2696,13 @@ fl_scale_object( FL_OBJECT * obj,
 
 		if ( fli_inverted_y )
 			obj->y = TRANY( obj, obj->form );
+
+		fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
+
+		/* If there are child objects also inform them about the size change */
+
+		if ( obj->child )
+			fli_composite_has_been_resized( obj );
 
 		fli_recalc_intersections( obj->form );
 	}
@@ -2904,7 +2924,10 @@ fl_set_object_position( FL_OBJECT * obj,
 		fli_recalc_intersections( obj->form );
 
     if ( visible )
+	{
+		fli_handle_object( obj, FL_MOVEORIGIN, 0, 0, 0, NULL, 0 );
 		fl_show_object( obj );
+	}
 }
 
 
@@ -2997,10 +3020,15 @@ fl_set_object_size( FL_OBJECT * obj,
 	if ( fli_inverted_y )
 		obj->y = TRANY( obj, obj->form );
 
+	fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
+
+	/* If there are child objects also inform them about the size change */
+
+	if ( obj->child )
+		fli_composite_has_been_resized( obj );
+
 	if ( ! obj->parent )
 		fli_recalc_intersections( obj->form );
-
-	fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
 
     if ( visible )
 		fl_show_object( obj );

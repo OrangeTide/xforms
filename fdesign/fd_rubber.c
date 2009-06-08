@@ -232,7 +232,7 @@ ready( void )
 
 
 /***************************************
- * returns the position of the mouse in world coordinates
+ * Returns the position of the mouse in world coordinates
  ***************************************/
 
 void
@@ -250,7 +250,7 @@ get_mouse_pos( float * xx,
 
 
 /***************************************
- * drag a box around until the user releases a mouse button
+ * Drag a box around until the user releases a mouse button
  ***************************************/
 
 void
@@ -302,7 +302,7 @@ move_box( float * x,
 
 
 /***************************************
- * scales a box until the user releases a mouse button
+ * Scales a box until the user releases a mouse button
  ***************************************/
 
 void

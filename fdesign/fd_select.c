@@ -716,6 +716,8 @@ resize_selection( FL_Coord dx,
 			selobj[ i ]->ft2 += y;
 			selobj[ i ]->fb1 -= y;
 			selobj[ i ]->fb2 -= y;
+
+
 		}
 
     if ( backf )

@@ -226,13 +226,12 @@ Return object or invoke callback on all of the above condtions.
 
 Most buttons will always return @code{@ref{FL_RETURN_END}} and
 @code{@ref{FL_RETURN_CHANGED}} at the same time. Exceptions are
-@code{@ref{FL_INOUT_BUTTON}}s and @code{@ref{FL_TOUCH_BUTTON}}s.
-The former returns @code{@ref{FL_RETURN_CHANGED}} when pushed
-and @code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}}
-together when released. @code{@ref{FL_TOUCH_BUTTON}}s return
-@code{@ref{FL_RETURN_CHANGED}} in regular time intervals while
-its pressed and @code{@ref{FL_RETURN_END}} and
-@code{@ref{FL_RETURN_CHANGED}} when released.
+@code{@ref{FL_INOUT_BUTTON}}s and @code{@ref{FL_TOUCH_BUTTON}}s. The
+former returns @code{@ref{FL_RETURN_CHANGED}} when pushed and both
+@code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}} together
+when released. @code{@ref{FL_TOUCH_BUTTON}}s return when pressed, then
+@code{@ref{FL_RETURN_CHANGED}} at regular time intervals while being
+pressed and finally @code{@ref{FL_RETURN_END}} when released.
 
 See demo @file{butttypes.c} for a feel of the different button types.
 
@@ -314,7 +313,8 @@ void fl_get_button_mouse_buttons(FL_OBJECT *obj,
 The value returned via @code{mbuttons} is the same value as would
 be used in @code{@ref{fl_set_button_mouse_buttons()}}.
 
-If more information is desired about the last event, use
+More information about the last event can be obtained by calling the
+function
 @code{@ref{fl_last_event()}}
 @findex fl_last_event()
 @example
@@ -322,7 +322,7 @@ const XEvent *fl_last_event(void);
 @end example
 
 In a number of situations it is useful to define a keyboard equivalent
-to a button. E.g.@: you might want to define that @code{<Ctrl>Q} has
+for a button. You might e.g.@: want to define that @code{<Ctrl>Q} has
 the same meaning as pressing the "Quit" button. This can be achieved
 using the following call:
 @findex fl_set_button_shortcut()
