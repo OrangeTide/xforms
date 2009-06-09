@@ -341,18 +341,18 @@ fl_create_spinner( int          type,
 	fl_set_object_callback( sp->up,    spinner_callback,  1 );
 	fl_set_object_callback( sp->down,  spinner_callback, -1 );
 
-	sp->i_val = sp->old_ival = 0;
-	sp->i_min = INT_MIN;
-	sp->i_max = INT_MAX;
+	sp->i_val  = sp->old_ival = 0;
+	sp->i_min  = INT_MIN;
+	sp->i_max  = INT_MAX;
 	sp->i_incr = 1;
 
-	sp->f_val = sp->old_fval = 0.0;
-	sp->f_min = - DBL_MAX;
-	sp->f_max = DBL_MAX;
+	sp->f_val  = sp->old_fval = 0.0;
+	sp->f_min  = - DBL_MAX;
+	sp->f_max  = DBL_MAX;
 	sp->f_incr = 1.0;
 
 	sp->orient = orient;
-	sp->prec = 1;
+	sp->prec   = DEFAULT_SPINNER_PRECISION;
 	sp->attrib = 1;
 
     fl_add_child( obj, sp->input );
@@ -380,7 +380,7 @@ fl_add_spinner( int          type,
 
 	/* Set default return policy for a spinner object */
 
-	fl_set_object_return( obj, FL_RETURN_CHANGED );
+	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
     fl_add_object( fl_current_form, obj );
 

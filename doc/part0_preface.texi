@@ -38,6 +38,13 @@ original sources seem to have gone AWOL) and is to be considered work
 in progress towards a documentation that describes the newest version,
 the soon to be published version 1.0.92.
 
+@strong{Please note: while development is going on the documentation
+necessarily requires to be chaged accordingly. The version you're just
+reading is meant for the newest development version. Some things from
+older versions might be missing (e.g.@: function that are deprecated
+but still can be used), while some features described here may not be
+available with older versions of XForms.}
+
 In the following the preface for the last available version of the
 documentation (version 0.89 from June 2000) is reproduced. Please note
 that a lot of the information there-in is outdated. Many of the URLs

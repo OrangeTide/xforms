@@ -44,4 +44,7 @@ typedef struct {
 } FLI_SPINNER_SPEC;
 
 
+#define DEFAULT_SPINNER_PRECISION  6
+
+
 #endif /* PSPINNER_H */

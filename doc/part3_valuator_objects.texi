@@ -9,6 +9,7 @@
 * Dial Object:        Dial Object
 * Positioner Object:  Positioner Object
 * Counter Object:     Counter Object
+* Spinner Object:     Spinner Object
 * Thumbwheel Object:  Thumbwheel Object
 @end menu
 
@@ -1255,6 +1256,216 @@ See demo program @file{counter.c} for an example of the use of
 counters.
 
 
+@node Spinner Object
+@section Spinner Object
+
+A spinner object is a combination of a (numerical) input field with
+two (touch) buttons that allow to increment or decrement the value in
+the (editable) iput field. I.e.@: the user can change the spinners
+value by either editing the value of the input field or by using the
+up/down buttons shown beside the input field.
+
+There are two types of spinner objects, one for integer and one for
+floating point values. You can set limits on the values that can be
+input and you can also set the amount of increment/decrement achieved
+when cicking on its buttons.
+
+@ifnottex
+
+@menu
+* Adding Spinner Objects:   Adding Spinner Objects
+* Spinner Types:            Spinner Types
+* Spinner Interaction:      Spinner Interaction
+* Other Spinner Routines:   Other Spinner Routines
+* Spinner Attributes:       Spinner Attributes
+@end menu
+
+@end ifnottex
+
+@node Adding Spinner Objects
+@subsection Adding Spinner Objects
+
+To add a spinner to a form use
+@findex fl_add_spinner()
+@anchor{fl_add_spinner()}
+@example
+FL_OBJECT *fl_add_spinner(int type, FL_Coord x, FL_Coord y,
+                          FL_Coord w, FL_Coord h, const char *label);
+@end example
+@noindent
+The meaning of the parameters is as usual. The label is by default
+placed on the left of the spinner object.
+
+
+@node Spinner Types
+@subsection Spinner Types
+
+There are two types pf spinners, one for input of integer and
+one for floating point values:
+@table @code
+@tindex FL_INT_SPINNER
+@anchor{FL_INT_SPINNER}
+@item FL_INT_SPINNER
+A spinner that allows input of integer values.
+
+@tindex FL_FLOAT_SPINNER
+@anchor{FL_FLOAT_SPINNER}
+@item FL_FLOAT_SPINNER
+A spinner that allows input of floating point values.
+@end table
+
+The way a spinner looks like depends on its dimensions. If its at
+least as wide as its high the two buttons a drawn above each other
+to the right of the input field (and are marked with and up and
+down pointing triangle), while when the object is higher than it's
+wide they are drawn beside eacho other and below the input field
+(and the markers are then left and right pointing arrows).
+
+
+@node Spinner Interaction
+@subsection Spinner Interaction
+
+The user can change the value of a spinner in two ways. She can either
+edit the value in the spinner directly (exactly the same as for an
+integer or floating point input object (@ref{Part III Input Objects})
+or by clicking on one of the buttons thatwill increment or decrement
+the value.
+
+Per default the spinner object gets returned tothe application
+(or the associated calback is called) whenever the value changed
+and the interaction seems to have ended. If you want it returned
+under different circumstances use the function
+@findex fl_set_object_return()
+@example
+void fl_set_object_return(FL_OBJECT *obj, int when);
+@end example
+where the parameter @code{when} can be one of the four values
+@table @code
+@tindex FL_RETURN_NEVER
+@item FL_RETURN_NEVER
+Never return or invoke callback.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback at end if value is changed
+since last return (this is the default)
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever the spinner's value changed.
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback at end regardless if the spinner's value was
+changed or not.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return or invoke callback whenever the value changed or the
+interaction ended.
+@end table
+
+
+@node Other Spinner Routines
+@subsection Other Spinner Routines
+
+Probably the most often used spinner functions are
+@findex fl_get_spinner_value()
+@anchor{fl_get_spinner_value()}
+@findex fl_set_spinner_value()
+@anchor{fl_set_spinner_value()}
+@example
+double fl_get_spinner_value(FL_OBJECT *obj );
+double fl_set_spinner_value(FL_OBJECT *obj, double val);
+@end example
+@noindent
+The first one returns the value of a spinner. The type of the return
+value is a double for both integer and floating point spinners, so
+you have to convert it for integer spinners appropriately, e.g:@:
+using the @code{FL_nint()} macro, that converts a double to the
+nearest integer value.
+
+You can set or retrieve the upper and lower limit the value a spinner
+can be set to using the functions
+@findex fl_set_spinner_bounds()
+@anchor{fl_set_spinner_bounds()}
+@findex fl_get_spinner_bounds()
+@anchor{fl_get_spinner_bounds()}
+@example
+void fl_set_spinner_bounds(FL_OBJECT *obj, double min, double max);
+void fl_get_spinner_bounds(FL_OBJECT *obj, double *min, double *max);
+@end example
+@noindent
+Since this function is to be used for integer as well as floating
+point spinner objects the @code{double} type values must be converted
+as necessary for @code{@ref{FL_INT_SPINNER}}.
+
+The default limits are @code{INT_MIN} and @code{INT_MAX} for
+@code{@ref{FL_INT_SPINNER}} and @code{-DBL_MAX} and @code{DBL_MAX}
+for @code{@ref{FL_FLOAT_SPINNER}}.
+
+To set or determine the step size by which a spinner will be
+incremented or decremented when one of the buttons is clicked on use
+@findex fl_set_spinner_step()
+@anchor{fl_set_spinner_step()}
+@findex fl_get_spinner_step()
+@anchor{fl_get_spinner_step()}
+@example
+void fl_set_spinner_step(FL_OBJECT *obj, double step);
+double fl_get_spinner_step(FL_OBJECT *obj);
+@end example
+@noindent
+The default step size if @code{1} for both @code{@ref{FL_INT_SPINNER}}
+and @code{@ref{FL_FLOAT_SPINNER}} objects.
+
+
+For @code{@ref{FL_FLOAT_SPINNER}} objects you can set (or determine)
+how many digits after the decimal point are shown by using
+@findex fl_set_spinner_precision()
+@anchor{fl_set_spinner_precision()}
+@findex fl_get_spinner_precision()
+@anchor{fl_get_spinner_precision()}
+@example
+void fl_set_spinner_precision(FL_OBJECT *obj, int prec);
+int fl_get_spinner_precision(FL_OBJECT *obj);
+@end example
+@noindent
+This is per default set to 6 digits after the decimal point. The
+function has no effect on @code{@ref{FL_INT_SPINNER}} objects. 
+
+
+@node Spinner Attributes
+@subsection Spinner Attributes
+
+The label color and font can be set using the normal
+@code{@ref{fl_set_object_lcol()}}, @code{@ref{fl_set_object_lsize()}}
+and @code{@ref{fl_set_object_lstyle()}} functions. The
+@code{@ref{fl_set_object_color()}} function does not influence the
+colors a spinner object is drawn.
+
+Instead of creating a plethora of functions to influence all the
+aspects of how the spinner is drawn (colors, font types etc.) the user
+is given direct access to the sub-objects of a spinner. To this end
+three functions exist:
+@findex fl_get_spinner_input()
+@anchor{fl_get_spinner_input()}
+@findex fl_get_spinner_up_button()
+@anchor{fl_get_spinner_up_button()}
+@findex fl_get_spinner_down_button()
+@anchor{fl_get_spinner_down_button()}
+@example
+FL_OBJECT *fl_get_spinner_input(FL_OBJECT *obj);
+FL_OBJECT *fl_get_spinner_up_button(FL_OBJECT *obj);
+FL_OBJECT *fl_get_spinner_down_button(FL_OBJECT *obj);
+@end example
+@noindent
+They return the addresses of the objects the spinner object is made up
+from and those then can be used to set or query the way the individual
+components are drawn. The addresses of these sub-objects shouldn't be
+used for any other purposes, especially their callback function should
+never be changed!
+
+
 @node Thumbwheel Object
 @section Thumbwheel Object
 
@@ -1281,7 +1492,7 @@ current value by rolling the wheel.
 @node Adding Thumbwheel Objects
 @subsection Adding Thumbwheel Objects
 
-Adding an object To add a thumbwheel to a form use
+To add a thumbwheel to a form use
 @findex fl_add_thumbwheel()
 @anchor{fl_add_thumbwheel()}
 @example

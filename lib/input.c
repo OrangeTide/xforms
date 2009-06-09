@@ -2055,7 +2055,7 @@ fl_get_input_cursorpos( FL_OBJECT * obj,
 
 
 /***************************************
- * really should let the user have a chance to override any of the
+ * Really should let the user have a chance to override any of the
  * defaults here. _TODO_
  ***************************************/
 
