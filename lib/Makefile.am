@@ -1,5 +1,11 @@
 include $(top_srcdir)/config/common.am
 
+if USE_BWC_BS_HACK
+BWC = -D USE_BWC_BS_HACK
+else
+BWC =
+endif
+
 CLEANFILES = forms.h xforms.5
 
 EXTRA_DIST = xforms.man \
@@ -15,7 +21,7 @@ man_MANS = xforms.5
 xforms.5:
 	cp -p $(srcdir)/xforms.man xforms.5
 
-INCLUDES = -DMAKING_FORMS $(X_CFLAGS)
+INCLUDES = -DMAKING_FORMS $(X_CFLAGS) $(BWC)
 
 lib_LTLIBRARIES = libforms.la
 

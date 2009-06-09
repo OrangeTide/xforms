@@ -51,35 +51,41 @@ static void attrib_change( FL_OBJECT * );
  ***************************************/
 
 static int
-handle_scrollbar( FL_OBJECT * ob,
+handle_scrollbar( FL_OBJECT * obj,
 				  int         event,
 				  FL_Coord    mx   FL_UNUSED_ARG,
 				  FL_Coord    my   FL_UNUSED_ARG,
 				  int         key  FL_UNUSED_ARG,
 				  void      * ev   FL_UNUSED_ARG )
 {
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
+
     switch ( event )
     {
 		case FL_ATTRIB :
-			attrib_change( ob );
-			get_geom( ob );
+		case FL_RESIZED :
+			sp->attrib = 1;
 			break;
 
 		case FL_DRAW :
-			attrib_change( ob );
-			get_geom( ob );
-			if ( IsThin( ob->type ) )
-				fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-							ob->col1, ob->bw );
+			if ( sp->attrib )
+			{
+				attrib_change( obj );
+				get_geom( obj );
+				sp->attrib = 0;
+			}
+			if ( IsThin( obj->type ) )
+				fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+							obj->col1, obj->bw );
 			/* fall through */
 
 		case FL_DRAWLABEL :
-			fl_draw_object_label_outside( ob );
+			fl_draw_object_label_outside( obj );
 			break;
 
 		case FL_FREEMEM :
 			/* children will take care of themselves */
-			fl_free( ob->spec );
+			fl_free( obj->spec );
 			break;
     }
 
@@ -96,15 +102,15 @@ handle_scrollbar( FL_OBJECT * ob,
  ***************************************/
 
 static void
-attrib_change( FL_OBJECT * ob )
+attrib_change( FL_OBJECT * obj )
 {
-    FLI_SCROLLBAR_SPEC *sp = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
-    sp->slider->col1 = ob->col1;
-    sp->slider->col2 = ob->col2;
-    sp->up->col1 = sp->down->col1 = ob->col1;
-    sp->up->col2 = sp->down->col2 = ob->col2;
-    sp->up->boxtype = sp->down->boxtype = sp->slider->boxtype = ob->boxtype;
+    sp->slider->col1 = obj->col1;
+    sp->slider->col2 = obj->col2;
+    sp->up->col1     = sp->down->col1    = obj->col1;
+    sp->up->col2     = sp->down->col2    = obj->col2;
+    sp->up->boxtype  = sp->down->boxtype = sp->slider->boxtype = obj->boxtype;
 }
 
 
@@ -118,20 +124,20 @@ attrib_change( FL_OBJECT * ob )
  ***************************************/
 
 static void
-get_geom( FL_OBJECT * ob )
+get_geom( FL_OBJECT * obj )
 {
-    FLI_SCROLLBAR_SPEC *sp = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
     FL_OBJECT *up     = sp->up,
 		      *down   = sp->down,
 		      *slider = sp->slider;
-    int x = ob->x,
-		y = ob->y,
-		w = ob->w,
-		h = ob->h;
-    int absbw = FL_abs( ob->bw );
-    int t = ob->type;
+    int x = obj->x,
+		y = obj->y,
+		w = obj->w,
+		h = obj->h;
+    int absbw = FL_abs( obj->bw );
+    int t = obj->type;
 
-    if ( is_horiz( ob->type ) )
+    if ( is_horiz( obj->type ) )
     {
 		down->x = x;
 		up->x = x + w - h;
@@ -169,21 +175,21 @@ get_geom( FL_OBJECT * ob )
 		down->y = y + h - down->h;
     }
 
-    up->bw = ob->bw;
-    down->bw = ob->bw;
-    slider->bw = ob->bw;
+    up->bw     = obj->bw;
+    down->bw   = obj->bw;
+    slider->bw = obj->bw;
 
     if ( absbw > 2 )
 		absbw--;
 
-    if ( ob->bw > 0 )
+    if ( obj->bw > 0 )
 		up->bw = down->bw = absbw;
     else
 		up->bw = down->bw = -absbw;
 
     if ( IsThin( t ) )
     {
-		absbw = IS_FLATBOX( ob->boxtype ) ? 1 : absbw;
+		absbw = IS_FLATBOX( obj->boxtype ) ? 1 : absbw;
 
 		up->boxtype = down->boxtype = FL_NO_BOX;
 		up->bw = down->bw = absbw;
@@ -379,13 +385,26 @@ fl_create_scrollbar( int          type,
     fl_set_slider_increment( sp->slider, 5 * sp->increment, sp->increment );
     fl_set_object_callback( sp->slider, slider_cb, 0 );
 	fl_set_slider_bounds( sp->slider, 0.0, 1.0 );
-    get_geom( obj );
+	sp->attrib = 1;
 
 	sp->old_val = fl_get_slider_value( sp->slider );
 
     fl_add_child( obj, sp->slider );
     fl_add_child( obj, sp->down );
     fl_add_child( obj, sp->up );
+
+	/* In older versions scrollbars and browsers didn't return to the
+	   application on e.g. fl_do_forms() but still a callback associated
+	   with the object got called. To emulate the old behaviour we have
+	   to set the return policy to default to FL_RETURN_NONE and only
+	   change that to FL_RETURN_CHANGED when a callback is installed
+	   (which is done in fl_set_object_callback()) */
+
+#if ! USE_BWC_BS_HACK
+	fl_set_object_return( obj, FL_RETURN_CHANGED );
+#else
+	fl_set_object_return( obj, FL_RETURN_NONE );
+#endif
 
     return obj;
 }
@@ -411,10 +430,6 @@ fl_add_scrollbar( int          type,
 {
     FL_OBJECT *obj = fl_create_scrollbar( type, x, y, w, h, l );
 
-	/* Set the default return policy for the object */
-
-	fl_set_object_return( obj, FL_RETURN_CHANGED );
-
     fl_add_object( fl_current_form, obj );
     return obj;
 }
@@ -424,16 +439,18 @@ fl_add_scrollbar( int          type,
  ***************************************/
 
 double
-fl_get_scrollbar_value( FL_OBJECT * ob )
+fl_get_scrollbar_value( FL_OBJECT * obj )
 {
-    if ( ! ISSCROLLBAR( ob ) )
+	FLI_SCROLLBAR_SPEC *sp = obj->spec;
+
+    if ( ! ISSCROLLBAR( obj ) )
     {
-		M_err( "GetScrollBarVal", "%s not a scrollbar",
-			   ob ? ob->label : "Object" );
+		M_err( "fl_get_scrollbar_value", "%s not a scrollbar",
+			   obj ? obj->label : "Object" );
 		return - HUGE_VAL;
     }
 
-    return fl_get_slider_value( ( ( FLI_SCROLLBAR_SPEC * ) ob->spec )->slider );
+    return fl_get_slider_value( sp->slider );
 }
 
 
@@ -441,15 +458,15 @@ fl_get_scrollbar_value( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_scrollbar_value( FL_OBJECT * ob,
+fl_set_scrollbar_value( FL_OBJECT * obj,
 						double      val )
 {
-	FLI_SCROLLBAR_SPEC *sp = ob->spec;
+	FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
-    if ( ! ISSCROLLBAR( ob ) )
+    if ( ! ISSCROLLBAR( obj ) )
     {
 		M_err( "fl_set_scrollbar_value", "%s not a scrollbar",
-			   ob ? ob->label : "Object" );
+			   obj ? obj->label : "Object" );
 		return;
     }
 
@@ -459,13 +476,18 @@ fl_set_scrollbar_value( FL_OBJECT * ob,
 
 
 /***************************************
+ * Sets the size of the knob of the scrollbar
+ * (the function name is a bit of misnomer)
  ***************************************/
 
 void
-fl_set_scrollbar_size( FL_OBJECT * ob,
+fl_set_scrollbar_size( FL_OBJECT * obj,
 					   double      val )
 {
-    fl_set_slider_size( ( ( FLI_SCROLLBAR_SPEC * ) ob->spec )->slider, val );
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
+
+    fl_set_slider_size( sp->slider, val );
+	sp->attrib = 1;
 }
 
 
@@ -473,11 +495,11 @@ fl_set_scrollbar_size( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_scrollbar_increment( FL_OBJECT * ob,
+fl_set_scrollbar_increment( FL_OBJECT * obj,
 							double      l,
 							double      r )
 {
-    FLI_SCROLLBAR_SPEC *sp = ob->spec;
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     fl_set_slider_increment( sp->slider, l, r );
     sp->increment = r;
@@ -488,12 +510,13 @@ fl_set_scrollbar_increment( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_get_scrollbar_increment( FL_OBJECT * ob,
+fl_get_scrollbar_increment( FL_OBJECT * obj,
 						    double    * a,
 							double    * b )
 {
-    fl_get_slider_increment( ( ( FLI_SCROLLBAR_SPEC * ) ob->spec )->slider,
-							 a, b );
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
+
+    fl_get_slider_increment( sp->slider, a, b );
 }
 
 
@@ -501,19 +524,20 @@ fl_get_scrollbar_increment( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_scrollbar_bounds( FL_OBJECT * ob,
+fl_set_scrollbar_bounds( FL_OBJECT * obj,
 						 double      b1,
 						 double      b2 )
 {
-    if ( ! ISSCROLLBAR( ob ) )
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
+
+    if ( ! ISSCROLLBAR( obj ) )
     {
-		M_err( "SetScrollBarBounds", "%s not a scrollbar",
-			   ob ? ob->label : "Object" );
+		M_err( "fl_set_scrollbar_bounds", "%s not a scrollbar",
+			   obj ? obj->label : "Object" );
 		return;
     }
 
-    fl_set_slider_bounds( ( ( FLI_SCROLLBAR_SPEC * ) ob->spec )->slider,
-						  b1, b2 );
+    fl_set_slider_bounds( sp->slider, b1, b2 );
 }
 
 
@@ -525,8 +549,9 @@ fl_get_scrollbar_bounds( FL_OBJECT * obj,
 						 double *    b1,
 						 double *    b2 )
 {
-    fl_get_slider_bounds( ( ( FLI_SCROLLBAR_SPEC * ) obj->spec )->slider,
-						  b1, b2 );
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
+
+    fl_get_slider_bounds( sp->slider, b1, b2 );
 }
 
 
@@ -566,5 +591,7 @@ void
 fl_set_scrollbar_step( FL_OBJECT * obj,
 					   double      step )
 {
-    fl_set_slider_step( ( ( FLI_SCROLLBAR_SPEC * ) obj->spec )->slider, step );
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
+
+    fl_set_slider_step( sp->slider, step );
 }

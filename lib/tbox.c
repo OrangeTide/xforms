@@ -173,7 +173,7 @@ fli_tbox_delete_line( FL_OBJECT * obj,
 	/* Move pointers to following line structures  one up */
 
 	if ( --sp->num_lines != line )
-		memmove( sp->lines + i, sp->lines + i + 1,
+		memmove( sp->lines + line, sp->lines + line + 1,
 				 ( sp->num_lines - line ) * sizeof *sp->lines );
 
 	/* Reduce memory for array of structure pointers */
@@ -602,6 +602,7 @@ fli_tbox_replace_line( FL_OBJECT  * obj,
 					   const char * text )
 {
    FLI_TBOX_SPEC *sp = obj->spec;
+   int old_select_line = sp->select_line;
 
    if ( line < 0 || line >= sp->num_lines || ! text )
 	   return;
@@ -609,6 +610,8 @@ fli_tbox_replace_line( FL_OBJECT  * obj,
    tbox_do_not_redraw = 1;
    fli_tbox_delete_line( obj, line );
    fli_tbox_insert_line( obj, line, text );
+   if ( line == old_select_line && sp->lines[ line ]->selectable )
+	   fli_tbox_select_line( obj, line );
 }
 
 
@@ -2141,6 +2144,12 @@ handle_tbox( FL_OBJECT * obj,
 				draw_tboxline( obj, i );
 			break;
 
+		case FL_DBLCLICK :
+		case FL_TRPLCLICK :
+			if ( sp->callback )
+				sp->callback( obj, sp->callback_data );
+			break;
+
 		case FL_KEYBOARD :
 			ret = handle_keyboard( obj, key );
 			break;
@@ -2162,12 +2171,6 @@ handle_tbox( FL_OBJECT * obj,
 			if ( sp->yoffset != old_yoffset )
 				ret |= FL_RETURN_CHANGED;
 			obj->want_update = 0;
-			break;
-
-		case FL_DBLCLICK :
-		case FL_TRPLCLICK :
-			if ( sp->callback )
-				sp->callback( obj, sp->callback_data );
 			break;
 
 		case FL_FREEMEM :

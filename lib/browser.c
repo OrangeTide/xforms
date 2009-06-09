@@ -559,7 +559,20 @@ fl_create_browser( int          type,
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
 
+
+	/* In older versions scrollbars and browsers didn't return to the
+	   application on e.g. fl_do_forms() but still a callback associated
+	   with the object got called. To emulate the old behaviour we have
+	   to set the return policy to default to FL_RETURN_NONE and only
+	   change that to FL_RETURN_CHANGED when a callback is installed
+	   (which is done in fl_set_object_callback()) */
+
+#if ! USE_BWC_BS_HACK
 	fl_set_object_return( ob, FL_RETURN_SELECTION | FL_RETURN_DESELECTION );
+#else
+	fl_set_object_return( ob, FL_RETURN_NONE );
+#endif
+
 	fl_set_object_return( sp->hsl, FL_RETURN_ALWAYS );
 	fl_set_object_return( sp->vsl, FL_RETURN_ALWAYS );
 	fl_set_object_return( sp->tb, FL_RETURN_ALWAYS );

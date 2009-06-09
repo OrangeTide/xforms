@@ -28,6 +28,7 @@ typedef struct {
 	FL_OBJECT * down;
     double      increment;
 	double      old_val;
+	int         attrib;
 } FLI_SCROLLBAR_SPEC;
 
 

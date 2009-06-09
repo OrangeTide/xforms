@@ -2483,6 +2483,24 @@ fl_set_object_callback( FL_OBJECT      * obj,
     obj->object_callback = callback;
     obj->argument = argument;
 
+	/* In older versions scrollbars and browsers didn't return to the
+	   application on e.g. fl_do_forms() but still a callback associated
+	   with the object got called. To emulate the old behaviour we have
+	   to set the return policy to FL_RETURN_NEVER if the callback is
+	   removed and to (FL_RETURN_SELECTION|FL_RETURN_DESELECTION) or
+	   FL_RETURN_CHANGED when a callback is installed. */
+
+#if defined USE_BWC_BS_HACK
+	if ( obj->objclass == FL_BROWSER )
+		fl_set_object_return( obj,
+							  callback ?
+							  ( FL_RETURN_SELECTION | FL_RETURN_DESELECTION ) :
+							  FL_RETURN_NONE );
+	else if ( obj->objclass == FL_SCROLLBAR )
+		fl_set_object_return( obj,
+							  callback ? FL_RETURN_CHANGED : FL_RETURN_NONE);
+#endif
+
     return old;
 }
 
