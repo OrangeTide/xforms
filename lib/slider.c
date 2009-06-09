@@ -713,42 +713,51 @@ handle_slider( FL_OBJECT * ob,
 
     switch ( event )
     {
-		case FL_DRAW:
-			compute_bounds( ob );
+		case FL_ATTRIB :
+		case FL_RESIZED :
+			sp->attrib = 1;
+			break;
+
+		case FL_DRAW :
+			if ( sp->attrib )
+			{
+				compute_bounds( ob );
+				sp->attrib = 0;
+			}
 			ob->align &= ~ FL_ALIGN_INSIDE;
 			sp->draw_type = COMPLETE;
 			draw_slider( ob );
 			break;
 
-		case FL_DRAWLABEL:
+		case FL_DRAWLABEL :
 			fl_draw_object_label_outside( ob );
 			break;
 
-		case FL_FREEMEM:
+		case FL_FREEMEM :
 			fl_safe_free( ob->spec );
 			break;
 
-		case FL_ENTER:
+		case FL_ENTER :
 			handle_enter( ob, mx, my );
 			break;
 
-		case FL_LEAVE:
+		case FL_LEAVE :
 			handle_leave( ob );
 			break;
 
-		case FL_MOTION:
+		case FL_MOTION :
 			ret |= handle_motion( ob, mx, my, key, ev );
 			break;
 
-		case FL_PUSH:
+		case FL_PUSH :
 			ret |= handle_push( ob, mx, my, key, ev );
 			break;
 
-		case FL_UPDATE:
+		case FL_UPDATE :
 			ret |= handle_update( ob, mx, my, key );
 			break;
 
-		case FL_RELEASE:
+		case FL_RELEASE :
 			ret |= handle_release( ob, mx, my, key, ev );
 			break;
     }
@@ -782,6 +791,7 @@ create_it( int          objclass,
     ob->lsize   = FL_TINY_SIZE;
     ob->spec    = sp =  fl_calloc( 1, sizeof *sp );
 
+	sp->attrib     = 1;
 	sp->min        = 0.0;
     sp->max        = 1.0;
     sp->val        = sp->start_val = 0.5;

@@ -23,9 +23,7 @@
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *.
- *
  * private header for slider object
- *
  */
 
 
@@ -38,13 +36,7 @@ typedef FLI_VALUATOR_SPEC FLI_SLIDER_SPEC;
 
 
 #define MINKNOB_SB     16		/* scrollbar        */
-#define MINKNOB_SL     10		/* regular sliders  */
-
-#define ON_TOP_OF_KNOB  0
-#define LEFT_OF_KNOB   -1
-#define ABOVE_KNOB     -1
-#define RIGHT_OF_KNOB   1
-#define BELOW_KNOB      1
+#define MINKNOB_SL     14		/* regular sliders  */
 
 #define IS_HSLIDER( t )      ( t & FL_HOR_FLAG )
 

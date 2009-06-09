@@ -207,7 +207,7 @@ void fli_drw_slider( FL_OBJECT  * ob,
 		if (    sltype == FL_VERT_BROWSER_SLIDER2
 			 || sltype == FL_HOR_BROWSER_SLIDER2 )
 		{
-/*          btype = FL_UP_BOX; */
+			btype = FL_UP_BOX;
 			actual_bw = bw > 0 ? 1 : -1;
 		}
 		else if (    sltype == FL_VERT_THIN_SLIDER
