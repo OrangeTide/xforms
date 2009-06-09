@@ -1,3 +1,14 @@
+2009-06-09 Jens Thoms Toerring    <jt@toerring.de>
+
+	Several bug-fixes and changes all over the place to
+	get everything working again.
+
+	Flag '--enable-bwc-bs-hack' added to 'configure' to
+	allow compliation for programs that rely on the tradi-
+	tional behaviour of browsers and scrollbars, i.e. that
+	they don't report changes via e.g. fl_do_forms() but
+	do invoke a callback if installed.
+
 2009-06-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/tbox.c: Replacement for lib/textbox.c used in all
