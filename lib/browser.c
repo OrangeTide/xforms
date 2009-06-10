@@ -889,7 +889,7 @@ void
 fl_addto_browser( FL_OBJECT  * ob,
 				  const char * text )
 {
-    fli_tbox_add_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, text );
+    fli_tbox_add_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, text, 1 );
     redraw_scrollbar( ob );
 }
 
@@ -902,8 +902,17 @@ fl_insert_browser_line( FL_OBJECT  * ob,
 						int          linenumb,
 						const char * newtext )
 {
-    fli_tbox_insert_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
-						  linenumb - 1, newtext );
+	FLI_BROWSER_SPEC *sp = ob->spec;
+	FLI_TBOX_SPEC *tbsp = sp->tb->spec;
+
+	/* When inserting into an empty browser or appending at then end
+	   is to be treated exactly the same way as fl_add_browser_line()
+	   (including interpretation of newline characters). */
+
+	if ( tbsp->num_lines == 0 || linenumb > tbsp->num_lines )
+		fli_tbox_insert_lines( sp->tb, linenumb - 1, newtext );
+	else
+		fli_tbox_insert_line( sp->tb, linenumb - 1, newtext );
     redraw_scrollbar( ob );
 }
 
@@ -1072,7 +1081,7 @@ fl_add_browser_line( FL_OBJECT  * ob,
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-    fli_tbox_add_line( sp->tb, newtext );
+    fli_tbox_add_line( sp->tb, newtext, 0 );
     redraw_scrollbar( ob );
 }
 

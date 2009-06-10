@@ -1085,6 +1085,9 @@ To add a line to a browser use
 @example
 void fl_add_browser_line(FL_OBJECT *obj, const char *text);
 @end example
+The line may contain embeeded newline characters (@code{'\n'}).
+These will result in the text being split up into several lines,
+separated at the newline characters.
 
 A second way of adding a line to the browser is to use the call
 @findex fl_addto_browser()
@@ -1099,8 +1102,8 @@ visible. This is useful when e.g.@: using the browser to display
 messages.
 
 Sometimes it may be more convenient to add characters to a browser
-without implying the starting of a new line. To this end, the
-following routine exists
+without starting of a new line. To this end, the following routine
+exists
 @findex fl_addto_browser_chars()
 @anchor{fl_addto_browser_chars()}
 @example
@@ -1108,12 +1111,12 @@ void fl_addto_browser_chars(FL_OBJECT *obj, const char *text);
 @end example
 @noindent
 This function appends text to the last line in the browser without
-advancing the line counter unless text contains embedded newline
-characters (@code{'\n'}). In that case, the text before the embedded
-newline is appended to the last line, and the line counter is
-incremented. The characters after the newline, possibly with more
-embedded newlines in it, are then added to the browser via means
-similar to @code{@ref{fl_addto_browser()}}.
+advancing the line counter. Again the text may contain embedded
+newline characters (@code{'\n'}). In that case, the text before the
+first embedded newline is appended to the last line, and everything
+aferwards is put onto new lines. As in the case of
+@code{@ref{fl_addto_browser()}} the last added line will be visible in
+the browser.
 
 You can also insert a line in front of a given line. All lines after
 it will be shifted. Note that the top line is numbered 1 (not 0).
@@ -1124,8 +1127,12 @@ void fl_insert_browser_line(FL_OBJECT *obj, int line,
                             const char *text);
 @end example
 @noindent
-Inserting into an empty browser or after the last line in the browser
-is the same as adding a line with e.g. @:
+Please note that on insertion (as well as replacements, see below)
+embedded newline characters don't result in the line being split up as
+it's done in the previous functions. Instead they will rather likely
+appear as strange looking characters in the text shown. The only
+exception is when inserting into an empty browser or after the last
+line, then this function works exactly as if you had called
 @code{@ref{fl_add_browser_line()}}.
 
 To delete a line (shifting the following lines) use:
@@ -1143,25 +1150,28 @@ One can also replace a line using
 void fl_replace_browser_line(FL_OBJECT *obj, int line,
                              const char *text);
 @end example
+As in the case of @code{@ref{fl_insert_browser_line()}} newline
+characters embedded into the replacement text don't have any special
+meaning, i.e.@: they don't result in replacement of more than a single
+line.
 
-Making many changes to a visible browser at the same moment, i.e.,
-clearing it and loading it with a number of new choices, is slow
-because the browser is redrawn after each change. The Forms Library
-has a mechanism for avoiding this using the calls
-@code{@ref{fl_freeze_form()}} and @code{@ref{fl_unfreeze_form()}}. So
-a piece of code that fills in a visible browser should preferably look
-like the following
+Making many changes to a visible browser after another, e.g.@:
+clearing it and then adding a number of new lines, is slow because the
+browser is redrawn on each and every change. This can be avoided by
+using calls of @code{@ref{fl_freeze_form()}} and
+@code{@ref{fl_unfreeze_form()}}. So a piece of code that fills in a
+visible browser should preferably look like the following
 @example
-fl_freeze_form(brow->form);
-fl_clear_browser(brow);
-fl_add_browser_line(brow, "line 1");
-fl_add_browser_line(brow, "line 2");
+fl_freeze_form(browser->form);
+fl_clear_browser(browser);
+fl_add_browser_line(browser, "line 1");
+fl_add_browser_line(browser, "line 2");
 ...
 fl_unfreeze_form(brow->form);
 @end example
 @noindent
-where @code{brow->form}q is the form that contains the browser object
-named @code{brow}.
+where @code{browser->form} is the form that contains the browser
+object named @code{browser}.
 
 To obtain the contents of a particular line in the browser, use
 @findex fl_get_browser_line()
@@ -1170,7 +1180,8 @@ To obtain the contents of a particular line in the browser, use
 const char *fl_get_browser_line(FL_OBJECT *obj, int line);
 @end example
 @noindent
-It returns a pointer to the particular line of text.
+It returns a pointer to the text of that line, exactly as it were
+passed to the function that created the line.
 
 It is possible to load an entire file into a browser using
 @findex fl_load_browser()
@@ -1179,11 +1190,12 @@ It is possible to load an entire file into a browser using
 int fl_load_browser(FL_OBJECT *obj, const char *filename);
 @end example
 @noindent
-The routine returns whether or not the file name was successfully
-loaded. If the file name is an empty string the browser is simply
-cleared. This routine is particularly useful when using the browser
-for a help facility. You can create different help files and load the
-needed one depending on context.
+The routine returns @code{1} when file could be successfully loaded,
+otherwise @code{0}. If the file name is an empty string (or the file
+could bot be opened for reading) the browser is just cleared. This
+routine is particularly useful when using the browser for a help
+facility. You can create different help files and load the needed one
+depending on context.
 
 The application program can select or de-select lines in the browser.
 To this end the following calls exist with the obvious meaning:
@@ -1220,9 +1232,9 @@ application program wants to figure out which lines in a
 @code{FL_MULTI_BROWSER} are selected code similar to the following can
 be used:
 @example
-int total_lines = fl_get_browser_maxline(brow);
+int total_lines = fl_get_browser_maxline(browser);
 for (i = 1; i <= total_lines; i++)
-    if (fl_isselected_browser_line(brow, i))
+    if (fl_isselected_browser_line(browser, i))
         /* Handle the selected line */
 @end example
 
@@ -1237,7 +1249,7 @@ Please note that this count only includes lines that are shown
 completely in the browser, lines that are partially obscured aren't
 counted in.
 
-To obtain the last selection made by the user, e.g. when the browser
+To obtain the last selection made by the user, e.g.@: when the browser
 is returned, the application program can use the routine
 @findex fl_get_browser()
 @anchor{fl_get_browser()}
@@ -1261,8 +1273,8 @@ int fl_get_browser_topline(FL_OBJECT *obj);
 Note that the index of the top line is 1, not 0.
 
 It is possible to register a callback function that gets called when a
-line is double-clicked. To this end, the following function can be
-used:
+line is double-clicked on. To do so, the following function is
+available:
 @findex fl_set_browser_dblclick_callback()
 @anchor{fl_set_browser_dblclick_callback()}
 @example
@@ -1327,6 +1339,19 @@ FL_Coord fl_get_browser_rel_xoffset(FL_OBJECT *obj);
 FL_Coord fl_get_browser_yoffset(FL_OBJECT *obj);
 FL_Coord fl_get_browser_rel_yoffset(FL_OBJECT *obj);
 @end example
+
+Finally, there's a function that tells you the vertical position of a
+line in pixels:
+@findex fl_get_browser_line_yoffset()
+@anchor{fl_get_browser_line_yoffset()}
+@example
+int fl_get_browser_line_yoffset(FL_OBJECT *obj, imt line);
+@end example
+@noindent
+The return value is just the value that would have to be passed to
+@code{@ref{fl_set_browser_yoffset()}} to make the line appear at the
+top of the browser. If the line does not exist it returns @code{-1}
+instead.
 
 
 @node Browser Attributes

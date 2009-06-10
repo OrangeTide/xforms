@@ -197,7 +197,37 @@ fli_tbox_delete_line( FL_OBJECT * obj,
 
 
 /***************************************
- * Inserts a line into the textbox
+ * Inserts one or more lines, separated by
+ * linefeed characters, into the textbox
+ ***************************************/
+
+void
+fli_tbox_insert_lines( FL_OBJECT  * obj,
+					   int          line,
+					   const char * new_text )
+{
+	char *text = fl_strdup( new_text );
+	char *p = text;
+	char *del;
+
+	while ( 1 )
+	{
+		;
+		if ( ( del = strchr( p, '\n' ) ) )
+			*del = '\0';
+		fli_tbox_insert_line( obj, line++, p );
+		if ( del )
+			p = del + 1;
+		else
+			break;
+	}
+
+	fl_free( text );
+}
+
+
+/***************************************
+ * Inserts a single line into the textbox
  ***************************************/
 
 void
@@ -215,7 +245,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 	TBOX_LINE *tl;
 	int i;
 
-	/* Catch invalid 'line' argument */
+	/* Catch invalid 'line' or 'new_text' argument */
 
 	if ( line < 0 || ! new_text )
 		return;
@@ -254,7 +284,6 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 	tl->fulltext      = NULL;
 	tl->text          = NULL;
 	tl->len           = 0;
-	tl->has_lf        = 0;
 	tl->selected      = 0;
 	tl->selectable    = 1;
 	tl->is_separator  = 0;
@@ -417,17 +446,9 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 	if ( ! tl->is_separator )
 		tl->text = p;
 	else
-	{
 		tl->text = tl->fulltext + strlen( tl->fulltext );
-		tl->has_lf = 1;
-	}
 
 	tl->len = strlen( tl->text );
-	if ( tl->text[ tl->len - 1 ] == '\n' )
-	{
-		tl->len--;
-		tl->has_lf = 1;
-	}
 
 	/* Figure out width and height of string */
 
@@ -436,7 +457,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 		tl->w = fl_get_string_widthTAB( tl->style, tl->size,
 										tl->text, tl->len );
 		tl->h = fl_get_string_height( tl->style, tl->size,
-									  tl->text, tl->len,
+									  tl->len ? tl->text : " " , tl->len | 1,
 									  &tl->asc, &tl->desc );
 	}
 	else
@@ -504,11 +525,22 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 
 void
 fli_tbox_add_line( FL_OBJECT  * obj,
-				   const char * text )
+				   const char * text,
+				   int          show )
 {
    FLI_TBOX_SPEC *sp = obj->spec;
 
-   fli_tbox_insert_line( obj, sp->num_lines, text );
+   fli_tbox_insert_lines( obj, sp->num_lines, text );
+
+   /* Make last line visible if asked for */
+
+   if ( show && sp->num_lines )
+   {
+	   TBOX_LINE *tl = sp->lines[ sp->num_lines - 1 ];
+
+	   if ( tl->y + tl->h - sp->yoffset >= sp->h )
+		   fli_tbox_set_bottomline( obj, sp->num_lines - 1 );
+   }
 }
 
 
@@ -526,40 +558,56 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 	char *old_fulltext;
 	char * old_text;
 	int i;
+	char *new_text;
+	char *del;
 
 	/* If there's nothing to add return */
 
 	if ( ! add || ! *add )
 		return;
 
-	/* If there aren't any lines yet or of the last line ended in a line feed
-	   this is equivalent to inserting a new one */
+	/* If there aren't any lines yet it's equivalent to inserting a new one */
 
-	if ( sp->num_lines == 0 || sp->lines[ sp->num_lines - 1 ]->has_lf )
+	if ( sp->num_lines == 0 )
 	{
-		fli_tbox_insert_line( obj, sp->num_lines, add );
+		fli_tbox_insert_lines( obj, sp->num_lines, add );
 		return;
 	}
+
+	/* If the last line is empty replace it by the stuff to be added */
+
+	if ( sp->lines[ sp->num_lines - 1 ]->len == 0 )
+	{
+		tbox_do_not_redraw = 1;
+		fli_tbox_delete_line( obj, sp->num_lines - 1 );
+		fli_tbox_insert_lines( obj, sp->num_lines, add );
+		return;
+	}
+
+	/* Append everything to the last line up to a linefeed */
+
+	if ( ( del = strchr( add, '\n' ) ) )
+	{
+		new_text = malloc( del - add );
+		memcpy( new_text, add, del - add - 1 );
+		new_text[ del - add - 1 ] = '\0';
+	}
+	else
+		new_text = ( char * ) add;
 
 	tl = sp->lines[ sp->num_lines - 1 ];
 
 	/* Make up the new text of the line from the old and the new text */
 
-	new_len = strlen( tl->fulltext ) + strlen( add );
+	new_len = strlen( tl->fulltext ) + strlen( new_text );
 	old_text = tl->text;
 	old_fulltext = tl->fulltext;
 
 	tl->fulltext = fl_malloc( new_len + 1 );
 	strcpy( tl->fulltext, old_fulltext );
-	strcat( tl->fulltext, add );
+	strcat( tl->fulltext, new_text );
 	tl->text = tl->fulltext + ( old_text - old_fulltext );
 	tl->len = new_len;
-
-	if ( tl->text[ tl->len - 1 ] == '\n' )
-	{
-		tl->len--;
-		tl->has_lf = 1;
-	}
 
 	fl_safe_free( old_fulltext );
 
@@ -594,12 +642,22 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 			tl->x = sp->max_width - tl->w;
 	}
 
-	if ( ! tbox_do_not_redraw )
-		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
-}
+	/* If there was no newline in the string to be appended we're done,
+	   otherwise the remaining stuff has to be added as new lines */
 
+	if ( ! del )
+	{
+	   TBOX_LINE *tl = sp->lines[ sp->num_lines - 1 ];
+
+	   if ( tl->y + tl->h - sp->yoffset >= sp->h )
+		   fli_tbox_set_bottomline( obj, sp->num_lines - 1 );
+	}
+	else
+	{
+		fl_free( new_text );
+		fli_tbox_add_line( obj, del + 1, 1 );
+	}
+}
 
 
 /***************************************
@@ -683,6 +741,7 @@ fli_tbox_load( FL_OBJECT  * obj,
     FLI_TBOX_SPEC *sp = obj->spec;
     FILE *fp;
     char *text;
+	char *del;
 
     fli_tbox_clear( obj );
 
@@ -696,6 +755,11 @@ fli_tbox_load( FL_OBJECT  * obj,
 
 	while ( ( text = fli_read_line( fp ) ) && *text != '\0' )
 	{
+		/* Get rid of linefeed at end of line */
+
+		if ( ( del = strrchr( text, '\n' ) ) )
+			*del = '\0';
+
 		tbox_do_not_redraw = 1;
 		fli_tbox_insert_line( obj, sp->num_lines, text );
 		fl_free( text );
@@ -775,7 +839,7 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
 			tl->w = fl_get_string_widthTAB( tl->style, tl->size,
 											tl->text, tl->len );
 			tl->h = fl_get_string_height( tl->style, tl->size,
-										  tl->text, tl->len,
+										  tl->len ? tl->text : " ", tl->len | 1,
 										  &tl->asc, &tl->desc );
 		}
 		else
@@ -852,7 +916,7 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
 			tl->w = fl_get_string_widthTAB( tl->style, tl->size,
 											tl->text, tl->len );
 			tl->h = fl_get_string_height( tl->style, tl->size,
-										  tl->text, tl->len,
+										  tl->len ? tl->text : " ", tl->len | 1,
 										  &tl->asc, &tl->desc );
 		}
 		else

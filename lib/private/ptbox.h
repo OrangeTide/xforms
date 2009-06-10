@@ -41,7 +41,6 @@ typedef struct {
     int            is_separator;     /* is this a separator line? */
 	int            is_special;       /* does it need special GC? */
     GC             specialGC;	     /* GC for if not default font/color */
-	int            has_lf;           /* tells if string ends in a '\n' */
 } TBOX_LINE;
 
 
@@ -100,12 +99,17 @@ extern FL_OBJECT * fli_create_tbox( int,
 extern void fli_tbox_delete_line( FL_OBJECT * obj,
 								  int         line );
 
+extern void fli_tbox_insert_lines( FL_OBJECT *,
+								   int,
+								   const char * );
+
 extern void fli_tbox_insert_line( FL_OBJECT *,
 								  int,
 								  const char * );
 
 extern void fli_tbox_add_line( FL_OBJECT *,
-							   const char * );
+							   const char *,
+							   int );
 
 extern void fli_tbox_add_chars( FL_OBJECT *,
 								const char * );

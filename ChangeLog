@@ -2,7 +2,7 @@
 
 	* lib/tbox.c: Bug in handling of new lines and
 	appending to existing lines fixed to make it
-	work liek earlier versions.
+	work like earlier versions.
 
 2009-06-09 Jens Thoms Toerring    <jt@toerring.de>
 
