@@ -588,9 +588,9 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 
 	if ( ( del = strchr( add, '\n' ) ) )
 	{
-		new_text = malloc( del - add );
-		memcpy( new_text, add, del - add - 1 );
-		new_text[ del - add - 1 ] = '\0';
+		new_text = fl_malloc( del - add + 1 );
+		memcpy( new_text, add, del - add );
+		new_text[ del - add ] = '\0';
 	}
 	else
 		new_text = ( char * ) add;
