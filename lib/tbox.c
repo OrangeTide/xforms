@@ -232,13 +232,9 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 	if ( sp->deselect_line >= line )
 		sp->deselect_line++;
 
-	/* Make a copy of the text of the line and remove linefeed that may have
-	   made it through to here */
+	/* Make a copy of the text of the line */
 
 	p = text = strdup( new_text );
-	i = strlen( text );
-	if ( i > 0 && text[ i - 1 ] == '\n' )
-		text[ i - 1 ] = '\0';
 
 	/* Get memory for one more line */
 
@@ -258,6 +254,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 	tl->fulltext      = NULL;
 	tl->text          = NULL;
 	tl->len           = 0;
+	tl->has_lf        = 0;
 	tl->selected      = 0;
 	tl->selectable    = 1;
 	tl->is_separator  = 0;
@@ -420,8 +417,17 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 	if ( ! tl->is_separator )
 		tl->text = p;
 	else
+	{
 		tl->text = tl->fulltext + strlen( tl->fulltext );
+		tl->has_lf = 1;
+	}
+
 	tl->len = strlen( tl->text );
+	if ( tl->text[ tl->len - 1 ] == '\n' )
+	{
+		tl->len--;
+		tl->has_lf = 1;
+	}
 
 	/* Figure out width and height of string */
 
@@ -526,12 +532,12 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 	if ( ! add || ! *add )
 		return;
 
-	/* If there aren't any lines yet this is equivalent to inserting
-	   a new one */
+	/* If there aren't any lines yet or of the last line ended in a line feed
+	   this is equivalent to inserting a new one */
 
-	if ( sp->num_lines == 0 )
+	if ( sp->num_lines == 0 || sp->lines[ sp->num_lines - 1 ]->has_lf )
 	{
-		fli_tbox_insert_line( obj, 0, add );
+		fli_tbox_insert_line( obj, sp->num_lines, add );
 		return;
 	}
 
@@ -546,10 +552,14 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 	tl->fulltext = fl_malloc( new_len + 1 );
 	strcpy( tl->fulltext, old_fulltext );
 	strcat( tl->fulltext, add );
-	if ( tl->fulltext[ new_len - 1 ] == '\n' )
-		tl->fulltext[ --new_len ] = '\0';
 	tl->text = tl->fulltext + ( old_text - old_fulltext );
 	tl->len = new_len;
+
+	if ( tl->text[ tl->len - 1 ] == '\n' )
+	{
+		tl->len--;
+		tl->has_lf = 1;
+	}
 
 	fl_safe_free( old_fulltext );
 

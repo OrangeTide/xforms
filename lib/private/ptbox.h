@@ -41,6 +41,7 @@ typedef struct {
     int            is_separator;     /* is this a separator line? */
 	int            is_special;       /* does it need special GC? */
     GC             specialGC;	     /* GC for if not default font/color */
+	int            has_lf;           /* tells if string ends in a '\n' */
 } TBOX_LINE;
 
 
