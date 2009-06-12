@@ -1,3 +1,8 @@
+2009-06-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/tbox.c: Some corner cases for browsers
+	corrected.
+
 2009-06-10 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/tbox.c: Bug in handling of new lines and

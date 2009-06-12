@@ -52,8 +52,6 @@ static GC create_gc( FL_OBJECT *,
 					 int,
 					 int  );
 
-int tbox_do_not_redraw = 0;
-
 
 /***************************************
  * Creates a new textbox
@@ -81,6 +79,7 @@ fli_create_tbox( int          type,
 	obj->spec        = sp = fl_malloc( sizeof *sp );
 
 	sp->attrib        = 1;
+	sp->no_redraw     = 0;
 	sp->lines         = NULL;
 	sp->num_lines     = 0;
 	sp->callback      = NULL;
@@ -187,12 +186,29 @@ fli_tbox_delete_line( FL_OBJECT * obj,
 		sp->max_width = 0;
 		for ( i = 0; i < sp->num_lines; i++ )
 			sp->max_width = FL_max( sp->max_width, sp->lines[ i ]->w );
+
+		/* Correct x offset if necessary */
+
+		if ( sp->xoffset > sp->max_width - sp->w )
+			sp->xoffset = sp->max_width - sp->w;
 	}
 
-	if ( ! tbox_do_not_redraw )
+	/* Check thaty offset is still reasonable */
+
+	if ( sp->num_lines == 0 )
+		sp->yoffset = 0;
+	else if (   sp->lines[ sp->num_lines - 1 ]->y
+			  + sp->lines[ sp->num_lines - 1 ]->h < sp->yoffset + sp->h )
+	{
+		int old_no_redraw = sp->no_redraw;
+
+		sp->no_redraw = 1;
+		fli_tbox_set_bottomline( obj, sp->num_lines - 1 );
+		sp->no_redraw = old_no_redraw;
+	}
+
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 }
 
 
@@ -512,10 +528,8 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 		 || ( tl->color != obj->lcol && tl->selectable ) )
 		tl->is_special = 1;
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 }
 
 
@@ -578,9 +592,12 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 
 	if ( sp->lines[ sp->num_lines - 1 ]->len == 0 )
 	{
-		tbox_do_not_redraw = 1;
+		int old_no_redraw = sp->no_redraw;
+
+		sp->no_redraw = 1;
 		fli_tbox_delete_line( obj, sp->num_lines - 1 );
 		fli_tbox_insert_lines( obj, sp->num_lines, add );
+		sp->no_redraw = old_no_redraw;
 		return;
 	}
 
@@ -671,12 +688,14 @@ fli_tbox_replace_line( FL_OBJECT  * obj,
 {
    FLI_TBOX_SPEC *sp = obj->spec;
    int old_select_line = sp->select_line;
+   int old_no_redraw = sp->no_redraw;
 
    if ( line < 0 || line >= sp->num_lines || ! text )
 	   return;
 
-   tbox_do_not_redraw = 1;
+   sp->no_redraw = 1;
    fli_tbox_delete_line( obj, line );
+   sp->no_redraw = old_no_redraw;
    fli_tbox_insert_line( obj, line, text );
    if ( line == old_select_line && sp->lines[ line ]->selectable )
 	   fli_tbox_select_line( obj, line );
@@ -691,7 +710,6 @@ void
 fli_tbox_clear( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
-	FLI_BROWSER_SPEC *br = obj->parent->spec;
     int i;
 
 
@@ -719,13 +737,8 @@ fli_tbox_clear( FL_OBJECT * obj )
 	sp->xoffset    = 0;
 	sp->yoffset    = 0;
 
-	fl_set_scrollbar_value( br->vsl, 0.0 );
-	fl_set_scrollbar_value( br->hsl, 0.0 );
-
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 }
 
 
@@ -743,8 +756,6 @@ fli_tbox_load( FL_OBJECT  * obj,
     char *text;
 	char *del;
 
-    fli_tbox_clear( obj );
-
     /* Load the file */
 
     if ( ! filename || ! *filename )
@@ -755,13 +766,16 @@ fli_tbox_load( FL_OBJECT  * obj,
 
 	while ( ( text = fli_read_line( fp ) ) && *text != '\0' )
 	{
+		int old_no_redraw = sp->no_redraw;
+
 		/* Get rid of linefeed at end of line */
 
 		if ( ( del = strrchr( text, '\n' ) ) )
 			*del = '\0';
 
-		tbox_do_not_redraw = 1;
+		sp->no_redraw = 1;
 		fli_tbox_insert_line( obj, sp->num_lines, text );
+		sp->no_redraw = old_no_redraw;
 		fl_free( text );
 	}
 
@@ -769,10 +783,8 @@ fli_tbox_load( FL_OBJECT  * obj,
 
     fclose( fp );
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 
     return 1;
 }
@@ -806,6 +818,7 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
     FLI_TBOX_SPEC *sp = obj->spec;
 	double old_xrel;
 	double old_yrel;
+	int old_no_redraw = sp->no_redraw;
 	int i;
 
 	if ( size < FL_TINY_SIZE || size > FL_HUGE_SIZE )
@@ -865,10 +878,10 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
 	sp->max_height =   sp->lines[ sp->num_lines - 1 ]->y
 		             + sp->lines[ sp->num_lines - 1 ]->h;
 
-	tbox_do_not_redraw = 1;
+	sp->no_redraw = 1;
 	fli_tbox_set_rel_xoffset( obj, old_xrel );
-	tbox_do_not_redraw = 1;
 	fli_tbox_set_rel_yoffset( obj, old_yrel );
+	sp->no_redraw = old_no_redraw;
 }
 
 
@@ -883,6 +896,7 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
     FLI_TBOX_SPEC *sp = obj->spec;
 	double old_xrel;
 	double old_yrel;
+	int old_no_redraw = sp->no_redraw;
 	int i;
 
 	if ( style < FL_NORMAL_STYLE || style > FL_TIMESBOLDITALIC_STYLE )
@@ -945,10 +959,10 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
 
 	sp->attrib = 1;
 
-	tbox_do_not_redraw = 1;
+	sp->no_redraw = 1;
 	fli_tbox_set_rel_xoffset( obj, old_xrel );
-	tbox_do_not_redraw = 1;
 	fli_tbox_set_rel_yoffset( obj, old_yrel );
+	sp->no_redraw = old_no_redraw;
 }
 
 
@@ -968,10 +982,8 @@ fli_tbox_set_xoffset( FL_OBJECT * obj,
 
 	sp->xoffset = pixel;
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 
 	return pixel;
 }
@@ -993,10 +1005,8 @@ fli_tbox_set_rel_xoffset( FL_OBJECT * obj,
 
 	sp->xoffset = FL_nint( offset * FL_max( 0, sp->max_width - sp->w ) );
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 
 	return fli_tbox_get_rel_xoffset( obj );
 }
@@ -1018,10 +1028,8 @@ fli_tbox_set_yoffset( FL_OBJECT * obj,
 
 	sp->yoffset = pixel;
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 
 	return pixel;
 }
@@ -1043,10 +1051,8 @@ fli_tbox_set_rel_yoffset( FL_OBJECT * obj,
 
 	sp->yoffset = FL_nint( offset * FL_max( 0, sp->max_height - sp->h ) );
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 
 	return fli_tbox_get_rel_yoffset( obj );
 }
@@ -1194,10 +1200,8 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
 	sp->select_line = -1;
 	sp->deselect_line = -1;
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 }
 
 
@@ -1225,10 +1229,8 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
 		sp->select_line = -1;
 	}
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 }
 
 
@@ -1256,10 +1258,8 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
 	sp->select_line = line;
 	sp->deselect_line = -1;
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 }
 
 
@@ -1327,10 +1327,8 @@ fli_tbox_make_line_selectable( FL_OBJECT * obj,
 		}
 	}
 
-	if ( ! tbox_do_not_redraw )
+	if ( ! sp->no_redraw )
 		fl_redraw_object( obj );
-	else
-		tbox_do_not_redraw = 0;
 }
 
 
@@ -1460,6 +1458,7 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 	int i;
 	double old_xrel = fli_tbox_get_rel_xoffset( obj );
 	double old_yrel = fli_tbox_get_rel_yoffset( obj );
+	int old_no_redraw = sp->no_redraw;
 
 	fli_tbox_recalc_area( obj );
 
@@ -1544,10 +1543,10 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 								   sp->x, sp->y, sp->w, sp->h );
 	}
 
-	tbox_do_not_redraw = 1;
+	sp->no_redraw = 1;
 	fli_tbox_set_rel_xoffset( obj, old_xrel );
-	tbox_do_not_redraw = 1;
 	fli_tbox_set_rel_yoffset( obj, old_yrel );
+	sp->no_redraw = old_no_redraw;
 }
 
 
@@ -1738,30 +1737,41 @@ int find_previous_selectable( FL_OBJECT * obj,
 
 
 /***************************************
- * Returns the index of the first line that's completete shown on the screen
+ * Returns the index of the first line that
+ * is completete shown on the screen
  ***************************************/
 
 int
 fli_tbox_get_topline( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
-	int i = sp->yoffset / sp->def_height;   /* guess index of topline */
+	int i = FL_min( sp->yoffset / sp->def_height, sp->num_lines - 1);
+
+	if ( sp->num_lines == 0 )
+		return -1;
 
 	if ( sp->lines[ i ]->y < sp->yoffset )
-		while (    ++i < sp->num_lines
-				&& sp->lines[ i ]->y < sp->yoffset )
+	{
+		while ( ++i < sp->num_lines && sp->lines[ i ]->y < sp->yoffset )
 			/* empty */ ;
+		if ( i == sp->num_lines || sp->lines[ i ]->y > sp->yoffset + sp->h )
+			i--;
+	}
 	else if ( sp->lines[ i ]->y > sp->yoffset )
-		while (    sp->num_lines && sp->lines[ i - 1 ]->y > sp->yoffset
-				&& i-- > 0  )
+	{
+		while ( i-- > 0 && sp->lines[ i ]->y > sp->yoffset )
 			/* empty */ ;
+		if ( i < 0 || sp->lines[ i ]->y < sp->yoffset )
+			i++;
+	}
 
 	return i < sp->num_lines ? i : -1;
 }
 
 
 /***************************************
- * Returns the index of the last line that's completete shown on the screen
+ * Returns the index of the last line that
+ * is completete shown on the screen
  ***************************************/
 
 int
@@ -1771,7 +1781,8 @@ fli_tbox_get_bottomline( FL_OBJECT * obj )
 	int i = sp->num_lines;
 
 	while ( --i >= 0
-			&& sp->lines[ i ]->y + sp->lines[ i ]->h > sp->yoffset+ sp->h )
+			&& sp->lines[ i ]->y > sp->yoffset
+			&& sp->lines[ i ]->y + sp->lines[ i ]->h > sp->yoffset + sp->h )
 		/* empty */ ;
 
 	return i;
@@ -1860,7 +1871,7 @@ handle_keyboard( FL_OBJECT * obj,
 		{
 			int topline = fli_tbox_get_topline( obj );
 
-			if ( topline < sp->num_lines - 1 )
+			if ( topline >= 0 && topline < sp->num_lines - 1 )
 			{
 				if ( sp->lines[ topline ]->y - sp->yoffset == 0 )
 					topline++;

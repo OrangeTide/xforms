@@ -577,37 +577,44 @@ There are several values @code{when} can take:
 @table @code
 @anchor{FL_RETURN_CHANGED}
 @tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
 Return (or call object callback) whenever there is a change in the
 state of the object (button was pressed, input field was changed,
 slider was moved etc.).
 
 @anchor{FL_RETURN_END}
 @tindex FL_RETURN_END
+@item FL_RETURN_END
 Return (or invoke callback) at the end of the interaction (typically
 when the user releases the mouse button) regardless if the objects
 state was changed or not.
 
 @anchor{FL_RETURN_END_CHANGED}
 @tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
 Return (or call object callback) when interaction stops @strong{and}
 the state of the object changed.
 
 @anchor{FL_RETURN_SELECTION}
 @tindex FL_RETURN_SELECTION
+@item FL_RETURN_SELECTION
 Return when e.g.@: a line in a browser was selected.
 
 @anchor{FL_RETURN_DESELECTION}
 @tindex FL_RETURN_DESELECTION
+@item FL_RETURN_DESELECTION
 Return when e.g.@: a line in a @code{@ref{FL_MULTI_BROWSER}} browser
 was deselected.
 
 @anchor{FL_RETURN_ALWAYS}
 @tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
 Return (or invoke callback) on any of the events that can happen
 to the object.
 
 @anchor{FL_RETURN_NONE}
 @tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
 Never notiy the application about interactions with this object
 (i.e.@: never return it nor invoke its callback). Note: this is not
 meant for deactivation of an object, it will still seem to work as
@@ -617,7 +624,7 @@ callbak get invoked.
 
 Since for different objects only subsets of these conditions
 make sense please read the more detailed descriptions for
-each of the object types in Part 3.
+each of the object types in Part III.
 
 All of the values above, except @code{@ref{FL_RETURN_END_CHANGED}},
 @code{@ref{FL_RETURN_ALWAYS}} and @code{@ref{FL_RETURN_NONE}} can be

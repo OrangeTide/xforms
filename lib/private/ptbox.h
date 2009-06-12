@@ -19,8 +19,6 @@
 #define PTBOX_H
 
 
-extern int tbox_do_not_redraw;
-
 typedef struct {
 	char         * fulltext;         /* text of line with flags */
     char         * text;			 /* text of line without flags */
@@ -54,6 +52,7 @@ typedef struct {
 	                  w,
 	                  h;
 	int               attrib;        /* set when attributes changed */
+	int               no_redraw;     /* flags when no redraw is to be done */
 	int               select_line;   /* last selected line */
 	int               deselect_line; /* last deselected line */
 	int               max_width;     /* length of longest line in pixels */

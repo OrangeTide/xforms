@@ -195,14 +195,15 @@ get_geometry( FL_OBJECT * obj )
 		comp->attrib = 1;
 		comp->dead_area = ! ( comp->h_on ^ comp->v_on );
 
-		tbox_do_not_redraw = 1;
+		sp->no_redraw = 1;
+
 		comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
 		fl_set_scrollbar_value( comp->vsl, comp->vval );
 
-		tbox_do_not_redraw = 1;
 		comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
 		fl_set_scrollbar_value( comp->hsl, comp->hval );
 
+		sp->no_redraw = 0;
 		sp->attrib = 1;
     }
 }
@@ -1061,13 +1062,15 @@ fl_get_browser_topline( FL_OBJECT * ob )
  ***************************************/
 
 int
-fl_load_browser( FL_OBJECT  * ob,
+fl_load_browser( FL_OBJECT  * obj,
 				 const char * f )
 {
-    FLI_BROWSER_SPEC *sp = ob->spec;
-    int status = fli_tbox_load( sp->tb, f );
+    FLI_BROWSER_SPEC *sp = obj->spec;
+    int status;
 
-    redraw_scrollbar( ob );
+	fl_clear_browser( obj );
+	status = fli_tbox_load( sp->tb, f );
+    redraw_scrollbar( obj );
     return status;
 }
 
