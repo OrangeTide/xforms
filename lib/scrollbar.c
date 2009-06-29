@@ -58,8 +58,6 @@ handle_scrollbar( FL_OBJECT * obj,
 				  int         key  FL_UNUSED_ARG,
 				  void      * ev   FL_UNUSED_ARG )
 {
-    FLI_SCROLLBAR_SPEC *sp = obj->spec;
-
     switch ( event )
     {
 		case FL_ATTRIB :

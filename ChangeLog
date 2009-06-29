@@ -5,6 +5,8 @@
 
 	* Some issues with fdesign and browsers removed.
 
+	* lib/scrolbar.c: Cleanup due to compiler warning
+
 2009-06-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/tbox.c: Some corner cases for browsers
