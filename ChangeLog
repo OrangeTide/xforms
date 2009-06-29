@@ -1,3 +1,10 @@
+2009-06-29 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Some bugs found by Werner Heisch in the new browser
+	implementation corrected.
+
+	* Some issues with fdesign and browsers removed.
+
 2009-06-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/tbox.c: Some corner cases for browsers

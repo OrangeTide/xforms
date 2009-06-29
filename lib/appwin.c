@@ -103,11 +103,11 @@ get_fl_win_struct( Window win )
     if ( fwin )
 		return fwin;
 
+	/* Otherwise create a new structure and append it to the end */
+
 #if FL_DEBUG >= ML_DEBUG
 	M_info( "get_fl_win_struct", "Creating FLI_WIN struct for 0x%lx", win );
 #endif
-
-	/* Otherwise create a new structure and append it to the end */
 
 	if ( ( fwin = fl_malloc( sizeof *fwin ) ) == NULL )
 		return NULL;
@@ -118,7 +118,7 @@ get_fl_win_struct( Window win )
 	fwin->pre_emptive_data = NULL;
 	for ( i = 0; i < LASTEvent; i++ )
 	{
-		fwin->callback[ i ] = NULL;
+		fwin->callback[  i ] = NULL;
 		fwin->user_data[ i ] = NULL;
 	}
 
@@ -156,7 +156,8 @@ fli_set_preemptive_callback( Window           win,
 	}
 
     old = fwin->pre_emptive;
-    fwin->pre_emptive = pcb;
+
+    fwin->pre_emptive      = pcb;
     fwin->pre_emptive_data = data;
 
     return old;

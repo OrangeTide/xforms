@@ -24,10 +24,8 @@
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *.
- *
  *   Browser composite.
  *   scrollbar redrawing can be further optimized.
- *
  */
 
 
@@ -65,7 +63,7 @@ attrib_change( FL_OBJECT * ob )
     sp->tb->col1    = ob->col1;
     sp->tb->col2    = ob->col2;
     sp->tb->bw      = ob->bw;
-	( ( FLI_TBOX_SPEC * ) sp->tb->spec )->attrib = 1;
+	fl_notify_object( sp->tb, FL_RESIZED );
 
     /* Scrollbars */
 
@@ -161,6 +159,7 @@ get_geometry( FL_OBJECT * obj )
 		comp->vsl->y = obj->y;
 		comp->vsl->w = comp->vw;
 		comp->vsl->h = obj->h - comp->hh;
+		fl_notify_object( comp->vsl, FL_RESIZED );
 
 		comp->vval  = old_yrel;
 		comp->vsize = comp->vinc1 = ( double ) sp->h / sp->max_height;
@@ -178,6 +177,7 @@ get_geometry( FL_OBJECT * obj )
 		comp->hsl->y = obj->y + obj->h - comp->hh;
 		comp->hsl->w = obj->w - comp->vw;
 		comp->hsl->h = comp->hh;
+		fl_notify_object( comp->hsl, FL_RESIZED );
 
 		comp->hval  = old_xrel;
 		comp->hsize = ( double ) sp->w / sp->max_width;
@@ -190,42 +190,52 @@ get_geometry( FL_OBJECT * obj )
 		comp->hval  = 1.0;
 	}
 
+	comp->dead_area = comp->h_on && comp->v_on;
+
     if ( h_on != comp->h_on || v_on != comp->v_on )
     {
 		comp->attrib = 1;
-		comp->dead_area = ! ( comp->h_on ^ comp->v_on );
 
 		sp->no_redraw = 1;
 
-		comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
-		fl_set_scrollbar_value( comp->vsl, comp->vval );
+		if ( comp->v_on )
+		{
+			comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
+			fl_set_scrollbar_value( comp->vsl, comp->vval );
+			fl_set_scrollbar_size( comp->vsl, comp->vsize );
+		}
 
-		comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
-		fl_set_scrollbar_value( comp->hsl, comp->hval );
+		if ( comp->h_on )
+		{
+			comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
+			fl_set_scrollbar_value( comp->hsl, comp->hval );
+			fl_set_scrollbar_size( comp->hsl, comp->hsize );	
+		}
 
 		sp->no_redraw = 0;
-		sp->attrib = 1;
+
+		fl_notify_object( tb, FL_RESIZED );
     }
 }
 
 
 /***************************************
  * The "dead area" is the small square in the lower right hand corner
- * of the browser (to the right of the vertical slider and below the
- * horizontal one) that shows up when both the sliders are displayed.
+ * of the browser (to the right of the horizontal slider and below the
+ * vertical one) that shows up when both the sliders are displayed.
  ***************************************/
 
 static void
-draw_dead_area( FL_OBJECT        * ob,
-				FLI_BROWSER_SPEC * comp )
+draw_dead_area( FL_OBJECT * obj )
 {
-    if ( comp->dead_area && FL_ObjWin( comp->tb ) )
+	FLI_BROWSER_SPEC *sp = obj->spec;
+
+    if ( FL_ObjWin( sp->tb ) )
     {
-		fl_winset( FL_ObjWin( comp->tb ) );
-		fl_drw_box( FL_FLAT_BOX, ob->x + ob->w - comp->vw,
-					ob->y + ob->h - comp->hh, comp->vw, comp->hh,
-					comp->vsl->col1, 1 );
-		comp->dead_area = 0;
+		fl_winset( FL_ObjWin( sp->tb ) );
+		fl_drw_box( FL_FLAT_BOX, obj->x + obj->w - sp->vw,
+					obj->y + obj->h - sp->hh, sp->vw, sp->hh,
+					sp->vsl->col1, 1 );
     }
 }
 
@@ -234,39 +244,39 @@ draw_dead_area( FL_OBJECT        * ob,
  ***************************************/
 
 static int
-handle_browser( FL_OBJECT * ob,
+handle_browser( FL_OBJECT * obj,
 				int         event,
 				FL_Coord    mx   FL_UNUSED_ARG,
 				FL_Coord    my   FL_UNUSED_ARG,
 				int         key  FL_UNUSED_ARG,
 				void      * ev   FL_UNUSED_ARG )
 {
-    FLI_BROWSER_SPEC *comp = ob->spec;
+    FLI_BROWSER_SPEC *sp = obj->spec;
 
     switch ( event )
     {
 		case FL_RESIZED :
 		case FL_ATTRIB :
-			comp->attrib = 1;
+			sp->attrib = 1;
 			break;
 
 		case FL_DRAW:
-			if ( comp->attrib )
+			if ( sp->attrib )
 			{
-				attrib_change( ob );
-				get_geometry( ob );
-				comp->attrib = 0;
+				attrib_change( obj );
+				get_geometry( obj );
+				sp->attrib = 0;
 			}
 
-			draw_dead_area( ob, comp );
+			draw_dead_area( obj );
 			/* fall through */
 
 		case FL_DRAWLABEL:
-			fl_draw_object_label( ob );
+			fl_draw_object_label( obj );
 			break;
 
 		case FL_FREEMEM:
-			fl_free( comp );
+			fl_free( sp );
 			break;
     }
 
@@ -282,6 +292,7 @@ redraw_scrollbar( FL_OBJECT * ob )
 {
     FLI_BROWSER_SPEC *comp = ob->spec;
 
+	attrib_change( ob );
     get_geometry( ob );
 
     fl_freeze_form( ob->form );
@@ -310,10 +321,10 @@ redraw_scrollbar( FL_OBJECT * ob )
 		fl_redraw_object( comp->hsl );
 		fl_redraw_object( comp->tb );
 
-		comp->attrib = 0;   /* JTT */
+		comp->attrib = 0;
     }
 
-    draw_dead_area( ob, comp );
+    draw_dead_area( ob );
     fl_unfreeze_form( ob->form );
 }
 
@@ -467,12 +478,6 @@ tbpre( FL_OBJECT * ob,
 }
 
 
-#define IS_FLATBOX(b) (    b == FL_FRAME_BOX    \
-                        || b == FL_EMBOSSED_BOX \
-                        || b == FL_BORDER_BOX   \
-                        || b == FL_ROUNDED_BOX )
-
-
 /***************************************
  ***************************************/
 
@@ -512,13 +517,13 @@ fl_create_browser( int          type,
     sp = ob->spec = fl_calloc( 1, sizeof *sp );
     sp->tb = fli_create_tbox( type, x, y, w, h, NULL );
 
-	sp->callback = NULL;
-	sp->hsize    = sp->vsize = sp->hval = sp->vval =
-	sp->hinc1    = sp->hinc2 = sp->vinc1 = sp->vinc2 = 0.0;
-	sp->hcb      = sp->vcb = NULL;
-	sp->hcb_data = sp->vcb_data = NULL;
-	sp->old_hp   = sp->old_vp = 0.0;
-	sp->attrib   = 1;
+	sp->callback  = NULL;
+	sp->hsize     = sp->vsize = sp->hval = sp->vval =
+	sp->hinc1     = sp->hinc2 = sp->vinc1 = sp->vinc2 = 0.0;
+	sp->hcb       = sp->vcb = NULL;
+	sp->hcb_data  = sp->vcb_data = NULL;
+	sp->old_hp    = sp->old_vp = 0.0;
+	sp->attrib    = 1;
 
     /* Copy browser attributes from textbox */
 
@@ -559,7 +564,6 @@ fl_create_browser( int          type,
     fl_add_child( ob, sp->tb  );
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
-
 
 	/* In older versions scrollbars and browsers didn't return to the
 	   application on e.g. fl_do_forms() but still a callback associated
@@ -965,7 +969,7 @@ fl_get_browser_maxline( FL_OBJECT * obj )
 {
 	FLI_BROWSER_SPEC *sp = obj->spec;
 
-    return ( ( FLI_TBOX_SPEC * ) sp->tb->spec )->num_lines;
+    return fli_tbox_get_num_lines( sp->tb );
 }
 
 
@@ -1046,15 +1050,11 @@ fl_set_browser_fontstyle( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_get_browser_topline( FL_OBJECT * ob )
+fl_get_browser_topline( FL_OBJECT * obj )
 {
-    FLI_BROWSER_SPEC *sp = ob->spec;
-	int line = fli_tbox_get_topline( sp->tb );
+    FLI_BROWSER_SPEC *sp = obj->spec;
 
-	if ( line < fl_get_browser_maxline( sp->tb ) )
-		 line++;
-
-	return line;
+	return fli_tbox_get_topline( sp->tb ) + 1;
 }
 
 

@@ -52,7 +52,6 @@ typedef struct {
 	              w,
 	              h;
     double        slsize;		/* size of the slider             */
-	int           attrib;
     FL_VAL_FILTER filter;
     FL_Coord      offx;
     FL_Coord      offy;

@@ -64,16 +64,11 @@ handle_scrollbar( FL_OBJECT * obj,
     {
 		case FL_ATTRIB :
 		case FL_RESIZED :
-			sp->attrib = 1;
+			attrib_change( obj );
+			get_geom( obj );
 			break;
 
 		case FL_DRAW :
-			if ( sp->attrib )
-			{
-				attrib_change( obj );
-				get_geom( obj );
-				sp->attrib = 0;
-			}
 			if ( IsThin( obj->type ) )
 				fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
 							obj->col1, obj->bw );
@@ -111,13 +106,9 @@ attrib_change( FL_OBJECT * obj )
     sp->up->col1     = sp->down->col1    = obj->col1;
     sp->up->col2     = sp->down->col2    = obj->col2;
     sp->up->boxtype  = sp->down->boxtype = sp->slider->boxtype = obj->boxtype;
+
+	fl_notify_object( sp->slider, FL_ATTRIB );
 }
-
-
-#define IS_FLATBOX( b )   (    ( b ) == FL_BORDER_BOX    \
-						    || ( b ) == FL_FRAME_BOX     \
-						    || ( b ) == FL_EMBOSSED_BOX  \
-						    || ( b ) == FL_ROUNDED_BOX )
 
 
 /***************************************
@@ -213,6 +204,8 @@ get_geom( FL_OBJECT * obj )
 			slider->w += 2 * absbw + ( absbw > 1 );
 		}
     }
+
+	fl_notify_object( slider, FL_RESIZED );
 }
 
 
@@ -385,7 +378,6 @@ fl_create_scrollbar( int          type,
     fl_set_slider_increment( sp->slider, 5 * sp->increment, sp->increment );
     fl_set_object_callback( sp->slider, slider_cb, 0 );
 	fl_set_slider_bounds( sp->slider, 0.0, 1.0 );
-	sp->attrib = 1;
 
 	sp->old_val = fl_get_slider_value( sp->slider );
 
@@ -487,7 +479,6 @@ fl_set_scrollbar_size( FL_OBJECT * obj,
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     fl_set_slider_size( sp->slider, val );
-	sp->attrib = 1;
 }
 
 

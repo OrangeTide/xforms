@@ -1289,7 +1289,7 @@ fl_get_visual_depth( void )
  * print out the current state info. For debugging only
  ***************************************/
 
-#if FL_DEBUG >= ML_WARN	/* { */
+#if FL_DEBUG >= ML_WARN
 void
 fli_dump_state_info( int          mode,
 					 const char * where )
@@ -1338,8 +1338,7 @@ fli_dump_state_info( int          mode,
 		exit( 1 );
     }
 }
-
-#endif /* } */
+#endif
 
 
 /***************************************

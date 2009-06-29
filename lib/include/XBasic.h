@@ -155,8 +155,8 @@ struct FL_pixmap_ {
 	Window		   win;
 	Visual       * visual;
 	FL_Coord	   x,
-				   y;
-	unsigned int   w,
+	               y,
+	               w,
 				   h;
 	int			   depth;
 	FL_COLOR	   dbl_background;
@@ -542,10 +542,10 @@ FL_EXPORT void fl_get_wingeometry( Window	  win,
 #define FL_IS_CANVAS( o )	\
     ( ( o )->objclass == FL_CANVAS || ( o )->objclass == FL_GLCANVAS )
 
-/* The window an object belongs. For drawing */
+/* The window an object belongs to - for drawing */
 
 #define FL_ObjWin( o )	 \
-    ( FL_IS_CANVAS( o ) ? fl_get_canvas_id( o ): ( o )->form->window )
+    ( FL_IS_CANVAS( o ) ? fl_get_canvas_id( o ) : ( o )->form->window )
 
 
 FL_EXPORT Window fl_get_real_object_window( FL_OBJECT * ob );

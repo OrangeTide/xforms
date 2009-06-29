@@ -102,9 +102,31 @@ void
 fli_add_composite( FL_OBJECT * obj )
 {
 	FL_FORM *form = obj->form;
+	FL_OBJECT *tmp;
 
-	for ( obj = obj->child; obj; obj = obj->nc )
-		fl_add_object( form, obj );
+	for ( tmp = obj->child; tmp; tmp = tmp->nc )
+	{
+		tmp->parent = obj;
+		fl_add_object( form, tmp );
+	}
+}
+
+
+/***************************************
+ * Inserts all children of a object before the object 'before'
+ ***************************************/
+
+void
+fli_insert_composite( FL_OBJECT * obj,
+					  FL_OBJECT * before )
+{
+	FL_OBJECT *tmp;
+
+	for ( tmp = obj->child; tmp; tmp = tmp->nc )
+	{
+		tmp->parent = obj;
+		fli_insert_object( tmp, before );
+	}
 }
 
 
@@ -253,45 +275,42 @@ fli_composite_has_been_resized( FL_OBJECT * obj )
 
 
 /***************************************
- * Sets the resize property for the children of an object
- * (and their children in turn)
+ * Inserts a composite object into a form after object 'after'
  ***************************************/
 
 void
-fli_insert_composite_after( FL_OBJECT * comp,
-							FL_OBJECT * node )
+fli_insert_composite_after( FL_OBJECT * obj,
+							FL_OBJECT * after )
 {
     FL_OBJECT *next,
 		      *tmp,
 		      *prev;
     FL_FORM *form;
 
-    if ( ! comp || ! node )
+    if ( ! obj || ! after )
     {
 		M_err( "fli_insert_composite_after", "Bad argument" );
 		return;
     }
 
-    if ( ! ( form = node->form ) )
+    if ( ! ( form = after->form ) )
     {
 		M_err( "fli_insert_composite_after", "Null form" );
 		return;
     }
 
-    comp->form = form;
+    obj->form = form;
 
-    next              = node->next;
-    node->next        = comp;
-    comp->prev        = node;
-    comp->child->form = form;
-    comp->next        = comp->child;
-    comp->next->prev  = comp;
+    next            = after->next;
+    after->next     = obj;
+    obj->prev       = after;
+    obj->next       = obj->child;
+    obj->next->prev = obj;
+    prev            = obj;
 
-    prev = comp;
-
-    for ( tmp = comp->child; tmp && tmp->nc; prev = tmp, tmp = tmp->nc )
+    for ( tmp = obj->child; tmp->nc; prev = tmp, tmp = tmp->nc )
     {
-		tmp->parent = comp;             /* needed for fdesign! */
+		tmp->parent = obj;
 		tmp->form   = form;
 		tmp->next   = tmp->nc;
 		tmp->prev   = prev;
@@ -301,7 +320,7 @@ fli_insert_composite_after( FL_OBJECT * comp,
     tmp->prev = prev;
     tmp->form = form;
 
-    if ( form->last == node )
+    if ( form->last == after )
 		form->last = tmp;
 }
 

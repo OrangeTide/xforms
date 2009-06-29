@@ -37,7 +37,7 @@
 #include <signal.h>
 
 
-void ( * fli_handle_signal )( void ) = NULL;
+void ( * fli_handle_signal )( void ) = NULL;    /* also needed in forms.c */
 
 
 /***************************************

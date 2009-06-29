@@ -367,13 +367,13 @@ load_objclass_spec_info( FILE      * fp,
 
 			if ( strlen( fli_de_space( key ) ) < 2 )
 				/* empty */ ;
-			else if ( strcmp( key, "bounds" ) == 0 )
+			else if ( ! strcmp( key, "bounds" ) )
 				sscanf( val, "%f %f", &sp->min, &sp->max );
-			else if ( strcmp( key, "precision" ) == 0 )
+			else if ( ! strcmp( key, "precision" ) )
 				sscanf( val, "%d", &sp->prec );
-			else if ( strcmp( key, "increment" ) == 0 )
+			else if ( ! strcmp( key, "increment" ) )
 				sscanf( val, "%f %f", &sp->ldelta, &sp->rdelta );
-			else if ( strcmp( key, "value" ) == 0 )
+			else if ( ! strcmp( key, "value" ) )
 			{
 				if ( ISBUTTON( ob->objclass ) || ISCHOICE( ob->objclass ) )
 				{
@@ -384,37 +384,37 @@ load_objclass_spec_info( FILE      * fp,
 				else
 					sp->val = atof( val );
 			}
-			else if ( strcmp( key, "slsize" ) == 0 )
+			else if ( ! strcmp( key, "slsize" ) )
 				sscanf( val, "%f", &sp->slsize );
-			else if ( strcmp( key, "step" ) == 0 )
+			else if ( ! strcmp( key, "step" ) )
 				sscanf( val, "%f", &sp->step );
-			else if ( strcmp( key, "h_pref") == 0 )
+			else if ( ! strcmp( key, "h_pref") )
 				sp->h_pref = get_scrollbar_pref_value( val );
-			else if ( strcmp( key, "v_pref" ) == 0 )
+			else if ( ! strcmp( key, "v_pref" ) )
 				sp->v_pref = get_scrollbar_pref_value( val );
-			else if ( strcmp( key, "sstep" ) == 0 )
+			else if ( ! strcmp( key, "sstep" ) )
 				sscanf( val, "%f", &sp->sstep );
-			else if ( strcmp( key, "lstep" ) == 0 )
+			else if ( ! strcmp( key, "lstep" ) )
 				sscanf( val, "%f", &sp->lstep );
-			else if ( strcmp( key, "xbounds" ) == 0 )
+			else if ( ! strcmp( key, "xbounds" ) )
 				sscanf( val, "%f %f", &sp->xmin, &sp->xmax );
-			else if ( strcmp( key, "ybounds" ) == 0 )
+			else if ( ! strcmp( key, "ybounds" ) )
 				sscanf( val, "%f %f", &sp->ymin, &sp->ymax );
-			else if ( strcmp( key, "xvalue" ) == 0 )
+			else if ( ! strcmp( key, "xvalue" ) )
 				sscanf( val, "%f", &sp->xval );
-			else if ( strcmp( key, "yvalue" ) == 0 )
+			else if ( ! strcmp( key, "yvalue" ) )
 				sscanf( val, "%f", &sp->yval );
-			else if ( strcmp( key, "xstep" ) == 0 )
+			else if ( ! strcmp( key, "xstep" ) )
 				sscanf( val, "%f", &sp->xstep );
-			else if ( strcmp( key, "ystep" ) == 0 )
+			else if ( ! strcmp( key, "ystep" ) )
 				sscanf( val, "%f", &sp->ystep );
-			else if ( strcmp( key, "angles" ) == 0 )
+			else if ( ! strcmp( key, "angles" ) )
 				sscanf( val, "%f %f", &sp->thetai, &sp->thetaf );
-			else if ( strcmp( key, "mbuttons" ) == 0 )
+			else if ( ! strcmp( key, "mbuttons" ) )
 				sscanf( val, "%d", &sp->mbuttons );
-			else if ( strcmp( key, "initial_val" ) == 0 )
+			else if ( ! strcmp( key, "initial_val" ) )
 				sscanf( val, "%f", &sp->val );
-			else if ( strcmp( key, "content" ) == 0 )
+			else if ( ! strcmp( key, "content" ) )
 			{
 				++sp->nlines;
 				sp->content  = fl_realloc( sp->content,
@@ -434,55 +434,55 @@ load_objclass_spec_info( FILE      * fp,
 				sp->mode[ sp->nlines ]     = 0;
 				sp->mval[ sp->nlines ]     = sp->nlines;
 			}
-			else if ( strcmp( key, "mode" ) == 0 )
+			else if ( ! strcmp( key, "mode" ) )
 				sp->mode[ sp->nlines ] = get_pupmode_value( val );
-			else if ( strcmp( key, "shortcut" ) == 0 )
+			else if ( ! strcmp( key, "shortcut" ) )
 				sp->shortcut[ sp->nlines ] = fl_strdup( val );
-			else if ( strcmp( key, "callback" ) == 0 )
+			else if ( ! strcmp( key, "callback" ) )
 				sp->callback[ sp->nlines ] = fl_strdup( val );
-			else if ( strcmp( key, "id" ) == 0 )
+			else if ( ! strcmp( key, "id" ) )
 				sscanf( val, "%d", sp->mval + sp->nlines );
-			else if ( strcmp( key, "file" ) == 0 )
+			else if ( ! strcmp( key, "file" ) )
 				strcpy( sp->filename, val );
-			else if ( strcmp( key, "focus_file" ) == 0 )
+			else if ( ! strcmp( key, "focus_file" ) )
 				strcpy( sp->focus_filename, val );
-			else if ( strcmp( key, "handler" ) == 0 )
+			else if ( ! strcmp( key, "handler" ) )
 				ob->c_vdata = fl_strdup( val );
-			else if ( strcmp( key, "data" ) == 0 )
+			else if ( ! strcmp( key, "data" ) )
 				strcpy( sp->data, val );
-			else if ( strcmp( key, "focus_data" ) == 0 )
+			else if ( ! strcmp( key, "focus_data" ) )
 				strcpy( sp->focus_data, val );
-			else if ( strcmp( key, "fullpath" ) == 0 )
+			else if ( ! strcmp( key, "fullpath" ) )
 				sp->fullpath = atoi( val );
-			else if ( strcmp( key, "width" ) == 0 )
+			else if ( ! strcmp( key, "width" ) )
 				strcpy( sp->width, val );
-			else if ( strcmp( key, "height" ) == 0 )
+			else if ( ! strcmp( key, "height" ) )
 				strcpy( sp->height, val );
-			else if ( strcmp( key, "helper" ) == 0 )
+			else if ( ! strcmp( key, "helper" ) )
 				strcpy( sp->helper, val );
-			else if ( strcmp( key, "align" ) == 0 )
+			else if ( ! strcmp( key, "align" ) )
 				sp->align = align_val( val ) & ~FL_ALIGN_INSIDE;
-			else if ( strcmp( key, "struct" ) == 0 )
+			else if ( ! strcmp( key, "struct" ) )
 				sp->new_menuapi = atoi( val );
-			else if ( strcmp( key, "global" ) == 0 )
+			else if ( ! strcmp( key, "global" ) )
 				sp->global_scope = atoi( val );
-			else if ( strcmp( key, "focus" ) == 0 )
+			else if ( ! strcmp( key, "focus" ) )
 				sp->show_focus = atoi( val );
-			else if ( strcmp( key, "xtics" ) == 0 )
+			else if ( ! strcmp( key, "xtics" ) )
 				sscanf( val, "%d %d", &sp->xmajor, &sp->xminor );
-			else if ( strcmp( key, "ytics" ) == 0 )
+			else if ( ! strcmp( key, "ytics" ) )
 				sscanf( val, "%d %d", &sp->ymajor, &sp->yminor );
-			else if ( strcmp( key, "xscale" ) == 0 )
+			else if ( ! strcmp( key, "xscale" ) )
 			{
 				sscanf( val, "%" XStr( TMP_BUF_LEN ) "s %g", buf, &sp->xbase );
 				sp->xscale = get_scale_value( buf );
 			}
-			else if ( strcmp( key, "yscale" ) == 0 )
+			else if ( ! strcmp( key, "yscale" ) )
 			{
 				sscanf( val, "%" XStr( TMP_BUF_LEN ) "s %g", buf, &sp->ybase );
 				sp->yscale = get_scale_value( buf );
 			}
-			else if ( strcmp( key, "grid" ) == 0 )
+			else if ( ! strcmp( key, "grid" ) )
 			{
 				char buf1[ TMP_BUF_LEN + 1 ];
 
@@ -492,13 +492,13 @@ load_objclass_spec_info( FILE      * fp,
 				sp->xgrid = get_grid_value( buf );
 				sp->ygrid = get_grid_value( buf1 );
 			}
-			else if ( strcmp( key, "gridstyle" ) == 0 )
+			else if ( ! strcmp( key, "gridstyle" ) )
 				sp->grid_linestyle = get_linestyle_value( val );
-			else if ( strcmp( key, "markactive" ) == 0 )
+			else if ( ! strcmp( key, "markactive" ) )
 				sp->mark_active = atoi( val );
-			else if ( strcmp( key, "dir" ) == 0 )
+			else if ( ! strcmp( key, "dir" ) )
 				sp->direction = get_direction_value( val );
-			else if ( strcmp( key, "return" ) == 0 )
+			else if ( ! strcmp( key, "return" ) )
 			{
 				fli_de_space_de( val );
 				sp->how_return = get_how_return_value( val );

@@ -36,21 +36,21 @@ One important caution about your draw event handling code: none of the
 high level routines (@code{@ref{fl_freeze_form()}},
 @code{@ref{fl_deactivate_form()}}) etc.@: can be used. The only
 routines allowed to be used are (direct) drawing functions and object
-internal book keeping routines. Attributes modifying routines, such as
+internal book keeping routines. Attribute modifying routines, such as
 @code{@ref{fl_set_object_color()}} etc.@: are not allowed (using them
 can lead to infinite recursions). In addition, (re)drawing of other
 objects using @code{@ref{fl_redraw_object()}} while handling
 @code{@ref{FL_DRAW}} will also not work.
 
-Due to the way double buffering is handled, @code{FL_ObjWin(obj)} is
-at the time @code{FL_DRAW} is possed as the event to the handling
-function (and only then) the backbuffer if the object is double
-bufferred. What this means is that @code{FL_ObjWin(obj)} should not be
-used when a real window is expected. The difference between Xforms
-backbuffer and a real window is that you can change the real window's
-cursor or query the mouse position with it. You can not do either of
-these with the backbuffer pixmap. If there is a need to obtain the
-real window ID the following routine can be used:
+Due to the way double buffering is handled, at the time the
+@code{FL_DRAW} event is passed to the handling function (and only
+then) @code{FL_ObjWin(obj)} might return a pixmap used as the
+backbuffer (at least if the object is double buffered). What that
+means is that @code{FL_ObjWin(obj)} should not be used when a real
+window is needed. For a real window you can change the window's cursor
+or query the mouse position within it. You can't do either of these
+with the backbuffer pixmap. If there is a need to obtain the real
+window ID the following routine can be used:
 @findex fl_get_real_object_window()
 @anchor{fl_get_real_object_window()}
 @example
@@ -60,7 +60,8 @@ Window fl_get_real_object_window(FL_OBJECT *)
 To summarize: use @code{FL_ObjWin(obj)} when drawing and use
 @code{@ref{fl_get_real_object_window()}} for cursor or pointer
 routines. This distinction is important only while handling
-@code{FL_DRAW} and @code{FL_ObjWin(obj)} should be used anywhere else.
+@code{FL_DRAW} events, @code{FL_ObjWin(obj)} should be used anywhere
+else.
 
 @tindex FL_DRAWLABEL
 @anchor{FL_DRAWLABEL}

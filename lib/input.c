@@ -1301,7 +1301,8 @@ handle_input( FL_OBJECT * obj,
 
     switch ( event )
     {
-		case FL_ATTRIB:
+		case FL_ATTRIB :
+		case FL_RESIZED :
 			check_scrollbar_size( obj );
 			/* fall through */
 
@@ -1664,6 +1665,7 @@ fl_add_input( int          type,
 		fl_set_object_label( obj, NULL );
 		sp->dummy = fl_create_box( FL_NO_BOX, x, y, w, h, label );
 		sp->dummy->objclass = FL_INPUT;
+		sp->dummy->type = FL_MULTILINE_INPUT;
 		copy_attributes( obj, sp->dummy );
 		sp->dummy->handle = fake_handle;
 		sp->dummy->spec = sp;

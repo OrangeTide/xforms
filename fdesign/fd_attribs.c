@@ -48,7 +48,7 @@ static void readback_attributes( FL_OBJECT * );
 
 
 /***************************************
- * Call-back routine to get a color from the user
+ * Callback routine to get a color from the user
  ***************************************/
 
 void
@@ -58,12 +58,12 @@ setcolor_cb( FL_OBJECT * obj,
     int col1 = fl_show_colormap( obj->col1 );
 
     fl_set_object_color( obj, col1, col1 );
-    auto_apply_cb( 0, 0 );
+    auto_apply_cb( obj, 0 );
 }
 
 
 /***************************************
- * if change attributes automatically
+ * If we're to change attributes automatically
  ***************************************/
 
 void
@@ -76,7 +76,7 @@ auto_apply_cb( FL_OBJECT * ob,
 
 
 /***************************************
- * the auto-apply setting itself
+ * The auto-apply setting itself
  ***************************************/
 
 void
@@ -122,7 +122,7 @@ save_object( FL_OBJECT * obj )
 
 
 /***************************************
- * duplicate everything in oldobj to obj
+ * Duplicate everything in oldobj to obj
  ***************************************/
 
 static void
@@ -151,6 +151,8 @@ restore_object( FL_OBJECT * obj )
     obj->shortcut = os;
     fl_set_object_label( obj, oldcopy->label );
 
+	fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
 	if ( child && ( old_parent = child->parent ) != obj )
 		for ( ; child && child->parent == old_parent; child = child->next )
 			child->parent = obj;
@@ -161,7 +163,7 @@ restore_object( FL_OBJECT * obj )
 
 
 /***************************************
- * really change object attributes
+ * Really change object attributes
  ***************************************/
 
 void
@@ -175,7 +177,7 @@ apply_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 
 /***************************************
- * restore from the original copy
+ * Restore from the original copy
  ***************************************/
 
 void
@@ -391,7 +393,7 @@ readback_attributes( FL_OBJECT * obj )
 
     obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
 
-    /* label style consists of two parts */
+    /* Label style consists of two parts */
 
     obj->lstyle = fl_get_choice( fd_generic_attrib->fontobj ) - 1;
     spstyle = fl_get_choice( fd_generic_attrib->styleobj ) - 1;
@@ -576,19 +578,19 @@ change_object( FL_OBJECT * obj,
 
     if ( all )
     {
-		fl_show_object( ui->labelobj );
-		fl_show_object( ui->scobj );
-		fl_show_object( ui->nameobj );
+		fl_show_object( ui->labelobj  );
+		fl_show_object( ui->scobj     );
+		fl_show_object( ui->nameobj   );
 		fl_show_object( ui->cbnameobj );
-		fl_show_object( ui->argobj );
+		fl_show_object( ui->argobj    );
     }
     else
     {
-		fl_hide_object( ui->labelobj );
-		fl_hide_object( ui->scobj );
-		fl_hide_object( ui->nameobj );
+		fl_hide_object( ui->labelobj  );
+		fl_hide_object( ui->scobj     );
+		fl_hide_object( ui->nameobj   );
 		fl_hide_object( ui->cbnameobj );
-		fl_hide_object( ui->argobj );
+		fl_hide_object( ui->argobj    );
     }
 
     /* Show attributes of the current object */
@@ -615,9 +617,9 @@ change_object( FL_OBJECT * obj,
     fl_set_app_mainform( fd_attrib->attrib );
 
     /* Both cancel and readyobj should have their own callbacks, so we don't
-       need this do_form stuff, but since attribute editing can't be invoked
-       for more than once item at a time, need to block the proces_xevent.
-       TODO */
+       need to call fl_do_forms(), but since attribute editing can't be
+       invoked for more than once item at a time we need to block the
+       proces_xevent. TODO */
 
     do
     {
@@ -626,8 +628,8 @@ change_object( FL_OBJECT * obj,
 		retobj = fl_do_forms( );
 		if ( retobj == FL_EVENT )
 			fl_XNextEvent( &xev );
-    } while (    ( retobj != fd_attrib->readyobj || ! validate_attributes( ) )
-			  && retobj != fd_attrib->cancelobj );
+    } while ( ! (    ( retobj == fd_attrib->readyobj && validate_attributes( ) )
+				  || retobj == fd_attrib->cancelobj ) );
 
     fl_set_app_mainform( fd_control->control );
     fl_hide_form( fd_attrib->attrib );
@@ -638,16 +640,11 @@ change_object( FL_OBJECT * obj,
     if ( retobj == fd_attrib->cancelobj )
     {
 		restore_object( obj );
-
-		/* change_selected_objects( obj ); */
-
 		redraw_the_form( 0 );
 		return FALSE;
     }
     else
     {
-		/* Read back form. Caller will do change_selected_objects */
-
 		readback_attributes( obj );
 		return TRUE;
     }
@@ -677,11 +674,13 @@ set_attribs( FL_OBJECT  * obj,
     obj->lsize   = lsize;
     obj->lstyle  = lstyle;
     fl_set_object_label( obj, label );
+
+	fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 }
 
 
 /***************************************
- * more attributes
+ * More attributes
  ***************************************/
 
 void
@@ -754,14 +753,16 @@ set_shortcut( FL_OBJECT  * obj,
 
 
 /***************************************
- * decide if label need quote \ 
+ * Decide if label need quotes ('\')
  ***************************************/
 
 static int
 need_quote( const char * s,
 			int          i )
 {
-    int c = s[ i ], p, n;
+    int c = s[ i ],
+		p,
+		n;
 
     p =  i ? s[ i - 1 ] : 0;	/* prev char */
     n = *s ? s[ i + 1 ] : 0;	/* next char */
@@ -826,7 +827,7 @@ get_label( const FL_OBJECT * obj,
 
 
 /***************************************
- * convert shortcut into string representation.
+ * Convert shortcut into string representation.
  * ESC -> ^[, F1 -> &1 etc.
  ***************************************/
 
@@ -967,17 +968,17 @@ change_type( FL_OBJECT * obj,
 			 int         type )
 {
     FL_OBJECT *ttt,
-		      *defobj;
+		      *defobj,
+	          *prev;
+	FL_FORM *form;
     int boxtype,
-		reshow = 0,
 		is_focus;
-    FL_FORM *form = obj->form;
-    FL_OBJECT *prev;
+    SuperSPEC *sp = obj->u_vdata;
 
     if ( obj->type == type )
 		return;
 
-    /* Create the new object. */
+    /* Create a new object. */
 
     ttt = add_an_object( obj->objclass, type, obj->x, obj->y, obj->w, obj->h );
 
@@ -988,19 +989,15 @@ change_type( FL_OBJECT * obj,
     /* Create a default object from which we obtain info on if the user has
        changed boxtype and other attributes. This is done primarily to get
        around the type change problem with types having different default
-       boxtype. */
+       boxtype. Don't need to free the defobj as it is managed by
+       find_class_default */
 
     defobj = find_class_default( obj->objclass, obj->type );
 
     if ( defobj->boxtype != obj->boxtype )
 		boxtype = obj->boxtype;
     else
-    {
 		boxtype = ttt->boxtype;
-		reshow = 1;
-    }
-
-    /* Don't need to free the defobj as it is managed by find_class_default */
 
     /* Set the attributes */
 
@@ -1009,61 +1006,39 @@ change_type( FL_OBJECT * obj,
 
     set_miscattribs( ttt, obj->nwgravity, obj->segravity, obj->resize );
 
-    obj->type = ttt->type;
-	prev = obj->prev;
     is_focus = obj->focus;
 
-    if ( ! ttt->child )
-    {
-		ttt->form = form;
+	prev = obj->prev;
+	form = obj->form;
 
-		if ( obj->child )
-		{
-			clear_selection( );
+	clear_selection( );
 
-			obj->focus = 0;
-			fl_delete_object( obj );
-			ttt->prev = prev;
-			ttt->next = prev ? prev->next : NULL;
-			if ( prev )
-				prev->next = ttt;
-			*obj = *ttt;
-			fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
-			addto_selection( obj );
-		}
-		else
-		{
-			ttt->prev = obj->prev;
-			ttt->next = obj->next;
-		}
-    }
-    else
-    {
-		clear_selection( );
-		ttt->parent = obj->parent;
-		fl_delete_object( obj );
-		ttt->form = form;
-		*obj = *ttt;
-		fli_insert_composite_after( obj, prev );
-		fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
-		addto_selection( obj );
-    }
+	fl_delete_object( obj );
+    fli_handle_object( obj, FL_FREEMEM, 0, 0, 0, NULL, 0 );
+	if ( obj->child )
+		fli_free_composite( obj );
+
+	*obj = *ttt;
+	obj->u_vdata = sp;
+	obj->form = NULL;
+	if ( prev->next )
+		fli_insert_object( obj, prev->next );
+	else
+		fl_add_object( form, obj );
+
+	addto_selection( obj );
+
+    superspec_to_spec( obj );
+
+	fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 
     /* Correct the object focus if required. */
 
     if ( is_focus )
-		fl_set_object_focus( obj->form, ttt );
+		fl_set_object_focus( obj->form, obj );
 
-    if ( ttt->child )
-		redraw_the_form( 0 );
-    else
-    {
-		copy_superspec( ttt, obj );
-		*obj = *ttt;
-    }
-
-    if ( reshow )
-		show_attributes( obj );
+	redraw_the_form( 0 );
+	show_attributes( obj );
 }
 
 

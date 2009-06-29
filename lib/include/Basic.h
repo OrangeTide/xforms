@@ -1026,6 +1026,9 @@ FL_EXPORT void fl_set_object_lcol( FL_OBJECT * ob,
 FL_EXPORT int fl_set_object_return( FL_OBJECT * ob,
 									int		    when );
 
+FL_EXPORT void fl_notify_object( FL_OBJECT * obj,
+								 int         cause );
+
 FL_EXPORT void fl_set_object_lalign( FL_OBJECT * ob,
 									 int		 align );
 

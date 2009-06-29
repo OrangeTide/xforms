@@ -791,9 +791,7 @@ add_an_object( int      objclass,
 			   FL_Coord h )
 {
     FL_OBJECT *obj = NULL;
-    int nosuper = 0,
-		i;
-    char buf[ 128 ];
+    int nosuper = 0;
     CDEF *cls;
 	static FL_FORM *cf = NULL;
 
@@ -929,12 +927,6 @@ add_an_object( int      objclass,
 			obj = cls->addit( type, x, y, w, h, "" );
 			spec_to_superspec( obj );
 			nosuper = 1;
-
-			for ( i = 0; i < 30; i++ )
-			{
-				sprintf( buf, "Browser line %d", i + 1 );
-				fl_add_browser_line( obj, buf );
-			}
 			break;
 
 		case FL_XYPLOT:
@@ -943,12 +935,12 @@ add_an_object( int      objclass,
 			{
 				float xx[ 30 ],
 					  yy[ 30 ];
-				int ii;
+				int i;
 
-				for ( ii = 0; ii < 30; ii++ )
+				for ( i = 0; i < 30; i++ )
 				{
-					xx[ ii ] = 3.1415 * ( ii + 0.5 ) / 8.0;
-					yy[ ii ] = FL_abs( sin( 2 * xx[ ii ] ) + cos( xx[ ii ] ) );
+					xx[ i ] = 3.1415 * ( i + 0.5 ) / 8.0;
+					yy[ i ] = FL_abs( sin( 2 * xx[ i ] ) + cos( xx[ i ] ) );
 				}
 
 				obj = cls->addit(type, x, y, w, h, "");

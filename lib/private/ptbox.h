@@ -61,8 +61,6 @@ typedef struct {
 	int               def_style;     /* default font style */
 	int               def_align;     /* default alignment */
 	int               def_height;    /* height of line with default font size */
-	FL_COLOR          def_col1;      /* background color */
-	FL_COLOR          def_col2;      /* selection color */
 	FL_COLOR          def_lcol;      /* text color */
     GC                defaultGC;	 /* text drawing GC */
     GC                backgroundGC;  /* background GC */
@@ -182,6 +180,8 @@ extern void fli_tbox_make_line_selectable( FL_OBJECT *,
 extern void fli_tbox_set_dblclick_callback( FL_OBJECT *,
 											FL_CALLBACKPTR,
 											long );
+
+extern int fli_tbox_get_num_lines( FL_OBJECT * );
 
 extern int fli_tbox_get_topline( FL_OBJECT * obj );
 

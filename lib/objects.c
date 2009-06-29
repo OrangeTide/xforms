@@ -211,7 +211,6 @@ fl_make_object( int            objclass,
     obj->wantkey  = FL_KEY_NORMAL;
 
     obj->flpixmap = NULL;
-
     obj->label    = fl_strdup( label ? label : "" );
     obj->handle   = handle;
     obj->align    = FL_ALIGN_CENTER;
@@ -263,7 +262,7 @@ fl_make_object( int            objclass,
 
 /***************************************
  * Adds an object to the form.
-***************************************/
+ ***************************************/
 
 void
 fl_add_object( FL_FORM   * form,
@@ -271,7 +270,7 @@ fl_add_object( FL_FORM   * form,
 {
 	FL_OBJECT *o;
 
-    /* Checking for correct behaviour. */
+    /* Checking for correct arguments. */
 
     if ( ! obj )
     {
@@ -308,18 +307,18 @@ fl_add_object( FL_FORM   * form,
     obj->prev = obj->next = NULL;
     obj->form = form;
 
+    if ( fli_inverted_y )
+		obj->y = TRANY( obj, form );
+
 	obj->fl1 = obj->x;
 	obj->fr1 = form->w_hr - obj->fl1;
 	obj->ft1 = obj->y;
 	obj->fb1 = form->h_hr - obj->ft1;
 
-	obj->fl2 = obj->x + obj->w;
+	obj->fl2 = obj->x  + obj->w;
 	obj->fr2 = form->w - obj->fl2;
-	obj->ft2 = obj->y + obj->h;
+	obj->ft2 = obj->y  + obj->h;
 	obj->fb2 = form->h - obj->ft2;
-
-    if ( fli_inverted_y )
-		obj->y = TRANY( obj, form );
 
     /* If adding to a group, set objects group ID, then find the end of the
 	   group or the end of the object list on this form */
@@ -360,7 +359,7 @@ fl_add_object( FL_FORM   * form,
 
 	/* If the object has child objects also add them to the form,
 	   otherwise check if the object partialy or completely hiddes
-	   other objects. */
+	   any objects before it in the list of objects of the form. */
 
     if ( obj->child )
 		fli_add_composite( obj );
@@ -391,7 +390,7 @@ fli_insert_object( FL_OBJECT * obj,
 {
     FL_FORM *form;
 
-    /* Checking for correct behaviour. */
+    /* Checking for correct arguments */
 
     if ( ! obj || ! before )
     {
@@ -406,33 +405,47 @@ fli_insert_object( FL_OBJECT * obj,
 		return;
     }
 
-    form = before->form;
-    obj->next = before;
+    form          = before->form;
+    obj->next     = before;
     obj->group_id = before->group_id;
 
     if ( before == form->first )
     {
 		form->first = obj;
-		obj->prev = NULL;
+		obj->prev   = NULL;
     }
     else
     {
-		obj->prev = before->prev;
+		obj->prev       = before->prev;
 		obj->prev->next = obj;
     }
 
+    if ( fli_inverted_y )
+		obj->y = TRANY( obj, form );
+
+	obj->fl1 = obj->x;
+	obj->fr1 = form->w_hr - obj->fl1;
+	obj->ft1 = obj->y;
+	obj->fb1 = form->h_hr - obj->ft1;
+
+	obj->fl2 = obj->x  + obj->w;
+	obj->fr2 = form->w - obj->fl2;
+	obj->ft2 = obj->y  + obj->h;
+	obj->fb2 = form->h - obj->ft2;
+
     before->prev = obj;
-    obj->form = form;
+    obj->form    = form;
 
     if ( obj->input && obj->active && ! form->focusobj )
 		fl_set_focus_object( form, obj );
 
-	/* If the object has child objects also add them to the form */
+	/* If the object has child objects also insert them into the form */
 
     if ( obj->child )
-		fli_add_composite( obj );
+		fli_insert_composite( obj, before );
 
-    fl_redraw_form( form );
+	if ( ! obj->parent )
+		fl_redraw_form( form );
 }
 
 
@@ -843,7 +856,7 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
 		return;
     }
 
-    /* never bother with composite object */
+    /* Never bother with composite object */
 
     if ( obj->child || obj->parent )
 		return;
@@ -854,7 +867,7 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
     if ( ( obj->use_pixmap = y ) && ! obj->flpixmap )
 		obj->flpixmap = fl_calloc( 1, sizeof( FL_pixmap ) );
 
-    /* figure out the double buffer background */
+    /* Figure out the background color to be used */
 
     if ( obj->form && obj->form->first )
     {
@@ -1804,9 +1817,9 @@ object_is_clipped( FL_OBJECT * obj )
 /***************************************
  * Redraws all marked objects and reduces the mark. It is important
  * NOT to set any clip masks inside this function (except for free objects)
- * in that it will prevent the drawing function from drawing labels. That
- * would be wrong since fl_redraw_object() calls redraw_marked
- * directly. All clip must done prior to calling this routines
+ * since that would prevent the drawing function from drawing labels. That
+ * would be wrong since fl_redraw_object() calls redraw_marked()
+ * directly. All cliping must done prior to calling this routines
  ***************************************/
 
 static void
@@ -1816,9 +1829,25 @@ redraw_marked( FL_FORM * form,
 {
     FL_OBJECT *obj,
 		      *o;
+	static int in_redraw = 0;
 
-    if ( form->visible != FL_VISIBLE || form->frozen > 0 )
+	/* Beside that case that the form isn't visioble or frozen we also
+	   need to consider the case that a redraw for an object is initiated
+	   while an other (parent) obkect gets redrawn (an example would be
+	   a scrillbar that during its redraw calls a function for setting
+	   the value of its slider which in turn triggers the redraw of the
+	   slider). In that case the (child) object is not to be redrawn yet
+	   (it's already marked for redraw and will be redrawn later automa-
+	   ticallysince child object always come after their parent objects)
+	   because that would mess up the behind-the-scenes switching of the
+	   window/pixmaps that drawing is done in. */
+
+    if ( form->visible != FL_VISIBLE || form->frozen > 0 || in_redraw )
 		return;
+
+	in_redraw = 1;
+
+	/* Set the window (or drawable) to be drawn to (flx->win) */
 
     fli_set_form_window( form );
     fli_create_form_pixmap( form );
@@ -1871,47 +1900,44 @@ redraw_marked( FL_FORM * form,
 
     for ( obj = form->first; obj; obj = obj->next )
     {
-		if (    obj->visible
-			 && obj->redraw
-			 && ( ! obj->parent || obj->parent->visible ) )
+		if ( ! obj->redraw )
+			continue;
+
+		obj->redraw = 0;
+
+		if (    ! obj->visible
+			 || ( obj->parent && ! obj->parent->visible )
+			 || ( fli_perm_clip && object_is_clipped( obj ) ) )
+			continue;
+
+		fli_create_object_pixmap( obj );
+
+		/* Will not allow free object draw outside of its box. Check
+		   perm_clip so we don't have draw regions we don't have to
+		   (Expose etc.) */
+
+		if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
 		{
-			obj->redraw = 0;
-
-			/* no point redrawing unexposed object */
-
-			if ( fli_perm_clip && object_is_clipped( obj ) )
-			{
-#if FL_DEBUG >= ML_WARN
-				M_warn( "redraw_marked", "%s is clipped", obj->label );
-#endif
-				continue;
-			}
-
-			fli_create_object_pixmap( obj );
-
-			/* Will not allow free object draw outside of its box. Check
-			   perm_clip so we don't have draw regions we don't have to
-			   (Expose etc.) */
-
-			if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
-			{
-				fl_set_clipping( obj->x, obj->y, obj->w, obj->h );
-				fl_set_text_clipping( obj->x, obj->y, obj->w, obj->h );
-			}
-
-			fli_handle_object( obj, FL_DRAW, 0, 0, key, xev, 0 );
-
-			if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
-			{
-				fl_unset_clipping( );
-				fl_unset_text_clipping( );
-			}
-
-			fli_show_object_pixmap( obj );
+			fl_set_clipping( obj->x, obj->y, obj->w, obj->h );
+			fl_set_text_clipping( obj->x, obj->y, obj->w, obj->h );
 		}
+
+		fli_handle_object( obj, FL_DRAW, 0, 0, key, xev, 0 );
+
+		if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
+		{
+			fl_unset_clipping( );
+			fl_unset_text_clipping( );
+		}
+
+		fli_show_object_pixmap( obj );
+
+		fli_handle_object( obj, FL_DRAWLABEL, 0, 0, 0, NULL, 0 );
     }
 
     fli_show_form_pixmap( form );
+
+	in_redraw = 0;
 }
 
 
@@ -2260,7 +2286,10 @@ handle_object( FL_OBJECT * obj,
 		return FL_RETURN_NONE;
 
 #if FL_DEBUG >= ML_WARN
-    if ( ! obj->form && ! ( event == FL_FREEMEM || event == FL_ATTRIB ) )
+    if (    ! obj->form
+		 && event != FL_FREEMEM
+		 && event != FL_ATTRIB
+		 && event != FL_RESIZED )
     {
 		M_err( "handle_object", "Bad object %s, event = %s",
 			   obj->label ? obj->label : "(no label)",
@@ -2384,7 +2413,7 @@ handle_object( FL_OBJECT * obj,
 
  recover:
 
-	/* call a pre-handler if it exists */
+	/* Call a pre-handler if it exists */
 
     if (    obj->prehandle
 		 && event != FL_FREEMEM
@@ -2402,7 +2431,7 @@ handle_object( FL_OBJECT * obj,
 	else
 		obj->handle( obj, event, mx, my, key, xev );
 
-	/* Now call a posthandler if it exists */
+	/* Now call a post-handler if it exists */
 
     if ( obj->posthandle && event != FL_FREEMEM )
 		obj->posthandle( obj, event, mx, my, key, xev );
@@ -3308,3 +3337,21 @@ fl_set_object_return( FL_OBJECT * obj,
 
 	return old_when;
 }
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_notify_object( FL_OBJECT * obj,
+				  int         cause )
+{
+	if (    ! obj 
+		 || (    cause != FL_ATTRIB
+			  && cause != FL_RESIZED
+			  && cause != FL_MOVEORIGIN ) )
+		return;
+
+	fli_handle_object( obj, cause, 0, 0, 0, NULL, 0 );
+}
+

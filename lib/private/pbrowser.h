@@ -29,6 +29,7 @@
 #define PBROWSER_H_
 
 #include "private/ptbox.h"
+#include "private/pscrollbar.h"
 
 
 typedef struct {

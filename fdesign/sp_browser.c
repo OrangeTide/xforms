@@ -134,7 +134,6 @@ emit_browser_code( FILE      * fp,
     defspec = get_superspec( defobj );
     spec = get_superspec( ob );
 
-
     if ( spec->h_pref != defspec->h_pref )
 		fprintf( fp, "    fl_set_browser_hscrollbar( obj, %s );\n",
 				 get_scrollbar_pref_name( spec->h_pref ) );

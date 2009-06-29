@@ -147,6 +147,10 @@ fl_create_formbrowser( int          type,
 
     fl_set_coordunit( oldu );
 
+	/* Set default return policy for the object */
+
+	fl_set_object_return( ob, FL_RETURN_NONE );
+
     return ob;
 }
 
@@ -163,14 +167,11 @@ fl_add_formbrowser( int          type,
 					const char * label )
 {
 
-    FL_OBJECT *ob = fl_create_formbrowser( type, x, y, w, h, label );
+    FL_OBJECT *obj = fl_create_formbrowser( type, x, y, w, h, label );
 
-	/* Set default return policy for the object */
+    fl_add_object( fl_current_form, obj );
 
-	fl_set_object_return( ob, FL_RETURN_NONE );
-
-    fl_add_object( fl_current_form, ob );
-    return ob;
+    return obj;
 }
 
 

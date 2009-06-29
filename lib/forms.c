@@ -22,10 +22,8 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  Main event dispatcher.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -44,9 +42,6 @@ static int fli_XLookupString( XKeyEvent *,
 							 char *,
 							 int,
 							 KeySym * );
-void fli_redraw_form_using_xevent( FL_FORM *,
-								   int,
-								   XEvent * );
 static void do_interaction_step( int );
 static int get_next_event_or_idle( int,
 								   FL_FORM **,
@@ -66,8 +61,9 @@ static FL_FORM *fli_mainform;
 static int nomainform;
 static int reopened_group;
 
-extern void ( * fli_handle_signal )( void );
-extern int ( * fli_handle_clipboard )( void * );
+
+extern void ( * fli_handle_signal )( void );       /* defined in signal.c */
+extern int ( * fli_handle_clipboard )( void * );   /* defined in clipboard.c */
 
 
 int fli_fast_free_object = 0;    /* exported to objects.c */
@@ -93,7 +89,7 @@ unsigned int fli_query_age = UINT_MAX;
    are at the start of the array (there are 'formnumb' of them), hidden
    form are at the end ('hidden_formnumb' elements). When a new form
    gets created the list is extended and when a form gets deleted the
-   list shrinks again. */
+   list is shrunken. */
 
 static FL_FORM **forms = NULL;	   /* all existing forms, visible and hidden */
 static int formnumb = 0;	       /* number of visible forms */
@@ -452,7 +448,7 @@ fl_end_group( void )
 
 /************************ Doing the Interaction *************************/
 
-static FL_FORM * mouseform = NULL;  /* The current form under mouse */
+static FL_FORM * mouseform = NULL;  /* the current form under mouse */
 static FL_FORM * keyform = NULL;    /* keyboard focus form */
 FL_OBJECT * fli_pushobj = NULL;	    /* latest pushed object */
 FL_OBJECT * fli_mouseobj = NULL;	    /* object under the mouse */
@@ -1337,7 +1333,7 @@ fl_hide_form( FL_FORM * form )
     fli_object_qflush( form );
 #endif
 
-    /* free backing store pixmap but keep the pointer */
+    /* Free backing store pixmap but keep the pointer */
 
     fli_free_flpixmap( form->flpixmap );
 
@@ -1424,7 +1420,6 @@ fl_free_form( FL_FORM * form )
     {
 		fli_free_flpixmap( form->flpixmap );
 		fl_free( form->flpixmap );
-		form->flpixmap = NULL;
     }
 
     if ( form->label )
@@ -2325,7 +2320,7 @@ do_interaction_step( int wait_io )
     if ( ! get_next_event_or_idle( wait_io, &evform, &st_xev ) )
 		return;
 
-	/* got an event for one of the forms */
+	/* Got an event for one of the forms */
 
 #if FL_DEBUG >= ML_WARN
 	if ( st_xev.type != MotionNotify || fli_cntl.debug > 2 )
@@ -2342,7 +2337,7 @@ do_interaction_step( int wait_io )
 	if ( preemptive_consumed( evform, st_xev.type, &st_xev ) )
 		return;
 
-	/* Otherwise we need to handle the event... */
+	/* Otherwise we need to handle the event ourself... */
 
     switch ( st_xev.type )
     {
@@ -2354,13 +2349,11 @@ do_interaction_step( int wait_io )
 			if ( evform->focusobj )
 				keyform = evform;
 
-			if ( ! fli_context->xic )
-				break;
-
-			XSetICValues( fli_context->xic,
-						  XNFocusWindow, st_xev.xfocus.window,
-						  XNClientWindow, st_xev.xfocus.window,
-						  ( char * ) NULL );
+			if ( fli_context->xic )
+				XSetICValues( fli_context->xic,
+							  XNFocusWindow, st_xev.xfocus.window,
+							  XNClientWindow, st_xev.xfocus.window,
+							  ( char * ) NULL );
 			break;
 
 		case FocusOut:
@@ -2388,10 +2381,10 @@ do_interaction_step( int wait_io )
 			break;
 
 		case ButtonPress:
-			fli_mousex = st_xev.xbutton.x;
-			fli_mousey = st_xev.xbutton.y;
+			fli_mousex  = st_xev.xbutton.x;
+			fli_mousey  = st_xev.xbutton.y;
 			fli_keymask =   st_xev.xbutton.state
-				         | ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
+				          | ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
 			fli_query_age = 0;
 
 			fli_context->mouse_button = st_xev.xbutton.button;
@@ -2403,10 +2396,10 @@ do_interaction_step( int wait_io )
 			break;
 
 		case ButtonRelease:
-			fli_mousex = st_xev.xbutton.x;
-			fli_mousey = st_xev.xbutton.y;
+			fli_mousex  = st_xev.xbutton.x;
+			fli_mousey  = st_xev.xbutton.y;
 			fli_keymask =   st_xev.xbutton.state
-				         & ~ ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
+				          & ~ ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
 			fli_query_age = 0;
 
 			fli_context->mouse_button = st_xev.xbutton.button;
@@ -2610,11 +2603,11 @@ handle_EnterNotify_event( FL_FORM * evform )
 	{
 		mouseform = evform;
 
-		/* this is necessary because win might be un-managed. To be
-		   friendly to other applications, grab focus only if abslutely
+		/* This is necessary because the window might be un-managed. To be
+		   friendly to other applications, grab focus only if absolutely
 		   necessary */
 
-		if (    mouseform->deactivated == 0
+		if (    ! mouseform->deactivated
 			 && ! st_xev.xcrossing.focus && unmanaged_count > 0 )
 		{
 			fli_check_key_focus( "EnterNotify", win );
@@ -2705,9 +2698,10 @@ handle_Expose_event( FL_FORM  * evform,
 	if ( ! evform )
 		return;
 
-	/* If 'redraw_form' is set we got a ConfigureNotify and the data from the
-	   Exposure event aren't correct - set clipping to the complete area of
-	   the form. */
+	/* If 'redraw_form' is the same as 'evform' we actually got a
+	   ConfigureNotify before that isn't handled yet and the data for the
+	   Exposure event must be modified - set clipping to the complete area
+	   of the form since we got to redraw it completely. */
 
 	if ( *redraw_form == evform )
 	{
@@ -2803,12 +2797,12 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
 				( double ) st_xev.xconfigure.height / evform->h );
 
 	/* If both the width and the height got smaller (or one got smaller and
-	   the other one is unchanged) we're not going to get an Expose event at
-	   all, so we need to redraw the form. Even if only one of the lengths
-	   gets smaller or remains unchanged while the other got larger, the next
-	   (compressed) Expose event will only cover the added part, so in this
-	   case store the forms address, so on the next Expose event we receive
-	   for it it's full area can be redrawn. */
+	   the other one remained unchanged) we're not going to get an Expose
+	   event, so we need to redraw the form. If only one of the lengths got
+	   smaller or remained unchanged while the other got larger the next
+	   (compressed) Expose event will only cover the added part. In this
+	   case store the forms address so on the next Expose event we receive
+	   for it its full area will be redrawn. */
 
 	if ( evform->w <= old_w && evform->h <= old_h )
 		fl_redraw_form( evform );

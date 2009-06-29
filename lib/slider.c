@@ -715,15 +715,10 @@ handle_slider( FL_OBJECT * ob,
     {
 		case FL_ATTRIB :
 		case FL_RESIZED :
-			sp->attrib = 1;
+			compute_bounds( ob );
 			break;
 
 		case FL_DRAW :
-			if ( sp->attrib )
-			{
-				compute_bounds( ob );
-				sp->attrib = 0;
-			}
 			ob->align &= ~ FL_ALIGN_INSIDE;
 			sp->draw_type = COMPLETE;
 			draw_slider( ob );
@@ -791,7 +786,6 @@ create_it( int          objclass,
     ob->lsize   = FL_TINY_SIZE;
     ob->spec    = sp =  fl_calloc( 1, sizeof *sp );
 
-	sp->attrib     = 1;
 	sp->min        = 0.0;
     sp->max        = 1.0;
     sp->val        = sp->start_val = 0.5;
@@ -1063,24 +1057,25 @@ fl_set_slider_size( FL_OBJECT * ob,
 					double      size )
 {
     FLI_SLIDER_SPEC *sp = ob->spec;
-	double psize,
-	 	   dim;
+	double dim;
 	int min_knob = IS_SCROLLBAR( ob->type ) ? MINKNOB_SB : MINKNOB_SL;
+	double old;
 
     if ( size <= 0.0 )
 		size = 0.0;
     else if (size >= 1.0)
 		size = 1.0;
 
+	old = size;
+
     /* Impose min knob size limit */
 
 	dim = IS_VSLIDER( ob->type ) ? ob->h : ob->w;
 	dim -= 2 * FL_abs( ob->bw );
-	psize = dim * size;
-	if ( psize < min_knob && dim > 0.0 )
+	if ( dim * size < min_knob && dim > 0.0 )
 		size = min_knob / dim;
-		
-    if ( size != sp->slsize )
+
+	if ( size != sp->slsize )
     {
 		sp->slsize = size;
 		fl_redraw_object( ob );

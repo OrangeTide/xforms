@@ -91,8 +91,6 @@ fli_create_tbox( int          type,
 		                fli_cntl.browserFontSize : FLI_TBOX_FONTSIZE;
     sp->def_style     = FL_NORMAL_STYLE;
 	sp->def_align     = FL_ALIGN_LEFT;
-	sp->def_col1      = obj->col1;
-	sp->def_col2      = obj->col2;
 	sp->def_lcol      = obj->lcol;
     sp->defaultGC     = None;
     sp->backgroundGC  = None;
@@ -103,8 +101,6 @@ fli_create_tbox( int          type,
 	sp->select_line   = -1;
 	sp->deselect_line = -1;
 	sp->react_to_vert = sp->react_to_hori = 1;
-
-    fl_set_object_dblbuffer( obj, 1 );
 
 	/* Per default the object never gets returned, user must change that */
 
@@ -1489,7 +1485,7 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 	if ( sp->backgroundGC )
 		XFreeGC( flx->display, sp->backgroundGC );
 
-	sp->backgroundGC = create_gc( obj, -1, 0, sp->def_col1,
+	sp->backgroundGC = create_gc( obj, -1, 0, obj->col1,
 								  sp->x - ( LEFT_MARGIN > 0 ),
 								  sp->y, sp->w + ( LEFT_MARGIN > 0 ), sp->h );
 
@@ -1500,7 +1496,7 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
 
 	sp->selectGC = create_gc( obj, -1, 0,
 							  fli_dithered( fl_vmode ) ?
-							  FL_BLACK : sp->def_col2,
+							  FL_BLACK : obj->col2,
 							  sp->x - ( LEFT_MARGIN > 0 ), sp->y,
 							  sp->w + ( LEFT_MARGIN > 0 ), sp->h );
 
@@ -1699,8 +1695,9 @@ draw_tboxline( FL_OBJECT * obj,
  * 'line', returns the total number of lines if none can be found.
  ***************************************/
 
-int find_next_selectable( FL_OBJECT * obj,
-						  int         line )
+static int
+find_next_selectable( FL_OBJECT * obj,
+					  int         line )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
 
@@ -1720,8 +1717,9 @@ int find_next_selectable( FL_OBJECT * obj,
  * before 'line', returns -1 if none can be found.
  ***************************************/
 
-int find_previous_selectable( FL_OBJECT * obj,
-							  int         line )
+static int
+find_previous_selectable( FL_OBJECT * obj,
+						  int         line )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
 
@@ -1734,6 +1732,20 @@ int find_previous_selectable( FL_OBJECT * obj,
 
 	return line;
 }
+
+
+/***************************************
+ * Returns the total number of lines in the browser
+ ***************************************/
+
+int
+fli_tbox_get_num_lines( FL_OBJECT * obj )
+{
+    FLI_TBOX_SPEC *sp = obj->spec;
+
+	return sp->num_lines;
+}
+
 
 
 /***************************************
@@ -2223,7 +2235,7 @@ handle_tbox( FL_OBJECT * obj,
 			}
 
 			fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-						sp->def_col1, obj->bw );
+						obj->col1, obj->bw );
 
 			for ( i = 0; i < sp->num_lines; i++ )
 				draw_tboxline( obj, i );

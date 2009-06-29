@@ -58,7 +58,7 @@ flinear( double val,
 
 void
 fli_calc_slider_size( FL_OBJECT          * ob,
-					  FLI_SCROLLBAR_KNOB * slb )
+					  FLI_SCROLLBAR_KNOB * knob )
 {
 	FLI_SLIDER_SPEC *sp = ob->spec;
 	int sltype = ob->type;
@@ -75,85 +75,85 @@ fli_calc_slider_size( FL_OBJECT          * ob,
     {
 		int inv = sp->min > sp->max;
 
-		slb->h = ( inv ? 1 - val : val ) * ( sp->h - 2 * absbw );
-		slb->y = inv ? sp->h - absbw - slb->h : absbw;
-		slb->w = sp->w - 2 * absbw;
-		slb->x = absbw;
+		knob->h = ( inv ? 1 - val : val ) * ( sp->h - 2 * absbw );
+		knob->y = inv ? sp->h - absbw - knob->h : absbw;
+		knob->w = sp->w - 2 * absbw;
+		knob->x = absbw;
 		return;
     }
     else if ( sltype == FL_HOR_FILL_SLIDER )
     {
-		slb->w = val * ( sp->w - 2 * absbw );
-		slb->x = absbw;
-		slb->h = sp->h - 2 * absbw;
-		slb->y = absbw;
+		knob->w = val * ( sp->w - 2 * absbw );
+		knob->x = absbw;
+		knob->h = sp->h - 2 * absbw;
+		knob->y = absbw;
 		return;
     }
 
 	if ( IS_VSLIDER( sltype ) )
     {
-		slb->h = size * ( sp->h - 2 * absbw );
+		knob->h = size * ( sp->h - 2 * absbw );
 	
-		if ( IS_SCROLLBAR( sltype ) && slb->h < MINKNOB_SB )
-			slb->h = MINKNOB_SB;
+		if ( IS_SCROLLBAR( sltype ) && knob->h < MINKNOB_SB )
+			knob->h = MINKNOB_SB;
 		else if (    ! IS_SCROLLBAR( sltype )
-				  && slb->h < 2 * absbw + MINKNOB_SL )
-			slb->h = 2 * absbw + MINKNOB_SL;
+				  && knob->h < 2 * absbw + MINKNOB_SL )
+			knob->h = 2 * absbw + MINKNOB_SL;
 
 		if ( sltype == FL_VERT_BROWSER_SLIDER2 )
 		{
-			slb->h = size * sp->h;
-			slb->y = flinear( val, 0.0, 1.0, 0, sp->h - slb->h );
-			slb->x = 1 + IS_FLATORDOWN( ob->boxtype );
-			slb->w = sp->w - 2 - 2 * IS_FLATORDOWN( ob->boxtype );
+			knob->h = size * sp->h;
+			knob->y = flinear( val, 0.0, 1.0, 0, sp->h - knob->h );
+			knob->x = 1 + IS_FLATORDOWN( ob->boxtype );
+			knob->w = sp->w - 2 - 2 * IS_FLATORDOWN( ob->boxtype );
 		}
 		else if (    sltype == FL_VERT_THIN_SLIDER
 				  || sltype == FL_VERT_BASIC_SLIDER )
 		{
-			slb->h = size * sp->h;
-			slb->y = flinear( val, 0.0, 1.0, 0, sp->h - slb->h );
-			slb->w = sp->w + fudge2;
-			slb->x = - fudge1;
+			knob->h = size * sp->h;
+			knob->y = flinear( val, 0.0, 1.0, 0, sp->h - knob->h );
+			knob->w = sp->w + fudge2;
+			knob->x = - fudge1;
 		}
 		else
 		{
-			slb->y = flinear( val, 0.0, 1.0, absbw, sp->h - absbw - slb->h );
-			slb->w = sp->w - 2 * absbw;
-			slb->x = absbw;
+			knob->y = flinear( val, 0.0, 1.0, absbw, sp->h - absbw - knob->h );
+			knob->w = sp->w - 2 * absbw;
+			knob->x = absbw;
 		}
 
 		return;
     }
 	else
     {
-		slb->w = size * ( sp->w - 2 * absbw );
+		knob->w = size * ( sp->w - 2 * absbw );
 
-		if ( IS_SCROLLBAR( sltype ) && slb->w < MINKNOB_SB )
-			slb->w = MINKNOB_SB;
+		if ( IS_SCROLLBAR( sltype ) && knob->w < MINKNOB_SB )
+			knob->w = MINKNOB_SB;
 		else if (    ! IS_SCROLLBAR( sltype )
-				  && slb->w < 2 * absbw + MINKNOB_SL )
-			slb->w = 2 * absbw + MINKNOB_SL;
+				  && knob->w < 2 * absbw + MINKNOB_SL )
+			knob->w = 2 * absbw + MINKNOB_SL;
 
 		if ( sltype == FL_HOR_BROWSER_SLIDER2 )
 		{
-			slb->w = size * sp->w;
-			slb->x = flinear( val, 0.0, 1.0, 0, sp->w - slb->w );
-			slb->h = sp->h - 2 * ( 1 + IS_FLATORDOWN( ob->boxtype ) );
-			slb->y = 1 + IS_FLATORDOWN( ob->boxtype );
+			knob->w = size * sp->w;
+			knob->x = flinear( val, 0.0, 1.0, 0, sp->w - knob->w );
+			knob->h = sp->h - 2 * ( 1 + IS_FLATORDOWN( ob->boxtype ) );
+			knob->y = 1 + IS_FLATORDOWN( ob->boxtype );
 		}
 		else if (    sltype == FL_HOR_THIN_SLIDER
 				  || sltype == FL_HOR_BASIC_SLIDER )
 		{
-			slb->w = size * sp->w;
-			slb->x = flinear( val, 0.0, 1.0, 0, sp->w - slb->w );
-			slb->h = sp->h + fudge2;
-			slb->y = - fudge1;
+			knob->w = size * sp->w;
+			knob->x = flinear( val, 0.0, 1.0, 0, sp->w - knob->w );
+			knob->h = sp->h + fudge2;
+			knob->y = - fudge1;
 		}
 		else
 		{
-			slb->x = flinear( val, 0.0, 1.0, absbw, sp->w - absbw - slb->w );
-			slb->h = sp->h - 2 * absbw;
-			slb->y = absbw;
+			knob->x = flinear( val, 0.0, 1.0, absbw, sp->w - absbw - knob->w );
+			knob->h = sp->h - 2 * absbw;
+			knob->y = absbw;
 		}
 
 		return;
@@ -188,14 +188,14 @@ void fli_drw_slider( FL_OBJECT  * ob,
 		     bw2,
 		     absbw2;
     int slbox;
-    FLI_SCROLLBAR_KNOB slb;
+    FLI_SCROLLBAR_KNOB knob;
 
-    fli_calc_slider_size( ob, &slb );
+    fli_calc_slider_size( ob, &knob );
 
-    xsl = ob->x + sp->x + slb.x;
-    ysl = ob->y + sp->y + slb.y;
-    wsl = slb.w;
-    hsl = slb.h;
+    xsl = ob->x + sp->x + knob.x;
+    ysl = ob->y + sp->y + knob.y;
+    wsl = knob.w;
+    hsl = knob.h;
 
     /* Draw the slider */
 
@@ -282,7 +282,7 @@ void fli_drw_slider( FL_OBJECT  * ob,
 				break;
 		}
 
-		/* this is the height of the sliding bar */
+		/* This is the height of the sliding bar */
 
 		absbw2 = absbw >= 2 ? absbw - 1 : absbw - ( bw < 0 );
 		if ( absbw2 == 0 )

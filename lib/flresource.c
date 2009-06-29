@@ -136,14 +136,14 @@ static char OpCoordUnit[32];
 
 static FLI_VN_PAIR vn_coordunit[] =
 {
-	{ FL_COORD_PIXEL, "pixel" },
-    { FL_COORD_MM, "mm" },
-    { FL_COORD_POINT, "point" },
+	{ FL_COORD_PIXEL,      "pixel"      },
+    { FL_COORD_MM,         "mm"         },
+    { FL_COORD_POINT,      "point"      },
     { FL_COORD_centiPOINT, "centipoint" },
-    { FL_COORD_centiPOINT, "cp" },
-    { FL_COORD_centiMM, "centimm" },
-    { FL_COORD_centiMM, "cmm" },
-    { -1, "Invalid" }
+    { FL_COORD_centiPOINT, "cp"         },
+    { FL_COORD_centiMM,    "centimm"    },
+    { FL_COORD_centiMM,    "cmm"        },
+    { -1,                  "Invalid"    }
 };
 
 
@@ -192,15 +192,14 @@ static FL_resource internal_resources[ ] =
 /* Program can set its own default, overriding XForms default */
 
 #define SetMember( a )   fli_cntl.a = cntl->a
-#define GetMember( a )   cntl->a
 
 
 /***************************************
  ***************************************/
 
 void
-fl_set_defaults( unsigned long mask,
-				 FL_IOPT *     cntl )
+fl_set_defaults( unsigned long   mask,
+				 FL_IOPT       * cntl )
 {
     if ( mask & FL_PDPrivateMap )
     {
@@ -599,10 +598,10 @@ is_true( const char *s )
 {
     return    strncmp( s, "True", 4 ) == 0
 		   || strncmp( s, "true", 4 ) == 0
-		   || strncmp( s, "Yes", 3  ) == 0
-		   || strncmp( s, "yes", 3  ) == 0
-		   || strncmp( s, "On", 2   ) == 0
-		   || strncmp( s, "on", 2   ) == 0
+		   || strncmp( s, "Yes",  3 ) == 0
+		   || strncmp( s, "yes",  3 ) == 0
+		   || strncmp( s, "On",   2 ) == 0
+		   || strncmp( s, "on",   2 ) == 0
 		   || *s == '1';
 }
 
@@ -1071,7 +1070,7 @@ fl_initialize( int        * na,
     fli_cntl.coordUnit = fli_get_vn_value( vn_coordunit, OpCoordUnit );
 
 
-#if FL_DEBUG >= ML_WARN	/* { */
+#if FL_DEBUG >= ML_WARN
     if ( fli_cntl.debug )
     {
 		fprintf( stderr, "Options Set\n" );
@@ -1099,7 +1098,7 @@ fl_initialize( int        * na,
 		DumpF( bgamma );
 #endif
     }
-#endif /* DEBUG *} */
+#endif
 
 #ifdef DO_GAMMA_CORRECTION
     fl_set_gamma( fli_cntl.rgamma, fli_cntl.ggamma, fli_cntl.bgamma );
@@ -1162,7 +1161,7 @@ fl_initialize( int        * na,
 
         /* Use the same input method throughout xforms */
 
-        fli_context->xim = XOpenIM( fl_display, 0, 0, 0 );
+        fli_context->xim = XOpenIM( fl_display, NULL, NULL, NULL );
 
         /* Also use the same input context */
 
@@ -1214,12 +1213,12 @@ fl_initialize( int        * na,
 		fli_context->hscb = FL_HOR_SCROLLBAR;
 		fli_context->vscb = FL_VERT_SCROLLBAR;
     }
-    else if ( strcmp( OpSCBT, "thin" ) == 0 )
+    else if ( ! strcmp( OpSCBT, "thin" ) )
     {
 		fli_context->hscb = FL_HOR_THIN_SCROLLBAR;
 		fli_context->vscb = FL_VERT_THIN_SCROLLBAR;
     }
-    else if ( strcmp( OpSCBT, "nice" ) == 0 )
+    else if ( ! strcmp( OpSCBT, "nice" ) )
     {
 		fli_context->hscb = FL_HOR_NICE_SCROLLBAR;
 		fli_context->vscb = FL_VERT_NICE_SCROLLBAR;
@@ -1229,7 +1228,7 @@ fl_initialize( int        * na,
 
     if ( fli_context->max_request_size < 4096 )
     {
-		M_err( "init", "Something is wrong with max_request_size:%ld",
+		M_err( "init", "Something is wrong with max_request_size: %ld",
 			   fli_context->max_request_size );
 		fli_context->max_request_size = 4096;
     }
@@ -1241,7 +1240,7 @@ fl_initialize( int        * na,
     fli_context->ext_request_size = 0;
 #endif
 
-    if ( fli_context->ext_request_size == 0 )
+    if ( ! fli_context->ext_request_size )
 		fli_context->ext_request_size = fli_context->max_request_size;
 
     fli_context->max_request_size -= 8;
@@ -1277,12 +1276,12 @@ static Window
 fli_GetVRoot( Display * dpy,
 			  int       scr )
 {
-    Window       rootReturn;
-	Window	     parentReturn;
-	Window *     children;
+    Window rootReturn;
+	Window parentReturn;
+	Window *children;
     unsigned int numChildren;
-    Window       root = RootWindow( dpy, scr );
-    Atom         __SWM_VROOT = None;
+    Window root = RootWindow( dpy, scr );
+    Atom __SWM_VROOT = None;
     unsigned int i;
 
     __SWM_VROOT = XInternAtom( dpy, "__SWM_VROOT", False );
@@ -1291,10 +1290,10 @@ fli_GetVRoot( Display * dpy,
 
     for ( i = 0; i < numChildren; i++ )
     {
-		Atom          actual_type;
-		int           actual_format;
+		Atom actual_type;
+		int actual_format;
 		unsigned long nitems, bytesafter;
-		Window *      newRoot = NULL;
+		Window *newRoot = NULL;
 
 		/* Kludge here: the ( void * ) bit in
 		   ( unsigned char ** ) ( void * ) &newRoot

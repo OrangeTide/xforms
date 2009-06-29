@@ -22,13 +22,14 @@
 #ifndef PSCROLLBAR_H_
 #define PSCROLLBAR_H_
 
+#include "private/pslider.h"
+
 typedef struct {
     FL_OBJECT * slider;
     FL_OBJECT * up;
 	FL_OBJECT * down;
     double      increment;
 	double      old_val;
-	int         attrib;
 } FLI_SCROLLBAR_SPEC;
 
 

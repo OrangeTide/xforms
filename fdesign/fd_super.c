@@ -82,8 +82,8 @@ spec_to_superspec( FL_OBJECT * ob )
 
 		spp->new_menuapi = 0;
     }
-
-    spp = ob->u_vdata;
+	else
+		spp = ob->u_vdata;
 
 	spp->how_return = ob->how_return;
 
@@ -94,7 +94,7 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->h_pref = sp->h_pref;
 		spp->v_pref = sp->v_pref;
 
-		for ( i = 1; i < spp->nlines; i++ )
+		for ( i = 1; i <= spp->nlines; i++ )
 		{
 			fl_safe_free( spp->content[ i ] );
 			fl_safe_free( spp->shortcut[ i ] );
@@ -113,9 +113,13 @@ spec_to_superspec( FL_OBJECT * ob )
 									( n + 1 ) * sizeof *spp->mode );
 		spp->mval     = fl_realloc( spp->mval,
 									( n + 1 ) * sizeof *spp->mval );
+
 		spp->nlines = n;
 		for ( i = 1; i <= n; i++ )
+		{
 			spp->content[ i ] = fl_strdup( fl_get_browser_line( ob, i ) );
+			spp->shortcut[ i ] = spp->callback[ i ] = NULL;
+		}
     }
     else if ( ob->objclass == FL_CHOICE )
     {

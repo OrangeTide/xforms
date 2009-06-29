@@ -860,13 +860,14 @@ change_selected_objects( FL_OBJECT * curobj )
 						 curobj->lsize, curobj->lstyle, ob->label );
 			set_miscattribs( ob, curobj->nwgravity, curobj->segravity,
 							 curobj->resize );
+			fli_handle_object( ob, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 		}
     }
 }
 
 
 /***************************************
- * interactively change the attributes of the selection
+ * Interactively change the attributes of the selection
  ***************************************/
 
 void

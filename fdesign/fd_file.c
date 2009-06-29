@@ -474,6 +474,8 @@ load_object( FILE * fl )
     fd_skip_comment( fl );
     load_objclass_spec_info( fl, obj );
 
+	fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
     return obj;
 }
 

@@ -56,7 +56,7 @@ typedef struct {
 static ClipBoard clipboard,
                  *cp;
 
-int ( * fli_handle_clipboard )( void * ) = NULL;
+int ( * fli_handle_clipboard )( void * ) = NULL;   /* also needed in forms.c */
 
 static int handle_clipboard_event( void * );
 

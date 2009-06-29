@@ -207,9 +207,13 @@ extern FL_OBJECT *fli_find_first( FL_FORM *,
 								  FL_Coord,
 								  FL_Coord );
 
-void fli_show_object( FL_OBJECT * );
+extern void fli_redraw_form_using_xevent( FL_FORM *,
+										  int,
+										  XEvent * );
 
-void fli_recalc_intersections( FL_FORM * );
+extern void fli_show_object( FL_OBJECT * );
+
+extern void fli_recalc_intersections( FL_FORM * );
 
 extern FL_OBJECT *fli_find_last( FL_FORM *,
 								 int,
@@ -830,6 +834,9 @@ extern void fli_insert_composite_after( FL_OBJECT *,
 										FL_OBJECT * );
 
 extern void fli_add_composite( FL_OBJECT * );
+
+extern void fli_insert_composite( FL_OBJECT *,
+								  FL_OBJECT * );
 
 extern int fli_is_watched_io( int );
 

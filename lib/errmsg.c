@@ -143,7 +143,7 @@ FL_ERROR_FUNC user_error_function_;  /* hooks for application error handler */
 
 
 /********************************************************************
- * generate two strings that contain where and why an error occured
+ * Generate two strings that contain where and why an error occured
  *********************************************************************/
 
 static void
