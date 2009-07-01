@@ -30,7 +30,6 @@ create_form_browserattrib( void )
     obj = fl_add_labelframe( FL_ENGRAVED_FRAME, 225, 57, 111, 140, "Action" );
 
     fdui->content_br = obj = fl_add_browser( FL_HOLD_BROWSER, 353, 55, 120, 150, "Current Items:" );
-    fl_set_object_color( obj, FL_COL1, FL_YELLOW );
     fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
 
     fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 35, 67, 170, 25, "EditItem" );

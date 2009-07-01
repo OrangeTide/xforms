@@ -294,14 +294,14 @@ add_frame_types( int frame_class )
 static void
 add_slider_types( int sclass )
 {
-    add_type_def( sclass, FL_VERT_SLIDER,         "VERT_SLIDER" );
-    add_type_def( sclass, FL_HOR_SLIDER,          "HOR_SLIDER" );
-    add_type_def( sclass, FL_VERT_FILL_SLIDER,    "VERT_FILL_SLIDER" );
-    add_type_def( sclass, FL_HOR_FILL_SLIDER,     "HOR_FILL_SLIDER" );
-    add_type_def( sclass, FL_VERT_NICE_SLIDER,    "VERT_NICE_SLIDER" );
-    add_type_def( sclass, FL_HOR_NICE_SLIDER,     "HOR_NICE_SLIDER" );
+    add_type_def( sclass, FL_VERT_SLIDER,         "VERT_SLIDER"         );
+    add_type_def( sclass, FL_HOR_SLIDER,          "HOR_SLIDER"          );
+    add_type_def( sclass, FL_VERT_FILL_SLIDER,    "VERT_FILL_SLIDER"    );
+    add_type_def( sclass, FL_HOR_FILL_SLIDER,     "HOR_FILL_SLIDER"     );
+    add_type_def( sclass, FL_VERT_NICE_SLIDER,    "VERT_NICE_SLIDER"    );
+    add_type_def( sclass, FL_HOR_NICE_SLIDER,     "HOR_NICE_SLIDER"     );
     add_type_def( sclass, FL_VERT_BROWSER_SLIDER, "VERT_BROWSER_SLIDER" );
-    add_type_def( sclass, FL_HOR_BROWSER_SLIDER,  "HOR_BROWSER_SLIDER" );
+    add_type_def( sclass, FL_HOR_BROWSER_SLIDER,  "HOR_BROWSER_SLIDER"  );
 }
 
 
@@ -727,7 +727,7 @@ find_type_name( int cln,
 
 
 /***************************************
- * returns a integer indicating the value of a type
+ * Returns a integer indicating the value of a type
  ***************************************/
 
 int
@@ -791,7 +791,6 @@ add_an_object( int      objclass,
 			   FL_Coord h )
 {
     FL_OBJECT *obj = NULL;
-    int nosuper = 0;
     CDEF *cls;
 	static FL_FORM *cf = NULL;
 
@@ -900,33 +899,21 @@ add_an_object( int      objclass,
 			if ( type == -1 )
 				type = FL_PULLDOWN_MENU;
 			obj = cls->addit( type, x, y, w, h, "Menu" );
-			spec_to_superspec( obj );
-			nosuper = 1;
-			fl_addto_menu( obj, "menuitem 1" );
-			fl_addto_menu( obj, "menuitem 2" );
-			fl_addto_menu( obj, "menuitem 3" );
-			fl_addto_menu( obj, "menuitem 4" );
+			get_superspec( obj );       /* super spec must exist for testing */
 			break;
 
 		case FL_CHOICE:
 			if ( type == -1 )
 				type = FL_NORMAL_CHOICE2;
 			obj = cls->addit( type, x, y, w, h, "" );
-			spec_to_superspec( obj );
-			nosuper = 1;
-
-			fl_addto_choice( obj, "choice 1" );
-			fl_addto_choice( obj, "choice 2" );
-			fl_addto_choice( obj, "choice 3" );
-			fl_addto_choice( obj, "choice 4" );
+			get_superspec( obj );       /* super spec must exist for testing */
 			break;
 
 		case FL_BROWSER:
 			if ( type == -1 )
 				type = FL_NORMAL_BROWSER;
 			obj = cls->addit( type, x, y, w, h, "" );
-			spec_to_superspec( obj );
-			nosuper = 1;
+			get_superspec( obj );       /* super spec must exist for testing */
 			break;
 
 		case FL_XYPLOT:
@@ -981,9 +968,6 @@ add_an_object( int      objclass,
 		fl_end_form( );
 		cf = NULL;
 	}
-
-    if ( ! nosuper )
-		get_superspec( obj );
 
     obj->active = 1;
 

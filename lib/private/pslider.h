@@ -38,19 +38,19 @@ typedef FLI_VALUATOR_SPEC FLI_SLIDER_SPEC;
 #define MINKNOB_SB     16		/* scrollbar        */
 #define MINKNOB_SL     14		/* regular sliders  */
 
-#define IS_HSLIDER( t )      ( t & FL_HOR_FLAG )
+#define IS_HSLIDER( o )      ( ( o )->type & FL_HOR_FLAG )
 
-#define IS_VSLIDER( t )      ( ! IS_HSLIDER( t ) )
+#define IS_VSLIDER( o )      ( ! IS_HSLIDER( o ) )
 
-#define IS_FILL( t )         (    t == FL_VERT_FILL_SLIDER      \
-                               || t == FL_HOR_FILL_SLIDER )
+#define IS_FILL( o )         (    ( o )->type == FL_VERT_FILL_SLIDER	\
+							   || ( o )->type == FL_HOR_FILL_SLIDER )
 
-#define IS_SCROLLBAR( t )    ( t & FL_SCROLL_FLAG )
+#define IS_SCROLLBAR( o )    ( ( o )->type & FL_SCROLL_FLAG )
 
-#define IS_FLATBOX( t )      (    t == FL_FRAME_BOX        \
-							   || t == FL_EMBOSSED_BOX 	  \
-							   || t == FL_BORDER_BOX       \
-                               || t == FL_ROUNDED_BOX )
+#define IS_FLATBOX( bt )     (    ( bt ) == FL_FRAME_BOX         \
+							   || ( bt ) == FL_EMBOSSED_BOX 	 \
+							   || ( bt ) == FL_BORDER_BOX        \
+                               || ( bt ) == FL_ROUNDED_BOX )
 
 
 #endif /* PSLIDER_H */

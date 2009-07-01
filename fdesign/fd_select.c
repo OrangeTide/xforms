@@ -491,6 +491,8 @@ handle_move( const XEvent * xev )
 			selobj[ 0 ]->fb2 = cur_form->h_hr - selobj[ 0 ]->ft2;
 			set_bounding_box( 0.0, 0.0, cur_form->w, cur_form->h );
 			fl_winresize( main_window, cur_form->w, cur_form->h );
+
+			fl_notify_object( selobj[ 0 ], FL_RESIZED );
 		}
     }
     else if ( s )
@@ -505,7 +507,7 @@ handle_move( const XEvent * xev )
 		ow = w;
 		oh = h;
 
-		/* show the rubberband box */
+		/* Show the rubberband box */
 
 		if ( mx <= x + HS && my <= y + HS )
 		{
@@ -532,7 +534,7 @@ handle_move( const XEvent * xev )
 		else
 			move_box( &x, &y, &w, &h, TRUE );
 
-		/* recompute object sizes */
+		/* Recompute object sizes */
 
 		for ( i = 0; i < selnumb; i++ )
 		{
@@ -560,6 +562,8 @@ handle_move( const XEvent * xev )
 				selobj[ i ]->ft2 += y;
 				selobj[ i ]->fb1 -= y;
 				selobj[ i ]->fb2 -= y;
+
+				fl_notify_object( selobj[ i ], FL_RESIZED );
 			}
 		}
     }
@@ -624,6 +628,8 @@ move_selection( FL_Coord dx,
 			ob->ft2 += dy;
 			ob->fb1 -= dy;
 			ob->fb2 -= dy;
+
+			fl_notify_object( ob, FL_RESIZED );
 		}
     }
 

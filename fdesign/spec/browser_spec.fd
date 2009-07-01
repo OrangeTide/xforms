@@ -72,7 +72,7 @@ class: FL_BROWSER
 type: HOLD_BROWSER
 box: 353 55 120 150
 boxtype: FL_DOWN_BOX
-colors: FL_COL1 FL_YELLOW
+colors: FL_WHITE FL_YELLOW
 alignment: FL_ALIGN_TOP_LEFT
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE

@@ -185,7 +185,9 @@ fli_tbox_delete_line( FL_OBJECT * obj,
 
 		/* Correct x offset if necessary */
 
-		if ( sp->xoffset > sp->max_width - sp->w )
+		if ( sp->max_width <= sp->w )
+			sp->xoffset = 0;
+		else if ( sp->xoffset > sp->max_width - sp->w )
 			sp->xoffset = sp->max_width - sp->w;
 	}
 

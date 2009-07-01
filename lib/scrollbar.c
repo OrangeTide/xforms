@@ -85,10 +85,7 @@ handle_scrollbar( FL_OBJECT * obj,
     return FL_RETURN_NONE;
 }
 
-#define is_horiz( t )   (    ( t ) == FL_HOR_SCROLLBAR         \
-						  || ( t ) == FL_HOR_THIN_SCROLLBAR    \
-						  || ( t ) == FL_HOR_NICE_SCROLLBAR    \
-						  || ( t ) == FL_HOR_PLAIN_SCROLLBAR )
+#define IS_HORIZ( o )  ( ( o )->type & FL_HOR_FLAG )
 
 
 /***************************************
@@ -126,7 +123,7 @@ get_geom( FL_OBJECT * obj )
     int absbw = FL_abs( obj->bw );
     int t = obj->type;
 
-    if ( is_horiz( obj->type ) )
+    if ( IS_HORIZ( obj ) )
     {
 		down->x = x;
 		up->x = x + w - h;
@@ -317,7 +314,7 @@ fl_create_scrollbar( int          type,
     else
 		obj->boxtype = FL_UP_BOX;
 
-    if ( is_horiz( type ) )
+    if ( IS_HORIZ( obj ) )
     {
 		fl_set_object_resize( obj, FL_RESIZE_X );
 
@@ -367,7 +364,7 @@ fl_create_scrollbar( int          type,
 			sp->slider = fl_create_slider( FL_VERT_NICE_SLIDER2, 1, 1,
 										   1, 1, "" );
 		else
-			M_err( "CreateScrollbar", "Unknown type %d", type );
+			M_err( "fl_create_scrollbar", "Unknown type %d", type );
 
 		fl_set_object_resize( sp->slider, FL_RESIZE_Y );
     }
@@ -421,6 +418,10 @@ fl_add_scrollbar( int          type,
     FL_OBJECT *obj = fl_create_scrollbar( type, x, y, w, h, l );
 
     fl_add_object( fl_current_form, obj );
+
+	attrib_change( obj );
+	get_geom( obj );
+
     return obj;
 }
 

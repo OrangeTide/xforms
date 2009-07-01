@@ -37,6 +37,7 @@
 #include "fd_main.h"
 #include "fd/ui_theforms.h"
 #include "private/pmenu.h"
+#include "private/pchoice.h"
 
 /* All control panel menus, File Object Options etc. have this
  * common structures
@@ -580,33 +581,96 @@ fix_button_label_size( FL_FORM * form,
  ***************************************/
 
 static void
-fix_menu_item_callbacks( FL_FORM * form,
-						 int       save )
+fix_menu_etc( FL_FORM * form,
+			  int       save )
 {
     FL_OBJECT *ob;
 	int i;
 
 	for ( ob = form->first; ob; ob = ob->next )
 	{
-		if ( ob->objclass != FL_MENU )
+		if (    ob->objclass != FL_MENU
+			 && ob->objclass != FL_CHOICE
+			 && ob->objclass != FL_BROWSER )
 			continue;
 
-		if ( save )
+		if ( ob->objclass == FL_MENU )
 		{
 			FLI_MENU_SPEC *sp = ob->spec;
 
-			for ( i = 1; i <= sp->numitems; i++ )
-				fl_safe_free( sp->cb[ i ] );
-		}
-		else
-		{
-			SuperSPEC *ssp = get_superspec( ob );
-			FLI_MENU_SPEC *sp = ob->spec;
-
-			for ( i = 1; i <= sp->numitems; i++ )
+			if ( save )
 			{
-				if ( ssp->callback[ i ] )
-					sp->cb[ i ] = ( FL_PUP_CB ) fl_strdup( ssp->callback[ i ] );
+				if ( sp->numitems > 0 )
+					for ( i = 1; i <= sp->numitems; i++ )
+						fl_safe_free( sp->cb[ i ] );
+				else
+				{
+					fl_addto_menu( ob, "menuitem 1" );
+					fl_addto_menu( ob, "menuitem 2" );
+					fl_addto_menu( ob, "menuitem 3" );
+					fl_addto_menu( ob, "menuitem 4" );
+				}
+			}
+			else
+			{
+				SuperSPEC *ssp = get_superspec( ob );
+
+				if ( sp->numitems == ssp->nlines )
+					for ( i = 1; i <= sp->numitems; i++ )
+						if ( ssp->callback[ i ] )
+							sp->cb[ i ] =
+							      ( FL_PUP_CB ) fl_strdup( ssp->callback[ i ] );
+						else
+							sp->cb[ i ] = NULL;
+				else
+					fl_clear_menu( ob );
+			}
+		}
+		else if ( ob->objclass == FL_CHOICE )
+		{
+			FLI_CHOICE_SPEC *sp = ob->spec;
+
+			if ( save )
+			{
+				if ( sp->numitems == 0 )
+				{
+					fl_addto_choice( ob, "choice 1" );
+					fl_addto_choice( ob, "choice 2" );
+					fl_addto_choice( ob, "choice 3" );
+					fl_addto_choice( ob, "choice 4" );
+				}
+			}
+			else
+			{
+				SuperSPEC *ssp = get_superspec( ob );
+
+				if ( sp->numitems != ssp->nlines )
+					fl_clear_choice( ob );
+			}
+		}
+		else if ( ob->objclass == FL_BROWSER )
+		{
+			int nlines = fl_get_browser_maxline( ob );
+
+			if ( save )
+			{
+				if ( nlines == 0 )
+				{
+					char buf[ 100 ];
+
+					for ( i = 0; i < 20; i++ )
+					{
+						sprintf( buf, "browser line %d", i + 1 );
+						fl_add_browser_line( ob, buf );
+					}
+				}
+			}
+			else
+			{
+				SuperSPEC *ssp = get_superspec( ob );
+
+				if ( nlines != ssp->nlines )
+					fl_clear_browser( ob );
 			}
 		}
 	}
@@ -614,7 +678,7 @@ fix_menu_item_callbacks( FL_FORM * form,
 
 
 /***************************************
- * testing
+ * Start a test of the current form
  ***************************************/
 
 void
@@ -654,7 +718,7 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     fix_button_label_size( thetestform, 1 );
 
-	fix_menu_item_callbacks( thetestform, 1 );
+	fix_menu_etc( thetestform, 1 );
 
     cur_form = NULL;
     redraw_the_form( 1 );
@@ -703,7 +767,7 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     fix_button_label_size( thetestform, 0 );
 
-	fix_menu_item_callbacks( thetestform, 0 );
+	fix_menu_etc( thetestform, 0 );
 
     cur_form = thetestform;
     thetestform = NULL;

@@ -1,3 +1,10 @@
+2009-07-01 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Several bugs in fdesign removed
+
+	* lib/tbox.c: Realculation of horizontal offset after
+	removal of longest line fixed
+
 2009-06-29 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Some bugs found by Werner Heisch in the new browser

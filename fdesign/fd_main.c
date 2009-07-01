@@ -230,7 +230,7 @@ double_click( const XEvent * xev )
 
 
 /***************************************
- * mouse click inside the working window
+ * Handle mouse click inside the working window
  ***************************************/
 
 static int
