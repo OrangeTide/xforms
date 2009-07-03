@@ -648,7 +648,7 @@ fli_create_window( Window       parent,
 		st_xswa.save_under = True;
 		st_wmask |= CWSaveUnder;
 
-	/* for small transient windows, we don't need backing store */
+	/* For small transient windows, we don't need backing store */
 
 		if ( st_xsh.width < 200 || st_xsh.height < 200 )
 			st_xswa.backing_store = NotUseful;
@@ -679,7 +679,7 @@ fli_create_window( Window       parent,
     clh.res_name = fl_label_to_res_name( label );
     clh.res_class = "XForm";
 
-    /* command property is set elsewhere */
+    /* Command property is set elsewhere */
 
     xtpwname.value = 0;
     XStringListToTextProperty( label ? &label : 0, 1, &xtpwname );
@@ -913,7 +913,7 @@ fl_winresize( Window   win,
 				lxsh.min_height = lxsh.max_height = newh;
 		}
 
-		/* reset any contraints. */
+		/* Reset any contraints */
 
 		if ( lxsh.flags & PMinSize )
 		{

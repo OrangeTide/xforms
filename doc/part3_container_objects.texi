@@ -52,7 +52,7 @@ FL_OBJECT *fl_add_tabfolder(int type, FL_Coord x, FL_Coord y,
                             FL_Coord w, FL_Coord h, const char *label);
 @end example
 @noindent
-The geomqetry indicated by @code{x}, @code{y}, @code{w}, and @code{h}
+The geometry indicated by @code{x}, @code{y}, @code{w}, and @code{h}
 is the total area of the tabbed folders, including the area used for
 the tab riders.
 
@@ -103,18 +103,17 @@ void fl_set_object_return(FL_OBJECT *obj, int when);
 @noindent
 where the @code{when} argument can be one of
 @table @code
-@tindex FL_RETURN_NEVER
-@item FL_RETURN_NEVER
-Never report or invoke callback even if the selected folder has
-changed.
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never report or invoke callback even if the selected folder has been
+changed (this is the default for the tabfolder object)
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Result in a notification whenever the a different folder from the
-currently active one has been selected (this is the default for the
-tabfolder object).
+currently active one has been selected.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
@@ -421,8 +420,8 @@ void fl_set_object_return(FL_OBJECT *obj, int when);
 @noindent
 where the @code{when} argument can be one of
 @table @code
-@tindex FL_RETURN_NEVER
-@item FL_RETURN_NEVER
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
 Never report or invoke callback (ethis is the default for the
 formbrowser object)
 

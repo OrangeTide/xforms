@@ -101,5 +101,6 @@ fl_add_box( int          type,
     FL_OBJECT *ob = fl_create_box( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
+
     return ob;
 }

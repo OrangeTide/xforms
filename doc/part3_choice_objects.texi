@@ -1027,7 +1027,7 @@ int fl_set_object_return(FL_OBJECT *obj, int when)
 where when can have the following values
 @table @code
 @tindex FL_RETURN_NONE
-@item FL_RETURN_NEVER
+@item FL_RETURN_NONE
 Never return or invoke callback.
 
 @tindex FL_RETURN_SELECTION

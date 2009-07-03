@@ -717,6 +717,7 @@ struct FL_FORM_ {
 						   y,
 						   w,
 						   h;
+	int                    in_redraw;     /* set while form is drawn */
 	int                    handle_dec_x,
 	                       handle_dec_y;
 	FL_Coord			   hotx,		  /* hot-spot of the form */

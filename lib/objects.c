@@ -115,13 +115,15 @@ fli_make_form( FL_Coord w,
 	form->handle_dec_x = 0;
 	form->handle_dec_y = 0;
 
+	form->in_redraw      = 0;
     form->deactivated    = 1;
     form->form_callback  = NULL;
     form->compress_mask  = ExposureMask | ButtonMotionMask | PointerMotionMask;
     form->key_callback   =
 	form->push_callback  = form->crossing_callback = NULL;
     form->focusobj       = NULL;
-    form->first          = form->last           = NULL;
+    form->first          = NULL;
+	form->last           = NULL;
     form->hotx           = form->hoty = -1;
     form->use_pixmap     = fli_cntl.doubleBuffer;
     form->label          = NULL;
@@ -1829,23 +1831,22 @@ redraw_marked( FL_FORM * form,
 {
     FL_OBJECT *obj,
 		      *o;
-	static int in_redraw = 0;
 
-	/* Beside that case that the form isn't visioble or frozen we also
-	   need to consider the case that a redraw for an object is initiated
-	   while an other (parent) obkect gets redrawn (an example would be
-	   a scrillbar that during its redraw calls a function for setting
-	   the value of its slider which in turn triggers the redraw of the
-	   slider). In that case the (child) object is not to be redrawn yet
-	   (it's already marked for redraw and will be redrawn later automa-
-	   ticallysince child object always come after their parent objects)
-	   because that would mess up the behind-the-scenes switching of the
-	   window/pixmaps that drawing is done in. */
 
-    if ( form->visible != FL_VISIBLE || form->frozen > 0 || in_redraw )
+	/* Beside the case that the form isn't visible or frozen we also need
+	   to consider the case that a redraw for an object is initiated while
+	   an other (parent) object gets redrawn (an example would be a scrollbar
+	   that during its redraw calls a function for setting the value of its
+	   slider which in turn triggers the redraw of the slider). In that case
+	   the (child) object is not to be redrawn yet (it's already marked for
+	   redraw and will be redrawn later automaticallysince child object always
+	   come after their parent objects) because that would mess up the behind-
+	   the-scenes-switching of the window/pixmaps that drawing is done in. */
+
+    if ( form->visible != FL_VISIBLE || form->frozen > 0 || form->in_redraw )
 		return;
 
-	in_redraw = 1;
+	form->in_redraw = 1;
 
 	/* Set the window (or drawable) to be drawn to (flx->win) */
 
@@ -1937,7 +1938,7 @@ redraw_marked( FL_FORM * form,
 
     fli_show_form_pixmap( form );
 
-	in_redraw = 0;
+	form->in_redraw = 0;
 }
 
 

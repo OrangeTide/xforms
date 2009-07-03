@@ -159,6 +159,7 @@ free_canvas( FL_OBJECT * ob )
 
 
 /***************************************
+ * Returns the window ID of the canvas window
  ***************************************/
 
 Window
@@ -343,9 +344,6 @@ init_canvas( FL_OBJECT       * ob,
 		if ( sp->init && sp->init( ob ) < 0 )
 		{
 			M_err( "init_canvas", "Unable to initialize canvas %s", ob->label );
-			if ( fl_show_question( "Warning\nCan't initialize canvas\nQuit ?",
-								   1 ) )
-				exit( 1 );
 			return;
 		}
 
@@ -401,8 +399,6 @@ init_canvas( FL_OBJECT       * ob,
 
     if ( Moved( ob, sp ) || Resized( ob, sp ) )
     {
-		/* XMoveWindow */
-
 		M_warn( "Canvas", "Canvas: WinMoved\n" );
 		XMoveResizeWindow( flx->display, sp->window, ob->x, ob->y,
 						   ob->w, ob->h );
@@ -417,7 +413,7 @@ init_canvas( FL_OBJECT       * ob,
 		XClearWindow( flx->display, sp->window );
 
     sp->dec_type = fli_boxtype2frametype( ob->boxtype );
-    fl_drw_frame( sp->dec_type, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
+	fl_drw_frame( sp->dec_type, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
 }
 
 
@@ -657,8 +653,6 @@ fl_add_canvas( int          type,
 
 
 /***************************************
- * To optimize the link profile, canvas_id and hide_canvas are moved
- * into objects.c
  ***************************************/
 
 void
@@ -669,9 +663,9 @@ fl_modify_canvas_prop( FL_OBJECT             * obj,
 {
     FLI_CANVAS_SPEC *sp = obj->spec;
 
-    sp->init = init;
+    sp->init     = init;
     sp->activate = activate;
-    sp->cleanup = cleanup;
+    sp->cleanup  = cleanup;
 }
 
 
@@ -704,8 +698,8 @@ fl_canvas_yield_to_shortcut( FL_OBJECT * ob,
 
 
 /***************************************
- * clear the canvas to the background color. If no background is
- * defined, black is used
+ * Clear the canvas to the background color. If no background is
+ * defined use black.
  ***************************************/
 
 void

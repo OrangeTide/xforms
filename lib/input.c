@@ -85,7 +85,8 @@ typedef struct {
     int             screenlines;
     int             topline;
     int             lines;			/* total number of lines in the field   */
-    int             xpos, ypos;		/* current cursor position in char,line */
+    int             xpos,    		/* current cursor position in char,line */
+	                ypos;
     int             cur_pixels;		/* current line length in pixels        */
     int             max_pixels;		/* max length of all lines              */
     int             max_pixels_line;
@@ -282,7 +283,9 @@ check_scrollbar_size( FL_OBJECT * obj )
 		sp->vsize = 1.0;
 
     sp->hscroll->w = sp->input->w;
+	fl_notify_object( sp->hscroll, FL_RESIZED );
     sp->vscroll->h = sp->input->h;
+	fl_notify_object( sp->vscroll, FL_RESIZED );
     sp->w = sp->input->w - 2 * xmargin;
 
     if ( h_on != sp->h_on || v_on != sp->v_on )
@@ -691,7 +694,7 @@ handle_movement( FL_OBJECT * obj,
 				i--;
 			oldwid = 0.0;
 			sp->position = i;
-			ready = sp->str[sp->position] == '\n';
+			ready = sp->str[ sp->position ] == '\n';
 			while ( ! ready )
 			{
 				tt = get_substring_width( obj, i, sp->position + 1 );
@@ -1026,8 +1029,11 @@ handle_key( FL_OBJECT    * obj,
 		{
 			int tmp = get_substring_width( obj, startpos, sp->position );
 
-			if ( tmp - sp->xoffset > sp->w )
-				sp->xoffset = tmp - sp->w + H_PAD;
+			/* The extra 4 are there to have enough space for the cursor
+			   when it's at the end of the line */
+
+			if ( tmp - sp->xoffset > sp->w - 4 )
+				sp->xoffset = tmp - sp->w + 4 + H_PAD;
 		}
 
 		ret = FL_RETURN_CHANGED;
@@ -1304,7 +1310,7 @@ handle_input( FL_OBJECT * obj,
 		case FL_ATTRIB :
 		case FL_RESIZED :
 			check_scrollbar_size( obj );
-			/* fall through */
+			break;
 
 		case FL_DRAW:
 			/* we always force label outside */
@@ -2671,6 +2677,7 @@ redraw_scrollbar( FL_OBJECT * obj )
 		fl_set_scrollbar_value( sp->vscroll, sp->vval );
 		if ( sp->vsize != 1.0 )
 			fl_set_scrollbar_increment( sp->vscroll, sp->vinc1, sp->vinc2 );
+		fl_redraw_object( sp->vscroll );
     }
 
     if ( sp->h_on )
@@ -2679,13 +2686,12 @@ redraw_scrollbar( FL_OBJECT * obj )
 		fl_set_scrollbar_value( sp->hscroll, sp->hval );
 		if ( sp->hsize != 1.0 )
 			fl_set_scrollbar_increment( sp->hscroll, sp->hinc1, sp->hinc2 );
+		fl_redraw_object( sp->hscroll );
     }
 
     if ( sp->attrib )
     {
 		fl_redraw_object( sp->input );
-		fl_redraw_object( sp->hscroll );
-		fl_redraw_object( sp->vscroll );
 		sp->attrib = 0;
     }
 
@@ -2730,17 +2736,20 @@ make_cursor_visible( FL_OBJECT      * obj,
     FLI_INPUT_SPEC *sp = obj->spec;
     int tt = get_substring_width( obj, startpos, sp->position );
 
+	/* The extra 4 are there to have enough space for the cursor
+	   when it's at the end of the line */
+
     if ( prev == -1 )
     {
-		if ( tt - sp->xoffset >= sp->w )
-			sp->xoffset = tt - sp->w;
+		if ( tt - sp->xoffset > sp->w - 4 )
+			sp->xoffset = tt - sp->w + 4;
 		else if ( tt < sp->xoffset )
 			sp->xoffset = tt;
 		else if ( tt == 0 )
 			sp->xoffset = 0;
     }
-    else if ( tt - sp->xoffset > sp->w )
-		sp->xoffset = tt - sp->w;
+    else if ( tt - sp->xoffset > sp->w - 4 )
+		sp->xoffset = tt - sp->w + 4;
 }
 
 
@@ -2750,6 +2759,5 @@ make_cursor_visible( FL_OBJECT      * obj,
 int
 fl_input_changed( FL_OBJECT *obj )
 {
-    return ( obj && ( obj->objclass == FL_INPUT ) ) ?
-		   ( ( FLI_INPUT_SPEC * ) obj->spec )->changed : 0;
+    return ( ( FLI_INPUT_SPEC * ) obj->spec )->changed;
 }

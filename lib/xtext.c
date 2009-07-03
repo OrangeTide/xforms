@@ -263,7 +263,7 @@ fli_drw_string( int           horalign,
 
 		ulpos = -1;
 
-		/* check if have underline request */
+		/* Check if have underline request */
 
 		if ( ( p = strchr( lines[ i ], *fl_ul_magic_char ) ) )
 		{
@@ -339,7 +339,7 @@ fli_drw_string( int           horalign,
 
     /* Draw the cursor  */
 
-    if ( curspos >= 0 )
+    if ( curspos >= 0 && w - 2 > 0 && h > 0 )
     {
 		int tt;
 
@@ -348,13 +348,11 @@ fli_drw_string( int           horalign,
 		i--;
 
 		tt = XTextWidth( flx->fs, lines[ i ], curspos - start[ i ] );
-		if ( w - 2 > 0 && h > 0 )
-		{
-			fl_set_clipping( x, y, w - 2, h );
-			fl_rectf( startx[ i ] + tt, starty[ i ] - height,
-					  2, flx->fheight, curscol );
-			fl_unset_clipping( );
-		}
+
+		fl_set_clipping( x, y, w - 2, h );
+		fl_rectf( startx[ i ] + tt, starty[ i ] - height,
+				  2, flx->fheight, curscol );
+		fl_unset_clipping( );
     }
 
 	fl_free( str );

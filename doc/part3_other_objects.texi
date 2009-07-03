@@ -294,8 +294,8 @@ int fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 where @code{when} can have the folowing values:
 @table @code
-@tindex FL_RETURN_NEVER
-@item FL_RETURN_NEVER
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
 Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED

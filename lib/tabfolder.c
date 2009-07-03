@@ -116,8 +116,8 @@ handle( FL_OBJECT * ob,
 
 		case FL_ATTRIB:
 		case FL_DRAW:
-			fl_set_canvas_decoration( sp->canvas,
-									  fli_boxtype2frametype( ob->boxtype ) );
+			fl_set_object_boxtype( sp->canvas,
+								   fli_boxtype2frametype( ob->boxtype ) );
 			sp->processing_destroy = 0;
 			compute_position( ob );
 			break;
@@ -241,8 +241,8 @@ fl_create_tabfolder( int          type,
 
     sp->canvas->u_vdata = sp;
     fl_modify_canvas_prop( sp->canvas, 0, 0, canvas_cleanup );
-    fl_set_canvas_decoration( sp->canvas,
-							  fli_boxtype2frametype( ob->boxtype ) );
+    fl_set_object_boxtype( sp->canvas,
+						   fli_boxtype2frametype( ob->boxtype ) );
     fl_add_canvas_handler( sp->canvas, Expose, canvas_handler, 0 );
 
     fl_set_object_color( sp->canvas, ob->col1, ob->col2 );
@@ -251,6 +251,8 @@ fl_create_tabfolder( int          type,
     fl_set_coordunit( oldu );
 
     fl_add_child( ob, sp->canvas );
+
+	fl_set_object_return( ob, FL_RETURN_NONE );
 
     return ob;
 }
@@ -270,8 +272,6 @@ fl_add_tabfolder( int          type,
     FL_OBJECT *obj = fl_create_tabfolder( type, x, y, w, h, l );
 
 	/* Set the default return policy for the object */
-
-	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
     fl_add_object( fl_current_form, obj );
     return obj;

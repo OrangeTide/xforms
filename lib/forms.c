@@ -978,7 +978,7 @@ fl_prepare_form_window( FL_FORM    * form,
 
     if ( form == NULL )
     {
-		M_err( "fl_show_form", "NULL form." );
+		M_err( "fl_prepare_form", "NULL form." );
 		return None;
     }
 
@@ -1152,7 +1152,6 @@ fl_show_form_window( FL_FORM * form )
     fl_winshow( form->window );
     form->visible = FL_VISIBLE;
     reshape_form( form );
-	fl_redraw_form( form );
 
 	if ( ! form->focusobj )
 		for ( obj = form->first; obj; obj = obj->next )

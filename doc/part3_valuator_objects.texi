@@ -138,8 +138,8 @@ void fl_set_object_return(FL_OBJECT *obj, int when)
 @noindent
 where the parameter @code{when} can be one of the four values:
 @table @code
-@tindex FL_RETURN_NEVER
-@item FL_RETURN_NEVER
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
 Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED
@@ -431,8 +431,8 @@ void fl_set_object_return(FL_OBJECT *obj, int when);
 where the parameter @code{when} can be one of the following four
 values:
 @table @code
-@tindex FL_RETURN_NEVER
-@item FL_RETURN_NEVER
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
 Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED
@@ -1341,8 +1341,8 @@ void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code
-@tindex FL_RETURN_NEVER
-@item FL_RETURN_NEVER
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
 Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED
@@ -1559,8 +1559,8 @@ void fl_set_object_return(FL_OBJECT *obj, int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code
-@tindex FL_RETURN_NEVER
-@item FL_RETURN_NEVER
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
 Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED

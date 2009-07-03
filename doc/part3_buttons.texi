@@ -202,7 +202,7 @@ int fl_set_object_return(FL_OBJECT *obj, int when);
 where reasonable values for @code{when} are
 @table @code
 @tindex FL_RETURN_NONE
-@item FL_RETURN_NEVER
+@item FL_RETURN_NONE
 Never return object or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED

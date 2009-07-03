@@ -73,7 +73,8 @@ handle_scrollbar( FL_OBJECT * obj,
 			/* fall through */
 
 		case FL_DRAWLABEL :
-			fl_draw_object_label_outside( obj );
+			if ( obj->label && *obj->label )
+				fl_draw_object_label_outside( obj );
 			break;
 
 		case FL_FREEMEM :
@@ -478,6 +479,7 @@ fl_set_scrollbar_size( FL_OBJECT * obj,
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     fl_set_slider_size( sp->slider, val );
+	get_geom( obj );
 }
 
 
