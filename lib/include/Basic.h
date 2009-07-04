@@ -463,10 +463,11 @@ enum {
 typedef int ( * FL_PUP_CB )( int );		   /* callback prototype  */
 
 typedef struct {
-	const char * text;			/* label of a popup/menu item	 */
-	FL_PUP_CB	 callback;		/* the callback function		 */
-	const char * shortcut;		/* hotkeys						 */
-	int			 mode;			/* FL_PUP_GRAY, FL_PUP_CHECK etc */
+	const char * text;			 /* label of a popup/menu item	 */
+	FL_PUP_CB	 callback;		 /* the callback function		 */
+	const char * shortcut;		 /* hotkeys						 */
+	int			 mode;			 /* FL_PUP_GRAY, FL_PUP_CHECK etc */
+	long         reserved[ 2 ];  /* left in for backward compatibility */
 } FL_PUP_ENTRY;
 
 #define FL_MENU_ENTRY  FL_PUP_ENTRY

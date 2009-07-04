@@ -361,8 +361,8 @@ void set_object_name( FL_OBJECT *,
 
 /* Contains the different object classes and types. */
 
-#define MAXCLASS	60	/* Max number of object class handled */
-#define MAXTYPE		24	/* Max number of types per class.     */
+#define MAXCLASSES	60	/* Max. number of object classes handled */
+#define MAXTYPES	24	/* Max. number of types per class.     */
 
 /* Maximal number of object classes. */
 

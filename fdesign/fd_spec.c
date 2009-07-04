@@ -19,14 +19,11 @@
 /**
  * \file fd_spec.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Driver for setting object specific info
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -219,7 +216,7 @@ static ObjSPEC objspec[ ] =
 
 
 /***************************************
- * check if ob has spec info functions
+ * Check if ob has spec info functions
  ***************************************/
 
 static ObjSPEC *
@@ -328,7 +325,7 @@ skip_spec_info( FILE      * fp,
 	{
 		if ( strlen( fli_de_space( key ) ) > 2 && ! warned )
 		{
-			M_err( "SpecInfo", "Skipped object class %d(%s)",
+			M_err( "skip_spec_info", "Skipped object class %d (%s)",
 				   ob->objclass, ob->label);
 			warned = 1;
 		}
@@ -364,7 +361,6 @@ load_objclass_spec_info( FILE      * fp,
 				&& c != EOF
 				&& read_key_val( fp, &key, &val ) != EOF )
 		{
-
 			if ( strlen( fli_de_space( key ) ) < 2 )
 				/* empty */ ;
 			else if ( ! strcmp( key, "bounds" ) )
@@ -499,10 +495,7 @@ load_objclass_spec_info( FILE      * fp,
 			else if ( ! strcmp( key, "dir" ) )
 				sp->direction = get_direction_value( val );
 			else if ( ! strcmp( key, "return" ) )
-			{
-				fli_de_space_de( val );
 				sp->how_return = get_how_return_value( val );
-			}
 			else
 				M_warn( "load_objclass_spec_info",
 						"Unknown key = %s val = %s\n", key, val );

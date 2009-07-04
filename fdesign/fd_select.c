@@ -1263,7 +1263,7 @@ paste_selection(void)
     {
 		obj = copy_object( cutbuf[ i ], 1 );
 
-		/* fix label:  if underlining caused by cutbuf shortcut, remove it.
+		/* Fix label:  if underlining caused by cutbuf shortcut, remove it.
 		   Note can't use cutbuf as cutbuf does not contain shortcut info */
 
 		if (    obj->label
@@ -1290,7 +1290,7 @@ paste_selection(void)
     oy = y;
     move_box( &x, &y, &w, &h, FALSE );
 
-    /* recompute object sizes */
+    /* Recompute object sizes */
 
     for ( i = 0; i < selnumb; i++ )
 		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP

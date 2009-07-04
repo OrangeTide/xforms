@@ -19,12 +19,10 @@
 /**
  * \file fd_objects.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *.
- *
  * This file is part of the Form Designer.
  *
  * It contains routines to keep track of all different object classes
@@ -34,7 +32,6 @@
  *      - in add_an_object() the way of adding it should be added.
  *
  * Also to support output fully, fd_spec.c needs to be modified
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -63,7 +60,7 @@ typedef FL_OBJECT * ( * FL_ADDPTR ) ( int, FL_Coord, FL_Coord, FL_Coord,
 typedef struct {
     int          cn;
     FL_OBJECT  * defobj;		                      /* default */
-    TDEF         types[ MAXTYPE ];
+    TDEF         types[ MAXTYPES ];
     char         cname[ MAX_CLASS_NAME_LEN ];	      /* add_XXX */
     char         formal_cname[ MAX_CLASS_NAME_LEN ];
     FL_OBJECT  * defobj1;		                      /* to specific type */
@@ -74,7 +71,7 @@ typedef struct {
     const char * default_label;
 } CDEF;
 
-static CDEF classes[ MAXCLASS ];
+static CDEF classes[ MAXCLASSES ];
 static int cnumb = 0;
 
 typedef FL_OBJECT * ( * FL_ADDFREEPTR )( int, FL_Coord, FL_Coord, FL_Coord,
@@ -94,21 +91,21 @@ add_class_def( int         numb,
 {
     int i;
 
-    if ( cnumb == MAXCLASS )
+    if ( cnumb == MAXCLASSES )
     {
 		fprintf( stderr, "exceeding maxclass allowed\n" );
 		return;
     }
 
     classes[ cnumb ].cn = numb;
-    strcpy( classes[ cnumb ].cname, name);
+    strcpy( classes[ cnumb ].cname, name );
     strcpy( classes[ cnumb ].formal_cname, formal_name );
     if ( createit )
 		classes[ cnumb ].defobj = createit( 1, 0, 0, 1, 1, "" );
     classes[ cnumb ].createit = createit;
     classes[ cnumb ].addit = addit;
 
-    for ( i = 0; i < MAXTYPE; i++ )
+    for ( i = 0; i < MAXTYPES; i++ )
 		classes[ cnumb ].types[ i ].defined = FALSE;
     cnumb++;
 }
@@ -144,9 +141,9 @@ add_type_def( int  cn,
 {
     int i;
 
-    if ( tn >= MAXTYPE || tn < 0 )
+    if ( tn >= MAXTYPES || tn < 0 )
     {
-		M_err( "add_type_def", "Bad type: %%d", tn );
+		M_err( "add_type_def", "Bad type: %d", tn );
 		return;
     }
 
@@ -160,7 +157,7 @@ add_type_def( int  cn,
 
 
 /***************************************
- * sets a default type and label for class cn
+ * Sets a default type and label for class cn
  ***************************************/
 
 static void
@@ -229,15 +226,27 @@ fd_add_free( int          type,
 ****/
 
 /***************************************
- * handles a class change event
+ * Handles a class change event
  ***************************************/
 
 void
 object_cb( FL_OBJECT * obj,
 		   long        arg  FL_UNUSED_ARG )
 {
-    if ( fl_get_browser( obj ) )
-		cur_class = classes[ fl_get_browser( obj ) - 1 ].cn;
+	int line = fl_get_browser( obj );
+
+    if ( line > 0 )
+	{
+		const char *name = fl_get_browser_line( obj, line );
+		int i;
+
+		for ( i = 0; classes[ i ].cname && i < MAXCLASSES; i++ )
+			if ( ! strcmp( classes[ i ].cname, name ) )
+			{
+				cur_class = classes[ i ].cn;
+				 break;
+			}
+	}
     else
 		cur_class = -1;
 
@@ -354,22 +363,21 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "chart" );
     add_class_def( VN( FL_CHART ), OBJNAME( chart ) );
-    add_type_def( FL_CHART, FL_BAR_CHART, "BAR_CHART" );
-    add_type_def( FL_CHART, FL_HORBAR_CHART, "HORBAR_CHART" );
-    add_type_def( FL_CHART, FL_LINE_CHART, "LINE_CHART" );
-    add_type_def( FL_CHART, FL_FILLED_CHART, "FILLED_CHART" );
-    add_type_def( FL_CHART, FL_SPIKE_CHART, "SPIKE_CHART" );
-    add_type_def( FL_CHART, FL_PIE_CHART, "PIE_CHART" );
+    add_type_def( FL_CHART, FL_BAR_CHART,        "BAR_CHART" );
+    add_type_def( FL_CHART, FL_HORBAR_CHART,     "HORBAR_CHART" );
+    add_type_def( FL_CHART, FL_LINE_CHART,       "LINE_CHART" );
+    add_type_def( FL_CHART, FL_FILLED_CHART,     "FILLED_CHART" );
+    add_type_def( FL_CHART, FL_SPIKE_CHART,      "SPIKE_CHART" );
+    add_type_def( FL_CHART, FL_PIE_CHART,        "PIE_CHART" );
     add_type_def( FL_CHART, FL_SPECIALPIE_CHART, "SPECIALPIE_CHART" );
 
     fl_add_browser_line( fd_control->objectbrowser, "clock" );
     add_class_def( VN( FL_CLOCK ), OBJNAME( clock ) );
-    add_type_def( FL_CLOCK, FL_ANALOG_CLOCK, "ANALOG_CLOCK" );
+    add_type_def( FL_CLOCK, FL_ANALOG_CLOCK,  "ANALOG_CLOCK" );
     add_type_def( FL_CLOCK, FL_DIGITAL_CLOCK, "DIGITAL_CLOCK" );
     set_class_default( FL_CLOCK, FL_ANALOG_CLOCK, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "button" );
     add_class_def( VN( FL_BUTTON ), OBJNAME( button ) );
@@ -414,7 +422,6 @@ init_classes( void )
     add_button_types( FL_LABELBUTTON );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "slider" );
     add_class_def( VN( FL_SLIDER ), OBJNAME( slider ) );
@@ -426,12 +433,12 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "scrollbar" );
     add_class_def( VN( FL_SCROLLBAR ), OBJNAME( scrollbar ) );
-    add_type_def( FL_SCROLLBAR, FL_VERT_SCROLLBAR, "VERT_SCROLLBAR");
-    add_type_def( FL_SCROLLBAR, FL_HOR_SCROLLBAR, "HOR_SCROLLBAR" );
+    add_type_def( FL_SCROLLBAR, FL_VERT_SCROLLBAR,      "VERT_SCROLLBAR");
+    add_type_def( FL_SCROLLBAR, FL_HOR_SCROLLBAR,       "HOR_SCROLLBAR" );
     add_type_def( FL_SCROLLBAR, FL_VERT_THIN_SCROLLBAR, "VERT_THIN_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_HOR_THIN_SCROLLBAR, "HOR_THIN_SCROLLBAR" );
+    add_type_def( FL_SCROLLBAR, FL_HOR_THIN_SCROLLBAR,  "HOR_THIN_SCROLLBAR" );
     add_type_def( FL_SCROLLBAR, FL_VERT_NICE_SCROLLBAR, "VERT_NICE_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_HOR_NICE_SCROLLBAR, "HOR_NICE_SCROLLBAR" );
+    add_type_def( FL_SCROLLBAR, FL_HOR_NICE_SCROLLBAR,  "HOR_NICE_SCROLLBAR" );
     add_type_def( FL_SCROLLBAR, FL_VERT_PLAIN_SCROLLBAR,
 				  "VERT_PLAIN_SCROLLBAR" );
     add_type_def( FL_SCROLLBAR, FL_HOR_PLAIN_SCROLLBAR, "HOR_PLAIN_SCROLLBAR" );
@@ -445,13 +452,13 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "positioner" );
     add_class_def( VN( FL_POSITIONER ), OBJNAME( positioner ) );
-    add_type_def( FL_POSITIONER, FL_NORMAL_POSITIONER, "NORMAL_POSITIONER" );
+    add_type_def( FL_POSITIONER, FL_NORMAL_POSITIONER,  "NORMAL_POSITIONER" );
     add_type_def( FL_POSITIONER, FL_OVERLAY_POSITIONER, "OVERLAY_POSITIONER" );
     set_var_boxtype( FL_POSITIONER, 1 );
 
     fl_add_browser_line( fd_control->objectbrowser, "thumbwheel" );
     add_class_def( VN( FL_THUMBWHEEL ), OBJNAME( thumbwheel ) );
-    add_type_def( FL_THUMBWHEEL, FL_HOR_THUMBWHEEL, "HOR_THUMBWHEEL" );
+    add_type_def( FL_THUMBWHEEL, FL_HOR_THUMBWHEEL,  "HOR_THUMBWHEEL" );
     add_type_def( FL_THUMBWHEEL, FL_VERT_THUMBWHEEL, "VERT_THUMBWHEEL" );
 
     fl_add_browser_line( fd_control->objectbrowser, "counter" );
@@ -460,32 +467,30 @@ init_classes( void )
     add_type_def( FL_COUNTER, FL_SIMPLE_COUNTER, "SIMPLE_COUNTER" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "input" );
     add_class_def( VN( FL_INPUT ), OBJNAME( input ) );
-    add_type_def( FL_INPUT, FL_NORMAL_INPUT, "NORMAL_INPUT" );
-    add_type_def( FL_INPUT, FL_FLOAT_INPUT, "FLOAT_INPUT" );
-    add_type_def( FL_INPUT, FL_INT_INPUT, "INT_INPUT" );
-    add_type_def( FL_INPUT, FL_HIDDEN_INPUT, "HIDDEN_INPUT" );
+    add_type_def( FL_INPUT, FL_NORMAL_INPUT,    "NORMAL_INPUT" );
+    add_type_def( FL_INPUT, FL_FLOAT_INPUT,     "FLOAT_INPUT" );
+    add_type_def( FL_INPUT, FL_INT_INPUT,       "INT_INPUT" );
+    add_type_def( FL_INPUT, FL_HIDDEN_INPUT,    "HIDDEN_INPUT" );
     add_type_def( FL_INPUT, FL_MULTILINE_INPUT, "MULTILINE_INPUT" );
-    add_type_def( FL_INPUT, FL_SECRET_INPUT, "SECRET_INPUT" );
-    add_type_def( FL_INPUT, FL_DATE_INPUT, "DATE_INPUT" );
+    add_type_def( FL_INPUT, FL_SECRET_INPUT,    "SECRET_INPUT" );
+    add_type_def( FL_INPUT, FL_DATE_INPUT,      "DATE_INPUT" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "menu" );
     add_class_def( VN( FL_MENU ), OBJNAME( menu ) );
-    add_type_def( FL_MENU, FL_PUSH_MENU, "PUSH_MENU" );
+    add_type_def( FL_MENU, FL_PUSH_MENU,     "PUSH_MENU" );
     add_type_def( FL_MENU, FL_PULLDOWN_MENU, "PULLDOWN_MENU" );
-    add_type_def( FL_MENU, FL_TOUCH_MENU, "TOUCH_MENU" );
+    add_type_def( FL_MENU, FL_TOUCH_MENU,    "TOUCH_MENU" );
     set_var_boxtype( FL_MENU, 1 );
 
     fl_add_browser_line( fd_control->objectbrowser, "choice" );
     add_class_def( VN( FL_CHOICE ), OBJNAME( choice ) );
-    add_type_def( FL_CHOICE, FL_NORMAL_CHOICE, "NORMAL_CHOICE" );
-    add_type_def( FL_CHOICE, FL_NORMAL_CHOICE2, "NORMAL_CHOICE2" );
+    add_type_def( FL_CHOICE, FL_NORMAL_CHOICE,   "NORMAL_CHOICE" );
+    add_type_def( FL_CHOICE, FL_NORMAL_CHOICE2,  "NORMAL_CHOICE2" );
     add_type_def( FL_CHOICE, FL_DROPLIST_CHOICE, "DROPLIST_CHOICE" );
     set_var_boxtype( FL_CHOICE, 1 );
 
@@ -493,24 +498,22 @@ init_classes( void )
     add_class_def( VN( FL_BROWSER), OBJNAME( browser ) );
     add_type_def( FL_BROWSER, FL_NORMAL_BROWSER, "NORMAL_BROWSER" );
     add_type_def( FL_BROWSER, FL_SELECT_BROWSER, "SELECT_BROWSER" );
-    add_type_def( FL_BROWSER, FL_HOLD_BROWSER, "HOLD_BROWSER" );
-    add_type_def( FL_BROWSER, FL_MULTI_BROWSER, "MULTI_BROWSER" );
+    add_type_def( FL_BROWSER, FL_HOLD_BROWSER,   "HOLD_BROWSER" );
+    add_type_def( FL_BROWSER, FL_MULTI_BROWSER,  "MULTI_BROWSER" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "timer" );
     add_class_def( VN( FL_TIMER ), OBJNAME( timer ) );
     add_type_def( FL_TIMER, FL_NORMAL_TIMER, "NORMAL_TIMER" );
-    add_type_def( FL_TIMER, FL_VALUE_TIMER, "VALUE_TIMER" );
+    add_type_def( FL_TIMER, FL_VALUE_TIMER,  "VALUE_TIMER" );
     add_type_def( FL_TIMER, FL_HIDDEN_TIMER, "HIDDEN_TIMER" );
     set_class_default( FL_TIMER, FL_NORMAL_TIMER, "timer" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "xyplot" );
-    add_class_def( VN( FL_XYPLOT ),                OBJNAME( xyplot ) );
+    add_class_def( VN( FL_XYPLOT ), OBJNAME( xyplot ) );
     add_type_def( FL_XYPLOT, FL_NORMAL_XYPLOT,     "NORMAL_XYPLOT" );
     add_type_def( FL_XYPLOT, FL_ACTIVE_XYPLOT,     "ACTIVE_XYPLOT" );
     add_type_def( FL_XYPLOT, FL_SQUARE_XYPLOT,     "SQUARE_XYPLOT" );
@@ -526,29 +529,27 @@ init_classes( void )
     add_type_def( FL_XYPLOT, FL_EMPTY_XYPLOT,      "EMPTY_XYPLOT" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "canvas" );
     add_class_def( VN( FL_CANVAS ), "canvas",
 				   fl_create_simu_canvas, fl_add_simu_canvas );
-    add_type_def( FL_CANVAS, FL_NORMAL_CANVAS, "NORMAL_CANVAS" );
+    add_type_def( FL_CANVAS, FL_NORMAL_CANVAS,   "NORMAL_CANVAS" );
     add_type_def( FL_CANVAS, FL_SCROLLED_CANVAS, "SCROLLED_CANVAS" );
     set_class_default( FL_CANVAS, FL_NORMAL_CANVAS, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "glcanvas" );
     add_class_def( VN( FL_GLCANVAS ), "glcanvas",
 				   fl_create_simu_glcanvas, fl_add_simu_glcanvas );
-    add_type_def( FL_GLCANVAS, FL_NORMAL_CANVAS, "NORMAL_CANVAS" );
+    add_type_def( FL_GLCANVAS, FL_NORMAL_CANVAS,   "NORMAL_CANVAS" );
     add_type_def( FL_GLCANVAS, FL_SCROLLED_CANVAS, "SCROLLED_CANVAS" );
     set_class_default( FL_GLCANVAS, FL_NORMAL_CANVAS, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "tabfolder" );
     add_class_def( FL_NTABFOLDER, "FL_TABFOLDER", "tabfolder",
 				   fl_create_ntabfolder, fl_add_ntabfolder );
-    add_type_def( FL_NTABFOLDER, FL_TOP_TABFOLDER, "TOP_TABFOLDER" );
+    add_type_def( FL_NTABFOLDER, FL_TOP_TABFOLDER,    "TOP_TABFOLDER" );
     add_type_def( FL_NTABFOLDER, FL_BOTTOM_TABFOLDER, "BOTTOM_TABFOLDER" );
     set_class_default( FL_NTABFOLDER, FL_TOP_TABFOLDER, "" );
 
@@ -558,13 +559,12 @@ init_classes( void )
     add_type_def( FL_FORMBROWSER, FL_NORMAL_FORMBROWSER, "NORMAL_FORMBROWSER" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-    add_class_def( VN( FL_BOX ), OBJNAME( box ) );
 
     fl_add_browser_line( fd_control->objectbrowser, "freeobject" );
     add_class_def( VN( FL_FREE ), "free", fd_create_free, fd_add_free );
-    add_type_def( FL_FREE, FL_NORMAL_FREE, "NORMAL_FREE" );
-    add_type_def( FL_FREE, FL_INACTIVE_FREE, "INACTIVE_FREE" );
-    add_type_def( FL_FREE, FL_INPUT_FREE, "INPUT_FREE" );
+    add_type_def( FL_FREE, FL_NORMAL_FREE,     "NORMAL_FREE" );
+    add_type_def( FL_FREE, FL_INACTIVE_FREE,   "INACTIVE_FREE" );
+    add_type_def( FL_FREE, FL_INPUT_FREE,      "INPUT_FREE" );
     add_type_def( FL_FREE, FL_CONTINUOUS_FREE, "CONTINUOUS_FREE" );
     add_type_def( FL_FREE, FL_ALL_FREE, "ALL_FREE" );
 
@@ -700,7 +700,7 @@ find_class_maxtype( int cln )
 
     for ( i = 0; i < cnumb; i++ )
 		if ( classes[ i ].cn == cln )
-			for ( j = 0; j < MAXTYPE; j++ )
+			for ( j = 0; j < MAXTYPES; j++ )
 				if ( classes[ i ].types[ j ].defined )
 					n++;
     return n;

@@ -106,14 +106,15 @@ where the @code{when} argument can be one of
 @tindex FL_RETURN_NONE
 @item FL_RETURN_NONE
 Never report or invoke callback even if the selected folder has been
-changed (this is the default for the tabfolder object)
+changed.
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Result in a notification whenever the a different folder from the
-currently active one has been selected.
+currently active one has been selected (this is the default for the
+tabfolder object).
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END

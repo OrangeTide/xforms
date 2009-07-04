@@ -79,12 +79,12 @@ static void shift_tabs( FL_OBJECT *,
  ***************************************/
 
 static int
-handle( FL_OBJECT * ob,
-		int         event,
-		FL_Coord    mx   FL_UNUSED_ARG,
-		FL_Coord    my   FL_UNUSED_ARG,
-		int         key  FL_UNUSED_ARG,
-		void      * ev )
+handle_tabfolder( FL_OBJECT * ob,
+				  int         event,
+				  FL_Coord    mx   FL_UNUSED_ARG,
+				  FL_Coord    my   FL_UNUSED_ARG,
+				  int         key  FL_UNUSED_ARG,
+				  void      * ev )
 {
 	FL_FORM *folder;
     FLI_TABFOLDER_SPEC *sp = ob->spec;
@@ -218,7 +218,8 @@ fl_create_tabfolder( int          type,
     int absbw,
 		oldu = fl_get_coordunit( );;
 
-    ob = fl_make_object( FL_TABFOLDER, type, x, y, w, h, label, handle );
+    ob = fl_make_object( FL_TABFOLDER, type, x, y, w, h, label,
+						 handle_tabfolder );
     fl_set_coordunit( FL_COORD_PIXEL );
 
     ob->boxtype    = FL_UP_BOX;
@@ -252,7 +253,7 @@ fl_create_tabfolder( int          type,
 
     fl_add_child( ob, sp->canvas );
 
-	fl_set_object_return( ob, FL_RETURN_NONE );
+	fl_set_object_return( ob, FL_RETURN_END_CHANGED );
 
     return ob;
 }
@@ -318,7 +319,7 @@ program_switch( FL_OBJECT * obj,
 		switch_folder( obj, folder );
 		obj->parent->returned = FL_RETURN_NONE;
 
-		/* this handles set_folder while hidden */
+		/* This handles set_folder while hidden */
 
 		if ( ! obj->visible || ! obj->form->visible == FL_VISIBLE )
 			sp->last_active = folder;
@@ -352,7 +353,14 @@ switch_folder( FL_OBJECT * ob,
 		 && ! sp->processing_destroy
 		 && (    ob->parent->how_return == FL_RETURN_ALWAYS
 			  || ob->parent->how_return == FL_RETURN_END ) )
+	{
 		ob->parent->returned |= FL_RETURN_END;
+
+#if USE_BWC_BS_HACK
+		if ( ! ob->parent->object_callback )
+			ob->parent->returned &= ~ FL_RETURN_END;
+#endif
+	}
 
     if ( active == sp->active_folder || sp->processing_destroy )
     {
@@ -435,7 +443,14 @@ switch_folder( FL_OBJECT * ob,
 						   FL_SELECTED_BOTTOMTAB_UPBOX );
 
 	if (    sp->active_folder >= 0 )
+	{
 		ob->parent->returned = FL_RETURN_END | FL_RETURN_CHANGED;
+
+#if USE_BWC_BS_HACK
+		if ( ! ob->parent->object_callback )
+			ob->parent->returned &= ~ ( FL_RETURN_END | FL_RETURN_CHANGED );
+#endif
+	}
 
     sp->active_folder = active;
 }
@@ -589,9 +604,9 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 
 		for ( j = i + 1; j < sp->nforms; j++ )
 		{
-			sp->title[ j - 1 ] = sp->title[ j ];
+			sp->title[ j - 1 ]           = sp->title[ j ];
 			sp->title[ j - 1 ]->argument = j - 1;
-			sp->forms[ j - 1 ] = sp->forms[ j ];
+			sp->forms[ j - 1 ]           = sp->forms[ j ];
 		}
 
 		sp->nforms--;

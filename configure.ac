@@ -24,7 +24,7 @@ for file in config/install-sh config/mkinstalldirs ; do
   chmod 755 ${srcdir}/${file}
 done
 
-AC_ARG_ENABLE(bwc_bs_hack, [AS_HELP_STRING([--enable-bwc-bs-hack],[Enable backward compatiblity hack for browser and scrollbar objects])])
+AC_ARG_ENABLE(bwc_bs_hack, [AS_HELP_STRING([--enable-bwc-bs-hack],[Enable backward compatiblity hack for browser, scrollbar and tabfolder objects])])
 AM_CONDITIONAL(USE_BWC_BS_HACK, test x$enable_bwc_bs_hack = xyes)
 
 AC_ARG_ENABLE(demos, [AS_HELP_STRING([--enable-demos],[Build demo programs])])

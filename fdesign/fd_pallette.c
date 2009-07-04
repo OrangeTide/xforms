@@ -59,11 +59,11 @@ init_entry_table( FL_FORM * form )
     int i;
 
     if ( ! entries )
-		entries = fl_calloc( 1, MAXCLASS * sizeof *entries );
+		entries = fl_calloc( 1, MAXCLASSES * sizeof *entries );
 
     /* we obtain the class by looking at the callback function */
 
-    for ( i = 0, ob = form->first; i < MAXCLASS && ob; ob = ob->next, i++ )
+    for ( i = 0, ob = form->first; i < MAXCLASSES && ob; ob = ob->next, i++ )
 		if ( ob->object_callback )
 		{
 			entries[ nentries ].ob = ob;
@@ -71,9 +71,9 @@ init_entry_table( FL_FORM * form )
 			nentries++;
 		}
 
-    if ( i >= MAXCLASS )
-		fprintf( stderr, "fd_pallette - Internal Error: MAXCLASS too "
-				 "small ?\n");
+    if ( i >= MAXCLASSES )
+		fprintf( stderr, "fd_pallette - Internal Error: MAXCLASSES "
+				 "too small?\n");
 }
 
 

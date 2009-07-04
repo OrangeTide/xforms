@@ -913,7 +913,7 @@ fl_set_choice_align( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_set_choice_entries(FL_OBJECT * ob, FL_PUP_ENTRY * ent)
+fl_set_choice_entries(FL_OBJECT * ob, FL_PUP_ENTRY * ent )
 {
     int i,
 		k;

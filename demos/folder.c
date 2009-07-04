@@ -183,6 +183,7 @@ main( int    argc,
 	fl_set_border_width( -2 );
 	fl_initialize( &argc, argv, 0, 0, 0 );
 	fd_mainform = create_form_mainform( );
+	fl_set_object_return( fd_mainform->folder, FL_RETURN_NONE );
 
 	make_folder( fd_mainform->folder );
 

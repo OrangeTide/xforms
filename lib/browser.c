@@ -580,7 +580,7 @@ fl_create_browser( int          type,
 
 	fl_set_object_return( sp->hsl, FL_RETURN_ALWAYS );
 	fl_set_object_return( sp->vsl, FL_RETURN_ALWAYS );
-	fl_set_object_return( sp->tb, FL_RETURN_ALWAYS );
+	fl_set_object_return( sp->tb,  FL_RETURN_ALWAYS );
 
     return ob;
 }
