@@ -1,3 +1,7 @@
+2009-07-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/tbox.c: Some adjustments to redraw of textbox
+
 2009-07-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Bugs found by Werner Heisch in fdesign fixed.

@@ -451,6 +451,7 @@ typedef struct @{
     FL_PUP_CB callback;
     const char *shortcut;
     int mode;
+    long reserved[2];
 @} FL_PUP_ENTRY;
 @end example
 The meaning of each member is explained in Section 21.3. For menus,
@@ -958,6 +959,7 @@ typedef struct @{
     FL_PUP_CB    callback;  /* item callback routine */
     const char * shortcut;  /* shortcut for this item */
     unsigned int mode;      /* item mode */
+    long reserved[2];
 @} FL_PUP_ENTRY;
 @end example
 @noindent
@@ -1025,22 +1027,22 @@ shows the popup created with the array of structures defined in the
 following code example:
 @example
 FL_PUP_ENTRY entries[ ] = @{
-   @{ "Top item1",  callback @}, /* item number 1 */
-   @{ "Top item2",  callback @},
-   @{ "Top item3",  callback @},
-   @{ "/Top item4", callback @},
-     @{ "Sub1 item1",  callback @}, /* item number 5 */
-     @{ "Sub1 item2",  callback @},
-     @{ "Sub1 item3",  callback @},
-     @{ "Sub1 item4",  callback @},
-     @{ "/Sub1 item5", callback @},
-       @{ "Sub2 item1",  callback @}, /* item number 10 */
-       @{ "Sub2 item2",  callback @},
-       @{ "Sub2 item3",  callback @},
-       @{ NULL,         NULL      @}, /* end of level2, item number 13 */
-     @{ NULL,           NULL    @}, /* end of sublevel1, item nuber 14 */
-   @{ "Top item5",  callback @},  /* item number 15 */
-   @{ NULL,         NULL     @}   /* end of popup */
+   @{"Top item1",  callback@},      /* item number 1 */
+   @{"Top item2",  callback@},
+   @{"Top item3",  callback@},
+   @{"/Top item4", callback@},
+     @{"Sub1 item1",  callback@},   /* item number 5 */
+     @{"Sub1 item2",  callback@},
+     @{"Sub1 item3",  callback@},
+     @{"Sub1 item4",  callback@},
+     @{"/Sub1 item5", callback@},
+       @{"Sub2 item1",  callback@}, /* item number 10 */
+       @{"Sub2 item2",  callback@},
+       @{"Sub2 item3",  callback@},
+       @{NULL,         NULL     @}, /* end of level2, item number 13 */
+     @{NULL,           NULL   @},   /* end of sublevel1, item nuber 14 */
+   @{"Top item5",  callback@},      /* item number 15 */
+   @{NULL,         NULL    @}       /* end of popup */
 @};
 @end example
 

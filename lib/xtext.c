@@ -178,7 +178,10 @@ fli_drw_string( int           horalign,
     /* Set clipping if required  */
 
     if ( clip > 0 )
+	{
+		fprintf( stderr, "Setting clip to %d %d %d %d\n", x, y, w, h );
 		fl_set_text_clipping( x, y, w, h );
+	}
 
     /* Split string into lines  */
 
@@ -606,7 +609,7 @@ fli_draw_text_inside( int          align,
 		style %= FL_SHADOW_STYLE;
     }
 
-    /* take care of special effects stuff  */
+    /* Take care of special effects stuff  */
 
     if ( special == FL_SHADOW_STYLE )
 		D( x + 2, y + 2, FL_BOTTOM_BCOL );

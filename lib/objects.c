@@ -365,18 +365,17 @@ fl_add_object( FL_FORM   * form,
 
     if ( obj->child )
 		fli_add_composite( obj );
-	else
-		for ( o = form->first; o != obj; o = o->next )
-		{
-			if (    o->is_under
-				 || o->parent
-				 || o->objclass == FL_BEGIN_GROUP
-				 || o->objclass == FL_END_GROUP )
-				continue;
 
-			if ( objects_intersect( o, obj ) )
-				o->is_under = 1;
-		}
+	for ( o = form->first; o != obj; o = o->next )
+	{
+		if (    o->is_under
+			 || o->objclass == FL_BEGIN_GROUP
+			 || o->objclass == FL_END_GROUP )
+			continue;
+
+		if ( objects_intersect( o, obj ) )
+			o->is_under = 1;
+	}
 
     fl_redraw_object( obj );
 }
@@ -1862,8 +1861,7 @@ redraw_marked( FL_FORM * form,
 			 && obj->redraw
              && obj->is_under
 			 && obj->objclass != FL_BEGIN_GROUP
-			 && obj->objclass != FL_END_GROUP
-			 && ! obj->parent )
+			 && obj->objclass != FL_END_GROUP )
 			break;
 
 	if ( obj && obj->next )
@@ -1874,8 +1872,7 @@ redraw_marked( FL_FORM * form,
 				 || ! obj->redraw
 				 || ! obj->is_under
 				 || obj->objclass == FL_BEGIN_GROUP
-				 || obj->objclass == FL_END_GROUP
-				 || obj->parent )
+				 || obj->objclass == FL_END_GROUP )
 				continue;
 
 			for ( o = obj->next; o; o = o->next )
@@ -1883,8 +1880,7 @@ redraw_marked( FL_FORM * form,
 				if (    ! o->visible
 					 || o->redraw
 					 || o->objclass == FL_BEGIN_GROUP
-					 || o->objclass == FL_END_GROUP
-					 || o->parent )
+					 || o->objclass == FL_END_GROUP )
 					continue;
 				 
 				if ( objects_intersect( obj, o ) )
@@ -1968,7 +1964,7 @@ fl_redraw_object( FL_OBJECT * obj )
     else
 		obj->redraw = 1;
 
-    /* If composite object, flag all children */
+    /* For composite objects also flag all children */
 
     if (    obj->child
 		 && ( ! obj->parent || obj->parent->visible )
@@ -2081,15 +2077,12 @@ mark_for_redraw( FL_FORM * form )
 
     for ( obj = form->first; obj; obj = obj->next )
 	{
-		if ( ! obj->visible || obj->parent )
+		if (    ! obj->visible
+			 || obj->objclass == FL_BEGIN_GROUP
+			 || obj->objclass == FL_END_GROUP )
 			continue;
 
-		if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
-		{
-			obj->redraw = 1;
-			if ( obj->child )
-				fli_mark_composite_for_redraw( obj );
-		}
+		obj->redraw = 1;
 	}
 }
 

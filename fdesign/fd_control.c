@@ -495,7 +495,7 @@ show_selmessage( FL_OBJECT * sel[ ],
     if ( n == 1 )
     {
 		get_object_name( sel[ 0 ], objname, cbname, argname );
-		sprintf( buf, "%s Name:%s  %s%s",
+		sprintf( buf, "%s Name: %s  %s%s",
 				 find_type_name( sel[ 0 ]->objclass, sel[ 0 ]->type ),
 				 objname[ 0 ] ? objname : "None",
 				 cbname[ 0 ]  ? "Callback: " : "",

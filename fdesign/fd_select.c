@@ -124,7 +124,7 @@ cleanup_selection( void )
 		obj = obj->next;
     }
 
-    /* make a new, ordered list of selected items, removing duplicates and
+    /* Make a new, ordered list of selected items, removing duplicates and
        NULL objects */
 
     tmpnumb = 0;
@@ -695,7 +695,7 @@ resize_selection( FL_Coord dx,
     xscale = ( float ) w / ow;
     yscale = ( float ) h / oh;
 
-    /* recompute object sizes */
+    /* Recompute object sizes */
 
     for ( i = 0; i < selnumb; i++ )
 		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
@@ -723,7 +723,7 @@ resize_selection( FL_Coord dx,
 			selobj[ i ]->fb1 -= y;
 			selobj[ i ]->fb2 -= y;
 
-
+			fl_notify_object( selobj[ i ], FL_RESIZED );
 		}
 
     if ( backf )
@@ -1290,7 +1290,7 @@ paste_selection(void)
     oy = y;
     move_box( &x, &y, &w, &h, FALSE );
 
-    /* Recompute object sizes */
+    /* Recompute object position */
 
     for ( i = 0; i < selnumb; i++ )
 		if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
@@ -1309,6 +1309,8 @@ paste_selection(void)
 			selobj[ i ]->ft2 += shift;
 			selobj[ i ]->fb1 -= shift;
 			selobj[ i ]->fb2 -= shift;
+
+			fl_notify_object( selobj[ i ], FL_RESIZED );
 		}
 
     cleanup_selection( );

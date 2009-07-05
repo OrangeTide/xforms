@@ -1587,108 +1587,109 @@ free_tbox_spec( FL_OBJECT * obj )
 
 
 /***************************************
- * Draws a line of text
+ * Draws the complete textbox
  ***************************************/
 
 static void
-draw_tboxline( FL_OBJECT * obj,
-			   int         line )
+draw_tbox( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
 	GC activeGC = sp->defaultGC;
 	TBOX_LINE *tl;
-
-	/* Nothing to be drawn for illegal line numbers */
-
-	if (    line < 0
-		 || line >= sp->num_lines )
-	{
-		M_err( "draw_tboxline", "Invalid line number" );
-		return;
-	}
-
-	/* Also nothing to be done if line isn't visible */
-
-	tl = sp->lines[ line ];
-
-	if (    tl->y >= sp->h + sp->yoffset
-		 || tl->y + tl->h < sp->yoffset )
-		return;
-
-	/* Draw the background, either the normal one or the one for selected
-	   lines */
+	int i;
 
 	XFillRectangle( flx->display, FL_ObjWin( obj ),
-					tl->selected ? sp->selectGC : sp->backgroundGC,
+					sp->backgroundGC,
 					obj->x + sp->x - ( LEFT_MARGIN > 0 ),
-					obj->y + sp->y + tl->y - sp->yoffset,
-					sp->w + ( LEFT_MARGIN > 0 ), tl->h );
+					obj->y + sp->y + sp->w - sp->yoffset,
+					sp->w + ( LEFT_MARGIN > 0 ), sp->h );
 
-	/* Separator lines obviously are to be treated differently from normal
-	   text */
-
-	if ( tl->is_separator )
-	{
-		/* The extra horizontal pixels here are due to the function called
-		   subtracting them! */
-
-		fl_drw_text( 0, obj->x + sp->x - 3,
-					 obj->y + sp->y - sp->yoffset + tl->y + tl->h / 2,
-					 sp->w + 6, 1,
-					 FL_COL1, FL_NORMAL_STYLE, sp->def_size, "@DnLine" );
-		return;
-	}
-
-	/* If there's no text or the text isn't within the textbox nothing needs
-	   to be drawn */
-
-	if (    ! *tl->text
-		 || tl->x - sp->xoffset >= sp->w
-		 || tl->x + tl->w - sp->xoffset < 0 )
+	if ( sp->num_lines == 0 )
 		return;
 
-	/* If the line needs a different font or color than the default use
-	   a special GC just for that line */
-
-	if ( ! tl->selectable )
-		activeGC = sp->nonselectGC;
-
-    if ( tl->is_special )
+	for ( i = 0, tl = sp->lines[ i ];
+		  i < sp->num_lines && tl->y < sp->h + sp->yoffset;
+		  tl = sp->lines[ ++i ] )
 	{
-		if ( ! tl->specialGC )
-			tl->specialGC = create_gc( obj, tl->style, tl->size,
-									   tl->selectable ? tl->color : FL_INACTIVE,
-									   sp->x, sp->y, sp->w, sp->h );
+		if ( tl->y + tl->h < sp->yoffset )
+			continue;
 
-		activeGC = tl->specialGC;
+		/* Separator lines obviously need to be treated differently from
+		   normal text */
+
+		if ( tl->is_separator )
+		{
+			/* The extra horizontal pixels here are due to the function called
+			   subtracting them! */
+
+			fl_drw_text( 0, obj->x + sp->x - 3,
+						 obj->y + sp->y - sp->yoffset + tl->y + tl->h / 2,
+						 sp->w + 6, 1,
+						 FL_COL1, FL_NORMAL_STYLE, sp->def_size, "@DnLine" );
+			continue;
+		}
+
+		/* Draw background of line in selection color if necessary*/
+
+		if ( tl->selected )
+			XFillRectangle( flx->display, FL_ObjWin( obj ), sp->selectGC,
+							obj->x + sp->x - ( LEFT_MARGIN > 0 ),
+							obj->y + sp->y + tl->y - sp->yoffset,
+							sp->w + ( LEFT_MARGIN > 0 ), tl->h );
+
+
+		/* If there's no text or the text isn't visible within the textbox
+		   nothing needs to be drawn */
+
+		if (    ! *tl->text
+			 || tl->x - sp->xoffset >= sp->w
+			 || tl->x + tl->w - sp->xoffset < 0 )
+			continue;
+
+		/* If the line needs a different font or color than the default use
+		   a special GC just for that line */
+
+		if ( ! tl->selectable )
+			activeGC = sp->nonselectGC;
+
+		if ( tl->is_special )
+		{
+			if ( ! tl->specialGC )
+				tl->specialGC = create_gc( obj, tl->style, tl->size,
+										   tl->selectable ?
+										   tl->color : FL_INACTIVE,
+										   sp->x, sp->y, sp->w, sp->h );
+
+			activeGC = tl->specialGC;
+		}
+
+		/* Set up GC for selected lines in B&W each time round - a bit slow,
+		   but I guess there are hardly any machines left with a B&W display */
+
+		if ( fli_dithered( fl_vmode ) && tl->selected )
+		{
+			XFontStruct *xfs = fl_get_fntstruct( tl->style, tl->size );
+			
+			XSetFont( flx->display, sp->bw_selectGC, xfs->fid );
+			XSetForeground( flx->display, sp->bw_selectGC,
+							fl_get_flcolor( FL_WHITE ) );
+			activeGC = sp->bw_selectGC;
+		}
+
+		/* Now draw the line, underlined if necessary */
+
+		if ( tl->is_underlined )
+			fl_diagline( obj->x + sp->x - sp->xoffset + tl->x,
+						 obj->y + sp->y - sp->yoffset + tl->y + tl->h - 1,
+						 FL_min( sp->w + sp->xoffset - tl->x, tl->w ), 1,
+						 ( fli_dithered( fl_vmode ) && tl->selected ) ?
+						 FL_WHITE : tl->color );
+
+		fli_drw_stringTAB( FL_ObjWin( obj ), activeGC,
+						   obj->x + sp->x - sp->xoffset + tl->x,
+						   obj->y + sp->y - sp->yoffset + tl->y + tl->asc,
+						   tl->style, tl->size, tl->text, tl->len, 0 );
 	}
-
-    /* Set up GC for selected lines in B&W each time round - a bit slow,
-	   but I guess there are hardly any machines left with a B&W display */
-
-    if ( fli_dithered( fl_vmode ) && tl->selected )
-    {
-		XFontStruct *xfs = fl_get_fntstruct( tl->style, tl->size );
-
-		XSetFont( flx->display, sp->bw_selectGC, xfs->fid );
-		XSetForeground( flx->display, sp->bw_selectGC,
-						fl_get_flcolor( FL_WHITE ) );
-		activeGC = sp->bw_selectGC;
-    }
-
-	/* Now draw the line, underlined if necessary */
-
-	if ( tl->is_underlined )
-		fl_diagline( obj->x + sp->x - sp->xoffset + tl->x,
-					 obj->y + sp->y - sp->yoffset + tl->y + tl->h - 1,
-					 FL_min( sp->w + sp->xoffset - tl->x, tl->w ), 1,
-					 ( fli_dithered( fl_vmode ) && tl->selected ) ?
-					 FL_WHITE : tl->color );
-
-    fli_drw_stringTAB( FL_ObjWin( obj ), activeGC,
-					   obj->x + sp->x - sp->xoffset + tl->x,
-					   obj->y + sp->y - sp->yoffset + tl->y + tl->asc,
-					   tl->style, tl->size, tl->text, tl->len, 0 );
 }
 
 
@@ -2085,7 +2086,7 @@ handle_mouse( FL_OBJECT * obj,
 	if ( obj->type == FL_NORMAL_BROWSER )
 		return ret;
 	else if (    obj->type == FL_SELECT_BROWSER
-		 || obj->type == FL_HOLD_BROWSER )
+		      || obj->type == FL_HOLD_BROWSER )
 	{
 		if ( line < 0 || ! sp->lines[ line ]->selectable )
 			return ret;
@@ -2212,7 +2213,6 @@ handle_tbox( FL_OBJECT * obj,
 {
     FLI_TBOX_SPEC *sp = obj->spec;
 	int ret = FL_RETURN_NONE;
-	int i;
 	static int old_yoffset = -1;
 
     /* Mouse wheel hack */
@@ -2238,9 +2238,7 @@ handle_tbox( FL_OBJECT * obj,
 
 			fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
 						obj->col1, obj->bw );
-
-			for ( i = 0; i < sp->num_lines; i++ )
-				draw_tboxline( obj, i );
+			draw_tbox( obj );
 			break;
 
 		case FL_DBLCLICK :
