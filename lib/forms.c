@@ -1152,6 +1152,14 @@ fl_show_form_window( FL_FORM * form )
     fl_winshow( form->window );
     form->visible = FL_VISIBLE;
     reshape_form( form );
+	fl_redraw_form( form );
+
+	/* TODO: somehow formbrowser objects get drawn incorrectly the first
+	   time round so, for the time being, we redraw it once again... */
+
+	for ( obj = form->first; obj; obj = obj->next )
+		if ( obj->objclass == FL_FORMBROWSER )
+			fl_redraw_object( obj );
 
 	if ( ! form->focusobj )
 		for ( obj = form->first; obj; obj = obj->next )

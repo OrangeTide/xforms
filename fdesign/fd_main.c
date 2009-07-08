@@ -735,7 +735,7 @@ interrupted( int    s     FL_UNUSED_ARG,
 
 
 /***************************************
- * default action for delete window client message
+ * Default action for delete window client message
  ***************************************/
 
 static int

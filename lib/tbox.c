@@ -78,6 +78,10 @@ fli_create_tbox( int          type,
 	obj->want_update = 0;
 	obj->spec        = sp = fl_malloc( sizeof *sp );
 
+	sp->x             = 0;
+	sp->y             = 0;
+	sp->w             = 0;
+	sp->h             = 0;
 	sp->attrib        = 1;
 	sp->no_redraw     = 0;
 	sp->lines         = NULL;
@@ -421,7 +425,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
 
 			case '-' :
 				sp->lines[ line ]->is_separator = 1;
-				sp->lines[ line ]->selectable = 0;
+				sp->lines[ line ]->selectable   = 0;
 				done = 1;
 				break;
 
@@ -1567,6 +1571,8 @@ free_tbox_spec( FL_OBJECT * obj )
 		fl_safe_free( sp->lines[ i ] );
 	}
 
+	fl_safe_free( sp->lines);
+
 	if ( sp->defaultGC )
 		XFreeGC( flx->display, sp->defaultGC );
 
@@ -1594,8 +1600,6 @@ static void
 draw_tbox( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
-	GC activeGC = sp->defaultGC;
-	TBOX_LINE *tl;
 	int i;
 
 	XFillRectangle( flx->display, FL_ObjWin( obj ),
@@ -1607,12 +1611,19 @@ draw_tbox( FL_OBJECT * obj )
 	if ( sp->num_lines == 0 )
 		return;
 
-	for ( i = 0, tl = sp->lines[ i ];
-		  i < sp->num_lines && tl->y < sp->h + sp->yoffset;
-		  tl = sp->lines[ ++i ] )
+	for ( i = 0; i < sp->num_lines; i++ )
 	{
-		if ( tl->y + tl->h < sp->yoffset )
+		TBOX_LINE *tl;
+		GC activeGC = sp->defaultGC;
+
+
+		tl = sp->lines[ i ];
+
+		if ( tl->y + tl->h < sp->yoffset )   /* if line is above tbox */
 			continue;
+
+		if ( tl->y >= sp->h + sp->yoffset )  /* if line is below tbox */
+			break;
 
 		/* Separator lines obviously need to be treated differently from
 		   normal text */

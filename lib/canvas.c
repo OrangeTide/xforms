@@ -322,9 +322,9 @@ fl_get_canvas_depth( FL_OBJECT * obj )
  ***************************************/
 
 static void
-init_canvas( FL_OBJECT       * ob,
-			 FLI_CANVAS_SPEC * sp )
+init_canvas( FL_OBJECT       * ob )
 {
+    FLI_CANVAS_SPEC *sp = ob->spec;
     static int nc;		/* number of canvases */
     char name[ 32 ];
 
@@ -529,7 +529,7 @@ handle_canvas( FL_OBJECT * ob,
 			else
 				sp->xswa.background_pixel = None;
 			sp->mask |= CWBackPixel;
-			init_canvas( ob, sp );
+			init_canvas( ob );
 			break;
 
 		case FL_FREEMEM:

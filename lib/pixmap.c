@@ -489,19 +489,19 @@ fl_add_pixmap( int			type,
  ***************************************/
 
 Pixmap
-fl_create_from_pixmapdata( Window		  win,
-						   char **		  data,
-						   unsigned int * w,
-						   unsigned int * h,
-						   Pixmap *		  sm,
-						   int *		  hotx,
-						   int *		  hoty,
-						   FL_COLOR		  tran )
+fl_create_from_pixmapdata( Window		   win,
+						   char         ** data,
+						   unsigned int  * w,
+						   unsigned int  * h,
+						   Pixmap        * sm,
+						   int           * hotx,
+						   int           * hoty,
+						   FL_COLOR		   tran )
 {
 	Pixmap p = None;
 	int s;
 
-	/* this ensures we do not depend on the header/dl having the same size */
+	/* This ensures we do not depend on the header/dl having the same size */
 
 	xpmattrib = fl_calloc( 1, XpmAttributesSize( ) );
 	init_xpm_attributes( win, xpmattrib, tran );
