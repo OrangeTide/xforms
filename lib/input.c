@@ -322,7 +322,7 @@ draw_input( FL_OBJECT * obj )
 
     col = obj->focus ? obj->col2 : obj->col1;
 
-    /* partial means only text has changed. Internally DrawImage string will
+    /* Partial means only text has changed. Internally DrawImage string will
        be used instead of normal string. --Unimplemented yet */
 
     sp->drawtype = COMPLETE;
@@ -495,7 +495,7 @@ handle_select( FL_Coord    mx,
 
 
 /***************************************
- * this is not XCUTBUFFER. It is generatede by ^K and can be
+ * This is not XCUTBUFFER. It is generatede by ^K and can be
  * recalled by ^Y
  ***************************************/
 
@@ -504,7 +504,7 @@ static char cutbuf[ MAXCBLEN ];
 
 
 /***************************************
- * delete a single char. dir =1 for next, dir -1 for prev
+ * Selete a single char. dir =1 for next, dir -1 for prev
  ***************************************/
 
 static void
@@ -612,9 +612,9 @@ handle_movement( FL_OBJECT * obj,
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     int ready,
-		wid,
+		width,
 		i,
-		oldwid,
+		oldwidth,
 		tt;
 
     if ( IsHome( key ) )
@@ -688,20 +688,26 @@ handle_movement( FL_OBJECT * obj,
     {
 		if ( startpos != 0 )
 		{
-			wid = get_substring_width( obj, startpos, sp->position );
+			width = get_substring_width( obj, startpos, sp->position );
 			i = startpos - 1;
+
 			while ( i > 0 && sp->str[ i - 1 ] != '\n' )
 				i--;
-			oldwid = 0.0;
+
+			oldwidth = 0.0;
 			sp->position = i;
+
 			ready = sp->str[ sp->position ] == '\n';
+
 			while ( ! ready )
 			{
 				tt = get_substring_width( obj, i, sp->position + 1 );
-				ready = 0.5 * ( oldwid + tt ) >= wid;
-				oldwid = tt;
+				ready = 0.5 * ( oldwidth + tt ) >= width;
+				oldwidth = tt;
+
 				if ( ! ready )
 					sp->position++;
+
 				if ( sp->str[ sp->position ] == '\n' )
 					ready = 1;
 			}
@@ -712,7 +718,7 @@ handle_movement( FL_OBJECT * obj,
     }
     else if ( IsDown( key ) )	/* Down key */
     {
-		wid = get_substring_width( obj, startpos, sp->position );
+		width = get_substring_width( obj, startpos, sp->position );
 		i = sp->position + 1;
 
 		while ( i < slen && sp->str[ i - 1 ] != '\n' )
@@ -720,15 +726,15 @@ handle_movement( FL_OBJECT * obj,
 
 		if ( i < slen )
 		{
-			oldwid = 0.0;
+			oldwidth = 0.0;
 			sp->position = i;
 			ready = sp->position == slen || sp->str[ sp->position ] == '\n';
 
 			while ( ! ready )
 			{
 				tt = get_substring_width( obj, i, sp->position + 1 );
-				ready = 0.5 * ( oldwid + tt ) >= wid;
-				oldwid = tt;
+				ready = 0.5 * ( oldwidth + tt ) >= width;
+				oldwidth = tt;
 
 				if ( ! ready )
 					sp->position++;
@@ -1313,7 +1319,7 @@ handle_input( FL_OBJECT * obj,
 			break;
 
 		case FL_DRAW:
-			/* we always force label outside */
+			/* We always force label outside */
 
 			if ( sp->input->type != FL_MULTILINE_INPUT )
 			{
@@ -1343,7 +1349,7 @@ handle_input( FL_OBJECT * obj,
 			if ( obj->type == FL_MULTILINE_INPUT )
 				sp->dummy->focus = 1;
 			if ( sp->str )
-				sp->position = strlen( sp->str );
+				sp->position = - sp->position - 1;
 			else
 				sp->position = 0;
 			sp->changed = 0;
@@ -1356,7 +1362,7 @@ handle_input( FL_OBJECT * obj,
 
 			if ( obj->type == FL_MULTILINE_INPUT )
 				sp->dummy->focus = 0;
-			sp->position = -1;
+			sp->position = - sp->position - 1;
 			sp->endrange = -1;
 			fl_redraw_object( sp->input );
 
@@ -1475,7 +1481,7 @@ hsl_cb( FL_OBJECT * obj,
 
 
 /***************************************
-* pre- and post- handlers
+* Pre- and post- handlers
  ***************************************/
 
 static int
@@ -1683,21 +1689,18 @@ fl_add_input( int          type,
 		sp->vscroll = fl_create_scrollbar( fli_context->vscb,
 										   x + w - sp->vw_def,
 										   y, sp->vw_def, h, NULL );
+		fl_set_scrollbar_value( sp->vscroll, 0.0 );
+		fl_set_object_callback( sp->vscroll, vsl_cb, 0 );
 		fl_set_object_resize( sp->vscroll, FL_RESIZE_NONE );
+		fl_add_child( sp->dummy, sp->vscroll );
 
 		sp->hscroll = fl_create_scrollbar( fli_context->hscb, x,
 										   y + h - sp->hh_def,
 										   w, sp->hh_def, NULL );
-
-		fl_set_object_resize( sp->hscroll, FL_RESIZE_NONE );
-
-		fl_set_scrollbar_value( sp->vscroll, 0.0 );
-		fl_set_object_callback( sp->vscroll, vsl_cb, 0 );
 		fl_set_scrollbar_value( sp->hscroll, 0.0 );
 		fl_set_object_callback( sp->hscroll, hsl_cb, 0 );
-
+		fl_set_object_resize( sp->hscroll, FL_RESIZE_NONE );
 		fl_add_child( sp->dummy, sp->hscroll );
-		fl_add_child( sp->dummy, sp->vscroll );
 
 		fl_set_object_callback( sp->input, input_cb, 0 );
     }
