@@ -1,3 +1,8 @@
+2009-09-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/events.c: Bug found by Werner Heisch when using
+	fdesign under KDE/Gnome removed.
+
 2009-08-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/forms.c: Hack added to correct drawing of formbrowser

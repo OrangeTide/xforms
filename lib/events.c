@@ -459,9 +459,12 @@ fli_object_qread( void )
 
 		while ( fli_handled_parent )
 		{
-			FL_OBJECT *n, *p;
+			FL_OBJECT *n,
+				      *p;
 
-			if ( ! ( ( n = fli_object_qtest( ) ) && n->parent ) )
+			if (    ! ( n = fli_object_qtest( ) )
+				 || n == FL_EVENT
+				 || ! n->parent )
 				break;
 
 			p = n->parent;

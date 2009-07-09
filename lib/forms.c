@@ -1473,7 +1473,7 @@ fl_activate_form( FL_FORM * form )
 
 
 /***************************************
- * deactivates a form
+ * Deactivates a form
  ***************************************/
 
 void
@@ -1563,7 +1563,7 @@ fl_activate_all_forms( void )
 
 
 /***************************************
- * deactivates all forms
+ * Deactivates all forms
  ***************************************/
 
 void
@@ -1577,7 +1577,7 @@ fl_deactivate_all_forms( void )
 
 
 /***************************************
- * should pass the mask instead of button numbers into the
+ * Should pass the mask instead of button numbers into the
  * event handler. basically throwing away info ..
  ***************************************/
 
@@ -1606,7 +1606,7 @@ xmask2key( unsigned int mask )
 
 
 /***************************************
- * a radio object is pushed
+ * A radio object is pushed
  ***************************************/
 
 void
@@ -2063,7 +2063,7 @@ fli_handle_form( FL_FORM * form,
 
 
 /***************************************
- * formevent is either FL_KEYPRESS or FL_KEYRELEASE
+ * Formevent is either FL_KEYPRESS or FL_KEYRELEASE
  ***************************************/
 
 static void
@@ -2258,8 +2258,8 @@ fl_win_to_form( Window win )
 }
 
 
-/* how frequent to generate FL_STEP event, in milli-seconds. These
- * are modified if idle callback exists */
+/* How frequently to generate FL_STEP event, in milli-seconds is set here.
+ * These are modified if an idle callback exists */
 
 static int delta_msec = FLI_TIMER_RES;
 static XEvent st_xev;
@@ -2933,7 +2933,7 @@ fl_set_initial_placement( FL_FORM  * form,
 
 
 /***************************************
- * register pre-emptive event handlers
+ * Register pre-emptive event handlers
  ***************************************/
 
 FL_RAW_CALLBACK
@@ -3173,7 +3173,7 @@ fl_set_form_callback( FL_FORM            * form,
 
 
 /***************************************
- * currently only a single idle callback is support
+ * Currently only a single idle callback is support
  ***************************************/
 
 static void
@@ -3192,7 +3192,7 @@ add_idle_callback( FL_APPEVENT_CB   cb,
 
 
 /***************************************
- * idle callback
+ * Set an idle callback
  ***************************************/
 
 FL_APPEVENT_CB
