@@ -64,6 +64,20 @@ int fli_inverted_y;
 
 long fli_requested_vid;
 
+FLI_INTERNAL fli_int = { NULL,      /* forms */
+						 0,         /* formnumb */
+						 0,         /* auto)count */
+						 0,         /* unmanaged_count */
+						 0,         /* mousex */
+						 0,         /* mousey */
+						 0,         /* keymask */
+						 UINT_MAX,  /* query_age */
+						 NULL,      /* mouseform */
+						 NULL,      /* keyform */
+						 NULL,      /* pushobj */
+						 NULL       /* mouseobj */
+                       };   
+
 FL_IOPT fli_cntl;
 
 FLI_CONTEXT *fli_context;

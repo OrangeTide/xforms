@@ -152,11 +152,6 @@ static int pup_subreturn;
 static int pup_using_keys = 0;
 static int pup_internal_showpup_call = 0;
 
-extern FL_Coord fli_mousex,	                    /* defined in forms.c */
-                fli_mousey;
-extern unsigned int fli_keymask;
-extern unsigned int fli_query_age;
-
 
 /************ data struct maintanance ******************{**/
 
@@ -1160,7 +1155,7 @@ pup_interact( PopUP * m )
 		}
 
 		timer_cnt = 0;
-		fli_query_age++;
+		fli_int.query_age++;
 
 		switch ( ev.type )
 		{
@@ -1176,10 +1171,10 @@ pup_interact( PopUP * m )
 			case ButtonPress:
 				/* taking adv. of xbutton.x == xcrossing.x */
 
-				fli_mousex  = ev.xmotion.x;
-				fli_mousey  = ev.xmotion.y;
-				fli_keymask = ev.xmotion.state;
-				fli_query_age = 0;
+				fli_int.mousex  = ev.xmotion.x;
+				fli_int.mousey  = ev.xmotion.y;
+				fli_int.keymask = ev.xmotion.state;
+				fli_int.query_age = 0;
 
 				pup_using_keys = 0;
 				item = handle_motion( m, ev.xbutton.x, ev.xbutton.y, &val );
@@ -1202,10 +1197,10 @@ pup_interact( PopUP * m )
 				break;
 
 			case ButtonRelease:
-				fli_mousex  = ev.xbutton.x;
-				fli_mousey  = ev.xbutton.y;
-				fli_keymask = ev.xbutton.state;
-				fli_query_age = 0;
+				fli_int.mousex  = ev.xbutton.x;
+				fli_int.mousey  = ev.xbutton.y;
+				fli_int.keymask = ev.xbutton.state;
+				fli_int.query_age = 0;
 
 				item = handle_motion( m, ev.xbutton.x, ev.xbutton.y, &val );
 				if ( item && item->subm >= 0 && val != -1 )
@@ -1215,10 +1210,10 @@ pup_interact( PopUP * m )
 				break;
 
 			case KeyPress:
-				fli_mousex  = ev.xkey.x;
-				fli_mousey  = ev.xkey.y;
-				fli_keymask = ev.xkey.state;
-				fli_query_age = 0;
+				fli_int.mousex  = ev.xkey.x;
+				fli_int.mousey  = ev.xkey.y;
+				fli_int.keymask = ev.xkey.state;
+				fli_int.query_age = 0;
 
 				pup_using_keys = 1;
 				done = pup_keyboard( ( XKeyEvent * ) &ev, m, &val );

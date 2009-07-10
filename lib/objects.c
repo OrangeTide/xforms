@@ -33,10 +33,6 @@
 #include <string.h>
 
 
-extern FL_OBJECT * fli_mouseobj,          /* defined in forms.c */
-                 * fli_pushobj;
-
-
 #define PointToPixel( a )     FL_crnd( ( a ) * fli_dpi / 72.0   )
 #define MMToPixel( a )        FL_crnd( ( a ) * fli_dpi / 25.4   )
 #define CMMToPixel( a )       FL_crnd( ( a ) * fli_dpi / 2540.0 )
@@ -522,10 +518,10 @@ fl_delete_object( FL_OBJECT * obj )
 	}
 
 	lose_focus( obj ); 
-    if ( obj == fli_pushobj )
-		fli_pushobj = NULL;
-    if ( obj == fli_mouseobj )
-		fli_mouseobj = NULL;
+    if ( obj == fli_int.pushobj )
+		fli_int.pushobj = NULL;
+    if ( obj == fli_int.mouseobj )
+		fli_int.mouseobj = NULL;
 
 #ifdef DELAYED_ACTION
     fli_object_qflush_object( obj );
@@ -1270,10 +1266,10 @@ fli_hide_and_get_region( FL_OBJECT * obj,
 	   the pushed object or the object the mouse is on */
 
 	lose_focus( obj );
-	if ( obj == fli_pushobj )
-		fli_pushobj = NULL;
-	if ( obj == fli_mouseobj )
-		fli_mouseobj = NULL;
+	if ( obj == fli_int.pushobj )
+		fli_int.pushobj = NULL;
+	if ( obj == fli_int.mouseobj )
+		fli_int.mouseobj = NULL;
 
 	/* Get the area the object covers and add that to the region passed 
 	   to the function */

@@ -177,7 +177,24 @@ extern void fli_handle_idling( XEvent * xev,
 							   long     msec,
 							   int      do_idle_cb );
 
+/* Variables defined in handling.c */
+
+extern FL_FORM * mouseform;         /* the current form under mouse */
+extern FL_FORM * keyform;           /* keyboard focus form */
+
+extern FL_OBJECT * fli_pushobj;
+extern FL_OBJECT * fli_mouseobj;
+
+extern FL_Coord fli_mousex,
+                fli_mousey;
+extern unsigned int fli_keymask;
+
+extern unsigned int fli_query_age;
+
 /* misc. utilitnes */
+
+
+extern FL_FORM * fli_find_event_form( XEvent * );
 
 extern void fli_print_version( int );
 
@@ -187,6 +204,10 @@ extern const char *fli_rm_rcs_kw( const char * );
 
 extern FL_FORM *fli_make_form( FL_Coord,
 							   FL_Coord );
+
+extern void fli_scale_form( FL_FORM *,
+							double,
+							double );
 
 extern void fli_handle_form( FL_FORM *,
 							 int, int,
@@ -547,8 +568,8 @@ typedef struct {
     unsigned long   bktextcolor;
     int             newpix;
     int             fdesc;		    /* font descent          */
-    int             fasc;		    	/* font ascent           */
-    int             fheight;			/* font height           */
+    int             fasc;		    /* font ascent           */
+    int             fheight;		/* font height           */
     Colormap        colormap;
     XFontStruct   * fs;
     unsigned long   color;	        /* last color. cache     */
@@ -556,6 +577,27 @@ typedef struct {
     unsigned long   bkcolor;
     int             screen;
 } FLI_TARGET;
+
+
+typedef struct {
+	FL_FORM      ** forms;             /* all forms, visible and hidden */
+	int             formnumb;          /* number of visible forms */
+	size_t          auto_count;
+	int             unmanaged_count;
+
+	FL_Coord        mousex,            /* last recorded mouse position */
+                    mousey;
+	unsigned int    keymask;           /* state of buttons and modifier keys */
+	unsigned int    query_age;         /* age of recorded information */
+
+	FL_FORM       * mouseform;         /* the current form under the mouse */
+	FL_FORM       * keyform;           /* keyboard focus form */
+
+	FL_OBJECT * pushobj;	           /* latest pushed object */
+	FL_OBJECT * mouseobj;	           /* object under the mouse */
+} FLI_INTERNAL;
+
+extern FLI_INTERNAL fli_int;
 
 
 extern void fli_init_context( void );

@@ -25,16 +25,6 @@
 #include <ctype.h>
 
 
-/*************************************************
- * Imported global variable, defined in forms.c  *
- *************************************************/
-
-extern FL_Coord fli_mousex,
-                fli_mousey;
-extern unsigned int fli_keymask;
-extern unsigned int fli_query_age;
-
-
 /***************************************
  *       Local global variables        *
  ***************************************/
@@ -3287,7 +3277,7 @@ popup_interaction( FL_POPUP * popup )
         }
 
         timer_cnt = 0;
-        fli_query_age++;
+        fli_int.query_age++;
 
         switch ( ev.type )
         {
@@ -3296,10 +3286,10 @@ popup_interaction( FL_POPUP * popup )
                 break;
 
             case MotionNotify :
-                fli_mousex    = ev.xmotion.x;
-                fli_mousey    = ev.xmotion.y;
-                fli_keymask   = ev.xmotion.state;
-                fli_query_age = 0;
+                fli_int.mousex    = ev.xmotion.x;
+                fli_int.mousey    = ev.xmotion.y;
+                fli_int.keymask   = ev.xmotion.state;
+                fli_int.query_age = 0;
 
                 fli_compress_event( &ev, PointerMotionMask );
                 popup = handle_motion( popup, ev.xmotion.x, ev.xmotion.y );
@@ -3307,10 +3297,10 @@ popup_interaction( FL_POPUP * popup )
 
             case ButtonRelease :
             case ButtonPress :
-                fli_mousex    = ev.xbutton.x;
-                fli_mousey    = ev.xbutton.y;
-                fli_keymask   = ev.xbutton.state;
-                fli_query_age = 0;
+                fli_int.mousex    = ev.xbutton.x;
+                fli_int.mousey    = ev.xbutton.y;
+                fli_int.keymask   = ev.xbutton.state;
+                fli_int.query_age = 0;
 
 				/* Don't react to mouse wheel buttons */
 
@@ -3344,10 +3334,10 @@ popup_interaction( FL_POPUP * popup )
                 return handle_selection( e );
 
             case KeyPress :
-                fli_mousex    = ev.xkey.x;
-                fli_mousey    = ev.xkey.y;
-                fli_keymask   = ev.xkey.state;
-                fli_query_age = 0;
+                fli_int.mousex    = ev.xkey.x;
+                fli_int.mousey    = ev.xkey.y;
+                fli_int.keymask   = ev.xkey.state;
+                fli_int.query_age = 0;
 
                 if ( ( p = handle_key( popup, ( XKeyEvent * ) &ev, &e ) ) )
                     popup = p;

@@ -1,7 +1,12 @@
+2009-09-10 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/forms.c: Forms.c split into two, 	forms.c
+	and handling.c
+
 2009-09-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/events.c: Bug found by Werner Heisch when using
-	fdesign under KDE/Gnome removed.
+	fdesign under KDE/Gnome removed
 
 2009-08-05 Jens Thoms Toerring    <jt@toerring.de>
 
