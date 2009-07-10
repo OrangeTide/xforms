@@ -1267,6 +1267,85 @@ fl_initialize( int        * na,
 
 
 /***************************************
+ * Cleanup everything. At the moment, only need to restore the keyboard
+ * settings and deallocate memory used for the object and event queue etc.
+ * This routine is registered as an atexit in fl_initialize in flresource.
+ ***************************************/
+
+void
+fl_finish( void )
+{
+    /* Make sure the connection is alive */
+
+    if ( ! flx->display )
+		return;
+
+	XChangeKeyboardControl( flx->display, fli_keybdmask,
+							&fli_keybdcontrol );
+
+	fl_remove_all_signal_callbacks( );
+	fl_remove_all_timeouts( );
+
+	/* Get rid of all forms, first hide all of them */
+
+	while ( fli_int.formnumb > 0 )
+		fl_hide_form( fli_int.forms[ 0 ] );
+
+	/* Now also delete them (to deallocate memory) - problem is that the
+	   tooltip form may only be deleted as the very last one since the objects
+	   that have a tooltip (and that get deleted in the process of deleting
+	   the form they belong to) still try to access the tooltip form */
+
+	while ( fli_int.hidden_formnumb > 0 )
+	{
+		if (    fli_int.hidden_formnumb > 1
+			 && fli_is_tooltip_form( fli_int.forms[ 0 ] ) )
+			fl_free_form( fli_int.forms[ 1 ] );
+		else
+			fl_free_form( fli_int.forms[ 0 ] );
+	}
+
+	/* Delete the object and event queue */
+
+	fli_obj_queue_delete( );
+	fli_event_queue_delete( );
+
+	/* Free memory allocated in xtext.c */
+
+	fli_free_xtext_workmem( );
+
+	/* Release memory used for symbols */
+
+	fli_release_symbols( );
+
+	/* Release memory allocated in goodies */
+
+	fli_goodies_cleanup( );
+
+	/* Release memory used for cursors */
+
+	fli_free_cursors( );
+
+	/* Release memory allocated for file selectors */
+
+	fli_free_fselectors( );
+
+	/* Release memory used by the popup system */
+
+	fli_popup_finish( );
+
+	/* Release memory used for the copy of the command line arguments */
+
+	fli_free_cmdline_args( );
+
+	/* Close the display */
+
+	XCloseDisplay( flx->display );
+	flx->display = fl_display = None;
+}
+
+
+/***************************************
  * Find out about  virtual root. Taken from XFaq
  ***************************************/
 

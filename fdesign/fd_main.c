@@ -62,7 +62,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.29 $ of $Date: 2009/07/01 11:27:18 $",
+    "$State: Exp $  $Revision: 1.30 $ of $Date: 2009/07/10 17:52:15 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
 	"GNU Lesser General Public License sinc 2002",
 	NULL
@@ -754,7 +754,7 @@ delete_handler( FL_FORM * form  FL_UNUSED_ARG,
 
 
 /***************************************
- * always out perl code in altformat
+ * Always output perl code in altformat
  ***************************************/
 
 static void

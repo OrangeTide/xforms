@@ -66,6 +66,7 @@ long fli_requested_vid;
 
 FLI_INTERNAL fli_int = { NULL,      /* forms */
 						 0,         /* formnumb */
+						 0,         /* hidden_formnumb */
 						 0,         /* auto)count */
 						 0,         /* unmanaged_count */
 						 0,         /* mousex */

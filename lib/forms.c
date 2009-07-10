@@ -46,7 +46,6 @@ static int reopened_group;
 
 int fli_fast_free_object = 0;    /* exported to objects.c */
 
-static int hidden_formnumb = 0;    /* number of hidden forms */
 static int has_initial;
 
 
@@ -78,7 +77,8 @@ get_hidden_forms_index( FL_FORM * form )
 {
 	int i;
 
-    for ( i = fli_int.formnumb; i < fli_int.formnumb + hidden_formnumb; i++ )
+    for ( i = fli_int.formnumb;
+		  i < fli_int.formnumb + fli_int.hidden_formnumb; i++ )
 		if ( fli_int.forms[ i ] == form )
 			return i;
 
@@ -98,9 +98,9 @@ add_form_to_hidden_list( FL_FORM * form )
 	   and put the new forms address into the new element */
 
 	fli_int.forms = realloc( fli_int.forms,
-							 ( fli_int.formnumb + hidden_formnumb + 1 )
+							 ( fli_int.formnumb + fli_int.hidden_formnumb + 1 )
 							 * sizeof *fli_int.forms );
-	fli_int.forms[ fli_int.formnumb + hidden_formnumb++ ] = form;
+	fli_int.forms[ fli_int.formnumb + fli_int.hidden_formnumb++ ] = form;
 }
 
 
@@ -116,7 +116,8 @@ move_form_to_visible_list( FL_FORM * form )
 
 	/* Find the index of the hidden form */
 
-	if ( hidden_formnumb == 0 || ( i = get_hidden_forms_index( form ) ) < 0 )
+	if (    fli_int.hidden_formnumb == 0
+		 || ( i = get_hidden_forms_index( form ) ) < 0 )
 	{
 		M_err( "move_form_to_visble_list", "Form not in hidden list" );
 		return -1;
@@ -131,7 +132,7 @@ move_form_to_visible_list( FL_FORM * form )
 		fli_int.forms[ fli_int.formnumb ] = form;
 	}
 
-	hidden_formnumb--;
+	fli_int.hidden_formnumb--;
 
     if ( form->has_auto_objects )
 		fli_int.auto_count++;
@@ -167,7 +168,7 @@ move_form_to_hidden_list( FL_FORM * form )
 		fli_int.forms[ fli_int.formnumb ] = form;
 	}
 
-	hidden_formnumb++;
+	fli_int.hidden_formnumb++;
 
     if ( form->has_auto_objects )
     {
@@ -194,7 +195,8 @@ remove_form_from_hidden_list( FL_FORM * form )
 	/* Find the index of the form to be removed completely from the
 	   hidden list */
 
-	if ( hidden_formnumb == 0 || ( i = get_hidden_forms_index( form ) ) < 0 )
+	if (    fli_int.hidden_formnumb == 0
+		 || ( i = get_hidden_forms_index( form ) ) < 0 )
 	{
 		M_err( "remove_form_from_hidden_list", "Form not in hidden list" );
 		return -1;
@@ -203,14 +205,14 @@ remove_form_from_hidden_list( FL_FORM * form )
 	/* If it's not the form at the very end of the hidden list exchange
 	   it with the one at the end */
 
-	if ( i != fli_int.formnumb + --hidden_formnumb )
+	if ( i != fli_int.formnumb + --fli_int.hidden_formnumb )
 		fli_int.forms[ i ] =
-			             fli_int.forms[ fli_int.formnumb + hidden_formnumb ];
+			       fli_int.forms[ fli_int.formnumb + fli_int.hidden_formnumb ];
 
 	/* Shorten the list of visible and hidden forms by one element */
 
 	fli_int.forms = fl_realloc( fli_int.forms,
-								( fli_int.formnumb + hidden_formnumb )
+								( fli_int.formnumb + fli_int.hidden_formnumb )
 								* sizeof *fli_int.forms );
 
 	return fli_int.formnumb;
@@ -1685,76 +1687,6 @@ unsigned long
 fl_get_form_event_cmask( FL_FORM * form )
 {
     return form ? form->compress_mask : 0UL;
-}
-
-
-/***************************************
- * Cleanup everything. At the moment, only need to restore the keyboard
- * settings and deallocate memory used for the object and event queue.
- * This routine is registered as an atexit in fl_initialize in flresource.c
- ***************************************/
-
-void
-fl_finish( void )
-{
-    /* Make sure the connection is alive */
-
-    if ( ! flx->display )
-		return;
-
-	XChangeKeyboardControl( flx->display, fli_keybdmask,
-							&fli_keybdcontrol );
-
-	fl_remove_all_signal_callbacks( );
-	fl_remove_all_timeouts( );
-
-	/* Get rid of all forms, first hide all of them */
-
-	while ( fli_int.formnumb > 0 )
-		fl_hide_form( *fli_int.forms );
-
-	/* Now also delete them (to deallocate memory) - problem is that the
-	   tooltip form may only be deleted as the very last one since the objects
-	   that have a tooltip (and that get deleted in the process of deleting
-	   the form they belong to) still try to access the tooltip form */
-
-	while ( hidden_formnumb > 0 )
-	{
-		if ( hidden_formnumb > 1 && fli_is_tooltip_form( *fli_int.forms ) )
-			fl_free_form( fli_int.forms[ 1 ] );
-		else
-			fl_free_form( *fli_int.forms );
-	}
-
-	/* Delete the object and event queue */
-
-	fli_obj_queue_delete( );
-	fli_event_queue_delete( );
-
-	/* Free memory allocated in xtext.c */
-
-	fli_free_xtext_workmem( );
-
-	/* Release memory used for symbols */
-
-	fli_release_symbols( );
-
-	/* Release memory allocated in goodies */
-
-	fli_goodies_cleanup( );
-
-	/* Release memory used by the popup system */
-
-	fli_popup_finish( );
-
-	/* Release memory used for the copy of the command line arguments */
-
-	fli_free_cmdline_args( );
-
-	/* Close the display */
-
-	XCloseDisplay( flx->display );
-	flx->display = fl_display = None;
 }
 
 

@@ -1571,7 +1571,7 @@ free_tbox_spec( FL_OBJECT * obj )
 		fl_safe_free( sp->lines[ i ] );
 	}
 
-	fl_safe_free( sp->lines);
+	fl_safe_free( sp->lines );
 
 	if ( sp->defaultGC )
 		XFreeGC( flx->display, sp->defaultGC );

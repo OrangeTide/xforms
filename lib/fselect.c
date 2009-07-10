@@ -102,7 +102,7 @@ typedef struct
 
 static FD_fselect * create_form_fselect( void );
 
-static FD_fselect *fd_fselector[ FL_MAX_FSELECTOR ],
+static FD_fselect *fd_fselector[ FL_MAX_FSELECTOR ] = { 0 },
 				  *fs;
 
 
@@ -112,7 +112,7 @@ static FD_fselect *fd_fselector[ FL_MAX_FSELECTOR ],
 static void
 allocate_fselector( int a )
 {
-	if ( ! fd_fselector [ a ] )
+	if ( ! fd_fselector[ a ] )
 	{
 		fs = fd_fselector[ a ] = fl_calloc( 1, sizeof *fs );
 		fs->fg = FL_COL1;
@@ -135,6 +135,19 @@ allocate_fselector( int a )
 
 
 #define fselector_init( )  if ( ! fs ) allocate_fselector( 0 )
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_free_fselectors( void )
+{
+	int i;
+
+	for ( i = 0; i < FL_MAX_FSELECTOR; i++ )
+		fl_safe_free( fd_fselector[ i ] );
+}
 
 
 /***************************************

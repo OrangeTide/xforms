@@ -46,7 +46,7 @@
 #define MAX_SEQ       24	/* max. number cursors per animation */
 
 
-/* cursor cache */
+/* Cursor cache */
 
 typedef struct {
     int    name;
@@ -59,7 +59,7 @@ typedef struct {
 } CurStruct;
 
 
-/* pre-built cursors */
+/* Pre-built cursors */
 
 static CurStruct prebuilt[ ] =
 {
@@ -71,7 +71,7 @@ static CurStruct prebuilt[ ] =
     { XC_pirate,         0, 0, 0, 0, 0, { 0 } }
 };
 
-static CurStruct *cursors;
+static CurStruct *cursors = NULL;
 
 static int fl_default_curname = XC_top_left_arrow;	/* xforms' default */
 
@@ -166,15 +166,25 @@ init_cursors( void )
     for ( c = cursors; c->name; c++ )
 		c->cur[ c->ncursor++ ] = XCreateFontCursor( flx->display, c->name );
 
-    /* create an invisible cursor */
+    /* Create an invisible cursor */
 
     add_cursor( FL_INVISIBLE_CURSOR,
 				create_bitmap_cursor( c_bits, c_bits, 1, 1, 0, 0 ) );
 
-    /* add the default cursor     */
+    /* Add the default cursor     */
 
     add_cursor( FL_DEFAULT_CURSOR,
 				XCreateFontCursor( flx->display, fl_default_curname ) );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_free_cursors( void )
+{
+	fl_safe_free( cursors );
 }
 
 
@@ -245,7 +255,7 @@ fl_set_cursor( Window win,
 
 
 /***************************************
- * to be used in XDefineCursor
+ * To be used in XDefineCursor
  ***************************************/
 
 Cursor
@@ -266,8 +276,8 @@ fl_get_cursor_byname( int name )
 		}
     }
 
-    /* take a wild shot. Since we can generate the default X cursor on the
-       fly, we don't have to always save them to the cursor structure */
+    /* Take a wild shot: since we can generate the default X cursor on the
+       fly we don't have to always save them to the cursor structure */
 
     if ( name < XC_num_glyphs - 1 )
     {

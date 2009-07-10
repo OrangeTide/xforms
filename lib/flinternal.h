@@ -582,6 +582,7 @@ typedef struct {
 typedef struct {
 	FL_FORM      ** forms;             /* all forms, visible and hidden */
 	int             formnumb;          /* number of visible forms */
+	int             hidden_formnumb;   /* number of hidden forms */
 	size_t          auto_count;
 	int             unmanaged_count;
 
@@ -1036,6 +1037,11 @@ extern int fli_check_popup_entry_exists( FL_POPUP_ENTRY * );
 extern FL_POPUP_RETURN *fli_set_popup_return( FL_POPUP_ENTRY * );
 
 extern void fli_popup_reset_counter( FL_POPUP * );
+
+extern void fli_free_cursors( void );
+
+extern void fli_free_fselectors( void );
+
 
 /*	Some utility stuff */
 
