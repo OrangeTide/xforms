@@ -1956,10 +1956,10 @@ fl_redraw_object( FL_OBJECT * obj )
 
     if ( obj->objclass == FL_BEGIN_GROUP )
     {
-		FL_OBJECT *ob = obj->next;
+		FL_OBJECT *o = obj->next;
 
-		for ( ; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
-			ob->redraw = 1;
+		for ( ; o && o->objclass != FL_END_GROUP; o = o->next )
+			o->redraw = 1;
     }
     else
 		obj->redraw = 1;

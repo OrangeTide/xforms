@@ -29,8 +29,8 @@ Window fl_show_form(FL_FORM *form, int place, int border,
 @noindent
 It opens a (top-level) window on the screen in which the form is
 shown. The parameter @code{name} is the title of the form (and its
-associated icon if any). The routine returns the window resource ID of
-the form. You normally never need this. Immediately after the form
+associated icon if any). The routine returns the ID of the forms
+window. You normally never need this. Immediately after the form
 becomes visible, a full draw of all objects on the form is performed.
 Due to the two way buffering mechanism of Xlib, if
 @code{@ref{fl_show_form()}} is followed by something that blocks
@@ -54,8 +54,9 @@ flushing is not necessary as the output buffer is flushed
 automatically. Excessive call to @code{@ref{fl_update_display()}}
 degrades performace.
 
-The location and size of the window are determined
-by @code{place}. The following possibilities exist:
+The location and size of the window to be shown on the call of
+@code{@ref{fl_show_form()}} are determined by the @code{place}
+argument. The following possibilities exist:
 @table @code
 @tindex FL_PLACE_SIZE
 @item FL_PLACE_SIZE
@@ -103,7 +104,7 @@ positioning may be possible if the window manager allows it.
 
 @tindex FL_PLACE_HOTSPOT
 @item FL_PLACE_HOTSPOT
-The form is so placed that mouse is on the "hotspot". If
+The form is placed so that mouse is on the form's "hotspot". If
 @code{FL_FREE_SIZE} is also specified, interactive resizing will be
 allowed.
 
@@ -118,10 +119,10 @@ The form is shown initially iconified. The size and location used are
 the window manager's default.
 @end table
 
-If no size is specified, the designed (or later scaled) size will be
+If no size was specified, the designed (or later scaled) size will be
 used. Note that the initial position is dependent upon the window
-manager used. Some window managers will allow interactive placement of
-the windows and some will not.
+manager used. Some window managers allow interactive placement of the
+windows but some don't.
 
 You can set the position or size to be used via the following calls
 @findex fl_set_form_position()
@@ -135,7 +136,7 @@ and
 void fl_set_form_size(FL_FORM *form, FL_Coord w, FL_Coord h);
 @end example
 @noindent
-or, more combining the two functions,
+or, combining both these two functions,
 @findex fl_set_form_geometry()
 @example
 void fl_set_form_geometry(FL_FORM form*, FL_Coord x, FL_Coord y,
@@ -143,23 +144,24 @@ void fl_set_form_geometry(FL_FORM form*, FL_Coord x, FL_Coord y,
 @end example
 @noindent
 before placing the form on the screen. (Actually the routines can also
-be called while the form is being displayed. It will change shape.)
-@code{x}>, @code{y}, @code{w} and @code{h} indicate the position of the
-form on the screen and its size@footnote{The parameters should be
-sensitive to the coordinate unit in effect at the time of the call, but
-at present, they are not, i.e., the function takes only values in pixel
-units.}. The position is measured from the top-left corner of the
-screen. When the position is negative the distance from the right or the
-bottom is indicated. Next the form should be placed on the screen using
-@code{FL_PLACE_GEOMETRY}, @code{FL_PLACE_FREE}. E.g., to place a form at
-the lower-right corner of the screen use
+be called while the form is being displayed. They will change the
+position and/or size of the form.) @code{x}>, @code{y}, @code{w} and
+@code{h} indicate the position of the form on the screen and its
+size@footnote{The parameters should be sensitive to the coordinate
+unit in effect at the time of the call, but at present, they are not,
+i.e., the function takes only values in pixel units.}. The position is
+measured from the top-left corner of the screen. When the position is
+negative the distance from the right or the bottom is indicated. Next
+the form should be placed on the screen using
+@code{FL_PLACE_GEOMETRY}, @code{FL_PLACE_FREE}. E.g., to place a form
+at the lower-right corner of the screen use
 @example
 fl_set_form_position(form, -form->w, -form->h);
 fl_show_form(form, FL_PLACE_GEOMETRY, FL_TRANSIENT, "formName");
 @end example
 
-To show a form so that a particular object or point is on the mouse, use
-one of the following two routines to set the "hotspot"
+To show a form so that a particular object or point is under the
+mouse, use one of the following two routines to set the "hotspot"
 @findex fl_set_form_hotspot()
 @anchor{fl_set_form_hotspot()}
 @findex fl_set_form_hotobject()
@@ -169,44 +171,46 @@ void fl_set_form_hotspot(FL_FORM *form, FL_Coord x, FL_Coord y);
 void fl_set_form_hotobject(FL_FORM *form, FL_OBJECT *obj);
 @end example
 @noindent
-and use @code{FL_PLACE_HOTSPOT} in @code{@ref{fl_show_form()}} to
-realize. The coordinates @code{x} and @code{y} are relative to the
-upper-left corner of the form.
+and then use @code{FL_PLACE_HOTSPOT} for the @code{place} argument in
+the call of @code{@ref{fl_show_form()}}. The coordinates @code{x} and
+@code{y} are relative to the upper-left hand corner of the form
+(within the window decorations).
 
 In the call @code{@ref{fl_show_form()}} the argument @code{border}
 indicates whether or not to request window manager's decoration.
-border should take one of the following values:
+@code{border} should take one of the following values:
 @table @code
 
 @tindex FL_FULLBORDER
 @item FL_FULLBORDER
-full borders
+Ffull border decorations.
 
 @tindex FL_TRANSIENT
 @item FL_TRANSIENT
-borders with (possibly) less decoration
+Borders with (possibly) less decorations.
 
 @tindex FL_NOBORDER
 @item FL_NOBORDER
-no decoration at all
+No decoration at all.
 @end table
 
-For some dialogs, such as demanding an answer etc., you probably do not
-want win dow manager's full decoration. Use @code{FL_TRANSIENT} for
-this.
+For some dialogs, such as demanding an answer etc., you probably do
+not want the window manager's full decorations. Use
+@code{FL_TRANSIENT} for this.
 
-A window border is useful to let the user iconify a form or move it
-around. If a form is transient or has no border, it is normally more
-difficult (or even impossible) to move the form. A transient form
-typically should have less decoration , but not necessarily so. It
-depends on window mangers as well as their options. @code{FL_NOBORDER}
-is guaranteed to have no border@footnote{Provided the window manager
-is compliant. If the window manager is not compliant, all bets are
-off.} and is immune to iconification request. Because of this,
-borderless forms can be hostile to other
-applications@footnote{Actually, they are also hostile to their sibling
-forms. @xref{Part V Overview of Main Functions, , Overview of Main
-Functions}.}, so use this only if absolutely necessary.
+A window border is useful to let the user iconify a form, move it
+around or resize it. If a form is transient or has no border, it is
+normally more difficult (or even impossible) to move the form. A
+transient form typically should have less decoration, but not
+necessarily so. It depends on the window managers as well as their
+options. @code{FL_NOBORDER} is guaranteed to have no
+border@footnote{Provided the window manager is compliant. If the
+window manager isn't compliant all bets are off.} and is immune to
+iconification request. Because of this, borderless forms can be
+hostile to other applications@footnote{Actually, they are also hostile
+to their sibling forms. @xref{Part V Overview of Main Functions, ,
+Overview of Main Functions}.}, so use this only if absolutely
+necessary.
 
 There are other subtle differences between the different decoration
 requests. For instance, (small) transient forms always have
@@ -230,7 +234,7 @@ void fl_set_app_mainform(FL_FORM *form);
 Setting the main form of an application will cause the @code{WM_COMMAND}
 property set for the form if no other form has this property.
 
-Sometimes, it is necessary to have access to the window resource ID
+Sometimes it is necessary to have access to the window resource ID
 before the window is mapped (shown). For this, the following routine
 can be used
 @findex fl_prepare_form_window()
@@ -869,18 +873,19 @@ One problem remains. Mouse actions etc. are presented to a program in
 the form of events in an event queue. The library routines
 @code{@ref{fl_do_forms()}} and @code{@ref{fl_check_forms()}} read this
 queue and handle the events. When the application program itself also
-opens windows, these windows should receive events as well.
-Unfortunately, there is only one event queue. When both the
-application program and the library routines read events from this one
-queue problems occur and events are missed. Hence, the application
-program should not read the event queue while displaying forms. To
-solve this problem, the package maintains (or appears to maintain) a
+opens windows, these windows will rather likely receive events as
+well. Unfortunately, there is only one event queue. When both the
+application program and the library routines would read events from
+this one queue problems would occur and events missed. Hence, the
+application program should not read the event queue itself.. To solve
+this problem, the library maintains (or appears to maintain) a
 separate event queue for the user. This queue behaves in exactly the
 same way as the normal event queue. To access it, the application
-program should use replacements for the usual Xlib routines. Instead
-of using @code{XNextEvent()}, the program should use
+program must use replacements for the usual Xlib routines. Instead of
+using @code{XNextEvent()}, the program will use
 @code{@ref{fl_XNextEvent()}}, with the same parameters except the
-@code{Display *} . The following is a list of all new routines:
+@code{Display *} argument. The following is a list of all replacement
+routines:
 @findex fl_XNextEvent()
 @anchor{fl_XNextEvent()}
 @findex fl_XPeekEvent()
@@ -897,14 +902,14 @@ int fl_XPutbackEvent(XEvent *xev);
 @end example
 
 Other events routines may be directly used if proper care is taken to
-make sure that only events for the application window in question are
-removed. These routines include @code{XWindowEvent()},
+make sure that only events for the application windows not handled by
+the library are removed. These routines include @code{XWindowEvent()},
 @code{XCheckWindowEvent()} etc.
 
 To help find out when an event has occurred, whenever
 @code{@ref{fl_do_forms()}} and @code{@ref{fl_check_forms()}} encounter
-an event that is not meant for them but for the application program
-they return a special object
+an event that is not meant for handling by the library but by the
+application program itself they return a special object
 @tindex FL_EVENT
 @code{FL_EVENT}. Upon receiving this special event, the application
 program can and must remove the pending event from the queue using
@@ -930,24 +935,24 @@ while (! ready) @{
 @}
 @end example
 
-In some situations you don't want to see the user events. For example,
-you might want to write a function that pops up a form to change some
-settings. This routine might not want to be concerned with any
-redrawing of the main window, etc., but you also don't want to discard
-any events. In this case you can use the routines
+In some situations you may not want to receive these "user" events.
+For example, you might want to write a function that pops up a form to
+change some settings. This routine might not want to be concerned with
+any redrawing of the main window, etc., but you also not want to
+discard any events. In this case you can use the routines
 @code{@ref{fl_do_only_forms()}} and @code{@ref{fl_check_only_forms()}}
-that will never return @code{FL_EVENT}. The events don't disappear.
-They will be returned at later calls to the normal routines
-@code{@ref{fl_do_forms()}}.
+that will never return @code{FL_EVENT}. The events don't disappear but
+will be returned at later calls to the normal routines
+@code{@ref{fl_do_forms()}} etc.
 
 It can't be over-emphasized that it is an error to ignore
 @code{FL_EVENT} or use @code{@ref{fl_XNextEvent()}} without seeing
 @code{FL_EVENT}.
 
-Sometimes an application program might need to find out more information
-on the event that triggered a callback, e.g., to implement button number
-sensitive functionalities. To this end, the following routines may be
-called
+Sometimes an application program might need to find out more
+information about the event that triggered a callback, e.g., to
+implement mouse button number sensitive functionalities. To this end,
+the following routines may be called
 @findex fl_mouse_button()
 @anchor{fl_mouse_button()}
 @example
@@ -978,7 +983,7 @@ else
 @end example
 
 More information can be obtained by using the following routine that
-returns the last XEvent
+returns the last @code{XEvent}
 @findex fl_last_event()
 @example
 const XEvent *fl_last_event(void);

@@ -880,7 +880,7 @@ fl_set_form_hotspot( FL_FORM * form,
 
 void
 fl_set_form_hotobject( FL_FORM   * form,
-					   FL_OBJECT * ob )
+					   FL_OBJECT * obj )
 {
     if ( ! form  )
     {
@@ -888,14 +888,14 @@ fl_set_form_hotobject( FL_FORM   * form,
 		return;
     }
 
-    if ( ! ob )
+    if ( ! obj )
     {
 		M_err( "fl_set_form_hotobject", "NULL object." );
 		return;
     }
 
 
-	fl_set_form_hotspot( form, ob->x + ob->w / 2, ob->y + ob->h / 2 );
+	fl_set_form_hotspot( form, obj->x + obj->w / 2, obj->y + obj->h / 2 );
 }
 
 
@@ -2085,7 +2085,7 @@ do_keyboard( XEvent * xev,
     if ( win && ( ! keyform || fli_get_visible_forms_index( keyform ) < 0 ) )
 		keyform = fl_win_to_form( win );
 
-    /* switch keyboard input only if different top-level form */
+    /* Switch keyboard input only if different top-level form */
 
     if ( keyform && keyform->window != win )
     {
@@ -3287,7 +3287,7 @@ static void
 simple_form_rescale( FL_FORM * form,
 					 double    scale )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
 	form->w_hr *= scale;
 	form->h_hr *= scale;
@@ -3295,9 +3295,9 @@ simple_form_rescale( FL_FORM * form,
 	form->w = FL_crnd( form->w_hr );
 	form->h = FL_crnd( form->h_hr );
 
-    for ( ob = form->first; ob; ob = ob->next )
-		if ( ob->objclass != FL_BEGIN_GROUP && ob->objclass != FL_END_GROUP )
-			fl_scale_object( ob, scale, scale );
+    for ( obj = form->first; obj; obj = obj->next )
+		if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
+			fl_scale_object( obj, scale, scale );
 
     fl_redraw_form( form );
 }
@@ -3429,7 +3429,7 @@ fl_form_is_visible( FL_FORM * form )
 double
 fl_adjust_form_size( FL_FORM * form )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
     double xfactor,
 		   yfactor,
 		   max_factor,
@@ -3445,44 +3445,44 @@ fl_adjust_form_size( FL_FORM * form )
 		return 1.0;
 
     max_factor = factor = 1.0;
-    for ( ob = form->first; ob; ob = ob->next )
+    for ( obj = form->first; obj; obj = obj->next )
     {
-		if (    (    ob->align == FL_ALIGN_CENTER
-				  || ob->align & FL_ALIGN_INSIDE
-				  || ob->objclass == FL_INPUT )
-			 && ! ob->parent
-			 && ob->label[ 0 ] != '\0'
-			 && ob->label[ 0 ] != '@'
-			 && ob->boxtype != FL_NO_BOX
-			 && ( ob->boxtype != FL_FLAT_BOX || ob->objclass == FL_MENU ) )
+		if (    (    obj->align == FL_ALIGN_CENTER
+				  || obj->align & FL_ALIGN_INSIDE
+				  || obj->objclass == FL_INPUT )
+			 && ! obj->parent
+			 && obj->label[ 0 ] != '\0'
+			 && obj->label[ 0 ] != '@'
+			 && obj->boxtype != FL_NO_BOX
+			 && ( obj->boxtype != FL_FLAT_BOX || obj->objclass == FL_MENU ) )
 		{
-			fl_get_string_dimension( ob->lstyle, ob->lsize, ob->label,
-									 strlen( ob->label ), &sw, &sh );
+			fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
+									 strlen( obj->label ), &sw, &sh );
 
-			bw = ( ob->boxtype == FL_UP_BOX || ob->boxtype == FL_DOWN_BOX ) ?
-				 FL_abs( ob->bw ) : 1;
+			bw = ( obj->boxtype == FL_UP_BOX || obj->boxtype == FL_DOWN_BOX ) ?
+				 FL_abs( obj->bw ) : 1;
 
-			if (    ob->objclass == FL_BUTTON
-				 && (    ob->type == FL_RETURN_BUTTON
-					  || ob->type == FL_MENU_BUTTON ) )
-				sw += FL_min( 0.6 * ob->h, 0.6 * ob->w ) - 1;
+			if (    obj->objclass == FL_BUTTON
+				 && (    obj->type == FL_RETURN_BUTTON
+					  || obj->type == FL_MENU_BUTTON ) )
+				sw += FL_min( 0.6 * obj->h, 0.6 * obj->w ) - 1;
 
-			if ( ob->objclass == FL_BUTTON && ob->type == FL_LIGHTBUTTON )
+			if ( obj->objclass == FL_BUTTON && obj->type == FL_LIGHTBUTTON )
 				sw += FL_LIGHTBUTTON_MINSIZE + 1;
 
-			if (    sw <= ob->w - 2 * ( bw + xm )
-				 && sh <= ob->h - 2 * ( bw + ym ) )
+			if (    sw <= obj->w - 2 * ( bw + xm )
+				 && sh <= obj->h - 2 * ( bw + ym ) )
 				continue;
 
-			if ( ( osize = ob->w - 2 * ( bw + xm ) ) <= 0 )
+			if ( ( osize = obj->w - 2 * ( bw + xm ) ) <= 0 )
 				osize = 1;
 			xfactor = ( double ) sw / osize;
 
-			if ( ( osize = ob->h - 2 * ( bw + ym ) ) <= 0 )
+			if ( ( osize = obj->h - 2 * ( bw + ym ) ) <= 0 )
 				osize = 1;
 			yfactor = ( double ) sh / osize;
 
-			if ( ob->objclass == FL_INPUT )
+			if ( obj->objclass == FL_INPUT )
 			{
 				xfactor = 1.0;
 				yfactor = ( sh + 1.6 ) / osize;
