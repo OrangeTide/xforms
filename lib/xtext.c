@@ -280,7 +280,8 @@ fli_drw_string( int           horalign,
 			*q = 0;
 
 #if FL_DEBUG >= ML_DEBUG
-			M_info2( "UnderLine", "new=%s old=%s", newlabel, lines[ i ] );
+			M_info2( "fli_drw_string", "new = %s old = %s",
+					 newlabel, lines[ i ] );
 #endif
 
 			lines[ i ] = newlabel;

@@ -802,7 +802,7 @@ fl_get_menu( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		M_err( "GetMenu", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "fl_get_menu", "%s is not Menu class", ob ? ob->label : "" );
 		return 0;
     }
 #endif
@@ -823,7 +823,8 @@ fl_get_menu_maxitems( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_MENU ) )
     {
-		M_err( "GetMenuMaxitems", "%s is not Menu class", ob ? ob->label : "" );
+		M_err( "fl_get_menu_maxitems", "%s is not Menu class",
+			   ob ? ob->label : "" );
 		return 0;
     }
 #endif

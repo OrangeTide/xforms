@@ -157,7 +157,7 @@ fl_set_font( int numb,
     if ( fl_state[ fl_vmode ].cur_fnt == fs )
     {
 #if FL_DEBUG >= ML_DEBUG
-		M_debug( "SetFont", "current", fli_curfnt );
+		M_debug( "fl_set_font", "current", fli_curfnt );
 #endif
 		return;
     }
@@ -184,7 +184,7 @@ fl_set_font( int numb,
 		unsigned long res = 0;
 
 		if ( XGetFontProperty( flx->fs, XA_RESOLUTION, &res ) )
-			M_info2( "", "FontResolution: %lu", res );
+			M_info2( "fl_set_font", "FontResolution: %lu", res );
     }
 }
 

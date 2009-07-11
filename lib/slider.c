@@ -57,7 +57,7 @@ enum
 
 
 /***************************************
-* due to reporting box need to compute bounds
+* Due to reporting box need to compute bounds
  ***************************************/
 
 static void
@@ -231,6 +231,7 @@ draw_slider( FL_OBJECT * ob )
 
 
 /***************************************
+ * Checks if mouse is on the knob of the slider
  ***************************************/
 
 static int
@@ -283,7 +284,7 @@ is_off_knob( FL_OBJECT * obj,
 
 
 /***************************************
- * get the value of the mouse position
+ * Get the slider value for the current mouse position
  ***************************************/
 
 static double
@@ -348,8 +349,8 @@ handle_enter( FL_OBJECT * obj,
     FLI_SLIDER_SPEC *sp = obj->spec;
 
 	/* When a scrollbar is entered we want to keep track of the mouse
-	   movements in order to be able to highlight the knob when the mouse is
-	   on top of it ('sp->mouse' keeps track of that). */
+	   movements in order to be able to highlight the knob when the mouse
+	   is on top of it ('sp->mouse' keeps track of that). */
 
 	if ( IS_SCROLLBAR( obj ) )
 	{
@@ -691,7 +692,7 @@ handle_release( FL_OBJECT * obj,
 
 
 /***************************************
- * Handles an event
+ * Handles an event for a slider
  ***************************************/
 
 static int
@@ -759,7 +760,7 @@ handle_slider( FL_OBJECT * ob,
 
 
 /***************************************
- * Creates an object
+ * Creates a slider object
  ***************************************/
 
 static FL_OBJECT *
@@ -807,7 +808,7 @@ create_it( int          objclass,
 
 
 /***************************************
- * Adds an object
+ * Adds a slider object
  ***************************************/
 
 static FL_OBJECT *
@@ -970,7 +971,8 @@ fl_get_slider_value( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_SLIDER ) && ! IsValidClass( ob, FL_VALSLIDER ) )
     {
-		M_err( "GetSliderValue", "%s is not a slider", ob ? ob->label : "" );
+		M_err( "fl_get_slider_value", "%s is not a slider",
+			   ob ? ob->label : "" );
 		return 0;
     }
 #endif

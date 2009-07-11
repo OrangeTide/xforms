@@ -202,7 +202,7 @@ fl_draw_symbol( const char * label,
 		/* need to replace the first @ otherwise bad recursion */
 
 		newlabel[ 0 ] = ' ';
-		M_err( "DrawSymbol", "Bad symbol:@%s", newlabel + 1 );
+		M_err( "fl_draw_symbol", "Bad symbol:@%s", newlabel + 1 );
 		fl_free( newlabel );
 		return 0;
     }

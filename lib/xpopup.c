@@ -227,7 +227,7 @@ find_empty_index( Window win )
 			return p - menu_rec;
 		}
 
-    M_err( "fl_newpup", "Too many popups (maximum is %d)", fl_maxpup );
+    M_err( "find_empty_index", "Too many popups (maximum is %d)", fl_maxpup );
     return -1;
 }
 
@@ -460,7 +460,7 @@ parse_entry( int          n,
 
 		if ( sc )
 		{
-			M_info( 0, "shortcut = %s for %s", sc, c );
+			M_info( "parse_entry", "shortcut = %s for %s", sc, c );
 			convert_shortcut( sc, c, item, NSC );
 		}
 

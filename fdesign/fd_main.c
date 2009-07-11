@@ -70,6 +70,45 @@ static const char *fd_version[ ] =
 
 
 /***************************************
+ * Remove RCS keywords
+ ***************************************/
+
+static char *
+rm_rcs_kw( const char * s )
+{
+    static unsigned char buf[ 5 ][ 255 ];
+    static int nbuf;
+    unsigned char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
+    int left = 0,
+		lastc = -1;
+
+
+    while ( *s && ( q - buf[ nbuf ] ) < ( int ) sizeof buf[ nbuf ] - 2 )
+    {
+		switch ( *s )
+		{
+			case '$':
+				if ( ( left = ! left ) )
+					while ( *s && *s != ':' )
+						s++;
+				break;
+
+			default:
+				/* copy the char and remove extra space */
+				if ( ! ( lastc == ' ' && *s == ' ' ) )
+					*q++ = lastc = *s;
+				break;
+		}
+		s++;
+    }
+
+    *q = '\0';
+
+    return ( const char * ) buf[ nbuf ];
+}
+
+
+/***************************************
  ***************************************/
 
 static void
@@ -78,7 +117,7 @@ print_version( int die )
     const char **p = fd_version;
 
     for ( ; *p; p++ )
-		fprintf( stderr, "%s\n", fli_rm_rcs_kw( *p ) );
+		fprintf( stderr, "%s\n", rm_rcs_kw( *p ) );
 
     if ( die )
 		exit( 0 );

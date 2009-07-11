@@ -265,7 +265,7 @@ fl_set_bitmap_data( FL_OBJECT *		obj,
 
 	if ( p == None )
 	{
-		M_err( "BitmapData", "Can't create bitmap" );
+		M_err( "fl_set_bitmap_data", "Can't create bitmap" );
 		return;
 	}
 
@@ -295,7 +295,7 @@ fl_read_bitmapfile( Window		   win,
 							  w, h, &p, hotx, hoty );
 
 	if ( status != BitmapSuccess )
-		M_err( "ReadBitmap", "%s: %s", file,
+		M_err( "fl_read_bitmapfile", "%s: %s", file,
 			   status == BitmapFileInvalid ? "Invalid file" : "Can't read" );
 	return p;
 }
@@ -318,7 +318,7 @@ fl_set_bitmap_file( FL_OBJECT *	 obj,
 
 	if ( obj == NULL || obj->objclass != FL_BITMAP )
 	{
-		M_err( "set_bitmap_file", "object %s not bitmap class",
+		M_err( "fl_set_bitmap_file", "object %s not bitmap class",
 			   ( obj && obj->label ) ? obj->label : "null" );
 		return;
 	}

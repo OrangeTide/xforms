@@ -43,7 +43,7 @@
  ***************************************/
 
 char *
-fli_vstrcat( const char * s1,
+fli_vstrcat( const char * fmt,
 			 ... )
 {
     size_t total = 0;
@@ -51,14 +51,14 @@ fli_vstrcat( const char * s1,
 		 *p;
     va_list ap;
 
-    if ( ! s1 )
+    if ( ! fmt || ! *fmt )
 		return NULL;
 
-    total = strlen( s1 );
+    total = strlen( fmt );
 
-    /* record total length */
+    /* Record total length */
 
-    va_start( ap, s1 );
+    va_start( ap, fmt );
     while ( ( p = va_arg( ap, char * ) ) )
 		total += strlen( p );
     va_end( ap );
@@ -66,8 +66,8 @@ fli_vstrcat( const char * s1,
     if ( ! ( ret = fl_malloc( total + 1 ) ))
 		return NULL;
 
-    strcpy( ret, s1 );
-    va_start( ap, s1 );
+    strcpy( ret, fmt );
+    va_start( ap, fmt );
     while ( ( p = va_arg( ap, char * ) ) )
 		strcat( ret, p );
     va_end( ap );
@@ -77,7 +77,6 @@ fli_vstrcat( const char * s1,
 
 
 /***************************************
- ****** so to protect from M_DBG *******
  ***************************************/
 
 void

@@ -104,7 +104,7 @@ add_cursor( int    name,
     }
     else if ( ! warned )
     {
-		M_err( "AddCursor", "too many cursors" );
+		M_err( "add_cursor", "too many cursors" );
 		warned = 1;
     }
     return c;
@@ -217,7 +217,7 @@ fl_set_cursor( Window win,
 
     if ( win == 0 )
     {
-		M_err( "SetCuror", "Bad Window" );
+		M_err( "fl_set_cursor", "Bad Window" );
 		return;
     }
 
@@ -291,7 +291,7 @@ fl_get_cursor_byname( int name )
     }
     else
     {
-		M_err( "GetCursor", "Unknown cursor: %d\n", name );
+		M_err( "fl_get_cursor_byname", "Unknown cursor: %d\n", name );
 		cur = fl_get_cursor_byname( FL_DEFAULT_CURSOR );	/* recursion */
     }
 

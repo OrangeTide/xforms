@@ -162,7 +162,7 @@ fl_request_clipboard( FL_OBJECT       * ob,
     {
 		/* We don't own it, request it */
 
-		M_warn( "clipboard", "Requesting selection from %ld", win );
+		M_warn( "fl_request_clipboard", "Requesting selection from %ld", win );
 		XConvertSelection( flx->display,
 						   XA_PRIMARY, XA_STRING,
 						   clipboard_prop,
@@ -281,7 +281,7 @@ handle_clipboard_event( void * event )
     {
 		/* someone wants our selection */
 
-		M_warn( "clipboard", "SelectionRequest" );
+		M_warn( "handle_clipboard_event", "SelectionRequest" );
 
 		if ( sreq->owner != cp->window )
 		{

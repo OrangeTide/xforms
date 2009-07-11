@@ -53,7 +53,7 @@
 static void
 free_pixmap( FL_BUTTON_STRUCT * sp )
 {
-    if ( sp->pixmap != None )
+    if ( sp->pixmap )
 	{
 		XFreePixmap( flx->display, sp->pixmap );
 		sp->pixmap = None;
@@ -64,7 +64,7 @@ free_pixmap( FL_BUTTON_STRUCT * sp )
 /********** DRAWING *************/
 
 /***************************************
- * Draws the object
+ * Draws a button object
  ***************************************/
 
 void
@@ -138,7 +138,7 @@ fli_draw_button( FL_OBJECT * obj )
  * separate this info out from generic button handlers
  ***************************************/
 
-#define MAX_BUTCLASS 12
+#define MAX_BUTTON_CLASS 12
 
 typedef struct
 {
@@ -148,18 +148,18 @@ typedef struct
 } ButtonRec;
 
 
-static ButtonRec how_draw[ MAX_BUTCLASS ];
+static ButtonRec how_draw[ MAX_BUTTON_CLASS ];
 
 
 /***************************************
- * lookup a drawing function given a button class ID
+ * Look up a drawing function given a button class ID
  ***************************************/
 
 static FL_DrawButton
 lookup_drawfunc( int bclass )
 {
     ButtonRec *db  = how_draw,
-		      *dbs = how_draw + MAX_BUTCLASS;
+		      *dbs = how_draw + MAX_BUTTON_CLASS;
 
     for ( ; db < dbs; db++ )
 		if ( db->bclass == bclass )
@@ -176,7 +176,7 @@ static FL_CleanupButton
 lookup_cleanupfunc( int bclass )
 {
     ButtonRec *db  = how_draw,
-		      *dbs = how_draw + MAX_BUTCLASS;
+		      *dbs = how_draw + MAX_BUTTON_CLASS;
 
     for ( ; db < dbs; db++ )
 		if ( db->bclass == bclass )
@@ -187,7 +187,7 @@ lookup_cleanupfunc( int bclass )
 
 
 /***************************************
- * associate a button class with the drawing function
+ * Associates a button class with a drawing function
  ***************************************/
 
 void
@@ -197,7 +197,7 @@ fl_add_button_class( int              bclass,
 {
     static int initialized;
     ButtonRec *db = how_draw,
-		      *dbs = how_draw + MAX_BUTCLASS,
+		      *dbs = how_draw + MAX_BUTTON_CLASS,
 		      *first_avail;
 
     if ( ! initialized )
@@ -209,7 +209,6 @@ fl_add_button_class( int              bclass,
     }
 
     for ( db = how_draw, first_avail = NULL; db < dbs; db++ )
-    {
 		if ( db->bclass == bclass )
 		{
 			db->drawbutton = drawit;
@@ -218,9 +217,8 @@ fl_add_button_class( int              bclass,
 		}
 		else if ( db->bclass < 0 && ! first_avail )
 			first_avail = db;
-    }
 
-    /* if we got here, the class is not defined yet */
+    /* If we get here, the class is not defined yet */
 
     if ( first_avail )
     {
@@ -229,7 +227,7 @@ fl_add_button_class( int              bclass,
 		first_avail->cleanup    = cleanup;
     }
     else
-		M_err( "AddButtonClass", "Exceeding limit: %d", MAX_BUTCLASS );
+		M_err( "fl_add_button_class", "Exceeding limit: %d", MAX_BUTTON_CLASS );
 }
 
 
@@ -253,7 +251,7 @@ wait_for_release( XKeyEvent * ev )
 
 
 /***************************************
- * Handles an event
+ * Handles an event for a button object
  ***************************************/
 
 static int
@@ -280,7 +278,8 @@ handle_button( FL_OBJECT * obj,
 				if ( ( drawit = lookup_drawfunc( obj->objclass ) ) )
 					drawit( obj );
 				else
-					M_err( "ButtonDraw", "Unknown class: %d", obj->objclass );
+					M_err( "handle_button", "Unknown button class: %d",
+						   obj->objclass );
 			}
 			sp->event = FL_DRAW;
 			break;
@@ -466,7 +465,7 @@ handle_button( FL_OBJECT * obj,
 
 
 /***************************************
- * Creates an object
+ * Creates a (generic) button object
  ***************************************/
 
 FL_OBJECT *
@@ -516,7 +515,7 @@ fl_create_generic_button( int          objclass,
 
 
 /***************************************
- * Sets the button
+ * Sets the buttons state
  ***************************************/
 
 void
@@ -544,7 +543,7 @@ fl_set_button( FL_OBJECT * obj,
 
 
 /***************************************
- * Returns value of the button
+ * Returns the value of the button
  ***************************************/
 
 int
@@ -612,8 +611,8 @@ fl_add_button( int          type,
 
 
 /***************************************
- * Function allows to set up to which
- * mouse buttons a button will react.
+ * Function allows to set up to which mouse
+ * buttons the button object will react.
  ***************************************/
 
 void
@@ -629,8 +628,8 @@ fl_set_button_mouse_buttons( FL_OBJECT    * obj,
 
 
 /***************************************
- * Function returns value indicating which
- * mouse buttons a button will react to.
+ * Function returns a value via 'mouse_buttons', indicating
+ * which mouse buttons the button object will react to.
  ***************************************/
 
 void

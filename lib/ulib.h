@@ -27,17 +27,18 @@
 #define TC_ULIB_H
 
 #include <stdio.h>		/* for FILE */
+#include <errno.h>
 
 
 #ifndef FL_EXPORT
 #  if ! defined FL_WIN32 || ! defined SHARED_LIB
 #      define FL_EXPORT extern
 #  else
-#     ifdef MAKING_FORMS
-#        define FL_EXPORT __declspec( dllexport ) extern
+#      ifdef MAKING_FORMS
+#          define FL_EXPORT __declspec( dllexport ) extern
 #     else
-#       define FL_EXPORT __declspec( dllimport ) extern
-#     endif                          /* MAKING_FORMS */
+#          define FL_EXPORT __declspec( dllimport ) extern
+#     endif                           /* MAKING_FORMS */
 #  endif                          /* FL_WIN32 */
 #endif     /* !def FL_EXPORT */
 
@@ -72,7 +73,7 @@ extern char * fli_nuke_all_non_alnum( char * );
 
 /********* Variable number arguments strcat ******************/
 
-extern char *fli_vstrcat( const char *,
+extern char * fli_vstrcat( const char *,
 					  ... );
 extern void fli_free_vstrcat( void * );
 
@@ -81,63 +82,51 @@ extern void fli_free_vstrcat( void * );
  * Basic error handling routines
  ********************************************************************/
 
-#ifndef TC_ERROR_H
-#define TC_ERROR_H
-
-#include <errno.h>
-
-/*
- * message levels(verbosity). Error generating routine should
+/* Message levels (verbosity). Error generating routine should
  * have a (positive) control parameter specifying how loud
- * to bark (i.e., amount of messages generated)
- */
+ * to bark (i.e., amount of messages generated) */
 
-# define ML_ERR     ( -1 )
-# define ML_WARN    0
-# define ML_INFO1   1
-# define ML_INFO2   2
-# define ML_DEBUG   3
-# define ML_TRACE   4
+# define ML_ERR     -1
+# define ML_WARN     0
+# define ML_INFO1    1
+# define ML_INFO2    2
+# define ML_DEBUG    3
+# define ML_TRACE    4
 
-extern FL_ERROR_FUNC fli_whereError( int,
-									 int,
-									 const char *,
-									 int );
+extern FL_ERROR_FUNC fli_error_setup( int,
+									  const char *,
+									  int );
+
 extern FL_ERROR_FUNC efp_;
 extern FL_ERROR_FUNC user_error_function_;
 
 
-/*
- * define the actual names that will be used
- */
+/* Define the actual names that will be used */
 
-# define M_err    ( efp_ = fli_whereError( 0, ML_ERR,   __FILE__, __LINE__ ) ), efp_
-# define M_warn   ( efp_ = fli_whereError( 0, ML_WARN,  __FILE__, __LINE__ ) ), efp_
-# define M_info   ( efp_ = fli_whereError( 0, ML_INFO1, __FILE__, __LINE__ ) ), efp_
-# define M_info2  ( efp_ = fli_whereError( 0, ML_INFO2, __FILE__, __LINE__ ) ), efp_
-# define M_debug  ( efp_ = fli_whereError( 0, ML_DEBUG, __FILE__, __LINE__ ) ), efp_
-# define M_trace  ( efp_ = fli_whereError( 0, ML_TRACE, __FILE__, __LINE__ ) ), efp_
+# define M_err   \
+    ( efp_ = fli_error_setup( ML_ERR,   __FILE__, __LINE__ ) ), efp_
 
+# define M_warn   \
+    ( efp_ = fli_error_setup( ML_WARN,  __FILE__, __LINE__ ) ), efp_
 
-/*
- * the actual output routines takes three constant strings and an integer
- * in the order title, where, why, 0
- */
+# define M_info   \
+    ( efp_ = fli_error_setup( ML_INFO1, __FILE__, __LINE__ ) ), efp_
 
-typedef void ( * Gmsgout_ )( const char *,
-							 const char *,
-							 const char *,
-							 int );
+# define M_info2  \
+    ( efp_ = fli_error_setup( ML_INFO2, __FILE__, __LINE__ ) ), efp_
+
+# define M_debug  \
+    ( efp_ = fli_error_setup( ML_DEBUG, __FILE__, __LINE__ ) ), efp_
+
+# define M_trace  \
+    ( efp_ = fli_error_setup( ML_TRACE, __FILE__, __LINE__ ) ), efp_
+
 
 /****** Misc. control routines **********/
-
-extern void fli_set_err_msg_func( Gmsgout_ );
 
 extern void fli_set_msg_threshold( int );
 
 extern const char *fli_get_syserror_msg( void );
 
-
-#endif /* ERROR_H */
 
 #endif /* TC_ULIB_H */

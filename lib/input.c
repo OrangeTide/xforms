@@ -1810,7 +1810,7 @@ fl_set_input_fieldchar( FL_OBJECT * obj,
 
     if ( obj->objclass != FL_INPUT )
     {
-		M_err( "InputFieldChar", "%s not input class",
+		M_err( "fl_set_input_fieldchar", "%s not input class",
 			   obj ? obj->label : "null" );
 		return 0;
     }

@@ -393,7 +393,7 @@ handle_keyboard( FL_FORM  * form,
 		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
 
 #if FL_DEBUG >= ML_INFO1
-    M_info( "fl_keyboard", "(%d %d)pushing %d to %s\n",
+    M_info( "handle_keyboard", "(%d %d)pushing %d to %s\n",
 			x, y, key, special->label );
 #endif
 }
@@ -1084,7 +1084,7 @@ handle_EnterNotify_event( FL_FORM * evform )
 	}
 #if FL_DEBUG >= ML_DEBUG
 	else
-		M_err( "handle_EnterNotify_event", "Null form!" );
+		M_err( "handle_EnterNotify_event", "Null form" );
 #endif
 }
 

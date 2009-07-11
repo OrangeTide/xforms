@@ -546,7 +546,7 @@ fl_drw_box( int      style,
 			if ( style & FLI_BROKEN_BOX )
 				fl_foldertab_box( style, x, y, w, h, c, bw_in );
 			else
-				M_err( "DrawBox", "Unkonwn boxtype:%d", style );
+				M_err( "fl_drw_box", "Unkonwn boxtype: %d", style );
 			break;
     }
 }
@@ -844,7 +844,7 @@ fli_endline( void )
 {
     if ( npt >= MAX_BUF_POINT )
 	{
-		M_err( "DoLine", "Vertices Out of bounds" );
+		M_err( "fli_endline", "Vertices Out of bounds" );
 		return;
 	}
 
@@ -860,7 +860,7 @@ fli_endclosedline( void )
 {
     if ( npt >= MAX_BUF_POINT )
 	{
-		M_err( "DoPolyLine", "Vertices Out of bounds" );
+		M_err( "fli_endclosedline", "Vertices Out of bounds" );
 		return;
 	}
 
@@ -876,7 +876,7 @@ fli_endpolygon( void )
 {
     if ( npt >= MAX_BUF_POINT )
 	{
-		M_err( "DoPoly", "Vertices Out of bounds" );
+		M_err( "fli_endpolygon", "Vertices Out of bounds" );
 		return;
 	}
 

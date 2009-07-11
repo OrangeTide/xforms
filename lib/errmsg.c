@@ -69,13 +69,15 @@ extern char *sys_errlist[ ];
 
 /************ Local variables ****************************************/
 
-static FILE *errlog;		/* where the msg is going       */
-static int threshold;		/* current threshold            */
-static int req_level;		/* requested message level      */
-static const char *file;	/* source file name             */
-static int lineno;		    /* line no. in that file        */
-static int gout;		    /* if demand graphics           */
-static Gmsgout_ gmout;
+static FILE *errlog;           /* where the msg is going       */
+static int threshold;		   /* current threshold            */
+static int level;		       /* requested message level      */
+static const char *file;	   /* source file name             */
+static int lineno;		       /* line no. in that file        */
+
+
+FL_ERROR_FUNC efp_;			         /* global pointer to shut up lint */
+FL_ERROR_FUNC user_error_function_;  /* hook for application error handler */
 
 
 /***************************************
@@ -85,7 +87,7 @@ static Gmsgout_ gmout;
 void
 fl_set_err_logfp( FILE * fp )
 {
-    if ( fp )
+	if ( fp )
 		errlog = fp;
 }
 
@@ -103,7 +105,8 @@ fl_set_error_handler( FL_ERROR_FUNC user_func)
 /***************************************
  ***************************************/
 
-const char *fli_get_syserror_msg( void )
+const char *
+fli_get_syserror_msg( void )
 {
     const char  *pp;
 
@@ -112,6 +115,7 @@ const char *fli_get_syserror_msg( void )
 #else
     pp = errno ? sys_errlist[ errno ] : "";
 #endif
+
     return pp;
 }
 
@@ -127,21 +131,6 @@ fli_set_msg_threshold( int mlevel )
 }
 
 
-/***************************************
- * Graphics output routine
- ***************************************/
-
-void
-fli_set_err_msg_func( Gmsgout_ errf )
-{
-    gmout = errf;
-}
-
-
-FL_ERROR_FUNC efp_;			/* global pointer to shut up lint */
-FL_ERROR_FUNC user_error_function_;  /* hooks for application error handler */
-
-
 /********************************************************************
  * Generate two strings that contain where and why an error occured
  *********************************************************************/
@@ -153,110 +142,65 @@ P_errmsg( const char * func,
 {
     va_list args;
     char *where,
-		 *why,
-		 line[ 20 ];
-    const char *pp;
-    static char emsg[ MAXESTR + 1 ];
+		 why[ MAXESTR + 1 ] = "";
+
+    /* Check if there is nothing to do */
+
+    if ( level >= threshold )
+		return;
 
     if ( ! errlog )
 		errlog = stderr;
 
-    /* If there is nothing to do, do nothing ! */
-
-#if 0
-    if ( req_level >= threshold && ( ! gout || ! gmout ) )
-#else
-    /*
-     * By commenting out gout, graphics output is also controled by threshold
-     */
-    if ( req_level >= threshold )
-#endif
-    {
-        errno = 0;
-		return;
-    }
-
-	/*
-	 * 'where' comes in two varieties, one is to print everthing, i.e.,
-	 * 1. FUNC [file, lineno]: why an error occured.
-	 * 2. why the mesage is printed
-	 *
-	 * If func passed is null, 2 will be used else 1 will be used.
-	 */
+	/* Set up the string where it happended */
 
     if ( func )
     {
+		char line[ 20 ];
+
 		if ( lineno > 0 )
 			sprintf( line, "%d", lineno );
 		else
 			strcpy( line, "?" );
 
 		where = *func ?
-				fli_vstrcat( "In ", func, " [", file, ":", line, "] ",
+				fli_vstrcat( "In ", func, "() [", file, ":", line, "] ",
 							 ( char * ) 0 ) :
 				fli_vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
     }
     else
-    {
-		line[ 0 ] = '\0';
 		where = strdup( "" );
-    }
 
     /* Now find out why */
-
-    emsg[ 0 ] = '\0';
-    why = 0;
-
-    /* Parse the fmt */
 
     if ( fmt && *fmt )
 	{
 		va_start( args, fmt );
-		fl_vsnprintf( emsg, sizeof emsg - 5, fmt, args );
+		fl_vsnprintf( why, sizeof why, fmt, args );
 		va_end( args );
 	}
 
-    /* Check if there is any system errors */
+	/* Having gotten the message as well as where and why show it */
 
-    if ( ( pp = fli_get_syserror_msg( ) ) && *pp )
-    {
-		strncat( strcat( emsg, " -- " ), pp, MAXESTR );
-        emsg[ MAXESTR - 1 ] = '\0';
-    }
-
-    why = emsg;
-
-	/* Have gotten the message, where and why, show it */
-
-    if ( req_level < threshold )
-		fprintf( errlog, "%s%s\n", where, why );
-
-    if ( gout && gmout )
-		gmout( "Warning", where, why,  0 );
+	fprintf( errlog, "%s%s\n", where, why );
 
     fli_free_vstrcat( where );
-
-    /* Reset system errors */
-
-    errno = 0;
 }
 
 
 /*********************************************************************
- * get the line number in file where error occurred. gui indicates
- * if graphics output function is to be called
+ * Set the level, line number and file where error occurred, return
+ * the function to use for outputting the error message
  ********************************************************************/
 
 FL_ERROR_FUNC
-fli_whereError( int          gui,
-				int          level,
-				const char * f,
-				int          l )
+fli_error_setup( int          lev,
+				 const char * f,
+				 int          l )
 {
-    file = f;
+    file   = f;
     lineno = l;
-    req_level = level;
-    gout = gui;
+    level  = lev;
 
     return user_error_function_ ? user_error_function_ : P_errmsg;
 }

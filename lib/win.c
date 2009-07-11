@@ -329,7 +329,7 @@ fl_winaspect( Window   win,
 
     if ( x <= 0 || y <= 0 )
     {
-		M_err( "Aspect", "Bad aspect ratio" );
+		M_err( "fl_winaspect", "Bad aspect ratio" );
 		return;
     }
 
@@ -575,7 +575,7 @@ get_machine_name( Display * d )
 
 	if ( gethostname( machine_name, sizeof machine_name - 1 ) )
 	{
-		M_err( "ClientMachine", "Unable to find" );
+		M_err( "get_machine_name", "Unable to get host name" );
 		strcpy( machine_name, DisplayString( d ) );
 		if ( ( p = strchr( machine_name, ':' ) ) )
 			*p = '\0';

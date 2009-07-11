@@ -540,7 +540,7 @@ is_cached( const char * dir,
 		*c = ++lastcache % MAXCACHE;
 
     lastcache = *c;
-    M_info( "CheckDirCache", "%s is %s cached", dir, cached ? "" : "not" );
+    M_info( "is_cached", "%s is %s cached", dir, cached ? "" : "not" );
     return cached;
 }
 
@@ -559,7 +559,7 @@ fl_free_dirlist( FL_Dirlist * dl )
 
     if ( i >= MAXCACHE )
     {
-		M_err( "FreeDirList", "Bad list" );
+		M_err( "fl_free_dirlist", "Bad list" );
 		return;
     }
 
@@ -969,7 +969,7 @@ tc_scandir( const char      * dirname,
 
     if ( sizeof( struct DIRENT ) < 100 && ! dname_is_1 )
     {
-		M_warn("scandir", "Bad dirent--will fix on the fly");
+		M_warn("tc_scandir", "Bad dirent -- will fix on the fly");
 		dname_is_1 = 1;
     }
 

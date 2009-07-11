@@ -198,8 +198,6 @@ extern FL_FORM * fli_find_event_form( XEvent * );
 
 extern void fli_print_version( int );
 
-extern const char *fli_rm_rcs_kw( const char * );
-
 /* from forms.c and object.c */
 
 extern FL_FORM *fli_make_form( FL_Coord,

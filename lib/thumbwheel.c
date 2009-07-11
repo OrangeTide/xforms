@@ -310,7 +310,7 @@ fl_get_thumbwheel_value( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_THUMBWHEEL ) )
     {
-		M_err( "GetThumbWheelValue", "%s is not a thumbwheel",
+		M_err( "fl_get_thumbwheel_value", "%s is not a thumbwheel",
 			   ob ? ob->label : "null" );
 		return 1.0;
     }
@@ -333,7 +333,7 @@ fl_set_thumbwheel_value( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_THUMBWHEEL ) )
     {
-		M_err( "SetThumbWheelValue", "%s is not a thumbwheel",
+		M_err( "fl_set_thumbwheel_value", "%s is not a thumbwheel",
 			   ob ? ob->label : "null" );
 		return 1.0;
     }
@@ -366,7 +366,7 @@ fl_set_thumbwheel_bounds( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_THUMBWHEEL ) )
     {
-		M_err( "SetThumbWheelBounds", "%s is not a thumbwheel",
+		M_err( "fl_set_thumbwheel_bounds", "%s is not a thumbwheel",
 			   ob ? ob->label : "null" );
 		return;
     }

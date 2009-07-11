@@ -19,12 +19,10 @@
 /**
  * \file canvas.c
  *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
  *.
- *
  * Class FL_CANVAS
  *
  *  Not too much different from an app_win except geometry is managed
@@ -97,7 +95,7 @@ canvas_event_intercept( XEvent * xev,
     {
 		/* Must be Destroy Event, which is generated after FREEMEM. Probably
 		   should block closewindow and handle the events there. Speed
-		   penalty ? */
+		   penalty? */
 
 		return FL_PREEMPT;
     }
@@ -149,7 +147,7 @@ free_canvas( FL_OBJECT * ob )
 
 	fli_unmap_canvas_window( ob );
 
-    /* Don't free the colormap if it is xforms internal one */
+    /* Don't free the colormap if it is XForms' internal one */
 
     if ( ! sp->keep_colormap && sp->colormap != fli_colormap( fl_vmode ) )
 		XFreeColormap( flx->display, sp->colormap );
@@ -250,7 +248,8 @@ fl_set_canvas_colormap( FL_OBJECT * ob,
 
     if ( sp->window )
     {
-		M_warn( "CanvasColormap", "Changing colormap for active window" );
+		M_warn( "fl_set_canvas_colormap",
+				"Changing colormap for active window" );
 		XChangeWindowAttributes( flx->display, sp->window, sp->mask,
 								 &sp->xswa );
 		BegWMColormap( sp );
@@ -287,7 +286,7 @@ fl_get_canvas_colormap( FL_OBJECT * ob )
 
 void
 fl_set_canvas_visual( FL_OBJECT * obj,
-					  Visual *    vi )
+					  Visual    * vi )
 {
     ( ( FLI_CANVAS_SPEC * ) ( obj->spec ) )->visual = vi;
 }
@@ -322,7 +321,7 @@ fl_get_canvas_depth( FL_OBJECT * obj )
  ***************************************/
 
 static void
-init_canvas( FL_OBJECT       * ob )
+init_canvas( FL_OBJECT * ob )
 {
     FLI_CANVAS_SPEC *sp = ob->spec;
     static int nc;		/* number of canvases */
@@ -359,7 +358,7 @@ init_canvas( FL_OBJECT       * ob )
 									 sp->user_mask, &sp->user_xswa );
 
 #if FL_DEBUG >= ML_ERR
-		M_warn( "CanvasWindow", "Depth=%d colormap=0x%lx, WinID=0x%lx",
+		M_warn( "init_canvas", "Depth=%d colormap=0x%lx, WinID=0x%lx",
 				sp->depth, sp->colormap, sp->window );
 #endif
 
@@ -369,7 +368,7 @@ init_canvas( FL_OBJECT       * ob )
 
 		if ( sp->activate && sp->activate( ob ) < 0 )
 		{
-			M_err( "InitCanvas", "Can't initialize canvas %s", ob->label );
+			M_err( "init_canvas", "Can't initialize canvas %s", ob->label );
 			return;
 		}
 
@@ -399,7 +398,7 @@ init_canvas( FL_OBJECT       * ob )
 
     if ( Moved( ob, sp ) || Resized( ob, sp ) )
     {
-		M_warn( "Canvas", "Canvas: WinMoved\n" );
+		M_warn( "init_canvas", "Canvas: WinMoved\n" );
 		XMoveResizeWindow( flx->display, sp->window, ob->x, ob->y,
 						   ob->w, ob->h );
     }
@@ -553,14 +552,11 @@ fl_hide_canvas( FL_OBJECT * ob )
     if ( sp->window && sp->cleanup )
 		sp->cleanup( ob );
 
-    /* If parent is unmapped, sp->window is also unmapped */
+    /* If parent is unmapped, sp->window is also unmapped, must cleanup canvas
+	   specific stuff before closing window */
 
     if ( ob->visible && sp->window && ob->form && ob->form->window )
-    {
-		/* must cleanup canvas specific stuff before closing window */
-
 		fl_winclose( sp->window );
-    }
 
     sp->window = None;
 }

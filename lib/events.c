@@ -326,7 +326,7 @@ fli_object_qenter( FL_OBJECT * obj )
          && ( ! obj->form || ! obj->visible || obj->active <= 0 ) )
     {
 #if FL_DEBUG >= ML_DEBUG
-        M_err( "Qenter", "Bad object" );
+        M_err( "fli_object_qenter", "Bad object" );
 #endif
         return;
     }
@@ -689,7 +689,7 @@ fl_XPutBackEvent( XEvent * xev )
     if ( xev->type == NoExpose )
     {
         if ( ++mm % 20 == 0 )
-            M_warn( "XPutbackEvent", "20 NoExpose discarded" );
+            M_warn( "fl_XPutbackEvent", "20 NoExpose discarded" );
         return;
     }
 
@@ -1039,7 +1039,7 @@ fli_compress_motion( XEvent * xme )
     do
     {
 #if FL_DEBUG >= ML_DEBUG
-        M_info2( "CompressMotion", "win=0x%lx (%d,%d) %s",
+        M_info2( "fli_compress_motion", "win=0x%lx (%d,%d) %s",
                  xme->xany.window, xme->xmotion.x, xme->xmotion.y,
                  xme->xmotion.is_hint ? "hint" : "" )
 #endif

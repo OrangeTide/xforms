@@ -193,7 +193,7 @@ draw_dial( FL_OBJECT * ob )
 			fl_circ( x, y, iradius, FL_BLACK );
     }
     else
-		M_err( "DrawDial", "Bad type" );
+		M_err( "draw_dial", "Bad type" );
 
     fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
 						ob->lcol, ob->lstyle, ob->lsize, ob->label );

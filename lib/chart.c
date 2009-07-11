@@ -561,7 +561,7 @@ handle_chart( FL_OBJECT * ob,
 			  void      * ev   FL_UNUSED_ARG )
 {
 #if FL_DEBUG >= ML_DEBUG
-    M_info( "HandleMenu", fli_event_name( event ) );
+    M_info( "handle_chart", fli_event_name( event ) );
 #endif
 
     switch ( event )
@@ -771,7 +771,7 @@ fl_insert_chart_value( FL_OBJECT  * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
     {
-		M_err( "AddChartValue", "%s not a chart", ob ? ob->label : "" );
+		M_err( "fl_insert_chart_value", "%s not a chart", ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -845,7 +845,7 @@ fl_set_chart_bounds( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_CHART ) )
     {
-		M_err( "SetChartBounds", "%s not a chart", ob ? ob->label : "" );
+		M_err( "fl_set_chart_bounds", "%s not a chart", ob ? ob->label : "" );
 		return;
     }
 #endif

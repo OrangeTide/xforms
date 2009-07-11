@@ -200,13 +200,15 @@ fl_set_gamma( double r,
     {
 		/* Too lazy to shuffle colormap around */
 
-		M_err( "Gamma", "Ignored. Please call set_gamma before fl_init" );
+		M_err( "fl_set_gamma",
+			   "Ignored. Please call fl_set_gamma before fl_init" );
 		return;
     }
 
     if ( r <= 1.e-3 || g <= 1.e-3 || b <= 1.e-3 )
     {
-		M_warn( "Gamma", "BadValue %4.2f %4.2f %4.2f. Ignored", r, g, b );
+		M_warn( "fl_set_gamma", "BadValue %4.2f %4.2f %4.2f. Ignored",
+				r, g, b );
 		return;
     }
 
@@ -285,7 +287,7 @@ be_nice( void )
     {
 		XColor xc;
 
-		M_warn( "BeNice", "Black=%ld White=%ld", black, white );
+		M_warn( "be_nice", "Black = %ld White = %ld", black, white );
 
 		/* As a minimum, we should preserve black & white */
 
@@ -295,33 +297,33 @@ be_nice( void )
 			xc.red = xc.green = xc.blue = 0;
 			xc.pixel = 0;
 			XAllocColor( flx->display, fli_colormap( fl_vmode ), &xc );
-			M_warn( 0, "   Get Black=%ld", xc.pixel );
+			M_warn( "be_nice", "Get Black = %ld", xc.pixel );
 
 			if ( white == 1 )
 			{
 				xc.pixel = white;
 				xc.red = xc.green = xc.blue = 0xffff;
 				XAllocColor( flx->display, fli_colormap( fl_vmode ), &xc );
-				M_warn( 0, "   Get White=%ld", xc.pixel );
+				M_warn( "be_nice", "Get White = %ld", xc.pixel );
 			}
 		}
 		else if ( white == 0 )
 		{
 			xc.red = xc.green = xc.blue = 0xffff;
 			XAllocColor( flx->display, fli_colormap( fl_vmode ), &xc );
-			M_warn( 0, "   Get White=%ld", xc.pixel );
+			M_warn( "be_nice", "Get White = %ld", xc.pixel );
 
 			if ( black == 1 )
 			{
 				xc.red = xc.green = xc.blue = black;
 				xc.pixel = 0;
 				XAllocColor( flx->display, fli_colormap( fl_vmode ), &xc );
-				M_warn( 0, "   Get Black=%ld", xc.pixel );
+				M_warn( "be_nice", "Get Black = %ld", xc.pixel );
 			}
 		}
     }
 
-    M_warn( "BeNice", "Total %d colors copied", save > 0 ? save : 2 );
+    M_warn( "be_nice", "Total %d colors copied", save > 0 ? save : 2 );
 }
 
 
@@ -373,7 +375,7 @@ fill_map( void )
     lut = fl_state[ fl_vmode ].lut;
     fli_dithered( fl_vmode ) = fli_depth( fl_vmode ) <= 2;
 
-    M_warn( "FillMap", "Trying to get %d colors", pred );
+    M_warn( "fill_map", "Trying to get %d colors", pred );
 
     xc.flags = DoRed | DoGreen | DoBlue;
 
@@ -431,7 +433,7 @@ get_private_cmap( int vmode )
     int ok,
 		i;
 
-    M_warn( "PriavatMap", "getting private colormap" );
+    M_warn( "get_private_cmap", "getting private colormap" );
 
     /* Get a private colormap */
 
@@ -441,7 +443,7 @@ get_private_cmap( int vmode )
 										AllocNone : AllocAll );
     if ( ! fli_map( vmode ) )
     {
-		M_err( "PrivateMap", "Can't create Colormap!" );
+		M_err( "get_private_cmap", "Can't create Colormap!" );
 		exit( 0 );
     }
 
@@ -461,7 +463,7 @@ get_private_cmap( int vmode )
     for ( i = builtin; i < FL_MAX_COLS; i++ )
 		lut[ i ] = i;
 
-    M_warn( "PrivateMap", "%s %s succesful",
+    M_warn( "get_private_cmap", "%s %s succesful",
 			fl_vclass_name( vmode ), ok ? "" : "not" );
 
     return ok;
@@ -485,12 +487,12 @@ get_standard_cmap( int vmode )
 		         XA_RGB_GRAY_MAP : XA_RGB_DEFAULT_MAP;
 
 #if FL_DEBUG >= ML_ERR
-    M_warn( "Stdcmap", "Getting standard colormap" );
+    M_warn( "get_standard_cmap", "Getting standard colormap" );
 #endif
 
     if ( ! XGetStandardColormap( flx->display, fl_root, &stdcmap, mapid ) )
     {
-		M_err( "Stdcmap", "Can't get standard map" );
+		M_err( "get_standard_cmap", "Can't get standard map" );
 		return 0;
     }
 
@@ -529,7 +531,7 @@ get_shared_cmap( int vmode )
     if ( fli_visual( vmode ) == DefaultVisual( flx->display, fl_screen ) )
     {
 		fli_map( vmode ) = DefaultColormap( flx->display, fl_screen );
-		M_warn( "ShareCmap", "Using default map %ld for %s",
+		M_warn( "get_shared_cmap", "Using default map %ld for %s",
 				fli_map( vmode ), fl_vclass_name( vmode ) );
     }
     else
@@ -538,14 +540,14 @@ get_shared_cmap( int vmode )
 											fli_visual( vmode ),
 											vmode != FL_DirectColor ?
 											AllocNone : AllocAll );
-		M_warn( "ShareMap", " NewMap %ld(0x%lx) for %s(ID=0x%lx)",
+		M_warn( "get_shared_cmap", " NewMap %ld (0x%lx) for %s (ID = 0x%lx)",
 				fli_map( vmode ), fli_map( vmode ), fl_vclass_name( vmode ),
 				fli_visual( vmode )->visualid );
     }
 
     if ( ! fli_map( vmode ) )
     {
-		M_err( "ShareMap", "Error getting colormaps" );
+		M_err( "get_shared_cmap", "Error getting colormaps" );
 		exit( 1 );
     }
 
@@ -582,7 +584,8 @@ get_shared_cmap( int vmode )
 
     if ( ! ok )
     {
-		M_warn( "ShareCmap", "can't share for %s", fl_vclass_name( vmode ) );
+		M_warn( "get_shared_cmap", "can't share for %s",
+				fl_vclass_name( vmode ) );
 		fli_map( vmode ) = XCopyColormapAndFree( flx->display,
 												 fli_map( vmode ) );
     }
@@ -621,11 +624,11 @@ fli_create_gc( Window win )
 
     /* Need to create new GCs */
 
-    M_warn( "CreateGC", "For %s", fl_vclass_name( fl_vmode ) );
+    M_warn( "fli_create_gc", "For %s", fl_vclass_name( fl_vmode ) );
 
     if ( ! fli_gray_pattern[ 1 ] )
     {
-		M_err( "CreateGC", "gray pattern not initialized" );
+		M_err( "fli_create_gc", "gray pattern not initialized" );
 		exit( 1 );
     }
 
@@ -703,7 +706,7 @@ fli_init_colormap( int vmode )
     if ( fli_map( vmode ) )
     {
 #if FL_DEBUG >= ML_DEBUG
-		M_info( "InitColormap", "%s is ok", fl_vclass_name( vmode ) );
+		M_info( "fli_init_colormap", "%s is ok", fl_vclass_name( vmode ) );
 #endif
 		return;
     }
@@ -718,7 +721,7 @@ fli_init_colormap( int vmode )
 		max_server_cols = 1L << fli_depth( vmode );
 
     predefined_cols = FL_min( builtin, max_server_cols );
-    M_info( "BestVisual", "MaxColors=%d PredefCol=%d",
+    M_info( "fli_init_colormap", "MaxColors=%d PredefCol=%d",
 			max_server_cols, predefined_cols );
 
     fli_init_stipples( );
@@ -748,7 +751,7 @@ fli_init_colormap( int vmode )
     if ( cols_in_default_visual <= 0 )
 		cols_in_default_visual = 80;
 
-    M_warn( "DefaultColormap", "%ld (0x%lx)", defmap, defmap );
+    M_warn( "fli_init_colormap", "%ld (0x%lx)", defmap, defmap );
 
     XQueryColors( flx->display, defmap, defaultc,
 				  FL_min( cols_in_default_visual, DEFAULT_SAVE ) );
@@ -765,7 +768,8 @@ fli_init_colormap( int vmode )
 		/* if unable to share colormaps, we can either get a private colormap
 		   or force substitutions */
 #if 1
-		M_err( 0, "Failed to share colors. Using private colormap" );
+		M_err( "fli_init_colormap",
+			   "Failed to share colors. Using private colormap" );
 		ok = get_private_cmap( vmode );
 #else
 		ok = 1;
@@ -776,11 +780,12 @@ fli_init_colormap( int vmode )
 
     if ( ! ok )
     {
-		M_err( "Init", "I screwed up or you have a weird workstatation" );
+		M_err( "fli_init_colormap",
+			   "I screwed up or you have a weird workstatation" );
 		exit( 1 );
     }
 
-    M_warn( "InitCMap", "%s Done", fl_vclass_name( vmode ) );
+    M_warn( "fli_init_colormap", "%s Done", fl_vclass_name( vmode ) );
 
 #if FL_DEBUG >= ML_WARN
     fli_dump_state_info( vmode, "FLMap" );
@@ -809,7 +814,7 @@ fl_get_pixel( FL_COLOR col )
 
 	if ( col >= FL_MAX_COLS )
 	{
-		M_err( "FLGetPixel", "Bad request %lu", col );
+		M_err( "fl_get_pixel", "Bad request %lu", col );
 		return 0;
 	}
 
@@ -1017,7 +1022,7 @@ fl_mapcolor( FL_COLOR col,
     /* If requested color is reserved, warn */
 
     if ( col < FL_BUILT_IN_COLS )
-		M_warn( "MapColor", "Changing reserved color" );
+		M_warn( "fl_mapcolor", "Changing reserved color" );
 
     /* Must invalidate color cache */
 
@@ -1028,7 +1033,8 @@ fl_mapcolor( FL_COLOR col,
 
     if ( col >= flmapsize )
     {
-		M_err( "MapColor", "Only %d indexed colors are supported", flmapsize );
+		M_err( "fl_mapcolor",
+			   "Only %d indexed colors are supported", flmapsize );
 		return 0;
     }
 
@@ -1094,7 +1100,7 @@ fl_mapcolor( FL_COLOR col,
 
     if ( ! cur_mapvals[ fl_vmode ] )
     {
-		M_warn( "MapColor", "ColormapFull. Using substitutions" );
+		M_warn( "fl_mapcolor", "ColormapFull. Using substitutions" );
 
 		totalcols = FL_min( FL_MAX_COLS, 1L << fli_depth( fl_vmode ) );
 		cur_map = fl_calloc( totalcols + 1, sizeof *cur_map );
@@ -1133,11 +1139,11 @@ fl_mapcolor( FL_COLOR col,
     exact.flags = DoRed | DoGreen | DoBlue;
 
     if ( ! XAllocColor( flx->display, fli_colormap( fl_vmode ), &exact ) )
-		M_warn( "MapColor", "Something is wrong - will proceed" );
+		M_warn( "fl_mapcolor", "Something is wrong - will proceed" );
 
 
 #if FL_DEBUG >= ML_DEBUG
-    M_warn( "MapColor", "(%d %d %d)<->(%d %d %d)",
+    M_warn( "fl_mapcolor", "(%d %d %d)<->(%d %d %d)",
 			r, g, b, cur_map[ j ].red, cur_map[ j ].green, cur_map[ j ].blue );
 #endif
 
@@ -1312,29 +1318,27 @@ fli_dump_state_info( int          mode,
     if ( ! XMatchVisualInfo( flx->display, fl_screen, fli_depth( mode ),
 							 fli_class( mode ), &xvi ) )
     {
-		M_err( "StateInfo", "Can't match listed visual" );
+		M_err( "fli_dump_state_info", "Can't match listed visual" );
 		exit( 1 );
     }
 
-    if ( fli_visual( mode )->visualid != xvi.visualid )
-    {
-		/* Possible on SGI with OpenGL selected visuals */
+	/* Possible on SGI with OpenGL selected visuals */
 
-		M_warn( "StateInfo", "inconsistent visualID, probably OK" );
-    }
+    if ( fli_visual( mode )->visualid != xvi.visualid )
+
+		M_warn( "fli_dump_state_info", "inconsistent visualID, probably OK" );
 
     /* State info consistency */
 
     if ( fli_depth( mode ) != fs->xvinfo->depth )
     {
-		M_err( "StateInfo", "Bad Depth" );
+		M_err( "fli_dump_state_info", "Bad Depth" );
 		exit( 1 );
     }
 
     if ( fli_class( mode ) != fs->xvinfo->class )
     {
-		fprintf( stderr, "Bad visual class\n" );
-		M_err( "StateInfo", "Bad visual class" );
+		M_err( "fli_dump_state_info", "Bad visual class" );
 		exit( 1 );
     }
 }
@@ -1352,14 +1356,14 @@ fl_mode_capable( int mode,
 
     if ( mode < 0 || mode > 5 )
     {
-		M_err( "GraphicsMode", "Bad mode=%d", mode );
+		M_err( "fl_mode_capable", "Bad mode=%d", mode );
 		return 0;
     }
 
     cap = fli_depth( mode ) >= FL_MINDEPTH && fli_visual( mode );
 
     if ( ! cap && warn )
-		M_warn( "CheckGMode", "Not capable of %s at depth=%d",
+		M_warn( "fl_mode_capable", "Not capable of %s at depth=%d",
 				fl_vclass_name( mode ), fli_depth( mode ) );
 
     return cap;
@@ -1488,7 +1492,7 @@ fl_create_colormap( XVisualInfo * xv,
 
 		if ( k )
 		{
-			M_warn( "CreateColormap", "free %d\n", k );
+			M_warn( "fl_create_colormap", "free %d\n", k );
 			XFreeColors( flx->display, cmap, pixels, k, 0 );
 		}
     }
@@ -1518,7 +1522,8 @@ bad_color_handler( Display     * d    FL_UNUSED_ARG,
 				   XErrorEvent * xev )
 {
     if ( xev->error_code == BadAccess )
-		M_warn( "XFreeColor", "bad pixel" );
+		M_warn( "bad_color_handler", "bad pixel" );
+
     return 0;
 }
 
@@ -1560,7 +1565,7 @@ fl_free_colors( FL_COLOR * c,
 		/* If requested color is reserved, warn */
 
 		if ( *c < FL_FREE_COL1 )
-			M_warn( "MapColor", "Changing reserved color" );
+			M_warn( "fl_free_colors", "Freeing reserved color" );
 
 		/* Must invalidate color cache */
 

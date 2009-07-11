@@ -319,7 +319,7 @@ fl_get_defaults( FL_IOPT * cntl )
 {
     if ( ! fl_display )
     {
-		M_err( "GetDefault", "You forgot to call fl_initialize" );
+		M_err( "fl_get_defaults", "You forgot to call fl_initialize" );
 		exit( 1 );
     }
 
@@ -429,11 +429,11 @@ handle_applresdir( const char * rstr,
     for ( tok = strtok( rbuf, ":" ); tok; tok = strtok( 0, ":" ) )
     {
         fl_snprintf( buf, sizeof buf,"%s/%s", tok,appclass );
-		M_info( 0, "Trying XAPPLRESDIR: %s", buf );
+		M_info( "handle_applresdir", "Trying XAPPLRESDIR: %s", buf );
 		if ( ( fdb = XrmGetFileDatabase( buf ) ) )
 		{
 			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( 0, "  XAPPLRESDIR %s loaded", buf );
+			M_warn( "handle_applresdir", "XAPPLRESDIR %s loaded", buf );
 		}
     }
 }
@@ -453,7 +453,7 @@ init_resource_database( const char *appclass )
 
     if ( ! fl_display )
     {
-		M_err( "InitResource", "fl_initialize is not called" );
+		M_err( "init_resource_database", "fl_initialize is not called" );
 		return;
     }
 
@@ -472,63 +472,63 @@ init_resource_database( const char *appclass )
 	*/
 
     fl_snprintf( buf, sizeof buf, "DECW$SYSTEM_DEFAULTS:%s.DAT", appclass );
-    M_info( 0, "Trying Sys_default: %s", buf );
+    M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
 		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( 0, "   system default %s loaded", buf );
+		M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
     fl_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:%s.DAT", appclass );
-    M_info( 0, "Trying User_default: %s", buf );
+    M_info( "init_resource_database", "Trying User_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
 		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( 0, "   system default %s loaded", buf );
+		M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
     fl_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT" );
-    M_info( 0, "Trying Sys_default: %s", buf );
+    M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
 		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( 0, "   system default %s loaded", buf );
+		M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
-    M_info( 0, "Trying RESOURCE_MANAGER" );
+    M_info( "init_resource_database", "Trying RESOURCE_MANAGER" );
     if ( ( rstr = XResourceManagerString( fl_display ) ) )
     {
 		if ( ( fdb = XrmGetStringDatabase( rstr ) ) )
 		{
 			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( 0, "   RESOURCE_MANAGER loaded" );
+			M_warn( "init_resource_database", "RESOURCE_MANAGER loaded" );
 		}
     }
 #else /* !VMS */
 
     fl_snprintf( buf, sizeof buf, "/usr/lib/X11/app-defaults/%s", appclass );
-    M_info( 0, "Trying Sys_default: %s", buf );
+    M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
 		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( 0, "   system default %s loaded", buf );
+		M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
     /* try XAPPLRESDIR */
 
-    M_info( 0, "Trying XAPPLRESDIR" );
+    M_info( "init_resource_database", "Trying XAPPLRESDIR" );
     if ( ( rstr = getenv( "XAPPLRESDIR" ) ) )
 		handle_applresdir( rstr, appclass );
 
     /* try server defined resources */
 
-    M_info( 0, "Trying RESOURCE_MANAGER" );
+    M_info( "init_resource_database", "Trying RESOURCE_MANAGER" );
     if ( ( rstr = XResourceManagerString( fl_display ) ) )
     {
 		if ( ( fdb = XrmGetStringDatabase( rstr ) ) )
 		{
 			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( 0, "   RESOURCE_MANAGER loaded" );
+			M_warn( "init_resource_database", "RESOURCE_MANAGER loaded" );
 		}
     }
     else
@@ -538,31 +538,31 @@ init_resource_database( const char *appclass )
 		if ( ( rstr = getenv( "HOME" ) ) )
 		{
             fl_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
-			M_info( 0, "Trying %s", buf );
+			M_info( "init_resource_database", "Trying %s", buf );
 			if ( ( fdb = XrmGetFileDatabase( buf ) ) )
 			{
 				XrmMergeDatabases( fdb, &fldatabase );
-				M_warn( 0, "   %s loaded", buf );
+				M_warn( "init_resource_database", "%s loaded", buf );
 			}
 		}
     }
 
     /* load file XENVIRONMENT */
 
-    M_info( 0, "Trying $XEVIRONMENT" );
+    M_info( "init_resource_database", "Trying $XEVIRONMENT" );
     if ( ( rstr = getenv( "XENVIRONMENT" ) ) )
     {
 		if ( ( fdb = XrmGetFileDatabase( rstr ) ) )
 		{
 			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( 0, "   %s loaded", rstr );
+			M_warn( "init_resource_database", "%s loaded", rstr );
 		}
     }
     else
     {
 		/* ~/.Xdefaults-<hostname> */
 
-		M_info( 0, "Trying ~/.Xdefaults-<hostname>" );
+		M_info( "init_resource_database", "Trying ~/.Xdefaults-<hostname>" );
 		if ( ( rstr = getenv( "HOME" ) ) )
 		{
 			int l;
@@ -570,11 +570,11 @@ init_resource_database( const char *appclass )
             fl_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
 			l = strlen( strcat( buf, "-" ) );
 			gethostname( buf + l, sizeof buf - l );
-			M_info( 0, "Trying %s", buf );
+			M_info( "init_resource_database", "Trying %s", buf );
 			if ( ( fdb = XrmGetFileDatabase( buf ) ) )
 			{
 				XrmMergeDatabases( fdb, &fldatabase );
-				M_warn( 0, "   %s loaded", buf );
+				M_warn( "init_resource_database", "%s loaded", buf );
 			}
 		}
     }
@@ -584,7 +584,8 @@ init_resource_database( const char *appclass )
 
     if ( ! fldatabase )
     {
-		M_warn( "InitResource", "Can't find any resource databases!" );
+		M_warn( "init_resource_database",
+				"Can't find any resource databases!" );
 		return;
     }
 }
@@ -688,7 +689,7 @@ fl_get_resource( const char * rname,	/* resource name */
 			break;
 
 		default:
-			M_err( "GetResource", "Unknown type %d", dtype );
+			M_err( "fl_get_resource", "Unknown type %d", dtype );
 			return NULL;
 	}
 
@@ -742,7 +743,7 @@ fli_init_resources( void )
     if ( fli_cntl.sync )
     {
 		XSynchronize( fl_display, 1 );
-		M_err( 0, "**** Synchronous Mode ********" );
+		M_err( "fli_init_resources", "**** Synchronous Mode ********" );
 		fli_set_debug_level( 4 );
     }
 }
@@ -921,7 +922,8 @@ fl_initialize( int        * na,
 
     if ( ! na || ! *na )
     {
-		fprintf( stderr, "XForms: argc == 0 or argv == NULL detected\n" );
+		M_err( "fl_initialize",
+			   "XForms: argc == 0 or argv == NULL detected\n" );
 		exit( 1 );
     }
 
@@ -999,7 +1001,7 @@ fl_initialize( int        * na,
         /* if no display is set, there is no guarantee that buf
            is long enough to contain the DISPLAY setting */
 
-		M_err( 0, "%s: Can't open display %s", fl_argv[ 0 ],
+		M_err( "fl_initialize", "%s: Can't open display %s", fl_argv[ 0 ],
 			   XDisplayName( buf[ 0 ] ? buf : 0 ) );
 		return 0;
     }
@@ -1046,12 +1048,12 @@ fl_initialize( int        * na,
 
     fl_snprintf( disp_name, sizeof disp_name, "%s.name", fl_app_name );
     fl_snprintf( disp_cls,  sizeof disp_cls , "%s.Name", fl_app_class );
-    M_warn( 0, "trying %s", disp_name );
+    M_warn( "fl_initialize", "Trying display %s", disp_name );
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
     {
 		fl_app_name = fl_strdup( xval.addr );
-		M_warn( 0, "Change AppName from %s to %s", fl_ori_app_name,
-				fl_app_name );
+		M_warn( "fl_initialize", "Changed AppName from %s to %s",
+				fl_ori_app_name, fl_app_name );
     }
 
     /* Merge  other resource database */
@@ -1127,7 +1129,8 @@ fl_initialize( int        * na,
 
     if ( fl_root != fl_vroot )
     {
-		M_warn( "FlInit", "fl_root=%lu fl_vroot=%lu", fl_root, fl_vroot );
+		M_warn( "fl_initialize", "fl_root = %lu fl_vroot = %lu",
+				fl_root, fl_vroot );
 
 		/* tvtwm requires this to position a window relative to the current
 		   desktop */
@@ -1142,12 +1145,12 @@ fl_initialize( int        * na,
     ydpi = fl_scrh * 25.4 / DisplayHeightMM( fl_display, fl_screen );
 
     if ( xdpi / ydpi > 1.05 || ydpi / xdpi < 0.95 )
-		M_warn( "FlInit", "NonSquarePixel %.1f %.1f", xdpi, ydpi );
+		M_warn( "fl_initialize", "NonSquarePixel %.1f %.1f", xdpi, ydpi );
 
     fli_dpi = ( xdpi + ydpi ) / 2;
     fli_dpi = ( ( int ) ( fli_dpi * 10.0 + 0.3 ) ) * 0.1;
 
-    M_info( 0, "screen DPI=%f", fli_dpi );
+    M_info( "fl_initialize", "screen DPI = %f", fli_dpi );
 
     fl_vmode = fli_initialize_program_visual( );
     fli_init_colormap( fl_vmode );
@@ -1188,7 +1191,6 @@ fl_initialize( int        * na,
 
     fli_default_xswa( );
     fli_init_stipples( );
-    fli_set_err_msg_func( fl_show_alert );
 
     /* If using non-default visual or private colormap, need a window with
        correct visual/colormap and depth */
@@ -1228,7 +1230,7 @@ fl_initialize( int        * na,
 
     if ( fli_context->max_request_size < 4096 )
     {
-		M_err( "init", "Something is wrong with max_request_size: %ld",
+		M_err( "fl_initialize", "Something is wrong with max_request_size: %ld",
 			   fli_context->max_request_size );
 		fli_context->max_request_size = 4096;
     }

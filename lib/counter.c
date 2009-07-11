@@ -580,7 +580,8 @@ fl_set_counter_value( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		M_err( "SetCounterValue", "%s not a counter", ob ? ob->label : "" );
+		M_err( "fl_set_counter_value", "%s not a counter",
+			   ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -623,7 +624,8 @@ fl_set_counter_bounds( FL_OBJECT * ob,
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		M_err( "CounterBounds", "%s not a counter", ob ? ob->label : "" );
+		M_err( "fl_set_counter_bounds", "%s not a counter",
+			   ob ? ob->label : "" );
 		return;
     }
 #endif
@@ -708,7 +710,8 @@ fl_get_counter_value( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		M_err( "GetCounterValue", "%s not a counter", ob ? ob->label : "" );
+		M_err( "fl_get_counter_value", "%s not a counter",
+			   ob ? ob->label : "" );
 		return 0;
     }
 #endif

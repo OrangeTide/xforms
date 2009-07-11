@@ -51,83 +51,41 @@ fli_set_form_window( FL_FORM * form )
 
 
 /***************************************
- * remove RCS keywords
- ***************************************/
-
-const char *
-fli_rm_rcs_kw( const char * s )
-{
-    static unsigned char buf[ 5 ][ 255 ];
-    static int nbuf;
-    unsigned char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
-    int left = 0,
-		lastc = -1;
-
-
-    while ( *s && ( q - buf[ nbuf ] ) < ( int ) sizeof buf[ nbuf ] - 2 )
-    {
-		switch ( *s )
-		{
-			case '$':
-				if ( ( left = ! left ) )
-					while ( *s && *s != ':' )
-						s++;
-				break;
-
-			default:
-				/* copy the char and remove extra space */
-				if ( ! ( lastc == ' ' && *s == ' ' ) )
-					*q++ = lastc = *s;
-				break;
-		}
-		s++;
-    }
-
-    *q = '\0';
-
-    return ( const char * ) buf[ nbuf ];
-}
-
-
-/***************************************
  * Function is kept at the moment only for backward compatibility
  ***************************************/
 
-static int showerrors = 1;
-
 void
-fl_show_errors( int y )
+fl_show_errors( int y   FL_UNUSED_ARG )
 {
-    showerrors = y;
 }
 
 
 /***************************************
- * for debugging
+ * For debugging
  ***************************************/
 
 #define VN( v )  { v, #v }
 
 static FLI_VN_PAIR flevent[ ] =
 {
-    VN( FL_ENTER ),
-	VN( FL_LEAVE ),
-	VN( FL_PUSH ),
-	VN( FL_RELEASE ),
-    VN( FL_STEP ),
-	VN( FL_SHORTCUT ),
-	VN( FL_UPDATE ),
-	VN( FL_MOTION ),
-    VN( FL_KEYPRESS ),
-	VN( FL_DRAW ),
-	VN( FL_FOCUS ),
-	VN( FL_UNFOCUS ),
-    VN( FL_FREEMEM ),
+    VN( FL_ENTER     ),
+	VN( FL_LEAVE     ),
+	VN( FL_PUSH      ),
+	VN( FL_RELEASE   ),
+    VN( FL_STEP      ),
+	VN( FL_SHORTCUT  ),
+	VN( FL_UPDATE    ),
+	VN( FL_MOTION    ),
+    VN( FL_KEYPRESS  ),
+	VN( FL_DRAW      ),
+	VN( FL_FOCUS     ),
+	VN( FL_UNFOCUS   ),
+    VN( FL_FREEMEM   ),
 	VN( FL_DRAWLABEL ),
-	VN( FL_DBLCLICK ),
-    VN( FL_OTHER ),
-	VN( FL_ATTRIB ),
-    VN( -1 )
+	VN( FL_DBLCLICK  ),
+    VN( FL_OTHER     ),
+	VN( FL_ATTRIB    ),
+    VN( -1           )
 };
 
 
@@ -143,43 +101,43 @@ fli_event_name( int ev )
 
 static FLI_VN_PAIR flclass[ ] =
 {
-    VN( FL_BUTTON ),
-	VN( FL_LIGHTBUTTON ),
-    VN( FL_ROUNDBUTTON ),
+    VN( FL_BUTTON        ),
+	VN( FL_LIGHTBUTTON   ),
+    VN( FL_ROUNDBUTTON   ),
 	VN( FL_ROUND3DBUTTON ),
-    VN( FL_CHECKBUTTON ),
-	VN( FL_BITMAPBUTTON ),
-	VN( FL_PIXMAPBUTTON ),
-    VN( FL_BITMAP ),
-	VN( FL_PIXMAP ),
-	VN( FL_BOX ),
-	VN( FL_TEXT ),
-    VN( FL_MENU ),
-	VN( FL_CHART ),
-	VN( FL_CHOICE ),
-    VN( FL_COUNTER ),
-	VN( FL_SLIDER ),
-	VN( FL_VALSLIDER ),
-	VN( FL_INPUT ),
-    VN( FL_BROWSER ),
-	VN( FL_DIAL ),
-	VN( FL_TIMER ),
-	VN( FL_CLOCK ),
-    VN( FL_POSITIONER ),
-	VN( FL_FREE ),
-	VN( FL_XYPLOT ),
-    VN( FL_FRAME ),
-	VN( FL_LABELFRAME ),
-	VN( FL_CANVAS ),
-    VN( FL_GLCANVAS ),
-	VN( FL_TABFOLDER ),
-	VN( FL_SCROLLBAR ),
-    VN( FL_SCROLLBUTTON ),
-	VN( FL_MENUBAR ),
-	VN( FL_IMAGECANVAS ),
-    VN( FL_TEXTBOX ),
-    VN( FL_SPINNER ),
-    VN( -1 )
+    VN( FL_CHECKBUTTON   ),
+	VN( FL_BITMAPBUTTON  ),
+	VN( FL_PIXMAPBUTTON  ),
+    VN( FL_BITMAP        ),
+	VN( FL_PIXMAP        ),
+	VN( FL_BOX           ),
+	VN( FL_TEXT          ),
+    VN( FL_MENU          ),
+	VN( FL_CHART         ),
+	VN( FL_CHOICE        ),
+    VN( FL_COUNTER       ),
+	VN( FL_SLIDER        ),
+	VN( FL_VALSLIDER     ),
+	VN( FL_INPUT         ),
+    VN( FL_BROWSER       ),
+	VN( FL_DIAL          ),
+	VN( FL_TIMER         ),
+	VN( FL_CLOCK         ),
+    VN( FL_POSITIONER    ),
+	VN( FL_FREE          ),
+	VN( FL_XYPLOT        ),
+    VN( FL_FRAME         ),
+	VN( FL_LABELFRAME    ),
+	VN( FL_CANVAS        ),
+    VN( FL_GLCANVAS      ),
+	VN( FL_TABFOLDER     ),
+	VN( FL_SCROLLBAR     ),
+    VN( FL_SCROLLBUTTON  ),
+	VN( FL_MENUBAR       ),
+	VN( FL_IMAGECANVAS   ),
+    VN( FL_TEXTBOX       ),
+    VN( FL_SPINNER       ),
+    VN( -1               )
 };
 
 

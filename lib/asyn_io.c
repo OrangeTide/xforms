@@ -87,7 +87,7 @@ collect_fd( void )
     {
 		if ( p->source < 0 )
 		{
-			M_err( "select", "source < 0\n" );
+			M_err( "collect_fd", "source < 0\n" );
 			continue;
 		}
 
@@ -214,12 +214,12 @@ fli_watch_io( FLI_IO_REC * io_rec,
     if ( nf < 0 )     /* something is wrong. */
     {
 		if ( errno == EINTR )
-			M_warn( "WatchIO", "select interrupted by signal" );
+			M_warn( "fli_watch_io", "select interrupted by signal" );
 
 		/* select() on some platforms returns -1 with errno == 0 */
 
 		else if ( errno != 0 )
-			M_err( "select", fli_get_syserror_msg( ) );
+			M_err( "fli_watch_io", fli_get_syserror_msg( ) );
     }
 
     /* time expired */

@@ -467,23 +467,23 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
 {
     FLI_TABFOLDER_SPEC *sp = ob->spec;
     FL_OBJECT *tab;
-    static const char *func = "AddtoFolder";
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( func, "%s not a folder class", ob ? ob->label : "null" );
+		M_err( "fl_addto_tabfolder", "%s not a folder class",
+			   ob ? ob->label : "null" );
 		return 0;
     }
 
     if ( ! form || ! title )
     {
-		M_err( func, "Invalid argument(s)" );
+		M_err( "fl_addto_tabfolder", "Invalid argument(s)" );
 		return 0;
     }
 
     if ( form->attached )
     {
-		M_err( func, "Seems the form already attached" );
+		M_err( "fl_addto_tabfolder", "Seems the form already attached" );
 		return 0;
     }
 
@@ -707,7 +707,8 @@ fl_set_folder( FL_OBJECT * ob,
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "SetFolder", "%s is not tabfolder", ob ? ob->label : "null" );
+		M_err( "fl_set_folder", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return;
     }
 
@@ -734,7 +735,7 @@ fl_set_folder_byname( FL_OBJECT  * ob,
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "SetFolderName", "%s is not tabfolder",
+		M_err( "fl_set_folder_byname", "%s is not tabfolder",
 			   ob ? ob->label : "null" );
 		return;
     }
@@ -761,7 +762,8 @@ fl_set_folder_bynumber( FL_OBJECT * ob,
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "SetFolderNum", "%s is not tabfolder", ob ? ob->label : "null" );
+		M_err( "fl_set_folder_bynumber", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return;
     }
 
@@ -804,7 +806,8 @@ fl_get_folder_number( FL_OBJECT * ob )
 {
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "GetFolderNum", "%s is not tabfolder", ob ? ob->label : "null" );
+		M_err( "fl_get_folder_number", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return 0;
     }
 
@@ -820,7 +823,8 @@ fl_get_active_folder_number( FL_OBJECT * ob )
 {
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "GetFolderNum", "%s is not tabfolder", ob ? ob->label : "null" );
+		M_err( "fl_get_active_folder_number", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return 0;
     }
 
@@ -838,7 +842,8 @@ fl_get_folder( FL_OBJECT * ob )
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "GetFolder", "%s is not tabfolder", ob ? ob->label : "null" );
+		M_err( "fl_get_folder", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return NULL;
     }
 
@@ -857,7 +862,7 @@ fl_get_folder_name( FL_OBJECT * ob )
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "GetFolderName", "%s is not tabfolder",
+		M_err( "fl_get_folder_name", "%s is not tabfolder",
 			   ob ? ob->label : "null" );
 		return NULL;
     }
@@ -877,7 +882,8 @@ fl_get_active_folder( FL_OBJECT * ob )
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "GetFolder", "%s is not tabfolder", ob ? ob->label : "null" );
+		M_err( "fl_get_active_folder", "%s is not tabfolder",
+			   ob ? ob->label : "null" );
 		return NULL;
     }
 
@@ -898,7 +904,7 @@ fl_get_active_folder_name( FL_OBJECT * ob )
 
     if ( ! IsFolderClass( ob ) )
     {
-		M_err( "GetActiveFolderName", "%s is not tabfolder",
+		M_err( "fl_get_active_folder_name", "%s is not tabfolder",
 			  ob ? ob->label : "null" );
 		return NULL;
     }
