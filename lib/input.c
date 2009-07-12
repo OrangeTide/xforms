@@ -1349,7 +1349,11 @@ handle_input( FL_OBJECT * obj,
 			if ( obj->type == FL_MULTILINE_INPUT )
 				sp->dummy->focus = 1;
 			if ( sp->str )
+			{
 				sp->position = - sp->position - 1;
+				if ( sp->position > ( int ) strlen( sp->str ) )
+					sp->position = strlen( sp->str );
+			}
 			else
 				sp->position = 0;
 			sp->changed = 0;
@@ -1748,10 +1752,13 @@ fl_set_input( FL_OBJECT  * obj,
 		len = strlen( sp->str );
     }
 
-    /* If no focus, need to remain so */
+    /* Set position of cursor in string to the end (if object doesn't has
+	   focus must be negative of length of strig minus one) */
 
-    if ( sp->position != -1 )
+    if ( sp->position >= 0 )
 		sp->position = len;
+	else
+		sp->position = - len - 1;
 
     sp->endrange = -1;
 
@@ -2108,7 +2115,7 @@ set_default_keymap( int force )
 
 #if FL_DEBUG > ML_WARN
 
-#define Dump( a ) fprintf( stderr, "\t%s: %ld(0x%lx)\n", #a,kmap.a, kmap.a )
+#define Dump( a ) fprintf( stderr, "\t%s: %ld (0x%lx)\n", #a,kmap.a, kmap.a )
 
     if ( fli_cntl.debug > 1 )
     {

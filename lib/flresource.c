@@ -549,7 +549,8 @@ init_resource_database( const char *appclass )
 
     /* load file XENVIRONMENT */
 
-    M_info( "init_resource_database", "Trying $XEVIRONMENT" );
+    M_info( "init_resource_database",
+			"Trying environment variable XEVIRONMENT" );
     if ( ( rstr = getenv( "XENVIRONMENT" ) ) )
     {
 		if ( ( fdb = XrmGetFileDatabase( rstr ) ) )
@@ -1092,7 +1093,7 @@ fl_initialize( int        * na,
 		DumpD( backingStore );
 		fprintf( stderr, "\t%s:%s\n", "coordUnit",
 				 fli_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
-		fprintf( stderr, "\t%s:0x%lx\n", "VisualId", fli_requested_vid );
+		fprintf( stderr, "\t%s: 0x%lx\n", "VisualId", fli_requested_vid );
 
 #ifdef DO_GAMMA_CORRECTION
 		DumpF( rgamma );
@@ -1410,7 +1411,7 @@ fli_get_app_resource( FL_resource * appresource,
 
     for ( ; flr < flrs; flr++ )
 		if ( flr->type == FL_STRING && flr->nbytes == 0 )
-			M_err( "fl_get_app_resources", "%s: buflen==0", flr->res_name );
+			M_err( "fl_get_app_resources", "%s: buflen == 0", flr->res_name );
 	else
 	    fl_get_resource( flr->res_name, flr->res_class,
 						 flr->type, flr->defval, flr->var, flr->nbytes );

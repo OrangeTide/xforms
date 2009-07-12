@@ -101,7 +101,7 @@ fli_XLookupString( XKeyEvent * xkey,
 static int
 xmask2key( unsigned int mask )
 {
-    /* once the FL_XXX_MOUSE is changed to mask, just loose the else */
+    /* Once the FL_XXX_MOUSE is changed to mask, just loose the else */
 
     if ( mask & Button1Mask )
 		return FL_LEFT_MOUSE;
@@ -193,7 +193,7 @@ do_shortcut( FL_FORM  * form,
     {
 		if ( key < 256 )
 		{
-			/* Always a good idea to make Alt_k case insensitive */
+			/* It's always a good idea to make Alt_k case insensitive */
 
 			key1 = FL_ALT_MASK
 				   + ( islower( key ) ? toupper( key ) : tolower( key ) );
@@ -203,7 +203,7 @@ do_shortcut( FL_FORM  * form,
 			key1 = key2 = key + FL_ALT_MASK;
     }
 
-    M_info( "do_shortcut", "win=%lu key=%d %d %d",
+    M_info( "do_shortcut", "win = %ld key = %d %d %d",
 			form->window, key, key1, key2 );
 
     /* Check whether an object has this as a shortcut */
@@ -237,7 +237,7 @@ do_shortcut( FL_FORM  * form,
 					fli_handle_object( obj, FL_SHORTCUT, x, y, key1, xev, 1 );
 				fli_context->mouse_button = FL_SHORTCUT + key1;
 
-				/* this is not exactly correct as shortcut might quit,
+				/* This is not exactly correct as shortcut might quit,
 				   fl_finish will restore the keyboard state */
 
 				if ( fli_keybdcontrol.auto_repeat_mode == AutoRepeatModeOn )
@@ -294,15 +294,15 @@ handle_keyboard( FL_FORM  * form,
     if ( fli_do_shortcut( form, key, x, y, xev ) )
 		return;
 
-    /* Focus policy is done as follows: Input object has the highiest
+    /* Focus policy is done as follows: Input object has the highest
        priority. Next comes the object that wants special keys, finally
-	   followed by mouseobj, having the lowest proiority. */
+	   followed by 'mouseobj', having the lowest proiority. */
 
     special = fli_find_first( form, FLI_FIND_KEYSPECIAL, 0, 0 );
     obj = special ?
 		  fli_find_object( special->next, FLI_FIND_KEYSPECIAL, 0, 0 ) : NULL;
 
-    /* If two or more objects that want keyboard input, none will get it and
+    /* If two or more objects want keyboard input none will get it and
        keyboard input will go to mouseobj instead */
 
     if ( obj && obj != special )
@@ -329,7 +329,7 @@ handle_keyboard( FL_FORM  * form,
 				fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
 			else if ( special && special->wantkey & FL_KEY_SPECIAL )
 			{
-				/* moving the cursor in input field that does not have focus
+				/* Moving the cursor in input field that does not have focus
 				   looks weird */
 
 				if ( special->objclass != FL_INPUT )
@@ -393,7 +393,7 @@ handle_keyboard( FL_FORM  * form,
 		fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
 
 #if FL_DEBUG >= ML_INFO1
-    M_info( "handle_keyboard", "(%d %d)pushing %d to %s\n",
+    M_info( "handle_keyboard", "(%d %d) pushing %d to %s\n",
 			x, y, key, special->label );
 #endif
 }
@@ -451,20 +451,19 @@ fli_handle_form( FL_FORM * form,
 			fli_redraw_form_using_xevent( form, key, xev );
 			break;
 
-		case FL_ENTER:		/* Mouse did enter the form */
+		case FL_ENTER:		/* mouse did enter the form */
 			fli_int.mouseobj = obj;
 			fli_handle_object( fli_int.mouseobj, FL_ENTER, x, y, 0, xev, 1 );
 			break;
 
-		case FL_LEAVE:		         /* Mouse left the form */
+		case FL_LEAVE:		/* mouse left the form */
 			fli_handle_object( fli_int.mouseobj, FL_LEAVE, x, y, 0, xev, 1 );
 			if ( fli_int.pushobj == fli_int.mouseobj )
 				fli_int.pushobj = NULL;
 			fli_int.mouseobj = NULL;
 			break;
 
-		case FL_PUSH:		/* Mouse button was pushed inside the form */
-
+		case FL_PUSH:		/* mouse button was pushed inside the form */
 			/* Change focus: If an input object has the focus make it lose it
 			   (and thus report changes) and then set the focus to either the
 			   object that got pushed (if it's an input object) or back to the
@@ -507,7 +506,7 @@ fli_handle_form( FL_FORM * form,
 				fli_do_radio_push( obj, x, y, key, xev );
 			break;
 
-		case FL_RELEASE:		/* Mouse button was released inside the form */
+		case FL_RELEASE:		/* mouse button was released inside the form */
 			if ( fli_int.pushobj )
 			{
 				obj = fli_int.pushobj;
@@ -517,7 +516,7 @@ fli_handle_form( FL_FORM * form,
 			}
 			break;
 
-		case FL_MOTION:		     /* Mouse position changed in the form */
+		case FL_MOTION:		     /* mouse position changed in the form */
 			/* "Pushable" objects always get FL_MOTION events. Since there's
 			   no direct EnterNotify or LeaveNotify event for objects we
 			   "fake" them when an object gets entered or left. */
@@ -543,11 +542,11 @@ fli_handle_form( FL_FORM * form,
 
 			break;
 
-		case FL_KEYBOARD:		/* A key was pressed */
+		case FL_KEYBOARD:		/* key was pressed */
 			handle_keyboard( form, key, x, y, xev );
 			break;
 
-		case FL_STEP:		/* A simple step */
+		case FL_STEP:		/* simple step */
 			obj = fli_find_first( form, FLI_FIND_AUTOMATIC, 0, 0 );
 
 			if ( obj )
@@ -630,9 +629,9 @@ do_keyboard( XEvent * xev,
 	if ( kbuflen < 0 )
 	{
 		if ( kbuflen != INT_MIN )
-			M_err( "do_keyboard", "keyboad buffer overflow ?" );
+			M_err( "do_keyboard", "keyboad buffer overflow?" );
 		else
-			M_err( "do_keyboard", "fli_XLookupString failed ?" );
+			M_err( "do_keyboard", "fli_XLookupString failed?" );
 
 		return;
 	}
@@ -644,7 +643,7 @@ do_keyboard( XEvent * xev,
 		/* empty */ ;
 	else if ( IsTab( keysym ) )
 	{
-		/* fake a tab key, some systems shift+tab does not generate a tab */
+		/* Fake a tab key, some systems shift+tab do not generate a tab */
 
 		fli_handle_form( fli_int.keyform, formevent, '\t', xev );
 	}
@@ -654,7 +653,7 @@ do_keyboard( XEvent * xev,
 	{
 		unsigned char *ch;
 
-		/* all regular keys, including mapped strings */
+		/* All regular keys, including mapped strings */
 
 		for ( ch = keybuf; ch < keybuf + kbuflen && fli_int.keyform; ch++ )
 			fli_handle_form( fli_int.keyform, formevent, *ch, xev );
@@ -681,7 +680,7 @@ handle_ClientMessage_event( FL_FORM * form,
 		atom_del_win = XInternAtom( xcm->display, "WM_DELETE_WINDOW", 0 );
     }
 
-    /* if delete top-level window, quit unless handlers are installed */
+    /* If delete top-level window, quit unless handlers are installed */
 
     if (    xcm->message_type == atom_protocol
 		 && ( Atom ) xcm->data.l[ 0 ] == atom_del_win )
@@ -1137,13 +1136,13 @@ handle_MotionNotify_event( FL_FORM * evform )
 
 	if ( ! fli_int.mouseform )
 	{
-		M_warn( "handle_MotionNotify_event", "evwin=0x%lx", win );
+		M_warn( "handle_MotionNotify_event", "event win = %ld", win );
 		return;
 	}
 
 	if ( fli_int.mouseform->window != win )
 	{
-		M_warn( "handle_MotionNotify_event", "mousewin=0x%ld evwin=0x%ld",
+		M_warn( "handle_MotionNotify_event", "mousewin = %ld event win = %ld",
 				fli_int.mouseform->window, win );
 		fli_int.mousex += evform->x - fli_int.mouseform->x;
 		fli_int.mousey += evform->y - fli_int.mouseform->y;
@@ -1234,7 +1233,7 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
 	{
 		evform->x = st_xev.xconfigure.x;
 		evform->y = st_xev.xconfigure.y;
-		M_warn( "handle_ConfigureNotify_event", "WMConfigure:x=%d y=%d "
+		M_warn( "handle_ConfigureNotify_event", "WMConfigure:x = %d y = %d"
 				"w=%d h=%d", evform->x, evform->y, st_xev.xconfigure.width,
 				st_xev.xconfigure.height );
 	}
@@ -1515,7 +1514,7 @@ fl_set_idle_callback( FL_APPEVENT_CB   callback,
 
     add_idle_callback( callback, user_data );
 
-    /* if we have idle callbacks, decrease the wait time */
+    /* If we have idle callbacks, decrease the wait time */
 
     delta_msec = FLI_TIMER_RES * ( callback ? 0.8 : 1.0 );
     fli_context->idle_delta = delta_msec;

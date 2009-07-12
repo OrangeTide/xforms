@@ -92,7 +92,7 @@ create_alert( const char * title,
 	fl_get_string_dimension( style, size, but_text, strlen( but_text ),
 							 &w_but, &h_but );
 
-	but_w = FL_max( 90, w_but + 20 );
+	w_but = FL_max( 90, w_but + 20 );
 
 	box_w = FL_max( 400, FL_max( FL_max( w_tit, w_msg ), but_w ) + 80 );
 	box_h = FL_max( h_tit + 20, 30 ) + 5 + h_msg + 30 + h_but + 20;
@@ -157,7 +157,6 @@ show_it( const char * title,
 	}
 	else
 		fl_deactivate_all_forms( );
-
 
 	fd_alert = create_alert( title, msg );
 

@@ -157,7 +157,7 @@ change_pixmap( FL_BUTTON_STRUCT * sp,
 	sp->pixmap = p;
 	sp->mask = shape_mask;
 
-	M_warn( "change_pixmap", "Pixmap=%ld mask=%ld win=%ld",
+	M_warn( "change_pixmap", "Pixmap = %ld mask = %ld win = %ld",
 			p, shape_mask, win );
 
 	if ( psp->gc == None )

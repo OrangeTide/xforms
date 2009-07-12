@@ -64,7 +64,7 @@ fli_handle_event_callbacks( XEvent * xev )
 
     if ( ! fwin )
     {
-		M_warn( "fli_handle_event_callbacks", "Unknown window = 0x%lx",
+		M_warn( "fli_handle_event_callbacks", "Unknown window = %ld",
 				xev->xany.window );
         fli_xevent_name( "Ignored", xev );
         return 1;
@@ -317,7 +317,7 @@ fli_object_qenter( FL_OBJECT * obj )
 {
     if ( ! obj )
     {
-        M_err( "Qenter", "NULL object" );
+        M_err( "fli_object_qenter", "NULL object" );
         return;
     }
 
@@ -684,7 +684,7 @@ fl_XPutBackEvent( XEvent * xev )
         return;
     }
 
-    /* these must be from simulating double buffering, throw them away */
+    /* These must have come from simulating double buffering, throw them away */
 
     if ( xev->type == NoExpose )
     {
@@ -871,13 +871,13 @@ fl_print_xevent_name( const char *   where,
     for ( i = KeyPress, known = 0; ! known && i < LASTEvent; i++ )
         if ( evname[ i ].type == xev->type )
         {
-            fprintf( stderr, "%s Event (%d,w=0x%lx s=%ld) %s ",
+            fprintf( stderr, "%s Event (%d, win = %ld serial = %ld) %s ",
                      where ? where : "",
                      xev->type, win, ( ( XAnyEvent * ) xev)->serial,
                      evname[ i ].name );
 
             if ( xev->type == Expose )
-                fprintf( stderr, "count=%d serial=%lx\n",
+                fprintf( stderr, "count = %d serial = %ld\n",
                          xev->xexpose.count, xev->xexpose.serial );
             else if ( xev->type == LeaveNotify || xev->type == EnterNotify )
                 fprintf(stderr, "Mode %s\n", xev->xcrossing.mode == NotifyGrab ?
@@ -888,7 +888,7 @@ fl_print_xevent_name( const char *   where,
                 fprintf(stderr, "Mode %s\n",
                         xev->xmotion.is_hint ? "Hint" : "Normal" );
             else if ( xev->type == ConfigureNotify )
-                fprintf( stderr, "(x=%d y=%d w=%d h=%d) %s\n",
+                fprintf( stderr, "(x = %d y = %d w = %d h = %d) %s\n",
                          xev->xconfigure.x, xev->xconfigure.y,
                          xev->xconfigure.width, xev->xconfigure.height,
                          xev->xconfigure.send_event ? "Syn" : "Non-Syn" );
@@ -902,7 +902,7 @@ fl_print_xevent_name( const char *   where,
         }
 
     if ( ! known )
-        fprintf( stderr, "Unknown event %d, win=%lu\n", xev->type, win );
+        fprintf( stderr, "Unknown event %d, win = %ld\n", xev->type, win );
 
     return ( XEvent * ) xev;
 }
@@ -1039,7 +1039,7 @@ fli_compress_motion( XEvent * xme )
     do
     {
 #if FL_DEBUG >= ML_DEBUG
-        M_info2( "fli_compress_motion", "win=0x%lx (%d,%d) %s",
+        M_info2( "fli_compress_motion", "win = %ld (%d, %d) %s",
                  xme->xany.window, xme->xmotion.x, xme->xmotion.y,
                  xme->xmotion.is_hint ? "hint" : "" )
 #endif
@@ -1051,8 +1051,8 @@ fli_compress_motion( XEvent * xme )
         int ( *old )( Display *, XErrorEvent * );
 
         /* We must protect against BadWindow here, because we have only
-         * looked for Motion events, and there could be a Destroy event
-         * which makes the XQueryPointer fail as the window is deleted. */
+		   looked for Motion events, and there could be a Destroy event
+		   which makes the XQueryPointer fail as the window is deleted. */
 
         old = XSetErrorHandler( fli_badwin_handler );
         fl_get_win_mouse( xme->xmotion.window,
@@ -1112,7 +1112,7 @@ fl_addto_selected_xevent( Window win,
     XGetWindowAttributes( flx->display, win, &xwa );
     xwa.your_event_mask |= mask;
 
-    /* on some SGI machines, 'your_event_mask' has bogus value 0x80??????,
+    /* On some SGI machines, 'your_event_mask' has bogus value 0x80??????,
        causing an X protocol error. Fix this here */
 
     xwa.your_event_mask &= AllEventsMask;

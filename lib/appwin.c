@@ -59,7 +59,7 @@ static void
 remove_app_win( FLI_WIN * appwin )
 {
 #if FL_DEBUG >= ML_DEBUG
-    M_info( "remove_app_win", "deleting 0x%lx", appwin->win );
+    M_info( "remove_app_win", "deleting window %ld", appwin->win );
 #endif
 
     if ( fli_app_win == appwin )
@@ -106,7 +106,7 @@ get_fl_win_struct( Window win )
 	/* Otherwise create a new structure and append it to the end */
 
 #if FL_DEBUG >= ML_DEBUG
-	M_info( "get_fl_win_struct", "Creating FLI_WIN struct for 0x%lx", win );
+	M_info( "get_fl_win_struct", "Creating FLI_WIN struct for %ld", win );
 #endif
 
 	if ( ( fwin = fl_malloc( sizeof *fwin ) ) == NULL )
@@ -320,7 +320,7 @@ fl_activate_event_callbacks( Window win )
 
     if ( ! fwin )
     {
-		M_err( "fl_activate_event_callbacks", "Unknown window 0x%lx", win );
+		M_err( "fl_activate_event_callbacks", "Unknown window %ld", win );
 		return;
     }
 

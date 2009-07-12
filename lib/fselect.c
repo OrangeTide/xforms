@@ -23,12 +23,8 @@
  *	Copyright (c) 1996-2002	 T.C. Zhao and Mark Overmars
  *	All rights reserved.
  *.
- *
- *
  *	Comprehensive interactive file selector. The actual directory reading
  *	code is isolated in listdir.c
- *
- *	Self contained and initialized code. Otherwise adds 30k to exe size
  */
 
 #ifdef HAVE_CONFIG_H
@@ -56,13 +52,13 @@ static int listdirfirst = 1;	/* list directory first */
 
 /******* GUI parameters ********/
 
-/*	misc. buttons configurable from application program */
+/*	Misc. buttons configurable from application program */
 
 #define MAX_APPBUTT	 3
 
 typedef struct
 {
-	/* due to FD_FSELECTOR, the order of these objects are important. maybe
+	/* Due to FD_FSELECTOR, the order of these objects are important. maybe
 	   put them in a union ? */
 
 	FL_FORM   * fselect;
@@ -134,9 +130,6 @@ allocate_fselector( int a )
 }
 
 
-#define fselector_init( )  if ( ! fs ) allocate_fselector( 0 )
-
-
 /***************************************
  ***************************************/
 
@@ -176,7 +169,8 @@ fl_add_fselector_appbutton( const char * label,
 	if ( ! label || ! *label || ! cb )
 		return;
 
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
 
 	for ( ok = i = 0; ! ok && i < MAX_APPBUTT; i++ )
 		if ( ! fs->appcb[ i ] || ! fs->applabel[ i ][ 0 ] )
@@ -234,7 +228,9 @@ appbutton_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 void
 fl_disable_fselector_cache( int yes )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	fs->disabled_cache = yes;
 }
 
@@ -255,7 +251,7 @@ append_slash( char * d )
 {
 	int n = strlen( d );
 
-	if ( d[ n - 1 ] != '/' )		/* FL_WIN32 */
+	if ( d[ n - 1 ] != '/' )
 	{
 		d[ n++ ] = '/';
 		d[ n ] = '\0';
@@ -265,7 +261,7 @@ append_slash( char * d )
 
 
 /***************************************
- * combine directory and filename to form a complete name
+ * Combine directory and file name to form a complete name
  ***************************************/
 
 static char *
@@ -307,7 +303,7 @@ fli_del_tail_slash( char * d )
 
 /***************************************
  * A file is selected from the browser. Return 1 if valid selection
- * i.e., double-clicked. Note that if a call back is defined,
+ * i.e., double-clicked. Note that if a callback is defined,
  * always return 0
  ***************************************/
 
@@ -366,7 +362,8 @@ fl_set_directory( const char * p )
 {
 	char tmpdir[ FL_PATH_MAX + 2 ];
 
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
 
 	if ( p == NULL )
 	{
@@ -419,20 +416,11 @@ directory_cb( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-static void
-input_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
-		  long		  q	  FL_UNUSED_ARG )
-{
-}
-
-
-/***************************************
- ***************************************/
-
 void
 fl_set_pattern( const char * s )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
 
 	if ( s && strcmp( fs->pattern, s ) )
 	{
@@ -494,7 +482,7 @@ fill_entries( FL_OBJECT  * br,
 		fl_show_alert( "ReadDir", tmpbuf, fli_get_syserror_msg( ), 0 );
 		M_err( "fill_entries", "Can't read %s", lfs->dname );
 
-		/* backup */
+		/* Backup */
 
 		if ( ( p = strrchr( lfs->dname, '/' ) ) )
 			*p = '\0';
@@ -507,7 +495,7 @@ fill_entries( FL_OBJECT  * br,
 	fl_set_object_label( lfs->dirbutt, contract_dirname( lfs->dname, 38 ) );
 	fl_clear_browser( br );
 
-	/* list directories first */
+	/* List directories first */
 
 	if ( listdirfirst )
 	{
@@ -590,12 +578,13 @@ fl_set_fselector_callback( FL_FSCB   fscb,
 	double dy;
 	FL_OBJECT *o;
 
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
 
 	fs->fselect_cb = fscb;
 	fs->callback_data = data;
 
-	/* force creation if not already */
+	/* Force creation if not already exists */
 
 	fl_get_fselector_form( );
 
@@ -682,7 +671,9 @@ fl_set_fselector_callback( FL_FSCB   fscb,
 void
 fl_set_fselector_placement( int place )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	fs->place = place;
 }
 
@@ -693,7 +684,9 @@ fl_set_fselector_placement( int place )
 void
 fl_set_fselector_border( int b )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	fs->border = b;
 }
 
@@ -704,7 +697,9 @@ fl_set_fselector_border( int b )
 void
 fl_invalidate_fselector_cache( void )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	fs->rescan = 1;
 }
 
@@ -715,7 +710,9 @@ fl_invalidate_fselector_cache( void )
 FL_FORM *
 fl_get_fselector_form( void )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	return fs->fselect;
 }
 
@@ -726,7 +723,9 @@ fl_get_fselector_form( void )
 FD_FSELECTOR *
 fl_get_fselector_fdstruct( void )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	return ( FD_FSELECTOR * ) fs;
 }
 
@@ -777,8 +776,8 @@ fl_show_fselector( const char * message,
 	fl_get_fselector_form( );
 	lfs = fs;
 
-	/* update directory only if requested dir is valid. This way, passing
-	   dir == 0 has the effect of keeping where we were the last time */
+	/* Update directory only if requested dir is valid. This way, passing
+	   dir == 0 has the effect of keeping us where we were the last time */
 
 	if ( fl_is_valid_dir( dir ) )
 		strcpy( fs->dname, dir );
@@ -811,11 +810,11 @@ fl_show_fselector( const char * message,
 			fl_hide_object( lfs->appbutt[ i ] );
 	}
 
-	/* check cache settings */
+	/* Check cache settings */
 
 	fl_fit_object_label( lfs->resbutt, 1, 1 );
 
-	/* if selection call back exists, cancel has no meaning as whenver a file
+	/* If selection call back exists, cancel has no meaning as whenver a file
 	   is selected callback is executed and there is no backing out */
 
 	if ( lfs->fselect_cb || lfs->fselect->attached )
@@ -832,14 +831,14 @@ fl_show_fselector( const char * message,
 	fl_set_object_label( lfs->patbutt, lfs->pattern );
 	fl_set_object_label( lfs->dirbutt, contract_dirname( lfs->dname, 38 ) );
 
-	/* fill the browser */
+	/* Fill the browser */
 
 	fill_entries( lfs->browser, lfs->filename, 1 );
 
 	if ( lfs->cancel->lsize != FL_DEFAULT_SIZE )
 		fl_fit_object_label( lfs->cancel, 16, 1 );
 
-	/* if attached to another form, don't show the form. The parent * will
+	/* If attached to another form, don't show the form. The parent * will
 	   handle it */
 
 	if ( lfs->fselect->attached )
@@ -858,7 +857,7 @@ fl_show_fselector( const char * message,
 	{
 		obj = fl_do_only_forms( );
 
-		/* can you say ugly */
+		/* Can you say ugly? */
 
 		if ( obj == lfs->ready && ( tmp = fl_get_input( lfs->input ) ) && *tmp )
 		{
@@ -879,7 +878,8 @@ fl_show_fselector( const char * message,
 			{
 				fill_entries( lfs->browser, 0, 1 );
 				fl_set_input( lfs->input, "" );
-				obj = 0;
+				fl_set_focus_object( lfs->input->form, lfs->input );
+				obj = NULL;
 			}
 			else
 			{
@@ -902,7 +902,7 @@ fl_show_fselector( const char * message,
 		lfs->fselect->sort_of_modal = 0;
 	}
 
-	/* do we really want to remove the fselect_cb ? Previous version did, so
+	/* Do we really want to remove the fselect_cb ? Previous version did, so
 	   keep the way it was */
 
 	fl_set_fselector_callback( 0, 0 );
@@ -917,7 +917,9 @@ fl_show_fselector( const char * message,
 const char *
 fl_get_directory( void )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	return fs->dname;
 }
 
@@ -928,7 +930,9 @@ fl_get_directory( void )
 const char *
 fl_get_pattern( void )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	return fs->pattern;
 }
 
@@ -939,7 +943,9 @@ fl_get_pattern( void )
 const char *
 fl_get_filename( void )
 {
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
+
 	return fs->filename;
 }
 
@@ -1021,7 +1027,7 @@ contract_dirname( const char * dir,
 																	   < ob->w )
 		return buf;
 
-	/* replace middle components with ... */
+	/* Replace middle components with ... */
 
 	if ( ( l = strlen( buf ) ) > limit )
 	{
@@ -1034,7 +1040,7 @@ contract_dirname( const char * dir,
 
 		if ( q > p + 3 )
 		{
-			/* replace whatever in between with X */
+			/* Replace whatever in between with X */
 
 			*++p = '.';
 			*++p = '.';
@@ -1044,7 +1050,7 @@ contract_dirname( const char * dir,
 		}
 	}
 
-	/* final check */
+	/* Final checks */
 
 	if ( strlen( buf ) > ( size_t ) limit )
 	{
@@ -1054,8 +1060,6 @@ contract_dirname( const char * dir,
 		*p++ = '.';
 		*p = '\0';
 	}
-
-	/* final check */
 
 	len = strlen( buf );
 	while (    len > 0
@@ -1146,7 +1150,7 @@ create_form_fselect( void )
 	fl_set_object_boxtype( obj, FL_SHADOW_BOX );
 	fl_set_object_resize( obj, FL_RESIZE_X );
 	fl_set_object_gravity( obj, FL_SouthWest, FL_SouthEast );
-	fl_set_object_callback( obj, input_cb, 0 );
+	fl_set_object_return( obj, FL_RETURN_NONE );
 
 	fs->browser = obj = fl_add_browser( FL_HOLD_BROWSER, 15, 80, 185, 180, "" );
 	fl_set_object_callback( obj, select_cb, 0 );
@@ -1174,7 +1178,7 @@ create_form_fselect( void )
 	fl_set_coordunit( oldunit );
 
 	/* These labels sometimes don't fit the above set sizes, so we
-	   resize the whole file selector box to make them fit    JTT */
+	   resize the whole file selector box to make them fit */
 
 	fl_fit_object_label( fs->dirlabel, 0, 0 );
 	fl_fit_object_label( fs->resbutt, 0, 0 );
@@ -1209,7 +1213,8 @@ fl_set_fselector_fontsize( int fsize )
 {
 	int i;
 
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
 
 	fl_freeze_form( fs->fselect );
 
@@ -1243,7 +1248,8 @@ fl_set_fselector_fontstyle( int fstyle )
 {
 	int i;
 
-	fselector_init( );
+	if ( ! fs )
+		allocate_fselector( 0 );
 
 	fl_freeze_form( fs->fselect );
 

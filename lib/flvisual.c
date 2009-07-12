@@ -68,11 +68,11 @@ RGBmode_init( int v )
     fli_xvisual2flstate( s, s->xvinfo );
 
 #if FL_DEBUG >= ML_WARN
-    M_info( "RGBmode_init", "%s:bits_per_rgb=%d",
+    M_info( "RGBmode_init", "%s: bits_per_rgb = %d",
 			fl_vclass_name( v ), s->rgb_bits );
-    M_info( "RGBmode_init", "RS=%d GS=%d BS=%d",
+    M_info( "RGBmode_init", "RS = %d GS = %d BS = %d",
 			s->rshift, s->gshift, s->bshift );
-    M_info( "RGBmode_init", "RB=%d GB=%d BB=%d",
+    M_info( "RGBmode_init", "RB = %d GB = %d BB = %d",
 			s->rbits, s->gbits, s->bbits );
 #endif
 }
@@ -159,7 +159,7 @@ select_best_visual( void )
 
     if ( ! ( xv = XGetVisualInfo( fl_display, VisualScreenMask, &xvt, &xvn ) ) )
     {
-		M_err( "SelectVisual", " Can't get VisualInfo!" );
+		M_err( "select_best_visual", " Can't get VisualInfo!" );
 		exit( 1 );
     }
 
@@ -190,12 +190,13 @@ select_best_visual( void )
 #if FL_DEBUG >= ML_DEBUG
     if ( fli_cntl.debug )
     {
-		M_warn( 0, "XlibVersion: %s", XlibVersion );
-		M_info( "FlInit", "DPI=%d", fli_dpi );
-		M_warn( 0, "No. of Visuals: %d", xvn );
+		M_warn( "select_best_visual", "XlibVersion: %s", XlibVersion );
+		M_info( "select_best_visual", "DPI = %d", fli_dpi );
+		M_warn( "select_best_visual", "No. of Visuals: %d", xvn );
 		for ( j = 0; j < 6; j++ )
 			if ( bestv[ j ] )
-				fprintf( stderr, "Best %11s: Id=0x%lx Depth=%2u RGBbits=%d\n",
+				fprintf( stderr,
+						 "Best %11s: Id = 0x%lx Depth = %2u RGBbits = %d\n",
 						 fl_vclass_name( fli_class( j ) ), bestv[ j ]->visualid,
 						 bestv[ j ]->depth, bestv[ j ]->bits_per_rgb );
     }
@@ -206,7 +207,8 @@ select_best_visual( void )
 
     if ( max_server_depth < FL_MINDEPTH )
     {
-		M_err( "Init", "MaxServerDepth=%d. XForms requires at least %d. Sorry",
+		M_err( "select_best_visual",
+			   "MaxServerDepth = %d. XForms requires at least %d. Sorry",
 			   max_server_depth, FL_MINDEPTH );
 		exit( 1 );
     }
@@ -230,7 +232,7 @@ select_best_visual( void )
 		bvmode = xv[ 0 ].class;
     else
     {
-		M_err( "", "Can't find an appropriate visual" );
+		M_err( "select_best_visual", "Can't find an appropriate visual" );
 		exit( 1 );
     }
 
@@ -259,7 +261,7 @@ fli_initialize_program_visual( void )
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "fli_initialize_program_visual",
-			"Initial visual: %s(ID=0x%lx) depth=%d",
+			"Initial visual: %s (ID = 0x%lx) depth = %d",
 			fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
 			fli_depth( vmode ) );
 #endif
@@ -342,7 +344,7 @@ fli_initialize_program_visual( void )
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "fli_initialize_program_visual",
-			"SelectedVisual: %s(ID=0x%lx) depth=%d",
+			"SelectedVisual: %s (ID = 0x%lx) depth = %d",
 			fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
 			fli_depth( vmode ) );
 #endif

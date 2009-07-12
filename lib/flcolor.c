@@ -553,7 +553,7 @@ get_shared_cmap( int vmode )
 
 #define PD( v )                                                          \
 	if ( ( DefaultVisual( flx->display, fl_screen ) )->class == ( v ) )	 \
-		fprintf( stderr, "DefaultVisual=%s CurrentVisual=%s\n",			 \
+		fprintf( stderr, "DefaultVisual = %s CurrentVisual = %s\n",			 \
 				 #v, fl_vclass_name( fli_class( vmode ) ) );
 
     if ( fli_cntl.debug )
@@ -721,7 +721,7 @@ fli_init_colormap( int vmode )
 		max_server_cols = 1L << fli_depth( vmode );
 
     predefined_cols = FL_min( builtin, max_server_cols );
-    M_info( "fli_init_colormap", "MaxColors=%d PredefCol=%d",
+    M_info( "fli_init_colormap", "MaxColors = %d PredefCol = %d",
 			max_server_cols, predefined_cols );
 
     fli_init_stipples( );
@@ -788,7 +788,7 @@ fli_init_colormap( int vmode )
     M_warn( "fli_init_colormap", "%s Done", fl_vclass_name( vmode ) );
 
 #if FL_DEBUG >= ML_WARN
-    fli_dump_state_info( vmode, "FLMap" );
+    fli_dump_state_info( vmode, "fli_init_colormap" );
 #endif
 }
 
@@ -1306,11 +1306,11 @@ fli_dump_state_info( int          mode,
     if ( fli_cntl.debug )
     {
 		fprintf( stderr, "In %s", where );
-		fprintf( stderr, " VClass:%s", fl_vclass_name( fli_class( mode ) ) );
-		fprintf( stderr, " VisualID:0x%lx", fs->xvinfo->visualid );
-		fprintf( stderr, " Depth:%d %d",
+		fprintf( stderr, " VClass: %s", fl_vclass_name( fli_class( mode ) ) );
+		fprintf( stderr, " VisualID: 0x%lx", fs->xvinfo->visualid );
+		fprintf( stderr, " Depth: %d %d",
 				 fli_depth( mode ), fs->xvinfo->depth );
-		fprintf( stderr, " Colormap:0x%lx\n", fli_map( mode ) );
+		fprintf( stderr, " Colormap: 0x%lx\n", fli_map( mode ) );
     }
 
     /* Some more checks */
@@ -1356,14 +1356,14 @@ fl_mode_capable( int mode,
 
     if ( mode < 0 || mode > 5 )
     {
-		M_err( "fl_mode_capable", "Bad mode=%d", mode );
+		M_err( "fl_mode_capable", "Bad mode = %d", mode );
 		return 0;
     }
 
     cap = fli_depth( mode ) >= FL_MINDEPTH && fli_visual( mode );
 
     if ( ! cap && warn )
-		M_warn( "fl_mode_capable", "Not capable of %s at depth=%d",
+		M_warn( "fl_mode_capable", "Not capable of %s at depth = %d",
 				fl_vclass_name( mode ), fli_depth( mode ) );
 
     return cap;

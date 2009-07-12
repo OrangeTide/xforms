@@ -358,7 +358,7 @@ init_canvas( FL_OBJECT * ob )
 									 sp->user_mask, &sp->user_xswa );
 
 #if FL_DEBUG >= ML_ERR
-		M_warn( "init_canvas", "Depth=%d colormap=0x%lx, WinID=0x%lx",
+		M_warn( "init_canvas", "Depth = %d colormap = 0x%lx, WinID = %ld",
 				sp->depth, sp->colormap, sp->window );
 #endif
 

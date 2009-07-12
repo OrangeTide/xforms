@@ -661,7 +661,7 @@ fli_create_window( Window       parent,
     }
 
 #if FL_DEBUG >= ML_WARN
-    fli_dump_state_info( fl_vmode, "WinOpen" );
+    fli_dump_state_info( fl_vmode, "fli_create_window" );
 #endif
 
     win = XCreateWindow( flx->display, parent,

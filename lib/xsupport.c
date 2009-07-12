@@ -305,7 +305,7 @@ fli_create_object_pixmap( FL_OBJECT * obj )
     fl_winset( p->pixmap );
     fl_rectf( 0, 0, obj->w, obj->h, obj->dbl_background );
 
-    M_info( "fli_create_object_pixmap", "Creating depth=%d for %s",
+    M_info( "fli_create_object_pixmap", "Creating depth = %d for %s",
 			fli_depth( fl_vmode ), obj->label ? obj->label : "unknown");
 
     /* Make sure it succeeds by forcing a two way request */
@@ -446,7 +446,7 @@ fli_create_form_pixmap( FL_FORM * form )
     p->visual = fli_visual( fl_vmode );
     change_form_drawable( p, form );
 
-    M_info( "fli_create_form_pixmap", "Creation done, win is now 0x%lx",
+    M_info( "fli_create_form_pixmap", "Creation done, win is now %ld",
 			p->pixmap );
 }
 

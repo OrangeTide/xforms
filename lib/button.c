@@ -484,10 +484,13 @@ fl_create_generic_button( int          objclass,
     obj = fl_make_object( objclass, type, x, y, w, h, label, handle_button );
     if ( type == FL_RADIO_BUTTON )
 		obj->radio = 1;
+
     if ( type == FL_RETURN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
 		fl_set_object_shortcut( obj, "^M", 0 );
+
     if ( type == FL_HIDDEN_BUTTON || type == FL_HIDDEN_RET_BUTTON )
 		obj->boxtype = FL_NO_BOX;
+
 	if ( obj->type == FL_TOUCH_BUTTON )
 	{
 		obj->want_update = 1;

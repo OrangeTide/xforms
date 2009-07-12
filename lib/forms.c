@@ -249,7 +249,7 @@ fl_bgn_form( int      type,
 {
     if ( ! fli_no_connection && ! flx->display )
     {
-		M_err( "fl_bgn_form", "Missing or failed fl_initialize()" );
+		M_err( "fl_bgn_form", "Missing or failed call of fl_initialize()" );
 		exit( 1 );
     }
 
@@ -288,7 +288,7 @@ void
 fl_end_form( void )
 {
     if ( ! fl_current_form )
-		M_err( "fl_end_form", "No current form." );
+		M_err( "fl_end_form", "No current form" );
 
     if ( fli_current_group )
     {
@@ -309,7 +309,7 @@ fl_addto_form( FL_FORM * form )
 {
     if ( ! form )
     {
-		M_err( "fl_addto_form", "NULL form." );
+		M_err( "fl_addto_form", "NULL form" );
 		return NULL;
     }
 
@@ -340,7 +340,7 @@ fl_bgn_group( void )
 
     if ( ! fl_current_form )
     {
-		M_err( "fl_bgn_group", "NULL form." );
+		M_err( "fl_bgn_group", "NULL form" );
 		return NULL;
     }
 
@@ -377,7 +377,7 @@ fli_end_group( void )
 
     if ( ! fl_current_form )
     {
-		M_err( "fl_end_group", "NULL form." );
+		M_err( "fl_end_group", "NULL form" );
 		return NULL;
     }
 
@@ -658,7 +658,7 @@ fl_scale_form( FL_FORM * form,
 {
     if ( form == NULL )
     {
-		M_err( "fl_scale_form", "NULL form." );
+		M_err( "fl_scale_form", "NULL form" );
 		return;
     }
 
@@ -668,7 +668,7 @@ fl_scale_form( FL_FORM * form,
 
 	fli_scale_form( form, xsc, ysc );
 
-    /* resize the window */
+    /* Resize the window */
 
     if ( form->visible == FL_VISIBLE )
 		fl_winresize( form->window, form->w, form->h );
@@ -703,7 +703,7 @@ fl_set_form_maxsize( FL_FORM * form,
 {
     if ( ! form )
     {
-		M_err( "fl_set_form_maxsize", "NULL form." );
+		M_err( "fl_set_form_maxsize", "NULL form" );
 		return;
     }
 
@@ -720,7 +720,7 @@ fl_set_form_dblbuffer( FL_FORM * form,
 {
     if ( ! form )
     {
-		M_err( "fl_set_form_dblbuffer", "NULL form." );
+		M_err( "fl_set_form_dblbuffer", "NULL form" );
 		return;
     }
 
@@ -739,7 +739,7 @@ fl_set_form_size( FL_FORM * form,
 {
     if ( ! form )
     {
-		M_err( "fl_set_form_size", "NULL form." );
+		M_err( "fl_set_form_size", "NULL form" );
 		return;
     }
 
@@ -762,7 +762,7 @@ fl_set_form_position( FL_FORM * form,
 
     if ( ! form )
     {
-		M_err( "fl_set_form_position", "NULL form." );
+		M_err( "fl_set_form_position", "NULL form" );
 		return;
     }
 
@@ -835,7 +835,7 @@ fl_set_form_hotspot( FL_FORM * form,
 {
     if ( ! form )
     {
-		M_err( "fl_set_form_hotspot", "NULL form." );
+		M_err( "fl_set_form_hotspot", "NULL form" );
 		return;
     }
 
@@ -853,7 +853,7 @@ fl_set_form_hotobject( FL_FORM   * form,
 {
     if ( ! form  )
     {
-		M_err( "fl_set_form_hotobject", "NULL form." );
+		M_err( "fl_set_form_hotobject", "NULL form" );
 		return;
     }
 
@@ -898,7 +898,7 @@ fl_set_form_title( FL_FORM *    form,
 {
     if ( ! form )
     {
-		M_err( "fl_set_form_title", "NULL form." );
+		M_err( "fl_set_form_title", "NULL form" );
 		return;
     }
 
@@ -944,7 +944,7 @@ fl_prepare_form_window( FL_FORM    * form,
 
     if ( form == NULL )
     {
-		M_err( "fl_prepare_form", "NULL form." );
+		M_err( "fl_prepare_form", "NULL form" );
 		return None;
     }
 
@@ -1007,8 +1007,8 @@ fl_prepare_form_window( FL_FORM    * form,
 				break;
 
 			case FL_PLACE_HOTSPOT:
-				if ( form->hotx < 0 )
-				{			                    /* never set */
+				if ( form->hotx < 0 || form->hoty < 0 )    /* not set */
+				{
 					form->hotx = form->w / 2;
 					form->hoty = form->h / 2;
 				}
@@ -1038,7 +1038,7 @@ fl_prepare_form_window( FL_FORM    * form,
 				break;
 		}
 
-		/* final check. Make sure form is visible */
+		/* Final check. Make sure form is visible */
 
 		if ( place != FL_PLACE_GEOMETRY )
 			force_visible( form );
@@ -1060,7 +1060,7 @@ fl_prepare_form_window( FL_FORM    * form,
 		fl_initial_wingeometry( form->x, form->y, form->w, form->h );
     }
 
-    /* WM typically does not allow dragging transient windows */
+    /* Window managers typically do not allow dragging transient windows */
 
     if ( border != FL_FULLBORDER )
     {
@@ -1108,7 +1108,7 @@ fl_show_form_window( FL_FORM * form )
 
     if ( ! form  )
     {
-		M_err( "fl_show_form_window", "NULL form." );
+		M_err( "fl_show_form_window", "NULL form" );
 		return None;
     }
 
@@ -1150,7 +1150,7 @@ fl_show_form( FL_FORM *    form,
 {
     if ( ! form  )
     {
-		M_err( "fl_show_form", "NULL form." );
+		M_err( "fl_show_form", "NULL form" );
 		return None;
     }
 
@@ -1175,7 +1175,7 @@ close_form_window( Window win )
     while ( XCheckWindowEvent( flx->display, win, AllEventsMask, &xev ) )
 		fli_xevent_name( "Eaten", &xev );
 
-    /* Gives subwindows a chance to handle destroy event promptly, take care
+    /* Give subwindows a chance to handle destroy event promptly, take care
 	   the window of the form doesn't exist anymore! */
 
     while ( XCheckTypedEvent( flx->display, DestroyNotify, &xev ) )
@@ -1219,7 +1219,7 @@ set_form_property( FL_FORM *    form,
 {
     if ( ! form  )
     {
-		M_err( "set_form_property", "NULL form." );
+		M_err( "set_form_property", "NULL form" );
 		return;
     }
 
@@ -1365,13 +1365,13 @@ fl_free_form( FL_FORM * form )
 
     if ( ! form )
     {
-		M_err( "fl_free_form", "NULL form." );
+		M_err( "fl_free_form", "NULL form" );
 		return;
     }
 
     if ( form->visible == FL_VISIBLE )
     {
-		M_warn( "fl_free_form", "Freeing visible form." );
+		M_warn( "fl_free_form", "Freeing visible form" );
 		fl_hide_form( form );
     }
 
@@ -1422,7 +1422,7 @@ fl_activate_form( FL_FORM * form )
 {
     if ( ! form )
     {
-		M_err( "fl_activate_form", "NULL form." );
+		M_err( "fl_activate_form", "NULL form" );
 		return;
     }
 
@@ -1448,7 +1448,7 @@ fl_deactivate_form( FL_FORM * form )
 {
     if ( ! form )
     {
-		M_err( "fl_deactivate_form", "NULL form." );
+		M_err( "fl_deactivate_form", "NULL form" );
 		return;
     }
 
@@ -1479,7 +1479,7 @@ fl_set_form_atactivate( FL_FORM            * form,
 
     if ( ! form  )
     {
-		M_err( "fl_set_form_atactivate", "NULL form." );
+		M_err( "fl_set_form_atactivate", "NULL form" );
 		return NULL;
     }
 
@@ -1503,7 +1503,7 @@ fl_set_form_atdeactivate( FL_FORM              * form,
 
     if ( ! form  )
     {
-		M_err( "fl_set_form_atdeactivate", "NULL form." );
+		M_err( "fl_set_form_atdeactivate", "NULL form" );
 		return NULL;
     }
 
@@ -1555,7 +1555,7 @@ fl_set_form_atclose( FL_FORM         * form,
 
     if ( ! form  )
     {
-		M_err( "fl_set_form_atclose", "NULL form." );
+		M_err( "fl_set_form_atclose", "NULL form" );
 		return NULL;
     }
 
@@ -1701,7 +1701,7 @@ fl_set_form_callback( FL_FORM            * form,
 {
     if ( form == NULL )
     {
-		M_err( "fl_set_form_callback", "NULL form." );
+		M_err( "fl_set_form_callback", "NULL form" );
 		return;
     }
 
@@ -1865,7 +1865,7 @@ fl_addto_group( FL_OBJECT * group )
     if ( fl_current_form && fl_current_form != group->form )
     {
 		M_err( "fl_addto_group",
-			   "Can't switch to a group on different form." );
+			   "Can't switch to a group on different form" );
 		return NULL;
     }
 
@@ -1982,7 +1982,7 @@ fl_adjust_form_size( FL_FORM * form )
     if ( max_factor > 1.25 )
 		max_factor = 1.25;
 
-    /* scale all objects without taking care of gravity etc. */
+    /* Scale all objects without taking care of gravity etc. */
 
 	simple_form_rescale( form, max_factor );
 
@@ -2000,7 +2000,7 @@ fl_adjust_form_size( FL_FORM * form )
  * old trick of searching up for the parent window that's either Null or
  * is a direct child of the root window and using this window's geometry
  * (but note: this doesn't work with window managers that don't reparent
- * the windows they manage).
+ * the windows they manage, but we can't recognize that).
  ***************************************/
 
 int
