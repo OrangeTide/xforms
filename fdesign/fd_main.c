@@ -62,7 +62,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.30 $ of $Date: 2009/07/10 17:52:15 $",
+    "$State: Exp $  $Revision: 1.31 $ of $Date: 2009/07/12 11:43:01 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
 	"GNU Lesser General Public License sinc 2002",
 	NULL
@@ -73,7 +73,7 @@ static const char *fd_version[ ] =
  * Remove RCS keywords
  ***************************************/
 
-static char *
+static const char *
 rm_rcs_kw( const char * s )
 {
     static unsigned char buf[ 5 ][ 255 ];

@@ -657,7 +657,7 @@ fl_is_valid_dir( const char *name )
 		return 1;
 #endif
 
-    /* on some machines, name should be plain char * */
+    /* On some machines name should be a plain char * (why? JTT) */
 
     return name
 		   && stat( ( char * ) name, &stbuf ) == 0

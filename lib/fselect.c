@@ -769,137 +769,135 @@ fl_show_fselector( const char * message,
 				   const char * fname )
 {
 	FL_OBJECT *obj;
-	const char *tmp;
 	int i;
-	FD_fselect *lfs;
 
 	fl_get_fselector_form( );
-	lfs = fs;
 
 	/* Update directory only if requested dir is valid. This way, passing
-	   dir == 0 has the effect of keeping us where we were the last time */
+	   NULL for dir has the effect of keeping us where we were the last time */
 
 	if ( fl_is_valid_dir( dir ) )
 		strcpy( fs->dname, dir );
 
 	fl_fix_dirname( fs->dname );
 
-	lfs->filename[ 0 ] = '\0';
+	fs->filename[ 0 ] = '\0';
 
 	if ( pat && *pat )
 	{
-		strncpy( lfs->pattern, pat, sizeof lfs->pattern );
-		lfs->pattern[ sizeof lfs->pattern - 1 ] = '\0';
+		strncpy( fs->pattern, pat, sizeof fs->pattern );
+		fs->pattern[ sizeof fs->pattern - 1 ] = '\0';
 	}
 
 	if ( fname && *fname )
 	{
-		strncpy( lfs->filename, fname, sizeof lfs->filename );
-		lfs->filename[ sizeof lfs->filename - 1 ] = '\0';
+		strncpy( fs->filename, fname, sizeof fs->filename );
+		fs->filename[ sizeof fs->filename - 1 ] = '\0';
 	}
 
 	for ( i = 0; i < MAX_APPBUTT; i++ )
 	{
-		if ( lfs->appcb[ i ] && lfs->applabel[ i ][ 0 ] )
+		if ( fs->appcb[ i ] && fs->applabel[ i ][ 0 ] )
 		{
-			fl_set_object_label( lfs->appbutt[ i ], lfs->applabel[ i ] );
-			fl_set_object_callback( lfs->appbutt[ i ], appbutton_cb, i );
-			fl_show_object( lfs->appbutt[ i ] );
+			fl_set_object_label( fs->appbutt[ i ], fs->applabel[ i ] );
+			fl_set_object_callback( fs->appbutt[ i ], appbutton_cb, i );
+			fl_show_object( fs->appbutt[ i ] );
 		}
 		else
-			fl_hide_object( lfs->appbutt[ i ] );
+			fl_hide_object( fs->appbutt[ i ] );
 	}
 
 	/* Check cache settings */
 
-	fl_fit_object_label( lfs->resbutt, 1, 1 );
+	fl_fit_object_label( fs->resbutt, 1, 1 );
 
 	/* If selection call back exists, cancel has no meaning as whenver a file
 	   is selected callback is executed and there is no backing out */
 
-	if ( lfs->fselect_cb || lfs->fselect->attached )
-		fl_hide_object( lfs->cancel );
+	if ( fs->fselect_cb || fs->fselect->attached )
+		fl_hide_object( fs->cancel );
 	else
 	{
-		fl_show_object( lfs->cancel );
+		fl_show_object( fs->cancel );
 		fl_deactivate_all_forms( );
-		lfs->fselect->sort_of_modal = 1;
+		fs->fselect->sort_of_modal = 1;
 	}
 
-	fl_set_object_label( lfs->prompt, message );
-	fl_set_input( lfs->input, lfs->filename );
-	fl_set_object_label( lfs->patbutt, lfs->pattern );
-	fl_set_object_label( lfs->dirbutt, contract_dirname( lfs->dname, 38 ) );
+	fl_set_object_label( fs->prompt, message );
+	fl_set_input( fs->input, fs->filename );
+	fl_set_object_label( fs->patbutt, fs->pattern );
+	fl_set_object_label( fs->dirbutt, contract_dirname( fs->dname, 38 ) );
 
 	/* Fill the browser */
 
-	fill_entries( lfs->browser, lfs->filename, 1 );
+	fill_entries( fs->browser, fs->filename, 1 );
 
-	if ( lfs->cancel->lsize != FL_DEFAULT_SIZE )
-		fl_fit_object_label( lfs->cancel, 16, 1 );
+	if ( fs->cancel->lsize != FL_DEFAULT_SIZE )
+		fl_fit_object_label( fs->cancel, 16, 1 );
 
 	/* If attached to another form, don't show the form. The parent * will
 	   handle it */
 
-	if ( lfs->fselect->attached )
+	if ( fs->fselect->attached )
 		return "";
 
-	if ( ! lfs->fselect->visible )
+	if ( ! fs->fselect->visible )
 	{
-		fl_set_form_minsize( lfs->fselect, lfs->fselect->w, lfs->fselect->w );
-		fl_show_form( lfs->fselect, lfs->place, lfs->border,
-					  lfs->fselect->label );
+		fl_set_form_minsize( fs->fselect, fs->fselect->w, fs->fselect->w );
+		fl_show_form( fs->fselect, fs->place, fs->border,
+					  fs->fselect->label );
 	}
 	else
-		fl_redraw_form( lfs->fselect );
+		fl_redraw_form( fs->fselect );
 
 	do
 	{
+		const char *tmp;
+
 		obj = fl_do_only_forms( );
 
-		/* Can you say ugly? */
-
-		if ( obj == lfs->ready && ( tmp = fl_get_input( lfs->input ) ) && *tmp )
+		if ( obj == fs->ready && ( tmp = fl_get_input( fs->input ) ) && *tmp )
 		{
 			if ( *tmp != '/' && *tmp != '~' )
 			{
-				strncat( append_slash( lfs->dname ), tmp, sizeof lfs->dname );
-				lfs->dname[ sizeof lfs->dname - 1 ] = '\0';
-				fl_fix_dirname( lfs->dname );
+				strncat( append_slash( fs->dname ), tmp, sizeof fs->dname );
+				fs->dname[ sizeof fs->dname - 1 ] = '\0';
+				fl_fix_dirname( fs->dname );
 			}
 			else
 			{
-				strncpy( lfs->dname, tmp, sizeof lfs->dname );
-				lfs->dname[ sizeof lfs->dname - 1 ] = '\0';
-				fl_fix_dirname( lfs->dname );
+				strncpy( fs->dname, tmp, sizeof fs->dname );
+				fs->dname[ sizeof fs->dname - 1 ] = '\0';
+				fl_fix_dirname( fs->dname );
 			}
 
-			if ( fl_is_valid_dir( lfs->dname ) )
+			if ( fl_is_valid_dir( fs->dname ) )
 			{
-				fill_entries( lfs->browser, 0, 1 );
-				fl_set_input( lfs->input, "" );
-				fl_set_focus_object( lfs->input->form, lfs->input );
+				fill_entries( fs->browser, 0, 1 );
+				fl_set_input( fs->input, "" );
+				fl_set_focus_object( fs->input->form, fs->input );
 				obj = NULL;
 			}
 			else
 			{
 				char *p;
 
-				if ( ( p = strrchr( fs->dname, '/' ) ) )
+				while ( ( p = strrchr( fs->dname, '/' ) ) )
 				{
 					*p = '\0';
-					fl_set_input( lfs->input, p + 1 );
+					if ( fl_is_valid_dir( fs->dname ) )
+						break;
 				}
 			}
 		}
-	} while ( obj != lfs->cancel && obj != lfs->ready );
+	} while ( obj != fs->cancel && obj != fs->ready );
 
-	fl_hide_form( lfs->fselect );
+	fl_hide_form( fs->fselect );
 
-	if ( ! lfs->fselect_cb && ! lfs->fselect->attached )
+	if ( ! fs->fselect_cb && ! fs->fselect->attached )
 	{
 		fl_activate_all_forms( );
-		lfs->fselect->sort_of_modal = 0;
+		fs->fselect->sort_of_modal = 0;
 	}
 
 	/* Do we really want to remove the fselect_cb ? Previous version did, so
