@@ -241,6 +241,7 @@ handle_menu( FL_OBJECT * ob,
     int val,
 		boxtype = ob->boxtype;
     FL_COLOR col;
+	int ret = FL_RETURN_NONE;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info2( "handle_menu", fli_event_name( event ) );
@@ -273,8 +274,8 @@ handle_menu( FL_OBJECT * ob,
 			break;
 
 		case FL_ENTER:
-			if ( ob->type == FL_TOUCH_MENU )
-				return do_menu( ob );
+			if ( ob->type == FL_TOUCH_MENU && do_menu( ob ) > 0 )
+					ret |= FL_RETURN_CHANGED;
 			break;
 
 		case FL_PUSH:
@@ -282,11 +283,18 @@ handle_menu( FL_OBJECT * ob,
 			   on a button press */
 
 			if (    key != FL_MBUTTON1
-				 || ob->type == FL_TOUCH_MENU
 				 || ( ob->type == FL_PUSH_MENU && sp->no_title ) )
 				break;
 
-			return do_menu( ob );
+			if ( ob->type == FL_TOUCH_MENU )
+			{
+				ret |= FL_RETURN_END;
+				break;
+			}
+
+			if ( do_menu( ob ) > 0 )
+				ret |= FL_RETURN_CHANGED;
+			break;
 
 		case FL_RELEASE :
 			/* Button release is only important for push menus without a
@@ -302,7 +310,9 @@ handle_menu( FL_OBJECT * ob,
 				 || my > ob->y + ob->h )
 				break;
 
-			return do_menu( ob );
+			if ( do_menu( ob ) > 0 )
+				ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+			break;
 
 		case FL_SHORTCUT:
 			/* Show menu as highlighted */
@@ -315,7 +325,9 @@ handle_menu( FL_OBJECT * ob,
 			val = do_menu( ob );
 			ob->pushed = 0;
 			fl_redraw_object( ob );
-			return val > 0;
+			if ( val > 0 )
+				ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+			break;
 
 		case FL_FREEMEM:
 			fl_clear_menu( ob );
@@ -323,7 +335,7 @@ handle_menu( FL_OBJECT * ob,
 			return 0;
     }
 
-	return 0;
+	return ret;
 }
 
 
@@ -339,23 +351,27 @@ fl_create_menu( int          type,
 				FL_Coord     h,
 				const char * label )
 {
-    FL_OBJECT *ob;
+	FL_OBJECT *obj;
     FLI_MENU_SPEC *sp;
 
-    ob = fl_make_object( FL_MENU, type, x, y, w, h, label, handle_menu );
+    obj = fl_make_object( FL_MENU, type, x, y, w, h, label, handle_menu );
 
-	ob->boxtype = FL_FLAT_BOX;
+	obj->boxtype = FL_FLAT_BOX;
+    obj->col1   = FL_MENU_COL1;
+    obj->col2   = FL_MENU_COL2;
+    obj->lcol   = FL_MENU_LCOL;
+    obj->lstyle = FL_NORMAL_STYLE;
+    obj->align  = FL_MENU_ALIGN;
 
-    ob->col1   = FL_MENU_COL1;
-    ob->col2   = FL_MENU_COL2;
-    ob->lcol   = FL_MENU_LCOL;
-    ob->lstyle = FL_NORMAL_STYLE;
-    ob->align  = FL_MENU_ALIGN;
+	if ( type == FL_TOUCH_MENU )
+		fl_set_object_return( obj, FL_RETURN_CHANGED );
+	else
+		fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
+    sp = obj->spec = fl_calloc( 1, sizeof *sp );
     sp->extern_menu = -1;
 
-    return ob;
+    return obj;
 }
 
 

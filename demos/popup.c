@@ -98,7 +98,7 @@ menu_callback( FL_OBJECT * ob,
 }
 
 
-/** menu initialization entries. No callbacks for the item */
+/* menu initialization entries. No callbacks for the item */
 
 FL_PUP_ENTRY menu_entries[ ] =
 {

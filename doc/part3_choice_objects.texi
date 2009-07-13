@@ -254,6 +254,40 @@ useful for cases where all work for a change of the selection can
 already be done within the items callback and the "main loop"
 shouldn't get involved anymore.
 
+As for all other normal objects the condition under which a
+@code{FL_SELECT} object gets returned to the application (or an
+associate callback is called) can be influenced by calling the
+function
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when)
+@end example
+where @code{when} can have the following values
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never return or invoke a callback.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback if end of interaction and selection of an
+item coincide.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever an item is selected (this is the
+default).
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback on end of an interaction.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return (or invoke callback) whenever the interaction ends and/or
+an item is selected.
+@end table
+
+
 Per default the popup of a select objects remains shown when the user
 releases the mouse somewhere outside the popup window (or on its title
 area). The alternative is to close the popup immediately when the user
@@ -735,6 +769,39 @@ callback functions are of type @code{FL_POPUP_CB} described above (and
 in even more detail in @ref{Part III Popups}), while object callbacks
 are "normal" XForms callback functions.
 
+The condition under which a @code{FL_NMENU} object gets returned to
+the application (or an associate callback is called) can be influenced
+by calling the function
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when)
+@end example
+where @code{when} can have the following values
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never return or invoke a callback.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback if end of interaction and selection of an
+item coincide.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever an item is selected (this is the
+default).
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback on end of an interaction.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return (or invoke callback) whenever the interaction ends and/or
+an item is selected.
+@end table
+
+
 One detail about the interaction that can be adjusted is when the
 nmenu's popup gets closed. Per default, the popup is closed when an
 item is selected or (without a selection) when the user clicks
@@ -1024,7 +1091,7 @@ changed by using the function
 @example
 int fl_set_object_return(FL_OBJECT *obj, int when)
 @end example
-where when can have the following values
+where @code{when} can have the following values
 @table @code
 @tindex FL_RETURN_NONE
 @item FL_RETURN_NONE
@@ -1036,8 +1103,8 @@ Return or invoke callback on selection of a line. Please note that for
 @code{@ref{FL_MULTI_BROWSER}} the browser may be returned just once
 for a number of lines having been selected.
 
-@tindex FL_RETURN_SELECTION
-@item FL_RETURN_SELECTION
+@tindex FL_RETURN_DESELECTION
+@item FL_RETURN_DESELECTION
 Return or invoke callback on deselection of a line. This only works
 for @code{@ref{FL_MULTI_BROWSER}} browsers and the browser may be
 returned just once for a number of lines having been deselected.
@@ -1062,8 +1129,12 @@ Return or invoke callback on selection, deselection or scrolling of
 text or end of scrolling.
 @end table
 
-The default settting for @code{when} for a browser is
-@code{FL_RETURN_SELECTION|FL_RETURN_DESELECTION}.
+The default settting for @code{when} for a browser object is
+@code{FL_RETURN_SELECTION|FL_RETURN_DESELECTION} (unless during the
+built of XForms you set the configurationb flag
+@code{--enable-bwc-bs-hack} in which case the default is
+@code{FL_RETURN_NONE} to keep backward compatibility with earlier
+releases of the library).
 
 
 @node Other Browser Routines

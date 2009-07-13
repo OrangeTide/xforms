@@ -64,7 +64,7 @@
 typedef struct
 {
     char         * str;				/* label               */
-    FL_PUP_CB      icb;		    	/* call back           */
+    FL_PUP_CB      icb;		    	/* callback            */
     long         * shortcut;		/* shortcut keys       */
     int            subm;			/* sub menu            */
     unsigned int   mode;			/* various attributes  */
@@ -1384,7 +1384,7 @@ fl_dopup( int n )
 		val = item->ret;
 		if ( item->icb )
 			val = item->icb( val );
-		if ( m->menu_cb )
+		if ( val > 0 && m->menu_cb )
 			val = m->menu_cb( val );
     }
 

@@ -124,6 +124,14 @@ Notify when either a new or the already active folder has been
 selected.
 @end table
 
+In older releases of the library on changes of the selected folder
+only a callback for the older was executed (if one was installed),
+but the folder object wasn't reported back via e.g.@:
+@code{@ref{fl_do_forms()}} etc. This has changed with version 1.0.92.
+To get the old behaviour you have to build XForms with the
+@code{--enable-bwc-bs-hack} being set.
+
+
 
 To find out which folder is currently active, the following routines
 the tab riders are available

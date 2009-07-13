@@ -67,6 +67,8 @@ fl_create_nmenu( int          type,
 	sp->sel   = NULL;
 	sp->hl_color = IS_BUTTON_NMENU( obj ) ? FL_LCOL : FL_WHITE;
 
+	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
+
     return obj;
 }
 
@@ -617,6 +619,7 @@ handle_nmenu( FL_OBJECT * obj,
     FLI_NMENU_SPEC *sp = obj->spec;
 	unsigned int w,
 		         h;
+	int ret = FL_RETURN_NONE;
 
 	switch ( event )
 	{
@@ -645,7 +648,9 @@ handle_nmenu( FL_OBJECT * obj,
 			sp->sel = fl_popup_do( sp->popup );
 			obj->pushed = 0;
 			fl_redraw_object( obj );
-			return sp->sel != NULL;
+			if ( sp->sel != NULL )
+				ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+			break;
 
 		case FL_FREEMEM :
 			if ( sp && sp->popup )
@@ -654,7 +659,7 @@ handle_nmenu( FL_OBJECT * obj,
 			break;
 	}
 
-	return 0;
+	return ret;
 }
 
 

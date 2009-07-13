@@ -305,6 +305,7 @@ handle_choice( FL_OBJECT * ob,
 {
     FLI_CHOICE_SPEC *sp = ob->spec;
     int val;
+	int ret = FL_RETURN_NONE;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info2( "handle_choice", fli_event_name( event ) );
@@ -337,14 +338,20 @@ handle_choice( FL_OBJECT * ob,
 				val = set_next_entry( sp, key == FL_MBUTTON3 ? 1 : -1 );
 				sp->pushed = 0;
 				fl_redraw_object( ob );
-				return val > 0;
+				if ( val > 0 )
+					ret |= FL_RETURN_CHANGED;
+				break;
 			}
 
 			if ( key != FL_MBUTTON1 || sp->numitems == 0 )
 				break;
 
 			if ( ob->type != FL_DROPLIST_CHOICE )
-				return do_pup( ob ) > 0;
+			{
+				if ( do_pup( ob ) > 0 )
+					ret |= FL_RETURN_CHANGED;
+				break;
+			}
 
 			/* Droplist choices only become active when the mouse button
 			   has been released */
@@ -364,7 +371,8 @@ handle_choice( FL_OBJECT * ob,
 				val = set_next_entry( sp, key == FL_MBUTTON3 ? 1 : -1 );
 				sp->pushed = 0;
 				fl_redraw_object( ob );
-				return val > 0;
+				if ( val > 0 )
+					ret |= FL_RETURN_CHANGED;
 			}
 			break;
 
@@ -397,7 +405,9 @@ handle_choice( FL_OBJECT * ob,
 				val = set_next_entry( sp, key == FL_MBUTTON5 ? 1 : -1 );
 				sp->pushed = 0;
 				fl_redraw_object( ob );
-				return val > 0;
+				if ( val > 0 )
+					ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+				break;
 			}
 
 			if ( ob->type != FL_DROPLIST_CHOICE || ! sp->pushed )
@@ -413,7 +423,9 @@ handle_choice( FL_OBJECT * ob,
 			fl_setpup_position( - ( ob->form->x + ob->x + ob->w ),
 								ob->form->y + ob->y + ob->h + FL_PUP_PADH );
 			sp->pushed = 0;
-			return do_pup( ob ) > 0;
+			if ( do_pup( ob ) > 0 )
+				ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+			break;
 
 		case FL_LEAVE:
 			sp->below = 0;
@@ -441,7 +453,9 @@ handle_choice( FL_OBJECT * ob,
 								ob->form->y + ob->y + ob->h / 2 );
 			val = do_pup( ob );
 			fl_redraw_object( ob );
-			return val > 0;
+			if ( val > 0 )
+				ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+			break;
 
 		case FL_FREEMEM:
 			free_choice( ob->spec );
@@ -449,7 +463,7 @@ handle_choice( FL_OBJECT * ob,
 			break;
     }
 
-    return 0;
+    return ret;
 }
 
 
@@ -465,19 +479,19 @@ fl_create_choice( int          type,
 				  FL_Coord     h,
 				  const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
     int i;
     FLI_CHOICE_SPEC *sp;
 
-    ob = fl_make_object( FL_CHOICE, type, x, y, w, h, label, handle_choice );
+    obj = fl_make_object( FL_CHOICE, type, x, y, w, h, label, handle_choice );
 
-    ob->boxtype     = type == FL_NORMAL_CHOICE2 ? FL_UP_BOX : FL_CHOICE_BOXTYPE;
-    ob->col1        = FL_CHOICE_COL1;
-    ob->col2        = FL_CHOICE_COL2;
-    ob->lcol        = FL_CHOICE_LCOL;
-    ob->align       = FL_CHOICE_ALIGN;
-	ob->want_update = 1;
-    ob->spec = sp   = fl_calloc( 1, sizeof *sp );
+    obj->boxtype     = type == FL_NORMAL_CHOICE2 ? FL_UP_BOX : FL_CHOICE_BOXTYPE;
+    obj->col1        = FL_CHOICE_COL1;
+    obj->col2        = FL_CHOICE_COL2;
+    obj->lcol        = FL_CHOICE_LCOL;
+    obj->align       = FL_CHOICE_ALIGN;
+	obj->want_update = 1;
+    obj->spec = sp   = fl_calloc( 1, sizeof *sp );
 
     sp->fontsize  = fli_cntl.choiceFontSize ?
 		            fli_cntl.choiceFontSize : FL_DEFAULT_FONT;
@@ -490,7 +504,9 @@ fl_create_choice( int          type,
 		sp->shortcut[ i ] = NULL;
     }
 
-   return ob;
+	fl_set_object_return( obj, FL_RETURN_CHANGED );
+
+	return obj;
 }
 
 

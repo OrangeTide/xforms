@@ -85,9 +85,41 @@ right mouse button on the choice object selects the next choice in the
 list. When pressing the middle mouse button the previous choice is
 taken. Keeping the mouse pressed slowly cycles through the list. The
 other way is to use the left mouse button. In this case a menu appears
-from which the user can select the proper choice. In both cases,
+from which the user can select the proper choice. Normally in both cases,
 whenever a choice is selected (even when it is the original one) the
 object is returned to the application program.
+
+You can control the condition under which the choice object gets
+returned to the application by using the function
+@findex fl_set_object_return()
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when)
+@end example
+where @code{when} can have the following values
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never return or invoke callback.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback if end of interaction and selection of an
+item coincide.
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever an item is selected (this is the
+default).
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback on end of an interaction.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return (or invoke callback) whenever the interaction ends and/or
+an item is selected.
+@end table
 
 
 @node Other Choice Routines
@@ -349,8 +381,42 @@ released.
 When the menu appears the user can make a selection using the left
 mouse button or make no selection by clicking outside the menu (or by
 simply releasing the mouse button in case of a @code{FL_PULLDOWN_MENU}
-type menu. When he makes a selection the menu object is returned by
-the interaction routines.
+type menu. Nornmally when he makes a selection the menu object is
+returned by the interaction routines.
+
+You can control the condition under which the menu object gets
+returned to the application by using the function
+@findex fl_set_object_return()
+@example
+int fl_set_object_return(FL_OBJECT *obj, int when)
+@end example
+where @code{when} can have the following values
+@table @code
+@tindex FL_RETURN_NONE
+@item FL_RETURN_NONE
+Never return the object or invoke its callback.
+
+@tindex FL_RETURN_END_CHANGED
+@item FL_RETURN_END_CHANGED
+Return or invoke callback if end of interaction and selection of an
+item coincide (this is the default for all menu objects except those
+of type @code{FL_TOUCH_MENU}).
+
+@tindex FL_RETURN_CHANGED
+@item FL_RETURN_CHANGED
+Return or invoke callback whenever an item is selected (this is the
+default for all menu objects of type @code{FL_TOUCH_MENU}).
+
+@tindex FL_RETURN_END
+@item FL_RETURN_END
+Return or invoke callback on end of an interaction.
+
+@tindex FL_RETURN_ALWAYS
+@item FL_RETURN_ALWAYS
+Return (or invoke callback) whenever the interaction ends and/or
+an item is selected.
+@end table
+
 
 @node Other Menu Routines
 @subsection Other Menu Routines
@@ -743,7 +809,7 @@ selected item is passed as the only argument to the invoked callback
 function. The callback function must return a non-negative integer. If
 such a callback function has been registered for a XPopup and you
 select its third item, in the simplest case 3 will be passed as a
-parameter to the callback function (more complicqated situations would
+parameter to the callback function (more complicated situations would
 involve that the item had been assigned a different value. e.g. using
 @code{%x}, see below, or that there's also a callback bound to the
 item itself, in which case the global XPopup callback would receive
@@ -756,8 +822,9 @@ is selected. The routine must be supplied in the parameters following
 selected item is passed as a parameter to this function. If you have
 also bound the entire XPopup to a callback function via @code{%F},
 then the function specified via @code{%f} is called first with the
-items value and its return value is then passed as the parameter to to
-the function bound to the whole XPopup (as set via @code{%F}).
+items value and its return value (if larger then @code{0} is then
+passed as the parameter to to the function bound to the whole XPopup
+(as set via @code{%F}).
 
 @item %i
 Disables and greys-out the item. @code{%d} can be used instead of @code{%i}.
@@ -1103,9 +1170,22 @@ typedef int (*FL_PUP_CB)(int);
 FL_PUP_CB fl_setpup_itemcb(int popup_id, int item_val, FL_PUP_CB cb);
 FL_PUP_CB fl_setpup_menucb(int popup_id, FL_PUP_CB cb);
 @end example
+These functions thus allow to change the popup and item callback
+functions set at creation of the popup with @code{%F} and @code{%f}.
 As usual, @code{popup_id} is the ID of the XPopup, @code{item_val} the
 value associated with the item (position or value set via @code{%x}),
 and @code{cb} is the address of the callback function.
+
+Please note that Xpopup objects are a bit special in XForms. Normal
+objects get returned by e.g.@: @code{@ref{fl_do_forms()}} (or an
+associated callback gets invoked). Butsince Xpopup objects are meant
+to be sub-objects of other objects (like @code{FL_CHOICE} and
+@code{L_MENU} objects) and don't get invoked directly by a call of
+e.g.@: @code{@ref{fl_do_forms()}} but instead by a call of
+@code{@ref{fl_dopup()}} they can't get returned to the application.
+Instead the caller of @code{@ref{fl_dopup()}} (normally some internal
+function of a @code{FL_CHOICE} or @code{FL_MENU} object) has to deal
+with the return value.
 
 Furthermore, also callback functions can be set that get invoked
 whenever an item in the XPopup is entered or left, even without a
@@ -1365,6 +1445,6 @@ programmatically via @code{@ref{fl_hidepup()}}.
 Take care to make sure all items, including the items on submenus,
 of a XPopup have unique values and are positive.
 
-XPopups are used are used indirectly in the demo programs
-@file{menu.c}, @file{boxtype.c}, @file{choice.c} and others. For a
-direct pop-up demo see @file{pup.c}.
+XPopups are used indirectly in the demo programs @file{menu.c},
+@file{boxtype.c}, @file{choice.c} and others. For a direct pop-up demo
+see @file{popup.c}.

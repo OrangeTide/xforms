@@ -76,6 +76,8 @@ fl_create_select( int          type,
 	sp->timeout_id = -1;
 	sp->repeat_ms  = 500;
 
+	fl_set_object_return( obj, FL_RETURN_CHANGED );
+
     return obj;
 }
 
@@ -872,6 +874,7 @@ handle_select( FL_OBJECT * obj,
 	FL_POPUP_RETURN *ret = NULL;
 	unsigned int w,
 		         h;
+	int sret = FL_RETURN_NONE;
 
     switch ( event )
 	{
@@ -901,10 +904,13 @@ handle_select( FL_OBJECT * obj,
 			fl_popup_set_position( sp->popup,
 								   obj->form->x + obj->x + ( obj->w - w ) / 2,
 								   obj->form->y + obj->y + obj->h );
+			sret |= FL_RETURN_END;
 			/* fall through */
 
 		case FL_PUSH :
-			return handle_push( obj, key );
+			if ( handle_push( obj, key ) )
+				sret |= FL_RETURN_CHANGED;
+			break;
 
 		case FL_RELEASE :
 			if ( key != FL_MBUTTON2 && key != FL_MBUTTON3 )
@@ -917,6 +923,7 @@ handle_select( FL_OBJECT * obj,
 			}
 
 			fl_redraw_object( obj );
+			sret |= FL_RETURN_END;
 			break;
 
 		case FL_UPDATE:
@@ -936,7 +943,8 @@ handle_select( FL_OBJECT * obj,
 				fl_redraw_object( obj );
 				sp->timeout_id = fl_add_timeout( sp->repeat_ms, timeout_cb,
 												 sp );
-				return ret != NULL;
+				if ( ret != NULL )
+					sret != FL_RETURN_CHANGED;
 			}
 			break;
 
@@ -947,7 +955,7 @@ handle_select( FL_OBJECT * obj,
 			break;
 	}
 
-	return 0;
+	return sret;
 }
 
 

@@ -456,6 +456,12 @@ Return or invoke callback whenever value changed or mouse button was
 released.
 @end table
 
+The default settting for @code{when} for a scrollbar object is
+@code{FL_RETURN_CHANGED} (unless during the built of XForms you set
+the configurationb flag @code{--enable-bwc-bs-hack} in which case the
+default is @code{FL_RETURN_NONE} to keep backward compatibility with
+earlier releases of the library).
+
 See demo program @file{objreturn.c} for an example use of this.
 
 
