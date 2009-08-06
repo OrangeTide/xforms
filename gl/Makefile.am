@@ -7,7 +7,9 @@ include_HEADERS = glcanvas.h
 
 lib_LTLIBRARIES = libformsGL.la
 
-libformsGL_la_LDFLAGS = -version-info @SO_VERSION@
+libformsGL_la_LDFLAGS = -no-undefined -Wl,--no-undefined -version-info @SO_VERSION@
+
+libformsGL_la_LIBADD = ../lib/libforms.la $(X_LIBS) -lGL -lX11
 
 libformsGL_la_SOURCES = \
 	glcanvas.c \

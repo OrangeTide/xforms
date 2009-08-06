@@ -227,7 +227,7 @@ fl_set_gamma( double r,
 #endif /* DO_GAMMA_CORRECTION */
 
 
-static XColor *defaultc;
+static XColor *defaultc = NULL;
 
 
 /***************************************
@@ -746,7 +746,7 @@ fli_init_colormap( int vmode )
     cols_in_default_visual =
 						  ( 1L << DefaultDepth( flx->display, fl_screen ) ) - 1;
 
-    /* some server may have a default visual with depth == 32 */
+    /* Some server may have a default visual with depth == 32 */
 
     if ( cols_in_default_visual <= 0 )
 		cols_in_default_visual = 80;
@@ -765,7 +765,7 @@ fli_init_colormap( int vmode )
 
     if ( ! ok && ! ( ok = get_shared_cmap( vmode ) ) )
     {
-		/* if unable to share colormaps, we can either get a private colormap
+		/* If unable to share colormaps, we can either get a private colormap
 		   or force substitutions */
 #if 1
 		M_err( "fli_init_colormap",
@@ -791,6 +791,29 @@ fli_init_colormap( int vmode )
     fli_dump_state_info( vmode, "fli_init_colormap" );
 #endif
 }
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_free_colormap( int vmode )
+{
+	int i;
+
+	for( i = 0; i < 3; i++ )
+		if ( fli_gray_pattern[ i ] )
+		{
+			XFreePixmap( flx->display, fli_gray_pattern[ i ] );
+			fli_gray_pattern[ i ] = None;
+		}
+
+    if ( fli_visual( vmode ) != DefaultVisual( flx->display, fl_screen ) )
+		XFreeColormap( flx->display, fli_map( vmode ) );
+
+	fl_safe_free( defaultc );
+}
+
 
 
 static unsigned long

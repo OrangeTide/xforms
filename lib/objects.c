@@ -2190,10 +2190,9 @@ void tooltip_handler( int    ID  FL_UNUSED_ARG,
 					  void * data )
 {
     FL_OBJECT * const obj = get_parent( data );
-    char const * const tooltip = obj->tooltip;
 
-    if ( tooltip && *tooltip )
-		fli_show_tooltip( tooltip, obj->form->x + obj->x,
+    if ( obj->tooltip && *obj->tooltip )
+		fli_show_tooltip( obj->tooltip, obj->form->x + obj->x,
 						  obj->form->y + obj->y + obj->h + 1 );
     obj->tipID = 0;
 }

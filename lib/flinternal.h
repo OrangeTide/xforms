@@ -290,6 +290,8 @@ extern void fli_set_winproperty( Window,
 
 extern void fli_init_colormap( int );
 
+extern void fli_free_colormap( int );
+
 extern void fli_dump_state_info( int,
 								 const char * );
 
@@ -542,8 +544,8 @@ typedef struct fli_context_ {
     long                 ext_request_size;	/* extended request size  */
     int                  tooltip_time;
 #ifdef XlibSpecificationRelease
-    XIM                  xim ;              /* input method           */
-    XIC                  xic ;              /* input context          */
+    XIM                  xim;               /* input method           */
+    XIC                  xic;               /* input context          */
 #else
     void               * xim;
     void               * xic;

@@ -678,7 +678,7 @@ fl_get_resource( const char * rname,	/* resource name */
 			break;
 
 		case FL_FLOAT:
-			*( float * ) val = ( float ) atof( entry.addr );
+			* ( float * ) val = ( float ) atof( entry.addr );
 			break;
 
 		case FL_STRING:
@@ -879,6 +879,8 @@ fli_init_context( void )
 	fli_context->hscb          = FL_HOR_THIN_SCROLLBAR;
 	fli_context->vscb          = FL_VERT_THIN_SCROLLBAR;
 	fli_context->navigate_mask = ShiftMask;   /* to navigate input field */
+	fli_context->xim           = NULL;
+	fli_context->xic           = NULL;
 }
 
 
@@ -1325,10 +1327,6 @@ fl_finish( void )
 
 	fli_goodies_cleanup( );
 
-	/* Release memory used for cursors */
-
-	fli_free_cursors( );
-
 	/* Release memory allocated for file selectors */
 
 	fli_free_fselectors( );
@@ -1340,6 +1338,27 @@ fl_finish( void )
 	/* Release memory used for the copy of the command line arguments */
 
 	fli_free_cmdline_args( );
+
+	/* Release memory used for cursors */
+
+	fli_free_cursors( );
+
+	/* Free memory used for colormaps */
+
+	fli_free_colormap( fl_vmode );
+
+	/* Get rid of memory for input methods */
+
+#ifdef XlibSpecificationRelease
+    if ( fli_context && XSupportsLocale( ) && fli_context->xim )
+	{
+		if ( fli_context->xic )
+			XDestroyIC( fli_context->xic );
+		XCloseIM( fli_context->xim );
+	}
+#endif
+
+	fl_safe_free( fli_context );
 
 	/* Close the display */
 

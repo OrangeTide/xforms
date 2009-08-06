@@ -633,7 +633,7 @@ typedef enum {
 typedef struct {
 	const char * res_name;		/* resource name						*/
 	const char * res_class;		/* resource class						*/
-	FL_RTYPE	 type;			/* FL_INT, FL_FLOAT, FL_BOOL,FL_STRING	*/
+	FL_RTYPE	 type;			/* FL_INT, FL_FLOAT, FL_BOOL, FL_STRING */
 	void       * var;			/* address for the variable				*/
 	const char * defval;		/* default setting in string form		*/
 	int			 nbytes;		/* used only for strings				*/
@@ -647,7 +647,7 @@ FL_EXPORT Display * fl_initialize( int        * na,
 								   char       * arg[ ],
 								   const char * appclass,
 								   FL_CMD_OPT * appopt,
-								   int			 nappopt );
+								   int			nappopt );
 
 FL_EXPORT Display * fl_init( void );
 

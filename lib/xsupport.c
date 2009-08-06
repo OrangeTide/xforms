@@ -152,7 +152,7 @@ fl_set_mouse( FL_Coord mx,
 /*** End of pointer query routines ******************/
 
 
-Pixmap fli_gray_pattern[ 3 ];
+Pixmap fli_gray_pattern[ 3 ] = { None, None, None };
 GC fli_bwgc[ 3 ];
 GC fli_whitegc;
 GC fl_drawgc[ 18 ];

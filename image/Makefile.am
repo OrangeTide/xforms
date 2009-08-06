@@ -7,7 +7,9 @@ include_HEADERS	= flimage.h
 
 lib_LTLIBRARIES = libflimage.la
 
-libflimage_la_LDFLAGS = -version-info @SO_VERSION@
+libflimage_la_LDFLAGS = -no-undefined -Wl,--no-undefined -version-info @SO_VERSION@
+
+libflimage_la_LIBADD = ../lib/libforms.la $(JPEG_LIB) $(X_LIBS) -lX11
 
 libflimage_la_SOURCES = \
 	flimage.h \
