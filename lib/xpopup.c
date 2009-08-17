@@ -821,7 +821,7 @@ convert_shortcut( const char * sc,
     item->ulpos = fli_get_underline_pos( str, sc ) - 1;
     fli_convert_shortcut( sc, item->shortcut );
     if ( sc[ 0 ] == '&' )
-		M_info( "convert_shortcut", "sc=%s keysym=%ld\n",
+		M_info( "convert_shortcut", "sc = %s keysym = %ld\n",
 				sc, item->shortcut[ 0 ] );
 }
 

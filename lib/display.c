@@ -20,7 +20,7 @@
  * \file display.c
  *
  * We need this so files that reference fl_display don't
- * have to pull other files in.
+ * have to in pull other files.
  */
 
 

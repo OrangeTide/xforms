@@ -19,7 +19,6 @@
 /**
  * \file formbrowser.c
  *
- *.
  *  This file is part of the XForms library package.
  *
  *  Copyright (c) 1997  By T.C. Zhao and Mark Overmars
@@ -27,10 +26,8 @@
  *                      Microscopy and Imaging Research
  *  Copyright (c) 1999-2002  by T.C. Zhao and Steve Lamont
  *  All rights reserved.
- *.
  *
  * form browser.
- *
  */
 
 #ifdef HAVE_CONFIG_H

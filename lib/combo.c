@@ -18,11 +18,10 @@
 
 /**
  * \file combo.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  All Buttons. Additional button class can be added via
  *  fl_add_button_class and fl_create_generic_button

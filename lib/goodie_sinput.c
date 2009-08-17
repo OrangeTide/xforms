@@ -18,14 +18,10 @@
 
 /**
  * \file goodie_sinput.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
- *
- *  Input goodie
  */
 
 #ifdef HAVE_CONFIG_H

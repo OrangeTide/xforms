@@ -23,7 +23,6 @@
  *   All rights reserved.
  *
  *   Similar to strcat, but takes variable number of argument
- *
  */
 
 #ifdef HAVE_CONFIG_H

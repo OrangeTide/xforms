@@ -316,7 +316,7 @@ append_fd_suffix( const char * ff )
 
 
 /***************************************
- * loads or merges a file with form definitions
+ * Loads or merges a file with form definitions
  ***************************************/
 
 int

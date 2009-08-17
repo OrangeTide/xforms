@@ -19,9 +19,8 @@
 /**
  * \file errmsg.c
  *
- *.  Copyright(c) 1993,1994 by T.C. Zhao
+ *   Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
- *.
  *
  *  Error handling routines.
  *
@@ -32,7 +31,7 @@
  *
  *  The graphical output routine must have the following form:
  *    void (*gmout)(const char *, const char *, const char *, int);
- ***********************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

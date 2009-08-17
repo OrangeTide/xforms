@@ -18,11 +18,10 @@
 
 /**
  * \file input.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  XForms Class FL_INPUT
  *     handle normal user inputs and exchange data with other
@@ -30,7 +29,6 @@
  *
  *  Data structure is grossly wrong and very inefficient.
  *  Need to complete overhaul this someday.
- *
  */
 
 #ifdef HAVE_CONFIG_H

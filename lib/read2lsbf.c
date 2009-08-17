@@ -19,11 +19,11 @@
 /**
  * \file read2lsbf.c
  *
- *.  Copyright(c) 1993,1994 by T.C. Zhao
+ *   Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
  *
  *    Read 2bytes LSB first
- ***********************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

@@ -18,11 +18,11 @@
 
 /**
  * \file fselect.c
- *.
+ *
  *	This file is part of the XForms library package.
  *	Copyright (c) 1996-2002	 T.C. Zhao and Mark Overmars
  *	All rights reserved.
- *.
+ *
  *	Comprehensive interactive file selector. The actual directory reading
  *	code is isolated in listdir.c
  */

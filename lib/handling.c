@@ -1234,7 +1234,7 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
 		evform->x = st_xev.xconfigure.x;
 		evform->y = st_xev.xconfigure.y;
 		M_warn( "handle_ConfigureNotify_event", "WMConfigure:x = %d y = %d"
-				"w=%d h=%d", evform->x, evform->y, st_xev.xconfigure.width,
+				"w = %d h = %d", evform->x, evform->y, st_xev.xconfigure.width,
 				st_xev.xconfigure.height );
 	}
 

@@ -22,7 +22,6 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  Counter class
  *   only FL_RETURN_END_CHANGED and FL_RETURN_CHANED are meaningful

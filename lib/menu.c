@@ -18,12 +18,10 @@
 
 /**
  * \file menu.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
  *
  *  XForms Class FL_MENU.
  *    call PopUp to handle the actual random access
@@ -35,7 +33,6 @@
  *  OR use the following to simplify code for extern pup
  *    when extern_menu is used, gets all text and mode, then
  *    all the code would be the same for extern and native menu.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -293,7 +290,8 @@ handle_menu( FL_OBJECT * ob,
 			}
 
 			if ( do_menu( ob ) > 0 )
-				ret |= FL_RETURN_CHANGED;
+				ret |= FL_RETURN_END | FL_RETURN_CHANGED;
+
 			break;
 
 		case FL_RELEASE :
@@ -312,6 +310,7 @@ handle_menu( FL_OBJECT * ob,
 
 			if ( do_menu( ob ) > 0 )
 				ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+
 			break;
 
 		case FL_SHORTCUT:

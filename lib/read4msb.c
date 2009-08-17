@@ -23,7 +23,7 @@
  *   All rights reserved.
  *
  *   Read 4bytes MSB first
- ***********************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

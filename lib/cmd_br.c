@@ -18,15 +18,13 @@
 
 /**
  * \file cmd_br.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Run a command and have its output re-directed to a browser.
  * Not very robust as signals are not handled.
- *
  */
 
 #ifdef HAVE_CONFIG_H

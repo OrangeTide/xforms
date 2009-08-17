@@ -931,7 +931,6 @@ add_an_object( int      objclass,
 				}
 
 				obj = cls->addit(type, x, y, w, h, "");
-				/* fl_set_xyplot_data(obj, xx, yy, 30, "XyPlot", "X-axis", "Y"); */
 				fl_set_xyplot_data( obj, xx, yy, 30, "", "", "" );
 			}
 			break;

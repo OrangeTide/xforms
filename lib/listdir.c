@@ -18,11 +18,10 @@
 
 /**
  * \file listdir.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Read a directory. Hightly system dependent.
  *  Seems opendir/readdir/closedir is the most portable.

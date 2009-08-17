@@ -18,16 +18,14 @@
 
 /**
  * \file interpol.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  * interpol1 interpolates a one-dimensional non-uniform
  * tabulated data onto a working grid, grid, using
  * nth order Lagrangian polynomial
- *
  */
 
 #ifdef HAVE_CONFIG_H

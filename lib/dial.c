@@ -18,13 +18,10 @@
 
 /**
  * \file dial.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *
- * dial.c
  *
  *  Default 0 is at 6 oclock and clock-wise is positive.
  */

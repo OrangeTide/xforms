@@ -62,7 +62,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.31 $ of $Date: 2009/07/12 11:43:01 $",
+    "$State: Exp $  $Revision: 1.32 $ of $Date: 2009/08/06 20:22:01 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
 	"GNU Lesser General Public License sinc 2002",
 	NULL
@@ -81,7 +81,6 @@ rm_rcs_kw( const char * s )
     unsigned char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
     int left = 0,
 		lastc = -1;
-
 
     while ( *s && ( q - buf[ nbuf ] ) < ( int ) sizeof buf[ nbuf ] - 2 )
     {
@@ -168,7 +167,7 @@ unsigned long fd_red,
               fd_white,
               fd_col;
 Display *fd_display;
-int changed = 0;				/* Whether the thing has changed. */
+int changed = 0;				/* Whether something has changed. */
 char main_name[ MAX_VAR_LEN ];	/* Name of the main calling routine */
 char *loadedfile;
 char *loadedfile_fullpath;
@@ -189,7 +188,7 @@ add_something( void )
 
     if ( ! cur_form )
     {
-		fl_show_alert( "Warning", "Please Add a form first", "", 0 );
+		fl_show_alert( "Warning", "Please add a form first", "", 0 );
 		return;
     }
 
@@ -233,8 +232,9 @@ mainname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if ( ! ( s = fl_show_input( "Main creation routine name:", main_name ) ) )
 		return;
 
-    strcpy( main_name, s );
-    if ( main_name[ 0 ] == '\0' )
+	if ( *s )
+		strcpy( main_name, s );
+    else
 		strcpy( main_name, "create_the_forms" );
     changed = 1;
 }

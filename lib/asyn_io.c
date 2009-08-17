@@ -22,13 +22,10 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
- *
  *
  *  Handle input other than the X event queue. Mostly maintanance
  *  here. Actual input/output handling is triggered in the main loop
  *  via fli_watch_io.
- *
  */
 
 #ifdef HAVE_CONFIG_H

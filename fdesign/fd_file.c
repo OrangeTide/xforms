@@ -119,7 +119,7 @@ myfgets( char * line,
     char tmpstr[ 10000 ];		/* Maximal label length is limited here. */
     int i = 0,
 		j;
-    int ch = fgetc(fl);
+    int ch = fgetc( fl );
 
     while ( ch != '\n' && ch != EOF )
     {
@@ -145,7 +145,6 @@ myfgets( char * line,
 /*
  * X version changed color systemtically, need to do a translation
  * from old fd files on the fly
- *
  */
 
 typedef struct {

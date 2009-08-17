@@ -18,14 +18,12 @@
 
 /**
  * \file fldraw.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  High level drawing routines. Uses the routines defined in xdraw.c
- *
  */
 
 #ifdef HAVE_CONFIG_H

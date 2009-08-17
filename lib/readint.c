@@ -19,7 +19,7 @@
 /**
  * \file readint.c
  *
- *.  Copyright(c) 1993,1994 by T.C. Zhao
+ *   Copyright(c) 1993,1994 by T.C. Zhao
  *   All rights reserved.
  *
  *   Read an integer (decimal or hex) from a file.
@@ -27,7 +27,7 @@
  *   Comment is introduced by #
  *
  * For hex integers, a-f, A-F is assumed continous
- ***********************************************************************/
+ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>

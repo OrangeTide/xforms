@@ -157,20 +157,21 @@ create_form( void )
 	obj = fl_add_box( FL_BORDER_BOX, 0, 0, 440, 380, "" );
 	fl_set_object_color( obj, FL_SLATEBLUE, FL_COL1 );
 
-	menu[0] = obj = fl_add_menu( FL_PUSH_MENU, 0, 0, 110, 30, "Color 1" );
+	menu[ 0 ] = obj = fl_add_menu( FL_PUSH_MENU, 0, 0, 110, 30, "Color 1" );
     fl_set_menu_notitle( obj, 1 );
     fl_set_object_shortcut( obj, "1#1", 1 );
     fl_set_object_callback( obj, menu_cb, 0 );
 
-	menu[1] = obj = fl_add_menu( FL_PUSH_MENU, 110, 0, 110, 30, "Color 2" );
+	menu[ 1 ] = obj = fl_add_menu( FL_PUSH_MENU, 110, 0, 110, 30, "Color 2" );
     fl_set_object_shortcut( obj, "2#2", 1 );
     fl_set_object_callback( obj, menu_cb, 1 );
 
-	menu[2] = obj = fl_add_menu( FL_PULLDOWN_MENU, 220, 0, 110, 30, "Color 3" );
+	menu[ 2 ] = obj = fl_add_menu( FL_PULLDOWN_MENU, 220, 0, 110, 30,
+								   "Color 3" );
     fl_set_object_shortcut( obj, "3#3", 1 );
     fl_set_object_callback( obj, menu_cb, 2 );
 
-	menu[3] = obj = fl_add_menu( FL_TOUCH_MENU, 330, 0, 110, 30, "Color 4" );
+	menu[ 3 ] = obj = fl_add_menu( FL_TOUCH_MENU, 330, 0, 110, 30, "Color 4" );
     fl_set_object_shortcut( obj, "4#4", 1 );
     fl_set_object_callback( obj, menu_cb, 3 );
 

@@ -19,11 +19,9 @@
 /**
  * \file lframe.c
  *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  similar to FL_FRAME, but label is drawn on the frame
  */

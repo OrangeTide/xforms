@@ -18,14 +18,12 @@
 
 /**
  * \file child.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Temporary hack to get composite (sort of) object support in
- *
  */
 
 #ifdef HAVE_CONFIG_H

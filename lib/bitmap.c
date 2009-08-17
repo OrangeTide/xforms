@@ -18,14 +18,12 @@
 
 /**
  * \file bitmap.c
- *.
+ *
  *	This file is part of the XForms library package.
  *	Copyright (c) 1996-2002	 T.C. Zhao and Mark Overmars
  *	All rights reserved.
- *.
  *
  *	FL_BITMAP & FL_BITMAPBUTTON class.
- *
  */
 
 #ifdef HAVE_CONFIG_H

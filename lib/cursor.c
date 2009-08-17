@@ -22,7 +22,6 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Cursor routines
  *
@@ -30,7 +29,6 @@
  *          the constants defined by XFORMS (FL_INVISIBLE_CURSOR etc)
  *
  *     Cursor is the cursor usable in XDefineCursor(win, cursor)
- *
  */
 
 #ifdef HAVE_CONFIG_H

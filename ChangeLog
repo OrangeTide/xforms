@@ -1,3 +1,8 @@
+2009-08-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_printC.c: Some correctiions/bug fixes
+	* Bit of clean-up all over the place;-)
+
 2009-08-06 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/Makefile.am, gl/Makefile.am, image/Makefile.am:

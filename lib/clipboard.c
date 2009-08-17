@@ -19,11 +19,9 @@
 /**
  * \file clipboard.c
  *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1997-2002  T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Implementation of clipboard.  Event handling violates the ICCCM,
  *  but should work ok. Need server time from the mainloop.

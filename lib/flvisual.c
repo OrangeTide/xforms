@@ -18,16 +18,14 @@
 
 /**
  * \file flvisual.c
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Visual
  *
  *  XForm will by default use the visual that has the most depth
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -333,7 +331,7 @@ fli_initialize_program_visual( void )
 			/* Bogus request. Revert to the best visual we have found */
 
 			M_err( "fli_initialize_program_visual",
-				   "Bogus request: %s with depth=%d",
+				   "Bogus request: %s with depth = %d",
 				   fl_vclass_name( vmode ), depth );
 
 			vmode = select_best_visual( );

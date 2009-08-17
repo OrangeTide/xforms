@@ -377,7 +377,7 @@ control_init( FD_control * ui )
     fl_set_object_dblbuffer( ui->sizestatus, 1 );
     fl_set_object_dblbuffer( ui->oristatus,  1 );
 
-    /* file menu */
+    /* File menu */
 
     for ( m = fmenu, me = m + NFM, i = 1; m < me; m++, i++ )
     {
@@ -385,7 +385,7 @@ control_init( FD_control * ui )
 		fl_set_menu_item_shortcut( ui->filemenu, i, m->sc );
     }
 
-    /* form menu */
+    /* Form menu */
 
     for ( m = fmmenu, me = m + NFMM, i = 1; m < me; m++, i++ )
     {
@@ -393,7 +393,7 @@ control_init( FD_control * ui )
 		fl_set_menu_item_shortcut( ui->formmenu, i, m->sc );
     }
 
-    /* group menu */
+    /* Group menu */
 
     for ( m = gmenu, me = m + NGM, i = 1; m < me; m++, i++ )
     {
@@ -401,7 +401,7 @@ control_init( FD_control * ui )
 		fl_set_menu_item_shortcut( ui->groupmenu, i, m->sc );
     }
 
-    /* object menu */
+    /* Object menu */
 
     for ( m = obmenu, me = m + NOBM, i = 1; m < me; m++, i++ )
     {
@@ -409,7 +409,7 @@ control_init( FD_control * ui )
 		fl_set_menu_item_shortcut( ui->objectmenu, i, m->sc );
     }
 
-    /* option menu.  all are binary items */
+    /* Option menu.  all are binary items */
 
     for ( m = opmenu, me = m + NOPM, i = 1; m < me; m++, i++ )
     {
@@ -446,7 +446,7 @@ show_geometry( const char * s  FL_UNUSED_ARG,
 		            lw = -1,
 		            lh;
 
-    /* canonicalize rectangle */
+    /* Canonicalize rectangle */
 
     if ( w < 0 )
     {
