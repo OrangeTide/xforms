@@ -861,6 +861,7 @@ main( int    argc,
 		revision;
     FL_IOPT cntl;
     unsigned int mask;
+	char *tmp = NULL;
 
     /* Before doing anything, check to make sure the library is made
        correctly */
@@ -944,21 +945,24 @@ main( int    argc,
 
     /* Load files */
 
-    /* If only on argument and the file does not exist, we can assume that
+    /* If only one argument and the file does not exist, we can assume that
        the intention is to create a new file so we don't bother to try to
        load it */
 
     if (    argc >= 2
-		 && access( append_fd_suffix( argv[ argc - 1 ] ), R_OK ) == 0 )
+		 && access( tmp = append_fd_suffix( argv[ argc - 1 ] ), R_OK ) == 0 )
     {
 		for ( s = 1; s < argc; s++ )
-			load_forms( s == 1 ? FALSE : TRUE, argv[ s ], 0 );
+			if ( load_forms( s == 1 ? FALSE : TRUE, argv[ s ], 0 ) < 0 )
+				break;
     }
     else
     {
 		select_object_by_class( FL_BUTTON );
 		select_pallette_entry( FL_BUTTON );
     }
+
+	fl_safe_free( tmp );
 
     /* Do auto-naming for single file only */
 

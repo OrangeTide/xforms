@@ -304,14 +304,58 @@ int fd_magic;
 char *
 append_fd_suffix( const char * ff )
 {
-    static char fname[ 1024 ];
-    int i;
+	size_t l = strlen( ff );
+    char *fname = fl_malloc( l + 4 );
 
     strcpy( fname, ff );
-    i = strlen( fname ) - 1;
-    if ( i < 3 || strcmp( fname + i - 2, ".fd" ) )
-		strcat(fname, ".fd" );
+    if ( l < 3 || strcmp( fname + l - 3, ".fd" ) )
+		strcat( fname, ".fd" );
     return fname;
+}
+
+
+/***************************************
+ * Asks the user (if necessary) for a file to load and opens it
+ ***************************************/
+
+static FILE *
+get_fd_file( const char  * str,
+			   char       ** fname,
+			   int           merge )
+{
+	FILE *fp;
+
+    fl_use_fselector( LOAD_FSELECTOR );
+
+    /* Get the filename if necessary */
+
+    if ( ! str || ! *str )
+	{
+		str = fl_show_fselector( merge ? "Filename to merge forms from" :
+								 "Filename to load forms from",
+								 "", "*.fd", "" );
+
+		if ( ! str || ! *str )
+			return NULL;
+	}
+
+    /* Append .fd if required. */
+
+    *fname = append_fd_suffix( str );
+
+    /* Open the file for reading */
+
+    if ( ! ( fp = fopen( *fname, "r" ) ) )
+    {
+		if ( ! fdopt.conv_only )
+			fl_show_alert( "Can't open file for reading", *fname, "", 0 );
+		else
+			M_err( "LoadForm", "can't open %s", fname );
+		fl_free( *fname );
+		return NULL;
+    }
+
+	return fp;
 }
 
 
@@ -329,46 +373,15 @@ load_forms( int          merge,
 		ok,
 		nforms;
     FILE *fn;
-    char fname[ 256 ],
-		 buf[ 256 ],
-		 ubuf[ 32 ];
-    const char *fname_nopath = NULL;
+    char *fname,
+		 buf[ 256 ];
+    char *tmp;
 	FRM *new_forms;
 
-    fl_use_fselector( LOAD_FSELECTOR );
+	/* Open the file */
 
-    /* Get the filename if necessary */
-
-    if ( ! str || ! *str )
-	{
-		if ( merge )
-			str = fl_show_fselector( "Filename to merge forms from", "",
-									 "*.fd", "" );
-		else
-		{
-			str = fl_show_fselector( "Filename to load forms from", "",
-									 "*.fd", "" );
-			fname_nopath = fl_get_filename( );
-		}
-
-		if ( ! str || ! *str )
-			return -1;
-	}
-
-    /* Append .fd if required. */
-
-    strcpy( fname, append_fd_suffix( str ) );
-
-    /* Open the file for reading */
-
-    if ( ! ( fn = fopen( fname, "r" ) ) )
-    {
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't open file for reading", fname, "", 0 );
-		else
-			M_err( "LoadForm", "can't open %s", fname );
+	if ( ! ( fn = get_fd_file( str, &fname, merge ) ) )
 		return -1;
-    }
 
     /* Read in the definitions */
 
@@ -384,6 +397,7 @@ load_forms( int          merge,
 			fl_show_alert( "Can't read from file %s", fname, "", 0 );
 		else
 			M_err( "LoadForm", "can't read from file %s", fname );
+		fl_free( fname );
 		return -1;
     }
 
@@ -392,7 +406,8 @@ load_forms( int          merge,
 		if ( ! fdopt.conv_only )
 			fl_show_alert( "Wrong type of file!", "", "", 1 );
 		else
-			M_err( "LoadForm", "wrong type of file ID=%d", fd_magic );
+			M_err( "LoadForm", "Wrong type of file ID = %d", fd_magic );
+		fl_free( fname );
 		return -1;
     }
 
@@ -410,6 +425,7 @@ load_forms( int          merge,
 						   NULL, 0 );
 		else
 			M_err( "LoadForm", "Input file %s can't be loaded", fname );
+		fl_free( fname );
 		return -1;
     }
 	else if ( ! ( new_forms =
@@ -421,6 +437,7 @@ load_forms( int          merge,
 		else
 			M_err( "LoadForm", "Too many forms, running out of memory",
 				   fname );
+		fl_free( fname );
 		return -1;
 	}
 
@@ -431,6 +448,8 @@ load_forms( int          merge,
 
     while ( fgets( buf, sizeof buf - 1, fn ) && *buf != '\n' )
     {
+		char ubuf[ 32 ];
+
 		if ( strncmp( buf, "Unit", 4 ) == 0 )
 		{
 			sscanf( buf, "Unit of measure: %s", ubuf );
@@ -493,26 +512,27 @@ load_forms( int          merge,
 
     if ( merge )
 		changed = 1;
-    else if ( record && fname_nopath )
+    else if ( record && ( tmp = strrchr( fname, '/' ) ) )
     {
-		if ( loadedfile )
-			fl_free( loadedfile );
-		loadedfile = fl_strdup( fname_nopath );
+		fl_safe_free( loadedfile );
+		*tmp = '\0';
+		loadedfile = fl_strdup( fname );
     }
     fclose( fn );
 
     if ( ! merge )
     {
-		if ( loadedfile_fullpath )
-			fl_free( loadedfile_fullpath );
+		fl_safe_free( loadedfile_fullpath );
 		loadedfile_fullpath = fl_strdup( fname );
     }
 
-    /* reset active coordinate system to pixel */
+	fl_free( fname );
+
+    /* Reset active coordinate system to pixel */
 
     fli_cntl.coordUnit = FL_COORD_PIXEL;
 
-    /* force output the same as input when converting directly. The reason is
+    /* Force output the same as input when converting directly. The reason is
        we don't know the screen DPI. */
 
     if ( ! fdopt.conv_only )

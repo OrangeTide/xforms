@@ -944,7 +944,7 @@ handle_select( FL_OBJECT * obj,
 				sp->timeout_id = fl_add_timeout( sp->repeat_ms, timeout_cb,
 												 sp );
 				if ( ret != NULL )
-					sret != FL_RETURN_CHANGED;
+					sret |= FL_RETURN_CHANGED;
 			}
 			break;
 

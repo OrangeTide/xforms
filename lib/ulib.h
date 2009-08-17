@@ -67,7 +67,6 @@ extern int fli_fput4LSBF( int,
 extern char * fli_de_space( char * );
 extern char * fli_space_de( char * );
 extern char * fli_de_space_de( char * );
-extern char * fli_nuke_all_spaces( char * );
 extern char * fli_nuke_all_non_alnum( char * );
 
 

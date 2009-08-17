@@ -173,7 +173,7 @@ loadforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 && ! save_forms( NULL ) )
 		return;
 
-    load_forms(FALSE, NULL, 1);
+    load_forms( FALSE, NULL, 1 );
     changed = 0;
 }
 

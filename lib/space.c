@@ -47,12 +47,12 @@ fli_de_space( char * s )
 {
     char *p;
 
-    /* not all isspace considers '\t' a white space */
+    /* Not all isspace considers '\t' a white space */
 
     for ( p = s; p && ( isspace( ( int ) *p ) || *p == '\t' ); p++ )
 		/* empty */ ;
 
-    return p == s ? s : strcpy( s, p );
+    return p == s ? s : memmove( s, p, strlen( p ) + 1 );
 }
 
 
@@ -83,34 +83,13 @@ fli_space_de( char * s )
 
 
 /***************************************
- * remove space from both ends
+ * Remove space from both ends
  ***************************************/
 
 char *
 fli_de_space_de( char * p )
 {
     return fli_space_de( fli_de_space( p ) );
-}
-
-
-/***************************************
- * remove all spaces from string
- * This is bullshit!
- ***************************************/
-
-char *
-fli_nuke_all_spaces( char * s )
-{
-    char *p = s,
-		 *q = s + strlen( s ),
-		 *b;
-    char buf[ 1024 ];
-
-    for ( b = buf; p < q; p++ )
-        if ( ! isspace( ( int ) *p ) )
-			*b++ = *p;
-    *b = '\0';
-    return strcpy( s, buf );
 }
 
 
