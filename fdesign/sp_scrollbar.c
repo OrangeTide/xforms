@@ -19,13 +19,11 @@
 /**
  * \file sp_scrollbar.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- * Settting slider class specific attributes.
  *
+ * Settting slider class specific attributes.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -53,7 +51,12 @@ get_scrollbar_spec_fdform( void )
     if ( ! scb_attrib )
     {
 		scb_attrib = create_form_scrollbarattrib( );
-		fl_addto_choice( scb_attrib->returnsetting, get_how_return_str( ) );
+
+		set_up_how_return_menu( scb_attrib->returnsetting );
+		fl_set_menu_item_mode( scb_attrib->returnsetting, 5,
+							   FL_PUP_BOX | FL_PUP_GRAY );
+		fl_set_menu_item_mode( scb_attrib->returnsetting, 6,
+							   FL_PUP_BOX | FL_PUP_GRAY );
     }
 
     return scb_attrib;
@@ -89,8 +92,7 @@ show_spec( SuperSPEC * spec )
     set_finput_value( scb_attrib->ldelta, spec->ldelta, -1 );
     set_finput_value( scb_attrib->rdelta, spec->rdelta, -1 );
 
-    fl_set_choice_text( scb_attrib->returnsetting,
-						get_how_return_str_name( spec->how_return ) );
+	reset_how_return_menu( scb_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -163,10 +165,6 @@ emit_scrollbar_code( FILE      * fp,
     if ( spec->ldelta != defspec->ldelta || spec->rdelta != defspec->rdelta )
 		fprintf( fp, "    fl_set_scrollbar_increment( obj, %g, %g );\n",
 				 spec->ldelta, spec->rdelta );
-
-    if ( spec->how_return != defspec->how_return )
-		fprintf( fp, "     fl_set_scrollbar_return( obj, %s );\n",
-				 get_how_return_name( spec->how_return ) );
 }
 
 
@@ -204,9 +202,6 @@ save_scrollbar_attrib( FILE      * fp,
 
     if ( sp->rdelta != defsp->rdelta || sp->ldelta != defsp->ldelta )
 		fprintf( fp, "increment: %g %g\n", sp->ldelta, sp->rdelta );
-
-    if ( sp->how_return != defsp->how_return )
-		fprintf( fp, "return: %s\n", get_how_return_name( sp->how_return ) );
 }
 
 
@@ -300,9 +295,8 @@ void
 scb_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						  long        data  FL_UNUSED_ARG )
 {
-    const char *s = fl_get_choice_text( scb_attrib->returnsetting );
-
-    fl_set_scrollbar_return( scb_attrib->vdata, get_how_return_str_value( s ) );
+	handle_how_return_changes( scb_attrib->returnsetting,
+							   scb_attrib->vdata );
 }
 
 

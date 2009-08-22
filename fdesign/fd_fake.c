@@ -19,13 +19,12 @@
 /**
  * \file fd_fake.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *.
- * Fdesign is not capable of handing real canvas classes. Here
- * we use frame/box classes to simulate the appearance of a canvas
+ *  Fdesign is not capable of handing real canvas classes. Here
+ *  we use frame/box classes to simulate the appearance of a canvas
  */
 
 #ifdef HAVE_CONFIG_H

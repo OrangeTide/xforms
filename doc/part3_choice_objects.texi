@@ -1609,7 +1609,7 @@ As an alternative you cound request that the browser object gets
 returned (or a callback invoked) when the the scrollbar positions are
 changed. This can be done e.g.@: by passing @code{FL_RETURN_CHANGED}
 (if necessary @code{OR}'ed with flags for also returning on
-selection/deselections). Within the code for ealing with the
+selection/deselections). Within the code for dealing with the
 event you could check if this is a change event by using the
 function
 @findex fl_get_object_return_state()

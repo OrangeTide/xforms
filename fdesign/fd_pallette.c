@@ -18,14 +18,14 @@
 
 /**
  * \file fd_pallette.c
- *.
+ *
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  handles the object pallette
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif

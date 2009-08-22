@@ -19,14 +19,11 @@
 /**
  * \file sp_button.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Settting button class specific attributes.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -721,16 +718,16 @@ get_data_name( FL_OBJECT * ob,
 
     if ( ob->objclass != FL_BITMAPBUTTON && ob->objclass != FL_PIXMAPBUTTON )
     {
-		inf->filename[ 0 ] = '\0';
-		inf->focus_filename[ 0 ] = '\0';
-		inf->width[ 0 ] = '\0';
-		inf->height[ 0 ] = '\0';
+		*inf->filename = '\0';
+		*inf->focus_filename = '\0';
+		*inf->width = '\0';
+		*inf->height = '\0';
 		return;
     }
 
     if ( ! inf->use_data )
     {
-		inf->data[ 0 ] = inf->width[ 0 ] = inf->height[ 0 ] = '\0';
+		*inf->data = *inf->width = *inf->height = '\0';
 		return;
     }
 
@@ -740,16 +737,16 @@ get_data_name( FL_OBJECT * ob,
 
 		/* wipe the icon file only if there isn't anything we can do */
 
-		if ( ! inf->use_data || inf->data[ 0 ] == '\0' )
-			inf->filename[ 0 ] = '\0';
+		if ( ! inf->use_data || ! *inf->data )
+			*inf->filename = '\0';
     }
 
     if (    inf->focus_filename[ 0 ]
 		 && ! ( focus_fp = fopen( inf->focus_filename, "r" ) ) )
     {
 		fprintf( stderr, "can't open focusfile %s\n", inf->focus_filename );
-		if ( ! inf->use_data || inf->focus_data[ 0 ] == '\0')
-			inf->focus_filename[ 0 ] = '\0';
+		if ( ! inf->use_data || ! *inf->focus_data )
+			*inf->focus_filename = '\0';
     }
 
     if ( ob->objclass == FL_PIXMAPBUTTON )

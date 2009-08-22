@@ -1107,7 +1107,7 @@ static FLI_VN_PAIR types[ ] =
     VN( FL_IMAGE_GRAY ),
     VN( FL_IMAGE_GRAY16 ),
     VN( FL_IMAGE_FLEX ),
-    VN( -1)
+    { -1, NULL }
 };
 
 

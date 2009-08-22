@@ -19,14 +19,11 @@
 /**
  * \file sp_xyplot.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Settting xyplot class specific attributes.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -60,7 +57,12 @@ get_xyplot_spec_fdform( void )
 		fl_addto_choice( xyplot_attrib->xgrid, get_grid_string( ) );
 		fl_addto_choice( xyplot_attrib->ygrid, get_grid_string( ) );
 		fl_addto_choice( xyplot_attrib->gridstyle, get_linestyle_string( ) );
-		fl_addto_choice( xyplot_attrib->how_return, get_how_return_str( ) );
+
+		set_up_how_return_menu( xyplot_attrib->how_return );
+		fl_set_menu_item_mode( xyplot_attrib->how_return, 5,
+							   FL_PUP_BOX | FL_PUP_GRAY );
+		fl_set_menu_item_mode( xyplot_attrib->how_return, 6,
+							   FL_PUP_BOX | FL_PUP_GRAY );
     }
 
     return xyplot_attrib;
@@ -101,8 +103,7 @@ show_spec( SuperSPEC * spec )
     set_finput_value( xyplot_attrib->xbase, spec->xbase, -1 );
     set_finput_value( xyplot_attrib->ybase, spec->ybase, -1 );
 
-    fl_set_choice_text( xyplot_attrib->how_return,
-						get_how_return_str_name( spec->how_return ) );
+	reset_how_return_menu( xyplot_attrib->how_return, spec->how_return );
 
     fl_set_button( xyplot_attrib->mark_active, spec->mark_active );
 }
@@ -208,10 +209,6 @@ emit_xyplot_code( FILE      * fp,
 		if ( sp->mark_active != defsp->mark_active )
 			fprintf( fp, "    fl_set_xyplot_mark_active( obj, %d );\n",
 					 sp->mark_active );
-
-		if ( sp->how_return != defsp->how_return )
-			fprintf( fp, "    fl_set_xyplot_return( obj, %s );\n",
-					 get_how_return_name( sp->how_return ) );
     }
 
     fl_free_object( defobj );
@@ -263,10 +260,6 @@ save_xyplot_attrib( FILE      * fp,
 
     if ( ob->type == FL_ACTIVE_XYPLOT )
     {
-		if ( sp->how_return != defsp->how_return )
-			fprintf( fp, "return: %s\n",
-					 get_how_return_str_name( sp->how_return ) );
-
 		if ( sp->mark_active != defsp->mark_active )
 			fprintf( fp, "markactive: %d\n", sp->mark_active );
     }
@@ -417,10 +410,8 @@ void
 xyplot_returnsetting_change( FL_OBJECT * ob,
 							 long        data  FL_UNUSED_ARG )
 {
-    const char *s = fl_get_choice_text( ob );
-
-    fl_set_xyplot_return( xyplot_attrib->how_return,
-						  get_how_return_str_value( s ) );
+	handle_how_return_changes( xyplot_attrib->how_return,
+							   xyplot_attrib->vdata );
 }
 
 

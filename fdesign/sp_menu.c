@@ -19,13 +19,11 @@
 /**
  * \file sp_menu.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- * Settting menu class specific attributes.
  *
+ * Setting menu class specific attributes.
  */
 
 #ifdef HAVE_CONFIG_H

@@ -85,7 +85,7 @@ static FLI_VN_PAIR flevent[ ] =
 	VN( FL_DBLCLICK  ),
     VN( FL_OTHER     ),
 	VN( FL_ATTRIB    ),
-    VN( -1           )
+    { -1, NULL }
 };
 
 
@@ -137,7 +137,7 @@ static FLI_VN_PAIR flclass[ ] =
 	VN( FL_IMAGECANVAS   ),
     VN( FL_TEXTBOX       ),
     VN( FL_SPINNER       ),
-    VN( -1               )
+	{ -1, NULL }
 };
 
 
@@ -281,3 +281,78 @@ fli_read_line( FILE *fp )
 		return old_line;
 	return line;
 }
+
+
+/*******************************************
+ * Secure string copy: a maximum of (n-1) bytes will be copied, the 
+ * destination string is always ends in a '\0'.
+ * Returns: dest or NULL if dest is NULL or n is 0
+ *******************************************/
+
+char *
+fli_sstrcpy( char       * dest,
+			 const char * src,
+			 size_t       n )
+{
+	size_t l = src ? strlen( src ) : 0;
+
+	if ( ! dest || n == 0 )
+		return NULL;
+
+	if ( l < n )
+		memcpy( dest, src, l + 1 );
+	else
+	{
+		memcpy( dest, src, n - 1 );
+		dest[ n - 1 ] = '\0';
+	}
+
+	return dest;
+}
+
+
+/*******************************************
+ *******************************************/
+
+#define GET_STRING_TRY_LENGTH 128
+
+char *
+fli_get_string( const char * fmt,
+				... )
+{
+    char *c = NULL;
+    size_t len = GET_STRING_TRY_LENGTH;
+    va_list ap;
+    int wr;
+
+    while ( 1 )
+    {
+        c = fl_realloc( c, len );
+        va_start( ap, fmt );
+        wr = vsnprintf( c, len, fmt, ap );
+        va_end( ap );
+
+        if ( wr < 0 )         /* indicates not enough space with older glibs */
+        {
+            len *= 2;
+            continue;
+        }
+
+        if ( ( size_t ) wr + 1 > len )   /* newer glibs return the number of */
+        {                                /* chars needed, not counting the   */
+            len = wr + 1;                /* trailing '\0'                    */
+            continue;
+        }
+
+        break;
+    }
+
+    /* Trim the string down to the number of required characters */
+
+    if ( ( size_t ) wr + 1 < len )
+        fl_realloc( c, ( size_t ) wr + 1 );
+
+    return c;
+}
+
+

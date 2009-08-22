@@ -39,13 +39,11 @@ int
 fli_get_vn_value( FLI_VN_PAIR * vn_pair,
 				  const char  * name )
 {
-    for ( ; vn_pair->val >= 0; vn_pair++ )
-        if ( strcmp( vn_pair->name, name ) == 0 )
+    for ( ; vn_pair->name; vn_pair++ )
+        if ( ! strcmp( vn_pair->name, name ) )
             return vn_pair->val;
 
-    /* Not found. Take a guess */
-
-    return atoi( name );
+    return -1;
 }
 
 
@@ -61,10 +59,10 @@ fli_get_vn_name( FLI_VN_PAIR * vn_pair,
 
     k = ( k + 1 ) % 5;
 
-    for ( ; vn_pair->val >= 0; vn_pair++ )
+    for ( ; vn_pair->name; vn_pair++ )
         if ( vn_pair->val == val )
             return vn_pair->name;
-    sprintf( buf[ k ], "%d", val );
 
+    sprintf( buf[ k ], "%d", val );
     return buf[ k ];
 }

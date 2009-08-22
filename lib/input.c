@@ -879,11 +879,9 @@ handle_edit( FL_OBJECT * obj,
 			/* save buffer */
 
 			if ( i - sp->position > 1 )
-			{
-				strncpy( cutbuf, sp->str + sp->position,
-						 i - sp->position );
-				cutbuf[ i - sp->position ] = '\0';
-			}
+				fli_sstrcpy( cutbuf, sp->str + sp->position,
+							 i - sp->position );
+
 			delete_piece( obj, sp->position, i - 1 );
 		}
 		else
@@ -1943,8 +1941,7 @@ fl_get_input_selected_range( FL_OBJECT * obj,
 		nselbuf = n;
     }
 
-    strncpy( selbuf, sp->str + sp->beginrange, n );
-    selbuf[ n ] = '\0';
+    fli_sstrcpy( selbuf, sp->str + sp->beginrange, n );
 
     return selbuf;
 }

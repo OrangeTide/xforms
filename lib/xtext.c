@@ -193,7 +193,7 @@ fli_drw_string( int           horalign,
 
   redo:
 
-    while ( str[ i ] != '\0' && lnumb < nlines - 1 )
+    while ( str[ i ] && lnumb < nlines - 1 )
     {
 		slen[ lnumb - 1 ]++;
 		if ( str[ i++ ] == '\n' )
@@ -207,7 +207,7 @@ fli_drw_string( int           horalign,
 		}
     }
 
-    if ( str[ i ] != '\0' )
+    if ( str[ i ] )
     {
 		extend_workmem( nlines += LINES_INCREMENT );
 		goto redo;
@@ -409,7 +409,7 @@ fli_get_pos_in_string( int          horalign,
     /* Split string into lines  */
 
     start[ 0 ] = 0;
-    for ( lnumb = 1, i = 0; str[ i ] != '\0'; i++ )
+    for ( lnumb = 1, i = 0; str[ i ]; i++ )
 		if ( str[ i ] == '\n' )
 			start[ lnumb++ ] = i + 1;
     start[ lnumb ] = i + 1;

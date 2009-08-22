@@ -478,25 +478,25 @@ fli_show_form_pixmap( FL_FORM * form )
 }
 
 
-/********  VisualClass name *************{*/
+/********  VisualClass name **************/
 
-#define VNP( a )   { a, #a }
+#define VN( a )   { a, #a }
 
 static FLI_VN_PAIR xvclass[ ] =
 {
-    VNP( PseudoColor ),
-	VNP( TrueColor ),
-	VNP( DirectColor ),
-	VNP( StaticColor ),
-    VNP( GrayScale ),
-	VNP( GreyScale ),
-	VNP( StaticGray ),
-	VNP( StaticGrey ),
+    VN( PseudoColor ),
+	VN( TrueColor ),
+	VN( DirectColor ),
+	VN( StaticColor ),
+    VN( GrayScale ),
+	VN( GreyScale ),
+	VN( StaticGray ),
+	VN( StaticGrey ),
     { FL_DefaultVisual, "DefaultVisual" },
     { FL_DefaultVisual, "default"       },
     { FL_DefaultVisual, "Default"       },
     { FL_IllegalVisual, "XInvalidClass" },
-    { -1,               "Invalid"       }
+    { -1,               NULL            }
 };
 
 
@@ -506,7 +506,9 @@ static FLI_VN_PAIR xvclass[ ] =
 const char *
 fl_vclass_name( int n )
 {
-    return fli_get_vn_name( xvclass, n );
+	const char *cn = fli_get_vn_name( xvclass, n );
+
+    return cn ? cn : fli_get_vn_name( xvclass, FL_IllegalVisual );
 }
 
 
@@ -518,10 +520,13 @@ fl_vclass_name( int n )
 int
 fl_vclass_val( const char * v )
 {
-    FLI_VN_PAIR *vn = xvclass;
+    FLI_VN_PAIR *vn;
 
-    for ( ; vn->val >= 0 && v; vn++ )
-		if ( strcmp( vn->name, v ) == 0 )
+	if ( ! v ) 
+		return FL_IllegalVisual;
+
+    for ( vn = xvclass; vn->name; vn++ )
+		if ( ! strcmp( vn->name, v ) )
 			return vn->val;
 
     return FL_IllegalVisual;

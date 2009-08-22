@@ -86,16 +86,16 @@ callback: scb_minmax_change
 argument: 0
 
 --------------------
-class: FL_CHOICE
-type: NORMAL_CHOICE2
+class: FL_MENU
+type: PULLDOWN_MENU
 box: 310 110 143 24
 boxtype: FL_UP_BOX
-colors: FL_COL1 FL_BLACK
-alignment: FL_ALIGN_TOP
+colors: FL_COL1 FL_MCOL
+alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: ReturnSetting
+label: Return Setting
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity

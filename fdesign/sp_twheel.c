@@ -19,13 +19,11 @@
 /**
  * \file sp_twheel.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- * Settting twheel class specific attributes.
  *
+ * Settting twheel class specific attributes.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -53,8 +51,12 @@ get_twheel_spec_fdform( void )
     if ( ! twheel_attrib )
     {
 		twheel_attrib = create_form_twheelattrib( );
-		fl_clear_choice( twheel_attrib->returnsetting );
-		fl_addto_choice( twheel_attrib->returnsetting, get_how_return_str( ) );
+
+		set_up_how_return_menu( twheel_attrib->returnsetting );
+		fl_set_menu_item_mode( twheel_attrib->returnsetting, 5,
+							   FL_PUP_BOX | FL_PUP_GRAY );
+		fl_set_menu_item_mode( twheel_attrib->returnsetting, 6,
+							   FL_PUP_BOX | FL_PUP_GRAY );
     }
     return twheel_attrib;
 }
@@ -67,10 +69,10 @@ void
 twheel_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
 					 long        data  FL_UNUSED_ARG )
 {
-    FL_OBJECT *edit_obj;
+    FL_OBJECT *edit_obj = twheel_attrib->vdata;
 
-    edit_obj = twheel_attrib->vdata;
     superspec_to_spec( edit_obj );
+    show_spec( get_superspec( edit_obj ) );
     redraw_the_form( 0 );
 }
 
@@ -89,8 +91,7 @@ show_spec( SuperSPEC * spec )
     fl_set_counter_value( twheel_attrib->prec, spec->prec );
     /* fl_call_object_callback( twheel_attrib->prec ); */
 
-    fl_set_choice_text( twheel_attrib->returnsetting,
-						get_how_return_str_name( spec->how_return ) );
+	reset_how_return_menu( twheel_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -152,10 +153,6 @@ emit_twheel_code( FILE      * fp,
 
     if ( sp->step != defsp->step )
 		fprintf( fp, "    fl_set_thumbwheel_step( obj, %g );\n", sp->step );
-
-    if ( sp->how_return != defsp->how_return )
-		fprintf( fp, "    fl_set_thumbwheel_return( obj, %s );\n",
-				 get_how_return_name(sp->how_return ) );
 }
 
 
@@ -197,9 +194,6 @@ save_twheel_attrib( FILE      * fp,
 
     if ( sp->step != defsp->step )
 		fprintf( fp, "step: %g\n", sp->step );
-
-    if ( sp->how_return != defsp->how_return )
-		fprintf( fp, "return: %s\n", get_how_return_name( sp->how_return ) );
 }
 
 
@@ -259,10 +253,8 @@ void
 twheel_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 							 long        data  FL_UNUSED_ARG )
 {
-    const char *s = fl_get_choice_text( twheel_attrib->returnsetting );
-
-    fl_set_thumbwheel_return( twheel_attrib->vdata,
-							  get_how_return_str_value( s ) );
+	handle_how_return_changes( twheel_attrib->returnsetting,
+							   twheel_attrib->vdata );
 }
 
 

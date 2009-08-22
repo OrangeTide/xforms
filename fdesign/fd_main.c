@@ -19,17 +19,13 @@
 /**
  * \file fd_main.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * This is the main module of the Form Designer, a program that
  * helps you to design form in a fully interactive way. It
  * automatically generates the corresponding C-code.
- *
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -393,7 +389,7 @@ static void
 main_loop( void )
 {
     FL_OBJECT *obj;
-    char str[ MAX_VAR_LEN ],
+    char str[ 3 * MAX_VAR_LEN + 20 ],
 		 name[ MAX_VAR_LEN ];
     char cbname[ MAX_VAR_LEN ],
 		 argname[ MAX_VAR_LEN ];
@@ -407,10 +403,10 @@ main_loop( void )
 		if ( thetestform != NULL && obj != FL_EVENT )
 		{
 			get_object_name( obj, name, cbname, argname );
-			if ( name[ 0 ] == '\0' )
+			if ( ! *name )
 				strcpy( name, "<noname>" );
-			if ( cbname[ 0 ] != '\0' )
-				sprintf( str, "Called: %s(%s,%s);", cbname, name, argname );
+			if ( ! *cbname )
+				sprintf( str, "Called: %s( %s, %s );", cbname, name, argname );
 			else
 				sprintf( str, "Returned: %s", name );
 			fl_addto_browser( fd_test->browser, str );

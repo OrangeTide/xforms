@@ -112,21 +112,3 @@ fli_nuke_all_non_alnum( char * s )
 
     return strcpy( s, buf );
 }
-
-
-#ifdef TEST
-int main( void )
-{
-    char buf[ 100 ],
-		 *p;
-
-    while ( fgets( buf, sizeof buf, stdin ) )
-	{
-		buf[ 99 ] = '\0';
-		if ( ( p = strchr( buf,'\n' ) ) )
-			*p = '\0';
-		fprintf( stderr, "^%s$\n", buf );
-		fprintf( stderr, "^%s$\n", de_space_de( buf ) );
-	}
-}
-#endif /* TEST */

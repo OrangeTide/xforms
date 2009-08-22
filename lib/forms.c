@@ -1932,8 +1932,8 @@ fl_adjust_form_size( FL_FORM * form )
 				  || obj->align & FL_ALIGN_INSIDE
 				  || obj->objclass == FL_INPUT )
 			 && ! obj->parent
-			 && obj->label[ 0 ] != '\0'
-			 && obj->label[ 0 ] != '@'
+			 && *obj->label
+			 && *obj->label != '@'
 			 && obj->boxtype != FL_NO_BOX
 			 && ( obj->boxtype != FL_FLAT_BOX || obj->objclass == FL_MENU ) )
 		{

@@ -18,11 +18,10 @@
 
 /**
  * \file fd_attribs.c
- *.
+ *
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * It contains some routines to deal with attributes of the objects.
  */
@@ -430,22 +429,20 @@ readback_attributes( FL_OBJECT * obj )
     set_label( obj, fl_get_input( fd_generic_attrib->labelobj ) );
     set_shortcut( obj, fl_get_input( fd_generic_attrib->scobj ) );
 
-    strncpy( name, fl_get_input( fd_generic_attrib->nameobj ), sizeof name );
-    name[ sizeof name - 1 ] = '\0';
-
-    strncpy( cbname, fl_get_input( fd_generic_attrib->cbnameobj ),
-			 sizeof cbname );
-    cbname[ sizeof cbname - 1 ] = '\0';
+    fli_sstrcpy( name, fl_get_input( fd_generic_attrib->nameobj ),
+				 sizeof name );
+    fli_sstrcpy( cbname, fl_get_input( fd_generic_attrib->cbnameobj ),
+				 sizeof cbname );
 
     if ( ! valid_c_identifier( name ) )
     {
-		name[ 0 ] = '\0';
+		*name = '\0';
 		warn = 1;
     }
 
     if ( ! valid_c_identifier( cbname ) )
     {
-		cbname[ 0 ] = '\0';
+		*cbname = '\0';
 		warn += 2;
     }
 
@@ -710,7 +707,7 @@ set_label( FL_OBJECT  * obj,
 		j = 0;
     char *tmpstr = fl_malloc( strlen( str ) + 1 );
 
-    tmpstr[ 0 ] = '\0';
+    *tmpstr = '\0';
 
     do
     {

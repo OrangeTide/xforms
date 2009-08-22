@@ -19,16 +19,13 @@
 /**
  * \file fd_help.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * This file is part of the Form Designer.
  *
  * It contains the routines for the help feature of the designer.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -55,7 +52,7 @@ load_it( char str[ ][ 80 ] )
 
     fl_freeze_form( fd_help->helpform );
     fl_clear_browser( fd_help->browser );
-    for ( i = 0; str[ i ][ 0 ] != '\0'; i++ )
+    for ( i = 0; str[ i ][ 0 ]; i++ )
 		fl_add_browser_line( fd_help->browser, str[ i ] );
     fl_unfreeze_form( fd_help->helpform );
 }

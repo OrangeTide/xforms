@@ -19,16 +19,14 @@
 /**
  * \file fd_groups.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
+ *
  * This file is part of the Form Designer.
  *
  * It maintains a list of groups in the form. Each group can be
  * assigned a name.
- *
  */
 
 #ifdef HAVE_CONFIG_H

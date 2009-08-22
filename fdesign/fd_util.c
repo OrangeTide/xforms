@@ -75,10 +75,7 @@ is_duplicate_info( FL_OBJECT  * ob  FL_UNUSED_ARG,
 		ninfo--;
     }
 
-    strncpy( info[ ninfo ].buf, s, MAXLEN );
-    info[ ninfo ].buf[ MAXLEN ] = '\0';
-
-    ninfo++;
+    fli_sstrcpy( info[ ninfo++ ].buf, s, MAXLEN );
 
     return 0;
 }

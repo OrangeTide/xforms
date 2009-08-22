@@ -19,14 +19,11 @@
 /**
  * \file sp_counter.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Settting counter class specific attributes.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -55,9 +52,13 @@ get_counter_spec_fdform( void )
     if ( ! cnt_attrib )
     {
 		cnt_attrib = create_form_counterattrib( );
-		fl_addto_choice( cnt_attrib->returnsetting, get_how_return_str( ) );
-		fl_set_choice_item_mode( cnt_attrib->returnsetting, 3, FL_PUP_GRAY );
-		fl_set_choice_item_mode( cnt_attrib->returnsetting, 4, FL_PUP_GRAY );
+
+
+		set_up_how_return_menu( cnt_attrib->returnsetting );
+		fl_set_menu_item_mode( cnt_attrib->returnsetting, 5,
+							   FL_PUP_BOX | FL_PUP_GRAY );
+		fl_set_menu_item_mode( cnt_attrib->returnsetting, 6,
+							   FL_PUP_BOX | FL_PUP_GRAY );
     }
     return cnt_attrib;
 }
@@ -90,7 +91,7 @@ init_spec( SuperSPEC * spec )
     set_finput_value( cnt_attrib->step1,      spec->sstep, spec->prec );
     set_finput_value( cnt_attrib->step2,      spec->lstep, spec->prec );
 
-    fl_set_choice( cnt_attrib->returnsetting, spec->how_return + 1 );
+	reset_how_return_menu( cnt_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -152,10 +153,6 @@ emit_counter_code( FILE      * fp,
 		fprintf( fp, "    fl_set_counter_step( obj, %.*f, %.*f );\n",
 				 spec->prec, spec->sstep, spec->prec, spec->lstep );
 
-    if ( ob->how_return != defspec->how_return )
-		fprintf( fp, "    fl_set_counter_return( obj, %s );\n",
-				 get_how_return_name( spec->how_return ) );
-
     fl_free_object( defobj );
 }
 
@@ -191,9 +188,6 @@ save_counter_attrib( FILE      * fp,
 
     if ( spec->val != defspec->val )
 		fprintf( fp, "value: %.*f\n", spec->prec, spec->val );
-
-    if ( spec->how_return != defspec->how_return )
-		fprintf( fp, "return: %s\n", get_how_return_name( spec->how_return ) );
 
     if ( spec->sstep != defspec->sstep )
 		fprintf( fp, "sstep: %.*f\n", spec->prec, spec->sstep );
@@ -283,17 +277,8 @@ void
 cnt_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						  long        data  FL_UNUSED_ARG )
 {
-#if 1
-    const char *s = fl_get_choice_text( cnt_attrib->returnsetting );
-
-    fprintf( stderr, "changing how return to %s (%d)\n", s,
-			 get_how_return_str_value( s ) );
-    fl_set_counter_return( cnt_attrib->vdata, get_how_return_str_value( s ) );
-#else
-    int r = fl_get_choice( cnt_attrib->returnsetting ) - 1;
-
-    fl_set_counter_return( cnt_attrib->vdata, r );
-#endif
+	handle_how_return_changes( cnt_attrib->returnsetting,
+							   cnt_attrib->vdata );
 }
 
 

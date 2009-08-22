@@ -122,19 +122,19 @@ static char OpChFsize[ 20 ]  = NS( FL_DEFAULT_SIZE );
 static char OpSLsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
 static char OpLLsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
 static char OpILsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
-static char OpIBW[ 20 ]      = NS( FL_BOUND_WIDTH );
+static char OpIBW[ 20 ]      = NS( FL_BOUND_WIDTH  );
 static char OpPsize[ 20 ]    = NS( FL_DEFAULT_SIZE );
 static char OpVisualID[ 20 ] = "0";
 
 #ifdef DO_GAMMA_CORRECTION
-static char OpRgamma[12] = "1";
-static char OpGgamma[12] = "1";
-static char OpBgamma[12] = "1";
+static char OpRgamma[ 12 ] = "1";
+static char OpGgamma[ 12 ] = "1";
+static char OpBgamma[ 12 ] = "1";
 #endif
 
-static char OpCoordUnit[32];
+static char OpCoordUnit[ 32 ];
 
-static FLI_VN_PAIR vn_coordunit[] =
+static FLI_VN_PAIR vn_coordunit[ ] =
 {
 	{ FL_COORD_PIXEL,      "pixel"      },
     { FL_COORD_MM,         "mm"         },
@@ -143,7 +143,8 @@ static FLI_VN_PAIR vn_coordunit[] =
     { FL_COORD_centiPOINT, "cp"         },
     { FL_COORD_centiMM,    "centimm"    },
     { FL_COORD_centiMM,    "cmm"        },
-    { -1,                  "Invalid"    }
+    { -1,                  "Invalid"    },
+	{ -1,                   NULL         }
 };
 
 
@@ -182,8 +183,8 @@ static FL_resource internal_resources[ ] =
     SetR( ulPropWidth, "ULWidth", FL_BOOL, OpULW, 0 ),
     SetR( backingStore, "BackingStore", FL_INT, OpBS, 0 ),
     SetR( safe, "Safe", FL_INT, OpSafe, 0 ),
-    {"coordUnit", "CoordUnit", FL_STRING, OpCoordUnit, OpCoordUnit, 32 },
-    {"visualID", "VisualID", FL_LONG, &fli_requested_vid, OpVisualID, 0 }
+    { "coordUnit", "CoordUnit", FL_STRING, OpCoordUnit, OpCoordUnit, 32 },
+    { "visualID", "VisualID", FL_LONG, &fli_requested_vid, OpVisualID, 0 }
 };
 
 #define Niopt ( sizeof internal_resources / sizeof *internal_resources )
@@ -328,14 +329,24 @@ fl_get_defaults( FL_IOPT * cntl )
 
 
 /***************************************
- * convenience functions
+ * Convenience functions
  ***************************************/
 
 void
 fl_set_coordunit( int u )
 {
+	const char *cu = fli_get_vn_name( vn_coordunit, u );
+
+	if ( cu == NULL )
+	{
+		M_err( "fl_set_coordunit",
+			   "Invald coord unit, defaulting to \"pixel\"" );
+		u = FL_COORD_PIXEL;
+		cu = "pixel";
+	}
+
     fli_cntl.coordUnit = u;
-    strcpy( OpCoordUnit, fli_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
+    strcpy( OpCoordUnit, cu );
 }
 
 
@@ -989,7 +1000,7 @@ fl_initialize( int        * na,
     fl_snprintf( disp_name, sizeof disp_name, "%s.display", fl_ori_app_name );
     fl_snprintf( disp_cls , sizeof disp_cls , "%s.Display", fl_app_class );
 
-    buf[ 0 ] = '\0';
+    *buf = '\0';
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
     {
@@ -1067,13 +1078,14 @@ fl_initialize( int        * na,
 
     XrmMergeDatabases( cmddb, &fldatabase );
 
-    /* load FL resources */
+    /* Load FL resources */
 
     fli_init_resources( );
 
     fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
     fli_cntl.coordUnit = fli_get_vn_value( vn_coordunit, OpCoordUnit );
-
+	if ( fli_cntl.coordUnit == -1 )
+		fli_cntl.coordUnit = FL_COORD_PIXEL;
 
 #if FL_DEBUG >= ML_WARN
     if ( fli_cntl.debug )
@@ -1113,7 +1125,7 @@ fl_initialize( int        * na,
 
     fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
 
-    /* get the current keyboard state */
+    /* Get the current keyboard state */
 
     {
 		XKeyboardState xks;
@@ -1123,7 +1135,7 @@ fl_initialize( int        * na,
 		fli_keybdmask = KBAutoRepeatMode;
     }
 
-    /* other initializations */
+    /* Other initializations */
 
     fl_screen = flx->screen = DefaultScreen( fl_display );
     fl_root                 = RootWindow( fl_display, fl_screen );

@@ -19,13 +19,11 @@
 /**
  * \file sp_slider.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- * Settting slider class specific attributes.
  *
+ * Settting slider class specific attributes.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -53,8 +51,12 @@ get_slider_spec_fdform( void )
     if ( ! sl_attrib )
     {
 		sl_attrib = create_form_sliderattrib( );
-		fl_clear_choice( sl_attrib->returnsetting );
-		fl_addto_choice( sl_attrib->returnsetting, get_how_return_str( ) );
+
+		set_up_how_return_menu( sl_attrib->returnsetting );
+		fl_set_menu_item_mode( sl_attrib->returnsetting, 5,
+							   FL_PUP_BOX | FL_PUP_GRAY );
+		fl_set_menu_item_mode( sl_attrib->returnsetting, 6,
+							   FL_PUP_BOX | FL_PUP_GRAY );
     }
     return sl_attrib;
 }
@@ -70,6 +72,7 @@ slider_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
     FL_OBJECT *edit_obj = sl_attrib->vdata;
 
     superspec_to_spec( edit_obj );
+    show_spec( get_superspec( edit_obj ) );
     redraw_the_form( 0 );
 }
 
@@ -90,8 +93,7 @@ show_spec( SuperSPEC * spec )
 
     fl_set_counter_value( sl_attrib->prec, spec->prec );
 
-    fl_set_choice_text( sl_attrib->returnsetting,
-						get_how_return_str_name( spec->how_return ) );
+	reset_how_return_menu( sl_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -183,10 +185,6 @@ emit_slider_code( FILE      * fp,
     if ( sp->ldelta != defsp->ldelta || sp->rdelta != defsp->rdelta )
 		fprintf( fp, "    fl_set_slider_increment( obj, %g, %g );\n",
 				 sp->ldelta, sp->rdelta );
-
-    if ( sp->how_return != defsp->how_return )
-		fprintf( fp, "    fl_set_slider_return( obj, %s );\n",
-				 get_how_return_name( sp->how_return ) );
 }
 
 
@@ -224,8 +222,6 @@ save_slider_attrib( FILE      * fp,
 		fprintf( fp, "slsize: %.2f\n", sp->slsize );
     if ( sp->step != defsp->step )
 		fprintf( fp, "step: %g\n", sp->step );
-    if ( sp->how_return != defsp->how_return )
-		fprintf( fp, "return: %s\n", get_how_return_name( sp->how_return ) );
 }
 
 
@@ -329,9 +325,8 @@ void
 returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 					  long        data  FL_UNUSED_ARG )
 {
-    const char *s = fl_get_choice_text( sl_attrib->returnsetting );
-
-    fl_set_slider_return( sl_attrib->vdata, get_how_return_str_value( s ) );
+	handle_how_return_changes( sl_attrib->returnsetting,
+							   sl_attrib->vdata );
 }
 
 

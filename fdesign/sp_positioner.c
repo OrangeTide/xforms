@@ -19,13 +19,11 @@
 /**
  * \file sp_positioner.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- * Settting counter class specific attributes.
  *
+ * Settting counter class specific attributes.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -54,7 +52,12 @@ get_pos_spec_fdform( void )
     if ( ! pos_attrib )
     {
 		pos_attrib = create_form_posattrib( );
-		fl_addto_choice( pos_attrib->returnsetting, get_how_return_str( ) );
+
+		set_up_how_return_menu( pos_attrib->returnsetting );
+		fl_set_menu_item_mode( pos_attrib->returnsetting, 5,
+							   FL_PUP_BOX | FL_PUP_GRAY );
+		fl_set_menu_item_mode( pos_attrib->returnsetting, 6,
+							   FL_PUP_BOX | FL_PUP_GRAY );
     }
 
     return pos_attrib;
@@ -91,8 +94,7 @@ init_spec( SuperSPEC * spec )
     set_finput_value( pos_attrib->xstep, spec->xstep, -1 );
     set_finput_value( pos_attrib->ystep, spec->ystep, -1 );
 
-    fl_set_choice_text( pos_attrib->returnsetting,
-						get_how_return_str_name( spec->how_return ) );
+	reset_how_return_menu( pos_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -151,10 +153,6 @@ emit_pos_code( FILE      * fp,
     if ( spec->ystep != defspec->ystep )
 		fprintf( fp, "    fl_set_positioner_ystep( obj, %g );\n", spec->ystep );
 
-    if ( ob->how_return != defspec->how_return )
-		fprintf( fp, "    fl_set_positioner_return( obj, %s );\n",
-				 get_how_return_name( spec->how_return ) );
-
     fl_free_object( defobj );
 }
 
@@ -197,9 +195,6 @@ save_pos_attrib( FILE      * fp,
 
     if ( spec->ystep != defspec->ystep )
 		fprintf( fp, "ystep: %g\n", spec->ystep );
-
-    if ( spec->how_return != defspec->how_return )
-		fprintf( fp, "return: %s\n", get_how_return_name( spec->how_return ) );
 
     fl_free_object( defobj );
 }
@@ -310,10 +305,8 @@ void
 pos_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						  long        data  FL_UNUSED_ARG )
 {
-    const char *s = fl_get_choice_text( pos_attrib->returnsetting );
-
-    fl_set_positioner_return( pos_attrib->vdata,
-							  get_how_return_str_value( s ) );
+	handle_how_return_changes( pos_attrib->returnsetting,
+							   pos_attrib->vdata );
 }
 
 #include "spec/positioner_spec.c"

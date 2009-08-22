@@ -178,8 +178,7 @@ fl_add_fselector_appbutton( const char * label,
 			ok = i + 1;
 			fs->appcb[ i ] = cb;
 			fs->appdata[ i ] = data;
-			strncpy( fs->applabel[ i ], label, 32 );
-			fs->applabel[ i ][ 31 ] = '\0';
+			fli_sstrcpy( fs->applabel[ i ], label, 32 );
 		}
 
 	if ( ! ok )
@@ -203,7 +202,7 @@ fl_remove_fselector_appbutton( const char * label )
 		if ( strcmp( label, fs->applabel[ i ] ) == 0 )
 		{
 			fs->appcb[ i ] = NULL;
-			fs->applabel[ i ][ 0 ] = '\0';
+			*fs->applabel[ i ] = '\0';
 			fl_hide_object( fs->appbutt[ i ] );
 		}
 }
@@ -271,17 +270,17 @@ cmplt_name( void )
 
 	if ( f && *f )
 	{
-		strncpy( fs->filename, f, FL_FLEN );
-		fs->filename[ FL_FLEN - 1 ] = '\0';
+		fli_sstrcpy( fs->filename, f, FL_FLEN );
+
 		if ( *f != '/' )
 			append_slash( strcpy( fs->retname, fs->dname ) );
 		else
-			fs->retname[ 0 ] = '\0';
+			*fs->retname = '\0';
 		return strcat( fs->retname, f );
 	}
 	else
 	{
-		fs->filename[ 0 ] = '\0';
+		*fs->filename = '\0';
 		return fs->filename;
 	}
 }
@@ -319,8 +318,7 @@ select_cb( FL_OBJECT * ob,
 	if ( ( thisline = fl_get_browser( ob ) )  <= 0 )
 		return;
 
-	strncpy( seltext, fl_get_browser_line( ob, thisline ), sizeof seltext );
-	seltext[ sizeof seltext - 1 ] = '\0';
+	fli_sstrcpy( seltext, fl_get_browser_line( ob, thisline ), sizeof seltext );
 	dir = seltext[ 0 ] == dirmarker && seltext[ 1 ] == ' ';
 
 	memmove( seltext, seltext + 2, strlen( seltext + 2 ) + 1 );
@@ -333,7 +331,7 @@ select_cb( FL_OBJECT * ob,
 			fl_fix_dirname( lfs->dname );
 			if ( fill_entries( lfs->browser, 0, 0 ) < 0 )
 				fli_del_tail_slash( lfs->dname );
-			seltext[ 0 ] = '\0';
+			*seltext = '\0';
 		}
 
 		fl_set_input( lfs->input, seltext );
@@ -371,8 +369,7 @@ fl_set_directory( const char * p )
 		return 1;
 	}
 
-	strncpy( tmpdir, p, sizeof tmpdir );
-	tmpdir[ sizeof tmpdir - 1 ] = '\0';
+	fli_sstrcpy( tmpdir, p, sizeof tmpdir );
 	fli_de_space_de( tmpdir );
 	if ( strcmp( tmpdir, fs->dname ) == 0 )
 		return 0;
@@ -424,8 +421,7 @@ fl_set_pattern( const char * s )
 
 	if ( s && strcmp( fs->pattern, s ) )
 	{
-		strncpy( fs->pattern, s, sizeof fs->pattern );
-		fs->pattern[ sizeof fs->pattern - 1 ] = '\0';
+		fli_sstrcpy( fs->pattern, s, sizeof fs->pattern );
 		fl_set_object_label( fs->patbutt, fs->pattern );
 		fill_entries( fs->browser, fs->filename, 1 );
 	}
@@ -781,19 +777,13 @@ fl_show_fselector( const char * message,
 
 	fl_fix_dirname( fs->dname );
 
-	fs->filename[ 0 ] = '\0';
+	*fs->filename = '\0';
 
 	if ( pat && *pat )
-	{
-		strncpy( fs->pattern, pat, sizeof fs->pattern );
-		fs->pattern[ sizeof fs->pattern - 1 ] = '\0';
-	}
+		fli_sstrcpy( fs->pattern, pat, sizeof fs->pattern );
 
 	if ( fname && *fname )
-	{
-		strncpy( fs->filename, fname, sizeof fs->filename );
-		fs->filename[ sizeof fs->filename - 1 ] = '\0';
-	}
+		fli_sstrcpy( fs->filename, fname, sizeof fs->filename );
 
 	for ( i = 0; i < MAX_APPBUTT; i++ )
 	{
@@ -866,8 +856,7 @@ fl_show_fselector( const char * message,
 			}
 			else
 			{
-				strncpy( fs->dname, tmp, sizeof fs->dname );
-				fs->dname[ sizeof fs->dname - 1 ] = '\0';
+				fli_sstrcpy( fs->dname, tmp, sizeof fs->dname );
 				fl_fix_dirname( fs->dname );
 			}
 

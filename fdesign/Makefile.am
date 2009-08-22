@@ -23,6 +23,7 @@ fdesign_SOURCES = \
 	fd_control.c \
 	fd_fake.c \
 	fd_file.c \
+	fd_file_fun.c \
 	fd_forms.c \
 	fd_groups.c \
 	fd_help.c \
@@ -53,6 +54,7 @@ fdesign_SOURCES = \
 	sp_slider.c \
 	sp_twheel.c \
 	sp_xyplot.c \
+	sp_util.c \
 	xpm.h
 
 #	viewforms.c \

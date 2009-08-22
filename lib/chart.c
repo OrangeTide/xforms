@@ -741,12 +741,9 @@ fl_add_chart_value( FL_OBJECT  * ob,
     sp->entries[ sp->numb ].col = col;
     sp->entries[ sp->numb ].lcol = sp->lcol;
 	if ( str )
-	{
-		strncpy( sp->entries[sp->numb ].str, str, MAX_CHART_LABEL_LEN );
-		sp->entries[ sp->numb ].str[ MAX_CHART_LABEL_LEN - 1 ] = '\0';
-	}
+		fli_sstrcpy( sp->entries[sp->numb ].str, str, MAX_CHART_LABEL_LEN );
 	else
-		sp->entries[sp->numb ].str[ 0 ] = '\0';
+		*sp->entries[sp->numb ].str = '\0';
     sp->numb++;
     fl_redraw_object( ob );
 }
@@ -790,12 +787,9 @@ fl_insert_chart_value( FL_OBJECT  * ob,
     sp->entries[ indx - 1 ].val = val;
     sp->entries[ indx - 1 ].col = col;
 	if ( str != NULL )
-	{
-		strncpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
-		sp->entries[ indx - 1 ].str[ MAX_CHART_LABEL_LEN - 1 ] = '\0';
-	}
+		fli_sstrcpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
 	else
-		sp->entries[ indx - 1 ].str[ 0 ] = '\0';
+		*sp->entries[ indx - 1 ].str = '\0';
     fl_redraw_object( ob );
 }
 
@@ -819,12 +813,9 @@ fl_replace_chart_value( FL_OBJECT  * ob,
     sp->entries[ indx - 1 ].val = val;
     sp->entries[ indx - 1 ].col = col;
 	if ( str )
-	{
-		strncpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
-		sp->entries[ indx - 1 ].str[ MAX_CHART_LABEL_LEN - 1 ] = '\0';
-	}
+		fli_sstrcpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
 	else
-		sp->entries[ indx - 1 ].str[ 0 ] = '\0';
+		*sp->entries[ indx - 1 ].str = '\0';
     fl_redraw_object( ob );
 }
 

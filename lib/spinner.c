@@ -402,7 +402,7 @@ fl_get_spinner_value( FL_OBJECT * obj )
 	{ 
 		long i_val = strtol( s_val, &eptr, 10 );
 
-		if ( *eptr != '\0' || i_val > sp->i_max || i_val < sp->i_min )
+		if ( *eptr || i_val > sp->i_max || i_val < sp->i_min )
 			i_val = sp->i_val;
 
 		return sp->i_val = i_val;
@@ -411,13 +411,13 @@ fl_get_spinner_value( FL_OBJECT * obj )
 	{
 		double f_val = strtod( s_val, &eptr );
 
-		if (    ( *eptr != '\0' && *eptr != 'e' && *eptr != 'E' )
+		if (    ( *eptr && *eptr != 'e' && *eptr != 'E' )
 			 || errno == ERANGE
 			 || f_val > sp->f_max
 			 || f_val < sp->f_min )
 			f_val = sp->f_val;
 		
-		if ( *eptr != '\0' )
+		if ( *eptr )
 		{
 			int max_len = 4 + sp->prec + log10( DBL_MAX );
 			char buf[ max_len ];

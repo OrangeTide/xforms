@@ -251,7 +251,7 @@ argument:
 
 --------------------
 class: FL_VALSLIDER
-type: FL_HOR_BROWSER_SLIDER
+type: HOR_BROWSER_SLIDER
 box: 800 575 135 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -274,7 +274,7 @@ argument:
 
 --------------------
 class: FL_VALSLIDER
-type: FL_HOR_BROWSER_SLIDER
+type: HOR_BROWSER_SLIDER
 box: 800 595 135 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -463,7 +463,7 @@ argument:
 
 --------------------
 class: FL_VALSLIDER
-type: FL_HOR_BROWSER_SLIDER
+type: HOR_BROWSER_SLIDER
 box: 794 359 146 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -485,7 +485,7 @@ argument: 0
 
 --------------------
 class: FL_VALSLIDER
-type: FL_HOR_BROWSER_SLIDER
+type: HOR_BROWSER_SLIDER
 box: 792 400 148 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1

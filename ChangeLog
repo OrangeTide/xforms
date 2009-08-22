@@ -1,3 +1,12 @@
+2009-08-22 Jens Thoms Toerring    <jt@toerring.de>
+
+	Thanks to lots of input (patches and discussions0 by Werner
+	Heisch the way .fd files get read in and analyzed has been
+	changed to be a lot more liberal of what is accepted as well
+	as spitting out reasonable error messages and warnings if
+	things go awry. New files added are fdesign/fd_file_fun.c
+	and fdesign/sp_util.c and lots of others have been changed.
+
 2009-08-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_printC.c: Some correctiions/bug fixes

@@ -586,7 +586,7 @@ fl_create_button( int          type,
     obj->boxtype = FL_BUTTON_BOXTYPE;
     obj->col1    = FL_BUTTON_COL1;
     obj->col2    = FL_BUTTON_COL2;
-    obj->align   = FL_BUTTON_ALIGN;
+    obj->align   = FL_BUTTON_ALIGN | FL_ALIGN_INSIDE;
     obj->lcol    = FL_BUTTON_LCOL;
 
     return obj;

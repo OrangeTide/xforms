@@ -25,13 +25,6 @@ extern void set_finput_value( FL_OBJECT *,
 							  int );
 extern double get_finput_value( FL_OBJECT *,
 								int );
-extern int get_how_return_value( const char * );
-extern int get_how_return_str_value( const char * );
-extern const char *get_how_return_name( int );
-extern const char *get_how_return_str_name( int );
-extern const char *get_how_return_str( void );
-
-#define get_how_return_string get_how_return_str
 
 /* slider and value slider */
 

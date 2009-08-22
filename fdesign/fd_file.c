@@ -19,17 +19,14 @@
 /**
  * \file fd_file.c
  *
- *.
- *  This file is part of XForms package
+*  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * This file is part of the Form Designer.
  *
  * It contains the routines to save and load forms in the internal
  * format used by the form designer. This is readable ASCII.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -39,6 +36,7 @@
 #include "include/forms.h"
 #include "flinternal.h"
 #include "fd_main.h"
+#include "fd_spec.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -66,10 +64,13 @@ save_object( FILE      * fl,
 		 argname[ MAX_VAR_LEN ];
 	char *label;
     double sc = get_conversion_factor( );
-    FL_OBJECT fake_obj;
+    FL_OBJECT *defobj,
+		      fake_obj;
 
     if ( obj->parent )
 		return;
+
+	defobj = find_class_default( obj->objclass, obj->type );
 
     get_object_name( obj, name, cbname, argname );
 
@@ -103,42 +104,11 @@ save_object( FILE      * fl,
     fprintf( fl, "name: %s\n", name );
     fprintf( fl, "callback: %s\n", cbname );
     fprintf( fl, "argument: %s\n", argname );
+	if ( ! defobj || obj->how_return != defobj->how_return )
+		fprintf( fl, "return: %s\n",
+				 get_how_return_name( obj->how_return, 0 ) );
 
     save_objclass_spec_info( fl, obj );
-}
-
-
-/***************************************
- * My version of fgets, removing heading name:
- ***************************************/
-
-static void
-myfgets( char * line,
-		 FILE * fl )
-{
-    char tmpstr[ 10000 ];		/* Maximal label length is limited here. */
-    int i = 0,
-		j;
-    int ch = fgetc( fl );
-
-    while ( ch != '\n' && ch != EOF )
-    {
-		tmpstr[ i++ ] = ch;
-		ch = fgetc( fl );
-    }
-
-    tmpstr[ i ] = '\0';
-
-    i = 0;
-    while ( tmpstr[ i ] != ':' && tmpstr[ i + 1 ] != ' ' )
-		i++;
-
-    i += 2;
-    j = 0;
-
-    do
-		line[ j++ ] = tmpstr[ i++ ];
-    while ( tmpstr[ i - 1 ] != '\0' );
 }
 
 
@@ -245,237 +215,516 @@ do_trans( Trantable * tab,
 }
 
 
-#define new_class( o )  do_trans( tclass, sizeof tclass / sizeof *tclass, o )
-#define new_color( o )  do_trans( tcolor, sizeof tcolor / sizeof *tcolor, o )
-#define new_align( o )  do_trans( talign, sizeof talign / sizeof *talign, o )
-#define new_btype( o )  do_trans( tbtype, sizeof tbtype / sizeof *tbtype, o )
+#define new_class( o ) do_trans( tclass, sizeof tclass / sizeof *tclass, ( o ) )
+#define new_color( o ) do_trans( tcolor, sizeof tcolor / sizeof *tcolor, ( o ) )
+#define new_align( o ) do_trans( talign, sizeof talign / sizeof *talign, ( o ) )
+#define new_btype( o ) do_trans( tbtype, sizeof tbtype / sizeof *tbtype, ( o ) )
 
 
 /***************************************
  ***************************************/
 
-static void
-fd_skip_comment( FILE * fp  FL_UNUSED_ARG )
+static int
+ff_read_boxtype( FL_OBJECT * obj )
 {
-#if 0
-    int c,
-		done = 0;
+	int r;
 
-    while ( ! done )
-    {
-		if ( ( c = getc( fp ) ) == '#' || c == ';' )
-			while ( ( c = getc( fp ) ) != '\n' && c != EOF )
-				/* empty */ ;
-		else
-		{
-			done = 1;
-			ungetc( c, fp );
-		}
-    }
-#endif
+	if ( ( r = ff_read( "%b", &obj->boxtype ) ) < 1 )
+		return ff_err( "Can't read expected object boxtype" );
+
+	if ( r == 0 )
+		ff_warn( "\"boxtype\" key without value" );
+	else if ( fd_magic == MAGIC2 )
+		obj->boxtype = new_btype( obj->boxtype );
+
+	return 0;
 }
 
 
 /***************************************
- * Read lines consisting of keyword: value and split. Return EOF on EOF
- * or error. On success 'key' is set to an allocated buffer with the
- * keyword and 'val' points to the value (if any). It is the responsibility
- * of the caller to free the memory for 'key', but it must be taken into
- * account that this also frees the memory used for 'val'!
  ***************************************/
 
-int
-read_key_val( FILE * fp,
-			  char ** key,
-			  char ** val )
+static int
+ff_read_colors( FL_OBJECT * obj )
 {
-    char *p;
+	int r;
 
+	if ( ( r = ff_read( "%c%c", &obj->col1, &obj->col2 ) ) < 0 )
+		return ff_err( "Can't read expected object colors" );
 
-    fd_skip_comment( fp );
-
-	if ( ( *key = fli_read_line( fp ) ) == NULL )
-		return EOF;
-
-    /* Nuke the new line */
-
-    if ( ( p = strchr( *key, '\n' ) ) )
-		*p = '\0';
-
-    if ( ! ( p = strchr ( *key, ':' ) ) )
-	{
-		fl_free( *key );
-		return EOF;
+	if ( r == 0 )
+		ff_warn( "\"colors\" key without two object colors" );
+	else if ( fd_magic == MAGIC2 )
+    {
+		obj->col1 = new_color( obj->col1 );
+		if ( r == 2 )
+			obj->col2 = new_color( obj->col2 );
 	}
 
-    *p = '\0';
-
-	*val = p + 1;
-    if ( **val )
-		*val += 1;
-
-    return 0;
+	return 0;
 }
 
 
 /***************************************
- *  Loads an object from the file and returns it.
- *
- *  object coordinates are measured from lower-left corner. fl_add_object
- *  will do the proper conversion but if obj->y is manipulated directly
- *  need to do the transformation manually
  ***************************************/
 
-#define Str( x ) #x
-#define XStr( x ) Str( x )
-
-static FL_OBJECT *
-load_object( FILE * fl )
+static int
+ff_read_alignment( FL_OBJECT * obj )
 {
-    FL_OBJECT *obj;
-    int objclass,
-		type;
-    float x,
-		  y,
-		  w,
-		  h;
-    char name[ MAX_VAR_LEN + 1 ],
-		 cbname[ MAX_VAR_LEN + 1 ] = "",
-		 argname[ MAX_VAR_LEN + 1 ] = "";
-    char cn1[ MAX_VAR_LEN + 1 ],
-		 cn2[ MAX_VAR_LEN + 1 ];
-    char objcls[ MAX_VAR_LEN + 1 ];
-    char *key,
-	     *val;
+	int r;
 
-    /* Must demand the vital info */
+	if ( ( r = ff_read( "%a", &obj->align ) ) < 0 )
+		return ff_err( "Can't read expected object alignment" );
 
-    if ( fscanf( fl, "\n--------------------\n" ) == EOF )
-    {
-		M_err( "load_object", "Error reading input file" );
-		return 0;
-    }
+	if ( r == 0 )
+		ff_warn( "\"alignment\" key without or invalid value" );
+    else if ( fd_magic == MAGIC2 )
+		obj->align = new_align( obj->align );
 
-    if (    fscanf( fl, "class: %" XStr( MAX_VAR_LEN ) "s\n", objcls ) != 1
-		 || fscanf( fl, "type: %" XStr( MAX_VAR_LEN ) "s\n", name ) != 1
-		 || fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h ) != 4 )
-    {
-		M_err( "load_object", "Error reading input file" );
-		return 0;
-    }
+	return 0;
+}
 
-	objcls[ MAX_VAR_LEN - 1 ] = '\0';
-	name[ MAX_VAR_LEN - 1 ] = '\0';
-    objclass = class_val( objcls );
-    type = find_type_value( objclass, name );
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_lstyle( FL_OBJECT * obj )
+{
+	int r;
+
+	if ( ( r = ff_read( "%p", &obj->lstyle ) ) < 0 )
+		return ff_err( "Can't read expected object label style" );
+
+	if ( r == 0 )
+		ff_warn( "\"style\" key without or invalid value" );
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_lsize( FL_OBJECT * obj )
+{
+	int r;
+
+	if ( ( r = ff_read( "%q", &obj->lsize ) ) < 0 )
+		return ff_err( "Can't read expected object label size" );
+
+	if ( r == 0 )
+		ff_warn( "\"size\" key without or invalid value" );
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_lcol( FL_OBJECT * obj )
+{
+	int r;
+
+	if ( ( r = ff_read( "%c", &obj->lcol ) ) < 0 )
+		return ff_err( "Can't read expected object label color" );
+
+	if ( r == 0 )
+		ff_warn( "\"lcol\" key without or invalid value" );
+    else if ( fd_magic == MAGIC2 )
+		obj->lcol = new_color( obj->lcol );
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_resize( FL_OBJECT * obj )
+{
+	int r;
+
+	if ( ( r = ff_read( "%r", &obj->resize ) ) < 0 )
+		return ff_err( "Can't read expected object resize value" );
+
+	if ( r == 0 )
+		ff_warn( "\"resize\" key without or invalid value" );
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_label( FL_OBJECT * obj )
+{
+	int r;
+	char *label;
+
+	if ( ( r = ff_read( "%s", &label ) ) < 0 )
+		return ff_err( "Can't read expected object label" );
+
+	if ( r == 1 )
+	{
+		set_label( obj, label );
+		fl_safe_free( label );
+	}
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_shortcut( FL_OBJECT * obj )
+{
+	int r;
+	char *shortcut;
+
+	if ( ( r = ff_read( "%s", &shortcut ) ) < 0 )
+		return ff_err( "Can't read expected object shortcut" );
+
+	if ( r == 1 )
+	{
+		set_shortcut( obj, shortcut );
+		fl_safe_free( shortcut );
+	}
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_callback( FL_OBJECT * obj )
+{
+	int r;
+	char *cbname;
+
+	if ( ( r = ff_read( "%v", &cbname ) ) < 0 )
+		return ff_err( "Can't read expected object callback" );
+
+	if ( r == 1 )
+	{
+		set_object_name( obj, NULL, cbname, NULL );
+		fl_safe_free( cbname );
+	}
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_name( FL_OBJECT * obj )
+{
+	int r;
+	char *name;
+
+	if ( ( r = ff_read( "%s", &name ) ) < 0 )
+		return ff_err( "Can't read expected object name" );
+
+	if ( r == 1 )
+	{
+		set_object_name( obj, name, NULL, NULL );
+		fl_safe_free( name );
+	}
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_gravity( FL_OBJECT * obj )
+{
+	int r;
+
+	if ( ( r = ff_read( "%g%g", &obj->nwgravity, &obj->segravity ) ) < 0 )
+		return ff_err( "Can't read expected object gravity values" );
+
+	if ( r == 0 )
+		ff_warn( "\"gravity\" key without any valid values" );
+	if ( r == 1 )
+		ff_warn( "\"gravity\" key with only one valid value" );
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_read_argument( FL_OBJECT * obj )
+
+{
+	int r;
+	char *arg;
+
+	if ( ( r = ff_read( "%s", &arg ) ) < 0 )
+		return ff_err( "Can't read expected object callback argument" );
+
+	if ( r == 1 )
+	{
+		set_object_name( obj, NULL, NULL, arg );
+		fl_safe_free( arg );
+	}
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int 
+ff_read_return( FL_OBJECT * obj )
+{
+	int r;
+	char *return_name;
+
+	if ( ( r = ff_read( "%s", &return_name ) ) < 0 )
+		return ff_err( "Can't read expected object return" );
+
+	if ( r == 0 )
+		ff_warn( "\"return\" key with no or invalid value" );
+	else
+	{
+		int ret = get_how_return_val( return_name );
+
+		fl_safe_free( return_name );
+
+		if ( ret == -1 )
+			ff_warn( "Invalid value for \"return\" key" );
+		else
+			fl_set_object_return( obj, ret );
+	}
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+typedef int ( * obj_attr_func )( FL_OBJECT * );
+
+typedef struct {
+	const char    * name;
+	obj_attr_func   func;
+} obj_attr_handlers;
+
+
+static obj_attr_handlers attr_array[ ] =
+{
+	{ "boxtype",   ff_read_boxtype   },
+	{ "colors",    ff_read_colors    },
+	{ "alignment", ff_read_alignment },
+	{ "style",     ff_read_lstyle    },
+	{ "lstyle",    ff_read_lstyle    },
+	{ "size",      ff_read_lsize     },
+	{ "lsize",     ff_read_lsize     },
+	{ "lcol",      ff_read_lcol      },
+	{ "resize",    ff_read_resize    },
+	{ "label",     ff_read_label     },
+	{ "shortcut",  ff_read_shortcut  },
+	{ "callback",  ff_read_callback  },
+	{ "name",      ff_read_name      },
+	{ "gravity",   ff_read_gravity   },
+	{ "argument",  ff_read_argument  },
+	{ "return",    ff_read_return    }
+};
+
+
+/***************************************
+ * Reads all information from a .fd file until it's
+ * detected that there's either a new form or object
+ * or the last line of the file has been reached.
+ * When called the first key for an object, "class:"
+ * already has been read from the file.
+ ***************************************/
+
+static int
+load_object( void )
+{
+	int objclass;
+	char *type_name;
+	int type;
+	FL_Coord x, y, w, h;
+	char *key, *p;
+	FL_OBJECT *obj;
+	int r;
+		
+	/* Start with trying to read the minmal information needed. First we
+	   want the object class */
+
+	if ( ! ff_read( "%o", &objclass ) < 0 )
+		return ff_err( "Expected object class" );
 
     if ( fd_magic == MAGIC2 )
 		objclass = new_class( objclass );
 
-	*name = '\0';
+	/* Next we need the object type. normally this is a string except for
+	   pseudo-objects that start and ed a group */
 
-    if ( cur_form && fd_magic != FD_V1 )
-		y = cur_form->h - y - h;
-
-    /* Create this object */
-
-    obj = add_an_object( objclass, type, x, y, w, h );
-
-    if ( obj == NULL )
-    {
-		fl_show_alert2( 1, "Unknown Object\nObject (class=%s(%d) type=%s) "
-						"discarded", objcls, objclass, val );
-		return NULL;
-    }
-
-    /* Now parse the attributes */
-
-    while ( read_key_val( fl, &key, &val ) != EOF )
-    {
-		if ( strcmp( key, "boxtype") == 0 )
-			obj->boxtype = boxtype_val( val );
-		else if ( strcmp( key, "colors" ) == 0 )
+	if ( ! ( objclass == FL_BEGIN_GROUP || objclass == FL_END_GROUP ) )
+	{
+		if (    ff_read( "%k%t", &key, &type_name ) < 2
+			 || strcmp( key, "type" ) )
 		{
-			cn1[ 0 ] = cn2[ 0 ] = '\0';
-			sscanf( val, "%" XStr( MAX_VAR_LEN ) "s%" XStr( MAX_VAR_LEN ) "s",
-					cn1, cn2 );
-			cn1[ MAX_VAR_LEN - 1 ] = '\0';
-			cn2[ MAX_VAR_LEN - 1 ] = '\0';
-			obj->col1 = fli_query_namedcolor( cn1 );
-			obj->col2 = fli_query_namedcolor( cn2 );
-			if ( obj->col1 == 0x8fffffff )
-				obj->col1 = FL_NoColor;
-		}
-		else if ( strcmp( key, "alignment" ) == 0 )
-			obj->align = align_val( val );
-		else if ( strcmp( key, "style") == 0 || strcmp( key, "lstyle" ) == 0 )
-			obj->lstyle = style_val( val );
-		else if ( strcmp( key, "size") == 0 || strcmp( key, "lsize" ) == 0 )
-			obj->lsize = lsize_val( val );
-		else if ( strcmp( key, "lcol" ) == 0 )
-			obj->lcol = fli_query_namedcolor( val );
-		else if ( strcmp( key, "resize" ) == 0 )
-			obj->resize = resize_val( val );
-		else if ( strcmp( key, "label" ) == 0 )
-			set_label( obj, val );
-		else if ( strcmp( key, "shortcut" ) == 0 )
-			set_shortcut( obj, val );
-		else if ( strcmp( key, "callback" ) == 0 )
-		{
-			strncpy( cbname, val, MAX_VAR_LEN - 1 );
-			cbname[ MAX_VAR_LEN - 1 ] = '\0';
-		}
-		else if ( strcmp( key, "name" ) == 0 )
-		{
-			strncpy( name, val, MAX_VAR_LEN - 1 );
-			name[ MAX_VAR_LEN - 1 ] = '\0';
-		}
-		else if ( strcmp( key, "gravity" ) == 0 )
-		{
-			cn1[ 0 ] = cn2[ 0 ] = '\0';
-			sscanf( val, "%" XStr( MAX_VAR_LEN ) "s %" XStr( MAX_VAR_LEN ) "s",
-					cn1, cn2 );
-			cn1[ MAX_VAR_LEN - 1 ] = '\0';
-			cn2[ MAX_VAR_LEN - 1 ] = '\0';
-			obj->nwgravity = gravity_val( cn1 );
-			obj->segravity = gravity_val( cn2 );
-		}
-		else if ( strcmp( key, "argument" ) == 0 )
-		{
-			strncpy( argname, val, MAX_VAR_LEN - 1 );
-			argname[ MAX_VAR_LEN - 1 ] = '\0';
 			fl_safe_free( key );
-			goto done;
+			return ff_err( "Expected object type" );
 		}
-		else
-			fprintf( stderr, "Unknown keyword %s ignored\n", key );
 
 		fl_safe_free( key );
-    }
 
- done:
+		if ( ( type = find_type_value( objclass, type_name ) ) < 0 )
+		{
+			char *tmp = fli_get_string( "Invalid type \"%s\" for object class",
+										type_name );
+			fl_safe_free( type_name );
+			ff_err( tmp );
+			fl_safe_free( type_name );
+			return FF_READ_FAILURE;
+		}
 
-    /* Do the translation from old fdesign on the fly */
+		fl_free( type_name );
+	}
+	else
+	{
+		if (    ff_read( "%k%d", &key, &type ) < 2
+			 || strcmp( key, "type" ) )
+		{
+			fl_safe_free( key );
+			return ff_err( "Expected object type" );
+		}
+	}
 
-    if ( fd_magic == MAGIC2 )
-    {
-		obj->col1 = new_color( obj->col1 );
-		obj->col2 = new_color( obj->col2 );
-		obj->lcol = new_color( obj->lcol );
-		obj->align = new_align( obj->align );
-		obj->boxtype = new_btype( obj->boxtype );
-    }
+	fl_safe_free( key );
 
-    set_object_name( obj, name, cbname, argname );
+	/* As the third thing the size of the object (following the "box" key) is
+	   required, exceptions are the pseudo-objectst that start and end a group,
+	   they may have less values */
 
-    /* Load object specific info */
+	if ( ! ( objclass == FL_BEGIN_GROUP || objclass == FL_END_GROUP ) )
+	{
+		if (    ( r = ff_read( "%k%D%D%U%U", &key, &x, &y, &w, &h ) ) < 5
+			 || strcmp( key, "box" ) )
+		{
+			fl_safe_free( key );
 
-    fd_skip_comment( fl );
-    load_objclass_spec_info( fl, obj );
+			if ( r == 0 )
+				ff_err( "Expected object box size" );
+			else
+			{
+				char *msg = fli_get_string( "Expected object box sizes as "
+											"4 values, found %d valid ones",
+											r - 1 );
+				ff_err( msg );
+				fl_safe_free( msg );
+			}
+			
+			return -1;
+		}
+	}
+	else
+	{
+		/* For start and end of group we get either 1 or 4 values */
+
+		r = ff_read( "%k%D%d%U%U", &key, &x, &y, &w, &h );
+		if ( ( r != 2 && r != 5 ) || strcmp( key, "box" ) )
+		{
+			fl_safe_free( key );
+			return ff_err( "Expected object box size with 1 or 4 valid"
+						   "values" );
+		}
+	}
+
+	fl_free( key );
+
+	if ( cur_form && fd_magic != FD_V1 )
+		y = cur_form->h - y - h;
+
+    /* Create the new object */
+
+    if ( ! ( obj = add_an_object( objclass, type, x, y, w, h ) ) )
+		return ff_err( "Failed to create an object" );
+
+	/* Now read the optional attributes, order is irrelevant except that
+	   all general object attributes must come before those specific to
+	   the type of the object and here we only look for the general ones */
+
+	while ( 1 )
+	{
+		size_t i;
+
+		if ( ( r = ff_read( "%k", &key ) ) < 0 )
+			return ff_err( "Failed to read expected key" );
+
+		if ( r == 0 || ! strcmp( key, "Name" ) || ! strcmp( key, "class" ) )
+			break;
+
+		for ( i = 0; i < sizeof attr_array / sizeof *attr_array; i++ )
+			if ( ! strcmp( key, attr_array[ i ].name ) )
+			{
+				fl_safe_free( key );
+				if ( attr_array[ i ].func( obj ) == FF_READ_FAILURE )
+					return FF_READ_FAILURE;
+				break;
+			}
+
+		if ( i == sizeof attr_array / sizeof *attr_array )
+			break;
+	}
+
+	/* If the key read isn't "Name" or "class" (indicating the start of the
+	   next form or object) it must be an object specific key */
+
+	if ( r == 1 && strcmp( key, "Name" ) && strcmp( key, "class" ) )
+	   r = load_objclass_spec_info( obj, key );
+	else
+	{
+		/* If a key could be read continue, otherwise this must be (nearly)
+		   the end of the file and the name of the main function must be
+		   readable (or something is wrong) */
+
+		if ( r == 1 )
+			r = ! strcmp( key, "class" ) ?
+				FF_AT_START_OF_OBJECT : FF_AT_START_OF_FORM;
+		else
+		{
+			if ( ff_read( "%v", &p ) < 1 )
+				return ff_err( "Expected main function name, not found here" );
+
+			fli_sstrcpy( main_name, p, MAX_VAR_LEN );
+			fl_safe_free( p );
+
+			ff_close( );
+			r = FF_AT_END_OF_FILE;
+		}
+
+		fl_safe_free( key );
+	}
 
 	fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 
-    return obj;
+	return r;
 }
 
 
@@ -515,55 +764,105 @@ write_form( FILE    * fl,
 
 
 /***************************************
- * Loads a form definition from the file
+ * Reads all information about a form from an .fd file until
+ * it's detected that a new form starts or the last line of
+ * the file has been reached. When we arrive here the "Name:"
+ * key as well as the name of the form itself already have been
+ * read in. We return when we detect that a new form starts
+ * (due to the "Mame:" key or the last line of the file should
+ * have been reached.
  ***************************************/
 
 int
-read_form( FILE * fl,
-		   char * fname )
+read_form( void )
 {
-    double w, h;
-    int onumb,
-		i,
-		ok;
-    char buf[ 256 ],
-		 *s;
+	char *key;
+    float w = -1.0,
+		  h = -1.0;
+	int num_objects = -1;
+	int r;
+	int i;
 
-    /* Skip until we get ===, the form seperator */
+	/* Try to read information pertinent to the form (name already has been
+	   read in) until the first key for an object in the form ("class:") is
+	   found */
 
-    while ( fgets( buf, sizeof buf - 1, fl ) && strncmp( buf, "===", 3 ) )
-		/* empty */ ;
+	while ( 1 )
+	{
+		if ( ff_read( "%k", &key ) < 0 )
+			return ff_err( "Invalid format of file" );
 
-    myfgets( fname, fl );
-    if (    fscanf( fl, "Width: %lf\n", &w ) != 1
-			|| fscanf( fl, "Height: %lf\n", &h ) != 1 )
-    {
-		M_err( "LoadForm", " Can't read Width or Height" );
-		return -1;
-    }
+		if ( ! strcmp( key, "class" ) )
+		{
+			fl_safe_free( key );
+			break;
+		}
+		else if ( ! strcmp( key, "Width" ) )
+		{
+			fl_safe_free( key );
 
-    if ( w <= 0.0 || h <= 0.0 || feof( fl ) )
-    {
-		M_err( "LoadForm", " Invalid Width/Height: %f %f", w, h );
-		return -1;
-    }
+			if ( ff_read( "%f", &w ) < 0 )
+				return ff_err( "Expected form width" );
+
+			if ( w < 0.0 )
+				return ff_err( "Invalid negative form width" );
+		}
+		else if ( ! strcmp( key, "Height" ) )
+		{
+			fl_safe_free( key );
+
+			if ( ff_read( "%f", &h ) < 0 )
+				return ff_err( "Expected form height" );
+
+			if ( h < 0.0 )
+				return ff_err( "Invalid negative form height" );
+		}
+		else if ( ! strcmp( key, "Number of Objects" ) )
+		{
+			fl_safe_free( key );
+
+			if ( ff_read( "%d", &num_objects ) < 0 )
+				return ff_err( "Expected form number of objects" );
+
+			if ( num_objects <= 0 )
+				return ff_err( "Invalid number of objects, must be at "
+							   "least 1" );
+		}
+	}
+
+	/* Before continuing with reading the form's objects check that at
+	   least width, height and number of objects in form were found */
+
+	if ( w < 0.0 )
+		return ff_err( "Width of form not found" );
+
+	if ( h < 0.0 )
+		return ff_err( "Height of form not found" );
+
+	if ( num_objects < 0 )
+		return ff_err( "Number of objects in form not found" );
+
+	/* Create the new form */
 
     cur_form = fl_bgn_form( FL_NO_BOX, ( FL_Coord ) w, ( FL_Coord ) h );
     fl_end_form( );
 
-    /* between width/height and number of objects, we can put anything we
-       want. */
+	/* Read all objects until next form starts or end file seems to
+	   have been reached */
 
-    while (    ( s = fgets( buf, sizeof buf  - 1, fl ) )
-			&& strncmp( s, "Number of O", 11 ) )
-    {
-		/* see what this is */		
-    }
+	r = FF_AT_START_OF_OBJECT;
 
-    sscanf( buf, "Number of Objects: %d", &onumb );
+    for ( i = 0; i < num_objects && r == FF_AT_START_OF_OBJECT; i++ )
+		r = load_object( );
 
-    for ( ok = 1, i = 0; i < onumb && ok; i++ )
-		ok = load_object( fl ) != 0;
+	if ( r == FF_READ_FAILURE )
+		return FF_READ_FAILURE;
 
-    return 0;
+	if ( r == FF_AT_START_OF_OBJECT )
+		return ff_err( "Less objects found than expected" );
+
+	if ( i < num_objects )
+		ff_warn( "Less objects found than expected" );
+
+    return r;
 }

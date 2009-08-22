@@ -19,15 +19,12 @@
 /**
  * \file sp_pixmap.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Settting pixmap/bitmap class specific attributes. Should
  * be absorbed into button class.
- *
  */
 
 #ifdef HAVE_CONFIG_H

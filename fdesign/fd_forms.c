@@ -18,11 +18,11 @@
 
 /**
  * \file fd_forms.c
- *.
+ *
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
+ *
  * This file is part of the Forms Designer.
  *
  * It contains the routines that maintain the collection of
@@ -30,7 +30,6 @@
  * routines to add forms, change their name, remove them ,etc.
  * It also contains the routine to draw them and the  basic routines
  * for loading and saving forms.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -302,12 +301,12 @@ int fd_magic;
  ***************************************/
 
 char *
-append_fd_suffix( const char * ff )
+append_fd_suffix( const char * fn )
 {
-	size_t l = strlen( ff );
+	size_t l = strlen( fn );
     char *fname = fl_malloc( l + 4 );
 
-    strcpy( fname, ff );
+    strcpy( fname, fn );
     if ( l < 3 || strcmp( fname + l - 3, ".fd" ) )
 		strcat( fname, ".fd" );
     return fname;
@@ -315,48 +314,88 @@ append_fd_suffix( const char * ff )
 
 
 /***************************************
- * Asks the user (if necessary) for a file to load and opens it
+ * Loads or merges a file with form definitions
  ***************************************/
 
-static FILE *
-get_fd_file( const char  * str,
-			   char       ** fname,
-			   int           merge )
+static int
+load_fd_header( void )
 {
-	FILE *fp;
+	char *p;
+	int nforms = -1;
 
-    fl_use_fselector( LOAD_FSELECTOR );
+	/* Line with "magic" number must come first, followed by some
+	   boilerplate text */
 
-    /* Get the filename if necessary */
+	if (    ff_read( "%k", &p ) < 0
+		 || strcmp( p, "Magic" )
+		 || ff_read( "%d", &fd_magic ) < 0
+		 || ( fd_magic != MAGIC2 && fd_magic != MAGIC3 && fd_magic != FD_V1 ) )
+		return ff_err( "Wrong type of file" );
 
-    if ( ! str || ! *str )
+	if (    ff_read( "Internal Form Definition File" ) < 0
+		 || ff_read( "(do not change)" ) < 0 )
+		return ff_err( "Invalid format of file" );
+
+	/* Now follows a set of keyword/value pairs. The key "Name" marks
+	   the end of the header and the start of the first form definition */
+
+	while ( 1 )
 	{
-		str = fl_show_fselector( merge ? "Filename to merge forms from" :
-								 "Filename to load forms from",
-								 "", "*.fd", "" );
+		if ( ff_read( "%k", &p ) < 0 )
+			return ff_err( "Invalid format of file" );
 
-		if ( ! str || ! *str )
-			return NULL;
+		if ( ! strcmp( p, "Number of forms" ) )
+		{
+			if ( ff_read( "%d", &nforms ) < 0 )
+				return ff_err( "Expected number of forms" );
+
+			if ( nforms <= 0 )
+				return ff_err( "Invalid number of forms" );
+		}
+		else if ( ! strcmp( p, "Unit of measure" ) )
+		{
+			if ( ff_read( "%x", &fdopt.unit ) < 0 )
+				return ff_err( "Expected valid unit of measure" );
+
+			fli_cntl.coordUnit = fdopt.unit;	    /* make_obj uses this */
+		}
+		else if ( ! strcmp( p, "SnapGrid" ) || ! strcmp( p, "Snap" ) )
+		{
+			int snap_size;
+
+			if ( ff_read( "%d", &snap_size ) < 0 )
+				return ff_err( "Expected snap size" );
+
+			if ( snap_size < 0 )
+				return ff_err( "Invalid snap size" );
+
+			set_snap_size( snap_size, 1 );
+		}
+		else if ( ! strcmp( p, "Border Width" ) )
+		{
+			int bw;
+
+			if ( ff_read( "%d", &bw ) < 0 )
+ 				return ff_err( "Expected border width" );
+			
+			if ( bw != FL_BOUND_WIDTH )
+				fl_set_border_width( fd_bwidth = bw );
+		}
+		else if ( ! strcmp( p, "Name" ) )
+		{
+			if ( nforms < 0 )
+ 				return ff_err( "Number of forms is missing" );
+
+			return nforms;
+		}
+		else
+			return ff_err( "Invalid format of file" );
 	}
 
-    /* Append .fd if required. */
-
-    *fname = append_fd_suffix( str );
-
-    /* Open the file for reading */
-
-    if ( ! ( fp = fopen( *fname, "r" ) ) )
-    {
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't open file for reading", *fname, "", 0 );
-		else
-			M_err( "LoadForm", "can't open %s", fname );
-		fl_free( *fname );
-		return NULL;
-    }
-
-	return fp;
+	return ff_err( "Invalid format of file" );
 }
+
+
 
 
 /***************************************
@@ -370,20 +409,16 @@ load_forms( int          merge,
 {
     int i,
 		saved_unit = fdopt.unit,
-		ok,
+		r,
 		nforms;
-    FILE *fn;
-    char *fname,
-		 buf[ 256 ];
-    char *tmp;
 	FRM *new_forms;
+	char *fname,
+		 *tmp;
 
-	/* Open the file */
+	/* Try to open the .fd file */
 
-	if ( ! ( fn = get_fd_file( str, &fname, merge ) ) )
+	if ( ff_get_fd_file( str, merge ) < 0 )
 		return -1;
-
-    /* Read in the definitions */
 
     if ( ! merge )
     {
@@ -391,93 +426,54 @@ load_forms( int          merge,
 		fl_clear_browser( fd_control->formbrowser );
     }
 
-    if ( fscanf( fn, "Magic: %d\n\n", &fd_magic ) != 1 )
-	{
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't read from file %s", fname, "", 0 );
-		else
-			M_err( "LoadForm", "can't read from file %s", fname );
-		fl_free( fname );
-		return -1;
-    }
+	/* Try to read the header of the file (must indicate that there's at
+	   least one form */
 
-    if ( fd_magic != MAGIC2 && fd_magic != MAGIC3 && fd_magic != FD_V1 )
-    {
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Wrong type of file!", "", "", 1 );
-		else
-			M_err( "LoadForm", "Wrong type of file ID = %d", fd_magic );
-		fl_free( fname );
+	if ( ( nforms = load_fd_header( ) ) <= 0 )
 		return -1;
-    }
 
-	if (    ! fgets( buf, sizeof buf, fn )
-		 || strcmp( buf, "Internal Form Definition File\n" )
-		 || ! fgets( buf, sizeof buf, fn )
-		 || strcmp( buf, "    (do not change)\n" )
-		 || fgetc( fn ) != '\n' 
-		 || ! fgets( buf, sizeof buf, fn )
-		 || sscanf( buf, "Number of forms: %d", &nforms ) != 1
-		 || nforms <= 0 )
-    {
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't load input file", "Invalid format of file",
-						   NULL, 0 );
-		else
-			M_err( "LoadForm", "Input file %s can't be loaded", fname );
-		fl_free( fname );
-		return -1;
-    }
-	else if ( ! ( new_forms =
-				     fl_realloc( forms, ( fnumb + nforms ) * sizeof *forms ) ) )
-	{
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't load input file", "Running out of memory",
-						   NULL, 0 );
-		else
-			M_err( "LoadForm", "Too many forms, running out of memory",
-				   fname );
-		fl_free( fname );
-		return -1;
-	}
+	if ( ! ( new_forms = fl_realloc( forms,
+									 ( fnumb + nforms ) * sizeof *forms ) ) )
+		return ff_err( "Can't load file, running out of memory" );
 
 	forms = new_forms;
 
-    /* From here until we hit a seperator newline, we are free to do whatever
-       we want here */
+	fname = ff_get_filename_copy( );
 
-    while ( fgets( buf, sizeof buf - 1, fn ) && *buf != '\n' )
+	/* Now read in all forms - we have already read in the "Name:" key that
+	   starts a new form */
+
+	r = FF_AT_START_OF_FORM;
+
+    for ( i = 0; i < nforms && r == FF_AT_START_OF_FORM; i++ )
     {
-		char ubuf[ 32 ];
+		char *p;
 
-		if ( strncmp( buf, "Unit", 4 ) == 0 )
-		{
-			sscanf( buf, "Unit of measure: %s", ubuf );
-			fdopt.unit = unit_val( ubuf );
-			fli_cntl.coordUnit = fdopt.unit;	    /* make_obj uses this */
-			M_warn( "LoadForm", "unit=%s %d", ubuf, fdopt.unit );
-		}
-		else if ( strncmp( buf, "Border", 6 ) == 0 )
-		{
-			int bw;
+		/* First thing to read is the name of the form (which must not be an
+		   empty string) */
 
-			sscanf( buf, "Border Width: %s", ubuf );
-			if ( ( bw = atoi( ubuf ) ) != FL_BOUND_WIDTH )
-				fl_set_border_width( fd_bwidth = bw );
-			M_warn( "LoadForm", "BW=%d", fd_bwidth );
-		}
-		else if ( strncmp( buf, "Snap", 4 ) == 0 )
+		if ( ff_read( "%v", &p ) < 0 )
 		{
-			sscanf( buf, "SnapGrid: %s", ubuf );
-			set_snap_size( atoi( ubuf ), 1 );
+			fl_free( fname );
+			return ff_err( "Failed to read expected form name" );
 		}
-		else
-			M_warn( "LoadForm", "skipped %s", buf );
-    }
 
-    for ( ok = 1, i = 0; i < nforms && ok; i++ )
-    {
-		if ( ( ok = read_form( fn, forms[ fnumb ].fname ) >= 0 ) )
+		if ( ! *p )
+		{
+			fl_safe_free( p );
+			return ff_err( "Expected name of the form" );
+		}
+
+		fli_sstrcpy( forms[ fnumb ].fname, p, sizeof forms[ fnumb ].fname );
+
+		fl_safe_free( p );
+
+		/* Having gotten the name read all the remaining information. We then
+		   should either end up at the start of a new form or at the end of
+		   the file */
+
+		if (    ( r = read_form( ) ) == FF_AT_START_OF_FORM
+			 || r == FF_AT_END_OF_FILE )
 		{
 			forms[ fnumb ].form = cur_form;
 			fl_add_browser_line( fd_control->formbrowser,
@@ -486,27 +482,25 @@ load_forms( int          merge,
 		}
     }
 
-    if ( ! ok )
-    {
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Not all forms could be loaded", NULL, NULL, 1 );
-		else
-			M_err( 0, "not all forms could be loaded" );
-    }
+	/* Check if we're really at the end of the file and as many forms have
+	   been found as we were led to expect */
 
-    if ( ok && ! merge && ! feof( fn ) )
-    {
-		if (    ! fgets( buf, sizeof buf, fn )
-			 || strcmp( buf, "==============================\n" )
-			 || ! fgets( main_name, MAX_VAR_LEN, fn ) )
-		{
-			if ( ! fdopt.conv_only )
-				fl_show_alert( "Failure to read file", NULL, NULL, 1 );
-			else
-				M_err( 0, "Failure to read file" );
-		}
-		main_name[ strlen( main_name ) - 1 ] = '\0';
-    }
+	if ( r == FF_AT_START_OF_FORM )
+	{
+		fl_free( fname );
+		return ff_err( "More forms found than expected" );
+	}
+	else if ( r != FF_READ_FAILURE && i < nforms )
+	{
+		if ( ! fdopt.conv_only )
+			fl_show_alert( "Error while reading .fd file",
+						   "Less forms found than expected", fname, 0 );
+		else
+			M_err( "Reading .fd File", "Less forms found than expected in %s",
+				   fname );
+		fl_free( fname );
+		return -1;
+	}
 
     set_form( fnumb > 0 ? 0 : -1 );
 
@@ -518,7 +512,6 @@ load_forms( int          merge,
 		*tmp = '\0';
 		loadedfile = fl_strdup( fname );
     }
-    fclose( fn );
 
     if ( ! merge )
     {
@@ -544,7 +537,7 @@ load_forms( int          merge,
 
 
 /***************************************
- * saves the form definitions, retunrs whether saved
+ * Saves the form definitions, returns whether saved
  ***************************************/
 
 int
@@ -568,7 +561,7 @@ save_forms( const char *str )
     if ( ! str )
 		return 0;		/* cancel */
 
-    if ( *str == '\0' )
+    if ( ! *str )
     {
 		fl_show_alert( "No forms were saved.", "", "", 0 );
 		return 0;
@@ -642,7 +635,7 @@ save_forms( const char *str )
 		char optbuf[ 512 ];
 		int status;
 
-		optbuf[ 0 ] = '\0';
+		*optbuf = '\0';
 
 		if ( fdopt.emit_main )
 			strcat( optbuf, "-main " );

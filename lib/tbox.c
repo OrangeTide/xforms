@@ -766,7 +766,7 @@ fli_tbox_load( FL_OBJECT  * obj,
     if ( ! ( fp = fopen( filename, "r" ) ) )
 		return 0;
 
-	while ( ( text = fli_read_line( fp ) ) && *text != '\0' )
+	while ( ( text = fli_read_line( fp ) ) && *text )
 	{
 		int old_no_redraw = sp->no_redraw;
 

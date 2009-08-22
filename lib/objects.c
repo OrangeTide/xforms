@@ -1481,7 +1481,7 @@ fli_convert_shortcut( const char * str,
 
 	sc[ i ] = 0;
 
-	if ( *c != '\0' )
+	if ( *c )
     {
 		M_err( "fli_convert_shortcut", "Too many shortcuts (>%d)",
 			   MAX_SHORTCUTS );
@@ -3302,7 +3302,7 @@ fl_set_object_helper( FL_OBJECT  * obj,
  * additional work on setting te condition (e.g. it has child
  * objects that also need to be set) it has to set up it's own
  * function that then will called in the end. This function should
- * obly be called once an object has been created completely!
+ * only be called once an object has been created completely!
  ***************************************/
 
 int
@@ -3315,6 +3315,9 @@ fl_set_object_return( FL_OBJECT * obj,
 		return FL_RETURN_ALWAYS;
 
 	old_when = obj->how_return;
+
+	/* FL_RETURN_END_CHANGED means FL_RETURN and FL_RETURN_CHANGED at the
+	   same moment, so it those two events can't be set at the same time */
 
 	if ( when & FL_RETURN_END_CHANGED )
 		when &= ~ ( FL_RETURN_END | FL_RETURN_CHANGED );

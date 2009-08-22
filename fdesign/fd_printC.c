@@ -19,11 +19,9 @@
 /**
  * \file fd_printC.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  Generate header/C files
  */
@@ -219,7 +217,7 @@ C_output( const char * filename,
     /* Strip path */
 
     j = -1;
-    for ( i = 0; fname[ i ] != '\0'; i++ )
+    for ( i = 0; fname[ i ]; i++ )
         if ( fname[i] == '/' )
             j = i;
     if ( j >= 0 )
@@ -497,6 +495,7 @@ get_vn_name( VN_pair * vn,
     for ( ; vn->val >= 0; vn++ )
     if ( vn->val == val )
         return vn->name;
+
     sprintf( buf, "%d", val );
     return buf;
 }
@@ -523,7 +522,7 @@ emit_attrib( FILE *       fp,
     else
         s = get_vn_name( vn, a );
 
-    fprintf( fp, "    %s( obj, %s );\n", aname, s);
+    fprintf( fp, "    %s( obj, %s );\n", aname, s );
 }
 
 
@@ -590,13 +589,14 @@ style_val( const char * cc )
          spstyle[ MAX_TYPE_NAME_LEN ],
          *p;
 
-    strcpy( lstyle, cc );
-    spstyle[ 0 ] = '\0';
+    fli_sstrcpy( lstyle, cc, sizeof lstyle );
+    *spstyle = '\0';
     if ( ( p = strchr( lstyle, '+' ) ) )
     {
         strcpy( spstyle, p + 1 );
         *p = 0;
     }
+
     return pure_style_val( lstyle ) + pure_style_val( spstyle );
 }
 
@@ -683,11 +683,11 @@ align_name( int val )
 int
 align_val( const char * cc )
 {
-    char s[ 128 ],
+    char s[ MAX_TYPE_NAME_LEN ],
          *p;
     int val;
 
-    strcpy( s, cc );
+    fli_sstrcpy( s, cc, sizeof s );
     if ( ( p = strchr( s, '|' ) ) )
     {
         *p = '\0';
@@ -1061,7 +1061,7 @@ print_form_altformat( FILE       * fn,
     while ( ( obj = obj->next ) != NULL )
     {
         get_object_name( obj, name, cbname, argname );
-        if ( name[ 0 ] != '\0' )
+        if ( *name )
         {
             if ( ! check_array_name( name ) )
             {
@@ -1239,7 +1239,7 @@ print_callbacks_and_globals( FILE    * fn,
             }
         }
 
-        if (    cbname[ 0 ] != '\0'
+        if (    *cbname
              && ! strstr( cbname, "::" )
              && ! already_emitted( form->first, obj, cbname ) )
         {
@@ -1566,7 +1566,7 @@ output_object( FILE      * fn,
 
     if ( obj->objclass == FL_BEGIN_GROUP )
     {
-        if ( name[ 0 ] != '\0' )
+        if ( *name )
         {
             if ( ! altfmt )
                 fprintf( fn, "\n    %s->%s =", fdvname, name );
@@ -1591,85 +1591,91 @@ output_object( FILE      * fn,
 
         fprintf( fn, "\n    " );
 
-        if ( name[ 0 ] != '\0' )
-    {
-        if ( ! altfmt )
-            fprintf( fn, "%s->%s = ", fdvname, name );
-        else
-            fprintf( fn, "%s = ", name );
-    }
+        if ( *name )
+		{
+			if ( ! altfmt )
+				fprintf( fn, "%s->%s = ", fdvname, name );
+			else
+				fprintf( fn, "%s = ", name );
+		}
 
-    fprintf( fn, "obj = " );
-    fprintf( fn, "fl_add_%s( ", find_class_name( obj->objclass ) );
-    fprintf( fn, "FL_%s,", find_type_name( obj->objclass, obj->type ) );
+		fprintf( fn, "obj = " );
+		fprintf( fn, "fl_add_%s( ", find_class_name( obj->objclass ) );
+		fprintf( fn, "FL_%s,", find_type_name( obj->objclass, obj->type ) );
 
-    fakeobj.x = obj->x;
-    fakeobj.y = obj->y;
-    fakeobj.w = obj->w;
-    fakeobj.h = obj->h;
-    fl_scale_object( &fakeobj, sc, sc );
+		fakeobj.x = obj->x;
+		fakeobj.y = obj->y;
+		fakeobj.w = obj->w;
+		fakeobj.h = obj->h;
+		fl_scale_object( &fakeobj, sc, sc );
 
-	label = get_label( obj, 1 );
-    if ( obj->objclass != FL_FREE )
-        fprintf( fn, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
-                 fakeobj.w, fakeobj.h, label );
-    else
-        fprintf( fn, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
-                 fakeobj.x, fakeobj.y, fakeobj.w, fakeobj.h,
-                 label, get_free_handle( obj, name ) );
-	fl_free( label );
+		label = get_label( obj, 1 );
+		if ( obj->objclass != FL_FREE )
+			fprintf( fn, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
+					 fakeobj.w, fakeobj.h, label );
+		else
+			fprintf( fn, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
+					 fakeobj.x, fakeobj.y, fakeobj.w, fakeobj.h,
+					 label, get_free_handle( obj, name ) );
+		fl_free( label );
+		
+		if  (    ( p = get_shortcut_string( obj ) )
+			  && *p
+			  && obj->type != FL_RETURN_BUTTON )
+			fprintf( fn, "    fl_set_%s_shortcut( obj, \"%s\", 1 );\n",
+					 supported_shortcut( obj->objclass ),
+					 get_shortcut_string( obj ) );
 
-    if  (    ( p = get_shortcut_string( obj ) )
-          && *p
-          && obj->type != FL_RETURN_BUTTON )
-        fprintf( fn, "    fl_set_%s_shortcut( obj, \"%s\", 1 );\n",
-                 supported_shortcut( obj->objclass ),
-                 get_shortcut_string( obj ) );
+		if ( obj->boxtype != defobj->boxtype && obj->objclass != FL_BOX )
+		{
+			if ( obj->objclass != FL_CANVAS && obj->objclass != FL_FRAME )
+				emit_attrib( fn, obj->boxtype, vn_btype,
+							 "fl_set_object_boxtype" );
+		}
 
-    if ( obj->boxtype != defobj->boxtype && obj->objclass != FL_BOX )
-    {
-        if ( obj->objclass != FL_CANVAS && obj->objclass != FL_FRAME )
-            emit_attrib( fn, obj->boxtype, vn_btype, "fl_set_object_boxtype" );
-    }
+		if ( obj->col1 != defobj->col1 || obj->col2 != defobj->col2 )
+		{
+			if ( obj->objclass != FL_CANVAS )
+				fprintf( fn, "    fl_set_object_color( obj, %s, %s );\n",
+						 fli_query_colorname( obj->col1 ),
+						 fli_query_colorname( obj->col2 ) );
+		}
 
-    if ( obj->col1 != defobj->col1 || obj->col2 != defobj->col2 )
-    {
-        if ( obj->objclass != FL_CANVAS )
-            fprintf( fn, "    fl_set_object_color( obj, %s, %s );\n",
-                     fli_query_colorname( obj->col1 ),
-                     fli_query_colorname( obj->col2 ) );
-    }
+		if ( obj->lcol != defobj->lcol )
+			fprintf( fn, "    fl_set_object_lcolor( obj, %s );\n",
+					 fli_query_colorname( obj->lcol ) );
 
-    if ( obj->lcol != defobj->lcol )
-        fprintf( fn, "    fl_set_object_lcolor( obj, %s );\n",
-                 fli_query_colorname( obj->lcol ) );
+		if ( obj->lsize != defobj->lsize )
+			emit_attrib( fn, obj->lsize, vn_lsize, "fl_set_object_lsize" );
 
-    if ( obj->lsize != defobj->lsize )
-        emit_attrib( fn, obj->lsize, vn_lsize, "fl_set_object_lsize" );
+		if ( obj->align != defobj->align )
+			emit_attrib( fn, obj->align, vn_align, "fl_set_object_lalign" );
 
-    if ( obj->align != defobj->align )
-        emit_attrib( fn, obj->align, vn_align, "fl_set_object_lalign" );
+		if ( obj->lstyle != defobj->lstyle )
+			fprintf( fn, "    fl_set_object_lstyle( obj, %s );\n",
+					 style_name( obj->lstyle ) );
 
-    if ( obj->lstyle != defobj->lstyle )
-        fprintf( fn, "    fl_set_object_lstyle( obj, %s );\n",
-                 style_name( obj->lstyle ) );
+		/* 'resize' must be checked for consistency with the gravity settings */
 
-    /* 'resize' must be checked for consistency with the gravity settings */
+		obj->resize = check_resize( obj->resize,
+									obj->nwgravity, obj->segravity );
+		if ( obj->resize != defobj->resize )
+			fprintf( fn, "    fl_set_object_resize( obj, %s );\n",
+					 resize_name( obj->resize ) );
 
-    obj->resize = check_resize( obj->resize, obj->nwgravity, obj->segravity );
-    if ( obj->resize != defobj->resize )
-        fprintf( fn, "    fl_set_object_resize( obj, %s );\n",
-                 resize_name( obj->resize ) );
+		if (    obj->nwgravity != defobj->nwgravity
+			 || obj->segravity != defobj->segravity)
+			fprintf( fn, "    fl_set_object_gravity( obj, %s, %s );\n",
+					 gravity_name( obj->nwgravity ),
+					 gravity_name( obj->segravity ) );
 
-    if (    obj->nwgravity != defobj->nwgravity
-         || obj->segravity != defobj->segravity)
-        fprintf( fn, "    fl_set_object_gravity( obj, %s, %s );\n",
-                 gravity_name( obj->nwgravity ),
-                 gravity_name( obj->segravity ) );
+		if ( *cbname )
+			fprintf( fn, "    fl_set_object_callback( obj, %s, %s );\n",
+					 cbname, argname );
 
-    if ( cbname[ 0 ] != 0 )
-        fprintf( fn, "    fl_set_object_callback( obj, %s, %s );\n",
-                 cbname, argname );
+		if ( obj->how_return != defobj->how_return )
+			fprintf( fn, "    fl_set_object_return( obj, %s );\n",
+					 get_how_return_name( obj->how_return, 1 ) );
     }
 
     /* Generate object class specifc settings */

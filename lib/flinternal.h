@@ -888,7 +888,14 @@ extern const char *fli_object_class_name( FL_OBJECT * );
 extern char *fli_print_to_string( const char * fmt,
 								  ... );
 
-extern char *fli_read_line( FILE *fp );
+extern char *fli_read_line( FILE * fp );
+
+extern char *fli_sstrcpy( char       * dest,
+						  const char * src,
+						  size_t       n );
+
+extern char * fli_get_string( const char * fmt,
+							  ... );
 
 extern void fli_mark_composite_for_redraw( FL_OBJECT * );
 

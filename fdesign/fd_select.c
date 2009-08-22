@@ -19,17 +19,14 @@
 /**
  * \file fd_select.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Part of the Form Designer.
  *
  * This file contains all routines and data types to maintain the current
  * selection and manipulate (move, scale) and draw it.
- *
  */
 
 

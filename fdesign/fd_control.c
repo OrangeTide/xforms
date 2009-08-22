@@ -19,14 +19,11 @@
 /**
  * \file fd_control.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  Form designer Control panel handling
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -490,7 +487,7 @@ show_selmessage( FL_OBJECT * sel[ ],
 		 argname[ MAX_VAR_LEN ];
     char buf[ MAX_VAR_LEN ];
 
-    buf[ 0 ] = '\0';
+    *buf = '\0';
 
     if ( n == 1 )
     {

@@ -19,11 +19,9 @@
 /**
  * \file fd_super.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * translation between superspec and spec
  */

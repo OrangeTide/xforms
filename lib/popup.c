@@ -216,7 +216,7 @@ fli_popup_add( Window       win,
         return NULL;
     }
 
-    if ( title == NULL || *title == '\0' )
+    if ( ! title || ! *title )
         p->title = NULL;
     else if ( ( p->title = fl_strdup( title ) ) == NULL )
     {
@@ -1017,12 +1017,12 @@ fl_popup_entry_set_text( FL_POPUP_ENTRY * entry,
 
     /* Finally set up the label and accel members of the structure */
 
-    if ( label == '\0' )
+    if ( ! *label )
         entry->label = NULL;
     else if ( ( entry->label = fl_strdup( label ) ) == NULL )
          goto REPLACE_DONE;
 
-    if ( accel == NULL || *accel == '\0' )
+    if ( ! accel || ! *accel )
         entry->accel = NULL;
     else if ( ( entry->accel = fl_strdup( accel ) ) == NULL )
         goto REPLACE_DONE;
@@ -1135,7 +1135,7 @@ fl_popup_set_title( FL_POPUP   * popup,
 
     fl_safe_free( popup->title );
 
-    if ( title != NULL && *title != '\0' )
+    if ( title && *title )
     {
         popup->title = fl_strdup( title );
         if ( popup->title == NULL )
@@ -2439,7 +2439,7 @@ parse_entries( FL_POPUP   * popup,
 
         cleanup_string ( c );
 
-        if ( *c == '\0' )
+        if ( ! *c )
             entry->label = NULL;
         else if ( ( entry->label = fl_strdup( c ) ) == NULL )
         {
@@ -2449,7 +2449,7 @@ parse_entries( FL_POPUP   * popup,
 
         acc = cleanup_string( acc );
 
-        if ( acc == NULL || *acc == '\0' )
+        if ( ! acc || ! *acc )
             entry->accel = NULL;
         else if ( ( entry->accel = fl_strdup( acc ) ) == NULL )
         {
@@ -2570,8 +2570,8 @@ convert_shortcut( const char     * shortcut,
     long sc[ MAX_SHORTCUTS + 1 ];
     int cnt;
 
-    if (    ( entry->label != NULL || *entry->label != '\0' )
-         && ( entry->accel == NULL || *entry->accel == '\0' ) )
+    if (    entry->label && *entry->label
+         && ( ! entry->accel || ! *entry->accel ) )
         entry->ulpos = fli_get_underline_pos( entry->label, shortcut ) - 1;
     else
         entry->ulpos = -1;
@@ -2728,7 +2728,7 @@ entry_text_dimensions( FL_POPUP_ENTRY * entry,
 
     /* Determine length and height of label string */
 
-    if ( entry->label != NULL && *entry->label != '\0' )
+    if ( entry->label && *entry->label )
     {
         s = c = fl_strdup( entry->label );
 
@@ -2776,7 +2776,7 @@ entry_text_dimensions( FL_POPUP_ENTRY * entry,
     /* Repeat this for the accelerator key text (minimum spacing between this
        and the label is 1.5 times the font size) */
 
-    if ( entry->accel != NULL && *entry->accel != '\0' )
+    if ( entry->accel && *entry->accel )
     {
         unsigned int aw = 0,
                      ah = 0;
@@ -2984,7 +2984,7 @@ draw_entry( FL_POPUP_ENTRY * entry )
     /* Finally it's time to draw the label and accelerator. Underlining is not
        done via the "normal" functions since they are too much of a mess...*/
 
-    if ( entry->label != NULL && *entry->label != '\0' )
+    if ( entry->label && *entry->label )
     {
         fl_drw_text( FL_ALIGN_LEFT_TOP, x, entry->box_y, w, entry->box_h,
                      color, ptp->entry_font_style, ptp->entry_font_size,
@@ -2994,7 +2994,7 @@ draw_entry( FL_POPUP_ENTRY * entry )
                           entry->ul_w, entry->ul_h, color );
     }
 
-    if ( entry->accel != NULL && *entry->accel != '\0' )
+    if ( entry->accel && *entry->accel )
         fl_drw_text( FL_ALIGN_RIGHT_TOP, x, entry->box_y, w, entry->box_h,
                      color, ptp->entry_font_style, ptp->entry_font_size,
                      entry->accel );
@@ -4120,7 +4120,7 @@ cleanup_string( char *s )
 {
     char *c;
 
-    if ( s == NULL || *s == '\0' )
+    if ( ! s || ! *s )
         return s;
 
     /* Remove all backspace charscters */

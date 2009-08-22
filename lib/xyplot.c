@@ -1011,10 +1011,8 @@ add_xtics( FL_OBJECT * ob )
 			char *p;
 
 			if ( ( p = strchr( sp->axtic[ i ], '@' ) ) )
-			{
-				label = strcpy( buf, sp->axtic[ i ] );
-				label[ p - sp->axtic[ i ] ] = '\0';
-			}
+				label = fli_sstrcpy( buf, sp->axtic[ i ],
+									 p - sp->axtic[ i ] + 1 );
 			else
 				label = sp->axtic[ i ];
 		}
@@ -1176,10 +1174,8 @@ add_ytics( FL_OBJECT * ob )
 		else
 		{
 			if ( ( p = strchr( sp->aytic[ i ], '@' ) ) )
-			{
-				label = strcpy( buf, sp->aytic[ i ] );
-				label[ p - sp->aytic[ i ] ] = '\0';
-			}
+				label = fli_sstrcpy( buf, sp->aytic[ i ],
+									 p - sp->aytic[ i ] + 1 );
 			else
 				label = sp->aytic[ i ];
 		}
@@ -1281,10 +1277,8 @@ convert_coord( FL_OBJECT       * ob,
 		else
 		{
 			if ( ( p = strchr( sp->aytic[ 0 ], '@' ) ) )
-			{
-				label = strcpy( buf, sp->aytic[ 0 ] );
-				label[ p - sp->aytic[ 0 ] ] = '\0';
-			}
+				label = fli_sstrcpy( buf, sp->aytic[ 0 ],
+									 p - sp->aytic[ 0 ] + 1 );
 			else
 				label = sp->aytic[ 0 ];
 

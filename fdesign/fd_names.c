@@ -19,16 +19,14 @@
 /**
  * \file fd_names.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
+ *
  * This file is part of the Form Designer.
  *
  * It contains the routines that keep track of the names and
  * callback routines associated to the different objects.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -82,8 +80,7 @@ check_names( int on )
 {
     /* Fill in argument if missing */
 
-    if (    objects[ on ].cbname[  0 ] != '\0'
-		 && objects[ on ].argname[ 0 ] == '\0')
+    if ( *objects[ on ].cbname && ! *objects[ on ].argname)
 		strcpy( objects[ on ].argname, "0" );
 
     /* HAS TO BE EXTENDED */
@@ -107,11 +104,12 @@ get_object_name( const FL_OBJECT * obj,
 {
     int on = get_object_numb( obj );
 
-    name[ 0 ] = '\0';
-    cbname[ 0 ] = '\0';
-    argname[ 0 ] = '\0';
+	*name = '\0';
+    *cbname = '\0';
+    *argname = '\0';
     if ( on == -1 )
 		return;
+
     strcpy( name, objects[ on ].name );
     strcpy( cbname, objects[ on ].cbname );
     strcpy( argname, objects[ on ].argname );
@@ -135,15 +133,26 @@ set_object_name( FL_OBJECT  * obj,
 
     if ( on == -1 )
     {
-		if ( name[ 0 ] == '\0' && cbname[ 0 ] == '\0' && argname[ 0 ] == '\0' )
+		if (    ( ! name    || ! *name    )
+			 && ( ! cbname  || ! *cbname  )
+			 && ( ! argname || ! *argname ) )
 			return;
+
 		if ( objnumb >= MAXOBJ )
 			return;
+
 		objects[ objnumb ].obj = obj;
 		on = objnumb++;
     }
-    strcpy( objects[ on ].name, name );
-    strcpy( objects[ on ].cbname, cbname );
-    strcpy( objects[ on ].argname, argname );
+
+	if ( name )
+		fli_sstrcpy( objects[ on ].name, name, sizeof objects[ on ].name );
+	if ( cbname )
+		fli_sstrcpy( objects[ on ].cbname, cbname,
+					 sizeof objects[ on ].cbname );
+	if ( argname )
+		fli_sstrcpy( objects[ on ].argname, argname,
+					 sizeof objects[ on ].argname  );
+
     check_names( on );
 }

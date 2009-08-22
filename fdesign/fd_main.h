@@ -271,12 +271,29 @@ char *get_shortcut_string( const FL_OBJECT * );
 FL_OBJECT *copy_object( FL_OBJECT *,	/* Make an exact copy of an object */
 					    int keep );
 
+/******** in fl_file_fun.c    ********/
+
+#define FF_READ_FAILURE        -1
+#define FF_AT_END_OF_FILE       0
+#define FF_AT_START_OF_FORM     1
+#define FF_AT_START_OF_OBJECT   2
+
+
+extern int ff_get_fd_file( const char *,
+							int  );
+extern char *ff_get_filename_copy( void );
+extern int ff_read( const char *,
+					... );
+extern void ff_close( void );
+extern int ff_err( const char * );
+extern void ff_warn( const char * );
+
+
 /******** in fl_file.c    ********/
 
 /* Contains all routines that deal with saving and loading forms. */
 
-extern int read_form( FILE *,
-					  char * );
+extern int read_form( void );
 extern void write_form( FILE *,
 						FL_FORM *,
 						char[ ] );
@@ -324,7 +341,7 @@ extern void reshape_form_background( FL_Coord,
 
 extern int load_forms( int,
 					   const char *,
-					   int);
+					   int );
 
 extern int save_forms( const char * );
 
@@ -572,8 +589,8 @@ extern FL_OBJECT *fl_add_simu_glcanvas( int,
 extern void save_objclass_spec_info( FILE *,
 									 FL_OBJECT * );
 
-extern void load_objclass_spec_info( FILE *,
-									 FL_OBJECT * );
+extern int load_objclass_spec_info( FL_OBJECT *,
+									char *);
 
 extern void emit_objclass_spec_info( FILE *,
 									 FL_OBJECT * );
@@ -593,10 +610,6 @@ extern void modify_attrib_basic_color( FL_COLOR,
 									   FL_COLOR );
 
 extern void show_attributes( const FL_OBJECT * );
-
-extern int read_key_val( FILE * fp,
-						 char **,
-						 char ** );
 
 /* Control panel etc */
 
@@ -752,7 +765,7 @@ typedef struct {
     int              nlines;
     char             filename[ 512 ];
     char             focus_filename[ 512 ];
-    char             data[64];
+    char             data[ 64 ];
     char             focus_data[ 64 ];
     char             width[ 64 ],
 	                 height[ 64 ];
@@ -844,6 +857,20 @@ extern int noop_handle( FL_OBJECT *,
 						void * );
 
 extern char *get_helper( char * );
+
+extern void set_up_how_return_menu( FL_OBJECT * );
+
+extern void reset_how_return_menu( FL_OBJECT *,
+								   int );
+
+extern void handle_how_return_changes( FL_OBJECT *,
+									   FL_OBJECT * );
+
+extern int get_how_return_val( const char * );
+
+extern const char * get_how_return_name( int,
+										 int );
+
 
 
 #endif /* FD_MAIN_H */

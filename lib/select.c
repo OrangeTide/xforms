@@ -257,7 +257,7 @@ fl_replace_select_item( FL_OBJECT      * obj,
 		return NULL;
 	}
 
-	if ( items == NULL || *items == '\0' )
+	if ( ! items || ! *items )
 	{
 		M_err( "fl_replace_select_items", "Items string NULL or empty" );
 		return NULL;

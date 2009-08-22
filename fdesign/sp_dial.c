@@ -19,16 +19,13 @@
 /**
  * \file sp_dial.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  Settting dial class specific attributes. We hang the spec
  *  structure on ob->u_vdata. The real spec ob->spec is affected
  *  by testing and can't be used.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -53,7 +50,7 @@ static FLI_VN_PAIR dial_dir[ ] =
 {
     VN( FL_DIAL_CW ),
     VN( FL_DIAL_CCW ),
-    VN( -1 )
+    { -1, NULL }
 };
 
 
@@ -78,7 +75,12 @@ get_dial_spec_fdform( void )
 		dial_attrib = create_form_dialattrib( );
 		fl_addto_choice( dial_attrib->dir, dial_dir[ 0 ].name );
 		fl_addto_choice( dial_attrib->dir, dial_dir[ 1 ].name );
-		fl_addto_choice( dial_attrib->returnsetting, get_how_return_str( ) );
+
+		set_up_how_return_menu( dial_attrib->returnsetting );
+		fl_set_menu_item_mode( dial_attrib->returnsetting, 5,
+							   FL_PUP_BOX | FL_PUP_GRAY );
+		fl_set_menu_item_mode( dial_attrib->returnsetting, 6,
+							   FL_PUP_BOX | FL_PUP_GRAY );
     }
 
     return dial_attrib;
@@ -115,8 +117,8 @@ show_spec( SuperSPEC * spec )
 
     fl_set_choice_text( dial_attrib->dir,
 						fli_get_vn_name( dial_dir, spec->direction ) );
-    fl_set_choice_text( dial_attrib->returnsetting,
-						get_how_return_str_name( spec->how_return ) );
+
+	reset_how_return_menu( dial_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -172,10 +174,6 @@ emit_dial_code( FILE      * fp,
 		fprintf( fp, "    fl_set_dial_direction( obj, %s );\n",
 				 fli_get_vn_name( dial_dir, sp->direction ) );
 
-    if ( sp->how_return != defspec->how_return )
-		fprintf( fp, "    fl_set_dial_return( obj, %s );\n",
-				 get_how_return_name( ob->how_return ) );
-
     fl_free_object( defobj );
 }
 
@@ -216,9 +214,6 @@ save_dial_attrib( FILE      * fp,
     if ( spec->direction != defspec->direction )
 		fprintf( fp, "dir: %s\n",
 				 fli_get_vn_name( dial_dir, spec->direction ) );
-
-    if ( spec->how_return != defspec->how_return )
-		fprintf( fp, "return: %s\n", get_how_return_name( spec->how_return ) );
 
     fl_free_object( defobj );
 }
@@ -312,10 +307,8 @@ void
 dial_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						   long        data  FL_UNUSED_ARG )
 {
-    const char *s = fl_get_choice_text( dial_attrib->returnsetting );
-
-    fl_set_dial_return( dial_attrib->vdata,
-						get_how_return_str_value( s ) );
+	handle_how_return_changes( dial_attrib->returnsetting,
+							   dial_attrib->vdata );
 }
 
 

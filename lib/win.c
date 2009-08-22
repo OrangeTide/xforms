@@ -552,8 +552,7 @@ fl_label_to_res_name( const char * label )
 {
     static char res[ 54 ];
 
-    strncpy( res, label ? label : "", sizeof res );
-    res[ sizeof res - 1 ] = '\0';
+    fli_sstrcpy( res, label ? label : "", sizeof res );
     fli_nuke_all_non_alnum( res );
     if ( res[ 0 ] && isupper( ( int ) res[ 0 ] ) )
 		res[ 0 ] = tolower( ( int ) res[ 0 ] );

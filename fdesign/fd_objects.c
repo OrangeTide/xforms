@@ -22,7 +22,7 @@
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
+ *
  * This file is part of the Form Designer.
  *
  * It contains routines to keep track of all different object classes
@@ -313,6 +313,60 @@ add_slider_types( int sclass )
     add_type_def( sclass, FL_HOR_BROWSER_SLIDER,  "HOR_BROWSER_SLIDER"  );
 }
 
+/***************************************
+ ***************************************/
+
+static void
+add_scrollbar_types( int sclass )
+{
+    add_type_def( sclass, FL_VERT_SCROLLBAR,      "VERT_SCROLLBAR"        );
+    add_type_def( sclass, FL_HOR_SCROLLBAR,       "HOR_SCROLLBAR"         );
+    add_type_def( sclass, FL_VERT_THIN_SCROLLBAR, "VERT_THIN_SCROLLBAR"   );
+    add_type_def( sclass, FL_HOR_THIN_SCROLLBAR,  "HOR_THIN_SCROLLBAR"    );
+    add_type_def( sclass, FL_VERT_NICE_SCROLLBAR, "VERT_NICE_SCROLLBAR"   );
+    add_type_def( sclass, FL_HOR_NICE_SCROLLBAR,  "HOR_NICE_SCROLLBAR"    );
+    add_type_def( sclass, FL_VERT_PLAIN_SCROLLBAR, "VERT_PLAIN_SCROLLBAR" );
+    add_type_def( sclass, FL_HOR_PLAIN_SCROLLBAR, "HOR_PLAIN_SCROLLBAR"   );
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+add_chart_types( int cclass )
+{
+    add_type_def( cclass, FL_BAR_CHART,        "BAR_CHART"        );
+    add_type_def( cclass, FL_HORBAR_CHART,     "HORBAR_CHART"     );
+    add_type_def( cclass, FL_LINE_CHART,       "LINE_CHART"       );
+    add_type_def( cclass, FL_FILLED_CHART,     "FILLED_CHART"     );
+    add_type_def( cclass, FL_SPIKE_CHART,      "SPIKE_CHART"      );
+    add_type_def( cclass, FL_PIE_CHART,        "PIE_CHART"        );
+    add_type_def( cclass, FL_SPECIALPIE_CHART, "SPECIALPIE_CHART" );
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+add_xyplot_types( int xyclass )
+{
+    add_type_def( xyclass, FL_NORMAL_XYPLOT,     "NORMAL_XYPLOT"     );
+    add_type_def( xyclass, FL_ACTIVE_XYPLOT,     "ACTIVE_XYPLOT"     );
+    add_type_def( xyclass, FL_SQUARE_XYPLOT,     "SQUARE_XYPLOT"     );
+    add_type_def( xyclass, FL_CIRCLE_XYPLOT,     "CIRCLE_XYPLOT"     );
+    add_type_def( xyclass, FL_POINTS_XYPLOT,     "POINTS_XYPLOT"     );
+    add_type_def( xyclass, FL_LINEPOINTS_XYPLOT, "LINEPOINTS_XYPLOT" );
+    add_type_def( xyclass, FL_DASHED_XYPLOT,     "DASHED_XYPLOT"     );
+    add_type_def( xyclass, FL_DOTTED_XYPLOT,     "DOTTED_XYPLOT"     );
+    add_type_def( xyclass, FL_DOTDASHED_XYPLOT,  "DOTDASHED_XYPLOT"  );
+    add_type_def( xyclass, FL_LONGDASHED_XYPLOT, "LONGDASHED_XYPLOT" );
+    add_type_def( xyclass, FL_FILL_XYPLOT,       "FILL_XYPLOT"       );
+    add_type_def( xyclass, FL_IMPULSE_XYPLOT,    "IMPULSE_XYPLOT"    );
+    add_type_def( xyclass, FL_EMPTY_XYPLOT,      "EMPTY_XYPLOT"      );
+}
+
 
 /***************************************
  * Initializes all the classes and types. Must be adapted
@@ -339,7 +393,7 @@ init_classes( void )
     set_class_default( FL_BOX, FL_UP_BOX, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "frame" );
-    add_class_def(VN( FL_FRAME ), OBJNAME( frame ) );
+    add_class_def( VN( FL_FRAME ), OBJNAME( frame ) );
     add_frame_types( FL_FRAME );
     set_class_default( FL_FRAME, FL_ENGRAVED_FRAME, "" );
 
@@ -363,13 +417,7 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "chart" );
     add_class_def( VN( FL_CHART ), OBJNAME( chart ) );
-    add_type_def( FL_CHART, FL_BAR_CHART,        "BAR_CHART" );
-    add_type_def( FL_CHART, FL_HORBAR_CHART,     "HORBAR_CHART" );
-    add_type_def( FL_CHART, FL_LINE_CHART,       "LINE_CHART" );
-    add_type_def( FL_CHART, FL_FILLED_CHART,     "FILLED_CHART" );
-    add_type_def( FL_CHART, FL_SPIKE_CHART,      "SPIKE_CHART" );
-    add_type_def( FL_CHART, FL_PIE_CHART,        "PIE_CHART" );
-    add_type_def( FL_CHART, FL_SPECIALPIE_CHART, "SPECIALPIE_CHART" );
+	add_chart_types( FL_CHART );
 
     fl_add_browser_line( fd_control->objectbrowser, "clock" );
     add_class_def( VN( FL_CLOCK ), OBJNAME( clock ) );
@@ -433,15 +481,7 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "scrollbar" );
     add_class_def( VN( FL_SCROLLBAR ), OBJNAME( scrollbar ) );
-    add_type_def( FL_SCROLLBAR, FL_VERT_SCROLLBAR,      "VERT_SCROLLBAR");
-    add_type_def( FL_SCROLLBAR, FL_HOR_SCROLLBAR,       "HOR_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_VERT_THIN_SCROLLBAR, "VERT_THIN_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_HOR_THIN_SCROLLBAR,  "HOR_THIN_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_VERT_NICE_SCROLLBAR, "VERT_NICE_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_HOR_NICE_SCROLLBAR,  "HOR_NICE_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_VERT_PLAIN_SCROLLBAR,
-				  "VERT_PLAIN_SCROLLBAR" );
-    add_type_def( FL_SCROLLBAR, FL_HOR_PLAIN_SCROLLBAR, "HOR_PLAIN_SCROLLBAR" );
+	add_scrollbar_types( FL_SCROLLBAR );
 
     fl_add_browser_line( fd_control->objectbrowser, "dial" );
     add_class_def( VN( FL_DIAL ), OBJNAME( dial ) );
@@ -514,19 +554,7 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "xyplot" );
     add_class_def( VN( FL_XYPLOT ), OBJNAME( xyplot ) );
-    add_type_def( FL_XYPLOT, FL_NORMAL_XYPLOT,     "NORMAL_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_ACTIVE_XYPLOT,     "ACTIVE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_SQUARE_XYPLOT,     "SQUARE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_CIRCLE_XYPLOT,     "CIRCLE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_POINTS_XYPLOT,     "POINTS_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_LINEPOINTS_XYPLOT, "LINEPOINTS_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_DASHED_XYPLOT,     "DASHED_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_DOTTED_XYPLOT,     "DOTTED_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_DOTDASHED_XYPLOT,  "DOTDASHED_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_LONGDASHED_XYPLOT, "LONGDASHED_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_FILL_XYPLOT,       "FILL_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_IMPULSE_XYPLOT,    "IMPULSE_XYPLOT" );
-    add_type_def( FL_XYPLOT, FL_EMPTY_XYPLOT,      "EMPTY_XYPLOT" );
+	add_xyplot_types( FL_XYPLOT );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
 
@@ -549,7 +577,7 @@ init_classes( void )
     fl_add_browser_line( fd_control->objectbrowser, "tabfolder" );
     add_class_def( FL_NTABFOLDER, "FL_TABFOLDER", "tabfolder",
 				   fl_create_ntabfolder, fl_add_ntabfolder );
-    add_type_def( FL_NTABFOLDER, FL_TOP_TABFOLDER,    "TOP_TABFOLDER" );
+    add_type_def( FL_NTABFOLDER, FL_TOP_TABFOLDER, "TOP_TABFOLDER" );
     add_type_def( FL_NTABFOLDER, FL_BOTTOM_TABFOLDER, "BOTTOM_TABFOLDER" );
     set_class_default( FL_NTABFOLDER, FL_TOP_TABFOLDER, "" );
 
@@ -741,11 +769,14 @@ find_type_value( int          cln,
     for ( i = 0; i < cnumb; i++ )
 		if ( classes[ i ].cn == cln )
 			for ( j = 0; j < jmax; j++ )
-				if ( strcmp( classes[ i ].types[ j ].tname, tyname ) == 0 )
+				if (    ! strcmp( classes[ i ].types[ j ].tname, tyname )
+					 || (    ! strncmp( tyname, "FL_", 3 )
+						  && ! strcmp( classes[ i ].types[ j ].tname,
+									   tyname + 3 ) ) )
 					return j;
 
     M_err( "TypeValue", "type %s is unknown", tyname );
-    return atoi( tyname );
+    return -1;
 }
 
 
@@ -949,7 +980,7 @@ add_an_object( int      objclass,
     }
 
     if ( ! obj )
-		fprintf( stderr, "Unknown object(class=%d type=%d)\n",
+		fprintf( stderr, "Unknown object (class = %d type = %d)\n",
 				 objclass, type );
 
 	obj->fl1 = obj->x;

@@ -19,16 +19,13 @@
 /**
  * \file sp_freeobj.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Settting free object class specific attributes, in this
  * case, the handler name.  We store this piece of into
  * in ob->c_vdata;
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -98,7 +95,7 @@ set_freeobj_attrib( FL_OBJECT * ob )
 {
     fo_attrib->vdata = edited = ob;
 
-    ori_handle_name[ 0 ] = '\0';
+    *ori_handle_name = '\0';
     if ( ob->c_vdata )
 		strcpy( ori_handle_name, ob->c_vdata );
 

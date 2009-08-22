@@ -93,8 +93,7 @@ fl_now( void )
     time_t t = time( 0 );
     static char buf[ 64 ];
 
-    strcpy( buf, asctime( localtime( &t ) ) );
-    buf[ strlen( buf ) - 1 ] = '\0';
+    fli_sstrcpy( buf, asctime( localtime( &t ) ), sizeof buf );
     return buf;
 }
 
