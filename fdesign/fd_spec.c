@@ -318,9 +318,9 @@ ff_read_sp_bounds( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object bounds" );
 
 	if ( r == 0 )
-		ff_warn( "\"bounds\" key with no or invalid values" );
+		return ff_err( "\"bounds\" key with no or invalid values" );
 	else if ( r == 1 )
-		ff_warn( "\"bounds\" key with only one value" );
+		return ff_err( "\"bounds\" key with only one value" );
 
 	return 0;
 }
@@ -339,7 +339,7 @@ ff_read_sp_precision( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object precision" );
 
 	if ( r == 0 )
-		ff_warn( "\"precision\" key with no or invalid value" );
+		return ff_err( "\"precision\" key with no or invalid value" );
 
 	return 0;
 }
@@ -358,9 +358,9 @@ ff_read_sp_increment( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object increment values" );
 
 	if ( r == 0 )
-		ff_warn( "\"increment\" key with no or invalid values" );
+		return ff_err( "\"increment\" key with no or invalid values" );
 	else if ( r == 1 )
-		ff_warn( "\"increment\" key with only one valid value" );
+		return ff_err( "\"increment\" key with only one valid value" );
 
 	return 0;
 }
@@ -387,7 +387,7 @@ ff_read_sp_value( FL_OBJECT * obj,
 		return ff_err( "Can't read expected object value" );
 
 	if ( r == 0 )
-		ff_warn( "\"value\" key with no or invalid value" );
+		return ff_err( "\"value\" key with no or invalid value" );
 
 	return 0;
 }
@@ -405,7 +405,7 @@ ff_read_sp_slsize( FL_OBJECT * ob  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object slider size" );
 
 	if ( r == 0 )
-		ff_warn( "\"slsize\" key with no or invalid value" );
+		return ff_err( "\"slsize\" key with no or invalid value" );
 
 	return 0;
 }
@@ -424,7 +424,7 @@ ff_read_sp_step( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object step" );
 
 	if ( r == 0 )
-		ff_warn( "\"step\" key with no or invalid value" );
+		return ff_err( "\"step\" key with no or invalid value" );
 
 	return 0;
 }
@@ -439,23 +439,22 @@ ff_read_sp_h_pref( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p;
+	int i;
 
-	if ( ( r = ff_read( "%v", *p ) ) < 0 )
+	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object h_pref" );
 
 	if ( r == 0 )
-		ff_warn( "\"h_pref\" key with no or invalid value" );
-	else
-	{
-		int i = get_scrollbar_pref_value( p );
+		return ff_err( "\"h_pref\" key with no or invalid value" );
 
-		fl_safe_free( p );
+	i = get_scrollbar_pref_value( p );
 
-		if ( i < 0 )
-			ff_warn( "Invalid value for \"h_pref\" key" );
-		else
-			sp->h_pref = i;
-	}
+	fl_safe_free( p );
+
+	if ( i < 0 )
+		return ff_err( "Invalid value for \"h_pref\" key" );
+
+	sp->h_pref = i;
 
 	return 0;
 }
@@ -470,23 +469,22 @@ ff_read_sp_v_pref( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p;
+	int i;
 
-	if ( ( r = ff_read( "%v", *p ) ) < 0 )
+	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object v_pref" );
 
 	if ( r == 0 )
-		ff_warn( "\"v_pref\" key with no or invalid value" );
-	else
-	{
-		int i = get_scrollbar_pref_value( p );
+		return ff_err( "\"v_pref\" key with no or invalid value" );
 
-		fl_safe_free( p );
+	i = get_scrollbar_pref_value( p );
 
-		if ( i < 0 )
-			ff_warn( "Invalid value for \"v_pref\" key" );
-		else
-			sp->v_pref = i;
-	}
+	fl_safe_free( p );
+
+	if ( i < 0 )
+		return ff_err( "Invalid value for \"v_pref\" key" );
+
+	sp->v_pref = i;
 
 	return 0;
 }
@@ -505,7 +503,7 @@ ff_read_sp_sstep( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object small step" );
 
 	if ( r == 0 )
-		ff_warn( "\"sstep\" key with no or invalid value" );
+		return ff_err( "\"sstep\" key with no or invalid value" );
 
 	return 0;
 }
@@ -524,7 +522,7 @@ ff_read_sp_lstep( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object large step" );
 
 	if ( r == 0 )
-		ff_warn( "\"lstep\" key with no or invalid value" );
+		return ff_err( "\"lstep\" key with no or invalid value" );
 
 	return 0;
 }
@@ -543,9 +541,9 @@ ff_read_sp_xbounds( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object xbounds" );
 
 	if ( r == 0 )
-		ff_warn( "\"xbounds\" key with no or invalid values" );
+		return ff_err( "\"xbounds\" key with no or invalid values" );
 	else if ( r == 1 )
-		ff_warn( "\"xbounds\" key with only one valid value" );
+		return ff_err( "\"xbounds\" key with only one valid value" );
 
 	return 0;
 }
@@ -564,9 +562,9 @@ ff_read_sp_ybounds( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object ybounds" );
 
 	if ( r == 0 )
-		ff_warn( "\"ybounds\" key with no or invalid values" );
+		return ff_err( "\"ybounds\" key with no or invalid values" );
 	else if ( r == 1 )
-		ff_warn( "\"ybounds\" key with only one valid value" );
+		return ff_err( "\"ybounds\" key with only one valid value" );
 
 	return 0;
 }
@@ -585,7 +583,7 @@ ff_read_sp_xvalue( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object xvalue" );
 
 	if ( r == 0 )
-		ff_warn( "\"xvalue\" key with no or invalid value" );
+		return ff_err( "\"xvalue\" key with no or invalid value" );
 
 	return 0;
 }
@@ -604,7 +602,7 @@ ff_read_sp_yvalue( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object yvalue" );
 
 	if ( r == 0 )
-		ff_warn( "\"yvalue\" key with no or invalid value" );
+		return ff_err( "\"yvalue\" key with no or invalid value" );
 
 	return 0;
 }
@@ -623,7 +621,7 @@ ff_read_sp_xstep( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object xstep" );
 
 	if ( r == 0 )
-		ff_warn( "\"xstep\" key with no or invalid value" );
+		return ff_err( "\"xstep\" key with no or invalid value" );
 
 	return 0;
 }
@@ -642,7 +640,7 @@ ff_read_sp_ystep( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object ystep" );
 
 	if ( r == 0 )
-		ff_warn( "\"ystep\" key with no or invalid value" );
+		return ff_err( "\"ystep\" key with no or invalid value" );
 
 	return 0;
 }
@@ -661,9 +659,9 @@ ff_read_sp_angles( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object angles" );
 
 	if ( r == 0 )
-		ff_warn( "\"angles\" key with no or invalid values" );
+		return ff_err( "\"angles\" key with no or invalid values" );
 	else if ( r == 1 )
-		ff_warn( "\"angles\" key with only one valid value" );
+		return ff_err( "\"angles\" key with only one valid value" );
 
 	return 0;
 }
@@ -682,7 +680,7 @@ ff_read_sp_mbuttons( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object mbuttons setting" );
 
 	if ( r == 0 )
-		ff_warn( "\"mbuttons\" key with no or invalid value" );
+		return ff_err( "\"mbuttons\" key with no or invalid value" );
 
 	return 0;
 }
@@ -701,7 +699,7 @@ ff_read_sp_initial_val( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object initial value" );
 
 	if ( r == 0 )
-		ff_warn( "\"initial_val\" key with no or invalid value" );
+		return ff_err( "\"initial_val\" key with no or invalid value" );
 
 	return 0;
 }
@@ -751,23 +749,22 @@ ff_read_sp_mode( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p;
+	int i;
 
 	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object mode" );
 
 	if ( r == 0 )
-		ff_warn( "\"mode\" key with no or invalid value" );
-	else
-	{
-		int i = get_pupmode_value( p );
+		return ff_err( "\"mode\" key with no or invalid value" );
 
-		fl_safe_free( p );
+	i = get_pupmode_value( p );
 
-		if ( i < 0 )
-			ff_warn( "Invalid value for \"mode\" key" );
-		else
-			sp->mode[ sp->nlines ] = i;
-	}
+	fl_safe_free( p );
+
+	if ( i < 0 )
+		return ff_err( "Invalid value for \"mode\" key" );
+
+	sp->mode[ sp->nlines ] = i;
 
 	return 0;
 }
@@ -824,7 +821,7 @@ ff_read_sp_id( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object id" );
 
 	if ( r == 0 )
-		ff_warn( "\"id\" key with no or invalid value" );
+		return ff_err( "\"id\" key with no or invalid value" );
 
 	return 0;
 }
@@ -844,9 +841,9 @@ ff_read_sp_file( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object \"file\" attribute" );
 
 	if ( strlen( p ) >= sizeof sp->filename )
-		ff_warn( "Filename for \"file\" key too long" );
-	else
-		strcpy( sp->filename, p );
+		return ff_err( "Filename for \"file\" key too long" );
+
+	strcpy( sp->filename, p );
  
 	fl_safe_free( p );
 
@@ -868,9 +865,9 @@ ff_read_sp_focus_file( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object \"focus\" attribute" );
 
 	if ( strlen( p ) >= sizeof sp->focus_filename )
-		ff_warn( "Filename for \"focus_file\" key too long" );
-	else
-		strcpy( sp->focus_filename, p );
+		return ff_err( "Filename for \"focus_file\" key too long" );
+
+	strcpy( sp->focus_filename, p );
  
 	fl_safe_free( p );
 
@@ -892,9 +889,9 @@ ff_read_sp_handler( FL_OBJECT * obj,
 		return ff_err( "Can't read expected object handler" );
 
 	if ( r == 0 )
-		ff_warn( "\"handler\" key with no or invalid value" );
-	else
-		obj->c_vdata = p;
+		return ff_err( "\"handler\" key with no or invalid value" );
+
+	obj->c_vdata = p;
 
 	return 0;
 }
@@ -914,9 +911,9 @@ ff_read_sp_data( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object data attribute" );
 
 	if ( strlen( p ) >= sizeof sp->data )
-		ff_warn( "Text for \"data\" key too long" );
-	else
-		strcpy( sp->data, p );
+		return ff_err( "Text for \"data\" key too long" );
+
+	strcpy( sp->data, p );
 
 	fl_safe_free( p );
 
@@ -938,9 +935,9 @@ ff_read_sp_focus_data( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object focus_data attribute" );
 
 	if ( strlen( p ) >= sizeof sp->focus_data )
-		ff_warn( "Text for \"focus_data\" key too long" );
-	else
-		strcpy( sp->focus_data, p );
+		return ff_err( "Text for \"focus_data\" key too long" );
+
+	strcpy( sp->focus_data, p );
 
 	fl_safe_free( p );
 
@@ -961,7 +958,7 @@ ff_read_sp_fullpath( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object fullpath attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"fullpath\" key with no or invalid value" );
+		return ff_err( "\"fullpath\" key with no or invalid value" );
 
 	return 0;
 }
@@ -981,9 +978,9 @@ ff_read_sp_width( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object width attribute" );
 
 	if ( strlen( p ) >= sizeof sp->width )
-		ff_warn( "Text for \"width\" key too long" );
-	else
-		strcpy( sp->width, p );
+		return ff_err( "Text for \"width\" key too long" );
+
+	strcpy( sp->width, p );
 
 	fl_safe_free( p );
 
@@ -1005,9 +1002,9 @@ ff_read_sp_height( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object height attribute" );
 
 	if ( strlen( p ) >= sizeof sp->height )
-		ff_warn( "Text for \"height\" key too long" );
-	else
-		strcpy( sp->height, p );
+		return ff_err( "Text for \"height\" key too long" );
+
+	strcpy( sp->height, p );
 
 	fl_safe_free( p );
 
@@ -1029,9 +1026,9 @@ ff_read_sp_helper( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object helper attribute" );
 
 	if ( strlen( p ) >= sizeof sp->helper )
-		ff_warn( "Text for \"helper\" key too long" );
-	else
-		strcpy( sp->helper, p );
+		return ff_err( "Text for \"helper\" key too long" );
+
+	strcpy( sp->helper, p );
 
 	fl_safe_free( p );
 
@@ -1052,9 +1049,9 @@ ff_read_sp_align( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object align attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"align\" key with no or invalid value" );
-	else
-		sp->align &= ~FL_ALIGN_INSIDE;
+		return ff_err( "\"align\" key with no or invalid value" );
+
+	sp->align &= ~FL_ALIGN_INSIDE;
 
 	return 0;
 }
@@ -1073,7 +1070,7 @@ ff_read_sp_struct( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object struct attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"struct\" key with no or invalid value" );
+		return ff_err( "\"struct\" key with no or invalid value" );
 
 	return 0;
 }
@@ -1092,7 +1089,7 @@ ff_read_sp_global( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object global attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"global\" key with no or invalid value" );
+		return ff_err( "\"global\" key with no or invalid value" );
 
 	return 0;
 }
@@ -1111,7 +1108,7 @@ ff_read_sp_focus( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object focus attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"focus\" key with no or invalid value" );
+		return ff_err( "\"focus\" key with no or invalid value" );
 
 	return 0;
 }
@@ -1130,9 +1127,9 @@ ff_read_sp_xtics( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object xtics values" );
 
 	if ( r == 0 )
-		ff_warn( "\"xtics\" key with no or invalid values" );
+		return ff_err( "\"xtics\" key with no or invalid values" );
 	else if ( r == 1 )
-		ff_warn( "\"xtics\" key with only one valid value" );
+		return ff_err( "\"xtics\" key with only one valid value" );
 
 	return 0;
 }
@@ -1151,9 +1148,9 @@ ff_read_sp_ytics( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object ytics values" );
 
 	if ( r == 0 )
-		ff_warn( "\"ytics\" key with no or invalid values" );
+		return ff_err( "\"ytics\" key with no or invalid values" );
 	else if ( r == 1 )
-		ff_warn( "\"ytics\" key with only one valid value" );
+		return ff_err( "\"ytics\" key with only one valid value" );
 
 	return 0;
 }
@@ -1168,26 +1165,25 @@ ff_read_sp_xscale( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p;
+	int xscale;
 
-	if ( ( r = ff_read( "%s%f", *p, &sp->xbase ) ) < 0 )
+	if ( ( r = ff_read( "%s%f", &p, &sp->xbase ) ) < 0 )
 		return ff_err( "Can't read expected object xscale values" );
 
 	if ( r == 0 )
-		ff_warn( "\"yscale\" key with no or invalid values" );
-	else
-	{
-		int xscale = get_scale_value( p );
+		return ff_err( "\"yscale\" key with no or invalid values" );
 
-		fl_safe_free( p );
+	xscale = get_scale_value( p );
 
-		if ( xscale < 0 )
-			ff_warn( "Invalid value for first value for \"xscale\" key" );
-		else
-			sp->xscale = xscale;
+	fl_safe_free( p );
 
-		if ( r == 1 )
-			ff_warn( "\"xscale\" key with only one valid value" );
-	}
+	if ( xscale < 0 )
+		return ff_err( "Invalid value for first value for \"xscale\" key" );
+
+	sp->xscale = xscale;
+
+	if ( r == 1 )
+		return ff_err( "\"xscale\" key with only one valid value" );
 
 	return 0;
 }
@@ -1202,26 +1198,25 @@ ff_read_sp_yscale( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p;
+	int yscale;
 
-	if ( ( r = ff_read( "%s%f", *p, &sp->ybase ) ) < 0 )
+	if ( ( r = ff_read( "%s%f", &p, &sp->ybase ) ) < 0 )
 		return ff_err( "Can't read expected object yscale values" );
 
 	if ( r == 0 )
-		ff_warn( "\"yscale\" key with no or invalid values" );
-	else
-	{
-		int yscale = get_scale_value( p );
+		return ff_err( "\"yscale\" key with no or invalid values" );
 
-		fl_safe_free( p );
+	yscale = get_scale_value( p );
 
-		if ( yscale < 0 )
-			ff_warn( "Invalid value for first value for \"yscale\" key" );
-		else
-			sp->yscale = yscale;
+	fl_safe_free( p );
 
-		if ( r == 1 )
-			ff_warn( "\"yscale\" key with only one valid value" );
-	}
+	if ( yscale < 0 )
+		return ff_err( "Invalid value for first value for \"yscale\" key" );
+
+	sp->yscale = yscale;
+
+	if ( r == 1 )
+		return ff_err( "\"yscale\" key with only one valid value" );
 
 	return 0;
 }
@@ -1236,40 +1231,34 @@ ff_read_sp_grid( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p1, *p2;
-	
+	int g;
+
 	if ( ( r = ff_read( "%v%v", &p1, &p2) ) < 0 )
 		return ff_err( "Can't read expected object grid attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"grid\" key with no or invalid values" );
-	else
-	{
-		int g = get_grid_value( p1 );
+		return ff_err( "\"grid\" key with no or invalid values" );
 
-		fl_safe_free( p1 );
+	g = get_grid_value( p1 );
 
-		if ( g < 0 )
-		{
-			ff_warn( "Invalid first value for \"grid\" key" );
-			return 0;
-		}
+	fl_safe_free( p1 );
 
-		sp->xgrid = g;
+	if ( g < 0 )
+		return ff_err( "Invalid first value for \"grid\" key" );
 
-		if ( r == 2 )
-		{
-			g = get_grid_value( p2 );
+	sp->xgrid = g;
 
-			fl_safe_free( p2 );
+	if ( r != 2 )
+		return ff_err( "\"grid\" key with only one valid value" );
 
-			if ( g < 0 )
-				ff_warn( "Invalid second value for \"grid\" key" );
-			else
-				sp->ygrid = g;
-		}
-		else
-			ff_warn( "\"grid\" key with only one valid value" );
-	}
+	g = get_grid_value( p2 );
+
+	fl_safe_free( p2 );
+
+	if ( g < 0 )
+		return ff_err( "Invalid second value for \"grid\" key" );
+
+	sp->ygrid = g;
 
 	return 0;
 }
@@ -1284,23 +1273,22 @@ ff_read_sp_gridstyle( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p;
+	int g;
 
 	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object gridstyle attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"gridstyle\" key with no or invalid value" );
-	else
-	{
-		int g = get_linestyle_value( p );
+		return ff_err( "\"gridstyle\" key with no or invalid value" );
 
-		fl_safe_free( p );
+	g = get_linestyle_value( p );
 
-		if ( g < 0 )
-			ff_warn( "Invalid value for \"gridstyle\" key" );
-		else
-			sp->grid_linestyle = g;
-	}
+	fl_safe_free( p );
+
+	if ( g < 0 )
+		return ff_err( "Invalid value for \"gridstyle\" key" );
+
+	sp->grid_linestyle = g;
 
 	return 0;
 }
@@ -1319,7 +1307,7 @@ ff_read_sp_markactive( FL_OBJECT * obj  FL_UNUSED_ARG,
 		return ff_err( "Can't read expected object markactive attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"markactive\" key with no or invalid value" );
+		return ff_err( "\"markactive\" key with no or invalid value" );
 
 	return 0;
 }
@@ -1334,23 +1322,56 @@ ff_read_sp_dir( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 	char *p;
+	int dir;
 
 	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object dir attribute" );
 
 	if ( r == 0 )
-		ff_warn( "\"dir\" key with no or invalid value" );
-	else
-	{
-		int dir = get_direction_value( p );
+		return ff_err( "\"dir\" key with no or invalid value" );
 
-		fl_safe_free( p );
+	dir = get_direction_value( p );
 
-		if ( dir < 0 )
-			ff_warn( "Invalid value for \"dir\" key" );
-		else
-			sp->direction = dir;
-	}
+	fl_safe_free( p );
+
+	if ( dir < 0 )
+		return ff_err( "Invalid value for \"dir\" key" );
+
+	sp->direction = dir;
+
+	return 0;
+}
+
+
+/***************************************
+ * Duplication of code in fd_file.c since in older versions
+ * the return setting was considered an "object specific"
+ * attribute
+ ***************************************/
+
+static int 
+ff_read_sp_return( FL_OBJECT * obj,
+				   SuperSPEC * sp )
+{
+	int r;
+	char *return_name;
+	int ret;
+
+	if ( ( r = ff_read( "%s", &return_name ) ) < 0 )
+		return ff_err( "Can't read expected object return" );
+
+	if ( r == 0 )
+		return ff_err( "\"return\" key with no or invalid value" );
+
+	ret = get_how_return_val( return_name );
+
+	fl_safe_free( return_name );
+
+	if ( ret == -1 )
+		return ff_err( "Invalid value for \"return\" key" );
+
+	fl_set_object_return( obj, ret );
+	sp->how_return = obj->how_return;
 
 	return 0;
 }
@@ -1414,6 +1435,7 @@ static spec_attr_handlers attr_array[ ] =
 	{ "gridstyle",	 ff_read_sp_gridstyle   },
 	{ "markactive",	 ff_read_sp_markactive  },
 	{ "dir",		 ff_read_sp_dir         },
+	{ "return",      ff_read_sp_return      }
 };
 
 
@@ -1427,8 +1449,7 @@ skip_spec_info( char * key )
 {
     char *rest,
   	     *p;
-    int r,
-		warned = 0;
+    int r;
 
 	/* Skip everything up to either the start of the next form or object or
 	   the end of the file */
@@ -1873,7 +1894,7 @@ get_pupmode_value( const char * s )
     char buf[ 32 ];
 
     strcpy( buf, s );
-    if ( buf[ 0 ] != 'F' )
+    if ( *buf != 'F' )
 		strcat( strcpy( buf, "FL_" ), s );
     return fli_get_vn_value( pupmode, buf );
 }

@@ -30,6 +30,7 @@
 #include "flinternal.h"
 #include "ulib.h"
 #include <stdlib.h>
+#include <limits.h>
 
 
 /***************************************
@@ -39,9 +40,17 @@ int
 fli_get_vn_value( FLI_VN_PAIR * vn_pair,
 				  const char  * name )
 {
+	long val;
+	char *ep;
+
     for ( ; vn_pair->name; vn_pair++ )
         if ( ! strcmp( vn_pair->name, name ) )
             return vn_pair->val;
+
+	val = strtol( name, &ep, 10 );
+
+	if ( ep != name && ! *ep && val >= INT_MIN && val <= INT_MAX )
+		return val;
 
     return -1;
 }

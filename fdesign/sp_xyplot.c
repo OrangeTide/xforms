@@ -407,7 +407,7 @@ xmajorminor_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void
-xyplot_returnsetting_change( FL_OBJECT * ob,
+xyplot_returnsetting_change( FL_OBJECT * ob  FL_UNUSED_ARG,
 							 long        data  FL_UNUSED_ARG )
 {
 	handle_how_return_changes( xyplot_attrib->how_return,

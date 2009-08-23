@@ -34,38 +34,48 @@ create_form_browserattrib( void )
 
     fdui->input = obj = fl_add_input( FL_NORMAL_INPUT, 35, 67, 170, 25, "EditItem" );
     fl_set_object_lalign( obj, FL_ALIGN_LEFT_TOP );
+    fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 235, 72, 84, 26, "Add" );
-    fl_set_button_shortcut( obj, "#A", 1 );
+    fl_set_button_shortcut( obj, "^A", 1 );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, add_item_cb, 0 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 235, 133, 84, 24, "Delete" );
-    fl_set_button_shortcut( obj, "#D", 1 );
+    fl_set_button_shortcut( obj, "^D", 1 );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, delete_item_cb, 0 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 235, 162, 84, 24, "Insert" );
-    fl_set_button_shortcut( obj, "#I", 1 );
+    fl_set_button_shortcut( obj, "^I", 1 );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, insert_cb, 0 );
 
     fdui->hscb_pref = obj = fl_add_choice( FL_NORMAL_CHOICE2, 95, 175, 90, 24, "" );
-    fl_set_object_shortcut( obj, "#H", 1 );
+    fl_set_object_shortcut( obj, "^H", 1 );
     fl_set_object_callback( obj, hscb_pref_cb, 0 );
 
     fdui->vscb_pref = obj = fl_add_choice( FL_NORMAL_CHOICE2, 95, 147, 90, 24, "" );
-    fl_set_object_shortcut( obj, "#V", 1 );
+    fl_set_object_shortcut( obj, "^V", 1 );
     fl_set_object_callback( obj, vscb_pref_cb, 0 );
 
+    fdui->returnsetting = obj = fl_add_menu( FL_PULLDOWN_MENU, 140, 210, 138, 24, "Return Setting" );
+    fl_set_object_boxtype( obj, FL_UP_BOX );
+    fl_set_object_callback( obj, br_returnsetting_change, 0 );
+
     obj = fl_add_button( FL_NORMAL_BUTTON, 120, 101, 82, 24, "ClearField" );
-    fl_set_button_shortcut( obj, "#L", 1 );
+    fl_set_button_shortcut( obj, "^L", 1 );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, clear_field_cb, 0 );
 
     fdui->auto_clear = obj = fl_add_checkbutton( FL_PUSH_BUTTON, 35, 99, 24, 27, "AutoClear" );
-    fl_set_button_shortcut( obj, "#U", 1 );
+    fl_set_button_shortcut( obj, "^U", 1 );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
     fl_set_button( obj, 1 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 235, 102, 84, 26, "Replace" );
-    fl_set_button_shortcut( obj, "#R", 1 );
+    fl_set_button_shortcut( obj, "^R", 1 );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, replace_item_cb, 0 );
 
     obj = fl_add_box( FL_NO_BOX, 33, 176, 62, 22, "H\010Scrollbar" );

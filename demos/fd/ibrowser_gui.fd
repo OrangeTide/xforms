@@ -266,11 +266,11 @@ gravity: FL_SouthEast FL_SouthEast
 name: xfloat
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 	bounds: 0 5
 	precision: 1
 	value: 1
 	step: 0.1
-	return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_VALSLIDER
@@ -289,11 +289,11 @@ gravity: FL_SouthEast FL_SouthEast
 name: yfloat
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 	bounds: 0 5
 	precision: 1
 	value: 1
 	step: 0.1
-	return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_BUTTON

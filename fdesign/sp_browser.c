@@ -57,6 +57,7 @@ get_browser_spec_fdform( void )
 		fl_addto_choice( br_attrib->vscb_pref, get_scrollbar_pref_string( ) );
 		fl_set_browser_dblclick_callback( br_attrib->content_br,
 										  change_item_cb, 0 );
+		set_up_how_return_menu( br_attrib->returnsetting );
     }
 
     return br_attrib;
@@ -94,6 +95,8 @@ show_spec( SuperSPEC * spec )
     for ( i = 1; i <= spec->nlines; i++ )
 		fl_add_browser_line( br_attrib->content_br, spec->content[ i ] );
     fl_unfreeze_form( br_attrib->content_br->form );
+
+	reset_how_return_menu( br_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -322,6 +325,18 @@ vscb_pref_cb( FL_OBJECT * ob,
 
     if ( auto_apply )
 		redraw_the_form( 0 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+br_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
+						 long        data  FL_UNUSED_ARG )
+{
+	handle_how_return_changes( br_attrib->returnsetting,
+							   br_attrib->vdata );
 }
 
 

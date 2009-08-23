@@ -14,19 +14,19 @@ extern void dir_cb(FL_OBJECT *, long);
 
 /**** Forms and Objects ****/
 typedef struct {
-	FL_FORM *dialattrib;
-	void *vdata;
-	char *cdata;
-	long  ldata;
-	FL_OBJECT *background;
-	FL_OBJECT *returnsetting;
-	FL_OBJECT *minval;
-	FL_OBJECT *maxval;
-	FL_OBJECT *initialval;
-	FL_OBJECT *step;
-	FL_OBJECT *thetai;
-	FL_OBJECT *thetaf;
-	FL_OBJECT *dir;
+	FL_FORM   * dialattrib;
+	void      * vdata;
+	char      * cdata;
+	long        ldata;
+	FL_OBJECT * background;
+	FL_OBJECT * returnsetting;
+	FL_OBJECT * minval;
+	FL_OBJECT * maxval;
+	FL_OBJECT * initialval;
+	FL_OBJECT * step;
+	FL_OBJECT * thetai;
+	FL_OBJECT * thetaf;
+	FL_OBJECT * dir;
 } FD_dialattrib;
 
 extern FD_dialattrib * create_form_dialattrib(void);

@@ -11,7 +11,7 @@ Border Width: -1
 Name: browserattrib
 Width: 520
 Height: 270
-Number of Objects: 15
+Number of Objects: 16
 
 --------------------
 class: FL_BOX
@@ -191,6 +191,24 @@ resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: vscb_pref
 callback: vscb_pref_cb
+argument: 0
+
+--------------------
+class: FL_MENU
+type: PULLDOWN_MENU
+box: 140 210 138 24
+boxtype: FL_UP_BOX
+colors: FL_COL1 FL_MCOL
+alignment: FL_ALIGN_CENTER
+style: FL_NORMAL_STYLE
+size: FL_DEFAULT_SIZE
+lcol: FL_BLACK
+label: Return Setting
+shortcut: 
+resize: FL_RESIZE_ALL
+gravity: FL_NoGravity FL_NoGravity
+name: returnsetting
+callback: br_returnsetting_change
 argument: 0
 
 --------------------

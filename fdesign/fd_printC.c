@@ -476,10 +476,19 @@ int
 get_vn_val( VN_pair *    vn,
             const char * name )
 {
-    for ( ; vn->val >= 0; vn++ )
+	long val;
+	char *ep;
+
+    for ( ; vn->name; vn++ )
         if ( strcmp( name, vn->name ) == 0 )
             return vn->val;
-    return atoi( name );
+
+	val = strtol( name, &ep, 10 );
+
+	if ( ep != name && ! *ep && val >= INT_MIN && val <= INT_MAX )
+		return val;
+
+    return -1;
 }
 
 

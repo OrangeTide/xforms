@@ -344,12 +344,16 @@ static int
 ff_match_int( int * p )
 {
 	long val;
+	char *old_pos = ff.pos;
 
 	if ( ff_match_long( &val ) < 0 )
 		return -1;
 
 	if ( ( val > INT_MAX || val < INT_MIN ) )
+	{
+		ff.pos = old_pos;
 		return -1;
+	}
 		
 	*p = val;
 	return 0;
@@ -363,12 +367,16 @@ static int
 ff_match_uint( unsigned int * p )
 {
 	unsigned long val;
+	char *old_pos = ff.pos;
 
 	if ( ff_match_ulong( &val ) < 0 )
 		return -1;
 
 	if ( val > UINT_MAX )
+	{
+		ff.pos = old_pos;
 		return -1;
+	}
 
 	*p = val;
 	return 0;
@@ -405,9 +413,13 @@ static int
 ff_match_float( float * p )
 {
 	double val;
+	char *old_pos = ff.pos;
 
-	if ( ff_match_double( &val ) < 0 || val < - FLT_MAX || val > FLT_MAX )
+	if ( ff_match_double( &val ) < 0 || val < - FLT_MAX || val > FLT_MAX)
+	{
+		ff.pos = old_pos;
 		return -1;
+	}
 
 	*p = val;
 	return 0;
@@ -443,6 +455,7 @@ ff_match_string( char ** p )
 {
 	char *ep = ff.pos + strlen( ff.pos ) - 1,
 		 *fp = ep + 1;
+	char old_c;
 
 	if ( ! *ff.pos )
 	{
@@ -455,9 +468,11 @@ ff_match_string( char ** p )
 	while ( ep > ff.pos && isspace( ( int ) *ep ) )
 		ep--;
 
+	old_c = *ep;
 	*++ep = '\0';
 
 	*p = fl_strdup( ff.pos );
+	*ep = old_c;
 	ff.pos = fp;
 
 	return 0;
@@ -495,11 +510,12 @@ static int
 ff_match_var( char ** p )
 {
 	char *ep = ff.pos;
+	char old_c;
 
 	if ( ! *ep )
 	{
 		*p = fl_strdup( ff.pos );
-		return 0;
+		return -1;
 	}
 
 	*p = NULL;
@@ -521,10 +537,12 @@ ff_match_var( char ** p )
 	if ( ep - ff.pos >= MAX_VAR_LEN )
 		return -1;
 
+	old_c = *ep;
 	*ep = '\0';
 
 	*p = fl_strdup( ff.pos );
 
+	*ep = old_c;
 	ff.pos = ep + 1;
 
 	return 0;
@@ -538,11 +556,21 @@ static int
 ff_match_objclass( int * p )
 {
 	char *class_name;
+	int class;
+	char * old_pos = ff.pos;
+	
 
 	if ( ff_match_spaceless_string( &class_name ) < 0 )
 		return -1;
 
-	*p = class_val( class_name );
+	if ( ! *class_name || ( class = class_val( class_name ) ) == -1 )
+	{
+		ff.pos = old_pos;
+		fl_safe_free( class_name );
+		return -1;
+	}
+
+	*p = class;
 	fl_safe_free( class_name );
 	return 0;
 }
@@ -555,11 +583,20 @@ static int
 ff_match_boxtype( int * p )
 {
 	char *boxtype_name;
+	char *old_pos = ff.pos;
+	int boxtype;
 
-	if ( ff_match_spaceless_string( &boxtype_name ) < 0 )
+	if (    ff_match_spaceless_string( &boxtype_name ) < 0 )
 		return -1;
 
-	*p = boxtype_val( boxtype_name );
+	if ( ! *boxtype_name || ( boxtype = boxtype_val( boxtype_name ) ) == -1 )
+	{
+		ff.pos = old_pos;
+		fl_safe_free( boxtype_name );
+		return -1;
+	}
+
+	*p = boxtype;
 	fl_safe_free( boxtype_name );
 	return 0;
 }
@@ -572,11 +609,22 @@ static int
 ff_match_color( FL_COLOR * p )
 {
 	char *color_name;
+	char *old_pos = ff.pos;
+	FL_COLOR color;
 
 	if ( ff_match_spaceless_string( &color_name ) < 0 )
 		return -1;
 
-	*p = fli_query_namedcolor( color_name );
+	if (    ! *color_name
+		 || (    ( color = fli_query_namedcolor( color_name ) ) > FL_MAX_COLORS
+			  && color != FL_NoColor ) )
+	{
+		ff.pos = old_pos;
+		fl_safe_free( color_name );
+		return -1;
+	}
+
+	*p = color;
 	if ( *p == 0x8fffffff )
 		*p = FL_NoColor;
 
@@ -593,7 +641,9 @@ static int
 ff_match_align( int * p )
 {
 	char *align_name;
+	char *old_pos = ff.pos;
 	char *sp = strchr( ff.pos, '|' );
+	int align;
 
 	if ( ! sp )
 		sp = strchr( ff.pos, '+' );
@@ -608,14 +658,15 @@ ff_match_align( int * p )
 	}
 	else
 	{
-		char *a1,
-		     *a2,
-			 *old_pos = ff.pos,
+		char *a1 = NULL,
+		     *a2 = NULL,
 			 o = *sp;
 
 		*sp = '\0';
-		if ( ff_match_spaceless_string( &a1 ) < 0 )
+		if ( ff_match_spaceless_string( &a1 ) < 0 || ! *a1 )
 		{
+			fl_safe_free( a1 );
+			ff.pos = old_pos;
 			*sp = o;
 			return -1;
 		}
@@ -624,8 +675,10 @@ ff_match_align( int * p )
 		ff.pos = sp + 1;
 		ff.pos = ff_skip_spaces( ff.pos );
 
-		if ( ff_match_spaceless_string( &a2 ) < 0 )
+		if ( ff_match_spaceless_string( &a2 ) < 0 || ! *a2 )
 		{
+			fl_safe_free( a1 );
+			fl_safe_free( a2 );
 			ff.pos = old_pos;
 			return -1;
 		}
@@ -635,7 +688,14 @@ ff_match_align( int * p )
 		fl_safe_free( a2 );
 	}
 
-	*p = align_val( align_name );
+	if ( ! *align_name || ( align = align_val( align_name ) ) == -1 )
+	{
+		ff.pos = old_pos;
+		fl_safe_free( align_name );
+		return -1;
+	}
+
+	*p =  align;
 	fl_safe_free( align_name );
 	return 0;
 }
@@ -649,6 +709,8 @@ static int
 ff_match_lstyle( int * p )
 {
 	char *lstyle_name;
+	int lstyle;
+	char *old_pos = ff.pos;
 	char *sp = strchr( ff.pos, '|' );
 
 	if ( ! sp )
@@ -680,9 +742,10 @@ ff_match_lstyle( int * p )
 		ff.pos = sp + 1;
 		ff.pos = ff_skip_spaces( ff.pos );
 
-		if ( ff_match_spaceless_string( &l2 ) < 0 )
+		if ( ff_match_spaceless_string( &l2 ) < 0 || ! *l2 )
 		{
 			ff.pos = old_pos;
+			fl_safe_free( l1 );
 			return -1;
 		}
 
@@ -691,7 +754,14 @@ ff_match_lstyle( int * p )
 		fl_safe_free( l2 );
 	}
 
-	*p = style_val( lstyle_name );
+	if ( ! *lstyle_name || ( lstyle = style_val( lstyle_name ) ) == -1 )
+	{
+		ff.pos = old_pos;
+		fl_safe_free( lstyle_name );
+		return -1;
+	}
+
+	*p = lstyle;
 	fl_safe_free( lstyle_name );
 	return 0;
 }
@@ -704,11 +774,20 @@ static int
 ff_match_lsize( int * p )
 {
 	char *lsize_name;
+	char *old_pos = ff.pos;
+	int lsize;
 
 	if ( ff_match_spaceless_string( &lsize_name ) < 0 )
 		return -1;
 
-	*p = lsize_val( lsize_name );
+	if( ! *lsize_name || ( lsize = lsize_val( lsize_name ) ) == -1 )
+	{
+		fl_safe_free( lsize_name );
+		ff.pos = old_pos;
+		return -1;
+	}
+
+	*p = lsize;
 	fl_safe_free( lsize_name );
 	return 0;
 }
@@ -721,11 +800,20 @@ static int
 ff_match_resize( int * p )
 {
 	char *resize_name;
+	char *old_pos = ff.pos;
+	int resize;
 
 	if ( ff_match_spaceless_string( &resize_name ) < 0 )
 		return -1;
 
-	*p = resize_val( resize_name );
+	if ( ! *resize_name || ( resize = resize_val( resize_name ) ) == -1 )
+	{
+		fl_safe_free( resize_name );
+		ff.pos = old_pos;
+		return -1;
+	}
+
+	*p = resize;
 	fl_safe_free( resize_name );
 	return 0;
 }
@@ -738,11 +826,20 @@ static int
 ff_match_gravity( int * p )
 {
 	char *gravity_name;
+	char *old_pos = ff.pos;
+	int gravity;
 
 	if ( ff_match_spaceless_string( &gravity_name ) < 0 )
 		return -1;
 
-	*p = gravity_val( gravity_name );
+	if ( ! *gravity_name || ( gravity = gravity_val( gravity_name ) ) == -1 )
+	{
+		ff.pos = old_pos;
+		fl_safe_free( gravity_name );
+		return -1;
+	}
+
+	*p = gravity;
 	fl_safe_free( gravity_name );
 	return 0;
 }
@@ -755,11 +852,20 @@ static int
 ff_match_unit( int * p )
 {
 	char *unit_name;
+	char *old_pos = ff.pos;
+	int unit;
 
 	if ( ff_match_spaceless_string( &unit_name ) < 0 )
 		return -1;
 
-	*p = unit_val( unit_name );
+	if ( ! *unit_name || ( unit = unit_val( unit_name ) ) == -1 )
+	{
+		ff.pos = old_pos;
+		fl_safe_free( unit_name );
+		return -1;
+	}
+
+	*p = unit;
 	fl_safe_free( unit_name );
 	return 0;
 }

@@ -62,6 +62,7 @@ get_button_spec_fdform( void )
 		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_BOTTOM ) );
 		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_LEFT ) );
 		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_RIGHT ) );
+
 		fl_set_input_return( bt_attrib->filename, FL_RETURN_END );
 		fl_set_input_return( bt_attrib->focus_filename, FL_RETURN_END );
 		fl_set_input_return( bt_attrib->tooltip, FL_RETURN_END );

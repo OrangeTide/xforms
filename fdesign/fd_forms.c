@@ -326,9 +326,9 @@ load_fd_header( void )
 	/* Line with "magic" number must come first, followed by some
 	   boilerplate text */
 
-	if (    ff_read( "%k", &p ) < 0
+	if (    ff_read( "%k", &p ) <= 0
 		 || strcmp( p, "Magic" )
-		 || ff_read( "%d", &fd_magic ) < 0
+		 || ff_read( "%d", &fd_magic ) <= 0
 		 || ( fd_magic != MAGIC2 && fd_magic != MAGIC3 && fd_magic != FD_V1 ) )
 		return ff_err( "Wrong type of file" );
 
@@ -341,12 +341,12 @@ load_fd_header( void )
 
 	while ( 1 )
 	{
-		if ( ff_read( "%k", &p ) < 0 )
+		if ( ff_read( "%k", &p ) <= 0 )
 			return ff_err( "Invalid format of file" );
 
 		if ( ! strcmp( p, "Number of forms" ) )
 		{
-			if ( ff_read( "%d", &nforms ) < 0 )
+			if ( ff_read( "%d", &nforms ) <= 0 )
 				return ff_err( "Expected number of forms" );
 
 			if ( nforms <= 0 )

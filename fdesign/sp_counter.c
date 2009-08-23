@@ -36,11 +36,11 @@
 #include "private/pcounter.h"
 #include "spec/counter_spec.h"
 
-extern FD_counterattrib *create_form_counterattrib(void);
+extern FD_counterattrib *create_form_counterattrib( void );
 
 static FD_counterattrib *cnt_attrib;
 static SuperSPEC *counter_spec;
-static void init_spec(SuperSPEC *);
+static void init_spec( SuperSPEC * );
 
 
 /***************************************
@@ -52,7 +52,6 @@ get_counter_spec_fdform( void )
     if ( ! cnt_attrib )
     {
 		cnt_attrib = create_form_counterattrib( );
-
 
 		set_up_how_return_menu( cnt_attrib->returnsetting );
 		fl_set_menu_item_mode( cnt_attrib->returnsetting, 5,
@@ -139,7 +138,8 @@ emit_counter_code( FILE      * fp,
     spec = get_superspec( ob );
 
     if ( spec->prec != defspec->prec )
-		fprintf( fp, "    fl_set_counter_precision( obj, %d );\n", spec->prec );
+		fprintf( fp, "    fl_set_counter_precision( obj, %d );\n",
+				 spec->prec );
 
     if ( spec->min != defspec->min || spec->max != defspec->max )
 		fprintf( fp, "    fl_set_counter_bounds( obj, %.*f, %.*f );\n",
@@ -171,7 +171,7 @@ save_counter_attrib( FILE      * fp,
     if ( ob->objclass != FL_COUNTER )
 		return;
 
-    /* create a default object */
+    /* Create a default object */
 
     defobj = fl_create_counter( ob->type, 0, 0, 0, 0, "" );
 

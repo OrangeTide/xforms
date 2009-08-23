@@ -233,8 +233,9 @@ ff_read_boxtype( FL_OBJECT * obj )
 		return ff_err( "Can't read expected object boxtype" );
 
 	if ( r == 0 )
-		ff_warn( "\"boxtype\" key without value" );
-	else if ( fd_magic == MAGIC2 )
+		return ff_err( "\"boxtype\" key without value" );
+
+	if ( fd_magic == MAGIC2 )
 		obj->boxtype = new_btype( obj->boxtype );
 
 	return 0;
@@ -252,13 +253,13 @@ ff_read_colors( FL_OBJECT * obj )
 	if ( ( r = ff_read( "%c%c", &obj->col1, &obj->col2 ) ) < 0 )
 		return ff_err( "Can't read expected object colors" );
 
-	if ( r == 0 )
-		ff_warn( "\"colors\" key without two object colors" );
-	else if ( fd_magic == MAGIC2 )
+	if ( r != 2 )
+		return ff_err( "\"colors\" key without two object colors" );
+
+	if ( fd_magic == MAGIC2 )
     {
 		obj->col1 = new_color( obj->col1 );
-		if ( r == 2 )
-			obj->col2 = new_color( obj->col2 );
+		obj->col2 = new_color( obj->col2 );
 	}
 
 	return 0;
@@ -277,8 +278,9 @@ ff_read_alignment( FL_OBJECT * obj )
 		return ff_err( "Can't read expected object alignment" );
 
 	if ( r == 0 )
-		ff_warn( "\"alignment\" key without or invalid value" );
-    else if ( fd_magic == MAGIC2 )
+		return ff_err( "\"alignment\" key without or invalid value" );
+
+    if ( fd_magic == MAGIC2 )
 		obj->align = new_align( obj->align );
 
 	return 0;
@@ -297,7 +299,7 @@ ff_read_lstyle( FL_OBJECT * obj )
 		return ff_err( "Can't read expected object label style" );
 
 	if ( r == 0 )
-		ff_warn( "\"style\" key without or invalid value" );
+		return ff_err( "\"style\" key without or invalid value" );
 
 	return 0;
 }
@@ -315,7 +317,7 @@ ff_read_lsize( FL_OBJECT * obj )
 		return ff_err( "Can't read expected object label size" );
 
 	if ( r == 0 )
-		ff_warn( "\"size\" key without or invalid value" );
+		return ff_err( "\"size\" key without or invalid value" );
 
 	return 0;
 }
@@ -333,8 +335,9 @@ ff_read_lcol( FL_OBJECT * obj )
 		return ff_err( "Can't read expected object label color" );
 
 	if ( r == 0 )
-		ff_warn( "\"lcol\" key without or invalid value" );
-    else if ( fd_magic == MAGIC2 )
+		return ff_err( "\"lcol\" key without or invalid value" );
+
+    if ( fd_magic == MAGIC2 )
 		obj->lcol = new_color( obj->lcol );
 
 	return 0;
@@ -353,7 +356,7 @@ ff_read_resize( FL_OBJECT * obj )
 		return ff_err( "Can't read expected object resize value" );
 
 	if ( r == 0 )
-		ff_warn( "\"resize\" key without or invalid value" );
+		return ff_err( "\"resize\" key without or invalid value" );
 
 	return 0;
 }
@@ -458,10 +461,14 @@ ff_read_gravity( FL_OBJECT * obj )
 	if ( ( r = ff_read( "%g%g", &obj->nwgravity, &obj->segravity ) ) < 0 )
 		return ff_err( "Can't read expected object gravity values" );
 
-	if ( r == 0 )
-		ff_warn( "\"gravity\" key without any valid values" );
-	if ( r == 1 )
-		ff_warn( "\"gravity\" key with only one valid value" );
+	if ( r != 2 )
+	{
+		if ( r == 0 )
+			ff_err( "\"gravity\" key without valid values" );
+		if ( r == 1 )
+			ff_err( "\"gravity\" key with only one valid value" );
+		return FF_READ_FAILURE;
+	}
 
 	return 0;
 }
@@ -498,23 +505,22 @@ ff_read_return( FL_OBJECT * obj )
 {
 	int r;
 	char *return_name;
+	int ret;
 
 	if ( ( r = ff_read( "%s", &return_name ) ) < 0 )
 		return ff_err( "Can't read expected object return" );
 
 	if ( r == 0 )
-		ff_warn( "\"return\" key with no or invalid value" );
-	else
-	{
-		int ret = get_how_return_val( return_name );
+		return ff_err( "\"return\" key with no or invalid value" );
 
-		fl_safe_free( return_name );
+	ret = get_how_return_val( return_name );
 
-		if ( ret == -1 )
-			ff_warn( "Invalid value for \"return\" key" );
-		else
-			fl_set_object_return( obj, ret );
-	}
+	fl_safe_free( return_name );
+
+	if ( ret == -1 )
+		return ff_err( "Invalid value for \"return\" key" );
+
+	fl_set_object_return( obj, ret );
 
 	return 0;
 }
