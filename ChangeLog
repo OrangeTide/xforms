@@ -1,3 +1,8 @@
+2009-08-25 Jens Thoms Toerring    <jt@toerring.de>
+
+	A number of bugs in the new code for reading in .fd-Files
+	pointed out by Werder Heisch have been removed.
+
 2009-08-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	Thanks to lots of input (patches and discussions0 by Werner
