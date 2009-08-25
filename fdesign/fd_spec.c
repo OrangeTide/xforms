@@ -1491,8 +1491,6 @@ skip_spec_info( char * key )
 		fl_safe_free( p );
 	}
 
-	ff_close( );
-
 	return FF_AT_END_OF_FILE;
 }
 
@@ -1565,8 +1563,6 @@ load_objclass_spec_info( FL_OBJECT * obj,
 			fli_sstrcpy( main_name, p, MAX_VAR_LEN );
 			fl_safe_free( p );
 		}
-
-		ff_close( );
 
 		return FF_AT_END_OF_FILE;
 	}

@@ -501,7 +501,7 @@ show_attributes( const FL_OBJECT * obj )
     /* Fill in settings */
 
     fl_set_choice( fd_generic_attrib->boxobj, obj->boxtype + 1 );
-    fl_set_choice_text( fd_generic_attrib->align, align_name( align ) + 9 );
+    fl_set_choice_text( fd_generic_attrib->align, align_name( align, 0 ) + 9 );
     fl_set_choice( fd_generic_attrib->inside, ( obj->align == align ) + 1 );
 
     lstyle = obj->lstyle % FL_SHADOW_STYLE;

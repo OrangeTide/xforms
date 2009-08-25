@@ -58,11 +58,13 @@ get_choice_spec_fdform( void )
 		fl_set_choice_item_mode( choice_attrib->mode, 4, FL_PUP_GRAY );
 		fl_set_choice_item_mode( choice_attrib->mode, 5, FL_PUP_GRAY );
 
-		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_CENTER ) );
-		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_TOP ) );
-		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_BOTTOM ) );
-		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_LEFT ) );
-		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_RIGHT ) );
+		fl_addto_choice( choice_attrib->align,
+						 align_name( FL_ALIGN_CENTER, 0 ) );
+		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_TOP, 0 ) );
+		fl_addto_choice( choice_attrib->align,
+						 align_name( FL_ALIGN_BOTTOM, 0 ) );
+		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_LEFT, 0 ) );
+		fl_addto_choice( choice_attrib->align, align_name( FL_ALIGN_RIGHT, 0 ) );
 
 		fl_set_browser_dblclick_callback( choice_attrib->content_br,
 										  change_choice_item_cb, 0 );
@@ -99,7 +101,7 @@ show_spec(SuperSPEC * sp)
 
     fl_set_button( choice_attrib->new_menuapi, sp->new_menuapi );
     fl_set_counter_value( choice_attrib->val, sp->int_val );
-    fl_set_choice_text( choice_attrib->align, align_name( sp->align ) );
+    fl_set_choice_text( choice_attrib->align, align_name( sp->align, 0 ) );
     fl_set_choice( choice_attrib->scope, sp->global_scope + 1 );
     fl_clear_browser( choice_attrib->content_br );
 
@@ -148,7 +150,7 @@ emit_choice_code( FILE     * fp,
 
     if ( sp->align != defsp->align )
 		fprintf( fp, "    fl_set_choice_align( obj, %s );\n",
-				 align_name( sp->align ) );
+				 align_name( sp->align, 1 ) );
 
     if ( sp->nlines < 1 )
 		return;
@@ -192,7 +194,7 @@ save_choice_attrib( FILE      * fp,
     sp = get_superspec( ob );
 
     if ( sp->align != defsp->align )
-		fprintf( fp, "align: %s\n", align_name( sp->align ) );
+		fprintf( fp, "align: %s\n", align_name( sp->align, 0 ) );
     if ( sp->new_menuapi != defsp->new_menuapi )
 		fprintf( fp, "struct: %d\n", sp->new_menuapi );
 

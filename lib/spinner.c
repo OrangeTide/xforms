@@ -341,6 +341,9 @@ fl_create_spinner( int          type,
 	fl_set_object_callback( sp->up,    spinner_callback,  1 );
 	fl_set_object_callback( sp->down,  spinner_callback, -1 );
 
+	fl_set_button_mouse_buttons( sp->up,   1 );
+	fl_set_button_mouse_buttons( sp->down, 1 );
+
 	sp->i_val  = sp->old_ival = 0;
 	sp->i_min  = INT_MIN;
 	sp->i_max  = INT_MAX;

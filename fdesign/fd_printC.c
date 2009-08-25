@@ -370,7 +370,7 @@ VN_pair vn_align[ ] =
     VN( FL_ALIGN_TOP_LEFT     ),
     VN( FL_ALIGN_BOTTOM_RIGHT ),
     VN( FL_ALIGN_BOTTOM_LEFT  ),
-    VN( -1                    )
+	{ -1, NULL, NULL, NULL    }
 };
 
 static VN_pair vn_lsize[ ] =
@@ -392,7 +392,7 @@ static VN_pair vn_lsize[ ] =
     VN( FL_HUGE_FONT    ),
     { FL_SMALL_FONT,  "FL_NORMAL_FONT1", NULL, NULL },
     { FL_NORMAL_FONT, "FL_NORMAL_FONT2", NULL, NULL },
-    VN( -1 )
+	{ -1, NULL, NULL, NULL    }
 };
 
 static VN_pair vn_lstyle[ ] =
@@ -412,7 +412,7 @@ static VN_pair vn_lstyle[ ] =
     VN( FL_SHADOW_STYLE ),
     VN( FL_ENGRAVED_STYLE ),
     VN( FL_EMBOSSED_STYLE ),
-    VN( -1 )
+	{ -1, NULL, NULL, NULL    }
 };
 
 VN_pair vn_gravity[] =
@@ -440,7 +440,7 @@ VN_pair vn_gravity[] =
     VN( SouthEastGravity ),
     VN( SouthWestGravity ),
 
-    VN( -1 )
+	{ -1, NULL, NULL, NULL    }
 };
 
 VN_pair vn_resize[ ] =
@@ -449,7 +449,7 @@ VN_pair vn_resize[ ] =
     VN( FL_RESIZE_X ),
     VN( FL_RESIZE_Y ),
     VN( FL_RESIZE_ALL ),
-    VN( -1 )
+	{ -1, NULL, NULL, NULL }
 };
 
 static VN_pair vn_unit[ ] =
@@ -465,7 +465,7 @@ static VN_pair vn_unit[ ] =
     { FL_COORD_centiPOINT, "cp",     NULL, NULL },
     { FL_COORD_centiMM,    "cmm",    NULL, NULL },
     { FL_COORD_centiPOINT, "cpoint", NULL, NULL },
-    VN( -1 )
+	{ -1,                  NULL,     NULL, NULL }
 };
 
 
@@ -501,7 +501,7 @@ get_vn_name( VN_pair * vn,
 {
     static char buf[ MAX_TYPE_NAME_LEN ];
 
-    for ( ; vn->val >= 0; vn++ )
+    for ( ; vn->name; vn++ )
     if ( vn->val == val )
         return vn->name;
 
@@ -527,7 +527,7 @@ emit_attrib( FILE *       fp,
     const char *s;
 
     if ( vn == vn_align )
-        s = align_name( a );
+        s = align_name( a, 1 );
     else
         s = get_vn_name( vn, a );
 
@@ -544,7 +544,7 @@ pure_style_name( int val )
     VN_pair *vn = vn_lstyle;
     static char buf[ 64 ];
 
-    for ( ; vn->val >= 0 && vn->val != val; vn++ )
+    for ( ; vn->name && vn->val != val; vn++ )
         /* empty */ ;
 
     if ( vn->val == val )
@@ -565,9 +565,9 @@ pure_style_val( const char * cc )
 {
     VN_pair *vn = vn_lstyle;
 
-    for ( ; vn->val >= 0 && strcmp( cc, vn->name ); vn++ )
+    for ( ; vn->name && strcmp( cc, vn->name ); vn++ )
         /* empty */;
-    return strcmp( cc, vn->name ) == 0 ? vn->val : atoi( cc );
+    return ( vn->name && ! strcmp( cc, vn->name ) ) ? vn->val : atoi( cc );
 }
 
 
@@ -674,13 +674,17 @@ resize_val( const char * cc )
  ***************************************/
 
 const char *
-align_name( int val )
+align_name( int val,
+			int with_spaces )
 {
     static char buf[ 128 ];
 
     strcpy( buf, get_vn_name( vn_align, val % FL_ALIGN_INSIDE ) );
-    if ( val >= FL_ALIGN_INSIDE )
-        strcat( buf, " | FL_ALIGN_INSIDE" );
+    if ( val & FL_ALIGN_INSIDE )
+	{
+		strcat( buf, with_spaces ? " | " : "|" );
+        strcat( buf, "FL_ALIGN_INSIDE" );
+	}
 
     return buf;
 }

@@ -286,7 +286,6 @@ extern int ff_read( const char *,
 					... );
 extern void ff_close( void );
 extern int ff_err( const char * );
-extern void ff_warn( const char * );
 
 
 /******** in fl_file.c    ********/
@@ -472,7 +471,8 @@ extern char *style_name( int );
 
 extern int style_val( const char * );
 
-extern const char *align_name( int );
+extern const char *align_name( int,
+							   int );
 
 extern int align_val( const char * );
 

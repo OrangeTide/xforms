@@ -57,11 +57,13 @@ get_pixmap_spec_fdform( void )
     if ( ! px_attrib )
     {
 		px_attrib = create_form_pixmapattrib( );
-		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_CENTER ) );
-		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_TOP    ) );
-		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_BOTTOM ) );
-		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_LEFT   ) );
-		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_RIGHT  ) );
+		fl_addto_choice( px_attrib->pixalign,
+						 align_name( FL_ALIGN_CENTER, 0 ) );
+		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_TOP, 0 ) );
+		fl_addto_choice( px_attrib->pixalign,
+						 align_name( FL_ALIGN_BOTTOM, 0 ) );
+		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_LEFT, 0 ) );
+		fl_addto_choice( px_attrib->pixalign, align_name( FL_ALIGN_RIGHT, 0 ) );
 		fl_set_input_return( px_attrib->filename, FL_RETURN_END );
     }
 
@@ -95,7 +97,7 @@ show_spec( SuperSPEC * spec )
     fl_set_button( px_attrib->use_data, spec->use_data );
     fl_set_button( px_attrib->fullpath, spec->fullpath );
 
-    fl_set_choice_text( px_attrib->pixalign, align_name( info->align ) );
+    fl_set_choice_text( px_attrib->pixalign, align_name( info->align, 0 ) );
 
     fl_set_input( px_attrib->filename, info->filename );
 }
@@ -220,7 +222,7 @@ emit_pixmap_code( FILE      * fp,
 
     if ( info->align != definfo->align && ob->objclass == FL_PIXMAP )
 		fprintf( fp, "    fl_set_pixmap_align( obj, %s, %d, %d );\n",
-				 align_name( info->align | FL_ALIGN_INSIDE ), info->dx,
+				 align_name( info->align | FL_ALIGN_INSIDE, 1 ), info->dx,
 				 info->dy );
 
     if ( *info->data && info->use_data && *info->filename )
@@ -274,7 +276,7 @@ save_pixmap_attrib( FILE      * fp,
 
     if ( info->align != definfo->align )
 		fprintf( fp, "align: %s\n",
-				 align_name( info->align | FL_ALIGN_INSIDE ) );
+				 align_name( info->align | FL_ALIGN_INSIDE, 0 ) );
 
     if ( *info->data && *info->filename )
 		fprintf( fp, "data: %s\n", info->data );

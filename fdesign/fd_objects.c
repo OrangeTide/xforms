@@ -506,6 +506,11 @@ init_classes( void )
     add_type_def( FL_COUNTER, FL_NORMAL_COUNTER, "NORMAL_COUNTER" );
     add_type_def( FL_COUNTER, FL_SIMPLE_COUNTER, "SIMPLE_COUNTER" );
 
+    fl_add_browser_line( fd_control->objectbrowser, "spinner" );
+    add_class_def( VN( FL_SPINNER ), OBJNAME( spinner ) );
+    add_type_def( FL_SPINNER, FL_INT_SPINNER, "INT_SPINNER" );
+    add_type_def( FL_SPINNER, FL_FLOAT_SPINNER, "FLOAT_SPINNER" );
+
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
 
     fl_add_browser_line( fd_control->objectbrowser, "input" );

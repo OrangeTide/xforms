@@ -465,7 +465,6 @@ load_forms( int          merge,
 		}
 
 		fli_sstrcpy( forms[ fnumb ].fname, p, sizeof forms[ fnumb ].fname );
-
 		fl_safe_free( p );
 
 		/* Having gotten the name read all the remaining information. We then
@@ -492,15 +491,14 @@ load_forms( int          merge,
 	}
 	else if ( r != FF_READ_FAILURE && i < nforms )
 	{
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Error while reading .fd file",
-						   "Less forms found than expected", fname, 0 );
-		else
-			M_err( "Reading .fd File", "Less forms found than expected in %s",
-				   fname );
+		ff_err( "Less forms found than expected" );
 		fl_free( fname );
 		return -1;
 	}
+
+	/* Everything's dandy and we're done with the file */
+
+	ff_close( );
 
     set_form( fnumb > 0 ? 0 : -1 );
 
@@ -615,7 +613,7 @@ save_forms( const char *str )
 
  emit_code:
 
-    /* if no code is desired, return */
+    /* If no code is desired, return */
 
     if ( ! fdopt.emit_code )
 		return 1;

@@ -139,29 +139,6 @@ ff_err( const char * message )
 /***************************************
  ***************************************/
 
-void
-ff_warn( const char * message )
-{
-	if ( ! fdopt.conv_only )
-	{
-		char *tmp = fli_get_string( "%s:%lu.%lu", ff.fname,
-									( unsigned long ) ff.line_no,
-									ff.line ?
-									( unsigned long ) ( ff.pos - ff.line ) :
-									0 );
-		fl_show_alert( "Warning", message, tmp, 0 );
-		fl_safe_free( tmp );
-	}
-	else
-		M_err( "Warning", "%s at %s:%lu.%lu",
-			   message, ff.fname, ( unsigned long ) ff.line_no,
-			   ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
-}
-
-
-/***************************************
- ***************************************/
-
 static int
 ff_get_line( void )
 {

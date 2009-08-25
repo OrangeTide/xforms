@@ -89,7 +89,7 @@ save_object( FILE      * fl,
     fprintf( fl, "boxtype: %s\n", boxtype_name( obj->boxtype ) );
     fprintf( fl, "colors: %s %s\n", fli_query_colorname( obj->col1 ),
 			 fli_query_colorname( obj->col2 ) );
-    fprintf( fl, "alignment: %s\n", align_name( obj->align ) );
+    fprintf( fl, "alignment: %s\n", align_name( obj->align, 0 ) );
     fprintf( fl, "style: %s\n", style_name( obj->lstyle ) );
     fprintf( fl, "size: %s\n", lsize_name( obj->lsize ) );
     fprintf( fl, "lcol: %s\n", fli_query_colorname( obj->lcol ) );
@@ -646,7 +646,7 @@ load_object( void )
 				fl_safe_free( msg );
 			}
 			
-			return -1;
+			return FF_READ_FAILURE;
 		}
 	}
 	else
@@ -721,7 +721,6 @@ load_object( void )
 			fli_sstrcpy( main_name, p, MAX_VAR_LEN );
 			fl_safe_free( p );
 
-			ff_close( );
 			r = FF_AT_END_OF_FILE;
 		}
 
@@ -865,10 +864,10 @@ read_form( void )
 		return FF_READ_FAILURE;
 
 	if ( r == FF_AT_START_OF_OBJECT )
-		return ff_err( "Less objects found than expected" );
+		return ff_err( "More objects found than expected" );
 
 	if ( i < num_objects )
-		ff_warn( "Less objects found than expected" );
+		return ff_err( "Less objects found than expected" );
 
     return r;
 }

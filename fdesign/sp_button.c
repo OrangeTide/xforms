@@ -57,11 +57,13 @@ get_button_spec_fdform( void )
     if ( ! bt_attrib )
     {
 		bt_attrib = create_form_buttonattrib( );
-		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_CENTER ) );
-		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_TOP ) );
-		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_BOTTOM ) );
-		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_LEFT ) );
-		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_RIGHT ) );
+		fl_addto_choice( bt_attrib->pixalign,
+						 align_name( FL_ALIGN_CENTER, 0 ) );
+		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_TOP, 0 ) );
+		fl_addto_choice( bt_attrib->pixalign,
+						 align_name( FL_ALIGN_BOTTOM, 0 ) );
+		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_LEFT, 0 ) );
+		fl_addto_choice( bt_attrib->pixalign, align_name( FL_ALIGN_RIGHT, 0 ) );
 
 		fl_set_input_return( bt_attrib->filename, FL_RETURN_END );
 		fl_set_input_return( bt_attrib->focus_filename, FL_RETURN_END );
@@ -106,7 +108,7 @@ show_spec( SuperSPEC * spec )
     fl_set_button( bt_attrib->fullpath,   spec->fullpath );
 
     fl_set_button( bt_attrib->showfocus, info->show_focus );
-    fl_set_choice_text( bt_attrib->pixalign, align_name( info->align ) );
+    fl_set_choice_text( bt_attrib->pixalign, align_name( info->align, 0 ) );
 
     fl_set_input( bt_attrib->filename, info->filename );
     fl_set_input( bt_attrib->focus_filename, info->focus_filename );
@@ -323,7 +325,7 @@ emit_button_code( FILE      * fp,
     if ( info->align != definfo->align && ob->objclass == FL_PIXMAPBUTTON )
     {
 		fprintf( fp, "    fl_set_pixmapbutton_align( obj, %s, %d, %d );\n",
-				 align_name( info->align | FL_ALIGN_INSIDE ),
+				 align_name( info->align | FL_ALIGN_INSIDE, 1 ),
 				 info->dx, info->dy );
     }
 
@@ -394,7 +396,7 @@ save_button_attrib( FILE      * fp,
 
     if ( info->align != definfo->align )
 		fprintf( fp, "align: %s\n",
-				 align_name( info->align | FL_ALIGN_INSIDE ) );
+				 align_name( info->align | FL_ALIGN_INSIDE, 0 ) );
 
     if ( info->show_focus != definfo->show_focus )
 		fprintf( fp, "focus: %d\n", info->show_focus );
