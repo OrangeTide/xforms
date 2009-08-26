@@ -1,4 +1,4 @@
-			  XForms Version 1.0.90
+			  XForms Version 1.0.91
 
 This is the Free Software distribution of the XForms Library, a
 graphical user interface toolkit for X Window Systems.
@@ -12,8 +12,8 @@ What's new?
 -----------
 
 XForms 1.0.91 is a development version in preparation for XForms 1.1.0.
-While we believe that it performs correctly, as with any development
-version, you may find out that it has too many bugs for your taste.
+While it is labeled as a "development version" we believe that it per-
+forms correctly and has less bugs than older versions.
 
 For more information, read the file ChangeLog.
 
@@ -21,34 +21,46 @@ For more information, read the file ChangeLog.
 Getting XForms
 --------------
 
-The entire XForms distribution plus the latest info is accessible via
-http://www.nongnu.org/xforms/
+The XForms homepage is accessible at
 
-This source distribution is available at
+  http://xforms-toolkit.org/
 
- <http://savannah.nongnu.org/files/?group=xforms>
+The sources can be downloaded from the project page at
+
+  http://www.nongnu.org/xforms/
+
+See the "Download Area" on that page.
 
 
 Keeping in touch
 ----------------
 
-There is a mailing list for XForms. Send a message to
-xforms-request@bob.usuhs.mil with one of the following commands
+There is a mailing list for XForms. To subscribe (or unsubscribe)
+go to
 
-	subscribe   xforms
-	unsubscribe xforms
+  http://lists.nongnu.org/mailman/listinfo/xforms-development
 
-to get on and off the list.
+or send an email to
 
-You can also use a web interface here:
-http://cweblog.usuhs.mil/mailman/listinfo/xforms
+  xforms-development-request@nongnu.org
+
+with a subject line consisting of just 'subscribe' or 'unsubscribe'.
 
 To use the mailing list, send your message to
-  xforms@bob.usuhs.mil
+
+  xforms-development@nongnu.org
 
 Remember your message will be sent to many people. Please DO NOT send
 subscribe/unsubscribe messages to the list, send it to
-xforms-request@bob.usuhs.mil
+xforms-request@nongnu.org
+
+The archive of the mailing list can be found at
+
+ http://lists.gnu.org/archive/html/xforms-development/
+
+Messages sent to the mailing list before August 2009 are at
+
+  http://xforms-toolkit.org/old-archive/
 
 
 Compiling XForms
@@ -107,6 +119,10 @@ flags:
     requires a lot more disk space, but is a must if you want to try to
     debug problems in XForms. The default is to have debug information
     for development versions and prereleases only.
+
+  o --enable-bwc-bs-hack enables some workarounds for incompatibilities
+    that may keep very old programs using XForms from working correctly.
+    Please only use as a last resort.
 
 Moreover, the following generic configure flags may be useful:
 
