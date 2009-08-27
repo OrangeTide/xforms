@@ -590,6 +590,14 @@ handle_configure( XEvent * xev,
 			reshape_form_background( winw, winh );
 			redraw_the_form( 1 );
 		}
+
+		if ( fd_resize->resize->visible )
+		{
+			fl_set_spinner_value( fd_resize->width,  winw );
+			fl_set_spinner_value( fd_resize->height, winh );
+		}
+
+		changed = TRUE;
     }
 
     return 1;
@@ -844,6 +852,17 @@ initialize( void )
 /***************************************
  ***************************************/
 
+static int
+ignore_close( FL_FORM *a  FL_UNUSED_ARG,
+			  void    *b  FL_UNUSED_ARG )
+{
+	return FL_IGNORE;
+}
+
+
+/***************************************
+ ***************************************/
+
 int
 main( int    argc,
 	  char * argv[ ] )
@@ -936,6 +955,19 @@ main( int    argc,
     fl_set_counter_step( fd_align->snapobj, 1.0, 5.0 );
     fl_set_counter_value( fd_align->snapobj, 10.0 );
     fl_set_counter_precision( fd_align->snapobj, 0 );
+	fl_set_form_atclose( fd_align->align, ignore_close, NULL );
+
+	fl_set_object_label( fd_resize->width,  "Width: " );
+	fl_set_object_label( fd_resize->height, "Height: " );
+	fl_set_spinner_bounds( fd_resize->width,  1, SHRT_MAX );
+	fl_set_spinner_bounds( fd_resize->height, 1, SHRT_MAX );
+	fl_set_form_atclose( fd_resize->resize, ignore_close, NULL );
+
+	fl_set_form_atclose( fd_attrib->attrib, ignore_close, NULL );
+	fl_set_form_atclose( fd_attrib->attrib, ignore_close, NULL );
+	fl_set_form_atclose( fd_test->test, ignore_close, NULL );
+	fl_set_form_atclose( fd_help->helpform, ignore_close, NULL );
+
     thetestform = NULL;
     strcpy( main_name, "create_the_forms" );
 
@@ -1024,10 +1056,6 @@ main( int    argc,
 
     main_window = fli_cmap_winopen( fl_root, fd_colormap, "Form Design" );
 
-    /* Set default constraint for the window and snap */
-
-    fl_winstepunit( main_window,
-					get_step_size( ) + 0.1, get_step_size( ) + 0.1 );
     fl_set_fselector_transient( 1 );
 
     fl_add_event_callback( main_window, Expose, handle_expose, 0 );

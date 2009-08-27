@@ -38,6 +38,7 @@
 FD_control *fd_control;
 FD_test *fd_test;
 FD_align *fd_align;
+FD_resize *fd_resize;
 FD_helpform *fd_help;
 FD_attrib *fd_attrib;
 FD_generic_attrib *fd_generic_attrib;
@@ -46,7 +47,7 @@ FD_nullattrib *fd_nullattrib;
 
 extern int fd_helpfontsize;
 extern int fd_align_fontsize,
-              fd_type_fontsize;
+           fd_type_fontsize;
 
 static void init_helpform( void );
 static void init_controlform( void );
@@ -86,6 +87,8 @@ create_the_forms( void )
     fd_align = create_form_align( );
     init_align( );
 
+    fd_resize = create_form_resize( );
+
     /* help form */
 
     fd_help = create_form_helpform( );
@@ -94,7 +97,7 @@ create_the_forms( void )
 
 
 /***************************************
- * conditionally modify the basic color of attribute form
+ * Conditionally modify the basic color of attribute form
  ***************************************/
 
 void
@@ -158,6 +161,7 @@ init_controlform( void )
     }
 
     fl_fit_object_label( fd_control->renameform, 1, 0 );
+    fl_fit_object_label( fd_control->resizeform, 1, 0 );
     fl_fit_object_label( fd_control->objectmenu, -3, 0 );
 }
 

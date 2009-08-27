@@ -177,7 +177,7 @@ fl_winsize( FL_Coord w,
 {
     fl_initial_winsize( w, h );
 
-    /* try to disable interactive resizing */
+    /* Try to disable interactive resizing */
 
     st_xsh.min_width   = st_xsh.max_width  = w;
     st_xsh.min_height  = st_xsh.max_height = h;

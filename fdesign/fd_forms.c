@@ -85,8 +85,6 @@ set_form( int numb )
 		fl_select_browser_line( fd_control->formbrowser, numb + 1 );
 		fl_winstepunit( main_window, 1, 1 );
 		fl_winresize( main_window, cur_form->w, cur_form->h );
-		fl_winstepunit( main_window,
-						get_step_size( ) + 0.1, get_step_size( ) + 0.1 );
 		if ( fl_display )
 			XSync( fl_display, 0 );
     }
@@ -225,11 +223,69 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 		 || ! *s )
 		return;
 
-    strcpy( forms[ fn ].fname, s );
+    fli_sstrcpy( forms[ fn ].fname, s, MAX_VAR_LEN );
 
     fl_replace_browser_line( fd_control->formbrowser, fn + 1,
 							 forms[ fn ].fname );
     changed = 1;
+}
+
+
+/***************************************
+ * Callback routine called when the user wants to change the forms size
+ ***************************************/
+
+void
+changesize_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
+			   long        arg  FL_UNUSED_ARG )
+{
+	FL_OBJECT *retobj;
+    int fn = get_form_numb( cur_form );
+
+    if ( cur_form == NULL || fn == -1 )
+		return;
+
+	fl_deactivate_all_forms( );
+
+	fl_set_spinner_value( fd_resize->width,  cur_form->w );
+	fl_set_spinner_value( fd_resize->height, cur_form->h );
+
+    fl_show_form( fd_resize->resize, FL_PLACE_HOTSPOT, FL_TRANSIENT,
+				  "Form size" );
+
+    fl_update_display( 0 );
+    fl_winfocus( fd_resize->resize->window );
+
+	while ( ( retobj = fl_do_only_forms( ) ) != fd_resize->quit )
+	{
+		int w;
+		int h;
+
+		if ( retobj != fd_resize->set_size )
+			continue;
+
+		w = FL_nint( fl_get_spinner_value( fd_resize->width  ) );
+		h = FL_nint( fl_get_spinner_value( fd_resize->height ) );
+		fl_set_spinner_value( fd_resize->width, w  );
+		fl_set_spinner_value( fd_resize->height, h );
+
+		if ( w == cur_form->w && h == cur_form->h )
+			continue;
+
+		XResizeWindow( flx->display, main_window, w, h );
+
+		if ( cur_form && ( cur_form->w > w || cur_form->h > h ) )
+		{
+			reshape_form_background( w, h );
+			redraw_the_form( 1 );
+		}
+
+		changed = TRUE;
+	}
+
+    fl_hide_form( fd_resize->resize );
+
+    fl_activate_all_forms( );
 }
 
 

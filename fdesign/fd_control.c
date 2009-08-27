@@ -245,7 +245,8 @@ static MenuEntry fmmenu[ ] =
 {
     { "New Form",    "Nn#n", addform_cb,    0, 0 },
     { "Delete Form", "Dd#d", deleteform_cb, 0, 0 },
-    { "Rename Form", "Rr#r", changename_cb, 0, 0 }
+    { "Rename Form", "Rr#r", changename_cb, 0, 0 },
+	{ "Resize Form", "Ss#s", changesize_cb, 0, 0 }
 };
 
 #define NFMM ( sizeof fmmenu / sizeof *fmmenu )
@@ -802,8 +803,11 @@ align_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if ( fd_align->align->visible )
 		fl_hide_form( fd_align->align );
     else
+	{
 		fl_show_form( fd_align->align, FL_PLACE_MOUSE, FL_FULLBORDER,
 					  "Alignments" );
+		XRaiseWindow( flx->display, fd_align->align->window );
+	}
 }
 
 
@@ -860,10 +864,7 @@ void
 snap_cb( FL_OBJECT * obj,
 		 long        arg  FL_UNUSED_ARG )
 {
-    float u = fl_get_counter_value( obj );
-
-    set_step_size( u );
-    fl_winstepunit( main_window, ( int ) ( u + 0.01 ), ( int ) ( u + 0.01 ) );
+    set_step_size( fl_get_counter_value( obj ) );
 }
 
 /***** End of alignment stuff */

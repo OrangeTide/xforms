@@ -627,6 +627,8 @@ extern FD_test *fd_test;
 
 extern FD_align *fd_align;
 
+extern FD_resize *fd_resize;
+
 extern FD_helpform *fd_help;
 
 extern FD_nullattrib *fd_nullattrib;
