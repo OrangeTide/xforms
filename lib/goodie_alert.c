@@ -112,7 +112,7 @@ create_alert( const char * title,
     fl_add_box( FL_FLAT_BOX, 50, h_tit + 20, box_w - 60, 5, "@DnLine" );
 
     fdui->str = fl_add_text( FL_FLAT_BOX, 60, h_tit + 35,
-							 box_w - 80, h_msg, msg ? msg : "" );
+							 box_w - 80, h_msg + 10, msg ? msg : "" );
     fl_set_object_lalign( fdui->str, FL_ALIGN_CENTER );
 	fl_set_object_lstyle( fdui->str, style );
 	fl_set_object_lsize( fdui->str, size );

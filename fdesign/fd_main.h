@@ -35,8 +35,13 @@
 #define TRUE    ( ! FALSE )
 #endif
 
+/* since MAGIC4 all coordinates are relative to the top-left */
+
 #define MAGIC2   12321
 #define MAGIC3   12322
+#define MAGIC4   13000
+#define MAGIC5   14000     /* since XForms 1.0.92 */
+
 
 /* general limits */
 
@@ -102,10 +107,6 @@ typedef struct {
 
 extern Conv convertor[ ];
 extern FD_Opt fdopt;
-
-/* since V1, all coordinates are relative to the top-left */
-
-#define FD_V1    13000
 
 #define ShiftIsDown( mask )    ( mask & ShiftMask )
 

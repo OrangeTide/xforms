@@ -329,8 +329,25 @@ load_fd_header( void )
 	if (    ff_read( "%k", &p ) <= 0
 		 || strcmp( p, "Magic" )
 		 || ff_read( "%d", &fd_magic ) <= 0
-		 || ( fd_magic != MAGIC2 && fd_magic != MAGIC3 && fd_magic != FD_V1 ) )
+		 || (    fd_magic != MAGIC2 && fd_magic != MAGIC3
+			  && fd_magic != MAGIC4 && fd_magic != MAGIC5 ) )
 		return ff_err( "Wrong type of file" );
+
+	if ( fd_magic != MAGIC5 )
+	{
+		char *tmp = ff_get_filename_copy( );
+
+		if ( ! fdopt.conv_only )
+			fl_show_alert2( 0, "Warning:\fFile %s\nwas created with an older "
+							"fdesign version,\nthe new output file may not be "
+							"compatible.", tmp );
+		else
+			M_warn( "", "Warning: File %s was created with an older fdesign "
+					"version, the new output file may not be compatible",
+					tmp );
+
+		fl_safe_free( tmp );
+	}
 
 	if (    ff_read( "Internal Form Definition File" ) < 0
 		 || ff_read( "(do not change)" ) < 0 )
@@ -592,7 +609,7 @@ save_forms( const char *str )
     }
 
     snap = get_step_size( ) + 0.1;
-    fprintf( fn, "Magic: %d\n\n", snap == 10 ? FD_V1 : FD_V1 );
+    fprintf( fn, "Magic: %d\n\n", MAGIC5 );
     fprintf( fn, "Internal Form Definition File\n" );
     fprintf( fn, "    (do not change)\n\n" );
     fprintf( fn, "Number of forms: %d\n", fnumb );

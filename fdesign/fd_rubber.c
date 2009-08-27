@@ -96,7 +96,7 @@ set_bounding_box( float x,
 
 
 /***************************************
- * rounds the box size to the stepsize and inside the bounding box
+ * Rounds the box size to the stepsize and inside the bounding box
  ***************************************/
 
 static void
@@ -146,7 +146,7 @@ round_size( float * x,
 
 
 /***************************************
- * rounds the position to the stepsize and inside the bounding box
+ * Rounds the position to the stepsize and inside the bounding box
  ***************************************/
 
 static void
@@ -179,12 +179,13 @@ round_position( float * x,
 		*y = ymin + height - *h;
 }
 
+
 /****
   DRAWING
 ****/
 
 /***************************************
- * draws a box
+ * Draws a box
  ***************************************/
 
 static void
@@ -345,7 +346,6 @@ scale_box( float * x,
 		*y += *h;
 		*h = - *h;
     }
-
 }
 
 

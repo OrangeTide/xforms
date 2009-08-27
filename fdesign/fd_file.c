@@ -664,7 +664,7 @@ load_object( void )
 
 	fl_free( key );
 
-	if ( cur_form && fd_magic != FD_V1 )
+	if ( cur_form && fd_magic < MAGIC4 )
 		y = cur_form->h - y - h;
 
     /* Create the new object */
