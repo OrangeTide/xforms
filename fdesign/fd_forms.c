@@ -96,7 +96,7 @@ set_form( int numb )
 
 
 /***************************************
- * change current form background. Called when the main window is resized
+ * Change current form background. Called when the main window is resized
  ***************************************/
 
 void
@@ -201,12 +201,12 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     set_form( fnumb++ );
     fl_activate_form( fd_control->control );
-    changed = 1;
+    changed = TRUE;
 }
 
 
 /***************************************
- * Callback routine called when the user wants to change the name
+ * Callback routine invoked when the user wants to change the name
  ***************************************/
 
 void
@@ -227,12 +227,12 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     fl_replace_browser_line( fd_control->formbrowser, fn + 1,
 							 forms[ fn ].fname );
-    changed = 1;
+    changed = TRUE;
 }
 
 
 /***************************************
- * Callback routine called when the user wants to change the forms size
+ * Callback routine invoked when the user wants to change the forms size
  ***************************************/
 
 void
@@ -245,7 +245,14 @@ changesize_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if ( cur_form == NULL || fn == -1 )
 		return;
 
+	/* While this form is shown no other should be operational (the user
+	   still can resize the forms window, that will automatically set the
+	   width and height spinners) */
+
 	fl_deactivate_all_forms( );
+
+	/* Set up the width and height spinner objects to show the sizes of
+	   the current form */
 
 	fl_set_spinner_value( fd_resize->width,  cur_form->w );
 	fl_set_spinner_value( fd_resize->height, cur_form->h );
@@ -256,6 +263,8 @@ changesize_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     fl_update_display( 0 );
     fl_winfocus( fd_resize->resize->window );
 
+	/* Loop until user clicks the "Dismiss" button */
+
 	while ( ( retobj = fl_do_only_forms( ) ) != fd_resize->quit )
 	{
 		int w;
@@ -263,6 +272,8 @@ changesize_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 		if ( retobj != fd_resize->set_size )
 			continue;
+
+		/* User has clicked on the "Set new size" button */
 
 		w = FL_nint( fl_get_spinner_value( fd_resize->width  ) );
 		h = FL_nint( fl_get_spinner_value( fd_resize->height ) );
@@ -284,7 +295,6 @@ changesize_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 	}
 
     fl_hide_form( fd_resize->resize );
-
     fl_activate_all_forms( );
 }
 
@@ -317,8 +327,8 @@ deleteform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 ****/
 
 /***************************************
- * Redraws the form in main window. back indicates whether the background
- * should be redrawn (when not doublebuffering). This avoids flashing.
+ * Redraws the form in main window. 'back' indicates whether the background
+ * should be redrawn (when not double-buffering). This avoids flashing.
  ***************************************/
 
 void
@@ -329,7 +339,7 @@ redraw_the_form( int back )
 
     fl_winset( main_window );
 
-    /* it is possible to have a null cur_form such as adding */
+    /* It's possible to have a NULL cur_form, e.g. when adding */
 
     if ( back && ! cur_form )
 		fd_clear( 0, 0, winw + 1, winh + 1 );
@@ -370,7 +380,7 @@ append_fd_suffix( const char * fn )
 
 
 /***************************************
- * Loads or merges a file with form definitions
+ * Reads in the very first part of a .fd file
  ***************************************/
 
 static int
@@ -467,8 +477,6 @@ load_fd_header( void )
 
 	return ff_err( "Invalid format of file" );
 }
-
-
 
 
 /***************************************
@@ -627,7 +635,7 @@ save_forms( const char *str )
 
     if ( ! str || ! * str )
 		str = fl_show_fselector( "Filename to save forms to", "",
-								"*.fd", loadedfile );
+								 "*.fd", loadedfile );
 
     if ( ! str )
 		return 0;		/* cancel */
@@ -647,7 +655,7 @@ save_forms( const char *str )
 
     strcpy( fname, filename );
 
-    /* if conversion only, no need to (re)save  the .fd file. It messes up
+    /* On conversion there's need to (re)save  the .fd file. It messes up
        Makefile rules */
 
     if ( fdopt.conv_only )

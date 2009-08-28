@@ -136,7 +136,7 @@ create_form_control( void )
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, changename_cb, 0 );
 
-    fdui->resizeform = obj = fl_add_button( FL_NORMAL_BUTTON, 226, 36, 78, 25, "Resize Form" );
+    fdui->resizeform = obj = fl_add_button( FL_NORMAL_BUTTON, 227, 36, 70, 25, "Resize Form" );
     fl_set_button_shortcut( obj, "^S", 1 );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, changesize_cb, 0 );

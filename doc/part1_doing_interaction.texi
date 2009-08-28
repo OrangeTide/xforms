@@ -145,7 +145,7 @@ void fl_set_form_geometry(FL_FORM form*, FL_Coord x, FL_Coord y,
 @noindent
 before placing the form on the screen. (Actually the routines can also
 be called while the form is being displayed. They will change the
-position and/or size of the form.) @code{x}>, @code{y}, @code{w} and
+position and/or size of the form.) @code{x}, @code{y}, @code{w} and
 @code{h} indicate the position of the form on the screen and its
 size@footnote{The parameters should be sensitive to the coordinate
 unit in effect at the time of the call, but at present, they are not,

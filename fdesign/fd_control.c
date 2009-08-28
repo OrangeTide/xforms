@@ -262,7 +262,7 @@ formmenu_callback( FL_OBJECT * ob,
     int n = fl_get_menu( ob ) - 1;
 
     if ( n >= 0 && fmmenu[ n ].callback )
-		fmmenu[n].callback( 0, 0 );
+		fmmenu[ n ].callback( 0, 0 );
 }
 
 
@@ -294,9 +294,9 @@ optionmenu_callback( FL_OBJECT * ob,
 
     if ( n >= 0 )
     {
-		* ( opmenu[ n ].p ) = ! * ( opmenu[ n ].p );
+		*opmenu[ n ].p = ! *opmenu[ n ].p;
 		sprintf( buf, "%s%%%c", opmenu[ n ].entry,
-				 * ( opmenu[ n ].p ) ? 'B' : 'b' );
+				 *opmenu[ n ].p ? 'B' : 'b' );
 		fl_replace_menu_item( fd_control->optionmenu, n + 1, buf );
 		( fd_show_palette ? show_pallette : hide_pallette )( );
     }
@@ -495,9 +495,9 @@ show_selmessage( FL_OBJECT * sel[ ],
 		get_object_name( sel[ 0 ], objname, cbname, argname );
 		sprintf( buf, "%s Name: %s  %s%s",
 				 find_type_name( sel[ 0 ]->objclass, sel[ 0 ]->type ),
-				 objname[ 0 ] ? objname : "None",
-				 cbname[ 0 ]  ? "Callback: " : "",
-				 cbname[ 0 ]  ? cbname : "" );
+				 *objname ? objname : "None",
+				 *cbname  ? "Callback: " : "",
+				 *cbname  ? cbname : "" );
     }
     else
     {
@@ -871,7 +871,7 @@ snap_cb( FL_OBJECT * obj,
 
 
 /***************************************
- * The user pressed one of the function keys on the main form
+ * The user pressed one of the function keys while in the main form
  ***************************************/
 
 void
@@ -976,12 +976,12 @@ init_align( void )
     fl_set_object_label( fd_align->hcenter, "@-><-" );
     fl_set_object_label( fd_align->vcenter, "@8-><-" );
 
-    fl_set_object_helper( fd_align->left,    "flush left" );
-    fl_set_object_helper( fd_align->hcenter, "center horizontally" );
-    fl_set_object_helper( fd_align->hequal,  "Equal distance" );
-    fl_set_object_helper( fd_align->right,   "flush right" );
-    fl_set_object_helper( fd_align->top,     "flush top" );
-    fl_set_object_helper( fd_align->bottom,  "flush bottom" );
-    fl_set_object_helper( fd_align->vcenter, "center vertically" );
-    fl_set_object_helper( fd_align->vequal,  "Equal distance" );
+    fl_set_object_helper( fd_align->left,    "Flush left" );
+    fl_set_object_helper( fd_align->hcenter, "Center horizontally" );
+    fl_set_object_helper( fd_align->hequal,  "Equal horizontal distance" );
+    fl_set_object_helper( fd_align->right,   "Flush right" );
+    fl_set_object_helper( fd_align->top,     "Flush top" );
+    fl_set_object_helper( fd_align->bottom,  "Flush bottom" );
+    fl_set_object_helper( fd_align->vcenter, "Center vertically" );
+    fl_set_object_helper( fd_align->vequal,  "Equal vertical distance" );
 }
