@@ -6,6 +6,10 @@
 
 	Some more bugs with new way of reading .fd files removed.
 
+	* lib/browser.c: Missing redraw of scrollbar added in
+	fl_show_browser_line() (thanks to Werner Heisch for
+	noticing and telling me about it),
+
 2009-08-26 Jens Thoms Toerring    <jt@toerring.de>
 
 	* README: updated to reflect new mailing list location

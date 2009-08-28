@@ -1224,6 +1224,7 @@ fl_show_browser_line( FL_OBJECT * ob,
 					  int         line )
 {
 	fli_tbox_set_centerline( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, line );
+    redraw_scrollbar( ob );
 }
 
 

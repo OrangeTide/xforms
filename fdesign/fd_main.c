@@ -58,7 +58,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.35 $ of $Date: 2009/08/28 14:07:18 $",
+    "$State: Exp $  $Revision: 1.36 $ of $Date: 2009/08/28 18:30:54 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
 	"GNU Lesser General Public License sinc 2002",
 	NULL
@@ -703,7 +703,7 @@ pre_connect( int    argc,
     if ( convertor[ fdopt.language ].init )
 		convertor[ fdopt.language ].init( );
 
-    /* no need to check for C syntax if not c program */
+    /* No need to check for C syntax if not C program */
 
     if ( fdopt.language != FD_C )
 		fdopt.lax = 1;
@@ -924,10 +924,10 @@ main( int    argc,
     fdopt.unit = unit_val( fd_sunit );
     fdopt.language = lang_val( fd_slanguage );
 
-    if ( fd_sfilter[ 0 ] )
+    if ( *fd_sfilter )
 		convertor[ fdopt.language ].extern_convertor = fd_sfilter;
 
-    /* no need to check for C syntax if not c program */
+    /* No need to check for C syntax if not C program */
 
     if ( fdopt.language != FD_C )
 		fdopt.lax = 1;
@@ -983,7 +983,7 @@ main( int    argc,
 				break;
     }
     else
-    {
+   {
 		select_object_by_class( FL_BUTTON );
 		select_pallette_entry( FL_BUTTON );
     }

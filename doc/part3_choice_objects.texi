@@ -1156,7 +1156,7 @@ To add a line to a browser use
 @example
 void fl_add_browser_line(FL_OBJECT *obj, const char *text);
 @end example
-The line may contain embeeded newline characters (@code{'\n'}).
+The line may contain embedded newline characters (@code{'\n'}).
 These will result in the text being split up into several lines,
 separated at the newline characters.
 
