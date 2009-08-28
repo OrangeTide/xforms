@@ -58,7 +58,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.34 $ of $Date: 2009/08/28 09:30:22 $",
+    "$State: Exp $  $Revision: 1.35 $ of $Date: 2009/08/28 14:07:18 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
 	"GNU Lesser General Public License sinc 2002",
 	NULL
@@ -957,8 +957,6 @@ main( int    argc,
     fl_set_counter_precision( fd_align->snapobj, 0 );
 	fl_set_form_atclose( fd_align->align, ignore_close, NULL );
 
-	fl_set_object_label( fd_resize->width,  "Width: " );
-	fl_set_object_label( fd_resize->height, "Height: " );
 	fl_set_spinner_bounds( fd_resize->width,  1, SHRT_MAX );
 	fl_set_spinner_bounds( fd_resize->height, 1, SHRT_MAX );
 	fl_set_form_atclose( fd_resize->resize, ignore_close, NULL );

@@ -1,12 +1,14 @@
 2009-08-28 Jens Thoms Toerring    <jt@toerring.de>
 
-	* Dependence of form size on snap grid setting in fdesign
+	Dependence of form size on snap grid setting in fdesign
 	removed since it led to unpleasant effects under KDE, form
 	size can now be set directly via a popup window.
 
+	Some more bugs with new way of reading .fd files removed.
+
 2009-08-26 Jens Thoms Toerring    <jt@toerring.de>
 
-	* README: updated to eflect new mailinglist location
+	* README: updated to reflect new mailing list location
 	and homepage
 
 2009-08-25 Jens Thoms Toerring    <jt@toerring.de>

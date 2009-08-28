@@ -53,7 +53,7 @@ static struct
 static char *
 ff_skip_spaces( const char * cp )
 {
-	while ( *cp && isspace( ( int ) * cp ) )
+	while ( *cp && isspace( ( unsigned char ) *cp ) )
 		cp++;
 
 	return ( char * ) cp;
@@ -230,10 +230,11 @@ ff_match_text( const char *txt )
 	while ( *src && *txt )
 	{
 		if (    *src != *txt
-			 && ! ( isspace( ( int ) *src ) && isspace( ( int ) *txt ) ) )
+			 && ! (    isspace( ( unsigned char ) *src )
+					&& isspace( ( unsigned char ) *txt ) ) )
 			return NULL;
 
-		if ( isspace( ( int ) *src ) )
+		if ( isspace( ( unsigned char ) *src ) )
 		{
 			src = ff_skip_spaces( src );
 			txt = ff_skip_spaces( txt );
@@ -269,7 +270,7 @@ ff_match_long( long * p )
 	if ( ep == ff.pos )
 		return -1;
 
-	if ( *ep != '\0' && ! isspace( ( int ) *ep ) )
+	if ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
 		return -1;
 
 	if ( ( val == LONG_MAX || val == LONG_MIN ) && errno == ERANGE )
@@ -297,7 +298,7 @@ ff_match_ulong( unsigned long * p )
 	val = strtoul( ff.pos, &ep, 10 );
 
 	if (    ep == ff.pos
-		 || ( *ep != '\0' && ! isspace( ( int ) *ep ) )
+		 || ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
 		 || ( val == ULONG_MAX && errno == ERANGE ) )
 		return -1;
 
@@ -366,7 +367,7 @@ ff_match_double( double * p )
 	val = strtod( ff.pos, &ep );
 
 	if (    ep == ff.pos
-		 || ( *ep != '\0' && ! isspace( ( int ) *ep ) )
+		 || ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
 		 || ( ( val == HUGE_VAL || val == - HUGE_VAL ) && errno == ERANGE ) )
 		return -1;
 		
@@ -424,6 +425,37 @@ ff_match_coord( FL_Coord * p,
 static int
 ff_match_string( char ** p )
 {
+	/* Backtrack to start of line or last ':' */
+
+	while ( ff.pos > ff.line && isspace( ( unsigned char ) *--ff.pos ) )
+		/* empty */ ;
+
+	/* If we're at a ':' skip the next space if if exists */
+
+	if (    ff.pos > ff.line
+		 && *ff.pos++ == ':'
+		 && isspace( ( unsigned char ) *ff.pos ) )
+		ff.pos++;
+
+	*p = ff.pos + strlen( ff.pos ) - 1;
+	if ( **p == '\n' )
+		**p = '\0';
+
+	*p = fl_strdup( ff.pos );
+
+	while ( *ff.pos )
+		ff.pos++;
+
+	return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+ff_match_trimmed_string( char ** p )
+{
 	char *ep = ff.pos + strlen( ff.pos ) - 1,
 		 *fp = ep + 1;
 	char old_c;
@@ -436,7 +468,7 @@ ff_match_string( char ** p )
 
 	*p = NULL;
 
-	while ( ep > ff.pos && isspace( ( int ) *ep ) )
+	while ( ep > ff.pos && isspace( ( unsigned char ) *ep ) )
 		ep--;
 
 	old_c = *ep;
@@ -458,7 +490,7 @@ ff_match_spaceless_string( char ** p )
 {
 	char *ep = ff.pos;
 
-	while ( *ep && ! isspace( ( int ) *ep ) )
+	while ( *ep && ! isspace( ( unsigned char ) *ep ) )
 		ep++;
 
 	if ( ep == ff.pos )
@@ -491,16 +523,16 @@ ff_match_var( char ** p )
 
 	*p = NULL;
 
-	if ( isdigit( ( int ) *ep ) )
+	if ( isdigit( ( unsigned char ) *ep ) )
 		return -1;
 
 	while ( *ep 
-			&& (    isalpha( ( int ) *ep )
-				 || isdigit( ( int ) *ep )
+			&& (    isalpha( ( unsigned char ) *ep )
+				 || isdigit( ( unsigned char ) *ep )
 				 || *ep == '_' ) )
 		ep++;
 
-	if ( *ep && ! isspace( ( int ) *ep ) )
+	if ( *ep && ! isspace( ( unsigned char ) *ep ) )
 		return -1;
 
 	/* Currently variable, function etc. names can't be longer... */
@@ -621,8 +653,8 @@ ff_match_align( int * p )
 
 	if (    ! sp
 		 || ( sp > ff.pos
-			  && ! isspace( ( int ) sp[ -1 ] )
-			  && ! isspace( ( int ) sp[ 1 ] ) ) )
+			  && ! isspace( ( unsigned char ) sp[ -1 ] )
+			  && ! isspace( ( unsigned char ) sp[ 1 ] ) ) )
 	{
 		if ( ff_match_spaceless_string( &align_name ) < 0 )
 			return -1;
@@ -689,8 +721,8 @@ ff_match_lstyle( int * p )
 
 	if (    ! sp
 		 || ( sp > ff.pos
-			  && ! isspace( ( int ) sp[ -1 ] )
-			  && ! isspace( ( int ) sp[ 1 ] ) ) )
+			  && ! isspace( ( unsigned char ) sp[ -1 ] )
+			  && ! isspace( ( unsigned char ) sp[ 1 ] ) ) )
 	{
 		if ( ff_match_spaceless_string( &lstyle_name ) < 0 )
 			return -1;
@@ -860,7 +892,7 @@ ff_match_key( char ** p )
 
 	np = ep-- + 1;
 
-	while ( ep > ff.pos && isspace( ( int ) *ep ) )
+	while ( ep > ff.pos && isspace( ( unsigned char ) *ep ) )
 		ep--;
 
 	if ( ep == ff.pos )
@@ -896,20 +928,21 @@ ff_match_type( char ** p )
  *  c) %u   match unsigned int (requires int *)
  *  d) %D   match FL_Coord (requires FL_Coord *)
  *  e) %U   match FL_Coord with positive value (requires FL_Coord *)
- *  f) %s   match string (including spaces etc.) (requires char **)
- *  g) %f   match floating point value (requires float *)
- *  h) %o   match object class (requires int *)
- *  i) %t   match type (requires char **)
- *  j) %b   mact boxtype (requires int *)
- *  k) %c   match color (requires FL_COLOR *)
- *  l) %a   match align (requires int *)
- *  m) %p   match lstyle (requires int *)
- *  n) %q   match lsize (requires int *)
- *  o) %r   match resize (requires int *)
- *  p) %g   match gravity (requires int *)
- *  q) %x   match unit (requires int *)
- *  r) %v   match C variable  (requires char **)
- *  w) %k   match a key (word(s) with a final colon) (requires char **)
+ *  f) %s   match string (trimmed of spaces at start and end) (requires char **)
+ *  g) %S   match string (with all spaces) (requires char **)
+ *  h) %f   match floating point value (requires float *)
+ *  i) %o   match object class (requires int *)
+ *  j) %t   match type (requires char **)
+ *  k) %b   match boxtype (requires int *)
+ *  l) %c   match color (requires FL_COLOR *)
+ *  m) %a   match align (requires int *)
+ *  n) %p   match lstyle (requires int *)
+ *  o) %q   match lsize (requires int *)
+ *  p) %r   match resize (requires int *)
+ *  q) %g   match gravity (requires int *)
+ *  r) %x   match unit (requires int *)
+ *  s) %v   match C variable  (requires char **)
+ *  t) %k   match a key (word(s) with a final colon) (requires char **)
  *
  * In case a string gets returned a copy must be made before the next
  * call of this function.
@@ -977,7 +1010,11 @@ ff_read( const char * format,
 					r = ff_match_coord( va_arg( ap, FL_Coord * ), *fp == 'U' );
 					break;
 
-				case 's' :                    /* string */
+				case 's' :                    /* trimmed string */
+					r = ff_match_trimmed_string( va_arg( ap, char ** ) );
+					break;
+
+				case 'S' :                    /* string (with spaces) */
 					r = ff_match_string( va_arg( ap, char ** ) );
 					break;
 

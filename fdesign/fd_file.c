@@ -371,7 +371,7 @@ ff_read_label( FL_OBJECT * obj )
 	int r;
 	char *label;
 
-	if ( ( r = ff_read( "%s", &label ) ) < 0 )
+	if ( ( r = ff_read( "%S", &label ) ) < 0 )
 		return ff_err( "Can't read expected object label" );
 
 	if ( r == 1 )

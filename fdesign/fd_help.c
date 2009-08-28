@@ -141,7 +141,7 @@ char mainhelp[ ][ 80 ] =
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.12 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@c$Revision: 1.13 $" LIBVERSION(FL_VERSION, FL_REVISION),
     "@C4@b@cWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",
@@ -175,7 +175,7 @@ char generalhelp[ ][ 80 ] =
 	"rubber band will appear. The size of the rubber band is the size of the",
 	"object you're creating.  Once a satifactory size is found, release the",
 	"left mouse button. You can change the size and position afterwards.",
-	"Multiple objects can be added in a similar way. After objects are added"
+	"Multiple objects can be added in a similar way. After objects are added",
 	"you can move, resize and clone them as needed. See Mouse section",
     " ",
     "@bDeleting a form",
@@ -200,7 +200,7 @@ char generalhelp[ ][ 80 ] =
 	"the new window to align it/them left, horizontal centers, right, etc. It",
 	"is also possible to put equal distances between objects. With this form",
 	"you can also set the 'snap value' which tells fdesign about the number of",
-    "pixels to which values are rounded when positioning or resizing objects in"
+    "pixels to which values are rounded when positioning or resizing objects in",
 	"your forms.",
     " ",
 

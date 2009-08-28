@@ -715,7 +715,7 @@ ff_read_sp_content( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%S", &p ) ) < 0 )
 		return ff_err( "Can't read expected object content" );
 
 	++sp->nlines;
@@ -781,7 +781,7 @@ ff_read_sp_shortcut( FL_OBJECT * obj  FL_UNUSED_ARG,
 	char *p;
 
 	if ( ( r = ff_read( "%s", &p) ) < 0 )
-		return ff_err( "Can't read expected object shotcut" );
+		return ff_err( "Can't read expected object shortcut" );
 
 	sp->shortcut[ sp->nlines ] = p;
 
@@ -799,7 +799,7 @@ ff_read_sp_callback( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p) ) < 0 )
+	if ( ( r = ff_read( "%v", &p) ) < 0 )
 		return ff_err( "Can't read expected object callback" );
 
 	sp->callback[ sp->nlines ] = p;
@@ -837,7 +837,7 @@ ff_read_sp_file( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%S", &p ) ) < 0 )
 		return ff_err( "Can't read expected object \"file\" attribute" );
 
 	if ( strlen( p ) >= sizeof sp->filename )
@@ -861,7 +861,7 @@ ff_read_sp_focus_file( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%S", &p ) ) < 0 )
 		return ff_err( "Can't read expected object \"focus\" attribute" );
 
 	if ( strlen( p ) >= sizeof sp->focus_filename )
@@ -907,11 +907,8 @@ ff_read_sp_data( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object data attribute" );
-
-	if ( strlen( p ) >= sizeof sp->data )
-		return ff_err( "Text for \"data\" key too long" );
 
 	strcpy( sp->data, p );
 
@@ -931,11 +928,8 @@ ff_read_sp_focus_data( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object focus_data attribute" );
-
-	if ( strlen( p ) >= sizeof sp->focus_data )
-		return ff_err( "Text for \"focus_data\" key too long" );
 
 	strcpy( sp->focus_data, p );
 
@@ -974,11 +968,8 @@ ff_read_sp_width( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object width attribute" );
-
-	if ( strlen( p ) >= sizeof sp->width )
-		return ff_err( "Text for \"width\" key too long" );
 
 	strcpy( sp->width, p );
 
@@ -998,11 +989,8 @@ ff_read_sp_height( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%v", &p ) ) < 0 )
 		return ff_err( "Can't read expected object height attribute" );
-
-	if ( strlen( p ) >= sizeof sp->height )
-		return ff_err( "Text for \"height\" key too long" );
 
 	strcpy( sp->height, p );
 
@@ -1022,7 +1010,7 @@ ff_read_sp_helper( FL_OBJECT * obj  FL_UNUSED_ARG,
 	int r;
 	char *p;
 
-	if ( ( r = ff_read( "%s", &p ) ) < 0 )
+	if ( ( r = ff_read( "%S", &p ) ) < 0 )
 		return ff_err( "Can't read expected object helper attribute" );
 
 	if ( strlen( p ) >= sizeof sp->helper )

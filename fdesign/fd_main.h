@@ -768,10 +768,10 @@ typedef struct {
     int              nlines;
     char             filename[ 512 ];
     char             focus_filename[ 512 ];
-    char             data[ 64 ];
-    char             focus_data[ 64 ];
-    char             width[ 64 ],
-	                 height[ 64 ];
+    char             data[ MAX_VAR_LEN ];
+    char             focus_data[ MAX_VAR_LEN ];
+    char             width[ MAX_VAR_LEN ],
+	                 height[ MAX_VAR_LEN ];
     void           * cspecv;
     int              use_data;
     int              fullpath;
@@ -818,10 +818,10 @@ typedef struct {
     int  show_focus;
     char filename[ 512 ];
     char focus_filename[ 512 ];
-    char data[ 64 ];
-    char focus_data[ 64 ];
-    char width[ 64 ];
-    char height[ 64 ];
+    char data[ MAX_VAR_LEN ];
+    char focus_data[ MAX_VAR_LEN ];
+    char width[ MAX_VAR_LEN ];
+    char height[ MAX_VAR_LEN ];
     int  use_data;
     int  fullpath;
     char helper[ 512 ];
