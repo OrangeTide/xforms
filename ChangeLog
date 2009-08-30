@@ -1,3 +1,7 @@
+2009-08-30 Jens Thoms Toerring    <jt@toerring.de>
+
+	Support for spinner objects built into fdesign.
+
 2009-08-28 Jens Thoms Toerring    <jt@toerring.de>
 
 	Dependence of form size on snap grid setting in fdesign

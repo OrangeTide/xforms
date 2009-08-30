@@ -1406,9 +1406,10 @@ Since this function is to be used for integer as well as floating
 point spinner objects the @code{double} type values must be converted
 as necessary for @code{@ref{FL_INT_SPINNER}}.
 
-The default limits are @code{INT_MIN} and @code{INT_MAX} for
-@code{@ref{FL_INT_SPINNER}} and @code{-DBL_MAX} and @code{DBL_MAX}
-for @code{@ref{FL_FLOAT_SPINNER}}.
+The default limits are @code{-10000} and @code{10000}, but can be
+set to up to @code{INT_MIN} and @code{INT_MIN} for
+@code{@ref{FL_INT_SPINNER}}s and @code{-DBL_MAX} and @code{DBL_MAX}
+for @code{@ref{FL_FLOAT_SPINNER}}s.
 
 To set or determine the step size by which a spinner will be
 incremented or decremented when one of the buttons is clicked on use
@@ -1437,7 +1438,9 @@ int fl_get_spinner_precision(FL_OBJECT *obj);
 @end example
 @noindent
 This is per default set to 6 digits after the decimal point. The
-function has no effect on @code{@ref{FL_INT_SPINNER}} objects. 
+function for setting the precision has no effect on
+@code{@ref{FL_INT_SPINNER}} objects and the other one returns 0 for
+this type of spinners.
 
 
 @node Spinner Attributes

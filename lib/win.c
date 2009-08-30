@@ -47,11 +47,11 @@
  ****************************************************************{****/
 
 static XSetWindowAttributes st_xswa;
-static XSizeHints st_xsh;
-static XWMHints st_xwmh;
-static unsigned int st_wmask;
-static int st_wmborder;
-static unsigned int bwidth = 0;
+static XSizeHints           st_xsh;
+static XWMHints             st_xwmh;
+static unsigned int         st_wmask;
+static int                  st_wmborder;
+static unsigned int         bwidth = 0;
 
 static int fli_winreparentxy( Window win,
 							  Window new_parent,
@@ -97,9 +97,9 @@ fli_default_xswa( void )
 
     /* Border_pixel must be set for 24bit TrueColor displays */
 
-    st_xswa.border_pixel = 0;
-    st_wmask |= CWBorderPixel;
-    st_xsh.flags = 0;
+    st_xswa.border_pixel  = 0;
+    st_wmask             |= CWBorderPixel;
+    st_xsh.flags          = 0;
 
     /* Default size */
 
@@ -128,9 +128,9 @@ void
 fl_initial_winsize( FL_Coord w,
 					FL_Coord h )
 {
-    st_xsh.width  = st_xsh.base_width = w;
-    st_xsh.height = st_xsh.base_height = h;
-    st_xsh.flags |= USSize;
+    st_xsh.width   = st_xsh.base_width = w;
+    st_xsh.height  = st_xsh.base_height = h;
+    st_xsh.flags  |= USSize;
 }
 
 
@@ -156,11 +156,11 @@ fl_winicon( Window win,
     XWMHints lxwmh,
 		     *xwmh;
 
-    lxwmh.flags = 0;
-    xwmh = win ? &lxwmh : &st_xwmh;
-    xwmh->icon_pixmap = p;
-    xwmh->icon_mask   = m;
-    xwmh->flags |= IconPixmapHint | IconMaskHint;
+    lxwmh.flags        = 0;
+    xwmh               = win ? &lxwmh : &st_xwmh;
+    xwmh->icon_pixmap  = p;
+    xwmh->icon_mask    = m;
+    xwmh->flags       |= IconPixmapHint | IconMaskHint;
     if ( win )
 		XSetWMHints( flx->display, win, xwmh );
 }
@@ -201,12 +201,13 @@ fl_winminsize( Window   win,
 
     /* Copy current constraints */
 
-    mxsh = st_xsh;
-    mxsh.flags = 0;
-    sh = win ? &mxsh : &st_xsh;
-    sh->min_width = w;
-    sh->min_height = h;
-    sh->flags |= PMinSize;
+    mxsh            = st_xsh;
+    mxsh.flags      = 0;
+    sh              = win ? &mxsh : &st_xsh;
+
+    sh->min_width   = w;
+    sh->min_height  = h;
+    sh->flags      |= PMinSize;
     if ( win )
 		XSetWMNormalHints( flx->display, win, sh );
 }
@@ -223,12 +224,13 @@ fl_winmaxsize( Window   win,
     XSizeHints mxsh,
 		       *sh;
 
-    mxsh = st_xsh;
-    mxsh.flags = 0;
-    sh = win ? &mxsh : &st_xsh;
-    sh->max_width = w;
-    sh->max_height = h;
-    sh->flags |= PMaxSize;
+    mxsh            = st_xsh;
+    mxsh.flags      = 0;
+    sh              = win ? &mxsh : &st_xsh;
+
+    sh->max_width   = w;
+    sh->max_height  = h;
+    sh->flags      |= PMaxSize;
     if ( win )
 		XSetWMNormalHints( flx->display, win, sh );
 }
@@ -247,12 +249,13 @@ fl_winstepunit( Window   win,
 
     /* copy current constraints */
 
-    mxsh = st_xsh;
-    mxsh.flags = 0;
-    sh = win ? &mxsh : &st_xsh;
-    sh->width_inc  = dx;
-    sh->height_inc = dy;
-    sh->flags |= PResizeInc;
+    mxsh            = st_xsh;
+    mxsh.flags      = 0;
+    sh              = win ? &mxsh : &st_xsh;
+
+    sh->width_inc   = dx;
+    sh->height_inc  = dy;
+    sh->flags      |= PResizeInc;
     if ( win )
 		XSetWMNormalHints( flx->display, win, sh );
 }
@@ -324,8 +327,8 @@ fl_winaspect( Window   win,
 			  FL_Coord x,
 			  FL_Coord y )
 {
-    double fact;
-    XSizeHints lxsh, *xsh;
+    XSizeHints lxsh,
+		       *xsh;
 
     if ( x <= 0 || y <= 0 )
     {
@@ -333,21 +336,22 @@ fl_winaspect( Window   win,
 		return;
     }
 
-    lxsh.flags = 0;
-    xsh = win ? &lxsh : &st_xsh;
+    lxsh.flags         = 0;
+    xsh                = win ? &lxsh : &st_xsh;
 
-    xsh->flags |= PAspect;
-    xsh->min_aspect.x = x;
-    xsh->min_aspect.y = y;
-    xsh->max_aspect.x = x;
-    xsh->max_aspect.y = y;
+    xsh->flags        |= PAspect;
+    xsh->min_aspect.x  = x;
+    xsh->min_aspect.y  = y;
+    xsh->max_aspect.x  = x;
+    xsh->max_aspect.y  = y;
 
-    xsh->base_width = xsh->width = x;
-    xsh->base_height = xsh->height = y;
+    xsh->base_width    = xsh->width  = x;
+    xsh->base_height   = xsh->height = y;
 
     if ( xsh->base_width < 100 || xsh->base_height < 100 )
     {
-		fact = 100 / FL_max( x, y );
+		double fact = 100 / FL_max( x, y );
+
 		xsh->base_width  *= fact;
 		xsh->base_height *= fact;
     }
@@ -900,9 +904,9 @@ fl_winresize( Window   win,
 
     if ( XGetWMNormalHints( flx->display, win, &lxsh, &fields ) )
     {
-		lxsh.width = lxsh.base_width = neww;
-		lxsh.height = lxsh.base_height = newh;
-		lxsh.flags |= USSize;
+		lxsh.width   = lxsh.base_width  = neww;
+		lxsh.height  = lxsh.base_height = newh;
+		lxsh.flags  |= USSize;
 
 		if ( lxsh.flags & PMinSize && lxsh.flags & PMaxSize )
 		{

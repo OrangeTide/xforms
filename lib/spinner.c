@@ -370,13 +370,13 @@ fl_create_spinner( int          type,
 	fl_set_button_mouse_buttons( sp->down, 1 );
 
 	sp->i_val  = sp->old_ival = 0;
-	sp->i_min  = INT_MIN;
-	sp->i_max  = INT_MAX;
+	sp->i_min  = - 10000;
+	sp->i_max  = 10000;
 	sp->i_incr = 1;
 
 	sp->f_val  = sp->old_fval = 0.0;
-	sp->f_min  = - DBL_MAX;
-	sp->f_max  = DBL_MAX;
+	sp->f_min  = - 10000.0;
+	sp->f_max  = 10000.0;
 	sp->f_incr = 1.0;
 
 	sp->orient = orient;
@@ -629,7 +629,7 @@ fl_set_spinner_precision( FL_OBJECT * obj,
 {
     FLI_SPINNER_SPEC *sp = obj->spec;
 
-	if ( prec < 0 )
+	if ( obj->type == FL_INT_SPINNER || prec < 0 )
 		return;
 
 	if ( prec > DBL_DIG )
@@ -649,6 +649,9 @@ fl_set_spinner_precision( FL_OBJECT * obj,
 int
 fl_get_spinner_precision( FL_OBJECT * obj )
 {
+	if ( obj->type == FL_INT_SPINNER )
+		return 0;
+
 	return ( ( FLI_SPINNER_SPEC * ) obj->spec )->prec;
 }
 

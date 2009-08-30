@@ -191,8 +191,8 @@ extern unsigned int fli_keymask;
 
 extern unsigned int fli_query_age;
 
-/* misc. utilitnes */
 
+/* Misc. utilitnes */
 
 extern FL_FORM * fli_find_event_form( XEvent * );
 
