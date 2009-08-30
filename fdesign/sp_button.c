@@ -373,10 +373,10 @@ save_button_attrib( FILE      * fp,
     info = btspec->cspecv;
 
     if ( btspec->mbuttons != defspec->mbuttons )
-		fprintf( fp, "mbuttons: %d\n", btspec->mbuttons );
+		fprintf( fp, "    mbuttons: %d\n", btspec->mbuttons );
 
     if ( btspec->int_val != defspec->int_val )
-		fprintf( fp, "value: %d\n", btspec->int_val );
+		fprintf( fp, "    value: %d\n", btspec->int_val );
 
     if ( ! info || ! definfo )
     {
@@ -388,33 +388,33 @@ save_button_attrib( FILE      * fp,
 
     if ( info->filename[ 0 ] )
     {
-		fprintf( fp, "file: %s\n", info->filename );
+		fprintf( fp, "    file: %s\n", info->filename );
 		if ( info->focus_filename[ 0 ] )
-			fprintf( fp, "focus_file: %s\n", info->focus_filename );
-		fprintf( fp, "fullpath: %d\n", info->fullpath );
+			fprintf( fp, "    focus_file: %s\n", info->focus_filename );
+		fprintf( fp, "    fullpath: %d\n", info->fullpath );
     }
 
     if ( info->align != definfo->align )
-		fprintf( fp, "align: %s\n",
+		fprintf( fp, "    align: %s\n",
 				 align_name( info->align | FL_ALIGN_INSIDE, 0 ) );
 
     if ( info->show_focus != definfo->show_focus )
-		fprintf( fp, "focus: %d\n", info->show_focus );
+		fprintf( fp, "    focus: %d\n", info->show_focus );
 
     if ( info->data[ 0 ] && info->filename[ 0 ] )
     {
-		fprintf( fp, "data: %s\n", info->data );
+		fprintf( fp, "    data: %s\n", info->data );
 		if ( info->focus_data[ 0 ] )
-			fprintf( fp, "focus_data: %s\n", info->focus_data );
+			fprintf( fp, "    focus_data: %s\n", info->focus_data );
     }
 
     if ( info->width[ 0 ] )
-		fprintf( fp, "width: %s\n", info->width );
+		fprintf( fp, "    width: %s\n", info->width );
     if ( info->height[ 0 ] )
-		fprintf( fp, "height: %s\n", info->height );
+		fprintf( fp, "    height: %s\n", info->height );
 
     if ( info->helper[ 0 ] )
-		fprintf( fp, "helper: %s\n", info->helper );
+		fprintf( fp, "    helper: %s\n", info->helper );
 
     fl_free_object( defobj );
 }
@@ -736,7 +736,7 @@ get_data_name( FL_OBJECT * ob,
 
     if ( inf->filename[ 0 ] && ! ( fp = fopen( inf->filename, "r" ) ) )
     {
-		fprintf( stderr, "can't open %s\n", inf->filename );
+		fprintf( stderr, "Can't open %s\n", inf->filename );
 
 		/* wipe the icon file only if there isn't anything we can do */
 
@@ -747,7 +747,7 @@ get_data_name( FL_OBJECT * ob,
     if (    inf->focus_filename[ 0 ]
 		 && ! ( focus_fp = fopen( inf->focus_filename, "r" ) ) )
     {
-		fprintf( stderr, "can't open focusfile %s\n", inf->focus_filename );
+		fprintf( stderr, "Can't open focusfile %s\n", inf->focus_filename );
 		if ( ! inf->use_data || ! *inf->focus_data )
 			*inf->focus_filename = '\0';
     }

@@ -180,20 +180,20 @@ save_counter_attrib( FILE      * fp,
 
     if (    spec->min != defspec->min
 		 || spec->max != defspec->max )
-		fprintf( fp, "bounds: %.*f %.*f\n",
+		fprintf( fp, "    bounds: %.*f %.*f\n",
 				 spec->prec, spec->min, spec->prec, spec->max );
 
     if ( spec->prec != defspec->prec )
-		fprintf( fp, "precision: %d\n", spec->prec );
+		fprintf( fp, "    precision: %d\n", spec->prec );
 
     if ( spec->val != defspec->val )
-		fprintf( fp, "value: %.*f\n", spec->prec, spec->val );
+		fprintf( fp, "    value: %.*f\n", spec->prec, spec->val );
 
     if ( spec->sstep != defspec->sstep )
-		fprintf( fp, "sstep: %.*f\n", spec->prec, spec->sstep );
+		fprintf( fp, "    sstep: %.*f\n", spec->prec, spec->sstep );
 
     if ( spec->lstep != defspec->lstep )
-		fprintf( fp, "lstep: %.*f\n", spec->prec, spec->lstep );
+		fprintf( fp, "    lstep: %.*f\n", spec->prec, spec->lstep );
 
     fl_free_object( defobj );
 }
@@ -221,8 +221,8 @@ void
 cnt_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 				   long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( cnt_attrib->minval, 3 );
-    double max = get_finput_value( cnt_attrib->maxval, 3 );
+    double min = get_finput_value( cnt_attrib->minval );
+    double max = get_finput_value( cnt_attrib->maxval );
 
     fl_set_counter_bounds( cnt_attrib->vdata, min, max );
 
@@ -238,8 +238,8 @@ void
 cnt_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 				   long        data  FL_UNUSED_ARG )
 {
-    float s1 = get_finput_value( cnt_attrib->step1, 3 );
-    float s2 = get_finput_value( cnt_attrib->step2, 3 );
+    float s1 = get_finput_value( cnt_attrib->step1 );
+    float s2 = get_finput_value( cnt_attrib->step2 );
 
     fl_set_counter_step( cnt_attrib->vdata, s1, s2 );
 
@@ -255,7 +255,7 @@ void
 cnt_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						 long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value(cnt_attrib->initialval, 2);
+    double val = get_finput_value( cnt_attrib->initialval );
 
     fl_set_counter_value( cnt_attrib->vdata, val );
 

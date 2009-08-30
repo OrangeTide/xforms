@@ -200,19 +200,19 @@ save_dial_attrib( FILE      * fp,
     spec = get_superspec( ob );
 
     if ( spec->min != defspec->min || spec->max != defspec->max )
-		fprintf( fp, "bounds: %g %g\n", spec->min, spec->max );
+		fprintf( fp, "    bounds: %g %g\n", spec->min, spec->max );
 
     if ( spec->thetai != defspec->thetai || spec->thetaf != defspec->thetaf )
-		fprintf( fp, "angles: %g %g\n", spec->thetai, spec->thetaf );
+		fprintf( fp, "    angles: %g %g\n", spec->thetai, spec->thetaf );
 
     if ( spec->val != defspec->val )
-		fprintf( fp, "value: %g\n", spec->val );
+		fprintf( fp, "    value: %g\n", spec->val );
 
     if ( spec->step != defspec->step )
-		fprintf( fp, "step: %g\n", spec->step );
+		fprintf( fp, "    step: %g\n", spec->step );
 
     if ( spec->direction != defspec->direction )
-		fprintf( fp, "dir: %s\n",
+		fprintf( fp, "    dir: %s\n",
 				 fli_get_vn_name( dial_dir, spec->direction ) );
 
     fl_free_object( defobj );
@@ -226,8 +226,8 @@ void
 dial_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 					long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( dial_attrib->minval, -1 );
-    double max = get_finput_value( dial_attrib->maxval, -1 );
+    double min = get_finput_value( dial_attrib->minval );
+    double max = get_finput_value( dial_attrib->maxval );
 
     fl_set_dial_bounds( dial_attrib->vdata, min, max );
     if ( auto_apply )
@@ -242,8 +242,8 @@ void
 dial_thetachange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 					 long        data  FL_UNUSED_ARG )
 {
-    double t1 = get_finput_value( dial_attrib->thetai, -1 );
-    double t2 = get_finput_value( dial_attrib->thetaf, -1 );
+    double t1 = get_finput_value( dial_attrib->thetai );
+    double t2 = get_finput_value( dial_attrib->thetaf );
 
     fl_set_dial_angles( dial_attrib->vdata, t1, t2 );
     if ( auto_apply )
@@ -258,7 +258,7 @@ void
 dial_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 					long        data  FL_UNUSED_ARG )
 {
-    float s = get_finput_value( dial_attrib->step, -1 );
+    float s = get_finput_value( dial_attrib->step );
 
     fl_set_dial_step( dial_attrib->vdata, s );
     if ( auto_apply )
@@ -273,7 +273,7 @@ void
 dial_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						  long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( dial_attrib->initialval, -1 );
+    double val = get_finput_value( dial_attrib->initialval );
 
     fl_set_dial_value( dial_attrib->vdata, val );
     if ( auto_apply )

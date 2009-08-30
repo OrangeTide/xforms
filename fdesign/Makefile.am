@@ -45,6 +45,7 @@ fdesign_SOURCES = \
 	sp_button.c \
 	sp_choice.c \
 	sp_counter.c \
+	sp_spinner.c \
 	sp_dial.c \
 	sp_freeobj.c \
 	sp_menu.c \

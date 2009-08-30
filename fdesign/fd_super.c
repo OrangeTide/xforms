@@ -38,6 +38,7 @@
 #include "private/pbrowser.h"
 #include "private/ppositioner.h"
 #include "private/pcounter.h"
+#include "private/pspinner.h"
 #include "private/pscrollbar.h"
 #include "private/pdial.h"
 #include "private/pxyplot.h"
@@ -284,7 +285,14 @@ spec_to_superspec( FL_OBJECT * ob )
 		spp->max        = sp->max;
 		spp->prec       = sp->prec;
     }
-    else if (ob->objclass == FL_DIAL)
+    else if ( ob->objclass == FL_SPINNER )
+    {
+		spp->dval = fl_get_spinner_value( ob );
+		fl_get_spinner_bounds( ob, &spp->dmin, &spp->dmax );
+		spp->dstep = fl_get_spinner_step( ob );
+		spp->prec = fl_get_spinner_precision( ob );
+    }
+    else if ( ob->objclass == FL_DIAL )
     {
 		FLI_DIAL_SPEC *sp = ob->spec;
 
@@ -490,6 +498,13 @@ superspec_to_spec( FL_OBJECT * ob )
 		sp->min        = spp->min;
 		sp->max        = spp->max;
 		sp->prec       = spp->prec;
+    }
+    else if ( ob->objclass == FL_SPINNER )
+    {
+		fl_set_spinner_value( ob, spp->dval );
+		fl_set_spinner_bounds( ob, spp->dmin, spp->dmax );
+		fl_set_spinner_step( ob, spp->dstep );
+		fl_set_spinner_precision( ob, spp->prec );
     }
     else if ( ob->objclass == FL_DIAL )
     {

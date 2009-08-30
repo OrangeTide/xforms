@@ -670,7 +670,7 @@ find_class_name( int cln )
 
 
 /***************************************
- * return a pointer to the formal name of the class
+ * Return a pointer to the formal name of the class
  ***************************************/
 
 char *
@@ -688,7 +688,7 @@ class_name( int cls )
 
 
 /***************************************
- * return the class value
+ * Return the class value
  ***************************************/
 
 int

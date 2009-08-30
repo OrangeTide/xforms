@@ -211,17 +211,17 @@ save_slider_attrib( FILE      * fp,
     sp = get_superspec( ob );
 
     if ( sp->min != defsp->min || sp->max != defsp->max )
-		fprintf( fp, "bounds: %g %g\n", sp->min, sp->max );
+		fprintf( fp, "    bounds: %g %g\n", sp->min, sp->max );
     if ( sp->prec != defsp->prec )
-		fprintf( fp, "precision: %d\n", sp->prec );
+		fprintf( fp, "    precision: %d\n", sp->prec );
     if ( sp->val != defsp->val )
-		fprintf( fp, "value: %g\n", sp->val );
+		fprintf( fp, "    value: %g\n", sp->val );
     if ( sp->ldelta != defsp->ldelta || sp->rdelta != defsp->rdelta )
-		fprintf( fp, "increment: %g %g\n", sp->ldelta, sp->rdelta );
+		fprintf( fp, "    increment: %g %g\n", sp->ldelta, sp->rdelta );
     if ( sp->slsize != defsp->slsize )
-		fprintf( fp, "slsize: %.2f\n", sp->slsize );
+		fprintf( fp, "    slsize: %.2f\n", sp->slsize );
     if ( sp->step != defsp->step )
-		fprintf( fp, "step: %g\n", sp->step );
+		fprintf( fp, "    step: %g\n", sp->step );
 }
 
 
@@ -247,8 +247,8 @@ void
 minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 			   long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( sl_attrib->minval, 3 );
-    double max = get_finput_value( sl_attrib->maxval, 3 );
+    double min = get_finput_value( sl_attrib->minval );
+    double max = get_finput_value( sl_attrib->maxval );
 
     fl_set_slider_bounds( sl_attrib->vdata, min, max );
     if ( auto_apply )
@@ -263,7 +263,7 @@ void
 slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 			   long        data  FL_UNUSED_ARG )
 {
-    double slsize = get_finput_value( sl_attrib->slsize, 3 );
+    double slsize = get_finput_value( sl_attrib->slsize );
 
     fl_set_slider_size( sl_attrib->vdata, slsize );
     if ( auto_apply )
@@ -278,7 +278,7 @@ void
 step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 			 long        data  FL_UNUSED_ARG )
 {
-    double step = get_finput_value( sl_attrib->step, 5 );
+    double step = get_finput_value( sl_attrib->step );
 
     fl_set_slider_step( sl_attrib->vdata, step );
     if ( auto_apply )
@@ -293,8 +293,8 @@ void
 increment_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 				  long        data  FL_UNUSED_ARG )
 {
-    double l = get_finput_value( sl_attrib->ldelta, -1 );
-    double r = get_finput_value( sl_attrib->rdelta, -1 );
+    double l = get_finput_value( sl_attrib->ldelta );
+    double r = get_finput_value( sl_attrib->rdelta );
 
     fl_set_slider_increment( sl_attrib->vdata, l, r );
 }
@@ -307,7 +307,7 @@ void
 initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 					 long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( sl_attrib->initial_val, 3 );
+    double val = get_finput_value( sl_attrib->initial_val );
 
     fl_set_slider_value( sl_attrib->vdata, val );
     slider_spec->val = fl_get_slider_value( sl_attrib->vdata );

@@ -20,7 +20,6 @@
  * \file fd_main.h
  *
  * This file is the header file used in the Form Designer
- *
  */
 
 #ifndef FD_MAIN_H_
@@ -754,6 +753,10 @@ typedef struct {
 	                 thetaf;
     float            ldelta,
 	                 rdelta;
+	double           dval,
+	                 dmin,
+	                 dmax,
+	                 dstep;
     int              prec;
     int              direction;
 	int              mbuttons;

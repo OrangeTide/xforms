@@ -78,6 +78,18 @@ static ObjSPEC objspec[ ] =
     },
 
     {
+		{ FL_SPINNER },
+		get_spinner_spec_fdform,
+		set_spinner_attrib,
+		spinner_spec_restore,
+		save_spinner_attrib,
+		emit_spinner_code,
+		NULL,
+		NULL,
+		NULL
+    },
+
+    {
 		{ FL_DIAL },
 		get_dial_spec_fdform,
 		set_dial_attrib,
@@ -309,18 +321,21 @@ save_objclass_spec_info( FILE      * fp,
  ***************************************/
 
 static int 
-ff_read_sp_bounds( FL_OBJECT * obj  FL_UNUSED_ARG,
+ff_read_sp_bounds( FL_OBJECT * obj,
 				   SuperSPEC * sp )
 {
 	int r;
 
-	if ( ( r = ff_read( "%f%f", &sp->min, &sp->max ) ) < 0 )
+	if (    (    obj->objclass == FL_SPINNER
+		      && ( r = ff_read( "%F%F", &sp->dmin, &sp->dmax ) ) < 0 )
+		 || (    obj->objclass != FL_SPINNER
+			  && ( r = ff_read( "%f%f", &sp->min, &sp->max ) ) < 0 )  )
 		return ff_err( "Can't read expected object bounds" );
 
 	if ( r == 0 )
 		return ff_err( "\"bounds\" key with no or invalid values" );
 	else if ( r == 1 )
-		return ff_err( "\"bounds\" key with only one value" );
+		return ff_err( "\"bounds\" key with only one (valid) value" );
 
 	return 0;
 }
@@ -383,6 +398,11 @@ ff_read_sp_value( FL_OBJECT * obj,
 		if ( ISBUTTON( obj->objclass ) )
 			fl_set_button( obj, sp->int_val );
 	}
+	else if ( obj->objclass == FL_SPINNER )
+	{
+		if ( ( r = ff_read( "%F", &sp->dval ) ) < 0 )
+			return ff_err( "Can't read expected object value" );
+	}
 	else if ( ( r = ff_read( "%f", &sp->val ) ) < 0 )
 		return ff_err( "Can't read expected object value" );
 
@@ -420,7 +440,10 @@ ff_read_sp_step( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
 	int r;
 
-	if ( ( r = ff_read( "%f", &sp->step ) ) < 0 )
+	if (    (    obj->objclass == FL_SPINNER
+		      && ( r = ff_read( "%F", &sp->dstep ) ) < 0 )
+		 || (    obj->objclass != FL_SPINNER
+			  && ( r = ff_read( "%f", &sp->step ) ) < 0 ) )
 		return ff_err( "Can't read expected object step" );
 
 	if ( r == 0 )
@@ -1637,10 +1660,15 @@ set_finput_value( FL_OBJECT * ob,
 				  double      f,
 				  int         prec)
 {
-    char buf[ 32 ];
+    char buf[ 64 ];
 
     if ( prec >= 0 )
-		sprintf( buf, "%.*f", prec, f );
+	{
+		if ( fabs( f ) < 1.0e38 && fabs( f ) > 1.0e-38 )
+			sprintf( buf, "%.*f", prec, f );
+		else
+			sprintf( buf, "%.*g", prec, f );
+	}
     else
 		sprintf( buf, "%g", f );
 
@@ -1652,8 +1680,7 @@ set_finput_value( FL_OBJECT * ob,
  ***************************************/
 
 double
-get_finput_value( FL_OBJECT * ob,
-				  int         prec  FL_UNUSED_ARG )
+get_finput_value( FL_OBJECT * ob )
 {
     double f = 0;
     const char *s = fl_get_input( ob );

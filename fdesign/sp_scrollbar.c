@@ -189,19 +189,19 @@ save_scrollbar_attrib( FILE      * fp,
     sp = get_superspec( ob );
 
     if ( sp->min != defsp->min || sp->max != defsp->max )
-		fprintf( fp, "bounds: %g %g\n", sp->min, sp->max );
+		fprintf( fp, "    bounds: %g %g\n", sp->min, sp->max );
 
     if ( sp->val != defsp->val )
-		fprintf( fp, "value: %g\n", sp->val );
+		fprintf( fp, "    value: %g\n", sp->val );
 
     if ( sp->slsize != defsp->slsize )
-		fprintf( fp, "slsize: %.2f\n", sp->slsize );
+		fprintf( fp, "    slsize: %.2f\n", sp->slsize );
 
     if ( sp->step != defsp->step )
-		fprintf( fp, "step: %.3f\n", sp->step );
+		fprintf( fp, "    step: %.3f\n", sp->step );
 
     if ( sp->rdelta != defsp->rdelta || sp->ldelta != defsp->ldelta )
-		fprintf( fp, "increment: %g %g\n", sp->ldelta, sp->rdelta );
+		fprintf( fp, "    increment: %g %g\n", sp->ldelta, sp->rdelta );
 }
 
 
@@ -212,8 +212,8 @@ void
 scb_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 				   long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( scb_attrib->minval, 3 );
-    double max = get_finput_value( scb_attrib->maxval, 3 );
+    double min = get_finput_value( scb_attrib->minval );
+    double max = get_finput_value( scb_attrib->maxval );
 
     fl_set_scrollbar_bounds( scb_attrib->vdata, min, max );
 
@@ -229,8 +229,8 @@ void
 scb_delta_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 				  long        data  FL_UNUSED_ARG )
 {
-    double ldelta = get_finput_value( scb_attrib->ldelta, -1 );
-    double rdelta = get_finput_value( scb_attrib->rdelta, -1 );
+    double ldelta = get_finput_value( scb_attrib->ldelta );
+    double rdelta = get_finput_value( scb_attrib->rdelta );
 
     fl_set_scrollbar_increment( scb_attrib->vdata, ldelta, rdelta );
 
@@ -246,7 +246,7 @@ void
 scb_slsize_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 				   long        data  FL_UNUSED_ARG )
 {
-    double slsize = get_finput_value( scb_attrib->slsize, 2 );
+    double slsize = get_finput_value( scb_attrib->slsize );
 
     fl_set_scrollbar_size( scb_attrib->vdata, slsize );
 
@@ -262,7 +262,7 @@ void
 scb_step_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 				 long        data  FL_UNUSED_ARG )
 {
-    double step = get_finput_value( scb_attrib->step, 4 );
+    double step = get_finput_value( scb_attrib->step );
 
     fl_set_scrollbar_step( scb_attrib->vdata, step );
 
@@ -278,7 +278,7 @@ void
 scb_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						 long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( scb_attrib->initial_val, 3 );
+    double val = get_finput_value( scb_attrib->initial_val );
 
     fl_set_scrollbar_value( scb_attrib->vdata, val );
     set_finput_value( scb_attrib->initial_val, scb_spec->val, -1 );

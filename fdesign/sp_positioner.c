@@ -179,22 +179,22 @@ save_pos_attrib( FILE      * fp,
     spec = get_superspec( ob );
 
     if ( spec->xmin != defspec->xmin || spec->xmax != defspec->xmax )
-		fprintf( fp, "xbounds: %g %g\n", spec->xmin, spec->xmax );
+		fprintf( fp, "    xbounds: %g %g\n", spec->xmin, spec->xmax );
 
     if ( spec->ymin != defspec->ymin || spec->ymax != defspec->ymax )
-		fprintf( fp, "ybounds: %g %g\n", spec->ymin, spec->ymax );
+		fprintf( fp, "    ybounds: %g %g\n", spec->ymin, spec->ymax );
 
     if ( spec->xval != defspec->xval )
-		fprintf( fp, "xvalue: %g\n", spec->xval );
+		fprintf( fp, "    xvalue: %g\n", spec->xval );
 
     if ( spec->yval != defspec->yval )
-		fprintf( fp, "yvalue: %g\n", spec->yval );
+		fprintf( fp, "    yvalue: %g\n", spec->yval );
 
     if ( spec->xstep != defspec->xstep )
-		fprintf( fp, "xstep: %g\n", spec->xstep );
+		fprintf( fp, "    xstep: %g\n", spec->xstep );
 
     if ( spec->ystep != defspec->ystep )
-		fprintf( fp, "ystep: %g\n", spec->ystep );
+		fprintf( fp, "    ystep: %g\n", spec->ystep );
 
     fl_free_object( defobj );
 }
@@ -207,8 +207,8 @@ void
 pos_xminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 					long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( pos_attrib->xminval, -1 );
-    double max = get_finput_value( pos_attrib->xmaxval, -1 );
+    double min = get_finput_value( pos_attrib->xminval );
+    double max = get_finput_value( pos_attrib->xmaxval );
 
     fl_set_positioner_xbounds( pos_attrib->vdata, min, max );
 
@@ -224,8 +224,8 @@ void
 pos_yminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 					long        data  FL_UNUSED_ARG )
 {
-    double min = get_finput_value( pos_attrib->yminval, -1 );
-    double max = get_finput_value( pos_attrib->ymaxval, -1 );
+    double min = get_finput_value( pos_attrib->yminval );
+    double max = get_finput_value( pos_attrib->ymaxval );
 
     fl_set_positioner_ybounds( pos_attrib->vdata, min, max );
 
@@ -241,7 +241,7 @@ void
 pos_xstepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 					long        data  FL_UNUSED_ARG )
 {
-    float s = get_finput_value( pos_attrib->xstep, -1 );
+    float s = get_finput_value( pos_attrib->xstep );
 
     fl_set_positioner_xstep( pos_attrib->vdata, s );
 
@@ -257,7 +257,7 @@ void
 pos_ystepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 					long        data  FL_UNUSED_ARG )
 {
-    float s = get_finput_value( pos_attrib->ystep, -1 );
+    float s = get_finput_value( pos_attrib->ystep );
 
     fl_set_positioner_ystep( pos_attrib->vdata, s );
 
@@ -273,7 +273,7 @@ void
 pos_initialxvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						  long        data  FL_UNUSED_ARG )
 {
-    double val = get_finput_value( pos_attrib->initialxval, -1 );
+    double val = get_finput_value( pos_attrib->initialxval );
 
     fl_set_positioner_xvalue( pos_attrib->vdata, val );
 
@@ -289,7 +289,7 @@ void
 pos_initialyvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 						  long        data  FL_UNUSED_ARG)
 {
-    double val = get_finput_value( pos_attrib->initialyval, -1 );
+    double val = get_finput_value( pos_attrib->initialyval );
 
     fl_set_positioner_yvalue( pos_attrib->vdata, val );
 

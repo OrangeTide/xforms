@@ -270,22 +270,22 @@ save_pixmap_attrib( FILE      * fp,
 
     if ( *info->filename )
     {
-		fprintf( fp, "file: %s\n", info->filename );
-		fprintf( fp, "fullpath: %d\n", info->fullpath );
+		fprintf( fp, "    file: %s\n", info->filename );
+		fprintf( fp, "    fullpath: %d\n", info->fullpath );
     }
 
     if ( info->align != definfo->align )
-		fprintf( fp, "align: %s\n",
+		fprintf( fp, "    align: %s\n",
 				 align_name( info->align | FL_ALIGN_INSIDE, 0 ) );
 
     if ( *info->data && *info->filename )
-		fprintf( fp, "data: %s\n", info->data );
+		fprintf( fp, "    data: %s\n", info->data );
 
     if ( *info->width )
-		fprintf( fp, "width: %s\n", info->width );
+		fprintf( fp, "    width: %s\n", info->width );
 
     if ( *info->height )
-		fprintf( fp, "height: %s\n", info->height );
+		fprintf( fp, "    height: %s\n", info->height );
 
     fl_free_object( defobj );
 }
@@ -474,7 +474,7 @@ get_data_name( FL_OBJECT * ob,
 
     if ( ! ( fp = fopen( inf->filename, "r" ) ) )
     {
-		fprintf( stderr, "can't open %s\n", inf->filename );
+		fprintf( stderr, "Can't open %s\n", inf->filename );
 		*inf->filename = '\0';
 		return;
     }

@@ -433,8 +433,8 @@ ff_match_string( char ** p )
 	/* If we're at a ':' skip the next space if if exists */
 
 	if (    ff.pos > ff.line
-		 && *ff.pos++ == ':'
-		 && isspace( ( unsigned char ) *ff.pos ) )
+		 && *ff.pos == ':'
+		 && isspace( ( unsigned char ) *++ff.pos ) )
 		ff.pos++;
 
 	*p = ff.pos + strlen( ff.pos ) - 1;
@@ -881,6 +881,7 @@ ff_match_key( char ** p )
 {
 	char *ep = ff.pos;
 	char *np;
+	char old_c;
 
 	*p = NULL;
 
@@ -898,10 +899,12 @@ ff_match_key( char ** p )
 	if ( ep == ff.pos )
 		return -1;
 
-	*++ep = '\0';
+	old_c = *++ep;
+	*ep = '\0';
 
 	*p = fl_strdup( ff.pos );
 
+	*ep = old_c;
 	ff.pos = np;
 
 	return 0;
@@ -930,19 +933,20 @@ ff_match_type( char ** p )
  *  e) %U   match FL_Coord with positive value (requires FL_Coord *)
  *  f) %s   match string (trimmed of spaces at start and end) (requires char **)
  *  g) %S   match string (with all spaces) (requires char **)
- *  h) %f   match floating point value (requires float *)
- *  i) %o   match object class (requires int *)
- *  j) %t   match type (requires char **)
- *  k) %b   match boxtype (requires int *)
- *  l) %c   match color (requires FL_COLOR *)
- *  m) %a   match align (requires int *)
- *  n) %p   match lstyle (requires int *)
- *  o) %q   match lsize (requires int *)
- *  p) %r   match resize (requires int *)
- *  q) %g   match gravity (requires int *)
- *  r) %x   match unit (requires int *)
- *  s) %v   match C variable  (requires char **)
- *  t) %k   match a key (word(s) with a final colon) (requires char **)
+ *  h) %f   match single-precision floating point value (requires float *)
+ *  i) %D   match double floating point value (requires double *)
+ *  j) %o   match object class (requires int *)
+ *  k) %t   match type (requires char **)
+ *  l) %b   match boxtype (requires int *)
+ *  m) %c   match color (requires FL_COLOR *)
+ *  n) %a   match align (requires int *)
+ *  o) %p   match lstyle (requires int *)
+ *  p) %q   match lsize (requires int *)
+ *  q) %r   match resize (requires int *)
+ *  r) %g   match gravity (requires int *)
+ *  s) %x   match unit (requires int *)
+ *  t) %v   match C variable  (requires char **)
+ *  u) %k   match a key (word(s) with a final colon) (requires char **)
  *
  * In case a string gets returned a copy must be made before the next
  * call of this function.
@@ -1020,6 +1024,10 @@ ff_read( const char * format,
 
 				case 'f' :                    /* float */
 					r = ff_match_float( va_arg( ap, float * ) );
+					break;
+
+				case 'F' :                    /* double */
+					r = ff_match_double( va_arg( ap, double * ) );
 					break;
 
 				case 'o' :                    /* object class */

@@ -237,31 +237,31 @@ save_xyplot_attrib( FILE      * fp,
     sp = get_superspec( ob );
 
     if ( sp->xmajor != defsp->xmajor || sp->xminor != defsp->xminor )
-		fprintf( fp, "xtics: %d %d\n", sp->xmajor, sp->xminor );
+		fprintf( fp, "    xtics: %d %d\n", sp->xmajor, sp->xminor );
 
     if ( sp->ymajor != defsp->ymajor || sp->yminor != defsp->yminor )
-		fprintf( fp, "ytics: %d %d\n", sp->ymajor, sp->yminor );
+		fprintf( fp, "    ytics: %d %d\n", sp->ymajor, sp->yminor );
 
     if ( sp->xgrid != defsp->xgrid || sp->ygrid != defsp->ygrid )
-		fprintf( fp, "grid: %s %s\n",
+		fprintf( fp, "    grid: %s %s\n",
 				 get_grid_name( sp->xgrid ), get_grid_name( sp->ygrid ) );
 
     if ( sp->grid_linestyle != defsp->grid_linestyle )
-		fprintf( fp, "gridstyle: %s\n",
+		fprintf( fp, "    gridstyle: %s\n",
 				 get_linestyle_name( sp->grid_linestyle ) );
 
     if ( sp->xscale != defsp->xscale || sp->xbase != defsp->xbase )
-		fprintf( fp, "xscale: %s %g\n",
+		fprintf( fp, "    xscale: %s %g\n",
 				 get_scale_name( sp->xscale ), sp->xbase );
 
     if ( sp->yscale != defsp->yscale || sp->ybase != defsp->ybase )
-		fprintf( fp, "yscale: %s %g\n",
+		fprintf( fp, "    yscale: %s %g\n",
 				 get_scale_name( sp->yscale ), sp->ybase );
 
     if ( ob->type == FL_ACTIVE_XYPLOT )
     {
 		if ( sp->mark_active != defsp->mark_active )
-			fprintf( fp, "markactive: %d\n", sp->mark_active );
+			fprintf( fp, "    markactive: %d\n", sp->mark_active );
     }
 
     fl_free_object( defobj );
@@ -331,7 +331,7 @@ xscale_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 				  long        data  FL_UNUSED_ARG )
 {
     int s = fl_get_choice( xyplot_attrib->xscale ) - 1;
-    float base = get_finput_value( xyplot_attrib->xbase, -1 );
+    float base = get_finput_value( xyplot_attrib->xbase );
 
     if ( s == FL_LOG )
 		fl_show_object( xyplot_attrib->xbase );
@@ -355,7 +355,7 @@ yscale_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
     /* fill-in code for callback */
 
     int s = fl_get_choice( xyplot_attrib->yscale ) - 1;
-    float base = get_finput_value( xyplot_attrib->ybase, -1 );
+    float base = get_finput_value( xyplot_attrib->ybase );
 
     if ( s == FL_LOG )
 		fl_show_object( xyplot_attrib->ybase );
