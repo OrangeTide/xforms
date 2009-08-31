@@ -87,49 +87,66 @@ typedef struct {
 
 static AllObj allobj[ ] =
 {
-    /* begin button class *{ */
+    /* begin button class */
+
     {
-        VNP(FL_BUTTON),
+        VNP( FL_BUTTON ),
         {
-            VNP(FL_NORMAL_BUTTON), VNP(FL_PUSH_BUTTON),
-            VNP(FL_RADIO_BUTTON), VNP(FL_HIDDEN_BUTTON),
-            VNP(FL_TOUCH_BUTTON), VNP(FL_INOUT_BUTTON),
-            VNP(FL_RETURN_BUTTON), VNP(FL_HIDDEN_RET_BUTTON),
-            VNP(FL_MENU_BUTTON),
-            VNP(-1)
+            VNP( FL_NORMAL_BUTTON    ),
+            VNP( FL_PUSH_BUTTON      ),
+            VNP( FL_RADIO_BUTTON     ),
+            VNP( FL_HIDDEN_BUTTON    ),
+            VNP( FL_TOUCH_BUTTON     ),
+            VNP( FL_INOUT_BUTTON     ),
+            VNP( FL_RETURN_BUTTON    ),
+            VNP(FL_HIDDEN_RET_BUTTON ),
+            VNP( FL_MENU_BUTTON      ),
+            VNP( -1 )
         }
     },
 
     {
-        VNP(FL_LIGHTBUTTON),
+        VNP( FL_LIGHTBUTTON ),
         {
-            VNP(FL_NORMAL_BUTTON), VNP(FL_PUSH_BUTTON),
-            VNP(FL_RADIO_BUTTON), VNP(FL_HIDDEN_BUTTON),
-            VNP(FL_TOUCH_BUTTON), VNP(FL_INOUT_BUTTON),
-            VNP(FL_RETURN_BUTTON), VNP(FL_HIDDEN_RET_BUTTON),
-            VNP(-1)
+            VNP( FL_NORMAL_BUTTON     ),
+            VNP( FL_PUSH_BUTTON       ),
+            VNP( FL_RADIO_BUTTON      ),
+            VNP( FL_HIDDEN_BUTTON     ),
+            VNP( FL_TOUCH_BUTTON      ),
+            VNP( FL_INOUT_BUTTON      ),
+            VNP( FL_RETURN_BUTTON     ),
+            VNP( FL_HIDDEN_RET_BUTTON ),
+            VNP( -1 )
         }
     },
 
     {
-        VNP(FL_ROUNDBUTTON),
+        VNP( FL_ROUNDBUTTON ),
         {
-            VNP(FL_NORMAL_BUTTON), VNP(FL_PUSH_BUTTON),
-            VNP(FL_RADIO_BUTTON), VNP(FL_HIDDEN_BUTTON),
-            VNP(FL_TOUCH_BUTTON), VNP(FL_INOUT_BUTTON),
-            VNP(FL_RETURN_BUTTON), VNP(FL_HIDDEN_RET_BUTTON),
-            VNP(-1)
+            VNP( FL_NORMAL_BUTTON     ),
+            VNP( FL_PUSH_BUTTON       ),
+            VNP( FL_RADIO_BUTTON      ),
+            VNP( FL_HIDDEN_BUTTON     ),
+            VNP( FL_TOUCH_BUTTON      ),
+            VNP( FL_INOUT_BUTTON      ),
+            VNP( FL_RETURN_BUTTON     ),
+            VNP( FL_HIDDEN_RET_BUTTON ),
+            VNP( -1 )
         }
     },
 
     {
-        VNP(FL_ROUND3DBUTTON),
+        VNP( FL_ROUND3DBUTTON ),
         {
-            VNP(FL_NORMAL_BUTTON), VNP(FL_PUSH_BUTTON),
-            VNP(FL_RADIO_BUTTON), VNP(FL_HIDDEN_BUTTON),
-            VNP(FL_TOUCH_BUTTON), VNP(FL_INOUT_BUTTON),
-            VNP(FL_RETURN_BUTTON), VNP(FL_HIDDEN_RET_BUTTON),
-            VNP(-1)
+            VNP( FL_NORMAL_BUTTON     ),
+            VNP( FL_PUSH_BUTTON       ),
+            VNP( FL_RADIO_BUTTON      ),
+            VNP( FL_HIDDEN_BUTTON     ),
+            VNP( FL_TOUCH_BUTTON      ),
+            VNP( FL_INOUT_BUTTON      ),
+            VNP( FL_RETURN_BUTTON     ),
+            VNP( FL_HIDDEN_RET_BUTTON ),
+            VNP( -1)
         }
     },
 

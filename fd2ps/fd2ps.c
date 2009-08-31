@@ -149,7 +149,7 @@ fd2ps_init( void )
     psinfo.xdpi = psinfo.ydpi = 85;
     psinfo.paper_name = "Letter";
     get_paper_size( psinfo.paper_name, &psinfo.paper_w, &psinfo.paper_h );
-    psinfo.bw = 3;
+    psinfo.bw = 2;          /* Should be 1 but then output looks shitty JTT */
     psinfo.verbose = 0;
     psinfo.colorps = 1;
     psinfo.eps = 0;
@@ -165,7 +165,7 @@ fd2ps_init( void )
 
     /* check if enviornment variable paper is defined */
 
-    if ((env = getenv("PAPER")))
+    if ( ( env = getenv( "PAPER" ) ) )
     {
         get_paper_size( env, &psinfo.paper_w, &psinfo.paper_h );
         psinfo.paper_name = env;
