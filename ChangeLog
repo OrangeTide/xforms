@@ -1,3 +1,11 @@
+2009-09-01 Jens Thoms Toerring    <jt@toerring.de>
+
+	Tabs replaced by spaces.
+
+	Repairs to fd2ps that had stopped working (output
+	doesn't look too nice yet, changing that will probably
+	take quite a bit of work...)
+
 2009-08-30 Jens Thoms Toerring    <jt@toerring.de>
 
 	Support for spinner objects built into fdesign.
