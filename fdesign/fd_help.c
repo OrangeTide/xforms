@@ -141,7 +141,7 @@ char mainhelp[ ][ 80 ] =
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.13 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@c$Revision: 1.14 $" LIBVERSION(FL_VERSION, FL_REVISION),
     "@C4@b@cWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",

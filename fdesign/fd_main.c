@@ -58,7 +58,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.36 $ of $Date: 2009/08/28 18:30:54 $",
+    "$State: Exp $  $Revision: 1.37 $ of $Date: 2009/08/31 23:19:23 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
     "GNU Lesser General Public License sinc 2002",
     NULL

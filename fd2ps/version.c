@@ -37,7 +37,7 @@
 static char *version[] =
 {
     "fd2ps",
-    "$State: Exp $ $Revision: 1.6 $ of $Date: 2008/12/27 22:20:40 $",
+    "$State: Exp $ $Revision: 1.7 $ of $Date: 2009/08/31 23:19:23 $",
     "Copyright (c) 1997-2000 by T.C. Zhao",
     0
 };
