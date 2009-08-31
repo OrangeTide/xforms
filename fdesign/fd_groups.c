@@ -44,7 +44,7 @@
 
 /**** Data Structure maintaining groups in current form ****/
 
-static FL_OBJECT **begobj = NULL;	  /* Begin objects of the groups */
+static FL_OBJECT **begobj = NULL;     /* Begin objects of the groups */
 
 
 /**** Call-back routines ****/
@@ -56,14 +56,14 @@ static FL_OBJECT **begobj = NULL;	  /* Begin objects of the groups */
 
 void
 group_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
-		  long        arg  FL_UNUSED_ARG )
+          long        arg  FL_UNUSED_ARG )
 {
     int nn = fl_get_browser( fd_control->groupbrowser );
 
     if ( nn > 0 )
-		addgroupto_selection( begobj[ nn ] );
+        addgroupto_selection( begobj[ nn ] );
     else if ( nn < 0 )
-		deletegroupfrom_selection( begobj[ -nn ] );
+        deletegroupfrom_selection( begobj[ -nn ] );
     redraw_the_form( 0 );
 }
 
@@ -74,38 +74,38 @@ group_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 void
 changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
-					long        arg  FL_UNUSED_ARG )
+                    long        arg  FL_UNUSED_ARG )
 {
     char name[ MAX_VAR_LEN ],
-		 cbname[ MAX_VAR_LEN ],
-		 argname[ MAX_VAR_LEN ];
+         cbname[ MAX_VAR_LEN ],
+         argname[ MAX_VAR_LEN ];
     int i,
-		numb = 0;
+        numb = 0;
     const char *s;
 
     if ( cur_form == NULL )
-		return;
+        return;
 
     for ( i = 1; i <= fl_get_browser_maxline( fd_control->groupbrowser ); i++ )
-		if ( fl_isselected_browser_line( fd_control->groupbrowser, i ) )
-		{
-			if ( numb != 0 )
-			{
-				fl_show_messages( "Cannot change name of multiple groups" );
-				return;
-			}
-			numb = i;
-		}
+        if ( fl_isselected_browser_line( fd_control->groupbrowser, i ) )
+        {
+            if ( numb != 0 )
+            {
+                fl_show_messages( "Cannot change name of multiple groups" );
+                return;
+            }
+            numb = i;
+        }
 
     if ( numb == 0 )
     {
-		fl_show_messages( "No group is selected" );
-		return;
+        fl_show_messages( "No group is selected" );
+        return;
     }
 
     get_object_name( begobj[ numb ], name, cbname, argname );
     if ( ! ( s = fl_show_input( "Enter group name", name ) ) )
-		return;
+        return;
 
     strcpy( name, s );
     set_object_name( begobj[ numb ], name, cbname, argname );
@@ -124,16 +124,16 @@ void
 fillin_groups( void )
 {
     char name[ MAX_VAR_LEN ],
-		 cbname[ MAX_VAR_LEN ],
-		 argname[ MAX_VAR_LEN ];
+         cbname[ MAX_VAR_LEN ],
+         argname[ MAX_VAR_LEN ];
     FL_OBJECT *obj,
-		      *obj2;
+              *obj2;
     int i;
 
     if ( cur_form == NULL )
     {
-		fl_clear_browser( fd_control->groupbrowser );
-		return;
+        fl_clear_browser( fd_control->groupbrowser );
+        return;
     }
 
     fl_freeze_form( fd_control->groupbrowser->form );
@@ -144,41 +144,49 @@ fillin_groups( void )
     obj = cur_form->first;
     while ( obj != NULL )
     {
-		obj2 = obj;
-		obj = obj->next;
-		if (    obj2->objclass == FL_END_GROUP
-			 && obj2->prev != NULL
-			 && obj2->prev->objclass == FL_BEGIN_GROUP )
-		{
-			fl_delete_object( obj2->prev );
-			fl_delete_object( obj2 );
-		}
+        obj2 = obj;
+        obj = obj->next;
+        if (    obj2->objclass == FL_END_GROUP
+             && obj2->prev != NULL
+             && obj2->prev->objclass == FL_BEGIN_GROUP )
+        {
+            fl_delete_object( obj2->prev );
+            fl_delete_object( obj2 );
+        }
     }
 
     /* Put the still existing groups in the list */
 
-	for ( i = 0, obj = cur_form->first; obj; obj = obj->next )
-		if ( obj->objclass == FL_BEGIN_GROUP )
-			i++;
+    for ( i = 0, obj = cur_form->first; obj; obj = obj->next )
+        if ( obj->objclass == FL_BEGIN_GROUP )
+            i++;
 
-	if ( i > 0 )
-	{
-		begobj = fl_realloc( begobj, ( i + 1 ) * sizeof *begobj );
+    if ( i > 0 )
+    {
+        begobj = fl_realloc( begobj, ( i + 1 ) * sizeof *begobj );
 
-		for ( i = 1, obj = cur_form->first; obj; obj = obj->next )
-			if ( obj->objclass == FL_BEGIN_GROUP )
-			{
-				begobj[ i ] = obj;
-				get_object_name( obj, name, cbname, argname );
-				if ( ! *name )
-					strcpy( name, "<no name>" );
-				fl_add_browser_line( fd_control->groupbrowser, name );
-				if ( is_selected( obj ) )
-					fl_select_browser_line( fd_control->groupbrowser, i );
-			}
-			else if ( obj->objclass == FL_END_GROUP )
-				i++;
-	}
+        for ( i = 1, obj = cur_form->first; obj; obj = obj->next )
+            if ( obj->objclass == FL_BEGIN_GROUP )
+            {
+                begobj[ i ] = obj;
+                get_object_name( obj, name, cbname, argname );
+                if ( ! *name )
+                    strcpy( name, "<no name>" );
+                fl_add_browser_line( fd_control->groupbrowser, name );
+                if ( is_selected( obj ) )
+                    fl_select_browser_line( fd_control->groupbrowser, i );
+            }
+            else if ( obj->objclass == FL_END_GROUP )
+                i++;
+    }
 
     fl_unfreeze_form( fd_control->groupbrowser->form );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

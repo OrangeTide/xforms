@@ -42,26 +42,26 @@ Display *fl_display;
 
 void
 fli_rgbmask_to_shifts( unsigned long   mask,
-					   unsigned int  * shift,
-					   unsigned int  * bits )
+                       unsigned int  * shift,
+                       unsigned int  * bits )
 {
     unsigned int val;
 
     if ( mask == 0 )
     {
-		*shift = *bits = 0;
-		return;
+        *shift = *bits = 0;
+        return;
     }
 
-	*shift = 0;
+    *shift = 0;
     while ( ! ( ( 1 << *shift ) & mask ) )
-		( *shift )++;
+        ( *shift )++;
 
     val = mask >> *shift;
 
-	*bits = 0;
+    *bits = 0;
     while ( ( 1 << *bits ) & val )
-		( *bits )++;
+        ( *bits )++;
 }
 
 
@@ -70,7 +70,7 @@ fli_rgbmask_to_shifts( unsigned long   mask,
 
 void
 fli_xvisual2flstate( FL_State    * s,
-					 XVisualInfo * xvinfo )
+                     XVisualInfo * xvinfo )
 {
     s->rgb_bits = xvinfo->bits_per_rgb;
     s->rmask = xvinfo->red_mask;
@@ -81,3 +81,11 @@ fli_xvisual2flstate( FL_State    * s,
     fli_rgbmask_to_shifts( s->gmask, &s->gshift, &s->gbits );
     fli_rgbmask_to_shifts( s->bmask, &s->bshift, &s->bbits );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -37,14 +37,14 @@
 void
 set_up_how_return_menu( FL_OBJECT * obj )
 {
-	fl_set_menu( obj,
-				 "Never%b|"                   /* menu item 1 */
-				 "End & Changed%b|"           /* menu item 2 */
-				 "Whenever Changed%b|"        /* menu item 3 */
-				 "At End%b|"                  /* menu item 4 */
-				 "On Selection%b|"            /* menu item 5 */
-				 "On Deselection%b|"          /* menu item 6 */
-				 "Always%b" );                /* menu item 7 */
+    fl_set_menu( obj,
+                 "Never%b|"                   /* menu item 1 */
+                 "End & Changed%b|"           /* menu item 2 */
+                 "Whenever Changed%b|"        /* menu item 3 */
+                 "At End%b|"                  /* menu item 4 */
+                 "On Selection%b|"            /* menu item 5 */
+                 "On Deselection%b|"          /* menu item 6 */
+                 "Always%b" );                /* menu item 7 */
 }
 
 
@@ -56,30 +56,30 @@ set_up_how_return_menu( FL_OBJECT * obj )
 
 void
 reset_how_return_menu( FL_OBJECT * menu,
-					   int         how_return )
+                       int         how_return )
 {
-	int i;
+    int i;
 
-	for ( i = 1; i <= 7; i++ )
-		fl_set_menu_item_mode( menu, i, FL_PUP_BOX );
+    for ( i = 1; i <= 7; i++ )
+        fl_set_menu_item_mode( menu, i, FL_PUP_BOX );
 
-	if ( how_return == FL_RETURN_NONE )
-		fl_set_menu_item_mode( menu, 1, FL_PUP_BOX | FL_PUP_CHECK );
-	else if ( how_return == FL_RETURN_ALWAYS )
-		fl_set_menu_item_mode( menu, 7, FL_PUP_BOX | FL_PUP_CHECK );
-	else
-	{
-		if ( how_return & FL_RETURN_END_CHANGED )
-			fl_set_menu_item_mode( menu, 2, FL_PUP_BOX | FL_PUP_CHECK );
-		if ( how_return & FL_RETURN_CHANGED )
-			fl_set_menu_item_mode( menu, 3, FL_PUP_BOX | FL_PUP_CHECK );
-		if ( how_return & FL_RETURN_END )
-			fl_set_menu_item_mode( menu, 4, FL_PUP_BOX | FL_PUP_CHECK );
-		if ( how_return & FL_RETURN_SELECTION )
-			fl_set_menu_item_mode( menu, 5, FL_PUP_BOX | FL_PUP_CHECK );
-		if ( how_return & FL_RETURN_DESELECTION )
-			fl_set_menu_item_mode( menu, 5, FL_PUP_BOX | FL_PUP_CHECK );
-	}
+    if ( how_return == FL_RETURN_NONE )
+        fl_set_menu_item_mode( menu, 1, FL_PUP_BOX | FL_PUP_CHECK );
+    else if ( how_return == FL_RETURN_ALWAYS )
+        fl_set_menu_item_mode( menu, 7, FL_PUP_BOX | FL_PUP_CHECK );
+    else
+    {
+        if ( how_return & FL_RETURN_END_CHANGED )
+            fl_set_menu_item_mode( menu, 2, FL_PUP_BOX | FL_PUP_CHECK );
+        if ( how_return & FL_RETURN_CHANGED )
+            fl_set_menu_item_mode( menu, 3, FL_PUP_BOX | FL_PUP_CHECK );
+        if ( how_return & FL_RETURN_END )
+            fl_set_menu_item_mode( menu, 4, FL_PUP_BOX | FL_PUP_CHECK );
+        if ( how_return & FL_RETURN_SELECTION )
+            fl_set_menu_item_mode( menu, 5, FL_PUP_BOX | FL_PUP_CHECK );
+        if ( how_return & FL_RETURN_DESELECTION )
+            fl_set_menu_item_mode( menu, 5, FL_PUP_BOX | FL_PUP_CHECK );
+    }
 }
 
 
@@ -88,43 +88,43 @@ reset_how_return_menu( FL_OBJECT * menu,
 
 void
 handle_how_return_changes( FL_OBJECT * menu,
-						   FL_OBJECT * target )
+                           FL_OBJECT * target )
 {
-	SuperSPEC *sp = target->u_vdata;
-	int hr = FL_RETURN_NONE;
+    SuperSPEC *sp = target->u_vdata;
+    int hr = FL_RETURN_NONE;
 
-	if (    fl_get_menu_item_mode( menu, 1 ) & FL_PUP_CHECK
-		 && target->how_return != FL_RETURN_NONE )
-		/* empty */ ;
-	else if (    fl_get_menu_item_mode( menu, 7 ) & FL_PUP_CHECK
-			  && target->how_return != FL_RETURN_ALWAYS )
-		hr = FL_RETURN_ALWAYS;
-	else
-	{
-		if (    fl_get_menu_item_mode( menu, 2 ) & FL_PUP_CHECK
-			 && ! ( target->how_return & FL_RETURN_END_CHANGED ) )
-			hr = FL_RETURN_END_CHANGED;
-		else
-		{
-			if ( fl_get_menu_item_mode( menu, 3 ) & FL_PUP_CHECK )
-				hr |= FL_RETURN_CHANGED;
+    if (    fl_get_menu_item_mode( menu, 1 ) & FL_PUP_CHECK
+         && target->how_return != FL_RETURN_NONE )
+        /* empty */ ;
+    else if (    fl_get_menu_item_mode( menu, 7 ) & FL_PUP_CHECK
+              && target->how_return != FL_RETURN_ALWAYS )
+        hr = FL_RETURN_ALWAYS;
+    else
+    {
+        if (    fl_get_menu_item_mode( menu, 2 ) & FL_PUP_CHECK
+             && ! ( target->how_return & FL_RETURN_END_CHANGED ) )
+            hr = FL_RETURN_END_CHANGED;
+        else
+        {
+            if ( fl_get_menu_item_mode( menu, 3 ) & FL_PUP_CHECK )
+                hr |= FL_RETURN_CHANGED;
 
-			if ( fl_get_menu_item_mode( menu, 4 ) & FL_PUP_CHECK )
-				hr |= FL_RETURN_END;
-		}
+            if ( fl_get_menu_item_mode( menu, 4 ) & FL_PUP_CHECK )
+                hr |= FL_RETURN_END;
+        }
 
-		if ( fl_get_menu_item_mode( menu, 5 ) & FL_PUP_CHECK )
-			hr |= FL_RETURN_SELECTION;
+        if ( fl_get_menu_item_mode( menu, 5 ) & FL_PUP_CHECK )
+            hr |= FL_RETURN_SELECTION;
 
-		if ( fl_get_menu_item_mode( menu, 6 ) & FL_PUP_CHECK )
-			hr |= FL_RETURN_DESELECTION;
-	}
+        if ( fl_get_menu_item_mode( menu, 6 ) & FL_PUP_CHECK )
+            hr |= FL_RETURN_DESELECTION;
+    }
 
-	fl_set_object_return( target, hr );
+    fl_set_object_return( target, hr );
 
-	sp->how_return = target->how_return;
+    sp->how_return = target->how_return;
 
-	reset_how_return_menu( menu, sp->how_return );
+    reset_how_return_menu( menu, sp->how_return );
 }
 
 
@@ -152,55 +152,55 @@ static FLI_VN_PAIR howreturn[ ] =
 int
 get_how_return_val( const char * s )
 {
-	char *tmp = fl_strdup( s ),
-		 *p = strtok( tmp, "|" ),
-	     *st;
-	int val = 0;
+    char *tmp = fl_strdup( s ),
+         *p = strtok( tmp, "|" ),
+         *st;
+    int val = 0;
 
-	while ( p )
-	{
-		while ( *p && isspace( ( int ) *p ) )
-			p++;
-		st = p;
-		while ( *p && ! isspace( ( int ) *p ) )
-			p++;
-		*p = '\0';
+    while ( p )
+    {
+        while ( *p && isspace( ( int ) *p ) )
+            p++;
+        st = p;
+        while ( *p && ! isspace( ( int ) *p ) )
+            p++;
+        *p = '\0';
 
-		if ( ! strcmp( st, "FL_RETURN_NONE" ) )
-		{
-			val = FL_RETURN_NONE;
-			break;
-		}
-		else if ( ! strcmp( st, "FL_RETURN_ALWAYS" ) )
-		{
-			val = FL_RETURN_ALWAYS;
-			break;
-		}
-		else if ( ! strcmp( st, "FL_RETURN_END_CHANGED" ) )
-		{
-			val |= FL_RETURN_END_CHANGED;
-			val &= ~ ( FL_RETURN_CHANGED | FL_RETURN_END );
-		}
-		else if ( ! strcmp( st, "FL_RETURN_CHANGED" ) )
-		{
-			val |= FL_RETURN_CHANGED;
-			val &= ~ FL_RETURN_END_CHANGED;
-		}
-		else if ( ! strcmp( st, "FL_RETURN_END" ) )
-		{
-			val |= FL_RETURN_END;
-			val &= ~ FL_RETURN_END_CHANGED;
-		}
-		else if ( ! strcmp( st, "FL_RETURN_SELECTION" ) )
-			val |= FL_RETURN_SELECTION;
-		else if ( ! strcmp( st, "FL_RETURN_DESELECTION" ) )
-			val |= FL_RETURN_DESELECTION;
+        if ( ! strcmp( st, "FL_RETURN_NONE" ) )
+        {
+            val = FL_RETURN_NONE;
+            break;
+        }
+        else if ( ! strcmp( st, "FL_RETURN_ALWAYS" ) )
+        {
+            val = FL_RETURN_ALWAYS;
+            break;
+        }
+        else if ( ! strcmp( st, "FL_RETURN_END_CHANGED" ) )
+        {
+            val |= FL_RETURN_END_CHANGED;
+            val &= ~ ( FL_RETURN_CHANGED | FL_RETURN_END );
+        }
+        else if ( ! strcmp( st, "FL_RETURN_CHANGED" ) )
+        {
+            val |= FL_RETURN_CHANGED;
+            val &= ~ FL_RETURN_END_CHANGED;
+        }
+        else if ( ! strcmp( st, "FL_RETURN_END" ) )
+        {
+            val |= FL_RETURN_END;
+            val &= ~ FL_RETURN_END_CHANGED;
+        }
+        else if ( ! strcmp( st, "FL_RETURN_SELECTION" ) )
+            val |= FL_RETURN_SELECTION;
+        else if ( ! strcmp( st, "FL_RETURN_DESELECTION" ) )
+            val |= FL_RETURN_DESELECTION;
 
-		val |= fli_get_vn_value( howreturn, st );
-		p = strtok( NULL, "|" );
-	}
+        val |= fli_get_vn_value( howreturn, st );
+        p = strtok( NULL, "|" );
+    }
 
-	fl_safe_free( tmp );
+    fl_safe_free( tmp );
 
     return val;
 }
@@ -214,26 +214,34 @@ get_how_return_val( const char * s )
 
 const char *
 get_how_return_name( int how_return,
-					 int with_spaces )
+                     int with_spaces )
 {
-	static char buf[ 256 ];
-	FLI_VN_PAIR *hr = howreturn;
+    static char buf[ 256 ];
+    FLI_VN_PAIR *hr = howreturn;
 
-	if ( how_return == FL_RETURN_ALWAYS )
-		return "FL_RETURN_ALWAYS";
+    if ( how_return == FL_RETURN_ALWAYS )
+        return "FL_RETURN_ALWAYS";
 
-	if ( how_return == FL_RETURN_NONE )
-		return "FL_RETURN_NONE";
+    if ( how_return == FL_RETURN_NONE )
+        return "FL_RETURN_NONE";
 
-	*buf = '\0';
+    *buf = '\0';
 
-	while ( ( ++hr )->val != FL_RETURN_ALWAYS )
-	{
-		if ( how_return & hr->val )
-			strcat( strcat( buf, with_spaces ? " | " : "|" ), hr->name );
-	}
+    while ( ( ++hr )->val != FL_RETURN_ALWAYS )
+    {
+        if ( how_return & hr->val )
+            strcat( strcat( buf, with_spaces ? " | " : "|" ), hr->name );
+    }
 
     return buf + ( with_spaces ? 3 : 1 );
 }
 
 
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

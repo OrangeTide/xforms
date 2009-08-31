@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,11 +19,9 @@
 /**
  * \file xpmtops.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Turn an xpm file into PostScript.
  *  Two methods are provided: one is to read the xpm file
@@ -35,7 +32,6 @@
  *  grayscale colormap in the xpm file.
  *
  *  The default is to use the direct translation.
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -46,11 +42,12 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>		/* unlink */
+#include <unistd.h>     /* unlink */
 #include <signal.h>
 
 
 /* get the dimension of the xpm file for alignment */
+
 static int
 get_xpm_size(const char *file, int *w, int *h)
 {
@@ -61,31 +58,32 @@ get_xpm_size(const char *file, int *w, int *h)
 
     if (!fp)
     {
-	fprintf(stderr, "Can't open xpm file %s\n", file);
-	return -1;
+        fprintf(stderr, "Can't open xpm file %s\n", file);
+        return -1;
     }
 
     while ((c = getc(fp)) != '"' && c != EOF)
-	;
+        /* empty */ ;
 
     if (c == EOF)
     {
-	fprintf(stderr, "error reading xpm file\n");
-	fclose(fp);
-	return -1;
+        fprintf(stderr, "error reading xpm file\n");
+        fclose(fp);
+        return -1;
     }
 
     if (fscanf(fp, "%d %d %d %d", w, h, &j, &j) != 4)
     {
-	fprintf(stderr, "Failed to get the size of the xpm\n");
-	fclose(fp);
-	*w = *h = 25;
-	return -1;
+        fprintf(stderr, "Failed to get the size of the xpm\n");
+        fclose(fp);
+        *w = *h = 25;
+        return -1;
     }
 
     fclose(fp);
     return 0;
 }
+
 
 void
 draw_xpm(FL_OBJECT * ob)
@@ -95,19 +93,20 @@ draw_xpm(FL_OBJECT * ob)
 
     if (get_xpm_size(sp->file, &w, &h) >= 0)
     {
-	fl_get_align_xy(sp->align, ob->x, ob->y, ob->w, ob->h, w, h,
-			FL_abs(ob->bw) + sp->dx, FL_abs(ob->bw) + sp->dy,
-			&xx, &yy);
+        fl_get_align_xy(sp->align, ob->x, ob->y, ob->w, ob->h, w, h,
+                        FL_abs(ob->bw) + sp->dx, FL_abs(ob->bw) + sp->dy,
+                        &xx, &yy);
 
 #if 0
-	if (!flps->xpmtops_direct)
-	    xpmtops_via_ppm(sp->file, xx, yy, ob->col1);
-	else
+        if (!flps->xpmtops_direct)
+            xpmtops_via_ppm(sp->file, xx, yy, ob->col1);
+        else
 #endif
-	    xpmtops_direct(sp->file, xx, yy, ob->col1);
+        xpmtops_direct(sp->file, xx, yy, ob->col1);
     }
 
 }
+
 
 #if 0
 /*
@@ -133,11 +132,12 @@ emit_epsf_import_command(void)
 
     if (!emitted)
     {
-	ps_output(bgn_eps);
-	ps_output(end_eps);
-	emitted = 1;
+        ps_output(bgn_eps);
+        ps_output(end_eps);
+        emitted = 1;
     }
 }
+
 
 static int
 get_bounding_box(const char *file, int *x, int *y, int *w, int *h)
@@ -147,24 +147,26 @@ get_bounding_box(const char *file, int *x, int *y, int *w, int *h)
 
     if (!(fp = fopen(file, "r")))
     {
-	return -1;
+        return -1;
     }
 
     while (fgets(buf, sizeof(buf), fp))
     {
-	if (strstr(buf, "BoundingBox:"))
-	{
-	    sscanf(buf, "%*s %d %d %d %d\n", x, y, w, h);
-	    fclose(fp);
-	    return 0;
-	}
+        if (strstr(buf, "BoundingBox:"))
+        {
+            sscanf(buf, "%*s %d %d %d %d\n", x, y, w, h);
+            fclose(fp);
+            return 0;
+        }
     }
-    fclose(fp);
 
+    fclose(fp);
     return -1;
 }
 
+
 static char *logfile = "xpmtops.log";
+
 
 static void
 convert_to_ps(const char *file, long trans)
@@ -177,66 +179,70 @@ convert_to_ps(const char *file, long trans)
 
     if (!file || !*file)
     {
-	fprintf(stderr, "null xpm filename\n");
-	return;
+        fprintf(stderr, "null xpm filename\n");
+        return;
     }
 
     sprintf(tempfile, "%s.%s", prefix, whoami());
 
     if (!(fpr = fopen(file, "r")))
     {
-	fprintf(stderr, "Can't open %s\n", file);
-	return;
+        fprintf(stderr, "Can't open %s\n", file);
+        return;
     }
 
     if (psinfo.colorps)
-	cmd = "(xpmtoppm | pnmdepth 255 | pnmtops >%s) >%s 2>&1";
+        cmd = "(xpmtoppm | pnmdepth 255 | pnmtops >%s) >%s 2>&1";
     else
-	cmd = "(xpmtoppm | pnmdepth 255 | ppmtopgm | pnmtops >%s) >%s 2>%1";
+        cmd = "(xpmtoppm | pnmdepth 255 | ppmtopgm | pnmtops >%s) >%s 2>%1";
 
     signal(SIGPIPE, SIG_IGN);
     sprintf(buf, cmd, tempfile, logfile);
+
     if (!(fpw = popen(buf, "w")))
     {
-	fprintf(stderr, "failed to convert xpm to PS. See %s file details\n",
-		logfile);
-	return;
+        fprintf(stderr, "failed to convert xpm to PS. See %s file details\n",
+                logfile);
+        return;
     }
 
     /* fix None attributes on the fly */
+
     fl_query_imap(trans, &r, &g, &b);
     sprintf(rgbstr, "#%2x%2x%2x", r, g, b);
 
     while (fgets(buf, sizeof(buf) - 1, fpr))
     {
-	while ((p = strstr(buf, "None")))
-	{
-	    *p = '\0';
-	    strcat(strcpy(tmpbuf, buf), rgbstr);
-	    strcat(tmpbuf, p + 4);
-	    strcpy(buf, tmpbuf);
-	}
-	fputs(buf, fpw);
+        while ((p = strstr(buf, "None")))
+        {
+            *p = '\0';
+            strcat(strcpy(tmpbuf, buf), rgbstr);
+            strcat(tmpbuf, p + 4);
+            strcpy(buf, tmpbuf);
+        }
+        fputs(buf, fpw);
     }
     pclose(fpw);
 
     /* find the bounding box of the EPS */
+
     if (get_bounding_box(tempfile, &xo, &yo, &w, &h) < 0)
     {
-	fprintf(stderr, "Failed to convert xpm to EPS. ");
-	fprintf(stderr, "See %s for details\n", logfile);
-	fprintf(stderr, "Rest of the files converted\n");
-	return;
+        fprintf(stderr, "Failed to convert xpm to EPS. ");
+        fprintf(stderr, "See %s for details\n", logfile);
+        fprintf(stderr, "Rest of the files converted\n");
+        return;
     }
 
     ps_output("-%d -%d translate\n", xo, yo);
     fpr = fopen(tempfile, "r");
     while (fgets(buf, sizeof(buf) - 1, fpr))
-	ps_output(buf);
+        ps_output(buf);
     fclose(fpr);
     unlink(tempfile);
     unlink(logfile);
 }
+
 
 static int
 xpmtops_via_ppm(const char *file, int xx, int yy, long tran)
@@ -253,3 +259,19 @@ xpmtops_via_ppm(const char *file, int xx, int yy, long tran)
 
 /* End of convert using pbmplus package } */
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

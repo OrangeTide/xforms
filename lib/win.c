@@ -54,9 +54,9 @@ static int                  st_wmborder;
 static unsigned int         bwidth = 0;
 
 static int fli_winreparentxy( Window win,
-							  Window new_parent,
-							  int    x,
-							  int    y );
+                              Window new_parent,
+                              int    x,
+                              int    y );
 
 extern FLI_WM_STUFF fli_wmstuff;       /* defined in flresource.c */
 
@@ -73,19 +73,19 @@ fli_default_xswa( void )
     st_xswa.event_mask =   ExposureMask
                          | KeyPressMask
                          | KeyReleaseMask
-						 | ButtonPressMask
+                         | ButtonPressMask
                          | ButtonReleaseMask
-		                 | OwnerGrabButtonMask
-		                 | EnterWindowMask
+                         | OwnerGrabButtonMask
+                         | EnterWindowMask
                          | LeaveWindowMask
-		                 | ButtonMotionMask
+                         | ButtonMotionMask
                          | PointerMotionMask
-		                 | PointerMotionHintMask
+                         | PointerMotionHintMask
 /*
                          | VisibilityChangeMask
                          | PropertyChangeMask
 */
-		                 | StructureNotifyMask;
+                         | StructureNotifyMask;
 
     /* for input method */
 
@@ -126,7 +126,7 @@ fli_default_xswa( void )
 
 void
 fl_initial_winsize( FL_Coord w,
-					FL_Coord h )
+                    FL_Coord h )
 {
     st_xsh.width   = st_xsh.base_width = w;
     st_xsh.height  = st_xsh.base_height = h;
@@ -150,11 +150,11 @@ fl_initial_winstate( int state )
 
 void
 fl_winicon( Window win,
-			Pixmap p,
-			Pixmap m )
+            Pixmap p,
+            Pixmap m )
 {
     XWMHints lxwmh,
-		     *xwmh;
+             *xwmh;
 
     lxwmh.flags        = 0;
     xwmh               = win ? &lxwmh : &st_xwmh;
@@ -162,7 +162,7 @@ fl_winicon( Window win,
     xwmh->icon_mask    = m;
     xwmh->flags       |= IconPixmapHint | IconMaskHint;
     if ( win )
-		XSetWMHints( flx->display, win, xwmh );
+        XSetWMHints( flx->display, win, xwmh );
 }
 
 
@@ -173,7 +173,7 @@ fl_winicon( Window win,
 
 void
 fl_winsize( FL_Coord w,
-			FL_Coord h )
+            FL_Coord h )
 {
     fl_initial_winsize( w, h );
 
@@ -193,11 +193,11 @@ fl_winsize( FL_Coord w,
 
 void
 fl_winminsize( Window   win,
-			   FL_Coord w,
-			   FL_Coord h )
+               FL_Coord w,
+               FL_Coord h )
 {
     XSizeHints mxsh,
-		       *sh;
+               *sh;
 
     /* Copy current constraints */
 
@@ -209,7 +209,7 @@ fl_winminsize( Window   win,
     sh->min_height  = h;
     sh->flags      |= PMinSize;
     if ( win )
-		XSetWMNormalHints( flx->display, win, sh );
+        XSetWMNormalHints( flx->display, win, sh );
 }
 
 
@@ -218,11 +218,11 @@ fl_winminsize( Window   win,
 
 void
 fl_winmaxsize( Window   win,
-			   FL_Coord w,
-			   FL_Coord h )
+               FL_Coord w,
+               FL_Coord h )
 {
     XSizeHints mxsh,
-		       *sh;
+               *sh;
 
     mxsh            = st_xsh;
     mxsh.flags      = 0;
@@ -232,7 +232,7 @@ fl_winmaxsize( Window   win,
     sh->max_height  = h;
     sh->flags      |= PMaxSize;
     if ( win )
-		XSetWMNormalHints( flx->display, win, sh );
+        XSetWMNormalHints( flx->display, win, sh );
 }
 
 
@@ -241,11 +241,11 @@ fl_winmaxsize( Window   win,
 
 void
 fl_winstepunit( Window   win,
-				FL_Coord dx,
-				FL_Coord dy )
+                FL_Coord dx,
+                FL_Coord dy )
 {
     XSizeHints mxsh,
-		       *sh;
+               *sh;
 
     /* copy current constraints */
 
@@ -257,7 +257,7 @@ fl_winstepunit( Window   win,
     sh->height_inc  = dy;
     sh->flags      |= PResizeInc;
     if ( win )
-		XSetWMNormalHints( flx->display, win, sh );
+        XSetWMNormalHints( flx->display, win, sh );
 }
 
 
@@ -272,7 +272,7 @@ fl_winstepunit( Window   win,
 
 void
 fl_winposition( FL_Coord x,
-				FL_Coord y )
+                FL_Coord y )
 {
     st_xsh.x = x;
     st_xsh.y = y;
@@ -291,9 +291,9 @@ fl_winposition( FL_Coord x,
 
 void
 fl_initial_wingeometry( FL_Coord x,
-						FL_Coord y,
-						FL_Coord w,
-						FL_Coord h )
+                        FL_Coord y,
+                        FL_Coord w,
+                        FL_Coord h )
 {
     fl_winposition( x, y );
     fl_initial_winsize( w, h );
@@ -305,9 +305,9 @@ fl_initial_wingeometry( FL_Coord x,
 
 void
 fl_wingeometry( FL_Coord x,
-				FL_Coord y,
-				FL_Coord w,
-				FL_Coord h )
+                FL_Coord y,
+                FL_Coord w,
+                FL_Coord h )
 {
     fl_winposition( x, y );
     fl_winsize( w, h );
@@ -324,16 +324,16 @@ fl_wingeometry( FL_Coord x,
 
 void
 fl_winaspect( Window   win,
-			  FL_Coord x,
-			  FL_Coord y )
+              FL_Coord x,
+              FL_Coord y )
 {
     XSizeHints lxsh,
-		       *xsh;
+               *xsh;
 
     if ( x <= 0 || y <= 0 )
     {
-		M_err( "fl_winaspect", "Bad aspect ratio" );
-		return;
+        M_err( "fl_winaspect", "Bad aspect ratio" );
+        return;
     }
 
     lxsh.flags         = 0;
@@ -350,14 +350,14 @@ fl_winaspect( Window   win,
 
     if ( xsh->base_width < 100 || xsh->base_height < 100 )
     {
-		double fact = 100 / FL_max( x, y );
+        double fact = 100 / FL_max( x, y );
 
-		xsh->base_width  *= fact;
-		xsh->base_height *= fact;
+        xsh->base_width  *= fact;
+        xsh->base_height *= fact;
     }
 
     if ( win )
-		XSetWMNormalHints( flx->display, win, xsh );
+        XSetWMNormalHints( flx->display, win, xsh );
 }
 
 
@@ -386,13 +386,13 @@ fl_transient( void )
 
 void
 fl_winmove( Window   win,
-			FL_Coord dx,
-			FL_Coord dy)
+            FL_Coord dx,
+            FL_Coord dy)
 {
     if ( win )
-		XMoveWindow( flx->display, win, dx, dy );
+        XMoveWindow( flx->display, win, dx, dy );
     else
-		fl_winposition( dx, dy );
+        fl_winposition( dx, dy );
 }
 
 
@@ -401,17 +401,17 @@ fl_winmove( Window   win,
 
 void
 fl_winreshape( Window   win,
-			   FL_Coord dx,
-			   FL_Coord dy,
-			   FL_Coord w,
-			   FL_Coord h )
+               FL_Coord dx,
+               FL_Coord dy,
+               FL_Coord w,
+               FL_Coord h )
 {
     if ( win )
-		XMoveResizeWindow( flx->display, win, dx, dy, w, h );
+        XMoveResizeWindow( flx->display, win, dx, dy, w, h );
     else
     {
-		fl_winresize( win, w, h );
-		fl_winmove( win, dx, dy );
+        fl_winresize( win, w, h );
+        fl_winmove( win, dx, dy );
     }
 }
 
@@ -426,19 +426,19 @@ fl_winreshape( Window   win,
 
 void
 fl_get_winsize( Window     win,
-				FL_Coord * w,
-				FL_Coord * h )
+                FL_Coord * w,
+                FL_Coord * h )
 {
     unsigned int ww,
-		         hh,
-		         bjunk,
-		         djunk;
+                 hh,
+                 bjunk,
+                 djunk;
     int xx,
-		yy;
+        yy;
     Window root;
 
     XGetGeometry( flx->display, win, &root, &xx, &yy, &ww, &hh,
-				  &bjunk, &djunk );
+                  &bjunk, &djunk );
     *w = ww;
     *h = hh;
 }
@@ -449,20 +449,20 @@ fl_get_winsize( Window     win,
 
 void
 fl_get_winorigin( Window     win,
-				  FL_Coord * x,
-				  FL_Coord * y )
+                  FL_Coord * x,
+                  FL_Coord * y )
 {
     int xx,
-		yy;
+        yy;
     unsigned int ww,
-		         hh,
-		         bw,
-		         d;
+                 hh,
+                 bw,
+                 d;
     Window root;
 
     XGetGeometry( flx->display, win, &root, &xx, &yy, &ww, &hh, &bw, &d );
     XTranslateCoordinates( flx->display, win, root,
-						   - ( int ) bw, - ( int ) bw, &xx, &yy, &root );
+                           - ( int ) bw, - ( int ) bw, &xx, &yy, &root );
     *x = xx;
     *y = yy;
 }
@@ -473,22 +473,22 @@ fl_get_winorigin( Window     win,
 
 void
 fl_get_wingeometry( Window     win,
-					FL_Coord * x,
-					FL_Coord * y,
-					FL_Coord * w,
-					FL_Coord * h )
+                    FL_Coord * x,
+                    FL_Coord * y,
+                    FL_Coord * w,
+                    FL_Coord * h )
 {
     int xx,
-		yy;
+        yy;
     unsigned int ww,
-		         hh,
-		         bw,
-		         d;
+                 hh,
+                 bw,
+                 d;
     Window root;
 
     XGetGeometry( flx->display, win, &root, &xx, &yy, &ww, &hh, &bw, &d );
     XTranslateCoordinates( flx->display, win, root,
-						   - ( int ) bw, - ( int ) bw, &xx, &yy, &root );
+                           - ( int ) bw, - ( int ) bw, &xx, &yy, &root );
     *x = xx;
     *y = yy;
     *w = ww;
@@ -513,13 +513,13 @@ setup_catch_destroy( Window win )
     static Atom atom_protocols;
 
     if ( ! atom_delete_win )
-		atom_delete_win = XInternAtom( flx->display, "WM_DELETE_WINDOW", 0 );
+        atom_delete_win = XInternAtom( flx->display, "WM_DELETE_WINDOW", 0 );
 
     if ( ! atom_protocols )
-		atom_protocols = XInternAtom( flx->display, "WM_PROTOCOLS", 0 );
+        atom_protocols = XInternAtom( flx->display, "WM_PROTOCOLS", 0 );
 
     XChangeProperty( flx->display, win, atom_protocols, XA_ATOM, 32,
-					 PropModeReplace, ( unsigned char * ) &atom_delete_win, 1 );
+                     PropModeReplace, ( unsigned char * ) &atom_delete_win, 1 );
 }
 
 
@@ -534,17 +534,17 @@ wait_mapwin( Window win )
 
     if ( ! ( st_xswa.event_mask & StructureNotifyMask ) )
     {
-		M_err( "wait_mapwin", "XForms improperly initialized" );
-		exit( 1 );
+        M_err( "wait_mapwin", "XForms improperly initialized" );
+        exit( 1 );
     }
 
     /* Wait for the window to become mapped */
 
     do
     {
-		XWindowEvent( flx->display, win, StructureNotifyMask, &xev );
-		fli_xevent_name( "waiting", &xev );
-	} while ( xev.type != MapNotify );
+        XWindowEvent( flx->display, win, StructureNotifyMask, &xev );
+        fli_xevent_name( "waiting", &xev );
+    } while ( xev.type != MapNotify );
 }
 
 
@@ -559,7 +559,7 @@ fl_label_to_res_name( const char * label )
     fli_sstrcpy( res, label ? label : "", sizeof res );
     fli_nuke_all_non_alnum( res );
     if ( res[ 0 ] && isupper( ( int ) res[ 0 ] ) )
-		res[ 0 ] = tolower( ( int ) res[ 0 ] );
+        res[ 0 ] = tolower( ( int ) res[ 0 ] );
     return res;
 }
 
@@ -571,18 +571,18 @@ static char *
 get_machine_name( Display * d )
 {
     static char machine_name[ 256 ] = "";
-	char *p;
+    char *p;
 
     if ( machine_name[ 0 ] )
-		return machine_name;
+        return machine_name;
 
-	if ( gethostname( machine_name, sizeof machine_name - 1 ) )
-	{
-		M_err( "get_machine_name", "Unable to get host name" );
-		strcpy( machine_name, DisplayString( d ) );
-		if ( ( p = strchr( machine_name, ':' ) ) )
-			*p = '\0';
-	}
+    if ( gethostname( machine_name, sizeof machine_name - 1 ) )
+    {
+        M_err( "get_machine_name", "Unable to get host name" );
+        strcpy( machine_name, DisplayString( d ) );
+        if ( ( p = strchr( machine_name, ':' ) ) )
+            *p = '\0';
+    }
 
     return machine_name;
 }
@@ -593,15 +593,15 @@ get_machine_name( Display * d )
 
 void
 fli_set_winproperty( Window       win,
-					 unsigned int prop )
+                     unsigned int prop )
 {
     char **argv;
     int argc;
 
     if ( prop & FLI_COMMAND_PROP )
     {
-		argv = fl_get_cmdline_args( &argc );
-		XSetCommand( flx->display, win, argv, argc );
+        argv = fl_get_cmdline_args( &argc );
+        XSetCommand( flx->display, win, argv, argc );
     }
 }
 
@@ -611,14 +611,14 @@ fli_set_winproperty( Window       win,
 
 Window
 fli_create_window( Window       parent,
-				   Colormap     m,
-				   const char * wname )
+                   Colormap     m,
+                   const char * wname )
 {
     Window win;
     XClassHint clh;
     char *tmp;
     XTextProperty xtpwname,
-		          xtpmachine;
+                  xtpmachine;
     char *label = fl_strdup( wname ? wname : "" );
     FL_FORM *mainform = fl_get_app_mainform( );
 
@@ -628,39 +628,39 @@ fli_create_window( Window       parent,
     /* no decoration means unmanagered windows */
 
     if (    st_wmborder == FL_NOBORDER
-		 && ( st_xsh.flags & fli_wmstuff.pos_request)
-			                                        == fli_wmstuff.pos_request )
+         && ( st_xsh.flags & fli_wmstuff.pos_request)
+                                                    == fli_wmstuff.pos_request )
     {
-		/* Turning this on will make the window truely unmananged, might have
-		   problems with the input focus and colormaps */
+        /* Turning this on will make the window truely unmananged, might have
+           problems with the input focus and colormaps */
 
-		st_xswa.override_redirect = True;
-		st_wmask |= CWOverrideRedirect;
+        st_xswa.override_redirect = True;
+        st_wmask |= CWOverrideRedirect;
     }
 
     /* MWM uses root window's cursor, don't want that */
 
     if ( ( st_wmask & CWCursor ) != CWCursor )
     {
-		st_xswa.cursor = fl_get_cursor_byname( FL_DEFAULT_CURSOR );
-		st_wmask |= CWCursor;
+        st_xswa.cursor = fl_get_cursor_byname( FL_DEFAULT_CURSOR );
+        st_wmask |= CWCursor;
     }
 
     if ( st_wmborder != FL_FULLBORDER )
     {
-		st_xswa.save_under = True;
-		st_wmask |= CWSaveUnder;
+        st_xswa.save_under = True;
+        st_wmask |= CWSaveUnder;
 
-	/* For small transient windows, we don't need backing store */
+    /* For small transient windows, we don't need backing store */
 
-		if ( st_xsh.width < 200 || st_xsh.height < 200 )
-			st_xswa.backing_store = NotUseful;
+        if ( st_xsh.width < 200 || st_xsh.height < 200 )
+            st_xswa.backing_store = NotUseful;
     }
 
     if ( mainform && mainform->window )
     {
-		st_xwmh.flags |= WindowGroupHint;
-		st_xwmh.window_group = mainform->window;
+        st_xwmh.flags |= WindowGroupHint;
+        st_xwmh.window_group = mainform->window;
     }
 
 #if FL_DEBUG >= ML_WARN
@@ -668,15 +668,15 @@ fli_create_window( Window       parent,
 #endif
 
     win = XCreateWindow( flx->display, parent,
-						 st_xsh.x, st_xsh.y, st_xsh.width, st_xsh.height,
-						 bwidth, fli_depth( fl_vmode ), InputOutput,
-						 fli_visual( fl_vmode ), st_wmask, &st_xswa );
+                         st_xsh.x, st_xsh.y, st_xsh.width, st_xsh.height,
+                         bwidth, fli_depth( fl_vmode ), InputOutput,
+                         fli_visual( fl_vmode ), st_wmask, &st_xswa );
 
     if ( fli_cntl.debug > 3 )
     {
-		XFlush( flx->display );
-		fprintf( stderr, "****CreateWin OK**** sleeping 1 seconds\n" );
-		sleep( 1 );
+        XFlush( flx->display );
+        fprintf( stderr, "****CreateWin OK**** sleeping 1 seconds\n" );
+        sleep( 1 );
     }
 
     clh.res_name = fl_label_to_res_name( label );
@@ -688,28 +688,28 @@ fli_create_window( Window       parent,
     XStringListToTextProperty( label ? &label : 0, 1, &xtpwname );
 
     XSetWMProperties( flx->display, win, &xtpwname, &xtpwname,
-					  0, 0, &st_xsh, &st_xwmh, &clh );
+                      0, 0, &st_xsh, &st_xwmh, &clh );
 
     if ( xtpwname.value )
-		XFree( xtpwname.value );
+        XFree( xtpwname.value );
 
     xtpmachine.value = 0;
     tmp = get_machine_name( flx->display );
 
     if ( XStringListToTextProperty( &tmp, 1, &xtpmachine ) )
-		XSetWMClientMachine( flx->display, win, &xtpmachine );
+        XSetWMClientMachine( flx->display, win, &xtpmachine );
 
     if ( xtpmachine.value )
-		XFree( xtpmachine.value );
+        XFree( xtpmachine.value );
 
     fli_create_gc( win );
 
     if ( st_wmborder == FL_TRANSIENT )
     {
-		if ( mainform && mainform->window )
-			XSetTransientForHint( flx->display, win, mainform->window );
-		else
-			XSetTransientForHint( flx->display, win, fl_root );
+        if ( mainform && mainform->window )
+            XSetTransientForHint( flx->display, win, mainform->window );
+        else
+            XSetTransientForHint( flx->display, win, fl_root );
     }
 
     fl_free( label );
@@ -723,8 +723,8 @@ fli_create_window( Window       parent,
 
 Window
 fli_cmap_winopen( Window       parent,
-				 Colormap     m,
-				 const char * label )
+                 Colormap     m,
+                 const char * label )
 {
     Window win = fli_create_window( parent, m, label );
     return fl_winshow( win );
@@ -763,7 +763,7 @@ fl_winshow( Window win )
     /* wait until the newly mapped win shows up */
 
     if ( st_xwmh.initial_state == NormalState )
-		wait_mapwin( win );
+        wait_mapwin( win );
 
     setup_catch_destroy( win );
     fl_winset( win );
@@ -780,15 +780,15 @@ fl_winshow( Window win )
 
 int
 fli_winreparentxy( Window win,
-				   Window new_parent,
-				   int    x,
-				   int    y )
+                   Window new_parent,
+                   int    x,
+                   int    y )
 {
 
     if ( ! win || ! new_parent )
-		return -1;
+        return -1;
     else
-		return XReparentWindow( flx->display, win, new_parent, x, y );
+        return XReparentWindow( flx->display, win, new_parent, x, y );
 }
 
 
@@ -797,7 +797,7 @@ fli_winreparentxy( Window win,
 
 int
 fl_winreparent( Window win,
-				Window new_parent )
+                Window new_parent )
 {
     return fli_winreparentxy( win, new_parent, 0, 0 );
 }
@@ -810,7 +810,7 @@ void
 fl_winhide( Window win )
 {
     if ( win )
-		XUnmapWindow( flx->display, win );
+        XUnmapWindow( flx->display, win );
 }
 
 
@@ -819,17 +819,17 @@ fl_winhide( Window win )
 
 void
 fl_winbackground( Window   win,
-				  FL_COLOR bk )
+                  FL_COLOR bk )
 {
     if ( win == 0 )
     {
-		st_xswa.background_pixel = bk;
-		st_wmask |= CWBackPixel;
+        st_xswa.background_pixel = bk;
+        st_wmask |= CWBackPixel;
     }
     else
     {
-		XSetWindowBackground( flx->display, win, bk );
-		XClearWindow( flx->display, win );
+        XSetWindowBackground( flx->display, win, bk );
+        XClearWindow( flx->display, win );
     }
 }
 
@@ -860,7 +860,7 @@ fl_winget( void )
 int
 fl_iconify( Window win )
 {
-	return XIconifyWindow( flx->display, win, flx->screen );
+    return XIconifyWindow( flx->display, win, flx->screen );
 }
 
 
@@ -873,7 +873,7 @@ void
 fl_reset_winconstraints( Window win )
 {
     if ( win )
-		XSetWMNormalHints( flx->display, win, &st_xsh );
+        XSetWMNormalHints( flx->display, win, &st_xsh );
 }
 
 
@@ -882,59 +882,59 @@ fl_reset_winconstraints( Window win )
 
 void
 fl_winresize( Window   win,
-			  FL_Coord neww,
-			  FL_Coord newh )
+              FL_Coord neww,
+              FL_Coord newh )
 {
     XSizeHints lxsh;
     long fields;
     FL_Coord curwh, curww;
 
     if ( ! win )
-		return;
+        return;
 
     /* If sizes are the same we don't have to do anything. Some window managers
        are too dumb to optimize this. */
 
     fl_get_winsize( win, &curww, &curwh );
     if ( curww == neww && curwh == newh )
-		return;
+        return;
 
     lxsh.flags = 0;
     fields = 0;
 
     if ( XGetWMNormalHints( flx->display, win, &lxsh, &fields ) )
     {
-		lxsh.width   = lxsh.base_width  = neww;
-		lxsh.height  = lxsh.base_height = newh;
-		lxsh.flags  |= USSize;
+        lxsh.width   = lxsh.base_width  = neww;
+        lxsh.height  = lxsh.base_height = newh;
+        lxsh.flags  |= USSize;
 
-		if ( lxsh.flags & PMinSize && lxsh.flags & PMaxSize )
-		{
-			if ( lxsh.min_width == lxsh.max_width )
-				lxsh.min_width = lxsh.max_width = neww;
-			if ( lxsh.min_height == lxsh.max_height )
-				lxsh.min_height = lxsh.max_height = newh;
-		}
+        if ( lxsh.flags & PMinSize && lxsh.flags & PMaxSize )
+        {
+            if ( lxsh.min_width == lxsh.max_width )
+                lxsh.min_width = lxsh.max_width = neww;
+            if ( lxsh.min_height == lxsh.max_height )
+                lxsh.min_height = lxsh.max_height = newh;
+        }
 
-		/* Reset any contraints */
+        /* Reset any contraints */
 
-		if ( lxsh.flags & PMinSize )
-		{
-			if ( lxsh.min_width > neww )
-				lxsh.min_width = neww;
-			if ( lxsh.min_height > newh )
-				lxsh.min_height = newh;
-		}
+        if ( lxsh.flags & PMinSize )
+        {
+            if ( lxsh.min_width > neww )
+                lxsh.min_width = neww;
+            if ( lxsh.min_height > newh )
+                lxsh.min_height = newh;
+        }
 
-		if ( lxsh.flags & PMaxSize )
-		{
-			if ( lxsh.max_width < neww )
-				lxsh.max_width = neww;
-			if ( lxsh.max_height < newh )
-				lxsh.max_height = newh;
-		}
+        if ( lxsh.flags & PMaxSize )
+        {
+            if ( lxsh.max_width < neww )
+                lxsh.max_width = neww;
+            if ( lxsh.max_height < newh )
+                lxsh.max_height = newh;
+        }
 
-		XSetWMNormalHints( flx->display, win, &lxsh );
+        XSetWMNormalHints( flx->display, win, &lxsh );
     }
 
     XResizeWindow( flx->display, win, neww, newh );
@@ -952,10 +952,10 @@ static int badwin;
 
 static int
 valid_win_handler( Display     * dpy  FL_UNUSED_ARG,
-				   XErrorEvent * xev )
+                   XErrorEvent * xev )
 {
     if ( xev->error_code == BadWindow || xev->error_code == BadDrawable )
-		badwin = 1;
+        badwin = 1;
 
     return 0;
 }
@@ -969,7 +969,7 @@ fl_winisvalid( Window win )
 {
     int ( * old )( Display *, XErrorEvent * );
     FL_Coord w,
-		     h;
+             h;
 
     badwin = 0;
     old = XSetErrorHandler( valid_win_handler );
@@ -984,19 +984,19 @@ fl_winisvalid( Window win )
 
 void
 fl_wintitle( Window       win,
-			 const char * title )
+             const char * title )
 {
-	XTextProperty xtp;
+    XTextProperty xtp;
 
     if ( ! win && ! title )
-		return;
+        return;
 
-	xtp.value = 0;
-	XStringListToTextProperty( ( char ** ) &title, 1, &xtp );
-	XSetWMName( flx->display, win, &xtp );
-	XSetWMIconName( flx->display, win, &xtp );
-	if ( xtp.value )
-	    XFree( xtp.value );
+    xtp.value = 0;
+    XStringListToTextProperty( ( char ** ) &title, 1, &xtp );
+    XSetWMName( flx->display, win, &xtp );
+    XSetWMIconName( flx->display, win, &xtp );
+    if ( xtp.value )
+        XFree( xtp.value );
 }
 
 
@@ -1005,18 +1005,18 @@ fl_wintitle( Window       win,
 
 void
 fl_winicontitle( Window       win,
-				 const char * title )
+                 const char * title )
 {
-	XTextProperty xtp;
+    XTextProperty xtp;
 
     if ( ! win || ! title )
-		return;
+        return;
 
-	xtp.value = 0;
-	XStringListToTextProperty( ( char ** ) &title, 1, &xtp );
-	XSetWMIconName( flx->display, win, &xtp );
-	if ( xtp.value )
-	    XFree( xtp.value );
+    xtp.value = 0;
+    XStringListToTextProperty( ( char ** ) &title, 1, &xtp );
+    XSetWMIconName( flx->display, win, &xtp );
+    if ( xtp.value )
+        XFree( xtp.value );
 }
 
 
@@ -1032,8 +1032,16 @@ fl_winfocus( Window win )
 #if 0
     if ( fli_context->xic )
        XSetICValues( fli_context->xic,
-					 XNClientWindow, win, XNFocusWindow, win, 0 );
+                     XNClientWindow, win, XNFocusWindow, win, 0 );
 #endif
 }
 
 /********* END of Windowing support ***}**/
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

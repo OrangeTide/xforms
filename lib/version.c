@@ -44,7 +44,7 @@ static const char *version =
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars\n"
 #endif
     "Parts Copyright(c) 1999-2002 by T.C. Zhao and Steve Lamont\n"
-	"GNU Lesser General Public License since 2002";
+    "GNU Lesser General Public License since 2002";
 
 
 /***************************************
@@ -52,12 +52,12 @@ static const char *version =
 
 int
 fl_library_version( int * ver,
-					int * rev )
+                    int * rev )
 {
     if ( ver )
-		*ver = FL_VERSION;
+        *ver = FL_VERSION;
     if ( rev )
-		*rev = FL_REVISION;
+        *rev = FL_REVISION;
 
     return FL_VERSION * 1000 + FL_REVISION;
 }
@@ -69,16 +69,24 @@ fl_library_version( int * ver,
 void
 fli_print_version( int in_window )
 {
-	char *msg = fl_malloc(   strlen( version ) + sizeof "FORMS Library Version "
-						   + 30 );
+    char *msg = fl_malloc(   strlen( version ) + sizeof "FORMS Library Version "
+                           + 30 );
 
-	sprintf( msg, "FORMS Library Version %d.%d.%s\n%s",
-			 FL_VERSION, FL_REVISION, FL_FIXLEVEL, version );
+    sprintf( msg, "FORMS Library Version %d.%d.%s\n%s",
+             FL_VERSION, FL_REVISION, FL_FIXLEVEL, version );
 
     if ( in_window )
-		fl_show_messages( msg );
-	else
-		fprintf( stderr, "%s\n", msg );
+        fl_show_messages( msg );
+    else
+        fprintf( stderr, "%s\n", msg );
 
-	fl_free( msg );
+    fl_free( msg );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

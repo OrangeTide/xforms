@@ -22,7 +22,6 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  private header for valuator object. Someday, all the
  *  valuator functions will be consolidated to take care
@@ -36,45 +35,45 @@
  * probably can be reduced quite a bit. */
 
 typedef struct {
-    double        min;			/* minimal value of slider */
-    double        max;			/* maximal value of slider */
-    double        val;			/* current value of slider */
-    double        step;			/* step size             */
+    double        min;          /* minimal value of slider */
+    double        max;          /* maximal value of slider */
+    double        val;          /* current value of slider */
+    double        step;         /* step size             */
     int           draw_type;
-    int           prec;			/* precision when printing value */
+    int           prec;         /* precision when printing value */
     double        start_val;
-    double        ldelta;		/* "left mouse" step   */
-    double        rdelta;		/* "right mouse " step   */
-    double        sstep;		/* small step for counter */
-    double        lstep;		/* large step for counter */
-    FL_Coord      x,			/* draw (dbl buffer): adjustment report box */
-	              y,
-	              w,
-	              h;
-    double        slsize;		/* size of the slider             */
+    double        ldelta;       /* "left mouse" step   */
+    double        rdelta;       /* "right mouse " step   */
+    double        sstep;        /* small step for counter */
+    double        lstep;        /* large step for counter */
+    FL_Coord      x,            /* draw (dbl buffer): adjustment report box */
+                  y,
+                  w,
+                  h;
+    double        slsize;       /* size of the slider             */
     FL_VAL_FILTER filter;
     FL_Coord      offx;
     FL_Coord      offy;
-    FL_Coord      mx,			/* mouse: after adjustment for report box  */
-	              my,
-	              mw,
-	              mh;
-	FL_Coord      old_mx,
-		          old_my;
-    int           mouse,		/* part the mouse is on                    */
-	              lmouse;
-    FL_Coord      ww[ 5 ],		/* for counter                             */
-	              xx[ 5 ];
+    FL_Coord      mx,           /* mouse: after adjustment for report box  */
+                  my,
+                  mw,
+                  mh;
+    FL_Coord      old_mx,
+                  old_my;
+    int           mouse,        /* part the mouse is on                    */
+                  lmouse;
+    FL_Coord      ww[ 5 ],      /* for counter                             */
+                  xx[ 5 ];
     int           changed;
     unsigned int  mouseobj;
     int           cross_over;   /* allow cross over                        */
     int           repeat_ms;
-	int           cur_repeat_ms;
-	int           min_repeat_ms;
-	int           do_speedjump;
+    int           cur_repeat_ms;
+    int           min_repeat_ms;
+    int           do_speedjump;
     int           timeout_id;
     int           mouse_off_knob;
-	int           was_shift;
+    int           was_shift;
 } FLI_VALUATOR_SPEC;
 
 enum
@@ -84,3 +83,11 @@ enum
 };
 
 #endif /* PVALUTOR_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

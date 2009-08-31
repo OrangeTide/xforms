@@ -37,26 +37,26 @@
 
 static int
 handle_frame( FL_OBJECT * ob,
-			  int         event,
-			  FL_Coord    mx   FL_UNUSED_ARG,
-			  FL_Coord    my   FL_UNUSED_ARG,
-			  int         key  FL_UNUSED_ARG,
-			  void *      ev   FL_UNUSED_ARG )
+              int         event,
+              FL_Coord    mx   FL_UNUSED_ARG,
+              FL_Coord    my   FL_UNUSED_ARG,
+              int         key  FL_UNUSED_ARG,
+              void *      ev   FL_UNUSED_ARG )
 {
     switch ( event )
     {
-		case FL_DRAW:
-			fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
-						  ob->col1, ob->bw );
-			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-						 ob->lcol, ob->lstyle, ob->lsize, ob->label );
-			break;
+        case FL_DRAW:
+            fl_drw_frame( ob->type, ob->x, ob->y, ob->w, ob->h,
+                          ob->col1, ob->bw );
+            fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            break;
 
-		case FL_DRAWLABEL:
-			if ( ob->align != FL_ALIGN_CENTER )
-				fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-							 ob->lcol, ob->lstyle, ob->lsize, ob->label );
-			break;
+        case FL_DRAWLABEL:
+            if ( ob->align != FL_ALIGN_CENTER )
+                fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            break;
     }
 
     return FL_RETURN_NONE;
@@ -68,11 +68,11 @@ handle_frame( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_frame( int          type,
-				 FL_Coord     x,
-				 FL_Coord     y,
-				 FL_Coord     w,
-				 FL_Coord     h,
-				 const char * label )
+                 FL_Coord     x,
+                 FL_Coord     y,
+                 FL_Coord     w,
+                 FL_Coord     h,
+                 const char * label )
 {
     FL_OBJECT *ob;
 
@@ -92,11 +92,11 @@ fl_create_frame( int          type,
 
 FL_OBJECT *
 fl_add_frame( int          type,
-			  FL_Coord     x,
-			  FL_Coord     y,
-			  FL_Coord     w,
-			  FL_Coord     h,
-			  const char * label )
+              FL_Coord     x,
+              FL_Coord     y,
+              FL_Coord     w,
+              FL_Coord     h,
+              const char * label )
 {
     FL_OBJECT *ob;
 
@@ -104,3 +104,11 @@ fl_add_frame( int          type,
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

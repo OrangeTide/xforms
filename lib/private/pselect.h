@@ -21,15 +21,23 @@
 
 
 typedef struct {
-	FL_POPUP        * popup;
-	FL_POPUP_RETURN * sel;
-	int               align;
-	int               style;
-	int               size;
-	FL_COLOR          color;
-	int               timeout_id;
-	long              repeat_ms;
+    FL_POPUP        * popup;
+    FL_POPUP_RETURN * sel;
+    int               align;
+    int               style;
+    int               size;
+    FL_COLOR          color;
+    int               timeout_id;
+    long              repeat_ms;
 } FLI_SELECT_SPEC;
 
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

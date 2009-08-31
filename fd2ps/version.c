@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,14 +19,13 @@
 /**
  * \file version.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  * version information
  */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -55,33 +53,37 @@ rm_rcs_kw( const char *s, int strip_time)
 
     while (*s && (q - buf[nbuf]) < (int)sizeof(buf[nbuf]) - 2)
     {
-	switch (*s)
-	{
-	case '$':
-	    if ((left = !left))
-		while (*s && *s != ':')
-		    s++;
-	    break;
-	default:
-	    /* copy the char and remove extra space */
-	    if (!(lastc == ' ' && *s == ' '))
-		*q++ = lastc = *s;
-	    break;
-	}
-	s++;
+        switch (*s)
+        {
+            case '$':
+                if ((left = !left))
+                    while (*s && *s != ':')
+                        s++;
+                break;
+
+            default:
+                /* copy the char and remove extra space */
+
+                if (!(lastc == ' ' && *s == ' '))
+                    *q++ = lastc = *s;
+                break;
+        }
+        s++;
     }
 
     *q = '\0';
 
     /* all xforms' RCS time has the format xx:xx:xx */
+
     if (strip_time)
     {
-	if ((q = strchr(buf[nbuf], ':')))
-	    *(q - 2) = '\0';
+        if ((q = strchr(buf[nbuf], ':')))
+            *(q - 2) = '\0';
     }
 
     return buf[nbuf];
 }
+
 
 void
 print_version(int die)
@@ -89,11 +91,12 @@ print_version(int die)
     char **q = version;
 
     for (; *q; q++)
-	fprintf(stderr, (q == version) ? "%s" : "%s\n", rm_rcs_kw(*q, 0));
+        fprintf(stderr, (q == version) ? "%s" : "%s\n", rm_rcs_kw(*q, 0));
 
     if (die)
-	exit(0);
+        exit(0);
 }
+
 
 const char *
 get_version(void)
@@ -102,7 +105,15 @@ get_version(void)
     char **q = version;
 
     for (buf[0] = '\0'; *q; q++)
-	strcat(buf, rm_rcs_kw(*q, 1));
+    strcat(buf, rm_rcs_kw(*q, 1));
 
     return buf;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

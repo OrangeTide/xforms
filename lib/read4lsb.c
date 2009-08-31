@@ -45,10 +45,18 @@ fli_fget4LSBF( FILE * fp )
 
 int
 fli_fput4LSBF( int    code,
-			  FILE * fp )
+              FILE * fp )
 {
     putc(code & 0xff, fp);
     putc((code >> 8) & 0xff, fp);
     putc((code >> 16) & 0xff, fp);
     return putc((code >> 24) & 0xff, fp);
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -53,33 +53,33 @@
 
 typedef struct
 {
-    FL_DRAWPTR   drawit;		/* how to draw it              */
-    char       * name;			/* symbol name                 */
-	int          scalable;  	/* currently unused            */
+    FL_DRAWPTR   drawit;        /* how to draw it              */
+    char       * name;          /* symbol name                 */
+    int          scalable;      /* currently unused            */
 } SYMBOL;
 
-static SYMBOL * symbols = NULL;		/* The symbols */
+static SYMBOL * symbols = NULL;     /* The symbols */
 static size_t nsymbols = 0;
 
 #define swapit( type, a, b )  \
-	do { type a_;             \
-		 a_ = ( a );          \
-		 a = ( b );           \
-		 b = a_;              \
-	} while ( 0 )
+    do { type a_;             \
+         a_ = ( a );          \
+         a = ( b );           \
+         b = a_;              \
+    } while ( 0 )
 
 #define AddPoint( p, xp, yp )   \
-	do { p->x = ( xp );         \
-		 p->y = ( yp );         \
-		 p++;                   \
-	} while ( 0 )
+    do { p->x = ( xp );         \
+         p->y = ( yp );         \
+         p++;                   \
+    } while ( 0 )
 
 #define ShrinkBox( x, y, w, h, d )  \
-	do { x += ( d );                \
-		 y += ( d );                \
-		 w -= 2 * ( d );            \
-		 h -= 2 * ( d );            \
-	} while ( 0 )
+    do { x += ( d );                \
+         y += ( d );                \
+         w -= 2 * ( d );            \
+         h -= 2 * ( d );            \
+    } while ( 0 )
 
 
 
@@ -92,9 +92,9 @@ find_symbol( const char * name )
 {
     size_t i;
 
-	for ( i = 0; i < nsymbols; i++ )
-		if ( ! strcmp( symbols[ i ].name, name ) )
-			break;
+    for ( i = 0; i < nsymbols; i++ )
+        if ( ! strcmp( symbols[ i ].name, name ) )
+            break;
 
     return i < nsymbols ? symbols + i : NULL;
 }
@@ -107,23 +107,23 @@ find_symbol( const char * name )
 
 int
 fl_add_symbol( const char * name,
-			   FL_DRAWPTR   drawit,
-			   int          scalable  FL_UNUSED_ARG )
+               FL_DRAWPTR   drawit,
+               int          scalable  FL_UNUSED_ARG )
 {
     SYMBOL *s;
 
     if ( ! name || ! *name || ! drawit )
-		return -1;
+        return -1;
 
-	if ( ! ( s = find_symbol( name ) ) )
-	{
-		symbols = fl_realloc( symbols, ++nsymbols * sizeof *symbols );
-		s = symbols + nsymbols - 1;
-		s->name = fl_strdup( name );
-	}
+    if ( ! ( s = find_symbol( name ) ) )
+    {
+        symbols = fl_realloc( symbols, ++nsymbols * sizeof *symbols );
+        s = symbols + nsymbols - 1;
+        s->name = fl_strdup( name );
+    }
 
     s->drawit   = drawit;
-	s->scalable = scalable;
+    s->scalable = scalable;
     return 1;
 }
 
@@ -134,96 +134,96 @@ fl_add_symbol( const char * name,
 
 int
 fl_draw_symbol( const char * label,
-				FL_Coord     x,
-				FL_Coord     y,
-				FL_Coord     w,
-				FL_Coord     h,
-				FL_COLOR     col )
+                FL_Coord     x,
+                FL_Coord     y,
+                FL_Coord     w,
+                FL_Coord     h,
+                FL_COLOR     col )
 {
     int pos,
-		shift,
-		equalscale = 0;
+        shift,
+        equalscale = 0;
     FL_Coord dx = 0,
-		     dy = 0;
+             dy = 0;
     int rotated = 0,
-		delta = 0;
+        delta = 0;
     short defr[ ] = { 0, 225, 270, 315, 180, 0, 0, 135, 90, 45 };
     SYMBOL *s;
 
     if ( ! label || *label != '@' )
-		return 0;
+        return 0;
 
     fli_init_symbols( );
 
     pos = 1;
     while (    ( label[ pos ] == '-' && isdigit( ( int ) label[ pos + 1 ] ) )
-			|| ( label[ pos ] == '+' && isdigit( ( int ) label[ pos + 1 ] ) )
-			|| label[ pos ] == '#' )
+            || ( label[ pos ] == '+' && isdigit( ( int ) label[ pos + 1 ] ) )
+            || label[ pos ] == '#' )
     {
-		switch ( label[ pos ] )
-		{
-			case '+':
-				delta = '0' - label[ ++pos ];
-				break;
+        switch ( label[ pos ] )
+        {
+            case '+':
+                delta = '0' - label[ ++pos ];
+                break;
 
-			case '-':
-				delta = label[ ++pos ] - '0';
-				break;
+            case '-':
+                delta = label[ ++pos ] - '0';
+                break;
 
-			case '#':
-				equalscale = 1;
-				break;
-		}
+            case '#':
+                equalscale = 1;
+                break;
+        }
 
-		pos++;
+        pos++;
     }
 
     shift = pos;
 
     if ( label[ pos ] >= '1' && label[ pos ] <= '9' )
     {
-		rotated = defr[ label[ pos ] - '0' ];
-		shift = pos + 1;
+        rotated = defr[ label[ pos ] - '0' ];
+        shift = pos + 1;
     }
     else if ( label[ pos ] == '0' )
     {
-		rotated =   100 * ( label[ pos + 1 ] - '0' )
-			      +  10 * ( label[ pos + 2 ] - '0' )
-			      +   1 * ( label[ pos + 3 ] - '0' );
-		shift = pos + 4;
+        rotated =   100 * ( label[ pos + 1 ] - '0' )
+                  +  10 * ( label[ pos + 2 ] - '0' )
+                  +   1 * ( label[ pos + 3 ] - '0' );
+        shift = pos + 4;
     }
 
     /* need to special-casing labels like "@4" etc. */
 
     if ( ! ( s = label[ shift ] ? find_symbol( label + shift ) : symbols ) )
     {
-		char *newlabel = fl_strdup( label );
+        char *newlabel = fl_strdup( label );
 
-		/* need to replace the first @ otherwise bad recursion */
+        /* need to replace the first @ otherwise bad recursion */
 
-		newlabel[ 0 ] = ' ';
-		M_err( "fl_draw_symbol", "Bad symbol:@%s", newlabel + 1 );
-		fl_free( newlabel );
-		return 0;
+        newlabel[ 0 ] = ' ';
+        M_err( "fl_draw_symbol", "Bad symbol:@%s", newlabel + 1 );
+        fl_free( newlabel );
+        return 0;
     }
 
     if ( equalscale )
     {
-		dx = w > h ? ( w - h ) / 2 : 0;
-		dy = w > h ? 0 : ( h - w ) / 2;
-		w = h = FL_min( w, h );
+        dx = w > h ? ( w - h ) / 2 : 0;
+        dy = w > h ? 0 : ( h - w ) / 2;
+        w = h = FL_min( w, h );
     }
 
     if ( delta )
-		ShrinkBox( x, y, w, h, delta );
+        ShrinkBox( x, y, w, h, delta );
 
     /* also if rotated 90 degrees, switch w, h and the bounding box. TODO  */
 
     if ( rotated == 90 || rotated == 270 )
     {
-		x += ( w - h ) / 2;
-		y += ( h - w ) / 2;
-		swapit( FL_Coord, w, h );
+        x += ( w - h ) / 2;
+        y += ( h - w ) / 2;
+        swapit( FL_Coord, w, h );
     }
 
     s->drawit( x + dx, y + dy, w, h, rotated, col );
@@ -239,83 +239,83 @@ fl_draw_symbol( const char * label,
 
 static void
 rotate_it( FL_Coord xc,
-		   FL_Coord yc,
-		   FL_POINT xpnts[ ],
-		   int      i,
-		   int      a )
+           FL_Coord yc,
+           FL_POINT xpnts[ ],
+           int      i,
+           int      a )
 {
     FL_POINT *xp = xpnts,
-		     *xps = xpnts + i;
+             *xps = xpnts + i;
     double tmpx,
-		   tmpy;
+           tmpy;
     int tmp;
 
     if ( a == 0 || a == 360 )
-		return;
+        return;
 
     if ( a == 180 )
-		for ( ; xp < xps; xp++ )
-			xp->x = 2 * xc - xp->x;
+        for ( ; xp < xps; xp++ )
+            xp->x = 2 * xc - xp->x;
     else if ( a == 90 )
-		for ( ; xp < xps; xp++ )
-		{
-			tmp = xp->x;
-			xp->x = xc + xp->y - yc;
-			xp->y = yc - tmp + xc;
-		}
+        for ( ; xp < xps; xp++ )
+        {
+            tmp = xp->x;
+            xp->x = xc + xp->y - yc;
+            xp->y = yc - tmp + xc;
+        }
     else if ( a == 270 )
-		for ( ; xp < xps; xp++ )
-	{
-	    tmp = xp->x;
-	    xp->x = xc + xp->y - yc;
-	    xp->y = yc + tmp - xc;
-	}
+        for ( ; xp < xps; xp++ )
+    {
+        tmp = xp->x;
+        xp->x = xc + xp->y - yc;
+        xp->y = yc + tmp - xc;
+    }
 
-#define FACT  0.707106781187	/* sin45 */
+#define FACT  0.707106781187    /* sin45 */
     else if ( a == 45 )
-		for ( ; xp < xps; xp++ )
-		{
-			tmpx = xp->x - xc;
-			tmpy = xp->y - yc;
-			xp->x = FL_nint( ( tmpx + tmpy ) * FACT + xc );
-			xp->y = FL_nint( ( - tmpx + tmpy ) * FACT + yc );
-		}
+        for ( ; xp < xps; xp++ )
+        {
+            tmpx = xp->x - xc;
+            tmpy = xp->y - yc;
+            xp->x = FL_nint( ( tmpx + tmpy ) * FACT + xc );
+            xp->y = FL_nint( ( - tmpx + tmpy ) * FACT + yc );
+        }
     else if ( a == 135 )
-		for ( ; xp < xps; xp++ )
-		{
-			tmpx = xp->x - xc;
-			tmpy = xp->y - yc;
-			xp->x = FL_nint( ( - tmpx + tmpy ) * FACT + xc );
-			xp->y = FL_nint( ( - tmpx - tmpy ) * FACT + yc );
-		}
+        for ( ; xp < xps; xp++ )
+        {
+            tmpx = xp->x - xc;
+            tmpy = xp->y - yc;
+            xp->x = FL_nint( ( - tmpx + tmpy ) * FACT + xc );
+            xp->y = FL_nint( ( - tmpx - tmpy ) * FACT + yc );
+        }
     else if ( a == 225 )
-		for ( ; xp < xps; xp++ )
-		{
-			tmpx = xp->x - xc;
-			tmpy = xp->y - yc;
-			xp->x = FL_nint( ( - tmpx - tmpy ) * FACT + xc );
-			xp->y = FL_nint( ( tmpx - tmpy ) * FACT + yc );
-		}
+        for ( ; xp < xps; xp++ )
+        {
+            tmpx = xp->x - xc;
+            tmpy = xp->y - yc;
+            xp->x = FL_nint( ( - tmpx - tmpy ) * FACT + xc );
+            xp->y = FL_nint( ( tmpx - tmpy ) * FACT + yc );
+        }
     else if ( a == 315 )
-		for ( ; xp < xps; xp++ )
-		{
-			tmpx = xp->x - xc;
-			tmpy = xp->y - yc;
-			xp->x = FL_nint( ( tmpx - tmpy ) * FACT + xc );
-			xp->y = FL_nint( ( tmpx + tmpy ) * FACT + yc );
-		}
+        for ( ; xp < xps; xp++ )
+        {
+            tmpx = xp->x - xc;
+            tmpy = xp->y - yc;
+            xp->x = FL_nint( ( tmpx - tmpy ) * FACT + xc );
+            xp->y = FL_nint( ( tmpx + tmpy ) * FACT + yc );
+        }
     else
     {
-		double sinfact = sin( a * M_PI / 180.0 );
-		double cosfact = cos( a * M_PI / 180.0 );
+        double sinfact = sin( a * M_PI / 180.0 );
+        double cosfact = cos( a * M_PI / 180.0 );
 
-		for ( ; xp < xps; xp++ )
-		{
-			tmpx = xp->x - xc;
-			tmpy = xp->y - yc;
-			xp->x = FL_nint( xc + tmpx * cosfact + tmpy * sinfact );
-			xp->y = FL_nint( yc - tmpx * sinfact + tmpy * cosfact );
-		}
+        for ( ; xp < xps; xp++ )
+        {
+            tmpx = xp->x - xc;
+            tmpy = xp->y - yc;
+            xp->x = FL_nint( xc + tmpx * cosfact + tmpy * sinfact );
+            xp->y = FL_nint( yc - tmpx * sinfact + tmpy * cosfact );
+        }
     }
 }
 
@@ -328,18 +328,18 @@ rotate_it( FL_Coord xc,
 
 static void
 draw_returnarrow( FL_Coord x,
-				  FL_Coord y,
-				  FL_Coord w,
-				  FL_Coord h,
-				  int      angle  FL_UNUSED_ARG,
-				  FL_COLOR col )
+                  FL_Coord y,
+                  FL_Coord w,
+                  FL_Coord h,
+                  int      angle  FL_UNUSED_ARG,
+                  FL_COLOR col )
 {
     double wm = w * 0.5,
-		   hm = h * 0.5;
+           hm = h * 0.5;
     int xc = FL_nint( x + wm ),
-		yc = FL_nint( y + hm );
+        yc = FL_nint( y + hm );
     FL_POINT xpoint[ 8 ],
-		     *xp;
+             *xp;
 
     xp = xpoint;
 
@@ -369,18 +369,18 @@ draw_returnarrow( FL_Coord x,
 
 static void
 draw_arrow( FL_Coord x,
-			FL_Coord y,
-			FL_Coord w,
-			FL_Coord h,
-			int      angle,
-			FL_COLOR col )
+            FL_Coord y,
+            FL_Coord w,
+            FL_Coord h,
+            int      angle,
+            FL_COLOR col )
 {
     int xc,
-		yc,
-		dx,
-		dy;
+        yc,
+        dx,
+        dy;
     FL_POINT xpoint[ 5 ],
-		     *xp;
+             *xp;
     int d = 3 + ( w + h ) * 0.03;
 
     xc = x + w / 2;
@@ -390,7 +390,7 @@ draw_arrow( FL_Coord x,
     dx = 0.35 * w;
     dy = 0.08 * h;
     if ( dy < 1 )
-		dy = 1;
+        dy = 1;
 
     xp = xpoint;
     AddPoint( xp, xc + dx, yc - dy );
@@ -420,23 +420,23 @@ draw_arrow( FL_Coord x,
 
 static void
 draw_arrow1( FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int      angle,
-			 FL_COLOR col )
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      angle,
+             FL_COLOR col )
 {
     double wm = ( w - 4 ) * 0.5,
-		   hm = ( h - 4 ) * 0.5;
+           hm = ( h - 4 ) * 0.5;
     int xc = x + w / 2,
-		yc = y + h / 2;
+        yc = y + h / 2;
     FL_POINT xpoint[ 8 ],
-		     *xp;
+             *xp;
     double pl = 0.8,
-		   ps = 0.4;
+           ps = 0.4;
     int pshm = ps * hm + 0.1,
-		plwm = pl * wm + 0.1,
-		plhm = pl * hm + 0.1;
+        plwm = pl * wm + 0.1,
+        plhm = pl * hm + 0.1;
 
     xp = xpoint;
 
@@ -461,22 +461,22 @@ draw_arrow1( FL_Coord x,
 
 static void
 draw_arrow2( FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int      angle,
-			 FL_COLOR col )
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      angle,
+             FL_COLOR col )
 {
     int xc = x + w / 2,
-		yc = y + h / 2;
+        yc = y + h / 2;
     FL_POINT xpoint[ 4 ],
-		     *xp;
+             *xp;
     double wm = ( w - 4 ) * 0.5,
-		   hm = ( h - 4 ) * 0.5;
+           hm = ( h - 4 ) * 0.5;
     double pl = 0.8,
-		   ps = 0.3;
+           ps = 0.3;
     int pswm = ps * wm + 0.1,
-		plhm = pl * hm + 0.1;
+        plhm = pl * hm + 0.1;
 
     xp = xpoint;
 
@@ -497,22 +497,22 @@ draw_arrow2( FL_Coord x,
 
 static void
 draw_arrow3( FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int      angle,
-			 FL_COLOR col )
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      angle,
+             FL_COLOR col )
 {
     int xc = x + w / 2 - 1,
-		yc = y + h / 2;
+        yc = y + h / 2;
     FL_POINT xpoint[ 9 ],
-		     *xp;
+             *xp;
     double wm = ( w - 4 ) * 0.5,
-		   hm = ( h - 4 ) * 0.5;
+           hm = ( h - 4 ) * 0.5;
     double pl = 0.7,
-		   ps = 0.15;
+           ps = 0.15;
     int pswm = ps * wm + 0.1,
-		plhm = pl * hm + 0.1;
+        plhm = pl * hm + 0.1;
 
     xp = xpoint;
 
@@ -543,14 +543,14 @@ draw_arrow3( FL_Coord x,
 
 static void
 draw_arrow01( FL_Coord x,
-			  FL_Coord y,
-			  FL_Coord w,
-			  FL_Coord h,
-			  int      angle,
-			  FL_COLOR col )
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h,
+              int      angle,
+              FL_COLOR col )
 {
     if ( ( angle += 180 ) > 360 )
-		angle -= 360;
+        angle -= 360;
     draw_arrow1( x, y, w, h, angle, col );
 }
 
@@ -560,14 +560,14 @@ draw_arrow01( FL_Coord x,
 
 static void
 draw_arrow02( FL_Coord x,
-			  FL_Coord y,
-			  FL_Coord w,
-			  FL_Coord h,
-			  int      angle,
-			  FL_COLOR col )
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h,
+              int      angle,
+              FL_COLOR col )
 {
     if ( ( angle += 180 ) > 360 )
-		angle -= 360;
+        angle -= 360;
     draw_arrow2( x, y, w, h, angle, col );
 }
 
@@ -577,14 +577,14 @@ draw_arrow02( FL_Coord x,
 
 static void
 draw_arrow03( FL_Coord x,
-			  FL_Coord y,
-			  FL_Coord w,
-			  FL_Coord h,
-			  int      angle,
-			  FL_COLOR col )
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h,
+              int      angle,
+              FL_COLOR col )
 {
     if ( ( angle += 180 ) > 360 )
-		angle -= 360;
+        angle -= 360;
     draw_arrow3( x, y, w, h, angle, col );
 }
 
@@ -594,21 +594,21 @@ draw_arrow03( FL_Coord x,
 
 static void
 draw_circle( FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int      angle  FL_UNUSED_ARG,
-			 FL_COLOR col )
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      angle  FL_UNUSED_ARG,
+             FL_COLOR col )
 {
     FL_Coord xo = x + w / 2,
-		     yo = y + h / 2;
+             yo = y + h / 2;
     int rr,
-		s = 3 + 0.04 * ( w + h );
+        s = 3 + 0.04 * ( w + h );
 
     ShrinkBox( x, y, w, h, s );
 
     if ( ( rr = 0.5 * FL_min( w, h ) ) <= 0 )
-		rr = 1;
+        rr = 1;
 
     fl_circf( xo, yo, rr, col );
     fl_circ( xo, yo, rr, FL_BLACK );
@@ -620,21 +620,21 @@ draw_circle( FL_Coord x,
 
 static void
 draw_square( FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int      angle  FL_UNUSED_ARG,
-			 FL_COLOR col )
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      angle  FL_UNUSED_ARG,
+             FL_COLOR col )
 {
     int s = ( 0.09 * w ) + 3;
 
     ShrinkBox( x, y, w, h, s );
 
     if ( w <= 1 )
-		w = 2;
+        w = 2;
 
     if ( h <= 1 )
-		h = 2;
+        h = 2;
 
     fl_rectbound( x, y, w - 1, h - 1, col );
 }
@@ -645,22 +645,22 @@ draw_square( FL_Coord x,
 
 static void
 draw_plus( FL_Coord x,
-		   FL_Coord y,
-		   FL_Coord w,
-		   FL_Coord h,
-		   int      angle,
-		   FL_COLOR col )
+           FL_Coord y,
+           FL_Coord w,
+           FL_Coord h,
+           int      angle,
+           FL_COLOR col )
 {
     int wm = ( w - 4 ) * 0.5,
-		hm = ( h - 4 ) * 0.5;
+        hm = ( h - 4 ) * 0.5;
     int xc = x + 2 + wm,
-		yc = y + 2 + hm;
+        yc = y + 2 + hm;
     int plw = FL_nint( 0.8  * wm ),
-		psh = FL_nint( 0.15 * hm );
+        psh = FL_nint( 0.15 * hm );
     int psw = FL_nint( 0.15 * wm ),
-		plh = FL_nint( 0.8  * hm );
+        plh = FL_nint( 0.8  * hm );
     FL_POINT xpoint[ 13 ],
-		     *xp;
+             *xp;
 
     xp = xpoint;
 
@@ -689,21 +689,21 @@ draw_plus( FL_Coord x,
 
 static void
 draw_menu( FL_Coord x,
-		   FL_Coord y,
-		   FL_Coord w,
-		   FL_Coord h,
-		   int      angle  FL_UNUSED_ARG,
-		   FL_COLOR col )
+           FL_Coord y,
+           FL_Coord w,
+           FL_Coord h,
+           int      angle  FL_UNUSED_ARG,
+           FL_COLOR col )
 {
     FL_Coord wm = ( w - 8 ) * 0.5,
-		     hm = ( h - 8 ) * 0.5;
+             hm = ( h - 8 ) * 0.5;
     int xc = x + w / 2,
-		yc = y + h / 2;
+        yc = y + h / 2;
     int dx = FL_nint( 0.6 * wm ),
-		cur_x,
-		cur_y;
+        cur_x,
+        cur_y;
     int shadow = FL_max( 2, 0.1 * FL_min( w, h ) ),
-		t = FL_min( 3, 0.30 * hm );
+        t = FL_min( 3, 0.30 * hm );
 
     cur_x = xc - dx;
     fl_rectbound( cur_x, yc - hm + 1, 2 * dx, t, col );
@@ -719,16 +719,16 @@ draw_menu( FL_Coord x,
 
 static void
 draw_line( FL_Coord x,
-		   FL_Coord y,
-		   FL_Coord w,
-		   FL_Coord h,
-		   int      angle,
-		   FL_COLOR col )
+           FL_Coord y,
+           FL_Coord w,
+           FL_Coord h,
+           int      angle,
+           FL_COLOR col )
 {
     FL_POINT xpoint[ 3 ],
-		     *xp;
+             *xp;
     FL_Coord xc = x + w / 2,
-		     yc = y + h / 2;
+             yc = y + h / 2;
 
     ShrinkBox( x, y, w, h, 3     /* FL_abs( FL_BOUND_WIDTH ) */ );
 
@@ -748,48 +748,48 @@ draw_line( FL_Coord x,
 
 static void
 draw_ripplelines( FL_Coord x,
-				  FL_Coord y,
-				  FL_Coord w,
-				  FL_Coord h,
-				  int      angle,
-				  FL_COLOR col  FL_UNUSED_ARG )
+                  FL_Coord y,
+                  FL_Coord w,
+                  FL_Coord h,
+                  int      angle,
+                  FL_COLOR col  FL_UNUSED_ARG )
 {
     int ym = y + ( h + 1 ) / 2,
-		xm = x + ( w + 1 ) / 2;
+        xm = x + ( w + 1 ) / 2;
     int xs,
-		ys,
-		i,
-		mw = 3;	/* FL_abs( FL_BOUND_WIDTH ); */
+        ys,
+        i,
+        mw = 3; /* FL_abs( FL_BOUND_WIDTH ); */
 
     xs = xm - 5;
     ys = ym - 5;
 
     if ( angle == 0 || angle == 180 )
-		for ( i = 0; i < 3; i++ )
-		{
-			fl_line( x + mw, ys, x + w - 1 - mw, ys, FL_LEFT_BCOL );
-			ys += 1;
-			fl_line( x + mw, ys, x + w - 1 - mw, ys, FL_RIGHT_BCOL );
-			ys += 3;
-		}
+        for ( i = 0; i < 3; i++ )
+        {
+            fl_line( x + mw, ys, x + w - 1 - mw, ys, FL_LEFT_BCOL );
+            ys += 1;
+            fl_line( x + mw, ys, x + w - 1 - mw, ys, FL_RIGHT_BCOL );
+            ys += 3;
+        }
     else if ( angle == 90 || angle == 270 )
     {
-		int e;
+        int e;
 
-		y += ( h - w ) / 2;
-		swapit( FL_Coord, w, h );
+        y += ( h - w ) / 2;
+        swapit( FL_Coord, w, h );
 
-		e = h < 15;
-		for ( i = 0; i < 3; i++ )
-		{
-			fl_line( xs, y + mw - e, xs, y + h - 1 - mw + e, FL_LEFT_BCOL );
-			xs += 1;
-			fl_line( xs, y + mw - e, xs, y + h - 1 - mw + e, FL_RIGHT_BCOL );
-			xs += 3;
-		}
+        e = h < 15;
+        for ( i = 0; i < 3; i++ )
+        {
+            fl_line( xs, y + mw - e, xs, y + h - 1 - mw + e, FL_LEFT_BCOL );
+            xs += 1;
+            fl_line( xs, y + mw - e, xs, y + h - 1 - mw + e, FL_RIGHT_BCOL );
+            xs += 3;
+        }
     }
     else
-		fprintf( stderr, "RippleLine: unsupported angle %d\n", angle );
+        fprintf( stderr, "RippleLine: unsupported angle %d\n", angle );
 }
 
 
@@ -799,14 +799,14 @@ draw_ripplelines( FL_Coord x,
 
 static void
 draw_dnline( FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int      angle,
-			 FL_COLOR col  FL_UNUSED_ARG )
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      angle,
+             FL_COLOR col  FL_UNUSED_ARG )
 {
     FL_POINT xpnt[ 3 ],
-		     *xp;
+             *xp;
     FL_Coord yc = y + h / 2;
 
     ShrinkBox( x, y, w, h, 3 );
@@ -819,7 +819,7 @@ draw_dnline( FL_Coord x,
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
 
     fl_line( xpnt[ 0 ].x, xpnt[ 0 ].y, xpnt[ 1 ].x, xpnt[ 1 ].y,
-			 FL_RIGHT_BCOL );
+             FL_RIGHT_BCOL );
 
     xp = xpnt;
 
@@ -837,14 +837,14 @@ draw_dnline( FL_Coord x,
 
 static void
 draw_upline( FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int      angle,
-			 FL_COLOR col  FL_UNUSED_ARG )
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      angle,
+             FL_COLOR col  FL_UNUSED_ARG )
 {
     FL_POINT xpnt[ 3 ],
-		     *xp;
+             *xp;
     FL_Coord yc = y + h / 2;
 
     ShrinkBox( x, y, w, h, 3 );
@@ -860,13 +860,13 @@ draw_upline( FL_Coord x,
 
     xp = xpnt;
 
-	AddPoint( xp, x, yc + 1 );
+    AddPoint( xp, x, yc + 1 );
     AddPoint( xp, x + w - 1, yc + 1 );
 
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
 
     fl_line( xpnt[ 0 ].x, xpnt[ 0 ].y, xpnt[ 1 ].x, xpnt[ 1 ].y,
-			 FL_RIGHT_BCOL );
+             FL_RIGHT_BCOL );
 }
 
 
@@ -875,70 +875,70 @@ draw_upline( FL_Coord x,
 
 static void
 draw_uparrow( FL_Coord x,
-			  FL_Coord y,
-			  FL_Coord w,
-			  FL_Coord h,
-			  int      a,
-			  FL_COLOR col  FL_UNUSED_ARG )
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h,
+              int      a,
+              FL_COLOR col  FL_UNUSED_ARG )
 {
     FL_Coord xc = x + ( w + 1 ) / 2,
-		     dx;
+             dx;
     FL_Coord yc = y + ( h + 1 ) / 2,
-		     dy;
+             dy;
     int d = 3 + ( w + h ) * 0.06;
 
     ShrinkBox( x, y, w, h, d );
 
     if ( a == 90 )
     {
-		/* undo driver's transformation */
+        /* undo driver's transformation */
 
-		swapit( FL_Coord, w, h );
-		x -= ( w - h ) / 2;
-		y -= ( h - w ) / 2;
-		dx = w / 2;
-		dy = h / 2;
+        swapit( FL_Coord, w, h );
+        x -= ( w - h ) / 2;
+        y -= ( h - w ) / 2;
+        dx = w / 2;
+        dy = h / 2;
 
-		/* correct for human perception error */
+        /* correct for human perception error */
 
-		y++;
-		h -= 2;
+        y++;
+        h -= 2;
 
-		fl_line( xc, yc - dy, xc - dx, yc + dy, FL_LEFT_BCOL );
-		fl_line( xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
-		fl_line( xc - dx, yc + dy, xc + dx, yc + dy, FL_BOTTOM_BCOL );
+        fl_line( xc, yc - dy, xc - dx, yc + dy, FL_LEFT_BCOL );
+        fl_line( xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc - dx, yc + dy, xc + dx, yc + dy, FL_BOTTOM_BCOL );
 
     }
     else if ( a == 270 )
     {
-		swapit( FL_Coord, w, h );
-		x -= ( w - h ) / 2;
-		y -= ( h - w ) / 2;
-		dx = w / 2;
-		dy = h / 2;
+        swapit( FL_Coord, w, h );
+        x -= ( w - h ) / 2;
+        y -= ( h - w ) / 2;
+        dx = w / 2;
+        dy = h / 2;
 
-		fl_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL );
-		fl_line( xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL );
-		fl_line( xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL );
+        fl_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL );
+        fl_line( xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL );
     }
     else if ( a == 180 )
     {
-		dy = h / 2;
-		dx = w / 2;
+        dy = h / 2;
+        dx = w / 2;
 
-		fl_line( xc - dx, yc, xc + dx, yc - dy, FL_LEFT_BCOL );
-		fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
-		fl_line( xc + dx, yc + dy, xc - dx, yc, FL_BOTTOM_BCOL );
+        fl_line( xc - dx, yc, xc + dx, yc - dy, FL_LEFT_BCOL );
+        fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc + dx, yc + dy, xc - dx, yc, FL_BOTTOM_BCOL );
     }
     else
     {
-		dx = w / 2;
-		dy = h / 2;
-		fl_line( xc - dx, yc - dy, xc + dx, yc,
-				 fli_dithered( fl_vmode ) ? FL_BLACK : FL_TOP_BCOL );
-		fl_line( xc - dx, yc + dy, xc + dx, yc, FL_RIGHT_BCOL );
-		fl_line( xc - dx, yc - dy, xc - dx, yc + dy,
-				 fli_dithered( fl_vmode ) ? FL_BLACK : FL_LEFT_BCOL );
+        dx = w / 2;
+        dy = h / 2;
+        fl_line( xc - dx, yc - dy, xc + dx, yc,
+                 fli_dithered( fl_vmode ) ? FL_BLACK : FL_TOP_BCOL );
+        fl_line( xc - dx, yc + dy, xc + dx, yc, FL_RIGHT_BCOL );
+        fl_line( xc - dx, yc - dy, xc - dx, yc + dy,
+                 fli_dithered( fl_vmode ) ? FL_BLACK : FL_LEFT_BCOL );
     }
 }
 
@@ -948,66 +948,66 @@ draw_uparrow( FL_Coord x,
 
 static void
 draw_dnarrow( FL_Coord x,
-			  FL_Coord y,
-			  FL_Coord w,
-			  FL_Coord h,
-			  int      a,
-			  FL_COLOR col  FL_UNUSED_ARG )
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h,
+              int      a,
+              FL_COLOR col  FL_UNUSED_ARG )
 {
     FL_Coord xc = x + ( w + 1 ) / 2,
-		     dx;
+             dx;
     FL_Coord yc = y + ( h + 1 ) / 2,
-		     dy;
+             dy;
     int d = 3 + ( w + h ) * 0.06;
 
     ShrinkBox( x, y, w, h, d );
 
     if ( a == 90 )
     {
-		/* undo driver's transformation */
+        /* undo driver's transformation */
 
-		swapit( FL_Coord, w, h );
-		x -= ( w - h ) / 2;
-		y -= ( h - w ) / 2;
-		dx = w / 2;
-		dy = h / 2;
+        swapit( FL_Coord, w, h );
+        x -= ( w - h ) / 2;
+        y -= ( h - w ) / 2;
+        dx = w / 2;
+        dy = h / 2;
 
-		/* correct for human perception error */
+        /* correct for human perception error */
 
-		y++;
-		h -= 2;
+        y++;
+        h -= 2;
 
-		fl_line( xc, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
-		fl_line( xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
-		fl_line( xc - dx, yc + dy, xc + dx, yc + dy, FL_TOP_BCOL );
+        fl_line( xc, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
+        fl_line( xc - dx, yc + dy, xc + dx, yc + dy, FL_TOP_BCOL );
     }
     else if ( a == 270 )
     {
-		swapit( FL_Coord, w, h );
-		x -= ( w - h ) / 2;
-		y -= ( h - w ) / 2;
-		dx = w / 2;
-		dy = h / 2;
+        swapit( FL_Coord, w, h );
+        x -= ( w - h ) / 2;
+        y -= ( h - w ) / 2;
+        dx = w / 2;
+        dy = h / 2;
 
-		fl_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL );
-		fl_line( xc + dx, yc - dy, xc, yc + dy, FL_LEFT_BCOL );
-		fl_line( xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
+        fl_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL );
+        fl_line( xc + dx, yc - dy, xc, yc + dy, FL_LEFT_BCOL );
+        fl_line( xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
     }
     else if ( a == 180 )
     {
-		dy = h / 2;
-		dx = w / 2;
-		fl_line( xc - dx, yc, xc + dx, yc - dy, FL_RIGHT_BCOL );
-		fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
-		fl_line( xc + dx, yc + dy, xc - dx, yc, FL_BOTTOM_BCOL );
+        dy = h / 2;
+        dx = w / 2;
+        fl_line( xc - dx, yc, xc + dx, yc - dy, FL_RIGHT_BCOL );
+        fl_line( xc + dx, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
+        fl_line( xc + dx, yc + dy, xc - dx, yc, FL_BOTTOM_BCOL );
     }
     else
     {
-		dx = w / 2;
-		dy = h / 2;
-		fl_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
-		fl_line( xc - dx, yc - dy, xc + dx, yc, FL_RIGHT_BCOL );
-		fl_line( xc - dx, yc + dy, xc + dx, yc, FL_TOP_BCOL );
+        dx = w / 2;
+        dy = h / 2;
+        fl_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
+        fl_line( xc - dx, yc - dy, xc + dx, yc, FL_RIGHT_BCOL );
+        fl_line( xc - dx, yc + dy, xc + dx, yc, FL_TOP_BCOL );
     }
 }
 
@@ -1018,22 +1018,22 @@ draw_dnarrow( FL_Coord x,
 
 static void
 draw_doublearrow( FL_Coord x,
-				  FL_Coord y,
-				  FL_Coord w,
-				  FL_Coord h,
-				  int      angle,
-				  FL_COLOR col )
+                  FL_Coord y,
+                  FL_Coord w,
+                  FL_Coord h,
+                  int      angle,
+                  FL_COLOR col )
 {
     int xc = x + w / 2,
-		yc = y + h / 2;
+        yc = y + h / 2;
     double wm = ( w - 4 ) * 0.5,
-		   hm = ( h - 4 ) * 0.5;
+           hm = ( h - 4 ) * 0.5;
     int dx1 = 0.5 * wm + 0.2,
-		dx2 = 0.9 * wm + 0.2;
+        dx2 = 0.9 * wm + 0.2;
     int dy1 = 0.3 * hm + 0.2,
-		dy2 = 0.7 * hm + 0.2;
+        dy2 = 0.7 * hm + 0.2;
     FL_POINT xpoint[ 11 ],
-		     *xp;
+             *xp;
 
     xp = xpoint;
 
@@ -1062,23 +1062,23 @@ draw_doublearrow( FL_Coord x,
 
 static void
 draw_arrowbar( FL_Coord x,
-			   FL_Coord y,
-			   FL_Coord w,
-			   FL_Coord h,
-			   int      angle,
-			   FL_COLOR col )
+               FL_Coord y,
+               FL_Coord w,
+               FL_Coord h,
+               int      angle,
+               FL_COLOR col )
 {
     double wm = ( w - 6 ) * 0.5,
-		   hm = ( h - 6 ) * 0.5;
+           hm = ( h - 6 ) * 0.5;
     int xc = x + w / 2,
-		yc = y + h / 2;
+        yc = y + h / 2;
     FL_POINT xpoint[ 8 ],
-		     *xp;
+             *xp;
     double pl = 0.8,
-		   ps = 0.4;
+           ps = 0.4;
     int pshm = ps * hm + 0.1,
-		plwm = pl * wm + 0.1,
-		plhm = pl * hm + 0.1;
+        plwm = pl * wm + 0.1,
+        plhm = pl * hm + 0.1;
 
     xp = xpoint;
 
@@ -1119,14 +1119,14 @@ draw_arrowbar( FL_Coord x,
 
 static void
 draw_arrowbar0( FL_Coord x,
-				FL_Coord y,
-				FL_Coord w,
-				FL_Coord h,
-				int      angle,
-				FL_COLOR col )
+                FL_Coord y,
+                FL_Coord w,
+                FL_Coord h,
+                int      angle,
+                FL_COLOR col )
 {
     if ( ( angle += 180 ) >= 360 )
-		angle -= 360;
+        angle -= 360;
     draw_arrowbar( x, y, w, h, angle, col );
 }
 
@@ -1137,22 +1137,22 @@ draw_arrowbar0( FL_Coord x,
 
 static void
 draw_arrowheadbar( FL_Coord x,
-				   FL_Coord y,
-				   FL_Coord w,
-				   FL_Coord h,
-				   int      angle,
-				   FL_COLOR col )
+                   FL_Coord y,
+                   FL_Coord w,
+                   FL_Coord h,
+                   int      angle,
+                   FL_COLOR col )
 {
     int xc = x + w / 2,
-		yc = y + h / 2;
+        yc = y + h / 2;
     FL_POINT xpoint[ 5 ],
-		     *xp;
+             *xp;
     double wm = ( w - 6 ) * 0.5,
-		   hm = ( h - 6 ) * 0.5;
+           hm = ( h - 6 ) * 0.5;
     double pl = 0.8,
-		   ps = 0.45;
+           ps = 0.45;
     int pswm = ps * wm + 0.1,
-		plhm = pl * hm + 0.1;
+        plhm = pl * hm + 0.1;
 
     xp = xpoint;
 
@@ -1184,14 +1184,14 @@ draw_arrowheadbar( FL_Coord x,
 
 static void
 draw_arrowheadbar0( FL_Coord x,
-					FL_Coord y,
-					FL_Coord w,
-					FL_Coord h,
-					int      angle,
-					FL_COLOR col )
+                    FL_Coord y,
+                    FL_Coord w,
+                    FL_Coord h,
+                    int      angle,
+                    FL_COLOR col )
 {
     if ( ( angle += 180 ) >= 360 )
-		angle -= 360;
+        angle -= 360;
     draw_arrowheadbar( x, y, w, h, angle, col );
 }
 
@@ -1201,22 +1201,22 @@ draw_arrowheadbar0( FL_Coord x,
 
 static void
 draw_bararrowhead( FL_Coord x,
-				   FL_Coord y,
-				   FL_Coord w,
-				   FL_Coord h,
-				   int      angle,
-				   FL_COLOR col )
+                   FL_Coord y,
+                   FL_Coord w,
+                   FL_Coord h,
+                   int      angle,
+                   FL_COLOR col )
 {
     int xc = x + ( w + 1 ) / 2,
-		yc = y + ( h + 1 ) / 2;
+        yc = y + ( h + 1 ) / 2;
     int dx,
-		dy,
-		dbar,
-		mar,
-		xl;
+        dy,
+        dbar,
+        mar,
+        xl;
     int d = 3 + ( w + h ) * 0.0;
     FL_POINT point[ 5 ],
-		     *p;
+             *p;
 
     ShrinkBox( x, y, w, h, d );
     dx = w / 2;
@@ -1256,14 +1256,14 @@ draw_bararrowhead( FL_Coord x,
 
 static void
 draw_bararrowhead0( FL_Coord x,
-					FL_Coord y,
-					FL_Coord w,
-					FL_Coord h,
-					int      angle,
-					FL_COLOR col )
+                    FL_Coord y,
+                    FL_Coord w,
+                    FL_Coord h,
+                    int      angle,
+                    FL_COLOR col )
 {
     if ( ( angle += 180 ) >= 360 )
-		angle -= 360;
+        angle -= 360;
     draw_bararrowhead( x, y, w, h, angle, col );
 }
 
@@ -1274,41 +1274,41 @@ draw_bararrowhead0( FL_Coord x,
 void
 fli_init_symbols( void )
 {
-	if ( symbols )
-		return;
+    if ( symbols )
+        return;
 
-	fl_add_symbol( "",            draw_arrow1,        1 );
-	fl_add_symbol( "->",          draw_arrow1,        1 );
-	fl_add_symbol( ">",           draw_arrow2,        1 );
-	fl_add_symbol( ">>",          draw_arrow3,        1 );
-	fl_add_symbol( "<-",          draw_arrow01,       1 );
-	fl_add_symbol( "<",           draw_arrow02,       1 );
-	fl_add_symbol( "<<",          draw_arrow03,       1 );
-	fl_add_symbol( "returnarrow", draw_returnarrow,   1 );
-	fl_add_symbol( "circle",      draw_circle,        1 );
-	fl_add_symbol( "square",      draw_square,        1 );
-	fl_add_symbol( "plus",        draw_plus,          1 );
-	fl_add_symbol( "menu",        draw_menu,          1 );
-	fl_add_symbol( "line",        draw_line,          1 );
-	fl_add_symbol( "=",           draw_ripplelines,   1 );
-	fl_add_symbol( "DnLine",      draw_dnline,        1 );
-	fl_add_symbol( "UpLine",      draw_upline,        1 );
-	fl_add_symbol( "UpArrow",     draw_uparrow,       1 );
-	fl_add_symbol( "DnArrow",     draw_dnarrow,       1 );
-	fl_add_symbol( "-->",         draw_arrow,         1 );
-	fl_add_symbol( "<->",         draw_doublearrow,   1 );
-	fl_add_symbol( "->|",         draw_arrowbar,      1 );
-	fl_add_symbol( "|<-",         draw_arrowbar0,     1 );
-	fl_add_symbol( ">|",          draw_arrowheadbar,  1 );
-	fl_add_symbol( "|<",          draw_arrowheadbar0, 1 );
-	fl_add_symbol( "|>",          draw_bararrowhead,  1 );
-	fl_add_symbol( "<|",          draw_bararrowhead0, 1 );
+    fl_add_symbol( "",            draw_arrow1,        1 );
+    fl_add_symbol( "->",          draw_arrow1,        1 );
+    fl_add_symbol( ">",           draw_arrow2,        1 );
+    fl_add_symbol( ">>",          draw_arrow3,        1 );
+    fl_add_symbol( "<-",          draw_arrow01,       1 );
+    fl_add_symbol( "<",           draw_arrow02,       1 );
+    fl_add_symbol( "<<",          draw_arrow03,       1 );
+    fl_add_symbol( "returnarrow", draw_returnarrow,   1 );
+    fl_add_symbol( "circle",      draw_circle,        1 );
+    fl_add_symbol( "square",      draw_square,        1 );
+    fl_add_symbol( "plus",        draw_plus,          1 );
+    fl_add_symbol( "menu",        draw_menu,          1 );
+    fl_add_symbol( "line",        draw_line,          1 );
+    fl_add_symbol( "=",           draw_ripplelines,   1 );
+    fl_add_symbol( "DnLine",      draw_dnline,        1 );
+    fl_add_symbol( "UpLine",      draw_upline,        1 );
+    fl_add_symbol( "UpArrow",     draw_uparrow,       1 );
+    fl_add_symbol( "DnArrow",     draw_dnarrow,       1 );
+    fl_add_symbol( "-->",         draw_arrow,         1 );
+    fl_add_symbol( "<->",         draw_doublearrow,   1 );
+    fl_add_symbol( "->|",         draw_arrowbar,      1 );
+    fl_add_symbol( "|<-",         draw_arrowbar0,     1 );
+    fl_add_symbol( ">|",          draw_arrowheadbar,  1 );
+    fl_add_symbol( "|<",          draw_arrowheadbar0, 1 );
+    fl_add_symbol( "|>",          draw_bararrowhead,  1 );
+    fl_add_symbol( "<|",          draw_bararrowhead0, 1 );
 
-	/* aliases */
+    /* aliases */
 
-	fl_add_symbol( "arrow",       draw_arrow,         1 );
-	fl_add_symbol( "RippleLines", draw_ripplelines,   1 );
-	fl_add_symbol( "+",           draw_plus,          1 );
+    fl_add_symbol( "arrow",       draw_arrow,         1 );
+    fl_add_symbol( "RippleLines", draw_ripplelines,   1 );
+    fl_add_symbol( "+",           draw_plus,          1 );
 }
 
 
@@ -1318,11 +1318,19 @@ fli_init_symbols( void )
 void
 fli_release_symbols( void )
 {
-	size_t i;
+    size_t i;
 
-	for ( i = 0; i < nsymbols; i++ )
-		fl_safe_free( symbols[ i ].name );
-		
-	fl_safe_free( symbols );
-	nsymbols = 0;
+    for ( i = 0; i < nsymbols; i++ )
+        fl_safe_free( symbols[ i ].name );
+        
+    fl_safe_free( symbols );
+    nsymbols = 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

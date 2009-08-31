@@ -39,7 +39,7 @@
 #include "spec/freeobj_spec.h"
 
 static char *get_free_handle( FL_OBJECT  * ob,
-							  const char * name );
+                              const char * name );
 
 static char ori_handle_name[ 128 ];
 
@@ -58,7 +58,7 @@ void *
 get_freeobj_spec_fdform( void )
 {
     if ( ! fo_attrib )
-		fo_attrib = create_form_freeobjattrib( );
+        fo_attrib = create_form_freeobjattrib( );
     return fo_attrib;
 }
 
@@ -68,10 +68,10 @@ get_freeobj_spec_fdform( void )
 
 void
 freeobj_spec_restore( FL_OBJECT * ob,
-					  long        data  FL_UNUSED_ARG )
+                      long        data  FL_UNUSED_ARG )
 {
     if ( ob->c_vdata )
-		fl_free( ob->c_vdata );
+        fl_free( ob->c_vdata );
     ob->c_vdata = fl_strdup( ori_handle_name );
 
 }
@@ -97,7 +97,7 @@ set_freeobj_attrib( FL_OBJECT * ob )
 
     *ori_handle_name = '\0';
     if ( ob->c_vdata )
-		strcpy( ori_handle_name, ob->c_vdata );
+        strcpy( ori_handle_name, ob->c_vdata );
 
     show_spec( freeobj_spec );
     return 0;
@@ -109,22 +109,22 @@ set_freeobj_attrib( FL_OBJECT * ob )
 
 int
 noop_handle( FL_OBJECT * ob,
-			 int         e,
-			 FL_Coord    mx   FL_UNUSED_ARG,
-			 FL_Coord    my   FL_UNUSED_ARG,
-			 int         k    FL_UNUSED_ARG,
-			 void      * xev  FL_UNUSED_ARG )
+             int         e,
+             FL_Coord    mx   FL_UNUSED_ARG,
+             FL_Coord    my   FL_UNUSED_ARG,
+             int         k    FL_UNUSED_ARG,
+             void      * xev  FL_UNUSED_ARG )
 {
     if ( e == FL_DRAW )
     {
-		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
-		return 0;
+        fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+        return 0;
     }
 
     if ( ob->type == FL_INACTIVE_FREE )
-		return 0;
+        return 0;
     if ( ob->type == FL_INPUT_FREE )
-		return e == FL_KEYBOARD;
+        return e == FL_KEYBOARD;
     return 1;
 }
 
@@ -139,7 +139,7 @@ create_a_freeobj( FL_OBJECT * ob )
     FL_OBJECT *defobj = 0;
 
     defobj = fl_create_free( ob->type, ob->x, ob->y, ob->w, ob->h,
-							 ob->label, noop_handle );
+                             ob->label, noop_handle );
     return defobj;
 }
 #endif
@@ -151,7 +151,7 @@ create_a_freeobj( FL_OBJECT * ob )
 
 void
 emit_freeobj_code( FILE      * fp  FL_UNUSED_ARG,
-				   FL_OBJECT * ob  FL_UNUSED_ARG )
+                   FL_OBJECT * ob  FL_UNUSED_ARG )
 {
 }
 
@@ -161,10 +161,10 @@ emit_freeobj_code( FILE      * fp  FL_UNUSED_ARG,
 
 void
 save_freeobj_attrib( FILE      * fp,
-					 FL_OBJECT * ob )
+                     FL_OBJECT * ob )
 {
     if ( ob->c_vdata )
-		fprintf( fp, "    handler: %s\n", ( char * ) ob->c_vdata );
+        fprintf( fp, "    handler: %s\n", ( char * ) ob->c_vdata );
 }
 
 
@@ -173,7 +173,7 @@ save_freeobj_attrib( FILE      * fp,
 
 void
 handler_name_change_cb( FL_OBJECT * ob,
-						long        data  FL_UNUSED_ARG )
+                        long        data  FL_UNUSED_ARG )
 {
     edited->c_vdata = fl_strdup( fl_get_input( ob ) );
 }
@@ -188,7 +188,7 @@ handler_name_change_cb( FL_OBJECT * ob,
 
 static char *
 get_free_handle( FL_OBJECT  * ob,
-				 const char * name )
+                 const char * name )
 {
     static int n;
     static char buf[ 1024 ];
@@ -196,24 +196,24 @@ get_free_handle( FL_OBJECT  * ob,
     int i, k;
 
     if ( ob->c_vdata )
-		strcpy( buf, ob->c_vdata );
+        strcpy( buf, ob->c_vdata );
     else if ( name && *name )
-		sprintf( buf, "freeobj_%s_handle", name );
+        sprintf( buf, "freeobj_%s_handle", name );
     else if ( *ob->label )
-		sprintf( buf, "freeobj_%s_handle", ob->label );
+        sprintf( buf, "freeobj_%s_handle", ob->label );
     else
     {
-		for ( k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++ )
-			if ( freeobj[ i ] == ob )
-				k = i;
+        for ( k = -1, i = 0; i < MAXFREEOBJ && k < 0; i++ )
+            if ( freeobj[ i ] == ob )
+                k = i;
 
-		if ( k < 0 )
-		{
-			k = ++n;
-			freeobj[ k ] = ob;
-		}
+        if ( k < 0 )
+        {
+            k = ++n;
+            freeobj[ k ] = ob;
+        }
 
-		sprintf( buf, "freeobj%d_handle", k );
+        sprintf( buf, "freeobj%d_handle", k );
     }
 
     return buf;
@@ -221,3 +221,11 @@ get_free_handle( FL_OBJECT  * ob,
 
 
 #include "spec/freeobj_spec.c"
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

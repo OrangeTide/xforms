@@ -32,8 +32,8 @@
 
 #include "fd_main.h"
 #include "flinternal.h"
-#include "fd/ui_attrib.h"		/* from  directory fd */
-#include "fd/ui_theforms.h"	/* from  directory fd */
+#include "fd/ui_attrib.h"       /* from  directory fd */
+#include "fd/ui_theforms.h" /* from  directory fd */
 
 FD_control *fd_control;
 FD_test *fd_test;
@@ -65,15 +65,15 @@ create_the_forms( void )
 
     if ( init )
     {
-		fprintf( stderr, "fd forms already initialized\n" );
-		return;
+        fprintf( stderr, "fd forms already initialized\n" );
+        return;
     }
 
     init = 1;
 
     fd_control = create_form_control( );
-    init_controlform( );		/* GUI  */
-    control_init( fd_control );	/* menu */
+    init_controlform( );        /* GUI  */
+    control_init( fd_control ); /* menu */
 
     fd_attrib = create_form_attrib( );
     fd_generic_attrib = create_form_generic_attrib( );
@@ -102,7 +102,7 @@ create_the_forms( void )
 
 void
 modify_attrib_basic_color( FL_COLOR col1,
-						   FL_COLOR col2 )
+                           FL_COLOR col2 )
 {
     fl_set_object_color( fd_generic_attrib->text[ 0 ], col1, col2 );
     fl_set_object_color( fd_generic_attrib->text[ 1 ], col1, col2 );
@@ -117,7 +117,7 @@ modify_attrib_basic_color( FL_COLOR col1,
 
 void
 clearlog_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			 long        data  FL_UNUSED_ARG )
+             long        data  FL_UNUSED_ARG )
 {
     fl_clear_browser( fd_test->browser );
 }
@@ -149,15 +149,15 @@ init_controlform( void )
 
     if ( fli_cntl.buttonFontSize > FL_DEFAULT_SIZE )
     {
-		fd_align_fontsize = FL_SMALL_SIZE;
-		fd_type_fontsize = FL_SMALL_SIZE;
+        fd_align_fontsize = FL_SMALL_SIZE;
+        fd_type_fontsize = FL_SMALL_SIZE;
     }
 
     if ( fd_control->objectbrowser->lsize > FL_NORMAL_SIZE )
     {
-		fl_set_object_lsize( fd_control->objectbrowser, FL_NORMAL_SIZE );
-		fl_set_object_lsize( fd_control->formbrowser, FL_NORMAL_SIZE );
-		fl_set_object_lsize( fd_control->groupbrowser, FL_NORMAL_SIZE );
+        fl_set_object_lsize( fd_control->objectbrowser, FL_NORMAL_SIZE );
+        fl_set_object_lsize( fd_control->formbrowser, FL_NORMAL_SIZE );
+        fl_set_object_lsize( fd_control->groupbrowser, FL_NORMAL_SIZE );
     }
 
     fl_fit_object_label( fd_control->renameform, 1, 0 );
@@ -175,7 +175,7 @@ init_attribform( void )
     int a = 1;
 
     if ( fl_get_visual_depth( ) <= 2 )
-		modify_attrib_basic_color( FL_WHITE, FL_WHITE );
+        modify_attrib_basic_color( FL_WHITE, FL_WHITE );
 
     fl_adjust_form_size( fd_attrib->attrib );
     fl_fit_object_label( fd_attrib->readyobj, 12, 1 );
@@ -188,10 +188,10 @@ init_attribform( void )
     fl_set_tabfolder_autofit( fd_attrib->attrib_folder, FL_ENLARGE_ONLY );
 
     fl_addto_tabfolder( fd_attrib->attrib_folder, " Generic ",
-						fd_generic_attrib->generic_attrib );
+                        fd_generic_attrib->generic_attrib );
 
     fl_addto_tabfolder( fd_attrib->attrib_folder, "  Spec   ",
-						fd_nullattrib->nullattrib );
+                        fd_nullattrib->nullattrib );
 }
 
 
@@ -208,3 +208,11 @@ init_testform( void )
 
 #include "fd/ui_attrib.c"
 #include "fd/ui_theforms.c"
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

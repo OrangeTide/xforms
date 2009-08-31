@@ -50,43 +50,43 @@ void fl_select_octree_quantizer( void )
 
 int
 fl_octree_quantize_rgb( unsigned char  ** red,
-						unsigned char  ** green,
-						unsigned char  ** blue,
-						int               w,
-						int               h,
-						int               max_color,
-						unsigned short ** ci,
-						int             * actual_color,
-						int             * red_lut,
-						int             * green_lut,
-						int             * blue_lut,
-						FL_IMAGE        * im )
+                        unsigned char  ** green,
+                        unsigned char  ** blue,
+                        int               w,
+                        int               h,
+                        int               max_color,
+                        unsigned short ** ci,
+                        int             * actual_color,
+                        int             * red_lut,
+                        int             * green_lut,
+                        int             * blue_lut,
+                        FL_IMAGE        * im )
 {
     int i,
-		j;
+        j;
     unsigned int *rlut,
-		         *glut,
-		         *blut;
+                 *glut,
+                 *blut;
     QuantizeDatabaseP database = QuantizeInitialize( max_color,
-													 QuantizeStyleLeast );
+                                                     QuantizeStyleLeast );
     if ( im )
     {
-		im->completed = 0;
-		im->visual_cue( im, "Starting OctreeQuantizer ..." );
+        im->completed = 0;
+        im->visual_cue( im, "Starting OctreeQuantizer ..." );
     }
 
     for ( i = 0; i < h; i++ )
-		for ( j = 0; j < w; j++ )
-			QuantizeColor( database,
-						   red[ i ][ j ], green[ i ][ j ], blue[ i ][ j ] );
+        for ( j = 0; j < w; j++ )
+            QuantizeColor( database,
+                           red[ i ][ j ], green[ i ][ j ], blue[ i ][ j ] );
 
     QuantizeCreateLUT( database, actual_color, &rlut, &glut, &blut);
 
     for ( i = 0; i < *actual_color; i++ )
     {
-		red_lut[   i ] = rlut[ i ];
-		green_lut[ i ] = glut[ i ];
-		blue_lut[  i ] = blut[ i ];
+        red_lut[   i ] = rlut[ i ];
+        green_lut[ i ] = glut[ i ];
+        blue_lut[  i ] = blut[ i ];
     }
 
     free( rlut );
@@ -94,17 +94,17 @@ fl_octree_quantize_rgb( unsigned char  ** red,
     free( blut );
 
     for ( i = 0; i < h; i++ )
-		for ( j = 0; j < w; j++ )
-			ci[ i ][ j ] = QuantizeFindIndex( database, red[ i ][ j ],
-											  green[ i ][ j ], blue[ i ][ j ] );
+        for ( j = 0; j < w; j++ )
+            ci[ i ][ j ] = QuantizeFindIndex( database, red[ i ][ j ],
+                                              green[ i ][ j ], blue[ i ][ j ] );
 
 
     QuantizeDatabaseFree( database );
 
     if ( im )
     {
-		im->completed = im->total;
-		im->visual_cue( im, "Done OctreeQuantizer" );
+        im->completed = im->total;
+        im->visual_cue( im, "Done OctreeQuantizer" );
     }
 
     return 0;
@@ -116,40 +116,40 @@ fl_octree_quantize_rgb( unsigned char  ** red,
 
 int
 fl_octree_quantize_packed( unsigned int   ** packed,
-						   int               w,
-						   int               h,
-						   int               max_color,
-						   unsigned short ** ci,
-						   int             * actual_color,
-						   int             * red_lut,
-						   int             * green_lut,
-						   int             * blue_lut,
-						   FL_IMAGE        * im )
+                           int               w,
+                           int               h,
+                           int               max_color,
+                           unsigned short ** ci,
+                           int             * actual_color,
+                           int             * red_lut,
+                           int             * green_lut,
+                           int             * blue_lut,
+                           FL_IMAGE        * im )
 {
     int i,
-		n = h * w;
+        n = h * w;
     unsigned int *p;
     unsigned short *ind;
     unsigned int *rlut,
-		         *glut,
-		         *blut;
+                 *glut,
+                 *blut;
     QuantizeDatabaseP database = QuantizeInitialize( max_color,
-													 QuantizeStyleLeast );
+                                                     QuantizeStyleLeast );
     if ( im )
     {
-		im->completed = 0;
-		im->visual_cue( im, "Starting OctreeQuantizer ..." );
+        im->completed = 0;
+        im->visual_cue( im, "Starting OctreeQuantizer ..." );
     }
 
     for ( p = packed[ 0 ], i = 0; i < n; i++, p++ )
-		QuantizeColor( database, FL_GETR( *p ), FL_GETG( *p ), FL_GETB( *p ) );
+        QuantizeColor( database, FL_GETR( *p ), FL_GETG( *p ), FL_GETB( *p ) );
 
     QuantizeCreateLUT( database, actual_color, &rlut, &glut, &blut );
     for ( i = 0; i < *actual_color; i++ )
     {
-		red_lut[   i ] = rlut[ i ];
-		green_lut[ i ] = glut[ i ];
-		blue_lut[  i ] = blut[ i ];
+        red_lut[   i ] = rlut[ i ];
+        green_lut[ i ] = glut[ i ];
+        blue_lut[  i ] = blut[ i ];
     }
 
     free( rlut );
@@ -157,16 +157,24 @@ fl_octree_quantize_packed( unsigned int   ** packed,
     free( blut );
 
     for ( ind = ci[ 0 ], p = packed[ 0 ], i = 0; i < n; i++, p++, ind++ )
-		*ind = QuantizeFindIndex( database, FL_GETR( *p ),
-								  FL_GETG( *p ), FL_GETB( *p ) );
+        *ind = QuantizeFindIndex( database, FL_GETR( *p ),
+                                  FL_GETG( *p ), FL_GETB( *p ) );
 
     QuantizeDatabaseFree( database );
 
     if ( im )
     {
-		im->completed = im->total;
-		im->visual_cue( im, "Done OctreeQuantizer" );
+        im->completed = im->total;
+        im->visual_cue( im, "Done OctreeQuantizer" );
     }
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

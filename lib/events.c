@@ -62,8 +62,8 @@ fli_handle_event_callbacks( XEvent * xev )
 
     if ( ! fwin )
     {
-		M_warn( "fli_handle_event_callbacks", "Unknown window = %ld",
-				xev->xany.window );
+        M_warn( "fli_handle_event_callbacks", "Unknown window = %ld",
+                xev->xany.window );
         fli_xevent_name( "Ignored", xev );
         return 1;
     }
@@ -114,7 +114,7 @@ fl_set_event_callback( FL_APPEVENT_CB callback,
 
 typedef struct FLI_OBJECT_QUEUE_ENTRY_ {
     FL_OBJECT *                      obj;
-	int                              ret;
+    int                              ret;
     struct FLI_OBJECT_QUEUE_ENTRY_ * next;
 } FLI_OBJECT_QUEUE_ENTRY;
 
@@ -200,8 +200,8 @@ fli_add_to_obj_queue( FL_OBJECT * obj )
 
     obj_queue.head->next = NULL;
     obj_queue.head->obj = obj;
-	if ( obj != FL_EVENT )
-		obj_queue.head->ret = obj->returned;
+    if ( obj != FL_EVENT )
+        obj_queue.head->ret = obj->returned;
 }
 
 
@@ -225,8 +225,8 @@ fli_get_from_obj_queue( void )
     t->next = obj_queue.empty;
     obj_queue.empty = t;
 
-	if ( t->obj != FL_EVENT )
-		t->obj->returned = t->ret;
+    if ( t->obj != FL_EVENT )
+        t->obj->returned = t->ret;
     return t->obj;
 }
     
@@ -329,9 +329,9 @@ fli_object_qenter( FL_OBJECT * obj )
         return;
     }
 
-	/* Please note: if 'DELAYED_ACTION' should ever be switched on don't
-	   forget to deal correctly with also handling callbacks of parent
-	   objects (if the object entered is a child object) */
+    /* Please note: if 'DELAYED_ACTION' should ever be switched on don't
+       forget to deal correctly with also handling callbacks of parent
+       objects (if the object entered is a child object) */
 
     if ( obj != FL_EVENT )
     {
@@ -374,18 +374,18 @@ fli_object_qtest( void )
 void
 fli_filter_returns( FL_OBJECT * obj )
 {
-	if (    obj->how_return & FL_RETURN_END_CHANGED
-		 && obj->returned & FL_RETURN_CHANGED
-		 && obj->returned & FL_RETURN_END )
-	{
-		obj->returned |= FL_RETURN_END_CHANGED;
-		obj->returned &= ~ ( FL_RETURN_CHANGED | FL_RETURN_END );
-	}
+    if (    obj->how_return & FL_RETURN_END_CHANGED
+         && obj->returned & FL_RETURN_CHANGED
+         && obj->returned & FL_RETURN_END )
+    {
+        obj->returned |= FL_RETURN_END_CHANGED;
+        obj->returned &= ~ ( FL_RETURN_CHANGED | FL_RETURN_END );
+    }
 
-	if ( obj->how_return != FL_RETURN_NONE )
-		obj->returned &= obj->how_return | FL_RETURN_TRIGGERED;
-	else
-		obj->returned = FL_RETURN_NONE;
+    if ( obj->how_return != FL_RETURN_NONE )
+        obj->returned &= obj->how_return | FL_RETURN_TRIGGERED;
+    else
+        obj->returned = FL_RETURN_NONE;
 }
 
 
@@ -405,125 +405,125 @@ fli_object_qread( void )
     if ( ! obj->form )
         return NULL;
 
-	/* If the object has a callback execute it and return NULL unless the
-	   object is a child object (in that case we're supposed to also check
-	   the for callbacks for the parent etc.). It's also important to make
-	   sure the object didn't get deleted within its callback - if that's
-	   the case it would be catastrophic to check for the parent... */
+    /* If the object has a callback execute it and return NULL unless the
+       object is a child object (in that case we're supposed to also check
+       the for callbacks for the parent etc.). It's also important to make
+       sure the object didn't get deleted within its callback - if that's
+       the case it would be catastrophic to check for the parent... */
 
     if ( obj->object_callback )
     {
-		fli_handled_obj = obj;
+        fli_handled_obj = obj;
         obj->object_callback( obj, obj->argument );
 
-		if ( fli_handled_obj )
-			obj->returned = FL_RETURN_NONE;
+        if ( fli_handled_obj )
+            obj->returned = FL_RETURN_NONE;
 
-		if ( ! fli_handled_obj || ! obj->parent )
-			return NULL;
-	}
+        if ( ! fli_handled_obj || ! obj->parent )
+            return NULL;
+    }
 
-	/* If the object is a child object check if there is a callback for
-	   the parent and execute that (and return NULL in that case). In
-	   between also check if there are further events for other childs
-	   of the same parent in the queue and also execute their callbacks.
-	   And keep in mind that execution of one of these callbacks may
-	   delete the object and its parent... */
+    /* If the object is a child object check if there is a callback for
+       the parent and execute that (and return NULL in that case). In
+       between also check if there are further events for other childs
+       of the same parent in the queue and also execute their callbacks.
+       And keep in mind that execution of one of these callbacks may
+       delete the object and its parent... */
 
-	if ( obj->parent )
-	{
-		obj = obj->parent;
-		fli_filter_returns( obj );
+    if ( obj->parent )
+    {
+        obj = obj->parent;
+        fli_filter_returns( obj );
 
-		while ( obj->parent )
-		{
-			if ( ! obj->returned )
-				return NULL;
+        while ( obj->parent )
+        {
+            if ( ! obj->returned )
+                return NULL;
 
-			if ( obj->object_callback )
-			{
-				fli_handled_obj = obj;
-				obj->object_callback( obj, obj->argument );
-				if ( fli_handled_obj )
-					obj->returned = FL_RETURN_NONE;
-				else
-					return NULL;
-			}
-			obj = obj->parent;
-			fli_filter_returns( obj );
-		}
+            if ( obj->object_callback )
+            {
+                fli_handled_obj = obj;
+                obj->object_callback( obj, obj->argument );
+                if ( fli_handled_obj )
+                    obj->returned = FL_RETURN_NONE;
+                else
+                    return NULL;
+            }
+            obj = obj->parent;
+            fli_filter_returns( obj );
+        }
 
-		fli_handled_parent = obj;
+        fli_handled_parent = obj;
 
-		while ( fli_handled_parent )
-		{
-			FL_OBJECT *n,
-				      *p;
+        while ( fli_handled_parent )
+        {
+            FL_OBJECT *n,
+                      *p;
 
-			if (    ! ( n = fli_object_qtest( ) )
-				 || n == FL_EVENT
-				 || ! n->parent )
-				break;
+            if (    ! ( n = fli_object_qtest( ) )
+                 || n == FL_EVENT
+                 || ! n->parent )
+                break;
 
-			p = n->parent;
-			while ( p->parent )
-				p = p->parent;
+            p = n->parent;
+            while ( p->parent )
+                p = p->parent;
 
-			if ( p != obj )
-				break;
+            if ( p != obj )
+                break;
 
-			n = fli_get_from_obj_queue( );
-			do
-			{
-				fli_filter_returns( n );
-				if ( ! n->returned )
-					break;
-			
-				if ( n->object_callback )
-				{
-					fli_handled_obj = n;
-					n->object_callback( n, n->argument );
-					if ( fli_handled_obj )
-						n->returned = FL_RETURN_NONE;
-					else
-						break;
-				}
-			} while ( fli_handled_parent && ( n = n->parent ) != obj );
+            n = fli_get_from_obj_queue( );
+            do
+            {
+                fli_filter_returns( n );
+                if ( ! n->returned )
+                    break;
+            
+                if ( n->object_callback )
+                {
+                    fli_handled_obj = n;
+                    n->object_callback( n, n->argument );
+                    if ( fli_handled_obj )
+                        n->returned = FL_RETURN_NONE;
+                    else
+                        break;
+                }
+            } while ( fli_handled_parent && ( n = n->parent ) != obj );
 
-			fli_filter_returns( obj );
-		}
+            fli_filter_returns( obj );
+        }
 
-		if ( ! fli_handled_parent )
-			return NULL;
-	}
+        if ( ! fli_handled_parent )
+            return NULL;
+    }
 
-	/* If we arrive here the original object either was a child object 
-	   or it had no callback. Run either the parent callback or the forms
-	   callback (if there's one). */
+    /* If we arrive here the original object either was a child object 
+       or it had no callback. Run either the parent callback or the forms
+       callback (if there's one). */
 
-	if ( ! obj->returned )
-		return NULL;
-	else if ( obj->object_callback  )
-	{
-		fli_handled_obj = obj;
-		obj->object_callback( obj, obj->argument );
-		if ( fli_handled_obj )
-			obj->returned = FL_RETURN_NONE;
-		return NULL;
+    if ( ! obj->returned )
+        return NULL;
+    else if ( obj->object_callback  )
+    {
+        fli_handled_obj = obj;
+        obj->object_callback( obj, obj->argument );
+        if ( fli_handled_obj )
+            obj->returned = FL_RETURN_NONE;
+        return NULL;
     }
     else if ( obj->form->form_callback )
     {
-		fli_handled_obj = obj;
+        fli_handled_obj = obj;
         obj->form->form_callback( obj, obj->form->form_cb_data );
-		if ( fli_handled_obj )
-			obj->returned = FL_RETURN_NONE;
+        if ( fli_handled_obj )
+            obj->returned = FL_RETURN_NONE;
         return NULL;
     }
  
-	if ( obj->child && obj->returned == FL_RETURN_NONE)
-		return NULL;
+    if ( obj->child && obj->returned == FL_RETURN_NONE)
+        return NULL;
 
-	return obj;
+    return obj;
 }
 
 
@@ -1049,8 +1049,8 @@ fli_compress_motion( XEvent * xme )
         int ( *old )( Display *, XErrorEvent * );
 
         /* We must protect against BadWindow here, because we have only
-		   looked for Motion events, and there could be a Destroy event
-		   which makes the XQueryPointer fail as the window is deleted. */
+           looked for Motion events, and there could be a Destroy event
+           which makes the XQueryPointer fail as the window is deleted. */
 
         old = XSetErrorHandler( fli_badwin_handler );
         fl_get_win_mouse( xme->xmotion.window,
@@ -1140,3 +1140,11 @@ fl_remove_selected_xevent( Window win,
 
     return xwa.your_event_mask;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

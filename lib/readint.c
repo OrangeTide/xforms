@@ -34,14 +34,14 @@
 #endif
 
 #include <stdio.h>
-#include <ctype.h>		/* for isdigit */
+#include <ctype.h>      /* for isdigit */
 #include "include/forms.h"
 #include "flinternal.h"
 #include "ulib.h"
 
 
 #define IS_FS( c )     \
-	( ( c ) == ' ' || ( c ) == '\t' || ( c ) == '\n' || ( c ) == ',' )
+    ( ( c ) == ' ' || ( c ) == '\t' || ( c ) == '\n' || ( c ) == ',' )
 #define IS_COMMENT( c )  ( ( c ) == '#' )
 
 static int yell = 0;
@@ -54,7 +54,7 @@ static void
 bad_character( int c )
 {
     if ( yell && c != EOF )
-		fprintf(stderr, "Bad character %c Code=%d\n", c, c);
+        fprintf(stderr, "Bad character %c Code=%d\n", c, c);
 }
 
 
@@ -67,7 +67,7 @@ skip_comment( FILE * fp )
     int c;
 
     while ( ( c = getc( fp ) ) != EOF && c != '\n' )
-		/* empty */ ;
+        /* empty */ ;
     return c != EOF ? getc( fp ) : EOF;
 }
 
@@ -80,32 +80,32 @@ int
 fli_readint( FILE * fp )
 {
     int c,
-		num = 0,
-		sign = 1;
+        num = 0,
+        sign = 1;
 
     do
     {
-		c = getc( fp );
-		while ( IS_COMMENT( c ) )
-			c = skip_comment( fp );
+        c = getc( fp );
+        while ( IS_COMMENT( c ) )
+            c = skip_comment( fp );
     } while ( IS_FS( c ) );
 
     if ( c == '-' || c == '+' )
     {
-		sign = ( c == '-' ) ? -1 : 1;
-		c = getc( fp );
+        sign = ( c == '-' ) ? -1 : 1;
+        c = getc( fp );
     }
 
     while ( isdigit( c ) )
     {
-		num = 10 * num + c - '0';
-		c = getc( fp );
+        num = 10 * num + c - '0';
+        c = getc( fp );
     }
 
     if ( ! IS_FS( c ) )
     {
-		bad_character( c );
-		num = 123456;
+        bad_character( c );
+        num = 123456;
     }
 
     return sign * num;
@@ -120,25 +120,25 @@ int
 fli_readpint( FILE * fp )
 {
     int c,
-		num = 0;
+        num = 0;
 
     do
     {
-		c = getc( fp );
-		while ( IS_COMMENT( c ) )
-			c = skip_comment( fp );
+        c = getc( fp );
+        while ( IS_COMMENT( c ) )
+            c = skip_comment( fp );
     } while ( IS_FS( c ) );
 
     if ( ! ( c == '+' || isdigit( c ) ) )
     {
-		bad_character( c );
-		return EOF;
+        bad_character( c );
+        return EOF;
     }
 
     do
     {
-		num = 10 * num + c - '0';
-		c = getc( fp );
+        num = 10 * num + c - '0';
+        c = getc( fp );
     } while ( isdigit( c ) );
 
     return num;
@@ -159,33 +159,41 @@ fli_readhexint( FILE * fp )
 
     if ( ! hextab[ '1' ] )
     {
-		for ( i = '1'; i <= '9'; i++ )
-			hextab[ i ] = i - '0';
-		for ( i = 'A'; i <= 'F'; i++ )
-			hextab[ i ] = 10 + i - 'A';
-		for ( i = 'a'; i <= 'f'; i++ )
-			hextab[ i ] = 10 + i - 'a';
+        for ( i = '1'; i <= '9'; i++ )
+            hextab[ i ] = i - '0';
+        for ( i = 'A'; i <= 'F'; i++ )
+            hextab[ i ] = 10 + i - 'A';
+        for ( i = 'a'; i <= 'f'; i++ )
+            hextab[ i ] = 10 + i - 'a';
     }
 
     do
     {
-		c = getc( fp );
-		while ( IS_COMMENT( c ) )
-			c = skip_comment( fp );
+        c = getc( fp );
+        while ( IS_COMMENT( c ) )
+            c = skip_comment( fp );
     } while ( IS_FS( c ) );
 
     /* demand  0[xX] */
 
     if ( c != '0' || ( ( c = getc( fp ) ) != 'x' && c != 'X' ) )
     {
-		bad_character( c );
-		return EOF;
+        bad_character( c );
+        return EOF;
     }
 
     /* now do the coversion */
 
     while ( ( c = getc( fp ) ), isxdigit( c ) )
-		num = ( num << 4 ) + hextab[ c ];
+        num = ( num << 4 ) + hextab[ c ];
 
     return num;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

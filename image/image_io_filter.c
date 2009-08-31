@@ -53,10 +53,10 @@ static char *
 get_tmpf( char * obuf )
 {
     static int k,
-		       seq;
+               seq;
     static char buf[ 15 ][ 256 ];
     int fd = -1,
-		tries = 0;
+        tries = 0;
     char *name;
 
     k = ( k + 1 ) % 15;
@@ -64,27 +64,27 @@ get_tmpf( char * obuf )
 
     do
     {
-		if ( ( fd = mkstemp( name ) ) >= 0 )
-			/* empty */ ;
-		else
-		{
-			fl_snprintf( buf[ k ], sizeof buf[ k ],
-						 "%s/.FL%03d_%d.tmp", "/tmp", seq++,
-						 ( int ) getpid( ) );
-			name = buf[ k ];
+        if ( ( fd = mkstemp( name ) ) >= 0 )
+            /* empty */ ;
+        else
+        {
+            fl_snprintf( buf[ k ], sizeof buf[ k ],
+                         "%s/.FL%03d_%d.tmp", "/tmp", seq++,
+                         ( int ) getpid( ) );
+            name = buf[ k ];
 
-			/* create the file now in exclusive mode (for security) */
+            /* create the file now in exclusive mode (for security) */
 
-			fd = open( name, O_RDWR | O_CREAT | O_EXCL, S_IREAD | S_IWRITE );
-		}
+            fd = open( name, O_RDWR | O_CREAT | O_EXCL, S_IREAD | S_IWRITE );
+        }
 
-		tries++;
+        tries++;
     } while ( fd < 0 && tries < 30 );
 
     if ( fd >= 0 )
     {
-		close( fd );
-		return name;
+        close( fd );
+        return name;
     }
 
     return 0;
@@ -96,45 +96,45 @@ get_tmpf( char * obuf )
 
 int
 flimage_description_via_filter( FL_IMAGE     * im,
-								char * const * cmds,
-								const char   * what,
-								int verbose )
+                                char * const * cmds,
+                                const char   * what,
+                                int verbose )
 {
     char cmd[ 1024 ],
-		 *tmpf;
+         *tmpf;
     char * const *q = cmds;
     int status = 0,
-		n;
+        n;
 
     if ( ! ( tmpf = get_tmpf( 0 ) ) )
     {
-		im->error_message( im, "can't get tmpfile!" );
-		return -1;
+        im->error_message( im, "can't get tmpfile!" );
+        return -1;
     }
 
     do
     {
-		fl_snprintf( cmd, sizeof cmd - 12, *q, im->infile, tmpf );
-		if ( verbose )
-			fprintf( stderr, "executing %s\n", cmd );
-		else
-			strcat( cmd, " 2>/dev/null" );
-		status = system( cmd );
+        fl_snprintf( cmd, sizeof cmd - 12, *q, im->infile, tmpf );
+        if ( verbose )
+            fprintf( stderr, "executing %s\n", cmd );
+        else
+            strcat( cmd, " 2>/dev/null" );
+        status = system( cmd );
     } while ( status && *++q );
 
     if ( status )
     {
-		M_err( "", "%s failed", cmd );
-		return -1;
+        M_err( "", "%s failed", cmd );
+        return -1;
     }
 
     /* first check if the converted image is something we can handle */
 
     if ( ! ( n = flimage_is_supported( tmpf ) ) )
     {
-		im->error_message( im, "unknown filtered output" );
-		remove( tmpf );
-		return -1;
+        im->error_message( im, "unknown filtered output" );
+        remove( tmpf );
+        return -1;
     }
 
     im->visual_cue( im, what );
@@ -150,17 +150,17 @@ flimage_description_via_filter( FL_IMAGE     * im,
 
     --n;
     if ( verbose )
-		fprintf( stderr, " reading %s via %s\n",
-				 ( ( FLIMAGE_IO * ) im->image_io )->short_name,
-				 flimage_io[ n ].short_name );
+        fprintf( stderr, " reading %s via %s\n",
+                 ( ( FLIMAGE_IO * ) im->image_io )->short_name,
+                 flimage_io[ n ].short_name );
 
     if ( strcmp( im->fmt_name, "gzip" ) == 0 )
-		im->fmt_name = flimage_io[ n ].short_name;
+        im->fmt_name = flimage_io[ n ].short_name;
 
     im->image_io = flimage_io + n;
     im->type = flimage_io[ n ].type;
 
-    flimage_io[ n ].identify( im->fpin );	/* advance file position */
+    flimage_io[ n ].identify( im->fpin );   /* advance file position */
     status = flimage_io[ n ].read_description( im );
 
     remove( tmpf );
@@ -184,29 +184,29 @@ flimage_description_via_filter( FL_IMAGE     * im,
 
 static FLIMAGE_IO *
 best_format( FL_IMAGE     * im,
-			 char * const   formats[ ] )
+             char * const   formats[ ] )
 {
     FLIMAGE_IO *io = flimage_io;
     char *const *fmts = formats;
     FLIMAGE_IO *first = 0,
-		       *best_sofar = 0;
+               *best_sofar = 0;
     int found;
 
     for ( ; *fmts; fmts++ )
     {
-		for ( io = flimage_io, found = 0; ! found && io->formal_name; io++ )
-			found =    strcasecmp( io->formal_name, *fmts ) == 0
-				    || strcasecmp( io->short_name,  *fmts ) == 0;
+        for ( io = flimage_io, found = 0; ! found && io->formal_name; io++ )
+            found =    strcasecmp( io->formal_name, *fmts ) == 0
+                    || strcasecmp( io->short_name,  *fmts ) == 0;
 
-		if ( found )
-		{
-			io--;
-			best_sofar = ( im->type & io->type ) ? io : 0;
-			if ( ! first )
-				first = best_sofar;
-		}
-		else
-			fprintf( stderr, "bad format name: %s\n", *fmts );
+        if ( found )
+        {
+            io--;
+            best_sofar = ( im->type & io->type ) ? io : 0;
+            if ( ! first )
+                first = best_sofar;
+        }
+        else
+            fprintf( stderr, "bad format name: %s\n", *fmts );
     }
 
     return best_sofar ? best_sofar : first;
@@ -218,28 +218,28 @@ best_format( FL_IMAGE     * im,
 
 int
 flimage_write_via_filter( FL_IMAGE     * im,
-						  char * const * cmds,	          /* shell commands */
-						  char *const    formats[ ],	  /* formats */
-						  int            verbose )
+                          char * const * cmds,            /* shell commands */
+                          char *const    formats[ ],      /* formats */
+                          int            verbose )
 {
     char *tmpf;
     char ofile[ 256 ],
-		 cmd[ 1024 ];
+         cmd[ 1024 ];
     char * const *shellcmd;
     FLIMAGE_IO *io;
     int err,
-		status;
+        status;
 
     /* check if we can handle the type */
 
     if ( ! ( io = best_format( im, formats ) ) )
     {
-		fprintf( stderr, "can't find format handler\n" );
-		return -1;
+        fprintf( stderr, "can't find format handler\n" );
+        return -1;
     }
 
     if ( ! ( io->type & im->type ) )
-		flimage_convert( im, io->type, 256 );
+        flimage_convert( im, io->type, 256 );
 
     tmpf = get_tmpf( 0 );
     strcpy( ofile, im->outfile );
@@ -247,9 +247,9 @@ flimage_write_via_filter( FL_IMAGE     * im,
 
     if ( ! ( im->fpout = fopen( im->outfile, "wb" ) ) )
     {
-		fprintf( stderr, "can't open %s\n", tmpf );
-		remove( tmpf );
-		return -1;
+        fprintf( stderr, "can't open %s\n", tmpf );
+        remove( tmpf );
+        return -1;
     }
 
     /* skip the pre_write step */
@@ -257,26 +257,34 @@ flimage_write_via_filter( FL_IMAGE     * im,
     err = io->write_image( im ) < 0;
     fclose( im->fpout );
     if ( verbose )
-		fprintf( stderr, "Done writing %s (%s) \n",
-				 im->outfile, io->short_name );
+        fprintf( stderr, "Done writing %s (%s) \n",
+                 im->outfile, io->short_name );
 
     /* now we have the intermediate image ready, generate the shell cmd */
 
     for ( shellcmd = cmds, status = ! err; status && *shellcmd; shellcmd++ )
     {
-		fl_snprintf( cmd, sizeof cmd, *shellcmd, tmpf, ofile );
-		if ( ! verbose )
-			strcat( cmd, " 2>/dev/null" );
-		else
-			fprintf( stderr, "executing %s\n", cmd );
-		status = system( cmd );
+        fl_snprintf( cmd, sizeof cmd, *shellcmd, tmpf, ofile );
+        if ( ! verbose )
+            strcat( cmd, " 2>/dev/null" );
+        else
+            fprintf( stderr, "executing %s\n", cmd );
+        status = system( cmd );
     }
 
     remove( tmpf );
     strcpy( im->outfile, ofile );
 
     if ( status )
-		fprintf( stderr, "%s failed\n", cmd );
+        fprintf( stderr, "%s failed\n", cmd );
 
     return status ? -1 : 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

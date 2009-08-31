@@ -39,8 +39,8 @@ typedef struct
      FL_FORM *   colorform;
      FL_OBJECT * col[ 64 ];
      FL_OBJECT * next,
-	           * prev,
-	           * cancel;
+               * prev,
+               * cancel;
      FL_OBJECT * cindex;
 } COLSEL;
 
@@ -58,18 +58,18 @@ create_colorform( void )
     int i, j;
 
     if ( cs->colorform )
-		return;
+        return;
 
     cs->colorform = fl_bgn_form( FL_UP_BOX, 240, 220 );
 
     for ( i = 0; i < 8; i++ )
-		for ( j = 0; j < 8; j++ )
-		{
-			cs->col[ 8 * i + j ] = fl_add_button( FL_NORMAL_BUTTON, 40 + j * 20,
-												  10 + i * 20, 20, 20, "" );
-			fl_set_object_boxtype( cs->col[ 8 * i + j ], FL_BORDER_BOX );
-			fl_set_object_lcol( cs->col[ 8 * i + j ], 7 );
-		}
+        for ( j = 0; j < 8; j++ )
+        {
+            cs->col[ 8 * i + j ] = fl_add_button( FL_NORMAL_BUTTON, 40 + j * 20,
+                                                  10 + i * 20, 20, 20, "" );
+            fl_set_object_boxtype( cs->col[ 8 * i + j ], FL_BORDER_BOX );
+            fl_set_object_lcol( cs->col[ 8 * i + j ], 7 );
+        }
 
     cs->prev = fl_add_button( FL_NORMAL_BUTTON, 10, 10, 30, 160, "@4" );
     cs->next = fl_add_button( FL_NORMAL_BUTTON, 200, 10, 30, 160, "@6" );
@@ -89,7 +89,7 @@ extern int flrectboundcolor;
 
 static void
 init_colors( int cc,
-			 int thecol )
+             int thecol )
 {
     int i;
     const char *cn;
@@ -97,10 +97,10 @@ init_colors( int cc,
     fl_freeze_form( cs->colorform );
     for ( i = 0; i < 64; i++ )
     {
-		fl_set_object_color( cs->col[ i ], cc + i, cc + i );
-		fl_set_object_label( cs->col[ i ], "" );
-		if ( thecol == cc + i )
-			fl_set_object_label( cs->col[ i ], "@9plus" );
+        fl_set_object_color( cs->col[ i ], cc + i, cc + i );
+        fl_set_object_label( cs->col[ i ], "" );
+        if ( thecol == cc + i )
+            fl_set_object_label( cs->col[ i ], "@9plus" );
     }
 
     cn = fli_query_colorname( thecol );
@@ -114,7 +114,7 @@ init_colors( int cc,
 
 static int
 atclose( FL_FORM * form,
-		 void *    ev  FL_UNUSED_ARG )
+         void *    ev  FL_UNUSED_ARG )
 {
     fl_trigger_object( form->u_vdata );
     return FL_IGNORE;
@@ -130,15 +130,15 @@ fl_show_colormap( int oldcol )
 {
     FL_OBJECT *ob;
     int i,
-		cc,
-		ready = 0,
-		thecol;
+        cc,
+        ready = 0,
+        thecol;
     int s =  flrectboundcolor;
 
     flrectboundcolor = FL_BOTTOM_BCOL;
 
     if ( oldcol == FL_NoColor )
-		oldcol = FL_COL1;
+        oldcol = FL_COL1;
 
     cc = 64 * ( oldcol / 64 );
     thecol = oldcol;
@@ -154,29 +154,37 @@ fl_show_colormap( int oldcol )
 
     while ( ! ready )
     {
-		ob = fl_do_only_forms( );
-		if ( ob == cs->prev && cc >= 64 )
-		{
-			cc -= 64;
-			init_colors( cc, thecol );
-		}
-		else if ( ob == cs->next && cc + 64 < FL_MAX_COLS )
-		{
-			cc += 64;
-			init_colors( cc, thecol );
-		}
-		else if ( ob == cs->cancel )
-			ready = 1;
-		else
-			for ( i = 0; i < 64; i++ )
-				if ( ob == cs->col[ i ] )
-				{
-					ready = 1;
-					thecol = cc + i;
-				}
+        ob = fl_do_only_forms( );
+        if ( ob == cs->prev && cc >= 64 )
+        {
+            cc -= 64;
+            init_colors( cc, thecol );
+        }
+        else if ( ob == cs->next && cc + 64 < FL_MAX_COLS )
+        {
+            cc += 64;
+            init_colors( cc, thecol );
+        }
+        else if ( ob == cs->cancel )
+            ready = 1;
+        else
+            for ( i = 0; i < 64; i++ )
+                if ( ob == cs->col[ i ] )
+                {
+                    ready = 1;
+                    thecol = cc + i;
+                }
     }
     fl_hide_form( cs->colorform );
     fl_activate_all_forms( );
     flrectboundcolor = s;
     return thecol;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

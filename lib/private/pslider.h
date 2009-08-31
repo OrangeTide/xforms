@@ -22,7 +22,7 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
+ *
  * private header for slider object
  */
 
@@ -35,22 +35,30 @@
 typedef FLI_VALUATOR_SPEC FLI_SLIDER_SPEC;
 
 
-#define MINKNOB_SB     16		/* scrollbar        */
-#define MINKNOB_SL     14		/* regular sliders  */
+#define MINKNOB_SB     16       /* scrollbar        */
+#define MINKNOB_SL     14       /* regular sliders  */
 
 #define IS_HSLIDER( o )      ( ( o )->type & FL_HOR_FLAG )
 
 #define IS_VSLIDER( o )      ( ! IS_HSLIDER( o ) )
 
-#define IS_FILL( o )         (    ( o )->type == FL_VERT_FILL_SLIDER	\
-							   || ( o )->type == FL_HOR_FILL_SLIDER )
+#define IS_FILL( o )         (    ( o )->type == FL_VERT_FILL_SLIDER    \
+                               || ( o )->type == FL_HOR_FILL_SLIDER )
 
 #define IS_SCROLLBAR( o )    ( ( o )->type & FL_SCROLL_FLAG )
 
 #define IS_FLATBOX( bt )     (    ( bt ) == FL_FRAME_BOX         \
-							   || ( bt ) == FL_EMBOSSED_BOX 	 \
-							   || ( bt ) == FL_BORDER_BOX        \
+                               || ( bt ) == FL_EMBOSSED_BOX      \
+                               || ( bt ) == FL_BORDER_BOX        \
                                || ( bt ) == FL_ROUNDED_BOX )
 
 
 #endif /* PSLIDER_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

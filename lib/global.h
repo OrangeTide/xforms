@@ -19,15 +19,13 @@
 
 /**
  * \file global.h
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-1998  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * All gloabl varialbes used in XForms. It is important to start all
  * variables with fl/FL to avoid name space pollution.
- *
  */
 
 #ifndef FL_GLOBAL_H
@@ -65,18 +63,18 @@ int fli_inverted_y;
 long fli_requested_vid;
 
 FLI_INTERNAL fli_int = { NULL,      /* forms */
-						 0,         /* formnumb */
-						 0,         /* hidden_formnumb */
-						 0,         /* auto)count */
-						 0,         /* unmanaged_count */
-						 0,         /* mousex */
-						 0,         /* mousey */
-						 0,         /* keymask */
-						 UINT_MAX,  /* query_age */
-						 NULL,      /* mouseform */
-						 NULL,      /* keyform */
-						 NULL,      /* pushobj */
-						 NULL       /* mouseobj */
+                         0,         /* formnumb */
+                         0,         /* hidden_formnumb */
+                         0,         /* auto)count */
+                         0,         /* unmanaged_count */
+                         0,         /* mousex */
+                         0,         /* mousey */
+                         0,         /* keymask */
+                         UINT_MAX,  /* query_age */
+                         NULL,      /* mouseform */
+                         NULL,      /* keyform */
+                         NULL,      /* pushobj */
+                         NULL       /* mouseobj */
                        };   
 
 FL_IOPT fli_cntl;
@@ -90,12 +88,20 @@ FL_FORM *fl_current_form;
 FL_OBJECT *fli_current_group;
 
 int fli_no_connection = 0;        /* Set only when fdesign is run with
-									 the '-convert' option */
+                                     the '-convert' option */
 FLI_WIN *fli_app_win;
 
-FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;	  /* The special event object */
+FL_OBJECT *FL_EVENT = ( FL_OBJECT * ) - 1L;   /* The special event object */
 
 
 FLI_TARGET *flx;
 
 #endif /* ! def GLOBAL_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -22,30 +22,36 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * private header for positioner object
- *
  */
 
 #ifndef PPOSITION_H
 #define PPOSITION_H
 
 typedef struct {
-    double xmin,				/* minimal values  */
+    double xmin,                /* minimal values  */
            ymin;
-    double xmax,				/* maximal values  */
-	       ymax;
-    double xval,				/* current values  */
-	       yval;
-    double lxval,				/* previous values */
-	       lyval;
-    double xstep,				/* step size to which values are rounded  */
-	       ystep;
+    double xmax,                /* maximal values  */
+           ymax;
+    double xval,                /* current values  */
+           yval;
+    double lxval,               /* previous values */
+           lyval;
+    double xstep,               /* step size to which values are rounded  */
+           ystep;
     int    partial;
-	double old_x,               /* values at start of ineraction */
-	       old_y;
+    double old_x,               /* values at start of ineraction */
+           old_y;
 } FLI_POSITIONER_SPEC;
 
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

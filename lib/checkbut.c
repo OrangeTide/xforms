@@ -41,14 +41,14 @@ static void
 draw_checkbutton( FL_OBJECT * ob )
 {
     FL_Coord xx,
-		     yy,
-		     ww,
-		     hh,
-		     bw = FL_abs( ob->bw );
-	FL_BUTTON_STRUCT *sp = ob->spec;
+             yy,
+             ww,
+             hh,
+             bw = FL_abs( ob->bw );
+    FL_BUTTON_STRUCT *sp = ob->spec;
 
     if ( sp->event == FL_ENTER || sp->event == FL_LEAVE )
-		return;
+        return;
 
     fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 
@@ -57,23 +57,23 @@ draw_checkbutton( FL_OBJECT * ob )
     yy = ob->y + ( ob->h - hh ) / 2;
 
     if ( sp->val )
-		fl_drw_checkbox( FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, bw );
+        fl_drw_checkbox( FL_DOWN_BOX, xx, yy, ww, hh, ob->col2, bw );
     else
-		fl_drw_checkbox( FL_UP_BOX, xx, yy, ww, hh, ob->col1, bw );
+        fl_drw_checkbox( FL_UP_BOX, xx, yy, ww, hh, ob->col1, bw );
 
     if ( ob->align == FL_ALIGN_CENTER )
-		fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3, ob->h,
-					 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3, ob->h,
+                     ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
-		fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-							ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                            ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
     if ( ob->type == FL_RETURN_BUTTON )
-		fl_drw_text( 0,
-					 ob->x + ob->w - 0.8f * ob->h,
-					 ob->y + 0.2f * ob->h,
-					 0.6f * ob->h, 0.6f * ob->h,
-					 ob->lcol, 0, 0, "@returnarrow" );
+        fl_drw_text( 0,
+                     ob->x + ob->w - 0.8f * ob->h,
+                     ob->y + 0.2f * ob->h,
+                     0.6f * ob->h, 0.6f * ob->h,
+                     ob->lcol, 0, 0, "@returnarrow" );
 }
 
 
@@ -82,11 +82,11 @@ draw_checkbutton( FL_OBJECT * ob )
 
 FL_OBJECT *
 fl_create_checkbutton( int          type,
-					   FL_Coord     x,
-					   FL_Coord     y,
-					   FL_Coord     w,
-					   FL_Coord     h,
-					   const char * label )
+                       FL_Coord     x,
+                       FL_Coord     y,
+                       FL_Coord     w,
+                       FL_Coord     h,
+                       const char * label )
 {
     FL_OBJECT *ob;
 
@@ -108,14 +108,22 @@ fl_create_checkbutton( int          type,
 
 FL_OBJECT *
 fl_add_checkbutton( int          type,
-					FL_Coord     x,
-					FL_Coord     y,
-					FL_Coord     w,
-					FL_Coord     h,
-					const char * label )
+                    FL_Coord     x,
+                    FL_Coord     y,
+                    FL_Coord     w,
+                    FL_Coord     h,
+                    const char * label )
 {
     FL_OBJECT *ob = fl_create_checkbutton( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

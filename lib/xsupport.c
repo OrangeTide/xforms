@@ -43,16 +43,16 @@
 
 void
 fli_check_key_focus( const char * s,
-					 Window       win )
+                     Window       win )
 {
     int r;
     Window w;
 
     if ( fli_cntl.debug > 1 )
     {
-		XGetInputFocus( flx->display, &w, &r );
-		M_info( "fli_check_key_focus", "%s:%s FWin = %lu ReqW = %lu",
-				s ? s : "", w == win ? "OK" : "Wrong", w, win );
+        XGetInputFocus( flx->display, &w, &r );
+        M_info( "fli_check_key_focus", "%s:%s FWin = %lu ReqW = %lu",
+                s ? s : "", w == win ? "OK" : "Wrong", w, win );
     }
 }
 
@@ -68,18 +68,18 @@ fli_check_key_focus( const char * s,
 
 Window
 fl_get_mouse( FL_Coord     * x,
-			  FL_Coord     * y,
-			  unsigned int * keymask )
+              FL_Coord     * y,
+              unsigned int * keymask )
 {
     Window rjunk,
-		   childwin;
+           childwin;
     int cx,
-		cy,
-		xx,
-		yy;
+        cy,
+        xx,
+        yy;
 
     XQueryPointer( flx->display, fl_root, &rjunk, &childwin,
-				   &xx, &yy, &cx, &cy, keymask );
+                   &xx, &yy, &cx, &cy, keymask );
     *x = xx;
     *y = yy;
 
@@ -94,21 +94,21 @@ fl_get_mouse( FL_Coord     * x,
 
 Window
 fl_get_win_mouse( Window         win,
-				  FL_Coord     * x,
-				  FL_Coord     * y,
-				  unsigned int * keymask )
+                  FL_Coord     * x,
+                  FL_Coord     * y,
+                  unsigned int * keymask )
 {
     Window rjunk,
-		   childwin;
+           childwin;
     int dummy,
-		ix,
-		iy;
+        ix,
+        iy;
 
     XQueryPointer( flx->display, win, &rjunk, &childwin,
-				   &dummy, &dummy, &ix, &iy, keymask );
+                   &dummy, &dummy, &ix, &iy, keymask );
 
-	*x = ix;
-	*y = iy;
+    *x = ix;
+    *y = iy;
 
     return childwin;
 }
@@ -119,18 +119,18 @@ fl_get_win_mouse( Window         win,
 
 Window
 fl_get_form_mouse( FL_FORM      * form,
-				   FL_Coord     * x,
-				   FL_Coord     * y,
-				   unsigned int * keymask )
+                   FL_Coord     * x,
+                   FL_Coord     * y,
+                   unsigned int * keymask )
 {
-	Window win = None;
+    Window win = None;
 
     if ( fli_get_visible_forms_index( form ) >= 0 )
     {
-		FL_pixmap *flp = form->flpixmap;
+        FL_pixmap *flp = form->flpixmap;
 
-		win = ( flp && flp->win != None ) ? flp->win : form->window;
-		fl_get_win_mouse( win, x, y, keymask );
+        win = ( flp && flp->win != None ) ? flp->win : form->window;
+        fl_get_win_mouse( win, x, y, keymask );
     }
 
     return win;
@@ -143,7 +143,7 @@ fl_get_form_mouse( FL_FORM      * form,
 
 void
 fl_set_mouse( FL_Coord mx,
-			  FL_Coord my )
+              FL_Coord my )
 {
     XWarpPointer( flx->display, None, fl_root, 0, 0, 0, 0, mx, my );
 }
@@ -182,15 +182,15 @@ fli_init_stipples( void )
 {
     if ( ! fli_gray_pattern[ 0 ] )
     {
-		fli_gray_pattern[ 0 ] =
-			XCreateBitmapFromData( flx->display, fl_root,
-								   ( char * ) gray40_bits, 8, 8 );
-		fli_gray_pattern[ 1 ] =
-			XCreateBitmapFromData( flx->display, fl_root,
-								   ( char * ) gray50_bits, 8, 8 );
-		fli_gray_pattern[ 2 ] =
-			XCreateBitmapFromData( flx->display, fl_root,
-								   ( char * ) gray60_bits, 8, 8 );
+        fli_gray_pattern[ 0 ] =
+            XCreateBitmapFromData( flx->display, fl_root,
+                                   ( char * ) gray40_bits, 8, 8 );
+        fli_gray_pattern[ 1 ] =
+            XCreateBitmapFromData( flx->display, fl_root,
+                                   ( char * ) gray50_bits, 8, 8 );
+        fli_gray_pattern[ 2 ] =
+            XCreateBitmapFromData( flx->display, fl_root,
+                                   ( char * ) gray60_bits, 8, 8 );
     }
 }
 
@@ -202,7 +202,7 @@ fli_init_stipples( void )
 
 static void
 change_drawable( FL_pixmap * p,
-				 FL_OBJECT * obj )
+                 FL_OBJECT * obj )
 {
     p->x = obj->x;
     p->y = obj->y;
@@ -219,7 +219,7 @@ change_drawable( FL_pixmap * p,
 
 static void
 change_form_drawable( FL_pixmap * p,
-					  FL_FORM   * form )
+                      FL_FORM   * form )
 {
     p->x = form->x;
     p->y = form->y;
@@ -236,12 +236,12 @@ change_form_drawable( FL_pixmap * p,
 
 static int
 fl_xerror_handler( Display     * d  FL_UNUSED_ARG,
-				   XErrorEvent * xev )
+                   XErrorEvent * xev )
 {
     if ( xev->error_code == BadAlloc )
-		M_err( "fl_xerror_handler", "XError: can't allocate - ignored " );
+        M_err( "fl_xerror_handler", "XError: can't allocate - ignored " );
     else
-		M_err( "fl_xerror_handler", "XError: %d", xev->error_code );
+        M_err( "fl_xerror_handler", "XError: %d", xev->error_code );
 
     return 0;
 
@@ -265,59 +265,59 @@ fli_create_object_pixmap( FL_OBJECT * obj )
     unsigned int junk;
     FL_pixmap *p;
     int i;
-	int ( * oldhandler )( Display *, XErrorEvent * );
+    int ( * oldhandler )( Display *, XErrorEvent * );
 
     /* Check to see if we need to create a pixmap. None-square boxes can't
-	   be used as it is not easy to figure out the object color beneath the
-	   object we are trying to paint */
+       be used as it is not easy to figure out the object color beneath the
+       object we are trying to paint */
 
     if (    ! obj->use_pixmap
          || obj->w <= 0
-		 || obj->h <= 0
-		 || NON_SQB( obj )
-		 || (    obj->form->flpixmap
-			  && ( ( FL_pixmap * ) obj->form->flpixmap )->win ) )
-		return;
+         || obj->h <= 0
+         || NON_SQB( obj )
+         || (    obj->form->flpixmap
+              && ( ( FL_pixmap * ) obj->form->flpixmap )->win ) )
+        return;
 
     if ( ! ( p = obj->flpixmap ) )
-		p = obj->flpixmap = fl_calloc( 1, sizeof *p );
+        p = obj->flpixmap = fl_calloc( 1, sizeof *p );
 
     if (    p->pixmap
-		 && p->w == obj->w
-		 && p->h == obj->h
-		 && p->depth == fli_depth( fl_vmode )
-		 && p->visual == fli_visual( fl_vmode )
-		 && p->dbl_background == obj->dbl_background
-		 && p->pixel == fl_get_pixel( obj->dbl_background ) )
+         && p->w == obj->w
+         && p->h == obj->h
+         && p->depth == fli_depth( fl_vmode )
+         && p->visual == fli_visual( fl_vmode )
+         && p->dbl_background == obj->dbl_background
+         && p->pixel == fl_get_pixel( obj->dbl_background ) )
     {
-		change_drawable( p, obj );
-		return;
+        change_drawable( p, obj );
+        return;
     }
 
     if ( p->pixmap )
-		XFreePixmap( flx->display, p->pixmap );
+        XFreePixmap( flx->display, p->pixmap );
 
     oldhandler = XSetErrorHandler( fl_xerror_handler );
 
     p->pixmap = XCreatePixmap( flx->display, FL_ObjWin( obj ), obj->w, obj->h,
-							   fli_depth( fl_vmode ) );
+                               fli_depth( fl_vmode ) );
 
     fl_winset( p->pixmap );
     fl_rectf( 0, 0, obj->w, obj->h, obj->dbl_background );
 
     M_info( "fli_create_object_pixmap", "Creating depth = %d for %s",
-			fli_depth( fl_vmode ), obj->label ? obj->label : "unknown");
+            fli_depth( fl_vmode ), obj->label ? obj->label : "unknown");
 
     /* Make sure it succeeds by forcing a two way request */
 
     if (    fli_cntl.safe
-		 && ! XGetGeometry( flx->display, p->pixmap, &root, &i,
-							&i, &junk, &junk, &junk, &junk ) )
+         && ! XGetGeometry( flx->display, p->pixmap, &root, &i,
+                            &i, &junk, &junk, &junk, &junk ) )
     {
-		M_err( "fli_create_object_pixmap", "Can't create" );
-		p->pixmap = None;
-		XSetErrorHandler( oldhandler );
-		return;
+        M_err( "fli_create_object_pixmap", "Can't create" );
+        p->pixmap = None;
+        XSetErrorHandler( oldhandler );
+        return;
     }
 
     XSetErrorHandler( oldhandler );
@@ -341,16 +341,16 @@ fli_show_object_pixmap( FL_OBJECT * obj )
     FL_pixmap *p = obj->flpixmap;
 
     if ( ! p || ! p->pixmap || ! p->win || NON_SQB( obj ) )
-		return;
+        return;
 
-	XCopyArea( flx->display, p->pixmap, p->win, flx->gc,
-			   0, 0, p->w, p->h, p->x, p->y );
+    XCopyArea( flx->display, p->pixmap, p->win, flx->gc,
+               0, 0, p->w, p->h, p->x, p->y );
 
-	obj->x = p->x;
-	obj->y = p->y;
-	obj->form->window = p->win;
-	p->win = None;
-	fl_winset( obj->form->window );
+    obj->x = p->x;
+    obj->y = p->y;
+    obj->form->window = p->win;
+    p->win = None;
+    fl_winset( obj->form->window );
 }
 
 
@@ -362,8 +362,8 @@ fli_free_flpixmap( FL_pixmap * p )
 {
     if ( p && p->pixmap )
     {
-		XFreePixmap( flx->display, p->pixmap );
-		p->pixmap = None;
+        XFreePixmap( flx->display, p->pixmap );
+        p->pixmap = None;
     }
 }
 
@@ -375,15 +375,15 @@ static int
 form_pixmapable( FL_FORM * form )
 {
     /* Check to see if we can use a pixmap. None-square boxes can't be used
-	   as it is not easy to figure out the object color beneath the form we're
-	   trying to paint. Take care, sometimes a form can have a fake NO_BOX as
-	   the first object */
+       as it is not easy to figure out the object color beneath the form we're
+       trying to paint. Take care, sometimes a form can have a fake NO_BOX as
+       the first object */
 
-	return    form->use_pixmap
-		   && (    form->first
-				&& (    ! NON_SQB( form->first )
-					 || (    form->first->next
-					      && ! NON_SQB( form->first->next ) ) ) );
+    return    form->use_pixmap
+           && (    form->first
+                && (    ! NON_SQB( form->first )
+                     || (    form->first->next
+                          && ! NON_SQB( form->first->next ) ) ) );
 }
 
 
@@ -397,45 +397,45 @@ fli_create_form_pixmap( FL_FORM * form )
     unsigned int junk;
     FL_pixmap *p;
     int i;
-	int ( * oldhandler )( Display *, XErrorEvent * );
+    int ( * oldhandler )( Display *, XErrorEvent * );
 
     if ( form->w <= 0 || form->h <= 0 || ! form_pixmapable( form ) )
-		return;
+        return;
 
     if ( ! ( p = form->flpixmap ) )
-		p = form->flpixmap = fl_calloc( 1, sizeof *p );
+        p = form->flpixmap = fl_calloc( 1, sizeof *p );
 
     if (    p->pixmap
-		 && p->w == form->w
-		 && p->h == form->h
-		 && p->depth == fli_depth( fl_vmode )
-		 && p->visual == fli_visual( fl_vmode ) )
+         && p->w == form->w
+         && p->h == form->h
+         && p->depth == fli_depth( fl_vmode )
+         && p->visual == fli_visual( fl_vmode ) )
     {
-		change_form_drawable( p, form );
-		return;
+        change_form_drawable( p, form );
+        return;
     }
 
     if ( p->pixmap )
-		XFreePixmap( flx->display, p->pixmap );
+        XFreePixmap( flx->display, p->pixmap );
 
     oldhandler = XSetErrorHandler( fl_xerror_handler );
 
     p->pixmap = XCreatePixmap( flx->display, form->window,
-							   form->w, form->h,
-							   fli_depth( fl_vmode ) );
+                               form->w, form->h,
+                               fli_depth( fl_vmode ) );
 
     M_info( "fli_create_form_pixmap", "Creating (w = %d, h = %d)",
-			form->w, form->h );
+            form->w, form->h );
 
     /* Make sure it succeeds by forcing a two way request */
 
     if ( ! XGetGeometry( flx->display, p->pixmap, &root, &i, &i,
-						 &junk, &junk, &junk, &junk ) )
+                         &junk, &junk, &junk, &junk ) )
     {
-		M_warn( "fli_create_form_pixmap", "Can't create pixmap" );
-		p->pixmap = None;
-		XSetErrorHandler( oldhandler );
-		return;
+        M_warn( "fli_create_form_pixmap", "Can't create pixmap" );
+        p->pixmap = None;
+        XSetErrorHandler( oldhandler );
+        return;
     }
 
     XSetErrorHandler( oldhandler );
@@ -447,7 +447,7 @@ fli_create_form_pixmap( FL_FORM * form )
     change_form_drawable( p, form );
 
     M_info( "fli_create_form_pixmap", "Creation done, win is now %ld",
-			p->pixmap );
+            p->pixmap );
 }
 
 
@@ -460,15 +460,15 @@ fli_show_form_pixmap( FL_FORM * form )
     FL_pixmap *p = form->flpixmap;
 
     if (    ! form_pixmapable( form )
-		 || ! p
-		 || ! p->pixmap
-		 || ! p->win
-		 || p->w <= 0
-		 || p->h <= 0 )
-		return;
+         || ! p
+         || ! p->pixmap
+         || ! p->win
+         || p->w <= 0
+         || p->h <= 0 )
+        return;
 
     XCopyArea( flx->display, p->pixmap, p->win, flx->gc,
-			   0, 0, p->w, p->h, 0, 0 );
+               0, 0, p->w, p->h, 0, 0 );
 
     form->x = p->x;
     form->y = p->y;
@@ -485,13 +485,13 @@ fli_show_form_pixmap( FL_FORM * form )
 static FLI_VN_PAIR xvclass[ ] =
 {
     VN( PseudoColor ),
-	VN( TrueColor ),
-	VN( DirectColor ),
-	VN( StaticColor ),
+    VN( TrueColor ),
+    VN( DirectColor ),
+    VN( StaticColor ),
     VN( GrayScale ),
-	VN( GreyScale ),
-	VN( StaticGray ),
-	VN( StaticGrey ),
+    VN( GreyScale ),
+    VN( StaticGray ),
+    VN( StaticGrey ),
     { FL_DefaultVisual, "DefaultVisual" },
     { FL_DefaultVisual, "default"       },
     { FL_DefaultVisual, "Default"       },
@@ -506,7 +506,7 @@ static FLI_VN_PAIR xvclass[ ] =
 const char *
 fl_vclass_name( int n )
 {
-	const char *cn = fli_get_vn_name( xvclass, n );
+    const char *cn = fli_get_vn_name( xvclass, n );
 
     return cn ? cn : fli_get_vn_name( xvclass, FL_IllegalVisual );
 }
@@ -522,12 +522,20 @@ fl_vclass_val( const char * v )
 {
     FLI_VN_PAIR *vn;
 
-	if ( ! v ) 
-		return FL_IllegalVisual;
+    if ( ! v ) 
+        return FL_IllegalVisual;
 
     for ( vn = xvclass; vn->name; vn++ )
-		if ( ! strcmp( vn->name, v ) )
-			return vn->val;
+        if ( ! strcmp( vn->name, v ) )
+            return vn->val;
 
     return FL_IllegalVisual;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

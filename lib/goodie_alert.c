@@ -52,48 +52,48 @@ static FD_alert *fd_alert;
 
 static FD_alert *
 create_alert( const char * title,
-			  const char * msg )
+              const char * msg )
 {
     FD_alert *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit( );
-	int style,
-		size;
-	int w_tit = 0,
-		h_tit = 0,
-		w_msg = 0,
-		h_msg = 0,
-		w_but = 0,
-		h_but;
-	int box_w,
-		box_h,
-		but_w;
+    int style,
+        size;
+    int w_tit = 0,
+        h_tit = 0,
+        w_msg = 0,
+        h_msg = 0,
+        w_but = 0,
+        h_but;
+    int box_w,
+        box_h,
+        but_w;
     FL_OBJECT *ob;
-	char but_text[ 256 ] = "Dismiss";
+    char but_text[ 256 ] = "Dismiss";
 
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-	fli_get_goodies_font( &style, &size );
+    fli_get_goodies_font( &style, &size );
 
-	if ( title )
-		fl_get_string_dimension( FL_BOLD_STYLE, FL_NORMAL_SIZE,
-								 title, strlen( title ), &w_tit, &h_tit );
+    if ( title )
+        fl_get_string_dimension( FL_BOLD_STYLE, FL_NORMAL_SIZE,
+                                 title, strlen( title ), &w_tit, &h_tit );
 
-	if ( msg )
-		fl_get_string_dimension( style, size, msg, strlen( msg ),
-								 &w_msg, &h_msg );
+    if ( msg )
+        fl_get_string_dimension( style, size, msg, strlen( msg ),
+                                 &w_msg, &h_msg );
 
     fl_get_resource( FLAlertDismissLabel, NULL, FL_STRING, NULL,
-					 but_text, 256 );
+                     but_text, 256 );
 
-	fl_get_string_dimension( style, size, but_text, strlen( but_text ),
-							 &w_but, &h_but );
+    fl_get_string_dimension( style, size, but_text, strlen( but_text ),
+                             &w_but, &h_but );
 
-	but_w = FL_max( 90, w_but + 20 );
+    but_w = FL_max( 90, w_but + 20 );
 
-	box_w = FL_max( 400, FL_max( FL_max( w_tit, w_msg ), but_w ) + 80 );
-	box_h = FL_max( h_tit + 20, 30 ) + 5 + h_msg + 30 + h_but + 20;
+    box_w = FL_max( 400, FL_max( FL_max( w_tit, w_msg ), but_w ) + 80 );
+    box_h = FL_max( h_tit + 20, 30 ) + 5 + h_msg + 30 + h_but + 20;
 
     fdui->form = fl_bgn_form( FL_NO_BOX, box_w, box_h );
     fl_set_form_title( fdui->form, "Alert" );
@@ -103,7 +103,7 @@ create_alert( const char * title,
     ob = fl_add_box( FL_UP_BOX, 0, 0, box_w, box_h, "" );
 
     fdui->title = fl_add_box( FL_FLAT_BOX, 60, 10, box_w - 80, h_tit,
-							  title ? title : "" );
+                              title ? title : "" );
     fl_set_object_lstyle( fdui->title, FL_BOLD_STYLE );
     fl_set_object_lsize( fdui->title, FL_NORMAL_SIZE );
 
@@ -112,23 +112,23 @@ create_alert( const char * title,
     fl_add_box( FL_FLAT_BOX, 50, h_tit + 20, box_w - 60, 5, "@DnLine" );
 
     fdui->str = fl_add_text( FL_FLAT_BOX, 60, h_tit + 35,
-							 box_w - 80, h_msg + 10, msg ? msg : "" );
+                             box_w - 80, h_msg + 10, msg ? msg : "" );
     fl_set_object_lalign( fdui->str, FL_ALIGN_CENTER );
-	fl_set_object_lstyle( fdui->str, style );
-	fl_set_object_lsize( fdui->str, size );
+    fl_set_object_lstyle( fdui->str, style );
+    fl_set_object_lsize( fdui->str, size );
 
     fdui->but = fl_add_button( FL_RETURN_BUTTON, ( box_w - but_w ) / 2,
-							   box_h - h_but - 20, but_w, h_but + 10,
-							   but_text );
-	fl_set_object_lstyle( fdui->but, style );
-	fl_set_object_lsize( fdui->but, size );
+                               box_h - h_but - 20, but_w, h_but + 10,
+                               but_text );
+    fl_set_object_lstyle( fdui->but, style );
+    fl_set_object_lsize( fdui->but, size );
 
     fl_set_form_hotobject( fdui->form, fdui->but );
 
     fl_end_form( );
 
     fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
-							  fli_goodies_preemptive );
+                              fli_goodies_preemptive );
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
     fdui->form->fdui = fdui;
 
@@ -144,31 +144,31 @@ create_alert( const char * title,
 
 static void
 show_it( const char * title,
-		 const char * msg,
-		 int          c )
+         const char * msg,
+         int          c )
 {
     if ( fd_alert )
-	{
-		fl_hide_form( fd_alert->form );
-		fl_free_form( fd_alert->form );
-		fd_alert = NULL;
-	}
-	else
-		fl_deactivate_all_forms( );
+    {
+        fl_hide_form( fd_alert->form );
+        fl_free_form( fd_alert->form );
+        fd_alert = NULL;
+    }
+    else
+        fl_deactivate_all_forms( );
 
-	fd_alert = create_alert( title, msg );
+    fd_alert = create_alert( title, msg );
 
     fl_show_form( fd_alert->form, c ? FL_PLACE_CENTER : FL_PLACE_HOTSPOT,
-				  FL_TRANSIENT, fd_alert->form->label );
+                  FL_TRANSIENT, fd_alert->form->label );
 
     fl_update_display( 1 );
 
     while ( fl_do_only_forms( ) != fd_alert->but )
-		/* empty */ ;
+        /* empty */ ;
 
     fl_hide_form( fd_alert->form );
-	fl_free_form( fd_alert->form );
-	fl_safe_free( fd_alert );
+    fl_free_form( fd_alert->form );
+    fl_safe_free( fd_alert );
     fl_activate_all_forms( );
 }
 
@@ -179,17 +179,17 @@ show_it( const char * title,
 
 void
 fl_show_alert( const char * title,
-			   const char * str1,
-			   const char * str2,
-			   int          c )
+               const char * str1,
+               const char * str2,
+               int          c )
 {
     char *buf;
 
-	buf= fl_malloc(   ( str1 ? strlen( str1 ) : 0 ) + 1
-					+ ( str2 ? strlen( str2 ) : 0 ) + 1 );
+    buf= fl_malloc(   ( str1 ? strlen( str1 ) : 0 ) + 1
+                    + ( str2 ? strlen( str2 ) : 0 ) + 1 );
     sprintf( buf,"%s\n%s", str1 ? str1 : "", str2 ? str2 : "" );
-	show_it( title, buf, c );
-	fl_free( buf );
+    show_it( title, buf, c );
+    fl_free( buf );
 }
 
 
@@ -198,56 +198,56 @@ fl_show_alert( const char * title,
 
 void
 fl_show_alert2( int c,
-				const char * fmt,
-				... )
+                const char * fmt,
+                ... )
 {
-	char *buf,
-		 *p;
-	int len;
-	int written;
-	va_list ap;
+    char *buf,
+         *p;
+    int len;
+    int written;
+    va_list ap;
 
-	if ( ! fmt || ! * fmt )
-	{
-		M_warn( "fl_show_msg", "NULL or empty format string" );
-		return;
-	}
+    if ( ! fmt || ! * fmt )
+    {
+        M_warn( "fl_show_msg", "NULL or empty format string" );
+        return;
+    }
 
-	/* Try to come up with an estimate of the length required for the
-	   whole string */
+    /* Try to come up with an estimate of the length required for the
+       whole string */
 
-	len = strlen( fmt ) + 1;
+    len = strlen( fmt ) + 1;
 
-	for ( p = strchr( fmt, '%' ); p; p = strchr( ++p, '%' ) )
-		len += 15;
+    for ( p = strchr( fmt, '%' ); p; p = strchr( ++p, '%' ) )
+        len += 15;
 
-	buf = fl_malloc( len );
+    buf = fl_malloc( len );
 
-	while ( 1 )
-	{
-		va_start( ap, fmt );
-		written = fl_vsnprintf( buf, len, fmt, ap );
-		va_end( ap );
+    while ( 1 )
+    {
+        va_start( ap, fmt );
+        written = fl_vsnprintf( buf, len, fmt, ap );
+        va_end( ap );
 
-		/* Take care: e.g. in older libc versions a negative value got
-		   returned if the buffer wasn't large enough while newer ones
-		   follow C99 and return the length of the string that would be
-		   needed (but without the trailing '\0') */
+        /* Take care: e.g. in older libc versions a negative value got
+           returned if the buffer wasn't large enough while newer ones
+           follow C99 and return the length of the string that would be
+           needed (but without the trailing '\0') */
 
-		if ( written > -1 && written < len )
-			break;
+        if ( written > -1 && written < len )
+            break;
 
-		len = written < 0 ? ( 2 * len ) : ( written + 1 );
-		buf = fl_realloc( buf, len );
-	}
+        len = written < 0 ? ( 2 * len ) : ( written + 1 );
+        buf = fl_realloc( buf, len );
+    }
 
-	p = strchr( buf, '\f' );
-	if ( p )
-		*p++ = '\0';
-	else
-		p = NULL;
+    p = strchr( buf, '\f' );
+    if ( p )
+        *p++ = '\0';
+    else
+        p = NULL;
 
-	show_it( buf, p, c );
+    show_it( buf, p, c );
 }
 
 
@@ -258,9 +258,9 @@ void
 fl_hide_alert( void )
 {
     if ( fd_alert && fd_alert->form->visible )
-		fl_trigger_object( fd_alert->but );
-	else
-		M_warn( "fl_hide_alert", "No alert box is shown" );
+        fl_trigger_object( fd_alert->but );
+    else
+        M_warn( "fl_hide_alert", "No alert box is shown" );
 }
 
 
@@ -270,5 +270,13 @@ fl_hide_alert( void )
 void
 fli_alert_cleanup( void )
 {
-	fl_safe_free( fd_alert );
+    fl_safe_free( fd_alert );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

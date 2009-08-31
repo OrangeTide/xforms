@@ -49,14 +49,14 @@ draw_labelbutton( FL_OBJECT * ob )
     FL_COLOR scol = ob->lcol;
     FL_COLOR col = ob->lcol;
     FL_Coord dh,
-		     dw,
-		     ww,
-		     absbw = FL_abs( ob->bw );
+             dw,
+             ww,
+             absbw = FL_abs( ob->bw );
 
     if ( ob->belowmouse )
-		col = ob->col1;
+        col = ob->col1;
     if ( ( ( FL_BUTTON_STRUCT * ) ob->spec )->val )
-		col = ob->col2;
+        col = ob->col2;
 
     ob->lcol = col;
 
@@ -65,11 +65,11 @@ draw_labelbutton( FL_OBJECT * ob )
 
     ww = 0.75 * ob->h;
     if ( ww < dw + absbw + 1 + ( ob->bw > 0 ) )
-		ww = dw + absbw + 1 + ( ob->bw > 0 );
+        ww = dw + absbw + 1 + ( ob->bw > 0 );
 
     if ( ob->type == FL_RETURN_BUTTON )
-		fl_drw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
-					 dw, dh, ob->lcol, 0, 0, "@returnarrow" );
+        fl_drw_text( 0, ob->x + ob->w - ww, ob->y + 0.2 * ob->h,
+                     dw, dh, ob->lcol, 0, 0, "@returnarrow" );
 
     fl_draw_object_label( ob );
     ob->lcol = scol;
@@ -82,11 +82,11 @@ draw_labelbutton( FL_OBJECT * ob )
 
 FL_OBJECT *
 fl_create_labelbutton( int          type,
-					   FL_Coord     x,
-					   FL_Coord     y,
-					   FL_Coord     w,
-					   FL_Coord     h,
-					   const char * label)
+                       FL_Coord     x,
+                       FL_Coord     y,
+                       FL_Coord     w,
+                       FL_Coord     h,
+                       const char * label)
 {
     FL_OBJECT *ob;
 
@@ -109,14 +109,22 @@ fl_create_labelbutton( int          type,
 
 FL_OBJECT *
 fl_add_labelbutton( int          type,
-					FL_Coord     x,
-					FL_Coord     y,
-					FL_Coord     w,
-					FL_Coord     h,
-					const char * label)
+                    FL_Coord     x,
+                    FL_Coord     y,
+                    FL_Coord     w,
+                    FL_Coord     h,
+                    const char * label)
 {
     FL_OBJECT *ob = fl_create_labelbutton( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

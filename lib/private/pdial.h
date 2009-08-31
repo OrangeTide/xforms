@@ -22,28 +22,35 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- * Private header for dial object
  *
+ * Private header for dial object
  */
 
 #ifndef PDIAL_H
 #define PDIAL_H
 
 typedef struct {
-    double a,				/* for speed                      */
-	       b;
-    double min,				/* min/max value of dial          */
-	       max;
-    double val;				/* current value of dial          */
-    double step;			/* step size                      */
-    double thetai;			/* start angle (degrees)          */
-    double thetaf;			/* end angle   (degrees)          */
-    double origin;			/* where the origin is            */
+    double a,               /* for speed                      */
+           b;
+    double min,             /* min/max value of dial          */
+           max;
+    double val;             /* current value of dial          */
+    double step;            /* step size                      */
+    double thetai;          /* start angle (degrees)          */
+    double thetaf;          /* end angle   (degrees)          */
+    double origin;          /* where the origin is            */
     short  cross_over;
     double  start_val;
-    short  direction;		/* not currently used            */
+    short  direction;       /* not currently used            */
 } FLI_DIAL_SPEC;
 
 
 #endif /* pdial_h */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

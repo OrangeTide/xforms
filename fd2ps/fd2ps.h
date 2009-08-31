@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -30,44 +29,44 @@
 
 typedef struct {
     FILE       * fp;
-    float        xdpi,		    /* screen resolution         */
-	             ydpi;
-    int          colorps;		/* false if grayscale        */
-    int          eps;			/* true for EPS              */
-    float        paper_w,	    /* default paper size        */
-	             paper_h;
+    float        xdpi,          /* screen resolution         */
+                 ydpi;
+    int          colorps;       /* false if grayscale        */
+    int          eps;           /* true for EPS              */
+    float        paper_w,       /* default paper size        */
+                 paper_h;
     const char * paper_name;
-    int          bw;			/* current border width      */
-    int          user_bw;		/* bw specified on cmdline   */
+    int          bw;            /* current border width      */
+    int          user_bw;       /* bw specified on cmdline   */
     int          verbose;
-    int          inverted;		/* take care of coord switch */
-    int          landscape;		/* print version             */
-    int          unit;			/* unit of measure           */
-    int          pages;			/* how many pages            */
-    int          page;			/* current page              */
-    int          epsf_import;	/* true if importing EPS     */
+    int          inverted;      /* take care of coord switch */
+    int          landscape;     /* print version             */
+    int          unit;          /* unit of measure           */
+    int          pages;         /* how many pages            */
+    int          page;          /* current page              */
+    int          epsf_import;   /* true if importing EPS     */
     float        xscale,
-	             yscale;
-    float        gamma;		    /* color adjustment          */
+                 yscale;
+    float        gamma;         /* color adjustment          */
     int          pack,
-	             len,
-	             lastc,
-	             literal;
+                 len,
+                 lastc,
+                 literal;
     char       * rgbfile;
     int          xpmtops_direct;
 
     /* internal stuff */
 
-    const char * poly_name;	/* PS poly name               */
+    const char * poly_name; /* PS poly name               */
 } PSInfo;
 
 typedef struct {
     float x,
-	      y;
+          y;
 } Point;
 
 
-#define MAX_CONTENT      64	/* max browser initialization lines */
+#define MAX_CONTENT      64 /* max browser initialization lines */
 #define rgb2gray( r, g, b )   \
      ( 0.299 * ( r ) + 0.587 * ( g ) + 0.114 * ( b ) + 0.4 )
 
@@ -76,29 +75,29 @@ typedef struct {
  * that have effect on the drawings.  */
 
 typedef struct {
-    float    ax,	        /* mapping factor */
-	         bx,
-	         ay,
-	         by;
+    float    ax,            /* mapping factor */
+             bx,
+             ay,
+             by;
     float    xval,
-	         yval;
+             yval;
     float    xmin,
-	         ymin;
+             ymin;
     float    xmax,
-	         ymax;
-    float    xstep,  		/* positioner          */
-	         ystep;
-    float    lstep,		    /* counter             */
-	         sstep;
-    float    slsize;		/* sliders             */
-    float    val;			/* */
+             ymax;
+    float    xstep,         /* positioner          */
+             ystep;
+    float    lstep,         /* counter             */
+             sstep;
+    float    slsize;        /* sliders             */
+    float    val;           /* */
     float    max,
-	         min;
+             min;
     int      prec;
     int      int_val;
 
     float    thetai,
-	         thetaf;
+             thetaf;
 
     float    origin;
     int      direction;
@@ -106,8 +105,8 @@ typedef struct {
     /* pixmap/bitmap stuff */
 
     char   * file;
-    int      dx,			/* alignment margin */
-	         dy;
+    int      dx,            /* alignment margin */
+             dy;
     int      align;
     int      show_focus;
 
@@ -115,19 +114,19 @@ typedef struct {
 
     int      right;
     float    xsl,
-	         ysl,
-	         wsl,
-	         hsl,
-	         sbw;
+             ysl,
+             wsl,
+             hsl,
+             sbw;
     int      has_sb;
     int      lines,
-	         screenlines;
-    char  ** content;		/* for input & browser */
+             screenlines;
+    char  ** content;       /* for input & browser */
     short  * mode;
     int      fontstyle,
-	         fontsize;
+             fontsize;
     int      v_pref,
-	         h_pref;
+             h_pref;
 } ALLSPEC;
 
 #define SPEC ALLSPEC
@@ -147,10 +146,10 @@ extern void ps_poly( int, Point *, int, long );
 extern int ps_draw_symbol( const char *, float, float, float, float, long );
 extern void ps_oval( int, float, float, float, float, long );
 extern void ps_pieslice( int fill, float x, float y, float w, float h,
-						 int t1, int t2, long col );
+                         int t1, int t2, long col );
 extern void ps_circ( int, float, float, float, long );
 extern void ps_arc( int fill, float x, float y, float r,
-					int t1, int t2, long col );
+                    int t1, int t2, long col );
 extern void ps_set_clipping( int, int, int, int );
 extern void ps_unset_clipping( void );
 
@@ -166,9 +165,9 @@ extern void ps_draw_checkbox( int, float, float, float, float, long, int );
 /* basic text drawing routines */
 
 extern void ps_draw_text( int, float, float, float, float,
-						  long, int, int, const char * );
+                          long, int, int, const char * );
 extern void ps_draw_text_beside( int, float, float, float, float,
-								 long, int, int, const char * );
+                                 long, int, int, const char * );
 extern void ps_text_init( void );
 
 /* FL Object drawing routine */
@@ -206,10 +205,10 @@ extern int find_class_val( const char * );
 extern void ps_set_font( int, int );
 extern int load_form_definition( const char * );
 extern void fl_get_outside_align( int align, int x, int y, int w, int h,
-								  int *new_align, int *newx, int *newy );
+                                  int *new_align, int *newx, int *newy );
 extern void fl_get_hv_align( int, int *, int * );
 extern void draw_bitmap( const char *, float, float, float, float,
-						 long, long );
+                         long, long );
 extern int get_gray255( long );
 extern void get_scale_unit( int, float *, float * );
 extern void draw_xpm( FL_OBJECT * );
@@ -219,35 +218,35 @@ extern void list_papers( const char * );
 extern void ps_invalidate_font_cache( void );
 extern void emit_epsf_import_command( void );
 extern FL_OBJECT *flps_make_object( int, int, int, int, int, int,
-									const char *, void * );
+                                    const char *, void * );
 
 #define PS_SPECIAL( c ) (    c == '(' || c == ')'    \
-						  || c == '[' || c == ']'    \
-						  || c == ' ' || c == '<'    \
-						  || c == '>' || c == '%'    \
-						  || c == '#' || c == '/' )
+                          || c == '[' || c == ']'    \
+                          || c == ' ' || c == '<'    \
+                          || c == '>' || c == '%'    \
+                          || c == '#' || c == '/' )
 
 
 extern void ps_output( const char *, ... );
 extern void ps_verbatim( const char *, ... );
 
 #define ISBUTTON( cls )  \
-   (    cls == FL_BUTTON        || cls == FL_LIGHTBUTTON	   \
-	 || cls == FL_CHECKBUTTON   || cls == FL_ROUNDBUTTON	   \
-	 || cls == FL_ROUND3DBUTTON || cls == FL_PIXMAPBUTTON      \
-     ||	cls == FL_BITMAPBUTTON  || cls == FL_SCROLLBUTTON      \
-	 || cls == FL_LABELBUTTON )
+   (    cls == FL_BUTTON        || cls == FL_LIGHTBUTTON       \
+     || cls == FL_CHECKBUTTON   || cls == FL_ROUNDBUTTON       \
+     || cls == FL_ROUND3DBUTTON || cls == FL_PIXMAPBUTTON      \
+     || cls == FL_BITMAPBUTTON  || cls == FL_SCROLLBUTTON      \
+     || cls == FL_LABELBUTTON )
 
 #define ISCHOICE( cls )   \
-	( cls == FL_CHOICE || cls == FL_MENU || cls == FL_BROWSER )
+    ( cls == FL_CHOICE || cls == FL_MENU || cls == FL_BROWSER )
 
 extern int xpmtops_direct( const char *, int, int, long );
 
 typedef struct {
     int  red,
-	     green,
-	     blue,
-	     alpha;
+         green,
+         blue,
+         alpha;
     char key[ 4 ];
     char name[ 32 ];
 } fd2psCMAP;
@@ -258,3 +257,11 @@ extern char *ps_literal( const char * );
 
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

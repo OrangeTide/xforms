@@ -40,10 +40,10 @@ IRIS_identify( FILE * fp )
     char buf[ 2 ];
 
     if ( fread( buf, 1, 2, fp ) != 2 )
-		return 0;
+        return 0;
 
     return    ( buf[ 0 ] == '\001' && buf[ 1 ] == '\332' )
-		   || ( buf[ 0 ] == '\332' && buf[ 1 ] == '\001' );
+           || ( buf[ 0 ] == '\332' && buf[ 1 ] == '\001' );
 }
 
 
@@ -90,9 +90,17 @@ void
 flimage_enable_sgi( void )
 {
     flimage_add_format( "SGI Iris", "iris", "rgb",
-						FL_IMAGE_RGB | FL_IMAGE_GRAY | FL_IMAGE_MONO,
-						IRIS_identify,
-						IRIS_description,
-						IRIS_load,
-						IRIS_dump);
+                        FL_IMAGE_RGB | FL_IMAGE_GRAY | FL_IMAGE_MONO,
+                        IRIS_identify,
+                        IRIS_description,
+                        IRIS_load,
+                        IRIS_dump);
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

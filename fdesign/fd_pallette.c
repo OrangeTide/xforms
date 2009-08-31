@@ -40,8 +40,8 @@
 static FD_pmain *pmain;
 
 typedef struct {
-    FL_OBJECT * ob;		   /* the object (radio button) handle */
-    int         cls;	   /* the obj class it represents      */
+    FL_OBJECT * ob;        /* the object (radio button) handle */
+    int         cls;       /* the obj class it represents      */
 }
 Entry;
 
@@ -59,21 +59,21 @@ init_entry_table( FL_FORM * form )
     int i;
 
     if ( ! entries )
-		entries = fl_calloc( 1, MAXCLASSES * sizeof *entries );
+        entries = fl_calloc( 1, MAXCLASSES * sizeof *entries );
 
     /* we obtain the class by looking at the callback function */
 
     for ( i = 0, ob = form->first; i < MAXCLASSES && ob; ob = ob->next, i++ )
-		if ( ob->object_callback )
-		{
-			entries[ nentries ].ob = ob;
-			entries[ nentries ].cls = ob->argument;
-			nentries++;
-		}
+        if ( ob->object_callback )
+        {
+            entries[ nentries ].ob = ob;
+            entries[ nentries ].cls = ob->argument;
+            nentries++;
+        }
 
     if ( i >= MAXCLASSES )
-		fprintf( stderr, "fd_pallette - Internal Error: MAXCLASSES "
-				 "too small?\n");
+        fprintf( stderr, "fd_pallette - Internal Error: MAXCLASSES "
+                 "too small?\n");
 }
 
 
@@ -90,7 +90,7 @@ create_all( void )
     FD_miscform *mf;
 
     if ( pmain )
-		return pmain->pmain;
+        return pmain->pmain;
 
     pmain = create_form_pmain( );
     bf = create_form_buttform( );
@@ -119,7 +119,7 @@ create_all( void )
 
 void
 dismiss_pallete( FL_OBJECT * ob,
-				 long        data  FL_UNUSED_ARG )
+                 long        data  FL_UNUSED_ARG )
 {
     fl_hide_form( ob->form );
     reset_pallette_menu_status( );
@@ -135,7 +135,7 @@ hide_pallette( void )
     FL_FORM *form = create_all( );
 
     if ( form->visible )
-		fl_hide_form( form );
+        fl_hide_form( form );
 }
 
 
@@ -150,8 +150,8 @@ show_pallette( void )
 
     if ( first )
     {
-		fl_set_form_position( form, -form->w - 50, 20 );
-		first = 0;
+        fl_set_form_position( form, -form->w - 50, 20 );
+        first = 0;
     }
 
     select_pallette_entry( cur_class );
@@ -166,10 +166,10 @@ show_pallette( void )
 
 void
 pallette_entry_callback( FL_OBJECT * ob,
-						 long        data )
+                         long        data )
 {
     if ( pmain->vdata && ( ( FL_OBJECT * ) pmain->vdata )->form != ob->form )
-		fl_set_button( pmain->vdata, 0 );
+        fl_set_button( pmain->vdata, 0 );
 
     pmain->vdata = ob;
     pmain->ldata = data;
@@ -188,8 +188,8 @@ reset_pallette( void )
 {
     if ( pmain && pmain->vdata )
     {
-		fl_set_button( pmain->vdata, 0 );
-		pmain->vdata = 0;
+        fl_set_button( pmain->vdata, 0 );
+        pmain->vdata = 0;
     }
 }
 
@@ -204,16 +204,24 @@ select_pallette_entry( int cls )
     int i;
 
     if ( ! entries || cls < 0 )
-		return;
+        return;
 
     for ( i = 0; i < nentries; i++ )
-		if ( entries[ i ].cls == cls )
-		{
-			fl_set_folder( pmain->folder, entries[ i ].ob->form );
-			fl_set_button( entries[ i ].ob, 1 );
-			break;
-		}
+        if ( entries[ i ].cls == cls )
+        {
+            fl_set_folder( pmain->folder, entries[ i ].ob->form );
+            fl_set_button( entries[ i ].ob, 1 );
+            break;
+        }
 }
 
 
 #include "fd/pallette.c"
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

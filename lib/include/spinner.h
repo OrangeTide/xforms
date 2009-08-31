@@ -1,5 +1,5 @@
 /*
- *	This file is part of the XForms library package.
+ *  This file is part of the XForms library package.
  *
  *  XForms is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Lesser General Public License as
@@ -8,7 +8,7 @@
  *
  *  XForms is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.     See the GNU
  *  Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
@@ -21,44 +21,44 @@
 #define FL_SPINNER_H
 
 typedef enum {
-	FL_INT_SPINNER,
-	FL_FLOAT_SPINNER,
+    FL_INT_SPINNER,
+    FL_FLOAT_SPINNER,
 } FL_SPINNER_TYPE;
 
-FL_EXPORT FL_OBJECT * fl_create_spinner( int			type,
-										 FL_Coord	    x,
-										 FL_Coord	    y,
-										 FL_Coord	    w,
-										 FL_Coord	    h,
-										 const char * label );
+FL_EXPORT FL_OBJECT * fl_create_spinner( int            type,
+                                         FL_Coord       x,
+                                         FL_Coord       y,
+                                         FL_Coord       w,
+                                         FL_Coord       h,
+                                         const char * label );
 
-FL_EXPORT FL_OBJECT * fl_add_spinner( int			 type,
-									  FL_Coord	 x,
-									  FL_Coord	 y,
-									  FL_Coord	 w,
-									  FL_Coord	 h,
-									  const char * label );
+FL_EXPORT FL_OBJECT * fl_add_spinner( int            type,
+                                      FL_Coord   x,
+                                      FL_Coord   y,
+                                      FL_Coord   w,
+                                      FL_Coord   h,
+                                      const char * label );
 
 FL_EXPORT double fl_get_spinner_value( FL_OBJECT * obj );
 
 FL_EXPORT double fl_set_spinner_value( FL_OBJECT * obj,
-									   double      val );
+                                       double      val );
 
 FL_EXPORT void fl_set_spinner_bounds( FL_OBJECT * obj,
-									  double      min,
-									  double      max );
+                                      double      min,
+                                      double      max );
 
 FL_EXPORT void fl_get_spinner_bounds( FL_OBJECT * obj,
-									  double    * min,
-									  double    * max );
+                                      double    * min,
+                                      double    * max );
 
 FL_EXPORT void fl_set_spinner_step( FL_OBJECT * obj,
-									double      step );
+                                    double      step );
 
 FL_EXPORT double fl_get_spinner_step( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_spinner_precision( FL_OBJECT * obj,
-										 int         prec );
+                                         int         prec );
 
 FL_EXPORT int fl_get_spinner_precision( FL_OBJECT * obj );
 

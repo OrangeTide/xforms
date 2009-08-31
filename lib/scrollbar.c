@@ -43,7 +43,7 @@ static void attrib_change( FL_OBJECT * );
 #define IsVThin( t )  (    t == FL_VERT_THIN_SCROLLBAR    \
                         || t == FL_VERT_PLAIN_SCROLLBAR )
 #define IsHThin( t )  (    t == FL_HOR_THIN_SCROLLBAR     \
-						|| t == FL_HOR_PLAIN_SCROLLBAR )
+                        || t == FL_HOR_PLAIN_SCROLLBAR )
 #define IsThin( t )   ( IsVThin( t ) || IsHThin( t ) )
 
 
@@ -52,35 +52,35 @@ static void attrib_change( FL_OBJECT * );
 
 static int
 handle_scrollbar( FL_OBJECT * obj,
-				  int         event,
-				  FL_Coord    mx   FL_UNUSED_ARG,
-				  FL_Coord    my   FL_UNUSED_ARG,
-				  int         key  FL_UNUSED_ARG,
-				  void      * ev   FL_UNUSED_ARG )
+                  int         event,
+                  FL_Coord    mx   FL_UNUSED_ARG,
+                  FL_Coord    my   FL_UNUSED_ARG,
+                  int         key  FL_UNUSED_ARG,
+                  void      * ev   FL_UNUSED_ARG )
 {
     switch ( event )
     {
-		case FL_ATTRIB :
-		case FL_RESIZED :
-			attrib_change( obj );
-			get_geom( obj );
-			break;
+        case FL_ATTRIB :
+        case FL_RESIZED :
+            attrib_change( obj );
+            get_geom( obj );
+            break;
 
-		case FL_DRAW :
-			if ( IsThin( obj->type ) )
-				fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-							obj->col1, obj->bw );
-			/* fall through */
+        case FL_DRAW :
+            if ( IsThin( obj->type ) )
+                fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                            obj->col1, obj->bw );
+            /* fall through */
 
-		case FL_DRAWLABEL :
-			if ( obj->label && *obj->label )
-				fl_draw_object_label_outside( obj );
-			break;
+        case FL_DRAWLABEL :
+            if ( obj->label && *obj->label )
+                fl_draw_object_label_outside( obj );
+            break;
 
-		case FL_FREEMEM :
-			/* children will take care of themselves */
-			fl_free( obj->spec );
-			break;
+        case FL_FREEMEM :
+            /* children will take care of themselves */
+            fl_free( obj->spec );
+            break;
     }
 
     return FL_RETURN_NONE;
@@ -103,7 +103,7 @@ attrib_change( FL_OBJECT * obj )
     sp->up->col2     = sp->down->col2    = obj->col2;
     sp->up->boxtype  = sp->down->boxtype = sp->slider->boxtype = obj->boxtype;
 
-	fl_notify_object( sp->slider, FL_ATTRIB );
+    fl_notify_object( sp->slider, FL_ATTRIB );
 }
 
 
@@ -115,51 +115,51 @@ get_geom( FL_OBJECT * obj )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
     FL_OBJECT *up     = sp->up,
-		      *down   = sp->down,
-		      *slider = sp->slider;
+              *down   = sp->down,
+              *slider = sp->slider;
     int x = obj->x,
-		y = obj->y,
-		w = obj->w,
-		h = obj->h;
+        y = obj->y,
+        w = obj->w,
+        h = obj->h;
     int absbw = FL_abs( obj->bw );
     int t = obj->type;
 
     if ( IS_HORIZ( obj ) )
     {
-		down->x = x;
-		up->x = x + w - h;
-		up->y = down->y = y;
-		down->h = up->h = h;
-		down->w = up->w = FL_min( w, h );
+        down->x = x;
+        up->x = x + w - h;
+        up->y = down->y = y;
+        down->h = up->h = h;
+        down->w = up->w = FL_min( w, h );
 
-		slider->x = x + h;
-		slider->y = y;
-		slider->h = h;
+        slider->x = x + h;
+        slider->y = y;
+        slider->h = h;
 
-		if ( ( slider->w = w - 2 * up->w ) < 0 )
-		{
-			slider->w = up->w / 3;
-			slider->x = x + up->w / 3;
-		}
+        if ( ( slider->w = w - 2 * up->w ) < 0 )
+        {
+            slider->w = up->w / 3;
+            slider->x = x + up->w / 3;
+        }
     }
     else
     {
-		up->x = down->x = x;
-		up->y = y;
-		up->w = down->w = w;
-		up->h = down->h = FL_min( w, h );
+        up->x = down->x = x;
+        up->y = y;
+        up->w = down->w = w;
+        up->h = down->h = FL_min( w, h );
 
-		slider->x = x;
-		slider->y = y + up->h;
-		slider->w = w;
+        slider->x = x;
+        slider->y = y + up->h;
+        slider->w = w;
 
-		if ( ( slider->h = h - 2 * up->h ) < 0 )
-		{
-			slider->h = h / 3;
-			slider->y = y + up->h / 3;
-		}
+        if ( ( slider->h = h - 2 * up->h ) < 0 )
+        {
+            slider->h = h / 3;
+            slider->y = y + up->h / 3;
+        }
 
-		down->y = y + h - down->h;
+        down->y = y + h - down->h;
     }
 
     up->bw     = obj->bw;
@@ -167,41 +167,41 @@ get_geom( FL_OBJECT * obj )
     slider->bw = obj->bw;
 
     if ( absbw > 2 )
-		absbw--;
+        absbw--;
 
     if ( obj->bw > 0 )
-		up->bw = down->bw = absbw;
+        up->bw = down->bw = absbw;
     else
-		up->bw = down->bw = -absbw;
+        up->bw = down->bw = -absbw;
 
     if ( IsThin( t ) )
     {
-		absbw = IS_FLATBOX( obj->boxtype ) ? 1 : absbw;
+        absbw = IS_FLATBOX( obj->boxtype ) ? 1 : absbw;
 
-		up->boxtype = down->boxtype = FL_NO_BOX;
-		up->bw = down->bw = absbw;
+        up->boxtype = down->boxtype = FL_NO_BOX;
+        up->bw = down->bw = absbw;
 
-		/* Due to slider double buffering we  have to be completly clear of
-		   the scrollbar bounding box, otherwise the slider will wipe out the
-		   scrollbars bounding box */
+        /* Due to slider double buffering we  have to be completly clear of
+           the scrollbar bounding box, otherwise the slider will wipe out the
+           scrollbars bounding box */
 
-		if ( IsVThin( t ) )
-		{
-			slider->x += absbw + 1;
-			slider->w -= 2 * absbw + 2;
-			slider->y -= absbw + ( absbw > 1 );
-			slider->h += 2 * absbw + ( absbw > 1 );
-		}
-		else
-		{
-			slider->y += absbw + 1;
-			slider->h -= 2 * absbw + 2;
-			slider->x -= absbw + ( absbw > 1 );
-			slider->w += 2 * absbw + ( absbw > 1 );
-		}
+        if ( IsVThin( t ) )
+        {
+            slider->x += absbw + 1;
+            slider->w -= 2 * absbw + 2;
+            slider->y -= absbw + ( absbw > 1 );
+            slider->h += 2 * absbw + ( absbw > 1 );
+        }
+        else
+        {
+            slider->y += absbw + 1;
+            slider->h -= 2 * absbw + 2;
+            slider->x -= absbw + ( absbw > 1 );
+            slider->w += 2 * absbw + ( absbw > 1 );
+        }
     }
 
-	fl_notify_object( slider, FL_RESIZED );
+    fl_notify_object( slider, FL_RESIZED );
 }
 
 
@@ -211,24 +211,24 @@ get_geom( FL_OBJECT * obj )
 
 static void
 slider_cb( FL_OBJECT * obj,
-		   long        data  FL_UNUSED_ARG )
+           long        data  FL_UNUSED_ARG )
 {
-	FLI_SCROLLBAR_SPEC *sp = obj->parent->spec;
+    FLI_SCROLLBAR_SPEC *sp = obj->parent->spec;
 
-	if ( obj->returned & FL_RETURN_END )
-		obj->parent->returned |= FL_RETURN_END;
+    if ( obj->returned & FL_RETURN_END )
+        obj->parent->returned |= FL_RETURN_END;
 
-	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
-		 && obj->returned & FL_RETURN_END )
-	{
-		double nval = fl_get_slider_value( obj );
+    if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+         && obj->returned & FL_RETURN_END )
+    {
+        double nval = fl_get_slider_value( obj );
 
-		if ( nval != sp->old_val )
-			obj->parent->returned |= FL_RETURN_CHANGED;
- 		sp->old_val = nval;
-	}
-	else if ( obj->returned & FL_RETURN_CHANGED )
-		obj->parent->returned |= FL_RETURN_CHANGED;
+        if ( nval != sp->old_val )
+            obj->parent->returned |= FL_RETURN_CHANGED;
+        sp->old_val = nval;
+    }
+    else if ( obj->returned & FL_RETURN_CHANGED )
+        obj->parent->returned |= FL_RETURN_CHANGED;
 }
 
 
@@ -238,51 +238,51 @@ slider_cb( FL_OBJECT * obj,
 
 static void
 button_cb( FL_OBJECT * obj,
-		   long        data )
+           long        data )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->parent->spec;
-	double ival = fl_get_slider_value( sp->slider ),
-		   nval = ival,
-		   slmax,
-		   slmin;
+    double ival = fl_get_slider_value( sp->slider ),
+           nval = ival,
+           slmax,
+           slmin;
 
-	/* Update the slider and get the new value */
+    /* Update the slider and get the new value */
 
-	if ( obj->returned == FL_RETURN_TRIGGERED )
-		obj->returned = FL_RETURN_END | FL_RETURN_CHANGED;
+    if ( obj->returned == FL_RETURN_TRIGGERED )
+        obj->returned = FL_RETURN_END | FL_RETURN_CHANGED;
 
-	if ( obj->returned & FL_RETURN_CHANGED )
-	{
-		fl_get_slider_bounds( sp->slider, &slmin, &slmax );
+    if ( obj->returned & FL_RETURN_CHANGED )
+    {
+        fl_get_slider_bounds( sp->slider, &slmin, &slmax );
 
-		if ( slmax > slmin )
-			nval = ival + data * sp->increment;
-		else
-			nval = ival - data * sp->increment;
+        if ( slmax > slmin )
+            nval = ival + data * sp->increment;
+        else
+            nval = ival - data * sp->increment;
 
-		fl_set_slider_value( sp->slider, nval );
+        fl_set_slider_value( sp->slider, nval );
 
-		nval = fl_get_slider_value( sp->slider );
-	}
+        nval = fl_get_slider_value( sp->slider );
+    }
 
-	if ( obj->returned & FL_RETURN_END )
-		obj->parent->returned |= FL_RETURN_END;
+    if ( obj->returned & FL_RETURN_END )
+        obj->parent->returned |= FL_RETURN_END;
 
-	/* If we're supposed to return only on end and change check if the
-	   slider value changed since interaction started, if we have to return
-	   on everty change check if if it changed this time round */
+    /* If we're supposed to return only on end and change check if the
+       slider value changed since interaction started, if we have to return
+       on everty change check if if it changed this time round */
 
-	if (    obj->parent->how_return & FL_RETURN_END_CHANGED
-		 && obj->returned & FL_RETURN_END )
-	{
-		if ( nval != sp->old_val )
-		{
-			obj->parent->returned |= FL_RETURN_CHANGED;
-			sp->old_val = nval;
-		}
-	}
-	else if ( ival != nval )
-		obj->parent->returned |= FL_RETURN_CHANGED;
+    if (    obj->parent->how_return & FL_RETURN_END_CHANGED
+         && obj->returned & FL_RETURN_END )
+    {
+        if ( nval != sp->old_val )
+        {
+            obj->parent->returned |= FL_RETURN_CHANGED;
+            sp->old_val = nval;
+        }
+    }
+    else if ( ival != nval )
+        obj->parent->returned |= FL_RETURN_CHANGED;
 }
 
 
@@ -291,11 +291,11 @@ button_cb( FL_OBJECT * obj,
 
 FL_OBJECT *
 fl_create_scrollbar( int          type,
-					 FL_Coord     x,
-					 FL_Coord     y,
-					 FL_Coord     w,
-					 FL_Coord     h,
-					 const char * l )
+                     FL_Coord     x,
+                     FL_Coord     y,
+                     FL_Coord     w,
+                     FL_Coord     h,
+                     const char * l )
 {
     FLI_SCROLLBAR_SPEC *sp;
     FL_OBJECT *obj;
@@ -304,94 +304,94 @@ fl_create_scrollbar( int          type,
 
     obj->spec       = sp = fl_calloc( 1, sizeof *sp );
     obj->col1       = FL_COL1;
-	obj->col2       = FL_COL1;
+    obj->col2       = FL_COL1;
     obj->align      = FL_ALIGN_BOTTOM;
-	obj->set_return = fl_set_scrollbar_return;
+    obj->set_return = fl_set_scrollbar_return;
 
     if ( IsThin( type ) )
-		obj->boxtype = FL_DOWN_BOX;
+        obj->boxtype = FL_DOWN_BOX;
     else if ( type == FL_HOR_NICE_SCROLLBAR || type == FL_VERT_NICE_SCROLLBAR )
-		obj->boxtype = FL_FRAME_BOX;
+        obj->boxtype = FL_FRAME_BOX;
     else
-		obj->boxtype = FL_UP_BOX;
+        obj->boxtype = FL_UP_BOX;
 
     if ( IS_HORIZ( obj ) )
     {
-		fl_set_object_resize( obj, FL_RESIZE_X );
+        fl_set_object_resize( obj, FL_RESIZE_X );
 
-		sp->up   = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "6" );
-		sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "4" );
-		fl_set_object_callback( sp->up, button_cb, 1 );
-		fl_set_object_resize( sp->up, FL_RESIZE_NONE );
-		fl_set_object_callback( sp->down, button_cb, -1 );
-		fl_set_object_resize( sp->down, FL_RESIZE_NONE );
+        sp->up   = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "6" );
+        sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "4" );
+        fl_set_object_callback( sp->up, button_cb, 1 );
+        fl_set_object_resize( sp->up, FL_RESIZE_NONE );
+        fl_set_object_callback( sp->down, button_cb, -1 );
+        fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
-		if ( type == FL_HOR_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_HOR_BROWSER_SLIDER2,
-										   1, 1, 1, 1, "" );
-		else if ( type == FL_HOR_THIN_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_HOR_THIN_SLIDER,
-										   1, 1, 1, 1, "" );
-		else if ( type == FL_HOR_PLAIN_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_HOR_BASIC_SLIDER,
-										   1, 1, 1, 1, "" );
-		else if ( type == FL_HOR_NICE_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_HOR_NICE_SLIDER2,
-										   1, 1, 1, 1, "" );
+        if ( type == FL_HOR_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_HOR_BROWSER_SLIDER2,
+                                           1, 1, 1, 1, "" );
+        else if ( type == FL_HOR_THIN_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_HOR_THIN_SLIDER,
+                                           1, 1, 1, 1, "" );
+        else if ( type == FL_HOR_PLAIN_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_HOR_BASIC_SLIDER,
+                                           1, 1, 1, 1, "" );
+        else if ( type == FL_HOR_NICE_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_HOR_NICE_SLIDER2,
+                                           1, 1, 1, 1, "" );
 
-		fl_set_object_resize( sp->slider, FL_RESIZE_X );
+        fl_set_object_resize( sp->slider, FL_RESIZE_X );
     }
     else
     {
-		fl_set_object_resize( obj, FL_RESIZE_Y );
+        fl_set_object_resize( obj, FL_RESIZE_Y );
 
-		sp->up = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "8" );
-		sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "2" );
-		fl_set_object_callback( sp->up, button_cb, -1 );
-		fl_set_object_resize( sp->up, FL_RESIZE_NONE );
-		fl_set_object_callback( sp->down, button_cb, 1 );
-		fl_set_object_resize( sp->down, FL_RESIZE_NONE );
+        sp->up = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "8" );
+        sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "2" );
+        fl_set_object_callback( sp->up, button_cb, -1 );
+        fl_set_object_resize( sp->up, FL_RESIZE_NONE );
+        fl_set_object_callback( sp->down, button_cb, 1 );
+        fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
-		if ( type == FL_VERT_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_VERT_BROWSER_SLIDER2, 1, 1,
-										   1, 1, "" );
-		else if ( type == FL_VERT_THIN_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_VERT_THIN_SLIDER, 1, 1,
-										   1, 1, "" );
-		else if ( type == FL_VERT_PLAIN_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_VERT_BASIC_SLIDER, 1, 1,
-										   1, 1, "" );
-		else if ( type == FL_VERT_NICE_SCROLLBAR )
-			sp->slider = fl_create_slider( FL_VERT_NICE_SLIDER2, 1, 1,
-										   1, 1, "" );
-		else
-			M_err( "fl_create_scrollbar", "Unknown type %d", type );
+        if ( type == FL_VERT_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_VERT_BROWSER_SLIDER2, 1, 1,
+                                           1, 1, "" );
+        else if ( type == FL_VERT_THIN_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_VERT_THIN_SLIDER, 1, 1,
+                                           1, 1, "" );
+        else if ( type == FL_VERT_PLAIN_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_VERT_BASIC_SLIDER, 1, 1,
+                                           1, 1, "" );
+        else if ( type == FL_VERT_NICE_SCROLLBAR )
+            sp->slider = fl_create_slider( FL_VERT_NICE_SLIDER2, 1, 1,
+                                           1, 1, "" );
+        else
+            M_err( "fl_create_scrollbar", "Unknown type %d", type );
 
-		fl_set_object_resize( sp->slider, FL_RESIZE_Y );
+        fl_set_object_resize( sp->slider, FL_RESIZE_Y );
     }
 
     sp->increment = 0.02;
     fl_set_slider_increment( sp->slider, 5 * sp->increment, sp->increment );
     fl_set_object_callback( sp->slider, slider_cb, 0 );
-	fl_set_slider_bounds( sp->slider, 0.0, 1.0 );
+    fl_set_slider_bounds( sp->slider, 0.0, 1.0 );
 
-	sp->old_val = fl_get_slider_value( sp->slider );
+    sp->old_val = fl_get_slider_value( sp->slider );
 
     fl_add_child( obj, sp->slider );
     fl_add_child( obj, sp->down );
     fl_add_child( obj, sp->up );
 
-	/* In older versions scrollbars and browsers didn't return to the
-	   application on e.g. fl_do_forms() but still a callback associated
-	   with the object got called. To emulate the old behaviour we have
-	   to set the return policy to default to FL_RETURN_NONE and only
-	   change that to FL_RETURN_CHANGED when a callback is installed
-	   (which is done in fl_set_object_callback()) */
+    /* In older versions scrollbars and browsers didn't return to the
+       application on e.g. fl_do_forms() but still a callback associated
+       with the object got called. To emulate the old behaviour we have
+       to set the return policy to default to FL_RETURN_NONE and only
+       change that to FL_RETURN_CHANGED when a callback is installed
+       (which is done in fl_set_object_callback()) */
 
 #if ! USE_BWC_BS_HACK
-	fl_set_object_return( obj, FL_RETURN_CHANGED );
+    fl_set_object_return( obj, FL_RETURN_CHANGED );
 #else
-	fl_set_object_return( obj, FL_RETURN_NONE );
+    fl_set_object_return( obj, FL_RETURN_NONE );
 #endif
 
     return obj;
@@ -410,18 +410,18 @@ fl_create_scrollbar( int          type,
 
 FL_OBJECT *
 fl_add_scrollbar( int          type,
-				  FL_Coord     x,
-				  FL_Coord     y,
-				  FL_Coord     w,
-				  FL_Coord     h,
-				  const char * l )
+                  FL_Coord     x,
+                  FL_Coord     y,
+                  FL_Coord     w,
+                  FL_Coord     h,
+                  const char * l )
 {
     FL_OBJECT *obj = fl_create_scrollbar( type, x, y, w, h, l );
 
     fl_add_object( fl_current_form, obj );
 
-	attrib_change( obj );
-	get_geom( obj );
+    attrib_change( obj );
+    get_geom( obj );
 
     return obj;
 }
@@ -433,13 +433,13 @@ fl_add_scrollbar( int          type,
 double
 fl_get_scrollbar_value( FL_OBJECT * obj )
 {
-	FLI_SCROLLBAR_SPEC *sp = obj->spec;
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     if ( ! ISSCROLLBAR( obj ) )
     {
-		M_err( "fl_get_scrollbar_value", "%s not a scrollbar",
-			   obj ? obj->label : "Object" );
-		return - HUGE_VAL;
+        M_err( "fl_get_scrollbar_value", "%s not a scrollbar",
+               obj ? obj->label : "Object" );
+        return - HUGE_VAL;
     }
 
     return fl_get_slider_value( sp->slider );
@@ -451,18 +451,18 @@ fl_get_scrollbar_value( FL_OBJECT * obj )
 
 void
 fl_set_scrollbar_value( FL_OBJECT * obj,
-						double      val )
+                        double      val )
 {
-	FLI_SCROLLBAR_SPEC *sp = obj->spec;
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     if ( ! ISSCROLLBAR( obj ) )
     {
-		M_err( "fl_set_scrollbar_value", "%s not a scrollbar",
-			   obj ? obj->label : "Object" );
-		return;
+        M_err( "fl_set_scrollbar_value", "%s not a scrollbar",
+               obj ? obj->label : "Object" );
+        return;
     }
 
-	sp->old_val = val;
+    sp->old_val = val;
     fl_set_slider_value( sp->slider, val );
 }
 
@@ -474,12 +474,12 @@ fl_set_scrollbar_value( FL_OBJECT * obj,
 
 void
 fl_set_scrollbar_size( FL_OBJECT * obj,
-					   double      val )
+                       double      val )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     fl_set_slider_size( sp->slider, val );
-	get_geom( obj );
+    get_geom( obj );
 }
 
 
@@ -488,8 +488,8 @@ fl_set_scrollbar_size( FL_OBJECT * obj,
 
 void
 fl_set_scrollbar_increment( FL_OBJECT * obj,
-							double      l,
-							double      r )
+                            double      l,
+                            double      r )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
@@ -503,8 +503,8 @@ fl_set_scrollbar_increment( FL_OBJECT * obj,
 
 void
 fl_get_scrollbar_increment( FL_OBJECT * obj,
-						    double    * a,
-							double    * b )
+                            double    * a,
+                            double    * b )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
@@ -517,16 +517,16 @@ fl_get_scrollbar_increment( FL_OBJECT * obj,
 
 void
 fl_set_scrollbar_bounds( FL_OBJECT * obj,
-						 double      b1,
-						 double      b2 )
+                         double      b1,
+                         double      b2 )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     if ( ! ISSCROLLBAR( obj ) )
     {
-		M_err( "fl_set_scrollbar_bounds", "%s not a scrollbar",
-			   obj ? obj->label : "Object" );
-		return;
+        M_err( "fl_set_scrollbar_bounds", "%s not a scrollbar",
+               obj ? obj->label : "Object" );
+        return;
     }
 
     fl_set_slider_bounds( sp->slider, b1, b2 );
@@ -538,8 +538,8 @@ fl_set_scrollbar_bounds( FL_OBJECT * obj,
 
 void
 fl_get_scrollbar_bounds( FL_OBJECT * obj,
-						 double *    b1,
-						 double *    b2 )
+                         double *    b1,
+                         double *    b2 )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
@@ -556,23 +556,23 @@ fl_get_scrollbar_bounds( FL_OBJECT * obj,
 
 void
 fl_set_scrollbar_return( FL_OBJECT * obj,
-						 int         when )
+                         int         when )
 {
-	FLI_SCROLLBAR_SPEC *sp = obj->spec;
+    FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
-	if ( when & FL_RETURN_END_CHANGED )
-		when &= ~ ( FL_RETURN_NONE | FL_RETURN_CHANGED );
+    if ( when & FL_RETURN_END_CHANGED )
+        when &= ~ ( FL_RETURN_NONE | FL_RETURN_CHANGED );
 
-	obj->how_return = when;
+    obj->how_return = when;
 
-	fl_set_object_return( sp->slider, FL_RETURN_ALWAYS );
-	fl_set_object_return( sp->up,     FL_RETURN_ALWAYS );
-	fl_set_object_return( sp->down,   FL_RETURN_ALWAYS );
+    fl_set_object_return( sp->slider, FL_RETURN_ALWAYS );
+    fl_set_object_return( sp->up,     FL_RETURN_ALWAYS );
+    fl_set_object_return( sp->down,   FL_RETURN_ALWAYS );
 
-	/* We may need the value of the slider at this moment in the
-	   callback function... */
+    /* We may need the value of the slider at this moment in the
+       callback function... */
 
-	sp->old_val = fl_get_slider_value( sp->slider );
+    sp->old_val = fl_get_slider_value( sp->slider );
 }
 
 
@@ -581,9 +581,17 @@ fl_set_scrollbar_return( FL_OBJECT * obj,
 
 void
 fl_set_scrollbar_step( FL_OBJECT * obj,
-					   double      step )
+                       double      step )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 
     fl_set_slider_step( sp->slider, step );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

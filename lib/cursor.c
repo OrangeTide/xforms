@@ -40,8 +40,8 @@
 #include "extern.h"
 
 
-#define MAX_CURSORS   64	/* max. number of bitmap cursors     */
-#define MAX_SEQ       24	/* max. number cursors per animation */
+#define MAX_CURSORS   64    /* max. number of bitmap cursors     */
+#define MAX_SEQ       24    /* max. number cursors per animation */
 
 
 /* Cursor cache */
@@ -71,7 +71,7 @@ static CurStruct prebuilt[ ] =
 
 static CurStruct *cursors = NULL;
 
-static int fl_default_curname = XC_top_left_arrow;	/* xforms' default */
+static int fl_default_curname = XC_top_left_arrow;  /* xforms' default */
 
 #ifndef XC_num_glyphs
 #define XC_num_glyphs 255
@@ -87,23 +87,23 @@ static CurStruct *find_timeout( Window win );
 
 static CurStruct *
 add_cursor( int    name,
-			Cursor cur )
+            Cursor cur )
 {
     CurStruct *c = cursors;
     static int warned;
 
     while ( c->name && c->name != name )
-		c++;
+        c++;
 
     if ( c < cursors + MAX_CURSORS )
     {
-		c->name = name;
-		c->cur[ c->ncursor++ ] = cur;
+        c->name = name;
+        c->cur[ c->ncursor++ ] = cur;
     }
     else if ( ! warned )
     {
-		M_err( "add_cursor", "too many cursors" );
-		warned = 1;
+        M_err( "add_cursor", "too many cursors" );
+        warned = 1;
     }
     return c;
 }
@@ -114,23 +114,23 @@ add_cursor( int    name,
 
 static Cursor
 create_bitmap_cursor( const char * source,
-					  const char * mask,
-					  int          w,
-					  int          h,
-					  int          hotx,
-					  int          hoty )
+                      const char * mask,
+                      int          w,
+                      int          h,
+                      int          hotx,
+                      int          hoty )
 {
     Pixmap s,
-		   m = None;
+           m = None;
     XColor fg,
-		   bg;
+           bg;
     Cursor cur;
     Window win = fl_root;
 
     s = XCreateBitmapFromData( flx->display, win, source, w, h );
 
     if ( mask )
-		m = XCreateBitmapFromData( flx->display, win, mask, w, h );
+        m = XCreateBitmapFromData( flx->display, win, mask, w, h );
 
     fg.red = fg.green = fg.blue = 0;
     bg.red = bg.green = bg.blue = 0xffff;
@@ -151,28 +151,28 @@ init_cursors( void )
     static char c_bits[ ] = { 0x00 };
 
     if ( ok )
-		return;
+        return;
 
     ok = 1;
 
     if ( ! cursors )
     {
-		cursors = fl_calloc( MAX_CURSORS, sizeof *c );
-		memcpy( cursors, prebuilt, sizeof prebuilt );
+        cursors = fl_calloc( MAX_CURSORS, sizeof *c );
+        memcpy( cursors, prebuilt, sizeof prebuilt );
     }
 
     for ( c = cursors; c->name; c++ )
-		c->cur[ c->ncursor++ ] = XCreateFontCursor( flx->display, c->name );
+        c->cur[ c->ncursor++ ] = XCreateFontCursor( flx->display, c->name );
 
     /* Create an invisible cursor */
 
     add_cursor( FL_INVISIBLE_CURSOR,
-				create_bitmap_cursor( c_bits, c_bits, 1, 1, 0, 0 ) );
+                create_bitmap_cursor( c_bits, c_bits, 1, 1, 0, 0 ) );
 
     /* Add the default cursor     */
 
     add_cursor( FL_DEFAULT_CURSOR,
-				XCreateFontCursor( flx->display, fl_default_curname ) );
+                XCreateFontCursor( flx->display, fl_default_curname ) );
 }
 
 
@@ -182,7 +182,7 @@ init_cursors( void )
 void
 fli_free_cursors( void )
 {
-	fl_safe_free( cursors );
+    fl_safe_free( cursors );
 }
 
 
@@ -191,7 +191,7 @@ fli_free_cursors( void )
 
 static void
 animate_cursor( int    id    FL_UNUSED_ARG,
-				void * data )
+                void * data )
 {
     CurStruct *cur = data;
 
@@ -207,7 +207,7 @@ animate_cursor( int    id    FL_UNUSED_ARG,
 
 void
 fl_set_cursor( Window win,
-			   int    name )
+               int    name )
 {
     CurStruct *c = cursors;
 
@@ -215,37 +215,37 @@ fl_set_cursor( Window win,
 
     if ( win == 0 )
     {
-		M_err( "fl_set_cursor", "Bad Window" );
-		return;
+        M_err( "fl_set_cursor", "Bad Window" );
+        return;
     }
 
     for ( ; c->name; c++ )
     {
-		if ( c->name == name )
-		{
-			if ( c->ncursor > 1 )
-			{
-				int n = c->cur_cursor % c->ncursor;
-				XDefineCursor( flx->display, win, c->cur[ n ] );;
-				c->cur_cursor++;
-				c->win = win;
-				if ( c->timeout_id == 0 )
-					c->timeout_id =
-						        fl_add_timeout( c->timeout, animate_cursor, c );
-			}
-			else
-			{
-				CurStruct *cur = find_timeout( win );
+        if ( c->name == name )
+        {
+            if ( c->ncursor > 1 )
+            {
+                int n = c->cur_cursor % c->ncursor;
+                XDefineCursor( flx->display, win, c->cur[ n ] );;
+                c->cur_cursor++;
+                c->win = win;
+                if ( c->timeout_id == 0 )
+                    c->timeout_id =
+                                fl_add_timeout( c->timeout, animate_cursor, c );
+            }
+            else
+            {
+                CurStruct *cur = find_timeout( win );
 
-				if ( cur && cur->timeout_id )
-				{
-					fl_remove_timeout( cur->timeout_id );
-					cur->timeout_id = 0;
-				}
-				XDefineCursor( flx->display, win, c->cur[ 0 ] );;
-			}
-			return;
-		}
+                if ( cur && cur->timeout_id )
+                {
+                    fl_remove_timeout( cur->timeout_id );
+                    cur->timeout_id = 0;
+                }
+                XDefineCursor( flx->display, win, c->cur[ 0 ] );;
+            }
+            return;
+        }
     }
 
     XDefineCursor( flx->display, win, fl_get_cursor_byname( name ) );
@@ -266,12 +266,12 @@ fl_get_cursor_byname( int name )
 
     for ( c = cursors; c->name; c++ )
     {
-		if ( c->name == name )
-		{
-			int n = c->cur_cursor % c->ncursor;
-			c->cur_cursor++;
-			return c->cur[ n ];
-		}
+        if ( c->name == name )
+        {
+            int n = c->cur_cursor % c->ncursor;
+            c->cur_cursor++;
+            return c->cur[ n ];
+        }
     }
 
     /* Take a wild shot: since we can generate the default X cursor on the
@@ -279,18 +279,18 @@ fl_get_cursor_byname( int name )
 
     if ( name < XC_num_glyphs - 1 )
     {
-		static int nn;
-		cur = XCreateFontCursor( flx->display, name );
-		if ( nn < 10 )
-		{
-			add_cursor( name, cur );
-			nn++;
-		}
+        static int nn;
+        cur = XCreateFontCursor( flx->display, name );
+        if ( nn < 10 )
+        {
+            add_cursor( name, cur );
+            nn++;
+        }
     }
     else
     {
-		M_err( "fl_get_cursor_byname", "Unknown cursor: %d\n", name );
-		cur = fl_get_cursor_byname( FL_DEFAULT_CURSOR );	/* recursion */
+        M_err( "fl_get_cursor_byname", "Unknown cursor: %d\n", name );
+        cur = fl_get_cursor_byname( FL_DEFAULT_CURSOR );    /* recursion */
     }
 
     return cur;
@@ -302,14 +302,14 @@ fl_get_cursor_byname( int name )
 
 void
 fl_set_cursor_color( int      name,
-					 FL_COLOR fg,
-					 FL_COLOR bg )
+                     FL_COLOR fg,
+                     FL_COLOR bg )
 {
     XColor xfg,
-		   xbg;
+           xbg;
     int r,
-		g,
-		b;
+        g,
+        b;
     Cursor cur = fl_get_cursor_byname( name );
 
     fl_getmcolor( fg, &r, &g, &b );
@@ -331,11 +331,11 @@ fl_set_cursor_color( int      name,
 
 int
 fl_create_bitmap_cursor( const char * source,
-						 const char * mask,
-						 int          w,
-						 int          h,
-						 int          hotx,
-						 int          hoty )
+                         const char * mask,
+                         int          w,
+                         int          h,
+                         int          hotx,
+                         int          hoty )
 {
     Cursor cur;
 
@@ -353,17 +353,17 @@ fl_create_bitmap_cursor( const char * source,
 
 int
 fl_create_animated_cursor( int * cur_names,
-						   int   timeout )
+                           int   timeout )
 {
     int *n = cur_names,
-		k = MAX_SEQ;
+        k = MAX_SEQ;
     CurStruct *c = 0;
 
     for ( ; *n >= 0 && --k >= 0; n++ )
-		c = add_cursor( user_cur_name, fl_get_cursor_byname( *n ) );
+        c = add_cursor( user_cur_name, fl_get_cursor_byname( *n ) );
 
     if ( c )
-		c->timeout = timeout > 0 ? timeout : 20;
+        c->timeout = timeout > 0 ? timeout : 20;
 
     return user_cur_name++;
 }
@@ -378,8 +378,16 @@ find_timeout( Window win )
     CurStruct *c = cursors;
 
     for ( ; c->name; c++ )
-		if ( c->win == win && c->timeout_id )
-			return c;
+        if ( c->win == win && c->timeout_id )
+            return c;
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

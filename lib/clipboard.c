@@ -36,12 +36,12 @@
 
 
 typedef struct {
-    FL_OBJECT            * ob;			/* the object that stuff'ed cp  */
-    FL_OBJECT            * req_ob;		/* the object that requested cp */
+    FL_OBJECT            * ob;          /* the object that stuff'ed cp  */
+    FL_OBJECT            * req_ob;      /* the object that requested cp */
     Window                 window;
     Window                 req_window;
     long                   type,
-	                       size;
+                           size;
     FL_LOSE_SELECTION_CB   lose_callback;
     FL_SELECTION_CB        got_it_callback;
 
@@ -64,7 +64,7 @@ static int handle_clipboard_event( void * );
 
 static int
 noop_lose_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-					long        type  FL_UNUSED_ARG )
+                    long        type  FL_UNUSED_ARG )
 {
     return 0;
 }
@@ -75,10 +75,10 @@ noop_lose_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 int
 fl_stuff_clipboard( FL_OBJECT            * ob,
-					long                   type  FL_UNUSED_ARG,
-					const void           * data,
-					long                   size,
-					FL_LOSE_SELECTION_CB   lose_callback )
+                    long                   type  FL_UNUSED_ARG,
+                    const void           * data,
+                    long                   size,
+                    FL_LOSE_SELECTION_CB   lose_callback )
 {
     Window win = FL_ObjWin( ob );
 
@@ -87,8 +87,8 @@ fl_stuff_clipboard( FL_OBJECT            * ob,
 
     if ( ! win )
     {
-		M_err( "fl_stuff_clipboard", "Bad object %s", ob ? ob->label : "null" );
-		return 0;
+        M_err( "fl_stuff_clipboard", "Bad object %s", ob ? ob->label : "null" );
+        return 0;
     }
 
     XSetSelectionOwner( flx->display, XA_PRIMARY, win, CurrentTime );
@@ -97,8 +97,8 @@ fl_stuff_clipboard( FL_OBJECT            * ob,
 
     if ( XGetSelectionOwner( flx->display, XA_PRIMARY ) != win )
     {
-		M_err( "fl_stuff_clipboard", "Failed to get owner" );
-		return 0;
+        M_err( "fl_stuff_clipboard", "Failed to get owner" );
+        return 0;
     }
 
     /* create structure that holds clipboard info */
@@ -124,8 +124,8 @@ static Atom targets_prop;
 
 int
 fl_request_clipboard( FL_OBJECT       * ob,
-					  long              type  FL_UNUSED_ARG,
-					  FL_SELECTION_CB   got_it_callback )
+                      long              type  FL_UNUSED_ARG,
+                      FL_SELECTION_CB   got_it_callback )
 {
     Window win;
     void *buf;
@@ -136,8 +136,8 @@ fl_request_clipboard( FL_OBJECT       * ob,
 
     if ( ! clipboard_prop )
     {
-		clipboard_prop = XInternAtom( flx->display, "FL_CLIPBOARD", False );
-		fli_handle_clipboard = handle_clipboard_event;
+        clipboard_prop = XInternAtom( flx->display, "FL_CLIPBOARD", False );
+        fli_handle_clipboard = handle_clipboard_event;
     }
 
     cp->got_it_callback = got_it_callback;
@@ -147,33 +147,33 @@ fl_request_clipboard( FL_OBJECT       * ob,
 
     if ( win == None )
     {
-		XSetSelectionOwner( flx->display, XA_PRIMARY, cp->req_window,
-							CurrentTime );
-		buf = XFetchBuffer( flx->display, &nb, 0 );
-		cp->window = XGetSelectionOwner( flx->display, XA_PRIMARY );
-		cp->ob = NULL;
-		cp->size = nb;
-		cp->got_it_callback( cp->req_ob, XA_STRING, buf, nb );
-		XFree( buf );
+        XSetSelectionOwner( flx->display, XA_PRIMARY, cp->req_window,
+                            CurrentTime );
+        buf = XFetchBuffer( flx->display, &nb, 0 );
+        cp->window = XGetSelectionOwner( flx->display, XA_PRIMARY );
+        cp->ob = NULL;
+        cp->size = nb;
+        cp->got_it_callback( cp->req_ob, XA_STRING, buf, nb );
+        XFree( buf );
     }
     else if ( win != cp->req_window )
     {
-		/* We don't own it, request it */
+        /* We don't own it, request it */
 
-		M_warn( "fl_request_clipboard", "Requesting selection from %ld", win );
-		XConvertSelection( flx->display,
-						   XA_PRIMARY, XA_STRING,
-						   clipboard_prop,
-						   cp->req_window, CurrentTime );
-		nb = -1;
+        M_warn( "fl_request_clipboard", "Requesting selection from %ld", win );
+        XConvertSelection( flx->display,
+                           XA_PRIMARY, XA_STRING,
+                           clipboard_prop,
+                           cp->req_window, CurrentTime );
+        nb = -1;
     }
     else if ( win == cp->req_window )
     {
-		/* we own the buffer */
+        /* we own the buffer */
 
-		buf = XFetchBuffer( flx->display, &nb, 0 );
-		cp->got_it_callback( cp->req_ob, XA_STRING, buf, nb );
-		XFree( buf );
+        buf = XFetchBuffer( flx->display, &nb, 0 );
+        cp->got_it_callback( cp->req_ob, XA_STRING, buf, nb );
+        XFree( buf );
     }
 
     return nb;
@@ -199,146 +199,154 @@ handle_clipboard_event( void * event )
     /* SelectionNotify confirms requests of selection ok */
 
     if ( ! targets_prop )
-		targets_prop = XInternAtom( flx->display, "TARGETS", False );
+        targets_prop = XInternAtom( flx->display, "TARGETS", False );
     if ( ! clipboard_prop )
-		clipboard_prop = XInternAtom( flx->display, "FL_CLIPBOARD", False );
+        clipboard_prop = XInternAtom( flx->display, "FL_CLIPBOARD", False );
 
     cp = &clipboard;
 
     if ( ! cp->req_window && !cp->window )
     {
-		M_warn( "handle_clipboard_event", "InternalError" );
-		return -1;
+        M_warn( "handle_clipboard_event", "InternalError" );
+        return -1;
     }
 
     if ( what == SelectionClear )
     {
-		if ( cp->ob )
-			cp->lose_callback( cp->ob, cp->type );
-		cp->ob = NULL;
-		cp->window = None;
+        if ( cp->ob )
+            cp->lose_callback( cp->ob, cp->type );
+        cp->ob = NULL;
+        cp->window = None;
     }
     else if ( what == SelectionNotify && cp->req_ob )
     {
-		/* our request went thru. Go and get it */
+        /* our request went thru. Go and get it */
 
-		Atom ret_type;
-		int ret_format;
-		unsigned long ret_len = 0,
-			          ret_after;
-		unsigned char *ret = NULL;
+        Atom ret_type;
+        int ret_format;
+        unsigned long ret_len = 0,
+                      ret_after;
+        unsigned char *ret = NULL;
 
-		/* X gurantees 16K request size */
+        /* X gurantees 16K request size */
 
-		long chunksize = fli_context->max_request_size,
-			 offset = 0;
-		char *buf = NULL;
+        long chunksize = fli_context->max_request_size,
+             offset = 0;
+        char *buf = NULL;
         int buflen = 0;
 
-		/* Get the stuff. Repeat until we get all  */
+        /* Get the stuff. Repeat until we get all  */
 
-		do
-		{
-			XGetWindowProperty( flx->display, xev->xselection.requestor,
-								xev->xselection.property, offset, chunksize,
-								False, xev->xselection.target, &ret_type,
-								&ret_format, &ret_len, &ret_after, &ret );
+        do
+        {
+            XGetWindowProperty( flx->display, xev->xselection.requestor,
+                                xev->xselection.property, offset, chunksize,
+                                False, xev->xselection.target, &ret_type,
+                                &ret_format, &ret_len, &ret_after, &ret );
 
-			if ( ret_len && ret )
-			{
-				if ( ret_after == 0 && ! buf )
-					cp->got_it_callback( cp->req_ob, ret_type, ret, ret_len );
-				else
-				{
-					buf = fl_realloc( buf, buflen + ret_len );
-					memcpy( buf + buflen, ret, ret_len );
-					buflen += ret_len;
-				}
+            if ( ret_len && ret )
+            {
+                if ( ret_after == 0 && ! buf )
+                    cp->got_it_callback( cp->req_ob, ret_type, ret, ret_len );
+                else
+                {
+                    buf = fl_realloc( buf, buflen + ret_len );
+                    memcpy( buf + buflen, ret, ret_len );
+                    buflen += ret_len;
+                }
 
-				XFree( ret );
-				ret = NULL;
-			}
+                XFree( ret );
+                ret = NULL;
+            }
 
-			offset += ret_len * ret_format / 32;
-			chunksize = ( ret_after + 3 ) / 4;
+            offset += ret_len * ret_format / 32;
+            chunksize = ( ret_after + 3 ) / 4;
 
-			if ( chunksize > fli_context->max_request_size )
-				chunksize = fli_context->max_request_size;
-		} while ( ret_after );
+            if ( chunksize > fli_context->max_request_size )
+                chunksize = fli_context->max_request_size;
+        } while ( ret_after );
 
-		if ( buflen )
-		{
-			cp->got_it_callback( cp->req_ob, ret_type, buf, buflen );
-			fl_free( buf );
-		}
+        if ( buflen )
+        {
+            cp->got_it_callback( cp->req_ob, ret_type, buf, buflen );
+            fl_free( buf );
+        }
 
-		XDeleteProperty( flx->display, xev->xselection.requestor,
-						 xev->xselection.property );
+        XDeleteProperty( flx->display, xev->xselection.requestor,
+                         xev->xselection.property );
     }
     else if ( SelectionRequest )
     {
-		/* someone wants our selection */
+        /* someone wants our selection */
 
-		M_warn( "handle_clipboard_event", "SelectionRequest" );
+        M_warn( "handle_clipboard_event", "SelectionRequest" );
 
-		if ( sreq->owner != cp->window )
-		{
-			M_err( "handle_clipboard_event", "Wrong owner" );
-			return -1;
-		}
+        if ( sreq->owner != cp->window )
+        {
+            M_err( "handle_clipboard_event", "Wrong owner" );
+            return -1;
+        }
 
-		/* now sets the things to the requestor */
+        /* now sets the things to the requestor */
 
-		sev.type = SelectionNotify;
-		sev.display = sreq->display;
-		sev.requestor = sreq->requestor;
-		sev.selection = sreq->selection;
-		sev.target = sreq->target;
-		sev.property = None;
-		sev.time = sreq->time;
+        sev.type = SelectionNotify;
+        sev.display = sreq->display;
+        sev.requestor = sreq->requestor;
+        sev.selection = sreq->selection;
+        sev.target = sreq->target;
+        sev.property = None;
+        sev.time = sreq->time;
 
-		if ( sreq->selection == XA_PRIMARY )
-		{
-			if ( sreq->target == XA_STRING )
-			{
-				s = XFetchBuffer( flx->display, &n, 0 );
-				XChangeProperty( flx->display,
-								 sreq->requestor, sreq->property, sreq->target,
-								 8, PropModeReplace, (unsigned char *) s, n );
-				sev.property = sreq->property;
-				XFree( s );
-			}
-			else if ( sreq->target == targets_prop )	/*aixterm wants this*/
-			{
-				Atom alist = XA_STRING;
+        if ( sreq->selection == XA_PRIMARY )
+        {
+            if ( sreq->target == XA_STRING )
+            {
+                s = XFetchBuffer( flx->display, &n, 0 );
+                XChangeProperty( flx->display,
+                                 sreq->requestor, sreq->property, sreq->target,
+                                 8, PropModeReplace, (unsigned char *) s, n );
+                sev.property = sreq->property;
+                XFree( s );
+            }
+            else if ( sreq->target == targets_prop )    /*aixterm wants this*/
+            {
+                Atom alist = XA_STRING;
 
-				XChangeProperty( flx->display,
-								 sreq->requestor, sreq->property, XA_ATOM,
-								 32, PropModeReplace,
-								 ( unsigned char * ) &alist, 1 );
-				sev.property = sreq->property;
-			}
-			else
-			{
-				/* if we have other types, conversion routine should be
-				   called here */
+                XChangeProperty( flx->display,
+                                 sreq->requestor, sreq->property, XA_ATOM,
+                                 32, PropModeReplace,
+                                 ( unsigned char * ) &alist, 1 );
+                sev.property = sreq->property;
+            }
+            else
+            {
+                /* if we have other types, conversion routine should be
+                   called here */
 
-				M_err( "handle_clipboard_event", "Unknown target: %d\n",
-					   sreq->target );
-			}
+                M_err( "handle_clipboard_event", "Unknown target: %d\n",
+                       sreq->target );
+            }
 
-			XSendEvent( flx->display, sreq->requestor, False, 0,
-					    ( XEvent * ) & sev );
-		}
-		else
-		{
-			/* not XA_PRIMARY request */
+            XSendEvent( flx->display, sreq->requestor, False, 0,
+                        ( XEvent * ) & sev );
+        }
+        else
+        {
+            /* not XA_PRIMARY request */
 
-			M_warn( "handle_clipboard_event", "Unknown selection request: %d",
-					sreq->selection );
-			return -1;
-		}
+            M_warn( "handle_clipboard_event", "Unknown selection request: %d",
+                    sreq->selection );
+            return -1;
+        }
     }
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

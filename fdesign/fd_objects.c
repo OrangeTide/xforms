@@ -55,28 +55,28 @@ typedef struct {
 } TDEF;
 
 typedef FL_OBJECT * ( * FL_ADDPTR ) ( int, FL_Coord, FL_Coord, FL_Coord,
-									  FL_Coord, const char * );
+                                      FL_Coord, const char * );
 
 typedef struct {
     int          cn;
-    FL_OBJECT  * defobj;		                      /* default */
+    FL_OBJECT  * defobj;                              /* default */
     TDEF         types[ MAXTYPES ];
-    char         cname[ MAX_CLASS_NAME_LEN ];	      /* add_XXX */
+    char         cname[ MAX_CLASS_NAME_LEN ];         /* add_XXX */
     char         formal_cname[ MAX_CLASS_NAME_LEN ];
-    FL_OBJECT  * defobj1;		                      /* to specific type */
+    FL_OBJECT  * defobj1;                             /* to specific type */
     FL_ADDPTR    createit,
-	             addit;
-    int          var_boxtype;	/* means default boxtype may depend on type */
+                 addit;
+    int          var_boxtype;   /* means default boxtype may depend on type */
     int          default_type;
     const char * default_label;
-	int          bline;
+    int          bline;
 } CDEF;
 
 static CDEF classes[ MAXCLASSES ];
 static int cnumb = 0;
 
 typedef FL_OBJECT * ( * FL_ADDFREEPTR )( int, FL_Coord, FL_Coord, FL_Coord,
-										 FL_Coord, const char *, FL_HANDLEPTR );
+                                         FL_Coord, const char *, FL_HANDLEPTR );
 
 
 /***************************************
@@ -85,31 +85,31 @@ typedef FL_OBJECT * ( * FL_ADDFREEPTR )( int, FL_Coord, FL_Coord, FL_Coord,
 
 static void
 add_class_def( int         numb,
-			   char      * formal_name,
-			   char      * name,
-			   FL_ADDPTR   createit,
-			   FL_ADDPTR   addit,
-			   int         bl )
+               char      * formal_name,
+               char      * name,
+               FL_ADDPTR   createit,
+               FL_ADDPTR   addit,
+               int         bl )
 {
     int i;
 
     if ( cnumb == MAXCLASSES )
     {
-		fprintf( stderr, "exceeding maxclass allowed\n" );
-		return;
+        fprintf( stderr, "exceeding maxclass allowed\n" );
+        return;
     }
 
     classes[ cnumb ].cn = numb;
     strcpy( classes[ cnumb ].cname, name );
     strcpy( classes[ cnumb ].formal_cname, formal_name );
     if ( createit )
-		classes[ cnumb ].defobj = createit( 1, 0, 0, 1, 1, "" );
+        classes[ cnumb ].defobj = createit( 1, 0, 0, 1, 1, "" );
     classes[ cnumb ].createit = createit;
     classes[ cnumb ].addit = addit;
-	classes[ cnumb ].bline = bl;
+    classes[ cnumb ].bline = bl;
 
     for ( i = 0; i < MAXTYPES; i++ )
-		classes[ cnumb ].types[ i ].defined = FALSE;
+        classes[ cnumb ].types[ i ].defined = FALSE;
     cnumb++;
 }
 
@@ -124,8 +124,8 @@ find_class_struct( int n )
 
     for ( i = 0; i < cnumb; i++ )
     {
-		if ( classes[ i ].cn == n )
-			return classes + i;
+        if ( classes[ i ].cn == n )
+            return classes + i;
     }
 
     M_err( "find_class_struct", "Can't find class %d", n );
@@ -139,23 +139,23 @@ find_class_struct( int n )
 
 static void
 add_type_def( int  cn,
-			  int  tn,
-			  char name[ ] )
+              int  tn,
+              char name[ ] )
 {
     int i;
 
     if ( tn >= MAXTYPES || tn < 0 )
     {
-		M_err( "add_type_def", "Bad type: %d", tn );
-		return;
+        M_err( "add_type_def", "Bad type: %d", tn );
+        return;
     }
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cn )
-		{
-			classes[ i ].types[ tn ].defined = TRUE;
-			strcpy( classes[ i ].types[ tn ].tname, name );
-		}
+        if ( classes[ i ].cn == cn )
+        {
+            classes[ i ].types[ tn ].defined = TRUE;
+            strcpy( classes[ i ].types[ tn ].tname, name );
+        }
 }
 
 
@@ -165,17 +165,17 @@ add_type_def( int  cn,
 
 static void
 set_class_default( int    cn,
-				   int    def_type,
-				   char * label )
+                   int    def_type,
+                   char * label )
 {
     int i;
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cn )
-		{
-			classes[ i ].default_type = def_type;
-			classes[ i ].default_label = label;  	/* note: no copy */
-		}
+        if ( classes[ i ].cn == cn )
+        {
+            classes[ i ].default_type = def_type;
+            classes[ i ].default_label = label;     /* note: no copy */
+        }
 }
 
 
@@ -184,13 +184,13 @@ set_class_default( int    cn,
 
 static void
 set_var_boxtype( int cn,
-				 int yes  FL_UNUSED_ARG )
+                 int yes  FL_UNUSED_ARG )
 {
     int i;
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cn )
-			classes[ i ].var_boxtype = 1;
+        if ( classes[ i ].cn == cn )
+            classes[ i ].var_boxtype = 1;
 }
 
 
@@ -199,11 +199,11 @@ set_var_boxtype( int cn,
 
 static FL_OBJECT *
 fd_create_free( int          type,
-				FL_Coord     x,
-				FL_Coord     y,
-				FL_Coord     w,
-				FL_Coord     h,
-				const char * l )
+                FL_Coord     x,
+                FL_Coord     y,
+                FL_Coord     w,
+                FL_Coord     h,
+                const char * l )
 {
     return fl_create_free( type, x, y, w, h, l, noop_handle );
 }
@@ -214,11 +214,11 @@ fd_create_free( int          type,
 
 static FL_OBJECT *
 fd_add_free( int          type,
-			 FL_Coord     x,
-			 FL_Coord     y,
-			 FL_Coord     w,
-			 FL_Coord     h,
-			 const char * l )
+             FL_Coord     x,
+             FL_Coord     y,
+             FL_Coord     w,
+             FL_Coord     h,
+             const char * l )
 {
     return fl_add_free( type, x, y, w, h, l, noop_handle );
 }
@@ -234,24 +234,24 @@ fd_add_free( int          type,
 
 void
 object_cb( FL_OBJECT * obj,
-		   long        arg  FL_UNUSED_ARG )
+           long        arg  FL_UNUSED_ARG )
 {
-	int line = fl_get_browser( obj );
+    int line = fl_get_browser( obj );
 
     if ( line > 0 )
-	{
-		const char *name = fl_get_browser_line( obj, line );
-		int i;
+    {
+        const char *name = fl_get_browser_line( obj, line );
+        int i;
 
-		for ( i = 0; classes[ i ].cname && i < MAXCLASSES; i++ )
-			if ( ! strcmp( classes[ i ].cname, name ) )
-			{
-				cur_class = classes[ i ].cn;
-				 break;
-			}
-	}
+        for ( i = 0; classes[ i ].cname && i < MAXCLASSES; i++ )
+            if ( ! strcmp( classes[ i ].cname, name ) )
+            {
+                cur_class = classes[ i ].cn;
+                 break;
+            }
+    }
     else
-		cur_class = -1;
+        cur_class = -1;
 
     select_pallette_entry( cur_class );
 }
@@ -261,7 +261,7 @@ object_cb( FL_OBJECT * obj,
   INITIALIZING THE CLASSES
 ****/
 
-int cur_class = -1;		/* The current class used */
+int cur_class = -1;     /* The current class used */
 
 
 /***************************************
@@ -381,10 +381,10 @@ init_classes( void )
 {
     static int initialized;
     VN_pair *vp;
-	int bl = 0;
+    int bl = 0;
 
     if ( initialized )
-		return;
+        return;
 
     initialized = 1;
 
@@ -393,7 +393,7 @@ init_classes( void )
     fl_add_browser_line( fd_control->objectbrowser, "box" );
     add_class_def( VN( FL_BOX ), OBJNAME( box ), ++bl );
     for ( vp = vn_btype; vp->val >= 0; vp++ )
-		add_type_def( FL_BOX, vp->val, vp->name + 3 );
+        add_type_def( FL_BOX, vp->val, vp->name + 3 );
     set_class_default( FL_BOX, FL_UP_BOX, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "frame" );
@@ -421,7 +421,7 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "chart" );
     add_class_def( VN( FL_CHART ), OBJNAME( chart ), ++bl );
-	add_chart_types( FL_CHART );
+    add_chart_types( FL_CHART );
 
     fl_add_browser_line( fd_control->objectbrowser, "clock" );
     add_class_def( VN( FL_CLOCK ), OBJNAME( clock ), ++bl );
@@ -430,7 +430,7 @@ init_classes( void )
     set_class_default( FL_CLOCK, FL_ANALOG_CLOCK, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "button" );
     add_class_def( VN( FL_BUTTON ), OBJNAME( button ), ++bl );
@@ -475,7 +475,7 @@ init_classes( void )
     add_button_types( FL_LABELBUTTON );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "slider" );
     add_class_def( VN( FL_SLIDER ), OBJNAME( slider ), ++bl );
@@ -487,7 +487,7 @@ init_classes( void )
 
     fl_add_browser_line( fd_control->objectbrowser, "scrollbar" );
     add_class_def( VN( FL_SCROLLBAR ), OBJNAME( scrollbar ), ++bl );
-	add_scrollbar_types( FL_SCROLLBAR );
+    add_scrollbar_types( FL_SCROLLBAR );
 
     fl_add_browser_line( fd_control->objectbrowser, "dial" );
     add_class_def( VN( FL_DIAL ), OBJNAME( dial ), ++bl );
@@ -518,7 +518,7 @@ init_classes( void )
     add_type_def( FL_SPINNER, FL_FLOAT_SPINNER, "FLOAT_SPINNER" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "input" );
     add_class_def( VN( FL_INPUT ), OBJNAME( input ), ++bl );
@@ -531,7 +531,7 @@ init_classes( void )
     add_type_def( FL_INPUT, FL_DATE_INPUT,      "DATE_INPUT" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "menu" );
     add_class_def( VN( FL_MENU ), OBJNAME( menu ), ++bl );
@@ -555,7 +555,7 @@ init_classes( void )
     add_type_def( FL_BROWSER, FL_MULTI_BROWSER,  "MULTI_BROWSER" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "timer" );
     add_class_def( VN( FL_TIMER ), OBJNAME( timer ), ++bl );
@@ -565,46 +565,46 @@ init_classes( void )
     set_class_default( FL_TIMER, FL_NORMAL_TIMER, "timer" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "xyplot" );
     add_class_def( VN( FL_XYPLOT ), OBJNAME( xyplot ), ++bl );
-	add_xyplot_types( FL_XYPLOT );
+    add_xyplot_types( FL_XYPLOT );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "canvas" );
     add_class_def( VN( FL_CANVAS ), "canvas",
-				   fl_create_simu_canvas, fl_add_simu_canvas, ++bl );
+                   fl_create_simu_canvas, fl_add_simu_canvas, ++bl );
     add_type_def( FL_CANVAS, FL_NORMAL_CANVAS,   "NORMAL_CANVAS" );
     add_type_def( FL_CANVAS, FL_SCROLLED_CANVAS, "SCROLLED_CANVAS" );
     set_class_default( FL_CANVAS, FL_NORMAL_CANVAS, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "glcanvas" );
     add_class_def( VN( FL_GLCANVAS ), "glcanvas",
-				   fl_create_simu_glcanvas, fl_add_simu_glcanvas, ++bl );
+                   fl_create_simu_glcanvas, fl_add_simu_glcanvas, ++bl );
     add_type_def( FL_GLCANVAS, FL_NORMAL_CANVAS,   "NORMAL_CANVAS" );
     add_type_def( FL_GLCANVAS, FL_SCROLLED_CANVAS, "SCROLLED_CANVAS" );
     set_class_default( FL_GLCANVAS, FL_NORMAL_CANVAS, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "tabfolder" );
     add_class_def( FL_NTABFOLDER, "FL_TABFOLDER", "tabfolder",
-				   fl_create_ntabfolder, fl_add_ntabfolder, ++bl );
+                   fl_create_ntabfolder, fl_add_ntabfolder, ++bl );
     add_type_def( FL_NTABFOLDER, FL_TOP_TABFOLDER, "TOP_TABFOLDER" );
     add_type_def( FL_NTABFOLDER, FL_BOTTOM_TABFOLDER, "BOTTOM_TABFOLDER" );
     set_class_default( FL_NTABFOLDER, FL_TOP_TABFOLDER, "" );
 
     fl_add_browser_line( fd_control->objectbrowser, "formbrowser" );
     add_class_def( FL_FORMBROWSER, "FL_FORMBROWSER", "formbrowser",
-				   fl_create_nformbrowser, fl_add_nformbrowser, ++bl );
+                   fl_create_nformbrowser, fl_add_nformbrowser, ++bl );
     add_type_def( FL_FORMBROWSER, FL_NORMAL_FORMBROWSER, "NORMAL_FORMBROWSER" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );
-	bl++;
+    bl++;
 
     fl_add_browser_line( fd_control->objectbrowser, "freeobject" );
     add_class_def( VN( FL_FREE ), "free", fd_create_free, fd_add_free, ++bl );
@@ -635,15 +635,15 @@ select_object_by_class( int cn )
     int i;
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cn )
-		{
-			fl_select_browser_line( fd_control->objectbrowser,
-									classes[ i ].bline );
-			fl_show_browser_line( fd_control->objectbrowser,
-								  classes[ i ].bline );
-			cur_class = cn;
-			break;
-		}
+        if ( classes[ i ].cn == cn )
+        {
+            fl_select_browser_line( fd_control->objectbrowser,
+                                    classes[ i ].bline );
+            fl_show_browser_line( fd_control->objectbrowser,
+                                  classes[ i ].bline );
+            cur_class = cn;
+            break;
+        }
 }
 
 
@@ -662,8 +662,8 @@ find_class_name( int cln )
     static char buf[ MAX_CLASS_NAME_LEN ];
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cln )
-			return classes[ i ].cname;
+        if ( classes[ i ].cn == cln )
+            return classes[ i ].cname;
     sprintf( buf, "%d", cln );
     return buf;
 }
@@ -680,8 +680,8 @@ class_name( int cls )
     static char buf[ MAX_CLASS_NAME_LEN ];
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cls )
-			return classes[ i ].formal_cname;
+        if ( classes[ i ].cn == cls )
+            return classes[ i ].formal_cname;
     sprintf( buf, "%d", cls );
     return buf;
 }
@@ -698,9 +698,9 @@ class_val( const char * name )
 
     for ( i = 0; i < cnumb; i++ )
     {
-		if (    strcmp( classes[ i ].cname, name ) == 0
-			 || strcmp( classes[ i ].formal_cname, name ) == 0 )
-			return classes[ i ].cn;
+        if (    strcmp( classes[ i ].cname, name ) == 0
+             || strcmp( classes[ i ].formal_cname, name ) == 0 )
+            return classes[ i ].cn;
     }
 
     return atoi( name );
@@ -714,23 +714,23 @@ class_val( const char * name )
 
 FL_OBJECT *
 find_class_default( int cln,
-					int t )
+                    int t )
 {
     int i;
     CDEF *c = classes;
 
     for ( i = 0; i < cnumb; i++, c++ )
-		if ( c->cn == cln )
-		{
-			if ( c->var_boxtype )
-			{
-				if ( c->defobj1 )
-					fl_free_object( c->defobj1 );
-				return c->defobj1 = c->createit( t, 0, 0, 1, 1, "" );
-			}
-			else
-				return c->defobj;
-		}
+        if ( c->cn == cln )
+        {
+            if ( c->var_boxtype )
+            {
+                if ( c->defobj1 )
+                    fl_free_object( c->defobj1 );
+                return c->defobj1 = c->createit( t, 0, 0, 1, 1, "" );
+            }
+            else
+                return c->defobj;
+        }
 
     return NULL;
 }
@@ -744,13 +744,13 @@ int
 find_class_maxtype( int cln )
 {
     int i, j,
-		n = 0;
+        n = 0;
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cln )
-			for ( j = 0; j < MAXTYPES; j++ )
-				if ( classes[ i ].types[ j ].defined )
-					n++;
+        if ( classes[ i ].cn == cln )
+            for ( j = 0; j < MAXTYPES; j++ )
+                if ( classes[ i ].types[ j ].defined )
+                    n++;
     return n;
 }
 
@@ -761,14 +761,14 @@ find_class_maxtype( int cln )
 
 const char *
 find_type_name( int cln,
-				int tyn )
+                int tyn )
 {
     int i;
     static char buf[ MAX_TYPE_NAME_LEN ];
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cln )
-			return classes[ i ].types[ tyn ].tname;
+        if ( classes[ i ].cn == cln )
+            return classes[ i ].types[ tyn ].tname;
     sprintf( buf, "%d", tyn );
     return buf;
 }
@@ -780,20 +780,20 @@ find_type_name( int cln,
 
 int
 find_type_value( int          cln,
-				 const char * tyname )
+                 const char * tyname )
 {
     int i,
-		jmax = find_class_maxtype( cln ),
-		j;
+        jmax = find_class_maxtype( cln ),
+        j;
 
     for ( i = 0; i < cnumb; i++ )
-		if ( classes[ i ].cn == cln )
-			for ( j = 0; j < jmax; j++ )
-				if (    ! strcmp( classes[ i ].types[ j ].tname, tyname )
-					 || (    ! strncmp( tyname, "FL_", 3 )
-						  && ! strcmp( classes[ i ].types[ j ].tname,
-									   tyname + 3 ) ) )
-					return j;
+        if ( classes[ i ].cn == cln )
+            for ( j = 0; j < jmax; j++ )
+                if (    ! strcmp( classes[ i ].types[ j ].tname, tyname )
+                     || (    ! strncmp( tyname, "FL_", 3 )
+                          && ! strcmp( classes[ i ].types[ j ].tname,
+                                       tyname + 3 ) ) )
+                    return j;
 
     M_err( "TypeValue", "type %s is unknown", tyname );
     return -1;
@@ -835,191 +835,199 @@ set_testing_pixmap( FL_OBJECT * ob )
 
 FL_OBJECT *
 add_an_object( int      objclass,
-			   int      type,
-			   FL_Coord x,
-			   FL_Coord y,
-			   FL_Coord w,
-			   FL_Coord h )
+               int      type,
+               FL_Coord x,
+               FL_Coord y,
+               FL_Coord w,
+               FL_Coord h )
 {
     FL_OBJECT *obj = NULL;
     CDEF *cls;
-	static FL_FORM *cf = NULL;
+    static FL_FORM *cf = NULL;
 
     if ( cur_form == NULL )
-		return NULL;
+        return NULL;
 
     /* This routine is called with X coordinate system, need to translate to
        up-right coordinate system */
 
     if ( ! ( cls = find_class_struct( objclass ) ) )
     {
-		fprintf( stderr, "unknown class %d\n", objclass );
-		return 0;
+        fprintf( stderr, "unknown class %d\n", objclass );
+        return 0;
     }
 
-	if ( ! cf )
-		fl_addto_form( cur_form );
+    if ( ! cf )
+        fl_addto_form( cur_form );
 
     switch ( objclass )
     {
-		case FL_BEGIN_GROUP:
-			cf = cur_form;
-			obj = fl_bgn_group( );
-			break;
+        case FL_BEGIN_GROUP:
+            cf = cur_form;
+            obj = fl_bgn_group( );
+            break;
 
-		case FL_END_GROUP:
-			obj = fli_end_group( );
-			break;
+        case FL_END_GROUP:
+            obj = fli_end_group( );
+            break;
 
-		case FL_BITMAP:
-			if ( type == -1 )
-				type = FL_NORMAL_BITMAP;
-			obj = cls->addit( type, x, y, w, h, "" );
-			if ( ! fdopt.conv_only )
-				fl_set_bitmap_data( obj, bm1_width, bm1_height, bm1_bits );
-			break;
+        case FL_BITMAP:
+            if ( type == -1 )
+                type = FL_NORMAL_BITMAP;
+            obj = cls->addit( type, x, y, w, h, "" );
+            if ( ! fdopt.conv_only )
+                fl_set_bitmap_data( obj, bm1_width, bm1_height, bm1_bits );
+            break;
 
-		case FL_PIXMAP:
-			if ( type == -1 )
-				type = FL_NORMAL_PIXMAP;
-			obj = cls->addit( type, x, y, w, h, "" );
-			if ( ! fdopt.conv_only )
-				fl_set_pixmap_data( obj, crab );
-			break;
+        case FL_PIXMAP:
+            if ( type == -1 )
+                type = FL_NORMAL_PIXMAP;
+            obj = cls->addit( type, x, y, w, h, "" );
+            if ( ! fdopt.conv_only )
+                fl_set_pixmap_data( obj, crab );
+            break;
 
-		case FL_CHART:
-			if ( type == -1 )
-				type = FL_BAR_CHART;
-			obj = cls->addit( type, x, y, w, h, "" );
-			fl_add_chart_value( obj, 4.0, "item 1", 2 );
-			fl_add_chart_value( obj, 8.0, "item 2", 3 );
-			fl_add_chart_value( obj, 2.0, "item 3", 4 );
-			fl_add_chart_value( obj, 5.0, "item 4", 5 );
-			break;
+        case FL_CHART:
+            if ( type == -1 )
+                type = FL_BAR_CHART;
+            obj = cls->addit( type, x, y, w, h, "" );
+            fl_add_chart_value( obj, 4.0, "item 1", 2 );
+            fl_add_chart_value( obj, 8.0, "item 2", 3 );
+            fl_add_chart_value( obj, 2.0, "item 3", 4 );
+            fl_add_chart_value( obj, 5.0, "item 4", 5 );
+            break;
 
-		case FL_BITMAPBUTTON:
-			if ( type == -1 )
-				type = FL_NORMAL_BUTTON;
-			obj = cls->addit( type, x, y, w, h, "" );
-			if ( ! fdopt.conv_only )
-				fl_set_bitmapbutton_data( obj, bm1_width, bm1_height,
-										  bm1_bits );
-			break;
+        case FL_BITMAPBUTTON:
+            if ( type == -1 )
+                type = FL_NORMAL_BUTTON;
+            obj = cls->addit( type, x, y, w, h, "" );
+            if ( ! fdopt.conv_only )
+                fl_set_bitmapbutton_data( obj, bm1_width, bm1_height,
+                                          bm1_bits );
+            break;
 
-		case FL_PIXMAPBUTTON:
-			if ( type == -1 )
-				type = FL_NORMAL_BUTTON;
-			obj = cls->addit( type, x, y, w, h, "" );
-			if ( ! fdopt.conv_only )
-				fl_set_pixmapbutton_data( obj, crab );
-			break;
+        case FL_PIXMAPBUTTON:
+            if ( type == -1 )
+                type = FL_NORMAL_BUTTON;
+            obj = cls->addit( type, x, y, w, h, "" );
+            if ( ! fdopt.conv_only )
+                fl_set_pixmapbutton_data( obj, crab );
+            break;
 
-		case FL_SLIDER:
-			if ( type == -1 )
-				type = h > w ? FL_VERT_BROWSER_SLIDER : FL_HOR_BROWSER_SLIDER;
-			obj = cls->addit( type, x, y, w, h, "" );
-			break;
+        case FL_SLIDER:
+            if ( type == -1 )
+                type = h > w ? FL_VERT_BROWSER_SLIDER : FL_HOR_BROWSER_SLIDER;
+            obj = cls->addit( type, x, y, w, h, "" );
+            break;
 
-		case FL_VALSLIDER:
-			if ( type == -1 )
-				type = h > w ? FL_VERT_BROWSER_SLIDER : FL_HOR_BROWSER_SLIDER;
-			obj = cls->addit( type, x, y, w, h, "" );
-			break;
+        case FL_VALSLIDER:
+            if ( type == -1 )
+                type = h > w ? FL_VERT_BROWSER_SLIDER : FL_HOR_BROWSER_SLIDER;
+            obj = cls->addit( type, x, y, w, h, "" );
+            break;
 
-		case FL_SCROLLBAR:
-			if ( type == -1 )
-				type = h > w ? FL_VERT_SCROLLBAR : FL_HOR_SCROLLBAR;
-			obj = cls->addit( type, x, y, w, h, "" );
-			break;
+        case FL_SCROLLBAR:
+            if ( type == -1 )
+                type = h > w ? FL_VERT_SCROLLBAR : FL_HOR_SCROLLBAR;
+            obj = cls->addit( type, x, y, w, h, "" );
+            break;
 
-		case FL_THUMBWHEEL:
-			if ( type == -1 )
-				type = h > w ? FL_VERT_THUMBWHEEL : FL_HOR_THUMBWHEEL;
-			obj = cls->addit( type, x, y, w, h, "" );
-			break;
+        case FL_THUMBWHEEL:
+            if ( type == -1 )
+                type = h > w ? FL_VERT_THUMBWHEEL : FL_HOR_THUMBWHEEL;
+            obj = cls->addit( type, x, y, w, h, "" );
+            break;
 
-		case FL_INPUT:
-			if ( type == -1 )
-				type = h < 60 ? FL_NORMAL_INPUT : FL_MULTILINE_INPUT;
-			obj = cls->addit( type, x, y, w, h, "Input" );
-			fl_set_input_hscrollbar( obj, FL_OFF );
-			fl_set_input_vscrollbar( obj, FL_OFF );
-			break;
+        case FL_INPUT:
+            if ( type == -1 )
+                type = h < 60 ? FL_NORMAL_INPUT : FL_MULTILINE_INPUT;
+            obj = cls->addit( type, x, y, w, h, "Input" );
+            fl_set_input_hscrollbar( obj, FL_OFF );
+            fl_set_input_vscrollbar( obj, FL_OFF );
+            break;
 
-		case FL_MENU:
-			if ( type == -1 )
-				type = FL_PULLDOWN_MENU;
-			obj = cls->addit( type, x, y, w, h, "Menu" );
-			get_superspec( obj );       /* super spec must exist for testing */
-			break;
+        case FL_MENU:
+            if ( type == -1 )
+                type = FL_PULLDOWN_MENU;
+            obj = cls->addit( type, x, y, w, h, "Menu" );
+            get_superspec( obj );       /* super spec must exist for testing */
+            break;
 
-		case FL_CHOICE:
-			if ( type == -1 )
-				type = FL_NORMAL_CHOICE2;
-			obj = cls->addit( type, x, y, w, h, "" );
-			get_superspec( obj );       /* super spec must exist for testing */
-			break;
+        case FL_CHOICE:
+            if ( type == -1 )
+                type = FL_NORMAL_CHOICE2;
+            obj = cls->addit( type, x, y, w, h, "" );
+            get_superspec( obj );       /* super spec must exist for testing */
+            break;
 
-		case FL_BROWSER:
-			if ( type == -1 )
-				type = FL_NORMAL_BROWSER;
-			obj = cls->addit( type, x, y, w, h, "" );
-			get_superspec( obj );       /* super spec must exist for testing */
-			break;
+        case FL_BROWSER:
+            if ( type == -1 )
+                type = FL_NORMAL_BROWSER;
+            obj = cls->addit( type, x, y, w, h, "" );
+            get_superspec( obj );       /* super spec must exist for testing */
+            break;
 
-		case FL_XYPLOT:
-			if (type == -1)
-				type = FL_NORMAL_XYPLOT;
-			{
-				float xx[ 30 ],
-					  yy[ 30 ];
-				int i;
+        case FL_XYPLOT:
+            if (type == -1)
+                type = FL_NORMAL_XYPLOT;
+            {
+                float xx[ 30 ],
+                      yy[ 30 ];
+                int i;
 
-				for ( i = 0; i < 30; i++ )
-				{
-					xx[ i ] = 3.1415 * ( i + 0.5 ) / 8.0;
-					yy[ i ] = FL_abs( sin( 2 * xx[ i ] ) + cos( xx[ i ] ) );
-				}
+                for ( i = 0; i < 30; i++ )
+                {
+                    xx[ i ] = 3.1415 * ( i + 0.5 ) / 8.0;
+                    yy[ i ] = FL_abs( sin( 2 * xx[ i ] ) + cos( xx[ i ] ) );
+                }
 
-				obj = cls->addit(type, x, y, w, h, "");
-				fl_set_xyplot_data( obj, xx, yy, 30, "", "", "" );
-			}
-			break;
+                obj = cls->addit(type, x, y, w, h, "");
+                fl_set_xyplot_data( obj, xx, yy, 30, "", "", "" );
+            }
+            break;
 
-		case FL_FREE:
-			if ( type == -1 )
-				type = FL_NORMAL_FREE;
-			obj = fl_add_free( type, x, y, w, h, "", noop_handle );
-			break;
+        case FL_FREE:
+            if ( type == -1 )
+                type = FL_NORMAL_FREE;
+            obj = fl_add_free( type, x, y, w, h, "", noop_handle );
+            break;
 
-		default:
-			if ( type == -1 )
-				type = cls->default_type;
-			obj = cls->addit( type, x, y, w, h, cls->default_label );
-			break;
+        default:
+            if ( type == -1 )
+                type = cls->default_type;
+            obj = cls->addit( type, x, y, w, h, cls->default_label );
+            break;
     }
 
     if ( ! obj )
-		fprintf( stderr, "Unknown object (class = %d type = %d)\n",
-				 objclass, type );
+        fprintf( stderr, "Unknown object (class = %d type = %d)\n",
+                 objclass, type );
 
-	obj->fl1 = obj->x;
-	obj->fr1 = cur_form->w_hr - obj->fl1;
-	obj->ft1 = obj->y;
-	obj->fb1 = cur_form->h_hr - obj->ft1;
+    obj->fl1 = obj->x;
+    obj->fr1 = cur_form->w_hr - obj->fl1;
+    obj->ft1 = obj->y;
+    obj->fb1 = cur_form->h_hr - obj->ft1;
 
-	obj->fl2 = obj->x + obj->w;
-	obj->fr2 = cur_form->w - obj->fl2;
-	obj->ft2 = obj->y + obj->h;
-	obj->fb2 = cur_form->h - obj->ft2;
+    obj->fl2 = obj->x + obj->w;
+    obj->fr2 = cur_form->w - obj->fl2;
+    obj->ft2 = obj->y + obj->h;
+    obj->fb2 = cur_form->h - obj->ft2;
 
-	if ( ! cf || objclass == FL_END_GROUP )
-	{
-		fl_end_form( );
-		cf = NULL;
-	}
+    if ( ! cf || objclass == FL_END_GROUP )
+    {
+        fl_end_form( );
+        cf = NULL;
+    }
 
     obj->active = 1;
 
     return obj;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

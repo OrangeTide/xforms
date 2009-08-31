@@ -52,9 +52,17 @@ fli_fget2MSBF( FILE * fp )
 
 int
 fli_fput2MSBF( int    code,
-			  FILE * fp )
+              FILE * fp )
 {
     putc( ( code >> 8 ) & 0xff, fp );
     putc( code & 0xff, fp );
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

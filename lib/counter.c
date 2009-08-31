@@ -47,12 +47,12 @@
 
 enum {
     NONE,
-	OB0 =  1,
-	OB1 =  2,
-	OB2 =  4,
-	OB3 =  8,
-	OB4 = 16,
-	ALL = 31
+    OB0 =  1,
+    OB1 =  2,
+    OB2 =  4,
+    OB3 =  8,
+    OB4 = 16,
+    ALL = 31
 };
 
 
@@ -65,98 +65,98 @@ draw_counter( FL_OBJECT * ob )
 {
     char str[ 64 ];
     int i,
-		btype[ 5 ];
+        btype[ 5 ];
     FLI_COUNTER_SPEC *sp = ob->spec;
 
     /* Compute boxtypes if pushed */
 
     for ( i = 0; i < 5; i++ )
-		if (    ob->pushed
-			 && FL_IS_UPBOX( ob->boxtype )
-			 && ( sp->mouseobj & ( 1 << i ) ) )
-			btype[i] = FL_TO_DOWNBOX( ob->boxtype );
-		else
-			btype[ i ] = ob->boxtype;
+        if (    ob->pushed
+             && FL_IS_UPBOX( ob->boxtype )
+             && ( sp->mouseobj & ( 1 << i ) ) )
+            btype[i] = FL_TO_DOWNBOX( ob->boxtype );
+        else
+            btype[ i ] = ob->boxtype;
 
     if ( btype[ 4 ] == FL_UP_BOX )
-		btype[ 4 ] = FL_DOWN_BOX;
+        btype[ 4 ] = FL_DOWN_BOX;
 
     /* Compute sizes. Must not leave any gaps otherwise double buffering will
        not work correctly */
 
     if ( ob->type == FL_NORMAL_COUNTER )
     {
-		/* Button is numbered 01 4 23 */
+        /* Button is numbered 01 4 23 */
 
-		sp->ww[ 0 ] = sp->ww[ 1 ] = sp->ww[ 2 ] = sp->ww[ 3 ] =
-												 FL_min( 0.18 * ob->w, ob->h );
-		sp->ww[ 4 ] = ob->w - 4 * sp->ww[ 0 ];	/* must calculate this way */
-		sp->xx[ 0 ] = ob->x;
-		sp->xx[ 1 ] = sp->xx[ 0 ] + sp->ww[ 0 ];
-		sp->xx[ 4 ] = sp->xx[ 1 ] + sp->ww[ 1 ];
-		sp->xx[ 2 ] = sp->xx[ 4 ] + sp->ww[ 4 ];
-		sp->xx[ 3 ] = sp->xx[ 2 ] + sp->ww[ 2 ];
+        sp->ww[ 0 ] = sp->ww[ 1 ] = sp->ww[ 2 ] = sp->ww[ 3 ] =
+                                                 FL_min( 0.18 * ob->w, ob->h );
+        sp->ww[ 4 ] = ob->w - 4 * sp->ww[ 0 ];  /* must calculate this way */
+        sp->xx[ 0 ] = ob->x;
+        sp->xx[ 1 ] = sp->xx[ 0 ] + sp->ww[ 0 ];
+        sp->xx[ 4 ] = sp->xx[ 1 ] + sp->ww[ 1 ];
+        sp->xx[ 2 ] = sp->xx[ 4 ] + sp->ww[ 4 ];
+        sp->xx[ 3 ] = sp->xx[ 2 ] + sp->ww[ 2 ];
     }
     else
     {
-		/* 1  4  2 */
+        /* 1  4  2 */
 
-		sp->ww[ 1 ] = sp->ww[ 2 ] = FL_min( 0.20 * ob->w, ob->h );
-		sp->ww[ 4 ] = ob->w - 2 * sp->ww[ 1 ];
-		sp->xx[ 1 ] = ob->x;
-		sp->xx[ 4 ] = ob->x + sp->ww[ 1 ];
-		sp->xx[ 2 ] = sp->xx[ 4 ] + sp->ww[ 4 ];
+        sp->ww[ 1 ] = sp->ww[ 2 ] = FL_min( 0.20 * ob->w, ob->h );
+        sp->ww[ 4 ] = ob->w - 2 * sp->ww[ 1 ];
+        sp->xx[ 1 ] = ob->x;
+        sp->xx[ 4 ] = ob->x + sp->ww[ 1 ];
+        sp->xx[ 2 ] = sp->xx[ 4 ] + sp->ww[ 4 ];
     }
 
     if ( sp->filter )
-		strcpy( str, sp->filter( ob, sp->val, sp->prec ) );
+        strcpy( str, sp->filter( ob, sp->val, sp->prec ) );
     else
-		sprintf( str, "%.*f", sp->prec, sp->val );
+        sprintf( str, "%.*f", sp->prec, sp->val );
 
     /* Only draw the parts that need to be drawn  */
 
     if ( ob->type == FL_NORMAL_COUNTER && sp->draw_type & OB0 )
     {
-		fl_drw_box( btype[ 0 ], sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
-					ob->col1, ob->bw );
-		fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
-					 ob->col2, 0, 0, "@#<<" );
+        fl_drw_box( btype[ 0 ], sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
+                    ob->col1, ob->bw );
+        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 0 ], ob->y, sp->ww[ 0 ], ob->h,
+                     ob->col2, 0, 0, "@#<<" );
     }
 
     if ( sp->draw_type & OB1 )
     {
-		fl_drw_box( btype[ 1 ], sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
-					ob->col1, ob->bw );
-		fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
-					 ob->col2, 0, 0, "@#<" );
+        fl_drw_box( btype[ 1 ], sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
+                    ob->col1, ob->bw );
+        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 1 ], ob->y, sp->ww[ 1 ], ob->h,
+                     ob->col2, 0, 0, "@#<" );
     }
 
     if ( sp->draw_type & OB4 )
     {
-		fl_drw_box( btype[ 4 ], sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
-					ob->col1, ob->bw );
-		fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
-					 ob->lcol, ob->lstyle, ob->lsize, str );
+        fl_drw_box( btype[ 4 ], sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
+                    ob->col1, ob->bw );
+        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
+                     ob->lcol, ob->lstyle, ob->lsize, str );
     }
 
     if ( sp->draw_type & OB2 )
     {
-		fl_drw_box( btype[ 2 ], sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
-					ob->col1, ob->bw );
-		fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
-					 ob->col2, 0, 0, "@#>" );
+        fl_drw_box( btype[ 2 ], sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
+                    ob->col1, ob->bw );
+        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 2 ], ob->y, sp->ww[ 2 ], ob->h,
+                     ob->col2, 0, 0, "@#>" );
     }
 
     if ( ob->type == FL_NORMAL_COUNTER && sp->draw_type & OB3 )
     {
-		fl_drw_box( btype[ 3 ], sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
-					ob->col1, ob->bw );
-		fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
-					 ob->col2, 0, 0, "@#>>" );
+        fl_drw_box( btype[ 3 ], sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
+                    ob->col1, ob->bw );
+        fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 3 ], ob->y, sp->ww[ 3 ], ob->h,
+                     ob->col2, 0, 0, "@#>>" );
     }
 
     if ( sp->draw_type == ALL )
-		fl_draw_object_label_outside( ob );
+        fl_draw_object_label_outside( ob );
 
     sp->draw_type = ALL;
 }
@@ -168,41 +168,41 @@ draw_counter( FL_OBJECT * ob )
 
 static void
 calc_mouse_obj( FL_OBJECT * ob,
-				FL_Coord    mx,
-				FL_Coord    my )
+                FL_Coord    mx,
+                FL_Coord    my )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
     sp->mouseobj = NONE;
 
     if ( my < ob->y || my > ob->y + ob->h || mx < ob->x )
-		return;
+        return;
 
     /* 01 4 23 */
 
     if ( ob->type == FL_NORMAL_COUNTER )
     {
-		if ( mx < ob->x + sp->ww[ 0 ] )
-			sp->mouseobj = OB0;
-		else if ( mx < sp->ww[ 1 ] + sp->xx[ 1 ] )
-			sp->mouseobj = OB1;
-		else if ( mx < sp->ww[ 4 ] + sp->xx[ 4 ] )
-			sp->mouseobj = OB4;
-		else if ( mx < sp->ww[ 2 ] + sp->xx[ 2 ] )
-			sp->mouseobj = OB2;
-		else if ( mx < sp->ww[ 3 ] + sp->xx[ 3 ] )
-			sp->mouseobj = OB3;
+        if ( mx < ob->x + sp->ww[ 0 ] )
+            sp->mouseobj = OB0;
+        else if ( mx < sp->ww[ 1 ] + sp->xx[ 1 ] )
+            sp->mouseobj = OB1;
+        else if ( mx < sp->ww[ 4 ] + sp->xx[ 4 ] )
+            sp->mouseobj = OB4;
+        else if ( mx < sp->ww[ 2 ] + sp->xx[ 2 ] )
+            sp->mouseobj = OB2;
+        else if ( mx < sp->ww[ 3 ] + sp->xx[ 3 ] )
+            sp->mouseobj = OB3;
     }
     else
     {
-		/* 1  4  2 */
+        /* 1  4  2 */
 
-		if ( mx < ob->x + sp->ww[ 1 ] )
-			sp->mouseobj = OB1;
-		else if ( mx < sp->xx[ 4 ] + sp->ww[ 4 ] )
-			sp->mouseobj = OB4;
-		else if ( mx < sp->xx[ 2 ] + sp->ww[ 2 ] )
-			sp->mouseobj = OB2;
+        if ( mx < ob->x + sp->ww[ 1 ] )
+            sp->mouseobj = OB1;
+        else if ( mx < sp->xx[ 4 ] + sp->ww[ 4 ] )
+            sp->mouseobj = OB4;
+        else if ( mx < sp->xx[ 2 ] + sp->ww[ 2 ] )
+            sp->mouseobj = OB2;
     }
 }
 
@@ -212,7 +212,7 @@ calc_mouse_obj( FL_OBJECT * ob,
 
 int fl_get_counter_repeat( FL_OBJECT * ob )
 {
-	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms;
+    return ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms;
 }
 
 
@@ -220,15 +220,15 @@ int fl_get_counter_repeat( FL_OBJECT * ob )
  ***************************************/
 
 void fl_set_counter_repeat( FL_OBJECT * ob,
-							int         millisec )
+                            int         millisec )
 {
-	if ( millisec <= 0 )
-	{
-		M_warn( "fl_set_counter_repeat", "Invalid argument, disregarded" );
-		return;
-	}
+    if ( millisec <= 0 )
+    {
+        M_warn( "fl_set_counter_repeat", "Invalid argument, disregarded" );
+        return;
+    }
 
-	( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms = millisec;
+    ( ( FLI_COUNTER_SPEC * ) ob->spec )->repeat_ms = millisec;
 }
 
 
@@ -237,7 +237,7 @@ void fl_set_counter_repeat( FL_OBJECT * ob,
 
 int fl_get_counter_min_repeat( FL_OBJECT * ob )
 {
-	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->min_repeat_ms;
+    return ( ( FLI_COUNTER_SPEC * ) ob->spec )->min_repeat_ms;
 }
 
 
@@ -245,15 +245,15 @@ int fl_get_counter_min_repeat( FL_OBJECT * ob )
  ***************************************/
 
 void fl_set_counter_min_repeat( FL_OBJECT * ob,
-								int         millisec )
+                                int         millisec )
 {
-	if ( millisec <= 0 )
-	{
-		M_warn( "fl_set_counter_min_repeat", "Invalid argument, disregarded" );
-		return;
-	}
+    if ( millisec <= 0 )
+    {
+        M_warn( "fl_set_counter_min_repeat", "Invalid argument, disregarded" );
+        return;
+    }
 
-	( ( FLI_COUNTER_SPEC * ) ob->spec )->min_repeat_ms = millisec;
+    ( ( FLI_COUNTER_SPEC * ) ob->spec )->min_repeat_ms = millisec;
 }
 
 
@@ -262,7 +262,7 @@ void fl_set_counter_min_repeat( FL_OBJECT * ob,
 
 int fl_get_counter_speedjump( FL_OBJECT * ob )
 {
-	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speedjump;
+    return ( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speedjump;
 }
 
 
@@ -270,9 +270,9 @@ int fl_get_counter_speedjump( FL_OBJECT * ob )
  ***************************************/
 
 void fl_set_counter_speedjump( FL_OBJECT * ob,
-							   int         yes_no )
+                               int         yes_no )
 {
-	( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speedjump = yes_no != 0;
+    ( ( FLI_COUNTER_SPEC * ) ob->spec )->do_speedjump = yes_no != 0;
 }
 
 
@@ -281,7 +281,7 @@ void fl_set_counter_speedjump( FL_OBJECT * ob,
 
 static void
 timeoutCB( int    val  FL_UNUSED_ARG,
-		   void * data )
+           void * data )
 {
     ( ( FLI_COUNTER_SPEC * ) data )->timeout_id = -1;
 }
@@ -293,8 +293,8 @@ timeoutCB( int    val  FL_UNUSED_ARG,
 
 static void
 show_focus_obj( FL_OBJECT * ob,
-				FL_Coord    mx,
-				FL_Coord    my )
+                FL_Coord    mx,
+                FL_Coord    my )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
     unsigned int oldobj = sp->mouseobj;
@@ -304,22 +304,22 @@ show_focus_obj( FL_OBJECT * ob,
     /* If same object, do nothing */
 
     if ( sp->mouseobj == oldobj )
-		return;
+        return;
 
     if ( sp->mouseobj && sp->mouseobj != OB4 && sp->mouseobj != oldobj )
     {
-		FL_COLOR old = ob->col1;
-		sp->draw_type = sp->mouseobj;
-		ob->col1 = FL_MCOL;
-		fl_redraw_object( ob );
-		sp->draw_type = oldobj;
-		ob->col1 = old;
-		fl_redraw_object( ob );
+        FL_COLOR old = ob->col1;
+        sp->draw_type = sp->mouseobj;
+        ob->col1 = FL_MCOL;
+        fl_redraw_object( ob );
+        sp->draw_type = oldobj;
+        ob->col1 = old;
+        fl_redraw_object( ob );
     }
     else if ( ( sp->mouseobj == NONE || sp->mouseobj == OB4 ) && oldobj )
     {
-		sp->draw_type = oldobj;
-		fl_redraw_object( ob );
+        sp->draw_type = oldobj;
+        fl_redraw_object( ob );
     }
 }
 
@@ -330,104 +330,104 @@ show_focus_obj( FL_OBJECT * ob,
 
 static int
 handle_mouse( FL_OBJECT * ob,
-			  int         event,
-			  FL_Coord    mx,
-			  FL_Coord    my )
+              int         event,
+              FL_Coord    mx,
+              FL_Coord    my )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
     int ret = FL_RETURN_NONE;
 
-	switch ( event )
-	{
-		/* On mouse push store the old value of the counter, set up the time
-		   values for speeding up updates while the mouse is pressed down,
-		   check where the mouse is and, if it's on one of the buttons, we're
-		   going to change the counters value. Reset the value for the timeout
-		   just to make sure */
+    switch ( event )
+    {
+        /* On mouse push store the old value of the counter, set up the time
+           values for speeding up updates while the mouse is pressed down,
+           check where the mouse is and, if it's on one of the buttons, we're
+           going to change the counters value. Reset the value for the timeout
+           just to make sure */
 
-		case FL_PUSH :
-			sp->start_val = sp->val;
-			sp->cur_repeat_ms = sp->repeat_ms;
-			calc_mouse_obj( ob, mx, my );
-			if ( sp->mouseobj != NONE )
-				ret = FL_RETURN_CHANGED;
-			sp->timeout_id = -1;
-			break;
+        case FL_PUSH :
+            sp->start_val = sp->val;
+            sp->cur_repeat_ms = sp->repeat_ms;
+            calc_mouse_obj( ob, mx, my );
+            if ( sp->mouseobj != NONE )
+                ret = FL_RETURN_CHANGED;
+            sp->timeout_id = -1;
+            break;
 
-		/* On release stop the update timer (if it's still running), set
-		   flag that indicates we're on a button and return end of inter-
-		   action */
+        /* On release stop the update timer (if it's still running), set
+           flag that indicates we're on a button and return end of inter-
+           action */
 
-		case FL_RELEASE :
-			if ( sp->timeout_id != -1 )
-			{
-				fl_remove_timeout( sp->timeout_id );
-				sp->timeout_id = -1;
-			}
+        case FL_RELEASE :
+            if ( sp->timeout_id != -1 )
+            {
+                fl_remove_timeout( sp->timeout_id );
+                sp->timeout_id = -1;
+            }
 
-			sp->mouseobj = NONE;
-			fl_redraw_object( ob );
-			ret = FL_RETURN_END;
-			break;
+            sp->mouseobj = NONE;
+            fl_redraw_object( ob );
+            ret = FL_RETURN_END;
+            break;
 
-		/* During an update (and if we're on a button) and the time has
-		   expired a change of the counters value is in order */
+        /* During an update (and if we're on a button) and the time has
+           expired a change of the counters value is in order */
 
-		case FL_UPDATE :
-			if ( sp->mouseobj != NONE && sp->timeout_id == -1 )
-				ret = FL_RETURN_CHANGED;
-			break;
-	}
+        case FL_UPDATE :
+            if ( sp->mouseobj != NONE && sp->timeout_id == -1 )
+                ret = FL_RETURN_CHANGED;
+            break;
+    }
 
-	/* Handle changes of the counter value */
+    /* Handle changes of the counter value */
 
     if ( ret == FL_RETURN_CHANGED )
     {
-		double oval = sp->val;
+        double oval = sp->val;
 
-		/* (Re)start the timer */
+        /* (Re)start the timer */
 
-		sp->timeout_id = fl_add_timeout( sp->cur_repeat_ms, timeoutCB, sp );
+        sp->timeout_id = fl_add_timeout( sp->cur_repeat_ms, timeoutCB, sp );
 
-		/* If 'speedjump' hasn't been switched on and we didn't reach the
-		   final speed reduce the timeout value by a third of the remaining
-		   difference (the extra substraction of 2 makes sure we can reach it
-		   in all circumstances) */
+        /* If 'speedjump' hasn't been switched on and we didn't reach the
+           final speed reduce the timeout value by a third of the remaining
+           difference (the extra substraction of 2 makes sure we can reach it
+           in all circumstances) */
 
-		if ( ! sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
-		{
-			sp->cur_repeat_ms -=
-				             ( sp->cur_repeat_ms - sp->min_repeat_ms ) / 3 + 2;
-			sp->cur_repeat_ms = FL_max( sp->cur_repeat_ms, sp->min_repeat_ms );
-		}
+        if ( ! sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
+        {
+            sp->cur_repeat_ms -=
+                             ( sp->cur_repeat_ms - sp->min_repeat_ms ) / 3 + 2;
+            sp->cur_repeat_ms = FL_max( sp->cur_repeat_ms, sp->min_repeat_ms );
+        }
 
-		/* If 'speedjump' has been switched on but initial and final speed
-		   aren't identical it means that we have a long delay at the start
-		   and then short timeouts afterwards */
+        /* If 'speedjump' has been switched on but initial and final speed
+           aren't identical it means that we have a long delay at the start
+           and then short timeouts afterwards */
 
-		if ( sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
-			sp->cur_repeat_ms = sp->min_repeat_ms;
+        if ( sp->do_speedjump && sp->cur_repeat_ms > sp->min_repeat_ms )
+            sp->cur_repeat_ms = sp->min_repeat_ms;
 
-		/* Change the counters value according to which button we're on */
+        /* Change the counters value according to which button we're on */
 
-		if ( sp->mouseobj == OB0 )
-			sp->val -= sp->lstep;
-		if ( sp->mouseobj == OB1 )
-			sp->val -= sp->sstep;
-		if ( sp->mouseobj == OB2 )
-			sp->val += sp->sstep;
-		if ( sp->mouseobj == OB3 )
-			sp->val += sp->lstep;
+        if ( sp->mouseobj == OB0 )
+            sp->val -= sp->lstep;
+        if ( sp->mouseobj == OB1 )
+            sp->val -= sp->sstep;
+        if ( sp->mouseobj == OB2 )
+            sp->val += sp->sstep;
+        if ( sp->mouseobj == OB3 )
+            sp->val += sp->lstep;
 
-		sp->val = fli_clamp( sp->val, sp->min, sp->max );
+        sp->val = fli_clamp( sp->val, sp->min, sp->max );
 
-		/* Redraw the central field with the new value */
+        /* Redraw the central field with the new value */
 
-		if ( sp->val != oval )
-		{
-			sp->draw_type = sp->mouseobj | OB4;
-			fl_redraw_object( ob );
-		}
+        if ( sp->val != oval )
+        {
+            sp->draw_type = sp->mouseobj | OB4;
+            fl_redraw_object( ob );
+        }
     }
 
     return ret;
@@ -440,55 +440,55 @@ handle_mouse( FL_OBJECT * ob,
 
 static int
 handle_counter( FL_OBJECT * ob,
-				int         event,
-				FL_Coord    mx,
-				FL_Coord    my,
-				int         key  FL_UNUSED_ARG,
-				void *      ev   FL_UNUSED_ARG )
+                int         event,
+                FL_Coord    mx,
+                FL_Coord    my,
+                int         key  FL_UNUSED_ARG,
+                void *      ev   FL_UNUSED_ARG )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
-	int ret = FL_RETURN_NONE;
+    int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
-		case FL_DRAW:
-			draw_counter( ob );
-			break;
+        case FL_DRAW:
+            draw_counter( ob );
+            break;
 
-		case FL_DRAWLABEL:
-			fl_draw_object_label_outside( ob );
-			break;
+        case FL_DRAWLABEL:
+            fl_draw_object_label_outside( ob );
+            break;
 
-		case FL_PUSH:
-			if ( key != FL_MBUTTON1 )
-				break;
-			/* fall through */
+        case FL_PUSH:
+            if ( key != FL_MBUTTON1 )
+                break;
+            /* fall through */
 
-		case FL_UPDATE:
-			if (    ( ret = handle_mouse( ob, event, mx, my ) )
-				 && ! ( ob->how_return & FL_RETURN_END_CHANGED ) )
-				sp->start_val = sp->val;
-			break;
+        case FL_UPDATE:
+            if (    ( ret = handle_mouse( ob, event, mx, my ) )
+                 && ! ( ob->how_return & FL_RETURN_END_CHANGED ) )
+                sp->start_val = sp->val;
+            break;
 
-		case FL_RELEASE:
-			if ( key != FL_MBUTTON1 )
-				break;
+        case FL_RELEASE:
+            if ( key != FL_MBUTTON1 )
+                break;
 
-			ret = handle_mouse( ob, event, mx, my );
-			show_focus_obj( ob, mx, my );
-			if ( sp->start_val != sp->val )
-				ret |= FL_RETURN_CHANGED;
-			break;
+            ret = handle_mouse( ob, event, mx, my );
+            show_focus_obj( ob, mx, my );
+            if ( sp->start_val != sp->val )
+                ret |= FL_RETURN_CHANGED;
+            break;
 
-		case FL_MOTION:
-		case FL_ENTER:
-		case FL_LEAVE:
-			show_focus_obj( ob, mx, my );
-			break;
+        case FL_MOTION:
+        case FL_ENTER:
+        case FL_LEAVE:
+            show_focus_obj( ob, mx, my );
+            break;
 
-		case FL_FREEMEM:
-			fl_free( ob->spec );
-			break;
+        case FL_FREEMEM:
+            fl_free( ob->spec );
+            break;
     }
 
     return ret;
@@ -501,11 +501,11 @@ handle_counter( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_counter( int          type,
-				   FL_Coord     x,
-				   FL_Coord     y,
-				   FL_Coord     w,
-				   FL_Coord     h,
-				   const char * label )
+                   FL_Coord     x,
+                   FL_Coord     y,
+                   FL_Coord     w,
+                   FL_Coord     h,
+                   const char * label )
 {
     FL_OBJECT *ob;
     FLI_COUNTER_SPEC *sp;
@@ -516,13 +516,13 @@ fl_create_counter( int          type,
     ob->col2        = FL_COUNTER_COL2;
     ob->align       = FL_COUNTER_ALIGN;
     ob->lcol        = FL_COUNTER_LCOL;
-	ob->want_motion = 1;
-	ob->want_update = 1;
+    ob->want_motion = 1;
+    ob->want_update = 1;
 
     /* Counter has a different default */
 
     if ( ob->bw == FL_BOUND_WIDTH && ob->bw == 3 )
-		ob->bw = FL_COUNTER_BW;
+        ob->bw = FL_COUNTER_BW;
 
     sp = ob->spec     = fl_calloc( 1, sizeof *sp );
     sp->min           = -1000000.0;
@@ -533,10 +533,10 @@ fl_create_counter( int          type,
     sp->prec          = 1;
     sp->mouseobj      = NONE;
     sp->draw_type     = ALL;
-	sp->filter        = NULL;
-	sp->min_repeat_ms = 50;
+    sp->filter        = NULL;
+    sp->min_repeat_ms = 50;
     sp->repeat_ms     = 600;
-	sp->do_speedjump  = 0;
+    sp->do_speedjump  = 0;
     sp->timeout_id    = -1;
 
     return ob;
@@ -549,17 +549,17 @@ fl_create_counter( int          type,
 
 FL_OBJECT *
 fl_add_counter( int          type,
-				FL_Coord     x,
-				FL_Coord     y,
-				FL_Coord     w,
-				FL_Coord     h,
-				const char * label )
+                FL_Coord     x,
+                FL_Coord     y,
+                FL_Coord     w,
+                FL_Coord     h,
+                const char * label )
 {
     FL_OBJECT *ob = fl_create_counter( type, x, y, w, h, label );
 
-	/* Set default return policy for the object */
+    /* Set default return policy for the object */
 
-	fl_set_object_return( ob, FL_RETURN_CHANGED );
+    fl_set_object_return( ob, FL_RETURN_CHANGED );
 
     fl_add_object( fl_current_form, ob );
 
@@ -572,25 +572,25 @@ fl_add_counter( int          type,
 
 void
 fl_set_counter_value( FL_OBJECT * ob,
-					  double      val )
+                      double      val )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		M_err( "fl_set_counter_value", "%s not a counter",
-			   ob ? ob->label : "" );
-		return;
+        M_err( "fl_set_counter_value", "%s not a counter",
+               ob ? ob->label : "" );
+        return;
     }
 #endif
 
     val = fli_clamp( val, sp->min, sp->max );
     if ( sp->val != val )
     {
-		sp->val = sp->start_val = val;
-		sp->draw_type = ( ob->visible && ob->form->visible ) ? OB4 : ALL;
-		fl_redraw_object( ob );
+        sp->val = sp->start_val = val;
+        sp->draw_type = ( ob->visible && ob->form->visible ) ? OB4 : ALL;
+        fl_redraw_object( ob );
     }
 }
 
@@ -600,8 +600,8 @@ fl_set_counter_value( FL_OBJECT * ob,
 
 void
 fl_get_counter_bounds( FL_OBJECT * ob,
-					   double    * min,
-					   double    * max )
+                       double    * min,
+                       double    * max )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
@@ -615,26 +615,26 @@ fl_get_counter_bounds( FL_OBJECT * ob,
 
 void
 fl_set_counter_bounds( FL_OBJECT * ob,
-					   double      min,
-					   double      max )
+                       double      min,
+                       double      max )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		M_err( "fl_set_counter_bounds", "%s not a counter",
-			   ob ? ob->label : "" );
-		return;
+        M_err( "fl_set_counter_bounds", "%s not a counter",
+               ob ? ob->label : "" );
+        return;
     }
 #endif
 
     if ( sp->min != min || sp->max != max )
     {
-		sp->min = min;
-		sp->max = max;
-		sp->val = fli_clamp( sp->val, sp->min, sp->max );
-		fl_redraw_object( ob );
+        sp->min = min;
+        sp->max = max;
+        sp->val = fli_clamp( sp->val, sp->min, sp->max );
+        fl_redraw_object( ob );
     }
 }
 
@@ -644,16 +644,16 @@ fl_set_counter_bounds( FL_OBJECT * ob,
 
 void
 fl_set_counter_step( FL_OBJECT * ob,
-					 double      s,
-					 double      l )
+                     double      s,
+                     double      l )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
     if ( sp->sstep != s || sp->lstep != l )
     {
-		sp->sstep = s;
-		sp->lstep = l;
-		fl_redraw_object( ob );
+        sp->sstep = s;
+        sp->lstep = l;
+        fl_redraw_object( ob );
     }
 }
 
@@ -663,8 +663,8 @@ fl_set_counter_step( FL_OBJECT * ob,
 
 void
 fl_get_counter_step( FL_OBJECT * ob,
-					 double *    s,
-					 double *    l )
+                     double *    s,
+                     double *    l )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
@@ -678,14 +678,14 @@ fl_get_counter_step( FL_OBJECT * ob,
 
 void
 fl_set_counter_precision( FL_OBJECT * ob,
-						  int         prec )
+                          int         prec )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
 
     if ( sp->prec != prec )
     {
-		sp->prec = prec;
-		fl_redraw_object( ob );
+        sp->prec = prec;
+        fl_redraw_object( ob );
     }
 }
 
@@ -696,7 +696,7 @@ fl_set_counter_precision( FL_OBJECT * ob,
 int
 fl_get_counter_precision( FL_OBJECT * ob )
 {
-	return ( ( FLI_COUNTER_SPEC * ) ob->spec )->prec;
+    return ( ( FLI_COUNTER_SPEC * ) ob->spec )->prec;
 }
 
 
@@ -709,9 +709,9 @@ fl_get_counter_value( FL_OBJECT * ob )
 #if FL_DEBUG >= ML_ERR
     if ( ! IsValidClass( ob, FL_COUNTER ) )
     {
-		M_err( "fl_get_counter_value", "%s not a counter",
-			   ob ? ob->label : "" );
-		return 0;
+        M_err( "fl_get_counter_value", "%s not a counter",
+               ob ? ob->label : "" );
+        return 0;
     }
 #endif
 
@@ -727,9 +727,9 @@ fl_get_counter_value( FL_OBJECT * ob )
 
 void
 fl_set_counter_return( FL_OBJECT * obj,
-					   int         when )
+                       int         when )
 {
-	fl_set_object_return( obj, when );
+    fl_set_object_return( obj, when );
 }
 
 
@@ -738,7 +738,15 @@ fl_set_counter_return( FL_OBJECT * obj,
 
 void
 fl_set_counter_filter( FL_OBJECT *   ob,
-					   FL_VAL_FILTER filter )
+                       FL_VAL_FILTER filter )
 {
     ( ( FLI_COUNTER_SPEC * ) ob->spec )->filter = filter;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

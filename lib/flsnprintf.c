@@ -104,47 +104,47 @@
  *   http://www.ijs.si/software/snprintf/
  *
  * REVISION HISTORY
- * 1999-04	V0.9  Mark Martinec
- *		- initial version, some modifications after comparing printf
- *		  man pages for Digital Unix 4.0, Solaris 2.6 and HPUX 10,
- *		  and checking how Perl handles sprintf (differently!);
- * 1999-04-09	V1.0  Mark Martinec <mark.martinec@ijs.si>
- *		- added main test program, fixed remaining inconsistencies,
- *		  added optional (long long int) support;
- * 1999-04-12	V1.1  Mark Martinec <mark.martinec@ijs.si>
- *		- support the 'p' format (pointer to void);
- *		- if a string precision is specified
- *		  make sure the string beyond the specified precision
- *		  will not be referenced (e.g. by strlen);
- * 1999-04-13	V1.2  Mark Martinec <mark.martinec@ijs.si>
- *		- support synonyms %D=%ld, %U=%lu, %O=%lo;
- *		- speed up the case of long format string with few conversions;
- * 1999-06-30	V1.3  Mark Martinec <mark.martinec@ijs.si>
- *		- fixed runaway loop (eventually crashing when str_l wraps
- *		  beyond 2*31) while copying format string without
- *		  conversion specifiers to a buffer that is too short
- *		  (thanks to Edwin Young <edwiny@autonomy.com> for
- *		  spotting the problem);
- *		- added macros PORTABLE_SNPRINTF_VERSION_(MAJOR|MINOR)
- *		  to snprintf.h
- * 2000-02-14	V2.0 (never released) Mark Martinec <mark.martinec@ijs.si>
- *		- relaxed license terms: The Artistic License now applies.
- *		  You may still apply the GNU GENERAL PUBLIC LICENSE
- *		  as was distributed with previous versions, if you prefer;
- *		- changed REVISION HISTORY dates to use ISO 8601 date format;
- *		- added vsnprintf (patch also independently proposed by
- *		  Caolan McNamara 2000-05-04, and Keith M Willenson 2000-06-01)
- * 2000-06-27	V2.1  Mark Martinec <mark.martinec@ijs.si>
- *		- removed POSIX check for str_m<1; value 0 for str_m is
- *		  allowed by ISO C9X (and GNU C library 2.1) - (pointed out
- *		  on 2000-05-04 by Caolan McNamara, caolan@ csn dot ul dot ie).
- *		  Besides relaxed license this change in standards adherence
- *		  is the main reason to bump up the major version number;
- *		- added nonstandard routines asnprintf, vasnprintf, asprintf,
- *		  vasprintf that dynamically allocate storage for the
- *		  resulting string; these routines are not compiled by default,
- *		  see comments where NEED_V?ASN?PRINTF macros are defined;
- *		- autoconf contributed by Caolan McNamara
+ * 1999-04  V0.9  Mark Martinec
+ *      - initial version, some modifications after comparing printf
+ *        man pages for Digital Unix 4.0, Solaris 2.6 and HPUX 10,
+ *        and checking how Perl handles sprintf (differently!);
+ * 1999-04-09   V1.0  Mark Martinec <mark.martinec@ijs.si>
+ *      - added main test program, fixed remaining inconsistencies,
+ *        added optional (long long int) support;
+ * 1999-04-12   V1.1  Mark Martinec <mark.martinec@ijs.si>
+ *      - support the 'p' format (pointer to void);
+ *      - if a string precision is specified
+ *        make sure the string beyond the specified precision
+ *        will not be referenced (e.g. by strlen);
+ * 1999-04-13   V1.2  Mark Martinec <mark.martinec@ijs.si>
+ *      - support synonyms %D=%ld, %U=%lu, %O=%lo;
+ *      - speed up the case of long format string with few conversions;
+ * 1999-06-30   V1.3  Mark Martinec <mark.martinec@ijs.si>
+ *      - fixed runaway loop (eventually crashing when str_l wraps
+ *        beyond 2*31) while copying format string without
+ *        conversion specifiers to a buffer that is too short
+ *        (thanks to Edwin Young <edwiny@autonomy.com> for
+ *        spotting the problem);
+ *      - added macros PORTABLE_SNPRINTF_VERSION_(MAJOR|MINOR)
+ *        to snprintf.h
+ * 2000-02-14   V2.0 (never released) Mark Martinec <mark.martinec@ijs.si>
+ *      - relaxed license terms: The Artistic License now applies.
+ *        You may still apply the GNU GENERAL PUBLIC LICENSE
+ *        as was distributed with previous versions, if you prefer;
+ *      - changed REVISION HISTORY dates to use ISO 8601 date format;
+ *      - added vsnprintf (patch also independently proposed by
+ *        Caolan McNamara 2000-05-04, and Keith M Willenson 2000-06-01)
+ * 2000-06-27   V2.1  Mark Martinec <mark.martinec@ijs.si>
+ *      - removed POSIX check for str_m<1; value 0 for str_m is
+ *        allowed by ISO C9X (and GNU C library 2.1) - (pointed out
+ *        on 2000-05-04 by Caolan McNamara, caolan@ csn dot ul dot ie).
+ *        Besides relaxed license this change in standards adherence
+ *        is the main reason to bump up the major version number;
+ *      - added nonstandard routines asnprintf, vasnprintf, asprintf,
+ *        vasprintf that dynamically allocate storage for the
+ *        resulting string; these routines are not compiled by default,
+ *        see comments where NEED_V?ASN?PRINTF macros are defined;
+ *      - autoconf contributed by Caolan McNamara
  */
 
 
@@ -296,25 +296,25 @@
 
 #if defined ( NEED_ASPRINTF )
 int asprintf( char **,
-			  const char *,
-			  ... );
+              const char *,
+              ... );
 #endif
 #if defined ( NEED_VASPRINTF )
 int vasprintf( char **,
-			   const char *,
-			   va_list );
+               const char *,
+               va_list );
 #endif
 #if defined ( NEED_ASNPRINTF )
 int asnprintf( char **,
-			   size_t,
-			   const char *,
-			   ... );
+               size_t,
+               const char *,
+               ... );
 #endif
 #if defined ( NEED_VASNPRINTF )
 int vasnprintf( char **,
-				size_t,
-				const char *,
-				va_list );
+                size_t,
+                const char *,
+                va_list );
 #endif
 
 #ifndef va_copy
@@ -336,14 +336,14 @@ int vasnprintf( char **,
 
 #if ! defined ( HAVE_SNPRINTF ) || defined ( PREFER_PORTABLE_SNPRINTF )
 int fl_portable_snprintf( char *,
-						  size_t,
-						  const char *,
-						  ... );
+                          size_t,
+                          const char *,
+                          ... );
 #if ! defined ( NEED_SNPRINTF_ONLY )
 int fl_portable_vsnprintf( char *,
-						   size_t,
-						   const char *,
-						   va_list );
+                           size_t,
+                           const char *,
+                           va_list );
 #endif
 #endif
 
@@ -353,38 +353,38 @@ int fl_portable_vsnprintf( char *,
 
 #if defined ( NEED_ASPRINTF )
 int asprintf( char **ptr,
-			  const char *fmt,
-			  ... )
+              const char *fmt,
+              ... )
 {
-	va_list ap;
-	size_t str_m;
-	int str_l;
+    va_list ap;
+    size_t str_m;
+    int str_l;
 
-	*ptr = NULL;
-	va_start( ap, fmt );                       /* measure the required size */
-	str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
-	va_end( ap );
+    *ptr = NULL;
+    va_start( ap, fmt );                       /* measure the required size */
+    str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
+    va_end( ap );
 
-	assert( str_l >= 0 );    /* possible integer overflow if str_m > INT_MAX */
+    assert( str_l >= 0 );    /* possible integer overflow if str_m > INT_MAX */
 
-	*ptr = fl_malloc( str_m = str_l + 1 );
-	if ( *ptr == NULL )
-	{
-		errno = ENOMEM;
-		str_l = -1;
-	}
-	else
-	{
-		int str_l2;
+    *ptr = fl_malloc( str_m = str_l + 1 );
+    if ( *ptr == NULL )
+    {
+        errno = ENOMEM;
+        str_l = -1;
+    }
+    else
+    {
+        int str_l2;
 
-		va_start( ap, fmt );
-		str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
-		va_end( ap );
+        va_start( ap, fmt );
+        str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+        va_end( ap );
 
-		assert( str_l2 == str_l );
-	}
+        assert( str_l2 == str_l );
+    }
 
-	return str_l;
+    return str_l;
 }
 #endif
 
@@ -396,41 +396,41 @@ int asprintf( char **ptr,
 #if defined ( NEED_VASPRINTF )
 int
 vasprintf( char       ** ptr,
-		   const char  * fmt,
-		   va_list       ap )
+           const char  * fmt,
+           va_list       ap )
 {
-	size_t str_m;
-	int str_l;
+    size_t str_m;
+    int str_l;
 
-	*ptr = NULL;
-	{
-		va_list ap2;
-		va_copy( ap2, ap );  /* don't consume the original ap, we'll need
-								it again */
+    *ptr = NULL;
+    {
+        va_list ap2;
+        va_copy( ap2, ap );  /* don't consume the original ap, we'll need
+                                it again */
 
-		/* measure the required size: */
+        /* measure the required size: */
 
-		str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
-		va_end( ap2 );
-	}
+        str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
+        va_end( ap2 );
+    }
 
-	assert( str_l >= 0 );     /* possible integer overflow if str_m > INT_MAX */
+    assert( str_l >= 0 );     /* possible integer overflow if str_m > INT_MAX */
 
-	*ptr = fl_malloc( str_m = str_l + 1 );
+    *ptr = fl_malloc( str_m = str_l + 1 );
 
-	if ( *ptr == NULL )
-	{
-		errno = ENOMEM;
-		str_l = -1;
-	}
-	else
-	{
-		int str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+    if ( *ptr == NULL )
+    {
+        errno = ENOMEM;
+        str_l = -1;
+    }
+    else
+    {
+        int str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
 
-		assert( str_l2 == str_l );
-	}
+        assert( str_l2 == str_l );
+    }
 
-	return str_l;
+    return str_l;
 }
 #endif
 
@@ -441,48 +441,48 @@ vasprintf( char       ** ptr,
 #if defined ( NEED_ASNPRINTF )
 int
 asnprintf( char       ** ptr,
-		   size_t        str_m,
-		   const char  * fmt,
-		   ... )
+           size_t        str_m,
+           const char  * fmt,
+           ... )
 {
-	va_list ap;
-	int str_l;
+    va_list ap;
+    int str_l;
 
-	*ptr = NULL;
-	va_start( ap, fmt );                        /* measure the required size */
-	str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
-	va_end( ap );
+    *ptr = NULL;
+    va_start( ap, fmt );                        /* measure the required size */
+    str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
+    va_end( ap );
 
-	assert( str_l >= 0 );     /* possible integer overflow if str_m > INT_MAX */
+    assert( str_l >= 0 );     /* possible integer overflow if str_m > INT_MAX */
 
-	if ( ( size_t ) str_l + 1 < str_m )
-		str_m = ( size_t ) str_l + 1;      /* truncate */
+    if ( ( size_t ) str_l + 1 < str_m )
+        str_m = ( size_t ) str_l + 1;      /* truncate */
 
-	/* if str_m is 0, no buffer is allocated, just set *ptr to NULL */
+    /* if str_m is 0, no buffer is allocated, just set *ptr to NULL */
 
-	if ( str_m == 0 )
-	{
-		/* not interested in resulting string, just return size */
-	}
-	else
-	{
-		*ptr = fl_malloc( str_m );
-		if ( *ptr == NULL )
-		{
-			errno = ENOMEM;
-			str_l = -1;
-		}
-		else
-		{
-			int str_l2;
+    if ( str_m == 0 )
+    {
+        /* not interested in resulting string, just return size */
+    }
+    else
+    {
+        *ptr = fl_malloc( str_m );
+        if ( *ptr == NULL )
+        {
+            errno = ENOMEM;
+            str_l = -1;
+        }
+        else
+        {
+            int str_l2;
 
-			va_start( ap, fmt );
-			str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
-			va_end( ap );
-			assert( str_l2 == str_l );
-		}
-	}
-	return str_l;
+            va_start( ap, fmt );
+            str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+            va_end( ap );
+            assert( str_l2 == str_l );
+        }
+    }
+    return str_l;
 }
 #endif
 
@@ -493,51 +493,51 @@ asnprintf( char       ** ptr,
 #if defined ( NEED_VASNPRINTF )
 int
 vasnprintf ( char **      ptr,
-			 size_t       str_m,
-			 const char * fmt,
-			 va_list      ap )
+             size_t       str_m,
+             const char * fmt,
+             va_list      ap )
 {
-	int str_l;
+    int str_l;
 
-	*ptr = NULL;
-	{
-		va_list ap2;
-		va_copy( ap2, ap );  /* don't consume the original ap, we'll need
-								it again */
+    *ptr = NULL;
+    {
+        va_list ap2;
+        va_copy( ap2, ap );  /* don't consume the original ap, we'll need
+                                it again */
 
-		/* measure the required size: */
+        /* measure the required size: */
 
-		str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
-		va_end( ap2 );
-	}
+        str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
+        va_end( ap2 );
+    }
 
-	assert( str_l >= 0 );     /* possible integer overflow if str_m > INT_MAX */
-	if ( ( size_t ) str_l + 1 < str_m )
-		str_m = ( size_t )str_l + 1;      /* truncate */
+    assert( str_l >= 0 );     /* possible integer overflow if str_m > INT_MAX */
+    if ( ( size_t ) str_l + 1 < str_m )
+        str_m = ( size_t )str_l + 1;      /* truncate */
 
-	/* if str_m is 0, no buffer is allocated, just set *ptr to NULL */
+    /* if str_m is 0, no buffer is allocated, just set *ptr to NULL */
 
-	if ( str_m == 0 )
-	{
-		/* not interested in resulting string, just return size */
-	}
-	else
-	{
-		*ptr = fl_malloc( str_m );
-		if ( *ptr == NULL )
-		{
-			errno = ENOMEM;
-			str_l = -1;
-		}
-		else
-		{
-			int str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+    if ( str_m == 0 )
+    {
+        /* not interested in resulting string, just return size */
+    }
+    else
+    {
+        *ptr = fl_malloc( str_m );
+        if ( *ptr == NULL )
+        {
+            errno = ENOMEM;
+            str_l = -1;
+        }
+        else
+        {
+            int str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
 
-			assert( str_l2 == str_l );
-		}
-	}
+            assert( str_l2 == str_l );
+        }
+    }
 
-	return str_l;
+    return str_l;
 }
 #endif
 
@@ -556,17 +556,17 @@ vasnprintf ( char **      ptr,
 #if ! defined ( NEED_SNPRINTF_ONLY )
 int
 fl_portable_snprintf( char       * str,
-					  size_t       str_m,
-					  const char * fmt,
-					  ... )
+                      size_t       str_m,
+                      const char * fmt,
+                      ... )
 {
-	va_list ap;
-	int str_l;
+    va_list ap;
+    int str_l;
 
-	va_start( ap, fmt );
-	str_l = fl_portable_vsnprintf( str, str_m, fmt, ap );
-	va_end( ap );
-	return str_l;
+    va_start( ap, fmt );
+    str_l = fl_portable_vsnprintf( str, str_m, fmt, ap );
+    va_end( ap );
+    return str_l;
 }
 #endif
 
@@ -577,714 +577,722 @@ fl_portable_snprintf( char       * str,
 #if defined ( NEED_SNPRINTF_ONLY )
 int
 fl_portable_snprintf( char       * str,
-					  size_t       str_m,
-					  const char * fmt,
-					  ... )
+                      size_t       str_m,
+                      const char * fmt,
+                      ... )
 {
 #else
 int
 fl_portable_vsnprintf( char       * str,
-					   size_t       str_m,
-					   const char * fmt,
-					   va_list      ap )
+                       size_t       str_m,
+                       const char * fmt,
+                       va_list      ap )
 {
 #endif
 
 #if defined ( NEED_SNPRINTF_ONLY )
-	 va_list ap;
+     va_list ap;
 #endif
-	 size_t str_l = 0;
-	 const char *p = fmt;
+     size_t str_l = 0;
+     const char *p = fmt;
 
-	/* In contrast with POSIX, the ISO C9X now says
-	 * that str can be NULL and str_m can be 0. This is more useful. */
+    /* In contrast with POSIX, the ISO C9X now says
+     * that str can be NULL and str_m can be 0. This is more useful. */
 
-	/*if (str_m < 1) return -1;*/
+    /*if (str_m < 1) return -1;*/
 
 #if defined ( NEED_SNPRINTF_ONLY )
-	 va_start( ap, fmt );
+     va_start( ap, fmt );
 #endif
-	 if ( ! p )
-		 p = "";
-	 while ( *p )
-	 {
-		 if ( *p != '%' )
-		 {
-			 /* if (str_l < str_m) str[str_l++] = *p++; -- this would be
-				sufficient but the following code achieves better performance
-				for cases where format string is long and contains few
-				conversions */
+     if ( ! p )
+         p = "";
+     while ( *p )
+     {
+         if ( *p != '%' )
+         {
+             /* if (str_l < str_m) str[str_l++] = *p++; -- this would be
+                sufficient but the following code achieves better performance
+                for cases where format string is long and contains few
+                conversions */
 
-			 const char *q = strchr( p + 1, '%' );
+             const char *q = strchr( p + 1, '%' );
 
-			 int n = ! q ? strlen( p ) : ( q - p );
-			 int avail = ( int ) ( str_m - str_l );
+             int n = ! q ? strlen( p ) : ( q - p );
+             int avail = ( int ) ( str_m - str_l );
 
-			 if ( avail > 0 )
-			 {
-				 int k;
-				 char *r;
-				 const char* p1;
+             if ( avail > 0 )
+             {
+                 int k;
+                 char *r;
+                 const char* p1;
 
-				 for ( p1 = p, r = str + str_l, k = ( n > avail ? avail : n );
-					   k > 0 ; k-- )
-					 *r++ = *p1++;
-			 }
-			 p += n;
-			 str_l += n;
-		 }
-		 else
-		 {
-			 const char *starting_p;
-			 int min_field_width = 0,
-				 precision = 0;
-			 int zero_padding = 0,
-				 precision_specified = 0,
-				 justify_left = 0;
-			 int alternative_form = 0,
-				 force_sign = 0;
-			 int space_for_positive = 1; /* If both the ' ' and '+' flags
-											appear, the ' ' flag should be
-											ignored. */
-			 char data_type_modifier = '\0';/* allowed valued: \0, h, l, L, p */
-			 char tmp[ 32 ];                /* temporary buffer for simple
-											   numeric->string conversion */
+                 for ( p1 = p, r = str + str_l, k = ( n > avail ? avail : n );
+                       k > 0 ; k-- )
+                     *r++ = *p1++;
+             }
+             p += n;
+             str_l += n;
+         }
+         else
+         {
+             const char *starting_p;
+             int min_field_width = 0,
+                 precision = 0;
+             int zero_padding = 0,
+                 precision_specified = 0,
+                 justify_left = 0;
+             int alternative_form = 0,
+                 force_sign = 0;
+             int space_for_positive = 1; /* If both the ' ' and '+' flags
+                                            appear, the ' ' flag should be
+                                            ignored. */
+             char data_type_modifier = '\0';/* allowed valued: \0, h, l, L, p */
+             char tmp[ 32 ];                /* temporary buffer for simple
+                                               numeric->string conversion */
 
-			 const char *str_arg = NULL;    /* string address in case of
-											   string arguments  */
-			 int str_arg_l;                 /* natural field width of arg
-											   without padding and sign */
+             const char *str_arg = NULL;    /* string address in case of
+                                               string arguments  */
+             int str_arg_l;                 /* natural field width of arg
+                                               without padding and sign */
 
-			 long int long_arg;  /* long int argument value - always defined
-									in case of numeric arguments, regardless
-									of data type modifiers. In case of data
-									type modifier 'll' the value is stored in
-									long_long_arg and only the sign of long_arg
-									is guaranteed to be correct */
-			 void *ptr_arg;      /* pointer argument value - only defined for
-									p format   */
-			 int int_arg;        /* int argument value - only defined if no
-									h or l modif.*/
+             long int long_arg;  /* long int argument value - always defined
+                                    in case of numeric arguments, regardless
+                                    of data type modifiers. In case of data
+                                    type modifier 'll' the value is stored in
+                                    long_long_arg and only the sign of long_arg
+                                    is guaranteed to be correct */
+             void *ptr_arg;      /* pointer argument value - only defined for
+                                    p format   */
+             int int_arg;        /* int argument value - only defined if no
+                                    h or l modif.*/
 #ifdef SNPRINTF_LONGLONG_SUPPORT
-			 long long int long_long_arg = 0; /* long long argument value - only
-												 defined if ll modifier is
-												 present */
+             long long int long_long_arg = 0; /* long long argument value - only
+                                                 defined if ll modifier is
+                                                 present */
 #endif
-			 int number_of_zeros_to_pad = 0;
-			 int zero_padding_insertion_ind = 0;
-			 char fmt_spec = '\0';            /* current format specifier
-												 character */
+             int number_of_zeros_to_pad = 0;
+             int zero_padding_insertion_ind = 0;
+             char fmt_spec = '\0';            /* current format specifier
+                                                 character */
 
-			 starting_p = p;
-			 p++;               /* skip '%' */
+             starting_p = p;
+             p++;               /* skip '%' */
 
-			 /* parse flags */
+             /* parse flags */
 
-			 while (    *p == '0' || *p == '-' || *p == '+'
-					 || *p == ' ' || *p == '#' || *p == '\'') {
-				 switch ( *p )
-				 {
-					 case '0':
-						 zero_padding = 1;
-						 break;
+             while (    *p == '0' || *p == '-' || *p == '+'
+                     || *p == ' ' || *p == '#' || *p == '\'') {
+                 switch ( *p )
+                 {
+                     case '0':
+                         zero_padding = 1;
+                         break;
 
-					 case '-':
-						 justify_left = 1;
-						 break;
+                     case '-':
+                         justify_left = 1;
+                         break;
 
-					 case '+':
-						 force_sign = 1;
-						 space_for_positive = 0;
-						 break;
+                     case '+':
+                         force_sign = 1;
+                         space_for_positive = 0;
+                         break;
 
-					 case ' ': 
-						 force_sign = 1;
-						 /* If both the ' ' and '+' flags appear, the ' ' flag
-							should be ignored */
+                     case ' ': 
+                         force_sign = 1;
+                         /* If both the ' ' and '+' flags appear, the ' ' flag
+                            should be ignored */
 #ifdef PERL_COMPATIBLE
-						 /* ... but in Perl the last of ' ' and '+' applies */
+                         /* ... but in Perl the last of ' ' and '+' applies */
 
-						 space_for_positive = 1;
+                         space_for_positive = 1;
 #endif
-						 break;
+                         break;
 
-					 case '#':
-						 alternative_form = 1;
-						 break;
+                     case '#':
+                         alternative_form = 1;
+                         break;
 
-					 case '\'':
-						 break;
-				 }
+                     case '\'':
+                         break;
+                 }
 
-				 p++;
-			 }
+                 p++;
+             }
 
-			 /* If the '0' and '-' flags both appear, the '0' flag should
-				be ignored. */
+             /* If the '0' and '-' flags both appear, the '0' flag should
+                be ignored. */
 
-			 /* parse field width */
+             /* parse field width */
 
-			 if ( *p == '*' )
-			 {
-				 p++;
-				 min_field_width = va_arg( ap, int );
-				 if ( min_field_width < 0 )
-				 {
-					 min_field_width = -min_field_width;
-					 justify_left = 1;
-				 }
-			 }
-			 else if ( isdigit( ( int ) *p ) )
-			 {
-				 min_field_width = *p++ - '0';
-				 while (isdigit( ( int ) *p ) )
-					 min_field_width = 10 * min_field_width + ( *p++ - '0' );
-			 }
+             if ( *p == '*' )
+             {
+                 p++;
+                 min_field_width = va_arg( ap, int );
+                 if ( min_field_width < 0 )
+                 {
+                     min_field_width = -min_field_width;
+                     justify_left = 1;
+                 }
+             }
+             else if ( isdigit( ( int ) *p ) )
+             {
+                 min_field_width = *p++ - '0';
+                 while (isdigit( ( int ) *p ) )
+                     min_field_width = 10 * min_field_width + ( *p++ - '0' );
+             }
 
-			 /* parse precision */
+             /* parse precision */
 
-			 if ( *p == '.' )
-			 {
-				 p++;
-				 precision_specified = 1;
-				 if ( *p == '*' )
-				 {
-					 p++;
-					 precision = va_arg( ap, int );
-					 if ( precision < 0 )
-					 {
-						 precision_specified = 0;
-						 precision = 0;
+             if ( *p == '.' )
+             {
+                 p++;
+                 precision_specified = 1;
+                 if ( *p == '*' )
+                 {
+                     p++;
+                     precision = va_arg( ap, int );
+                     if ( precision < 0 )
+                     {
+                         precision_specified = 0;
+                         precision = 0;
 
-						 /* NOTE: Solaris 2.6 man page claims that in this
-						  * case the precision should be set to 0. Digital
-						  * Unix 4.0 and HPUX 10 man page claim that this
-						  * case should be treated as unspecified precision,
-						  * which is what we do here.
-						  */
-					 }
-				 } else if ( isdigit( ( int ) *p ) )
-				 {
-					 precision = *p++ - '0';
-					 while ( isdigit( ( int ) *p ) )
-						 precision = 10 * precision + ( *p++ - '0' );
-				 }
-			 }
+                         /* NOTE: Solaris 2.6 man page claims that in this
+                          * case the precision should be set to 0. Digital
+                          * Unix 4.0 and HPUX 10 man page claim that this
+                          * case should be treated as unspecified precision,
+                          * which is what we do here.
+                          */
+                     }
+                 } else if ( isdigit( ( int ) *p ) )
+                 {
+                     precision = *p++ - '0';
+                     while ( isdigit( ( int ) *p ) )
+                         precision = 10 * precision + ( *p++ - '0' );
+                 }
+             }
 
-			 /* parse 'h', 'l' and 'll' data type modifiers */
+             /* parse 'h', 'l' and 'll' data type modifiers */
 
-			 if ( *p == 'h' || *p == 'l' )
-			 {
-				 data_type_modifier = *p;
-				 p++;
-				 if ( data_type_modifier == 'l' && *p == 'l' )
-				 {
-					 /* double l = long long */
+             if ( *p == 'h' || *p == 'l' )
+             {
+                 data_type_modifier = *p;
+                 p++;
+                 if ( data_type_modifier == 'l' && *p == 'l' )
+                 {
+                     /* double l = long long */
 #ifdef SNPRINTF_LONGLONG_SUPPORT
-					 data_type_modifier = '2';     /* double l encoded as '2' */
+                     data_type_modifier = '2';     /* double l encoded as '2' */
 #else
-					 data_type_modifier = 'l';     /* treat it as single 'l' */
+                     data_type_modifier = 'l';     /* treat it as single 'l' */
 #endif
-					 p++;
-				 }
-			 }
-			 fmt_spec = *p;
+                     p++;
+                 }
+             }
+             fmt_spec = *p;
 
-			 /* common synonyms: */
+             /* common synonyms: */
 
-			 switch ( fmt_spec )
-			 {
-				 case 'i':
-					 fmt_spec = 'd';
-					 break;
+             switch ( fmt_spec )
+             {
+                 case 'i':
+                     fmt_spec = 'd';
+                     break;
 
-				 case 'D':
-					 fmt_spec = 'd';
-					 data_type_modifier = 'l';
-					 break;
+                 case 'D':
+                     fmt_spec = 'd';
+                     data_type_modifier = 'l';
+                     break;
 
-				 case 'U':
-					 fmt_spec = 'u';
-					 data_type_modifier = 'l';
-					 break;
+                 case 'U':
+                     fmt_spec = 'u';
+                     data_type_modifier = 'l';
+                     break;
 
-				 case 'O':
-					 fmt_spec = 'o';
-					 data_type_modifier = 'l';
-					 break;
+                 case 'O':
+                     fmt_spec = 'o';
+                     data_type_modifier = 'l';
+                     break;
 
-				 default:
-					 break;
-			 }
+                 default:
+                     break;
+             }
 
-			 /* get parameter value, do initial processing */
+             /* get parameter value, do initial processing */
 
-			 switch ( fmt_spec )
-			 {
-				 case '%':
-					 /* % behaves similar to 's' regarding flags and field
-						widths */
+             switch ( fmt_spec )
+             {
+                 case '%':
+                     /* % behaves similar to 's' regarding flags and field
+                        widths */
 
-				 case 'c':
-					 /* c behaves similar to 's' regarding flags and field
-						widths */
+                 case 'c':
+                     /* c behaves similar to 's' regarding flags and field
+                        widths */
 
-				 case 's':
-					 data_type_modifier = '\0';  
+                 case 's':
+                     data_type_modifier = '\0';  
 
-					 /* wint_t and wchar_t not supported */
-					 /* the result of zero padding flag with non-numeric
-						format is undefined */
-					 /* Solaris and HPUX 10 does zero padding in this case,
-						Digital Unix not */
+                     /* wint_t and wchar_t not supported */
+                     /* the result of zero padding flag with non-numeric
+                        format is undefined */
+                     /* Solaris and HPUX 10 does zero padding in this case,
+                        Digital Unix not */
 #ifdef DIGITAL_UNIX_COMPATIBLE
-					 zero_padding = 0;        /* turn zero padding off for
-												 string formats */
+                     zero_padding = 0;        /* turn zero padding off for
+                                                 string formats */
 #endif
-					 str_arg_l = 1;
+                     str_arg_l = 1;
 
-					 switch ( fmt_spec )
-					 {
-						 case '%':
-							 str_arg = p;
-							 break;
+                     switch ( fmt_spec )
+                     {
+                         case '%':
+                             str_arg = p;
+                             break;
 
-						 case 'c':
-						 {
-							 int j = va_arg( ap, int );
+                         case 'c':
+                         {
+                             int j = va_arg( ap, int );
 
-							 str_arg = ( const char * ) &j;
-						 }
-						 break;
+                             str_arg = ( const char * ) &j;
+                         }
+                         break;
 
-						 case 's':
-							 str_arg = va_arg( ap, const char * );
-							 if ( ! str_arg )
-								 str_arg_l = 0;
+                         case 's':
+                             str_arg = va_arg( ap, const char * );
+                             if ( ! str_arg )
+                                 str_arg_l = 0;
 
-							 /* make sure not to address string beyond the
-								specified precision !!! */
-							 else if ( ! precision_specified )
-								 str_arg_l = strlen( str_arg );
+                             /* make sure not to address string beyond the
+                                specified precision !!! */
+                             else if ( ! precision_specified )
+                                 str_arg_l = strlen( str_arg );
 
-							 /* truncate string if necessary as requested by
-								precision */
+                             /* truncate string if necessary as requested by
+                                precision */
 
-							 else if ( precision <= 0 )
-								 str_arg_l = 0;
-							 else
-							 {
-								 const char *q = memchr( str_arg, '\0',
-														 ( size_t ) precision );
-								 str_arg_l = ! q ? precision : ( q - str_arg );
-							 }
-							 break;
+                             else if ( precision <= 0 )
+                                 str_arg_l = 0;
+                             else
+                             {
+                                 const char *q = memchr( str_arg, '\0',
+                                                         ( size_t ) precision );
+                                 str_arg_l = ! q ? precision : ( q - str_arg );
+                             }
+                             break;
 
-						 default:
-							 break;
-					 }
-					 break;
+                         default:
+                             break;
+                     }
+                     break;
 
-				 case 'd':
-				 case 'o':
-				 case 'u':
-				 case 'x':
-				 case 'X':
-				 case 'p':
-					 long_arg = 0;
-					 int_arg = 0;
-					 ptr_arg = NULL;
+                 case 'd':
+                 case 'o':
+                 case 'u':
+                 case 'x':
+                 case 'X':
+                 case 'p':
+                     long_arg = 0;
+                     int_arg = 0;
+                     ptr_arg = NULL;
 
-					 if ( fmt_spec == 'p' )
-					 {
-						 /* * HPUX 10:
-							  An l, h, ll or L before any other conversion
-							  character (other than d, i, o, u, x, or X) is
-							  ignored.
-							* Digital Unix:
-							  not specified, but seems to behave as HPUX does.
-							* Solaris:
-							  If an h, l, or L appears before any other
-							  conversion specifier (other than d, i, o, u, x,
-							  or X), the behavior is undefined. (Actually %hp
-							  converts only 16-bits of address and %llp treats
-							  address as 64-bit data which is incompatible
-							  with (void *) argument on a 32-bit system). */
+                     if ( fmt_spec == 'p' )
+                     {
+                         /* * HPUX 10:
+                              An l, h, ll or L before any other conversion
+                              character (other than d, i, o, u, x, or X) is
+                              ignored.
+                            * Digital Unix:
+                              not specified, but seems to behave as HPUX does.
+                            * Solaris:
+                              If an h, l, or L appears before any other
+                              conversion specifier (other than d, i, o, u, x,
+                              or X), the behavior is undefined. (Actually %hp
+                              converts only 16-bits of address and %llp treats
+                              address as 64-bit data which is incompatible
+                              with (void *) argument on a 32-bit system). */
 
 #ifdef SOLARIS_COMPATIBLE
 #  ifdef SOLARIS_BUG_COMPATIBLE
-						 /* keep data type modifiers even if it
-							represents 'll' */
+                         /* keep data type modifiers even if it
+                            represents 'll' */
 #  else
-						 if ( data_type_modifier == '2' )
-							 data_type_modifier = '\0';
+                         if ( data_type_modifier == '2' )
+                             data_type_modifier = '\0';
 #  endif
 #else
-						 data_type_modifier = '\0';
+                         data_type_modifier = '\0';
 #endif
-						 ptr_arg = va_arg( ap, void * );
-						 long_arg = ! ptr_arg ? 0 : 1;
-					 } else {
-						 switch ( data_type_modifier )
-						 {
-							 case '\0':
-							 case 'h':
-								 /* It is non-portable to specify a second
-									argument of char or short to va_arg,
-									because arguments seen by the called
-									function are not char or short. C converts
-									char and short arguments to int before
-									passing them to a function. */
+                         ptr_arg = va_arg( ap, void * );
+                         long_arg = ! ptr_arg ? 0 : 1;
+                     } else {
+                         switch ( data_type_modifier )
+                         {
+                             case '\0':
+                             case 'h':
+                                 /* It is non-portable to specify a second
+                                    argument of char or short to va_arg,
+                                    because arguments seen by the called
+                                    function are not char or short. C converts
+                                    char and short arguments to int before
+                                    passing them to a function. */
 
-								 int_arg = va_arg( ap, int );
-								 long_arg = int_arg;
-								 break;
+                                 int_arg = va_arg( ap, int );
+                                 long_arg = int_arg;
+                                 break;
 
-							 case 'l':
-								 long_arg = va_arg( ap, long int );
-								 break;
+                             case 'l':
+                                 long_arg = va_arg( ap, long int );
+                                 break;
 
 #ifdef SNPRINTF_LONGLONG_SUPPORT
-							 case '2':
-								 long_long_arg = va_arg( ap, long long int );
+                             case '2':
+                                 long_long_arg = va_arg( ap, long long int );
 
-								 /* only the sign of long_arg is guaranteed */
+                                 /* only the sign of long_arg is guaranteed */
 
-								 if ( long_long_arg > 0 )
-									 long_arg = +1;
-								 else if ( long_long_arg < 0 )
-									 long_arg = -1;
-								 else
-									 long_arg = 0;
-								 break;
+                                 if ( long_long_arg > 0 )
+                                     long_arg = +1;
+                                 else if ( long_long_arg < 0 )
+                                     long_arg = -1;
+                                 else
+                                     long_arg = 0;
+                                 break;
 #endif
-						 }
-					 }
+                         }
+                     }
 
-					 str_arg = tmp;
-					 str_arg_l = 0;
+                     str_arg = tmp;
+                     str_arg_l = 0;
 
-					 /* NOTE:
-					  *   For d, i, o, u, x, and X conversions, if precision
-					  *   is specified, the '0' flag should be ignored. This
-					  *   is so with Solaris 2.6, Digital UNIX 4.0 and HPUX 10;
-					  *   but not with Perl. */
+                     /* NOTE:
+                      *   For d, i, o, u, x, and X conversions, if precision
+                      *   is specified, the '0' flag should be ignored. This
+                      *   is so with Solaris 2.6, Digital UNIX 4.0 and HPUX 10;
+                      *   but not with Perl. */
 
 #ifndef PERL_COMPATIBLE
-					 if ( precision_specified )
-						 zero_padding = 0;
+                     if ( precision_specified )
+                         zero_padding = 0;
 #endif
 
-					 if ( fmt_spec == 'd' )
-					 {
-						 if ( force_sign && long_arg >= 0 )
-							 tmp[ str_arg_l++ ] =
-								                space_for_positive ? ' ' : '+';
+                     if ( fmt_spec == 'd' )
+                     {
+                         if ( force_sign && long_arg >= 0 )
+                             tmp[ str_arg_l++ ] =
+                                                space_for_positive ? ' ' : '+';
 
-						 /* leave negative numbers for sprintf to handle,
-							to avoid handling tricky cases like
-							(short int)(-32768) */
+                         /* leave negative numbers for sprintf to handle,
+                            to avoid handling tricky cases like
+                            (short int)(-32768) */
 
-					 }
-					 else if ( alternative_form )
-					 {
-						 if (    long_arg != 0
-							  && ( fmt_spec == 'x' || fmt_spec == 'X' ) )
-						 {
-							 tmp[ str_arg_l++ ] = '0';
-							 tmp[ str_arg_l++ ] = fmt_spec; }
+                     }
+                     else if ( alternative_form )
+                     {
+                         if (    long_arg != 0
+                              && ( fmt_spec == 'x' || fmt_spec == 'X' ) )
+                         {
+                             tmp[ str_arg_l++ ] = '0';
+                             tmp[ str_arg_l++ ] = fmt_spec; }
 #ifdef HPUX_COMPATIBLE
-						 else if ( fmt_spec == 'p'
+                         else if ( fmt_spec == 'p'
 
-						/* HPUX 10: for an alternative form of p conversion,
-						 *          a nonzero result is prefixed by 0x. */
+                        /* HPUX 10: for an alternative form of p conversion,
+                         *          a nonzero result is prefixed by 0x. */
 #ifndef HPUX_BUG_COMPATIBLE
-					    /* Actually it uses 0x prefix even for a zero value. */
-								   && long_arg != 0
+                        /* Actually it uses 0x prefix even for a zero value. */
+                                   && long_arg != 0
 #endif
-							 )
-						 {
-							 tmp[ str_arg_l++ ] = '0';
-							 tmp[ str_arg_l++ ] = 'x';
-						 }
+                             )
+                         {
+                             tmp[ str_arg_l++ ] = '0';
+                             tmp[ str_arg_l++ ] = 'x';
+                         }
 #endif
-					 }
+                     }
 
-					 zero_padding_insertion_ind = str_arg_l;
+                     zero_padding_insertion_ind = str_arg_l;
 
-					 if ( ! precision_specified )
-						 precision = 1;   /* default precision is 1 */
+                     if ( ! precision_specified )
+                         precision = 1;   /* default precision is 1 */
 
-					 if ( precision == 0 && long_arg == 0
+                     if ( precision == 0 && long_arg == 0
 #ifdef HPUX_BUG_COMPATIBLE
-						  && fmt_spec != 'p'
+                          && fmt_spec != 'p'
 
-						  /* HPUX 10 man page claims: With conversion character
-						   * p the result of converting a zero value with a
-						   * precision of zero is a null string.
-						   * Actually it returns all zeroes. */
+                          /* HPUX 10 man page claims: With conversion character
+                           * p the result of converting a zero value with a
+                           * precision of zero is a null string.
+                           * Actually it returns all zeroes. */
 #endif
-						 )
-					 {
-						 /* converted to null string */
-					 }
-					 else
-					 {
-						 char f[ 5 ];
-						 int f_l = 0;
+                         )
+                     {
+                         /* converted to null string */
+                     }
+                     else
+                     {
+                         char f[ 5 ];
+                         int f_l = 0;
 
-						 f[ f_l++ ] = '%';
+                         f[ f_l++ ] = '%';
 
-						 if ( ! data_type_modifier )
-						 {
-						 }
-						 else if ( data_type_modifier == '2' )
-						 {
-							 f[ f_l++ ] = 'l';
-							 f[ f_l++ ] = 'l';
-						 }
-						 else
-							 f[ f_l++ ] = data_type_modifier;
+                         if ( ! data_type_modifier )
+                         {
+                         }
+                         else if ( data_type_modifier == '2' )
+                         {
+                             f[ f_l++ ] = 'l';
+                             f[ f_l++ ] = 'l';
+                         }
+                         else
+                             f[ f_l++ ] = data_type_modifier;
 
-						 f[ f_l++ ] = fmt_spec; f[ f_l++ ] = '\0';
+                         f[ f_l++ ] = fmt_spec; f[ f_l++ ] = '\0';
 
-						 if ( fmt_spec == 'p' )
-							 str_arg_l += sprintf( tmp + str_arg_l,
-												   f, ptr_arg );
-						 else
-						 {
-							 switch ( data_type_modifier )
-							 {
-								 case '\0':
-								 case 'h':
-									 str_arg_l += sprintf( tmp + str_arg_l,
-														   f, int_arg );
-									 break;
+                         if ( fmt_spec == 'p' )
+                             str_arg_l += sprintf( tmp + str_arg_l,
+                                                   f, ptr_arg );
+                         else
+                         {
+                             switch ( data_type_modifier )
+                             {
+                                 case '\0':
+                                 case 'h':
+                                     str_arg_l += sprintf( tmp + str_arg_l,
+                                                           f, int_arg );
+                                     break;
 
-								 case 'l':
-									 str_arg_l += sprintf( tmp + str_arg_l, f,
-														   long_arg );
-									 break;
+                                 case 'l':
+                                     str_arg_l += sprintf( tmp + str_arg_l, f,
+                                                           long_arg );
+                                     break;
 
 #ifdef SNPRINTF_LONGLONG_SUPPORT
-								 case '2':
-									 str_arg_l += sprintf( tmp + str_arg_l,
-														   f, long_long_arg );
-									 break;
+                                 case '2':
+                                     str_arg_l += sprintf( tmp + str_arg_l,
+                                                           f, long_long_arg );
+                                     break;
 #endif
-							 }
-						 }
+                             }
+                         }
 
-						 if (    zero_padding_insertion_ind < str_arg_l
-							  && tmp[ zero_padding_insertion_ind ] == '-' )
-							 zero_padding_insertion_ind++;
-					 }
+                         if (    zero_padding_insertion_ind < str_arg_l
+                              && tmp[ zero_padding_insertion_ind ] == '-' )
+                             zero_padding_insertion_ind++;
+                     }
 
-					 {
-						 int num_of_digits =
-							           str_arg_l - zero_padding_insertion_ind;
+                     {
+                         int num_of_digits =
+                                       str_arg_l - zero_padding_insertion_ind;
 
-						 if ( alternative_form && fmt_spec == 'o'
+                         if ( alternative_form && fmt_spec == 'o'
 #ifdef HPUX_COMPATIBLE                                  /* ("%#.o",0) -> ""  */
-							  && ( str_arg_l > 0 )
+                              && ( str_arg_l > 0 )
 #endif
 #ifdef DIGITAL_UNIX_BUG_COMPATIBLE                      /* ("%#o",0) -> "00" */
 #else
-							  && ! ( zero_padding_insertion_ind < str_arg_l
-									 && tmp[zero_padding_insertion_ind] == '0' )
+                              && ! ( zero_padding_insertion_ind < str_arg_l
+                                     && tmp[zero_padding_insertion_ind] == '0' )
 #endif
-							 )
-						 {
-							 /* assure leading zero for alternative-form
-								octal numbers */
+                             )
+                         {
+                             /* assure leading zero for alternative-form
+                                octal numbers */
 
-							 if (    ! precision_specified
-								  || precision < num_of_digits + 1 )
-							 {
-								 precision = num_of_digits + 1;
-								 precision_specified = 1;
-							 }
-						 }
+                             if (    ! precision_specified
+                                  || precision < num_of_digits + 1 )
+                             {
+                                 precision = num_of_digits + 1;
+                                 precision_specified = 1;
+                             }
+                         }
 
-						 /* zero padding to specified precision? */
+                         /* zero padding to specified precision? */
 
-						 if ( num_of_digits < precision )
-							 number_of_zeros_to_pad = precision - num_of_digits;
-					 }
+                         if ( num_of_digits < precision )
+                             number_of_zeros_to_pad = precision - num_of_digits;
+                     }
 
-					 /* zero padding to specified minimal field width? */
+                     /* zero padding to specified minimal field width? */
 
-					 if ( ! justify_left && zero_padding )
-					 {
-						 int n = min_field_width
-							     - ( str_arg_l + number_of_zeros_to_pad );
+                     if ( ! justify_left && zero_padding )
+                     {
+                         int n = min_field_width
+                                 - ( str_arg_l + number_of_zeros_to_pad );
 
-						 if ( n > 0 )
-							 number_of_zeros_to_pad += n;
-					 }
-					 break;
+                         if ( n > 0 )
+                             number_of_zeros_to_pad += n;
+                     }
+                     break;
 
-				 default:  /* unrecognized format, keep format string
-							  unchanged */
+                 default:  /* unrecognized format, keep format string
+                              unchanged */
 
-					 zero_padding = 0;   /* turn zero padding off for
-											non-numeric formats */
+                     zero_padding = 0;   /* turn zero padding off for
+                                            non-numeric formats */
 
 #ifndef DIGITAL_UNIX_COMPATIBLE
-					 justify_left = 1;
-					 min_field_width = 0;                /* reset flags */
+                     justify_left = 1;
+                     min_field_width = 0;                /* reset flags */
 #endif
 #ifdef PERL_COMPATIBLE
-					 /* keep the entire format string unchanged */
+                     /* keep the entire format string unchanged */
 
-					 str_arg = starting_p;
-					 str_arg_l = p - starting_p;
+                     str_arg = starting_p;
+                     str_arg_l = p - starting_p;
 #else
 
-					 /* discard the unrecognized format, just keep the
-						unrecognized fmt char */
+                     /* discard the unrecognized format, just keep the
+                        unrecognized fmt char */
 
-					 str_arg = p;
-					 str_arg_l = 0;
+                     str_arg = p;
+                     str_arg_l = 0;
 #endif
 
-					 if ( *p )
-						 str_arg_l++;  /* include invalid fmt specifier if
-										  not at EOS */
-					 break;
-			 }
+                     if ( *p )
+                         str_arg_l++;  /* include invalid fmt specifier if
+                                          not at EOS */
+                     break;
+             }
 
-			 if ( *p )
-				 p++;       /* step over the just processed format specifier */
+             if ( *p )
+                 p++;       /* step over the just processed format specifier */
 
-			 /* insert padding to the left as requested by min_field_width */
+             /* insert padding to the left as requested by min_field_width */
 
-			 if ( ! justify_left )
-			 {                /* left padding with blank or zero */
-				 int n =   min_field_width
-					     - ( str_arg_l + number_of_zeros_to_pad );
+             if ( ! justify_left )
+             {                /* left padding with blank or zero */
+                 int n =   min_field_width
+                         - ( str_arg_l + number_of_zeros_to_pad );
 
-				 if ( n > 0 )
-				 {
-					 int avail = ( int ) ( str_m - str_l );
+                 if ( n > 0 )
+                 {
+                     int avail = ( int ) ( str_m - str_l );
 
-					 if ( avail > 0 )
-					 {      /* memset(str+str_l, zp, (n>avail?avail:n)); */
-						 const char zp = zero_padding ? '0' : ' ';
-						 int k;
-						 char *r;
+                     if ( avail > 0 )
+                     {      /* memset(str+str_l, zp, (n>avail?avail:n)); */
+                         const char zp = zero_padding ? '0' : ' ';
+                         int k;
+                         char *r;
 
-						 for ( r = str + str_l, k= ( n > avail ? avail : n );
-							   k > 0; k-- )
-							 *r++ = zp;
-					 }
-					 str_l += n;
-				 }
-			 }
+                         for ( r = str + str_l, k= ( n > avail ? avail : n );
+                               k > 0; k-- )
+                             *r++ = zp;
+                     }
+                     str_l += n;
+                 }
+             }
 
-			 /* zero padding as requested by the precision for numeric
-				formats requred?*/
+             /* zero padding as requested by the precision for numeric
+                formats requred?*/
 
-			 if ( number_of_zeros_to_pad <= 0 )
-			 {
-				 /* will not copy first part of numeric here,   *
-				  * force it to be copied later in its entirety */
+             if ( number_of_zeros_to_pad <= 0 )
+             {
+                 /* will not copy first part of numeric here,   *
+                  * force it to be copied later in its entirety */
 
-				 zero_padding_insertion_ind = 0;
-			 }
-			 else
-			 {
-				 /* insert first part of numerics (sign or '0x') before
-					zero padding */
+                 zero_padding_insertion_ind = 0;
+             }
+             else
+             {
+                 /* insert first part of numerics (sign or '0x') before
+                    zero padding */
 
-				 int n = zero_padding_insertion_ind;
+                 int n = zero_padding_insertion_ind;
 
-				 if ( n > 0 )
-				 {
-					 int avail = ( int ) ( str_m - str_l );
+                 if ( n > 0 )
+                 {
+                     int avail = ( int ) ( str_m - str_l );
 
-					 if ( avail > 0 )
-						 memcpy( str + str_l, str_arg,
-								 ( size_t ) ( n > avail ? avail : n ) );
-					 str_l += n;
-				 }
+                     if ( avail > 0 )
+                         memcpy( str + str_l, str_arg,
+                                 ( size_t ) ( n > avail ? avail : n ) );
+                     str_l += n;
+                 }
 
-				 /* insert zero padding as requested by the precision */
+                 /* insert zero padding as requested by the precision */
 
-				 n = number_of_zeros_to_pad;
-				 if ( n > 0 )
-				 {
-					 int avail = ( int ) ( str_m - str_l );
+                 n = number_of_zeros_to_pad;
+                 if ( n > 0 )
+                 {
+                     int avail = ( int ) ( str_m - str_l );
 
-					 if ( avail > 0 )
-					 {     /* memset(str+str_l, '0', (n>avail?avail:n)); */
-						 int k;
-						 char *r;
+                     if ( avail > 0 )
+                     {     /* memset(str+str_l, '0', (n>avail?avail:n)); */
+                         int k;
+                         char *r;
 
-						 for ( r = str + str_l, k = ( n > avail ? avail : n );
-							   k > 0; k-- )
-							 *r++ = '0';
-					 }
-					 str_l += n;
-				 }
-			 }
+                         for ( r = str + str_l, k = ( n > avail ? avail : n );
+                               k > 0; k-- )
+                             *r++ = '0';
+                     }
+                     str_l += n;
+                 }
+             }
 
-			 /* insert formatted string (or unmodified format for unknown
-				formats) */
+             /* insert formatted string (or unmodified format for unknown
+                formats) */
 
-			 {
-				 int n = str_arg_l - zero_padding_insertion_ind;
+             {
+                 int n = str_arg_l - zero_padding_insertion_ind;
 
-				 if ( n > 0 )
-				 {
-					 int avail = ( int ) ( str_m - str_l );
+                 if ( n > 0 )
+                 {
+                     int avail = ( int ) ( str_m - str_l );
 
-					 if ( avail > 0 )
-						 memcpy( str + str_l,
-								 str_arg + zero_padding_insertion_ind,
-								 ( size_t ) ( n > avail ? avail : n ) );
-					 str_l += n;
-				 }
-			 }
+                     if ( avail > 0 )
+                         memcpy( str + str_l,
+                                 str_arg + zero_padding_insertion_ind,
+                                 ( size_t ) ( n > avail ? avail : n ) );
+                     str_l += n;
+                 }
+             }
 
-			 /* insert right padding */
+             /* insert right padding */
 
-			 if ( justify_left )
-			 {          /* right blank padding to the field width */
-				 int n = min_field_width
-					     - ( str_arg_l + number_of_zeros_to_pad );
+             if ( justify_left )
+             {          /* right blank padding to the field width */
+                 int n = min_field_width
+                         - ( str_arg_l + number_of_zeros_to_pad );
 
-				 if ( n > 0 )
-				 {
-					 int avail = ( int ) ( str_m - str_l );
+                 if ( n > 0 )
+                 {
+                     int avail = ( int ) ( str_m - str_l );
 
-					 if ( avail > 0 )
-					 {     /* memset(str+str_l, ' ', (n>avail?avail:n)); */
-						 int k;
-						 char *r;
+                     if ( avail > 0 )
+                     {     /* memset(str+str_l, ' ', (n>avail?avail:n)); */
+                         int k;
+                         char *r;
 
-						 for ( r = str + str_l, k= n > avail ? avail : n;
-							   k > 0;  k-- )
-							 *r++ = ' ';
-					 }
-					 str_l += n;
-				 }
-			 }
-		 }
-	 }
+                         for ( r = str + str_l, k= n > avail ? avail : n;
+                               k > 0;  k-- )
+                             *r++ = ' ';
+                     }
+                     str_l += n;
+                 }
+             }
+         }
+     }
 #if defined(NEED_SNPRINTF_ONLY)
-	 va_end( ap );
+     va_end( ap );
 #endif
 
-	 if ( str_m > 0 )
-	 {               /* make sure the string is null-terminated
-						even at the expense of overwriting the last character */
-		 str[ str_l <= str_m - 1 ? str_l : str_m-1 ] = '\0';
-	 }
+     if ( str_m > 0 )
+     {               /* make sure the string is null-terminated
+                        even at the expense of overwriting the last character */
+         str[ str_l <= str_m - 1 ? str_l : str_m-1 ] = '\0';
+     }
 
-	 return str_l;    /* return the number of characters formatted
-						 (excluding trailing null character),
-						 that is, the number of characters that would have been
-						 written to the buffer if it were large enough */
+     return str_l;    /* return the number of characters formatted
+                         (excluding trailing null character),
+                         that is, the number of characters that would have been
+                         written to the buffer if it were large enough */
 }
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

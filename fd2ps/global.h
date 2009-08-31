@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -17,10 +16,17 @@
  */
 
 
-
 #ifndef FD2PS_GLOBAL
 #define FD2PS_GLOBAL
 
 PSInfo psinfo, *flps;
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

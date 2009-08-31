@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,14 +19,11 @@
 /**
  * \file xbmtops.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  *  Turn an xbm file into PostScript
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -45,17 +41,18 @@ gethexint(FILE * fp)
     int c;
 
     while ((c = getc(fp)) == ',' || isspace(c))
-	;
+        /* empty */ ;
 
     if (c == EOF)
-	return -1;
+        return -1;
 
     for (p = buf; c != EOF && c != ',' && !isspace(c); c = getc(fp))
-	*p++ = c;
+        *p++ = c;
     *p = '\0';
 
     return strtol(buf, 0, 16);
 }
+
 
 #define MAXH  500
 static int bit_w, bit_h;
@@ -71,72 +68,73 @@ read_xbm(const char *f)
 
     if (!(fp = fopen(f, "r")))
     {
-	fprintf(stderr, "Can't open %s\n", f);
-	return -1;
+        fprintf(stderr, "Can't open %s\n", f);
+        return -1;
     }
 
     bit_w = bit_h = 0;
 
     for (nosize = 1; nosize && fgets(buf, sizeof(buf) - 1, fp);)
     {
-	if (sscanf(buf, "#define %*s %d", &c) == 1)
-	{
-	    if (strstr(buf, "_width"))
-		bit_w = c;
-	    else if (strstr(buf, "_height"))
-		bit_h = c;
-	    nosize = bit_w < 1 || bit_h < 1;
-	}
+        if (sscanf(buf, "#define %*s %d", &c) == 1)
+        {
+            if (strstr(buf, "_width"))
+                bit_w = c;
+            else if (strstr(buf, "_height"))
+                bit_h = c;
+            nosize = bit_w < 1 || bit_h < 1;
+        }
     }
 
     if (bit_h > MAXH)
     {
-	fprintf(stderr, "bitmap too large. truncated\n");
-	bit_h = MAXH;
+        fprintf(stderr, "bitmap too large. truncated\n");
+        bit_h = MAXH;
     }
 
     for (i = 0; i < bit_h; i++)
     {
-	if (bit_buf[i])
-	    free(bit_buf[i]);
-	bit_buf[i] = calloc(bit_w, sizeof(*bit_buf[i]));
+        if (bit_buf[i])
+            free(bit_buf[i]);
+        bit_buf[i] = calloc(bit_w, sizeof(*bit_buf[i]));
     }
 
     /* skip until getting a brace */
-    for (; (c = getc(fp)) != EOF && c != '{';)	/* } VI */
-	;
+
+    for (; (c = getc(fp)) != EOF && c != '{';)  /* } VI */
+        /* empty */ ;
 
     if (feof(fp) || ferror(fp))
     {
-	fprintf(stderr, "error reading %s\n", f);
-	bit_w = 0;
-	return -1;
+        fprintf(stderr, "error reading %s\n", f);
+        bit_w = 0;
+        return -1;
     }
 
     /* read the data */
 
     for (j = err = c = 0; j < bit_h && !err; j++)
     {
-	bits = bit_buf[bit_h - 1 - j];
-	for (i = ct = 0; i < bit_w && !err; i++, ct = (ct + 1) & 7)
-	{
-	    if (ct == 0)
-		err = (c = gethexint(fp)) < 0;
-	    *bits++ = (c & 1);
-	    c = c >> 1;
-	}
+        bits = bit_buf[bit_h - 1 - j];
+        for (i = ct = 0; i < bit_w && !err; i++, ct = (ct + 1) & 7)
+        {
+            if (ct == 0)
+                err = (c = gethexint(fp)) < 0;
+            *bits++ = (c & 1);
+            c = c >> 1;
+        }
     }
 
     if (err)
-	fprintf(stderr, "Junk in bitmap hex stream\n");
+        fprintf(stderr, "Junk in bitmap hex stream\n");
 
     return (j > bit_h / 2) ? 0 : -1;
 }
 
+
 void
 draw_bitmap(const char *f, float x, float y, float w, float h,
-	    long fcol, long bcol)
-
+            long fcol, long bcol)
 {
     int i, j, r, g, b;
     char *bits;
@@ -147,13 +145,14 @@ draw_bitmap(const char *f, float x, float y, float w, float h,
     read_xbm(f);
 
     if (bit_w < 1)
-	return;
+        return;
 
     xx = x + (w - bit_w) / 2;
     yy = y + (h - bit_h) / 2;
 
     /* in xforms, bitmap is really an image with two colors, not *
        neccessarily black and white */
+
     fl_query_imap(bcol, &r, &g, &b);
     cmap[0].red = r;
     cmap[0].green = g;
@@ -168,9 +167,9 @@ draw_bitmap(const char *f, float x, float y, float w, float h,
 
     for (j = 0; j < bit_h; j++)
     {
-	bits = bit_buf[bit_h - 1 - j];
-	for (i = 0; i < bit_w; i++, bits++, pix++)
-	    *pix = (*bits != 0);
+        bits = bit_buf[bit_h - 1 - j];
+        for (i = 0; i < bit_w; i++, bits++, pix++)
+            *pix = (*bits != 0);
     }
 
     ps_verbatim("\n%% Start of XBM file %s %%{\n", f);
@@ -178,12 +177,20 @@ draw_bitmap(const char *f, float x, float y, float w, float h,
     ps_output("%.1f %.1f translate\n", xx, yy);
 
     if (flps->colorps)
-	image2colorps(pixels, bit_w, bit_h, cmap, 2, 0);
+        image2colorps(pixels, bit_w, bit_h, cmap, 2, 0);
     else
-	image2grayps(pixels, bit_w, bit_h, cmap, 2, 0);
+        image2grayps(pixels, bit_w, bit_h, cmap, 2, 0);
 
     ps_verbatim("\ngrestore%%}\n");
 
     free(pixels);
     return;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

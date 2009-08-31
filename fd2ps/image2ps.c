@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,11 +19,9 @@
 /**
  * \file image2ps.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Turn a colormapped image into PostScript
  */
@@ -46,21 +43,21 @@ static const char *hexdigits = "0123456789abcdef";
 
 int
 image2colorps( short      * pixels,
-			   int          w,
-			   int          h,
-			   fd2psCMAP *  map,
-			   int          ncol  FL_UNUSED_ARG,
-			   const char * cmt)
+               int          w,
+               int          h,
+               fd2psCMAP *  map,
+               int          ncol  FL_UNUSED_ARG,
+               const char * cmt)
 {
     int x,
-		y,
-		k,
-		r,
-		g,
-		b;
+        y,
+        k,
+        r,
+        g,
+        b;
     int *rb,
-		*gb,
-		*bb;
+        *gb,
+        *bb;
     char pscmd[ 128 ];
     short *p;
 
@@ -88,39 +85,39 @@ image2colorps( short      * pixels,
 
     for ( p = pixels, k = y = 0; y < h; y++ )
     {
-		for ( x = 0; x < w; x++, p++ )
-		{
-			rb[ x ] = map[ *p ].red;
-			gb[ x ] = map[ *p ].green;
-			bb[ x ] = map[ *p ].blue;
-		}
+        for ( x = 0; x < w; x++, p++ )
+        {
+            rb[ x ] = map[ *p ].red;
+            gb[ x ] = map[ *p ].green;
+            bb[ x ] = map[ *p ].blue;
+        }
 
-		for ( x = 0; x < w; x++ )
-		{
-			r = rb[ x ];
-			ps_output( "%c%c", hexdigits[ ( r >> 4 ) & 15 ],
-					   hexdigits[ r & 15 ] );
-			if ( ++k % LINELENGTH == 0 )
-				ps_output( "\n" );
-		}
+        for ( x = 0; x < w; x++ )
+        {
+            r = rb[ x ];
+            ps_output( "%c%c", hexdigits[ ( r >> 4 ) & 15 ],
+                       hexdigits[ r & 15 ] );
+            if ( ++k % LINELENGTH == 0 )
+                ps_output( "\n" );
+        }
 
-		for ( x = 0; x < w; x++ )
-		{
-			g = gb[ x ];
-			ps_output( "%c%c", hexdigits[ ( g >> 4 ) & 15 ],
-					   hexdigits[ g & 15 ] );
-			if ( ++k % LINELENGTH == 0 )
-				ps_output( "\n" );
-		}
+        for ( x = 0; x < w; x++ )
+        {
+            g = gb[ x ];
+            ps_output( "%c%c", hexdigits[ ( g >> 4 ) & 15 ],
+                       hexdigits[ g & 15 ] );
+            if ( ++k % LINELENGTH == 0 )
+                ps_output( "\n" );
+        }
 
-		for ( x = 0; x < w; x++ )
-		{
-			b = bb[ x ];
-			ps_output( "%c%c", hexdigits[ ( b >> 4 ) & 15 ],
-					   hexdigits[ b & 15 ] );
-			if ( ++k % LINELENGTH == 0 )
-				ps_output( "\n" );
-		}
+        for ( x = 0; x < w; x++ )
+        {
+            b = bb[ x ];
+            ps_output( "%c%c", hexdigits[ ( b >> 4 ) & 15 ],
+                       hexdigits[ b & 15 ] );
+            if ( ++k % LINELENGTH == 0 )
+                ps_output( "\n" );
+        }
     }
 
     free( rb );
@@ -136,20 +133,20 @@ image2colorps( short      * pixels,
 
 int
 image2grayps( short      * pixels,
-			  int          w,
-			  int          h,
-			  fd2psCMAP  * map,
-			  int          ncol,
-			  const char * cmt)
+              int          w,
+              int          h,
+              fd2psCMAP  * map,
+              int          ncol,
+              const char * cmt)
 {
     int x,
-		y,
-		k,
-		r;
+        y,
+        k,
+        r;
     char pscmd[ 128 ];
     short *p;
 
-	strcpy( pscmd, ps_literal( ( cmt && *cmt ) ? cmt : "startGrayImage" ) );
+    strcpy( pscmd, ps_literal( ( cmt && *cmt ) ? cmt : "startGrayImage" ) );
     ps_output( "/graystring %d string def\n", w );
 
     ps_output( "/%s\n", pscmd );
@@ -162,18 +159,18 @@ image2grayps( short      * pixels,
     /* convert colormap to grayscale */
 
     for ( x = 0; x < ncol; x++ )
-		map[ x ].red = rgb2gray( map[ x ].red, map[ x ].green, map[ x ].blue );
+        map[ x ].red = rgb2gray( map[ x ].red, map[ x ].green, map[ x ].blue );
 
     for ( p = pixels, k = y = 0; y < h; y++ )
     {
-		for ( x = 0; x < w; x++, p++ )
-		{
-			r = map[ *p ].red;
-			ps_output( "%c%c", hexdigits[ ( r >> 4 ) & 15 ],
-					   hexdigits[ r & 15 ] );
-			if ( ++k % LINELENGTH == 0 )
-				ps_output( "\n" );
-		}
+        for ( x = 0; x < w; x++, p++ )
+        {
+            r = map[ *p ].red;
+            ps_output( "%c%c", hexdigits[ ( r >> 4 ) & 15 ],
+                       hexdigits[ r & 15 ] );
+            if ( ++k % LINELENGTH == 0 )
+                ps_output( "\n" );
+        }
     }
 
     return 0;
@@ -190,8 +187,16 @@ ps_literal( const char * s )
     char *p = buf;
 
     for ( *p = '\0'; s && *s; s++ )
-		*p++ = ( PS_SPECIAL( *s ) ) ? '$' : *s;
+        *p++ = ( PS_SPECIAL( *s ) ) ? '$' : *s;
 
     *p = '\0';
     return buf;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

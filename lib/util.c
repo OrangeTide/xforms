@@ -46,7 +46,7 @@ void
 fli_set_form_window( FL_FORM * form )
 {
     if ( form && form->window != None )
-		flx->win = form->window;
+        flx->win = form->window;
 }
 
 
@@ -69,22 +69,22 @@ fl_show_errors( int y   FL_UNUSED_ARG )
 static FLI_VN_PAIR flevent[ ] =
 {
     VN( FL_ENTER     ),
-	VN( FL_LEAVE     ),
-	VN( FL_PUSH      ),
-	VN( FL_RELEASE   ),
+    VN( FL_LEAVE     ),
+    VN( FL_PUSH      ),
+    VN( FL_RELEASE   ),
     VN( FL_STEP      ),
-	VN( FL_SHORTCUT  ),
-	VN( FL_UPDATE    ),
-	VN( FL_MOTION    ),
+    VN( FL_SHORTCUT  ),
+    VN( FL_UPDATE    ),
+    VN( FL_MOTION    ),
     VN( FL_KEYPRESS  ),
-	VN( FL_DRAW      ),
-	VN( FL_FOCUS     ),
-	VN( FL_UNFOCUS   ),
+    VN( FL_DRAW      ),
+    VN( FL_FOCUS     ),
+    VN( FL_UNFOCUS   ),
     VN( FL_FREEMEM   ),
-	VN( FL_DRAWLABEL ),
-	VN( FL_DBLCLICK  ),
+    VN( FL_DRAWLABEL ),
+    VN( FL_DBLCLICK  ),
     VN( FL_OTHER     ),
-	VN( FL_ATTRIB    ),
+    VN( FL_ATTRIB    ),
     { -1, NULL }
 };
 
@@ -102,42 +102,42 @@ fli_event_name( int ev )
 static FLI_VN_PAIR flclass[ ] =
 {
     VN( FL_BUTTON        ),
-	VN( FL_LIGHTBUTTON   ),
+    VN( FL_LIGHTBUTTON   ),
     VN( FL_ROUNDBUTTON   ),
-	VN( FL_ROUND3DBUTTON ),
+    VN( FL_ROUND3DBUTTON ),
     VN( FL_CHECKBUTTON   ),
-	VN( FL_BITMAPBUTTON  ),
-	VN( FL_PIXMAPBUTTON  ),
+    VN( FL_BITMAPBUTTON  ),
+    VN( FL_PIXMAPBUTTON  ),
     VN( FL_BITMAP        ),
-	VN( FL_PIXMAP        ),
-	VN( FL_BOX           ),
-	VN( FL_TEXT          ),
+    VN( FL_PIXMAP        ),
+    VN( FL_BOX           ),
+    VN( FL_TEXT          ),
     VN( FL_MENU          ),
-	VN( FL_CHART         ),
-	VN( FL_CHOICE        ),
+    VN( FL_CHART         ),
+    VN( FL_CHOICE        ),
     VN( FL_COUNTER       ),
-	VN( FL_SLIDER        ),
-	VN( FL_VALSLIDER     ),
-	VN( FL_INPUT         ),
+    VN( FL_SLIDER        ),
+    VN( FL_VALSLIDER     ),
+    VN( FL_INPUT         ),
     VN( FL_BROWSER       ),
-	VN( FL_DIAL          ),
-	VN( FL_TIMER         ),
-	VN( FL_CLOCK         ),
+    VN( FL_DIAL          ),
+    VN( FL_TIMER         ),
+    VN( FL_CLOCK         ),
     VN( FL_POSITIONER    ),
-	VN( FL_FREE          ),
-	VN( FL_XYPLOT        ),
+    VN( FL_FREE          ),
+    VN( FL_XYPLOT        ),
     VN( FL_FRAME         ),
-	VN( FL_LABELFRAME    ),
-	VN( FL_CANVAS        ),
+    VN( FL_LABELFRAME    ),
+    VN( FL_CANVAS        ),
     VN( FL_GLCANVAS      ),
-	VN( FL_TABFOLDER     ),
-	VN( FL_SCROLLBAR     ),
+    VN( FL_TABFOLDER     ),
+    VN( FL_SCROLLBAR     ),
     VN( FL_SCROLLBUTTON  ),
-	VN( FL_MENUBAR       ),
-	VN( FL_IMAGECANVAS   ),
+    VN( FL_MENUBAR       ),
+    VN( FL_IMAGECANVAS   ),
     VN( FL_TEXTBOX       ),
     VN( FL_SPINNER       ),
-	{ -1, NULL }
+    { -1, NULL }
 };
 
 
@@ -147,12 +147,12 @@ static FLI_VN_PAIR flclass[ ] =
 const char *
 fli_object_class_name( FL_OBJECT * ob )
 {
-	if ( ! ob )
-		return "null";
-	else if ( ob == FL_EVENT )
-		return "FL_EVENT";
+    if ( ! ob )
+        return "null";
+    else if ( ob == FL_EVENT )
+        return "FL_EVENT";
 
-	return fli_get_vn_name( flclass, ob->objclass );
+    return fli_get_vn_name( flclass, ob->objclass );
 }
 
 
@@ -174,10 +174,10 @@ fli_object_class_name( FL_OBJECT * ob )
 
 char *
 fli_print_to_string( const char * fmt,
-					... )
+                    ... )
 {
     char *c = NULL;
-	char *old_c;
+    char *old_c;
     size_t len = STRING_TRY_LENGTH;
     va_list ap;
     int wr;
@@ -185,13 +185,13 @@ fli_print_to_string( const char * fmt,
 
     while ( 1 )
     {
-		old_c = c;
+        old_c = c;
         if ( ( c = fl_realloc( c, len ) ) == NULL )
-		{
-			fl_safe_free( old_c );
-			M_err( "fli_print_to_string", "Running out of memory\n" );
-			return NULL;
-		}
+        {
+            fl_safe_free( old_c );
+            M_err( "fli_print_to_string", "Running out of memory\n" );
+            return NULL;
+        }
 
         va_start( ap, fmt );
         wr = vsnprintf( c, len, fmt, ap );
@@ -215,11 +215,11 @@ fli_print_to_string( const char * fmt,
     /* Trim the string down to the number of required characters */
 
     if ( ( size_t ) wr + 1 < len )
-	{
-		old_c = c;
+    {
+        old_c = c;
         if ( ( c = fl_realloc( c, ( size_t ) wr + 1 ) ) == NULL )
-			return old_c;
-	}
+            return old_c;
+    }
 
     return c;
 }
@@ -236,50 +236,50 @@ char *
 fli_read_line( FILE *fp )
 {
     char *line = NULL;
-	char *old_line = NULL;
+    char *old_line = NULL;
     size_t len = STRING_TRY_LENGTH;
-	size_t old_len = 0;
+    size_t old_len = 0;
 
     while ( 1 )
     {
         if ( ( line = fl_realloc( line, len ) ) == NULL )
-		{
-			fl_safe_free( old_line );
-			M_err( "fli_read_line", "Running out of memory\n" );
-			return NULL;
-		}
+        {
+            fl_safe_free( old_line );
+            M_err( "fli_read_line", "Running out of memory\n" );
+            return NULL;
+        }
 
-		if ( ! fgets( line + old_len, len - old_len, fp ) )
-		{
-			if ( ferror( fp ) )
-			{
-				M_err( "fli_read_line", "Failed to read from file" );
-				fl_free( line );
-				return NULL;
-			}
+        if ( ! fgets( line + old_len, len - old_len, fp ) )
+        {
+            if ( ferror( fp ) )
+            {
+                M_err( "fli_read_line", "Failed to read from file" );
+                fl_free( line );
+                return NULL;
+            }
 
-			if ( old_len == 0 )
-			{
-				fl_free( line );
-				return NULL;
-			}
+            if ( old_len == 0 )
+            {
+                fl_free( line );
+                return NULL;
+            }
 
-			M_warn( "fli_read_line", "Missing newline at end of line" );
-			break;
-		}
+            M_warn( "fli_read_line", "Missing newline at end of line" );
+            break;
+        }
 
-		if ( strchr( line + old_len, '\n' ) )
-			break;
+        if ( strchr( line + old_len, '\n' ) )
+            break;
 
-		old_line = line;
-		old_len = len - 1;
-		len *= 2;
-	}
+        old_line = line;
+        old_len = len - 1;
+        len *= 2;
+    }
 
-	old_line = line;
-	if ( ( line = fl_realloc( line, strlen( line ) + 1 ) ) == NULL )
-		return old_line;
-	return line;
+    old_line = line;
+    if ( ( line = fl_realloc( line, strlen( line ) + 1 ) ) == NULL )
+        return old_line;
+    return line;
 }
 
 
@@ -291,23 +291,23 @@ fli_read_line( FILE *fp )
 
 char *
 fli_sstrcpy( char       * dest,
-			 const char * src,
-			 size_t       n )
+             const char * src,
+             size_t       n )
 {
-	size_t l = src ? strlen( src ) : 0;
+    size_t l = src ? strlen( src ) : 0;
 
-	if ( ! dest || n == 0 )
-		return NULL;
+    if ( ! dest || n == 0 )
+        return NULL;
 
-	if ( l < n )
-		memcpy( dest, src, l + 1 );
-	else
-	{
-		memcpy( dest, src, n - 1 );
-		dest[ n - 1 ] = '\0';
-	}
+    if ( l < n )
+        memcpy( dest, src, l + 1 );
+    else
+    {
+        memcpy( dest, src, n - 1 );
+        dest[ n - 1 ] = '\0';
+    }
 
-	return dest;
+    return dest;
 }
 
 
@@ -318,7 +318,7 @@ fli_sstrcpy( char       * dest,
 
 char *
 fli_get_string( const char * fmt,
-				... )
+                ... )
 {
     char *c = NULL;
     size_t len = GET_STRING_TRY_LENGTH;
@@ -356,3 +356,11 @@ fli_get_string( const char * fmt,
 }
 
 
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

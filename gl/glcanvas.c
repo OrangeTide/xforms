@@ -1,5 +1,4 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -65,10 +64,10 @@ typedef struct
 static int glconfig[ MAXATTRIB ] =
 {
     GLX_RGBA,
-	GLX_DEPTH_SIZE, 1,
+    GLX_DEPTH_SIZE, 1,
     GLX_RED_SIZE,   1,
-	GLX_GREEN_SIZE, 1,
-	GLX_BLUE_SIZE,  1,
+    GLX_GREEN_SIZE, 1,
+    GLX_BLUE_SIZE,  1,
     GLX_DOUBLEBUFFER,
     None
 };
@@ -80,7 +79,7 @@ static int glx_init( FL_OBJECT * );
 static int glx_activate( FL_OBJECT * );
 static int glx_cleanup( FL_OBJECT * );
 static void copy_attributes( int *,
-							 const int * );
+                             const int * );
 
 
 /***************************************
@@ -89,11 +88,11 @@ static void copy_attributes( int *,
 
 FL_OBJECT *
 fl_add_glcanvas( int          type,
-				 FL_Coord     x,
-				 FL_Coord     y,
-				 FL_Coord     w,
-				 FL_Coord     h,
-				 const char * label )
+                 FL_Coord     x,
+                 FL_Coord     y,
+                 FL_Coord     w,
+                 FL_Coord     h,
+                 const char * label )
 {
     FL_OBJECT * ob = fl_create_glcanvas( type, x, y, w, h, label );
 
@@ -129,18 +128,18 @@ fl_get_glcanvas_defaults( int config[ ] )
 
 void
 fl_set_glcanvas_attributes( FL_OBJECT * ob,
-							const int * config )
+                            const int * config )
 {
     if ( ! ISGLC( ob ) )
-		fprintf( stderr, "object %s is not glcanvas\n",
-				 ob ? ob->label : "null" );
+        fprintf( stderr, "object %s is not glcanvas\n",
+                 ob ? ob->label : "null" );
 
     copy_attributes( GLPROP( ob )->glconfig, config );
 
     if ( ob->visible )
     {
-		fl_hide_object( ob );
-		fl_show_object( ob );
+        fl_hide_object( ob );
+        fl_show_object( ob );
     }
 }
 
@@ -150,7 +149,7 @@ fl_set_glcanvas_attributes( FL_OBJECT * ob,
 
 void
 fl_get_glcanvas_attributes( FL_OBJECT * ob,
-							int       * attributes )
+                            int       * attributes )
 {
     copy_attributes( attributes, GLPROP( ob )->glconfig );
 }
@@ -161,16 +160,16 @@ fl_get_glcanvas_attributes( FL_OBJECT * ob,
 
 void
 fl_set_glcanvas_direct( FL_OBJECT * ob,
-						int         direct )
+                        int         direct )
 {
     if ( direct != GLPROP( ob )->direct )
     {
-		GLPROP( ob )->direct = direct ? GL_TRUE : GL_FALSE;
-		if ( ob->visible )
-		{
-			fl_hide_object( ob );
-			fl_show_object( ob );
-		}
+        GLPROP( ob )->direct = direct ? GL_TRUE : GL_FALSE;
+        if ( ob->visible )
+        {
+            fl_hide_object( ob );
+            fl_show_object( ob );
+        }
     }
 }
 
@@ -202,7 +201,7 @@ void
 fl_activate_glcanvas( FL_OBJECT * ob )
 {
     if ( FL_ObjWin( ob ) )
-		glx_activate( ob );
+        glx_activate( ob );
 }
 
 
@@ -212,11 +211,11 @@ fl_activate_glcanvas( FL_OBJECT * ob )
 
 FL_OBJECT *
 fl_create_glcanvas( int          type,
-					FL_Coord     x,
-					FL_Coord     y,
-					FL_Coord     w,
-					FL_Coord     h,
-					const char * label )
+                    FL_Coord     x,
+                    FL_Coord     y,
+                    FL_Coord     w,
+                    FL_Coord     h,
+                    const char * label )
 {
     FL_OBJECT *ob = fl_create_canvas( type, x, y, w, h, label );
 
@@ -247,17 +246,17 @@ glx_init( FL_OBJECT * ob )
 
     if ( ! glXQueryExtension( fl_display, 0, 0 ) )
     {
-		fprintf( stderr, "GLCanvas: OpenGL not supported\n" );
-		return -1;
+        fprintf( stderr, "GLCanvas: OpenGL not supported\n" );
+        return -1;
     }
 
-	/* quit if can't get a visual */
+    /* quit if can't get a visual */
 
     if ( ! ( vi = glXChooseVisual( fl_display, fl_screen,
-								   GLPROP( ob )->glconfig ) ) )
+                                   GLPROP( ob )->glconfig ) ) )
     {
-		fprintf( stderr, "GLCanvas: Can't get visual\n" );
-		return -1;
+        fprintf( stderr, "GLCanvas: Can't get visual\n" );
+        return -1;
     }
 
     /* Change canvas defaults */
@@ -270,8 +269,8 @@ glx_init( FL_OBJECT * ob )
 
     if ( ! context )
     {
-		fprintf( stderr, "Can't create GLX context!\n" );
-		return -1;
+        fprintf( stderr, "Can't create GLX context!\n" );
+        return -1;
     }
 
     /* Under some conditions, the parent of the gl canvas might go away,
@@ -309,10 +308,10 @@ glx_cleanup( FL_OBJECT * ob )
 {
     if ( GLPROP( ob )->context )
     {
-		glXDestroyContext( fl_display, GLPROP( ob )->context );
-		XFree( GLPROP( ob )->xvinfo );
-		GLPROP( ob )->context = 0;
-		GLPROP( ob )->xvinfo = 0;
+        glXDestroyContext( fl_display, GLPROP( ob )->context );
+        XFree( GLPROP( ob )->xvinfo );
+        GLPROP( ob )->context = 0;
+        GLPROP( ob )->xvinfo = 0;
     }
 
     return 0;
@@ -324,10 +323,10 @@ glx_cleanup( FL_OBJECT * ob )
 
 static void
 copy_attributes( int *       dest,
-				 const int * src )
+                 const int * src )
 {
     while ( *src != None )
-		*dest++ = *src++;
+        *dest++ = *src++;
     *dest = None;
 }
 
@@ -341,9 +340,9 @@ copy_attributes( int *       dest,
 
 Window
 fl_glwincreate( int *        config,
-				GLXContext * context,
-				int          w,
-				int          h )
+                GLXContext * context,
+                int          w,
+                int          h )
 {
     XVisualInfo *xvi;
     XSetWindowAttributes xswa;
@@ -351,11 +350,11 @@ fl_glwincreate( int *        config,
     Window win;
 
     if ( ! glXQueryExtension( fl_display, 0, 0 ) )
-		return 0;
+        return 0;
 
     if ( ! ( xvi = glXChooseVisual( fl_display, fl_screen,
-									config ? config : glconfig ) ) )
-		return 0;
+                                    config ? config : glconfig ) ) )
+        return 0;
 
     *context = glXCreateContext( fl_display, xvi, None, GL_TRUE );
 
@@ -367,11 +366,11 @@ fl_glwincreate( int *        config,
     mask |= CWEventMask;
 
     win = XCreateWindow( fl_display, RootWindow(fl_display, fl_screen),
-						 0, 0, w, h, 0,
-						 xvi->depth, InputOutput,
-						 xvi->visual, mask, &xswa );
+                         0, 0, w, h, 0,
+                         xvi->depth, InputOutput,
+                         xvi->visual, mask, &xswa );
     if ( win )
-		glXMakeCurrent( fl_display, win, *context );
+        glXMakeCurrent( fl_display, win, *context );
 
     return win;
 }
@@ -382,14 +381,22 @@ fl_glwincreate( int *        config,
 
 Window
 fl_glwinopen( int *        config,
-			  GLXContext * context,
-			  int          w,
-			  int          h )
+              GLXContext * context,
+              int          w,
+              int          h )
 {
     Window win;
 
     if ( ( win = fl_glwincreate( config, context, w, h ) ) )
-		fl_winshow( win );
+        fl_winshow( win );
 
     return win;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

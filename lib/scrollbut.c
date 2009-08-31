@@ -48,44 +48,44 @@ draw_sbbutton( FL_OBJECT * ob )
     int btype = FLI_TRIANGLE_UPBOX8;
     char *label = ob->label;
     int x = ob->x,
-		y = ob->y,
-		w = ob->w,
-		h = ob->h;
+        y = ob->y,
+        w = ob->w,
+        h = ob->h;
 
     if (    ob->col2 != FL_COL1
-		 && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )
-		return;
+         && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )
+        return;
 
     if ( sp->event == FL_DRAW )
-		fl_drw_box( ob->boxtype, x, y, w, h, ob->col1, ob->bw );
+        fl_drw_box( ob->boxtype, x, y, w, h, ob->col1, ob->bw );
 
     if ( *label == '#' )
     {
-		w = h = FL_min( ob->w, ob->h );
-		x += ( ob->w - w ) / 2;
-		y += ( ob->h - h ) / 2;
-		label++;
+        w = h = FL_min( ob->w, ob->h );
+        x += ( ob->w - w ) / 2;
+        y += ( ob->h - h ) / 2;
+        label++;
     }
 
     if (    ( ob->boxtype != FL_NO_BOX && ob->boxtype != FL_FLAT_BOX )
-		 || abw == 1 )
+         || abw == 1 )
     {
-		extra += 1 + 0.051 * FL_min( w, h );
-		abw = 1;
+        extra += 1 + 0.051 * FL_min( w, h );
+        abw = 1;
     }
 
     if ( *label == '2' )
-		btype = sp->val ? FLI_TRIANGLE_DOWNBOX2 : FLI_TRIANGLE_UPBOX2;
+        btype = sp->val ? FLI_TRIANGLE_DOWNBOX2 : FLI_TRIANGLE_UPBOX2;
     else if ( *label == '4' )
-		btype = sp->val ? FLI_TRIANGLE_DOWNBOX4 : FLI_TRIANGLE_UPBOX4;
+        btype = sp->val ? FLI_TRIANGLE_DOWNBOX4 : FLI_TRIANGLE_UPBOX4;
     else if ( *label == '6' )
-		btype = sp->val ? FLI_TRIANGLE_DOWNBOX6 : FLI_TRIANGLE_UPBOX6;
+        btype = sp->val ? FLI_TRIANGLE_DOWNBOX6 : FLI_TRIANGLE_UPBOX6;
     else if ( *label == '8' )
-		btype = sp->val ? FLI_TRIANGLE_DOWNBOX8 : FLI_TRIANGLE_UPBOX8;
+        btype = sp->val ? FLI_TRIANGLE_DOWNBOX8 : FLI_TRIANGLE_UPBOX8;
 
     c1 = ( ob->belowmouse && sp->event != FL_RELEASE ) ? FL_MCOL : ob->col2;
     fli_drw_tbox( btype, x + extra, y + extra, w - 2 * extra, h - 2 * extra,
-				  c1, abw );
+                  c1, abw );
 }
 
 
@@ -95,11 +95,11 @@ draw_sbbutton( FL_OBJECT * ob )
 
 FL_OBJECT *
 fl_create_scrollbutton( int          type,
-						FL_Coord     x,
-						FL_Coord     y,
-						FL_Coord     w,
-						FL_Coord     h,
-						const char * label )
+                        FL_Coord     x,
+                        FL_Coord     y,
+                        FL_Coord     w,
+                        FL_Coord     h,
+                        const char * label )
 {
     FL_OBJECT *ob;
 
@@ -120,14 +120,22 @@ fl_create_scrollbutton( int          type,
 
 FL_OBJECT *
 fl_add_scrollbutton( int          type,
-					 FL_Coord     x,
-					 FL_Coord     y,
-					 FL_Coord     w,
-					 FL_Coord     h,
-					 const char * label )
+                     FL_Coord     x,
+                     FL_Coord     y,
+                     FL_Coord     w,
+                     FL_Coord     h,
+                     const char * label )
 {
     FL_OBJECT *ob = fl_create_scrollbutton( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

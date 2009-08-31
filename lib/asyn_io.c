@@ -82,20 +82,20 @@ collect_fd( void )
 
     for ( p = fli_context->io_rec; p; p = p->next )
     {
-		if ( p->source < 0 )
-		{
-			M_err( "collect_fd", "source < 0\n" );
-			continue;
-		}
+        if ( p->source < 0 )
+        {
+            M_err( "collect_fd", "source < 0\n" );
+            continue;
+        }
 
-		if ( p->mask & FL_READ )
-			FD_SET( p->source, &st_rfds );
-		if ( p->mask & FL_WRITE )
-			FD_SET( p->source, &st_wfds );
-		if ( p->mask & FL_EXCEPT )
-			FD_SET( p->source, &st_efds );
-		if ( nf < p->source + 1 )
-			nf = p->source + 1;
+        if ( p->mask & FL_READ )
+            FD_SET( p->source, &st_rfds );
+        if ( p->mask & FL_WRITE )
+            FD_SET( p->source, &st_wfds );
+        if ( p->mask & FL_EXCEPT )
+            FD_SET( p->source, &st_efds );
+        if ( nf < p->source + 1 )
+            nf = p->source + 1;
     }
 
     fli_context->num_io = nf;
@@ -108,9 +108,9 @@ collect_fd( void )
 
 void
 fl_add_io_callback( int              fd,
-					unsigned int     mask,
-					FL_IO_CALLBACK   callback,
-					void           * data )
+                    unsigned int     mask,
+                    FL_IO_CALLBACK   callback,
+                    void           * data )
 {
     FLI_IO_REC *io_rec;
 
@@ -125,7 +125,7 @@ fl_add_io_callback( int              fd,
 
     fli_context->io_rec = io_rec;
 
-	collect_fd( );
+    collect_fd( );
 }
 
 
@@ -134,39 +134,39 @@ fl_add_io_callback( int              fd,
 
 void
 fl_remove_io_callback( int            fd,
-					   unsigned       int mask,
-					   FL_IO_CALLBACK cb )
+                       unsigned       int mask,
+                       FL_IO_CALLBACK cb )
 {
     FLI_IO_REC *io,
-		       *last;
+               *last;
 
     for ( last = io = fli_context->io_rec;
-		  io && ! ( io->source == fd && io->callback == cb && io->mask & mask );
-		  last = io, io = io->next )
-		/* empty */ ;
+          io && ! ( io->source == fd && io->callback == cb && io->mask & mask );
+          last = io, io = io->next )
+        /* empty */ ;
 
-	if ( ! io )
+    if ( ! io )
     {
-		M_err( "fl_remove_io_callback", "Non-existent handler for %d", fd );
-		return;
-	}
+        M_err( "fl_remove_io_callback", "Non-existent handler for %d", fd );
+        return;
+    }
 
-	io->mask &= ~mask;
+    io->mask &= ~mask;
 
-	/* Special case: if after removal fd does not do anything
-	   anymore, i.e. mask == 0, remove it from global record */
+    /* Special case: if after removal fd does not do anything
+       anymore, i.e. mask == 0, remove it from global record */
 
-	if ( io->mask == 0 )
-	{
-		if ( io == fli_context->io_rec )
-			fli_context->io_rec = io->next;
-		else
-			last->next = io->next;
+    if ( io->mask == 0 )
+    {
+        if ( io == fli_context->io_rec )
+            fli_context->io_rec = io->next;
+        else
+            last->next = io->next;
 
-		fl_add_to_freelist( io );
-	}
+        fl_add_to_freelist( io );
+    }
 
-	collect_fd( );
+    collect_fd( );
 }
 
 
@@ -176,22 +176,22 @@ fl_remove_io_callback( int            fd,
 
 void
 fli_watch_io( FLI_IO_REC * io_rec,
-			  long        msec )
+              long        msec )
 {
     fd_set rfds,
-		   wfds,
-		   efds;
+           wfds,
+           efds;
     struct timeval timeout;
     FLI_IO_REC *p;
     int nf;
 
-	fl_clear_freelist( );
+    fl_clear_freelist( );
 
     if ( ! io_rec )
     {
-		if ( msec > 0 )
-			fl_msleep( msec );
-		return;
+        if ( msec > 0 )
+            fl_msleep( msec );
+        return;
     }
 
     timeout.tv_usec = 1000 * ( msec % 1000 );
@@ -206,42 +206,42 @@ fli_watch_io( FLI_IO_REC * io_rec,
     /* now watch it. HP defines rfds to be ints. Althought compiler will
        bark, it is harmless. */
 
-	nf = select( fli_context->num_io, &rfds, &wfds, &efds, &timeout );
+    nf = select( fli_context->num_io, &rfds, &wfds, &efds, &timeout );
 
     if ( nf < 0 )     /* something is wrong. */
     {
-		if ( errno == EINTR )
-			M_warn( "fli_watch_io", "select interrupted by signal" );
+        if ( errno == EINTR )
+            M_warn( "fli_watch_io", "select interrupted by signal" );
 
-		/* select() on some platforms returns -1 with errno == 0 */
+        /* select() on some platforms returns -1 with errno == 0 */
 
-		else if ( errno != 0 )
-			M_err( "fli_watch_io", fli_get_syserror_msg( ) );
+        else if ( errno != 0 )
+            M_err( "fli_watch_io", fli_get_syserror_msg( ) );
     }
 
     /* time expired */
 
     if ( nf <= 0 )
-		return;
+        return;
 
     /* handle it */
 
     for ( p = io_rec; p; p = p->next )
     {
-		if ( ! p->callback || p->source < 0 || p->mask == 0 )
-			continue;
+        if ( ! p->callback || p->source < 0 || p->mask == 0 )
+            continue;
 
-		if ( p->mask & FL_READ && FD_ISSET( p->source, &rfds ) )
-			p->callback( p->source, p->data );
+        if ( p->mask & FL_READ && FD_ISSET( p->source, &rfds ) )
+            p->callback( p->source, p->data );
 
-		if ( p->mask & FL_WRITE && FD_ISSET( p->source, &wfds ) )
-			p->callback( p->source, p->data );
+        if ( p->mask & FL_WRITE && FD_ISSET( p->source, &wfds ) )
+            p->callback( p->source, p->data );
 
-		if ( p->mask & FL_EXCEPT && FD_ISSET( p->source, &efds ) )
-			p->callback( p->source, p->data );
+        if ( p->mask & FL_EXCEPT && FD_ISSET( p->source, &efds ) )
+            p->callback( p->source, p->data );
     }
 
-	fl_clear_freelist( );
+    fl_clear_freelist( );
 }
 
 
@@ -254,8 +254,8 @@ fli_is_watched_io( int fd )
     FLI_IO_REC *p;
 
     for ( p = fli_context->io_rec; p; p = p->next )
-		if ( p->source == fd && p->mask )
-			return 1;
+        if ( p->source == fd && p->mask )
+            return 1;
 
     return 0;
 }
@@ -266,8 +266,8 @@ fli_is_watched_io( int fd )
 
 typedef struct free_list_
 {
-	struct free_list_ * next;
-	FLI_IO_REC         * io;
+    struct free_list_ * next;
+    FLI_IO_REC         * io;
 } Free_List_T;
 
 static Free_List_T *fl = NULL;
@@ -276,13 +276,13 @@ static Free_List_T *fl = NULL;
 static void
 fl_add_to_freelist( FLI_IO_REC * io )
 {
-	Free_List_T *cur;
+    Free_List_T *cur;
 
     cur = malloc( sizeof *cur );
-	cur->next = fl;
-	cur->io   = io;
+    cur->next = fl;
+    cur->io   = io;
 
-	fl = cur;
+    fl = cur;
 }
 
 
@@ -292,13 +292,21 @@ fl_add_to_freelist( FLI_IO_REC * io )
 static void
 fl_clear_freelist( void )
 {
-	Free_List_T *cur;
+    Free_List_T *cur;
 
-	while ( fl )
-	{
-		fl_free( fl->io );
-		cur = fl;
-		fl = fl->next;
-		fl_free( cur );
-	}
+    while ( fl )
+    {
+        fl_free( fl->io );
+        cur = fl;
+        fl = fl->next;
+        fl_free( cur );
+    }
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

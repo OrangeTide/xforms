@@ -50,25 +50,25 @@ flps_init( void )
 
     if ( ! local_flps )
     {
-		local_flps = fl_calloc( 1, sizeof *flps );
-		local_flps->ps_color = FLPS_COLOR;
-		local_flps->orientation = FLPS_AUTO;
-		local_flps->paper_w = 8.5;
-		local_flps->paper_h = 11.0;
-		local_flps->auto_fit = 1;
-		local_flps->xscale = local_flps->yscale = 1.0;
+        local_flps = fl_calloc( 1, sizeof *flps );
+        local_flps->ps_color = FLPS_COLOR;
+        local_flps->orientation = FLPS_AUTO;
+        local_flps->paper_w = 8.5;
+        local_flps->paper_h = 11.0;
+        local_flps->auto_fit = 1;
+        local_flps->xscale = local_flps->yscale = 1.0;
 
-		/* driver will fill-in appropriate vals for minus */
+        /* driver will fill-in appropriate vals for minus */
 
-		local_flps->drawbox = -1;
-		local_flps->xdpi = local_flps->ydpi = fli_dpi;
-		local_flps->pack = 1;
+        local_flps->drawbox = -1;
+        local_flps->xdpi = local_flps->ydpi = fli_dpi;
+        local_flps->pack = 1;
 
-		/* cache */
+        /* cache */
 
-		local_flps->cur_color = FL_NoColor;
-		local_flps->cur_style = local_flps->cur_size = -1;
-		local_flps->cur_lw = -1;
+        local_flps->cur_color = FL_NoColor;
+        local_flps->cur_style = local_flps->cur_size = -1;
+        local_flps->cur_lw = -1;
     }
 
     return  ( FLPS_CONTROL * ) ( flps = local_flps );
@@ -130,23 +130,23 @@ flps_log( const char * s )
 
 void
 flps_output( const char * fmt,
-			 ... )
+             ... )
 {
     va_list args;
     char buf[ 2048 ],
-		 *q;
+         *q;
     int lastc = flps->lastc;
 
     /* flush */
 
     if ( ! fmt )
     {
-		if ( flps->pack && flps->len )
-		{
-			putc( '\n', flps->fp );
-			flps->len = 0;
-		}
-		return;
+        if ( flps->pack && flps->len )
+        {
+            putc( '\n', flps->fp );
+            flps->len = 0;
+        }
+        return;
     }
 
     va_start( args, fmt );
@@ -154,41 +154,41 @@ flps_output( const char * fmt,
     va_end( args );
 
     if ( ! flps->pack )
-		fprintf( flps->fp, "%s", buf );
+        fprintf( flps->fp, "%s", buf );
     else
     {
-		for ( q = buf; *q; q++ )
-		{
-			if ( *q == '\n' )
-				*q = ' ';
+        for ( q = buf; *q; q++ )
+        {
+            if ( *q == '\n' )
+                *q = ' ';
 
-			/* this is less than robust */
+            /* this is less than robust */
 
-			if ( *q == LEFT )
-				flps->literal = 1;
-			else if ( *q == RIGHT )
-				flps->literal = 0;
+            if ( *q == LEFT )
+                flps->literal = 1;
+            else if ( *q == RIGHT )
+                flps->literal = 0;
 
-			if ( lastc == ' ' && *q == ' ' && !flps->literal )
-				continue;
+            if ( lastc == ' ' && *q == ' ' && !flps->literal )
+                continue;
 
-			if ( *q == ' ' && flps->len == 0 )
-				continue;
+            if ( *q == ' ' && flps->len == 0 )
+                continue;
 
-			if ( *q == ' ' && flps->len >= 70 )
-			{
-				putc( '\n', flps->fp );
-				flps->len = 0;
-			}
-			else
-			{
-				lastc = *q;
-				flps->len++;
-				putc( *q, flps->fp );
-			}
-		}
+            if ( *q == ' ' && flps->len >= 70 )
+            {
+                putc( '\n', flps->fp );
+                flps->len = 0;
+            }
+            else
+            {
+                lastc = *q;
+                flps->len++;
+                putc( *q, flps->fp );
+            }
+        }
 
-		flps->lastc = lastc;
+        flps->lastc = lastc;
     }
 }
 
@@ -203,17 +203,17 @@ flps_linewidth( int lw )
     float flw;
 
     if ( lw == flps->cur_lw )
-		return;
+        return;
 
     flps->last_lw = flps->cur_lw;
     flps->cur_lw = lw;
 
     flw = 0.9 * lw;
     if ( flps->final_xscale + flps->final_yscale > 2 )
-		flw = 0.9 * lw;
-	
+        flw = 0.9 * lw;
+    
     if ( flw < 0.4 )
-		flw = 0.4;
+        flw = 0.4;
 
     flps_output( " %.1f %.1f LW\n", flw, flw );
 }
@@ -260,37 +260,37 @@ void
 flps_linestyle( int n )
 {
     if ( ps_ls == n )
-		return;
+        return;
 
     switch ( n )
     {
-		case FL_DOT :
-			flps_output( "DT " );
-			break;
+        case FL_DOT :
+            flps_output( "DT " );
+            break;
 
-		case FL_DOTDASH :
-			flps_output( "DTD " );
-			break;
+        case FL_DOTDASH :
+            flps_output( "DTD " );
+            break;
 
-		case FL_DASH :
-			flps_output( "D " );
-			break;
+        case FL_DASH :
+            flps_output( "D " );
+            break;
 
-		case FL_LONGDASH :
-			flps_output( "LD " );
-			break;
+        case FL_LONGDASH :
+            flps_output( "LD " );
+            break;
 
-		case FL_SOLID :
-		case FL_USERDASH :
-		case FL_USERDOUBLEDASH :
-		case -1:
-			flps_output( "SL " );
-			ps_ls = FL_SOLID;
-			break;
+        case FL_SOLID :
+        case FL_USERDASH :
+        case FL_USERDOUBLEDASH :
+        case -1:
+            flps_output( "SL " );
+            ps_ls = FL_SOLID;
+            break;
 
-		default:
-			fprintf( stderr, "Unknown dashstyle: %d\n", n );
-			return;
+        default:
+            fprintf( stderr, "Unknown dashstyle: %d\n", n );
+            return;
     }
 
     ps_ls = n;
@@ -313,10 +313,10 @@ flps_get_linestyle( void )
 
 void
 flps_line( int  xi,
-		   int  yi,
-		   int  xf,
-		   int  yf,
-		   long col )
+           int  yi,
+           int  xf,
+           int  yf,
+           long col )
 {
     flps_color( col );
     flps_output( "%d %d %d %d L S\n", xf, yf, xi, yi );
@@ -333,8 +333,8 @@ flps_line( int  xi,
 
 static void
 small_flps_lines( FL_POINT * xp,
-				  int        n,
-				  long       col )
+                  int        n,
+                  long       col )
 {
     FL_POINT *xps = xp + n;
     int cnt = 1;
@@ -343,13 +343,13 @@ small_flps_lines( FL_POINT * xp,
 
     for ( ; xp < xps; xp++, cnt++ )
     {
-		flps_output( "%d %d ", ( int ) xp->x, ( int ) xp->y );
-		if ( cnt % 6 == 0 )
-			flps_output( "\n" );
+        flps_output( "%d %d ", ( int ) xp->x, ( int ) xp->y );
+        if ( cnt % 6 == 0 )
+            flps_output( "\n" );
     }
 
     if ( n )
-		flps_output( "%d lines\n", n );
+        flps_output( "%d lines\n", n );
 }
 
 
@@ -358,21 +358,21 @@ small_flps_lines( FL_POINT * xp,
 
 void
 flps_lines( FL_POINT * xp,
-			int        n,
-			long       col )
+            int        n,
+            long       col )
 {
     int k = n / PSMAXP,
-		r = n % PSMAXP;
+        r = n % PSMAXP;
     int b;
 
     /* need to backup one point if broken up the batch */
 
     for ( b = 0; b < k; b++ )
-		small_flps_lines( xp + b * PSMAXP - ( b > 0 ),
-						  PSMAXP + ( b > 0 ), col );
+        small_flps_lines( xp + b * PSMAXP - ( b > 0 ),
+                          PSMAXP + ( b > 0 ), col );
 
     if ( r )
-		small_flps_lines( xp + k * PSMAXP - ( k > 0 ), r + ( k > 0 ), col );
+        small_flps_lines( xp + k * PSMAXP - ( k > 0 ), r + ( k > 0 ), col );
 }
 
 
@@ -381,9 +381,9 @@ flps_lines( FL_POINT * xp,
 
 void
 flps_poly( int        fill,
-		   FL_POINT * xp,
-		   int        n,
-		   long       col )
+           FL_POINT * xp,
+           int        n,
+           long       col )
 {
     FL_POINT *xps = xp + n;
     int cnt = 1;
@@ -392,9 +392,9 @@ flps_poly( int        fill,
 
     for ( ; xp < xps; xp++, cnt++ )
     {
-		flps_output( "%d %d ", ( int ) xp->x, ( int ) xp->y );
-		if ( cnt % 6 == 0 )
-			flps_output( "\n" );
+        flps_output( "%d %d ", ( int ) xp->x, ( int ) xp->y );
+        if ( cnt % 6 == 0 )
+            flps_output( "\n" );
     }
 
     flps_output( "%d P %c\n", n, "SF"[ fill ] );
@@ -406,15 +406,15 @@ flps_poly( int        fill,
 
 void
 flps_rectangle( int  fill,
-				int  x,
-				int  y,
-				int  w,
-				int  h,
-				long col)
+                int  x,
+                int  y,
+                int  w,
+                int  h,
+                long col)
 {
     flps_color( col );
     flps_output( "%d %d %d %d %d %d %d %d 4 P",
-				 x, y, x, y + h - 1, x + w - 1, y + h - 1, x + w - 1, y );
+                 x, y, x, y + h - 1, x + w - 1, y + h - 1, x + w - 1, y );
     flps_output( " %c\n", "SF"[ fill ] );
 }
 
@@ -424,11 +424,11 @@ flps_rectangle( int  fill,
 
 void
 flps_oval( int  fill,
-		   int  x,
-		   int  y,
-		   int  w,
-		   int  h,
-		   long col )
+           int  x,
+           int  y,
+           int  w,
+           int  h,
+           long col )
 {
     flps_pieslice( fill, x, y, w, h, 0.0, 3600.0, col );
 }
@@ -439,10 +439,10 @@ flps_oval( int  fill,
 
 void
 flps_circ( int  fill,
-		   int  x,
-		   int  y,
-		   int  r,
-		   long col )
+           int  x,
+           int  y,
+           int  r,
+           long col )
 {
     flps_color( col );
     flps_output( "newpath %d %d %d 0 360 arc %c\n", x, y, r, "SF"[ fill ] );
@@ -456,16 +456,16 @@ flps_circ( int  fill,
 
 void
 flps_arc( int  fill,
-		  int  x,
-		  int  y,
-		  int  r,
-		  int  t1,
-		  int  t2,
-		  long col )
+          int  x,
+          int  y,
+          int  r,
+          int  t1,
+          int  t2,
+          long col )
 {
     flps_color( col );
     flps_output( "newpath %d %d %d %.1f %.1f arc %c\n",
-				 x, y, r, t1 * 0.1, t2 * 0.1, "SF"[ fill ] );
+                 x, y, r, t1 * 0.1, t2 * 0.1, "SF"[ fill ] );
 }
 
 
@@ -475,26 +475,26 @@ flps_arc( int  fill,
 
 void
 flps_pieslice( int  fill,
-			   int  x,
-			   int  y,
-			   int  w,
-			   int  h,
-			   int  t1,
-			   int  t2,
-			   long col )
+               int  x,
+               int  y,
+               int  w,
+               int  h,
+               int  t1,
+               int  t2,
+               long col )
 {
     float sx = 1.0,
-		  sy = ( float ) h / w;
+          sy = ( float ) h / w;
 
     flps_color( col );
     flps_output( "gsave newpath %.1f %.1f translate %.1f %.1f scale\n",
-				 x + 0.5f * w, y + 0.5f * h, sx, sy );
+                 x + 0.5f * w, y + 0.5f * h, sx, sy );
     if ( ! fill )
-		flps_output( "0 0 %.1f %.1f %.1f arc S grestore\n",
-					 w * 0.5, t1 * 0.1, t2 * 0.1 );
+        flps_output( "0 0 %.1f %.1f %.1f arc S grestore\n",
+                     w * 0.5, t1 * 0.1, t2 * 0.1 );
     else
-		flps_output( "0 0 M 0 0 %.1f %.1f %.1f arc C F grestore\n",
-					 w * 0.5, t1 * 0.1, t2 * 0.1 );
+        flps_output( "0 0 M 0 0 %.1f %.1f %.1f arc C F grestore\n",
+                     w * 0.5, t1 * 0.1, t2 * 0.1 );
 
     flps_invalidate_color_cache( );
 }
@@ -519,11 +519,11 @@ static FLI_IMAP fl_imap[ ] =
     { NV( FL_BLACK ), 0, 0, 0, 0, 0 },
     { NV( FL_WHITE ), 255, 255, 255, 0, 0 },
 
-    { NV( FL_COL1 ), 161, 161, 161, 0, 0 },		    /* default color, gray63 */
-    { NV( FL_MCOL ), 191, 191, 191, 0, 0 },		    /* used as magic, gray75 */
-    { NV( FL_RIGHT_BCOL ), 41, 41, 41, 0, 0 },	    /* right  gray16  */
-    { NV( FL_BOTTOM_BCOL ), 89, 89, 89, 0, 0 },	    /* bottom  gray35 */
-    { NV( FL_LEFT_BCOL ), 222, 222, 222, 0, 0 },	/* left color  gray87 */
+    { NV( FL_COL1 ), 161, 161, 161, 0, 0 },         /* default color, gray63 */
+    { NV( FL_MCOL ), 191, 191, 191, 0, 0 },         /* used as magic, gray75 */
+    { NV( FL_RIGHT_BCOL ), 41, 41, 41, 0, 0 },      /* right  gray16  */
+    { NV( FL_BOTTOM_BCOL ), 89, 89, 89, 0, 0 },     /* bottom  gray35 */
+    { NV( FL_LEFT_BCOL ), 222, 222, 222, 0, 0 },    /* left color  gray87 */
 
     { NV( FL_SLATEBLUE ), 113, 113, 198, 0, 0 },
     { NV( FL_INDIANRED ), 198, 113, 113, 0, 0 },
@@ -536,8 +536,8 @@ static FLI_IMAP fl_imap[ ] =
     { NV( FL_CYAN ), 0, 255, 255, 0, 0 },
     { NV( FL_TOMATO ), 255, 99, 71, 0, 0 },
 
-    { NV(FL_INACTIVE ), 110, 110, 110, 0, 0 },	    /* gray43       */
-    { NV(FL_TOP_BCOL ), 204, 204, 204, 0, 0 },	    /* top  gray80  */
+    { NV(FL_INACTIVE ), 110, 110, 110, 0, 0 },      /* gray43       */
+    { NV(FL_TOP_BCOL ), 204, 204, 204, 0, 0 },      /* top  gray80  */
 
     { NV( FL_PALEGREEN ), 113, 198, 113, 0, 0 },
     { NV( FL_DARKGOLD ), 205, 149, 10, 0, 0 },
@@ -565,24 +565,24 @@ void
 flps_apply_gamma( float gamma )
 {
     FLI_IMAP *fm = fl_imap,
-		     *fs;
+             *fs;
     float lastgamma = 1.0;
 
     if ( FL_abs(gamma) < 1.0e-3 )
     {
-		fprintf( stderr, "fd2ps: Bad Gamma value %.2f\n", gamma );
-		return;
+        fprintf( stderr, "fd2ps: Bad Gamma value %.2f\n", gamma );
+        return;
     }
 
     for ( fs = fm + builtin; fm < fs; fm++ )
     {
-		if ( flps->verbose )
-			fprintf( stderr, "fm->r=%d\n", fm->r );
-		fm->r = 0.4 + 255 * ( pow( fm->r / 255.0, lastgamma / gamma ) );
-		fm->g = 0.4 + 255 * ( pow( fm->g / 255.0, lastgamma / gamma ) );
-		fm->b = 0.4 + 255 * ( pow( fm->b / 255.0, lastgamma / gamma ) );
-		if ( flps->verbose )
-			fprintf( stderr, "fm->r=%d\n", fm->r );
+        if ( flps->verbose )
+            fprintf( stderr, "fm->r=%d\n", fm->r );
+        fm->r = 0.4 + 255 * ( pow( fm->r / 255.0, lastgamma / gamma ) );
+        fm->g = 0.4 + 255 * ( pow( fm->g / 255.0, lastgamma / gamma ) );
+        fm->b = 0.4 + 255 * ( pow( fm->b / 255.0, lastgamma / gamma ) );
+        if ( flps->verbose )
+            fprintf( stderr, "fm->r=%d\n", fm->r );
     }
 
     lastgamma = gamma;
@@ -594,21 +594,21 @@ flps_apply_gamma( float gamma )
 
 static void
 flps_query_imap( long   col,
-				 int  * r,
-				 int  * g,
-				 int  * b )
+                 int  * r,
+                 int  * g,
+                 int  * b )
 {
     FLI_IMAP *flmap = fl_imap,
-		     *flmape = flmap + builtin;
+             *flmape = flmap + builtin;
 
     for ( ; flmap < flmape; flmap++ )
-		if ( col == ( long ) flmap->index )
-		{
-			*r = flmap->r;
-			*g = flmap->g;
-			*b = flmap->b;
-			return;
-		}
+        if ( col == ( long ) flmap->index )
+        {
+            *r = flmap->r;
+            *g = flmap->g;
+            *b = flmap->b;
+            return;
+        }
 }
 
 
@@ -618,11 +618,11 @@ flps_query_imap( long   col,
 #ifndef FL_PACK
 #define FL_PACK( r, g, b )        ( ( b ) << 16 | ( g ) << 8 | ( r ) )
 #define FL_UNPACK( p, r, g, b )       \
-	do {							  \
-    	r = ( ( p )       ) & 0xff;	  \
-		g = ( ( p ) >>  8 ) &0xff;	  \
-		b = ( ( p ) >> 16 ) &0xff;	  \
-	} while ( 0 )
+    do {                              \
+        r = ( ( p )       ) & 0xff;   \
+        g = ( ( p ) >>  8 ) &0xff;    \
+        b = ( ( p ) >> 16 ) &0xff;    \
+    } while ( 0 )
 #endif
 
 
@@ -643,19 +643,19 @@ void
 flps_color( long color )
 {
     int r = 0,
-		g = 0,
-		b = 0;
+        g = 0,
+        b = 0;
 
     if ( color == FL_NoColor )
-		return;
+        return;
 
     if ( flps->isRGBColor )
-		FL_UNPACK( color, r, g, b );
+        FL_UNPACK( color, r, g, b );
     else
-		flps_query_imap( color, &r, &g, &b );
+        flps_query_imap( color, &r, &g, &b );
 
     if ( FL_PACK( r, g, b ) != flps->cur_color )
-		flps_rgbcolor( r, g, b );
+        flps_rgbcolor( r, g, b );
 }
 
 
@@ -664,20 +664,20 @@ flps_color( long color )
 
 void
 flps_rgbcolor( int r,
-			   int g,
-			   int b )
+               int g,
+               int b )
 {
     unsigned int packed = FL_PACK( r, g, b );
 
     if ( flps->cur_color == ( int ) packed )
-		return;
+        return;
 
     if ( flps->ps_color == FLPS_COLOR && ( r != g || r != b ) )
-		flps_output( "%.3g %.3g %.3g RGB ", C2NC( r ), C2NC( g ), C2NC( b ) );
+        flps_output( "%.3g %.3g %.3g RGB ", C2NC( r ), C2NC( g ), C2NC( b ) );
     else if ( flps->ps_color == FLPS_BW )
-		flps_output("%d G ", C2NC( rgb2gray( r, g, b ) ) > 0.62 );
-	else
-		flps_output( "%.3g G ", C2NC( rgb2gray( r, g, b ) ) );
+        flps_output("%d G ", C2NC( rgb2gray( r, g, b ) ) > 0.62 );
+    else
+        flps_output( "%.3g G ", C2NC( rgb2gray( r, g, b ) ) );
 
     flps->cur_color = FL_PACK( r, g, b );
 }
@@ -690,13 +690,13 @@ int
 flps_get_gray255( long color )
 {
     int r = 0,
-		g = 0,
-		b = 0;
+        g = 0,
+        b = 0;
 
     if ( flps->isRGBColor )
-		FL_UNPACK( color, r, g, b );
+        FL_UNPACK( color, r, g, b );
     else
-		flps_query_imap( color, &r, &g, &b );
+        flps_query_imap( color, &r, &g, &b );
 
     return rgb2gray( r, g, b ) + 0.1;
 }
@@ -709,11 +709,11 @@ int
 flps_get_namedcolor( const char * s )
 {
     FLI_IMAP *flmap = fl_imap,
-		     *flmape = flmap + builtin;
+             *flmape = flmap + builtin;
 
     for ( ; s && flmap < flmape; flmap++ )
-		if ( strcmp( s, flmap->name ) == 0 )
-			return flmap->index;
+        if ( strcmp( s, flmap->name ) == 0 )
+            return flmap->index;
 
     /* a wild shot */
 
@@ -731,8 +731,8 @@ typedef struct
     const char * draw;
     int          otherdef;
     PSdrawit     fdrawit;
-    int          abs_coordinate;	   /* fdrawit uses abs coordinate system */
-    int          defined;		       /* if def code emitted                */
+    int          abs_coordinate;       /* fdrawit uses abs coordinate system */
+    int          defined;              /* if def code emitted                */
 } PS_draw;
 
 
@@ -741,22 +741,22 @@ typedef struct
 
 static void
 draw_dnline( int x      FL_UNUSED_ARG,
-			 int y      FL_UNUSED_ARG,
-			 int w,
-			 int h,
-			 int angle  FL_UNUSED_ARG,
-			 long col   FL_UNUSED_ARG )
+             int y      FL_UNUSED_ARG,
+             int w,
+             int h,
+             int angle  FL_UNUSED_ARG,
+             long col   FL_UNUSED_ARG )
 {
     float t = 0.2,
-		  len;
+          len;
 
     flps_output( "%.2f %.2f LW ", 3.5 / ( w + h ), 3.5 / ( w + h ) );
     if ( w + h > 200 )
-		len = 0.99;
+        len = 0.99;
     else if ( w + h > 150 )
-		len = 0.98;
+        len = 0.98;
     else
-		len = 0.93;
+        len = 0.93;
 
     flps_color( FL_RIGHT_BCOL );
     flps_output( "-%.3f %.2f M %.3f %.2f LT S\n", len, t, len, t );
@@ -770,11 +770,11 @@ draw_dnline( int x      FL_UNUSED_ARG,
 
 static void
 draw_upline( int x      FL_UNUSED_ARG,
-			 int y      FL_UNUSED_ARG,
-			 int w,
-			 int h,
-			 int angle  FL_UNUSED_ARG,
-			 long col   FL_UNUSED_ARG )
+             int y      FL_UNUSED_ARG,
+             int w,
+             int h,
+             int angle  FL_UNUSED_ARG,
+             long col   FL_UNUSED_ARG )
 {
     float t = 0.033;
 
@@ -798,16 +798,16 @@ draw_upline( int x      FL_UNUSED_ARG,
 
 static void
 draw_uparrow( int x,
-			  int y,
-			  int w,
-			  int h,
-			  int angle,
-			  long col  FL_UNUSED_ARG )
+              int y,
+              int w,
+              int h,
+              int angle,
+              long col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
     float dx,
-		  dy;
+          dy;
     int d = 3 + ( w + h ) * 0.06;
 
     x += d;
@@ -819,27 +819,27 @@ draw_uparrow( int x,
 
     if ( angle == 90 )
     {
-		flps_line( xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL );
-		flps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL );
-		flps_line( xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL );
+        flps_line( xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL );
+        flps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL );
+        flps_line( xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL );
     }
     else if ( angle == 180 )
     {
-		flps_line( xc - dx, yc, xc + dx, yc + dy, FL_TOP_BCOL );
-		flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL );
-		flps_line( xc + dx, yc - dy, xc - dx, yc, FL_BOTTOM_BCOL );
+        flps_line( xc - dx, yc, xc + dx, yc + dy, FL_TOP_BCOL );
+        flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL );
+        flps_line( xc + dx, yc - dy, xc - dx, yc, FL_BOTTOM_BCOL );
     }
     else if ( angle == 270 )
     {
-		flps_line( xc - dx, yc + dy, xc, yc - dy, FL_BOTTOM_BCOL );
-		flps_line( xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
-		flps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL );
+        flps_line( xc - dx, yc + dy, xc, yc - dy, FL_BOTTOM_BCOL );
+        flps_line( xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL );
+        flps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL );
     }
     else
     {
-		flps_line( x, yc - dy, x + w, yc, FL_BOTTOM_BCOL );
-		flps_line( x, yc + dy, x + w, yc, FL_RIGHT_BCOL );
-		flps_line( x, yc - dy, x, yc + dy, FL_LEFT_BCOL );
+        flps_line( x, yc - dy, x + w, yc, FL_BOTTOM_BCOL );
+        flps_line( x, yc + dy, x + w, yc, FL_RIGHT_BCOL );
+        flps_line( x, yc - dy, x, yc + dy, FL_LEFT_BCOL );
     }
 }
 
@@ -849,16 +849,16 @@ draw_uparrow( int x,
 
 static void
 draw_dnarrow( int x,
-			  int y,
-			  int w,
-			  int h,
-			  int angle,
-			  long col   FL_UNUSED_ARG )
+              int y,
+              int w,
+              int h,
+              int angle,
+              long col   FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
     float dx,
-		  dy;
+          dy;
     int d = 3 + ( w + h ) * 0.06;
 
     x += d;
@@ -871,27 +871,27 @@ draw_dnarrow( int x,
 
     if ( angle == 90 )
     {
-		flps_line( xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
-		flps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL );
-		flps_line( xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL );
+        flps_line( xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL );
+        flps_line( xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL );
+        flps_line( xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL );
     }
     else if ( angle == 180 )
     {
-		flps_line( xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL );
-		flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL );
-		flps_line( xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL );
+        flps_line( xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL );
+        flps_line( xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL );
+        flps_line( xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL );
     }
     else if ( angle == 270 )
     {
-		flps_line( xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL );
-		flps_line( xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
-		flps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL );
+        flps_line( xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL );
+        flps_line( xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL );
+        flps_line( xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL );
     }
     else
     {
-		flps_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
-		flps_line( xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL );
-		flps_line( xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL );
+        flps_line( xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL );
+        flps_line( xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL );
+        flps_line( xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL );
     }
 }
 
@@ -902,52 +902,52 @@ draw_dnarrow( int x,
 
 static void
 draw_ripple_lines( int x,
-				   int y,
-				   int w,
-				   int h,
-				   int angle,
-				   long col  FL_UNUSED_ARG )
+                   int y,
+                   int w,
+                   int h,
+                   int angle,
+                   long col  FL_UNUSED_ARG )
 {
     float ym = y + h / 2,
-		  ys;
+          ys;
     float xm = x + w / 2,
-		  xs;
+          xs;
     int i,
-		mw = FL_BOUND_WIDTH;
+        mw = FL_BOUND_WIDTH;
 
     if ( h < 14 )
-		return;
+        return;
 
     xs = xm + 5;
     ys = ym + 5;
 
     if ( angle == 90 || angle == 270 )
     {
-		for ( i = 0; i < 3; i++ )
-		{
-			flps_line( xs, y + mw, xs, y + h - mw - 1, FL_RIGHT_BCOL );
-			xs -= 1;
-			flps_line( xs, y + mw, xs, y + h - mw - 1, FL_LEFT_BCOL );
-			xs -= 3;
-		}
+        for ( i = 0; i < 3; i++ )
+        {
+            flps_line( xs, y + mw, xs, y + h - mw - 1, FL_RIGHT_BCOL );
+            xs -= 1;
+            flps_line( xs, y + mw, xs, y + h - mw - 1, FL_LEFT_BCOL );
+            xs -= 3;
+        }
     }
     else
     {
-		for ( i = 0; i < 3; i++ )
-		{
-			flps_line( x + mw, ys, x + w - mw - 1, ys, FL_LEFT_BCOL );
-			ys -= 1;
-			flps_line( x + mw, ys, x + w - mw - 1, ys, FL_RIGHT_BCOL );
-			ys -= 3;
-		}
+        for ( i = 0; i < 3; i++ )
+        {
+            flps_line( x + mw, ys, x + w - mw - 1, ys, FL_LEFT_BCOL );
+            ys -= 1;
+            flps_line( x + mw, ys, x + w - mw - 1, ys, FL_RIGHT_BCOL );
+            ys -= 3;
+        }
     }
 }
 
 
 #define AddVertex( p, xp, yp)    do {             \
-	                                 p->x = xp;   \
-									 p->y = yp;   \
-									 p++;         \
+                                     p->x = xp;   \
+                                     p->y = yp;   \
+                                     p++;         \
                                  } while ( 0 )
 
 
@@ -956,22 +956,22 @@ draw_ripple_lines( int x,
 
 static void
 draw_bararrowhead( int  x,
-				   int  y,
-				   int  w,
-				   int  h,
-				   int  angle,
-				   long col )
+                   int  y,
+                   int  w,
+                   int  h,
+                   int  angle,
+                   long col )
 {
     float xc = x + 0.5 * w,
-		  yc = y + 0.5 * h;
+          yc = y + 0.5 * h;
     int d = 3 + ( w + h ) * 0.06;
     float dx,
-		  dy,
-		  mar,
-		  dbar,
-		  xl;
+          dy,
+          mar,
+          dbar,
+          xl;
     FL_POINT point[ 5 ],
-		     *p;
+             *p;
 
     x += d;
     y += d;
@@ -1010,11 +1010,11 @@ draw_bararrowhead( int  x,
 static PS_draw psdraw[ ] =
 {
     { "returnarrow", "symreturnarrow",
-	  "-0.8 0.0 -0.1 0.7 -0.1 0.05 0.6 0.05 0.6 0.7 0.7 0.7 0.7 -0.05\n"
-	  "-0.1 -0.05 -0.1 -0.7 9 P", 0, 0, 0, 0 },
+      "-0.8 0.0 -0.1 0.7 -0.1 0.05 0.6 0.05 0.6 0.7 0.7 0.7 0.7 -0.05\n"
+      "-0.1 -0.05 -0.1 -0.7 9 P", 0, 0, 0, 0 },
 
     { "->", "symrarrow",
-	  "-0.8 -0.4 -0.8 0.4 0 0.4 0 0.8 0.8 0 0 -0.8 0 -0.4 7 P", 0, 0, 0, 0 },
+      "-0.8 -0.4 -0.8 0.4 0 0.4 0 0.8 0.8 0 0 -0.8 0 -0.4 7 P", 0, 0, 0, 0 },
 
     { "<-", "180 rotate", 0, -1, 0, 0, 0 },
 
@@ -1023,44 +1023,44 @@ static PS_draw psdraw[ ] =
     { "<", "180 rotate", 0, -1, 0, 0, 0 },
 
     { "<->", "symdarrow",
-	  "-0.25 0.4 0.25 0.4 0.25 0.8 0.85 0 0.25 -0.8 0.25 -0.4 -0.25 -0.4\n"
-	  "-0.25 -0.8 -0.85 0 -0.25 0.8 10 P", 0, 0, 0, 0 },
+      "-0.25 0.4 0.25 0.4 0.25 0.8 0.85 0 0.25 -0.8 0.25 -0.4 -0.25 -0.4\n"
+      "-0.25 -0.8 -0.85 0 -0.25 0.8 10 P", 0, 0, 0, 0 },
 
     { "plus", "symplus",
-	  "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
-	  "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P",
-	  0, 0, 0, 0 },
+      "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
+      "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P",
+      0, 0, 0, 0 },
 
     { ">>", "symdarrowh",
-	  "0.15 0.7 0.85 0 0.15 -0.7 0.15 -0.001 -0.55 -0.7 -0.55 0.7 0.15 0.001\n"
-	  "7 P", 0, 0, 0, 0 },
+      "0.15 0.7 0.85 0 0.15 -0.7 0.15 -0.001 -0.55 -0.7 -0.55 0.7 0.15 0.001\n"
+      "7 P", 0, 0, 0, 0 },
 
     { "<<", "180 rotate", 0, -1, 0, 0, 0 },
 
     { "arrow", "symthinarrow",
-	  "-0.9 0.02 M 0.65 0.02 LT 0.65 0.15 LT 0.9 0 LT 0.65 -0.15 LT\n"
-	  "0.65 -0.02 LT -0.9 -0.02 LT C", 0, 0, 0, 0 },
+      "-0.9 0.02 M 0.65 0.02 LT 0.65 0.15 LT 0.9 0 LT 0.65 -0.15 LT\n"
+      "0.65 -0.02 LT -0.9 -0.02 LT C", 0, 0, 0, 0 },
 
     { "circle", "symcircle", "0 0 0.77 0 360 arc", 0, 0, 0, 0 },
 
     { "square", "symsquare",
-	  "-0.77 -0.77 M -0.77 0.77 LT 0.77 0.77 LT 0.77 -0.77 LT C",
-	  0, 0, 0, 0 },
+      "-0.77 -0.77 M -0.77 0.77 LT 0.77 0.77 LT 0.77 -0.77 LT C",
+      0, 0, 0, 0 },
 
     { "line", "symline",
-	  "-0.97 0.01 M  0.97 0.01 LT 0.97 -0.01 LT -0.08 -0.01 LT C",
-	  0, 0, 0, 0 },
+      "-0.97 0.01 M  0.97 0.01 LT 0.97 -0.01 LT -0.08 -0.01 LT C",
+      0, 0, 0, 0 },
 
     { "->|", "symarrowbar",
-	  "-0.75 0.35 -0.1 0.35 -0.1 0.75 0.6 0.001 0.6 0.75 0.75 0.75\n"
-	  " 0.75 -0.75 0.6 -0.75 0.6 -0.001 -0.1 -0.75 -0.1 -0.35 -0.75 "
-	  "-0.35 12 P\n", 0, 0, 0, 0 },
+      "-0.75 0.35 -0.1 0.35 -0.1 0.75 0.6 0.001 0.6 0.75 0.75 0.75\n"
+      " 0.75 -0.75 0.6 -0.75 0.6 -0.001 -0.1 -0.75 -0.1 -0.35 -0.75 "
+      "-0.35 12 P\n", 0, 0, 0, 0 },
 
     { "|<-", "180 rotate", 0, -1, 0, 0, 0 },
 
-    { ">|", "symarrowheadbar",	/* bar 0.25 */
-	  "-0.60 0.7 0.22 0.001 0.22 0.7 0.47 0.7 0.47 -0.7 0.22 -0.7\n"
-	  " 0.22 -0.001 -0.60 -0.7 8 P", 0, 0, 0, 0 },
+    { ">|", "symarrowheadbar",  /* bar 0.25 */
+      "-0.60 0.7 0.22 0.001 0.22 0.7 0.47 0.7 0.47 -0.7 0.22 -0.7\n"
+      " 0.22 -0.001 -0.60 -0.7 8 P", 0, 0, 0, 0 },
 
     { "|<", "180 rotate", 0, -1, 0, 0, 0 },
 
@@ -1080,18 +1080,18 @@ static PS_draw psdraw[ ] =
 
     { "=", "symRippleLines", 0, -1, draw_ripple_lines, 1, 0 },
 
-	/* aliases */
+    /* aliases */
 
     { "RippleLines", "symRippleLines", 0, -1, draw_ripple_lines, 1, 0 },
 
     { "+", "symplus",
-	  "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
-	  "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P",
-	  0, 0, 0, 0 },
+      "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
+      "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P",
+      0, 0, 0, 0 },
 
     { "-->", "symthinarrow",
-	  "-0.9 0.02 M 0.65 0.02 LT 0.65 0.15 LT 0.9 0 LT 0.65 -0.15 LT\n"
-	  "0.65 -0.02 LT -0.9 -0.02 LT C", 0, 0, 0, 0 }
+      "-0.9 0.02 M 0.65 0.02 LT 0.65 0.15 LT 0.9 0 LT 0.65 -0.15 LT\n"
+      "0.65 -0.02 LT -0.9 -0.02 LT C", 0, 0, 0, 0 }
 };
 
 
@@ -1103,11 +1103,11 @@ define_symbol( PS_draw * p )
 {
     if ( ! p->defined && ! p->fdrawit )
     {
-		if ( p->otherdef )
-			define_symbol( p + p->otherdef );
-		else
-			flps_output( "/%s {%s} BD\n", p->psname, p->draw );
-		p->defined = 1;
+        if ( p->otherdef )
+            define_symbol( p + p->otherdef );
+        else
+            flps_output( "/%s {%s} BD\n", p->psname, p->draw );
+        p->defined = 1;
     }
 }
 
@@ -1120,10 +1120,10 @@ void
 flps_invalidate_symbol_cache( void )
 {
     PS_draw *p = psdraw,
-		    *ps = psdraw + sizeof psdraw / sizeof *psdraw;
+            *ps = psdraw + sizeof psdraw / sizeof *psdraw;
 
     for ( ; p < ps; p++ )
-		p->defined = 0;
+        p->defined = 0;
 }
 
 
@@ -1134,24 +1134,24 @@ static PS_draw *
 find( const char * s )
 {
     PS_draw *p = psdraw,
-		    *ps = psdraw + sizeof psdraw / sizeof *psdraw;
+            *ps = psdraw + sizeof psdraw / sizeof *psdraw;
 
     for ( ; p < ps; p++ )
-		if ( strcmp( s, p->name ) == 0 )
-		{
-			define_symbol( p );
-			return p;
-		}
+        if ( strcmp( s, p->name ) == 0 )
+        {
+            define_symbol( p );
+            return p;
+        }
 
     return NULL;
 }
 
 
 #define swapit( t, a, b )      do {         \
-	                               t t_;    \
-								   t_ = a;  \
-								   a = b;   \
-								   b = t_;  \
+                                   t t_;    \
+                                   t_ = a;  \
+                                   a = b;   \
+                                   b = t_;  \
                                } while ( 0 )
 
 
@@ -1160,28 +1160,28 @@ find( const char * s )
 
 int
 flps_draw_symbol( const char * label,
-				  int          x,
-				  int          y,
-				  int          w,
-				  int          h,
-				  long         col )
+                  int          x,
+                  int          y,
+                  int          w,
+                  int          h,
+                  long         col )
 {
     int pos,
-		shift,
-		equalscale = 0;
+        shift,
+        equalscale = 0;
     short defr[ ] = { 0, 225, 270, 315, 180, 0, 0, 135, 90, 45 };
     PS_draw *s;
     int rotated = 0;
     int sw = w,
-		sh = h;
+        sh = h;
     int delta = 0;
 
     if ( ! label || *label != '@' )
-		return 0;
+        return 0;
 
     if ( flps->verbose )
-		fprintf( flps->fp, "%%Symbol %s: %d %d %d %d\n",
-				 label + 1, x, y, w, h );
+        fprintf( flps->fp, "%%Symbol %s: %d %d %d %d\n",
+                 label + 1, x, y, w, h );
 
     x += 1.2;
     y += 1.2;
@@ -1193,92 +1193,92 @@ flps_draw_symbol( const char * label,
     pos = 1;
 
     while (    ( label[ pos ] == '-' && isdigit( ( int ) label[ pos + 1 ] ) )
-			|| ( label[ pos ] == '+' && isdigit( ( int ) label[ pos + 1 ] ) )
-			|| label[pos] == '#' )
+            || ( label[ pos ] == '+' && isdigit( ( int ) label[ pos + 1 ] ) )
+            || label[pos] == '#' )
     {
-		switch ( label[ pos ] )
-		{
-			case '+' :
-				delta = '0' - label[ ++pos ];
-				break;
+        switch ( label[ pos ] )
+        {
+            case '+' :
+                delta = '0' - label[ ++pos ];
+                break;
 
-			case '-' :
-				delta = label[ ++pos ] - '0';
-				break;
+            case '-' :
+                delta = label[ ++pos ] - '0';
+                break;
 
-			case '#' :
-				equalscale = 1;
-				break;
-		}
+            case '#' :
+                equalscale = 1;
+                break;
+        }
 
-		pos++;
+        pos++;
     }
 
     shift = pos;
 
     if ( label[ pos ] >= '1' && label[ pos ] <= '9' )
     {
-		rotated = defr[ label[ pos ] - '0' ];
-		shift = pos + 1;
+        rotated = defr[ label[ pos ] - '0' ];
+        shift = pos + 1;
     }
     else if ( label[ pos ] == '0' )
     {
-		rotated =   100 * ( label[ pos + 1 ] - '0' )
-			      +  10 * ( label[ pos + 2 ] - '0' )
-			      +   1 * ( label[ pos + 3 ] - '0' );
-		shift = pos + 4;
+        rotated =   100 * ( label[ pos + 1 ] - '0' )
+                  +  10 * ( label[ pos + 2 ] - '0' )
+                  +   1 * ( label[ pos + 3 ] - '0' );
+        shift = pos + 4;
     }
 
     /* short hand with @4 etc */
 
     if ( ! ( s = ( label[ shift ] ? find( label + shift ) : psdraw ) ) )
     {
-		fprintf( stderr, "Bad label %s\n", label + shift );
-		if ( flps->verbose )
-			fprintf( flps->fp, "%% unknown symbol %s. Not drawn\n", label );
-		return 0;
+        fprintf( stderr, "Bad label %s\n", label + shift );
+        if ( flps->verbose )
+            fprintf( flps->fp, "%% unknown symbol %s. Not drawn\n", label );
+        return 0;
     }
 
     if ( equalscale )
-		sw = sh = FL_min( w, h );
+        sw = sh = FL_min( w, h );
 
     if ( delta )
     {
-		if ( s->abs_coordinate )
-		{
-			x += delta;
-			y += delta;
-		}
+        if ( s->abs_coordinate )
+        {
+            x += delta;
+            y += delta;
+        }
 
-		sw -= 2 * delta;
-		sh -= 2 * delta;
+        sw -= 2 * delta;
+        sh -= 2 * delta;
     }
 
     if ( sw <= 5 )
-		sw = 5;
+        sw = 5;
     if ( sh <= 5 )
-		sw = 5;
+        sw = 5;
 
     if ( ! s->abs_coordinate )
     {
-		flps_output( "gsave\n%.1f %.1f translate %.1f %.1f scale %d rotate ",
-					 x + 0.5 * w, y + 0.5 * h, 0.5 * sw, 0.5 * sh, rotated );
-		flps_output( "%.3f %.3f LW\n", 3.0 / ( sw + sh ), 3.0 / ( sh + sw ) );
+        flps_output( "gsave\n%.1f %.1f translate %.1f %.1f scale %d rotate ",
+                     x + 0.5 * w, y + 0.5 * h, 0.5 * sw, 0.5 * sh, rotated );
+        flps_output( "%.3f %.3f LW\n", 3.0 / ( sw + sh ), 3.0 / ( sh + sw ) );
     }
 
     if ( s->fdrawit )
     {
-		s->fdrawit( x, y, w, h, rotated, col );
-		if ( ! s->abs_coordinate )
-			flps_output( "grestore\n" );
-		flps_invalidate_color_cache( );
-		return 1;
+        s->fdrawit( x, y, w, h, rotated, col );
+        if ( ! s->abs_coordinate )
+            flps_output( "grestore\n" );
+        flps_invalidate_color_cache( );
+        return 1;
     }
 
     if ( s->otherdef )
     {
-		flps_output( "%s ", s->psname );
-		s = s + s->otherdef;
+        flps_output( "%s ", s->psname );
+        s = s + s->otherdef;
     }
 
     flps_color( col );
@@ -1313,15 +1313,15 @@ flps_emit_prolog( void )
 
     flps_output( "/P  {3 1 roll M 2 exch 1 exch {pop LT} for C} BD\n" );
     flps_output( "/lines {3 1 roll M 2 exch 1 exch {pop LT} for S} BD\n" );
-    flps_output( "/DTD {[5 4 1 4] 0 setdash} BD\n" );	/* dot-dash */
-    flps_output( "/DT {[1 3] 0 setdash} BD\n" );	    /* dot   */
-    flps_output( "/LD {[8 5] 0 setdash} BD\n" );	    /* long dash */
-    flps_output( "/D {[4 4] 0 setdash} BD\n" );	        /* dash */
-    flps_output( "/SL {[] 0 setdash} BD\n" );	        /* solid */
-    flps_output( "/NP {newpath} BD\n" );	            /* solid */
+    flps_output( "/DTD {[5 4 1 4] 0 setdash} BD\n" );   /* dot-dash */
+    flps_output( "/DT {[1 3] 0 setdash} BD\n" );        /* dot   */
+    flps_output( "/LD {[8 5] 0 setdash} BD\n" );        /* long dash */
+    flps_output( "/D {[4 4] 0 setdash} BD\n" );         /* dash */
+    flps_output( "/SL {[] 0 setdash} BD\n" );           /* solid */
+    flps_output( "/NP {newpath} BD\n" );                /* solid */
 
     flps_output( "/SX %.2g def /SY %.2g def\n",
-				 flps->final_xscale, flps->final_yscale );
+                 flps->final_xscale, flps->final_yscale );
 
     /* basic font support */
 
@@ -1339,31 +1339,31 @@ flps_emit_prolog( void )
 
 void
 flps_emit_header( const char * title,
-				  int          n,
-				  int          xi,
-				  int          yi,
-				  int          xf,
-				  int          yf )
+                  int          n,
+                  int          xi,
+                  int          yi,
+                  int          xf,
+                  int          yf )
 {
     if ( flps->eps )
-		fprintf( flps->fp, "%%!PS-Adobe-3.0 EPSF-2.0\n" );
+        fprintf( flps->fp, "%%!PS-Adobe-3.0 EPSF-2.0\n" );
     else
-		fprintf( flps->fp, "%%!PS-Adobe-1.0\n" );
+        fprintf( flps->fp, "%%!PS-Adobe-1.0\n" );
 
     fprintf( flps->fp, "%%%%Title: %s\n", title );
     fprintf( flps->fp, "%%%%For: %s\n", fl_whoami( ) );
     fprintf( flps->fp, "%%%%CreateDate: %s\n", fl_now( ) );
     fprintf( flps->fp, "%%%%Creator: xforms V%d.%d.%s "
-			 "Copyright (c) 1997-1999 T.C. Zhao and M. Overmars\n",
-			 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
+             "Copyright (c) 1997-1999 T.C. Zhao and M. Overmars\n",
+             FL_VERSION, FL_REVISION, FL_FIXLEVEL );
     fprintf( flps->fp, "%%%%Pages: %d\n", n );
     fprintf( flps->fp, "%%%%BoundingBox: %d %d %d %d\n", xi, yi, xf, yf );
     fprintf( flps->fp, "%%%%Orientation: %s\n",
-			 flps->landscape ? "Landscape" : "Portrait" );
+             flps->landscape ? "Landscape" : "Portrait" );
     fprintf( flps->fp, "%%%%EndComments\n" );
 
     fprintf( flps->fp, "%% PaperSize: %.1fx%.1fin\n",
-			 flps->paper_w, flps->paper_h );
+             flps->paper_w, flps->paper_h );
 }
 
 
@@ -1372,15 +1372,15 @@ flps_emit_header( const char * title,
 
 void
 flps_set_clipping( int x,
-				   int y,
-				   int w,
-				   int h )
+                   int y,
+                   int w,
+                   int h )
 {
-#if 0				/* rectclip is a level 2 feature */
+#if 0               /* rectclip is a level 2 feature */
     flps_output( "gsave NP %d %d %d %d rectclip\n", x, y, w, h );
 #else
     flps_output( "gsave NP %d %d M %d 0 RLT 0 %d RLT %d neg 0 RLT CP clip NP\n",
-				 x, y, w, h, w );
+                 x, y, w, h, w );
 #endif
 }
 
@@ -1394,3 +1394,11 @@ flps_unset_clipping( void )
     flps_output( "grestore\n" );
     flps_reset_cache( );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

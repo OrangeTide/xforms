@@ -51,13 +51,13 @@ get_pos_spec_fdform( void )
 {
     if ( ! pos_attrib )
     {
-		pos_attrib = create_form_posattrib( );
+        pos_attrib = create_form_posattrib( );
 
-		set_up_how_return_menu( pos_attrib->returnsetting );
-		fl_set_menu_item_mode( pos_attrib->returnsetting, 5,
-							   FL_PUP_BOX | FL_PUP_GRAY );
-		fl_set_menu_item_mode( pos_attrib->returnsetting, 6,
-							   FL_PUP_BOX | FL_PUP_GRAY );
+        set_up_how_return_menu( pos_attrib->returnsetting );
+        fl_set_menu_item_mode( pos_attrib->returnsetting, 5,
+                               FL_PUP_BOX | FL_PUP_GRAY );
+        fl_set_menu_item_mode( pos_attrib->returnsetting, 6,
+                               FL_PUP_BOX | FL_PUP_GRAY );
     }
 
     return pos_attrib;
@@ -69,7 +69,7 @@ get_pos_spec_fdform( void )
 
 void
 pos_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-				  long        data  FL_UNUSED_ARG )
+                  long        data  FL_UNUSED_ARG )
 {
     superspec_to_spec( pos_attrib->vdata );
     init_spec(get_superspec( pos_attrib->vdata ) );
@@ -94,7 +94,7 @@ init_spec( SuperSPEC * spec )
     set_finput_value( pos_attrib->xstep, spec->xstep, -1 );
     set_finput_value( pos_attrib->ystep, spec->ystep, -1 );
 
-	reset_how_return_menu( pos_attrib->returnsetting, spec->how_return );
+    reset_how_return_menu( pos_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -117,14 +117,14 @@ set_pos_attrib( FL_OBJECT * ob )
 
 void
 emit_pos_code( FILE      * fp,
-			   FL_OBJECT * ob )
+               FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *spec,
-		      *defspec;
+              *defspec;
 
     if ( ob->objclass != FL_POSITIONER )
-		return;
+        return;
 
     /* create a default object */
 
@@ -134,24 +134,24 @@ emit_pos_code( FILE      * fp,
     spec = get_superspec( ob );
 
     if ( spec->xmin != defspec->xmin || spec->xmax != defspec->xmax )
-		fprintf( fp, "    fl_set_positioner_xbounds( obj, %g, %g );\n",
-				 spec->xmin, spec->xmax );
+        fprintf( fp, "    fl_set_positioner_xbounds( obj, %g, %g );\n",
+                 spec->xmin, spec->xmax );
 
     if ( spec->ymin != defspec->ymin || spec->ymax != defspec->ymax )
-		fprintf( fp, "    fl_set_positioner_ybounds( obj, %g, %g );\n",
-				 spec->ymin, spec->ymax );
+        fprintf( fp, "    fl_set_positioner_ybounds( obj, %g, %g );\n",
+                 spec->ymin, spec->ymax );
 
     if ( spec->xval != defspec->xval )
-		fprintf( fp, "    fl_set_positioner_xvalue( obj, %g );\n", spec->xval );
+        fprintf( fp, "    fl_set_positioner_xvalue( obj, %g );\n", spec->xval );
 
     if ( spec->yval != defspec->yval )
-		fprintf( fp, "    fl_set_positioner_yvalue( obj, %g );\n", spec->yval );
+        fprintf( fp, "    fl_set_positioner_yvalue( obj, %g );\n", spec->yval );
 
     if ( spec->xstep != defspec->xstep )
-		fprintf( fp, "    fl_set_positioner_xstep( obj, %g );\n", spec->xstep );
+        fprintf( fp, "    fl_set_positioner_xstep( obj, %g );\n", spec->xstep );
 
     if ( spec->ystep != defspec->ystep )
-		fprintf( fp, "    fl_set_positioner_ystep( obj, %g );\n", spec->ystep );
+        fprintf( fp, "    fl_set_positioner_ystep( obj, %g );\n", spec->ystep );
 
     fl_free_object( defobj );
 }
@@ -162,14 +162,14 @@ emit_pos_code( FILE      * fp,
 
 void
 save_pos_attrib( FILE      * fp,
-				 FL_OBJECT * ob )
+                 FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *defspec,
-		      *spec;
+              *spec;
 
     if ( ob->objclass != FL_POSITIONER )
-		return;
+        return;
 
     /* create a default object */
 
@@ -179,22 +179,22 @@ save_pos_attrib( FILE      * fp,
     spec = get_superspec( ob );
 
     if ( spec->xmin != defspec->xmin || spec->xmax != defspec->xmax )
-		fprintf( fp, "    xbounds: %g %g\n", spec->xmin, spec->xmax );
+        fprintf( fp, "    xbounds: %g %g\n", spec->xmin, spec->xmax );
 
     if ( spec->ymin != defspec->ymin || spec->ymax != defspec->ymax )
-		fprintf( fp, "    ybounds: %g %g\n", spec->ymin, spec->ymax );
+        fprintf( fp, "    ybounds: %g %g\n", spec->ymin, spec->ymax );
 
     if ( spec->xval != defspec->xval )
-		fprintf( fp, "    xvalue: %g\n", spec->xval );
+        fprintf( fp, "    xvalue: %g\n", spec->xval );
 
     if ( spec->yval != defspec->yval )
-		fprintf( fp, "    yvalue: %g\n", spec->yval );
+        fprintf( fp, "    yvalue: %g\n", spec->yval );
 
     if ( spec->xstep != defspec->xstep )
-		fprintf( fp, "    xstep: %g\n", spec->xstep );
+        fprintf( fp, "    xstep: %g\n", spec->xstep );
 
     if ( spec->ystep != defspec->ystep )
-		fprintf( fp, "    ystep: %g\n", spec->ystep );
+        fprintf( fp, "    ystep: %g\n", spec->ystep );
 
     fl_free_object( defobj );
 }
@@ -205,7 +205,7 @@ save_pos_attrib( FILE      * fp,
 
 void
 pos_xminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-					long        data  FL_UNUSED_ARG )
+                    long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value( pos_attrib->xminval );
     double max = get_finput_value( pos_attrib->xmaxval );
@@ -213,7 +213,7 @@ pos_xminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_set_positioner_xbounds( pos_attrib->vdata, min, max );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -222,7 +222,7 @@ pos_xminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 pos_yminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-					long        data  FL_UNUSED_ARG )
+                    long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value( pos_attrib->yminval );
     double max = get_finput_value( pos_attrib->ymaxval );
@@ -230,7 +230,7 @@ pos_yminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_set_positioner_ybounds( pos_attrib->vdata, min, max );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -239,14 +239,14 @@ pos_yminmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 pos_xstepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-					long        data  FL_UNUSED_ARG )
+                    long        data  FL_UNUSED_ARG )
 {
     float s = get_finput_value( pos_attrib->xstep );
 
     fl_set_positioner_xstep( pos_attrib->vdata, s );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -255,14 +255,14 @@ pos_xstepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 pos_ystepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-					long        data  FL_UNUSED_ARG )
+                    long        data  FL_UNUSED_ARG )
 {
     float s = get_finput_value( pos_attrib->ystep );
 
     fl_set_positioner_ystep( pos_attrib->vdata, s );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -271,14 +271,14 @@ pos_ystepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 pos_initialxvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-						  long        data  FL_UNUSED_ARG )
+                          long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value( pos_attrib->initialxval );
 
     fl_set_positioner_xvalue( pos_attrib->vdata, val );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -287,14 +287,14 @@ pos_initialxvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 pos_initialyvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-						  long        data  FL_UNUSED_ARG)
+                          long        data  FL_UNUSED_ARG)
 {
     double val = get_finput_value( pos_attrib->initialyval );
 
     fl_set_positioner_yvalue( pos_attrib->vdata, val );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -303,10 +303,18 @@ pos_initialyvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 pos_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-						  long        data  FL_UNUSED_ARG )
+                          long        data  FL_UNUSED_ARG )
 {
-	handle_how_return_changes( pos_attrib->returnsetting,
-							   pos_attrib->vdata );
+    handle_how_return_changes( pos_attrib->returnsetting,
+                               pos_attrib->vdata );
 }
 
 #include "spec/positioner_spec.c"
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

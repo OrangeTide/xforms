@@ -18,11 +18,10 @@
 
 /**
  * \file pcanvas.h
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  */
 
 #ifndef PCANVAS_H
@@ -32,33 +31,33 @@
 /* Canvas specific stuff */
 
 typedef struct {
-    const char            * winname;	/* name of the window                */
-    Window                  parent;		/* real parent(needed for dblbuffer) */
-    Window                  window;		/* Canvas window                     */
-    Visual                * visual;		/* canvas visual                     */
-    void                  * context;	/* context for glx/mesa              */
+    const char            * winname;    /* name of the window                */
+    Window                  parent;     /* real parent(needed for dblbuffer) */
+    Window                  window;     /* Canvas window                     */
+    Visual                * visual;     /* canvas visual                     */
+    void                  * context;    /* context for glx/mesa              */
 
     FL_MODIFY_CANVAS_PROP   init;
     FL_MODIFY_CANVAS_PROP   activate;
     FL_MODIFY_CANVAS_PROP   cleanup;
 
-    Colormap                colormap;	/* colormap for the canvas       */
+    Colormap                colormap;   /* colormap for the canvas       */
     GC                      gc;
     unsigned int            mask,
-	                        user_mask;
+                            user_mask;
     int                     depth;
-    int                     dec_type;	/* if and how to decorate canvas */
-    int                     x,			/* window size                   */
-	                        y,
-	                        w,
-	                        h;
+    int                     dec_type;   /* if and how to decorate canvas */
+    int                     x,          /* window size                   */
+                            y,
+                            w,
+                            h;
     int                     yield_to_shortcut;  /* other object's shortcut
-												 has priority */
+                                                 has priority */
 
     XSetWindowAttributes    xswa;
     XSetWindowAttributes    user_xswa;
 
-    FL_OBJECT             * last_active;	/* last sp->activated object */
+    FL_OBJECT             * last_active;    /* last sp->activated object */
 
     /* this is not exactly right. sort of wasteful */
 
@@ -66,12 +65,20 @@ typedef struct {
     void *                   user_data[ LASTEvent ];
     int                      keep_colormap;
 
-    Window                   swindow;		/* scrolled/subwindow           */
+    Window                   swindow;       /* scrolled/subwindow           */
     int                      sx,
-	                         sy,
-	                         sw,
-	                         sh;			/* scrolled window size          */
+                             sy,
+                             sw,
+                             sh;            /* scrolled window size          */
 } FLI_CANVAS_SPEC;
 
 
 #endif /* PCANVAS_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

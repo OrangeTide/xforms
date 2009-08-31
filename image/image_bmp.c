@@ -40,30 +40,30 @@
 
 typedef struct
 {
-    long fsize;			/* total file size              */
+    long fsize;         /* total file size              */
     long offset;
-    int infosize;		/* supposedly 40 bytes          */
-    int bpp;			/* bits per pixel               */
-    int w, h;			/* width & height in pixels     */
-    int col_used;		/* actual colors used           */
+    int infosize;       /* supposedly 40 bytes          */
+    int bpp;            /* bits per pixel               */
+    int w, h;           /* width & height in pixels     */
+    int col_used;       /* actual colors used           */
     int col_important;
     int planes;
-    int encode;			/* compression method           */
-    long isize;			/* (compressed) image size      */
-    int xres, yres;		/* pix per meter                */
-    int bpl;			/* bytes per line               */
-    int pad;			/* line pad                     */
+    int encode;         /* compression method           */
+    long isize;         /* (compressed) image size      */
+    int xres, yres;     /* pix per meter                */
+    int bpl;            /* bytes per line               */
+    int pad;            /* line pad                     */
 }
 SPEC;
 
 static int load_24bit_bmp( FL_IMAGE *,
-						   SPEC     * );
+                           SPEC     * );
 static int load_8bit_bmp( FL_IMAGE *,
-						  SPEC     * );
+                          SPEC     * );
 static int load_4bit_bmp( FL_IMAGE *,
-						  SPEC     * );
+                          SPEC     * );
 static int load_1bit_bmp( FL_IMAGE *,
-						  SPEC     * );
+                          SPEC     * );
 
 
 /***************************************
@@ -73,7 +73,7 @@ static int
 BMP_identify( FILE * fp )
 {
     char buf[ 2 ];
-	size_t c;
+    size_t c;
 
     c = fread( buf, 1, 2, fp );
     rewind( fp );
@@ -88,21 +88,21 @@ BMP_identify( FILE * fp )
 #if BMPDEBUG
 static void
 dump_header( const char * where,
-			 SPEC       * sp )
+             SPEC       * sp )
 {
     fprintf( stderr, "%s\noffset=%ld infosize=%d\n", where,
-			 sp->offset, sp->infosize );
+             sp->offset, sp->infosize );
     fprintf( stderr, "bpl=%d ", sp->bpl );
     fprintf( stderr, "w=%d h=%d bpp=%d col_used=%d important=%d\n",
-			 sp->w, sp->h, sp->bpp, sp->col_used, sp->col_important );
+             sp->w, sp->h, sp->bpp, sp->col_used, sp->col_important );
 }
 #endif
 
 enum
 {
     E_RGB,
-	E_RLE8,
-	E_RLE4
+    E_RLE8,
+    E_RLE4
 };
 
 #define bad_bpp( b ) ( b != 1 && b != 4 && b != 8 && b != 24 )
@@ -127,8 +127,8 @@ generate_header_info( FL_IMAGE * im )
 
     if ( sp->bpp != 24 )
     {
-		sprintf( buf,"ColorUsed=%d\n", sp->col_used );
-		strcat( im->info,buf );
+        sprintf( buf,"ColorUsed=%d\n", sp->col_used );
+        strcat( im->info,buf );
     }
 
     sprintf( buf,"Encoding=%s", encoding[ sp->encode ] );
@@ -148,18 +148,18 @@ BMP_description( FL_IMAGE * im )
 
     if ( fread( buf, 1, 2, im->fpin ) != 2 )
     {
-		im->error_message( im, "error while readin bmp file" );
-		fl_free( sp );
-		return -1;
+        im->error_message( im, "error while readin bmp file" );
+        fl_free( sp );
+        return -1;
     }
 
     sp->fsize = fli_fget4LSBF( im->fpin );
 
     if ( fread( buf, 1, 4, im->fpin ) != 4 )
     {
-		im->error_message( im, "error while reading bmp file" );
-		fl_free( sp );
-		return -1;
+        im->error_message( im, "error while reading bmp file" );
+        fl_free( sp );
+        return -1;
     }
 
     sp->offset = fli_fget4LSBF( im->fpin );
@@ -167,9 +167,9 @@ BMP_description( FL_IMAGE * im )
 
     if ( sp->infosize != 40 && sp->infosize != 64 )
     {
-		im->error_message( im, "unsupported old obsolete bmp file" );
-		fl_free( sp );
-		return -1;
+        im->error_message( im, "unsupported old obsolete bmp file" );
+        fl_free( sp );
+        return -1;
     }
 
     im->io_spec = sp;
@@ -186,25 +186,25 @@ BMP_description( FL_IMAGE * im )
 
     if ( bad_bpp( sp->bpp ) )
     {
-		flimage_error( im, "%s: bad bpp (%d)", im->infile, sp->bpp );
-		fl_free( im->io_spec );
-		im->io_spec = 0;
-		return -1;
+        flimage_error( im, "%s: bad bpp (%d)", im->infile, sp->bpp );
+        fl_free( im->io_spec );
+        im->io_spec = 0;
+        return -1;
     }
 
     if ( sp->infosize != 40 )
     {
-		int skip = sp->infosize - 40;
+        int skip = sp->infosize - 40;
 
-		if (    skip < 0
-			 || fread( buf, 1, skip, im->fpin ) != ( size_t ) skip )
-		{
-			flimage_error( im, "%s: error while reading bmp file",
-						   im->infile );
-			fl_free( im->io_spec );
-			im->io_spec = 0;
-			return -1;
-		}
+        if (    skip < 0
+             || fread( buf, 1, skip, im->fpin ) != ( size_t ) skip )
+        {
+            flimage_error( im, "%s: error while reading bmp file",
+                           im->infile );
+            fl_free( im->io_spec );
+            im->io_spec = 0;
+            return -1;
+        }
     }
 
     im->w = sp->w;
@@ -214,34 +214,34 @@ BMP_description( FL_IMAGE * im )
 
     if ( sp->bpp != 24 )
     {
-		if ( ( im->map_len = sp->col_used ) <= 0 )
-			im->map_len = 1 << sp->bpp;
-		flimage_getcolormap( im );
-		for ( i = 0; i < im->map_len; i++ )
-		{
-			im->blue_lut[ i ]  = getc( im->fpin );
-			im->green_lut[ i ] = getc( im->fpin );
-			im->red_lut[ i ]   = getc( im->fpin );
-			im->alpha_lut[ i ] = getc( im->fpin );
-		}
+        if ( ( im->map_len = sp->col_used ) <= 0 )
+            im->map_len = 1 << sp->bpp;
+        flimage_getcolormap( im );
+        for ( i = 0; i < im->map_len; i++ )
+        {
+            im->blue_lut[ i ]  = getc( im->fpin );
+            im->green_lut[ i ] = getc( im->fpin );
+            im->red_lut[ i ]   = getc( im->fpin );
+            im->alpha_lut[ i ] = getc( im->fpin );
+        }
     }
 
     sp->bpl = ( sp->w * sp->bpp + 7 ) / 8;
-    sp->pad = ( ( sp->bpl + 3 ) / 4 ) * 4 - sp->bpl;	/* pad to 4 bytes */
+    sp->pad = ( ( sp->bpl + 3 ) / 4 ) * 4 - sp->bpl;    /* pad to 4 bytes */
 
     if ( sp->bpp == 24 )
-		im->type = FL_IMAGE_RGB;
+        im->type = FL_IMAGE_RGB;
     else if ( sp->bpp == 1 )
-		im->type = FL_IMAGE_MONO;
+        im->type = FL_IMAGE_MONO;
     else
-		im->type = FL_IMAGE_CI;
+        im->type = FL_IMAGE_CI;
 
 #if BMPDEBUG
     dump_header( "after read", sp );
 #endif
 
     if ( im->setup->header_info )
-		generate_header_info( im );
+        generate_header_info( im );
 
     return 1;
 }
@@ -261,13 +261,13 @@ BMP_read_pixels( FL_IMAGE * im )
     im->completed = 0;
 
     if ( sp->bpp == 24 )
-		status = load_24bit_bmp( im, sp );
+        status = load_24bit_bmp( im, sp );
     else if ( sp->bpp == 8 )
-		status = load_8bit_bmp( im, sp );
+        status = load_8bit_bmp( im, sp );
     else if ( sp->bpp == 4 )
-		status = load_4bit_bmp( im, sp );
+        status = load_4bit_bmp( im, sp );
     else
-		status = load_1bit_bmp( im, sp );
+        status = load_1bit_bmp( im, sp );
 
     return status;
 }
@@ -278,33 +278,33 @@ BMP_read_pixels( FL_IMAGE * im )
 
 static int
 load_24bit_bmp( FL_IMAGE * im,
-				SPEC     * sp )
+                SPEC     * sp )
 {
     FILE *fp = im->fpin;
     int i,
-		j;
+        j;
     unsigned char *red,
-		          *green,
-		          *blue;
+                  *green,
+                  *blue;
 
     for ( i = im->h - 1; ! feof( fp ) && i >= 0; i--, im->completed++ )
     {
-		red   = im->red[ i ];
-		green = im->green[ i ];
-		blue  = im->blue[ i ];
+        red   = im->red[ i ];
+        green = im->green[ i ];
+        blue  = im->blue[ i ];
 
-		for ( j = 0; j < im->w; j++ )
-		{
-			blue[ j ]  = getc( fp );
-			green[ j ] = getc( fp );
-			red[ j ]   = getc( fp );
-		}
+        for ( j = 0; j < im->w; j++ )
+        {
+            blue[ j ]  = getc( fp );
+            green[ j ] = getc( fp );
+            red[ j ]   = getc( fp );
+        }
 
-		for ( j = 0; j < sp->pad; j++ )
-			getc( fp );
+        for ( j = 0; j < sp->pad; j++ )
+            getc( fp );
 
-		if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
-			im->visual_cue( im, "Reading 24bit BMP" );
+        if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
+            im->visual_cue( im, "Reading 24bit BMP" );
     }
 
     return ( i < im->h / 2 ) ? 1 : -1;
@@ -316,74 +316,74 @@ load_24bit_bmp( FL_IMAGE * im,
 
 static int
 load_8bit_bmp( FL_IMAGE * im,
-			   SPEC     * sp )
+               SPEC     * sp )
 {
     FILE *fp = im->fpin;
     int i,
-		j,
-		k,
-		len,
-		pix;
+        j,
+        k,
+        len,
+        pix;
     unsigned short *ci;
 
     if ( sp->encode == E_RGB )
     {
-		for ( i = im->h - 1; i >= 0 && ! feof( fp ); i--, im->completed++ )
-		{
-			ci = im->ci[ i ];
+        for ( i = im->h - 1; i >= 0 && ! feof( fp ); i--, im->completed++ )
+        {
+            ci = im->ci[ i ];
 
-			for ( j = 0; j < im->w + sp->pad; j++ )
-			{
-				/* check for EOF so we can display partial files */
+            for ( j = 0; j < im->w + sp->pad; j++ )
+            {
+                /* check for EOF so we can display partial files */
 
-				if ( ( pix = getc( fp ) ) != EOF && j < im->w )
-					*ci++ = pix;
-			}
+                if ( ( pix = getc( fp ) ) != EOF && j < im->w )
+                    *ci++ = pix;
+            }
 
-			if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
-				im->visual_cue( im, "Reading 8bit BMP" );
-		}
+            if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
+                im->visual_cue( im, "Reading 8bit BMP" );
+        }
     }
     else
     {
-		ci = im->ci[ im->h - 1 ];
+        ci = im->ci[ im->h - 1 ];
 
-		for ( i = im->h - 1; i >= 0 && ! feof( fp ); )
-		{
-			len = getc( fp );
-			pix = getc( fp );
+        for ( i = im->h - 1; i >= 0 && ! feof( fp ); )
+        {
+            len = getc( fp );
+            pix = getc( fp );
 
-			if ( len )
-			{
-				while ( --len >= 0 )
-					*ci++ = pix;
-			}
-			else
-			{
-				if ( pix == 0 )
-					ci = im->ci[ --i ];
-				else if ( pix == 1 )
-					goto done;
-				else if ( pix == 2 )
-				{
-					/* the document is unclear. don't know what does down
-					   mean */
-					ci += getc( fp );
-					i += ( pix = getc( fp ) );
-					ci -= pix * im->w;
-				}
-				else
-				{
-					for ( k = 0; k < pix; k++ )
-						*ci++ = getc( fp );
-					if ( k & 1 )
-						getc( fp );
-				}
-			}
+            if ( len )
+            {
+                while ( --len >= 0 )
+                    *ci++ = pix;
+            }
+            else
+            {
+                if ( pix == 0 )
+                    ci = im->ci[ --i ];
+                else if ( pix == 1 )
+                    goto done;
+                else if ( pix == 2 )
+                {
+                    /* the document is unclear. don't know what does down
+                       mean */
+                    ci += getc( fp );
+                    i += ( pix = getc( fp ) );
+                    ci -= pix * im->w;
+                }
+                else
+                {
+                    for ( k = 0; k < pix; k++ )
+                        *ci++ = getc( fp );
+                    if ( k & 1 )
+                        getc( fp );
+                }
+            }
 
-			if ( ! ( ( im->completed = im->h - i - 1 ) & FLIMAGE_REPFREQ ) )
-				im->visual_cue( im, "Reading 8bit encoded BMP" );
-		}
+            if ( ! ( ( im->completed = im->h - i - 1 ) & FLIMAGE_REPFREQ ) )
+                im->visual_cue( im, "Reading 8bit encoded BMP" );
+        }
     }
 
  done:
@@ -396,86 +396,86 @@ load_8bit_bmp( FL_IMAGE * im,
 
 static int
 load_4bit_bmp( FL_IMAGE * im,
-			   SPEC     * sp )
+               SPEC     * sp )
 {
     FILE *fp = im->fpin;
     int i = -1,
-		j,
-		c,
-		k,
-		len,
-		pix;
+        j,
+        c,
+        k,
+        len,
+        pix;
     unsigned short *ci,
-		           *cis = 0;
+                   *cis = 0;
 
     if ( sp->encode == E_RGB )
     {
-		for ( i = im->h - 1; i >= 0 && ! feof( fp ); i--, im->completed++ )
-		{
-			ci = im->ci[ i ];
-			cis = ci + im->w;
+        for ( i = im->h - 1; i >= 0 && ! feof( fp ); i--, im->completed++ )
+        {
+            ci = im->ci[ i ];
+            cis = ci + im->w;
 
-			for ( j = 0; j < sp->bpl; j++ )
-			{
-				c = getc( fp );
-				*ci++ = ( c >> 4 ) & 0x0f;
-				if ( ci < cis )
-					*ci++ = c & 0x0f;
-			}
-			for ( ; j < sp->bpl + sp->pad; j++ )
-				getc( fp );
+            for ( j = 0; j < sp->bpl; j++ )
+            {
+                c = getc( fp );
+                *ci++ = ( c >> 4 ) & 0x0f;
+                if ( ci < cis )
+                    *ci++ = c & 0x0f;
+            }
+            for ( ; j < sp->bpl + sp->pad; j++ )
+                getc( fp );
 
-			if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
-				im->visual_cue( im, "Reading 4bit BMP" );
-		}
+            if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
+                im->visual_cue( im, "Reading 4bit BMP" );
+        }
     }
     else
     {
-		for ( i = im->h - 1; i >= 0 && ! feof( fp ); )
-		{
-			ci = im->ci[ i ];
-			len = getc( fp );
-			pix = getc( fp );
+        for ( i = im->h - 1; i >= 0 && ! feof( fp ); )
+        {
+            ci = im->ci[ i ];
+            len = getc( fp );
+            pix = getc( fp );
 
-			if ( len )
-			{
-				/* len is the number of pixels, not bytes */
+            if ( len )
+            {
+                /* len is the number of pixels, not bytes */
 
-				for ( k = 0; k < len; k++ )
-					*ci++ = ( ( k & 1 ) ? pix : ( pix >> 4 ) ) & 0x0f;
-			}
-			else
-			{
-				if ( pix == 0 )
-					ci = im->ci[ --i] ;
-				else if ( pix == 1 )
-					goto done;
-				else if ( pix == 2 )
-				{
-					ci += getc( fp );
-					i += ( pix = getc( fp ) );
-					ci -= pix * im->w;
-				}
-				else
-				{
-					for ( k = 0, len = pix; k < len; k++ )
-					{
-						if ( ( k & 1 ) == 0 )
-							pix = getc( fp );
-						*ci++ = ( ( k & 1 ) ? pix : ( pix >> 4 ) ) & 0x0f;
-					}
+                for ( k = 0; k < len; k++ )
+                    *ci++ = ( ( k & 1 ) ? pix : ( pix >> 4 ) ) & 0x0f;
+            }
+            else
+            {
+                if ( pix == 0 )
+                    ci = im->ci[ --i] ;
+                else if ( pix == 1 )
+                    goto done;
+                else if ( pix == 2 )
+                {
+                    ci += getc( fp );
+                    i += ( pix = getc( fp ) );
+                    ci -= pix * im->w;
+                }
+                else
+                {
+                    for ( k = 0, len = pix; k < len; k++ )
+                    {
+                        if ( ( k & 1 ) == 0 )
+                            pix = getc( fp );
+                        *ci++ = ( ( k & 1 ) ? pix : ( pix >> 4 ) ) & 0x0f;
+                    }
 
-					/* take care of padding, 2bytes boundary */
+                    /* take care of padding, 2bytes boundary */
 
-					pix = len % 4;
-					if ( pix && pix != 3 )
-						getc( fp );
-				}
-			}
+                    pix = len % 4;
+                    if ( pix && pix != 3 )
+                        getc( fp );
+                }
+            }
 
-			if ( ! ( ( im->completed = im->h - 1 - i ) & FLIMAGE_REPFREQ ) )
-				im->visual_cue( im, "Reading 4bit encoded BMP" );
-		}
+            if ( ! ( ( im->completed = im->h - 1 - i ) & FLIMAGE_REPFREQ ) )
+                im->visual_cue( im, "Reading 4bit encoded BMP" );
+        }
     }
 
  done:
@@ -488,27 +488,27 @@ load_4bit_bmp( FL_IMAGE * im,
 
 static int
 load_1bit_bmp( FL_IMAGE * im,
-			   SPEC     * sp )
+               SPEC     * sp )
 {
     int i,
-		totalbpl = sp->bpl + sp->pad;
+        totalbpl = sp->bpl + sp->pad;
     unsigned char *buf = fl_malloc( totalbpl );
 
     if( ! buf )
     {
-		im->error_message( im, "malloc() failed" );
+        im->error_message( im, "malloc() failed" );
         return -1;
     }
 
     for ( i = im->h; --i >= 0 && ! feof( im->fpin ); )
     {
-		if ( fread( buf, 1, totalbpl, im->fpin ) != ( size_t ) totalbpl )
-		{
-			fl_free( buf );
-			im->error_message( im, "malloc() failed" );
-			return -1;
-		}
-		fl_unpack_bits( im->ci[ i ], buf, im->w );
+        if ( fread( buf, 1, totalbpl, im->fpin ) != ( size_t ) totalbpl )
+        {
+            fl_free( buf );
+            im->error_message( im, "malloc() failed" );
+            return -1;
+        }
+        fl_unpack_bits( im->ci[ i ], buf, im->w );
     }
 
     fl_free( buf );
@@ -529,7 +529,7 @@ load_1bit_bmp( FL_IMAGE * im,
 
 static int
 write_bmp_header( FL_IMAGE * im,
-				  SPEC     * sp )
+                  SPEC     * sp )
 {
     FILE *fp = im->fpout;
     int mapsize, i;
@@ -542,12 +542,12 @@ write_bmp_header( FL_IMAGE * im,
     /* make exception for 16 colors or less */
 
     if ( im->type == FL_IMAGE_CI && im->map_len <= 16 )
-		sp->bpp = im->map_len <= 2 ? 1 : 4;
+        sp->bpp = im->map_len <= 2 ? 1 : 4;
 
     /* if grayscale, we can make it into a CI */
 
     if ( im->type == FL_IMAGE_GRAY )
-		sp->bpp = 8;
+        sp->bpp = 8;
 
     /* bytes per line */
 
@@ -560,7 +560,7 @@ write_bmp_header( FL_IMAGE * im,
 
     sp->col_used = sp->col_important = sp->bpp != 24 ? im->map_len : 0;
     if ( sp->bpp == 1 )
-		sp->col_used = sp->col_important = 2;
+        sp->col_used = sp->col_important = 2;
 
 #if BMPDEBUG
     dump_header( "before write", sp );
@@ -569,7 +569,7 @@ write_bmp_header( FL_IMAGE * im,
     /* start writing */
 
     fputc( 'B', fp );
-	fputc( 'M', fp );
+    fputc( 'M', fp );
     fli_fput4LSBF( sp->fsize, fp );
     fli_fput4LSBF( 0, fp );
     fli_fput4LSBF( sp->offset, fp );
@@ -579,30 +579,30 @@ write_bmp_header( FL_IMAGE * im,
     fli_fput2LSBF( 1, fp );
     fli_fput2LSBF( sp->bpp, fp );
     fli_fput4LSBF( E_RGB, fp );
-    fli_fput4LSBF( 0, fp );	                 /* encoded size */
+    fli_fput4LSBF( 0, fp );                  /* encoded size */
     fli_fput4LSBF( 96 * 36, fp );
     fli_fput4LSBF( 96 * 36, fp );
-    fli_fput4LSBF( sp->col_used, fp );	     /* actual colors   */
-    fli_fput4LSBF( sp->col_important, fp );	 /* important colors */
+    fli_fput4LSBF( sp->col_used, fp );       /* actual colors   */
+    fli_fput4LSBF( sp->col_important, fp );  /* important colors */
 
     if ( sp->bpp != 24 )
     {
-		char junk[ ] = { 0, 0, 0, 0 };
+        char junk[ ] = { 0, 0, 0, 0 };
 
-		for ( i = 0; i < im->map_len; i++ )
-		{
-			putc( im->blue_lut[ i ], fp );
-			putc( im->green_lut[ i ], fp );
-			putc( im->red_lut[ i ], fp );
-			putc( 0, fp );
-	}
+        for ( i = 0; i < im->map_len; i++ )
+        {
+            putc( im->blue_lut[ i ], fp );
+            putc( im->green_lut[ i ], fp );
+            putc( im->red_lut[ i ], fp );
+            putc( 0, fp );
+    }
 
-		for ( ; i < 1 << sp->bpp; i++ )
-		{
-			size_t dummy;
+        for ( ; i < 1 << sp->bpp; i++ )
+        {
+            size_t dummy;
 
-			dummy = fwrite( junk, 1, 4, fp );
-		}
+            dummy = fwrite( junk, 1, 4, fp );
+        }
     }
 
     return 0;
@@ -623,86 +623,86 @@ BMP_write_image( FL_IMAGE * im )
 
     if ( sp->bpp == 24 )
     {
-		unsigned char *r,
-			          *g,
-			          *b;
+        unsigned char *r,
+                      *g,
+                      *b;
 
-		for ( i = im->h; --i >= 0 ; )
-		{
-			r = im->red[ i ];
-			g = im->green[ i ];
-			b = im->blue[ i ];
+        for ( i = im->h; --i >= 0 ; )
+        {
+            r = im->red[ i ];
+            g = im->green[ i ];
+            b = im->blue[ i ];
 
-			for ( j = 0; j < im->w; j++, r++, g++, b++ )
-			{
-				putc( *b, fp );
-				putc( *g, fp );
-				putc( *r, fp );
-			}
+            for ( j = 0; j < im->w; j++, r++, g++, b++ )
+            {
+                putc( *b, fp );
+                putc( *g, fp );
+                putc( *r, fp );
+            }
 
-			for ( j = 0; j < sp->pad; j++ )
-				putc( 0, fp );
-		}
+            for ( j = 0; j < sp->pad; j++ )
+                putc( 0, fp );
+        }
     }
     else if ( sp->bpp == 8 )
     {
-		unsigned short *p8,
-			           **ras = FL_IMAGE_CI ? im->ci:im->gray;
+        unsigned short *p8,
+                       **ras = FL_IMAGE_CI ? im->ci:im->gray;
 
-		for ( i = im->h; --i >= 0; )
-		{
-			p8 = ras[ i ];
+        for ( i = im->h; --i >= 0; )
+        {
+            p8 = ras[ i ];
 
-			for ( j = 0; j < im->w; j++, p8++ )
-				putc( *p8, fp );
+            for ( j = 0; j < im->w; j++, p8++ )
+                putc( *p8, fp );
 
-			for ( j = 0; j < sp->pad; j++ )
-				putc( 0, fp );
-		}
+            for ( j = 0; j < sp->pad; j++ )
+                putc( 0, fp );
+        }
     }
     else if ( sp->bpp == 4 )
     {
-		unsigned short *ci,
-			           *cis;
-		unsigned char uc;
+        unsigned short *ci,
+                       *cis;
+        unsigned char uc;
 
-		for ( i = im->h; --i >= 0; )
-		{
-			cis = ( ci = im->ci[ i ] ) + im->w;
+        for ( i = im->h; --i >= 0; )
+        {
+            cis = ( ci = im->ci[ i ] ) + im->w;
 
-			for ( j = 0; j < sp->bpl; j++ )
-			{
-				uc = *ci++;
-				uc <<= 4;
-				if ( ci < cis )
-					uc |= *ci++;
-				putc( uc, fp );
-			}
+            for ( j = 0; j < sp->bpl; j++ )
+            {
+                uc = *ci++;
+                uc <<= 4;
+                if ( ci < cis )
+                    uc |= *ci++;
+                putc( uc, fp );
+            }
 
-			for ( j = 0; j < sp->pad; j++ )
-				putc( 0, fp );
-		}
+            for ( j = 0; j < sp->pad; j++ )
+                putc( 0, fp );
+        }
     }
     else if ( sp->bpp == 1 )
     {
-		int totalbpl = sp->bpl + sp->pad;
-		unsigned char *tmpbuf = fl_malloc( totalbpl );
+        int totalbpl = sp->bpl + sp->pad;
+        unsigned char *tmpbuf = fl_malloc( totalbpl );
 
-		if ( ! tmpbuf )
+        if ( ! tmpbuf )
         {
-			im->error_message( im, "malloc() failed" );
-			return -1;
+            im->error_message( im, "malloc() failed" );
+            return -1;
         }
 
-		for ( i = im->h; --i >= 0; )
-		{
-			size_t dummy;
+        for ( i = im->h; --i >= 0; )
+        {
+            size_t dummy;
 
-			fl_pack_bits( tmpbuf, im->ci[ i ], im->w );
-			dummy = fwrite( tmpbuf, 1, totalbpl, fp );
-		}
+            fl_pack_bits( tmpbuf, im->ci[ i ], im->w );
+            dummy = fwrite( tmpbuf, 1, totalbpl, fp );
+        }
 
-		fl_free( tmpbuf );
+        fl_free( tmpbuf );
     }
 
     fl_free( sp );
@@ -718,9 +718,17 @@ void
 flimage_enable_bmp( void )
 {
     flimage_add_format( "Windows/OS2 BMP file", "bmp", "bmp",
-						FL_IMAGE_FLEX & ~FL_IMAGE_GRAY16,
-						BMP_identify,
-						BMP_description,
-						BMP_read_pixels,
-						BMP_write_image );
+                        FL_IMAGE_FLEX & ~FL_IMAGE_GRAY16,
+                        BMP_identify,
+                        BMP_description,
+                        BMP_read_pixels,
+                        BMP_write_image );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

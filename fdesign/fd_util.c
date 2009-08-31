@@ -61,21 +61,29 @@ reset_dupinfo_cache( void )
 
 int
 is_duplicate_info( FL_OBJECT  * ob  FL_UNUSED_ARG,
-				   const char * s )
+                   const char * s )
 {
     int i;
 
     for ( i = 0; i < ninfo; i++ )
-		if ( strcmp( s, info[ i ].buf ) == 0 )
-			return 1;
+        if ( strcmp( s, info[ i ].buf ) == 0 )
+            return 1;
 
     if ( ninfo == MAXREC )
     {
-		fprintf( stderr, "dupinfo cache overflown\n" );
-		ninfo--;
+        fprintf( stderr, "dupinfo cache overflown\n" );
+        ninfo--;
     }
 
     fli_sstrcpy( info[ ninfo++ ].buf, s, MAXLEN );
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

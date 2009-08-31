@@ -22,7 +22,6 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  *  private header for xyplot object
  */
@@ -34,102 +33,102 @@
 #define MAX_ALABEL        64
 #define MAX_MAJOR         50
 #define MAX_MINOR         50
-#define MAX_TIC           200	/* really should be MAJOR * MINOR */
+#define MAX_TIC           200   /* really should be MAJOR * MINOR */
 
 
 typedef struct {
-    float               xmin,				/* true xbounds                 */
-	                    xmax;
-    float               ymin,				/* true ybounds                 */
-	                    ymax;
-    float               xscmin,				/* bounds used in mapping       */
-	                    xscmax;
-    float               yscmin,				/* bounds used in mapping       */
-	                    yscmax;
-    float               ax,					/* data -> screen conversion    */
-	                    bx,
-	                    ay,
-	                    by;
-    float               xtic,				/* tic marks                    */
-	                    ytic;
-    float               xbase,				/* log base                     */
-	                    ybase;
-    float               lxbase,				/* log10 of the log base        */
-	                    lybase;
-    int                 xi,					/* ploted area bounds           */
-	                    xf,
-	                    yi,
-	                    yf;
-    char              * title;				/* overall title                */
+    float               xmin,               /* true xbounds                 */
+                        xmax;
+    float               ymin,               /* true ybounds                 */
+                        ymax;
+    float               xscmin,             /* bounds used in mapping       */
+                        xscmax;
+    float               yscmin,             /* bounds used in mapping       */
+                        yscmax;
+    float               ax,                 /* data -> screen conversion    */
+                        bx,
+                        ay,
+                        by;
+    float               xtic,               /* tic marks                    */
+                        ytic;
+    float               xbase,              /* log base                     */
+                        ybase;
+    float               lxbase,             /* log10 of the log base        */
+                        lybase;
+    int                 xi,                 /* ploted area bounds           */
+                        xf,
+                        yi,
+                        yf;
+    char              * title;              /* overall title                */
     char              * xlabel,
-	                  * ylabel;				/* the x- and y-axis labels     */
+                      * ylabel;             /* the x- and y-axis labels     */
     char              * axtic[ MAX_ALABEL ];/* alphanumerical tic marks     */
     char              * aytic[ MAX_ALABEL ];/* alphanumerical tic marks     */
     char              * xmargin1,
                       * xmargin2;
     char              * ymargin1,
-	                  * ymargin2;			/* fixed area. margins          */
-    char             ** text;				/* inset text *text[over]       */
+                      * ymargin2;           /* fixed area. margins          */
+    char             ** text;               /* inset text *text[over]       */
     float             * xt,
-                      * yt;					/* inset text position xt[over] */
+                      * yt;                 /* inset text position xt[over] */
     float            ** x,
-	                 ** y;					/* real data *x, *y[over+1]     */
-    float               * grid;				/* interpolating grid[over+1]   */
-    float               ux,					/* points to be updated         */
+                     ** y;                  /* real data *x, *y[over+1]     */
+    float               * grid;             /* interpolating grid[over+1]   */
+    float               ux,                 /* points to be updated         */
                         uy;
-    float             * wx,					/* working array for interpolat.*/
-	                  * wy;
-    FL_POINT          * xp;					/* screen data                  */
-    FL_POINT          * xpactive;			/* active(mouse) screen data    */
-    FL_POINT          * xpi;				/* screen data for interpolated */
-    short             * thickness;			/* line thickness [over+1]      */
-    FL_COLOR          * col;				/* overlay color [over+1]       */
-    FL_COLOR          * tcol;				/* overlay text color [over+1]  */
-    int               * type;				/* type[over+1]                 */
-    int               * n,					/* total points/viewable points */
-	                    nxp;
+    float             * wx,                 /* working array for interpolat.*/
+                      * wy;
+    FL_POINT          * xp;                 /* screen data                  */
+    FL_POINT          * xpactive;           /* active(mouse) screen data    */
+    FL_POINT          * xpi;                /* screen data for interpolated */
+    short             * thickness;          /* line thickness [over+1]      */
+    FL_COLOR          * col;                /* overlay color [over+1]       */
+    FL_COLOR          * tcol;               /* overlay text color [over+1]  */
+    int               * type;               /* type[over+1]                 */
+    int               * n,                  /* total points/viewable points */
+                        nxp;
     int                 n1;
     int                 ninterpol;
     int                 nxpi;
-    int                 cur_nxp;			/* length of xp                 */
+    int                 cur_nxp;            /* length of xp                 */
     int                 inside;
     int                 grid_linestyle;
-    FL_XYPLOT_SYMBOL  * symbol;				/* [over + 1] */
-    short             * interpolate;		/* if interpolate[over+1]       */
-    short             * talign;				/* inset text alignment [over+1] */
-    short               xscale;				/* linear or log for x          */
-    short               yscale;				/* linear or log for y          */
-    short               active;				/* if accepting mouse events    */
-    short               ssize;				/* symbol size                  */
-    short               lsize,		        /* font and style for labels    */
-	                    lstyle;
-    short               xautoscale;			/* autoscale to fit             */
-    short               yautoscale;			/* autoscale to fit             */
-    short               xmajor, xminor;		/* x-axis scaling               */
-    short               ymajor, yminor;		/* y-axis scaling               */
+    FL_XYPLOT_SYMBOL  * symbol;             /* [over + 1] */
+    short             * interpolate;        /* if interpolate[over+1]       */
+    short             * talign;             /* inset text alignment [over+1] */
+    short               xscale;             /* linear or log for x          */
+    short               yscale;             /* linear or log for y          */
+    short               active;             /* if accepting mouse events    */
+    short               ssize;              /* symbol size                  */
+    short               lsize,              /* font and style for labels    */
+                        lstyle;
+    short               xautoscale;         /* autoscale to fit             */
+    short               yautoscale;         /* autoscale to fit             */
+    short               xmajor, xminor;     /* x-axis scaling               */
+    short               ymajor, yminor;     /* y-axis scaling               */
     short               inspect;
     short               update;
     short               maxoverlay;
-    short               xgrid, ygrid;		/* if draw grid                 */
-    short               iactive;			/* which overlay is active      */
-    int                 objx,				/* singlebuffer mode            */
-	                    objy;
-    float               bxm,				/* data -> screen conversion    */
-	                    bym;
-    float               key_x,				/* key place location           */
-	                    key_y;
+    short               xgrid, ygrid;       /* if draw grid                 */
+    short               iactive;            /* which overlay is active      */
+    int                 objx,               /* singlebuffer mode            */
+                        objy;
+    float               bxm,                /* data -> screen conversion    */
+                        bym;
+    float               key_x,              /* key place location           */
+                        key_y;
     int                 key_lstyle,
-	                    key_lsize;
+                        key_lsize;
     int                 key_align;
     int                 no_keybox;
     char             ** key;
-    short               maxytic;			/* max tic mark length in pixels */
+    short               maxytic;            /* max tic mark length in pixels */
     int                 key_maxw,
-	                    key_maxh,
-	                    key_ascend,
-	                    key_descend;
+                        key_maxh,
+                        key_ascend,
+                        key_descend;
     int                 key_xs,
-	                    key_ys;
+                        key_ys;
 
     /* tic locations */
 
@@ -145,9 +144,17 @@ typedef struct {
     short              ytic_major[ MAX_MAJOR ];
     short              mark_active;
     short              external_data;
-	int                start_x;
-	int                start_y;
+    int                start_x;
+    int                start_y;
 } FLI_XYPLOT_SPEC;
 
 
 #endif /* PXYPLOT.H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

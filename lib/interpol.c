@@ -42,20 +42,20 @@
 
 int
 fl_interpolate( const float * wx,
-			    const float * wy,
-			    int           nin,
-			    float *       x,
-			    float *       y,
-			    double        grid,
-			    int ndeg )
+                const float * wy,
+                int           nin,
+                float *       x,
+                float *       y,
+                double        grid,
+                int ndeg )
 {
     int i, j, k, l, jo, ih, im, idm, nout;
     double term, accum;
 
     if (nin <= ndeg)
     {
-		fputs("too few points in interpol\n", stderr);
-		return -1;
+        fputs("too few points in interpol\n", stderr);
+        return -1;
     }
 
     nout = (int) ((wx[nin - 1] - wx[0]) / grid + 1.01);
@@ -68,44 +68,44 @@ fl_interpolate( const float * wx,
     jo = 0;
     for (i = 1; i < nout; i++)
     {
-		/* better than x[i] = x[i-1] + grid; */
+        /* better than x[i] = x[i-1] + grid; */
 
-		x[i] = x[0] + (i * grid);
+        x[i] = x[0] + (i * grid);
 
-		/* center */
+        /* center */
 
-		j = jo;
-		ih = nin;
-		while ((ih - j) > 1)
-		{
-			im = (ih + j) / 2;
-			if (x[i] > wx[im])
-				j = im;
-			else
-				ih = im;
-		}
-		jo = j;
-		j = j - (ndeg / 2);	/* shift */
-		if (j < 0)
-			j = 0;
-		if (j > nin - ndeg - 1)
-			j = nin - ndeg - 1;
+        j = jo;
+        ih = nin;
+        while ((ih - j) > 1)
+        {
+            im = (ih + j) / 2;
+            if (x[i] > wx[im])
+                j = im;
+            else
+                ih = im;
+        }
+        jo = j;
+        j = j - (ndeg / 2); /* shift */
+        if (j < 0)
+            j = 0;
+        if (j > nin - ndeg - 1)
+            j = nin - ndeg - 1;
 
-		/* interpolate */
+        /* interpolate */
 
-		accum = 0.0;
-		idm = j + ndeg;
-		for (l = j; l <= idm; l++)
-		{
-			term = wy[l];
-			for (k = j; k <= idm; k++)
-			{
-				if (l != k)
-					term *= (x[i] - wx[k]) / (double) (wx[l] - wx[k]);
-			}
-			accum += term;
-		}
-		y[i] = accum;
+        accum = 0.0;
+        idm = j + ndeg;
+        for (l = j; l <= idm; l++)
+        {
+            term = wy[l];
+            for (k = j; k <= idm; k++)
+            {
+                if (l != k)
+                    term *= (x[i] - wx[k]) / (double) (wx[l] - wx[k]);
+            }
+            accum += term;
+        }
+        y[i] = accum;
     }
 
     /* make sure the ends are free of numerical errors */
@@ -115,3 +115,11 @@ fl_interpolate( const float * wx,
 
     return nout;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

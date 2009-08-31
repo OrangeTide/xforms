@@ -60,27 +60,27 @@ flimage_ps_options( void )
 
     if ( ! sp )
     {
-		extern float fli_dpi;	/* I don't like this and will change it */
+        extern float fli_dpi;   /* I don't like this and will change it */
 
-		sp = fl_calloc( 1, sizeof *sp );
-		sp->orientation = FLPS_AUTO;
-		sp->paper_w = 8.5;
-		sp->paper_h = 11.0;
-		sp->auto_fit = 1;
-		sp->xdpi = sp->ydpi = fli_dpi;
-		sp->printer_dpi = 300;
-		sp->vm = sp->hm = 0.3;
-		sp->xscale = sp->yscale = 1.0;
-		sp->tmpdir = "/tmp";
-		sp->gamma = 1.0;
-		sp->verbose = 0;
-		sp->comment = 0;
-		sp->pack = 0;
-		sp->lastr = -1;
-		sp->ps_color = 1;
-		/* cache */
-		sp->cur_color = FLIMAGE_BADCOLOR;
-		sp->cur_style = sp->cur_size = sp->cur_lw = -1;
+        sp = fl_calloc( 1, sizeof *sp );
+        sp->orientation = FLPS_AUTO;
+        sp->paper_w = 8.5;
+        sp->paper_h = 11.0;
+        sp->auto_fit = 1;
+        sp->xdpi = sp->ydpi = fli_dpi;
+        sp->printer_dpi = 300;
+        sp->vm = sp->hm = 0.3;
+        sp->xscale = sp->yscale = 1.0;
+        sp->tmpdir = "/tmp";
+        sp->gamma = 1.0;
+        sp->verbose = 0;
+        sp->comment = 0;
+        sp->pack = 0;
+        sp->lastr = -1;
+        sp->ps_color = 1;
+        /* cache */
+        sp->cur_color = FLIMAGE_BADCOLOR;
+        sp->cur_style = sp->cur_size = sp->cur_lw = -1;
     }
 
     return ( FLPS_CONTROL * ) sp;
@@ -94,7 +94,7 @@ static int
 PS_identify( FILE * fp )
 {
     char buf[ 2 ];
-	size_t c;
+    size_t c;
 
     c = fread( buf, 1, 2, fp );
     rewind( fp );
@@ -128,24 +128,24 @@ PS_description( FL_IMAGE * im )
 
 static int
 load_page( FL_IMAGE * im,
-		   int        pageNo )
+           int        pageNo )
 {
     char name[ 1024 ],
-		 tmpf[ 1024 ];
+         tmpf[ 1024 ];
     SPEC *sp = im->extra_io_info;
     FLIMAGE_IO *fileIO;
     int status, n;
 
     fl_snprintf( name, sizeof name, "%s/%s_%d",
-				 sp->tmpdir, sp->prefix, pageNo );
+                 sp->tmpdir, sp->prefix, pageNo );
 
     if ( sp->verbose )
-		M_err( "LoadPage", "loading %s", name );
+        M_err( "LoadPage", "loading %s", name );
 
     if ( ! ( n = flimage_is_supported( name ) ) )
     {
-		M_err( "LoadPage", "internal error. %s unknown", name );
-		return -1;
+        M_err( "LoadPage", "internal error. %s unknown", name );
+        return -1;
     }
 
     fclose( im->fpin );
@@ -164,10 +164,10 @@ load_page( FL_IMAGE * im,
     fileIO->identify( im->fpin );
 
     if ( ( status = fileIO->read_description( im ) ) >= 0 )
-		status = flimage_getmem( im );
+        status = flimage_getmem( im );
 
     if ( status >= 0 )
-		status = fileIO->read_pixels( im );
+        status = fileIO->read_pixels( im );
 
     strcpy( im->infile, tmpf );
     return status;
@@ -182,19 +182,19 @@ static void
 PS_cleanup( FL_IMAGE * im )
 {
     int i,
-		n = im->total_frames >= 1 ? im->total_frames : 1;
+        n = im->total_frames >= 1 ? im->total_frames : 1;
     SPEC *sp = im->extra_io_info;
     char name[ 1024 ];
 
     if ( ! sp )
-		return;
+        return;
 
     for ( i = 1; i <= n; i++ )
     {
-		fl_snprintf( name, sizeof name, "%s/%s_%d", sp->tmpdir, sp->prefix, i );
-		if ( sp->verbose )
-			M_err( "Cleanup", "deleting %s", name );
-		remove( name );
+        fl_snprintf( name, sizeof name, "%s/%s_%d", sp->tmpdir, sp->prefix, i );
+        if ( sp->verbose )
+            M_err( "Cleanup", "deleting %s", name );
+        remove( name );
     }
 
     fl_free( sp->prefix );
@@ -222,45 +222,45 @@ PS_read_pixels( FL_IMAGE * im )
 {
     char cmd[ 1024 ];
     int npages,
-		status;
+        status;
     SPEC *sp = im->extra_io_info;
     FL_Dirlist *dirlist;
     const FL_Dirlist *dls,
-		             *dl;
+                     *dl;
     char prefix[ 1024 ];
     int old_sort;
 
     /* the tmp file pattern will be /tmp/gs_$InputFile_$pid_pageNO */
 
     fl_snprintf( prefix, sizeof prefix,
-				 "gs_%s_%d", file_tail( im->infile ), ( int ) fli_getpid( ) );
+                 "gs_%s_%d", file_tail( im->infile ), ( int ) fli_getpid( ) );
 
     sp->prefix = strdup( prefix );
 
     if ( sp->verbose )
-		M_err( "LoadPS", "prefix=%s", sp->prefix );
+        M_err( "LoadPS", "prefix=%s", sp->prefix );
 
     fl_snprintf( cmd, sizeof cmd,
-				 "gs -sDEVICE=%s %s -r%dx%d -sOutputFile=%s/%s_%%d -- %s %s",
-				 GS_DEVICE, GS_OPTION, (int) sp->xdpi, ( int ) sp->ydpi,
-				 sp->tmpdir, sp->prefix, im->infile,
-				 sp->first_page_only ?
-				 "/showpage { systemdict begin showpage quit end} def" : "" );
+                 "gs -sDEVICE=%s %s -r%dx%d -sOutputFile=%s/%s_%%d -- %s %s",
+                 GS_DEVICE, GS_OPTION, (int) sp->xdpi, ( int ) sp->ydpi,
+                 sp->tmpdir, sp->prefix, im->infile,
+                 sp->first_page_only ?
+                 "/showpage { systemdict begin showpage quit end} def" : "" );
 
     if ( sp->verbose )
-		M_err( "LoadPS", "executing %s\n", cmd );
+        M_err( "LoadPS", "executing %s\n", cmd );
     else
-		strcat( cmd, " 2 > /dev/null" );
+        strcat( cmd, " 2 > /dev/null" );
 
-    im->completed = -1;		/* indicate infinite/unknown */
+    im->completed = -1;     /* indicate infinite/unknown */
     im->visual_cue( im, "Converting PS ..." );
 
     if ( ( status = system( cmd ) ) )
     {
-		M_err( "ReadPS", " status=%d", status );
-		flimage_error( im, "ReadPS failed. Status=%d", status );
+        M_err( "ReadPS", " status=%d", status );
+        flimage_error( im, "ReadPS failed. Status=%d", status );
 
-		/* return -1; */
+        /* return -1; */
     }
 
     im->completed = 1;
@@ -278,35 +278,35 @@ PS_read_pixels( FL_IMAGE * im )
 
     if ( ! ( dirlist = ( FL_Dirlist * ) dl ) )
     {
-		PS_cleanup( im );
-		return -1;
+        PS_cleanup( im );
+        return -1;
     }
 
     /* remove directories from the list */
 
     for ( dls = dl + npages; dl < dls; dl++ )
-		if ( dl->type == FT_DIR )
-			npages--;
+        if ( dl->type == FT_DIR )
+            npages--;
 
     fl_free_dirlist( dirlist );
 
     if ( sp->verbose )
-		M_err( "LoadPS", "Total %d pages", npages );
+        M_err( "LoadPS", "Total %d pages", npages );
 
     if ( npages <= 0 )
     {
-		PS_cleanup( im );
-		flimage_error( im, "LoadPS: no page written!" );
-		return -1;
+        PS_cleanup( im );
+        flimage_error( im, "LoadPS: no page written!" );
+        return -1;
     }
 
     im->total_frames = npages;
 
     if ( ! sp->first_page_only )
     {
-		im->more = npages > 1;
-		im->random_frame = load_page;
-		im->cleanup = PS_cleanup;
+        im->more = npages > 1;
+        im->random_frame = load_page;
+        im->cleanup = PS_cleanup;
     }
 
     im->total = im->total_frames;
@@ -319,7 +319,7 @@ PS_read_pixels( FL_IMAGE * im )
        will cleanup */
 
     if ( ! im->more || status < 0 )
-		PS_cleanup( im );
+        PS_cleanup( im );
 
     return status;
 }
@@ -365,30 +365,30 @@ PS_trailer( SPEC *sp )
 
 static int
 auto_scale( float pagew,
-			float pageh,
-			float w,
-			float h,
-			int   landscape )
+            float pageh,
+            float w,
+            float h,
+            int   landscape )
 {
     float sx,
-		  sy;
+          sy;
     int i = 0;
 
     if (    ( ! landscape && ( pagew < w || pageh < h ) )
-		 || ( landscape && ( pagew < h || pageh < w ) ) )
+         || ( landscape && ( pagew < h || pageh < w ) ) )
     {
-		if ( ! landscape )
-		{
-			sx = ( pagew - 2.0 ) / w;
-			sy = ( pageh - 2.0 ) / h;
-		}
-		else
-		{
-			sx = ( pagew - 2.0 ) / h;
-			sy = ( pageh - 2.0 ) / w;
-		}
-		
-		i = 100.0 * FL_min( sx, sy );
+        if ( ! landscape )
+        {
+            sx = ( pagew - 2.0 ) / w;
+            sy = ( pageh - 2.0 ) / h;
+        }
+        else
+        {
+            sx = ( pagew - 2.0 ) / h;
+            sy = ( pageh - 2.0 ) / w;
+        }
+        
+        i = 100.0 * FL_min( sx, sy );
     }
 
     return i;
@@ -432,15 +432,15 @@ PS_write_header( FL_IMAGE * im )
     float pagew = sp->paper_w - 2.0 * sp->hm;
     float pageh = sp->paper_h - 2.0 * sp->vm;
     float hm = sp->hm,
-		  vm = sp->vm;
+          vm = sp->vm;
     float s2px,
-		  s2py;
+          s2py;
     float xscale = sp->xscale,
-		  yscale = sp->yscale;
+          yscale = sp->yscale;
     int xo,
-		yo;
+        yo;
     int w = im->w,
-		h = im->h;
+        h = im->h;
     int orientation;
     int rescale;
 
@@ -460,19 +460,19 @@ PS_write_header( FL_IMAGE * im )
 
     if ( ( orientation = sp->orientation ) == FLPS_AUTO )
     {
-		/* pick the orientation so even margin results */
+        /* pick the orientation so even margin results */
 
-		int plm,
-			pbm,
-			llm,
-			lbm;
+        int plm,
+            pbm,
+            llm,
+            lbm;
 
-		plm = ( pagew - w ) / 2;
-		pbm = ( pageh - h ) / 2;
-		llm = ( pagew - h ) / 2;
-		lbm = ( pageh - w ) / 2;
-		orientation = ( FL_abs( lbm - llm ) < FL_abs( pbm - plm ) ) ?
-			            FLPS_LANDSCAPE : FLPS_PORTRAIT;
+        plm = ( pagew - w ) / 2;
+        pbm = ( pageh - h ) / 2;
+        llm = ( pagew - h ) / 2;
+        lbm = ( pageh - w ) / 2;
+        orientation = ( FL_abs( lbm - llm ) < FL_abs( pbm - plm ) ) ?
+                        FLPS_LANDSCAPE : FLPS_PORTRAIT;
     }
 
     sp->landscape = orientation == FLPS_LANDSCAPE;
@@ -480,12 +480,12 @@ PS_write_header( FL_IMAGE * im )
     /* always make the image fit on the page */
 
     if (    ( rescale = auto_scale( pagew, pageh, w, h, sp->landscape ) )
-		 && sp->auto_fit)
+         && sp->auto_fit)
     {
-		xscale *= rescale * 0.01;
-		yscale *= rescale * 0.01;
-		w *= rescale * 0.01;
-		h *= rescale * 0.01;
+        xscale *= rescale * 0.01;
+        yscale *= rescale * 0.01;
+        w *= rescale * 0.01;
+        h *= rescale * 0.01;
     }
 
     /* update */
@@ -508,7 +508,7 @@ PS_write_header( FL_IMAGE * im )
     /* write header */
 
     flps_emit_header( file_tail( im->infile ), im->total_frames,
-					  xo - 1, yo - 1, xo + w + 1, yo + h + 1 );
+                      xo - 1, yo - 1, xo + w + 1, yo + h + 1 );
 
     /* Prolog. Basic defines. */
 
@@ -519,8 +519,8 @@ PS_write_header( FL_IMAGE * im )
     fprintf( fp, "/lm {%.2g inch} BD \t%% Left margin\n", sp->hm );
     fprintf( fp, "/bm {%.2g inch} BD \t%% Bottom margin\n", sp->vm );
     fprintf( fp, "/xscale %g D /yscale %g D\t %% DPIScale %g SizeScale %g\n",
-			 s2px * xscale, s2py * yscale,
-			 (s2px + s2py) * 0.5, rescale * 0.01 );
+             s2px * xscale, s2py * yscale,
+             (s2px + s2py) * 0.5, rescale * 0.01 );
     fputs( "% End of modifiable parameters\n", fp );
 
     fprintf( fp, "/pw { pagew lm 2 mul sub } BD \t%% writable width\n" );
@@ -530,9 +530,9 @@ PS_write_header( FL_IMAGE * im )
      * both scale and margin can be adjusted in PS */
 
     flps_output( "/xo pw xscale div %d sub 2 div def\n",
-				 sp->landscape ? im->h : im->w );
+                 sp->landscape ? im->h : im->w );
     flps_output( "/yo ph yscale div %d sub 2 div def\n",
-				 sp->landscape ? im->w : im->h );
+                 sp->landscape ? im->w : im->h );
 
     PS_annotation_init( im );
 
@@ -540,7 +540,7 @@ PS_write_header( FL_IMAGE * im )
     fputs( "%%EndProlog\n", fp );
 
     if ( sp->comment )
-		fprintf( sp->fp, "%%OverallStateSave{\n" );
+        fprintf( sp->fp, "%%OverallStateSave{\n" );
 
     PS_push( );
 
@@ -568,68 +568,68 @@ PS_write_pixels( FL_IMAGE * im )
 {
     FILE *fp = im->fpout;
     int ok = 1,
-		j,
-		k;
+        j,
+        k;
 
     im->total = im->h;
     im->completed = 0;
 
     if ( FL_IsRGB( im ) )
     {
-		unsigned char *pc,
-			          *ss;
+        unsigned char *pc,
+                      *ss;
 
-		im->visual_cue( im, "Writing ColorPS" );
-		for ( j = 0, k = 1; ok && j < im->h; j++, im->completed++ )
-		{
-			for ( pc = im->red[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
-			{
-				OutPixel( *pc );
-				if ( k % 37 == 0 )
-					putc( '\n', fp );
-			}
-			for ( pc = im->green[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
-			{
-				OutPixel( *pc );
-				if ( k % 37 == 0 )
-					putc( '\n', fp );
-			}
-			for ( pc = im->blue[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
-			{
-				OutPixel( *pc );
-				if ( k % 37 == 0 )
-					putc( '\n', fp );
-			}
+        im->visual_cue( im, "Writing ColorPS" );
+        for ( j = 0, k = 1; ok && j < im->h; j++, im->completed++ )
+        {
+            for ( pc = im->red[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
+            {
+                OutPixel( *pc );
+                if ( k % 37 == 0 )
+                    putc( '\n', fp );
+            }
+            for ( pc = im->green[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
+            {
+                OutPixel( *pc );
+                if ( k % 37 == 0 )
+                    putc( '\n', fp );
+            }
+            for ( pc = im->blue[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
+            {
+                OutPixel( *pc );
+                if ( k % 37 == 0 )
+                    putc( '\n', fp );
+            }
 
-			if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
-			{
-				im->visual_cue( im, "Writing PS" );
-				ok = ! ferror( fp );
-			}
-		}
+            if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
+            {
+                im->visual_cue( im, "Writing PS" );
+                ok = ! ferror( fp );
+            }
+        }
     }
     else
     {
-		unsigned short *pc,
-			           *ss;
-		unsigned char g;
+        unsigned short *pc,
+                       *ss;
+        unsigned char g;
 
-		im->visual_cue( im, "Writing GrayPS" );
-		for ( j = 0, k = 1; ok && j < im->h; j++, im->completed++ )
-		{
-			for ( pc = im->gray[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
-			{
-				g = *pc & 0xff;
-				OutPixel( g );
-				if ( k % 37 == 0 )
-					putc( '\n', fp );
-			}
-			if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
-			{
-				im->visual_cue( im, "Writing PS" );
-				ok = ! ferror( fp );
-			}
-		}
+        im->visual_cue( im, "Writing GrayPS" );
+        for ( j = 0, k = 1; ok && j < im->h; j++, im->completed++ )
+        {
+            for ( pc = im->gray[ j ], ss = pc + im->w; pc < ss; pc++, k++ )
+            {
+                g = *pc & 0xff;
+                OutPixel( g );
+                if ( k % 37 == 0 )
+                    putc( '\n', fp );
+            }
+            if ( ! ( im->completed & FLIMAGE_REPFREQ ) )
+            {
+                im->visual_cue( im, "Writing PS" );
+                ok = ! ferror( fp );
+            }
+        }
     }
 
     putc( '\n', fp );
@@ -643,7 +643,7 @@ PS_write_pixels( FL_IMAGE * im )
 
 static void
 make_raster_command( FL_IMAGE * im,
-					 char       pscmd[ ] )
+                     char       pscmd[ ] )
 {
     int rgb = FL_IsRGB( im );
 
@@ -651,25 +651,25 @@ make_raster_command( FL_IMAGE * im,
 
     if ( ! rgb )
     {
-		flps_output( "/graystring %d string def\n", im->w );
-		flps_output( "/%s\n", pscmd );
-		flps_output( "  {%d %d %d [ %d 0 0 -%d 0 %d]\n",
-					 im->w, im->h, FL_PCBITS, im->w, im->h, im->h );
-		flps_output( "  {currentfile graystring readhexstring pop}\n" );
-		flps_output( "  imag`e\n} bind def\n" );
+        flps_output( "/graystring %d string def\n", im->w );
+        flps_output( "/%s\n", pscmd );
+        flps_output( "  {%d %d %d [ %d 0 0 -%d 0 %d]\n",
+                     im->w, im->h, FL_PCBITS, im->w, im->h, im->h );
+        flps_output( "  {currentfile graystring readhexstring pop}\n" );
+        flps_output( "  imag`e\n} bind def\n" );
     }
     else
     {
-		flps_output( "/redstring %d string def\n", im->w );
-		flps_output( "/grnstring %d string def\n", im->w );
-		flps_output( "/blustring %d string def\n", im->w );
-		flps_output( "/%s\n", pscmd );
-		flps_output( "  {%d %d %d [ %d 0 0 -%d 0 %d]\n",
-					im->w, im->h, FL_PCBITS, im->w, im->h, im->h );
-		flps_output( "  {currentfile redstring readhexstring pop}\n" );
-		flps_output( "  {currentfile grnstring readhexstring pop}\n" );
-		flps_output( "  {currentfile blustring readhexstring pop}\n" );
-		flps_output( "  true 3 colorimage\n} bind def\n");
+        flps_output( "/redstring %d string def\n", im->w );
+        flps_output( "/grnstring %d string def\n", im->w );
+        flps_output( "/blustring %d string def\n", im->w );
+        flps_output( "/%s\n", pscmd );
+        flps_output( "  {%d %d %d [ %d 0 0 -%d 0 %d]\n",
+                    im->w, im->h, FL_PCBITS, im->w, im->h, im->h );
+        flps_output( "  {currentfile redstring readhexstring pop}\n" );
+        flps_output( "  {currentfile grnstring readhexstring pop}\n" );
+        flps_output( "  {currentfile blustring readhexstring pop}\n" );
+        flps_output( "  true 3 colorimage\n} bind def\n");
     }
 }
 
@@ -684,12 +684,12 @@ PS_write_image( FL_IMAGE * sim )
     char pscmd[ 512 ];
     FL_IMAGE *im = sim;
     int err,
-		npage;
+        npage;
 
     if ( ! sp )
     {
-		sp = sim->extra_io_info = fl_calloc( 1, sizeof *sp );
-		memcpy( sp, flimage_ps_options( ), sizeof *sp );
+        sp = sim->extra_io_info = fl_calloc( 1, sizeof *sp );
+        memcpy( sp, flimage_ps_options( ), sizeof *sp );
     }
 
     sp->fp = sim->fpout;
@@ -702,32 +702,32 @@ PS_write_image( FL_IMAGE * sim )
 
     for ( err = 0, npage = 1, im = sim; !err && im; im = im->next, npage++ )
     {
-		im->fpout = sim->fpout;
-		flps_output( 0 );
-		fprintf( im->fpout, "%%%%Page: %d %d\n", npage, sim->total_frames );
+        im->fpout = sim->fpout;
+        flps_output( 0 );
+        fprintf( im->fpout, "%%%%Page: %d %d\n", npage, sim->total_frames );
 
-		/* the origin of the image (xo,yo) and annotation */
+        /* the origin of the image (xo,yo) and annotation */
 
-		flps_output( "xscale yscale scale xo yo translate\n" );
+        flps_output( "xscale yscale scale xo yo translate\n" );
 
-		if ( sp->landscape )
-		{
-			flps_output( "%d %d translate\n", sim->h, 0 );
-			flps_output( " 90 rotate\n" );
-		}
+        if ( sp->landscape )
+        {
+            flps_output( "%d %d translate\n", sim->h, 0 );
+            flps_output( " 90 rotate\n" );
+        }
 
-		PS_start_image( im );
-		make_raster_command( im, pscmd );
-		flps_output( "%d %d scale %s\n", im->w, im->h, pscmd );
-		flps_output( 0 );
-		err = PS_write_pixels( im ) < 0;
-		PS_end_image( im );
-		PS_annotation( im );
-		flps_output( "showpage\n" );
+        PS_start_image( im );
+        make_raster_command( im, pscmd );
+        flps_output( "%d %d scale %s\n", im->w, im->h, pscmd );
+        flps_output( 0 );
+        err = PS_write_pixels( im ) < 0;
+        PS_end_image( im );
+        PS_annotation( im );
+        flps_output( "showpage\n" );
     }
 
     if ( sp->comment )
-		fprintf (sp->fp, " %%EndOfMultiImage}\n" );
+        fprintf (sp->fp, " %%EndOfMultiImage}\n" );
 
     PS_pop( );
 
@@ -748,9 +748,9 @@ void
 flimage_enable_ps( void )
 {
     flimage_add_format( "PostScript", "ps", "ps",
-						FL_IMAGE_RGB | FL_IMAGE_GRAY,
-						PS_identify, PS_description,
-						PS_read_pixels, PS_write_image );
+                        FL_IMAGE_RGB | FL_IMAGE_GRAY,
+                        PS_identify, PS_description,
+                        PS_read_pixels, PS_write_image );
 }
 
 
@@ -766,59 +766,59 @@ PS_annotation_init( FL_IMAGE * im )
 {
     const char *mbuf[ MBUFLEN ];
     int i,
-		j,
-		k,
-		out;
+        j,
+        k,
+        out;
     FLIMAGE_MARKER *m;
 
     if ( ! im->nmarkers && !im->ntext )
-		return;
+        return;
 
     flps_output( "/M {moveto} BD /G {setgray} BD /RGB {setrgbcolor} BD\n" );
     flps_output( "/LT {lineto} BD /L {M LT} BD /S {stroke} BD /F {fill} BD\n" );
     flps_output( "/L {M LT} BD /S {stroke} BD /F {fill} BD\n" );
     flps_output( "/LW {setlinewidth} BD /C {closepath} BD\n" );
 
-	memset( mbuf, 0, MBUFLEN );
+    memset( mbuf, 0, MBUFLEN );
 
     if ( im->nmarkers )
     {
-		flps_output( "%%marker defs: t w h angle xo yo\n" );
-		flps_output( 0 );
-		flps_output( "/DTD {[5 4 1 4] 0 setdash} BD\n" );		/* dot-dash */
-		flps_output( "/DT {[1 3] 0 setdash} BD\n" );	        /* dot   */
-		flps_output( "/LD {[8 5] 0 setdash} BD\n" );	        /* long dash */
-		flps_output( "/DS {[4 4] 0 setdash} BD\n" );	        /* dash */
-		flps_output( "/SL {[] 0 setdash} BD\n" );		        /* solid */
-		flps_output( "/NP {newpath} BD\n" );	                /* solid */
+        flps_output( "%%marker defs: t w h angle xo yo\n" );
+        flps_output( 0 );
+        flps_output( "/DTD {[5 4 1 4] 0 setdash} BD\n" );       /* dot-dash */
+        flps_output( "/DT {[1 3] 0 setdash} BD\n" );            /* dot   */
+        flps_output( "/LD {[8 5] 0 setdash} BD\n" );            /* long dash */
+        flps_output( "/DS {[4 4] 0 setdash} BD\n" );            /* dash */
+        flps_output( "/SL {[] 0 setdash} BD\n" );               /* solid */
+        flps_output( "/NP {newpath} BD\n" );                    /* solid */
 
-		flps_output( "/BM {gsave} D /EM {grestore} D\n" );
-		flps_output( "/MK {newpath translate rotate scale LW} BD\n" );
+        flps_output( "/BM {gsave} D /EM {grestore} D\n" );
+        flps_output( "/MK {newpath translate rotate scale LW} BD\n" );
 
-		/* define primitives (-1 to +1) */
+        /* define primitives (-1 to +1) */
 
-		for ( k = 0, m = im->marker, i = 0; i < im->nmarkers; i++, m++ )
-		{
-			for ( j = out = 0; ! out && j < MBUFLEN; j++ )
-				out = m->name == mbuf[ j ];
-			if ( ! out )
-			{
-				mbuf[ k++ ] = m->name;
-				flps_output( "/%s {%s %s} D\n", m->name, "MK", m->psdraw );
-			}
-		}
+        for ( k = 0, m = im->marker, i = 0; i < im->nmarkers; i++, m++ )
+        {
+            for ( j = out = 0; ! out && j < MBUFLEN; j++ )
+                out = m->name == mbuf[ j ];
+            if ( ! out )
+            {
+                mbuf[ k++ ] = m->name;
+                flps_output( "/%s {%s %s} D\n", m->name, "MK", m->psdraw );
+            }
+        }
     }
 
     if ( im->ntext )
     {
-		/* do we want to scale the font ? */
+        /* do we want to scale the font ? */
 
-		flps_output( "/point {xscale yscale add 2 div div} BD\n" );
-		flps_output( "/SetFont {findfont exch scalefont setfont} BD\n" );
-		flps_output( "/CP {currentpoint} BD /SW {stringwidth} BD\n" );
-		flps_output( "/Lshow {show} BD\n" );
-		flps_output( "/Cshow {dup SW pop -2 div 0 rmoveto show} BD\n" );
-		flps_output( "/Rshow {dup SW pop neg 0 rmoveto show} BD\n" );
+        flps_output( "/point {xscale yscale add 2 div div} BD\n" );
+        flps_output( "/SetFont {findfont exch scalefont setfont} BD\n" );
+        flps_output( "/CP {currentpoint} BD /SW {stringwidth} BD\n" );
+        flps_output( "/Lshow {show} BD\n" );
+        flps_output( "/Cshow {dup SW pop -2 div 0 rmoveto show} BD\n" );
+        flps_output( "/Rshow {dup SW pop neg 0 rmoveto show} BD\n" );
     }
 }
 
@@ -842,7 +842,7 @@ switch_to_ISOLatin1( FILE * fp )
     flps_output( "   ifelse\n" );
     flps_output( "/SwitchToISO {\n" );
     flps_output( "   findfont dup length\n   dict begin {1 index /FID ne {def} "
-				 "{pop pop} ifelse} forall\n" );
+                 "{pop pop} ifelse} forall\n" );
     flps_output( "   /Encoding BitEncoding def " );
     flps_output( " currentdict end\n   definefont pop\n} bind def\n" );
 }
@@ -858,22 +858,22 @@ PS_annotation( FL_IMAGE * im )
     FLIMAGE_MARKER *m = im->marker;
     FLIMAGE_TEXT *t = im->text;
     int r,
-		g,
-		b,
-		i,
-		thickness;
+        g,
+        b,
+        i,
+        thickness;
     SPEC *sp = im->extra_io_info;
 
     for ( i = 0; i < im->nmarkers; i++, m++ )
     {
-		thickness = m->thickness + (m->thickness == 0);
-		FL_UNPACK( m->color, r, g, b );
-		flps_rgbcolor( r, g, b );
-		flps_linestyle( m->style );
-		flps_output( "BM %.3g %g %g %g %d %d %s",
-					 2.0 * thickness / ( m->w + m->h ), 0.5 * m->w,
-					 0.5 * m->h, m->angle * 0.1, m->x, im->h - m->y, m->name );
-		flps_output( " %c EM\n", "SF"[ m->fill ] );
+        thickness = m->thickness + (m->thickness == 0);
+        FL_UNPACK( m->color, r, g, b );
+        flps_rgbcolor( r, g, b );
+        flps_linestyle( m->style );
+        flps_output( "BM %.3g %g %g %g %d %d %s",
+                     2.0 * thickness / ( m->w + m->h ), 0.5 * m->w,
+                     0.5 * m->h, m->angle * 0.1, m->x, im->h - m->y, m->name );
+        flps_output( " %c EM\n", "SF"[ m->fill ] );
     }
 
     /* we make use of the ps_text.c */
@@ -881,11 +881,19 @@ PS_annotation( FL_IMAGE * im )
     sp->isRGBColor = 1;
     for ( i = 0; i < im->ntext; i++, t++ )
     {
-		sp->rotation = t->angle;
-		flps_draw_text( t->align, t->x - 1, im->h - t->y - 1, 2, 2,
-						t->color, t->style, t->size, t->str );
+        sp->rotation = t->angle;
+        flps_draw_text( t->align, t->x - 1, im->h - t->y - 1, 2, 2,
+                        t->color, t->style, t->size, t->str );
     }
 
     sp->rotation = 0;
     sp->isRGBColor = 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

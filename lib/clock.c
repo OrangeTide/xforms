@@ -45,7 +45,7 @@ typedef struct
     long sec;
     long offset;
     int  nstep;
-    int  am_pm;			/* 12hr clock */
+    int  am_pm;         /* 12hr clock */
 } SPEC;
 
 
@@ -74,14 +74,14 @@ static double sechand[ 4 ][ 2 ] =
 };
 
 
-#define ROTxy( xx, yy, x, y, a )										 \
-	do                                                                   \
-	{							                                         \
-		double s = sin( a );                                             \
-		double c = cos( a );                                             \
-        xx = FL_crnd( xc + ( ( x ) - xc ) * c + ( ( y ) - yc ) * s );	 \
-		yy = FL_crnd( yc - ( ( x ) - xc ) * s + ( ( y ) - yc ) * c );	 \
-	} while ( 0 )
+#define ROTxy( xx, yy, x, y, a )                                         \
+    do                                                                   \
+    {                                                                    \
+        double s = sin( a );                                             \
+        double c = cos( a );                                             \
+        xx = FL_crnd( xc + ( ( x ) - xc ) * c + ( ( y ) - yc ) * s );    \
+        yy = FL_crnd( yc - ( ( x ) - xc ) * s + ( ( y ) - yc ) * c );    \
+    } while ( 0 )
 
 
 /***************************************
@@ -89,25 +89,25 @@ static double sechand[ 4 ][ 2 ] =
 
 static void
 draw_hand( FL_Coord x,
-		   FL_Coord y,
-		   FL_Coord w,
-		   FL_Coord h,
-		   double   a[ ][ 2 ],
-		   double   ra,
-		   FL_COLOR fc,
-		   FL_COLOR bc )
+           FL_Coord y,
+           FL_Coord w,
+           FL_Coord h,
+           double   a[ ][ 2 ],
+           double   ra,
+           FL_COLOR fc,
+           FL_COLOR bc )
 {
     int i;
     double ccp[ 4 ][ 2 ];
     double xc = x + 0.5 * w,
-		   yc = y + 0.5 * h;
+           yc = y + 0.5 * h;
     FL_POINT xp[ 5 ];            /* Needs one extra point! */
 
     for ( i = 0; i < 4; i++ )
     {
-		ccp[ i ][ 0 ] = xc + a[ i ][ 0 ] * w / 28.0;
-		ccp[ i ][ 1 ] = yc + a[ i ][ 1 ] * h / 28.0;
-		ROTxy( xp[ i ].x, xp[ i ].y, ccp[ i ][ 0 ], ccp[ i ][ 1 ], ra );
+        ccp[ i ][ 0 ] = xc + a[ i ][ 0 ] * w / 28.0;
+        ccp[ i ][ 1 ] = yc + a[ i ][ 1 ] * h / 28.0;
+        ROTxy( xp[ i ].x, xp[ i ].y, ccp[ i ][ 0 ], ccp[ i ][ 1 ], ra );
     }
 
     fl_polyf( xp, 4, fc );
@@ -115,7 +115,7 @@ draw_hand( FL_Coord x,
 }
 
 
-static int hours,		/* hr: 0-23, minutes:0-59 */
+static int hours,       /* hr: 0-23, minutes:0-59 */
            minutes,
            seconds;
 
@@ -127,11 +127,11 @@ static int updating;
 
 static void
 show_hands( FL_Coord x,
-			FL_Coord y,
-			FL_Coord w,
-			FL_Coord h,
-			FL_COLOR fcolor,
-			FL_COLOR bcolor )
+            FL_Coord y,
+            FL_Coord w,
+            FL_Coord h,
+            FL_COLOR fcolor,
+            FL_COLOR bcolor )
 {
     double ra;
     double fact = - M_PI / 180.0;
@@ -150,21 +150,21 @@ show_hands( FL_Coord x,
 
 static void
 draw_clock( int      type  FL_UNUSED_ARG,
-			FL_Coord x,
-			FL_Coord y,
-			FL_Coord w,
-			FL_Coord h,
-			FL_COLOR col1  FL_UNUSED_ARG,
-			FL_COLOR col2 )
+            FL_Coord x,
+            FL_Coord y,
+            FL_Coord w,
+            FL_Coord h,
+            FL_COLOR col1  FL_UNUSED_ARG,
+            FL_COLOR col2 )
 {
     double xc = x + 0.5 * w,
-		   yc = y + 0.5 * h;
+           yc = y + 0.5 * h;
     int i;
     double ra;
     FL_POINT xp[ 5 ];             /* need one extra for closing of polygon! */
     double f1,
-		   f2,
-		   f3;
+           f2,
+           f3;
 
 #if FL_DEBUG >= ML_DEBUG
     M_info( "draw_clock", "entering" );
@@ -180,18 +180,18 @@ draw_clock( int      type  FL_UNUSED_ARG,
 
     for ( ra = 0.0, i = 0; i < 12; i++, ra += M_PI / 6 )
     {
-		f1 = ( i % 3 ? 0.01 : 0.02 ) * w;
+        f1 = ( i % 3 ? 0.01 : 0.02 ) * w;
 
-		ROTxy( xp[ 0 ].x, xp[ 0 ].y, xc - f1, yc + f2, ra );
-		ROTxy( xp[ 1 ].x, xp[ 1 ].y, xc + f1, yc + f2, ra );
-		ROTxy( xp[ 2 ].x, xp[ 2 ].y, xc + f1, yc + f3, ra );
-		ROTxy( xp[ 3 ].x, xp[ 3 ].y, xc - f1, yc + f3, ra );
+        ROTxy( xp[ 0 ].x, xp[ 0 ].y, xc - f1, yc + f2, ra );
+        ROTxy( xp[ 1 ].x, xp[ 1 ].y, xc + f1, yc + f2, ra );
+        ROTxy( xp[ 2 ].x, xp[ 2 ].y, xc + f1, yc + f3, ra );
+        ROTxy( xp[ 3 ].x, xp[ 3 ].y, xc - f1, yc + f3, ra );
 
-		fl_polyf( xp, 4, FL_LEFT_BCOL );
+        fl_polyf( xp, 4, FL_LEFT_BCOL );
     }
 
     show_hands( x + 2 + 0.02 * w, y + 2 + 0.02 * h,
-				w, h, FL_RIGHT_BCOL, FL_RIGHT_BCOL );
+                w, h, FL_RIGHT_BCOL, FL_RIGHT_BCOL );
     show_hands( x, y, w, h, col2, FL_LEFT_BCOL );
 
 #if FL_DEBUG >= ML_DEBUG
@@ -210,13 +210,13 @@ draw_digitalclock( FL_OBJECT * ob )
     SPEC *sp = ob->spec;
 
     if ( sp->am_pm )
-		sprintf( buf, "%d:%02d:%02d %s", hours > 12 ? hours - 12 : hours,
-				 minutes, seconds, hours > 12 ? "pm" : "am" );
+        sprintf( buf, "%d:%02d:%02d %s", hours > 12 ? hours - 12 : hours,
+                 minutes, seconds, hours > 12 ? "pm" : "am" );
     else
-		sprintf( buf, "%d:%02d:%02d", hours, minutes, seconds );
+        sprintf( buf, "%d:%02d:%02d", hours, minutes, seconds );
 
     fl_drw_text( FL_ALIGN_CENTER, ob->x, ob->y, ob->w, ob->h, ob->col2,
-				 ob->lstyle, ob->lsize, buf );
+                 ob->lstyle, ob->lsize, buf );
 }
 
 
@@ -225,11 +225,11 @@ draw_digitalclock( FL_OBJECT * ob )
 
 static int
 handle_clock( FL_OBJECT * ob,
-			  int         event,
-			  FL_Coord    x   FL_UNUSED_ARG,
-			  FL_Coord    y   FL_UNUSED_ARG,
-			  int         k   FL_UNUSED_ARG,
-			  void *      ev  FL_UNUSED_ARG )
+              int         event,
+              FL_Coord    x   FL_UNUSED_ARG,
+              FL_Coord    y   FL_UNUSED_ARG,
+              int         k   FL_UNUSED_ARG,
+              void *      ev  FL_UNUSED_ARG )
 {
     time_t ticks;
     struct tm *timeofday;
@@ -237,50 +237,50 @@ handle_clock( FL_OBJECT * ob,
 
     switch ( event )
     {
-		case FL_DRAW :
-			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-						ob->col1, ob->bw );
-			if ( ob->type == FL_DIGITAL_CLOCK )
-				draw_digitalclock( ob );
-			else
-				draw_clock( ob->type, ob->x, ob->y, ob->w, ob->h,
-							ob->col1, ob->col2 );
-			/* fall through */
+        case FL_DRAW :
+            fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
+                        ob->col1, ob->bw );
+            if ( ob->type == FL_DIGITAL_CLOCK )
+                draw_digitalclock( ob );
+            else
+                draw_clock( ob->type, ob->x, ob->y, ob->w, ob->h,
+                            ob->col1, ob->col2 );
+            /* fall through */
 
-		case FL_DRAWLABEL :
-			if ( ! updating )
-				fl_drw_text_beside( ob->align & ~FL_ALIGN_INSIDE,
-									ob->x, ob->y, ob->w, ob->h,
-									ob->lcol, ob->lstyle, ob->lsize,
-									ob->label );
-			updating = 0;
-			break;
+        case FL_DRAWLABEL :
+            if ( ! updating )
+                fl_drw_text_beside( ob->align & ~FL_ALIGN_INSIDE,
+                                    ob->x, ob->y, ob->w, ob->h,
+                                    ob->lcol, ob->lstyle, ob->lsize,
+                                    ob->label );
+            updating = 0;
+            break;
 
-		case FL_STEP:
-			/* clock has resolution of about 1 sec. FL_STEP is sent about
-			   every 0.05 sec. If there are more than 10 clocks, we might run
-			   into trouble */
+        case FL_STEP:
+            /* clock has resolution of about 1 sec. FL_STEP is sent about
+               every 0.05 sec. If there are more than 10 clocks, we might run
+               into trouble */
 
-			if ( ++sp->nstep & 1 )
-				break;
+            if ( ++sp->nstep & 1 )
+                break;
 
-			ticks = time( 0 );
-			if ( sp->sec != ticks )
-			{
-				updating = 1;
-				sp->sec = ticks;
-				ticks += sp->offset;
-				timeofday = localtime( &ticks );
-				seconds = timeofday->tm_sec;
-				hours = timeofday->tm_hour;
-				minutes = timeofday->tm_min;
-				fl_redraw_object( ob );
-			}
-			break;
+            ticks = time( 0 );
+            if ( sp->sec != ticks )
+            {
+                updating = 1;
+                sp->sec = ticks;
+                ticks += sp->offset;
+                timeofday = localtime( &ticks );
+                seconds = timeofday->tm_sec;
+                hours = timeofday->tm_hour;
+                minutes = timeofday->tm_min;
+                fl_redraw_object( ob );
+            }
+            break;
 
-		case FL_FREEMEM:
-			fl_free( ob->spec );
-			break;
+        case FL_FREEMEM:
+            fl_free( ob->spec );
+            break;
     }
 
     return FL_RETURN_NONE;
@@ -292,11 +292,11 @@ handle_clock( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_clock( int          type,
-				 FL_Coord     x,
-				 FL_Coord     y,
-				 FL_Coord     w,
-				 FL_Coord     h,
-				 const char * s )
+                 FL_Coord     x,
+                 FL_Coord     y,
+                 FL_Coord     w,
+                 FL_Coord     h,
+                 const char * s )
 {
     FL_OBJECT *obj;
 
@@ -319,11 +319,11 @@ fl_create_clock( int          type,
 
 FL_OBJECT *
 fl_add_clock( int          type,
-			  FL_Coord     x,
-			  FL_Coord     y,
-			  FL_Coord     w,
-			  FL_Coord     h,
-			  const char * s )
+              FL_Coord     x,
+              FL_Coord     y,
+              FL_Coord     w,
+              FL_Coord     h,
+              const char * s )
 
 {
     FL_OBJECT *ob = fl_create_clock( type, x, y, w, h, s );
@@ -339,7 +339,7 @@ fl_add_clock( int          type,
 
 long
 fl_set_clock_adjustment( FL_OBJECT * ob,
-						 long        offset )
+                         long        offset )
 {
     SPEC *sp = ob->spec;
     long old = sp->offset;
@@ -354,9 +354,9 @@ fl_set_clock_adjustment( FL_OBJECT * ob,
 
 void
 fl_get_clock( FL_OBJECT * ob,
-			  int *       h,
-			  int *       m,
-			  int *       s )
+              int *       h,
+              int *       m,
+              int *       s )
 {
     SPEC *sp = ob->spec;
     time_t ticks;
@@ -376,13 +376,21 @@ fl_get_clock( FL_OBJECT * ob,
 
 void
 fl_set_clock_ampm( FL_OBJECT * ob,
-				   int         y )
+                   int         y )
 {
     SPEC *sp = ob->spec;
 
     if ( sp->am_pm != y )
     {
-		sp->am_pm = y;
-		fl_redraw_object( ob );
+        sp->am_pm = y;
+        fl_redraw_object( ob );
     }
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

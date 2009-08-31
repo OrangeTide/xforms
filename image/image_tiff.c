@@ -65,11 +65,11 @@ static TIFFTag *find_tag( int );
 typedef struct
 {
     int endian;
-    int ifd_offset;		/* next ifd location. 0 indicates end */
-    int spp;			/* samples per pixel                  */
-    int bps[ 4 ];		/* bits per sample                    */
-    int curr_pos;		/* current writing location           */
-    int next_pos;		/* next   writing location           */
+    int ifd_offset;     /* next ifd location. 0 indicates end */
+    int spp;            /* samples per pixel                  */
+    int bps[ 4 ];       /* bits per sample                    */
+    int curr_pos;       /* current writing location           */
+    int next_pos;       /* next   writing location           */
     int ( * read2bytes ) ( FILE * );
     int ( * read4bytes ) ( FILE * );
     int ( * write2bytes ) ( int, FILE * );
@@ -77,8 +77,8 @@ typedef struct
     FL_IMAGE *image;
     ReadIT readit[ 15 ];
     WriteIT writeit[ 15 ];
-    int strip_size;		/* strip size in bytes */
-    int rowsPerStrip;		/* preferred  */
+    int strip_size;     /* strip size in bytes */
+    int rowsPerStrip;       /* preferred  */
     int nstrips;
     int *stripOffsets;
     int *stripByteCount;
@@ -88,7 +88,7 @@ typedef struct
 } SPEC;
 
 static void initialize_tiff_io( SPEC *,
-								int );
+                                int );
 
 /***************************************
  ***************************************/
@@ -97,17 +97,17 @@ static int
 TIFF_identify( FILE * fp )
 {
     char c[ 4 ];
-	size_t i;
+    size_t i;
 
     i = fread( c, 1, 4, fp );
     rewind( fp );
     return    i == 4
-		   && (    ( c[ 0 ] == 'I' && c[ 1 ] == 'I' )
-			    || ( c[ 0 ] == 'M' && c[ 1 ] == 'M' ) );
+           && (    ( c[ 0 ] == 'I' && c[ 1 ] == 'I' )
+                || ( c[ 0 ] == 'M' && c[ 1 ] == 'M' ) );
 }
 
 static int read_tiff_ifd( FILE * fp,
-						  SPEC * sp );
+                          SPEC * sp );
 
 
 /***************************************
@@ -126,11 +126,11 @@ TIFF_description( FL_IMAGE * im )
 
     if ( fread( buf, 1, 4, fp ) != 4 )
     {
-		flimage_error( im, "Failure to read TIFF file" );
-		fl_free( sp );
-		im->io_spec = NULL;
-		im->spec_size = 0;
-		return -1;
+        flimage_error( im, "Failure to read TIFF file" );
+        fl_free( sp );
+        im->io_spec = NULL;
+        im->spec_size = 0;
+        return -1;
     }
 
     sp->endian = buf[ 0 ] == 'M' ? MSBFirst : LSBFirst;
@@ -141,22 +141,22 @@ TIFF_description( FL_IMAGE * im )
 
     if ( ! sp->ifd_offset )
     {
-		flimage_error( im, "Invalid TIFF: no IFD" );
-		fl_free( sp );
-		im->io_spec = NULL;
-		im->spec_size = 0;
-		return -1;
+        flimage_error( im, "Invalid TIFF: no IFD" );
+        fl_free( sp );
+        im->io_spec = NULL;
+        im->spec_size = 0;
+        return -1;
     }
 
     read_tiff_ifd( fp, sp );
 
     if ( get_image_info_from_ifd( im ) < 0 )
-	{
-		fl_free( sp );
-		im->io_spec = NULL;
-		im->spec_size = 0;
-		return -1;
-	}
+    {
+        fl_free( sp );
+        im->io_spec = NULL;
+        im->spec_size = 0;
+        return -1;
+    }
 
     return 0;
 }
@@ -178,9 +178,9 @@ TIFF_readpixels( FL_IMAGE * im )
     load_tiff_colormap( im );
 
     if ( sp->ifd_offset )
-		im->next_frame = TIFF_next;
+        im->next_frame = TIFF_next;
     else
-		im->next_frame = 0;
+        im->next_frame = 0;
 
     im->more = sp->ifd_offset != 0;
 
@@ -200,9 +200,9 @@ TIFF_next( FL_IMAGE * im )
 
     if ( get_image_info_from_ifd( im ) < 0 )
     {
-		flimage_error( im, "Can't get image info" );
-		M_err( "Next", "Can't get image info" );
-		return -1;
+        flimage_error( im, "Can't get image info" );
+        M_err( "Next", "Can't get image info" );
+        return -1;
     }
 
     flimage_getmem( im );
@@ -212,9 +212,9 @@ TIFF_next( FL_IMAGE * im )
 
 
 static int write_ifd( FL_IMAGE *,
-					  SPEC * );
+                      SPEC * );
 static int write_pixels( FL_IMAGE *,
-						 SPEC * );
+                         SPEC * );
 
 
 /***************************************
@@ -242,9 +242,9 @@ TIFF_write( FL_IMAGE * image )
     FILE *fp = image->fpout;
     FL_IMAGE *im = image;
     int err,
-		t;
+        t;
     SPEC *sp;
-	size_t dummy;
+    size_t dummy;
 
     /* we do not touch im->io_spec. Use this local copy */
 
@@ -268,21 +268,21 @@ TIFF_write( FL_IMAGE * image )
     sp->write2bytes( 42, fp );
     sp->next_pos = 4;
     sp->max_tags = 15;
-    sp->write4bytes( sp->next_pos += 4, fp );	/* ifd location */
+    sp->write4bytes( sp->next_pos += 4, fp );   /* ifd location */
 
     for ( err = 0; ! err && im; im = im->next )
     {
-		sp->curr_pos = sp->next_pos;
-		sp->next_pos += sp->max_tags * 12;
-		im->fpout = image->fpout;
-		fseek( fp, sp->curr_pos, SEEK_SET );
-		err =    write_ifd( im, sp ) < 0
-		      || write_pixels( im, sp ) < 0;
+        sp->curr_pos = sp->next_pos;
+        sp->next_pos += sp->max_tags * 12;
+        im->fpout = image->fpout;
+        fseek( fp, sp->curr_pos, SEEK_SET );
+        err =    write_ifd( im, sp ) < 0
+              || write_pixels( im, sp ) < 0;
 
-		/* update the IFD location */
+        /* update the IFD location */
 
-		fseek( fp, sp->ifd_offset, SEEK_SET );
-		sp->write4bytes( im->next ? sp->next_pos : 0, fp );
+        fseek( fp, sp->ifd_offset, SEEK_SET );
+        sp->write4bytes( im->next ? sp->next_pos : 0, fp );
     }
 
     fl_free( sp->stripByteCount );
@@ -300,11 +300,11 @@ void
 flimage_enable_tiff(void)
 {
     flimage_add_format( "Tag Image File Format", "tiff", "tif",
-						FL_IMAGE_FLEX,
-						TIFF_identify,
-						TIFF_description,
-						TIFF_readpixels,
-						TIFF_write);
+                        FL_IMAGE_FLEX,
+                        TIFF_identify,
+                        TIFF_description,
+                        TIFF_readpixels,
+                        TIFF_write);
 }
 
 
@@ -360,16 +360,16 @@ static int junkBuffer;
 enum
 {
     kUByte    = 1,
-	ASCII     = 2,
-	kUShort   = 3,
+    ASCII     = 2,
+    kUShort   = 3,
     kULong    = 4,
-	RATIONAL  = 5,
-	SBYTE     = 6,
+    RATIONAL  = 5,
+    SBYTE     = 6,
     kShort    = 8,
-	kLong     = 9,
-	SRATIONAL = 10,
-	kFloat    = 11,
-	kDouble   = 12
+    kLong     = 9,
+    SRATIONAL = 10,
+    kFloat    = 11,
+    kDouble   = 12
 };
 
 /* type is used for writing only */
@@ -411,9 +411,9 @@ find_tag( int val )
     /* if tags are more than about 20, binary search may be better */
 
     for ( tag = interestedTags; tag->tag_value && tag->tag_value != val; tag++ )
-		/* empty */ ;
+        /* empty */ ;
 
-    return tag->tag_value ? tag : 0;	/* &stag; */
+    return tag->tag_value ? tag : 0;    /* &stag; */
 }
 
 
@@ -430,70 +430,70 @@ get_image_info_from_ifd( FL_IMAGE * im )
 
     if ( ! ( tag = find_tag( ImageWidth ) ) )
     {
-		flimage_error( im, "Bad ImageWidth tag" );
-		return -1;
+        flimage_error( im, "Bad ImageWidth tag" );
+        return -1;
     }
     im->w = tag->value[ 0 ];
 
     if ( ! ( tag = find_tag( ImageHeight ) ) )
     {
-		flimage_error( im, "Bad ImageLength tag" );
-		return -1; 
+        flimage_error( im, "Bad ImageLength tag" );
+        return -1; 
     }
     im->h = tag->value[ 0 ];
 
     if ( im->w <= 0 || im->h <= 0 )
     {
-		fprintf( stderr, "bad image dimension: %d %d\n", im->w, im->h );
-		return -1;
+        fprintf( stderr, "bad image dimension: %d %d\n", im->w, im->h );
+        return -1;
     }
 
     if ( ! ( sp->spp = find_tag( SamplesPerPixel )->value[ 0 ] ) )
-		sp->spp = 1;
+        sp->spp = 1;
 
     tag = find_tag( BitsPerSample );
 
     for ( i = 0; i < sp->spp; i++ )
     {
-		if ( ( sp->bps[ i ] = tag->value[ i ] ) <= 0 )
-		{
-			flimage_error( im, "bad bps: %d\n", sp->bps[ i ] );
-			return -1;
-		}
+        if ( ( sp->bps[ i ] = tag->value[ i ] ) <= 0 )
+        {
+            flimage_error( im, "bad bps: %d\n", sp->bps[ i ] );
+            return -1;
+        }
     }
 
     tag = find_tag( PhotometricI );
 
     switch ( tag->value[ 0 ] )
     {
-		case PhotoBW0White :
-		case PhotoBW0Black :
-			im->type = sp->bps[ 0 ] == 1 ? FL_IMAGE_MONO :
-			           ( sp->bps[ 0 ] <= 8 ? FL_IMAGE_GRAY : FL_IMAGE_GRAY16 );
-			break;
+        case PhotoBW0White :
+        case PhotoBW0Black :
+            im->type = sp->bps[ 0 ] == 1 ? FL_IMAGE_MONO :
+                       ( sp->bps[ 0 ] <= 8 ? FL_IMAGE_GRAY : FL_IMAGE_GRAY16 );
+            break;
 
-		case PhotoRGB :
-			im->type = FL_IMAGE_RGB;
-			break;
+        case PhotoRGB :
+            im->type = FL_IMAGE_RGB;
+            break;
 
-		case PhotoPalette :
-			im->type = FL_IMAGE_CI;
-			if ( ( im->map_len = find_tag( ColorMap )->count / 3 ) <= 0 )
-			{
-				flimage_error( im, "Colormap is missing for PhotoPalette" );
-				return -1;
-			}
-			break;
+        case PhotoPalette :
+            im->type = FL_IMAGE_CI;
+            if ( ( im->map_len = find_tag( ColorMap )->count / 3 ) <= 0 )
+            {
+                flimage_error( im, "Colormap is missing for PhotoPalette" );
+                return -1;
+            }
+            break;
 
-		default:
-			flimage_error( im, "Unhandled photometricI %d\n", 0 );
-			break;
+        default:
+            flimage_error( im, "Unhandled photometricI %d\n", 0 );
+            break;
     }
 
     if ( im->type == FL_IMAGE_GRAY16 && ( tag = find_tag( MaxSampleValue ) ) )
-		im->gray_maxval = tag->value[ 0 ];
+        im->gray_maxval = tag->value[ 0 ];
     else
-		im->gray_maxval = ( 1 << sp->bps[ 0 ] ) - 1;
+        im->gray_maxval = ( 1 << sp->bps[ 0 ] ) - 1;
 
     return 0;
 }
@@ -507,19 +507,19 @@ static int typeSize[ 13 ];
 
 static void
 initialize_tiff_io( SPEC * sp,
-					int    endian )
+                    int    endian )
 {
     if ( ! typeSize[ kUByte ] )
     {
-		/* initialize the typeSize                       */
+        /* initialize the typeSize                       */
 
-		typeSize[ kUByte ] = typeSize[ SBYTE ] = 1;
-		typeSize[ ASCII ] = 1;
-		typeSize[ kShort ] = typeSize[ kUShort ] = 2;
-		typeSize[ kLong ] = typeSize[ kULong ] = 4;
-		typeSize[ RATIONAL ] = typeSize[ SRATIONAL ] = 8;
-		typeSize[ kFloat ] = 4;
-		typeSize[ kDouble ] = 8;
+        typeSize[ kUByte ] = typeSize[ SBYTE ] = 1;
+        typeSize[ ASCII ] = 1;
+        typeSize[ kShort ] = typeSize[ kUShort ] = 2;
+        typeSize[ kLong ] = typeSize[ kULong ] = 4;
+        typeSize[ RATIONAL ] = typeSize[ SRATIONAL ] = 8;
+        typeSize[ kFloat ] = 4;
+        typeSize[ kDouble ] = 8;
     }
 
     /* initialize the functions that reads various types */
@@ -551,14 +551,14 @@ initialize_tiff_io( SPEC * sp,
 
 static void
 read_tag( FILE * fp,
-		  long   offset,
-		  SPEC * sp )
+          long   offset,
+          SPEC * sp )
 {
     int tag_val,
-		count,
-		type,
-		nbyte,
-		i;
+        count,
+        type,
+        nbyte,
+        i;
     TIFFTag *tag;
 
     fseek( fp, offset, SEEK_SET );
@@ -567,46 +567,46 @@ read_tag( FILE * fp,
     if ( ! ( tag = find_tag( tag_val ) ) )
     {
 #if TIFF_DEBUG
-		fprintf( stderr, "Unsupported tag 0x%x(%d)\n", tag_val, tag_val );
+        fprintf( stderr, "Unsupported tag 0x%x(%d)\n", tag_val, tag_val );
 #endif
-		return;
+        return;
     }
 
     tag->type = type = sp->read2bytes( fp );
     tag->count = count = sp->read4bytes( fp );
 
     if (    type < 0
-		 || type > kDouble
-		 || ( nbyte = count * typeSize[ type ] ) <= 0 )
+         || type > kDouble
+         || ( nbyte = count * typeSize[ type ] ) <= 0 )
     {
-		flimage_error( sp->image, "BadType (%d) or count (%d)\n", type, count );
-		M_err( "ReadTag", "BadType (%d) or count (%d)\n", type, count );
-		return;
+        flimage_error( sp->image, "BadType (%d) or count (%d)\n", type, count );
+        M_err( "ReadTag", "BadType (%d) or count (%d)\n", type, count );
+        return;
     }
 
     if ( tag->value && tag->value != &junkBuffer )
-		fl_free( tag->value );
+        fl_free( tag->value );
 
     if ( ! ( tag->value = fl_malloc( sizeof *tag->value * tag->count ) ) )
     {
-		flimage_error( sp->image, "Can't allocate %d tag value buffer",
-					   tag->count );
-		return;
+        flimage_error( sp->image, "Can't allocate %d tag value buffer",
+                       tag->count );
+        return;
     }
 
     if ( nbyte > 4 )
     {
-		tag->offset = sp->read4bytes( fp );
-		tag->value[ 0 ] = tag->offset;
-		fseek( fp, tag->offset, SEEK_SET );
+        tag->offset = sp->read4bytes( fp );
+        tag->value[ 0 ] = tag->offset;
+        fseek( fp, tag->offset, SEEK_SET );
     }
 
     /* we read the colormap seperately */
 
     if ( tag->tag_value != ColorMap )
     {
-		for ( i = 0; i < count; i++)
-			tag->value[ i ] = ( sp->readit[ type ] )( fp );
+        for ( i = 0; i < count; i++)
+            tag->value[ i ] = ( sp->readit[ type ] )( fp );
     }
 }
 
@@ -616,11 +616,11 @@ read_tag( FILE * fp,
 
 static int
 read_tiff_ifd( FILE * fp,
-			   SPEC * sp )
+               SPEC * sp )
 {
     int num_tags,
-		offset,
-		i;
+        offset,
+        i;
     TIFFTag *tag;
 
     fseek( fp, sp->ifd_offset, SEEK_SET );
@@ -629,8 +629,8 @@ read_tiff_ifd( FILE * fp,
 
     for ( offset = sp->ifd_offset + 2, i = 0; i < num_tags; i++ )
     {
-		read_tag( fp, offset, sp );
-		offset += 12;
+        read_tag( fp, offset, sp );
+        offset += 12;
     }
 
     fseek( fp, sp->ifd_offset + num_tags * 12 + 2, SEEK_SET );
@@ -639,25 +639,25 @@ read_tiff_ifd( FILE * fp,
     /* validate the tags (sort of) */
 
     if ( ! ( tag = find_tag( BitsPerSample ) )->count )
-		return -1;
+        return -1;
 
     if (    tag->value[ 0 ] != 1
-		 && tag->value[ 0 ] !=  2
-		 && tag->value[ 0 ] !=  4
-		 && tag->value[ 0 ] !=  8
-		 && tag->value[ 0 ] != 16 )
+         && tag->value[ 0 ] !=  2
+         && tag->value[ 0 ] !=  4
+         && tag->value[ 0 ] !=  8
+         && tag->value[ 0 ] != 16 )
     {
-		M_err( "ReadIFD", "Unsupported bitsPerSample %d", tag->value[ 0 ] );
-		return -1;
+        M_err( "ReadIFD", "Unsupported bitsPerSample %d", tag->value[ 0 ] );
+        return -1;
     }
 
 #if TIFF_DEBUG
     for ( tag = interestedTags; tag->tag_value; tag++ )
     {
-		if ( tag->count )
-			fprintf( stderr, "%s\t count=%2d\t val=%d\n",
-					 tag->tag_name, tag->count,
-					 tag->value ? tag->value[ 0 ] : 0 );
+        if ( tag->count )
+            fprintf( stderr, "%s\t count=%2d\t val=%d\n",
+                     tag->tag_name, tag->count,
+                     tag->value ? tag->value[ 0 ] : 0 );
     }
     fprintf( stderr, "nextIFD at %d\n", sp->ifd_offset );
 #endif
@@ -672,32 +672,32 @@ read_tiff_ifd( FILE * fp,
 
 static unsigned short *
 convert2( unsigned short * sbuf,
-		  int              nbytes,
-		  int              endian )
+          int              nbytes,
+          int              endian )
 {
     int nshort = nbytes / 2,
-		i,
-		j;
+        i,
+        j;
     unsigned char *buf = ( unsigned char * ) sbuf;
 
     if ( nbytes & 1 )
     {
-		fprintf( stderr, "Error: Bad ByteCount %d\n", nbytes );
-		return sbuf;
+        fprintf( stderr, "Error: Bad ByteCount %d\n", nbytes );
+        return sbuf;
     }
 
     if ( endian == machine_endian( ) )
-		return sbuf;
+        return sbuf;
 
     if ( endian == MSBFirst )
     {
-		for ( i = j = 0; i < nshort; i++, j += 2 )
-			sbuf[ i ] = ( buf[ j ] << 8 ) | buf[ j + 1 ];
+        for ( i = j = 0; i < nshort; i++, j += 2 )
+            sbuf[ i ] = ( buf[ j ] << 8 ) | buf[ j + 1 ];
     }
     else
     {
-		for ( i = j = 0; i < nshort; i++, j += 2 )
-			sbuf[ i ] = buf[ j ] | ( buf[ j + 1 ] << 8 );
+        for ( i = j = 0; i < nshort; i++, j += 2 )
+            sbuf[ i ] = buf[ j ] | ( buf[ j + 1 ] << 8 );
     }
 
     return sbuf;
@@ -713,21 +713,21 @@ read_pixels( FL_IMAGE * im )
 {
     SPEC *sp = im->io_spec;
     int nstrips,
-		val,
-		err,
-		i,
-		j,
-		strip,
-		row,
-		bytecount;
+        val,
+        err,
+        i,
+        j,
+        strip,
+        row,
+        bytecount;
     TIFFTag *tag,
-		    *bytecountTag,
-		    *rowsPerStripTag;
+            *bytecountTag,
+            *rowsPerStripTag;
     unsigned char *tmpbuffer,
-		          *tmp;
+                  *tmp;
     int compress,
-		rps,
-		bpl;
+        rps,
+        bpl;
     unsigned short *sbuf;
     FILE *fp = im->fpin;
 
@@ -735,15 +735,15 @@ read_pixels( FL_IMAGE * im )
 
     if ( ( val = rowsPerStripTag->value[ 0 ] ) <= 0 )
     {
-		flimage_error( im, "Bad RowsPerStrip tag" );
-		return -1;
+        flimage_error( im, "Bad RowsPerStrip tag" );
+        return -1;
     }
 
     if (    ( compress = find_tag( Compression )->value[ 0 ] )
-		 && compress != Uncompressed )
+         && compress != Uncompressed )
     {
-		flimage_error( im, "can't handled compressed TIF" );
-		return -1;
+        flimage_error( im, "can't handled compressed TIF" );
+        return -1;
     }
 
     nstrips = ( im->h + val - 1 ) / val;
@@ -751,8 +751,8 @@ read_pixels( FL_IMAGE * im )
 
     if ( nstrips != bytecountTag->count )
     {
-		flimage_error( im, "Inconsistent in number of strips" );
-		return -1;
+        flimage_error( im, "Inconsistent in number of strips" );
+        return -1;
     }
 
     bpl = ( im->w * sp->spp * find_tag( BitsPerSample )->value[ 0 ] + 7 ) / 8;
@@ -761,147 +761,147 @@ read_pixels( FL_IMAGE * im )
 
     if ( ! ( tmpbuffer = fl_malloc( bytecountTag->value[ 0 ] + 4 ) ) )
     {
-		flimage_error( im, "Can't allocate strip buffer (%d bytes)",
-					   bytecountTag->value[ 0 ] );
-		return -1;
+        flimage_error( im, "Can't allocate strip buffer (%d bytes)",
+                       bytecountTag->value[ 0 ] );
+        return -1;
     }
 
     for ( row = strip = err = 0; !err && strip < nstrips; strip++ )
     {
 #if TIFF_DEBUG
-		fprintf( stderr, "strip%d at %d\n", strip, tag->value[ strip ] );
+        fprintf( stderr, "strip%d at %d\n", strip, tag->value[ strip ] );
 #endif
-		fseek( fp, tag->value[strip], SEEK_SET );
+        fseek( fp, tag->value[strip], SEEK_SET );
 
-		bytecount = bytecountTag->value[ strip ];
+        bytecount = bytecountTag->value[ strip ];
 
-		if ( ( err = ( fread( tmpbuffer, 1, bytecount, fp ) == 0 ) ) )
-			M_err( "ReadStrip", "Error reading ByteCount" );
+        if ( ( err = ( fread( tmpbuffer, 1, bytecount, fp ) == 0 ) ) )
+            M_err( "ReadStrip", "Error reading ByteCount" );
 
-		/* TODO: de-compress the tmpbuffer */
+        /* TODO: de-compress the tmpbuffer */
 
-		tmp = tmpbuffer;
-		if ( sp->spp == 1 )
-		{
-			if ( sp->bps[ 0 ] == 8 )
-			{
-				unsigned short **ctmp = FL_IsCI( im->type ) ? im->ci : im->gray;
+        tmp = tmpbuffer;
+        if ( sp->spp == 1 )
+        {
+            if ( sp->bps[ 0 ] == 8 )
+            {
+                unsigned short **ctmp = FL_IsCI( im->type ) ? im->ci : im->gray;
 
-				for ( i = 0; row < im->h && i < rps; i++, row++ )
-				{
-					for ( j = 0; j < im->w; j++ )
-						ctmp[ row ][ j ] = tmp[ j ];
-					tmp += im->w;
-				}
-			}
-			else if ( sp->bps[ 0 ] > 8 )
-			{
-				unsigned short **ctmp = FL_IsCI( im->type ) ? im->ci : im->gray;
+                for ( i = 0; row < im->h && i < rps; i++, row++ )
+                {
+                    for ( j = 0; j < im->w; j++ )
+                        ctmp[ row ][ j ] = tmp[ j ];
+                    tmp += im->w;
+                }
+            }
+            else if ( sp->bps[ 0 ] > 8 )
+            {
+                unsigned short **ctmp = FL_IsCI( im->type ) ? im->ci : im->gray;
 
-				/* TIFF SPEC did not define 16 bps, and seems libtiff always
-				   uses MSB. */
+                /* TIFF SPEC did not define 16 bps, and seems libtiff always
+                   uses MSB. */
 
-				sbuf = convert2( ( void * ) tmp, bytecount,
-								 MSBFirst /* sp->endian */ );
+                sbuf = convert2( ( void * ) tmp, bytecount,
+                                 MSBFirst /* sp->endian */ );
 
-				for ( i = 0; row < im->h && i < rps; i++, row++ )
-				{
-					memcpy( ctmp[ row ], sbuf, bpl );
-					sbuf += im->w;
-				}
-			}
-			else if ( sp->bps[ 0 ] == 4 )
-			{
-				for ( i = 0; row < im->h && i < rps; i++, row++, tmp += bpl )
-				{
-					for ( j = 0; j < im->w - 1; tmp++ )
-					{
-						im->ci[ row ][ j++ ] = ( *tmp >> 4 ) & 0x0f;
-						im->ci[ row ][ j++ ] = *tmp & 0x0f;
-					}
+                for ( i = 0; row < im->h && i < rps; i++, row++ )
+                {
+                    memcpy( ctmp[ row ], sbuf, bpl );
+                    sbuf += im->w;
+                }
+            }
+            else if ( sp->bps[ 0 ] == 4 )
+            {
+                for ( i = 0; row < im->h && i < rps; i++, row++, tmp += bpl )
+                {
+                    for ( j = 0; j < im->w - 1; tmp++ )
+                    {
+                        im->ci[ row ][ j++ ] = ( *tmp >> 4 ) & 0x0f;
+                        im->ci[ row ][ j++ ] = *tmp & 0x0f;
+                    }
 
-					im->ci[ row ][ j++ ] = ( *tmp >> 4 ) & 0x0f;
+                    im->ci[ row ][ j++ ] = ( *tmp >> 4 ) & 0x0f;
 
-					if ( j < im->w )
-						im->ci[ row ][ j ] = *tmp & 0x0f;
-				}
-			}
-			else if ( sp->bps[0] == 1 )
-			{
-				for ( i = 0; row < im->h && i < rps; i++, row++, tmp += bpl )
-					fl_unpack_bits( im->ci[ row ], tmp, im->w );
-			}
-			else
-			{
-				M_err( "ReadStrip", "Unhandled bpp=%d\n", sp->bps[ 0 ] );
-				return -1;
-			}
-		}
-		else if ( sp->spp == 3 || sp->spp == 4 )
-		{
-			int config = find_tag( PlannarConfig )->value[ 0 ];
+                    if ( j < im->w )
+                        im->ci[ row ][ j ] = *tmp & 0x0f;
+                }
+            }
+            else if ( sp->bps[0] == 1 )
+            {
+                for ( i = 0; row < im->h && i < rps; i++, row++, tmp += bpl )
+                    fl_unpack_bits( im->ci[ row ], tmp, im->w );
+            }
+            else
+            {
+                M_err( "ReadStrip", "Unhandled bpp=%d\n", sp->bps[ 0 ] );
+                return -1;
+            }
+        }
+        else if ( sp->spp == 3 || sp->spp == 4 )
+        {
+            int config = find_tag( PlannarConfig )->value[ 0 ];
 
-			if ( sp->bps[ 0 ] == 8 )
-			{
-				if ( config == RGBRGB )
-				{
-					for ( i = 0; row < im->h && i < rps; i++, row++ )
-					{
-						for ( j = 0; j < im->w; j++, tmp += sp->spp )
-						{
-							im->red[   row ][ j ] = *tmp;
-							im->green[ row ][ j ] = *( tmp + 1 );
-							im->blue[  row ][ j ] = *( tmp + 2 );
-						}
-					}
-				}
-				else if ( config == RRGGBB )
-				{
-					for ( i = 0; row < im->h && i < rps; i++, row++ )
-					{
-						for ( j = 0; j < im->w; j++, tmp++ )
-							im->red[ row ][ j ] = *tmp;
+            if ( sp->bps[ 0 ] == 8 )
+            {
+                if ( config == RGBRGB )
+                {
+                    for ( i = 0; row < im->h && i < rps; i++, row++ )
+                    {
+                        for ( j = 0; j < im->w; j++, tmp += sp->spp )
+                        {
+                            im->red[   row ][ j ] = *tmp;
+                            im->green[ row ][ j ] = *( tmp + 1 );
+                            im->blue[  row ][ j ] = *( tmp + 2 );
+                        }
+                    }
+                }
+                else if ( config == RRGGBB )
+                {
+                    for ( i = 0; row < im->h && i < rps; i++, row++ )
+                    {
+                        for ( j = 0; j < im->w; j++, tmp++ )
+                            im->red[ row ][ j ] = *tmp;
 
-						for ( j = 0; j < im->w; j++, tmp++ ) ;
-						im->green[ row ][ j ] = *tmp;
+                        for ( j = 0; j < im->w; j++, tmp++ ) ;
+                        im->green[ row ][ j ] = *tmp;
 
-						for ( j = 0; j < im->w; j++, tmp++ )
-							im->blue[ row ][ j ] = *tmp;
-					}
-				}
-				else
-				{
-					M_err( "ReadRGB", "Unknown PlannarConfig %d", config );
-					return -1;
-				}
-			}
-			else
-			{
-				flimage_error( im, "Unsupported bps=%d", sp->bps[ 0 ] );
-				return -1;
-			}
-		}
-		else
-		{
-			flimage_error( im, "spp=%d unsupported", sp->spp );
-			return -1;
-		}
+                        for ( j = 0; j < im->w; j++, tmp++ )
+                            im->blue[ row ][ j ] = *tmp;
+                    }
+                }
+                else
+                {
+                    M_err( "ReadRGB", "Unknown PlannarConfig %d", config );
+                    return -1;
+                }
+            }
+            else
+            {
+                flimage_error( im, "Unsupported bps=%d", sp->bps[ 0 ] );
+                return -1;
+            }
+        }
+        else
+        {
+            flimage_error( im, "spp=%d unsupported", sp->spp );
+            return -1;
+        }
     }
 
     fl_free( tmpbuffer );
 
     if ( find_tag(BitsPerSample)->value[ 0 ] == 1 )
     {
-		int b = find_tag( PhotometricI )->value[0] != PhotoBW0Black;
-		im->red_lut[ b ] = im->green_lut[ b ] = im->blue_lut[ b ] = 0;
-		im->red_lut[ ! b ] = im->green_lut[ ! b ] = im->blue_lut[ ! b ] =
-			                                                          FL_PCMAX;
+        int b = find_tag( PhotometricI )->value[0] != PhotoBW0Black;
+        im->red_lut[ b ] = im->green_lut[ b ] = im->blue_lut[ b ] = 0;
+        im->red_lut[ ! b ] = im->green_lut[ ! b ] = im->blue_lut[ ! b ] =
+                                                                      FL_PCMAX;
     }
 
     /* TODO: post-processing gamma, color/gray response etc */
 
     if ( err )
-		flimage_error( im, "ErrorReading" );
+        flimage_error( im, "ErrorReading" );
 
     return err ? -1 : 0;
 }
@@ -919,26 +919,26 @@ load_tiff_colormap( FL_IMAGE * im )
     int i;
 
     if ( ! tag->count )
-		return 0;
+        return 0;
 
     if ( im->map_len != tag->count / 3 )
     {
-		flimage_error( im, "Bad Colormap" );
-		return -1;
+        flimage_error( im, "Bad Colormap" );
+        return -1;
     }
 
     if ( im->map_len > 0 )
     {
-		fseek( fp, tag->offset, SEEK_SET );
+        fseek( fp, tag->offset, SEEK_SET );
 
-		for ( i = 0; i < im->map_len; i++ )
-			im->red_lut[ i ] = sp->readit[ kUShort ]( fp ) >> 8;
+        for ( i = 0; i < im->map_len; i++ )
+            im->red_lut[ i ] = sp->readit[ kUShort ]( fp ) >> 8;
 
-		for ( i = 0; i < im->map_len; i++ )
-			im->green_lut[ i ] = sp->readit[ kUShort ]( fp ) >> 8;
+        for ( i = 0; i < im->map_len; i++ )
+            im->green_lut[ i ] = sp->readit[ kUShort ]( fp ) >> 8;
 
-		for ( i = 0; i < im->map_len; i++ )
-			im->blue_lut[ i ] = sp->readit[ kUShort ]( fp ) >> 8;
+        for ( i = 0; i < im->map_len; i++ )
+            im->blue_lut[ i ] = sp->readit[ kUShort ]( fp ) >> 8;
     }
 
     return 0;
@@ -950,8 +950,8 @@ load_tiff_colormap( FL_IMAGE * im )
 
 static void
 write_tiff_colormap( FL_IMAGE * im,
-					 SPEC     * sp,
-					 int        len )
+                     SPEC     * sp,
+                     int        len )
 {
     FILE *fp = im->fpout;
     int i;
@@ -965,26 +965,26 @@ write_tiff_colormap( FL_IMAGE * im,
     /* red */
 
     for ( i = 0; i < im->map_len; i++ )
-		sp->write2bytes( im->red_lut[ i ] << 8 | 0xff, fp );
+        sp->write2bytes( im->red_lut[ i ] << 8 | 0xff, fp );
 
     for ( ; i < len; i++ )
-		sp->write2bytes( 0, fp );
+        sp->write2bytes( 0, fp );
 
     /* green */
 
     for ( i = 0; i < im->map_len; i++ )
-		sp->write2bytes( im->green_lut[ i ] << 8 | 0xff, fp );
+        sp->write2bytes( im->green_lut[ i ] << 8 | 0xff, fp );
 
     for ( ; i < len; i++ )
-		sp->write2bytes( 0, fp );
+        sp->write2bytes( 0, fp );
 
     /* blue */
 
     for ( i = 0; i < im->map_len; i++ )
-		sp->write2bytes( im->blue_lut[ i ] << 8 | 0xff, fp );
+        sp->write2bytes( im->blue_lut[ i ] << 8 | 0xff, fp );
 
     for ( ; i < len; i++ )
-		sp->write2bytes( 0, fp );
+        sp->write2bytes( 0, fp );
 }
 
 
@@ -994,11 +994,11 @@ write_tiff_colormap( FL_IMAGE * im,
 
 static void
 write_tag( FILE * fp,
-		   SPEC * sp,
-		   int    tag_val,
-		   int    count,
-		   int  * value,
-		   int  * n )
+           SPEC * sp,
+           int    tag_val,
+           int    count,
+           int  * value,
+           int  * n )
 {
     TIFFTag *tag;
     int i;
@@ -1010,25 +1010,25 @@ write_tag( FILE * fp,
 
     if ( typeSize[ tag->type ] * count > 4 )
     {
-		sp->write4bytes( sp->next_pos, fp );
-		fseek( fp, sp->next_pos, SEEK_SET );
+        sp->write4bytes( sp->next_pos, fp );
+        fseek( fp, sp->next_pos, SEEK_SET );
 
-		if ( tag->type == ASCII || tag->type == SBYTE || tag->type == kUByte )
-		{
-			char *p = ( char * ) value;
+        if ( tag->type == ASCII || tag->type == SBYTE || tag->type == kUByte )
+        {
+            char *p = ( char * ) value;
 
-			for ( i = 0; i < count; i++ )
-				sp->writeit[ tag->type ]( p[ i ], fp );
-		}
-		else
-			for ( i = 0; i < count; i++ )
-				sp->writeit[ tag->type ]( value[ i ], fp );
+            for ( i = 0; i < count; i++ )
+                sp->writeit[ tag->type ]( p[ i ], fp );
+        }
+        else
+            for ( i = 0; i < count; i++ )
+                sp->writeit[ tag->type ]( value[ i ], fp );
 
-		sp->next_pos += count * typeSize[ tag->type ];
+        sp->next_pos += count * typeSize[ tag->type ];
     }
     else
-		for ( i = 0; i < count; i++ )
-			sp->writeit[ tag->type ]( value[ i ], fp );
+        for ( i = 0; i < count; i++ )
+            sp->writeit[ tag->type ]( value[ i ], fp );
 
     ( *n )++;
 
@@ -1043,22 +1043,22 @@ write_tag( FILE * fp,
 
 static int
 write_ifd( FL_IMAGE * im,
-		   SPEC     * sp )
+           SPEC     * sp )
 {
     FILE *fp = im->fpout;
     int num_tags,
-		itag,
-		nstrips,
-		bpl;
+        itag,
+        nstrips,
+        bpl;
     int compression = Uncompressed,
-		              photometric;
+                      photometric;
     int plannarConfig = RGBRGB,
-		orientation = TopLeft;
+        orientation = TopLeft;
     char doc[ 256 ],
-		 *p;
+         *p;
     static const char *desc = "TIFF by XForms V1.0.91";
     int minval = -1,
-		maxval = -1;
+        maxval = -1;
 
     num_tags = 13;
     sp->spp = 1;
@@ -1066,34 +1066,34 @@ write_ifd( FL_IMAGE * im,
     /* strip path info */
 
     if ( ! *strcpy( doc,
-					( p = strrchr( im->outfile, '/' ) ) ? p + 1 : im->outfile ) )
-		num_tags--;
+                    ( p = strrchr( im->outfile, '/' ) ) ? p + 1 : im->outfile ) )
+        num_tags--;
 
     if ( im->type == FL_IMAGE_CI )
     {
-		num_tags++;
-		sp->bps[ 0 ] = 8;
-		photometric = PhotoPalette;
+        num_tags++;
+        sp->bps[ 0 ] = 8;
+        photometric = PhotoPalette;
     }
     else if ( im->type == FL_IMAGE_MONO )
     {
-		sp->bps[ 0 ] = 1;
-		photometric = im->red_lut[ 0 ] > im->red_lut[ 1 ] ?
-			          PhotoBW0White : PhotoBW0Black;
+        sp->bps[ 0 ] = 1;
+        photometric = im->red_lut[ 0 ] > im->red_lut[ 1 ] ?
+                      PhotoBW0White : PhotoBW0Black;
     }
     else if ( im->type == FL_IMAGE_GRAY || im->type == FL_IMAGE_GRAY16 )
     {
-		num_tags += im->type == FL_IMAGE_GRAY ? 0 : 2;
-		sp->bps[ 0 ] = im->type == FL_IMAGE_GRAY ? 8 : 16;
-		minval = 0;
-		maxval = im->gray_maxval;
-		photometric = PhotoBW0Black;
+        num_tags += im->type == FL_IMAGE_GRAY ? 0 : 2;
+        sp->bps[ 0 ] = im->type == FL_IMAGE_GRAY ? 8 : 16;
+        minval = 0;
+        maxval = im->gray_maxval;
+        photometric = PhotoBW0Black;
     }
     else if ( im->type == FL_IMAGE_RGB )
     {
-		sp->bps[ 0 ] = sp->bps[ 1 ] = sp->bps[ 2 ] = 8;
-		sp->spp = 3;
-		photometric = PhotoRGB;
+        sp->bps[ 0 ] = sp->bps[ 1 ] = sp->bps[ 2 ] = 8;
+        sp->spp = 3;
+        photometric = PhotoRGB;
     }
 
     bpl = ( im->w * sp->spp * sp->bps[ 0 ] + 7 ) / 8;
@@ -1102,8 +1102,8 @@ write_ifd( FL_IMAGE * im,
 
     if ( sp->nstrips < nstrips )
     {
-		sp->stripOffsets = fl_calloc( sizeof( int ), nstrips );
-		sp->stripByteCount = fl_calloc( sizeof( int ), nstrips );
+        sp->stripOffsets = fl_calloc( sizeof( int ), nstrips );
+        sp->stripByteCount = fl_calloc( sizeof( int ), nstrips );
     }
     sp->nstrips = nstrips;
 
@@ -1111,8 +1111,8 @@ write_ifd( FL_IMAGE * im,
 
     if ( num_tags > sp->max_tags )
     {
-		M_err( "WriteTIFFIFD", "InternalError: run out of tag space" );
-		return -1;
+        M_err( "WriteTIFFIFD", "InternalError: run out of tag space" );
+        return -1;
     }
 
     sp->write2bytes( num_tags, fp );
@@ -1126,7 +1126,7 @@ write_ifd( FL_IMAGE * im,
     write_tag( fp, sp, PhotometricI, 1, &photometric, &itag );
 
     if ( doc[ 0 ] )
-		write_tag( fp, sp, DocumentName, strlen( doc ), ( int * ) doc, &itag );
+        write_tag( fp, sp, DocumentName, strlen( doc ), ( int * ) doc, &itag );
 
     write_tag( fp, sp, Description, strlen(desc), (int *) desc, &itag );
     sp->offset_offset = sp->next_pos;
@@ -1141,28 +1141,28 @@ write_ifd( FL_IMAGE * im,
 
     if ( im->type == FL_IMAGE_GRAY16 )
     {
-		write_tag( fp, sp, MinSampleValue, 1, &minval, &itag );
-		write_tag( fp, sp, MaxSampleValue, 1, &maxval, &itag );
+        write_tag( fp, sp, MinSampleValue, 1, &minval, &itag );
+        write_tag( fp, sp, MaxSampleValue, 1, &maxval, &itag );
     }
 
     write_tag( fp, sp, PlannarConfig, 1, &plannarConfig, &itag );
 
     if ( im->type == FL_IMAGE_CI )
     {
-		itag++;
+        itag++;
 
-		/* we always write 8bit palette image */
+        /* we always write 8bit palette image */
 
-		write_tiff_colormap( im, sp, 256 );
-		sp->next_pos += 256 * 3 * typeSize[ kShort ];
-		fseek( fp, sp->curr_pos += 12, SEEK_SET );
+        write_tiff_colormap( im, sp, 256 );
+        sp->next_pos += 256 * 3 * typeSize[ kShort ];
+        fseek( fp, sp->curr_pos += 12, SEEK_SET );
     }
 
     if ( itag != num_tags )
     {
-		M_err( "WriteTIFFIFD", "wrong number of tags. wrote %d expect %d",
-			   itag, num_tags );
-		return -1;
+        M_err( "WriteTIFFIFD", "wrong number of tags. wrote %d expect %d",
+               itag, num_tags );
+        return -1;
     }
 
     /* we do not know where next IFD is at, but need to reserve space */
@@ -1180,16 +1180,16 @@ write_ifd( FL_IMAGE * im,
 
 static int
 write_pixels( FL_IMAGE * im,
-			  SPEC     * sp )
+              SPEC     * sp )
 {
     FILE *fp = im->fpout;
     int row,
-		i,
-		j,
-		k,
-		err,
-		eof,
-		strip;
+        i,
+        j,
+        k,
+        err,
+        eof,
+        strip;
     int bytesPerRow;
     unsigned char *tmpbuf;
 
@@ -1200,102 +1200,102 @@ write_pixels( FL_IMAGE * im,
 
     for ( i = 0; i < sp->nstrips; i++ )
     {
-		sp->stripByteCount[ i ] = sp->rowsPerStrip * bytesPerRow;
-		sp->stripOffsets[ i ]   = eof + i * sp->stripByteCount[ i ];
+        sp->stripByteCount[ i ] = sp->rowsPerStrip * bytesPerRow;
+        sp->stripOffsets[ i ]   = eof + i * sp->stripByteCount[ i ];
     }
 
     /* fix up the last strip, otherwise we need to pad the output */
 
     sp->stripByteCount[ sp->nstrips - 1 ] =
-				  bytesPerRow
-				* ( im->h - sp->rowsPerStrip * ( sp->nstrips - 1 ) );
+                  bytesPerRow
+                * ( im->h - sp->rowsPerStrip * ( sp->nstrips - 1 ) );
 
     fseek( fp, sp->offset_offset, SEEK_SET );
 
     for ( i = 0; i < sp->nstrips; i++ )
-		sp->write4bytes( sp->stripOffsets[ i ], fp );
+        sp->write4bytes( sp->stripOffsets[ i ], fp );
 
     /* if compression, we won't know the bytecount until after writing */
 
     fseek( fp, sp->bytecount_offset, SEEK_SET );
 
     for ( i = 0; i < sp->nstrips; i++ )
-		sp->write4bytes( sp->stripByteCount[i], fp );
+        sp->write4bytes( sp->stripByteCount[i], fp );
 
     if ( ! ( tmpbuf = fl_malloc( bytesPerRow + 4 ) ) )
     {
-		flimage_error( im, "Can't allocate buffer (%d bytes)", bytesPerRow );
-		return -1;
+        flimage_error( im, "Can't allocate buffer (%d bytes)", bytesPerRow );
+        return -1;
     }
 
     for ( row = strip = err = 0; !err && strip < sp->nstrips; strip++ )
     {
-		fseek( fp, sp->stripOffsets[ strip ], SEEK_SET );
+        fseek( fp, sp->stripOffsets[ strip ], SEEK_SET );
 
-		if ( im->type == FL_IMAGE_CI )
-		{
-			for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
-			{
-				for ( k = 0; k < im->w; k++ )
-					tmpbuf[ k ] = im->ci[ row ][ k];
+        if ( im->type == FL_IMAGE_CI )
+        {
+            for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
+            {
+                for ( k = 0; k < im->w; k++ )
+                    tmpbuf[ k ] = im->ci[ row ][ k];
 
-				err =
-				 fwrite( tmpbuf, 1, bytesPerRow, fp ) != ( size_t ) bytesPerRow;
-			}
-		}
-		else if ( im->type == FL_IMAGE_GRAY )
-		{
-			for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
-			{
-				for ( k = 0; k < im->w; k++ )
-					tmpbuf[ k ] = im->gray[ row ][ k ];
-				err =
-				 fwrite( tmpbuf, 1, bytesPerRow, fp ) != ( size_t ) bytesPerRow;
-			}
-		}
-		else if ( im->type == FL_IMAGE_GRAY16 )
-		{
-			for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
-			{
-				/* tiff spec 6.0 did not define 16 bits samples. libtiff
-				   seems to use MSB always for this. We do the same */
+                err =
+                 fwrite( tmpbuf, 1, bytesPerRow, fp ) != ( size_t ) bytesPerRow;
+            }
+        }
+        else if ( im->type == FL_IMAGE_GRAY )
+        {
+            for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
+            {
+                for ( k = 0; k < im->w; k++ )
+                    tmpbuf[ k ] = im->gray[ row ][ k ];
+                err =
+                 fwrite( tmpbuf, 1, bytesPerRow, fp ) != ( size_t ) bytesPerRow;
+            }
+        }
+        else if ( im->type == FL_IMAGE_GRAY16 )
+        {
+            for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
+            {
+                /* tiff spec 6.0 did not define 16 bits samples. libtiff
+                   seems to use MSB always for this. We do the same */
 
-				for ( k = 0; k < im->w; k++ )
-					fli_fput2MSBF( im->gray[row][k], fp );
+                for ( k = 0; k < im->w; k++ )
+                    fli_fput2MSBF( im->gray[row][k], fp );
 
-				/* sp->write2bytes(im->gray[row][k], fp); */
-			}
-		}
-		else if ( im->type == FL_IMAGE_MONO )
-		{
-			for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
-			{
-				fl_pack_bits( tmpbuf, im->ci[row], im->w );
-				err = 
-				 fwrite( tmpbuf, 1, bytesPerRow, fp ) != ( size_t ) bytesPerRow;
-			}
-		}
-		else if ( im->type == FL_IMAGE_RGB )
-		{
-			/* always write RGBRGB */
+                /* sp->write2bytes(im->gray[row][k], fp); */
+            }
+        }
+        else if ( im->type == FL_IMAGE_MONO )
+        {
+            for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
+            {
+                fl_pack_bits( tmpbuf, im->ci[row], im->w );
+                err = 
+                 fwrite( tmpbuf, 1, bytesPerRow, fp ) != ( size_t ) bytesPerRow;
+            }
+        }
+        else if ( im->type == FL_IMAGE_RGB )
+        {
+            /* always write RGBRGB */
 
-			for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
-			{
-				for ( k = 0; k < im->w; k++ )
-				{
-					tmpbuf[ 0 ] = im->red[   row ][ k ];
-					tmpbuf[ 1 ] = im->green[ row ][ k ];
-					tmpbuf[ 2 ] = im->blue[  row ][ k ];
-					err = fwrite( tmpbuf, 1, 3, fp ) != 3;
-				}
-			}
-		}
-		else
-		{
-			flimage_error( im, "unhandled type: %s",
-						   flimage_type_name( im->type ) );
-			return -1;
-		}
+            for ( j = 0; row < im->h && j < sp->rowsPerStrip; j++, row++ )
+            {
+                for ( k = 0; k < im->w; k++ )
+                {
+                    tmpbuf[ 0 ] = im->red[   row ][ k ];
+                    tmpbuf[ 1 ] = im->green[ row ][ k ];
+                    tmpbuf[ 2 ] = im->blue[  row ][ k ];
+                    err = fwrite( tmpbuf, 1, 3, fp ) != 3;
+                }
+            }
+        }
+        else
+        {
+            flimage_error( im, "unhandled type: %s",
+                           flimage_type_name( im->type ) );
+            return -1;
+        }
     }
 
     fl_free( tmpbuf );
@@ -1312,27 +1312,35 @@ write_pixels( FL_IMAGE * im,
 #if 0
 static int
 PackBitsDecode( char * input,
-				char * output,
-				int    inlen,
-				int    outlen )
+                char * output,
+                int    inlen,
+                int    outlen )
 {
     int b,
-		n;
+        n;
 
     for ( n = 0; n < outlen; )
     {
-		b = *input;
-		if ( b >= 128 )
-			b -= 256;
+        b = *input;
+        if ( b >= 128 )
+            b -= 256;
 
-		if ( b == -128 )
-			;
+        if ( b == -128 )
+            ;
 
-		if (b < 0)
-		{
-			b = -b + 1;
-			input++;
-		}
+        if (b < 0)
+        {
+            b = -b + 1;
+            input++;
+        }
     }
 }
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -43,11 +43,11 @@ XBM_identify( FILE * fp )
 
     while ( --n >= 0 && fgets( buf, sizeof buf - 1, fp ) )
     {
-		if ( strstr( buf, "#define" ) && strstr( buf, "_width " ) )
-		{
-			rewind( fp );
-			return 1;
-		}
+        if ( strstr( buf, "#define" ) && strstr( buf, "_width " ) )
+        {
+            rewind( fp );
+            return 1;
+        }
     }
 
     return -1;
@@ -62,26 +62,26 @@ XBM_description( FL_IMAGE * im )
 {
     char tmpstr[ 256 ];
     int w = -1,
-		h = -1,
-		no_size = 1,
-		c;
+        h = -1,
+        no_size = 1,
+        c;
 
     while ( no_size && fgets( tmpstr, sizeof tmpstr, im->fpin ) )
     {
-		if ( sscanf( tmpstr, "#define %*s %d", &c ) == 1 )
-		{
-			if ( strstr( tmpstr, "_width" ) )
-				w = c;
-			else if ( strstr( tmpstr, "_height" ) )
-				h = c;
-			no_size = w < 1 || h < 1;
-		}
+        if ( sscanf( tmpstr, "#define %*s %d", &c ) == 1 )
+        {
+            if ( strstr( tmpstr, "_width" ) )
+                w = c;
+            else if ( strstr( tmpstr, "_height" ) )
+                h = c;
+            no_size = w < 1 || h < 1;
+        }
     }
 
     if ( no_size )
     {
-		im->error_message( im, "can't get xbm size" );
-		return -1;
+        im->error_message( im, "can't get xbm size" );
+        return -1;
     }
 
     im->w = w;
@@ -91,8 +91,8 @@ XBM_description( FL_IMAGE * im )
 
     /* skip until we get brace */
 
-    while ( ( h = getc( im->fpin ) ) != EOF && h != '{' )	  /* } VI */
-		/* empty */ ;
+    while ( ( h = getc( im->fpin ) ) != EOF && h != '{' )     /* } VI */
+        /* empty */ ;
 
     return h == EOF ? EOF : 0;
 }
@@ -105,10 +105,10 @@ static int
 XBM_load( FL_IMAGE * im )
 {
     int c,
-		ct,
-		i,
-		j,
-		err;
+        ct,
+        i,
+        j,
+        err;
     unsigned short *bits;
 
     /* populate the colormap */
@@ -118,20 +118,20 @@ XBM_load( FL_IMAGE * im )
 
     for ( j = err = c = 0; j < im->h && !err; j++ )
     {
-		bits = im->ci[ j ];
-		im->completed = j + 1;
+        bits = im->ci[ j ];
+        im->completed = j + 1;
 
-		for (i  = ct = 0; i < im->w && !err; i++, ct = ( ct + 1 ) & 7, c >>= 1 )
-		{
-			if ( ! ct )
-				err = ( c = fli_readhexint( im->fpin ) ) < 0;
-			*bits++ = c & 1;
-		}
+        for (i  = ct = 0; i < im->w && !err; i++, ct = ( ct + 1 ) & 7, c >>= 1 )
+        {
+            if ( ! ct )
+                err = ( c = fli_readhexint( im->fpin ) ) < 0;
+            *bits++ = c & 1;
+        }
     }
 
     if ( err )
     {
-		im->error_message( im, "Junk in hex stream" );
+        im->error_message( im, "Junk in hex stream" );
     }
 
     return j > im->h / 2 ? j : -1;
@@ -145,70 +145,70 @@ static int
 XBM_write( FL_IMAGE * im )
 {
     char tmpstr[ 256 ],
-		 *p;
+         *p;
     unsigned short *bits;
     int nbits,
-		k,
-		len,
-		i,
-		j;
+        k,
+        len,
+        i,
+        j;
     FILE *fp = im->fpout;
 
     strncpy( tmpstr, im->outfile, sizeof tmpstr - 25 );
     if ( ( p = strchr( tmpstr, '.' ) ))
-		*p = '\0';
+        *p = '\0';
 
     if ( isdigit( ( int ) tmpstr[ 0 ] ) )
-		tmpstr[ 0 ] = 'a';
+        tmpstr[ 0 ] = 'a';
 
     fprintf( fp, "#define %s_width %d\n#define %s_height %d\n",
-			 tmpstr, im->w, tmpstr, im->h );
+             tmpstr, im->w, tmpstr, im->h );
     fprintf( fp, "static char %s_bits[] = {\n ", tmpstr );
 
     for ( j = 0, len = 1; j < im->h; j++ )
     {
-		bits = im->ci[ j];
-		im->completed = j;
+        bits = im->ci[ j];
+        im->completed = j;
 
-		for ( i = nbits = k = 0; i < im->w; i++, bits++ )
-		{
-			k = k >> 1;
-			if ( *bits )
-				k |= 0x80;
+        for ( i = nbits = k = 0; i < im->w; i++, bits++ )
+        {
+            k = k >> 1;
+            if ( *bits )
+                k |= 0x80;
 
-			if ( ++nbits == 8 )
-			{
-				fprintf( fp, "0x%02x", k &= 0xf );
+            if ( ++nbits == 8 )
+            {
+                fprintf( fp, "0x%02x", k &= 0xf );
 
-				if ( j != im->h - 1 || i != im->w - 1 )
-					putc( ',', fp );
+                if ( j != im->h - 1 || i != im->w - 1 )
+                    putc( ',', fp );
 
-				if ( ( len += 5 ) > 70 )
-				{
-					fprintf( fp, "\n " );
-					len = 1;
-				}
+                if ( ( len += 5 ) > 70 )
+                {
+                    fprintf( fp, "\n " );
+                    len = 1;
+                }
 
-				nbits = k = 0;
-			}
-		}
+                nbits = k = 0;
+            }
+        }
 
-		/* check for possible padding */
+        /* check for possible padding */
 
-		if ( nbits )
-		{
-			k >>= 8 - nbits;
-			fprintf( fp, "0x%02x", k &= 0xff );
+        if ( nbits )
+        {
+            k >>= 8 - nbits;
+            fprintf( fp, "0x%02x", k &= 0xff );
 
-			if ( j != im->h - 1 )
-				putc( ',', fp );
+            if ( j != im->h - 1 )
+                putc( ',', fp );
 
-			if ( ( len += 5 ) > 70 )
-			{
-				fprintf( fp, "\n " );
-				len = 1;
-			}
-		}
+            if ( ( len += 5 ) > 70 )
+            {
+                fprintf( fp, "\n " );
+                len = 1;
+            }
+        }
     }
 
     fputs( "};\n", fp );
@@ -224,8 +224,16 @@ void
 flimage_enable_xbm( void )
 {
     flimage_add_format( "X11 Bitmap", "xbm", "xbm", FL_IMAGE_MONO,
-						XBM_identify,
-						XBM_description,
-						XBM_load,
-						XBM_write );
+                        XBM_identify,
+                        XBM_description,
+                        XBM_load,
+                        XBM_write );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

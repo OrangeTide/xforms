@@ -39,20 +39,20 @@
 
 int
 flimage_replace_pixel( FL_IMAGE     * im,
-					   unsigned int   target,
-					   unsigned int   repl )
+                       unsigned int   target,
+                       unsigned int   repl )
 {
     int n,
-		r1,
-		g1,
-		b1,
-		r2,
-		g2,
-		b2;
+        r1,
+        g1,
+        b1,
+        r2,
+        g2,
+        b2;
     int tmp;
 
     if ( ! im || im->w <= 0 )
-		return -1;
+        return -1;
 
     FL_UNPACK( target, r1, g1, b1 );
     FL_UNPACK( repl, r2, g2, b2 );
@@ -61,57 +61,65 @@ flimage_replace_pixel( FL_IMAGE     * im,
 
     if ( im->type == FL_IMAGE_RGB )
     {
-		unsigned char *red   = im->red[   0 ];
-		unsigned char *green = im->green[ 0 ];
-		unsigned char *blue  = im->blue[  0 ];
+        unsigned char *red   = im->red[   0 ];
+        unsigned char *green = im->green[ 0 ];
+        unsigned char *blue  = im->blue[  0 ];
 
-		for ( n = im->w * im->h; --n >= 0; )
-		{
-			tmp = FL_PACK( red[ n ], green[ n ], blue[ n ] );
-			if ( tmp == ( int ) target )
-			{
-				red[   n ] = r2;
-				green[ n ] = g2;
-				blue[  n ] = b2;
-			}
-		}
+        for ( n = im->w * im->h; --n >= 0; )
+        {
+            tmp = FL_PACK( red[ n ], green[ n ], blue[ n ] );
+            if ( tmp == ( int ) target )
+            {
+                red[   n ] = r2;
+                green[ n ] = g2;
+                blue[  n ] = b2;
+            }
+        }
     }
     else if ( im->type == FL_IMAGE_PACKED )
     {
-		unsigned int *packed = im->packed[ 0 ];
+        unsigned int *packed = im->packed[ 0 ];
 
-		for ( n = im->w * im->h; --n >= 0; )
-		{
-			if ( packed[ n ] == target )
-				packed[ n ] = repl;
-		}
+        for ( n = im->w * im->h; --n >= 0; )
+        {
+            if ( packed[ n ] == target )
+                packed[ n ] = repl;
+        }
     }
     else if ( FL_IsGray( im->type ) )
     {
-		unsigned short *gray = im->gray[ 0 ];
-		unsigned short gray1 = FL_RGB2GRAY( r1, g1, b1 );
-		unsigned short gray2 = FL_RGB2GRAY( r2, g2, b2 );
+        unsigned short *gray = im->gray[ 0 ];
+        unsigned short gray1 = FL_RGB2GRAY( r1, g1, b1 );
+        unsigned short gray2 = FL_RGB2GRAY( r2, g2, b2 );
 
-		for ( n = im->w * im->h; --n >= 0; )
-			if ( gray[n] == gray1 )
-				gray[ n ] = gray2;
+        for ( n = im->w * im->h; --n >= 0; )
+            if ( gray[n] == gray1 )
+                gray[ n ] = gray2;
     }
     else if ( FL_IsCI( im->type ) )
     {
-		unsigned short *ci = im->ci[ 0 ];
-		unsigned short c1 = flimage_get_closest_color_from_map( im, target );
-		unsigned short c2 = flimage_get_closest_color_from_map( im, repl );
+        unsigned short *ci = im->ci[ 0 ];
+        unsigned short c1 = flimage_get_closest_color_from_map( im, target );
+        unsigned short c2 = flimage_get_closest_color_from_map( im, repl );
 
-		for ( n = im->w * im->h; --n >= 0; )
-			if ( ci[ n ] == c1 )
-				ci[ n ] = c2;
+        for ( n = im->w * im->h; --n >= 0; )
+            if ( ci[ n ] == c1 )
+                ci[ n ] = c2;
     }
     else
     {
-		M_err( "ReplaceColor", "InternalError: bad type %d", im->type );
-		return -1;
+        M_err( "ReplaceColor", "InternalError: bad type %d", im->type );
+        return -1;
     }
 
     im->modified = 1;
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

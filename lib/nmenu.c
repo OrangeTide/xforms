@@ -25,7 +25,7 @@
 
 
 static int handle_nmenu( FL_OBJECT *, int, FL_Coord, FL_Coord,
-						 int , void * );
+                         int , void * );
 static void popup_reparent( FL_POPUP *, FL_POPUP * );
 static void draw_menu( FL_OBJECT * );
 
@@ -43,18 +43,18 @@ static void draw_menu( FL_OBJECT * );
 
 FL_OBJECT *
 fl_create_nmenu( int          type,
-				 FL_Coord     x,
-				 FL_Coord     y,
-				 FL_Coord     w,
-				 FL_Coord     h,
-				 const char * label )
+                 FL_Coord     x,
+                 FL_Coord     y,
+                 FL_Coord     w,
+                 FL_Coord     h,
+                 const char * label )
 {
     FL_OBJECT *obj;
     FLI_NMENU_SPEC *sp;
 
     obj = fl_make_object( FL_NMENU, type, x, y, w, h, label, handle_nmenu );
 
-	obj->boxtype = FL_FLAT_BOX;
+    obj->boxtype = FL_FLAT_BOX;
     obj->col1    = FL_COL1;
     obj->col2    = IS_BUTTON_NMENU( obj ) ? FL_MCOL : FL_BOTTOM_BCOL;
     obj->lcol    = FL_LCOL;
@@ -63,11 +63,11 @@ fl_create_nmenu( int          type,
 
     sp = obj->spec = fl_malloc( sizeof *sp );
 
-	sp->popup = NULL;
-	sp->sel   = NULL;
-	sp->hl_color = IS_BUTTON_NMENU( obj ) ? FL_LCOL : FL_WHITE;
+    sp->popup = NULL;
+    sp->sel   = NULL;
+    sp->hl_color = IS_BUTTON_NMENU( obj ) ? FL_LCOL : FL_WHITE;
 
-	fl_set_object_return( obj, FL_RETURN_END_CHANGED );
+    fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
     return obj;
 }
@@ -79,22 +79,22 @@ fl_create_nmenu( int          type,
 
 FL_OBJECT *
 fl_add_nmenu( int          type,
-			  FL_Coord     x,
-			  FL_Coord     y,
-			  FL_Coord     w,
-			  FL_Coord     h,
-			  const char * label )
+              FL_Coord     x,
+              FL_Coord     y,
+              FL_Coord     w,
+              FL_Coord     h,
+              const char * label )
 {
     FL_OBJECT *obj;
 
     obj = fl_create_nmenu( type, x, y, w, h, label );
     fl_add_object( fl_current_form, obj );
 
-	/* Popup can only be created after the object has been added to its form,
-	   otherwise we don't know which window is its parent window... */
+    /* Popup can only be created after the object has been added to its form,
+       otherwise we don't know which window is its parent window... */
 
-	( ( FLI_NMENU_SPEC * ) obj->spec )->popup =
-		               fli_popup_add( FL_ObjWin( obj ), NULL, "fl_add_nmenu" );
+    ( ( FLI_NMENU_SPEC * ) obj->spec )->popup =
+                       fli_popup_add( FL_ObjWin( obj ), NULL, "fl_add_nmenu" );
 
     return obj;
 }
@@ -107,33 +107,33 @@ fl_add_nmenu( int          type,
 int
 fl_clear_nmenu( FL_OBJECT * obj )
 {
-	FLI_NMENU_SPEC *sp;
+    FLI_NMENU_SPEC *sp;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_clear_nmenu_popup", "NULL object" );
-		return -1;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_clear_nmenu_popup", "NULL object" );
+        return -1;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	/* Remove all existing entries and reset the popups internal counter */
+    /* Remove all existing entries and reset the popups internal counter */
 
-	if ( sp->popup != NULL )
-	{
-		while ( sp->popup->entries != NULL )
-			fl_popup_entry_delete( sp->popup->entries );
+    if ( sp->popup != NULL )
+    {
+        while ( sp->popup->entries != NULL )
+            fl_popup_entry_delete( sp->popup->entries );
 
-		fli_popup_reset_counter( sp->popup );
-	}
-	else 
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL, "fl_clear_nmenu" );
+        fli_popup_reset_counter( sp->popup );
+    }
+    else 
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL, "fl_clear_nmenu" );
 
-	sp->sel = NULL;
+    sp->sel = NULL;
 
-	fl_redraw_object( obj );
+    fl_redraw_object( obj );
 
-	return 0;
+    return 0;
 }
 
 
@@ -143,33 +143,33 @@ fl_clear_nmenu( FL_OBJECT * obj )
 
 FL_POPUP_ENTRY *
 fl_add_nmenu_items( FL_OBJECT  * obj,
-					const char * items,
-					 ... )
+                    const char * items,
+                     ... )
 {
-	FLI_NMENU_SPEC *sp;
-	FL_POPUP_ENTRY *new_entries;
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP_ENTRY *new_entries;
     va_list ap;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_add_nmenu_items", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_add_nmenu_items", "NULL object" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_add_nmenu_items" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_add_nmenu_items" );
 
-	/* Create and append the new entries to the popup */
+    /* Create and append the new entries to the popup */
 
-	va_start( ap, items );
-	new_entries = fli_popup_add_entries( sp->popup, items, ap,
-										 "fl_add_nmenu_items", 0 );
-	va_end( ap );
+    va_start( ap, items );
+    new_entries = fli_popup_add_entries( sp->popup, items, ap,
+                                         "fl_add_nmenu_items", 0 );
+    va_end( ap );
 
-	return new_entries;
+    return new_entries;
 }
 
 
@@ -179,38 +179,38 @@ fl_add_nmenu_items( FL_OBJECT  * obj,
 
 FL_POPUP_ENTRY *
 fl_insert_nmenu_items( FL_OBJECT      * obj,
-					   FL_POPUP_ENTRY * after,
-					   const char     * items,
-						... )
+                       FL_POPUP_ENTRY * after,
+                       const char     * items,
+                        ... )
 {
-	FLI_NMENU_SPEC *sp;
-	FL_POPUP_ENTRY *new_entries;
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP_ENTRY *new_entries;
     va_list ap;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_add_nmenu_items", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_add_nmenu_items", "NULL object" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_insert_nmenu_items" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_insert_nmenu_items" );
 
-	if ( after != NULL && fli_check_popup_entry_exists( after ) != 0 )
-	{
-		M_err( "fl_add_nmenu_items", "Item to insert after doesn't exist" );
-		return NULL;
-	}
+    if ( after != NULL && fli_check_popup_entry_exists( after ) != 0 )
+    {
+        M_err( "fl_add_nmenu_items", "Item to insert after doesn't exist" );
+        return NULL;
+    }
 
-	va_start( ap, items );
-	new_entries = fli_popup_insert_entries( sp->popup, after, items, ap,
-											"fl_insert_nmenu_items", 0 );
-	va_end( ap );
+    va_start( ap, items );
+    new_entries = fli_popup_insert_entries( sp->popup, after, items, ap,
+                                            "fl_insert_nmenu_items", 0 );
+    va_end( ap );
 
-	return new_entries;
+    return new_entries;
 }
 
 
@@ -220,59 +220,59 @@ fl_insert_nmenu_items( FL_OBJECT      * obj,
 
 FL_POPUP_ENTRY *
 fl_replace_nmenu_item( FL_OBJECT      * obj,
-					   FL_POPUP_ENTRY * old_item,
-					   const char     * items,
-					   ... )
+                       FL_POPUP_ENTRY * old_item,
+                       const char     * items,
+                       ... )
 {
-	FLI_NMENU_SPEC *sp;
-	FL_POPUP_ENTRY *new_entries;
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP_ENTRY *new_entries;
     va_list ap;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_replace_nmenu_items", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_replace_nmenu_items", "NULL object" );
+        return NULL;
+    }
 
-	if ( ! items || ! *items )
-	{
-		M_err( "fl_replace_nmenu_items", "Items string NULL or empty" );
-		return NULL;
-	}
+    if ( ! items || ! *items )
+    {
+        M_err( "fl_replace_nmenu_items", "Items string NULL or empty" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_replace_nmenu_items" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_replace_nmenu_items" );
 
-	/* Test if the item we're supposed to replace exists */
+    /* Test if the item we're supposed to replace exists */
 
-	if ( fli_check_popup_entry_exists( old_item ) )
-	{
-		M_err( "fl_replace_nmenu_items", "Item to replace doesn't exist" );
-		return NULL;
-	}
+    if ( fli_check_popup_entry_exists( old_item ) )
+    {
+        M_err( "fl_replace_nmenu_items", "Item to replace doesn't exist" );
+        return NULL;
+    }
 
-	/* Add the new item(s) after the one to replaced */
+    /* Add the new item(s) after the one to replaced */
 
-	va_start( ap, items );
-	new_entries = fli_popup_insert_entries( sp->popup, old_item, items, ap,
-											"fl_replace_nmenu_items", 0 );
-	va_end( ap );
+    va_start( ap, items );
+    new_entries = fli_popup_insert_entries( sp->popup, old_item, items, ap,
+                                            "fl_replace_nmenu_items", 0 );
+    va_end( ap );
 
-	/* If the insert worked out ok delete the old item (and check if we
-	   have to set a new displayed item) */
+    /* If the insert worked out ok delete the old item (and check if we
+       have to set a new displayed item) */
 
-	if ( new_entries != NULL )
-	{
-		if ( sp->sel != NULL && sp->sel->entry == old_item )
-			sp->sel = NULL;
+    if ( new_entries != NULL )
+    {
+        if ( sp->sel != NULL && sp->sel->entry == old_item )
+            sp->sel = NULL;
 
-		fl_popup_entry_delete( old_item );
-	}
+        fl_popup_entry_delete( old_item );
+    }
 
-	return new_entries;
+    return new_entries;
 }
 
 
@@ -282,38 +282,38 @@ fl_replace_nmenu_item( FL_OBJECT      * obj,
 
 int
 fl_delete_nmenu_item( FL_OBJECT      * obj,
-					  FL_POPUP_ENTRY * item )
+                      FL_POPUP_ENTRY * item )
 {
-	FLI_NMENU_SPEC *sp;
+    FLI_NMENU_SPEC *sp;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_delete_nmenu_item", "NULL object" );
-		return -1;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_delete_nmenu_item", "NULL object" );
+        return -1;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_delete_nmenu_items" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_delete_nmenu_items" );
 
-	if ( fli_check_popup_entry_exists( item ) != 0 )
-	{
-		M_err( "fl_delete_nmenu_item", "Item doesnt exist" );
-		return -1;
-	}
+    if ( fli_check_popup_entry_exists( item ) != 0 )
+    {
+        M_err( "fl_delete_nmenu_item", "Item doesnt exist" );
+        return -1;
+    }
 
-	/* Delete the entry */
+    /* Delete the entry */
 
-	fl_popup_entry_delete( item );
+    fl_popup_entry_delete( item );
 
-	if ( item == sp->sel->entry )
-		sp->sel = NULL;
+    if ( item == sp->sel->entry )
+        sp->sel = NULL;
 
-	return 0;
+    return 0;
 }
-	
+    
 
 /***************************************
  * (Re)polulate a nmenu objects popup via an array of FL_POPUP_ITEM structures
@@ -321,46 +321,46 @@ fl_delete_nmenu_item( FL_OBJECT      * obj,
 
 FL_POPUP_ENTRY *
 fl_set_nmenu_items( FL_OBJECT     * obj,
-					 FL_POPUP_ITEM * items )
+                     FL_POPUP_ITEM * items )
 {
-	FLI_NMENU_SPEC *sp;
-	FL_POPUP *p;
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP *p;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_set_nmenu_items", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_set_nmenu_items", "NULL object" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_set_nmenu_items" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_set_nmenu_items" );
 
-	/* Create a new popup (otherwise we would have to repeat much of the
-	   code from popup.c) */
+    /* Create a new popup (otherwise we would have to repeat much of the
+       code from popup.c) */
 
-	if ( ( p = fl_popup_create( sp->popup->win, NULL, items ) ) == NULL )
-		return NULL;
+    if ( ( p = fl_popup_create( sp->popup->win, NULL, items ) ) == NULL )
+        return NULL;
 
-	/* Remove all existing entries and reset the popups internal counter */
+    /* Remove all existing entries and reset the popups internal counter */
 
-	while ( sp->popup->entries != NULL )
-		fl_popup_entry_delete( sp->popup->entries );
+    while ( sp->popup->entries != NULL )
+        fl_popup_entry_delete( sp->popup->entries );
 
-	fli_popup_reset_counter( sp->popup );
+    fli_popup_reset_counter( sp->popup );
 
-	/* Now move the new entries to the already existing popup of the nmenu
-	   object*/
+    /* Now move the new entries to the already existing popup of the nmenu
+       object*/
 
-	sp->popup->entries = p->entries;
-	popup_reparent( sp->popup, sp->popup );
-	fl_free( p );
+    sp->popup->entries = p->entries;
+    popup_reparent( sp->popup, sp->popup );
+    fl_free( p );
 
-	sp->sel = NULL;
+    sp->sel = NULL;
 
-	return p->entries;
+    return p->entries;
 }
 
 
@@ -371,21 +371,21 @@ fl_set_nmenu_items( FL_OBJECT     * obj,
 FL_POPUP *
 fl_get_nmenu_popup( FL_OBJECT * obj )
 {
-	FLI_NMENU_SPEC *sp;
+    FLI_NMENU_SPEC *sp;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_get_nmenu_popup", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_get_nmenu_popup", "NULL object" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_get_nmenu_popup" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_get_nmenu_popup" );
 
-	return sp->popup;
+    return sp->popup;
 }
 
 
@@ -395,52 +395,52 @@ fl_get_nmenu_popup( FL_OBJECT * obj )
 
 int
 fl_set_nmenu_popup( FL_OBJECT * obj,
-					FL_POPUP  * popup )
+                    FL_POPUP  * popup )
 {
-	FLI_NMENU_SPEC *sp;
-	FL_POPUP *old_popup;
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP *old_popup;
 
-	/* We need a valid object */
+    /* We need a valid object */
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_set_nmenu_popup", "NULL object" );
-		return -1;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_set_nmenu_popup", "NULL object" );
+        return -1;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	/* The popup must exist */
+    /* The popup must exist */
 
-	if ( fli_check_popup_exists( popup ) )
-	{
-		M_err( "fl_set_nmenu_popup", "Popup doesn't exist" );
-		return -1;
-	}
+    if ( fli_check_popup_exists( popup ) )
+    {
+        M_err( "fl_set_nmenu_popup", "Popup doesn't exist" );
+        return -1;
+    }
 
-	/* The popup can't be a sub-popup */
+    /* The popup can't be a sub-popup */
 
-	if ( popup->parent != NULL )
-	{
-		M_err( "fl_set_nmenu_popup", "Popup is a sub-popup" );
-		return -1;
-	}
+    if ( popup->parent != NULL )
+    {
+        M_err( "fl_set_nmenu_popup", "Popup is a sub-popup" );
+        return -1;
+    }
 
-	/* Delete a popup already associated with the nmenu object */
+    /* Delete a popup already associated with the nmenu object */
 
-	old_popup = ( ( FLI_NMENU_SPEC * ) obj->spec )->popup;
-	if ( old_popup != NULL )
-		fl_popup_delete( old_popup );
+    old_popup = ( ( FLI_NMENU_SPEC * ) obj->spec )->popup;
+    if ( old_popup != NULL )
+        fl_popup_delete( old_popup );
 
-	/* Set the new popup as the nmenu objects popup and redraw */
+    /* Set the new popup as the nmenu objects popup and redraw */
 
-	sp->popup = popup;
+    sp->popup = popup;
 
-	sp->sel = NULL;
+    sp->sel = NULL;
 
-	fl_redraw_object( obj );
+    fl_redraw_object( obj );
 
-	return 1;
+    return 1;
 }
 
 
@@ -450,16 +450,16 @@ fl_set_nmenu_popup( FL_OBJECT * obj,
 
 int
 fl_set_nmenu_policy( FL_OBJECT * obj,
-					 int         policy )
+                     int         policy )
 {
     FLI_NMENU_SPEC *sp;
     int old_policy;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_set_nmenu_policy", "NULL object" );
-		return INT_MIN;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_set_nmenu_policy", "NULL object" );
+        return INT_MIN;
+    }
 
     if ( policy < FL_POPUP_NORMAL_SELECT || policy > FL_POPUP_DRAG_SELECT )
     {
@@ -467,16 +467,16 @@ fl_set_nmenu_policy( FL_OBJECT * obj,
         return -1;
     }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_set_select_policy" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_set_select_policy" );
 
-	old_policy = fl_popup_get_policy( sp->popup );
-	fl_popup_set_policy( sp->popup, policy );
+    old_policy = fl_popup_get_policy( sp->popup );
+    fl_popup_set_policy( sp->popup, policy );
 
-	return old_policy;
+    return old_policy;
 }
 
 
@@ -487,13 +487,13 @@ fl_set_nmenu_policy( FL_OBJECT * obj,
 FL_POPUP_RETURN *
 fl_get_nmenu_item( FL_OBJECT * obj )
 {
-	if ( obj == NULL )
-	{
-		M_err( "fl_get_nmenu_item", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_get_nmenu_item", "NULL object" );
+        return NULL;
+    }
 
-	return ( ( FLI_NMENU_SPEC * ) obj->spec )->sel;
+    return ( ( FLI_NMENU_SPEC * ) obj->spec )->sel;
 }
 
 
@@ -502,23 +502,23 @@ fl_get_nmenu_item( FL_OBJECT * obj )
 
 FL_POPUP_ENTRY *
 fl_get_nmenu_item_by_value( FL_OBJECT * obj,
-							long int    val )
+                            long int    val )
 {
-	FLI_NMENU_SPEC *sp;
+    FLI_NMENU_SPEC *sp;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_get_nmenu_item_by_value", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_get_nmenu_item_by_value", "NULL object" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_get_nmenu_item_by_value" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_get_nmenu_item_by_value" );
 
-	return fl_popup_entry_get_by_value( sp->popup, val );
+    return fl_popup_entry_get_by_value( sp->popup, val );
 }
 
 
@@ -527,23 +527,23 @@ fl_get_nmenu_item_by_value( FL_OBJECT * obj,
 
 FL_POPUP_ENTRY *
 fl_get_nmenu_item_by_label( FL_OBJECT  * obj,
-							 const char * label )
+                             const char * label )
 {
-	FLI_NMENU_SPEC *sp;
+    FLI_NMENU_SPEC *sp;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_get_nmenu_item_by_label", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_get_nmenu_item_by_label", "NULL object" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_get_nmenu_item_by_label" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_get_nmenu_item_by_label" );
 
-	return fl_popup_entry_get_by_label( sp->popup, label );
+    return fl_popup_entry_get_by_label( sp->popup, label );
 }
 
 
@@ -552,23 +552,23 @@ fl_get_nmenu_item_by_label( FL_OBJECT  * obj,
 
 FL_POPUP_ENTRY *
 fl_get_nmenu_item_by_text( FL_OBJECT  * obj,
-							const char * text )
+                            const char * text )
 {
-	FLI_NMENU_SPEC *sp;
+    FLI_NMENU_SPEC *sp;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_get_nmenu_item_by_text", "NULL object" );
-		return NULL;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_get_nmenu_item_by_text", "NULL object" );
+        return NULL;
+    }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	if ( sp->popup == NULL )
-		sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
-								   "fl_get_nmenu_item_by_text" );
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_get_nmenu_item_by_text" );
 
-	return fl_popup_entry_get_by_text( sp->popup, text );
+    return fl_popup_entry_get_by_text( sp->popup, text );
 }
 
 
@@ -577,16 +577,16 @@ fl_get_nmenu_item_by_text( FL_OBJECT  * obj,
 
 FL_COLOR
 fl_set_nmenu_hl_text_color(FL_OBJECT * obj,
-						   FL_COLOR    color )
+                           FL_COLOR    color )
 {
-	FLI_NMENU_SPEC *sp;
-	FL_COLOR old_color;
+    FLI_NMENU_SPEC *sp;
+    FL_COLOR old_color;
 
-	if ( obj == NULL )
-	{
-		M_err( "fl_set_nmenu_hl_text_color", "NULL object" );
-		return FL_MAX_COLORS;
-	}
+    if ( obj == NULL )
+    {
+        M_err( "fl_set_nmenu_hl_text_color", "NULL object" );
+        return FL_MAX_COLORS;
+    }
 
     if ( color >= FL_MAX_COLORS )
     {
@@ -594,13 +594,13 @@ fl_set_nmenu_hl_text_color(FL_OBJECT * obj,
         return FL_MAX_COLORS;
     }
 
-	sp = obj->spec;
+    sp = obj->spec;
 
-	old_color = sp->hl_color;
-	sp->hl_color = color;
-	fl_redraw_object( obj );
+    old_color = sp->hl_color;
+    sp->hl_color = color;
+    fl_redraw_object( obj );
 
-	return old_color;
+    return old_color;
 }
 
 
@@ -610,56 +610,56 @@ fl_set_nmenu_hl_text_color(FL_OBJECT * obj,
 
 static int
 handle_nmenu( FL_OBJECT * obj,
-			  int         event,
-			  FL_Coord    mx   FL_UNUSED_ARG,
-			  FL_Coord    my   FL_UNUSED_ARG,
-			  int         key  FL_UNUSED_ARG,
-			  void      * ev   FL_UNUSED_ARG )
+              int         event,
+              FL_Coord    mx   FL_UNUSED_ARG,
+              FL_Coord    my   FL_UNUSED_ARG,
+              int         key  FL_UNUSED_ARG,
+              void      * ev   FL_UNUSED_ARG )
 {
     FLI_NMENU_SPEC *sp = obj->spec;
-	unsigned int w,
-		         h;
-	int ret = FL_RETURN_NONE;
+    unsigned int w,
+                 h;
+    int ret = FL_RETURN_NONE;
 
-	switch ( event )
-	{
-		case FL_DRAW :
-			draw_menu( obj );
-			break;
+    switch ( event )
+    {
+        case FL_DRAW :
+            draw_menu( obj );
+            break;
 
-		case FL_ENTER :
-			if ( ! IS_TOUCH_NMENU( obj ) )
-				break;
-			/* fall through */
+        case FL_ENTER :
+            if ( ! IS_TOUCH_NMENU( obj ) )
+                break;
+            /* fall through */
 
-		case FL_SHORTCUT :
-		case FL_PUSH :
-			obj->pushed = 1;
-			fl_redraw_object( obj );
-			fl_popup_get_size( sp->popup, &w, &h );
-			if ( obj->form->y + obj->y + obj->h + h < ( unsigned int ) fl_scrh )
-				fl_popup_set_position( sp->popup,
-									   obj->form->x + obj->x,
-									   obj->form->y + obj->y + obj->h );
-			else
-				fl_popup_set_position( sp->popup,
-									   obj->form->x + obj->x,
-									   obj->form->y + obj->y - h );
-			sp->sel = fl_popup_do( sp->popup );
-			obj->pushed = 0;
-			fl_redraw_object( obj );
-			if ( sp->sel != NULL )
-				ret |= FL_RETURN_CHANGED | FL_RETURN_END;
-			break;
+        case FL_SHORTCUT :
+        case FL_PUSH :
+            obj->pushed = 1;
+            fl_redraw_object( obj );
+            fl_popup_get_size( sp->popup, &w, &h );
+            if ( obj->form->y + obj->y + obj->h + h < ( unsigned int ) fl_scrh )
+                fl_popup_set_position( sp->popup,
+                                       obj->form->x + obj->x,
+                                       obj->form->y + obj->y + obj->h );
+            else
+                fl_popup_set_position( sp->popup,
+                                       obj->form->x + obj->x,
+                                       obj->form->y + obj->y - h );
+            sp->sel = fl_popup_do( sp->popup );
+            obj->pushed = 0;
+            fl_redraw_object( obj );
+            if ( sp->sel != NULL )
+                ret |= FL_RETURN_CHANGED | FL_RETURN_END;
+            break;
 
-		case FL_FREEMEM :
-			if ( sp && sp->popup )
-				fl_popup_delete( sp->popup );
-			fl_safe_free( obj->spec );
-			break;
-	}
+        case FL_FREEMEM :
+            if ( sp && sp->popup )
+                fl_popup_delete( sp->popup );
+            fl_safe_free( obj->spec );
+            break;
+    }
 
-	return ret;
+    return ret;
 }
 
 
@@ -668,20 +668,20 @@ handle_nmenu( FL_OBJECT * obj,
 
 static void
 popup_reparent( FL_POPUP * popup,
-				FL_POPUP * top_parent )
+                FL_POPUP * top_parent )
 {
-	FL_POPUP_ENTRY *e;
+    FL_POPUP_ENTRY *e;
 
-	for ( e = popup->entries; e != NULL; e = e->next )
-	{
-		e->popup = popup;
-		if ( e->type == FL_POPUP_SUB )
-		{
-			e->sub->parent = popup;
-			e->sub->top_parent = top_parent;
-			popup_reparent( e->sub, top_parent );
-		}
-	}
+    for ( e = popup->entries; e != NULL; e = e->next )
+    {
+        e->popup = popup;
+        if ( e->type == FL_POPUP_SUB )
+        {
+            e->sub->parent = popup;
+            e->sub->top_parent = top_parent;
+            popup_reparent( e->sub, top_parent );
+        }
+    }
 }
 
 
@@ -691,23 +691,31 @@ popup_reparent( FL_POPUP * popup,
 static void
 draw_menu( FL_OBJECT * obj )
 {
-	if ( ! obj->pushed )
-	{
-		fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, obj->col1,
-					obj->bw );
-		obj->align |= FL_ALIGN_INSIDE;
-		fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, obj->lcol,
-					 obj->lstyle, obj->lsize, obj->label );
-	}
-	else
-	{
-		FLI_NMENU_SPEC *sp = obj->spec;
+    if ( ! obj->pushed )
+    {
+        fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, obj->col1,
+                    obj->bw );
+        obj->align |= FL_ALIGN_INSIDE;
+        fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, obj->lcol,
+                     obj->lstyle, obj->lsize, obj->label );
+    }
+    else
+    {
+        FLI_NMENU_SPEC *sp = obj->spec;
 
-		fl_drw_box( ( IS_BUTTON_NMENU( obj ) && obj->boxtype == FL_FLAT_BOX ) ?
-					FL_UP_BOX : obj->boxtype,
-					obj->x, obj->y, obj->w, obj->h, obj->col2, obj->bw );
-		obj->align |= FL_ALIGN_INSIDE;
-		fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, sp->hl_color,
-					 obj->lstyle, obj->lsize, obj->label );
-	}	
+        fl_drw_box( ( IS_BUTTON_NMENU( obj ) && obj->boxtype == FL_FLAT_BOX ) ?
+                    FL_UP_BOX : obj->boxtype,
+                    obj->x, obj->y, obj->w, obj->h, obj->col2, obj->bw );
+        obj->align |= FL_ALIGN_INSIDE;
+        fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, sp->hl_color,
+                     obj->lstyle, obj->lsize, obj->label );
+    }   
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

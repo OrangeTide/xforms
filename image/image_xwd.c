@@ -57,7 +57,7 @@ SPEC;
 #if XWDDEBUG==1
 static void
 dumpheader( const char    * where,
-			XWDFileHeader * h )
+            XWDFileHeader * h )
 {
     fprintf( stderr, "%s\n", where );
     fprintf( stderr, "file_version = %ld\n", ( long ) h->file_version );
@@ -144,26 +144,26 @@ XWD_identify( FILE * fp )
     XWDFileHeader h;
 
     if ( fread( &h, 1, sizeof h, fp ) != sizeof h )
-		return 0;
+        return 0;
     rewind( fp );
 
     need_swap = ( h.file_version != XWD_FILE_VERSION );
 
     if ( need_swap )
-		swap_header( &h );
+        swap_header( &h );
 
     if ( h.file_version != XWD_FILE_VERSION )
-		return -1;
+        return -1;
 
 #if XWDDEBUG==1
     dumpheader( "Identify", &h );
 #endif
 
     return    h.file_version == XWD_FILE_VERSION
-		   && h.visual_class <= 5
-		   && h.pixmap_depth > 0
-		   && h.pixmap_depth <= 32
-		   && h.pixmap_format <= ZPixmap;
+           && h.visual_class <= 5
+           && h.pixmap_depth > 0
+           && h.pixmap_depth <= 32
+           && h.pixmap_format <= ZPixmap;
 }
 
 
@@ -172,25 +172,25 @@ XWD_identify( FILE * fp )
 
 static void
 generate_header_info( FL_IMAGE      * im,
-					  XWDFileHeader * h )
+                      XWDFileHeader * h )
 {
     char buf[ 128 ];
 
     if ( ! ( im->info = fl_malloc( 1024 ) ) )
-		return;
+        return;
 
     sprintf( im->info, "file_version=%ld\nheader_size=%ld\n",
-			 ( long ) h->file_version, ( long ) h->header_size );
+             ( long ) h->file_version, ( long ) h->header_size );
     sprintf( buf, "visual_class=%d\nbits_per_pixel=%d\nncolors=%d",
-			 ( int ) h->visual_class, ( int ) h->bits_per_pixel,
-			 ( int ) h->ncolors );
+             ( int ) h->visual_class, ( int ) h->bits_per_pixel,
+             ( int ) h->ncolors );
     strcat( im->info, buf );
     sprintf( buf, "PixmapDepth=%d\nPixmapWidth=%d\nPixmapHeight=%d",
-			 ( int ) h->bits_per_pixel, ( int ) h->pixmap_width,
-			 ( int ) h->pixmap_height );
+             ( int ) h->bits_per_pixel, ( int ) h->pixmap_width,
+             ( int ) h->pixmap_height );
     strcat( im->info, buf );
     sprintf( buf, "red_mask=0x%x\n green_mask=0x%x\n blue_mask=0x%x\n",
-			 ( int ) h->red_mask, ( int ) h->green_mask, ( int ) h->blue_mask );
+             ( int ) h->red_mask, ( int ) h->green_mask, ( int ) h->blue_mask );
     strcat( im->info, buf );
 }
 
@@ -210,10 +210,10 @@ XWD_description( FL_IMAGE * im )
     im->spec_size = sizeof *sp;
 
     if ( fread( header, 1, sizeof *header, fp ) != sizeof *header )
-		M_err( "ImageXWD", "failure to read from file" );
+        M_err( "ImageXWD", "failure to read from file" );
 
     if ( ( sp->swap = need_swap ) )
-		swap_header( header );
+        swap_header( header );
 
     fli_rgbmask_to_shifts( header->red_mask,   &sp->rshifts, &sp->rbits );
     fli_rgbmask_to_shifts( header->green_mask, &sp->gshifts, &sp->gbits );
@@ -221,45 +221,45 @@ XWD_description( FL_IMAGE * im )
 
     if ( sp->gbits > ( unsigned int ) FL_PCBITS )
     {
-		sp->rshifts += sp->rbits - FL_PCBITS;
-		sp->gshifts += sp->gbits - FL_PCBITS;
-		sp->bshifts += sp->bbits - FL_PCBITS;
+        sp->rshifts += sp->rbits - FL_PCBITS;
+        sp->gshifts += sp->gbits - FL_PCBITS;
+        sp->bshifts += sp->bbits - FL_PCBITS;
     }
 
     /* print header info */
 
     if ( im->setup->header_info )
-		generate_header_info( im, header );
+        generate_header_info( im, header );
 
 #if XWDDEBUG
     dumpheader( "Description", header );
 #endif
 
     if ( ( k = header->header_size - sizeof *header ) > 0 )
-		k = fread( sp->name, 1, k, fp );
+        k = fread( sp->name, 1, k, fp );
     if ( k >= 0 )
-		sp->name[ k ] = '\0';
+        sp->name[ k ] = '\0';
 
     /* image type */
 
     if (    header->visual_class == StaticGray
-		 || header->visual_class == GrayScale )
+         || header->visual_class == GrayScale )
     {
-		im->type = header->pixmap_depth == 1 ? FL_IMAGE_MONO : FL_IMAGE_GRAY;
-		if ( header->bits_per_pixel > 8 )
-		{
-			im->type = FL_IMAGE_GRAY16;
-			im->gray_maxval = ( 1 << header->bits_per_pixel ) - 1;
-		}
+        im->type = header->pixmap_depth == 1 ? FL_IMAGE_MONO : FL_IMAGE_GRAY;
+        if ( header->bits_per_pixel > 8 )
+        {
+            im->type = FL_IMAGE_GRAY16;
+            im->gray_maxval = ( 1 << header->bits_per_pixel ) - 1;
+        }
     }
     else if (    header->visual_class == TrueColor
-			  || header->visual_class == DirectColor )
-		im->type = FL_IMAGE_RGB;
+              || header->visual_class == DirectColor )
+        im->type = FL_IMAGE_RGB;
     else
     {
-		im->type = FL_IMAGE_CI;
-		if ( header->ncolors == 0 )
-			M_err( "ImageXWD", "no colormap ?" );
+        im->type = FL_IMAGE_CI;
+        if ( header->ncolors == 0 )
+            M_err( "ImageXWD", "no colormap ?" );
     }
 
     im->w = header->pixmap_width;
@@ -281,20 +281,20 @@ XWD_read_pixels( FL_IMAGE * im )
     FILE *fp = im->fpin;
     unsigned short us;
     unsigned int u32,
-		         n,
-		         r,
-		         g,
-		         b,
-		         rn,
-		         gn,
-		         bn;
+                 n,
+                 r,
+                 g,
+                 b,
+                 rn,
+                 gn,
+                 bn;
     unsigned char *uc;
     int x,
-		y,
-		i,
-		err;
+        y,
+        i,
+        err;
     int ( * get32 )( FILE * ),
-		( * get16 )( FILE * );
+        ( * get16 )( FILE * );
 
     fseek( fp, sp->header.header_size, SEEK_SET );
     im->completed = 0;
@@ -302,58 +302,58 @@ XWD_read_pixels( FL_IMAGE * im )
 
     if ( sp->gbits < FL_PCBITS )
     {
-		rn = FL_PCBITS - sp->rbits;
-		gn = FL_PCBITS - sp->gbits;
-		bn = FL_PCBITS - sp->bbits;
+        rn = FL_PCBITS - sp->rbits;
+        gn = FL_PCBITS - sp->gbits;
+        bn = FL_PCBITS - sp->bbits;
     }
     else
-		rn = gn = bn = 0;
+        rn = gn = bn = 0;
 
     if ( h->byte_order == MSBFirst )
     {
-		get32 = fli_fget4MSBF;
-		get16 = fli_fget2MSBF;
+        get32 = fli_fget4MSBF;
+        get16 = fli_fget2MSBF;
     }
     else
     {
-		get32 = fli_fget4LSBF;
-		get16 = fli_fget2LSBF;
+        get32 = fli_fget4LSBF;
+        get16 = fli_fget2LSBF;
     }
 
     /* read the colormap */
 
     if ( h->ncolors > 0 )
     {
-		XWDColor *xwdcolor = fl_malloc( h->ncolors * sizeof *xwdcolor );
+        XWDColor *xwdcolor = fl_malloc( h->ncolors * sizeof *xwdcolor );
 
-		if (    fread( xwdcolor, sizeof *xwdcolor, h->ncolors, fp )
-				                                                 == h->ncolors
-			 && h->visual_class != TrueColor && h->visual_class != DirectColor )
-		{
-			for ( i = 0; i < ( int ) h->ncolors; i++ )
-			{
-				if ( sp->swap )
-				{
-					im->red_lut[   i ] = swap16( xwdcolor[ i ].red   ) >> 8;
-					im->green_lut[ i ] = swap16( xwdcolor[ i ].green ) >> 8;
-					im->blue_lut[  i ] = swap16( xwdcolor[ i ].blue  ) >> 8;
-				}
-				else
-				{
-					im->red_lut[   i ] = ( xwdcolor[ i ].red   ) >> 8;
-					im->green_lut[ i ] = ( xwdcolor[ i ].green ) >> 8;
-					im->blue_lut[  i ] = ( xwdcolor[ i ].blue  ) >> 8;
-				}
-			}
-		}
+        if (    fread( xwdcolor, sizeof *xwdcolor, h->ncolors, fp )
+                                                                 == h->ncolors
+             && h->visual_class != TrueColor && h->visual_class != DirectColor )
+        {
+            for ( i = 0; i < ( int ) h->ncolors; i++ )
+            {
+                if ( sp->swap )
+                {
+                    im->red_lut[   i ] = swap16( xwdcolor[ i ].red   ) >> 8;
+                    im->green_lut[ i ] = swap16( xwdcolor[ i ].green ) >> 8;
+                    im->blue_lut[  i ] = swap16( xwdcolor[ i ].blue  ) >> 8;
+                }
+                else
+                {
+                    im->red_lut[   i ] = ( xwdcolor[ i ].red   ) >> 8;
+                    im->green_lut[ i ] = ( xwdcolor[ i ].green ) >> 8;
+                    im->blue_lut[  i ] = ( xwdcolor[ i ].blue  ) >> 8;
+                }
+            }
+        }
 
-		fl_free( xwdcolor );
+        fl_free( xwdcolor );
     }
 
     if ( feof( fp ) || ferror( fp ) )
     {
-		im->error_message( im, "premature EOF ?" );
-		return -1;
+        im->error_message( im, "premature EOF ?" );
+        return -1;
     }
 
     /* reading the pixels */
@@ -362,136 +362,136 @@ XWD_read_pixels( FL_IMAGE * im )
 
     switch ( h->bits_per_pixel )
     {
-		case 32 :
-			for ( y = 0; !err && y < im->h; y++ )
-			{
-				for ( x = 0; x < im->w; x++ )
-				{
-					u32 = get32( fp );
-					im->red[   y ][ x ] =
-						                 ( u32 & h->red_mask   ) >> sp->rshifts;
-					im->green[ y ][ x ] =
-						                 ( u32 & h->green_mask ) >> sp->gshifts;
-					im->blue[  y ][ x ] =
-						                 ( u32 & h->blue_mask  ) >> sp->bshifts;
-				}
+        case 32 :
+            for ( y = 0; !err && y < im->h; y++ )
+            {
+                for ( x = 0; x < im->w; x++ )
+                {
+                    u32 = get32( fp );
+                    im->red[   y ][ x ] =
+                                         ( u32 & h->red_mask   ) >> sp->rshifts;
+                    im->green[ y ][ x ] =
+                                         ( u32 & h->green_mask ) >> sp->gshifts;
+                    im->blue[  y ][ x ] =
+                                         ( u32 & h->blue_mask  ) >> sp->bshifts;
+                }
 
-				for ( n = im->w * 4; n < h->bytes_per_line; n++ )
-					getc( fp );
+                for ( n = im->w * 4; n < h->bytes_per_line; n++ )
+                    getc( fp );
 
-				err = feof( fp ) || ferror( fp );
-			}
-			break;
+                err = feof( fp ) || ferror( fp );
+            }
+            break;
 
-		case 8 :
-			if (    h->visual_class == TrueColor
-				 || h->visual_class == DirectColor )
-			{
-				for ( err = 0, y = 0; !err && y < im->h; y++ )
-				{
-					for ( x = 0; x < im->w; x++ )
-					{
-						us = getc( fp );
-						r = ( us & h->red_mask   ) >> sp->rshifts;
-						g = ( us & h->green_mask ) >> sp->gshifts;
-						b = ( us & h->blue_mask  ) >> sp->bshifts;
+        case 8 :
+            if (    h->visual_class == TrueColor
+                 || h->visual_class == DirectColor )
+            {
+                for ( err = 0, y = 0; !err && y < im->h; y++ )
+                {
+                    for ( x = 0; x < im->w; x++ )
+                    {
+                        us = getc( fp );
+                        r = ( us & h->red_mask   ) >> sp->rshifts;
+                        g = ( us & h->green_mask ) >> sp->gshifts;
+                        b = ( us & h->blue_mask  ) >> sp->bshifts;
 
-						/* normalize. */
+                        /* normalize. */
 
-						im->red[   y ][ x ] = ( ( r + 1 ) << rn ) - 1;
-						im->green[ y ][ x ] = ( ( g + 1 ) << gn ) - 1;
-						im->blue[  y ][ x ] = ( ( b + 1 ) << bn ) - 1;
-					}
+                        im->red[   y ][ x ] = ( ( r + 1 ) << rn ) - 1;
+                        im->green[ y ][ x ] = ( ( g + 1 ) << gn ) - 1;
+                        im->blue[  y ][ x ] = ( ( b + 1 ) << bn ) - 1;
+                    }
 
-					for ( ; x < ( int ) h->bytes_per_line; x++ )
-						getc( fp );
+                    for ( ; x < ( int ) h->bytes_per_line; x++ )
+                        getc( fp );
 
-					err = feof( fp ) || ferror( fp );
-				}
-			}
-			else
-			{
-				for ( y = 0; !err && y < im->h; y++ )
-				{
-					for ( x = 0; x < im->w; x++ )
-						im->ci[ y ][ x ] = getc( fp );
+                    err = feof( fp ) || ferror( fp );
+                }
+            }
+            else
+            {
+                for ( y = 0; !err && y < im->h; y++ )
+                {
+                    for ( x = 0; x < im->w; x++ )
+                        im->ci[ y ][ x ] = getc( fp );
 
-					for ( ; x < (int)h->bytes_per_line; x++ )
-						getc( fp );
+                    for ( ; x < (int)h->bytes_per_line; x++ )
+                        getc( fp );
 
-					err = feof( fp ) || ferror( fp );
-				}
-			}
-			break;
+                    err = feof( fp ) || ferror( fp );
+                }
+            }
+            break;
 
-		case 16 :
-			if (    h->visual_class == TrueColor
-				 || h->visual_class == DirectColor )
-			{
-				for ( err = 0, y = 0; ! err && y < im->h; y++ )
-				{
-					for ( x = 0; x < im->w; x++ )
-					{
-						us = get16( fp );
-						r = ( us & h->red_mask   ) >> sp->rshifts;
-						g = ( us & h->green_mask ) >> sp->gshifts;
-						b = ( us & h->blue_mask  ) >> sp->bshifts;
+        case 16 :
+            if (    h->visual_class == TrueColor
+                 || h->visual_class == DirectColor )
+            {
+                for ( err = 0, y = 0; ! err && y < im->h; y++ )
+                {
+                    for ( x = 0; x < im->w; x++ )
+                    {
+                        us = get16( fp );
+                        r = ( us & h->red_mask   ) >> sp->rshifts;
+                        g = ( us & h->green_mask ) >> sp->gshifts;
+                        b = ( us & h->blue_mask  ) >> sp->bshifts;
 
-						/* normalize. */
+                        /* normalize. */
 
-						im->red[   y ][ x ] = ( ( r + 1 ) << rn ) - 1;
-						im->green[ y ][ x ] = ( ( g + 1 ) << gn ) - 1;
-						im->blue[  y ][ x ] = ( ( b + 1 ) << bn ) - 1;
-					}
+                        im->red[   y ][ x ] = ( ( r + 1 ) << rn ) - 1;
+                        im->green[ y ][ x ] = ( ( g + 1 ) << gn ) - 1;
+                        im->blue[  y ][ x ] = ( ( b + 1 ) << bn ) - 1;
+                    }
 
-					for ( x = im->w * 2; x < ( int ) h->bytes_per_line; x++ )
-						getc( fp );
+                    for ( x = im->w * 2; x < ( int ) h->bytes_per_line; x++ )
+                        getc( fp );
 
-					err = feof( fp ) || ferror( fp );
-				}
-			}
-			else
-			{
-				for ( y = 0; !err && y < im->h; y++ )
-				{
-					for ( x = 0; x < im->w; x++ )
-						im->ci[ y ][ x ] = get16( fp );
+                    err = feof( fp ) || ferror( fp );
+                }
+            }
+            else
+            {
+                for ( y = 0; !err && y < im->h; y++ )
+                {
+                    for ( x = 0; x < im->w; x++ )
+                        im->ci[ y ][ x ] = get16( fp );
 
-					for ( n = im->w * 2; x < ( int ) h->bytes_per_line; x++ )
-						getc( fp );
+                    for ( n = im->w * 2; x < ( int ) h->bytes_per_line; x++ )
+                        getc( fp );
 
-					err = feof( fp ) || ferror( fp );
-				}
-			}
-			break;
+                    err = feof( fp ) || ferror( fp );
+                }
+            }
+            break;
 
-		case 1 :
-			uc = fl_malloc( h->bytes_per_line );
-			for ( y = 0; y < im->h; y++ )
-			{
-				if ( fread( uc, 1, h->bytes_per_line, fp )
-					                                     != h->bytes_per_line )
-				{
-					M_err( "LoadXWD", "failure to read from file" );
-					err = 1;
-					break;
-				}
+        case 1 :
+            uc = fl_malloc( h->bytes_per_line );
+            for ( y = 0; y < im->h; y++ )
+            {
+                if ( fread( uc, 1, h->bytes_per_line, fp )
+                                                         != h->bytes_per_line )
+                {
+                    M_err( "LoadXWD", "failure to read from file" );
+                    err = 1;
+                    break;
+                }
 
-				fl_unpack_bits( im->ci[y], uc, h->bytes_per_line );
-			}
-			fl_free( uc );
-			break;
+                fl_unpack_bits( im->ci[y], uc, h->bytes_per_line );
+            }
+            fl_free( uc );
+            break;
 
-		default:
-			M_err( "LoadXWD", "%d bpp not implemented\n", h->bits_per_pixel );
-			err = 1;
-			break;
+        default:
+            M_err( "LoadXWD", "%d bpp not implemented\n", h->bits_per_pixel );
+            err = 1;
+            break;
     }
 
     if ( ! err )
     {
-		im->completed = im->total;
-		im->visual_cue( im, "Done Loading XWD" );
+        im->completed = im->total;
+        im->visual_cue( im, "Done Loading XWD" );
     }
 
     return err ? ( y < im->h / 2 ? -1 : y ) : 0;
@@ -519,21 +519,21 @@ static int
 XWD_write_image( FL_IMAGE * im )
 {
     XWDFileHeader header,
-		          *h;
+                  *h;
     FILE *fp = im->fpout;
     int x,
-		y,
-		n,
-		pad;
+        y,
+        n,
+        pad;
     CARD32 *c32;
     int ( * write32 )( int, FILE * ),
-		( * write16 )( int, FILE * );
+        ( * write16 )( int, FILE * );
     unsigned char *uc;
     static int machine_endian = -1;
-	size_t dummy;
+    size_t dummy;
 
     if ( machine_endian < 0 )
-		machine_endian = detect_endian( );
+        machine_endian = detect_endian( );
 
     /* some programs expect MSBF always. Force it */
 
@@ -566,35 +566,35 @@ XWD_write_image( FL_IMAGE * im )
 
     if ( FL_IsRGB( im ) )
     {
-		h->pixmap_depth = 24;
-		h->bits_per_pixel = 32;
-		h->bitmap_unit = 32;
-		h->bitmap_pad = 32;
-		h->visual_class = TrueColor;
+        h->pixmap_depth = 24;
+        h->bits_per_pixel = 32;
+        h->bitmap_unit = 32;
+        h->bitmap_pad = 32;
+        h->visual_class = TrueColor;
     }
     else if ( im->type == FL_IMAGE_CI || im->type == FL_IMAGE_GRAY )
     {
-		h->pixmap_depth = 8;
-		h->bits_per_pixel = 8;
-		h->bitmap_unit = 8;
-		h->bitmap_pad = 8;
-		h->visual_class = FL_IsGray( im->type ) ? GrayScale : PseudoColor;
+        h->pixmap_depth = 8;
+        h->bits_per_pixel = 8;
+        h->bitmap_unit = 8;
+        h->bitmap_pad = 8;
+        h->visual_class = FL_IsGray( im->type ) ? GrayScale : PseudoColor;
     }
     else if ( im->type == FL_IMAGE_GRAY16 )
     {
-		h->pixmap_depth = fl_value_to_bits( im->gray_maxval + 1 );
-		h->bits_per_pixel = 16;
-		h->bitmap_unit = 16;
-		h->bitmap_pad = 16;
-		h->visual_class = GrayScale;
+        h->pixmap_depth = fl_value_to_bits( im->gray_maxval + 1 );
+        h->bits_per_pixel = 16;
+        h->bitmap_unit = 16;
+        h->bitmap_pad = 16;
+        h->visual_class = GrayScale;
     }
     else if ( im->type == FL_IMAGE_MONO )
     {
-		h->pixmap_depth = 1;
-		h->bits_per_pixel = 1;
-		h->bitmap_unit = 8;
-		h->bitmap_pad = 8;
-		h->visual_class = StaticGray;
+        h->pixmap_depth = 1;
+        h->bits_per_pixel = 1;
+        h->bitmap_unit = 8;
+        h->bitmap_pad = 8;
+        h->visual_class = StaticGray;
     }
 
     h->bits_per_rgb = h->pixmap_depth;
@@ -602,13 +602,13 @@ XWD_write_image( FL_IMAGE * im )
 
     if ( h->byte_order == MSBFirst )
     {
-		write32 = fli_fput4MSBF;
-		write16 = fli_fput2MSBF;
+        write32 = fli_fput4MSBF;
+        write16 = fli_fput2MSBF;
     }
     else
     {
-		write32 = fli_fput4LSBF;
-		write16 = fli_fput2LSBF;
+        write32 = fli_fput4LSBF;
+        write16 = fli_fput2LSBF;
     }
 
     /* write the header */
@@ -616,83 +616,83 @@ XWD_write_image( FL_IMAGE * im )
     c32 = ( CARD32 * ) h;
 
     for ( n = 0; ( size_t ) n < sizeof *h / sizeof h->file_version; n++, c32++ )
-		write32( *c32, fp );
+        write32( *c32, fp );
 
     dummy = fwrite( im->outfile, 1, strlen( im->outfile ) + 1, fp );
 
     if ( h->ncolors )
     {
-		XWDColor xwdcolor;
+        XWDColor xwdcolor;
 
-		xwdcolor.flags = DoRed | DoGreen | DoBlue;
+        xwdcolor.flags = DoRed | DoGreen | DoBlue;
 
-		for ( n = 0; n < ( int ) h->ncolors; n++ )
-		{
-			xwdcolor.red   = ( im->red_lut[   n ] << 8 ) | 0xff;
-			xwdcolor.green = ( im->green_lut[ n ] << 8 ) | 0xff;
-			xwdcolor.blue  = ( im->blue_lut[  n ] << 8 ) | 0xff;
+        for ( n = 0; n < ( int ) h->ncolors; n++ )
+        {
+            xwdcolor.red   = ( im->red_lut[   n ] << 8 ) | 0xff;
+            xwdcolor.green = ( im->green_lut[ n ] << 8 ) | 0xff;
+            xwdcolor.blue  = ( im->blue_lut[  n ] << 8 ) | 0xff;
 
-			xwdcolor.pixel = n;
-			write32( xwdcolor.pixel, fp );
-			write16( xwdcolor.red, fp );
-			write16( xwdcolor.green, fp );
-			write16( xwdcolor.blue, fp );
-			putc( xwdcolor.flags, fp );
+            xwdcolor.pixel = n;
+            write32( xwdcolor.pixel, fp );
+            write16( xwdcolor.red, fp );
+            write16( xwdcolor.green, fp );
+            write16( xwdcolor.blue, fp );
+            putc( xwdcolor.flags, fp );
 
-			/* pad */
+            /* pad */
 
-			pad = sizeof xwdcolor - 11;
-			for ( ; --pad >= 0; )
-				putc( 0, fp );
-		}
+            pad = sizeof xwdcolor - 11;
+            for ( ; --pad >= 0; )
+                putc( 0, fp );
+        }
     }
 
     if ( im->type == FL_IMAGE_RGB )
     {
-		for ( y = 0; y < im->h; y++ )
-		{
-			for ( x = 0; x < im->w; x++ )
-				write32( FL_PACK( im->red[   y ][ x ],
-								  im->green[ y ][ x ],
-								  im->blue[  y ][ x ] ),
-						 fp );
-		}
+        for ( y = 0; y < im->h; y++ )
+        {
+            for ( x = 0; x < im->w; x++ )
+                write32( FL_PACK( im->red[   y ][ x ],
+                                  im->green[ y ][ x ],
+                                  im->blue[  y ][ x ] ),
+                         fp );
+        }
     }
     else if ( im->type == FL_IMAGE_CI || im->type == FL_IMAGE_GRAY )
     {
-		uc = fl_malloc( h->bytes_per_line );
+        uc = fl_malloc( h->bytes_per_line );
 
-		for ( y = 0; y < im->h; y++ )
-		{
-			for ( x = 0; x < im->w; x++ )
-				uc[ x ] = im->ci[ y ][ x ];
-			dummy = fwrite( uc, 1, h->bytes_per_line, fp );
-		}
+        for ( y = 0; y < im->h; y++ )
+        {
+            for ( x = 0; x < im->w; x++ )
+                uc[ x ] = im->ci[ y ][ x ];
+            dummy = fwrite( uc, 1, h->bytes_per_line, fp );
+        }
 
-		fl_free( uc );
+        fl_free( uc );
     }
     else if ( im->type == FL_IMAGE_GRAY16 )
     {
-		for ( y = 0; y < im->h; y++ )
-			for ( x = 0; x < im->w; x++ )
-				write16( im->gray[ y ][ x ], fp );
+        for ( y = 0; y < im->h; y++ )
+            for ( x = 0; x < im->w; x++ )
+                write16( im->gray[ y ][ x ], fp );
     }
     else if ( im->type == FL_IMAGE_MONO )
     {
-		uc = fl_malloc( h->bytes_per_line );
+        uc = fl_malloc( h->bytes_per_line );
 
-		for ( y = 0; y < im->h; y++ )
-		{
-			fl_pack_bits( uc, im->ci[ y ], im->w );
-			dummy = fwrite( uc, 1, h->bytes_per_line, fp );
-		}
+        for ( y = 0; y < im->h; y++ )
+        {
+            fl_pack_bits( uc, im->ci[ y ], im->w );
+            dummy = fwrite( uc, 1, h->bytes_per_line, fp );
+        }
 
-		fl_free( uc );
+        fl_free( uc );
     }
     else
     {
-		im->error_message( im, "Unknown type" );
-		return -1;
+        im->error_message( im, "Unknown type" );
+        return -1;
     }
 
     return 0;
@@ -706,7 +706,15 @@ void
 flimage_enable_xwd( void )
 {
     flimage_add_format( "X Window Dump", "xwd", "xwd",
-						FL_IMAGE_FLEX & ~FL_IMAGE_PACKED,
-						XWD_identify, XWD_description,
-						XWD_read_pixels, XWD_write_image );
+                        FL_IMAGE_FLEX & ~FL_IMAGE_PACKED,
+                        XWD_identify, XWD_description,
+                        XWD_read_pixels, XWD_write_image );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

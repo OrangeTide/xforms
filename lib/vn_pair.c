@@ -38,19 +38,19 @@
 
 int
 fli_get_vn_value( FLI_VN_PAIR * vn_pair,
-				  const char  * name )
+                  const char  * name )
 {
-	long val;
-	char *ep;
+    long val;
+    char *ep;
 
     for ( ; vn_pair->name; vn_pair++ )
         if ( ! strcmp( vn_pair->name, name ) )
             return vn_pair->val;
 
-	val = strtol( name, &ep, 10 );
+    val = strtol( name, &ep, 10 );
 
-	if ( ep != name && ! *ep && val >= INT_MIN && val <= INT_MAX )
-		return val;
+    if ( ep != name && ! *ep && val >= INT_MIN && val <= INT_MAX )
+        return val;
 
     return -1;
 }
@@ -61,7 +61,7 @@ fli_get_vn_value( FLI_VN_PAIR * vn_pair,
 
 const char *
 fli_get_vn_name( FLI_VN_PAIR * vn_pair,
-				 int           val )
+                 int           val )
 {
     static char buf[ 5 ][ 16 ];
     static int k;
@@ -75,3 +75,11 @@ fli_get_vn_name( FLI_VN_PAIR * vn_pair,
     sprintf( buf[ k ], "%d", val );
     return buf[ k ];
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

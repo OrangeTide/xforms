@@ -55,22 +55,30 @@ fl_init_RGBdatabase( const char * f  FL_UNUSED_ARG )
  ***************************************/
 
 int fl_lookup_RGBcolor( const char * colname,
-						int *        r,
-						int *        g,
-						int *        b )
+                        int *        r,
+                        int *        g,
+                        int *        b )
 {
     XColor xc;
-	XColor w;
+    XColor w;
 
     if (    XParseColor( fl_display, fl_state[ fl_vmode ].colormap,
-						 "rgb:ffff/ffff/ffff",  &w ) == 0 
-		 || XParseColor( fl_display, fl_state[ fl_vmode ].colormap,
-						 colname,  &xc ) == 0 )
-		return -1;
+                         "rgb:ffff/ffff/ffff",  &w ) == 0 
+         || XParseColor( fl_display, fl_state[ fl_vmode ].colormap,
+                         colname,  &xc ) == 0 )
+        return -1;
 
-	*r = ( ( xc.red   << 8 ) - 1 ) / w.red;
-	*g = ( ( xc.green << 8 ) - 1 ) / w.green;
-	*b = ( ( xc.blue  << 8 ) - 1 ) / w.blue;
+    *r = ( ( xc.red   << 8 ) - 1 ) / w.red;
+    *g = ( ( xc.green << 8 ) - 1 ) / w.green;
+    *b = ( ( xc.blue  << 8 ) - 1 ) / w.blue;
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

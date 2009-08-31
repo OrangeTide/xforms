@@ -67,11 +67,11 @@ RGBmode_init( int v )
 
 #if FL_DEBUG >= ML_WARN
     M_info( "RGBmode_init", "%s: bits_per_rgb = %d",
-			fl_vclass_name( v ), s->rgb_bits );
+            fl_vclass_name( v ), s->rgb_bits );
     M_info( "RGBmode_init", "RS = %d GS = %d BS = %d",
-			s->rshift, s->gshift, s->bshift );
+            s->rshift, s->gshift, s->bshift );
     M_info( "RGBmode_init", "RB = %d GB = %d BB = %d",
-			s->rbits, s->gbits, s->bbits );
+            s->rbits, s->gbits, s->bbits );
 #endif
 }
 
@@ -87,41 +87,41 @@ RGBmode_init( int v )
 
 static void
 check_user_preference( int * vmode,
-					   int * depth )
+                       int * depth )
 {
     int reqv = -1,
-		reqd = 0;
+        reqd = 0;
 
     reqv = fli_cntl.vclass;
     reqd = fli_cntl.depth;
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "check_user_preference", "UserRequest: %s %d",
-			reqv >= 0 ? fl_vclass_name( reqv ) : "None", reqd > 0 ? reqd : 0 );
+            reqv >= 0 ? fl_vclass_name( reqv ) : "None", reqd > 0 ? reqd : 0 );
 #endif
 
     /* Need to check special value FL_DefaultVisual */
 
     if ( reqv == FL_DefaultVisual )
     {
-		reqd = DefaultDepth( fl_display, fl_screen );
-		reqv = DefaultVisual( fl_display, fl_screen )->class;
+        reqd = DefaultDepth( fl_display, fl_screen );
+        reqv = DefaultVisual( fl_display, fl_screen )->class;
     }
 
     /* Here make a guess if incomplete request is made */
 
     if ( reqv >= 0 && reqd == 0 )
-		reqd = fli_depth( reqv );
+        reqd = fli_depth( reqv );
 
     /* If only depth is requested, select a visual */
 
     if ( reqd > 0 && reqv < 0 )
-		reqv = reqd > 12 ? TrueColor : PseudoColor;
+        reqv = reqd > 12 ? TrueColor : PseudoColor;
 
     if ( reqv >= 0 && reqd >= FL_MINDEPTH )
     {
-		*vmode = reqv;
-		*depth = reqd;
+        *vmode = reqv;
+        *depth = reqd;
     }
 }
 
@@ -139,17 +139,17 @@ select_best_visual( void )
 {
     static XVisualInfo *xv;
     static XVisualInfo *bestv[ 6 ];
-    static XVisualInfo xvt;  	/* fl_state uses it */
+    static XVisualInfo xvt;     /* fl_state uses it */
     int xvn,
-		i,
-		j,
-		depth;
-    static int bvmode = -1;	  /* initial default if no user prefernce */
+        i,
+        j,
+        depth;
+    static int bvmode = -1;   /* initial default if no user prefernce */
 
     /* Have already done it */
 
     if ( xv )
-		return bvmode;
+        return bvmode;
 
     /* Request for a list of all supported visuals on fl_screen */
 
@@ -157,46 +157,46 @@ select_best_visual( void )
 
     if ( ! ( xv = XGetVisualInfo( fl_display, VisualScreenMask, &xvt, &xvn ) ) )
     {
-		M_err( "select_best_visual", " Can't get VisualInfo!" );
-		exit( 1 );
+        M_err( "select_best_visual", " Can't get VisualInfo!" );
+        exit( 1 );
     }
 
     /* Choose the visual that has the most colors among each class. */
 
     for ( i = 0; i < xvn; i++ )
     {
-		depth = xv[ i ].depth;
-		j = xv[ i ].class;
+        depth = xv[ i ].depth;
+        j = xv[ i ].class;
 
-		/* Simply use visuals returned by GetVisualInfo and make sure xv is
-		   NOT freed */
+        /* Simply use visuals returned by GetVisualInfo and make sure xv is
+           NOT freed */
 
-		if ( ! bestv[ j ] || depth > bestv[ j ]->depth )
-		{
-			FL_State *fs = fl_state + j;
+        if ( ! bestv[ j ] || depth > bestv[ j ]->depth )
+        {
+            FL_State *fs = fl_state + j;
 
-			bestv[ j ] = xv + i;
-			fs->xvinfo = bestv[ j ];
-			fs->depth = bestv[ j ]->depth;
-			fs->vclass = bestv[ j ]->class;
-			fs->rgb_bits = bestv[ j ]->bits_per_rgb;
-			if ( depth > max_server_depth )
-				max_server_depth = fs->depth;
-		}
+            bestv[ j ] = xv + i;
+            fs->xvinfo = bestv[ j ];
+            fs->depth = bestv[ j ]->depth;
+            fs->vclass = bestv[ j ]->class;
+            fs->rgb_bits = bestv[ j ]->bits_per_rgb;
+            if ( depth > max_server_depth )
+                max_server_depth = fs->depth;
+        }
     }
 
 #if FL_DEBUG >= ML_DEBUG
     if ( fli_cntl.debug )
     {
-		M_warn( "select_best_visual", "XlibVersion: %s", XlibVersion );
-		M_info( "select_best_visual", "DPI = %d", fli_dpi );
-		M_warn( "select_best_visual", "No. of Visuals: %d", xvn );
-		for ( j = 0; j < 6; j++ )
-			if ( bestv[ j ] )
-				fprintf( stderr,
-						 "Best %11s: Id = 0x%lx Depth = %2u RGBbits = %d\n",
-						 fl_vclass_name( fli_class( j ) ), bestv[ j ]->visualid,
-						 bestv[ j ]->depth, bestv[ j ]->bits_per_rgb );
+        M_warn( "select_best_visual", "XlibVersion: %s", XlibVersion );
+        M_info( "select_best_visual", "DPI = %d", fli_dpi );
+        M_warn( "select_best_visual", "No. of Visuals: %d", xvn );
+        for ( j = 0; j < 6; j++ )
+            if ( bestv[ j ] )
+                fprintf( stderr,
+                         "Best %11s: Id = 0x%lx Depth = %2u RGBbits = %d\n",
+                         fl_vclass_name( fli_class( j ) ), bestv[ j ]->visualid,
+                         bestv[ j ]->depth, bestv[ j ]->bits_per_rgb );
     }
 #endif
 
@@ -205,33 +205,33 @@ select_best_visual( void )
 
     if ( max_server_depth < FL_MINDEPTH )
     {
-		M_err( "select_best_visual",
-			   "MaxServerDepth = %d. XForms requires at least %d. Sorry",
-			   max_server_depth, FL_MINDEPTH );
-		exit( 1 );
+        M_err( "select_best_visual",
+               "MaxServerDepth = %d. XForms requires at least %d. Sorry",
+               max_server_depth, FL_MINDEPTH );
+        exit( 1 );
     }
 
     /* If depth is smaller than 10, RGBmode offers no advantage over
        PseudoColor in that PseudoColors offers better flexibility */
 
     if ( setmode( TrueColor, 12 ) )
-		bvmode = TrueColor;
+        bvmode = TrueColor;
     else if ( setmode( DirectColor, 12 ) )
-		bvmode = DirectColor;
+        bvmode = DirectColor;
     else if ( setmode( PseudoColor, FL_MINDEPTH ) )
-		bvmode = PseudoColor;
+        bvmode = PseudoColor;
     else if ( setmode( StaticColor, FL_MINDEPTH ) )
-		bvmode = StaticColor;
+        bvmode = StaticColor;
     else if ( setmode( GrayScale, FL_MINDEPTH ) )
-		bvmode = GrayScale;
+        bvmode = GrayScale;
     else if ( setmode( StaticGray, FL_MINDEPTH ) )
-		bvmode = StaticGray;
-    else if ( xvn )		/* have to take what we have */
-		bvmode = xv[ 0 ].class;
+        bvmode = StaticGray;
+    else if ( xvn )     /* have to take what we have */
+        bvmode = xv[ 0 ].class;
     else
     {
-		M_err( "select_best_visual", "Can't find an appropriate visual" );
-		exit( 1 );
+        M_err( "select_best_visual", "Can't find an appropriate visual" );
+        exit( 1 );
     }
 
     return bvmode;
@@ -247,116 +247,124 @@ int
 fli_initialize_program_visual( void )
 {
     int vmode,
-		depth;
+        depth;
     static XVisualInfo xvt;
     static int visual_initialized;
     static int program_vclass;
 
     if ( visual_initialized )
-		return program_vclass;
+        return program_vclass;
 
     vmode = select_best_visual( );
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "fli_initialize_program_visual",
-			"Initial visual: %s (ID = 0x%lx) depth = %d",
-			fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
-			fli_depth( vmode ) );
+            "Initial visual: %s (ID = 0x%lx) depth = %d",
+            fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
+            fli_depth( vmode ) );
 #endif
 
     /* Check program default, settable by user fl_vmode */
 
     if ( fl_vmode >= 0 )
-		vmode = fl_vmode;
+        vmode = fl_vmode;
 
     depth = fli_depth( vmode );
 
     M_warn( "fli_initialize_program_visual", "ProgramDefault: %s %d",
-			fl_vclass_name( vmode ), depth);
+            fl_vclass_name( vmode ), depth);
 
     /* Give user a chance to select a visual */
 
     check_user_preference( &vmode, &depth );
 
     M_warn( "fli_initialize_program_visual", "UserPreference: %s %d",
-			fl_vclass_name( vmode ), depth );
+            fl_vclass_name( vmode ), depth );
 
     /* If requested a visualID directly, honor it here */
 
     if ( fli_requested_vid > 0 )
     {
-		XVisualInfo xv,
-			        *retxv;
-		int nv;
+        XVisualInfo xv,
+                    *retxv;
+        int nv;
 
-		M_warn( "fli_initialize_program_visual", "UserRequestedVID: 0x%lx",
-				fli_requested_vid );
+        M_warn( "fli_initialize_program_visual", "UserRequestedVID: 0x%lx",
+                fli_requested_vid );
 
-		xv.visualid = fli_requested_vid;
+        xv.visualid = fli_requested_vid;
 
-		if ( ( retxv = XGetVisualInfo( fl_display, VisualIDMask, &xv, &nv ) ) )
-		{
-			FL_State *fs = fl_state + retxv->class;
+        if ( ( retxv = XGetVisualInfo( fl_display, VisualIDMask, &xv, &nv ) ) )
+        {
+            FL_State *fs = fl_state + retxv->class;
 
-			vmode = retxv->class;
-			fs->xvinfo = retxv;
-			fs->depth = retxv->depth;
-			fs->vclass = retxv->class;
-			fs->rgb_bits = retxv->bits_per_rgb;
-		}
-		else
-		{
-			M_err( "fli_initialize_program_visual", "Can't find visualID 0x%lx",
-				   fli_requested_vid );
-			fli_requested_vid = 0;
-		}
+            vmode = retxv->class;
+            fs->xvinfo = retxv;
+            fs->depth = retxv->depth;
+            fs->vclass = retxv->class;
+            fs->rgb_bits = retxv->bits_per_rgb;
+        }
+        else
+        {
+            M_err( "fli_initialize_program_visual", "Can't find visualID 0x%lx",
+                   fli_requested_vid );
+            fli_requested_vid = 0;
+        }
     }
 
     /* Make sure the stuff flies. */
 
     if ( ! fli_requested_vid )
-	{
-		if ( XMatchVisualInfo( fl_display, fl_screen, depth, vmode, &xvt ) )
-		{
-			FL_State *fs = fl_state + xvt.class;
+    {
+        if ( XMatchVisualInfo( fl_display, fl_screen, depth, vmode, &xvt ) )
+        {
+            FL_State *fs = fl_state + xvt.class;
 
-			vmode = xvt.class;
-			fs->xvinfo = &xvt;
-			fs->depth = xvt.depth;
-			fs->vclass = xvt.class;
-			fs->rgb_bits = xvt.bits_per_rgb;
-		}
-		else
-		{
-			/* Bogus request. Revert to the best visual we have found */
+            vmode = xvt.class;
+            fs->xvinfo = &xvt;
+            fs->depth = xvt.depth;
+            fs->vclass = xvt.class;
+            fs->rgb_bits = xvt.bits_per_rgb;
+        }
+        else
+        {
+            /* Bogus request. Revert to the best visual we have found */
 
-			M_err( "fli_initialize_program_visual",
-				   "Bogus request: %s with depth = %d",
-				   fl_vclass_name( vmode ), depth );
+            M_err( "fli_initialize_program_visual",
+                   "Bogus request: %s with depth = %d",
+                   fl_vclass_name( vmode ), depth );
 
-			vmode = select_best_visual( );
-		}
-	}
+            vmode = select_best_visual( );
+        }
+    }
 
     program_vclass = vmode;
 
 #if FL_DEBUG >= ML_WARN
     M_warn( "fli_initialize_program_visual",
-			"SelectedVisual: %s (ID = 0x%lx) depth = %d",
-			fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
-			fli_depth( vmode ) );
+            "SelectedVisual: %s (ID = 0x%lx) depth = %d",
+            fl_vclass_name( vmode ), fli_visual( vmode )->visualid,
+            fli_depth( vmode ) );
 #endif
 
     /* If RGB Visual is supported, need to find out the masks and shifts
        stuff to be used in RGB -> pixel mapping */
 
     if ( fli_depth( TrueColor ) )
-		RGBmode_init( TrueColor );
+        RGBmode_init( TrueColor );
 
     if ( fli_depth( DirectColor ) )
-		RGBmode_init( DirectColor );
+        RGBmode_init( DirectColor );
 
     visual_initialized = 1;
 
     return program_vclass;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

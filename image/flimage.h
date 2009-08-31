@@ -34,25 +34,25 @@ extern "C"
 #endif
 
 #define fl_safe_free( p )     do {                   \
-	                              if ( p )           \
-								  {                  \
-									  fl_free( p );  \
-									  p = NULL;      \
-								  }                  \
+                                  if ( p )           \
+                                  {                  \
+                                      fl_free( p );  \
+                                      p = NULL;      \
+                                  }                  \
                               } while( 0 )
 
 #define FL_RGB2GRAY( r, g, b )  \
-	( ( unsigned int )( ( 78 * ( r ) + 150 * ( g ) + 28 * ( b ) ) >> 8 ) )
+    ( ( unsigned int )( ( 78 * ( r ) + 150 * ( g ) + 28 * ( b ) ) >> 8 ) )
 
 enum {
     FL_IMAGE_NONE,
-    FL_IMAGE_MONO   =    1,		/* b&w. 1bit. 0=white 1=black */
-    FL_IMAGE_GRAY   =    2,		/* 8 bit gray image           */
-    FL_IMAGE_CI     =    4,		/* colormmaped image          */
-    FL_IMAGE_RGB    =    8,		/* RGBA image. 8bit each      */
-    FL_IMAGE_PACKED =   16,		/* RGBA packed into an int    */
-    FL_IMAGE_GRAY16 =   32,		/* 12bit gray scale image     */
-    FL_IMAGE_RGB16  =   64,		/* 36bits color image         */
+    FL_IMAGE_MONO   =    1,     /* b&w. 1bit. 0=white 1=black */
+    FL_IMAGE_GRAY   =    2,     /* 8 bit gray image           */
+    FL_IMAGE_CI     =    4,     /* colormmaped image          */
+    FL_IMAGE_RGB    =    8,     /* RGBA image. 8bit each      */
+    FL_IMAGE_PACKED =   16,     /* RGBA packed into an int    */
+    FL_IMAGE_GRAY16 =   32,     /* 12bit gray scale image     */
+    FL_IMAGE_RGB16  =   64,     /* 36bits color image         */
     FL_IMAGE_FLEX   = 1023,     /* all formats                */
     /* aliases */
     FLIMAGE_NONE    = FL_IMAGE_NONE,
@@ -67,11 +67,11 @@ enum {
 };
 
 #ifndef FL_PCBITS
-typedef unsigned char FL_PCTYPE;	/* primary color type */
-#define FL_PCBITS         8	/* primary color bits */
+typedef unsigned char FL_PCTYPE;    /* primary color type */
+#define FL_PCBITS         8 /* primary color bits */
 #define FL_PCMAX          ( ( 1 << FL_PCBITS ) - 1 )
 #define FL_PCCLAMP( a )   ( ( a ) > ( FL_PCMAX ) ?    \
-							( FL_PCMAX ) : ( ( a ) < 0 ? 0 : ( a ) ) )
+                            ( FL_PCMAX ) : ( ( a ) < 0 ? 0 : ( a ) ) )
 
 typedef unsigned int      FL_PACKED4;
 #define FL_PACKED         FL_PACKED4
@@ -93,25 +93,25 @@ typedef unsigned int      FL_PACKED4;
 #define FL_GETA( packed ) ( ( ( packed ) >> FL_ASHIFT ) & FL_PCMAX )
 
 #define FL_PACK3( r, g, b )   \
-	( ( ( r ) << FL_RSHIFT ) | ( ( g ) << FL_GSHIFT ) | ( ( b ) << FL_BSHIFT ) )
+    ( ( ( r ) << FL_RSHIFT ) | ( ( g ) << FL_GSHIFT ) | ( ( b ) << FL_BSHIFT ) )
 
 #define FL_PACK           FL_PACK3
 
 #define FL_PACK4( r, g, b, a)  \
-	( FL_PACK3( r, g, b ) | ( ( a ) << FL_ASHIFT ) )
+    ( FL_PACK3( r, g, b ) | ( ( a ) << FL_ASHIFT ) )
 
 #define FL_UNPACK( p, r, g, b )  \
-	do { r = FL_GETR( p );       \
-		 g = FL_GETG( p );		 \
-		 b = FL_GETB( p );       \
-	} while ( 0 )
+    do { r = FL_GETR( p );       \
+         g = FL_GETG( p );       \
+         b = FL_GETB( p );       \
+    } while ( 0 )
 
 #define FL_UNPACK3        FL_UNPACK
 
 #define FL_UNPACK4( p, r, g, b, a )  \
-	do { FL_UNPACK3( p, r, g, b );   \
-		 a = FL_GETA( p );           \
-	} while ( 0 )
+    do { FL_UNPACK3( p, r, g, b );   \
+         a = FL_GETA( p );           \
+    } while ( 0 )
 
 #endif
 
@@ -130,15 +130,15 @@ enum
 typedef Window FL_WINDOW;   /* unsigned long */
 
 typedef struct flimage_text_ {
-    char         * str;		  /* the string itself             */
-    int            len;		  /* string length                 */
-    int            x,		  /* starting location of text (wrt image) */
-	               y;
-    unsigned int   color;	  /* color of the text             */
-    unsigned int   bcolor;	  /* background color of the text  */
+    char         * str;       /* the string itself             */
+    int            len;       /* string length                 */
+    int            x,         /* starting location of text (wrt image) */
+                   y;
+    unsigned int   color;     /* color of the text             */
+    unsigned int   bcolor;    /* background color of the text  */
     int            nobk;      /* no background                 */
-    int            size,	  /* font size & style             */
-	               style;
+    int            size,      /* font size & style             */
+                   style;
     int            angle;     /* in 1/10th of a degrees        */
     int            align;     /* alignment wrt to (x,y)        */
     int            reserved[ 6 ];
@@ -147,11 +147,11 @@ typedef struct flimage_text_ {
 typedef struct flimage_marker_ {
     const char   * name;      /* marker name                  */
     int           w,          /* size                         */
-	               h ;
+                   h ;
     int            x,         /* location                     */
-	               y;
-    unsigned int   color;	  /* color of the marker          */
-    unsigned int   bcolor;	  /* aux. color of the marker     */
+                   y;
+    unsigned int   color;     /* color of the marker          */
+    unsigned int   bcolor;    /* aux. color of the marker     */
     int            angle;     /* in 1/10th of a degree        */
     int            fill;
     int            thickness; /* line thickness               */
@@ -191,12 +191,12 @@ typedef struct {
 typedef struct flimage_setup_ *FLIMAGESETUP;
 
 typedef struct flimage_ {
-    int               type;			/* image type                    */
+    int               type;         /* image type                    */
     int               w,
-	                  h;			/* image size                    */
-    void *            app_data;		/* for application at setup time */
-    void *            u_vdata;		/* for application               */
-    long              u_ldata;		/* for application               */
+                      h;            /* image size                    */
+    void *            app_data;     /* for application at setup time */
+    void *            u_vdata;      /* for application               */
+    long              u_ldata;      /* for application               */
     unsigned char  ** red;
     unsigned char  ** green;
     unsigned char  ** blue;
@@ -205,11 +205,11 @@ typedef struct flimage_ {
     unsigned short ** ci;
     unsigned short ** gray;
     FL_PACKED4 **     packed;
-    unsigned short ** red16;    	  /* not currently supported */
-    unsigned short ** green16;  	  /* not currently supported */
-    unsigned short ** blue16;   	  /* not currently supported */
-    unsigned short ** alpha16;  	  /* not currently supported */
-    unsigned char  ** ci8;  		  /* not currently supported */
+    unsigned short ** red16;          /* not currently supported */
+    unsigned short ** green16;        /* not currently supported */
+    unsigned short ** blue16;         /* not currently supported */
+    unsigned short ** alpha16;        /* not currently supported */
+    unsigned char  ** ci8;            /* not currently supported */
     int             * red_lut;        /* red lookup tables                */
     int             * green_lut;      /* green lookup tables              */
     int             * blue_lut;       /* blue lookup tables               */
@@ -219,10 +219,10 @@ typedef struct flimage_ {
     int               colors;         /* actual colors used in displaying */
     int               gray_maxval;    /* indicate the range of gray16     */
     int               ci_maxval;      /* max value of ci. not used,
-										 use map_len */
+                                         use map_len */
     int               rgb_maxval;     /* max value for rgb16 image       */
     int               level,
-	                  wwidth;
+                      wwidth;
     unsigned short  * wlut;           /* lut for window levelling         */
     int               wlut_len;
     int               app_background; /* transparent color: in RGB        */
@@ -231,20 +231,20 @@ typedef struct flimage_ {
     int               available_type;
     struct flimage_ * next;
     int               sx,             /* display subimage origin          */
-	                  sy;
+                      sy;
     int               sw,             /* display subimage width           */
-	                  sh;
+                      sh;
     int               wx,             /* display location relative to win */
                       wy;
     int modified;
     int               ( * display )( struct flimage_ *, FL_WINDOW );
     int               double_buffer;
     int               sxd,
-	                  syd,
-	                  swd,
-	                  shd;
+                      syd,
+                      swd,
+                      shd;
     int               wxd,
-	                  wyd;
+                      wyd;
     const char      * fmt_name;       /* format name (ppm,jpg etc)     */
     int               bi_reserved[ 8 ];
 
@@ -252,13 +252,13 @@ typedef struct flimage_ {
 
     FLIMAGE_TEXT    * text;
     int               ntext,
-	                  max_text;
+                      max_text;
     int               dont_display_text;
     void              ( * display_text )( struct flimage_ * );
     void              ( * free_text )( struct flimage_ * );
     FLIMAGE_MARKER  * marker;
     int               nmarkers,
-	                  max_markers;
+                      max_markers;
     int               dont_display_marker;
     void              ( * display_markers )( struct flimage_ * );
     void              ( * free_markers )( struct flimage_ * );
@@ -267,7 +267,7 @@ typedef struct flimage_ {
     /* physicalValue = poffset + pixelValue * pscale  */
 
     double            pmin,           /* physical data range             */
-	                  pmax;
+                      pmax;
     double            poffset;
     double            pscale;
 
@@ -284,8 +284,8 @@ typedef struct flimage_ {
     long              foffset;
     int               original_type;
 
-	/* hooks for application to have a chance to set some options.
-	   if pre_write returns -1, the output will be canceled */
+    /* hooks for application to have a chance to set some options.
+       if pre_write returns -1, the output will be canceled */
 
     int               ( * pre_write )( struct flimage_ * );
     int               ( * post_write )( struct flimage_ * );
@@ -294,7 +294,7 @@ typedef struct flimage_ {
     /* image processing stuff */
 
     int               subx,           /* subimage origin       */
-	                  suby;
+                      suby;
     int               subw,           /* subimage size         */
                       subh;
     int               sub_shape;      /* shape of the subimage */
@@ -308,16 +308,16 @@ typedef struct flimage_ {
     /* application handlers */
 
     int               total,
-	                  completed;
+                      completed;
     int               ( * visual_cue )( struct flimage_*,
-										const char * );
+                                        const char * );
     void              ( * error_message )( struct flimage_*,
-										   const char * );
+                                           const char * );
     int               error_code;     /* not currently used */
 
-    int               display_type;	  /* just before handing it to X      */
+    int               display_type;   /* just before handing it to X      */
     unsigned short ** pixels;
-    void            * image_spec;	  /* additional image info            */
+    void            * image_spec;     /* additional image info            */
     void            * xdisplay;       /* the X connection                 */
     int               tran_rgb;       /* RGB color that should be transparent */
     int               tran_index;     /* index that should be transparent     */
@@ -342,7 +342,7 @@ typedef struct flimage_ {
     FILE            * fpin;
     FILE            * fpout;
     void            * image_io;
-    void            * io_spec;		  /* io operation helper       */
+    void            * io_spec;        /* io operation helper       */
     int               spec_size;
     int               depth;          /* the depth we actually use */
     int               vclass;
@@ -358,8 +358,8 @@ typedef struct flimage_ {
     void            * extra_io_info;
     unsigned long     pixmap;
     int               pixmap_w,
-	                  pixmap_h,
-	                  pixmap_depth;
+                      pixmap_h,
+                      pixmap_depth;
     int               isPixmap;
     FLIMAGESETUP      setup;
     char            * info;
@@ -371,11 +371,11 @@ typedef struct flimage_ {
 typedef struct flimage_setup_ {
     void          * app_data;
     int             ( * visual_cue )( FL_IMAGE *,
-									  const char *);
+                                      const char *);
     void            ( * error_message )( FL_IMAGE *,
-										 const char *);
+                                         const char *);
     int             ( * display )( FL_IMAGE *,
-								   unsigned long );
+                                   unsigned long );
 
     const char    * rgbfile;
     int             do_not_clear;
@@ -394,8 +394,8 @@ typedef struct flimage_setup_ {
 } FLIMAGE_SETUP;
 
 FL_EXPORT void flimage_setup(
-		FLIMAGE_SETUP * setup
-		);
+        FLIMAGE_SETUP * setup
+        );
 
 /* possible errors from the library. Not currently (v0.89) used */
 
@@ -417,150 +417,150 @@ typedef int ( * FLIMAGE_Write_Image )( FL_IMAGE * );
 /* basic IO routines */
 
 FL_EXPORT FL_IMAGE * flimage_load(
-		const char * file
-		);
+        const char * file
+        );
 
 FL_EXPORT FL_IMAGE * flimage_read(
-		FL_IMAGE * im
-		);
+        FL_IMAGE * im
+        );
 
 FL_EXPORT int flimage_dump(
-		FL_IMAGE *,
-		const char *,
-		const char *
-		);
+        FL_IMAGE *,
+        const char *,
+        const char *
+        );
 
 FL_EXPORT int flimage_close(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT FL_IMAGE * flimage_alloc(
-		void
-		);
+        void
+        );
 
 FL_EXPORT int flimage_getmem(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 
 FL_EXPORT int flimage_is_supported(
-		const char *
-		);
+        const char *
+        );
 
 FL_EXPORT int flimage_description_via_filter(
-		FL_IMAGE *,
-		char *const *,
-		const char *,
-		int
-		);
+        FL_IMAGE *,
+        char *const *,
+        const char *,
+        int
+        );
 
 FL_EXPORT int flimage_write_via_filter(
-		FL_IMAGE *,
-		char * const *,
-		char * const *,
-		int
-		);
+        FL_IMAGE *,
+        char * const *,
+        char * const *,
+        int
+        );
 
 FL_EXPORT FL_IMAGE * flimage_alloc(
-		void
-		);
+        void
+        );
 
 FL_EXPORT int flimage_free(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT int flimage_display(
-		FL_IMAGE *,
-		Window
-		);
+        FL_IMAGE *,
+        Window
+        );
 
 FL_EXPORT int flimage_sdisplay(
-		FL_IMAGE *,
-		Window
-		);
+        FL_IMAGE *,
+        Window
+        );
 
 FL_EXPORT int flimage_convert(
-		FL_IMAGE *,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        int,
+        int
+        );
 
 FL_EXPORT const char * flimage_type_name(
-		int type
-		);
+        int type
+        );
 
 FL_EXPORT int flimage_add_text(
-		FL_IMAGE *,
-		const char *,
-		int,
-		int,
-		int,
-		unsigned int,
-		unsigned int,
-		int,
-		double,
-		double,
-		int
-		);
+        FL_IMAGE *,
+        const char *,
+        int,
+        int,
+        int,
+        unsigned int,
+        unsigned int,
+        int,
+        double,
+        double,
+        int
+        );
 
 FL_EXPORT int flimage_add_text_struct(
-		FL_IMAGE *,
-		const FLIMAGE_TEXT *
-		);
+        FL_IMAGE *,
+        const FLIMAGE_TEXT *
+        );
 
 FL_EXPORT void flimage_delete_all_text(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT int flimage_add_marker(
-		FL_IMAGE *,
-		const char *,
-		double,
-		double,
-		double,
-		double,
-		int,
-		int,
-		int,
-		unsigned int,
-		unsigned int
-		);
+        FL_IMAGE *,
+        const char *,
+        double,
+        double,
+        double,
+        double,
+        int,
+        int,
+        int,
+        unsigned int,
+        unsigned int
+        );
 
 FL_EXPORT int flimage_add_marker_struct(
-		FL_IMAGE *,
-		const FLIMAGE_MARKER *
-		);
+        FL_IMAGE *,
+        const FLIMAGE_MARKER *
+        );
 
 FL_EXPORT int flimage_define_marker(
-		const char *,
-		void ( * )( FLIMAGE_MARKER * ),
-		const char *
-		);
+        const char *,
+        void ( * )( FLIMAGE_MARKER * ),
+        const char *
+        );
 
 FL_EXPORT void flimage_delete_all_markers(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT int flimage_render_annotation(
-		FL_IMAGE *,
-		FL_WINDOW
-		);
+        FL_IMAGE *,
+        FL_WINDOW
+        );
 
 FL_EXPORT void flimage_error(
-		FL_IMAGE *,
-		const char *,
-		...
-		);
+        FL_IMAGE *,
+        const char *,
+        ...
+        );
 
 /* built-in format supports */
 
 FL_EXPORT void flimage_enable_pnm(
-		void
-		);
+        void
+        );
 
 FL_EXPORT int flimage_set_fits_bits(
-		int
-		);
+        int
+        );
 
 /* output options       */
 
@@ -572,20 +572,20 @@ typedef struct
 } FLIMAGE_JPEG_OPTION;
 
 FL_EXPORT void flimage_jpeg_options(
-		FLIMAGE_JPEG_OPTION *
-		);
+        FLIMAGE_JPEG_OPTION *
+        );
 
 FL_EXPORT void flimage_pnm_options(
-		int
-		);
+        int
+        );
 
 FL_EXPORT void flimage_gif_options(
-		int
-		);
+        int
+        );
 
 FL_EXPORT FLPS_CONTROL * flimage_ps_options(
-		void
-		);
+        void
+        );
 
 #define flimage_jpeg_output_options   flimage_jpeg_options
 #define flimage_pnm_output_options    flimage_pnm_options
@@ -594,7 +594,7 @@ FL_EXPORT FLPS_CONTROL * flimage_ps_options(
 enum
 {
     FLIMAGE_WRITABLE = FL_WRITE,
-	FLIMAGE_READABLE = FL_READ
+    FLIMAGE_READABLE = FL_READ
 };
 
 typedef struct {
@@ -608,75 +608,75 @@ typedef struct {
 } FLIMAGE_FORMAT_INFO;
 
 FL_EXPORT int flimage_get_number_of_formats(
-		void
-		);
+        void
+        );
 
 FL_EXPORT const FLIMAGE_FORMAT_INFO * flimage_get_format_info(
-		int
-		);
+        int
+        );
 
 FL_EXPORT void * fl_get_matrix(
-		int,
-		int,
-		unsigned int
-		);
+        int,
+        int,
+        unsigned int
+        );
 
 FL_EXPORT void * fl_make_matrix(
-		int,
-		int,
-		unsigned int,
-		void *
-		);
+        int,
+        int,
+        unsigned int,
+        void *
+        );
 
 FL_EXPORT void fl_free_matrix(
-		void *
-		);
+        void *
+        );
 
 FL_EXPORT char * fl_basename(
-		char *
-		);
+        char *
+        );
 
 /** This function is retained for compatibility reasons only.
     It returns 1 always. */
 
 FL_EXPORT int fl_init_RGBdatabase(
-		const char *
-		);
+        const char *
+        );
 
 FL_EXPORT int fl_lookup_RGBcolor(
-		const char *,
-		int *,
-		int *,
-		int *
-		);
+        const char *,
+        int *,
+        int *,
+        int *
+        );
 
 FL_EXPORT int flimage_add_format(
-		const char *,
-		const char *,
-		const char *,
-		int,
-		FLIMAGE_Identify,
-		FLIMAGE_Description,
-		FLIMAGE_Read_Pixels,
-		FLIMAGE_Write_Image
-		);
+        const char *,
+        const char *,
+        const char *,
+        int,
+        FLIMAGE_Identify,
+        FLIMAGE_Description,
+        FLIMAGE_Read_Pixels,
+        FLIMAGE_Write_Image
+        );
 
 FL_EXPORT void flimage_set_annotation_support(
-		int,
-		int
-		);
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_getcolormap(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void fl_select_octree_quantizer(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void fl_select_mediancut_quantizer(
-		void
-		);
+        void
+        );
 
 /* simple image processing routines */
 
@@ -695,592 +695,592 @@ enum {
 };
 
 FL_EXPORT int flimage_convolve(
-		FL_IMAGE *,
-		int **,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        int **,
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_convolvea(
-		FL_IMAGE *,
-		int *,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        int *,
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_tint(
-		FL_IMAGE *,
-		unsigned int,
-		double
-		);
+        FL_IMAGE *,
+        unsigned int,
+        double
+        );
 
 FL_EXPORT int flimage_rotate(
-		FL_IMAGE *,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_flip(
-		FL_IMAGE *,
-		int
-		);
+        FL_IMAGE *,
+        int
+        );
 
 FL_EXPORT int flimage_scale(
-		FL_IMAGE *,
-		int,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        int,
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_warp(
-		FL_IMAGE *,
-		float [ ][ 2 ],
-		int,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        float [ ][ 2 ],
+        int,
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_autocrop(
-		FL_IMAGE *,
-		unsigned int
-		);
+        FL_IMAGE *,
+        unsigned int
+        );
 
 FL_EXPORT int flimage_get_autocrop(
-		FL_IMAGE *,
-		unsigned int,
-		int *,
-		int *,
-		int *,
-		int *
-		);
+        FL_IMAGE *,
+        unsigned int,
+        int *,
+        int *,
+        int *,
+        int *
+        );
 
 FL_EXPORT int flimage_crop(
-		FL_IMAGE *,
-		int,
-		int,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        int,
+        int,
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_replace_pixel(
-		FL_IMAGE *,
-		unsigned int,
-		unsigned int
-		);
+        FL_IMAGE *,
+        unsigned int,
+        unsigned int
+        );
 
 FL_EXPORT int flimage_transform_pixels(
-		FL_IMAGE *,
-		int *,
-		int *,
-		int *
-		);
+        FL_IMAGE *,
+        int *,
+        int *,
+        int *
+        );
 
 FL_EXPORT int flimage_windowlevel(
-		FL_IMAGE *,
-		int,
-		int
-		);
+        FL_IMAGE *,
+        int,
+        int
+        );
 
 FL_EXPORT int flimage_enhance(
-		FL_IMAGE *,
-		int
-		);
+        FL_IMAGE *,
+        int
+        );
 
 FL_EXPORT int flimage_from_pixmap(
-		FL_IMAGE *,
-		Pixmap
-		);
+        FL_IMAGE *,
+        Pixmap
+        );
 
 FL_EXPORT Pixmap flimage_to_pixmap(
-		FL_IMAGE *,
-		FL_WINDOW
-		);
+        FL_IMAGE *,
+        FL_WINDOW
+        );
 
 FL_EXPORT FL_IMAGE * flimage_dup(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 /* Miscellaneous prototypes */
 
 FL_EXPORT void * fl_get_submatrix(
-		void *,
-		int,
-		int,
-		int,
-		int,
-		int,
-		int,
-		unsigned int
-		);
+        void *,
+        int,
+        int,
+        int,
+        int,
+        int,
+        int,
+        unsigned int
+        );
 
 FL_EXPORT int fl_j2pass_quantize_packed(
-		unsigned int **,
-		int,
-		int,
-		int,
-		unsigned short **,
-		int *,
-		int *,
-		int *,
-		int *,
-		FL_IMAGE *
-		);
+        unsigned int **,
+        int,
+        int,
+        int,
+        unsigned short **,
+        int *,
+        int *,
+        int *,
+        int *,
+        FL_IMAGE *
+        );
 
 FL_EXPORT int fl_j2pass_quantize_rgb(
-		unsigned char **,
-		unsigned char **,
-		unsigned char **,
-		int,
-		int,
-		int,
-		unsigned short **,
-		int *,
-		int *,
-		int *,
-		int *,
-		FL_IMAGE *
-		);
+        unsigned char **,
+        unsigned char **,
+        unsigned char **,
+        int,
+        int,
+        int,
+        unsigned short **,
+        int *,
+        int *,
+        int *,
+        int *,
+        FL_IMAGE *
+        );
 
 FL_EXPORT void * fl_make_submatrix(
-		void *,
-		int,
-		int,
-		int,
-		int,
-		int,
-		int,
-		unsigned int
-		);
+        void *,
+        int,
+        int,
+        int,
+        int,
+        int,
+        int,
+        unsigned int
+        );
 
 FL_EXPORT int fl_object_ps_dump(
-		FL_OBJECT *,
-		const char *
-		);
+        FL_OBJECT *,
+        const char *
+        );
 
 FL_EXPORT void fl_pack_bits(
-		unsigned char *,
-		unsigned short *,
-		int
-		);
+        unsigned char *,
+        unsigned short *,
+        int
+        );
 
 FL_EXPORT void fl_unpack_bits(
-		unsigned short *,
-		unsigned char  *,
-		int
-		);
+        unsigned short *,
+        unsigned char  *,
+        int
+        );
 
 FL_EXPORT unsigned int fl_value_to_bits(
-		unsigned int
-		);
+        unsigned int
+        );
 
 FL_EXPORT void flimage_add_comments(
-		FL_IMAGE *,
-		const char *,
-		int
-		);
+        FL_IMAGE *,
+        const char *,
+        int
+        );
 
 FL_EXPORT unsigned long flimage_color_to_pixel(
-		FL_IMAGE *,
-		int,
-		int,
-		int,
-		int *
-		);
+        FL_IMAGE *,
+        int,
+        int,
+        int,
+        int *
+        );
 
 FL_EXPORT FL_IMAGE * flimage_combine(
-		FL_IMAGE *,
-		FL_IMAGE *,
-		double
-		);
+        FL_IMAGE *,
+        FL_IMAGE *,
+        double
+        );
 
 FL_EXPORT int flimage_define_marker(
-		const char *,
-		void ( * )( FLIMAGE_MARKER * ),
-		const char *
-		);
+        const char *,
+        void ( * )( FLIMAGE_MARKER * ),
+        const char *
+        );
 
 FL_EXPORT void flimage_display_markers(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT FL_IMAGE *flimage_dup_(
-		FL_IMAGE *,
-		int
-		);
+        FL_IMAGE *,
+        int
+        );
 
 FL_EXPORT void flimage_enable_bmp(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_fits(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_genesis(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_gif(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_gzip(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_jpeg(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_png(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_ps(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_sgi(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_tiff(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_xbm(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_xpm(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_enable_xwd(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flimage_free_ci(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void flimage_free_gray(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void flimage_free_linearlut(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void flimage_free_rgb(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void flimage_freemem(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT int flimage_get_closest_color_from_map(
-		FL_IMAGE *,
-		unsigned int
-		);
+        FL_IMAGE *,
+        unsigned int
+        );
 
 FL_EXPORT int flimage_get_linearlut(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void flimage_invalidate_pixels(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT FL_IMAGE *flimage_open(
-		const char *
-		);
+        const char *
+        );
 
 FL_EXPORT int flimage_read_annotation(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void flimage_replace_image(
-		FL_IMAGE *,
-		int,
-		int,
-		void *,
-		void *,
-		void *
-		);
+        FL_IMAGE *,
+        int,
+        int,
+        void *,
+        void *,
+        void *
+        );
 
 FL_EXPORT int flimage_swapbuffer(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT int flimage_to_ximage(
-		FL_IMAGE *,
-		FL_WINDOW,
-		XWindowAttributes *
-		);
+        FL_IMAGE *,
+        FL_WINDOW,
+        XWindowAttributes *
+        );
 
 FL_EXPORT int flimage_write_annotation(
-		FL_IMAGE *
-		);
+        FL_IMAGE *
+        );
 
 FL_EXPORT void flps_apply_gamma(
-		float
-		);
+        float
+        );
 
 FL_EXPORT void flps_arc(
-		int,
-		int,
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_circ(
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_color(
-		long
-		);
+        long
+        );
 
 FL_EXPORT void flps_draw_box(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long,
-		int
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long,
+        int
+        );
 
 FL_EXPORT void flps_draw_checkbox(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long,
-		int
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long,
+        int
+        );
 
 FL_EXPORT void flps_draw_frame(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long,
-		int
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long,
+        int
+        );
 
 FL_EXPORT int flps_draw_symbol(
-		const char *,
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        const char *,
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_draw_tbox(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long,
-		int
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long,
+        int
+        );
 
 FL_EXPORT void flps_draw_text(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long,
-		int,
-		int,
-		const char *
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long,
+        int,
+        int,
+        const char *
+        );
 
 FL_EXPORT void flps_draw_text_beside(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long,
-		int,
-		int,
-		const char *
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long,
+        int,
+        int,
+        const char *
+        );
 
 FL_EXPORT void flps_emit_header(
-		const char *,
-		int,
-		int,
-		int,
-		int,
-		int
-		);
+        const char *,
+        int,
+        int,
+        int,
+        int,
+        int
+        );
 
 FL_EXPORT void flps_emit_prolog(
-		void
-		);
+        void
+        );
 
 FL_EXPORT int flps_get_gray255(
-		long
-		);
+        long
+        );
 
 FL_EXPORT int flps_get_linestyle(
-		void
-		);
+        void
+        );
 
 FL_EXPORT int flps_get_linewidth(
-		void
-		);
+        void
+        );
 
 FL_EXPORT int flps_get_namedcolor(
-		const char *
-		);
+        const char *
+        );
 
 FL_EXPORT FLPS_CONTROL * flps_init(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_invalidate_color_cache(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_invalidate_font_cache(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_invalidate_linewidth_cache(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_invalidate_symbol_cache(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_line(
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_lines(
-		FL_POINT *,
-		int,
-		long
-		);
+        FL_POINT *,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_linestyle(
-		int
-		);
+        int
+        );
 
 FL_EXPORT void flps_linewidth(
-		int
-		);
+        int
+        );
 
 FL_EXPORT void flps_log(
-		const char *
-		);
+        const char *
+        );
 
 FL_EXPORT void flps_output(
-		const char *,
-		...
-		);
+        const char *,
+        ...
+        );
 
 FL_EXPORT void flps_oval(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_pieslice(
-		int,
-		int,
-		int,
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_poly(
-		int,
-		FL_POINT *,
-		int,
-		long
-		);
+        int,
+        FL_POINT *,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_rectangle(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_reset_cache(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_reset_linewidth(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_restore_flps(
-		void
-		);
+        void
+        );
 
 FL_EXPORT void flps_rgbcolor(
-		int,
-		int,
-		int
-		);
+        int,
+        int,
+        int
+        );
 
 FL_EXPORT void flps_roundrectangle(
-		int,
-		int,
-		int,
-		int,
-		int,
-		long
-		);
+        int,
+        int,
+        int,
+        int,
+        int,
+        long
+        );
 
 FL_EXPORT void flps_set_clipping(
-		int,
-		int,
-		int,
-		int
-		);
+        int,
+        int,
+        int,
+        int
+        );
 
 FL_EXPORT void flps_set_font(
-		int,
-		int
-		);
+        int,
+        int
+        );
 
 FL_EXPORT void flps_unset_clipping(
-		void
-		);
+        void
+        );
 
 #ifdef MAKING_FORMS
 #include "flimage_int.h"

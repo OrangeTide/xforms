@@ -45,8 +45,8 @@ fli_init_valuator( FL_OBJECT * ob )
     FLI_VALUATOR_SPEC *sp = ob->spec;
 
     if ( ! sp )
-		ob->spec = sp = fl_calloc( 1, sizeof *sp );
-	ob->how_return = FL_RETURN_CHANGED;
+        ob->spec = sp = fl_calloc( 1, sizeof *sp );
+    ob->how_return = FL_RETURN_CHANGED;
 
     sp->min       = 0.0;
     sp->max       = 1.0;
@@ -59,7 +59,7 @@ fli_init_valuator( FL_OBJECT * ob )
 }
 
 #define CROSS_OVER( v, vmin, vmax )  \
-	( ( v ) < ( vmin ) ? ( vmax ) : ( ( v ) > ( vmax ) ? ( vmin ) : ( v ) ) )
+    ( ( v ) < ( vmin ) ? ( vmax ) : ( ( v ) > ( vmax ) ? ( vmin ) : ( v ) ) )
 
 
 /***************************************
@@ -67,25 +67,25 @@ fli_init_valuator( FL_OBJECT * ob )
 
 double
 fli_valuator_round_and_clamp( FL_OBJECT * ob,
-							  double      val )
+                              double      val )
 {
     FLI_VALUATOR_SPEC *sp = ob->spec;
     double vmin,
-		   vmax;
+           vmax;
 
     if ( sp->step != 0.0 )
     {
-	   val /= sp->step;
-	   val = sp->step * ( val >= 0 ? floor( val + 0.5 ) : ceil( val - 0.5 ) );
+       val /= sp->step;
+       val = sp->step * ( val >= 0 ? floor( val + 0.5 ) : ceil( val - 0.5 ) );
     }
 
     vmin = FL_min( sp->min, sp->max );
     vmax = FL_max( sp->min, sp->max );
 
     if ( ! sp->cross_over )
-		return FL_clamp( val, vmin, vmax );
+        return FL_clamp( val, vmin, vmax );
     else
-		return CROSS_OVER( val, vmin, vmax );
+        return CROSS_OVER( val, vmin, vmax );
 }
 
 
@@ -94,7 +94,7 @@ fli_valuator_round_and_clamp( FL_OBJECT * ob,
 
 int
 fli_valuator_handle_drag( FL_OBJECT * ob,
-						  double      value )
+                          double      value )
 {
     FLI_VALUATOR_SPEC *sp = ob->spec;
 
@@ -102,11 +102,11 @@ fli_valuator_handle_drag( FL_OBJECT * ob,
 
     if ( value != sp->val )
     {
-		sp->val = value;
-		sp->draw_type = VALUE_DRAW;
-		fl_redraw_object( ob );
-		return    ob->how_return == FL_RETURN_CHANGED
-			   || ob->how_return == FL_RETURN_ALWAYS;
+        sp->val = value;
+        sp->draw_type = VALUE_DRAW;
+        fl_redraw_object( ob );
+        return    ob->how_return == FL_RETURN_CHANGED
+               || ob->how_return == FL_RETURN_ALWAYS;
     }
 
     return ob->how_return == FL_RETURN_ALWAYS;
@@ -118,7 +118,7 @@ fli_valuator_handle_drag( FL_OBJECT * ob,
 
 int
 fli_valuator_handle_release( FL_OBJECT * ob,
-							 double      value )
+                             double      value )
 {
     FLI_VALUATOR_SPEC *sp = ob->spec;
 
@@ -126,18 +126,18 @@ fli_valuator_handle_release( FL_OBJECT * ob,
 
     if ( value != sp->val )
     {
-		sp->val = value;
-		sp->draw_type = VALUE_DRAW;
-		fl_redraw_object(ob);
-		if ( ob->how_return == FL_RETURN_CHANGED)
-			return 1;
+        sp->val = value;
+        sp->draw_type = VALUE_DRAW;
+        fl_redraw_object(ob);
+        if ( ob->how_return == FL_RETURN_CHANGED)
+            return 1;
     }
 
     if ( sp->start_val != sp->val && ob->how_return == FL_RETURN_END_CHANGED )
-		return 1;
+        return 1;
 
     return    ob->how_return == FL_RETURN_ALWAYS
-		   || ob->how_return == FL_RETURN_END;
+           || ob->how_return == FL_RETURN_END;
 }
 
 
@@ -146,11 +146,19 @@ fli_valuator_handle_release( FL_OBJECT * ob,
 
 double
 fli_clamp( double val,
-		   double min,
-		   double max)
+           double min,
+           double max)
 {
     double vmin = FL_min( min, max ),
-		   vmax = FL_max( min, max );
+           vmax = FL_max( min, max );
 
     return FL_clamp( val, vmin, vmax );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

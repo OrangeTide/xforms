@@ -48,7 +48,7 @@ typedef struct
 
 static FD_input *
 create_input( const char * str1,
-			  const char * defstr )
+              const char * defstr )
 {
     FD_input *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fli_inverted_y;
@@ -65,7 +65,7 @@ create_input( const char * str1,
     fl_set_input( fdui->input, defstr );
 
     fdui->but = fl_add_button( FL_RETURN_BUTTON, 185, 94, 90, 27, "OK" );
-	fli_parse_goodies_label( fdui->but, FLOKLabel );
+    fli_parse_goodies_label( fdui->but, FLOKLabel );
 
     fl_set_form_hotobject( fdui->form, fdui->but );
 
@@ -74,7 +74,7 @@ create_input( const char * str1,
     fli_handle_goodie_font( fdui->but, fdui->input );
 
     fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
-							  fli_goodies_preemptive );
+                              fli_goodies_preemptive );
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
 
     fli_inverted_y = oldy;
@@ -93,32 +93,32 @@ static char *ret_str = NULL;
 
 const char *
 fl_show_simple_input( const char * str1,
-					  const char * defstr )
+                      const char * defstr )
 {
-	if ( fd_input )
-	{
-		fl_hide_form( fd_input->form );
-		fl_free_form( fd_input->form );
-		fl_safe_free( fd_input );
-	}
-	else
-		fl_deactivate_all_forms( );
+    if ( fd_input )
+    {
+        fl_hide_form( fd_input->form );
+        fl_free_form( fd_input->form );
+        fl_safe_free( fd_input );
+    }
+    else
+        fl_deactivate_all_forms( );
 
-	fl_safe_free( ret_str );
+    fl_safe_free( ret_str );
 
-	fd_input = create_input( str1, defstr );
+    fd_input = create_input( str1, defstr );
 
     fl_show_form( fd_input->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Input" );
     fl_update_display( 0 );
 
     while ( fl_do_only_forms( ) != fd_input->but )
-		/* empty */ ;
+        /* empty */ ;
 
-	ret_str = fl_strdup( fl_get_input( fd_input->input ) );
+    ret_str = fl_strdup( fl_get_input( fd_input->input ) );
 
     fl_hide_form( fd_input->form );
     fl_free_form( fd_input->form );
-	fl_safe_free( fd_input );
+    fl_safe_free( fd_input );
 
     fl_activate_all_forms( );
 
@@ -132,6 +132,14 @@ fl_show_simple_input( const char * str1,
 void
 fli_sinput_cleanup( void )
 {
-	fl_safe_free( fd_input );
-	fl_safe_free( ret_str );
+    fl_safe_free( fd_input );
+    fl_safe_free( ret_str );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -43,28 +43,28 @@ static void display_text( FL_IMAGE * im );
 
 int
 flimage_add_text( FL_IMAGE     * im,
-				  const char   * str,
-				  int            len,
-				  int            style,
-				  int            size,
-				  unsigned int   tcol,
-				  unsigned int   bcol,
-				  int            tran,
-				  double         tx,
-				  double         ty,
-				  int            rot )
+                  const char   * str,
+                  int            len,
+                  int            style,
+                  int            size,
+                  unsigned int   tcol,
+                  unsigned int   bcol,
+                  int            tran,
+                  double         tx,
+                  double         ty,
+                  int            rot )
 {
     FLIMAGE_TEXT *text;
 
     if ( ! str || ! *str || ! len || ! size || ! im )
-		return -1;
+        return -1;
 
-	im->text = fl_realloc( im->text, ( im->ntext + 1 ) * sizeof *im->text );
+    im->text = fl_realloc( im->text, ( im->ntext + 1 ) * sizeof *im->text );
 
     if ( ! im->text )
     {
-		flimage_error( im, "AddText: malloc failed" );
-		return -1;
+        flimage_error( im, "AddText: malloc failed" );
+        return -1;
     }
 
     text = im->text + im->ntext;
@@ -92,23 +92,23 @@ flimage_add_text( FL_IMAGE     * im,
 
 int
 flimage_add_text_struct( FL_IMAGE           * im,
-						 const FLIMAGE_TEXT * txt )
+                         const FLIMAGE_TEXT * txt )
 {
     FLIMAGE_TEXT *text;
 
     if ( ! txt || ! im || ! txt->str )
-		return -1;
+        return -1;
 
     if ( txt->len <= 0 )
     {
-		flimage_error( im, "AddTextStruct: bad text length (%d)", txt->len );
-		return -1;
+        flimage_error( im, "AddTextStruct: bad text length (%d)", txt->len );
+        return -1;
     }
 
-	im->text = fl_realloc( im->text, ( im->ntext + 1 ) * sizeof *im->text );
+    im->text = fl_realloc( im->text, ( im->ntext + 1 ) * sizeof *im->text );
 
     if ( ! im->text)
-		return -1;
+        return -1;
 
     text = im->text + im->ntext;
     memcpy( text, txt, sizeof *text );
@@ -132,10 +132,10 @@ flimage_delete_all_text( FL_IMAGE * im )
     int i;
 
     if ( ! im || ! im->ntext || ! im->text )
-		return;
+        return;
 
     for ( i = 0; i < im->ntext; i++ )
-		fl_free( im->text[ i ].str );
+        fl_free( im->text[ i ].str );
 
     fl_free( im->text );
     im->ntext = 0;
@@ -150,14 +150,14 @@ static void
 display_text( FL_IMAGE * im )
 {
     FLIMAGE_TEXT *t,
-		         *tend;
+                 *tend;
     FLI_TARGET target;
 
     if ( im->dont_display_text || im->ntext == 0 )
-		return;
+        return;
 
     if ( ! im->textgc )
-		im->textgc = XCreateGC( im->xdisplay, im->win, 0, 0 );
+        im->textgc = XCreateGC( im->xdisplay, im->win, 0, 0 );
 
     memcpy( &target, fli_internal_init( ), sizeof target );
 
@@ -170,12 +170,20 @@ display_text( FL_IMAGE * im )
     fli_switch_target( &target );
 
     for ( t = im->text, tend = t + im->ntext; t < tend; t++ )
-		fli_draw_text_inside (t->align,
-							  t->x + im->wxd - im->sxd -1,
-							  t->y + im->wyd - im->syd -1,
-							  2, 2, t->str,
-							  t->style, t->size, t->color, t->bcolor,
-							  ! t->nobk );
+        fli_draw_text_inside (t->align,
+                              t->x + im->wxd - im->sxd -1,
+                              t->y + im->wyd - im->syd -1,
+                              2, 2, t->str,
+                              t->style, t->size, t->color, t->bcolor,
+                              ! t->nobk );
 
     fli_restore_target( );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

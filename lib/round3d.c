@@ -42,14 +42,14 @@ draw_round3dbutton( FL_OBJECT * ob )
 {
     int c1;
     FL_Coord xx,
-		     yy,
-		     rr,
-		     bw = FL_abs( ob->bw );
+             yy,
+             rr,
+             bw = FL_abs( ob->bw );
     FL_BUTTON_STRUCT *sp = ob->spec;
 
     if (    ob->boxtype == FL_NO_BOX
-		 && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )
-		return;
+         && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )
+        return;
 
     c1 = ob->belowmouse ? FL_ROUND3DBUTTON_MCOL : FL_ROUND3DBUTTON_TOPCOL;
 
@@ -61,11 +61,11 @@ draw_round3dbutton( FL_OBJECT * ob )
     yy = ob->y + 0.5 * ob->h;
 
     if ( rr < bw / 2 )
-		rr = bw / 2 + 1;
+        rr = bw / 2 + 1;
 
 #if 1
     fl_drw_box( FL_OVAL3D_DOWNBOX, xx - rr, yy - rr,
-				2 * rr, 2 * rr, ob->col1, ob->bw );
+                2 * rr, 2 * rr, ob->col1, ob->bw );
 #else
     olw = fl_get_linewidth( );
     fl_linewidth( bw );
@@ -75,24 +75,24 @@ draw_round3dbutton( FL_OBJECT * ob )
     fl_linewidth( olw );
 
     if ( fli_dithered( fl_vmode ) )
-		fl_arc( xx, yy, rr - bw / 2, 0, 3600, FL_BLACK );
+        fl_arc( xx, yy, rr - bw / 2, 0, 3600, FL_BLACK );
 #endif
 
     if ( sp->val )
-		fl_circf( xx, yy, ( int ) FL_max( 1, 0.85 * rr - 1.0 - 0.5 * bw ),
-				  ob->col2 );
+        fl_circf( xx, yy, ( int ) FL_max( 1, 0.85 * rr - 1.0 - 0.5 * bw ),
+                  ob->col2 );
 
     if ( ob->align == FL_ALIGN_CENTER )
-		fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
-					 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
+                     ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
-		fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-							ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
+                            ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
     if ( ob->type == FL_RETURN_BUTTON )
-		fl_drw_text( 0,
-					 ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
-					 0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
+        fl_drw_text( 0,
+                     ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
+                     0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
 }
 
 
@@ -102,11 +102,11 @@ draw_round3dbutton( FL_OBJECT * ob )
 
 FL_OBJECT *
 fl_create_round3dbutton( int          type,
-						 FL_Coord     x,
-						 FL_Coord     y,
-						 FL_Coord     w,
-						 FL_Coord     h,
-						 const char * label )
+                         FL_Coord     x,
+                         FL_Coord     y,
+                         FL_Coord     w,
+                         FL_Coord     h,
+                         const char * label )
 {
     FL_OBJECT *ob;
 
@@ -129,14 +129,22 @@ fl_create_round3dbutton( int          type,
 
 FL_OBJECT *
 fl_add_round3dbutton( int          type,
-					  FL_Coord     x,
-					  FL_Coord     y,
-					  FL_Coord     w,
-					  FL_Coord     h,
-					  const char * label )
+                      FL_Coord     x,
+                      FL_Coord     y,
+                      FL_Coord     w,
+                      FL_Coord     h,
+                      const char * label )
 {
     FL_OBJECT *ob = fl_create_round3dbutton( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

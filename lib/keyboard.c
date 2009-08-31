@@ -41,12 +41,20 @@ void
 fl_ringbell( int percent )
 {
     if ( percent < -100 )
-		percent = -100;
+        percent = -100;
     else if ( percent > 100 )
-		percent = 100;
+        percent = 100;
 
     if ( flx->display )
-		XBell( flx->display, percent );
+        XBell( flx->display, percent );
     else
-		fprintf( stderr, "\a" );
+        fprintf( stderr, "\a" );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -1,5 +1,5 @@
 /*
- *	This file is part of the XForms library package.
+ *  This file is part of the XForms library package.
  *
  *  XForms is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Lesser General Public License as
@@ -8,7 +8,7 @@
  *
  *  XForms is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.     See the GNU
  *  Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
@@ -19,13 +19,13 @@
 /**
  * \file xdraw.c
  *
- *	This file is part of the XForms library package.
- *	Copyright (c) 1996-2002	 T.C. Zhao and Mark Overmars
- *	All rights reserved.
+ *  This file is part of the XForms library package.
+ *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
+ *  All rights reserved.
  *
- *	Basic low level drawing routines in Xlib.
+ *  Basic low level drawing routines in Xlib.
  *
- *	BUGS: All form window share a common GC and Colormap.
+ *  BUGS: All form window share a common GC and Colormap.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -54,43 +54,43 @@ static GC dithered_gc;
  ***************************************/
 
 void
-fl_rectangle( int	   fill,
-			  FL_Coord x,
-			  FL_Coord y,
-			  FL_Coord w,
-			  FL_Coord h,
-			  FL_COLOR col )
+fl_rectangle( int      fill,
+              FL_Coord x,
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h,
+              FL_COLOR col )
 {
-	int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
-	GC gc = flx->gc;
-	int ( * draw_as )( Display *,
-					   Drawable,
-					   GC,
-					   int,
-					   int,
-					   unsigned int,
-					   unsigned int );
+    int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
+    GC gc = flx->gc;
+    int ( * draw_as )( Display *,
+                       Drawable,
+                       GC,
+                       int,
+                       int,
+                       unsigned int,
+                       unsigned int );
 
-	if ( flx->win == None || w <= 0 || h <= 0 )
-		return;
+    if ( flx->win == None || w <= 0 || h <= 0 )
+        return;
 
-	fli_canonicalize_rect( &x, &y, &w, &h );
+    fli_canonicalize_rect( &x, &y, &w, &h );
 
-	draw_as = fill ? XFillRectangle : XDrawRectangle;
+    draw_as = fill ? XFillRectangle : XDrawRectangle;
 
-	if ( bw && fill )
-	{
-		fli_set_current_gc( fli_whitegc );
-		draw_as( flx->display, flx->win, flx->gc, x, y, w, h );
-		fli_set_current_gc( dithered_gc );
-	}
+    if ( bw && fill )
+    {
+        fli_set_current_gc( fli_whitegc );
+        draw_as( flx->display, flx->win, flx->gc, x, y, w, h );
+        fli_set_current_gc( dithered_gc );
+    }
 
 
-	fl_color( bw ? FL_BLACK : col );
-	draw_as( flx->display, flx->win, flx->gc, x, y, w, h );
+    fl_color( bw ? FL_BLACK : col );
+    draw_as( flx->display, flx->win, flx->gc, x, y, w, h );
 
-	if ( bw )
-		fli_set_current_gc( gc );
+    if ( bw )
+        fli_set_current_gc( gc );
 }
 
 
@@ -109,49 +109,49 @@ fl_rectangle( int	   fill,
  ***************************************/
 
 void
-fl_polygon( int		   fill,
-			FL_POINT * xp,
-			int		   n,
-			FL_COLOR   col )
+fl_polygon( int        fill,
+            FL_POINT * xp,
+            int        n,
+            FL_COLOR   col )
 {
-	int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
-	GC gc = flx->gc;
+    int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
+    GC gc = flx->gc;
 
-	if ( flx->win == None || n <= 0 )
-		return;
+    if ( flx->win == None || n <= 0 )
+        return;
 
-	if ( bw )
-	{
-		flx->gc = dithered_gc;
-		fl_color( FL_WHITE );
-		if ( fill )
-			XFillPolygon( flx->display, flx->win, flx->gc, xp, n,
-						  Nonconvex, CoordModeOrigin );
-		else
-		{
-			xp[ n ].x = xp[ 0 ].x;
-			xp[ n ].y = xp[ 0 ].y;
-			n++;
-			XDrawLines( flx->display, flx->win, flx->gc, xp, n,
-						CoordModeOrigin );
-		}
-	}
+    if ( bw )
+    {
+        flx->gc = dithered_gc;
+        fl_color( FL_WHITE );
+        if ( fill )
+            XFillPolygon( flx->display, flx->win, flx->gc, xp, n,
+                          Nonconvex, CoordModeOrigin );
+        else
+        {
+            xp[ n ].x = xp[ 0 ].x;
+            xp[ n ].y = xp[ 0 ].y;
+            n++;
+            XDrawLines( flx->display, flx->win, flx->gc, xp, n,
+                        CoordModeOrigin );
+        }
+    }
 
-	fl_color( bw ? FL_BLACK : col );
+    fl_color( bw ? FL_BLACK : col );
 
-	if ( fill )
-		XFillPolygon( flx->display, flx->win, flx->gc, xp, n,
-					  Nonconvex, CoordModeOrigin );
-	else
-	{
-		xp[ n ].x = xp[ 0 ].x;
-		xp[ n ].y = xp[ 0 ].y;
-		n++;
-		XDrawLines( flx->display, flx->win, flx->gc, xp, n, CoordModeOrigin );
-	}
+    if ( fill )
+        XFillPolygon( flx->display, flx->win, flx->gc, xp, n,
+                      Nonconvex, CoordModeOrigin );
+    else
+    {
+        xp[ n ].x = xp[ 0 ].x;
+        xp[ n ].y = xp[ 0 ].y;
+        n++;
+        XDrawLines( flx->display, flx->win, flx->gc, xp, n, CoordModeOrigin );
+    }
 
-	if ( bw )
-		flx->gc = gc;
+    if ( bw )
+        flx->gc = gc;
 }
 
 
@@ -164,44 +164,44 @@ fl_polygon( int		   fill,
  **********************************************************{******/
 
 void
-fl_oval( int	  fill,
-		 FL_Coord x,
-		 FL_Coord y,
-		 FL_Coord w,
-		 FL_Coord h,
-		 FL_COLOR col )
+fl_oval( int      fill,
+         FL_Coord x,
+         FL_Coord y,
+         FL_Coord w,
+         FL_Coord h,
+         FL_COLOR col )
 {
-	int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
-	GC gc = flx->gc;
-	int ( * draw_as )( Display *,
-					   Drawable,
-					   GC,
-					   int,
-					   int,
-					   unsigned int,
-					   unsigned int,
-					   int,
-					   int );
+    int bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
+    GC gc = flx->gc;
+    int ( * draw_as )( Display *,
+                       Drawable,
+                       GC,
+                       int,
+                       int,
+                       unsigned int,
+                       unsigned int,
+                       int,
+                       int );
 
-	if ( flx->win == None || w <= 0 || h <= 0 )
-		return;
+    if ( flx->win == None || w <= 0 || h <= 0 )
+        return;
 
-	draw_as = fill ? XFillArc : XDrawArc;
+    draw_as = fill ? XFillArc : XDrawArc;
 
-	if ( bw )
-	{
-		fli_set_current_gc( fli_whitegc );
-		draw_as( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
-		fli_set_current_gc( dithered_gc );
-	}
+    if ( bw )
+    {
+        fli_set_current_gc( fli_whitegc );
+        draw_as( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
+        fli_set_current_gc( dithered_gc );
+    }
 
-	fl_color( bw ? FL_BLACK : col );
+    fl_color( bw ? FL_BLACK : col );
 
-	if ( w >= 0 && h >= 0 )
-		draw_as( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
+    if ( w >= 0 && h >= 0 )
+        draw_as( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
 
-	if ( bw )
-		fli_set_current_gc( gc );
+    if ( bw )
+        fli_set_current_gc( gc );
 }
 
 
@@ -210,19 +210,19 @@ fl_oval( int	  fill,
 
 void
 fl_ovalbound( FL_Coord x,
-			  FL_Coord y,
-			  FL_Coord w,
-			  FL_Coord h,
-			  FL_COLOR col )
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h,
+              FL_COLOR col )
 {
-	if ( flx->win == None || w <= 0 || h <= 0 )
-		return;
+    if ( flx->win == None || w <= 0 || h <= 0 )
+        return;
 
-	fl_color( col );
-	XFillArc( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
-	fl_color( FL_BLACK );
-	XDrawArc( flx->display, flx->win, flx->gc, x, y, w - 1, h - 1, 0,
-			  360 * 64 );
+    fl_color( col );
+    XFillArc( flx->display, flx->win, flx->gc, x, y, w, h, 0, 360 * 64 );
+    fl_color( FL_BLACK );
+    XDrawArc( flx->display, flx->win, flx->gc, x, y, w - 1, h - 1, 0,
+              360 * 64 );
 }
 
 
@@ -237,47 +237,47 @@ fl_ovalbound( FL_Coord x,
  ***************************************/
 
 void
-fl_ovalarc( int		 fill,
-			FL_Coord x,
-			FL_Coord y,
-			FL_Coord w,
-			FL_Coord h,
-			int		 t0,
-			int		 dt,
-			FL_COLOR col )
+fl_ovalarc( int      fill,
+            FL_Coord x,
+            FL_Coord y,
+            FL_Coord w,
+            FL_Coord h,
+            int      t0,
+            int      dt,
+            FL_COLOR col )
 {
-	int mono = fli_dithered( fl_vmode ) && fli_mono_dither( col );
-	int ( * draw_as )( Display *,
-					   Drawable,
-					   GC,
-					   int,
-					   int,
-					   unsigned int,
-					   unsigned int,
-					   int,
-					   int );
+    int mono = fli_dithered( fl_vmode ) && fli_mono_dither( col );
+    int ( * draw_as )( Display *,
+                       Drawable,
+                       GC,
+                       int,
+                       int,
+                       unsigned int,
+                       unsigned int,
+                       int,
+                       int );
 
-	if ( flx->win == None || w <= 0 || h <= 0 )
-		return;
+    if ( flx->win == None || w <= 0 || h <= 0 )
+        return;
 
-	draw_as = fill ? XFillArc : XDrawArc;
+    draw_as = fill ? XFillArc : XDrawArc;
 
-	if ( mono )
-	{
-		fli_set_current_gc( fli_whitegc );
-		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
-				 t0 * 6.4, dt * 6.4 );
-		fli_set_current_gc( dithered_gc );
-	}
+    if ( mono )
+    {
+        fli_set_current_gc( fli_whitegc );
+        draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
+                 t0 * 6.4, dt * 6.4 );
+        fli_set_current_gc( dithered_gc );
+    }
 
-	fl_color( mono ? FL_BLACK : col );
+    fl_color( mono ? FL_BLACK : col );
 
-	if ( w >= 0 && h >= 0 )
-		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
-				 t0 * 6.4, dt * 6.4 );
+    if ( w >= 0 && h >= 0 )
+        draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
+                 t0 * 6.4, dt * 6.4 );
 
-	if ( mono )
-		fli_set_current_gc( fl_state[ fl_vmode ].gc[ 0 ] );
+    if ( mono )
+        fli_set_current_gc( fl_state[ fl_vmode ].gc[ 0 ] );
 }
 
 
@@ -285,48 +285,48 @@ fl_ovalarc( int		 fill,
  ***************************************/
 
 void
-fl_pieslice( int	  fill,
-			 FL_Coord x,
-			 FL_Coord y,
-			 FL_Coord w,
-			 FL_Coord h,
-			 int	  a1,
-			 int	  a2,
-			 FL_COLOR col )
+fl_pieslice( int      fill,
+             FL_Coord x,
+             FL_Coord y,
+             FL_Coord w,
+             FL_Coord h,
+             int      a1,
+             int      a2,
+             FL_COLOR col )
 {
-	int delta = a2 - a1,
-		bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
-	GC gc = flx->gc;
-	int ( * draw_as )( Display *,
-					   Drawable,
-					   GC,
-					   int,
-					   int,
-					   unsigned int,
-					   unsigned int,
-					   int,
-					   int );
+    int delta = a2 - a1,
+        bw = fli_dithered( fl_vmode ) && fli_mono_dither( col );
+    GC gc = flx->gc;
+    int ( * draw_as )( Display *,
+                       Drawable,
+                       GC,
+                       int,
+                       int,
+                       unsigned int,
+                       unsigned int,
+                       int,
+                       int );
 
-	if ( flx->win == None || w <= 0 || h <= 0)
-		return;
+    if ( flx->win == None || w <= 0 || h <= 0)
+        return;
 
-	draw_as = fill ? XFillArc : XDrawArc;
+    draw_as = fill ? XFillArc : XDrawArc;
 
-	if ( bw )
-	{
-		fli_set_current_gc( fli_whitegc );
-		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
-				 a1 * 6.4, delta * 6.4 );
-		fli_set_current_gc( dithered_gc );
-	}
+    if ( bw )
+    {
+        fli_set_current_gc( fli_whitegc );
+        draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
+                 a1 * 6.4, delta * 6.4 );
+        fli_set_current_gc( dithered_gc );
+    }
 
-	fl_color( bw ? FL_BLACK : col );
+    fl_color( bw ? FL_BLACK : col );
 
-	if ( w >= 0 && h >= 0 )
-		draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
-				 a1 * 6.4, delta * 6.4 );
-	if ( bw )
-		fli_set_current_gc( gc );
+    if ( w >= 0 && h >= 0 )
+        draw_as( flx->display, flx->win, flx->gc, x, y, w, h,
+                 a1 * 6.4, delta * 6.4 );
+    if ( bw )
+        fli_set_current_gc( gc );
 }
 
 
@@ -340,44 +340,44 @@ fl_pieslice( int	  fill,
 
 void
 fl_lines( FL_POINT * xp,
-		  int		 n,
-		  FL_COLOR	 col )
+          int        n,
+          FL_COLOR   col )
 {
-	if ( flx->win == None  || n <= 0 )
-		return;
+    if ( flx->win == None  || n <= 0 )
+        return;
 
-	fl_color( col );
+    fl_color( col );
 
-	/* we may need to break up the request into smaller pieces */
+    /* we may need to break up the request into smaller pieces */
 
-	if ( fli_context->ext_request_size >= n )
-		XDrawLines( flx->display, flx->win, flx->gc, xp, n, CoordModeOrigin );
-	else
-	{
-		int req = fli_context->ext_request_size;
-		int i,
-			nchunks = ( n + ( n / req ) ) / req,
-			left;
-		FL_POINT *p = xp;
+    if ( fli_context->ext_request_size >= n )
+        XDrawLines( flx->display, flx->win, flx->gc, xp, n, CoordModeOrigin );
+    else
+    {
+        int req = fli_context->ext_request_size;
+        int i,
+            nchunks = ( n + ( n / req ) ) / req,
+            left;
+        FL_POINT *p = xp;
 
-		for ( i = 0; i < nchunks; i++, p += req - 1 )
-			XDrawLines( flx->display, flx->win, flx->gc, p, req,
-						CoordModeOrigin );
+        for ( i = 0; i < nchunks; i++, p += req - 1 )
+            XDrawLines( flx->display, flx->win, flx->gc, p, req,
+                        CoordModeOrigin );
 
-		left = xp + n - p;
+        left = xp + n - p;
 
-		if ( left )
-		{
-			if ( left == 1 )
-			{
-				p--;
-				left++;
-			}
+        if ( left )
+        {
+            if ( left == 1 )
+            {
+                p--;
+                left++;
+            }
 
-			XDrawLines( flx->display, flx->win, flx->gc, p, left,
-						CoordModeOrigin );
-		}
-	}
+            XDrawLines( flx->display, flx->win, flx->gc, p, left,
+                        CoordModeOrigin );
+        }
+    }
 }
 
 
@@ -387,16 +387,16 @@ fl_lines( FL_POINT * xp,
 
 void
 fl_line( FL_Coord xi,
-		 FL_Coord yi,
-		 FL_Coord xf,
-		 FL_Coord yf,
-		 FL_COLOR c )
+         FL_Coord yi,
+         FL_Coord xf,
+         FL_Coord yf,
+         FL_COLOR c )
 {
-	if ( flx->win == None )
-		return;
+    if ( flx->win == None )
+        return;
 
-	fl_color( c );
-	XDrawLine( flx->display, flx->win, flx->gc, xi, yi, xf, yf );
+    fl_color( c );
+    XDrawLine( flx->display, flx->win, flx->gc, xi, yi, xf, yf );
 }
 
 
@@ -410,14 +410,14 @@ fl_line( FL_Coord xi,
 
 void
 fl_point( FL_Coord x,
-		  FL_Coord y,
-		  FL_COLOR c )
+          FL_Coord y,
+          FL_COLOR c )
 {
-	if ( flx->win == None )
-		return;
+    if ( flx->win == None )
+        return;
 
-	fl_color( c );
-	XDrawPoint( flx->display, flx->win, flx->gc, x, y );
+    fl_color( c );
+    XDrawPoint( flx->display, flx->win, flx->gc, x, y );
 }
 
 
@@ -426,14 +426,14 @@ fl_point( FL_Coord x,
 
 void
 fl_points( FL_POINT * p,
-		   int		  np,
-		   FL_COLOR	  c )
+           int        np,
+           FL_COLOR   c )
 {
-	if ( flx->win == None || np <= 0 )
-		return;
+    if ( flx->win == None || np <= 0 )
+        return;
 
-	fl_color( c );
-	XDrawPoints( flx->display, flx->win, flx->gc, p, np, CoordModeOrigin );
+    fl_color( c );
+    XDrawPoints( flx->display, flx->win, flx->gc, p, np, CoordModeOrigin );
 }
 
 
@@ -442,8 +442,8 @@ fl_points( FL_POINT * p,
  ****************************************************************{*/
 
 static int lw     = 0,
-		   ls     = LineSolid,
-		   drmode = GXcopy;
+           ls     = LineSolid,
+           drmode = GXcopy;
 
 
 /***************************************
@@ -452,15 +452,15 @@ static int lw     = 0,
 void
 fl_linewidth( int n )
 {
-	XGCValues gcvalue;
-	unsigned long gcmask;
+    XGCValues gcvalue;
+    unsigned long gcmask;
 
-	if ( lw == n )
-		return;
+    if ( lw == n )
+        return;
 
-	gcmask = GCLineWidth;
-	gcvalue.line_width = lw = n;
-	XChangeGC( flx->display, flx->gc, gcmask, &gcvalue );
+    gcmask = GCLineWidth;
+    gcvalue.line_width = lw = n;
+    XChangeGC( flx->display, flx->gc, gcmask, &gcvalue );
 }
 
 
@@ -470,46 +470,46 @@ fl_linewidth( int n )
 int
 fl_get_linewidth( void )
 {
-	return lw;
+    return lw;
 }
 
 
 static void fli_xdashedlinestyle( Display *,
-								  GC,
-								  const char *,
-								  int );
+                                  GC,
+                                  const char *,
+                                  int );
 
 /***************************************
  ***************************************/
 
 void
 fli_xlinestyle( Display * d,
-				GC		 gc,
-				int		 n )
+                GC       gc,
+                int      n )
 {
-	static char dots[ ]    = { 2, 4 };
-	static char dotdash[ ] = { 7, 3, 2, 3 };
-	static char ldash[ ]   = { 10, 4 };
-	XGCValues gcvalue;
-	unsigned long gcmask;
+    static char dots[ ]    = { 2, 4 };
+    static char dotdash[ ] = { 7, 3, 2, 3 };
+    static char ldash[ ]   = { 10, 4 };
+    XGCValues gcvalue;
+    unsigned long gcmask;
 
-	if ( ls == n )
-		return;
+    if ( ls == n )
+        return;
 
-	ls = n;
+    ls = n;
 
-	gcmask = GCLineStyle;
-	if ( n == FL_DOT )
-		fli_xdashedlinestyle( d, gc, dots, 2 );
-	else if ( n == FL_DOTDASH )
-		fli_xdashedlinestyle( d, gc, dotdash, 4 );
-	else if ( n == FL_LONGDASH )
-		fli_xdashedlinestyle( d, gc, ldash, 2 );
-	if ( n > LineDoubleDash )
-		n = LineOnOffDash;
+    gcmask = GCLineStyle;
+    if ( n == FL_DOT )
+        fli_xdashedlinestyle( d, gc, dots, 2 );
+    else if ( n == FL_DOTDASH )
+        fli_xdashedlinestyle( d, gc, dotdash, 4 );
+    else if ( n == FL_LONGDASH )
+        fli_xdashedlinestyle( d, gc, ldash, 2 );
+    if ( n > LineDoubleDash )
+        n = LineOnOffDash;
 
-	gcvalue.line_style = n;
-	XChangeGC( d, gc, gcmask, &gcvalue );
+    gcvalue.line_style = n;
+    XChangeGC( d, gc, gcmask, &gcvalue );
 }
 
 
@@ -519,7 +519,7 @@ fli_xlinestyle( Display * d,
 void
 fl_linestyle( int n )
 {
-	fli_xlinestyle( flx->display, flx->gc, n );
+    fli_xlinestyle( flx->display, flx->gc, n );
 }
 
 
@@ -529,7 +529,7 @@ fl_linestyle( int n )
 int
 fl_get_linestyle( void )
 {
-	return ls;
+    return ls;
 }
 
 
@@ -539,7 +539,7 @@ fl_get_linestyle( void )
 int
 fl_get_drawmode( void )
 {
-	return drmode;
+    return drmode;
 }
 
 
@@ -549,8 +549,8 @@ fl_get_drawmode( void )
 void
 fl_drawmode( int request )
 {
-	if ( drmode != request )
-		XSetFunction( flx->display, flx->gc, drmode = request );
+    if ( drmode != request )
+        XSetFunction( flx->display, flx->gc, drmode = request );
 }
 
 
@@ -558,20 +558,20 @@ fl_drawmode( int request )
  ***************************************/
 
 static void
-fli_xdashedlinestyle( Display	 * d,
-					  GC		   gc,
-					  const char * dash,
-					  int		   ndash )
+fli_xdashedlinestyle( Display    * d,
+                      GC           gc,
+                      const char * dash,
+                      int          ndash )
 {
-	static char default_dash[ ] = { 4, 4 };
+    static char default_dash[ ] = { 4, 4 };
 
-	if ( dash == NULL )
-	{
-		dash = default_dash;
-		ndash = 2;
-	}
+    if ( dash == NULL )
+    {
+        dash = default_dash;
+        ndash = 2;
+    }
 
-	XSetDashes( d, gc, 0, ( char * ) dash, ndash );
+    XSetDashes( d, gc, 0, ( char * ) dash, ndash );
 }
 
 
@@ -580,17 +580,17 @@ fli_xdashedlinestyle( Display	 * d,
 
 void
 fl_dashedlinestyle( const char * dash,
-					int			 ndash )
+                    int          ndash )
 {
-	static char default_dash[ ] = { 4, 4 };
+    static char default_dash[ ] = { 4, 4 };
 
-	if ( dash == NULL )
-	{
-		dash = default_dash;
-		ndash = 2;
-	}
+    if ( dash == NULL )
+    {
+        dash = default_dash;
+        ndash = 2;
+    }
 
-	XSetDashes( flx->display, flx->gc, 0, ( char * ) dash, ndash );
+    XSetDashes( flx->display, flx->gc, 0, ( char * ) dash, ndash );
 }
 
 
@@ -598,13 +598,13 @@ fl_dashedlinestyle( const char * dash,
  * Clipping stuff
  ***********************************************************************/
 /*
- *	Remember global clipping so unset_clipping will restore it. Most
- *	useful as part of event dispatching
+ *  Remember global clipping so unset_clipping will restore it. Most
+ *  useful as part of event dispatching
  */
 
 XRectangle fli_perm_xcr;
 int fli_perm_clip;
-static FL_RECT cur_clip;	/* not includng perm clip, probably should */
+static FL_RECT cur_clip;    /* not includng perm clip, probably should */
 
 
 /***************************************
@@ -612,15 +612,15 @@ static FL_RECT cur_clip;	/* not includng perm clip, probably should */
 
 void
 fli_set_perm_clipping( FL_Coord x,
-					   FL_Coord y,
-					   FL_Coord w,
-					   FL_Coord h )
+                       FL_Coord y,
+                       FL_Coord w,
+                       FL_Coord h )
 {
-	fli_perm_clip       = 1;
-	fli_perm_xcr.x      = x;
-	fli_perm_xcr.y      = y;
-	fli_perm_xcr.width  = w;
-	fli_perm_xcr.height = h;
+    fli_perm_clip       = 1;
+    fli_perm_xcr.x      = x;
+    fli_perm_xcr.y      = y;
+    fli_perm_xcr.width  = w;
+    fli_perm_xcr.height = h;
 }
 
 
@@ -630,7 +630,7 @@ fli_set_perm_clipping( FL_Coord x,
 void
 fli_unset_perm_clipping( void )
 {
-	fli_perm_clip = 0;
+    fli_perm_clip = 0;
 }
 
 
@@ -639,20 +639,20 @@ fli_unset_perm_clipping( void )
 
 void
 fl_set_clipping( FL_Coord x,
-				 FL_Coord y,
-				 FL_Coord w,
-				 FL_Coord h )
+                 FL_Coord y,
+                 FL_Coord w,
+                 FL_Coord h )
 {
-	cur_clip.x      = x;
-	cur_clip.y      = y;
-	cur_clip.width  = w;
-	cur_clip.height = h;
+    cur_clip.x      = x;
+    cur_clip.y      = y;
+    cur_clip.width  = w;
+    cur_clip.height = h;
 
-	if ( w > 0 && h > 0 )
-	   XSetClipRectangles( flx->display, flx->gc, 0, 0, &cur_clip, 1,
-						   Unsorted );
-	else
-		XSetClipMask( flx->display, flx->gc, None );
+    if ( w > 0 && h > 0 )
+       XSetClipRectangles( flx->display, flx->gc, 0, 0, &cur_clip, 1,
+                           Unsorted );
+    else
+        XSetClipMask( flx->display, flx->gc, None );
 }
 
 
@@ -661,11 +661,11 @@ fl_set_clipping( FL_Coord x,
 
 void
 fl_set_text_clipping( FL_Coord x,
-					  FL_Coord y,
-					  FL_Coord w,
-					  FL_Coord h )
+                      FL_Coord y,
+                      FL_Coord w,
+                      FL_Coord h )
 {
-	fl_set_gc_clipping( flx->textgc, x, y, w, h );
+    fl_set_gc_clipping( flx->textgc, x, y, w, h );
 }
 
 
@@ -675,7 +675,7 @@ fl_set_text_clipping( FL_Coord x,
 void
 fl_unset_text_clipping( void )
 {
-	fl_unset_gc_clipping( flx->textgc );
+    fl_unset_gc_clipping( flx->textgc );
 }
 
 
@@ -684,14 +684,14 @@ fl_unset_text_clipping( void )
 
 void
 fli_get_clipping( FL_Coord * x,
-				  FL_Coord * y,
-				  FL_Coord * w,
-				  FL_Coord * h )
+                  FL_Coord * y,
+                  FL_Coord * w,
+                  FL_Coord * h )
 {
-	*x = cur_clip.x;
-	*y = cur_clip.y;
-	*w = cur_clip.width;
-	*h = cur_clip.height;
+    *x = cur_clip.x;
+    *y = cur_clip.y;
+    *w = cur_clip.width;
+    *h = cur_clip.height;
 }
 
 
@@ -700,26 +700,26 @@ fli_get_clipping( FL_Coord * x,
 
 void
 fli_set_additional_clipping( FL_Coord x,
-							 FL_Coord y,
-							 FL_Coord w,
-							 FL_Coord h )
+                             FL_Coord y,
+                             FL_Coord w,
+                             FL_Coord h )
 {
-	FL_RECT rect[ 2 ],
-			*r;
+    FL_RECT rect[ 2 ],
+            *r;
 
-	rect[ 0 ]        = cur_clip;
-	rect[ 1 ].x      = x;
-	rect[ 1 ].y      = y;
-	rect[ 1 ].width  = w;
-	rect[ 1 ].height = h;
+    rect[ 0 ]        = cur_clip;
+    rect[ 1 ].x      = x;
+    rect[ 1 ].y      = y;
+    rect[ 1 ].width  = w;
+    rect[ 1 ].height = h;
 
-	r = fli_union_rect( rect, rect + 1 );
+    r = fli_union_rect( rect, rect + 1 );
 
-	if ( r != NULL )
-	{
-		XSetClipRectangles( flx->display, flx->gc, 0, 0, r, 1, Unsorted );
-		fl_free( r );
-	}
+    if ( r != NULL )
+    {
+        XSetClipRectangles( flx->display, flx->gc, 0, 0, r, 1, Unsorted );
+        fl_free( r );
+    }
 }
 
 
@@ -727,19 +727,19 @@ fli_set_additional_clipping( FL_Coord x,
  ***************************************/
 
 void
-fl_set_gc_clipping( GC		 gc,
-					FL_Coord x,
-					FL_Coord y,
-					FL_Coord w,
-					FL_Coord h )
+fl_set_gc_clipping( GC       gc,
+                    FL_Coord x,
+                    FL_Coord y,
+                    FL_Coord w,
+                    FL_Coord h )
 {
-	XRectangle xrect;
+    XRectangle xrect;
 
-	xrect.x      = x;
-	xrect.y      = y;
-	xrect.width  = w;
-	xrect.height = h;
-	XSetClipRectangles( flx->display, gc, 0, 0, &xrect, 1, Unsorted );
+    xrect.x      = x;
+    xrect.y      = y;
+    xrect.width  = w;
+    xrect.height = h;
+    XSetClipRectangles( flx->display, gc, 0, 0, &xrect, 1, Unsorted );
 }
 
 
@@ -748,9 +748,9 @@ fl_set_gc_clipping( GC		 gc,
 
 void
 fl_set_clippings( FL_RECT * xrect,
-				  int		n )
+                  int       n )
 {
-	XSetClipRectangles( flx->display, flx->gc, 0, 0, xrect, n, Unsorted );
+    XSetClipRectangles( flx->display, flx->gc, 0, 0, xrect, n, Unsorted );
 }
 
 
@@ -760,17 +760,17 @@ fl_set_clippings( FL_RECT * xrect,
 void
 fl_unset_clipping( void )
 {
-	if ( ! fli_perm_clip )
-	{
-		XSetClipMask( flx->display, flx->gc, None );
-		cur_clip.x = cur_clip.y = cur_clip.width = cur_clip.height = 0;
-	}
-	else
-	{
-		XSetClipRectangles( flx->display, flx->gc, 0, 0, &fli_perm_xcr, 1,
-							Unsorted );
-		cur_clip = fli_perm_xcr;
-	}
+    if ( ! fli_perm_clip )
+    {
+        XSetClipMask( flx->display, flx->gc, None );
+        cur_clip.x = cur_clip.y = cur_clip.width = cur_clip.height = 0;
+    }
+    else
+    {
+        XSetClipRectangles( flx->display, flx->gc, 0, 0, &fli_perm_xcr, 1,
+                            Unsorted );
+        cur_clip = fli_perm_xcr;
+    }
 }
 
 
@@ -780,11 +780,11 @@ fl_unset_clipping( void )
 void
 fl_unset_gc_clipping( GC gc )
 {
-	if ( ! fli_perm_clip )
-		XSetClipMask( flx->display, gc, None );
-	else
-		XSetClipRectangles( flx->display, gc, 0, 0, &fli_perm_xcr, 1,
-							Unsorted );
+    if ( ! fli_perm_clip )
+        XSetClipMask( flx->display, gc, None );
+    else
+        XSetClipRectangles( flx->display, gc, 0, 0, &fli_perm_xcr, 1,
+                            Unsorted );
 }
 
 
@@ -794,11 +794,11 @@ fl_unset_gc_clipping( GC gc )
 static void
 fli_set_current_gc( GC gc )
 {
-	if ( flx->gc != gc )
-	{
-		flx->gc = gc;
-		flx->color = FL_NoColor;
-	}
+    if ( flx->gc != gc )
+    {
+        flx->gc = gc;
+        flx->color = FL_NoColor;
+    }
 }
 
 
@@ -810,46 +810,54 @@ fli_set_current_gc( GC gc )
 static int
 fli_mono_dither( unsigned long col )
 {
-	int bwtrick = 0;
+    int bwtrick = 0;
 
-	switch ( col )
-	{
-		case FL_RED:
-		case FL_MAGENTA:
-		case FL_SLATEBLUE:
-		case FL_PALEGREEN:
-		case FL_DARKGOLD:
-		case FL_INACTIVE_COL:
-			dithered_gc = fli_bwgc[ 1 ];
-			bwtrick     = 1;
-			break;
+    switch ( col )
+    {
+        case FL_RED:
+        case FL_MAGENTA:
+        case FL_SLATEBLUE:
+        case FL_PALEGREEN:
+        case FL_DARKGOLD:
+        case FL_INACTIVE_COL:
+            dithered_gc = fli_bwgc[ 1 ];
+            bwtrick     = 1;
+            break;
 
-		case FL_YELLOW:
-		case FL_CYAN:
-		case FL_INDIANRED:
-		case FL_GREEN:
-			dithered_gc = fli_bwgc[ 2 ];
-			bwtrick     = 1;
-			break;
+        case FL_YELLOW:
+        case FL_CYAN:
+        case FL_INDIANRED:
+        case FL_GREEN:
+            dithered_gc = fli_bwgc[ 2 ];
+            bwtrick     = 1;
+            break;
 
-		case FL_BLUE:
-			dithered_gc = fli_bwgc[ 0 ];
-			bwtrick     = 1;
-			break;
+        case FL_BLUE:
+            dithered_gc = fli_bwgc[ 0 ];
+            bwtrick     = 1;
+            break;
 
-		default:
-			if ( col >= FL_FREE_COL1 )
-			{
-				int r,
-					g,
-					b;
+        default:
+            if ( col >= FL_FREE_COL1 )
+            {
+                int r,
+                    g,
+                    b;
 
-				fl_get_icm_color( col, &r, &g, &b );
-				if ( ( bwtrick = ( r > 70 && r <= 210 ) ) )
-					dithered_gc = fli_bwgc[ r / 70 - 1 ];
-			}
-			break;
-	}
+                fl_get_icm_color( col, &r, &g, &b );
+                if ( ( bwtrick = ( r > 70 && r <= 210 ) ) )
+                    dithered_gc = fli_bwgc[ r / 70 - 1 ];
+            }
+            break;
+    }
 
-	return bwtrick;
+    return bwtrick;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

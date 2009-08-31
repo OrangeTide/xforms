@@ -1,5 +1,4 @@
 /*
- *
  *  This file is part of the XForms library package.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,15 +19,13 @@
 /**
  * \file extern.h
  *
- *.
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-1998  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
+ *
  * All global variables used in forms.  Should not be used
  * by application programs.  There is no guarantee that these
  * variables exist in future version of XForms
- *
  */
 
 #ifndef FL_EXTERN_H_MAKING_FORMS_ONLY
@@ -66,12 +63,20 @@ extern char fli_curfnt[ 127 ];
 extern FLI_WIN *fli_app_win;
 
 extern void fli_drw_tbox( int,
-						  FL_Coord,
-						  FL_Coord,
-						  FL_Coord,
-						  FL_Coord,
-						  FL_COLOR,
-						  int );
+                          FL_Coord,
+                          FL_Coord,
+                          FL_Coord,
+                          FL_Coord,
+                          FL_COLOR,
+                          int );
 
 
 #endif /* !def EXTERN.H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

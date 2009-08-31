@@ -22,8 +22,8 @@
 **  Written by Rich Salz, <rsalz@bbn.com> in August, 1990.
 **  This code has no copyright.
 **
-**  Feb'95 --	eliminate reliance on <descrip.h>; safeguard multiple
-**		inclusion; fully prototype the routines provided.	[pr]
+**  Feb'95 --   eliminate reliance on <descrip.h>; safeguard multiple
+**      inclusion; fully prototype the routines provided.   [pr]
 */
 
 #ifndef DIRENT_H
@@ -31,32 +31,40 @@
 
 /* Data structure returned by READDIR(). */
 struct dirent {
-    char	d_name[100];		/* File name		*/
-    int		vms_verscount;		/* Number of versions	*/
-    short	vms_versions[64];	/* Version numbers	*/
+    char    d_name[100];        /* File name        */
+    int     vms_verscount;      /* Number of versions   */
+    short   vms_versions[64];   /* Version numbers  */
 };
 
 /* Handle returned by opendir(), used by the other routines.  You
  * are not supposed to care what's inside this structure. */
 typedef struct _dirdesc {
-    unsigned long	context;
-    int			count;
-    int			vms_wantversions;
-    char		*pattern;
-    struct dirent	entry;
-				/* pattern string descriptor */
+    unsigned long   context;
+    int         count;
+    int         vms_wantversions;
+    char        *pattern;
+    struct dirent   entry;
+                /* pattern string descriptor */
     struct { unsigned short len, mbz; char *adr; } pat;
 } DIR;
 
 
-#define rewinddir(dirp)		seekdir((dirp), 0L)
+#define rewinddir(dirp)     seekdir((dirp), 0L)
 
 
-extern DIR		*opendir(const char *);
-extern struct dirent	*readdir(DIR *);
-extern long		telldir(DIR *);
-extern void		seekdir(DIR *,long);
-extern void		closedir(DIR *);
-extern int		vmsreaddirversions(DIR *,int);
+extern DIR      *opendir(const char *);
+extern struct dirent    *readdir(DIR *);
+extern long     telldir(DIR *);
+extern void     seekdir(DIR *,long);
+extern void     closedir(DIR *);
+extern int      vmsreaddirversions(DIR *,int);
 
-#endif	/* DIRENT_H */
+#endif  /* DIRENT_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

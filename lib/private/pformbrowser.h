@@ -31,18 +31,18 @@ typedef struct {
     int          v_pref;
     int          h_pref;
     int          vw_def,
-	             vw;
+                 vw;
     int          hh_def,
-	             hh;
+                 hh;
     FL_OBJECT  * hsl;
-	FL_OBJECT  * vsl;
+    FL_OBJECT  * vsl;
     int          h_on,
-	             v_on;
-	double       old_vval,
-	             old_hval;
+                 v_on;
+    double       old_vval,
+                 old_hval;
 
     int          x,
-	             y;
+                 y;
     int          left_edge;
     int          top_edge;
     int          top_form;
@@ -52,14 +52,22 @@ typedef struct {
 
     int          processing_destroy;
     int          in_draw;
-    int          scroll;			/* either pixel based or form based */
+    int          scroll;            /* either pixel based or form based */
 } FLI_FORMBROWSER_SPEC;
 
 #define IsFormBrowserClass( ob )  \
-	( ( ob ) && ( ob )->objclass == FL_FORMBROWSER )
+    ( ( ob ) && ( ob )->objclass == FL_FORMBROWSER )
 
 #if defined sun && ! defined __SVR4
 #define memmove( a, b, c )   bcopy( b, a, c )
 #endif
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

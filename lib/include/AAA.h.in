@@ -81,5 +81,5 @@ extern "C"
 #define FL_EXPORT __declspec( dllexport ) extern
 #else
 #define FL_EXPORT __declspec( dllimport ) extern
-#endif				/* MAKING_FORMS */
-#endif				/* FL_WIN32 */
+#endif              /* MAKING_FORMS */
+#endif              /* FL_WIN32 */

@@ -44,3 +44,11 @@ fl_strdup( const char * s )
 
     return p ? strcpy( p, s ) : p;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

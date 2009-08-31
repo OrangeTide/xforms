@@ -193,7 +193,7 @@ FL_POPUP *
 fl_popup_add( Window       win,
               const char * title )
 {
-	return fli_popup_add( win, title, "fl_popup_add" );
+    return fli_popup_add( win, title, "fl_popup_add" );
 }
 
 
@@ -203,8 +203,8 @@ fl_popup_add( Window       win,
 
 FL_POPUP *
 fli_popup_add( Window       win,
-			   const char * title,
-			   const char * caller )
+               const char * title,
+               const char * caller )
 {
     FL_POPUP *p;
 
@@ -253,7 +253,7 @@ fli_popup_add( Window       win,
 
     p->use_req_pos = 0;
     p->need_recalc = 1;
-	p->min_width = 0;
+    p->min_width = 0;
     p->has_subs = 0;
     p->has_boxes = 0;
 
@@ -286,16 +286,16 @@ fl_popup_add_entries( FL_POPUP   * popup,
                       const char * entries,
                       ... )
 {
-	FL_POPUP_ENTRY *new_entries;
+    FL_POPUP_ENTRY *new_entries;
     va_list ap;
 
     va_start( ap, entries );
     new_entries = fli_popup_add_entries( popup, entries, ap,
-										 "fl_popup_add_entries",
-										 0 );
+                                         "fl_popup_add_entries",
+                                         0 );
     va_end( ap );
 
-	return new_entries;
+    return new_entries;
 }
 
 
@@ -305,14 +305,14 @@ fl_popup_add_entries( FL_POPUP   * popup,
 
 FL_POPUP_ENTRY *
 fli_popup_add_entries( FL_POPUP   * popup,
-					   const char * entries,
-					   va_list      ap,
-					   const char * caller,
-					   int          simple )
+                       const char * entries,
+                       va_list      ap,
+                       const char * caller,
+                       int          simple )
 {
     FL_POPUP_ENTRY *new_entries,
                    *e;
-	char *str;
+    char *str;
 
     /* Calling this function with no string for the entries doesn't make
        sense */
@@ -386,15 +386,15 @@ fl_popup_insert_entries( FL_POPUP       * popup,
                          const char     * entries,
                          ... )
 {
-	FL_POPUP_ENTRY *new_entries;
+    FL_POPUP_ENTRY *new_entries;
     va_list ap;
 
     va_start( ap, entries );
     new_entries = fl_popup_insert_entries( popup, after, entries, ap,
-										   "fl_popup_insert_entries" );
+                                           "fl_popup_insert_entries" );
     va_end( ap );
 
-	return new_entries;
+    return new_entries;
 }
 
 
@@ -404,11 +404,11 @@ fl_popup_insert_entries( FL_POPUP       * popup,
 
 FL_POPUP_ENTRY *
 fli_popup_insert_entries( FL_POPUP       * popup,
-						  FL_POPUP_ENTRY * after,
-						  const char     * entries,
-						  va_list          ap,
-						  const char     * caller,
-	                      int              simple)
+                          FL_POPUP_ENTRY * after,
+                          const char     * entries,
+                          va_list          ap,
+                          const char     * caller,
+                          int              simple)
 {
     FL_POPUP_ENTRY *new_entries,
                    *new_last,
@@ -454,7 +454,7 @@ fli_popup_insert_entries( FL_POPUP       * popup,
     }
 
     new_entries = parse_entries( popup, str, ap, "fl_popup_insert_entries",
-								 simple );
+                                 simple );
     fl_free( str );
 
     /* A return value of NULL says something went wrong (warning was altready
@@ -906,8 +906,8 @@ fl_popup_set_position( FL_POPUP * popup,
 int
 fl_popup_get_policy( FL_POPUP * popup )
 {
-	if ( popup == NULL )
-		return popup_policy;
+    if ( popup == NULL )
+        return popup_policy;
 
     if ( fli_check_popup_exists( popup ) )
     {
@@ -915,7 +915,7 @@ fl_popup_get_policy( FL_POPUP * popup )
         return -1;
     }
 
-	return popup->top_parent->policy;
+    return popup->top_parent->policy;
 }
 
 
@@ -1115,7 +1115,7 @@ fl_popup_get_title( FL_POPUP   * popup )
         return NULL;
     }
 
-	return popup->title;
+    return popup->title;
 }
 
 
@@ -1139,15 +1139,15 @@ fl_popup_set_title( FL_POPUP   * popup,
     {
         popup->title = fl_strdup( title );
         if ( popup->title == NULL )
-		{
+        {
             M_err( "fl_popup_set_title", "Running out of memory" );
-			return NULL;
-		}
+            return NULL;
+        }
     }
 
     popup->need_recalc = 1;
 
-	return popup;
+    return popup;
 }
 
 
@@ -1706,7 +1706,7 @@ fl_popup_entry_clear_state( FL_POPUP_ENTRY * entry,
         return UINT_MAX;
     }
 
-	old_state = entry->state;
+    old_state = entry->state;
 
     for ( i = 0; i < sizeof flags / sizeof *flags; i++ )
         if ( what & flags[ i ] )
@@ -1736,7 +1736,7 @@ fl_popup_entry_raise_state( FL_POPUP_ENTRY * entry,
         return UINT_MAX;
     }
 
-	old_state = entry->state;
+    old_state = entry->state;
 
     for ( i = 0; i < sizeof flags / sizeof *flags; i++ )
         if ( what & flags[ i ] )
@@ -1766,7 +1766,7 @@ fl_popup_entry_toggle_state( FL_POPUP_ENTRY * entry,
         return UINT_MAX;
     }
 
-	old_state = entry->state;
+    old_state = entry->state;
 
     for ( i = 0; i < sizeof flags / sizeof *flags; i++ )
         if ( what & flags[ i ] )
@@ -1856,11 +1856,11 @@ fl_popup_entry_set_group( FL_POPUP_ENTRY * entry,
         return INT_MAX;
     }
 
-	old_group = entry->group;
+    old_group = entry->group;
 
     if ( entry->type != FL_POPUP_RADIO )
     {
-		entry->group = group;
+        entry->group = group;
         return old_group;
     }
 
@@ -2167,9 +2167,9 @@ fl_popup_get_min_width( FL_POPUP * popup )
 
 int
 fl_popup_set_min_width( FL_POPUP * popup,
-	                    int        min_width )
+                        int        min_width )
 {
-	int old_min_width;
+    int old_min_width;
 
     if ( fli_check_popup_exists( popup ) )
     {
@@ -2177,13 +2177,13 @@ fl_popup_set_min_width( FL_POPUP * popup,
         return -1;
     }
 
-	old_min_width = popup->min_width;
+    old_min_width = popup->min_width;
 
-	if ( min_width < 0 )
-		min_width = 0;
+    if ( min_width < 0 )
+        min_width = 0;
 
-	popup->min_width = min_width;
-	popup->need_recalc = 1;
+    popup->min_width = min_width;
+    popup->need_recalc = 1;
 
     return old_min_width;
 }
@@ -2202,7 +2202,7 @@ parse_entries( FL_POPUP   * popup,
                char       * str,
                va_list      ap,
                const char * caller,
-			   int          simple )
+               int          simple )
 {
     FL_POPUP_ENTRY *entry,
                    *entry_first = NULL;
@@ -2317,19 +2317,19 @@ parse_entries( FL_POPUP   * popup,
 
                     entry->sub = va_arg( ap, FL_POPUP * );
 
-					if ( ! simple )
-					{
-						if ( check_sub( entry ) )
-						{
-							M_err( caller, "Invalid submenu popup" );
-							return failed_add( entry_first );
-						}
+                    if ( ! simple )
+                    {
+                        if ( check_sub( entry ) )
+                        {
+                            M_err( caller, "Invalid submenu popup" );
+                            return failed_add( entry_first );
+                        }
 
-						entry->type = FL_POPUP_SUB;
-						entry->sub->parent = popup;
-					}
-					else
-						entry->sub = NULL;
+                        entry->type = FL_POPUP_SUB;
+                        entry->sub->parent = popup;
+                    }
+                    else
+                        entry->sub = NULL;
 
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
@@ -2342,7 +2342,7 @@ parse_entries( FL_POPUP   * popup,
                         return failed_add( entry_first );
                     }
 
-					entry->type = FL_POPUP_LINE;
+                    entry->type = FL_POPUP_LINE;
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
                     
@@ -2355,12 +2355,12 @@ parse_entries( FL_POPUP   * popup,
                         return failed_add( entry_first );
                     }
 
-					if ( ! simple )
-					{
-						entry->type = FL_POPUP_TOGGLE;
-						if ( s[ 1 ] == 'T' )
-							entry->state |= FL_POPUP_CHECKED;
-					}
+                    if ( ! simple )
+                    {
+                        entry->type = FL_POPUP_TOGGLE;
+                        if ( s[ 1 ] == 'T' )
+                            entry->state |= FL_POPUP_CHECKED;
+                    }
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
 
@@ -2375,12 +2375,12 @@ parse_entries( FL_POPUP   * popup,
 
                     entry->group = va_arg( ap, int );
 
-					if ( ! simple )
-					{
-						entry->type = FL_POPUP_RADIO;
-						if ( s[ 1 ] == 'R' )
-							entry->state |= FL_POPUP_CHECKED;
-					}
+                    if ( ! simple )
+                    {
+                        entry->type = FL_POPUP_RADIO;
+                        if ( s[ 1 ] == 'R' )
+                            entry->state |= FL_POPUP_CHECKED;
+                    }
 
                     memmove( s, s + 2, strlen( s + 1 ) );
                     break;
@@ -2417,21 +2417,21 @@ parse_entries( FL_POPUP   * popup,
             }
         }
 
-		/* If we're asked to create simple popup (for a FL_SELECT object)
-		   remove the entry again if it's a line entry */
+        /* If we're asked to create simple popup (for a FL_SELECT object)
+           remove the entry again if it's a line entry */
 
-		if ( simple && entry->type == FL_POPUP_LINE )
-		{
-			if ( entry->prev != NULL )
-				entry->prev->next = NULL;
-			else
-				entry_first = NULL;
-			fl_free( entry );
+        if ( simple && entry->type == FL_POPUP_LINE )
+        {
+            if ( entry->prev != NULL )
+                entry->prev->next = NULL;
+            else
+                entry_first = NULL;
+            fl_free( entry );
 
-			popup->counter--;
+            popup->counter--;
 
-			continue;
-		}
+            continue;
+        }
 
         /* Now all flags should be removed from text string, so we can set
            the entries label and accelerator key text after also removing
@@ -2646,9 +2646,9 @@ recalc_popup( FL_POPUP * popup )
     popup->w = cur_w + 2 * offset + OUTER_PADDING_LEFT + OUTER_PADDING_RIGHT;
     popup->h = cur_h + offset + 1;
 
-	popup->w = FL_max( popup->w, ( unsigned int ) popup->min_width );
+    popup->w = FL_max( popup->w, ( unsigned int ) popup->min_width );
     popup->title_box_w =   popup->w - 2 * offset
-		                 - OUTER_PADDING_LEFT - OUTER_PADDING_RIGHT;
+                         - OUTER_PADDING_LEFT - OUTER_PADDING_RIGHT;
 
     popup->need_recalc = 0;
 }
@@ -3057,7 +3057,7 @@ calculate_window_position( FL_POPUP * popup )
     }
 
     if (    ( e = find_entry( popup, x - popup->x, y - popup->y ) ) != NULL
-		 && ! ( e->state & FL_POPUP_DISABLED ) )
+         && ! ( e->state & FL_POPUP_DISABLED ) )
         enter_leave( e, 1 );
 }
 
@@ -3302,11 +3302,11 @@ popup_interaction( FL_POPUP * popup )
                 fli_int.keymask   = ev.xbutton.state;
                 fli_int.query_age = 0;
 
-				/* Don't react to mouse wheel buttons */
+                /* Don't react to mouse wheel buttons */
 
-				if (    ev.xbutton.button == Button4
-					 || ev.xbutton.button == Button5 )
-					break;
+                if (    ev.xbutton.button == Button4
+                     || ev.xbutton.button == Button5 )
+                    break;
 
                 /* Try to find "active" entry */
 
@@ -3356,8 +3356,8 @@ popup_interaction( FL_POPUP * popup )
 
 static int
 is_on_popups( FL_POPUP * popup,
-			  int        x,
-			  int        y )
+              int        x,
+              int        y )
 {
     do
     {
@@ -3418,9 +3418,9 @@ handle_selection( FL_POPUP_ENTRY *entry )
     }
 
     /* Set up the structure to be returned and call the entries callback
-	   function */
+       function */
 
-	fli_set_popup_return( entry );
+    fli_set_popup_return( entry );
 
     if ( entry->callback )
         cb_result = entry->callback( &entry->popup->top_parent->ret );
@@ -3935,8 +3935,8 @@ static FL_POPUP *
 open_subpopup( FL_POPUP_ENTRY * entry )
 {
     FL_POPUP *popup = entry->popup;
-	int offset =   FL_abs( popup->top_parent->bw )
-		         + ( popup->top_parent->bw > 0 ? 1 : 0 ) + OUTER_PADDING_TOP;
+    int offset =   FL_abs( popup->top_parent->bw )
+                 + ( popup->top_parent->bw > 0 ? 1 : 0 ) + OUTER_PADDING_TOP;
 
     /* Set the position of the new sub-popup. Normaly show it to the right of
        the parent popup, but if this is a sub-popup of a sub-popup and the
@@ -4021,7 +4021,7 @@ enter_leave( FL_POPUP_ENTRY * entry,
          || ( ! act && entry->leave_callback == NULL ) )
         return;
 
-	fli_set_popup_return( entry );
+    fli_set_popup_return( entry );
 
     if ( act )
         entry->enter_callback( &entry->popup->top_parent->ret );
@@ -4269,7 +4269,7 @@ fli_set_popup_return( FL_POPUP_ENTRY * entry )
     entry->popup->top_parent->ret.entry     = entry;
     entry->popup->top_parent->ret.popup     = entry->popup;
 
-	return &entry->popup->top_parent->ret;
+    return &entry->popup->top_parent->ret;
 }
 
 
@@ -4280,5 +4280,13 @@ fli_set_popup_return( FL_POPUP_ENTRY * entry )
 void
 fli_popup_reset_counter( FL_POPUP *popup )
 {
-	popup->counter = 0;
+    popup->counter = 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

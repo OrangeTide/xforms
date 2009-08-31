@@ -21,10 +21,18 @@
 
 
 typedef struct {
-	FL_POPUP        * popup;
-	FL_POPUP_RETURN * sel;
-	FL_COLOR          hl_color;
+    FL_POPUP        * popup;
+    FL_POPUP_RETURN * sel;
+    FL_COLOR          hl_color;
 } FLI_NMENU_SPEC;
 
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

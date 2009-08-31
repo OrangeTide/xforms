@@ -39,26 +39,26 @@
 
 static int
 handle_text( FL_OBJECT * ob,
-			 int         event,
-			 FL_Coord    mx   FL_UNUSED_ARG,
-			 FL_Coord    my   FL_UNUSED_ARG,
-			 int         key  FL_UNUSED_ARG,
-			 void *      ev   FL_UNUSED_ARG )
+             int         event,
+             FL_Coord    mx   FL_UNUSED_ARG,
+             FL_Coord    my   FL_UNUSED_ARG,
+             int         key  FL_UNUSED_ARG,
+             void *      ev   FL_UNUSED_ARG )
 {
     switch ( event )
     {
-		case FL_DRAW:
-			ob->align |= FL_ALIGN_INSIDE;
-			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
-						ob->bw );
-			/* fall through */
+        case FL_DRAW:
+            ob->align |= FL_ALIGN_INSIDE;
+            fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
+                        ob->bw );
+            /* fall through */
 
-		case FL_DRAWLABEL:
-			fl_set_text_clipping( ob->x + FL_abs( ob->bw ), ob->y + 2,
-								  ob->w - 2 * FL_abs( ob->bw ), ob->h - 4 );
-			fl_draw_object_label( ob );
-			fl_unset_text_clipping( );
-			break;
+        case FL_DRAWLABEL:
+            fl_set_text_clipping( ob->x + FL_abs( ob->bw ), ob->y + 2,
+                                  ob->w - 2 * FL_abs( ob->bw ), ob->h - 4 );
+            fl_draw_object_label( ob );
+            fl_unset_text_clipping( );
+            break;
     }
 
     return FL_RETURN_NONE;
@@ -70,11 +70,11 @@ handle_text( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_text( int          type,
-				FL_Coord     x,
-				FL_Coord     y,
-				FL_Coord     w,
-				FL_Coord     h,
-				const char * label )
+                FL_Coord     x,
+                FL_Coord     y,
+                FL_Coord     w,
+                FL_Coord     h,
+                const char * label )
 {
     FL_OBJECT *ob;
 
@@ -94,11 +94,11 @@ fl_create_text( int          type,
 
 FL_OBJECT *
 fl_add_text( int          type,
-			 FL_Coord     x,
-			 FL_Coord     y,
-			 FL_Coord     w,
-			 FL_Coord     h,
-			 const char * label)
+             FL_Coord     x,
+             FL_Coord     y,
+             FL_Coord     w,
+             FL_Coord     h,
+             const char * label)
 {
     FL_OBJECT *ob;
 
@@ -107,3 +107,11 @@ fl_add_text( int          type,
 
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

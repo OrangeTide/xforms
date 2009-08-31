@@ -23,7 +23,7 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-1998  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
+ *
  *  Some machine specific stuff.
  */
 
@@ -36,7 +36,7 @@
 
 #ifndef HAVE_STRCASECMP
 extern int strcasecmp( const char *,
-					   const char * );
+                       const char * );
 #endif
 
 #if defined Lynx
@@ -49,12 +49,12 @@ extern int strcasecmp( const char *,
 #if __VMS_VER < 70000000
 struct timezone
 {
-    int tz_minuteswest;		/* minutes west of Greenwich */
-    int tz_dsttime;	    	/* type of dst correction */
+    int tz_minuteswest;     /* minutes west of Greenwich */
+    int tz_dsttime;         /* type of dst correction */
 };
 
 extern int gettimeofday( struct timeval  * tv,
-						 struct timezone * tz );
+                         struct timezone * tz );
 #endif /* ___VMS_VER  */
 
 #endif /* __VMS */
@@ -84,3 +84,11 @@ extern int gettimeofday( struct timeval  * tv,
 /*#define NO_MSG_INFO */
 
 #endif /* ifndef local.h } */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

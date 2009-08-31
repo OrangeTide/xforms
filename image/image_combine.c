@@ -37,15 +37,15 @@
 
 FL_IMAGE *
 flimage_combine( FL_IMAGE * im1,
-				 FL_IMAGE * im2,
-				 double     alpha )
+                 FL_IMAGE * im2,
+                 double     alpha )
 {
     FL_IMAGE *ret;
     int i,
-		w,
-		h,
-		x,
-		y;
+        w,
+        h,
+        x,
+        y;
 
     if ( ! im1 || im1->w <= 0 || ! im2 || im2->w <= 0 )
        return 0;
@@ -108,3 +108,11 @@ flimage_combine( FL_IMAGE * im1,
 
      return ret;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

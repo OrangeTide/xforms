@@ -19,11 +19,10 @@
 
 /**
  * \file dmalloc.h
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-1998  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  *
  * Very simple debug version of malloc family. It works by replacing the
  * standard malloc and its cousins with  my own routines that track, among
@@ -41,32 +40,32 @@
 #ifdef TC_MEMDBG
 
 extern void *tc_dbg_malloc( size_t,
-							const char *,
-							int );
+                            const char *,
+                            int );
 extern void *tc_dbg_calloc( size_t,
-							size_t,
-							const char *,
-							int );
+                            size_t,
+                            const char *,
+                            int );
 extern void *tc_dbg_realloc( void *,
-							 size_t,
-							 const char *,
-							 int );
+                             size_t,
+                             const char *,
+                             int );
 extern void *tc_dbg_getmat( int,
-							int,
-							size_t,
-							const char *,
-							int );
+                            int,
+                            size_t,
+                            const char *,
+                            int );
 extern char *tc_dbg_strdup( const char *,
-							const char *,
-							int );
+                            const char *,
+                            int );
 extern void tc_dbg_free( void *,
-						 const char *,
-						 int );
+                         const char *,
+                         int );
 extern void tc_true_free( void * );
 extern void tc_set_mem_warn( int );
 extern void tc_mem_stat( int );
 
-#ifndef TC_MEMDBG_OWNER		/* actual replacememnt */
+#ifndef TC_MEMDBG_OWNER     /* actual replacememnt */
 #define fl_malloc( a )        tc_dbg_malloc( a, __FILE__, __LINE__ )
 #define fl_calloc( a, b )     tc_dbg_calloc( a, b, __FILE__, __LINE__ )
 #define fl_realloc( a, b )    tc_dbg_realloc( a, b, __FILE__, __LINE__ )
@@ -90,3 +89,11 @@ extern void tc_mem_stat( int );
 #endif /* TC_MEMDBG */
 
 #endif /* _MY_MALLOC_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,14 +19,12 @@
 /**
  * \file fd2ps.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
+ *
  * Read in a form defination file (.fd) and write an EPS output
  * for inclusion in a document
- *
  */
 
 
@@ -70,7 +67,7 @@ static char *helpmsg[ ] =
 
 static void
 usage( const char * cmd,
-	   int          die )
+       int          die )
 {
     char **q = helpmsg;
 
@@ -78,13 +75,13 @@ usage( const char * cmd,
     fprintf( stderr, " where options are\n" );
 
     for ( ; *q; q++ )
-		fprintf( stderr, "    %s\n", *q );
+        fprintf( stderr, "    %s\n", *q );
 
     fprintf( stderr, "    -rgb file specifies the path to rgb.txt. "
-			 "Default is %s\n", psinfo.rgbfile );
+             "Default is %s\n", psinfo.rgbfile );
 
     if ( die )
-		exit( 1 );
+        exit( 1 );
 }
 
 
@@ -93,12 +90,12 @@ usage( const char * cmd,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     int n;
     char outname[ 512 ],
-		 inname[ 512 ],
-		 *p;
+         inname[ 512 ],
+         *p;
     FILE *fp;
 
     fd2ps_init( );
@@ -106,33 +103,33 @@ main( int    argc,
 
     strcpy( inname, argv[ n ] );
     if ( ! strstr( inname, ".fd" ) )
-		strcat( inname, ".fd" );
+        strcat( inname, ".fd" );
 
     if ( n < argc - 1 )
-		strcpy( outname, argv[ ++n ] );
+        strcpy( outname, argv[ ++n ] );
     else
     {
-		strcpy( outname, inname );
-		if ( ( p = strrchr( outname, '.' ) ) )
-			*p = '\0';
-		strcat( outname, psinfo.eps ? ".eps" : ".ps" );
+        strcpy( outname, inname );
+        if ( ( p = strrchr( outname, '.' ) ) )
+            *p = '\0';
+        strcat( outname, psinfo.eps ? ".eps" : ".ps" );
     }
 
     /* before opening the output file, check the existence of input */
 
     if ( ! ( fp = fopen( inname, "r" ) ) )
     {
-		perror( inname );
-		exit( 1 );
+        perror( inname );
+        exit( 1 );
     }
     fclose( fp );
 
     if ( strcmp( outname, "-" ) == 0 )
-		flps->fp = stdout;
+        flps->fp = stdout;
     else if ( ! ( flps->fp = fopen( outname, "w" ) ) )
     {
-		fprintf( stderr, "Can't open %s for output\n", outname );
-		exit( 1 );
+        fprintf( stderr, "Can't open %s for output\n", outname );
+        exit( 1 );
     }
 
     load_form_definition( inname );
@@ -160,7 +157,7 @@ fd2ps_init( void )
     psinfo.page = 1;
     psinfo.xscale = psinfo.yscale = 1.0;
     psinfo.pack = 1;
-    psinfo.landscape = -1;	/* auto */
+    psinfo.landscape = -1;  /* auto */
     psinfo.fp = stdout;
     psinfo.rgbfile = "/usr/lib/X11/rgb.txt";
     psinfo.xpmtops_direct = 1;
@@ -170,12 +167,12 @@ fd2ps_init( void )
 
     if ((env = getenv("PAPER")))
     {
-		get_paper_size( env, &psinfo.paper_w, &psinfo.paper_h );
-		psinfo.paper_name = env;
+        get_paper_size( env, &psinfo.paper_w, &psinfo.paper_h );
+        psinfo.paper_name = env;
     }
 
     if ( ( env = getenv( "RGBFile" ) ) )
-		psinfo.rgbfile = env;
+        psinfo.rgbfile = env;
 }
 
 
@@ -184,93 +181,101 @@ fd2ps_init( void )
 
 static int
 parse_command_line( int    argc,
-					char * argv[ ] )
+                    char * argv[ ] )
 {
     int i;
     float ftmp;
 
     for ( i = 1; i < argc && *argv[ i ] == '-'; i++ )
     {
-		if ( strcmp( argv[ i ], "-bw" ) == 0 && i + 1 < argc )
-			psinfo.user_bw = atoi( argv[ ++i ] );
-		else if ( strcmp( argv[ i ], "-dpi" ) == 0 && i + 1 < argc )
-		{
-			ftmp = atof( argv[ ++i ] );
-			psinfo.xdpi = psinfo.ydpi = ftmp;
-		}
-		else if ( strncmp( argv[ i ], "-verb", 5 ) == 0 )
-			psinfo.verbose = 1;
-		else if ( strcmp(argv[ i ], "-eps" ) == 0 )
-			psinfo.eps = 1;
-		else if ( strncmp( argv[ i ], "-vers", 5 ) == 0 )
-			print_version( 1 );
-		else if (strncmp( argv[ i ], "-h", 2 ) == 0 )
-			usage( argv[ 0 ], 1 );
-		else if ( strcmp( argv[ i ], "-pw" ) == 0 && i + 1 < argc )
-		{
-			psinfo.paper_w = atof( argv[ ++i ] );
-			psinfo.paper_name = 0;
-		}
-		else if ( strcmp(argv[ i ], "-ph" ) == 0 && i + 1 < argc )
-		{
-			psinfo.paper_h = atof( argv[ ++i ] );
-			psinfo.paper_name = 0;
-		}
-		else if ( strcmp( argv[ i ], "-G" ) == 0 && i + 1 < argc )
-			psinfo.gamma = atof( argv[ ++i ] );
-		else if (strcmp( argv[ i ], "-l" ) == 0 )
-			psinfo.landscape = 1;
-		else if ( strcmp( argv[ i ], "-p" ) == 0 )
-	    psinfo.landscape = 0;
-		else if ( strcmp( argv[ i ], "-color" ) == 0 )
-			psinfo.colorps = 1;
-		else if ( strcmp( argv[ i ], "-pack" ) == 0 )
-			psinfo.pack = !psinfo.pack;
-		else if (    strcmp( argv[ i ], "-gray" ) == 0
-				  || strcmp( argv[ i ], "-grey" ) == 0 )
-			psinfo.colorps = 0;
-		else if ( strcmp( argv[ i ], "-rgb" ) == 0 && i + 1 < argc )
-			psinfo.rgbfile = fl_strdup( argv[ ++i ] );
-		else if ( strcmp( argv[ i ], "-paper" ) == 0 && i + 1 < argc )
-		{
-			if ( strcmp( argv[ ++i ], "all" ) == 0 )
-			{
-				fprintf( stderr, " The following paper names are known\n" );
-				list_papers( "\t" );
-				exit( 0 );
-			}
+        if ( strcmp( argv[ i ], "-bw" ) == 0 && i + 1 < argc )
+            psinfo.user_bw = atoi( argv[ ++i ] );
+        else if ( strcmp( argv[ i ], "-dpi" ) == 0 && i + 1 < argc )
+        {
+            ftmp = atof( argv[ ++i ] );
+            psinfo.xdpi = psinfo.ydpi = ftmp;
+        }
+        else if ( strncmp( argv[ i ], "-verb", 5 ) == 0 )
+            psinfo.verbose = 1;
+        else if ( strcmp(argv[ i ], "-eps" ) == 0 )
+            psinfo.eps = 1;
+        else if ( strncmp( argv[ i ], "-vers", 5 ) == 0 )
+            print_version( 1 );
+        else if (strncmp( argv[ i ], "-h", 2 ) == 0 )
+            usage( argv[ 0 ], 1 );
+        else if ( strcmp( argv[ i ], "-pw" ) == 0 && i + 1 < argc )
+        {
+            psinfo.paper_w = atof( argv[ ++i ] );
+            psinfo.paper_name = 0;
+        }
+        else if ( strcmp(argv[ i ], "-ph" ) == 0 && i + 1 < argc )
+        {
+            psinfo.paper_h = atof( argv[ ++i ] );
+            psinfo.paper_name = 0;
+        }
+        else if ( strcmp( argv[ i ], "-G" ) == 0 && i + 1 < argc )
+            psinfo.gamma = atof( argv[ ++i ] );
+        else if (strcmp( argv[ i ], "-l" ) == 0 )
+            psinfo.landscape = 1;
+        else if ( strcmp( argv[ i ], "-p" ) == 0 )
+        psinfo.landscape = 0;
+        else if ( strcmp( argv[ i ], "-color" ) == 0 )
+            psinfo.colorps = 1;
+        else if ( strcmp( argv[ i ], "-pack" ) == 0 )
+            psinfo.pack = !psinfo.pack;
+        else if (    strcmp( argv[ i ], "-gray" ) == 0
+                  || strcmp( argv[ i ], "-grey" ) == 0 )
+            psinfo.colorps = 0;
+        else if ( strcmp( argv[ i ], "-rgb" ) == 0 && i + 1 < argc )
+            psinfo.rgbfile = fl_strdup( argv[ ++i ] );
+        else if ( strcmp( argv[ i ], "-paper" ) == 0 && i + 1 < argc )
+        {
+            if ( strcmp( argv[ ++i ], "all" ) == 0 )
+            {
+                fprintf( stderr, " The following paper names are known\n" );
+                list_papers( "\t" );
+                exit( 0 );
+            }
 
-			get_paper_size( argv[ i ], &psinfo.paper_w, &psinfo.paper_h );
-			psinfo.paper_name = argv[ i ];
-		}
-		else
-		{
-			usage( argv[ 0 ], 0 );
-			fprintf( stderr, "Unknown Option %s\n", argv[ i ] );
-			exit( 1 );
-		}
+            get_paper_size( argv[ i ], &psinfo.paper_w, &psinfo.paper_h );
+            psinfo.paper_name = argv[ i ];
+        }
+        else
+        {
+            usage( argv[ 0 ], 0 );
+            fprintf( stderr, "Unknown Option %s\n", argv[ i ] );
+            exit( 1 );
+        }
     }
 
     if ( i == argc )
-		usage( argv[ 0 ], 1 );
+        usage( argv[ 0 ], 1 );
 
     /* limited validation */
 
     if ( psinfo.paper_h <= 1 || psinfo.paper_w <= 1 )
     {
-		fprintf( stderr, "%s: incorrect paper size (%.1fX%.1f)\n",
-				 argv[ 0 ], psinfo.paper_w, psinfo.paper_h );
-		exit( 0 );
+        fprintf( stderr, "%s: incorrect paper size (%.1fX%.1f)\n",
+                 argv[ 0 ], psinfo.paper_w, psinfo.paper_h );
+        exit( 0 );
     }
 
     if ( psinfo.xdpi < 50 || psinfo.xdpi > 300 )
     {
-		fprintf( stderr, "%s: unusual DPI value %.1f\n",
-				 argv[ 0 ], psinfo.xdpi );
+        fprintf( stderr, "%s: unusual DPI value %.1f\n",
+                 argv[ 0 ], psinfo.xdpi );
     }
 
     if ( psinfo.gamma != 1.0 )
-		apply_gamma( psinfo.gamma );
+        apply_gamma( psinfo.gamma );
 
     return i;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

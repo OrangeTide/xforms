@@ -42,20 +42,20 @@ draw_roundbutton( FL_OBJECT * ob )
 {
     int c1;
     FL_Coord xx,
-		     yy,
-		     rr;
+             yy,
+             rr;
     FL_BUTTON_STRUCT *sp = ob->spec;
 
     if (    ob->boxtype == FL_NO_BOX
-		 && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )
-		return;
+         && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )
+        return;
 
     c1 = ob->belowmouse ? FL_ROUNDBUTTON_MCOL : FL_ROUNDBUTTON_TOPCOL;
 
     fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw );
 
     rr = 0.3 * FL_min( ob->w, ob->h ) + 0.5;
-	xx = ob->x + rr + 4.1;
+    xx = ob->x + rr + 4.1;
     yy = ob->y + 0.5 * ob->h;
 
     fl_circf( xx, yy, rr, ob->col1 );
@@ -63,20 +63,20 @@ draw_roundbutton( FL_OBJECT * ob )
 
     if ( sp->val )
     {
-		fl_circf( xx, yy, ( int ) ( 0.8 * rr ), ob->col2 );
-		fl_circ(  xx, yy, ( int ) ( 0.8 * rr ), FL_BLACK );
+        fl_circf( xx, yy, ( int ) ( 0.8 * rr ), ob->col2 );
+        fl_circ(  xx, yy, ( int ) ( 0.8 * rr ), FL_BLACK );
     }
 
     if ( ob->align == FL_ALIGN_CENTER )
-		fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
-					 ob->lcol, ob->lstyle, ob->lsize, ob->label );
+        fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
+                     ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
-		fl_draw_object_label_outside( ob );
+        fl_draw_object_label_outside( ob );
 
     if ( ob->type == FL_RETURN_BUTTON )
-		fl_drw_text( 0,
-					 ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
-					 0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
+        fl_drw_text( 0,
+                     ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
+                     0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
 }
 
 
@@ -86,11 +86,11 @@ draw_roundbutton( FL_OBJECT * ob )
 
 FL_OBJECT *
 fl_create_roundbutton( int          type,
-					   FL_Coord     x,
-					   FL_Coord     y,
-					   FL_Coord     w,
-					   FL_Coord     h,
-					   const char * label )
+                       FL_Coord     x,
+                       FL_Coord     y,
+                       FL_Coord     w,
+                       FL_Coord     h,
+                       const char * label )
 {
     FL_OBJECT *ob;
 
@@ -113,14 +113,22 @@ fl_create_roundbutton( int          type,
 
 FL_OBJECT *
 fl_add_roundbutton( int          type,
-					FL_Coord     x,
-					FL_Coord     y,
-					FL_Coord     w,
-					FL_Coord     h,
-					const char * label )
+                    FL_Coord     x,
+                    FL_Coord     y,
+                    FL_Coord     w,
+                    FL_Coord     h,
+                    const char * label )
 {
     FL_OBJECT *ob = fl_create_roundbutton( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

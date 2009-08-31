@@ -87,18 +87,18 @@ create_choice( void )
 
 int
 fl_show_choices( const char * msg,
-				 int          numb,
-				 const char * c0,
-				 const char * c1,
-				 const char * c2,
-				 int          def )
+                 int          numb,
+                 const char * c0,
+                 const char * c1,
+                 const char * c2,
+                 int          def )
 {
     FL_OBJECT *retobj;
     const char *c[ ] = { c0, c1, c2 };
     int i;
 
     if ( ! fd_choice )
-		fd_choice = create_choice( );
+        fd_choice = create_choice( );
 
     fli_handle_goodie_font( fd_choice->but[ 0 ], fd_choice->but[ 1 ] );
     fli_handle_goodie_font( fd_choice->but[ 2 ], fd_choice->str );
@@ -112,67 +112,67 @@ fl_show_choices( const char * msg,
 
     switch ( numb )
     {
-		case 3:
-			for ( i = 0; i < 3; i++ )
-			{
-				fl_set_object_label( fd_choice->but[ i ], c[ i ] );
-				fl_set_object_shortcut( fd_choice->but[ i ],
-										fd_choice->sc[ i ], 1 );
-				fl_show_object( fd_choice->but[ i ] );
-				fl_fit_object_label( fd_choice->but[ i ], 1, 1 );
-			}
-			break;
+        case 3:
+            for ( i = 0; i < 3; i++ )
+            {
+                fl_set_object_label( fd_choice->but[ i ], c[ i ] );
+                fl_set_object_shortcut( fd_choice->but[ i ],
+                                        fd_choice->sc[ i ], 1 );
+                fl_show_object( fd_choice->but[ i ] );
+                fl_fit_object_label( fd_choice->but[ i ], 1, 1 );
+            }
+            break;
 
-		case 2:
-			/* pick button 0 and 2 */
+        case 2:
+            /* pick button 0 and 2 */
 
-			fl_set_object_label( fd_choice->but[ 0 ], c[ 0 ] );
-			fl_set_object_shortcut( fd_choice->but[ 0 ],
-									fd_choice->sc[ 0 ], 1 );
-			fl_show_object( fd_choice->but[ 0 ] );
-			fl_fit_object_label( fd_choice->but[ 0 ], 1, 1 );
+            fl_set_object_label( fd_choice->but[ 0 ], c[ 0 ] );
+            fl_set_object_shortcut( fd_choice->but[ 0 ],
+                                    fd_choice->sc[ 0 ], 1 );
+            fl_show_object( fd_choice->but[ 0 ] );
+            fl_fit_object_label( fd_choice->but[ 0 ], 1, 1 );
 
-			fl_set_object_label( fd_choice->but[ 2 ], c[ 1 ] );
-			fl_set_object_shortcut( fd_choice->but[ 2 ],
-									fd_choice->sc[ 2 ], 1 );
-			fl_show_object( fd_choice->but[ 2 ] );
-			fl_fit_object_label( fd_choice->but[ 2 ], 1, 1 );
-			break;
+            fl_set_object_label( fd_choice->but[ 2 ], c[ 1 ] );
+            fl_set_object_shortcut( fd_choice->but[ 2 ],
+                                    fd_choice->sc[ 2 ], 1 );
+            fl_show_object( fd_choice->but[ 2 ] );
+            fl_fit_object_label( fd_choice->but[ 2 ], 1, 1 );
+            break;
 
-		case 1:
-			fl_set_object_label( fd_choice->but[ 0 ], c[ 0 ] );
-			fl_set_object_shortcut( fd_choice->but[ 0 ],
-									fd_choice->sc[ 0 ], 1 );
-			fl_show_object( fd_choice->but[ 0 ] );
-			fl_fit_object_label( fd_choice->but[ 0 ], 1, 1 );
-			break;
+        case 1:
+            fl_set_object_label( fd_choice->but[ 0 ], c[ 0 ] );
+            fl_set_object_shortcut( fd_choice->but[ 0 ],
+                                    fd_choice->sc[ 0 ], 1 );
+            fl_show_object( fd_choice->but[ 0 ] );
+            fl_fit_object_label( fd_choice->but[ 0 ], 1, 1 );
+            break;
 
-		default:
-			return 0;
+        default:
+            return 0;
     }
 
     fli_get_goodie_title( fd_choice->form, FLChoiceTitle );
 
     if ( ! fd_choice->form->visible )
-		fl_deactivate_all_forms( );
+        fl_deactivate_all_forms( );
 
     if ( def > 0 && def <= 3 )
-		fl_set_form_hotobject( fd_choice->form, fd_choice->but[ def - 1 ] );
+        fl_set_form_hotobject( fd_choice->form, fd_choice->but[ def - 1 ] );
     else
-		fl_set_form_hotspot( fd_choice->form, -1, -1 );
+        fl_set_form_hotspot( fd_choice->form, -1, -1 );
 
     fl_show_form( fd_choice->form, FL_PLACE_HOTSPOT, FL_TRANSIENT,
-				  fd_choice->form->label );
+                  fd_choice->form->label );
 
     fl_update_display( 0 );
 
-	retobj = fl_do_only_forms( );
+    retobj = fl_do_only_forms( );
 
     fl_hide_form( fd_choice->form );
     fl_activate_all_forms( );
 
     return retobj == fd_choice->but[ 0 ] ?
-		   1 : ( ( retobj == fd_choice->but[ 1 ] || numb == 2 ) ? 2 : 3);
+           1 : ( ( retobj == fd_choice->but[ 1 ] || numb == 2 ) ? 2 : 3);
 }
 
 
@@ -181,38 +181,38 @@ fl_show_choices( const char * msg,
 
 int
 fl_show_choice( const char * m1,
-				const char * m2,
-				const char * m3,
-				int          numb,
-				const char * c1,
-				const char * c2,
-				const char * c3,
-				int          def )
+                const char * m2,
+                const char * m3,
+                int          numb,
+                const char * c1,
+                const char * c2,
+                const char * c3,
+                int          def )
 {
     char *buf;
-	size_t len;
-	int ret;
+    size_t len;
+    int ret;
 
-	len =   ( m1 ? strlen( m1 ) : 0 ) + 1
-		  + ( m2 ? strlen( m2 ) : 0 ) + 1
-		  + ( m3 ? strlen( m3 ) : 0 ) + 1;
+    len =   ( m1 ? strlen( m1 ) : 0 ) + 1
+          + ( m2 ? strlen( m2 ) : 0 ) + 1
+          + ( m3 ? strlen( m3 ) : 0 ) + 1;
 
-	if ( len == 3 )
-	{
-		M_warn( "fl_show_choice", "Only NULL or empty strings" );
-		return 0;
-	}
+    if ( len == 3 )
+    {
+        M_warn( "fl_show_choice", "Only NULL or empty strings" );
+        return 0;
+    }
 
-	buf = fl_malloc( len );
+    buf = fl_malloc( len );
 
     sprintf( buf, "%s\n%s\n%s",
-			 m1 ? m1 : "", m2 ? m2 : "", m3 ? m3 : "" );
+             m1 ? m1 : "", m2 ? m2 : "", m3 ? m3 : "" );
 
     ret = fl_show_choices( buf, numb, c1, c2, c3, def );
 
-	fl_free( buf );
+    fl_free( buf );
 
-	return ret;
+    return ret;
 }
 
 
@@ -221,23 +221,23 @@ fl_show_choice( const char * m1,
 
 void
 fl_set_choices_shortcut( const char * a,
-						 const char * b,
-						 const char * c )
+                         const char * b,
+                         const char * c )
 {
     if ( ! fd_choice )
-		fd_choice = create_choice( );
+        fd_choice = create_choice( );
 
-	if ( fd_choice->sc[ 0 ] )
-		fl_free( ( char * ) fd_choice->sc[ 0 ] );
-	fd_choice->sc[ 0 ] = ( a && *a ) ? fl_strdup( a ) : NULL;
+    if ( fd_choice->sc[ 0 ] )
+        fl_free( ( char * ) fd_choice->sc[ 0 ] );
+    fd_choice->sc[ 0 ] = ( a && *a ) ? fl_strdup( a ) : NULL;
 
-	if ( fd_choice->sc[ 1 ] )
-		fl_free( ( char * ) fd_choice->sc[ 1 ] );
-	fd_choice->sc[ 1 ] = ( b && *b ) ? fl_strdup( b ) : NULL;
+    if ( fd_choice->sc[ 1 ] )
+        fl_free( ( char * ) fd_choice->sc[ 1 ] );
+    fd_choice->sc[ 1 ] = ( b && *b ) ? fl_strdup( b ) : NULL;
 
-	if ( fd_choice->sc[ 2 ] )
-		fl_free( ( char * ) fd_choice->sc[ 2 ] );
-	fd_choice->sc[ 2 ] = ( c && *c ) ? fl_strdup( c ) : NULL;
+    if ( fd_choice->sc[ 2 ] )
+        fl_free( ( char * ) fd_choice->sc[ 2 ] );
+    fd_choice->sc[ 2 ] = ( c && *c ) ? fl_strdup( c ) : NULL;
 }
 
 
@@ -249,10 +249,10 @@ fl_hide_choice( void )
 {
     if ( fd_choice && fd_choice->form->visible )
     {
-		if ( default_choice <= 0 || default_choice > 3 )
-			default_choice = 1;
+        if ( default_choice <= 0 || default_choice > 3 )
+            default_choice = 1;
 
-		fl_trigger_object( fd_choice->but[ default_choice ] );
+        fl_trigger_object( fd_choice->but[ default_choice ] );
     }
 }
 
@@ -264,16 +264,24 @@ void
 fli_choice_cleanup( void )
 {
     if ( ! fd_choice )
-		return;
+        return;
 
-	if ( fd_choice->sc[ 0 ] )
-		fl_free( ( char * ) fd_choice->sc[ 0 ] );
+    if ( fd_choice->sc[ 0 ] )
+        fl_free( ( char * ) fd_choice->sc[ 0 ] );
 
-	if ( fd_choice->sc[ 1 ] )
-		fl_free( ( char * ) fd_choice->sc[ 1 ] );
+    if ( fd_choice->sc[ 1 ] )
+        fl_free( ( char * ) fd_choice->sc[ 1 ] );
 
-	if ( fd_choice->sc[ 2 ] )
-		fl_free( ( char * ) fd_choice->sc[ 2 ] );
+    if ( fd_choice->sc[ 2 ] )
+        fl_free( ( char * ) fd_choice->sc[ 2 ] );
 
-	fl_safe_free( fd_choice );
+    fl_safe_free( fd_choice );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

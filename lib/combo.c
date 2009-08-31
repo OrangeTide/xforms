@@ -48,11 +48,11 @@ typedef struct
 
 static int
 handle( FL_OBJECT * ob   FL_UNUSED_ARG,
-		int         ev   FL_UNUSED_ARG,
-		int         mx   FL_UNUSED_ARG,
-		int         my   FL_UNUSED_ARG,
-		int         key  FL_UNUSED_ARG,
-		void *      xev  FL_UNUSED_ARG )
+        int         ev   FL_UNUSED_ARG,
+        int         mx   FL_UNUSED_ARG,
+        int         my   FL_UNUSED_ARG,
+        int         key  FL_UNUSED_ARG,
+        void *      xev  FL_UNUSED_ARG )
 {
     return 0;
 }
@@ -64,11 +64,11 @@ handle( FL_OBJECT * ob   FL_UNUSED_ARG,
 
 FL_OBJECT *
 fl_create_combobox( int          type,
-					FL_Coord     x,
-					FL_Coord     y,
-					FL_Coord     w,
-					FL_Coord     h,
-					const char * label )
+                    FL_Coord     x,
+                    FL_Coord     y,
+                    FL_Coord     w,
+                    FL_Coord     h,
+                    const char * label )
 {
     FL_OBJECT *ob;
 
@@ -83,11 +83,11 @@ fl_create_combobox( int          type,
 
 FL_OBJECT *
 fl_add_combobox( int          type,
-				 FL_Coord     x,
-				 FL_Coord     y,
-				 FL_Coord     w,
-				 FL_Coord     h,
-				 const char * label )
+                 FL_Coord     x,
+                 FL_Coord     y,
+                 FL_Coord     w,
+                 FL_Coord     h,
+                 const char * label )
 {
     FL_OBJECT *ob;
 
@@ -95,3 +95,11 @@ fl_add_combobox( int          type,
     fl_add_object(fl_current_form, ob);
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

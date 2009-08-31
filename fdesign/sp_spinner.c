@@ -41,13 +41,13 @@ get_spinner_spec_fdform( void )
 {
     if ( ! spn_attrib )
     {
-		spn_attrib = create_form_spinnerattrib( );
+        spn_attrib = create_form_spinnerattrib( );
 
-		set_up_how_return_menu( spn_attrib->returnsetting );
-		fl_set_menu_item_mode( spn_attrib->returnsetting, 5,
-							   FL_PUP_BOX | FL_PUP_GRAY );
-		fl_set_menu_item_mode( spn_attrib->returnsetting, 6,
-							   FL_PUP_BOX | FL_PUP_GRAY );
+        set_up_how_return_menu( spn_attrib->returnsetting );
+        fl_set_menu_item_mode( spn_attrib->returnsetting, 5,
+                               FL_PUP_BOX | FL_PUP_GRAY );
+        fl_set_menu_item_mode( spn_attrib->returnsetting, 6,
+                               FL_PUP_BOX | FL_PUP_GRAY );
     }
 
     return spn_attrib;
@@ -59,7 +59,7 @@ get_spinner_spec_fdform( void )
 
 void
 spinner_spec_restore( FL_OBJECT * ob    FL_UNUSED_ARG,
-					  long        data  FL_UNUSED_ARG )
+                      long        data  FL_UNUSED_ARG )
 {
     superspec_to_spec( spn_attrib->vdata );
     init_spec( get_superspec( spn_attrib->vdata ) );
@@ -80,7 +80,7 @@ init_spec( SuperSPEC * spec )
     set_finput_value( spn_attrib->initialval, spec->dval,  spec->prec );
     set_finput_value( spn_attrib->step,       spec->dstep, spec->prec );
 
-	reset_how_return_menu( spn_attrib->returnsetting, spec->how_return );
+    reset_how_return_menu( spn_attrib->returnsetting, spec->how_return );
 }
 
 
@@ -94,14 +94,14 @@ set_spinner_attrib( FL_OBJECT * ob )
     spinner_spec = get_superspec( ob );
 
     if ( ob->type == FL_INT_SPINNER )
-		fl_hide_object( spn_attrib->prec );
-	else
-	{
-		fl_set_counter_step( spn_attrib->prec, 1, 2 );
-		fl_set_counter_bounds( spn_attrib->prec, 0, 6 );
-		fl_set_counter_precision( spn_attrib->prec, 0 );
-		fl_show_object( spn_attrib->prec );
-	}
+        fl_hide_object( spn_attrib->prec );
+    else
+    {
+        fl_set_counter_step( spn_attrib->prec, 1, 2 );
+        fl_set_counter_bounds( spn_attrib->prec, 0, 6 );
+        fl_set_counter_precision( spn_attrib->prec, 0 );
+        fl_show_object( spn_attrib->prec );
+    }
 
     init_spec( spinner_spec );
 
@@ -114,14 +114,14 @@ set_spinner_attrib( FL_OBJECT * ob )
 
 void
 emit_spinner_code( FILE      * fp,
-				   FL_OBJECT * ob )
+                   FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *spec,
-		      *defspec;
+              *defspec;
 
     if ( ob->objclass != FL_SPINNER )
-		return;
+        return;
 
     /* Create a default object */
 
@@ -131,20 +131,20 @@ emit_spinner_code( FILE      * fp,
     spec = get_superspec( ob );
 
     if ( spec->prec != defspec->prec )
-		fprintf( fp, "    fl_set_spinner_precision( obj, %d );\n",
-				 spec->prec );
+        fprintf( fp, "    fl_set_spinner_precision( obj, %d );\n",
+                 spec->prec );
 
     if ( spec->dmin != defspec->dmin || spec->dmax != defspec->dmax )
-		fprintf( fp, "    fl_set_spinner_bounds( obj, %.*f, %.*f );\n",
-				 spec->prec, spec->dmin, spec->prec, spec->dmax );
+        fprintf( fp, "    fl_set_spinner_bounds( obj, %.*f, %.*f );\n",
+                 spec->prec, spec->dmin, spec->prec, spec->dmax );
 
     if ( spec->dval != defspec->dval )
-		fprintf( fp, "    fl_set_spinner_value( obj, %.*f );\n",
-				 spec->prec, spec->dval );
+        fprintf( fp, "    fl_set_spinner_value( obj, %.*f );\n",
+                 spec->prec, spec->dval );
 
     if ( spec->dstep != defspec->dstep )
-		fprintf( fp, "    fl_set_spinner_step( obj, %.*f );\n",
-				 spec->prec, spec->dstep );
+        fprintf( fp, "    fl_set_spinner_step( obj, %.*f );\n",
+                 spec->prec, spec->dstep );
 
     fl_free_object( defobj );
 }
@@ -155,14 +155,14 @@ emit_spinner_code( FILE      * fp,
 
 void
 save_spinner_attrib( FILE      * fp,
-					 FL_OBJECT * ob )
+                     FL_OBJECT * ob )
 {
     FL_OBJECT *defobj;
     SuperSPEC *defspec,
-		      *spec;
+              *spec;
 
     if ( ob->objclass != FL_SPINNER )
-		return;
+        return;
 
     /* Create a default object */
 
@@ -172,18 +172,18 @@ save_spinner_attrib( FILE      * fp,
     spec = get_superspec( ob );
 
     if (    spec->dmin != defspec->dmin
-		 || spec->dmax != defspec->dmax )
-		fprintf( fp, "    bounds: %.*f %.*f\n",
-				 spec->prec, spec->dmin, spec->prec, spec->dmax );
+         || spec->dmax != defspec->dmax )
+        fprintf( fp, "    bounds: %.*f %.*f\n",
+                 spec->prec, spec->dmin, spec->prec, spec->dmax );
 
     if ( spec->prec != defspec->prec )
-		fprintf( fp, "    precision: %d\n", spec->prec );
+        fprintf( fp, "    precision: %d\n", spec->prec );
 
     if ( spec->dval != defspec->dval )
-		fprintf( fp, "    value: %.*f\n", spec->prec, spec->dval );
+        fprintf( fp, "    value: %.*f\n", spec->prec, spec->dval );
 
     if ( spec->dstep != defspec->dstep )
-		fprintf( fp, "    step: %.*f\n", spec->prec, spec->dstep );
+        fprintf( fp, "    step: %.*f\n", spec->prec, spec->dstep );
 
     fl_free_object( defobj );
 }
@@ -194,13 +194,13 @@ save_spinner_attrib( FILE      * fp,
 
 void
 spn_precision_cb( FL_OBJECT * ob,
-				  long        data  FL_UNUSED_ARG )
+                  long        data  FL_UNUSED_ARG )
 {
     double p = fl_get_counter_value( ob );
 
     fl_set_spinner_precision( spn_attrib->vdata, p );
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -209,7 +209,7 @@ spn_precision_cb( FL_OBJECT * ob,
 
 void
 spn_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-				   long        data  FL_UNUSED_ARG )
+                   long        data  FL_UNUSED_ARG )
 {
     double min = get_finput_value( spn_attrib->minval );
     double max = get_finput_value( spn_attrib->maxval );
@@ -217,7 +217,7 @@ spn_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_set_spinner_bounds( spn_attrib->vdata, min, max );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -226,14 +226,14 @@ spn_minmax_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 spn_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-				   long        data  FL_UNUSED_ARG )
+                   long        data  FL_UNUSED_ARG )
 {
     double s1 = get_finput_value( spn_attrib->step );
 
     fl_set_spinner_step( spn_attrib->vdata, s1 );
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -242,7 +242,7 @@ spn_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 spn_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-						 long        data  FL_UNUSED_ARG )
+                         long        data  FL_UNUSED_ARG )
 {
     double val = get_finput_value( spn_attrib->initialval );
 
@@ -250,13 +250,13 @@ spn_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
     if ( val != fl_get_spinner_value( spn_attrib->vdata ) )
     {
-		spinner_spec->dval = fl_get_spinner_value( spn_attrib->vdata );
-		set_finput_value( spn_attrib->initialval, spinner_spec->dval,
-						  spinner_spec->prec );
+        spinner_spec->dval = fl_get_spinner_value( spn_attrib->vdata );
+        set_finput_value( spn_attrib->initialval, spinner_spec->dval,
+                          spinner_spec->prec );
     }
 
     if ( auto_apply )
-		redraw_the_form( 0 );
+        redraw_the_form( 0 );
 }
 
 
@@ -265,11 +265,19 @@ spn_initialvalue_change( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 spn_returnsetting_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-						  long        data  FL_UNUSED_ARG )
+                          long        data  FL_UNUSED_ARG )
 {
-	handle_how_return_changes( spn_attrib->returnsetting,
-							   spn_attrib->vdata );
+    handle_how_return_changes( spn_attrib->returnsetting,
+                               spn_attrib->vdata );
 }
 
 
 #include "spec/spinner_spec.c"
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

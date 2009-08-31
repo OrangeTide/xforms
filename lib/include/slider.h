@@ -21,7 +21,6 @@
  * \file slider.h
  *
  * Object Class: Slider
- *
  */
 
 #ifndef FL_SLIDER_H
@@ -44,108 +43,108 @@ typedef enum {
     FL_VERT_BROWSER_SLIDER   = 6,
     FL_HOR_BROWSER_SLIDER    = FL_VERT_BROWSER_SLIDER  | FL_HOR_FLAG,
 
-	/* The following are for use with scrollbars only! */
+    /* The following are for use with scrollbars only! */
 
-	/* for FL_VERT_SCROLLBAR and FL_HOR_SCROLLBAR */
+    /* for FL_VERT_SCROLLBAR and FL_HOR_SCROLLBAR */
 
     FL_VERT_BROWSER_SLIDER2   = FL_VERT_SLIDER         | FL_SCROLL_FLAG,
     FL_HOR_BROWSER_SLIDER2    = FL_HOR_SLIDER          | FL_SCROLL_FLAG,
 
-	/* for FL_VERT_THIN_SCROLLBAR and FL_VERT_THIN_SCROLLBAR */
+    /* for FL_VERT_THIN_SCROLLBAR and FL_VERT_THIN_SCROLLBAR */
 
     FL_VERT_THIN_SLIDER       = FL_VERT_FILL_SLIDER    | FL_SCROLL_FLAG,
     FL_HOR_THIN_SLIDER        = FL_HOR_FILL_SLIDER     | FL_SCROLL_FLAG,
 
-	/* for FL_VERT_NICE_SCROLLBAR and FL_HOR_NICE_SCROLLBAR */
+    /* for FL_VERT_NICE_SCROLLBAR and FL_HOR_NICE_SCROLLBAR */
 
     FL_VERT_NICE_SLIDER2      = FL_VERT_NICE_SLIDER    | FL_SCROLL_FLAG,
     FL_HOR_NICE_SLIDER2       = FL_HOR_NICE_SLIDER     | FL_SCROLL_FLAG,
 
-	/* for use as FL_VERT_PLAIN_SCROLLBAR and FL_VERT_PLAIN_SCROLLBAR */
+    /* for use as FL_VERT_PLAIN_SCROLLBAR and FL_VERT_PLAIN_SCROLLBAR */
 
-    FL_VERT_BASIC_SLIDER	  = FL_VERT_BROWSER_SLIDER | FL_SCROLL_FLAG,
-    FL_HOR_BASIC_SLIDER 	  = FL_HOR_BROWSER_SLIDER  | FL_SCROLL_FLAG
+    FL_VERT_BASIC_SLIDER      = FL_VERT_BROWSER_SLIDER | FL_SCROLL_FLAG,
+    FL_HOR_BASIC_SLIDER       = FL_HOR_BROWSER_SLIDER  | FL_SCROLL_FLAG
 } FL_SLIDER_TYPE;
 
 /***** Defaults *****/
 
 #define FL_SLIDER_BW1       FL_BOUND_WIDTH
 #define FL_SLIDER_BW2       ( FL_abs( FL_BOUND_WIDTH ) - 1 )
-#define FL_SLIDER_BOXTYPE	FL_DOWN_BOX
-#define FL_SLIDER_COL1		FL_COL1
-#define FL_SLIDER_COL2		FL_COL1
-#define FL_SLIDER_LCOL		FL_LCOL
-#define FL_SLIDER_ALIGN		FL_ALIGN_BOTTOM
+#define FL_SLIDER_BOXTYPE   FL_DOWN_BOX
+#define FL_SLIDER_COL1      FL_COL1
+#define FL_SLIDER_COL2      FL_COL1
+#define FL_SLIDER_LCOL      FL_LCOL
+#define FL_SLIDER_ALIGN     FL_ALIGN_BOTTOM
 
 /***** Others   *****/
 
-#define FL_SLIDER_FINE		0.25
-#define FL_SLIDER_WIDTH		0.10
+#define FL_SLIDER_FINE      0.25
+#define FL_SLIDER_WIDTH     0.10
 
 /***** Routines *****/
 
 FL_EXPORT FL_OBJECT * fl_create_slider( int          type,
-										FL_Coord     x,
-										FL_Coord     y,
-										FL_Coord     w,
-										FL_Coord     h,
-										const char * label );
+                                        FL_Coord     x,
+                                        FL_Coord     y,
+                                        FL_Coord     w,
+                                        FL_Coord     h,
+                                        const char * label );
 
 FL_EXPORT FL_OBJECT * fl_add_slider( int          type,
-									 FL_Coord     x,
-									 FL_Coord     y,
-									 FL_Coord     w,
-									 FL_Coord     h,
-									 const char * label );
+                                     FL_Coord     x,
+                                     FL_Coord     y,
+                                     FL_Coord     w,
+                                     FL_Coord     h,
+                                     const char * label );
 
 FL_EXPORT FL_OBJECT * fl_create_valslider( int          type,
-										   FL_Coord     x,
-										   FL_Coord     y,
-										   FL_Coord     w,
-										   FL_Coord     h,
-										   const char * label );
+                                           FL_Coord     x,
+                                           FL_Coord     y,
+                                           FL_Coord     w,
+                                           FL_Coord     h,
+                                           const char * label );
 
 FL_EXPORT FL_OBJECT * fl_add_valslider( int          type,
-										FL_Coord     x,
-										FL_Coord     y,
-										FL_Coord     w,
-										FL_Coord     h,
-										const char * label );
+                                        FL_Coord     x,
+                                        FL_Coord     y,
+                                        FL_Coord     w,
+                                        FL_Coord     h,
+                                        const char * label );
 
 FL_EXPORT void fl_set_slider_value( FL_OBJECT * ob,
-									double      val );
+                                    double      val );
 
 FL_EXPORT double fl_get_slider_value( FL_OBJECT * ob );
 
 FL_EXPORT void fl_set_slider_bounds( FL_OBJECT * ob,
-									 double      min,
-									 double      max );
+                                     double      min,
+                                     double      max );
 
 FL_EXPORT void fl_get_slider_bounds( FL_OBJECT * ob,
-									 double    * min,
-									 double    * max );
+                                     double    * min,
+                                     double    * max );
 
 FL_EXPORT void fl_set_slider_return( FL_OBJECT * ob,
-									 int         value );
+                                     int         value );
 
 FL_EXPORT void fl_set_slider_step( FL_OBJECT * ob,
-								   double      value );
+                                   double      value );
 
 FL_EXPORT void fl_set_slider_increment( FL_OBJECT * ob,
-										double      l,
-										double      r );
+                                        double      l,
+                                        double      r );
 
 FL_EXPORT void fl_get_slider_increment( FL_OBJECT * ob,
-										double    * l,
-										double    * r );
+                                        double    * l,
+                                        double    * r );
 
 FL_EXPORT void fl_set_slider_size( FL_OBJECT * ob,
-								   double      size );
+                                   double      size );
 
 FL_EXPORT void fl_set_slider_precision( FL_OBJECT * ob,
-										int         prec );
+                                        int         prec );
 
 FL_EXPORT void fl_set_slider_filter( FL_OBJECT     * ob,
-									 FL_VAL_FILTER   filter );
+                                     FL_VAL_FILTER   filter );
 
 #endif /* ! defined FL_SLIDER_H */

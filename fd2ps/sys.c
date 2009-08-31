@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -19,7 +18,6 @@
 
 /**
  * \file sys.c
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -73,16 +71,25 @@ strcasecmp( const char *s1, const char *s2)
 {
     int c1, c2;
 
-    while (*s1 && *s2)
+    while ( *s1 && *s2 )
     {
-	c1 = tolower(*s1);
-	c2 = tolower(*s2);
-	if (c1 != c2)
-	    return (c1 - c2);
-	s1++;
-	s2++;
+        c1 = tolower( *s1 );
+        c2 = tolower( *s2 );
+        if ( c1 != c2 )
+            return c1 - c2;
+        s1++;
+        s2++;
     }
-    return (int) (*s1 - *s2);
+
+    return *s1 - *s2;
 }
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

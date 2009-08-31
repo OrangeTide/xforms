@@ -43,15 +43,15 @@
 
 char *
 fli_vstrcat( const char * fmt,
-			 ... )
+             ... )
 {
     size_t total = 0;
     char *ret,
-		 *p;
+         *p;
     va_list ap;
 
     if ( ! fmt || ! *fmt )
-		return NULL;
+        return NULL;
 
     total = strlen( fmt );
 
@@ -59,16 +59,16 @@ fli_vstrcat( const char * fmt,
 
     va_start( ap, fmt );
     while ( ( p = va_arg( ap, char * ) ) )
-		total += strlen( p );
+        total += strlen( p );
     va_end( ap );
 
     if ( ! ( ret = fl_malloc( total + 1 ) ))
-		return NULL;
+        return NULL;
 
     strcpy( ret, fmt );
     va_start( ap, fmt );
     while ( ( p = va_arg( ap, char * ) ) )
-		strcat( ret, p );
+        strcat( ret, p );
     va_end( ap );
 
     return ret;
@@ -83,3 +83,11 @@ fli_free_vstrcat( void * p )
 {
     fl_safe_free( p );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

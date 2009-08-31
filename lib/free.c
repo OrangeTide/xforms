@@ -37,12 +37,12 @@
 
 FL_OBJECT *
 fl_create_free( int            type,
-				FL_Coord       x,
-				FL_Coord       y,
-				FL_Coord       w,
-				FL_Coord       h,
-				const char   * label,
-				FL_HANDLEPTR   handle )
+                FL_Coord       x,
+                FL_Coord       y,
+                FL_Coord       w,
+                FL_Coord       h,
+                const char   * label,
+                FL_HANDLEPTR   handle )
 {
     FL_OBJECT *obj;
 
@@ -50,19 +50,19 @@ fl_create_free( int            type,
     obj->boxtype = FL_FLAT_BOX;
 
     if ( type == FL_INACTIVE_FREE )
-		obj->active = 0;
+        obj->active = 0;
     else if ( type == FL_CONTINUOUS_FREE )
-		obj->automatic = 1;
+        obj->automatic = 1;
     else if ( type == FL_INPUT_FREE )
-		obj->input = 1;
+        obj->input = 1;
     else if ( type == FL_ALL_FREE )
     {
-		obj->input = 1;
-		obj->automatic = 1;
+        obj->input = 1;
+        obj->automatic = 1;
     }
 
     if ( type != FL_INACTIVE_FREE )
-		obj->click_timeout = FL_CLICK_TIMEOUT;
+        obj->click_timeout = FL_CLICK_TIMEOUT;
 
     return obj;
 }
@@ -74,12 +74,12 @@ fl_create_free( int            type,
 
 FL_OBJECT *
 fl_add_free( int            type,
-			 FL_Coord       x,
-			 FL_Coord       y,
-			 FL_Coord       w,
-			 FL_Coord       h,
-			 const char   * label,
-			 FL_HANDLEPTR   handle)
+             FL_Coord       x,
+             FL_Coord       y,
+             FL_Coord       w,
+             FL_Coord       h,
+             const char   * label,
+             FL_HANDLEPTR   handle)
 {
     FL_OBJECT *ob;
 
@@ -87,3 +87,11 @@ fl_add_free( int            type,
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -1,5 +1,5 @@
 /*
- *	This file is part of the XForms library package.
+ *  This file is part of the XForms library package.
  *
  *  XForms is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Lesser General Public License as
@@ -8,7 +8,7 @@
  *
  *  XForms is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.     See the GNU
  *  Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
@@ -20,41 +20,41 @@
 /**
  * \file filesys.h
  *
- *	Convenience functions to read a directory
+ *  Convenience functions to read a directory
  */
 
 #ifndef FL_FILESYS_H
 #define FL_FILESYS_H
 
-/*	File types */
+/*  File types */
 
 enum {
-	FT_FILE,
-	FT_DIR,
-	FT_LINK,
-	FT_SOCK,
-	FT_FIFO,
-	FT_BLK,
-	FT_CHR,
-	FT_OTHER
+    FT_FILE,
+    FT_DIR,
+    FT_LINK,
+    FT_SOCK,
+    FT_FIFO,
+    FT_BLK,
+    FT_CHR,
+    FT_OTHER
 };
 
 typedef struct {
-	char          * name;			/* entry name			  */
-	int			    type;			/* FILE_TYPE			  */
-	long		    dl_mtime;		/* file modification time */
-	unsigned long   dl_size;		/* file size in bytes	  */
+    char          * name;           /* entry name             */
+    int             type;           /* FILE_TYPE              */
+    long            dl_mtime;       /* file modification time */
+    unsigned long   dl_size;        /* file size in bytes     */
 } FL_Dirlist;
 
 enum {
-	FL_ALPHASORT = 1,		/* sort in alphabetic order			  */
-	FL_RALPHASORT,			/* sort in reverse alphabetic order	  */
-	FL_MTIMESORT,			/* sort according to modifcation time */
-	FL_RMTIMESORT,			/* sort in reverse modificaiton time  */
-	FL_SIZESORT,			/* sort in increasing size order	  */
-	FL_RSIZESORT,			/* sort in decreasing size order	  */
-	FL_CASEALPHASORT,		/* sort case insensitive			  */
-	FL_RCASEALPHASORT		/* sort case insensitive			  */
+    FL_ALPHASORT = 1,       /* sort in alphabetic order           */
+    FL_RALPHASORT,          /* sort in reverse alphabetic order   */
+    FL_MTIMESORT,           /* sort according to modifcation time */
+    FL_RMTIMESORT,          /* sort in reverse modificaiton time  */
+    FL_SIZESORT,            /* sort in increasing size order      */
+    FL_RSIZESORT,           /* sort in decreasing size order      */
+    FL_CASEALPHASORT,       /* sort case insensitive              */
+    FL_RCASEALPHASORT       /* sort case insensitive              */
 };
 
 typedef int ( * FL_DIRLIST_FILTER )( const char *, int );
@@ -63,9 +63,9 @@ typedef int ( * FL_DIRLIST_FILTER )( const char *, int );
  * must not change dirlist in anyway. */
 
 FL_EXPORT const FL_Dirlist * fl_get_dirlist( const char * dir,
-											 const char * pattern,
-											 int        * n,
-											 int		  rescan );
+                                             const char * pattern,
+                                             int        * n,
+                                             int          rescan );
 
 FL_EXPORT FL_DIRLIST_FILTER fl_set_dirlist_filter( FL_DIRLIST_FILTER filter );
 

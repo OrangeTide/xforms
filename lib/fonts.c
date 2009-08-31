@@ -40,10 +40,10 @@
 static XFontStruct *defaultfs;
 
 static XFontStruct *try_get_font_struct( int,
-										 int,
-										 int );
+                                         int,
+                                         int );
 static char *get_fname( const char *str,
-						int size );
+                        int size );
 
 /*
  * Question marks indicate the sizes in tenth of a point. It will be
@@ -110,7 +110,7 @@ fli_init_font( void )
     static int initialized;
 
     if ( initialized )
-		return;
+        return;
 
     initialized = 1;
 
@@ -118,14 +118,14 @@ fli_init_font( void )
        the change */
 
     for ( ; *f; f++, flf++ )
-		if ( ! *flf->fname )
-			strcpy( flf->fname, *f );
+        if ( ! *flf->fname )
+            strcpy( flf->fname, *f );
 
     /* Load a default font */
 
     if (    ! defaultfs
-		 && ! ( defaultfs = XLoadQueryFont( flx->display, DEFAULTF1 ) ) )
-		defaultfs = XLoadQueryFont( flx->display, DEFAULTF2 );
+         && ! ( defaultfs = XLoadQueryFont( flx->display, DEFAULTF1 ) ) )
+        defaultfs = XLoadQueryFont( flx->display, DEFAULTF2 );
 
     /* Load a couple of fonts at normal size to prevent the caching code from
        using bad looking replacement if strange sizes are requested */
@@ -143,7 +143,7 @@ fli_init_font( void )
 
 void
 fl_set_font( int numb,
-			 int size )
+             int size )
 {
     int dh;
     XCharStruct overall;
@@ -156,9 +156,9 @@ fl_set_font( int numb,
     if ( fl_state[ fl_vmode ].cur_fnt == fs )
     {
 #if FL_DEBUG >= ML_DEBUG
-		M_debug( "fl_set_font", "current", fli_curfnt );
+        M_debug( "fl_set_font", "current", fli_curfnt );
 #endif
-		return;
+        return;
     }
 
     fl_state[ fl_vmode ].cur_fnt = flx->fs = fs;
@@ -180,10 +180,10 @@ fl_set_font( int numb,
 
     if ( fli_cntl.debug > 1 )
     {
-		unsigned long res = 0;
+        unsigned long res = 0;
 
-		if ( XGetFontProperty( flx->fs, XA_RESOLUTION, &res ) )
-			M_info2( "fl_set_font", "FontResolution: %lu", res );
+        if ( XGetFontProperty( flx->fs, XA_RESOLUTION, &res ) )
+            M_info2( "fl_set_font", "FontResolution: %lu", res );
     }
 }
 
@@ -196,37 +196,37 @@ fl_set_font( int numb,
 
 int
 fl_set_font_name( int          n,
-				  const char * name )
+                  const char * name )
 {
     FL_FONT *flf;
     int i;
 
     if ( n < 0 || n >= FL_MAXFONTS )
     {
-		M_warn( "fl_set_font_name", "bad font number (%d)", n );
-		return -1;
+        M_warn( "fl_set_font_name", "bad font number (%d)", n );
+        return -1;
     }
 
-	if ( ! name )
-	{
-		M_warn( "fl_set_font_name", "bad font name" );
-		return -1;
+    if ( ! name )
+    {
+        M_warn( "fl_set_font_name", "bad font name" );
+        return -1;
     }
 
-	flf = fl_fonts + n;
+    flf = fl_fonts + n;
 
     if ( *flf->fname )
     {
-		for ( i = 0; i < flf->nsize; i++ )
-			XFreeFont( flx->display, flf->fs[ i ] );
-		*flf->fname = '\0';
+        for ( i = 0; i < flf->nsize; i++ )
+            XFreeFont( flx->display, flf->fs[ i ] );
+        *flf->fname = '\0';
     }
 
     flf->nsize = 0;
     strcpy( flf->fname, name );
 
     if ( ! flx->display )
-		return 1;
+        return 1;
 
     return try_get_font_struct( n, FL_DEFAULT_SIZE, 1 ) ? 0 : -1;
 }
@@ -238,18 +238,18 @@ fl_set_font_name( int          n,
 
 int
 fl_enumerate_fonts( void ( * output )( const char *s ),
-					int  shortform)
+                    int  shortform)
 {
     FL_FONT *flf = fl_fonts,
-		    *fe = flf + FL_MAXFONTS;
+            *fe = flf + FL_MAXFONTS;
     int n = 0;
 
     for ( ; output && flf < fe; flf++ )
-		if ( *flf->fname )
-		{
-			output( shortform ? cv_fname( flf->fname ) : flf->fname );
-			n++;
-		}
+        if ( *flf->fname )
+        {
+            output( shortform ? cv_fname( flf->fname ) : flf->fname );
+            n++;
+        }
 
     return n;
 }
@@ -263,35 +263,35 @@ fl_enumerate_fonts( void ( * output )( const char *s ),
 
 static XFontStruct *
 try_get_font_struct( int numb,
-					 int size,
-					 int with_fail )
+                     int size,
+                     int with_fail )
 {
     FL_FONT *flf = fl_fonts;
     XFontStruct *fs = NULL;
     int n = 0,
-		i;
+        i;
 
     if ( special_style( numb ) )
-		numb %= FL_SHADOW_STYLE;
+        numb %= FL_SHADOW_STYLE;
 
     flf = fl_fonts + numb;
 
     if ( numb < 0 || numb >= FL_MAXFONTS || ! *flf->fname )
     {
-		if ( ! fli_no_connection ) {
+        if ( ! fli_no_connection ) {
 
-			/* This function is typically used to test whether a font is
-			 * loadable or not, so need not be a fatal condition if
-			 * it fails. Issue a message for information therefore. */
+            /* This function is typically used to test whether a font is
+             * loadable or not, so need not be a fatal condition if
+             * it fails. Issue a message for information therefore. */
 
-			M_info( "try_get_font_struct", "Bad FontStyle requested: %d: %s",
-					numb, flf->fname );
-		}
+            M_info( "try_get_font_struct", "Bad FontStyle requested: %d: %s",
+                    numb, flf->fname );
+        }
 
-		if ( ! fl_state[ fl_vmode ].cur_fnt )
-			M_warn( "try_get_font_struct", "bad font returned" );
+        if ( ! fl_state[ fl_vmode ].cur_fnt )
+            M_warn( "try_get_font_struct", "bad font returned" );
 
-		return fl_state[ fl_vmode ].cur_fnt;
+        return fl_state[ fl_vmode ].cur_fnt;
     }
 
     strcpy( fli_curfnt, get_fname( flf->fname, size ) );
@@ -300,14 +300,14 @@ try_get_font_struct( int numb,
 
     for ( fs = 0, i = 0; i < flf->nsize; i++ )
     {
-		if ( size == flf->size[ i ] )
-		{
-			fs = flf->fs[ i ];
+        if ( size == flf->size[ i ] )
+        {
+            fs = flf->fs[ i ];
 #if FL_DEBUG >= ML_DEBUG
-			M_debug( "try_get_font_struct", "Cache hit: %s",
-					 fl_cur_fontname );
+            M_debug( "try_get_font_struct", "Cache hit: %s",
+                     fl_cur_fontname );
 #endif
-		}
+        }
     }
 
     /* if requested not found or cache full, get the destination cache for
@@ -315,55 +315,55 @@ try_get_font_struct( int numb,
 
     if ( ! fs && flf->nsize == FL_MAX_FONTSIZES )
     {
-		XFreeFont( flx->display, flf->fs[ FL_MAX_FONTSIZES - 1 ] );
-		flf->nsize--;
+        XFreeFont( flx->display, flf->fs[ FL_MAX_FONTSIZES - 1 ] );
+        flf->nsize--;
     }
 
     /* font is not cached, try to load the font */
 
     if ( ! fs )
     {
-		n = flf->nsize;
-		flf->fs[ n ] = XLoadQueryFont( flx->display, fli_curfnt );
+        n = flf->nsize;
+        flf->fs[ n ] = XLoadQueryFont( flx->display, fli_curfnt );
 
-		if ( ( fs = flf->fs[ n ] ) )
-		{
-			flf->size[ n ] = size;
-			flf->nsize++;
-		}
+        if ( ( fs = flf->fs[ n ] ) )
+        {
+            flf->size[ n ] = size;
+            flf->nsize++;
+        }
     }
 
     if ( ! fs && with_fail )
-		return 0;
+        return 0;
 
     /* Didn't get it. Try to find a substitute */
 
     if ( ! fs )
     {
-		int mdiff = 1000,
-			k = -1;
+        int mdiff = 1000,
+            k = -1;
 
-		M_warn( "try_get_font_struct", "can't load %s", fli_curfnt );
+        M_warn( "try_get_font_struct", "can't load %s", fli_curfnt );
 
-		/* search for a replacement */
+        /* search for a replacement */
 
-		for ( i = 0; i < flf->nsize; i++ )
-		{
-			if ( mdiff > FL_abs( size - flf->size[ i ] ) )
-			{
-				mdiff = FL_abs( size - flf->size[ i ] );
-				k = i;
-			}
-		}
+        for ( i = 0; i < flf->nsize; i++ )
+        {
+            if ( mdiff > FL_abs( size - flf->size[ i ] ) )
+            {
+                mdiff = FL_abs( size - flf->size[ i ] );
+                k = i;
+            }
+        }
 
-		fs = k == -1 ? ( flx->fs ? flx->fs : defaultfs ) : flf->fs[ k ];
+        fs = k == -1 ? ( flx->fs ? flx->fs : defaultfs ) : flf->fs[ k ];
 
-		/* If we did not get it this time, we won't get it next time either,
-		   so replace it with whatever we found  */
+        /* If we did not get it this time, we won't get it next time either,
+           so replace it with whatever we found  */
 
-		flf->size[ flf->nsize ] = size;
-		flf->fs[ flf->nsize ] = fs;
-		flf->nsize++;
+        flf->size[ flf->nsize ] = size;
+        flf->fs[ flf->nsize ] = fs;
+        flf->nsize++;
     }
 
     /* Here we are guranteed a valid font handle although there is no
@@ -378,7 +378,7 @@ try_get_font_struct( int numb,
 
 XFontStruct *
 fl_get_font_struct( int style,
-					int size )
+                    int size )
 {
     return try_get_font_struct( style, size, 0 );
 }
@@ -392,9 +392,9 @@ fl_get_font_struct( int style,
 
 int
 fl_get_string_width( int          style,
-					 int          size,
-					 const char * s,
-					 int          len )
+                     int          size,
+                     const char * s,
+                     int          len )
 {
     XFontStruct *fs = fl_get_font_struct( style, size );
 
@@ -408,24 +408,24 @@ fl_get_string_width( int          style,
 
 int
 fli_get_string_widthTABfs( XFontStruct * fs,
-						   const char *  s,
-						   int           len )
+                           const char *  s,
+                           int           len )
 {
     int w,
-		tab;
+        tab;
     const char *p,
-		       *q;
+               *q;
 
     if ( fli_no_connection )
-		return 12 * len;
+        return 12 * len;
 
     tab = fli_get_tabpixels( fs );
 
     for ( w = 0, q = s; *q && ( p = strchr( q, '\t' ) ) && ( p - s ) < len;
-		  q = p + 1 )
+          q = p + 1 )
     {
-		w += XTextWidth( fs, q, p - q );
-		w = ( ( w / tab ) + 1 ) * tab;
+        w += XTextWidth( fs, q, p - q );
+        w = ( ( w / tab ) + 1 ) * tab;
     }
 
     return w += XTextWidth( fs, q, len - ( q - s ) );
@@ -437,9 +437,9 @@ fli_get_string_widthTABfs( XFontStruct * fs,
 
 int
 fl_get_string_widthTAB( int          style,
-						int          size,
-						const char * s,
-						int          len )
+                        int          size,
+                        const char * s,
+                        int          len )
 {
     XFontStruct *fs = fl_get_font_struct( style, size );
 
@@ -452,27 +452,27 @@ fl_get_string_widthTAB( int          style,
 
 int
 fl_get_string_height( int          style,
-					  int          size,
-					  const char * s,
-					  int          len,
-					  int *        asc,
-					  int *        desc )
+                      int          size,
+                      const char * s,
+                      int          len,
+                      int *        asc,
+                      int *        desc )
 {
     XFontStruct *fs = fl_get_font_struct( style, size );
     XCharStruct overall;
     int dh,
-		a,
-		d;
+        a,
+        d;
 
     if ( fli_no_connection )
-		a = d = size / 2;
+        a = d = size / 2;
     else
-		XTextExtents( fs, s, len, &dh, &a, &d, &overall );
+        XTextExtents( fs, s, len, &dh, &a, &d, &overall );
 
     if ( asc )
-		*asc = a;
+        *asc = a;
     if ( desc )
-		*desc = d;
+        *desc = d;
 
     return a + d;
 }
@@ -483,9 +483,9 @@ fl_get_string_height( int          style,
 
 int
 fl_get_char_height( int   style,
-					int   size,
-					int * asc,
-					int * desc )
+                    int   size,
+                    int * asc,
+                    int * desc )
 {
     return fl_get_string_height( style, size, "gbjQ", 4, asc, desc );
 }
@@ -496,7 +496,7 @@ fl_get_char_height( int   style,
 
 int
 fl_get_char_width( int style,
-				   int size )
+                   int size )
 {
     XFontStruct *fs = fl_get_font_struct( style, size );
 
@@ -509,29 +509,29 @@ fl_get_char_width( int style,
 
 void
 fl_get_string_dimension( int          fntstyle,
-						 int          fntsize,
-						 const char * s,
-						 int          len,
-						 int *        width,
-						 int *        height )
+                         int          fntsize,
+                         const char * s,
+                         int          len,
+                         int *        width,
+                         int *        height )
 {
     const char *p,
-		       *q;
+               *q;
     int h,
-		maxw = 0,
-		maxh = 0;
+        maxw = 0,
+        maxh = 0;
 
     h = fl_get_string_height( fntstyle, fntsize, "qjb", 3, 0, 0 );
 
     for ( q = s; *q && ( p = strchr( q, '\n' ) ); q = p + 1 )
     {
-		maxw = FL_max( maxw,
-					   fl_get_string_width( fntstyle, fntsize, q, p - q ) );
-		maxh += h;
+        maxw = FL_max( maxw,
+                       fl_get_string_width( fntstyle, fntsize, q, p - q ) );
+        maxh += h;
     }
 
     maxw = FL_max( maxw, fl_get_string_width( fntstyle, fntsize,
-											  q, len - ( q - s ) ) );
+                                              q, len - ( q - s ) ) );
     maxh += h;
 
     *width  = maxw;
@@ -559,11 +559,11 @@ fl_set_tabstop( const char *s )
 
     if ( s )
     {
-		if ( set )
-			fl_free( *tabstop );
-		*tabstop = fl_strdup( s );
-		*tabstopNchar = strlen( *tabstop );
-		set = 1;
+        if ( set )
+            fl_free( *tabstop );
+        *tabstop = fl_strdup( s );
+        *tabstopNchar = strlen( *tabstop );
+        set = 1;
     }
 }
 
@@ -575,7 +575,7 @@ fl_set_tabstop( const char *s )
 
 int
 fl_set_tabstops( int          n,
-				 const char * s )
+                 const char * s )
 {
     if ( n < 0 || n >= MaxTabs || ! s )
         return -1;
@@ -613,22 +613,22 @@ cv_fname( const char *f )
 {
     static char fname[ 127 ];
     char *q,
-		 *p;
+         *p;
 
     /* Remove all the garbages from head */
 
     for ( q = strcpy( fname, f ); *q && is_garb( *q ); q++ )
-		/* empty */ ;
+        /* empty */ ;
 
     /* Remove all the garbage from the end, starting from '?' */
 
     if ( ( p = strchr( fname, '?' ) ) )
-		*--p = '\0';
+        *--p = '\0';
 
     /* Remove all remaining garbages */
 
     for ( p = fname + strlen( fname ) - 1; p > q && is_garb( *p ); p-- )
-		/* empty */ ;
+        /* empty */ ;
 
     *++p = '\0';
 
@@ -642,21 +642,21 @@ cv_fname( const char *f )
 
 static char *
 get_fname( const char * str,
-		   int          size )
+           int          size )
 {
     static char fname[ 80 ];
     char *p,
-		 sz[ 15 ],
-		 tail[ 80 ];
+         sz[ 15 ],
+         tail[ 80 ];
 
     strcpy( fname, str );
 
     if ( ( p = strchr( fname, '?' ) ) )
     {
-		sprintf( sz, "%d", size * 10 );
-		strcpy( tail, p + 1 );
-		*p = '\0';
-		strcat( strcat( fname, sz ), tail );
+        sprintf( sz, "%d", size * 10 );
+        strcpy( tail, p + 1 );
+        *p = '\0';
+        strcat( strcat( fname, sz ), tail );
     }
 
     return fname;
@@ -680,7 +680,7 @@ fl_fdesc_( void )
 int
 fl_fheight_( void )
 {
-	return flx->fheight;
+    return flx->fheight;
 }
 
 
@@ -690,7 +690,7 @@ fl_fheight_( void )
 GC
 fl_gc_( void )
 {
-	return flx->gc;
+    return flx->gc;
 }
 
 
@@ -700,7 +700,7 @@ fl_gc_( void )
 GC
 fl_textgc_( void )
 {
-	return flx->textgc;
+    return flx->textgc;
 }
 
 
@@ -710,7 +710,7 @@ fl_textgc_( void )
 Window
 fl_cur_win_( void )
 {
-	return flx->win;
+    return flx->win;
 }
 
 
@@ -720,7 +720,7 @@ fl_cur_win_( void )
 XFontStruct *
 fl_cur_fs_( void )
 {
-	return flx->fs;
+    return flx->fs;
 }
 
 
@@ -730,5 +730,13 @@ fl_cur_fs_( void )
 Display *
 fl_display_( void )
 {
-	return flx->display;
+    return flx->display;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -49,17 +49,17 @@ static void
 create_it( void )
 {
     if ( oneliner )
-		return;
+        return;
 
-	oneliner = fl_bgn_form( FL_NO_BOX, 5, 5 );
+    oneliner = fl_bgn_form( FL_NO_BOX, 5, 5 );
 
-	text = fl_add_box( FL_BORDER_BOX, 0, 0, 5, 5, "" );
+    text = fl_add_box( FL_BORDER_BOX, 0, 0, 5, 5, "" );
 
-	fl_set_object_lstyle( text, fntstyle );
-	fl_set_object_lsize( text, fntsize );
-	fl_set_object_lcol( text, textcolor );
-	fl_set_object_color( text, background, background );
-	fl_end_form( );
+    fl_set_object_lstyle( text, fntstyle );
+    fl_set_object_lsize( text, fntsize );
+    fl_set_object_lcol( text, textcolor );
+    fl_set_object_color( text, background, background );
+    fl_end_form( );
 }
 
 
@@ -68,14 +68,14 @@ create_it( void )
 
 void
 fl_show_oneliner( const char * s,
-				  FL_Coord     x,
-				  FL_Coord     y )
+                  FL_Coord     x,
+                  FL_Coord     y )
 {
     int w,
-		h;
+        h;
 
     if ( ! s )
-		return;
+        return;
 
     create_it( );
 
@@ -84,16 +84,16 @@ fl_show_oneliner( const char * s,
     w += ( 2 * fntsize ) / 3;
     h += ( 2 * fntsize ) / 3;
 
-	fl_freeze_form( oneliner );
+    fl_freeze_form( oneliner );
     fl_set_form_geometry( oneliner, x, y, w, h );
     fl_set_object_label( text, s );
-	fl_unfreeze_form( oneliner );
+    fl_unfreeze_form( oneliner );
 
     if ( oneliner->visible == FL_INVISIBLE )
-		fl_show_form( oneliner, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
-					  FL_NOBORDER, "OneLiner" );
+        fl_show_form( oneliner, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
+                      FL_NOBORDER, "OneLiner" );
 
-	fl_update_display( 1 );
+    fl_update_display( 1 );
 }
 
 
@@ -104,7 +104,7 @@ void
 fl_hide_oneliner( void )
 {
     if ( oneliner && oneliner->visible )
-		fl_hide_form( oneliner );
+        fl_hide_form( oneliner );
 }
 
 
@@ -113,7 +113,7 @@ fl_hide_oneliner( void )
 
 void
 fl_set_oneliner_color( FL_COLOR tc,
-					   FL_COLOR bc )
+                       FL_COLOR bc )
 {
     create_it( );
     fl_set_object_lcol( text, textcolor = tc );
@@ -127,9 +127,17 @@ fl_set_oneliner_color( FL_COLOR tc,
 
 void
 fl_set_oneliner_font( int style,
-					  int size )
+                      int size )
 {
     create_it( );
     fl_set_object_lstyle( text, fntstyle = style );
     fl_set_object_lsize( text, fntsize = size );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

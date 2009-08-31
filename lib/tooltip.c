@@ -58,30 +58,30 @@ static TOOLTIP *tip;
 static void
 create_it( void )
 {
-	FL_OBJECT *text;
+    FL_OBJECT *text;
 
     if ( tip )
-		return;
+        return;
 
-	tip              = fl_calloc( 1, sizeof *tip );
-	tip->fntstyle    = FL_NORMAL_STYLE;
-	tip->fntsize     = FL_DEFAULT_SIZE;
-	tip->boxtype     = FL_BORDER_BOX;
-	tip->lalign      = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
-	tip->textcolor   = FL_BLACK;
-	tip->background  = FL_YELLOW;
+    tip              = fl_calloc( 1, sizeof *tip );
+    tip->fntstyle    = FL_NORMAL_STYLE;
+    tip->fntsize     = FL_DEFAULT_SIZE;
+    tip->boxtype     = FL_BORDER_BOX;
+    tip->lalign      = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
+    tip->textcolor   = FL_BLACK;
+    tip->background  = FL_YELLOW;
 
-	tip->tooltipper  = fl_bgn_form( FL_NO_BOX, 5, 5 );
+    tip->tooltipper  = fl_bgn_form( FL_NO_BOX, 5, 5 );
 
-	tip->text = text = fl_add_box( tip->boxtype, 0, 0, 5, 5, "" );
-	fl_set_object_bw( text, -1 );
-	fl_set_object_lstyle( text, tip->fntstyle );
-	fl_set_object_lsize( text, tip->fntsize );
-	fl_set_object_lcol( text, tip->textcolor );
-	fl_set_object_lalign( text, tip->lalign );
-	fl_set_object_color( text, tip->background, tip->background );
+    tip->text = text = fl_add_box( tip->boxtype, 0, 0, 5, 5, "" );
+    fl_set_object_bw( text, -1 );
+    fl_set_object_lstyle( text, tip->fntstyle );
+    fl_set_object_lsize( text, tip->fntsize );
+    fl_set_object_lcol( text, tip->textcolor );
+    fl_set_object_lalign( text, tip->lalign );
+    fl_set_object_color( text, tip->background, tip->background );
 
-	fl_end_form( );
+    fl_end_form( );
 }
 
 
@@ -102,30 +102,30 @@ fl_set_tooltip_boxtype( int bt )
 
 void
 fli_show_tooltip( const char * s,
-				  int          x,
-				  int          y )
+                  int          x,
+                  int          y )
 {
     int maxw = 0,
-		maxh = 0,
-		extra;
+        maxh = 0,
+        extra;
 
     if ( ! s )
-		return;
+        return;
 
     create_it( );
 
     extra =
-		   1 + ( tip->boxtype != FL_FLAT_BOX && tip->boxtype != FL_BORDER_BOX );
+           1 + ( tip->boxtype != FL_FLAT_BOX && tip->boxtype != FL_BORDER_BOX );
     fl_get_string_dimension( tip->fntstyle, tip->fntsize,
-							 s, strlen( s ), &maxw, &maxh );
+                             s, strlen( s ), &maxw, &maxh );
 
     maxw += 7 + extra;
     maxh += 7 + extra;
 
     if ( maxw > 800 )
-		maxw = 800;
+        maxw = 800;
     if ( maxh > 800 )
-		maxh = 800;
+        maxh = 800;
 
     fl_freeze_form( tip->tooltipper );
     fl_set_form_geometry( tip->tooltipper, x, y, maxw, maxh );
@@ -133,8 +133,8 @@ fli_show_tooltip( const char * s,
     fl_unfreeze_form( tip->tooltipper );
 
     if ( ! tip->tooltipper->visible )
-		fl_show_form( tip->tooltipper, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
-					  FL_NOBORDER, "Tooltip" );
+        fl_show_form( tip->tooltipper, FL_PLACE_GEOMETRY | FL_FREE_SIZE,
+                      FL_NOBORDER, "Tooltip" );
 
     fl_update_display( 1 );
 }
@@ -147,7 +147,7 @@ void
 fli_hide_tooltip( void )
 {
     if ( tip && tip->tooltipper->visible )
-		fl_hide_form( tip->tooltipper );
+        fl_hide_form( tip->tooltipper );
 }
 
 
@@ -157,7 +157,7 @@ fli_hide_tooltip( void )
 int
 fli_is_tooltip_form( FL_FORM * form )
 {
-	return tip && tip->tooltipper == form;
+    return tip && tip->tooltipper == form;
 }
 
 
@@ -166,7 +166,7 @@ fli_is_tooltip_form( FL_FORM * form )
 
 void
 fl_set_tooltip_color( FL_COLOR tc,
-					  FL_COLOR bc )
+                      FL_COLOR bc )
 {
     create_it( );
     fl_set_object_lcol( tip->text, tip->textcolor = tc );
@@ -180,7 +180,7 @@ fl_set_tooltip_color( FL_COLOR tc,
 
 void
 fl_set_tooltip_font( int style,
-					 int size )
+                     int size )
 {
     create_it( );
     fl_set_object_lstyle( tip->text, tip->fntstyle = style );
@@ -197,3 +197,11 @@ fl_set_tooltip_lalign( int align )
     create_it( );
     fl_set_object_lalign( tip->text, tip->lalign = align );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

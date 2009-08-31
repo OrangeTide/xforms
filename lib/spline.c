@@ -42,41 +42,41 @@
 
 int
 fl_spline_interpolate( const float * wx,
-					   const float * wy,
-					   int           nin,
-					   float *       x,
-					   float *       y,
-					   double        grid )
+                       const float * wy,
+                       int           nin,
+                       float *       x,
+                       float *       y,
+                       double        grid )
 {
     int i,
-		j,
-		k,
-		jo,
-		ih,
-		im,
-		nout;
+        j,
+        k,
+        jo,
+        ih,
+        im,
+        nout;
     double sig,
-		   un,
-		   p,
-		   qn,
-		   h,
-		   a,
-		   b;
+           un,
+           p,
+           qn,
+           h,
+           a,
+           b;
     static int nwork = 0;
     static double *y2 = NULL,
-		          *u = NULL;
+                  *u = NULL;
 
     if ( nin <= 3 )
     {
-		fputs( "too few points in interpol\n", stderr );
-		return -1;
+        fputs( "too few points in interpol\n", stderr );
+        return -1;
     }
 
     if ( nwork < nin )
     {
-		y2 = fl_realloc( y2, nin * sizeof *y2 );
-		u = fl_realloc( u, nin * sizeof *u );
-		nwork = nin;
+        y2 = fl_realloc( y2, nin * sizeof *y2 );
+        u = fl_realloc( u, nin * sizeof *u );
+        nwork = nin;
     }
 
     /* compute the second derivative */
@@ -85,22 +85,22 @@ fl_spline_interpolate( const float * wx,
 
     for ( i = 1; i < nin - 1; i++ )
     {
-		sig = ( double ) ( wx[ i ] - wx[ i - 1 ] ) /
-			  ( wx[ i + 1 ] - wx[ i - 1 ] );
-		p = sig * y2[ i - 1 ] + 2.0;
-		y2[ i ] = ( sig - 1.0 ) / p;
-		u[ i ] =   ( double ) ( wy[ i + 1 ] - wy[ i ] ) /
-			                  ( wx[ i + 1 ] - wx[ i ] )
-			     - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
-				              ( wx[ i ] - wx[ i - 1 ] );
-		u[i] = ( 6.0 * u[i] / ( wx[ i + 1 ] - wx[ i - 1 ] )
-				 - sig * u[ i - 1 ] ) / p;
+        sig = ( double ) ( wx[ i ] - wx[ i - 1 ] ) /
+              ( wx[ i + 1 ] - wx[ i - 1 ] );
+        p = sig * y2[ i - 1 ] + 2.0;
+        y2[ i ] = ( sig - 1.0 ) / p;
+        u[ i ] =   ( double ) ( wy[ i + 1 ] - wy[ i ] ) /
+                              ( wx[ i + 1 ] - wx[ i ] )
+                 - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
+                              ( wx[ i ] - wx[ i - 1 ] );
+        u[i] = ( 6.0 * u[i] / ( wx[ i + 1 ] - wx[ i - 1 ] )
+                 - sig * u[ i - 1 ] ) / p;
     }
 
     qn = un = 0.0;
     y2[ nin - 1 ] = ( un - qn * u[ nin - 2 ] ) / ( qn * y2[ nin - 2 ] + 1.0 );
     for ( k = nin - 2; k >= 0; k-- )
-		y2[ k ] = y2[ k ] * y2[ k + 1 ] + u[ k ];
+        y2[ k ] = y2[ k ] * y2[ k + 1 ] + u[ k ];
 
     /* outputs */
 
@@ -113,34 +113,34 @@ fl_spline_interpolate( const float * wx,
 
     for ( jo = 0, i = 1; i < nout; i++ )
     {
-		/* better than x[i] = x[i-1] + grid; */
+        /* better than x[i] = x[i-1] + grid; */
 
-		x[ i ] = x[ 0 ] + i * grid;
+        x[ i ] = x[ 0 ] + i * grid;
 
-		/* center */
+        /* center */
 
-		j = jo;
-		ih = nin;
-		while ( ih - j > 1 )
-		{
-			im = ( ih + j ) / 2;
-			if ( x[ i ] > wx[ im ] )
-				j = im;
-			else
-				ih = im;
-		}
+        j = jo;
+        ih = nin;
+        while ( ih - j > 1 )
+        {
+            im = ( ih + j ) / 2;
+            if ( x[ i ] > wx[ im ] )
+                j = im;
+            else
+                ih = im;
+        }
 
-		jo = j;
+        jo = j;
 
-		/* interpolate */
+        /* interpolate */
 
-		h = wx[ ih ] - wx[ j ];
-		a = ( wx[ ih ] - x[ i ] ) / h;
-		b = ( x[ i ] - wx[ j ] ) / h;
+        h = wx[ ih ] - wx[ j ];
+        a = ( wx[ ih ] - x[ i ] ) / h;
+        b = ( x[ i ] - wx[ j ] ) / h;
 
-		y[i] =   a * wy[ j ] + b * wy[ ih ]
-			   + ( ( a * a * a - a ) * y2[ j ]
-				   + ( b * b * b - b ) * y2[ ih ] ) * ( h * h ) / 6.0;
+        y[i] =   a * wy[ j ] + b * wy[ ih ]
+               + ( ( a * a * a - a ) * y2[ j ]
+                   + ( b * b * b - b ) * y2[ ih ] ) * ( h * h ) / 6.0;
     }
 
     x[ nout - 1 ] = wx[ nin - 1 ];
@@ -156,64 +156,64 @@ fl_spline_interpolate( const float * wx,
 
 int
 fl_spline_int_interpolate( const int * wx,
-						   const int * wy,
-						   int         nin,
-						   int         grid,
-						   int *       y )
+                           const int * wy,
+                           int         nin,
+                           int         grid,
+                           int *       y )
 {
     int i,
-		j,
-		k,
-		jo,
-		ih,
-		im,
-		nout;
+        j,
+        k,
+        jo,
+        ih,
+        im,
+        nout;
     double sig,
-		   un,
-		   p,
-		   qn,
-		   h,
-		   a,
-		   b,
-		   x;
+           un,
+           p,
+           qn,
+           h,
+           a,
+           b,
+           x;
     static int nwork = 0;
     static double *y2 = NULL,
-		          *u = NULL;
+                  *u = NULL;
 
     if ( nin <= 3 )
     {
-		fputs( "too few points in interpol\n", stderr );
-		return -1;
+        fputs( "too few points in interpol\n", stderr );
+        return -1;
     }
 
     if ( nwork < nin )
     {
-		y2 = fl_realloc( y2, nin * sizeof *y2 );
-		u = fl_realloc( u, nin * sizeof *u );
-		nwork = nin;
+        y2 = fl_realloc( y2, nin * sizeof *y2 );
+        u = fl_realloc( u, nin * sizeof *u );
+        nwork = nin;
     }
 
     y2[ 0 ] = u[ 0 ] = 0.0;
 
     for ( i = 1; i < nin - 1; i++ )
     {
-		sig = ( double ) ( wx[ i ] - wx[ i - 1 ] ) /
-			  ( wx[ i + 1 ] - wx[ i - 1 ] );
-		p = sig * y2[ i - 1 ] + 2.0;
-		y2[ i ] = ( sig - 1.0 ) / p;
-		u[i] =   ( double ) ( wy[ i + 1 ] - wy[ i ] ) /
-			                ( wx[ i + 1 ] - wx[ i ] )
-			   - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
-			                ( wx[ i ] - wx[ i - 1 ] );
-		u[ i ] = ( 6.0 * u[ i ] / ( wx[ i + 1 ] - wx[ i - 1 ] )
-				   - sig * u[ i - 1 ] ) / p;
+        sig = ( double ) ( wx[ i ] - wx[ i - 1 ] ) /
+              ( wx[ i + 1 ] - wx[ i - 1 ] );
+        p = sig * y2[ i - 1 ] + 2.0;
+        y2[ i ] = ( sig - 1.0 ) / p;
+        u[i] =   ( double ) ( wy[ i + 1 ] - wy[ i ] ) /
+                            ( wx[ i + 1 ] - wx[ i ] )
+               - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
+                            ( wx[ i ] - wx[ i - 1 ] );
+        u[ i ] = ( 6.0 * u[ i ] / ( wx[ i + 1 ] - wx[ i - 1 ] )
+                   - sig * u[ i - 1 ] ) / p;
     }
 
     qn = un = 0.0;
     y2[ nin - 1 ] = ( un - qn * u[ nin - 2 ] ) / ( qn * y2[ nin - 2 ] + 1.0 );
 
     for ( k = nin - 2; k >= 0; k-- )
-		y2[ k ] = y2[ k ] * y2[ k + 1 ] + u[ k ];
+        y2[ k ] = y2[ k ] * y2[ k + 1 ] + u[ k ];
 
     /* outputs */
 
@@ -225,42 +225,50 @@ fl_spline_int_interpolate( const int * wx,
 
     for ( jo = 0, i = 1; i < nout; i++ )
     {
-		x = wx[ 0 ] + i * grid;
+        x = wx[ 0 ] + i * grid;
 
-		/* center */
+        /* center */
 
-		j = jo;
-		ih = nin - 1;
-		while ( ih - j > 1 )
-		{
-			im = ( ih + j ) / 2;
-			if ( x > wx[ im ] )
-				j = im;
-			else
-				ih = im;
-		}
+        j = jo;
+        ih = nin - 1;
+        while ( ih - j > 1 )
+        {
+            im = ( ih + j ) / 2;
+            if ( x > wx[ im ] )
+                j = im;
+            else
+                ih = im;
+        }
 
-		jo = j;
+        jo = j;
 
-		/* interpolate */
+        /* interpolate */
 
-		h = wx[ ih ] - wx[ j ];
-		a = ( wx[ ih ] - x ) / h;
-		b = ( x - wx[ j ] ) / h;
+        h = wx[ ih ] - wx[ j ];
+        a = ( wx[ ih ] - x ) / h;
+        b = ( x - wx[ j ] ) / h;
 
-		y[i] = ( a * wy[ j ] + b * wy[ ih ]
-				 + ( ( a * a * a - a ) * y2[ j ]
-					 + ( b * b * b - b ) * y2[ ih ] )
-				 * ( h * h ) / 6.0 ) + 0.1;
+        y[i] = ( a * wy[ j ] + b * wy[ ih ]
+                 + ( ( a * a * a - a ) * y2[ j ]
+                     + ( b * b * b - b ) * y2[ ih ] )
+                 * ( h * h ) / 6.0 ) + 0.1;
 
-		/* clamp */
+        /* clamp */
 
-		if ( y[ i ] < 0 )
-			y[ i ] = 0;
-		else if ( y[ i ] > FL_PCMAX )
-			y[ i ] = FL_PCMAX;
+        if ( y[ i ] < 0 )
+            y[ i ] = 0;
+        else if ( y[ i ] > FL_PCMAX )
+            y[ i ] = FL_PCMAX;
     }
 
     y[ nout - 1 ] = wy[ nin - 1 ];
     return nout;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

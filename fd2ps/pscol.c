@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,11 +19,9 @@
 /**
  * \file pscol.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Take care of color
  */
@@ -52,11 +49,11 @@ static FLI_IMAP fl_imap[ ] =
     {NV(FL_BLACK), 0, 0, 0, 0, 0},
     {NV(FL_WHITE), 255, 255, 255, 0, 0},
 
-    {NV(FL_COL1), 161, 161, 161, 0, 0},		/* default color, gray63 */
-    {NV(FL_MCOL), 191, 191, 191, 0, 0},		/* used as magic, gray75 */
-    {NV(FL_RIGHT_BCOL), 41, 41, 41, 0, 0},	/* right  gray16  */
-    {NV(FL_BOTTOM_BCOL), 89, 89, 89, 0, 0},	/* bottom  gray35 */
-    {NV(FL_LEFT_BCOL), 222, 222, 222, 0, 0},	/* left color  gray87 */
+    {NV(FL_COL1), 161, 161, 161, 0, 0},     /* default color, gray63 */
+    {NV(FL_MCOL), 191, 191, 191, 0, 0},     /* used as magic, gray75 */
+    {NV(FL_RIGHT_BCOL), 41, 41, 41, 0, 0},  /* right  gray16  */
+    {NV(FL_BOTTOM_BCOL), 89, 89, 89, 0, 0}, /* bottom  gray35 */
+    {NV(FL_LEFT_BCOL), 222, 222, 222, 0, 0},    /* left color  gray87 */
 
     {NV(FL_SLATEBLUE), 113, 113, 198, 0, 0},
     {NV(FL_INDIANRED), 198, 113, 113, 0, 0},
@@ -69,8 +66,8 @@ static FLI_IMAP fl_imap[ ] =
     {NV(FL_CYAN), 0, 255, 255, 0, 0},
     {NV(FL_TOMATO), 255, 99, 71, 0, 0},
 
-    {NV(FL_INACTIVE), 110, 110, 110, 0, 0},	/* gray43       */
-    {NV(FL_TOP_BCOL), 204, 204, 204, 0, 0},	/* top  gray80  */
+    {NV(FL_INACTIVE), 110, 110, 110, 0, 0}, /* gray43       */
+    {NV(FL_TOP_BCOL), 204, 204, 204, 0, 0}, /* top  gray80  */
 
     {NV(FL_PALEGREEN), 113, 198, 113, 0, 0},
     {NV(FL_DARKGOLD), 205, 149, 10, 0, 0},
@@ -100,26 +97,26 @@ void
 apply_gamma( float gamma )
 {
     FLI_IMAP *fm = fl_imap,
-		     *fs;
+             *fs;
     float lastgamma = 1.0;
 
     if ( FL_abs( gamma ) < 1.0e-3 )
     {
-		fprintf( stderr, "fd2ps: Bad Gamma value %.2f\n", gamma );
-		return;
+        fprintf( stderr, "fd2ps: Bad Gamma value %.2f\n", gamma );
+        return;
     }
 
     for ( fs = fm + builtin; fm < fs; fm++ )
     {
-		if ( psinfo.verbose )
-			fprintf( stderr, "fm->r=%d\n", fm->r );
+        if ( psinfo.verbose )
+            fprintf( stderr, "fm->r=%d\n", fm->r );
 
-		fm->r = 0.4 + 255.0 * pow( fm->r / 255.0, lastgamma / gamma );
-		fm->g = 0.4 + 255.0 * pow( fm->g / 255.0, lastgamma / gamma );
-		fm->b = 0.4 + 255.0 * pow( fm->b / 255.0, lastgamma / gamma );
+        fm->r = 0.4 + 255.0 * pow( fm->r / 255.0, lastgamma / gamma );
+        fm->g = 0.4 + 255.0 * pow( fm->g / 255.0, lastgamma / gamma );
+        fm->b = 0.4 + 255.0 * pow( fm->b / 255.0, lastgamma / gamma );
 
-		if ( psinfo.verbose )
-			fprintf( stderr, "fm->r=%d\n", fm->r );
+        if ( psinfo.verbose )
+            fprintf( stderr, "fm->r=%d\n", fm->r );
     }
 
     lastgamma = gamma;
@@ -131,21 +128,21 @@ apply_gamma( float gamma )
 
 void
 fl_query_imap( long   col,
-			   int  * r,
-			   int  * g,
-			   int  * b )
+               int  * r,
+               int  * g,
+               int  * b )
 {
     FLI_IMAP *flmap = fl_imap,
-		     *flmape = flmap + builtin;
+             *flmape = flmap + builtin;
 
     for ( ; flmap < flmape; flmap++ )
-		if ( col == ( long ) flmap->index )
-		{
-			*r = flmap->r;
-			*g = flmap->g;
-			*b = flmap->b;
-			return;
-		}
+        if ( col == ( long ) flmap->index )
+        {
+            *r = flmap->r;
+            *g = flmap->g;
+            *b = flmap->b;
+            return;
+        }
 }
 
 
@@ -171,18 +168,18 @@ void
 ps_color( long color )
 {
     int r = 0,
-		g = 0,
-		b = 0;
+        g = 0,
+        b = 0;
 
     if ( color == cur_color )
-		return;
+        return;
 
     fl_query_imap( color, &r, &g, &b );
 
     if ( psinfo.colorps && ( r != g || r != b ) )
-		ps_output( "%.3g %.3g %.3g RGB ", C2NC( r), C2NC( g ), C2NC( b ) );
+        ps_output( "%.3g %.3g %.3g RGB ", C2NC( r), C2NC( g ), C2NC( b ) );
     else
-		ps_output( "%.3g G ", C2NC( rgb2gray( r, g, b ) ) );
+        ps_output( "%.3g G ", C2NC( rgb2gray( r, g, b ) ) );
 
     cur_color = color;
 }
@@ -195,8 +192,8 @@ int
 get_gray255( long color )
 {
     int r = 0,
-		g = 0,
-		b = 0;
+        g = 0,
+        b = 0;
 
     fl_query_imap( color, &r, &g, &b );
 
@@ -211,13 +208,21 @@ int
 fl_get_namedcolor( const char * s )
 {
     FLI_IMAP *flmap = fl_imap,
-		     *flmape = flmap + builtin;
+             *flmape = flmap + builtin;
 
     for ( ; s && flmap < flmape; flmap++ )
-		if ( strcmp(s, flmap->name) == 0 )
-			return flmap->index;
+        if ( strcmp(s, flmap->name) == 0 )
+            return flmap->index;
 
     /* a wild shot */
 
     return atoi( s );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

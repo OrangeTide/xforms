@@ -52,63 +52,63 @@ create_msg( const char * str )
     FD_msg *fdui = fl_calloc( 1, sizeof *fdui );
     int oldy = fli_inverted_y;
     int oldu = fl_get_coordunit( );
-	int style,
-		size;
-	int w_msg,
-		h_msg,
-		w_but,
-		h_but;
-	int box_w,
-		box_h,
-		but_w;
-	char but_text[ 256 ] = "Ok";
+    int style,
+        size;
+    int w_msg,
+        h_msg,
+        w_but,
+        h_but;
+    int box_w,
+        box_h,
+        but_w;
+    char but_text[ 256 ] = "Ok";
 
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-	fli_get_goodies_font( &style, &size );
+    fli_get_goodies_font( &style, &size );
 
-	/* Get size of box that fits the message. The message will have 20 px
-	   around spacing it (and the box a minimum width of 400 px) */
+    /* Get size of box that fits the message. The message will have 20 px
+       around spacing it (and the box a minimum width of 400 px) */
 
-	fl_get_string_dimension( style, size, str, strlen( str ), &w_msg, &h_msg );
+    fl_get_string_dimension( style, size, str, strlen( str ), &w_msg, &h_msg );
 
-	box_w = FL_max( 400, w_msg + 40 );
-	box_h = h_msg + 40;
+    box_w = FL_max( 400, w_msg + 40 );
+    box_h = h_msg + 40;
 
-	/* Get the text for the button (default is "Ok") and the size needed for
-	   it. The button should have at least 20 px space to the left and right
-	   and 10 px inner horizontal margins (and a minimum width of 90 px).
-	   Vertical inner margins are 5 px and the button should have 10 px
-	   spacing to the lower border of the box. */
+    /* Get the text for the button (default is "Ok") and the size needed for
+       it. The button should have at least 20 px space to the left and right
+       and 10 px inner horizontal margins (and a minimum width of 90 px).
+       Vertical inner margins are 5 px and the button should have 10 px
+       spacing to the lower border of the box. */
 
     fl_get_resource( FLOKLabel, NULL, FL_STRING, NULL, but_text, 256 );
 
-	fl_get_string_dimension( style, size, but_text, strlen( but_text ),
-							 &w_but, &h_but );
+    fl_get_string_dimension( style, size, but_text, strlen( but_text ),
+                             &w_but, &h_but );
 
-	but_w = FL_max( 90, w_but + 20 );
+    but_w = FL_max( 90, w_but + 20 );
 
-	box_w = FL_max( box_w, but_w + 40 );
-	box_h += h_but + 20;
+    box_w = FL_max( box_w, but_w + 40 );
+    box_h += h_but + 20;
 
     fdui->form = fl_bgn_form( FL_UP_BOX, box_w, box_h );
 
     fdui->str = fl_add_box( FL_FLAT_BOX, ( box_w - w_msg ) / 2, 20,
-							w_msg, h_msg, str );
-	fl_set_object_lstyle( fdui->str, style );
-	fl_set_object_lsize( fdui->str, size );
+                            w_msg, h_msg, str );
+    fl_set_object_lstyle( fdui->str, style );
+    fl_set_object_lsize( fdui->str, size );
 
     fdui->but = fl_add_button( FL_RETURN_BUTTON, ( box_w - but_w ) / 2,
-							   box_h - h_but - 20, but_w, h_but + 10, "Ok" );
+                               box_h - h_but - 20, but_w, h_but + 10, "Ok" );
     fl_set_form_hotobject( fdui->form, fdui->but );
-	fl_set_object_lstyle( fdui->but, style );
-	fl_set_object_lsize( fdui->but, size );
+    fl_set_object_lstyle( fdui->but, style );
+    fl_set_object_lsize( fdui->but, size );
 
     fl_end_form( );
 
     fl_register_raw_callback( fdui->form, FL_ALL_EVENT,
-							  fli_goodies_preemptive );
+                              fli_goodies_preemptive );
 
     fl_set_form_atclose( fdui->form, fl_goodies_atclose, fdui->but );
 
@@ -128,33 +128,33 @@ static FD_msg *fd_msg = NULL;
 void
 fl_show_messages( const char *str )
 {
-	if ( ! str || ! * str )
-	{
-		M_warn( "fl_show_messages", "NULL or empty string" );
-		return;
-	}
+    if ( ! str || ! * str )
+    {
+        M_warn( "fl_show_messages", "NULL or empty string" );
+        return;
+    }
 
     if ( fd_msg )
-	{
-		fl_hide_form( fd_msg->form );
-		fl_free_form( fd_msg->form );
-		fl_safe_free( fd_msg );
-	}
-	else
-		fl_deactivate_all_forms( );
+    {
+        fl_hide_form( fd_msg->form );
+        fl_free_form( fd_msg->form );
+        fl_safe_free( fd_msg );
+    }
+    else
+        fl_deactivate_all_forms( );
 
-	fd_msg = create_msg( str );
+    fd_msg = create_msg( str );
 
     fl_show_form( fd_msg->form, FL_PLACE_HOTSPOT, FL_TRANSIENT, "Message" );
 
     fl_update_display( 1 );
 
     while ( fl_do_only_forms( ) != fd_msg->but )
-		/* empty */ ;
+        /* empty */ ;
 
     fl_hide_form( fd_msg->form );
-	fl_free_form( fd_msg->form );
-	fl_safe_free( fd_msg );
+    fl_free_form( fd_msg->form );
+    fl_safe_free( fd_msg );
     fl_activate_all_forms( );
 }
 
@@ -164,51 +164,51 @@ fl_show_messages( const char *str )
 
 void
 fl_show_msg( const char * fmt,
-			 ... )
+             ... )
 {
-	char *buf,
-		 *p;
-	int len;
-	int written;
-	va_list ap;
+    char *buf,
+         *p;
+    int len;
+    int written;
+    va_list ap;
 
-	if ( ! fmt || ! * fmt )
-	{
-		M_warn( "fl_show_msg", "NULL or empty format string" );
-		return;
-	}
+    if ( ! fmt || ! * fmt )
+    {
+        M_warn( "fl_show_msg", "NULL or empty format string" );
+        return;
+    }
 
-	/* Try to come up with an estimate of the length required for the
-	   whole string */
+    /* Try to come up with an estimate of the length required for the
+       whole string */
 
-	len = strlen( fmt ) + 1;
+    len = strlen( fmt ) + 1;
 
-	for ( p = strchr( fmt, '%' ); p; p = strchr( ++p, '%' ) )
-		len += 15;
+    for ( p = strchr( fmt, '%' ); p; p = strchr( ++p, '%' ) )
+        len += 15;
 
-	buf = fl_malloc( len );
+    buf = fl_malloc( len );
 
-	while ( 1 )
-	{
-		va_start( ap, fmt );
-		written = fl_vsnprintf( buf, len, fmt, ap );
-		va_end( ap );
+    while ( 1 )
+    {
+        va_start( ap, fmt );
+        written = fl_vsnprintf( buf, len, fmt, ap );
+        va_end( ap );
 
-		/* Take care: e.g. in older libc versions a negative value got
-		   returned if the buffer wasn't large enough while newer ones
-		   follow C99 and return the length of the string that would be
-		   needed (but without the trailing '\0') */
+        /* Take care: e.g. in older libc versions a negative value got
+           returned if the buffer wasn't large enough while newer ones
+           follow C99 and return the length of the string that would be
+           needed (but without the trailing '\0') */
 
-		if ( written > -1 && written < len )
-			break;
+        if ( written > -1 && written < len )
+            break;
 
-		len = written < 0 ? ( 2 * len ) : ( written + 1 );
-		buf = fl_realloc( buf, len );
-	}
+        len = written < 0 ? ( 2 * len ) : ( written + 1 );
+        buf = fl_realloc( buf, len );
+    }
 
-	fl_show_messages( buf );
+    fl_show_messages( buf );
 
-	fl_free( buf );
+    fl_free( buf );
 }
 
 
@@ -217,30 +217,30 @@ fl_show_msg( const char * fmt,
 
 void
 fl_show_message( const char * s1,
-				 const char * s2,
-				 const char * s3 )
+                 const char * s2,
+                 const char * s3 )
 {
-	char *buf;
-	size_t len;
+    char *buf;
+    size_t len;
 
-	len =   ( s1 ? strlen( s1 ) : 0 ) + 1
-		  + ( s2 ? strlen( s2 ) : 0 ) + 1
-		  + ( s3 ? strlen( s3 ) : 0 ) + 1;
+    len =   ( s1 ? strlen( s1 ) : 0 ) + 1
+          + ( s2 ? strlen( s2 ) : 0 ) + 1
+          + ( s3 ? strlen( s3 ) : 0 ) + 1;
 
-	if ( len == 3 )
-	{
-		M_warn( "fl_show_message", "Only NULL or empty strings" );
-		return;
-	}
+    if ( len == 3 )
+    {
+        M_warn( "fl_show_message", "Only NULL or empty strings" );
+        return;
+    }
 
-	buf = fl_malloc( len );
+    buf = fl_malloc( len );
 
-	fl_snprintf( buf, len, "%s\n%s\n%s",
-				 s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "" );
+    fl_snprintf( buf, len, "%s\n%s\n%s",
+                 s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "" );
 
-	fl_show_messages( buf );
+    fl_show_messages( buf );
 
-	fl_free( buf );
+    fl_free( buf );
 }
 
 
@@ -251,9 +251,9 @@ void
 fl_hide_message( void )
 {
     if ( fd_msg )
-		fl_trigger_object( fd_msg->but );
-	else
-		M_warn( "fl_hide_message", "No message box is shown" );
+        fl_trigger_object( fd_msg->but );
+    else
+        M_warn( "fl_hide_message", "No message box is shown" );
 }
 
 
@@ -263,5 +263,13 @@ fl_hide_message( void )
 void
 fli_msg_cleanup( void )
 {
-	fl_safe_free( fd_msg );
+    fl_safe_free( fd_msg );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

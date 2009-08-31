@@ -1,5 +1,5 @@
 /*
- *	This file is part of the XForms library package.
+ *  This file is part of the XForms library package.
  *
  *  XForms is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Lesser General Public License as
@@ -8,7 +8,7 @@
  *
  *  XForms is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.     See the GNU
  *  Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
@@ -20,7 +20,7 @@
 /**
  * \file free.h
  *
- *	Object Class: Free
+ *  Object Class: Free
  */
 
 #ifndef FL_FREE_H
@@ -28,29 +28,29 @@
 
 
 typedef enum {
-	FL_NORMAL_FREE,
-	FL_INACTIVE_FREE,
-	FL_INPUT_FREE,
-	FL_CONTINUOUS_FREE,
-	FL_ALL_FREE
+    FL_NORMAL_FREE,
+    FL_INACTIVE_FREE,
+    FL_INPUT_FREE,
+    FL_CONTINUOUS_FREE,
+    FL_ALL_FREE
 } FL_FREE_TYPE;
 
 #define FL_SLEEPING_FREE  FL_INACTIVE_FREE
 
-FL_EXPORT FL_OBJECT * fl_create_free( int			 type,
-									  FL_Coord	     x,
-									  FL_Coord	     y,
-									  FL_Coord	     w,
-									  FL_Coord	     h,
-									  const char   * label,
-									  FL_HANDLEPTR   handle );
+FL_EXPORT FL_OBJECT * fl_create_free( int            type,
+                                      FL_Coord       x,
+                                      FL_Coord       y,
+                                      FL_Coord       w,
+                                      FL_Coord       h,
+                                      const char   * label,
+                                      FL_HANDLEPTR   handle );
 
-FL_EXPORT FL_OBJECT * fl_add_free( int			  type,
-								   FL_Coord	      x,
-								   FL_Coord	      y,
-								   FL_Coord	      w,
-								   FL_Coord	      h,
-								   const char   * label,
-								   FL_HANDLEPTR   handle );
+FL_EXPORT FL_OBJECT * fl_add_free( int            type,
+                                   FL_Coord       x,
+                                   FL_Coord       y,
+                                   FL_Coord       w,
+                                   FL_Coord       h,
+                                   const char   * label,
+                                   FL_HANDLEPTR   handle );
 
 #endif /* ! defined FL_FREE_H */

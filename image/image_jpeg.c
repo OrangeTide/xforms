@@ -24,7 +24,7 @@
  *  JFIF file IO support.
  *  Based mostly on Independent JPEG Groups' example code.
  *
- *  Except for a couple of output control parameters, there is no
+ *  Except for a couple of output control parameters, there are no
  *  static variables.
  */
 
@@ -98,10 +98,10 @@ JPEG_identify( FILE * fp )
      */
 
     if ( buf[ 0 ] == 0xff && buf[ 1 ] == 0xd8 && buf[ 2 ] == 0xff )
-		return 1;
+        return 1;
 
     for ( i = 0; i < sizeof buf - 3 && buf[ i ] != 'J'; i++ )
-		/* empty */ ;
+        /* empty */ ;
 
     return ! strncmp( ( char * ) buf + i, "JFIF", 4 );
 }
@@ -144,21 +144,21 @@ gather_comments( j_decompress_ptr cinfo )
     SPEC *spec = ( SPEC * ) cinfo->err;
     FL_IMAGE *image = spec->image;
     int length,
-		ch;
+        ch;
     char *s;
 
     length  = jpeg_getc( cinfo ) << 8;
     length += jpeg_getc( cinfo ) - 2;
 
-	image->comments = fl_realloc( image->comments, length + 1 );
+    image->comments = fl_realloc( image->comments, length + 1 );
 
     image->comments[ length ] = '\0';
     image->comments_len = length;
 
     for ( s = image->comments; --length >= 0; )
     {
-		ch = jpeg_getc( cinfo );
-		*s++ = ch;
+        ch = jpeg_getc( cinfo );
+        *s++ = ch;
     }
 
     return TRUE;
@@ -174,16 +174,16 @@ gather_text( j_decompress_ptr cinfo )
     SPEC *spec = ( SPEC * ) cinfo->err;
     FL_IMAGE *image = spec->image;
     int length,
-		ch;
+        ch;
     char *s;
 
     length = jpeg_getc( cinfo ) << 8;
     length += jpeg_getc( cinfo ) - 2;
 
     if ( image->comments )
-		image->comments = fl_realloc( image->comments, length + 1 );
+        image->comments = fl_realloc( image->comments, length + 1 );
     else
-		image->comments = fl_malloc( length + 1 );
+        image->comments = fl_malloc( length + 1 );
 
     image->comments[ length ] = '\0';
     image->comments_len = length;
@@ -191,12 +191,12 @@ gather_text( j_decompress_ptr cinfo )
 
     for ( s = image->comments; --length >= 0; )
     {
-		ch = jpeg_getc( cinfo );
-		*s++ = ch;
+        ch = jpeg_getc( cinfo );
+        *s++ = ch;
     }
 
     if ( image->comments[ image->comments_len - 1 ] == '\n' )
-		image->comments[ image->comments_len - 1 ] = ' ';
+        image->comments[ image->comments_len - 1 ] = ' ';
 
     return TRUE;
 }
@@ -227,11 +227,11 @@ JPEG_description( FL_IMAGE * im )
     /* decompressison options such as quantization here */
     if (do_quantization)
     {
-		cinfo->desired_number_of_colors = 215;
-		cinfo->quantize_colors = TRUE;
-		cinfo->enable_2pass_quant = TRUE;
-		cinfo->two_pass_quantize = TRUE;
-		cinfo->dither_mode = JDITHER_FS;
+        cinfo->desired_number_of_colors = 215;
+        cinfo->quantize_colors = TRUE;
+        cinfo->enable_2pass_quant = TRUE;
+        cinfo->two_pass_quantize = TRUE;
+        cinfo->dither_mode = JDITHER_FS;
     }
 
     jpeg_start_decompress( cinfo );
@@ -241,13 +241,13 @@ JPEG_description( FL_IMAGE * im )
     im->map_len = cinfo->desired_number_of_colors;
 
     if ( cinfo->out_color_space == JCS_GRAYSCALE )
-		im->type = FL_IMAGE_GRAY;
+        im->type = FL_IMAGE_GRAY;
     else if ( cinfo->out_color_space == JCS_RGB )
-		im->type = cinfo->output_components == 3 ? FL_IMAGE_RGB : FL_IMAGE_CI;
+        im->type = cinfo->output_components == 3 ? FL_IMAGE_RGB : FL_IMAGE_CI;
     else
     {
-		im->error_message( im, "unhandled colorspace" );
-		return -1;
+        im->error_message( im, "unhandled colorspace" );
+        return -1;
     }
 
     im->original_type = im->type;
@@ -264,73 +264,73 @@ JPEG_read_pixels( FL_IMAGE * im )
     SPEC *spec = im->io_spec;
     struct jpeg_decompress_struct *cinfo = &spec->dinfo;
     int i,
-		j,
-		stride,
-		err;
+        j,
+        stride,
+        err;
     JSAMPARRAY buf;
     unsigned short *gray,
-		           *ci;
+                   *ci;
 
     if ( setjmp( spec->jmp_buffer ) )
     {
-		jpeg_destroy_decompress( cinfo );
-		/* keep what we'be got */
-		return ( im->completed > im->w / 2 ) ? 1 : -1;
+        jpeg_destroy_decompress( cinfo );
+        /* keep what we'be got */
+        return ( im->completed > im->w / 2 ) ? 1 : -1;
     }
 
     err = 0;
     stride = cinfo->output_width * cinfo->output_components;
 
     buf = cinfo->mem->alloc_sarray( ( j_common_ptr ) cinfo, JPOOL_IMAGE,
-									stride, 1 /* cinfo->rec_outbuf_height */ );
+                                    stride, 1 /* cinfo->rec_outbuf_height */ );
 
     while ( cinfo->output_scanline < cinfo->output_height && ! err )
     {
-		jpeg_read_scanlines( cinfo, buf, 1 /* cinfo->rec_out_height  */ );
+        jpeg_read_scanlines( cinfo, buf, 1 /* cinfo->rec_out_height  */ );
 
-		if ( ! ( cinfo->output_scanline & FLIMAGE_REPFREQ ) )
+        if ( ! ( cinfo->output_scanline & FLIMAGE_REPFREQ ) )
         {
-			im->completed = cinfo->output_scanline;
-			im->visual_cue( im, "Reading JPEG" );
+            im->completed = cinfo->output_scanline;
+            im->visual_cue( im, "Reading JPEG" );
         }
 
-		if ( im->type == FL_IMAGE_RGB )
-		{
-			for ( i = j = 0; i < ( int ) cinfo->output_width; i++, j += 3 )
-			{
-				im->red[   cinfo->output_scanline - 1 ][ i ] =
-					                                         buf[ 0 ][ j ];
-				im->green[ cinfo->output_scanline - 1 ][ i ] =
-					                                         buf[ 0 ][ j + 1 ];
-				im->blue[  cinfo->output_scanline - 1 ][ i ] =
-					                                         buf[ 0 ][ j + 2 ];
-			}
-		}
-		else if ( im->type == FL_IMAGE_CI )
-		{
-			im->map_len = cinfo->actual_number_of_colors;
-			for ( i = 0; i < cinfo->actual_number_of_colors; i++ )
-			{
-				im->red_lut[   i ] = cinfo->colormap[ 0 ][ i ];
-				im->green_lut[ i ] = cinfo->colormap[ 1 ][ i ];
-				im->blue_lut[  i ] = cinfo->colormap[ 2 ][ i ];
-			}
+        if ( im->type == FL_IMAGE_RGB )
+        {
+            for ( i = j = 0; i < ( int ) cinfo->output_width; i++, j += 3 )
+            {
+                im->red[   cinfo->output_scanline - 1 ][ i ] =
+                                                             buf[ 0 ][ j ];
+                im->green[ cinfo->output_scanline - 1 ][ i ] =
+                                                             buf[ 0 ][ j + 1 ];
+                im->blue[  cinfo->output_scanline - 1 ][ i ] =
+                                                             buf[ 0 ][ j + 2 ];
+            }
+        }
+        else if ( im->type == FL_IMAGE_CI )
+        {
+            im->map_len = cinfo->actual_number_of_colors;
+            for ( i = 0; i < cinfo->actual_number_of_colors; i++ )
+            {
+                im->red_lut[   i ] = cinfo->colormap[ 0 ][ i ];
+                im->green_lut[ i ] = cinfo->colormap[ 1 ][ i ];
+                im->blue_lut[  i ] = cinfo->colormap[ 2 ][ i ];
+            }
 
-			ci = im->ci[ cinfo->output_scanline - 1 ];
-			for ( i = 0; i < ( int ) cinfo->output_width; i++ )
-				ci[ i ] = buf[ 0 ][ i ];
-		}
-		else if ( im->type == FL_IMAGE_GRAY )
-		{
-			gray = im->gray[ cinfo->output_scanline - 1 ];
-			for ( i = j = 0; i < im->w; i++ )
-				gray[ i ] = buf[ 0 ][ i ];
-		}
-		else
-		{
-			flimage_error( im, "%s: unknown color space", im->infile );
-			err = 1;
-		}
+            ci = im->ci[ cinfo->output_scanline - 1 ];
+            for ( i = 0; i < ( int ) cinfo->output_width; i++ )
+                ci[ i ] = buf[ 0 ][ i ];
+        }
+        else if ( im->type == FL_IMAGE_GRAY )
+        {
+            gray = im->gray[ cinfo->output_scanline - 1 ];
+            for ( i = j = 0; i < im->w; i++ )
+                gray[ i ] = buf[ 0 ][ i ];
+        }
+        else
+        {
+            flimage_error( im, "%s: unknown color space", im->infile );
+            err = 1;
+        }
     }
 
     jpeg_finish_decompress( cinfo );
@@ -359,9 +359,9 @@ JPEG_write( FL_IMAGE * im )
 
     if ( setjmp( spec->jmp_buffer ) )
     {
-		jpeg_destroy_compress( cinfo );
-		fl_free( spec );
-		return -1;
+        jpeg_destroy_compress( cinfo );
+        fl_free( spec );
+        return -1;
     }
 
     jpeg_create_compress( cinfo );
@@ -372,13 +372,13 @@ JPEG_write( FL_IMAGE * im )
 
     if ( im->type == FL_IMAGE_RGB )
     {
-		cinfo->input_components = 3;
-		cinfo->in_color_space = JCS_RGB;
+        cinfo->input_components = 3;
+        cinfo->in_color_space = JCS_RGB;
     }
     else if ( im->type == FL_IMAGE_GRAY )
     {
-		cinfo->input_components = 1;
-		cinfo->in_color_space = JCS_GRAYSCALE;
+        cinfo->input_components = 1;
+        cinfo->in_color_space = JCS_GRAYSCALE;
     }
 
     jpeg_set_defaults( cinfo );
@@ -388,34 +388,34 @@ JPEG_write( FL_IMAGE * im )
     jpeg_start_compress( cinfo, TRUE );
 
     if ( im->comments )
-		jpeg_write_marker( cinfo, JPEG_COM, (void *) im->comments,
-						   im->comments_len );
+        jpeg_write_marker( cinfo, JPEG_COM, (void *) im->comments,
+                           im->comments_len );
 
     rowptr = cinfo->mem->alloc_sarray( ( j_common_ptr ) cinfo, JPOOL_IMAGE,
-									   cinfo->input_components * im->w, 1 );
+                                       cinfo->input_components * im->w, 1 );
 
     while ( cinfo->next_scanline < cinfo->image_height )
     {
-		if ( ! ( cinfo->next_scanline & FLIMAGE_REPFREQ ) )
+        if ( ! ( cinfo->next_scanline & FLIMAGE_REPFREQ ) )
         {
-			im->completed = cinfo->next_scanline;
-			im->visual_cue( im, "Writing JPEG " );
+            im->completed = cinfo->next_scanline;
+            im->visual_cue( im, "Writing JPEG " );
         }
 
-		for ( buf = rowptr[ 0 ], i = 0; i < im->w; i++ )
-		{
-			if ( cinfo->input_components == 3 )
-			{
-				*buf++ = im->red[   cinfo->next_scanline ][ i ];
-				*buf++ = im->green[ cinfo->next_scanline ][ i ];
-				*buf++ = im->blue[  cinfo->next_scanline ][ i ];
-			}
-			else
-				*buf++ =
-					    ( unsigned char ) im->gray[ cinfo->next_scanline ][ i ];
-		}
+        for ( buf = rowptr[ 0 ], i = 0; i < im->w; i++ )
+        {
+            if ( cinfo->input_components == 3 )
+            {
+                *buf++ = im->red[   cinfo->next_scanline ][ i ];
+                *buf++ = im->green[ cinfo->next_scanline ][ i ];
+                *buf++ = im->blue[  cinfo->next_scanline ][ i ];
+            }
+            else
+                *buf++ =
+                        ( unsigned char ) im->gray[ cinfo->next_scanline ][ i ];
+        }
 
-		jpeg_write_scanlines( cinfo, rowptr, 1 );
+        jpeg_write_scanlines( cinfo, rowptr, 1 );
     }
 
     jpeg_finish_compress( cinfo );
@@ -439,8 +439,8 @@ jpeg_getc( j_decompress_ptr cinfo )
     if (datasrc->bytes_in_buffer == 0)
     {
 
-	if (!datasrc->fill_input_buffer(cinfo))
-	    ERREXIT(cinfo, JERR_CANT_SUSPEND);
+    if (!datasrc->fill_input_buffer(cinfo))
+        ERREXIT(cinfo, JERR_CANT_SUSPEND);
     }
 
     datasrc->bytes_in_buffer--;
@@ -456,9 +456,17 @@ void
 flimage_enable_jpeg( void )
 {
     flimage_add_format( "JPEG/JFIF format", "jpeg", "jpg",
-						FL_IMAGE_RGB | FL_IMAGE_GRAY,
-						JPEG_identify,
-						JPEG_description,
-						JPEG_read_pixels,
-						JPEG_write );
+                        FL_IMAGE_RGB | FL_IMAGE_GRAY,
+                        JPEG_identify,
+                        JPEG_description,
+                        JPEG_read_pixels,
+                        JPEG_write );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

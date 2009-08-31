@@ -43,7 +43,7 @@ PNG_identify( FILE * fp )
     static unsigned char sig[ 9 ] = { 137, 80, 78, 71, 13, 10, 26, 10 };
 
     if ( fread( buf, 1, 8, fp ) != 8 )
-		return 0;
+        return 0;
     return strncmp( ( char * ) sig, buf, 8 ) == 0;
 }
 
@@ -94,9 +94,17 @@ void
 flimage_enable_png( void )
 {
     flimage_add_format( "Portable Network Graphics", "png", "png",
-						FL_IMAGE_RGB | FL_IMAGE_GRAY,
-						PNG_identify,
-						PNG_description,
-						PNG_load,
-						PNG_dump);
+                        FL_IMAGE_RGB | FL_IMAGE_GRAY,
+                        PNG_identify,
+                        PNG_description,
+                        PNG_load,
+                        PNG_dump);
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

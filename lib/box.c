@@ -38,22 +38,22 @@
 
 static int
 handle_box( FL_OBJECT * ob,
-			int         event,
-			FL_Coord    mx   FL_UNUSED_ARG,
-			FL_Coord    my   FL_UNUSED_ARG,
-			int         key  FL_UNUSED_ARG,
-			void *      ev   FL_UNUSED_ARG )
+            int         event,
+            FL_Coord    mx   FL_UNUSED_ARG,
+            FL_Coord    my   FL_UNUSED_ARG,
+            int         key  FL_UNUSED_ARG,
+            void *      ev   FL_UNUSED_ARG )
 {
     switch ( event )
     {
-		case FL_DRAW:
-			fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-						ob->col1, ob->bw );
-			/* fall through */
+        case FL_DRAW:
+            fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
+                        ob->col1, ob->bw );
+            /* fall through */
 
-		case FL_DRAWLABEL:
-			fl_draw_object_label( ob );
-			break;
+        case FL_DRAWLABEL:
+            fl_draw_object_label( ob );
+            break;
     }
 
     return FL_RETURN_NONE;
@@ -65,11 +65,11 @@ handle_box( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_box( int          type,
-			   FL_Coord     x,
-			   FL_Coord     y,
-			   FL_Coord     w,
-			   FL_Coord     h,
-			   const char * label )
+               FL_Coord     x,
+               FL_Coord     y,
+               FL_Coord     w,
+               FL_Coord     h,
+               const char * label )
 {
     FL_OBJECT *ob;
 
@@ -90,11 +90,11 @@ fl_create_box( int          type,
 
 FL_OBJECT *
 fl_add_box( int          type,
-			FL_Coord     x,
-			FL_Coord     y,
-			FL_Coord     w,
-			FL_Coord     h,
-			const char * label)
+            FL_Coord     x,
+            FL_Coord     y,
+            FL_Coord     w,
+            FL_Coord     h,
+            const char * label)
 {
     FL_OBJECT *ob = fl_create_box( type, x, y, w, h, label );
 
@@ -102,3 +102,11 @@ fl_add_box( int          type,
 
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

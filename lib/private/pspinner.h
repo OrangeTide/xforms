@@ -20,27 +20,27 @@
 #define PSPINNER_H
 
 typedef struct {
-	FL_OBJECT * input;
-	FL_OBJECT * up;
-	FL_OBJECT * down;
+    FL_OBJECT * input;
+    FL_OBJECT * up;
+    FL_OBJECT * down;
 
-	int         i_val;
-	int         i_min;
-	int         i_max;
-	int         i_incr;
+    int         i_val;
+    int         i_min;
+    int         i_max;
+    int         i_incr;
 
-	double      f_val;
-	double      f_min;
-	double      f_max;
-	double      f_incr;
+    double      f_val;
+    double      f_min;
+    double      f_max;
+    double      f_incr;
 
-	int         orient;
-	int         prec;
+    int         orient;
+    int         prec;
 
-	int         attrib;
+    int         attrib;
 
-	int         old_ival;
-	double      old_fval;
+    int         old_ival;
+    double      old_fval;
 } FLI_SPINNER_SPEC;
 
 
@@ -48,3 +48,11 @@ typedef struct {
 
 
 #endif /* PSPINNER_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

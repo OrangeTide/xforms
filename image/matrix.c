@@ -37,25 +37,25 @@
 
 void *
 fl_get_matrix( int          nrows,
-			   int          ncols,
-			   unsigned int esize )
+               int          ncols,
+               unsigned int esize )
 {
     char **mat;
     int i;
 
     if ( ! ( mat = fl_malloc( ( nrows + 1 ) * sizeof *mat ) ) )
-		return NULL;
+        return NULL;
 
     mat[ 0 ] = ( void * ) FL_GET_MATRIX;
 
     if ( ! ( mat[ 1 ] = fl_calloc( nrows * ncols, esize ) ) )
     {
-		fl_free( mat );
-		return NULL;
+        fl_free( mat );
+        return NULL;
     }
 
     for ( i = 2; i <= nrows; i++ )
-		mat[ i ] = mat[ i - 1 ] + ncols * esize;
+        mat[ i ] = mat[ i - 1 ] + ncols * esize;
 
     return mat + 1;
 }
@@ -67,20 +67,20 @@ fl_get_matrix( int          nrows,
 
 void *
 fl_make_matrix( int            nrows,
-				int            ncols,
-				unsigned int   esize,
-				void         * mem )
+                int            ncols,
+                unsigned int   esize,
+                void         * mem )
 {
     char **mat = fl_malloc( ( nrows + 1 ) * sizeof *mat );
     int i;
 
     if ( ! mat )
-		return NULL;
+        return NULL;
 
-	mat[ 0 ] = ( char * ) FL_MAKE_MATRIX;
+    mat[ 0 ] = ( char * ) FL_MAKE_MATRIX;
 
-	for ( mat[ 1 ] = mem, i = 2; i <= nrows; i++ )
-		mat[ i ] = mat[ i - 1 ] + ncols * esize;
+    for ( mat[ 1 ] = mem, i = 2; i <= nrows; i++ )
+        mat[ i ] = mat[ i - 1 ] + ncols * esize;
 
     return mat + 1;
 }
@@ -95,12 +95,20 @@ fl_free_matrix( void *p )
     char **matrix = p;
 
     if ( ! p )
-		return;
+        return;
 
     if ( matrix[ -1 ] && matrix[ 0 ] )
     {
-		if ( matrix[ -1 ] == ( char * ) FL_GET_MATRIX )
-			fl_free( matrix[ 0 ] );
-		fl_free( matrix - 1 );
+        if ( matrix[ -1 ] == ( char * ) FL_GET_MATRIX )
+            fl_free( matrix[ 0 ] );
+        fl_free( matrix - 1 );
     }
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

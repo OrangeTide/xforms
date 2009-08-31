@@ -100,9 +100,9 @@ build_fname( char       * fname,
     else
         npc = fl_snprintf( fname, fname_capacity, "%s%s", filename, ext );
 
-	/* Older libc return -1 if text doesn't, newer ones the total number
-	   of chars that would have been written if there would have been
-	   enough space */
+    /* Older libc return -1 if text doesn't, newer ones the total number
+       of chars that would have been written if there would have been
+       enough space */
 
     return npc >= 0 && ( size_t ) npc <= fname_capacity;
 }
@@ -122,17 +122,17 @@ C_output( const char * filename,
      char *tmp;
     int i, j;
     FILE *fn;
-	FL_OBJECT *obj;
-	int use_glcanvas = 0;
+    FL_OBJECT *obj;
+    int use_glcanvas = 0;
 
     if ( ! build_fname( fname, fname_capacity, filename, ".h" ) )
     {
         if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't create header file!",
-						   "Filename is too long:", "", 1 );
-		else
-			M_err( "C_output",
-				   "Can't create header file, filename is too long" );
+            fl_show_alert( "Can't create header file!",
+                           "Filename is too long:", "", 1 );
+        else
+            M_err( "C_output",
+                   "Can't create header file, filename is too long" );
         return 0;
     }
 
@@ -157,18 +157,18 @@ C_output( const char * filename,
     fprintf( fn, "#include <%s>\n", xform_header );
 
     for ( i = 0; i < fnumb && ! use_glcanvas; i++ )
-	{
-		obj = forms[ i ].form->first;
-		while ( ( obj = obj->next ) != NULL )
-			if ( obj->objclass == FL_GLCANVAS )
-			{
-				use_glcanvas = 1;
-				break;
-			}
-	}
+    {
+        obj = forms[ i ].form->first;
+        while ( ( obj = obj->next ) != NULL )
+            if ( obj->objclass == FL_GLCANVAS )
+            {
+                use_glcanvas = 1;
+                break;
+            }
+    }
 
-	if ( use_glcanvas )
-		fprintf( fn, "#include <%s>\n", glcanvas_header );
+    if ( use_glcanvas )
+        fprintf( fn, "#include <%s>\n", glcanvas_header );
 
     fprintf( fn, "\n/** Callbacks, globals and object handlers **/\n\n" );
     for ( i = 0; i < fnumb; i++ )
@@ -192,10 +192,10 @@ C_output( const char * filename,
     if ( ! build_fname( fname, fname_capacity, filename, ".c" ) )
     {
         if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't create C file!",
-						   "Filename is too long.", "", 1 );
-		else
-			M_err( "C_output", "Can't create C file, filename is too long" );
+            fl_show_alert( "Can't create C file!",
+                           "Filename is too long.", "", 1 );
+        else
+            M_err( "C_output", "Can't create C file, filename is too long" );
         return 0;
     }
 
@@ -204,9 +204,9 @@ C_output( const char * filename,
     if ( ! ( fn = fopen( fname, "w" ) ) )
     {
         if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't open C file!", fname, "", 1 );
-		else
-			M_err( "C_output", "Can't open C file '%s'", fname );
+            fl_show_alert( "Can't open C file!", fname, "", 1 );
+        else
+            M_err( "C_output", "Can't open C file '%s'", fname );
         return 0;
     }
 
@@ -244,25 +244,25 @@ C_output( const char * filename,
 
     if ( fdopt.emit_main )
     {
-		if ( ! build_fname( fname, fname_capacity, filename, "_cb.c" ) )
-		{
-			if ( ! fdopt.conv_only )
-				fl_show_alert( "Can't create C file for main() function!",
-							   "Filename is too long:", "", 1 );
-			else
-				M_err( "C_output", "Can't create C file for main() function, "
-					   "filename is too long" );
-			return 0;
-		}
+        if ( ! build_fname( fname, fname_capacity, filename, "_cb.c" ) )
+        {
+            if ( ! fdopt.conv_only )
+                fl_show_alert( "Can't create C file for main() function!",
+                               "Filename is too long:", "", 1 );
+            else
+                M_err( "C_output", "Can't create C file for main() function, "
+                       "filename is too long" );
+            return 0;
+        }
 
         make_backup( fname );
         if ( ! ( fn = fopen( fname, "w" ) ) )
         {
-			if ( ! fdopt.conv_only )
-				fl_show_alert( "Can't open file for main() function!",
-							   "", "", 1 );
-			else
-				M_err( "C_output", "Can't open file for main() function!" );
+            if ( ! fdopt.conv_only )
+                fl_show_alert( "Can't open file for main() function!",
+                               "", "", 1 );
+            else
+                M_err( "C_output", "Can't open file for main() function!" );
             return 0;
         }
 
@@ -282,26 +282,26 @@ C_output( const char * filename,
 
     if ( fdopt.emit_cb )
     {
-		if ( ! build_fname( fname, fname_capacity, filename, "_cb.c" ) )
-		{
-			if ( ! fdopt.conv_only )
-				fl_show_alert( "Can't create C file for callbacks!",
-							   "Filename is too long:", "", 1 );
-			else
-				M_err( "C_output", "Can't create C file for callbacks, "
-					   "filename is too long" );
-			return 0;
-		}
+        if ( ! build_fname( fname, fname_capacity, filename, "_cb.c" ) )
+        {
+            if ( ! fdopt.conv_only )
+                fl_show_alert( "Can't create C file for callbacks!",
+                               "Filename is too long:", "", 1 );
+            else
+                M_err( "C_output", "Can't create C file for callbacks, "
+                       "filename is too long" );
+            return 0;
+        }
 
         make_backup( fname );
         if ( ! ( fn = fopen( fname, "w" ) ) )
         {
-			if ( ! fdopt.conv_only )
-				fl_show_alert( "Can't open C file for callbacks!", fname,
-							   "", 1 );
-			else
-				M_err( "C_output",
-					   "Can't open C file for callbacks '%s'", fname );
+            if ( ! fdopt.conv_only )
+                fl_show_alert( "Can't open C file for callbacks!", fname,
+                               "", 1 );
+            else
+                M_err( "C_output",
+                       "Can't open C file for callbacks '%s'", fname );
             return 0;
         }
 
@@ -370,7 +370,7 @@ VN_pair vn_align[ ] =
     VN( FL_ALIGN_TOP_LEFT     ),
     VN( FL_ALIGN_BOTTOM_RIGHT ),
     VN( FL_ALIGN_BOTTOM_LEFT  ),
-	{ -1, NULL, NULL, NULL    }
+    { -1, NULL, NULL, NULL    }
 };
 
 static VN_pair vn_lsize[ ] =
@@ -392,7 +392,7 @@ static VN_pair vn_lsize[ ] =
     VN( FL_HUGE_FONT    ),
     { FL_SMALL_FONT,  "FL_NORMAL_FONT1", NULL, NULL },
     { FL_NORMAL_FONT, "FL_NORMAL_FONT2", NULL, NULL },
-	{ -1, NULL, NULL, NULL    }
+    { -1, NULL, NULL, NULL    }
 };
 
 static VN_pair vn_lstyle[ ] =
@@ -412,7 +412,7 @@ static VN_pair vn_lstyle[ ] =
     VN( FL_SHADOW_STYLE ),
     VN( FL_ENGRAVED_STYLE ),
     VN( FL_EMBOSSED_STYLE ),
-	{ -1, NULL, NULL, NULL    }
+    { -1, NULL, NULL, NULL    }
 };
 
 VN_pair vn_gravity[] =
@@ -440,7 +440,7 @@ VN_pair vn_gravity[] =
     VN( SouthEastGravity ),
     VN( SouthWestGravity ),
 
-	{ -1, NULL, NULL, NULL    }
+    { -1, NULL, NULL, NULL    }
 };
 
 VN_pair vn_resize[ ] =
@@ -449,7 +449,7 @@ VN_pair vn_resize[ ] =
     VN( FL_RESIZE_X ),
     VN( FL_RESIZE_Y ),
     VN( FL_RESIZE_ALL ),
-	{ -1, NULL, NULL, NULL }
+    { -1, NULL, NULL, NULL }
 };
 
 static VN_pair vn_unit[ ] =
@@ -465,7 +465,7 @@ static VN_pair vn_unit[ ] =
     { FL_COORD_centiPOINT, "cp",     NULL, NULL },
     { FL_COORD_centiMM,    "cmm",    NULL, NULL },
     { FL_COORD_centiPOINT, "cpoint", NULL, NULL },
-	{ -1,                  NULL,     NULL, NULL }
+    { -1,                  NULL,     NULL, NULL }
 };
 
 
@@ -476,17 +476,17 @@ int
 get_vn_val( VN_pair *    vn,
             const char * name )
 {
-	long val;
-	char *ep;
+    long val;
+    char *ep;
 
     for ( ; vn->name; vn++ )
         if ( strcmp( name, vn->name ) == 0 )
             return vn->val;
 
-	val = strtol( name, &ep, 10 );
+    val = strtol( name, &ep, 10 );
 
-	if ( ep != name && ! *ep && val >= INT_MIN && val <= INT_MAX )
-		return val;
+    if ( ep != name && ! *ep && val >= INT_MIN && val <= INT_MAX )
+        return val;
 
     return -1;
 }
@@ -675,16 +675,16 @@ resize_val( const char * cc )
 
 const char *
 align_name( int val,
-			int with_spaces )
+            int with_spaces )
 {
     static char buf[ 128 ];
 
     strcpy( buf, get_vn_name( vn_align, val % FL_ALIGN_INSIDE ) );
     if ( val & FL_ALIGN_INSIDE )
-	{
-		strcat( buf, with_spaces ? " | " : "|" );
+    {
+        strcat( buf, with_spaces ? " | " : "|" );
         strcat( buf, "FL_ALIGN_INSIDE" );
-	}
+    }
 
     return buf;
 }
@@ -782,19 +782,19 @@ static int
 check_array_name( char * aname )
 {
     char tmpstr[ MAX_VAR_LEN ];
-	char *p, *ep;
+    char *p, *ep;
     unsigned long ind;
-	size_t i;
+    size_t i;
 
-	if ( ! ( p = strchr( aname, '[' ) ) )
+    if ( ! ( p = strchr( aname, '[' ) ) )
         return FALSE;
 
     strcpy( tmpstr, aname );
-	p = tmpstr + ( p - aname );
+    p = tmpstr + ( p - aname );
 
-	ind = strtoul( p + 1, &ep, 10 );
-	if ( ep == p + 1 )
-		ind = 0;
+    ind = strtoul( p + 1, &ep, 10 );
+    if ( ep == p + 1 )
+        ind = 0;
 
     *p = 0;
 
@@ -1415,7 +1415,7 @@ get_placement( FL_FORM * form )
     else if ( form->first->next->resize )
         return "FL_PLACE_CENTERFREE";
 
-	return "FL_PLACE_CENTER";
+    return "FL_PLACE_CENTER";
 }
 
 
@@ -1568,7 +1568,7 @@ output_object( FILE      * fn,
          argname[ MAX_VAR_LEN ];
     char * p,
            fdvname[ MAX_VAR_LEN ];
-	char *label;
+    char *label;
     double sc = get_conversion_factor( );
 
     if ( obj->parent )
@@ -1596,7 +1596,7 @@ output_object( FILE      * fn,
         if ( ! defobj )
         {
             M_err( "output_object",
-				   "Failed to create default (class = %s, type = %s)",
+                   "Failed to create default (class = %s, type = %s)",
                    find_class_name( obj->objclass ),
                    find_type_name( obj->objclass, obj->type ) );
             exit( 1 );
@@ -1605,93 +1605,101 @@ output_object( FILE      * fn,
         fprintf( fn, "\n    " );
 
         if ( *name )
-		{
-			if ( ! altfmt )
-				fprintf( fn, "%s->%s = ", fdvname, name );
-			else
-				fprintf( fn, "%s = ", name );
-		}
+        {
+            if ( ! altfmt )
+                fprintf( fn, "%s->%s = ", fdvname, name );
+            else
+                fprintf( fn, "%s = ", name );
+        }
 
-		fprintf( fn, "obj = " );
-		fprintf( fn, "fl_add_%s( ", find_class_name( obj->objclass ) );
-		fprintf( fn, "FL_%s,", find_type_name( obj->objclass, obj->type ) );
+        fprintf( fn, "obj = " );
+        fprintf( fn, "fl_add_%s( ", find_class_name( obj->objclass ) );
+        fprintf( fn, "FL_%s,", find_type_name( obj->objclass, obj->type ) );
 
-		fakeobj.x = obj->x;
-		fakeobj.y = obj->y;
-		fakeobj.w = obj->w;
-		fakeobj.h = obj->h;
-		fl_scale_object( &fakeobj, sc, sc );
+        fakeobj.x = obj->x;
+        fakeobj.y = obj->y;
+        fakeobj.w = obj->w;
+        fakeobj.h = obj->h;
+        fl_scale_object( &fakeobj, sc, sc );
 
-		label = get_label( obj, 1 );
-		if ( obj->objclass != FL_FREE )
-			fprintf( fn, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
-					 fakeobj.w, fakeobj.h, label );
-		else
-			fprintf( fn, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
-					 fakeobj.x, fakeobj.y, fakeobj.w, fakeobj.h,
-					 label, get_free_handle( obj, name ) );
-		fl_free( label );
-		
-		if  (    ( p = get_shortcut_string( obj ) )
-			  && *p
-			  && obj->type != FL_RETURN_BUTTON )
-			fprintf( fn, "    fl_set_%s_shortcut( obj, \"%s\", 1 );\n",
-					 supported_shortcut( obj->objclass ),
-					 get_shortcut_string( obj ) );
+        label = get_label( obj, 1 );
+        if ( obj->objclass != FL_FREE )
+            fprintf( fn, " %d, %d, %d, %d, \"%s\" );\n", fakeobj.x, fakeobj.y,
+                     fakeobj.w, fakeobj.h, label );
+        else
+            fprintf( fn, "% d, %d, %d, %d, \"%s\",\n\t\t\t%s );\n",
+                     fakeobj.x, fakeobj.y, fakeobj.w, fakeobj.h,
+                     label, get_free_handle( obj, name ) );
+        fl_free( label );
+        
+        if  (    ( p = get_shortcut_string( obj ) )
+              && *p
+              && obj->type != FL_RETURN_BUTTON )
+            fprintf( fn, "    fl_set_%s_shortcut( obj, \"%s\", 1 );\n",
+                     supported_shortcut( obj->objclass ),
+                     get_shortcut_string( obj ) );
 
-		if ( obj->boxtype != defobj->boxtype && obj->objclass != FL_BOX )
-		{
-			if ( obj->objclass != FL_CANVAS && obj->objclass != FL_FRAME )
-				emit_attrib( fn, obj->boxtype, vn_btype,
-							 "fl_set_object_boxtype" );
-		}
+        if ( obj->boxtype != defobj->boxtype && obj->objclass != FL_BOX )
+        {
+            if ( obj->objclass != FL_CANVAS && obj->objclass != FL_FRAME )
+                emit_attrib( fn, obj->boxtype, vn_btype,
+                             "fl_set_object_boxtype" );
+        }
 
-		if ( obj->col1 != defobj->col1 || obj->col2 != defobj->col2 )
-		{
-			if ( obj->objclass != FL_CANVAS )
-				fprintf( fn, "    fl_set_object_color( obj, %s, %s );\n",
-						 fli_query_colorname( obj->col1 ),
-						 fli_query_colorname( obj->col2 ) );
-		}
+        if ( obj->col1 != defobj->col1 || obj->col2 != defobj->col2 )
+        {
+            if ( obj->objclass != FL_CANVAS )
+                fprintf( fn, "    fl_set_object_color( obj, %s, %s );\n",
+                         fli_query_colorname( obj->col1 ),
+                         fli_query_colorname( obj->col2 ) );
+        }
 
-		if ( obj->lcol != defobj->lcol )
-			fprintf( fn, "    fl_set_object_lcolor( obj, %s );\n",
-					 fli_query_colorname( obj->lcol ) );
+        if ( obj->lcol != defobj->lcol )
+            fprintf( fn, "    fl_set_object_lcolor( obj, %s );\n",
+                     fli_query_colorname( obj->lcol ) );
 
-		if ( obj->lsize != defobj->lsize )
-			emit_attrib( fn, obj->lsize, vn_lsize, "fl_set_object_lsize" );
+        if ( obj->lsize != defobj->lsize )
+            emit_attrib( fn, obj->lsize, vn_lsize, "fl_set_object_lsize" );
 
-		if ( obj->align != defobj->align )
-			emit_attrib( fn, obj->align, vn_align, "fl_set_object_lalign" );
+        if ( obj->align != defobj->align )
+            emit_attrib( fn, obj->align, vn_align, "fl_set_object_lalign" );
 
-		if ( obj->lstyle != defobj->lstyle )
-			fprintf( fn, "    fl_set_object_lstyle( obj, %s );\n",
-					 style_name( obj->lstyle ) );
+        if ( obj->lstyle != defobj->lstyle )
+            fprintf( fn, "    fl_set_object_lstyle( obj, %s );\n",
+                     style_name( obj->lstyle ) );
 
-		/* 'resize' must be checked for consistency with the gravity settings */
+        /* 'resize' must be checked for consistency with the gravity settings */
 
-		obj->resize = check_resize( obj->resize,
-									obj->nwgravity, obj->segravity );
-		if ( obj->resize != defobj->resize )
-			fprintf( fn, "    fl_set_object_resize( obj, %s );\n",
-					 resize_name( obj->resize ) );
+        obj->resize = check_resize( obj->resize,
+                                    obj->nwgravity, obj->segravity );
+        if ( obj->resize != defobj->resize )
+            fprintf( fn, "    fl_set_object_resize( obj, %s );\n",
+                     resize_name( obj->resize ) );
 
-		if (    obj->nwgravity != defobj->nwgravity
-			 || obj->segravity != defobj->segravity)
-			fprintf( fn, "    fl_set_object_gravity( obj, %s, %s );\n",
-					 gravity_name( obj->nwgravity ),
-					 gravity_name( obj->segravity ) );
+        if (    obj->nwgravity != defobj->nwgravity
+             || obj->segravity != defobj->segravity)
+            fprintf( fn, "    fl_set_object_gravity( obj, %s, %s );\n",
+                     gravity_name( obj->nwgravity ),
+                     gravity_name( obj->segravity ) );
 
-		if ( *cbname )
-			fprintf( fn, "    fl_set_object_callback( obj, %s, %s );\n",
-					 cbname, argname );
+        if ( *cbname )
+            fprintf( fn, "    fl_set_object_callback( obj, %s, %s );\n",
+                     cbname, argname );
 
-		if ( obj->how_return != defobj->how_return )
-			fprintf( fn, "    fl_set_object_return( obj, %s );\n",
-					 get_how_return_name( obj->how_return, 1 ) );
+        if ( obj->how_return != defobj->how_return )
+            fprintf( fn, "    fl_set_object_return( obj, %s );\n",
+                     get_how_return_name( obj->how_return, 1 ) );
     }
 
     /* Generate object class specifc settings */
 
     emit_objclass_spec_info( fn, obj );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

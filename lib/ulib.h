@@ -20,13 +20,13 @@
 /**
  * \file ulib.h
  *
- *    Macros and Prototypes for the utilities routines
+ * Macros and Prototypes for the utilities routines
  */
 
 #ifndef TC_ULIB_H
 #define TC_ULIB_H
 
-#include <stdio.h>		/* for FILE */
+#include <stdio.h>      /* for FILE */
 #include <errno.h>
 
 
@@ -50,16 +50,16 @@ extern int fli_readpint( FILE * );
 extern int fli_readhexint( FILE * );
 extern int fli_fget4MSBF( FILE * );
 extern int fli_fput4MSBF( int,
-						 FILE * );
+                         FILE * );
 extern int fli_fget2LSBF( FILE * );
 extern int fli_fput2LSBF( int,
-						 FILE * );
+                         FILE * );
 extern int fli_fget2MSBF( FILE * );
 extern int fli_fput2MSBF( int,
-						 FILE * );
+                         FILE * );
 extern int fli_fget4LSBF( FILE *);
 extern int fli_fput4LSBF( int,
-						 FILE * );
+                         FILE * );
 
 
 /********** End of  Portable IO *******************}**/
@@ -73,7 +73,7 @@ extern char * fli_nuke_all_non_alnum( char * );
 /********* Variable number arguments strcat ******************/
 
 extern char * fli_vstrcat( const char *,
-					  ... );
+                      ... );
 extern void fli_free_vstrcat( void * );
 
 
@@ -93,8 +93,8 @@ extern void fli_free_vstrcat( void * );
 # define ML_TRACE    4
 
 extern FL_ERROR_FUNC fli_error_setup( int,
-									  const char *,
-									  int );
+                                      const char *,
+                                      int );
 
 extern FL_ERROR_FUNC efp_;
 extern FL_ERROR_FUNC user_error_function_;
@@ -129,3 +129,11 @@ extern const char *fli_get_syserror_msg( void );
 
 
 #endif /* TC_ULIB_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

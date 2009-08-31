@@ -18,11 +18,10 @@
 
 /**
  * \file pbrowser.h
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright (c) T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  */
 
 #ifndef PBROWSER_H_
@@ -33,36 +32,44 @@
 
 
 typedef struct {
-    FL_OBJECT                  * tb;			/* the textbox                */
-    FL_OBJECT                  * hsl;			/* horizontal scrollbar       */
-    FL_OBJECT                  * vsl;			/* vertical scrollbar         */
+    FL_OBJECT                  * tb;            /* the textbox                */
+    FL_OBJECT                  * hsl;           /* horizontal scrollbar       */
+    FL_OBJECT                  * vsl;           /* vertical scrollbar         */
     FL_CALLBACKPTR               callback;
     long                         callback_data;
     double                       hsize,
-	                             vsize;
+                                 vsize;
     double                       hval,
-	                             vval;
+                                 vval;
     double                       hinc1,
-	                             hinc2;
+                                 hinc2;
     double                       vinc1,
-	                             vinc2;
+                                 vinc2;
     int                          dead_area;
     int                          attrib;
-    int                          v_on,		    /* scrollbar on/off state     */
-	                             h_on;
-    int                          v_pref,		/* on/off prefererence        */
-	                             h_pref;
+    int                          v_on,          /* scrollbar on/off state     */
+                                 h_on;
+    int                          v_pref,        /* on/off prefererence        */
+                                 h_pref;
     int                          vw,
-	                             vw_def;
+                                 vw_def;
     int                          hh,
-	                             hh_def;
+                                 hh_def;
     int                          user_set;
     FL_BROWSER_SCROLL_CALLBACK   hcb,
-	                             vcb;
+                                 vcb;
     void                       * hcb_data,
-	                           * vcb_data;
-	double                     old_vp;
-	double                     old_hp;                          
+                               * vcb_data;
+    double                     old_vp;
+    double                     old_hp;                          
 } FLI_BROWSER_SPEC;
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

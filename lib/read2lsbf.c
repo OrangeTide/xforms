@@ -53,6 +53,14 @@ fli_fget2LSBF( FILE * fp )
 int
 fli_fput2LSBF( int code, FILE * fp )
 {
-	putc( code & 0xff, fp );
-	return putc( ( code >> 8 ) & 0xff, fp );
+    putc( code & 0xff, fp );
+    return putc( ( code >> 8 ) & 0xff, fp );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

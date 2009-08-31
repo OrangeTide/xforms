@@ -43,16 +43,16 @@
 
 typedef struct
 {
-    FL_OBJECT * obj;		                /* The object */
-    char        name[ MAX_VAR_LEN ];	    /* Its name (if any) */
+    FL_OBJECT * obj;                        /* The object */
+    char        name[ MAX_VAR_LEN ];        /* Its name (if any) */
     char        cbname[ MAX_VAR_LEN ];      /* Callback Routine */
-    char        argname[ MAX_VAR_LEN ];	    /* The argument */
+    char        argname[ MAX_VAR_LEN ];     /* The argument */
 } OBJ;
 
 #define MAXOBJ  1024
 
-static OBJ objects[ MAXOBJ ];	/* The stored objects */
-static int objnumb = 0;		/* Their number */
+static OBJ objects[ MAXOBJ ];   /* The stored objects */
+static int objnumb = 0;     /* Their number */
 
 
 /***************************************
@@ -65,8 +65,8 @@ get_object_numb( const FL_OBJECT * obj )
     int i;
 
     for ( i = 0; i < objnumb; i++ )
-		if ( objects[ i ].obj == obj )
-			return i;
+        if ( objects[ i ].obj == obj )
+            return i;
     return -1;
 }
 
@@ -81,7 +81,7 @@ check_names( int on )
     /* Fill in argument if missing */
 
     if ( *objects[ on ].cbname && ! *objects[ on ].argname)
-		strcpy( objects[ on ].argname, "0" );
+        strcpy( objects[ on ].argname, "0" );
 
     /* HAS TO BE EXTENDED */
 }
@@ -98,17 +98,17 @@ check_names( int on )
 
 void
 get_object_name( const FL_OBJECT * obj,
-				 char            * name,
-				 char            * cbname,
-				 char            * argname)
+                 char            * name,
+                 char            * cbname,
+                 char            * argname)
 {
     int on = get_object_numb( obj );
 
-	*name = '\0';
+    *name = '\0';
     *cbname = '\0';
     *argname = '\0';
     if ( on == -1 )
-		return;
+        return;
 
     strcpy( name, objects[ on ].name );
     strcpy( cbname, objects[ on ].cbname );
@@ -122,37 +122,45 @@ get_object_name( const FL_OBJECT * obj,
 
 void
 set_object_name( FL_OBJECT  * obj,
-				 const char * name,
-				 const char * cbname,
-				 const char * argname )
+                 const char * name,
+                 const char * cbname,
+                 const char * argname )
 {
     int on = get_object_numb( obj );
 
     if ( obj == NULL )
-		return;
+        return;
 
     if ( on == -1 )
     {
-		if (    ( ! name    || ! *name    )
-			 && ( ! cbname  || ! *cbname  )
-			 && ( ! argname || ! *argname ) )
-			return;
+        if (    ( ! name    || ! *name    )
+             && ( ! cbname  || ! *cbname  )
+             && ( ! argname || ! *argname ) )
+            return;
 
-		if ( objnumb >= MAXOBJ )
-			return;
+        if ( objnumb >= MAXOBJ )
+            return;
 
-		objects[ objnumb ].obj = obj;
-		on = objnumb++;
+        objects[ objnumb ].obj = obj;
+        on = objnumb++;
     }
 
-	if ( name )
-		fli_sstrcpy( objects[ on ].name, name, sizeof objects[ on ].name );
-	if ( cbname )
-		fli_sstrcpy( objects[ on ].cbname, cbname,
-					 sizeof objects[ on ].cbname );
-	if ( argname )
-		fli_sstrcpy( objects[ on ].argname, argname,
-					 sizeof objects[ on ].argname  );
+    if ( name )
+        fli_sstrcpy( objects[ on ].name, name, sizeof objects[ on ].name );
+    if ( cbname )
+        fli_sstrcpy( objects[ on ].cbname, cbname,
+                     sizeof objects[ on ].cbname );
+    if ( argname )
+        fli_sstrcpy( objects[ on ].argname, argname,
+                     sizeof objects[ on ].argname  );
 
     check_names( on );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

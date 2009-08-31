@@ -18,11 +18,10 @@
 
 /**
  * \file pchoice.h
- *.
+ *
  *  This file is part of the XForms library package.
  *  Copyright T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
  */
 
 #ifndef PCHOICE_H_
@@ -33,19 +32,27 @@
  */
 
 typedef struct {
-    int             numitems;		/* number of items in choice */
-    int             val;			/* last menu item selected */
-    char          * items[ FL_CHOICE_MAXITEMS + 1 ];	/* choice items */
+    int             numitems;       /* number of items in choice */
+    int             val;            /* last menu item selected */
+    char          * items[ FL_CHOICE_MAXITEMS + 1 ];    /* choice items */
     char          * shortcut[ FL_CHOICE_MAXITEMS + 1 ];
     unsigned char   mode[ FL_CHOICE_MAXITEMS + 1 ];
-    int             align;			/* the choice text is aligned */
-    int             fontsize;		/* font size */
-    int             fontstyle;		/* font style */
+    int             align;          /* the choice text is aligned */
+    int             fontsize;       /* font size */
+    int             fontstyle;      /* font style */
     int             pushed;
     int             below;
     unsigned char   modechange[ FL_CHOICE_MAXITEMS + 1 ];
-	int             counter;
+    int             counter;
     int             no_title;
 } FLI_CHOICE_SPEC;
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

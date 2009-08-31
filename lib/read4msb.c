@@ -55,7 +55,7 @@ fli_fget4MSBF( FILE * fp )
 
 int
 fli_fput4MSBF( int    n,
-			   FILE * fp )
+               FILE * fp )
 {
      putc( ( n >> 24 ) & 0xff, fp );
      putc( ( n >> 16 ) & 0xff, fp );
@@ -64,3 +64,11 @@ fli_fput4MSBF( int    n,
      return n;
 }
 
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

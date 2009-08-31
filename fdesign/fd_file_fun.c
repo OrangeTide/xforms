@@ -35,12 +35,12 @@
 
 static struct
 {
-	FILE   * fp;
-	char   * fname;
-	size_t   line_no;
-	char   * line;
-	char   * pos;
-	int      merge;
+    FILE   * fp;
+    char   * fname;
+    size_t   line_no;
+    char   * line;
+    char   * pos;
+    int      merge;
 } ff = { NULL, NULL, 0, NULL, NULL, 0 };
 
 
@@ -53,10 +53,10 @@ static struct
 static char *
 ff_skip_spaces( const char * cp )
 {
-	while ( *cp && isspace( ( unsigned char ) *cp ) )
-		cp++;
+    while ( *cp && isspace( ( unsigned char ) *cp ) )
+        cp++;
 
-	return ( char * ) cp;
+    return ( char * ) cp;
 }
 
 
@@ -66,10 +66,10 @@ ff_skip_spaces( const char * cp )
 char *
 ff_get_filename_copy( void )
 {
-	if ( ! ff.fname || ! ff.fp )
-		return NULL;
+    if ( ! ff.fname || ! ff.fp )
+        return NULL;
 
-	return fl_strdup( ff.fname );
+    return fl_strdup( ff.fname );
 }
 
 
@@ -79,13 +79,13 @@ ff_get_filename_copy( void )
 static int
 ff_is_comment( void )
 {
-	ff.pos = ff_skip_spaces( ff.pos );
+    ff.pos = ff_skip_spaces( ff.pos );
 
-	return    ! *ff.pos
-		   || *ff.pos == ';'
-		   || *ff.pos == '#'
-		   || *ff.pos == '-'
-		   || *ff.pos == '=';
+    return    ! *ff.pos
+           || *ff.pos == ';'
+           || *ff.pos == '#'
+           || *ff.pos == '-'
+           || *ff.pos == '=';
 }
 
 
@@ -95,18 +95,18 @@ ff_is_comment( void )
 void
 ff_close( void )
 {
-	if ( ff.fp )
-	{
-		fclose( ff.fp );
-		ff.fp = NULL;
-	}
+    if ( ff.fp )
+    {
+        fclose( ff.fp );
+        ff.fp = NULL;
+    }
 
-	fl_safe_free( ff.fname );
-	fl_safe_free( ff.line );
+    fl_safe_free( ff.fname );
+    fl_safe_free( ff.line );
 
-	ff.pos = NULL;
-	ff.line_no = 0;
-	ff.merge = 0;
+    ff.pos = NULL;
+    ff.line_no = 0;
+    ff.merge = 0;
 }
 
 
@@ -116,17 +116,17 @@ ff_close( void )
 int 
 ff_err( const char * message )
 {
-	if ( ! fdopt.conv_only )
-		fl_show_alert2( 0, "Error:\f%s\n$s:%lu.%lu",
-						message, ff.fname, ( unsigned long ) ff.line_no,
-						ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
-	else
-		M_err( "Error", "%s at %s:%lu.%lu",
-			   message, ff.fname, ( unsigned long ) ff.line_no,
-			   ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
+    if ( ! fdopt.conv_only )
+        fl_show_alert2( 0, "Error:\f%s\n$s:%lu.%lu",
+                        message, ff.fname, ( unsigned long ) ff.line_no,
+                        ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
+    else
+        M_err( "Error", "%s at %s:%lu.%lu",
+               message, ff.fname, ( unsigned long ) ff.line_no,
+               ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
 
-	ff_close( );
-	return FF_READ_FAILURE;
+    ff_close( );
+    return FF_READ_FAILURE;
 }
 
 
@@ -136,26 +136,26 @@ ff_err( const char * message )
 static int
 ff_get_line( void )
 {
-	if ( ff.fp )
-		do
-		{
-			fl_safe_free( ff.line );
+    if ( ff.fp )
+        do
+        {
+            fl_safe_free( ff.line );
 
-			if ( ! ( ff.line = fli_read_line( ff.fp ) ) )
-			{
-				if ( feof( ff.fp ) )
-				{
-					ff.line_no++;
-					return 0;
-				}
-				return ff_err( "Error while reading from file" );
-			}
+            if ( ! ( ff.line = fli_read_line( ff.fp ) ) )
+            {
+                if ( feof( ff.fp ) )
+                {
+                    ff.line_no++;
+                    return 0;
+                }
+                return ff_err( "Error while reading from file" );
+            }
 
-			ff.line_no++;
-			ff.pos = ff.line;
-		} while ( ff_is_comment( ) );
+            ff.line_no++;
+            ff.pos = ff.line;
+        } while ( ff_is_comment( ) );
 
-	return 0;
+    return 0;
 }
 
 
@@ -164,25 +164,25 @@ ff_get_line( void )
 
 int
 ff_get_fd_file( const char  * str,
-				int           merge )
+                int           merge )
 {
-	ff_close( );
+    ff_close( );
 
-	ff.merge = merge;
+    ff.merge = merge;
 
     fl_use_fselector( LOAD_FSELECTOR );
 
     /* Get the filename if necessary */
 
     if ( ! str || ! *str )
-	{
-		str = fl_show_fselector( merge ? "Filename to merge forms from" :
-								 "Filename to load forms from",
-								 "", "*.fd", "" );
+    {
+        str = fl_show_fselector( merge ? "Filename to merge forms from" :
+                                 "Filename to load forms from",
+                                 "", "*.fd", "" );
 
-		if ( ! str || ! *str )
-			return -1;
-	}
+        if ( ! str || ! *str )
+            return -1;
+    }
 
     /* Append ".fd" if required. */
 
@@ -192,26 +192,26 @@ ff_get_fd_file( const char  * str,
 
     if ( ! ( ff.fp = fopen( ff.fname, "r" ) ) )
     {
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Can't open file for reading", ff.fname, "", 0 );
-		else
-			M_err( "ff_get_fd_file", "Can't open '%s' for reading", ff.fname );
-		ff_close( );
-		return -1;
+        if ( ! fdopt.conv_only )
+            fl_show_alert( "Can't open file for reading", ff.fname, "", 0 );
+        else
+            M_err( "ff_get_fd_file", "Can't open '%s' for reading", ff.fname );
+        ff_close( );
+        return -1;
     }
 
-	if ( ff_get_line( ) < 0 )
-	{
-		if ( ! fdopt.conv_only )
-			fl_show_alert( "Nothing to be read from", ff.fname, "", 0 );
-		else
-			M_err( "ff_get_fd_file", "Nothing to be read from '%s'",
-				   ff.fname );
-		ff_close( );
-		return -1;
+    if ( ff_get_line( ) < 0 )
+    {
+        if ( ! fdopt.conv_only )
+            fl_show_alert( "Nothing to be read from", ff.fname, "", 0 );
+        else
+            M_err( "ff_get_fd_file", "Nothing to be read from '%s'",
+                   ff.fname );
+        ff_close( );
+        return -1;
     }
 
-	return 0;
+    return 0;
 }
 
 
@@ -223,36 +223,36 @@ ff_get_fd_file( const char  * str,
 static const char *
 ff_match_text( const char *txt )
 {
-	char *src = ff.pos;
+    char *src = ff.pos;
 
-	txt = ff_skip_spaces( txt );
+    txt = ff_skip_spaces( txt );
 
-	while ( *src && *txt )
-	{
-		if (    *src != *txt
-			 && ! (    isspace( ( unsigned char ) *src )
-					&& isspace( ( unsigned char ) *txt ) ) )
-			return NULL;
+    while ( *src && *txt )
+    {
+        if (    *src != *txt
+             && ! (    isspace( ( unsigned char ) *src )
+                    && isspace( ( unsigned char ) *txt ) ) )
+            return NULL;
 
-		if ( isspace( ( unsigned char ) *src ) )
-		{
-			src = ff_skip_spaces( src );
-			txt = ff_skip_spaces( txt );
-		}
-		else
-		{
-			src++;
-			txt++;
-		}
-	}
+        if ( isspace( ( unsigned char ) *src ) )
+        {
+            src = ff_skip_spaces( src );
+            txt = ff_skip_spaces( txt );
+        }
+        else
+        {
+            src++;
+            txt++;
+        }
+    }
 
-	txt = ff_skip_spaces( txt );
-	if ( *txt )
-		return NULL;
+    txt = ff_skip_spaces( txt );
+    if ( *txt )
+        return NULL;
 
-	ff.pos = src;
+    ff.pos = src;
 
-	return txt;
+    return txt;
 }
 
 
@@ -262,24 +262,24 @@ ff_match_text( const char *txt )
 static int
 ff_match_long( long * p )
 {
-	long val;
-	char *ep;
+    long val;
+    char *ep;
 
-	val = strtol( ff.pos, &ep, 10 );
+    val = strtol( ff.pos, &ep, 10 );
 
-	if ( ep == ff.pos )
-		return -1;
+    if ( ep == ff.pos )
+        return -1;
 
-	if ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
-		return -1;
+    if ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
+        return -1;
 
-	if ( ( val == LONG_MAX || val == LONG_MIN ) && errno == ERANGE )
-		return -1;
-		
-	ff.pos = ep;
+    if ( ( val == LONG_MAX || val == LONG_MIN ) && errno == ERANGE )
+        return -1;
+        
+    ff.pos = ep;
 
-	*p = val;
-	return 0;
+    *p = val;
+    return 0;
 }
 
 
@@ -289,23 +289,23 @@ ff_match_long( long * p )
 static int
 ff_match_ulong( unsigned long * p )
 {
-	unsigned long val;
-	char *ep;
+    unsigned long val;
+    char *ep;
 
-	if ( *ff.pos == '-' )
-		return -1;
+    if ( *ff.pos == '-' )
+        return -1;
 
-	val = strtoul( ff.pos, &ep, 10 );
+    val = strtoul( ff.pos, &ep, 10 );
 
-	if (    ep == ff.pos
-		 || ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
-		 || ( val == ULONG_MAX && errno == ERANGE ) )
-		return -1;
+    if (    ep == ff.pos
+         || ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
+         || ( val == ULONG_MAX && errno == ERANGE ) )
+        return -1;
 
-	ff.pos = ep;
+    ff.pos = ep;
 
-	*p = val;
-	return 0;
+    *p = val;
+    return 0;
 }
 
 
@@ -315,20 +315,20 @@ ff_match_ulong( unsigned long * p )
 static int
 ff_match_int( int * p )
 {
-	long val;
-	char *old_pos = ff.pos;
+    long val;
+    char *old_pos = ff.pos;
 
-	if ( ff_match_long( &val ) < 0 )
-		return -1;
+    if ( ff_match_long( &val ) < 0 )
+        return -1;
 
-	if ( ( val > INT_MAX || val < INT_MIN ) )
-	{
-		ff.pos = old_pos;
-		return -1;
-	}
-		
-	*p = val;
-	return 0;
+    if ( ( val > INT_MAX || val < INT_MIN ) )
+    {
+        ff.pos = old_pos;
+        return -1;
+    }
+        
+    *p = val;
+    return 0;
 }
 
 
@@ -338,20 +338,20 @@ ff_match_int( int * p )
 static int
 ff_match_uint( unsigned int * p )
 {
-	unsigned long val;
-	char *old_pos = ff.pos;
+    unsigned long val;
+    char *old_pos = ff.pos;
 
-	if ( ff_match_ulong( &val ) < 0 )
-		return -1;
+    if ( ff_match_ulong( &val ) < 0 )
+        return -1;
 
-	if ( val > UINT_MAX )
-	{
-		ff.pos = old_pos;
-		return -1;
-	}
+    if ( val > UINT_MAX )
+    {
+        ff.pos = old_pos;
+        return -1;
+    }
 
-	*p = val;
-	return 0;
+    *p = val;
+    return 0;
 }
 
 
@@ -361,20 +361,20 @@ ff_match_uint( unsigned int * p )
 static int
 ff_match_double( double * p )
 {
-	double val;
-	char *ep;
+    double val;
+    char *ep;
 
-	val = strtod( ff.pos, &ep );
+    val = strtod( ff.pos, &ep );
 
-	if (    ep == ff.pos
-		 || ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
-		 || ( ( val == HUGE_VAL || val == - HUGE_VAL ) && errno == ERANGE ) )
-		return -1;
-		
-	ff.pos = ep;
+    if (    ep == ff.pos
+         || ( *ep != '\0' && ! isspace( ( unsigned char ) *ep ) )
+         || ( ( val == HUGE_VAL || val == - HUGE_VAL ) && errno == ERANGE ) )
+        return -1;
+        
+    ff.pos = ep;
 
-	*p = val;
-	return 0;
+    *p = val;
+    return 0;
 }
 
 
@@ -384,17 +384,17 @@ ff_match_double( double * p )
 static int
 ff_match_float( float * p )
 {
-	double val;
-	char *old_pos = ff.pos;
+    double val;
+    char *old_pos = ff.pos;
 
-	if ( ff_match_double( &val ) < 0 || val < - FLT_MAX || val > FLT_MAX)
-	{
-		ff.pos = old_pos;
-		return -1;
-	}
+    if ( ff_match_double( &val ) < 0 || val < - FLT_MAX || val > FLT_MAX)
+    {
+        ff.pos = old_pos;
+        return -1;
+    }
 
-	*p = val;
-	return 0;
+    *p = val;
+    return 0;
 }
 
 
@@ -403,19 +403,19 @@ ff_match_float( float * p )
 
 static int
 ff_match_coord( FL_Coord * p,
-				int        need_positive )
+                int        need_positive )
 {
-	int val;
-	char *old_pos = ff.pos;
+    int val;
+    char *old_pos = ff.pos;
 
-	if ( ff_match_int( &val ) < 0 || ( need_positive && val < 0 ) )
-	{
-		ff.pos = old_pos;
-		return -1;
-	}
+    if ( ff_match_int( &val ) < 0 || ( need_positive && val < 0 ) )
+    {
+        ff.pos = old_pos;
+        return -1;
+    }
 
-	*p = val;
-	return 0;
+    *p = val;
+    return 0;
 }
 
 
@@ -425,28 +425,28 @@ ff_match_coord( FL_Coord * p,
 static int
 ff_match_string( char ** p )
 {
-	/* Backtrack to start of line or last ':' */
+    /* Backtrack to start of line or last ':' */
 
-	while ( ff.pos > ff.line && isspace( ( unsigned char ) *--ff.pos ) )
-		/* empty */ ;
+    while ( ff.pos > ff.line && isspace( ( unsigned char ) *--ff.pos ) )
+        /* empty */ ;
 
-	/* If we're at a ':' skip the next space if if exists */
+    /* If we're at a ':' skip the next space if if exists */
 
-	if (    ff.pos > ff.line
-		 && *ff.pos == ':'
-		 && isspace( ( unsigned char ) *++ff.pos ) )
-		ff.pos++;
+    if (    ff.pos > ff.line
+         && *ff.pos == ':'
+         && isspace( ( unsigned char ) *++ff.pos ) )
+        ff.pos++;
 
-	*p = ff.pos + strlen( ff.pos ) - 1;
-	if ( **p == '\n' )
-		**p = '\0';
+    *p = ff.pos + strlen( ff.pos ) - 1;
+    if ( **p == '\n' )
+        **p = '\0';
 
-	*p = fl_strdup( ff.pos );
+    *p = fl_strdup( ff.pos );
 
-	while ( *ff.pos )
-		ff.pos++;
+    while ( *ff.pos )
+        ff.pos++;
 
-	return 0;
+    return 0;
 }
 
 
@@ -456,29 +456,29 @@ ff_match_string( char ** p )
 static int
 ff_match_trimmed_string( char ** p )
 {
-	char *ep = ff.pos + strlen( ff.pos ) - 1,
-		 *fp = ep + 1;
-	char old_c;
+    char *ep = ff.pos + strlen( ff.pos ) - 1,
+         *fp = ep + 1;
+    char old_c;
 
-	if ( ! *ff.pos )
-	{
-		*p = fl_strdup( ff.pos );
-		return 0;
-	}
+    if ( ! *ff.pos )
+    {
+        *p = fl_strdup( ff.pos );
+        return 0;
+    }
 
-	*p = NULL;
+    *p = NULL;
 
-	while ( ep > ff.pos && isspace( ( unsigned char ) *ep ) )
-		ep--;
+    while ( ep > ff.pos && isspace( ( unsigned char ) *ep ) )
+        ep--;
 
-	old_c = *ep;
-	*++ep = '\0';
+    old_c = *ep;
+    *++ep = '\0';
 
-	*p = fl_strdup( ff.pos );
-	*ep = old_c;
-	ff.pos = fp;
+    *p = fl_strdup( ff.pos );
+    *ep = old_c;
+    ff.pos = fp;
 
-	return 0;
+    return 0;
 }
 
 
@@ -488,21 +488,21 @@ ff_match_trimmed_string( char ** p )
 static int
 ff_match_spaceless_string( char ** p )
 {
-	char *ep = ff.pos;
+    char *ep = ff.pos;
 
-	while ( *ep && ! isspace( ( unsigned char ) *ep ) )
-		ep++;
+    while ( *ep && ! isspace( ( unsigned char ) *ep ) )
+        ep++;
 
-	if ( ep == ff.pos )
-		*p = fl_strdup( "" );
-	else
-	{
-		*p = fl_malloc( ep - ff.pos + 1 );
-		fli_sstrcpy( *p, ff.pos, ep - ff.pos + 1 );
-		ff.pos = ep;
-	}
+    if ( ep == ff.pos )
+        *p = fl_strdup( "" );
+    else
+    {
+        *p = fl_malloc( ep - ff.pos + 1 );
+        fli_sstrcpy( *p, ff.pos, ep - ff.pos + 1 );
+        ff.pos = ep;
+    }
 
-	return 0;
+    return 0;
 }
 
 
@@ -512,43 +512,43 @@ ff_match_spaceless_string( char ** p )
 static int
 ff_match_var( char ** p )
 {
-	char *ep = ff.pos;
-	char old_c;
+    char *ep = ff.pos;
+    char old_c;
 
-	if ( ! *ep )
-	{
-		*p = fl_strdup( ff.pos );
-		return -1;
-	}
+    if ( ! *ep )
+    {
+        *p = fl_strdup( ff.pos );
+        return -1;
+    }
 
-	*p = NULL;
+    *p = NULL;
 
-	if ( isdigit( ( unsigned char ) *ep ) )
-		return -1;
+    if ( isdigit( ( unsigned char ) *ep ) )
+        return -1;
 
-	while ( *ep 
-			&& (    isalpha( ( unsigned char ) *ep )
-				 || isdigit( ( unsigned char ) *ep )
-				 || *ep == '_' ) )
-		ep++;
+    while ( *ep 
+            && (    isalpha( ( unsigned char ) *ep )
+                 || isdigit( ( unsigned char ) *ep )
+                 || *ep == '_' ) )
+        ep++;
 
-	if ( *ep && ! isspace( ( unsigned char ) *ep ) )
-		return -1;
+    if ( *ep && ! isspace( ( unsigned char ) *ep ) )
+        return -1;
 
-	/* Currently variable, function etc. names can't be longer... */
+    /* Currently variable, function etc. names can't be longer... */
 
-	if ( ep - ff.pos >= MAX_VAR_LEN )
-		return -1;
+    if ( ep - ff.pos >= MAX_VAR_LEN )
+        return -1;
 
-	old_c = *ep;
-	*ep = '\0';
+    old_c = *ep;
+    *ep = '\0';
 
-	*p = fl_strdup( ff.pos );
+    *p = fl_strdup( ff.pos );
 
-	*ep = old_c;
-	ff.pos = ep + 1;
+    *ep = old_c;
+    ff.pos = ep + 1;
 
-	return 0;
+    return 0;
 }
 
 
@@ -558,24 +558,24 @@ ff_match_var( char ** p )
 static int
 ff_match_objclass( int * p )
 {
-	char *class_name;
-	int class;
-	char * old_pos = ff.pos;
-	
+    char *class_name;
+    int class;
+    char * old_pos = ff.pos;
+    
 
-	if ( ff_match_spaceless_string( &class_name ) < 0 )
-		return -1;
+    if ( ff_match_spaceless_string( &class_name ) < 0 )
+        return -1;
 
-	if ( ! *class_name || ( class = class_val( class_name ) ) == -1 )
-	{
-		ff.pos = old_pos;
-		fl_safe_free( class_name );
-		return -1;
-	}
+    if ( ! *class_name || ( class = class_val( class_name ) ) == -1 )
+    {
+        ff.pos = old_pos;
+        fl_safe_free( class_name );
+        return -1;
+    }
 
-	*p = class;
-	fl_safe_free( class_name );
-	return 0;
+    *p = class;
+    fl_safe_free( class_name );
+    return 0;
 }
 
 
@@ -585,23 +585,23 @@ ff_match_objclass( int * p )
 static int
 ff_match_boxtype( int * p )
 {
-	char *boxtype_name;
-	char *old_pos = ff.pos;
-	int boxtype;
+    char *boxtype_name;
+    char *old_pos = ff.pos;
+    int boxtype;
 
-	if (    ff_match_spaceless_string( &boxtype_name ) < 0 )
-		return -1;
+    if (    ff_match_spaceless_string( &boxtype_name ) < 0 )
+        return -1;
 
-	if ( ! *boxtype_name || ( boxtype = boxtype_val( boxtype_name ) ) == -1 )
-	{
-		ff.pos = old_pos;
-		fl_safe_free( boxtype_name );
-		return -1;
-	}
+    if ( ! *boxtype_name || ( boxtype = boxtype_val( boxtype_name ) ) == -1 )
+    {
+        ff.pos = old_pos;
+        fl_safe_free( boxtype_name );
+        return -1;
+    }
 
-	*p = boxtype;
-	fl_safe_free( boxtype_name );
-	return 0;
+    *p = boxtype;
+    fl_safe_free( boxtype_name );
+    return 0;
 }
 
 
@@ -611,28 +611,28 @@ ff_match_boxtype( int * p )
 static int
 ff_match_color( FL_COLOR * p )
 {
-	char *color_name;
-	char *old_pos = ff.pos;
-	FL_COLOR color;
+    char *color_name;
+    char *old_pos = ff.pos;
+    FL_COLOR color;
 
-	if ( ff_match_spaceless_string( &color_name ) < 0 )
-		return -1;
+    if ( ff_match_spaceless_string( &color_name ) < 0 )
+        return -1;
 
-	if (    ! *color_name
-		 || (    ( color = fli_query_namedcolor( color_name ) ) > FL_MAX_COLORS
-			  && color != FL_NoColor ) )
-	{
-		ff.pos = old_pos;
-		fl_safe_free( color_name );
-		return -1;
-	}
+    if (    ! *color_name
+         || (    ( color = fli_query_namedcolor( color_name ) ) > FL_MAX_COLORS
+              && color != FL_NoColor ) )
+    {
+        ff.pos = old_pos;
+        fl_safe_free( color_name );
+        return -1;
+    }
 
-	*p = color;
-	if ( *p == 0x8fffffff )
-		*p = FL_NoColor;
+    *p = color;
+    if ( *p == 0x8fffffff )
+        *p = FL_NoColor;
 
-	fl_safe_free( color_name );
-	return 0;
+    fl_safe_free( color_name );
+    return 0;
 }
 
 
@@ -643,64 +643,64 @@ ff_match_color( FL_COLOR * p )
 static int
 ff_match_align( int * p )
 {
-	char *align_name;
-	char *old_pos = ff.pos;
-	char *sp = strchr( ff.pos, '|' );
-	int align;
+    char *align_name;
+    char *old_pos = ff.pos;
+    char *sp = strchr( ff.pos, '|' );
+    int align;
 
-	if ( ! sp )
-		sp = strchr( ff.pos, '+' );
+    if ( ! sp )
+        sp = strchr( ff.pos, '+' );
 
-	if (    ! sp
-		 || ( sp > ff.pos
-			  && ! isspace( ( unsigned char ) sp[ -1 ] )
-			  && ! isspace( ( unsigned char ) sp[ 1 ] ) ) )
-	{
-		if ( ff_match_spaceless_string( &align_name ) < 0 )
-			return -1;
-	}
-	else
-	{
-		char *a1 = NULL,
-		     *a2 = NULL,
-			 o = *sp;
+    if (    ! sp
+         || ( sp > ff.pos
+              && ! isspace( ( unsigned char ) sp[ -1 ] )
+              && ! isspace( ( unsigned char ) sp[ 1 ] ) ) )
+    {
+        if ( ff_match_spaceless_string( &align_name ) < 0 )
+            return -1;
+    }
+    else
+    {
+        char *a1 = NULL,
+             *a2 = NULL,
+             o = *sp;
 
-		*sp = '\0';
-		if ( ff_match_spaceless_string( &a1 ) < 0 || ! *a1 )
-		{
-			fl_safe_free( a1 );
-			ff.pos = old_pos;
-			*sp = o;
-			return -1;
-		}
+        *sp = '\0';
+        if ( ff_match_spaceless_string( &a1 ) < 0 || ! *a1 )
+        {
+            fl_safe_free( a1 );
+            ff.pos = old_pos;
+            *sp = o;
+            return -1;
+        }
 
-		*sp = o;
-		ff.pos = sp + 1;
-		ff.pos = ff_skip_spaces( ff.pos );
+        *sp = o;
+        ff.pos = sp + 1;
+        ff.pos = ff_skip_spaces( ff.pos );
 
-		if ( ff_match_spaceless_string( &a2 ) < 0 || ! *a2 )
-		{
-			fl_safe_free( a1 );
-			fl_safe_free( a2 );
-			ff.pos = old_pos;
-			return -1;
-		}
+        if ( ff_match_spaceless_string( &a2 ) < 0 || ! *a2 )
+        {
+            fl_safe_free( a1 );
+            fl_safe_free( a2 );
+            ff.pos = old_pos;
+            return -1;
+        }
 
-		align_name = fli_get_string( "%s|%s", a1, a2 );
-		fl_safe_free( a1 );
-		fl_safe_free( a2 );
-	}
+        align_name = fli_get_string( "%s|%s", a1, a2 );
+        fl_safe_free( a1 );
+        fl_safe_free( a2 );
+    }
 
-	if ( ! *align_name || ( align = align_val( align_name ) ) == -1 )
-	{
-		ff.pos = old_pos;
-		fl_safe_free( align_name );
-		return -1;
-	}
+    if ( ! *align_name || ( align = align_val( align_name ) ) == -1 )
+    {
+        ff.pos = old_pos;
+        fl_safe_free( align_name );
+        return -1;
+    }
 
-	*p =  align;
-	fl_safe_free( align_name );
-	return 0;
+    *p =  align;
+    fl_safe_free( align_name );
+    return 0;
 }
 
 
@@ -711,62 +711,62 @@ ff_match_align( int * p )
 static int
 ff_match_lstyle( int * p )
 {
-	char *lstyle_name;
-	int lstyle;
-	char *old_pos = ff.pos;
-	char *sp = strchr( ff.pos, '|' );
+    char *lstyle_name;
+    int lstyle;
+    char *old_pos = ff.pos;
+    char *sp = strchr( ff.pos, '|' );
 
-	if ( ! sp )
-		sp = strchr( ff.pos, '+' );
+    if ( ! sp )
+        sp = strchr( ff.pos, '+' );
 
-	if (    ! sp
-		 || ( sp > ff.pos
-			  && ! isspace( ( unsigned char ) sp[ -1 ] )
-			  && ! isspace( ( unsigned char ) sp[ 1 ] ) ) )
-	{
-		if ( ff_match_spaceless_string( &lstyle_name ) < 0 )
-			return -1;
-	}
-	else
-	{
-		char *l1,
-		     *l2,
-			 *old_pos = ff.pos,
-			 o = *sp;
+    if (    ! sp
+         || ( sp > ff.pos
+              && ! isspace( ( unsigned char ) sp[ -1 ] )
+              && ! isspace( ( unsigned char ) sp[ 1 ] ) ) )
+    {
+        if ( ff_match_spaceless_string( &lstyle_name ) < 0 )
+            return -1;
+    }
+    else
+    {
+        char *l1,
+             *l2,
+             *old_pos = ff.pos,
+             o = *sp;
 
-		*sp = '\0';
-		if ( ff_match_spaceless_string( &l1 ) < 0 )
-		{
-			*sp = o;
-			return -1;
-		}
+        *sp = '\0';
+        if ( ff_match_spaceless_string( &l1 ) < 0 )
+        {
+            *sp = o;
+            return -1;
+        }
 
-		*sp = o;
-		ff.pos = sp + 1;
-		ff.pos = ff_skip_spaces( ff.pos );
+        *sp = o;
+        ff.pos = sp + 1;
+        ff.pos = ff_skip_spaces( ff.pos );
 
-		if ( ff_match_spaceless_string( &l2 ) < 0 || ! *l2 )
-		{
-			ff.pos = old_pos;
-			fl_safe_free( l1 );
-			return -1;
-		}
+        if ( ff_match_spaceless_string( &l2 ) < 0 || ! *l2 )
+        {
+            ff.pos = old_pos;
+            fl_safe_free( l1 );
+            return -1;
+        }
 
-		lstyle_name = fli_get_string( "%s|%s", l1, l2 );
-		fl_safe_free( l1 );
-		fl_safe_free( l2 );
-	}
+        lstyle_name = fli_get_string( "%s|%s", l1, l2 );
+        fl_safe_free( l1 );
+        fl_safe_free( l2 );
+    }
 
-	if ( ! *lstyle_name || ( lstyle = style_val( lstyle_name ) ) == -1 )
-	{
-		ff.pos = old_pos;
-		fl_safe_free( lstyle_name );
-		return -1;
-	}
+    if ( ! *lstyle_name || ( lstyle = style_val( lstyle_name ) ) == -1 )
+    {
+        ff.pos = old_pos;
+        fl_safe_free( lstyle_name );
+        return -1;
+    }
 
-	*p = lstyle;
-	fl_safe_free( lstyle_name );
-	return 0;
+    *p = lstyle;
+    fl_safe_free( lstyle_name );
+    return 0;
 }
 
 
@@ -776,23 +776,23 @@ ff_match_lstyle( int * p )
 static int
 ff_match_lsize( int * p )
 {
-	char *lsize_name;
-	char *old_pos = ff.pos;
-	int lsize;
+    char *lsize_name;
+    char *old_pos = ff.pos;
+    int lsize;
 
-	if ( ff_match_spaceless_string( &lsize_name ) < 0 )
-		return -1;
+    if ( ff_match_spaceless_string( &lsize_name ) < 0 )
+        return -1;
 
-	if( ! *lsize_name || ( lsize = lsize_val( lsize_name ) ) == -1 )
-	{
-		fl_safe_free( lsize_name );
-		ff.pos = old_pos;
-		return -1;
-	}
+    if( ! *lsize_name || ( lsize = lsize_val( lsize_name ) ) == -1 )
+    {
+        fl_safe_free( lsize_name );
+        ff.pos = old_pos;
+        return -1;
+    }
 
-	*p = lsize;
-	fl_safe_free( lsize_name );
-	return 0;
+    *p = lsize;
+    fl_safe_free( lsize_name );
+    return 0;
 }
 
 
@@ -802,23 +802,23 @@ ff_match_lsize( int * p )
 static int
 ff_match_resize( int * p )
 {
-	char *resize_name;
-	char *old_pos = ff.pos;
-	int resize;
+    char *resize_name;
+    char *old_pos = ff.pos;
+    int resize;
 
-	if ( ff_match_spaceless_string( &resize_name ) < 0 )
-		return -1;
+    if ( ff_match_spaceless_string( &resize_name ) < 0 )
+        return -1;
 
-	if ( ! *resize_name || ( resize = resize_val( resize_name ) ) == -1 )
-	{
-		fl_safe_free( resize_name );
-		ff.pos = old_pos;
-		return -1;
-	}
+    if ( ! *resize_name || ( resize = resize_val( resize_name ) ) == -1 )
+    {
+        fl_safe_free( resize_name );
+        ff.pos = old_pos;
+        return -1;
+    }
 
-	*p = resize;
-	fl_safe_free( resize_name );
-	return 0;
+    *p = resize;
+    fl_safe_free( resize_name );
+    return 0;
 }
 
 
@@ -828,23 +828,23 @@ ff_match_resize( int * p )
 static int
 ff_match_gravity( int * p )
 {
-	char *gravity_name;
-	char *old_pos = ff.pos;
-	int gravity;
+    char *gravity_name;
+    char *old_pos = ff.pos;
+    int gravity;
 
-	if ( ff_match_spaceless_string( &gravity_name ) < 0 )
-		return -1;
+    if ( ff_match_spaceless_string( &gravity_name ) < 0 )
+        return -1;
 
-	if ( ! *gravity_name || ( gravity = gravity_val( gravity_name ) ) == -1 )
-	{
-		ff.pos = old_pos;
-		fl_safe_free( gravity_name );
-		return -1;
-	}
+    if ( ! *gravity_name || ( gravity = gravity_val( gravity_name ) ) == -1 )
+    {
+        ff.pos = old_pos;
+        fl_safe_free( gravity_name );
+        return -1;
+    }
 
-	*p = gravity;
-	fl_safe_free( gravity_name );
-	return 0;
+    *p = gravity;
+    fl_safe_free( gravity_name );
+    return 0;
 }
 
 
@@ -854,23 +854,23 @@ ff_match_gravity( int * p )
 static int
 ff_match_unit( int * p )
 {
-	char *unit_name;
-	char *old_pos = ff.pos;
-	int unit;
+    char *unit_name;
+    char *old_pos = ff.pos;
+    int unit;
 
-	if ( ff_match_spaceless_string( &unit_name ) < 0 )
-		return -1;
+    if ( ff_match_spaceless_string( &unit_name ) < 0 )
+        return -1;
 
-	if ( ! *unit_name || ( unit = unit_val( unit_name ) ) == -1 )
-	{
-		ff.pos = old_pos;
-		fl_safe_free( unit_name );
-		return -1;
-	}
+    if ( ! *unit_name || ( unit = unit_val( unit_name ) ) == -1 )
+    {
+        ff.pos = old_pos;
+        fl_safe_free( unit_name );
+        return -1;
+    }
 
-	*p = unit;
-	fl_safe_free( unit_name );
-	return 0;
+    *p = unit;
+    fl_safe_free( unit_name );
+    return 0;
 }
 
 /***************************************
@@ -879,35 +879,35 @@ ff_match_unit( int * p )
 static int
 ff_match_key( char ** p )
 {
-	char *ep = ff.pos;
-	char *np;
-	char old_c;
+    char *ep = ff.pos;
+    char *np;
+    char old_c;
 
-	*p = NULL;
+    *p = NULL;
 
-	while ( *ep && *ep != ':' )
-		ep++;
+    while ( *ep && *ep != ':' )
+        ep++;
 
-	if ( ! *ep )
-		return -1;
+    if ( ! *ep )
+        return -1;
 
-	np = ep-- + 1;
+    np = ep-- + 1;
 
-	while ( ep > ff.pos && isspace( ( unsigned char ) *ep ) )
-		ep--;
+    while ( ep > ff.pos && isspace( ( unsigned char ) *ep ) )
+        ep--;
 
-	if ( ep == ff.pos )
-		return -1;
+    if ( ep == ff.pos )
+        return -1;
 
-	old_c = *++ep;
-	*ep = '\0';
+    old_c = *++ep;
+    *ep = '\0';
 
-	*p = fl_strdup( ff.pos );
+    *p = fl_strdup( ff.pos );
 
-	*ep = old_c;
-	ff.pos = np;
+    *ep = old_c;
+    ff.pos = np;
 
-	return 0;
+    return 0;
 }
 
 
@@ -917,7 +917,7 @@ ff_match_key( char ** p )
 static int
 ff_match_type( char ** p )
 {
-	return ff_match_var( p );
+    return ff_match_var( p );
 }
 
 
@@ -956,158 +956,166 @@ ff_match_type( char ** p )
 
 int
 ff_read( const char * format,
-		 ... )
+         ... )
 {
-	va_list ap;
-	char *fmt;
-	const char *fp;
-	int cnt = 0;
-	char last = '\0';
+    va_list ap;
+    char *fmt;
+    const char *fp;
+    int cnt = 0;
+    char last = '\0';
 
-	if ( ! ff.line )
-		return -1;
+    if ( ! ff.line )
+        return -1;
 
-	format = ff_skip_spaces( format );
+    format = ff_skip_spaces( format );
 
-	if ( ! format || ! *format )
-	{
-		M_err( "ff_read", "Invalid argument(s)" );
-		return -1;
-	}
+    if ( ! format || ! *format )
+    {
+        M_err( "ff_read", "Invalid argument(s)" );
+        return -1;
+    }
 
-	fp = fmt = fl_strdup( format );
+    fp = fmt = fl_strdup( format );
 
-	va_start( ap, format );
+    va_start( ap, format );
 
-	while ( *fp )
-	{
-		if ( *fp != '%' )
-		{
-			if ( ! ( fp = ff_match_text( fp ) ) )
-			{
-				va_end( ap );
-				return -1;
-			}
+    while ( *fp )
+    {
+        if ( *fp != '%' )
+        {
+            if ( ! ( fp = ff_match_text( fp ) ) )
+            {
+                va_end( ap );
+                return -1;
+            }
 
-			last = '\0';
-		}
-		else
-		{
-			int r;
+            last = '\0';
+        }
+        else
+        {
+            int r;
 
-			switch ( *++fp )
-			{
-				case 'l' :                    /* long int */
-					r = ff_match_long( va_arg( ap, long * ) );
-					break;
+            switch ( *++fp )
+            {
+                case 'l' :                    /* long int */
+                    r = ff_match_long( va_arg( ap, long * ) );
+                    break;
 
-				case 'd' :                    /* int */
-					r = ff_match_int( va_arg( ap, int * ) );
-					break;
+                case 'd' :                    /* int */
+                    r = ff_match_int( va_arg( ap, int * ) );
+                    break;
 
-				case 'u' :                    /* unsigned int */
-					r = ff_match_uint( va_arg( ap, unsigned int * ) );
-					break;
+                case 'u' :                    /* unsigned int */
+                    r = ff_match_uint( va_arg( ap, unsigned int * ) );
+                    break;
 
-				case 'D' :                    /* FL_Coord ('U' for positive) */
-				case 'U' :
-					r = ff_match_coord( va_arg( ap, FL_Coord * ), *fp == 'U' );
-					break;
+                case 'D' :                    /* FL_Coord ('U' for positive) */
+                case 'U' :
+                    r = ff_match_coord( va_arg( ap, FL_Coord * ), *fp == 'U' );
+                    break;
 
-				case 's' :                    /* trimmed string */
-					r = ff_match_trimmed_string( va_arg( ap, char ** ) );
-					break;
+                case 's' :                    /* trimmed string */
+                    r = ff_match_trimmed_string( va_arg( ap, char ** ) );
+                    break;
 
-				case 'S' :                    /* string (with spaces) */
-					r = ff_match_string( va_arg( ap, char ** ) );
-					break;
+                case 'S' :                    /* string (with spaces) */
+                    r = ff_match_string( va_arg( ap, char ** ) );
+                    break;
 
-				case 'f' :                    /* float */
-					r = ff_match_float( va_arg( ap, float * ) );
-					break;
+                case 'f' :                    /* float */
+                    r = ff_match_float( va_arg( ap, float * ) );
+                    break;
 
-				case 'F' :                    /* double */
-					r = ff_match_double( va_arg( ap, double * ) );
-					break;
+                case 'F' :                    /* double */
+                    r = ff_match_double( va_arg( ap, double * ) );
+                    break;
 
-				case 'o' :                    /* object class */
-					r = ff_match_objclass( va_arg( ap, int * ) );
-					break;
+                case 'o' :                    /* object class */
+                    r = ff_match_objclass( va_arg( ap, int * ) );
+                    break;
 
-				case 't' :                    /* object type */
-					r = ff_match_type( va_arg( ap, char ** ) );
-					break;
+                case 't' :                    /* object type */
+                    r = ff_match_type( va_arg( ap, char ** ) );
+                    break;
 
-				case 'b' :                    /* box type */
-					r = ff_match_boxtype( va_arg( ap, int * ) );
-					break;
+                case 'b' :                    /* box type */
+                    r = ff_match_boxtype( va_arg( ap, int * ) );
+                    break;
 
-				case 'c' :                    /* color */
-					r = ff_match_color( va_arg( ap, FL_COLOR * ) );
-					break;
+                case 'c' :                    /* color */
+                    r = ff_match_color( va_arg( ap, FL_COLOR * ) );
+                    break;
 
-				case 'a' :                    /* alignment value */
-					r = ff_match_align( va_arg( ap, int * ) );
-					break;
+                case 'a' :                    /* alignment value */
+                    r = ff_match_align( va_arg( ap, int * ) );
+                    break;
 
-				case 'p' :                    /* lstyle value */
-					r = ff_match_lstyle( va_arg( ap, int * ) );
-					break;
+                case 'p' :                    /* lstyle value */
+                    r = ff_match_lstyle( va_arg( ap, int * ) );
+                    break;
 
-				case 'q' :                    /* lsize value */
-					r = ff_match_lsize( va_arg( ap, int * ) );
-					break;
+                case 'q' :                    /* lsize value */
+                    r = ff_match_lsize( va_arg( ap, int * ) );
+                    break;
 
-				case 'r' :                    /* resize value */
-					r = ff_match_resize( va_arg( ap, int * ) );
-					break;
+                case 'r' :                    /* resize value */
+                    r = ff_match_resize( va_arg( ap, int * ) );
+                    break;
 
-				case 'g' :                    /* gravity value */
-					r = ff_match_gravity( va_arg( ap, int * ) );
-					break;
+                case 'g' :                    /* gravity value */
+                    r = ff_match_gravity( va_arg( ap, int * ) );
+                    break;
 
-				case 'x' :                    /* unit value */
-					r = ff_match_unit( va_arg( ap, int * ) );
-					break;
+                case 'x' :                    /* unit value */
+                    r = ff_match_unit( va_arg( ap, int * ) );
+                    break;
 
-				case 'v' :                    /* C variable name */
-					r = ff_match_var( va_arg( ap, char ** ) );
-					break;
+                case 'v' :                    /* C variable name */
+                    r = ff_match_var( va_arg( ap, char ** ) );
+                    break;
 
-				case 'k' :                    /* key with trailing colon */
-					r = ff_match_key( va_arg( ap, char ** ) );
-					break;
+                case 'k' :                    /* key with trailing colon */
+                    r = ff_match_key( va_arg( ap, char ** ) );
+                    break;
 
-				default :                     /* error, wrong format */
-					va_end( ap );
-					fl_free( fmt );
-					M_err( "ff_read", "Invalid argument(s)" );
-					return -1;
-			}
+                default :                     /* error, wrong format */
+                    va_end( ap );
+                    fl_free( fmt );
+                    M_err( "ff_read", "Invalid argument(s)" );
+                    return -1;
+            }
 
-			last = *fp;
+            last = *fp;
 
-			if ( r < 0 )
-				break;
+            if ( r < 0 )
+                break;
 
-			cnt++;
-			fp++;
-		}
+            cnt++;
+            fp++;
+        }
 
-		ff.pos = ff_skip_spaces( ff.pos );
-		fp = ff_skip_spaces( fp );
-	}
+        ff.pos = ff_skip_spaces( ff.pos );
+        fp = ff_skip_spaces( fp );
+    }
 
-	va_end( ap );
-	fl_free( fmt );
+    va_end( ap );
+    fl_free( fmt );
 
-	/* If we're at the end of the line read in the next - except when the
-	   last request was for a key, in that case the next one will be for
-	   a value and it's allowed that no value exists even when there's a
-	   key... */
+    /* If we're at the end of the line read in the next - except when the
+       last request was for a key, in that case the next one will be for
+       a value and it's allowed that no value exists even when there's a
+       key... */
 
-	if ( last != 'k' && ! *ff.pos )
-		ff_get_line( );
+    if ( last != 'k' && ! *ff.pos )
+        ff_get_line( );
 
-	return cnt;
+    return cnt;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

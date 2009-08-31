@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,14 +19,11 @@
 /**
  * \file psdraw.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Some primitive drawing routines is PS
- *
  *
  *  (x,y) (w,h) passed to all drawing functions are relative
  *  to PS coordinate system and the unit is point.
@@ -62,11 +58,11 @@ ps_log( const char *s )
 
 void
 ps_output( const char * fmt,
-		   ... )
+           ... )
 {
     va_list args;
     char buf[ 2048 ],
-		 *q;
+         *q;
     int lastc = flps->lastc;
 
     va_start( args, fmt );
@@ -74,39 +70,39 @@ ps_output( const char * fmt,
     va_end( args );
 
     if ( ! flps->pack )
-		fprintf( flps->fp, "%s", buf );
+        fprintf( flps->fp, "%s", buf );
     else
     {
-		for ( q = buf; *q; q++ )
-		{
-			if ( *q == '\n' )
-				*q = ' ';
+        for ( q = buf; *q; q++ )
+        {
+            if ( *q == '\n' )
+                *q = ' ';
 
-			if ( *q == '(')	/* ) ( */
-				flps->literal = 1;
-			else if ( *q == '(' )
-				flps->literal = 0;
+            if ( *q == '(') /* ) ( */
+                flps->literal = 1;
+            else if ( *q == '(' )
+                flps->literal = 0;
 
-			if ( lastc == ' ' && *q == ' ' && ! flps->literal )
-				continue;
+            if ( lastc == ' ' && *q == ' ' && ! flps->literal )
+                continue;
 
-			if ( *q == ' ' && flps->len == 0 )
-				continue;
+            if ( *q == ' ' && flps->len == 0 )
+                continue;
 
-			if ( *q == ' ' && flps->len >= 69 )
-			{
-				putc( '\n', flps->fp );
-				flps->len = 0;
-			}
-			else
-			{
-				lastc = *q;
-				flps->len++;
-				putc( *q, flps->fp );
-			}
-		}
+            if ( *q == ' ' && flps->len >= 69 )
+            {
+                putc( '\n', flps->fp );
+                flps->len = 0;
+            }
+            else
+            {
+                lastc = *q;
+                flps->len++;
+                putc( *q, flps->fp );
+            }
+        }
 
-		flps->lastc = lastc;
+        flps->lastc = lastc;
     }
 }
 
@@ -116,9 +112,9 @@ ps_output( const char * fmt,
 
 void
 ps_set_clipping( int x,
-				 int y,
-				 int w,
-				 int h )
+                 int y,
+                 int w,
+                 int h )
 {
     ps_output( "gsave newpath %d %d %d %d rectclip\n", x, y, w, h );
 }
@@ -140,7 +136,7 @@ ps_unset_clipping( void )
 
 void
 ps_verbatim( const char * fmt,
-			 ... )
+             ... )
 {
     va_list args;
 
@@ -155,7 +151,7 @@ ps_verbatim( const char * fmt,
 
 void
 ps_set_linewidth( float lwx,
-				  float lwy )
+                  float lwy )
 {
     ps_output( "gsave %.2g %.2g LW\n", cur_lwx = lwx, cur_lwy = lwy );
 }
@@ -166,7 +162,7 @@ ps_set_linewidth( float lwx,
 
 void
 ps_get_linewidth( float * lwx,
-				  float * lwy )
+                  float * lwy )
 {
     *lwx = cur_lwx;
     *lwy = cur_lwy;
@@ -205,10 +201,10 @@ ps_reset_linewidth( void )
 
 void
 ps_line( float x1,
-		 float y1,
-		 float x2,
-		 float y2,
-		 long  col )
+         float y1,
+         float x2,
+         float y2,
+         long  col )
 {
     ps_color( col );
     ps_output( "%.1f %.1f %.1f %.1f L S\n", x2, y2, x1, y1 );
@@ -220,8 +216,8 @@ ps_line( float x1,
 
 void
 ps_lines( Point * xp,
-		  int     n,
-		  long    col )
+          int     n,
+          long    col )
 {
     Point *xps = xp + n;
     int cnt = 1;
@@ -230,9 +226,9 @@ ps_lines( Point * xp,
 
     for ( ; xp < xps; xp++, cnt++ )
     {
-		ps_output( "%.1f %.1f ", ( double ) xp->x, ( double ) xp->y );
-		if ( cnt % 6 == 0 )
-			ps_output( "\n" );
+        ps_output( "%.1f %.1f ", ( double ) xp->x, ( double ) xp->y );
+        if ( cnt % 6 == 0 )
+            ps_output( "\n" );
     }
 
     ps_output( "%d linesa\n", n );
@@ -244,9 +240,9 @@ ps_lines( Point * xp,
 
 void
 ps_poly( int     fill,
-		 Point * xp,
-		 int     n,
-		 long    col )
+         Point * xp,
+         int     n,
+         long    col )
 {
     Point *xps = xp + n;
     int cnt = 1;
@@ -255,9 +251,9 @@ ps_poly( int     fill,
 
     for ( ; xp < xps; xp++, cnt++ )
     {
-		ps_output( "%.1f %.1f ", ( double ) xp->x, ( double ) xp->y );
-		if ( cnt % 6 == 0 )
-			ps_output( "\n" );
+        ps_output( "%.1f %.1f ", ( double ) xp->x, ( double ) xp->y );
+        if ( cnt % 6 == 0 )
+            ps_output( "\n" );
     }
 
     ps_output( "%d P %c\n", n, "SF"[ fill ? 1 : 0 ] );
@@ -269,15 +265,15 @@ ps_poly( int     fill,
 
 void
 ps_rectangle( int   fill,
-			  float x,
-			  float y,
-			  float w,
-			  float h,
-			  long  col )
+              float x,
+              float y,
+              float w,
+              float h,
+              long  col )
 {
     ps_color( col );
     ps_output( "%.1f %.1f %.1f %.1f %.1f %.1f %.1f %.1f 4 P",
-			   x, y, x, y + h - 1, x + w - 1, y + h - 1, x + w - 1, y );
+               x, y, x, y + h - 1, x + w - 1, y + h - 1, x + w - 1, y );
     ps_output( " %c\n", "SF"[ fill ? 1 : 0 ] );
 }
 
@@ -305,10 +301,10 @@ static float offset[ ] =
 
 static int
 compute_rounded_corners( FL_Coord   x,
-						 FL_Coord   y,
-						 FL_Coord   w,
-						 FL_Coord   h,
-						 Point    * point)
+                         FL_Coord   y,
+                         FL_Coord   w,
+                         FL_Coord   h,
+                         Point    * point)
 {
     Point *xp;
     size_t i, n;
@@ -317,38 +313,38 @@ compute_rounded_corners( FL_Coord   x,
     rsx = rsy = 0.42 * FL_min( w, h );
 
     if ( rsx > RS )
-		rsx = rsy = RS;
+        rsx = rsy = RS;
 
     for ( xp = point, n = i = 0; i < RN; i++, n++, xp++ )
     {
-		xf = x + offset[ RN - i - 1 ] * rsx;
-		yf = y + offset[ i ] * rsy;
-		xp->x = FL_nint( xf );
-		xp->y = FL_nint( yf );
+        xf = x + offset[ RN - i - 1 ] * rsx;
+        yf = y + offset[ i ] * rsy;
+        xp->x = FL_nint( xf );
+        xp->y = FL_nint( yf );
     }
 
     for ( i = 0; i < RN; i++, n++, xp++ )
     {
-		xf = x + offset[ i ] * rsx;
-		yf = y + h - 1.0 - offset[ RN - i - 1 ] * rsy;
-		xp->x = FL_nint( xf );
-		xp->y = FL_nint( yf );
+        xf = x + offset[ i ] * rsx;
+        yf = y + h - 1.0 - offset[ RN - i - 1 ] * rsy;
+        xp->x = FL_nint( xf );
+        xp->y = FL_nint( yf );
     }
 
     for ( i = 0; i < RN; i++, n++, xp++ )
     {
-		xf = x + w - 1.0 - offset[ RN - i - 1 ] * rsx;
-		yf = y + h - 1.0 - offset[ i ] * rsy;
-		xp->x = FL_nint( xf );
-		xp->y = FL_nint( yf );
+        xf = x + w - 1.0 - offset[ RN - i - 1 ] * rsx;
+        yf = y + h - 1.0 - offset[ i ] * rsy;
+        xp->x = FL_nint( xf );
+        xp->y = FL_nint( yf );
     }
 
     for ( i = 0; i < RN; i++, n++, xp++ )
     {
-		xf = x + w - 1.0 - offset[ i ] * rsx;
-		yf = y + offset[ RN - i - 1 ] * rsy;
-		xp->x = FL_nint( xf );
-		xp->y = FL_nint( yf );
+        xf = x + w - 1.0 - offset[ i ] * rsx;
+        yf = y + offset[ RN - i - 1 ] * rsy;
+        xp->x = FL_nint( xf );
+        xp->y = FL_nint( yf );
     }
 
     return n;
@@ -363,11 +359,11 @@ compute_rounded_corners( FL_Coord   x,
 
 void
 ps_roundrectangle( int   fill,
-				   float x,
-				   float y,
-				   float w,
-				   float h,
-				   long  col )
+                   float x,
+                   float y,
+                   float w,
+                   float h,
+                   long  col )
 {
     Point point[ 5 * RN ];
     int n;
@@ -385,11 +381,11 @@ ps_roundrectangle( int   fill,
 
 void
 ps_oval( int   fill,
-		 float x,
-		 float y,
-		 float w,
-		 float h,
-		 long  col )
+         float x,
+         float y,
+         float w,
+         float h,
+         long  col )
 {
     ps_pieslice( fill, x, y, w, h, 0.0, 3600.0, col );
 }
@@ -400,14 +396,14 @@ ps_oval( int   fill,
 
 void
 ps_circ( int   fill,
-		 float x,
-		 float y,
-		 float r,
-		 long  col )
+         float x,
+         float y,
+         float r,
+         long  col )
 {
     ps_color( col );
     ps_output( "newpath %.1f %.1f %.1f 0 360 arc %c\n", x, y, r,
-			   "SF"[ fill ? 1 : 0 ] );
+               "SF"[ fill ? 1 : 0 ] );
 }
 
 
@@ -418,16 +414,16 @@ ps_circ( int   fill,
 
 void
 ps_arc( int   fill,
-		float x,
-		float y,
-		float r,
-		int  t1,
-		int   t2,
-		long  col )
+        float x,
+        float y,
+        float r,
+        int  t1,
+        int   t2,
+        long  col )
 {
     ps_color( col );
     ps_output( "newpath %.1f %.1f %.1f %.1f %.1f arc %c\n",
-			   x, y, r, t1 * 0.1, t2 * 0.1, "SF"[ fill ? 1 : 0 ] );
+               x, y, r, t1 * 0.1, t2 * 0.1, "SF"[ fill ? 1 : 0 ] );
 }
 
 
@@ -437,26 +433,26 @@ ps_arc( int   fill,
 
 void
 ps_pieslice( int   fill,
-			 float x,
-			 float y,
-			 float w,
-			 float h,
-			 int   t1,
-			 int   t2,
-			 long  col )
+             float x,
+             float y,
+             float w,
+             float h,
+             int   t1,
+             int   t2,
+             long  col )
 {
     float sx = 1.0,
-		  sy = ( float ) h / w;
+          sy = ( float ) h / w;
 
     ps_color( col );
     ps_output( "gsave newpath %.1f %.1f translate %.1f %.1f scale\n",
-			   x + 0.5 * w, y + 0.5 * h, sx, sy );
+               x + 0.5 * w, y + 0.5 * h, sx, sy );
     if ( ! fill )
-		ps_output( "0 0 %.1f %.1f %.1f arc S grestore\n",
-				   w * 0.5, t1 * 0.1, t2 * 0.1 );
+        ps_output( "0 0 %.1f %.1f %.1f arc S grestore\n",
+                   w * 0.5, t1 * 0.1, t2 * 0.1 );
     else
-		ps_output( "0 0 M 0 0 %.1f %.1f %.1f arc C F grestore\n",
-				   w * 0.5, t1 * 0.1, t2 * 0.1 );
+        ps_output( "0 0 M 0 0 %.1f %.1f %.1f arc C F grestore\n",
+                   w * 0.5, t1 * 0.1, t2 * 0.1 );
 
     ps_invalidate_color_cache( );
 }
@@ -473,17 +469,17 @@ ps_pieslice( int   fill,
 
 static void
 ps_roundedbox( int   style,
-			   float x,
-			   float y,
-			   float w,
-			   float h,
-			   long  col,
-			   int   bw )
+               float x,
+               float y,
+               float w,
+               float h,
+               long  col,
+               int   bw )
 {
     Point point[ 5 * RN + 2 ];
     int n,
-		lw = FL_abs( bw ),
-		lw2 = lw / 2;
+        lw = FL_abs( bw ),
+        lw2 = lw / 2;
 
     n = compute_rounded_corners( x + lw2, y + lw2, w - lw, h - lw, point );
     ps_poly( 1, point, n, col );
@@ -492,19 +488,19 @@ ps_roundedbox( int   style,
 
     if ( style == FL_ROUNDED3D_UPBOX )
     {
-		ps_lines( point, 2 * RN, FL_TOP_BCOL );
-		ps_lines( point + 2 * RN - 3, RN + 1, FL_TOP_BCOL );
-		ps_lines( point + 3 * RN - 4, RN + 2, FL_BOTTOM_BCOL );
-		point[ n ] = point[ 0 ];
-		ps_lines( point + n - 3, 4, FL_BOTTOM_BCOL );
+        ps_lines( point, 2 * RN, FL_TOP_BCOL );
+        ps_lines( point + 2 * RN - 3, RN + 1, FL_TOP_BCOL );
+        ps_lines( point + 3 * RN - 4, RN + 2, FL_BOTTOM_BCOL );
+        point[ n ] = point[ 0 ];
+        ps_lines( point + n - 3, 4, FL_BOTTOM_BCOL );
     }
     else
     {
-		ps_lines( point, 2 * RN, FL_BOTTOM_BCOL );
-		ps_lines( point + 2 * RN - 3, RN + 1, FL_BOTTOM_BCOL );
-		ps_lines( point + 3 * RN - 4, RN + 2, FL_LEFT_BCOL );
-		point[ n ] = point[ 0 ];
-		ps_lines( point + n - 3, 4, FL_TOP_BCOL );
+        ps_lines( point, 2 * RN, FL_BOTTOM_BCOL );
+        ps_lines( point + 2 * RN - 3, RN + 1, FL_BOTTOM_BCOL );
+        ps_lines( point + 3 * RN - 4, RN + 2, FL_LEFT_BCOL );
+        point[ n ] = point[ 0 ];
+        ps_lines( point + n - 3, 4, FL_TOP_BCOL );
     }
 
     ps_reset_linewidth( );
@@ -516,20 +512,20 @@ ps_roundedbox( int   style,
 
 static void
 ps_ovalbox( int   style,
-			float x,
-			float y,
-			float w,
-			float h,
-			long  col,
-			int   bw )
+            float x,
+            float y,
+            float w,
+            float h,
+            long  col,
+            int   bw )
 {
     int lw = FL_abs( bw ),
-		cr = lw / 2;
+        cr = lw / 2;
     int extra = 1 + ( lw > 3 );
     int xx,
-		yy,
-		ww,
-		hh;
+        yy,
+        ww,
+        hh;
 
     x += cr;
     y += cr;
@@ -548,41 +544,41 @@ ps_ovalbox( int   style,
 
     if ( style == FL_OVAL3D_UPBOX )
     {
-		ps_set_linewidth( bw, bw );
+        ps_set_linewidth( bw, bw );
 
-		ps_pieslice( 0, x, y, w, h, 450, 2250, FL_TOP_BCOL );
-		ps_pieslice( 0, x, y, w, h, 0, 450, FL_BOTTOM_BCOL );
-		ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, x, y, w, h, 450, 2250, FL_TOP_BCOL );
+        ps_pieslice( 0, x, y, w, h, 0, 450, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_BOTTOM_BCOL );
     }
     else if ( style == FL_OVAL3D_FRAMEBOX )
     {
-		ps_set_linewidth( 0.9, 0.9 );
+        ps_set_linewidth( 0.9, 0.9 );
 
-		ps_pieslice( 0, x, y, w, h, 450, 2250, FL_BOTTOM_BCOL );
-		ps_pieslice( 0, xx, yy, ww, hh, 450, 2250, FL_LEFT_BCOL );
-		ps_pieslice( 0, xx, yy, ww, hh, 0, 450, FL_BOTTOM_BCOL );
-		ps_pieslice( 0, x, y, w, h, 0, 450, FL_LEFT_BCOL );
-		ps_pieslice( 0, xx, yy, ww, hh, 2250, 3600, FL_BOTTOM_BCOL );
-		ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_LEFT_BCOL );
+        ps_pieslice( 0, x, y, w, h, 450, 2250, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, xx, yy, ww, hh, 450, 2250, FL_LEFT_BCOL );
+        ps_pieslice( 0, xx, yy, ww, hh, 0, 450, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, x, y, w, h, 0, 450, FL_LEFT_BCOL );
+        ps_pieslice( 0, xx, yy, ww, hh, 2250, 3600, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_LEFT_BCOL );
     }
     else if ( style == FL_OVAL3D_EMBOSSEDBOX )
     {
-		ps_set_linewidth( 0.9, 0.9 );
+        ps_set_linewidth( 0.9, 0.9 );
 
-		ps_pieslice( 0, x, y, w, h, 450, 2250, FL_LEFT_BCOL );
-		ps_pieslice( 0, xx, yy, ww, hh, 450, 2250, FL_BOTTOM_BCOL );
-		ps_pieslice( 0, xx, yy, ww, hh, 0, 450, FL_LEFT_BCOL );
-		ps_pieslice( 0, x, y, w, h, 0, 450, FL_BOTTOM_BCOL );
-		ps_pieslice( 0, xx, yy, ww, hh, 2250, 3600, FL_LEFT_BCOL );
-		ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, x, y, w, h, 450, 2250, FL_LEFT_BCOL );
+        ps_pieslice( 0, xx, yy, ww, hh, 450, 2250, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, xx, yy, ww, hh, 0, 450, FL_LEFT_BCOL );
+        ps_pieslice( 0, x, y, w, h, 0, 450, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, xx, yy, ww, hh, 2250, 3600, FL_LEFT_BCOL );
+        ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_BOTTOM_BCOL );
     }
     else
     {
-		ps_set_linewidth( bw, bw );
+        ps_set_linewidth( bw, bw );
 
-		ps_pieslice( 0, x, y, w, h, 450, 2250, FL_BOTTOM_BCOL );
-		ps_pieslice( 0, x, y, w, h, 0, 450, FL_TOP_BCOL );
-		ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_TOP_BCOL );
+        ps_pieslice( 0, x, y, w, h, 450, 2250, FL_BOTTOM_BCOL );
+        ps_pieslice( 0, x, y, w, h, 0, 450, FL_TOP_BCOL );
+        ps_pieslice( 0, x, y, w, h, 2250, 3600, FL_TOP_BCOL );
     }
 
     ps_reset_linewidth( );
@@ -600,12 +596,12 @@ ps_ovalbox( int   style,
 
 static void
 ps_foldertab_box( int   style,
-				  float x,
-				  float y,
-				  float w,
-				  float h,
-				  long  col,
-				  float bw )
+                  float x,
+                  float y,
+                  float w,
+                  float h,
+                  long  col,
+                  float bw )
 {
     float ctr, right, top;
     Point vert[10], *xp;
@@ -614,7 +610,7 @@ ps_foldertab_box( int   style,
     float C = Corner;
 
     if ( ! ( border = bw > 0 ) )
-		bw = bw;
+        bw = bw;
 
     ctr = absbw / 2;
     x += ctr;
@@ -628,42 +624,42 @@ ps_foldertab_box( int   style,
 
     switch ( style )
     {
-		case FL_TOPTAB_UPBOX :
-			vv3( x, y, x, top - C, x + C, top );
-			vv2( x + C, top, right - C, top );
-			vv3( right - C, top, right, top - C, right, y );
-			ps_poly( 1, vert, 8, col );
-			ps_set_linewidth( absbw, absbw );
-			ps_lines( vert, 3, FL_LEFT_BCOL );
-			ps_lines( vert + 3, 2, FL_TOP_BCOL );
-			ps_lines( vert + 5, 3, FL_BOTTOM_BCOL );
-			ps_reset_linewidth( );
-			if ( border )
-				for ( i = 0; i < 8; i++ )
-				{
-					if ( vert[ i ].x > x + w / 2 )
-						vert[ i ].x += ctr;
-					else
-						vert[ i ].x -= ctr + 1;
-					if ( vert[ i ].y > y + h / 2 )
-						vert[ i ].y += ctr;
-				}
-			break;
+        case FL_TOPTAB_UPBOX :
+            vv3( x, y, x, top - C, x + C, top );
+            vv2( x + C, top, right - C, top );
+            vv3( right - C, top, right, top - C, right, y );
+            ps_poly( 1, vert, 8, col );
+            ps_set_linewidth( absbw, absbw );
+            ps_lines( vert, 3, FL_LEFT_BCOL );
+            ps_lines( vert + 3, 2, FL_TOP_BCOL );
+            ps_lines( vert + 5, 3, FL_BOTTOM_BCOL );
+            ps_reset_linewidth( );
+            if ( border )
+                for ( i = 0; i < 8; i++ )
+                {
+                    if ( vert[ i ].x > x + w / 2 )
+                        vert[ i ].x += ctr;
+                    else
+                        vert[ i ].x -= ctr + 1;
+                    if ( vert[ i ].y > y + h / 2 )
+                        vert[ i ].y += ctr;
+                }
+            break;
 
-		case FL_SELECTED_TOPTAB_UPBOX :
-			vv3( x, y - absbw, x, top - C, x + C, top );
-			vv2( x + C, top, right - C, top );
-			vv3( right - C, top, right, top - C, right, y - absbw );
-			ps_poly( 1, vert, 8, col );
-			ps_set_linewidth( absbw, absbw );
-			ps_lines( vert, 3, FL_LEFT_BCOL );
-			ps_lines( vert + 3, 2, FL_TOP_BCOL );
-			ps_lines( vert + 5, 3, FL_BOTTOM_BCOL );
-			ps_reset_linewidth( );
-			break;
+        case FL_SELECTED_TOPTAB_UPBOX :
+            vv3( x, y - absbw, x, top - C, x + C, top );
+            vv2( x + C, top, right - C, top );
+            vv3( right - C, top, right, top - C, right, y - absbw );
+            ps_poly( 1, vert, 8, col );
+            ps_set_linewidth( absbw, absbw );
+            ps_lines( vert, 3, FL_LEFT_BCOL );
+            ps_lines( vert + 3, 2, FL_TOP_BCOL );
+            ps_lines( vert + 5, 3, FL_BOTTOM_BCOL );
+            ps_reset_linewidth( );
+            break;
 
-		default:
-			break;
+        default:
+            break;
     }
 }
 
@@ -676,81 +672,81 @@ ps_foldertab_box( int   style,
 
 void
 ps_draw_tbox( int   style,
-			  float x,
-			  float y,
-			  float w,
-			  float h,
-			  long  col,
-			  float bw )
+              float x,
+              float y,
+              float w,
+              float h,
+              long  col,
+              float bw )
 {
     Point point[ 8 ],
-		  *fp;
+          *fp;
     float absbw = FL_abs( bw );
     float halfbw = absbw / 2;
     float xc = x + w / 2,
-		  yc = y + h / 2;
+          yc = y + h / 2;
 
     if ( psinfo.verbose )
-		ps_verbatim( "%%TBOX %d: %.1f %.1f %.1f %.1f\n", style, x, y, w, h );
+        ps_verbatim( "%%TBOX %d: %.1f %.1f %.1f %.1f\n", style, x, y, w, h );
 
     fp = point;
 
     switch ( style )
     {
-		case FLI_TRIANGLE_UPBOX8 :
-			AddVertex(fp, xc, y + h - absbw);
-			AddVertex(fp, x + w - bw, y + absbw);
-			AddVertex(fp, x + bw, y + bw);
-			ps_poly(1, point, 3, col);
+        case FLI_TRIANGLE_UPBOX8 :
+            AddVertex(fp, xc, y + h - absbw);
+            AddVertex(fp, x + w - bw, y + absbw);
+            AddVertex(fp, x + bw, y + bw);
+            ps_poly(1, point, 3, col);
 
-			ps_set_linewidth(absbw, absbw);
-			ShrinkBox(x, y, w, h, halfbw);
-			ps_line(x, y, xc, y + h - 1, FL_LEFT_BCOL);
-			ps_line(xc, y + h - 1, x + w - 1, y, FL_RIGHT_BCOL);
-			ps_line(x + w - 1, y, x, y, FL_BOTTOM_BCOL);
-			ps_reset_linewidth();
-			break;
+            ps_set_linewidth(absbw, absbw);
+            ShrinkBox(x, y, w, h, halfbw);
+            ps_line(x, y, xc, y + h - 1, FL_LEFT_BCOL);
+            ps_line(xc, y + h - 1, x + w - 1, y, FL_RIGHT_BCOL);
+            ps_line(x + w - 1, y, x, y, FL_BOTTOM_BCOL);
+            ps_reset_linewidth();
+            break;
 
-		case FLI_TRIANGLE_UPBOX2 :
-			AddVertex(fp, xc, y + absbw);
-			AddVertex(fp, xc, y + h - absbw);
-			AddVertex(fp, x + w - absbw, y + h - absbw);
-			ps_poly(1, point, 3, col);
+        case FLI_TRIANGLE_UPBOX2 :
+            AddVertex(fp, xc, y + absbw);
+            AddVertex(fp, xc, y + h - absbw);
+            AddVertex(fp, x + w - absbw, y + h - absbw);
+            ps_poly(1, point, 3, col);
 
-			ps_set_linewidth(absbw, absbw);
-			ShrinkBox(x, y, w, h, halfbw);
-			ps_line(xc, y, x, y + h - 1, FL_LEFT_BCOL);
-			ps_line(x, y + h - 1, x + w - 1, y + h - 1, FL_TOP_BCOL);
-			ps_line(x + w - 1, y + h - 1, xc, y, FL_RIGHT_BCOL);
-			ps_reset_linewidth();
-			break;
+            ps_set_linewidth(absbw, absbw);
+            ShrinkBox(x, y, w, h, halfbw);
+            ps_line(xc, y, x, y + h - 1, FL_LEFT_BCOL);
+            ps_line(x, y + h - 1, x + w - 1, y + h - 1, FL_TOP_BCOL);
+            ps_line(x + w - 1, y + h - 1, xc, y, FL_RIGHT_BCOL);
+            ps_reset_linewidth();
+            break;
 
-		case FLI_TRIANGLE_UPBOX6:
-			AddVertex(fp, x + bw, y + h - bw);
-			AddVertex(fp, x + w - bw, yc);
-			AddVertex(fp, x + bw, y + bw);
-			ps_poly(1, point, 3, col);
-			ps_set_linewidth(absbw, absbw);
-			ShrinkBox(x, y, w, h, halfbw);
-			ps_line(x, y + h - 1, x + w - 1, yc, FL_RIGHT_BCOL);
-			ps_line(x + w - 1, yc, x, y, FL_BOTTOM_BCOL);
-			ps_line(x, y, x, y + h - 1, FL_LEFT_BCOL);
-			ps_reset_linewidth();
-			break;
+        case FLI_TRIANGLE_UPBOX6:
+            AddVertex(fp, x + bw, y + h - bw);
+            AddVertex(fp, x + w - bw, yc);
+            AddVertex(fp, x + bw, y + bw);
+            ps_poly(1, point, 3, col);
+            ps_set_linewidth(absbw, absbw);
+            ShrinkBox(x, y, w, h, halfbw);
+            ps_line(x, y + h - 1, x + w - 1, yc, FL_RIGHT_BCOL);
+            ps_line(x + w - 1, yc, x, y, FL_BOTTOM_BCOL);
+            ps_line(x, y, x, y + h - 1, FL_LEFT_BCOL);
+            ps_reset_linewidth();
+            break;
 
-		case FLI_TRIANGLE_UPBOX4:
-			AddVertex(fp, x + bw, yc);
-			AddVertex(fp, x + w - bw, y + h - bw);
-			AddVertex(fp, x + w - bw, y);
-			ps_poly(1, point, 3, col);
+        case FLI_TRIANGLE_UPBOX4:
+            AddVertex(fp, x + bw, yc);
+            AddVertex(fp, x + w - bw, y + h - bw);
+            AddVertex(fp, x + w - bw, y);
+            ps_poly(1, point, 3, col);
 
-			ps_set_linewidth(absbw, absbw);
-			ShrinkBox(x, y, w, h, halfbw);
-			ps_line(x, yc, x + w - 1, y + h - 1, FL_TOP_BCOL);
-			ps_line(x + w - 1, y + h - 1, x + w - 1, y, FL_RIGHT_BCOL);
-			ps_line(x + w - 1, y, x, yc, FL_BOTTOM_BCOL);
-			ps_reset_linewidth();
-			break;
+            ps_set_linewidth(absbw, absbw);
+            ShrinkBox(x, y, w, h, halfbw);
+            ps_line(x, yc, x + w - 1, y + h - 1, FL_TOP_BCOL);
+            ps_line(x + w - 1, y + h - 1, x + w - 1, y, FL_RIGHT_BCOL);
+            ps_line(x + w - 1, y, x, yc, FL_BOTTOM_BCOL);
+            ps_reset_linewidth();
+            break;
     }
 }
 
@@ -760,158 +756,158 @@ ps_draw_tbox( int   style,
 
 void
 ps_draw_box( int   style,
-			 float x,
-			 float y,
-			 float w,
-			 float h,
-			 long  col,
-			 float bw_in )
+             float x,
+             float y,
+             float w,
+             float h,
+             long  col,
+             float bw_in )
 {
     int border, B;
     Point xpoint[ 8 ], *xp;
     int bw = bw_in;
 
     if ( ! ( border = bw > 0 ) )
-		bw = -bw;
+        bw = -bw;
 
     B = border;
     xp = xpoint;
 
     if ( psinfo.verbose )
-		ps_verbatim( "%%BOX %d: %.1f %.1f %.1f %.1f\n", style, x, y, w, h );
+        ps_verbatim( "%%BOX %d: %.1f %.1f %.1f %.1f\n", style, x, y, w, h );
 
     switch (style)
     {
-		case FL_NO_BOX:
-			break;
+        case FL_NO_BOX:
+            break;
 
-		case FL_UP_BOX:
-			ps_rectf(x + bw, y + bw, w - 2 * bw, h - 2 * bw, col);
+        case FL_UP_BOX:
+            ps_rectf(x + bw, y + bw, w - 2 * bw, h - 2 * bw, col);
 
-			ps_rectf(x + B, y, w - 2 * B, bw + 1, FL_BOTTOM_BCOL);
-			ps_rectf(x + B, y + h - 1 - bw, w - 2 * B, bw + 1, FL_TOP_BCOL);
+            ps_rectf(x + B, y, w - 2 * B, bw + 1, FL_BOTTOM_BCOL);
+            ps_rectf(x + B, y + h - 1 - bw, w - 2 * B, bw + 1, FL_TOP_BCOL);
 
-			/* left */
+            /* left */
 
-			AddVertex(xp, x + B, y + B);
-			AddVertex(xp, x + B, y + h - 1 - B);
-			AddVertex(xp, x + bw + B, y + h - 1 - bw - B);
-			AddVertex(xp, x + bw + B, y + bw + B);
-			ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
+            AddVertex(xp, x + B, y + B);
+            AddVertex(xp, x + B, y + h - 1 - B);
+            AddVertex(xp, x + bw + B, y + h - 1 - bw - B);
+            AddVertex(xp, x + bw + B, y + bw + B);
+            ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
 
-			xp = xpoint;
-			AddVertex(xp, x + w - 1, y);
-			AddVertex(xp, x + w - 1, y + h - 1);
-			AddVertex(xp, x + w - 1 - bw, y + h - 1 - bw);
-			AddVertex(xp, x + w - 1 - bw, y + bw);
-			ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
+            xp = xpoint;
+            AddVertex(xp, x + w - 1, y);
+            AddVertex(xp, x + w - 1, y + h - 1);
+            AddVertex(xp, x + w - 1 - bw, y + h - 1 - bw);
+            AddVertex(xp, x + w - 1 - bw, y + bw);
+            ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
 
-			if (border)
-				ps_rect(x, y, w, h, FL_BLACK);
-			break;
+            if (border)
+                ps_rect(x, y, w, h, FL_BLACK);
+            break;
 
-		case FL_DOWN_BOX:
-			ps_rectf(x, y, w, h, col);
-			ps_rectf(x, y + h - bw, w, bw, FL_BOTTOM_BCOL);
-			ps_rectf(x, y, w, bw, FL_TOP_BCOL);
+        case FL_DOWN_BOX:
+            ps_rectf(x, y, w, h, col);
+            ps_rectf(x, y + h - bw, w, bw, FL_BOTTOM_BCOL);
+            ps_rectf(x, y, w, bw, FL_TOP_BCOL);
 
-			AddVertex(xp, x, y);
-			AddVertex(xp, x, y + h - 1);
-			AddVertex(xp, x + bw - 1, y + h - bw);
-			AddVertex(xp, x + bw - 1, y + bw - 1);
-			ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
+            AddVertex(xp, x, y);
+            AddVertex(xp, x, y + h - 1);
+            AddVertex(xp, x + bw - 1, y + h - bw);
+            AddVertex(xp, x + bw - 1, y + bw - 1);
+            ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
 
-			/* right */
+            /* right */
 
-			xp = xpoint;
-			AddVertex(xp, x + w - 1, y);
-			AddVertex(xp, x + w - 1, y + h - 1);
+            xp = xpoint;
+            AddVertex(xp, x + w - 1, y);
+            AddVertex(xp, x + w - 1, y + h - 1);
 #if 0
-			AddVertex(xp, x + w - 1 - bw, y + h - bw);
-			AddVertex(xp, x + w - 1 - bw, y + bw - 1);
+            AddVertex(xp, x + w - 1 - bw, y + h - bw);
+            AddVertex(xp, x + w - 1 - bw, y + bw - 1);
 #else
-			AddVertex(xp, x + w - bw, y + h - bw);
-			AddVertex(xp, x + w - bw, y + bw - 1);
+            AddVertex(xp, x + w - bw, y + h - bw);
+            AddVertex(xp, x + w - bw, y + bw - 1);
 #endif
-			ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
-			break;
+            ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
+            break;
 
-		case FL_FRAME_BOX:
-			ps_rectf(x, y, w, h, col);
-			ps_start_lw(1.1, 1.1);
-			ps_rect(x + 1.4, y, w - 1.4, h - 1.4, FL_TOP_BCOL);
-			ps_end_lw();
-			ps_rect(x, y + 1.4, w - 1.4, h - 1.4, FL_BOTTOM_BCOL);
-			break;
+        case FL_FRAME_BOX:
+            ps_rectf(x, y, w, h, col);
+            ps_start_lw(1.1, 1.1);
+            ps_rect(x + 1.4, y, w - 1.4, h - 1.4, FL_TOP_BCOL);
+            ps_end_lw();
+            ps_rect(x, y + 1.4, w - 1.4, h - 1.4, FL_BOTTOM_BCOL);
+            break;
 
-		case FL_EMBOSSED_BOX:
-			ps_rectf(x, y, w, h, col);
-			ps_start_lw(1.1, 1.1);
-			ps_rect(x + 1.4, y, w - 1.4, h - 1.4, FL_BOTTOM_BCOL);
-			ps_end_lw();
-			ps_rect(x, y + 1.4, w - 1.4, h - 1.4, FL_TOP_BCOL);
-			break;
+        case FL_EMBOSSED_BOX:
+            ps_rectf(x, y, w, h, col);
+            ps_start_lw(1.1, 1.1);
+            ps_rect(x + 1.4, y, w - 1.4, h - 1.4, FL_BOTTOM_BCOL);
+            ps_end_lw();
+            ps_rect(x, y + 1.4, w - 1.4, h - 1.4, FL_TOP_BCOL);
+            break;
 
-		case FL_FLAT_BOX:
-			ps_rectf(x, y, w, h, col);
-			break;
+        case FL_FLAT_BOX:
+            ps_rectf(x, y, w, h, col);
+            break;
 
-		case FL_SHADOW_BOX:
-			if (w > 100 && h > 100)
-				bw++;
-			ps_rectf(x + bw, y + bw, w - bw, -bw, FL_BOTTOM_BCOL);
-			ps_rectf(x + w - 1, y, -bw, h - bw - 1, FL_BOTTOM_BCOL);
-			ps_rectf(x, y + bw, w - bw, h - bw, col);
-			ps_rect(x, y + bw, w - bw, h - bw, FL_BLACK);
-			break;
+        case FL_SHADOW_BOX:
+            if (w > 100 && h > 100)
+                bw++;
+            ps_rectf(x + bw, y + bw, w - bw, -bw, FL_BOTTOM_BCOL);
+            ps_rectf(x + w - 1, y, -bw, h - bw - 1, FL_BOTTOM_BCOL);
+            ps_rectf(x, y + bw, w - bw, h - bw, col);
+            ps_rect(x, y + bw, w - bw, h - bw, FL_BLACK);
+            break;
 
-		case FL_BORDER_BOX:
-			ps_rectf(x, y, w, h, col);
-			ps_rect(x, y, w, h, FL_BLACK);
-			break;
+        case FL_BORDER_BOX:
+            ps_rectf(x, y, w, h, col);
+            ps_rect(x, y, w, h, FL_BLACK);
+            break;
 
-		case FL_RFLAT_BOX:
-			ps_rbox(1, x, y, w, h, col);
-			break;
+        case FL_RFLAT_BOX:
+            ps_rbox(1, x, y, w, h, col);
+            break;
 
-		case FL_ROUNDED_BOX:
-			ps_rbox(1, x, y, w, h, col);
-			ps_rbox(0, x, y, w, h, FL_BLACK);
-			break;
+        case FL_ROUNDED_BOX:
+            ps_rbox(1, x, y, w, h, col);
+            ps_rbox(0, x, y, w, h, FL_BLACK);
+            break;
 
-		case FL_ROUNDED3D_UPBOX:
-		case FL_ROUNDED3D_DOWNBOX:
-			ps_roundedbox(style, x, y, w, h, col, bw);
-			break;
+        case FL_ROUNDED3D_UPBOX:
+        case FL_ROUNDED3D_DOWNBOX:
+            ps_roundedbox(style, x, y, w, h, col, bw);
+            break;
 
-		case FL_RSHADOW_BOX:
-			ps_rbox(1, x + bw, y - 1, w - bw + 1, h - bw, FL_BOTTOM_BCOL);
-			ps_rbox(1, x, y + bw - 1, w - bw + 1, h - bw + 1, col);
-			ps_rbox(0, x, y + bw - 1, w - bw + 1, h - bw + 1, FL_BLACK);
-			break;
+        case FL_RSHADOW_BOX:
+            ps_rbox(1, x + bw, y - 1, w - bw + 1, h - bw, FL_BOTTOM_BCOL);
+            ps_rbox(1, x, y + bw - 1, w - bw + 1, h - bw + 1, col);
+            ps_rbox(0, x, y + bw - 1, w - bw + 1, h - bw + 1, FL_BLACK);
+            break;
 
-		case FL_OVAL_BOX:
-			ps_oval(1, x, y, w, h, col);
-			ps_oval(0, x, y, w, h, FL_BLACK);
-			break;
+        case FL_OVAL_BOX:
+            ps_oval(1, x, y, w, h, col);
+            ps_oval(0, x, y, w, h, FL_BLACK);
+            break;
 
-		case FL_OVAL3D_UPBOX:
-		case FL_OVAL3D_DOWNBOX:
-		case FL_OVAL3D_FRAMEBOX:
-		case FL_OVAL3D_EMBOSSEDBOX:
-			ps_ovalbox(style, x, y, w, h, col, bw);
-			break;
+        case FL_OVAL3D_UPBOX:
+        case FL_OVAL3D_DOWNBOX:
+        case FL_OVAL3D_FRAMEBOX:
+        case FL_OVAL3D_EMBOSSEDBOX:
+            ps_ovalbox(style, x, y, w, h, col, bw);
+            break;
 
-		case FL_TOPTAB_UPBOX:
-		case FL_SELECTED_TOPTAB_UPBOX:
-		case FL_BOTTOMTAB_UPBOX:
-		case FL_SELECTED_BOTTOMTAB_UPBOX:
-			ps_foldertab_box(style, x, y, w, h, col, bw_in);
-			break;
+        case FL_TOPTAB_UPBOX:
+        case FL_SELECTED_TOPTAB_UPBOX:
+        case FL_BOTTOMTAB_UPBOX:
+        case FL_SELECTED_BOTTOMTAB_UPBOX:
+            ps_foldertab_box(style, x, y, w, h, col, bw_in);
+            break;
 
-		default:
-			fprintf(stderr, "Unknown Boxtype %d\n", style);
-			break;
+        default:
+            fprintf(stderr, "Unknown Boxtype %d\n", style);
+            break;
     }
 }
 
@@ -922,79 +918,79 @@ ps_draw_box( int   style,
 
 void
 ps_draw_frame( int   style,
-			   float x,
-			   float y,
-			   float w,
-			   float h,
-			   long  col  FL_UNUSED_ARG,
-			   int bw )
+               float x,
+               float y,
+               float w,
+               float h,
+               long  col  FL_UNUSED_ARG,
+               int bw )
 {
     int border;
     float B;
     Point xpoint[ 10 ], *xp;
 
     if (!(border = bw > 0))
-	bw = -bw;
+    bw = -bw;
 
     B = border;
     xp = xpoint;
 
     if (psinfo.verbose)
-	ps_verbatim("%%frame (%.2f %.2f %.2f %.2f)\n", x, y, w, h);
+    ps_verbatim("%%frame (%.2f %.2f %.2f %.2f)\n", x, y, w, h);
 
     switch (style)
     {
-		case FL_UP_FRAME:
-			ps_rectf(x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B, FL_TOP_BCOL);
-			ps_rectf(x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B, FL_BOTTOM_BCOL);
-			/* left */
+        case FL_UP_FRAME:
+            ps_rectf(x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B, FL_TOP_BCOL);
+            ps_rectf(x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B, FL_BOTTOM_BCOL);
+            /* left */
 
-			xp = xpoint;
-			AddVertex(xp, x - bw - B, y - bw - B);
-			AddVertex(xp, x, y);
-			AddVertex(xp, x, y + h - 1);
-			AddVertex(xp, x - bw - B, y + h + bw + B - 1);
-			ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
+            xp = xpoint;
+            AddVertex(xp, x - bw - B, y - bw - B);
+            AddVertex(xp, x, y);
+            AddVertex(xp, x, y + h - 1);
+            AddVertex(xp, x - bw - B, y + h + bw + B - 1);
+            ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
 
-			/* right */
+            /* right */
 
-			xp = xpoint;
-			AddVertex(xp, x + w - 1 + bw + B, y - bw - B);
-			AddVertex(xp, x + w - 1 + bw + B, y + h + bw + B - 1);
-			AddVertex(xp, x + w - 1, y + h - 1);
-			AddVertex(xp, x + w - 1, y);
-			ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
-			break;
+            xp = xpoint;
+            AddVertex(xp, x + w - 1 + bw + B, y - bw - B);
+            AddVertex(xp, x + w - 1 + bw + B, y + h + bw + B - 1);
+            AddVertex(xp, x + w - 1, y + h - 1);
+            AddVertex(xp, x + w - 1, y);
+            ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
+            break;
 
-		case FL_DOWN_FRAME:
-			ps_rectf(x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B, FL_BOTTOM_BCOL);
-			ps_rectf(x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B, FL_TOP_BCOL);
+        case FL_DOWN_FRAME:
+            ps_rectf(x - bw - B, y + h - 1, w + 2 * bw, bw + 1 + B, FL_BOTTOM_BCOL);
+            ps_rectf(x - bw - B, y - bw - B, w + 2 * bw, bw + 1 + B, FL_TOP_BCOL);
 
-			/* left */
+            /* left */
 
-			xp = xpoint;
-			AddVertex(xp, x - bw - B, y - bw - B);
-			AddVertex(xp, x, y);
-			AddVertex(xp, x, y + h - 1);
-			AddVertex(xp, x - bw - B, y + h + bw + B - 1);
-			ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
+            xp = xpoint;
+            AddVertex(xp, x - bw - B, y - bw - B);
+            AddVertex(xp, x, y);
+            AddVertex(xp, x, y + h - 1);
+            AddVertex(xp, x - bw - B, y + h + bw + B - 1);
+            ps_poly(1, xpoint, 4, FL_RIGHT_BCOL);
 
-			/* right */
+            /* right */
 
-			xp = xpoint;
-			AddVertex(xp, x + w - 1 + bw + B, y - bw - B);
-			AddVertex(xp, x + w - 1 + bw + B, y + h + bw + B - 1);
-			AddVertex(xp, x + w - 1, y + h - 1);
-			AddVertex(xp, x + w - 1, y);
-			ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
-			break;
+            xp = xpoint;
+            AddVertex(xp, x + w - 1 + bw + B, y - bw - B);
+            AddVertex(xp, x + w - 1 + bw + B, y + h + bw + B - 1);
+            AddVertex(xp, x + w - 1, y + h - 1);
+            AddVertex(xp, x + w - 1, y);
+            ps_poly(1, xpoint, 4, FL_LEFT_BCOL);
+            break;
 
-		case FL_ENGRAVED_FRAME:
-			B = (bw > 2 ? (bw - 2) : 1);
-			B *= 0.5;
-			ps_draw_frame(FL_DOWN_FRAME, x, y, w, h, 0, 1);
-			ps_draw_frame(FL_UP_FRAME, x + B, y + B, w - 2 * B, h - 2 * B, 0, -1);
-			break;
+        case FL_ENGRAVED_FRAME:
+            B = (bw > 2 ? (bw - 2) : 1);
+            B *= 0.5;
+            ps_draw_frame(FL_DOWN_FRAME, x, y, w, h, 0, 1);
+            ps_draw_frame(FL_UP_FRAME, x + B, y + B, w - 2 * B, h - 2 * B, 0, -1);
+            break;
     }
 }
 
@@ -1004,12 +1000,12 @@ ps_draw_frame( int   style,
 
 void
 ps_draw_checkbox( int   type,
-				  float x,
-				  float y,
-				  float w,
-				  float h,
-				  long  col,
-				  int   bw )
+                  float x,
+                  float y,
+                  float w,
+                  float h,
+                  long  col,
+                  int   bw )
 {
     Point xpoint[6], *xp;
     Point allp[10];
@@ -1035,65 +1031,65 @@ ps_draw_checkbox( int   type,
 
     switch (type)
     {
-		case FL_DOWN_BOX:
-			AddVertex(xp, allp[0].x, allp[0].y);
-			AddVertex(xp, allp[1].x, allp[1].y);
-			AddVertex(xp, allp[5].x, allp[5].y);
-			AddVertex(xp, allp[4].x, allp[4].y);
-			ps_poly(1, xp = xpoint, 4, FL_LEFT_BCOL);
+        case FL_DOWN_BOX:
+            AddVertex(xp, allp[0].x, allp[0].y);
+            AddVertex(xp, allp[1].x, allp[1].y);
+            AddVertex(xp, allp[5].x, allp[5].y);
+            AddVertex(xp, allp[4].x, allp[4].y);
+            ps_poly(1, xp = xpoint, 4, FL_LEFT_BCOL);
 
-			AddVertex(xp, allp[0].x, allp[0].y);
-			AddVertex(xp, allp[4].x, allp[4].y);
-			AddVertex(xp, allp[7].x, allp[7].y);
-			AddVertex(xp, allp[3].x, allp[3].y);
-			ps_poly(1, xp = xpoint, 4, FL_TOP_BCOL);
+            AddVertex(xp, allp[0].x, allp[0].y);
+            AddVertex(xp, allp[4].x, allp[4].y);
+            AddVertex(xp, allp[7].x, allp[7].y);
+            AddVertex(xp, allp[3].x, allp[3].y);
+            ps_poly(1, xp = xpoint, 4, FL_TOP_BCOL);
 
-			/* right bottom */
+            /* right bottom */
 
-			AddVertex(xp, allp[6].x, allp[6].y);
-			AddVertex(xp, allp[2].x, allp[2].y);
-			AddVertex(xp, allp[3].x, allp[3].y);
-			AddVertex(xp, allp[7].x, allp[7].y);
-			ps_poly(1, xp = xpoint, 4, FL_RIGHT_BCOL);
+            AddVertex(xp, allp[6].x, allp[6].y);
+            AddVertex(xp, allp[2].x, allp[2].y);
+            AddVertex(xp, allp[3].x, allp[3].y);
+            AddVertex(xp, allp[7].x, allp[7].y);
+            ps_poly(1, xp = xpoint, 4, FL_RIGHT_BCOL);
 
-			AddVertex(xp, allp[1].x, allp[1].y);
-			AddVertex(xp, allp[2].x, allp[2].y);
-			AddVertex(xp, allp[6].x, allp[6].y);
-			AddVertex(xp, allp[5].x, allp[5].y);
-			ps_poly(1, xp = xpoint, 4, FL_BOTTOM_BCOL);
-			break;
+            AddVertex(xp, allp[1].x, allp[1].y);
+            AddVertex(xp, allp[2].x, allp[2].y);
+            AddVertex(xp, allp[6].x, allp[6].y);
+            AddVertex(xp, allp[5].x, allp[5].y);
+            ps_poly(1, xp = xpoint, 4, FL_BOTTOM_BCOL);
+            break;
 
-		case FL_UP_BOX:
-			AddVertex(xp, allp[0].x, allp[0].y);
-			AddVertex(xp, allp[1].x, allp[1].y);
-			AddVertex(xp, allp[5].x, allp[5].y);
-			AddVertex(xp, allp[4].x, allp[4].y);
-			ps_poly(1, xp = xpoint, 4, FL_BOTTOM_BCOL);
+        case FL_UP_BOX:
+            AddVertex(xp, allp[0].x, allp[0].y);
+            AddVertex(xp, allp[1].x, allp[1].y);
+            AddVertex(xp, allp[5].x, allp[5].y);
+            AddVertex(xp, allp[4].x, allp[4].y);
+            ps_poly(1, xp = xpoint, 4, FL_BOTTOM_BCOL);
 
-			AddVertex(xp, allp[0].x, allp[0].y);
-			AddVertex(xp, allp[4].x, allp[4].y);
-			AddVertex(xp, allp[7].x, allp[7].y);
-			AddVertex(xp, allp[3].x, allp[3].y);
-			ps_poly(1, xp = xpoint, 4, FL_RIGHT_BCOL);
+            AddVertex(xp, allp[0].x, allp[0].y);
+            AddVertex(xp, allp[4].x, allp[4].y);
+            AddVertex(xp, allp[7].x, allp[7].y);
+            AddVertex(xp, allp[3].x, allp[3].y);
+            ps_poly(1, xp = xpoint, 4, FL_RIGHT_BCOL);
 
-			/* right bottom */
+            /* right bottom */
 
-			AddVertex(xp, allp[6].x, allp[6].y);
-			AddVertex(xp, allp[2].x, allp[2].y);
-			AddVertex(xp, allp[3].x, allp[3].y);
-			AddVertex(xp, allp[7].x, allp[7].y);
-			ps_poly(1, xp = xpoint, 4, FL_LEFT_BCOL);
+            AddVertex(xp, allp[6].x, allp[6].y);
+            AddVertex(xp, allp[2].x, allp[2].y);
+            AddVertex(xp, allp[3].x, allp[3].y);
+            AddVertex(xp, allp[7].x, allp[7].y);
+            ps_poly(1, xp = xpoint, 4, FL_LEFT_BCOL);
 
-			AddVertex(xp, allp[1].x, allp[1].y);
-			AddVertex(xp, allp[2].x, allp[2].y);
-			AddVertex(xp, allp[6].x, allp[6].y);
-			AddVertex(xp, allp[5].x, allp[5].y);
-			ps_poly(1, xp = xpoint, 4, FL_TOP_BCOL);
-			break;
+            AddVertex(xp, allp[1].x, allp[1].y);
+            AddVertex(xp, allp[2].x, allp[2].y);
+            AddVertex(xp, allp[6].x, allp[6].y);
+            AddVertex(xp, allp[5].x, allp[5].y);
+            ps_poly(1, xp = xpoint, 4, FL_TOP_BCOL);
+            break;
     }
 
     if (psinfo.verbose)
-		ps_verbatim("%%BOX }\n");
+        ps_verbatim("%%BOX }\n");
 }
 
 /******* End of high-level drawing routines **********}******/
@@ -1109,8 +1105,8 @@ typedef struct {
     const char * draw;
     int          otherdef;
     PSdrawit     fdrawit;
-    int          abs_coordinate;	/* fdrawit uses abs coordinate system */
-    int          defined;		    /* if def code emitted                */
+    int          abs_coordinate;    /* fdrawit uses abs coordinate system */
+    int          defined;           /* if def code emitted                */
 } PS_draw;
 
 
@@ -1119,22 +1115,22 @@ typedef struct {
 
 static void
 draw_dnline( float x      FL_UNUSED_ARG,
-			 float y      FL_UNUSED_ARG,
-			 float w,
-			 float h,
-			 int   angle  FL_UNUSED_ARG,
-			 long  col    FL_UNUSED_ARG )
+             float y      FL_UNUSED_ARG,
+             float w,
+             float h,
+             int   angle  FL_UNUSED_ARG,
+             long  col    FL_UNUSED_ARG )
 {
     float t = 0.20;
     float len;
 
     ps_output("%.3f %.3f LW ", 3.5 / (w + h), 3.5 / (w + h));
     if ((w + h) > 200)
-		len = 0.99;
+        len = 0.99;
     else if ((w + h) > 150)
-		len = 0.98;
+        len = 0.98;
     else
-		len = 0.93;
+        len = 0.93;
 
     ps_color(FL_RIGHT_BCOL);
     ps_output("-%.3f %.2f M %.3f %.2f LT S\n", len, t, len, t);
@@ -1148,11 +1144,11 @@ draw_dnline( float x      FL_UNUSED_ARG,
 
 static void
 draw_upline( float x      FL_UNUSED_ARG,
-			 float y      FL_UNUSED_ARG,
-			 float w,
-			 float h,
-			 int   angle  FL_UNUSED_ARG,
-			 long  col    FL_UNUSED_ARG )
+             float y      FL_UNUSED_ARG,
+             float w,
+             float h,
+             int   angle  FL_UNUSED_ARG,
+             long  col    FL_UNUSED_ARG )
 {
     float t = 0.033;
 
@@ -1173,11 +1169,11 @@ draw_upline( float x      FL_UNUSED_ARG,
 
 static void
 draw_uparrow( float x,
-			  float y,
-			  float w,
-			  float h,
-			  int angle,
-			  long col  FL_UNUSED_ARG )
+              float y,
+              float w,
+              float h,
+              int angle,
+              long col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
@@ -1193,28 +1189,28 @@ draw_uparrow( float x,
 
     if (angle == 90)
     {
-		ps_line(xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL);
-		ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL);
-		ps_line(xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL);
+        ps_line(xc, yc + dy, xc - dx, yc - dy, FL_LEFT_BCOL);
+        ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_BOTTOM_BCOL);
+        ps_line(xc + dx, yc - dy, xc, yc + dy, FL_RIGHT_BCOL);
     }
     else if (angle == 180)
     {
-		ps_line(xc - dx, yc, xc + dx, yc + dy, FL_TOP_BCOL);
-		ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL);
-		ps_line(xc + dx, yc - dy, xc - dx, yc, FL_BOTTOM_BCOL);
+        ps_line(xc - dx, yc, xc + dx, yc + dy, FL_TOP_BCOL);
+        ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_RIGHT_BCOL);
+        ps_line(xc + dx, yc - dy, xc - dx, yc, FL_BOTTOM_BCOL);
     }
     else if (angle == 270)
     {
-		ps_line(xc - dx, yc + dy, xc, yc - dy, FL_BOTTOM_BCOL);
-		ps_line(xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL);
-		ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL);
-		
+        ps_line(xc - dx, yc + dy, xc, yc - dy, FL_BOTTOM_BCOL);
+        ps_line(xc, yc - dy, xc + dx, yc + dy, FL_RIGHT_BCOL);
+        ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_TOP_BCOL);
+        
     }
     else
     {
-		ps_line(x, yc - dy, x + w, yc, FL_BOTTOM_BCOL);
-		ps_line(x, yc + dy, x + w, yc, FL_RIGHT_BCOL);
-		ps_line(x, yc - dy, x, yc + dy, FL_LEFT_BCOL);
+        ps_line(x, yc - dy, x + w, yc, FL_BOTTOM_BCOL);
+        ps_line(x, yc + dy, x + w, yc, FL_RIGHT_BCOL);
+        ps_line(x, yc - dy, x, yc + dy, FL_LEFT_BCOL);
     }
 }
 
@@ -1224,11 +1220,11 @@ draw_uparrow( float x,
 
 static void
 draw_dnarrow( float x,
-			  float y,
-			  float w,
-			  float h,
-			  int   angle,
-			  long  col  FL_UNUSED_ARG )
+              float y,
+              float w,
+              float h,
+              int   angle,
+              long  col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
@@ -1245,29 +1241,29 @@ draw_dnarrow( float x,
 
     if (angle == 90)
     {
-		ps_line(xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL);
-		ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL);
-		ps_line(xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL);
+        ps_line(xc, yc + dy, xc - dx, yc - dy, FL_RIGHT_BCOL);
+        ps_line(xc - dx, yc - dy, xc + dx, yc - dy, FL_TOP_BCOL);
+        ps_line(xc + dx, yc - dy, xc, yc + dy, FL_TOP_BCOL);
     }
     else if (angle == 180)
     {
-		ps_line(xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL);
-		ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL);
-		ps_line(xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL);
+        ps_line(xc - dx, yc, xc + dx, yc + dy, FL_RIGHT_BCOL);
+        ps_line(xc + dx, yc + dy, xc + dx, yc - dy, FL_LEFT_BCOL);
+        ps_line(xc + dx, yc - dy, xc - dx, yc, FL_TOP_BCOL);
 
     }
     else if (angle == 270)
     {
-		ps_line(xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL);
-		ps_line(xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL);
-		ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL);
+        ps_line(xc - dx, yc + dy, xc, yc - dy, FL_RIGHT_BCOL);
+        ps_line(xc, yc - dy, xc + dx, yc + dy, FL_LEFT_BCOL);
+        ps_line(xc + dx, yc + dy, xc - dx, yc + dy, FL_BOTTOM_BCOL);
 
     }
     else
     {
-		ps_line(xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL);
-		ps_line(xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL);
-		ps_line(xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL);
+        ps_line(xc - dx, yc - dy, xc - dx, yc + dy, FL_RIGHT_BCOL);
+        ps_line(xc - dx, yc - dy, xc + dx, yc, FL_TOP_BCOL);
+        ps_line(xc - dx, yc + dy, xc + dx, yc, FL_BOTTOM_BCOL);
     }
 }
 
@@ -1278,11 +1274,11 @@ draw_dnarrow( float x,
 
 static void
 draw_ripple_lines( float x,
-				   float y,
-				   float w,
-				   float h,
-				   int   angle,
-				   long  col  FL_UNUSED_ARG )
+                   float y,
+                   float w,
+                   float h,
+                   int   angle,
+                   long  col  FL_UNUSED_ARG )
 {
     float ym = y + h / 2, ys;
     float xm = x + w / 2, xs;
@@ -1290,29 +1286,29 @@ draw_ripple_lines( float x,
 
     if (h < 9 || w < 9)
     {
-		fprintf(stderr, "RippledLine: Area too small\n");
-		return;
+        fprintf(stderr, "RippledLine: Area too small\n");
+        return;
     }
 
     xs = xm + 5;
     ys = ym + 5;
 
     if (angle == 90 || angle == 270)
-		for (i = 0; i < 3; i++)
-		{
-			ps_line(xs, y + mw, xs, y + h - mw - 1, FL_RIGHT_BCOL);
-			xs -= 1;
-			ps_line(xs, y + mw, xs, y + h - mw - 1, FL_LEFT_BCOL);
-			xs -= 3;
-		}
+        for (i = 0; i < 3; i++)
+        {
+            ps_line(xs, y + mw, xs, y + h - mw - 1, FL_RIGHT_BCOL);
+            xs -= 1;
+            ps_line(xs, y + mw, xs, y + h - mw - 1, FL_LEFT_BCOL);
+            xs -= 3;
+        }
     else
-		for (i = 0; i < 3; i++)
-		{
-			ps_line(x + mw, ys, x + w - mw - 1, ys, FL_LEFT_BCOL);
-			ys -= 1;
-			ps_line(x + mw, ys, x + w - mw - 1, ys, FL_RIGHT_BCOL);
-			ys -= 3;
-		}
+        for (i = 0; i < 3; i++)
+        {
+            ps_line(x + mw, ys, x + w - mw - 1, ys, FL_LEFT_BCOL);
+            ys -= 1;
+            ps_line(x + mw, ys, x + w - mw - 1, ys, FL_RIGHT_BCOL);
+            ys -= 3;
+        }
 }
 
 
@@ -1321,22 +1317,22 @@ draw_ripple_lines( float x,
 
 static void
 draw_bararrowhead( float x,
-				   float y,
-				   float w,
-				   float h,
-				   int   angle,
-				   long  col )
+                   float y,
+                   float w,
+                   float h,
+                   int   angle,
+                   long  col )
 {
     float xc = x + 0.5 * w,
-		  yc = y + 0.5 * h;
+          yc = y + 0.5 * h;
     int d = 3 + 0.06 * (w + h);
     float dx,
-		  dy,
-		  mar,
-		  dbar,
-		  xl;
+          dy,
+          mar,
+          dbar,
+          xl;
     Point point[ 5 ],
-		  *p;
+          *p;
 
     x += d;
     y += d;
@@ -1393,12 +1389,12 @@ static PS_draw psdraw[] =
     },
 
     {"plus", "plus",
-	 "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
+     "-0.9 -0.13 -0.9 0.13 -0.13 0.13 -0.13 0.9 0.13 0.9 0.13 0.13 0.9 0.13\n"
      "0.9 -0.13 0.13 -0.13 0.13 -0.9 -0.13 -0.9 -0.13 -0.13 12 P", 0, 0, 0, 0
     },
 
     {">>", "darrowh",
-	 "0.15 0.7 0.85 0 0.15 -0.7 0.15 -0.001 -0.55 -0.7 -0.55 0.7 0.15 0.001\n"
+     "0.15 0.7 0.85 0 0.15 -0.7 0.15 -0.001 -0.55 -0.7 -0.55 0.7 0.15 0.001\n"
      "7 P", 0, 0, 0, 0
     },
     {"<<", "180 rotate", 0, -1, 0, 0, 0},
@@ -1420,13 +1416,13 @@ static PS_draw psdraw[] =
 
     {"->|", "arrowbar",
      "-0.75 0.35 -0.1 0.35 -0.1 0.75 0.6 0.001 0.6 0.75 0.75 0.75\n"
-	 " 0.75 -0.75 0.6 -0.75 0.6 -0.001 -0.1 -0.75 -0.1 -0.35 -0.75 -0.35 12 P\n",
+     " 0.75 -0.75 0.6 -0.75 0.6 -0.001 -0.1 -0.75 -0.1 -0.35 -0.75 -0.35 12 P\n",
      0, 0, 0, 0
     },
 
     {"|<-", "180 rotate", 0, -1, 0, 0, 0},
 
-    {">|", "arrowheadbar",	/* bar 0.25 */
+    {">|", "arrowheadbar",  /* bar 0.25 */
      "-0.60 0.7 0.22 0.001 0.22 0.7 0.47 0.7 0.47 -0.7 0.22 -0.7\n"
      " 0.22 -0.001 -0.60 -0.7 8 P", 0, 0, 0, 0
     },
@@ -1466,11 +1462,11 @@ define_symbol( PS_draw * p )
 {
     if ( ! p->defined && ! p->fdrawit )
     {
-		if ( p->otherdef )
-			define_symbol( p + p->otherdef );
-		else
-			ps_output( "/%s {%s} bind def\n", p->psname, p->draw );
-		p->defined = 1;
+        if ( p->otherdef )
+            define_symbol( p + p->otherdef );
+        else
+            ps_output( "/%s {%s} bind def\n", p->psname, p->draw );
+        p->defined = 1;
     }
 }
 
@@ -1482,14 +1478,14 @@ static PS_draw *
 find( const char *s )
 {
     PS_draw *p = psdraw,
-		    *ps = psdraw + sizeof psdraw / sizeof *psdraw;
+            *ps = psdraw + sizeof psdraw / sizeof *psdraw;
 
     for ( ; p < ps; p++ )
-		if ( strcmp( s, p->name ) == 0 )
-		{
-			define_symbol( p );
-			return p;
-		}
+        if ( strcmp( s, p->name ) == 0 )
+        {
+            define_symbol( p );
+            return p;
+        }
 
     return 0;
 }
@@ -1502,15 +1498,15 @@ find( const char *s )
 
 int
 ps_draw_symbol( const char * label,
-				float        x,
-				float        y,
-				float        w,
-				float        h,
-				long         col )
+                float        x,
+                float        y,
+                float        w,
+                float        h,
+                long         col )
 {
     int pos,
-		shift,
-		equalscale = 0;
+        shift,
+        equalscale = 0;
     short defr[] = { 0, 225, 270, 315, 180, 0, 0, 135, 90, 45 };
     PS_draw *s;
     int rotated = 0;
@@ -1518,11 +1514,11 @@ ps_draw_symbol( const char * label,
     int delta = 0;
 
     if ( ! label || *label != '@' )
-		return 0;
+        return 0;
 
     if ( psinfo.verbose )
-		ps_verbatim( "%%Symbol %s: %.1f %.1f %.1f %.1f\n",
-					 label + 1, x, y, w, h );
+        ps_verbatim( "%%Symbol %s: %.1f %.1f %.1f %.1f\n",
+                     label + 1, x, y, w, h );
 
     x += 1.2;
     y += 1.2;
@@ -1533,86 +1529,86 @@ ps_draw_symbol( const char * label,
 
     pos = 1;
     while (    ( label[ pos ] == '-' && isdigit( label[ pos + 1 ] ) )
-			|| ( label[ pos ] == '+' && isdigit( label[ pos + 1 ] ) )
-			|| label[ pos ] == '#' )
+            || ( label[ pos ] == '+' && isdigit( label[ pos + 1 ] ) )
+            || label[ pos ] == '#' )
     {
-		switch ( label[ pos ] )
-		{
-			case '+':
-				delta = '0' - label[ ++pos ];
-				break;
+        switch ( label[ pos ] )
+        {
+            case '+':
+                delta = '0' - label[ ++pos ];
+                break;
 
-			case '-':
-				delta = label[ ++pos ] - '0';
-				break;
+            case '-':
+                delta = label[ ++pos ] - '0';
+                break;
 
-			case '#':
-				equalscale = 1;
-				break;
-		}
+            case '#':
+                equalscale = 1;
+                break;
+        }
 
-		pos++;
+        pos++;
     }
 
     shift = pos;
 
     if ( label[ pos ] >= '1' && label[ pos ] <= '9' )
     {
-		rotated = defr[ label[ pos ] - '0' ];
-		shift = pos + 1;
+        rotated = defr[ label[ pos ] - '0' ];
+        shift = pos + 1;
     }
     else if ( label[ pos ] == '0' )
     {
-		rotated =   100 * ( label[ pos + 1 ] - '0' )
-			      +  10 * ( label[ pos + 2 ] - '0' )
-			      +   1 * ( label[ pos + 3 ] - '0' );
-		shift = pos + 4;
+        rotated =   100 * ( label[ pos + 1 ] - '0' )
+                  +  10 * ( label[ pos + 2 ] - '0' )
+                  +   1 * ( label[ pos + 3 ] - '0' );
+        shift = pos + 4;
     }
 
     /* short hand with @4 etc */
 
     if ( ! ( s = ( label[ shift ] ? find( label + shift ) : psdraw ) ) )
     {
-		fprintf( stderr, "Bad label %s\n", label + shift );
-		if ( psinfo.verbose )
-			ps_verbatim( "%% unknown symbol %s. Not drawn\n", label );
-		return 0;
+        fprintf( stderr, "Bad label %s\n", label + shift );
+        if ( psinfo.verbose )
+            ps_verbatim( "%% unknown symbol %s. Not drawn\n", label );
+        return 0;
     }
 
     if ( equalscale )
-		sw = sh = FL_min( w, h );
+        sw = sh = FL_min( w, h );
 
     if ( delta )
     {
-		if ( s->abs_coordinate )
-		{
-			x += delta;
-			y += delta;
-		}
+        if ( s->abs_coordinate )
+        {
+            x += delta;
+            y += delta;
+        }
 
-		sw -= 2 * delta;
-		sh -= 2 * delta;
+        sw -= 2 * delta;
+        sh -= 2 * delta;
     }
 
     if ( ! s->abs_coordinate )
-		ps_output( "gsave\n%.1f %.1f translate %.1f %.1f scale %d rotate "
-				   "%.3f %.3f LW\n",
-				   x + 0.5 * w, y + 0.5 * h, 0.45 * sw, 0.45 * sh, rotated,
-				   3.2 / ( sw + sh ), 3.2 / ( sh + sw ) );
+        ps_output( "gsave\n%.1f %.1f translate %.1f %.1f scale %d rotate "
+                   "%.3f %.3f LW\n",
+                   x + 0.5 * w, y + 0.5 * h, 0.45 * sw, 0.45 * sh, rotated,
+                   3.2 / ( sw + sh ), 3.2 / ( sh + sw ) );
 
     if ( s->fdrawit )
     {
-		s->fdrawit( x, y, w, h, rotated, col );
-		if (!s->abs_coordinate)
-			ps_output( "grestore\n" );
-		ps_invalidate_color_cache( );
-		return 1;
+        s->fdrawit( x, y, w, h, rotated, col );
+        if (!s->abs_coordinate)
+            ps_output( "grestore\n" );
+        ps_invalidate_color_cache( );
+        return 1;
     }
 
     if ( s->otherdef )
     {
-		ps_output( "%s ", s->psname );
-		s = s + s->otherdef;
+        ps_output( "%s ", s->psname );
+        s = s + s->otherdef;
     }
 
     ps_color( col );
@@ -1625,3 +1621,11 @@ ps_draw_symbol( const char * label,
 }
 
 /********************** end of symbols *************************}*/
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

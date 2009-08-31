@@ -49,8 +49,8 @@
 
 
 FLI_WM_STUFF fli_wmstuff;       /* also used in win.c */
-static XrmDatabase fldatabase;	/* final merged database */
-static XrmDatabase cmddb;	    /* command line database */
+static XrmDatabase fldatabase;  /* final merged database */
+static XrmDatabase cmddb;       /* command line database */
 static char *fl_app_name,
             *fl_app_class,
             *fl_ori_app_name;
@@ -101,8 +101,8 @@ static XrmOptionDescRec copt[ ] =
 
 /* xform and XForm will be generated on the fly */
 
-typedef char Bop[ 8 ];		/* Boolean default */
-typedef char Iop[ 8 ];		/* Integer default */
+typedef char Bop[ 8 ];      /* Boolean default */
+typedef char Iop[ 8 ];      /* Integer default */
 static Bop OpPrivateMap,
            OpSharedMap,
            OpStandardMap,
@@ -112,7 +112,7 @@ static Bop OpSync,
 static Iop OpDebug,
            OpDepth,
            OpULT = "-1";
-static char OpBS[ 12 ]       = "1";	/* whenmapped */
+static char OpBS[ 12 ]       = "1"; /* whenmapped */
 static char OpSafe[ 12 ];
 static char OpSCBT[ 16 ]     = "thin";
 static char OpBLsize[ 20 ]   = NS( FL_DEFAULT_SIZE );
@@ -136,7 +136,7 @@ static char OpCoordUnit[ 32 ];
 
 static FLI_VN_PAIR vn_coordunit[ ] =
 {
-	{ FL_COORD_PIXEL,      "pixel"      },
+    { FL_COORD_PIXEL,      "pixel"      },
     { FL_COORD_MM,         "mm"         },
     { FL_COORD_POINT,      "point"      },
     { FL_COORD_centiPOINT, "centipoint" },
@@ -144,7 +144,7 @@ static FLI_VN_PAIR vn_coordunit[ ] =
     { FL_COORD_centiMM,    "centimm"    },
     { FL_COORD_centiMM,    "cmm"        },
     { -1,                  "Invalid"    },
-	{ -1,                   NULL         }
+    { -1,                   NULL         }
 };
 
 
@@ -200,115 +200,115 @@ static FL_resource internal_resources[ ] =
 
 void
 fl_set_defaults( unsigned long   mask,
-				 FL_IOPT       * cntl )
+                 FL_IOPT       * cntl )
 {
     if ( mask & FL_PDPrivateMap )
     {
-		SetMember( privateColormap );
-		sprintf( OpPrivateMap, "%d", cntl->privateColormap != 0 );
+        SetMember( privateColormap );
+        sprintf( OpPrivateMap, "%d", cntl->privateColormap != 0 );
     }
 
     if ( mask & FL_PDSharedMap )
     {
-		SetMember( sharedColormap );
-		sprintf( OpSharedMap, "%d", cntl->sharedColormap != 0 );
+        SetMember( sharedColormap );
+        sprintf( OpSharedMap, "%d", cntl->sharedColormap != 0 );
     }
 
     if ( mask & FL_PDStandardMap )
     {
-		SetMember( standardColormap );
-		sprintf( OpStandardMap, "%d", cntl->standardColormap != 0 );
+        SetMember( standardColormap );
+        sprintf( OpStandardMap, "%d", cntl->standardColormap != 0 );
     }
 
     if ( mask & FL_PDDouble )
     {
-		SetMember( doubleBuffer );
-		sprintf( OpDouble, "%d", cntl->doubleBuffer != 0 );
+        SetMember( doubleBuffer );
+        sprintf( OpDouble, "%d", cntl->doubleBuffer != 0 );
     }
 
     if ( mask & FL_PDDepth )
     {
-		SetMember( depth );
-		sprintf( OpDepth, "%d", cntl->depth );
+        SetMember( depth );
+        sprintf( OpDepth, "%d", cntl->depth );
     }
 
     if ( mask & FL_PDVisual )
     {
-		SetMember( vclass );
-		strcpy( fli_cntl.vname, fl_vclass_name( cntl->vclass ) );
+        SetMember( vclass );
+        strcpy( fli_cntl.vname, fl_vclass_name( cntl->vclass ) );
     }
 
     if ( mask & FL_PDButtonFontSize )
     {
-		SetMember( buttonFontSize );
-		sprintf( OpBLsize, "%d", cntl->buttonFontSize );
+        SetMember( buttonFontSize );
+        sprintf( OpBLsize, "%d", cntl->buttonFontSize );
     }
 
     if ( mask & FL_PDBrowserFontSize )
     {
-		SetMember( browserFontSize );
-		sprintf( OpBrFsize, "%d", cntl->browserFontSize );
+        SetMember( browserFontSize );
+        sprintf( OpBrFsize, "%d", cntl->browserFontSize );
     }
 
     if ( mask & FL_PDMenuFontSize )
     {
-		SetMember( menuFontSize );
-		sprintf( OpMLsize, "%d", cntl->menuFontSize );
+        SetMember( menuFontSize );
+        sprintf( OpMLsize, "%d", cntl->menuFontSize );
     }
 
     if ( mask & FL_PDChoiceFontSize )
     {
-		SetMember( choiceFontSize );
-		sprintf( OpChFsize, "%d", cntl->choiceFontSize );
+        SetMember( choiceFontSize );
+        sprintf( OpChFsize, "%d", cntl->choiceFontSize );
     }
 
     if ( mask & FL_PDSliderFontSize )
     {
-		SetMember( sliderFontSize );
-		sprintf( OpSLsize, "%d", cntl->sliderFontSize );
+        SetMember( sliderFontSize );
+        sprintf( OpSLsize, "%d", cntl->sliderFontSize );
     }
 
     if ( mask & FL_PDInputFontSize )
     {
-		SetMember( inputFontSize );
-		sprintf( OpILsize, "%d", cntl->inputFontSize );
+        SetMember( inputFontSize );
+        sprintf( OpILsize, "%d", cntl->inputFontSize );
     }
 
     if ( mask & FL_PDLabelFontSize )
     {
-		SetMember( labelFontSize );
-		sprintf( OpLLsize, "%d", cntl->labelFontSize );
+        SetMember( labelFontSize );
+        sprintf( OpLLsize, "%d", cntl->labelFontSize );
     }
 
     if ( mask & FL_PDBorderWidth )
-		fl_set_border_width( cntl->borderWidth );
+        fl_set_border_width( cntl->borderWidth );
 
     if ( mask & FL_PDScrollbarType )
-		fl_set_scrollbar_type( cntl->scrollbarType );
+        fl_set_scrollbar_type( cntl->scrollbarType );
 
     if ( mask & FL_PDPupFontSize )
     {
-		SetMember( pupFontSize );
-		sprintf( OpPsize, "%d", cntl->pupFontSize );
+        SetMember( pupFontSize );
+        sprintf( OpPsize, "%d", cntl->pupFontSize );
     }
 
     if ( mask & FL_PDSafe )
     {
-		SetMember( safe );
-		sprintf( OpSafe, "%d", cntl->safe );
+        SetMember( safe );
+        sprintf( OpSafe, "%d", cntl->safe );
     }
 
     if ( mask & FL_PDBS )
     {
-		SetMember( backingStore );
-		sprintf( OpBS, "%d", cntl->backingStore );
+        SetMember( backingStore );
+        sprintf( OpBS, "%d", cntl->backingStore );
     }
 
     if ( mask & FL_PDCoordUnit )
-		fl_set_coordunit( cntl->coordUnit );
+        fl_set_coordunit( cntl->coordUnit );
 
     if ( mask & FL_PDDebug )
-		fli_set_debug_level( cntl->debug );
+        fli_set_debug_level( cntl->debug );
 }
 
 
@@ -320,8 +320,8 @@ fl_get_defaults( FL_IOPT * cntl )
 {
     if ( ! fl_display )
     {
-		M_err( "fl_get_defaults", "You forgot to call fl_initialize" );
-		exit( 1 );
+        M_err( "fl_get_defaults", "You forgot to call fl_initialize" );
+        exit( 1 );
     }
 
     *cntl = fli_cntl;
@@ -335,15 +335,15 @@ fl_get_defaults( FL_IOPT * cntl )
 void
 fl_set_coordunit( int u )
 {
-	const char *cu = fli_get_vn_name( vn_coordunit, u );
+    const char *cu = fli_get_vn_name( vn_coordunit, u );
 
-	if ( cu == NULL )
-	{
-		M_err( "fl_set_coordunit",
-			   "Invald coord unit, defaulting to \"pixel\"" );
-		u = FL_COORD_PIXEL;
-		cu = "pixel";
-	}
+    if ( cu == NULL )
+    {
+        M_err( "fl_set_coordunit",
+               "Invald coord unit, defaulting to \"pixel\"" );
+        u = FL_COORD_PIXEL;
+        cu = "pixel";
+    }
 
     fli_cntl.coordUnit = u;
     strcpy( OpCoordUnit, cu );
@@ -369,13 +369,13 @@ fl_set_scrollbar_type( int t )
 {
     fli_cntl.scrollbarType = t;
     if ( t == FL_NORMAL_SCROLLBAR )
-		strcpy( OpSCBT, "normal" );
+        strcpy( OpSCBT, "normal" );
     else if ( t == FL_NICE_SCROLLBAR )
-		strcpy( OpSCBT, "nice" );
+        strcpy( OpSCBT, "nice" );
     else if ( t == FL_PLAIN_SCROLLBAR )
-		strcpy( OpSCBT, "plain" );
+        strcpy( OpSCBT, "plain" );
     else
-		strcpy( OpSCBT, "thin" );
+        strcpy( OpSCBT, "thin" );
 }
 
 
@@ -429,23 +429,23 @@ fli_set_debug_level( int l )
 
 static void
 handle_applresdir( const char * rstr,
-				   const char * appclass )
+                   const char * appclass )
 {
     char *tok;
     char rbuf[ 512 ],
-		 buf[ 512 ];
+         buf[ 512 ];
     XrmDatabase fdb = 0;
 
     strcpy( rbuf, rstr );
     for ( tok = strtok( rbuf, ":" ); tok; tok = strtok( 0, ":" ) )
     {
         fl_snprintf( buf, sizeof buf,"%s/%s", tok,appclass );
-		M_info( "handle_applresdir", "Trying XAPPLRESDIR: %s", buf );
-		if ( ( fdb = XrmGetFileDatabase( buf ) ) )
-		{
-			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( "handle_applresdir", "XAPPLRESDIR %s loaded", buf );
-		}
+        M_info( "handle_applresdir", "Trying XAPPLRESDIR: %s", buf );
+        if ( ( fdb = XrmGetFileDatabase( buf ) ) )
+        {
+            XrmMergeDatabases( fdb, &fldatabase );
+            M_warn( "handle_applresdir", "XAPPLRESDIR %s loaded", buf );
+        }
     }
 }
 
@@ -459,61 +459,61 @@ static void
 init_resource_database( const char *appclass )
 {
     char buf[ FL_PATH_MAX + 127 ],
-		 *rstr;
+         *rstr;
     XrmDatabase fdb = 0;
 
     if ( ! fl_display )
     {
-		M_err( "init_resource_database", "fl_initialize is not called" );
-		return;
+        M_err( "init_resource_database", "fl_initialize is not called" );
+        return;
     }
 
     if ( fldatabase )
-		return;
+        return;
 
     XrmInitialize( );
 
 #ifdef __VMS
-	/* For the VMS version try to load the resources from, in this order,
+    /* For the VMS version try to load the resources from, in this order,
 
-	   DECW$SYSTEM_DEFAULTS:appclass.DAT
-	   DECW$USER_DEFAULTS:appclass.DAT
-	   DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT
-	   The window resource manager for this display
-	*/
+       DECW$SYSTEM_DEFAULTS:appclass.DAT
+       DECW$USER_DEFAULTS:appclass.DAT
+       DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT
+       The window resource manager for this display
+    */
 
     fl_snprintf( buf, sizeof buf, "DECW$SYSTEM_DEFAULTS:%s.DAT", appclass );
     M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
-		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( "init_resource_database", "System default %s loaded", buf );
+        XrmMergeDatabases( fdb, &fldatabase );
+        M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
     fl_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:%s.DAT", appclass );
     M_info( "init_resource_database", "Trying User_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
-		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( "init_resource_database", "System default %s loaded", buf );
+        XrmMergeDatabases( fdb, &fldatabase );
+        M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
     fl_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT" );
     M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
-		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( "init_resource_database", "System default %s loaded", buf );
+        XrmMergeDatabases( fdb, &fldatabase );
+        M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
     M_info( "init_resource_database", "Trying RESOURCE_MANAGER" );
     if ( ( rstr = XResourceManagerString( fl_display ) ) )
     {
-		if ( ( fdb = XrmGetStringDatabase( rstr ) ) )
-		{
-			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( "init_resource_database", "RESOURCE_MANAGER loaded" );
-		}
+        if ( ( fdb = XrmGetStringDatabase( rstr ) ) )
+        {
+            XrmMergeDatabases( fdb, &fldatabase );
+            M_warn( "init_resource_database", "RESOURCE_MANAGER loaded" );
+        }
     }
 #else /* !VMS */
 
@@ -521,74 +521,74 @@ init_resource_database( const char *appclass )
     M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
-		XrmMergeDatabases( fdb, &fldatabase );
-		M_warn( "init_resource_database", "System default %s loaded", buf );
+        XrmMergeDatabases( fdb, &fldatabase );
+        M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
     /* try XAPPLRESDIR */
 
     M_info( "init_resource_database", "Trying XAPPLRESDIR" );
     if ( ( rstr = getenv( "XAPPLRESDIR" ) ) )
-		handle_applresdir( rstr, appclass );
+        handle_applresdir( rstr, appclass );
 
     /* try server defined resources */
 
     M_info( "init_resource_database", "Trying RESOURCE_MANAGER" );
     if ( ( rstr = XResourceManagerString( fl_display ) ) )
     {
-		if ( ( fdb = XrmGetStringDatabase( rstr ) ) )
-		{
-			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( "init_resource_database", "RESOURCE_MANAGER loaded" );
-		}
+        if ( ( fdb = XrmGetStringDatabase( rstr ) ) )
+        {
+            XrmMergeDatabases( fdb, &fldatabase );
+            M_warn( "init_resource_database", "RESOURCE_MANAGER loaded" );
+        }
     }
     else
     {
-		/* try ~/.Xdefaults   */
+        /* try ~/.Xdefaults   */
 
-		if ( ( rstr = getenv( "HOME" ) ) )
-		{
+        if ( ( rstr = getenv( "HOME" ) ) )
+        {
             fl_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
-			M_info( "init_resource_database", "Trying %s", buf );
-			if ( ( fdb = XrmGetFileDatabase( buf ) ) )
-			{
-				XrmMergeDatabases( fdb, &fldatabase );
-				M_warn( "init_resource_database", "%s loaded", buf );
-			}
-		}
+            M_info( "init_resource_database", "Trying %s", buf );
+            if ( ( fdb = XrmGetFileDatabase( buf ) ) )
+            {
+                XrmMergeDatabases( fdb, &fldatabase );
+                M_warn( "init_resource_database", "%s loaded", buf );
+            }
+        }
     }
 
     /* load file XENVIRONMENT */
 
     M_info( "init_resource_database",
-			"Trying environment variable XEVIRONMENT" );
+            "Trying environment variable XEVIRONMENT" );
     if ( ( rstr = getenv( "XENVIRONMENT" ) ) )
     {
-		if ( ( fdb = XrmGetFileDatabase( rstr ) ) )
-		{
-			XrmMergeDatabases( fdb, &fldatabase );
-			M_warn( "init_resource_database", "%s loaded", rstr );
-		}
+        if ( ( fdb = XrmGetFileDatabase( rstr ) ) )
+        {
+            XrmMergeDatabases( fdb, &fldatabase );
+            M_warn( "init_resource_database", "%s loaded", rstr );
+        }
     }
     else
     {
-		/* ~/.Xdefaults-<hostname> */
+        /* ~/.Xdefaults-<hostname> */
 
-		M_info( "init_resource_database", "Trying ~/.Xdefaults-<hostname>" );
-		if ( ( rstr = getenv( "HOME" ) ) )
-		{
-			int l;
+        M_info( "init_resource_database", "Trying ~/.Xdefaults-<hostname>" );
+        if ( ( rstr = getenv( "HOME" ) ) )
+        {
+            int l;
 
             fl_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
-			l = strlen( strcat( buf, "-" ) );
-			gethostname( buf + l, sizeof buf - l );
-			M_info( "init_resource_database", "Trying %s", buf );
-			if ( ( fdb = XrmGetFileDatabase( buf ) ) )
-			{
-				XrmMergeDatabases( fdb, &fldatabase );
-				M_warn( "init_resource_database", "%s loaded", buf );
-			}
-		}
+            l = strlen( strcat( buf, "-" ) );
+            gethostname( buf + l, sizeof buf - l );
+            M_info( "init_resource_database", "Trying %s", buf );
+            if ( ( fdb = XrmGetFileDatabase( buf ) ) )
+            {
+                XrmMergeDatabases( fdb, &fldatabase );
+                M_warn( "init_resource_database", "%s loaded", buf );
+            }
+        }
     }
 #endif /* VMS */
 
@@ -596,9 +596,9 @@ init_resource_database( const char *appclass )
 
     if ( ! fldatabase )
     {
-		M_warn( "init_resource_database",
-				"Can't find any resource databases!" );
-		return;
+        M_warn( "init_resource_database",
+                "Can't find any resource databases!" );
+        return;
     }
 }
 
@@ -610,12 +610,12 @@ static int
 is_true( const char *s )
 {
     return    strncmp( s, "True", 4 ) == 0
-		   || strncmp( s, "true", 4 ) == 0
-		   || strncmp( s, "Yes",  3 ) == 0
-		   || strncmp( s, "yes",  3 ) == 0
-		   || strncmp( s, "On",   2 ) == 0
-		   || strncmp( s, "on",   2 ) == 0
-		   || *s == '1';
+           || strncmp( s, "true", 4 ) == 0
+           || strncmp( s, "Yes",  3 ) == 0
+           || strncmp( s, "yes",  3 ) == 0
+           || strncmp( s, "On",   2 ) == 0
+           || strncmp( s, "on",   2 ) == 0
+           || *s == '1';
 }
 
 
@@ -627,83 +627,83 @@ is_true( const char *s )
  ***************************************/
 
 const char *
-fl_get_resource( const char * rname,	/* resource name */
-				 const char * cname,	/* class name    */
-				 FL_RTYPE     dtype,	/* data type     */
-				 const char * defval,	/* default       */
-				 void *       val,	    /* variable      */
-				 int          size )    /* buffer size if string */
+fl_get_resource( const char * rname,    /* resource name */
+                 const char * cname,    /* class name    */
+                 FL_RTYPE     dtype,    /* data type     */
+                 const char * defval,   /* default       */
+                 void *       val,      /* variable      */
+                 int          size )    /* buffer size if string */
 {
     XrmValue entry = { 0, NULL };
     char *type = NULL;
     char res_name[ 256 ]  = "",
-		 res_class[ 256 ] = "";
+         res_class[ 256 ] = "";
 
 
-	if ( ( ! rname || ! * rname ) && ( ! cname || ! *cname ) )
-		return NULL;
+    if ( ( ! rname || ! * rname ) && ( ! cname || ! *cname ) )
+        return NULL;
 
-	if ( rname && *rname )
-		fl_snprintf( res_name, sizeof res_name,"%s.%s", fl_app_name, rname );
+    if ( rname && *rname )
+        fl_snprintf( res_name, sizeof res_name,"%s.%s", fl_app_name, rname );
     else if ( cname && *cname )
         fl_snprintf( res_class, sizeof res_class,"%s.%s", fl_app_class, cname );
 
-	/* Just checking the return value of XrmGetResource() doesn't seem to
-	   work (as it should, unless I completely mis-understand the man
-	   page), and 'entry' seems to return the same data as on a previous
-	   call (despite the initialization!), but 'type' seems to get set to
-	   NULL in cases of failure to find the requested resource in the
-	   database. So in that case we try to use the default value.       JTT */
+    /* Just checking the return value of XrmGetResource() doesn't seem to
+       work (as it should, unless I completely mis-understand the man
+       page), and 'entry' seems to return the same data as on a previous
+       call (despite the initialization!), but 'type' seems to get set to
+       NULL in cases of failure to find the requested resource in the
+       database. So in that case we try to use the default value.       JTT */
 
-	if (    ! XrmGetResource( fldatabase, res_name, res_class, &type, &entry )
-		 || ! type
-		 || strcmp( type, "String" )
-		 || ! entry.addr )
-	{
-		M_warn( "fl_get_resource", "%s (%s): not found", res_name, res_class );
-		entry.addr = ( XPointer ) defval;
-	}
-	else
-		M_info( "fl_get_resource", "%s (%s): %s", res_name, res_class,
-				entry.addr );
+    if (    ! XrmGetResource( fldatabase, res_name, res_class, &type, &entry )
+         || ! type
+         || strcmp( type, "String" )
+         || ! entry.addr )
+    {
+        M_warn( "fl_get_resource", "%s (%s): not found", res_name, res_class );
+        entry.addr = ( XPointer ) defval;
+    }
+    else
+        M_info( "fl_get_resource", "%s (%s): %s", res_name, res_class,
+                entry.addr );
 
     if ( dtype == FL_NONE || ! entry.addr )
-		return entry.addr;
+        return entry.addr;
 
-	switch ( dtype )
-	{
-		case FL_SHORT:
-			*( short * ) val = atoi( entry.addr );
-			break;
+    switch ( dtype )
+    {
+        case FL_SHORT:
+            *( short * ) val = atoi( entry.addr );
+            break;
 
-		case FL_INT:
-			*( int * ) val = atoi( entry.addr );
-			break;
+        case FL_INT:
+            *( int * ) val = atoi( entry.addr );
+            break;
 
-		case FL_BOOL:
-			*( int * ) val = is_true( entry.addr );
-			break;
+        case FL_BOOL:
+            *( int * ) val = is_true( entry.addr );
+            break;
 
-		case FL_LONG:
-			*( long * ) val = strtol( entry.addr, NULL, 0 );
-			break;
+        case FL_LONG:
+            *( long * ) val = strtol( entry.addr, NULL, 0 );
+            break;
 
-		case FL_FLOAT:
-			* ( float * ) val = ( float ) atof( entry.addr );
-			break;
+        case FL_FLOAT:
+            * ( float * ) val = ( float ) atof( entry.addr );
+            break;
 
-		case FL_STRING:
-			if ( val && val != entry.addr && size > 0 )
-			{
-				strncpy( val, entry.addr, size );
-				( ( char * ) val )[ size - 1 ] = '\0';
-			}
-			break;
+        case FL_STRING:
+            if ( val && val != entry.addr && size > 0 )
+            {
+                strncpy( val, entry.addr, size );
+                ( ( char * ) val )[ size - 1 ] = '\0';
+            }
+            break;
 
-		default:
-			M_err( "fl_get_resource", "Unknown type %d", dtype );
-			return NULL;
-	}
+        default:
+            M_err( "fl_get_resource", "Unknown type %d", dtype );
+            return NULL;
+    }
 
     return entry.addr;
 }
@@ -714,7 +714,7 @@ fl_get_resource( const char * rname,	/* resource name */
 
 void
 fl_set_resource( const char * str,
-				 const char * val )
+                 const char * val )
 {
     char res_name[ 256 ];
 
@@ -731,10 +731,10 @@ static void
 fli_init_resources( void )
 {
     char res[ 256 ],
-		 cls[ 256 ],
-		 ores[ 256 ];
+         cls[ 256 ],
+         ores[ 256 ];
     char *appname = fl_app_name,
-		 *appclass = fl_app_class;
+         *appclass = fl_app_class;
     char *ori_appname = fl_ori_app_name;
 
     /* internal resources need to be prefixed xform and XForm. need to
@@ -754,9 +754,9 @@ fli_init_resources( void )
 
     if ( fli_cntl.sync )
     {
-		XSynchronize( fl_display, 1 );
-		M_err( "fli_init_resources", "**** Synchronous Mode ********" );
-		fli_set_debug_level( 4 );
+        XSynchronize( fl_display, 1 );
+        M_err( "fli_init_resources", "**** Synchronous Mode ********" );
+        fli_set_debug_level( 4 );
     }
 }
 
@@ -770,19 +770,19 @@ static char **fl_argv;
 
 static void
 dup_argv( char ** argv,
-		  int     n )
+          int     n )
 {
     int i;
 
     if ( ! argv )
-		return;
+        return;
 
     if ( ! fl_argv )
-		fl_argv = fl_malloc( ( n + 1 ) * sizeof *fl_argv );
+        fl_argv = fl_malloc( ( n + 1 ) * sizeof *fl_argv );
 
     for ( i = 0; i < n; i++ )
-		fl_argv[ i ] = fl_strdup( argv[ i ] );
-	
+        fl_argv[ i ] = fl_strdup( argv[ i ] );
+    
     fl_argv[ i ] = NULL;
 }
 
@@ -804,15 +804,15 @@ fl_get_cmdline_args( int *n )
 void
 fli_free_cmdline_args( void )
 {
-	size_t i;
+    size_t i;
 
-	if ( ! fl_argv )
-		return;
+    if ( ! fl_argv )
+        return;
 
-	for ( i = 0; fl_argv[ i ]; i++ )
-		fl_safe_free( fl_argv[ i ] );
+    for ( i = 0; fl_argv[ i ]; i++ )
+        fl_safe_free( fl_argv[ i ] );
 
-	fl_safe_free( fl_argv );
+    fl_safe_free( fl_argv );
 }
 
 
@@ -831,27 +831,27 @@ get_command_name( const char * arg0 )
     /* vms command disk:[path]command.exe  */
 
     if ( ( p = strrchr( s, ']' ) ) )
-		cmd_name = p + 1;
+        cmd_name = p + 1;
 #else
 #ifdef FL_WIN32
     _splitpath( arg0, NULL, NULL, cmd_name, NULL );
 #else
     if ( ( p = strrchr( s, '/' ) ) )
-		cmd_name = p + 1;
+        cmd_name = p + 1;
 #endif
 #endif
 
     /* Remove the extension and the period */
 
     if ( ( p = strrchr( cmd_name, '.' ) ) )
-		*p = '\0';
+        *p = '\0';
 
     /* Prevent a valgrind warning about a possible memory leak. */
 
     if ( s != cmd_name )
-	{
-		cmd_name = fl_strdup( cmd_name );
-		fl_free( s );
+    {
+        cmd_name = fl_strdup( cmd_name );
+        fl_free( s );
     }
 
     return cmd_name;
@@ -868,7 +868,7 @@ get_command_name( const char * arg0 )
 #define DumpF( a )    fprintf( stderr,"\t%s:%.3f\n", #a, fli_cntl.a )
 
 static Window fli_GetVRoot( Display *,
-							int );
+                            int );
 
 
 /***************************************
@@ -879,19 +879,19 @@ void
 fli_init_context( void )
 {
     if ( fli_context )
-		return;
+        return;
 
-	fli_context = fl_calloc( 1, sizeof *fli_context );
-	fli_context->io_rec        = NULL;
-	fli_context->idle_rec      = NULL;
-	fli_context->atclose       = NULL;
-	fli_context->signal_rec    = NULL;
-	fli_context->idle_delta    = FLI_TIMER_RES;
-	fli_context->hscb          = FL_HOR_THIN_SCROLLBAR;
-	fli_context->vscb          = FL_VERT_THIN_SCROLLBAR;
-	fli_context->navigate_mask = ShiftMask;   /* to navigate input field */
-	fli_context->xim           = NULL;
-	fli_context->xic           = NULL;
+    fli_context = fl_calloc( 1, sizeof *fli_context );
+    fli_context->io_rec        = NULL;
+    fli_context->idle_rec      = NULL;
+    fli_context->atclose       = NULL;
+    fli_context->signal_rec    = NULL;
+    fli_context->idle_delta    = FLI_TIMER_RES;
+    fli_context->hscb          = FL_HOR_THIN_SCROLLBAR;
+    fli_context->vscb          = FL_VERT_THIN_SCROLLBAR;
+    fli_context->navigate_mask = ShiftMask;   /* to navigate input field */
+    fli_context->xim           = NULL;
+    fli_context->xic           = NULL;
 }
 
 
@@ -904,7 +904,7 @@ fli_set_input_navigate( unsigned int mask )
      fli_init_context( );
 
      if ( mask == ShiftMask || mask == Mod1Mask || mask == ControlMask )
-		 fli_context->navigate_mask = mask;
+         fli_context->navigate_mask = mask;
 }
 
 
@@ -913,41 +913,41 @@ fli_set_input_navigate( unsigned int mask )
 
 Display *
 fl_initialize( int        * na,
-			   char       * arg[ ],
-			   const char * appclass,
-			   FL_CMD_OPT * appopt,
-			   int          nappopt )
+               char       * arg[ ],
+               const char * appclass,
+               FL_CMD_OPT * appopt,
+               int          nappopt )
 {
     char disp_name[ 256 ],
-		 disp_cls[ 256 ],
-		 buf[ 256 ];
+         disp_cls[ 256 ],
+         buf[ 256 ];
     XrmValue xval;
     char *type;
     float xdpi,
-		  ydpi;
+          ydpi;
 
     if ( fl_display )
     {
-		M_warn( "fl_initialize", "XForms: already initialized" );
-		return fl_display;
+        M_warn( "fl_initialize", "XForms: already initialized" );
+        return fl_display;
     }
 
     /* be paranoid */
 
     if ( ! na || ! *na )
     {
-		M_err( "fl_initialize",
-			   "XForms: argc == 0 or argv == NULL detected\n" );
-		exit( 1 );
+        M_err( "fl_initialize",
+               "XForms: argc == 0 or argv == NULL detected\n" );
+        exit( 1 );
     }
 
-	/* Setting the locale was introduced in 0.89.5 (as far as I could figure
-	   out) but never was officially documented. Since it can break programs
-	   when run in a different locale then the one the original author used
-	   (e.g. because reading of files with scanf() may not work anymore when,
-	   due to the locale setting a ',' instead of a '.' as the decimal point is
-	   expected) I have thrown it out. Jean-Marc and Angus already planned to
-	   do that back in 2004 but obviously never got around to doing it.  JTT */
+    /* Setting the locale was introduced in 0.89.5 (as far as I could figure
+       out) but never was officially documented. Since it can break programs
+       when run in a different locale then the one the original author used
+       (e.g. because reading of files with scanf() may not work anymore when,
+       due to the locale setting a ',' instead of a '.' as the decimal point is
+       expected) I have thrown it out. Jean-Marc and Angus already planned to
+       do that back in 2004 but obviously never got around to doing it.  JTT */
 
 #if 0
     setlocale( LC_ALL, "" );
@@ -966,15 +966,15 @@ fl_initialize( int        * na,
 
     fl_ori_app_name = fl_app_name = get_command_name( arg[ 0 ] );
     fl_app_class = fl_strdup( ( appclass && *appclass ) ?
-							  appclass : fl_app_name );
+                              appclass : fl_app_name );
 
     /* Make class name upper case if non supplied */
 
     if ( ! appclass || ! *appclass )
     {
-		fl_app_class[ 0 ] = toupper( fl_app_class[ 0 ] );
-		if ( fl_app_class[ 0 ] == 'X' )
-			fl_app_class[ 1 ] = toupper( fl_app_class[ 1 ] );
+        fl_app_class[ 0 ] = toupper( fl_app_class[ 0 ] );
+        if ( fl_app_class[ 0 ] == 'X' )
+            fl_app_class[ 1 ] = toupper( fl_app_class[ 1 ] );
     }
 
     /* Do form internal resouces first */
@@ -984,8 +984,8 @@ fl_initialize( int        * na,
     /* if there are still more left and  appopt is not zero */
 
     if ( appopt && na && *na )
-		XrmParseCommand( &cmddb, appopt, nappopt,
-						 ( char * ) fl_ori_app_name, na, arg );
+        XrmParseCommand( &cmddb, appopt, nappopt,
+                         ( char * ) fl_ori_app_name, na, arg );
 
     /* Check version request */
 
@@ -993,7 +993,7 @@ fl_initialize( int        * na,
     fl_snprintf( disp_cls, sizeof disp_cls, "%s.flversion", fl_app_name );
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
-		fli_print_version( 0 );
+        fli_print_version( 0 );
 
     /* Get the display name first before doing anything */
 
@@ -1004,8 +1004,8 @@ fl_initialize( int        * na,
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
     {
-		strncpy( buf, xval.addr, sizeof buf );
-		buf[ sizeof buf - 1 ] = '\0';
+        strncpy( buf, xval.addr, sizeof buf );
+        buf[ sizeof buf - 1 ] = '\0';
     }
 
     /* Open display and quit if failure */
@@ -1015,9 +1015,9 @@ fl_initialize( int        * na,
         /* if no display is set, there is no guarantee that buf
            is long enough to contain the DISPLAY setting */
 
-		M_err( "fl_initialize", "%s: Can't open display %s", fl_argv[ 0 ],
-			   XDisplayName( buf[ 0 ] ? buf : 0 ) );
-		return 0;
+        M_err( "fl_initialize", "%s: Can't open display %s", fl_argv[ 0 ],
+               XDisplayName( buf[ 0 ] ? buf : 0 ) );
+        return 0;
     }
 
     flx->display = fl_display;
@@ -1029,7 +1029,7 @@ fl_initialize( int        * na,
     fl_snprintf( disp_name, sizeof disp_name, "%s.fldebug", fl_app_name );
     fl_snprintf( disp_cls , sizeof disp_cls , "%s.flDebug", fl_app_class );
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
-		fli_set_debug_level( atoi( xval.addr ) );
+        fli_set_debug_level( atoi( xval.addr ) );
 
     /* print help */
 
@@ -1038,24 +1038,24 @@ fl_initialize( int        * na,
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
     {
-		size_t i = 0;
+        size_t i = 0;
 
-		while ( i < Ncopt )
-		{
-			if ( i == 0 )
-				fprintf( stderr, "%s: ", fl_argv[ 0 ] );
-			else
-				fprintf( stderr, "%*s  ", ( int ) strlen( fl_argv[ 0 ] ), "" );
+        while ( i < Ncopt )
+        {
+            if ( i == 0 )
+                fprintf( stderr, "%s: ", fl_argv[ 0 ] );
+            else
+                fprintf( stderr, "%*s  ", ( int ) strlen( fl_argv[ 0 ] ), "" );
 
-			fprintf( stderr, " %s", copt[ i ].option );
+            fprintf( stderr, " %s", copt[ i ].option );
 
-			if ( copt[ i ].argKind == XrmoptionSepArg )
-				fprintf( stderr, " \t[arg]" );
-			fprintf( stderr, "\n" );
-			i++;
-		}
+            if ( copt[ i ].argKind == XrmoptionSepArg )
+                fprintf( stderr, " \t[arg]" );
+            fprintf( stderr, "\n" );
+            i++;
+        }
 
-		exit(1);
+        exit(1);
     }
 
     /* Check if -name is present */
@@ -1065,9 +1065,9 @@ fl_initialize( int        * na,
     M_warn( "fl_initialize", "Trying display %s", disp_name );
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
     {
-		fl_app_name = fl_strdup( xval.addr );
-		M_warn( "fl_initialize", "Changed AppName from %s to %s",
-				fl_ori_app_name, fl_app_name );
+        fl_app_name = fl_strdup( xval.addr );
+        M_warn( "fl_initialize", "Changed AppName from %s to %s",
+                fl_ori_app_name, fl_app_name );
     }
 
     /* Merge  other resource database */
@@ -1084,35 +1084,35 @@ fl_initialize( int        * na,
 
     fli_cntl.vclass = fl_vclass_val( fli_cntl.vname );
     fli_cntl.coordUnit = fli_get_vn_value( vn_coordunit, OpCoordUnit );
-	if ( fli_cntl.coordUnit == -1 )
-		fli_cntl.coordUnit = FL_COORD_PIXEL;
+    if ( fli_cntl.coordUnit == -1 )
+        fli_cntl.coordUnit = FL_COORD_PIXEL;
 
 #if FL_DEBUG >= ML_WARN
     if ( fli_cntl.debug )
     {
-		fprintf( stderr, "Options Set\n" );
-		DumpD( debug );
-		fprintf( stderr, "\tVisual:%s (%d)\n",
-				 fli_cntl.vclass >= 0 ?
-				 fl_vclass_name( fli_cntl.vclass ) : "To be set",
-				 fli_cntl.vclass );
-		DumpD( depth );
-		DumpD( privateColormap );
-		DumpD( sharedColormap );
-		DumpD( standardColormap );
-		DumpD( doubleBuffer );
-		DumpD( ulPropWidth );
-		DumpD( ulThickness );
-		DumpD( scrollbarType );
-		DumpD( backingStore );
-		fprintf( stderr, "\t%s:%s\n", "coordUnit",
-				 fli_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
-		fprintf( stderr, "\t%s: 0x%lx\n", "VisualId", fli_requested_vid );
+        fprintf( stderr, "Options Set\n" );
+        DumpD( debug );
+        fprintf( stderr, "\tVisual:%s (%d)\n",
+                 fli_cntl.vclass >= 0 ?
+                 fl_vclass_name( fli_cntl.vclass ) : "To be set",
+                 fli_cntl.vclass );
+        DumpD( depth );
+        DumpD( privateColormap );
+        DumpD( sharedColormap );
+        DumpD( standardColormap );
+        DumpD( doubleBuffer );
+        DumpD( ulPropWidth );
+        DumpD( ulThickness );
+        DumpD( scrollbarType );
+        DumpD( backingStore );
+        fprintf( stderr, "\t%s:%s\n", "coordUnit",
+                 fli_get_vn_name( vn_coordunit, fli_cntl.coordUnit ) );
+        fprintf( stderr, "\t%s: 0x%lx\n", "VisualId", fli_requested_vid );
 
 #ifdef DO_GAMMA_CORRECTION
-		DumpF( rgamma );
-		DumpF( ggamma );
-		DumpF( bgamma );
+        DumpF( rgamma );
+        DumpF( ggamma );
+        DumpF( bgamma );
 #endif
     }
 #endif
@@ -1128,11 +1128,11 @@ fl_initialize( int        * na,
     /* Get the current keyboard state */
 
     {
-		XKeyboardState xks;
+        XKeyboardState xks;
 
-		XGetKeyboardControl( fl_display, &xks );
-		fli_keybdcontrol.auto_repeat_mode = xks.global_auto_repeat;
-		fli_keybdmask = KBAutoRepeatMode;
+        XGetKeyboardControl( fl_display, &xks );
+        fli_keybdcontrol.auto_repeat_mode = xks.global_auto_repeat;
+        fli_keybdmask = KBAutoRepeatMode;
     }
 
     /* Other initializations */
@@ -1144,13 +1144,13 @@ fl_initialize( int        * na,
 
     if ( fl_root != fl_vroot )
     {
-		M_warn( "fl_initialize", "fl_root = %lu fl_vroot = %lu",
-				fl_root, fl_vroot );
+        M_warn( "fl_initialize", "fl_root = %lu fl_vroot = %lu",
+                fl_root, fl_vroot );
 
-		/* tvtwm requires this to position a window relative to the current
-		   desktop */
+        /* tvtwm requires this to position a window relative to the current
+           desktop */
 
-		fli_wmstuff.pos_request = PPosition;
+        fli_wmstuff.pos_request = PPosition;
     }
 
     fl_scrh = DisplayHeight( fl_display, fl_screen );
@@ -1160,7 +1160,7 @@ fl_initialize( int        * na,
     ydpi = fl_scrh * 25.4 / DisplayHeightMM( fl_display, fl_screen );
 
     if ( xdpi / ydpi > 1.05 || ydpi / xdpi < 0.95 )
-		M_warn( "fl_initialize", "NonSquarePixel %.1f %.1f", xdpi, ydpi );
+        M_warn( "fl_initialize", "NonSquarePixel %.1f %.1f", xdpi, ydpi );
 
     fli_dpi = ( xdpi + ydpi ) / 2;
     fli_dpi = ( ( int ) ( fli_dpi * 10.0 + 0.3 ) ) * 0.1;
@@ -1175,7 +1175,7 @@ fl_initialize( int        * na,
 #ifdef XlibSpecificationRelease
     if ( XSupportsLocale( ) )
     {
-		XSetLocaleModifiers( "" );
+        XSetLocaleModifiers( "" );
 
         /* Use the same input method throughout xforms */
 
@@ -1188,19 +1188,19 @@ fl_initialize( int        * na,
             int style =  XIMPreeditNothing | XIMStatusNothing;
 
             fli_context->xic = XCreateIC( fli_context->xim,
-										  XNInputStyle, style,
-										  ( char * ) NULL );
+                                          XNInputStyle, style,
+                                          ( char * ) NULL );
 
-	    /* Clean-up on failure */
+        /* Clean-up on failure */
 
-			if ( ! fli_context->xic )
-			{
-				M_err( "fl_initialize", "Could not create an input context" );
-				XCloseIM( fli_context->xim );
-			}
+            if ( ! fli_context->xic )
+            {
+                M_err( "fl_initialize", "Could not create an input context" );
+                XCloseIM( fli_context->xim );
+            }
         }
-		else
-			M_err( "fl_initialize", "Could not create an input method" );
+        else
+            M_err( "fl_initialize", "Could not create an input method" );
     }
 #endif
 
@@ -1213,41 +1213,41 @@ fl_initialize( int        * na,
     fl_state[ fl_vmode ].trailblazer = fl_root;
 
     if (    fli_visual( fl_vmode ) != DefaultVisual( fl_display, fl_screen )
-		 || fl_state[ fl_vmode ].pcm )
+         || fl_state[ fl_vmode ].pcm )
     {
-		fl_state[ fl_vmode ].trailblazer =
-		   fli_create_window( fl_root, fli_colormap( fl_vmode ),
-							  "trailblazer" );
+        fl_state[ fl_vmode ].trailblazer =
+           fli_create_window( fl_root, fli_colormap( fl_vmode ),
+                              "trailblazer" );
     }
 
     if ( strcmp( OpSCBT, "plain" ) == 0 )
     {
-		fli_context->hscb = FL_HOR_PLAIN_SCROLLBAR;
-		fli_context->vscb = FL_VERT_PLAIN_SCROLLBAR;
+        fli_context->hscb = FL_HOR_PLAIN_SCROLLBAR;
+        fli_context->vscb = FL_VERT_PLAIN_SCROLLBAR;
     }
     else if ( strcmp( OpSCBT, "normal" ) == 0 )
     {
-		fli_context->hscb = FL_HOR_SCROLLBAR;
-		fli_context->vscb = FL_VERT_SCROLLBAR;
+        fli_context->hscb = FL_HOR_SCROLLBAR;
+        fli_context->vscb = FL_VERT_SCROLLBAR;
     }
     else if ( ! strcmp( OpSCBT, "thin" ) )
     {
-		fli_context->hscb = FL_HOR_THIN_SCROLLBAR;
-		fli_context->vscb = FL_VERT_THIN_SCROLLBAR;
+        fli_context->hscb = FL_HOR_THIN_SCROLLBAR;
+        fli_context->vscb = FL_VERT_THIN_SCROLLBAR;
     }
     else if ( ! strcmp( OpSCBT, "nice" ) )
     {
-		fli_context->hscb = FL_HOR_NICE_SCROLLBAR;
-		fli_context->vscb = FL_VERT_NICE_SCROLLBAR;
+        fli_context->hscb = FL_HOR_NICE_SCROLLBAR;
+        fli_context->vscb = FL_VERT_NICE_SCROLLBAR;
     }
 
     fli_context->max_request_size = XMaxRequestSize( fl_display );
 
     if ( fli_context->max_request_size < 4096 )
     {
-		M_err( "fl_initialize", "Something is wrong with max_request_size: %ld",
-			   fli_context->max_request_size );
-		fli_context->max_request_size = 4096;
+        M_err( "fl_initialize", "Something is wrong with max_request_size: %ld",
+               fli_context->max_request_size );
+        fli_context->max_request_size = 4096;
     }
 
 
@@ -1258,7 +1258,7 @@ fl_initialize( int        * na,
 #endif
 
     if ( ! fli_context->ext_request_size )
-		fli_context->ext_request_size = fli_context->max_request_size;
+        fli_context->ext_request_size = fli_context->max_request_size;
 
     fli_context->max_request_size -= 8;
     fli_context->ext_request_size -= 8;
@@ -1275,9 +1275,9 @@ fl_initialize( int        * na,
 
     XrmSetDatabase( fl_display, fldatabase );
 
-	/* Initialize popup system */
+    /* Initialize popup system */
 
-	fli_popup_init( );
+    fli_popup_init( );
 
     return fl_display;
 }
@@ -1295,87 +1295,87 @@ fl_finish( void )
     /* Make sure the connection is alive */
 
     if ( ! flx->display )
-		return;
+        return;
 
-	XChangeKeyboardControl( flx->display, fli_keybdmask,
-							&fli_keybdcontrol );
+    XChangeKeyboardControl( flx->display, fli_keybdmask,
+                            &fli_keybdcontrol );
 
-	fl_remove_all_signal_callbacks( );
-	fl_remove_all_timeouts( );
+    fl_remove_all_signal_callbacks( );
+    fl_remove_all_timeouts( );
 
-	/* Get rid of all forms, first hide all of them */
+    /* Get rid of all forms, first hide all of them */
 
-	while ( fli_int.formnumb > 0 )
-		fl_hide_form( fli_int.forms[ 0 ] );
+    while ( fli_int.formnumb > 0 )
+        fl_hide_form( fli_int.forms[ 0 ] );
 
-	/* Now also delete them (to deallocate memory) - problem is that the
-	   tooltip form may only be deleted as the very last one since the objects
-	   that have a tooltip (and that get deleted in the process of deleting
-	   the form they belong to) still try to access the tooltip form */
+    /* Now also delete them (to deallocate memory) - problem is that the
+       tooltip form may only be deleted as the very last one since the objects
+       that have a tooltip (and that get deleted in the process of deleting
+       the form they belong to) still try to access the tooltip form */
 
-	while ( fli_int.hidden_formnumb > 0 )
-	{
-		if (    fli_int.hidden_formnumb > 1
-			 && fli_is_tooltip_form( fli_int.forms[ 0 ] ) )
-			fl_free_form( fli_int.forms[ 1 ] );
-		else
-			fl_free_form( fli_int.forms[ 0 ] );
-	}
+    while ( fli_int.hidden_formnumb > 0 )
+    {
+        if (    fli_int.hidden_formnumb > 1
+             && fli_is_tooltip_form( fli_int.forms[ 0 ] ) )
+            fl_free_form( fli_int.forms[ 1 ] );
+        else
+            fl_free_form( fli_int.forms[ 0 ] );
+    }
 
-	/* Delete the object and event queue */
+    /* Delete the object and event queue */
 
-	fli_obj_queue_delete( );
-	fli_event_queue_delete( );
+    fli_obj_queue_delete( );
+    fli_event_queue_delete( );
 
-	/* Free memory allocated in xtext.c */
+    /* Free memory allocated in xtext.c */
 
-	fli_free_xtext_workmem( );
+    fli_free_xtext_workmem( );
 
-	/* Release memory used for symbols */
+    /* Release memory used for symbols */
 
-	fli_release_symbols( );
+    fli_release_symbols( );
 
-	/* Release memory allocated in goodies */
+    /* Release memory allocated in goodies */
 
-	fli_goodies_cleanup( );
+    fli_goodies_cleanup( );
 
-	/* Release memory allocated for file selectors */
+    /* Release memory allocated for file selectors */
 
-	fli_free_fselectors( );
+    fli_free_fselectors( );
 
-	/* Release memory used by the popup system */
+    /* Release memory used by the popup system */
 
-	fli_popup_finish( );
+    fli_popup_finish( );
 
-	/* Release memory used for the copy of the command line arguments */
+    /* Release memory used for the copy of the command line arguments */
 
-	fli_free_cmdline_args( );
+    fli_free_cmdline_args( );
 
-	/* Release memory used for cursors */
+    /* Release memory used for cursors */
 
-	fli_free_cursors( );
+    fli_free_cursors( );
 
-	/* Free memory used for colormaps */
+    /* Free memory used for colormaps */
 
-	fli_free_colormap( fl_vmode );
+    fli_free_colormap( fl_vmode );
 
-	/* Get rid of memory for input methods */
+    /* Get rid of memory for input methods */
 
 #ifdef XlibSpecificationRelease
     if ( fli_context && XSupportsLocale( ) && fli_context->xim )
-	{
-		if ( fli_context->xic )
-			XDestroyIC( fli_context->xic );
-		XCloseIM( fli_context->xim );
-	}
+    {
+        if ( fli_context->xic )
+            XDestroyIC( fli_context->xic );
+        XCloseIM( fli_context->xim );
+    }
 #endif
 
-	fl_safe_free( fli_context );
+    fl_safe_free( fli_context );
 
-	/* Close the display */
+    /* Close the display */
 
-	XCloseDisplay( flx->display );
-	flx->display = fl_display = None;
+    XCloseDisplay( flx->display );
+    flx->display = fl_display = None;
 }
 
 
@@ -1387,11 +1387,11 @@ fl_finish( void )
 
 static Window
 fli_GetVRoot( Display * dpy,
-			  int       scr )
+              int       scr )
 {
     Window rootReturn;
-	Window parentReturn;
-	Window *children;
+    Window parentReturn;
+    Window *children;
     unsigned int numChildren;
     Window root = RootWindow( dpy, scr );
     Atom __SWM_VROOT = None;
@@ -1399,29 +1399,29 @@ fli_GetVRoot( Display * dpy,
 
     __SWM_VROOT = XInternAtom( dpy, "__SWM_VROOT", False );
     XQueryTree( dpy, root, &rootReturn, &parentReturn, &children,
-				&numChildren );
+                &numChildren );
 
     for ( i = 0; i < numChildren; i++ )
     {
-		Atom actual_type;
-		int actual_format;
-		unsigned long nitems, bytesafter;
-		Window *newRoot = NULL;
+        Atom actual_type;
+        int actual_format;
+        unsigned long nitems, bytesafter;
+        Window *newRoot = NULL;
 
-		/* Kludge here: the ( void * ) bit in
-		   ( unsigned char ** ) ( void * ) &newRoot
-		   is there to avoid a spurious  GCC warning         JTT */
+        /* Kludge here: the ( void * ) bit in
+           ( unsigned char ** ) ( void * ) &newRoot
+           is there to avoid a spurious  GCC warning         JTT */
 
-		if (    XGetWindowProperty( dpy, children[ i ], __SWM_VROOT, 0, 1,
-									False, XA_WINDOW, &actual_type,
-									&actual_format, &nitems, &bytesafter,
-									( unsigned char ** ) ( void * ) &newRoot )
-																	== Success
-			 && newRoot )
-		{
-			root = *newRoot;
-			break;
-		}
+        if (    XGetWindowProperty( dpy, children[ i ], __SWM_VROOT, 0, 1,
+                                    False, XA_WINDOW, &actual_type,
+                                    &actual_format, &nitems, &bytesafter,
+                                    ( unsigned char ** ) ( void * ) &newRoot )
+                                                                    == Success
+             && newRoot )
+        {
+            root = *newRoot;
+            break;
+        }
     }
 
     XFree( ( char * ) children );
@@ -1435,17 +1435,17 @@ fli_GetVRoot( Display * dpy,
 
 static void
 fli_get_app_resource( FL_resource * appresource,
-					  int           n )
+                      int           n )
 {
     FL_resource *flr = appresource,
-		        *flrs = flr + n;
+                *flrs = flr + n;
 
     for ( ; flr < flrs; flr++ )
-		if ( flr->type == FL_STRING && flr->nbytes == 0 )
-			M_err( "fl_get_app_resources", "%s: buflen == 0", flr->res_name );
-	else
-	    fl_get_resource( flr->res_name, flr->res_class,
-						 flr->type, flr->defval, flr->var, flr->nbytes );
+        if ( flr->type == FL_STRING && flr->nbytes == 0 )
+            M_err( "fl_get_app_resources", "%s: buflen == 0", flr->res_name );
+    else
+        fl_get_resource( flr->res_name, flr->res_class,
+                         flr->type, flr->defval, flr->var, flr->nbytes );
 }
 
 
@@ -1454,7 +1454,7 @@ fli_get_app_resource( FL_resource * appresource,
 
 void
 fl_get_app_resources( FL_resource * appresource,
-					  int           n )
+                      int           n )
 {
     char *tmp = fl_app_name;
 
@@ -1463,8 +1463,8 @@ fl_get_app_resources( FL_resource * appresource,
 
     if ( fl_app_name != tmp )
     {
-		fl_app_name = tmp;
-		fli_get_app_resource( appresource, n );
+        fl_app_name = tmp;
+        fli_get_app_resource( appresource, n );
     }
 }
 
@@ -1476,9 +1476,9 @@ void
 fl_flip_yorigin( void )
 {
     if ( ! fl_display )
-		fli_inverted_y = 1;
+        fli_inverted_y = 1;
     else
-		M_err( "fl_flip_yorigin", "Only supported before fl_initialize" );
+        M_err( "fl_flip_yorigin", "Only supported before fl_initialize" );
 }
 
 
@@ -1487,10 +1487,18 @@ fl_flip_yorigin( void )
 
 void
 fli_set_app_name( const char * n,
-				  const char * c )
+                  const char * c )
 {
     if ( n )
-		fl_app_name = fl_strdup( n );
+        fl_app_name = fl_strdup( n );
     if ( c )
-		fl_app_class = fl_strdup( c );
+        fl_app_class = fl_strdup( c );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

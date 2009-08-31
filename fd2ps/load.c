@@ -1,5 +1,4 @@
 /*
- *
  * This file is part of XForms.
  *
  * XForms is free software; you can redistribute it and/or modify it
@@ -20,14 +19,11 @@
 /**
  * \file load.c
  *
- *.
  *  This file is part of XForms package
  *  Copyright (c) 1997-2000  by T.C. Zhao
  *  All rights reserved.
- *.
  *
  * Read a form defination file and call PS output routines
- *
  */
 
 #ifdef HAVE_CONFIG_H
@@ -50,8 +46,8 @@ extern char *de_space( char *s );
 
 static FL_FORM *
 make_form( int type  FL_UNUSED_ARG,
-		   int w,
-		   int h )
+           int w,
+           int h )
 {
     FL_FORM *form;
 
@@ -66,10 +62,10 @@ make_form( int type  FL_UNUSED_ARG,
 
 #define sl_focus( t ) (    t == FL_HOR_BROWSER_SLIDER   \
                         || t == FL_VERT_BROWSER_SLIDER  \
-	                    || t == FL_HOR_BROWSER_SLIDER2  \
-	                    || t == FL_VERT_BROWSER_SLIDER2 \
-	                    || t == FL_HOR_THIN_SLIDER      \
-	                    || t == FL_VERT_THIN_SLIDER )
+                        || t == FL_HOR_BROWSER_SLIDER2  \
+                        || t == FL_VERT_BROWSER_SLIDER2 \
+                        || t == FL_HOR_THIN_SLIDER      \
+                        || t == FL_VERT_THIN_SLIDER )
 
 
 /***************************************
@@ -77,13 +73,13 @@ make_form( int type  FL_UNUSED_ARG,
 
 FL_OBJECT *
 flps_make_object( int          objclass,
-				  int          type,
-				  int          x,
-				  int          y,
-				  int          w,
-				  int          h,
-				  const char * label,
-				  void       * p  FL_UNUSED_ARG )
+                  int          type,
+                  int          x,
+                  int          y,
+                  int          w,
+                  int          h,
+                  const char * label,
+                  void       * p  FL_UNUSED_ARG )
 {
     FL_OBJECT *ob = calloc( 1, sizeof *ob );
     ALLSPEC *sp;
@@ -113,7 +109,7 @@ flps_make_object( int          objclass,
     ob->next = ob->prev = NULL;
     ob->form = NULL;
     ob->bw = ( psinfo.bw && FL_abs( psinfo.bw ) <= 6 ) ?
-		     psinfo.bw : FL_BOUND_WIDTH;
+             psinfo.bw : FL_BOUND_WIDTH;
 
     sp = ob->spec = calloc( 1, sizeof *ob->spec );
     sp->content = calloc( MAX_CONTENT + 1, sizeof *sp->content );
@@ -125,74 +121,74 @@ flps_make_object( int          objclass,
     /* set object specific defaults */
 
     if (    ob->objclass == FL_SLIDER
-		 || ob->objclass == FL_VALSLIDER
-		 || ob->objclass == FL_THUMBWHEEL )
+         || ob->objclass == FL_VALSLIDER
+         || ob->objclass == FL_THUMBWHEEL )
     {
-		sp->val = 0.5;
-		sp->prec = 2;
-		sp->max = 1.0;
-		sp->min = 0.0;
-		sp->slsize = FL_SLIDER_WIDTH;
+        sp->val = 0.5;
+        sp->prec = 2;
+        sp->max = 1.0;
+        sp->min = 0.0;
+        sp->slsize = FL_SLIDER_WIDTH;
 
-		if ( sl_focus( ob->type ) )
-			sp->slsize *= 1.5;
+        if ( sl_focus( ob->type ) )
+            sp->slsize *= 1.5;
     }
     else if ( ob->objclass == FL_SCROLLBAR )
     {
-		ob->col1 = ob->col2 = FL_COL1;
+        ob->col1 = ob->col2 = FL_COL1;
 
-		sp->val = 0.5;
-		sp->prec = 2;
-		sp->max = 1.0;
-		sp->min = 0.0;
-		sp->slsize = FL_SLIDER_WIDTH;
+        sp->val = 0.5;
+        sp->prec = 2;
+        sp->max = 1.0;
+        sp->min = 0.0;
+        sp->slsize = FL_SLIDER_WIDTH;
 
-		if (    ob->type == FL_HOR_THIN_SCROLLBAR
-			 || ob->type == FL_VERT_THIN_SCROLLBAR
-			 || ob->type == FL_HOR_SCROLLBAR
-			 || ob->type == FL_VERT_SCROLLBAR )
-			sp->slsize *= 1.6;
+        if (    ob->type == FL_HOR_THIN_SCROLLBAR
+             || ob->type == FL_VERT_THIN_SCROLLBAR
+             || ob->type == FL_HOR_SCROLLBAR
+             || ob->type == FL_VERT_SCROLLBAR )
+            sp->slsize *= 1.6;
     }
     else if ( ob->objclass == FL_POSITIONER )
     {
-		sp->xmin = sp->ymin = 0.0;
-		sp->xmax = sp->ymax = 1.0;
-		sp->xval = sp->yval = 0.5;
+        sp->xmin = sp->ymin = 0.0;
+        sp->xmax = sp->ymax = 1.0;
+        sp->xval = sp->yval = 0.5;
     }
     else if ( ob->objclass == FL_COUNTER )
     {
-		sp->val = 0.0;
-		sp->prec = 1;
-		sp->min = -1000000.0;
-		sp->max = 1000000.0;
+        sp->val = 0.0;
+        sp->prec = 1;
+        sp->min = -1000000.0;
+        sp->max = 1000000.0;
     }
     else if ( ob->objclass == FL_DIAL )
     {
-		sp->min = 0.0;
-		sp->max = 1.0;
-		sp->val = 0.5;
-		sp->thetai = 0.0;
-		sp->thetaf = 360;
-		sp->origin = 270;
-		sp->direction = FL_DIAL_CW;
+        sp->min = 0.0;
+        sp->max = 1.0;
+        sp->val = 0.5;
+        sp->thetai = 0.0;
+        sp->thetaf = 360;
+        sp->origin = 270;
+        sp->direction = FL_DIAL_CW;
     }
     else if ( ob->objclass == FL_PIXMAP || ob->objclass == FL_PIXMAPBUTTON )
     {
-		sp->align = FL_ALIGN_CENTER;
-		sp->dx = sp->dy = 3;
-		sp->show_focus = 1;
-		psinfo.epsf_import = 1;
+        sp->align = FL_ALIGN_CENTER;
+        sp->dx = sp->dy = 3;
+        sp->show_focus = 1;
+        psinfo.epsf_import = 1;
     }
     else if ( ob->objclass == FL_CHOICE )
     {
-		sp->align = FL_ALIGN_CENTER;
-		sp->fontsize = FL_DEFAULT_FONT;
+        sp->align = FL_ALIGN_CENTER;
+        sp->fontsize = FL_DEFAULT_FONT;
     }
     else if ( ob->objclass == FL_BROWSER )
     {
-		sp->fontsize = FL_DEFAULT_FONT;
-		sp->h_pref = FL_AUTO;
-		sp->v_pref = FL_AUTO;
+        sp->fontsize = FL_DEFAULT_FONT;
+        sp->h_pref = FL_AUTO;
+        sp->v_pref = FL_AUTO;
     }
 
     return ob;
@@ -204,31 +200,31 @@ flps_make_object( int          objclass,
 
 static void
 myfgets( char * line,
-		 FILE * fl )
+         FILE * fl )
 {
-    char tmpstr[ 10000 ];		/* Maximal label length is limited here. */
+    char tmpstr[ 10000 ];       /* Maximal label length is limited here. */
     int i = 0,
-		j,
-		ch;
+        j,
+        ch;
 
     ch = fgetc( fl );
     while ( ch != '\n' && ch != EOF )
     {
-		tmpstr[ i++ ] = ch;
-		ch = fgetc( fl );
+        tmpstr[ i++ ] = ch;
+        ch = fgetc( fl );
     }
 
     tmpstr[ i ] = '\0';
 
     i = 0;
     while ( tmpstr[ i ] != ':' && tmpstr[ i + 1 ] != ' ')
-		i++;
+        i++;
 
     i += 2;
     j = 0;
 
     do
-		line[ j++ ] = tmpstr[ i++ ];
+        line[ j++ ] = tmpstr[ i++ ];
     while ( tmpstr[ i - 1 ] != '\0' );
 }
 
@@ -238,14 +234,14 @@ myfgets( char * line,
 
 static int
 read_key_val(FILE * fp,
-			 char * key,
-			 char * val )
+             char * key,
+             char * val )
 {
     char buf[ 1024 ],
-		 *p;
+         *p;
 
     if ( ! fgets( buf, 1024, fp ) || ferror( fp ) )
-		return EOF;
+        return EOF;
 
     buf[ 1023 ] = 0;
     val[ 0 ] = key[ 0 ] = '\0';
@@ -253,19 +249,19 @@ read_key_val(FILE * fp,
     /* nuke the new line */
 
     if ( ( p = strchr( buf, '\n' ) ) )
-		*p = '\0';
+        *p = '\0';
 
     if ( ! ( p = strchr( buf, ':' ) ) )
     {
-		strcpy( key, "?" );
-		return EOF;
+        strcpy( key, "?" );
+        return EOF;
     }
 
     *p = '\0';
     strcpy( key, buf );
 
     if ( * ( p + 1 ) )
-		strcpy( val, p + 2 );
+        strcpy( val, p + 2 );
 
     return 0;
 }
@@ -277,34 +273,34 @@ read_key_val(FILE * fp,
 
 static void
 flps_add_object( FL_FORM   * form,
-				 FL_OBJECT * obj )
+                 FL_OBJECT * obj )
 {
     /* Checking for correct behaviour. */
 
     if ( obj == NULL )
     {
-		fprintf( stderr, "fl_add_object:Trying to add NULL object.\n" );
-		return;
+        fprintf( stderr, "fl_add_object:Trying to add NULL object.\n" );
+        return;
     }
 
     if ( form == NULL )
     {
-		fprintf( stderr, "fl_add_object:Trying to add object to NULL form\n" );
-		return;
+        fprintf( stderr, "fl_add_object:Trying to add object to NULL form\n" );
+        return;
     }
 
     obj->prev = obj->next = NULL;
 
     if ( psinfo.inverted )
-		obj->y = form->h - obj->h - obj->y;
+        obj->y = form->h - obj->h - obj->y;
 
     if ( form->first == NULL )
-		form->first = form->last = obj;
+        form->first = form->last = obj;
     else
     {
-		obj->prev = form->last;
-		form->last->next = obj;
-		form->last = obj;
+        obj->prev = form->last;
+        form->last->next = obj;
+        form->last = obj;
     }
     obj->form = form;
 }
@@ -319,27 +315,27 @@ flps_add_object( FL_FORM   * form,
 
 static void
 set_label( FL_OBJECT  * obj,
-		   const char * str )
+           const char * str )
 {
     int i = 0,
-		j = 0;
+        j = 0;
     static char tmpstr[ 1024 ];
 
     do
     {
-		if ( str[ i ] == '\\' && str[ i + 1 ] == 'n' )
-		{
-			tmpstr[ j++ ] = NL;
-			i++;
-		}
-		else if ( str[ i ] == '\\' && strncmp( str + i + 1, "010", 3 ) == 0 )
-		{
-			if ( ! obj->shortcut || ! *obj->shortcut )
-				tmpstr[ j++ ] = *ul_magic_char;
-			i += 3;
-		}
-		else
-			tmpstr[ j++ ] = str[ i ];
+        if ( str[ i ] == '\\' && str[ i + 1 ] == 'n' )
+        {
+            tmpstr[ j++ ] = NL;
+            i++;
+        }
+        else if ( str[ i ] == '\\' && strncmp( str + i + 1, "010", 3 ) == 0 )
+        {
+            if ( ! obj->shortcut || ! *obj->shortcut )
+                tmpstr[ j++ ] = *ul_magic_char;
+            i += 3;
+        }
+        else
+            tmpstr[ j++ ] = str[ i ];
     } while ( str[ i++ ] != 0);
 
     tmpstr[ j ] = '\0';
@@ -385,89 +381,89 @@ set_object_modifier( void ( *m ) ( FL_OBJECT * ) )
 
 static void
 load_objclass_spec_info( FILE      * fp,
-						 FL_OBJECT * ob )
+                         FL_OBJECT * ob )
 {
     char key[ 128 ],
-		 val[ 128 ];
+         val[ 128 ];
     SPEC *sp = ob->spec;
     int c;
 
     while ( ungetc( ( c = getc( fp ) ), fp ) != '-' && c != '=' )
     {
-		read_key_val( fp, key, val );
-		if ( strlen( de_space( key ) ) < 2 )
-			/* empty */ ;
-		else if ( strcmp( key, "bounds" ) == 0 )
-			sscanf( val, "%f %f", &sp->min, &sp->max );
-		else if ( strcmp( key, "xbounds" ) == 0 )
-			sscanf( val, "%f %f", &sp->xmin, &sp->xmax );
-		else if (strcmp( key, "ybounds" ) == 0 )
-			sscanf( val, "%f %f", &sp->ymin, &sp->ymax );
-		else if ( strcmp( key, "precision" ) == 0 )
-			sscanf( val, "%d", &sp->prec );
-		else if ( strcmp( key, "initial_val" ) == 0 )
-			sscanf( val, "%f", &sp->val );
-		else if ( strcmp( key, "value" ) == 0 )
-		{
-			if ( ISBUTTON( ob->objclass ) || ISCHOICE( ob->objclass ) )
-				sp->int_val = atoi( val );
-			else
-				sp->val = atof( val );
-		}
-		else if ( strcmp( key, "xvalue" ) == 0 )
-			sscanf( val, "%f", &sp->xval );
-		else if ( strcmp( key, "yvalue" ) == 0 )
-			sscanf( val, "%f", &sp->yval );
-		else if ( strcmp( key, "xstep" ) == 0 )
-			sscanf( val, "%f", &sp->xstep );
-		else if ( strcmp( key, "ystep" ) == 0 )
-			sscanf( val, "%f", &sp->ystep );
-		else if ( strcmp(key, "sstep" ) == 0 )
-			sscanf( val, "%f", &sp->sstep );
-		else if ( strcmp( key, "lstep" ) == 0 )
-			sscanf( val, "%f", &sp->lstep );
-		else if ( strcmp( key, "file" ) == 0 )
-			sp->file = fl_strdup( val );
-		else if ( strcmp( key, "focus" ) == 0 )
-			sp->show_focus = atoi( val );
-		else if ( strcmp( key, "align" ) == 0 )
-			sp->align = align_val( val );
-		else if ( strcmp( key, "slsize" ) == 0 )
-			sscanf( val, "%f", &sp->slsize );
-		else if ( strcmp( key, "angles" ) == 0 )
-			sscanf( val, "%f %f", &sp->thetai, &sp->thetaf );
-		else if ( strcmp( key, "content" ) == 0 )
-			sp->content[ ++sp->lines ] = fl_strdup( val );
-		else if ( strcmp( key, "mode" ) == 0 )
-			sp->mode[ sp->lines ] = pupmode_val( val );
-		else if ( strcmp( key, "h_pref" ) == 0 )
-			sp->h_pref = scbpref_val( val );
-		else if ( strcmp( key, "v_pref" ) == 0 )
-			sp->v_pref = scbpref_val( val );
-		else if ( strcmp(key, "dir" ) == 0 )
-		{
-			if ( strcmp( val, "FL_DIAL_CCW" ) == 0 )
-				sp->direction = FL_DIAL_CCW;
-			else
-				sp->direction = FL_DIAL_CW;
-		}
-		/* known but don't care */
-		else if (    strcmp( key, "return" )   == 0
-				  || strcmp( key, "data" )     == 0
-				  || strcmp( key, "ytics" )    == 0
-				  || strcmp( key, "xtics" )    == 0
-				  || strcmp( key, "xscale" )   == 0
-				  || strcmp( key, "yscale" )   == 0
-				  || strcmp( key, "struct" )   == 0
-				  || strcmp( key, "global" )    == 0
-				  || strcmp( key, "shortcut" )  == 0
-				  || strcmp( key, "increment" ) == 0
-				  || strcmp( key, "handler" )   == 0
-				  || strcmp( key, "fullpath" )  == 0 )
-			/* empty */;
-	else
-	    fprintf( stderr, "%s: Unknown spec (%s=%s) -- Ignored\n",
-				 find_class_name(ob->objclass), key, val );
+        read_key_val( fp, key, val );
+        if ( strlen( de_space( key ) ) < 2 )
+            /* empty */ ;
+        else if ( strcmp( key, "bounds" ) == 0 )
+            sscanf( val, "%f %f", &sp->min, &sp->max );
+        else if ( strcmp( key, "xbounds" ) == 0 )
+            sscanf( val, "%f %f", &sp->xmin, &sp->xmax );
+        else if (strcmp( key, "ybounds" ) == 0 )
+            sscanf( val, "%f %f", &sp->ymin, &sp->ymax );
+        else if ( strcmp( key, "precision" ) == 0 )
+            sscanf( val, "%d", &sp->prec );
+        else if ( strcmp( key, "initial_val" ) == 0 )
+            sscanf( val, "%f", &sp->val );
+        else if ( strcmp( key, "value" ) == 0 )
+        {
+            if ( ISBUTTON( ob->objclass ) || ISCHOICE( ob->objclass ) )
+                sp->int_val = atoi( val );
+            else
+                sp->val = atof( val );
+        }
+        else if ( strcmp( key, "xvalue" ) == 0 )
+            sscanf( val, "%f", &sp->xval );
+        else if ( strcmp( key, "yvalue" ) == 0 )
+            sscanf( val, "%f", &sp->yval );
+        else if ( strcmp( key, "xstep" ) == 0 )
+            sscanf( val, "%f", &sp->xstep );
+        else if ( strcmp( key, "ystep" ) == 0 )
+            sscanf( val, "%f", &sp->ystep );
+        else if ( strcmp(key, "sstep" ) == 0 )
+            sscanf( val, "%f", &sp->sstep );
+        else if ( strcmp( key, "lstep" ) == 0 )
+            sscanf( val, "%f", &sp->lstep );
+        else if ( strcmp( key, "file" ) == 0 )
+            sp->file = fl_strdup( val );
+        else if ( strcmp( key, "focus" ) == 0 )
+            sp->show_focus = atoi( val );
+        else if ( strcmp( key, "align" ) == 0 )
+            sp->align = align_val( val );
+        else if ( strcmp( key, "slsize" ) == 0 )
+            sscanf( val, "%f", &sp->slsize );
+        else if ( strcmp( key, "angles" ) == 0 )
+            sscanf( val, "%f %f", &sp->thetai, &sp->thetaf );
+        else if ( strcmp( key, "content" ) == 0 )
+            sp->content[ ++sp->lines ] = fl_strdup( val );
+        else if ( strcmp( key, "mode" ) == 0 )
+            sp->mode[ sp->lines ] = pupmode_val( val );
+        else if ( strcmp( key, "h_pref" ) == 0 )
+            sp->h_pref = scbpref_val( val );
+        else if ( strcmp( key, "v_pref" ) == 0 )
+            sp->v_pref = scbpref_val( val );
+        else if ( strcmp(key, "dir" ) == 0 )
+        {
+            if ( strcmp( val, "FL_DIAL_CCW" ) == 0 )
+                sp->direction = FL_DIAL_CCW;
+            else
+                sp->direction = FL_DIAL_CW;
+        }
+        /* known but don't care */
+        else if (    strcmp( key, "return" )   == 0
+                  || strcmp( key, "data" )     == 0
+                  || strcmp( key, "ytics" )    == 0
+                  || strcmp( key, "xtics" )    == 0
+                  || strcmp( key, "xscale" )   == 0
+                  || strcmp( key, "yscale" )   == 0
+                  || strcmp( key, "struct" )   == 0
+                  || strcmp( key, "global" )    == 0
+                  || strcmp( key, "shortcut" )  == 0
+                  || strcmp( key, "increment" ) == 0
+                  || strcmp( key, "handler" )   == 0
+                  || strcmp( key, "fullpath" )  == 0 )
+            /* empty */;
+    else
+        fprintf( stderr, "%s: Unknown spec (%s=%s) -- Ignored\n",
+                 find_class_name(ob->objclass), key, val );
     }
 }
 
@@ -477,32 +473,32 @@ load_objclass_spec_info( FILE      * fp,
 
 static FL_OBJECT *
 load_object( FL_FORM * form,
-			 FILE    * fl )
+             FILE    * fl )
 {
     FL_OBJECT *obj;
     int objclass, type;
     float x,
-		  y,
-		  w,
-		  h;
+          y,
+          w,
+          h;
     char name[ 64 ],
-		 cbname[ 64 ];
+         cbname[ 64 ];
     char cn1[ 64 ],
-		 cn2[ 64 ];
+         cn2[ 64 ];
     char objcls[ 64 ];
     char key[ 64 ],
-		 val[ 10000 ];
+         val[ 10000 ];
 
     /* Must demand the vital info */
 
-	if (    fgetc( fl ) != '\n'
-		 || ! fgets( val, sizeof val, fl )
-		 || strcmp( val, "--------------------\n" ) 
-		 || fscanf( fl, "type: %s\n", val ) != 1
-		 || fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h ) != 4 )
-	{
-		/* This is an error and should be handled JTT*/
-	}
+    if (    fgetc( fl ) != '\n'
+         || ! fgets( val, sizeof val, fl )
+         || strcmp( val, "--------------------\n" ) 
+         || fscanf( fl, "type: %s\n", val ) != 1
+         || fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h ) != 4 )
+    {
+        /* This is an error and should be handled JTT*/
+    }
 
     objclass = find_class_val(objcls);
     type = find_type_val(objclass, val);
@@ -513,38 +509,38 @@ load_object( FL_FORM * form,
 
     while ( read_key_val( fl, key, val ) != EOF )
     {
-		if ( strcmp( key, "boxtype" ) == 0 )
-			obj->boxtype = boxtype_val( val );
-		else if ( strcmp(key, "colors" ) == 0 )
-		{
-			cn1[ 0 ] = cn2[ 0 ] = '\0';
-			if ( sscanf( val, "%s %s", cn1, cn2 ) != 2 )
-			{
-				/* This is an error and should be handled JTT*/
-			}
-			obj->col1 = fl_get_namedcolor(cn1);
-			obj->col2 = fl_get_namedcolor(cn2);
-		}
-		else if (strcmp(key, "alignment") == 0)
-			obj->align = align_val(val);
-		else if (strcmp(key, "style") == 0 || strcmp(key, "lstyle") == 0)
-			obj->lstyle = style_val(val);
-		else if (strcmp(key, "size") == 0 || strcmp(key, "lsize") == 0)
-			obj->lsize = lsize_val(val);
-		else if (strcmp(key, "lcol") == 0)
-			obj->lcol = fl_get_namedcolor(val);
-		else if (strcmp(key, "label") == 0)
-			set_label(obj, val);
-		else if (strcmp(key, "shortcut") == 0)
-			flps_set_object_shortcut(obj, val, 1);
-		else if (strcmp(key, "callback") == 0)
-			strcpy(cbname, val);
-		else if (strcmp(key, "name") == 0)
-			strcpy(name, val);
-		else if (strcmp(key, "argument") == 0)
-			goto done;
+        if ( strcmp( key, "boxtype" ) == 0 )
+            obj->boxtype = boxtype_val( val );
+        else if ( strcmp(key, "colors" ) == 0 )
+        {
+            cn1[ 0 ] = cn2[ 0 ] = '\0';
+            if ( sscanf( val, "%s %s", cn1, cn2 ) != 2 )
+            {
+                /* This is an error and should be handled JTT*/
+            }
+            obj->col1 = fl_get_namedcolor(cn1);
+            obj->col2 = fl_get_namedcolor(cn2);
+        }
+        else if (strcmp(key, "alignment") == 0)
+            obj->align = align_val(val);
+        else if (strcmp(key, "style") == 0 || strcmp(key, "lstyle") == 0)
+            obj->lstyle = style_val(val);
+        else if (strcmp(key, "size") == 0 || strcmp(key, "lsize") == 0)
+            obj->lsize = lsize_val(val);
+        else if (strcmp(key, "lcol") == 0)
+            obj->lcol = fl_get_namedcolor(val);
+        else if (strcmp(key, "label") == 0)
+            set_label(obj, val);
+        else if (strcmp(key, "shortcut") == 0)
+            flps_set_object_shortcut(obj, val, 1);
+        else if (strcmp(key, "callback") == 0)
+            strcpy(cbname, val);
+        else if (strcmp(key, "name") == 0)
+            strcpy(name, val);
+        else if (strcmp(key, "argument") == 0)
+            goto done;
 
-		/* ignore uninteresting keywords */
+        /* ignore uninteresting keywords */
     }
 
   done:
@@ -564,35 +560,35 @@ read_form( FILE * fl )
     FL_FORM *cur_form = 0;
     char fname[ 1024 ];
 
-	if (    fgetc( fl ) != '\n'
-		 || ! fgets( fname, sizeof fname, fl )
-		 || strcmp( fname, "=============== FORM ===============\n" ) )
-	{
-		/* This is an error and should be handled JTT*/
-	}
+    if (    fgetc( fl ) != '\n'
+         || ! fgets( fname, sizeof fname, fl )
+         || strcmp( fname, "=============== FORM ===============\n" ) )
+    {
+        /* This is an error and should be handled JTT*/
+    }
 
     fname[ 0 ] = '\0';
     myfgets( fname, fl );
 
     if (    fscanf( fl, "Width: %lf\n", &w ) != 1
-		 || fscanf( fl, "Height: %lf\n", &h ) != 1 )
-	{
-		/* This is an error and should be handled JTT*/
-	}
+         || fscanf( fl, "Height: %lf\n", &h ) != 1 )
+    {
+        /* This is an error and should be handled JTT*/
+    }
 
     cur_form = make_form( FL_NO_BOX, w, h );
     cur_form->label = fl_strdup( fname );
 
     if ( fscanf( fl, "Number of Objects: %d\n", &onumb ) != 1 )
-	{
-		/* This is an error and should be handled JTT*/
-	}
+    {
+        /* This is an error and should be handled JTT*/
+    }
 
-	/* Here should be checked if as many objects could be loaded as expected
-	   JTT */
+    /* Here should be checked if as many objects could be loaded as expected
+       JTT */
 
-	while ( --onumb >= 0 )
-		load_object( cur_form, fl );
+    while ( --onumb >= 0 )
+        load_object( cur_form, fl );
 
     return cur_form;
 }
@@ -608,87 +604,87 @@ load_form_definition( const char * filename )
     int fd_magic, nf;
     FL_FORM *form;
     char buf[ 256 ],
-		 ubuf[ 32 ];
+         ubuf[ 32 ];
 
     if ( ! fp )
     {
-		perror( filename );
-		return -1;
+        perror( filename );
+        return -1;
     };
 
     if (    fscanf( fp, "Magic: %d\n\n", &fd_magic ) != 1
-		 || ( fd_magic != MAGIC3 && fd_magic != MAGIC4 ) )
+         || ( fd_magic != MAGIC3 && fd_magic != MAGIC4 ) )
     {
-		fclose( fp );
-		fprintf( stderr, "Unknown file %s (magic %d)\n", filename, fd_magic );
-		return -1;
+        fclose( fp );
+        fprintf( stderr, "Unknown file %s (magic %d)\n", filename, fd_magic );
+        return -1;
     }
 
     psinfo.inverted = ( fd_magic == MAGIC4 );
 
-	if (    ! fgets( buf, sizeof buf, fp )
-		 || strcmp( buf, "Internal Form Definition File\n" )
-		 || ! fgets( buf, sizeof buf, fp )
-		 || strcmp( buf, "    (do not change)\n" )
-		 || fgetc( fp ) != '\n'
-		 || fscanf( fp, "Number of forms: %d\n", &nf ) != 1 )
+    if (    ! fgets( buf, sizeof buf, fp )
+         || strcmp( buf, "Internal Form Definition File\n" )
+         || ! fgets( buf, sizeof buf, fp )
+         || strcmp( buf, "    (do not change)\n" )
+         || fgetc( fp ) != '\n'
+         || fscanf( fp, "Number of forms: %d\n", &nf ) != 1 )
     {
-		fclose(fp);
-		fprintf( stderr, "Failure to read file %s\n", filename );
-		return -1;
+        fclose(fp);
+        fprintf( stderr, "Failure to read file %s\n", filename );
+        return -1;
     }
 
     psinfo.pages = nf;
 
     if ( nf > 1 && psinfo.eps )
-		fprintf( stderr, "Requesting EPS output with more than one form.\n" );
+        fprintf( stderr, "Requesting EPS output with more than one form.\n" );
 
     if ( psinfo.verbose )
-		fprintf( stderr, "%d forms will be converted\n", nf );
+        fprintf( stderr, "%d forms will be converted\n", nf );
 
     /* read until we hit a seperator line */
 
     while ( fgets( buf, sizeof buf, fp ) && buf[ 0 ] != '\n' )
     {
-		if ( strncmp( buf, "Unit", 4 ) == 0 )
-		{
-			float xs,
-				  ys;
+        if ( strncmp( buf, "Unit", 4 ) == 0 )
+        {
+            float xs,
+                  ys;
 
-			if ( sscanf( buf, "Unit of measure: %s", ubuf ) != 1 )
-			{
-				fclose( fp );
-				fprintf( stderr, "Failure to read file %s\n", filename );
-				return -1;
-			}
+            if ( sscanf( buf, "Unit of measure: %s", ubuf ) != 1 )
+            {
+                fclose( fp );
+                fprintf( stderr, "Failure to read file %s\n", filename );
+                return -1;
+            }
 
-			psinfo.unit = unit_val( ubuf );
-			get_scale_unit( psinfo.unit, &xs, &ys );
-		}
-		else if ( strncmp( buf, "Border", 6 ) == 0 )
-		{
-			if ( sscanf( buf, "Border Width: %s", ubuf ) != 1 )
-			{
-				fclose( fp );
-				fprintf( stderr, "Failure to read file %s\n", filename );
-				return -1;
-			}
+            psinfo.unit = unit_val( ubuf );
+            get_scale_unit( psinfo.unit, &xs, &ys );
+        }
+        else if ( strncmp( buf, "Border", 6 ) == 0 )
+        {
+            if ( sscanf( buf, "Border Width: %s", ubuf ) != 1 )
+            {
+                fclose( fp );
+                fprintf( stderr, "Failure to read file %s\n", filename );
+                return -1;
+            }
 
-			psinfo.bw = atoi( ubuf );
-		}
-		else if  (strncmp( buf, "Snap", 4 ) == 0 )
-			/* empty */ ;
-		else
-			fprintf( stderr, "Unknown token: %s", buf );
+            psinfo.bw = atoi( ubuf );
+        }
+        else if  (strncmp( buf, "Snap", 4 ) == 0 )
+            /* empty */ ;
+        else
+            fprintf( stderr, "Unknown token: %s", buf );
     }
 
     if ( psinfo.user_bw )
-		psinfo.bw = psinfo.user_bw;
+        psinfo.bw = psinfo.user_bw;
 
     while ( --nf >= 0 )
     {
-		form = read_form( fp );
-		ps_show_form( form );
+        form = read_form( fp );
+        ps_show_form( form );
     }
 
     fclose( fp );
@@ -730,8 +726,8 @@ boxtype_val( char *cc )
     VN_pair *vn = vn_btype;
 
     for ( ; vn->val >= 0; vn++ )
-		if ( strcmp( cc, vn->name ) == 0 )
-			return vn->val;
+        if ( strcmp( cc, vn->name ) == 0 )
+            return vn->val;
 
     fprintf( stderr, "unknown boxtype %s\n", cc );
     return atoi( cc );
@@ -740,9 +736,9 @@ boxtype_val( char *cc )
 static VN_pair vn_align[ ] =
 {
     VN( FL_ALIGN_CENTER       ),
-	VN( FL_ALIGN_TOP          ),
+    VN( FL_ALIGN_TOP          ),
     VN( FL_ALIGN_BOTTOM       ),
-	VN( FL_ALIGN_LEFT         ),
+    VN( FL_ALIGN_LEFT         ),
     VN( FL_ALIGN_RIGHT        ),
     VN( FL_ALIGN_LEFT_TOP     ),
     VN( FL_ALIGN_RIGHT_TOP    ),
@@ -754,19 +750,19 @@ static VN_pair vn_align[ ] =
 static VN_pair vn_lsize[ ] =
 {
     VN( FL_DEFAULT_FONT ),
-	VN( FL_DEFAULT_SIZE ),
+    VN( FL_DEFAULT_SIZE ),
     VN( FL_TINY_FONT ),
-	VN( FL_TINY_SIZE ),
+    VN( FL_TINY_SIZE ),
     VN( FL_SMALL_FONT ),
-	VN( FL_SMALL_SIZE ),
+    VN( FL_SMALL_SIZE ),
     VN( FL_NORMAL_FONT ),
-	VN( FL_NORMAL_SIZE ),
+    VN( FL_NORMAL_SIZE ),
     VN( FL_MEDIUM_FONT ),
-	VN( FL_MEDIUM_SIZE ),
+    VN( FL_MEDIUM_SIZE ),
     VN( FL_LARGE_FONT ),
-	VN( FL_LARGE_SIZE ),
+    VN( FL_LARGE_SIZE ),
     VN( FL_HUGE_FONT ),
-	VN( FL_HUGE_SIZE ),
+    VN( FL_HUGE_SIZE ),
     { FL_SMALL_FONT, "FL_NORMAL_FONT1" },
     { FL_NORMAL_FONT, "FL_NORMAL_FONT2" },
     VN( -1 )
@@ -815,8 +811,8 @@ pure_style_val( const char *cc )
     VN_pair *vn = vn_lstyle;
 
     for ( ; vn->val >= 0; vn++ )
-		if ( strcmp( cc, vn->name ) == 0 )
-			return vn->val;
+        if ( strcmp( cc, vn->name ) == 0 )
+            return vn->val;
 
     return atoi( cc );
 }
@@ -829,14 +825,14 @@ int
 style_val( const char *cc )
 {
     char lstyle[ 40 ],
-		 spstyle[ 40 ],
-		 *p;
+         spstyle[ 40 ],
+         *p;
 
     strcpy( lstyle, cc );
     spstyle[ 0 ] = '\0';
 
     if ( ( p = strchr( lstyle, '+' ) ) )
-		memmove( spstyle, p + 1, strlen( p ) );
+        memmove( spstyle, p + 1, strlen( p ) );
 
     return pure_style_val( lstyle ) + pure_style_val( spstyle );
 }
@@ -851,8 +847,8 @@ lsize_val(const char *cc)
     VN_pair *vn = vn_lsize;
 
     for ( ; vn->val >= 0; vn++ )
-		if ( strcmp( cc, vn->name ) == 0 )
-			return vn->val;
+        if ( strcmp( cc, vn->name ) == 0 )
+            return vn->val;
 
     return atoi( cc );
 }
@@ -867,8 +863,8 @@ pupmode_val( const char *cc )
     VN_pair *vn = vn_pupmode;
 
     for (; vn->val >= 0; vn++)
-		if ( strcmp( cc, vn->name ) == 0 )
-			return vn->val;
+        if ( strcmp( cc, vn->name ) == 0 )
+            return vn->val;
 
     return atoi( cc );
 }
@@ -883,8 +879,8 @@ scbpref_val( const char *cc )
     VN_pair *vn = vn_scbpref;
 
     for ( ; vn->val >= 0; vn++)
-		if ( strcmp( cc, vn->name ) == 0 )
-			return vn->val;
+        if ( strcmp( cc, vn->name ) == 0 )
+            return vn->val;
 
     return atoi( cc );
 }
@@ -898,21 +894,21 @@ align_val( const char *cc )
 {
     VN_pair *vn = vn_align;
     char s[ 128 ],
-		 *p;
+         *p;
 
     strcpy( s, cc );
 
     if ( ( p = strchr( s, '|' ) ) )
-		*p = '\0';
+        *p = '\0';
 
     for ( ; vn->val >= 0; vn++)
-		if ( strcmp( s, vn->name ) == 0 )
-			return p ? ( vn->val | FL_ALIGN_INSIDE ) : vn->val;
+        if ( strcmp( s, vn->name ) == 0 )
+            return p ? ( vn->val | FL_ALIGN_INSIDE ) : vn->val;
 
     if ( ! isdigit( ( int ) cc[ 0 ] ) )
-		fprintf( stderr, "Unknown alignment %s\n", cc );
+        fprintf( stderr, "Unknown alignment %s\n", cc );
 
-	return atoi( cc );
+    return atoi( cc );
 }
 
 
@@ -928,6 +924,14 @@ de_space( char *s )
     /* not all isspace considers '\t' a white space */
 
     for ( p = s; p && ( isspace( ( int ) *p ) || *p == '\t' ); p++ )
-		/* empty */ ;
+        /* empty */ ;
     return ( p == s ) ? s : strcpy( s, p );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

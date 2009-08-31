@@ -42,9 +42,9 @@ GZIP_identify( FILE * fp )
     char buf[ 2 ];
 
     if ( fread( buf, 1, 2, fp ) != 2 )
-		return 0;
-	return    buf[ 0 ] == '\037'
-		   && ( buf[ 1 ] == '\213' || buf[ 1 ] == '\235' );
+        return 0;
+    return    buf[ 0 ] == '\037'
+           && ( buf[ 1 ] == '\213' || buf[ 1 ] == '\235' );
 }
 
 
@@ -79,7 +79,7 @@ GZIP_dump( FL_IMAGE * im )
 {
     static char *cmds[ ] = {"gzip %s > %s", NULL };
     static char *formats[ ] = { "ppm", "pgm", "pbm", NULL };
-	return flimage_write_via_filter( im, cmds, formats, 0 );
+    return flimage_write_via_filter( im, cmds, formats, 0 );
 }
 
 
@@ -90,9 +90,17 @@ void
 flimage_enable_gzip( void )
 {
     flimage_add_format( "GZIP format", "gzip", "gz",
-						FL_IMAGE_FLEX,
-						GZIP_identify,
-						GZIP_description,
-						GZIP_load,
-						GZIP_dump );
+                        FL_IMAGE_FLEX,
+                        GZIP_identify,
+                        GZIP_description,
+                        GZIP_load,
+                        GZIP_dump );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

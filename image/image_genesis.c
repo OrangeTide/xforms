@@ -55,7 +55,7 @@ static int
 GENESIS_identify( FILE * fp )
 {
     char buf[ 4 ];
-	size_t c;
+    size_t c;
 
     c = fread( buf, 1, 4, fp );
     rewind( fp );
@@ -87,7 +87,7 @@ GENESIS_description( FL_IMAGE * im )
     sp->windowl  = fli_fget4MSBF( fp );
 
     if ( sp->depth < 8 || sp->compress != 1 )
-		return -1;
+        return -1;
 
     im->type = sp->depth == 8 ? FL_IMAGE_GRAY : FL_IMAGE_GRAY16;
     im->gray_maxval = ( 1 << sp->depth ) - 1;
@@ -104,14 +104,14 @@ GENESIS_description( FL_IMAGE * im )
 
 static void
 convert_msbf( unsigned short * pixels,
-			  int              npixels )
+              int              npixels )
 {
     unsigned short *p = pixels,
-		           *ps = p + npixels;
+                   *ps = p + npixels;
     unsigned char *c = ( unsigned char * ) p;
 
     for ( ; p < ps; p++, c += 2 )
-		*p = ( c[ 0 ] << 8 ) | c[ 1 ];
+        *p = ( c[ 0 ] << 8 ) | c[ 1 ];
 }
 
 
@@ -126,8 +126,8 @@ GENESIS_load( FL_IMAGE * im )
 
     fseek( fp, sp->hdr_len, SEEK_SET );
     if ( fread( im->gray[ 0 ], sp->depth / 8, im->w * im->h, fp )
-		                                         != ( size_t ) im->w * im->h )
-		convert_msbf( im->gray[ 0 ], im->w * im->h );
+                                                 != ( size_t ) im->w * im->h )
+        convert_msbf( im->gray[ 0 ], im->w * im->h );
 
     return 0;
 }
@@ -140,9 +140,17 @@ void
 flimage_enable_genesis( void )
 {
     flimage_add_format( "GE Genesis", "genesis", "ge",
-						FL_IMAGE_GRAY16 | FL_IMAGE_GRAY,
-						GENESIS_identify,
-						GENESIS_description,
-						GENESIS_load,
-						0 );
+                        FL_IMAGE_GRAY16 | FL_IMAGE_GRAY,
+                        GENESIS_identify,
+                        GENESIS_description,
+                        GENESIS_load,
+                        0 );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

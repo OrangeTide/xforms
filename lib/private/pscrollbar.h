@@ -27,10 +27,18 @@
 typedef struct {
     FL_OBJECT * slider;
     FL_OBJECT * up;
-	FL_OBJECT * down;
+    FL_OBJECT * down;
     double      increment;
-	double      old_val;
+    double      old_val;
 } FLI_SCROLLBAR_SPEC;
 
 
 #endif
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

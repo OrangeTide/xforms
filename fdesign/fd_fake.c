@@ -41,30 +41,30 @@
 
 static int
 handle_simu_canvas( FL_OBJECT * ob,
-					int         event,
-					FL_Coord    mx   FL_UNUSED_ARG,
-					FL_Coord    my   FL_UNUSED_ARG,
-					int         key  FL_UNUSED_ARG,
-					void      * ev   FL_UNUSED_ARG )
+                    int         event,
+                    FL_Coord    mx   FL_UNUSED_ARG,
+                    FL_Coord    my   FL_UNUSED_ARG,
+                    int         key  FL_UNUSED_ARG,
+                    void      * ev   FL_UNUSED_ARG )
 {
     int ftype;
 
     switch ( event )
     {
-		case FL_DRAW:
-			fl_drw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h,
-						ob->col1, ob->bw );
-			ftype = fli_boxtype2frametype( ob->boxtype );
-			fl_drw_frame( ftype, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
-			fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-						 ob->lcol, ob->lstyle, ob->lsize, ob->label );
-			break;
+        case FL_DRAW:
+            fl_drw_box( FL_FLAT_BOX, ob->x, ob->y, ob->w, ob->h,
+                        ob->col1, ob->bw );
+            ftype = fli_boxtype2frametype( ob->boxtype );
+            fl_drw_frame( ftype, ob->x, ob->y, ob->w, ob->h, ob->col2, ob->bw );
+            fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                         ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            break;
 
-		case FL_DRAWLABEL:
-			if ( ob->align != FL_ALIGN_CENTER )
-				fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
-							 ob->lcol, ob->lstyle, ob->lsize, ob->label );
-			break;
+        case FL_DRAWLABEL:
+            if ( ob->align != FL_ALIGN_CENTER )
+                fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
+                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
+            break;
     }
 
     return 0;
@@ -76,16 +76,16 @@ handle_simu_canvas( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_simu_canvas( int          type,
-					   FL_Coord     x,
-					   FL_Coord     y,
-					   FL_Coord     w,
-					   FL_Coord     h,
-					   const char * label )
+                       FL_Coord     x,
+                       FL_Coord     y,
+                       FL_Coord     w,
+                       FL_Coord     h,
+                       const char * label )
 {
     FL_OBJECT *ob;
 
     ob = fl_make_object( FL_CANVAS, type, x, y, w, h, label,
-						 handle_simu_canvas );
+                         handle_simu_canvas );
     ob->boxtype = FL_CANVAS_BOXTYPE;
     ob->col1    = FL_NoColor;
     ob->col2    = FL_BLACK;
@@ -103,11 +103,11 @@ fl_create_simu_canvas( int          type,
 
 FL_OBJECT *
 fl_add_simu_canvas( int          type,
-					FL_Coord     x,
-					FL_Coord     y,
-					FL_Coord     w,
-					FL_Coord     h,
-					const char * label )
+                    FL_Coord     x,
+                    FL_Coord     y,
+                    FL_Coord     w,
+                    FL_Coord     h,
+                    const char * label )
 {
     FL_OBJECT *ob;
 
@@ -124,16 +124,16 @@ fl_add_simu_canvas( int          type,
 
 FL_OBJECT *
 fl_create_simu_glcanvas( int          type,
-						 FL_Coord     x,
-						 FL_Coord     y,
-						 FL_Coord     w,
-						 FL_Coord     h,
-						 const char * label )
+                         FL_Coord     x,
+                         FL_Coord     y,
+                         FL_Coord     w,
+                         FL_Coord     h,
+                         const char * label )
 {
     FL_OBJECT *ob;
 
     ob = fl_make_object( FL_GLCANVAS, type, x, y, w, h, label,
-						 handle_simu_canvas );
+                         handle_simu_canvas );
     ob->boxtype = FL_CANVAS_BOXTYPE;
     ob->col1    = FL_NoColor;
     ob->col2    = FL_BLACK;
@@ -151,11 +151,11 @@ fl_create_simu_glcanvas( int          type,
 
 FL_OBJECT *
 fl_add_simu_glcanvas( int          type,
-					  FL_Coord     x,
-					  FL_Coord     y,
-					  FL_Coord     w,
-					  FL_Coord     h,
-					  const char * label )
+                      FL_Coord     x,
+                      FL_Coord     y,
+                      FL_Coord     w,
+                      FL_Coord     h,
+                      const char * label )
 {
     FL_OBJECT *ob;
 
@@ -171,16 +171,16 @@ fl_add_simu_glcanvas( int          type,
 
 static int
 handle_tabfolder( FL_OBJECT * ob,
-				  int         event,
-				  FL_Coord    mx   FL_UNUSED_ARG,
-				  FL_Coord    my   FL_UNUSED_ARG,
-				  int         key  FL_UNUSED_ARG,
-				  void      * ev   FL_UNUSED_ARG )
+                  int         event,
+                  FL_Coord    mx   FL_UNUSED_ARG,
+                  FL_Coord    my   FL_UNUSED_ARG,
+                  int         key  FL_UNUSED_ARG,
+                  void      * ev   FL_UNUSED_ARG )
 {
     if ( event == FL_DRAW )
     {
-		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
-		fl_draw_object_label( ob );
+        fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+        fl_draw_object_label( ob );
     }
 
     return 0;
@@ -192,16 +192,16 @@ handle_tabfolder( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_ntabfolder( int          type,
-					  FL_Coord     x,
-					  FL_Coord     y,
-					  FL_Coord     w,
-					  FL_Coord     h,
-					  const char * label )
+                      FL_Coord     x,
+                      FL_Coord     y,
+                      FL_Coord     w,
+                      FL_Coord     h,
+                      const char * label )
 {
     FL_OBJECT *ob;
 
     ob = fl_make_object( FL_NTABFOLDER, type, x, y, w, h, label,
-						 handle_tabfolder );
+                         handle_tabfolder );
 
     ob->boxtype = FL_UP_BOX;
     ob->resize  = FL_RESIZE_NONE;
@@ -218,11 +218,11 @@ fl_create_ntabfolder( int          type,
 
 FL_OBJECT *
 fl_add_ntabfolder( int          type,
-				   FL_Coord     x,
-				   FL_Coord     y,
-				   FL_Coord     w,
-				   FL_Coord     h,
-				   const char * label )
+                   FL_Coord     x,
+                   FL_Coord     y,
+                   FL_Coord     w,
+                   FL_Coord     h,
+                   const char * label )
 {
     FL_OBJECT *ob = fl_create_ntabfolder( type, x, y, w, h, label );
 
@@ -237,16 +237,16 @@ fl_add_ntabfolder( int          type,
 
 static int
 handle_formbrowser( FL_OBJECT * ob,
-					int         event,
-					FL_Coord    mx   FL_UNUSED_ARG,
-					FL_Coord    my   FL_UNUSED_ARG,
-					int         key  FL_UNUSED_ARG,
-					void      * ev   FL_UNUSED_ARG )
+                    int         event,
+                    FL_Coord    mx   FL_UNUSED_ARG,
+                    FL_Coord    my   FL_UNUSED_ARG,
+                    int         key  FL_UNUSED_ARG,
+                    void      * ev   FL_UNUSED_ARG )
 {
     if ( event == FL_DRAW )
     {
-		fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
-		fl_draw_object_label( ob );
+        fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
+        fl_draw_object_label( ob );
     }
 
     return 0;
@@ -258,16 +258,16 @@ handle_formbrowser( FL_OBJECT * ob,
 
 FL_OBJECT *
 fl_create_nformbrowser( int          type,
-						FL_Coord     x,
-						FL_Coord     y,
-						FL_Coord     w,
-						FL_Coord     h,
-						const char * label )
+                        FL_Coord     x,
+                        FL_Coord     y,
+                        FL_Coord     w,
+                        FL_Coord     h,
+                        const char * label )
 {
     FL_OBJECT *ob;
 
     ob = fl_make_object( FL_FORMBROWSER, type, x, y, w, h, label,
-						 handle_formbrowser );
+                         handle_formbrowser );
 
     ob->boxtype = FL_DOWN_BOX;
     ob->resize  = FL_RESIZE_NONE;
@@ -284,14 +284,22 @@ fl_create_nformbrowser( int          type,
 
 FL_OBJECT *
 fl_add_nformbrowser( int          type,
-					 FL_Coord     x,
-					 FL_Coord     y,
-					 FL_Coord     w,
-					 FL_Coord     h,
-					 const char * label )
+                     FL_Coord     x,
+                     FL_Coord     y,
+                     FL_Coord     w,
+                     FL_Coord     h,
+                     const char * label )
 {
     FL_OBJECT *ob = fl_create_nformbrowser( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, ob );
     return ob;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

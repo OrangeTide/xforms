@@ -41,7 +41,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <lib$routines.h>
-#include <fscndef.h>		/* $FILESCAN arguments */
+#include <fscndef.h>        /* $FILESCAN arguments */
 #include <rmsdef.h>
 
 
@@ -53,7 +53,7 @@
 /* #define TEST */
 
  /* Number of elements in vms_versions array */
-#define VERSIZE(e)	(sizeof e->vms_versions / sizeof e->vms_versions[0])
+#define VERSIZE(e)  (sizeof e->vms_versions / sizeof e->vms_versions[0])
 
  /* Simplified string descriptor */
 struct dsc
@@ -68,8 +68,8 @@ struct dsc
 extern unsigned long sys$filescan();
 
  /* Filename syntax conversion routine */
-#ifdef __DECC			/* (really depends on run-time library, not
-				   compiler) */
+#ifdef __DECC           /* (really depends on run-time library, not
+                   compiler) */
 #define cvt__to_vms decc$to_vms
 #else
 #define cvt__to_vms shell$to_vms
@@ -111,54 +111,54 @@ opendir(name)
 
     /* Validate the directory name argument.  ("[...]" is allowed!) */
     if (!name || !*name || strchr(name, '*') != 0
-	|| strchr(name, '%') != 0 || strchr(name, '?') != 0)
+    || strchr(name, '%') != 0 || strchr(name, '?') != 0)
     {
-	/* Name is required; wildcards are not allowed. */
-	errno = ENOTDIR;
-	return NULL;
+    /* Name is required; wildcards are not allowed. */
+    errno = ENOTDIR;
+    return NULL;
     }
-    nambuf[sizeof nambuf - 1] = '\0';	/* (strncpy doesn't guarantee it) */
+    nambuf[sizeof nambuf - 1] = '\0';   /* (strncpy doesn't guarantee it) */
     name_dsc.adr = strncpy(nambuf, name, sizeof nambuf - 1);
     name_dsc.mbz = 0;
     do
     {
-	name_dsc.len = len = strlen(nambuf);
-	/* Check which components of file specification seem to be present. */
-	flags = ~0;		/* (init so that we can ignore return status)
-				 */
-	(void) sys$filescan(&name_dsc, (void *) 0, &flags);
-	if ((flags & ~FSCN_DIR) != 0 || strchr(nambuf, '/') != 0)
-	{
-	    /* Didn't supply nice directory name; check for Unix-style one. */
-	    /* (stupid shell$to_vms doesn't like trailing slash) */
-	    if (len > 1 && nambuf[len - 1] == '/')
-		nambuf[len - 1] = '\0';
+    name_dsc.len = len = strlen(nambuf);
+    /* Check which components of file specification seem to be present. */
+    flags = ~0;     /* (init so that we can ignore return status)
+                 */
+    (void) sys$filescan(&name_dsc, (void *) 0, &flags);
+    if ((flags & ~FSCN_DIR) != 0 || strchr(nambuf, '/') != 0)
+    {
+        /* Didn't supply nice directory name; check for Unix-style one. */
+        /* (stupid shell$to_vms doesn't like trailing slash) */
+        if (len > 1 && nambuf[len - 1] == '/')
+        nambuf[len - 1] = '\0';
 
-	    if (++retry > 1 || cvt__to_vms(nambuf, cvt_action, 0, 0) != 1)
-	    {
-		errno = ENOTDIR;
-		return NULL;
-	    }			/* else:        cvt_action() has updated
-				   `nambuf'; `retry' is now 1 */
-	}
-	else
-	    retry = 0;		/* have something, possibly after retrying
-				   once */
+        if (++retry > 1 || cvt__to_vms(nambuf, cvt_action, 0, 0) != 1)
+        {
+        errno = ENOTDIR;
+        return NULL;
+        }           /* else:        cvt_action() has updated
+                   `nambuf'; `retry' is now 1 */
+    }
+    else
+        retry = 0;      /* have something, possibly after retrying
+                   once */
     }
     while (retry);
 
     /* Get memory for the handle, and the pattern. */
     if ((dd = fl_malloc( sizeof *dd ) ) == NULL )
     {
-		errno = ENOMEM;
-		return NULL;
+        errno = ENOMEM;
+        return NULL;
     }
     dd->pattern = fl_malloc( strlen( nambuf ) + sizeof "*.*" );
     if (dd->pattern == NULL)
     {
-		fl_free( dd );
-		errno = ENOMEM;
-		return NULL;
+        fl_free( dd );
+        errno = ENOMEM;
+        return NULL;
     }
 
     /* Fill in the fields. */
@@ -199,9 +199,9 @@ closedir(dd)
 {
     if (dd)
     {
-	(void) lib$find_file_end(&dd->context);
-	fl_free(dd->pattern);
-	fl_free((void *) dd);
+    (void) lib$find_file_end(&dd->context);
+    fl_free(dd->pattern);
+    fl_free((void *) dd);
     }
 }
 
@@ -228,10 +228,10 @@ collectversions(dd)
     /* Add the name plus version wildcard, replacing the "*.*" put on before */
     i = strlen(dd->pattern);
     /* assert( i > 3 ); */
-	i = FL_max( i, 4 );
+    i = FL_max( i, 4 );
     text = fl_malloc( (i - 3) + strlen(e->d_name) + sizeof ";*");
     if (text == NULL)
-		return;
+        return;
     strcpy(text, dd->pattern);
     strcat(strcpy(&text[i - 3], e->d_name), ";*");
 
@@ -245,16 +245,16 @@ collectversions(dd)
     /* Read files, collecting versions. */
     for (context = 0; e->vms_verscount < VERSIZE(e); e->vms_verscount++)
     {
-		if (lib$find_file(&pat, &res, &context) == RMS$_NMF || context == 0)
-			break;
-		buff[sizeof buff - 1] = '\0';
-		if (p = strchr(buff, ';'))
-			e->vms_versions[e->vms_verscount] = atoi(p + 1);
-		else
-			e->vms_versions[e->vms_verscount] = -1;
+        if (lib$find_file(&pat, &res, &context) == RMS$_NMF || context == 0)
+            break;
+        buff[sizeof buff - 1] = '\0';
+        if (p = strchr(buff, ';'))
+            e->vms_versions[e->vms_verscount] = atoi(p + 1);
+        else
+            e->vms_versions[e->vms_verscount] = -1;
     }
     if (e->vms_verscount < VERSIZE(e))
-		e->vms_versions[e->vms_verscount] = -1;
+        e->vms_versions[e->vms_verscount] = -1;
 
     (void) lib$find_file_end(&context);
     fl_free(text);
@@ -279,30 +279,30 @@ readdir(dd)
     dd->count++;
     /* (ought to check for generic success/failure, not a specific value) */
     if (lib$find_file(&dd->pat, &res, &dd->context) == RMS$_NMF
-	|| dd->context == 0L)
-	/* None left... */
-	return NULL;
+    || dd->context == 0L)
+    /* None left... */
+    return NULL;
 
     /* Strip trailing blanks. */
     nambuf[sizeof nambuf - 1] = '\0';
     for (p = &nambuf[sizeof nambuf - 1]; p > nambuf && *--p == ' ';)
-	*p = '\0';
+    *p = '\0';
 
     /* Skip any directory component and just copy the name. */
     p = nambuf;
     while ((q = strchr(p, ']')) != 0 || (q = strchr(p, '>')) != 0)
-	p = q + 1;
+    p = q + 1;
     (void) strncpy(dd->entry.d_name, p, sizeof dd->entry.d_name - 1);
     dd->entry.d_name[sizeof dd->entry.d_name - 1] = '\0';
 
     /* Clobber the version. */
     if ((p = strchr(dd->entry.d_name, ';')) != 0)
-	*p = '\0';
+    *p = '\0';
 
     dd->entry.vms_verscount = 0;
     dd->entry.vms_versions[0] = 0;
     if (dd->vms_wantversions)
-	collectversions(dd);
+    collectversions(dd);
     return &dd->entry;
 }
 
@@ -330,7 +330,7 @@ seekdir(dd, count)
 
     /* If we haven't done anything yet... */
     if (dd->count == 0)
-	return;
+    return;
 
     /* Remember some state, and clear it. */
     vms_wantversions = dd->vms_wantversions;
@@ -340,7 +340,15 @@ seekdir(dd, count)
 
     /* The increment is in readdir(). */
     for (dd->count = 0; dd->count < count;)
-	(void) readdir(dd);
+    (void) readdir(dd);
 
     dd->vms_wantversions = vms_wantversions;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

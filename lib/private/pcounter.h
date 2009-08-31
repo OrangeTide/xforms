@@ -21,9 +21,8 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1995-1997  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *.
- *  private header for counter objects
  *
+ *  private header for counter objects
  */
 
 #ifndef PCOUNTER_H
@@ -36,3 +35,11 @@ typedef FLI_VALUATOR_SPEC FLI_COUNTER_SPEC;
 
 
 #endif /* PCOUNTER_H */
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

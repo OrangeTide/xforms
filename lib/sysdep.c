@@ -123,7 +123,7 @@ int
 fl_msleep( unsigned long msec )
 {
 #ifdef __EMX__
-    _sleep2( msec );		/* more accurate than select/sleep in OS2 */
+    _sleep2( msec );        /* more accurate than select/sleep in OS2 */
     return 0;
 #else
 #ifdef FL_WIN32
@@ -177,7 +177,7 @@ fl_msleep( unsigned long msec )
 
 int
 gettimeofday( struct timeval *  tv,
-			  struct timezone * tz )
+              struct timezone * tz )
 {
     timeb_t tmp_time;
 
@@ -185,14 +185,14 @@ gettimeofday( struct timeval *  tv,
 
     if ( tv != NULL )
     {
-		tv->tv_sec = tmp_time.time;
-		tv->tv_usec = tmp_time.millitm * 1000;
+        tv->tv_sec = tmp_time.time;
+        tv->tv_usec = tmp_time.millitm * 1000;
     }
 
     if ( tz != NULL )
     {
-		tz->tz_minuteswest = tmp_time.timezone;
-		tz->tz_dsttime = tmp_time.dstflag;
+        tz->tz_minuteswest = tmp_time.timezone;
+        tz->tz_dsttime = tmp_time.dstflag;
     }
 
     return 0;
@@ -211,7 +211,7 @@ gettimeofday( struct timeval *  tv,
 
 void
 fl_gettime( long * sec,
-			long * usec )
+            long * usec )
 {
 #ifndef FL_WIN32
     static struct timeval tp;
@@ -242,3 +242,11 @@ long fli_getpid( void )
 }
 
 
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

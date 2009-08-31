@@ -60,8 +60,8 @@ static const char *fd_version[ ] =
     "fdesign (FORM Designer)"
     "$State: Exp $  $Revision: 1.36 $ of $Date: 2009/08/28 18:30:54 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
-	"GNU Lesser General Public License sinc 2002",
-	NULL
+    "GNU Lesser General Public License sinc 2002",
+    NULL
 };
 
 
@@ -76,25 +76,25 @@ rm_rcs_kw( const char * s )
     static int nbuf;
     unsigned char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
     int left = 0,
-		lastc = -1;
+        lastc = -1;
 
     while ( *s && ( q - buf[ nbuf ] ) < ( int ) sizeof buf[ nbuf ] - 2 )
     {
-		switch ( *s )
-		{
-			case '$':
-				if ( ( left = ! left ) )
-					while ( *s && *s != ':' )
-						s++;
-				break;
+        switch ( *s )
+        {
+            case '$':
+                if ( ( left = ! left ) )
+                    while ( *s && *s != ':' )
+                        s++;
+                break;
 
-			default:
-				/* copy the char and remove extra space */
-				if ( ! ( lastc == ' ' && *s == ' ' ) )
-					*q++ = lastc = *s;
-				break;
-		}
-		s++;
+            default:
+                /* copy the char and remove extra space */
+                if ( ! ( lastc == ' ' && *s == ' ' ) )
+                    *q++ = lastc = *s;
+                break;
+        }
+        s++;
     }
 
     *q = '\0';
@@ -112,10 +112,10 @@ print_version( int die )
     const char **p = fd_version;
 
     for ( ; *p; p++ )
-		fprintf( stderr, "%s\n", rm_rcs_kw( *p ) );
+        fprintf( stderr, "%s\n", rm_rcs_kw( *p ) );
 
     if ( die )
-		exit( 0 );
+        exit( 0 );
 }
 
 
@@ -126,16 +126,16 @@ static void
 print_xforms_version( int die )
 {
     fprintf( stderr, "FORMS Library Version %d.%d.%s\n",
-			 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
+             FL_VERSION, FL_REVISION, FL_FIXLEVEL );
 
     if ( die )
-		exit( 0 );
+        exit( 0 );
 }
 
 
 char xform_header[ 128 ] = "forms.h";
 char glcanvas_header[ 128 ] = "glcanvas.h";
-long main_window = 0;		/* The main screen window */
+long main_window = 0;       /* The main screen window */
 FL_Coord winw,
          winh;
 
@@ -163,8 +163,8 @@ unsigned long fd_red,
               fd_white,
               fd_col;
 Display *fd_display;
-int changed = 0;				/* Whether something has changed. */
-char main_name[ MAX_VAR_LEN ];	/* Name of the main calling routine */
+int changed = 0;                /* Whether something has changed. */
+char main_name[ MAX_VAR_LEN ];  /* Name of the main calling routine */
 char *loadedfile;
 char *loadedfile_fullpath;
 
@@ -178,21 +178,21 @@ add_something( void )
 {
     FL_OBJECT *obj;
     float xx,
-		  yy,
-		  ww = 0.0,
-		  hh = 0.0;
+          yy,
+          ww = 0.0,
+          hh = 0.0;
 
     if ( ! cur_form )
     {
-		fl_show_alert( "Warning", "Please add a form first", "", 0 );
-		return;
+        fl_show_alert( "Warning", "Please add a form first", "", 0 );
+        return;
     }
 
     if ( cur_class == -1 )
     {
-		fl_show_alert( "Warning", "Please select what object to add first",
-					   "", 0 );
-		return;
+        fl_show_alert( "Warning", "Please select what object to add first",
+                       "", 0 );
+        return;
     }
 
     fl_winset( main_window );
@@ -200,7 +200,7 @@ add_something( void )
     scale_box( &xx, &yy, &ww, &hh );
 
     if ( ww < 5.0 || hh < 5.0 )
-		return;
+        return;
 
     obj = add_an_object( cur_class, -1, xx, yy, ww, hh );
     clear_selection( );
@@ -221,17 +221,17 @@ add_something( void )
 
 void
 mainname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
-			 long        arg  FL_UNUSED_ARG )
+             long        arg  FL_UNUSED_ARG )
 {
     const char *s;
 
     if ( ! ( s = fl_show_input( "Main creation routine name:", main_name ) ) )
-		return;
+        return;
 
-	if ( *s )
-		strcpy( main_name, s );
+    if ( *s )
+        strcpy( main_name, s );
     else
-		strcpy( main_name, "create_the_forms" );
+        strcpy( main_name, "create_the_forms" );
     changed = 1;
 }
 
@@ -243,17 +243,17 @@ static int
 double_click( const XEvent * xev )
 {
     static Time lasttime;
-	static unsigned int lastbut;		       
+    static unsigned int lastbut;               
     static int lastx,
-		       lasty;
+               lasty;
     int dblclk,
-		x = xev->xbutton.x,
-		y = xev->xbutton.y;
+        x = xev->xbutton.x,
+        y = xev->xbutton.y;
 
     dblclk =    xev->xbutton.button == lastbut
-		     && xev->xbutton.time - lasttime < FL_CLICK_TIMEOUT
-		     && lastx == x
-		     && lasty == y;
+             && xev->xbutton.time - lasttime < FL_CLICK_TIMEOUT
+             && lastx == x
+             && lasty == y;
 
     lasttime = xev->xbutton.time;
     lastbut = xev->xbutton.button;
@@ -270,48 +270,48 @@ double_click( const XEvent * xev )
 
 static int
 handle_click( XEvent * xev,
-			  void   * p  FL_UNUSED_ARG  )
+              void   * p  FL_UNUSED_ARG  )
 {
     int dblclk = double_click( xev );
 
     if ( no_selection )
-		return 0;
+        return 0;
 
     if ( dblclk )
     {
-		if ( xev->xbutton.button == 1 )
-			cut_selection( );
-		else if ( xev->xbutton.button == 3 )
-			change_selection( );
+        if ( xev->xbutton.button == 1 )
+            cut_selection( );
+        else if ( xev->xbutton.button == 3 )
+            change_selection( );
 
-		redraw_the_form( 0 );
-		return 0;
+        redraw_the_form( 0 );
+        return 0;
     }
 
     if ( xev->xbutton.button == 1 && cur_class != -1 )
     {
-		XEvent ev;
+        XEvent ev;
 
-		XNextEvent( fl_display, &ev );
+        XNextEvent( fl_display, &ev );
 
-		if ( ev.type == MotionNotify )
-			add_something( );
+        if ( ev.type == MotionNotify )
+            add_something( );
     }
     else if ( is_pasting )
-		/* empty */;
+        /* empty */;
     else if (    within_selection( xev->xbutton.x, xev->xbutton.y )
-			  && xev->xbutton.button != 3 )
+              && xev->xbutton.button != 3 )
     {
-		XEvent ev;
+        XEvent ev;
 
-		XNextEvent( fl_display, &ev );
-		if ( ev.type == MotionNotify )
-			handle_move( xev );
-		else if ( ev.type == ButtonRelease )
-			handle_select( &ev );
+        XNextEvent( fl_display, &ev );
+        if ( ev.type == MotionNotify )
+            handle_move( xev );
+        else if ( ev.type == ButtonRelease )
+            handle_select( &ev );
     }
     else
-		handle_select( xev );
+        handle_select( xev );
 
     redraw_the_form( 0 );
     return 0;
@@ -332,28 +332,28 @@ handle_keypress( const XKeyEvent * xev )
     XLookupString( ( XKeyEvent * ) xev, keybuf, sizeof keybuf, &keysym, 0 );
 
     if ( keysym >= XK_F1 && keysym <= XK_F12 )
-		func_cb( 0, keysym - XK_F1 + 1 );
+        func_cb( 0, keysym - XK_F1 + 1 );
     else if ( IsRight( keysym ) )
-		( shift ? resize_selection : move_selection )( stp, 0 );
+        ( shift ? resize_selection : move_selection )( stp, 0 );
     else if ( IsLeft( keysym ) )
-		( shift ? resize_selection : move_selection )( -stp, 0 );
+        ( shift ? resize_selection : move_selection )( -stp, 0 );
     else if ( IsUp( keysym ) )
-		( shift ? resize_selection : move_selection )( 0, -stp );
+        ( shift ? resize_selection : move_selection )( 0, -stp );
     else if ( IsDown(keysym ) )
-		( shift ? resize_selection : move_selection )( 0, stp );
+        ( shift ? resize_selection : move_selection )( 0, stp );
     else if ( keysym == XK_Escape )
-		exit_cb( 0, 0 );
+        exit_cb( 0, 0 );
     else if ( keysym == XK_t || keysym == XK_T )
-		( fd_test->test->visible ? stoptest_cb : test_cb )( 0, 0 );
+        ( fd_test->test->visible ? stoptest_cb : test_cb )( 0, 0 );
     else if ( keysym == XK_s || keysym == XK_S )
-		saveforms_as_cb( 0, 0 );
+        saveforms_as_cb( 0, 0 );
     else if ( IsTab( keysym ) )
-		( shift ? prev_selection : next_selection )( );
+        ( shift ? prev_selection : next_selection )( );
     else if ( keysym >= '0' && keysym <= '9' )
     {
-		if ( ( stp = keysym - '0' ) == 0 )
-			stp = 10;
-		set_snap_size( stp, 1 );
+        if ( ( stp = keysym - '0' ) == 0 )
+            stp = 10;
+        set_snap_size( stp, 1 );
     }
 }
 
@@ -374,9 +374,9 @@ process_xevent( int no_add  FL_UNUSED_ARG )
 
     switch ( xev.type )
     {
-		case KeyPress:
-			handle_keypress( ( XKeyEvent * ) & xev );
-			break;
+        case KeyPress:
+            handle_keypress( ( XKeyEvent * ) & xev );
+            break;
     }
 }
 
@@ -390,40 +390,40 @@ main_loop( void )
 {
     FL_OBJECT *obj;
     char str[ 3 * MAX_VAR_LEN + 20 ],
-		 name[ MAX_VAR_LEN ];
+         name[ MAX_VAR_LEN ];
     char cbname[ MAX_VAR_LEN ],
-		 argname[ MAX_VAR_LEN ];
+         argname[ MAX_VAR_LEN ];
 
     while ( 1 )
     {
-		obj = fl_do_forms( );
+        obj = fl_do_forms( );
 
-		/* Check whether testing a form */
+        /* Check whether testing a form */
 
-		if ( thetestform != NULL && obj != FL_EVENT )
-		{
-			get_object_name( obj, name, cbname, argname );
-			if ( ! *name )
-				strcpy( name, "<noname>" );
-			if ( ! *cbname )
-				sprintf( str, "Called: %s( %s, %s );", cbname, name, argname );
-			else
-				sprintf( str, "Returned: %s", name );
-			fl_addto_browser( fd_test->browser, str );
-		}
+        if ( thetestform != NULL && obj != FL_EVENT )
+        {
+            get_object_name( obj, name, cbname, argname );
+            if ( ! *name )
+                strcpy( name, "<noname>" );
+            if ( ! *cbname )
+                sprintf( str, "Called: %s( %s, %s );", cbname, name, argname );
+            else
+                sprintf( str, "Returned: %s", name );
+            fl_addto_browser( fd_test->browser, str );
+        }
 
-		if ( obj == FL_EVENT )
-			process_xevent( 0 );
+        if ( obj == FL_EVENT )
+            process_xevent( 0 );
     }
 }
 
 
-#define DEFGeom       "320x250+150+420"	/* working area geometry     */
-#define DEFcntlGeom   "+150+1"	        /* control panel position    */
-#define DEFattribGeom "+210+25"	        /* Attributes panel position */
-#define DEFtestGeom   "-275+2"	        /* Test panel position       */
-#define DEFalignGeom  "-1+1"	        /* align panel position       */
-#define DEFhelpGeom   "-1+1"	        /* Help panel position       */
+#define DEFGeom       "320x250+150+420" /* working area geometry     */
+#define DEFcntlGeom   "+150+1"          /* control panel position    */
+#define DEFattribGeom "+210+25"         /* Attributes panel position */
+#define DEFtestGeom   "-275+2"          /* Test panel position       */
+#define DEFalignGeom  "-1+1"            /* align panel position       */
+#define DEFhelpGeom   "-1+1"            /* Help panel position       */
 
 static FL_CMD_OPT fd_cmdopt[ ] =
 {
@@ -475,9 +475,9 @@ static FL_resource fdres[ ] =
     { "workingArea.geometry", "Geometry", FL_STRING, fdgeom, 0, NG },
     { "control.geometry", "Control.Geometry", FL_STRING, fdcntlgeom, 0, NG },
     { "attributes.geometry", "Attributes.Geometry", FL_STRING, fdattribgeom,
-	  0, NG },
+      0, NG },
     { "attributes.background", "Attributes.Background", FL_STRING,
-	  fd_attrib_col, 0, NG },
+      fd_attrib_col, 0, NG },
     { "test.geometry", "Test.Geometry", FL_STRING, fdtestgeom, 0, NG },
     { "help.geometry", "Help.Geometry", FL_STRING, fdhelpgeom, 0, NG },
     { "align.geometry", "Align.Geometry", FL_STRING, fdaligngeom, 0, NG },
@@ -489,7 +489,7 @@ static FL_resource fdres[ ] =
     { "filter", "Filter", FL_STRING, fd_sfilter, 0, 30 },
     { "xformHeader", "XFormHeader", FL_STRING, xform_header, "forms.h", 128 },
     { "glcanvasHeader", "GLCanvasHeader", FL_STRING, glcanvas_header,
-	  "glcanvas.h", 128 },
+      "glcanvas.h", 128 },
     { "altformat", "AltFormat", FL_BOOL, &fdopt.altformat, "0", 0 },
     { "helpFontSize", "HelpFontSize", FL_INT, &fd_helpfontsize, "12", 0 },
     { "nocode", "NoCode", FL_BOOL, &fdopt.emit_code, "1", 0 },
@@ -514,7 +514,7 @@ char *helps[ ] =
     "-compensate               emit font/server compensation code",
     "-lax                      go easy on syntax checking",
     "-I headername             alternate header file (forms.h default)",
-	"-G glcanvas headername    alternate glcanvas header file (glcanvas.h default)",
+    "-G glcanvas headername    alternate glcanvas header file (glcanvas.h default)",
     "-convert file-list        convert .fd to code non-interactively",
     "-dir destdir              output any generated files in destdir",
     "-geometry geom            initial working area geometry",
@@ -527,7 +527,7 @@ char *helps[ ] =
 
 static void
 usage( char * s,
-	   int    die )
+       int    die )
 {
     char **q = helps;
     Conv *cv = convertor;
@@ -535,17 +535,17 @@ usage( char * s,
     fprintf( stderr, "usage: %s: [options] [file.fd]\n", s );
     fprintf( stderr, "  where options are\n" );
     for ( ; *q; q++ )
-		fprintf( stderr, "   %s\n", *q );
+        fprintf( stderr, "   %s\n", *q );
 
     fprintf( stderr, "  Language Options\n   " );
     for ( cv += 2; cv->lang_name; cv++ )
-		fprintf( stderr, "-%s ", cv->lang_name );
+        fprintf( stderr, "-%s ", cv->lang_name );
 
     fprintf( stderr, "\n   -filter f       filter name" );
     fprintf( stderr, "\n\n See also the online Help for resources info\n" );
 
     if ( die )
-		exit( 1 );
+        exit( 1 );
 }
 
 
@@ -558,9 +558,9 @@ lang_val( const char *s )
     int i;
 
     for ( i = 1; i < MAX_CONVERTOR; i++ )
-		if (    strcasecmp( s, convertor[ i ].lang_name ) == 0
-			 || strncmp( s, convertor[ i ].lang_name, 3 ) == 0 )
-			return i;
+        if (    strcasecmp( s, convertor[ i ].lang_name ) == 0
+             || strncmp( s, convertor[ i ].lang_name, 3 ) == 0 )
+            return i;
 
     return FD_C;
 }
@@ -573,31 +573,31 @@ static int ignored_fake_configure;
 
 static int
 handle_configure( XEvent * xev,
-				  void   * p  FL_UNUSED_ARG )
+                  void   * p  FL_UNUSED_ARG )
 {
     /* Some window managers sends bogus configure events. Make a note of it */
 
     if ( xev->xconfigure.send_event )
-		ignored_fake_configure =    winw != xev->xconfigure.width
-			                     && winh != xev->xconfigure.height;
+        ignored_fake_configure =    winw != xev->xconfigure.width
+                                 && winh != xev->xconfigure.height;
     else
     {
-		winw = xev->xconfigure.width;
-		winh = xev->xconfigure.height;
+        winw = xev->xconfigure.width;
+        winh = xev->xconfigure.height;
 
-		if ( cur_form && ( cur_form->w > winw || cur_form->h > winh ) )
-		{
-			reshape_form_background( winw, winh );
-			redraw_the_form( 1 );
-		}
+        if ( cur_form && ( cur_form->w > winw || cur_form->h > winh ) )
+        {
+            reshape_form_background( winw, winh );
+            redraw_the_form( 1 );
+        }
 
-		if ( fd_resize->resize->visible )
-		{
-			fl_set_spinner_value( fd_resize->width,  winw );
-			fl_set_spinner_value( fd_resize->height, winh );
-		}
+        if ( fd_resize->resize->visible )
+        {
+            fl_set_spinner_value( fd_resize->width,  winw );
+            fl_set_spinner_value( fd_resize->height, winh );
+        }
 
-		changed = TRUE;
+        changed = TRUE;
     }
 
     return 1;
@@ -609,26 +609,26 @@ handle_configure( XEvent * xev,
 
 static int
 handle_expose( XEvent * xev,
-			   void   * p  FL_UNUSED_ARG )
+               void   * p  FL_UNUSED_ARG )
 {
     if ( xev->xexpose.count == 0 )
     {
-		M_warn( "FD_Expose", "" );
+        M_warn( "FD_Expose", "" );
 
-		/* If we have ignored a previous configure event, need the window
-		   size might not be correct. Re-read */
+        /* If we have ignored a previous configure event, need the window
+           size might not be correct. Re-read */
 
-		if ( ignored_fake_configure )
-			fl_get_winsize( main_window, &winw, &winh );
+        if ( ignored_fake_configure )
+            fl_get_winsize( main_window, &winw, &winh );
 
-		/* Change form background size */
+        /* Change form background size */
 
-		if ( cur_form && ( cur_form->w != winw || cur_form->h != winh ) )
-			reshape_form_background( winw, winh );
+        if ( cur_form && ( cur_form->w != winw || cur_form->h != winh ) )
+            reshape_form_background( winw, winh );
 
-		redraw_the_form( 1 );
-		ignored_fake_configure = 0;
-		return 1;
+        redraw_the_form( 1 );
+        ignored_fake_configure = 0;
+        return 1;
     }
 
     return 0;
@@ -641,105 +641,105 @@ handle_expose( XEvent * xev,
 
 static void
 pre_connect( int    argc,
-			 char * argv[ ] )
+             char * argv[ ] )
 {
     int i,
-		s;
+        s;
     static char filter[ 128 ];
 
     for ( i = 1; i < argc && *argv[ i ] == '-'; i++ )
     {
-		if ( strncmp( argv[ i ] + 1, "help", 1 ) == 0 )
-			usage( argv[ 0 ], 1 );
-		else if ( strncmp( argv[ i ] + 1, "version", 4 ) == 0 )
-			print_version( 1 );
-		else if ( strncmp( argv[ i ] + 1, "xforms_version", 4 ) == 0 )
-			print_xforms_version( 1 );
-		else if ( strncmp( argv[ i ] + 1, "altformat", 3 ) == 0 )
-			fdopt.altformat = 1;
-		else if ( strncmp( argv[ i ] + 1, "callback", 3 ) == 0 )
-			fdopt.emit_cb = 1;
-		else if ( strncmp(argv[ i ] + 1, "compensate", 4 ) == 0 )
-			fdopt.compensate = 1;
-		else if ( strncmp( argv[ i ] + 1, "main", 3 ) == 0 )
-			fdopt.emit_main = 1;
-		else if ( strncmp( argv[ i ] + 1, "noc", 3 ) == 0 )
-			fdopt.emit_code = 0;
-		else if ( strncmp( argv[ i ] + 1, "unit", 4 ) == 0 && i + 1 < argc )
-			fdopt.unit = unit_val( argv[ ++i ] );
-		else if ( strncmp( argv[ i ] + 1, "filter", 4 ) == 0 && i + 1 < argc )
-			strcpy( filter, argv[ ++i ] );
-		else if ( strcmp( argv[ i ], "-I" ) == 0 && i + 1 < argc )
-			strcpy( xform_header, argv[ ++i ] );
-		else if ( strcmp( argv[ i ], "-G" ) == 0 && i + 1 < argc )
-			strcpy( glcanvas_header, argv[ ++i ] );
-		else if ( strcmp( argv[ i ], "-bw" ) == 0 && i + 1 < argc )
-			fd_bwidth = atoi( argv[ ++i ] );
-		else if ( strncmp( argv[ i ] + 1, "convert", 1 ) == 0 )
-		{
-			fli_no_connection = 1;
-			fli_internal_init( );
-			fdopt.conv_only = 1;
-		}
-		else if ( strncmp( argv[ i ] + 1, "dir", 3 ) == 0 && i + 1 < argc )
-		{
-			fdopt.output_dir = malloc( strlen( argv[ ++i ] ) + 1 );
-			strcpy( fdopt.output_dir, argv[ i ] );
-		}
-		else if ( strncmp( argv[ i ] + 1, "lang", 4 ) == 0 && i + 1 < argc )
-			fdopt.language = lang_val( argv[ ++i ] );
-		else
-		{
-			fdopt.language = lang_val( argv[ i ] + 1 );
-		}
+        if ( strncmp( argv[ i ] + 1, "help", 1 ) == 0 )
+            usage( argv[ 0 ], 1 );
+        else if ( strncmp( argv[ i ] + 1, "version", 4 ) == 0 )
+            print_version( 1 );
+        else if ( strncmp( argv[ i ] + 1, "xforms_version", 4 ) == 0 )
+            print_xforms_version( 1 );
+        else if ( strncmp( argv[ i ] + 1, "altformat", 3 ) == 0 )
+            fdopt.altformat = 1;
+        else if ( strncmp( argv[ i ] + 1, "callback", 3 ) == 0 )
+            fdopt.emit_cb = 1;
+        else if ( strncmp(argv[ i ] + 1, "compensate", 4 ) == 0 )
+            fdopt.compensate = 1;
+        else if ( strncmp( argv[ i ] + 1, "main", 3 ) == 0 )
+            fdopt.emit_main = 1;
+        else if ( strncmp( argv[ i ] + 1, "noc", 3 ) == 0 )
+            fdopt.emit_code = 0;
+        else if ( strncmp( argv[ i ] + 1, "unit", 4 ) == 0 && i + 1 < argc )
+            fdopt.unit = unit_val( argv[ ++i ] );
+        else if ( strncmp( argv[ i ] + 1, "filter", 4 ) == 0 && i + 1 < argc )
+            strcpy( filter, argv[ ++i ] );
+        else if ( strcmp( argv[ i ], "-I" ) == 0 && i + 1 < argc )
+            strcpy( xform_header, argv[ ++i ] );
+        else if ( strcmp( argv[ i ], "-G" ) == 0 && i + 1 < argc )
+            strcpy( glcanvas_header, argv[ ++i ] );
+        else if ( strcmp( argv[ i ], "-bw" ) == 0 && i + 1 < argc )
+            fd_bwidth = atoi( argv[ ++i ] );
+        else if ( strncmp( argv[ i ] + 1, "convert", 1 ) == 0 )
+        {
+            fli_no_connection = 1;
+            fli_internal_init( );
+            fdopt.conv_only = 1;
+        }
+        else if ( strncmp( argv[ i ] + 1, "dir", 3 ) == 0 && i + 1 < argc )
+        {
+            fdopt.output_dir = malloc( strlen( argv[ ++i ] ) + 1 );
+            strcpy( fdopt.output_dir, argv[ i ] );
+        }
+        else if ( strncmp( argv[ i ] + 1, "lang", 4 ) == 0 && i + 1 < argc )
+            fdopt.language = lang_val( argv[ ++i ] );
+        else
+        {
+            fdopt.language = lang_val( argv[ i ] + 1 );
+        }
     }
 
     if ( fdopt.language < FD_C || fdopt.language > FD_EXP )
-		fdopt.language = FD_C;
+        fdopt.language = FD_C;
 
     if ( filter[ 0 ] )
-		convertor[ fdopt.language ].extern_convertor = filter;
+        convertor[ fdopt.language ].extern_convertor = filter;
 
     if ( convertor[ fdopt.language ].init )
-		convertor[ fdopt.language ].init( );
+        convertor[ fdopt.language ].init( );
 
     /* No need to check for C syntax if not C program */
 
     if ( fdopt.language != FD_C )
-		fdopt.lax = 1;
+        fdopt.lax = 1;
 
     if ( fdopt.conv_only )
     {
-		fli_set_app_name( argv[ 0 ], "Fdesign" );     /* resource routine
-													   wants this */
-		fli_init_context( );
-		create_the_forms( );
-		init_classes( );
+        fli_set_app_name( argv[ 0 ], "Fdesign" );     /* resource routine
+                                                       wants this */
+        fli_init_context( );
+        create_the_forms( );
+        init_classes( );
 
-		fli_dpi = 95;
+        fli_dpi = 95;
 
-		if ( i > argc - 1 )
-		{
-			fprintf( stderr, "-convert requires arguments\n" );
-			usage( argv[ 0 ], 1 );
-		}
+        if ( i > argc - 1 )
+        {
+            fprintf( stderr, "-convert requires arguments\n" );
+            usage( argv[ 0 ], 1 );
+        }
 
-		for ( s = i; s < argc; s++ )
-		{
-			if ( load_forms( FALSE, argv[ s ], 0 ) < 0 )
-			{
-				fprintf( stderr, "Unable to load %s\n", argv[ s ] );
-				exit( 1 );
-			}
+        for ( s = i; s < argc; s++ )
+        {
+            if ( load_forms( FALSE, argv[ s ], 0 ) < 0 )
+            {
+                fprintf( stderr, "Unable to load %s\n", argv[ s ] );
+                exit( 1 );
+            }
 
-			if ( ! save_forms( argv[ s ] ) )
-			{
-				fprintf( stderr, "Unable to convert %s\n", argv[ s ] );
-				exit( 1 );
-			}
-		}
+            if ( ! save_forms( argv[ s ] ) )
+            {
+                fprintf( stderr, "Unable to convert %s\n", argv[ s ] );
+                exit( 1 );
+            }
+        }
 
-		exit( 0 );
+        exit( 0 );
     }
 }
 
@@ -749,18 +749,18 @@ pre_connect( int    argc,
 
 static int
 parse_geometry( const char   * gstr,
-				int          * x,
-				int          * y,
-				unsigned int * w,
-				unsigned int * h )
+                int          * x,
+                int          * y,
+                unsigned int * w,
+                unsigned int * h )
 {
     int s;
 
     s = XParseGeometry( ( char * ) gstr, x, y, w, h );
     if ( s & XValue && s & XNegative )
-		*x = fl_scrw - FL_abs( *x );
+        *x = fl_scrw - FL_abs( *x );
     if ( s & YValue && s & YNegative )
-		*y = fl_scrh - FL_abs( *y );
+        *y = fl_scrh - FL_abs( *y );
     return s;
 }
 
@@ -771,7 +771,7 @@ parse_geometry( const char   * gstr,
 
 static void
 interrupted( int    s     FL_UNUSED_ARG,
-			 void * data  FL_UNUSED_ARG )
+             void * data  FL_UNUSED_ARG )
 {
     exit_cb( 0, 0 );
 }
@@ -783,16 +783,16 @@ interrupted( int    s     FL_UNUSED_ARG,
 
 static int
 delete_handler( FL_FORM * form  FL_UNUSED_ARG,
-				void    * data  FL_UNUSED_ARG )
+                void    * data  FL_UNUSED_ARG )
 {
     if (    changed 
-		 && fl_show_question( "Changes have not been saved\n"
-							  "Save them now ?", 1 )
-		 && ! save_forms( NULL ) )
-		return FL_IGNORE;
+         && fl_show_question( "Changes have not been saved\n"
+                              "Save them now ?", 1 )
+         && ! save_forms( NULL ) )
+        return FL_IGNORE;
 
     exit( 0 );
-    return 0;			/* shut up compiler */
+    return 0;           /* shut up compiler */
 }
 
 
@@ -854,9 +854,9 @@ initialize( void )
 
 static int
 ignore_close( FL_FORM *a  FL_UNUSED_ARG,
-			  void    *b  FL_UNUSED_ARG )
+              void    *b  FL_UNUSED_ARG )
 {
-	return FL_IGNORE;
+    return FL_IGNORE;
 }
 
 
@@ -865,28 +865,28 @@ ignore_close( FL_FORM *a  FL_UNUSED_ARG,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     unsigned int w = 0,
-		         h = 0;
+                 h = 0;
     int x = 0,
-		y = 0,
-		s,
-		version,
-		revision;
+        y = 0,
+        s,
+        version,
+        revision;
     FL_IOPT cntl;
     unsigned int mask;
-	char *tmp = NULL;
+    char *tmp = NULL;
 
     /* Before doing anything, check to make sure the library is made
        correctly */
 
     if ( FL_INCLUDE_VERSION != fl_library_version( &version, &revision ) )
     {
-		fprintf( stderr, "Library and header mismatch\n" );
-		fprintf( stderr, "  Header Version:%d.%d.%s\n",
-				 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
-		fprintf( stderr, " Library version:%d.%d\n", version, revision );
+        fprintf( stderr, "Library and header mismatch\n" );
+        fprintf( stderr, "  Header Version:%d.%d.%s\n",
+                 FL_VERSION, FL_REVISION, FL_FIXLEVEL );
+        fprintf( stderr, " Library version:%d.%d\n", version, revision );
     }
 
     initialize( );
@@ -909,15 +909,15 @@ main( int    argc,
     fl_set_defaults( mask, &cntl );
 
     if ( ! ( fd_display = fl_initialize( &argc, argv, 0, fd_cmdopt, Ncopt ) ) )
-		exit( 1 );
+        exit( 1 );
 
     fl_get_app_resources( fdres, Nropt );
     fl_add_signal_callback( SIGINT, interrupted, 0 );
 
     if ( argv[ 1 ] && argv[ 1 ][ 0 ] == '-' )
     {
-		fprintf( stderr, " Unknown option: %s\n", argv[ 1 ] );
-		usage( argv[ 0 ], 1 );
+        fprintf( stderr, " Unknown option: %s\n", argv[ 1 ] );
+        usage( argv[ 0 ], 1 );
     }
 
     fli_cntl.coordUnit = FL_COORD_PIXEL;
@@ -925,15 +925,15 @@ main( int    argc,
     fdopt.language = lang_val( fd_slanguage );
 
     if ( *fd_sfilter )
-		convertor[ fdopt.language ].extern_convertor = fd_sfilter;
+        convertor[ fdopt.language ].extern_convertor = fd_sfilter;
 
     /* No need to check for C syntax if not C program */
 
     if ( fdopt.language != FD_C )
-		fdopt.lax = 1;
+        fdopt.lax = 1;
 
     if ( convertor[ fdopt.language ].init )
-		convertor[ fdopt.language ].init( );
+        convertor[ fdopt.language ].init( );
 
     fd_bwidth = fli_cntl.borderWidth;
     M_warn( "fdesign", "UNIT=%s BW=%d", unit_name( fdopt.unit ), fd_bwidth );
@@ -955,16 +955,16 @@ main( int    argc,
     fl_set_counter_step( fd_align->snapobj, 1.0, 5.0 );
     fl_set_counter_value( fd_align->snapobj, 10.0 );
     fl_set_counter_precision( fd_align->snapobj, 0 );
-	fl_set_form_atclose( fd_align->align, ignore_close, NULL );
+    fl_set_form_atclose( fd_align->align, ignore_close, NULL );
 
-	fl_set_spinner_bounds( fd_resize->width,  1, SHRT_MAX );
-	fl_set_spinner_bounds( fd_resize->height, 1, SHRT_MAX );
-	fl_set_form_atclose( fd_resize->resize, ignore_close, NULL );
+    fl_set_spinner_bounds( fd_resize->width,  1, SHRT_MAX );
+    fl_set_spinner_bounds( fd_resize->height, 1, SHRT_MAX );
+    fl_set_form_atclose( fd_resize->resize, ignore_close, NULL );
 
-	fl_set_form_atclose( fd_attrib->attrib, ignore_close, NULL );
-	fl_set_form_atclose( fd_attrib->attrib, ignore_close, NULL );
-	fl_set_form_atclose( fd_test->test, ignore_close, NULL );
-	fl_set_form_atclose( fd_help->helpform, ignore_close, NULL );
+    fl_set_form_atclose( fd_attrib->attrib, ignore_close, NULL );
+    fl_set_form_atclose( fd_attrib->attrib, ignore_close, NULL );
+    fl_set_form_atclose( fd_test->test, ignore_close, NULL );
+    fl_set_form_atclose( fd_help->helpform, ignore_close, NULL );
 
     thetestform = NULL;
     strcpy( main_name, "create_the_forms" );
@@ -976,33 +976,33 @@ main( int    argc,
        load it */
 
     if (    argc >= 2
-		 && access( tmp = append_fd_suffix( argv[ argc - 1 ] ), R_OK ) == 0 )
+         && access( tmp = append_fd_suffix( argv[ argc - 1 ] ), R_OK ) == 0 )
     {
-		for ( s = 1; s < argc; s++ )
-			if ( load_forms( s == 1 ? FALSE : TRUE, argv[ s ], 0 ) < 0 )
-				break;
+        for ( s = 1; s < argc; s++ )
+            if ( load_forms( s == 1 ? FALSE : TRUE, argv[ s ], 0 ) < 0 )
+                break;
     }
     else
    {
-		select_object_by_class( FL_BUTTON );
-		select_pallette_entry( FL_BUTTON );
+        select_object_by_class( FL_BUTTON );
+        select_pallette_entry( FL_BUTTON );
     }
 
-	fl_safe_free( tmp );
+    fl_safe_free( tmp );
 
     /* Do auto-naming for single file only */
 
     if ( argc == 2 )
-		loadedfile = fl_strdup( argv[ 1 ] );
+        loadedfile = fl_strdup( argv[ 1 ] );
 
     /* See if color change */
 
     if ( fd_attrib_col[ 0 ] )
     {
-		long c = FL_FREE_COL1 - 10;
+        long c = FL_FREE_COL1 - 10;
 
-		fl_mapcolor_name( c, fd_attrib_col );
-		modify_attrib_basic_color( c, c );
+        fl_mapcolor_name( c, fd_attrib_col );
+        modify_attrib_basic_color( c, c );
     }
 
     parse_geometry( fdcntlgeom, &x, &y, &w, &h );
@@ -1011,8 +1011,8 @@ main( int    argc,
     fl_set_app_mainform( fd_control->control );
     fli_set_form_icon_data( fd_control->control, fd_logo_pixels );
     fl_show_form(fd_control->control, FL_PLACE_GEOMETRY,
-				 ( 1 || fd_cntlborder ) ? FL_FULLBORDER : FL_TRANSIENT,
-				 "Control" );
+                 ( 1 || fd_cntlborder ) ? FL_FULLBORDER : FL_TRANSIENT,
+                 "Control" );
 
     /* Other geometries */
 
@@ -1030,18 +1030,18 @@ main( int    argc,
 
     s = parse_geometry( fdgeom, &x, &y, &w, &h );
     if ( s & XValue || s & YValue )
-		fl_winposition( x, y );
+        fl_winposition( x, y );
     if ( s & WidthValue && s & HeightValue )
-		fl_initial_winsize( w, h );
+        fl_initial_winsize( w, h );
 
     /* If a form is already loaded, use that size */
 
     if ( cur_form )
     {
-		y -= cur_form->h - h;
-		w = cur_form->w;
-		h = cur_form->h;
-		fl_initial_wingeometry( x, y, w, h );
+        y -= cur_form->h - h;
+        w = cur_form->w;
+        h = cur_form->h;
+        fl_initial_wingeometry( x, y, w, h );
     }
 
     winw = w;
@@ -1060,7 +1060,7 @@ main( int    argc,
     fl_add_event_callback( main_window, ConfigureNotify, handle_configure, 0 );
     fl_add_event_callback( main_window, ButtonPress, handle_click, 0 );
     fl_addto_selected_xevent( main_window,
-							  ButtonMotionMask | PointerMotionHintMask );
+                              ButtonMotionMask | PointerMotionHintMask );
     fl_addto_selected_xevent( main_window, ButtonReleaseMask );
 
     redraw_the_form( 1 );
@@ -1080,11 +1080,11 @@ main( int    argc,
 
 void
 set_snap_size( int n,
-			   int cb )
+               int cb )
 {
     fl_set_counter_value( fd_align->snapobj, n > 0 ? n : 5 );
     if ( cb )
-		fl_call_object_callback( fd_align->snapobj );
+        fl_call_object_callback( fd_align->snapobj );
 }
 
 
@@ -1096,3 +1096,11 @@ get_snap_size( void )
 {
     return 0.01 + fl_get_counter_value( fd_align->snapobj );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

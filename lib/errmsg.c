@@ -50,13 +50,13 @@
 #include "private/flsnprintf.h"
 #include "ulib.h"
 
-extern int errno;		/* system error no            */
+extern int errno;       /* system error no            */
 
 #ifndef HAVE_STRERROR
 extern char *sys_errlist[ ];
 #endif
 
-#define MAXESTR 2048		/* maximum error string len   */
+#define MAXESTR 2048        /* maximum error string len   */
 
 
 /**********************************************************************
@@ -69,13 +69,13 @@ extern char *sys_errlist[ ];
 /************ Local variables ****************************************/
 
 static FILE *errlog;           /* where the msg is going       */
-static int threshold;		   /* current threshold            */
-static int level;		       /* requested message level      */
-static const char *file;	   /* source file name             */
-static int lineno;		       /* line no. in that file        */
+static int threshold;          /* current threshold            */
+static int level;              /* requested message level      */
+static const char *file;       /* source file name             */
+static int lineno;             /* line no. in that file        */
 
 
-FL_ERROR_FUNC efp_;			         /* global pointer to shut up lint */
+FL_ERROR_FUNC efp_;                  /* global pointer to shut up lint */
 FL_ERROR_FUNC user_error_function_;  /* hook for application error handler */
 
 
@@ -86,8 +86,8 @@ FL_ERROR_FUNC user_error_function_;  /* hook for application error handler */
 void
 fl_set_err_logfp( FILE * fp )
 {
-	if ( fp )
-		errlog = fp;
+    if ( fp )
+        errlog = fp;
 }
 
 
@@ -136,52 +136,52 @@ fli_set_msg_threshold( int mlevel )
 
 static void
 P_errmsg( const char * func,
-		  const char * fmt,
-		  ... )
+          const char * fmt,
+          ... )
 {
     va_list args;
     char *where,
-		 why[ MAXESTR + 1 ] = "";
+         why[ MAXESTR + 1 ] = "";
 
     /* Check if there is nothing to do */
 
     if ( level >= threshold )
-		return;
+        return;
 
     if ( ! errlog )
-		errlog = stderr;
+        errlog = stderr;
 
-	/* Set up the string where it happended */
+    /* Set up the string where it happended */
 
     if ( func )
     {
-		char line[ 20 ];
+        char line[ 20 ];
 
-		if ( lineno > 0 )
-			sprintf( line, "%d", lineno );
-		else
-			strcpy( line, "?" );
+        if ( lineno > 0 )
+            sprintf( line, "%d", lineno );
+        else
+            strcpy( line, "?" );
 
-		where = *func ?
-				fli_vstrcat( "In ", func, "() [", file, ":", line, "] ",
-							 ( char * ) 0 ) :
-				fli_vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
+        where = *func ?
+                fli_vstrcat( "In ", func, "() [", file, ":", line, "] ",
+                             ( char * ) 0 ) :
+                fli_vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
     }
     else
-		where = strdup( "" );
+        where = strdup( "" );
 
     /* Now find out why */
 
     if ( fmt && *fmt )
-	{
-		va_start( args, fmt );
-		fl_vsnprintf( why, sizeof why, fmt, args );
-		va_end( args );
-	}
+    {
+        va_start( args, fmt );
+        fl_vsnprintf( why, sizeof why, fmt, args );
+        va_end( args );
+    }
 
-	/* Having gotten the message as well as where and why show it */
+    /* Having gotten the message as well as where and why show it */
 
-	fprintf( errlog, "%s%s\n", where, why );
+    fprintf( errlog, "%s%s\n", where, why );
 
     fli_free_vstrcat( where );
 }
@@ -194,8 +194,8 @@ P_errmsg( const char * func,
 
 FL_ERROR_FUNC
 fli_error_setup( int          lev,
-				 const char * f,
-				 int          l )
+                 const char * f,
+                 int          l )
 {
     file   = f;
     lineno = l;
@@ -203,3 +203,11 @@ fli_error_setup( int          lev,
 
     return user_error_function_ ? user_error_function_ : P_errmsg;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
