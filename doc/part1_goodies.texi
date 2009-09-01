@@ -773,7 +773,7 @@ typedef struct @{
               * ready;
     FL_OBJECT * dirlabel,
               * patlabel;
-    FL_OBJECT *appbutt[ 3 ];
+    FL_OBJECT * appbutt[3];
 @} FD_FSELECTOR;
 
 FD_FSELECTOR *fl_get_fselector_fdstruct(void);
@@ -781,7 +781,7 @@ FD_FSELECTOR *fl_get_fselector_fdstruct(void);
 
 
 You can, for example, change the default label strings of various
-buttons via structure members of @code{FD_FSELECTOR}:
+buttons via members of the @code{FD_FSELECTOR} structure:
 @example
 FD_FSELECTOR *fs = fl_get_fselector_fdstruct();
 
@@ -791,12 +791,11 @@ fl_fit_object_label(fs->ready, 1, 1);
 @noindent
 Since the return value of @code{@ref{fl_get_fselector_fdstruct()}} is
 a pointer to an internal structures, the members of this structure
-should not be freed or changed in ways that are not safe, which
-includes hiding or showing of the forms.
+should not be modified.
 
-Special files are marked with a distinct prefix in the browser (for
-example, @code{D} for directory, @code{p} for a pipe etc). To change the
-prefix, use the following routine
+In the listing of files in a directory special files are marked with a
+prefix in the browser (for example, @code{D} for directories, @code{p}
+for pipes etc.). To change the prefix, use the following routine
 @findex fl_set_fselector_filetype_marker()
 @anchor{fl_set_fselector_filetype_marker()}
 @example
@@ -814,7 +813,7 @@ the marker for pipes and FIFOs, @code{socket} the marker for sockets,
 
 Although file systems under Unix are similar, they are not identical. In
 the implementation of the file selector, the subtle differences in
-directory structure are isolated and conditionally compiled so an
+directory structures are isolated and conditionally compiled so an
 apparent uniform interface to the underlying directory structure is
 achieved.
 
@@ -844,10 +843,10 @@ a re-read.
 @code{FL_Dirlist} is a structure defined as follows
 @example
 typedef struct @{
-    char *name;             /* file name */
-    int type;               /* file type */
-    long dl_mtime;          /* file modification time */
-    unsigned long dl_size;  /* file size in bytes */
+    char          * name;        /* file name */
+    int             type;        /* file type */
+    long            dl_mtime;    /* file modification time */
+    unsigned long   dl_size;     /* file size in bytes */
 @} FL_Dirlist;
 @end example
 @noindent
@@ -886,28 +885,32 @@ the following call
 void fl_free_dirlist(FL_Dirlist *dl);
 @end example
 @noindent
-Note that a cast may be required to get rid of the const qualifier.
-See demo program @file{dirlist.c} for an example use of
-@code{@ref{fl_get_dirlist()}}.
+Note that a cast may be required to get rid of compiler warnings due
+to the @code{const} qualifier of the return value of
+@code{@ref{fl_get_dirlist()}}. See demo program @file{dirlist.c} for
+an example use of @code{@ref{fl_get_dirlist()}}.
 
-By default, not all types of files are returned by
-@code{@ref{fl_get_dirlist()}}. The specific rules regarding which
-types of file to return are controlled by an additional filter after
-the pattern filter of type
+Per default not all types of files are returned by
+@code{@ref{fl_get_dirlist()}}. The specific rules for which
+types of file are returned are controlled by an additional filter
+after the pattern filter. It has the type
 @example
-int ffilter(const char *name, int type);
+int default_filter(const char *name, int type);
 @end example
 @noindent
-which is called for each entry found in the directory (except for
-directories, which are always shown by default) that matches the
-pattern. This filter function should return true (non-zero_ if the entry
-is to be included in the directory list. The default filter is similar
-to the following
+and is called for each entry found in the directory that matched the
+pattern. This filter function should return true (non-zero) if the
+entry is to be included in the directory list. The default filter is
+similar to the following
 @example
 int ffilter(const char *name, int type) @{
-    return type == FT_FILE || type == FT_LINK;
+    return type == FT_DIR || type == FT_FILE || type == FT_LINK;
 @}
 @end example
+@noindent
+i.e.@: per default only directories, normal files and symbolic links
+are shown (the first argument of the function, the file name, isn't
+used by the default filter).
 
 To change the default filter, use the following routine
 @tindex FL_DIRLIST_FILTER

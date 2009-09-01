@@ -57,14 +57,14 @@
 #include "dirent_vms.h"
 #endif
 
-/* work around the bugs in various cpp */
+/* Work around the bugs in various cpp */
 
-#if defined(Lynx) && !defined(__VMS)
+#if defined Lynx && ! defined __VMS
 #include <dir.h>
 #include <dirent.h>
 #endif
 
-#if !defined __VMS  && !defined Lynx && ! defined FL_WIN32
+#if ! defined __VMS  && ! defined Lynx && ! defined FL_WIN32
 #include <dirent.h>
 #endif
 
@@ -152,7 +152,7 @@ getcwd( char * a,
 #ifdef FL_WIN32
 
 /***************************************
- * convert the backslash to slash
+ * Convert the backslash to slash
  ***************************************/
 
 static char *
@@ -160,15 +160,16 @@ fl_b2f_slash( char *dir )
 {
     char *p = dir;
 
-    for ( ; p && *p; p++ )
-    if ( *p == '\\' )
+    while ( ( p = strchr( p, '\\' ) ) )
         *p = '/';
+
     return dir;
 }
 
 #else
 #define fl_b2f_slash( a )
 #endif
+
 /************* local variables ****************/
 
 static const char *cpat;    /* current pattern          */
@@ -231,8 +232,8 @@ mode2type( unsigned int mode,
 
 
 /******************************************************************
- * Filter the filename before handing over to the "file is here" list.
- * Only files (include links) are shown,
+ * Filter the filename before handing it over to the "file is here"
+ * list. Per default only files (including links) are shown.
  ******************************************************************/
 
 static int
@@ -252,7 +253,7 @@ fselect( const char  * d_name,
         ret = 1;
     else if ( ffilter == default_filter )
     {
-        /* always keep directory and links */
+        /* Always keep directory and links */
 
         ret =    S_ISDIR(mode)
               || (    ( S_ISREG( mode ) || S_ISLNK( mode ) )
@@ -260,15 +261,16 @@ fselect( const char  * d_name,
     }
     else
     {
-        /* we don't filter directories unless requested */
+        /* We don't filter directories unless requested */
 
         if ( ! filter_directory )
-           ret = *type == FT_DIR
+           ret =    *type == FT_DIR
                  || ( fli_wildmat( d_name, cpat ) && ffilter( fname, *type ) );
         else
             ret =    ( *type == FT_DIR || fli_wildmat( d_name, cpat ) )
                   && ffilter( fname, *type );
     }
+
     return ret;
 }
 
@@ -363,7 +365,8 @@ tc_sort( const void * a,
  * On entry, dir must be no zero and be terminated properly, i.e.,
  * ends with /
  *******************************************************************/
-#ifndef FL_WIN32        /* [ */
+
+#ifndef FL_WIN32
 
 static int
 scandir_get_entries( const char  * dir,
@@ -380,19 +383,19 @@ scandir_get_entries( const char  * dir,
     cpat = pat;
     cdir = dir;
 
-    /* free all memory used last time we were here */
+    /* Free all memory used last time we were here */
 
     if ( dlist )
     {
         while ( --lastn >= 0 )
-            if ( dlist[lastn] )
+            if ( dlist[ lastn ] )
                 fl_free( dlist[ lastn ]);
         fl_free( dlist );
         dlist = NULL;
     }
 
     n = 0;
-    if ( ( lastn = tc_scandir( ( char * ) dir, &dlist ) ) > 0 )
+    if ( ( lastn = tc_scandir( dir, &dlist ) ) > 0 )
     {
         dl = *dirlist = fl_malloc( ( lastn + 1 ) * sizeof **dirlist );
         for ( i = n = 0; i < lastn; i++ )
@@ -416,7 +419,7 @@ scandir_get_entries( const char  * dir,
     return n;
 }
 
-#else /* FL_WIN32 ][ */
+#else /* FL_WIN32 */
 
 /***************************************
  ***************************************/
@@ -436,7 +439,7 @@ scandir_get_entries( const char  * dir,
     cdir = dir;
     n = 0;
 
-    /* save the working directory */
+    /* Save the working directory */
 
     getcwd( cwd, FL_PATH_MAX );
     if ( chdir( dir ) != 0 )    /* invalid directory */
@@ -446,7 +449,7 @@ scandir_get_entries( const char  * dir,
 
     if ( ( hFile = _findfirst( "*", &c_file ) ) == -1L )
     {
-        /* directory is empty, nothing to do */
+        /* Directory is empty, nothing to do */
 
         chdir( cwd );
         return 0;
@@ -454,6 +457,7 @@ scandir_get_entries( const char  * dir,
 
     lastn = 10;
     dl = *dirlist = fl_malloc( ( lastn + 1 ) * sizeof **dirlist );
+
     if ( fselect( &c_file, dl ) )
     {
         dl++;
@@ -489,7 +493,7 @@ scandir_get_entries( const char  * dir,
     return n;
 }
 
-#endif /* FL_WIN32 ] */
+#endif /* FL_WIN32 */
 
 
 /********************************************************************
@@ -643,7 +647,7 @@ fl_get_dirlist( const char * dir,
 
 
 /***********************************************************************
- * Misc. routines related directory
+ * Misc. routines related to directory handling
  **********************************************************************/
 
 int
@@ -665,7 +669,7 @@ fl_is_valid_dir( const char *name )
 
 
 /***************************************
- * Fix directory name, such as ../../a/b etc
+ * Fix directory names such as ../../a/b etc
  ***************************************/
 
 static void add_one( char *,
@@ -855,7 +859,7 @@ static int match_star( const char * s,
 
 
 /***************************************
- * match string "s" to pattern "p"
+ * Match string "s" to pattern "p"
  ***************************************/
 
 static int
@@ -871,8 +875,8 @@ do_matching( const char * s,
         if ( *s == '\0' )
             return *p == '*' && *++p == '\0' ? 1 : -1;
 
-        switch ( *p )
-        {           /* parse pattern */
+        switch ( *p )           /* parse pattern */
+        {
             case '\\':      /* Literal match with following character. */
                 if ( *s != *++p )
                     return 0;
@@ -922,6 +926,7 @@ match_star( const char * s,
     while ( ( result = do_matching( s, p ) ) == 0 ) /* gobble up * match */
         if ( *++s == '\0' )
             return -1;
+
     return result;
 }
 
@@ -950,7 +955,7 @@ fli_wildmat( const char * s,
  * scandir emulation
  ***************************************/
 
-#ifndef FL_WIN32        /* [  */
+#ifndef FL_WIN32
 
 static int
 tc_scandir( const char      * dirname,
@@ -968,21 +973,22 @@ tc_scandir( const char      * dirname,
 
     if ( sizeof( struct DIRENT ) < 100 && ! dname_is_1 )
     {
-        M_warn("tc_scandir", "Bad dirent -- will fix on the fly");
+        M_warn("tc_scandir", "Bad dirent -- will fix it on the fly" );
         dname_is_1 = 1;
     }
 
-    /* start reading the darn thing */
+    /* Start reading the darn thing */
 
     for ( n = 0; ( dentry = readdir( dir ) ) != NULL; n++ )
     {
         head = fl_realloc( head, ( n + 1 ) * sizeof *head );
 
-        /* here it is even weirder: some systems have d_reclen =
+        /* Here it is even weirder: some systems have d_reclen =
            sizeof(struct dirent) + strlen(d_name) and some have it as
            d_reclen = strlen(d_name) */
 
         /* Mathog, VMS<7.0, at least has no d_reclen *at all */
+
 #if defined __VMS && __VMS_VER < 70000000 || defined opennt || defined __CYGWIN__
         total = dname_is_1 ? strlen( dentry->d_name ) : sizeof *dentry;
 #else
@@ -997,7 +1003,7 @@ tc_scandir( const char      * dirname,
     return n;
 }
 
-#endif /* FL_WIN32 ] */
+#endif /* ! FL_WIN32 */
 
 
 /***************************************
