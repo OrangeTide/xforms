@@ -157,23 +157,18 @@ fli_object_class_name( FL_OBJECT * ob )
 
 
 /***************************************
- * Function expects a format string as printf() and arguments which
- * must correspond to the given format string and returns a string
- * of the right length into which the arguments are written. The
- * caller of the function is responsible for free-ing the string.
+ * This function is a poor mans asprintf() and expects a format
+ * string as printf() and arguments which must correspond to the
+ * given format string and returns a string of the right length
+ * into which the arguments are written. The caller of the function
+ * is responsible for fl_free()-ing the string.
  * -> 1. printf()-type format string
  *    2. As many arguments as there are conversion specifiers etc.
  *       in the format string.
  * <- Pointer to character array of exactly the right length into
  *    which the string characterized by the format string has been
  *    written. On failure, i.e. if there is not enough space, the
- *    function throws an OUT_OF_MEMORY exception.
- * This function has one drawback: the arguments might be evaluated
- * more than once, resulting a problems with arguments that have
- * side effects. Trivial example:
- *   fli_print_to_string( "%s%d", str, printf( "%d\n", 3 ) );
- * If 'str' is long enough this might result in "3\n" getting
- * printed more than once.
+ *    function emits an error message and returns NULL.
  ***************************************/
 
 #define STRING_TRY_LENGTH 128
