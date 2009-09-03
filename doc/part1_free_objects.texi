@@ -32,12 +32,12 @@ To add a free object to a form use the call
 @findex fl_add_free()
 @anchor{fl_add_free()}
 @example
-FL_OBJECT *fl_add_free(int type,FL_Coord x,FL_Coord y,
-                       FL_Coord w,FL_Coord h,
+FL_OBJECT *fl_add_free(int type, FL_Coord x, FL_Coord y,
+                       FL_Coord w, FL_Coord h,
                        const char *label, int (*handle)());
 @end example
 @noindent
-@code{type} indicates the type of free object. See below for a list
+@code{type} indicates the type of free object, see below for a list
 and their meaning. @code{x}, @code{y}, @code{w} and @code{h} are the
 bounding box. The @code{label} is normally not drawn unless the
 @code{handle} routine takes care of this. @code{handle} is the routine
@@ -254,10 +254,12 @@ The entire UI is designed interactively using the GUI builder
 forward declarations of callback functions and other function
 prototypes:
 @example
-#ifndef FD_drawfree_h_ #define FD_drawfree_h_
+#ifndef FD_drawfree_h_
+#define FD_drawfree_h_
 
 extern void change_color(FL_OBJECT *, long);
 extern void switch_figure(FL_OBJECT *, long);
+
 /* more callback declarations omitted */
 
 typedef struct @{
@@ -280,7 +282,7 @@ extern FD_drawfree *create_form_drawfree(void);
 @end example
 
 The other file contains the actual C-code that creates the form when
-compiled and executed. Since free object is not directly supported by
+compiled and executed. Since free objects are not directly supported by
 fdesign, a box was used as a stub for the location and size of the
 drawing area. After the C-code was generated, the box was changed
 manually to a free object by replacing
@@ -326,17 +328,18 @@ This creates three buttons that control what figures are to be drawn.
 Since figure selection is mutually exclusive, we use
 @code{RADIO_BUTTON} for this. Further, the three buttons are placed
 inside a group so that they won't interfere with other radio buttons
-on the same form. Notice that callback function switch_figure() is
-bound to all three buttons but with different arguments. The callback
-function can resolve the associated object with the callback function
-argument. In this case, 0 is used for circle, 1 for square and 2 for
-triangle. This association of a callback function with a piece of user
-data can often reduce coding substantially, especially if you have a
-large group of objects that control similar things. The advantage will
-become clear as we proceed.
+on the same form. Notice that the callback function
+@code{switch_figure()} is bound to all three buttons but with
+different arguments. Thus the callback function can resolve the
+associated object via the callback function argument. In this case, 0
+is used for circle, 1 for square and 2 for triangle. This association
+of a callback function with a piece of user data can often reduce the
+amount of code substantially, especially if you have a large group of
+objects that control similar things. The advantage will become clear
+as we proceed.
 
 Next we add three sliders to the form. By using appropriate colors for
-the sliding bar (Red, Green, Blue), there is no need to label the
+the sliding bar (red, green, blue), there is no need to label the
 slider. There's also no need to store their addresses since the
 callback routine receives it autmatically.
 @example
@@ -361,16 +364,16 @@ callback routine receives it autmatically.
     fl_end_group();
 @end example
 
-Again, a single callback function, change_color(), is bound to all
-three sliders. In addition to the sliders, a box object is added to
-the form. This box is set to use color index @code{FL_FREE_COL1} and
-will be used to show visually what the current color setting looks
-like. This implies that in the @code{change_color()} callback
-function, the entry @code{FL_FREE_COL1} in the Forms Library's
-internal colormap will be changed. We also place all the color related
-objects inside a group even though they are not of radio property.
-This is to facilitate gravity settings which otherwise require setting
-the gravities of each individual object.
+Again, a single callback function, @code{change_color()}, is bound to
+all three sliders. In addition to the sliders, a box object is added
+to the form. This box is set to use the color indexed by
+@code{FL_FREE_COL1} and will be used to show visually what the current
+color setting looks like. This implies that in the
+@code{change_color()} callback function, the entry @code{FL_FREE_COL1}
+in the Forms Library's internal colormap will be changed. We also
+place all the color related objects inside a group even though they
+are not of radio buttons. This is to facilitate gravity settings which
+otherwise require setting the gravities of each individual object.
 
 Next we create our drawing area which is simply a free object of type
 @code{NORMAL_FREE} with a handler to be written
@@ -385,16 +388,16 @@ Next we create our drawing area which is simply a free object of type
     fl_set_object_gravity(obj, FL_NorthWest, FL_SouthEast);
 @end example
 
-The frame is added for decoration purpose only. Although a free object
-with a down box would appear the same, the down box can be written
-over by the free object drawing while the free object can't draw on
-top of the frame since the frame is outside of the free object. Notice
-the gravity settings. This kind setting maximizes the real estate of
-the free object when the form is resized.
+The frame is added for decoration purposes only. Although a free
+object with a down box would appear the same, the down box can be
+written over by the free object drawing while the free object can't
+draw on top of the frame since the frame is outside of the free
+object. Notice the gravity settings. This kind of setting maximizes
+the real estate of the free object when the form is resized.
 
 Next, we need to have control over the size of the object. For this,
-added are two sliders bound to the same callback function with different
-user data (0 and 1 in this case):
+two sliders are added, using the same callback function but with
+different user data (0 and 1 in this case):
 @example
     fdui->sizegrp = fl_bgn_group();
 
@@ -412,10 +415,10 @@ user data (0 and 1 in this case):
 @end example
 
 The rest of the UI consists of some buttons the user can use to exit
-the program, elect to draw outline instead of filled figures etc. Form
-definition ends with @code{@ref{fl_end_form()}}. The structure that
-holds the form as well as all the objects on them is returned to the
-caller:
+the program, elect to draw outlined instead of filled figures etc. The
+form definition ends with @code{@ref{fl_end_form()}}. The structure
+that holds the form as well as all the objects within it is returned
+to the caller:
 @example
     fdui->miscgrp = fl_bgn_group();
 
@@ -443,13 +446,13 @@ caller:
 @}
 @end example
 
-After creating the UI, we need to write the callback functions and the
+After creating the UI we need to write the callback functions and the
 free object handler. The callback functions are relatively easy since
 each object is designed to perform a very specific task.
 
-Before we proceed to code the callback functions, we first need to
-define the overall data structure that will be used to glue together the
-UI and the routines that do real work.
+Before we proceed to code the callback functions we first need to
+define the overall data structure that will be used to glue together
+the UI and the routines that do real work.
 
 The basic structure is the DrawFigure structure that holds the current
 drawing function as well as object attributes such as size and color:

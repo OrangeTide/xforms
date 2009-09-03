@@ -602,8 +602,8 @@ load_object( void )
 
         if ( ( type = find_type_value( objclass, type_name ) ) < 0 )
         {
-            char *tmp = fli_get_string( "Invalid type \"%s\" for object class",
-                                        type_name );
+            char *tmp = fli_print_to_string( "Invalid type \"%s\" for object "
+                                             "class", type_name );
             fl_safe_free( type_name );
             ff_err( tmp );
             fl_safe_free( type_name );
@@ -639,9 +639,9 @@ load_object( void )
                 ff_err( "Expected object box size" );
             else
             {
-                char *msg = fli_get_string( "Expected object box sizes as "
-                                            "4 values, found %d valid ones",
-                                            r - 1 );
+                char *msg = fli_print_to_string( "Expected object box sizes "
+                                                 "as 4 values, found %d valid "
+                                                 "ones", r - 1 );
                 ff_err( msg );
                 fl_safe_free( msg );
             }

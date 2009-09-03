@@ -686,7 +686,7 @@ ff_match_align( int * p )
             return -1;
         }
 
-        align_name = fli_get_string( "%s|%s", a1, a2 );
+        align_name = fli_print_to_string( "%s|%s", a1, a2 );
         fl_safe_free( a1 );
         fl_safe_free( a2 );
     }
@@ -752,7 +752,7 @@ ff_match_lstyle( int * p )
             return -1;
         }
 
-        lstyle_name = fli_get_string( "%s|%s", l1, l2 );
+        lstyle_name = fli_print_to_string( "%s|%s", l1, l2 );
         fl_safe_free( l1 );
         fl_safe_free( l2 );
     }

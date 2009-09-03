@@ -890,9 +890,6 @@ extern char *fli_sstrcpy( char       * dest,
                           const char * src,
                           size_t       n );
 
-extern char * fli_get_string( const char * fmt,
-                              ... );
-
 extern void fli_mark_composite_for_redraw( FL_OBJECT * );
 
 

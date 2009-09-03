@@ -1,3 +1,8 @@
+2009-09-03 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/util.c: Removed function fli_get_string()
+	which was just a duplication of fli_print_to_string()
+
 2009-09-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	Tabs replaced by spaces.

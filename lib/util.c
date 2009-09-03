@@ -168,6 +168,12 @@ fli_object_class_name( FL_OBJECT * ob )
  *    which the string characterized by the format string has been
  *    written. On failure, i.e. if there is not enough space, the
  *    function throws an OUT_OF_MEMORY exception.
+ * This function has one drawback: the arguments might be evaluated
+ * more than once, resulting a problems with arguments that have
+ * side effects. Trivial example:
+ *   fli_print_to_string( "%s%d", str, printf( "%d\n", 3 ) );
+ * If 'str' is long enough this might result in "3\n" getting
+ * printed more than once.
  ***************************************/
 
 #define STRING_TRY_LENGTH 128
@@ -309,53 +315,6 @@ fli_sstrcpy( char       * dest,
 
     return dest;
 }
-
-
-/*******************************************
- *******************************************/
-
-#define GET_STRING_TRY_LENGTH 128
-
-char *
-fli_get_string( const char * fmt,
-                ... )
-{
-    char *c = NULL;
-    size_t len = GET_STRING_TRY_LENGTH;
-    va_list ap;
-    int wr;
-
-    while ( 1 )
-    {
-        c = fl_realloc( c, len );
-        va_start( ap, fmt );
-        wr = vsnprintf( c, len, fmt, ap );
-        va_end( ap );
-
-        if ( wr < 0 )         /* indicates not enough space with older glibs */
-        {
-            len *= 2;
-            continue;
-        }
-
-        if ( ( size_t ) wr + 1 > len )   /* newer glibs return the number of */
-        {                                /* chars needed, not counting the   */
-            len = wr + 1;                /* trailing '\0'                    */
-            continue;
-        }
-
-        break;
-    }
-
-    /* Trim the string down to the number of required characters */
-
-    if ( ( size_t ) wr + 1 < len )
-        fl_realloc( c, ( size_t ) wr + 1 );
-
-    return c;
-}
-
-
 
 
 /*

@@ -1541,8 +1541,8 @@ load_objclass_spec_info( FL_OBJECT * obj,
 
         if ( i >= sizeof attr_array / sizeof *attr_array )
         {
-            char *tmp = fli_get_string( "Read invalid object specific key "
-                                        "\"%s\"", key );
+            char *tmp = fli_print_to_string( "Read invalid object specific "
+                                             "key \"%s\"", key );
 
             fl_safe_free( key );
             ff_err( tmp );
