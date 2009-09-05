@@ -36,6 +36,7 @@
 
 #include "include/forms.h"
 #include "fd_main.h"
+#include <ctype.h>
 
 #define MAXSEL  512
 
@@ -1465,6 +1466,7 @@ group_selection( void )
     int i;
     FL_OBJECT *obj;
     const char *s;
+    const char *sp;
 
     if ( backf )
         return;         /* Cannot group the backface */
@@ -1472,8 +1474,32 @@ group_selection( void )
     if ( ! cur_form || selnumb == 0 )
         return;
 
-    if ( ! ( s = fl_show_input( "Enter group name", "" ) ) )
+ get_new_group_name:
+
+    if (    ! ( s = fl_show_input( "Enter group name (must be usable as "
+                                   "a C variable):", "" ) )
+          || ! *s )
         return;
+
+    if (    ! isascii( ( unsigned char ) *s )
+         || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
+    {
+        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        goto get_new_group_name;
+    }
+
+    sp = s + 1;
+
+    while ( *sp )
+    {
+        if (    ! isascii( ( unsigned char ) *sp )
+             || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
+        {
+            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            goto get_new_group_name;
+        }
+        sp++;
+    }
 
     obj = add_an_object( FL_BEGIN_GROUP, -1, 0, 0, 0, 0 );
 

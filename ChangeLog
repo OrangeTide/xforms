@@ -1,3 +1,9 @@
+2009-09-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	Some bugs reported by Werner Heisch in fdesign fixed.
+	Input of form and group names is now checked for being
+	a valid C identifier.
+
 2009-09-03 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/util.c: Removed function fli_get_string()

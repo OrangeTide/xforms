@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "include/forms.h"
 #include "fd_main.h"
@@ -82,6 +83,7 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     int i,
         numb = 0;
     const char *s;
+    const char *sp;
 
     if ( cur_form == NULL )
         return;
@@ -104,8 +106,33 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     }
 
     get_object_name( begobj[ numb ], name, cbname, argname );
-    if ( ! ( s = fl_show_input( "Enter group name", name ) ) )
+
+ get_changed_group_name:
+
+    if (    ! ( s = fl_show_input( "Enter group name (must be usable as "
+                                   "a C variable):", name ) )
+         || ! *s )
         return;
+
+    if (    ! isascii( ( unsigned char ) *s )
+         || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
+    {
+        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        goto get_changed_group_name;
+    }
+
+    sp = s + 1;
+
+    while ( *sp )
+    {
+        if (    ! isascii( ( unsigned char ) *sp )
+              || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
+        {
+            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            goto get_changed_group_name;
+        }
+        sp++;
+    }
 
     strcpy( name, s );
     set_object_name( begobj[ numb ], name, cbname, argname );

@@ -229,7 +229,7 @@ ff_read_boxtype( FL_OBJECT * obj )
 {
     int r;
 
-    if ( ( r = ff_read( "%b", &obj->boxtype ) ) < 1 )
+    if ( ( r = ff_read( "%b", &obj->boxtype ) ) < 0 )
         return ff_err( "Can't read expected object boxtype" );
 
     if ( r == 0 )
@@ -794,7 +794,7 @@ read_form( void )
 
     while ( 1 )
     {
-        if ( ff_read( "%k", &key ) < 0 )
+        if ( ff_read( "%k", &key ) < 1 )
             return ff_err( "Invalid format of file" );
 
         if ( ! strcmp( key, "class" ) )
@@ -806,8 +806,8 @@ read_form( void )
         {
             fl_safe_free( key );
 
-            if ( ff_read( "%f", &w ) < 0 )
-                return ff_err( "Expected form width" );
+            if ( ff_read( "%f", &w ) < 1 )
+                return ff_err( "Can't read expected form width" );
 
             if ( w < 0.0 )
                 return ff_err( "Invalid negative form width" );
@@ -816,8 +816,8 @@ read_form( void )
         {
             fl_safe_free( key );
 
-            if ( ff_read( "%f", &h ) < 0 )
-                return ff_err( "Expected form height" );
+            if ( ff_read( "%f", &h ) < 1 )
+                return ff_err( "Can't read expected form height" );
 
             if ( h < 0.0 )
                 return ff_err( "Invalid negative form height" );
@@ -826,8 +826,9 @@ read_form( void )
         {
             fl_safe_free( key );
 
-            if ( ff_read( "%d", &num_objects ) < 0 )
-                return ff_err( "Expected form number of objects" );
+            if ( ff_read( "%d", &num_objects ) < 1 )
+                return ff_err( "Can't read expected number of objects in "
+                               "form" );
 
             if ( num_objects <= 0 )
                 return ff_err( "Invalid number of objects, must be at "

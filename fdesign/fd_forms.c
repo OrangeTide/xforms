@@ -43,6 +43,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 static FRM *forms = NULL;   /* The forms */
 int fnumb = 0;
@@ -148,6 +149,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
              yy;
     static int form_seq;
     const char *s;
+    const char *sp;
     FRM *new_forms;
 
     new_forms = fl_realloc( forms, ( fnumb + 1 ) * sizeof *forms );
@@ -175,10 +177,34 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     w = xx;
     h = yy;
 
-    if ( ! ( s = fl_show_input( "Enter form name:", "" ) ))
+ get_new_form_name:
+
+    if (    ! ( s = fl_show_input( "Enter form name (must be usable as "
+                                   "a C variable):", "" ) )
+         || ! *s )
     {
         fl_activate_form( fd_control->control );
         return;
+    }
+
+    if (    ! isascii( ( unsigned char ) *s )
+         || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
+    {
+        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        goto get_new_form_name;
+    }
+
+    sp = s + 1;
+
+    while ( *sp )
+    {
+        if (    ! isascii( ( unsigned char ) *sp )
+             || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
+        {
+            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            goto get_new_form_name;
+        }
+        sp++;
     }
 
     /* Create the form */
@@ -215,13 +241,37 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int fn = get_form_numb( cur_form );
     const char *s;
+    const char *sp;
 
     if ( cur_form == NULL || fn == -1 )
         return;
 
-    if (    ! ( s = fl_show_input( "Give form name:", forms[ fn ].fname ) )
+ get_changed_form_name:
+
+    if (    ! ( s = fl_show_input( "Enter form name (must be usable as "
+                                   "a C variable):", forms[ fn ].fname ) )
          || ! *s )
         return;
+
+    if (    ! isascii( ( unsigned char ) *s )
+         || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
+    {
+        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        goto get_changed_form_name;
+    }
+
+    sp = s + 1;
+
+    while ( *sp )
+    {
+        if (    ! isascii( ( unsigned char ) *sp )
+             || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
+        {
+            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            goto get_changed_form_name;
+        }
+        sp++;
+    }
 
     fli_sstrcpy( forms[ fn ].fname, s, MAX_VAR_LEN );
 
@@ -533,13 +583,13 @@ load_forms( int          merge,
         /* First thing to read is the name of the form (which must not be an
            empty string) */
 
-        if ( ff_read( "%v", &p ) < 0 )
+        if ( ff_read( "%v", &p ) < 1 )
         {
             fl_free( fname );
             return ff_err( "Failed to read expected form name" );
         }
 
-        if ( ! *p )
+        if ( ! p || ! *p )
         {
             fl_safe_free( p );
             return ff_err( "Expected name of the form" );

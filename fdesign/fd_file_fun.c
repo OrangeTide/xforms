@@ -117,7 +117,7 @@ int
 ff_err( const char * message )
 {
     if ( ! fdopt.conv_only )
-        fl_show_alert2( 0, "Error:\f%s\n$s:%lu.%lu",
+        fl_show_alert2( 0, "Error:\f%s\n%s:%lu.%lu",
                         message, ff.fname, ( unsigned long ) ff.line_no,
                         ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
     else
@@ -523,22 +523,31 @@ ff_match_var( char ** p )
 
     *p = NULL;
 
-    if ( isdigit( ( unsigned char ) *ep ) )
+    if (    ! isascii( ( unsigned char ) *ep )
+         || ! ( isalpha( ( unsigned char ) *ep ) || *ep == '_' ) )
+    {
+        *p = fl_strdup( "" );
         return -1;
+    }
 
-    while ( *ep 
-            && (    isalpha( ( unsigned char ) *ep )
-                 || isdigit( ( unsigned char ) *ep )
-                 || *ep == '_' ) )
-        ep++;
+    while (    *++ep 
+            && isascii( ( unsigned char ) *ep )
+            && ( isalnum( ( unsigned char ) *ep ) || *ep == '_' ) )
+        /* empty */ ;
 
     if ( *ep && ! isspace( ( unsigned char ) *ep ) )
+    {
+        *p = fl_strdup( "" );
         return -1;
+    }
 
     /* Currently variable, function etc. names can't be longer... */
 
     if ( ep - ff.pos >= MAX_VAR_LEN )
+    {
+        *p = fl_strdup( "" );
         return -1;
+    }
 
     old_c = *ep;
     *ep = '\0';
