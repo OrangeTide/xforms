@@ -1,6 +1,6 @@
 2009-09-05 Jens Thoms Toerring    <jt@toerring.de>
 
-	Some bugs reported by Werner Heisch in fdesign fixed.
+	Several bugs reported by Werner Heisch in fdesign fixed.
 	Input of form and group names is now checked for being
 	a valid C identifier.
 
