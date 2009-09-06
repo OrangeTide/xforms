@@ -40,7 +40,8 @@ each of which contains several objects, say @code{fnobj1},
 @code{fnobj2} etc. where @code{n = 1, 2}. The default output format
 will generate the following header file (@file{foobar.h}):
 @example
-#ifndef FD_foobar_h_ #define FD_foobar_h_
+#ifndef FD_foobar_h_
+#define FD_foobar_h_
 
 /* call back routines if any */
 
@@ -72,7 +73,8 @@ extern FD_bar *create_form_bar(void);
 @noindent
  and the corresponding C file:
 @example
-#include "forms.h" #include "foobar.h"
+#include <forms.h>
+#include "foobar.h"
 
 FD_foo *create_form_foo(void) @{
     FD_foo *fdui = fl_calloc(1, sizeof *dhui);

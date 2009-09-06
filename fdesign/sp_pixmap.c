@@ -232,7 +232,7 @@ emit_pixmap_code( FILE      * fp,
                      info->data );
         else
             fprintf( fp, "    fl_set_bitmap_data( obj, %s, %s, "
-                     "( unsigned char * ) %s);\n",
+                     "( unsigned char * ) %s );\n",
                      info->width, info->height, info->data );
     }
 
@@ -348,7 +348,7 @@ pixmapalign_change( FL_OBJECT * ob,
 
     info->align = align_val( s );
 
-    /* don't allow outside align */
+    /* Don't allow outside align */
 
     fl_set_pixmap_align( edited, info->align | FL_ALIGN_INSIDE,
                          info->dx, info->dy );
@@ -389,13 +389,14 @@ pixmaplookfor_pixmapfile_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
     fl_use_fselector( XPM_FSELECTOR );
     fl_set_fselector_placement( FL_PLACE_MOUSE );
     fl_set_fselector_callback( loadfile, 0 );
-    fl_show_fselector( "XPM file", "",
-                       edited->objclass == FL_PIXMAP ? "*.xpm" : "*.xbm", "" );
+    fl_show_fselector( edited->objclass == FL_PIXMAP ? "XPM file" : "XBM file",
+                       "", edited->objclass == FL_PIXMAP ? "*.xpm" : "*.xbm",
+                       "" );
 }
 
 
 /***************************************
- * read the specified xpm/xbm filename, and return the data name
+ * Read the specified xpm/xbm filename, and return the data name
  * and size
  ***************************************/
 

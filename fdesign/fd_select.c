@@ -40,7 +40,7 @@
 
 #define MAXSEL  512
 
-#define BackOBJ()    cur_form->first->next
+#define BackOBJ( )    cur_form->first->next
 
 static FL_OBJECT *selobj[ MAXSEL ]; /* The selected objects */
 static int selnumb = 0;     /* Their number */
@@ -260,7 +260,7 @@ clear_selection( void )
 
 
 /****
-  Help procedures
+  Helper procedures
 ****/
 
 /***************************************
@@ -361,7 +361,7 @@ draw_selbox( void )
     if ( selnumb == 0 )
         return;
 
-    /* draw object boxes */
+    /* Draw object boxes */
 
     color( fd_red );
     for ( i = 0; i < selnumb; i++ )
@@ -374,11 +374,11 @@ draw_selbox( void )
     if ( hidden )
         return;
 
-    /* draw the total box */
+    /* Draw the total box */
 
     compute_selbox( &x, &y, &w, &h );
 
-    show_geometry( "", x, y, w, h );
+    show_geometry( x, y, w, h );
 
     if ( ! backf )
     {
@@ -389,11 +389,11 @@ draw_selbox( void )
     }
     color( fd_red );
 
-    rect( x, y, x + w - 1.0, y + h - 1.0 );
-    rectf( x, y, x + HS - 1.0, y + HS - 1.0 );
-    rectf( x + w - HS, y, x + w - 1.0, y + HS - 1.0 );
-    rectf( x + w - HS, y + h - HS, x + w - 1.0, y + h - 1.0 );
-    rectf( x, y + h - HS, x + HS - 1.0, y + h - 1.0 );
+    rect(  x,          y,          x + w  - 1.0, y + h  - 1.0 );
+    rectf( x,          y,          x + HS - 1.0, y + HS - 1.0 );
+    rectf( x + w - HS, y,          x + w  - 1.0, y + HS - 1.0 );
+    rectf( x + w - HS, y + h - HS, x + w  - 1.0, y + h  - 1.0 );
+    rectf( x,          y + h - HS, x + HS - 1.0, y + h  - 1.0 );
 
     show_selmessage( selobj, selnumb );
 }
@@ -421,7 +421,7 @@ within_selection( float mx,
 
     compute_selbox( &x, &y, &w, &h );
 
-    /* if backface, only within scale knob is considered within */
+    /* If backface, only within scale knob is considered within */
 
     if ( selobj[ selnumb - 1 ] == BackOBJ( ) )
         return    mx >= x + w - HS
@@ -465,7 +465,7 @@ handle_move( const XEvent * xev )
     compute_selbox( &x, &y, &w, &h );
 
     if ( mx < x || mx > x + w || my < y || my > y + h )
-        return;         /* Not in box */
+        return;         /* not in box */
 
     hidden = TRUE;
     redraw_the_form( 0 );
@@ -636,14 +636,12 @@ move_selection( FL_Coord dx,
 }
 
 
-/* change the selection  size */
+/***************************************
+ * Change the selection  size
+ ***************************************/
 
 #define MINSIZE 5
 #define DELTA 0.2
-
-
-/***************************************
- ***************************************/
 
 void
 resize_selection( FL_Coord dx,
@@ -737,7 +735,7 @@ resize_selection( FL_Coord dx,
 
 
 /***************************************
- * handles the selection of objects
+ * Handles the selection of objects
  ***************************************/
 
 void
@@ -844,7 +842,7 @@ select_all( void )
 ****/
 
 /***************************************
- * clone curobj's attributes to the currently selected objects
+ * Clone curobj's attributes to the currently selected objects
  ***************************************/
 
 void
@@ -1347,7 +1345,7 @@ copy_selection( void )
 
 
 /***************************************
- * make a copy of the current selection
+ * Makes a copy of the current selection
  ***************************************/
 
 void *
@@ -1384,7 +1382,7 @@ free_dupped_selection( void *a )
 
 
 /***************************************
- * change the selection to a new list of objects and show it
+ * Changes the selection to a new list of objects and show it
  ***************************************/
 
 void

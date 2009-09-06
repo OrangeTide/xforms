@@ -306,31 +306,39 @@ void
 fl_set_bitmap_file( FL_OBJECT *  obj,
                     const char * fname )
 {
+    unsigned int w,
+                 h;
     int xhot,
         yhot;
     Pixmap p;
-    FL_BUTTON_STRUCT *sp = obj->spec;
 
     if ( ! flx->display )
         return;
 
-    if ( obj == NULL || obj->objclass != FL_BITMAP )
+    if (    ! obj
+         || ( obj->objclass != FL_BITMAP && obj->objclass != FL_BITMAPBUTTON ) )
     {
-        M_err( "fl_set_bitmap_file", "object %s not bitmap class",
+        M_err( "fl_set_bitmap_file", "object %s not bitmap or bitmap button",
                ( obj && obj->label ) ? obj->label : "null" );
         return;
     }
 
     p = fl_read_bitmapfile( FL_ObjWin( obj ) ? FL_ObjWin( obj ) : fl_root,
-                            fname, &sp->bits_w, &sp->bits_h, &xhot, &yhot );
+                            fname, &w, &h, &xhot, &yhot );
+
     if ( p != None )
     {
+        FL_BUTTON_STRUCT *sp = obj->spec;
+
         free_bitmap( sp );
         sp->pixmap = p;
+        sp->bits_w = w;
+        sp->bits_h = h;
     }
 
     fl_redraw_object( obj );
 }
+
 
 /***** End of static BITMAP ************************/
 
@@ -471,31 +479,6 @@ fl_set_bitmapbutton_data( FL_OBJECT *     obj,
     sp->pixmap = XCreateBitmapFromData( flx->display, win, ( char * ) bits,
                                         sp->bits_w, sp->bits_h );
 
-    fl_redraw_object( obj );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_set_bitmapbutton_file( FL_OBJECT  * obj,
-                          const char * file )
-{
-    FL_BUTTON_STRUCT *sp;
-    int hx,
-        hy;
-
-    if ( ! flx->display )
-        return;
-
-    if ( ! obj || obj->objclass != FL_BITMAPBUTTON )
-        return;
-
-    sp = obj->spec;
-    sp->pixmap =
-        fl_read_bitmapfile( FL_ObjWin( obj ) ? FL_ObjWin( obj ) : fl_root,
-                            file, &sp->bits_w, &sp->bits_h, &hx, &hy );
     fl_redraw_object( obj );
 }
 

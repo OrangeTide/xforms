@@ -432,8 +432,7 @@ control_init( FD_control * ui )
  ***************************************/
 
 void
-show_geometry( const char * s  FL_UNUSED_ARG,
-               FL_Coord     x,
+show_geometry( FL_Coord     x,
                FL_Coord     y,
                FL_Coord     w,
                FL_Coord     h )
@@ -514,7 +513,7 @@ show_selmessage( FL_OBJECT * sel[ ],
 
 /*
  * Form designer itself does not use resource settings, but when testing
- * the newly created forms, resources are turned on. At the moment, we
+ * the newly created forms, resources are turned on. At the moment we
  * only allow button label size to be changed
  */
 

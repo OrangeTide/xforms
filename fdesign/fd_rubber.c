@@ -288,7 +288,7 @@ move_box( float * x,
             show_box( *x, *y, *w, *h );
 
             if ( fd_trackgeometry )
-                show_geometry( 0, *x, *y, *w, *h );
+                show_geometry( *x, *y, *w, *h );
             oldx = *x;
             oldy = *y;
             oldw = *w;
@@ -325,7 +325,7 @@ scale_box( float * x,
         if ( *w != oldw || *h != oldh )
         {
             if ( fd_trackgeometry )
-                show_geometry( "", *x, *y, *w, *h );
+                show_geometry( *x, *y, *w, *h );
             hide_box( *x - 1, *y - 1, oldw, oldh );
             show_box( *x - 1, *y - 1, *w, *h );
             oldw = *w;

@@ -261,8 +261,7 @@ FL_EXPORT FL_OBJECT * fl_add_labelbutton( int          type,
                                           FL_Coord     h,
                                           const char * label );
 
-FL_EXPORT void fl_set_bitmapbutton_file( FL_OBJECT  * ob,
-                                         const char * file );
+#define fl_set_bitmapbutton_file  fl_set_bitmap_file
 
 FL_EXPORT void fl_set_bitmapbutton_data( FL_OBJECT     * ob,
                                          int             w,

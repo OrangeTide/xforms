@@ -84,7 +84,7 @@ fl_whoami( void )
 
 
 /***************************************************
- * fl_now() returns today's date in ASCII format
+ * fl_now() returns today's (local) date in ASCII format
  ***************************************************/
 
 const char *
@@ -94,6 +94,8 @@ fl_now( void )
     static char buf[ 64 ];
 
     fli_sstrcpy( buf, asctime( localtime( &t ) ), sizeof buf );
+    if ( buf[ strlen( buf ) - 1 ] == '\n' )
+        buf[ strlen( buf ) - 1 ] = '\0';
     return buf;
 }
 

@@ -1,3 +1,13 @@
+2009-09-06 Jens Thoms Toerring    <jt@toerring.de>
+
+	Some more bugs in fdesign, found by Werner Heisch,
+	removed. Most important: bitmaps weren't drawn
+	correctly.
+	* lib/bitmap.c: fl_set_bitmapbutton_file() removed,
+	is now an alias for fl_set_bitmap_file()
+	* lib/sysdep.c: fl_now() doesn't add a trailing '\n'
+	anymore
+
 2009-09-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	Several bugs reported by Werner Heisch in fdesign fixed.
@@ -54,7 +64,7 @@
 
 2009-08-13 Jens Thoms Toerring    <jt@toerring.de>
 
-	* fdesign/fd_printC.c: Some correctiions/bug fixes
+	* fdesign/fd_printC.c: Some corrections/bug fixes
 	* Bit of clean-up all over the place;-)
 
 2009-08-06 Jens Thoms Toerring    <jt@toerring.de>

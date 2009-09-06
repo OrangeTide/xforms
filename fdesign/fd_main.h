@@ -524,8 +524,7 @@ extern double get_conversion_factor( void );
 extern char xform_header[ ];
 extern char glcanvas_header[ ];
 
-extern void show_geometry( const char *,
-                           int,
+extern void show_geometry( int,
                            int,
                            int,
                            int );

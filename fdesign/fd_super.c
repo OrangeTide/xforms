@@ -457,18 +457,18 @@ superspec_to_spec( FL_OBJECT * ob )
                 fl_set_pixmapbutton_focus_outline( ob, info->show_focus );
             }
 
-            if ( info->filename[ 0 ] )
+            if ( *info->filename )
             {
                 if (    ob->objclass == FL_PIXMAPBUTTON
                      || ob->objclass == FL_PIXMAP )
                 {
-                    fl_set_pixmapbutton_file( ob, info->filename );
-                    if ( info->focus_filename[ 0 ] )
+                    fl_set_pixmap_file( ob, info->filename );
+                    if ( *info->focus_filename )
                         fl_set_pixmapbutton_focus_file( ob,
                                                         info->focus_filename );
                 }
                 else
-                    fl_set_bitmapbutton_file( ob, info->filename );
+                    fl_set_bitmap_file( ob, info->filename );
             }
         }
 
