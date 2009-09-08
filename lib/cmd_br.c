@@ -405,7 +405,7 @@ fl_exe_command( const char * cmd,
     create_logger( );
 
     sa.nLength = sizeof sa;
-    sa.bInheritHandle = TRUE;
+    sa.bInheritHandle = FL_TRUE;
     sa.lpSecurityDescriptor = NULL;
     if ( ! CreatePipe( &hPipeRead, &hPipeWrite, &sa, 255 ) )
     {
@@ -426,7 +426,7 @@ fl_exe_command( const char * cmd,
     si.hStdOutput = hPipeWrite;
     si.hStdError = hPipeWrite;
 
-    if ( CreateProcess( NULL, ( LPTSTR ) cmd, NULL, NULL, TRUE, 0,
+    if ( CreateProcess( NULL, ( LPTSTR ) cmd, NULL, NULL, FL_TRUE, 0,
                         NULL, NULL, &si, &pi ) )
     {
         /* close write end of the pipe, only child process uses them */

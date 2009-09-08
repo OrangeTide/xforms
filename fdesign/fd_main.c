@@ -58,7 +58,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.37 $ of $Date: 2009/08/31 23:19:23 $",
+    "$State: Exp $  $Revision: 1.38 $ of $Date: 2009/09/08 14:18:40 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
     "GNU Lesser General Public License sinc 2002",
     NULL
@@ -597,7 +597,7 @@ handle_configure( XEvent * xev,
             fl_set_spinner_value( fd_resize->height, winh );
         }
 
-        changed = TRUE;
+        changed = FL_TRUE;
     }
 
     return 1;
@@ -726,7 +726,7 @@ pre_connect( int    argc,
 
         for ( s = i; s < argc; s++ )
         {
-            if ( load_forms( FALSE, argv[ s ], 0 ) < 0 )
+            if ( load_forms( FL_FALSE, argv[ s ], 0 ) < 0 )
             {
                 fprintf( stderr, "Unable to load %s\n", argv[ s ] );
                 exit( 1 );
@@ -979,7 +979,7 @@ main( int    argc,
          && access( tmp = append_fd_suffix( argv[ argc - 1 ] ), R_OK ) == 0 )
     {
         for ( s = 1; s < argc; s++ )
-            if ( load_forms( s == 1 ? FALSE : TRUE, argv[ s ], 0 ) < 0 )
+            if ( load_forms( s == 1 ? FL_FALSE : FL_TRUE, argv[ s ], 0 ) < 0 )
                 break;
     }
     else

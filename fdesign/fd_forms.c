@@ -227,7 +227,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     set_form( fnumb++ );
     fl_activate_form( fd_control->control );
-    changed = TRUE;
+    changed = FL_TRUE;
 }
 
 
@@ -277,7 +277,7 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     fl_replace_browser_line( fd_control->formbrowser, fn + 1,
                              forms[ fn ].fname );
-    changed = TRUE;
+    changed = FL_TRUE;
 }
 
 
@@ -341,7 +341,7 @@ changesize_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
             redraw_the_form( 1 );
         }
 
-        changed = TRUE;
+        changed = FL_TRUE;
     }
 
     fl_hide_form( fd_resize->resize );

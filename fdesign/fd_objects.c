@@ -109,7 +109,7 @@ add_class_def( int         numb,
     classes[ cnumb ].bline = bl;
 
     for ( i = 0; i < MAXTYPES; i++ )
-        classes[ cnumb ].types[ i ].defined = FALSE;
+        classes[ cnumb ].types[ i ].defined = FL_FALSE;
     cnumb++;
 }
 
@@ -153,7 +153,7 @@ add_type_def( int  cn,
     for ( i = 0; i < cnumb; i++ )
         if ( classes[ i ].cn == cn )
         {
-            classes[ i ].types[ tn ].defined = TRUE;
+            classes[ i ].types[ tn ].defined = FL_TRUE;
             strcpy( classes[ i ].types[ tn ].tname, name );
         }
 }

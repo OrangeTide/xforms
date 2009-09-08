@@ -1,3 +1,14 @@
+2009-09-08 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: Bug in copy-and-paste and found by Werner
+	Heisch repaired.
+
+	* lib/include/zzz.h: defines of 'TRUE' and 'FALSE'
+	relaced by 'FL_TRUE' and 'FL_FALSE' to avoid problems
+	for other programs that may define them on their own
+	(thanks to Serge Bromow for pointing out that this
+	can be a real problem).
+
 2009-09-06 Jens Thoms Toerring    <jt@toerring.de>
 
 	Some more bugs in fdesign, found by Werner Heisch,

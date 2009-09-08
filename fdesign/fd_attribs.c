@@ -638,12 +638,12 @@ change_object( FL_OBJECT * obj,
     {
         restore_object( obj );
         redraw_the_form( 0 );
-        return FALSE;
+        return FL_FALSE;
     }
     else
     {
         readback_attributes( obj );
-        return TRUE;
+        return FL_TRUE;
     }
 }
 

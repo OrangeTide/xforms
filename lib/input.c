@@ -378,7 +378,7 @@ draw_input( FL_OBJECT * obj )
 
     if ( obj->type == FL_SECRET_INPUT )
     {
-        fl_free( sp->str );
+        fl_safe_free( sp->str );
         sp->str = saved;
     }
 
@@ -502,7 +502,7 @@ static char cutbuf[ MAXCBLEN ];
 
 
 /***************************************
- * Selete a single char. dir =1 for next, dir -1 for prev
+ * Delete a single char. dir =1 for next, dir -1 for prev
  ***************************************/
 
 static void
@@ -1125,7 +1125,7 @@ paste_it( FL_OBJECT           * obj,
     int slen;
     unsigned char *p;
 
-    /* for non-text input, we must check each individual characters */
+    /* For non-text input we must check each individual characters */
 
     if (    obj->type == FL_FLOAT_INPUT
          || obj->type == FL_INT_INPUT
@@ -1156,7 +1156,7 @@ paste_it( FL_OBJECT           * obj,
             sp->str = fl_realloc( sp->str, sp->size );
         }
 
-        /* Shift text after cursor posirion and then insert the new text */
+        /* Shift text after cursor position and then insert the new text */
 
         memmove( sp->str + sp->position + nb, sp->str + sp->position,
                  slen - sp->position + 1 );
@@ -1344,14 +1344,17 @@ handle_input( FL_OBJECT * obj,
         case FL_FOCUS:
             if ( obj->type == FL_MULTILINE_INPUT )
                 sp->dummy->focus = 1;
+
             if ( sp->str )
             {
-                sp->position = - sp->position - 1;
+                if ( sp->position < 0 )
+                    sp->position = - sp->position - 1;
                 if ( sp->position > ( int ) strlen( sp->str ) )
                     sp->position = strlen( sp->str );
             }
             else
                 sp->position = 0;
+
             sp->changed = 0;
             fl_redraw_object( sp->input );
             break;
@@ -1362,7 +1365,9 @@ handle_input( FL_OBJECT * obj,
 
             if ( obj->type == FL_MULTILINE_INPUT )
                 sp->dummy->focus = 0;
-            sp->position = - sp->position - 1;
+
+            if ( sp->position >= 0 )
+                sp->position = - sp->position - 1;
             sp->endrange = -1;
             fl_redraw_object( sp->input );
 
@@ -1426,7 +1431,7 @@ handle_input( FL_OBJECT * obj,
             break;
 
         case FL_FREEMEM:
-            fl_free( ( ( FLI_INPUT_SPEC * ) obj->spec )->str );
+            fl_safe_free( ( ( FLI_INPUT_SPEC * ) obj->spec )->str );
             fl_safe_free( obj->spec );
             break;
     }
@@ -1573,7 +1578,7 @@ fl_create_input( int          type,
     sp->size     = 8;
     sp->lines    = sp->ypos = 1;
     sp->str      = fl_malloc( sp->size );
-    sp->str[ 0 ] = '\0';
+    *sp->str     = '\0';
 
     switch ( obj->type )
     {

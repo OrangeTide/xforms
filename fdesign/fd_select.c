@@ -44,7 +44,7 @@
 
 static FL_OBJECT *selobj[ MAXSEL ]; /* The selected objects */
 static int selnumb = 0;     /* Their number */
-int backf = FALSE;          /* Whether the selection is the backface */
+int backf = FL_FALSE;       /* Whether the selection is the backface */
 
 static FL_OBJECT *tmpobj[ MAXSEL ]; /* A temporary list of objects */
 static int tmpnumb = 0;     /* Their number */
@@ -84,7 +84,7 @@ cleanup_selection( void )
     if ( cur_form == NULL )
     {
         selnumb = 0;
-        backf = FALSE;
+        backf = FL_FALSE;
         return;
     }
 
@@ -254,7 +254,7 @@ void
 clear_selection( void )
 {
     selnumb = 0;
-    backf = FALSE;
+    backf = FL_FALSE;
     cleanup_selection( );
 }
 
@@ -341,7 +341,7 @@ find_mouseobj( void )
 
 #define HS  8
 
-int hidden = FALSE;
+int hidden = FL_FALSE;
 
 
 /***************************************
@@ -467,7 +467,7 @@ handle_move( const XEvent * xev )
     if ( mx < x || mx > x + w || my < y || my > y + h )
         return;         /* not in box */
 
-    hidden = TRUE;
+    hidden = FL_TRUE;
     redraw_the_form( 0 );
 
     if ( backf )
@@ -530,7 +530,7 @@ handle_move( const XEvent * xev )
         else if ( mx >= x + w - HS && my >= y + h - HS )
             scale_box( &x, &y, &w, &h );
         else
-            move_box( &x, &y, &w, &h, TRUE );
+            move_box( &x, &y, &w, &h, FL_TRUE );
 
         /* Recompute object sizes */
 
@@ -566,9 +566,9 @@ handle_move( const XEvent * xev )
         }
     }
 
-    hidden = FALSE;
+    hidden = FL_FALSE;
     redraw_the_form( backf );
-    changed = TRUE;
+    changed = FL_TRUE;
 }
 
 
@@ -632,7 +632,7 @@ move_selection( FL_Coord dx,
     }
 
     redraw_the_form( 1 );
-    changed = TRUE;
+    changed = FL_TRUE;
 }
 
 
@@ -730,7 +730,7 @@ resize_selection( FL_Coord dx,
     }
 
     redraw_the_form( 1 );
-    changed = TRUE;
+    changed = FL_TRUE;
 }
 
 
@@ -806,7 +806,7 @@ handle_select( const XEvent * xev )
             else if ( mouseobj == BackOBJ( ) )
             {
                 addto_selection( mouseobj );
-                backf = TRUE;
+                backf = FL_TRUE;
             }
             else
                 addto_selection( mouseobj );
@@ -891,7 +891,7 @@ change_selection( void )
     }
 
     if ( selnumb == 1 )
-        change_object( selobj[ 0 ], TRUE );
+        change_object( selobj[ 0 ], FL_TRUE );
     else
     {
         for ( i = 0; i < selnumb; i++ )
@@ -917,7 +917,7 @@ change_selection( void )
         if ( firstobj == NULL )
             return;
 
-        if ( ! change_object( firstobj, FALSE ) )
+        if ( ! change_object( firstobj, FL_FALSE ) )
             return;
 
         change_selected_objects( firstobj );
@@ -1284,7 +1284,7 @@ paste_selection(void)
     compute_selbox( &x, &y, &w, &h );
     ox = x;
     oy = y;
-    move_box( &x, &y, &w, &h, FALSE );
+    move_box( &x, &y, &w, &h, FL_FALSE );
 
     /* Recompute object position */
 

@@ -36,9 +36,9 @@ extern Window fl_cur_win_( void );
 extern XFontStruct * fl_cur_fs_( void );
 extern Display * fl_display_( void );
 
-#if ! defined TRUE && ! defined FALSE
-#define FALSE        0
-#define TRUE         ( ! FALSE )
+#if ! defined FL_TRUE && ! defined FL_FALSE
+#define FL_FALSE        0
+#define FL_TRUE         ( ! FL_FALSE )
 #endif
 
 #if defined __cplusplus

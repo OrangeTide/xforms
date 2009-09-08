@@ -161,7 +161,7 @@ gather_comments( j_decompress_ptr cinfo )
         *s++ = ch;
     }
 
-    return TRUE;
+    return FL_TRUE;
 }
 
 
@@ -198,7 +198,7 @@ gather_text( j_decompress_ptr cinfo )
     if ( image->comments[ image->comments_len - 1 ] == '\n' )
         image->comments[ image->comments_len - 1 ] = ' ';
 
-    return TRUE;
+    return FL_TRUE;
 }
 
 
@@ -222,15 +222,15 @@ JPEG_description( FL_IMAGE * im )
     jpeg_set_marker_processor( cinfo, JPEG_APP0 + 12, gather_text );
 
     jpeg_stdio_src( cinfo, im->fpin );
-    jpeg_read_header( cinfo, TRUE );
+    jpeg_read_header( cinfo, FL_TRUE );
 
     /* decompressison options such as quantization here */
     if (do_quantization)
     {
         cinfo->desired_number_of_colors = 215;
-        cinfo->quantize_colors = TRUE;
-        cinfo->enable_2pass_quant = TRUE;
-        cinfo->two_pass_quantize = TRUE;
+        cinfo->quantize_colors = FL_TRUE;
+        cinfo->enable_2pass_quant = FL_TRUE;
+        cinfo->two_pass_quantize = FL_TRUE;
         cinfo->dither_mode = JDITHER_FS;
     }
 
@@ -382,10 +382,10 @@ JPEG_write( FL_IMAGE * im )
     }
 
     jpeg_set_defaults( cinfo );
-    jpeg_set_quality( cinfo, quality_factor, TRUE );
+    jpeg_set_quality( cinfo, quality_factor, FL_TRUE );
     cinfo->smoothing_factor = smoothing_factor;
 
-    jpeg_start_compress( cinfo, TRUE );
+    jpeg_start_compress( cinfo, FL_TRUE );
 
     if ( im->comments )
         jpeg_write_marker( cinfo, JPEG_COM, (void *) im->comments,

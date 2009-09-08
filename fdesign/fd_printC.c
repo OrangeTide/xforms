@@ -774,7 +774,7 @@ check_array_name( char * aname )
     size_t i;
 
     if ( ! ( p = strchr( aname, '[' ) ) )
-        return FALSE;
+        return FL_FALSE;
 
     strcpy( tmpstr, aname );
     p = tmpstr + ( p - aname );
@@ -790,16 +790,16 @@ check_array_name( char * aname )
         {
             if ( ind + 1 > arsizes[ i ] )
                 arsizes[ i ] = ind + 1;
-            return TRUE;
+            return FL_TRUE;
         }
 
     if ( anumb == MAXARNAME )
-        return FALSE;
+        return FL_FALSE;
 
     arnames[ anumb ] = malloc( MAX_VAR_LEN );
     strcpy( arnames[ anumb ], tmpstr);
     arsizes[ anumb++ ] = ind + 1;
-    return TRUE;
+    return FL_TRUE;
 }
 
 
