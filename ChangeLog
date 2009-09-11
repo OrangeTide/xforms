@@ -1,3 +1,11 @@
+2009-09-11 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/flcolor.c, lib/include/Basic.h: New pre-defined
+	colors added as proposed and assembled by Rob Carpenter.
+
+	* lib/spinner.c: Corrections to return behaviour of
+	spinner objects as pointed out by Werner Heisch.
+
 2009-09-08 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c: Bug in copy-and-paste and found by Werner

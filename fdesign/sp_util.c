@@ -35,7 +35,7 @@
  ***************************************/
 
 void
-set_up_how_return_menu( FL_OBJECT * obj )
+setup_how_return_menu( FL_OBJECT * obj )
 {
     fl_set_menu( obj,
                  "Never%b|"                   /* menu item 1 */
@@ -59,26 +59,37 @@ reset_how_return_menu( FL_OBJECT * menu,
                        int         how_return )
 {
     int i;
+    unsigned int modes[ 8 ];
 
     for ( i = 1; i <= 7; i++ )
-        fl_set_menu_item_mode( menu, i, FL_PUP_BOX );
+    {
+        modes[ i ] = fl_get_menu_item_mode( menu, i ) & FL_PUP_GRAY;
+        fl_set_menu_item_mode( menu, i, modes[ i ] | FL_PUP_BOX );
+    }
 
     if ( how_return == FL_RETURN_NONE )
-        fl_set_menu_item_mode( menu, 1, FL_PUP_BOX | FL_PUP_CHECK );
+        fl_set_menu_item_mode( menu, 1,
+                               modes[ 1 ] | FL_PUP_BOX | FL_PUP_CHECK );
     else if ( how_return == FL_RETURN_ALWAYS )
-        fl_set_menu_item_mode( menu, 7, FL_PUP_BOX | FL_PUP_CHECK );
+        fl_set_menu_item_mode( menu, 7,
+                               modes[ 7 ] | FL_PUP_BOX | FL_PUP_CHECK );
     else
     {
         if ( how_return & FL_RETURN_END_CHANGED )
-            fl_set_menu_item_mode( menu, 2, FL_PUP_BOX | FL_PUP_CHECK );
+            fl_set_menu_item_mode( menu, 2,
+                                   modes[ 2 ] | FL_PUP_BOX | FL_PUP_CHECK );
         if ( how_return & FL_RETURN_CHANGED )
-            fl_set_menu_item_mode( menu, 3, FL_PUP_BOX | FL_PUP_CHECK );
+            fl_set_menu_item_mode( menu, 3,
+                                   modes[ 3 ] | FL_PUP_BOX | FL_PUP_CHECK );
         if ( how_return & FL_RETURN_END )
-            fl_set_menu_item_mode( menu, 4, FL_PUP_BOX | FL_PUP_CHECK );
+            fl_set_menu_item_mode( menu, 4,
+                                   modes[ 4 ] | FL_PUP_BOX | FL_PUP_CHECK );
         if ( how_return & FL_RETURN_SELECTION )
-            fl_set_menu_item_mode( menu, 5, FL_PUP_BOX | FL_PUP_CHECK );
+            fl_set_menu_item_mode( menu, 5,
+                                   modes[ 5 ] | FL_PUP_BOX | FL_PUP_CHECK );
         if ( how_return & FL_RETURN_DESELECTION )
-            fl_set_menu_item_mode( menu, 5, FL_PUP_BOX | FL_PUP_CHECK );
+            fl_set_menu_item_mode( menu, 6,
+                                   modes[ 6 ] | FL_PUP_BOX | FL_PUP_CHECK );
     }
 }
 

@@ -3322,10 +3322,10 @@ fl_set_object_return( FL_OBJECT * obj,
     if ( when & FL_RETURN_END_CHANGED )
         when &= ~ ( FL_RETURN_END | FL_RETURN_CHANGED );
 
-    obj->how_return = when;
-
     if ( obj->set_return )
         obj->set_return( obj, when );
+    else
+        obj->how_return = when;
 
     return old_when;
 }

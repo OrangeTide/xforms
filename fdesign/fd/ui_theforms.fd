@@ -12,7 +12,7 @@ SnapGrid: 5
 Name: control
 Width: 580
 Height: 280
-Number of Objects: 43
+Number of Objects: 42
 
 --------------------
 class: FL_BOX
@@ -31,24 +31,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-
---------------------
-class: FL_BUTTON
-type: HIDDEN_BUTTON
-box: 0 0 570 265
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: 
-shortcut: ^[
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: esc_exit_cb
-argument: 0
 
 --------------------
 class: FL_FRAME

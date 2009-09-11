@@ -699,6 +699,20 @@ load_object( void )
             break;
     }
 
+    /* Some extra adjustments for spinner objects (this is a hack but
+       avoiding it would require a complete change of how fdesign works) */
+
+    if ( obj->objclass == FL_SPINNER )
+    {
+        FL_OBJECT *subobj = fl_get_spinner_input( obj );
+
+        subobj->col1 = obj->col1;
+        subobj->col2 = obj->col2;
+
+        subobj->lstyle = obj->lstyle;
+        subobj->lsize  = obj->lsize;
+    }
+
     /* If the key read isn't "Name" or "class" (indicating the start of the
        next form or object) it must be an object specific key */
 

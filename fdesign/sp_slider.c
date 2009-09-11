@@ -52,7 +52,7 @@ get_slider_spec_fdform( void )
     {
         sl_attrib = create_form_sliderattrib( );
 
-        set_up_how_return_menu( sl_attrib->returnsetting );
+        setup_how_return_menu( sl_attrib->returnsetting );
         fl_set_menu_item_mode( sl_attrib->returnsetting, 5,
                                FL_PUP_BOX | FL_PUP_GRAY );
         fl_set_menu_item_mode( sl_attrib->returnsetting, 6,

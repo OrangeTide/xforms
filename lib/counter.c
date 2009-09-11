@@ -24,7 +24,6 @@
  *  All rights reserved.
  *
  *  Counter class
- *   only FL_RETURN_END_CHANGED and FL_RETURN_CHANED are meaningful
  */
 
 #ifdef HAVE_CONFIG_H
@@ -350,7 +349,7 @@ handle_mouse( FL_OBJECT * ob,
             sp->cur_repeat_ms = sp->repeat_ms;
             calc_mouse_obj( ob, mx, my );
             if ( sp->mouseobj != NONE )
-                ret = FL_RETURN_CHANGED;
+                ret |= FL_RETURN_CHANGED;
             sp->timeout_id = -1;
             break;
 
@@ -367,7 +366,7 @@ handle_mouse( FL_OBJECT * ob,
 
             sp->mouseobj = NONE;
             fl_redraw_object( ob );
-            ret = FL_RETURN_END;
+            ret |= FL_RETURN_END;
             break;
 
         /* During an update (and if we're on a button) and the time has
@@ -375,7 +374,7 @@ handle_mouse( FL_OBJECT * ob,
 
         case FL_UPDATE :
             if ( sp->mouseobj != NONE && sp->timeout_id == -1 )
-                ret = FL_RETURN_CHANGED;
+                ret |= FL_RETURN_CHANGED;
             break;
     }
 
@@ -460,12 +459,11 @@ handle_counter( FL_OBJECT * ob,
             break;
 
         case FL_PUSH:
+        case FL_UPDATE:
             if ( key != FL_MBUTTON1 )
                 break;
-            /* fall through */
 
-        case FL_UPDATE:
-            if (    ( ret = handle_mouse( ob, event, mx, my ) )
+            if (    ( ret |= handle_mouse( ob, event, mx, my ) )
                  && ! ( ob->how_return & FL_RETURN_END_CHANGED ) )
                 sp->start_val = sp->val;
             break;
@@ -474,7 +472,7 @@ handle_counter( FL_OBJECT * ob,
             if ( key != FL_MBUTTON1 )
                 break;
 
-            ret = handle_mouse( ob, event, mx, my );
+            ret |= handle_mouse( ob, event, mx, my );
             show_focus_obj( ob, mx, my );
             if ( sp->start_val != sp->val )
                 ret |= FL_RETURN_CHANGED;
@@ -539,6 +537,10 @@ fl_create_counter( int          type,
     sp->do_speedjump  = 0;
     sp->timeout_id    = -1;
 
+    /* Set default return policy for the object */
+
+    fl_set_object_return( ob, FL_RETURN_CHANGED );
+
     return ob;
 }
 
@@ -556,10 +558,6 @@ fl_add_counter( int          type,
                 const char * label )
 {
     FL_OBJECT *ob = fl_create_counter( type, x, y, w, h, label );
-
-    /* Set default return policy for the object */
-
-    fl_set_object_return( ob, FL_RETURN_CHANGED );
 
     fl_add_object( fl_current_form, ob );
 

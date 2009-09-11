@@ -636,14 +636,14 @@ void fl_set_object_color(FL_OBJECT *obj,
 @end example
 @noindent
 @code{col1} and @code{col2} are indices into a colormap. Which colors
-are actually changed depend on the type of objects. For box and text
-only @code{col1} is important. It indicates the color of the box or of
-the box in which the text is placed. For buttons, @code{col1} is the
-color of the button when released and @code{col2} is the color of the
-button when pushed. (Note that when changing the color of a button the
-nice property that the color of a button changes when the mouse moves
-over it disappears.) For light buttons the two colors indicate the
-color of the light when off and when on. For bitmap buttons,
+are actually changed depends on the type of the object. For box and
+text only @code{col1} is important. It indicates the color of the box
+or of the box in which the text is placed. For buttons, @code{col1} is
+the color of the button when released and @code{col2} is the color of
+the button when pushed. (Note that when changing the color of a button
+the nice property that the color of a button changes when the mouse
+moves over it disappears.) For light buttons the two colors indicate
+the color of the light when off and when on. For bitmap buttons,
 @code{col1} is the color of the box and @code{col2} is the color of
 the bitmap. For sliders @code{col1} is the color of the background of
 the slider and @code{col2} is the color of the slider itself. Finally,

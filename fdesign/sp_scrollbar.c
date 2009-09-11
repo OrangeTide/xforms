@@ -52,7 +52,7 @@ get_scrollbar_spec_fdform( void )
     {
         scb_attrib = create_form_scrollbarattrib( );
 
-        set_up_how_return_menu( scb_attrib->returnsetting );
+        setup_how_return_menu( scb_attrib->returnsetting );
         fl_set_menu_item_mode( scb_attrib->returnsetting, 5,
                                FL_PUP_BOX | FL_PUP_GRAY );
         fl_set_menu_item_mode( scb_attrib->returnsetting, 6,

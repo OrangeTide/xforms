@@ -82,8 +82,12 @@ FL_EXPORT void fl_set_input_return( FL_OBJECT * ob,
                                     int         value );
 
 FL_EXPORT void fl_set_input_color( FL_OBJECT * ob,
-                                   int         textcol,
-                                   int         curscol );
+                                   FL_COLOR    textcol,
+                                   FL_COLOR    curscol );
+
+FL_EXPORT void fl_get_input_color( FL_OBJECT * ob,
+                                   FL_COLOR  * textcol,
+                                   FL_COLOR  * curscol );
 
 FL_EXPORT void fl_set_input_scroll( FL_OBJECT * ob,
                                     int         yes );
@@ -122,6 +126,10 @@ FL_EXPORT void fl_set_input_topline( FL_OBJECT * ob,
 FL_EXPORT void fl_set_input_scrollbarsize( FL_OBJECT * ob,
                                            int         hh,
                                            int         vw );
+
+FL_EXPORT void fl_get_input_scrollbarsize( FL_OBJECT * ob,
+                                           int       * hh,
+                                           int       * vw );
 
 FL_EXPORT void fl_set_input_xoffset( FL_OBJECT * ob,
                                      int         xoff );

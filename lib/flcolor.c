@@ -72,56 +72,184 @@ static FL_COLOR rgb2pixel( unsigned int, unsigned int, unsigned int );
 
 static FLI_IMAP fli_imap[ FL_MAX_COLS ] =
 {
-    { NV( FL_BLACK ),          0,   0,   0, 0, 0 },
-    { NV( FL_WHITE ),        255, 255, 255, 0, 0 },
-
-    { NV( FL_COL1 ),         173, 173, 173, 0, 0 }, /* default color, gray86 */
-    { NV( FL_BOTTOM_BCOL ),   89,  89,  89, 0, 0 }, /* bottom  gray35 */
-    { NV( FL_RIGHT_BCOL ),    41,  41,  41, 0, 0 }, /* right  gray16  */
-    { NV( FL_MCOL ),         191, 191, 191, 0, 0 }, /* used as magic, gray75 */
-    { NV( FL_LEFT_BCOL ),    222, 222, 222, 0, 0 }, /* left color  gray87 */
-
-    { NV( FL_LIGHTER_COL1 ), 204, 204, 204, 0, 0 }, /* left color  gray80 */
-    { NV( FL_DARKER_COL1 ),  161, 161, 161, 0, 0 }, /* left color  gray63 */
-
-    { NV( FL_SLATEBLUE ),    113, 113, 198, 0, 0 },
-    { NV( FL_INDIANRED ),    198, 113, 113, 0, 0 },
-
-    { NV( FL_RED ),          255,   0,   0, 0, 0 },
-    { NV( FL_BLUE ),           0,   0, 255, 0, 0 },
-    { NV( FL_GREEN ),          0, 255,   0, 0, 0 },
-    { NV( FL_YELLOW ),       255, 255,   0, 0, 0 },
-    { NV( FL_MAGENTA ),      255,   0, 255, 0, 0 },
-    { NV( FL_CYAN ),           0, 255, 255, 0, 0 },
-    { NV( FL_TOMATO ),       255,  99,  71, 0, 0 },
-
-    { NV( FL_INACTIVE ),     110, 110, 110, 0, 0 }, /* gray43       */
-    { NV( FL_TOP_BCOL ),     204, 204, 204, 0, 0 }, /* top  gray80  */
-
-    { NV( FL_PALEGREEN ),    113, 198, 113, 0, 0 },
-    { NV( FL_DARKGOLD ),     205, 149,  10, 0, 0 },
-    { NV( FL_ORCHID ),       205, 105, 201, 0, 0 },
-    { NV( FL_DARKCYAN ),      40, 170, 175, 0, 0 },
-    { NV( FL_DARKTOMATO ),   139,  54,  38, 0, 0 },
-    { NV( FL_WHEAT ),        255, 231, 155, 0, 0 },
-    { NV( FL_DARKORANGE ),   255, 128,   0, 0, 0 },
-    { NV( FL_DEEPPINK ),     255,   0, 128, 0, 0 },
-    { NV( FL_CHARTREUSE ),   128, 255,   0, 0, 0 },
-    { NV( FL_DARKVIOLET ),   128,   0, 255, 0, 0 },
-    { NV( FL_SPRINGGREEN ),    0, 255, 128, 0, 0 },
-    { NV( FL_DODGERBLUE ),     0, 128, 255, 0, 0 },
-    { NV( FL_DOGERBLUE ),      0, 128, 255, 0, 0 },
-
-    { NV( FL_FREE_COL1 ),      0,   0,   0, 0, 0 },
-    { NV( FL_FREE_COL2 ),      0,   0,   0, 0, 0 },
-    { NV( FL_FREE_COL3 ),      0,   0,   0, 0, 0 },
-    { NV( FL_FREE_COL4 ),      0,   0,   0, 0, 0 },
-    { NV( FL_FREE_COL5 ),      0,   0,   0, 0, 0 },
-    { NV( FL_FREE_COL6 ),      0,   0,   0, 0, 0 },
+	{ NV( FL_BLACK                ),   0,   0,   0, 0, 0 },
+	{ NV( FL_WHITE                ), 255, 255, 255, 0, 0 },
+	{ NV( FL_COL1                 ), 173, 173, 173, 0, 0 },
+	{ NV( FL_BOTTOM_BCOL          ),  89,  89,  89, 0, 0 },
+	{ NV( FL_RIGHT_BCOL           ),  41,  41,  41, 0, 0 },
+	{ NV( FL_MCOL                 ), 191, 191, 191, 0, 0 },
+	{ NV( FL_LEFT_BCOL            ), 222, 222, 222, 0, 0 },
+	{ NV( FL_SLATEBLUE            ), 113, 113, 198, 0, 0 },
+	{ NV( FL_INDIANRED            ), 198, 113, 113, 0, 0 },
+	{ NV( FL_RED                  ), 255,   0,   0, 0, 0 },
+	{ NV( FL_BLUE                 ),   0,   0, 255, 0, 0 },
+	{ NV( FL_GREEN                ),   0, 255,   0, 0, 0 },
+	{ NV( FL_YELLOW               ), 255, 255,   0, 0, 0 },
+	{ NV( FL_MAGENTA              ), 255,   0, 255, 0, 0 },
+	{ NV( FL_CYAN                 ),   0, 255, 255, 0, 0 },
+	{ NV( FL_TOMATO               ), 255,  99,  71, 0, 0 },
+	{ NV( FL_INACTIVE             ), 110, 110, 110, 0, 0 },
+	{ NV( FL_TOP_BCOL             ), 204, 204, 204, 0, 0 },
+	{ NV( FL_PALEGREEN            ), 113, 198, 113, 0, 0 },
+	{ NV( FL_DARKGOLD             ), 205, 149,  10, 0, 0 },
+	{ NV( FL_ORCHID               ), 205, 105, 201, 0, 0 },
+	{ NV( FL_DARKCYAN             ),  40, 170, 175, 0, 0 },
+	{ NV( FL_DARKTOMATO           ), 139,  54,  38, 0, 0 },
+	{ NV( FL_WHEAT                ), 255, 231, 155, 0, 0 },
+	{ NV( FL_DARKORANGE           ), 255, 128,   0, 0, 0 },
+	{ NV( FL_DEEPPINK             ), 255,   0, 128, 0, 0 },
+	{ NV( FL_CHARTREUSE           ), 128, 255,   0, 0, 0 },
+	{ NV( FL_DARKVIOLET           ), 128,   0, 255, 0, 0 },
+	{ NV( FL_SPRINGGREEN          ),   0, 255, 128, 0, 0 },
+	{ NV( FL_DODGERBLUE           ),   0, 128, 255, 0, 0 },
+	{ NV( FL_DOGERBLUE            ),   0, 128, 255, 0, 0 },
+	{ NV( FL_LIGHTER_COL1         ), 204, 204, 204, 0, 0 },
+	{ NV( FL_DARKER_COL1          ), 161, 161, 161, 0, 0 },
+	{ NV( FL_ALICEBLUE            ), 240, 248, 255, 0, 0 },
+	{ NV( FL_ANTIQUEWHITE         ), 250, 235, 215, 0, 0 },
+	{ NV( FL_AQUA                 ),   0, 255, 255, 0, 0 },
+	{ NV( FL_AQUAMARINE           ), 127, 255, 212, 0, 0 },
+	{ NV( FL_AZURE                ), 240, 255, 255, 0, 0 },
+	{ NV( FL_BEIGE                ), 245, 245, 220, 0, 0 },
+	{ NV( FL_BISQUE               ), 255, 228, 196, 0, 0 },
+	{ NV( FL_BLANCHEDALMOND       ), 255, 235, 205, 0, 0 },
+	{ NV( FL_BLUEVIOLET           ), 138,  43, 226, 0, 0 },
+	{ NV( FL_BROWN                ), 165,  42,  42, 0, 0 },
+	{ NV( FL_BURLYWOOD            ), 222, 184, 135, 0, 0 },
+	{ NV( FL_CADETBLUE            ),  95, 158, 160, 0, 0 },
+	{ NV( FL_CHOCOLATE            ), 210, 105,  30, 0, 0 },
+	{ NV( FL_CORAL                ), 255, 127,  80, 0, 0 },
+	{ NV( FL_CORNFLOWERBLUE       ), 100, 149, 237, 0, 0 },
+	{ NV( FL_CORNSILK             ), 255, 248, 220, 0, 0 },
+	{ NV( FL_CRIMSON              ), 220,  20,  60, 0, 0 },
+	{ NV( FL_DARKBLUE             ),   0,   0, 139, 0, 0 },
+	{ NV( FL_DARKGOLDENROD        ), 184, 134,  11, 0, 0 },
+	{ NV( FL_DARKGRAY             ), 169, 169, 169, 0, 0 },
+	{ NV( FL_DARKGREEN            ),   0, 100,   0, 0, 0 },
+	{ NV( FL_DARKGREY             ), 169, 169, 169, 0, 0 },
+	{ NV( FL_DARKKHAKI            ), 189, 183, 107, 0, 0 },
+	{ NV( FL_DARKMAGENTA          ), 139,   0, 139, 0, 0 },
+	{ NV( FL_DARKOLIVEGREEN       ),  85, 107,  47, 0, 0 },
+	{ NV( FL_DARKORCHID           ), 153,  50, 204, 0, 0 },
+	{ NV( FL_DARKRED              ), 139,   0,   0, 0, 0 },
+	{ NV( FL_DARKSALMON           ), 233, 150, 122, 0, 0 },
+	{ NV( FL_DARKSEAGREEN         ), 143, 188, 143, 0, 0 },
+	{ NV( FL_DARKSLATEBLUE        ),  72,  61, 139, 0, 0 },
+	{ NV( FL_DARKSLATEGRAY        ),  47,  79,  79, 0, 0 },
+	{ NV( FL_DARKSLATEGREY        ),  47,  79,  79, 0, 0 },
+	{ NV( FL_DARKTURQUOISE        ),   0, 206, 209, 0, 0 },
+	{ NV( FL_DEEPSKYBLUE          ),   0, 191, 255, 0, 0 },
+	{ NV( FL_DIMGRAY              ), 105, 105, 105, 0, 0 },
+	{ NV( FL_DIMGREY              ), 105, 105, 105, 0, 0 },
+	{ NV( FL_FIREBRICK            ), 178,  34,  34, 0, 0 },
+	{ NV( FL_FLORALWHITE          ), 255, 250, 240, 0, 0 },
+	{ NV( FL_FORESTGREEN          ),  34, 139,  34, 0, 0 },
+	{ NV( FL_FUCHSIA              ), 255,   0, 255, 0, 0 },
+	{ NV( FL_GAINSBORO            ), 220, 220, 220, 0, 0 },
+	{ NV( FL_GHOSTWHITE           ), 248, 248, 255, 0, 0 },
+	{ NV( FL_GOLD                 ), 255, 215,   0, 0, 0 },
+	{ NV( FL_GOLDENROD            ), 218, 165,  32, 0, 0 },
+	{ NV( FL_GRAY                 ), 128, 128, 128, 0, 0 },
+	{ NV( FL_GREENYELLOW          ), 173, 255,  47, 0, 0 },
+	{ NV( FL_GREY                 ), 128, 128, 128, 0, 0 },
+	{ NV( FL_HONEYDEW             ), 240, 255, 240, 0, 0 },
+	{ NV( FL_HOTPINK              ), 255, 105, 180, 0, 0 },
+	{ NV( FL_INDIGO               ),  75,   0, 130, 0, 0 },
+	{ NV( FL_IVORY                ), 255, 255, 240, 0, 0 },
+	{ NV( FL_KHAKI                ), 240, 230, 140, 0, 0 },
+	{ NV( FL_LAVENDER             ), 230, 230, 250, 0, 0 },
+	{ NV( FL_LAVENDERBLUSH        ), 255, 240, 245, 0, 0 },
+	{ NV( FL_LAWNGREEN            ), 124, 252,   0, 0, 0 },
+	{ NV( FL_LEMONCHIFFON         ), 255, 250, 205, 0, 0 },
+	{ NV( FL_LIGHTBLUE            ), 173, 216, 230, 0, 0 },
+	{ NV( FL_LIGHTCORAL           ), 240, 128, 128, 0, 0 },
+	{ NV( FL_LIGHTCYAN            ), 224, 255, 255, 0, 0 },
+	{ NV( FL_LIGHTGOLDENRODYELLOW ), 250, 250, 210, 0, 0 },
+	{ NV( FL_LIGHTGRAY            ), 211, 211, 211, 0, 0 },
+	{ NV( FL_LIGHTGREEN           ), 144, 238, 144, 0, 0 },
+	{ NV( FL_LIGHTGREY            ), 211, 211, 211, 0, 0 },
+	{ NV( FL_LIGHTPINK            ), 255, 182, 193, 0, 0 },
+	{ NV( FL_LIGHTSALMON          ), 255, 160, 122, 0, 0 },
+	{ NV( FL_LIGHTSEAGREEN        ),  32, 178, 170, 0, 0 },
+	{ NV( FL_LIGHTSKYBLUE         ), 135, 206, 250, 0, 0 },
+	{ NV( FL_LIGHTSLATEGRAY       ), 119, 136, 153, 0, 0 },
+	{ NV( FL_LIGHTSLATEGREY       ), 119, 136, 153, 0, 0 },
+	{ NV( FL_LIGHTSTEELBLUE       ), 176, 196, 222, 0, 0 },
+	{ NV( FL_LIGHTYELLOW          ), 255, 255, 224, 0, 0 },
+	{ NV( FL_LIME                 ),   0, 255,   0, 0, 0 },
+	{ NV( FL_LIMEGREEN            ),  50, 205,  50, 0, 0 },
+	{ NV( FL_LINEN                ), 250, 240, 230, 0, 0 },
+	{ NV( FL_MAROON               ), 128,   0,   0, 0, 0 },
+	{ NV( FL_MEDIUMAQUAMARINE     ), 102, 205, 170, 0, 0 },
+	{ NV( FL_MEDIUMBLUE           ),   0,   0, 205, 0, 0 },
+	{ NV( FL_MEDIUMORCHID         ), 186,  85, 211, 0, 0 },
+	{ NV( FL_MEDIUMPURPLE         ), 147, 112, 219, 0, 0 },
+	{ NV( FL_MEDIUMSEAGREEN       ),  60, 179, 113, 0, 0 },
+	{ NV( FL_MEDIUMSLATEBLUE      ), 123, 104, 238, 0, 0 },
+	{ NV( FL_MEDIUMSPRINGGREEN    ),   0, 250, 154, 0, 0 },
+	{ NV( FL_MEDIUMTURQUOISE      ),  72, 209, 204, 0, 0 },
+	{ NV( FL_MEDIUMVIOLETRED      ), 199,  21, 133, 0, 0 },
+	{ NV( FL_MIDNIGHTBLUE         ),  25,  25, 112, 0, 0 },
+	{ NV( FL_MINTCREAM            ), 245, 255, 250, 0, 0 },
+	{ NV( FL_MISTYROSE            ), 255, 228, 225, 0, 0 },
+	{ NV( FL_MOCCASIN             ), 255, 228, 181, 0, 0 },
+	{ NV( FL_NAVAJOWHITE          ), 255, 222, 173, 0, 0 },
+	{ NV( FL_NAVY                 ),   0,   0, 128, 0, 0 },
+	{ NV( FL_OLDLACE              ), 253, 245, 230, 0, 0 },
+	{ NV( FL_OLIVE                ), 128, 128,   0, 0, 0 },
+	{ NV( FL_OLIVEDRAB            ), 107, 142,  35, 0, 0 },
+	{ NV( FL_ORANGE               ), 255, 165,   0, 0, 0 },
+	{ NV( FL_ORANGERED            ), 255,  69,   0, 0, 0 },
+	{ NV( FL_PALEGOLDENROD        ), 238, 232, 170, 0, 0 },
+	{ NV( FL_PALETURQUOISE        ), 175, 238, 238, 0, 0 },
+	{ NV( FL_PALEVIOLETRED        ), 219, 112, 147, 0, 0 },
+	{ NV( FL_PAPAYAWHIP           ), 255, 239, 213, 0, 0 },
+	{ NV( FL_PEACHPUFF            ), 255, 218, 185, 0, 0 },
+	{ NV( FL_PERU                 ), 205, 133,  63, 0, 0 },
+	{ NV( FL_PINK                 ), 255, 192, 203, 0, 0 },
+	{ NV( FL_PLUM                 ), 221, 160, 221, 0, 0 },
+	{ NV( FL_POWDERBLUE           ), 176, 224, 230, 0, 0 },
+	{ NV( FL_PURPLE               ), 128,   0, 128, 0, 0 },
+	{ NV( FL_ROSYBROWN            ), 188, 143, 143, 0, 0 },
+	{ NV( FL_ROYALBLUE            ),  65, 105, 225, 0, 0 },
+	{ NV( FL_SADDLEBROWN          ), 139,  69,  19, 0, 0 },
+	{ NV( FL_SALMON               ), 250, 128, 114, 0, 0 },
+	{ NV( FL_SANDYBROWN           ), 244, 164,  96, 0, 0 },
+	{ NV( FL_SEAGREEN             ),  46, 139,  87, 0, 0 },
+	{ NV( FL_SEASHELL             ), 255, 245, 238, 0, 0 },
+	{ NV( FL_SIENNA               ), 160,  82,  45, 0, 0 },
+	{ NV( FL_SILVER               ), 192, 192, 192, 0, 0 },
+	{ NV( FL_SKYBLUE              ), 135, 206, 235, 0, 0 },
+	{ NV( FL_SLATEGRAY            ), 112, 128, 144, 0, 0 },
+	{ NV( FL_SLATEGREY            ), 112, 128, 144, 0, 0 },
+	{ NV( FL_SNOW                 ), 255, 250, 250, 0, 0 },
+	{ NV( FL_STEELBLUE            ),  70, 130, 180, 0, 0 },
+	{ NV( FL_TAN                  ), 210, 180, 140, 0, 0 },
+	{ NV( FL_TEAL                 ),   0, 128, 128, 0, 0 },
+	{ NV( FL_THISTLE              ), 216, 191, 216, 0, 0 },
+	{ NV( FL_TURQUOISE            ),  64, 224, 208, 0, 0 },
+	{ NV( FL_VIOLET               ), 238, 130, 238, 0, 0 },
+	{ NV( FL_WHITESMOKE           ), 245, 245, 245, 0, 0 },
+	{ NV( FL_YELLOWGREEN          ), 154, 205,  50, 0, 0 },
+	{ NV( FL_FREE_COL1            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL2            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL3            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL4            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL5            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL6            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL7            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL8            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL9            ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL10           ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL11           ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL12           ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL13           ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL14           ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL15           ),   0,   0,   0, 0, 0 },
+	{ NV( FL_FREE_COL16           ),   0,   0,   0, 0, 0 },
 };
 
 #define flmapsize ( ( int ) ( sizeof fli_imap / sizeof *fli_imap ) )
-#define builtin   FL_BUILT_IN_COLS
 
 
 /***************************************
@@ -133,7 +261,7 @@ fli_query_colorname( FL_COLOR col )
     FLI_IMAP *flmap;
     static char buf[ 32 ];
 
-    for ( flmap = fli_imap; flmap < fli_imap + builtin + 2; flmap++ )
+    for ( flmap = fli_imap; flmap < fli_imap + FL_BUILT_IN_COLS + 2; flmap++ )
         if ( col == flmap->index )
             return flmap->name;
 
@@ -159,7 +287,7 @@ fli_query_namedcolor( const char *s )
 {
     FLI_IMAP *flmap;
 
-    for ( flmap = fli_imap; s && flmap < fli_imap + builtin; flmap++ )
+    for ( flmap = fli_imap; s && flmap < fli_imap + FL_BUILT_IN_COLS; flmap++ )
         if ( strcmp( s, flmap->name ) == 0 )
             return flmap->index;
 
@@ -209,7 +337,7 @@ fl_set_gamma( double r,
         return;
     }
 
-    for ( fm = fli_imap; fm < fli_imap + builtin; fm++ )
+    for ( fm = fli_imap; fm < fli_imap + FL_BUILT_IN_COLS; fm++ )
     {
         fm->r = 0.5 + 255 * pow( fm->r / 255.0, rgamma / r );
         fm->g = 0.5 + 255 * pow( fm->g / 255.0, ggamma / g );
@@ -330,7 +458,7 @@ be_nice( void )
 static int
 alloc_direct_color( void )
 {
-    XColor xxc[ builtin ],
+    XColor xxc[ FL_BUILT_IN_COLS ],
            *xc;
     FLI_IMAP *fm;
     long pred = predefined_cols;
@@ -346,8 +474,6 @@ alloc_direct_color( void )
     }
 
     XStoreColors( flx->display, fli_map( fl_vmode ), xxc, pred );
-
-    /* Might want to do rest of the colors ( max_server < col < builtin) */
 
     return 1;
 }
@@ -406,13 +532,14 @@ fill_map( void )
 
     /* Get approx. for the rest of needed colors */
 
-    for ( fs = fli_imap + builtin; ok && fm < fs; fm++ )
+    for ( fs = fli_imap + FL_BUILT_IN_COLS; ok && fm < fs; fm++ )
         fl_mapcolor( fm->index, fm->r, fm->g, fm->b );
 
     /* Make rest of the entry invalid so we don't accidently free a valid
        pixel */
 
-    memset( lut + builtin, 1, ( FL_MAX_COLS - builtin ) * sizeof *lut );
+    memset( lut + FL_BUILT_IN_COLS, 1,
+            ( FL_MAX_COLS - FL_BUILT_IN_COLS ) * sizeof *lut );
 
     return ok;
 }
@@ -457,7 +584,7 @@ get_private_cmap( int vmode )
     fl_state[ vmode ].pcm = 1;
     ok = fill_map( );
 
-    for ( i = builtin; i < FL_MAX_COLS; i++ )
+    for ( i = FL_BUILT_IN_COLS; i < FL_MAX_COLS; i++ )
         lut[ i ] = i;
 
     M_warn( "get_private_cmap", "%s %s succesful",
@@ -500,7 +627,7 @@ get_standard_cmap( int vmode )
     fli_map( vmode ) = sc->colormap;
 
     xc.flags = DoRed | DoGreen | DoBlue;
-    for ( fm = fli_imap, fs = fm + builtin; fm < fs; fm++ )
+    for ( fm = fli_imap, fs = fm + FL_BUILT_IN_COLS; fm < fs; fm++ )
     {
         xc.red   = ( fm->r << 8 ) | 0xff;
         xc.green = ( fm->g << 8 ) | 0xff;
@@ -717,7 +844,7 @@ fli_init_colormap( int vmode )
     else
         max_server_cols = 1L << fli_depth( vmode );
 
-    predefined_cols = FL_min( builtin, max_server_cols );
+    predefined_cols = FL_min( FL_BUILT_IN_COLS, max_server_cols );
     M_info( "fli_init_colormap", "MaxColors = %d PredefCol = %d",
             max_server_cols, predefined_cols );
 

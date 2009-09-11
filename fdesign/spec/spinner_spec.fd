@@ -122,7 +122,7 @@ shortcut:
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: returnsetting
-callback: cnt_returnsetting_change
+callback: spn_returnsetting_change
 argument: 0
 
 --------------------

@@ -1795,14 +1795,30 @@ fl_set_input( FL_OBJECT  * obj,
 
 void
 fl_set_input_color( FL_OBJECT * obj,
-                    int         textcol,
-                    int         curscol )
+                    FL_COLOR    textcol,
+                    FL_COLOR    curscol )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
 
     sp->textcol = textcol;
     sp->curscol = curscol;
     fl_redraw_object( sp->input );
+}
+
+
+/***************************************
+ * Returns the color of the input string
+ ***************************************/
+
+void
+fl_get_input_color( FL_OBJECT * obj,
+                    FL_COLOR  * textcol,
+                    FL_COLOR  * curscol )
+{
+    FLI_INPUT_SPEC *sp = obj->spec;
+
+    *textcol = sp->textcol;
+    *curscol = sp->curscol;
 }
 
 
@@ -2583,6 +2599,21 @@ fl_set_input_scrollbarsize( FL_OBJECT * obj,
         redraw_scrollbar( obj );
         fl_redraw_object( sp->input );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_get_input_scrollbarsize( FL_OBJECT * obj,
+                            int       * hh,
+                            int       * vw )
+{
+    FLI_INPUT_SPEC *sp = obj->spec;
+
+    *hh = sp->hh_def;
+    *vw = sp->vw_def;
 }
 
 

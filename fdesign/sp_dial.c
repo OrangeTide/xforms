@@ -76,7 +76,7 @@ get_dial_spec_fdform( void )
         fl_addto_choice( dial_attrib->dir, dial_dir[ 0 ].name );
         fl_addto_choice( dial_attrib->dir, dial_dir[ 1 ].name );
 
-        set_up_how_return_menu( dial_attrib->returnsetting );
+        setup_how_return_menu( dial_attrib->returnsetting );
         fl_set_menu_item_mode( dial_attrib->returnsetting, 5,
                                FL_PUP_BOX | FL_PUP_GRAY );
         fl_set_menu_item_mode( dial_attrib->returnsetting, 6,

@@ -1078,21 +1078,20 @@ where @code{when} can be either
 @item FL_RETURN_NONE
 Never report or invoke callback.
 
-@table @code
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
 Return or invoke callback at end (mouse release) and only if the counter
-value is changed. This is the default setting.
+value is changed.
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Return or invoke callback whenever the counter value is changed.
+Return or invoke callback whenever the counter value is changed. This
+is the default setting.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
 Return or invoke callback at the end regardless if the counter value is
 changed or not.
-@end table
 
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS
@@ -1353,17 +1352,19 @@ Never return or invoke callback.
 
 @tindex FL_RETURN_END_CHANGED
 @item FL_RETURN_END_CHANGED
-Return or invoke callback at end if value is changed
-since last return (this is the default)
+Return or invoke callback at end of interaction (when either the input
+field loses the focus or one of the buttons was released) and the
+spinner's value changed during the interaction.
 
 @tindex FL_RETURN_CHANGED
 @item FL_RETURN_CHANGED
-Return or invoke callback whenever the spinner's value changed.
+Return or invoke callback whenever the spinner's value changed. This
+is the default.
 
 @tindex FL_RETURN_END
 @item FL_RETURN_END
-Return or invoke callback at end regardless if the spinner's value was
-changed or not.
+Return or invoke callback at end of interaction regardless of the
+spinner's value having changed or not.
 
 @tindex FL_RETURN_ALWAYS
 @item FL_RETURN_ALWAYS

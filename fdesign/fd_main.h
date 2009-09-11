@@ -250,7 +250,7 @@ void set_attribs( FL_OBJECT *,
                   int,
                   int,
                   int,
-                  float,
+                  int,
                   int,
                   const char * );
 
@@ -863,7 +863,7 @@ extern int noop_handle( FL_OBJECT *,
 
 extern char *get_helper( char * );
 
-extern void set_up_how_return_menu( FL_OBJECT * );
+extern void setup_how_return_menu( FL_OBJECT * );
 
 extern void reset_how_return_menu( FL_OBJECT *,
                                    int );

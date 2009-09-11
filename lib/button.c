@@ -331,8 +331,10 @@ handle_button( FL_OBJECT * obj,
             sp->mousebut = key;
             sp->timdel = 1;
             fl_redraw_object( obj );
+
             if ( obj->type == FL_MENU_BUTTON )
                 ret |= FL_RETURN_END;
+
             if (    obj->type == FL_INOUT_BUTTON
                  || obj->type == FL_MENU_BUTTON
                  || obj->type == FL_TOUCH_BUTTON )
@@ -399,11 +401,23 @@ handle_button( FL_OBJECT * obj,
                 if ( obj->type == FL_TOUCH_BUTTON )
                     ret |= FL_RETURN_END;
             }
+
             break;
 
         case FL_UPDATE:
+            if (    key < FL_MBUTTON1
+                 || key > FL_MBUTTON5
+                 || ! sp->react_to[ key - 1 ] )
+                break;
+
             sp->event = FL_UPDATE;
-            if ( obj->type != FL_RADIO_BUTTON && obj->type != FL_INOUT_BUTTON )
+            if (    sp->val
+                 && obj->type == FL_TOUCH_BUTTON
+                 && sp->timdel++ > 10
+                 && ( sp->timdel & 1 ) == 0 )
+                ret |= FL_RETURN_CHANGED;
+            else if (    obj->type != FL_RADIO_BUTTON
+                      && obj->type != FL_INOUT_BUTTON )
             {
                 if ( ! WITHIN( obj, mx, my ) )
                     newval = oldval;
@@ -416,17 +430,12 @@ handle_button( FL_OBJECT * obj,
                     fl_redraw_object( obj );
                 }
             }
-            if (    sp->val
-                 && obj->type == FL_TOUCH_BUTTON
-                 && sp->timdel++ > 10
-                 && ( sp->timdel & 1 ) == 0 )
-                ret |= FL_RETURN_CHANGED;
             break;
 
         case FL_SHORTCUT:
             sp->event = FL_SHORTCUT;
 
-            /* this is a horrible hack */
+            /* This is a horrible hack */
 
             if ( obj->type == FL_PUSH_BUTTON || obj->type == FL_RADIO_BUTTON )
             {
@@ -504,7 +513,7 @@ fl_create_generic_button( int          objclass,
     sp->cspecv     = NULL;
     sp-> filename  = sp->focus_filename = NULL;
 
-    /* Per default a button reacts to all mouse buttons */
+    /* Per default a button (unfortunately) reacts to all mouse buttons */
 
     for ( i = 0; i < 5; i++ )
         sp->react_to[ i ] = 1;

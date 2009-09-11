@@ -107,19 +107,6 @@ exit_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 
 /***************************************
- * Escape or clicked on the control panel. If escape, quit
- ***************************************/
-
-void
-esc_exit_cb( FL_OBJECT * obj,
-             long        arg  FL_UNUSED_ARG )
-{
-    if ( fl_get_button_numb( obj ) > 3 )
-        exit_cb( 0, 0 );
-}
-
-
-/***************************************
  * Merge a set of forms with the current ones.
  ***************************************/
 

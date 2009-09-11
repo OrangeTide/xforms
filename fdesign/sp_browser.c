@@ -57,7 +57,7 @@ get_browser_spec_fdform( void )
         fl_addto_choice( br_attrib->vscb_pref, get_scrollbar_pref_string( ) );
         fl_set_browser_dblclick_callback( br_attrib->content_br,
                                           change_item_cb, 0 );
-        set_up_how_return_menu( br_attrib->returnsetting );
+        setup_how_return_menu( br_attrib->returnsetting );
     }
 
     return br_attrib;

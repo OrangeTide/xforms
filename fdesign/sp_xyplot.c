@@ -58,7 +58,7 @@ get_xyplot_spec_fdform( void )
         fl_addto_choice( xyplot_attrib->ygrid, get_grid_string( ) );
         fl_addto_choice( xyplot_attrib->gridstyle, get_linestyle_string( ) );
 
-        set_up_how_return_menu( xyplot_attrib->how_return );
+        setup_how_return_menu( xyplot_attrib->how_return );
         fl_set_menu_item_mode( xyplot_attrib->how_return, 5,
                                FL_PUP_BOX | FL_PUP_GRAY );
         fl_set_menu_item_mode( xyplot_attrib->how_return, 6,

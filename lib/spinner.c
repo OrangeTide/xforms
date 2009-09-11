@@ -123,10 +123,6 @@ handle_spinner( FL_OBJECT * obj,
             sp->attrib = 1;
             break;
 
-        case FL_UNFOCUS:
-            fprintf( stderr, "Losing focus\n" );
-            break;
-
         case FL_DRAW :
             if ( sp->attrib )
             {
@@ -158,33 +154,17 @@ spinner_callback( FL_OBJECT * obj,
     const char *s_val = fl_get_input( sp->input );
     int max_len = 4 + sp->prec + log10( DBL_MAX );
     char buf[ max_len ];
-    int is_new = 0;
 
-    /* If one of the buttons was pressed first check if there's not another
-       input object with an invalid value. Then, if the input object belonging
-       to the button doesn't have the focus, set it to that input. */
+    /* Don't react to mere changes of the input field while it keeps focus */
 
-    if ( data != 0 )
-    {
-        FL_OBJECT *fo = fl_get_focus_object( obj->parent->form );
-
-        if ( obj->returned == FL_RETURN_TRIGGERED )
-            obj->returned = FL_RETURN_CHANGED | FL_RETURN_END;
-
-        if (    fo
-             && fo->objclass == FL_INPUT
-             && fl_validate_input( fo ) != FL_VALID )
-            return;
-
-        if ( fo !=  sp->input )
-            fl_set_focus_object( obj->parent->form, sp->input );
-    }
+    if ( data == 0 && ! ( obj->returned & FL_RETURN_END ) )
+        return;
 
     if ( obj->parent->type == FL_INT_SPINNER )
     { 
         int old_i_val = sp->i_val;
 
-        if ( data == 0 && obj->returned & FL_RETURN_END )
+        if ( data == 0 )
         {
             char *eptr;
             long i_val = strtol( s_val, &eptr, 10 );
@@ -198,15 +178,14 @@ spinner_callback( FL_OBJECT * obj,
             else
                 sp->i_val = i_val;
         }
-        else if ( data == 1 )
+        else if ( data == 1 && obj->returned & FL_RETURN_CHANGED )
         {
             if ( sp->i_val <= sp->i_max - sp->i_incr )
                 sp->i_val += sp->i_incr;
             else
                 sp->i_val = sp->i_max;
-            is_new = 1;
         }
-        else if ( data == -1 )
+        else if ( data == -1 && obj->returned & FL_RETURN_CHANGED )
         {
             if ( sp->i_val >= sp->i_min + sp->i_incr )
                 sp->i_val -= sp->i_incr;
@@ -214,39 +193,33 @@ spinner_callback( FL_OBJECT * obj,
                 sp->i_val = sp->i_min;
         }
 
-        if ( data != 0 || obj->returned & FL_RETURN_END )
-        {
-            int r = obj->returned;
-
-            sprintf( buf, "%d", sp->i_val );
-            fl_set_input( sp->input, buf );
-            obj->returned = r;
-        }
+        sprintf( buf, "%d", sp->i_val );
+        fl_set_input( sp->input, buf );
 
         if ( obj->returned & FL_RETURN_END )
             obj->parent->returned |= FL_RETURN_END;
 
-        if (    sp->i_val != old_i_val
-             && ! ( obj->parent->how_return & FL_RETURN_END_CHANGED ) )
+        if ( sp->i_val != old_i_val )
             obj->parent->returned |= FL_RETURN_CHANGED;
 
         if (    sp->i_val != sp->old_ival
-             && obj->parent->how_return & FL_RETURN_END_CHANGED )
-            obj->parent->returned |= FL_RETURN_CHANGED;
+             && data != 0
+             && obj->returned & FL_RETURN_END )
+            obj->parent->returned |= FL_RETURN_CHANGED | FL_RETURN_END;
+
+        if ( obj->parent->returned & FL_RETURN_END )
+            sp->old_ival = sp->i_val;
 
         if ( obj->parent->how_return & FL_RETURN_END_CHANGED
              && ! (    obj->parent->returned & FL_RETURN_CHANGED
                     && obj->parent->returned & FL_RETURN_END ) )
             obj->parent->returned = FL_RETURN_NONE;
-
-        if ( obj->parent->returned & FL_RETURN_END )
-            sp->old_ival = sp->i_val;
     }
     else
     {
         int old_f_val = sp->f_val;
 
-        if ( data == 0 && obj->returned & FL_RETURN_END )
+        if ( data == 0 )
         {
             char *eptr;
             double f_val = strtod( s_val, &eptr );
@@ -260,14 +233,14 @@ spinner_callback( FL_OBJECT * obj,
             else
                 sp->f_val = f_val;
         }
-        else if ( data == 1 )
+        else if ( data == 1 && obj->returned & FL_RETURN_CHANGED )
         {
             if ( sp->f_val <= sp->f_max - sp->f_incr )
                 sp->f_val += sp->f_incr;
             else
                 sp->f_val = sp->f_max;
         }
-        else if ( data == -1 )
+        else if ( data == -1 && obj->returned & FL_RETURN_CHANGED )
         {
             if ( sp->f_val >= sp->f_min + sp->f_incr )
                 sp->f_val -= sp->f_incr;
@@ -275,33 +248,27 @@ spinner_callback( FL_OBJECT * obj,
                 sp->f_val = sp->f_min;
         }
 
-        if ( data != 0 || obj->returned & FL_RETURN_END )
-        {
-            int r = obj->returned;
-
-            sprintf( buf, "%.*f", sp->prec, sp->f_val );
-            fl_set_input( sp->input, buf );
-            obj->returned = r;
-        }
+        sprintf( buf, "%.*f", sp->prec, sp->f_val );
+        fl_set_input( sp->input, buf );
 
         if ( obj->returned & FL_RETURN_END )
             obj->parent->returned |= FL_RETURN_END;
 
-        if (    sp->f_val != old_f_val
-             && ! ( obj->parent->how_return & FL_RETURN_END_CHANGED ) )
+        if ( sp->f_val != old_f_val )
             obj->parent->returned |= FL_RETURN_CHANGED;
 
         if (    sp->f_val != sp->old_fval
-             && obj->parent->how_return & FL_RETURN_END_CHANGED )
-            obj->parent->returned |= FL_RETURN_CHANGED;
+             && data != 0
+             && obj->returned & FL_RETURN_END )
+            obj->parent->returned |= FL_RETURN_CHANGED | FL_RETURN_END;
+
+        if ( obj->parent->returned & FL_RETURN_END )
+            sp->old_fval = sp->f_val;
 
         if ( obj->parent->how_return & FL_RETURN_END_CHANGED
              && ! (    obj->parent->returned & FL_RETURN_CHANGED
                     && obj->parent->returned & FL_RETURN_END ) )
             obj->parent->returned = FL_RETURN_NONE;
-
-        if ( obj->parent->returned & FL_RETURN_END )
-            sp->old_fval = sp->f_val;
     }
 }
 
@@ -369,6 +336,9 @@ fl_create_spinner( int          type,
     fl_set_button_mouse_buttons( sp->up,   1 );
     fl_set_button_mouse_buttons( sp->down, 1 );
 
+    fl_set_object_lcolor( sp->up,   FL_BLUE );
+    fl_set_object_lcolor( sp->down, FL_BLUE );
+
     sp->i_val  = sp->old_ival = 0;
     sp->i_min  = - 10000;
     sp->i_max  = 10000;
@@ -389,6 +359,10 @@ fl_create_spinner( int          type,
 
     fl_set_input( sp->input, type == FL_INT_SPINNER ? "0" : "0.0" );
 
+    /* Set default return policy for a spinner object */
+
+    fl_set_object_return( obj, FL_RETURN_CHANGED );
+
     return obj;
 }
 
@@ -405,10 +379,6 @@ fl_add_spinner( int          type,
                 const char * label )
 {
     FL_OBJECT *obj = fl_create_spinner( type, x, y, w, h, label );
-
-    /* Set default return policy for a spinner object */
-
-    fl_set_object_return( obj, FL_RETURN_END_CHANGED );
 
     fl_add_object( fl_current_form, obj );
 
@@ -701,8 +671,8 @@ set_spinner_return( FL_OBJECT * obj,
 
     obj->how_return = when;
     fl_set_object_return( sp->input, FL_RETURN_ALWAYS );
-    fl_set_object_return( sp->up, FL_RETURN_CHANGED );
-    fl_set_object_return( sp->down, FL_RETURN_CHANGED );
+    fl_set_object_return( sp->up,   FL_RETURN_CHANGED | FL_RETURN_END );
+    fl_set_object_return( sp->down, FL_RETURN_CHANGED | FL_RETURN_END );
 }
 
 

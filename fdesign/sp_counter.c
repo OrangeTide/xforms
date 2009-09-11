@@ -53,7 +53,7 @@ get_counter_spec_fdform( void )
     {
         cnt_attrib = create_form_counterattrib( );
 
-        set_up_how_return_menu( cnt_attrib->returnsetting );
+        setup_how_return_menu( cnt_attrib->returnsetting );
         fl_set_menu_item_mode( cnt_attrib->returnsetting, 5,
                                FL_PUP_BOX | FL_PUP_GRAY );
         fl_set_menu_item_mode( cnt_attrib->returnsetting, 6,
@@ -105,7 +105,6 @@ set_counter_attrib( FL_OBJECT * ob )
 
     fl_set_counter_precision( cnt_attrib->prec, 0 );
     fl_set_counter_step( cnt_attrib->prec, 1, 2 );
-    fl_set_counter_bounds( cnt_attrib->prec, 0, 6 );
 
     if ( ob->type == FL_SIMPLE_COUNTER )
         fl_hide_object( cnt_attrib->step2 );

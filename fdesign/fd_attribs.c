@@ -659,7 +659,7 @@ set_attribs( FL_OBJECT  * obj,
              int          col2,
              int          lcol,
              int          align,
-             float        lsize,
+             int          lsize,
              int          lstyle,
              const char * label )
 {
@@ -673,6 +673,22 @@ set_attribs( FL_OBJECT  * obj,
     fl_set_object_label( obj, label );
 
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+    /* Some extra adjustments for spinner objects (this is a hack but
+       avoiding it would require a complete change of how fdesign works) */
+
+    if ( obj->objclass == FL_SPINNER )
+    {
+        FL_OBJECT *subobj = fl_get_spinner_input( obj );
+
+        subobj->col1 = col1;
+        subobj->col2 = col2;
+
+        subobj->lstyle = lstyle;
+        subobj->lsize  = lsize; 
+
+        fli_handle_object( subobj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+   }
 }
 
 

@@ -570,11 +570,18 @@ To change the color of the input text or the cursor use
 @findex fl_set_input_color()
 @anchor{fl_set_input_color()}
 @example
-void fl_set_input_color(FL_OBJECT *obj, int tcol, int ccol);
+void fl_set_input_color(FL_OBJECT *obj, FL_COLOR tcol, FL_COLOR ccol);
 @end example
 @noindent
 Here @code{tcol} indicates the color of the text and @code{ccol} is
 the color of the cursor.
+
+If you want to know the colors of the text and cursor use
+@findex fl_get_input_color()
+@anchor{fl_get_input_color()}
+@example
+void fl_get_input_color(FL_OBJECT *obj, FL_COLOR *tcol, FL_COLOR *ccol);
+@end example
 
 By default, the scrollbar size is dependent on the initial size of the
 input box. To change the size of the scrollbars, use the following
@@ -586,8 +593,17 @@ void fl_set_input_scrollbarsize(FL_OBJECT *obj, int hh, int vw);
 @end example
 @noindent
 where @code{hh} is the horizontal scrollbar height and @code{vw} is
-the vertical scrollbar width in pixels. The default scrollbar types
-are @code{@ref{FL_HOR_THIN_SCROLLBAR}} and
+the vertical scrollbar width in pixels.
+
+To determine the current settings for the orizontal scrollbar height
+and the vertical scrollbar width use
+@findex fl_get_input_scrollbarsize()
+@anchor{fl_get_input_scrollbarsize()}
+@example
+void fl_get_input_scrollbarsize(FL_OBJECT *obj, int *hh, int *vw);
+@end example
+
+The default scrollbar types are @code{@ref{FL_HOR_THIN_SCROLLBAR}} and
 @code{@ref{FL_VERT_THIN_SCROLLBAR}}. There are two ways you can change
 the default. One way is to use @code{@ref{fl_set_defaults()}} or
 @code{@ref{fl_set_scrollbar_type()}} to set the application wide
