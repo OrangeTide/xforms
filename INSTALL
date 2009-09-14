@@ -65,7 +65,7 @@ The simplest way to compile this package is:
      with the distribution.
 
   6. To create the documenation in PDF or HTML format 'cd' into the
-     'doc' subdirectory and type 'make PDF' or 'make HTML'. For that
+     'doc' subdirectory and type 'make pdf' or 'make html'. For that
      'texinfo' or 'texi2html' must be installed.
 
 Compilers and Options
