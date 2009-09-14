@@ -42,10 +42,10 @@
 
 typedef struct
 {
-    long sec;
-    long offset;
-    int  nstep;
-    int  am_pm;         /* 12hr clock */
+    time_t sec;
+    long   offset;
+    int    nstep;
+    int    am_pm;         /* 12hr clock */
 } SPEC;
 
 
@@ -115,7 +115,7 @@ draw_hand( FL_Coord x,
 }
 
 
-static int hours,       /* hr: 0-23, minutes:0-59 */
+static int hours,
            minutes,
            seconds;
 
@@ -138,8 +138,10 @@ show_hands( FL_Coord x,
 
     ra = fact * ( 180 + 30 * hours + 0.5 * minutes );
     draw_hand( x, y, w, h, hourhand, ra, fcolor, bcolor );
+
     ra = fact * ( 180 + 6 * minutes + seconds / 10 );
     draw_hand( x, y, w, h, minhand, ra, fcolor, bcolor );
+
     ra = fact * ( 180 + 6 * seconds );
     draw_hand( x, y, w, h, sechand, ra, fcolor, bcolor );
 }
@@ -206,7 +208,7 @@ draw_clock( int      type  FL_UNUSED_ARG,
 static void
 draw_digitalclock( FL_OBJECT * ob )
 {
-    char buf[ 13 ];
+    char buf[ 12 ];
     SPEC *sp = ob->spec;
 
     if ( sp->am_pm )
@@ -249,7 +251,7 @@ handle_clock( FL_OBJECT * ob,
 
         case FL_DRAWLABEL :
             if ( ! updating )
-                fl_drw_text_beside( ob->align & ~FL_ALIGN_INSIDE,
+                fl_drw_text_beside( ob->align & ~ FL_ALIGN_INSIDE,
                                     ob->x, ob->y, ob->w, ob->h,
                                     ob->lcol, ob->lstyle, ob->lsize,
                                     ob->label );
@@ -257,23 +259,23 @@ handle_clock( FL_OBJECT * ob,
             break;
 
         case FL_STEP:
-            /* clock has resolution of about 1 sec. FL_STEP is sent about
+            /* Clock has a resolution of about 1 sec. FL_STEP is sent about
                every 0.05 sec. If there are more than 10 clocks, we might run
                into trouble */
 
             if ( ++sp->nstep & 1 )
                 break;
 
-            ticks = time( 0 );
-            if ( sp->sec != ticks )
+            sp->nstep = 0;
+            ticks = time( 0 ) + sp->offset;
+            if ( ticks != sp->sec )
             {
-                updating = 1;
-                sp->sec = ticks;
-                ticks += sp->offset;
-                timeofday = localtime( &ticks );
-                seconds = timeofday->tm_sec;
-                hours = timeofday->tm_hour;
-                minutes = timeofday->tm_min;
+                updating   = 1;
+                sp->sec    = ticks;
+                timeofday  = localtime( &ticks );
+                seconds    = timeofday->tm_sec;
+                hours      = timeofday->tm_hour;
+                minutes    = timeofday->tm_min;
                 fl_redraw_object( ob );
             }
             break;
@@ -362,8 +364,7 @@ fl_get_clock( FL_OBJECT * ob,
     time_t ticks;
     struct tm *tm;
 
-    ticks = time( 0 );
-    ticks += sp->offset;
+    ticks = time( 0 ) + sp->offset;
     tm = localtime( &ticks );
     *h = tm->tm_hour;
     *m = tm->tm_min;

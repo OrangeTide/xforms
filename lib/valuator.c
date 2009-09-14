@@ -46,7 +46,6 @@ fli_init_valuator( FL_OBJECT * ob )
 
     if ( ! sp )
         ob->spec = sp = fl_calloc( 1, sizeof *sp );
-    ob->how_return = FL_RETURN_CHANGED;
 
     sp->min       = 0.0;
     sp->max       = 1.0;
@@ -97,6 +96,7 @@ fli_valuator_handle_drag( FL_OBJECT * ob,
                           double      value )
 {
     FLI_VALUATOR_SPEC *sp = ob->spec;
+    int ret = FL_RETURN_NONE;
 
     value = fli_valuator_round_and_clamp( ob, value );
 
@@ -105,11 +105,10 @@ fli_valuator_handle_drag( FL_OBJECT * ob,
         sp->val = value;
         sp->draw_type = VALUE_DRAW;
         fl_redraw_object( ob );
-        return    ob->how_return == FL_RETURN_CHANGED
-               || ob->how_return == FL_RETURN_ALWAYS;
+        ret |= FL_RETURN_CHANGED;
     }
 
-    return ob->how_return == FL_RETURN_ALWAYS;
+    return ret;
 }
 
 
@@ -121,23 +120,23 @@ fli_valuator_handle_release( FL_OBJECT * ob,
                              double      value )
 {
     FLI_VALUATOR_SPEC *sp = ob->spec;
-
+    int ret = FL_RETURN_END;
+    
     value = fli_valuator_round_and_clamp( ob, value );
 
     if ( value != sp->val )
     {
         sp->val = value;
         sp->draw_type = VALUE_DRAW;
-        fl_redraw_object(ob);
-        if ( ob->how_return == FL_RETURN_CHANGED)
-            return 1;
+        fl_redraw_object( ob );
+        if ( ! ( ob->how_return & FL_RETURN_END_CHANGED ) )
+            ret |= FL_RETURN_CHANGED;
     }
 
-    if ( sp->start_val != sp->val && ob->how_return == FL_RETURN_END_CHANGED )
-        return 1;
+    if ( sp->start_val != sp->val && ob->how_return & FL_RETURN_END_CHANGED )
+        ret |= FL_RETURN_CHANGED;
 
-    return    ob->how_return == FL_RETURN_ALWAYS
-           || ob->how_return == FL_RETURN_END;
+    return ret;
 }
 
 

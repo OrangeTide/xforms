@@ -44,7 +44,7 @@
 #define M_PI    3.14159265359
 #endif
 
-static const double arc = ( M_PI * 0.48 );  /* about 90 degrees    */
+static const double arc = ( M_PI * 0.48 );  /* about 90 degrees */
 
 #define GRID       0.190    /* angular grid for ridges */
 #define NEAR       600.0    /* near plane distance     */
@@ -88,7 +88,7 @@ draw( FL_OBJECT * ob )
     {
         double extra = h2 * ( NEAR / ( NEAR - h2 ) - 0.96 );
 
-        /* (fake) depth-cue */
+        /* (Fake) depth-cue */
 
         fl_rectf( x, y + 1, w, h - 2, FL_DARKER_COL1 );
         fl_rectf( x, yo - ob->h / 4, w, ob->h / 2, FL_COL1 );
@@ -126,16 +126,16 @@ draw( FL_OBJECT * ob )
             }
         }
 
-        /* bottom */
+        /* Bottom */
 
         y = ob->y + absbw;
         fl_rectf( x - 1, ob->y + ob->h - 6, w, 3, FL_RIGHT_BCOL );
 
-        /* top */
+        /* Top */
 
         fl_rectf( x - 1, y, w, 3, FL_RIGHT_BCOL );
 
-        /* left */
+        /* Left */
 
         fl_line( x - 1, y, x - 1, y + h - 1, FL_BLACK );
 
@@ -143,7 +143,7 @@ draw( FL_OBJECT * ob )
 
         fl_rectf( x + w - 1, y, 2, h, FL_RIGHT_BCOL );
 
-        /* highlight */
+        /* Highlight */
 
         fl_line( x + 1, yo - h2 + 10, x + 1, yo + h2 - 10, FL_LEFT_BCOL );
     }
@@ -192,23 +192,23 @@ draw( FL_OBJECT * ob )
             w = ob->w - 2 * absbw;
             h = ob->h - 2 * absbw;
 
-            /* top shadow */
+            /* Top shadow */
 
             fl_line( x, y - 1, x + w - 2, y - 1, FL_BLACK );
             fl_line( x, y, x + w - 4, y, FL_BLACK );
 
-            /* bottom shadow */
+            /* Bottom shadow */
 
             fl_line( x + 5, y + h - 2, x + w - 4, y + h - 2, FL_BLACK );
             fl_line( x, y + h - 1, x + w - 2, y + h - 1, FL_BLACK );
             fl_line( x, y + h, x + w - 2, y + h, FL_BLACK );
 
-            /* left & right */
+            /* Left & right */
 
             fl_rectf( x, y - 1, 3, h + 1, FL_RIGHT_BCOL );
             fl_rectf( x + w - 4, y - 1, 3, h + 1, FL_RIGHT_BCOL );
 
-            /* high light */
+            /* High light */
 
             fl_line( x0 - w2 + 11, y + 1, x0 + w2 - 11, y + 1, FL_TOP_BCOL );
         }
@@ -223,18 +223,19 @@ draw( FL_OBJECT * ob )
  ***************************************/
 
 static int
-handle( FL_OBJECT * ob,
-        int         ev,
-        int         mx,
-        int         my,
-        int         key,
-        void *      xev  FL_UNUSED_ARG )
+handle_thumbwheel( FL_OBJECT * ob,
+                   int         ev,
+                   int         mx,
+                   int         my,
+                   int         key,
+                   void *      xev  FL_UNUSED_ARG )
 {
     FLI_THUMBWHEEL_SPEC *sp = ob->spec;
     int cur_pos,
         old_pos;
     double value;
     double step = sp->step != 0.0 ? sp->step : DEFSTEP;
+    int ret = FL_RETURN_NONE;
 
     switch ( ev )
     {
@@ -266,7 +267,8 @@ handle( FL_OBJECT * ob,
             value = sp->val + step * ( cur_pos - old_pos );
             sp->old_mx = mx;
             sp->old_my = my;
-            return fli_valuator_handle_drag( ob, value );
+            ret |= fli_valuator_handle_drag( ob, value );
+            break;
 
         case FL_KEYPRESS:
             value = sp->val;
@@ -280,7 +282,8 @@ handle( FL_OBJECT * ob,
                 value = sp->val + step;
             else if ( IsLeft( key ) && ob->type == FL_HOR_THUMBWHEEL )
                 value = sp->val - step;
-            return fli_valuator_handle_release( ob, value );
+            ret |= fli_valuator_handle_release( ob, value );
+            break;
 
         case FL_RELEASE:
             if (    ! ( key == FL_MBUTTON1
@@ -294,10 +297,11 @@ handle( FL_OBJECT * ob,
                 value = sp->val + ( key == FL_MBUTTON4 ? step : -step );
             else
                 value = sp->val;
-            return fli_valuator_handle_release( ob, value );
+            ret |= fli_valuator_handle_release( ob, value );
+            break;
     }
 
-    return 0;
+    return ret;
 }
 
 
@@ -461,7 +465,7 @@ fl_set_thumbwheel_return( FL_OBJECT * obj,
 
 
 /***************************************
- * creates a thumbwheel object *
+ * Creates a thumbwheel object *
  ***************************************/
 
 FL_OBJECT *
@@ -472,26 +476,30 @@ fl_create_thumbwheel( int          type,
                       FL_Coord     h,
                       const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
     FLI_THUMBWHEEL_SPEC *sp;
 
-    ob = fl_make_object( FL_THUMBWHEEL, type, x, y, w, h, label, handle );
-    ob->col1       = FL_THUMBWHEEL_COL1;
-    ob->col2       = FL_THUMBWHEEL_COL2;
-    ob->lcol       = FL_THUMBWHEEL_LCOL;
-    ob->align      = FL_THUMBWHEEL_ALIGN;
-    ob->boxtype    = FL_THUMBWHEEL_BOXTYPE;
-    ob->wantkey    = FL_KEY_SPECIAL;
+    obj = fl_make_object( FL_THUMBWHEEL, type, x, y, w, h, label,
+                          handle_thumbwheel );
+    obj->col1    = FL_THUMBWHEEL_COL1;
+    obj->col2    = FL_THUMBWHEEL_COL2;
+    obj->lcol    = FL_THUMBWHEEL_LCOL;
+    obj->align   = FL_THUMBWHEEL_ALIGN;
+    obj->boxtype = FL_THUMBWHEEL_BOXTYPE;
+    obj->wantkey = FL_KEY_SPECIAL;
+    obj->spec    = NULL;
 
-    sp = fli_init_valuator( ob );
+    sp = fli_init_valuator( obj );
     sp->step = DEFSTEP;
 
-    return ob;
+    fl_set_object_return( obj, FL_RETURN_CHANGED );
+
+    return obj;
 }
 
 
 /***************************************
- * Adds an object
+ * Adds a thumbwheel object
  ***************************************/
 
 FL_OBJECT *

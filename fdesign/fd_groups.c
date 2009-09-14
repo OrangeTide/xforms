@@ -117,7 +117,8 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if (    ! isascii( ( unsigned char ) *s )
          || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        fl_show_alert( "Error", "Invalid C identifier specified for group "
+                       "name:", s, 0 );
         goto get_changed_group_name;
     }
 
@@ -128,7 +129,8 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         if (    ! isascii( ( unsigned char ) *sp )
               || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
         {
-            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            fl_show_alert( "Error", "Invalid C identifier specified for group "
+                           "name:", s, 0 );
             goto get_changed_group_name;
         }
         sp++;

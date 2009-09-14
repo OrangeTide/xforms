@@ -77,7 +77,7 @@ draw_labelbutton( FL_OBJECT * ob )
 
 
 /***************************************
- * creates an object
+ * Creates a labelbutton object
  ***************************************/
 
 FL_OBJECT *
@@ -88,23 +88,23 @@ fl_create_labelbutton( int          type,
                        FL_Coord     h,
                        const char * label)
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
     fl_add_button_class( FL_LABELBUTTON, draw_labelbutton, NULL );
-    ob = fl_create_generic_button( FL_LABELBUTTON, type, x, y, w, h, label );
+    obj = fl_create_generic_button( FL_LABELBUTTON, type, x, y, w, h, label );
 
-    ob->boxtype = FL_FLAT_BOX;
-    ob->col1    = FL_RED;
-    ob->col2    = FL_BLUE;
-    ob->align   = FL_LIGHTBUTTON_ALIGN;
-    ob->lcol    = FL_LIGHTBUTTON_LCOL;
+    obj->boxtype = FL_FLAT_BOX;
+    obj->col1    = FL_RED;
+    obj->col2    = FL_BLUE;
+    obj->align   = FL_LIGHTBUTTON_ALIGN;
+    obj->lcol    = FL_LIGHTBUTTON_LCOL;
 
-    return ob;
+    return obj;
 }
 
 
 /***************************************
- * Adds an object
+ * Adds a labelbutton object
  ***************************************/
 
 FL_OBJECT *
@@ -115,10 +115,11 @@ fl_add_labelbutton( int          type,
                     FL_Coord     h,
                     const char * label)
 {
-    FL_OBJECT *ob = fl_create_labelbutton( type, x, y, w, h, label );
+    FL_OBJECT *obj = fl_create_labelbutton( type, x, y, w, h, label );
 
-    fl_add_object( fl_current_form, ob );
-    return ob;
+    fl_add_object( fl_current_form, obj );
+
+    return obj;
 }
 
 

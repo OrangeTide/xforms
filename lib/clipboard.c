@@ -45,7 +45,7 @@ typedef struct {
     FL_LOSE_SELECTION_CB   lose_callback;
     FL_SELECTION_CB        got_it_callback;
 
-    /* the following not really used */
+    /* the following are not used */
 
     void                 * losecb_data;
     void                 * gotitcb_data;
@@ -220,7 +220,7 @@ handle_clipboard_event( void * event )
     }
     else if ( what == SelectionNotify && cp->req_ob )
     {
-        /* our request went thru. Go and get it */
+        /* Our request went thru. Go and get it */
 
         Atom ret_type;
         int ret_format;
@@ -277,7 +277,7 @@ handle_clipboard_event( void * event )
     }
     else if ( SelectionRequest )
     {
-        /* someone wants our selection */
+        /* Someone wants our selection */
 
         M_warn( "handle_clipboard_event", "SelectionRequest" );
 
@@ -287,7 +287,7 @@ handle_clipboard_event( void * event )
             return -1;
         }
 
-        /* now sets the things to the requestor */
+        /* Now sets the things to the requestor */
 
         sev.type = SelectionNotify;
         sev.display = sreq->display;

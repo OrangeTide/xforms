@@ -250,7 +250,7 @@ FL_INPUTVALIDATOR fl_set_input_filter(FL_OBJECT *obj,
 The function @code{filter} is called whenever a new (regular)
 character is entered. @code{old} is the string in the input field
 before the newly typed character @code{c} was added to form the new
-strin @code{cur}. If the new character is not an acceptable character
+string @code{cur}. If the new character is not an acceptable character
 for the input field, the filter function should return
 @tindex FL_INVALID
 @code{FL_INVALID}
@@ -258,9 +258,10 @@ otherwise
 @tindex FL_VALID
 @code{FL_VALID}. If @code{FL_INVALID} is returned, the new character
 is discarded and the input field remains unmodified. The function
-returns the old filter. Unlike the built-in filters, keyboard bell is
-not sounded when @code{FL_INVALID} is received. To sound the bell,
-return
+returns the old filter. While the built-in filters also sound the
+keyboard bell, this don't happpens if a custn filter only returns
+@code{FL_INVALID}. To also sound the keyboard bell logically or it
+with
 @tindex FL_RINGBELL
 @code{FL_INVALID | FL_RINGBELL}.
 
@@ -273,9 +274,9 @@ just prior to returning the object with the argument @code{c} (for the
 newly entered character) set to zero. If the validator returns
 @code{FL_INVALID} the object is not returned to the application
 program, but input focus can change to the next input field. If the
-return value is @code{FL_INVALID | FL_RINGBELL}, the keyboard bell is
-sound and the object is not returned to the application program.
-Further, the input focus is not changed.
+return value @code{FL_INVALID | FL_RINGBELL}, the keyboard bell is
+sound and the object is not returned to the application program and
+the input focus remains in the object.
 
 
 To facilitate specialized input fields using validators, the following

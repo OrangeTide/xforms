@@ -238,7 +238,7 @@ fl_make_object( int            objclass,
 
     obj->lstyle             = FL_NORMAL_STYLE;
     obj->shortcut           = fl_calloc( 1, sizeof( long ) );
-    obj->shortcut[ 0 ]      = 0;
+    *obj->shortcut          = 0;
     obj->active             = 1;
     obj->visible            = FL_VISIBLE;
     obj->object_callback    = NULL;
@@ -476,7 +476,7 @@ fl_delete_object( FL_OBJECT * obj )
     {
         FL_OBJECT *o;
 
-        for ( o = obj->next; o != NULL; o = o->next )
+        for ( o = obj->next; o; o = o->next )
         {
             fl_delete_object( o );
             if ( o->objclass == FL_END_GROUP )
@@ -491,7 +491,7 @@ fl_delete_object( FL_OBJECT * obj )
     {
         FL_OBJECT *o;
 
-        for ( o = obj->form->first; o != NULL && o != obj; o = o->next )
+        for ( o = obj->form->first; o && o != obj; o = o->next )
             if ( o->group_id == obj->group_id && o->objclass != FL_BEGIN_GROUP )
                 break;
 
@@ -579,7 +579,7 @@ fl_free_object( FL_OBJECT * obj )
         FL_OBJECT *o,
                   *on;
 
-        for ( o = obj->next; o != NULL && o->objclass != FL_END_GROUP; o = on )
+        for ( o = obj->next; o && o->objclass != FL_END_GROUP; o = on )
         {
             on = o->next;
 
@@ -603,7 +603,7 @@ fl_free_object( FL_OBJECT * obj )
     {
         FL_OBJECT *o;
 
-        for ( o = obj->form->first; o != NULL && o != obj; o = o->next )
+        for ( o = obj->form->first; o && o != obj; o = o->next )
             if ( o->group_id == obj->group_id && o->objclass != FL_BEGIN_GROUP )
                 break;
 
@@ -1519,7 +1519,7 @@ fli_get_underline_pos( const char * label,
 
     /* Find where the match occurs */
 
-    if ( c == sc[ 0 ] )
+    if ( c == *sc )
         p = strchr( label, c );
     else if ( ! ( p = strchr( label, c ) ) )
         p = strchr( label, islower( c ) ? toupper( c ) : tolower( c ) );
@@ -1552,7 +1552,7 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 
     if ( ! sstr || ! *sstr )
     {
-        obj->shortcut[ 0 ] = 0;
+        *obj->shortcut = 0;
         return;
     }
 
@@ -1563,8 +1563,8 @@ fl_set_object_shortcut( FL_OBJECT  * obj,
 
     if (    ! showit
          || ! obj->label
-         || ! obj->label[ 0 ]
-         || obj->label[ 0 ] == '@' )
+         || ! *obj->label
+         || *obj->label == '@' )
         return;
 
     /* Find out where to underline */

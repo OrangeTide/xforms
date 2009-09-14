@@ -74,16 +74,18 @@ fl_create_frame( int          type,
                  FL_Coord     h,
                  const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
-    ob = fl_make_object( FL_FRAME, type, x, y, w, h, label, handle_frame );
-    ob->boxtype = FL_NO_BOX;
-    ob->col1 = FL_FRAME_COL1;
-    ob->col2 = FL_FRAME_COL2;
-    ob->lcol = FL_FRAME_LCOL;
-    ob->align = FL_ALIGN_CENTER;
-    ob->active = 0;
-    return ob;
+    obj = fl_make_object( FL_FRAME, type, x, y, w, h, label, handle_frame );
+
+    obj->boxtype = FL_NO_BOX;
+    obj->col1    = FL_FRAME_COL1;
+    obj->col2    = FL_FRAME_COL2;
+    obj->lcol    = FL_FRAME_LCOL;
+    obj->align   = FL_ALIGN_CENTER;
+    obj->active  = 0;
+
+    return obj;
 }
 
 
@@ -98,11 +100,11 @@ fl_add_frame( int          type,
               FL_Coord     h,
               const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj = fl_create_frame( type, x, y, w, h, label );
 
-    ob = fl_create_frame( type, x, y, w, h, label );
-    fl_add_object( fl_current_form, ob );
-    return ob;
+    fl_add_object( fl_current_form, obj );
+
+    return obj;
 }
 
 

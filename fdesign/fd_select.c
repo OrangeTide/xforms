@@ -1482,7 +1482,8 @@ group_selection( void )
     if (    ! isascii( ( unsigned char ) *s )
          || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        fl_show_alert( "Error", "Invalid C identifier specified for group "
+                       "name:", s, 0 );
         goto get_new_group_name;
     }
 
@@ -1493,7 +1494,8 @@ group_selection( void )
         if (    ! isascii( ( unsigned char ) *sp )
              || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
         {
-            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            fl_show_alert( "Error", "Invalid C identifier specified for group "
+                           "name:", s, 0 );
             goto get_new_group_name;
         }
         sp++;

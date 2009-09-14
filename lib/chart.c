@@ -584,7 +584,7 @@ handle_chart( FL_OBJECT * ob,
 
 
 /***************************************
- * creates an object
+ * creates a chart object
  ***************************************/
 
 FL_OBJECT *
@@ -595,33 +595,53 @@ fl_create_chart( int          type,
                  FL_Coord     h,
                  const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
     FLI_CHART_SPEC *sp;
     int i;
 
-    ob = fl_make_object( FL_CHART, type, x, y, w, h, label, handle_chart );
-    ob->boxtype = FL_CHART_BOXTYPE;
-    ob->col1 = FL_CHART_COL1;
-    ob->col2 = FL_CHART_COL1;
-    ob->align = FL_CHART_ALIGN;
-    ob->lcol = FL_CHART_LCOL;
+    obj = fl_make_object( FL_CHART, type, x, y, w, h, label, handle_chart );
 
-    ob->active = 0;
+    obj->boxtype = FL_CHART_BOXTYPE;
+    obj->col1    = FL_CHART_COL1;
+    obj->col2    = FL_CHART_COL1;
+    obj->align   = FL_CHART_ALIGN;
+    obj->lcol    = FL_CHART_LCOL;
+    obj->active  = 0;
 
-    sp = ob->spec = fl_calloc( 1, sizeof *sp );
+    sp = obj->spec = fl_calloc( 1, sizeof *sp );
+
     sp->maxnumb = 512;
-
     sp->entries = fl_calloc( sp->maxnumb + 1, sizeof *sp->entries );
     for ( i = 0; i <= sp->maxnumb; i++ )
         sp->entries[ i ].val = 0.0;
 
     sp->autosize = 1;
-    sp->min = sp->max = 0.0;
-    sp->lsize = FL_TINY_SIZE;
-    sp->lstyle = FL_NORMAL_STYLE;
-    sp->lcol = FL_BLACK;
+    sp->min      = sp->max = 0.0;
+    sp->lsize    = FL_TINY_SIZE;
+    sp->lstyle   = FL_NORMAL_STYLE;
+    sp->lcol     = FL_BLACK;
 
-    return ob;
+    return obj;
+}
+
+
+/***************************************
+ * Adds a chart object
+ ***************************************/
+
+FL_OBJECT *
+fl_add_chart( int          type,
+              FL_Coord     x,
+              FL_Coord     y,
+              FL_Coord     w,
+              FL_Coord     h,
+              const char * label )
+{
+    FL_OBJECT *obj = fl_create_chart( type, x, y, w, h, label );
+
+    fl_add_object( fl_current_form, obj );
+
+    return obj;
 }
 
 
@@ -674,26 +694,6 @@ fl_set_chart_lcolor( FL_OBJECT * ob,
 
 
 /***************************************
- * Adds an object
- ***************************************/
-
-FL_OBJECT *
-fl_add_chart( int          type,
-              FL_Coord     x,
-              FL_Coord     y,
-              FL_Coord     w,
-              FL_Coord     h,
-              const char * label )
-{
-    FL_OBJECT *ob;
-
-    ob = fl_create_chart( type, x, y, w, h, label );
-    fl_add_object( fl_current_form, ob );
-    return ob;
-}
-
-
-/***************************************
  * Clears the contents of a chart
  ***************************************/
 
@@ -740,11 +740,13 @@ fl_add_chart_value( FL_OBJECT  * ob,
     sp->entries[ sp->numb ].val = val;
     sp->entries[ sp->numb ].col = col;
     sp->entries[ sp->numb ].lcol = sp->lcol;
+
     if ( str )
         fli_sstrcpy( sp->entries[sp->numb ].str, str, MAX_CHART_LABEL_LEN );
     else
         *sp->entries[sp->numb ].str = '\0';
     sp->numb++;
+
     fl_redraw_object( ob );
 }
 
@@ -786,10 +788,12 @@ fl_insert_chart_value( FL_OBJECT  * ob,
 
     sp->entries[ indx - 1 ].val = val;
     sp->entries[ indx - 1 ].col = col;
+
     if ( str != NULL )
         fli_sstrcpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
     else
         *sp->entries[ indx - 1 ].str = '\0';
+
     fl_redraw_object( ob );
 }
 
@@ -812,10 +816,12 @@ fl_replace_chart_value( FL_OBJECT  * ob,
 
     sp->entries[ indx - 1 ].val = val;
     sp->entries[ indx - 1 ].col = col;
+
     if ( str )
         fli_sstrcpy( sp->entries[ indx - 1 ].str, str, MAX_CHART_LABEL_LEN );
     else
         *sp->entries[ indx - 1 ].str = '\0';
+
     fl_redraw_object( ob );
 }
 

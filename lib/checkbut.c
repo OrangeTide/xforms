@@ -34,7 +34,7 @@
 
 
 /**************************************************************************
- * Check buttons
+ * Draws a check button
  **********************************************************************{*/
 
 static void
@@ -88,18 +88,18 @@ fl_create_checkbutton( int          type,
                        FL_Coord     h,
                        const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
     fl_add_button_class( FL_CHECKBUTTON, draw_checkbutton, 0 );
-    ob = fl_create_generic_button( FL_CHECKBUTTON, type, x, y, w, h, label );
+    obj = fl_create_generic_button( FL_CHECKBUTTON, type, x, y, w, h, label );
 
-    ob->boxtype = FL_CHECKBUTTON_BOXTYPE;
-    ob->col1    = FL_CHECKBUTTON_COL1;
-    ob->col2    = FL_CHECKBUTTON_COL2;
-    ob->align   = FL_CHECKBUTTON_ALIGN;
-    ob->lcol    = FL_CHECKBUTTON_LCOL;
+    obj->boxtype = FL_CHECKBUTTON_BOXTYPE;
+    obj->col1    = FL_CHECKBUTTON_COL1;
+    obj->col2    = FL_CHECKBUTTON_COL2;
+    obj->align   = FL_CHECKBUTTON_ALIGN;
+    obj->lcol    = FL_CHECKBUTTON_LCOL;
 
-    return ob;
+    return obj;
 }
 
 
@@ -114,10 +114,11 @@ fl_add_checkbutton( int          type,
                     FL_Coord     h,
                     const char * label )
 {
-    FL_OBJECT *ob = fl_create_checkbutton( type, x, y, w, h, label );
+    FL_OBJECT *obj = fl_create_checkbutton( type, x, y, w, h, label );
 
-    fl_add_object( fl_current_form, ob );
-    return ob;
+    fl_add_object( fl_current_form, obj );
+
+    return obj;
 }
 
 

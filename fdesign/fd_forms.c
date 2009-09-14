@@ -190,7 +190,8 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if (    ! isascii( ( unsigned char ) *s )
          || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        fl_show_alert( "Error", "Invalid C identifier specified for form "
+                       "name:", s, 0 );
         goto get_new_form_name;
     }
 
@@ -201,7 +202,8 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         if (    ! isascii( ( unsigned char ) *sp )
              || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
         {
-            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            fl_show_alert( "Error", "Invalid C identifier specified for form "
+                           "name:", s, 0 );
             goto get_new_form_name;
         }
         sp++;
@@ -256,7 +258,8 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if (    ! isascii( ( unsigned char ) *s )
          || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        fl_show_alert( "Error", "Invalid C identifier specified for form "
+                       "name:", s, 0 );
         goto get_changed_form_name;
     }
 
@@ -267,7 +270,8 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         if (    ! isascii( ( unsigned char ) *sp )
              || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
         {
-            fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+            fl_show_alert( "Error", "Invalid C identifier specified for form "
+                           "name:", s, 0 );
             goto get_changed_form_name;
         }
         sp++;

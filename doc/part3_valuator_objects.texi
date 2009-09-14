@@ -1447,13 +1447,17 @@ this type of spinners.
 @node Spinner Attributes
 @subsection Spinner Attributes
 
+Please don't change the boxtype from @code{@ref{FL_NO_BOX}}.
+
 The label color and font can be set using the normal
 @code{@ref{fl_set_object_lcol()}}, @code{@ref{fl_set_object_lsize()}}
-and @code{@ref{fl_set_object_lstyle()}} functions. The
-@code{@ref{fl_set_object_color()}} function does not influence the
-colors a spinner object is drawn.
+and @code{@ref{fl_set_object_lstyle()}} functions. The color of the
+input field of a spinner object can be set via using
+@code{@ref{fl_set_object_color()}} where the first color argument
+(@code{col1}) controls the color of the input field when it is not
+selected and the second (@code{col2}) is the color when selected.
 
-Instead of creating a plethora of functions to influence all the
+Instead of creating a plethora of functions to influence all the other
 aspects of how the spinner is drawn (colors, font types etc.) the user
 is given direct access to the sub-objects of a spinner. To this end
 three functions exist:
@@ -1472,7 +1476,7 @@ FL_OBJECT *fl_get_spinner_down_button(FL_OBJECT *obj);
 They return the addresses of the objects the spinner object is made up
 from and those then can be used to set or query the way the individual
 components are drawn. The addresses of these sub-objects shouldn't be
-used for any other purposes, especially their callback function should
+used for any other purposes, especially their callback function may
 never be changed!
 
 

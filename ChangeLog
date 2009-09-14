@@ -1,3 +1,21 @@
+2009-09-14 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/thumwheel.c, lib/validator.c: Fixed return
+	behaviour of thumbwheel.
+
+2009-09-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: Further problems with beep and
+	input objects removed.
+
+2009-09-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/sp_spinner.c: Added forgotten output to
+	C file for setting colors and text size and style.
+
+	* lib/input.c: Removed beep on valid input into
+	FL_INT_INPUT and FL_FLOAT_INPUT objects.
+
 2009-09-11 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/flcolor.c, lib/include/Basic.h: New pre-defined

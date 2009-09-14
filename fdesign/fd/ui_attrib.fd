@@ -323,7 +323,7 @@ resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: cbnameobj
 callback: validate_cvar_name_cb
-argument: 0
+argument: 1
 
 --------------------
 class: FL_INPUT

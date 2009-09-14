@@ -159,7 +159,10 @@ fli_drw_string( int           horalign,
     char *str = fl_strdup( istr );
 
     if ( flx->win == None )
+    {
+        fl_safe_free( str );
         return 0;
+    }
 
     if ( ! startx )
         extend_workmem( nlines = LINES );
@@ -178,16 +181,13 @@ fli_drw_string( int           horalign,
     /* Set clipping if required  */
 
     if ( clip > 0 )
-    {
-        fprintf( stderr, "Setting clip to %d %d %d %d\n", x, y, w, h );
         fl_set_text_clipping( x, y, w, h );
-    }
 
     /* Split string into lines  */
 
-    lines[ 0 ] = str;
-    start[ 0 ] = 0;
-    slen[ 0 ] = 0;
+    *lines = str;
+    *start = 0;
+    *slen = 0;
     lnumb = 1;
     i = 0;
 
@@ -224,6 +224,7 @@ fli_drw_string( int           horalign,
     /* using fl_fheight etc. is not theorectically correct since it is the
        max height. For lines that do not have desc, we are overestimating
        the height of the string. */
+
     /* Calculate start FL_coordinates of lines  */
 
     cdelta = CDELTA;

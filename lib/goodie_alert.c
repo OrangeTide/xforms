@@ -153,8 +153,8 @@ show_it( const char * title,
         fl_free_form( fd_alert->form );
         fd_alert = NULL;
     }
-    else
-        fl_deactivate_all_forms( );
+
+    fl_deactivate_all_forms( );
 
     fd_alert = create_alert( title, msg );
 

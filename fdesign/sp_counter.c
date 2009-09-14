@@ -31,6 +31,7 @@
 #endif
 
 #include "include/forms.h"
+#include <float.h>
 #include "fd_main.h"
 #include "fd_spec.h"
 #include "private/pcounter.h"
@@ -105,6 +106,7 @@ set_counter_attrib( FL_OBJECT * ob )
 
     fl_set_counter_precision( cnt_attrib->prec, 0 );
     fl_set_counter_step( cnt_attrib->prec, 1, 2 );
+    fl_set_counter_bounds( cnt_attrib->prec, 0, DBL_DIG );
 
     if ( ob->type == FL_SIMPLE_COUNTER )
         fl_hide_object( cnt_attrib->step2 );

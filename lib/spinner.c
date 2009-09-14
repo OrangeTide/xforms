@@ -36,8 +36,9 @@ set_spinner_return( FL_OBJECT *,
 
 /***************************************
  * This function got to be called before a redraw, at least if
- * the form the spinner belongs to has been resized. It calculates
- * the new positions and sizes of the objectes the spinner widget
+ * the form the spinner belongs to has been resized or proper-
+ * ties of the spinner have been changed. It calculates the
+ * new positions and sizes of the objectes the spinner widget
  * is made up from.
  ***************************************/
 
@@ -93,6 +94,13 @@ set_geom( FL_OBJECT * obj )
             fl_set_object_label( sp->down, "@4>" );
         }
     }
+
+    /* Also avoid changes of the box type and check for color changes
+       (that must be passed on to the child input object) */
+
+    obj->boxtype = FL_NO_BOX;
+    sp->input->col1 = obj->col1;
+    sp->input->col2 = obj->col2;
 }
 
 
@@ -100,10 +108,10 @@ set_geom( FL_OBJECT * obj )
  * There aren't many types of events a spinner object must directly
  * react to. If it got resized the positions and sizes of the child
  * objects it's made up from need to be recalculated, but that can
- * be deferred until it's dran anew. Drawing it works mostly auto-
+ * be deferred until it's redrawn. Drawing it works mostly auto-
  * matically except the redraw of the label. And on deletion just
  * the FLI_SPINNER_SPEC needs to be deallocated (the child objects
- * referenced there-in have already been deallocated before)
+ * referenced there-in have already been deallocated before).
  ***************************************/
 
 static int
@@ -338,6 +346,9 @@ fl_create_spinner( int          type,
 
     fl_set_object_lcolor( sp->up,   FL_BLUE );
     fl_set_object_lcolor( sp->down, FL_BLUE );
+
+    obj->col1 = sp->input->col1;
+    obj->col2 = sp->input->col2;
 
     sp->i_val  = sp->old_ival = 0;
     sp->i_min  = - 10000;
@@ -604,6 +615,8 @@ fl_set_spinner_precision( FL_OBJECT * obj,
 
     if ( prec > DBL_DIG )
         prec = DBL_DIG;
+    if ( prec < 0 )
+        prec = 0;
 
     if ( sp->prec != prec )
     {

@@ -37,9 +37,6 @@
 #include "private/pbrowser.h"
 
 
-#define MaxPixels( sp )   ( sp->maxpixels + 5 )
-
-
 /***************************************
  ***************************************/
 
@@ -220,8 +217,8 @@ get_geometry( FL_OBJECT * obj )
 
 /***************************************
  * The "dead area" is the small square in the lower right hand corner
- * of the browser (to the right of the horizontal slider and below the
- * vertical one) that shows up when both the sliders are displayed.
+ * of the browser (beside the horizontal slider and below the vertical
+ * one) that shows up when both sliders are displayed.
  ***************************************/
 
 static void
@@ -564,12 +561,12 @@ fl_create_browser( int          type,
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
 
-    /* In older versions scrollbars and browsers didn't return to the
-       application on e.g. fl_do_forms() but still a callback associated
-       with the object got called. To emulate the old behaviour we have
-       to set the return policy to default to FL_RETURN_NONE and only
-       change that to FL_RETURN_CHANGED when a callback is installed
-       (which is done in fl_set_object_callback()) */
+    /* In older versions scrollbars and browsers weren't return to e.g.
+       fl_do_forms() but still a callback associated with the object
+       got called. To emulate the old behaviour we have to set the
+       return policy to default to FL_RETURN_NONE and only change that
+       to FL_RETURN_CHANGED when a callback is installed (which is done
+       in fl_set_object_callback()) */
 
 #if ! USE_BWC_BS_HACK
     fl_set_object_return( ob, FL_RETURN_SELECTION | FL_RETURN_DESELECTION );
@@ -695,7 +692,7 @@ fl_get_browser_vscroll_callback( FL_OBJECT * ob )
 
 
 /***************************************
- * meant for the textbox to handle scroll callback properly
+ * Meant for the textbox to handle scroll callback properly
  ***************************************/
 
 void
@@ -910,13 +907,14 @@ fl_insert_browser_line( FL_OBJECT  * ob,
     FLI_TBOX_SPEC *tbsp = sp->tb->spec;
 
     /* When inserting into an empty browser or appending at then end
-       is to be treated exactly the same way as fl_add_browser_line()
+       it's treated exactly the same way as for fl_add_browser_line()
        (including interpretation of newline characters). */
 
     if ( tbsp->num_lines == 0 || linenumb > tbsp->num_lines )
         fli_tbox_insert_lines( sp->tb, linenumb - 1, newtext );
     else
         fli_tbox_insert_line( sp->tb, linenumb - 1, newtext );
+
     redraw_scrollbar( ob );
 }
 

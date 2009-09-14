@@ -36,6 +36,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <float.h>
 
 
 /* Give each component a name. parts are numbered 01 4 23, i.e. OB0 is the
@@ -134,8 +135,10 @@ draw_counter( FL_OBJECT * ob )
     {
         fl_drw_box( btype[ 4 ], sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
                     ob->col1, ob->bw );
+        fl_set_text_clipping( sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h );
         fl_drw_text( FL_ALIGN_CENTER, sp->xx[ 4 ], ob->y, sp->ww[ 4 ], ob->h,
                      ob->lcol, ob->lstyle, ob->lsize, str );
+        fl_unset_text_clipping( );
     }
 
     if ( sp->draw_type & OB2 )
@@ -162,7 +165,7 @@ draw_counter( FL_OBJECT * ob )
 
 
 /***************************************
- * buttons are numbered as 01 4 23
+ * Buttons are numbered as 01 4 23
  ***************************************/
 
 static void
@@ -679,6 +682,11 @@ fl_set_counter_precision( FL_OBJECT * ob,
                           int         prec )
 {
     FLI_COUNTER_SPEC *sp = ob->spec;
+
+    if ( prec < 0 )
+        prec = 0;
+    if ( prec > DBL_DIG )
+        prec = DBL_DIG;
 
     if ( sp->prec != prec )
     {

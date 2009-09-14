@@ -110,9 +110,10 @@ free_pixmap( FL_BUTTON_STRUCT * sp )
     fl_free_pixmap( sp->pixmap );
     fl_free_pixmap( sp->mask );
     cleanup_xpma_struct( psp->xpma );
-    psp->xpma = NULL;
+
+    psp->xpma  = NULL;
     sp->pixmap = None;
-    sp->mask = None;
+    sp->mask   = None;
 }
 
 
@@ -124,8 +125,9 @@ free_focuspixmap( FL_BUTTON_STRUCT * sp )
 {
     fl_free_pixmap( sp->focus_pixmap );
     fl_free_pixmap( sp->focus_mask );
+
     sp->focus_pixmap = None;
-    sp->focus_mask = None;
+    sp->focus_mask   = None;
 }
 
 
@@ -434,6 +436,7 @@ handle_pixmap( FL_OBJECT * obj,
 
 
 /***************************************
+ * Creates a pixmap object
  ***************************************/
 
 FL_OBJECT *
@@ -449,16 +452,19 @@ fl_create_pixmap( int          type,
     PixmapSPEC *psp;
 
     obj = fl_make_object( FL_PIXMAP, type, x, y, w, h, label, handle_pixmap );
+
     obj->boxtype = FL_BITMAP_BOXTYPE;
-    obj->col1 = FL_BITMAP_COL1;
-    obj->col2 = FL_BITMAP_COL2;
-    obj->lcol = FL_BITMAP_LCOL;
-    obj->align = FL_BITMAP_ALIGN;
-    obj->active = type != FL_NORMAL_BITMAP;
-    sp = obj->spec = fl_calloc( 1, sizeof *sp );
+    obj->col1    = FL_BITMAP_COL1;
+    obj->col2    = FL_BITMAP_COL2;
+    obj->lcol    = FL_BITMAP_LCOL;
+    obj->align   = FL_BITMAP_ALIGN;
+    obj->active  = type != FL_NORMAL_BITMAP;
+    obj->spec    = sp = fl_calloc( 1, sizeof *sp );
+
     sp->bits_w = 0;
-    psp = sp->cspecv = fl_calloc( 1, sizeof *psp );
-    psp->dx = psp->dy = 0;
+    sp->cspecv = psp = fl_calloc( 1, sizeof *psp );
+
+    psp->dx    = psp->dy = 0;
     psp->align = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;
 
     return obj;
@@ -466,7 +472,7 @@ fl_create_pixmap( int          type,
 
 
 /***************************************
- * Adds an object
+ * Adds a pixmap object
  ***************************************/
 
 FL_OBJECT *
@@ -480,6 +486,7 @@ fl_add_pixmap( int          type,
     FL_OBJECT *obj = fl_create_pixmap( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, obj );
+
     return obj;
 }
 
@@ -554,10 +561,13 @@ fl_set_pixmap_pixmap( FL_OBJECT * obj,
 
     sp = obj->spec;
     change_pixmap( sp, FL_ObjWin( obj ), id, mask, 0 ); /* 0 don't free old */
+
     if ( sp->pixmap != None )
         fl_get_winsize( sp->pixmap, &w, &h );
+
     sp->bits_w = w;
     sp->bits_h = h;
+
     fl_redraw_object( obj );
 }
 
@@ -770,6 +780,7 @@ fl_create_pixmapbutton( int          type,
 {
     FL_OBJECT *obj;
     static int class_init;
+    FL_BUTTON_STRUCT *sp;
     PixmapSPEC *psp;
 
     if ( ! class_init )
@@ -780,15 +791,21 @@ fl_create_pixmapbutton( int          type,
     }
 
     obj = fl_create_generic_button( FL_PIXMAPBUTTON, type, x, y, w, h, label );
+
     obj->boxtype = FL_PIXMAPBUTTON_BOXTYPE;
     obj->col1    = FL_PIXMAPBUTTON_COL1;
     obj->col2    = FL_PIXMAPBUTTON_COL2;
     obj->align   = FL_PIXMAPBUTTON_ALIGN;
     obj->lcol    = FL_PIXMAPBUTTON_LCOL;
-    psp = ( ( FL_BUTTON_STRUCT * ) obj->spec )->cspecv = fl_calloc( 1, sizeof *psp );
+
+    sp = obj->spec;   /* allocated in fl_create_generic_button() */
+
+    sp->cspecv = psp = fl_calloc( 1, sizeof *psp );
+
     psp->show_focus = 1;
-    psp->align = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;
-    psp->dx = psp->dy = 3;
+    psp->align      = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;
+    psp->dx         = psp->dy = 3;
+
     return obj;
 }
 
@@ -807,7 +824,9 @@ fl_add_pixmapbutton( int          type,
     FL_OBJECT *obj;
 
     obj = fl_create_pixmapbutton( type, x, y, w, h, label );
+
     fl_add_object( fl_current_form, obj );
+
     return obj;
 }
 

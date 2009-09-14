@@ -570,7 +570,7 @@ style_name( int style )
 
     strcpy( buf, pure_style_name( lstyle ) );
     if ( spstyle )
-        strcat( strcat( buf, "+" ), pure_style_name( spstyle ) );
+        strcat( strcat( buf, " + " ), pure_style_name( spstyle ) );
     return buf;
 }
 
@@ -1149,7 +1149,7 @@ already_emitted( FL_OBJECT  * first,
     for ( ob = first->next; ob && ob != curobj; ob = ob->next )
     {
         get_object_name( ob, name, cbname, argname );
-        if ( cbname[ 0 ] && strcmp( cbname, cb ) == 0 )
+        if ( *cbname && strcmp( cbname, cb ) == 0 )
             return 1;
     }
 
@@ -1231,10 +1231,16 @@ print_callbacks_and_globals( FILE    * fn,
             {
                 fprintf( fn, "/***************************************\n"
                          " ***************************************/\n\n" );
-                fprintf( fn, "int %s( FL_OBJECT *ob, int ev, FL_Coord mx, "
-                         "FL_Coord my, int key, void *xev )\n"
-                         "{\n    /* Free obj handler code */\n    "
-                         "return 0;\n}\n\n\n",
+                fprintf( fn, "int %s( FL_OBJECT * ob,\n"
+                             "        int         ev,\n"
+                             "        FL_Coord    mx,\n"
+                             "        FL_Coord    my,\n"
+                             "        int         key,\n"
+                             "        void      * xev )\n"
+                             "{\n"
+                             "    /* Free object handler code */\n\n"
+                             "    return 0;\n"
+                             "}\n\n\n",
                          get_free_handle( obj, name ) );
             }
         }
@@ -1246,13 +1252,13 @@ print_callbacks_and_globals( FILE    * fn,
             if ( ! code )
                 fprintf( fn, "extern void %s( FL_OBJECT *, long );\n", cbname );
             else
-            {
                 fprintf( fn, "/***************************************\n"
-                         " ***************************************/\n\n" );
-                fprintf( fn, "void %s( FL_OBJECT *ob, long data )\n{\n",
-                         cbname );
-                fprintf( fn, "    /* Fill-in code for callback */\n}\n\n\n" );
-            }
+                             " ***************************************/\n\n"
+                             "void %s( FL_OBJECT * ob,\n"
+                             "         long        data )\n"
+                             "{\n"
+                             "    /* Fill-in code for callback here */\n"
+                             "}\n\n\n", cbname );
         }
 
         if ( obj->objclass == FL_MENU )
@@ -1293,7 +1299,7 @@ print_header_newformat( FILE       * fn,
     for ( obj = form->first; obj; obj = obj->next )
     {
         get_object_name( obj, name, cbname, argname );
-        if ( name[ 0 ] && ! check_array_name( name ) )
+        if ( *name && ! check_array_name( name ) )
             fprintf( fn, "    FL_OBJECT * %s;\n", name );
     }
 
@@ -1329,7 +1335,7 @@ print_header_altformat( FILE       * fn,
     while ( ( obj = obj->next ) != NULL )
     {
         get_object_name( obj, name, cbname, argname );
-        if ( name[ 0 ] != 0 )
+        if ( *name )
         {
             if ( ! check_array_name( name ) )
             {
@@ -1381,7 +1387,7 @@ output_callbacks( FILE * fn,
 
     for ( i = 0; i < nform; i++ )
     {
-        fprintf( fn, "/*** Callbacks and freeobj handles for form %s ***/\n\n",
+        fprintf( fn, "/* Callbacks and freeobj handles for form %s */\n\n",
                  fdform[ i ].fname );
         print_callbacks_and_globals( fn, fdform[i].form, 1 );
         fprintf( fn, "\n" );

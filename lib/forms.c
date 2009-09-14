@@ -87,16 +87,13 @@ get_hidden_forms_index( FL_FORM * form )
 
 
 /***************************************
- * Adds a new form to the list of hidden forms, extending
- * the list in the process.
+ * Extend the list of visible and hidden forms by one element
+ * and put the new forms address into the new element
  ***************************************/
 
 static void
 add_form_to_hidden_list( FL_FORM * form )
 {
-    /* Extend the list of visible and hidden forms by one element
-       and put the new forms address into the new element */
-
     fli_int.forms = realloc( fli_int.forms,
                              ( fli_int.formnumb + fli_int.hidden_formnumb + 1 )
                              * sizeof *fli_int.forms );
@@ -153,14 +150,15 @@ move_form_to_hidden_list( FL_FORM * form )
 
     /* Find the index of the form to be moved to the hidden list */
 
-    if ( fli_int.formnumb == 0 || ( i = fli_get_visible_forms_index( form ) ) < 0 )
+    if (    fli_int.formnumb == 0
+         || ( i = fli_get_visible_forms_index( form ) ) < 0 )
     {
         M_err( "move_form_to_hidden_list", "Form not in visible list" );
         return -1;
     }
 
-    /* Unless the form is the very last in the visible list exchange it
-       with the form at the end of the visible list */
+    /* Unless the form is the last in the visible list exchange it with
+       the form at the end of the visible list */
 
     if ( i != --fli_int.formnumb )
     {
@@ -202,8 +200,8 @@ remove_form_from_hidden_list( FL_FORM * form )
         return -1;
     }
 
-    /* If it's not the form at the very end of the hidden list exchange
-       it with the one at the end */
+    /* If it's not the form at the end of the hidden list exchange it with
+       the one at the end */
 
     if ( i != fli_int.formnumb + --fli_int.hidden_formnumb )
         fli_int.forms[ i ] =
@@ -220,6 +218,7 @@ remove_form_from_hidden_list( FL_FORM * form )
 
 
 /***************************************
+ * Returns the form that's shown in 'win'
  ***************************************/
 
 FL_FORM *
@@ -271,7 +270,7 @@ fl_bgn_form( int      type,
 
     add_form_to_hidden_list( fl_current_form );
 
-    /* Each form has a empty box, covering the whole form as its first
+    /* Each form has an empty box, covering the whole form as its first
        object */
 
     fl_add_box( type, 0, 0, w, h, "" );
@@ -313,8 +312,8 @@ fl_addto_form( FL_FORM * form )
         return NULL;
     }
 
-    /* Can't open a form for adding objects when another form is already
-       opened for the same purpose */
+    /* We can't open a form for adding objects when another form has already
+       been opened for the same purpose */
 
     if ( fl_current_form && fl_current_form != form )
     {
@@ -414,6 +413,8 @@ fli_end_group( void )
 
 
 /***************************************
+ * Necessary since the public interface function for ending a group
+ * doesn't have a return value
  ***************************************/
 
 void
@@ -424,7 +425,7 @@ fl_end_group( void )
 
 
 /***************************************
- * Function for "freezing" all (shown) forms
+ * "Freezes" all (shown) forms
  ***************************************/
 
 void
@@ -438,7 +439,7 @@ fl_freeze_all_forms( void )
 
 
 /***************************************
- * Function for "unfreezing" all (shown) forms
+ * "Unfreezes" all (shown) forms
  ***************************************/
 
 void
@@ -536,7 +537,7 @@ fli_scale_form( FL_FORM * form,
         double oldw = obj->fl2 - obj->fl1;
         double oldh = obj->ft2 - obj->ft1;
 
-        /* Special case to keep the center of gravity of obejcts that have
+        /* Special case to keep the center of gravity of objects that have
            no gravity set and aren't to be resized */
 
         if (    obj->resize == FL_RESIZE_NONE
@@ -648,7 +649,7 @@ fli_scale_form( FL_FORM * form,
 
 
 /***************************************
- * Externally visible routine to scale a form. Need to reshape the window
+ * Externally visible routine to scale a form. Needs to reshape the window.
  ***************************************/
 
 void
@@ -656,7 +657,7 @@ fl_scale_form( FL_FORM * form,
                double    xsc,
                double    ysc )
 {
-    if ( form == NULL )
+    if ( ! form )
     {
         M_err( "fl_scale_form", "NULL form" );
         return;
@@ -729,7 +730,7 @@ fl_set_form_dblbuffer( FL_FORM * form,
 
 
 /***************************************
- * Sets the size of the form on the screen.
+ * Sets the size of a form
  ***************************************/
 
 void
@@ -749,7 +750,7 @@ fl_set_form_size( FL_FORM * form,
 
 
 /***************************************
- * Sets the position of the form on the screen.
+ * Sets the position of a form
  ***************************************/
 
 void
@@ -825,7 +826,7 @@ fl_set_form_position( FL_FORM * form,
 
 
 /***************************************
- * Sets the position of the form on the screen.
+ * Sets the position of the hotspot of a form
  ***************************************/
 
 void
@@ -862,7 +863,6 @@ fl_set_form_hotobject( FL_FORM   * form,
         M_err( "fl_set_form_hotobject", "NULL object." );
         return;
     }
-
 
     fl_set_form_hotspot( form, obj->x + obj->w / 2, obj->y + obj->h / 2 );
 }
@@ -915,7 +915,7 @@ fl_set_form_title( FL_FORM *    form,
 
 
 /***************************************
- * Displays a particular form. Returns window handle.
+ * Displays a particular form, returns its window handle.
  ***************************************/
 
 Window
@@ -942,7 +942,7 @@ fl_prepare_form_window( FL_FORM    * form,
         fl_current_form = NULL;
     }
 
-    if ( form == NULL )
+    if ( ! form )
     {
         M_err( "fl_prepare_form", "NULL form" );
         return None;
@@ -1277,13 +1277,13 @@ fl_hide_form( FL_FORM * form )
     /* Checking mouseobj->form is necessary as it might be deleted from a
        form */
 
-    if ( fli_int.mouseobj != NULL && fli_int.mouseobj->form == form )
+    if ( fli_int.mouseobj && fli_int.mouseobj->form == form )
     {
         fli_handle_object( fli_int.mouseobj, FL_LEAVE, 0, 0, 0, NULL, 1 );
         fli_int.mouseobj = NULL;
     }
 
-    if ( fli_int.pushobj != NULL && fli_int.pushobj->form == form )
+    if ( fli_int.pushobj && fli_int.pushobj->form == form )
     {
         fli_handle_object( fli_int.pushobj, FL_RELEASE, 0, 0, 0, NULL, 1 );
         fli_int.pushobj = NULL;
@@ -1347,7 +1347,7 @@ fl_hide_form( FL_FORM * form )
     /* Need to re-establish command property */
 
     if ( fli_int.formnumb && form->prop & FLI_COMMAND_PROP )
-        set_form_property( fli_int.forms[ 0 ], FLI_COMMAND_PROP );
+        set_form_property( *fli_int.forms, FLI_COMMAND_PROP );
 
     if ( form == fli_int.keyform )
         fli_int.keyform = NULL;
@@ -1355,7 +1355,7 @@ fl_hide_form( FL_FORM * form )
 
 
 /***************************************
- * Frees the memory used by a form, together with all its objects.
+ * Frees the memory used by a form together with all its objects.
  ***************************************/
 
 void
@@ -1414,7 +1414,7 @@ fl_free_form( FL_FORM * form )
 
 
 /***************************************
- * activates a form
+ * Activates a form
  ***************************************/
 
 void
@@ -1453,7 +1453,7 @@ fl_deactivate_form( FL_FORM * form )
     }
 
     if (    ! form->deactivated
-         && fli_int.mouseobj != NULL
+         && fli_int.mouseobj
          && fli_int.mouseobj->form == form )
         fli_handle_object( fli_int.mouseobj, FL_LEAVE, 0, 0, 0, NULL, 1 );
 
@@ -1516,7 +1516,7 @@ fl_set_form_atdeactivate( FL_FORM              * form,
 
 
 /***************************************
- * activates all forms
+ * Activates all forms
  ***************************************/
 
 void
@@ -1699,7 +1699,7 @@ fl_set_form_callback( FL_FORM            * form,
                       FL_FORMCALLBACKPTR   callback,
                       void *               d )
 {
-    if ( form == NULL )
+    if ( ! form )
     {
         M_err( "fl_set_form_callback", "NULL form" );
         return;
@@ -1785,7 +1785,10 @@ simple_form_rescale( FL_FORM * form,
 
 
 /***************************************
- * Never shrinks a form, margin is the minimum margin to leave
+ * Checks if the label of an object fits into it (after x- and
+ * y-margin have been added). If not, all objects and the form
+ * are enlarged by the necessary factor (but never by more than
+ * a factor of 1.5).
  ***************************************/
 
 void
@@ -1844,13 +1847,13 @@ fli_recount_auto_objects( void )
 
 
 /***************************************
- * Function for adding an object to the (currently open) group
+ * Reopens a group to allow addition of further objects
  ***************************************/
 
 FL_OBJECT *
 fl_addto_group( FL_OBJECT * group )
 {
-    if ( group == NULL )
+    if ( ! group )
     {
         M_err( "fl_addto_group", "NULL group." );
         return NULL;
@@ -1865,7 +1868,7 @@ fl_addto_group( FL_OBJECT * group )
     if ( fl_current_form && fl_current_form != group->form )
     {
         M_err( "fl_addto_group",
-               "Can't switch to a group on different form" );
+               "Can't switch to a group on a different form" );
         return NULL;
     }
 
@@ -1991,14 +1994,14 @@ fl_adjust_form_size( FL_FORM * form )
 
 
 /***************************************
- * Returns the sizes of the "descorations" the window manager puts around
+ * Returns the sizes of the "decorations" the window manager puts around
  * a forms window. Returns 0 on success and 1 if the form isn't visisble
- * or is a form embedded into another form.
+ * or it's a form embedded into another form.
  * This first tries to use the "_NET_FRAME_EXTENTS" atom which window
  * manager in principle should set for windows that have decorations.
  * For those window managers that don't have that atom we try it with the
  * old trick of searching up for the parent window that's either Null or
- * is a direct child of the root window and using this window's geometry
+ * is a direct child of the root window and using this windows geometry
  * (but note: this doesn't work with window managers that don't reparent
  * the windows they manage, but we can't recognize that).
  ***************************************/
@@ -2020,8 +2023,8 @@ fl_get_decoration_sizes( FL_FORM * form,
 
     *top = *right = *bottom = *left = 0;
 
-    /* If the window manager knows about the '_NET_FRAME_EXTENTS' ask for
-       the settings for the form's window (if there are none the window
+    /* If the window manager knows about '_NET_FRAME_EXTENTS' ask for
+       the settings for the forms window (if there are none the window
        probably has no decorations) */
 
     if ( ( a = XInternAtom( fl_get_display( ), "_NET_FRAME_EXTENTS", True ) )
@@ -2051,8 +2054,8 @@ fl_get_decoration_sizes( FL_FORM * form,
     else
     {
         /* The window manager doesn't have the _NET_FRAME_EXTENDS atom so we
-           have to try with the traditional method (which assumes that the
-           window manager reparents the windows it manages) */
+           have to try the traditional method (which assumes that the window
+           manager reparents the windows it manages) */
 
         Window cur_win = form->window;
         Window root;
@@ -2113,7 +2116,7 @@ fl_get_decoration_sizes( FL_FORM * form,
         *top    = win_attr.y - frame_attr.y;
         *left   = win_attr.x - frame_attr.x;
         *bottom = frame_attr.height - win_attr.height - *top;
-        *right  = frame_attr.width - win_attr.width - *left;
+        *right  = frame_attr.width  - win_attr.width  - *left;
     }
 
     return 0;
@@ -2121,7 +2124,7 @@ fl_get_decoration_sizes( FL_FORM * form,
 
 
 /***************************************
- * Function returns if a form's window is in iconified state
+ * Returns if a forms window is in iconified state
  ***************************************/
 
 int

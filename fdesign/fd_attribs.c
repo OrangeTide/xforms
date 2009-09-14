@@ -337,13 +337,23 @@ valid_c_identifier( const char * s )
  ***************************************/
 
 static int
-validate_cvar_name( FL_OBJECT * obj )
+validate_cvar_name( FL_OBJECT * obj,
+                    const char * w )
 {
     const char *s = fl_get_input( obj );
 
     if ( ! valid_c_identifier( s ) )
     {
-        fl_show_alert( "Error", "Invalid C identifier:", s, 0 );
+        char *m;
+
+        if ( ! w || ! *w )
+            m = fl_strdup( "Invalid C identifier:" );
+        else
+            m = fli_print_to_string( "Invalid C identifier specified for %s:",
+                                     w );
+
+        fl_show_alert( "Error", m, s, 0 );
+        fl_free( m );
         fl_set_focus_object( obj->form, obj );
         return 0;
     }
@@ -358,8 +368,8 @@ validate_cvar_name( FL_OBJECT * obj )
 static int
 validate_attributes( void )
 {
-    return    validate_cvar_name( fd_generic_attrib->nameobj )
-           && validate_cvar_name( fd_generic_attrib->cbnameobj );
+    return    validate_cvar_name( fd_generic_attrib->nameobj, "object name" )
+           && validate_cvar_name( fd_generic_attrib->cbnameobj, "callback" );
 }
 
 
@@ -368,9 +378,9 @@ validate_attributes( void )
 
 void
 validate_cvar_name_cb( FL_OBJECT * obj,
-                       long        data  FL_UNUSED_ARG )
+                       long        data )
 {
-    validate_cvar_name( obj );
+    validate_cvar_name( obj, data == 0 ? "object name" : "callback" );
 }
 
 
@@ -382,13 +392,10 @@ validate_cvar_name_cb( FL_OBJECT * obj,
 static void
 readback_attributes( FL_OBJECT * obj )
 {
-    int spstyle, warn = 0;
+    int spstyle;
     char name[ 128],
          cbname[ 128 ];
     char tmpbuf[ 128 ];
-    static char *m[ ] = { "object name",
-                          "callback",
-                          "object name & callback" };
 
     obj->boxtype = fl_get_choice( fd_generic_attrib->boxobj ) - 1;
 
@@ -435,20 +442,11 @@ readback_attributes( FL_OBJECT * obj )
                  sizeof cbname );
 
     if ( ! valid_c_identifier( name ) )
-    {
         *name = '\0';
-        warn = 1;
-    }
 
     if ( ! valid_c_identifier( cbname ) )
-    {
         *cbname = '\0';
-        warn += 2;
-    }
 
-    if ( warn )
-        fl_show_alert( "Error", "Invalid C identifier specified for",
-                       m[ warn - 1 ], 0 );
     set_object_name( obj, name, cbname,
                      fl_get_input( fd_generic_attrib->argobj ) );
 

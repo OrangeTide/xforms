@@ -207,8 +207,9 @@ fl_create_bitmap( int          type,
     obj->active  = type != FL_NORMAL_BITMAP;
 
     sp = obj->spec = fl_calloc( 1, sizeof *sp );
-    sp->pixmap = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
-    sp->cspecv = NULL;
+
+    sp->pixmap   = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
+    sp->cspecv   = NULL;
     sp->filename = sp->focus_filename = NULL;
 
     return obj;
@@ -230,6 +231,7 @@ fl_add_bitmap( int          type,
     FL_OBJECT *obj = fl_create_bitmap( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, obj );
+
     return obj;
 }
 
@@ -427,11 +429,13 @@ fl_create_bitmapbutton( int          type,
 
     fl_add_button_class( FL_BITMAPBUTTON, draw_bitmapbutton, 0 );
     obj = fl_create_generic_button( FL_BITMAPBUTTON, type, x, y, w, h, label );
+
     obj->boxtype = FL_BITMAPBUTTON_BOXTYPE;
     obj->col1    = FL_BITMAPBUTTON_COL1;
     obj->col2    = FL_BITMAPBUTTON_COL2;
     obj->align   = FL_BITMAPBUTTON_ALIGN;
     obj->lcol    = FL_BITMAP_LCOL;
+
     return obj;
 }
 
@@ -450,6 +454,7 @@ fl_add_bitmapbutton( int          type,
     FL_OBJECT *obj = fl_create_bitmapbutton( type, x, y, w, h, label );
 
     fl_add_object( fl_current_form, obj );
+
     return obj;
 }
 

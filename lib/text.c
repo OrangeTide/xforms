@@ -76,16 +76,18 @@ fl_create_text( int          type,
                 FL_Coord     h,
                 const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
-    ob = fl_make_object( FL_TEXT, type, x, y, w, h, label, handle_text );
-    ob->boxtype = FL_TEXT_BOXTYPE;
-    ob->col1 = FL_TEXT_COL1;
-    ob->col2 = FL_TEXT_COL2;
-    ob->lcol = FL_TEXT_LCOL;
-    ob->align = FL_TEXT_ALIGN | FL_ALIGN_INSIDE;
-    ob->active = 0;
-    return ob;
+    obj = fl_make_object( FL_TEXT, type, x, y, w, h, label, handle_text );
+
+    obj->boxtype = FL_TEXT_BOXTYPE;
+    obj->col1    = FL_TEXT_COL1;
+    obj->col2    = FL_TEXT_COL2;
+    obj->lcol    = FL_TEXT_LCOL;
+    obj->align   = FL_TEXT_ALIGN | FL_ALIGN_INSIDE;
+    obj->active  = 0;
+
+    return obj;
 }
 
 
@@ -100,12 +102,11 @@ fl_add_text( int          type,
              FL_Coord     h,
              const char * label)
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj = fl_create_text( type, x, y, w, h, label );
 
-    ob = fl_create_text( type, x, y, w, h, label );
-    fl_add_object( fl_current_form, ob );
+    fl_add_object( fl_current_form, obj );
 
-    return ob;
+    return obj;
 }
 
 

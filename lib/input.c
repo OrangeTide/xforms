@@ -1057,7 +1057,7 @@ handle_key( FL_OBJECT    * obj,
                 }
             }
 
-            if ( ( ok & FL_RINGBELL ) )
+            if ( ok & FL_RINGBELL )
                 fl_ringbell( 0 );
             fl_free( tmpbuf );
         }
@@ -1125,7 +1125,7 @@ paste_it( FL_OBJECT           * obj,
     int slen;
     unsigned char *p;
 
-    /* For non-text input we must check each individual characters */
+    /* For non-text input we must check each individual character */
 
     if (    obj->type == FL_FLOAT_INPUT
          || obj->type == FL_INT_INPUT
@@ -1436,9 +1436,10 @@ handle_input( FL_OBJECT * obj,
             break;
     }
 
-    if (    sp
-         && ret
+    if (    ret
+         && sp
          && sp->validate
+         && event == FL_UNFOCUS
          && ( val = sp->validate( obj, sp->str, sp->str, 0 ) ) != FL_VALID )
     {
         ret = FL_RETURN_NONE;
@@ -1454,6 +1455,7 @@ handle_input( FL_OBJECT * obj,
 
 
 /***************************************
+ * Callback for the vertical scrollbar of multi-line input objects
  ***************************************/
 
 static void
@@ -1470,6 +1472,7 @@ vsl_cb( FL_OBJECT * obj,
 
 
 /***************************************
+ * Callback for the horizontal scrollbar of multi-line input objects
  ***************************************/
 
 static void
@@ -1889,7 +1892,7 @@ fl_set_input_scroll( FL_OBJECT * obj,
 
 
 /***************************************
- * makes a part of an input string selected or deselected
+ * Makes a part of an input string selected or deselected
  ***************************************/
 
 void
@@ -1969,7 +1972,7 @@ fl_get_input_selected_range( FL_OBJECT * obj,
 
 
 /***************************************
- * selects the current input programmatically without moving
+ * Selects the current input programmatically without moving
  * the cursor
  ***************************************/
 
@@ -1995,7 +1998,7 @@ fl_set_input_selected( FL_OBJECT * obj,
 
 
 /***************************************
- * given an (x,y) location,  return the string position in chars
+ * Given an (x,y) location returns the string position in chars
  ***************************************/
 
 static int
@@ -2016,7 +2019,7 @@ xytopos( FLI_INPUT_SPEC * sp,
 
 
 /***************************************
- * move cursor within the input field. curpos is measured in chars
+ * Move cursor within the input field. curpos is measured in chars
  ***************************************/
 
 void
@@ -2128,25 +2131,6 @@ set_default_keymap( int force )
     kmap.transpose = Control( 't' );
     kmap.paste = Control( 'y' );
     kmap.clear_field = Control( 'u' );
-
-#if FL_DEBUG > ML_WARN
-
-#define Dump( a ) fprintf( stderr, "\t%s: %ld (0x%lx)\n", #a,kmap.a, kmap.a )
-
-    if ( fli_cntl.debug > 1 )
-    {
-        Dump( moveto_prev_char );
-        Dump( moveto_next_char );
-        Dump( moveto_prev_word );
-        Dump( moveto_next_word );
-        Dump( moveto_prev_line );
-        Dump( moveto_next_line );
-        Dump( moveto_bol );
-        Dump( moveto_eol );
-        Dump( moveto_eof );
-        Dump( moveto_eol );
-    }
-#endif
 }
 
 
@@ -2216,16 +2200,14 @@ fl_validate_input( FL_OBJECT *obj )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
 
-    if (    ! sp->validate
-         || sp->validate( obj, sp->str, sp->str, 0 ) == FL_VALID )
-        return FL_VALID;
-
-    return FL_INVALID;
+    return (    ! sp->validate
+             || sp->validate( obj, sp->str, sp->str, 0 ) == FL_VALID ) ?
+           FL_VALID : FL_INVALID;
 }
 
 
 /***************************************
- * validators for specialized inputs
+ * Validators for specialized inputs
  ***************************************/
 
 #define IS_LEAP_YEAR( y )   \
@@ -2250,24 +2232,25 @@ date_validator( FL_OBJECT  * obj,
     int m,
         d;
 
-    /* consider empty valid */
+    /* Consider empty valid */
 
     if ( ( len = strlen( newstr ) ) == 0 )
         return FL_VALID;
 
     fl_get_input_format( obj, &fmt, &sep );
 
-    ssep[ 0 ] = sep;
+    *ssep = sep;
     strcat( strcpy( sepsep, ssep ), ssep );
 
     if (    ( newc != sep && newc != 0 && ! isdigit( newc ) )
-         || newstr[ 0 ] == sep || strstr( newstr, sepsep ) )
+         || *newstr == sep || strstr( newstr, sepsep ) )
         return invalid;
 
     s = fl_strdup( newstr );
+
     for ( i = 0, val = strtok( s, ssep ); val; val = strtok( NULL, ssep ) )
     {
-        /* must allow incomplete input so 12/01 does not get rejected at 0 */
+        /* Must allow incomplete input so 12/01 does not get rejected at 0 */
 
         if ( val[ 1 ] == '\0' && val[ 0 ] == newstr[ len - 1 ] )
         {
@@ -2329,7 +2312,7 @@ float_int_validator( FL_OBJECT  * obj,
         c;
     double dummy;
 
-    /* empty string is considered valid */
+    /* Empty string is considered valid */
 
     if ( ! ( slen = strlen( str ) ) )
         return FL_VALID;
@@ -2349,10 +2332,10 @@ float_int_validator( FL_OBJECT  * obj,
     lc = str + slen - 1;
     llc = lc - 1;
 
-    if (    newc == 0
-            && (    ( c = tolower( ( int ) *lc ) ) == '+'
-                 || c == '-'
-                 || c == 'e' ) )
+    if (    ! newc
+         && (    ( c = tolower( ( int ) *lc ) ) == '+'
+              || c == '-'
+              || c == 'e' ) )
         return FL_INVALID | FL_RINGBELL;
 
     /* -+eE at end can cause strtod to fail, but it is in fact valid. The
@@ -2483,7 +2466,7 @@ fl_set_input_topline( FL_OBJECT * obj,
 
 
 /***************************************
- * line number, n, is numbered from 1.
+ * Line number 'n' is numbered from 1.
  ***************************************/
 
 static int
@@ -2646,7 +2629,7 @@ fl_get_input_screenlines( FL_OBJECT * obj )
 void
 fl_set_input_editkeymap( const FL_EditKeymap * keymap )
 {
-    /* if keymap is null, force default */
+    /* If keymap is Null force default */
 
     if ( ! keymap )
     {
