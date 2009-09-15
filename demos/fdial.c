@@ -57,6 +57,7 @@ makeform( void )
     fl_set_dial_bounds( red, 0.0, 255.0 );
     fl_set_dial_value( red, 128.0 );
     fl_set_object_color( red, FL_DIAL_COL1, FL_RED );
+	fl_set_object_return( red, FL_RETURN_CHANGED );
 
     redtext = fl_add_box( FL_DOWN_BOX, 105, 255, 50, 25, "" );
 
@@ -65,6 +66,7 @@ makeform( void )
     fl_set_dial_value( green, 128.0 );
     fl_set_dial_angles( green, 45.0, 360 - 45.0 );
     fl_set_object_color( green, FL_DIAL_COL1, FL_GREEN );
+	fl_set_object_return( green, FL_RETURN_CHANGED );
 
     greentext = fl_add_box( FL_DOWN_BOX, 105, 170, 50, 25,"" );
 
@@ -73,6 +75,7 @@ makeform( void )
     fl_set_dial_value( blue, 128.0 );
     fl_set_object_color( blue, FL_DIAL_COL1, FL_BLUE );
     fl_set_dial_direction( blue, FL_DIAL_CCW );
+	fl_set_object_return( blue, FL_RETURN_CHANGED );
 
     bluetext = fl_add_box( FL_DOWN_BOX, 105, 90, 50, 25, "" );
 

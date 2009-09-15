@@ -1156,7 +1156,11 @@ int callback(XEvent *xev, void *data);
 
 This assumes the application program solicits the events and further,
 the callback routine should be prepared to handle all XEvent for all
-non-form windows. This could be undesirable if more than one application
+non-form windows. The callback function normally should return
+@code{0} unless the event isn't for one of the applcation-managed
+windows.
+
+This could be undesirable if more than one application
 window is active. To further partition and simplify the interaction,
 callbacks for a specific event on a specific window can be registered:
 @findex fl_add_event_callback()

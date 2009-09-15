@@ -1013,7 +1013,7 @@ get_next_event_or_idle( int        wait_io,
            event queue */
 
         if ( ( *form = fli_find_event_form( xev ) ) != NULL )
-            return 1;
+           return 1;
 
         /* Please note: we do event compression before the user ever sees the
            events. This is a bit questionable at least for mouse movements

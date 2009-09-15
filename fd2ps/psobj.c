@@ -1007,10 +1007,8 @@ flps_draw_dial( FL_OBJECT * ob )
     else
         dangle += sp->origin;
 
-    if ( dangle < 0.0 )
+    if ( ( dangle = fmod( dangle, 360.0 ) ) < 0.0 )
         dangle += 360.0;
-    else if ( dangle > 360 )
-        dangle -= 360;
 
     w = ob->w - 3;
     h = ob->h - 3;
@@ -1088,12 +1086,10 @@ flps_draw_dial( FL_OBJECT * ob )
         else
             ti = sp->origin - sp->thetai;
 
-        if ( ti < 0.0 )
+        if ( ( ti = fmod( ti, 360.0 ) ) < 0.0 )
             ti += 360.0;
-        else if ( ti > 360.0 )
-            ti -= 360.0;
 
-    /* Have to break the drawing into two parts if cross 0 */
+        /* Have to break the drawing into two parts if cross 0 */
 
         if ( sp->direction == FL_DIAL_CCW )
         {

@@ -62,6 +62,13 @@ fli_handle_event_callbacks( XEvent * xev )
 
     if ( ! fwin )
     {
+        /* If there's a callback for events for independendly created user
+           windows that returns 0 the event has been handled, otherwise
+           ignore it */
+
+        if ( fli_event_callback && ! fli_event_callback( xev, fli_user_data ) )
+            return 1;
+
         M_warn( "fli_handle_event_callbacks", "Unknown window = %ld",
                 xev->xany.window );
         fli_xevent_name( "Ignored", xev );
@@ -675,12 +682,6 @@ fl_XPutBackEvent( XEvent * xev )
 
     if ( fli_handle_event_callbacks( xev ) )
         return;
-
-    if ( fli_event_callback )
-    {
-        fli_event_callback( xev, fli_user_data );
-        return;
-    }
 
     /* These must have come from simulating double buffering, throw them away */
 

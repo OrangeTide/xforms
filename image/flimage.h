@@ -146,7 +146,7 @@ typedef struct flimage_text_ {
 
 typedef struct flimage_marker_ {
     const char   * name;      /* marker name                  */
-    int           w,          /* size                         */
+    int            w,         /* size                         */
                    h ;
     int            x,         /* location                     */
                    y;

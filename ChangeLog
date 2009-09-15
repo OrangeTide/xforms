@@ -1,3 +1,8 @@
+2009-09-15 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/events.c: general callbacks for events for user
+	generated windows weren't called anymore, repaired.
+
 2009-09-14 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/thumwheel.c, lib/validator.c: Fixed return
@@ -92,7 +97,7 @@
 
 2009-08-22 Jens Thoms Toerring    <jt@toerring.de>
 
-	Thanks to lots of input (patches and discussions0 by Werner
+	Thanks to lots of input (patches and discussions) by Werner
 	Heisch the way .fd files get read in and analyzed has been
 	changed to be a lot more liberal of what is accepted as well
 	as spitting out reasonable error messages and warnings if
@@ -123,8 +128,8 @@
 
 2009-07-10 Jens Thoms Toerring    <jt@toerring.de>
 
-	* lib/forms.c: Forms.c split into two, 	forms.c
-	and handling.c
+	* lib/forms.c: Forms.c split into two, forms.c and
+	handling.c
 
 2009-07-09 Jens Thoms Toerring    <jt@toerring.de>
 
@@ -397,7 +402,7 @@
 
 2008-12-01 Jens Thoms Toerring    <jt@toerring.de>
 
-	* doc: New dirctory with first parts of rewrite of docu-
+	* doc: New directory with first parts of rewrite of docu-
 	mentation in texi format.
 
 	* lib/counter.c: Rob Carpenter noticed that it sometimes
@@ -433,7 +438,7 @@
 
 2008-11-11 Jens Thoms Toerring    <jt@toerring.de>
 
-	Cosmetic changes to a numbr of files to pacify the
+	Cosmetic changes to a number of files to pacify the
 	newest gcc/libc combination about issues with disre-
 	garded return values of standard input/output func-
 	tions (fgets(), fread(), fwrite(), sscanf() etc.)

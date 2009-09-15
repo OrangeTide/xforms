@@ -199,10 +199,10 @@ flimage_add_marker( FL_IMAGE     * im,
     imarker->color = col;
     imarker->bcolor = bcol;
     imarker->style = ( style >= 0 && style <= FL_LONGDASH ) ? style : FL_SOLID;
-    imarker->x = ( int )( im->xdist_offset + x * im->xdist_scale );
-    imarker->y = ( int )( im->ydist_offset + y * im->ydist_scale );
-    imarker->w = ( int )( w * im->xdist_scale );
-    imarker->h = ( int )( h * im->ydist_scale );
+    imarker->x = im->xdist_offset + x * im->xdist_scale;
+    imarker->y = im->ydist_offset + y * im->ydist_scale;
+    imarker->w = w * im->xdist_scale;
+    imarker->h = h * im->ydist_scale;
     im->free_markers = flimage_delete_all_markers;
     im->display_markers = flimage_display_markers;
     return ++im->nmarkers;

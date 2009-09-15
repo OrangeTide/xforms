@@ -241,12 +241,12 @@ drawit( OBJ * obj )
 
 	if ( obj->type == 1 )
 		fl_rectf( obj->x - obj->size, obj->y - obj->size,
-				  obj->size * 2, obj->size *2, FL_FREE_COL1 );
+				  2 * obj->size, 2 * obj->size, FL_FREE_COL1 );
 	else if ( obj->type == 2 )
 		fl_circf( obj->x, obj->y, obj->size, FL_FREE_COL1 );
 	else if ( obj->type == 3 )
 	{
-		FL_POINT point[ 4 ];
+		FL_POINT point[ 3 ];
 
 		point[ 0 ].x = obj->x - obj->size;
 		point[ 0 ].y = obj->y + obj->size;
@@ -312,7 +312,7 @@ clearit( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 
 /***************************************
- * event callback routine
+ * Event callback routine
  ***************************************/
 
 int main_callback( XEvent * xev,
@@ -322,7 +322,7 @@ int main_callback( XEvent * xev,
 
 	if ( xev->type == Expose )
 		redrawit( );
-	else if ( xev->type == ButtonPress && xev->xbutton.button != Button2 )
+	else if ( xev->type == ButtonPress )
 		drawobject( );
     return 0;
 }
@@ -337,7 +337,7 @@ init_mainpart( void )
 	fl_pref_wingeometry( 400, 300, 400, 400 );
 	fl_pref_winsize( 400, 400 );
 	fl_winbackground( 0, fl_get_flcolor( FL_COL1 ) );
-	main_win  = fl_winopen( "Drawing" );
+	main_win = fl_winopen( "Drawing" );
 	fl_set_event_callback( main_callback, 0 );
 }
 

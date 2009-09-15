@@ -85,7 +85,7 @@ draw_dial( FL_OBJECT * ob )
     int boxtype,
         iradius;
 
-    /* since rotate_it always does the rotation in the math way, i.e. 0 at
+    /* Since rotate_it() always does the rotation in the math way, i.e. 0 at
        three o'clock and CCW, need to translate the current theta into that
        coordiante system */
 
@@ -96,10 +96,8 @@ draw_dial( FL_OBJECT * ob )
     else
         dangle += sp->origin;
 
-    while ( dangle < 0.0 )
+    if ( ( dangle = fmod( dangle, 360.0 ) ) < 0.0 )
         dangle += 360.0;
-    while ( dangle > 360.0 )
-        dangle -= 360.0;
 
     dangle *= M_PI / 180.0;
 
@@ -171,10 +169,8 @@ draw_dial( FL_OBJECT * ob )
         else
             ti = sp->origin - sp->thetai;
         
-        while ( ti < 0.0 )
+        if ( ( ti = fmod( ti, 360.0 ) ) < 0.0 )
             ti += 360.0;
-        while ( ti > 360.0 )
-            ti -= 360.0;
 
         fl_ovalarc( 1, xo - iradius, yo - iradius, 2 * iradius, 2 * iradius,
                     ti * 10, delta * 10, ob->col2 );
@@ -228,7 +224,7 @@ handle_mouse( FL_OBJECT * ob,
     if ( fabs( mx ) < 2 && fabs( my ) < 2 )
         return FL_RETURN_NONE;
 
-    /* Get angle and normalize to (0,2PI) */
+    /* Get angle and normalize to [0, 2 * PI] */
 
     angle = atan2( my, mx ) * 180.0 / M_PI;
 
@@ -237,14 +233,12 @@ handle_mouse( FL_OBJECT * ob,
     else
         angle -= sp->origin;
 
-    while ( angle < 0.0 )
+    if ( ( angle = fmod( angle, 360.0 ) ) < 0.0 )
         angle += 360.0;
-    while ( angle > 360.0 )
-        angle -= 360.0;
 
     val = fli_clamp( sp->a * angle + sp->b, sp->min, sp->max );
 
-    /* check if crossed boundary. Fix it if it did. Fixing is necessary
+    /* Check if crossed boundary. Fix it if it did. Fixing is necessary
        otherwise might be unable to reach thetaf(360) */
 
     if ( ! sp->cross_over && fabs( oldv - val ) > 0.6 * range )
@@ -511,15 +505,10 @@ fl_set_dial_angles( FL_OBJECT * ob,
 {
     FLI_DIAL_SPEC *sp = ob->spec;
 
-    while ( amin < 0.0 )
+    if ( ( amin = fmod( amin, 360.0 ) ) < 0.0 )
         amin += 360.0;
-    while ( amin > 360 )
-        amin -= 360.0;
-
-    while ( amax < 0.0 )
+    if ( ( amax = fmod( amax, 360.0 ) ) < 0.0 )
         amax += 360.0;
-    while ( amax > 360.0 )
-        amax -= 360.0;
 
     if ( sp->thetaf != amax || sp->thetai != amin )
     {

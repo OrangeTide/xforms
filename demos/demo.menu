@@ -56,7 +56,6 @@
 		  @menu:Choice\n(deprecated):choice
 		@other:Canvas:@canvas
 		    @canvas:Normal\nCanvas:canvas
-		    @canvas:XMesa\nCanvas:mesa
 		    @canvas:OpenGL\nCanvas:gl
 		@other:Positioner:@positioner
 		    @positioner:Normal\nPositioner:positioner
@@ -103,7 +102,7 @@
 	@Misc:Iconify\nvia WM:iconify
 	@Misc:Cursor:cursor
 	@Misc:Preemptive\nHandler:preemptive
-	@Misc:Object\nActivation:objreturn
+	@Misc:Object\nReturn\nBehaviour:objreturn
 	@Misc:Move\nObject:objpos
 	@Misc:Object\nGroups:group
     @Misc:Form\nResizing:grav
