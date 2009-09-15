@@ -2,6 +2,8 @@
 
 	* lib/events.c: general callbacks for events for user
 	generated windows weren't called anymore, repaired.
+	* lib/include/xpopup.h: Broken define Rouben Rostamian
+	found for the fl_setpup_default_checkcolor() repaired.
 
 2009-09-14 Jens Thoms Toerring    <jt@toerring.de>
 

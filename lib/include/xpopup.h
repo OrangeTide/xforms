@@ -57,13 +57,10 @@ FL_EXPORT int fl_dopup( int n );
 
 FL_EXPORT Cursor fl_setpup_default_cursor( int cursor );
 
-/* setpup_{colors|fontsize} etc will be removed in next revision
- * use fl_set_default_xxx instead */
-
 FL_EXPORT void fl_setpup_color( FL_COLOR fg,
                                 FL_COLOR bg );
 
-FL_EXPORT void fl_setpup_checkcolor( FL_COLOR col );
+FL_EXPORT void fl_setpup_default_pup_checked_color( FL_COLOR col );
 
 FL_EXPORT int fl_setpup_fontsize( int size );
 
@@ -72,7 +69,8 @@ FL_EXPORT int fl_setpup_fontstyle( int style );
 #define fl_setpup_default_fontsize    fl_setpup_fontsize
 #define fl_setpup_default_fontstyle   fl_setpup_fontstyle
 #define fl_setpup_default_color       fl_setpup_color
-#define fl_setpup_default_checkcolor  fl_setpup_checkcolor
+#define fl_setpup_default_checkcolor  fl_setpup_default_pup_checked_color
+#define fl_setpup_checkcolor          fl_setpup_default_pup_checked_color
 
 FL_EXPORT int fl_setpup_default_bw( int bw );
 
