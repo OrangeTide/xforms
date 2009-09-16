@@ -1,3 +1,9 @@
+2009-09-16 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/include/Basic.h: Removed a nonexistent color
+	that had made it into the list of colors as Werner
+	Heisch pointed out.
+
 2009-09-15 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/events.c: general callbacks for events for user

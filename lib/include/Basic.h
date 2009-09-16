@@ -334,7 +334,6 @@ typedef enum {
 	FL_DARKVIOLET,
 	FL_SPRINGGREEN,
     FL_DODGERBLUE,
-	FL_DOGERBLUE,
 	FL_LIGHTER_COL1,
 	FL_DARKER_COL1,
 	FL_ALICEBLUE,
@@ -482,6 +481,8 @@ typedef enum {
     FL_NOCOLOR = INT_MAX
 } FL_PD_COL;
 
+
+
 #define FL_BUILT_IN_COLS  ( FL_YELLOWGREEN + 1 )
 #define FL_INACTIVE_COL   FL_INACTIVE
 
@@ -495,6 +496,10 @@ typedef enum {
 #define FL_GRAY75           FL_MCOL
 #define  FL_LCOL            FL_BLACK
 #define  FL_NoColor         FL_NOCOLOR
+
+/* An alias probably for an earlier typo */
+
+#define FL_DOGERBLUE        FL_DODGERBLUE
 
 /* Events that a form reacts to.  */
 
