@@ -615,7 +615,7 @@ fl_get_dirlist( const char * dir,
     if ( ! pat || ! *pat )
         pat = "*";
 
-    /* fix the directory on the fly */
+    /* Fix the directory on the fly */
 
     i = strlen( strcpy( okdir, dir ) );
     if ( okdir[ i - 1 ] != '/' )

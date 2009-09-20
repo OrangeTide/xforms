@@ -1,3 +1,7 @@
+2009-09-29 Jens Thoms Toerring    <jt@toerring.de>
+
+	Minor corrections in the documentation.
+
 2009-09-16 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/include/Basic.h: Removed a nonexistent color
