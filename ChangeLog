@@ -1,4 +1,10 @@
-2009-09-29 Jens Thoms Toerring    <jt@toerring.de>
+2009-09-21 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_forms.c, fdesign/fd_groups.c,
+	fdesign/fd_super.c: Two bugs in fdesign, found
+	by Werner Heisch, removed.
+
+2009-09-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	Minor corrections in the documentation.
 
