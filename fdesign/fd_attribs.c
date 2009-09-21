@@ -298,7 +298,7 @@ attrib_init( FD_generic_attrib * ui )
 
 }
 
-/* check for obvious errors */
+/* Check for obvious errors */
 
 #define OK_letter( c )    (    *c == '_'                       \
                             || *c == '['                       \

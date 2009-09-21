@@ -127,7 +127,7 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     while ( *sp )
     {
         if (    ! isascii( ( unsigned char ) *sp )
-              || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
+              || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
         {
             fl_show_alert( "Error", "Invalid C identifier specified for group "
                            "name:", s, 0 );

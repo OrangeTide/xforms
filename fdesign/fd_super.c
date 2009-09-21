@@ -128,7 +128,6 @@ spec_to_superspec( FL_OBJECT * ob )
         {
             fl_safe_free( spp->content[ i ] );
             fl_safe_free( spp->shortcut[ i ] );
-            fl_safe_free( spp->callback[ i ] );
         }
 
         n = spp->nlines = sp->numitems;

@@ -217,7 +217,7 @@ save_choice_attrib( FILE      * fp,
  */
 
 /***************************************
- * callbacks and freeobj handles for form choiceattrib
+ * Callbacks and freeobj handles for form choiceattrib
  ***************************************/
 
 void
@@ -237,7 +237,7 @@ add_choice_item_cb( FL_OBJECT * ob,
         fl_set_choice_item_shortcut( ui->vdata, i, sc );
         fl_set_choice_item_mode( ui->vdata, i, get_pupmode_value( mode ) );
 
-        if (fl_get_button( ui->auto_clear ) )
+        if ( fl_get_button( ui->auto_clear ) )
             clear_choice_field_cb( ui->auto_clear, 0 );
 
         if ( auto_apply )
