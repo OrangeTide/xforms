@@ -38,16 +38,11 @@ Please write to the mailing list if you have questions or find bugs.
 
 This document is mostly based on the documentation for version 0.89 of
 the Forms Library. It has been reconstructed from the PDF version (the
-original sources seem to have gone AWOL) and is to be considered work
-in progress towards a documentation that describes the newest version,
-1.0.92.
-
-@strong{Please note: while development is going on the documentation
-necessarily requires to be changed accordingly. The version you're
-just reading is meant for the newest version. Some things from older
-versions might be missing (e.g.@: function that are deprecated but
-still can be used), while some features described here may not be
-available with older versions of XForms.}
+original sources seem to have gone AWOL) and has been updated to cover
+the changes introduced with version 1.0.92. Some things from older
+versions are missing (e.g.@: function that are deprecated but still
+can be used), while some features described here may not be available
+with older versions of XForms.
 
 In the following the preface for the last available version of the
 documentation (version 0.89 from June 2000) is reproduced. Please note

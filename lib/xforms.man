@@ -7,7 +7,7 @@
 .\"   ul | more -fsk to view
 .\"
 .\"
-.TH XFORMS 5 "September 2008" "Version 1.0.91" "Forms Library"
+.TH XFORMS 5 "October 2009" "Version 1.0.92" "Forms Library"
 .SH NAME
 xforms \-   A GUI Toolkit for X Window Systems
 .\"
@@ -22,21 +22,21 @@ xforms \-   A GUI Toolkit for X Window Systems
 runs on all major UNIX platforms as well as OpenVMS and OS2.
 .B Forms Library
 is too complex to be described in the "man" page format.
-Ask your system administrator for the location of the PostScript
-document or follow the links on the
+Ask your system administrator for the location of the HTML, PDF or
+PostScript document or follow the links on the
 .BR "Forms Library" 's
-home page for an html or PostScript version of the document.
+home page for an online version of the documentation.
 .SH DESCRIPTION
 .B Forms Library
 is a graphical user interface toolkit based on Xlib for X Window
-Systems. It comes with a rich set of objects such as buttons,
-browsers, sliders and menus integrated into an elegant event/object
-callback execution model that allows fast and easy construction
-of X applications. In addition, the library has support for image read
-and write, format conversion and simple image processing.
-The library consists of a flexible set of
-C-routines that can be used in C and C++ programs (As of this
-writing, perl, ada95, pascal, scheme and Fortran bindings to the
+Systems. It comes with a rich set of objects such as buttons, browsers,
+sliders and menus integrated into an elegant event/object callback
+execution model that allows fast and easy construction of X
+applications. In addition, the library has support for image read and
+write, format conversion and simple image processing. The library
+consists of a flexible set of C-routines that can be used in C and C++
+programs (As of this writing, perl, ada95, pascal, scheme and Fortran
+bindings to the
 .B Forms Library
 are in beta.)
 
@@ -119,4 +119,6 @@ Maintainers: Jean-Marc Lasgouttes, Angus Leeming and Jens Thoms Toerring
 <jt@toerring.de>
 
 .SH HOME PAGE
+http://xforms-toolkit.org
+.br
 http://savannah.nongnu.org/projects/xforms/

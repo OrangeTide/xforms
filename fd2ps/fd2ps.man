@@ -8,7 +8,7 @@
 .\"   ul | more -fsk to view
 .\"
 .\"
-.TH FD2PS 1L "February 2000" "Version 0.36" "Forms Library"
+.TH FD2PS 1L "October 2009" "Version 0.36" "Forms Library"
 .SH NAME
 fd2ps \-  Translates fdesign output to PostScript
 .\"
@@ -128,5 +128,12 @@ fdesign(1L), xforms(5)
 Copyright
 .Cr
 1997-98 by T.C. Zhao (tc_zhao@yahoo.com)
+.br
+Since 2002: GNU Lesser General Public License
+.br
+Maintainers: Jean-Marc Lasgouttes, Angus Leeming and Jens Thoms Toerring
+<jt@toerring.de>
 .SH HOME PAGE
+http://xforms-toolkit.org
+.br
 http://world.std.com/~xforms

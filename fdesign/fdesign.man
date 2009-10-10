@@ -6,7 +6,7 @@
 .\"   ul | more -fsk to view
 .\"
 .\"
-.TH FDESIGN 1L "November 2008" "Version 1.0.91" "Forms Library"
+.TH FDESIGN 1L "October 2009" "Version 1.0.92" "Forms Library"
 .SH NAME
 fdesign \-  Forms Library User Interface Designer
 .\"
@@ -195,4 +195,6 @@ Since 2002: GNU Lesser General Public License
 Maintainers: Jean-Marc Lasgouttes, Angus Leeming and Jens Thoms Toerring
 <jt@toerring.de>
 .SH HOME PAGE
+http://xforms-toolkit.org
+.br
 http://savannah.nongnu.org/projects/xforms/
