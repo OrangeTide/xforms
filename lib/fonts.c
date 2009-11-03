@@ -114,8 +114,8 @@ fli_init_font( void )
 
     initialized = 1;
 
-    /* If fl_set_font_name is called before fl_initialize, we need to keep
-       the change */
+    /* If fl_set_font_name() is called before fl_initialize(), we need to
+       keep the change */
 
     for ( ; *f; f++, flf++ )
         if ( ! *flf->fname )
@@ -131,8 +131,8 @@ fli_init_font( void )
        using bad looking replacement if strange sizes are requested */
 
     fl_get_font_struct( FL_NORMAL_STYLE, FL_DEFAULT_SIZE );
-    fl_get_font_struct( FL_BOLD_STYLE, FL_DEFAULT_SIZE );
-    fl_get_font_struct( FL_FIXED_STYLE, FL_DEFAULT_SIZE );
+    fl_get_font_struct( FL_BOLD_STYLE,   FL_DEFAULT_SIZE );
+    fl_get_font_struct( FL_FIXED_STYLE,  FL_DEFAULT_SIZE );
 }
 
 
@@ -225,7 +225,7 @@ fl_set_font_name( int          n,
     flf->nsize = 0;
     strcpy( flf->fname, name );
 
-    if ( ! flx->display )
+    if ( ! flx || ! flx->display )
         return 1;
 
     return try_get_font_struct( n, FL_DEFAULT_SIZE, 1 ) ? 0 : -1;
@@ -233,7 +233,7 @@ fl_set_font_name( int          n,
 
 
 /***************************************
- * list built-in fonts
+ * List built-in fonts
  ***************************************/
 
 int
@@ -296,7 +296,7 @@ try_get_font_struct( int numb,
 
     strcpy( fli_curfnt, get_fname( flf->fname, size ) );
 
-    /* search for requested size */
+    /* Search for requested size */
 
     for ( fs = 0, i = 0; i < flf->nsize; i++ )
     {
@@ -310,8 +310,8 @@ try_get_font_struct( int numb,
         }
     }
 
-    /* if requested not found or cache full, get the destination cache for
-       this size */
+    /* If requested font is not found or cache is full, get the destination
+       cache for this size */
 
     if ( ! fs && flf->nsize == FL_MAX_FONTSIZES )
     {
@@ -319,7 +319,7 @@ try_get_font_struct( int numb,
         flf->nsize--;
     }
 
-    /* font is not cached, try to load the font */
+    /* Font is not cached, try to load the font */
 
     if ( ! fs )
     {
@@ -345,7 +345,7 @@ try_get_font_struct( int numb,
 
         M_warn( "try_get_font_struct", "can't load %s", fli_curfnt );
 
-        /* search for a replacement */
+        /* Search for a replacement */
 
         for ( i = 0; i < flf->nsize; i++ )
         {

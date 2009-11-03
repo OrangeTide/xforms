@@ -1089,7 +1089,7 @@ fl_keysym_pressed( KeySym k )
 
     if ( ( code = XKeysymToKeycode( flx->display, k ) ) == NoSymbol )
     {
-        M_warn( "fl_keysym_pressed", "Bad KeySym %d", (int) k );
+        M_warn( "fl_keysym_pressed", "Bad KeySym %d", ( int ) k );
         return 0;
     }
 
@@ -1099,7 +1099,7 @@ fl_keysym_pressed( KeySym k )
 
 
 /***************************************
- * add an event
+ * Add an event
  ***************************************/
 
 long

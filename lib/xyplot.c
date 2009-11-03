@@ -1825,7 +1825,7 @@ handle_mouse( FL_OBJECT * ob,
     float ymin = FL_min( sp->ymin, sp->ymax ),
           ymax = FL_max( sp->ymax, sp->ymin );
 
-    if ( *sp->n == 0 || ! sp->x || ( ! sp->active && ! sp->inspect ) )
+    if ( *sp->n == 0 || ! sp->x || ! ( sp->active || sp->inspect ) )
         return FL_RETURN_NONE;
 
     if ( lmx == mx && lmy == my )
@@ -2166,7 +2166,7 @@ init_spec( FL_OBJECT       * ob,
 
     sp->objx           = ob->x;
     sp->objy           = ob->y;
-    sp->active         = ob->active;
+    sp->active         = ob->type == FL_ACTIVE_XYPLOT;
     sp->key_lsize      = ob->lsize;
     sp->key_lstyle     = ob->lstyle;
     *sp->type          = ob->type;
@@ -2180,7 +2180,6 @@ init_spec( FL_OBJECT       * ob,
     sp->xp++;
     sp->xpactive       = fl_malloc( ( sp->cur_nxp + 3 )
                                     * sizeof *sp->xpactive );
-
     sp->mark_active    = 1;
 }
 
@@ -2202,12 +2201,11 @@ fl_create_xyplot( int          t,
     ob = fl_make_object( FL_XYPLOT, t, x, y, w, h, l, handle_xyplot );
 
     ob->boxtype    = FL_XYPLOT_BOXTYPE;
-    ob->active     = t == FL_ACTIVE_XYPLOT;
     ob->col2       = ob->lcol = FL_BLACK;
     ob->col1       = FL_COL1;
     ob->lsize      = FL_TINY_FONT;
     ob->align      = FL_XYPLOT_ALIGN;
-    ob->spec       = sp =  fl_calloc( 1, sizeof *sp );
+    ob->spec       = sp = fl_calloc( 1, sizeof *sp );
 
     init_spec( ob, sp );
 
@@ -2229,12 +2227,13 @@ fl_add_xyplot( int          t,
                const char * l )
 {
     FL_OBJECT *ob = fl_create_xyplot( t, x, y, w, h, l );
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     fl_add_object( fl_current_form, ob );
 
-    /* active_xyplot looks a little better in double buffer mode */
+    /* Active_xyplot looks a little better in double buffer mode */
 
-    fl_set_object_dblbuffer( ob, ob->active );
+    fl_set_object_dblbuffer( ob, sp->active );
     return ob;
 }
 
@@ -2422,19 +2421,18 @@ fl_set_xyplot_inspect( FL_OBJECT * ob,
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
-    if ( sp->inspect != yes )
-    {
-        ob->active = sp->inspect = yes;
-        if ( ob->type == FL_ACTIVE_XYPLOT )
-            ob->active = 1;
-        else
-        {
-            /* Work-around, need to get doublebuffer to get inspect work
-               right */
+    if ( sp->inspect == yes )
+        return;
 
-            fl_set_object_dblbuffer( ob, sp->active || sp->inspect );
-            fl_redraw_object( ob );
-        }
+    sp->active = sp->inspect = yes;
+
+    if ( ob->type != FL_ACTIVE_XYPLOT )
+    {
+        /* Work-around, need to get doublebuffer to get inspect work
+           right */
+
+        fl_set_object_dblbuffer( ob, sp->active || sp->inspect );
+        fl_redraw_object( ob );
     }
 }
 

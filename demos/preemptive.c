@@ -77,7 +77,6 @@ preemptive_handler( FL_OBJECT * ob   FL_UNUSED_ARG,
 		case FL_ENTER:
 			if ( fl_get_button(fd_form0->enter ) )
 			{
-				/* ok, want to handle enter */
 				sprintf( buf,"%s %s", "FL_ENTER", what );
 				fl_set_object_label( fd_form0->event, buf );
 				return override ? FL_PREEMPT : 0;
@@ -85,7 +84,7 @@ preemptive_handler( FL_OBJECT * ob   FL_UNUSED_ARG,
 			break;
 
 		case FL_LEAVE:
-			if( fl_get_button( fd_form0->leave ) )
+			if ( fl_get_button( fd_form0->leave ) )
 			{
 				sprintf( buf,"%s %s", "FL_LEAVE", what);
 				fl_set_object_label( fd_form0->event, buf );
@@ -189,7 +188,7 @@ main( int    argc,
 
 	fd_form0 = create_form_form0( );
 
-	/* fill-in form initialization code */
+	/* Fill-in form initialization code */
 
 	fl_set_button( fd_form0->peek, 1 );
 	fl_set_button( fd_form0->enter, 1 );
@@ -203,7 +202,7 @@ main( int    argc,
 	set_tip( fd_form0->peek, "Turn preempting off" );
 	set_tip( fd_form0->override, "Turn preempting on" );
 
-	/* show the first form */
+	/* Show the first form */
 
 	fl_show_form( fd_form0->form0, FL_PLACE_CENTER, FL_TRANSIENT,
 				  "Preemptive" );

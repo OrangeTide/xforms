@@ -90,7 +90,7 @@ post( FL_OBJECT * ob,
 	  int         key,
 	  void      * xev  FL_UNUSED_ARG )
 {
-    if ( ev == FL_PUSH || ev == FL_UPDATE )
+    if ( ev == FL_PUSH || ev == FL_MOTION )
     {
         float wx, wy;
         char buf[ 64 ];

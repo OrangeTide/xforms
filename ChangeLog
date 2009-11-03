@@ -1,3 +1,12 @@
+2009-11-03 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/xyplot.c: As Jussi Elorante noticed posthandlers
+	didn't work with XYPLOT objects. This now should be
+	fixed.
+
+	Peter S. Galbraith pointed out that building the documen-
+	tation in info format didn't work properly.
+
 2009-09-21 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_forms.c, fdesign/fd_groups.c,

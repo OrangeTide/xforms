@@ -1,4 +1,4 @@
-			  XForms Version 1.0.91
+			  XForms Version 1.0.92
 
 This is the Free Software distribution of the XForms Library, a
 graphical user interface toolkit for X Window Systems.
@@ -11,8 +11,8 @@ See the file COPYING.LIB for the gory details.
 What's new?
 -----------
 
-XForms 1.0.91 is a development version in preparation for XForms 1.1.0.
-While it is labeled as a "development version" we believe that it per-
+XForms 1.0.92 is a version in preparation for XForms 1.1.0. While
+it is labeled as a "development version" we believe that it per-
 forms correctly and has less bugs than older versions.
 
 For more information, read the file ChangeLog.
@@ -29,7 +29,14 @@ The sources can be downloaded from the project page at
 
   http://www.nongnu.org/xforms/
 
-See the "Download Area" on that page.
+See the "Download Area" on that page. On this page you should
+select the file named 'xforms.latest_stable.tar.gz' (which will
+point to the latest stable release, including bug-fixes that may
+have become necessary) to download the sources -  unless you're
+prepared to take part in testing the "bleeding edge" versions
+that have a name containing '-preX' (where X is some number),
+indicating that it is a pre-release on the way to a new stable
+release.
 
 
 Keeping in touch
@@ -148,5 +155,4 @@ give a value to the CC variable.
 The following option might be useful in desperate cases:
 
   o --enable-warnings that make the compiler output more warnings during
-    the compilation of LyX.  Opposite is --disable-warnings.  By default,
-    this flag is on for development versions only.
+    the compilation.  Opposite is --disable-warnings.

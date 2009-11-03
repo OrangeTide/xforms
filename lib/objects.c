@@ -2288,7 +2288,7 @@ handle_object( FL_OBJECT * obj,
 #endif
 
     if ( obj->objclass == FL_BEGIN_GROUP || obj->objclass == FL_END_GROUP )
-        return 0;
+        return FL_RETURN_NONE;
 
     if ( ! obj->handle )
         return FL_RETURN_NONE;
@@ -2402,7 +2402,8 @@ handle_object( FL_OBJECT * obj,
 
  recover:
 
-    /* Call a pre-handler if it exists */
+    /* Call a pre-handler if it exists and return if it tells us the event
+       has been handled completely */
 
     if (    obj->prehandle
          && event != FL_FREEMEM
@@ -2768,6 +2769,7 @@ fl_set_object_posthandler( FL_OBJECT    * obj,
                            FL_HANDLEPTR   post )
 {
     FL_HANDLEPTR oldh = obj->posthandle;
+
     obj->posthandle = post;
     return oldh;
 }
