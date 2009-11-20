@@ -177,7 +177,7 @@ draw_droplist_choice( FL_OBJECT * ob )
 
 
 /***************************************
- * due to grayout, need to find out which one is valid
+ * Due to grayout, need to find out which one is valid
  ***************************************/
 
 static int

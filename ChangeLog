@@ -1,3 +1,18 @@
+2009-11-20 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/positioner lib/include/positioner.h: Added a new
+	type of positioner (FL_INVISIBLE_POSITIONER) that's
+	completely invisible to put on top of other objects.
+	The idea for that came from Werner Heisch.
+
+	* fdesign/fd_superspec.c: Werner Heisch found that changing
+	copied menu and choice object entries also change the ones
+	of the object copied from. Bug hopefully fixed.
+
+	* lib/fselect.c: When entering text into the input object
+	of a file selector now a fitting file/directory (if one
+	exists) will now be selected automatically in the browser.
+
 2009-11-03 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/xyplot.c: As Jussi Elorante noticed posthandlers

@@ -804,8 +804,9 @@ See the demo programs @file{ldial.c}, @file{ndial.c} and
 
 A positioner is an object in which the user can indicate a position
 with an x- and a y-coordinate. It displays a box with a cross-hair
-cursor in it. Clicking the mouse inside the box changes the position
-of the cross-hair cursor and, hence, the x- and y-values.
+cursor in it (except an invisble positioner, of course). Clicking the
+mouse inside the box changes the position of the cross-hair cursor
+and, hence, the x- and y-values.
 
 @ifnottex
 
@@ -850,6 +851,13 @@ Cross-hair inside a box.
 @anchor{FL_OVERLAY_POSITIONER}
 @item FL_OVERLAY_POSITIONER
 Cross-hair inside a transparent box (i.e.@{ drawn in in XOR mode).
+
+@tindex FL_INVISIBLE_POSITIONER
+@anchor{FL_INVISIBLE_POSITIONER}
+@item FL_INVISIBLE_POSITIONER
+Completely invisible positioner to be used just for the side effect
+of obtaining a position (typically an object is below below it that
+otherwise would receive user events).
 @end table
 
 
@@ -979,7 +987,9 @@ example.
 @node Positioner Attributes
 @subsection Positioner Attributes
 
-Never use @code{FL_NO_BOX} as the boxtype for a positioner. 
+Never use @code{FL_NO_BOX} as the boxtype for a positioner of type.
+@code{FL_NORMAL_POSITIONER} (but the other two types will have a box
+type of @code{FL_NO_BOX} per default).
 
 The first color argument (@code{col1}) t
 @code{@ref{fl_set_object_color()}} controls the color of the box, the

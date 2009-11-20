@@ -593,7 +593,17 @@ copy_superspec( FL_OBJECT * target,
     }
     else
     {
-        for ( i = 1; i <= t->nlines; i++ )
+        if ( s->nlines )
+        {
+            if ( s->mode )
+                t->mode = fl_calloc( s->nlines + 1, sizeof *t->mode );
+            if ( s->content )
+                t->content = fl_calloc( s->nlines + 1, sizeof * t->content);
+            if ( s->shortcut )
+                t->shortcut = fl_calloc( s->nlines + 1, sizeof *t->shortcut );
+        }
+
+        for ( i = 1; i <= s->nlines; i++ )
         {
             t->mode[ i ]    = s->mode[ i ];
             t->content[ i ] = fl_strdup( s->content[ i ] );

@@ -500,6 +500,8 @@ init_classes( void )
     add_class_def( VN( FL_POSITIONER ), OBJNAME( positioner ), ++bl );
     add_type_def( FL_POSITIONER, FL_NORMAL_POSITIONER,  "NORMAL_POSITIONER" );
     add_type_def( FL_POSITIONER, FL_OVERLAY_POSITIONER, "OVERLAY_POSITIONER" );
+    add_type_def( FL_POSITIONER, FL_INVISIBLE_POSITIONER,
+                  "INVISIBLE_POSITIONER" );
     set_var_boxtype( FL_POSITIONER, 1 );
 
     fl_add_browser_line( fd_control->objectbrowser, "thumbwheel" );

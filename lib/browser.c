@@ -1181,7 +1181,7 @@ fl_addto_browser_chars( FL_OBJECT  * ob,
 
 
 /***************************************
- * Returns an approimation of the number of lines shown in the browser
+ * Returns an approximation of the number of lines shown in the browser
  ***************************************/
 
 int

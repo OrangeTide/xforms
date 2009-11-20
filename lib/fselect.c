@@ -49,6 +49,8 @@ static int fifomarker   = 'p';  /* pipe marker          */
 static int sockmarker   = 's';  /* socket marker        */
 static int listdirfirst = 1;    /* list directory first */
 
+extern int fli_sort_method;     /* form listdir.c */
+
 
 /******* GUI parameters ********/
 
@@ -111,11 +113,11 @@ allocate_fselector( int a )
     if ( ! fd_fselector[ a ] )
     {
         fs = fd_fselector[ a ] = fl_calloc( 1, sizeof *fs );
-        fs->fg = FL_COL1;
-        fs->brcol = FL_COL1;
+        fs->fg       = FL_COL1;
+        fs->brcol    = FL_COL1;
         fs->brselcol = FL_TOP_BCOL;
-        fs->border = FL_TRANSIENT;
-        fs->place = FL_PLACE_FREE_CENTER;
+        fs->border   = FL_TRANSIENT;
+        fs->place    = FL_PLACE_FREE_CENTER;
         strcpy( fs->dname, "." );
         strcpy( fs->pattern, "*" );
 
@@ -209,7 +211,7 @@ fl_remove_fselector_appbutton( const char * label )
 
 
 /***************************************
- * just a fake to get the prototypes right
+ * Just a fake to get the prototypes right
  ***************************************/
 
 static void
@@ -447,7 +449,7 @@ pattern_cb( FL_OBJECT * ob,
 
 /***************************************
  * Show all files in directory dname that match selection pattern.
- * Note fn indicates if we should highlight the current selection.
+ * Note: fn indicates if we should highlight the current selection.
  ***************************************/
 
 static int
@@ -561,6 +563,51 @@ fill_entries( FL_OBJECT  * br,
     if ( br->form->window )
         fl_reset_cursor( br->form->window );
     return 0;
+}
+
+
+/***************************************
+ * Handles changes of the input object the user can enter a file name
+ * in. Tries to find a name in the browser that matches the input and
+ * select it if it exists.
+ ***************************************/
+
+static void
+input_cb( FL_OBJECT * obj,
+          long        arg  FL_UNUSED_ARG )
+{
+    FD_fselect *lfs = obj->form->fdui;
+    const char *ip = fl_get_input( obj );
+    int len = strlen( ip );
+    int num_lines;
+    int i;
+
+
+    if ( ! *ip )
+        return;
+
+    num_lines = fl_get_browser_maxline( lfs->browser );
+    for ( i = 1; i <= num_lines; i++ )
+    {
+        const char *line = fl_get_browser_line( lfs->browser, i );
+        int cmp;
+
+        if ( line[ 1 ] == '\0' )
+            continue;
+
+        if ( ! ( cmp = strncmp( line + 2, ip, len ) ) )
+        {
+            fl_select_browser_line( lfs->browser, i );
+            fl_show_browser_line( lfs->browser, i );
+            return;
+        }
+
+        if (    (    ( fli_sort_method == FL_ALPHASORT  && cmp > 0 )
+                  || ( fli_sort_method == FL_RALPHASORT && cmp < 0 ) )
+             && (    ( listdirfirst && *line != dirmarker )
+                  || ! listdirfirst ) )
+            return;
+    }
 }
 
 
@@ -1137,7 +1184,8 @@ create_form_fselect( void )
     fl_set_object_boxtype( obj, FL_SHADOW_BOX );
     fl_set_object_resize( obj, FL_RESIZE_X );
     fl_set_object_gravity( obj, FL_SouthWest, FL_SouthEast );
-    fl_set_object_return( obj, FL_RETURN_NONE );
+    fl_set_object_callback( obj, input_cb, 0 );
+    fl_set_object_return( obj, FL_RETURN_CHANGED );
 
     fs->browser = obj = fl_add_browser( FL_HOLD_BROWSER, 15, 80, 185, 180, "" );
     fl_set_object_callback( obj, select_cb, 0 );

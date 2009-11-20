@@ -298,7 +298,7 @@ try_get_font_struct( int numb,
 
     /* Search for requested size */
 
-    for ( fs = 0, i = 0; i < flf->nsize; i++ )
+    for ( fs = NULL, i = 0; i < flf->nsize; i++ )
     {
         if ( size == flf->size[ i ] )
         {
@@ -334,7 +334,7 @@ try_get_font_struct( int numb,
     }
 
     if ( ! fs && with_fail )
-        return 0;
+        return NULL;
 
     /* Didn't get it. Try to find a substitute */
 

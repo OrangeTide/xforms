@@ -192,7 +192,7 @@ static int default_filter( const char *,
 
 /* default filter and sort method */
 
-static int sort_method = FL_ALPHASORT;
+int fli_sort_method = FL_ALPHASORT;
 static FL_DIRLIST_FILTER ffilter = default_filter;
 static int filter_directory = 0;   /* true to filter directory entries */
 
@@ -329,7 +329,7 @@ tc_sort( const void * a,
     FL_Dirlist *da = ( FL_Dirlist * ) a;
     FL_Dirlist *db = ( FL_Dirlist * ) b;
 
-    switch ( sort_method )
+    switch ( fli_sort_method )
     {
         case FL_RALPHASORT:
             return strcmp( db->name, da->name );
@@ -412,7 +412,7 @@ scandir_get_entries( const char  * dir,
 
         dl->name = NULL;        /* sentinel */
 
-        if ( sort_method != FL_NONE )
+        if ( fli_sort_method != FL_NONE )
             qsort( *dirlist, n, sizeof **dirlist, tc_sort );
     }
 
@@ -487,7 +487,7 @@ scandir_get_entries( const char  * dir,
 
     dl->name = NULL;        /* sentinel */
 
-    if ( sort_method != FL_NONE )
+    if ( fli_sort_method != FL_NONE )
         qsort( *dirlist, n, sizeof **dirlist, tc_sort );
 
     return n;
@@ -630,16 +630,16 @@ fl_get_dirlist( const char * dir,
     {
         fl_free_dirlist( dirlist[ c ] );
         lastn[ c ] = scandir_get_entries( okdir, pat, dirlist + c );
-        last_sort[ c ] = sort_method;
+        last_sort[ c ] = fli_sort_method;
         StrReDup( lastpat[ c ], pat );
         StrReDup( lastdir[ c ], okdir );
     }
 
     *n = lastn[ c ];
-    if ( last_sort[ c ] != sort_method )
+    if ( last_sort[ c ] != fli_sort_method )
     {
         qsort( dirlist[ c ], *n, sizeof **dirlist, tc_sort );
-        last_sort[ c ] = sort_method;
+        last_sort[ c ] = fli_sort_method;
     }
 
     return dirlist[ c ];
@@ -1050,9 +1050,9 @@ default_filter( const char * name  FL_UNUSED_ARG,
 int
 fl_set_dirlist_sort( int method )
 {
-    int old = sort_method;
+    int old = fli_sort_method;
 
-    sort_method = method;
+    fli_sort_method = method;
     return old;
 }
 

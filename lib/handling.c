@@ -671,7 +671,7 @@ handle_ClientMessage_event( FL_FORM * form,
 {
     XClientMessageEvent *xcm = xev;
     static Atom atom_protocol;
-    static Atom atom_del_win;
+    static Atom atom_del_win = None;
 
 
     if ( ! atom_del_win )

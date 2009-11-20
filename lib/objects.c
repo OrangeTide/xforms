@@ -1650,7 +1650,7 @@ fl_get_focus_object( FL_FORM * form )
 -----------------------------------------------------------------------*/
 
 /***************************************
- * Returns an object of type 'find' in a form , starting at 'obj'.
+ * Returns an object of type 'find' in a form, starting at 'obj'.
  * If find_object() does not return an object the event that
  * triggered the call will be eaten. This is how the deactived
  * and inactive objects reject events.

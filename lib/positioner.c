@@ -176,7 +176,8 @@ handle_positioner( FL_OBJECT * ob,
     switch ( event )
     {
         case FL_DRAW:
-            draw_positioner( ob );
+            if ( ob->type != FL_INVISIBLE_POSITIONER )
+                draw_positioner( ob );
             sp->partial = 0;
             break;
 
@@ -237,7 +238,8 @@ fl_create_positioner( int          type,
     ob->align      = FL_POSITIONER_ALIGN;
     ob->lcol       = FL_POSITIONER_LCOL;
 
-    if ( ob->type == FL_OVERLAY_POSITIONER )
+    if (   ob->type == FL_OVERLAY_POSITIONER
+        || ob->type == FL_INVISIBLE_POSITIONER )
     {
         ob->bw = 0;
         ob->boxtype = FL_NO_BOX;
