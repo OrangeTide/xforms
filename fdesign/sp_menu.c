@@ -309,16 +309,20 @@ emit_menu_code( FILE      * fp,
         {
             fprintf( fp, "    fl_addto_menu( obj, \"%s\" );\n",
                      sp->content[ i ] );
+
             if ( sp->mode[ i ] != defsp->mode[ i ] )
                 fprintf(fp, "    fl_set_menu_item_mode( obj, %d, %s );\n",
                         i, get_pupmode_name( sp->mode[ i ] ) );
+
             if ( sp->shortcut[ i ] && *sp->shortcut[ i ] )
                 fprintf( fp,
                          "    fl_set_menu_item_shortcut( obj, %d, \"%s\" );\n",
                          i, sp->shortcut[ i ] );
+
             if ( sp->callback[ i ] && *sp->callback[ i ] )
                 fprintf( fp, "    fl_set_menu_item_callback( obj, %d, %s );\n",
                          i, sp->callback[ i ] );
+
             if ( sp->mval[ i ] != i )
                 fprintf( fp, "    fl_set_menu_item_id( obj, %d, %d );\n",
                          i, sp->mval[ i ] );
@@ -347,18 +351,23 @@ save_menu_attrib( FILE      * fp,
 
     if ( sp->new_menuapi != defsp->new_menuapi )
         fprintf( fp, "    struct: %d\n", sp->new_menuapi );
+
     if ( sp->global_scope != defsp->global_scope )
         fprintf( fp, "    global: %d\n", sp->global_scope );
 
     for ( i = 1; i <= sp->nlines; i++ )
     {
         fprintf( fp, "    content: %s\n", sp->content[i]);
+
         if ( sp->mval[ i ] != i )
             fprintf( fp, "    id: %d\n", sp->mval[ i ] );
+
         if ( sp->mode[ i ] != defsp->mode[ i ] )
             fprintf( fp, "    mode: %s\n", get_pupmode_name(sp->mode[ i ] ) );
+
         if ( sp->shortcut[ i ] && *sp->shortcut[ i ] )
             fprintf( fp, "    shortcut: %s\n", sp->shortcut[ i ] );
+
         if ( sp->callback[ i ] ) 
             fprintf( fp, "    callback: %s\n", sp->callback[ i ] );
     }
@@ -391,11 +400,16 @@ add_menu_item_cb( FL_OBJECT * ob,
             k;
 
         fl_addto_browser( ui->content_br, s );
+
         i = fl_addto_menu( ui->vdata, s );
+
         k = sp->mval[ i ];
         fl_set_menu_item_shortcut( ui->vdata, k, sc );
+
         fl_set_menu_item_mode( ui->vdata, k, get_pupmode_value( mode ) );
+
         fl_safe_free( sp->cb[ i ] );
+
         if ( item_cb && *item_cb )
             fl_set_menu_item_callback( ui->vdata, k,
                                        ( FL_PUP_CB ) fl_strdup( item_cb ) );
@@ -404,6 +418,7 @@ add_menu_item_cb( FL_OBJECT * ob,
 
         if ( fl_get_button( ui->auto_clear ) )
             clear_menu_field_cb( ui->auto_clear, 0 );
+
         if ( auto_apply )
             redraw_the_form( 0 );
     }
@@ -431,11 +446,17 @@ replace_menu_item_cb( FL_OBJECT * ob,
         int k;
 
         fl_replace_browser_line( ui->content_br, i, s );
+
         k = sp->mval[ i ];
+
         fl_replace_menu_item( ui->vdata, k, s );
+
         fl_set_menu_item_shortcut( ui->vdata, k, sc );
+
         fl_set_menu_item_mode( ui->vdata, k, get_pupmode_value( mode ) );
+
         fl_safe_free( sp->cb[ i ] );
+
         if ( item_cb && *item_cb )
             fl_set_menu_item_callback( ui->vdata, k,
                                        ( FL_PUP_CB ) fl_strdup( item_cb ) );
@@ -489,13 +510,17 @@ change_menu_item_cb( FL_OBJECT * ob,
     if ( i > 0 )
     {
         fl_set_input( ui->input, fl_get_browser_line( ui->content_br, i ) );
+
         if ( sp->shortcut[ i ] )
             fl_set_input( ui->shortcut, sp->shortcut[ i ] );
+
         fl_set_choice_text( ui->mode, get_pupmode_name( sp->mode[ i ] ) + 3 );
+
         if ( sp->cb[ i ] )
             fl_set_input( ui->item_cb, ( char * ) sp->cb[ i ] );
         else
             fl_set_input( ui->item_cb, "" );
+
         fl_set_counter_value( ui->id, sp->mval[ i ] );
     }
 }

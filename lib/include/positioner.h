@@ -27,7 +27,7 @@
 
 #define FL_NORMAL_POSITIONER      0
 #define FL_OVERLAY_POSITIONER     1
-#define FL_INVISIBLE_POSITIONER   1
+#define FL_INVISIBLE_POSITIONER   2
 
 /***** Defaults *****/
 

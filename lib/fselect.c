@@ -84,7 +84,6 @@ typedef struct
     char        applabel[ MAX_APPBUTT ][ 32 ];
     void        ( * appcb[ MAX_APPBUTT ] )( void * );
     void      * appdata[ MAX_APPBUTT ];
-
     FL_COLOR    fg;
     FL_COLOR    brcol;
     FL_COLOR    brselcol;
@@ -96,6 +95,8 @@ typedef struct
     char        dname[ MAXFL ];         /* current path */
     char        filename[ FL_FLEN ];    /* bare filename */
     char        pattern[ FL_FLEN ];     /* patterns    */
+    int         last_len;
+    int         last_line;
 } FD_fselect;
 
 static FD_fselect * create_form_fselect( void );
@@ -303,16 +304,15 @@ fli_del_tail_slash( char * d )
 
 
 /***************************************
- * A file is selected from the browser. Return 1 if valid selection
- * i.e., double-clicked. Note that if a callback is defined,
- * always return 0
+ * Callback for selection of a file name. On double click on a directory
+ * we change to that directory, whiel for a double click on a normal file
+ * the return button gets triggered/
  ***************************************/
 
 static void
 select_cb( FL_OBJECT * ob,
            long        isdblclick )
 {
-    int dir;
     char seltext[ FL_PATH_MAX ];
     int thisline;
     FD_fselect *lfs = ob->form->fdui;
@@ -321,12 +321,13 @@ select_cb( FL_OBJECT * ob,
         return;
 
     fli_sstrcpy( seltext, fl_get_browser_line( ob, thisline ), sizeof seltext );
-    dir = seltext[ 0 ] == dirmarker && seltext[ 1 ] == ' ';
+    lfs->last_len = strlen( seltext + 2 );
+    lfs->last_line = thisline;
+    memmove( seltext, seltext + 2, lfs->last_len + 1 );
 
-    memmove( seltext, seltext + 2, strlen( seltext + 2 ) + 1 );
-
-    if ( dir )
+    if ( seltext[ 0 ] == dirmarker && seltext[ 1 ] == ' ' )  /* directory */
     {
+            
         if ( isdblclick )
         {
             strcat( append_slash( lfs->dname ), seltext );
@@ -338,7 +339,7 @@ select_cb( FL_OBJECT * ob,
 
         fl_set_input( lfs->input, seltext );
     }
-    else
+    else                                                     /* normal file */
     {
         fl_set_input( lfs->input, seltext );
         strcpy( lfs->filename, seltext );
@@ -562,6 +563,10 @@ fill_entries( FL_OBJECT  * br,
     fl_unfreeze_form( lfs->fselect );
     if ( br->form->window )
         fl_reset_cursor( br->form->window );
+
+    lfs->last_line = 0;
+    lfs->last_len = 0;
+
     return 0;
 }
 
@@ -578,35 +583,116 @@ input_cb( FL_OBJECT * obj,
 {
     FD_fselect *lfs = obj->form->fdui;
     const char *ip = fl_get_input( obj );
-    int len = strlen( ip );
+    int len;
     int num_lines;
     int i;
-
+    int dir;        /* 1: forward, 0: backward */
 
     if ( ! *ip )
-        return;
-
-    num_lines = fl_get_browser_maxline( lfs->browser );
-    for ( i = 1; i <= num_lines; i++ )
     {
-        const char *line = fl_get_browser_line( lfs->browser, i );
-        int cmp;
+        lfs->last_line = 0;
+        lfs->last_len = 0;
+        return;
+    }
 
-        if ( line[ 1 ] == '\0' )
-            continue;
+    len = strlen( ip );
+    num_lines = fl_get_browser_maxline( lfs->browser );
 
-        if ( ! ( cmp = strncmp( line + 2, ip, len ) ) )
+
+    /* If the entries aren't sorted in alphabetical order we can't use
+       any tricks to shorten the search, we have to run over all entries
+       and pick the first one that matches */
+
+    if (    fli_sort_method != FL_ALPHASORT
+         && fli_sort_method != FL_RALPHASORT )
+    {
+        lfs->last_line = 0;
+
+        for ( i = 1; i <= num_lines; i++ )
         {
-            fl_select_browser_line( lfs->browser, i );
-            fl_show_browser_line( lfs->browser, i );
-            return;
+            const char *line = fl_get_browser_line( lfs->browser, i );
+            int cmp;
+
+            if ( line[ 1 ] == '\0' )
+                continue;
+
+            if ( ! ( cmp = strncmp( line + 2, ip, len ) ) )
+            {
+                fl_select_browser_line( lfs->browser, i );
+                fl_show_browser_line( lfs->browser, i );
+                return;
+            }
         }
 
-        if (    (    ( fli_sort_method == FL_ALPHASORT  && cmp > 0 )
-                  || ( fli_sort_method == FL_RALPHASORT && cmp < 0 ) )
-             && (    ( listdirfirst && *line != dirmarker )
-                  || ! listdirfirst ) )
-            return;
+        return;
+    }
+
+    /* Otherwise we start at the entry found last time and search forward
+       from there if the string in the input field got longer (or we haven't
+       a stored match) and search backwards if it got shorter */
+
+    dir = len > lfs->last_len || lfs->last_line == 0;
+    lfs->last_len = len;
+
+    /* First check if the last matched entry still matches */
+
+    if (    lfs->last_line > 0
+         && dir
+         && ! strncmp( fl_get_browser_line( lfs->browser, lfs->last_line ) + 2,
+                       ip, len ) )
+        return;
+
+    if ( dir ) 
+        for ( i = lfs->last_line + 1; i <= num_lines; i++ )
+        {
+            const char *line = fl_get_browser_line( lfs->browser, i );
+            int cmp;
+
+            if ( line[ 1 ] == '\0' )
+                continue;
+
+            if ( ! ( cmp = strncmp( line + 2, ip, len ) ) )
+            {
+                fl_select_browser_line( lfs->browser, i );
+                fl_show_browser_line( lfs->browser, i );
+                lfs->last_line = i;
+                return;
+            }
+
+	        if (    (    ( fli_sort_method == FL_ALPHASORT  && cmp > 0 )
+	                  || ( fli_sort_method == FL_RALPHASORT && cmp < 0 ) )
+	             && (    ( listdirfirst && *line != dirmarker )
+	                  || ! listdirfirst ) )
+	            return;
+	    }
+    else
+    {
+        int found = 0;
+
+        for ( i = lfs->last_line - 1; i > 0; i-- )
+        {
+            const char *line = fl_get_browser_line( lfs->browser, i );
+            int cmp;
+
+            if ( line[ 1 ] == '\0' )
+                continue;
+
+            if ( ! ( cmp = strncmp( line + 2, ip, len ) ) )
+                found = i;
+
+	        if (    (    ( fli_sort_method == FL_ALPHASORT  && cmp < 0 )
+	                  || ( fli_sort_method == FL_RALPHASORT && cmp > 0 ) )
+	             && (    ( listdirfirst && *line == dirmarker )
+	                  || ! listdirfirst ) )
+                break;
+        }
+
+        if ( found )
+        {
+            fl_select_browser_line( lfs->browser, found );
+            fl_show_browser_line( lfs->browser, found );
+            lfs->last_line = found;
+        }
     }
 }
 

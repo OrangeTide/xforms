@@ -1,3 +1,8 @@
+2009-11-23 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/fselect.c: Improved algorithm for finding file
+	to be shown selected on changes of input field
+
 2009-11-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/positioner lib/include/positioner.h: Added a new
