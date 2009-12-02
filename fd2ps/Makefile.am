@@ -16,7 +16,7 @@ INCLUDES = -I../lib -I$(top_srcdir)/lib $(X_CFLAGS)
 
 bin_PROGRAMS = fd2ps
 
-fd2ps_LDADD = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) $(XPM_LIB) -lX11 $(LIBS) $(X_EXTRA_LIBS)
+fd2ps_LDADD = ../lib/libforms.la $(X_LIBS) $(X_PRE_LIBS) -lX11 $(LIBS) $(X_EXTRA_LIBS)
 
 fd2ps_SOURCES = \
         align.c \

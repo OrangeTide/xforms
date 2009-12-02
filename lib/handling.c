@@ -341,37 +341,32 @@ handle_keyboard( FL_FORM  * form,
             return;
         }
 
-        /* Tab & Return switches focus (for Return only if not FL_KEY_TAB) */
+        /* The <Tab> and <Return> keys the move focus to the next or previous
+           input object (depending on the <SHIFT> being pressed also and for
+           <Return> only if the current focus object hasn't set FL_KEY_TAB as
+           it is the case for  multiline input objects) */
 
         if (    key == '\t'
              || ( key == '\r' && ! ( focusobj->wantkey & FL_KEY_TAB ) ) )
         {
+            fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev, 1 );
+
             if ( ( ( XKeyEvent * ) xev )->state & fli_context->navigate_mask )
             {
-                if ( focusobj == fli_find_first( form, FLI_FIND_INPUT, 0, 0 ) )
+                if ( ! ( obj = fli_find_object_backwards( focusobj->prev,
+                                                          FLI_FIND_INPUT,
+                                                          0, 0 ) ) )
                     obj = fli_find_last( form, FLI_FIND_INPUT, 0, 0 );
-                else
-                    obj = fli_find_object_backwards( focusobj->prev,
-                                                     FLI_FIND_INPUT, 0, 0 );
             }
-            else
-                obj = fli_find_object( focusobj->next, FLI_FIND_INPUT, 0, 0 );
-
-            if ( obj == NULL )
-                obj = fli_find_first( form, FLI_FIND_INPUT, 0, 0 );
-
-            if ( obj != NULL && obj != focusobj )
+            else                                      /* search forward */
             {
-                fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev, 1 );
-                fli_handle_object( obj, FL_FOCUS, x, y, 0, xev, 1 );
+                if ( ! ( obj = fli_find_object( focusobj->next,
+                                                FLI_FIND_INPUT, 0, 0 ) ) )
+                        
+                    obj = fli_find_first( form, FLI_FIND_INPUT, 0, 0 );
             }
-            else if (    key == '\r'
-                      && ( obj = fli_find_first( form, FLI_FIND_RETURN,
-                                                 0, 0 ) ) )
-            {
-                fli_handle_object( focusobj, FL_UNFOCUS, x, y, 0, xev, 1 );
-                fli_handle_object( obj, FL_SHORTCUT, x, y, key, xev, 1 );
-            }
+                
+            fli_handle_object( obj, FL_FOCUS, x, y, 0, xev, 1 );
         }
         else if ( focusobj->wantkey != FL_KEY_SPECIAL )
             fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );

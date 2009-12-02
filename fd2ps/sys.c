@@ -28,46 +28,63 @@
 #include <time.h>
 #include <ctype.h>
 
-const char *
-ascii_date(void)
-{
-    time_t t = time(0);
-    static char buf[64];
 
-    strcpy(buf, asctime(localtime(&t)));
-    buf[strlen(buf) - 1] = '\0';
+/***************************************
+ ***************************************/
+
+const char *
+ascii_date( void )
+{
+    time_t t = time( 0 );
+    static char buf[ 64 ];
+
+    strcpy( buf, asctime( localtime( &t ) ) );
+    buf[ strlen( buf ) - 1 ] = '\0';
     return buf;
 }
+
 
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <stdlib.h>
 
+
+/***************************************
+ ***************************************/
+
 const char *
-whoami(void)
+whoami( void )
 {
 #ifndef __VMS
-    struct passwd *passwd = getpwuid(getuid());
+    struct passwd *passwd = getpwuid( getuid( ) );
     const char *name = passwd ? passwd->pw_name : "Unknown";
-    endpwent();
+    endpwent( );
 #else
-    const char *name = getenv("USER");
+    const char *name = getenv( "USER" );
 #endif
     return name ? name : "unknown";
 }
 
 
+/***************************************
+ ***************************************/
+
 char *
-fl_strdup(const char *s)
+fl_strdup( const char * s )
 {
-    char *p = malloc(1 + strlen(s));
-    return p ? strcpy(p, s) : p;
+    char *p = malloc( 1 + strlen( s ) );
+    return p ? strcpy( p, s ) : p;
 }
+
+
+/***************************************
+ ***************************************/
 
 #ifndef HAVE_STRCASECMP
 int
-strcasecmp( const char *s1, const char *s2)
+strcasecmp( const char * s1,
+            const char * s2 )
 {
     int c1, c2;
 

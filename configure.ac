@@ -13,7 +13,7 @@ AM_MAINTAINER_MODE
 
 ### This defines the version number of the installed .so files
 ### using libtool's versioning system.
-AC_SUBST(SO_VERSION, ["2:0:1"])
+AC_SUBST(SO_VERSION, ["2:0:0"])
 
 # fix the value of the prefixes.
 test "x$prefix" = xNONE && prefix=$ac_default_prefix

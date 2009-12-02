@@ -152,6 +152,9 @@ handle_spinner( FL_OBJECT * obj,
 
 
 /***************************************
+ * Callback for the input and button objects of the spinner,
+ * called with 'data' set to 0 for the input object and with
+ * 'data' being 1 or -1 for the up and down buttons
  ***************************************/
 
 static void
@@ -163,9 +166,7 @@ spinner_callback( FL_OBJECT * obj,
     int max_len = 4 + sp->prec + log10( DBL_MAX );
     char buf[ max_len ];
 
-    /* Don't react to mere changes of the input field while it keeps focus */
-
-    if ( data == 0 && ! ( obj->returned & FL_RETURN_END ) )
+    if ( data == 0 && ! *s_val && ! ( obj->returned & FL_RETURN_END ) )
         return;
 
     if ( obj->parent->type == FL_INT_SPINNER )
@@ -177,12 +178,18 @@ spinner_callback( FL_OBJECT * obj,
             char *eptr;
             long i_val = strtol( s_val, &eptr, 10 );
 
-            if ( eptr == s_val )
-                /* empty */ ;
-            else if ( i_val > sp->i_max )
-                sp->i_val = sp->i_max;
-            else if ( i_val < sp->i_min )
-                sp->i_val = sp->i_min;
+            /* heck for an invalid value entered */
+
+            if ( eptr == s_val || i_val > sp->i_max || i_val < sp->i_min )
+            {
+                if ( ! ( obj->returned & FL_RETURN_END ) )
+                    return;
+
+                if ( i_val > sp->i_max )
+                    sp->i_val = sp->i_max;
+                else if ( i_val < sp->i_min )
+                    sp->i_val = sp->i_min;
+            }
             else
                 sp->i_val = i_val;
         }
@@ -232,12 +239,16 @@ spinner_callback( FL_OBJECT * obj,
             char *eptr;
             double f_val = strtod( s_val, &eptr );
 
-            if ( eptr == s_val )
-                /* empty */ ;
-            else if ( f_val > sp->f_max )
-                sp->f_val = sp->f_max;
-            else if ( f_val < sp->f_min )
-                sp->f_val = sp->f_min;
+            if ( eptr == s_val || f_val > sp->f_max || f_val < sp->f_min )
+            {
+                if ( ! ( obj->returned & FL_RETURN_END ) )
+                    return;
+
+                if ( f_val > sp->f_max )
+                    sp->f_val = sp->f_max;
+                if ( f_val < sp->f_min )
+                    sp->f_val = sp->f_min;
+            }
             else
                 sp->f_val = f_val;
         }
