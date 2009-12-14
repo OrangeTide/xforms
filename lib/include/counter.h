@@ -37,7 +37,7 @@ typedef enum {
 #define FL_COUNTER_LCOL     FL_LCOL     /* ct reporting */
 #define FL_COUNTER_ALIGN    FL_ALIGN_BOTTOM
 
-/***** Others   *****/
+/***** Others *****/
 
 #define FL_COUNTER_BW       ( FL_BOUND_WIDTH - 1 )
 

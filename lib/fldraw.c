@@ -801,13 +801,8 @@ void
 fli_add_vertex( FL_Coord x,
                 FL_Coord y )
 {
-#if FL_CoordIsFloat
-    xpbuf[ npt   ].x = FL_nint( x );
-    xpbuf[ npt++ ].y = FL_nint( y );
-#else
     xpbuf[ npt   ].x = x;
     xpbuf[ npt++ ].y = y;
-#endif
 }
 
 

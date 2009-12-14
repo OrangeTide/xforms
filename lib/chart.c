@@ -874,7 +874,7 @@ fl_get_chart_bounds( FL_OBJECT * ob,
  * Sets the maximal number of values displayed in the chart
  ***************************************/
 
-int
+void
 fl_set_chart_maxnumb( FL_OBJECT * ob,
                       int         maxnumb )
 {
@@ -884,10 +884,13 @@ fl_set_chart_maxnumb( FL_OBJECT * ob,
     /* Fill in the new number */
 
     if ( maxnumb < 0 )
-        return FL_ARGUMENT;
+    {
+        M_err( "fl_set_chart_maxnum", "Invalid maxnumb value" );
+        return;
+    }
 
     if ( maxnumb == sp->maxnumb )
-        return 0;
+        return;
 
     curmax = sp->maxnumb;
 
@@ -910,7 +913,7 @@ fl_set_chart_maxnumb( FL_OBJECT * ob,
        sp->entries = fl_calloc( curmax + 1, sizeof *sp->entries );
        for ( i = 0; i <= curmax; i++ )
            sp->entries[ i ].val = 0.0;
-       return FL_ALLOC;
+       return;
    }
 
     /* Shift entries if required */
@@ -922,8 +925,6 @@ fl_set_chart_maxnumb( FL_OBJECT * ob,
        sp->numb = sp->maxnumb;
        fl_redraw_object( ob );
     }
-
-    return 0;
 }
 
 

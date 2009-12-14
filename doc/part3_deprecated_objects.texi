@@ -517,7 +517,6 @@ typedef struct @{
     FL_PUP_CB callback;
     const char *shortcut;
     int mode;
-    long reserved[2];
 @} FL_PUP_ENTRY;
 @end example
 The meaning of each member is explained in Section 21.3. For menus,
@@ -1026,7 +1025,6 @@ typedef struct @{
     FL_PUP_CB    callback;  /* item callback routine */
     const char * shortcut;  /* shortcut for this item */
     unsigned int mode;      /* item mode */
-    long reserved[2];
 @} FL_PUP_ENTRY;
 @end example
 @noindent

@@ -2703,7 +2703,7 @@ find_ybounds( FLI_XYPLOT_SPEC * sp )
  * overloading would'v been nice ...
  ***************************************/
 
-int
+void
 fl_set_xyplot_data_double( FL_OBJECT  * ob,
                            double     * x,
                            double     * y,
@@ -2720,7 +2720,7 @@ fl_set_xyplot_data_double( FL_OBJECT  * ob,
     {
         M_err( "fl_set_xyplot_data_double",
                "%s not an xyplot", ob ? ob->label : "" );
-        return FL_BAD_OBJECT;
+        return;
     }
 #endif
 
@@ -2742,7 +2742,7 @@ fl_set_xyplot_data_double( FL_OBJECT  * ob,
         if ( *sp->x )
             fl_free( *sp->x );
         M_err( "fl_set_xyplot_data_double", "Can't allocate memory" );
-        return FL_ALLOC;
+        return;
     }
 
     extend_screen_data( sp, n );
@@ -2759,14 +2759,13 @@ fl_set_xyplot_data_double( FL_OBJECT  * ob,
     find_ybounds( sp );
 
     fl_redraw_object( ob );
-    return FL_OK;
 }
 
 
 /***************************************
  ***************************************/
 
-int
+void
 fl_set_xyplot_data( FL_OBJECT  * ob,
                     float      * x,
                     float      * y,
@@ -2781,7 +2780,7 @@ fl_set_xyplot_data( FL_OBJECT  * ob,
     if ( ! IsValidClass( ob, FL_XYPLOT ) )
     {
         M_err( "fl_set_xyplot_data", "%s not an xyplot", ob ? ob->label : "" );
-        return FL_BAD_OBJECT;
+        return;
     }
 #endif
 
@@ -2803,7 +2802,7 @@ fl_set_xyplot_data( FL_OBJECT  * ob,
         if ( *sp->x )
             fl_free( *sp->x );
         M_err( "fl_set_xyplot_data", "Can't allocate memory" );
-        return FL_ALLOC;
+        return;
     }
 
     extend_screen_data( sp, n );
@@ -2816,8 +2815,6 @@ fl_set_xyplot_data( FL_OBJECT  * ob,
     find_ybounds( sp );
 
     fl_redraw_object( ob );
-
-    return FL_OK;
 }
 
 

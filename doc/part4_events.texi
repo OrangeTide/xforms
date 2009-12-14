@@ -173,9 +173,9 @@ to 1 (see below).
 @item FL_UNFOCUS
 Input is no longer focussed on the object.
 
-@tindex FL_KEYBOARD
-@anchor{FL_KEYBOARD}
-@item FL_KEYBOARD
+@tindex FL_KEYPRESS
+@anchor{FL_KEYPRESS}
+@item FL_KEYPRESS
 A key was pressed. The ASCII value (or KeySym if non-ASCII) is passed
 to the routine via the @code{key} argument, modiier keys can be
 retrieved from the @code{state} member of the XEvent also passed to

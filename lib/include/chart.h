@@ -37,7 +37,7 @@ typedef enum {
     FL_SPECIALPIE_CHART
 } FL_CHART_TYPE;
 
-#define FL_FILLED_CHART  FL_FILL_CHART  /* compatibility */
+#define FL_FILLED_CHART  FL_FILL_CHART  /* for backward compatibility */
 
 /***** Defaults *****/
 
@@ -93,8 +93,8 @@ FL_EXPORT void fl_get_chart_bounds( FL_OBJECT * ob,
                                     double    * min,
                                     double    * max );
 
-FL_EXPORT int fl_set_chart_maxnumb( FL_OBJECT * ob,
-                                    int         maxnumb );
+FL_EXPORT void fl_set_chart_maxnumb( FL_OBJECT * ob,
+									 int         maxnumb );
 
 FL_EXPORT void fl_set_chart_autosize( FL_OBJECT * ob,
                                       int         autosize );

@@ -320,24 +320,24 @@ handle_keyboard( FL_FORM  * form,
                  || IsRight( key )
                  || IsHome( key )
                  || IsEnd( key ) )
-                fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
+                fli_handle_object( focusobj, FL_KEYPRESS, x, y, key, xev, 1 );
             else if (    (    IsUp( key )
                            || IsDown( key )
                            || IsPageUp( key )
                            || IsPageDown( key ) )
                       && focusobj->wantkey & FL_KEY_TAB )
-                fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
+                fli_handle_object( focusobj, FL_KEYPRESS, x, y, key, xev, 1 );
             else if ( special && special->wantkey & FL_KEY_SPECIAL )
             {
                 /* Moving the cursor in input field that does not have focus
                    looks weird */
 
                 if ( special->objclass != FL_INPUT )
-                    fli_handle_object( special, FL_KEYBOARD,
+                    fli_handle_object( special, FL_KEYPRESS,
                                        x, y, key, xev, 1 );
             }
             else if ( key == XK_BackSpace || key == XK_Delete )
-                fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
+                fli_handle_object( focusobj, FL_KEYPRESS, x, y, key, xev, 1 );
             return;
         }
 
@@ -369,7 +369,7 @@ handle_keyboard( FL_FORM  * form,
             fli_handle_object( obj, FL_FOCUS, x, y, 0, xev, 1 );
         }
         else if ( focusobj->wantkey != FL_KEY_SPECIAL )
-            fli_handle_object( focusobj, FL_KEYBOARD, x, y, key, xev, 1 );
+            fli_handle_object( focusobj, FL_KEYPRESS, x, y, key, xev, 1 );
         return;
     }
 
@@ -381,11 +381,11 @@ handle_keyboard( FL_FORM  * form,
     /* Space is an exception for browser */
 
     if ( ( key > 255 || key == ' ' ) && special->wantkey & FL_KEY_SPECIAL )
-        fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
+        fli_handle_object( special, FL_KEYPRESS, x, y, key, xev, 1 );
     else if ( key < 255 && special->wantkey & FL_KEY_NORMAL )
-        fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
+        fli_handle_object( special, FL_KEYPRESS, x, y, key, xev, 1 );
     else if ( special->wantkey == FL_KEY_ALL )
-        fli_handle_object( special, FL_KEYBOARD, x, y, key, xev, 1 );
+        fli_handle_object( special, FL_KEYPRESS, x, y, key, xev, 1 );
 
 #if FL_DEBUG >= ML_INFO1
     M_info( "handle_keyboard", "(%d %d) pushing %d to %s\n",
@@ -426,7 +426,7 @@ fli_handle_form( FL_FORM * form,
     {
         fl_get_form_mouse( fli_int.mouseform, &fli_int.mousex, &fli_int.mousey,
                            &fli_int.keymask );
-        if ( event != FL_KEYBOARD )
+        if ( event != FL_KEYPRESS )
             key = xmask2key( fli_int.keymask );
         fli_int.query_age = 0;
     }
@@ -537,11 +537,11 @@ fli_handle_form( FL_FORM * form,
 
             break;
 
-        case FL_KEYBOARD:       /* key was pressed */
+        case FL_KEYPRESS:      /* key was pressed */
             handle_keyboard( form, key, x, y, xev );
             break;
 
-        case FL_STEP:       /* simple step */
+        case FL_STEP:          /* simple step */
             obj = fli_find_first( form, FLI_FIND_AUTOMATIC, 0, 0 );
 
             if ( obj )

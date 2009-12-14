@@ -730,7 +730,7 @@ draw_line( FL_Coord x,
     FL_Coord xc = x + w / 2,
              yc = y + h / 2;
 
-    ShrinkBox( x, y, w, h, 3     /* FL_abs( FL_BOUND_WIDTH ) */ );
+    ShrinkBox( x, y, w, h, 3 );
 
     xp = xpoint;
 
@@ -759,7 +759,7 @@ draw_ripplelines( FL_Coord x,
     int xs,
         ys,
         i,
-        mw = 3; /* FL_abs( FL_BOUND_WIDTH ); */
+        mw = 3;
 
     xs = xm - 5;
     ys = ym - 5;

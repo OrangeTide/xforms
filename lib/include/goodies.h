@@ -182,12 +182,12 @@ FL_EXPORT void fl_set_command_log_position( int,
 
 FL_EXPORT FD_CMDLOG * fl_get_command_log_fdstruct( void );
 
-/* aliases */
+/* Aliases */
 
 #define fl_open_command    fl_exe_command
 #define fl_close_command   fl_end_command
 
-/******* file selector *****************/
+/******* File selector *****************/
 
 #define FL_MAX_FSELECTOR  6
 

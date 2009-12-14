@@ -17,9 +17,7 @@
 
 /********************** crop here for forms.h **********************/
 
-/*
- * Image related routines
- */
+/* Image related routines */
 
 #ifndef FL_IMAGE_H
 #define FL_IMAGE_H
@@ -85,7 +83,7 @@ typedef unsigned int      FL_PACKED4;
 #define FL_AMASK          0xff000000
 #define FL_ASHIFT         24
 
-/* if PCBITS is not 8, we need to apply the RGBmask */
+/* If PCBITS is not 8, we need to apply the RGBmask */
 
 #define FL_GETR( packed ) (   ( packed )                & FL_RMASK )
 #define FL_GETG( packed ) ( ( ( packed ) >> FL_GSHIFT ) & FL_PCMAX )
@@ -141,7 +139,6 @@ typedef struct flimage_text_ {
                    style;
     int            angle;     /* in 1/10th of a degrees        */
     int            align;     /* alignment wrt to (x,y)        */
-    int            reserved[ 6 ];
 } FLIMAGE_TEXT;
 
 typedef struct flimage_marker_ {
@@ -163,7 +160,6 @@ typedef struct flimage_marker_ {
     void       * gc;
     FL_WINDOW    win;
     const char * psdraw;
-    int          reserved[ 6 ];
 } FLIMAGE_MARKER;
 
 #define FLIMAGE_REPFREQ  0x1f   /* report every 32 lines */
@@ -182,7 +178,6 @@ typedef struct {
                 bbits;
    int          bits_per_rgb;
    int          colormap_size;
-   int          reserved[ 2 ];
 } FL_RGB2PIXEL_;
 
 #define FL_RGB2PIXEL  FL_RGB2PIXEL_
@@ -246,7 +241,6 @@ typedef struct flimage_ {
     int               wxd,
                       wyd;
     const char      * fmt_name;       /* format name (ppm,jpg etc)     */
-    int               bi_reserved[ 8 ];
 
     /* annotation stuff */
 
@@ -262,7 +256,6 @@ typedef struct flimage_ {
     int               dont_display_marker;
     void              ( * display_markers )( struct flimage_ * );
     void              ( * free_markers )( struct flimage_ * );
-    int               an_reserved[ 8 ];
 
     /* physicalValue = poffset + pixelValue * pscale  */
 
@@ -277,7 +270,6 @@ typedef struct flimage_ {
     double            xdist_scale;
     double            ydist_offset;
     double            ydist_scale;
-    int               px_reserved[ 8 ];
 
     char            * infile;
     char            * outfile;
@@ -289,7 +281,6 @@ typedef struct flimage_ {
 
     int               ( * pre_write )( struct flimage_ * );
     int               ( * post_write )( struct flimage_ * );
-    int               f_reserved[ 16 ];
 
     /* image processing stuff */
 
@@ -303,7 +294,6 @@ typedef struct flimage_ {
     int             * llut[ 3 ];      /* linear lut            */
     int               llut_len;
     unsigned int    * hist[ 4 ];
-    int               ip_reserved[ 16 ];
 
     /* application handlers */
 
@@ -335,7 +325,6 @@ typedef struct flimage_ {
     int               ( * rewind_frame )( struct flimage_ * );
     void              ( * cleanup )( struct flimage_ * );
     int               stop_looping;
-    int               mi_reserved[ 16 ];
 
     /* the following are for internal use */
 
@@ -363,7 +352,6 @@ typedef struct flimage_ {
     int               isPixmap;
     FLIMAGESETUP      setup;
     char            * info;
-    int               internal_reserved[ 14 ];
 } FL_IMAGE;
 
 /* some configuration stuff */
@@ -390,7 +378,6 @@ typedef struct flimage_setup_ {
 
     unsigned long   trailblazer;
     int             header_info;
-    int             reserved[ 8 ];
 } FLIMAGE_SETUP;
 
 FL_EXPORT void flimage_setup(
@@ -568,7 +555,6 @@ typedef struct
 {
     int quality;
     int smoothing;
-    int reserved[ 6 ];
 } FLIMAGE_JPEG_OPTION;
 
 FL_EXPORT void flimage_jpeg_options(
@@ -604,7 +590,6 @@ typedef struct {
     int          type;
     int          read_write;
     int          annotation;
-    int          reserved[5];
 } FLIMAGE_FORMAT_INFO;
 
 FL_EXPORT int flimage_get_number_of_formats(
@@ -632,12 +617,8 @@ FL_EXPORT void fl_free_matrix(
         void *
         );
 
-FL_EXPORT char * fl_basename(
-        char *
-        );
-
-/** This function is retained for compatibility reasons only.
-    It returns 1 always. */
+/* This function is retained for compatibility reasons only.
+   It returns 1 always. */
 
 FL_EXPORT int fl_init_RGBdatabase(
         const char *
@@ -678,7 +659,7 @@ FL_EXPORT void fl_select_mediancut_quantizer(
         void
         );
 
-/* simple image processing routines */
+/* Simple image processing routines */
 
 #define FLIMAGE_SHARPEN        ( ( int** )( -1 ) )
 #define FLIMAGE_SMOOTH         ( ( int** )( -2 ) )

@@ -1420,7 +1420,7 @@ handle_input( FL_OBJECT * obj,
             }
             break;
 
-        case FL_KEYBOARD:
+        case FL_KEYPRESS:
             if ( ( ret = handle_key( obj, key,
                                      ( ( XKeyEvent * ) ev )->state ) ) )
             {

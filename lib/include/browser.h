@@ -28,6 +28,7 @@
 
 
 /***** Types    *****/
+
 typedef enum {
     FL_NORMAL_BROWSER,
     FL_SELECT_BROWSER,
@@ -52,7 +53,7 @@ typedef enum {
 
 /* This exists only for backward compatibility and isn't used anymore! */
 
-#define FL_BROWSER_LINELENGTH   2048
+#define FL_BROWSER_LINELENGTH   INT_MAX
 
 
 /***** Routines *****/

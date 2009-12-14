@@ -124,7 +124,7 @@ noop_handle( FL_OBJECT * ob,
     if ( ob->type == FL_INACTIVE_FREE )
         return 0;
     if ( ob->type == FL_INPUT_FREE )
-        return e == FL_KEYBOARD;
+        return e == FL_KEYPRESS;
     return 1;
 }
 

@@ -105,7 +105,7 @@ post( FL_OBJECT * ob,
     {
         fl_hide_oneliner( );
     }
-    else if( ev == FL_KEYBOARD )
+    else if( ev == FL_KEYPRESS )
     {
 		fprintf( stderr,"key=%d\n",key );
     }

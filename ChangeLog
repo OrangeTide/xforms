@@ -1,3 +1,16 @@
+2009-12-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	demos/thumbwheel.c: Bug fixed as pointed out by "LukeShiro"
+
+	images/flimage.h: Removed useless declaration of fl_basename()
+	as proposed by "LukenShiro"
+
+	several include files: Removed useless members from a number
+	of structures and enums, adjusted return types of a few
+	functions to fit the documentation, all as part of the clean
+	up for the new SO version since this just th right moment to
+	get rid of garbage.
+
 2009-11-30 Jens Thoms Toerring    <jt@toerring.de>
 
 	* configure.ac: Updated SO_VERSION since the library isn't

@@ -25,7 +25,7 @@
 #ifndef FL_BOX_H
 #define FL_BOX_H
 
-/* type already defined in Basic.h */
+/* Type is already defined in Basic.h */
 
 FL_EXPORT FL_OBJECT * fl_create_box( int          type,
                                      FL_Coord     x,

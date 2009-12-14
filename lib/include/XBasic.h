@@ -144,11 +144,9 @@ FL_EXPORT int fl_mode_capable( int mode,
 #define fl_default_window( )    ( fl_state[ fl_vmode ].trailblazer )
 
 
-/*
- * All pixmaps used by FL_OBJECT to simulate double buffering have the
+/* All pixmaps used by FL_OBJECT to simulate double buffering have the
  * following entries in the structure. FL_Coord x,y are used to shift
- * the origin of the drawing routines
- */
+ * the origin of the drawing routines */
 
 struct FL_pixmap_ {
     Pixmap         pixmap;

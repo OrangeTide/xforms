@@ -56,7 +56,7 @@ where @code{obj} is the object to which the event applies.
 a list of possible events. @code{mx} and @code{my} indicate the
 position of the mouse (only meaningful with mouse related events)
 relative to the form origin and @code{key} is the KeySym of the key
-typed in by the user (only for @code{FL_KEYBOARD} events). @code{xev}
+typed in by the user (only for @code{FL_KEYPRESS} events). @code{xev}
 is the (cast) XEvent that causes the invocation of this handler.
 @code{event} and @code{xev->type} can both be used to obtain the event
 types. The routine should return whether the status of the object has
@@ -159,8 +159,8 @@ only sent to a free object of type @code{FL_INPUT_FREE} (see below).
 @item FL_UNFOCUS
 Input is no longer focussed on this object.
 
-@tindex FL_KEYBOARD
-@item FL_KEYBOARD
+@tindex FL_KEYPRESS
+@item FL_KEYPRESS
 A key was pressed. The KeySym is given with the routine. This event
 only happens between @code{FL_FOCUS} and @code{FL_UNFOCUS} events.
 
@@ -208,7 +208,7 @@ for objects without interaction (e.g. a picture).
 @tindex FL_INPUT_FREE
 @item FL_INPUT_FREE
 Same as @code{FL_NORMAL_FREE} but the object also receives
-@code{FL_FOCUS}, @code{FL_UNFOCUS} and @code{FL_KEYBOARD} events. The
+@code{FL_FOCUS}, @code{FL_UNFOCUS} and @code{FL_KEYPRESS} events. The
 @code{obj->wantkey} is by default set to @code{FL_KEY_NORMAL}, i.e.,
 the free object will receive all normal keys (0-255) except
 @code{<Tab>} and @code{<Return>} key. If you're interested in

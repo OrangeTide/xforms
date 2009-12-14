@@ -1959,7 +1959,7 @@ fli_handle_mouse_wheel( int       * ev,
 
     if ( *ev == FL_RELEASE )
     {
-        *ev = FL_KEYBOARD;
+        *ev = FL_KEYPRESS;
 
         if ( xev && shiftkey_down( ( ( XButtonEvent * ) xev )->state ) )
         {
@@ -2258,7 +2258,7 @@ handle_tbox( FL_OBJECT * obj,
                 sp->callback( obj, sp->callback_data );
             break;
 
-        case FL_KEYBOARD :
+        case FL_KEYPRESS :
             ret = handle_keyboard( obj, key );
             break;
 

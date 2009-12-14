@@ -1010,7 +1010,7 @@ other objects that get returned by @code{@ref{fl_do_forms()}} etc.@:
 or have their callbacks invoked.
 
 Instead the user can request that for specific @code{X} events (not
-XForms object events like @code{FL_PRESS}, @code{FL_KEYBOARD} etc.!)
+XForms object events like @code{FL_PRESS}, @code{FL_KEYPRESS} etc.!)
 callbacks are invoked that receive all information about the
 @code{XEvent} that led to their invocation. This obviously requires
 some understanding of how the X Window system works.

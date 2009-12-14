@@ -47,7 +47,7 @@ typedef struct {
                    mask;
     unsigned int   bits_w,
                    bits_h;
-    int            val;             /* whether on */
+    int            val;             /* state of button (on/off) */
     int            mousebut;        /* mouse button that caused the push     */
     int            timdel;          /* time since last touch (TOUCH buttons) */
     int            event;           /* what event triggers redraw            */

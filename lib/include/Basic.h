@@ -56,18 +56,9 @@ enum {
     FL_CANCEL      = 0,
     FL_INVALID     = 0,
 
-    /* FL_NONE        = 0,  defined elsewhere */
-
     /* WM_DELETE_WINDOW callback return */
 
     FL_IGNORE      = -1,
-    FL_CLOSE       = -2,
-
-    /* misc. return types */
-
-    FL_ARGUMENT    = -3,
-    FL_ALLOC       = -4,
-    FL_BAD_OBJECT  = -5
 };
 
 /* Max  directory length  */
@@ -78,16 +69,12 @@ enum {
 #else
 #define FL_PATH_MAX       PATH_MAX
 #endif
-#endif /* !def FL_PATH_MAX */
+#endif /* ! def FL_PATH_MAX */
 
-/* The screen coordinate unit, FL_Coord, must be of signed type.
- * If FL_Coord is float, FL_CoordIsFloat must be defined to be 1 so that
- * round-off error can be checked. **TODO Float not tested */
+/* The screen coordinate unit, FL_Coord, must be of signed type */
 
 typedef int FL_Coord;
-
 #define FL_COORD         FL_Coord
-#define FL_CoordIsFloat  0  /* make it 1 if FL_Coord is of type float */
 
 typedef unsigned long FL_COLOR;
 
@@ -191,8 +178,7 @@ enum {
     FL_FULLBORDER = 1,      /* normal                                  */
     FL_TRANSIENT,           /* set TRANSIENT_FOR property              */
     FL_NOBORDER,            /* use override_redirect to supress decor. */
-    FL_MODAL      = 1 << 8  /* not implemented yet                     */
-};
+ };
 
 /* All box types */
 
@@ -222,8 +208,7 @@ typedef enum {
     FL_SELECTED_TOPTAB_UPBOX,
     FL_BOTTOMTAB_UPBOX,
     FL_SELECTED_BOTTOMTAB_UPBOX,
-    FL_OSHADOW_BOX,                 /* not used */
-
+ 
     FL_MAX_BOX_STYLES               /* sentinel */
 } FL_BOX_TYPE;
 
@@ -501,7 +486,7 @@ typedef enum {
 
 #define FL_DOGERBLUE        FL_DODGERBLUE
 
-/* Events that a form reacts to.  */
+/* Events that a form reacts to  */
 
 typedef enum {
     FL_NOEVENT,                /*  0 */
@@ -513,11 +498,9 @@ typedef enum {
     FL_MOTION,                 /*  6 */
     FL_FOCUS,                  /*  7 */
     FL_UNFOCUS,                /*  8 */
-    FL_KEYBOARD,               /*  9 */
-    FL_KEYPRESS = FL_KEYBOARD, /*  9 */
+    FL_KEYPRESS,               /*  9 */
     FL_UPDATE,                 /* 10 for objects that need to update something
                                      from time to time */
-    FL_MOUSE = FL_UPDATE,      /* 10 */
     FL_STEP,                   /* 11 */
     FL_SHORTCUT,               /* 12 */
     FL_FREEMEM,                /* 13 */
@@ -532,13 +515,19 @@ typedef enum {
                                      changes its absolute x,y coords. Objects
                                      that themselves contain forms should
                                      ensure that they are up to date. */
-    FL_RESIZED                 /* 22 the object has been resized by scale_form
+    FL_RESIZED,                /* 22 the object has been resized by scale_form
                                      Tell it that this has happened so that
                                      it can resize any FL_FORMs that it
                                      contains. */
+
+	/* The following are only for backward compatibility, not used anymore */
+
+	FL_MOVE = FL_MOTION,
+    FL_KEYBOARD = FL_KEYPRESS,
+    FL_MOUSE = FL_UPDATE
+
 } FL_EVENTS;
 
-#define FL_MOVE   FL_MOTION    /* for compatibility */
 
 /* Resize policies */
 
@@ -548,6 +537,7 @@ typedef enum {
     FL_RESIZE_Y,
     FL_RESIZE_ALL = ( FL_RESIZE_X | FL_RESIZE_Y )
 } FL_RESIZE_T;
+
 
 /* Keyboard focus control */
 
@@ -589,7 +579,6 @@ typedef struct {
     FL_PUP_CB    callback;       /* the callback function        */
     const char * shortcut;       /* hotkeys                      */
     int          mode;           /* FL_PUP_GRAY, FL_PUP_CHECK etc */
-    long         reserved[ 2 ];  /* left in for backward compatibility */
 } FL_PUP_ENTRY;
 
 #define FL_MENU_ENTRY  FL_PUP_ENTRY
@@ -707,7 +696,7 @@ struct FL_OBJECT_ {
     void             ( * object_callback )( FL_OBJECT *,
                                             long );
     long             argument;
-    void           * spec;       /* instantiation                      */
+    void           * spec;            /* instantiation */
 
     int              ( * prehandle )( FL_OBJECT *,
                                       int,
@@ -735,14 +724,15 @@ struct FL_OBJECT_ {
 
     FL_OBJECT      * parent;
     FL_OBJECT      * child;
-    FL_OBJECT      * nc;
-    int              returned;
+    FL_OBJECT      * nc;             /* next child */
 
     FL_pixmap      * flpixmap;       /* pixmap double buffering stateinfo */
     int              use_pixmap;     /* true to use pixmap double buffering*/
 
     /* some interaction flags */
 
+    int              returned;       /* what last interaction returned */
+    int              how_return;     /* under which conitions to return */
     int              double_buffer;  /* only used by mesa/gl canvas */
     int              pushed;
     int              focus;
@@ -760,10 +750,7 @@ struct FL_OBJECT_ {
     void           * c_vdata;        /* for class use */
     char           * c_cdata;        /* for class use */
     long             c_ldata;        /* for class use */
-    FL_COLOR         aux_col1,       /* aux colors */
-                     aux_col2;
     FL_COLOR         dbl_background; /* double buffer background */
-    int              how_return;
     char           * tooltip;
     int              tipID;
     int              group_id;

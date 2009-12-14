@@ -1,4 +1,4 @@
-/*
+^^^^^^/*
  *  This file is part of XForms.
  *
  *  XForms is free software; you can redistribute it and/or modify it
@@ -183,18 +183,18 @@ pupitem_cb( int selected )
 
 FL_PUP_ENTRY pup_entries[ ] =
 {
-	{ "Popup Item1", pupitem_cb, "1", FL_PUP_RADIO, { 0, 0 } },
-	{ "Popup Item2", pupitem_cb, "2", FL_PUP_RADIO, { 0, 0 } },
-	{ "Popup Item3", pupitem_cb, "3", FL_PUP_RADIO, { 0, 0 } },
-	{ "/Popup Item 4", pupitem_cb, NULL, 0, { 0, 0 } },
-	{ "Popup Item 5", pupitem_cb, NULL, 0, { 0, 0 } },
-	{ "Popup Item 6", pupitem_cb, NULL, 0, { 0, 0 } },
-	{ "Popup Item 7", pupitem_cb, NULL, 0, { 0, 0 } },
-	{ "Popup Item 8", pupitem_cb, NULL, 0, { 0, 0 } },
-	{ NULL, NULL, NULL, 0, { 0, 0 } },
-	{ "Popup Item10", pupitem_cb, 0, FL_PUP_GRAY, { 0, 0 } },
-	{ "Popup Item11", pupitem_cb, NULL, 0, { 0, 0 } },
-	{ NULL, NULL, NULL, 0, { 0, 0 } }
+	{ "Popup Item1", pupitem_cb, "1", FL_PUP_RADIO },
+	{ "Popup Item2", pupitem_cb, "2", FL_PUP_RADIO },
+	{ "Popup Item3", pupitem_cb, "3", FL_PUP_RADIO },
+	{ "/Popup Item 4", pupitem_cb, NULL, 0 },
+	{ "Popup Item 5", pupitem_cb, NULL, 0 },
+	{ "Popup Item 6", pupitem_cb, NULL, 0 },
+	{ "Popup Item 7", pupitem_cb, NULL, 0 },
+	{ "Popup Item 8", pupitem_cb, NULL, 0 },
+	{ NULL, NULL, NULL, 0 },
+	{ "Popup Item10", pupitem_cb, 0, FL_PUP_GRAY },
+	{ "Popup Item11", pupitem_cb, NULL, 0 },
+	{ NULL, NULL, NULL, 0 }
 };
 
 
