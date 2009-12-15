@@ -797,35 +797,35 @@ The following is a rundown of the built-in options that control some
 aspects of image support. Note that these options are persistent in
 nature and once set they remain in force until reset.
 @tindex FLIMAGE_JPEG_OPTIONS
-@findex flimage_output_options()
-@anchor{flimage_output_options()}
+@findex flimage_jpeg_output_options()
+@anchor{flimage_jpeg_output_options()}
 @example
 typedef struct @{
     int quality;
     int smoothing;
 @} FLIMAGE_JPEG_OPTIONS;
 
-void flimage_output_options(FLIMAGE_JPEG_OPTIONS *option);
+void flimage_jpeg_output_options(FLIMAGE_JPEG_OPTIONS *option);
 @end example
 @noindent
 The default quality factor for JPEG output is 75. In general, the
 higher the quality factor rhe better the image is, but the file size
 gets larger. The default smoothing factor is 0.
 
-@findex flimage_pnm_options()
-@anchor{flimage_pnm_options()}
+@findex flimage_pnm_output_options()
+@anchor{flimage_pnm_output_options()}
 @example
-void flimage_pnm_options(int raw_format);
+void flimage_pnm_output_options(int raw_format);
 @end example
 For PNM (ppm, pgm, and pbm) output, two variants are supported, the
 binary (raw) and ASCII format. The raw format is the default. If the
 output image is of type @code{FL_IMAGE_GRAY16}, ASCII format is always
 output.
 
-@findex flimage_gif_options()
-@anchor{flimage_gif_options()}
+@findex flimage_gif_output_options()
+@anchor{flimage_gif_output_options()}
 @example
-void flimage_gif_options(int interlace);
+void flimage_gif_output_options(int interlace);
 @end example
 @noindent
 If @code{interlace} is true, an interlaced output is generated.
@@ -886,7 +886,7 @@ All these option setting routines can be used either as a
 configuration routine or an image-by-image basis by always calling one
 of these routines before @code{@ref{flimage_dump()}}. For example,
 @example
-flimage_output_options(option_for_this_image);
+flimage_jpeg_output_options(option_for_this_image);
 flimage_dump(im, "file","jpeg");
 @end example
 

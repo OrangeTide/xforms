@@ -62,13 +62,13 @@ FL_EXPORT void fl_setpup_color( FL_COLOR fg,
 
 FL_EXPORT void fl_setpup_default_pup_checked_color( FL_COLOR col );
 
-FL_EXPORT int fl_setpup_fontsize( int size );
+FL_EXPORT int fl_setpup_default_fontsize( int size );
 
-FL_EXPORT int fl_setpup_fontstyle( int style );
+FL_EXPORT int fl_setpup_default_fontstyle( int style );
 
-#define fl_setpup_default_fontsize    fl_setpup_fontsize
-#define fl_setpup_default_fontstyle   fl_setpup_fontstyle
-#define fl_setpup_default_color       fl_setpup_color
+#define fl_setpup_fontsize            fl_setpup_default_fontsize    
+#define fl_setpup_fontstyle           fl_setpup_default_fontstyle   
+#define fl_setpup_color               fl_setpup_default_color       
 #define fl_setpup_default_checkcolor  fl_setpup_default_pup_checked_color
 #define fl_setpup_checkcolor          fl_setpup_default_pup_checked_color
 

@@ -2700,7 +2700,7 @@ find_ybounds( FLI_XYPLOT_SPEC * sp )
 
 
 /***************************************
- * overloading would'v been nice ...
+ * Overloading would've been nice ...
  ***************************************/
 
 void
@@ -2819,7 +2819,7 @@ fl_set_xyplot_data( FL_OBJECT  * ob,
 
 
 /***************************************
- * insert a point after n
+ *i nsert a point after n
  ***************************************/
 
 void

@@ -27,7 +27,6 @@ noinst_HEADERS = \
 	goodies.h \
 	input.h \
 	menu.h \
-	menubar.h \
 	nmenu.h \
 	positioner.h \
 	scrollbar.h \

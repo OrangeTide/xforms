@@ -1,3 +1,7 @@
+2009-12-14 Jens Thoms Toerring    <jt@toerring.de>
+
+	Some more clean-up in header files (and documentation)
+
 2009-12-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	demos/thumbwheel.c: Bug fixed as pointed out by "LukeShiro"
@@ -17,7 +21,7 @@
 	compatible anymore with the 1.0.90 release and this lead to
 	trouble for Debian (at least).
 
-	* lib/spinner.c, lib/handling.c: Updates to eleminate bug
+	* lib/spinner.c, lib/handling.c: Updates to eliminate a bug
 	detected by Werner Heisch that kept spinner objects from
 	working correctly if they are the only input object in a
 	form.

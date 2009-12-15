@@ -107,11 +107,11 @@ FL_EXPORT int fl_show_choice( const char *,
 
 FL_EXPORT void fl_hide_choice( void );
 
-FL_EXPORT void fl_set_choice_shortcut( const char *,
+FL_EXPORT void fl_set_choices_shortcut( const char *,
                                        const char *,
                                        const char * );
 
-#define fl_set_choices_shortcut fl_set_choice_shortcut
+#define fl_set_choice_shortcut fl_set_choices_shortcut
 
 /************ one liner ***************/
 

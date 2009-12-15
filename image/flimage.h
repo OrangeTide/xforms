@@ -557,15 +557,15 @@ typedef struct
     int smoothing;
 } FLIMAGE_JPEG_OPTION;
 
-FL_EXPORT void flimage_jpeg_options(
+FL_EXPORT void flimage_jpeg_output_options(
         FLIMAGE_JPEG_OPTION *
         );
 
-FL_EXPORT void flimage_pnm_options(
+FL_EXPORT void flimage_pnm_output_options(
         int
         );
 
-FL_EXPORT void flimage_gif_options(
+FL_EXPORT void flimage_gif_output_options(
         int
         );
 
@@ -573,9 +573,9 @@ FL_EXPORT FLPS_CONTROL * flimage_ps_options(
         void
         );
 
-#define flimage_jpeg_output_options   flimage_jpeg_options
-#define flimage_pnm_output_options    flimage_pnm_options
-#define flimage_gif_output_options    flimage_gif_options
+#define flimage_jpeg_options  flimage_jpeg_output_options
+#define flimage_pnm_options   flimage_pnm_output_options    
+#define flimage_gif_options   flimage_gif_output_options    
 
 enum
 {

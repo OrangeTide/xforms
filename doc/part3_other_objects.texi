@@ -350,19 +350,27 @@ with @code{yes_no} being set to false (0).
 To set or replace the data for an xyplot, use
 @findex fl_set_xyplot_data()
 @anchor{fl_set_xyplot_data()}
+@findex fl_set_xyplot_data_double()
+@anchor{fl_set_xyplot_data_double()}
 @example
 void fl_set_xyplot_data(FL_OBJECT *obj, float *x, float *y, int n,
                         const char *title, const char *xlabel,
                         const char *ylabel);
+void fl_set_xyplot_data_double(FL_OBJECT *obj, double *x, double *y, int n,
+                               const char *title, const char *xlabel,
+                               const char *ylabel);
 @end example
 @noindent
-Here @code{x}, @code{y} is the tabulated function, and @code{n} is the
-number of data points. If the XYPlot being set exists already, old
-data will be cleared. Note that the tabulated function is copied
-internally so you can free or do whatever you want with the @code{x}
-and @code{y} arrays after the function returns. @code{title} is a
-title that is drawn above the XYPlot and @code{xlabel} and
-@code{ylabel} are the labels drawn at the x- and y-axes.
+(The @code{fl_set_xyplot_data_double()} function allows to pass data
+of type @code{double} but which get "demoted" to @code{float} type
+when assigned to the xyplot object.) Here @code{x}, @code{y} is the
+tabulated function, and @code{n} is the number of data points. If the
+xyplot object being set exists already, old data will be cleared. Note
+that the tabulated function is copied internally so you can free or do
+whatever you want with the @code{x} and @code{y} arrays after the
+function returns. @code{title} is a title that is drawn above the
+XYPlot and @code{xlabel} and @code{ylabel} are the labels drawn at the
+x- and y-axes.
 
 You can also load a tabulated function from a file using the following
 routine
