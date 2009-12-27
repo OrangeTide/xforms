@@ -2099,6 +2099,32 @@ fl_adjust_form_size( FL_FORM * form )
 
 
 /***************************************
+ ***************************************/
+
+void
+fl_raise_form( FL_FORM * form )
+{
+    if ( form && form->window )
+        XRaiseWindow( fl_display, form->window );
+    else
+        M_err( "fl_raise_form", "NULL form or form window not shown" );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_lower_form( FL_FORM * form )
+{
+    if ( form && form->window )
+        XLowerWindow( fl_display, form->window );
+    else
+        M_err( "fl_lower_form", "NULL form or forn window not shown" );
+}
+
+
+/***************************************
  * Returns the sizes of the "decorations" the window manager puts around
  * a forms window. Returns 0 on success and 1 if the form isn't visible
  * or it's a form embedded into another form.

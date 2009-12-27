@@ -698,7 +698,7 @@ Finally there is a routine that can be used to free a Pixmap
 @findex fl_free_pixmap()
 @anchor{fl_free_pixmap()}
 @example
-void fl_free_pixmap(Pixmap Id);
+void fl_free_pixmap(Pixmap id);
 @end example
 @noindent
 You will need the XPM library (version 3.4c or later) developed by

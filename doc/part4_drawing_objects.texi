@@ -159,8 +159,8 @@ void fl_set_background(GC gc, FL_COLOR color);
 @noindent
 which is equivalent to the following Xlib calls
 @example
-XSetForeground(fl_display, gc, fl_get_pixel(color));
-XSetBackground(fl_display, gc, fl_get_pixel(color));
+XSetForeground(fl_get_display(), gc, fl_get_pixel(color));
+XSetBackground(fl_get_display(), gc, fl_get_pixel(color));
 @end example
 
 To free allocated colors from the default colormap, use the following

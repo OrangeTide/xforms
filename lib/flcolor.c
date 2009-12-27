@@ -973,6 +973,28 @@ fl_get_pixel( FL_COLOR col )
  ***************************************/
 
 void
+fl_set_foreground( GC       gc,
+                   FL_COLOR color )
+{
+    XSetForeground( fl_display, gc, fl_get_pixel( color ) );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_background( GC       gc,
+                   FL_COLOR color )
+{
+    XSetBackground( fl_display, gc, fl_get_pixel( color ) );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
 fl_color( FL_COLOR col )
 {
     static int vmode = -1;
@@ -988,15 +1010,8 @@ fl_color( FL_COLOR col )
     }
 }
 
-#ifndef FL_GETR
-#define FL_GETR( p )  ( ( p )           & 0xff )
-#define FL_GETG( p )  ( ( ( p ) >>  8 ) & 0xff )
-#define FL_GETB( p )  ( ( ( p ) >> 16 ) & 0xff )
-#endif
-
 
 /***************************************
- * given a RGB triplet, set the folor in GC
  ***************************************/
 
 static unsigned long

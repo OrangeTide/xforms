@@ -386,7 +386,7 @@ connect_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
     if ( ( i = fl_get_browser( ui->listbr ) ) > 0 )
     {
 		fl_set_cursor( ui->www->window, XC_watch );
-		XFlush( fl_get_display( ) );
+		fl_XFlush( );
 		fl_snprintf( cmdbuf, sizeof cmdbuf, "%s %s", WWW_BROWSER,
 					 get_site( fl_get_choice( ui->cat ), i ) );
 		if( fl_exe_command( cmdbuf, 0 ) < 0 )

@@ -479,8 +479,8 @@ typedef enum {
 #define FL_GRAY90           FL_LEFT_BCOL
 #define FL_GRAY63           FL_COL1
 #define FL_GRAY75           FL_MCOL
-#define  FL_LCOL            FL_BLACK
-#define  FL_NoColor         FL_NOCOLOR
+#define FL_LCOL             FL_BLACK
+#define FL_NoColor          FL_NOCOLOR
 
 /* An alias probably for an earlier typo */
 

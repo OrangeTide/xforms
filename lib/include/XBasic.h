@@ -388,21 +388,14 @@ FL_EXPORT int fl_get_decoration_sizes( FL_FORM * form,
                                        int     * bottom,
                                        int     * left );
 
-#define fl_raise_form( f )                           \
-    do { if ( f->window )                            \
-             XRaiseWindow( fl_display, f->window );  \
-    } while( 0 )
+FL_EXPORT void fl_raise_form( FL_FORM * form );
 
-#define fl_lower_form( f )                           \
-    do { if ( f->window )                            \
-             XLowerWindow( fl_display, f->window );  \
-    } while( 0 )
+FL_EXPORT void fl_lower_form( FL_FORM * form );
 
-#define fl_set_foreground( gc, c )   \
-    XSetForeground( fl_display, gc, fl_get_pixel( c ) )
-
-#define fl_set_background( gc, c )   \
-    XSetBackground( fl_display, gc, fl_get_pixel( c ) )
+FL_EXPORT void fl_set_foreground( GC       gc,
+								  FL_COLOR color );
+FL_EXPORT void fl_set_background( GC       gc,
+								  FL_COLOR color );
 
 /* General windowing support */
 
@@ -563,7 +556,7 @@ FL_EXPORT Window fl_get_real_object_window( FL_OBJECT * ob );
                         | PointerMotionMask )
 
 
-/* Replacements for X functions that access the event queue*/
+/* Replacements for X functions that access the event queue */
 
 FL_EXPORT int fl_XNextEvent( XEvent * xev );
 
@@ -605,6 +598,8 @@ FL_EXPORT void fl_activate_event_callbacks( Window win );
 
 FL_EXPORT XEvent *fl_print_xevent_name( const char   * where,
                                         const XEvent * xev );
+
+FL_EXPORT void fl_XFlush( void );
 
 #define metakey_down( mask )     ( ( mask ) & Mod1Mask )
 #define shiftkey_down( mask )    ( ( mask ) & ShiftMask )
@@ -809,7 +804,7 @@ typedef unsigned int       FL_PACKED4;
 
 /* If PCBITS is not 8, we need to apply the RGBmask */
 
-#define FL_GETR( packed )  ( ( packed ) & FL_RMASK )
+#define FL_GETR( packed )  ( ( ( packed ) >> FL_RSHIFT ) & FL_RMASK )
 #define FL_GETG( packed )  ( ( ( packed ) >> FL_GSHIFT ) & FL_PCMAX )
 #define FL_GETB( packed )  ( ( ( packed ) >> FL_BSHIFT ) & FL_PCMAX )
 #define FL_GETA( packed )  ( ( ( packed ) >> FL_ASHIFT ) & FL_PCMAX )

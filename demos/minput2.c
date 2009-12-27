@@ -60,7 +60,7 @@ peek_event( FL_FORM * form  FL_UNUSED_ARG,
     if ( ( ( XEvent * )xev )->type == KeyPress )
     {
 		fl_set_object_label( ui->status, "keyboard input" );
-		XFlush( fl_get_display( ) );   /* necessary to show the label */
+		fl_XFlush(  );           /* necessary to show the label? */
 		fl_msleep( 50 );
     }
 
@@ -99,7 +99,7 @@ input_callback( FL_OBJECT * ob  FL_UNUSED_ARG,
 
      sprintf( buf, "Input%ld returned", data );
      fl_set_object_label( ui->status, buf );
-     XFlush( fl_get_display( ) );
+     fl_XFlush( );
      fl_msleep( 50 );
 }
 

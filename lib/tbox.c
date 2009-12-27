@@ -54,7 +54,7 @@ static GC create_gc( FL_OBJECT *,
 
 
 /***************************************
- * Creates a new textbox
+ * Creates a new textbox object
  ***************************************/
 
 FL_OBJECT *
@@ -969,6 +969,7 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the x-offset in pixels of the text displayed in the textbox
  ***************************************/
 
 int
@@ -992,6 +993,9 @@ fli_tbox_set_xoffset( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the x-offset of the text displayed in the textbox as a
+ * number between 0 (starts of lines are shown) and 1 (end of
+ * longest line is shown)
  ***************************************/
 
 double
@@ -1015,6 +1019,7 @@ fli_tbox_set_rel_xoffset( FL_OBJECT * obj,
     
 
 /***************************************
+ * Sets the y-offset in pixels of the text displayed in the textbox
  ***************************************/
 
 int
@@ -1038,6 +1043,9 @@ fli_tbox_set_yoffset( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the y-offset of the text displayed in the textbox as a
+ * number between 0 (show start of text) and 1 (show end of
+ * text)
  ***************************************/
 
 double
@@ -1061,6 +1069,7 @@ fli_tbox_set_rel_yoffset( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the x-offset in pixels of the text displayed in the textbox
  ***************************************/
 
 int
@@ -1071,6 +1080,9 @@ fli_tbox_get_xoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the x-offset of the text displayed in the textbox
+ * as a number between 0 (starts of lines are shown) and 1
+ * (end of longest line s shown)
  ***************************************/
 
 double
@@ -1086,6 +1098,7 @@ fli_tbox_get_rel_xoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the y-offset in pixels of the text displayed in the textbox
  ***************************************/
 
 int
@@ -1095,8 +1108,11 @@ fli_tbox_get_yoffset( FL_OBJECT * obj )
 }
 
 
-/***************************************
- ***************************************/
+/*************************************** 
+ * Returns the y-offset of the text displayed in the textbox
+ * as a number between 0 (start of text is shown) and 1 (end
+ * of text is shown)
+***************************************/
 
 double
 fli_tbox_get_rel_yoffset( FL_OBJECT * obj )
@@ -1111,6 +1127,8 @@ fli_tbox_get_rel_yoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the y-offset (in pixel) for a line (or -1 if the line
+ * does not exist).
  ***************************************/
 
 int
@@ -1373,6 +1391,7 @@ fli_tbox_set_dblclick_callback( FL_OBJECT      * obj,
     
 
 /***************************************
+ * Creates a GC with the required settings
  ***************************************/
 
 static GC
@@ -2018,6 +2037,9 @@ find_mouse_line( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets if the textbox reacts to keys that change the vertical
+ * position (used by browser when vertical scrollbar is switched
+ * on or off)
  ***************************************/
 
 void
@@ -2029,6 +2051,9 @@ fli_tbox_react_to_vert( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets if the textbox reacts to keys that change the horizontal
+ * position (used by browser when horizontal scrollbar is switched
+ * on or off)
  ***************************************/
 
 void
@@ -2040,7 +2065,7 @@ fli_tbox_react_to_hori( FL_OBJECT * obj,
 
 
 /***************************************
- * Handles a mouse change, returns whether a selection change has occured
+ * Handles a mouse event, returns whether a selection change has occured
  ***************************************/
 
 #define DESELECT 0
@@ -2211,7 +2236,7 @@ handle_mouse( FL_OBJECT * obj,
 
 
 /***************************************
- * Handles the textbox
+ * Called for events concerning the textbox
  ***************************************/
 
 static int

@@ -67,8 +67,10 @@ FL_EXPORT Pixmap fl_read_bitmapfile( Window         win,
                                      int          * hotx,
                                      int          * hoty );
 
-#define fl_create_from_bitmapdata( win, data, w, h )  \
-    XCreateBitmapFromData( fl_get_display( ), win, ( char * ) data, w, h )
+FL_EXPORT Pixmap fl_create_from_bitmapdata( Window       win,
+											const char * data,
+											int          width,
+											int          height );
 
 /* for compatibility */
 
@@ -135,9 +137,7 @@ FL_EXPORT Pixmap fl_create_from_pixmapdata( Window          win,
                                             int           * hoty,
                                             FL_COLOR        tran );
 
-#define fl_free_pixmap( id )                  \
-    do { if ( id != None )                    \
-             XFreePixmap( fl_display, id );   \
-    } while( 0 )
+FL_EXPORT void fl_free_pixmap( Pixmap id );
+
 
 #endif /* ! defined FL_BITMAP_H */

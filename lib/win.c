@@ -1021,7 +1021,7 @@ fl_winicontitle( Window       win,
 
 
 /***************************************
- * grab keyboard focus
+ * Grab keyboard focus
  ***************************************/
 
 void

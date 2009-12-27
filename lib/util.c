@@ -61,6 +61,17 @@ fl_show_errors( int y   FL_UNUSED_ARG )
 
 
 /***************************************
+ * Convenience replacement for XFlush()
+ ***************************************/
+
+void
+fl_XFlush( void )
+{
+    XFlush( fl_display );
+}
+
+
+/***************************************
  * For debugging
  ***************************************/
 
