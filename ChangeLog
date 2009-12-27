@@ -1,3 +1,8 @@
+2009-12-21 Jens Thoms Toerring    <jt@toerring.de>
+
+	Some problems with new forms.h pointed out by Lukenshiro
+	and Luis Balona cleaned up.
+
 2009-12-14 Jens Thoms Toerring    <jt@toerring.de>
 
 	Some more clean-up in header files (and documentation)

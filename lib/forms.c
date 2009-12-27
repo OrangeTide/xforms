@@ -35,6 +35,13 @@
 #include "flinternal.h"
 
 
+#define PointToPixel( a )     FL_crnd( ( a ) * fli_dpi / 72.0   )
+#define MMToPixel( a )        FL_crnd( ( a ) * fli_dpi / 25.4   )
+#define CMMToPixel( a )       FL_crnd( ( a ) * fli_dpi / 2540.0 )
+#define CPointToPixel( a )    FL_crnd( ( a ) * fli_dpi / 7200.0 )
+
+static FL_FORM * create_new_form( FL_Coord,
+                                  FL_Coord );
 static void force_visible( FL_FORM * );
 static void set_form_property( FL_FORM *,
                                unsigned int );
@@ -51,7 +58,7 @@ static int has_initial;
 
 /***************************************
  * Returns the index of a form in the list of visible forms
- * or -1 if the form isn't in this list
+ * (or -1 if the form isn't in this list)
  ***************************************/
 
 int
@@ -69,7 +76,7 @@ fli_get_visible_forms_index( FL_FORM * form )
 
 /***************************************
  * Returns the index of a form in the list of hidden forms
- * or -1 if the form isn't in this list
+ * (or -1 if the form isn't in this list)
  ***************************************/
 
 static int
@@ -87,8 +94,8 @@ get_hidden_forms_index( FL_FORM * form )
 
 
 /***************************************
- * Extend the list of visible and hidden forms by one element
- * and put the new forms address into the new element
+ * Extend the list of forms by one element and append the
+ * new forms address (thus listing it as invisible)
  ***************************************/
 
 static void
@@ -131,7 +138,7 @@ move_form_to_visible_list( FL_FORM * form )
 
     fli_int.hidden_formnumb--;
 
-    if ( form->has_auto_objects )
+    if ( form->num_auto_objects > 0 )
         fli_int.auto_count++;
 
     return ++fli_int.formnumb;
@@ -168,7 +175,7 @@ move_form_to_hidden_list( FL_FORM * form )
 
     fli_int.hidden_formnumb++;
 
-    if ( form->has_auto_objects )
+    if ( form->num_auto_objects > 0 )
     {
         if ( fli_int.auto_count == 0 )
             M_err( "move_form_to_hidden_list", "Bad auto count" );
@@ -238,6 +245,84 @@ fl_win_to_form( Window win )
 
 
 /***************************************
+ * Creates a new, empty form
+ ***************************************/
+
+static FL_FORM *
+create_new_form( FL_Coord w,
+                 FL_Coord h )
+{
+    FL_FORM *form;
+
+    form = fl_calloc( 1, sizeof *form );
+
+    /* Convert non-pixel unit into pixles */
+
+    switch ( fli_cntl.coordUnit )
+    {
+        case FL_COORD_PIXEL :
+            break;
+
+        case FL_COORD_MM :
+            w = MMToPixel( w );
+            h = MMToPixel( h );
+            break;
+
+        case FL_COORD_POINT :
+            w = PointToPixel( w );
+            h = PointToPixel( h );
+            break;
+
+        case FL_COORD_centiPOINT :
+            w = CPointToPixel( w );
+            h = CPointToPixel( h );
+            break;
+
+        case FL_COORD_centiMM :
+            w = CMMToPixel( w );
+            h = CMMToPixel( h );
+            break;
+
+        default :
+            M_err( "create_new_form", "Unknown unit: %d, using pixel",
+                   fli_cntl.coordUnit );
+            fli_cntl.coordUnit = FL_COORD_PIXEL;
+    }
+
+    /* Initialize pointers and non-zero defaults */
+
+    form->w_hr = form->w    = w;
+    form->h_hr = form->h    = h;
+
+    form->handle_dec_x      = 0;
+    form->handle_dec_y      = 0;
+
+    form->num_auto_objects  = 0;
+    form->in_redraw         = 0;
+    form->deactivated       = 1;
+    form->form_callback     = NULL;
+    form->compress_mask     =   ExposureMask | ButtonMotionMask
+                              | PointerMotionMask;
+    form->key_callback      = NULL;
+    form->push_callback     = NULL;
+    form->crossing_callback = NULL;
+    form->focusobj          = NULL;
+    form->first             = NULL;
+    form->last              = NULL;
+    form->hotx              = form->hoty = -1;
+    form->use_pixmap        = fli_cntl.doubleBuffer;
+    form->label             = NULL;
+    form->u_vdata           = NULL;
+    form->close_callback    = NULL;
+    form->close_data        = NULL;
+    form->icon_pixmap       = form->icon_mask = None;
+    form->no_tooltip        = 0;
+
+    return form;
+}
+
+
+/***************************************
  * Starts a form definition
  ***************************************/
 
@@ -264,7 +349,7 @@ fl_bgn_form( int      type,
 
     /* Create a new form */
 
-    fl_current_form = fli_make_form( w, h );
+    fl_current_form = create_new_form( w, h );
 
     /* Add it to the list of still hidden forms */
 
@@ -300,7 +385,7 @@ fl_end_form( void )
 
 
 /***************************************
- * Reopens a form for input
+ * Reopens a form for adding further objects
  ***************************************/
 
 FL_FORM *
@@ -677,6 +762,7 @@ fl_scale_form( FL_FORM * form,
 
 
 /***************************************
+ * Sets lower limits for the width and height of a form
  ***************************************/
 
 void
@@ -695,6 +781,7 @@ fl_set_form_minsize( FL_FORM * form,
 
 
 /***************************************
+ * Sets upper limits for the width and height of a form
  ***************************************/
 
 void
@@ -846,6 +933,8 @@ fl_set_form_hotspot( FL_FORM * form,
 
 
 /***************************************
+ * Sets the position of the hotspot of a form
+ * to the center of one of its objects
  ***************************************/
 
 void
@@ -860,7 +949,13 @@ fl_set_form_hotobject( FL_FORM   * form,
 
     if ( ! obj )
     {
-        M_err( "fl_set_form_hotobject", "NULL object." );
+        M_err( "fl_set_form_hotobject", "NULL object" );
+        return;
+    }
+
+    if ( obj->form != form )
+    {
+        M_err( "fl_set_form_hotobject", "Object not part of form" );
         return;
     }
 
@@ -869,7 +964,7 @@ fl_set_form_hotobject( FL_FORM   * form,
 
 
 /***************************************
- * Try to make sure a form is completely visible
+ * Try to make sure a form is completely visible on the screen
  ***************************************/
 
 static void
@@ -890,6 +985,8 @@ force_visible( FL_FORM * form )
 
 
 /***************************************
+ * Sets the name (label) of the form and. if the
+ * form is shown, the form's window title
  ***************************************/
 
 void
@@ -915,7 +1012,8 @@ fl_set_form_title( FL_FORM *    form,
 
 
 /***************************************
- * Displays a particular form, returns its window handle.
+ * Creates the window for a form (but doesn't show it yet, use
+ * fl_show_form_window() for that), returns the window handle
  ***************************************/
 
 Window
@@ -952,7 +1050,7 @@ fl_prepare_form_window( FL_FORM    * form,
         return form->window;
 
     /* Try to move the form from the part of the list for hidden forms to
-       tha at the start for visible forms */
+       that at the start for visible forms */
 
     move_form_to_visible_list( form );
 
@@ -1078,8 +1176,6 @@ fl_prepare_form_window( FL_FORM    * form,
             fl_transient( );
     }
 
-    form->vmode = fl_vmode;
-
     if ( place == FL_PLACE_ICONIC )
         fl_initial_winstate( IconicState );
     if ( form->icon_pixmap )
@@ -1099,6 +1195,7 @@ fl_prepare_form_window( FL_FORM    * form,
 
 
 /***************************************
+ * Maps (displays) a form's window created with fl_prepare_form_window()
  ***************************************/
 
 Window
@@ -1140,6 +1237,8 @@ fl_show_form_window( FL_FORM * form )
 
 
 /***************************************
+ * Makes a new form visible by creating a window for it
+ * and mapping it. Returns the form's window handle.
  ***************************************/
 
 Window
@@ -1160,7 +1259,7 @@ fl_show_form( FL_FORM *    form,
 
 
 /***************************************
- * Hides a particular form
+ * Hides a particular form by unmapping and destroying its window
  ***************************************/
 
 static void
@@ -1355,7 +1454,7 @@ fl_hide_form( FL_FORM * form )
 
 
 /***************************************
- * Frees the memory used by a form together with all its objects.
+ * Frees the memory used by a form, together with all its objects.
  ***************************************/
 
 void
@@ -1414,7 +1513,8 @@ fl_free_form( FL_FORM * form )
 
 
 /***************************************
- * Activates a form
+ * Activates a form (form only becomes activated if this function has
+ * been called as many times as fl_deactive_form()).
  ***************************************/
 
 void
@@ -1440,7 +1540,8 @@ fl_activate_form( FL_FORM * form )
 
 
 /***************************************
- * Deactivates a form
+ * Deactivates a form (re-activation requires as many calls of
+ * fl_activate_form() as there were calls of fl_deactivate_form()).
  ***************************************/
 
 void
@@ -1468,6 +1569,7 @@ fl_deactivate_form( FL_FORM * form )
 
 
 /***************************************
+ * Installs handler to be called at (final) re-activation of the form
  ***************************************/
 
 FL_FORM_ATACTIVATE
@@ -1492,6 +1594,7 @@ fl_set_form_atactivate( FL_FORM            * form,
 
 
 /***************************************
+ * Installs handler to be called at (first) deactivation of the form
  ***************************************/
 
 FL_FORM_ATDEACTIVATE
@@ -1544,6 +1647,7 @@ fl_deactivate_all_forms( void )
 
 
 /***************************************
+ * Installs handler to be called at close of the form
  ***************************************/
 
 FL_FORM_ATCLOSE
@@ -1587,11 +1691,11 @@ fl_set_atclose( FL_FORM_ATCLOSE   fmclose,
  ***************************************/
 
 void
-fl_set_initial_placement( FL_FORM  * form,
-                          FL_Coord   x,
-                          FL_Coord   y,
-                          FL_Coord   w,
-                          FL_Coord   h )
+fl_set_form_geometry( FL_FORM  * form,
+                      FL_Coord   x,
+                      FL_Coord   y,
+                      FL_Coord   w,
+                      FL_Coord   h )
 {
     fl_set_form_position( form, x, y );
     fl_set_form_size( form, w, h );
@@ -1691,7 +1795,7 @@ fl_get_form_event_cmask( FL_FORM * form )
 
 
 /***************************************
- * Sets the call_back routine for the form
+ * Sets the callback routine for the form
  ***************************************/
 
 void
@@ -1841,7 +1945,7 @@ fli_recount_auto_objects( void )
     int i;
 
     for ( fli_int.auto_count = i = 0; i < fli_int.formnumb; i++ )
-        if ( fli_int.forms[ i ]->has_auto_objects )
+        if ( fli_int.forms[ i ]->num_auto_objects > 0 )
             fli_int.auto_count++;
 }
 
@@ -1889,6 +1993,7 @@ fl_addto_group( FL_OBJECT * group )
 
 
 /***************************************
+ * Returns if a form is visible
  ***************************************/
 
 int
@@ -1905,9 +2010,9 @@ fl_form_is_visible( FL_FORM * form )
 
 
 /***************************************
- * Similar to fit_object_label, but will do it for all objects and has
- * a smaller threshold. Mainly intended for compensation for font size
- * variations
+ * Similar to fit_object_label(), but will do it for all objects and
+ * has a smaller maximum magnification factor (1.25 instead of 1.5).
+ * Mainly intended for compensation for font size variations.
  ***************************************/
 
 double
@@ -1995,7 +2100,7 @@ fl_adjust_form_size( FL_FORM * form )
 
 /***************************************
  * Returns the sizes of the "decorations" the window manager puts around
- * a forms window. Returns 0 on success and 1 if the form isn't visisble
+ * a forms window. Returns 0 on success and 1 if the form isn't visible
  * or it's a form embedded into another form.
  * This first tries to use the "_NET_FRAME_EXTENTS" atom which window
  * manager in principle should set for windows that have decorations.
@@ -2065,7 +2170,6 @@ fl_get_decoration_sizes( FL_FORM * form,
         XWindowAttributes frame_attr;
         Window wdummy;
         unsigned int udummy;
-
 
         /* Get the coordinates and size of the form's window */
 

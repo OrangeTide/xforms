@@ -651,10 +651,6 @@ FL_EXPORT int flimage_getcolormap(
         FL_IMAGE *
         );
 
-FL_EXPORT void fl_select_octree_quantizer(
-        void
-        );
-
 FL_EXPORT void fl_select_mediancut_quantizer(
         void
         );

@@ -732,7 +732,7 @@ struct FL_OBJECT_ {
     /* some interaction flags */
 
     int              returned;       /* what last interaction returned */
-    int              how_return;     /* under which conitions to return */
+    int              how_return;     /* under which conditions to return */
     int              double_buffer;  /* only used by mesa/gl canvas */
     int              pushed;
     int              focus;
@@ -867,14 +867,13 @@ struct FL_FORM_ {
 
     /* interaction and other flags */
 
-    int                    vmode;            /* current X visual class */
-    int                    deactivated;      /* true if sensitive */
+    int                    deactivated;      /* non-zero if deactivated */
     int                    use_pixmap;       /* true if dbl buffering */
     int                    frozen;           /* true if sync change */
     int                    visible;          /* true if mapped */
     int                    wm_border;        /* window manager info */
     unsigned int           prop;             /* other attributes */
-    int                    has_auto_objects;
+    int                    num_auto_objects;
     int                    top;
     int                    sort_of_modal;    /* internal use */
     FL_FORM              * parent;

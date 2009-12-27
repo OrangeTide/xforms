@@ -21,7 +21,7 @@
  *  Copyright (c) 1996-2001  T.C. Zhao
  *  All rights reserved.
  *
- * headers used internally by image support
+ *  Headers used internally by image support
  */
 
 #ifndef FLIMAGE_INT_H_
@@ -49,7 +49,7 @@ typedef struct {
     void * pixels;
 } FLIMAGE_BUFFER;
 
-/* subimage for convolve etc */
+/* Subimage for convolve etc */
 
 typedef struct {
     int    w,
@@ -143,31 +143,7 @@ extern int fl_j2pass_quantize_packed( unsigned int **,
                                       int *,
                                       FL_IMAGE * );
 
-extern int fl_octree_quantize_rgb( unsigned char **,
-                                   unsigned char **,
-                                   unsigned char **,
-                                   int,
-                                   int,
-                                   int,
-                                   unsigned short **,
-                                   int *,
-                                   int *,
-                                   int *,
-                                   int *,
-                                   FL_IMAGE * );
-
-extern int fl_octree_quantize_packed( unsigned int **,
-                                      int,
-                                      int,
-                                      int,
-                                      unsigned short **,
-                                      int *,
-                                      int *,
-                                      int *,
-                                      int *,
-                                      FL_IMAGE * );
-
-/* these numbers can be anything, but should be less than < 128 and may not
+/* These numbers can be anything, but should be less than < 128 and may not
    equal 0 */
 
 enum {

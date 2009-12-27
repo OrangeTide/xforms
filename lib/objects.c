@@ -33,11 +33,6 @@
 #include <string.h>
 
 
-#define PointToPixel( a )     FL_crnd( ( a ) * fli_dpi / 72.0   )
-#define MMToPixel( a )        FL_crnd( ( a ) * fli_dpi / 25.4   )
-#define CMMToPixel( a )       FL_crnd( ( a ) * fli_dpi / 2540.0 )
-#define CPointToPixel( a )    FL_crnd( ( a ) * fli_dpi / 7200.0 )
-
 #define TRANY( obj, form )    ( form->h - obj->h - obj->y )
 
 #define LInside( a )    \
@@ -56,81 +51,6 @@ static void checked_hide_tooltip( FL_OBJECT *,
                                   XEvent    * );
 
 static FL_OBJECT *refocus;
-
-
-/***************************************
- * Creates an empty form
- ***************************************/
-
-FL_FORM *
-fli_make_form( FL_Coord w,
-               FL_Coord h )
-{
-    FL_FORM *form;
-
-    form = fl_calloc( 1, sizeof *form );
-
-    /* Convert non-pixel unit into pixles */
-
-    switch ( fli_cntl.coordUnit )
-    {
-        case FL_COORD_PIXEL :
-            break;
-
-        case FL_COORD_MM :
-            w = MMToPixel( w );
-            h = MMToPixel( h );
-            break;
-
-        case FL_COORD_POINT :
-            w = PointToPixel( w );
-            h = PointToPixel( h );
-            break;
-
-        case FL_COORD_centiPOINT :
-            w = CPointToPixel( w );
-            h = CPointToPixel( h );
-            break;
-
-        case FL_COORD_centiMM :
-            w = CMMToPixel( w );
-            h = CMMToPixel( h );
-            break;
-
-        default :
-            M_err( "fli_make_form", "Unknown unit: %d. Reset to pixel",
-                   fli_cntl.coordUnit );
-            fli_cntl.coordUnit = FL_COORD_PIXEL;
-    }
-
-    /* Initialize pointers and non-zero defaults */
-
-    form->w_hr = form->w = w;
-    form->h_hr = form->h = h;
-
-    form->handle_dec_x = 0;
-    form->handle_dec_y = 0;
-
-    form->in_redraw      = 0;
-    form->deactivated    = 1;
-    form->form_callback  = NULL;
-    form->compress_mask  = ExposureMask | ButtonMotionMask | PointerMotionMask;
-    form->key_callback   =
-    form->push_callback  = form->crossing_callback = NULL;
-    form->focusobj       = NULL;
-    form->first          = NULL;
-    form->last           = NULL;
-    form->hotx           = form->hoty = -1;
-    form->use_pixmap     = fli_cntl.doubleBuffer;
-    form->label          = NULL;
-    form->u_vdata        = NULL;
-    form->close_callback = NULL;
-    form->close_data     = NULL;
-    form->icon_pixmap    = form->icon_mask = None;
-    form->no_tooltip     = 0;
-
-    return form;
-}
 
 
 #define IS_BUTTON_CLASS( i )   (    i == FL_BUTTON           \
@@ -298,7 +218,7 @@ fl_add_object( FL_FORM   * form,
 
     if ( obj->automatic )
     {
-        form->has_auto_objects++;
+        form->num_auto_objects++;
         fli_recount_auto_objects( );
     }
 
@@ -512,7 +432,7 @@ fl_delete_object( FL_OBJECT * obj )
 
     if ( obj->automatic )
     {
-        form->has_auto_objects--;
+        form->num_auto_objects--;
         fli_recount_auto_objects( );
     }
 
@@ -3212,9 +3132,9 @@ fl_set_object_automatic( FL_OBJECT * obj,
         if ( obj->form )
         {
             if ( flag )
-                obj->form->has_auto_objects++;
+                obj->form->num_auto_objects++;
             else
-                obj->form->has_auto_objects--;
+                obj->form->num_auto_objects--;
         }
 
         fli_recount_auto_objects( );

@@ -65,7 +65,7 @@ static XpmAttributes *xpmattrib;
 
 
 /***************************************
- * part of pixmap cleanup
+ * Part of pixmap cleanup
  ***************************************/
 
 static void
@@ -334,7 +334,7 @@ static int blue_closeness  = 50000;
 
 
 /***************************************
- * basic attributes.
+ * Basic attributes
  ***************************************/
 
 static void
@@ -577,8 +577,8 @@ fl_set_pixmap_pixmap( FL_OBJECT * obj,
 
 Pixmap
 fl_get_pixmap_pixmap( FL_OBJECT * obj,
-                      Pixmap *    p,
-                      Pixmap *    m )
+                      Pixmap    * p,
+                      Pixmap    * m )
 {
     FL_BUTTON_STRUCT *sp;
 
@@ -603,17 +603,17 @@ fl_get_pixmap_pixmap( FL_OBJECT * obj,
 
 
 /***************************************
- * generic routine to read a pixmap file.
+ * Generic routine to read a pixmap file.
  ***************************************/
 
 Pixmap
 fl_read_pixmapfile( Window         win,
-                    const char *   file,
+                    const char   * file,
                     unsigned int * w,
                     unsigned int * h,
-                    Pixmap *       shape_mask,
-                    int *          hotx,
-                    int *          hoty,
+                    Pixmap       * shape_mask,
+                    int          * hotx,
+                    int          * hoty,
                     FL_COLOR       tran )
 {
     Pixmap p = None;
@@ -661,7 +661,7 @@ fl_read_pixmapfile( Window         win,
  ***************************************/
 
 void
-fl_set_pixmap_file( FL_OBJECT *  obj,
+fl_set_pixmap_file( FL_OBJECT  * obj,
                     const char * fname )
 {
     Pixmap p = None,
@@ -835,8 +835,8 @@ fl_add_pixmapbutton( int          type,
  ***************************************/
 
 void
-fl_set_pixmap_data( FL_OBJECT * obj,
-                    char **     bits )
+fl_set_pixmap_data( FL_OBJECT  * obj,
+                    char      ** bits )
 {
     FL_BUTTON_STRUCT *sp;
     Window win;
@@ -936,8 +936,8 @@ fl_set_pixmapbutton_focus_pixmap( FL_OBJECT * obj,
  ***************************************/
 
 void
-fl_set_pixmapbutton_focus_data( FL_OBJECT * obj,
-                                char **     bits )
+fl_set_pixmapbutton_focus_data( FL_OBJECT  * obj,
+                                char      ** bits )
 {
     FL_BUTTON_STRUCT *sp;
     PixmapSPEC *psp;
@@ -970,7 +970,7 @@ fl_set_pixmapbutton_focus_data( FL_OBJECT * obj,
  ***************************************/
 
 void
-fl_set_pixmapbutton_focus_file( FL_OBJECT *  obj,
+fl_set_pixmapbutton_focus_file( FL_OBJECT  * obj,
                                 const char * fname )
 {
     Pixmap p,
@@ -1029,13 +1029,13 @@ fl_free_pixmap_pixmap( FL_OBJECT * obj )
 
 
 /***************************************
- * this can't go into forms.c as it will pull xpm into
+ * This can't go into forms.c as it will pull xpm into
  * programs that don't need it
  ***************************************/
 
 void
-fli_set_form_icon_data( FL_FORM * form,
-                        char *   data[ ] )
+fli_set_form_icon_data( FL_FORM  * form,
+                        char    ** data )
 {
     Pixmap p,
            s = None;

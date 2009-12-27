@@ -448,7 +448,7 @@ FL_EXPORT void fl_winicon( Window win,
 FL_EXPORT void fl_winbackground( Window   win,
                                  FL_COLOR bk );
 
-FL_EXPORT void fl_winstepunit( Window   win,
+FL_EXPORT void fl_winstepsize( Window   win,
                                FL_Coord dx,
                                FL_Coord dy );
 
@@ -465,7 +465,8 @@ FL_EXPORT void fl_winposition( FL_Coord x,
 
 #define fl_pref_winposition   fl_winposition
 #define fl_win_background     fl_winbackground
-#define fl_set_winstepunit    fl_winstepunit
+#define fl_winstepunit        fl_winstepsize
+#define fl_set_winstepunit    fl_winstepsize
 
 FL_EXPORT void fl_winminsize( Window   win,
                               FL_Coord w,

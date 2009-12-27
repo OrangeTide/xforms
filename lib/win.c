@@ -240,14 +240,14 @@ fl_winmaxsize( Window   win,
  ***************************************/
 
 void
-fl_winstepunit( Window   win,
+fl_winstepsize( Window   win,
                 FL_Coord dx,
                 FL_Coord dy )
 {
     XSizeHints mxsh,
                *sh;
 
-    /* copy current constraints */
+    /* Copy current constraints */
 
     mxsh            = st_xsh;
     mxsh.flags      = 0;

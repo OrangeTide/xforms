@@ -94,15 +94,13 @@ fli_XLookupString( XKeyEvent * xkey,
 
 
 /***************************************
- * Should pass the mask instead of button numbers into the
- * event handler. basically throwing away info ..
+ * Converts 'state' member of the 'xkey' member of an XEvent
+ * into the corresponding mouse button number
  ***************************************/
 
 static int
-xmask2key( unsigned int mask )
+xmask2button( unsigned int mask )
 {
-    /* Once the FL_XXX_MOUSE is changed to mask, just loose the else */
-
     if ( mask & Button1Mask )
         return FL_LEFT_MOUSE;
 
@@ -185,9 +183,9 @@ do_shortcut( FL_FORM  * form,
     FL_OBJECT *obj;
     long *s;
 
-    /* Check whether the <Alt> key is pressed */
-
     key1 = key2 = key;
+
+    /* Check if the <Alt> key is pressed */
 
     if ( fl_keypressed( XK_Alt_L ) || fl_keypressed( XK_Alt_R ) )
     {
@@ -206,7 +204,7 @@ do_shortcut( FL_FORM  * form,
     M_info( "do_shortcut", "win = %ld key = %d %d %d",
             form->window, key, key1, key2 );
 
-    /* Check whether an object has this as a shortcut */
+    /* Check if an object has this as a shortcut */
 
     for ( obj = form->first; obj; obj = obj->next )
     {
@@ -427,7 +425,7 @@ fli_handle_form( FL_FORM * form,
         fl_get_form_mouse( fli_int.mouseform, &fli_int.mousex, &fli_int.mousey,
                            &fli_int.keymask );
         if ( event != FL_KEYPRESS )
-            key = xmask2key( fli_int.keymask );
+            key = xmask2button( fli_int.keymask );
         fli_int.query_age = 0;
     }
 
@@ -657,7 +655,7 @@ do_keyboard( XEvent * xev,
 
 
 /***************************************
- * ClientMessage is intercepted if it is delete window
+ * ClientMessage is intercepted if it's WM_DELETE_WINDOW
  ***************************************/
 
 static void
@@ -698,7 +696,7 @@ handle_ClientMessage_event( FL_FORM * form,
         else
             exit( 1 );
     }
-    else    /* pump it thru current form */
+    else    /* pump it through current form */
         fli_handle_form( form, FL_OTHER, 0, xev );
 }
 
@@ -708,7 +706,7 @@ static int preemptive_consumed( FL_FORM *,
                                 XEvent * );
 
 /***************************************
- * Given an X event check for which of our forms it is.
+ * Given an X event check for which of our forms it is
  ***************************************/
 
 FL_FORM *
@@ -950,13 +948,13 @@ fli_handle_idling( XEvent * xev,
          && fli_int.pushobj->want_update
          && fli_int.mouseform )
         fli_handle_form( fli_int.mouseform, FL_UPDATE,
-                         xmask2key( fli_int.keymask ), xev );
+                         xmask2button( fli_int.keymask ), xev );
 
     /* Handle automatic tasks */
 
     if ( fli_int.auto_count )
         for ( i = 0; i < fli_int.formnumb; i++ )
-            if ( fli_int.forms[ i ]->has_auto_objects )
+            if ( fli_int.forms[ i ]->num_auto_objects )
                 fli_handle_form( fli_int.forms[ i ], FL_STEP, 0, xev );
 
     /* If asked to also execute user idle callbacks */
@@ -1056,7 +1054,7 @@ handle_EnterNotify_event( FL_FORM * evform )
 
     if ( fli_int.mouseform )
         fli_handle_form( fli_int.mouseform, FL_LEAVE,
-                         xmask2key( fli_int.keymask ), &st_xev );
+                         xmask2button( fli_int.keymask ), &st_xev );
 
     if ( evform )
     {
@@ -1074,7 +1072,7 @@ handle_EnterNotify_event( FL_FORM * evform )
         }
 
         fli_handle_form( fli_int.mouseform, FL_ENTER,
-                         xmask2key( fli_int.keymask ), &st_xev );
+                         xmask2button( fli_int.keymask ), &st_xev );
     }
 #if FL_DEBUG >= ML_DEBUG
     else
@@ -1100,7 +1098,7 @@ handle_LeaveNotify_event( void )
         return;
 
     /* olvwm sends LeaveNotify with NotifyGrab whenever button is clicked,
-       ignore it. Due to Xpopup grab, (maybe Wm bug ?), end grab can also
+       ignore it. Due to Xpopup grab, (maybe Wm bug?), end grab can also
        generate this event. We can tell these two situations by doing a real
        button_down test (as opposed to relying on the keymask in event) */
 
@@ -1111,7 +1109,7 @@ handle_LeaveNotify_event( void )
         return;
 
     fli_handle_form( fli_int.mouseform, FL_LEAVE,
-                     xmask2key( fli_int.keymask ), &st_xev );
+                     xmask2button( fli_int.keymask ), &st_xev );
 }
 
 
@@ -1144,7 +1142,7 @@ handle_MotionNotify_event( FL_FORM * evform )
     }
 
     fli_handle_form( fli_int.mouseform, FL_MOTION,
-                     xmask2key( fli_int.keymask ), &st_xev );
+                     xmask2button( fli_int.keymask ), &st_xev );
 }
 
 
@@ -1312,7 +1310,7 @@ fl_check_only_forms( void )
 
 
 /***************************************
- * Checks all forms and keep checking while nothing happens.
+ * Checks all forms and keeps checking as long as nothing happens.
  ***************************************/
 
 FL_OBJECT *
@@ -1497,7 +1495,7 @@ add_idle_callback( FL_APPEVENT_CB   cb,
 
 
 /***************************************
- * Set an idle callback
+ * Sets an idle callback
  ***************************************/
 
 FL_APPEVENT_CB

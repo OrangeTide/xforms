@@ -165,7 +165,7 @@ init_canvas( FD_canvasform * fdui )
     fl_add_canvas_handler( fdui->canvas, ButtonRelease, canvas_but, fdui );
     fl_set_button( fdui->mouse, 1 );
     fl_set_button( fdui->keyboard, 1 );
-    canvasGC = XCreateGC( fl_get_display( ),fl_state[ fl_vmode].trailblazer,
+    canvasGC = XCreateGC( fl_get_display( ),fl_state[ fl_vmode ].trailblazer,
 						  0, 0 );
     XSetForeground( fl_get_display( ), canvasGC, fl_get_flcolor( FL_BLACK ) );
 }

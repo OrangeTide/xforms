@@ -1025,7 +1025,7 @@ fl_show_fselector( const char * message,
     /* Do we really want to remove the fselect_cb ? Previous version did, so
        keep the way it was */
 
-    fl_set_fselector_callback( 0, 0 );
+    fl_set_fselector_callback( NULL, NULL );
     fs->place = FL_PLACE_FREE_CENTER;
     return ( obj == fs->cancel || fs->fselect_cb ) ? NULL : cmplt_name( );
 }

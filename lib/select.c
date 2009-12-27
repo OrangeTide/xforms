@@ -330,7 +330,7 @@ fl_delete_select_item( FL_OBJECT      * obj,
 
     if ( fli_check_popup_entry_exists( item ) != 0 )
     {
-        M_err( "fl_delete_select_item", "Item doesnt exist" );
+        M_err( "fl_delete_select_item", "Item doesn't exist" );
         return -1;
     }
 
@@ -350,7 +350,8 @@ fl_delete_select_item( FL_OBJECT      * obj,
     
 
 /***************************************
- * (Re)polulate a select objects popup via an array of FL_POPUP_ITEM structures
+ * (Re)populate a select object's popup via an
+ * array of FL_POPUP_ITEM structures
  ***************************************/
 
 long

@@ -53,7 +53,7 @@ typedef enum {
 
 /* This exists only for backward compatibility and isn't used anymore! */
 
-#define FL_BROWSER_LINELENGTH   INT_MAX
+#define FL_BROWSER_LINELENGTH   2048
 
 
 /***** Routines *****/
@@ -122,7 +122,10 @@ FL_EXPORT int fl_get_browser_maxline( FL_OBJECT * ob );
 FL_EXPORT int fl_get_browser_screenlines( FL_OBJECT * ob );
 
 FL_EXPORT void fl_set_browser_topline( FL_OBJECT * ob,
-                                       int         topline );
+                                       int         line );
+
+FL_EXPORT void fl_set_browser_bottomline( FL_OBJECT * ob,
+										  int         line );
 
 FL_EXPORT void fl_set_browser_fontsize( FL_OBJECT * ob,
                                         int         size );

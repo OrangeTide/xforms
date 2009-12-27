@@ -176,8 +176,8 @@ static void set_need_recalc( FL_POPUP * );
 #define WINDOW_SHIFT_DELAY  100000 
 
 
-/* Macro for testing if a popup entry can be made "active" (i.e. gets
-   highlighted when its under the mouse) */
+/* Macro for testing if a popup entry can be made "active" (i.e. if it
+   gets highlighted when under the mouse) */
 
 #define IS_ACTIVATABLE( e )                                               \
     (     ( e )->type != FL_POPUP_LINE                                    \
@@ -242,7 +242,7 @@ fli_popup_add( Window       win,
     }
 
     p->parent = NULL;
-    p->top_parent = p;         /* points at iself except for sub-popups */
+    p->top_parent = p;         /* points at itself except for sub-popups */
 
     p->win = None;
     p->parent_win = win != None ? win : fl_root;
@@ -749,7 +749,7 @@ fl_popup_create( Window          win,
 
 
 /***************************************
- * Removes a popup. Returns 0 on success and -1 on failure.
+ * Removes a popup, returns 0 on success and -1 on failure.
  ***************************************/
 
 int
@@ -877,8 +877,8 @@ fl_popup_do( FL_POPUP * popup )
 
 
 /***************************************
- * Set position were the popup is supposed to appear (if never called
- * the popup appears at the mouse position)
+ * Set position where the popup is supposed to appear (if
+ * never called the popup appears at the mouse position)
  ***************************************/
 
 void
@@ -1107,7 +1107,7 @@ fl_popup_set_callback( FL_POPUP    * popup,
  ***************************************/
 
 const char *
-fl_popup_get_title( FL_POPUP   * popup )
+fl_popup_get_title( FL_POPUP * popup )
 {
     if ( fli_check_popup_exists( popup ) )
     {
@@ -1517,8 +1517,8 @@ fl_popup_set_color( FL_POPUP * popup,
 
 
 /***************************************
- * Sets the cursor of a popup (or change the default cursor if called
- * with NULL)
+ * Sets the cursor of a popup (or change the
+ * default cursor if called with NULL)
  ***************************************/
 
 void 
@@ -1687,7 +1687,7 @@ fl_popup_entry_set_state( FL_POPUP_ENTRY * entry,
 
 
 /***************************************
- * Clear certain bits of an entrys state
+ * Clear certain bits of an entries state
  ***************************************/
 
 unsigned int
@@ -1747,7 +1747,7 @@ fl_popup_entry_raise_state( FL_POPUP_ENTRY * entry,
 
 
 /***************************************
- * Toggle certain bits of an entrys state
+ * Toggle certain bits of an entries state
  ***************************************/
 
 unsigned int
@@ -2117,7 +2117,7 @@ fl_popup_entry_get_by_label( FL_POPUP   * popup,
 
 
 /***************************************
- * Get size of a popup, returns - on sucess and -1 on error
+ * Get size of a popup, returns 0 on success and -1 on error
  ***************************************/
 
 int
@@ -2162,7 +2162,7 @@ fl_popup_get_min_width( FL_POPUP * popup )
 
 
 /***************************************
- * Get minimum width of a popup
+ * Set minimum width of a popup
  ***************************************/
 
 int
@@ -2350,7 +2350,7 @@ parse_entries( FL_POPUP   * popup,
                 case 't' :
                     if ( entry->type != FL_POPUP_NORMAL )
                     {
-                        M_err( caller, "Entry can't be a toogle entry and "
+                        M_err( caller, "Entry can't be a toggle entry and "
                                "something else" );
                         return failed_add( entry_first );
                     }
@@ -2585,7 +2585,7 @@ convert_shortcut( const char     * shortcut,
 
 
 /***************************************
- * Recalculate the dimensions of a popup and the positons of the entries
+ * Recalculate the dimensions of a popup and the positions of the entries
  ***************************************/
 
 static void
@@ -3179,7 +3179,7 @@ close_popup( FL_POPUP * popup,
     XEvent ev;
 
     /* Change grab to parent popup window (if there's one), delete popup
-       window and drop all events for it. Sync before waitng for events
+       window and drop all events for it. Sync before waiting for events
        to make sure all events are already in the event queue. */
 
     if ( popup->parent )
@@ -3938,13 +3938,13 @@ open_subpopup( FL_POPUP_ENTRY * entry )
     int offset =   FL_abs( popup->top_parent->bw )
                  + ( popup->top_parent->bw > 0 ? 1 : 0 ) + OUTER_PADDING_TOP;
 
-    /* Set the position of the new sub-popup. Normaly show it to the right of
+    /* Set the position of the new sub-popup. Normally show it to the right of
        the parent popup, but if this is a sub-popup of a sub-popup and the
        parent sub-pupop is to the left of its parent (because there wasn't
-       enough room to the right) position it also to the left. Vertically put
-       it at the same height as the entry its opened up from. But the function
-       for opening the window for the sub-popup may overrule these settings if
-       there isn't enough room on the screen. */
+       enough room on the right side) position it also to the left. Vertically
+       put it at the same height as the entry its opened up from. But the
+       function for opening the window for the sub-popup may overrule these
+       settings if there isn't enough room on the screen. */
 
     if (    popup->parent == NULL
          || popup->x > popup->parent->x )

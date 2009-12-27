@@ -196,9 +196,6 @@ extern void fli_print_version( int );
 
 /* from forms.c and object.c */
 
-extern FL_FORM *fli_make_form( FL_Coord,
-                               FL_Coord );
-
 extern void fli_scale_form( FL_FORM *,
                             double,
                             double );

@@ -208,8 +208,8 @@ init_controlpart( void )
 	create_controlform( );
 	fl_set_form_callback( controlform, control_callback, 0 );
 	fl_set_button( squareobj, 1 );
-	fl_set_initial_placement( controlform, 20, -controlform->h - 40,
-							  controlform->w, controlform->h );
+	fl_set_form_geometry( controlform, 20, -controlform->h - 40,
+						  controlform->w, controlform->h );
 	fl_show_form( controlform, FL_PLACE_SIZE, FL_TRANSIENT, "Control" );
 }
 

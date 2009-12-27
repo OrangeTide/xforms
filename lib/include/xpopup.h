@@ -57,8 +57,8 @@ FL_EXPORT int fl_dopup( int n );
 
 FL_EXPORT Cursor fl_setpup_default_cursor( int cursor );
 
-FL_EXPORT void fl_setpup_color( FL_COLOR fg,
-                                FL_COLOR bg );
+FL_EXPORT void fl_setpup_default_color( FL_COLOR fg,
+										FL_COLOR bg );
 
 FL_EXPORT void fl_setpup_default_pup_checked_color( FL_COLOR col );
 

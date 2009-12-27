@@ -237,6 +237,7 @@ draw_dead_area( FL_OBJECT * obj )
 
 
 /***************************************
+ * Called for events concerning the browser
  ***************************************/
 
 static int
@@ -493,6 +494,7 @@ fli_get_default_scrollbarsize( FL_OBJECT * ob )
 
 
 /***************************************
+ * Creates a new browser object to be added to a form
  ***************************************/
 
 FL_OBJECT *
@@ -583,6 +585,7 @@ fl_create_browser( int          type,
 
 
 /***************************************
+ * Adds a new browser object to the current form
  ***************************************/
 
 FL_OBJECT *
@@ -602,6 +605,7 @@ fl_add_browser( int          type,
 
 
 /***************************************
+ * Switches the vertical scrollbar of the browser on or off
  ***************************************/
 
 void
@@ -622,6 +626,7 @@ fl_set_browser_vscrollbar( FL_OBJECT * obj,
 
 
 /***************************************
+ * Switches the horizontal scrollbar of the browser on or off
  ***************************************/
 
 void
@@ -642,6 +647,7 @@ fl_set_browser_hscrollbar( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the callback for the horizontal scrollbar of the browser
  ***************************************/
 
 void
@@ -657,6 +663,7 @@ fl_set_browser_hscroll_callback( FL_OBJECT                  * ob,
 
 
 /***************************************
+ * Returns the callback for the horizontal scrollbar of the browser
  ***************************************/
 
 FL_BROWSER_SCROLL_CALLBACK
@@ -667,6 +674,7 @@ fl_get_browser_hscroll_callback( FL_OBJECT * ob )
 
 
 /***************************************
+ * Sets the callback for the vertical scrollbar of the browser
  ***************************************/
 
 void
@@ -682,6 +690,7 @@ fl_set_browser_vscroll_callback( FL_OBJECT                  * ob,
 
 
 /***************************************
+ * Returns the callback for the vertical scrollbar of the browser
  ***************************************/
 
 FL_BROWSER_SCROLL_CALLBACK
@@ -706,6 +715,7 @@ fli_adjust_browser_scrollbar( FL_OBJECT * ob )
 
 
 /***************************************
+ * Removes all text from the browser
  ***************************************/
 
 void
@@ -713,8 +723,8 @@ fl_clear_browser( FL_OBJECT * ob )
 {
     FLI_BROWSER_SPEC *comp = ob->spec;
 
-    fli_tbox_clear( comp->tb );
     fl_freeze_form( ob->form );
+    fli_tbox_clear( comp->tb );
     fl_set_scrollbar_value( comp->hsl, 0.0 );
     fl_set_scrollbar_size( comp->hsl, 1.0 );
     fl_set_scrollbar_value( comp->vsl, 0.0 );
@@ -725,6 +735,8 @@ fl_clear_browser( FL_OBJECT * ob )
 
 
 /***************************************
+ * Returns the x-offset of the text shown in the browser as
+ * the number of pixels
  ***************************************/
 
 FL_Coord
@@ -737,6 +749,9 @@ fl_get_browser_xoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the x-offset of the text shown in the browser as a
+ * number between 0 (starts of lines are shown) and 1 (end of
+ * longest line is shown)
  ***************************************/
 
 double
@@ -749,6 +764,8 @@ fl_get_browser_rel_xoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Sets the x-offset of the text shown in the browser as given
+ * by the number of pixels
  ***************************************/
 
 void
@@ -763,6 +780,9 @@ fl_set_browser_xoffset( FL_OBJECT * ob,
 
 
 /***************************************
+ * Sets the x-offset of the text shown in the browser as given
+ * by a value between 0 (show start of lines) and 1 (show end
+ * of longest line)
  ***************************************/
 
 void
@@ -777,6 +797,8 @@ fl_set_browser_rel_xoffset( FL_OBJECT * ob,
 
 
 /***************************************
+ * Returns the y-offset of the text shown in the browser as
+ * the number of pixels
  ***************************************/
 
 FL_Coord
@@ -789,6 +811,9 @@ fl_get_browser_yoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the y-offset of the text shown in the browser as a
+ * number between 0 (start of text is shown) and 1 (end of
+ * text is shown)
  ***************************************/
 
 double
@@ -801,6 +826,8 @@ fl_get_browser_rel_yoffset( FL_OBJECT * obj )
 
 
 /***************************************
+ * Sets the y-offset of the text shown in the browser as given
+ * by the number of pixels
  ***************************************/
 
 void
@@ -815,6 +842,9 @@ fl_set_browser_yoffset( FL_OBJECT * ob,
 
 
 /***************************************
+ * Sets the y-offset of the text shown in the browser as given
+ * by a value between 0 (show start of text) and 1 (show end of
+ * text)
  ***************************************/
 
 void
@@ -829,7 +859,7 @@ fl_set_browser_rel_yoffset( FL_OBJECT * ob,
 
 
 /***************************************
- * Returns the y-offset for a certain line (or -1 if line does not exist).
+ * Returns the y-offset for a line (or -1 if the line does not exist).
  ***************************************/
 
 int
@@ -848,11 +878,11 @@ fl_get_browser_line_yoffset( FL_OBJECT * obj,
 
 void
 fl_set_browser_topline( FL_OBJECT * ob,
-                        int         topline )
+                        int         line )
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-    fli_tbox_set_topline( sp->tb, topline - 1 );
+    fli_tbox_set_topline( sp->tb, line - 1 );
     redraw_scrollbar( ob );
 }
 
@@ -863,16 +893,17 @@ fl_set_browser_topline( FL_OBJECT * ob,
 
 void
 fl_set_browser_bottomline( FL_OBJECT * ob,
-                        int         topline )
+                           int         line )
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-    fli_tbox_set_bottomline( sp->tb, topline - 1 );
+    fli_tbox_set_bottomline( sp->tb, line - 1 );
     redraw_scrollbar( ob );
 }
 
 
 /***************************************
+ * Marks a line of the browser as selected
  ***************************************/
 
 void
@@ -884,6 +915,8 @@ fl_select_browser_line( FL_OBJECT * ob,
 
 
 /***************************************
+ * Adds a line to the (end of the) browser and shifts the dos[alyed
+ * area so that the line is visible
  ***************************************/
 
 void
@@ -896,6 +929,8 @@ fl_addto_browser( FL_OBJECT  * ob,
 
 
 /***************************************
+ * Inserts a line into the browser before the line currently
+ * having the number 'linenumb'
  ***************************************/
 
 void
@@ -920,6 +955,7 @@ fl_insert_browser_line( FL_OBJECT  * ob,
 
 
 /***************************************
+ * Deletes the line at line number 'linenumb' from the browser
  ***************************************/
 
 void
@@ -933,6 +969,7 @@ fl_delete_browser_line( FL_OBJECT * ob,
 
 
 /***************************************
+ * Replaces the browser line at line number 'linenumb' with a new one
  ***************************************/
 
 void
@@ -947,6 +984,8 @@ fl_replace_browser_line( FL_OBJECT  * ob,
 
 
 /***************************************
+ * Returns the text of the browser's line at line number 'linenum'.
+ * Returned text may not be modified (and not free'ed!)
  ***************************************/
 
 const char *
@@ -959,6 +998,7 @@ fl_get_browser_line( FL_OBJECT * ob,
 
 
 /***************************************
+ * Returns the number of the last line of the browser
  ***************************************/
 
 int
@@ -971,6 +1011,7 @@ fl_get_browser_maxline( FL_OBJECT * obj )
 
 
 /***************************************
+ * Unselects a line in the browser
  ***************************************/
 
 void
@@ -982,6 +1023,7 @@ fl_deselect_browser_line( FL_OBJECT * ob,
 
 
 /***************************************
+ * De-selects all lines of the browser
  ***************************************/
 
 void
@@ -992,6 +1034,7 @@ fl_deselect_browser( FL_OBJECT * ob )
 
 
 /***************************************
+ * Tests if a certain line of the browser is selected
  ***************************************/
 
 int
@@ -1004,6 +1047,7 @@ fl_isselected_browser_line( FL_OBJECT * ob,
 
 
 /***************************************
+ * Returns the line last selected (or deselected) by the user
  ***************************************/
 
 int
@@ -1014,6 +1058,7 @@ fl_get_browser( FL_OBJECT * ob )
 
 
 /***************************************
+ * Sets the font size to be used per default
  ***************************************/
 
 void
@@ -1029,6 +1074,7 @@ fl_set_browser_fontsize( FL_OBJECT * ob,
 
 
 /***************************************
+ * Sets the font style to be used per default
  ***************************************/
 
 void
@@ -1044,6 +1090,7 @@ fl_set_browser_fontstyle( FL_OBJECT * ob,
 
 
 /***************************************
+ * Returns the number of the topmost line that is completely visible
  ***************************************/
 
 int
@@ -1056,6 +1103,7 @@ fl_get_browser_topline( FL_OBJECT * obj )
 
 
 /***************************************
+ * Loads a browser with text from a file
  ***************************************/
 
 int
@@ -1073,6 +1121,8 @@ fl_load_browser( FL_OBJECT  * obj,
 
 
 /***************************************
+ * Adds a line to the (end of the) browser (does not make the line
+ * visible)
  ***************************************/
 
 void
@@ -1087,6 +1137,7 @@ fl_add_browser_line( FL_OBJECT  * ob,
 
 
 /***************************************
+ * Sets a callback for double clicks in the browser
  ***************************************/
 
 void
@@ -1102,6 +1153,8 @@ fl_set_browser_dblclick_callback( FL_OBJECT      * ob,
 
 
 /***************************************
+ * Sets the height of the vertical and the width of the horzontal
+ * scrollbar
  ***************************************/
 
 void
@@ -1136,6 +1189,7 @@ fl_set_browser_scrollbarsize( FL_OBJECT * ob,
 
 
 /***************************************
+ * Returns the position and width and height of the browsers text area
  ***************************************/
 
 void
@@ -1155,6 +1209,7 @@ fl_get_browser_dimension( FL_OBJECT * obj,
 
 
 /***************************************
+ * Makes a browser line selectable or unselectable
  ***************************************/
 
 void
@@ -1167,6 +1222,7 @@ fl_set_browser_line_selectable( FL_OBJECT * ob,
 
 
 /***************************************
+ * Appends characters to the end of the last line in the browser
  ***************************************/
 
 void
@@ -1214,7 +1270,7 @@ fl_set_browser_specialkey( FL_OBJECT * ob,
 
 
 /***************************************
- * Bring a line into view
+ * Brings a line into view
  ***************************************/
 
 void
@@ -1227,6 +1283,7 @@ fl_show_browser_line( FL_OBJECT * ob,
 
 
 /***************************************
+ * Deprecated function, only left in for backward compatibility
  ***************************************/
 
 int
