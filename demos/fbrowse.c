@@ -96,7 +96,7 @@ hide_show( FL_OBJECT * ob,
 {
     FD_form *fdui = ob->form->fdui;
 
-    if ( fdui->br->visible )
+    if ( fl_object_is_visible( fdui->br ) )
 		fl_hide_object( fdui->br );
     else
 		fl_show_object( fdui->br );

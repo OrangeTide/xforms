@@ -113,7 +113,8 @@ idle_cb( XEvent * ev,
 		           yrot,
 		           zrot;
 
-    if ( ! ui->form->visible  || ! ui->canvas->visible )
+    if (    ! fl_form_is_visible( ui->form )
+		 || ! fl_object_is_visible( ui->canvas ) )
 		return 0;
 
     fl_activate_glcanvas(ui->canvas);
@@ -303,7 +304,7 @@ static void
 hide_it( FL_OBJECT * ob,
 		 long        data  FL_UNUSED_ARG )
 {
-    if( ui->canvas->visible )
+    if ( fl_object_is_visible( ui->canvas ) )
     {
 		fl_hide_object( ui->canvas );
 		fl_set_object_label( ob,"Show" );

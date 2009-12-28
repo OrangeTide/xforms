@@ -88,7 +88,7 @@ deactivate_cb( FL_OBJECT * ob,
 {
 	FD_mainform *fdui = ob->form->fdui;
 
-	if ( fdui->formbrowser->active )
+	if ( fl_object_is_active( fdui->formbrowser ) )
 	{
 		fl_set_object_label( ob, "Activate" );
 		fl_deactivate_object( fdui->formbrowser );

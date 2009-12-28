@@ -566,6 +566,16 @@ appearance of a form depending on particular information provided by the
 user. You can also make overlapping groups in the form and take care
 that only one of them is visible.
 
+If you want to know if an object is shown you can use
+@findex fl_object_is_visible()
+@example
+int fl_object_is_visible(FL_OBJECT *obj);
+@end example
+@noindent
+Please note for an object to be visible also the form it belongs to
+must be shown, which isn't factored into the return value.
+
+
 @node Deactivating and Triggering Objects
 @section Deactivating and Triggering Objects
 
@@ -584,6 +594,12 @@ To reactivate the group or button use the routine
 @findex fl_activate_object()
 @example
 void fl_activate_object(FL_OBJECT *obj);
+@end example
+
+To find out if an object is in active state use the function
+@findex fl_object_is_active()
+@example
+int fl_object_is_active(FL_OBJECT *obj);
 @end example
 
 Normally you also want to give the user a visual indication that the
@@ -656,6 +672,13 @@ fields the default colors are @code{FL_INPUT_COL1} and
 familiarizing you with various attributes since you can change all
 attributes of an object and immediately see the difference by
 "test"ing the object.
+
+To find out the colors of an object use
+@findex fl_get_object_color()
+@example
+void fl_get_object_color(FL_OBJECT *obj,
+                         FL_COLOR *col1, FL_COLOR *col2);
+@end example
 
 The following pre-defined color symbols can be used in all color change
 requests. If the workstation does not support this many colors,
@@ -1386,7 +1409,13 @@ changes the label of a given object. An internal copy of the parameter
 @code{label} is made. As mentioned earlier, newline (@code{\n}) can be
 embedded in the label to generate multiple lines. By embedding
 @code{<Ctrl>H} (@code{\010}) in the label, the entire label or one of
-the characters in the label can be underlined.
+the characters in the label can be underlined. The function
+@findex fl_get_object_label()
+@example
+const char * fl_get_object_label(FL_OBJECT *obj);
+@end example
+@noindent
+returns the label string.
 
 
 @node Tool Tips

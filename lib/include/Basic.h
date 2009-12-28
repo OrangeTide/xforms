@@ -737,7 +737,7 @@ struct FL_OBJECT_ {
     int              pushed;
     int              focus;
     int              belowmouse;
-    int              active;         /* if accept event */
+    int              active;         /* if object accepts events */
     int              input;
     int              wantkey;
     int              radio;
@@ -1101,8 +1101,15 @@ FL_EXPORT FL_OBJECT *fl_addto_group( FL_OBJECT * group );
 
 /****** Routines that deal with FL_OBJECTS ********/
 
+
+FL_EXPORT int fl_get_object_objclass( FL_OBJECT * obj );
+
+FL_EXPORT int fl_get_object_type( FL_OBJECT * obj );
+
 FL_EXPORT void fl_set_object_boxtype( FL_OBJECT * ob,
                                       int         boxtype );
+
+FL_EXPORT int fl_get_object_boxtype( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_object_bw( FL_OBJECT * ob,
                                  int         bw );
@@ -1124,14 +1131,21 @@ FL_EXPORT void fl_get_object_gravity( FL_OBJECT    * ob,
                                       unsigned int * nw,
                                       unsigned int * se );
 
-FL_EXPORT void fl_set_object_lsize( FL_OBJECT * ob,
+FL_EXPORT void fl_set_object_lsize( FL_OBJECT * obj,
                                     int         lsize );
 
-FL_EXPORT void fl_set_object_lstyle( FL_OBJECT * ob,
+FL_EXPORT int fl_get_object_lsize( FL_OBJECT * obj );
+
+
+FL_EXPORT void fl_set_object_lstyle( FL_OBJECT * obj,
                                      int         lstyle );
+
+FL_EXPORT int fl_get_object_lstyle( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_object_lcol( FL_OBJECT * ob,
                                    FL_COLOR    lcol );
+
+FL_EXPORT FL_COLOR fl_get_object_lcol( FL_OBJECT * obj );
 
 FL_EXPORT int fl_set_object_return( FL_OBJECT * ob,
                                     int         when );
@@ -1139,8 +1153,10 @@ FL_EXPORT int fl_set_object_return( FL_OBJECT * ob,
 FL_EXPORT void fl_notify_object( FL_OBJECT * obj,
                                  int         cause );
 
-FL_EXPORT void fl_set_object_lalign( FL_OBJECT * ob,
+FL_EXPORT void fl_set_object_lalign( FL_OBJECT * obj,
                                      int         align );
+
+FL_EXPORT int fl_get_object_lalign( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_object_shortcut( FL_OBJECT  * obj,
                                        const char * sstr,
@@ -1156,8 +1172,14 @@ FL_EXPORT void fl_set_object_color( FL_OBJECT * ob,
                                     FL_COLOR    col1,
                                     FL_COLOR    col2 );
 
+FL_EXPORT void fl_get_object_color( FL_OBJECT * obj,
+									FL_COLOR  * col1,
+									FL_COLOR  * col2 );
+
 FL_EXPORT void fl_set_object_label( FL_OBJECT  * ob,
                                     const char * label );
+
+FL_EXPORT const char * fl_get_object_label( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_object_helper( FL_OBJECT  * ob,
                                      const char * tip );
@@ -1174,8 +1196,10 @@ FL_EXPORT void fl_set_object_size( FL_OBJECT * obj,
                                    FL_Coord    w,
                                    FL_Coord    h );
 
-FL_EXPORT void fl_set_object_automatic( FL_OBJECT * ob,
+FL_EXPORT void fl_set_object_automatic( FL_OBJECT * obj,
                                         int         flag );
+
+FL_EXPORT int fl_object_is_automatic( FL_OBJECT * obj );
 
 FL_EXPORT void fl_draw_object_label( FL_OBJECT * ob );
 
@@ -1261,6 +1285,8 @@ FL_EXPORT void fl_show_object( FL_OBJECT * ob );
 
 FL_EXPORT void fl_hide_object( FL_OBJECT * ob );
 
+FL_EXPORT int fl_object_is_visible( FL_OBJECT * obj );
+
 FL_EXPORT void fl_free_object( FL_OBJECT * obj );
 
 FL_EXPORT void fl_delete_object( FL_OBJECT * obj );
@@ -1272,6 +1298,8 @@ FL_EXPORT void fl_trigger_object( FL_OBJECT * obj );
 FL_EXPORT void fl_activate_object( FL_OBJECT * ob );
 
 FL_EXPORT void fl_deactivate_object( FL_OBJECT * ob );
+
+FL_EXPORT int fl_object_is_active( FL_OBJECT * obj );
 
 FL_EXPORT int fl_enumerate_fonts( void ( * output )( const char * s ),
                                   int  shortform );

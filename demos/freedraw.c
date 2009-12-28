@@ -35,7 +35,7 @@
 /**** Forms and Objects ****/
 
 typedef struct {
-	FL_FORM *drawfree;
+	FL_FORM   * drawfree;
 	void      * vdata;
 	char      * cdata;
 	long        ldata;
@@ -53,10 +53,10 @@ typedef struct {
 	FL_OBJECT * drobj[ 3 ];
 } FD_drawfree;
 
-extern FD_drawfree * create_form_drawfree(void);
+extern FD_drawfree * create_form_drawfree( void );
 
 static FD_drawfree * drawui;
-extern void draw_initialize(FD_drawfree *);
+extern void draw_initialize( FD_drawfree * );
 
 static int max_w = 150,
            max_h = 150;
@@ -67,8 +67,8 @@ static Display *dpy;
  ***************************************/
 
 int
- main( int    argc,
-	   char * argv[ ] )
+main( int    argc,
+	  char * argv[ ] )
 {
     dpy = fl_initialize( &argc, argv, "FormDemo", 0, 0 );
     drawui = create_form_drawfree( );

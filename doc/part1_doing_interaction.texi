@@ -646,10 +646,10 @@ at once) ask instead for the logical @code{OR} of these two.
 
 Once an object is returned (or its callback invoked) you can determine
 the reason it was returned by calling
-@findex fl_get_object_return_status()
-@anchor{fl_get_object_return_status()}
+@findex fl_get_object_return_state()
+@anchor{fl_get_object_return_state()}
 @example
-int fl_get_object_return_status(FL_OBBJECT *obj);
+int fl_get_object_return_state(FL_OBBJECT *obj);
 @end example
 The returned value is logical @code{OR} of the conditions that led to
 the object getting returned, where the conditions can be

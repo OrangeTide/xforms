@@ -73,7 +73,7 @@ hide_show_cb( FL_OBJECT * ob,
 {
     FD_input *fd = ob->form->fdui;
 
-    if ( fd->multiinput->visible )
+    if ( fl_object_is_visible( fd->multiinput ) )
 		fl_hide_object( fd->multiinput );
     else
 		fl_show_object( fd->multiinput );

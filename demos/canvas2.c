@@ -243,7 +243,7 @@ static void
 hide_it( FL_OBJECT * ob,
 		 long        all  FL_UNUSED_ARG  )
 {
-	if ( fd_canvasform->canvas->visible )
+	if ( fl_object_is_visible( fd_canvasform->canvas ) )
 	{
 		fl_hide_object( fd_canvasform->canvas );
 		fl_set_object_label( ob, "ShowCanvas" );

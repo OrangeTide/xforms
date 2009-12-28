@@ -85,7 +85,7 @@ deactivate_cb( FL_OBJECT * ob,
 {
     FD_mainform *fdui = ob->form->fdui;
 
-    if ( fdui->folder->active )
+    if ( fl_object_is_active( fdui->folder ) )
     {
         fl_set_object_label( ob, "Activate" );
         fl_deactivate_object( fdui->folder );

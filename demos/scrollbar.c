@@ -38,7 +38,7 @@ void hide_cb( FL_OBJECT * ob,
 {
     FD_scb *fdui = ob->form->fdui;
 
-    if( fdui->hor_thin->visible )
+    if ( fl_object_is_visible( fdui->hor_thin ) )
     {
         fl_set_object_label( fdui->hide,"Show" );
         fl_hide_object( fdui->hor_thin );
@@ -59,7 +59,7 @@ void deactivate_cb( FL_OBJECT * ob,
 {
     FD_scb *fdui = ob->form->fdui;
 
-    if( fdui->hor_thin->active == 1 )
+    if ( fl_object_is_active( fdui->hor_thin ) )
     {
         fl_set_object_label( fdui->deactivate,"Activate" );
         fl_deactivate_object( fdui->hor_thin );

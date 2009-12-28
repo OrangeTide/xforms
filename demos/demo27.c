@@ -118,10 +118,10 @@ init_colorpart( void )
 
 /*--------------- Control Part -------------------*/
 
-FL_FORM *controlform;
-FL_OBJECT *squareobj,
-          *exitobj,
-          *sizeobj;
+FL_FORM * controlform;
+FL_OBJECT * squareobj,
+          * exitobj,
+          * sizeobj;
 
 int curobj = 1,
     cursize = 20;

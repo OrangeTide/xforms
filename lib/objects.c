@@ -593,8 +593,42 @@ fl_free_object( FL_OBJECT * obj )
 
 
 /*-----------------------------------------------------------------------
-   Setting Attributes.
+   Setting/getting attributes.
 -----------------------------------------------------------------------*/
+
+/***************************************
+ * Returns the object class of the object
+ ***************************************/
+
+int
+fl_get_object_objclass( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_objclass", "NULL object" );
+        return -1;
+    }
+
+    return obj->objclass;
+}
+
+
+/***************************************
+ * Returns the type of the object
+ ***************************************/
+
+int
+fl_get_object_type( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_type", "NULL object" );
+        return -1;
+    }
+
+    return obj->type;
+}
+
 
 /***************************************
  * Sets the boxtype of the object
@@ -616,6 +650,23 @@ fl_set_object_boxtype( FL_OBJECT * obj,
         fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
         fl_redraw_object( obj );
     }
+}
+
+
+/***************************************
+ * Returns the boxtype of the object
+ ***************************************/
+
+int
+fl_get_object_boxtype( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_boxtype", "NULL object" );
+        return -1;
+    }
+
+    return obj->boxtype;
 }
 
 
@@ -758,6 +809,28 @@ fl_set_object_color( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the colors of the object
+ ***************************************/
+
+void
+fl_get_object_color( FL_OBJECT * obj,
+                     FL_COLOR  * col1,
+                     FL_COLOR  * col2 )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_color", "NULL object" );
+        return;
+    }
+
+    if ( col1 )
+        *col1 = obj->col1;
+    if ( col2 )
+        *col2 = obj->col2;
+}
+
+
+/***************************************
  ***************************************/
 
 void
@@ -803,23 +876,6 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
 
 
 /***************************************
- * Returns a pointer to the label of an object
- ***************************************/
-
-const char *
-fl_get_object_label( FL_OBJECT * obj )
-{
-    if ( ! obj )
-    {
-        M_err( "fl_get_object_label", "NULL object" );
-        return NULL;
-    }
-
-    return obj->label;
-}
-
-
-/***************************************
  * Sets the label of an object
  ***************************************/
 
@@ -839,25 +895,28 @@ fl_set_object_label( FL_OBJECT  * obj,
     if ( ! strcmp( obj->label, label )  )
         return;
 
-    if ( LInside( obj->align ) )
-    {
-        obj->label = fl_realloc( obj->label, strlen( label ) + 1 );
-        strcpy( obj->label, label );
+    obj->label = fl_realloc( obj->label, strlen( label ) + 1 );
+    strcpy( obj->label, label );
+
+    if ( ObjIsVisible( obj ) )
         fl_redraw_object( obj );
-    }
-    else
+}
+
+
+/***************************************
+ * Returns the objects label string
+ ***************************************/
+
+const char *
+fl_get_object_label( FL_OBJECT * obj )
+{
+    if ( ! obj )
     {
-        int visible = ObjIsVisible( obj );
-
-        if ( visible )
-            fl_hide_object( obj );
-
-        obj->label = fl_realloc( obj->label, strlen( label ) + 1 );
-        strcpy( obj->label, label );
-
-        if ( visible )
-            fl_show_object( obj );
+        M_err( "fl_get_object_label", "NULL object" );
+        return NULL;
     }
+
+    return obj->label;
 }
 
 
@@ -900,6 +959,23 @@ fl_set_object_lcol( FL_OBJECT * obj,
         fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
         fl_redraw_object( obj );
     }
+}
+
+
+/***************************************
+ * Returns the label color of an object
+ ***************************************/
+
+FL_COLOR
+fl_get_object_lcol( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_lcol", "NULL object" );
+        return FL_NOCOLOR;
+    }
+
+    return obj->lcol;
 }
 
 
@@ -952,6 +1028,23 @@ fl_set_object_lsize( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the label size of an object
+ ***************************************/
+
+int
+fl_get_object_lsize( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_lsize", "NULL object" );
+        return -1;
+    }
+
+    return obj->lsize;
+}
+
+
+/***************************************
  * Sets the label style of an object
  ***************************************/
 
@@ -998,6 +1091,23 @@ fl_set_object_lstyle( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the label style of an object
+ ***************************************/
+
+int
+fl_get_object_lstyle( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_lstyle", "NULL object" );
+        return -1;
+    }
+
+    return obj->lstyle;
+}
+
+
+/***************************************
  * Sets the label alignment of an object
  ***************************************/
 
@@ -1037,6 +1147,23 @@ fl_set_object_lalign( FL_OBJECT * obj,
         if ( visible )
             fl_show_object( obj );
     }
+}
+
+
+/***************************************
+ * Returns the label alignment of an object
+ ***************************************/
+
+int
+fl_get_object_lalign( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_lalign", "NULL object" );
+        return -1;
+    }
+
+    return obj->align;
 }
 
 
@@ -1119,6 +1246,23 @@ fl_deactivate_object( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns if an object is in active state, i.e. reacting to events
+ ***************************************/
+
+int
+fl_object_is_active( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_object_is_active", "NULL object" );
+        return 0;
+    }
+
+    return obj->active;
+}
+
+
+/***************************************
  * Makes an object visible and sets the visible flag to 1
  ***************************************/
 
@@ -1160,6 +1304,24 @@ fl_show_object( FL_OBJECT * obj )
         fli_show_object( obj );
 
     fl_redraw_object( o );
+}
+
+
+/***************************************
+ * Returns if an object is shown (gien that the form it
+ * belongs to is visible!)
+ ***************************************/
+
+int
+fl_object_is_visible( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_object_is_visible", "NULL object" );
+        return 0;
+    }
+
+    return obj->visible;
 }
 
 
@@ -3139,6 +3301,22 @@ fl_set_object_automatic( FL_OBJECT * obj,
 
         fli_recount_auto_objects( );
     }
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_object_is_automatic( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "fl_object_is_automatic", "NULL object" );
+        return 0;
+    }
+
+    return obj->automatic;
 }
 
 

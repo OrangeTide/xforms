@@ -801,18 +801,42 @@ the form.
 @node Object Attributes
 @section Object Attributes
 
-A number of general routines are available for setting attributes.
-Unless stated otherwise, all attributes altering routines affect the
-appearance or geometry of the object immediately if the object is
-visible.
+A number of general routines are available for setting and querying
+attributes. Unless stated otherwise, all attributes altering routines
+affect the appearance or geometry of the object immediately if the
+object is visible.
 
+Since the object class and type of an object can't be changed anymore
+once an object has been created there are only functions for querying
+these attributes:
+@findex fl_get_object_objclass()
+@anchor{fl_get_object_objclass()}
+@findex fl_get_object_type()
+@anchor{fl_get_object_type()}
+@example
+int fl_get_object_objclass(FL_OBJECT *obj);
+int fl_get_object_type(FL_OBJECT *obj);
+@end example
+@noindent
+Receiving a negative value indicates that a @code{NULL} pointer
+was passed to the functions.
+
+
+To set the two colors that influence the appearance of the object use
 @findex fl_set_object_color()
 @anchor{fl_set_object_color()}
 @example
 void fl_set_object_color(FL_OBJECT *obj, FL_COLOR col1, FL_COLOR col2);
 @end example
 @noindent
-Sets the two colors that influence the appearance of the object.
+and to find out about the colors of an object use
+@findex fl_get_object_color()
+@anchor{fl_get_object_color()}
+@example
+void fl_get_object_color(FL_OBJECT *obj,
+                         FL_COLOR *col1, FL_COLOR *col2);
+@end example
+
 
 @findex fl_set_object_boxtype()
 @anchor{fl_set_object_boxtype()}
@@ -820,7 +844,21 @@ Sets the two colors that influence the appearance of the object.
 void fl_set_object_boxtype(FL_OBJECT *obj, int boxtype);
 @end example
 @noindent
-Changes the shape of the bounding box of the object.
+Changes the shape of the box of the object. Please note that not all
+possible boxtypes are suitable for all types of objects, see the
+documentation for the different objects for limitations.
+
+
+To find out the current boxtype of an object use
+@findex fl_get_object_boxtype()
+@anchor{fl_get_object_boxtype()}
+@example
+int fl_get_object_boxtype(FL_OBJECT *obj);
+@end example
+@noindent
+Receiving a negative value indicates that a @code{NULL} pointer
+was passed to the function.
+
 
 There are also functions to change or query the border width of an object:
 @findex fl_set_object_bw()
@@ -935,11 +973,31 @@ text of the label of an object use
 @findex fl_set_object_label()
 @anchor{fl_set_object_label()}
 @example
-void fl_set_object_lcol(FL_OBJECT *obj, int lcol);
+void fl_set_object_lcol(FL_OBJECT *obj, FL_COLOR lcol);
 void fl_set_object_lsize(FL_OBJECT *obj, int lsize);
 void fl_set_object_lstyle(FL_OBJECT *obj, int lstyle);
 void fl_set_object_lalign(FL_OBJECT *obj, int align);
 void fl_set_object_label(FL_OBJECT *obj, const char *label);
+@end example
+
+To find out about the object labels color, font size, style, alignment
+and the string itself use
+@findex fl_get_object_lcol()
+@anchor{fl_get_object_lcol()}
+@findex fl_get_object_lsize()
+@anchor{fl_get_object_lsize()}
+@findex fl_get_object_lstyle()
+@anchor{fl_get_object_lstyle()}
+@findex fl_get_object_lalign()
+@anchor{fl_get_object_lalign()}
+@findex fl_get_object_label()
+@anchor{fl_get_object_label()}
+@example
+FL_COLOR fl_set_object_lcol(FL_OBJECT *obj);
+int fl_set_object_lsize(FL_OBJECT *obj);
+int fl_set_object_lstyle(FL_OBJECT *obj);
+int fl_set_object_lalign(FL_OBJECT *obj);
+const char * fl_set_object_label(FL_OBJECT *obj);
 @end example
 
 To set a tool-tip text for an object use the following routine
@@ -1022,6 +1080,13 @@ use the following routine
 void fl_set_object_automatic(FL_OBJECT *obj, int yes);
 @end example
 
+To determine if an object receives @code{FL_STEP} events use
+@findex fl_object_is_automatic()
+@anchor{fl_object_is_automatic()}
+@example
+int fl_object_is_automatic(FL_OBJECT *obj);
+@end example
+
 To enable or disable an object to receive the FL_DBLCLICK event, use
 the following routine
 @findex fl_set_object_dblclick()
@@ -1047,6 +1112,14 @@ void fl_show_object(FL_OBJECT *obj);
 @code{obj} can be the pseudo-object returned by
 @code{@ref{fl_bgn_group()}} and then allows to hide or show whole
 groups of objects.
+
+To determine if an object is visible (given that the form it belongs
+to is also visible) use
+@findex fl_object_is_visible()
+@anchor{fl_object_is_visible()}
+@example
+int fl_object_is_visible(FL_OBJECT *obj);
+@end example
 
 @findex fl_trigger_object()
 @anchor{fl_trigger_object()}
@@ -1612,7 +1685,14 @@ void fl_deactivate_object(FL_OBJECT *obj);
 @end example
 @noindent
 It is nrmally useful to give the user a visual clue when an object
-getsdeactivated, e.g.@: by graying out its label etc.
+gets deactivated, e.g.@: by graying out its label etc.
+
+To find out if an object is active use
+@findex fl_object_is_active()
+@anchor{fl_object_is_active()}
+@example
+int fl_object_is_active(FL_OBJECT *obj);
+@end example
 
 @findex fl_redraw_object()
 @anchor{fl_redraw_object()}

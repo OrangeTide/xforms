@@ -563,7 +563,7 @@ fl_create_browser( int          type,
     fl_add_child( ob, sp->hsl );
     fl_add_child( ob, sp->vsl );
 
-    /* In older versions scrollbars and browsers weren't return to e.g.
+    /* In older versions scrollbars and browsers weren't returned to e.g.
        fl_do_forms() but still a callback associated with the object
        got called. To emulate the old behaviour we have to set the
        return policy to default to FL_RETURN_NONE and only change that
