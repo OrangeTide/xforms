@@ -147,9 +147,9 @@ visible, in which case @code{@ref{fl_form_is_visible()}} returns true.
 Indicates whether the object is active, i.e.@: wants to receive events
 other than @code{FL_DRAW}.
 
-Static objects, such as text and boxes are inactive. Changing the
-status should be done in the @code{fl_add_NEW()} routine if required.
-By default objects are active. This can be changed by using the
+Static objects, such as text and boxes are inactive. This property
+should be set in the @code{fl_add_NEW()} routine if required. By
+default objects are active. This attribute can be changed by using the
 functions @code{@ref{fl_deactivate_object()}} and
 @code{@ref{fl_activate_object()}} and the current state can be
 determined by calling @code{@ref{fl_object_is_active()}}.

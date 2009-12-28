@@ -604,7 +604,9 @@ int fl_object_is_active(FL_OBJECT *obj);
 
 Normally you also want to give the user a visual indication that the
 object is not active. This can, for example, be done by changing the
-label color to grey (see below).
+label color to grey (see below). This is not done automatically, so
+unless you set e.g.@: a different color the objects appearance won't
+change on deactivation (or re-activation).
 
 It is possible to simulate the action of an object being triggered from
 within the program by using the following routine

@@ -1570,6 +1570,8 @@ typedef const char * ( * FL_VAL_FILTER )( FL_OBJECT *,
                                           double,
                                           int );
 
+FL_EXPORT int fl_is_same_object( FL_OBJECT * obj1,
+								 FL_OBJECT * obj2 );
 
 #endif /* ! defined FL_BASIC_H */
 
