@@ -1211,14 +1211,13 @@ FL_EXPORT FL_OBJECT * fl_get_object_component( FL_OBJECT * composite,
                                                int          numb );
 
 FL_EXPORT void fl_for_all_objects( FL_FORM * form,
-                                   int        ( * cb )( FL_OBJECT *, void * ),
+                                   int       ( * cb )( FL_OBJECT *, void * ),
                                    void    * v );
-
 
 #define fl_draw_object_outside_label fl_draw_object_label_outside
 
-FL_EXPORT void fl_set_object_dblclick( FL_OBJECT * obj,
-									   unsigned    long timeout );
+FL_EXPORT void fl_set_object_dblclick( FL_OBJECT     * obj,
+									   unsigned long   timeout );
 
 FL_EXPORT unsigned long fl_get_object_dblclick( FL_OBJECT * obj );
 

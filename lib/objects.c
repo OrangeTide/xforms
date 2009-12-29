@@ -838,13 +838,13 @@ fl_get_object_color( FL_OBJECT * obj,
  ***************************************/
 
 void
-fl_set_object_dblclick( FL_OBJECT * obj,
-                        unsigned    long timeout );
+fl_set_object_dblclick( FL_OBJECT     * obj,
+                        unsigned long   timeout )
 {
     if ( ! obj )
     {
         M_err( "fl_set_object_dblclick", "NULL object" );
-        return;
+        return ULONG_MAX;
     }
 
     obj->click_timeout = timeout;
@@ -856,7 +856,7 @@ fl_set_object_dblclick( FL_OBJECT * obj,
  ***************************************/
 
 unsigned long
-fl_get_object_dblclick( FL_OBJECT * obj );
+fl_get_object_dblclick( FL_OBJECT * obj )
 {
     if ( ! obj )
     {
