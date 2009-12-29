@@ -831,6 +831,44 @@ fl_get_object_color( FL_OBJECT * obj,
 
 
 /***************************************
+ * If called with a non-zero value for 'timeout' the object will
+ * receive FL_DBLCLICK events if the mouse is clicked twice within
+ * 'timeout' milliseconds, if called with 0 no FL_DBLCLICK events
+ * are received.
+ ***************************************/
+
+void
+fl_set_object_dblclick( FL_OBJECT * obj,
+                        unsigned    long timeout );
+{
+    if ( ! obj )
+    {
+        M_err( "fl_set_object_dblclick", "NULL object" );
+        return;
+    }
+
+    obj->click_timeout = timeout;
+}
+
+
+/***************************************
+ * Returns the double click timeout for the object
+ ***************************************/
+
+unsigned long
+fl_get_object_dblclick( FL_OBJECT * obj );
+{
+    if ( ! obj )
+    {
+        M_err( "fl_get_object_dblclick", "NULL object" );
+        return;
+    }
+
+    return obj->click_timeout;
+}
+
+
+/***************************************
  ***************************************/
 
 void

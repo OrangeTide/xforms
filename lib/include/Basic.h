@@ -1217,10 +1217,10 @@ FL_EXPORT void fl_for_all_objects( FL_FORM * form,
 
 #define fl_draw_object_outside_label fl_draw_object_label_outside
 
-#define fl_set_object_dblclick( ob, timeout )  \
-    do {                                       \
-        ( ob )->click_timeout = ( timeout );   \
-    } while ( 0 )
+FL_EXPORT void fl_set_object_dblclick( FL_OBJECT * obj,
+									   unsigned    long timeout );
+
+FL_EXPORT unsigned long fl_get_object_dblclick( FL_OBJECT * obj );
 
 FL_EXPORT void fl_set_object_geometry( FL_OBJECT * obj,
                                        FL_Coord    x,
@@ -1247,8 +1247,6 @@ FL_EXPORT void fl_get_object_geometry( FL_OBJECT * ob,
 FL_EXPORT void fl_get_object_position( FL_OBJECT * ob,
                                        FL_Coord  * x,
                                        FL_Coord  * y );
-
-FL_EXPORT const char * fl_get_object_label( FL_OBJECT * ob );
 
 /* this one takes into account the label */
 

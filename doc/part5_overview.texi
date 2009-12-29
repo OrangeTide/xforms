@@ -1087,16 +1087,23 @@ To determine if an object receives @code{FL_STEP} events use
 int fl_object_is_automatic(FL_OBJECT *obj);
 @end example
 
-To enable or disable an object to receive the FL_DBLCLICK event, use
+To enable or disable an object to receive the FL_DBLCLICK event use
 the following routine
 @findex fl_set_object_dblclick()
 @anchor{fl_set_object_dblclick()}
 @example
 void fl_set_object_dblclick(FL_OBJECT *obj, unsigned long timeout);
 @end example
+@noindent
 where @code{timeout} specifies the maximum time interval (in msec)
 between two clicks for them to be considered a double-click (using 0
-disables double-click detection).
+disables double-click detection). To determine the current setting
+of the timeout use
+@findex fl_get_object_dblclick()
+@anchor{fl_get_object_dblclick()}
+@example
+unsigned fl_get_object_dblclick(FL_OBJECT *obj);
+@end example
 
 To make an object or a group invisible or visible use the following
 two functions

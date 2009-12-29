@@ -173,10 +173,13 @@ and @code{<PgUp>} and @code{<PgDn>} when it has the focus. To receive
 other special keys (e.g.@: function keys) @code{FL_KEY_SPECIAL} must
 be set in @code{wantkey}. By setting @code{wantkey} to
 @code{FL_KEY_ALL} all keys are sent to the object.
+
 @item unsigned int click_timeout
 If non-zero this indicates the the maximum elapsed time (in msec)
 between two mouse clicks to be considered a double click. A zero value
-disables double/triple click detection.
+disables double/triple click detection. The user can set or query this
+value using the functions @code{@ref{fl_set_object_dblclick()}} and
+@code{@ref{fl_get_object_dblclick()}}.
 
 @c The following is incorrect. The current implementation works only
 @c for buttons since it explictely calls @code{@ref{fl_get_button()}},
