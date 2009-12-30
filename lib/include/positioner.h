@@ -85,7 +85,7 @@ FL_EXPORT void fl_set_positioner_xstep( FL_OBJECT * ob,
 FL_EXPORT void fl_set_positioner_ystep( FL_OBJECT * ob,
                                         double      value );
 
-FL_EXPORT void fl_set_positioner_return( FL_OBJECT * ob,
-                                         int         value );
+FL_EXPORT void fl_set_positioner_return( FL_OBJECT    * ob,
+                                         unsigned int   when );
 
 #endif /* ! defined FL_POSITIONER_H */

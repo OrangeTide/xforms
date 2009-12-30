@@ -78,8 +78,8 @@ FL_EXPORT FL_OBJECT * fl_add_input( int          type,
 FL_EXPORT void fl_set_input( FL_OBJECT  * ob,
                              const char * str );
 
-FL_EXPORT void fl_set_input_return( FL_OBJECT * ob,
-                                    int         value );
+FL_EXPORT void fl_set_input_return( FL_OBJECT    * ob,
+                                    unsigned int   when );
 
 FL_EXPORT void fl_set_input_color( FL_OBJECT * ob,
                                    FL_COLOR    textcol,

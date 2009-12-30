@@ -67,7 +67,7 @@ main( int    argc,
 
 	form = fl_bgn_form( FL_UP_BOX, 320, 120 );
 
-    fl_add_box( FL_NO_BOX, 160, 40, 0, 0, "Do you want to Quit?" );
+    fl_add_box( FL_NO_BOX, 80, 20, 160, 40, "Do you want to quit?" );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 40, 70, 80, 30, "Yes" );
 	fl_set_object_callback( obj, yes_push, 0 );

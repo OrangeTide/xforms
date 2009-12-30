@@ -732,8 +732,8 @@ fl_get_counter_value( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_set_counter_return( FL_OBJECT * obj,
-                       int         when )
+fl_set_counter_return( FL_OBJECT    * obj,
+                       unsigned int   when )
 {
     fl_set_object_return( obj, when );
 }

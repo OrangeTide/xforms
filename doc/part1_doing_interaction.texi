@@ -573,7 +573,7 @@ the function
 @findex fl_set_object_return()
 @anchor{fl_set_object_return()}
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when);
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 with @code{when} set to @code{FL_RETURN_END_CHANGED}.
 
@@ -1147,8 +1147,8 @@ FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev, void *data),
                                      void *data);
 @end example
 @noindent
-Whenever an event takes place callback is called with the event as
-argument. So the callback should have the form
+Whenever an event happens the callback function is invoked with the
+event as the first argument. So the callback should have the form
 @example
 typedef int (*FL_APPEVENT_CB)(XEvent *ev, void *data);
 int callback(XEvent *xev, void *data);

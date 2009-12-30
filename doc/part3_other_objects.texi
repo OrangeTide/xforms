@@ -85,9 +85,8 @@ blinking by pressing the mouse on it or by resetting the timer to 0.
 The timer object is returned to the application program or its
 callback called when the timer expired per default. You can
 also swich off reporting the expiry of the timer by calling
-@findex fl_set_object_return()
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when)
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 with @code{when} set to @code{FL_RETURN_NONE}. To re-enable
 reporting call it with one of @code{FL_RETURN_CHANGED},
@@ -288,9 +287,8 @@ the data and result in the object getiing returned to the application
 happens only when the mouse is released. In some situations, reporting
 changes as soon as they happen might be desirable. To control when
 mouse events are returned use the function
-@findex fl_set_object_return()
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when);
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 where @code{when} can have the folowing values:
 @table @code

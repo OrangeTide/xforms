@@ -131,9 +131,8 @@ hold down the @code{<Shift>} key while moving the slider.
 In some cases you might not want the slider to be returned or its
 callback called each time its value changes. To change the default,
 call the following routine:
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when)
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 @noindent
 where the parameter @code{when} can be one of the four values:
@@ -423,9 +422,8 @@ key while moving the slider.
 
 You can control under which conditions the scrollbar gets returned to
 your application or its callback invoked. To change the default, call
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 @noindent
 where the parameter @code{when} can be one of the following four
@@ -659,9 +657,8 @@ The area between initial and current is filled.
 By default, the dial value is returned to the application when the
 user releases the mouse. It is possible to change this behavior using
 the following routine
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 @noindent
 where @code{when} can be one of the following
@@ -870,9 +867,8 @@ returned by the interaction routines or its callback invoked (if
 one exists.
 
 To change the default use the function
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 @noindent
 where @code{when} can be one of the following
@@ -1077,9 +1073,8 @@ application program or its callback is invoked.
 In some applications you might want the counter to be returned to the
 application program (or the callback invoked) e.g.@: whenever the
 value changes and not only wjen the mouse is released. To this end use
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 @noindent
 where @code{when} can be either
@@ -1350,9 +1345,8 @@ Per default the spinner object gets returned tothe application
 (or the associated calback is called) whenever the value changed
 and the interaction seems to have ended. If you want it returned
 under different circumstances use the function
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code
@@ -1577,9 +1571,8 @@ value of the thumbwheel.
 
 In some applications you might not want the thumbwheel to be returned
 all the time. To change the default, call the following routine:
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code

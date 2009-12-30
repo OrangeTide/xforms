@@ -67,8 +67,8 @@ static void set_form_position( FL_FORM * form,
                                int       y );
 static void vcb( FL_OBJECT * ob,
                  long        data );
-static void set_formbrowser_return( FL_OBJECT *,
-                                    int );
+static void set_formbrowser_return( FL_OBJECT    * obj,
+                                    unsigned int   when );
 
 
 /***************************************
@@ -1121,8 +1121,8 @@ check_scrollbar( FL_OBJECT * ob )
  ***************************************/
 
 static void
-set_formbrowser_return( FL_OBJECT * obj,
-                        int         when )
+set_formbrowser_return( FL_OBJECT    * obj,
+                        unsigned int   when )
 {
     FLI_FORMBROWSER_SPEC *sp = obj->spec;
 

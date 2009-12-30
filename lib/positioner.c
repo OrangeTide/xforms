@@ -433,10 +433,10 @@ fl_set_positioner_ystep( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_positioner_return( FL_OBJECT * obj,
-                          int         always )
+fl_set_positioner_return( FL_OBJECT    * obj,
+                          unsigned int   when )
 {
-    if ( always )
+    if ( when )
         fl_set_object_return( obj, FL_RETURN_CHANGED );
     else
         fl_set_object_return( obj, FL_RETURN_END );

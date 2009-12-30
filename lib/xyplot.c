@@ -2355,8 +2355,8 @@ fl_set_xyplot_maxoverlays( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_xyplot_return( FL_OBJECT * obj,
-                      int         when )
+fl_set_xyplot_return( FL_OBJECT    * obj,
+                      unsigned int   when )
 {
     if ( obj->type == FL_ACTIVE_XYPLOT )
         obj->how_return = when ? FL_RETURN_CHANGED : FL_RETURN_END_CHANGED;

@@ -31,7 +31,7 @@
 
 static void
 set_spinner_return( FL_OBJECT *,
-                    int );
+                    unsigned int );
 
 
 /***************************************
@@ -688,8 +688,8 @@ fl_get_spinner_down_button( FL_OBJECT * obj )
  ***************************************/
 
 static void
-set_spinner_return( FL_OBJECT * obj,
-                    int         when )
+set_spinner_return( FL_OBJECT    * obj,
+                    unsigned int   when )
 {
     FLI_SPINNER_SPEC *sp = obj->spec;
 

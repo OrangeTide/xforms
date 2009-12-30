@@ -91,9 +91,8 @@ object is returned to the application program.
 
 You can control the condition under which the choice object gets
 returned to the application by using the function
-@findex fl_set_object_return()
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when)
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 where @code{when} can have the following values
 @table @code
@@ -386,9 +385,8 @@ returned by the interaction routines.
 
 You can control the condition under which the menu object gets
 returned to the application by using the function
-@findex fl_set_object_return()
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when)
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 where @code{when} can have the following values
 @table @code

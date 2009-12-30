@@ -73,8 +73,8 @@ FL_EXPORT void fl_set_counter_precision( FL_OBJECT * ob,
 
 FL_EXPORT int fl_get_counter_precision( FL_OBJECT * ob );
 
-FL_EXPORT void fl_set_counter_return( FL_OBJECT * ob,
-                                      int         how );
+FL_EXPORT void fl_set_counter_return( FL_OBJECT    * ob,
+                                      unsigned int   how );
 
 FL_EXPORT double fl_get_counter_value( FL_OBJECT * ob );
 

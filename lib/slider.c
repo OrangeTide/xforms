@@ -1001,8 +1001,8 @@ fl_get_slider_bounds( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_slider_return( FL_OBJECT * obj,
-                      int         when )
+fl_set_slider_return( FL_OBJECT    * obj,
+                      unsigned int   when )
 {
     if ( when & FL_RETURN_END_CHANGED )
         when &= ~ ( FL_RETURN_NONE | FL_RETURN_CHANGED );

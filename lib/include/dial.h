@@ -79,8 +79,8 @@ FL_EXPORT void fl_get_dial_bounds( FL_OBJECT * ob,
 FL_EXPORT void fl_set_dial_step( FL_OBJECT * ob,
                                  double      value );
 
-FL_EXPORT void fl_set_dial_return( FL_OBJECT * ob,
-                                   int         value );
+FL_EXPORT void fl_set_dial_return( FL_OBJECT    * ob,
+                                   unsigned int   value );
 
 FL_EXPORT void fl_set_dial_angles( FL_OBJECT * ob,
                                    double      amin,

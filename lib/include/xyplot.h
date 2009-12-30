@@ -132,8 +132,8 @@ FL_EXPORT int fl_add_xyplot_overlay_file( FL_OBJECT  * ob,
                                           const char * f,
                                           FL_COLOR     c );
 
-FL_EXPORT void fl_set_xyplot_return( FL_OBJECT * ob,
-                                     int         when );
+FL_EXPORT void fl_set_xyplot_return( FL_OBJECT    * ob,
+                                     unsigned int   when );
 
 FL_EXPORT void fl_set_xyplot_xtics( FL_OBJECT * ob,
                                     int         major,

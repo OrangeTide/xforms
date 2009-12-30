@@ -274,13 +274,13 @@ enum {
 /* control when to return input, slider and dial etc. object. */
 
 enum {
-    FL_RETURN_NONE         =    0,
-    FL_RETURN_CHANGED      =    1,
-    FL_RETURN_END          =    2,
-    FL_RETURN_END_CHANGED  =    4,
-    FL_RETURN_SELECTION    =    8,
-    FL_RETURN_DESELECTION  =   16,
-    FL_RETURN_TRIGGERED    = 1024,
+    FL_RETURN_NONE         =    0U,
+    FL_RETURN_CHANGED      =    1U,
+    FL_RETURN_END          =    2U,
+    FL_RETURN_END_CHANGED  =    4U,
+    FL_RETURN_SELECTION    =    8U,
+    FL_RETURN_DESELECTION  =   16U,
+    FL_RETURN_TRIGGERED    = 1024U,
     FL_RETURN_ALWAYS       = ~ FL_RETURN_END_CHANGED
 };
 
@@ -1147,8 +1147,8 @@ FL_EXPORT void fl_set_object_lcol( FL_OBJECT * ob,
 
 FL_EXPORT FL_COLOR fl_get_object_lcol( FL_OBJECT * obj );
 
-FL_EXPORT int fl_set_object_return( FL_OBJECT * ob,
-                                    int         when );
+FL_EXPORT int fl_set_object_return( FL_OBJECT    * ob,
+                                    unsigned int   when );
 
 FL_EXPORT void fl_notify_object( FL_OBJECT * obj,
                                  int         cause );

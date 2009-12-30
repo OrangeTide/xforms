@@ -33,8 +33,8 @@ input_cb( FL_OBJECT * ob,
 {
     int x, y;
 
-    fl_get_input_cursorpos(ob, &x , &y);
-    fprintf(stderr,"x=%d y=%d\n",x,y);
+    fl_get_input_cursorpos( ob, &x , &y );
+    fprintf( stderr," x = %d y = %d\n", x, y );
 }
 
 
@@ -57,6 +57,7 @@ main( int    argc,
 
     obj =  fl_add_input( FL_MULTILINE_INPUT, 30, 90, 340, 150, "" );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
+    fl_set_object_callback( obj, input_cb, 0 );
 
 	but = fl_add_button( FL_NORMAL_BUTTON, 160, 30, 80, 30, "Exit" );
 

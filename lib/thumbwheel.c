@@ -457,8 +457,8 @@ int fl_set_thumbwheel_crossover( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_set_thumbwheel_return( FL_OBJECT * obj,
-                          int         when )
+fl_set_thumbwheel_return( FL_OBJECT    * obj,
+                          unsigned int   when )
 {
     return fl_set_object_return( obj, when );
 }

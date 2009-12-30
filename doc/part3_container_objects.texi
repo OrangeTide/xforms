@@ -96,9 +96,8 @@ with a folder.
 
 To set up when either the application is notified about events of the
 tabfolder or the tabfolders callback is invoked (if installed) use
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 @noindent
 where the @code{when} argument can be one of
@@ -422,9 +421,8 @@ callbacks bound to them will not be returned by
 Your application can be notified about changes of the scrollbars of
 the formbrowser. To set up under which conditions the application is
 notified or the formbrowsers callback is invoked (if installed) use
-@findex fl_set_object_return()
 @example
-void fl_set_object_return(FL_OBJECT *obj, int when);
+void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 @noindent
 where the @code{when} argument can be one of

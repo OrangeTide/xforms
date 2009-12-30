@@ -456,6 +456,7 @@ fli_object_qread( void )
                 else
                     return NULL;
             }
+
             obj = obj->parent;
             fli_filter_returns( obj );
         }

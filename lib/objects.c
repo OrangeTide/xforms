@@ -2602,7 +2602,7 @@ fli_handle_object( FL_OBJECT * obj,
 
 
 /***************************************
- * Sets the call_back routine for the object
+ * Sets the callback routine for the object
  ***************************************/
 
 FL_CALLBACKPTR
@@ -3444,8 +3444,8 @@ fl_set_object_helper( FL_OBJECT  * obj,
  ***************************************/
 
 int
-fl_set_object_return( FL_OBJECT * obj,
-                      int         when )
+fl_set_object_return( FL_OBJECT    * obj,
+                      unsigned int   when )
 {
     int old_when;
 

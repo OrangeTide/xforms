@@ -83,8 +83,8 @@ FL_EXPORT void fl_get_scrollbar_bounds( FL_OBJECT * ob,
                                         double    * b1,
                                         double    * b2 );
 
-FL_EXPORT void fl_set_scrollbar_return( FL_OBJECT * ob,
-                                        int         ret );
+FL_EXPORT void fl_set_scrollbar_return( FL_OBJECT    * ob,
+                                        unsigned int   when );
 
 FL_EXPORT void fl_set_scrollbar_step( FL_OBJECT * ob,
                                       double      step );

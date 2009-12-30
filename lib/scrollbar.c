@@ -555,8 +555,8 @@ fl_get_scrollbar_bounds( FL_OBJECT * obj,
  ***************************************/
 
 void
-fl_set_scrollbar_return( FL_OBJECT * obj,
-                         int         when )
+fl_set_scrollbar_return( FL_OBJECT    * obj,
+                         unsigned int   when )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 

@@ -124,8 +124,8 @@ FL_EXPORT void fl_get_slider_bounds( FL_OBJECT * ob,
                                      double    * min,
                                      double    * max );
 
-FL_EXPORT void fl_set_slider_return( FL_OBJECT * ob,
-                                     int         value );
+FL_EXPORT void fl_set_slider_return( FL_OBJECT    * ob,
+                                     unsigned int   value );
 
 FL_EXPORT void fl_set_slider_step( FL_OBJECT * ob,
                                    double      value );

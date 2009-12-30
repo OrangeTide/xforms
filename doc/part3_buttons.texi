@@ -195,9 +195,8 @@ are also returned when the user presses the @code{<Return>} key.
 As for other ``active'' objects, you can control under which
 conditions a button object gets returned or its callback invoked
 by using the function
-@findex fl_set_object_return()
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when);
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 where reasonable values for @code{when} are
 @table @code

@@ -197,7 +197,7 @@ of @code{@ref{fl_set_select_items()}} then they are removed before the
 new ones are set. The values assigned to the items start at 0.
 
 A third way to "populate" a select object is to create a popup
-directly and then associate it with the selecy object using
+directly and then associate it with the select object using
 @findex fl_set_select_popup()
 @anchor{fl_set_select_popup()}
 @example
@@ -259,7 +259,7 @@ As for all other normal objects the condition under which a
 associate callback is called) can be influenced by calling the
 function
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when)
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 where @code{when} can have the following values
 @table @code
@@ -773,7 +773,7 @@ The condition under which a @code{FL_NMENU} object gets returned to
 the application (or an associate callback is called) can be influenced
 by calling the function
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when)
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 where @code{when} can have the following values
 @table @code
@@ -1087,9 +1087,8 @@ Per default a browser gets only returned or the associated callback
 invoked on selection of a line (and, in the case of
 @code{@ref{FL_MULTI_BROWSER}}, on deselections). This behaviour can be
 changed by using the function
-@findex fl_set_object_return()
 @example
-int fl_set_object_return(FL_OBJECT *obj, int when)
+int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 where @code{when} can have the following values
 @table @code

@@ -39,26 +39,27 @@ void fl_set_object_posthandler(FL_OBJECT *obj,
 @end example
 @noindent
 @code{event} is a generic event of the Forms Library, that is,
-@code{FL_DRAW}, @code{FL_ENTER} etc. Parameters @code{mx} and
-@code{my} are the mouse position and @code{key} is the key pressed.
-The last parameter @code{raw_event} is a pointer to the XEvent (cast
-to a void pointer due to the different types of Xevents) that caused
-the invocation of the pre- or post-handler. But note: not all events
-of the Form Library have a corresponding Xevent and thus dereferencing
-of @code{xev} should only be done after making sure it is not
-@code{NULL}.
+@code{@ref{FL_DRAW}}, @code{@ref{FL_ENTER}} etc. Parameters @code{mx}
+and @code{my} are the mouse position and @code{key} is the key
+pressed. The last parameter @code{raw_event} is a pointer to the
+XEvent (cast to a void pointer due to the different types of Xevents)
+that caused the invocation of the pre- or post-handler. But note: not
+all events of the Form Library have a corresponding Xevent and thus
+dereferencing of @code{xev} should only be done after making sure it
+is not @code{NULL}.
 
 The pre- and post-handler have the same function prototype as the
 built-in handler. Actually they are called with exactly the same
 parameters by the event dispatcher. The pre-handler should return
 @tindex FL_PREEMPT
-@code{FL_PREEMPT} to prevent the dispatcher from calling the normal
-object handler for events and @code{!FL_PREEMPT} if the objects
-handler for is to be invoked next. The post-handler is free to return
-anything, the return value is not used. Note that a post-handler will
-receive all events even if the object the post-handler is registered
-for does not. For example, a post-handler for a box (a static object
-that only receives @code{FL_DRAW}) receives all events.
+@anchor{FL_PREEMPT} @code{FL_PREEMPT} to prevent the dispatcher from
+calling the normal object handler for events and @code{!FL_PREEMPT} if
+the objects handler for is to be invoked next. The post-handler may
+return whatever it wants since the return value is not used. Note that
+a post-handler will receive all events even if the object the
+post-handler is registered for does not. For example, a post-handler
+for a box (a static object that only receives @code{@ref{FL_DRAW}})
+receives all events.
 
 Note that when an object has been de-activated using
 @code{@ref{fl_deactivate_object()}} (or the whole form the object

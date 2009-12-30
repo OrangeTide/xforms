@@ -561,8 +561,8 @@ fl_get_dial_bounds( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_dial_return( FL_OBJECT * obj,
-                    int         when )
+fl_set_dial_return( FL_OBJECT    * obj,
+                    unsigned int   when )
 {
     fl_set_object_return( obj, when );
 }

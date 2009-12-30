@@ -48,8 +48,8 @@ FL_EXPORT double fl_get_thumbwheel_step( FL_OBJECT * ob );
 FL_EXPORT double fl_set_thumbwheel_step( FL_OBJECT * ob,
                                          double      step );
 
-FL_EXPORT int fl_set_thumbwheel_return( FL_OBJECT * ob,
-                                        int         how );
+FL_EXPORT int fl_set_thumbwheel_return( FL_OBJECT    * ob,
+                                        unsigned int   when );
 
 FL_EXPORT int fl_set_thumbwheel_crossover( FL_OBJECT * ob,
                                            int         flag );
