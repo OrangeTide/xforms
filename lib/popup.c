@@ -246,20 +246,17 @@ fli_popup_add( Window       win,
 
     p->win = None;
     p->parent_win = win != None ? win : fl_root;
-    p->cursor = fl_get_cursor_byname( popup_cursor );
+    p->cursor     = fl_get_cursor_byname( popup_cursor );
 
-    p->entries = NULL;
-    p->callback = NULL;
-
+    p->entries     = NULL;
+    p->callback    = NULL;
     p->use_req_pos = 0;
     p->need_recalc = 1;
-    p->min_width = 0;
-    p->has_subs = 0;
-    p->has_boxes = 0;
-
-    p->counter = 0;
-
-    p->policy = popup_policy;
+    p->min_width   = 0;
+    p->has_subs    = 0;
+    p->has_boxes   = 0;
+    p->counter     = 0;
+    p->policy      = popup_policy;
 
     fl_popup_set_title_font( p, popup_title_font_style, popup_title_font_size );
     fl_popup_entry_set_font( p, popup_entry_font_style, popup_entry_font_size );
@@ -278,7 +275,7 @@ fli_popup_add( Window       win,
 
 
 /***************************************
- * Add entries to a popup
+ * Add (append) entries to a popup
  ***************************************/
 
 FL_POPUP_ENTRY *
@@ -291,8 +288,7 @@ fl_popup_add_entries( FL_POPUP   * popup,
 
     va_start( ap, entries );
     new_entries = fli_popup_add_entries( popup, entries, ap,
-                                         "fl_popup_add_entries",
-                                         0 );
+                                         "fl_popup_add_entries", 0 );
     va_end( ap );
 
     return new_entries;
@@ -377,7 +373,7 @@ fli_popup_add_entries( FL_POPUP   * popup,
 
 
 /***************************************
- * Insert new entries after an entry (use NULL for inserting at start)
+ * Insert new entries after an entry (use NULL for inserting at the start)
  ***************************************/
 
 FL_POPUP_ENTRY *
@@ -390,8 +386,8 @@ fl_popup_insert_entries( FL_POPUP       * popup,
     va_list ap;
 
     va_start( ap, entries );
-    new_entries = fl_popup_insert_entries( popup, after, entries, ap,
-                                           "fl_popup_insert_entries" );
+    new_entries = fli_popup_insert_entries( popup, after, entries, ap,
+                                            "fl_popup_insert_entries", 0 );
     va_end( ap );
 
     return new_entries;
@@ -457,7 +453,7 @@ fli_popup_insert_entries( FL_POPUP       * popup,
                                  simple );
     fl_free( str );
 
-    /* A return value of NULL says something went wrong (warning was altready
+    /* A return value of NULL says something went wrong (warning was already
        output) */
 
     if ( new_entries == NULL )
@@ -509,15 +505,18 @@ fli_popup_insert_entries( FL_POPUP       * popup,
 
 
 /***************************************
- * Create a popup and populate it from a list of FL_POPUP_ITEM structures
+ * Internal function for inserting entries into a popup after entry
+ * 'after' (NULL stands for "insert at start") from a list of FL_POPUP_ITEM
+ * structures - they are converted into a string that then gets passed
+ * with the required additional arguments to fl_popup_insert_entries()
  ***************************************/
 
-FL_POPUP *
-fl_popup_create( Window          win,
-                 const char    * title,
-                 FL_POPUP_ITEM * entries )
+FL_POPUP_ENTRY *
+fli_popup_insert_items( FL_POPUP       * popup,
+                        FL_POPUP_ENTRY * after,
+                        FL_POPUP_ITEM  * entries,
+                        const char     * caller)
 {
-    FL_POPUP *popup;
     FL_POPUP_ITEM *e;
     const char *c;
     char *txt;
@@ -526,10 +525,39 @@ fl_popup_create( Window          win,
     int level = 0;
     int need_line = 0;
     int is_sub = 0;
-    FL_POPUP_ENTRY *entry = NULL;
+    FL_POPUP_ENTRY *entry;
+    int first = 1;
 
-    if ( ( popup = fl_popup_add( win, title ) ) == NULL )
+    /* Return if the array of items is NULL */
+
+    if ( entries == NULL )
         return NULL;
+
+    /* Check if the popup we're supposed to add to does exist at all */
+
+    if ( fli_check_popup_exists( popup ) )
+    {
+        M_err( caller, "Popup does not exist" );
+        return NULL;
+    }
+
+    /* If 'after' isn't NULL (indicating that we have to insert at the
+       start) check that this popup entry exists */
+
+    if ( after != NULL )
+    {
+        for ( entry = popup->entries; entry != NULL; entry = entry->next )
+            if ( entry == after )
+                break;
+
+        if ( entry == NULL )
+        {
+            M_err( caller, "Invalid 'after' argument" );
+            return NULL;
+        }
+    }
+
+    /* Iterate over all items, inserting each individually */
 
     for ( e = entries; e->text != NULL; e++ )
     {
@@ -539,8 +567,7 @@ fl_popup_create( Window          win,
              && e->type != FL_POPUP_TOGGLE
              && e->type != FL_POPUP_RADIO )
         {
-            fl_popup_delete( popup );
-            M_err( "fl_popup_create", "Invalid entry type" );
+            M_err( caller, "Invalid entry type" );
             return NULL;
         }
 
@@ -555,41 +582,31 @@ fl_popup_create( Window          win,
         {
             if ( e->type != FL_POPUP_NORMAL )
             {
-                fl_popup_delete( popup );
-                M_err( "fl_popup_create", "Entry can't be entry for sub-popup "
+                M_err( caller, "Entry can't be for a sub-popup "
                        "and toggle or radio entry at the same time" );
                 return NULL;
             }
             is_sub = 1;
         }
 
-        if ( *c == '/' )
-        {
-            if ( *++c == '_' )
-                c++;
-        }
-        else if ( *c == '_' )
-        {
-            if ( *++c == '/' )
-                c++;
-        }
+        if (    ( *c == '/' && *++c == '_' )
+             || ( *c == '_' && *++c == '/' ) )
+            c++;
 
         /* Count the number of '%' in the string (without a directly following
            'S') since all of them need to be escaped */
 
         cnt = 0;
         for ( txt = strchr( c, '%' ); txt != NULL; txt = strchr( ++txt, '%' ) )
-        {
             if ( txt[ 1 ] != 'S' )
                 cnt++;
-        }
 
-        /* Get enough memory for the string to pass to fl_popup_set_entries() */
+        /* Get enough memory for the string to pass to
+           fl_popup_insert_entries() */
 
         if ( ( txt = fl_malloc( strlen( c ) + cnt + 13 ) ) == NULL )
         {
-            fl_popup_delete( popup );
-            M_err( "fl_popup_create", "Running out of memory" );
+            M_err( caller, "Running out of memory" );
             return NULL;
         }
 
@@ -630,13 +647,26 @@ fl_popup_create( Window          win,
 
         level++;
 
+        if ( need_line )
+        {
+            if ( ( after = fl_popup_insert_entries( popup, after, "%l" ) )
+                                                                      == NULL )
+            {
+                if ( --level == 0 )
+                    val = 0;
+                return NULL;
+            }
+
+            need_line = 0;
+        }
+
         if ( e->type == FL_POPUP_NORMAL && ! is_sub )
         {
-            if ( ( entry = fl_popup_add_entries( popup, txt, val++, e->callback,
-                                                 e->shortcut ) ) == NULL )
+            if ( ( after = fl_popup_insert_entries( popup, after, txt, val++,
+                                                    e->callback, e->shortcut ) )
+                                                                       == NULL )
             {
                 fl_free( txt );
-                fl_popup_delete( popup );
                 if ( --level == 0 )
                     val = 0;
                 return NULL;
@@ -646,11 +676,11 @@ fl_popup_create( Window          win,
         {
             strcat( txt, e->state & FL_POPUP_CHECKED  ? "%T" : "%t" );
 
-            if ( ( entry = fl_popup_add_entries( popup, txt, val++, e->callback,
-                                                 e->shortcut ) ) == NULL )
+            if ( ( after = fl_popup_insert_entries( popup, after, txt, val++,
+                                                    e->callback, e->shortcut ) )
+                                                                       == NULL )
             {
                 fl_free( txt );
-                fl_popup_delete( popup );
                 if ( --level == 0 )
                     val = 0;
                 return NULL;
@@ -660,12 +690,11 @@ fl_popup_create( Window          win,
         {
             strcat( txt, e->state & FL_POPUP_CHECKED ? "%R" : "%r" );
 
-            if ( ( entry = fl_popup_add_entries( popup, txt, val++,
-                                                 e->callback, e->shortcut,
-                                                 INT_MIN ) ) == NULL )
+            if ( ( after = fl_popup_insert_entries( popup, after, txt, val++,
+                                                    e->callback, e->shortcut,
+                                                    INT_MIN ) ) == NULL )
             {
                 fl_free( txt );
-                fl_popup_delete( popup );
                 if ( --level == 0 )
                     val = 0;
                 return NULL;
@@ -678,14 +707,12 @@ fl_popup_create( Window          win,
 
             strcat( txt, "%m" );
 
-            
-            if (    ( sub = fl_popup_create( win, NULL, e + 1 ) ) == NULL
-                 || ( entry = fl_popup_add_entries( popup, txt, pval,
-                                                    e->callback, e->shortcut,
-                                                    sub ) ) == NULL )
+            if (    ( sub = fl_popup_create( popup->win, NULL, e + 1 ) ) == NULL
+                 || ( after = fl_popup_insert_entries( popup, after,txt, pval,
+                                                       e->callback, e->shortcut,
+                                                       sub ) ) == NULL )
             {
                 fl_free( txt );
-                fl_popup_delete( popup );
                 if ( ! fli_check_popup_exists( sub ) )
                     fl_popup_delete( sub );
                 if ( --level == 0 )
@@ -698,8 +725,8 @@ fl_popup_create( Window          win,
 
         /* Set the entries text member to exactly what the user gave us */
 
-        fl_safe_free( entry->text );
-        if ( ( entry->text = fl_strdup( e->text ) ) == NULL )
+        fl_safe_free( after->text );
+        if ( ( after->text = fl_strdup( e->text ) ) == NULL )
         {
             fl_popup_delete( popup );
             if ( --level == 0 )
@@ -727,24 +754,92 @@ fl_popup_create( Window          win,
             is_sub = 0;
         }
 
-        if ( need_line )
+        if ( first )
         {
-            if ( fl_popup_add_entries( popup, "%l" ) == NULL )
-            {
-                fl_popup_delete( popup );
-                if ( --level == 0 )
-                    val = 0;
-                return NULL;
-            }
-
-            need_line = 0;
+            entry = after;
+            first = 0;
         }
     }
 
     val++;
     if ( --level == 0 )
         val = 0;
+
+    return entry;
+}
+
+
+/***************************************
+ * Create a popup and populate it from a list of FL_POPUP_ITEM structures
+ ***************************************/
+
+FL_POPUP *
+fl_popup_create( Window          win,
+                 const char    * title,
+                 FL_POPUP_ITEM * entries )
+{
+    FL_POPUP *popup;
+
+    if ( ( popup = fl_popup_add( win, title ) ) == NULL )
+        return NULL;
+
+    if ( fli_popup_insert_items( popup, NULL, entries,
+                                 "fl_popup_create" ) == NULL )
+    {
+        fl_popup_delete( popup );
+        return NULL;
+    }
+
     return popup;
+}
+
+
+/***************************************
+ * Appends entries to a popup from a list of FL_POPUP_ITEM structures
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_popup_add_items( FL_POPUP      * popup,
+                    FL_POPUP_ITEM * entries )
+{
+    FL_POPUP_ENTRY *after;
+
+    /* Return if the array of items is NULL */
+
+    if ( entries == NULL )
+        return NULL;
+
+    /* Check if the popup we're supposed to add to does exist at all */
+
+    if ( fli_check_popup_exists( popup ) )
+    {
+        M_err( "fl_popup_add_items", "Popup does not exist" );
+        return NULL;
+    }
+
+    /* Determine the last existing entry in the popup */
+
+    after = popup->entries;
+    while ( after != NULL && after->next != NULL )
+        after = after->next;
+
+    return fli_popup_insert_items( popup, after, entries,
+                                   "fl_popup_add_items" );
+}
+
+
+/***************************************
+ * Insert entries into a popup from a list of FL_POPUP_ITEM structures
+ * after an entry
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_popup_insert_items( FL_POPUP       * popup,
+                       FL_POPUP_ENTRY * after,
+                       FL_POPUP_ITEM  * entries )
+{
+    return fli_popup_insert_items( popup, after, entries,
+                                   "fl_popup_insert_items" );
 }
 
 

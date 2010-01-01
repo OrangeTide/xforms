@@ -491,7 +491,7 @@ fl_create_choice( int          type,
     obj->spec = sp   = fl_calloc( 1, sizeof *sp );
 
     sp->fontsize  = fli_cntl.choiceFontSize ?
-                    fli_cntl.choiceFontSize : FL_DEFAULT_FONT;
+                    fli_cntl.choiceFontSize : FL_DEFAULT_SIZE;
     sp->fontstyle = FL_NORMAL_STYLE;
     sp->align     = FL_ALIGN_CENTER;
 

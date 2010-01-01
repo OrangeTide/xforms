@@ -26,15 +26,17 @@
 
 static int handle_nmenu( FL_OBJECT *, int, FL_Coord, FL_Coord,
                          int , void * );
-static void popup_reparent( FL_POPUP *, FL_POPUP * );
+static void popup_reparent_entries( FL_POPUP *, FL_POPUP * );
 static void draw_menu( FL_OBJECT * );
 
 
-#define IS_TOUCH_NMENU( o )  \
-( ( o )->type == FL_NORMAL_TOUCH_NMENU || ( o )->type == FL_BUTTON_TOUCH_NMENU )
+#define IS_TOUCH_NMENU( o )                      \
+	(    ( o )->type == FL_NORMAL_TOUCH_NMENU    \
+      || ( o )->type == FL_BUTTON_TOUCH_NMENU )
 
-#define IS_BUTTON_NMENU( o )  \
-( ( o )->type == FL_BUTTON_NMENU || ( o )->type == FL_BUTTON_TOUCH_NMENU )
+#define IS_BUTTON_NMENU( o )                     \
+	(    ( o )->type == FL_BUTTON_NMENU          \
+      || ( o )->type == FL_BUTTON_TOUCH_NMENU )
 
 
 /***************************************
@@ -138,7 +140,7 @@ fl_clear_nmenu( FL_OBJECT * obj )
 
 
 /***************************************
- * Add item(s) to the nmenu object
+ * Add (append) item(s) to the nmenu object
  ***************************************/
 
 FL_POPUP_ENTRY *
@@ -236,7 +238,7 @@ fl_replace_nmenu_item( FL_OBJECT      * obj,
 
     if ( ! items || ! *items )
     {
-        M_err( "fl_replace_nmenu_items", "Items string NULL or empty" );
+        M_err( "fl_replace_nmenu_item", "Items string NULL or empty" );
         return NULL;
     }
 
@@ -250,7 +252,7 @@ fl_replace_nmenu_item( FL_OBJECT      * obj,
 
     if ( fli_check_popup_entry_exists( old_item ) )
     {
-        M_err( "fl_replace_nmenu_items", "Item to replace doesn't exist" );
+        M_err( "fl_replace_nmenu_item", "Item to replace doesn't exist" );
         return NULL;
     }
 
@@ -258,7 +260,7 @@ fl_replace_nmenu_item( FL_OBJECT      * obj,
 
     va_start( ap, items );
     new_entries = fli_popup_insert_entries( sp->popup, old_item, items, ap,
-                                            "fl_replace_nmenu_items", 0 );
+                                            "fl_replace_nmenu_item", 0 );
     va_end( ap );
 
     /* If the insert worked out ok delete the old item (and check if we
@@ -321,7 +323,7 @@ fl_delete_nmenu_item( FL_OBJECT      * obj,
 
 FL_POPUP_ENTRY *
 fl_set_nmenu_items( FL_OBJECT     * obj,
-                     FL_POPUP_ITEM * items )
+                    FL_POPUP_ITEM * items )
 {
     FLI_NMENU_SPEC *sp;
     FL_POPUP *p;
@@ -352,15 +354,163 @@ fl_set_nmenu_items( FL_OBJECT     * obj,
     fli_popup_reset_counter( sp->popup );
 
     /* Now move the new entries to the already existing popup of the nmenu
-       object*/
+       object */
 
     sp->popup->entries = p->entries;
-    popup_reparent( sp->popup, sp->popup );
+    popup_reparent_entries( sp->popup, sp->popup );
     fl_free( p );
 
     sp->sel = NULL;
 
-    return p->entries;
+    return sp->popup->entries;
+}
+
+
+/***************************************
+ * Add (append) item(s) to the nmenu object from a list of FL_POPUP_ITEM
+ * structures
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_add_nmenu_items2( FL_OBJECT     * obj,
+                     FL_POPUP_ITEM * items )
+{
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP_ENTRY *after;
+    FL_POPUP_ENTRY *new_entries;
+
+    if ( obj == NULL )
+    {
+        M_err( "fl_add_nmenu_items2", "NULL object" );
+        return NULL;
+    }
+
+    if ( ! items || ! items->text )
+    {
+        M_err( "fl_add_nmenu_items2", "Items list NULL or empty" );
+        return NULL;
+    }
+
+    sp = obj->spec;
+
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_add_nmenu_items2" );
+
+    /* Determine the last existing entry in the nmenu's popup */
+
+    after = sp->popup->entries;
+    while ( after != NULL && after->next != NULL )
+        after = after->next;
+
+    /* Create and append the new entries to the popup */
+
+    new_entries = fli_popup_insert_items( sp->popup, after, items,
+                                          "fl_add_nmenu_items2" );
+
+    return new_entries;
+}
+
+
+/***************************************
+ * Insert item(s) into the nmenu object from a list of FL_POPUP_ITEM
+ * structures after an already existing item
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_insert_nmenu_items2( FL_OBJECT      * obj,
+                        FL_POPUP_ENTRY * after,
+                        FL_POPUP_ITEM  * items )
+{
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP_ENTRY *new_entries;
+
+    if ( obj == NULL )
+    {
+        M_err( "fl_add_nmenu_items2", "NULL object" );
+        return NULL;
+    }
+
+    if ( ! items || ! items->text )
+    {
+        M_err( "fl_insert_nmenu_items2", "Items list NULL or empty" );
+        return NULL;
+    }
+
+    sp = obj->spec;
+
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_insert_nmenu_items2" );
+
+    if ( after != NULL && fli_check_popup_entry_exists( after ) != 0 )
+    {
+        M_err( "fl_add_nmenu_items2", "Item to insert after doesn't exist" );
+        return NULL;
+    }
+
+    new_entries = fli_popup_insert_items( sp->popup, after, items,
+                                          "fl_insert_nmenu_items2" );
+
+    return new_entries;
+}
+
+
+/***************************************
+ * Replace an item by new item(s) from a list of FL_POPUP_ITEM structures
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_replace_nmenu_item2( FL_OBJECT      * obj,
+                        FL_POPUP_ENTRY * old_item,
+                        FL_POPUP_ITEM  * items )
+{
+    FLI_NMENU_SPEC *sp;
+    FL_POPUP_ENTRY *new_entries;
+
+    if ( obj == NULL )
+    {
+        M_err( "fl_replace_nmenu_items2", "NULL object" );
+        return NULL;
+    }
+
+    if ( ! items || ! items->text )
+    {
+        M_err( "fl_replace_nmenu_items2", "Items list NULL or empty" );
+        return NULL;
+    }
+
+    sp = obj->spec;
+
+    if ( sp->popup == NULL )
+        sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
+                                   "fl_replace_nmenu_items2" );
+
+    /* Test if the item we're supposed to replace exists */
+
+    if ( fli_check_popup_entry_exists( old_item ) )
+    {
+        M_err( "fl_replace_nmenu_item2", "Item to replace doesn't exist" );
+        return NULL;
+    }
+
+    /* Add the new item(s) after the one to replaced */
+
+    new_entries = fli_popup_insert_items( sp->popup, old_item, items,
+                                          "fl_replace_nmenu_item2" );
+
+    /* If the insert worked out ok delete the old item (and check if we
+       have to set a new displayed item) */
+
+    if ( new_entries != NULL )
+    {
+        if ( sp->sel != NULL && sp->sel->entry == old_item )
+            sp->sel = NULL;
+
+        fl_popup_entry_delete( old_item );
+    }
+
+    return new_entries;
 }
 
 
@@ -667,8 +817,8 @@ handle_nmenu( FL_OBJECT * obj,
  ***************************************/
 
 static void
-popup_reparent( FL_POPUP * popup,
-                FL_POPUP * top_parent )
+popup_reparent_entries( FL_POPUP * popup,
+                        FL_POPUP * top_parent )
 {
     FL_POPUP_ENTRY *e;
 
@@ -679,7 +829,7 @@ popup_reparent( FL_POPUP * popup,
         {
             e->sub->parent = popup;
             e->sub->top_parent = top_parent;
-            popup_reparent( e->sub, top_parent );
+            popup_reparent_entries( e->sub, top_parent );
         }
     }
 }

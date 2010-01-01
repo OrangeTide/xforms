@@ -844,7 +844,7 @@ fl_set_object_dblclick( FL_OBJECT     * obj,
     if ( ! obj )
     {
         M_err( "fl_set_object_dblclick", "NULL object" );
-        return ULONG_MAX;
+        return;
     }
 
     obj->click_timeout = timeout;
@@ -861,7 +861,7 @@ fl_get_object_dblclick( FL_OBJECT * obj )
     if ( ! obj )
     {
         M_err( "fl_get_object_dblclick", "NULL object" );
-        return;
+        return ULONG_MAX;
     }
 
     return obj->click_timeout;

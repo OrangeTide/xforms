@@ -2203,7 +2203,7 @@ fl_create_xyplot( int          t,
     ob->boxtype    = FL_XYPLOT_BOXTYPE;
     ob->col2       = ob->lcol = FL_BLACK;
     ob->col1       = FL_COL1;
-    ob->lsize      = FL_TINY_FONT;
+    ob->lsize      = FL_TINY_SIZE;
     ob->align      = FL_XYPLOT_ALIGN;
     ob->spec       = sp = fl_calloc( 1, sizeof *sp );
 

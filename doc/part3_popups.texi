@@ -12,14 +12,14 @@ with the popup and it has been removed from the screen. Only idle
 callbacks and timers etc.@: are executed in the background while a
 popup is being shown.
 
-Popups also play an important role for menu and selector objects,
-which internally create and use popups. Thus it might be helpful to
+Popups are the building blocks for menu and selector objects, which
+internally create and use popups. Thus it might be helpful to
 understand how popups work to get the most out of these objects.
 
-All functions dealing with popups habe names starting with
+All functions dealing with popups have names starting with
 @code{'fl_popup_'}, functions for individual entries start with
 @code{'fl_popup_entry_'} and typedefs as well as macros with
-@code{'FL_POPUP_'}.
+@code{'FL_POPUP_'}. 
 
 @ifnottex
 
@@ -36,25 +36,27 @@ All functions dealing with popups habe names starting with
 @section Adding Popups
 
 There are two ways to create and polulate a popup with entries. The
-first method, that allows more fine-grained control consists of
-first generating a popup and then add entries. Using this method all
-the properties of entries can be set immediately. The second method,
-to be discussed a bit later, is simpler and may be sufficient for
-many applications, internally uses the first method.
+first method, that allows more fine-grained control consists of first
+generating a popup and then adding entries. Using this method all the
+properties of entries can be set immediately. The second method, to be
+discussed later, is simpler and may be sufficient for many
+applications, and internally uses the first method.
 
-To define a new popup use
+To define a new popup using the more general interface call
 @findex fl_popup_add()
 @anchor{fl_popup_add()}
 @example
 FL_POPUP *fl_popup_add(Window win, const char *title);
 @end example
 @noindent
-@code{win} is the window of a parent object (use
-@code{@ref{FL_ObjWin()}} to find out about it). You can also use
-@code{fl_root} (the rooot windows) or @code{None}. @code{title} is an
-optional string that gets shown at the top of the popup in a framed
-box. If not wanted pass an empty string or @code{NULL}. The function
-returns a pointer to a new popup or @code{NULL} on failure.
+The function returns the address of the new popup on success and
+@code{NULL} on failure. @code{win} is the window of a parent object
+(use @code{@ref{FL_ObjWin()}} to find out about it). You can also use
+@code{fl_root} for the rooot window, with @code{None} having the same
+effect . @code{title} is an optional string that gets shown at the top
+of the popup in a framed box. If not wanted pass an empty string or
+@code{NULL}. The function returns a pointer to a new popup or
+@code{NULL} on failure.
 
 The title may contain embedded newline characters, this allows to
 create titles that span more than one line.)
@@ -70,13 +72,14 @@ FL_POPUP_ENTRY *fl_popup_add_entries(FL_POPUP *popup,
                                      const char *entries, ...);
 @end example
 @noindent
-The first argument, @code{entries}, is a pointer to the popup the new
-entry (or entries) is added to. The second argument, @code{entries},
-encodes information about the entries to add. In the most simple case
-it consists just of the entries texts, separated by @code{|}
-characters, e.g. @w{@code{"Item 1|Item 2|Item 3"}}. This would create
-three simple entries in the popup with labels @code{"Item 1"},
-@code{"Item 2"} and @code{"Item 3"}.
+On success the return value is the address of the first entry created
+and @code{NULL} on failure. The first argument, @code{entries}, is a
+pointer to the popup the new entry (or entries) is added to. The
+second argument, @code{entries}, encodes information about the entries
+to add. In the most simple case it consists just of the entries texts,
+separated by @code{|} characters, e.g. @w{@code{"Item 1|Item 2|Item
+3"}}. This would create three simple entries in the popup with labels
+@code{"Item 1"}, @code{"Item 2"} and @code{"Item 3"}.
 
 The @code{entries} string may contain newline characters which allows
 to create entries that span more than a single line.
@@ -257,7 +260,7 @@ Offline"} and @code{"Ctrl+O"} and shortcut key @code{<Ctrl>O}. This
 label is a "toggle" entry in "on" state, thus a check-marker is shown
 beside it.
 
-A few remarks about the callback routines. Each have type
+A few remarks about the callback routines. All have a type of
 @code{FL_POPUP_CB} as given by this @code{typedef}:
 @tindex FL_POPUP_CB
 @example
@@ -272,8 +275,8 @@ just stand for separator lines. When an entry that can receive enter
 callbacks is left, its leave callback is invoked.
 
 Leave callbacks are not called when a selection has been made.
-Instead, only the call of the selection callback for the selected
-entry is made.
+Instead, only the selection callback for the selected entry is
+invoked.
 
 A "sub-popup entry", i.e.@: an entry that when entered results in a
 sub-popup to open, also can have an enter callback. It's leave
@@ -604,7 +607,7 @@ FL_POPUP_ITEMS items[] = @{
   @{"Item 1%S^1", NULL, "^1", FL_POPUP_NORMAL, 0               @},
   @{"Item 2%S^2", NULL, "^2", FL_POPUP_RADIO,  FL_POPUP_CHECKED@},
   @{"Item 2%S^3", NULL, "^3", FL_POPUP_RADIO,  0               @},
-  @{"_/Item 4",   NULL, NUL, FL_POPUP_NORMAL,  0               @},
+  @{"_/Item 4",   NULL, NULL, FL_POPUP_NORMAL, 0               @},
     @{"Sub-item A", cbA,  NULL, FL_POPUP_NORMAL, 0                @},
     @{"Sub-item B", cbB,  NULL, FL_POPUP_TOGGLE, FL_POPUP_DISABLED@},
     @{NULL,         NULL, NULL, 0,               0                @},
@@ -657,6 +660,32 @@ follows, a normal entry with just a left-label of @code{Item 5}. The
 final element of @code{items}, where @code{text} is set to @code{NULL}
 then signifies that this is the end of the popup.
 
+As there are functions to append to and insert entries into a popup with
+a kind of format string, followed by a variable list of arguments,
+there are also functions for adding and inserting entries using an
+array of @code{@ref{FL_POPUP_ITEM}}. These are
+@anchor{fl_popup_add_items()}
+@findex fl_popup_add_items()
+@anchor{fl_popup_insert_items()}
+@findex fl_popup_insert_items()
+@example
+FL_POPUP_ENTRY *fl_popup_add_items(FL_POPUP *popup,
+                                   FL_POPUP_ITEM *items);
+FL_POPUP_ENTRY *fl_popup_insert_items(FL_POPUP *popup,
+                                      FL_POPUP_ENTRY *after,
+                                      FL_POPUP_ITEM  *items);
+@end example
+@noindent
+Both functions return the address of the first entry created on
+success and @code{NULL} on error. The first argument is the popup the
+entries are to be appended to or inserted into, the last argument the
+array of items (as in the case of @code{@ref{fl_popup_create()}} at
+least the @code{text} member of the last element must be a @code{NULL}
+pointer to indicate the end). @code{fl_popup_insert_items()} takes
+another argument, @code{after}, the entry after which the new entries
+are to be inserted (if called with @code{after} set to @code{NULL} the
+new entries are inserted at the very start of the popup).
+
 
 @node Popup Interaction
 @section Popup Interaction
@@ -665,11 +694,11 @@ A popup will be drawn on the screen when the function
 @tindex fl_popup_do()
 @anchor{fl_popup_do()}
 @example
-FL_POPUP_RETURN *fl_popup_do(FLPOPUP *popup);
+FL_POPUP_RETURN *fl_popup_do(FL_POPUP *popup);
 @end example
 @noindent
 is called. It only returns when the user either selects an entry or
-closes it in some other way (e.g.@: by clicking outside the popups
+closes it in some other way (e.g.@: by clicking outside the popup's
 area). When a selection was made the function returns a pointer to a
 @code{FL_POPUP_RETURN} structure with information about the entry that
 was selected (please note that the structure is internal storage
@@ -756,7 +785,7 @@ It's also possible to derermine the policy setting by using
 @findex fl_popup_get_policy()
 @anchor{fl_popup_get_policy()}
 @example
-int fl_popup_get_policy( Fl_POPUP * popup );
+int fl_popup_get_policy(Fl_POPUP *popup);
 @end example
 If called with the address of a (valid) popup the policy for this
 popup (or its parent if one exists) gets returned. If called with a
@@ -893,12 +922,12 @@ functions allows to change state bits in a single call.
 @findex fl_popup_toggle_clear_state()
 @anchor{fl_popup_toggle_clear_state()}
 @example
-unsigned int fl_popup_entry_clear_state( FL_POPUP_ENTRY *entry,
-                                         unsigned int what );
-unsigned int fl_popup_entry_raise_state( FL_POPUP_ENTRY *entry,
-                                         unsigned int what );
-unsigned int fl_popup_entry_toggle_state( FL_POPUP_ENTRY *entry,
-                                          unsigned int what );
+unsigned int fl_popup_entry_clear_state(FL_POPUP_ENTRY *entry,
+                                        unsigned int what);
+unsigned int fl_popup_entry_raise_state(FL_POPUP_ENTRY *entry,
+                                        unsigned int what);
+unsigned int fl_popup_entry_toggle_state(FL_POPUP_ENTRY *entry,
+                                         unsigned int what);
 @end example
 The @code{what} argument can be any value resulting from a bitwise OR
 of @code{FL_POPUP_DISABLED}, @code{FL_POPUP_HIDDEN} and

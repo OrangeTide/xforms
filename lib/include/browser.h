@@ -48,7 +48,7 @@ typedef enum {
 /***** Others   *****/
 
 #define FL_BROWSER_SLCOL        FL_COL1
-#define FL_BROWSER_FONTSIZE     FL_SMALL_FONT
+#define FL_BROWSER_FONTSIZE     FL_SMALL_SIZE
 
 
 /* This exists only for backward compatibility and isn't used anymore! */

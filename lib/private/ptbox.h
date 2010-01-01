@@ -83,7 +83,7 @@ typedef struct {
 #define FLI_TBOX_COL2      FL_YELLOW
 #define FLI_TBOX_LCOL      FL_LCOL
 #define FLI_TBOX_ALIGN     FL_ALIGN_BOTTOM
-#define FLI_TBOX_FONTSIZE  FL_SMALL_FONT
+#define FLI_TBOX_FONTSIZE  FL_SMALL_SIZE
 
 
 extern FL_OBJECT * fli_create_tbox( int,

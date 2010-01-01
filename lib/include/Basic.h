@@ -471,7 +471,7 @@ typedef enum {
 #define FL_BUILT_IN_COLS  ( FL_YELLOWGREEN + 1 )
 #define FL_INACTIVE_COL   FL_INACTIVE
 
-/* Some aliases for the color. This is actually backwards ... */
+/* Some aliases for a number of colors */
 
 #define FL_GRAY16           FL_RIGHT_BCOL
 #define FL_GRAY35           FL_BOTTOM_BCOL

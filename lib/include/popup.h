@@ -28,30 +28,30 @@ typedef struct FL_POPUP_RETURN_ FL_POPUP_RETURN;
 typedef int ( * FL_POPUP_CB )( FL_POPUP_RETURN * );
 
 struct FL_POPUP_RETURN_ {
-    long int               val;        /* value assigned to popup entry */
-    void                 * user_data;  /* pointer to user data */
-    const char           * text;       /* text of the selected popup entry */
-    const char           * label;      /* left-flushed label part */
-    const char           * accel;      /* right-flushed label part */
-    const FL_POPUP_ENTRY * entry;      /* pointer to selected popup entry */
-    const FL_POPUP       * popup;      /* popup we're called for */
+    long int               val;          /* value assigned to popup entry */
+    void                 * user_data;    /* pointer to user data */
+    const char           * text;         /* text of the selected popup entry */
+    const char           * label;        /* left-flushed label part */
+    const char           * accel;        /* right-flushed label part */
+    const FL_POPUP_ENTRY * entry;        /* pointer to selected popup entry */
+    const FL_POPUP       * popup;        /* popup we're called for */
 };
 
 struct FL_POPUP_ {
-    FL_POPUP         * next;           /* next in linked list */
-    FL_POPUP         * prev;           /* previous in linked list */
-    FL_POPUP         * parent;         /* for sub-popups: direct parent */
-    FL_POPUP         * top_parent;     /* and top-most parent */
-    FL_POPUP_ENTRY   * entries;        /* pointer to list of entries */
+    FL_POPUP         * next;             /* next in linked list */
+    FL_POPUP         * prev;             /* previous in linked list */
+    FL_POPUP         * parent;           /* for sub-popups: direct parent */
+    FL_POPUP         * top_parent;       /* and top-most parent */
+    FL_POPUP_ENTRY   * entries;          /* pointer to list of entries */
     char             * title;
-    Window             win;            /* popup window */
-    Window             parent_win;     /* parent window of popup window */
-    Cursor             cursor;         /* cursor for the popup */
+    Window             win;              /* popup window */
+    Window             parent_win;       /* parent window of popup window */
+    Cursor             cursor;           /* cursor for the popup */
     FL_POPUP_CB        callback;
     int                use_req_pos;      /* if set use req_x, req_y */
     int                req_x,
                        req_y;
-    int                x,                  /* position of popup window */
+    int                x,                /* position of popup window */
                        y;
     unsigned int       w,                /* dimensions of popup window */
                        h;
@@ -117,11 +117,11 @@ struct FL_POPUP_ENTRY_ {
 };
 
 typedef struct {
-    const char     * text;         /* text of entry */
-    FL_POPUP_CB      callback;     /* (selection) callback */
-    const char     * shortcut;     /* keyboard shortcut description */
-    int              type;         /* type of entry */
-    int              state;        /* disabled, hidden, checked */
+    const char     * text;               /* text of entry */
+    FL_POPUP_CB      callback;           /* (selection) callback */
+    const char     * shortcut;           /* keyboard shortcut description */
+    int              type;               /* type of entry */
+    int              state;              /* disabled, hidden, checked */
 } FL_POPUP_ITEM;
 
 /* Popup policies */
@@ -135,19 +135,19 @@ enum {
 
 enum {
     FL_POPUP_NONE     = 0,
-    FL_POPUP_DISABLED = 1,             /* entry is disabled */
-    FL_POPUP_HIDDEN   = 2,             /* entry is temporarily hidden */
-    FL_POPUP_CHECKED  = 4              /* tooogle/radio item is in on state */
+    FL_POPUP_DISABLED = 1,               /* entry is disabled */
+    FL_POPUP_HIDDEN   = 2,               /* entry is temporarily hidden */
+    FL_POPUP_CHECKED  = 4                /* tooogle/radio item is in on state */
 };
 
 /* Popup entry types */
 
 enum {
-    FL_POPUP_NORMAL,                   /* normal popup entry */
-    FL_POPUP_TOGGLE,                   /* toggle ("binary") popup entry */
-    FL_POPUP_RADIO,                    /* radio popup entry */
-    FL_POPUP_SUB,                      /* sub-popup popup entry */
-    FL_POPUP_LINE                      /* line popup entry */
+    FL_POPUP_NORMAL,                     /* normal popup entry */
+    FL_POPUP_TOGGLE,                     /* toggle ("binary") popup entry */
+    FL_POPUP_RADIO,                      /* radio popup entry */
+    FL_POPUP_SUB,                        /* sub-popup popup entry */
+    FL_POPUP_LINE                        /* line popup entry */
 };
 
 /* Popup color types */
@@ -177,6 +177,13 @@ FL_EXPORT FL_POPUP_ENTRY *fl_popup_insert_entries( FL_POPUP *,
 FL_EXPORT FL_POPUP *fl_popup_create( Window,
                                      const char *,
                                      FL_POPUP_ITEM * );
+
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_add_items( FL_POPUP      *,
+											  FL_POPUP_ITEM * );
+
+FL_EXPORT FL_POPUP_ENTRY *fl_popup_insert_items( FL_POPUP       *,
+												 FL_POPUP_ENTRY *,
+												 FL_POPUP_ITEM  * );
 
 FL_EXPORT int fl_popup_delete( FL_POPUP * );
 

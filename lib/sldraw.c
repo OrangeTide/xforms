@@ -332,7 +332,7 @@ void fli_drw_slider( FL_OBJECT  * ob,
     /* Draw the label */
 
     fl_drw_text( FL_ALIGN_CENTER, xsl, ysl, wsl, hsl, 0, FL_NORMAL_STYLE,
-                 FL_TINY_FONT, str );
+                 FL_TINY_SIZE, str );
 }
 
 

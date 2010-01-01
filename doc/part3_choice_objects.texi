@@ -83,8 +83,8 @@ it. For this the following function exists:
 @findex fl_add_select_items()
 @anchor{fl_add_select_items()}
 @example
-FL_POPUP_ENTRY *fl_add_select_items(FL_OBJECT *obj, const char items,
-                                    ...);
+FL_POPUP_ENTRY *fl_add_select_items(FL_OBJECT *obj,
+                                    const char items,...);
 @end example
 @noindent
 @code{items} is a string with the items to add, separated by the
@@ -608,13 +608,18 @@ it. For this the following function exists:
 @findex fl_add_nmenu_items()
 @anchor{fl_add_nmenu_items()}
 @example
-FL_POPUP_ENTRY *fl_add_nmenu_items(FL_OBJECT *obj, const char items,
-                                   ...);
+FL_POPUP_ENTRY *fl_add_nmenu_items(FL_OBJECT *obj,
+                                   const char items, ...);
 @end example
 @noindent
-@code{items} is a string with the items to add, separated by the
-@code{|} character. In the simplest case you would just use something
-like @code{"Item 1|Item 2|Item 3"} to add three items to the list.
+(The function can also be used to append new items to a nmenu object
+that already has items.)
+
+The function returns a pointer to the first menu entry added on
+success and @code{NULL} on failure. @code{items} is a string with the
+items to add, separated by the @code{|} character. In the simplest
+case you would just use something like @code{"Item 1|Item 2|Item 3"}
+to add three items to the list.
 
 As also described in the documentation for the similar function
 @code{@ref{fl_popup_add_entries()}} the text for an item may contain
@@ -629,42 +634,46 @@ Another way to set up the popup of a select object, using an array of
 @findex fl_set_nmenu_items()
 @anchor{fl_set_nmenu_items()}
 @example
-long fl_set_nmenu_items(FL_OBJECT *obj, FL_POPUP_ITEM *item);
+FL_POPUP_ENTRY *fl_set_nmenu_items(FL_OBJECT *obj, FL_POPUP_ITEM *item);
 @end example
 @noindent
-The function expects an array of @ref{FL_POPUP_ITEM} structuress, with
-the very last element having @code{NULL} as the @code{text} member to
-mark the end of the array.
+The function returns a pointer to the first menu item on success and
+@code{NULL} on failure. The function expects as arguments a pointer to
+the nmenu object and an array of @code{@ref{FL_POPUP_ITEM}}
+structuress, with the very last element having @code{NULL} as the
+@code{text} member to mark the end of the array.
 
 The @code{text} member of the structure may contain the character
 sequence @code{%S} to have the text drawn for the item split up at
 that position and with everything before @code{%S} drawn left-flushed
 and the rest right-flushed. Moreover, @code{text} may start with the
-character @code{/} and/or @code{_}. If there's an underline a line is
-drawn above the item. And if there's a slash this item marks the begin
-of s sub-menu with all further items belonging to the sub-menu until a
-structure with @code{text} set to @code{NULL} is found in the array.
-(The @code{/} and @code{_} characters are, of course, not drawn.)
+character @code{/} and/or @code{_}. For an underline character a line
+is drawn above the item. And if there's a slash this item marks the
+begin of a sub-menu with all further items belonging to the sub-menu
+until a structure with member @code{text} bing set to @code{NULL} is
+found in the array. (The @code{/} and @code{_} characters are, of
+course, not drawn.)
 
 @code{type} indicates the type of the item. It can be
 @table @code
 @tindex FL_POPUP_NORMAL
 @anchor{FL_POPUP_NORMAL}
 @item FL_POPUP_NORMAL
-Just a noral, plain item.
+A normal, plain item.
 
 @tindex FL_POPUP_TOGGLE
 @anchor{FL_POPUP_TOGGLE}
 @item FL_POPUP_TOGGLE
-An item that represents one of tow states and is drawn with a
+An item that represents one of two states and is drawn with a
 check-marker when in "on" state.
 
 @tindex FL_POPUP_RADIO
 @anchor{FL_POPUP_RADIO}
 @item FL_POPUP_RADIO
 A radio item, i.e.@: it belongs to a group of items of which only one
-can be in "on" state at a time. The are drawn with a circle to the
-left with circle for the "selected" item being filed with a color.
+can be in "on" state at a time. They are drawn with a circle to the
+left with the circle for the "selected" item being filled with a
+color.
 @end table
 @noindent
 Please note that if @code{text} starts with a @code{/} the type
@@ -686,7 +695,7 @@ The item is disabled and can't be selected.
 @tindex FL_POPUP_HIDDEN
 @anchor{FL_POPUP_HIDDEN}
 @item FL_POPUP_HIDDEN
-The popup is hidden, i.e.@: does not get shown (and thus can't be
+The item is hidden, i.e.@: does not get shown (and thus can't be
 selected).
 
 @tindex FL_POPUP_CHECKED
@@ -909,6 +918,44 @@ inserted (use @code{NULL} to insert at the very start) and
 @code{new_items} is a strung just like used with
 @code{@ref{fl_add_nmenu_items()}} with informations about the
 additional item(s).
+
+
+As you may remember, there are two different ways to "populate" a
+nmenu object. In one case you pass a kind of format string plus
+a variable number of arguments and in the other case an array of
+@code{@ref{FL_POPUP_ITEM}} structures. The previously listed
+functions for inserting and replacing used the first "interface".
+But there are also three functions for using the alternative
+interface:
+@anchor{fl_add_nmenu_items2()}
+@findex fl_add_nmenu_items2()
+@anchor{fl_add_insert_items2()}
+@findex fl_add_insert_items2()
+@anchor{fl_add_replace_items2()}
+@findex fl_add_replace_items2()
+@example
+FL_POPUP_ENTRY *fl_add_nmenu_items2(FL_OBJECT *obj,
+                                    FL_POPUP_ITEM *items);
+FL_POPUP_ENTRY *fl_insert_nmenu_items2(FL_OBJECT *obj,
+                                       FL_POPUP_ENTRY *after,
+                                       FL_POPUP_ITEM  *items);
+FL_POPUP_ENTRY *fl_replace_nmenu_item2(FL_OBJECT *obj,
+                                       FL_POPUP_ENTRY *old_item,
+                                       FL_POPUP_ITEM  *items);
+@end example
+@noindent
+All three functions return a pointer to the first new entry in the
+nmenu's popup on success and @code{NULL} on failure. The all take
+a pointer to the nmneu object as their first argument.
+
+@code{fl_add_nmenu_items2()} appends the items given by the list
+specified via the second argument to the nmenu's popup.
+@code{fl_insert_nmenu_items2()} inserts one or more new items (as
+given by the last argument) after the entry specified by @code{after}
+(if @code{after} is @code{NULL} the new items are inserted before
+all existing items). Finally, @code{fl_replace_nmenu_item2()} replaces
+the existing entry @code{old_item} with a new (or a list of new items
+specified by @code{items}.
 
 Finally, there's a function to remove all items from a nmenu object
 at once:

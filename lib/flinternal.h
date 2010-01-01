@@ -1023,6 +1023,11 @@ extern FL_POPUP_ENTRY *fli_popup_insert_entries( FL_POPUP *,
                                                  const char *,
                                                  int );
 
+extern FL_POPUP_ENTRY *fli_popup_insert_items( FL_POPUP       *,
+                                               FL_POPUP_ENTRY *,
+                                               FL_POPUP_ITEM  *,
+                                               const char * );
+
 extern void fli_popup_init( void );
 
 extern void fli_popup_finish( void );

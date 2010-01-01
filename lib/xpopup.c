@@ -120,11 +120,11 @@ static int pup_title_font_style = FL_NORMAL_STYLE;
 
 
 #ifdef __sgi
-static int pup_font_size = FL_SMALL_FONT,
-           pup_title_font_size = FL_SMALL_FONT;
+static int pup_font_size = FL_SMALL_SIZE,
+           pup_title_font_size = FL_SMALL_SIZE;
 #else
-static int pup_font_size = FL_NORMAL_FONT,
-           pup_title_font_size = FL_NORMAL_FONT;
+static int pup_font_size = FL_NORMAL_SIZE,
+           pup_title_font_size = FL_NORMAL_SIZE;
 #endif
 
 static FL_COLOR pup_color         = FL_COL1;

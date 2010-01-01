@@ -261,7 +261,7 @@ fli_query_colorname( FL_COLOR col )
     FLI_IMAP *flmap;
     static char buf[ 32 ];
 
-    for ( flmap = fli_imap; flmap < fli_imap + FL_BUILT_IN_COLS + 2; flmap++ )
+    for ( flmap = fli_imap; flmap < fli_imap + FL_BUILT_IN_COLS + 1; flmap++ )
         if ( col == flmap->index )
             return flmap->name;
 
@@ -287,7 +287,8 @@ fli_query_namedcolor( const char *s )
 {
     FLI_IMAP *flmap;
 
-    for ( flmap = fli_imap; s && flmap < fli_imap + FL_BUILT_IN_COLS; flmap++ )
+    for ( flmap = fli_imap;
+          s && flmap < fli_imap + FL_BUILT_IN_COLS + 1; flmap++ )
         if ( strcmp( s, flmap->name ) == 0 )
             return flmap->index;
 
@@ -337,7 +338,7 @@ fl_set_gamma( double r,
         return;
     }
 
-    for ( fm = fli_imap; fm < fli_imap + FL_BUILT_IN_COLS; fm++ )
+    for ( fm = fli_imap; fm < fli_imap + FL_BUILT_IN_COLS + 1; fm++ )
     {
         fm->r = 0.5 + 255 * pow( fm->r / 255.0, rgamma / r );
         fm->g = 0.5 + 255 * pow( fm->g / 255.0, ggamma / g );
