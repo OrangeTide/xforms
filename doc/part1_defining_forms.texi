@@ -997,12 +997,11 @@ in PseudoColor. Forms Library is capable of operating in all visuals
 and as a matter of fact the Forms Library will always select TrueColor
 or DirectColor if the hardware is capable of it.
 
-The actual color is
-handled by an internal colormap of
+The actual color is handled by an internal colormap of
+@anchor{FL_MAX_COLORS}
 @tindex FL_MAX_COLORS
-@code{FL_MAX_COLORS} entries (default
-1024). To change or query the values of this internal colormap use the
-call
+@code{FL_MAX_COLORS} entries (default is 1024). To change or query the
+values of this internal colormap use the call
 @findex fl_set_icm_color()
 @findex fl_get_icm_color()
 @example
@@ -1181,21 +1180,27 @@ requested size can not be honored, substitution will be made. The
 default size for XForms is 10pt.
 
 @multitable  @columnfractions 0.3 0.2 0.5
+@anchor{FL_TINY_SIZE}
 @tindex FL_TINY_SIZE
 @item @code{FL_TINY_SIZE}
 @tab 8pt
+@anchor{FL_SMALL_SIZE}
 @tindex FL_SMALL_SIZE
 @item @code{FL_SMALL_SIZE}
 @tab 10pt
+@anchor{FL_NORMAL_SIZE}
 @tindex FL_NORMAL_SIZE
 @item @code{FL_NORMAL_SIZE}
 @tab 12pt
+@anchor{FL_MEDIUM_SIZE}
 @tindex FL_MEDIUM_SIZE
 @item @code{FL_MEDIUM_SIZE}
 @tab 14pt
+@anchor{FL_LARGE_SIZE}
 @tindex FL_LARGE_SIZE
 @item @code{FL_LARGE_SIZE}
 @tab 18pt
+@anchor{FL_HUGE_SIZE}
 @tindex FL_HUGE_SIZE
 @item @code{FL_HUGE_SIZE}
 @tab 24pt
@@ -1219,56 +1224,71 @@ The default font for the Forms Library is Helvetica at 10pt.
 
 Additional styles are available:
 @multitable @columnfractions 0.5 0.5
+@anchor{FL_NORMAL_STYLE}
 @tindex FL_NORMAL_STYLE
 @item @code{FL_NORMAL_STYLE}
 @tab Normal text
+@anchor{FL_BOLD_STYLE}
 @tindex FL_BOLD_STYLE
 @item @code{FL_BOLD_STYLE}
 @tab Boldface text
+@anchor{FL_ITALIC_STYLE}
 @tindex FL_ITALIC_STYLE
 @item @code{FL_ITALIC_STYLE}
 @tab Guess what
+@anchor{FL_BOLDITALIC_STYLE}
 @tindex FL_BOLDITALIC_STYLE
 @item @code{FL_BOLDITALIC_STYLE}
 @tab BoldItalic
+@anchor{FL_FIXED_STYLE}
 @tindex FL_FIXED_STYLE
 @item @code{FL_FIXED_STYLE}
 @tab Fixed width (good for tables)
+@anchor{FL_FIXEDBOLD_STYLE}
 @tindex FL_FIXEDBOLD_STYLE
 @item @code{FL_FIXEDBOLD_STYLE}
 @tab 
+@anchor{FL_FIXEDITALIC_STYLE}
 @tindex FL_FIXEDITALIC_STYLE
 @item @code{FL_FIXEDITALIC_STYLE}
 @tab 
+@anchor{FL_FIXEDBOLDITALIC_STYLE}
 @tindex FL_FIXEDBOLDITALIC_STYLE
 @item @code{FL_FIXEDBOLDITALIC_STYLE}
 @tab 
+@anchor{FL_TIMES_STYLE}
 @tindex FL_TIMES_STYLE
 @item @code{FL_TIMES_STYLE}
 @tab Times-Roman like font
+@anchor{FL_TIMESBOLD_STYLE FL}
 @tindex FL_TIMESBOLD_STYLE FL
 @item @code{FL_TIMESBOLD_STYLE FL}
 @tab 
+@anchor{FL_TIMESITALIC_STYLE}
 @tindex FL_TIMESITALIC_STYLE
 @item @code{FL_TIMESITALIC_STYLE}
 @tab 
+@anchor{FL_TIMESBOLDITALIC_STYLE}
 @tindex FL_TIMESBOLDITALIC_STYLE
 @item @code{FL_TIMESBOLDITALIC_STYLE}
 @tab 
+@anchor{FL_SHADOW_STYLE}
 @tindex FL_SHADOW_STYLE
 @item @code{FL_SHADOW_STYLE}
 @tab Text casting a shadow
+@anchor{FL_ENGRAVED_STYLE}
 @tindex FL_ENGRAVED_STYLE
 @item @code{FL_ENGRAVED_STYLE}
 @tab Text engraved into the form
+@anchor{FL_EMBOSSED_STYLE}
 @tindex FL_EMBOSSED_STYLE
 @item @code{FL_EMBOSSED_STYLE}
 @tab Text standing out
 @end multitable
-The last three styles are special in that they are modifiers, i.e., they
-do not cause font changes themselves, they only modify the appearance of
-the font already active. E.g., to get a bold engraved text, set lstyle
-to @code{FL_BOLD_STYLE | FL_ENGRAVED_STYLE}.
+The last three styles are special in that they are modifiers, i.e.,
+they do not cause font changes themselves, they only modify the
+appearance of the font already active. E.g., to get a bold engraved
+text, set @code{lstyle} to @code{FL_BOLD_STYLE|FL_ENGRAVED_STYLE}.
 
 Other styles correspond to the first 12 fonts. The package, however, can
 handle up to 48 different fonts. The first 16 (numbers 0-15) have been
@@ -1364,37 +1384,49 @@ void fl_set_object_lalign(FL_OBJECT *obj, int align);
 
 The following possibilities exist:
 @multitable @columnfractions 0.3 0.7
+@anchor{FL_ALIGN_LEFT}
 @tindex FL_ALIGN_LEFT
 @item @code{FL_ALIGN_LEFT}
 @tab To the left of the box.
+@anchor{FL_ALIGN_RIGHT}
 @tindex FL_ALIGN_RIGHT
 @item @code{FL_ALIGN_RIGHT}
 @tab To the right of the box.
+@anchor{FL_ALIGN_TOP}
 @tindex FL_ALIGN_TOP
 @item @code{FL_ALIGN_TOP}
 @tab To the top of the box.
+@anchor{FL_ALIGN_BOTTOM}
 @tindex FL_ALIGN_BOTTOM
 @item @code{FL_ALIGN_BOTTOM}
 @tab To the bottom of the box.
+@anchor{FL_ALIGN_CENTER}
 @tindex FL_ALIGN_CENTER
 @item @code{FL_ALIGN_CENTER}
 @tab In the middle of the box.
+@anchor{FL_ALIGN_RIGHT_BOTTOM}
 @tindex FL_ALIGN_RIGHT_BOTTOM
 @item @code{FL_ALIGN_RIGHT_BOTTOM}
 @tab To the right and bottom of the box.
+@anchor{FL_ALIGN_LEFT_BOTTOM}
 @tindex FL_ALIGN_LEFT_BOTTOM
 @item @code{FL_ALIGN_LEFT_BOTTOM}
 @tab To the left and bottom of the box.
+@anchor{FL_ALIGN_RIGHT_TOP}
 @tindex FL_ALIGN_RIGHT_TOP
 @item @code{FL_ALIGN_RIGHT_TOP}
 @tab To the right and top of the box.
+@anchor{FL_ALIGN_LEFT_TOP}
 @tindex FL_ALIGN_LEFT_TOP
 @item @code{FL_ALIGN_LEFT_TOP}
 @tab To the left and top of the box.
 @end multitable
 
 Normally, all the alignment request places the text outside the box,
-except for @code{FL_ALIGN_CENTER}. This can be changed by using a
+except for
+@anchor{FL_ALIGN_INSIDE}
+@tindex FL_ALIGN_INSIDE
+@code{FL_ALIGN_CENTER}q. This can be changed by using a
 special mask, @code{FL_ALIGN_INSIDE}, to request alignments that place
 the text inside the box. This works for most of the objects in the
 library but not for all. For sliders, inputs and some others, placing

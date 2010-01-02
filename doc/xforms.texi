@@ -70,7 +70,7 @@
 * Drawing Objects:                     Part IV Drawing Objects
 * An Example:                          Part IV An Example
 * New Buttons:                         Part IV New Buttons
-* Using a Pre-empive Handler:          Part IV Using a Pre-empive Handler
+* Using a Pre-emptive Handler:         Part IV Using a Pre-emptive Handler
 * Part V - General Informations:       Part V
 * Overview of Main Functions:          Part V Overview of Main Functions
 * Some Useful Functions:               Part V Some Useful Functions

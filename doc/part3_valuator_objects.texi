@@ -137,27 +137,22 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @noindent
 where the parameter @code{when} can be one of the four values:
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never return or invoke callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) if value is changed
 since last return.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever the slider value is changed. This
 is the default.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at end (mouse release) regardless if the
 value is changed or not.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback when the value changed or at end (mouse
 release).
 @end table
@@ -429,36 +424,31 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 where the parameter @code{when} can be one of the following four
 values:
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never return or invoke callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) if value is changed
 (since last return).
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever the scrollbar value is changed.
 This is the default.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at end (mouse release) regardless if the
 value is changed or not.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback whenever value changed or mouse button was
 released.
 @end table
 
 The default settting for @code{when} for a scrollbar object is
-@code{FL_RETURN_CHANGED} (unless during the built of XForms you set
-the configurationb flag @code{--enable-bwc-bs-hack} in which case the
-default is @code{FL_RETURN_NONE} to keep backward compatibility with
-earlier releases of the library).
+@code{@ref{FL_RETURN_CHANGED}} (unless during the built of XForms you
+set the configurationb flag @code{--enable-bwc-bs-hack} in which case
+the default is @code{@ref{FL_RETURN_NONE}} to keep backward
+compatibility with earlier releases of the library).
 
 See demo program @file{objreturn.c} for an example use of this.
 
@@ -663,28 +653,21 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @noindent
 where @code{when} can be one of the following
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never report or invoke callback.
 
-@table @code
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) and only if the dial
 value is changed. This is the default setting.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever the dial value is changed.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at the end regardless if the dial value is
 changed or not.
-@end table
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback when value has changed or mouse button has
 been released.
 @end table
@@ -873,30 +856,23 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @noindent
 where @code{when} can be one of the following
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never report or invoke callback.
 
-@table @code
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) and only when
 the positioner ended in a different postion than the one it
 started from.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever the positioners value is changed,
 default setting.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at the end only but regardless if the
 positioners value changed or not.
-@end table
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback when value has changed or mouse button has
 been released.
 @end table
@@ -1079,27 +1055,22 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @noindent
 where @code{when} can be either
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never report or invoke callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) and only if the counter
 value is changed.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever the counter value is changed. This
 is the default setting.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at the end regardless if the counter value is
 changed or not.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback when the counter value has changed or mouse
 button has been released.
 @end table
@@ -1350,28 +1321,23 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never return or invoke callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end of interaction (when either the input
 field loses the focus or one of the buttons was released) and the
 spinner's value changed during the interaction.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever the spinner's value changed. This
 is the default.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at end of interaction regardless of the
 spinner's value having changed or not.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback whenever the value changed or the
 interaction ended.
 @end table
@@ -1576,26 +1542,21 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 where the parameter @code{when} can be one of the four values
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never return or invoke callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) if value is changed
 since last return.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever the thumbwheel value is changed.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at end (mouse release) regardless if the
 value is changed or not.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback whenever the value changes or the mouse
 button is released.
 @end table

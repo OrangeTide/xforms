@@ -88,10 +88,10 @@ also swich off reporting the expiry of the timer by calling
 @example
 int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
-with @code{when} set to @code{FL_RETURN_NONE}. To re-enable
-reporting call it with one of @code{FL_RETURN_CHANGED},
-@code{FL_RETURN_END}, @code{FL_RETURN_END_CHANGED} or
-@code{FL_RETURN_ALWAYS}.
+with @code{when} set to @code{@ref{FL_RETURN_NONE}}. To re-enable
+reporting call it with one of @code{@ref{FL_RETURN_CHANGED}},
+@code{@ref{FL_RETURN_END}}, @code{@ref{FL_RETURN_END_CHANGED}} or
+@code{@ref{FL_RETURN_ALWAYS}}.
 
 
 @node Other Timer Routines
@@ -292,26 +292,21 @@ int fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
 where @code{when} can have the folowing values:
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never return or invoke callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) if one of the points
 has been moved to a different place. This is the default.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever a point has been moved.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback at end (mouse release) regardless if a
 point has been moved is changed or not.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke callback when a point has been moved or the mouse
 button has been release).
 @end table
@@ -319,8 +314,8 @@ button has been release).
 Please note: a object can also been in inspect mode (see function
 @code{@ref{fl_set_xyplot_inspect()}} below). In this case the object
 gets returned (or its callback invoked) for all of the obove settings
-except (@code{FL_RETURN_NONE}) when the mouse was released on top of
-such one of the points.
+except (@code{@ref{FL_RETURN_NONE}}) when the mouse was released on
+top of such one of the points.
 
 
 To obtain the current value of the point that has changed, use the

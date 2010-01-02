@@ -454,12 +454,12 @@ int fl_set_atclose(int (*at_close)(FL_FORM *, void *), void *data);
 @end example
 @noindent
 The callback function @code{at_close} will be called before the Forms
-Library terminates the application. The first parameter of the callback
-function is the form that received the @code{WM_DELETE_WINDOW} message.
-To prevent the Forms Library from terminating the application, the
-callback function should return a constant @code{FL_IGNORE}. Any other
-value (e.g., @code{FL_OK}) will result in the termination of the
-application.
+Library terminates the application. The first parameter of the
+callback function is the form that received the
+@code{WM_DELETE_WINDOW} message. To prevent the Forms Library from
+terminating the application, the callback function should return the
+constant @code{FL_IGNORE}. Any other value (e.g., @code{FL_OK}) will
+result in the termination of the application.
 
 Similar mechanism exists for individual forms
 @findex fl_set_form_atclose()
@@ -602,7 +602,8 @@ the state of the object changed.
 @anchor{FL_RETURN_SELECTION}
 @tindex FL_RETURN_SELECTION
 @item FL_RETURN_SELECTION
-Return when e.g.@: a line in a browser was selected.
+Return when e.g.@: a line in a @code{@ref{FL_MULTI_BROWSER}} browser
+was selected.
 
 @anchor{FL_RETURN_DESELECTION}
 @tindex FL_RETURN_DESELECTION

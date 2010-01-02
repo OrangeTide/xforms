@@ -104,14 +104,15 @@ and test it with @code{@ref{fl_get_object_lstyle()}}.
 @item int align
 The alignment of the label with respect to the object. Again it is up
 to the class routines to do something useful with this. The possible
-values are @code{FL_ALIGN_LEFT}, @code{FL_ALIGN_RIGHT},
-@code{FL_ALIGN_TOP}, @code{FL_ALIGN_BOTTOM}, @code{FL_ALIGN_CENTER},
-@code{FL_ALIGN_TOP_LEFT}, @code{FL_ALIGN_TOP_RIGHT},
-@code{FL_ALIGN_BOTTOM_LEFT} and @code{FL_ALIGN_BOTTOM_RIGHT}. The
-value should be bitwise ORed with @code{FL_ALIGN_INSIDE} if the label
-will be within the bounding box of the object. The user can set this
-using the routine @code{@ref{fl_set_object_lalign()}} and test it
-with @code{@ref{fl_set_object_lalign()}}.
+values are @code{@ref{FL_ALIGN_LEFT}}, @code{@ref{FL_ALIGN_RIGHT}},
+@code{@ref{FL_ALIGN_TOP}}, @code{@ref{FL_ALIGN_BOTTOM}},
+@code{@ref{FL_ALIGN_CENTER}}, @code{@ref{FL_ALIGN_LEFT_TOP}},
+@code{@ref{FL_ALIGN_RIGHT_TOP}}, @code{@ref{FL_ALIGN_LEFT_BOTTOM}} and
+@code{@ref{FL_ALIGN_RIGHT_BOTTOM}}. The value should be bitwise ORed
+with @code{@ref{FL_ALIGN_INSIDE}} if the label will be within the
+bounding box of the object. The user can set this using the routine
+@code{@ref{fl_set_object_lalign()}} and test it with
+@code{@ref{fl_set_object_lalign()}}.
 
 @item int bw
 An integer indicating the border width of the object. Negative values
@@ -273,37 +274,30 @@ Determines under what circumstances the object is returned by e.g.@:
 @code{@ref{fl_do_forms()}} or the callback function for the object is
 invoked. This can be either
 @table @code
-@item FL_RETURN_NONE
-@tindex FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Object gets never returned or its callback invoked
 
-@item FL_RETURN_CHANGED
-@tindex FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return object or invoke callback when state of object changed.
 
-@item FL_RETURN_END
-@tindex FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return object or invoke callback at end of interaction, normally when
 the mouse key is released or, in the case of input objects, the object
 has lost focus.
 
-@item FL_RETURN_END_CHANGED
-@tindex FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return object or invoke callback only when interaction has ended and
 the state of the object has changed.
 
-@item FL_RETURN_SELECTION
-@tindex FL_RETURN_SELECTION
+@item @ref{FL_RETURN_SELECTION}
 Return object or invoke callback if e.g.@: in a browser a line
 was selected.
 
-@item FL_RETURN_SELECTION
-@tindex FL_RETURN_SELECTION
+@item @ref{FL_RETURN_SELECTION}
 Return object or invoke callback if e.g.@: in a browser a line
 was deselected.
 
-@item FL_RETURN_ALWAYS
-@tindex FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return object or invoke callback whenever interaction has ended or
 the state of the object has changed.
 @end table
@@ -311,30 +305,27 @@ the state of the object has changed.
 Never change this element of the structure directly but use the
 function @code{@ref{fl_set_object_return()}} instead! Especially in
 the case of objects having child objects also the corresponding
-settings for child objects may need changes, which automatically
-is adjusted when the above function is used.
+settings for child objects may need changes and which automatically
+get adjusted when the above function is used.
 
 @item int returned
 Set to what calling the object handling function did return (and
 pruned to what the object is supposed to return according to the
 @code{how_return} element). Can be either
 @table @code
-@item FL_RETURN_NONE
-@tindex FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Handling function did @code{FL_RETURN_NONE} (i.e.@: @code{0}).
 
-@item FL_RETURN_CHANGED
-@tindex FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Handling function detected a change of the objects state.
 
-@item FL_RETURN_END
-@tindex FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Handling function detected end of interaction with object.
 @end table
 
-@code{FL_RETURN_CHANGED} and @code{FL_RETURN_END} are bits that
-can be bitwise ored. If both are set this indicates that the objects
-state was changed and the interaction ended.
+@code{@ref{FL_RETURN_CHANGED}} and @code{@ref{FL_RETURN_END}} are bits
+that can be bitwise ored. If both are set this indicates that the
+objects state was changed and the interaction ended.
 @end table
 
 The generic object construction routine

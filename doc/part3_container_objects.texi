@@ -102,23 +102,18 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @noindent
 where the @code{when} argument can be one of
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never report or invoke callback even if the selected folder has been
 changed.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_CHANGED}
+@item @ref{FL_RETURN_END_CHANGED}
 Result in a notification whenever the a different folder from the
 currently active one has been selected (this is the default for the
 tabfolder object).
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_END}
+@item @ref{FL_RETURN_ALWAYS}
 Notify when either a new or the already active folder has been
 selected.
 @end table
@@ -427,27 +422,22 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @noindent
 where the @code{when} argument can be one of
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never report or invoke callback (ethis is the default for the
 formbrowser object)
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Result in a notification whenever the position of one of the
 scrollbars has chnaged.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Notification is sen if the position of a scrollbar has changed and the
 mouse button has been released.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Notification on release of the mouse button.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Notify if the position of a scrollbar has chanhed or the mouse
 button has been released.
 @end table

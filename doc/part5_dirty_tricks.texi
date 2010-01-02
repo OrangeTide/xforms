@@ -103,7 +103,7 @@ object. The pre-handler will be called before the built-in object
 handler. By electing to handle some of the events, a pre-handler can,
 in effect, replace part of the built-in handler.
 
-In @ref{Part IV Using a Pre-empive Handler, , the chapter about
+In @ref{Part IV Using a Pre-emptive Handler, , the chapter about
 pre-emptive handlers} the API was already discussed in detail, so here
 we just repeat the discussion for completeness as any use of
 pre-emptive handler is considered "dirty tricks".

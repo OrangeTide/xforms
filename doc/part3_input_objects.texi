@@ -189,26 +189,21 @@ void fl_set_input_return(FL_OBJECT *obj, int when);
 @noindent
 Where @code{when} can take one of the following values:
 @table @code
-@tindex FL_RETURN_END_NONE
-@item FL_RETURN_END_NONE
+@item @ref{FL_RETURN_NONE}
 Never return or invoke callback
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Default, object is returned or callback is called at the end if the
 field is modified.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke the callback function whenever the field is changed.
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke the callback function at the end regardless if the
 field was modified or not.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return or invoke the callback function upon each keystroke and at
 the end (regardless if the field was changed or not)
 @end table
@@ -229,7 +224,7 @@ input objects of types @code{@ref{FL_DATE_INPUT}} are limited to 10
 characters per default and those of type @code{@ref{FL_SECRET_INPUT}}
 to 16.
 
-Although an input of type @code{FL_RETURN_ALWAYS} can be used in
+Although an input of type @code{@ref{FL_RETURN_ALWAYS}} can be used in
 combination with the callback function to check the validity of
 characters that are entered into the input field, use of the following
 is typically more appropriate

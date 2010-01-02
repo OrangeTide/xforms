@@ -1,5 +1,5 @@
-@node Part IV Using a Pre-empive Handler
-@chapter Using a Pre-empive Handler
+@node Part IV Using a Pre-emptive Handler
+@chapter Using a Pre-emptive Handler
 
 Pre-emptive handlers came into being due to reasons not related to
 developing new classes. They are provided for the application programs
@@ -52,11 +52,12 @@ The pre- and post-handler have the same function prototype as the
 built-in handler. Actually they are called with exactly the same
 parameters by the event dispatcher. The pre-handler should return
 @tindex FL_PREEMPT
-@anchor{FL_PREEMPT} @code{FL_PREEMPT} to prevent the dispatcher from
-calling the normal object handler for events and @code{!FL_PREEMPT} if
-the objects handler for is to be invoked next. The post-handler may
-return whatever it wants since the return value is not used. Note that
-a post-handler will receive all events even if the object the
+@anchor{FL_PREEMPT}
+@code{FL_PREEMPT} to prevent the dispatcher from calling the normal
+object handler for events and @code{!FL_PREEMPT} if the objects
+handler for is to be invoked next. The post-handler may return
+whatever it wants since the return value is not used. Note that a
+post-handler will receive all events even if the object the
 post-handler is registered for does not. For example, a post-handler
 for a box (a static object that only receives @code{@ref{FL_DRAW}})
 receives all events.

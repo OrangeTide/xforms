@@ -96,26 +96,21 @@ int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 where @code{when} can have the following values
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never return or invoke callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback if end of interaction and selection of an
 item coincide.
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever an item is selected (this is the
 default).
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback on end of an interaction.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return (or invoke callback) whenever the interaction ends and/or
 an item is selected.
 @end table
@@ -390,27 +385,22 @@ int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
 where @code{when} can have the following values
 @table @code
-@tindex FL_RETURN_NONE
-@item FL_RETURN_NONE
+@item @ref{FL_RETURN_NONE}
 Never return the object or invoke its callback.
 
-@tindex FL_RETURN_END_CHANGED
-@item FL_RETURN_END_CHANGED
+@item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback if end of interaction and selection of an
 item coincide (this is the default for all menu objects except those
 of type @code{FL_TOUCH_MENU}).
 
-@tindex FL_RETURN_CHANGED
-@item FL_RETURN_CHANGED
+@item @ref{FL_RETURN_CHANGED}
 Return or invoke callback whenever an item is selected (this is the
 default for all menu objects of type @code{FL_TOUCH_MENU}).
 
-@tindex FL_RETURN_END
-@item FL_RETURN_END
+@item @ref{FL_RETURN_END}
 Return or invoke callback on end of an interaction.
 
-@tindex FL_RETURN_ALWAYS
-@item FL_RETURN_ALWAYS
+@item @ref{FL_RETURN_ALWAYS}
 Return (or invoke callback) whenever the interaction ends and/or
 an item is selected.
 @end table
