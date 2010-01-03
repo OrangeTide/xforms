@@ -982,9 +982,10 @@ FL_EXPORT FL_FORM_ATCLOSE fl_set_form_atclose( FL_FORM         * form,
 FL_EXPORT FL_FORM_ATCLOSE fl_set_atclose( FL_FORM_ATCLOSE   fmclose,
                                           void            * data );
 
-FL_EXPORT FL_FORM_ATACTIVATE fl_set_form_atactivate(FL_FORM            * form,
-                                                    FL_FORM_ATACTIVATE   cb,
-                                                    void               * data );
+FL_EXPORT FL_FORM_ATACTIVATE
+	fl_set_form_atactivate( FL_FORM            * form,
+							FL_FORM_ATACTIVATE   cb,
+							void               * data );
 
 FL_EXPORT FL_FORM_ATDEACTIVATE
     fl_set_form_atdeactivate( FL_FORM              * form,

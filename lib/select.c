@@ -370,16 +370,18 @@ fl_set_select_items( FL_OBJECT     * obj,
 
     sp = obj->spec;
 
+    /* If no popup exists yet create it, otherwise remove all entries */
+
     if ( sp->popup == NULL )
         sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
                                    "fl_set_select_items" );
+    else
+    {
+        while ( sp->popup->entries != NULL )
+            fl_popup_entry_delete( sp->popup->entries );
 
-    /* Remove all existing entries and reset the popups internal counter */
-
-    while ( sp->popup->entries != NULL )
-        fl_popup_entry_delete( sp->popup->entries );
-
-    fli_popup_reset_counter( sp->popup );
+        fli_popup_reset_counter( sp->popup );
+    }
 
     /* Now add the new ones */
 

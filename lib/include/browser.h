@@ -202,9 +202,8 @@ FL_EXPORT void
                                      FL_BROWSER_SCROLL_CALLBACK   cb,
                                      void                       * data );
 
-FL_EXPORT int
-fl_get_browser_line_yoffset( FL_OBJECT * obj,
-                             int         line );
+FL_EXPORT int fl_get_browser_line_yoffset( FL_OBJECT * obj,
+										   int         line );
 
 FL_EXPORT FL_BROWSER_SCROLL_CALLBACK
     fl_get_browser_hscroll_callback( FL_OBJECT * ob );

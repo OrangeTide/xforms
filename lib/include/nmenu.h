@@ -92,7 +92,7 @@ FL_EXPORT FL_POPUP_ENTRY *fl_insert_nmenu_items2(
 		FL_POPUP_ENTRY *,
 		FL_POPUP_ITEM  * );
 
-FL_EXPORT FL_POPUP_ENTRY *fl_replace_nmenu_item2(
+FL_EXPORT FL_POPUP_ENTRY *fl_replace_nmenu_items2(
 		FL_OBJECT *,
 		FL_POPUP_ENTRY *,
 		FL_POPUP_ITEM * );

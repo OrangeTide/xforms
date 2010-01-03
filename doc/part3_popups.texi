@@ -620,7 +620,7 @@ FL_POPUP *popup;
 FL_POPUP_ITEMS items[] = @{
   @{"Item 1%S^1", NULL, "^1", FL_POPUP_NORMAL, 0               @},
   @{"Item 2%S^2", NULL, "^2", FL_POPUP_RADIO,  FL_POPUP_CHECKED@},
-  @{"Item 2%S^3", NULL, "^3", FL_POPUP_RADIO,  0               @},
+  @{"Item 3%S^3", NULL, "^3", FL_POPUP_RADIO,  0               @},
   @{"_/Item 4",   NULL, NULL, FL_POPUP_NORMAL, 0               @},
     @{"Sub-item A", cbA,  NULL, FL_POPUP_NORMAL, 0                @},
     @{"Sub-item B", cbB,  NULL, FL_POPUP_TOGGLE, FL_POPUP_DISABLED@},

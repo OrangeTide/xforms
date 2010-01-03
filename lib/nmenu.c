@@ -336,33 +336,23 @@ fl_set_nmenu_items( FL_OBJECT     * obj,
 
     sp = obj->spec;
 
+    /* If no popup exists yet create it, otherwise remove all entries */
+
     if ( sp->popup == NULL )
         sp->popup = fli_popup_add( FL_ObjWin( obj ), NULL,
                                    "fl_set_nmenu_items" );
+    else
+    {
+        while ( sp->popup->entries != NULL )
+            fl_popup_entry_delete( sp->popup->entries );
 
-    /* Create a new popup (otherwise we would have to repeat much of the
-       code from popup.c) */
-
-    if ( ( p = fl_popup_create( sp->popup->win, NULL, items ) ) == NULL )
-        return NULL;
-
-    /* Remove all existing entries and reset the popups internal counter */
-
-    while ( sp->popup->entries != NULL )
-        fl_popup_entry_delete( sp->popup->entries );
-
-    fli_popup_reset_counter( sp->popup );
-
-    /* Now move the new entries to the already existing popup of the nmenu
-       object */
-
-    sp->popup->entries = p->entries;
-    popup_reparent_entries( sp->popup, sp->popup );
-    fl_free( p );
+        fli_popup_reset_counter( sp->popup );
+    }
 
     sp->sel = NULL;
 
-    return sp->popup->entries;
+    return fli_popup_insert_items( sp->popup, NULL, items,
+                                   "fl_set_nmenu_items" );
 }
 
 
@@ -461,9 +451,9 @@ fl_insert_nmenu_items2( FL_OBJECT      * obj,
  ***************************************/
 
 FL_POPUP_ENTRY *
-fl_replace_nmenu_item2( FL_OBJECT      * obj,
-                        FL_POPUP_ENTRY * old_item,
-                        FL_POPUP_ITEM  * items )
+fl_replace_nmenu_items2( FL_OBJECT      * obj,
+                         FL_POPUP_ENTRY * old_item,
+                         FL_POPUP_ITEM  * items )
 {
     FLI_NMENU_SPEC *sp;
     FL_POPUP_ENTRY *new_entries;
@@ -784,6 +774,8 @@ handle_nmenu( FL_OBJECT * obj,
 
         case FL_SHORTCUT :
         case FL_PUSH :
+            if ( ! sp->popup || ! sp->popup->entries )
+                break;
             obj->pushed = 1;
             fl_redraw_object( obj );
             fl_popup_get_size( sp->popup, &w, &h );
