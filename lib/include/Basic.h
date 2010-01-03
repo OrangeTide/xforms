@@ -273,16 +273,15 @@ enum {
 
 /* control when to return input, slider and dial etc. object. */
 
-enum {
-    FL_RETURN_NONE         =    0U,
-    FL_RETURN_CHANGED      =    1U,
-    FL_RETURN_END          =    2U,
-    FL_RETURN_END_CHANGED  =    4U,
-    FL_RETURN_SELECTION    =    8U,
-    FL_RETURN_DESELECTION  =   16U,
-    FL_RETURN_TRIGGERED    = 1024U,
-    FL_RETURN_ALWAYS       = ~ FL_RETURN_END_CHANGED
-};
+#define FL_RETURN_NONE         0U
+#define FL_RETURN_CHANGED      1U
+#define FL_RETURN_END          2U
+#define FL_RETURN_END_CHANGED  4U
+#define FL_RETURN_SELECTION    8U
+#define FL_RETURN_DESELECTION  16U
+#define FL_RETURN_TRIGGERED    1024U
+#define FL_RETURN_ALWAYS       ( ~ FL_RETURN_END_CHANGED )
+
 
 /*  Some special color indices for FL private colormap. It does not matter
  *  what the value of each enum is, but it must start from 0 and be
@@ -711,7 +710,7 @@ struct FL_OBJECT_ {
                                        int,
                                        void * );
     void             ( * set_return )( FL_OBJECT *,
-                                       int );
+                                       unsigned int );
 
     /* re-configure preference */
 
@@ -732,7 +731,7 @@ struct FL_OBJECT_ {
     /* some interaction flags */
 
     int              returned;       /* what last interaction returned */
-    int              how_return;     /* under which conditions to return */
+    unsigned int     how_return;     /* under which conditions to return */
     int              double_buffer;  /* only used by mesa/gl canvas */
     int              pushed;
     int              focus;

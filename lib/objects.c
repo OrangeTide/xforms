@@ -2562,7 +2562,7 @@ handle_object( FL_OBJECT * obj,
     }
 
     return ( event == FL_DBLCLICK || event == FL_TRPLCLICK ) ?
-           FL_RETURN_NONE : obj->returned;
+           ( int ) FL_RETURN_NONE : obj->returned;
 }
 
 

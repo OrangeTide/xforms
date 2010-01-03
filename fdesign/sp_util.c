@@ -55,8 +55,8 @@ setup_how_return_menu( FL_OBJECT * obj )
  ***************************************/
 
 void
-reset_how_return_menu( FL_OBJECT * menu,
-                       int         how_return )
+reset_how_return_menu( FL_OBJECT    * menu,
+                       unsigned int how_return )
 {
     int i;
     unsigned int modes[ 8 ];
@@ -224,8 +224,8 @@ get_how_return_val( const char * s )
  ***************************************/
 
 const char *
-get_how_return_name( int how_return,
-                     int with_spaces )
+get_how_return_name( unsigned int how_return,
+                     int          with_spaces )
 {
     static char buf[ 256 ];
     FLI_VN_PAIR *hr = howreturn;
@@ -238,7 +238,7 @@ get_how_return_name( int how_return,
 
     *buf = '\0';
 
-    while ( ( ++hr )->val != FL_RETURN_ALWAYS )
+    while ( ( ++hr )->val != ( int ) FL_RETURN_ALWAYS )
     {
         if ( how_return & hr->val )
             strcat( strcat( buf, with_spaces ? " | " : "|" ), hr->name );
@@ -246,8 +246,6 @@ get_how_return_name( int how_return,
 
     return buf + ( with_spaces ? 3 : 1 );
 }
-
-
 
 
 /*

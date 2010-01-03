@@ -525,7 +525,7 @@ fli_popup_insert_items( FL_POPUP       * popup,
     int level = 0;
     int need_line = 0;
     int is_sub = 0;
-    FL_POPUP_ENTRY *entry;
+    FL_POPUP_ENTRY *entry = NULL;
     int first = 1;
 
     /* Return if the array of items is NULL */

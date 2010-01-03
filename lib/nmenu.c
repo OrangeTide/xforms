@@ -26,7 +26,6 @@
 
 static int handle_nmenu( FL_OBJECT *, int, FL_Coord, FL_Coord,
                          int , void * );
-static void popup_reparent_entries( FL_POPUP *, FL_POPUP * );
 static void draw_menu( FL_OBJECT * );
 
 
@@ -326,7 +325,6 @@ fl_set_nmenu_items( FL_OBJECT     * obj,
                     FL_POPUP_ITEM * items )
 {
     FLI_NMENU_SPEC *sp;
-    FL_POPUP *p;
 
     if ( obj == NULL )
     {
@@ -802,28 +800,6 @@ handle_nmenu( FL_OBJECT * obj,
     }
 
     return ret;
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-popup_reparent_entries( FL_POPUP * popup,
-                        FL_POPUP * top_parent )
-{
-    FL_POPUP_ENTRY *e;
-
-    for ( e = popup->entries; e != NULL; e = e->next )
-    {
-        e->popup = popup;
-        if ( e->type == FL_POPUP_SUB )
-        {
-            e->sub->parent = popup;
-            e->sub->top_parent = top_parent;
-            popup_reparent_entries( e->sub, top_parent );
-        }
-    }
 }
 
 

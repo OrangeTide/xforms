@@ -760,7 +760,7 @@ typedef struct {
     int              direction;
     int              mbuttons;
     int              int_val;
-    int              how_return;
+    unsigned int     how_return;
     int              align;
     int              dx,
                      dy;
@@ -866,14 +866,14 @@ extern char *get_helper( char * );
 extern void setup_how_return_menu( FL_OBJECT * );
 
 extern void reset_how_return_menu( FL_OBJECT *,
-                                   int );
+                                   unsigned int );
 
 extern void handle_how_return_changes( FL_OBJECT *,
                                        FL_OBJECT * );
 
 extern int get_how_return_val( const char * );
 
-extern const char * get_how_return_name( int,
+extern const char * get_how_return_name( unsigned int,
                                          int );
 
 
