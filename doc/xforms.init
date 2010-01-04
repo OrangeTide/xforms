@@ -207,7 +207,7 @@ $EXTERNAL_DIR = undef;
 # cf texinfo manual for more info.
 # - means STDIN
 
-@CSS_FILES = ( );
+@CSS_FILES = ( 'xforms.css' );
 
 
 1;

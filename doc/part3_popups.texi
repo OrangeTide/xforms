@@ -618,15 +618,15 @@ Here's an example of how to create a popup using
 FL_POPUP *popup;
 
 FL_POPUP_ITEMS items[] = @{
-  @{"Item 1%S^1", NULL, "^1", FL_POPUP_NORMAL, 0               @},
-  @{"Item 2%S^2", NULL, "^2", FL_POPUP_RADIO,  FL_POPUP_CHECKED@},
-  @{"Item 3%S^3", NULL, "^3", FL_POPUP_RADIO,  0               @},
-  @{"_/Item 4",   NULL, NULL, FL_POPUP_NORMAL, 0               @},
-    @{"Sub-item A", cbA,  NULL, FL_POPUP_NORMAL, 0                @},
-    @{"Sub-item B", cbB,  NULL, FL_POPUP_TOGGLE, FL_POPUP_DISABLED@},
+  @{"Item 1%S^1", NULL, "^1", FL_POPUP_NORMAL, FL_POPUP_NONE    @},
+  @{"Item 2%S^2", NULL, "^2", FL_POPUP_RADIO,  FL_POPUP_CHECKED @},
+  @{"Item 3%S^3", NULL, "^3", FL_POPUP_RADIO,  FL_POPUP_NONE    @},
+  @{"_/Item 4",   NULL, NULL, FL_POPUP_NORMAL, FL_POPUP_NONE    @},
+    @{"Sub-item A",  cbA, "^A", FL_POPUP_NORMAL, FL_POPUP_DISABLED@},
+    @{"Sub-item B",  cbB, "^B", FL_POPUP_TOGGLE, FL_POPUP_NONE    @},
     @{NULL,         NULL, NULL, 0,               0                @},
-  @{"Item 5",     NULL, NULL, FL_POPUP_NORMAL, 0               @},
-  @{NULL,         NULL, NULL, 0,               0               @}
+  @{"Item 5",     NULL, NULL, FL_POPUP_NORMAL, FL_POPUP_NONE    @},
+  @{NULL,         NULL, NULL, 0,               FL_POPUP_NONE    @}
 @};
 
 popup = fl_popup_create(None, "Test", items);

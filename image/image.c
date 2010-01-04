@@ -355,7 +355,7 @@ default_next_frame( FL_IMAGE * im )
  ***************************************/
 
 FL_IMAGE *
-flimage_load( const char *file )
+flimage_load( const char * file )
 {
     FL_IMAGE *image,
              *im;

@@ -144,7 +144,7 @@ flps_roundedbox( int  style,
                  int  w,
                  int  h,
                  long col,
-                 int bw )
+                 int  bw )
 {
     FL_POINT point[ 5 * RN + 2 ];
     int n,
@@ -270,8 +270,6 @@ flps_ovalbox( int  style,
         AddVertex( xp, x3, y3);         \
     } while ( 0 )
 
-#define Corner   4
-
 
 /***************************************
  ***************************************/
@@ -293,7 +291,7 @@ flps_foldertab_box( int  style,
     int border,
         i;
     float absbw = FL_abs( bw );
-    float C = Corner;
+    float C = 4;
     int savelw = fl_get_linewidth( );
 
     if ( ! ( border = bw > 0 ) )
@@ -312,13 +310,13 @@ flps_foldertab_box( int  style,
     switch ( style )
     {
         case FL_TOPTAB_UPBOX :
-            vv3( x, y, x, top - C, x + C, top );
-            vv2( x + C, top, right - C, top );
-            vv3( right - C, top, right, top - C, right, y );
+            vv3( x,         y,           x, top - C, x + C, top );
+            vv2( x + C,     top, right - C, top );
+            vv3( right - C, top, right,     top - C, right, y );
             flps_poly( 1, vert, 8, col );
             flps_linewidth( absbw );
-            flps_lines( vert, 3, FL_LEFT_BCOL );
-            flps_lines( vert + 3, 2, FL_TOP_BCOL );
+            flps_lines( vert,     3, FL_LEFT_BCOL   );
+            flps_lines( vert + 3, 2, FL_TOP_BCOL    );
             flps_lines( vert + 5, 3, FL_BOTTOM_BCOL );
             flps_reset_linewidth( );
 
@@ -336,13 +334,13 @@ flps_foldertab_box( int  style,
             break;
 
         case FL_SELECTED_TOPTAB_UPBOX :
-            vv3( x, y - absbw, x, top - C, x + C, top );
-            vv2( x + C, top, right - C, top );
-            vv3( right - C, top, right, top - C, right, y - absbw );
+            vv3( x,         y - absbw, x,          top - C, x + C, top );
+            vv2( x + C,     top,       right - C,  top );
+            vv3( right - C, top,       right,      top - C, right, y - absbw );
             flps_poly( 1, vert, 8, col );
             flps_linewidth( absbw );
-            flps_lines( vert, 3, FL_LEFT_BCOL );
-            flps_lines( vert + 3, 2, FL_TOP_BCOL );
+            flps_lines( vert,     3, FL_LEFT_BCOL   );
+            flps_lines( vert + 3, 2, FL_TOP_BCOL    );
             flps_lines( vert + 5, 3, FL_BOTTOM_BCOL );
             break;
 

@@ -34,9 +34,11 @@
 #include "gl/glcanvas.h"
 #include <stdlib.h>
 
-extern Window fl_glwincreate(int *, GLXContext *, int, int);
+extern Window fl_glwincreate( int *,
+							  GLXContext *,
+							  int, int );
 
-/**** Forms and Objects ****/
+/* Forms and Objects */
 
 typedef struct {
 	FL_FORM   * glcontrol;
@@ -48,7 +50,8 @@ typedef struct {
 
 extern FD_glcontrol *create_form_glcontrol( void );
 
-extern int handle_expose( XEvent *, void * );
+extern int handle_expose( XEvent *,
+						  void * );
 
 int prim = GL_POLYGON;     /* GL primitive to draw */
 
@@ -198,7 +201,7 @@ handle_expose( XEvent * xev,
 
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity( );
-    glFrustum( -1.0, 1.0,  -1.0, 1.0,  1.0, 10.0 );
+    glFrustum( -1.0, 1.0, -1.0, 1.0, 1.0, 10.0 );
     glTranslatef( 0.0, 0.0, -5.0 );
 
     glMatrixMode( GL_MODELVIEW );
@@ -269,4 +272,3 @@ create_form_glcontrol( void )
 
 	return fdui;
 }
-/*---------------------------------------*/

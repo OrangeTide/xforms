@@ -51,24 +51,24 @@ flps_init( void )
     if ( ! local_flps )
     {
         local_flps = fl_calloc( 1, sizeof *flps );
-        local_flps->ps_color = FLPS_COLOR;
+        local_flps->ps_color    = FLPS_COLOR;
         local_flps->orientation = FLPS_AUTO;
-        local_flps->paper_w = 8.5;
-        local_flps->paper_h = 11.0;
-        local_flps->auto_fit = 1;
+        local_flps->paper_w     = 8.5;
+        local_flps->paper_h     = 11.0;
+        local_flps->auto_fit    = 1;
         local_flps->xscale = local_flps->yscale = 1.0;
 
         /* driver will fill-in appropriate vals for minus */
 
         local_flps->drawbox = -1;
-        local_flps->xdpi = local_flps->ydpi = fli_dpi;
-        local_flps->pack = 1;
+        local_flps->xdpi    = local_flps->ydpi = fli_dpi;
+        local_flps->pack    = 1;
 
-        /* cache */
+        /* Cache */
 
         local_flps->cur_color = FL_NoColor;
         local_flps->cur_style = local_flps->cur_size = -1;
-        local_flps->cur_lw = -1;
+        local_flps->cur_lw    = -1;
     }
 
     return  ( FLPS_CONTROL * ) ( flps = local_flps );
@@ -137,7 +137,7 @@ flps_output( const char * fmt,
          *q;
     int lastc = flps->lastc;
 
-    /* flush */
+    /* Flush */
 
     if ( ! fmt )
     {
@@ -169,7 +169,7 @@ flps_output( const char * fmt,
             else if ( *q == RIGHT )
                 flps->literal = 0;
 
-            if ( lastc == ' ' && *q == ' ' && !flps->literal )
+            if ( lastc == ' ' && *q == ' ' && ! flps->literal )
                 continue;
 
             if ( *q == ' ' && flps->len == 0 )
@@ -194,7 +194,7 @@ flps_output( const char * fmt,
 
 
 /***************************************
- * linewidth and reset linewidth must be used in pairs
+ * flps_linewidth() and flps_reset_linewidth() must be used in pairs
  ***************************************/
 
 void
@@ -769,12 +769,12 @@ draw_dnline( int x      FL_UNUSED_ARG,
  ***************************************/
 
 static void
-draw_upline( int x      FL_UNUSED_ARG,
-             int y      FL_UNUSED_ARG,
-             int w,
-             int h,
-             int angle  FL_UNUSED_ARG,
-             long col   FL_UNUSED_ARG )
+draw_upline( int  x      FL_UNUSED_ARG,
+             int  y      FL_UNUSED_ARG,
+             int  w,
+             int  h,
+             int  angle  FL_UNUSED_ARG,
+             long col    FL_UNUSED_ARG )
 {
     float t = 0.033;
 
@@ -787,21 +787,19 @@ draw_upline( int x      FL_UNUSED_ARG,
 }
 
 
-/* due to pixel precision problems, we have to draw uparrow, downarrow
- * and ripple line in absolute unit with the origin
- * at the center of the figure.
- */
+/* Due to pixel precision problems, we have to draw uparrow, downarrow and
+ * ripple line in absolute unit with the origin at the center of the figure. */
 
 
 /***************************************
  ***************************************/
 
 static void
-draw_uparrow( int x,
-              int y,
-              int w,
-              int h,
-              int angle,
+draw_uparrow( int  x,
+              int  y,
+              int  w,
+              int  h,
+              int  angle,
               long col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
@@ -848,11 +846,11 @@ draw_uparrow( int x,
  ***************************************/
 
 static void
-draw_dnarrow( int x,
-              int y,
-              int w,
-              int h,
-              int angle,
+draw_dnarrow( int  x,
+              int  y,
+              int  w,
+              int  h,
+              int  angle,
               long col   FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
@@ -901,11 +899,11 @@ draw_dnarrow( int x,
  ***************************************/
 
 static void
-draw_ripple_lines( int x,
-                   int y,
-                   int w,
-                   int h,
-                   int angle,
+draw_ripple_lines( int  x,
+                   int  y,
+                   int  w,
+                   int  h,
+                   int  angle,
                    long col  FL_UNUSED_ARG )
 {
     float ym = y + h / 2,

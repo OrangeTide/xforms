@@ -102,7 +102,7 @@ fl_add_glcanvas( int          type,
 
 
 /***************************************
- * modify the global defaults
+ * Modify the global defaults
  ***************************************/
 
 void
@@ -116,14 +116,14 @@ fl_set_glcanvas_defaults( const int * config )
  ***************************************/
 
 void
-fl_get_glcanvas_defaults( int config[ ] )
+fl_get_glcanvas_defaults( int * config )
 {
     copy_attributes( config, glconfig );
 }
 
 
 /***************************************
- * modify the default configuration of a particular canvas
+ * Modify the default configuration of a particular canvas
  ***************************************/
 
 void
@@ -222,7 +222,7 @@ fl_create_glcanvas( int          type,
     ob->objclass = FL_GLCANVAS;
     fl_modify_canvas_prop( ob, glx_init, glx_activate, glx_cleanup );
 
-    /* initialize glcanvas specific stuff */
+    /* Initialize glcanvas specific stuff */
 
     ob->c_vdata = fl_calloc( 1, sizeof( CSPEC ) );
     memcpy( GLPROP( ob )->glconfig, glconfig, sizeof glconfig );
@@ -250,7 +250,7 @@ glx_init( FL_OBJECT * ob )
         return -1;
     }
 
-    /* quit if can't get a visual */
+    /* Quit if we can't get a visual */
 
     if ( ! ( vi = glXChooseVisual( fl_display, fl_screen,
                                    GLPROP( ob )->glconfig ) ) )
@@ -273,7 +273,7 @@ glx_init( FL_OBJECT * ob )
         return -1;
     }
 
-    /* Under some conditions, the parent of the gl canvas might go away,
+    /* Under some conditions the parent of the gl canvas might go away,
        leaving the old context and vi hanging. */
 
     glx_cleanup( ob );
@@ -299,7 +299,7 @@ glx_activate( FL_OBJECT * ob )
 
 
 /***************************************
- * cleanup is called before destroying the window.  Might be called
+ * Cleanup is called before destroying the window.  Might be called
  * more than once
  ***************************************/
 
@@ -350,11 +350,11 @@ fl_glwincreate( int *        config,
     Window win;
 
     if ( ! glXQueryExtension( fl_display, 0, 0 ) )
-        return 0;
+        return None;
 
     if ( ! ( xvi = glXChooseVisual( fl_display, fl_screen,
                                     config ? config : glconfig ) ) )
-        return 0;
+        return None;
 
     *context = glXCreateContext( fl_display, xvi, None, GL_TRUE );
 
@@ -362,10 +362,10 @@ fl_glwincreate( int *        config,
     xswa.border_pixel = 0;
     mask = CWColormap | CWBorderPixel;
 
-    xswa.event_mask = ExposureMask;
+    xswa.event_mask = ExposureMask | StructureNotifyMask;
     mask |= CWEventMask;
 
-    win = XCreateWindow( fl_display, RootWindow(fl_display, fl_screen),
+    win = XCreateWindow( fl_display, RootWindow( fl_display, fl_screen ),
                          0, 0, w, h, 0,
                          xvi->depth, InputOutput,
                          xvi->visual, mask, &xswa );

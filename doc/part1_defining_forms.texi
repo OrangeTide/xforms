@@ -71,9 +71,9 @@ the actual work but it's no problem to define new forms also later on.
 @section Boxes
 
 The first type of objects are boxes. Boxes are simply used to give the
-dialogue forms a nicer appearance. They can be used to visually group
-other object together. The bottom of each form is a box. To add a box to
-a form you use the routine
+forms and objects a nicer appearance. They can be used to visually
+group other object together. The background of each form is a box. To
+add a box to a form you use the routine
 @findex fl_add_box()
 @example
 FL_OBJECT *fl_add_box(int type, FL_Coord x, FL_Coord y,

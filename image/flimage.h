@@ -380,11 +380,9 @@ typedef struct flimage_setup_ {
     int             header_info;
 } FLIMAGE_SETUP;
 
-FL_EXPORT void flimage_setup(
-        FLIMAGE_SETUP * setup
-        );
+FL_EXPORT void flimage_setup( FLIMAGE_SETUP * );
 
-/* possible errors from the library. Not currently (v0.89) used */
+/* Possible errors from the library. Not currently (v0.89) used */
 
 enum {
    FLIMAGE_ERR_NONE = 0,
@@ -401,155 +399,102 @@ typedef int ( * FLIMAGE_Description )( FL_IMAGE * );
 typedef int ( * FLIMAGE_Read_Pixels )( FL_IMAGE * );
 typedef int ( * FLIMAGE_Write_Image )( FL_IMAGE * );
 
-/* basic IO routines */
+/* Basic IO routines */
 
-FL_EXPORT FL_IMAGE * flimage_load(
-        const char * file
-        );
+FL_EXPORT FL_IMAGE * flimage_load( const char * file );
 
-FL_EXPORT FL_IMAGE * flimage_read(
-        FL_IMAGE * im
-        );
+FL_EXPORT FL_IMAGE * flimage_read( FL_IMAGE * im );
 
-FL_EXPORT int flimage_dump(
-        FL_IMAGE *,
-        const char *,
-        const char *
-        );
+FL_EXPORT int flimage_dump( FL_IMAGE *,
+							const char *,
+							const char * );
 
-FL_EXPORT int flimage_close(
-        FL_IMAGE *
-        );
+FL_EXPORT int flimage_close( FL_IMAGE * );
 
-FL_EXPORT FL_IMAGE * flimage_alloc(
-        void
-        );
+FL_EXPORT FL_IMAGE * flimage_alloc( void );
 
-FL_EXPORT int flimage_getmem(
-        FL_IMAGE *
-        );
+FL_EXPORT int flimage_getmem( FL_IMAGE * );
 
+FL_EXPORT int flimage_is_supported( const char * );
 
-FL_EXPORT int flimage_is_supported(
-        const char *
-        );
+FL_EXPORT int flimage_description_via_filter( FL_IMAGE *,
+											  char *const *,
+											  const char *,
+											  int );
 
-FL_EXPORT int flimage_description_via_filter(
-        FL_IMAGE *,
-        char *const *,
-        const char *,
-        int
-        );
+FL_EXPORT int flimage_write_via_filter( FL_IMAGE *,
+										char * const *,
+										char * const *,
+										int );
 
-FL_EXPORT int flimage_write_via_filter(
-        FL_IMAGE *,
-        char * const *,
-        char * const *,
-        int
-        );
+FL_EXPORT FL_IMAGE * flimage_alloc( void );
 
-FL_EXPORT FL_IMAGE * flimage_alloc(
-        void
-        );
+FL_EXPORT int flimage_free( FL_IMAGE * );
 
-FL_EXPORT int flimage_free(
-        FL_IMAGE *
-        );
+FL_EXPORT int flimage_display( FL_IMAGE *,
+							   Window );
 
-FL_EXPORT int flimage_display(
-        FL_IMAGE *,
-        Window
-        );
+FL_EXPORT int flimage_sdisplay( FL_IMAGE *,
+								Window );
 
-FL_EXPORT int flimage_sdisplay(
-        FL_IMAGE *,
-        Window
-        );
+FL_EXPORT int flimage_convert( FL_IMAGE *,
+							   int,
+							   int );
 
-FL_EXPORT int flimage_convert(
-        FL_IMAGE *,
-        int,
-        int
-        );
+FL_EXPORT const char * flimage_type_name( int type );
 
-FL_EXPORT const char * flimage_type_name(
-        int type
-        );
+FL_EXPORT int flimage_add_text( FL_IMAGE *,
+								const char *,
+								int,
+								int,
+								int,
+								unsigned int,
+								unsigned int,
+								int,
+								double,
+								double,
+								int );
 
-FL_EXPORT int flimage_add_text(
-        FL_IMAGE *,
-        const char *,
-        int,
-        int,
-        int,
-        unsigned int,
-        unsigned int,
-        int,
-        double,
-        double,
-        int
-        );
+FL_EXPORT int flimage_add_text_struct( FL_IMAGE *,
+									   const FLIMAGE_TEXT * );
 
-FL_EXPORT int flimage_add_text_struct(
-        FL_IMAGE *,
-        const FLIMAGE_TEXT *
-        );
+FL_EXPORT void flimage_delete_all_text( FL_IMAGE * );
 
-FL_EXPORT void flimage_delete_all_text(
-        FL_IMAGE *
-        );
+FL_EXPORT int flimage_add_marker( FL_IMAGE *,
+								  const char *,
+								  double,
+								  double,
+								  double,
+								  double,
+								  int,
+								  int,
+								  int,
+								  unsigned int,
+								  unsigned int );
 
-FL_EXPORT int flimage_add_marker(
-        FL_IMAGE *,
-        const char *,
-        double,
-        double,
-        double,
-        double,
-        int,
-        int,
-        int,
-        unsigned int,
-        unsigned int
-        );
+FL_EXPORT int flimage_add_marker_struct( FL_IMAGE *,
+										 const FLIMAGE_MARKER * );
 
-FL_EXPORT int flimage_add_marker_struct(
-        FL_IMAGE *,
-        const FLIMAGE_MARKER *
-        );
+FL_EXPORT int flimage_define_marker( const char *,
+									 void ( * )( FLIMAGE_MARKER * ),
+									 const char * );
 
-FL_EXPORT int flimage_define_marker(
-        const char *,
-        void ( * )( FLIMAGE_MARKER * ),
-        const char *
-        );
+FL_EXPORT void flimage_delete_all_markers( FL_IMAGE * );
 
-FL_EXPORT void flimage_delete_all_markers(
-        FL_IMAGE *
-        );
+FL_EXPORT int flimage_render_annotation( FL_IMAGE *,
+										 FL_WINDOW );
 
-FL_EXPORT int flimage_render_annotation(
-        FL_IMAGE *,
-        FL_WINDOW
-        );
+FL_EXPORT void flimage_error( FL_IMAGE *,
+							  const char *,
+							  ... );
 
-FL_EXPORT void flimage_error(
-        FL_IMAGE *,
-        const char *,
-        ...
-        );
+/* Built-in format supports */
 
-/* built-in format supports */
+FL_EXPORT void flimage_enable_pnm( void );
 
-FL_EXPORT void flimage_enable_pnm(
-        void
-        );
+FL_EXPORT int flimage_set_fits_bits( int );
 
-FL_EXPORT int flimage_set_fits_bits(
-        int
-        );
-
-/* output options       */
+/* Output options */
 
 typedef struct
 {
@@ -557,21 +502,13 @@ typedef struct
     int smoothing;
 } FLIMAGE_JPEG_OPTION;
 
-FL_EXPORT void flimage_jpeg_output_options(
-        FLIMAGE_JPEG_OPTION *
-        );
+FL_EXPORT void flimage_jpeg_output_options( FLIMAGE_JPEG_OPTION * );
 
-FL_EXPORT void flimage_pnm_output_options(
-        int
-        );
+FL_EXPORT void flimage_pnm_output_options( int );
 
-FL_EXPORT void flimage_gif_output_options(
-        int
-        );
+FL_EXPORT void flimage_gif_output_options( int );
 
-FL_EXPORT FLPS_CONTROL * flimage_ps_options(
-        void
-        );
+FL_EXPORT FLPS_CONTROL * flimage_ps_options( void );
 
 #define flimage_jpeg_options  flimage_jpeg_output_options
 #define flimage_pnm_options   flimage_pnm_output_options    
@@ -592,68 +529,46 @@ typedef struct {
     int          annotation;
 } FLIMAGE_FORMAT_INFO;
 
-FL_EXPORT int flimage_get_number_of_formats(
-        void
-        );
+FL_EXPORT int flimage_get_number_of_formats( void );
 
-FL_EXPORT const FLIMAGE_FORMAT_INFO * flimage_get_format_info(
-        int
-        );
+FL_EXPORT const FLIMAGE_FORMAT_INFO * flimage_get_format_info( int );
 
-FL_EXPORT void * fl_get_matrix(
-        int,
-        int,
-        unsigned int
-        );
+FL_EXPORT void * fl_get_matrix( int,
+								int,
+								unsigned int );
 
-FL_EXPORT void * fl_make_matrix(
-        int,
-        int,
-        unsigned int,
-        void *
-        );
+FL_EXPORT void * fl_make_matrix( int,
+								 int,
+								 unsigned int,
+								 void * );
 
-FL_EXPORT void fl_free_matrix(
-        void *
-        );
+FL_EXPORT void fl_free_matrix( void * );
 
 /* This function is retained for compatibility reasons only.
    It returns 1 always. */
 
-FL_EXPORT int fl_init_RGBdatabase(
-        const char *
-        );
+FL_EXPORT int fl_init_RGBdatabase( const char * );
 
-FL_EXPORT int fl_lookup_RGBcolor(
-        const char *,
-        int *,
-        int *,
-        int *
-        );
+FL_EXPORT int fl_lookup_RGBcolor( const char *,
+								  int *,
+								  int *,
+								  int * );
 
-FL_EXPORT int flimage_add_format(
-        const char *,
-        const char *,
-        const char *,
-        int,
-        FLIMAGE_Identify,
-        FLIMAGE_Description,
-        FLIMAGE_Read_Pixels,
-        FLIMAGE_Write_Image
-        );
+FL_EXPORT int flimage_add_format( const char *,
+								  const char *,
+								  const char *,
+								  int,
+								  FLIMAGE_Identify,
+								  FLIMAGE_Description,
+								  FLIMAGE_Read_Pixels,
+								  FLIMAGE_Write_Image );
 
-FL_EXPORT void flimage_set_annotation_support(
-        int,
-        int
-        );
+FL_EXPORT void flimage_set_annotation_support( int,
+											   int );
 
-FL_EXPORT int flimage_getcolormap(
-        FL_IMAGE *
-        );
+FL_EXPORT int flimage_getcolormap( FL_IMAGE * );
 
-FL_EXPORT void fl_select_mediancut_quantizer(
-        void
-        );
+FL_EXPORT void fl_select_mediancut_quantizer( void );
 
 /* Simple image processing routines */
 
@@ -671,593 +586,398 @@ enum {
    FLIMAGE_NOCENTER   = FL_ALIGN_LEFT_TOP
 };
 
-FL_EXPORT int flimage_convolve(
-        FL_IMAGE *,
-        int **,
-        int,
-        int
+FL_EXPORT int flimage_convolve( FL_IMAGE *,
+								int **,
+								int,
+								int );
+
+FL_EXPORT int flimage_convolvea( FL_IMAGE *,
+								 int *,
+								 int,
+								 int );
+
+FL_EXPORT int flimage_tint( FL_IMAGE *,
+							unsigned int,
+							double
         );
 
-FL_EXPORT int flimage_convolvea(
-        FL_IMAGE *,
-        int *,
-        int,
-        int
-        );
+FL_EXPORT int flimage_rotate( FL_IMAGE *,
+							  int,
+							  int );
 
-FL_EXPORT int flimage_tint(
-        FL_IMAGE *,
-        unsigned int,
-        double
-        );
+FL_EXPORT int flimage_flip( FL_IMAGE *,
+							int );
 
-FL_EXPORT int flimage_rotate(
-        FL_IMAGE *,
-        int,
-        int
-        );
+FL_EXPORT int flimage_scale( FL_IMAGE *,
+							 int,
+							 int,
+							 int );
 
-FL_EXPORT int flimage_flip(
-        FL_IMAGE *,
-        int
-        );
+FL_EXPORT int flimage_warp( FL_IMAGE *,
+							float [ ][ 2 ],
+							int,
+							int,
+							int );
 
-FL_EXPORT int flimage_scale(
-        FL_IMAGE *,
-        int,
-        int,
-        int
-        );
+FL_EXPORT int flimage_autocrop( FL_IMAGE *,
+								unsigned int );
 
-FL_EXPORT int flimage_warp(
-        FL_IMAGE *,
-        float [ ][ 2 ],
-        int,
-        int,
-        int
-        );
+FL_EXPORT int flimage_get_autocrop( FL_IMAGE *,
+									unsigned int,
+									int *,
+									int *,
+									int *,
+									int * );
 
-FL_EXPORT int flimage_autocrop(
-        FL_IMAGE *,
-        unsigned int
-        );
+FL_EXPORT int flimage_crop( FL_IMAGE *,
+							int,
+							int,
+							int,
+							int );
 
-FL_EXPORT int flimage_get_autocrop(
-        FL_IMAGE *,
-        unsigned int,
-        int *,
-        int *,
-        int *,
-        int *
-        );
+FL_EXPORT int flimage_replace_pixel( FL_IMAGE *,
+									 unsigned int,
+									 unsigned int );
 
-FL_EXPORT int flimage_crop(
-        FL_IMAGE *,
-        int,
-        int,
-        int,
-        int
-        );
+FL_EXPORT int flimage_transform_pixels( FL_IMAGE *,
+										int *,
+										int *,
+										int * );
 
-FL_EXPORT int flimage_replace_pixel(
-        FL_IMAGE *,
-        unsigned int,
-        unsigned int
-        );
+FL_EXPORT int flimage_windowlevel( FL_IMAGE *,
+								   int,
+								   int );
 
-FL_EXPORT int flimage_transform_pixels(
-        FL_IMAGE *,
-        int *,
-        int *,
-        int *
-        );
+FL_EXPORT int flimage_enhance( FL_IMAGE *,
+							   int );
 
-FL_EXPORT int flimage_windowlevel(
-        FL_IMAGE *,
-        int,
-        int
-        );
+FL_EXPORT int flimage_from_pixmap( FL_IMAGE *,
+								   Pixmap );
 
-FL_EXPORT int flimage_enhance(
-        FL_IMAGE *,
-        int
-        );
+FL_EXPORT Pixmap flimage_to_pixmap( FL_IMAGE *, 
+									FL_WINDOW );
 
-FL_EXPORT int flimage_from_pixmap(
-        FL_IMAGE *,
-        Pixmap
-        );
-
-FL_EXPORT Pixmap flimage_to_pixmap(
-        FL_IMAGE *,
-        FL_WINDOW
-        );
-
-FL_EXPORT FL_IMAGE * flimage_dup(
-        FL_IMAGE *
-        );
+FL_EXPORT FL_IMAGE * flimage_dup( FL_IMAGE * );
 
 /* Miscellaneous prototypes */
 
-FL_EXPORT void * fl_get_submatrix(
-        void *,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        unsigned int
-        );
-
-FL_EXPORT int fl_j2pass_quantize_packed(
-        unsigned int **,
-        int,
-        int,
-        int,
-        unsigned short **,
-        int *,
-        int *,
-        int *,
-        int *,
-        FL_IMAGE *
-        );
-
-FL_EXPORT int fl_j2pass_quantize_rgb(
-        unsigned char **,
-        unsigned char **,
-        unsigned char **,
-        int,
-        int,
-        int,
-        unsigned short **,
-        int *,
-        int *,
-        int *,
-        int *,
-        FL_IMAGE *
-        );
-
-FL_EXPORT void * fl_make_submatrix(
-        void *,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        unsigned int
-        );
-
-FL_EXPORT int fl_object_ps_dump(
-        FL_OBJECT *,
-        const char *
-        );
-
-FL_EXPORT void fl_pack_bits(
-        unsigned char *,
-        unsigned short *,
-        int
-        );
-
-FL_EXPORT void fl_unpack_bits(
-        unsigned short *,
-        unsigned char  *,
-        int
-        );
-
-FL_EXPORT unsigned int fl_value_to_bits(
-        unsigned int
-        );
-
-FL_EXPORT void flimage_add_comments(
-        FL_IMAGE *,
-        const char *,
-        int
-        );
-
-FL_EXPORT unsigned long flimage_color_to_pixel(
-        FL_IMAGE *,
-        int,
-        int,
-        int,
-        int *
-        );
-
-FL_EXPORT FL_IMAGE * flimage_combine(
-        FL_IMAGE *,
-        FL_IMAGE *,
-        double
-        );
-
-FL_EXPORT int flimage_define_marker(
-        const char *,
-        void ( * )( FLIMAGE_MARKER * ),
-        const char *
-        );
-
-FL_EXPORT void flimage_display_markers(
-        FL_IMAGE *
-        );
-
-FL_EXPORT FL_IMAGE *flimage_dup_(
-        FL_IMAGE *,
-        int
-        );
-
-FL_EXPORT void flimage_enable_bmp(
-        void
-        );
-
-FL_EXPORT void flimage_enable_fits(
-        void
-        );
-
-FL_EXPORT void flimage_enable_genesis(
-        void
-        );
-
-FL_EXPORT void flimage_enable_gif(
-        void
-        );
-
-FL_EXPORT void flimage_enable_gzip(
-        void
-        );
-
-FL_EXPORT void flimage_enable_jpeg(
-        void
-        );
-
-FL_EXPORT void flimage_enable_png(
-        void
-        );
-
-FL_EXPORT void flimage_enable_ps(
-        void
-        );
-
-FL_EXPORT void flimage_enable_sgi(
-        void
-        );
-
-FL_EXPORT void flimage_enable_tiff(
-        void
-        );
-
-FL_EXPORT void flimage_enable_xbm(
-        void
-        );
-
-FL_EXPORT void flimage_enable_xpm(
-        void
-        );
-
-FL_EXPORT void flimage_enable_xwd(
-        void
-        );
-
-FL_EXPORT void flimage_free_ci(
-        FL_IMAGE *
-        );
-
-FL_EXPORT void flimage_free_gray(
-        FL_IMAGE *
-        );
-
-FL_EXPORT void flimage_free_linearlut(
-        FL_IMAGE *
-        );
-
-FL_EXPORT void flimage_free_rgb(
-        FL_IMAGE *
-        );
-
-FL_EXPORT void flimage_freemem(
-        FL_IMAGE *
-        );
-
-FL_EXPORT int flimage_get_closest_color_from_map(
-        FL_IMAGE *,
-        unsigned int
-        );
-
-FL_EXPORT int flimage_get_linearlut(
-        FL_IMAGE *
-        );
-
-FL_EXPORT void flimage_invalidate_pixels(
-        FL_IMAGE *
-        );
-
-FL_EXPORT FL_IMAGE *flimage_open(
-        const char *
-        );
-
-FL_EXPORT int flimage_read_annotation(
-        FL_IMAGE *
-        );
-
-FL_EXPORT void flimage_replace_image(
-        FL_IMAGE *,
-        int,
-        int,
-        void *,
-        void *,
-        void *
-        );
-
-FL_EXPORT int flimage_swapbuffer(
-        FL_IMAGE *
-        );
-
-FL_EXPORT int flimage_to_ximage(
-        FL_IMAGE *,
-        FL_WINDOW,
-        XWindowAttributes *
-        );
-
-FL_EXPORT int flimage_write_annotation(
-        FL_IMAGE *
-        );
-
-FL_EXPORT void flps_apply_gamma(
-        float
-        );
-
-FL_EXPORT void flps_arc(
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_circ(
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_color(
-        long
-        );
-
-FL_EXPORT void flps_draw_box(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long,
-        int
-        );
-
-FL_EXPORT void flps_draw_checkbox(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long,
-        int
-        );
-
-FL_EXPORT void flps_draw_frame(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long,
-        int
-        );
-
-FL_EXPORT int flps_draw_symbol(
-        const char *,
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_draw_tbox(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long,
-        int
-        );
-
-FL_EXPORT void flps_draw_text(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long,
-        int,
-        int,
-        const char *
-        );
-
-FL_EXPORT void flps_draw_text_beside(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long,
-        int,
-        int,
-        const char *
-        );
-
-FL_EXPORT void flps_emit_header(
-        const char *,
-        int,
-        int,
-        int,
-        int,
-        int
-        );
-
-FL_EXPORT void flps_emit_prolog(
-        void
-        );
-
-FL_EXPORT int flps_get_gray255(
-        long
-        );
-
-FL_EXPORT int flps_get_linestyle(
-        void
-        );
-
-FL_EXPORT int flps_get_linewidth(
-        void
-        );
-
-FL_EXPORT int flps_get_namedcolor(
-        const char *
-        );
-
-FL_EXPORT FLPS_CONTROL * flps_init(
-        void
-        );
-
-FL_EXPORT void flps_invalidate_color_cache(
-        void
-        );
-
-FL_EXPORT void flps_invalidate_font_cache(
-        void
-        );
-
-FL_EXPORT void flps_invalidate_linewidth_cache(
-        void
-        );
-
-FL_EXPORT void flps_invalidate_symbol_cache(
-        void
-        );
-
-FL_EXPORT void flps_line(
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_lines(
-        FL_POINT *,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_linestyle(
-        int
-        );
-
-FL_EXPORT void flps_linewidth(
-        int
-        );
-
-FL_EXPORT void flps_log(
-        const char *
-        );
-
-FL_EXPORT void flps_output(
-        const char *,
-        ...
-        );
-
-FL_EXPORT void flps_oval(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_pieslice(
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_poly(
-        int,
-        FL_POINT *,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_rectangle(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_reset_cache(
-        void
-        );
-
-FL_EXPORT void flps_reset_linewidth(
-        void
-        );
-
-FL_EXPORT void flps_restore_flps(
-        void
-        );
-
-FL_EXPORT void flps_rgbcolor(
-        int,
-        int,
-        int
-        );
-
-FL_EXPORT void flps_roundrectangle(
-        int,
-        int,
-        int,
-        int,
-        int,
-        long
-        );
-
-FL_EXPORT void flps_set_clipping(
-        int,
-        int,
-        int,
-        int
-        );
-
-FL_EXPORT void flps_set_font(
-        int,
-        int
-        );
-
-FL_EXPORT void flps_unset_clipping(
-        void
-        );
+FL_EXPORT void * fl_get_submatrix( void *,
+								   int,
+								   int,
+								   int,
+								   int,
+								   int,
+								   int,
+								   unsigned int );
+
+FL_EXPORT int fl_j2pass_quantize_packed( unsigned int **,
+										 int,
+										 int,
+										 int,
+										 unsigned short **,
+										 int *,
+										 int *,
+										 int *,
+										 int *,
+										 FL_IMAGE * );
+
+FL_EXPORT int fl_j2pass_quantize_rgb( unsigned char **,
+									  unsigned char **,
+									  unsigned char **,
+									  int,
+									  int,
+									  int,
+									  unsigned short **,
+									  int *,
+									  int *,
+									  int *,
+									  int *,
+									  FL_IMAGE * );
+
+FL_EXPORT void * fl_make_submatrix( void *,
+									int,
+									int,
+									int,
+									int,
+									int,
+									int,
+									unsigned int );
+
+FL_EXPORT int fl_object_ps_dump( FL_OBJECT *,
+								 const char * );
+
+FL_EXPORT void fl_pack_bits( unsigned char *,
+							 unsigned short *,
+							 int );
+
+FL_EXPORT void fl_unpack_bits( unsigned short *,
+							   unsigned char  *,
+							   int );
+
+FL_EXPORT unsigned int fl_value_to_bits( unsigned int );
+
+FL_EXPORT void flimage_add_comments( FL_IMAGE *,
+									 const char *,
+									 int );
+
+FL_EXPORT unsigned long flimage_color_to_pixel( FL_IMAGE *,
+												int,
+												int,
+												int,
+												int * );
+
+FL_EXPORT FL_IMAGE * flimage_combine( FL_IMAGE *,
+									  FL_IMAGE *,
+									  double );
+
+FL_EXPORT int flimage_define_marker( const char *,
+									 void ( * )( FLIMAGE_MARKER * ),
+									 const char * );
+
+FL_EXPORT void flimage_display_markers( FL_IMAGE * );
+
+FL_EXPORT FL_IMAGE *flimage_dup_( FL_IMAGE *, 
+								  int );
+
+FL_EXPORT void flimage_enable_bmp( void );
+
+FL_EXPORT void flimage_enable_fits( void );
+
+FL_EXPORT void flimage_enable_genesis( void );
+
+FL_EXPORT void flimage_enable_gif( void );
+
+FL_EXPORT void flimage_enable_gzip( void );
+
+FL_EXPORT void flimage_enable_jpeg( void );
+
+FL_EXPORT void flimage_enable_png( void );
+
+FL_EXPORT void flimage_enable_ps( void );
+
+FL_EXPORT void flimage_enable_sgi( void );
+
+FL_EXPORT void flimage_enable_tiff( void );
+
+FL_EXPORT void flimage_enable_xbm( void );
+
+FL_EXPORT void flimage_enable_xpm( void );
+
+FL_EXPORT void flimage_enable_xwd( void );
+
+FL_EXPORT void flimage_free_ci( FL_IMAGE * );
+
+FL_EXPORT void flimage_free_gray( FL_IMAGE * );
+
+FL_EXPORT void flimage_free_linearlut( FL_IMAGE * );
+
+FL_EXPORT void flimage_free_rgb( FL_IMAGE * );
+
+FL_EXPORT void flimage_freemem( FL_IMAGE * );
+
+FL_EXPORT int flimage_get_closest_color_from_map( FL_IMAGE *,
+												  unsigned int );
+
+FL_EXPORT int flimage_get_linearlut( FL_IMAGE * );
+
+FL_EXPORT void flimage_invalidate_pixels( FL_IMAGE * );
+
+FL_EXPORT FL_IMAGE *flimage_open( const char * );
+
+FL_EXPORT int flimage_read_annotation( FL_IMAGE * );
+
+FL_EXPORT void flimage_replace_image( FL_IMAGE *,
+									  int,
+									  int,
+									  void *,
+									  void *,
+									  void * );
+
+FL_EXPORT int flimage_swapbuffer( FL_IMAGE * );
+
+FL_EXPORT int flimage_to_ximage( FL_IMAGE *,
+								 FL_WINDOW,
+								 XWindowAttributes * );
+
+FL_EXPORT int flimage_write_annotation( FL_IMAGE * );
+
+FL_EXPORT void flps_apply_gamma( float );
+
+FL_EXPORT void flps_arc( int,
+						 int,
+						 int,
+						 int,
+						 int,
+						 int,
+						 long );
+
+FL_EXPORT void flps_circ( int,
+						  int,
+						  int,
+						  int,
+						  long );
+
+FL_EXPORT void flps_color( long );
+
+FL_EXPORT void flps_draw_box( int,
+							  int,
+							  int,
+							  int,
+							  int,
+							  long,
+							  int );
+
+FL_EXPORT void flps_draw_checkbox( int,
+								   int,
+								   int,
+								   int,
+								   int,
+								   long,
+								   int );
+
+FL_EXPORT void flps_draw_frame( int,
+								int,
+								int,
+								int,
+								int,
+								long,
+								int );
+
+FL_EXPORT int flps_draw_symbol( const char *,
+								int,
+								int,
+								int,
+								int,
+								long );
+
+FL_EXPORT void flps_draw_tbox( int,
+							   int,
+							   int,
+							   int,
+							   int,
+							   long,
+							   int );
+
+FL_EXPORT void flps_draw_text( int,
+							   int,
+							   int,
+							   int,
+							   int,
+							   long,
+							   int,
+							   int,
+							   const char * );
+
+FL_EXPORT void flps_draw_text_beside( int,
+									  int,
+									  int,
+									  int,
+									  int,
+									  long,
+									  int,
+									  int,
+									  const char * );
+
+FL_EXPORT void flps_emit_header( const char *,
+								 int,
+								 int,
+								 int,
+								 int,
+								 int );
+
+FL_EXPORT void flps_emit_prolog( void );
+
+FL_EXPORT int flps_get_gray255( long );
+
+FL_EXPORT int flps_get_linestyle( void );
+
+FL_EXPORT int flps_get_linewidth( void );
+
+FL_EXPORT int flps_get_namedcolor( const char * );
+
+FL_EXPORT FLPS_CONTROL * flps_init( void );
+
+FL_EXPORT void flps_invalidate_color_cache( void );
+
+FL_EXPORT void flps_invalidate_font_cache( void );
+
+FL_EXPORT void flps_invalidate_linewidth_cache( void );
+
+FL_EXPORT void flps_invalidate_symbol_cache( void );
+
+FL_EXPORT void flps_line( int,
+						  int,
+						  int,
+						  int,
+						  long );
+
+FL_EXPORT void flps_lines( FL_POINT *,
+						   int,
+						   long );
+
+FL_EXPORT void flps_linestyle( int );
+
+FL_EXPORT void flps_linewidth( int );
+
+FL_EXPORT void flps_log( const char * );
+
+FL_EXPORT void flps_output( const char *,
+							... );
+
+FL_EXPORT void flps_oval( int,
+						  int,
+						  int,
+						  int,
+						  int,
+						  long );
+
+FL_EXPORT void flps_pieslice( int,
+							  int,
+							  int,
+							  int,
+							  int,
+							  int,
+							  int,
+							  long );
+
+FL_EXPORT void flps_poly( int,
+						  FL_POINT *,
+						  int,
+						  long );
+
+FL_EXPORT void flps_rectangle( int,
+							   int,
+							   int,
+							   int,
+							   int,
+							   long );
+
+FL_EXPORT void flps_reset_cache( void );
+
+FL_EXPORT void flps_reset_linewidth( void );
+
+FL_EXPORT void flps_restore_flps( void );
+
+FL_EXPORT void flps_rgbcolor( int,
+							  int,
+							  int );
+
+FL_EXPORT void flps_roundrectangle( int,
+									int,
+									int,
+									int,
+									int,
+									long );
+
+FL_EXPORT void flps_set_clipping( int,
+								  int,
+								  int,
+								  int );
+
+FL_EXPORT void flps_set_font( int,
+							  int );
+
+FL_EXPORT void flps_unset_clipping( void );
 
 #ifdef MAKING_FORMS
 #include "flimage_int.h"

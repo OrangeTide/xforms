@@ -524,7 +524,7 @@ setup_catch_destroy( Window win )
 
 
 /***************************************
- * Wait until we know for sure the newly mapped window is visible
+ * Waits until we know for sure the newly mapped window is visible
  ***************************************/
 
 static void
@@ -760,7 +760,7 @@ fl_winshow( Window win )
 {
     XMapRaised( flx->display, win );
 
-    /* wait until the newly mapped win shows up */
+    /* Wait until the newly mapped window shows up */
 
     if ( st_xwmh.initial_state == NormalState )
         wait_mapwin( win );
