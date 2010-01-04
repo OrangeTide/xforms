@@ -149,7 +149,7 @@ typedef enum {
 
 #define FL_MAX_BW          10
 
-/* how to display a form onto screen */
+/* How to display a form onto screen */
 
 typedef enum {
     FL_PLACE_FREE       =   0,      /* size remain resizable      */
@@ -163,10 +163,9 @@ typedef enum {
     FL_PLACE_HOTSPOT    = 128,      /* so mouse fall on (x,y)     */
     FL_PLACE_ICONIC     = 256,
 
-    /* modifiers */
+    /* Modifiers */
 
-    FL_FREE_SIZE        = ( 1 << 14 ),
-    FL_FIX_SIZE         = ( 1 << 15 )
+    FL_FREE_SIZE        = ( 1 << 14 )
 } FL_PLACE;
 
 #define FL_PLACE_FREE_CENTER ( FL_PLACE_CENTER | FL_FREE_SIZE )

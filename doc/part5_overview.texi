@@ -1322,7 +1322,7 @@ resizing is not allowed once the form becomes visible.
 @tindex FL_PLACE_POSITION
 @item FL_PLACE_POSITION
 Initial position used will be the one set via
-@code{@ref{fl_set_form_position()}}. Interactive resizing is possible.
+@code{@ref{fl_set_form_position()}}. Interactive resizing is allowed.
 
 @tindex FL_PLACE GEOMETRY
 @item FL_PLACE GEOMETRY
@@ -1338,37 +1338,40 @@ as that of the initial size.
 @tindex FL_PLACE_MOUSE
 @item FL_PLACE_MOUSE
 The form is placed centered below the mouse. Interactive resizing will
-not be allowed unless this option is accompanied by @code{FL_FREE_SIZE}
-as in @code{FL_PLACE_MOUSE | FL_FREE_SIZE}.
+not be allowed unless this option is accompanied by
+@code{@ref{FL_FREE_SIZE}} as in
+@code{@ref{FL_PLACE_MOUSE}|@ref{FL_FREE_SIZE}}.
 
 @tindex FL_PLACE_CENTER
 @item FL_PLACE_CENTER
-The form is placed in the center of the screen. If @code{FL_FREE_SIZE}
-is also specified, interactive resizing will be allowed.
+The form is placed in the center of the screen. If
+@code{@ref{FL_FREE_SIZE}} is also specified, interactive resizing will
+be allowed.
 
 @tindex FL_PLACE_FULLSCREEN
 @item FL_PLACE_FULLSCREEN
-The form is scaled to cover the full screen. If @code{FL_FREE_SIZE} is
-also specified, interative resizing will be allowed.
+The form is scaled to cover the full screen. If
+@code{@ref{FL_FREE_SIZE}} is also specified, interative resizing will
+be allowed.
 
 @tindex FL_PLACE_FREE
 @item FL_PLACE_FREE
 Both the position and size are completely free. The initial size used
-is the designed size. Initial position, if setvia
-@code{@ref{fl_set_form_position()}}, will be used otherwise
+is the designed size. Initial position, if set via
+@code{@ref{fl_set_form_position()}}, will be used, otherwise
 interactive positioning may be possible if the window manager allows
 it.
 
 @tindex FL_PLACE_HOTSPOT
 @item FL_PLACE_HOTSPOT
 The form is so placed that mouse is on the "hotspot". If
-@code{FL_FREE_SIZE} is also specified, interactive resizing will be
-allowed.
+@code{@ref{FL_FREE_SIZE}} is also specified, interactive resizing will
+be allowed.
 
 @tindex FL_PLACE_CENTERFREE
 @item FL_PLACE_CENTERFREE
-Same as @code{FL_PLACE_CENTER | FL_FREE_SIZE}, i.e., place the form at
-the center of the screen and allow resizing.
+Same as @code{@ref{FL_PLACE_CENTER}|@ref{FL_FREE_SIZE}}, i.e., place
+the form at the center of the screen and allow resizing.
 
 @tindex FL_PLACE ICONIC
 @item FL_PLACE ICONIC
@@ -1537,10 +1540,11 @@ The function
 int fl_form_is_isconified(FL_FORM *form);
 @end example
 @noindent
-allows to query if a forms (visible) window is in iconified state.
+allows to test if the (visible) window of a form is in iconified
+state.
 
-If interactive resizing is to be allowed, (e.g., the form has been
-shown using @code{FL_PLACE_FREE}), it can be useful to limit the range
+If interactive resizing is allowed (e.g., by showing the form with
+@code{@ref{FL_PLACE_POSITION}}) it can be useful to limit the range of
 the size of a form can take. To this end, the following functions are
 available
 @findex fl_set_form_minsize()
@@ -1554,8 +1558,8 @@ void fl_set_form_maxsize(FL_FORM *form, FL_Coord maxw, FL_Coord maxh);
 
 Although these two routines can be used before or after a form becomes
 visible, not all window managers honor such requests once the window
-is visible. Also note that the constraints only applies to the next
-call of @code{@ref{fl_show_form()}} for the form.
+is visible. Also note that the constraints only apply to the next call
+of @code{@ref{fl_show_form()}} for the form.
 
 To set or change the icon shown when a form is iconified use the
 following routine
@@ -1565,13 +1569,13 @@ following routine
 void fl_set_form_icon(FL_FORM *form, Pixmap icon, Pixmap mask);
 @end example
 @noindent
-where @code{icon} can be any valid Pixmap ID. (@xref{Pixmap Object},
-for some of the routines that can be used to create Pixmaps.) Note
-that the previous icon if not freed or modified in anyway.
+where @code{icon} can be any valid pixmap ID. (@xref{Pixmap Object},
+for some of the routines that can be used to create pixmaps.) Note
+that a previously set icon if not freed or modified in anyway.
 
-If for any reason, you would like to change the form title after it is
-shown, the following call can be used (this will also change the icon
-title)
+If, for any reason, you would like to change the form title after the
+form has been made visible, the following call can be used (this will
+also change the icon title)
 @findex fl_set_form_title()
 @anchor{fl_set_form_title()}
 @example
@@ -1594,17 +1598,15 @@ To check if a form is visible or not, the following function can be used
 int fl_form_is_visible(FL_FORM *form)'
 @end example
 @noindent
-@tindex FL VISIBLE
-@tindex FL INSIBILE
-@tindex FL BEING HIDDEN
-The function can return that the form is visible (@code{FL VISIBLE}),
-is invisible (@code{FL INSIBILE}) or in the processing of becoming
-invisible (@code{FL BEING HIDDEN}).
+The function can return that the form is visible
+(@code{@ref{FL_VISIBLE}}), is invisible (@code{@code{FL_INSIBILE}}) or
+in the processing of becoming invisible
+(@code{@ref{FL_BEING_HIDDEN}}).
 
 The most important function for doing the actual ineraction with forms
 is
-@findex fl_do_forms()
 @anchor{fl_do_forms()}
+@findex fl_do_forms()
 @example
 FL_OBJECT *fl_do_forms(void);
 @end example
@@ -1614,29 +1616,30 @@ of an object changes that has no callback bound to it. A pointer to
 this object is then returned.
 
 A second way of doing interaction with the currently displayed forms
-exists by using 
-@findex fl_check_forms()
+is using
 @anchor{fl_check_forms()}
+@findex fl_check_forms()
 @example
 FL_OBJECT *fl_check_forms(void);
 @end example
 @noindent
-The routine returns @code{NULL} immediately unless the state of one of
-the object (without a callback bound to it) changed. In tha case a
+This routine returns @code{NULL} immediately unless the state of one
+of the object (without a callback bound to it) changed. In that case a
 pointer to this object gets returned.
 
-@findex fl_do_only_forms()
+Then there are two more functions:
 @anchor{fl_do_only_forms()}
-@findex fl_check_only_forms()
+@findex fl_do_only_forms()
 @anchor{fl_check_only_forms()}
+@findex fl_check_only_forms()
 @example
 FL_OBJECT *fl_do_only_forms(void);
 FL_OBJECT *fl_check_only_forms(void);
 @end example
 @noindent
-Both functiosn are the same as @code{@ref{fl_do_forms()}} and
-@code{@ref{fl_check_forms()}} except that these routines do not handle
-user events generated by application windows opened via
+Both functions do the same as @code{@ref{fl_do_forms()}} and
+@code{@ref{fl_check_forms()}} except that they do not handle user
+events generated by application windows opened via
 @code{@ref{fl_winopen()}} or similar routines.
 
 To activate or deactivate a form for user interaction you can use
@@ -1679,9 +1682,9 @@ FL_FORM_ACTIVATE fl_set_form_atdeactivate(FL_FORM *form,
                                           void *data);
 @end example
 
-Also individual objects (or whole groups of objects if the argument of
-the function is an object returned by @code{@ref{fl_bgn_group()}}) can
-be activated and deactivated to enable or disable user interaction:
+Also individual objects (or groups of objects if the argument of the
+function is an object returned by @code{@ref{fl_bgn_group()}}) can be
+activated and deactivated to enable or disable user interaction:
 @findex fl_activate_object()
 @anchor{fl_activate_object()}
 @findex fl_deactivate_object()
@@ -1692,7 +1695,7 @@ void fl_deactivate_object(FL_OBJECT *obj);
 @end example
 @noindent
 It is nrmally useful to give the user a visual clue when an object
-gets deactivated, e.g.@: by graying out its label etc.
+gets deactivated, e.g., by graying out its label etc.
 
 To find out if an object is active use
 @findex fl_object_is_active()
@@ -1848,10 +1851,10 @@ following routine should be called prior to any use of
 void fl_app_signal_direct(int flag);
 @end example
 @noindent
-After this call, @code{@ref{fl_add_signal_callback()}} will not
+After this call @code{@ref{fl_add_signal_callback()}} will not
 initiate any actions to receive a signal. The application program
-should handle the receipt and blocking of signals (via e.g.@:
-@code{signal()}, @code{sigaction()}, @code{sigprocmask(d2}) etc.) When
+should handle the receipt and blocking of signals (via e.g.,
+@code{signal(2)}, @code{sigaction(2)}, @code{sigprocmask(2}) etc.) When
 the signal is received by the application program, it should call the
 following routine to inform the main loop of the delivery of the
 signal @code{signum}, possibly after performing some timing sensitive
@@ -1874,13 +1877,13 @@ situition (for most application, idle callback, timeouts or
 
 First, you need to define the function that will handle the timing
 critical tasks. The function will be registered with the OS to be
-invoked directly by the OS. There are limitations on what you can do
+invoked directly by it. There are limitations on what you can do
 within a (OS) signal handler, in particular, GUI activity is not safe.
 @example
 void timing_critical_task(int sig) @{
     /* handle timing critical tasks that does not involve GUI */
     ...
-    /* now tell the library the signal has been delivered by the OS.
+    /* Now tell the library the signal has been delivered by the OS.
      * The library will invoke the xforms signal handler when it's
      * appropriate to do so */
     fl_signal_caught(sig);
@@ -1898,7 +1901,7 @@ void gui_signal_handler(int sig, void *data) @{
 @}
 @end example
 
-To make all these work, a set-up similar to the following can be used
+To make all this work, a set-up similar to the following can be used
 @example
 /* setup the signal */
 fl_app_signal_direct(1);
@@ -1915,7 +1918,6 @@ fl_add_signal_callback(SIGALRM, gui_signal_handler, &myData);
 @node Idle Callbacks and Timeouts
 @section Idle Callbacks and Timeouts
 
-
 For application programs that need to perform some light, but
 semi-continuous or periodic tasks, idle callback and timeouts (also
 @code{FL_TIMER} objects) can be utilized.
@@ -1926,56 +1928,54 @@ To register an idle callback with the system, use the following routine
 @anchor{fl_set_idle_callback()}
 @example
 typedef int (*FL_APPEVENT_CB)(XEvent *, void *);
-
 FL_APPEVENT_CB fl_set_idle_callback(FL_APPEVENT_CB callback,
                                     void *user_data);
 @end example
 @noindent
 where @code{callback} is the function that will get called whenever
-the main loop is idle. The time interval between any two consecutive
-invocations of the idle callback can vary considerably depending on
-interface activity and other factors. A range between 50 and @w{300
-msec} should be expected.
+the main loop is idle. The time interval between invocations of the
+idle callback can vary considerably depending on interface activity
+and other factors. A range between 50 and @w{300 msec} should be
+expected.
 
-It is possible to change the the condition (intervals of inactivity)
-based on which the main loop determines the idleness of the interface.
-To this end, the following function is available
+It is possible to change what the library considers to be "idle" with
+the following function:
 @findex fl_set_idle_delta()
 @anchor{fl_set_idle_delta()}
 @example
 void fl_set_idle_delta(long msec);
 @end example
 @noindent
-where @code{msec} is the minimum interval of inactivity to be
-considered idle. However it should be noted that under some conditions
-an idle callback can be called sooner than the minimum interval.
+Here @code{msec} is the minimum time interval of inactivity after
+which the main loop is considered to be in an idle state. However it
+should be noted that under some conditions an idle callback can be
+called sooner than the minimum interval.
 
 If the timing of the idle callback is of concern, timeouts should be
 used. Timeouts are similar to idle callbacks but with the property
 that the user can specify a minimum time interval that must elapse
-before the callback is called. Moreover, the precision of timeouts
-tends to be quite a bit better than that of idle callbacks since they
-internally get prefered treatent. To register a timeout callback, the
-following routine can be used
+before the callback is called. The precision of timeouts tends to be
+quite a bit better than that of idle callbacks since they internally
+get prefered treatent. To register a timeout callback, the following
+routine can be used
 @tindex FL_TIMEOUT_CALLBACK
 @findex fl_add_timeout()
 @anchor{fl_add_timeout()}
 @example
 typedef void (*FL_TIMEOUT_CALLBACK)(int, void *);
-
 int fl_add_timeout(long msec, FL_TIMEOUT_CALLBACK callback,
                    void *data);
 @end example
 @noindent
-The function returns the timeout ID@footnote{The function will not
+The function returns the timeout ID (note: the function will not
 return 0 and -1, so the application can use these values to mark
-invalid or expired timeouts.}. When the time interval specified by the
+invalid or expired timeouts). When the time interval specified by the
 @code{msec} argument (in milli-second) is elapsed, the timeout is
-removed and the callback function is called with the timeout ID as
-the first argument. Although timeout offers some control over the
+removed and the callback function is called with the timeout ID as the
+first argument. Although a timeout offers some control over the
 timing, due to performance and CPU load compromises, while the
-resolution can be better than @w{10 ms} under favorable conditions,
-but can also be much worse, occasionally up to @w{150 ms}.
+resolution can be better than @w{10 ms} under favourable conditions,
+it can also be much worse, occasionally up to @w{150 ms}.
 
 To remove a timeout before it triggers, use the following routine
 @findex fl_remove_timeout()
