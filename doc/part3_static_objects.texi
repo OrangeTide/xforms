@@ -910,7 +910,7 @@ To add an item to a chart use
 @anchor{fl_add_chart_value()}
 @example
 void fl_add_chart_value(FL_OBJECT *obj, double val,
-                        const char *text, int col);
+                        const char *text, FL_COLOR col);
 @end example
 @noindent
 Here @code{val} is the value of the item, @code{text} is the label to
@@ -932,7 +932,7 @@ the font style, size or color using the following routine
 @example
 void fl_set_chart_lstyle(FL_OBJECT *obj, int fontstyle);
 void fl_set_chart_lsize(FL_OBJECT *obj, int fontsize);
-void fl_set_chart_lcolor(FL_OBJECT *obj, int color);
+void fl_set_chart_lcolor(FL_OBJECT *obj, FL_COLOR color);
 @end example
 @noindent
 Note that @code{@ref{fl_set_chart_lcolor()}} only affects the label
@@ -943,7 +943,8 @@ You can also insert a new value at a particular place using
 @anchor{fl_insert_chart_value()}
 @example
 void fl_insert_chart_value(FL_OBJECT *obj, int index,
-                           double val, const char *text, int col);
+                           double val, const char *text,
+                           FL_COLOR col);
 @end example
 @noindent
 @code{index} is the index before which the new item should be
@@ -956,7 +957,8 @@ To replace the value of a particular item use the routine
 @anchor{fl_replace_chart_value()}
 @example
 void fl_replace_chart_value(FL_OBJECT *obj, int index,
-                            double val, const char *text, int col);
+                            double val, const char *text,
+                            FL_COLOR col);
 @end example
 @noindent
 Here @code{index} is the index of the value to be replaced. The first

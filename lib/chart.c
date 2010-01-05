@@ -50,10 +50,10 @@
 
 typedef struct
 {
-    float val;                          /* Value of the entry       */
-    int   col;                          /* Color of the entry       */
-    int   lcol;                         /* Label color of the entry */
-    char  str[ MAX_CHART_LABEL_LEN ];   /* Label of the entry       */
+    float    val;                          /* Value of the entry       */
+    FL_COLOR col;                          /* Color of the entry       */
+    FL_COLOR lcol;                         /* Label color of the entry */
+    char     str[ MAX_CHART_LABEL_LEN ];   /* Label of the entry       */
 } ENTRY;
 
 typedef struct
@@ -713,7 +713,7 @@ void
 fl_add_chart_value( FL_OBJECT  * ob,
                     double       val,
                     const char * str,
-                    int          col )
+                    FL_COLOR     col )
 {
     FLI_CHART_SPEC *sp = ob->spec;
     int i;
@@ -760,7 +760,7 @@ fl_insert_chart_value( FL_OBJECT  * ob,
                        int          indx,
                        double       val,
                        const char * str,
-                       int          col )
+                       FL_COLOR     col )
 {
     FLI_CHART_SPEC *sp = ob->spec;
     int i;
@@ -807,7 +807,7 @@ fl_replace_chart_value( FL_OBJECT  * ob,
                         int          indx,
                         double       val,
                         const char * str,
-                        int          col )
+                        FL_COLOR     col )
 {
     FLI_CHART_SPEC *sp = ob->spec;
 

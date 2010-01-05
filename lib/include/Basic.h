@@ -465,7 +465,6 @@ typedef enum {
 } FL_PD_COL;
 
 
-
 #define FL_BUILT_IN_COLS  ( FL_YELLOWGREEN + 1 )
 #define FL_INACTIVE_COL   FL_INACTIVE
 

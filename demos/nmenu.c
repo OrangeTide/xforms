@@ -69,6 +69,8 @@ main( int    argc,
    fl_do_forms( );
    fl_hide_form( form );
 
+   fl_finish( );
+
    return 0;
 }
 

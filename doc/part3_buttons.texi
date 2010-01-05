@@ -134,9 +134,9 @@ Push button that switches off other radio buttons.
 @item FL_HIDDEN_BUTTON
 Invisible normal button.
 
-@tindex FL_INPUT_BUTTON
-@anchor{FL_INPUT_BUTTON}
-@item FL_INPUT_BUTTON
+@tindex FL_INOUT_BUTTON
+@anchor{FL_INOUT_BUTTON}
+@item FL_INOUT_BUTTON
 Returns value both when pushed and when released.
 
 @tindex FL_RETURN_BUTTON
@@ -157,7 +157,7 @@ different. Each of these buttons gets pushed down when the user
 presses the mouse on top of it. What actually happens when the user
 does so depends on the type of the button. An
 @code{@ref{FL_NORMAL_BUTTON}}, @code{@ref{FL_TOUCH_BUTTON}} and
-@code{@ref{FL_INPUT_BUTTON}} gets released when the user releases the
+@code{@ref{FL_INOUT_BUTTON}} gets released when the user releases the
 mouse button. Their difference lies in the moment at which the
 interaction routines return them (see below). A
 @code{@ref{FL_PUSH_BUTTON}} remains pushed and is only released when
@@ -185,7 +185,7 @@ but also reacts to @code{<Return>} key presses.
 @code{@ref{FL_HIDDEN_BUTTON}}s are returned at the moment the user
 releases the mouse after having pressed it on the button. A
 @code{@ref{FL_MENU_BUTTON}}, in contrast, is returned already on a
-mouse press. A @code{@ref{FL_INPUT_BUTTON}} is returned both when the
+mouse press. A @code{@ref{FL_INOUT_BUTTON}} is returned both when the
 user presses it and when the user releases it. A
 @code{@ref{FL_TOUCH_BUTTON}} is returned all the time as long as the
 user keeps the mouse button pressed while the mouse is on top of it. A
@@ -220,7 +220,7 @@ Return object or invoke callback on all of the above condtions.
 
 Most buttons will always return @code{@ref{FL_RETURN_END}} and
 @code{@ref{FL_RETURN_CHANGED}} at the same time. Exceptions are
-@code{@ref{FL_INPUT_BUTTON}}s and @code{@ref{FL_TOUCH_BUTTON}}s. The
+@code{@ref{FL_INOUT_BUTTON}}s and @code{@ref{FL_TOUCH_BUTTON}}s. The
 former returns @code{@ref{FL_RETURN_CHANGED}} when pushed and both
 @code{@ref{FL_RETURN_END}} and @code{@ref{FL_RETURN_CHANGED}} together
 when released. @code{@ref{FL_TOUCH_BUTTON}}s return when pressed, then

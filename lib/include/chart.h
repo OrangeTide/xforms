@@ -71,19 +71,19 @@ FL_EXPORT void fl_clear_chart( FL_OBJECT * ob );
 FL_EXPORT void fl_add_chart_value( FL_OBJECT  * ob,
                                    double       val,
                                    const char * str,
-                                   int          col );
+                                   FL_COLOR     col );
 
 FL_EXPORT void fl_insert_chart_value( FL_OBJECT  * ob,
                                       int          indx,
                                       double       val,
                                       const char * str,
-                                      int          col );
+                                      FL_COLOR     col );
 
 FL_EXPORT void fl_replace_chart_value( FL_OBJECT  * ob,
                                        int          indx,
                                        double       val,
                                        const char * str,
-                                       int          col );
+                                       FL_COLOR     col );
 
 FL_EXPORT void fl_set_chart_bounds( FL_OBJECT * ob,
                                     double      min,

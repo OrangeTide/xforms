@@ -1991,7 +1991,7 @@ To add a marker to an image use the following routines
 int flimage_add_marker(FL_IMAGE *im, const char *name,
                        double x, double y, double w, double h,
                        int linestyle, int fill, int rotation,
-                       unsigned int col, unsigned int bcol);
+                       FL_COLOR, FL_COLOR bcol);
 int flimage_add_marker_struct(FL_IMAGE *im, const FLIMAGE_MARKER *m);
 @end example
 @noindent
