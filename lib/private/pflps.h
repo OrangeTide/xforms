@@ -71,7 +71,7 @@ typedef struct {
                  last_lw;
     int          cur_style,         /* font style and size       */
                  cur_size;
-    long         cur_color;         /* color cache               */
+    FL_COLOR     cur_color;         /* color cache               */
     int          landscape;
     float        final_xscale,
                  final_yscale;
@@ -106,13 +106,13 @@ typedef struct {
 
 extern FLPSInfo *flps;
 
-extern void flps_color( long );
+extern void flps_color( FL_COLOR );
 
 extern void flps_rgbcolor( int,
                            int,
                            int );
 
-extern int flps_get_gray255( long );
+extern int flps_get_gray255( FL_COLOR );
 
 extern void flps_emit_prolog( void );
 
@@ -137,42 +137,43 @@ extern void flps_rectangle( int,
                             int,
                             int,
                             int,
-                            long );
+                            FL_COLOR );
 
 extern void flps_roundrectangle( int,
                                  int,
                                  int,
                                  int,
                                  int,
-                                 long );
+                                 FL_COLOR );
 
 extern void flps_lines( FL_POINT *,
                         int,
-                        long);
+                        FL_COLOR );
 
 extern void flps_line( int,
                        int,
                        int,
                        int,
-                       long );
+                       FL_COLOR );
 
 extern void flps_poly( int,
                        FL_POINT *,
                        int,
-                       long );
+                       FL_COLOR );
+
 extern int flps_draw_symbol( const char *,
                              int,
                              int,
                              int,
                              int,
-                             long );
+                             FL_COLOR );
 
 extern void flps_oval( int,
                        int,
                        int,
                        int,
                        int,
-                       long );
+                       FL_COLOR );
 
 extern void flps_pieslice( int,
                            int,
@@ -181,13 +182,13 @@ extern void flps_pieslice( int,
                            int,
                            int,
                            int,
-                           long );
+                           FL_COLOR );
 
 extern void flps_circ( int,
                        int,
                        int,
                        int,
-                       long );
+                       FL_COLOR );
 
 extern void flps_arc( int,
                       int,
@@ -195,7 +196,7 @@ extern void flps_arc( int,
                       int,
                       int,
                       int,
-                      long );
+                      FL_COLOR );
 
 
 #define flps_rectf( x, y, w, h, c )   flps_rectangle( 1, x, y, w, h, c )
@@ -207,7 +208,7 @@ extern void flps_draw_box( int,
                            int,
                            int,
                            int,
-                           long,
+                           FL_COLOR,
                            int );
 
 extern void flps_draw_tbox( int,
@@ -215,7 +216,7 @@ extern void flps_draw_tbox( int,
                             int,
                             int,
                             int,
-                            long,
+                            FL_COLOR,
                             int );
 
 extern void flps_draw_frame( int,
@@ -223,7 +224,7 @@ extern void flps_draw_frame( int,
                              int,
                              int,
                              int,
-                             long,
+                             FL_COLOR,
                              int );
 
 extern void flps_draw_checkbox( int,
@@ -231,7 +232,7 @@ extern void flps_draw_checkbox( int,
                                 int,
                                 int,
                                 int,
-                                long,
+                                FL_COLOR,
                                 int );
 
 
@@ -242,7 +243,7 @@ extern void flps_draw_text( int,
                             int,
                             int,
                             int,
-                            long,
+                            FL_COLOR,
                             int,
                             int,
                             const char * );
@@ -252,7 +253,7 @@ extern void flps_draw_text_beside( int,
                                    int,
                                    int,
                                    int,
-                                   long,
+                                   FL_COLOR,
                                    int,
                                    int,
                                    const char * );
@@ -290,7 +291,7 @@ extern void flps_output( const char *,
 extern void flps_set_font( int,
                            int );
 
-extern int get_gray255( long );
+extern int get_gray255( FL_COLOR );
 
 extern void get_scale_unit( int,
                             float *,
@@ -309,7 +310,7 @@ extern void flps_unset_clipping( void );
 
 extern void flps_apply_gamma( float );
 
-extern int flps_get_namedcolor( const char * );
+extern FL_COLOR flps_get_namedcolor( const char * );
 
 
 #define PS_SPECIAL( c )  (    ( c ) == '('   \

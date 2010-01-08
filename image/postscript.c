@@ -637,7 +637,7 @@ static void
 draw_square( FL_POINT * p,
              int        n,
              int        w,
-             int        h)
+             int        h )
 {
     int w2 = w / 2,
         h2 = h / 2;
@@ -772,17 +772,14 @@ ps_draw_xyplot( FL_OBJECT * ob )
         n2,
         nxp,
         newn;
-    void ( * drawsymbol )( FL_POINT *,
-                           int,
-                           int,
-                           int);
+    void ( * drawsymbol )( FL_POINT *, int, int, int );
     int savels = flps_get_linestyle( );
     int savelw = flps_get_linewidth( );
     int key_xs,
         key_ys;
     int dblbuffer;
-    long col,
-         savecol2;
+    FL_COLOR col,
+             savecol2;
 
     if ( ! ob->visible || ! ob->form->visible )
     {

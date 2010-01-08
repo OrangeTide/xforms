@@ -113,12 +113,12 @@ compute_rounded_corners( FL_Coord   x,
  ***************************************/
 
 void
-flps_roundrectangle( int  fill,
-                     int  x,
-                     int  y,
-                     int  w,
-                     int  h,
-                     long col )
+flps_roundrectangle( int      fill,
+                     int      x,
+                     int      y,
+                     int      w,
+                     int      h,
+                     FL_COLOR col )
 {
     FL_POINT point[ 5 * RN ];
     int n;
@@ -138,13 +138,13 @@ flps_roundrectangle( int  fill,
  *************************************************************{***/
 
 static void
-flps_roundedbox( int  style,
-                 int  x,
-                 int  y,
-                 int  w,
-                 int  h,
-                 long col,
-                 int  bw )
+flps_roundedbox( int      style,
+                 int      x,
+                 int      y,
+                 int      w,
+                 int      h,
+                 FL_COLOR col,
+                 int      bw )
 {
     FL_POINT point[ 5 * RN + 2 ];
     int n,
@@ -182,13 +182,13 @@ flps_roundedbox( int  style,
  ***************************************/
 
 static void
-flps_ovalbox( int  style,
-              int  x,
-              int  y,
-              int  w,
-              int  h,
-              long col,
-              int  bw )
+flps_ovalbox( int      style,
+              int      x,
+              int      y,
+              int      w,
+              int      h,
+              FL_COLOR col,
+              int      bw )
 {
     int lw = FL_abs( bw ),
         cr = lw / 2;
@@ -275,13 +275,13 @@ flps_ovalbox( int  style,
  ***************************************/
 
 static void
-flps_foldertab_box( int  style,
-                    int  x,
-                    int  y,
-                    int  w,
-                    int  h,
-                    long col,
-                    int  bw )
+flps_foldertab_box( int      style,
+                    int      x,
+                    int      y,
+                    int      w,
+                    int      h,
+                    FL_COLOR col,
+                    int      bw )
 {
     float ctr,
           right,
@@ -365,13 +365,13 @@ flps_foldertab_box( int  style,
  ***************************************/
 
 void
-flps_draw_tbox( int  style,
-                int  x,
-                int  y,
-                int  w,
-                int  h,
-                long col,
-                int  bw )
+flps_draw_tbox( int      style,
+                int      x,
+                int      y,
+                int      w,
+                int      h,
+                FL_COLOR col,
+                int      bw )
 {
     FL_POINT point[ 8 ],
              *fp;
@@ -450,13 +450,13 @@ flps_draw_tbox( int  style,
  ***************************************/
 
 void
-flps_draw_box( int  style,
-               int  x,
-               int  y,
-               int  w,
-               int  h,
-               long col,
-               int  bw_in )
+flps_draw_box( int      style,
+               int      x,
+               int      y,
+               int      w,
+               int      h,
+               FL_COLOR col,
+               int      bw_in )
 {
     int border,
         B;
@@ -609,13 +609,13 @@ flps_draw_box( int  style,
  ***************************************/
 
 void
-flps_draw_frame( int  style,
-                 int  x,
-                 int  y,
-                 int  w,
-                 int  h,
-                 long col  FL_UNUSED_ARG,
-                 int  bw )
+flps_draw_frame( int      style,
+                 int      x,
+                 int      y,
+                 int      w,
+                 int      h,
+                 FL_COLOR col  FL_UNUSED_ARG,
+                 int      bw )
 {
     int border;
     int B;
@@ -698,13 +698,13 @@ flps_draw_frame( int  style,
  ***************************************/
 
 void
-flps_draw_checkbox( int  type,
-                    int  x,
-                    int  y,
-                    int  w,
-                    int  h,
-                    long col,
-                    int bw )
+flps_draw_checkbox( int      type,
+                    int      x,
+                    int      y,
+                    int      w,
+                    int      h,
+                    FL_COLOR col,
+                    int      bw )
 {
     FL_POINT xpoint[ 6 ],
              *xp;

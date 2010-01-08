@@ -809,22 +809,22 @@ FL_EXPORT void flps_arc( int,
 						 int,
 						 int,
 						 int,
-						 long );
+						 FL_COLOR );
 
 FL_EXPORT void flps_circ( int,
 						  int,
 						  int,
 						  int,
-						  long );
+						  FL_COLOR );
 
-FL_EXPORT void flps_color( long );
+FL_EXPORT void flps_color( FL_COLOR col );
 
 FL_EXPORT void flps_draw_box( int,
 							  int,
 							  int,
 							  int,
 							  int,
-							  long,
+							  FL_COLOR,
 							  int );
 
 FL_EXPORT void flps_draw_checkbox( int,
@@ -832,7 +832,7 @@ FL_EXPORT void flps_draw_checkbox( int,
 								   int,
 								   int,
 								   int,
-								   long,
+								   FL_COLOR,
 								   int );
 
 FL_EXPORT void flps_draw_frame( int,
@@ -840,7 +840,7 @@ FL_EXPORT void flps_draw_frame( int,
 								int,
 								int,
 								int,
-								long,
+								FL_COLOR,
 								int );
 
 FL_EXPORT int flps_draw_symbol( const char *,
@@ -848,14 +848,14 @@ FL_EXPORT int flps_draw_symbol( const char *,
 								int,
 								int,
 								int,
-								long );
+								FL_COLOR );
 
 FL_EXPORT void flps_draw_tbox( int,
 							   int,
 							   int,
 							   int,
 							   int,
-							   long,
+							   FL_COLOR,
 							   int );
 
 FL_EXPORT void flps_draw_text( int,
@@ -863,7 +863,7 @@ FL_EXPORT void flps_draw_text( int,
 							   int,
 							   int,
 							   int,
-							   long,
+							   FL_COLOR,
 							   int,
 							   int,
 							   const char * );
@@ -873,7 +873,7 @@ FL_EXPORT void flps_draw_text_beside( int,
 									  int,
 									  int,
 									  int,
-									  long,
+									  FL_COLOR,
 									  int,
 									  int,
 									  const char * );
@@ -887,13 +887,13 @@ FL_EXPORT void flps_emit_header( const char *,
 
 FL_EXPORT void flps_emit_prolog( void );
 
-FL_EXPORT int flps_get_gray255( long );
+FL_EXPORT int flps_get_gray255( FL_COLOR );
 
 FL_EXPORT int flps_get_linestyle( void );
 
 FL_EXPORT int flps_get_linewidth( void );
 
-FL_EXPORT int flps_get_namedcolor( const char * );
+FL_EXPORT FL_COLOR flps_get_namedcolor( const char * );
 
 FL_EXPORT FLPS_CONTROL * flps_init( void );
 
@@ -909,11 +909,11 @@ FL_EXPORT void flps_line( int,
 						  int,
 						  int,
 						  int,
-						  long );
+						  FL_COLOR );
 
 FL_EXPORT void flps_lines( FL_POINT *,
 						   int,
-						   long );
+						   FL_COLOR );
 
 FL_EXPORT void flps_linestyle( int );
 
@@ -929,7 +929,7 @@ FL_EXPORT void flps_oval( int,
 						  int,
 						  int,
 						  int,
-						  long );
+						  FL_COLOR );
 
 FL_EXPORT void flps_pieslice( int,
 							  int,
@@ -938,19 +938,19 @@ FL_EXPORT void flps_pieslice( int,
 							  int,
 							  int,
 							  int,
-							  long );
+							  FL_COLOR );
 
 FL_EXPORT void flps_poly( int,
 						  FL_POINT *,
 						  int,
-						  long );
+						  FL_COLOR );
 
 FL_EXPORT void flps_rectangle( int,
 							   int,
 							   int,
 							   int,
 							   int,
-							   long );
+							   FL_COLOR );
 
 FL_EXPORT void flps_reset_cache( void );
 
@@ -967,7 +967,7 @@ FL_EXPORT void flps_roundrectangle( int,
 									int,
 									int,
 									int,
-									long );
+									FL_COLOR );
 
 FL_EXPORT void flps_set_clipping( int,
 								  int,

@@ -312,11 +312,11 @@ flps_get_linestyle( void )
  ***************************************/
 
 void
-flps_line( int  xi,
-           int  yi,
-           int  xf,
-           int  yf,
-           long col )
+flps_line( int      xi,
+           int      yi,
+           int      xf,
+           int      yf,
+           FL_COLOR col )
 {
     flps_color( col );
     flps_output( "%d %d %d %d L S\n", xf, yf, xi, yi );
@@ -334,7 +334,7 @@ flps_line( int  xi,
 static void
 small_flps_lines( FL_POINT * xp,
                   int        n,
-                  long       col )
+                  FL_COLOR   col )
 {
     FL_POINT *xps = xp + n;
     int cnt = 1;
@@ -359,7 +359,7 @@ small_flps_lines( FL_POINT * xp,
 void
 flps_lines( FL_POINT * xp,
             int        n,
-            long       col )
+            FL_COLOR   col )
 {
     int k = n / PSMAXP,
         r = n % PSMAXP;
@@ -383,7 +383,7 @@ void
 flps_poly( int        fill,
            FL_POINT * xp,
            int        n,
-           long       col )
+           FL_COLOR   col )
 {
     FL_POINT *xps = xp + n;
     int cnt = 1;
@@ -405,12 +405,12 @@ flps_poly( int        fill,
  ***************************************/
 
 void
-flps_rectangle( int  fill,
-                int  x,
-                int  y,
-                int  w,
-                int  h,
-                long col)
+flps_rectangle( int      fill,
+                int      x,
+                int      y,
+                int      w,
+                int      h,
+                FL_COLOR col)
 {
     flps_color( col );
     flps_output( "%d %d %d %d %d %d %d %d 4 P",
@@ -423,12 +423,12 @@ flps_rectangle( int  fill,
  ***************************************/
 
 void
-flps_oval( int  fill,
-           int  x,
-           int  y,
-           int  w,
-           int  h,
-           long col )
+flps_oval( int      fill,
+           int      x,
+           int      y,
+           int      w,
+           int      h,
+           FL_COLOR col )
 {
     flps_pieslice( fill, x, y, w, h, 0.0, 3600.0, col );
 }
@@ -438,11 +438,11 @@ flps_oval( int  fill,
  ***************************************/
 
 void
-flps_circ( int  fill,
-           int  x,
-           int  y,
-           int  r,
-           long col )
+flps_circ( int      fill,
+           int      x,
+           int      y,
+           int      r,
+           FL_COLOR col )
 {
     flps_color( col );
     flps_output( "newpath %d %d %d 0 360 arc %c\n", x, y, r, "SF"[ fill ] );
@@ -450,18 +450,18 @@ flps_circ( int  fill,
 
 
 /***************************************
- * draw an circular arc, optionally filled. Angle t1 and t2 are in one-tenth of
+ * Draw an circular arc, optionally filled. Angle t1 and t2 are in one-tenth of
  * a degree
  ***************************************/
 
 void
-flps_arc( int  fill,
-          int  x,
-          int  y,
-          int  r,
-          int  t1,
-          int  t2,
-          long col )
+flps_arc( int      fill,
+          int      x,
+          int      y,
+          int      r,
+          int      t1,
+          int      t2,
+          FL_COLOR col )
 {
     flps_color( col );
     flps_output( "newpath %d %d %d %.1f %.1f arc %c\n",
@@ -470,18 +470,18 @@ flps_arc( int  fill,
 
 
 /***************************************
- * only fill does a pie slice
+ * Only fill does a pie slice
  ***************************************/
 
 void
-flps_pieslice( int  fill,
-               int  x,
-               int  y,
-               int  w,
-               int  h,
-               int  t1,
-               int  t2,
-               long col )
+flps_pieslice( int      fill,
+               int      x,
+               int      y,
+               int      w,
+               int      h,
+               int      t1,
+               int      t2,
+               FL_COLOR col )
 {
     float sx = 1.0,
           sy = ( float ) h / w;
@@ -516,42 +516,165 @@ flps_pieslice( int  fill,
 
 static FLI_IMAP fl_imap[ ] =
 {
-    { NV( FL_BLACK ), 0, 0, 0, 0, 0 },
-    { NV( FL_WHITE ), 255, 255, 255, 0, 0 },
-
-    { NV( FL_COL1 ), 161, 161, 161, 0, 0 },         /* default color, gray63 */
-    { NV( FL_MCOL ), 191, 191, 191, 0, 0 },         /* used as magic, gray75 */
-    { NV( FL_RIGHT_BCOL ), 41, 41, 41, 0, 0 },      /* right  gray16  */
-    { NV( FL_BOTTOM_BCOL ), 89, 89, 89, 0, 0 },     /* bottom  gray35 */
-    { NV( FL_LEFT_BCOL ), 222, 222, 222, 0, 0 },    /* left color  gray87 */
-
-    { NV( FL_SLATEBLUE ), 113, 113, 198, 0, 0 },
-    { NV( FL_INDIANRED ), 198, 113, 113, 0, 0 },
-
-    { NV( FL_RED ), 255, 0, 0, 0, 0 },
-    { NV( FL_BLUE ), 0, 0, 255, 0, 0 },
-    { NV( FL_GREEN ), 0, 255, 0, 0, 0 },
-    { NV( FL_YELLOW ), 255, 255, 0, 0, 0 },
-    { NV( FL_MAGENTA ), 255, 0, 255, 0, 0 },
-    { NV( FL_CYAN ), 0, 255, 255, 0, 0 },
-    { NV( FL_TOMATO ), 255, 99, 71, 0, 0 },
-
-    { NV(FL_INACTIVE ), 110, 110, 110, 0, 0 },      /* gray43       */
-    { NV(FL_TOP_BCOL ), 204, 204, 204, 0, 0 },      /* top  gray80  */
-
-    { NV( FL_PALEGREEN ), 113, 198, 113, 0, 0 },
-    { NV( FL_DARKGOLD ), 205, 149, 10, 0, 0 },
-    { NV( FL_ORCHID ), 205, 105, 201, 0, 0 },
-    { NV( FL_DARKCYAN ), 40, 170, 175, 0, 0 },
-    { NV( FL_DARKTOMATO ), 139, 54, 38, 0, 0 },
-    { NV( FL_WHEAT ), 255, 231, 155, 0, 0 },
-    { NV( FL_DARKORANGE ), 255, 128, 0, 0, 0 },
-    { NV( FL_DEEPPINK ), 255, 0, 128, 0, 0 },
-    { NV( FL_CHARTREUSE ), 128, 255, 0, 0, 0 },
-    { NV( FL_DARKVIOLET ), 128, 0, 255, 0, 0 },
-    { NV( FL_SPRINGGREEN ), 0, 255, 128, 0, 0 },
-    { NV( FL_DODGERBLUE ), 0, 128, 255, 0, 0 },
-    { NV( FL_DOGERBLUE ), 0, 128, 255, 0, 0 },
+    { NV( FL_BLACK                ),   0,   0,   0, 0, 0 },
+    { NV( FL_WHITE                ), 255, 255, 255, 0, 0 },
+    { NV( FL_COL1                 ), 161, 161, 161, 0, 0 },
+    { NV( FL_BOTTOM_BCOL          ),  89,  89,  89, 0, 0 },
+    { NV( FL_RIGHT_BCOL           ),  41,  41,  41, 0, 0 },
+    { NV( FL_MCOL                 ), 191, 191, 191, 0, 0 },
+    { NV( FL_LEFT_BCOL            ), 222, 222, 222, 0, 0 },
+    { NV( FL_SLATEBLUE            ), 113, 113, 198, 0, 0 },
+    { NV( FL_INDIANRED            ), 198, 113, 113, 0, 0 },
+    { NV( FL_RED                  ), 255,   0,   0, 0, 0 },
+    { NV( FL_BLUE                 ),   0,   0, 255, 0, 0 },
+    { NV( FL_GREEN                ),   0, 255,   0, 0, 0 },
+    { NV( FL_YELLOW               ), 255, 255,   0, 0, 0 },
+    { NV( FL_MAGENTA              ), 255,   0, 255, 0, 0 },
+    { NV( FL_CYAN                 ),   0, 255, 255, 0, 0 },
+    { NV( FL_TOMATO               ), 255,  99,  71, 0, 0 },
+    { NV(FL_INACTIVE              ), 110, 110, 110, 0, 0 },
+    { NV(FL_TOP_BCOL              ), 204, 204, 204, 0, 0 },
+    { NV( FL_PALEGREEN            ), 113, 198, 113, 0, 0 },
+    { NV( FL_DARKGOLD             ), 205, 149,  10, 0, 0 },
+    { NV( FL_ORCHID               ), 205, 105, 201, 0, 0 },
+    { NV( FL_DARKCYAN             ),  40, 170, 175, 0, 0 },
+    { NV( FL_DARKTOMATO           ), 139,  54,  38, 0, 0 },
+    { NV( FL_WHEAT                ), 255, 231, 155, 0, 0 },
+    { NV( FL_DARKORANGE           ), 255, 128,   0, 0, 0 },
+    { NV( FL_DEEPPINK             ), 255,   0, 128, 0, 0 },
+    { NV( FL_CHARTREUSE           ), 128, 255,   0, 0, 0 },
+    { NV( FL_DARKVIOLET           ), 128,   0, 255, 0, 0 },
+    { NV( FL_SPRINGGREEN          ),   0, 255, 128, 0, 0 },
+    { NV( FL_DODGERBLUE           ),   0, 128, 255, 0, 0 },
+    { NV( FL_DOGERBLUE            ),   0, 128, 255, 0, 0 },
+	{ NV( FL_LIGHTER_COL1         ), 204, 204, 204, 0, 0 },
+	{ NV( FL_DARKER_COL1          ), 161, 161, 161, 0, 0 },
+	{ NV( FL_ALICEBLUE            ), 240, 248, 255, 0, 0 },
+	{ NV( FL_ANTIQUEWHITE         ), 250, 235, 215, 0, 0 },
+	{ NV( FL_AQUA                 ),   0, 255, 255, 0, 0 },
+	{ NV( FL_AQUAMARINE           ), 127, 255, 212, 0, 0 },
+	{ NV( FL_AZURE                ), 240, 255, 255, 0, 0 },
+	{ NV( FL_BEIGE                ), 245, 245, 220, 0, 0 },
+	{ NV( FL_BISQUE               ), 255, 228, 196, 0, 0 },
+	{ NV( FL_BLANCHEDALMOND       ), 255, 235, 205, 0, 0 },
+	{ NV( FL_BLUEVIOLET           ), 138,  43, 226, 0, 0 },
+	{ NV( FL_BROWN                ), 165,  42,  42, 0, 0 },
+	{ NV( FL_BURLYWOOD            ), 222, 184, 135, 0, 0 },
+	{ NV( FL_CADETBLUE            ),  95, 158, 160, 0, 0 },
+	{ NV( FL_CHOCOLATE            ), 210, 105,  30, 0, 0 },
+	{ NV( FL_CORAL                ), 255, 127,  80, 0, 0 },
+	{ NV( FL_CORNFLOWERBLUE       ), 100, 149, 237, 0, 0 },
+	{ NV( FL_CORNSILK             ), 255, 248, 220, 0, 0 },
+	{ NV( FL_CRIMSON              ), 220,  20,  60, 0, 0 },
+	{ NV( FL_DARKBLUE             ),   0,   0, 139, 0, 0 },
+	{ NV( FL_DARKGOLDENROD        ), 184, 134,  11, 0, 0 },
+	{ NV( FL_DARKGRAY             ), 169, 169, 169, 0, 0 },
+	{ NV( FL_DARKGREEN            ),   0, 100,   0, 0, 0 },
+	{ NV( FL_DARKGREY             ), 169, 169, 169, 0, 0 },
+	{ NV( FL_DARKKHAKI            ), 189, 183, 107, 0, 0 },
+	{ NV( FL_DARKMAGENTA          ), 139,   0, 139, 0, 0 },
+	{ NV( FL_DARKOLIVEGREEN       ),  85, 107,  47, 0, 0 },
+	{ NV( FL_DARKORCHID           ), 153,  50, 204, 0, 0 },
+	{ NV( FL_DARKRED              ), 139,   0,   0, 0, 0 },
+	{ NV( FL_DARKSALMON           ), 233, 150, 122, 0, 0 },
+	{ NV( FL_DARKSEAGREEN         ), 143, 188, 143, 0, 0 },
+	{ NV( FL_DARKSLATEBLUE        ),  72,  61, 139, 0, 0 },
+	{ NV( FL_DARKSLATEGRAY        ),  47,  79,  79, 0, 0 },
+	{ NV( FL_DARKSLATEGREY        ),  47,  79,  79, 0, 0 },
+	{ NV( FL_DARKTURQUOISE        ),   0, 206, 209, 0, 0 },
+	{ NV( FL_DEEPSKYBLUE          ),   0, 191, 255, 0, 0 },
+	{ NV( FL_DIMGRAY              ), 105, 105, 105, 0, 0 },
+	{ NV( FL_DIMGREY              ), 105, 105, 105, 0, 0 },
+	{ NV( FL_FIREBRICK            ), 178,  34,  34, 0, 0 },
+	{ NV( FL_FLORALWHITE          ), 255, 250, 240, 0, 0 },
+	{ NV( FL_FORESTGREEN          ),  34, 139,  34, 0, 0 },
+	{ NV( FL_FUCHSIA              ), 255,   0, 255, 0, 0 },
+	{ NV( FL_GAINSBORO            ), 220, 220, 220, 0, 0 },
+	{ NV( FL_GHOSTWHITE           ), 248, 248, 255, 0, 0 },
+	{ NV( FL_GOLD                 ), 255, 215,   0, 0, 0 },
+	{ NV( FL_GOLDENROD            ), 218, 165,  32, 0, 0 },
+	{ NV( FL_GRAY                 ), 128, 128, 128, 0, 0 },
+	{ NV( FL_GREENYELLOW          ), 173, 255,  47, 0, 0 },
+	{ NV( FL_GREY                 ), 128, 128, 128, 0, 0 },
+	{ NV( FL_HONEYDEW             ), 240, 255, 240, 0, 0 },
+	{ NV( FL_HOTPINK              ), 255, 105, 180, 0, 0 },
+	{ NV( FL_INDIGO               ),  75,   0, 130, 0, 0 },
+	{ NV( FL_IVORY                ), 255, 255, 240, 0, 0 },
+	{ NV( FL_KHAKI                ), 240, 230, 140, 0, 0 },
+	{ NV( FL_LAVENDER             ), 230, 230, 250, 0, 0 },
+	{ NV( FL_LAVENDERBLUSH        ), 255, 240, 245, 0, 0 },
+	{ NV( FL_LAWNGREEN            ), 124, 252,   0, 0, 0 },
+	{ NV( FL_LEMONCHIFFON         ), 255, 250, 205, 0, 0 },
+	{ NV( FL_LIGHTBLUE            ), 173, 216, 230, 0, 0 },
+	{ NV( FL_LIGHTCORAL           ), 240, 128, 128, 0, 0 },
+	{ NV( FL_LIGHTCYAN            ), 224, 255, 255, 0, 0 },
+	{ NV( FL_LIGHTGOLDENRODYELLOW ), 250, 250, 210, 0, 0 },
+	{ NV( FL_LIGHTGRAY            ), 211, 211, 211, 0, 0 },
+	{ NV( FL_LIGHTGREEN           ), 144, 238, 144, 0, 0 },
+	{ NV( FL_LIGHTGREY            ), 211, 211, 211, 0, 0 },
+	{ NV( FL_LIGHTPINK            ), 255, 182, 193, 0, 0 },
+	{ NV( FL_LIGHTSALMON          ), 255, 160, 122, 0, 0 },
+	{ NV( FL_LIGHTSEAGREEN        ),  32, 178, 170, 0, 0 },
+	{ NV( FL_LIGHTSKYBLUE         ), 135, 206, 250, 0, 0 },
+	{ NV( FL_LIGHTSLATEGRAY       ), 119, 136, 153, 0, 0 },
+	{ NV( FL_LIGHTSLATEGREY       ), 119, 136, 153, 0, 0 },
+	{ NV( FL_LIGHTSTEELBLUE       ), 176, 196, 222, 0, 0 },
+	{ NV( FL_LIGHTYELLOW          ), 255, 255, 224, 0, 0 },
+	{ NV( FL_LIME                 ),   0, 255,   0, 0, 0 },
+	{ NV( FL_LIMEGREEN            ),  50, 205,  50, 0, 0 },
+	{ NV( FL_LINEN                ), 250, 240, 230, 0, 0 },
+	{ NV( FL_MAROON               ), 128,   0,   0, 0, 0 },
+	{ NV( FL_MEDIUMAQUAMARINE     ), 102, 205, 170, 0, 0 },
+	{ NV( FL_MEDIUMBLUE           ),   0,   0, 205, 0, 0 },
+	{ NV( FL_MEDIUMORCHID         ), 186,  85, 211, 0, 0 },
+	{ NV( FL_MEDIUMPURPLE         ), 147, 112, 219, 0, 0 },
+	{ NV( FL_MEDIUMSEAGREEN       ),  60, 179, 113, 0, 0 },
+	{ NV( FL_MEDIUMSLATEBLUE      ), 123, 104, 238, 0, 0 },
+	{ NV( FL_MEDIUMSPRINGGREEN    ),   0, 250, 154, 0, 0 },
+	{ NV( FL_MEDIUMTURQUOISE      ),  72, 209, 204, 0, 0 },
+	{ NV( FL_MEDIUMVIOLETRED      ), 199,  21, 133, 0, 0 },
+	{ NV( FL_MIDNIGHTBLUE         ),  25,  25, 112, 0, 0 },
+	{ NV( FL_MINTCREAM            ), 245, 255, 250, 0, 0 },
+	{ NV( FL_MISTYROSE            ), 255, 228, 225, 0, 0 },
+	{ NV( FL_MOCCASIN             ), 255, 228, 181, 0, 0 },
+	{ NV( FL_NAVAJOWHITE          ), 255, 222, 173, 0, 0 },
+	{ NV( FL_NAVY                 ),   0,   0, 128, 0, 0 },
+	{ NV( FL_OLDLACE              ), 253, 245, 230, 0, 0 },
+	{ NV( FL_OLIVE                ), 128, 128,   0, 0, 0 },
+	{ NV( FL_OLIVEDRAB            ), 107, 142,  35, 0, 0 },
+	{ NV( FL_ORANGE               ), 255, 165,   0, 0, 0 },
+	{ NV( FL_ORANGERED            ), 255,  69,   0, 0, 0 },
+	{ NV( FL_PALEGOLDENROD        ), 238, 232, 170, 0, 0 },
+	{ NV( FL_PALETURQUOISE        ), 175, 238, 238, 0, 0 },
+	{ NV( FL_PALEVIOLETRED        ), 219, 112, 147, 0, 0 },
+	{ NV( FL_PAPAYAWHIP           ), 255, 239, 213, 0, 0 },
+	{ NV( FL_PEACHPUFF            ), 255, 218, 185, 0, 0 },
+	{ NV( FL_PERU                 ), 205, 133,  63, 0, 0 },
+	{ NV( FL_PINK                 ), 255, 192, 203, 0, 0 },
+	{ NV( FL_PLUM                 ), 221, 160, 221, 0, 0 },
+	{ NV( FL_POWDERBLUE           ), 176, 224, 230, 0, 0 },
+	{ NV( FL_PURPLE               ), 128,   0, 128, 0, 0 },
+	{ NV( FL_ROSYBROWN            ), 188, 143, 143, 0, 0 },
+	{ NV( FL_ROYALBLUE            ),  65, 105, 225, 0, 0 },
+	{ NV( FL_SADDLEBROWN          ), 139,  69,  19, 0, 0 },
+	{ NV( FL_SALMON               ), 250, 128, 114, 0, 0 },
+	{ NV( FL_SANDYBROWN           ), 244, 164,  96, 0, 0 },
+	{ NV( FL_SEAGREEN             ),  46, 139,  87, 0, 0 },
+	{ NV( FL_SEASHELL             ), 255, 245, 238, 0, 0 },
+	{ NV( FL_SIENNA               ), 160,  82,  45, 0, 0 },
+	{ NV( FL_SILVER               ), 192, 192, 192, 0, 0 },
+	{ NV( FL_SKYBLUE              ), 135, 206, 235, 0, 0 },
+	{ NV( FL_SLATEGRAY            ), 112, 128, 144, 0, 0 },
+	{ NV( FL_SLATEGREY            ), 112, 128, 144, 0, 0 },
+	{ NV( FL_SNOW                 ), 255, 250, 250, 0, 0 },
+	{ NV( FL_STEELBLUE            ),  70, 130, 180, 0, 0 },
+	{ NV( FL_TAN                  ), 210, 180, 140, 0, 0 },
+	{ NV( FL_TEAL                 ),   0, 128, 128, 0, 0 },
+	{ NV( FL_THISTLE              ), 216, 191, 216, 0, 0 },
+	{ NV( FL_TURQUOISE            ),  64, 224, 208, 0, 0 },
+	{ NV( FL_VIOLET               ), 238, 130, 238, 0, 0 },
+	{ NV( FL_WHITESMOKE           ), 245, 245, 245, 0, 0 },
+	{ NV( FL_YELLOWGREEN          ), 154, 205,  50, 0, 0 }
 };
 
 #define builtin  ( sizeof fl_imap / sizeof *fl_imap )
@@ -593,16 +716,16 @@ flps_apply_gamma( float gamma )
  ***************************************/
 
 static void
-flps_query_imap( long   col,
-                 int  * r,
-                 int  * g,
-                 int  * b )
+flps_query_imap( FL_COLOR   col,
+                 int      * r,
+                 int      * g,
+                 int      * b )
 {
     FLI_IMAP *flmap = fl_imap,
              *flmape = flmap + builtin;
 
     for ( ; flmap < flmape; flmap++ )
-        if ( col == ( long ) flmap->index )
+        if ( col == flmap->index )
         {
             *r = flmap->r;
             *g = flmap->g;
@@ -640,7 +763,7 @@ flps_invalidate_color_cache( void )
  ***************************************/
 
 void
-flps_color( long color )
+flps_color( FL_COLOR color )
 {
     int r = 0,
         g = 0,
@@ -654,7 +777,7 @@ flps_color( long color )
     else
         flps_query_imap( color, &r, &g, &b );
 
-    if ( FL_PACK( r, g, b ) != flps->cur_color )
+    if ( ( FL_COLOR ) FL_PACK( r, g, b ) != flps->cur_color )
         flps_rgbcolor( r, g, b );
 }
 
@@ -669,7 +792,7 @@ flps_rgbcolor( int r,
 {
     unsigned int packed = FL_PACK( r, g, b );
 
-    if ( flps->cur_color == ( int ) packed )
+    if ( flps->cur_color == packed )
         return;
 
     if ( flps->ps_color == FLPS_COLOR && ( r != g || r != b ) )
@@ -687,7 +810,7 @@ flps_rgbcolor( int r,
  ***************************************/
 
 int
-flps_get_gray255( long color )
+flps_get_gray255( FL_COLOR color )
 {
     int r = 0,
         g = 0,
@@ -705,7 +828,7 @@ flps_get_gray255( long color )
 /***************************************
  ***************************************/
 
-int
+FL_COLOR
 flps_get_namedcolor( const char * s )
 {
     FLI_IMAP *flmap = fl_imap,
@@ -722,7 +845,7 @@ flps_get_namedcolor( const char * s )
 
 /************** Handle built-in symbols. ****************{*/
 
-typedef void ( * PSdrawit )( int, int, int, int, int, long );
+typedef void ( * PSdrawit )( int, int, int, int, int, FL_COLOR );
 
 typedef struct
 {
@@ -740,12 +863,12 @@ typedef struct
  ***************************************/
 
 static void
-draw_dnline( int x      FL_UNUSED_ARG,
-             int y      FL_UNUSED_ARG,
-             int w,
-             int h,
-             int angle  FL_UNUSED_ARG,
-             long col   FL_UNUSED_ARG )
+draw_dnline( int     x      FL_UNUSED_ARG,
+             int     y      FL_UNUSED_ARG,
+             int     w,
+             int     h,
+             int     angle  FL_UNUSED_ARG,
+             FL_COLOR col   FL_UNUSED_ARG )
 {
     float t = 0.2,
           len;
@@ -769,12 +892,12 @@ draw_dnline( int x      FL_UNUSED_ARG,
  ***************************************/
 
 static void
-draw_upline( int  x      FL_UNUSED_ARG,
-             int  y      FL_UNUSED_ARG,
-             int  w,
-             int  h,
-             int  angle  FL_UNUSED_ARG,
-             long col    FL_UNUSED_ARG )
+draw_upline( int      x      FL_UNUSED_ARG,
+             int      y      FL_UNUSED_ARG,
+             int      w,
+             int      h,
+             int      angle  FL_UNUSED_ARG,
+             FL_COLOR col    FL_UNUSED_ARG )
 {
     float t = 0.033;
 
@@ -795,12 +918,12 @@ draw_upline( int  x      FL_UNUSED_ARG,
  ***************************************/
 
 static void
-draw_uparrow( int  x,
-              int  y,
-              int  w,
-              int  h,
-              int  angle,
-              long col  FL_UNUSED_ARG )
+draw_uparrow( int      x,
+              int      y,
+              int      w,
+              int      h,
+              int      angle,
+              FL_COLOR col  FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
@@ -846,12 +969,12 @@ draw_uparrow( int  x,
  ***************************************/
 
 static void
-draw_dnarrow( int  x,
-              int  y,
-              int  w,
-              int  h,
-              int  angle,
-              long col   FL_UNUSED_ARG )
+draw_dnarrow( int      x,
+              int      y,
+              int      w,
+              int      h,
+              int      angle,
+              FL_COLOR col   FL_UNUSED_ARG )
 {
     float yc = y + h * 0.5;
     float xc = x + w * 0.5;
@@ -899,12 +1022,12 @@ draw_dnarrow( int  x,
  ***************************************/
 
 static void
-draw_ripple_lines( int  x,
-                   int  y,
-                   int  w,
-                   int  h,
-                   int  angle,
-                   long col  FL_UNUSED_ARG )
+draw_ripple_lines( int      x,
+                   int      y,
+                   int      w,
+                   int      h,
+                   int      angle,
+                   FL_COLOR col  FL_UNUSED_ARG )
 {
     float ym = y + h / 2,
           ys;
@@ -953,12 +1076,12 @@ draw_ripple_lines( int  x,
  ***************************************/
 
 static void
-draw_bararrowhead( int  x,
-                   int  y,
-                   int  w,
-                   int  h,
-                   int  angle,
-                   long col )
+draw_bararrowhead( int      x,
+                   int      y,
+                   int      w,
+                   int      h,
+                   int      angle,
+                   FL_COLOR col )
 {
     float xc = x + 0.5 * w,
           yc = y + 0.5 * h;
@@ -1162,7 +1285,7 @@ flps_draw_symbol( const char * label,
                   int          y,
                   int          w,
                   int          h,
-                  long         col )
+                  FL_COLOR     col )
 {
     int pos,
         shift,
