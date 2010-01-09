@@ -1,3 +1,21 @@
+2010-01-09 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Lots of clean-up in header files to address inconsistencies
+	(and in some cases also function prototypes had to be changed)
+	as pointed out by LukenShiro.
+
+	* lib/input.c: Bug with return behaviour of FL_MULTI_INPUT
+	objects fixed.
+
+	* lib/popup.c, lib/nmenu.c: Functions added for adding
+	and modifying popup entries using a FL_POPUP_ITEM added.
+
+	* lib/objects.c: Several getter functions for object
+	properties added
+
+	* gl/glcanvas.c: Bug about missing requested event and
+	pointed out by Dave Strang fixed.
+
 2009-12-21 Jens Thoms Toerring    <jt@toerring.de>
 
 	Some problems with new forms.h pointed out by Lukenshiro
