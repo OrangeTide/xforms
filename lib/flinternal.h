@@ -483,7 +483,9 @@ typedef struct fli_io_event_ {
 
 /* signals */
 
-typedef RETSIGTYPE ( * FL_OSSIG_HANDLER )( int );
+#if ! defined HAVE_SIGACTION
+typedef RETSIGTYPE ( * FLI_OSSIG_HANDLER )( int );
+#endif
 
 typedef struct fli_signallist_ {
     struct fli_signallist_ * next;
@@ -491,7 +493,7 @@ typedef struct fli_signallist_ {
 #if defined HAVE_SIGACTION
     struct sigaction         old_sigact;
 #else
-    FL_OSSIG_HANDLER         ocallback; /* default OS signal handler */
+    FLI_OSSIG_HANDLER        ocallback; /* default OS signal handler */
 #endif
     void                   * data;
     int                      signum;

@@ -1396,10 +1396,10 @@ fli_hide_and_get_region( FL_OBJECT * obj,
     if ( obj->objclass == FL_CANVAS || obj->objclass == FL_GLCANVAS )
     {
         fl_hide_canvas( obj );
-        extra = 3;
-        xrect.x = obj->x - extra;
-        xrect.y = obj->y - extra;
-        xrect.width = obj->w + 2 * extra + 1;
+        extra        = 3;
+        xrect.x      = obj->x - extra;
+        xrect.y      = obj->y - extra;
+        xrect.width  = obj->w + 2 * extra + 1;
         xrect.height = obj->h + 2 * extra + 1;
     }
     else
@@ -1408,9 +1408,9 @@ fli_hide_and_get_region( FL_OBJECT * obj,
     
         if ( obj->objclass == FL_FRAME )
         {
-            extra = FL_abs( obj->bw );
-            xrect.x -= extra;
-            xrect.y -= extra;
+            extra         = FL_abs( obj->bw );
+            xrect.x      -= extra;
+            xrect.y      -= extra;
             xrect.width  += 2 * extra + 1;
             xrect.height += 2 * extra + 1;
         }
@@ -2115,7 +2115,7 @@ objects_intersect( FL_OBJECT * obj1,
         if (    ob[ i ]->objclass == FL_CANVAS
              || ob[ i ]->objclass == FL_GLCANVAS )
         {
-            extra = 3;
+            extra        = 3;
             xrect.x      = ob[ i ]->x - extra;
             xrect.y      = ob[ i ]->y - extra;
             xrect.width  = ob[ i ]->w + 2 * extra + 1;
@@ -2127,7 +2127,7 @@ objects_intersect( FL_OBJECT * obj1,
     
             if ( ob[ i ]->objclass == FL_FRAME )
             {
-                extra = FL_abs( ob[ i ]->bw );
+                extra         = FL_abs( ob[ i ]->bw );
                 xrect.x      -= extra;
                 xrect.y      -= extra;
                 xrect.width  += 2 * extra + 1;
@@ -3258,23 +3258,22 @@ fl_get_object_bbox( FL_OBJECT * obj,
 
     if ( obj->label && *obj->label )
     {
-        int len = strlen( obj->label );
         int sw,
             sh;
         int xx,
             yy,
-            a,
-            d;
+            ascent,
+            descent;
 
-        fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label, len,
-                                 &sw, &sh );
-        fl_get_char_height( obj->lstyle, obj->lsize, &a, &d );
+        fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
+                                 strlen( obj->label ), &sw, &sh );
+        fl_get_char_height( obj->lstyle, obj->lsize, &ascent, &descent );
         fl_get_align_xy( obj->align, obj->x, obj->y, obj->w, obj->h,
-                         sw, sh + d, 3, 3, &xx, &yy );
+                         sw, sh + descent, 3, 3, &xx, &yy );
         lrect.x      = xx - 1;
         lrect.y      = yy;
         lrect.width  = sw + 1;
-        lrect.height = sh + d;
+        lrect.height = sh + descent;
     }
 
     xr = get_bounding_rect( &lrect, &orect );
@@ -3311,9 +3310,9 @@ get_object_bbox_rect( FL_OBJECT * obj,
 
     fl_get_object_bbox( obj, &x, &y, &w, &h );
 
-    xr->x = x;
-    xr->y = y;
-    xr->width = w;
+    xr->x      = x;
+    xr->y      = y;
+    xr->width  = w;
     xr->height = h;
 }
 

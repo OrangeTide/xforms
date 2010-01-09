@@ -1428,7 +1428,6 @@ handle_input( FL_OBJECT * obj,
                 if ( obj->how_return == FL_RETURN_CHANGED )
                     sp->changed = 0;
             }
-            fprintf( stderr, "PRESS %d\n", ret );
             break;
 
         case FL_FREEMEM:

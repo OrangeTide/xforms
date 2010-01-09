@@ -137,7 +137,7 @@ fl_add_signal_callback( int                 s,
 #else
             errno = 0;
             sig_rec->ocallback = signal( s, default_signal_handler );
-            if ( sig_rec->ocallback == ( FL_OSSIG_HANDLER ) - 1L || errno )
+            if ( sig_rec->ocallback == ( FLI_OSSIG_HANDLER ) - 1L || errno )
 #endif
             {
                 M_err( "fl_add_signal_callback", "Can't add handler for "

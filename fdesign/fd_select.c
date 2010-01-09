@@ -1487,19 +1487,14 @@ group_selection( void )
         goto get_new_group_name;
     }
 
-    sp = s + 1;
-
-    while ( *sp )
-    {
+    for ( sp = s + 1; *sp; sp++ )
         if (    ! isascii( ( unsigned char ) *sp )
-             || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
+             || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
         {
             fl_show_alert( "Error", "Invalid C identifier specified for group "
                            "name:", s, 0 );
             goto get_new_group_name;
         }
-        sp++;
-    }
 
     obj = add_an_object( FL_BEGIN_GROUP, -1, 0, 0, 0, 0 );
 
