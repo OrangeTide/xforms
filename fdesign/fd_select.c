@@ -274,8 +274,8 @@ compute_selbox( float * x,
                 float * h )
 {
     int i;
-    float x1 = 1.0e+37,
-          y1 = 1.0e+37,
+    float x1 =   1.0e+37,
+          y1 =   1.0e+37,
           x2 = - 1.0e+37,
           y2 = - 1.0e+37;
 
@@ -1137,7 +1137,9 @@ raise_selection( void )
     for ( i = 0; i < selnumb; i++ )
     {
         fl_delete_object( selobj[ i ] );
-        fl_add_object( cur_form, selobj[ i ] );
+        if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
+             && selobj[ i ]->objclass != FL_END_GROUP )
+            fl_add_object( cur_form, selobj[ i ] );
     }
 
     changed = 1;
@@ -1173,7 +1175,7 @@ lower_selection( void )
 
 
 static FL_OBJECT *cutbuf[ MAXSEL ]; /* Buffered objects */
-static int ncut = 0;        /* Their number */
+static int ncut = 0;                /* and their number */
 
 /***************************************
  ***************************************/
@@ -1229,7 +1231,7 @@ cut_selection( void )
 
 
 /***************************************
- * Pastes elements form buffer into form
+ * Pastes elements from buffer into form
  ***************************************/
 
 void
@@ -1257,6 +1259,10 @@ paste_selection(void)
 
     for ( i = 0; i < ncut; i++ )
     {
+        if (    selobj[ i ]->objclass == FL_BEGIN_GROUP
+             || selobj[ i ]->objclass == FL_END_GROUP )
+            continue;
+
         obj = copy_object( cutbuf[ i ], 1 );
 
         /* Fix label:  if underlining caused by cutbuf shortcut, remove it.
@@ -1317,7 +1323,7 @@ paste_selection(void)
 
 
 /***************************************
- * Copies all elements in the selection  to the buffer
+ * Copies all elements in the selection to the buffer
  ***************************************/
 
 void
@@ -1401,7 +1407,9 @@ set_selection( void *a )
     for ( selnumb = 0; ob[ selnumb ]; selnumb++ )
     {
         obj = copy_object( ob[ selnumb ], 1 );
-        fl_add_object( cur_form, obj );
+        if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
+             && selobj[ i ]->objclass != FL_END_GROUP )
+            fl_add_object( cur_form, obj );
         selobj[ selnumb ] = obj;
     }
 

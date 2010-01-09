@@ -138,10 +138,8 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 }
 
 
-/************ MAIN ROUTINES ******************/
-
 /***************************************
- * fills in the current list of groups.
+ * Fills in the current list of groups
  ***************************************/
 
 void
