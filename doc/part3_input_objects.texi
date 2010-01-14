@@ -297,7 +297,7 @@ for @code{attrib1}, it can take
 @code{FL_INPUT_DDMM} and @code{attrib2} is the separator between month
 and day. For example, to set the date format to @code{dd/mm}, use
 @example
-fl_set_input_format(ob, FL_INPUT_DDMM,'/');
+fl_set_input_format(obj, FL_INPUT_DDMM, '/');
 @end example
 For the built-in type @code{@ref{FL_DATE_INPUT}} the default is
 @code{FL_INPUT_MMDD} and the separator is @code{'/'}. There is no
@@ -308,7 +308,7 @@ The function
 @findex fl_validate_input()
 @anchor{fl_validate_input()}
 @example
-int fl_validate_input( FL_OBJECT * obj);
+int fl_validate_input(FL_OBJECT *obj);
 @end example
 can be used to test if the value in an input field is valid. It
 returns @code{@ref{FL_VALID}} if the value is valid or if there is no

@@ -195,10 +195,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         goto get_new_form_name;
     }
 
-    sp = s + 1;
-
-    while ( *sp )
-    {
+    for ( sp = s + 1; *sp; sp++ )
         if (    ! isascii( ( unsigned char ) *sp )
              || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
         {
@@ -206,8 +203,6 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
                            "name:", s, 0 );
             goto get_new_form_name;
         }
-        sp++;
-    }
 
     /* Create the form */
 
@@ -263,19 +258,14 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         goto get_changed_form_name;
     }
 
-    sp = s + 1;
-
-    while ( *sp )
-    {
+    for ( sp = s + 1; *sp; sp++ )
         if (    ! isascii( ( unsigned char ) *sp )
-             || ! ( isalnum( ( unsigned char ) *sp ) || *s == '_' ) )
+             || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
         {
             fl_show_alert( "Error", "Invalid C identifier specified for form "
                            "name:", s, 0 );
             goto get_changed_form_name;
         }
-        sp++;
-    }
 
     fli_sstrcpy( forms[ fn ].fname, s, MAX_VAR_LEN );
 

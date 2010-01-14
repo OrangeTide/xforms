@@ -118,10 +118,10 @@ int callback(FL_POPUP_RETURN *r);
 @noindent
 Informaton about the item etc.@: gets passed to the callback function
 via the @code{@ref{FL_POPUP_RETURN}} structure and the return value of
-the function can be used to keep the selection being made from
-becoming reported back to the user made by returning a value of
-@code{FL_IGNORE} (-1). The functions address must be given in the
-arguments following the @code{items} string.
+the function can be used to keep the selection from becoming reported
+back to the user made by returning a value of @code{FL_IGNORE} (-1).
+The functions address must be given in the arguments following the
+@code{items} string.
 
 @item %E
 Set a callback routine that gets called each time the mouse enters the
@@ -340,8 +340,8 @@ search the list of items accoring to several criteria:
 FL_POPUP_ENTRY *fl_get_select_item_by_value(FL_OBJECT *obj, long val);
 FL_POPUP_ENTRY *fl_get_select_item_by_label(FL_OBJECT *obj,
                                             const char *label);
-FL_POPUP_ENTRY *fl_get_select_item_by_label(FL_OBJECT *obj,
-                                            const char *text);
+FL_POPUP_ENTRY *fl_get_select_item_by_text(FL_OBJECT *obj,
+                                           const char *text);
 @end example
 The first function, @code{@ref{fl_get_select_item_by_value()}},
 searches through the list of items and returns the first one with the
@@ -466,13 +466,13 @@ setting for the alignemnt or -1 on error.
 
 Finally, the font style and size of the text can be set or obtained
 using
-@findex fl_set_select_font()
-@anchor{fl_set_select_font()}
-@findex fl_get_select_font()
-@anchor{fl_get_select_font()}
+@findex fl_set_select_text_font()
+@anchor{fl_set_select_text_font()}
+@findex fl_get_select_text_font()
+@anchor{fl_get_select_text_font()}
 @example
-int fl_set_select_font(FL_OBJECT *obj, int style, int size);
-int fl_get_select_font(FL_OBJECT *obj, int *style, int *size);
+int fl_set_select_text_font(FL_OBJECT *obj, int style, int size);
+int fl_get_select_text_font(FL_OBJECT *obj, int *style, int *size);
 @end example
 @noindent
 

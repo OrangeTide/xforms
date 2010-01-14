@@ -193,7 +193,7 @@ fl_draw_symbol( const char * label,
         shift = pos + 4;
     }
 
-    /* need to special-casing labels like "@4" etc. */
+    /* Need to special-casing labels like "@4" etc. */
 
     if ( ! ( s = label[ shift ] ? find_symbol( label + shift ) : symbols ) )
     {
@@ -217,7 +217,7 @@ fl_draw_symbol( const char * label,
     if ( delta )
         ShrinkBox( x, y, w, h, delta );
 
-    /* also if rotated 90 degrees, switch w, h and the bounding box. TODO  */
+    /* Also if rotated 90 degrees, switch w, h and the bounding box. TODO  */
 
     if ( rotated == 90 || rotated == 270 )
     {

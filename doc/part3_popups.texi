@@ -1060,8 +1060,8 @@ Also the font for the entries of a popup can be queried or and set via
 @findex fl_popup_entry_set_font()
 @anchor{fl_popup_entry_set_font()}
 @example
-void fl_popup_entry_get_font(FL_POPUP *popup, int *size, int *style);
-void fl_popup_entry_set_font(FL_POPUP *popup, int size, int style);
+void fl_popup_entry_get_font(FL_POPUP *popup, int *style, int *size);
+void fl_popup_entry_set_font(FL_POPUP *popup, int style, int size);
 @end example
 @noindent
 The defalt size is @code{@ref{FL_NORMAL_SIZE}} and the default style

@@ -67,28 +67,21 @@ complete version information.
 @node Initialization
 @section Initialization
 
-The routines
-@findex fl_init()
-@anchor{fl_init()}
+The routine
 @findex fl_initialize()
 @anchor{fl_initialize()}
 @example
-Display *fl_init(void);
 Display *fl_initialize(int *argc, char *argv[], const char *appclass,
                        XrmOptionDescList app_opt, int n_app_opt);
 @end example
 @noindent
 initializes the Forms Library and returns a pointer to the
 @code{Display} structure if a connection could be made, otherwise
-@code{NULL}. One of the two functions should always be called before
-any other calls to the Forms Library (except
-@code{@ref{fl_set_defaults()}} and a few other functions that alter
-some of the defaults of the library).
+@code{NULL}. The this function must be called before any other calls
+to the Forms Library (except @code{@ref{fl_set_defaults()}} and a few
+other functions that alter some of the defaults of the library).
 
-The first function is useful for quick "throw-away" prototypes or
-applications that parse their own command line parameters.
-
-The meaning of the arguments to the second function are as follows
+The meaning of the arguments is as follows
 @table @code
 @item argc, argv
 Number and array of the command line arguments the application was
@@ -562,10 +555,14 @@ The fonts used in all forms can be changed using the routine
 @findex fl_set_font_name()
 @anchor{fl_set_font_name()}
 @example
-void fl_set_font_name(int n, const char *name);
+int fl_set_font_name(int n, const char *name);
 @end example
 @noindent
-where @code{n} is a number between 0 and @code{FL_MAXFONTS -1}.
+where @code{n} is a number between 0 and @code{FL_MAXFONTS -1}. The
+function returns @code{0} on success, @code{1} if called before proper
+initialization of the library and @code{-1} for either invalid
+arguments (@code{name} isn't set or isn't a name of a font that could
+be found, @code{n} negative ot larger or equal to @code{FL_MAXFONTS}).
 @xref{Label Attributes and Fonts}, for details. A redraw of all forms
 is required to actually see the change for visible forms.
 

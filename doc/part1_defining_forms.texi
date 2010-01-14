@@ -1638,13 +1638,15 @@ directly using
 @findex fl_draw_symbol()
 @anchor{fl_draw_symbol()}
 @example
-void fl_draw_symbol(const char *symbolname, FL_Coord x, FL_Coord y,
-                    FL_Coord w, FL_Coord h, FL_Color col);
+int fl_draw_symbol(const char *symbolname, FL_Coord x, FL_Coord y,
+                   FL_Coord w, FL_Coord h, FL_Color col);
 @end example
 @noindent
-or indirectly via @code{@ref{fl_drw_text()}}. The application program
-can also add symbols to the system which it can then use to display
-symbols on objects that are not provided by the Forms Library. To add
+(the function returns @code{1} on success and @code{0} on failure
+when the symbol name isn't valid) or indirectly via
+@code{@ref{fl_drw_text()}}. The application program can also add
+symbols to the system which it can then use to display symbols on
+objects that are not provided by the Forms Library. To add
 a symbol, use the call
 @findex fl_add_symbol()
 @anchor{fl_add_symbol()}

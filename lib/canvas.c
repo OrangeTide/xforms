@@ -529,6 +529,7 @@ handle_canvas( FL_OBJECT * ob,
                 sp->xswa.background_pixel = None;
             sp->mask |= CWBackPixel;
             init_canvas( ob );
+            fl_draw_object_label_outside( ob );
             break;
 
         case FL_FREEMEM:
