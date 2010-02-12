@@ -756,11 +756,6 @@ struct FL_OBJECT_ {
 }; /* typedef'ed to FL_OBJECT above */;
 
 
-/* Macro for getting at the object handlers return value */
-
-#define fl_object_returned( o )  ( ( o )->returned )
-
-
 /* callback function for an entire form */
 
 typedef void ( * FL_FORMCALLBACKPTR )( FL_OBJECT *,
