@@ -34,7 +34,7 @@
 #include <stdlib.h>
 
 extern void sensitive_setting( FL_OBJECT *,
-							   long);
+							   long );
 extern void misc_cb( FL_OBJECT *,
 					 long );
 

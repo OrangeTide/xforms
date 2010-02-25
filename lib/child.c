@@ -349,27 +349,6 @@ fl_get_object_component( FL_OBJECT * composite,
 
 
 /***************************************
- ***************************************/
-
-void
-fli_mark_composite_for_redraw( FL_OBJECT * ob )
-{
-    FL_OBJECT *tmp;
-
-    for ( tmp = ob->child; tmp; tmp = tmp->nc )
-    {
-        if ( tmp->objclass == FL_BEGIN_GROUP || tmp->objclass == FL_END_GROUP )
-            continue;
-
-        if ( tmp->child && tmp->child->visible )
-            fli_mark_composite_for_redraw( tmp );
-
-        tmp->redraw = 1;
-    }
-}
-
-
-/***************************************
  * copy the parent attributes. gravity stuff is taken care of by
  * fl_add_child()
  ***************************************/

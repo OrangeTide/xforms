@@ -40,6 +40,22 @@
 /***************************************
  ***************************************/
 
+static set_visibility( FL_OBJECT * obj,
+                       int         vis )
+{
+    obj->visible = vis;
+    for ( obj = obj->child; obj; obj = obj->nc )
+    {
+        if ( obj->child )
+            set_visibility( obj->child, vis );
+        obj->visible = vis;
+    }
+}
+
+
+/***************************************
+ ***************************************/
+
 static void
 attrib_change( FL_OBJECT * ob )
 {
@@ -50,7 +66,7 @@ attrib_change( FL_OBJECT * ob )
     sp->tb->x = ob->x;
     sp->tb->y = ob->y;
 
-    sp->tb->visible = 1;
+    set_visibility( sp->tb, 1 );
     sp->tb->input = ob->input;
 
     sp->tb->type    = ob->type;
@@ -146,9 +162,6 @@ get_geometry( FL_OBJECT * obj )
         fli_tbox_recalc_area( tb );
     }
 
-    comp->hsl->visible = comp->h_on;
-    comp->vsl->visible = comp->v_on;
-
     if ( comp->v_on )
     {
         comp->vsl->x = obj->x + obj->w - comp->vw;
@@ -187,31 +200,31 @@ get_geometry( FL_OBJECT * obj )
     }
 
     comp->dead_area = comp->h_on && comp->v_on;
+    set_visibility( comp->hsl, comp->h_on );
+    set_visibility( comp->vsl, comp->v_on );
+
+    comp->attrib = 1;
+
+    sp->no_redraw = 1;
+
+    if ( comp->v_on )
+    {
+        comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
+        fl_set_scrollbar_value( comp->vsl, comp->vval );
+        fl_set_scrollbar_size( comp->vsl, comp->vsize );
+    }
+
+    if ( comp->h_on )
+    {
+        comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
+        fl_set_scrollbar_value( comp->hsl, comp->hval );
+        fl_set_scrollbar_size( comp->hsl, comp->hsize );    
+    }
+
+    sp->no_redraw = 0;
 
     if ( h_on != comp->h_on || v_on != comp->v_on )
-    {
-        comp->attrib = 1;
-
-        sp->no_redraw = 1;
-
-        if ( comp->v_on )
-        {
-            comp->vval = fli_tbox_set_rel_yoffset( tb, comp->vval );
-            fl_set_scrollbar_value( comp->vsl, comp->vval );
-            fl_set_scrollbar_size( comp->vsl, comp->vsize );
-        }
-
-        if ( comp->h_on )
-        {
-            comp->hval = fli_tbox_set_rel_xoffset( tb, comp->hval );
-            fl_set_scrollbar_value( comp->hsl, comp->hval );
-            fl_set_scrollbar_size( comp->hsl, comp->hsize );    
-        }
-
-        sp->no_redraw = 0;
-
         fl_notify_object( tb, FL_RESIZED );
-    }
 }
 
 
@@ -314,8 +327,10 @@ redraw_scrollbar( FL_OBJECT * ob )
 
     if ( comp->attrib )
     {
-        fl_redraw_object( comp->vsl );
-        fl_redraw_object( comp->hsl );
+        if ( comp->v_on )
+            fl_redraw_object( comp->vsl );
+        if ( comp->h_on )
+            fl_redraw_object( comp->hsl );
         fl_redraw_object( comp->tb );
 
         comp->attrib = 0;
@@ -545,7 +560,7 @@ fl_create_browser( int          type,
 
     sp->hsl = fl_create_scrollbar( fli_context->hscb, x, y + h - D,
                                    w - D, D, NULL );
-    sp->hsl->visible = sp->h_pref == FL_ON;
+    set_visibility( sp->hsl, sp->h_pref == FL_ON );
     fl_set_object_callback( sp->hsl, hcb, 0 );
     fl_set_scrollbar_value( sp->hsl, 0.0 );
     fl_set_scrollbar_bounds( sp->hsl, 0.0, 1.0 );
@@ -553,7 +568,7 @@ fl_create_browser( int          type,
 
     sp->vsl = fl_create_scrollbar( fli_context->vscb, x + w - D, y,
                                    D, h - D, NULL );
-    sp->vsl->visible = sp->v_pref == FL_ON;
+    set_visibility( sp->vsl, sp->v_pref == FL_ON );
     fl_set_object_callback( sp->vsl, vcb, 0 );
     fl_set_scrollbar_value( sp->vsl, 0.0 );
     fl_set_scrollbar_bounds( sp->hsl, 0.0, 1.0 );

@@ -201,8 +201,8 @@ fli_init_stipples( void )
  ***************************************/
 
 static void
-change_drawable( FL_pixmap * p,
-                 FL_OBJECT * obj )
+change_object_drawable( FL_pixmap * p,
+                        FL_OBJECT * obj )
 {
     p->x = obj->x;
     p->y = obj->y;
@@ -263,26 +263,28 @@ fli_create_object_pixmap( FL_OBJECT * obj )
 {
     Window root;
     unsigned int junk;
-    FL_pixmap *p;
+    FL_pixmap *p = obj->flpixmap;
     int i;
     int ( * oldhandler )( Display *, XErrorEvent * );
 
     /* Check to see if we need to create a pixmap. None-square boxes can't
        be used as it is not easy to figure out the object color beneath the
-       object we are trying to paint */
+       object we are trying to paint. It also makes no sense to draw to
+       on a special pixmap for the object if we're already been directed
+       to draw to a pixmap for the form itself. */
 
     if (    ! obj->use_pixmap
          || obj->w <= 0
          || obj->h <= 0
          || NON_SQB( obj )
-         || (    obj->form->flpixmap
-              && ( ( FL_pixmap * ) obj->form->flpixmap )->win ) )
+         || ( obj->form->flpixmap && obj->form->flpixmap->win ) )
         return;
 
-    if ( ! ( p = obj->flpixmap ) )
-        p = obj->flpixmap = fl_calloc( 1, sizeof *p );
+    /* If we already got a pixmap that fits the objects properties just
+       switch to it */
 
-    if (    p->pixmap
+    if (    p
+         && p->pixmap
          && p->w == obj->w
          && p->h == obj->h
          && p->depth == fli_depth( fl_vmode )
@@ -290,23 +292,20 @@ fli_create_object_pixmap( FL_OBJECT * obj )
          && p->dbl_background == obj->dbl_background
          && p->pixel == fl_get_pixel( obj->dbl_background ) )
     {
-        change_drawable( p, obj );
+        change_object_drawable( p, obj );
+        fl_rectf( 0, 0, obj->w, obj->h, obj->dbl_background );
         return;
     }
 
-    if ( p->pixmap )
+    if ( ! p )
+        p = obj->flpixmap = fl_calloc( 1, sizeof *p );
+    else if ( p->pixmap )
         XFreePixmap( flx->display, p->pixmap );
 
     oldhandler = XSetErrorHandler( fl_xerror_handler );
 
     p->pixmap = XCreatePixmap( flx->display, FL_ObjWin( obj ), obj->w, obj->h,
                                fli_depth( fl_vmode ) );
-
-    fl_winset( p->pixmap );
-    fl_rectf( 0, 0, obj->w, obj->h, obj->dbl_background );
-
-    M_info( "fli_create_object_pixmap", "Creating depth = %d for %s",
-            fli_depth( fl_vmode ), obj->label ? obj->label : "unknown");
 
     /* Make sure it succeeds by forcing a two way request */
 
@@ -328,7 +327,8 @@ fli_create_object_pixmap( FL_OBJECT * obj )
     p->visual = fli_visual( fl_vmode );
     p->dbl_background = obj->dbl_background;
     p->pixel = fl_get_pixel( obj->dbl_background );
-    change_drawable( p, obj );
+    change_object_drawable( p, obj );
+    fl_rectf( 0, 0, obj->w, obj->h, obj->dbl_background );
 }
 
 
@@ -340,7 +340,10 @@ fli_show_object_pixmap( FL_OBJECT * obj )
 {
     FL_pixmap *p = obj->flpixmap;
 
-    if ( ! p || ! p->pixmap || ! p->win || NON_SQB( obj ) )
+    if (    ! p
+         || ! p->pixmap
+         || ! p->win
+         || NON_SQB( obj ) )
         return;
 
     XCopyArea( flx->display, p->pixmap, p->win, flx->gc,
@@ -394,18 +397,16 @@ void
 fli_create_form_pixmap( FL_FORM * form )
 {
     Window root;
-    unsigned int junk;
-    FL_pixmap *p;
-    int i;
+    int ijunk;
+    unsigned int uijunk;
+    FL_pixmap *p = form->flpixmap;
     int ( * oldhandler )( Display *, XErrorEvent * );
 
     if ( form->w <= 0 || form->h <= 0 || ! form_pixmapable( form ) )
         return;
 
-    if ( ! ( p = form->flpixmap ) )
-        p = form->flpixmap = fl_calloc( 1, sizeof *p );
-
-    if (    p->pixmap
+    if (    p
+         && p->pixmap
          && p->w == form->w
          && p->h == form->h
          && p->depth == fli_depth( fl_vmode )
@@ -415,7 +416,9 @@ fli_create_form_pixmap( FL_FORM * form )
         return;
     }
 
-    if ( p->pixmap )
+    if ( ! p )
+        p = form->flpixmap = fl_calloc( 1, sizeof *p );
+    else if ( p->pixmap )
         XFreePixmap( flx->display, p->pixmap );
 
     oldhandler = XSetErrorHandler( fl_xerror_handler );
@@ -424,13 +427,10 @@ fli_create_form_pixmap( FL_FORM * form )
                                form->w, form->h,
                                fli_depth( fl_vmode ) );
 
-    M_info( "fli_create_form_pixmap", "Creating (w = %d, h = %d)",
-            form->w, form->h );
-
     /* Make sure it succeeds by forcing a two way request */
 
-    if ( ! XGetGeometry( flx->display, p->pixmap, &root, &i, &i,
-                         &junk, &junk, &junk, &junk ) )
+    if ( ! XGetGeometry( flx->display, p->pixmap, &root, &ijunk, &ijunk,
+                         &uijunk, &uijunk, &uijunk, &uijunk ) )
     {
         M_warn( "fli_create_form_pixmap", "Can't create pixmap" );
         p->pixmap = None;
@@ -445,9 +445,6 @@ fli_create_form_pixmap( FL_FORM * form )
     p->depth = fli_depth( fl_vmode );
     p->visual = fli_visual( fl_vmode );
     change_form_drawable( p, form );
-
-    M_info( "fli_create_form_pixmap", "Creation done, win is now %ld",
-            p->pixmap );
 }
 
 

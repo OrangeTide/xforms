@@ -298,7 +298,6 @@ create_new_form( FL_Coord w,
     form->handle_dec_y      = 0;
 
     form->num_auto_objects  = 0;
-    form->in_redraw         = 0;
     form->deactivated       = 1;
     form->form_callback     = NULL;
     form->compress_mask     =   ExposureMask | ButtonMotionMask
@@ -312,6 +311,7 @@ create_new_form( FL_Coord w,
     form->hotx              = form->hoty = -1;
     form->use_pixmap        = fli_cntl.doubleBuffer;
     form->label             = NULL;
+    form->flpixmap          = NULL;
     form->u_vdata           = NULL;
     form->close_callback    = NULL;
     form->close_data        = NULL;

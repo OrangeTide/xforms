@@ -889,9 +889,6 @@ extern char *fli_sstrcpy( char       * dest,
                           const char * src,
                           size_t       n );
 
-extern void fli_mark_composite_for_redraw( FL_OBJECT * );
-
-
 extern void fli_set_form_icon_data( FL_FORM *,
                                     char ** );
 

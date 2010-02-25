@@ -151,7 +151,7 @@ resources:
 @item doubleBuffer
 @tab DoubleBuffer
 @tab bool
-@tab false
+@tab true
 @item privateColormap
 @tab PrivateColormap
 @tab bool

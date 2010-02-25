@@ -85,7 +85,6 @@ static XrmOptionDescRec copt[ ] =
     { "-ggamma",    "*ggamma",           XrmoptionSepArg, ( caddr_t ) 0   },
 #endif
 
-/*  { "-single",    "*doubleBuffer",     XrmoptionNoArg, ( caddr_t ) "0"   }, */
     { "-bs",        "*backingStore",     XrmoptionNoArg, ( caddr_t ) "0"   }
 };
 
@@ -106,7 +105,7 @@ typedef char Iop[ 8 ];      /* Integer default */
 static Bop OpPrivateMap,
            OpSharedMap,
            OpStandardMap,
-           OpDouble;
+           OpDouble = "true";
 static Bop OpSync,
            OpULW = "1";
 static Iop OpDebug,

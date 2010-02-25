@@ -24,6 +24,19 @@
  *  All rights reserved.
  */
 
+
+/**************************************************
+
+  The handling of redrawing objects could do with a lot of improvements.
+  It should be a high priority that only that objects get redrawn that
+  rally need redrawing. The main problem at the moment is handling of
+  redraws for objects with a label outside of the object (and of objects
+  with the label inside, but extending beyond the borders of the object).
+  That's all still a mess (and too slow ) and needs quite a bit of cleaning
+   up!
+
+ ***************************************************/
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -60,6 +73,7 @@ static FL_OBJECT *refocus;
                                  || i == FL_CHECKBUTTON      \
                                  || i == FL_BITMAPBUTTON     \
                                  || i == FL_PIXMAPBUTTON )
+
 
 
 /***************************************
@@ -361,7 +375,7 @@ fli_insert_object( FL_OBJECT * obj,
         fli_insert_composite( obj, before );
 
     if ( ! obj->parent )
-        fl_redraw_form( form );
+        fli_redraw_form_using_xevent( form, 0, NULL );
 }
 
 
@@ -470,9 +484,8 @@ fl_delete_object( FL_OBJECT * obj )
         fli_recalc_intersections( form );
 
     if (    obj->visible
-         && ( ! obj->parent || obj->parent->visible )
          && form && form->visible == FL_VISIBLE )
-        fl_redraw_form( form );
+        fli_redraw_form_using_xevent( form, 0, NULL );
 }
 
 
@@ -937,7 +950,17 @@ fl_set_object_label( FL_OBJECT  * obj,
     strcpy( obj->label, label );
 
     if ( ObjIsVisible( obj ) )
-        fl_redraw_object( obj );
+    {
+        if ( obj->align & FL_ALIGN_INSIDE )
+            fl_redraw_object( obj );
+        else
+        {
+            if ( ! obj->parent )
+                fli_recalc_intersections( obj->form );
+
+            fli_redraw_form_using_xevent( obj->form, 0, NULL );
+        }
+    }
 }
 
 
@@ -1057,6 +1080,9 @@ fl_set_object_lsize( FL_OBJECT * obj,
 
             obj->lsize = lsize;
             fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+            if ( ! obj->parent )
+                fli_recalc_intersections( obj->form );
 
             if ( visible )
                 fl_show_object( obj );
@@ -1313,7 +1339,10 @@ fli_show_object( FL_OBJECT * obj )
     obj->visible = 1;
 
     if ( obj->child )
+    {
         fli_show_composite( obj );
+        fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+    }
 
     if ( obj->input && obj->active && ! obj->form->focusobj )
         fl_set_focus_object( obj->form, obj );
@@ -1327,7 +1356,7 @@ fli_show_object( FL_OBJECT * obj )
 void
 fl_show_object( FL_OBJECT * obj )
 {
-    FL_OBJECT *o = obj;
+    FL_OBJECT *o = obj->next;
 
     if ( ! obj )
     {
@@ -1335,13 +1364,13 @@ fl_show_object( FL_OBJECT * obj )
         return;
     }
 
-    if ( obj->objclass == FL_BEGIN_GROUP )
-        for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
-            fli_show_object( obj );
+     if ( obj->objclass == FL_BEGIN_GROUP )
+        for ( ; o && o->objclass != FL_END_GROUP; o = o->next )
+            fli_show_object( o );
     else
         fli_show_object( obj );
 
-    fl_redraw_object( o );
+     fli_redraw_form_using_xevent( obj->form, 0, NULL );
 }
 
 
@@ -1429,7 +1458,8 @@ fli_hide_and_get_region( FL_OBJECT * obj,
  * Makes an object (and all its children) invisible
  ***************************************/
 
-void fl_hide_object( FL_OBJECT * obj )
+void
+fl_hide_object( FL_OBJECT * obj )
 {
     FL_OBJECT *tmp;
     FL_RECT xrect;
@@ -1458,14 +1488,20 @@ void fl_hide_object( FL_OBJECT * obj )
               tmp = tmp->next )
         {
             if ( tmp->child )
+            {
                 fli_hide_composite( tmp, &reg );
+                fli_handle_object( tmp, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+            }
 
             fli_hide_and_get_region( tmp, &reg );
         }
     else
     {
         if ( obj->child )
+        {
             fli_hide_composite( obj, &reg );
+            fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+        }
 
         fli_hide_and_get_region( obj, &reg );
     }
@@ -1488,7 +1524,7 @@ void fl_hide_object( FL_OBJECT * obj )
     fl_set_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
     fl_set_text_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
 
-    fl_redraw_form( obj->form );
+    fli_redraw_form_using_xevent( obj->form, 0, NULL );
 
     fli_unset_perm_clipping( );
     fl_unset_clipping( );
@@ -1788,7 +1824,6 @@ fli_find_object( FL_OBJECT * obj,
         if (    obj->objclass != FL_BEGIN_GROUP
              && obj->objclass != FL_END_GROUP
              && obj->visible
-             && ( ! obj->parent || obj->parent->visible )
              && (     obj->active
                   || ( obj->posthandle && ! obj->active )
                   || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
@@ -1834,7 +1869,6 @@ fli_find_object_backwards( FL_OBJECT * obj,
         if (    obj->objclass != FL_BEGIN_GROUP
              && obj->objclass != FL_END_GROUP
              && obj->visible
-             && ( ! obj->parent || obj->parent->visible )
              && (     obj->active
                   || ( obj->posthandle && ! obj->active )
                   || ( obj->tooltip && *obj->tooltip && ! obj->active ) ) )
@@ -1932,11 +1966,38 @@ object_is_clipped( FL_OBJECT * obj )
 
 
 /***************************************
- * Redraws all marked objects and reduces the mark. It is important
- * NOT to set any clip masks inside this function (except for free objects)
- * since that would prevent the drawing function from drawing labels. That
- * would be wrong since fl_redraw_object() calls redraw_marked()
- * directly. All cliping must done prior to calling this routines
+ * Marks an object for redraw
+ ***************************************/
+
+static void
+mark_object_for_redraw( FL_OBJECT * obj )
+{
+    if ( ! obj )
+    {
+        M_err( "mark_object_for_redraw", "Redrawing NULL object" );
+        return;
+    }
+
+    if  (    ! obj->form
+          || ! obj->visible
+          || ( obj->parent && ! obj->parent->visible )
+          || obj->objclass == FL_BEGIN_GROUP
+          || obj->objclass == FL_END_GROUP )
+        return;
+
+    obj->redraw = 1;
+
+    for ( obj = obj->child; obj; obj = obj->nc )
+        mark_object_for_redraw( obj );
+}
+
+
+/***************************************
+ * Redraws all marked objects and removes the mark. It is important NOT to
+ * set any clip masks inside this function (except for free objects) since
+ * that would prevent the drawing function from drawing labels. That would
+ * be wrong since fl_redraw_object() calls redraw_marked() directly. All
+ * cliping must done prior to calling this routines
  ***************************************/
 
 static void
@@ -1950,27 +2011,20 @@ redraw_marked( FL_FORM * form,
 
     /* Beside the case that the form isn't visible or frozen we also need
        to consider the case that a redraw for an object is initiated while
-       an other (parent) object gets redrawn (an example would be a scrollbar
+       another (parent) object gets redrawn (an example would be a scrollbar
        that during its redraw calls a function for setting the value of its
        slider which in turn triggers the redraw of the slider). In that case
        the (child) object is not to be redrawn yet (it's already marked for
-       redraw and will be redrawn later automaticallysince child object always
+       redraw and will be redrawn later automatically since child object always
        come after their parent objects) because that would mess up the behind-
        the-scenes-switching of the window/pixmaps that drawing is done in. */
 
-    if ( form->visible != FL_VISIBLE || form->frozen > 0 || form->in_redraw )
+    if ( form->visible != FL_VISIBLE || form->frozen )
         return;
-
-    form->in_redraw = 1;
-
-    /* Set the window (or drawable) to be drawn to (flx->win) */
-
-    fli_set_form_window( form );
-    fli_create_form_pixmap( form );
 
     /* Check if there are any objects that partially or fully hide one of
        the objects to be redrawn and mark those also for redrawing (and, of
-       course, also those that are "above" this newly added object etc.) */
+       course, also those that are "above" these newly added objects etc.) */
 
     for ( obj = form->first; obj; obj = obj->next )
         if (    obj->visible
@@ -2000,14 +2054,14 @@ redraw_marked( FL_FORM * form,
                     continue;
                  
                 if ( objects_intersect( obj, o ) )
-                {
-                    o->redraw = 1;
-                    if ( o->child )
-                        fli_mark_composite_for_redraw( o );
-                }
+                    mark_object_for_redraw( o );
             }
         }
     }
+
+    /* Set the window (or drawable) to be drawn to (flx->win) */
+
+    fli_set_form_window( form );
 
     /* Now redraw all marked objects */
 
@@ -2019,13 +2073,12 @@ redraw_marked( FL_FORM * form,
         obj->redraw = 0;
 
         if (    ! obj->visible
-             || ( obj->parent && ! obj->parent->visible )
              || ( fli_perm_clip && object_is_clipped( obj ) ) )
             continue;
 
         fli_create_object_pixmap( obj );
 
-        /* Will not allow free object draw outside of its box. Check
+        /* Don't allow free objects to draw outside of their boxes. Check
            perm_clip so we don't have draw regions we don't have to
            (Expose etc.) */
 
@@ -2047,10 +2100,6 @@ redraw_marked( FL_FORM * form,
 
         fli_handle_object( obj, FL_DRAWLABEL, 0, 0, 0, NULL, 0 );
     }
-
-    fli_show_form_pixmap( form );
-
-    form->in_redraw = 0;
 }
 
 
@@ -2067,7 +2116,7 @@ fl_redraw_object( FL_OBJECT * obj )
         return;
     }
 
-    if ( ! obj->form )
+    if ( ! obj->form || ! obj->visible )
         return;
 
     if ( obj->objclass == FL_BEGIN_GROUP )
@@ -2075,22 +2124,12 @@ fl_redraw_object( FL_OBJECT * obj )
         FL_OBJECT *o = obj->next;
 
         for ( ; o && o->objclass != FL_END_GROUP; o = o->next )
-            o->redraw = 1;
+            mark_object_for_redraw( o );
     }
     else
-        obj->redraw = 1;
+        mark_object_for_redraw( obj );
 
-    /* For composite objects also flag all children */
-
-    if (    obj->child
-         && ( ! obj->parent || obj->parent->visible )
-         && obj->visible )
-        fli_mark_composite_for_redraw( obj );
-
-    /* If object is a child object and the parent is not visible, do nothing */
-
-    if ( obj->visible && ( ! obj->parent || obj->parent->visible ) )
-        redraw_marked( obj->form, 0, NULL );
+    redraw_marked( obj->form, 0, NULL );
 }
 
 
@@ -2177,46 +2216,7 @@ object_is_under( FL_OBJECT * obj )
 
 
 /***************************************
- * Marks all objects for redraw
- ***************************************/
-
-static void
-mark_for_redraw( FL_FORM * form )
-{
-    FL_OBJECT *obj;
-
-    if ( ! form )
-    {
-        M_err( "mark_for_redraw", "Drawing NULL form" );
-        return;
-    }
-
-    for ( obj = form->first; obj; obj = obj->next )
-    {
-        if (    ! obj->visible
-             || obj->objclass == FL_BEGIN_GROUP
-             || obj->objclass == FL_END_GROUP )
-            continue;
-
-        obj->redraw = 1;
-    }
-}
-
-
-/***************************************
- * Draws a form
- ***************************************/
-
-void
-fl_redraw_form( FL_FORM * form )
-{
-    mark_for_redraw( form );
-    redraw_marked( form, 0, NULL );
-}
-
-
-/***************************************
- * Draws a form
+ * Redraws a form
  ***************************************/
 
 void
@@ -2224,9 +2224,63 @@ fli_redraw_form_using_xevent( FL_FORM * form,
                               int       key,
                               XEvent  * xev )
 {
-    mark_for_redraw( form );
-    redraw_marked( form, key, xev );
+    FL_OBJECT *obj;
+
+    if ( ! form || form->visible != FL_VISIBLE || form->frozen > 0 )
+        return;
+
+    /* Set the window (or drawable) to be drawn to (flx->win) */
+
+    fli_set_form_window( form );
+    fli_create_form_pixmap( form );
+
+    for ( obj = form->first; obj; obj = obj->next )
+    {
+        obj->redraw = 0;
+
+        if (    ! obj->visible
+             || ( fli_perm_clip && object_is_clipped( obj ) ) )
+            continue;
+
+        fli_create_object_pixmap( obj );
+
+        /* Don't allow free objects to draw outside of their boxes. Check
+           perm_clip so we don't have draw regions we don't have to
+           (Expose etc.) */
+
+        if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
+        {
+            fl_set_clipping( obj->x, obj->y, obj->w, obj->h );
+            fl_set_text_clipping( obj->x, obj->y, obj->w, obj->h );
+        }
+
+        fli_handle_object( obj, FL_DRAW, 0, 0, key, xev, 0 );
+
+        if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
+        {
+            fl_unset_clipping( );
+            fl_unset_text_clipping( );
+        }
+
+        fli_show_object_pixmap( obj );
+
+        fli_handle_object( obj, FL_DRAWLABEL, 0, 0, 0, NULL, 0 );
+    }
+
+    fli_show_form_pixmap( form );
 }
+
+
+/***************************************
+ * Exported function for drawing a form
+ ***************************************/
+
+void
+fl_redraw_form( FL_FORM * form )
+{
+    fli_redraw_form_using_xevent( form, 0, NULL );
+}
+
 
 
 /***************************************
@@ -2268,7 +2322,7 @@ fl_unfreeze_form( FL_FORM * form )
     form->frozen--;
 
     if ( form->frozen == 0 && form->visible == FL_VISIBLE )
-        redraw_marked( form, 0, NULL );
+        fli_redraw_form_using_xevent( form, 0, NULL );
 }
 
 /*-----------------------------------------------------------------------
