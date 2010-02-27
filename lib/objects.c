@@ -997,18 +997,17 @@ fl_set_object_lcol( FL_OBJECT * obj,
 
     if ( obj->objclass == FL_BEGIN_GROUP )
     {
+        FL_OBJECT *o = obj->next;;
+
         fl_freeze_form( obj->form );
 
-        for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+        for ( ; o && o->objclass != FL_END_GROUP; o = o->next )
         {
-            if ( obj->lcol != lcol )
+            if ( o->lcol != lcol )
             {
-                obj->lcol = lcol;
-                if ( obj->objclass != FL_BEGIN_GROUP )
-                {
-                    fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
-                    fl_redraw_object( obj );
-                }
+                o->lcol = lcol;
+                fli_handle_object( o, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+                fl_redraw_object( o );
             }
         }
 
@@ -1242,8 +1241,10 @@ activate_object( FL_OBJECT * obj )
         return;
 
     obj->active = 1;
+
     if ( obj->input && obj->active && ! obj->form->focusobj )
         fl_set_focus_object( obj->form, obj );
+
     if ( obj->child )
         fli_activate_composite( obj );
 }
@@ -1263,8 +1264,14 @@ fl_activate_object( FL_OBJECT * obj )
     }
 
     if ( obj->objclass == FL_BEGIN_GROUP )
-        for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+    {
+        obj->active = 1;
+
+        for ( obj = obj->next;
+              obj && obj->objclass != FL_END_GROUP;
+              obj = obj->next )
             activate_object( obj );
+    }
     else
         activate_object( obj );
 }
@@ -1302,8 +1309,14 @@ fl_deactivate_object( FL_OBJECT * obj )
     }
 
     if ( obj->objclass == FL_BEGIN_GROUP )
-        for ( ; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+    {
+        obj->active = 0;
+
+        for ( obj = obj->next;
+              obj && obj->objclass != FL_END_GROUP;
+              obj = obj->next )
             deactivate_object( obj );
+    }
     else
         deactivate_object( obj );
 }
@@ -2319,11 +2332,10 @@ fl_unfreeze_form( FL_FORM * form )
         return;
     }
 
-    form->frozen--;
-
-    if ( form->frozen == 0 && form->visible == FL_VISIBLE )
+    if ( --form->frozen == 0 && form->visible == FL_VISIBLE )
         fli_redraw_form_using_xevent( form, 0, NULL );
 }
+
 
 /*-----------------------------------------------------------------------
    Handling Routines.

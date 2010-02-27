@@ -533,6 +533,7 @@ fl_set_select_item( FL_OBJECT      * obj,
 {
     FL_POPUP_ENTRY *e;
     FLI_SELECT_SPEC *sp;
+    FL_POPUP_RETURN *r;
 
     if ( obj == NULL )
     {
@@ -568,7 +569,9 @@ fl_set_select_item( FL_OBJECT      * obj,
         return NULL;
     }
 
-    return fli_set_popup_return( entry );
+    r = fli_set_popup_return( entry );
+    fl_redraw_object( obj );
+    return r;
 }
 
 
