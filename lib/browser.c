@@ -40,10 +40,11 @@
 /***************************************
  ***************************************/
 
-static set_visibility( FL_OBJECT * obj,
-                       int         vis )
+static void set_visibility( FL_OBJECT * obj,
+                            int         vis )
 {
     obj->visible = vis;
+
     for ( obj = obj->child; obj; obj = obj->nc )
     {
         if ( obj->child )

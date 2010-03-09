@@ -574,8 +574,8 @@ FITS_load( FL_IMAGE * im )
              tmp32;
     void **vals;
 
-    dmin = 1.e30;
-    dmax = -1.e30;
+    dmin = 1.0e30;
+    dmax = -1.0e30;
     has_minmax = sp->dmax != sp->dmin;
 
 #if FITS_DEBUG
@@ -662,8 +662,10 @@ FITS_load( FL_IMAGE * im )
                 {
                     if ( little_endian )
                     {
-                        SWAP4( c, uc );
-                        fval[ j ] = * ( FLOAT32 * ) uc;
+                        /* Using
+                            fval[ j ] = * ( FLOAT32 * ) uc;
+                           results in type-punning warning, so instead: */
+                        memcpy( fval + j, uc, 4 );
                     }
 
                     if ( ISNAN( fval[ j ], tmp32 ) )
@@ -686,7 +688,10 @@ FITS_load( FL_IMAGE * im )
                     if ( little_endian )
                     {
                         SWAP8( c, uc );
-                        dval[j] = * ( FLOAT64 * ) uc;
+                        /* Using
+                            dval[ j ] = * ( FLOAT64 * ) uc;
+                           results in type-punning warning, so instead: */
+                        memcpy( dval + j, uc, 8 );
                     }
 
                     if ( ISNAN( dval[ j ], tmp64 ) )
