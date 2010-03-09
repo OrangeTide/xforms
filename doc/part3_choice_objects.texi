@@ -436,10 +436,10 @@ The two color arguments, @code{clo1} and @code{col2}, of the function
 obect normally and when the mouse is hovering over it, respectively.
 
 With the functions
-@findex fl_set_selection_text_color()
-@anchor{fl_set_selection_text_color()}
-@findex fl_get_selection_text_color()
-@anchor{fl_get_selection_text_color()}
+@findex fl_set_select_text_color()
+@anchor{fl_set_select_text_color()}
+@findex fl_get_select_text_color()
+@anchor{fl_get_select_text_color()}
 @example
 FL_COLOR fl_set_selection_text_color(FL_OBJECT *obj, FL_COLOR color);
 FL_COLOR fl_get_selection_text_color(FL_OBJECT *obj);
