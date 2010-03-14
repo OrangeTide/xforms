@@ -1,3 +1,20 @@
+2010-03-14 Jens Thoms Toerring    <jt@toerring.de>
+
+	* clipboard.c: Converted error message into warning printed
+	out when a selectio request is made to the XForms program for
+	a type of Atom that XForms doesn't support. Thanks to Mark
+	Adler for pointing out the problem.
+
+2010-03-09 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Several changes to the way things re redrawn - there
+	were some problems with redrawing labels that needed
+	several changes to get it right (again).
+
+	* Some unused stuff removed from include files
+
+	* Corrections in the documentation
+
 2010-01-09 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Lots of clean-up in header files to address inconsistencies

@@ -54,7 +54,7 @@ typedef struct {
 static ClipBoard clipboard,
                  *cp;
 
-int ( * fli_handle_clipboard )( void * ) = NULL;   /* also needed in forms.c */
+int ( * fli_handle_clipboard )( void * ) = NULL; /* also needed in handling.c */
 
 static int handle_clipboard_event( void * );
 
@@ -190,13 +190,12 @@ handle_clipboard_event( void * event )
     XSelectionRequestEvent *sreq = event;
     XEvent *xev = event;
     XSelectionEvent sev;
-    int what = xev->type;
     char *s;
     int n;
 
-    /* SelectionClear confirms lose of selection */
-    /* SelectionRequest indicates other app, wants to own selection */
-    /* SelectionNotify confirms requests of selection ok */
+    /* SelectionClear confirms loss of selection */
+    /* SelectionRequest indicates that another app wants to own selection */
+    /* SelectionNotify confirms that request of selection is ok */
 
     if ( ! targets_prop )
         targets_prop = XInternAtom( flx->display, "TARGETS", False );
@@ -205,22 +204,22 @@ handle_clipboard_event( void * event )
 
     cp = &clipboard;
 
-    if ( ! cp->req_window && !cp->window )
+    if ( ! cp->req_window && ! cp->window )
     {
         M_warn( "handle_clipboard_event", "InternalError" );
         return -1;
     }
 
-    if ( what == SelectionClear )
+    if ( xev->type == SelectionClear )
     {
         if ( cp->ob )
             cp->lose_callback( cp->ob, cp->type );
         cp->ob = NULL;
         cp->window = None;
     }
-    else if ( what == SelectionNotify && cp->req_ob )
+    else if ( xev->type == SelectionNotify && cp->req_ob )
     {
-        /* Our request went thru. Go and get it */
+        /* Our request went through, go and get it */
 
         Atom ret_type;
         int ret_format;
@@ -275,7 +274,7 @@ handle_clipboard_event( void * event )
         XDeleteProperty( flx->display, xev->xselection.requestor,
                          xev->xselection.property );
     }
-    else if ( SelectionRequest )
+    else if ( xev->type == SelectionRequest )
     {
         /* Someone wants our selection */
 
@@ -287,15 +286,15 @@ handle_clipboard_event( void * event )
             return -1;
         }
 
-        /* Now sets the things to the requestor */
+        /* Set up the event to be sent to the requestor */
 
-        sev.type = SelectionNotify;
-        sev.display = sreq->display;
+        sev.type      = SelectionNotify;
+        sev.display   = sreq->display;
         sev.requestor = sreq->requestor;
         sev.selection = sreq->selection;
-        sev.target = sreq->target;
-        sev.property = None;
-        sev.time = sreq->time;
+        sev.target    = sreq->target;
+        sev.property  = None;
+        sev.time      = sreq->time;
 
         if ( sreq->selection == XA_PRIMARY )
         {
@@ -308,7 +307,7 @@ handle_clipboard_event( void * event )
                 sev.property = sreq->property;
                 XFree( s );
             }
-            else if ( sreq->target == targets_prop )    /*aixterm wants this*/
+            else if ( sreq->target == targets_prop )   /* aixterm wants this */
             {
                 Atom alist = XA_STRING;
 
@@ -320,11 +319,12 @@ handle_clipboard_event( void * event )
             }
             else
             {
-                /* if we have other types, conversion routine should be
+                /* If we have other types conversion routine should be
                    called here */
 
-                M_err( "handle_clipboard_event", "Unknown target: %d\n",
-                       sreq->target );
+                M_warn( "handle_clipboard_event", "Received request with "
+                        "unknown/not implemented XAtom target type: %d\n",
+                        ( int ) sreq->target );
             }
 
             XSendEvent( flx->display, sreq->requestor, False, 0,
