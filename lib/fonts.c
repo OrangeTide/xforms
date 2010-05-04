@@ -281,8 +281,8 @@ try_get_font_struct( int numb,
         if ( ! fli_no_connection ) {
 
             /* This function is typically used to test whether a font is
-             * loadable or not, so need not be a fatal condition if
-             * it fails. Issue a message for information therefore. */
+               loadable or not, so need not be a fatal condition if
+               it fails. Issue a message for information therefore. */
 
             M_info( "try_get_font_struct", "Bad FontStyle requested: %d: %s",
                     numb, flf->fname );
@@ -299,7 +299,6 @@ try_get_font_struct( int numb,
     /* Search for requested size */
 
     for ( fs = NULL, i = 0; i < flf->nsize; i++ )
-    {
         if ( size == flf->size[ i ] )
         {
             fs = flf->fs[ i ];
@@ -308,7 +307,6 @@ try_get_font_struct( int numb,
                      fl_cur_fontname );
 #endif
         }
-    }
 
     /* If requested font is not found or cache is full, get the destination
        cache for this size */
@@ -637,26 +635,32 @@ cv_fname( const char *f )
 
 
 /***************************************
- * Given a fontname and a size (in point), get the complete name
+ * Given a font name and a size (in points), assemble the complete name
  ***************************************/
 
 static char *
 get_fname( const char * str,
            int          size )
 {
-    static char fname[ 80 ];
-    char *p,
-         sz[ 15 ],
-         tail[ 80 ];
+    static char fname[ sizeof fli_curfnt ];
+    char len_str[ 50 ];    /* should be enough for all ints */
+    int len;
+    char *p;
 
-    strcpy( fname, str );
+    /* If necessary truncate font names that are too long, the caller
+       expects a real string */
+
+    strncpy( fname, str, sizeof fname - 1 );
+    fname[ sizeof fname - 1 ] = '\0';
 
     if ( ( p = strchr( fname, '?' ) ) )
     {
-        sprintf( sz, "%d", size * 10 );
-        strcpy( tail, p + 1 );
-        *p = '\0';
-        strcat( strcat( fname, sz ), tail );
+        len = sprintf( len_str, "%d0", size );
+        if ( len + strlen( str ) <= sizeof fname - 1 )
+        {
+            memmove( p + len, p + 1, strlen( p ) );
+            strncpy( p, len_str, len );
+        }
     }
 
     return fname;

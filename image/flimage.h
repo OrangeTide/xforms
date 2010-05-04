@@ -429,7 +429,7 @@ FL_EXPORT int flimage_write_via_filter( FL_IMAGE *,
 
 FL_EXPORT FL_IMAGE * flimage_alloc( void );
 
-FL_EXPORT int flimage_free( FL_IMAGE * );
+FL_EXPORT void flimage_free( FL_IMAGE * );
 
 FL_EXPORT int flimage_display( FL_IMAGE *,
 							   Window );

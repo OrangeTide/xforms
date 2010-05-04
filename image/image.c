@@ -608,7 +608,7 @@ convert_type( FL_IMAGE   * im,
  *  memory related routines
  ********************************************************************{**/
 
-int
+void
 flimage_free( FL_IMAGE * image )
 {
     FL_IMAGE *im,
@@ -625,8 +625,6 @@ flimage_free( FL_IMAGE * image )
         im->next = NULL;
         fl_free( im );
     }
-
-    return 0;
 }
 
 

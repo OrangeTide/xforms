@@ -1,3 +1,12 @@
+2010-05-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	* image/image.c: LukenShiro pointed out a deviation between
+	the diocumented return type of the flimage_free() function.
+	It now returns void as already documented.
+
+	* lib/font.c: Fix for (rather hypothetical buffer) overrun
+	in get_fname().
+
 2010-03-14 Jens Thoms Toerring    <jt@toerring.de>
 
 	* clipboard.c: Converted error message into warning printed
