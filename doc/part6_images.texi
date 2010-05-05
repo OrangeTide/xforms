@@ -1458,10 +1458,10 @@ routine
 @anchor{flimage_convolve()}
 @example
 int flimage_convolve(FL_IMAGE *im, int** kernel,
-                     int krows, int kcol);
+                     int krow, int kcol);
 @end example
 
-This function takes a convolution kernel of @code{krow} by @code{kvol}
+This function takes a convolution kernel of @code{krow} by @code{kcol}
 and convolves it with the image. The result replaces the input image.
 The kernel size should be odd. If successful, the function returns a
 positive integer, otherwise a negative number. The kernel should be
@@ -1472,7 +1472,7 @@ function
 @anchor{flimage_convolvea()}
 @example
 int flimage_convolvea(FL_IMAGE *im, int* kernel,
-                      int krows, int kcol);
+                      int krow, int kcol);
 @end example
 
 The difference between these two functions is in their usage syntax:
@@ -1516,7 +1516,7 @@ totally transparent, i.e.@: the glass has no effect3, while a value of
 glass. Any value between these two extremes results in a color that is
 a combination of the pixel color and the glass color. For example, to
 tint a part of the image bluish, you can set @code{packed} to
-@code{FL_PACKq(0,0,200)} and use an opacity of 0@footnote{Strictly
+@code{FL_PACK(0,0,200)} and use an opacity of 0@footnote{Strictly
 speaking, a piece of glass that is totally transparent can't have
 colors.}.
 

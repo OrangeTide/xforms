@@ -1,3 +1,8 @@
+2010-05-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	* doc/part6_images.texi: A number of typos etc.
+	found by LukenShiro removed.
+
 2010-05-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	* image/image.c: LukenShiro pointed out a deviation between
