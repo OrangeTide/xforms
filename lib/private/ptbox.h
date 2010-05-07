@@ -61,7 +61,6 @@ typedef struct {
     int               def_style;     /* default font style */
     int               def_align;     /* default alignment */
     int               def_height;    /* height of line with default font size */
-    FL_COLOR          def_lcol;      /* text color */
     GC                defaultGC;     /* text drawing GC */
     GC                backgroundGC;  /* background GC */
     GC                selectGC;      /* background for selection GC */

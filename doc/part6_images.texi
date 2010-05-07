@@ -1726,13 +1726,13 @@ less scaling artifacts.
 Image warping (or texture mapping in 2D) refers to the transformation
 of pixel coordinates. Rotation, scaling and shearing etc. are examples
 of (linear and non-perspective) image warping. In typical applications
-some of the commonly used pixel coordinates transformations are
+some of the commonly used pixel coordinate transformations are
 implemented using more efficient algorithms instead of a general
 warping. For example, image rotation is often implemented using three
 shears rather than a general warp (Forms Library implements rotation
 via image warping).
 
-Non-perspetive linear image warping in general is characterized by a
+Non-perspective linear image warping in general is characterized by a
 2x2 warp matrix @code{W} and a translation vector @code{T} with two
 elements as follows
 @example
@@ -1741,17 +1741,17 @@ elements as follows
 where @code{P} is a vector describing a position via it's x and y
 coordinates and @code{P'} is the position after warping.
 
-The elements @code{w[i][j]} of the warp matrix and are constants (if
-the warp matrix isn't constant or is of higher order, we usually call
-such a transformation morphing rather than warping). Since our
-destination for the warped image is an array of pixels rather than a
-properly defined coordinate system (such as a window) the translation
-has no meaning. For the following discussion, we assume the
-translation vector is zero. (In doing the actual warping, the warped
-image is indeed shifted so it starts at the (0,0) element of the array
+The elements @code{w[i][j]} of the warp matrix are constants (if the
+warp matrix isn't constant or is of higher order, we usually call such
+a transformation morphing rather than warping). Since our destination
+for the warped image is an array of pixels rather than a properly
+defined coordinate system (such as a window) the translation has no
+meaning. For the following discussion, we assume the translation
+vector is zero. (In doing the actual warping, the warped image is
+indeed shifted so it starts at the (0,0) element of the array
 representing it).
 
-Although theoretically, any 2D matrix can be used as a warp matrix,
+Although, theoretically, any 2D matrix can be used as a warp matrix,
 there are practical constraints in image warping due to the
 discreteness of pixel coordinates. First of all, we have to snap all
 pixel coordinates onto a 2D rectangular integer grid. This in general
@@ -1773,7 +1773,7 @@ The following function is available in the library to perform warping
 @findex flimage_warp()
 @anchor{flimage_warp()}
 @example
-int flimage_warp(FL_IMAGE *im, int float matrix[][2],
+int flimage_warp(FL_IMAGE *im, float matrix[][2],
                  int neww, int newh, int subpixel);
 @end example
 @noindent
@@ -1786,9 +1786,9 @@ location with the fill color. This is how the aspect ratio preserving
 scaling is implemented.
 
 In general, the warped image will not be rectangular in shape. To make
-the image rectangular, we fill the empty regions You specify the fill
-color by setting the @code{image->fill_color} field with a packed RGB
-color.
+the image rectangular the function fills the empty regions. The fill
+color is specified by setting the @code{image->fill_color} field with
+a packed RGB color.
 
 The last argument, @code{subpixel} specifies if subpixel sampling
 should be used. Although subpixel sampling adds processing time, it
@@ -1806,7 +1806,7 @@ warped image is flushed top-left within the image grid, otherwise it
 is centered.
 
 To illustrate how image warping can be used, we show how an image
-rotation can be implemented:
+rotation by an angle @code{deg} can be implemented:
 @example
 float m[2][2];
 m[0][0] = m[1][1] = cos(deg * M_PI / 180.0);
@@ -1816,13 +1816,14 @@ m[1][0] = -m[0][1];
 flimage_warp(im, mat, 0, 0, FLIMAGE_SUBPIXEL); 
 @end example
 @noindent
-Please note that the transormation is done in-place, i.e.@: after the
+Please note that the transformation is done in-place, i.e.@: after the
 function returns the image structure pointer, @code{im}, points to the
 rotated image.
 
-If you specify a warp matrix with only non-zero elements in the
-diagonal (scaling matrix), the image will only be scaled without being
-sheared.
+If you specify a warp matrix with the off-diagonal elements being zero
+(scaling matrix), the image will only be scaled (in x-direction by
+@code{m[0][0]} and in y-direction by @code{m[1][1]}) without being
+also rotated.
 
 By experimenting with various warp matrices you can obtain some
 interesting images. Just keep in mind that large values of the warp
@@ -1833,23 +1834,23 @@ matrix elements tend to make the final image larger.
 @subsection General Pixel Transformation
 
 Many image processing tasks can be implemented as seperate RGB
-transformations. These transformations can be done very effciently
-through the use of lookup tables. For this reason, the following
+transformations. These transformations can be done very efficiently
+through the use of lookup tables. For this reason the following
 routine exists:
 @findex flimage_transform_pixels()
 @anchor{flimage_transform_pixels()}
 @example
-int flimage_transform_pixels(FL_IMAGE *im ,int *red,int *green,
-                             int *blue);
+int flimage_transform_pixels(FL_IMAGE *im, int *red,
+                             int *green, int *blue);
 @end example
 @noindent
 where @code{red}, @code{green} and @code{blue} are the lookup tables
-of a length of at least @code{FL_PCMAX + 1} (256). The function
-returns a postive number on success and the image will be replaced.
-Note that this routine notices the settings of the subimage, i.e., you
-can transform a portion of the image.
+of a length of at least @code{FL_PCMAX + 1} (typically 256). The
+function returns a postive number on success and the image will be
+replaced. Note that this routine notices the settings of the subimage,
+i.e., you can transform a portion of the image.
 
-To illustrate the use of this routine, let's look at how a simple
+To illustrate the use of this routine let's look at how a simple
 contrast adjustment may be implemented:
 @example
 #include <forms.h>

@@ -95,7 +95,6 @@ fli_create_tbox( int          type,
                         fli_cntl.browserFontSize : FLI_TBOX_FONTSIZE;
     sp->def_style     = FL_NORMAL_STYLE;
     sp->def_align     = FL_ALIGN_LEFT;
-    sp->def_lcol      = obj->lcol;
     sp->defaultGC     = None;
     sp->backgroundGC  = None;
     sp->selectGC      = None;
@@ -1502,7 +1501,7 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
     if ( sp->defaultGC )
         XFreeGC( flx->display, sp->defaultGC );
 
-    sp->defaultGC = create_gc( obj, sp->def_style, sp->def_size, sp->def_lcol,
+    sp->defaultGC = create_gc( obj, sp->def_style, sp->def_size, obj->lcol,
                                sp->x, sp->y, sp->w, sp->h );
 
     /* Create background GC for redraw deselected lines */

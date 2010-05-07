@@ -1,3 +1,12 @@
+2010-05-07 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/tbox.c: As Marcus D.Leech pointed out setting colors
+	for a browser via fl_set_object_color() didn't work for
+	the font color (always black), hopefully fixed
+
+	* doc/part6_images.texi: Some more typos etc. found
+	by LukenShiro removed
+
 2010-05-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	* doc/part6_images.texi: A number of typos etc.
