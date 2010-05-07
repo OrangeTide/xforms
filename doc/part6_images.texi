@@ -2053,7 +2053,7 @@ so you can define your own markers:
 @anchor{flimage_define_marker()}
 @example
 int flimage_define_marker(const char *name,
-                          void *(draw)(FLIMAGE_MARKER *marker),
+                          void (*draw)(FLIMAGE_MARKER *marker),
                           const char *psdraw);
 @end example
 @noindent
