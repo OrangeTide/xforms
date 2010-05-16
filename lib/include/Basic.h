@@ -155,17 +155,19 @@ typedef enum {
     FL_PLACE_FREE       =   0,      /* size remain resizable      */
     FL_PLACE_MOUSE      =   1,      /* mouse centered on form     */
     FL_PLACE_CENTER     =   2,      /* center of the screen       */
-    FL_PLACE_POSITION   =   4,      /* specific size              */
+    FL_PLACE_POSITION   =   4,      /* specific position          */
     FL_PLACE_SIZE       =   8,      /* specific size              */
-    FL_PLACE_GEOMETRY   =  16,      /* specific position          */
+    FL_PLACE_GEOMETRY   =  16,      /* specific size and position */
     FL_PLACE_ASPECT     =  32,      /* keep aspect ratio          */
-    FL_PLACE_FULLSCREEN =  64,      /* scale to fit screen        */
+    FL_PLACE_FULLSCREEN =  64,      /* scale to fit to screen     */
     FL_PLACE_HOTSPOT    = 128,      /* so mouse fall on (x,y)     */
-    FL_PLACE_ICONIC     = 256,
+    FL_PLACE_ICONIC     = 256,      /* start in iconified form    */
 
     /* Modifiers */
 
-    FL_FREE_SIZE        = ( 1 << 14 )
+    FL_FREE_SIZE        = ( 1 << 14 ),
+	FL_FIX_SIZE         = ( 1 << 15 )  /* seems to be useless, but some
+										  programs seem to rely on it... */
 } FL_PLACE;
 
 #define FL_PLACE_FREE_CENTER ( FL_PLACE_CENTER | FL_FREE_SIZE )
@@ -923,6 +925,16 @@ FL_EXPORT void fl_remove_signal_callback( int s );
 FL_EXPORT void fl_signal_caught( int s );
 
 FL_EXPORT void fl_app_signal_direct( int y );
+
+
+
+enum {
+	FL_INPUT_END_EVENT_CLASSIC = 0,
+	FL_INPUT_END_EVENT_ALWAYS  = 1
+};
+
+FL_EXPORT int fl_input_end_return_handling( int type );
+
 
 /* timeouts */
 

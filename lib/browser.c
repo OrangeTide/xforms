@@ -543,9 +543,9 @@ fl_create_browser( int          type,
 
     ob->boxtype  = sp->tb->boxtype;
     ob->lcol     = sp->tb->lcol;
-    ob->align    = sp->tb->align;
     ob->col1     = sp->tb->col1;
     ob->col2     = sp->tb->col2;
+    ob->align    = sp->tb->align;
 
     /* Textbox handlers */
  

@@ -194,10 +194,11 @@ Never return or invoke callback
 
 @item @ref{FL_RETURN_END_CHANGED}
 Default, object is returned or callback is called at the end if the
-field is modified.
+field had been modified.
 
 @item @ref{FL_RETURN_CHANGED}
-Return or invoke the callback function whenever the field is changed.
+Return or invoke the callback function whenever the field had
+been changed.
 
 @item @ref{FL_RETURN_END}
 Return or invoke the callback function at the end regardless if the
@@ -210,24 +211,67 @@ the end (regardless if the field was changed or not)
 
 See demo @file{objreturn.c} for an example use of this.
 
-There is a
-routine that can be used to limit the number of characters per line
-for input fields of type @code{@ref{FL_NORMAL_INPUT}}
+A few additional notes: when you read "the fields has been changed"
+this includes the case that the user e.g.@: deleted a character and
+then added it back. Also this case is reported as a "change" so the
+term "changed"  does not necessarily mean that the content of the
+field has changed but that the user made changes (but which still
+might result in the exact same content as before.
+
+Another term that may be understood differently is "end". In the
+versions since 1.0.91 it means that the users either hits the
+@code{<Tab>} or the @code{<Return>} key (except for multi-line
+inputs) or that she clicks onto some other object that in principle
+allows user interaction. These events are interpreted as an
+indication the user is done editing the input field and thus are
+reported back to the program, either by returning the input object
+or invoking its callback. But unless the user goes to a different
+input object the input field edited retains the focus.
+
+Up to version 1.0.90 this was handled a bit differently: an "end
+of edit" event was not reported back to the program when the user
+clicked on a non-input object, i.e. changed to a different input
+object. This let to some problems when the interaction with the
+clicked-on non-input object dependet on the new content of the
+input object, just having been edited, but which hadn't been
+been reported back to the caller. On the other hand, some programs
+rely on the "old" behaviour. These programs can switch back to the
+traditional behaviour by calling the new function (available since
+1.0.93)
+@findex fl_input_end_return_handling
+@anchor{fl_input_end_return_handling()}
+@example
+fl_input_end_return_handling(int type);
+@end example
+@noindent
+where @code{type} can be either
+@tindex FL_INPUT_END_EVENT_ALWAYS
+@anchor{FL_INPUT_END_EVENT_ALWAYS}
+@code{FL_INPUT_END_EVENT_ALWAYS}, which is now the default, or
+@tindex FL_INPUT_END_EVENT_CLASSIC
+@anchor{FL_INPUT_END_EVENT_CLASSIC}
+@code{FL_INPUT_END_EVENT_CLASSIC}, which switches back to the type
+of handing used in versions up and including to 1.0.90. The function
+can be used at any time to change between the two possible types of
+behaviour.
+
+There is a routine that can be used to limit the number of characters
+per line for input fields of type @code{@ref{FL_NORMAL_INPUT}}
 @findex fl_set_input_maxchars()
 @anchor{fl_set_input_maxchars()}
 @example
 void fl_set_input_maxchars(FL_OBJECT *obj, int maxchars);
 @end example
 @noindent
-To reset the limit to infinite, set @code{maxchars} to 0. Note that
-input objects of types @code{@ref{FL_DATE_INPUT}} are limited to 10
+To reset the limit to unlimited, set @code{maxchars} to 0. Note that
+input objects of type @code{@ref{FL_DATE_INPUT}} are limited to 10
 characters per default and those of type @code{@ref{FL_SECRET_INPUT}}
 to 16.
 
 Although an input of type @code{@ref{FL_RETURN_ALWAYS}} can be used in
 combination with the callback function to check the validity of
 characters that are entered into the input field, use of the following
-is typically more appropriate
+method may simpliy this task considerably:
 @tindex FL_INPUTVALIDATOR
 @anchor{FL_INPUTVALIDATOR}
 @findex fl_set_input_filter()
@@ -242,7 +286,7 @@ FL_INPUTVALIDATOR fl_set_input_filter(FL_OBJECT *obj,
 @anchor{FL_VALID}
 @anchor{FL_INVALID}
 @anchor{FL_RINGBELL}
-The function @code{filter} is called whenever a new (regular)
+The function @code{filter()} is called whenever a new (regular)
 character is entered. @code{old} is the string in the input field
 before the newly typed character @code{c} was added to form the new
 string @code{cur}. If the new character is not an acceptable character

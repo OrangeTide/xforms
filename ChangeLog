@@ -1,3 +1,11 @@
+2010-05-15 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/handling.c, lib/include/Basic.h: After intensive
+	discussions with Serge Bromow added new funtion that alows
+	to switch back to the pre-1.0.91 behavior concerning when
+	an interaction with an input object is considered to be
+	finished.
+
 2010-05-07 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/tbox.c: As Marcus D.Leech pointed out setting colors

@@ -57,6 +57,26 @@ static XEvent st_xev;
 extern void ( * fli_handle_signal )( void );       /* defined in signal.c */
 extern int ( * fli_handle_clipboard )( void * );   /* defined in clipboard.c */
 
+/* When set results in behaviour as in version 1.0.90 and before where
+   clicking on a non-input object didn't make an input object lose focus
+   shortly and thus no "end of editing" was signaled to the user */
+
+static int end_event_for_input = FL_INPUT_END_EVENT_ALWAYS;
+
+
+/***************************************
+ * Function for switching between "old" and "new" input handling
+ * when another non-input object is clicked on
+ ***************************************/
+
+int
+fl_input_end_return_handling( int type )
+{
+    int old_end_event_for_input = end_event_for_input;
+
+    end_event_for_input = type;
+    return old_end_event_for_input;
+}
 
 
 /***************************************
@@ -193,8 +213,9 @@ do_shortcut( FL_FORM  * form,
         {
             /* It's always a good idea to make Alt_k case insensitive */
 
-            key1 = FL_ALT_MASK
-                   + ( islower( key ) ? toupper( key ) : tolower( key ) );
+            key1 =   FL_ALT_MASK
+                   + ( islower( ( unsigned char ) key ) ?
+                       toupper( ( unsigned char ) key ) : key );
             key2 = key + FL_ALT_MASK;
         }
         else
@@ -208,7 +229,7 @@ do_shortcut( FL_FORM  * form,
 
     for ( obj = form->first; obj; obj = obj->next )
     {
-        if ( ! obj->visible || ! obj->active || ! obj->shortcut )
+        if ( ! obj->shortcut || ! obj->active || ! obj->visible)
             continue;
 
         for ( s = obj->shortcut; *s; s++ )
@@ -236,7 +257,7 @@ do_shortcut( FL_FORM  * form,
                 fli_context->mouse_button = FL_SHORTCUT + key1;
 
                 /* This is not exactly correct as shortcut might quit,
-                   fl_finish will restore the keyboard state */
+                   fl_finish() will restore the keyboard state */
 
                 if ( fli_keybdcontrol.auto_repeat_mode == AutoRepeatModeOn )
                     XAutoRepeatOn( flx->display );
@@ -339,10 +360,10 @@ handle_keyboard( FL_FORM  * form,
             return;
         }
 
-        /* The <Tab> and <Return> keys the move focus to the next or previous
-           input object (depending on the <SHIFT> being pressed also and for
+        /* The <Tab> and <Return> keys move the focus to the next or previous
+           input object (depending on <SHIFT> being pressed also, and for
            <Return> only if the current focus object hasn't set FL_KEY_TAB as
-           it is the case for  multiline input objects) */
+           it's the case for  multiline input objects) */
 
         if (    key == '\t'
              || ( key == '\r' && ! ( focusobj->wantkey & FL_KEY_TAB ) ) )
@@ -464,7 +485,10 @@ fli_handle_form( FL_FORM * form,
                FL_PUSH was for is still active - it may have become deactivated
                due to the handler for the object that became unfocused! */
 
-            if ( obj && form->focusobj && form->focusobj != obj )
+            if (    obj
+                 && form->focusobj
+                 && form->focusobj != obj
+                 && ( obj->input || end_event_for_input ) )
             {
                 FL_OBJECT *old_focusobj = form->focusobj;
 
@@ -563,8 +587,8 @@ fli_handle_form( FL_FORM * form,
 
         case FL_MOVEORIGIN:
         case FL_OTHER:
-            /* Need to dispatch it thru all objects and monitor the status of
-               forms as it may get closed */
+            /* Need to dispatch it through all objects and monitor the status
+               of forms as it may get closed */
 
             for ( obj = form->first; obj && form->visible == FL_VISIBLE;
                   obj = obj->next )
