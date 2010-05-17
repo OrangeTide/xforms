@@ -253,7 +253,7 @@ where @code{type} can be either
 @code{FL_INPUT_END_EVENT_CLASSIC}, which switches back to the type
 of handing used in versions up and including to 1.0.90. The function
 can be used at any time to change between the two possible types of
-behaviour.
+behaviour. The function returns the previous setting.
 
 There is a routine that can be used to limit the number of characters
 per line for input fields of type @code{@ref{FL_NORMAL_INPUT}}

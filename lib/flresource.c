@@ -1061,7 +1061,9 @@ fl_initialize( int        * na,
 
     fl_snprintf( disp_name, sizeof disp_name, "%s.name", fl_app_name );
     fl_snprintf( disp_cls,  sizeof disp_cls , "%s.Name", fl_app_class );
+
     M_warn( "fl_initialize", "Trying display %s", disp_name );
+
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
     {
         fl_app_name = fl_strdup( xval.addr );
@@ -1379,7 +1381,7 @@ fl_finish( void )
 
 
 /***************************************
- * Find out about  virtual root. Taken from XFaq
+ * Find out about virtual root. Taken from XFaq
  ***************************************/
 
 #include <X11/Xatom.h>

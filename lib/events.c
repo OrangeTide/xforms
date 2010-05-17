@@ -234,6 +234,7 @@ fli_get_from_obj_queue( void )
 
     if ( t->obj != FL_EVENT )
         t->obj->returned = t->ret;
+
     return t->obj;
 }
     
@@ -737,9 +738,9 @@ fl_XNextEvent( XEvent * xev )
 
 
 /***************************************
- * Replacement for the Xlib XPeekEvent() function: returns the the
- * first event avaialable without removing it from the queue and
- * blocks until an event is received.
+ * Replacement for the Xlib XPeekEvent() function: returns a copy
+ * of the first event avaialable but does not remove it. Blocks
+ * if there is no event until a new one has arrived.
  ***************************************/
 
 int
@@ -757,9 +758,9 @@ fl_XPeekEvent( XEvent * xev )
 
 
 /***************************************
- * Get all user events and treat them: either consume by calling
- * the callback routine or put into the internal object queue for
- * later retrival
+ * Get all user events and treat them: either "consume" them by
+ * calling the callback routine or put them onto the internal
+ * object queue for later retrival
  ***************************************/
 
 void
@@ -953,9 +954,9 @@ fli_compress_redraw( XEvent * ev )
     Region reg = XCreateRegion( );
     XRectangle rec;
 
-    /* This is theoretically not correct as we can't peek ahead and ignore
-       the events in between, but it works in XForms as we always update the
-       form size and position when dealing with Expose event.
+    /* Original comment: this is theoretically not correct as we can't peek
+       ahead and ignore the events in between, but it works in XForms as we
+       always update the form size and position when dealing with Expose event.
 
        This has been changed a bit since 1.0.90: There was a problem with
        e.g. KDE or Gnome when they were set up to redraw also during resizing
@@ -966,8 +967,8 @@ fli_compress_redraw( XEvent * ev )
        event onto the event queue and return the last ConfigureNotify event
        instead of the original Expose event we got started with. This hope-
        fully is not only a solution that covers all cases but also keeps
-       the numbers of redraws to a minimum. The only drawback is that the
-       function do_interaction_step(), handling the Expose event, one has to
+       the numbers of redraws to a minimum. The only drawback is that in the
+       do_interaction_step() function, handling the Expose event, one has to
        check if the area specified by the event isn't larger than the (new)
        size of the window and prune it if necessary.                  JTT */
         
@@ -1002,9 +1003,9 @@ fli_compress_redraw( XEvent * ev )
     while ( XCheckTypedWindowEvent( flx->display, win, ConfigureNotify, ev ) )
         /*empty */ ;
 
-    /* If there was at least one put the "consolidated" Expose event back
-       onto the event queue and return the last ConfigureNotify event we got,
-       otherwise the Expose event itself.
+    /* If there was at least one ConfigureNotify event put the "consolidated"
+       Expose event back onto the event queue and return the last
+       ConfigureNotify event we got, otherwise the Expose event itself.
 
        Since e.g. KDE and Gnome can send the ConfigureNotify event artificially
        to achieve an update of the display while resizing is still going on,
@@ -1012,9 +1013,9 @@ fli_compress_redraw( XEvent * ev )
        other hand, in do_interaction_step(), where the events are handled,
        this member is checked for to get around a bug in mwm. So we got to
        reset it here to avoid the event getting flagged as spurious. This
-       hopefully won't interfere we the mwm bug detection since it's for
+       hopefully won't interfere with the mwm bug detection since it's for
        cases were a ConfigureNotify gets send, but no corresponding Expose
-       events, and in this case we wouldn't have gotten here... */
+       events, and in this case we wouldn't have ended up here... */
 
     if ( ev->type == ConfigureNotify )
     {
@@ -1134,7 +1135,7 @@ fl_remove_selected_xevent( Window win,
     XGetWindowAttributes( flx->display, win, &xwa );
     xwa.your_event_mask &= ~mask;
 
-    /* On some SGI machines, your_event_mask has bogus value 0x80??????,
+    /* On some SGI machines 'your_event_mask' has bogus value of 0x80??????,
        causing an X protocol error. Fix this here */
 
     xwa.your_event_mask &= AllEventsMask;

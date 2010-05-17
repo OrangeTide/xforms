@@ -1153,6 +1153,9 @@ fli_tbox_set_topline( FL_OBJECT * obj,
 {
     FLI_TBOX_SPEC *sp = obj->spec;
 
+    if ( ! sp->num_lines )
+        return;
+
     if ( line < 0 )
         line = 0;
     else if ( line >= sp->num_lines )
@@ -1171,6 +1174,9 @@ fli_tbox_set_bottomline( FL_OBJECT * obj,
                          int         line )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
+
+    if ( ! sp->num_lines )
+        return;
 
     if ( line < 0 )
         line = 0;
@@ -1191,6 +1197,9 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
                          int         line )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
+
+    if ( ! sp->num_lines )
+        return;
 
     if ( line < 0 )
         line = 0;

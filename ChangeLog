@@ -1,10 +1,18 @@
+2010-05-17 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/tbox.c: As Serge Bromow pointed out in the functions
+	fl_set_browser_topline(), fl_set_browser_bottomline() and
+	fl_set_browser_centerline() there was a missing check for
+	the browser being empty, resulting in dereferencing a NULL
+	pointer.
+
 2010-05-15 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/handling.c, lib/include/Basic.h: After intensive
-	discussions with Serge Bromow added new funtion that alows
+	discussions with Serge Bromow added new funtion that allows
 	to switch back to the pre-1.0.91 behavior concerning when
-	an interaction with an input object is considered to be
-	finished.
+	an interaction with an input object is considered to have
+	ended.
 
 2010-05-07 Jens Thoms Toerring    <jt@toerring.de>
 
