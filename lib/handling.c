@@ -205,21 +205,18 @@ do_shortcut( FL_FORM  * form,
 
     key1 = key2 = key;
 
-    /* Check if the <Alt> key is pressed */
+    /* Check for ALT modifier key */
 
     if ( fl_keypressed( XK_Alt_L ) || fl_keypressed( XK_Alt_R ) )
     {
         if ( key < 256 )
         {
-            /* It's always a good idea to make Alt_k case insensitive */
-
-            key1 =   FL_ALT_MASK
-                   + ( islower( ( unsigned char ) key ) ?
-                       toupper( ( unsigned char ) key ) : key );
-            key2 = key + FL_ALT_MASK;
+            key1 = FL_ALT_MASK + ( islower( ( int ) key ) ?
+                                   toupper( ( int ) key ) : key );
+            key2 = FL_ALT_MASK + key;
         }
         else
-            key1 = key2 = key + FL_ALT_MASK;
+            key1 = key2 = FL_ALT_MASK + key;
     }
 
     M_info( "do_shortcut", "win = %ld key = %d %d %d",
