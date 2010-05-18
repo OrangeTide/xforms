@@ -1638,9 +1638,9 @@ fli_convert_shortcut( const char * str,
 
             default :
                 if (    offset & ( FL_CONTROL_MASK | FL_ALT_MASK )
-                        && (    ( *c >= 'A' && *c <= 'Z' )
-                             || ( *c >= 'a' && *c <= 'z' ) ) )
-                    sc[ i++ ] = toupper( ( int ) *c ) - 'A' + 1;
+                     && (    ( *c >= 'A' && *c <= 'Z' )
+                          || ( *c >= 'a' && *c <= 'z' ) ) )
+                    sc[ i++ ] = toupper( ( int ) *c ) + offset;
                 else
                     sc[ i++ ] = *c + offset;
                 offset = 0;
