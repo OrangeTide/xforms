@@ -58,7 +58,7 @@ extern int strcasecmp( const char *, const char * );
 static const char *fd_version[ ] =
 {
     "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.38 $ of $Date: 2009/09/08 14:18:40 $",
+    "$State: Exp $  $Revision: 1.39 $ of $Date: 2010/05/19 21:18:01 $",
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
     "GNU Lesser General Public License sinc 2002",
     NULL
@@ -1046,11 +1046,12 @@ main( int    argc,
 
     winw = w;
     winh = h;
+
     fd_colormap = fl_state[ fl_vmode ].colormap;
     fd_white = fl_get_flcolor( FL_WHITE );
-    fd_red = fl_get_flcolor( FL_RED );
+    fd_red   = fl_get_flcolor( FL_RED );
     fd_black = fl_get_flcolor( FL_BLACK );
-    fd_col = fl_get_flcolor( FL_COL1 );
+    fd_col   = fl_get_flcolor( FL_COL1 );
 
     main_window = fli_cmap_winopen( fl_root, fd_colormap, "Form Design" );
 

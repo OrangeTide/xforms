@@ -747,70 +747,64 @@ handle_select( const XEvent * xev )
     float x,
           y,
           w,
-          h,
-          mx,
-          my;
+          h;
     float stepsize;
 
-    if ( cur_form == NULL )
+    if ( cur_form == NULL || ! ( mouseobj = find_mouseobj( ) ) )
         return;
 
-    s = ShiftIsDown( xev->xbutton.state );
-
-    mouseobj = find_mouseobj( );
-    find_mousepos( &mx, &my );
-
-    if ( s )            /* Shift Push */
+    if ( ( s = ShiftIsDown( xev->xbutton.state ) ) )      /* Shift Push */
     {
         if ( ! cur_form->first )
             fprintf( stderr, "something is wrong\n" );
-        if ( mouseobj == NULL || mouseobj == BackOBJ( ) )
+        if ( mouseobj == BackOBJ( ) )
             return;
 
         if ( find_selobject( mouseobj ) == -1 )
             addto_selection( mouseobj );
         else
             deletefrom_selection( mouseobj );
+
+        return;
     }
-    else
+
+    clear_selection( );
+
+    find_mousepos( &x, &y );
+    w = 0.0;
+    h = 0.0;
+
+    stepsize = get_step_size( );
+    set_step_size( 0.0 );
+    if ( xev->type != ButtonRelease )
+        scale_box( &x, &y, &w, &h );
+    set_step_size( stepsize );
+    obj = BackOBJ( )->next;
+
+    while ( obj != NULL )
     {
-        clear_selection( );
-        x = mx;
-        y = my;
-        w = 0.0;
-        h = 0.0;
-        stepsize = get_step_size( );
-        set_step_size( 0.0 );
-        if ( xev->type != ButtonRelease )
-            scale_box( &x, &y, &w, &h );
-        set_step_size( stepsize );
-        obj = BackOBJ( )->next;
+        if (    obj->objclass != FL_BEGIN_GROUP
+             && obj->objclass != FL_END_GROUP
+              && obj->x >= x
+              && obj->y >= y
+              && obj->x + obj->w <= x + w
+              && obj->y + obj->h <= y + h )
+            addto_selection( obj );
 
-        while ( obj != NULL )
+        obj = obj->next;
+    }
+
+    if ( selnumb == 0 )
+    {
+        if ( mouseobj == NULL )
+            return;
+        else if ( mouseobj == BackOBJ( ) )
         {
-            if (    obj->objclass != FL_BEGIN_GROUP
-                 && obj->objclass != FL_END_GROUP
-                 && obj->x >= x
-                 && obj->y >= y
-                 && obj->x + obj->w <= x + w
-                 && obj->y + obj->h <= y + h )
-                addto_selection( obj );
-
-            obj = obj->next;
+            addto_selection( mouseobj );
+            backf = FL_TRUE;
         }
-
-        if ( selnumb == 0 )
-        {
-            if ( mouseobj == NULL )
-                return;
-            else if ( mouseobj == BackOBJ( ) )
-            {
-                addto_selection( mouseobj );
-                backf = FL_TRUE;
-            }
-            else
-                addto_selection( mouseobj );
-        }
+        else
+            addto_selection( mouseobj );
     }
 }
 

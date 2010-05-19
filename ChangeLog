@@ -1,3 +1,9 @@
+2010-05-19 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign: small changes (mostly to fd/ui_theforms.fd)
+	to get rid of annoying flicker in the control window
+	when adding a new object in the other window.
+
 2010-05-18 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/objects.c: Another bug found by Serge Bromow fixed:
@@ -21,7 +27,7 @@
 
 2010-05-07 Jens Thoms Toerring    <jt@toerring.de>
 
-	* lib/tbox.c: As Marcus D.Leech pointed out setting colors
+	* lib/tbox.c: As Marcus D. Leech pointed out setting colors
 	for a browser via fl_set_object_color() didn't work for
 	the font color (always black), hopefully fixed
 
@@ -51,9 +57,9 @@
 
 2010-03-09 Jens Thoms Toerring    <jt@toerring.de>
 
-	* Several changes to the way things re redrawn - there
-	were some problems with redrawing labels that needed
-	several changes to get it right (again).
+	* Several changes to the way things redrawn - there were
+	some problems with redrawing labels that needed several
+	changes to get it right (again).
 
 	* Some unused stuff removed from include files
 
@@ -88,10 +94,10 @@
 
 2009-12-13 Jens Thoms Toerring    <jt@toerring.de>
 
-	demos/thumbwheel.c: Bug fixed as pointed out by "LukeShiro"
+	demos/thumbwheel.c: Bug fixed as pointed out by LukeShiro
 
 	images/flimage.h: Removed useless declaration of fl_basename()
-	as proposed by "LukenShiro"
+	as proposed by LukenShiro
 
 	several include files: Removed useless members from a number
 	of structures and enums, adjusted return types of a few

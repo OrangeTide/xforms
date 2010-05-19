@@ -1203,13 +1203,13 @@ void fl_set_form_callback(FL_FORM *form,
 
 Whenever @code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}}
 would return an object in form they call the routine callback instead,
-with the object as an argument. So callback should have the form
+with the object as an argument. So the callback should have the form
 @example
 void callback(FL_OBJECT *obj, void *data);
 @end example
 
 With each form you can associate its own callback routine. For objects
-that have their own callbacks, the object callbacks have priority over
+that have their own callbacks the object callbacks have priority over
 the form callback.
 
 When the application program also has its own windows (via Xlib or Xt),
@@ -1222,12 +1222,14 @@ callback routine use the call
 @tindex FL_APPEVENT_CB
 @findex fl_set_event_callback()
 @example
-FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev, void *data),
+FL_APPEVENT_CB fl_set_event_callback(int (*callback)(XEvent *ev,
+                                                     void *data),
                                      void *data);
 @end example
 @noindent
 Whenever an event happens the callback function is invoked with the
-event as the first argument. So the callback should have the form
+event as the first argument and a pointer to data you want it to
+receive. So the callback should have the form
 @example
 typedef int (*FL_APPEVENT_CB)(XEvent *ev, void *data);
 int callback(XEvent *xev, void *data);
@@ -1252,20 +1254,19 @@ FL_APPEVENT_CB fl_add_event_callback(Window window, int xev_type,
 where @code{window} is the window for which the callback routine is to
 be registered. @code{xev_type} is the XEvent type you're interested
 in, e.g., @code{Expose} etc. If @code{xev_type} is 0, it is taken to
-mean the callback routine will handle all events for the window. The
-newly installed callback replaces the callback already installed. Note
-that this function only works for windows created directly by the
+mean that the callback routine will handle all events for the window.
+The newly installed callback replaces the callback already installed.
+Note that this function only works for windows created directly by the
 application program (i.e., it won't work for forms' windows or windows
 created by the canvas object). It is possible to access the raw events
 that happen on a form's window via
-@code{@ref{fl_register_raw_callback()}} discussed in @ref{Form
-Events}.
+@code{@ref{fl_register_raw_callback()}} discussed in @ref{Form Events}.
 
 @code{@ref{fl_add_event_callback()}} does not alter the window's event
-mask nor does it solicit events for you. This is so mainly for the
-reason that an event type does not always correspond to a unique event
-mask, also in this way, the user can solicit events at window's
-creation and use 0 to register all the event handlers.
+mask nor does it solicit events for you. That's mainly for the reason
+that an event type does not always correspond to a unique event mask,
+also in this way, the user can solicit events at window's creation and
+use 0 to register all the event handlers.
 
 To let XForms handle solicitation for you, call the following routine
 @findex fl_activate_event_callbacks()
@@ -1281,7 +1282,7 @@ be the one you want. For example, @code{MotionNotify} event can be
 mapped into @code{ButtonMotionMask} or @code{PointerMotionMask}. Forms
 Library will use both.
 
-It is possible to control precisely the masks you want by using the
+It is possible to control the masks you want precisely by using the
 following function, which can also be used to add or remove solicited
 event masks on the fly without altering other masks already selected:
 @findex fl_addto_selected_xevent()
@@ -1305,8 +1306,8 @@ present. For example, after the following sequence
 fl_add_event_callback(winID, Expose, expose_cb, 0);
 fl_set_event_callback(event_callback);
 @end example
-All @code{Expose} events on window @code{winID} are consumed by
-@code{expose_cb}, thus @code{event_callback()} would never be
+and all @code{Expose} events on window @code{winID} are consumed
+by @code{expose_cb} then @code{event_callback()} would never be
 invoked as a result of an @code{Expose} event.
 
 To remove a callback, use the following routine

@@ -33,13 +33,15 @@ create_form_control( void )
     fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_lsize( obj, FL_MEDIUM_SIZE );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
-    fl_set_object_lstyle( obj, FL_BOLD_STYLE+FL_EMBOSSED_STYLE );
 
     fdui->selmsg = obj = fl_add_text( FL_NORMAL_TEXT, 10, 254, 298, 22, "" );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_COL1, FL_COL1 );
 
-    fdui->oristatus = obj = fl_add_box( FL_DOWN_BOX, 315, 254, 75, 22, "" );
+    fdui->oristatus = obj = fl_add_text( FL_NORMAL_TEXT, 315, 254, 75, 22, "" );
+    fl_set_object_boxtype( obj, FL_DOWN_BOX );
+    fl_set_object_color( obj, FL_COL1, FL_COL1 );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
 
     obj = fl_add_frame( FL_ENGRAVED_FRAME, 10, 70, 460, 181, "" );
 
@@ -103,7 +105,10 @@ create_form_control( void )
     fl_set_object_lalign( obj, FL_ALIGN_TOP );
     fl_set_object_callback( obj, group_cb, 0 );
 
-    fdui->sizestatus = obj = fl_add_box( FL_DOWN_BOX, 390, 254, 80, 22, "" );
+    fdui->sizestatus = obj = fl_add_text( FL_NORMAL_TEXT, 390, 254, 80, 22, "" );
+    fl_set_object_boxtype( obj, FL_DOWN_BOX );
+    fl_set_object_color( obj, FL_COL1, FL_COL1 );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
 
     obj = fl_add_text( FL_NORMAL_TEXT, 440, 17, 138, 13, "(c) T.C. Zhao & Mark Overmars" );
     fl_set_object_boxtype( obj, FL_NO_BOX );
@@ -427,6 +432,7 @@ create_form_resize( void )
     fdui->height = obj = fl_add_spinner( FL_INT_SPINNER, 105, 90, 90, 24, "Height: " );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_return( obj, FL_RETURN_END_CHANGED );
+    fl_set_object_lsize( fl_get_spinner_input( obj ), FL_NORMAL_SIZE );
 
     fdui->quit = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 140, 80, 25, "Dismiss" );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );

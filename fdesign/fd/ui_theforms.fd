@@ -75,7 +75,7 @@ box: 452 0 125 22
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
-style: FL_BOLD_STYLE+FL_EMBOSSED_STYLE
+style: FL_NORMAL_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLUE
 label: Form Designer
@@ -105,12 +105,12 @@ callback:
 argument: 
 
 --------------------
-class: FL_BOX
-type: DOWN_BOX
+class: FL_TEXT
+type: NORMAL_TEXT
 box: 315 254 75 22
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -431,12 +431,12 @@ callback: group_cb
 argument: 0
 
 --------------------
-class: FL_BOX
-type: DOWN_BOX
+class: FL_TEXT
+type: NORMAL_TEXT
 box: 390 254 80 22
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
+alignment: FL_ALIGN_CENTER|FL_ALIGN_INSIDE
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -907,7 +907,6 @@ gravity: FL_NoGravity FL_NoGravity
 name: snapobj
 callback: snap_cb
 argument: 0
-return: FL_RETURN_CHANGED
 
 --------------------
 class: FL_BUTTON
