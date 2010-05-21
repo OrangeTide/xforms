@@ -1,4 +1,4 @@
-			  XForms Version 1.0.92
+			  XForms Version 1.0.93
 
 This is the Free Software distribution of the XForms Library, a
 graphical user interface toolkit for X Window Systems.
@@ -11,7 +11,7 @@ See the file COPYING.LIB for the gory details.
 What's new?
 -----------
 
-XForms 1.0.92 is a version in preparation for XForms 1.1.0. While
+XForms 1.0.93 is a version in preparation for XForms 1.1.0. While
 it is labeled as a "development version" we believe that it per-
 forms correctly and has less bugs than older versions.
 
@@ -76,8 +76,9 @@ Compiling XForms
 You should be able to compile XForms on any 'reasonable' flavour of
 unix.
 
-XForms relies on several other libraries, namely
+XForms relies on some other libraries, namely
 
+    * libX11
 	* libXpm, version 4.7 or newer.
 	* libjpeg, 6.0b or newer.
 	* libGL (optional)

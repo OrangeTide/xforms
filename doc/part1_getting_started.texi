@@ -71,10 +71,10 @@ The first line indicates the start of the form definition.
 @code{simpleform} will later be used to identify the form. The type of
 the form is @code{FL_UP_BOX}. This means that the background of the
 form is a raised box that looks like it is coming out of the screen.
-The form has a size of 230 by 160 pixels1. Next we add a button to the
+The form has a size of 230 by 160 pixels. Next we add a button to the
 form. The type of the button is @code{FL_NORMAL_BUTTON} which will be
-explained below in detail. It is centered in the form by virtue of
-the button geometry supplied and has "Push Me" its label. After
+explained below in detail. It is positioned in the form by virtue of
+the button geometry supplied and has "Push Me" as its label. After
 having defined the form we can display it using the call
 @example
 fl_show_form(simpleform, FL_PLACE_MOUSE, FL_NOBORDER,
@@ -99,7 +99,7 @@ fl_do_forms();
 @end example
 @noindent
 This will handle interaction with the form until you press and release
-the button with the mouse at which moment control is returned to the
+the button with the mouse, at which moment control is returned to the
 program. Now the form can be removed from the screen (and have its
 associated window destroyed) using
 @example
@@ -114,12 +114,16 @@ library works.
 Compile and run it to see the effect. To compile a program using the
 Forms Library use the following command or something similar
 @example
-cc -o pushme pushme.c -lX11 -lforms -lXpm -lm
+cc -o pushme pushme.c -lforms
 @end example
 @noindent
-(Of course you need to already have installed the library for that to
-work. Contact your systems administrator or read the @file{README} file
-in the topmost XForms directory to see how to do this.)
+Please note that linking against the Forms library requires some
+other libraries to be istalled, at least the @code{X11} and the
+@code{Xpm} library. Some applications may also require the @code{JPEG}
+and/or the @code{GL} library. These libraries don't need to be
+specified explicitely in the linker command but must be available
+since the Forms library depends on them. If not installed contact
+your systems administrator.
 
 This simple example is, of course, of little use. Let us look at a
 slightly more complicated one (the program can be found

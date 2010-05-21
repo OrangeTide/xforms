@@ -36,10 +36,10 @@ The archive of messages from before August 2009 and going back until
 @center @url{http://xforms-toolkit.org/old-archive}
 Please write to the mailing list if you have questions or find bugs.
 
-This document is mostly based on the documentation for version 0.89 of
-the Forms Library. It has been reconstructed from the PDF version (the
+This document is based on the documentation for version 0.89 of the
+Forms Library. It has been reconstructed from the PDF version (the
 original sources seem to have gone AWOL) and has been updated to cover
-the changes introduced with version 1.0.92. Some things from older
+the changes introduced since version 0.89. Some things from older
 versions are missing (e.g.@: function that are deprecated but still
 can be used), while some features described here may not be available
 with older versions of XForms.
