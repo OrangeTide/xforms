@@ -98,7 +98,7 @@
 	@nice:Pixmap\nBrowser:pmbrowse
 	@nice:WWW\nbrowser\nLauncher:wwwl
 
-@main:Miscllenous\nDemos:@Misc
+@main:Miscellaneous\nDemos:@Misc
 	@Misc:Iconify\nvia WM:iconify
 	@Misc:Cursor:cursor
 	@Misc:Preemptive\nHandler:preemptive
