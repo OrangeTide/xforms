@@ -1,8 +1,8 @@
 \input texinfo
 
 @setfilename xforms.info
-@settitle XForms (Forms Library)@*A Graphical User Interface Toolkit for X@*Version 1.0.92
-@set lastupdate January 4, 2010
+@settitle XForms (Forms Library)@*A Graphical User Interface Toolkit for X@*Version 1.0.93
+@set lastupdate May 21, 2010
 @paragraphindent 0
 
 @titlepage
@@ -12,9 +12,9 @@
 @sp 1
 @center @titlefont{A Graphical User Interface Toolkit for X}
 @sp 8
-@center Library Version 1.0.92
+@center Library Version 1.0.93
 @sp 2
-@center January 2010
+@center May 2010
 @sp 8
 @end titlepage
 

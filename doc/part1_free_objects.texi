@@ -339,9 +339,9 @@ objects that control similar things. The advantage will become clear
 as we proceed.
 
 Next we add three sliders to the form. By using appropriate colors for
-the sliding bar (red, green, blue), there is no need to label the
-slider. There's also no need to store their addresses since the
-callback routine receives it autmatically.
+these sliding bars (red, green, blue), there is no need to label them.
+There's also no need to store their addresses as their callback routine
+@code{change_color()} will receive them automatically.
 @example
    fdui->colgrp = fl_bgn_group();
 
@@ -470,7 +470,7 @@ typedef struct @{
     int      pc[3];       /* primary color R,G,B */
     int      newfig;      /* indicate a new figure */
     FL_COLOR col;         /* color index */
-@} DrawObject;
+@} DrawFigure;
 
 static DrawFigure saved_figure[MAX_FIGURES],
                   *cur_fig;
@@ -533,7 +533,7 @@ might have to set the clip mask in the copy whereas the default GC
 always have the proper clip mask (in this case, to the bounding box of
 the free object).
 
-We useq the Forms Library's built-in drawing routines to draw circles
+We use the Forms Library's built-in drawing routines to draw circles
 and rectangles. Then our drawing functions can be defined as follows:
 @example
 static DrawFunc drawfunc[] = @{

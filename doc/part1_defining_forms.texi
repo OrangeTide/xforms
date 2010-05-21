@@ -72,7 +72,7 @@ the actual work but it's no problem to define new forms also later on.
 
 The first type of objects are boxes. Boxes are simply used to give the
 forms and objects a nicer appearance. They can be used to visually
-group other object together. The background of each form is a box. To
+group other objects together. The background of each form is a box. To
 add a box to a form you use the routine
 @findex fl_add_box()
 @example
@@ -1028,7 +1028,7 @@ This function frees the previous allocated pixel corresponding to color
 index @code{i} and re-allocates a pixel with the RGB value specified.
 The pixel value is returned by the function. It is recommended that you
 use an index larger than @code{FL_FREE_COL1} for your remap request to
-avoid accidentally free the colors you have not explicitly allocated.
+avoid accidentally freeing the colors you have not explicitly allocated.
 Indices larger than 224 are reserved and should not be used.
 
 Sometimes it may be more convenient to associate an index with a
@@ -1077,8 +1077,8 @@ void fl_set_color_leak(int flag);
 @end example
 
 Due to the use of an internal colormap and the simplified user
-interface, changing the colormap value for the index index may not
-result in a change of the color for the object. An actual redraw of the
+interface, changing the colormap value for the index may not result
+in a change of the color for the object. An actual redraw of the
 object (see below) whose color is changed may be required to have the
 change take effect. Therefore, a typical sequence of changing the color
 of a visible object is as follows:
@@ -1321,11 +1321,12 @@ int fl_set_font_name(int index, const char *name);
 @end example
 where @code{index} is the number of the font (between 0 and 47) and
 @code{name} should be a valid font name (with the exception of the size
-field). If you are defining a complete different font family starting at
-index @code{k}, it's a good idea to define @code{k + FL_BOLD_STYLE} to
-be the corresponding bold font in the family , and @code{k +
-FL_ITALIC_STYLE} the corresponding italic font in the family (so object
-like browser can obtain correct style when switching font styles):
+field). If you are defining a completely different font family
+starting at index @code{k}, it's a good idea to define
+@code{k + FL_BOLD_STYLE} to be the corresponding bold font in the
+family , and @code{k + FL_ITALIC_STYLE} the corresponding italic font
+in the family (so object like browser can obtain correct style when
+switching font styles):
 @example
 #define Pretty       30
 #define PrettyBold   (Pretty + FL_BOLD_STYLE)
@@ -1422,11 +1423,11 @@ The following possibilities exist:
 @tab To the left and top of the box.
 @end multitable
 
-Normally, all the alignment request places the text outside the box,
+Normally, all the alignment requests place the text outside the box,
 except for
 @anchor{FL_ALIGN_INSIDE}
 @tindex FL_ALIGN_INSIDE
-@code{FL_ALIGN_CENTER}q. This can be changed by using a
+@code{FL_ALIGN_CENTER}. This can be changed by using a
 special mask, @code{FL_ALIGN_INSIDE}, to request alignments that place
 the text inside the box. This works for most of the objects in the
 library but not for all. For sliders, inputs and some others, placing
@@ -1495,7 +1496,7 @@ alignment of the text string with respective to the box. The default is
 
 A word of caution is required. It is possible to change the attributes
 of an object at any time. But when the form is already displayed on the
-screen some care has to be taken. Whenever changing attributes the
+screen some care has to be taken. Whenever attributes change the
 system redraws the object. This is fine when drawing the object erases
 the old one but this is not always the case. For example, when placing
 labels outside the box (not using @code{FL_ALIGN_CENTER}) they are not
@@ -1633,7 +1634,7 @@ smaller in radius than the default size, use @code{@@-3square}.
 @center @image{images/symbols}
 @end ifnothtml
 
-In addition to using symbol as object labels, symbols can also be drawn
+In addition to using symbols as object labels, symbols can also be drawn
 directly using
 @findex fl_draw_symbol()
 @anchor{fl_draw_symbol()}
@@ -1655,11 +1656,11 @@ int fl_add_symbol(const char *name, void (*drawit)(),int sc);
 @end example
 @noindent
 @code{name} is the name under which the symbol should be known (at most
-15 characters), without the leading @code{@@}. @code{drawit} is the
+15 characters), without the leading @code{@@}. @code{drawit()} is the
 drawing routine that draws the symbol. @code{sc} is reserved and
 currently has no meaning. Simply setting it to zero would do.
 
-The routine drawit should have the form
+The routine @code{drawit()} should have the form
 @example
 void drawit(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
             int angle, FL_COLOR col);

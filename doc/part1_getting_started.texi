@@ -45,10 +45,10 @@ application. But be aware that there are also can be forms that
 themselves contain further forms, so "form" and "window" aren't
 necessarily synonyms.
 
-The only exceptions from the above conention are names of functions
+The only exceptions from the above convention are names of functions
 related to image manipulations - they start with @code{flimage_}. And
 then there's a single function called @code{@ref{flps_init()}} that
-allows to customize the way hardcopies are created from an existing
+allows customization of the way hardcopies are created from an existing
 user interface.
 
 
@@ -73,8 +73,8 @@ the form is @code{FL_UP_BOX}. This means that the background of the
 form is a raised box that looks like it is coming out of the screen.
 The form has a size of 230 by 160 pixels1. Next we add a button to the
 form. The type of the button is @code{FL_NORMAL_BUTTON} which will be
-explained below in detail. It is centered in the form by the virtue of
-the button geometry supplied and has as a label "Push Me". After
+explained below in detail. It is centered in the form by virtue of
+the button geometry supplied and has "Push Me" its label. After
 having defined the form we can display it using the call
 @example
 fl_show_form(simpleform, FL_PLACE_MOUSE, FL_NOBORDER,

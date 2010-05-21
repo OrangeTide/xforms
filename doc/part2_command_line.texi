@@ -16,7 +16,7 @@ default placement of the control panel via resources).
 fdesign accepts all of the XForms command line options as well as the following
 @table @code
 @item -geometry @i{geom}
-This option specifies the initial placement and size of the worki ng
+This option specifies the initial placement and size of the working
 area.
 @item -convert @i{fd-file-list}
 Normally fdesign does its work interactively. This option causes the
@@ -34,7 +34,7 @@ easily.
 @item -unit @i{point|pixel|mm|cp|cmm}
 Outputs object sizes in units other than pixels. cp and cmm stand for
 centi-point (1/100 of a point) and centi-mm (1/100 of a milli-meter).
-For ty pical displays, pixel and mm are too coarse and subject to
+For typical displays, pixel and mm are too coarse and subject to
 round-off errors.
 @item -nocode
 Suppresses the output of UI code. This can be handy if the UI code is

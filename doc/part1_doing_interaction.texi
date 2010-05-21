@@ -205,7 +205,7 @@ indicates whether or not to request window manager's decoration.
 @anchor{FL_FULLBORDER}
 @tindex FL_FULLBORDER
 @item FL_FULLBORDER
-Ffull border decorations.
+Full border decorations.
 
 @anchor{FL_TRANSIENT}
 @tindex FL_TRANSIENT

@@ -272,10 +272,12 @@ attrib_init( FD_generic_attrib * ui )
         fl_addto_choice( ui->segravity, vp->name + 3 );
     }
 
-    /* align */
+    /* align (only show the first 9 elements of 'vn_align' the rest is
+       in there only for backward compatibility reasons when reading in
+       a file) */
 
     fl_set_choice_fontsize( ui->align, fd_align_fontsize );
-    for ( vp = vn_align; vp->val >= 0; vp++ )
+    for ( vp = vn_align, i = 0; vp->val >= 0 && i < 9; vp++, i++ )
         fl_addto_choice( ui->align, vp->name + 9 );
     fl_addto_choice( ui->inside, "Inside|Outside" );
 

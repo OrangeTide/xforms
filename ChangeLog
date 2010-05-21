@@ -1,5 +1,11 @@
 2010-05-21 Jens Thoms Toerring    <jt@toerring.de>
 
+	* doc: Many spelling errors etc. removed that Paul
+	Nicholson had pointed out.
+
+	* fdesign: deprecated values from alignment label menu
+	in the form for editing object attributes removed.
+
 	* lib/forms.c: Bug with resizing scrollbars on resize of
 	form that Paul Nicholson pointed out fixed.
 

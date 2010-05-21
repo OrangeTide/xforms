@@ -63,14 +63,14 @@ of 10 pixels. This can be changed. See below on alignments.
 
 To perform operations on objects that are already visible in the form,
 we first have to select them. Any mouse button can be used for
-selecting objects. Simply click on the object you want to select. A
+selecting objects. Simply single-click on the object you want to select. A
 red outline will appear, indicating that the object is selected. In
 some cases when the currently selected object is large and encloses
 some smaller objects in it, using the left mouse button might not
-allow to select the enclosed small objects. In this case, use the the
+allow selection of the enclosed small objects. In this case use the the
 right mouse button. Another way of selecting objects is to use the
 @code{<Tab>} key or the @code{<F11>} or the button labeled @code{F11},
-which iterates over the object list and selects an object upon each
+which iterates over the object list and selects a new object upon each
 press.
 
 It is also possible to select multiple objects. To this end, draw a
@@ -113,7 +113,7 @@ and next copy it.
 
 For precise object movement, the cursor keys can be used. Each press
 of the four directional cursors keys moves the object by 5 pixels. To
-change the step size, precedes the cursor keys with 0-9 with 0
+change the step size, precede the cursor keys with 0-9 with 0
 indicating 10 pixels. If @code{<Shift>} key is kept pressed down,
 instead of moving the object, the object size is increased or
 decreased by the step size.
@@ -131,7 +131,7 @@ on the form or by clicking the "Align" button again.
 
 First select the objects you want to align. Next, press one of the
 alignment buttons in the form. The buttons in the top row have the
-following meaning: flush left, center horizonatally, flush right, and
+following meaning: flush left, center horizontally, flush right, and
 make the objects have equal distances in horizontal direction (see
 below). The buttons in the bottom row mean: align to bottom, center
 vertically, align to top, and make all objects have the same vertical
@@ -152,7 +152,7 @@ objects of the same size and aligning them nicely.
 @center @image{images/fd_align,9cm}
 @end ifnothtml
 
-The "Undo" utton undoes the last alignment change. It is an undo with
+The "Undo" button undoes the last alignment change. It is an undo with
 a depth of 1, i.e.@: you can only undo the last change and an undo
 after an undo will undo itself. Note however, that any modification to
 the selected objects invalidates the undo buffer.
@@ -175,7 +175,7 @@ button and next press the function key @code{<F2>} to lower the
 selection or @code{<F3>} to raise it.
 
 Another use of raising and lowering is to change the order in which
-input field receive focues via the @code{<Tab>} key. Input fields focus
+input field receive focus via the @code{<Tab>} key. Input fields focus
 order is the same as the order in which they are added to the form.
 This can become a problem if another input field is needed after the
 form is designed because this extra input field will always be the
@@ -216,12 +216,12 @@ to the generic attributes part).
 @node Generic Attributes
 @section Generic Attributes
 
-The form for setting generic attributes contains four fields fpr
+The form for setting generic attributes contains four fields for
 setting different groups of generic object properties, discussed in
 the following. Once you are satisfied with the settings, press the
 button labeled "Accept" and the form will disappear. If you don't want
 to change the attributes after all press the button labeled "Cancel".
-You may als reset the values to their initial settings by clicking on
+You may also reset the values to their initial settings by clicking on
 the "Restore" button.
 
 @ifnottex
@@ -238,22 +238,22 @@ the "Restore" button.
 @node Basic Attributes
 @subsection Basic Attributes
 
-The basix attributes include the type, boxtype, name, label string,
+The basic attributes include the type, boxtype, name, label string,
 the callback function with its arguments associated with the object
 and a shortcut.
 
-For most object classes seberal different types exist. The type of
-object under consideration can be selected via a choice object.
+For most object classes several different types exist. The type of
+the object under consideration can be selected via a choice object.
 
 Most objects can also be drawn using different boxtypes. Normally, the
 default should do, but using the choice object labeled "BoxType" you
-can switch to a different box type (but not that not all choices may
+can switch to a different box type (but note that not all choices may
 result in a different way the object is drawn).
 
 Nearly all objects have a label that can be drawn at different
 positions within or outside of the object. The input field labeled
-"Label" lets you set this lable string (it may also include return
-characters, i.e. @code{\n}).
+"Label" lets you set this label string (it may also include return
+characters, i.e. @code{\n}, for line breaks).
 
 An object may have a name by which it can be accessed within the
 program. This name must be a valid C (or simple C++) variable
@@ -262,13 +262,13 @@ need to make sure that there are no objects with the same name!
 
 If instead of having e.g.@: the function @code{@ref{fl_do_forms()}}
 return when an object is triggered a callback is to be called you can
-set the name of the callback function in the input field labelded
-"Callback". Obviously, this must be a valid C or C++ function name. If
-a callback function is set you must also specify a argument passed to
-the callback function together with the objects address via the input
-field labeled "Argument". This norally will be a (long) integer
-(defaulting to 0 if not specified). Using this value it's e.g.@:
-possible to distinguish between different objects all using the same
+set the name of the callback function in the input field labeled
+"Callback". Obviously, this must be a valid C or C++ function name. When
+a callback function is set you must also specify the argument passed to
+the callback function together with the object's address via the input
+field labeled "Argument". This normally will be a (long) integer
+(defaulting to 0 if not specified). Using this value it is e.g.@:
+possible to distinguish between different objects, all using the same
 callback function.
 
 
@@ -285,11 +285,11 @@ types of properties can be selected via choice objects.
 @node Misc. Attributes
 @subsection Misc. Attributes
 
-The field labeled "Misc. Attributes" allows to set a number of
-attributes that don't fit into any other category.
+The field labeled "Misc. Attributes" allows the setting of a number
+of attributes that don't fit into any other category.
 
-First you can set the alignment of the objects label. It can be placed
-inside the object or outside of it and it 9 different positions. Use
+First you can set the alignment of the object's label. It can be placed
+inside the object or outside of it and in 9 different positions. Use
 the choice objects labeled "Label/Align" and "In/Out" for this
 purpose.
 
@@ -301,9 +301,9 @@ chapter 4.
 
 With the choice objects labeled "Resize" you can control if an object
 is to be resized in x- or y-direction or both or none. You may also
-specify if the objects upper left hand corner or it's lower right hand
-corner is supposed to keep a fixed distance from the forms borders via
-the choice objects labled "NW Gravity" and "SE Gravity". Please note
+specify if the object's upper left hand corner or its lower right hand
+corner is supposed to keep a fixed distance from the form's borders via
+the choice objects labeled "NW Gravity" and "SE Gravity". Please note
 that these properties aren't orthogonal, with the NWGravity and
 SEGravity overriding the resize property if necessary (also see the
 program @file{grav} in the @file{demo} directory that lets you
@@ -314,14 +314,14 @@ experiment with these properties).
 @subsection Colors
 
 Within the "Color" field you can set three colors for the object. The
-colors of the object iself are controlled via the buttons labeled
+colors of the object itself are controlled via the buttons labeled
 "Color 1" and "Color 2", while the button labeled "LabelColor" is for
 setting the color the label is drawn in.
 
-Clicking on any of the three buttons will result in a new form for
-being shown in which you can select one of the prefinied colors from
-the internal colormap. You also can select one of the "free" colors
-but since these colors aren't set yet they will appear as black in the
+Clicking on any of the three buttons will result in a new form being
+shown in which you can select one of the predefined colors from the
+internal colormap. You also can select one of the "free" colors but
+since these colors aren't set yet they will appear as black in the
 form for selecting the color.
 
 While it's rather obvious what the label color is, the meaning of
@@ -458,9 +458,9 @@ the mouse on the group name in the group browser.
 @section Testing Forms
 
 To test the current form, press the button labeled "Test". The form
-will be displayed in the center of the screen anf a panel appear at
+will be displayed in the center of the screen anf a panel appears at
 the top right corner of the screen. This panel shows you the objects
-that get be returned and the callback routines called when working
+as they are returned and the callback routines called when working
 with the form. In this way you can verify whether the form behaves
 correctly and whether all objects have either callback routines or
 names (or both) associated with them. You can also resize the form (if
@@ -471,4 +471,4 @@ When ready, press the "Stop Testing" button.
 Note that any changes you made to the form while testing (including
 its size) do not show up when saving the form. E.g.@: filling in an
 input field or setting a slider does not mean that in the saved code
-the input field will be filled in or the sliders preset value.
+the input field will be filled in or the slider's preset value.

@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 14000
 
 Internal Form Definition File
     (do not change)
@@ -145,7 +145,7 @@ type: TOP_TABFOLDER
 box: 6 5 531 299
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -184,7 +184,7 @@ argument:
 --------------------
 class: FL_BEGIN_GROUP
 type: 0
-box: 0 0 0 0
+box: 0 10 10 0
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_CENTER
@@ -198,6 +198,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: generic_group
 callback: 
 argument: 
+return: FL_RETURN_ALWAYS
 
 --------------------
 class: FL_LABELFRAME
@@ -205,7 +206,7 @@ type: ENGRAVED_FRAME
 box: 235 120 185 137
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -223,7 +224,7 @@ type: ENGRAVED_FRAME
 box: 235 15 185 95
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -241,7 +242,7 @@ type: ENGRAVED_FRAME
 box: 10 15 212 242
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -306,6 +307,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: nameobj
 callback: validate_cvar_name_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -318,12 +320,13 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Callback
-shortcut: #k
+shortcut: #K
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: cbnameobj
 callback: validate_cvar_name_cb
 argument: 1
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -336,12 +339,13 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Argument
-shortcut: #u
+shortcut: #U
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: argobj
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -360,6 +364,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: scobj
 callback: auto_apply_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
@@ -378,6 +383,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: labelobj
 callback: auto_apply_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE
@@ -426,7 +432,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Size
-shortcut: #z
+shortcut: #Z
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: sizeobj
@@ -439,7 +445,7 @@ type: ENGRAVED_FRAME
 box: 431 80 89 150
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -612,6 +618,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
+return: FL_RETURN_ALWAYS
 
 =============== FORM ===============
 Name: nullattrib

@@ -21,17 +21,19 @@ selections or give commands to the program.
 Directly below the menu you have a row of buttons for manipulating
 forms and to invoke few other functions described below.
 
-At the left there is a list of forms you are working on. The list is
-empty, indicating that there are no forms yet. There's no upper limit
-on the number of forms You can work on at the same time. You can use
-this list to switch between forms. Below the forms list is another
-list of all groups in the form you're currently working on. It will be
-empty at first because there are no groups yet. Ignore this at the
-moment as we will come back to groups and their uses later.
+At the left there is a list of all existing forms. At the
+start the list is empty, indicating that there are no forms yet.
+There's no upper limit to the number of forms you that can be
+created. You can work on exactly one form at a time and use this
+list to switch between the different forms. Below the forms list
+is another list of all groups in the form you're currently working
+on. It will be empty at first because there are no groups yet.
+Ignore this at the moment as we will come back to groups and their
+uses later.
 
-Just right to those two lists you find a list of all different types
-of objects that can be placed on the forms. You can use the mouse to
-select the type of object you want to add to the form.
+Just right of those two lists you find a list of all the different
+types of objects that can be placed into the form. Use the
+mouse to select the type of object you want to add to the form.
 
 On the right side you find a number of buttons to give commands to the
 program. Each of these buttons is bound to a function key. You can
@@ -45,13 +47,13 @@ little popup box will appear, prompting you for the name of the new
 form. This is the name under which the application program will know
 the form. You will have to provide a name (which must be a legal C
 variable name). Type in the name and press @code{<Return>}. Now the
-color of the main qwindow for working on forms changes to that of the
+color of the other window for working on forms changes to that of the
 background color of the new form. (Actually, each new form gets
 created with a box already covering its entire area, what you see is
 the color of this box. You can change most properties of this box
 using the methods described below. Just its size is fixed to the size
 of the form, which can be simply changed by resizing the window.) Note
-that the forms name is added to the list of forms in the control
+that the form's name is added to the list of forms in the control
 panel.
 
 To add an object to the form choose the type of object in the control
@@ -64,26 +66,26 @@ object. This indicates that the object is selected. In this way you
 can put all kinds of objects on the form.
 
 It is possible to move objects around or change their sizes. To this
-end, first select the object by pressing the mouse in it. A red outline
+end first select the object by pressing the mouse in it. A red outline
 will appear around the object. You now will be able to drag the object
-arund with the mouse. By grabbing the object at one of the four red
+around with the mouse. By grabbing the object at one of the four red
 corners you can change its size. In this way you can change the layout
 of the objects on the form. It is also possible to select multiple
 objects and move or scale them simultaneously. See below for details.
 
-To change the objects attributes, e.g., the label, of an object, click
-the mouse inside the object to select it. Next press the function key
+To change the object's attributes, e.g. the label, of an object, first
+single-click on the object to select it. Next press the function key
 @code{<F1>} or click on the button labeled "F1 attribs'' in the
 control panel or select "Object attributes" from the "Object" menu.
-You may also double-clicking with the right mouse button on the
-object. A new form will appear in which you can change all the
-different attributes. Their meanings should be clear (if you have read
-the documentation on the Forms Library). Change the attributes by
-pressing a mouse button on them. A menu will appear in which you can
-make the required choice. Change the attributes you want to change and
-finally press the button labeled "Accept". Press "Restore" to restore
-the original attributes. See below for more information about changing
-attributes.
+The same effect can also be achieved by double-clicking on the object
+with the right mouse button. A new form appears in which you can
+change all the different attributes. Their meanings should be clear
+(if you have read the documentation on the Forms Library). Change the
+attributes you want to change and finally press the button labeled
+"Accept". To reset all attributes to their original values press
+"Restore" (or "Cancel" if you also want to close the window for
+modifying the attributes). See below for more information about
+changing attributes.
 
 In this way you can create the forms you want to have. Note that you
 can work on different forms at the same moment. Just add another form

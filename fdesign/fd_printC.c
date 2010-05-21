@@ -695,6 +695,7 @@ align_val( const char * cc )
             *p = '\0';
     }
     val = get_vn_val( vn_align, s );
+
     return p ? ( val | FL_ALIGN_INSIDE ) : val;
 }
 

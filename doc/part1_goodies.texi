@@ -55,13 +55,13 @@ use it for e.g.@: @code{printf(3)}, which then is followed by as many
 arguments as there are format specifiers in the format string. The
 string resulting from expansion of the format string using the
 remaining arguments can have arbitrary length and embedded newline
-characters (@code{'\n'}), producinf line breaks. The size of the
-message box gets set in a way that the whole text fits into it.
+characters (@code{'\n'}), producing line breaks. The size of the
+message box is automatically made to fit the whole text.
 
-Both of the message routines blocks execution and does not return
-immediately (but idle callback and asynchronous IO continue being run
-and checked). Execution continues when the OK button is pressed or
-@code{<Return>} is hit or when the message form is removed from the
+Both of the message routines block execution and do not return
+immediately (but idle callbacks and asynchronous IO continue to be
+run and checked). Execution resumes when the OK button is pressed or
+@code{<Return>} is hit, or when the message form is removed from the
 screen by the following routine (for example, triggered by a timeout or
 idle callback):
 @findex fl_hide_message()
@@ -127,14 +127,14 @@ void fl_show_alert2(int centered, const char *fmt, ...);
 @end example
 @noindent
 @code{centered} controls if the alert message is centered and
-@code{fmt} must be a fornat string as e.g.@: used for
+@code{fmt} must be a format string as e.g.@: used for
 @code{printf(3)}. After the format string as many further arguments
 are required as there are format specifiers in the format string. The
 string resulting from expansion of the format string using the rest of
 the arguents can have arbitrary length and the first embedded
 form-feed character (@code{'\f'}) is used as the separator between the
 title string and the message of the alert box. Embedded newline
-characters (@code{'\n'}) produce lines break.
+characters (@code{'\n'}) produce line breaks.
 
 In combination with @code{@ref{fl_add_timeout()}}, it is easy to develop a
 timed alert routine that goes away when the user pushes the OK button or
@@ -246,7 +246,7 @@ second, or third button. More mnemonic hotkeys can be defined using
 the shortcut routine, @code{s1}, @code{s2} and @code{s3} are the
 shortcuts to bind to the three buttons. If the choice goodie is
 removed by @code{@ref{fl_hide_choice()}}, the default @code{def} is
-retuned.
+returned.
 
 To change the font used in all messages, use the following routine
 @findex fl_set_goodies_font()
@@ -537,11 +537,11 @@ filename selected, or @code{NULL} if the @code{Cancel} button is pressed
 (see below).
 
 The user can also walk through the directory structure, either by
-changing the directory string (by clicking the mouse on top of it) or by
-clicking on the name of a directory listed (shown with a D in front of
-it) to enter this directory. All elements of the currently displayed
-directory are cached internally, so if there is the directories contents
-are changed, click on the @code{ReScan} button to force an update.
+clicking on the box with the name of the currently displayed directory
+to edit it manually, or by double-clicking on the name of a directory
+(shown with a 'D' in front of it) shown in the list. If the directory
+content changes while it is being displayed in the file selector the
+@code{ReScan} button can be used to request a rescan of the directory.
 
 @ifhtml
 @center @image{images/fselect}
