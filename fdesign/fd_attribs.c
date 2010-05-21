@@ -106,6 +106,7 @@ save_object( FL_OBJECT * obj )
 {
     char *ol;
     long *os;
+    FL_OBJECT *tmp;
 
     get_object_name( obj, oldname, oldcbname, oldargname );
 
@@ -117,6 +118,8 @@ save_object( FL_OBJECT * obj )
     oldcopy->label = ol;
     oldcopy->shortcut = os;
     fl_set_object_label( oldcopy, obj->label );
+    for ( tmp = obj->child; tmp; tmp = tmp->nc )
+        tmp->parent = obj;
 }
 
 
@@ -129,10 +132,11 @@ restore_object( FL_OBJECT * obj )
 {
     char *ol = obj->label;
     long *os = obj->shortcut;
+    FL_OBJECT *tmp;
+    void *spec;
     FL_OBJECT *child,
               *prev,
-              *next,
-              *old_parent;
+              *next;
 
     if ( obj->type != oldcopy->type )
         change_type( obj, oldcopy->type );
@@ -140,10 +144,14 @@ restore_object( FL_OBJECT * obj )
     child = obj->child;
     prev  = obj->prev;
     next  = obj->next;
+    spec = obj->spec;
 
     set_object_name( obj, oldname, oldcbname, oldargname );
     *obj          = *oldcopy;
     obj->child    = child;
+    for ( tmp = child; tmp; tmp = tmp->nc )
+        tmp->parent = obj;
+    obj->spec     = spec;
     obj->prev     = prev;
     obj->next     = next;
     obj->label    = ol;
@@ -151,10 +159,6 @@ restore_object( FL_OBJECT * obj )
     fl_set_object_label( obj, oldcopy->label );
 
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
-
-    if ( child && ( old_parent = child->parent ) != obj )
-        for ( ; child && child->parent == old_parent; child = child->next )
-            child->parent = obj;
 }
 
 
@@ -971,7 +975,7 @@ copy_object( FL_OBJECT * obj,
 /***************************************
  * Changes the type of an object by reconstructing it. A quite nasty
  * procedure that delves into the form structure in a bad way.
- * And it looks a lot like a memnory leak...
+ * And it looks a lot like a memory leak...
  ***************************************/
 
 void
@@ -997,11 +1001,10 @@ change_type( FL_OBJECT * obj,
 
     fl_delete_object( ttt );
 
-    /* Create a default object from which we obtain info on if the user has
-       changed boxtype and other attributes. This is done primarily to get
-       around the type change problem with types having different default
-       boxtype. Don't need to free the defobj as it is managed by
-       find_class_default */
+    /* Create a default object from which we can test if the user has changed
+       boxtype and other attributes. This is done primarily to get around the
+       type change problem with types having different default boxtype. Don't
+       need to free the defobj as it is managed by find_class_default */
 
     defobj = find_class_default( obj->objclass, obj->type );
 

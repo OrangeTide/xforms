@@ -181,7 +181,7 @@ get_geom( FL_OBJECT * obj )
         up->boxtype = down->boxtype = FL_NO_BOX;
         up->bw = down->bw = absbw;
 
-        /* Due to slider double buffering we  have to be completly clear of
+        /* Due to slider double buffering we have to be completely clear of
            the scrollbar bounding box, otherwise the slider will wipe out the
            scrollbars bounding box */
 
@@ -339,7 +339,7 @@ fl_create_scrollbar( int          type,
             sp->slider = fl_create_slider( FL_HOR_NICE_SLIDER2,
                                            1, 1, 1, 1, "" );
 
-        fl_set_object_resize( sp->slider, FL_RESIZE_X );
+        fl_set_object_resize( sp->slider, FL_RESIZE_NONE );
     }
     else
     {
@@ -367,7 +367,7 @@ fl_create_scrollbar( int          type,
         else
             M_err( "fl_create_scrollbar", "Unknown type %d", type );
 
-        fl_set_object_resize( sp->slider, FL_RESIZE_Y );
+        fl_set_object_resize( sp->slider, FL_RESIZE_NONE );
     }
 
     sp->increment = 0.02;
@@ -418,10 +418,9 @@ fl_add_scrollbar( int          type,
 {
     FL_OBJECT *obj = fl_create_scrollbar( type, x, y, w, h, l );
 
-    fl_add_object( fl_current_form, obj );
-
     attrib_change( obj );
     get_geom( obj );
+    fl_add_object( fl_current_form, obj );
 
     return obj;
 }

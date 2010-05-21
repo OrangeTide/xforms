@@ -1,3 +1,13 @@
+2010-05-21 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/forms.c: Bug with resizing scrollbars on resize of
+	form that Paul Nicholson pointed out fixed.
+
+	* fdesign/fd_attribs.c: Another bug found by Paul Nicholson:
+	when in changing the type of an object with childs and then
+	undoing the change immediately ("Attributes" form still open
+	and clicking "Cancel") fdesign crashed. Hopefully fixed now.
+
 2010-05-19 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign: small changes (mostly to fd/ui_theforms.fd)

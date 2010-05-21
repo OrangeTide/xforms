@@ -57,7 +57,7 @@ enum
 
 
 /***************************************
-* Due to reporting box need to compute bounds
+ * Due to reporting box need to compute bounds
  ***************************************/
 
 static void
@@ -87,7 +87,6 @@ compute_bounds( FL_OBJECT * ob )
 
 
 /***************************************
- * Reduce flicker by not painting the location the slider is going to be
  ***************************************/
 
 static void

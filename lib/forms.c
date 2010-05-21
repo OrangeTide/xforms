@@ -725,9 +725,16 @@ fli_scale_form( FL_FORM * form,
 
         if ( fli_inverted_y )
             obj->y = form->h - obj->h - obj->y;
-
-        fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
     }
+
+    /* Only notify objects now - parent objects might have to adjust
+       sizes and positions of child objects and when objects get the
+       resize notice immediately after resizing above then the parent
+       object gets it first, sets a different size for the child, which
+       then is overwritten */
+
+    for ( obj = form->first; obj; obj = obj->next )
+        fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
 
     fli_recalc_intersections( form );
 }
