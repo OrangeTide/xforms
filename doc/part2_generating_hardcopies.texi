@@ -26,8 +26,8 @@ xyplot, charts and possibly canvas (if vector graphics), that are
 dynamic in nature, probably should have some hardcopy output support
 in the library, but even then, the relevant code should only be loaded
 when these specific support is actually used. This fattening problem
-is becoming less troublesome as computers aget faster and typically
-have more RAMs then nowadays.
+is becoming less troublesome as computers get faster and typically
+have more RAMs nowadays.
 
 @code{fd2ps} was designed to address the need of having a hardcopy of
 the interface for application documentation development. Basically,
@@ -56,11 +56,13 @@ stand-alone program
 @item -h
 This option prints a brief help message.
 @item -p
-This options requests Portrait output. By default, the orientation is
+This option requests Portrait output. By default, the orientation is
 switched to landscape automatically if the output would not fit on the
 page. This option overrides the default.
 @item -l
-This option requests landscape orientation. -gray This option requests
+This option requests landscape orientation.
+@item -gray
+This option requests
 all colors be converted to gray levels. By default, @code{fd2ps} outputs
 colors as specified in the @code{.fd} file.
 @item -bw @i{width}
@@ -75,8 +77,8 @@ specified in device independent unit (point, mm etc), this flag has no
 effect. Also this flag does not change text size.
 @item -G @i{gamma}
 This option specifies a value (gamma) that will be used to adjust the
-builtin colors. Larger the value, bright the colors. The default gamma
-is 1.
+builtin colors. The larger the value the brighter the colors. The default
+gamma is 1.
 @item -rgb @i{file}
 The option specifies the path to the colorname database
 @file{rgb.txt}. (It is used in parsing the colornames in XPM file).
