@@ -56,7 +56,7 @@ void xyplot_cb( FL_OBJECT * ob,
     if ( i < 0 )
        return;
 
-	sprintf( buf, "X=%f  Y=%f", x, y );
+	sprintf( buf, "X=%.3f  Y=%.3f", x, y );
     fl_set_object_label( xypui->status, buf );
 }
 
@@ -126,26 +126,27 @@ int
 main( int    argc,
 	  char * argv[ ] )
 {
-	float x[ 25 ],
-		  y[ 25 ];
+	float x[ 11 ],
+		  y[ 11 ];
 	int i;
 
 	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 	xypui = create_form_axypform( );
 
-	/* fill-in form initialization code */
+	/* Fill-in form initialization code */
 
 	fl_set_object_dblbuffer( xypui->status, 1 );
-	for ( i  = 0; i <= 10; i++ )
+	for ( i  = 0; i < 11; i++ )
 		x[ i ] = y[ i ] = i;
 
 	fl_set_xyplot_data( xypui->xyplot, x, y, 11, "", "", "" );
 	fl_set_xyplot_linewidth( xypui->xyplot, 0, 2 );
 	fl_set_xyplot_xgrid( xypui->xyplot, FL_GRID_MINOR );
 
-	/* show the first form */
+	/* Show the first form */
 
-	fl_show_form( xypui->axypform, FL_PLACE_MOUSE, FL_TRANSIENT, "axypform" );
+	fl_show_form( xypui->axypform, FL_PLACE_MOUSE | FL_FREE_SIZE,
+				  FL_FULLBORDER, "axypform" );
 
 	fl_do_forms( );
 
@@ -172,27 +173,35 @@ create_form_axypform( void )
     fl_set_object_color( obj, FL_BLACK, FL_GREEN );
     fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
     fl_set_object_callback( obj, xyplot_cb, 0 );
+	fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );
 
 	obj = fl_add_checkbutton( FL_PUSH_BUTTON, 315, 40, 80, 25, "AlwaysReturn" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
     fl_set_object_callback( obj, alwaysreturn_cb, 0 );
+	fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
 	obj = fl_add_checkbutton( FL_PUSH_BUTTON, 315, 65, 80, 25, "Interpolate" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
     fl_set_object_callback( obj, interpolate_cb, 0 );
+	fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
 	obj = fl_add_checkbutton( FL_PUSH_BUTTON, 315, 90, 85, 25, "InspectOnly" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
     fl_set_object_callback( obj, inspect_cb, 0 );
-
-	fdui->status = obj = fl_add_box( FL_BORDER_BOX, 45, 15, 170, 25, "" );
-    fl_set_object_boxtype( obj, FL_DOWN_BOX );
-
-	fl_add_button( FL_NORMAL_BUTTON, 325, 250, 90, 30, "Done" );
+	fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
 	obj = fl_add_checkbutton( FL_PUSH_BUTTON, 315, 120, 85, 25, "NoTics" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
     fl_set_object_callback( obj, notic_cb, 0 );
+	fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
+
+	fdui->status = obj = fl_add_box( FL_BORDER_BOX, 20, 15, 285, 25, "" );
+    fl_set_object_boxtype( obj, FL_DOWN_BOX );
+	fl_set_object_gravity( obj, FL_NorthWest, FL_NorthEast );
+	fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
+
+	obj = fl_add_button( FL_NORMAL_BUTTON, 325, 250, 90, 30, "Done" );
+	fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
 
 	fl_end_form( );
 

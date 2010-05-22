@@ -163,14 +163,14 @@ fli_calc_slider_size( FL_OBJECT          * ob,
 
 
 /***************************************
- * val is normalized betweew 0 and 1
  ***************************************/
 
-void fli_drw_slider( FL_OBJECT  * ob,
-                     FL_COLOR     col1,
-                     FL_COLOR     col2,
-                     const char * str,
-                     int          d )
+void
+fli_drw_slider( FL_OBJECT  * ob,
+                FL_COLOR     col1,
+                FL_COLOR     col2,
+                const char * str,
+                int          d )
 {
     FLI_SLIDER_SPEC *sp = ob->spec;
     FL_COORD x = ob->x + sp->x,

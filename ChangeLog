@@ -1,3 +1,10 @@
+2010-05-22 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: Active xyplot was broken.
+
+	* lib/box.c: If label is inside of box it's now clipped
+	to the inside of the box and never draws outside of it.
+
 2010-05-21 Jens Thoms Toerring    <jt@toerring.de>
 
 	* doc: Many spelling errors etc. removed that Paul

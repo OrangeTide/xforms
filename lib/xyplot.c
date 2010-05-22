@@ -284,12 +284,12 @@ fli_xyplot_interpolate( FL_OBJECT * ob,
 
     newn = 1.01 + ( x[ n2 - 1 ] - x[ n1 ] ) / sp->grid[ id ];
 
-    /* Far exceeds screen resolution. warn */
+    /* Test if number of points exceeds screen resolution by a large margin */
 
     if ( newn > 5000 )
     {
         M_err( "fli_xyplot_interpolate",
-               "interpolating %d points. Far exceeds screen res", newn );
+               "interpolating %d points, exceeds screen res", newn );
         return -1;
     }
 
@@ -330,7 +330,7 @@ fli_xyplot_interpolate( FL_OBJECT * ob,
 }
 
 
-/* to avoid singularity or extreme scaling factors */
+/* To avoid singularity or extreme scaling factors */
 
 #define FMIN  1.0e-25
 
@@ -421,21 +421,17 @@ fli_xyplot_compute_data_bounds( FL_OBJECT * ob,
     }
 
     for ( *n1 = -1, i = 0; i < sp->n[ id ] && *n1 < 0; i++ )
-    {
         if ( x[ i ] >= xmin )
             *n1 = i;
-    }
 
     if ( *n1 > 0 )
         *n1 -= 1;
-    if ( *n1 < 0 )
+    else if ( *n1 < 0 )
         *n1 = 0;
 
     for ( *n2 = -1, i = sp->n[ id ]; --i >= 0 && *n2 < 0; )
-    {
         if ( x[ i ] <= xmax )
             *n2 = i;
-    }
 
     if ( *n2 < 0 )
         *n2 = sp->n[ id ] > 1 ? sp->n[ id ] : 1;
@@ -497,7 +493,7 @@ draw_curve_only( FL_OBJECT * ob )
         drawsymbol = 0;
         noline = 0;
 
-        /* If non-autoscaling, some of the data might fall outside the range
+        /* Without autoscaling some of the data might fall outside the range
            desired, get rid of them so actual data that get plotted are bound
            by (n1, n2) */
 
@@ -1285,7 +1281,7 @@ convert_coord( FL_OBJECT       * ob,
                                      strlen( label ) );
         }
 
-        /* how much space to leave for ytics ylabels */
+        /* How much space to leave for ytics ylabels */
 
         extrax1 += ticl + 1;
         extrax1 += w;
@@ -1324,18 +1320,18 @@ convert_coord( FL_OBJECT       * ob,
                                         strlen( sp->ymargin2 ) );
     }
 
-    sp->xi = ob->x + extrax1;
-    sp->yi = ob->y + extray1;
-    sp->xf = ob->x + ob->w - extrax2;
-    sp->yf = ob->y + ob->h - extray2;
+    sp->xi = sp->objx + extrax1;
+    sp->yi = sp->objy + extray1;
+    sp->xf = sp->objx + ob->w - extrax2;
+    sp->yf = sp->objy + ob->h - extray2;
 
     sp->ax  = ( sp->xf - sp->xi ) / ( sp->xscmax - sp->xscmin );
     sp->bx  = sp->xi - sp->ax * sp->xscmin;
-    sp->bxm = sp->bx - ob->x + sp->objx;
+    sp->bxm = sp->bx;
 
     sp->ay  = ( sp->yf - sp->yi ) / ( sp->yscmin - sp->yscmax );
     sp->by  = sp->yi - sp->ay * sp->yscmax;
-    sp->bym = sp->by - ob->y + sp->objy;
+    sp->bym = sp->by;
 
     fl_xyplot_gen_xtic( ob );
     fl_xyplot_gen_ytic( ob );
@@ -1705,6 +1701,8 @@ draw_xyplot( FL_OBJECT * ob )
 }
 
 
+#if 0    /* not used at the moment */
+
 /***************************************
  * For active xyplot only. point (ux,uy) is dragged to a new position.
  *
@@ -1733,7 +1731,7 @@ update_xyplot( FL_OBJECT * ob )
     sp->x[ active ][ n ] = sp->ux;
     sp->y[ active ][ n ] = sp->uy;
 
-    /* Due to possible double buffering, switch mapping */
+    /* Due to possible double buffering switch mapping */
 
     w2s_draw( ob, sp->ux, sp->uy, &x, &y );
 
@@ -1743,6 +1741,8 @@ update_xyplot( FL_OBJECT * ob )
     add_border( sp, ob->col2 );
     draw_curve_only( ob );
 }
+
+#endif
 
 
 /***************************************
@@ -1800,6 +1800,7 @@ find_data( FL_OBJECT * ob,
     /* n overshoots by 1 and we're dependent on that ! */
 
     *n = newi;
+
     return found;
 }
 
@@ -1838,12 +1839,9 @@ handle_mouse( FL_OBJECT * ob,
     lmx = mx;
     lmy = my;
 
-    mx -= ob->x;
-    my -= ob->y;
-
     /* If the mouse hadn't been on one of the points (or it had been released,
-       in which case sp->inside is -1) check again. Don't do anything yet
-       except changing the way the cursor looks like if we're now on a
+       in which case sp->inside is negative) check again. Don't do anything
+       yet except changing the way the cursor looks like if we're now on a
        point. */
 
     if ( sp->inside <= 0 )
@@ -1970,19 +1968,13 @@ handle_xyplot( FL_OBJECT * ob,
 
     switch ( event )
     {
-        case FL_DRAW:
-            if ( ob->flpixmap )
-            {
-                sp->objx = ob->flpixmap->x;
-                sp->objy = ob->flpixmap->y;
-            }
-            else
-            {
-                sp->objx = ob->x;
-                sp->objy = ob->y;
-            }
+        case FL_RESIZED :
+            sp->objx = ob->x;
+            sp->objy = ob->y;
+            break;
 
-            ( sp->update ? update_xyplot : draw_xyplot )( ob );
+        case FL_DRAW:
+            draw_xyplot( ob );
             sp->update = 0;
             break;
 
@@ -1990,19 +1982,10 @@ handle_xyplot( FL_OBJECT * ob,
             fl_draw_object_label( ob );
             break;
 
-        case FL_ENTER:
-            sp->objx = ob->x;
-            sp->objy = ob->y;
-            break;
-
         case FL_PUSH:
         case FL_MOTION:
-            if ( key != FL_MBUTTON1 )
-                break;
-
-            sp->objx = ob->x;
-            sp->objy = ob->y;
-            ret = handle_mouse( ob, mx, my );
+            if ( key == FL_MBUTTON1 )
+                ret = handle_mouse( ob, mx, my );
             break;
 
         case FL_RELEASE:
@@ -2227,13 +2210,13 @@ fl_add_xyplot( int          t,
                const char * l )
 {
     FL_OBJECT *ob = fl_create_xyplot( t, x, y, w, h, l );
-    FLI_XYPLOT_SPEC *sp = ob->spec;
+//    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     fl_add_object( fl_current_form, ob );
 
     /* Active_xyplot looks a little better in double buffer mode */
 
-    fl_set_object_dblbuffer( ob, sp->active );
+//    fl_set_object_dblbuffer( ob, sp->active );
     return ob;
 }
 
@@ -2319,7 +2302,7 @@ void
 fl_get_xyplot( FL_OBJECT * ob,
                float     * x,
                float     * y,
-               int *       i )
+               int       * i )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
@@ -2424,14 +2407,14 @@ fl_set_xyplot_inspect( FL_OBJECT * ob,
     if ( sp->inspect == yes )
         return;
 
-    sp->active = sp->inspect = yes;
+    sp->inspect = yes;
 
     if ( ob->type != FL_ACTIVE_XYPLOT )
     {
         /* Work-around, need to get doublebuffer to get inspect work
            right */
 
-        fl_set_object_dblbuffer( ob, sp->active || sp->inspect );
+//        fl_set_object_dblbuffer( ob, sp->active || sp->inspect );
         fl_redraw_object( ob );
     }
 }
@@ -2819,7 +2802,7 @@ fl_set_xyplot_data( FL_OBJECT  * ob,
 
 
 /***************************************
- *i nsert a point after n
+ * Insert a point after n
  ***************************************/
 
 void
@@ -3267,7 +3250,7 @@ fl_set_xyplot_interpolate( FL_OBJECT * ob,
     int intpl;
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
-    if ( id < 0 || ! ob || id > sp->maxoverlay )
+    if ( ! ob || id < 0 || id > sp->maxoverlay )
         return;
 
     if ( deg >= 2 && grid <= 0.0 )
@@ -3527,8 +3510,8 @@ w2s_draw( FL_OBJECT * ob,
     float sbx = sp->bxm,
           sby = sp->bym;
 
-    sp->bxm = sp->bx;
-    sp->bym = sp->by;
+    sp->bxm = sp->bx - sp->objx;
+    sp->bym = sp->by - sp->objy;
     fl_xyplot_w2s( ob, wx, wy, sx, sy );
     sp->bxm = sbx;
     sp->bym = sby;

@@ -57,7 +57,6 @@ enum
 
 
 /***************************************
- * Due to reporting box need to compute bounds
  ***************************************/
 
 static void
@@ -230,7 +229,7 @@ draw_slider( FL_OBJECT * ob )
 
 
 /***************************************
- * Checks if mouse is on the knob of the slider
+ * Checks if mouse is not on the knob of the slider
  ***************************************/
 
 static int
@@ -463,8 +462,8 @@ handle_motion( FL_OBJECT * obj,
         return FL_RETURN_NONE;
 
     /* If we get here without the left mouse button being pressed we're
-       monitoring the mouse movements to change hightlighting of the knob of a
-       scrollbar */
+       monitoring the mouse movements to change hightlighting of the knob
+       of a scrollbar */
 
     if ( key != FL_MBUTTON1 )
     {
@@ -547,7 +546,7 @@ handle_push( FL_OBJECT * obj,
 
     /* If the object is a scrollbar and the mouse is on its knob nothing
        happens yet and we're just going to wait for mouse movements. If it's
-       not on the knon we need articfical timer events to make the knob jump.
+       not on the knob we need articfical timer events to make the knob jump.
        For non-scrollbars we're going to jump the slider so the mouse will be
        on top of the "knob" and will stay there (and we will get updates about
        mouse movements via FL_MOTION events). */
@@ -763,13 +762,13 @@ handle_slider( FL_OBJECT * ob,
  ***************************************/
 
 static FL_OBJECT *
-create_it( int          objclass,
-           int          type,
-           FL_Coord     x,
-           FL_Coord     y,
-           FL_Coord     w,
-           FL_Coord     h,
-           const char * label )
+create_slider( int          objclass,
+               int          type,
+               FL_Coord     x,
+               FL_Coord     y,
+               FL_Coord     w,
+               FL_Coord     h,
+               const char * label )
 {
     FL_OBJECT *ob;
     FLI_SLIDER_SPEC *sp;
@@ -781,24 +780,24 @@ create_it( int          objclass,
     ob->align   = FL_SLIDER_ALIGN;
     ob->lcol    = FL_SLIDER_LCOL;
     ob->lsize   = FL_TINY_SIZE;
-    ob->spec    = sp =  fl_calloc( 1, sizeof *sp );
+    ob->spec    = sp = fl_calloc( 1, sizeof *sp );
 
-    sp->min        = 0.0;
-    sp->max        = 1.0;
-    sp->val        = sp->start_val = 0.5;
-    sp->filter     = NULL;
-    sp->slsize     = FL_SLIDER_WIDTH;
-    sp->prec       = 2;
-    sp->repeat_ms  = 100;
-    sp->timeout_id = -1;
+    sp->min            = 0.0;
+    sp->max            = 1.0;
+    sp->val            = sp->start_val = 0.5;
+    sp->filter         = NULL;
+    sp->slsize         = FL_SLIDER_WIDTH;
+    sp->prec           = 2;
+    sp->repeat_ms      = 100;
+    sp->timeout_id     = -1;
     sp->mouse_off_knob = 0;
-    sp->was_shift = 0;
+    sp->was_shift      = 0;
     sp->old_mx = sp->old_my = 0;
     if ( IS_SCROLLBAR( ob ) )
-        sp->slsize *= 1.5;
+        sp->slsize    *= 1.5;
 
-    sp->ldelta      = 0.1;
-    sp->rdelta      = 0.05;
+    sp->ldelta         = 0.1;
+    sp->rdelta         = 0.05;
 
     fl_set_object_dblbuffer( ob, 1 );
 
@@ -811,15 +810,15 @@ create_it( int          objclass,
  ***************************************/
 
 static FL_OBJECT *
-add_it( int          objclass,
-        int          type,
-        FL_Coord     x,
-        FL_Coord     y,
-        FL_Coord     w,
-        FL_Coord     h,
-        const char * label )
+add_slider( int          objclass,
+            int          type,
+            FL_Coord     x,
+            FL_Coord     y,
+            FL_Coord     w,
+            FL_Coord     h,
+            const char * label )
 {
-    FL_OBJECT *obj = create_it( objclass, type, x, y, w, h, label );
+    FL_OBJECT *obj = create_slider( objclass, type, x, y, w, h, label );
 
     /* Set the default return policy for the object */
 
@@ -844,7 +843,7 @@ fl_create_slider( int          type,
                   FL_Coord     h,
                   const char * label )
 {
-    return create_it( FL_SLIDER, type, x, y, w, h, label );
+    return create_slider( FL_SLIDER, type, x, y, w, h, label );
 }
 
 
@@ -859,7 +858,7 @@ fl_add_slider( int          type,
                FL_Coord     h,
                const char * label )
 {
-    return add_it( FL_SLIDER, type, x, y, w, h, label );
+    return add_slider( FL_SLIDER, type, x, y, w, h, label );
 }
 
 
@@ -874,7 +873,7 @@ fl_create_valslider( int          type,
                      FL_Coord     h,
                      const char * label )
 {
-    return create_it( FL_VALSLIDER, type, x, y, w, h, label );
+    return create_slider( FL_VALSLIDER, type, x, y, w, h, label );
 }
 
 
@@ -889,7 +888,7 @@ fl_add_valslider( int          type,
                   FL_Coord     h,
                   const char * label )
 {
-    return add_it( FL_VALSLIDER, type, x, y, w, h, label );
+    return add_slider( FL_VALSLIDER, type, x, y, w, h, label );
 }
 
 
@@ -1069,7 +1068,7 @@ fl_set_slider_size( FL_OBJECT * ob,
 
     old = size;
 
-    /* Impose min knob size limit */
+    /* Impose minimum knob size */
 
     dim = IS_VSLIDER( ob ) ? ob->h : ob->w;
     dim -= 2 * FL_abs( ob->bw );

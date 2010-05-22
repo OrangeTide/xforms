@@ -51,7 +51,12 @@ handle_box( FL_OBJECT * ob,
             /* fall through */
 
         case FL_DRAWLABEL:
+            if ( ob->align & FL_ALIGN_INSIDE )
+                fl_set_text_clipping( ob->x + ob->bw, ob->y + ob->bw,
+                                      ob->w - 2 * ob->bw, ob->h - 2 * ob->bw );
             fl_draw_object_label( ob );
+            if ( ob->align & FL_ALIGN_INSIDE )
+                fl_unset_text_clipping( );
             break;
     }
 

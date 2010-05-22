@@ -23,8 +23,8 @@
  *  Copyright (c) 1998-2002  T.C. Zhao
  *  All rights reserved.
  *
- * interpolate_spline interpolates a one-dimensional non-uniform
- * tabulated data onto a working grid, grid, using cubic splines.
+ * interpolate_spline interpolates one-dimensional, non-uniform
+ * tabulated data onto a working grid, using cubic splines.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -36,8 +36,14 @@
 #include "flinternal.h"
 
 
+/*
+  NOTE: In the two functions memory gets allocated that is never
+        deallocated, not even on fl_finish().
+*/
+
+
 /***************************************
- * the input X should be monotonic increasing
+ * The input x-coordinate should be monotonically increasing
  ***************************************/
 
 int
@@ -56,9 +62,7 @@ fl_spline_interpolate( const float * wx,
         im,
         nout;
     double sig,
-           un,
            p,
-           qn,
            h,
            a,
            b;
@@ -68,7 +72,8 @@ fl_spline_interpolate( const float * wx,
 
     if ( nin <= 3 )
     {
-        fputs( "too few points in interpol\n", stderr );
+        M_warn( "fl_spline_interpolate",
+                "too few points (less than 4) for interpolation" );
         return -1;
     }
 
@@ -79,7 +84,7 @@ fl_spline_interpolate( const float * wx,
         nwork = nin;
     }
 
-    /* compute the second derivative */
+    /* Compute the second derivative */
 
     y2[ 0 ] = u[ 0 ] = 0.0;
 
@@ -93,16 +98,15 @@ fl_spline_interpolate( const float * wx,
                               ( wx[ i + 1 ] - wx[ i ] )
                  - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
                               ( wx[ i ] - wx[ i - 1 ] );
-        u[i] = ( 6.0 * u[i] / ( wx[ i + 1 ] - wx[ i - 1 ] )
-                 - sig * u[ i - 1 ] ) / p;
+        u[ i ] = (   6.0 * u[i] / ( wx[ i + 1 ] - wx[ i - 1 ] )
+                   - sig * u[ i - 1 ] ) / p;
     }
 
-    qn = un = 0.0;
-    y2[ nin - 1 ] = ( un - qn * u[ nin - 2 ] ) / ( qn * y2[ nin - 2 ] + 1.0 );
+    y2[ nin - 1 ] = 0.0;
     for ( k = nin - 2; k >= 0; k-- )
         y2[ k ] = y2[ k ] * y2[ k + 1 ] + u[ k ];
 
-    /* outputs */
+    /* Outputs */
 
     nout = ( int ) ( ( wx[ nin - 1 ] - wx[ 0 ] ) / grid + 1.01);
 
@@ -117,7 +121,7 @@ fl_spline_interpolate( const float * wx,
 
         x[ i ] = x[ 0 ] + i * grid;
 
-        /* center */
+        /* Center */
 
         j = jo;
         ih = nin;
@@ -132,7 +136,7 @@ fl_spline_interpolate( const float * wx,
 
         jo = j;
 
-        /* interpolate */
+        /* Interpolate */
 
         h = wx[ ih ] - wx[ j ];
         a = ( wx[ ih ] - x[ i ] ) / h;
@@ -151,7 +155,7 @@ fl_spline_interpolate( const float * wx,
 
 
 /***************************************
- * specialized for image processing
+ * Specialized for image processing
  ***************************************/
 
 int
@@ -169,9 +173,7 @@ fl_spline_int_interpolate( const int * wx,
         im,
         nout;
     double sig,
-           un,
            p,
-           qn,
            h,
            a,
            b,
@@ -182,7 +184,8 @@ fl_spline_int_interpolate( const int * wx,
 
     if ( nin <= 3 )
     {
-        fputs( "too few points in interpol\n", stderr );
+        M_warn( "fl_spline_int_interpolate",
+                "too few points (less than 4) for interpolation" );
         return -1;
     }
 
@@ -201,21 +204,19 @@ fl_spline_int_interpolate( const int * wx,
               ( wx[ i + 1 ] - wx[ i - 1 ] );
         p = sig * y2[ i - 1 ] + 2.0;
         y2[ i ] = ( sig - 1.0 ) / p;
-        u[i] =   ( double ) ( wy[ i + 1 ] - wy[ i ] ) /
-                            ( wx[ i + 1 ] - wx[ i ] )
-               - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
-                            ( wx[ i ] - wx[ i - 1 ] );
-        u[ i ] = ( 6.0 * u[ i ] / ( wx[ i + 1 ] - wx[ i - 1 ] )
+        u[ i ] =   ( double ) ( wy[ i + 1 ] - wy[ i ] ) /
+                              ( wx[ i + 1 ] - wx[ i ] )
+                 - ( double ) ( wy[ i ] - wy[ i - 1 ] ) /
+                              ( wx[ i ] - wx[ i - 1 ] );
+        u[ i ] = (   6.0 * u[ i ] / ( wx[ i + 1 ] - wx[ i - 1 ] )
                    - sig * u[ i - 1 ] ) / p;
     }
 
-    qn = un = 0.0;
-    y2[ nin - 1 ] = ( un - qn * u[ nin - 2 ] ) / ( qn * y2[ nin - 2 ] + 1.0 );
-
+    y2[ nin - 1 ] = 0.0;
     for ( k = nin - 2; k >= 0; k-- )
         y2[ k ] = y2[ k ] * y2[ k + 1 ] + u[ k ];
 
-    /* outputs */
+    /* Outputs */
 
     nout = ( int ) ( ( wx[ nin - 1 ] - wx[ 0 ] ) / grid + 1.01 );
 
@@ -227,7 +228,7 @@ fl_spline_int_interpolate( const int * wx,
     {
         x = wx[ 0 ] + i * grid;
 
-        /* center */
+        /* Center */
 
         j = jo;
         ih = nin - 1;
@@ -242,7 +243,7 @@ fl_spline_int_interpolate( const int * wx,
 
         jo = j;
 
-        /* interpolate */
+        /* Interpolate */
 
         h = wx[ ih ] - wx[ j ];
         a = ( wx[ ih ] - x ) / h;
@@ -253,7 +254,7 @@ fl_spline_int_interpolate( const int * wx,
                      + ( b * b * b - b ) * y2[ ih ] )
                  * ( h * h ) / 6.0 ) + 0.1;
 
-        /* clamp */
+        /* Clamp */
 
         if ( y[ i ] < 0 )
             y[ i ] = 0;

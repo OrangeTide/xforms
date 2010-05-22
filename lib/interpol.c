@@ -52,66 +52,67 @@ fl_interpolate( const float * wx,
     int i, j, k, l, jo, ih, im, idm, nout;
     double term, accum;
 
-    if (nin <= ndeg)
+    if ( nin <= ndeg )
     {
-        fputs("too few points in interpol\n", stderr);
+        M_warn( "fl_interpolate", "too few points in interpol\n" );
         return -1;
     }
 
-    nout = (int) ((wx[nin - 1] - wx[0]) / grid + 1.01);
+    nout = ( wx[ nin - 1 ] - wx[ 0 ] ) / grid + 1.01;
 
-    x[0] = wx[0];
-    y[0] = wy[0];
+    x[ 0 ] = wx[ 0 ];
+    y[ 0 ] = wy[ 0 ];
 
     /* Start the main loop */
 
     jo = 0;
-    for (i = 1; i < nout; i++)
+    for ( i = 1; i < nout; i++ )
     {
         /* better than x[i] = x[i-1] + grid; */
 
-        x[i] = x[0] + (i * grid);
+        x[ i ] = x[ 0 ] + i * grid;
 
-        /* center */
+        /* Center */
 
         j = jo;
         ih = nin;
-        while ((ih - j) > 1)
+        while ( ih - j > 1 )
         {
-            im = (ih + j) / 2;
-            if (x[i] > wx[im])
+            im = ( ih + j ) / 2;
+            if ( x[ i ] > wx[ im ] )
                 j = im;
             else
                 ih = im;
         }
         jo = j;
-        j = j - (ndeg / 2); /* shift */
-        if (j < 0)
+        j = j - ndeg / 2;
+        if ( j < 0 )
             j = 0;
-        if (j > nin - ndeg - 1)
+        if ( j > nin - ndeg - 1 )
             j = nin - ndeg - 1;
 
         /* interpolate */
 
         accum = 0.0;
         idm = j + ndeg;
-        for (l = j; l <= idm; l++)
+        for ( l = j; l <= idm; l++ )
         {
-            term = wy[l];
-            for (k = j; k <= idm; k++)
+            term = wy[ l ];
+            for ( k = j; k <= idm; k++ )
             {
-                if (l != k)
-                    term *= (x[i] - wx[k]) / (double) (wx[l] - wx[k]);
+                if ( l != k )
+                    term *=   ( double ) ( x[ i ] - wx[ k ] )
+                            / ( wx[ l ] - wx[ k ] );
             }
             accum += term;
         }
-        y[i] = accum;
+        y[ i ] = accum;
     }
 
-    /* make sure the ends are free of numerical errors */
+    /* Make sure the ends are free of numerical errors */
 
-    x[nout - 1] = wx[nin - 1];
-    y[nout - 1] = wy[nin - 1];
+    x[ nout - 1 ] = wx[ nin - 1 ];
+    y[ nout - 1 ] = wy[ nin - 1 ];
 
     return nout;
 }
