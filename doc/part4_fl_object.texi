@@ -54,7 +54,7 @@ Controls if the object should be resized if the form it is on is
 resized. The options are @code{FL_RESIZE_NONE}, @code{FL_RESIZE_X},
 @code{FL_RESIZE_Y} and @code{FL_RESIZE_ALL}. The default is
 @code{FL_RESIZE_ALL} which is the bitwise OR of @code{FL_RESIZE_X} and
-@code{FL_RESIZE_Y}. Instead of accessing this element dirrectly better
+@code{FL_RESIZE_Y}. Instead of accessing this element directly better
 use the functions @code{@ref{fl_get_object_resize()}} and
 @code{@ref{fl_set_object_resize()}}.
 
@@ -67,7 +67,7 @@ directly use @code{@ref{fl_get_object_gravity()}} and
 @item FL_COLOR col1, col2
 These are two color indices in the internal color lookup table. The
 class routines are free to use them or not. The user can change them
-using the routine @code{@ref{fl_set_object_color()}} or insoect the
+using the routine @code{@ref{fl_set_object_color()}} or inspect the
 colors with @code{@ref{fl_get_object_color()}}. The routine
 @code{fl_add_NEW()} should fill in defaults.
 
@@ -141,7 +141,7 @@ main routine will never try to draw it or send events to it. By
 default objects are visible. The visisbility of an object can be
 tested using the @code{@ref{fl_object_is_visible()}} function. Note
 that a this doesn't guarantee that the object is visible on the
-screen, for this also the form the object beongs to needs to be
+screen, for this also the form the object belongs to needs to be
 visible, in which case @code{@ref{fl_form_is_visible()}} returns true.
 
 @item int active
@@ -339,7 +339,7 @@ typedef int (*FL_HANDLEPTR)(FL_OBJECT *obj, int event,
 
 FL_OBJECT *fl_make_object(int objclass, int type,
                           FL_Coord x, FL_Coord y,
-                          FL_Coord w, FL_Cord h,
+                          FL_Coord w, FL_Coord h,
                           const char *label,
                           FL_HANDLEPTR handle);
 @end example
@@ -368,7 +368,7 @@ obj->how_return = FL_RETURN_CHANGED
 
 In some situations it can be also useful to make an object a child
 of another object. An example is the scrollbar object. It has three
-child objects, a slider and two buttons, which all three are childs
+child objects, a slider and two buttons, which all three are children
 of the scrollbar object. To make an object @code{child} a child
 object of an object named @code{parent} use the function
 @findex fl_add_child()
@@ -390,7 +390,7 @@ There is rarely any need for the new object class to know how the
 object is added to a form and how the Forms Library manages the
 geometry, e.g.@: does an object have its own window etc. Nonetheless
 if this information is required, use @code{@ref{FL_ObjWin()}} on the
-object to obtain the window resource ID of the window thhe object
+object to obtain the window resource ID of the window the object
 belongs to. Beware that an object window ID may be shared with other
 objects@footnote{The only exception is the canvas class where the
 window ID is guaranteed to be non-shared.}. Always remove an object

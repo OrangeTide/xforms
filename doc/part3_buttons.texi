@@ -205,7 +205,7 @@ Never return object or invoke callback.
 
 @item @ref{FL_RETURN_END_CHANGED}
 Return object or invoke callback when mouse button is released and at
-the same moment the state of the button changed. button was changed.
+the same moment the state of the button changed.
 
 @item @ref{FL_RETURN_CHANGED}
 Return object or invoke callback whenever the state of the button
@@ -243,7 +243,7 @@ void fl_set_button(FL_OBJECT *obj, int pushed);
 @noindent
 @code{pushed} indicates whether the button should be pushed (1) or
 released (0). When setting a @code{@ref{FL_RADIO_BUTTON}} to be pushed
-this automatically releases the a currently pushed radio button in the
+this automatically releases the currently pushed radio button in the
 same form (or group). Also note that, while this routine only
 simulates the visual appearance and perhaps some internal states, it
 does not affect the program flow in any way, i.e.@: setting a button
@@ -253,7 +253,7 @@ becoming returned to the program. For that
 just follow up @code{@ref{fl_set_button()}} with a call of
 @code{@ref{fl_call_object_callback()}}.
 
-To figure out whether a button is pushed1 or not
+To figure out whether a button is pushed or not
 use@footnote{@code{@ref{fl_mouse_button()}} can also be used.}
 @findex fl_get_button()
 @anchor{fl_get_button()}
@@ -275,7 +275,7 @@ It returns one of the constants @code{@ref{FL_LEFT_MOUSE}},
 @code{@ref{FL_SCROLLUP_MOUSE}} or @code{@ref{FL_SCROLLDOWN_MOUSE}}
 (the latter two are from the scroll wheel of the mouse). If the last
 push was triggered by a shortcut (see below), the function returns the
-@code{keysym} (ASCII value if the key used has is between 0 and 127)
+@code{keysym} (ASCII value if the key used is between 0 and 127)
 of the key plus
 @tindex FL_SHORTCUT
 @code{@ref{FL_SHORTCUT}}. For example, if a button has @code{<Ctrl>C}
@@ -384,7 +384,7 @@ void fl_set_pixmapbutton_pixmap(FL_OBJECT *obj, Pixmap id,
 @noindent
 To use the first routine, you @code{#include} the pixmap file into
 your source code and use the pixmap definition data (an array of char
-pointers) directly. for the second routine the filename @code{file}
+pointers) directly. For the second routine the filename @code{file}
 that contains the pixmap definition is used to specify the pixmap. The
 last routine assumes that you already have a X Pixmap resource ID for
 the pixmap you want to use. Note that these routines do not free a
@@ -397,7 +397,7 @@ void fl_free_pixmapbutton_pixmap(FL_OBJECT *obj);
 @end example
 @noindent
 This function frees the pixmap and mask together with all the colors
-allocated for then.
+allocated for them.
 
 To get the pixmap and mask that is currently being displayed, use the
 following routine
@@ -478,7 +478,7 @@ of the bitmap is controlled by label color (as set via
 the overall boundbox color (if boxtype is not @code{FL_NO_BOX}),
 @code{col2} is the arrow color. The label of a scrollbutton must be a
 string with a number between 1 and 9 (except 5), indicating the arrow
-direciton like on the numerical key pad. The label can have an
+direction like on the numerical key pad. The label can have an
 optional prefix @code{#} to indicate uniform scaling. For example, the
 label @code{"#9"} tells that the arrow should be pointing up-right and
 the arrow has the identical width and height regardless the overall

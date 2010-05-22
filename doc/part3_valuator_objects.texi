@@ -180,7 +180,7 @@ slider. By setting @code{nin} to a larger value than @code{max} in a
 call of @code{@ref{fl_set_slider_bounds()}} this can be reversed.
 
 If in a call of @code{@ref{fl_set_slider_bounds()}} the actual value
-of a slider isn't within the range of the new bounds, it's value gets
+of a slider isn't within the range of the new bounds, its value gets
 adjusted to the nearest limit. When the requested new slider value in
 a call of @code{@ref{fl_set_slider_value()}} is outside the range of
 bounds it gets adjusted to the nearest boundary value.
@@ -444,9 +444,9 @@ Return or invoke callback whenever value changed or mouse button was
 released.
 @end table
 
-The default settting for @code{when} for a scrollbar object is
-@code{@ref{FL_RETURN_CHANGED}} (unless during the built of XForms you
-set the configurationb flag @code{--enable-bwc-bs-hack} in which case
+The default setting for @code{when} for a scrollbar object is
+@code{@ref{FL_RETURN_CHANGED}} (unless during the build of XForms you
+set the configuration flag @code{--enable-bwc-bs-hack} in which case
 the default is @code{@ref{FL_RETURN_NONE}} to keep backward
 compatibility with earlier releases of the library).
 
@@ -473,7 +473,7 @@ slider. By setting @code{min} to a larger value than @code{max} in a
 call of @code{@ref{fl_set_scrollbar_bounds()}} this can be reversed.
 
 If in a call of @code{@ref{fl_set_scrollbar_bounds()}} the actual
-value of a scrollbar isn't within the range of the new bounds, it's
+value of a scrollbar isn't within the range of the new bounds, its
 value gets adjusted to the nearest limit. When the requested new
 scrollbar value in a call of @code{@ref{fl_set_scrollbar_value()}} is
 outside the range of bounds it gets adjusted to the nearest boundary
@@ -861,7 +861,7 @@ Never report or invoke callback.
 
 @item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) and only when
-the positioner ended in a different postion than the one it
+the positioner ended in a different position than the one it
 started from.
 
 @item @ref{FL_RETURN_CHANGED}
@@ -963,7 +963,7 @@ Never use @code{FL_NO_BOX} as the boxtype for a positioner of type.
 @code{FL_NORMAL_POSITIONER} (but the other two types will have a box
 type of @code{FL_NO_BOX} per default).
 
-The first color argument (@code{col1}) t
+The first color argument (@code{col1}) to
 @code{@ref{fl_set_object_color()}} controls the color of the box, the
 second (@code{col2}) the color of the cross-hair.
 
@@ -1042,13 +1042,13 @@ A counter with one button on each side.
 @subsection Counter Interaction
 
 The user changes the value of the counter by keeping his mouse pressed
-on one of the buttons. Per default whenever the mouse is relased and
+on one of the buttons. Per default whenever the mouse is released and
 the counter value is changed the counter is returned to the
 application program or its callback is invoked.
 
 In some applications you might want the counter to be returned to the
 application program (or the callback invoked) e.g.@: whenever the
-value changes and not only wjen the mouse is released. To this end use
+value changes and not only when the mouse is released. To this end use
 @example
 void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 @end example
@@ -1242,14 +1242,14 @@ counters.
 
 A spinner object is a combination of a (numerical) input field with
 two (touch) buttons that allow to increment or decrement the value in
-the (editable) iput field. I.e.@: the user can change the spinners
+the (editable) input field. I.e.@: the user can change the spinners
 value by either editing the value of the input field or by using the
 up/down buttons shown beside the input field.
 
 There are two types of spinner objects, one for integer and one for
 floating point values. You can set limits on the values that can be
 input and you can also set the amount of increment/decrement achieved
-when cicking on its buttons.
+when clicking on its buttons.
 
 @ifnottex
 
@@ -1281,7 +1281,7 @@ placed on the left of the spinner object.
 @node Spinner Types
 @subsection Spinner Types
 
-There are two types pf spinners, one for input of integer and
+There are two types of spinners, one for input of integer and
 one for floating point values:
 @table @code
 @tindex FL_INT_SPINNER
@@ -1295,11 +1295,11 @@ A spinner that allows input of integer values.
 A spinner that allows input of floating point values.
 @end table
 
-The way a spinner looks like depends on its dimensions. If its at
-least as wide as its high the two buttons a drawn above each other
+The way a spinner looks like depends on its dimensions. If it's at
+least as wide as it's high the two buttons are drawn above each other
 to the right of the input field (and are marked with and up and
 down pointing triangle), while when the object is higher than it's
-wide they are drawn beside eacho other and below the input field
+wide they are drawn beside each other and below the input field
 (and the markers are then left and right pointing arrows).
 
 
@@ -1309,11 +1309,11 @@ wide they are drawn beside eacho other and below the input field
 The user can change the value of a spinner in two ways. She can either
 edit the value in the spinner directly (exactly the same as for an
 integer or floating point input object (@ref{Part III Input Objects})
-or by clicking on one of the buttons thatwill increment or decrement
+or by clicking on one of the buttons that will increment or decrement
 the value.
 
-Per default the spinner object gets returned tothe application
-(or the associated calback is called) whenever the value changed
+Per default the spinner object gets returned to the application
+(or the associated callback is called) whenever the value changed
 and the interaction seems to have ended. If you want it returned
 under different circumstances use the function
 @example
@@ -1393,7 +1393,7 @@ void fl_set_spinner_step(FL_OBJECT *obj, double step);
 double fl_get_spinner_step(FL_OBJECT *obj);
 @end example
 @noindent
-The default step size if @code{1} for both @code{@ref{FL_INT_SPINNER}}
+The default step size is @code{1} for both @code{@ref{FL_INT_SPINNER}}
 and @code{@ref{FL_FLOAT_SPINNER}} objects.
 
 
@@ -1520,7 +1520,7 @@ A horizontal thumbwheel.
 Whenever the user changes the value of the thumbwheel using the mouse
 or keyboard, the thumbwheel is returned (or the callback called) by
 the interaction routines. You change the value of a thumbwheel by
-dragging the mouse inside the wheel area or, for vertical thubwheels
+dragging the mouse inside the wheel area or, for vertical thumbwheels
 also by using the scroll wheel of the mouse. Each pixel of movement
 changes the value of the thumbwheel by 0.005, which you can change
 using the @code{@ref{fl_set_thumbwheel_step()}} function.

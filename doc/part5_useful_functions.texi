@@ -88,7 +88,7 @@ possible on your system).
 @node Windowing Support
 @section Windowing Support
 
-Some of the following routines are qalso used internally by the Forms
+Some of the following routines are also used internally by the Forms
 Library as an attempt to localize window system dependencies and may
 be of some general use. Be warned that these routines may be subject
 to changes, both in their API and/or functionality.
@@ -489,7 +489,7 @@ returned by @code{@ref{fl_create_bitmap_cursor()}}), terminated by -1.
 Parameter @code{interval} indicates the time each cursor is displayed
 before it is replaced by the next in the array. An interval about
 @w{150 msec} is a good value for typical uses. Note that there is
-currently a limit of 24 cursors per animination sequence.
+currently a limit of 24 cursors per animation sequence.
 
 Internally animated cursor works by utilizing the timeout callback.
 This means that if the application blocks (thus the main loop has no

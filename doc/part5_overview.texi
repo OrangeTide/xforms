@@ -77,7 +77,7 @@ Display *fl_initialize(int *argc, char *argv[], const char *appclass,
 @noindent
 initializes the Forms Library and returns a pointer to the
 @code{Display} structure if a connection could be made, otherwise
-@code{NULL}. The this function must be called before any other calls
+@code{NULL}. This function must be called before any other calls
 to the Forms Library (except @code{@ref{fl_set_defaults()}} and a few
 other functions that alter some of the defaults of the library).
 
@@ -203,7 +203,7 @@ for all options. The following are the defaults:
 @end multitable
 
 In the above table "best" means the visual that has the most colors,
-which may or may not be the servers default. There is a special
+which may or may not be the server's default. There is a special
 command option @code{-visual Default} that sets both the visual and
 depth to the X servers default. If a visual ID is requested, it
 overrides depth or visual if specified. The visual ID can also be
@@ -443,7 +443,7 @@ It is recommended that this function be used before
 @code{@ref{fl_initialize()}} so the user has the option to override
 the default through application resources.
 
-Prior to version 0.80, the origin of XForms's coordinate system was at
+Prior to version 0.80, the origin of XForms' coordinate system was at
 the lower-left corner of the form. The new Form Designer will convert
 the form definition file to the new coordinate system, i.e., with the
 origin at the upper-left hand corner, so no manual intervention is
@@ -562,7 +562,7 @@ where @code{n} is a number between 0 and @code{FL_MAXFONTS -1}. The
 function returns @code{0} on success, @code{1} if called before proper
 initialization of the library and @code{-1} for either invalid
 arguments (@code{name} isn't set or isn't a name of a font that could
-be found, @code{n} negative ot larger or equal to @code{FL_MAXFONTS}).
+be found, @code{n} negative or larger or equal to @code{FL_MAXFONTS}).
 @xref{Label Attributes and Fonts}, for details. A redraw of all forms
 is required to actually see the change for visible forms.
 
@@ -656,7 +656,7 @@ void fl_set_icm_color(FL_COLOR index, int r, int g, int b);
 @end example
 @noindent
 Using this function you can actually change all entries in the
-internal coloormap (with @code{index} going up to
+internal colormap (with @code{index} going up to
 @code{FL_MAX_COLORS-1}). You may also inspect the internal colormap
 using
 @findex fl_get_icm_color()
@@ -710,7 +710,7 @@ form. To start a new group of objects use
 FL_OBJECT *fl_bgn_group(void);
 @end example
 @noindent
-The function returns a pointer to the group (actually to an invsible
+The function returns a pointer to the group (actually to an invisible
 object of class
 @tindex FL_BEGIN_GROUP
 @code{FL_BEGIN_GROUP}). Groups can't be nested.
@@ -757,7 +757,7 @@ FL_OBJECT *fl_addto_group(FL_OBJECT *group);
 @noindent
 Both functions return their argument on success and @code{NULL} on
 failure (e.g. because a different group or form is still open).
-On success further objects can be appened to the form or group.
+On success further objects can be appended to the form or group.
 
 To remove an object from a form use
 @findex fl_delete_object()
@@ -877,8 +877,8 @@ belongs to) the functions
 @findex fl_get_object_position()
 @anchor{fl_get_object_position()}
 @example
-void fl_set_object_position(FL_OBJECT *obj, FL_Coord x, FL_Cood y);
-void fl_get_object_position(FL_OBJECT *obj, FL_Coord *x, FL_Cood *y);
+void fl_set_object_position(FL_OBJECT *obj, FL_Coord x, FL_Coord y);
+void fl_get_object_position(FL_OBJECT *obj, FL_Coord *x, FL_Coord *y);
 @end example
 @noindent
 exist. If the object is visible it's redrawn at the new position.
@@ -990,11 +990,11 @@ and the string itself use
 @findex fl_get_object_label()
 @anchor{fl_get_object_label()}
 @example
-FL_COLOR fl_set_object_lcol(FL_OBJECT *obj);
-int fl_set_object_lsize(FL_OBJECT *obj);
-int fl_set_object_lstyle(FL_OBJECT *obj);
-int fl_set_object_lalign(FL_OBJECT *obj);
-const char * fl_set_object_label(FL_OBJECT *obj);
+FL_COLOR fl_get_object_lcol(FL_OBJECT *obj);
+int fl_get_object_lsize(FL_OBJECT *obj);
+int fl_get_object_lstyle(FL_OBJECT *obj);
+int fl_get_object_lalign(FL_OBJECT *obj);
+const char * fl_get_object_label(FL_OBJECT *obj);
 @end example
 
 To set a tool-tip text for an object use the following routine
@@ -1261,7 +1261,7 @@ Valid choices are @code{FLPS_AUTO}, @code{FLPS_PORTRAIT} and
 @code{FLPS_LANDSCAPE}. The default is @code{FLPS_AUTO}.
 
 @item auto_fit
-By defaul, this is true so the object always fits the printed page.
+By default, this is true so the object always fits the printed page.
 Set it to false (0) to turn off auto-scaling.
 
 @item int eps
@@ -1302,7 +1302,7 @@ Window fl_show_form(FL_FORM *form, int place, int border,
 @code{place} controls the position and size of the form. @code{border}
 indicates whether a border (window manager's decoration) should be
 drawn around the form. If a border is to be drawn @code{title} is the
-name of the window (and its associated icon). The routine retuarns the
+name of the window (and its associated icon). The routine returns the
 window identifier of the form. For resource and identification
 purposes, the form name is taken to be the title with spaces removed
 and the first character lower-cased. E.g., if a form has a title
@@ -1527,7 +1527,7 @@ void fl_get_decoration_sizes(FL_FORM *form, int *top, int *right,
 This is especially useful if it is necessary to open a window at some
 previously stored position since in that case one needs the position
 of of the window, which deviates from the position reported for the
-form by the window managers decoarations. Obviously, the above
+form by the window manager's decorations. Obviously, the above
 function can't be used for forms that are embedded into another form.
 
 The function
@@ -1600,7 +1600,7 @@ The function can return that the form is visible
 in the processing of becoming invisible
 (@code{@ref{FL_BEING_HIDDEN}}).
 
-The most important function for doing the actual ineraction with forms
+The most important function for doing the actual interaction with forms
 is
 @anchor{fl_do_forms()}
 @findex fl_do_forms()
@@ -1691,7 +1691,7 @@ void fl_activate_object(FL_OBJECT *obj);
 void fl_deactivate_object(FL_OBJECT *obj);
 @end example
 @noindent
-It is nrmally useful to give the user a visual clue when an object
+It is normally useful to give the user a visual clue when an object
 gets deactivated, e.g., by graying out its label etc.
 
 To find out if an object is active use
@@ -1831,7 +1831,7 @@ use of @code{@ref{fl_add_signal_callback()}} prevents the application
 program from using any, potentially more flexible, system signal
 handling routines on some platforms. Also there might be perceptible
 delays from the time a signal is delivered by the OS and the time its
-callback is invoked by Xforms main loop. This delay can be particular
+callback is invoked by XForms' main loop. This delay can be particular
 troublesome for timing sensitive tasks (playing music for example).
 
 In light of these limitations, provisions are made so an application
@@ -1869,7 +1869,7 @@ loop is able to call the registered callback, the callback is called
 only once.
 
 The following example illustrates how to handle a timing critical
-situition (for most application, idle callback, timeouts or
+situation (for most application, idle callback, timeouts or
 @code{FL_TIMER} object should be sufficient).
 
 First, you need to define the function that will handle the timing
@@ -1887,11 +1887,11 @@ void timing_critical_task(int sig) @{
 @}
 @end example
 @noindent
-Now define a (Xforms) signal handler that will be responsible for
+Now define a (XForms) signal handler that will be responsible for
 handling the response of the GUI upon receipt of the signal
 @example
 void gui_signal_handler(int sig, void *data) @{
-    /* within an Xforms signal handler, there is no limitation
+    /* within an XForms signal handler, there is no limitation
      * on GUI activitity */
     fl_set_object_color(....);
     ...
@@ -1907,7 +1907,7 @@ setitimer(ITIMER_REAL, interval);
 /* setup the OS signal handler */
 signal(SIGALRM, timing_critical_tasks);
 
-/* setup the Xforms signal handler */
+/* setup the XForms signal handler */
 fl_add_signal_callback(SIGALRM, gui_signal_handler, &myData);
 @end example
 

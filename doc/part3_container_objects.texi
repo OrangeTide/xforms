@@ -44,7 +44,7 @@ be selected.
 @node Adding Folder Objects
 @subsection Adding Folder Objects
 
-To add a tabbed folders to a form use the routine
+To add a tabbed folder to a form use the routine
 @findex fl_add_tabfolder()
 @anchor{fl_add_tabfolder()}
 @example
@@ -79,7 +79,7 @@ Tabs on the left of the folders (not yet functional).
 @tindex FL_RIGHT_TABFOLDER
 @anchor{FL_RIGHT_TABFOLDER}
 @item FL_RIGHT_TABFOLDER
-Tabs on the righ of the folders (not yet functional).
+Tabs on the right of the folders (not yet functional).
 @end table
 
 
@@ -186,7 +186,7 @@ This means that the application program should not destroy a form that
 has been added to a tabbed folder. The function returns the folder tab
 object, which is an object of class @code{FL_BUTTON}. The initial
 object color, label color, and other attributes (gravities, for
-example) of the tab button is inherited from the tabbed folder object
+example) of the tab button are inherited from the tabbed folder object
 @code{obj} and the location and size of the tab are determined
 automatically. You can change the attributes of the returned object
 just like any other objects, but not all possibilities result in a
@@ -231,7 +231,7 @@ when their states change, to the application program via
 @code{@ref{fl_do_forms()}} or @code{@ref{fl_check_forms()}}. When a
 form is used as a folder, objects that do not have a callback are
 ignored even when their states changes. The reason for this behavior
-is that presumely the application does not care while the changes take
+is that presumably the application does not care while the changes take
 place and they only become relevant when the the folder is switched
 off and at that time the application program can decide what to do
 with these objects' states (apply or ignore for example). If immediate
@@ -324,7 +324,7 @@ The function returns the old setting.
 @subsection Remarks
 
 By default, the tab for each folder is drawn with a corner of 3 pixels
-so it appears to be a trapzoid rather than a square. To change the
+so it appears to be a trapezoid rather than a square. To change the
 appearance of the tabs, you can adjust the corner pixels using the
 following routine
 @findex fl_set_default_tabfolder_corner()
@@ -423,22 +423,22 @@ void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
 where the @code{when} argument can be one of
 @table @code
 @item @ref{FL_RETURN_NONE}
-Never report or invoke callback (ethis is the default for the
+Never report or invoke callback (this is the default for the
 formbrowser object)
 
 @item @ref{FL_RETURN_CHANGED}
 Result in a notification whenever the position of one of the
-scrollbars has chnaged.
+scrollbars has changed.
 
 @item @ref{FL_RETURN_END_CHANGED}
-Notification is sen if the position of a scrollbar has changed and the
+Notification is sent if the position of a scrollbar has changed and the
 mouse button has been released.
 
 @item @ref{FL_RETURN_END}
 Notification on release of the mouse button.
 
 @item @ref{FL_RETURN_ALWAYS}
-Notify if the position of a scrollbar has chanhed or the mouse
+Notify if the position of a scrollbar has changed or the mouse
 button has been released.
 @end table
 
@@ -512,7 +512,7 @@ FL_FORM *fl_replace_formbrowser(FL_OBJECT *obj, int num,
 @end example
 @noindent
 where @code{num} is the sequence number of the form that is to be
-replaced by form. For example, to replace the first form form in the
+replaced by @code{form}. For example, to replace the first form in the
 browser with a different form, you should use 1 for @code{num}. The
 function returns the form that has been replaced on success, otherwise
 @code{NULL} is returned.
@@ -525,7 +525,7 @@ using the following routine
 int fl_insert_formbrowser(FL_OBJECT *obj, int num, FL_FORM *form);
 @end example
 @noindent
-where @code{num} is the sequence number before which the new form form
+where @code{num} is the sequence number before which the new form @code{form}
 is to be inserted into the formbrowser. If successful the function
 returns the number of forms in the formbrowser, otherwise -1.
 
@@ -557,7 +557,7 @@ void fl_set_formbrowser_hscrollbar(FL_OBJECT *obj, int how);
 void fl_set_formbrowser_vscrollbar(FL_OBJECT *obj, int how);
 @end example
 @noindent
-where how can be one of the following
+where @code{how} can be one of the following
 @table @code
 @tindex FL_ON
 @item FL_ON
@@ -570,7 +570,7 @@ Always off.
 On when needed. This is the default.
 @end table
 
-The Vertical scrollbar by default scrolls a fixed number of pixels. To
+The vertical scrollbar by default scrolls a fixed number of pixels. To
 change it so each action of the scrollbar scrolls to the next forms,
 the following routine is available
 @findex fl_set_formbrowser_scroll()
@@ -592,7 +592,7 @@ The default.
 Scrolls in form increments.
 @end table
 
-To obtain the the form that is currently the first form in the
+To obtain the form that is currently the first form in the
 formbrowser visible to the user, the following can be used
 @findex fl_get_formbrowser_topform()
 @anchor{fl_get_formbrowser_topform()}
@@ -625,7 +625,7 @@ void fl_get_formbrowser_area(FL_OBJECT *obj, int *x, int *y,
 @end example
 @noindent
 where @code{x} and @code{y} are relative to the (top-level) form the
-formbrowser beongs to.
+formbrowser belongs to.
 
 To programatically scroll within a formbrowser in horizontal
 and vertical direction, the following routines are available

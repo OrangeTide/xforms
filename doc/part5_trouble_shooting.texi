@@ -9,7 +9,7 @@ people using the Forms Library. Ways of avoiding them are presented.
 @item @code{fl show form()} only draws the form partially
 This only happens if immediately following @code{@ref{fl_show_form()}}
 the application program blocks the execution (e.g., waiting for a
-socket connection, starting a new process via @code{fork()}q etc.). To
+socket connection, starting a new process via @code{fork()} etc.). To
 fix this problem, you can flush the X buffer manually using
 @code{fl_update_display(1)} before blocking occurs or use an idle
 callback to check the status of the blocking device or let the main
@@ -21,7 +21,7 @@ can force a screen update using @code{fl_update_display(1)}.
 @item I found a bug in XForms, What do I do?
 Please consider subscribing to the XForms mailing list at
 
-@url{http://cweblog.usuhs.mil/mailman/listinfo/xforms}
+@url{http://lists.nongnu.org/mailman/listinfo/xforms-development}
 
 and sending an email with information about the bug you found. Please
 try to post information about the version of the Forms Library you're
@@ -30,6 +30,6 @@ that exhibits the erratic behavior would help greatly.
 
 If, for some reasons, you don't want subscribe to the mailing list you
 may also send an email to one of the maintainers. At the moment you
-probaly should first contact Jens Thoms Toerring,
+probably should first contact Jens Thoms Toerring,
 <@email{jt@@toerring.de}>.
 @end table

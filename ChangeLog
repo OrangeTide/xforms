@@ -1,5 +1,12 @@
 2010-05-22 Jens Thoms Toerring    <jt@toerring.de>
 
+	* doc: Paul Nicholson put a lot of work into correcting
+	all kinds of issue with the documentation!
+
+	* lib/input.c: in some situations in a multi-line
+	input object parts of the scrollbar were drawn even
+	though no scrollbars were suposed to be shown.
+
 	* lib/xyplot.c: Active xyplot was broken.
 
 	* lib/box.c: If label is inside of box it's now clipped

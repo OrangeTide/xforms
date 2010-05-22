@@ -47,7 +47,7 @@ defaults.
 
 Object classes can be roughly divided into static object classes (Box,
 Frame, LabelFrame, Text, Bitmap, Pixmap, Clock and Chart), Buttons,
-valuator objects classes (Slider, Scrollba, Dial, Positioner, Counter,
+valuator objects classes (Slider, Scrollbar, Dial, Positioner, Counter,
 Thumbwheel), Inputs, choice object classes (Menu, Choice, Browser),
 container object classes (Tabbed Folder, Form Browser, Menu bar) and,
 finally, other object classes (Timer, XYPlot, Canvas, Popup).

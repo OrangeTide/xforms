@@ -96,7 +96,7 @@ We use two examples to show how new buttons are created. The first
 example is taken from the button class in the Forms Library, i.e.@:
 its real working source code that implements the button class. To
 illustrate the entire process of creating this class, let us call this
-button class @code{FL_NBUTTON}q.
+button class @code{FL_NBUTTON}.
 
 First we create a header file to be included in an application program
 that uses this button class:
@@ -346,7 +346,7 @@ the new object class, you can modify the system header file
 (either through inclusion at compile time or by including the actual
 header). You can also place the object file (@file{crossbut.o}) in
 @file{libforms.a} and @file{libforms.so} if you wish. Note however
-that this will make your application programs dependend on your
+that this will make your application programs dependent on your
 personal version of the library.
 
 Since the current version of Form Designer does not support any new

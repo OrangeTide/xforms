@@ -2236,7 +2236,7 @@ int flimage_from_pixmap(FL_IMAGE *im, Pixmap pixmap);
 The first function converts an image into a Pixmap (a server side
 resource) that can be used in the pixmap object (see pixmap-class???).
 
-The second functon does the reverse. @code{im} must be a properly
+The second function does the reverse. @code{im} must be a properly
 allocated image.
 
 

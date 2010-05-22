@@ -171,7 +171,7 @@ focus order, see @ref{Raising and Lowering}, in Part II for details. If
 the @code{<Shift>} key is pressed down when the @code{<Tab>} is
 pressed, the focus is directed to the previous input field.
 
-Leaving an inut field using the @code{<Return>}) key does not work for
+Leaving an input field using the @code{<Return>}) key does not work for
 multi-line input fields since the @code{<Return>} key is used to start
 a new line.
 
@@ -179,7 +179,7 @@ Per default the input object gets returned to the application (or the
 callback set for the input object is invoked) when the input field is
 left and has been changed. Depending on the application, other options
 might be useful. To change the precise condition for the object to be
-returned (or its callback to becone invoked), the following function
+returned (or its callback to become invoked), the following function
 can be used:
 @findex fl_set_input_return()
 @anchor{fl_set_input_return()}
@@ -271,7 +271,7 @@ to 16.
 Although an input of type @code{@ref{FL_RETURN_ALWAYS}} can be used in
 combination with the callback function to check the validity of
 characters that are entered into the input field, use of the following
-method may simpliy this task considerably:
+method may simplify this task considerably:
 @tindex FL_INPUTVALIDATOR
 @anchor{FL_INPUTVALIDATOR}
 @findex fl_set_input_filter()
@@ -298,7 +298,7 @@ otherwise
 @code{FL_VALID}. If @code{FL_INVALID} is returned, the new character
 is discarded and the input field remains unmodified. The function
 returns the old filter. While the built-in filters also sound the
-keyboard bell, this don't happpens if a custn filter only returns
+keyboard bell, this don't happpens if a custom filter only returns
 @code{FL_INVALID}. To also sound the keyboard bell logically or it
 with
 @tindex FL_RINGBELL
@@ -308,7 +308,7 @@ This still leaves the possibility that the input is valid for every
 character entered, but the string is invalid for the field because it
 is incomplete. For example, 12.0e is valid for a float input field for
 every character typed, but the final string is not a valid floating
-point number. To guard again this, the filter function is also called
+point number. To guard against this, the filter function is also called
 just prior to returning the object with the argument @code{c} (for the
 newly entered character) set to zero. If the validator returns
 @code{FL_INVALID} the object is not returned to the application
@@ -544,7 +544,7 @@ field. To programmatically scroll horizontally, use the following routine
 void fl_set_input_xoffset(FL_OBJECT *obj, int pixels);
 @end example
 @noindent
-where @code{pixels}, whoch must be a positive number, indicates how
+where @code{pixels}, which must be a positive number, indicates how
 many pixels to scroll to the left relative to the nominal position of
 the text lines.
 
@@ -635,7 +635,7 @@ void fl_set_input_scrollbarsize(FL_OBJECT *obj, int hh, int vw);
 where @code{hh} is the horizontal scrollbar height and @code{vw} is
 the vertical scrollbar width in pixels.
 
-To determine the current settings for the orizontal scrollbar height
+To determine the current settings for the horizontal scrollbar height
 and the vertical scrollbar width use
 @findex fl_get_input_scrollbarsize()
 @anchor{fl_get_input_scrollbarsize()}

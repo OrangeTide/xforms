@@ -99,7 +99,7 @@ has the advantage that your program will remain compatible with future
 
 There are a couple of ways to find out the "current" window ID,
 defined as the window ID the object receiving dispatcher's messages
-like @code{FL_DRAW} etc.@: belongs to. If the objects address is
+like @code{FL_DRAW} etc.@: belongs to. If the object's address is
 available, @code{FL_ObjWin(obj)} will suffice. Otherwise the function
 @code{@ref{fl_winget()}} (see below) can be used.
 
@@ -207,7 +207,7 @@ indexed by @code{color} to the color given by the @code{red},
 
 The second function, @code{@ref{fl_mapcolorname()}}, sets the color in
 the colormap indexed by @code{color} to the color named @code{name},
-where @code{name} must be a valid name from the systems color database
+where @code{name} must be a valid name from the system's color database
 file @file{rgb.txt}. It also returns the colors pixel value or -1 on
 failure.
 
@@ -825,7 +825,7 @@ void fl_draw_object_label(FL_OBJECT *obj)
 void fl_draw_object_label_outside(FL_OBJECT *obj);
 @end example
 @noindent
-Both routines assume that the alignment is relative to the fulll
+Both routines assume that the alignment is relative to the full
 bounding box of the object. The first routine draws the label
 according to the alignment, which could be inside or outside of the
 bounding box. The second routine will always draw the label outside of

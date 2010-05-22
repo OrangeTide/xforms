@@ -47,7 +47,7 @@ actual accuracy measurement.
 @node Adding Timer Objects
 @subsection Adding Timer Objects
 
-Adding an object To add a timer to a form you use the routine
+To add a timer to a form you use the routine
 @findex fl_add_timer()
 @anchor{fl_add_timer()}
 @example
@@ -84,7 +84,7 @@ blinking by pressing the mouse on it or by resetting the timer to 0.
 
 The timer object is returned to the application program or its
 callback called when the timer expired per default. You can
-also swich off reporting the expiry of the timer by calling
+also switch off reporting the expiry of the timer by calling
 @example
 int fl_set_object_return(FL_OBJECT *obj, unsigned int when)
 @end example
@@ -282,8 +282,8 @@ change the symbol drawn on the data point.
 
 Only @code{FL_ACTIVE_XYPLOT} report mouse events by default. Clicking
 and dragging the data points (marked with little squares) will change
-the data and result in the object getiing returned to the application
-(or the objects calllback getting invoked). By default, the reporting
+the data and result in the object getting returned to the application
+(or the object's callback getting invoked). By default, the reporting
 happens only when the mouse is released. In some situations, reporting
 changes as soon as they happen might be desirable. To control when
 mouse events are returned use the function
@@ -313,7 +313,7 @@ button has been release).
 
 Please note: a object can also been in inspect mode (see function
 @code{@ref{fl_set_xyplot_inspect()}} below). In this case the object
-gets returned (or its callback invoked) for all of the obove settings
+gets returned (or its callback invoked) for all of the above settings
 except (@code{@ref{FL_RETURN_NONE}}) when the mouse was released on
 top of such one of the points.
 
@@ -380,7 +380,7 @@ data line must have two columns, indicating the (x,y) pair with a
 space, tab or comma (@code{,}) separating the two columns. Lines that
 start with any of @code{!}, @code{;} or @code{#} are considered to be
 comments and are ignored. The functions returns the number of data
-points succesfully read or 0 if the file can't be opened/
+points successfully read or 0 if the file can't be opened/
 
 To get a copy of the current XYPLot data, use
 @findex fl_get_xyplot_data()
@@ -543,7 +543,7 @@ void fl_set_xyplot_symbolsize(FL_OBJECT *obj, int size);
 where @code{size} should be given in pixels. The default is 4.
 
 For @code{FL_POINTS_XYPLOT} and @code{FL_LINEPOINTS_XYPLOT} (main
-plot or overlay), the applicaiton program can change the symbol using
+plot or overlay), the application program can change the symbol using
 the following routine
 @tindex FL_XYPLOT_SYMBOL
 @findex fl_set_xyplot_symbol()
@@ -654,7 +654,7 @@ int fl_add_xyplot_overlay_file(FL_OBJECT *obj, int ID,
                                const char *file, FL_COLOR col);
 @end example
 @noindent
-The function returns the number of data points succesfully read. The
+The function returns the number of data points successfully read. The
 type (@code{FL_NORMAL_XYPLOT} etc.) used in overlay plot is the same
 as the object itself. To change an overlay style, use the following
 call
@@ -768,7 +768,7 @@ void fl_delete_xyplot_text(FL_OBJECT *obj, const char *text);
 
 Another kind of inset is the "keys" to the plots. A key is the
 combination of drawing a segment of the plot line style with a piece
-of text that descries what the corrsponding line represents.
+of text that describes what the corrsponding line represents.
 Obviously, keys are most useful when you have more than one plot
 (i.e.@: overlays). To add a key to a particular plot, use the
 following routine
@@ -866,7 +866,7 @@ void fl_clear_xyplot(FL_OBJECT *obj);
 This routine frees all data associated with an XYPlot, including all
 overlays and all inset texts. This routine does not reset all plotting
 options, such as line thickness, major/minor divisions etc.@: nor does
-it free all memories associated with the XYPqlot, for this
+it free all memories associated with the XYPlot, for this
 @code{@ref{fl_free_object()}} is needed.
 
 The mapping between the screen coordinates and data can be obtained
@@ -908,14 +908,14 @@ and @code{wy} are the world coordinates.
 @node XYPlot Attributes
 @subsection XYPlot Attributes
 
-Don't use @code{FL_NO_BOX} as the boxtyppe of an XYPlot object that is
+Don't use @code{FL_NO_BOX} as the boxtype of an XYPlot object that is
 to be changed dynamically. To change the font size and style for the
 tic labels, inset text etc., use @code{@ref{fl_set_object_lsize()}}
 and @code{@ref{fl_set_object_lstyle()}}.
 
 The first color argument (@code{col1}) to
 @code{@ref{fl_set_object_color()}} controls the color of the box and
-the second (@code{col2}) yhe actual XYPlot color.
+the second (@code{col2}) the actual XYPlot color.
 
 
 @node XYPlot Remarks
@@ -934,7 +934,7 @@ int fl_interpolate(const float *inx, const float *iny, int num_in,
 If successful, the function returns the number of points in the
 interpolated function (@code{(inx[num_in - 1] - inx[0]) / grid +
 1.01}), otherwise it returns -1. Upon return, @code{outx} and
-@code{outy} are set to the interplated values. The caller must
+@code{outy} are set to the interpolated values. The caller must
 allocate the storage for @code{outx} and @code{outy}.
 
 See @file{xyplotall.c} and @code{xyplotactive.c} for examples of the
@@ -1003,7 +1003,7 @@ The only types of canvases currently available is
 @node Canvas Interaction
 @subsection Canvas Interaction
 
-The canvas class is designed to maximize the programmers ability to
+The canvas class is designed to maximize the programmer's ability to
 deal with situations where standard form classes may not be flexible
 enough. With canvases, the programmer has complete control over
 everything that can happen to a window. It thus doesn't work like
@@ -1038,15 +1038,15 @@ and invokes @code{@ref{fl_addto_selected_xevent()}} to solicit the
 event from the server. Other book keeping (e.g.@: drawing the box that
 encloses the canvas, etc.) is done by the object handler.
 
-When a banvas handler is installed the library tries to set the
-correct mask for the the @code{Xevent} (which then tell the X Window
+When a canvas handler is installed the library tries to set the
+correct mask for the the @code{Xevent} (which then tells the X Window
 system which events to pass on to the Forms Library). But since
 translation from an @code{Xevent} to a @code{Xevent} mask is not
 unique, the default translation of the @code{Xevent} to a mask may or
 may not match exactly the intention of the application. Two events,
 namely @code{MotionNotify} and @code{ButtonPress}, are likely
 candidates that need further clarification from the application. There
-are two funtions to add or delete from the mask,
+are two functions to add or delete from the mask,
 @code{@ref{fl_addto_selected_xevent()}} and
 @code{@ref{fl_remove_selected_xevent()}}.
 
@@ -1057,7 +1057,7 @@ interested in a continous motion monitoring (tracking), thus per
 default @code{MotionNotify} events are requested with
 @code{PointerMotionHintMask} being set in the mask to reduce the
 number of events generated. If this is not the case and in fact the
-aplication wants to use the mouse motion as some type of graphics
+application wants to use the mouse motion as some type of graphics
 control, the default behavior would appear "jerky" as not every mouse
 motion is reported. To change the default behavior so that every mouse
 motion is reported, you need to call
@@ -1083,8 +1083,8 @@ void fl_remove_canvas_handler(FL_OBJECT *obj, int event,
 @noindent
 After this function call the canvas ceases to receive the events for
 @code{event}. The corresponding default bits in the @code{XEvent} mask
-as theu got set by @code{@ref{fl_add_canvas_handler()}} are cleared.
-Ifyou added extra ones with @code{@ref{fl_addto_selected_xevent()}}
+as were set by @code{@ref{fl_add_canvas_handler()}} are cleared.
+If you added extra ones with @code{@ref{fl_addto_selected_xevent()}}
 you should reset them using @code{@ref{fl_remove_selected_xevent()}}.
 
 To obtain the window ID of a canvas, use
@@ -1124,7 +1124,7 @@ by using @code{form->window} if you want to (un)map a form or
 @node Other Canvas Routines
 @subsection Other Canvas Routines
 
-Upon canvass creation, all its window related attributes, e.g.@:
+Upon canvas creation, all its window related attributes, e.g.@:
 visual, depth and colormap etc., are inherited from its parent (i.e.@:
 the window of the form the canvas belongs to). To modify any
 attributes of the canvas, use the following routine
@@ -1164,12 +1164,12 @@ the canvas window is created (which happens when the parent form is
 shown). Also, typically if you change the canvas visual, you probably
 should also change the canvas depth to match the visual.
 
-Caution should also applied when usin
+Caution should also applied when using
 @code{@ref{fl_set_canvas_colormap()}}: when the canvas window goes
 away, e.g.@: as a result of a call of @code{@ref{fl_hide_form()}}, the
 colormap associated with the canvas is freed (destroyed). This likely
 will cause problems if a single colormap is used for multiple canvases
-as each canvase will attempt to free the same colormap, resulting in
+as each canvas will attempt to free the same colormap, resulting in
 an X error. If your application works this way, i.e.@: the same
 colormap is used on multiple canvases (via
 @code{@ref{fl_set_canvas_colormap()}}), you should use the following
@@ -1182,7 +1182,7 @@ void fl_share_canvas_colormap(FL_OBJECT *obj, Colormap colormap);
 @noindent
 This function works the same way as
 @code{@ref{fl_set_canvas_colormap()}} except that it also sets a
-intenal flag so the colormap isn't freed when the canvas goes away.
+internal flag so the colormap isn't freed when the canvas goes away.
 
 By default, canvases are decorated with an @code{FL_DOWN_FRAME}. To
 change the decoration, change the the boxtype of the canvas and the

@@ -66,7 +66,7 @@ typedef struct {
     int           size;             /* size of the string              */
     int           changed;          /* whether the field has changed   */
     int           drawtype;         /* if to draw text with background */
-    int           noscroll;         /* true if no scrollis allowd      */
+    int           noscroll;         /* true if no scrollis allowed     */
     int           maxchars;         /* limit for normal_input          */
     int           attrib1;
     int           attrib2;
@@ -175,6 +175,16 @@ get_margin( int        btype,
 }
 
 
+static void
+set_visibility( FL_OBJECT * obj,
+                int state )
+{
+    obj->visible = state;
+    for ( obj = obj->child; obj; obj = obj->nc )
+        set_visibility( obj, state );
+}
+    
+
 /***************************************
  * Check the size of scrollbars and input field.  No drawing is allowed
  ***************************************/
@@ -194,7 +204,7 @@ check_scrollbar_size( FL_OBJECT * obj )
     if ( sp->input->type != FL_MULTILINE_INPUT )
         return;
 
-    /* compute the real input box size */
+    /* Compute the real input box size */
 
     sp->input->x = sp->dummy->x;
     sp->input->y = sp->dummy->y;
@@ -202,7 +212,7 @@ check_scrollbar_size( FL_OBJECT * obj )
     get_margin( sp->input->boxtype, bw, &xmargin, &ymargin );
     sp->charh = fl_get_char_height( sp->input->lstyle, sp->input->lsize, 0, 0 );
 
-    /* see how many (potential) lines we can have */
+    /* See how many (potential) lines we can have */
 
     sp->screenlines = ( sp->dummy->h - 2.0 * ymargin ) / sp->charh + 0.001;
 
@@ -216,12 +226,12 @@ check_scrollbar_size( FL_OBJECT * obj )
         sp->vscroll->x = sp->input->x + sp->dummy->w - sp->vw;
         sp->vscroll->y = sp->input->y;
         sp->vscroll->w = sp->vw;
-        sp->vscroll->visible = 1;
+        set_visibility( sp->vscroll, 1 );
     }
     else
     {
         sp->vw = 0;
-        sp->vscroll->visible = 0;
+        set_visibility( sp->vscroll, 0 );
     }
 
     sp->input->w = sp->dummy->w - sp->vw;
@@ -237,7 +247,7 @@ check_scrollbar_size( FL_OBJECT * obj )
         sp->hscroll->x = sp->input->x;
         sp->hscroll->y = sp->input->y + sp->dummy->h - sp->hh;
         sp->hscroll->h = sp->hh;
-        sp->hscroll->visible = 1;
+        set_visibility( sp->hscroll, 1 );
 
         if ( ( delta = max_pixels - sp->w ) > 0 )
         {
@@ -252,7 +262,7 @@ check_scrollbar_size( FL_OBJECT * obj )
     else
     {
         sp->hh = 0;
-        sp->hscroll->visible = 0;
+        set_visibility( sp->hscroll, 0 );
     }
 
     sp->input->h = sp->dummy->h - sp->hh;

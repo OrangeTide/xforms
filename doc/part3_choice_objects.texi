@@ -116,11 +116,11 @@ The function is of type
 int callback(FL_POPUP_RETURN *r);
 @end example
 @noindent
-Informaton about the item etc.@: gets passed to the callback function
+Information about the item etc.@: gets passed to the callback function
 via the @code{@ref{FL_POPUP_RETURN}} structure and the return value of
 the function can be used to keep the selection from becoming reported
 back to the user made by returning a value of @code{FL_IGNORE} (-1).
-The functions address must be given in the arguments following the
+The function's address must be given in the arguments following the
 @code{items} string.
 
 @item %E
@@ -157,7 +157,7 @@ be done using @code{"%s"}.
 Sets one or more shortcut keys for an item. Requires a string with the
 shortcuts in the arguments following the @code{items} string.
 @xref{Shortcuts}, for details on how to define shortcuts. Please note
-that the character in the label idenical to the shortcut character is
+that the character in the label identical to the shortcut character is
 only shown as underlined if @code{"%S"} isn't used.
 
 @item %%
@@ -206,7 +206,7 @@ directly and then associate it with the select object using
 int fl_set_select_popup(FL_OBJECT *obj, FL_POPUP *popup);
 @end example
 @noindent
-If the select object lready had a popup before this will be deleted
+If the select object already had a popup before this will be deleted
 and replaced by the new popup passed as the second argument. Please
 note that the popup the argument @code{popup} points to may not
 contain any entries other than those of type
@@ -236,7 +236,7 @@ executed. The callback receives as its argument a pointer to a
 structure of type @code{@ref{FL_POPUP_RETURN}}.
 
 Its @code{val} member is a integer value associated with the entry. It
-can be set explicitely on creationg of the item using the @code{"%x"}
+can be set explicitely on creation of the item using the @code{"%x"}
 "special sequence". If not given then first item gets the value 0, the
 next 1 etc. @code{user_data} is a pointer to some user data, which can
 be set on creation of the item using @code{"%u"}. @code{text} is the
@@ -250,7 +250,7 @@ finally, @code{popup} is the popup associated with the select object.
 
 Normally, when a new item is selected this is reported back to the
 caller either by calling the select objects callback (if one exists)
-or by returning the onject as the result of a call of e.g.@:
+or by returning the object as the result of a call of e.g.@:
 @code{@ref{fl_do_forms()}}. But if the callback for the item itself
 returns @code{FL_IGNORE} then the latter doesn't happen. This can be
 useful for cases where all work for a change of the selection can
@@ -329,7 +329,7 @@ all needed information about the selected item.
 
 For some actions, e.g.@: deletion of an item etc., it is necessary to
 know the popup entry that represents it. Therefore it's possible to
-search the list of items accoring to several criteria:
+search the list of items according to several criteria:
 @findex fl_get_select_item_by_value()
 @anchor{fl_get_select_item_by_value()}
 @findex fl_get_select_item_by_label()
@@ -347,7 +347,7 @@ The first function, @code{@ref{fl_get_select_item_by_value()}},
 searches through the list of items and returns the first one with the
 @code{val} associated with the item (or @code{NULL} if none is found).
 The second, @code{@ref{fl_get_select_item_by_label()}} searches for a
-certain label as displayed for the iten in the popup. The third,
+certain label as displayed for the item in the popup. The third,
 @code{@ref{fl_get_select_item_by_text()}} searches for the text the
 item was created by (that might be the same as the label text in
 simple cases). Please note that all functions return a structure of
@@ -390,13 +390,13 @@ string exactly like it would be used in
 defines the item(s) to replace the existing item. Please note that,
 unless values to be associated with the items (see the @code{val}
 member of the @code{@ref{FL_POPUP_RETURN}} structure) there's a twist
-here. When items get created they per default reeive increasing
+here. When items get created they per default receive increasing
 values, starting at 0. This also holds for items that get created in
 the process of replacement. The result is that the ordering of those
-values in that case won;t represent the order in whch they appear in
+values in that case wont represent the order in which they appear in
 the select objects popup.
 
-Another sometimes useful function allows to insert new items somewhere
+Another sometimes useful function allows insertion of new items somewhere
 in the middle of a list of already existing items:
 @findex fl_insert_select_item()
 @anchor{fl_insert_select_item()}
@@ -408,9 +408,9 @@ FL_POPUP_ENTRY *fl_insert_select_item(FL_OBJECT *obj,
 @noindent
 @code{after} is the entry after which the new item(s) are to be
 inserted (if it's @code{NULL} the new items are inserted at the very
-start). The rest of the argumnts are the same as for
+start). The rest of the arguments are the same as for
 @code{@ref{fl_replace_select_item()}} and the same caveats about the
-values associated autimatically with the new items holds.
+values associated automatically with the new items holds.
 
 It's possible to remove all items from a select object by calling
 @findex fl_clear_select()
@@ -433,7 +433,7 @@ at 0 again.
 
 The two color arguments, @code{clo1} and @code{col2}, of the function
 @code{@ref{fl_set_object_color()}} set the background color of the
-obect normally and when the mouse is hovering over it, respectively.
+object normally and when the mouse is hovering over it, respectively.
 
 With the functions
 @findex fl_set_select_text_color()
@@ -445,7 +445,7 @@ FL_COLOR fl_set_selection_text_color(FL_OBJECT *obj, FL_COLOR color);
 FL_COLOR fl_get_selection_text_color(FL_OBJECT *obj);
 @end example
 @noindent
-the color of the text of the currenty selected item on top of the
+the color of the text of the currently selected item on top of the
 object can be set or queried.
 
 To control (or determine) the alignment of the text with the currently
@@ -460,9 +460,9 @@ int fl_get_select_text_align(FLOBJECT *obj);
 @end example
 @noindent
 Please note that the @code{@ref{FL_ALIGN_INSIDE}} flag should be set
-with @code{align} since the text always will be drawn withing the
+with @code{align} since the text always will be drawn within the
 boundaries of the object. On success the function return the old
-setting for the alignemnt or -1 on error.
+setting for the alignment or -1 on error.
 
 Finally, the font style and size of the text can be set or obtained
 using
@@ -486,7 +486,7 @@ passed to all callbacks and also returned by
 @code{@ref{fl_get_select_item()}}. Both structures have a member
 called @code{popup} that is a pointer to the popup associated with the
 select object. For popup functions operation on indiviual items just
-use the poiner to the @code{@ref{FL_POPUP_ENTRY}} structure itself or
+use the pointer to the @code{@ref{FL_POPUP_ENTRY}} structure itself or
 the @code{entry} member of the @code{@ref{FL_POPUP_RETURN}} structure.
 
 There's also a convenience function for finding out the popup used
@@ -591,13 +591,13 @@ required.
 @anchor{FL_BUTTON_NMENU}
 @item FL_BUTTON_NMENU
 When not active shown as text on borderless background, when clicked
-on popup is shown and the object itself being dispayed as a button.
+on popup is shown and the object itself being displayed as a button.
 
 @tindex FL_BUTTON_TOUCH_NMENU
 @anchor{FL_BUTTON_TOUCH_NMENU}
 @item FL_BUTTON_TOUCH_NMENU
 When not active shown as text on borderless background, when mouse is
-moved onto it the popup is shown and the object itself is dispayed as
+moved onto it the popup is shown and the object itself is displayed as
 a button.
 @end table
 
@@ -649,7 +649,7 @@ start with the character @code{'/'} and/or @code{'_'}. For an
 underline character a line is drawn above the item. And if there's a
 slash this item marks the begin of a sub-menu with all further items
 belonging to the sub-menu until a structure with member @code{text}
-bing set to @code{NULL} is found in the array. (The @code{'/'} and
+being set to @code{NULL} is found in the array. (The @code{'/'} and
 @code{'_'} characters are, of course, not drawn.)
 
 @code{type} indicates the type of the item. It can be
@@ -711,7 +711,7 @@ typedef struct @{
     const char           *label;     /* text drawn on left side */        
     const char           *accel;     /* text drawn on right side */
     const FL_POPUP_ENTRY *entry;     /* selected popup entry */
-    const aFL_POPUP       *popup;     /* (sub-)popup it belongs to */
+    const FL_POPUP       *popup;     /* (sub-)popup it belongs to */
 @} FL_POPUP_RETURN;
 @end example
 @noindent
@@ -725,7 +725,7 @@ entry selected and @code{popup} to the (sub-) popup the entry belongs
 to (@pxref{Part III Popups}, for more details on these structures).
 
 If the callback function already does all the work required on
-seletion of the item have it return the value @code{FL_IGNORE} to
+selection of the item have it return the value @code{FL_IGNORE} to
 keep the selection from being reported back to the main loop of the
 program.
 
@@ -733,7 +733,7 @@ Finally, @code{shortcut} is a string encoding the keybord shortcut to
 be used for the item.
 
 
-There'e also a third method to "populate" a menu. If you already
+There's also a third method to "populate" a menu. If you already
 created a popup than you can set it as the menu's popup via a call of
 @findex fl_set_nmenu_popup()
 @anchor{fl_set_nmenu_popup()}
@@ -836,14 +836,14 @@ To find out which item of a nmenu object was selected last use
 FL_POPUP_RETURN *fl_get_nmenu_item(FL_OBJECT *obj);
 @end example
 @noindent
-The functon returns either a pointer to a @code{@ref{FL_POPUP_RETURN}}
+The function returns either a pointer to a @code{@ref{FL_POPUP_RETURN}}
 structure with informations about the selected item (as already
 discussed above when talking about callbacks) or @code{NULL} if
 no selection was made the last time the nmenu object was used.
 
 For some actions, e.g.@: deletion of an item etc., it is necessary to
 know the popup entry that represents it. Therefore it's possible to
-search the list of items accoring to several criteria:
+search the list of items according to several criteria:
 @findex fl_get_nmenu_item_by_value()
 @anchor{fl_get_nmenu_item_by_value()}
 @findex fl_get_nmenu_item_by_label()
@@ -854,7 +854,7 @@ search the list of items accoring to several criteria:
 FL_POPUP_ENTRY *fl_get_nmenu_item_by_value(FL_OBJECT *obj, long val);
 FL_POPUP_ENTRY *fl_get_nmenu_item_by_label(FL_OBJECT *obj,
                                            const char *label);
-FL_POPUP_ENTRY *fl_get_nmneu_item_by_label(FL_OBJECT *obj,
+FL_POPUP_ENTRY *fl_get_nmenu_item_by_label(FL_OBJECT *obj,
                                            const char *text);
 @end example
 The first function, @code{@ref{fl_get_nmenu_item_by_value()}},
@@ -862,7 +862,7 @@ searches through the list of all items (including items in sub-popups)
 and returns the first one with the @code{val} associated with the item
 (or @code{NULL} if none is found). The second,
 @code{@ref{fl_get_nmenu_item_by_label()}} searches for a certain label
-as displayed for the iten in the popup. The third,
+as displayed for the item in the popup. The third,
 @code{@ref{fl_get_nmenu_item_by_text()}} searches for the text the
 item was created by (that might be the same as the label text in
 simple cases). Please note that all functions return a structure of
@@ -873,10 +873,10 @@ entry in the popup for the item.
 
 Using e.g.@: the results of the above searches a nmenu item can be
 deleted:
-@findex fl_delete_nmneu_item()
-@anchor{fl_delete_nmneu_item()}
+@findex fl_delete_nmenu_item()
+@anchor{fl_delete_nmenu_item()}
 @example
-int fl_delete_nmneu_item(FL_OBJECT *obj, FL_POPUP_ENTRY *item);
+int fl_delete_nmenu_item(FL_OBJECT *obj, FL_POPUP_ENTRY *item);
 @end example
 
 Alternatively, an item can be replaced by one or more items:
@@ -902,7 +902,7 @@ FL_POPUP_ENTRY *fl_insert_nmenu_items(FL_OBJECT *obj,
 @noindent
 where @code{after} is the item after which the new items are to be
 inserted (use @code{NULL} to insert at the very start) and
-@code{new_items} is a strung just like used with
+@code{new_items} is a string just like used with
 @code{@ref{fl_add_nmenu_items()}} with informations about the
 additional item(s).
 
@@ -933,7 +933,7 @@ FL_POPUP_ENTRY *fl_replace_nmenu_items2(FL_OBJECT *obj,
 @noindent
 All three functions return a pointer to the first new entry in the
 nmenu's popup on success and @code{NULL} on failure. The all take
-a pointer to the nmneu object as their first argument.
+a pointer to the nmenu object as their first argument.
 
 @code{@ref{fl_add_nmenu_items2()}} appends the items given by the list
 specified via the second argument to the nmenu's popup.
@@ -1097,7 +1097,7 @@ Whenever he releases the mouse the highlighting disappears and the
 browser is returned to the application program. The application
 program can now figure out which line was selected using a call of
 @code{@ref{fl_get_browser()}} to be described below. It returns the
-number of the last selected line (with the topmoset line being line
+number of the last selected line (with the topmost line being line
 1.)
 
 An @code{@ref{FL_HOLD_BROWSER}} works exactly the same except that,
@@ -1156,9 +1156,9 @@ Return or invoke callback on selection, deselection or scrolling of
 text or end of scrolling.
 @end table
 
-The default settting for @code{when} for a browser object is
+The default setting for @code{when} for a browser object is
 @code{@ref{FL_RETURN_SELECTION}|@ref{FL_RETURN_DESELECTION}} (unless
-during the built of XForms you set the configurationb flag
+during the built of XForms you set the configuration flag
 @code{--enable-bwc-bs-hack} in which case the default is
 @code{@ref{FL_RETURN_NONE}} to keep backward compatibility with
 earlier releases of the library).
@@ -1212,7 +1212,7 @@ This function appends text to the last line in the browser without
 advancing the line counter. Again the text may contain embedded
 newline characters (@code{'\n'}). In that case, the text before the
 first embedded newline is appended to the last line, and everything
-aferwards is put onto new lines. As in the case of
+afterwards is put onto new lines. As in the case of
 @code{@ref{fl_addto_browser()}} the last added line will be visible in
 the browser.
 
@@ -1290,7 +1290,7 @@ int fl_load_browser(FL_OBJECT *obj, const char *filename);
 @noindent
 The routine returns @code{1} when file could be successfully loaded,
 otherwise @code{0}. If the file name is an empty string (or the file
-could bot be opened for reading) the browser is just cleared. This
+could not be opened for reading) the browser is just cleared. This
 routine is particularly useful when using the browser for a help
 facility. You can create different help files and load the needed one
 depending on context.
@@ -1416,7 +1416,7 @@ void fl_set_browser_rel_yoffset(FL_OBJECT *obj, double yval);
 @end example
 @noindent
 where @code{xoff} and @code{yoff} indicate how many pixels to scroll
-horizontally (relativ to the left margin) or vertically (relative to
+horizontally (relative to the left margin) or vertically (relative to
 the top of the text), while @code{xval} and @code{yval} stand for
 positions relative to the total width or height of all of the text and
 thus have to be numbers between @code{0.0} and @code{1.0}.
@@ -1632,7 +1632,7 @@ function calls to install the callback.
 To uninstall a scroll callback, use a @code{NULL} pointer as the
 callback function.
 
-As an alternative you cound request that the browser object gets
+As an alternative you could request that the browser object gets
 returned (or a callback invoked) when the the scrollbar positions are
 changed. This can be done e.g.@: by passing
 @code{@ref{FL_RETURN_CHANGED}} (if necessary @code{OR}'ed with flags
@@ -1691,7 +1691,7 @@ text area size.
 
 Since version 1.0.92 there isn't a limit on the maximum length of
 lines in a browser anymore. (The macro @code{FL_BROWSER_LINELENGTH}
-still exists and is set tp 2048 for backward compatibility but has no
+still exists and is set to 2048 for backward compatibility but has no
 function anymore).
 
 See @file{fbrowse1.c} for an example program using a

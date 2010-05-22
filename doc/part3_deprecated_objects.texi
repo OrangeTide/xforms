@@ -375,7 +375,7 @@ released.
 When the menu appears the user can make a selection using the left
 mouse button or make no selection by clicking outside the menu (or by
 simply releasing the mouse button in case of a @code{FL_PULLDOWN_MENU}
-type menu. Nornmally when he makes a selection the menu object is
+type menu. Normally when he makes a selection the menu object is
 returned by the interaction routines.
 
 You can control the condition under which the menu object gets
@@ -834,7 +834,7 @@ which item was selected.
 Specify a "hotkeys" that can be used to select this item. Hotkeys must
 be given in the arguments following @code{str} as a pointer to a
 string. Use @code{#} to specify that a key must be pressed together
-with the @code{<Alt>} key, @code{^} for simultanious pressing of
+with the @code{<Alt>} key, @code{^} for simultaneous pressing of
 @code{<Ctrl>} and @code{&n} for the function key @code{Fn}.
 
 @code{%s} can be used instead of @code{%h}.
@@ -863,7 +863,7 @@ left. See also @code{FL_PUP_BOX | FL_PUP_CHECK}.
 Specifies this menu item is a "radio item" belonging to group with
 number @code{g}, currently not being selected. The group number
 @code{g}, that must be part of the string directly following @code{%r}
-(and not secified via the arguments following the string), must be a
+(and not specified via the arguments following the string), must be a
 non-zero, positive number. Radio items are drawn with a small diamond
 box to the left (empty while not active). See also
 @code{FL_PUP_RADIO}.
@@ -1164,7 +1164,7 @@ and @code{cb} is the address of the callback function.
 
 Please note that Xpopup objects are a bit special in XForms. Normal
 objects get returned by e.g.@: @code{@ref{fl_do_forms()}} (or an
-associated callback gets invoked). Butsince Xpopup objects are meant
+associated callback gets invoked). But since Xpopup objects are meant
 to be sub-objects of other objects (like @code{FL_CHOICE} and
 @code{L_MENU} objects) and don't get invoked directly by a call of
 e.g.@: @code{@ref{fl_do_forms()}} but instead by a call of
@@ -1198,7 +1198,7 @@ an (non-disabled) item of the XPopup @code{popup_id}. Two parameters
 are passed to the callback function. The first parameter is the item
 number enter/leave applies to and the second parameter is a data
 pointer. To remove an enter/leave callback, call the functions with
-the callback funtion argument @code{cb} set to @code{NULL}.
+the callback function argument @code{cb} set to @code{NULL}.
 
 There is also a function to associate a XPopup item with a sub-XPopup
 @findex fl_setpup_submenu()
@@ -1272,7 +1272,7 @@ void fl_setpup_position(int x, int y);
 @end example
 @noindent
 where @code{x} and @code{y} specify the location where the top-left
-corner of the popup should be. @code{x} and @code{y}q must be given in
+corner of the popup should be. @code{x} and @code{y} must be given in
 screen coordinates (i.e.@: relative to the root window) with the
 origin at the top-left corner of the screen. This routine should be
 used immediately before invoking @code{@ref{fl_dopup()}}, the position

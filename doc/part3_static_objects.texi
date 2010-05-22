@@ -368,7 +368,7 @@ Any boxtype can be used for text.
 
 The first color argument (@code{col1}) of
 @code{@ref{fl_set_object_color()}} controls the color of the box the
-text is paced into, the second (@code{col2}) is not used. The color of
+text is placed into, the second (@code{col2}) is not used. The color of
 the text itself is controlled by calls of
 @code{@ref{fl_set_object_lcol()}} as usual.
 
@@ -489,7 +489,7 @@ should be displayed using @code{XCopyPlane()}.
 @node Bitmap Attributes
 @subsection Bitmap Attributes
 
-The label color as set bi @code{@ref{fl_set_object_lcol()}} controls
+The label color as set by @code{@ref{fl_set_object_lcol()}} controls
 both the foreground color of the bitmap and the color of the label
 (i.e.@: they are always identical).
 
@@ -586,7 +586,7 @@ old pixmaps by calling
 void fl_free_pixmap_pixmap(FL_OBJECT *obj);
 @end example
 @noindent
-on the pximap object prior to calling these two routines. This
+on the pixmap object prior to calling these two routines. This
 function, in addition to freeing the pixmap and the mask, also frees
 the colors the pixmap allocated.
 
@@ -705,7 +705,7 @@ You will need the XPM library (version 3.4c or later) developed by
 Arnaud Le Hors and GROUPE BULL (@email{lehors@@sophia.inria.fr}) to
 use pixmap. The XPM library can be obtained from many X
 distribution/mirror sites via anonymous FTP, e.g.@:
-(@uref{ftp://ftp.x.org/contrib/libraries/}. It's home page is
+(@uref{ftp://ftp.x.org/contrib/libraries/}. Its home page is
 @uref{http://old.koalateam.com/lehors/xpm.html}.
 
 
@@ -914,7 +914,7 @@ void fl_add_chart_value(FL_OBJECT *obj, double val,
 @end example
 @noindent
 Here @code{val} is the value of the item, @code{text} is the label to
-be assoc iated with the item (can be empty) and @code{col} is an index
+be associated with the item (can be empty) and @code{col} is an index
 into the colormap (@code{FL_RED} etc.) that is the color of this item.
 The chart will be redrawn each time you add an item. This might not be
 appropriate if you are filling a chart with values. In this case put
@@ -974,7 +974,7 @@ the minimal and maximal value displayed use the routine
 void fl_set_chart_bounds(FL_OBJECT *obj, double min, double max)'
 @end example
 @noindent
-To return to automatic scaling call it with boyh @code{min} and
+To return to automatic scaling call it with both @code{min} and
 @code{max} being set to @code{0.0}. To obtain the current bounds, use
 the following routine
 @findex fl_get_chart_bounds()

@@ -177,7 +177,7 @@ Input is no longer focussed on the object.
 @anchor{FL_KEYPRESS}
 @item FL_KEYPRESS
 A key was pressed. The ASCII value (or KeySym if non-ASCII) is passed
-to the routine via the @code{key} argument, modiier keys can be
+to the routine via the @code{key} argument, modifier keys can be
 retrieved from the @code{state} member of the XEvent also passed to
 the function via @code{xev}.
 
