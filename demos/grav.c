@@ -363,7 +363,7 @@ create_form_help( void )
 		"Gravity and resize settings demonstration",
 		"",
 		"The interaction between gravity and resize settings",
-		"can somtimes be difficult to understand  This pro-",
+		"can sometimes be difficult to understand  This pro-",
 		"gram allows you to test some of the effects.",
 		"",
 		"With the sets of buttons in the upper left hand and",
@@ -435,16 +435,7 @@ main( int    argc,
 
 	fl_do_forms( );
 
-//	fl_hide_form( grav->grav );
-//	fl_free_form( grav->grav );
-
-//	if ( help->is_shown )
-//		fl_hide_form( help->help );
-//	fl_free_form( help->help );
-
 	fl_finish( );
 
 	return 0;
 }
-
-

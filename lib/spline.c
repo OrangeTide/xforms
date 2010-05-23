@@ -27,6 +27,7 @@
  * tabulated data onto a working grid, using cubic splines.
  */
 
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -117,7 +118,7 @@ fl_spline_interpolate( const float * wx,
 
     for ( jo = 0, i = 1; i < nout; i++ )
     {
-        /* better than x[i] = x[i-1] + grid; */
+        /* Better than x[i] = x[i-1] + grid; */
 
         x[ i ] = x[ 0 ] + i * grid;
 

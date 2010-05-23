@@ -40,23 +40,6 @@
 /***************************************
  ***************************************/
 
-static void set_visibility( FL_OBJECT * obj,
-                            int         vis )
-{
-    obj->visible = vis;
-
-    for ( obj = obj->child; obj; obj = obj->nc )
-    {
-        if ( obj->child )
-            set_visibility( obj->child, vis );
-        obj->visible = vis;
-    }
-}
-
-
-/***************************************
- ***************************************/
-
 static void
 attrib_change( FL_OBJECT * ob )
 {
@@ -67,7 +50,7 @@ attrib_change( FL_OBJECT * ob )
     sp->tb->x = ob->x;
     sp->tb->y = ob->y;
 
-    set_visibility( sp->tb, 1 );
+    fli_set_object_visibility( sp->tb, FL_VISIBLE );
     sp->tb->input = ob->input;
 
     sp->tb->type    = ob->type;
@@ -201,8 +184,8 @@ get_geometry( FL_OBJECT * obj )
     }
 
     comp->dead_area = comp->h_on && comp->v_on;
-    set_visibility( comp->hsl, comp->h_on );
-    set_visibility( comp->vsl, comp->v_on );
+    fli_set_object_visibility( comp->hsl, comp->h_on );
+    fli_set_object_visibility( comp->vsl, comp->v_on );
 
     comp->attrib = 1;
 
@@ -561,7 +544,7 @@ fl_create_browser( int          type,
 
     sp->hsl = fl_create_scrollbar( fli_context->hscb, x, y + h - D,
                                    w - D, D, NULL );
-    set_visibility( sp->hsl, sp->h_pref == FL_ON );
+    fli_set_object_visibility( sp->hsl, sp->h_pref == FL_ON );
     fl_set_object_callback( sp->hsl, hcb, 0 );
     fl_set_scrollbar_value( sp->hsl, 0.0 );
     fl_set_scrollbar_bounds( sp->hsl, 0.0, 1.0 );
@@ -569,7 +552,7 @@ fl_create_browser( int          type,
 
     sp->vsl = fl_create_scrollbar( fli_context->vscb, x + w - D, y,
                                    D, h - D, NULL );
-    set_visibility( sp->vsl, sp->v_pref == FL_ON );
+    fli_set_object_visibility( sp->vsl, sp->v_pref == FL_ON );
     fl_set_object_callback( sp->vsl, vcb, 0 );
     fl_set_scrollbar_value( sp->vsl, 0.0 );
     fl_set_scrollbar_bounds( sp->hsl, 0.0, 1.0 );

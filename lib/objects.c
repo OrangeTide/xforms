@@ -3554,6 +3554,24 @@ fl_notify_object( FL_OBJECT * obj,
 }
 
 
+/***************************************
+ * Sets the visibility flag for an object and all its children
+ * without inducing a redraw. Used e.g. in browser and multi-
+ * line input object's code to switch scrollbars on and off.
+ ***************************************/
+
+void
+fli_set_object_visibility( FL_OBJECT * obj,
+                           int         vis )
+{
+    if ( obj )        /* let's be careful... */
+    {
+        obj->visible = vis;
+        for ( obj = obj->child; obj; obj = obj->nc )
+            fli_set_object_visibility( obj, vis );
+    }
+}
+
 
 /*
  * Local variables:

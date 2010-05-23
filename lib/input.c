@@ -175,16 +175,6 @@ get_margin( int        btype,
 }
 
 
-static void
-set_visibility( FL_OBJECT * obj,
-                int state )
-{
-    obj->visible = state;
-    for ( obj = obj->child; obj; obj = obj->nc )
-        set_visibility( obj, state );
-}
-    
-
 /***************************************
  * Check the size of scrollbars and input field.  No drawing is allowed
  ***************************************/
@@ -226,12 +216,12 @@ check_scrollbar_size( FL_OBJECT * obj )
         sp->vscroll->x = sp->input->x + sp->dummy->w - sp->vw;
         sp->vscroll->y = sp->input->y;
         sp->vscroll->w = sp->vw;
-        set_visibility( sp->vscroll, 1 );
+        fli_set_object_visibility( sp->vscroll, FL_VISIBLE );
     }
     else
     {
         sp->vw = 0;
-        set_visibility( sp->vscroll, 0 );
+        fli_set_object_visibility( sp->vscroll, FL_INVISIBLE );
     }
 
     sp->input->w = sp->dummy->w - sp->vw;
@@ -247,7 +237,7 @@ check_scrollbar_size( FL_OBJECT * obj )
         sp->hscroll->x = sp->input->x;
         sp->hscroll->y = sp->input->y + sp->dummy->h - sp->hh;
         sp->hscroll->h = sp->hh;
-        set_visibility( sp->hscroll, 1 );
+        fli_set_object_visibility( sp->hscroll, FL_VISIBLE );
 
         if ( ( delta = max_pixels - sp->w ) > 0 )
         {
@@ -262,7 +252,7 @@ check_scrollbar_size( FL_OBJECT * obj )
     else
     {
         sp->hh = 0;
-        set_visibility( sp->hscroll, 0 );
+        fli_set_object_visibility( sp->hscroll, FL_INVISIBLE );
     }
 
     sp->input->h = sp->dummy->h - sp->hh;

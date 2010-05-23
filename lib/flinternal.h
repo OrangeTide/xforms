@@ -245,6 +245,10 @@ extern FL_OBJECT *fli_find_object_backwards( FL_OBJECT *,
 extern void fli_insert_object( FL_OBJECT *,
                                FL_OBJECT * );
 
+
+extern void fli_set_object_visibility( FL_OBJECT * obj,
+                                       int         vis );
+
 /* double buffering etc. */
 
 extern void fli_free_flpixmap( FL_pixmap * );

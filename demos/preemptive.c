@@ -56,8 +56,8 @@ FD_form0 *fd_form0;
 
 
 /***************************************
- * which event to take over is better kept in a state varible even though
- * query the status via fl_get_button is cheap
+ * Which event to take over is better kept in a state varible
+ * even though query of the status via fl_get_button is cheap
  ***************************************/
 
 int
@@ -116,7 +116,7 @@ preemptive_handler( FL_OBJECT * ob   FL_UNUSED_ARG,
 }
 
 
-#define INTERVAL  800  /* wait this long before show tip */
+#define INTERVAL  800  /* wait this long before showing tip */
 static int timeoutID;  /* we can also use ob->u_ldata to hold it */
 
 /***************************************
@@ -135,7 +135,7 @@ do_tips( int    id  FL_UNUSED_ARG,
 
 
 /***************************************
- * use the post handler as a tipper
+ * Use the post handler as a tipper
  ***************************************/
 
 int
@@ -214,8 +214,6 @@ main( int    argc,
 }
 
 
-/* Form definition file generated with fdesign. */
-
 /***************************************
  ***************************************/
 
@@ -250,11 +248,11 @@ create_form_form0( void )
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
 
-	fdui->peek = obj = fl_add_checkbutton( FL_RADIO_BUTTON, 190, 40, 35, 30,
+	fdui->peek = obj = fl_add_checkbutton( FL_RADIO_BUTTON, 150, 40, 35, 30,
 										   "Peek" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
 
-	fdui->override = obj = fl_add_checkbutton( FL_RADIO_BUTTON, 240, 40, 35, 30,
+	fdui->override = obj = fl_add_checkbutton( FL_RADIO_BUTTON, 210, 40, 35, 30,
 											   "Override" );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );
 

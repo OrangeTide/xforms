@@ -1,3 +1,9 @@
+2010-05-23 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/flinternals.h, browser.c, objects.c, input.c: Moved
+	duplicate code in brower and input module into a function
+	in objects.c.
+
 2010-05-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	* doc: Paul Nicholson put a lot of work into correcting

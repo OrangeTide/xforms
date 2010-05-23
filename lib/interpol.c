@@ -28,6 +28,7 @@
  * nth order Lagrangian polynomial
  */
 
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -68,7 +69,7 @@ fl_interpolate( const float * wx,
     jo = 0;
     for ( i = 1; i < nout; i++ )
     {
-        /* better than x[i] = x[i-1] + grid; */
+        /* Better than x[i] = x[i-1] + grid; */
 
         x[ i ] = x[ 0 ] + i * grid;
 
@@ -91,7 +92,7 @@ fl_interpolate( const float * wx,
         if ( j > nin - ndeg - 1 )
             j = nin - ndeg - 1;
 
-        /* interpolate */
+        /* Interpolate */
 
         accum = 0.0;
         idm = j + ndeg;

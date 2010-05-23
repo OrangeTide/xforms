@@ -134,7 +134,7 @@ handle_tabfolder( FL_OBJECT * ob,
 
 
 /***************************************
- * canvas expose handler.
+ * Canvas expose handler.
  ***************************************/
 
 static int
@@ -616,7 +616,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
 
     if ( deleted )
     {
-        deleted->visible = 0;
+        fli_set_object_visibility( deleted, FL_INVISIBLE );
 
         if ( theform->form_callback == form_cb )
             theform->form_callback = NULL;
@@ -624,7 +624,7 @@ fl_delete_folder_bynumber( FL_OBJECT * ob,
         if ( theform->visible == FL_VISIBLE )
             fl_hide_form( theform );
 
-        /* change active folder if need to */
+        /* Change active folder if need to */
 
         sp->last_active = -1;
 
@@ -774,7 +774,7 @@ fl_set_folder_bynumber( FL_OBJECT * ob,
 
 
 /***************************************
- * keep tab, but replace the folder content
+ * Keep tab but replace the folder content
  ***************************************/
 
 void
@@ -971,7 +971,7 @@ fl_set_tabfolder_offset( FL_OBJECT * ob,
 
 
 /***************************************
- * compute the position and propagate the parent attributes
+ * Compute the position and propagate the parent attributes
  ***************************************/
 
 static void
@@ -990,7 +990,7 @@ compute_top_position( FL_OBJECT * ob )
     for ( i = 0; i < sp->offset; i++ )
         sp->title[ i ]->x = 2000;
 
-    /* this gets the fl_get_folder_area() right (singe line tab)  * even if
+    /* This gets the fl_get_folder_area() right (single line tab) - even if
        empty folder */
 
     if ( sp->nforms == 0 )
