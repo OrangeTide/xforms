@@ -1,3 +1,9 @@
+2010-05-24 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/spinner.c: Werner Heisch found a bug in the
+	float spinner that kept the user from editing the
+	value.
+
 2010-05-23 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/flinternals.h, browser.c, objects.c, input.c: Moved

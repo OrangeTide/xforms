@@ -166,7 +166,10 @@ spinner_callback( FL_OBJECT * obj,
     int max_len = 4 + sp->prec + log10( DBL_MAX );
     char buf[ max_len ];
 
-    if ( data == 0 && ! *s_val && ! ( obj->returned & FL_RETURN_END ) )
+    /* Don't react to editing the input field unless user ended interaction
+       with input field */
+
+    if ( data == 0 && ! ( obj->returned & FL_RETURN_END ) )
         return;
 
     if ( obj->parent->type == FL_INT_SPINNER )
@@ -178,7 +181,7 @@ spinner_callback( FL_OBJECT * obj,
             char *eptr;
             long i_val = strtol( s_val, &eptr, 10 );
 
-            /* heck for an invalid value entered */
+            /* Check for an invalid value entered */
 
             if ( eptr == s_val || i_val > sp->i_max || i_val < sp->i_min )
             {
