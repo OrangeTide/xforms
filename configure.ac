@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.61)
-AC_INIT([xforms],[1.0.93sp1],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.0.93pre1],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION

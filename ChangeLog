@@ -1,3 +1,9 @@
+2010-06-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/tabfolder.c: Serge Bromow found that under Gnome the
+	contents of a tabfolder weren't positioned correctly,
+	hopefully fixed.
+
 2010-05-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/spinner.c: Werner Heisch found a bug in the

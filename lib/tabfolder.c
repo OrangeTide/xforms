@@ -379,7 +379,7 @@ switch_folder( FL_OBJECT * ob,
             fl_set_form_size( form, sp->canvas->w, sp->canvas->h );
     }
 
-    /* We have more tabs than that can be shown */
+    /* We may have more tabs than can be shown */
 
     if ( sp->num_visible < sp->nforms - 1 || sp->offset )
     {
@@ -398,7 +398,7 @@ switch_folder( FL_OBJECT * ob,
         }
     }
 
-    win = fl_prepare_form_window( form, 0, 0, "Folder" );
+    win = fl_prepare_form_window( form, 0, FL_NOBORDER, "Folder" );
 
     /* win reparent eats the reparent event */
 
@@ -483,7 +483,8 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
 
     if ( form->attached )
     {
-        M_err( "fl_addto_tabfolder", "Seems the form already attached" );
+        M_err( "fl_addto_tabfolder",
+               "Seems as if the form is already attached" );
         return 0;
     }
 
