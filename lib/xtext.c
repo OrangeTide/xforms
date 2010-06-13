@@ -221,7 +221,7 @@ fli_drw_string( int           horalign,
     if ( endline > lnumb || endline <= 0 )
         endline = lnumb;
 
-    /* using fl_fheight etc. is not theorectically correct since it is the
+    /* Using fl_fheight etc. is not theorectically correct since it is the
        max height. For lines that do not have desc, we are overestimating
        the height of the string. */
 
@@ -297,7 +297,7 @@ fli_drw_string( int           horalign,
         XdrawString( flx->display, flx->win, flx->textgc,
                      startx[ i ], starty[ i ], lines[ i ], slen[ i ] );
 
-        /* setup correct underline color in proper GC */
+        /* Set up correct underline color in proper GC */
 
         if ( ulpos > 0 )
         {
@@ -310,7 +310,7 @@ fli_drw_string( int           horalign,
             do_underline_all( startx[ i ], starty[ i ], lines[ i ], slen[ i ] );
         }
 
-        /* Draw selection area if required.  */
+        /* Draw selection area if required  */
 
         if ( selstart < start[ i + 1 ] && selend > start[ i ] )
         {
@@ -354,10 +354,12 @@ fli_drw_string( int           horalign,
 
         tt = XTextWidth( flx->fs, lines[ i ], curspos - start[ i ] );
 
-        fl_set_clipping( x, y, w - 2, h );
+        if ( clip >= 0 )
+            fl_set_clipping( x, y, w - 2, h );
         fl_rectf( startx[ i ] + tt, starty[ i ] - height,
                   2, flx->fheight, curscol );
-        fl_unset_clipping( );
+        if ( clip >= 0 )
+            fl_unset_clipping( );
     }
 
     fl_free( str );

@@ -4,6 +4,10 @@
 	contents of a tabfolder weren't positioned correctly,
 	hopefully fixed.
 
+	lib/input.c, xtext.c: As serge Bromow pointed out selection
+	was not always drawn correctly if the text in an input object
+	was longer than the width of the object.
+
 2010-05-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/spinner.c: Werner Heisch found a bug in the

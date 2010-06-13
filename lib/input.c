@@ -348,6 +348,7 @@ draw_input( FL_OBJECT * obj )
     cy = sp->input->y + ymargin;
 
     fl_set_text_clipping( cx, cy, sp->w, sp->h );
+    fl_set_clipping( cx, cy, sp->w, sp->h );
 
     max_pixels = fli_drw_string( FL_ALIGN_LEFT,
                                  valign,                /* Align left cent. */
@@ -355,7 +356,7 @@ draw_input( FL_OBJECT * obj )
                                  cy - sp->yoffset,
                                  sp->w + sp->xoffset,
                                  sp->h + sp->yoffset,
-                                 -1,                    /* Do clipping */
+                                 -5,                    /* Do clipping */
                                  col, textcol, curscol,
                                  obj->lstyle, obj->lsize,
                                  sp->no_cursor ? -1 : sp->position,
@@ -374,6 +375,7 @@ draw_input( FL_OBJECT * obj )
         sp->max_pixels_line = max_pixels_line;
     }
 
+    fl_unset_clipping( );
     fl_unset_text_clipping( );
 
     if ( obj->type == FL_SECRET_INPUT )
@@ -390,7 +392,7 @@ draw_input( FL_OBJECT * obj )
 
 
 /***************************************
- * figures out selection region of mouse. Returns whether anything changed
+ * Figures out selection region of mouse, returns whether anything changed
  ***************************************/
 
 static int
@@ -598,7 +600,7 @@ static void set_default_keymap( int );
 
 
 /***************************************
- * cursor moved. No editing.
+ * Cursor moved. No editing.
  ***************************************/
 
 static void
