@@ -187,28 +187,33 @@ FL_EXPORT int fl_set_default_browser_maxlinelength( int n );
 
 #ifndef FL_BROWSER_SCROLL_CALLBACKt
 #define FL_BROWSER_SCROLL_CALLBACKt
-typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *ob,
+typedef void ( * FL_BROWSER_SCROLL_CALLBACK )( FL_OBJECT *,
                                                int,
                                                void * );
 #endif
 
 FL_EXPORT void
-    fl_set_browser_hscroll_callback( FL_OBJECT                  * ob,
-                                     FL_BROWSER_SCROLL_CALLBACK   cb,
-                                     void                       * data );
+    fl_set_browser_hscroll_callback( FL_OBJECT *,
+                                     FL_BROWSER_SCROLL_CALLBACK,
+                                     void * );
 
 FL_EXPORT void
-    fl_set_browser_vscroll_callback( FL_OBJECT                  * ob,
-                                     FL_BROWSER_SCROLL_CALLBACK   cb,
-                                     void                       * data );
+    fl_set_browser_vscroll_callback( FL_OBJECT *,
+                                     FL_BROWSER_SCROLL_CALLBACK,
+                                     void * );
 
-FL_EXPORT int fl_get_browser_line_yoffset( FL_OBJECT * obj,
-										   int         line );
-
-FL_EXPORT FL_BROWSER_SCROLL_CALLBACK
-    fl_get_browser_hscroll_callback( FL_OBJECT * ob );
+FL_EXPORT int fl_get_browser_line_yoffset( FL_OBJECT *,
+										   int  );
 
 FL_EXPORT FL_BROWSER_SCROLL_CALLBACK
-    fl_get_browser_vscroll_callback( FL_OBJECT * ob );
+    fl_get_browser_hscroll_callback( FL_OBJECT * );
+
+FL_EXPORT FL_BROWSER_SCROLL_CALLBACK
+    fl_get_browser_vscroll_callback( FL_OBJECT * );
+
+FL_EXPORT int fl_get_browser_scrollbar_repeat( FL_OBJECT * );
+
+FL_EXPORT void fl_set_browser_scrollbar_repeat( FL_OBJECT *,
+												int  );
 
 #endif /* ! defined FL_BROWSER_H */

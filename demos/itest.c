@@ -35,6 +35,9 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 typedef struct
 {
@@ -422,8 +425,21 @@ load_and_show( const char * file,
     FD_is_mainform *fdui = data;
     FL_IMAGE *image;
     FD_viewform *fd_viewform = app.fd_viewform;
+	struct stat buff;
 
-    if ( ! ( image = flimage_load( file ) ) )
+	if ( ! file || ! *file )
+	{
+		fprintf( stderr, "Missing file name\n" );
+		return 0;
+	}
+
+	if ( ! stat( file, &buff ) && S_ISDIR( buff.st_mode ) )
+	{
+		fl_set_directory( file );
+		return 0;
+	}
+
+	if ( ! ( image = flimage_load( file ) ) )
 		return 0;
 
 	image->u_vdata = data;

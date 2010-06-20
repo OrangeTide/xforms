@@ -31,6 +31,9 @@
 #include "include/forms.h"
 #include "fd/pmbrowse_gui.h"
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 FD_ttt *fd_ttt;
 
@@ -64,40 +67,56 @@ static int
 load_file( const char * fname,
 		   void       * data  FL_UNUSED_ARG )
 {
-     char *p;
+	char *p;
+	struct stat buff;
 
-	 if ( ! fname || ! *fname )
-	 {
-		 fprintf( stderr, "Missing file name\n" );
-		 return 0;
-	 }
+	if ( ! fname || ! *fname )
+	{
+		fprintf( stderr, "Missing file name\n" );
+		return 0;
+	}
 
-     if ( ! ( p = strrchr( fname, '.' ) ) )
-	 {
-		 fprintf( stderr, "Missing file extension\n" );
-		 return 0;
-	 }
+	if ( ! stat( fname, &buff ) )
+	{
+		if ( S_ISDIR( buff.st_mode ) )
+			fl_set_directory( fname );
+		else
+		{
+			if ( ( p = strrchr( fname, '.' ) ) )
+			{
+				if ( ! strcmp( p + 1, "xpm" ) )
+				{
+					fl_hide_object( fd_ttt->bm );
+					fl_free_pixmap_pixmap( fd_ttt->pm );
+					fl_set_pixmap_file( fd_ttt->pm, fname );
+					fl_show_object( fd_ttt->pm );
+				}
+				else if ( ! strcmp( p + 1, "xbm" ) )
+				{
+					fl_hide_object( fd_ttt->pm );
+					fl_set_bitmap_file( fd_ttt->bm, fname );
+					 fl_show_object( fd_ttt->bm );
+				}
+				else
+				{
+					fprintf( stderr, "Invalid file extension: %s\n", p + 1 );
+					return 0;
+				}
+			}
+			else
+			{
+				fprintf( stderr, "Neither .xpm nor .xbm file\n" );
+				return 0;
+			}
+		}
+	}
+	else
+	{
+		fprintf( stderr, "Can't stat() file %s\n", fname );
+		return 0;
+	}
 
-     if ( ! strcmp( p + 1, "xpm" ) )
-     {
-		 fl_hide_object( fd_ttt->bm );
-		 fl_free_pixmap_pixmap( fd_ttt->pm );
-		 fl_set_pixmap_file( fd_ttt->pm, fname );
-		 fl_show_object( fd_ttt->pm );
-     }
-     else if ( ! strcmp( p + 1, "xbm" ) )
-     {
-		 fl_hide_object( fd_ttt->pm );
-		 fl_set_bitmap_file( fd_ttt->bm, fname );
-		 fl_show_object( fd_ttt->bm );
-     }
-	 else
-	 {
-		 fprintf( stderr, "Invalid file extension: %s\n", p + 1 );
-		 return 0;
-	 }
-
-     return 1;
+	return 1;
 }
 
 

@@ -26,15 +26,13 @@
 
 
 /**************************************************
-
-  The handling of redrawing objects could do with a lot of improvements.
-  It should be a high priority that only that objects get redrawn that
-  rally need redrawing. The main problem at the moment is handling of
-  redraws for objects with a label outside of the object (and of objects
-  with the label inside, but extending beyond the borders of the object).
-  That's all still a mess (and too slow ) and needs quite a bit of cleaning
-   up!
-
+ * The handling of redrawing objects could do with a lot of improvements.
+ * It should be a high priority that only that objects get redrawn that
+ * rally need redrawing. The main problem at the moment is handling of
+ * redraws for objects with a label outside of the object (and of objects
+ * with the label inside, but extending beyond the borders of the object).
+ * That's all still a mess (and too slow) and needs quite a bit of cleaning
+ *  up!
  ***************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -1586,7 +1584,7 @@ fli_convert_shortcut( const char * str,
                 {
                     if ( c[ 1 ] == '[' )
                     {
-                        sc[ i++ ] = 0x1b + offset - FL_CONTROL_MASK;
+                        sc[ i++ ] = 0x1b;
                         c++;
                         offset = 0;
                     }
@@ -2023,7 +2021,6 @@ redraw_marked( FL_FORM * form,
 {
     FL_OBJECT *obj,
               *o;
-
 
     /* Beside the case that the form isn't visible or frozen we also need
        to consider the case that a redraw for an object is initiated while

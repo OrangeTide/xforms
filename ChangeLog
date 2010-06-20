@@ -1,3 +1,21 @@
+2010-06-20 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/slider.c: Doubled the time we wait immediately
+	after a mouse button has pressed in a slider "through"
+	to give the user more time to release the button before
+	"jumping" sets in.
+
+	lib/objects.c: Recognition of "^[" as meaning the <ESC>
+	key as shortcut key was broken.
+
+	lib/fselect.c: When a callnback is set for a file selector
+	<ENTER> now has the same function as a double-click. "Dismiss"
+	button was renamed "Close" and now has shortcut keys.
+
+	lib/browser.c: Added function proposed by Michal Szymanski
+	that allows to set the speed with which the browsers scroll-
+	bar "jump".
+
 2010-06-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/tabfolder.c: Serge Bromow found that under Gnome the

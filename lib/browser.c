@@ -1244,7 +1244,6 @@ fl_get_browser_screenlines( FL_OBJECT * ob )
 {
     FLI_BROWSER_SPEC *sp = ob->spec;
 
-
     int t = fli_tbox_get_topline( sp->tb );
     int b = fli_tbox_get_bottomline( sp->tb );
 
@@ -1289,6 +1288,31 @@ int
 fl_set_default_browser_maxlinelength( int n  FL_UNUSED_ARG )
 {
     return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+int fl_get_browser_scrollbar_repeat( FL_OBJECT * ob )
+{
+    return fl_get_slider_repeat( ( ( FLI_BROWSER_SPEC * ) ob->spec )->vsl );
+}
+
+
+/***************************************
+ ***************************************/
+
+void fl_set_browser_scrollbar_repeat( FL_OBJECT * ob,
+                                      int         millisec )
+{
+    if ( millisec > 0 )
+    {
+        fl_set_slider_repeat( ( ( FLI_BROWSER_SPEC * ) ob->spec )->vsl,
+                              millisec );
+        fl_set_slider_repeat( ( ( FLI_BROWSER_SPEC * ) ob->spec )->hsl,
+                              millisec );
+    }
 }
 
 

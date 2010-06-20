@@ -229,7 +229,9 @@ draw_slider( FL_OBJECT * ob )
 
 
 /***************************************
- * Checks if mouse is not on the knob of the slider
+ * Checks if mouse is not on the knob of the slider. returns -1 if
+ * the mouse is above or to the left of the knob, +1 if it's below
+ * or to the right of the knob and 0 if it's on the knob.
  ***************************************/
 
 static int
@@ -426,10 +428,17 @@ handle_mouse( FL_OBJECT    * obj,
     if ( sp->val == newval )
         return FL_RETURN_NONE;
 
-    /* When we're still doing jumps in a scrollbar restart the timer */
+    /* When we're doing jumps in a scrollbar (re)start the timer, wait a bit
+       longer the first time round to allow the user to release the mouse
+       button before jumping starts */
 
     if ( sp->mouse_off_knob )
-        sp->timeout_id = fl_add_timeout( sp->repeat_ms, scrollbar_timeout, sp );
+    {
+        sp->timeout_id =
+            fl_add_timeout( ( obj->want_update ? 1 : 2 ) * sp->repeat_ms,
+                            scrollbar_timeout, sp );
+        obj->want_update = 1;
+    }
 
     sp->val = newval;
     sp->draw_type = sp->mouse_off_knob ? SLIDER_JUMP : SLIDER_MOTION;
@@ -456,9 +465,7 @@ handle_motion( FL_OBJECT * obj,
 
     /* If this is a motion while in "jump mode" for a scrollbar do nothing */
 
-    if (    IS_SCROLLBAR( obj )
-         && sp->mouse_off_knob
-         && key )
+    if ( IS_SCROLLBAR( obj ) && sp->mouse_off_knob && key )
         return FL_RETURN_NONE;
 
     /* If we get here without the left mouse button being pressed we're
@@ -540,23 +547,21 @@ handle_push( FL_OBJECT * obj,
               || ( IS_VSLIDER( obj ) && my < 0 ) ) )
         return FL_RETURN_NONE;
 
-    /* Check were the mouse button was clicked */
+    /* Check where the mouse button was clicked */
 
     sp->mouse_off_knob = is_off_knob( obj, mx, my );
 
     /* If the object is a scrollbar and the mouse is on its knob nothing
        happens yet and we're just going to wait for mouse movements. If it's
-       not on the knob we need articfical timer events to make the knob jump.
-       For non-scrollbars we're going to jump the slider so the mouse will be
-       on top of the "knob" and will stay there (and we will get updates about
-       mouse movements via FL_MOTION events). */
+       not on the knob we will set an artifical timer events to make the knob
+       jump. For non-scrollbars we're going to jump the slider so the mouse
+       will be on top of the "knob" and will stay there (and we will get
+       updates about mouse movements via FL_MOTION events). */
 
     if ( IS_SCROLLBAR( obj ) )
     {
-        if ( ! sp->mouse_off_knob ) 
+        if ( ! sp->mouse_off_knob )
             return FL_RETURN_NONE;
-        obj->want_update = 1;
-        fl_add_timeout( sp->repeat_ms, scrollbar_timeout, sp );
     }
     else
         sp->mouse_off_knob = 0;
@@ -653,13 +658,13 @@ handle_release( FL_OBJECT * obj,
     int ret = FL_RETURN_NONE;
     int old_state = sp->mouse_off_knob;
 
+    obj->want_update = 0;
+
     if ( sp->timeout_id != -1 )
     {
         fl_remove_timeout( sp->timeout_id );
         sp->timeout_id = -1;
     }
-
-    obj->want_update = 0;
 
     /* Scrollwheel only is used with scrollbars */
 

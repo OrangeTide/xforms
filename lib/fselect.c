@@ -74,7 +74,9 @@ typedef struct
     FL_OBJECT * patbutt,
               * dirbutt,
               * cancel,
-              * ready;
+              * ready,
+              * ret,
+              * dismiss;
     FL_OBJECT * dirlabel,
               * patlabel;
     FL_OBJECT * appbutt[ MAX_APPBUTT ];
@@ -305,22 +307,37 @@ fli_del_tail_slash( char * d )
 
 /***************************************
  * Callback for selection of a file name. On double click on a directory
- * we change to that directory, whiel for a double click on a normal file
+ * we change to that directory while for a double click on a normal file
  * the return button gets triggered/
  ***************************************/
 
 static void
-select_cb( FL_OBJECT * ob,
+select_cb( FL_OBJECT * obj,
            long        isdblclick )
 {
     char seltext[ FL_PATH_MAX ];
     int thisline;
-    FD_fselect *lfs = ob->form->fdui;
+    FD_fselect *lfs = fs->browser->form->fdui;
 
-    if ( ( thisline = fl_get_browser( ob ) )  <= 0 )
+    /* For a file selector with a callback that got the return button
+       check if there's something in the input field. If it is return
+       that to the caller. */
+
+    if ( lfs->fselect_cb && obj == fs->ret )
+    {
+        const char *fn = cmplt_name( );
+        if ( fn )
+        {
+            lfs->fselect_cb( fn, lfs->callback_data );
+            return;
+        }
+    }
+
+    if ( ( thisline = fl_get_browser( fs->browser ) ) <= 0 )
         return;
 
-    fli_sstrcpy( seltext, fl_get_browser_line( ob, thisline ), sizeof seltext );
+    fli_sstrcpy( seltext, fl_get_browser_line( fs->browser, thisline ),
+                 sizeof seltext );
     lfs->last_len = strlen( seltext + 2 );
     lfs->last_line = thisline;
     memmove( seltext, seltext + 2, lfs->last_len + 1 );
@@ -704,92 +721,27 @@ void
 fl_set_fselector_callback( FL_FSCB   fscb,
                            void    * data )
 {
-    double dy;
-    FL_OBJECT *o;
-
     if ( ! fs )
         allocate_fselector( 0 );
 
     fs->fselect_cb = fscb;
     fs->callback_data = data;
 
-    /* Force creation if not already exists */
+    /* Force creation if it does not already exists */
 
     fl_get_fselector_form( );
 
-    dy = fs->input->y + fs->input->h - fs->browser->y - fs->browser->h;
-
     if ( fscb )
     {
-        if ( strncmp( fs->ready->label, "Ready", 5 ) == 0 )
-        {
-            fl_set_object_label( fs->ready, "Dismiss" );
-
-            fl_hide_object( fs->prompt );
-            fl_hide_object( fs->input );
-
-            o = fs->fselect->first;
-            o->h -= dy;
-            o->fb1 -= dy;
-            o->ft2 -= dy;
-
-            o = o->next;
-            o->h -= dy;
-            o->fb1 -= dy;
-            o->ft2 -= dy;
-
-            for ( o = o->next; o; o = o->next )
-            {
-                if (    ! o->visible
-                     || o->objclass == FL_BEGIN_GROUP 
-                     || o->objclass == FL_END_GROUP )
-                    continue;
-
-                o->fb1 -= dy;
-                o->fb2 -= dy;
-            }
-
-            fs->fselect->h_hr -= dy;
-            fs->fselect->h = FL_crnd( fs->fselect->h_hr );
-
-            fl_set_form_minsize( fs->fselect, fs->fselect->w, fs->fselect->h );
-        }
+        fl_hide_object( fs->ready );
+        fl_show_object( fs->ret );
+        fl_show_object( fs->dismiss );
     }
     else
     {
-        if ( strncmp( fs->ready->label, "Dismiss", 7 ) == 0 )
-        {
-            fl_set_object_label( fs->ready, "Ready" );
-
-            o = fs->fselect->first;
-            o->h += dy;
-            o->fb1 += dy;
-            o->ft2 += dy;
-
-            o = o->next;
-            o->h += dy;
-            o->fb1 += dy;
-            o->ft2 += dy;
-
-            for ( o = o->next; o; o = o->next )
-            {
-                if (    ! o->visible
-                     || o->objclass == FL_BEGIN_GROUP 
-                     || o->objclass == FL_END_GROUP )
-                    continue;
-
-                o->fb1 += dy;
-                o->fb2 += dy;
-            }
-
-            fs->fselect->h_hr += dy;
-            fs->fselect->h = FL_crnd( fs->fselect->h_hr );
-
-            fl_show_object( fs->prompt );
-            fl_show_object( fs->input );
-
-            fl_set_form_minsize( fs->fselect, fs->fselect->w, fs->fselect->h );
-        }
+        fl_show_object( fs->ready );
+        fl_hide_object( fs->ret );
+        fl_hide_object( fs->dismiss );
     }
 }
 
@@ -1012,7 +964,7 @@ fl_show_fselector( const char * message,
                 }
             }
         }
-    } while ( obj != fs->cancel && obj != fs->ready );
+    } while ( obj != fs->cancel && obj != fs->ready && obj != fs->dismiss );
 
     fl_hide_form( fs->fselect );
 
@@ -1260,6 +1212,20 @@ create_form_fselect( void )
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
 
+    fs->ret = obj = fl_add_button( FL_RETURN_BUTTON, 251, 247, 1, 1, "" );
+    fl_set_object_callback( obj, select_cb, 1 );
+    fl_set_object_resize( obj, FL_RESIZE_NONE );
+    fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
+    fl_hide_object( obj );
+
+    fs->dismiss = obj = fl_add_button( FL_NORMAL_BUTTON, 210, 233, 83, 28,
+                                       "Close" );
+    fl_set_button_shortcut( obj, "#C#c^[", 1 );
+    fl_set_object_color( obj, FL_COL1, FL_GREEN );
+    fl_set_object_resize( obj, FL_RESIZE_NONE );
+    fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
+    fl_hide_object( obj );
+
     fs->prompt = obj = fl_add_text( FL_NORMAL_TEXT, 20, 270, 264, 18,
                                     "File name:" );
     fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
@@ -1268,6 +1234,7 @@ create_form_fselect( void )
 
     fs->input = obj = fl_add_input( FL_NORMAL_INPUT, 30, 290, 235, 27, "" );
     fl_set_object_boxtype( obj, FL_SHADOW_BOX );
+    fl_set_object_color( obj, FL_WHITE, FL_WHITE );
     fl_set_object_resize( obj, FL_RESIZE_X );
     fl_set_object_gravity( obj, FL_SouthWest, FL_SouthEast );
     fl_set_object_callback( obj, input_cb, 0 );
@@ -1374,15 +1341,16 @@ fl_set_fselector_fontstyle( int fstyle )
 
     fl_freeze_form( fs->fselect );
 
-    fl_set_object_lstyle( fs->input, fstyle );
-    fl_set_object_lstyle( fs->prompt, fstyle );
-    fl_set_object_lstyle( fs->patbutt, fstyle );
-    fl_set_object_lstyle( fs->dirbutt, fstyle );
-    fl_set_object_lstyle( fs->resbutt, fstyle );
-    fl_set_object_lstyle( fs->cancel, fstyle );
+    fl_set_object_lstyle( fs->input,    fstyle );
+    fl_set_object_lstyle( fs->prompt,   fstyle );
+    fl_set_object_lstyle( fs->patbutt,  fstyle );
+    fl_set_object_lstyle( fs->dirbutt,  fstyle );
+    fl_set_object_lstyle( fs->resbutt,  fstyle );
+    fl_set_object_lstyle( fs->cancel,   fstyle );
     fl_set_object_lstyle( fs->dirlabel, fstyle );
     fl_set_object_lstyle( fs->patlabel, fstyle );
-    fl_set_object_lstyle( fs->ready, fstyle );
+    fl_set_object_lstyle( fs->ready,    fstyle );
+    fl_set_object_lstyle( fs->dismiss,  fstyle );
     fl_set_browser_fontstyle( fs->browser, fstyle );
 
     for ( i = 0; i < MAX_APPBUTT; i++ )

@@ -147,4 +147,9 @@ FL_EXPORT void fl_set_slider_precision( FL_OBJECT * ob,
 FL_EXPORT void fl_set_slider_filter( FL_OBJECT     * ob,
                                      FL_VAL_FILTER   filter );
 
+FL_EXPORT int fl_get_slider_repeat( FL_OBJECT * );
+
+FL_EXPORT void fl_set_slider_repeat( FL_OBJECT *,
+									 int );
+
 #endif /* ! defined FL_SLIDER_H */
