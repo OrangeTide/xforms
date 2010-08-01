@@ -1294,7 +1294,8 @@ fl_set_default_browser_maxlinelength( int n  FL_UNUSED_ARG )
 /***************************************
  ***************************************/
 
-int fl_get_browser_scrollbar_repeat( FL_OBJECT * ob )
+int
+fl_get_browser_scrollbar_repeat( FL_OBJECT * ob )
 {
     return fl_get_slider_repeat( ( ( FLI_BROWSER_SPEC * ) ob->spec )->vsl );
 }
@@ -1303,8 +1304,9 @@ int fl_get_browser_scrollbar_repeat( FL_OBJECT * ob )
 /***************************************
  ***************************************/
 
-void fl_set_browser_scrollbar_repeat( FL_OBJECT * ob,
-                                      int         millisec )
+void
+fl_set_browser_scrollbar_repeat( FL_OBJECT * ob,
+                                 int         millisec )
 {
     if ( millisec > 0 )
     {

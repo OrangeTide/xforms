@@ -1686,6 +1686,27 @@ border with and text margin), you can compare the browser size and
 text area size.
 
 
+Finally, the functions
+@findex fl_get_browser_scrollbar_repeat()
+@anchor{fl_get_browser_scrollbar_repeat()}
+@findex fl_set_browser_scrollbar_repeat()
+@anchor{fl_set_browser_scrollbar_repeat()}
+@example
+int fl_get_browser_scrollbar_repeat(FL_OBJECT *obj);
+void fl_set_browser_scrollbar_repeat(FL_OBJECT *obj, int millisec);
+@end example
+@noindent
+allows to determine and control the time delay (in milliseconds)
+between jumps of the scrollbar knob when the mouse button is kept
+pressed down on the scrollbar outside of the knobs area. The default
+value is @w{100 ms}. The delay for the very first jump is twice
+that long in order to avoid jumping to start too soon when only a
+single click was intended but the user is a bit slow in releasing
+the mouse button.
+
+
+
+
 @node Browser Remarks
 @subsection Remarks
 

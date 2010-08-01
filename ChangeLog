@@ -1,3 +1,9 @@
+2010-08-01 Jens Thoms Toerring    <jt@toerring.de>
+
+	doc/part3_choice_objects.texi, doc/part3_valuatorobjects.texi:
+	Added documentation for functions to set the repeat rate for
+	sliders and browser scrollbars.
+
 2010-06-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/slider.c: Doubled the time we wait immediately

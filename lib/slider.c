@@ -435,8 +435,8 @@ handle_mouse( FL_OBJECT    * obj,
     if ( sp->mouse_off_knob )
     {
         sp->timeout_id =
-            fl_add_timeout( ( obj->want_update ? 1 : 2 ) * sp->repeat_ms,
-                            scrollbar_timeout, sp );
+                 fl_add_timeout( ( obj->want_update ? 1 : 2 ) * sp->repeat_ms,
+                                 scrollbar_timeout, sp );
         obj->want_update = 1;
     }
 
@@ -1124,7 +1124,8 @@ fl_set_slider_filter( FL_OBJECT *   ob,
 /***************************************
  ***************************************/
 
-int fl_get_slider_repeat( FL_OBJECT * ob )
+int
+fl_get_slider_repeat( FL_OBJECT * ob )
 {
     return ( ( FLI_SLIDER_SPEC * ) ob->spec )->repeat_ms;
 }
@@ -1133,8 +1134,9 @@ int fl_get_slider_repeat( FL_OBJECT * ob )
 /***************************************
  ***************************************/
 
-void fl_set_slider_repeat( FL_OBJECT * ob,
-                           int         millisec )
+void
+fl_set_slider_repeat( FL_OBJECT * ob,
+                      int         millisec )
 {
     if ( millisec > 0 )
         ( ( FLI_SLIDER_SPEC * ) ob->spec )->repeat_ms = millisec;

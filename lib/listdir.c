@@ -244,7 +244,7 @@ fselect( const char  * d_name,
     int ret = 0;
     unsigned int mode;
 
-    strcat(strcpy( fname, cdir), d_name );
+    strcat( strcpy( fname, cdir), d_name );
     stat( fname, ffstat );
     mode = ffstat->st_mode;
     mode2type( mode, type );
@@ -656,14 +656,18 @@ fl_is_valid_dir( const char *name )
     struct stat stbuf;
 
 #ifdef __EMX__
-    if ( isalpha( name[ 0 ] ) && name[ 1 ] == ':' && name[ 2 ] == '0' )
+    if (    name
+         && isalpha( ( unsigned char ) name[ 0 ] )
+         && name[ 1 ] == ':'
+         && name[ 2 ] == '0' )
         return 1;
 #endif
 
     /* On some machines name should be a plain char * (why? JTT) */
 
-    return name
-           && stat( ( char * ) name, &stbuf ) == 0
+    return    name
+           && *name
+           && ! stat( ( char * ) name, &stbuf )
            && S_ISDIR( stbuf.st_mode );
 }
 
@@ -705,8 +709,9 @@ fl_fix_dirname( char * dir )
     p = ldir;
 
 #if defined __EMX__ || defined FL_WIN32
-    if ( isalpha( ldir[ 0 ] ) && ldir[ 1 ] == ':' )
-    {               /* drive letter */
+    if (    isalpha( ( unsigned char ) ldir[ 0 ] )
+         && ldir[ 1 ] == ':' )
+    {                               /* drive letter */
         dir[ 0 ] = ldir[ 0 ];
         dir[ 1 ] = ldir[ 1 ];
         dir[ 2 ] = '\0';
@@ -784,8 +789,8 @@ fl_fix_dirname( char * dir )
  ***************************************/
 
 static void
-add_one( char dir[ ],
-         char one[ ] )
+add_one( char * dir,
+         char * one )
 {
     char *q;
 

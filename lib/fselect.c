@@ -74,9 +74,7 @@ typedef struct
     FL_OBJECT * patbutt,
               * dirbutt,
               * cancel,
-              * ready,
-              * ret,
-              * dismiss;
+              * ready;
     FL_OBJECT * dirlabel,
               * patlabel;
     FL_OBJECT * appbutt[ MAX_APPBUTT ];
@@ -317,26 +315,12 @@ select_cb( FL_OBJECT * obj,
 {
     char seltext[ FL_PATH_MAX ];
     int thisline;
-    FD_fselect *lfs = fs->browser->form->fdui;
+    FD_fselect *lfs = obj->form->fdui;
 
-    /* For a file selector with a callback that got the return button
-       check if there's something in the input field. If it is return
-       that to the caller. */
-
-    if ( lfs->fselect_cb && obj == fs->ret )
-    {
-        const char *fn = cmplt_name( );
-        if ( fn )
-        {
-            lfs->fselect_cb( fn, lfs->callback_data );
-            return;
-        }
-    }
-
-    if ( ( thisline = fl_get_browser( fs->browser ) ) <= 0 )
+    if ( ( thisline = fl_get_browser( obj ) ) <= 0 )
         return;
 
-    fli_sstrcpy( seltext, fl_get_browser_line( fs->browser, thisline ),
+    fli_sstrcpy( seltext, fl_get_browser_line( obj, thisline ),
                  sizeof seltext );
     lfs->last_len = strlen( seltext + 2 );
     lfs->last_line = thisline;
@@ -344,7 +328,6 @@ select_cb( FL_OBJECT * obj,
 
     if ( seltext[ 0 ] == dirmarker && seltext[ 1 ] == ' ' )  /* directory */
     {
-            
         if ( isdblclick )
         {
             strcat( append_slash( lfs->dname ), seltext );
@@ -363,8 +346,13 @@ select_cb( FL_OBJECT * obj,
 
         if ( isdblclick )
         {
-            if ( lfs->fselect_cb )
-                lfs->fselect_cb( cmplt_name( ), lfs->callback_data );
+            if ( lfs->fselect_cb || lfs->fselect->attached )
+            {
+                const char *fn = cmplt_name( );
+                lfs->fselect_cb( fn, lfs->callback_data );
+                if ( fl_is_valid_dir( fn ) )
+                    fl_set_directory( fn );
+            }
             else
                 fl_trigger_object( lfs->ready );
         }
@@ -724,7 +712,7 @@ fl_set_fselector_callback( FL_FSCB   fscb,
     if ( ! fs )
         allocate_fselector( 0 );
 
-    fs->fselect_cb = fscb;
+    fs->fselect_cb    = fscb;
     fs->callback_data = data;
 
     /* Force creation if it does not already exists */
@@ -733,15 +721,15 @@ fl_set_fselector_callback( FL_FSCB   fscb,
 
     if ( fscb )
     {
-        fl_hide_object( fs->ready );
-        fl_show_object( fs->ret );
-        fl_show_object( fs->dismiss );
+        fl_set_object_label( fs->cancel, "Close" );
+        fl_set_button_shortcut( fs->cancel, "#C#c^[", 1 );
+        fl_set_object_label( fs->ready, "Select" );
     }
     else
     {
-        fl_show_object( fs->ready );
-        fl_hide_object( fs->ret );
-        fl_hide_object( fs->dismiss );
+        fl_set_object_label( fs->cancel, "Cancel" );
+        fl_set_button_shortcut( fs->cancel, "#C#c^[", 1 );
+        fl_set_object_label( fs->ready, "Ready" );
     }
 }
 
@@ -889,11 +877,8 @@ fl_show_fselector( const char * message,
     /* If selection call back exists, cancel has no meaning as whenver a file
        is selected callback is executed and there is no backing out */
 
-    if ( fs->fselect_cb || fs->fselect->attached )
-        fl_hide_object( fs->cancel );
-    else
+    if ( ! ( fs->fselect_cb || fs->fselect->attached ) )
     {
-        fl_show_object( fs->cancel );
         fl_deactivate_all_forms( );
         fs->fselect->sort_of_modal = 1;
     }
@@ -910,7 +895,7 @@ fl_show_fselector( const char * message,
     if ( fs->cancel->lsize != FL_DEFAULT_SIZE )
         fl_fit_object_label( fs->cancel, 16, 1 );
 
-    /* If attached to another form, don't show the form. The parent * will
+    /* If attached to another form, don't show the form. The parent will
        handle it */
 
     if ( fs->fselect->attached )
@@ -937,13 +922,14 @@ fl_show_fselector( const char * message,
             {
                 strncat( append_slash( fs->dname ), tmp, sizeof fs->dname );
                 fs->dname[ sizeof fs->dname - 1 ] = '\0';
-                fl_fix_dirname( fs->dname );
             }
             else
-            {
                 fli_sstrcpy( fs->dname, tmp, sizeof fs->dname );
-                fl_fix_dirname( fs->dname );
-            }
+
+            fl_fix_dirname( fs->dname );
+
+            if ( fs->fselect_cb || fs->fselect->attached )
+                fs->fselect_cb( fs->dname, fs->callback_data );
 
             if ( fl_is_valid_dir( fs->dname ) )
             {
@@ -964,11 +950,13 @@ fl_show_fselector( const char * message,
                 }
             }
         }
-    } while ( obj != fs->cancel && obj != fs->ready && obj != fs->dismiss );
+    } while (    obj != fs->cancel
+              && ( obj != fs->ready
+                   || fs->fselect_cb || fs->fselect->attached ) );
 
     fl_hide_form( fs->fselect );
 
-    if ( ! fs->fselect_cb && ! fs->fselect->attached )
+    if ( ! ( fs->fselect_cb || fs->fselect->attached ) )
     {
         fl_activate_all_forms( );
         fs->fselect->sort_of_modal = 0;
@@ -1086,8 +1074,8 @@ contract_dirname( const char * dir,
     int l,
         len;
 
-    if ( fl_get_string_width( ob->lstyle, ob->lsize, dir, strlen( dir ) ) <
-                                                                     ob->w - 4 )
+    if ( fl_get_string_width( ob->lstyle, ob->lsize,
+                              dir, strlen( dir ) ) < ob->w - 4 )
         return dir;
 
     strcpy( buf, dir );
@@ -1095,8 +1083,8 @@ contract_dirname( const char * dir,
     if ( home )
         pat_replace( buf, home, "~" );
 
-    if ( fl_get_string_width( ob->lstyle, ob->lsize, buf, strlen( buf ) )
-                                                                       < ob->w )
+    if ( fl_get_string_width( ob->lstyle, ob->lsize, buf,
+                              strlen( buf ) ) < ob->w )
         return buf;
 
     /* Replace middle components with ... */
@@ -1135,8 +1123,8 @@ contract_dirname( const char * dir,
 
     len = strlen( buf );
     while (    len > 0
-            && fl_get_string_width( ob->lstyle, ob->lsize, buf, len )
-                                                                  > ob->w - 2 )
+            && fl_get_string_width( ob->lstyle, ob->lsize,
+                                    buf, len ) > ob->w - 2 )
     {
         buf[ len - 1 ] = '\0';
         len--;
@@ -1211,20 +1199,6 @@ create_form_fselect( void )
     fl_set_object_color( obj, FL_COL1, FL_GREEN );
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
-
-    fs->ret = obj = fl_add_button( FL_RETURN_BUTTON, 251, 247, 1, 1, "" );
-    fl_set_object_callback( obj, select_cb, 1 );
-    fl_set_object_resize( obj, FL_RESIZE_NONE );
-    fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
-    fl_hide_object( obj );
-
-    fs->dismiss = obj = fl_add_button( FL_NORMAL_BUTTON, 210, 233, 83, 28,
-                                       "Close" );
-    fl_set_button_shortcut( obj, "#C#c^[", 1 );
-    fl_set_object_color( obj, FL_COL1, FL_GREEN );
-    fl_set_object_resize( obj, FL_RESIZE_NONE );
-    fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );
-    fl_hide_object( obj );
 
     fs->prompt = obj = fl_add_text( FL_NORMAL_TEXT, 20, 270, 264, 18,
                                     "File name:" );
@@ -1350,7 +1324,6 @@ fl_set_fselector_fontstyle( int fstyle )
     fl_set_object_lstyle( fs->dirlabel, fstyle );
     fl_set_object_lstyle( fs->patlabel, fstyle );
     fl_set_object_lstyle( fs->ready,    fstyle );
-    fl_set_object_lstyle( fs->dismiss,  fstyle );
     fl_set_browser_fontstyle( fs->browser, fstyle );
 
     for ( i = 0; i < MAX_APPBUTT; i++ )

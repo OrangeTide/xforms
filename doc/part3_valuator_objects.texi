@@ -301,6 +301,26 @@ const char *filter(FL_OBJECT *obj, double value, int prec) @{
 @}
 @end example
 
+
+Finally, the function
+@findex fl_get_slider_repeat()
+@anchor{fl_get_slider_repeat()}
+@findex fl_set_slider_repeat()
+@anchor{fl_set_slider_repeat()}
+@example
+int fl_get_slider_repeat(FL_OBJECT *obj);
+void fl_set_slider_repeat(FL_OBJECT *obj, int millisec)
+@end example
+@noindent
+allows to determine and control the time delay (in milliseconds)
+between jumps of the sliders knob when the mouse button is kept
+pressed down on the slider outside of the knobs area. The default
+value is @w{100 ms}. The delay for the very first jump is twice
+that long in order to avoid jumping to start too soon when only a
+single click was intended but the user is a bit slow in releasing
+the mouse button.
+
+
 @node Slider Remarks
 @subsection Remarks
 

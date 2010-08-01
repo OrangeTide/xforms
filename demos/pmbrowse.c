@@ -78,9 +78,7 @@ load_file( const char * fname,
 
 	if ( ! stat( fname, &buff ) )
 	{
-		if ( S_ISDIR( buff.st_mode ) )
-			fl_set_directory( fname );
-		else
+		if ( ! S_ISDIR( buff.st_mode ) )
 		{
 			if ( ( p = strrchr( fname, '.' ) ) )
 			{
