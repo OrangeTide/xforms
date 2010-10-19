@@ -387,17 +387,17 @@ fl_set_select_items( FL_OBJECT     * obj,
 
     for ( count = 0; items && items->text != NULL; count++, items++ )
     {
-        size_t i = 9;
+        size_t len = strlen( items->text ) + 9;
         char *txt;
         char *t = ( char * ) items->text;
 
-        /* Figure out how many chars we need fot the text */
+        /* Figure out how many chars we need for the text */
 
         while ( ( t = strchr( t, '%' ) ) != NULL )
             if ( *++t != 'S' )
-                i++;
+                len++;
 
-        t = txt = fl_malloc( i );
+        t = txt = fl_malloc( len );
 
         strcpy( txt, items->text );
         

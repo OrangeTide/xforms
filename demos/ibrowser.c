@@ -336,7 +336,7 @@ write_image( FL_OBJECT * ob,
 
 	fl_use_fselector( 1 );
 	fl_set_fselector_placement( FL_PLACE_MOUSE );
-	if ( ! ( f = fl_show_fselector( "Save Image", 0, "*", 0 ) ) )
+	if ( ! ( f = fl_show_fselector( "Save Image", NULL, "*", NULL ) ) )
         return;
 	flimage_dump( curr_image, f, fl_get_choice_text( fdui->format ) );
 }

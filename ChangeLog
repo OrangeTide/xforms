@@ -1,3 +1,8 @@
+2010-10-18
+
+	lib/select.c: Memory allocation bug found by Luis Balona
+	removed.
+
 2010-08-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	doc/part3_choice_objects.texi, doc/part3_valuatorobjects.texi:

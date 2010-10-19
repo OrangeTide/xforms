@@ -189,3 +189,4 @@ lib/xforms.5
 libtool
 makelog
 xforms.spec
+semantic.cache
