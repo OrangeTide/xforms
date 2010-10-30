@@ -1001,8 +1001,11 @@ print_form_newformat( FILE       * fn,
     fprintf( fn, "%s *\ncreate_form_%s( void )\n{\n    FL_OBJECT *obj;\n",
              fdtname, fname );
 
-    fprintf( fn, "    %s *%s = fl_malloc( sizeof *%s );\n\n",
-             fdtname, fdvname, fdvname );
+    /* Note: we putput code that casts the return value of fl_malloc()
+       in order to make the resulting code acceptable for C++ compilers */
+
+    fprintf( fn, "    %s *%s = ( %s * ) fl_malloc( sizeof *%s );\n\n",
+             fdtname, fdvname, fdtname, fdvname );
 
     /* Take care of unit, borderwidth etc that affect the entire form */
 

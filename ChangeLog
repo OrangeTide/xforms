@@ -1,4 +1,11 @@
-2010-10-18
+2010-10-28 Jens Thoms Toerring    <jt@toerring.de>
+
+	fdesign/fd_printC.c: Changed the output format so that
+	the resulting C files also compile with C++ compilers
+	(cast of return value of fd_malloc() needed). Thanks
+	to John Wang for pointing out the problem.
+
+2010-10-18 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/select.c: Memory allocation bug found by Luis Balona
 	removed.
