@@ -277,18 +277,26 @@ Interaction, , Doing Interaction}, for details on the interaction with
 forms.
 
 Different types of buttons are used in all the example programs
-provided. The application program can also set a button to be pushed
-or not itself without a user action. (This is of course only useful
-for push buttons and radio buttons. Setting a radio button does not
-mean that the currently set radio button is reset. The application
-program has to do this.) To set or reset a button use the routine
+provided. The application program can also set a button to appear
+pushed or not without user action. This is of course only useful
+for push buttons and radio buttons. To set or reset a push or radio
+button use the routine
 @findex fl_set_button()
 @example
 void fl_set_button(FL_OBJECT *obj, int pushed);
 @end example
 @noindent
-@code{pushed} indicates whether the button should be pushed (1) or
-released (0). To figure out whether a button is pushed or not use
+@code{pushed} indicates whether the button should appear to be
+pushed (1) or released (0). Note that this does not invoke a
+callback routine bound to the button or results in the button
+getting returned to the program, i.e.@: only the visual appearance
+of the button is changed and what it returns when asked for its
+state (and, in the case of a radio button, possibly that of another
+radio button in the same group). To also get the callback invoked or
+the button returned to the program additonally call e.g.@:
+@code{@ref{fl_trigger_object()}}.
+
+To figure out whether a button appears as pushed or not use
 @findex fl_get_button()
 @example
 int fl_get_button(FL_OBJECT *obj);

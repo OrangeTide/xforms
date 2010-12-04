@@ -958,7 +958,8 @@ extern void fli_do_radio_push( FL_OBJECT *,
                                FL_Coord,
                                FL_Coord,
                                int,
-                               void * );
+                               void *,
+                               int );
 
 extern long fli_getpid( void );
 

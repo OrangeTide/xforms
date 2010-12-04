@@ -241,17 +241,16 @@ itself without a user action. To this end use the routine
 void fl_set_button(FL_OBJECT *obj, int pushed);
 @end example
 @noindent
-@code{pushed} indicates whether the button should be pushed (1) or
-released (0). When setting a @code{@ref{FL_RADIO_BUTTON}} to be pushed
-this automatically releases the currently pushed radio button in the
-same form (or group). Also note that, while this routine only
-simulates the visual appearance and perhaps some internal states, it
-does not affect the program flow in any way, i.e.@: setting a button
-as being pushed does not invoke its callback or results in the button
-becoming returned to the program. For that
-@code{@ref{fl_trigger_object()}} is to be used or, more conveniently,
-just follow up @code{@ref{fl_set_button()}} with a call of
-@code{@ref{fl_call_object_callback()}}.
+@code{pushed} indicates whether the button should be set to be pushed
+(1) or released (0). When setting a @code{@ref{FL_RADIO_BUTTON}} to be
+pushed this automatically releases the currently pushed radio button
+in the same form (or group). Also note that this routine only
+simulates the visual appearance but does not affect the program flow
+in any way, i.e.@: setting a button as being pushed does not invoke
+its callback or results in the button becoming returned to the
+program. For that follow up the call of @code{@ref{fl_set_button()}}
+with a call of @code{@ref{fl_trigger_object()}} (or
+@code{@ref{fl_call_object_callback()}}).
 
 To figure out whether a button is pushed or not
 use@footnote{@code{@ref{fl_mouse_button()}} can also be used.}

@@ -537,19 +537,21 @@ fl_set_button( FL_OBJECT * obj,
 
     pushed = pushed ? 1 : 0;     /* button can only be on or off */
 
-    if ( sp->val != pushed )
-    {
-        if ( obj->type == FL_RADIO_BUTTON )
-        {
-            if ( ! pushed )
-                return;
+    /* Nothing to do if the new state is already what the button is set to */
 
-            fli_do_radio_push( obj, obj->x, obj->y, FL_MBUTTON1, NULL );
-        }           
+    if ( sp->val == pushed )
+        return;
 
-        sp->val = pushed;
-        fl_redraw_object( obj );
-    }
+    /* If this is a radio button to be show as switched on unset other
+       radio button in its group */
+
+    if ( obj->type == FL_RADIO_BUTTON && pushed )
+        fli_do_radio_push( obj, obj->x, obj->y, FL_MBUTTON1, NULL, 1 );
+
+    /* Set new state and redraw the button */
+
+    sp->val = pushed;
+    fl_redraw_object( obj );
 }
 
 

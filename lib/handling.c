@@ -149,7 +149,8 @@ fli_do_radio_push( FL_OBJECT * obj,
                    FL_Coord    x,
                    FL_Coord    y,
                    int         key,
-                   void      * xev )
+                   void      * xev,
+                   int         no_callbacks )
 {
     FL_OBJECT *o = obj;
 
@@ -184,7 +185,8 @@ fli_do_radio_push( FL_OBJECT * obj,
             }
     }
 
-    fli_handle_object( obj, FL_PUSH, x, y, key, xev, 1 );
+    if ( ! no_callbacks )
+        fli_handle_object( obj, FL_PUSH, x, y, key, xev, 1 );
 }
 
 
@@ -246,7 +248,7 @@ do_shortcut( FL_FORM  * form,
             else
             {
                 if ( obj->radio )
-                    fli_do_radio_push( obj, x, y, FL_MBUTTON1, xev );
+                    fli_do_radio_push( obj, x, y, FL_MBUTTON1, xev, 0 );
 
                 XAutoRepeatOff( flx->display );
                 if ( ! obj->radio )
@@ -517,7 +519,7 @@ fli_handle_form( FL_FORM * form,
                 fli_int.pushobj = obj;
             }
             else if ( obj->radio )
-                fli_do_radio_push( obj, x, y, key, xev );
+                fli_do_radio_push( obj, x, y, key, xev, 0 );
             break;
 
         case FL_RELEASE:        /* mouse button was released inside the form */
