@@ -1713,6 +1713,7 @@ fl_add_input( int          type,
         fl_add_child( sp->dummy, sp->hscroll );
 
         fl_set_object_callback( sp->input, input_cb, 0 );
+        fl_set_object_return( sp->dummy, FL_RETURN_END_CHANGED );
     }
 
     fl_add_object( fl_current_form, sp->dummy );

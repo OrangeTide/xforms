@@ -59,8 +59,11 @@ input_cb( FL_OBJECT * ob,
 	char buf[ 128 ];
 
 	fl_get_input_cursorpos( ob, &cx, &cy );
-	sprintf( buf,"x=%d y=%d",cx, cy );
+	sprintf( buf,"x = %d y = %d", cx, cy );
+	fprintf( stdout, "%s\n", buf );
 	fl_set_object_label( ( ( FD_input * ) ob->form->fdui )->report, buf );
+
+	fprintf( stderr, "%p %s\n", ob, ob->label );
 }
 
 
@@ -92,11 +95,13 @@ main( int    argc,
 	fl_initialize( &argc, argv, 0, 0, 0 );
 	fd_input = create_form_input( );
 
-	/* fill-in form initialization code */
-
 	fl_set_object_dblbuffer( fd_input->report, 1 );
-	fl_set_object_return( fd_input->multiinput, FL_RETURN_ALWAYS );
 	fl_set_object_return( fd_input->norminput, FL_RETURN_ALWAYS );
+	fl_set_object_return( fd_input->intinput, FL_RETURN_ALWAYS );
+	fl_set_object_return( fd_input->floatinput, FL_RETURN_ALWAYS );
+	fl_set_object_return( fd_input->dateinput, FL_RETURN_ALWAYS );
+	fl_set_object_return( fd_input->secretinput, FL_RETURN_ALWAYS );
+	fl_set_object_return( fd_input->multiinput, FL_RETURN_ALWAYS );
 
 	/* show the first form */
 

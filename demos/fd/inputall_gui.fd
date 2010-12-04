@@ -62,8 +62,8 @@ label: Integer Input
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
+name: intinput
+callback: input_cb
 argument: 
 
 --------------------
@@ -80,8 +80,8 @@ label: Float Input
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
+name: floatinput
+callback: input_cb
 argument: 
 
 --------------------
@@ -98,8 +98,8 @@ label: Date Input
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
+name: dateinput
+callback: input_cb
 argument: 
 
 --------------------
@@ -116,8 +116,8 @@ label: Secret Input
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
+name: secretinput
+callback: input_cb
 argument: 
 
 --------------------
