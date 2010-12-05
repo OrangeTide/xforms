@@ -902,6 +902,11 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
     if ( obj->use_pixmap == y )
         return;
 
+    /**** BUG FIX, DON'T KNOW YET WHY IT'S NEEDED JTT */
+
+    if ( y == 1 && obj->objclass == FL_XYPLOT && obj->type == FL_ACTIVE_XYPLOT )
+        return;
+
     if ( ( obj->use_pixmap = y ) && ! obj->flpixmap )
         obj->flpixmap = fl_calloc( 1, sizeof( FL_pixmap ) );
 

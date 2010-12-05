@@ -350,33 +350,30 @@ mapw2s( FLI_XYPLOT_SPEC * sp,
 {
     int i,
         tmp;
-    float t,
-          lbase;
+    double t;
 
     if ( sp->xscale == FL_LOG )
     {
-        lbase = 1.0 / sp->lxbase;
+        double lbase = 1.0 / sp->lxbase;
 
         for ( i = n1; i < n2; i++ )
         {
-            t = x[ i ] > 0.0 ? x[ i ] : FMIN;
-            p[ i - n1 ].x = sp->ax * log10( t ) * lbase + sp->bx + 0.4;
+            t = log10( FL_max( x[ i ], FMIN ) ) * lbase;
+            p[ i - n1 ].x = FL_crnd( sp->ax * t + sp->bx );
         }
     }
     else
-    {
         for ( i = n1; i < n2; i++ )
-            p[ i - n1 ].x = sp->ax * x[ i ] + sp->bx + 0.4;
-    }
+            p[ i - n1 ].x = FL_crnd( sp->ax * x[ i ] + sp->bx );
 
     if ( sp->yscale == FL_LOG )
     {
-        lbase = 1.0 / sp->lybase;
+        double lbase = 1.0 / sp->lybase;
 
         for ( i = n1; i < n2; i++ )
         {
-            t = y[ i ] > 0.0 ? y[ i ] : FMIN;
-            p[ i - n1 ].y = sp->ay * log10( t ) * lbase + sp->by + 0.4;
+            t = log10( FL_max( y[ i ], FMIN ) ) * lbase;
+            p[ i - n1 ].y = FL_crnd( sp->ay * t + sp->by );
         }
     }
     else
@@ -384,7 +381,7 @@ mapw2s( FLI_XYPLOT_SPEC * sp,
         {
             /* This can happen if y is zoomed */
 
-            if ( ( tmp = sp->ay * y[ i ] + sp->by + 0.4 ) < 0 )
+            if ( ( tmp = FL_crnd( sp->ay * y[ i ] + sp->by ) ) < 0 )
                 tmp = 0;
             else if ( tmp > 30000 )
                 tmp = 30000;
@@ -1268,7 +1265,7 @@ convert_coord( FL_OBJECT       * ob,
                                             strlen( label ) );
             }
 
-            w = w > tmpw ? w : tmpw;
+            w = FL_max( w, tmpw );
         }
         else
         {
@@ -1304,18 +1301,18 @@ convert_coord( FL_OBJECT       * ob,
 
     if ( sp->xmargin1 )
     {
-        extrax1 = extrax2 = FL_abs( ob->bw ) + 1 + fl_get_linewidth( );
-        extrax1 += fl_get_string_width( sp->lstyle, sp->lsize, sp->xmargin1,
-                                        strlen( sp->xmargin1 ) );
+        extrax1 =   extrax2 = FL_abs( ob->bw ) + 1 + fl_get_linewidth( )
+                  + fl_get_string_width( sp->lstyle, sp->lsize, sp->xmargin1,
+                                         strlen( sp->xmargin1 ) );
         extrax2 += fl_get_string_width( sp->lstyle, sp->lsize, sp->xmargin2,
                                         strlen( sp->xmargin2 ) );
     }
 
     if ( sp->ymargin1 )
     {
-        extray1 = extray2 = FL_abs( ob->bw ) + 1;
-        extray1 += fl_get_string_width( sp->lstyle, sp->lsize, sp->ymargin1,
-                                        strlen( sp->ymargin1 ) );
+        extray1 =   extray2 = FL_abs( ob->bw ) + 1
+                  + fl_get_string_width( sp->lstyle, sp->lsize, sp->ymargin1,
+                                         strlen( sp->ymargin1 ) );
         extray2 += fl_get_string_width( sp->lstyle, sp->lsize, sp->ymargin2,
                                         strlen( sp->ymargin2 ) );
     }
@@ -1326,12 +1323,10 @@ convert_coord( FL_OBJECT       * ob,
     sp->yf = sp->objy + ob->h - extray2;
 
     sp->ax  = ( sp->xf - sp->xi ) / ( sp->xscmax - sp->xscmin );
-    sp->bx  = sp->xi - sp->ax * sp->xscmin;
-    sp->bxm = sp->bx;
+    sp->bx  = sp->bxm = sp->xi - sp->ax * sp->xscmin;
 
     sp->ay  = ( sp->yf - sp->yi ) / ( sp->yscmin - sp->yscmax );
-    sp->by  = sp->yi - sp->ay * sp->yscmax;
-    sp->bym = sp->by;
+    sp->by  = sp->bym = sp->yi - sp->ay * sp->yscmax;
 
     fl_xyplot_gen_xtic( ob );
     fl_xyplot_gen_ytic( ob );
@@ -1666,23 +1661,22 @@ draw_xyplot( FL_OBJECT * ob )
     /* Draw the title */
 
     fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2,
-                 sp->yi + 1, 0, 0,
-                 ob->col2, sp->lstyle, sp->lsize, sp->title );
+                 sp->yi + 1, 0, 0, ob->col2, sp->lstyle, sp->lsize, sp->title );
 
     ( sp->xscale == FL_LOG ? add_logxtics : add_xtics )( ob );
-    fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2,
-                 ob->y + ob->h - bw,
+
+    fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2, ob->y + ob->h - bw,
                  1, 1, ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
 
     ( sp->yscale == FL_LOG ? add_logytics : add_ytics )( ob );
 
     if ( sp->ylabel && *sp->ylabel )
     {
-        int cw = fl_get_char_width( sp->lstyle, sp->lsize ),
-            w;
+        int cw = fl_get_char_width( sp->lstyle, sp->lsize );
+        int w;
         int ch = fl_get_char_height( sp->lstyle, sp->lsize, 0, 0 );
-        int jj,
-            nc = strlen( sp->ylabel );
+        int jj;
+        int nc = strlen( sp->ylabel );
         char ss[ 2 ];
 
         for ( ss[ 1 ] = '\0', jj = 0; jj < nc; jj++ )
@@ -1701,8 +1695,6 @@ draw_xyplot( FL_OBJECT * ob )
 }
 
 
-#if 0    /* not used at the moment */
-
 /***************************************
  * For active xyplot only. point (ux,uy) is dragged to a new position.
  *
@@ -1710,6 +1702,8 @@ draw_xyplot( FL_OBJECT * ob )
  * everything by redrawing the box, can cause flicker in single buffer
  * mode.
  ***************************************/
+
+#if 0    /* not used at the moment */
 
 static void
 update_xyplot( FL_OBJECT * ob )
@@ -1938,7 +1932,8 @@ handle_mouse( FL_OBJECT * ob,
 
     sp->update = i + 1;
 
-    fl_redraw_object( ob );
+    draw_xyplot( ob );
+    sp->update = 0;
 
     sp->x[ 0 ][ i ] = fmx;
     sp->y[ 0 ][ i ] = fmy;
@@ -2194,6 +2189,11 @@ fl_create_xyplot( int          t,
 
     fl_set_object_return( ob, FL_RETURN_END_CHANGED );
 
+    /**** BUG FIX, DON'T KNOW YET WHY IT'S NEEDED JTT */
+
+    if ( ob->objclass == FL_XYPLOT && ob->type == FL_ACTIVE_XYPLOT )
+        fl_set_object_dblbuffer( ob, 0 );
+
     return ob;
 }
 
@@ -2210,30 +2210,38 @@ fl_add_xyplot( int          t,
                const char * l )
 {
     FL_OBJECT *ob = fl_create_xyplot( t, x, y, w, h, l );
-//    FLI_XYPLOT_SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     fl_add_object( fl_current_form, ob );
 
     /* Active_xyplot looks a little better in double buffer mode */
 
-//    fl_set_object_dblbuffer( ob, sp->active );
+    fl_set_object_dblbuffer( ob, sp->active );
     return ob;
 }
 
 
 /***************************************
- * This function looks extremely dangerous since the caller must supply
- * buffers for the data - but where does the caller get the information
- * from about how large the buffers must be?          JTT
+ * Returns the number of points a call of fl_get_xyplot_data() will return
+ ***************************************/
+
+int
+fl_get_xyplot_data_size( FL_OBJECT * obj )
+{
+    return *( ( FLI_XYPLOT_SPEC * ) obj->spec )->n;
+}
+    
+
+/***************************************
  ***************************************/
 
 void
-fl_get_xyplot_data( FL_OBJECT * ob,
+fl_get_xyplot_data( FL_OBJECT * obj,
                     float     * x,
                     float     * y,
                     int       * n )
 {
-    FLI_XYPLOT_SPEC *sp = ob->spec;
+    FLI_XYPLOT_SPEC *sp = obj->spec;
 
     *n = 0;
     if ( *sp->n > 0 )
@@ -3300,8 +3308,8 @@ fl_set_xyplot_fontstyle( FL_OBJECT * ob,
 #define ADVANCE  0.1        /* shoulde not be greater than 0.25 */
 #define FACTOR   1.9        /* max major expansion              */
 
-static float trunc_f( float,
-                      int );
+static double trunc_f( double,
+                       int );
 
 
 /***************************************
@@ -3404,45 +3412,40 @@ gen_logtic( float tmin,
 
 
 /***************************************
- * truncate a floating point number to requested significant digits
+ * Truncates a floating point number to a requested significant digits
+ * (if the number of digits is 0 truncate to the nearest integer)
  ***************************************/
 
-static float
-trunc_f( float f,
-         int   digit )
+static double
+trunc_f( double f,
+         int    digits )
 {
-    int ipow,
-        c;
-    float expon,
-          tmp;
+    int sign;
+    double fac;
+    int expon;
 
     if ( fabs( f ) < 1.e-20 )
         return 0.0;
 
-    if ( digit < 0 )
-        digit = 1;
+    if ( digits < 0 )
+        digits = 1;
 
-    if ( ! digit )
-    {
-        if ( f > 0.5 )
-            return 1.0;
-        else if ( f < 0.5 )
-            return 0.0;
-        else
-            return ( int ) f;
-    }
+    if ( ! digits )
+        return f >= 0 ? floor( f + 0.5 ) : ceil( f - 0.5 );
 
-    c = digit - 1;
-    expon = log10( f );
-    ipow = expon > 0.0 ? expon : expon - 1;
+    sign = f >= 0 ? 1 : -1;
+    f *= sign;
 
-    tmp = pow( 10.0, expon - ipow );
-    tmp += ADVANCE;
-    tmp *= pow( 10.0, c );
-    tmp = ( int ) tmp;
-    tmp *= pow( 10.0, ipow - c );
+    sign = f >= 0 ? 1 : -1;
+    f *= sign;
 
-    return tmp;
+    if ( f >= 1.0 )
+        expon = floor( log10( f ) + 1 + 0.5 );
+	else
+		expon = ceil( log10( f ) + 0.5 );
+
+	fac = pow( 10.0, digits - expon );
+	return sign * floor( fac * f + 0.5 ) / fac;
 }
 
 
@@ -3532,14 +3535,14 @@ fl_xyplot_w2s( FL_OBJECT * ob,
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( sp->xscale == FL_LOG )
-        *sx = log10( wx ) / sp->lxbase * sp->ax + sp->bxm + 0.5;
+        *sx = FL_crnd( log10( wx ) / sp->lxbase * sp->ax + sp->bxm );
     else
-        *sx = wx * sp->ax + sp->bxm + 0.5;
+        *sx = FL_crnd( wx * sp->ax + sp->bxm );
 
     if ( sp->yscale == FL_LOG )
-        *sy = log10( wy ) / sp->lybase * sp->ay + sp->bym + 0.5;
+        *sy = FL_crnd( log10( wy ) / sp->lybase * sp->ay + sp->bym );
     else
-        *sy = wy * sp->ay + sp->bym + 0.5;
+        *sy = FL_crnd( wy * sp->ay + sp->bym );
 }
 
 
@@ -3596,6 +3599,7 @@ fl_set_xyplot_yscale( FL_OBJECT * ob,
             sp->ybase = base;
             sp->lybase = log10( base );
         }
+
         fl_redraw_object( ob );
     }
 }
@@ -3617,9 +3621,9 @@ fl_set_xyplot_fixed_xaxis( FL_OBJECT  * ob,
     sp->xmargin1 = lm ? fl_strdup( lm ) : NULL;
     sp->xmargin2 = rm ? fl_strdup( rm ) : NULL;
 
-    if ( sp->xmargin2 && !sp->xmargin1 )
+    if ( sp->xmargin2 && ! sp->xmargin1 )
         sp->xmargin1 = fl_strdup( "" );
-    if ( sp->xmargin1 && !sp->xmargin2 )
+    if ( sp->xmargin1 && ! sp->xmargin2 )
         sp->xmargin2 = fl_strdup( "" );
 }
 

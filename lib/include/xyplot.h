@@ -164,6 +164,8 @@ FL_EXPORT void fl_get_xyplot( FL_OBJECT * ob,
                               float     * y,
                               int       * i );
 
+FL_EXPORT int fl_get_xyplot_data_size( FL_OBJECT * obj );
+
 FL_EXPORT void fl_get_xyplot_data( FL_OBJECT * ob,
                                    float     * x,
                                    float     * y,
