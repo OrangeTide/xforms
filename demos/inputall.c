@@ -60,10 +60,7 @@ input_cb( FL_OBJECT * ob,
 
 	fl_get_input_cursorpos( ob, &cx, &cy );
 	sprintf( buf,"x = %d y = %d", cx, cy );
-	fprintf( stdout, "%s\n", buf );
 	fl_set_object_label( ( ( FD_input * ) ob->form->fdui )->report, buf );
-
-	fprintf( stderr, "%p %s\n", ob, ob->label );
 }
 
 

@@ -1,46 +1,67 @@
+2010-12-06 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: Bug removed that kept a multi-line
+	input object to return (or invloe a callback) under
+	the requested circumstances. Thanks to Eberhard
+	Kuemmerle for pointing out the problem and submitting
+	a patch.
+
+	* lib/button.c: As Michal Szymanski pointed out the
+	fl_set_button() function didn't work as described in
+	the documentation for radio buttons (it did either
+	lead to the button object getting returned to the
+	program or an associated callback to be called).
+	Hopefully fixed.
+
+	* lib/xyplot.c: Marcus D. Leech reported problems
+	with xyplot objects of type FL_ACTIVE_XYPLOT when
+	using double buffering. For the time being (as a
+	temporary fix) double buffering is disabled for
+	such objects.
+
 2010-10-28 Jens Thoms Toerring    <jt@toerring.de>
 
-	fdesign/fd_printC.c: Changed the output format so that
+	* fdesign/fd_printC.c: Changed the output format so that
 	the resulting C files also compile with C++ compilers
 	(cast of return value of fd_malloc() needed). Thanks
 	to John Wang for pointing out the problem.
 
 2010-10-18 Jens Thoms Toerring    <jt@toerring.de>
 
-	lib/select.c: Memory allocation bug found by Luis Balona
+	* lib/select.c: Memory allocation bug found by Luis Balona
 	removed.
 
 2010-08-01 Jens Thoms Toerring    <jt@toerring.de>
 
-	doc/part3_choice_objects.texi, doc/part3_valuatorobjects.texi:
+	* doc/part3_choice_objects.texi, doc/part3_valuatorobjects.texi:
 	Added documentation for functions to set the repeat rate for
 	sliders and browser scrollbars.
 
 2010-06-20 Jens Thoms Toerring    <jt@toerring.de>
 
-	lib/slider.c: Doubled the time we wait immediately
+	* lib/slider.c: Doubled the time we wait immediately
 	after a mouse button has pressed in a slider "through"
 	to give the user more time to release the button before
 	"jumping" sets in.
 
-	lib/objects.c: Recognition of "^[" as meaning the <ESC>
+	* lib/objects.c: Recognition of "^[" as meaning the <ESC>
 	key as shortcut key was broken.
 
-	lib/fselect.c: When a callnback is set for a file selector
+	* lib/fselect.c: When a callnback is set for a file selector
 	<ENTER> now has the same function as a double-click. "Dismiss"
 	button was renamed "Close" and now has shortcut keys.
 
-	lib/browser.c: Added function proposed by Michal Szymanski
+	* lib/browser.c: Added function proposed by Michal Szymanski
 	that allows to set the speed with which the browsers scroll-
 	bar "jump".
 
 2010-06-13 Jens Thoms Toerring    <jt@toerring.de>
 
-	lib/tabfolder.c: Serge Bromow found that under Gnome the
+	* lib/tabfolder.c: Serge Bromow found that under Gnome the
 	contents of a tabfolder weren't positioned correctly,
 	hopefully fixed.
 
-	lib/input.c, xtext.c: As serge Bromow pointed out selection
+	* lib/input.c, xtext.c: As serge Bromow pointed out selection
 	was not always drawn correctly if the text in an input object
 	was longer than the width of the object.
 

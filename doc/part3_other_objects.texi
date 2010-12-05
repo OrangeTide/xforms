@@ -377,19 +377,25 @@ int fl_set_xyplot_file(FL_OBJECT *obj, const char *filename,
 @noindent
 The data file should be an ASCII file consisting of data lines. Each
 data line must have two columns, indicating the (x,y) pair with a
-space, tab or comma (@code{,}) separating the two columns. Lines that
+space, tab or comma separating the two columns. Lines that
 start with any of @code{!}, @code{;} or @code{#} are considered to be
 comments and are ignored. The functions returns the number of data
-points successfully read or 0 if the file can't be opened/
+points successfully read or 0 if the file couldn't be opened.
 
 To get a copy of the current XYPLot data, use
+@findex fl_get_xyplot_data_size()
+@anchor{fl_get_xyplot_data_size()}
 @findex fl_get_xyplot_data()
 @anchor{fl_get_xyplot_data()}
 @example
+int fl_get_xyplot_data_size(FL_OBJECT *obj);
 void fl_get_xyplot_data(FL_OBJECT *obj, float x[], float y[], int *n);
 @end example
 @noindent
-The caller must supply the space for the data.
+The first function returns the number of data points which the second
+will return. The caller must supply the space for the data returned
+by @code{fl_get_xyplot_data()}. The last argument of that function is
+again the number of points that got returned.
 
 All XYPlot objects can be made aware of mouse clicks by using the
 following routine
@@ -401,7 +407,7 @@ void fl_set_xyplot_inspect(FL_OBJECT *obj, int yes_no);
 @noindent
 Once an XYPlot is in inspect mode, whenever the mouse is released and
 the mouse position is on one of the data point, the object is returned
-to the caller or its callback is invoked. You can use
+to the caller or its callback is invoked. You then can use
 @code{@ref{fl_get_xyplot()}} to find out which point the mouse was
 clicked on.
 
@@ -887,7 +893,7 @@ screenCoord = a * data + b       (linear scale)
 screenCoord = a * log(data) / log(p) + b (log scale)
 @end example
 @noindent
-where p is the base of the requested logarithm.
+where @code{p} is the base of the requested logarithm.
 
 If you need to do conversions only occasionally (for example,
 converting the position of a mouse click to a data point or vice

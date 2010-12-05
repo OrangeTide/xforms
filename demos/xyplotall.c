@@ -127,13 +127,14 @@ main( int    argc,
 	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 	create_form_xyplot( );
 
-	/* make sure double buffer also works */
+	/* Make sure double buffer also works */
 
-	for ( i = 0; i < 3; i++ )
-		fl_set_object_dblbuffer( xyplot[ i ], 0 );
+//	for ( i = 0; i < 3; i++ )
 
 	for ( i = 0; i < N; i++ )
 	{
+		fl_set_object_dblbuffer( xyplot[ i ], 1 );
+
 		for( j = 0; j < 21; j++ )
 		{
             x[ i ][ j ] = j * 3.1415 / 10 + 0.2;
