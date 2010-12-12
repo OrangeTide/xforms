@@ -951,6 +951,11 @@ FL_EXPORT void fl_remove_timeout( int id );
 FL_EXPORT int fl_library_version( int * ver,
                                   int * rev );
 
+FL_EXPORT long fl_library_full_version( int         * version,
+										int         * revision,
+										int         * fix_level,
+										const char ** extra );
+
 /** Generic routines that deal with FORMS **/
 
 FL_EXPORT FL_FORM * fl_bgn_form( int      type,

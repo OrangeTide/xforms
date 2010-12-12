@@ -47,6 +47,9 @@ static const char *version =
     "GNU Lesser General Public License since 2002";
 
 
+static const char *fli_fix_level = FL_FIXLEVEL;
+
+
 /***************************************
  ***************************************/
 
@@ -60,6 +63,33 @@ fl_library_version( int * ver,
         *rev = FL_REVISION;
 
     return FL_VERSION * 1000 + FL_REVISION;
+}
+
+
+/***************************************
+ ***************************************/
+
+long
+fl_library_full_version( int         * version,
+                         int         * revision,
+                         int         * fix_level,
+                         const char ** extra )
+{
+    long flv;
+    char *x;
+
+    if ( version )
+        *version = FL_VERSION;
+    if ( revision )
+        *revision = FL_REVISION;
+
+    flv = strtol( fli_fix_level, &x, 10 );
+    if ( fix_level )
+        fix_level = flv;
+    if ( extra )
+        extra = x;
+
+    return FL_VERSION * 1000000 + FL_REVISION * 1000  + flv;
 }
 
 

@@ -1,3 +1,8 @@
+2010-12-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/version.c: fl_library_full_version() function
+	added as sugested by Lukenshiro.
+
 2010-12-06 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c: Bug removed that kept a multi-line
