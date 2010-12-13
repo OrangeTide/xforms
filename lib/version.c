@@ -85,9 +85,9 @@ fl_library_full_version( int         * version,
 
     flv = strtol( fli_fix_level, &x, 10 );
     if ( fix_level )
-        fix_level = flv;
+        *fix_level = flv;
     if ( extra )
-        extra = x;
+        *extra = x;
 
     return FL_VERSION * 1000000 + FL_REVISION * 1000  + flv;
 }
