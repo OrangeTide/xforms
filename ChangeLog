@@ -1,7 +1,16 @@
+2010-12-14 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/win.c, lib/flcolor.c, doc/part4_drawing_objects.texi:
+	In some places there was a mix-up between FL_COLOR and
+	'unsigned long' as LukenShiro pointed out. While this
+	has no direct consequences it obscures the distinction
+	between XForms colors and the colors the X server kows
+	about.
+
 2010-12-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/version.c: fl_library_full_version() function
-	added as sugested by Lukenshiro.
+	added as sugested by LukenShiro.
 
 2010-12-06 Jens Thoms Toerring    <jt@toerring.de>
 

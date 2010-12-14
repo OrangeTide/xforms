@@ -942,13 +942,13 @@ fli_free_colormap( int vmode )
 
 
 static unsigned long
-fli_get_rgb_pixel( FL_COLOR packed,
-                   int *    newpix );
+get_rgb_pixel( FL_COLOR packed,
+               int *    newpix );
 
 
 /***************************************
- * Input col is the color known to the world outside of FORMS,
- * FL_RED etc. Returned will be the true pixel X understands
+ * Input col is an XForms color, e.g. FL_RED etc. The
+ * return value is the true pixel value X understands.
  ***************************************/
 
 unsigned long
@@ -958,7 +958,7 @@ fl_get_pixel( FL_COLOR col )
         return fl_get_pixel( FL_COL1 );
 
     if ( flx->isRGBColor )
-        return fli_get_rgb_pixel( col, &flx->newpix );
+        return get_rgb_pixel( col, &flx->newpix );
 
     if ( col >= FL_MAX_COLS )
     {
@@ -1016,8 +1016,8 @@ fl_color( FL_COLOR col )
  ***************************************/
 
 static unsigned long
-fli_get_rgb_pixel( FL_COLOR packed,
-                   int *    newpix )
+get_rgb_pixel( FL_COLOR   packed,
+               int      * newpix )
 {
     FL_STATE *s = &fl_state[ fl_vmode ];
     unsigned long pixel;
