@@ -818,8 +818,8 @@ fl_winhide( Window win )
  ***************************************/
 
 void
-fl_winbackground( Window   win,
-                  FL_COLOR bk )
+fl_winbackground( Window         win,
+                  unsigned long  bk )
 {
     if ( win == 0 )
     {

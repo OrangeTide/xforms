@@ -438,8 +438,8 @@ FL_EXPORT void fl_winicon( Window win,
                            Pixmap p,
                            Pixmap m );
 
-FL_EXPORT void fl_winbackground( Window   win,
-                                 FL_COLOR bk );
+FL_EXPORT void fl_winbackground( Window        win,
+                                 unsigned long bk );
 
 FL_EXPORT void fl_winstepsize( Window   win,
                                FL_Coord dx,

@@ -942,8 +942,8 @@ fli_free_colormap( int vmode )
 
 
 static unsigned long
-fl_get_rgb_pixel( FL_COLOR packed,
-                  int *    newpix );
+fli_get_rgb_pixel( FL_COLOR packed,
+                   int *    newpix );
 
 
 /***************************************
@@ -958,7 +958,7 @@ fl_get_pixel( FL_COLOR col )
         return fl_get_pixel( FL_COL1 );
 
     if ( flx->isRGBColor )
-        return fl_get_rgb_pixel( col, &flx->newpix );
+        return fli_get_rgb_pixel( col, &flx->newpix );
 
     if ( col >= FL_MAX_COLS )
     {
@@ -999,13 +999,13 @@ void
 fl_color( FL_COLOR col )
 {
     static int vmode = -1;
-    long p;
 
     if ( flx->color != col || vmode != fl_vmode )
     {
+        unsigned long p = fl_get_pixel( col );
+
         flx->color = col;
         vmode = fl_vmode;
-        p = fl_get_pixel( col );
         XSetForeground( flx->display, flx->gc, p );
         fli_free_newpixel( p );
     }
@@ -1016,8 +1016,8 @@ fl_color( FL_COLOR col )
  ***************************************/
 
 static unsigned long
-fl_get_rgb_pixel( FL_COLOR packed,
-                  int *    newpix )
+fli_get_rgb_pixel( FL_COLOR packed,
+                   int *    newpix )
 {
     FL_STATE *s = &fl_state[ fl_vmode ];
     unsigned long pixel;
@@ -1098,6 +1098,7 @@ fl_textcolor( FL_COLOR col )
     static int vmode = -1;
     static int switched;
     static GC textgc;
+    unsigned long p;
 
     if (    flx->textcolor != col
          || vmode != fl_vmode
@@ -1125,8 +1126,9 @@ fl_textcolor( FL_COLOR col )
             switched = 0;
         }
 
-        XSetForeground( flx->display, flx->textgc, col = fl_get_pixel( col ) );
-        fli_free_newpixel( col );
+        p = fl_get_pixel( col );
+        XSetForeground( flx->display, flx->textgc, p );
+        fli_free_newpixel( p );
     }
 }
 
@@ -1139,10 +1141,11 @@ fl_bk_color( FL_COLOR col )
 {
     if ( flx->bkcolor != col )
     {
+        unsigned long p = fl_get_pixel( col );
+
         flx->bkcolor = col;
-        col = fl_get_pixel( col );
-        XSetBackground( flx->display, flx->gc, col );
-        fli_free_newpixel( col );
+        XSetBackground( flx->display, flx->gc, p );
+        fli_free_newpixel( p );
     }
 }
 
@@ -1155,10 +1158,10 @@ fl_bk_textcolor( FL_COLOR col )
 {
     if ( flx->bktextcolor != col )
     {
+        unsigned long p = fl_get_pixel( col );
         flx->bktextcolor = col;
-        col = fl_get_pixel( col );
-        XSetBackground( flx->display, flx->textgc, col );
-        fli_free_newpixel( col );
+        XSetBackground( flx->display, flx->textgc, p );
+        fli_free_newpixel( p );
     }
 }
 
