@@ -26,7 +26,6 @@ noinst_PROGRAMS = arrowbutton \
 	buttonall \
 	butttypes \
 	canvas \
-	canvas2 \
 	chartall \
 	chartstrip \
 	choice \
@@ -131,7 +130,6 @@ nodist_butttypes_SOURCES = fd/butttypes_gui.c fd/butttypes_gui.h
 butttypes.$(OBJEXT): fd/butttypes_gui.c
 
 canvas_SOURCES = canvas.c
-canvas2_SOURCES = canvas2.c
 chartall_SOURCES = chartall.c
 chartstrip_SOURCES = chartstrip.c
 choice_SOURCES = choice.c
