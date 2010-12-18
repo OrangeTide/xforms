@@ -1,3 +1,10 @@
+2010-12-18 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/include/tabfolder.h, doc/part3_container_objects.tex:
+	Declaration of fl_get_tabfolder_offset() added and description
+	of both fl_get_tabfolder_offset() and fl_set_tabfolder_offset()
+	which as LukenShiro noted was missing./
+
 2010-12-14 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/win.c, lib/flcolor.c, doc/part4_drawing_objects.texi:

@@ -110,7 +110,9 @@ FL_EXPORT int fl_set_tabfolder_autofit( FL_OBJECT * ob,
 
 FL_EXPORT int fl_set_default_tabfolder_corner( int n );
 
-FL_EXPORT int fl_set_tabfolder_offset( FL_OBJECT * ob,
+FL_EXPORT int fl_set_tabfolder_offset( FL_OBJECT * obj,
                                        int         offset );
+
+FL_EXPORT int fl_get_tabfolder_offset( FL_OBJECT * obj );
 
 #endif /* ! defined FL_FOLDER_H */

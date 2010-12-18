@@ -221,8 +221,19 @@ number or the name. If the requested number or name is invalid,
 If there are more tabs than that can be shown, the right-most tab will
 be shown as "broken". Clicking on the "broken" tab scrolls the tab to
 the right one per each click. To scroll to the left (if there are tabs
-scrolled off screen from the left), clicking on the first tab scrolls
-right.
+scrolled-off screen from the left), clicking on the first tab scrolls
+right. How many tabs are "hidden" on the left can be determined and
+also set using the functions
+@findex fl_get_tabfolder_offset()
+@anchor{fl_get_tabfolder_offset()}
+@findex fl_set_tabfolder_offset()
+@anchor{fl_set_tabfolder_offset()}
+@example
+int fl_get_tabfolder_offset(FL_OBJECT *ojb);
+int gl_set_tabfolder_offset(FL_OBJECT *obj, int offset);
+@end example
+@noindent
+where @code{offset} is the number of tabs hidden on the left.
 
 Although a regular form (top-level) and a form used as a folder behave
 almost identically, there are some differences. In a top-level form,

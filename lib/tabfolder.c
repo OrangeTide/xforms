@@ -940,9 +940,9 @@ fl_get_folder_area( FL_OBJECT * ob,
  ***************************************/
 
 int
-fl_get_tabfolder_offset( FL_OBJECT * ob )
+fl_get_tabfolder_offset( FL_OBJECT * obj )
 {
-    return ( ( FLI_TABFOLDER_SPEC * ) ob->spec )->offset;
+    return ( ( FLI_TABFOLDER_SPEC * ) obj->spec )->offset;
 }
 
 
@@ -950,10 +950,10 @@ fl_get_tabfolder_offset( FL_OBJECT * ob )
  ***************************************/
 
 int
-fl_set_tabfolder_offset( FL_OBJECT * ob,
+fl_set_tabfolder_offset( FL_OBJECT * obj,
                          int         offset )
 {
-    FLI_TABFOLDER_SPEC *sp = ob->spec;
+    FLI_TABFOLDER_SPEC *sp = obj->spec;
     int old = sp->offset;
 
     if ( offset < 0 )
@@ -963,8 +963,8 @@ fl_set_tabfolder_offset( FL_OBJECT * ob,
 
     if ( offset != sp->offset )
     {
-        shift_tabs( ob, offset - sp->offset );
-        fl_redraw_form( ob->form );
+        shift_tabs( obj, offset - sp->offset );
+        fl_redraw_form( obj->form );
     }
 
     return old;

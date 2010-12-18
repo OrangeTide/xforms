@@ -1,8 +1,8 @@
 \input texinfo
 
 @setfilename xforms.info
-@settitle XForms (Forms Library)@*A Graphical User Interface Toolkit for X@*Version 1.0.93
-@set lastupdate December 6, 2010
+@settitle XForms (Forms Library)@*A Graphical User Interface Toolkit for X@*Version 1.0.94
+@set lastupdate December 18, 2010
 @paragraphindent 0
 
 @titlepage
@@ -21,7 +21,7 @@
 
 @dircategory Development
 @direntry
-* XForms: (xforms). Graphical user interface toolkit for X
+* XForms: (xforms). A Graphical user interface toolkit for X
 @end direntry
 
 
