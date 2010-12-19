@@ -1,9 +1,13 @@
 2010-12-18 Jens Thoms Toerring    <jt@toerring.de>
 
-	* lib/include/tabfolder.h, doc/part3_container_objects.tex:
+	* lib/include/tabfolder.h, doc/part3_container_objects.texi:
 	Declaration of fl_get_tabfolder_offset() added and description
 	of both fl_get_tabfolder_offset() and fl_set_tabfolder_offset()
 	which as LukenShiro noted was missing./
+
+	* doc/part5_useful_function.texi: Corrections to the
+	descriptions of fl_iconify() and flwinresize() as
+	proposed by LukeShiro.
 
 2010-12-14 Jens Thoms Toerring    <jt@toerring.de>
 

@@ -318,24 +318,24 @@ void fl_get_wingeometry(Window win, FL_Coord *x, FL_Coord *y,
                         FL_Coord *w, FL_Coord *h);
 @end example
 @noindent
-All returned values are in pixels. The origin of a window is measured
-from the upper left corner of the root window.
+All values returned are in pixels. The origin of a window is measured
+from the upper left hand corner of the root window.
 
-To change the size of window programmatically the following routine
+To change the size of a window programmatically the following function
 is available:
 @findex fl_winresize()
 @anchor{fl_winresize()}
 @example
-int fl_winresize(Window win, FL_Coord neww, FL_Coord newh);
+void fl_winresize(Window win, FL_Coord neww, FL_Coord newh);
 @end example
 @noindent
-In addition to resizing the window, this routine will keep the
-original constraints. For example, if a window was not permitted to be
-interactively resized it will remains unresizeable after the resize.
-Resizing is done by keeping the origin constant relative to the root
-window.
+Resizing will not change the origin of the window (relative to the
+root window). While the window gets resized originally set restraints
+will remain unchanged. E.g., if a window was not permitted to be
+resized interactively it will continue to remain unresizeable by the
+user.
 
-To move a window without resizing it, use the following call
+To move a window without resizing it use the following function:
 @findex fl_winmove()
 @anchor{fl_winmove()}
 @example
@@ -354,8 +354,13 @@ The following routine is available to iconify a window
 @findex fl_iconify()
 @anchor{fl_iconify()}
 @example
-void fl_iconify(Window win);
+int fl_iconify(Window win);
 @end example
+@noindent
+The return value is nonzero when the message, asking for iconification
+of the window, was send successfully to the window manager, otherwise
+zero (but this may not be taken as a sure sign that the window was
+really iconified).
 
 To make a window invisible use
 @findex fl_winhide()
