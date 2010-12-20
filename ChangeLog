@@ -1,3 +1,9 @@
+2010-12-20 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/part5_resources.texi: Wrong signature of
+	fl_get_app_resources() as pointed out by LukenShiro
+	corrected.
+
 2010-12-18 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/include/tabfolder.h, doc/part3_container_objects.texi:

@@ -56,7 +56,7 @@ database. To read your application specific options follow
 @findex fl_get_app_resources()
 @anchor{fl_get_app_resources()}
 @example
-int fl_get_app_resources(FL_RESOURCE *resource, int nresources);
+void fl_get_app_resources(FL_RESOURCE *resource, int nresources);
 @end example
 @noindent
 Here @code{resource} is a table containing application specific

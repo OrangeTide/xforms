@@ -744,5 +744,3 @@ See the program @file{demo06.c} for an example of the use of input
 fields. See @file{minput.c} for multi-line input fields. See
 @file{secretinput.c} for secret input fields and @file{inputall.c} for
 all input fields.
-
-
