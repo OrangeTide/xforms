@@ -4,6 +4,16 @@
 	fl_get_app_resources() as pointed out by LukenShiro
 	corrected.
 
+	* lib/xsupport.c: Strange returned string in (undocumented
+	function) fl_vclass_name() on invalid argument changed to
+	something hopefully more reasonable (bug found by
+	LukenShiro)
+
+	* lib/xdraw.c, doc/part5_drawing_obects.texi: As LukenShiro
+	pointed out fl_dashedlinestyle() will fail with BadValue Xlib
+	error when the first argument ontains '\0' characters. In that
+	case no also the default dash pattern is set instead.
+
 2010-12-18 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/include/tabfolder.h, doc/part3_container_objects.texi:

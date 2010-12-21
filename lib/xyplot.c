@@ -582,7 +582,7 @@ draw_curve_only( FL_OBJECT * ob )
                 break;
 
             case FL_DASHED_XYPLOT:
-                fl_dashedlinestyle( 0, 0 );
+                fl_dashedlinestyle( NULL, 0 );
                 fl_linestyle( LineOnOffDash );
                 break;
 

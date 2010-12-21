@@ -583,8 +583,24 @@ fl_dashedlinestyle( const char * dash,
                     int          ndash )
 {
     static char default_dash[ ] = { 4, 4 };
+    int i;
 
-    if ( dash == NULL )
+    /* Check that the input is reasonable - XSetDashes() requires that
+       there's at least one element in the 'dash' array and that none
+       of its elements are 0. If one of these conditions isn't satis-
+       fied (or 'dash' itself is NULL) set the defaut dash pattern. */
+
+    if ( dash )
+        for ( i = 0; i < ndash; i++ )
+            if ( dash[ i ] == '\0' )
+            {
+                M_warn( "fl_dashedlinestyle", "Invalid '\0' in dash pattern "
+                        "array, using default pattern" );
+                ndash = 0;
+                break;
+            }
+
+    if ( ! dash || ! ndash )
     {
         dash = default_dash;
         ndash = 2;

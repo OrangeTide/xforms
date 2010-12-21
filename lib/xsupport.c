@@ -490,9 +490,6 @@ static FLI_VN_PAIR xvclass[ ] =
     VN( StaticGray ),
     VN( StaticGrey ),
     { FL_DefaultVisual, "DefaultVisual" },
-    { FL_DefaultVisual, "default"       },
-    { FL_DefaultVisual, "Default"       },
-    { FL_IllegalVisual, "XInvalidClass" },
     { -1,               NULL            }
 };
 
@@ -503,9 +500,13 @@ static FLI_VN_PAIR xvclass[ ] =
 const char *
 fl_vclass_name( int n )
 {
-    const char *cn = fli_get_vn_name( xvclass, n );
+    FLI_VN_PAIR *xc = xvclass;
 
-    return cn ? cn : fli_get_vn_name( xvclass, FL_IllegalVisual );
+    for ( ; xc->name; xc++ )
+        if ( n == xc->val )
+            return xc->name;
+
+    return "InvalidVisual";
 }
 
 

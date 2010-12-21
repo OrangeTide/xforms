@@ -630,18 +630,22 @@ for @code{FL_USERDASH} and @code{FL USERDOUBLEDASH}:
 void fl_dashedlinestyle(const char *dash, int ndashes)
 @end example
 Each element of the array @code{dash} is the length of a segment of
-the pattern in pixels. Dashed lines are drawn as alternating segments,
-each with the length of an element in @code{dash}. Thus the overall
-length of the dash pattern, in pixels, is the sum of all elements of
-@code{dash}. When the pattern is used up but the line to draw is
-longer it used from the start again. The following example code
-specifies a long dash (9 pixels) to come first, then a skip (3
-pixels), a short dash (2 pixels) and then again a skip (3 pixels).
-After this sequence, the pattern repeats.
+the pattern in pixels (0 is not allowed). Dashed lines are drawn as
+alternating segments, each with the length of an element in
+@code{dash}. Thus the overall length of the dash pattern, in pixels,
+is the sum of all elements of @code{dash}. When the pattern is used
+up but the line to draw is longer it used from the start again. The
+following example code specifies a long dash (9 pixels) to come first,
+then a skip (3 pixels), a short dash (2 pixels) and then again a skip
+(3 pixels). After this sequence, the pattern repeats.
 @example
 char ldash_sdash[] = @{9, 3, 2, 3@};
 fl_dashedlinestyle(ldash_sdash, 4);
 @end example
+@noindent
+If @code{dash} is @code{NULL} or @code{ndashes} is @code{0} (or
+the @code{dash} array contains an element set to @code{0}) a default
+pattern of 4 pixels on and 4 fixels off is set.
 
 It is important to remember to call @code{@ref{fl_dashedlinestyle()}}
 whenever @code{FL_USERDASH} is used to set the dash pattern, otherwise
