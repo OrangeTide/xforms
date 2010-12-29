@@ -52,6 +52,10 @@
 #endif
 
 
+static int read_dummy_box( void );
+static int read_dummy_type( void );
+
+
 /***************************************
  ***************************************/
 
@@ -571,9 +575,13 @@ load_object( void )
 {
     int objclass;
     char *type_name;
-    int type;
-    FL_Coord x, y, w, h;
-    char *key, *p;
+    int type = 0;
+    FL_Coord x = 0,
+             y = 0,
+             w = 0,
+             h = 0;
+    char *key = NULL,
+         *p;
     FL_OBJECT *obj;
     int r;
         
@@ -587,9 +595,9 @@ load_object( void )
         objclass = new_class( objclass );
 
     /* Next we need the object type. normally this is a string except for
-       pseudo-objects that start and ed a group */
+       pseudo-objects that start and end a group */
 
-    if ( ! ( objclass == FL_BEGIN_GROUP || objclass == FL_END_GROUP ) )
+    if ( objclass != FL_BEGIN_GROUP && objclass != FL_END_GROUP )
     {
         if (    ff_read( "%k%t", &key, &type_name ) < 2
              || strcmp( key, "type" ) )
@@ -611,25 +619,11 @@ load_object( void )
         }
 
         fl_free( type_name );
-    }
-    else
-    {
-        if (    ff_read( "%k%d", &key, &type ) < 2
-             || strcmp( key, "type" ) )
-        {
-            fl_safe_free( key );
-            return ff_err( "Expected object type" );
-        }
-    }
 
-    fl_safe_free( key );
+        /* As the third entry the size of the object (following the "box" key)
+           is required, exceptions are the pseudo-objectst that start and end
+           a group, they may have less values */
 
-    /* As the third thing the size of the object (following the "box" key) is
-       required, exceptions are the pseudo-objectst that start and end a group,
-       they may have less values */
-
-    if ( ! ( objclass == FL_BEGIN_GROUP || objclass == FL_END_GROUP ) )
-    {
         if (    ( r = ff_read( "%k%D%D%U%U", &key, &x, &y, &w, &h ) ) < 5
              || strcmp( key, "box" ) )
         {
@@ -648,21 +642,9 @@ load_object( void )
             
             return FF_READ_FAILURE;
         }
-    }
-    else
-    {
-        /* For start and end of group we get either 1 or 4 values */
 
-        r = ff_read( "%k%D%d%U%U", &key, &x, &y, &w, &h );
-        if ( ( r != 2 && r != 5 ) || strcmp( key, "box" ) )
-        {
-            fl_safe_free( key );
-            return ff_err( "Expected object box size with 1 or 4 valid"
-                           "values" );
-        }
+        fl_free( key );
     }
-
-    fl_free( key );
 
     if ( cur_form && fd_magic < MAGIC4 )
         y = cur_form->h - y - h;
@@ -683,6 +665,32 @@ load_object( void )
         if ( ( r = ff_read( "%k", &key ) ) < 0 )
             return ff_err( "Failed to read expected key" );
 
+        /* The pseudo-objects FL_BEGIN_GROUP and FL_END_GROUP may have a
+           'type' and 'box' field we didn't check for yet - what they
+           contain is actually irrelevant but we must read them if present */
+
+        if (    r == 1
+             && ( objclass == FL_BEGIN_GROUP || objclass == FL_END_GROUP ) )
+        {
+            if ( ! strcmp( key, "type" ) )
+            {
+                fl_safe_free( key );
+                if ( read_dummy_type( ) == FF_READ_FAILURE )
+                    return FF_READ_FAILURE;
+                else
+                    continue;
+            }
+
+            if ( ! strcmp( key, "box" ) )
+            {
+                fl_safe_free( key );
+                if ( read_dummy_box( ) == FF_READ_FAILURE )
+                    return FF_READ_FAILURE;
+                else
+                    continue;
+            }
+        }
+
         if ( r == 0 || ! strcmp( key, "Name" ) || ! strcmp( key, "class" ) )
             break;
 
@@ -697,9 +705,11 @@ load_object( void )
 
         if ( i == sizeof attr_array / sizeof *attr_array )
             break;
+
+        fl_safe_free( key );
     }
 
-    /* Some extra adjustments for spinner objects (this is a hack but
+    /* Some extra adjustments for spinner objects (this is a evel but
        avoiding it would require a complete change of how fdesign works) */
 
     if ( obj->objclass == FL_SPINNER )
@@ -744,6 +754,41 @@ load_object( void )
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 
     return r;
+}
+
+
+/***************************************
+ * Function for reading the 'type' of a FL_BEGIN_GROUP or FL_END_GROUP
+ * pseudo-object (which alsways is an int with value 0)
+ ***************************************/
+
+static int
+read_dummy_type( void )
+{
+    int type;
+    
+    if ( ff_read( "%d", &type ) < 0 || type != 0 )
+         return ff_err( "Expected object type" );
+    return 0;
+}
+
+
+
+/***************************************
+ * Function for reading the box size of a FL_BEGIN_GROUP or FL_END_GROUP
+ * pseudo-object, we can expect either 1 or 4 FL_COORD values
+ ***************************************/
+
+static int
+read_dummy_box( void )
+{
+    int r;
+    FL_COORD dummy;
+        
+    r = ff_read( "%D%D%U%U", &dummy, &dummy, &dummy, &dummy );
+    if ( r != 1 &&  r != 4 )
+        return ff_err( "Expected object box size with 1 or 4 valid values" );
+    return 0;
 }
 
 

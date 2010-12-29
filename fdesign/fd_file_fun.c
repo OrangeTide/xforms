@@ -981,7 +981,7 @@ ff_read( const char * format,
     if ( ! format || ! *format )
     {
         M_err( "ff_read", "Invalid argument(s)" );
-        return -1;
+        return FF_READ_FAILURE;
     }
 
     fp = fmt = fl_strdup( format );
@@ -995,7 +995,7 @@ ff_read( const char * format,
             if ( ! ( fp = ff_match_text( fp ) ) )
             {
                 va_end( ap );
-                return -1;
+                return FF_READ_FAILURE;
             }
 
             last = '\0';
@@ -1091,7 +1091,7 @@ ff_read( const char * format,
                     va_end( ap );
                     fl_free( fmt );
                     M_err( "ff_read", "Invalid argument(s)" );
-                    return -1;
+                    return FF_READ_FAILURE;
             }
 
             last = *fp;

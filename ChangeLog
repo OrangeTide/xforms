@@ -1,3 +1,10 @@
+2010-12-29 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fl_file.c: Changed the input function
+	to accept .fd files so that for pseudo-objects of
+	type FL_BEGIN_GROUP and FL_END_GROUP no more than
+	a single line with the class name is required.
+
 2010-12-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/part5_resources.texi: Wrong signature of

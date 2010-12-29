@@ -782,7 +782,7 @@ find_type_name( int cln,
 
 int
 find_type_value( int          cln,
-                 const char * tyname )
+                 const char * type_name )
 {
     int i,
         jmax = find_class_maxtype( cln ),
@@ -791,13 +791,13 @@ find_type_value( int          cln,
     for ( i = 0; i < cnumb; i++ )
         if ( classes[ i ].cn == cln )
             for ( j = 0; j < jmax; j++ )
-                if (    ! strcmp( classes[ i ].types[ j ].tname, tyname )
-                     || (    ! strncmp( tyname, "FL_", 3 )
+                if (    ! strcmp( classes[ i ].types[ j ].tname, type_name )
+                     || (    ! strncmp( type_name, "FL_", 3 )
                           && ! strcmp( classes[ i ].types[ j ].tname,
-                                       tyname + 3 ) ) )
+                                       type_name + 3 ) ) )
                     return j;
 
-    M_err( "TypeValue", "type %s is unknown", tyname );
+    M_err( "TypeValue", "type %s is unknown", type_name );
     return -1;
 }
 

@@ -424,7 +424,8 @@ extern int find_type_value( int,
 
 extern unsigned long fd_red,
                      fd_black,
-                     fd_white, fd_col;
+                     fd_white,
+                     fd_col;
 
 extern int fd_magic;
 extern int fd_border;
