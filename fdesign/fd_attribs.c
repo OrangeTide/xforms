@@ -667,6 +667,8 @@ set_attribs( FL_OBJECT  * obj,
              int          lstyle,
              const char * label )
 {
+    char *s;
+
     obj->boxtype = boxtype;
     obj->col1    = col1;
     obj->col2    = col2;
@@ -674,6 +676,10 @@ set_attribs( FL_OBJECT  * obj,
     obj->align   = align;
     obj->lsize   = lsize;
     obj->lstyle  = lstyle;
+
+    if ( ( s = strchr( label, '\010' ) ) )
+        memmove( s, s + 1, strlen( s ) + 1 );
+        
     fl_set_object_label( obj, label );
 
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
@@ -991,9 +997,24 @@ change_type( FL_OBJECT * obj,
     int boxtype,
         is_focus;
     SuperSPEC *sp = obj->u_vdata;
+    long int *shct = NULL;
 
     if ( obj->type == type )
         return;
+
+    if ( obj->shortcut )
+    {
+        size_t i = 0;
+
+        while ( obj->shortcut[ i++ ] )
+            /* empty */ ;
+
+        if ( i )
+        {
+            shct = malloc( i * sizeof *shct );
+            memcpy( shct, obj->shortcut, i * sizeof *shct );
+        }
+    }
 
     /* Create a new object. */
 
@@ -1052,6 +1073,8 @@ change_type( FL_OBJECT * obj,
 
     if ( is_focus )
         fl_set_object_focus( obj->form, obj );
+
+    obj->shortcut = shct;
 
     redraw_the_form( 0 );
     show_attributes( obj );

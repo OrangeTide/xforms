@@ -14,6 +14,11 @@
 	* fd2ps/load.c: Changes to make fd2ps work with the new
 	layout of the .fd files
 
+	* fdesign/fd_attributes.c: Fixed a bug pointed out by
+	LukenShiro that resulted in garbage appearing in an
+	objects label with a shortcut when the type of the
+	object got changed.
+
 2010-12-20 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/part5_resources.texi: Wrong signature of
