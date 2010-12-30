@@ -38,6 +38,7 @@
 #define MAGIC3  12322
 #define MAGIC4  13000
 #define MAGIC5  14000
+#define MAGIC6  15000
 
 extern char *de_space( char *s );
 
@@ -200,15 +201,18 @@ flps_make_object( int          objclass,
  ***************************************/
 
 static int
-read_key_val(FILE * fp,
-             char * key,
-             char * val )
+read_key_val( FILE * fp,
+              char * key,
+              char * val )
 {
     char buf[ 1024 ],
          *p;
 
-    if ( ! fgets( buf, 1024, fp ) || ferror( fp ) )
+    if ( ! fgets( buf, 1024, fp ) )
+    {
+        strcpy( key, "?" );
         return EOF;
+    }
 
     buf[ 1023 ] = 0;
     val[ 0 ] = key[ 0 ] = '\0';
@@ -269,16 +273,14 @@ flps_add_object( FL_FORM   * form,
         form->last->next = obj;
         form->last = obj;
     }
+
     obj->form = form;
 }
 
 
-#define NL '\n'
-
-
-/***************************************
- * Sets the label, turning \n in NL
- ***************************************/
+/****************************************
+ * Sets the label, turning "\\n" in "\n"
+ ****************************************/
 
 static void
 set_label( FL_OBJECT  * obj,
@@ -292,7 +294,7 @@ set_label( FL_OBJECT  * obj,
     {
         if ( str[ i ] == '\\' && str[ i + 1 ] == 'n' )
         {
-            tmpstr[ j++ ] = NL;
+            tmpstr[ j++ ] = '\n';
             i++;
         }
         else if ( str[ i ] == '\\' && strncmp( str + i + 1, "010", 3 ) == 0 )
@@ -431,32 +433,42 @@ load_object( FL_FORM * form,
              FILE    * fl )
 {
     FL_OBJECT *obj;
-    int objclass, type;
-    float x,
-          y,
-          w,
-          h;
+    int objclass,
+        type = 0;
+    int x = 0,
+        y = 0,
+        w = 0,
+        h = 0;
     char name[ 64 ],
          cbname[ 64 ];
     char cn1[ 64 ],
          cn2[ 64 ];
     char objcls[ 64 ];
     char key[ 64 ],
-         val[ 10000 ];
+         val[ 1000 ];
 
     /* Must demand the vital info */
 
     if (    ! fgets( val, sizeof val, fl )
          || *val != '-'
-         || fscanf( fl, "class: %s\n", objcls ) != 1
-         || fscanf( fl, "type: %s\n", val ) != 1
-         || fscanf( fl, "box: %f %f %f %f\n", &x, &y, &w, &h ) != 4 )
+         || read_key_val(fl, key, objcls ) == EOF
+         || strcmp( key, "class" )
+         || (    strcmp( objcls, "FL_BEGIN_GROUP" )
+              && strcmp( objcls, "BEGIN_GROUP" )
+              && strcmp( objcls, "FL_END_GROUP" )
+              && strcmp( objcls, "END_GROUP" )
+              && (    fscanf( fl, "type: %s\n", val ) != 1
+                   || fscanf( fl, "box: %d %d %d %d\n",
+                              &x, &y, &w, &h ) != 4 ) ) )
     {
-        /* This is an error and should be handled JTT*/
+        fprintf( stderr, "Somethings wrong with the file\n" );
+        exit( EXIT_FAILURE );
     }
 
     objclass = find_class_val( objcls );
-    type = find_type_val( objclass, val );
+
+    if ( objclass != FL_BEGIN_GROUP && objclass != FL_END_GROUP )
+        type = find_type_val( objclass, val );
     obj = flps_make_object( objclass, type, x, y, w, h, 0, 0 );
     flps_add_object( form, obj );
 
@@ -464,14 +476,18 @@ load_object( FL_FORM * form,
 
     while ( read_key_val( fl, key, val ) != EOF )
     {
-        if ( ! strcmp( key, "boxtype" ) )
+        if (    ( objclass == FL_BEGIN_GROUP || objclass == FL_END_GROUP ) 
+             && ( ! strcmp( key, "type" ) || ! strcmp( key, "box" ) ) )
+            /* do nothing */ ;
+        else if ( ! strcmp( key, "boxtype" ) )
             obj->boxtype = boxtype_val( val );
         else if ( ! strcmp(key, "colors" ) )
         {
             cn1[ 0 ] = cn2[ 0 ] = '\0';
             if ( sscanf( val, "%s %s", cn1, cn2 ) != 2 )
             {
-                /* This is an error and should be handled JTT*/
+                fprintf( stderr, "Somethings wrong with the file\n" );
+                exit( EXIT_FAILURE );
             }
             obj->col1 = fl_get_namedcolor(cn1);
             obj->col2 = fl_get_namedcolor(cn2);
@@ -504,7 +520,9 @@ load_object( FL_FORM * form,
             break;
     }
 
-    load_objclass_spec_info( fl, obj );
+    if ( objclass != FL_BEGIN_GROUP && objclass != FL_END_GROUP && *key != '?' )
+        load_objclass_spec_info( fl, obj );
+
     return obj;
 }
 
@@ -572,14 +590,15 @@ load_form_definition( const char * filename )
     if (    fscanf( fp, "Magic: %d\n\n", &fd_magic ) != 1
          || (    fd_magic != MAGIC3
               && fd_magic != MAGIC4
-              && fd_magic != MAGIC5 ) )
+              && fd_magic != MAGIC5
+              && fd_magic != MAGIC6 ) )
     {
         fclose( fp );
         fprintf( stderr, "Unknown file %s (magic %d)\n", filename, fd_magic );
         return -1;
     }
 
-    psinfo.inverted = ( fd_magic == MAGIC4 );
+    psinfo.inverted = fd_magic >= MAGIC4;
 
     if (    ! fgets( buf, sizeof buf, fp )
          || strcmp( buf, "Internal Form Definition File\n" )
@@ -664,15 +683,27 @@ typedef struct {
 
 static VN_pair vn_btype[ ] =
 {
-    VN(FL_NO_BOX), VN(FL_UP_BOX), VN(FL_DOWN_BOX),
-    VN(FL_FLAT_BOX), VN(FL_BORDER_BOX), VN(FL_SHADOW_BOX),
-    VN(FL_FRAME_BOX), VN(FL_ROUNDED_BOX), VN(FL_RFLAT_BOX),
-    VN(FL_RSHADOW_BOX), VN(FL_OVAL_BOX), VN(FL_EMBOSSED_BOX),
-    VN(FL_ROUNDED3D_UPBOX), VN(FL_ROUNDED3D_DOWNBOX),
-    VN(FL_OVAL3D_UPBOX), VN(FL_OVAL3D_DOWNBOX),
-    VN(FL_TOPTAB_UPBOX), VN(FL_SELECTED_TOPTAB_UPBOX),
-    VN(FL_BOTTOMTAB_UPBOX), VN(FL_SELECTED_BOTTOMTAB_UPBOX),
-    VN(-1)
+    VN( FL_NO_BOX                   ),
+    VN( FL_UP_BOX                   ),
+    VN( FL_DOWN_BOX                 ),
+    VN( FL_FLAT_BOX                 ),
+    VN( FL_BORDER_BOX               ),
+    VN( FL_SHADOW_BOX               ),
+    VN( FL_FRAME_BOX                ),
+    VN( FL_ROUNDED_BOX              ),
+    VN( FL_RFLAT_BOX                ),
+    VN( FL_RSHADOW_BOX              ),
+    VN( FL_OVAL_BOX                 ),
+    VN( FL_EMBOSSED_BOX             ),
+    VN( FL_ROUNDED3D_UPBOX          ),
+    VN( FL_ROUNDED3D_DOWNBOX        ),
+    VN( FL_OVAL3D_UPBOX             ),
+    VN( FL_OVAL3D_DOWNBOX           ),
+    VN( FL_TOPTAB_UPBOX             ),
+    VN( FL_SELECTED_TOPTAB_UPBOX    ),
+    VN( FL_BOTTOMTAB_UPBOX          ),
+    VN( FL_SELECTED_BOTTOMTAB_UPBOX ),
+    VN( -1                          )
 };
 
 
@@ -748,20 +779,20 @@ static VN_pair vn_lstyle[ ] =
 
 static VN_pair vn_pupmode[ ] =
 {
-    VN(FL_PUP_NONE),
-    VN(FL_PUP_GRAY),
-    VN(FL_PUP_BOX),
-    VN(FL_PUP_CHECK),
-    VN(FL_PUP_RADIO),
-    VN(-1)
+    VN( FL_PUP_NONE  ),
+    VN( FL_PUP_GRAY  ),
+    VN( FL_PUP_BOX   ),
+    VN( FL_PUP_CHECK ),
+    VN( FL_PUP_RADIO ),
+    VN( -1           )
 };
 
 static VN_pair vn_scbpref[] =
 {
-    VN(FL_OFF),
-    VN(FL_ON),
-    VN(FL_AUTO),
-    VN(-1)
+    VN( FL_OFF  ),
+    VN( FL_ON   ),
+    VN( FL_AUTO ),
+    VN( -1      )
 };
 
 

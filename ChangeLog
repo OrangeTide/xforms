@@ -1,9 +1,18 @@
 2010-12-29 Jens Thoms Toerring    <jt@toerring.de>
 
-	* fdesign/fl_file.c: Changed the input function
+	* fdesign/fd_file.c: Changed the input function
 	to accept .fd files so that for pseudo-objects of
 	type FL_BEGIN_GROUP and FL_END_GROUP no more than
 	a single line with the class name is required.
+
+	* fdesign/fd_file.c, fd_main.h: Change of .fd file
+	to avoid writing out useless informantion for
+	FL_BEGIN_GROUP and FL_END_GROUP	and to have object
+	type names start also with 'FL_'. "Magic" number of
+	.fd file bumped up to 15000.
+
+	* fd2ps/load.c: Changes to make fd2ps work with the new
+	layout of the .fd files
 
 2010-12-20 Jens Thoms Toerring    <jt@toerring.de>
 

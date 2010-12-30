@@ -440,10 +440,11 @@ load_fd_header( void )
          || strcmp( p, "Magic" )
          || ff_read( "%d", &fd_magic ) <= 0
          || (    fd_magic != MAGIC2 && fd_magic != MAGIC3
-              && fd_magic != MAGIC4 && fd_magic != MAGIC5 ) )
+              && fd_magic != MAGIC4 && fd_magic != MAGIC5
+              && fd_magic != MAGIC6 ) )
         return ff_err( "Wrong type of file" );
 
-    if ( fd_magic != MAGIC5 )
+    if ( fd_magic < MAGIC6 )
     {
         char *tmp = ff_get_filename_copy( );
 
@@ -717,7 +718,7 @@ save_forms( const char *str )
     }
 
     snap = get_step_size( ) + 0.1;
-    fprintf( fn, "Magic: %d\n\n", MAGIC5 );
+    fprintf( fn, "Magic: %d\n\n", MAGIC6 );
     fprintf( fn, "Internal Form Definition File\n" );
     fprintf( fn, "    (do not change)\n\n" );
     fprintf( fn, "Number of forms: %d\n", fnumb );

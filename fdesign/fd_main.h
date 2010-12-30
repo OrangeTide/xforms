@@ -40,6 +40,7 @@
 #define MAGIC3   12322
 #define MAGIC4   13000
 #define MAGIC5   14000     /* since XForms 1.0.92 */
+#define MAGIC6   15000     /* since XForms 1.0.94pre4 */
 
 
 /* general limits */
