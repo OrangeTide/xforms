@@ -277,10 +277,10 @@ push was triggered by a shortcut (see below), the function returns the
 @code{keysym} (ASCII value if the key used is between 0 and 127)
 of the key plus
 @tindex FL_SHORTCUT
-@code{@ref{FL_SHORTCUT}}. For example, if a button has @code{<Ctrl>C}
+@code{@ref{FL_SHORTCUT}}. For example, if a button has @code{<Ctrl>-C}
 as its shortcut the button number returned upon activation of the
 shortcut will be @code{FL_SHORTCUT + 3} (the ASCII value of
-@code{<Ctrl>C} is 3).
+@code{<Ctrl>-C} is 3).
 
 It can also be controlled which mouse buttons a buttons reacts to at
 all. To set which mouse buttons the button reacts to use
@@ -293,7 +293,7 @@ void fl_set_button_mouse_buttons(FL_OBJECT *obj, int mbuttons);
 @code{mbuttons} is the bitwise OR of the numbers 1 for the left
 mouse button, 2 for the middle, 4 for the right mouse button, 8 for
 moving the scroll wheel up "button" and 16 for scrolling down
-"button". Unless set differently a button reacts to all mouse buttons.
+"button". Per default a button reacts to all mouse buttons.
 
 To determine which mouse buttons a button is reacting to use
 @findex fl_get_button_mouse_buttons()
@@ -305,14 +305,6 @@ void fl_get_button_mouse_buttons(FL_OBJECT *obj,
 @noindent
 The value returned via @code{mbuttons} is the same value as would
 be used in @code{@ref{fl_set_button_mouse_buttons()}}.
-
-More information about the last event can be obtained by calling the
-function
-@code{@ref{fl_last_event()}}
-@findex fl_last_event()
-@example
-const XEvent *fl_last_event(void);
-@end example
 
 In a number of situations it is useful to define a keyboard equivalent
 for a button. You might e.g.@: want to define that @code{<Ctrl>Q} has

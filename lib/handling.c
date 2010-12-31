@@ -528,7 +528,6 @@ fli_handle_form( FL_FORM * form,
                 obj = fli_int.pushobj;
                 fli_int.pushobj = NULL;
                 fli_handle_object( obj, FL_RELEASE, x, y, key, xev, 1 );
-
             }
             break;
 

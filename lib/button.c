@@ -374,7 +374,10 @@ handle_button( FL_OBJECT * obj,
             if (    key < FL_MBUTTON1
                  || key > FL_MBUTTON5
                  || ! sp->react_to[ key - 1 ] )
+            {
+                fli_int.pushobj = obj;
                 break;
+            }
 
             sp->event = FL_RELEASE;
             sp->is_pushed = 0;

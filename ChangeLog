@@ -1,3 +1,8 @@
+2010-12-31 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/button.c: Fixed bug that made buttons on which the
+	wrong mouse button was released, seem to have been released.
+
 2010-12-29 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_file.c: Changed the input function
