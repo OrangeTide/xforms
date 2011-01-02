@@ -755,7 +755,7 @@ struct FL_OBJECT_ {
     int              group_id;
     int              want_motion;
     int              want_update;
-}; /* typedef'ed to FL_OBJECT above */;
+}; /* typedef'ed to FL_OBJECT above */
 
 
 /* callback function for an entire form */

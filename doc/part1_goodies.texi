@@ -476,16 +476,16 @@ of the command browser
 typedef struct @{
     FL_FORM   * form;           /* the form */
     FL_OBJECT * browser;        /* the browser */
-    FL_OBJECT * close_browser;  /* the Close button */
-    FL_OBJECT * clear_browser;  /* the Clear button */
+    FL_OBJECT * close_browser;  /* the close button */
+    FL_OBJECT * clear_browser;  /* the clear button */
 @} FD_CMDLOG;
 
 FD_CMDLOG *fl_get_command_log_fdstruct(void);
 @end example
 @noindent
-From the information returned, the application program can change
+From the information returned the application program can change
 various attributes of the command browser and its associated objects.
-Note however, that you should not hide/show the form or free any member
+Note however, that you should not hide/show the form or free any members
 of the structure.
 
 

@@ -141,9 +141,9 @@ FL_EXPORT void fl_set_tooltip_lalign( int );
 
 typedef struct {
     FL_FORM   * form;
-    void      * vdata;
-    char      * cdata;
-    long        ldata;
+    void      * vdata;                  /* UNUSED, remove in later version */
+    char      * cdata;                  /* UNUSED, remove in later version */
+    long        ldata;                  /* UNUSED, remove in later version */
     FL_OBJECT * browser;
     FL_OBJECT * close_browser;
     FL_OBJECT * clear_browser;
