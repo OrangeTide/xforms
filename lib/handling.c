@@ -688,7 +688,6 @@ handle_ClientMessage_event( FL_FORM * form,
     static Atom atom_protocol;
     static Atom atom_del_win = None;
 
-
     if ( ! atom_del_win )
     {
         atom_protocol = XInternAtom( xcm->display, "WM_PROTOCOLS", 0 );

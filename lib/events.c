@@ -633,7 +633,7 @@ fli_event_queue_delete( void )
  ***********************************************************/
 
 static void
-fli_add_to_event_queue( XEvent *xev )
+fli_add_to_event_queue( XEvent * xev )
 {
     if ( event_queue.empty == NULL )
         fli_extend_event_queue( );
@@ -682,7 +682,7 @@ fl_XPutBackEvent( XEvent * xev )
 {
     static int mm;
 
-    if ( fli_handle_event_callbacks( xev ) )
+    if ( xev->type != ClientMessage && fli_handle_event_callbacks( xev ) )
         return;
 
     /* These must have come from simulating double buffering, throw them away */
