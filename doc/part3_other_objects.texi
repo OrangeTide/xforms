@@ -889,8 +889,8 @@ void fl_get_xyplot_xmapping(FL_OBJECT *obj, float *a, float *b);
 where @code{a} and @code{b} are the mapping constants and are used as
 follows:
 @example
-screenCoord = a * data + b       (linear scale)
-screenCoord = a * log(data) / log(p) + b (log scale)
+screenCoord = a * data + b                 (linear scale)
+screenCoord = a * log(data) / log(p) + b   (log scale)
 @end example
 @noindent
 where @code{p} is the base of the requested logarithm.

@@ -38,16 +38,16 @@
 #include "fd_main.h"
 #include <ctype.h>
 
-#define MAXSEL  512
+#define MAXSEL  2048
 
 #define BackOBJ( )    cur_form->first->next
 
-static FL_OBJECT *selobj[ MAXSEL ]; /* The selected objects */
-static int selnumb = 0;     /* Their number */
-int backf = FL_FALSE;       /* Whether the selection is the backface */
+static FL_OBJECT *selobj[ MAXSEL ]; /* the selected objects */
+static int selnumb = 0;             /* and their number */
+static int backf = FL_FALSE;        /* whether the selection is the backface */
 
-static FL_OBJECT *tmpobj[ MAXSEL ]; /* A temporary list of objects */
-static int tmpnumb = 0;     /* Their number */
+static FL_OBJECT *tmpobj[ MAXSEL ]; /* temporary list of objects */
+static int tmpnumb = 0;             /* and their number */
 
 
 /***************************************
@@ -156,19 +156,21 @@ is_selected( FL_OBJECT * obj )
 void
 addto_selection( FL_OBJECT * obj )
 {
+    /* Don't add objects with backface */
+
     if ( backf )
     {
         M_warn( "", "ignoring object with backface" );
-        return;         /* Don't add objects with backface */
+        return;
     }
 
-    if ( selnumb == MAXSEL )
+    if ( selnumb >= MAXSEL )
     {
         fprintf( stderr, "Exceeding selection limits\n" );
         return;
     }
 
-    /* find the real parent */
+    /* Find the real parent */
 
     while ( obj->parent )
         obj = obj->parent;
@@ -195,8 +197,14 @@ addgroupto_selection( FL_OBJECT * obj )
 
     for ( ob = obj; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
     {
-        if ( selnumb == MAXSEL )
+        if ( selnumb >= MAXSEL - 1 )
+        {
+            fprintf( stderr, "Exceeding selection limits\n" );
+            while ( selobj[ --selnumb ]->objclass != FL_BEGIN_GROUP )
+                /* empty */ ;
             return;
+        }
+
         selobj[ selnumb++ ] = ob;
     }
 
@@ -1526,8 +1534,10 @@ flatten_selection( void )
 {
     int i;
 
+    /* Cannot flatten the backface */
+
     if ( backf )
-        return;         /* Cannot flatten the backface */
+        return;
 
     if ( ! cur_form )
         return;

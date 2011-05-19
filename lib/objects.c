@@ -884,7 +884,7 @@ fl_get_object_dblclick( FL_OBJECT * obj )
 
 void
 fl_set_object_dblbuffer( FL_OBJECT * obj,
-                         int         y )
+                         int         yesno )
 {
     FL_COLOR bkcol;
 
@@ -899,16 +899,12 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
     if ( obj->child || obj->parent )
         return;
 
-    if ( obj->use_pixmap == y )
+    if ( obj->use_pixmap == yesno )
         return;
 
-    /**** BUG FIX, DON'T KNOW YET WHY IT'S NEEDED JTT */
-
-    if ( y == 1 && obj->objclass == FL_XYPLOT && obj->type == FL_ACTIVE_XYPLOT )
-        return;
-
-    if ( ( obj->use_pixmap = y ) && ! obj->flpixmap )
-        obj->flpixmap = fl_calloc( 1, sizeof( FL_pixmap ) );
+    obj->use_pixmap = yesno;
+    if ( yesno && ! obj->flpixmap )
+        obj->flpixmap = fl_calloc( 1, sizeof *obj->flpixmap );
 
     /* Figure out the background color to be used */
 

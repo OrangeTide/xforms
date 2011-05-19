@@ -97,6 +97,8 @@ static void fl_xyplot_gen_xtic( FL_OBJECT * );
 
 static void fl_xyplot_gen_ytic( FL_OBJECT * );
 
+static int last_draw_with_pixmap = 0;
+
 
 /***************************************
  * Free data associated with overlay i
@@ -314,6 +316,7 @@ fli_xyplot_interpolate( FL_OBJECT * ob,
                    "Can't allocate memory for %d points", newn );
             return -1;
         }
+
         sp->ninterpol = newn;
     }
 
@@ -341,16 +344,17 @@ fli_xyplot_interpolate( FL_OBJECT * ob,
  ***************************************/
 
 static void
-mapw2s( FLI_XYPLOT_SPEC * sp,
-        FL_POINT        * p,
-        int               n1,
-        int               n2,
-        float           * x,
-        float           * y )
+mapw2s( FL_OBJECT * ob,
+        FL_POINT  * p,
+        int         n1,
+        int         n2,
+        float     * x,
+        float     * y )
 {
     int i,
         tmp;
     double t;
+    FLI_XYPLOT_SPEC *sp = ob->spec;
 
     if ( sp->xscale == FL_LOG )
     {
@@ -466,6 +470,7 @@ draw_curve_only( FL_OBJECT * ob )
         key_ys;
 
     fl_set_clipping( sp->xi, sp->yi, sp->xf - sp->xi + 1, sp->yf - sp->yi + 1 );
+
     fl_set_text_clipping( sp->xi, sp->yi, sp->xf - sp->xi + 1,
                           sp->yf - sp->yi + 1 );
 
@@ -508,11 +513,11 @@ draw_curve_only( FL_OBJECT * ob )
             y = sp->wy;
             xp = sp->xpi;
 
-            mapw2s( sp, xp, 0, newn, x, y );
+            mapw2s( ob, xp, 0, newn, x, y );
 
             nxp = sp->nxpi = newn;
 
-            mapw2s( sp, sp->xp, n1, n2, sp->x[ nplot ], sp->y[ nplot ] );
+            mapw2s( ob, sp->xp, n1, n2, sp->x[ nplot ], sp->y[ nplot ] );
             sp->nxp = n2 - n1;
             if (    ( sp->active || sp->inspect )
                  && sp->iactive == nplot
@@ -527,7 +532,7 @@ draw_curve_only( FL_OBJECT * ob )
             x = sp->x[ nplot ];
             y = sp->y[ nplot ];
             xp = sp->xp;
-            mapw2s( sp, xp, n1, n2, x, y );
+            mapw2s( ob, xp, n1, n2, x, y );
             nxp = sp->nxp = n2 - n1;
             if (    ( sp->active || sp->inspect )
                  && sp->iactive == nplot
@@ -741,7 +746,7 @@ fl_xyplot_gen_xtic( FL_OBJECT * ob )
 
             if ( val >= xmin && val <= xmax )
             {
-                sp->xtic_major[ i ] = sp->ax * val + sp->bx + 0.4;
+                sp->xtic_major[ i ] = FL_crnd( sp->ax * val + sp->bx );
                 sp->xmajor_val[ i ] = val;
                 j++;
             }
@@ -758,7 +763,7 @@ fl_xyplot_gen_xtic( FL_OBJECT * ob )
         for ( i = 0, xw = mxmin; xw <= mxmax; xw += tic )
         {
             if ( xw >= xmin && xw <= xmax )
-                sp->xtic_minor[ i++ ] = sp->ax * xw + sp->bx + 0.4;
+                sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * xw + sp->bx );
         }
         sp->num_xminor = i;
 
@@ -766,7 +771,7 @@ fl_xyplot_gen_xtic( FL_OBJECT * ob )
         {
             if ( xw >= xmin && xw <= xmax )
             {
-                sp->xtic_major[ i ] = sp->ax * xw + sp->bx + 0.4;
+                sp->xtic_major[ i ] = FL_crnd( sp->ax * xw + sp->bx );
                 sp->xmajor_val[ i ] = xw;
                 i++;
             }
@@ -780,13 +785,13 @@ fl_xyplot_gen_xtic( FL_OBJECT * ob )
         /* Minor */
 
         for ( i = 0, xw = xmin; xw <= xmax; xw += minortic )
-            sp->xtic_minor[ i++ ] = sp->ax * xw + sp->bx + 0.4;
+            sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * xw + sp->bx );
 
         sp->num_xminor = i;
 
         for ( i = 0, xw = xmin; xw <= xmax; xw += tic )
         {
-            sp->xtic_major[ i ] = sp->ax * xw + sp->bx + 0.4;
+            sp->xtic_major[ i ] = FL_crnd( sp->ax * xw + sp->bx );
             sp->xmajor_val[ i ] = xw;
             i++;
         }
@@ -839,7 +844,7 @@ fl_xyplot_gen_ytic( FL_OBJECT * ob )
 
             if ( val >= ymin && val <= ymax )
             {
-                sp->ytic_major[ i ] = sp->ay * val + sp->by + 0.4;
+                sp->ytic_major[ i ] = FL_crnd( sp->ay * val + sp->by );
                 sp->ymajor_val[ i ] = val;
                 j++;
             }
@@ -853,7 +858,7 @@ fl_xyplot_gen_ytic( FL_OBJECT * ob )
     {
         for ( i = 0, yw = mymin; yw <= mymax; yw += tic )
             if ( yw >= ymin && yw <= ymax )
-                sp->ytic_minor[i++] = sp->ay * yw + sp->by + 0.4f;
+                sp->ytic_minor[i++] = FL_crnd( sp->ay * yw + sp->by );
 
         sp->num_yminor = i;
 
@@ -861,7 +866,7 @@ fl_xyplot_gen_ytic( FL_OBJECT * ob )
         {
             if ( yw >= ymin && yw <= ymax )
             {
-                sp->ytic_major[ i ] = sp->ay * yw + sp->by + 0.4;
+                sp->ytic_major[ i ] = FL_crnd( sp->ay * yw + sp->by );
                 sp->ymajor_val[ i ] = yw;
                 i++;
             }
@@ -875,12 +880,12 @@ fl_xyplot_gen_ytic( FL_OBJECT * ob )
         double minortic = sp->ytic / sp->yminor;
 
         for ( i = 0, yw = ymin; yw <= ymax; yw += minortic )
-            sp->ytic_minor[ i++ ] = sp->ay * yw + sp->by + 0.4;
+            sp->ytic_minor[ i++ ] = FL_crnd( sp->ay * yw + sp->by );
         sp->num_yminor = i;
 
         for ( i = 0, yw = ymin; yw <= ymax; yw += sp->ytic )
         {
-            sp->ytic_major[ i ] = sp->ay * yw + sp->by + 0.4;
+            sp->ytic_major[ i ] = FL_crnd( sp->ay * yw + sp->by );
             sp->ymajor_val[ i ] = yw;
             i++;
         }
@@ -1317,10 +1322,10 @@ convert_coord( FL_OBJECT       * ob,
                                         strlen( sp->ymargin2 ) );
     }
 
-    sp->xi = sp->objx + extrax1;
-    sp->yi = sp->objy + extray1;
-    sp->xf = sp->objx + ob->w - extrax2;
-    sp->yf = sp->objy + ob->h - extray2;
+    sp->xi = ob->x + extrax1;
+    sp->yi = ob->y + extray1;
+    sp->xf = ob->x + ob->w - extrax2;
+    sp->yf = ob->y + ob->h - extray2;
 
     sp->ax  = ( sp->xf - sp->xi ) / ( sp->xscmax - sp->xscmin );
     sp->bx  = sp->bxm = sp->xi - sp->ax * sp->xscmin;
@@ -1612,6 +1617,9 @@ draw_xyplot( FL_OBJECT * ob )
     FLI_XYPLOT_SPEC *sp = ob->spec;
     FL_Coord bw = FL_abs( ob->bw );
 
+    last_draw_with_pixmap =    ob->use_pixmap
+                            && ob->form->window == ob->flpixmap->pixmap;
+
     fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 
     fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
@@ -1665,7 +1673,7 @@ draw_xyplot( FL_OBJECT * ob )
 
     ( sp->xscale == FL_LOG ? add_logxtics : add_xtics )( ob );
 
-    fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2, ob->y + ob->h - bw,
+    fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2, sp->objy + ob->h - bw,
                  1, 1, ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
 
     ( sp->yscale == FL_LOG ? add_logytics : add_ytics )( ob );
@@ -1696,50 +1704,6 @@ draw_xyplot( FL_OBJECT * ob )
 
 
 /***************************************
- * For active xyplot only. point (ux,uy) is dragged to a new position.
- *
- * Only need to erase the old drawing and update. draw_xyplot erases
- * everything by redrawing the box, can cause flicker in single buffer
- * mode.
- ***************************************/
-
-#if 0    /* not used at the moment */
-
-static void
-update_xyplot( FL_OBJECT * ob )
-{
-    FLI_XYPLOT_SPEC *sp = ob->spec;
-    int n = sp->update - 1;
-    float x,
-          y;
-    int active = sp->iactive;
-
-    /* Erase the old drawing */
-
-    *sp->col = ob->col1;
-    draw_curve_only( ob );
-
-    /* Update */
-
-    *sp->col = ob->col2;
-    sp->x[ active ][ n ] = sp->ux;
-    sp->y[ active ][ n ] = sp->uy;
-
-    /* Due to possible double buffering switch mapping */
-
-    w2s_draw( ob, sp->ux, sp->uy, &x, &y );
-
-    sp->xpactive[ n - sp->n1 ].x = x;
-    sp->xpactive[ n - sp->n1 ].y = y;
-
-    add_border( sp, ob->col2 );
-    draw_curve_only( ob );
-}
-
-#endif
-
-
-/***************************************
  * Find the data point the mouse falls on. Since log scale is
  * non-linear, can't do search in world coordinates given pixel-delta,
  * thus the xpactive keeps the active screen data.
@@ -1763,6 +1727,12 @@ find_data( FL_OBJECT * ob,
     int dx = 0;                  /* to shut -Wall up */
     int dy = 0;                  /* same here */
     FL_POINT *p = sp->xpactive;
+
+    if ( last_draw_with_pixmap )
+    {
+        mx -= sp->objx;
+        my -= sp->objy;
+    }
 
     for ( i = found = 0; i < *sp->n && ! found; i++ )
     {
@@ -1875,8 +1845,8 @@ handle_mouse( FL_OBJECT * ob,
     /* Now we are sure we're not in inspect mode and are shifting around
        one of the points. */
 
-    fmx = ( lmx - sp->bxm ) / sp->ax;
-    fmy = ( lmy - sp->bym ) / sp->ay;
+    fmx = ( lmx - sp->bxm - ( last_draw_with_pixmap ? sp->objx : 0 ) ) / sp->ax;
+    fmy = ( lmy - sp->bym - ( last_draw_with_pixmap ? sp->objy : 0 ) ) / sp->ay;
 
     if ( sp->xscale == FL_LOG )
         fmx = pow( sp->xbase, fmx );
@@ -1925,18 +1895,9 @@ handle_mouse( FL_OBJECT * ob,
         }
     }
 
-    sp->ux = fmx;
-    sp->uy = fmy;
-
-    /* Suspend drawing of tics etc */
-
-    sp->update = i + 1;
-
-    draw_xyplot( ob );
-    sp->update = 0;
-
     sp->x[ 0 ][ i ] = fmx;
     sp->y[ 0 ][ i ] = fmy;
+    fl_redraw_object( ob );
 
     return ob->how_return & FL_RETURN_END_CHANGED ?
            FL_RETURN_NONE : FL_RETURN_CHANGED;
@@ -1963,11 +1924,6 @@ handle_xyplot( FL_OBJECT * ob,
 
     switch ( event )
     {
-        case FL_RESIZED :
-            sp->objx = ob->x;
-            sp->objy = ob->y;
-            break;
-
         case FL_DRAW:
             draw_xyplot( ob );
             sp->update = 0;
@@ -2188,11 +2144,6 @@ fl_create_xyplot( int          t,
     init_spec( ob, sp );
 
     fl_set_object_return( ob, FL_RETURN_END_CHANGED );
-
-    /**** BUG FIX, DON'T KNOW YET WHY IT'S NEEDED JTT */
-
-    if ( ob->objclass == FL_XYPLOT && ob->type == FL_ACTIVE_XYPLOT )
-        fl_set_object_dblbuffer( ob, 0 );
 
     return ob;
 }
@@ -2422,7 +2373,7 @@ fl_set_xyplot_inspect( FL_OBJECT * ob,
         /* Work-around, need to get doublebuffer to get inspect work
            right */
 
-//        fl_set_object_dblbuffer( ob, sp->active || sp->inspect );
+        fl_set_object_dblbuffer( ob, sp->active || sp->inspect );
         fl_redraw_object( ob );
     }
 }
@@ -2530,11 +2481,13 @@ fl_set_xyplot_xbounds( FL_OBJECT * ob,
                        double      xmax )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
-    int xs = xmax == xmin;
+    int do_autoscale = xmax == xmin;
 
-    if ( sp->xautoscale != xs || sp->xmin != xmin || sp->xmax != xmax )
+    if (    sp->xautoscale != do_autoscale
+         || sp->xmin != xmin
+         || sp->xmax != xmax )
     {
-        sp->xautoscale = xs;
+        sp->xautoscale = do_autoscale;
         sp->xmax = xmax;
         sp->xmin = xmin;
         find_xbounds( sp );
@@ -2583,11 +2536,13 @@ fl_set_xyplot_ybounds( FL_OBJECT * ob,
                        double      ymax )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
-    int ys = ymax == ymin;
+    int do_autoscale = ymax == ymin;
 
-    if ( sp->yautoscale != ys || sp->ymin != ymin || sp->ymax != ymax )
+    if (    sp->yautoscale != do_autoscale
+         || sp->ymin != ymin
+         || sp->ymax != ymax )
     {
-        sp->yautoscale = ys;
+        sp->yautoscale = do_autoscale;
         sp->ymax = ymax;
         sp->ymin = ymin;
         find_ybounds( sp );
@@ -3082,7 +3037,7 @@ fl_delete_xyplot_overlay( FL_OBJECT * ob,
 /***************************************
  * This function looks extremely dangerous since the caller must supply
  * buffers for the data - but where does the caller get the information
- * from about how large the buffers must be?          JTT
+ * from about how large these buffers must be?          JTT
 ***************************************/
 
 void
@@ -3436,9 +3391,6 @@ trunc_f( double f,
     sign = f >= 0 ? 1 : -1;
     f *= sign;
 
-    sign = f >= 0 ? 1 : -1;
-    f *= sign;
-
     if ( f >= 1.0 )
         expon = floor( log10( f ) + 1 + 0.5 );
 	else
@@ -3513,8 +3465,8 @@ w2s_draw( FL_OBJECT * ob,
     float sbx = sp->bxm,
           sby = sp->bym;
 
-    sp->bxm = sp->bx - sp->objx;
-    sp->bym = sp->by - sp->objy;
+    sp->bxm = sp->bx - ob->x;
+    sp->bym = sp->by - ob->y;
     fl_xyplot_w2s( ob, wx, wy, sx, sy );
     sp->bxm = sbx;
     sp->bym = sby;
@@ -3701,7 +3653,7 @@ fl_set_xyplot_alphaytics( FL_OBJECT  * ob,
 
 
 /***************************************
- * free all data and inset text, alphanumerical labels and other stuff
+ * Free all data and inset text, alphanumerical labels and other stuff
  ***************************************/
 
 void
