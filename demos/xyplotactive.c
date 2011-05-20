@@ -24,6 +24,7 @@
 
 #include "include/forms.h"
 #include <stdlib.h>
+#include "time.h"
 
 /**** Forms and Objects ****/
 
@@ -135,9 +136,24 @@ main( int    argc,
 
     /* Fill-in form initialization code */
 
-    fl_set_object_dblbuffer( xypui->status, 1 );
-    for ( i  = 0; i < 11; i++ )
+    fl_set_xyplot_ybounds( xypui->xyplot, 0, 10 );
+
+    for ( i  = 0; i <= 10; i++ )
         x[ i ] = y[ i ] = i;
+
+	fl_add_xyplot_overlay( xypui->xyplot, 1, x, y, 11, FL_YELLOW );
+	fl_set_xyplot_overlay_type( xypui->xyplot, 1, FL_LINEPOINTS_XYPLOT );
+	fl_set_xyplot_interpolate( xypui->xyplot, 1, 2, 0.1 );
+
+	fl_set_xyplot_key( xypui->xyplot, 0, "Experiment" );
+	fl_set_xyplot_key( xypui->xyplot, 1, "Theory" );
+	fl_set_xyplot_key_position( xypui->xyplot, 0.25, 9.75,
+									FL_ALIGN_RIGHT_BOTTOM );
+
+	srand( time( NULL ) );
+
+	for ( i = 0; i <= 10; i++ )
+		y[ i ] +=  ( double ) rand( ) / RAND_MAX - 0.5;
 
     fl_set_xyplot_data( xypui->xyplot, x, y, 11, "", "", "" );
     fl_set_xyplot_linewidth( xypui->xyplot, 0, 2 );

@@ -61,14 +61,22 @@ main( int    argc,
 
     fd_fff = create_form_fff( );
 
-    /* fill-in form initialization code */
+    /* Fill-in form initialization code */
 
     init_xyplot( fd_fff );
 
-    /* show the first form */
+    /* Show the first form */
 
     fl_show_form( fd_fff->fff, FL_PLACE_MOUSE | FL_FREE_SIZE, FL_TRANSIENT,
 				  "XYPlot Overlay" );
+
+	{
+		float sx, sy;
+		int llx, lly, urx, ury;
+		fl_get_xyplot_plotrange( fd_fff->xyplot, &llx, &lly, &urx, &ury );
+		fl_xyplot_w2s( fd_fff->xyplot, 0, 0, &sx, &sy );
+		fprintf( stderr, "%d %d -> %f %f\n", llx, lly, sx, sy );
+	}
 
     fl_do_forms( );
 
@@ -92,7 +100,7 @@ init_xyplot( FD_fff * fd_fff )
     for ( i = 0; i <= 10; i++ )
     {
 		xx[ i ] = i;
-		yy[ i ] = exp( - ( xx[ i ] - 5 ) * ( xx[ i ] - 5 ) / 8 );
+		yy[ i ] = exp( - 0.125 * ( i - 5 ) * ( i - 5 ) );
     }
 
     fl_set_xyplot_data( fd_fff->xyplot, xx, yy, 8,

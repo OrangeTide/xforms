@@ -97,7 +97,16 @@ static void fl_xyplot_gen_xtic( FL_OBJECT * );
 
 static void fl_xyplot_gen_ytic( FL_OBJECT * );
 
-static int last_draw_with_pixmap = 0;
+
+/* This variable is needed because screen positions of data drawn are
+ * calculated differently when drawing directly to the screen and when
+ * using double buffering and thus drawing to a pixmap - in the first
+ * case the positions are calculated relative to the form while in the
+ * second relative to the xyplot object. This must be taken into con-
+ * sideration when comparing data positions to the mouse position while
+ * the user clicks on or moves onto data point in an active xyplot. */
+
+static int draw_to_pixmap = 0;
 
 
 /***************************************
@@ -1617,8 +1626,8 @@ draw_xyplot( FL_OBJECT * ob )
     FLI_XYPLOT_SPEC *sp = ob->spec;
     FL_Coord bw = FL_abs( ob->bw );
 
-    last_draw_with_pixmap =    ob->use_pixmap
-                            && ob->form->window == ob->flpixmap->pixmap;
+    draw_to_pixmap =    ob->use_pixmap
+                     && ob->form->window == ob->flpixmap->pixmap;
 
     fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1, ob->bw );
 
@@ -1673,8 +1682,9 @@ draw_xyplot( FL_OBJECT * ob )
 
     ( sp->xscale == FL_LOG ? add_logxtics : add_xtics )( ob );
 
-    fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2, sp->objy + ob->h - bw,
-                 1, 1, ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
+    fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2,
+                 sp->objy + ob->h - bw, 1, 1,
+                 ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
 
     ( sp->yscale == FL_LOG ? add_logytics : add_ytics )( ob );
 
@@ -1728,7 +1738,7 @@ find_data( FL_OBJECT * ob,
     int dy = 0;                  /* same here */
     FL_POINT *p = sp->xpactive;
 
-    if ( last_draw_with_pixmap )
+    if ( draw_to_pixmap )
     {
         mx -= sp->objx;
         my -= sp->objy;
@@ -1845,8 +1855,8 @@ handle_mouse( FL_OBJECT * ob,
     /* Now we are sure we're not in inspect mode and are shifting around
        one of the points. */
 
-    fmx = ( lmx - sp->bxm - ( last_draw_with_pixmap ? sp->objx : 0 ) ) / sp->ax;
-    fmy = ( lmy - sp->bym - ( last_draw_with_pixmap ? sp->objy : 0 ) ) / sp->ay;
+    fmx = ( lmx - sp->bxm - ( draw_to_pixmap ? sp->objx : 0 ) ) / sp->ax;
+    fmy = ( lmy - sp->bym - ( draw_to_pixmap ? sp->objy : 0 ) ) / sp->ay;
 
     if ( sp->xscale == FL_LOG )
         fmx = pow( sp->xbase, fmx );
@@ -3392,9 +3402,11 @@ trunc_f( double f,
     f *= sign;
 
     if ( f >= 1.0 )
-        expon = floor( log10( f ) + 1 + 0.5 );
+        expon = floor( log10( f ) );
+	else if ( f == 0.0 )
+		return 0.0;
 	else
-		expon = ceil( log10( f ) - 0.5 );
+		expon = ceil( log10( f ) );
 
 	fac = pow( 10.0, digits - expon );
 	return sign * floor( fac * f + 0.5 ) / fac;
@@ -3468,6 +3480,11 @@ w2s_draw( FL_OBJECT * ob,
     sp->bxm = sp->bx - ob->x;
     sp->bym = sp->by - ob->y;
     fl_xyplot_w2s( ob, wx, wy, sx, sy );
+    if ( ! draw_to_pixmap )
+    {
+        *sx += sp->objx;
+        *sy += sp->objy;
+    }
     sp->bxm = sbx;
     sp->bym = sby;
 }

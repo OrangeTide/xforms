@@ -755,15 +755,15 @@ void fl_add_xyplot_text(FL_OBJECT *obj, double x, double y,
                         const char *text, int align, FL_COLOR col);
 @end example
 @noindent
-where @code{x} and @code{y} are the coordinates where text is to be
-placed and align specifies the placement options relative to the
-specified point (See @code{@ref{fl_set_object_lalign()}} for valid
-options). If you for example specify @code{FL_ALIGN_LEFT}, the text
-will appear on the left of the point and flushed toward the point (see
-Fig. 21.1). This is mostly consistent with the label alignment except
-that now the bounding box (of the point) is of zero dimension. Normal
-text interpretation applies, i.e., if text starts with @code{@@} a
-symbol is drawn.
+where @code{x} and @code{y} are the (world) coordinates where text
+is to be placed and align specifies the placement options relative
+to the specified point (See @code{@ref{fl_set_object_lalign()}} for
+valid options). If you for example specify @code{FL_ALIGN_LEFT}, the
+text will appear on the left of the point and flushed toward the point
+(see Fig. 21.1). This is mostly consistent with the label alignment
+except that now the bounding box (of the point) is of zero dimension.
+Normal text interpretation applies, i.e., if text starts with @code{@@}
+a symbol is drawn.
 
 To remove an inset text, use the following routine
 @findex fl_delete_xyplot_text()
@@ -899,7 +899,9 @@ If you need to do conversions only occasionally (for example,
 converting the position of a mouse click to a data point or vice
 versa) the following routines might be more convenient
 @findex fl_xyplot_s2w()
+@findex fl_xyplot_w2s()
 @anchor{fl_xyplot_s2w()}
+@anchor{fl_xyplot_w2s()}
 @example
 void fl_xyplot_s2w(FL_OBJECT *obj, double sx, double sy,
                    float *wx, float *wy);
@@ -912,15 +914,19 @@ and @code{wy} are the world coordinates.
 
 Finally, there's a function for returning the coordinates of the
 area of the object used for drawing the data (i.e. the area, when
-axes are displayed, enclosed by the axes):
+axes are displayed, which is enclosed by the axes):
 @findex fl_get_xyplot_plotarea()
 @anchor{fl_get_xyplot_plotarea()}
 @example
-void fl_get_xyplot_plotrange( FL_OBJECT *obj,
-                              FL_COORD  &llx, FL_COORD  & lly,
-                                        FL_COORD  & urx,
-                                        FL_COORD  & ury );
-
+void fl_get_xyplot_plotrange(FL_OBJECT *obj,
+                             FL_COORD  *llx, FL_COORD  *lly,
+                             FL_COORD  *urx, FL_COORD  *ury );
+@end example
+@noindent
+where via @code{llx} and @code{lly} the coordinates (in pixels,
+relative to the object) of the lower left hand corner and via
+@code{urx} and @code{ury} those of the upper right hand corner
+are returned.
 
 
 @node XYPlot Attributes
