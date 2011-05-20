@@ -915,18 +915,24 @@ and @code{wy} are the world coordinates.
 Finally, there's a function for returning the coordinates of the
 area of the object used for drawing the data (i.e. the area, when
 axes are displayed, which is enclosed by the axes):
-@findex fl_get_xyplot_plotarea()
-@anchor{fl_get_xyplot_plotarea()}
+@findex fl_get_xyplot_screen_area()
+@anchor{fl_get_xyplot_screen_area()}
+@findex fl_get_xyplot_world_area()
+@anchor{fl_get_xyplot_world_area()}
 @example
-void fl_get_xyplot_plotrange(FL_OBJECT *obj,
-                             FL_COORD  *llx, FL_COORD  *lly,
-                             FL_COORD  *urx, FL_COORD  *ury );
+void fl_get_xyplot_screen_area(FL_OBJECT *obj,
+                               FL_COORD *llx, FL_COORD *lly,
+                               FL_COORD *urx, FL_COORD *ury );
+void fl_get_xyplot_world_area(FL_OBJECT *obj,
+                              double *llx, double *lly,
+                              double *urx, double *ury );
 @end example
 @noindent
-where via @code{llx} and @code{lly} the coordinates (in pixels,
-relative to the object) of the lower left hand corner and via
-@code{urx} and @code{ury} those of the upper right hand corner
-are returned.
+where via @code{llx} and @code{lly} the coordinates of the lower
+left hand corner and via @code{urx} and @code{ury} those of the
+upper right hand corner are returned. The first function returns
+the corner positions in screen coordinates (relative to the object),
+while the secoind returns them in "world" coordinates.
 
 
 @node XYPlot Attributes

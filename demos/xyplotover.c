@@ -70,14 +70,6 @@ main( int    argc,
     fl_show_form( fd_fff->fff, FL_PLACE_MOUSE | FL_FREE_SIZE, FL_TRANSIENT,
 				  "XYPlot Overlay" );
 
-	{
-		float sx, sy;
-		int llx, lly, urx, ury;
-		fl_get_xyplot_plotrange( fd_fff->xyplot, &llx, &lly, &urx, &ury );
-		fl_xyplot_w2s( fd_fff->xyplot, 0, 0, &sx, &sy );
-		fprintf( stderr, "%d %d -> %f %f\n", llx, lly, sx, sy );
-	}
-
     fl_do_forms( );
 
     if ( fl_object_ps_dump( fd_fff->xyplot, "test.ps" ) >= 0 )

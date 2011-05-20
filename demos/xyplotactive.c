@@ -117,6 +117,22 @@ notic_cb( FL_OBJECT * ob,
         fl_set_xyplot_xtics( xypui->xyplot, 0, 0 );
         fl_set_xyplot_ytics( xypui->xyplot, 0, 0 );
     }
+
+#if 0
+	{
+		fl_set_xyplot_ybounds( xypui->xyplot, 2.25, 7.7 );
+		fl_set_xyplot_ytics( xypui->xyplot, 5, 5 );
+
+		FL_COORD sllx, slly, surx, sury;
+		double wllx, wlly, wurx, wury;
+
+		fl_get_xyplot_screen_area( xypui->xyplot, &sllx, &slly, &surx, &sury );
+		fl_get_xyplot_world_area( xypui->xyplot, &wllx, &wlly, &wurx, &wury );
+
+		fprintf( stderr, "%d %d %d %d\n%lf %lf %lf %lf\n",
+				 sllx, slly, surx, sury, wllx, wlly, wurx, wury );
+	}
+#endif
 }
 
 
@@ -141,19 +157,19 @@ main( int    argc,
     for ( i  = 0; i <= 10; i++ )
         x[ i ] = y[ i ] = i;
 
-	fl_add_xyplot_overlay( xypui->xyplot, 1, x, y, 11, FL_YELLOW );
-	fl_set_xyplot_overlay_type( xypui->xyplot, 1, FL_LINEPOINTS_XYPLOT );
-	fl_set_xyplot_interpolate( xypui->xyplot, 1, 2, 0.1 );
+    fl_add_xyplot_overlay( xypui->xyplot, 1, x, y, 11, FL_YELLOW );
+    fl_set_xyplot_overlay_type( xypui->xyplot, 1, FL_LINEPOINTS_XYPLOT );
+    fl_set_xyplot_interpolate( xypui->xyplot, 1, 2, 0.1 );
 
-	fl_set_xyplot_key( xypui->xyplot, 0, "Experiment" );
-	fl_set_xyplot_key( xypui->xyplot, 1, "Theory" );
-	fl_set_xyplot_key_position( xypui->xyplot, 0.25, 9.75,
-									FL_ALIGN_RIGHT_BOTTOM );
+    fl_set_xyplot_key( xypui->xyplot, 0, "Experiment" );
+    fl_set_xyplot_key( xypui->xyplot, 1, "Theory" );
+    fl_set_xyplot_key_position( xypui->xyplot, 0.25, 9.75,
+                                    FL_ALIGN_RIGHT_BOTTOM );
 
-	srand( time( NULL ) );
+    srand( time( NULL ) );
 
-	for ( i = 0; i <= 10; i++ )
-		y[ i ] +=  ( double ) rand( ) / RAND_MAX - 0.5;
+    for ( i = 0; i <= 10; i++ )
+        y[ i ] +=  ( double ) rand( ) / RAND_MAX - 0.5;
 
     fl_set_xyplot_data( xypui->xyplot, x, y, 11, "", "", "" );
     fl_set_xyplot_linewidth( xypui->xyplot, 0, 2 );

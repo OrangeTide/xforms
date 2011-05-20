@@ -336,11 +336,16 @@ FL_EXPORT FL_XYPLOT_SYMBOL fl_set_xyplot_symbol( FL_OBJECT        * ob,
 FL_EXPORT int fl_set_xyplot_mark_active( FL_OBJECT * ob,
                                          int         y );
 
-FL_EXPORT void fl_get_xyplot_plotrange( FL_OBJECT * obj,
-                                        FL_COORD  * llx,
-                                        FL_COORD  * lly,
-                                        FL_COORD  * urx,
-                                        FL_COORD  * ury );
+FL_EXPORT void fl_get_xyplot_screen_area( FL_OBJECT * obj,
+										  FL_COORD  * llx,
+										  FL_COORD  * lly,
+										  FL_COORD  * urx,
+										  FL_COORD  * ury );
 
+FL_EXPORT void fl_get_xyplot_world_area( FL_OBJECT * obj,
+										 double    * llx,
+										 double    * lly,
+										 double    * urx,
+										 double    * ury );
 
 #endif  /* ! defined FL_XYPLOT_H */

@@ -93,9 +93,9 @@ static void compute_key_position( FL_OBJECT * );
 
 static void draw_inset( FL_OBJECT * );
 
-static void fl_xyplot_gen_xtic( FL_OBJECT * );
+static void gen_xtic( FL_OBJECT * );
 
-static void fl_xyplot_gen_ytic( FL_OBJECT * );
+static void gen_ytic( FL_OBJECT * );
 
 
 /* This variable is needed because screen positions of data drawn are
@@ -717,7 +717,7 @@ fli_xyplot_nice_label( float tic,
  ***************************************/
 
 static void
-fl_xyplot_gen_xtic( FL_OBJECT * ob )
+gen_xtic( FL_OBJECT * ob )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
     float tic = sp->xtic;
@@ -814,7 +814,7 @@ fl_xyplot_gen_xtic( FL_OBJECT * ob )
  ***************************************/
 
 static void
-fl_xyplot_gen_ytic( FL_OBJECT * ob )
+gen_ytic( FL_OBJECT * ob )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
     float ymin,
@@ -1342,8 +1342,8 @@ convert_coord( FL_OBJECT       * ob,
     sp->ay  = ( sp->yf - sp->yi ) / ( sp->yscmin - sp->yscmax );
     sp->by  = sp->bym = sp->yi - sp->ay * sp->yscmax;
 
-    fl_xyplot_gen_xtic( ob );
-    fl_xyplot_gen_ytic( ob );
+    gen_xtic( ob );
+    gen_ytic( ob );
 }
 
 
@@ -3790,17 +3790,17 @@ fl_set_xyplot_mark_active( FL_OBJECT * ob,
  * Function that allows to determine the rectangle into which the data
  * of the xyplot widget are drawn into (when axes are drawn this is
  * also the rectangle formed by those axes). The first two return
- * arguments are the coordinates (relatibe to the object) of the
+ * arguments are the coordinates (relative to the object) of the
  * lower left hand corner, while the other two are those of the
  * upper right hand corner.
  ***************************************/
 
 void
-fl_get_xyplot_plotrange( FL_OBJECT * obj,
-                         FL_COORD  * llx,
-                         FL_COORD  * lly,
-                         FL_COORD  * urx,
-                         FL_COORD  * ury )
+fl_get_xyplot_screen_area( FL_OBJECT * obj,
+                           FL_COORD  * llx,
+                           FL_COORD  * lly,
+                           FL_COORD  * urx,
+                           FL_COORD  * ury )
 {
     FLI_XYPLOT_SPEC *sp = obj->spec;
 
@@ -3808,6 +3808,38 @@ fl_get_xyplot_plotrange( FL_OBJECT * obj,
     *lly = sp->yf;
     *urx = sp->xf;
     *ury = sp->yi;
+}
+
+
+/***************************************
+ * Function that allows to determine the rectangle into which the data
+ * of the xyplot widget are drawn into (when axes are drawn this is
+ * also the rectangle formed by those axes). The first two return
+ * arguments are the coordinates (in "world" units) of the lower
+ * left hand corner, while the other two are those of the upper
+ * right hand corner.
+ ***************************************/
+
+void
+fl_get_xyplot_world_area( FL_OBJECT * obj,
+                          double    * llx,
+                          double    * lly,
+                          double    * urx,
+                          double    * ury )
+{
+    FLI_XYPLOT_SPEC *sp = obj->spec;
+    float a, b;
+
+    fl_xyplot_s2w( obj, sp->xi, sp->yf, &a, &b );
+    *llx = a;
+    *lly = b;
+
+    fl_xyplot_s2w( obj, sp->xf, sp->yi, &a, &b );
+    *urx = a;
+    *ury = b;
+
+    fprintf( stderr, "%d %d %d %d -> %lf %lf %lf %lf\n", 
+             sp->xi, sp->yf, sp->xf, sp->yi, *llx, *lly, *urx, *ury );
 }
 
 
