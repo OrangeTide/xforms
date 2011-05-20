@@ -2620,7 +2620,7 @@ find_xbounds( FLI_XYPLOT_SPEC * sp )
     if ( sp->xautoscale )
         get_min_max( *sp->x, *sp->n, &sp->xmin, &sp->xmax );
 
-    if ( sp->xmax - sp->xmin == 0.0 )
+    if ( sp->xmax == sp->xmin )
     {
         sp->xmin -= 1.0;
         sp->xmax += 1.0;
@@ -2637,7 +2637,7 @@ find_ybounds( FLI_XYPLOT_SPEC * sp )
     if ( sp->yautoscale )
         get_min_max( *sp->y, *sp->n, &sp->ymin, &sp->ymax );
 
-    if ( sp->ymax - sp->ymin == 0.0 )
+    if ( sp->ymax == sp->ymin )
     {
         sp->ymin -= 1.0;
         sp->ymax += 1.0;
@@ -3394,7 +3394,7 @@ trunc_f( double f,
     if ( f >= 1.0 )
         expon = floor( log10( f ) + 1 + 0.5 );
 	else
-		expon = ceil( log10( f ) + 0.5 );
+		expon = ceil( log10( f ) - 0.5 );
 
 	fac = pow( 10.0, digits - expon );
 	return sign * floor( fac * f + 0.5 ) / fac;
@@ -3766,6 +3766,31 @@ fl_set_xyplot_mark_active( FL_OBJECT * ob,
     }
 
     return old;
+}
+
+
+/***************************************
+ * Function that allows to determine the rectangle into which the data
+ * of the xyplot widget are drawn into (when axes are drawn this is
+ * also the rectangle formed by those axes). The first two return
+ * arguments are the coordinates (relatibe to the object) of the
+ * lower left hand corner, while the other two are those of the
+ * upper right hand corner.
+ ***************************************/
+
+void
+fl_get_xyplot_plotrange( FL_OBJECT * obj,
+                         FL_COORD  * llx,
+                         FL_COORD  * lly,
+                         FL_COORD  * urx,
+                         FL_COORD  * ury )
+{
+    FLI_XYPLOT_SPEC *sp = obj->spec;
+
+    *llx = sp->xi;
+    *lly = sp->yf;
+    *urx = sp->xf;
+    *ury = sp->yi;
 }
 
 

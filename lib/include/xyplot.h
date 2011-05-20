@@ -78,20 +78,20 @@ FL_EXPORT FL_OBJECT * fl_add_xyplot( int          t,
                                      const char * label );
 
 FL_EXPORT void fl_set_xyplot_data( FL_OBJECT  * ob,
-								   float      * x,
-								   float      * y,
-								   int          n,
-								   const char * title,
-								   const char * xlabel,
-								   const char * ylabel );
+                                   float      * x,
+                                   float      * y,
+                                   int          n,
+                                   const char * title,
+                                   const char * xlabel,
+                                   const char * ylabel );
 
 FL_EXPORT void fl_set_xyplot_data_double( FL_OBJECT  * ob,
-										  double     * x,
-										  double     * y,
-										  int          n,
-										  const char * title,
-										  const char * xlabel,
-										  const char * ylabel );
+                                          double     * x,
+                                          double     * y,
+                                          int          n,
+                                          const char * title,
+                                          const char * xlabel,
+                                          const char * ylabel );
 
 FL_EXPORT int fl_set_xyplot_file( FL_OBJECT  * ob,
                                   const char * f,
@@ -335,5 +335,12 @@ FL_EXPORT FL_XYPLOT_SYMBOL fl_set_xyplot_symbol( FL_OBJECT        * ob,
 
 FL_EXPORT int fl_set_xyplot_mark_active( FL_OBJECT * ob,
                                          int         y );
+
+FL_EXPORT void fl_get_xyplot_plotrange( FL_OBJECT * obj,
+                                        FL_COORD  * llx,
+                                        FL_COORD  * lly,
+                                        FL_COORD  * urx,
+                                        FL_COORD  * ury );
+
 
 #endif  /* ! defined FL_XYPLOT_H */
