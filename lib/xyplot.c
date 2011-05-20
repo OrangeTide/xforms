@@ -3779,11 +3779,11 @@ fl_set_xyplot_mark_active( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_get_xyplot_plotarea( FL_OBJECT * obj,
-                        FL_COORD  * llx,
-                        FL_COORD  * lly,
-                        FL_COORD  * urx,
-                        FL_COORD  * ury )
+fl_get_xyplot_plotrange( FL_OBJECT * obj,
+                         FL_COORD  * llx,
+                         FL_COORD  * lly,
+                         FL_COORD  * urx,
+                         FL_COORD  * ury )
 {
     FLI_XYPLOT_SPEC *sp = obj->spec;
 
