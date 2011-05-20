@@ -910,6 +910,15 @@ void fl_xyplot_w2s(FL_OBJECT *obj, double wx, double wy,
 where @code{sx} and @code{sy} are the screen coordinates and @code{wx}
 and @code{wy} are the world coordinates.
 
+Finally, there's a function for returning the coordinates of the
+area of the object used for drawing the data (i.e. the area, when
+axes are displayed, enclosed by the axes):
+@findex fl_get_xyplot_plotarea()
+@anchor{fl_xyplot_s2w()}
+@example
+
+
+
 
 @node XYPlot Attributes
 @subsection XYPlot Attributes
