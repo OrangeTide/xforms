@@ -914,9 +914,12 @@ Finally, there's a function for returning the coordinates of the
 area of the object used for drawing the data (i.e. the area, when
 axes are displayed, enclosed by the axes):
 @findex fl_get_xyplot_plotarea()
-@anchor{fl_xyplot_s2w()}
+@anchor{fl_get_xyplot_plotarea()}
 @example
-
+void fl_get_xyplot_plotrange( FL_OBJECT *obj,
+                              FL_COORD  &llx, FL_COORD  & lly,
+                                        FL_COORD  & urx,
+                                        FL_COORD  & ury );
 
 
 

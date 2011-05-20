@@ -337,10 +337,10 @@ FL_EXPORT int fl_set_xyplot_mark_active( FL_OBJECT * ob,
                                          int         y );
 
 FL_EXPORT void fl_get_xyplot_plotrange( FL_OBJECT * obj,
-                                        FL_COORD  & llx,
-                                        FL_COORD  & lly,
-                                        FL_COORD  & urx,
-                                        FL_COORD  & ury );
+                                        FL_COORD  * llx,
+                                        FL_COORD  * lly,
+                                        FL_COORD  * urx,
+                                        FL_COORD  * ury );
 
 
 #endif  /* ! defined FL_XYPLOT_H */
