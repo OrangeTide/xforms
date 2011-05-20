@@ -360,44 +360,40 @@ mapw2s( FL_OBJECT * ob,
         float     * x,
         float     * y )
 {
-    int i,
-        tmp;
-    double t;
     FLI_XYPLOT_SPEC *sp = ob->spec;
+    int i;
 
     if ( sp->xscale == FL_LOG )
     {
         double lbase = 1.0 / sp->lxbase;
 
-        for ( i = n1; i < n2; i++ )
+        for ( i = n1; i <= n2; i++ )
         {
-            t = log10( FL_max( x[ i ], FMIN ) ) * lbase;
+            double t = log10( FL_max( x[ i ], FMIN ) ) * lbase;
             p[ i - n1 ].x = FL_crnd( sp->ax * t + sp->bx );
         }
     }
     else
-        for ( i = n1; i < n2; i++ )
+        for ( i = n1; i <= n2; i++ )
             p[ i - n1 ].x = FL_crnd( sp->ax * x[ i ] + sp->bx );
 
     if ( sp->yscale == FL_LOG )
     {
         double lbase = 1.0 / sp->lybase;
 
-        for ( i = n1; i < n2; i++ )
+        for ( i = n1; i <= n2; i++ )
         {
-            t = log10( FL_max( y[ i ], FMIN ) ) * lbase;
+            double t = log10( FL_max( y[ i ], FMIN ) ) * lbase;
             p[ i - n1 ].y = FL_crnd( sp->ay * t + sp->by );
         }
     }
     else
-        for ( i = n1; i < n2; i++ )
+        for ( i = n1; i <= n2; i++ )
         {
-            /* This can happen if y is zoomed */
+            int tmp = FL_crnd( sp->ay * y[ i ] + sp->by );
 
-            if ( ( tmp = FL_crnd( sp->ay * y[ i ] + sp->by ) ) < 0 )
-                tmp = 0;
-            else if ( tmp > 30000 )
-                tmp = 30000;
+            tmp = FL_max( 0, tmp );
+            tmp = FL_min( 30000, tmp );
             p[ i - n1 ].y = tmp;
         }
 }
@@ -446,6 +442,8 @@ fli_xyplot_compute_data_bounds( FL_OBJECT * ob,
     if ( *n2 < 0 )
         *n2 = sp->n[ id ] > 1 ? sp->n[ id ] : 1;
 
+    if ( *n2 < sp->n[ id ] )
+        *n2 += 1;
     if ( *n2 < sp->n[ id ] )
         *n2 += 1;
 }
@@ -509,6 +507,7 @@ draw_curve_only( FL_OBJECT * ob )
            by (n1, n2) */
 
         fli_xyplot_compute_data_bounds( ob, &n1, &n2, nplot );
+        sp->n1 = n1;
 
         /* Convert data */
 
@@ -531,25 +530,22 @@ draw_curve_only( FL_OBJECT * ob )
             if (    ( sp->active || sp->inspect )
                  && sp->iactive == nplot
                  && ! sp->update )
-            {
                 memcpy( sp->xpactive, sp->xp, sp->nxp * sizeof *xp );
-                sp->n1 = n1;
-            }
         }
         else
         {
             x = sp->x[ nplot ];
             y = sp->y[ nplot ];
             xp = sp->xp;
+
             mapw2s( ob, xp, n1, n2, x, y );
+
             nxp = sp->nxp = n2 - n1;
+
             if (    ( sp->active || sp->inspect )
                  && sp->iactive == nplot
                  && ! sp->update )
-            {
                 memcpy( sp->xpactive, sp->xp, sp->nxp * sizeof *xp );
-                sp->n1 = n1;
-            }
         }
 
         type = nplot ? sp->type[ nplot ] : ob->type;
@@ -633,7 +629,7 @@ draw_curve_only( FL_OBJECT * ob )
         {
             xp = sp->xp;    /* always use original point for symbol */
             nxp = sp->nxp;
-            drawsymbol( ob, nplot, xp, nxp, sp->ssize, sp->ssize );
+            drawsymbol( ob, nplot, sp->xp, sp->nxp, sp->ssize, sp->ssize );
         }
 
         /* Do keys */
@@ -1773,7 +1769,7 @@ find_data( FL_OBJECT * ob,
 
     /* n overshoots by 1 and we're dependent on that ! */
 
-    *n = newi;
+    *n = newi + sp->n1;
 
     return found;
 }
@@ -2118,6 +2114,7 @@ init_spec( FL_OBJECT       * ob,
     sp->nxpi           = 1;
     sp->xpi            = fl_malloc( ( sp->nxpi + 3 ) * sizeof  *sp->xpi );
     sp->xpi++;
+    sp->n1             = 0;
 
     sp->cur_nxp        = 1;
     sp->xp             = fl_malloc( ( sp->cur_nxp + 3 ) * sizeof *sp->xp );
@@ -2421,8 +2418,10 @@ fl_set_xyplot_xtics( FL_OBJECT * ob,
 
         sp->xmajor = major ? major : XMAJOR;
         sp->xminor = minor ? minor : XMINOR;
+
         if ( *sp->axtic )
             free_atic( sp->axtic );
+
         fl_redraw_object( ob );
     }
 }
@@ -2556,6 +2555,7 @@ fl_set_xyplot_ybounds( FL_OBJECT * ob,
         sp->ymax = ymax;
         sp->ymin = ymin;
         find_ybounds( sp );
+
         fl_redraw_object( ob );
     }
 }
@@ -2610,13 +2610,10 @@ get_min_max( float * x,
     if ( ! x || ! n )
         return;
 
-    *xmin = *xmax = *x++;
-    for ( ; x < xs; x++ )
+    for ( *xmin = *xmax = *x++; x < xs; x++ )
     {
-        if ( *xmin > *x )
-            *xmin = *x;
-        else if ( *xmax < *x )
-            *xmax = *x;
+        *xmin = FL_min( *xmin, *x );
+        *xmax = FL_max( *xmax, *x );
     }
 }
 

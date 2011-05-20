@@ -73,7 +73,7 @@ typedef struct {
                       * yt;                 /* inset text position xt[over] */
     float            ** x,
                      ** y;                  /* real data *x, *y[over+1]     */
-    float               * grid;             /* interpolating grid[over+1]   */
+    float             * grid;               /* interpolating grid[over+1]   */
     float               ux,                 /* points to be updated         */
                         uy;
     float             * wx,                 /* working array for interpolat.*/
