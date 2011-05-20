@@ -3819,24 +3819,15 @@ fl_get_xyplot_screen_area( FL_OBJECT * obj,
 
 void
 fl_get_xyplot_world_area( FL_OBJECT * obj,
-                          double    * llx,
-                          double    * lly,
-                          double    * urx,
-                          double    * ury )
+                          float     * llx,
+                          float     * lly,
+                          float     * urx,
+                          float     * ury )
 {
     FLI_XYPLOT_SPEC *sp = obj->spec;
-    float a, b;
 
-    fl_xyplot_s2w( obj, sp->xi, sp->yf, &a, &b );
-    *llx = a;
-    *lly = b;
-
-    fl_xyplot_s2w( obj, sp->xf, sp->yi, &a, &b );
-    *urx = a;
-    *ury = b;
-
-    fprintf( stderr, "%d %d %d %d -> %lf %lf %lf %lf\n", 
-             sp->xi, sp->yf, sp->xf, sp->yi, *llx, *lly, *urx, *ury );
+    fl_xyplot_s2w( obj, sp->xi, sp->yf, llx, lly );
+    fl_xyplot_s2w( obj, sp->xf, sp->yi, urx, ury );
 }
 
 

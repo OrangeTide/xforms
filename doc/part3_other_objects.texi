@@ -924,8 +924,8 @@ void fl_get_xyplot_screen_area(FL_OBJECT *obj,
                                FL_COORD *llx, FL_COORD *lly,
                                FL_COORD *urx, FL_COORD *ury );
 void fl_get_xyplot_world_area(FL_OBJECT *obj,
-                              double *llx, double *lly,
-                              double *urx, double *ury );
+                              float  *llx, float  *lly,
+                              float  *urx, float  *ury );
 @end example
 @noindent
 where via @code{llx} and @code{lly} the coordinates of the lower

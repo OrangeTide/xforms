@@ -343,9 +343,9 @@ FL_EXPORT void fl_get_xyplot_screen_area( FL_OBJECT * obj,
 										  FL_COORD  * ury );
 
 FL_EXPORT void fl_get_xyplot_world_area( FL_OBJECT * obj,
-										 double    * llx,
-										 double    * lly,
-										 double    * urx,
-										 double    * ury );
+										 float     * llx,
+										 float     * lly,
+										 float     * urx,
+										 float     * ury );
 
 #endif  /* ! defined FL_XYPLOT_H */
