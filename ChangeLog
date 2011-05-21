@@ -1,3 +1,10 @@
+2011-05-21 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: Two new public functions added:
+	fl_get_xyplot_screen_area() and fl_get_xyplot_woorld_area()
+	Also a number of bug fixes for double buffered drawing
+	and concerning the displayed axes.
+
 2011-01-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/include/Basic.h: Small change as proposed by
