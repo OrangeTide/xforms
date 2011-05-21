@@ -103,6 +103,7 @@ noinst_PROGRAMS = arrowbutton \
 	timeoutprec \
 	touchbutton \
 	xyplotactive \
+	xyplotactivelog \
 	xyplotall \
 	xyplotover \
 	yesno \
@@ -271,6 +272,7 @@ timerprec_SOURCES = timerprec.c
 timeoutprec_SOURCES = timeoutprec.c
 touchbutton_SOURCES = touchbutton.c
 xyplotactive_SOURCES = xyplotactive.c
+xyplotactivelog_SOURCES = xyplotactivelog.c
 xyplotall_SOURCES = xyplotall.c
 
 xyplotover_SOURCES = xyplotover.c

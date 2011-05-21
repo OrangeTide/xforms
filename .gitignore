@@ -143,6 +143,7 @@ demos/timerprec
 demos/touchbutton
 demos/wwwl
 demos/xyplotactive
+demos/xyplotactivelog
 demos/xyplotall
 demos/xyplotover
 demos/yesno

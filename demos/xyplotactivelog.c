@@ -136,6 +136,18 @@ bounds_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 		float xmin = strtod( fl_get_input( xypui->xmin ), NULL );
 		float xmax = strtod( fl_get_input( xypui->xmax ), NULL );
 
+		if ( xmin <= 0.0 )
+		{
+			xmin = 1.0;
+			fl_set_input( xypui->xmin, "1.0" );
+		}
+
+		if ( xmax <= 0.0 )
+		{
+			xmax = 10.0;
+			fl_set_input( xypui->xmax, "10.0" );
+		}
+
 		fl_set_xyplot_xbounds( xypui->xyplot, xmin, xmax );
 
 		fl_get_xyplot_xbounds( xypui->xyplot, &xmin, &xmax );
@@ -148,6 +160,18 @@ bounds_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 	{
 		float ymin = strtod( fl_get_input( xypui->ymin ), NULL );
 		float ymax = strtod( fl_get_input( xypui->ymax ), NULL );
+
+		if ( ymin <= 0.0 )
+		{
+			ymin = 1.0;
+			fl_set_input( xypui->ymin, "1.0" );
+		}
+
+		if ( ymax <= 0.0 )
+		{
+			ymax = 10.0;
+			fl_set_input( xypui->ymax, "10.0" );
+		}
 
 		fl_set_xyplot_ybounds( xypui->xyplot, ymin, ymax );
 
@@ -176,28 +200,28 @@ main( int    argc,
 
     /* Fill-in form initialization code */
 
-    fl_set_xyplot_ybounds( xypui->xyplot, 0.0, 10.0 );
+    fl_set_xyplot_ybounds( xypui->xyplot, 1.0, 10.0 );
 
-    for ( i  = 0; i <= 10; i++ )
-        x[ i ] = y[ i ] = i;
+    for ( i  = 0; i < 10; i++ )
+        x[ i ] = y[ i ] = i + 1;
 
-    fl_add_xyplot_overlay( xypui->xyplot, 1, x, y, 11, FL_YELLOW );
+    fl_add_xyplot_overlay( xypui->xyplot, 1, x, y, 10, FL_YELLOW );
     fl_set_xyplot_overlay_type( xypui->xyplot, 1, FL_LINEPOINTS_XYPLOT );
     fl_set_xyplot_interpolate( xypui->xyplot, 1, 2, 0.1 );
 
     srand( time( NULL ) );
 
-    for ( i = 0; i <= 10; i++ )
+    for ( i = 0; i < 10; i++ )
         y[ i ] +=  ( double ) rand( ) / RAND_MAX - 0.5;
 
-    fl_set_xyplot_data( xypui->xyplot, x, y, 11, "", "", "" );
+    fl_set_xyplot_data( xypui->xyplot, x, y, 10, "", "", "" );
     fl_set_xyplot_linewidth( xypui->xyplot, 0, 2 );
     fl_set_xyplot_xgrid( xypui->xyplot, FL_GRID_MINOR );
 
     /* Show the first form */
 
     fl_show_form( xypui->axypform, FL_PLACE_MOUSE | FL_FREE_SIZE,
-                  FL_FULLBORDER, "xyplotactive" );
+                  FL_FULLBORDER, "xyplotactivelog" );
 
     fl_do_forms( );
 
@@ -220,6 +244,9 @@ create_form_axypform( void )
 
     fdui->xyplot = obj = fl_add_xyplot( FL_ACTIVE_XYPLOT, 20, 50, 285, 235,
                                         "" );
+
+	fl_set_xyplot_xscale( obj, FL_LOG, 2.0 );
+	fl_set_xyplot_yscale( obj, FL_LOG, 2.0 );
 
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_BLACK, FL_GREEN );
@@ -247,10 +274,9 @@ create_form_axypform( void )
     fl_set_object_callback( obj, notic_cb, 0 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
-
 	fdui->xmin = obj = fl_add_input( FL_FLOAT_INPUT, 315, 150, 50, 20,
 									 " x_min" );
-	fl_set_input( obj, "0.0" );
+	fl_set_input( obj, "1.0" );
 	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 0 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
@@ -264,7 +290,7 @@ create_form_axypform( void )
 
 	fdui->ymin = obj = fl_add_input( FL_FLOAT_INPUT, 315, 200, 50, 20,
 									 " y_min" );
-	fl_set_input( obj, "0.0" );
+	fl_set_input( obj, "1.0" );
     fl_set_object_color( obj, FL_COL1, FL_WHITE );
 	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 1 );

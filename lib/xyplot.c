@@ -46,7 +46,7 @@
 
 #define XMAJOR       5
 #define XMINOR       2
-#define YMAJOR       1
+#define YMAJOR       5
 #define YMINOR       2
 
 #define XRound( s )  (    ( s )->xtic > 0.0      \
@@ -64,7 +64,6 @@ static float gen_tic( float,
 static float gen_logtic( float,
                          float,
                          float,
-                         int,
                          int );
 
 static void convert_coord( FL_OBJECT *,
@@ -169,7 +168,7 @@ free_xyplot( FL_OBJECT * ob )
 
     fl_clear_xyplot( ob );
 
-    /* working arrays */
+    /* Working arrays */
 
     fl_free( sp->wx );
     fl_free( sp->wy );
@@ -755,9 +754,11 @@ gen_xtic( FL_OBJECT * ob )
                 sp->xmajor_val[ i ] = val;
                 j++;
             }
+
             sp->num_xmajor = j;
             sp->num_xminor = 1;
         }
+
         return;
     }
 
@@ -766,39 +767,43 @@ gen_xtic( FL_OBJECT * ob )
         /* Other minor tics */
 
         for ( i = 0, xw = mxmin; xw <= mxmax; xw += tic )
-        {
             if ( xw >= xmin && xw <= xmax )
                 sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * xw + sp->bx );
-        }
+
         sp->num_xminor = i;
 
         for ( i = 0, xw = mxmin; xw <= mxmax; xw += tic * sp->xminor )
-        {
             if ( xw >= xmin && xw <= xmax )
             {
                 sp->xtic_major[ i ] = FL_crnd( sp->ax * xw + sp->bx );
-                sp->xmajor_val[ i ] = xw;
-                i++;
+                sp->xmajor_val[ i++ ] = xw;
             }
-        }
+
         sp->num_xmajor = i;
     }
     else
     {
-        float minortic = tic / sp->xminor;
+        double minortic = tic / sp->xminor;
 
         /* Minor */
 
-        for ( i = 0, xw = xmin; xw <= xmax; xw += minortic )
+        xw = floor( xmin / minortic ) * minortic;
+        while ( xw + 1.0e-5 <= xw )
+            xw += minortic;
+
+        for ( i = 0; xw - 1.0e-5 <= xmax; xw += minortic )
             sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * xw + sp->bx );
 
         sp->num_xminor = i;
 
-        for ( i = 0, xw = xmin; xw <= xmax; xw += tic )
+        xw = floor( xmin / tic ) * tic;
+        while ( xw + 1.0e-5 <= xmin )
+            xw += tic;
+
+        for ( i = 0; xw - 1.0e-5 <= xmax; xw += tic )
         {
             sp->xtic_major[ i ] = FL_crnd( sp->ax * xw + sp->bx );
-            sp->xmajor_val[ i ] = xw;
-            i++;
+            sp->xmajor_val[ i++ ] = xw;
         }
 
         sp->num_xmajor = i;
@@ -872,9 +877,9 @@ gen_ytic( FL_OBJECT * ob )
             if ( yw >= ymin && yw <= ymax )
             {
                 sp->ytic_major[ i ] = FL_crnd( sp->ay * yw + sp->by );
-                sp->ymajor_val[ i ] = yw;
-                i++;
+                sp->ymajor_val[ i++ ] = yw;
             }
+
             yw = mymin + ( n + 1 ) * tic * sp->yminor;
         }
 
@@ -884,15 +889,23 @@ gen_ytic( FL_OBJECT * ob )
     {
         double minortic = sp->ytic / sp->yminor;
 
-        for ( i = 0, yw = ymin; yw <= ymax; yw += minortic )
+        yw = floor( ymin / minortic ) * minortic;
+        while ( yw + 1.0e-5 < ymin )
+            yw += minortic;
+
+        for ( i = 0; yw - 1.0e-5 <= ymax; yw += minortic )
             sp->ytic_minor[ i++ ] = FL_crnd( sp->ay * yw + sp->by );
+
         sp->num_yminor = i;
 
-        for ( i = 0, yw = ymin; yw <= ymax; yw += sp->ytic )
+        yw = floor( ymin / tic ) * tic;
+        while ( yw + 1.0e-5 < ymin )
+            yw += tic;
+
+        for ( i = 0; yw - 1.0e-5 <= ymax; yw += tic )
         {
             sp->ytic_major[ i ] = FL_crnd( sp->ay * yw + sp->by );
-            sp->ymajor_val[ i ] = yw;
-            i++;
+            sp->ymajor_val[ i++ ] = yw;
         }
 
         sp->num_ymajor = i;
@@ -1517,48 +1530,13 @@ round_xminmax( FLI_XYPLOT_SPEC * sp )
 {
     if ( sp->xscale != FL_LOG )
     {
-        float xmin = sp->xmin,
-              xmax = sp->xmax,
-              tic = sp->xtic;
-        float threshold = 0.5 * tic;
-
-        if ( XRound( sp ) )
-        {
-            xmin = ( xmin < xmax ? floor : ceil )( xmin / tic ) * tic;
-
-            if ( FL_abs( xmin - sp->xmin ) > threshold )
-                xmin = sp->xmin;
-
-            xmax = ( xmin < xmax ? ceil : floor )( xmax / tic ) * tic;
-
-            if ( FL_abs( xmax - sp->xmax ) > threshold )
-                xmax = sp->xmax;
-        }
-
-        sp->xscmin = xmin;
-        sp->xscmax = xmax;
+        sp->xscmin = sp->xmin;
+        sp->xscmax = sp->xmax;
     }
     else
     {
-        sp->xscmax = log10( sp->xmax ) / sp->lxbase;
         sp->xscmin = log10( sp->xmin ) / sp->lxbase;
-
-        if ( XRound( sp ) )
-        {
-            if ( sp->xmin < sp->xmax )
-                sp->xscmin = sp->xtic * floor( log10( sp->xmin ) /
-                                               ( sp->lxbase * sp->xtic ) );
-            else
-                sp->xscmin = sp->xtic * ceil( log10( sp->xmin ) /
-                                               ( sp->lxbase * sp->xtic ) );
-
-            if ( sp->xmin < sp->xmax )
-                sp->xscmax = sp->xtic * ceil( log10( sp->xmax ) /
-                                              ( sp->lxbase * sp->xtic ) );
-            else
-                sp->xscmax = sp->xtic * floor( log10( sp->xmax ) /
-                                              ( sp->lxbase * sp->xtic ) );
-        }
+        sp->xscmax = log10( sp->xmax ) / sp->lxbase;
     }
 }
 
@@ -1573,42 +1551,13 @@ round_yminmax( FLI_XYPLOT_SPEC * sp )
 
     if ( sp->yscale != FL_LOG )
     {
-        float ymin = sp->ymin,
-              ymax = sp->ymax,
-              tic = sp->ytic;
-        float threshold = 0.7 * tic;
-
-        if ( YRound( sp ) )
-        {
-            ymin = ( ymin < ymax ? floor : ceil )( ymin / tic ) * tic;
-
-            if ( FL_abs( ymin - sp->ymin ) > threshold )
-                ymin = sp->ymin;
-
-            ymax = ( ymin < ymax ? ceil : floor )( ymax / tic ) * tic;
-
-            if ( FL_abs( ymax - sp->ymax ) > threshold )
-                ymax = sp->ymax;
-        }
-
-        sp->yscmin = ymin;
-        sp->yscmax = ymax;
+        sp->yscmin = sp->ymin;
+        sp->yscmax = sp->ymax;
     }
     else
     {
-        float lmax = log10( sp->ymax ) / sp->lybase;
-        float lmin = log10( sp->ymin ) / sp->lybase;
-
-        if ( YRound( sp ) )
-        {
-            lmin = ( sp->ymin < sp->ymax ? floor : ceil )
-                ( log10( sp->ymin ) / ( sp->lybase * sp->ytic ) ) * sp->ytic;
-            lmax = ( sp->xmin < sp->xmax ? ceil : floor )
-                ( log10( sp->ymax ) / ( sp->lybase * sp->ytic ) ) * sp->ytic;
-        }
-
-        sp->yscmin = lmin;
-        sp->yscmax = lmax;
+        sp->yscmin = log10( sp->ymin ) / sp->lybase;
+        sp->yscmax = log10( sp->ymax ) / sp->lybase;
     }
 }
 
@@ -1643,23 +1592,23 @@ draw_xyplot( FL_OBJECT * ob )
     {
         if ( sp->xscale == FL_LOG )
             sp->xtic = gen_logtic( sp->xmin, sp->xmax, sp->xbase,
-                                   sp->xmajor, sp->xminor );
+                                   sp->xmajor );
         else
             sp->xtic = gen_tic( sp->xmin, sp->xmax, sp->xmajor, sp->xminor );
-
-        round_xminmax( sp );
     }
+
+    round_xminmax( sp );
 
     if ( sp->ymajor > 0 )
     {
         if ( sp->yscale == FL_LOG )
             sp->ytic = gen_logtic( sp->ymin, sp->ymax, sp->ybase,
-                                   sp->ymajor, sp->yminor );
+                                   sp->ymajor );
         else
             sp->ytic = gen_tic( sp->ymin, sp->ymax, sp->ymajor, sp->yminor );
-
-        round_yminmax( sp );
     }
+
+    round_yminmax( sp );
 
     convert_coord( ob, sp );
     add_border( sp, ob->col2 );
@@ -3343,33 +3292,24 @@ static float
 gen_logtic( float tmin,
             float tmax,
             float base,
-            int   major,
-            int   minor )
+            int   major )
 {
     float tic,
-          lbase = log10( base ),
-          tmp;
+          lbase = log10( base );
 
     if ( tmin <= 0.0 || tmax <= 0.0 )
     {
-        M_err( "gen_logtic", "range must be greater than 0 for logscale" );
+        M_err( "gen_logtic", "range bordrs must be greater than 0 for "
+               "logscale" );
         return -1;
     }
 
-    if ( major == 1 && minor == 2 )
-    {
-        tic = floor( log10( tmax ) / lbase + 0.0001 );
-        if ( tic < 1.0 )
-            tic = 1.0;
-        return tic;
-    }
-
-    tmp = log10( tmax ) - log10( tmin );
-    tic = floor( FL_abs( tmp ) / lbase ) / major + 0.01;
-    tic = floor( tic );
+    tic = (   floor( log10( tmax ) / lbase + 0.5 )
+            - ceil( log10( tmin )  / lbase - 0.5 ) ) / major;
     if ( tic < 1.0 )
         tic = 1.0;
-    return tic;
+
+    return floor( tic + 0.5 );
 }
 
 
