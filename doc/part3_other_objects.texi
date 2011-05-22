@@ -266,11 +266,10 @@ manipulations.
 Only the axes are drawn.
 @end table
 
-All xyplots display the curve auto-scaled to fit the plotting area.
-Although there is no limitation on the actual data, a non-monotonic
-increasing (or decreasing) x-axis might be plotted incorrectly. For
-@code{FL_ACTIVE_PLOT} the x-coordinate of the data must be
-monotonically increasing.
+All xyplots per default display the curve auto-scaled to fit the
+plotting area. Although there is no limitation on the actual data,
+a non-monotonic increasing (or decreasing) x-axis might be plotted
+incorrectly.
 
 XYPlots of type @code{FL_POINTS_XYPLOT} and
 @code{FL_LINEPOINTS_XYPLOT} are special in that the application can
@@ -311,11 +310,11 @@ Return or invoke callback when a point has been moved or the mouse
 button has been release).
 @end table
 
-Please note: a object can also been in inspect mode (see function
+Please note: an object can also be in inspect mode (see function
 @code{@ref{fl_set_xyplot_inspect()}} below). In this case the object
 gets returned (or its callback invoked) for all of the above settings
 except (@code{@ref{FL_RETURN_NONE}}) when the mouse was released on
-top of such one of the points.
+top of one of the points.
 
 
 To obtain the current value of the point that has changed, use the
@@ -327,11 +326,11 @@ void fl_get_xyplot(FL_OBJECT *obj, float *x, float *y, int *i);
 @end example
 @noindent
 where via @code{i} the data index (starting from 0) is returned while
-@code{x}, @code{y} is the actual data point. If no point is changed,
-@code{i} is set to -1.
+via @code{x} and @code{y} the actual data point gets returned. If no
+point has changed @code{i} will be set to -1.
 
-It is possible to not to draw the squares that mark an active plot
-using the following routine
+It is possible tp switch drawing of the squares that mark an active
+plot on and off (default is on) using the following routine
 @findex fl_set_xyplot_mark_active()
 @anchor{fl_set_xyplot_mark_active()}
 @example
@@ -358,15 +357,14 @@ void fl_set_xyplot_data_double(FL_OBJECT *obj, double *x, double *y, int n,
 of type @code{double} but which get "demoted" to @code{float} type
 when assigned to the xyplot object.) Here @code{x}, @code{y} is the
 tabulated function, and @code{n} is the number of data points. If the
-xyplot object being set exists already, old data will be cleared. Note
+xyplot object being set already exists old data will be cleared. Note
 that the tabulated function is copied internally so you can free or do
 whatever you want with the @code{x} and @code{y} arrays after the
-function returns. @code{title} is a title that is drawn above the
+function has returned. @code{title} is a title that is drawn above the
 XYPlot and @code{xlabel} and @code{ylabel} are the labels drawn at the
 x- and y-axes.
 
-You can also load a tabulated function from a file using the following
-routine
+You can also load a tabulated function from a file using the routine
 @findex fl_set_xyplot_file()
 @anchor{fl_set_xyplot_file()}
 @example
@@ -389,7 +387,7 @@ To get a copy of the current XYPLot data, use
 @anchor{fl_get_xyplot_data()}
 @example
 int fl_get_xyplot_data_size(FL_OBJECT *obj);
-void fl_get_xyplot_data(FL_OBJECT *obj, float x[], float y[], int *n);
+void fl_get_xyplot_data(FL_OBJECT *obj, float *x, *float y, int *n);
 @end example
 @noindent
 The first function returns the number of data points which the second
@@ -411,11 +409,11 @@ to the caller or its callback is invoked. You then can use
 @code{@ref{fl_get_xyplot()}} to find out which point the mouse was
 clicked on.
 
-Another, perhaps even more general, way to read-off the values from an
+Another, perhaps even more general, way to obtain the values from an
 XYPlot is to use a posthandler or an overlay positioner. See demo
 @file{xyplotall.c} for the use of posthandler and
-@file{positionerXOR.c} for an example of reading-off xyplot values
-using an overlap positioner.
+@file{positionerXOR.c} for an example of reading-out xyplot values
+using an overlayed positioner.
 
 
 @node Other XYPlot Routines
@@ -434,9 +432,10 @@ void fl_set_xyplot_ytics(FL_OBJECT *obj, int major, int minor);
 @end example
 @noindent
 where @code{major} and @code{minor} are the number of tic marks to be
-placed on the plot and the number of divisions between major tic
+placed on the axis and the number of divisions between major tic
 marks. In particular, -1 suppresses the tic marks completely while 0
-restores the default settings.
+restores the default settings (which is 5 for the major and 2 for
+the minor tic arguments).
 
 Note that the actual scaling routine may choose a value other than
 that requested if it decides that this would make the plot look nicer,
@@ -494,14 +493,14 @@ where @code{xgrid} and @code{ygrid} can be one of the following
 No grid.
 @tindex FL_GRID_MAJOR
 @item FL_GRID_MAJOR
-Grid for the major divisions.
+Grid for the major divisions only.
 @tindex FL_GRID_MINOR
 @item FL_GRID_MINOR
-Grid for the major and minor divisions.
+Grid for both the major and minor divisions.
 @end table
 
 The grid line by default is drawn using a dotted line, which you can
-change using the following routine
+change using the routine
 @findex fl_set_xyplot_grid_linestyle()
 @anchor{fl_set_xyplot_grid_linestyle()}
 @example
@@ -513,8 +512,8 @@ etc. @xref{Part IV Drawing Objects, , Drawing Objects}, for a
 complete list). The function returns the old grid linestyle.
 
 By default, the plotting area is automatically adjusted for tic labels
-and titles so that a maximum plotting area results. This can be
-undesirable in certain situations. To control the plotting area
+and titles so that a maximum plotting area results. This can in
+certain situations be undesirable. To control the plotting area
 manually, the following routines can be used
 @findex fl_set_xyplot_fixed_xaxis()
 @anchor{fl_set_xyplot_fixed_xaxis()}
@@ -571,7 +570,7 @@ symbol size (@code{w}, @code{h}). If the type of the XYPlot
 corresponding to @code{id} is not @code{FL_POINTS_XYPLOT} or
 @code{FL_LINESPOINTS_XYPLOT}, the function will not be called.
 
-To change or example a @code{FL_LINEPOINTS_XYPLOT} XYPlot to plot
+To change for example a @code{FL_LINEPOINTS_XYPLOT} XYPlot to plot
 filled small circles instead of the default crosses, the following
 code could be used
 @example
@@ -592,12 +591,12 @@ fl_set_xyplot_symbol(xyplot, 0, drawsymbol);
 If a Xlib drawing routine is used it should use the current active
 window (@code{FL_ObjWin(obj)}) and the current GC. Take care not to
 call routines inside the @code{drawsymbol()} function that could
-trigger a redraw of the XYPlot (such as
+trigger a redraw of the XYPlot (such as 
 @code{@ref{fl_set_object_color()}}, @code{@ref{fl_set_xyplot_data()}}
 etc.).
 
-To use absolute bounds as opposed to actual bounds in data, use the
-following routines
+To use absolute bounds (as opposed to the bounds derived from the
+data), use the following routines
 @findex fl_set_xyplot_xbounds()
 @anchor{fl_set_xyplot_xbounds()}
 @findex fl_set_xyplot_ybounds()
@@ -621,10 +620,6 @@ To get the current bounds, use the following routines
 void fl_get_xyplot_xbounds(FL_OBJECT *obj, float *min, float *max);
 void fl_get_xyplot_ybounds(FL_OBJECT *obj, float *min, float *max);
 @end example
-@noindent
-Note that the bounds returned are the bounds used in clipping the
-data, which are not necessarily the bounds used in computing the
-world/screen mapping due to tic rounding.
 
 To replace the value of a particular point use the routine
 @findex fl_replace_xyplot_point()
@@ -637,8 +632,7 @@ void fl_replace_xyplot_point(FL_OBJECT *obj, int index,
 Here @code{index} is the index of the value to be replaced. The first
 value has an index of 0.
 
-It is possible to overlay several plots together using the following
-call
+It is possible to overlay several plots together by calling
 @findex fl_add_xyplot_overlay()
 @anchor{fl_add_xyplot_overlay()}
 @example
@@ -648,8 +642,8 @@ void fl_add_xyplot_overlay(FL_OBJECT *obj, int id, float *x, float *y,
 @noindent
 where @code{id} must be between 1 and
 @tindex FL_MAX_XYPLOTOVERLAY
-@code{FL_MAX_XYPLOTOVERLAY} (currently 32). Again, the data is copied to
-an internal buffer (old data are freed if necessary).
+@code{FL_MAX_XYPLOTOVERLAY} (currently 32). Again, the data are copied
+to an internal buffer (old data are freed if necessary).
 
 As for the base data, a data file can be used to specify the (x,y)
 function
@@ -662,8 +656,9 @@ int fl_add_xyplot_overlay_file(FL_OBJECT *obj, int ID,
 @noindent
 The function returns the number of data points successfully read. The
 type (@code{FL_NORMAL_XYPLOT} etc.) used in overlay plot is the same
-as the object itself. To change an overlay style, use the following
-call
+as the object itself.
+
+To change an overlay style, use the following call
 @findex fl_set_xyplot_overlay_type()
 @anchor{fl_set_xyplot_overlay_type()}
 @example
@@ -714,14 +709,14 @@ int fl_set_xyplot_maxoverlays(FL_OBJECT *obj, int maxoverlays);
 @noindent
 The function returns the previous maximum number of overlays.
 
-To obtain the number of data points, use the following routine
+To obtain the number of data points, use the routine
 @findex fl_get_xyplot_numdata()
 @anchor{fl_get_xyplot_numdata()}
 @example
 int fl_get_xyplot_numdata(FL_OBJECT *obj, int id);
 @end example
 @noindent
-where @code{id} is the overlay ID with 0 being the base data set.
+where @code{id} is the overlay ID (with 0 being the base data set).
 
 To insert a point into an xyplot, use the following routine
 @findex fl_insert_xyplot_data()
@@ -755,15 +750,15 @@ void fl_add_xyplot_text(FL_OBJECT *obj, double x, double y,
                         const char *text, int align, FL_COLOR col);
 @end example
 @noindent
-where @code{x} and @code{y} are the (world) coordinates where text
-is to be placed and align specifies the placement options relative
-to the specified point (See @code{@ref{fl_set_object_lalign()}} for
-valid options). If you for example specify @code{FL_ALIGN_LEFT}, the
-text will appear on the left of the point and flushed toward the point
-(see Fig. 21.1). This is mostly consistent with the label alignment
-except that now the bounding box (of the point) is of zero dimension.
-Normal text interpretation applies, i.e., if text starts with @code{@@}
-a symbol is drawn.
+where @code{x} and @code{y} are the (world) coordinates where text is
+to be placed and align specifies the placement options relative to the
+specified point (See @code{@ref{fl_set_object_lalign()}} for valid
+options). If you for example specify @code{FL_ALIGN_LEFT}, the text
+will appear on the left of the point and flushed toward the point (see
+Fig. 21.1). This is mostly consistent with the label alignment except
+that now the bounding box (of the point) is of zero dimension. Normal
+text interpretation applies, i.e.@: if text starts with @code{@@} a
+symbol is drawn.
 
 To remove an inset text, use the following routine
 @findex fl_delete_xyplot_text()
@@ -794,8 +789,8 @@ void fl_set_xyplot_key_position(FL_OBJECT *obj, float x, float y,
                                 int align)
 @end example
 @noindent
-where @code{x} and @code{y} should be given in world coordinate
-system. @code{align} specifies the alignment of the entire key box
+where @code{x} and @code{y} should be given in world coordinates.
+@code{align} specifies the alignment of the entire key box
 relative to the given position (see Fig.21.1).
 
 The following routine combines the above two functions and may be more
@@ -828,10 +823,10 @@ void fl_set_xyplot_interpolate(FL_OBJECT *obj, int id, int degree,
 @end example
 @noindent
 where @code{id} is the overlay ID (use 0 for the base data set);
-@code{degree} is the order of the polynomial to use and @code{grid} is
-the working grid onto which the data are to be interpolated. To
-restore the default linear interpolation, use @code{degree} set to 0
-or 1.
+@code{degree} is the order of the polynomial to use (between 2 and 7)
+and @code{grid} is the working grid onto which the data are to be
+interpolated. To restore the default linear interpolation, use
+@code{degree} set to 0 or 1.
 
 To change the line thickness of an xyplot (base data or overlay), the
 follow routine is available:

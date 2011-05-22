@@ -1627,8 +1627,10 @@ draw_xyplot( FL_OBJECT * ob )
 
     ( sp->xscale == FL_LOG ? add_logxtics : add_xtics )( ob );
 
-    fl_drw_text( FL_ALIGN_BOTTOM, ( sp->xi + sp->xf ) / 2,
-                 sp->objy + ob->h - bw, 1, 1,
+    fl_drw_text( FL_ALIGN_BOTTOM,
+                 ( sp->xi + sp->xf ) / 2,
+                 sp->objy + ob->h - bw - ( draw_to_pixmap ? sp->objy : 0 ),
+                 1, 1,
                  ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
 
     ( sp->yscale == FL_LOG ? add_logytics : add_ytics )( ob );
@@ -2945,7 +2947,7 @@ fl_set_xyplot_overlay_type( FL_OBJECT * ob,
 {
     FLI_XYPLOT_SPEC *sp  = ob->spec;
 
-    if ( id < 0 || ! ob || id > sp->maxoverlay )
+    if ( ! ob || id < 0 || id > sp->maxoverlay )
         return;
 
     if ( sp->type[ id ] != type )
@@ -2965,7 +2967,7 @@ fl_get_xyplot_numdata( FL_OBJECT * ob,
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
-    if ( id < 0 || ! ob || id > sp->maxoverlay )
+    if ( ! ob || id < 0 || id > sp->maxoverlay )
         return 0;
 
     return sp->n[ id ];
@@ -2991,9 +2993,6 @@ fl_delete_xyplot_overlay( FL_OBJECT * ob,
 
 
 /***************************************
- * This function looks extremely dangerous since the caller must supply
- * buffers for the data - but where does the caller get the information
- * from about how large these buffers must be?          JTT
 ***************************************/
 
 void

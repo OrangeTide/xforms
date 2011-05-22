@@ -190,7 +190,8 @@ main( int    argc,
     for ( i = 0; i <= 10; i++ )
         y[ i ] +=  ( double ) rand( ) / RAND_MAX - 0.5;
 
-    fl_set_xyplot_data( xypui->xyplot, x, y, 11, "", "", "" );
+    fl_set_xyplot_data( xypui->xyplot, x, y, 11, "Active xyplot with overlay",
+						"x-axis", "y-axis" );
     fl_set_xyplot_linewidth( xypui->xyplot, 0, 2 );
     fl_set_xyplot_xgrid( xypui->xyplot, FL_GRID_MINOR );
 
@@ -265,7 +266,6 @@ create_form_axypform( void )
 	fdui->ymin = obj = fl_add_input( FL_FLOAT_INPUT, 315, 200, 50, 20,
 									 " y_min" );
 	fl_set_input( obj, "0.0" );
-    fl_set_object_color( obj, FL_COL1, FL_WHITE );
 	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 1 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
@@ -273,7 +273,6 @@ create_form_axypform( void )
 	fdui->ymax = obj = fl_add_input( FL_FLOAT_INPUT, 315, 220, 50, 20,
 									 " y_max" );
 	fl_set_input( obj, "10.0" );
-    fl_set_object_color( obj, FL_COL1, FL_WHITE );
 	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 1 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
