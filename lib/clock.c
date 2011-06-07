@@ -301,6 +301,7 @@ fl_create_clock( int          type,
                  const char * s )
 {
     FL_OBJECT *obj;
+    SPEC *sp;
 
     obj = fl_make_object( FL_CLOCK, type, x, y, w, h, s, handle_clock );
 
@@ -310,7 +311,7 @@ fl_create_clock( int          type,
     obj->lcol      = FL_CLOCK_LCOL;
     obj->align     = FL_CLOCK_ALIGN;
     obj->automatic = obj->active = 1;
-    obj->spec      = fl_calloc( 1, sizeof *obj->spec );
+    obj->spec = sp = fl_calloc( 1, sizeof *sp );
 
     return obj;
 }

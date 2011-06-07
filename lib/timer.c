@@ -222,17 +222,20 @@ fl_create_timer( int          type,
                  const char * l )
 {
     FL_OBJECT *ob;
+    SPEC *sp;
 
     ob = fl_make_object( FL_TIMER, type, x, y, w, h, l, handle_timer );
-    ob->boxtype = FL_TIMER_BOXTYPE;
-    ob->col1 = FL_TIMER_COL1;
-    ob->col2 = FL_TIMER_COL2;
-    ob->align = FL_TIMER_ALIGN;
-    ob->lcol = FL_TIMER_LCOL;
-    ob->spec = fl_calloc( 1, sizeof( SPEC ) );
+
+    ob->boxtype   = FL_TIMER_BOXTYPE;
+    ob->col1      = FL_TIMER_COL1;
+    ob->col2      = FL_TIMER_COL2;
+    ob->align     = FL_TIMER_ALIGN;
+    ob->lcol      = FL_TIMER_LCOL;
+    ob->spec = sp = fl_calloc( 1, sizeof *sp );
 
     fl_set_timer( ob, 0.0 );       /* disabled timer */
-    ( ( SPEC * ) ob->spec )->filter = default_filter;
+    sp->filter = default_filter;
+
     return ob;
 }
 
