@@ -178,7 +178,7 @@ fl_msleep( unsigned long msec )
 #include <timeb.h>
 
 int
-gettimeofday( struct timeval *  tv,
+gettimeofday( struct timeval  * tv,
               struct timezone * tz )
 {
     timeb_t tmp_time;

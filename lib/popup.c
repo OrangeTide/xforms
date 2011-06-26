@@ -26,7 +26,7 @@
 
 
 /***************************************
- *       Local global variables        *
+ * Local global variables
  ***************************************/
 
 /* Head of linked list of popups */
@@ -95,7 +95,7 @@ static int popup_cursor;
 
 
 /***************************************
- *           Local functions           *
+ * Local functions           *
  ***************************************/
 
 static FL_POPUP_ENTRY *parse_entries( FL_POPUP *, char *, va_list,
@@ -133,7 +133,7 @@ static void set_need_recalc( FL_POPUP * );
 
 
 /***************************************
- *             #defines                *
+ * #defines
  ***************************************/
 
 /* Inner padding is used within the title box of popups only */
@@ -3999,7 +3999,7 @@ handle_key( FL_POPUP        * popup,
  ***************************************/
 
 static void
-key_shift_window( FL_POPUP *       popup,
+key_shift_window( FL_POPUP       * popup,
                   FL_POPUP_ENTRY * entry )
 {
     /* Test if the window is only partially visible on the window (in vertical

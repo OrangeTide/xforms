@@ -45,9 +45,9 @@ long msec0 = 0;
  ***************************************/
 
 int
-fl_add_timeout( long                msec,
-                FL_TIMEOUT_CALLBACK callback,
-                void *              data )
+fl_add_timeout( long                  msec,
+                FL_TIMEOUT_CALLBACK   callback,
+                void                * data )
 {
     FLI_TIMEOUT_REC *rec;
     static int id = 1;

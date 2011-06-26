@@ -537,8 +537,8 @@ fl_set_scrollbar_bounds( FL_OBJECT * obj,
 
 void
 fl_get_scrollbar_bounds( FL_OBJECT * obj,
-                         double *    b1,
-                         double *    b2 )
+                         double    * b1,
+                         double    * b2 )
 {
     FLI_SCROLLBAR_SPEC *sp = obj->spec;
 

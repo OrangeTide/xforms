@@ -3354,8 +3354,8 @@ trunc_f( double f,
 
 void
 fl_get_xyplot_xmapping( FL_OBJECT * ob,
-                        float *     a,
-                        float *     b )
+                        float     * a,
+                        float     * b )
 {
     *a = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->ax;
     *b = ( ( FLI_XYPLOT_SPEC * ) ob->spec )->bxm;

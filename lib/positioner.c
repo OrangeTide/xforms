@@ -168,7 +168,7 @@ handle_positioner( FL_OBJECT * ob,
                    FL_Coord    mx,
                    FL_Coord    my,
                    int         key  FL_UNUSED_ARG,
-                   void *      ev   FL_UNUSED_ARG )
+                   void      * ev   FL_UNUSED_ARG )
 {
     FLI_POSITIONER_SPEC *sp = ob->spec;
     int ret = FL_RETURN_NONE;
@@ -383,8 +383,8 @@ fl_get_positioner_yvalue( FL_OBJECT * ob )
 
 void
 fl_get_positioner_xbounds( FL_OBJECT * ob,
-                           double *    min,
-                           double *    max )
+                           double    * min,
+                           double    * max )
 {
     *min = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->xmin;
     *max = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->xmax;
@@ -392,8 +392,8 @@ fl_get_positioner_xbounds( FL_OBJECT * ob,
 
 void
 fl_get_positioner_ybounds( FL_OBJECT * ob,
-                           double *    min,
-                           double *    max)
+                           double    * min,
+                           double    * max)
 {
     *min = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->ymin;
     *max = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->ymax;

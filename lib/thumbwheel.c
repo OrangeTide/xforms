@@ -228,7 +228,7 @@ handle_thumbwheel( FL_OBJECT * ob,
                    int         mx,
                    int         my,
                    int         key,
-                   void *      xev  FL_UNUSED_ARG )
+                   void      * xev  FL_UNUSED_ARG )
 {
     FLI_THUMBWHEEL_SPEC *sp = ob->spec;
     int cur_pos,
@@ -393,8 +393,8 @@ fl_set_thumbwheel_bounds( FL_OBJECT * ob,
 
 void
 fl_get_thumbwheel_bounds( FL_OBJECT * ob,
-                          double *    min,
-                          double *    max )
+                          double    * min,
+                          double    * max )
 {
     FLI_THUMBWHEEL_SPEC *sp = ob->spec;
 

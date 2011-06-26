@@ -45,10 +45,10 @@ int
 fl_interpolate( const float * wx,
                 const float * wy,
                 int           nin,
-                float *       x,
-                float *       y,
+                float       * x,
+                float       * y,
                 double        grid,
-                int ndeg )
+                int           ndeg )
 {
     int i, j, k, l, jo, ih, im, idm, nout;
     double term, accum;

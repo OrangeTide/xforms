@@ -85,7 +85,7 @@ attrib_change( FL_OBJECT * ob )
 
     if ( ! sp->user_set && ob->boxtype != FL_DOWN_BOX )
         sp->vw = sp->vw_def = sp->hh = sp->hh_def =
-                                            fli_get_default_scrollbarsize( ob );
+                                          fli_get_default_scrollbarsize( ob );
 }
 
 
@@ -940,7 +940,7 @@ fl_insert_browser_line( FL_OBJECT  * ob,
     FLI_BROWSER_SPEC *sp = ob->spec;
     FLI_TBOX_SPEC *tbsp = sp->tb->spec;
 
-    /* When inserting into an empty browser or appending at then end
+    /* When inserting into an empty browser or appending at the end
        it's treated exactly the same way as for fl_add_browser_line()
        (including interpretation of newline characters). */
 
@@ -1040,8 +1040,9 @@ int
 fl_isselected_browser_line( FL_OBJECT * ob,
                             int         line )
 {
-    return fli_tbox_is_line_selected( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
-                                      line - 1 );
+    FLI_BROWSER_SPEC *sp = ob->spec;
+
+    return fli_tbox_is_line_selected( sp->tb, line - 1 );
 }
 
 
@@ -1052,7 +1053,9 @@ fl_isselected_browser_line( FL_OBJECT * ob,
 int
 fl_get_browser( FL_OBJECT * ob )
 {
-    return fli_tbox_get_selection( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb );
+    FLI_BROWSER_SPEC *sp = ob->spec;
+
+    return fli_tbox_get_selection( sp->tb );
 }
 
 

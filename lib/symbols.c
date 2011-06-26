@@ -456,7 +456,7 @@ draw_arrow1( FL_Coord x,
 
 
 /***************************************
- *  An arrow head >
+ * An arrow head >
  ***************************************/
 
 static void

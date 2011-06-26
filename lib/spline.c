@@ -51,8 +51,8 @@ int
 fl_spline_interpolate( const float * wx,
                        const float * wy,
                        int           nin,
-                       float *       x,
-                       float *       y,
+                       float       * x,
+                       float       * y,
                        double        grid )
 {
     int i,
@@ -164,7 +164,7 @@ fl_spline_int_interpolate( const int * wx,
                            const int * wy,
                            int         nin,
                            int         grid,
-                           int *       y )
+                           int       * y )
 {
     int i,
         j,

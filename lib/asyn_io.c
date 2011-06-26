@@ -203,7 +203,7 @@ fli_watch_io( FLI_IO_REC * io_rec,
     wfds = st_wfds;
     efds = st_efds;
 
-    /* now watch it. HP defines rfds to be ints. Althought compiler will
+    /* Now watch it. HP defines rfds to be ints. Althought compiler will
        bark, it is harmless. */
 
     nf = select( fli_context->num_io, &rfds, &wfds, &efds, &timeout );
@@ -219,12 +219,12 @@ fli_watch_io( FLI_IO_REC * io_rec,
             M_err( "fli_watch_io", fli_get_syserror_msg( ) );
     }
 
-    /* time expired */
+    /* Time expired */
 
     if ( nf <= 0 )
         return;
 
-    /* handle it */
+    /* Handle it */
 
     for ( p = io_rec; p; p = p->next )
     {

@@ -86,9 +86,9 @@ typedef struct
     MenuItem       * item[ FL_MAXPUPI + 1 ];
     FL_PUP_CB        menu_cb;       /* call back routine     */
     FL_PUP_ENTERCB   enter_cb;      /* enter callback routine */
-    void *           enter_data;
+    void           * enter_data;
     FL_PUP_ENTERCB   leave_cb;      /* enter callback routine */
-    void *           leave_data;
+    void           * leave_data;
     unsigned long    event_mask;
     int              x,             /* origin relative to root */
                      y;
@@ -105,7 +105,7 @@ typedef struct
     short            cellh;
     short            isEntry;       /* true if menu is setup via entry struct */
     int              par_y;
-    FL_FORM *        form;
+    FL_FORM        * form;
 } PopUP;
 
 
@@ -812,7 +812,7 @@ fl_setpup_mode( int          nm,
 static void
 convert_shortcut( const char * sc,
                   const char * str,
-                  MenuItem *   item,
+                  MenuItem   * item,
                   int          n     FL_UNUSED_ARG )
 {
     if ( ! item->shortcut )
@@ -895,9 +895,9 @@ get_valid_entry( PopUP * m,
  ***************************************/
 
 static int
-handle_shortcut( PopUP *      m,
-                 KeySym       keysym,
-                 unsigned int keymask )
+handle_shortcut( PopUP        * m,
+                 KeySym         keysym,
+                 unsigned int   keymask )
 {
     MenuItem **mi = m->item;
     int i,
@@ -925,9 +925,9 @@ handle_shortcut( PopUP *      m,
  ***************************************/
 
 static int
-handle_submenu( PopUP *    m,
+handle_submenu( PopUP    * m,
                 MenuItem * item,
-                int *      val )
+                int      * val )
 {
     if ( ! ( item->mode & ( FL_PUP_GREY | FL_INACTIVE ) ) && item->subm >= 0 )
     {
@@ -960,8 +960,8 @@ handle_submenu( PopUP *    m,
 
 static int
 pup_keyboard( XKeyEvent * xev,
-              PopUP *     m,
-              int *       val )
+              PopUP     * m,
+              int       * val )
 {
     KeySym keysym = NoSymbol;
     char buf[ 16 ];
@@ -1052,7 +1052,7 @@ static MenuItem *
 handle_motion( PopUP * m,
                int     mx,
                int     my,
-               int *   val )
+               int   * val )
 {
     int cval = -1;
     MenuItem *item = NULL;
@@ -1486,9 +1486,9 @@ fl_setpup_menucb( int       nm,
  ***************************************/
 
 FL_PUP_ENTERCB
-fl_setpup_entercb( int            nm,
-                   FL_PUP_ENTERCB cb,
-                   void *         data )
+fl_setpup_entercb( int              nm,
+                   FL_PUP_ENTERCB   cb,
+                   void           * data )
 {
     FL_PUP_ENTERCB oldcb;
     PopUP *m;
@@ -1514,9 +1514,9 @@ fl_setpup_entercb( int            nm,
  ***************************************/
 
 FL_PUP_LEAVECB
-fl_setpup_leavecb( int            nm,
-                   FL_PUP_LEAVECB cb,
-                   void *         data )
+fl_setpup_leavecb( int              nm,
+                   FL_PUP_LEAVECB   cb,
+                   void           * data )
 {
     FL_PUP_LEAVECB oldcb;
     PopUP *m;
@@ -1707,7 +1707,7 @@ fl_setpup_softedge( int n,
  ***************************************/
 
 static void
-reset_radio( PopUP *    m,
+reset_radio( PopUP    * m,
              MenuItem * item )
 {
     MenuItem **ii;
@@ -1849,11 +1849,11 @@ draw_item( PopUP * m,
  ***************************************/
 
 static void
-draw_title( Display * d,
-            Drawable  w,
-            int       x,
-            int       y,
-            char *    s )
+draw_title( Display  * d,
+            Drawable   w,
+            int        x,
+            int        y,
+            char     * s )
 {
     char *t, *b;
     int n;

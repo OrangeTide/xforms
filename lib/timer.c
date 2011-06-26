@@ -130,7 +130,7 @@ handle_timer( FL_OBJECT * ob,
               FL_Coord    mx   FL_UNUSED_ARG,
               FL_Coord    my   FL_UNUSED_ARG,
               int         key  FL_UNUSED_ARG,
-              void *      ev   FL_UNUSED_ARG )
+              void      * ev   FL_UNUSED_ARG )
 {
     SPEC *sp = ob->spec;
     long sec,
@@ -308,8 +308,8 @@ fl_set_timer_countup( FL_OBJECT * ob,
  ***************************************/
 
 FL_TIMER_FILTER
-fl_set_timer_filter( FL_OBJECT *     ob,
-                     FL_TIMER_FILTER filter )
+fl_set_timer_filter( FL_OBJECT       * ob,
+                     FL_TIMER_FILTER   filter )
 {
     SPEC *sp = ob->spec;
     FL_TIMER_FILTER old = sp->filter;

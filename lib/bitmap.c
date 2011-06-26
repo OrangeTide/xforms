@@ -127,7 +127,7 @@ static void
 draw_bitmap( FL_OBJECT * obj )
 {
     FL_BUTTON_STRUCT *sp = obj->spec;
-    FL_Coord xx,            /* position of bitmap */
+    FL_Coord xx,                        /* position of bitmap */
              yy;
 
     /* Draw the box */
@@ -135,7 +135,7 @@ draw_bitmap( FL_OBJECT * obj )
     fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
                 obj->col1, obj->bw );
 
-    /* do nothing is not empty data */
+    /* Do nothing for empty data */
 
     if ( sp->bits_w == 0 || ! sp->pixmap )
         return;
@@ -165,15 +165,15 @@ handle_bitmap( FL_OBJECT * obj,
 {
     switch ( event )
     {
-        case FL_DRAW:
+        case FL_DRAW :
             draw_bitmap( obj );
             /* fall through */
 
-        case FL_DRAWLABEL:
+        case FL_DRAWLABEL :
             fl_draw_object_label( obj );
             break;
 
-        case FL_FREEMEM:
+        case FL_FREEMEM :
             free_bitmap( obj->spec );
             fl_free( obj->spec );
             break;
@@ -241,7 +241,7 @@ fl_add_bitmap( int          type,
  ***************************************/
 
 void
-fl_set_bitmap_data( FL_OBJECT *     obj,
+fl_set_bitmap_data( FL_OBJECT     * obj,
                     int             w,
                     int             h,
                     unsigned char * data )
@@ -282,11 +282,11 @@ fl_set_bitmap_data( FL_OBJECT *     obj,
 
 Pixmap
 fl_read_bitmapfile( Window         win,
-                    const char *   file,
+                    const char   * file,
                     unsigned int * w,
                     unsigned int * h,
-                    int *          hotx,
-                    int *          hoty )
+                    int          * hotx,
+                    int          * hoty )
 {
     Pixmap p = None;
     int status;
@@ -305,7 +305,7 @@ fl_read_bitmapfile( Window         win,
  ***************************************/
 
 void
-fl_set_bitmap_file( FL_OBJECT *  obj,
+fl_set_bitmap_file( FL_OBJECT  * obj,
                     const char * fname )
 {
     unsigned int w,
@@ -463,7 +463,7 @@ fl_add_bitmapbutton( int          type,
  ***************************************/
 
 void
-fl_set_bitmapbutton_data( FL_OBJECT *     obj,
+fl_set_bitmapbutton_data( FL_OBJECT     * obj,
                           int             w,
                           int             h,
                           unsigned char * bits )

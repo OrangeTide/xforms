@@ -46,52 +46,52 @@ fli_get_hv_align( int   align,
 
     switch ( align )
     {
-        case FL_ALIGN_LEFT:
+        case FL_ALIGN_LEFT :
             *halign = FL_ALIGN_LEFT;
             *valign = FL_ALIGN_CENTER;
             break;
 
-        case FL_ALIGN_RIGHT:
+        case FL_ALIGN_RIGHT :
             *halign = FL_ALIGN_RIGHT;
             *valign = FL_ALIGN_CENTER;
             break;
 
-        case FL_ALIGN_CENTER:
+        case FL_ALIGN_CENTER :
             *halign = FL_ALIGN_CENTER;
             *valign = FL_ALIGN_CENTER;
             break;
 
-        case FL_ALIGN_TOP:
+        case FL_ALIGN_TOP :
             *halign = FL_ALIGN_CENTER;
             *valign = FL_ALIGN_TOP;
             break;
 
-        case FL_ALIGN_BOTTOM:
+        case FL_ALIGN_BOTTOM :
             *halign = FL_ALIGN_CENTER;
             *valign = FL_ALIGN_BOTTOM;
             break;
 
-        case FL_ALIGN_LEFT_BOTTOM:
+        case FL_ALIGN_LEFT_BOTTOM :
             *halign = FL_ALIGN_LEFT;
             *valign = FL_ALIGN_BOTTOM;
             break;
 
-        case FL_ALIGN_RIGHT_BOTTOM:
+        case FL_ALIGN_RIGHT_BOTTOM :
             *halign = FL_ALIGN_RIGHT;
             *valign = FL_ALIGN_BOTTOM;
             break;
 
-        case FL_ALIGN_LEFT_TOP:
+        case FL_ALIGN_LEFT_TOP :
             *halign = FL_ALIGN_LEFT;
             *valign = FL_ALIGN_TOP;
             break;
 
-        case FL_ALIGN_RIGHT_TOP:
+        case FL_ALIGN_RIGHT_TOP :
             *halign = FL_ALIGN_RIGHT;
             *valign = FL_ALIGN_TOP;
             break;
 
-        default:
+        default :
             M_err( "fli_get_hv_align", "Bad request: %d\n", align );
             *halign = FL_ALIGN_CENTER;
             *valign = FL_ALIGN_CENTER;
@@ -121,43 +121,42 @@ fli_get_outside_align( int   align,
 
     switch ( align )
     {
-        case FL_ALIGN_LEFT:
+        case FL_ALIGN_LEFT :
             *new_align = FL_ALIGN_RIGHT;
             *newx = x - w;
             break;
 
-        case FL_ALIGN_RIGHT:
+        case FL_ALIGN_RIGHT :
             *new_align = FL_ALIGN_LEFT;
             *newx = x + w;
             break;
 
-        case FL_ALIGN_TOP:
+        case FL_ALIGN_TOP :
             *new_align = FL_ALIGN_BOTTOM;
             *newy = y - h;
             break;
 
-        case FL_ALIGN_BOTTOM:
+        case FL_ALIGN_BOTTOM :
             *new_align = FL_ALIGN_TOP;
             *newy = y + h;
             break;
 
-        case FL_ALIGN_LEFT_TOP:
+        case FL_ALIGN_LEFT_TOP :
             *new_align = FL_ALIGN_LEFT_BOTTOM;
             *newy = y - h;
             break;
 
-        case FL_ALIGN_RIGHT_TOP:
-
+        case FL_ALIGN_RIGHT_TOP :
             *new_align = FL_ALIGN_RIGHT_BOTTOM;
             *newy = y - h;
             break;
 
-        case FL_ALIGN_LEFT_BOTTOM:
+        case FL_ALIGN_LEFT_BOTTOM :
             *new_align = FL_ALIGN_LEFT_TOP;
             *newy = y + h;
             break;
 
-        case FL_ALIGN_RIGHT_BOTTOM:
+        case FL_ALIGN_RIGHT_BOTTOM :
             *new_align = FL_ALIGN_RIGHT_TOP;
             *newy = y + h;
             break;
@@ -192,15 +191,15 @@ get_align_inside( int   align,
 
     switch ( hor )
     {
-        case FL_ALIGN_LEFT:
+        case FL_ALIGN_LEFT :
             *xx = x;
             break;
 
-        case FL_ALIGN_RIGHT:
+        case FL_ALIGN_RIGHT :
             *xx = x + w - xsize;
             break;
 
-        case FL_ALIGN_CENTER:
+        case FL_ALIGN_CENTER :
         default:
             *xx = x + ( w - xsize ) / 2;
             break;
@@ -208,16 +207,16 @@ get_align_inside( int   align,
 
     switch ( vert )
     {
-        case FL_ALIGN_TOP:
+        case FL_ALIGN_TOP :
             *yy = y;
             break;
 
-        case FL_ALIGN_BOTTOM:
+        case FL_ALIGN_BOTTOM :
             *yy = y + h - ysize;
             break;
 
-        case FL_ALIGN_CENTER:
-        default:
+        case FL_ALIGN_CENTER :
+        default :
             *yy = y + ( h - ysize ) / 2;
             break;
     }

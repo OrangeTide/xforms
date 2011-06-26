@@ -259,7 +259,7 @@ handle_button( FL_OBJECT * obj,
                FL_Coord    mx,
                FL_Coord    my,
                int         key,
-               void *      ev )
+               void      * ev )
 {
     static int oldval;
     int newval;
@@ -571,7 +571,7 @@ fl_get_button( FL_OBJECT * obj )
 
 /***************************************
  * Returns the number of the last used mouse button.
- *  fl_mouse_button will also return the mouse number
+ * fl_mouse_button will also return the mouse number
  ***************************************/
 
 int

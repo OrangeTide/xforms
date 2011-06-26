@@ -989,8 +989,8 @@ fl_get_slider_value( FL_OBJECT * ob )
 
 void
 fl_get_slider_bounds( FL_OBJECT * ob,
-                      double *    min,
-                      double *    max )
+                      double    * min,
+                      double    * max )
 {
     *min = ( ( FLI_SLIDER_SPEC * ) ob->spec )->min;
     *max = ( ( FLI_SLIDER_SPEC * ) ob->spec )->max;
@@ -1045,8 +1045,8 @@ fl_set_slider_increment( FL_OBJECT * ob,
 
 void
 fl_get_slider_increment( FL_OBJECT * ob,
-                         double *    l,
-                         double *    r )
+                         double    * l,
+                         double    * r )
 {
     *l = ( ( FLI_SLIDER_SPEC * ) ob->spec )->ldelta;
     *r = ( ( FLI_SLIDER_SPEC * ) ob->spec )->rdelta;
@@ -1114,8 +1114,8 @@ fl_set_slider_precision( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_slider_filter( FL_OBJECT *   ob,
-                      FL_VAL_FILTER filter )
+fl_set_slider_filter( FL_OBJECT     * ob,
+                      FL_VAL_FILTER   filter )
 {
     ( ( FLI_SLIDER_SPEC * ) ob->spec )->filter = filter;
 }

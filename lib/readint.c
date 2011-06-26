@@ -146,7 +146,7 @@ fli_readpint( FILE * fp )
 
 
 /***************************************
- *  Read a hex integer
+ * Read a hex integer
  ***************************************/
 
 int

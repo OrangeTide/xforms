@@ -29,8 +29,8 @@ static int handle_select( FL_OBJECT *, int, FL_Coord, FL_Coord, int, void * );
 static int handle_push( FL_OBJECT *, int );
 static FL_POPUP_RETURN * find_first_item( FL_OBJECT * );
 static FL_POPUP_RETURN * find_last_item( FL_OBJECT * );
-static FL_POPUP_RETURN * find_next_item( FL_OBJECT *  );
-static FL_POPUP_RETURN * find_prev_item( FL_OBJECT *  );
+static FL_POPUP_RETURN * find_next_item( FL_OBJECT * );
+static FL_POPUP_RETURN * find_prev_item( FL_OBJECT * );
 static void draw_select( FL_OBJECT * );
 static void draw_droplist( FL_OBJECT * );
 
@@ -874,7 +874,7 @@ handle_select( FL_OBJECT * obj,
                FL_Coord    mx   FL_UNUSED_ARG,
                FL_Coord    my   FL_UNUSED_ARG,
                int         key,
-               void *      ev   FL_UNUSED_ARG )
+               void      * ev   FL_UNUSED_ARG )
 {
     FLI_SELECT_SPEC *sp = obj->spec;
     FL_POPUP_RETURN *ret = NULL;

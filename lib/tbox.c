@@ -69,14 +69,15 @@ fli_create_tbox( int          type,
     FLI_TBOX_SPEC *sp;
 
     obj = fl_make_object( FL_TBOX, type, x, y, w, h, label, handle_tbox );
-    obj->boxtype     = FLI_TBOX_BOXTYPE;
-    obj->lcol        = FLI_TBOX_LCOL;
-    obj->col1        = FLI_TBOX_COL1;
-    obj->col2        = FLI_TBOX_COL2;
-    obj->align       = FLI_TBOX_ALIGN;
-    obj->wantkey     = FL_KEY_SPECIAL;
-    obj->want_update = 0;
-    obj->spec        = sp = fl_malloc( sizeof *sp );
+
+    obj->boxtype      = FLI_TBOX_BOXTYPE;
+    obj->lcol         = FLI_TBOX_LCOL;
+    obj->col1         = FLI_TBOX_COL1;
+    obj->col2         = FLI_TBOX_COL2;
+    obj->align        = FLI_TBOX_ALIGN;
+    obj->wantkey      = FL_KEY_SPECIAL;
+    obj->want_update  = 0;
+    obj->spec         = sp = fl_malloc( sizeof *sp );
 
     sp->x             = 0;
     sp->y             = 0;
@@ -316,7 +317,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
     tl->specialGC     = None;
 
     /* Check for flags at the start of the line. When we're done 'p'
-       points to the start of the string to be shown in the textbox.*/
+       points to the start of the string to be shown in the textbox. */
 
     while ( *p && *p == sp->specialkey && ! done )
     {
@@ -559,9 +560,10 @@ fli_tbox_add_line( FL_OBJECT  * obj,
 }
 
 
-/***************************************
- * Appends characters to the last line in the textbox
- ***************************************/
+/**************************************
+ * Appends characters to the last line
+ * in the textbox
+ **************************************/
 
 void
 fli_tbox_add_chars( FL_OBJECT  * obj,
@@ -678,9 +680,9 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
 }
 
 
-/***************************************
+/*********************************
  * Replaces a line in the textbox
- ***************************************/
+ *********************************/
 
 void
 fli_tbox_replace_line( FL_OBJECT  * obj,
@@ -703,9 +705,9 @@ fli_tbox_replace_line( FL_OBJECT  * obj,
 }
 
 
-/***************************************
+/*************************************
  * Removes all lines from the textbox
- ***************************************/
+ *************************************/
 
 void
 fli_tbox_clear( FL_OBJECT * obj )
@@ -743,10 +745,9 @@ fli_tbox_clear( FL_OBJECT * obj )
 }
 
 
-
-/***************************************
+/***********************************************
  * Loads all lines from a file into the textbox
- ***************************************/
+ ***********************************************/
 
 int
 fli_tbox_load( FL_OBJECT  * obj,
@@ -791,9 +792,10 @@ fli_tbox_load( FL_OBJECT  * obj,
 }
 
 
-/***************************************
- * Returns the text of a line in the textbox (including flags)
- ***************************************/
+/************************************
+ * Returns the text of a line in the
+ * textbox (including flags)
+ ************************************/
 
 const char *
 fli_tbox_get_line( FL_OBJECT * obj,
@@ -808,9 +810,10 @@ fli_tbox_get_line( FL_OBJECT * obj,
 }
 
 
-/***************************************
- * Sets a new font size for all lines drawn with default settings
- ***************************************/
+/*************************************
+ * Sets a new font size for all lines
+ * drawn with default settings
+ *************************************/
 
 void
 fli_tbox_set_fontsize( FL_OBJECT * obj,
@@ -853,7 +856,8 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
             tl->w = fl_get_string_widthTAB( tl->style, tl->size,
                                             tl->text, tl->len );
             tl->h = fl_get_string_height( tl->style, tl->size,
-                                          tl->len ? tl->text : " ", tl->len | 1,
+                                          tl->len ? tl->text : " ",
+                                          tl->len | 1,
                                           &tl->asc, &tl->desc );
         }
         else
@@ -864,7 +868,7 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
         }
     }
 
-    /* Calculate vertical positions of all lines and max width */
+    /* Calculate vertical positions of all lines and maximum width */
 
     sp->max_width = sp->lines[ 0 ]->w;
 
@@ -874,7 +878,7 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
         sp->max_width = FL_max( sp->max_width, sp->lines[ i ]->w );
     }
 
-    /* Determine new height of all text */
+    /* Determine new height of all the text */
 
     sp->max_height =   sp->lines[ sp->num_lines - 1 ]->y
                      + sp->lines[ sp->num_lines - 1 ]->h;
@@ -886,9 +890,10 @@ fli_tbox_set_fontsize( FL_OBJECT * obj,
 }
 
 
-/***************************************
- * Sets a new font style for all lines drawn with default settings
- ***************************************/
+/**************************************
+ * Sets a new font style for all lines
+ * drawn with default settings
+ **************************************/
 
 void
 fli_tbox_set_fontstyle( FL_OBJECT * obj,
@@ -931,7 +936,8 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
             tl->w = fl_get_string_widthTAB( tl->style, tl->size,
                                             tl->text, tl->len );
             tl->h = fl_get_string_height( tl->style, tl->size,
-                                          tl->len ? tl->text : " ", tl->len | 1,
+                                          tl->len ? tl->text : " ",
+                                          tl->len | 1,
                                           &tl->asc, &tl->desc );
         }
         else
@@ -942,8 +948,8 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
         }
     }
 
-    /* Calculate vertical positions of all lines and the width of the longest
-       line */
+    /* Calculate vertical positions of all lines and the width of the
+       longest line */
 
     sp->max_width = sp->lines[ 0 ]->w;
 
@@ -967,9 +973,10 @@ fli_tbox_set_fontstyle( FL_OBJECT * obj,
 }
 
 
-/***************************************
- * Sets the x-offset in pixels of the text displayed in the textbox
- ***************************************/
+/*************************************
+ * Sets the x-offset in pixels of the
+ * text displayed in the textbox
+ *************************************/
 
 int
 fli_tbox_set_xoffset( FL_OBJECT * obj,
@@ -1043,8 +1050,7 @@ fli_tbox_set_yoffset( FL_OBJECT * obj,
 
 /***************************************
  * Sets the y-offset of the text displayed in the textbox as a
- * number between 0 (show start of text) and 1 (show end of
- * text)
+ * number between 0 (show start of text) and 1 (show end of text)
  ***************************************/
 
 double
@@ -1081,7 +1087,7 @@ fli_tbox_get_xoffset( FL_OBJECT * obj )
 /***************************************
  * Returns the x-offset of the text displayed in the textbox
  * as a number between 0 (starts of lines are shown) and 1
- * (end of longest line s shown)
+ * (end of longest line is shown)
  ***************************************/
 
 double
@@ -1126,8 +1132,8 @@ fli_tbox_get_rel_yoffset( FL_OBJECT * obj )
 
 
 /***************************************
- * Returns the y-offset (in pixel) for a line (or -1 if the line
- * does not exist).
+ * Returns the y-offset in pixel for a line
+ * (or -1 if the line doesn't exist).
  ***************************************/
 
 int
@@ -1144,7 +1150,7 @@ fli_tbox_get_line_yoffset( FL_OBJECT * obj,
 
 
 /***************************************
- * Makes a line the topmost shown line (as far as possible)
+ * Makes a line the one shown at the top (as far as possible)
  ***************************************/
 
 void
@@ -1184,7 +1190,8 @@ fli_tbox_set_bottomline( FL_OBJECT * obj,
         line = sp->num_lines - 1;
 
     fli_tbox_set_yoffset( obj,
-                          sp->lines[ line ]->y + sp->lines[ line ]->h - sp->h );
+                            sp->lines[ line ]->y
+                          + sp->lines[ line ]->h - sp->h );
 }
 
 
@@ -1216,10 +1223,10 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
  * Removes all selections in the browser
  ***************************************/
 
- void
- fli_tbox_deselect( FL_OBJECT * obj )
- {
-     FLI_TBOX_SPEC *sp = obj->spec;
+void
+fli_tbox_deselect( FL_OBJECT * obj )
+{
+    FLI_TBOX_SPEC *sp = obj->spec;
     int i;
 
     for ( i = 0; i < sp->num_lines; i++ )
@@ -1237,10 +1244,10 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
  * Deselects a line in the browser
  ***************************************/
 
- void
- fli_tbox_deselect_line( FL_OBJECT * obj,
+void
+fli_tbox_deselect_line( FL_OBJECT * obj,
                          int         line )
- {
+{
     FLI_TBOX_SPEC *sp = obj->spec;
 
     if ( line < 0 || line >= sp->num_lines || ! sp->lines[ line ]->selected )
@@ -1266,10 +1273,10 @@ fli_tbox_set_centerline( FL_OBJECT * obj,
  * Selects a line in the browser (if necessary deselecting another line)
  ***************************************/
 
- void
- fli_tbox_select_line( FL_OBJECT * obj,
-                       int         line )
- {
+void
+fli_tbox_select_line( FL_OBJECT * obj,
+                      int         line )
+{
     FLI_TBOX_SPEC *sp = obj->spec;
 
     if (    line < 0
@@ -1788,7 +1795,6 @@ fli_tbox_get_num_lines( FL_OBJECT * obj )
 }
 
 
-
 /***************************************
  * Returns the index of the first line that
  * is completete shown on the screen
@@ -2054,7 +2060,9 @@ void
 fli_tbox_react_to_vert( FL_OBJECT * obj,
                         int         state )
 {
-    ( ( FLI_TBOX_SPEC * ) obj->spec )->react_to_vert = state ? 1 : 0;
+    FLI_TBOX_SPEC *sp = obj->spec;
+
+    sp->react_to_vert = state ? 1 : 0;
 }
 
 
@@ -2068,7 +2076,9 @@ void
 fli_tbox_react_to_hori( FL_OBJECT * obj,
                         int         state )
 {
-    ( ( FLI_TBOX_SPEC * ) obj->spec )->react_to_hori = state ? 1 : 0;
+    FLI_TBOX_SPEC *sp = obj->spec;
+
+    sp->react_to_hori = state ? 1 : 0;
 }
 
 

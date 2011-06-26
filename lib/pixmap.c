@@ -404,7 +404,7 @@ handle_pixmap( FL_OBJECT * obj,
                FL_Coord    mx   FL_UNUSED_ARG,
                FL_Coord    my   FL_UNUSED_ARG,
                int         key  FL_UNUSED_ARG,
-               void *      ev   FL_UNUSED_ARG )
+               void      * ev   FL_UNUSED_ARG )
 {
     FL_BUTTON_STRUCT *sp = obj->spec;
 
@@ -693,7 +693,7 @@ fl_set_pixmap_file( FL_OBJECT  * obj,
 
 
 /*****************************************************************
- *      Pixmap button
+ * Pixmap button
  ***********************************************************{****/
 
 #define IsFlat( t ) (    ( t ) == FL_FLAT_BOX       \

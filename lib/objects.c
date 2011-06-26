@@ -32,7 +32,7 @@
  * redraws for objects with a label outside of the object (and of objects
  * with the label inside, but extending beyond the borders of the object).
  * That's all still a mess (and too slow) and needs quite a bit of cleaning
- *  up!
+ * up!
  ***************************************************/
 
 #ifdef HAVE_CONFIG_H
@@ -718,7 +718,7 @@ fl_set_object_resize( FL_OBJECT    * obj,
  ***************************************/
 
 void
-fl_get_object_resize( FL_OBJECT *    obj,
+fl_get_object_resize( FL_OBJECT    * obj,
                       unsigned int * resize )
 {
     if ( ! obj )
@@ -771,7 +771,7 @@ fl_set_object_gravity( FL_OBJECT    * obj,
  * Returns the gravity settings for an object
  ***************************************/
 void
-fl_get_object_gravity( FL_OBJECT *    obj,
+fl_get_object_gravity( FL_OBJECT    * obj,
                        unsigned int * nw,
                        unsigned int * se )
 {
@@ -2643,7 +2643,7 @@ fli_handle_object( FL_OBJECT * obj,
                    FL_Coord    mx,
                    FL_Coord    my,
                    int         key,
-                   XEvent *    xev,
+                   XEvent    * xev,
                    int         enter_it )
 {
     int res;
@@ -2768,7 +2768,7 @@ fl_set_object_bw( FL_OBJECT * obj,
 
 void
 fl_get_object_bw( FL_OBJECT * obj,
-                  int *       bw )
+                  int       * bw )
 {
     if ( ! obj )
     {
@@ -2938,8 +2938,8 @@ fl_scale_object( FL_OBJECT * obj,
  ***************************************/
 
 FL_HANDLEPTR
-fl_set_object_prehandler( FL_OBJECT *  obj,
-                          FL_HANDLEPTR phandler )
+fl_set_object_prehandler( FL_OBJECT    * obj,
+                          FL_HANDLEPTR   phandler )
 {
     FL_HANDLEPTR oldh = obj->prehandle;
 
@@ -3266,10 +3266,10 @@ fl_set_object_size( FL_OBJECT * obj,
 
 void
 fl_get_object_geometry( FL_OBJECT * obj,
-                        FL_Coord *  x,
-                        FL_Coord *  y,
-                        FL_Coord *  w,
-                        FL_Coord *  h )
+                        FL_Coord  * x,
+                        FL_Coord  * y,
+                        FL_Coord  * w,
+                        FL_Coord  * h )
 {
     fl_get_object_position( obj, x, y );
     fl_get_object_size( obj, w, h );

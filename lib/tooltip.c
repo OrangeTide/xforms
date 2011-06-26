@@ -36,9 +36,9 @@
 
 
 typedef struct {
-     FL_FORM *   tooltipper;
-     void *      vdata;
-     char *      cdata;
+     FL_FORM   * tooltipper;
+     void      * vdata;
+     char      * cdata;
      long        ldate;
      FL_OBJECT * text;
      int         fntstyle;

@@ -389,8 +389,8 @@ fli_get_pos_in_string( int          horalign,
                        FL_Coord     xpos,
                        FL_Coord     ypos,
                        const char * str,
-                       int *        xp,
-                       int *        yp )
+                       int        * xp,
+                       int        * yp )
 {
     int i,
         i0,
@@ -648,15 +648,15 @@ fli_draw_text_inside( int          align,
  ***************************************/
 
 void
-fl_drw_text( int            align,
-             FL_Coord       x,
-             FL_Coord       y,
-             FL_Coord       w,
-             FL_Coord       h,
-             FL_COLOR       c,
-             int            style,
-             int            size,
-             const char *   istr )
+fl_drw_text( int          align,
+             FL_Coord     x,
+             FL_Coord     y,
+             FL_Coord     w,
+             FL_Coord     h,
+             FL_COLOR     c,
+             int          style,
+             int          size,
+             const char * istr )
 {
     fli_draw_text_inside( align, x, y, w, h, istr, style, size, c, 0, 0 );
 }
@@ -668,18 +668,18 @@ fl_drw_text( int            align,
 #if 0
 
 void
-fl_draw_text_beside( int      align,
-                     FL_Coord x,
-                     FL_Coord y,
-                     FL_Coord w,
-                     FL_Coord h,
-                     char *   str,
-                     int      len,
-                     int      style,
-                     int      size,
-                     FL_COLOR c,
-                     FL_COLOR bc,
-                     int      bk )
+fl_draw_text_beside( int        align,
+                     FL_Coord   x,
+                     FL_Coord   y,
+                     FL_Coord   w,
+                     FL_Coord   h,
+                     char     * str,
+                     int        len,
+                     int        style,
+                     int        size,
+                     FL_COLOR   c,
+                     FL_COLOR   bc,
+                     int        bk )
 {
     int newa,
         newx,
@@ -801,7 +801,7 @@ XRectangle *
 fli_get_underline_rect( XFontStruct * fs,
                         FL_Coord      x,
                         FL_Coord      y,
-                        const char *  cstr,
+                        const char  * cstr,
                         int           n )
 {
     static XRectangle xr;

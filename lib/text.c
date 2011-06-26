@@ -43,7 +43,7 @@ handle_text( FL_OBJECT * ob,
              FL_Coord    mx   FL_UNUSED_ARG,
              FL_Coord    my   FL_UNUSED_ARG,
              int         key  FL_UNUSED_ARG,
-             void *      ev   FL_UNUSED_ARG )
+             void      * ev   FL_UNUSED_ARG )
 {
     switch ( event )
     {
@@ -100,7 +100,7 @@ fl_add_text( int          type,
              FL_Coord     y,
              FL_Coord     w,
              FL_Coord     h,
-             const char * label)
+             const char * label )
 {
     FL_OBJECT *obj = fl_create_text( type, x, y, w, h, label );
 

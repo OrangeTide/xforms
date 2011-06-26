@@ -232,7 +232,7 @@ handle_menu( FL_OBJECT * ob,
              FL_Coord    mx   FL_UNUSED_ARG,
              FL_Coord    my   FL_UNUSED_ARG,
              int         key  FL_UNUSED_ARG,
-             void *      ev   FL_UNUSED_ARG )
+             void      * ev   FL_UNUSED_ARG )
 {
     FLI_MENU_SPEC *sp = ob->spec;
     int val,
@@ -496,7 +496,7 @@ addto_menu( FL_OBJECT  * ob,
  ***************************************/
 
 void
-fl_set_menu( FL_OBJECT *  ob,
+fl_set_menu( FL_OBJECT  * ob,
              const char * menustr,
              ... )
 {
@@ -600,7 +600,7 @@ fl_addto_menu( FL_OBJECT  * ob,
  ***************************************/
 
 void
-fl_replace_menu_item( FL_OBJECT *  ob,
+fl_replace_menu_item( FL_OBJECT  * ob,
                       int          numb,
                       const char * str,
                       ... )
@@ -704,9 +704,9 @@ fl_delete_menu_item( FL_OBJECT * ob,
  ***************************************/
 
 FL_PUP_CB
-fl_set_menu_item_callback( FL_OBJECT *  ob,
-                           int          numb,
-                           FL_PUP_CB    cb )
+fl_set_menu_item_callback( FL_OBJECT * ob,
+                           int         numb,
+                           FL_PUP_CB   cb )
 {
     FLI_MENU_SPEC *sp = ob->spec;
     FL_PUP_CB old_cb;
@@ -725,7 +725,7 @@ fl_set_menu_item_callback( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_set_menu_item_shortcut( FL_OBJECT *  ob,
+fl_set_menu_item_shortcut( FL_OBJECT  * ob,
                            int          numb,
                            const char * str )
 {
@@ -744,9 +744,9 @@ fl_set_menu_item_shortcut( FL_OBJECT *  ob,
  ***************************************/
 
 void
-fl_set_menu_item_mode( FL_OBJECT *  ob,
-                       int          numb,
-                       unsigned int mode )
+fl_set_menu_item_mode( FL_OBJECT    * ob,
+                       int            numb,
+                       unsigned int   mode )
 {
     FLI_MENU_SPEC *sp = ob->spec;
 

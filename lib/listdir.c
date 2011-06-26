@@ -207,8 +207,8 @@ static int filter_directory = 0;   /* true to filter directory entries */
  ***************************************/
 
 static void
-mode2type( unsigned int mode,
-           int *        type )
+mode2type( unsigned int   mode,
+           int          * type )
 {
     if ( S_ISDIR( mode ) )
         *type = FT_DIR;
@@ -281,7 +281,7 @@ fselect( const char  * d_name,
 
 static int
 fselect( struct _finddata_t * c_file,
-         FL_Dirlist *         dl )
+         FL_Dirlist         * dl )
 {
     int type,
         ret = 0;
@@ -293,10 +293,8 @@ fselect( struct _finddata_t * c_file,
 
     if ( ! ffilter )
         ret = 1;
-    else if ( ffilter == default_filter )
-    {               /* always keep directory and links */
+    else if ( ffilter == default_filter ) /* always keep directory and links */
         ret = type == FT_DIR || fli_wildmat( c_file->name, cpat );
-    }
     else
     {
         strcat( strcpy( fname, cdir ), c_file->name );

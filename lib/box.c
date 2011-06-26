@@ -41,7 +41,7 @@ handle_box( FL_OBJECT * ob,
             FL_Coord    mx   FL_UNUSED_ARG,
             FL_Coord    my   FL_UNUSED_ARG,
             int         key  FL_UNUSED_ARG,
-            void *      ev   FL_UNUSED_ARG )
+            void      * ev   FL_UNUSED_ARG )
 {
     switch ( event )
     {

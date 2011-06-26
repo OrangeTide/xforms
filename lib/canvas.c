@@ -553,8 +553,8 @@ fl_hide_canvas( FL_OBJECT * ob )
     if ( sp->window && sp->cleanup )
         sp->cleanup( ob );
 
-    /* If parent is unmapped, sp->window is also unmapped, must cleanup canvas
-       specific stuff before closing window */
+    /* If parent is unmapped, sp->window is also unmapped, must cleanup
+       canvas specific stuff before closing window */
 
     if ( ob->visible && sp->window && ob->form && ob->form->window )
         fl_winclose( sp->window );
@@ -681,7 +681,8 @@ fl_canvas_yield_to_shortcut( FL_OBJECT * ob,
         if ( ! sp->window )
             sp->xswa.event_mask |= emask;
         else
-            sp->xswa.event_mask = fl_addto_selected_xevent( sp->window, emask );
+            sp->xswa.event_mask =
+                               fl_addto_selected_xevent( sp->window, emask );
     }
     else if ( ! sp->canvas_handler[ KeyPress ] )
     {
