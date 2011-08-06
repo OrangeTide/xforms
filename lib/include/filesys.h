@@ -60,7 +60,7 @@ enum {
 typedef int ( * FL_DIRLIST_FILTER )( const char *, int );
 
 /* read dir with pattern filtering. All dirs read might be cached.
- * must not change dirlist in anyway. */
+ * Must not change dirlist in anyway. */
 
 FL_EXPORT const FL_Dirlist * fl_get_dirlist( const char * dir,
                                              const char * pattern,

@@ -72,7 +72,7 @@ rotate_it( FL_POINT * xp,
  ***************************************/
 
 static void
-draw_dial( FL_OBJECT * ob )
+draw_dial( FL_OBJECT * obj )
 {
     FL_Coord x,
              y,
@@ -80,7 +80,7 @@ draw_dial( FL_OBJECT * ob )
              h,
              radius;
     double dangle;
-    FLI_DIAL_SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = obj->spec;
     FL_POINT xp[ 5 ];             /* need one extra for closing of polygon! */
     int boxtype,
         iradius;
@@ -101,19 +101,19 @@ draw_dial( FL_OBJECT * ob )
 
     dangle *= M_PI / 180.0;
 
-    w = ob->w - 3;
-    h = ob->h - 3;
+    w = obj->w - 3;
+    h = obj->h - 3;
 
-    x = xo = ob->x + ob->w / 2;
-    y = yo = ob->y + ob->h / 2;
+    x = xo = obj->x + obj->w / 2;
+    y = yo = obj->y + obj->h / 2;
 
-    if ( FL_IS_UPBOX( ob->boxtype ) )
+    if ( FL_IS_UPBOX( obj->boxtype ) )
         boxtype = FL_OVAL3D_UPBOX;
-    else if ( FL_IS_DOWNBOX( ob->boxtype ) )
+    else if ( FL_IS_DOWNBOX( obj->boxtype ) )
         boxtype = FL_OVAL3D_DOWNBOX;
-    else if ( ob->boxtype == FL_FRAME_BOX )
+    else if ( obj->boxtype == FL_FRAME_BOX )
         boxtype = FL_OVAL3D_FRAMEBOX;
-    else if ( ob->boxtype == FL_EMBOSSED_BOX )
+    else if ( obj->boxtype == FL_EMBOSSED_BOX )
         boxtype = FL_OVAL3D_EMBOSSEDBOX;
     else
         boxtype = FL_OVAL_BOX;
@@ -124,11 +124,11 @@ draw_dial( FL_OBJECT * ob )
     iradius = radius - 1;         /* internal radius */
 
     fl_drw_box( boxtype, x - radius, y - radius, 2 * radius, 2 * radius,
-                ob->col1, ob->bw );
+                obj->col1, obj->bw );
 
     /* the "hand" */
 
-    if ( ob->type == FL_NORMAL_DIAL )
+    if ( obj->type == FL_NORMAL_DIAL )
     {
         FL_Coord r;
 
@@ -139,9 +139,9 @@ draw_dial( FL_OBJECT * ob )
         rotate_it( xp + 2, x + iradius - 1 - r, y + 2, dangle );
         rotate_it( xp + 3, x + iradius - 1,     y + 2, dangle );
 
-        fl_polyf( xp, 4, ob->col2 );
+        fl_polyf( xp, 4, obj->col2 );
     }
-    else if ( ob->type == FL_LINE_DIAL )
+    else if ( obj->type == FL_LINE_DIAL )
     {
         double dx = 0.1 + 0.08 * iradius,
                dy = 0.1 + 0.08 * iradius;
@@ -151,9 +151,9 @@ draw_dial( FL_OBJECT * ob )
         rotate_it( xp + 2, x + iradius - 2, y,      dangle );
         rotate_it( xp + 3, x + dx,          y + dy, dangle );
 
-        fl_polybound( xp, 4, ob->col2 );
+        fl_polybound( xp, 4, obj->col2 );
     }
-    else if ( ob->type == FL_FILL_DIAL )
+    else if ( obj->type == FL_FILL_DIAL )
     {
         double ti,
                delta;
@@ -173,7 +173,7 @@ draw_dial( FL_OBJECT * ob )
             ti += 360.0;
 
         fl_ovalarc( 1, xo - iradius, yo - iradius, 2 * iradius, 2 * iradius,
-                    ti * 10, delta * 10, ob->col2 );
+                    ti * 10, delta * 10, obj->col2 );
 
         rotate_it( xp,     xo + iradius - 1, yo, dangle );
         rotate_it( xp + 1, xo + iradius - 1, yo, ti * M_PI / 180.0 );
@@ -188,8 +188,8 @@ draw_dial( FL_OBJECT * ob )
     else
         M_err( "draw_dial", "Bad type" );
 
-    fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h,
-                        ob->lcol, ob->lstyle, ob->lsize, ob->label );
+    fl_drw_text_beside( obj->align, obj->x, obj->y, obj->w, obj->h,
+                        obj->lcol, obj->lstyle, obj->lsize, obj->label );
 }
 
 
@@ -198,11 +198,11 @@ draw_dial( FL_OBJECT * ob )
  ***************************************/
 
 static int
-handle_mouse( FL_OBJECT * ob,
+handle_mouse( FL_OBJECT * obj,
               FL_Coord    mousex,
               FL_Coord    mousey )
 {
-    FLI_DIAL_SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = obj->spec;
     double oldv,
            val,
            olda;
@@ -216,8 +216,8 @@ handle_mouse( FL_OBJECT * ob,
 
     /* convert to sane FL_coordinate system, i.e., +y up */
 
-    mx =   mousex - ( ob->x + ob->w * 0.5 );
-    my = - mousey + ( ob->y + ob->h * 0.5 );
+    mx =   mousex - ( obj->x + obj->w * 0.5 );
+    my = - mousey + ( obj->y + obj->h * 0.5 );
 
     /* Don't react to clicks very close to center */
 
@@ -258,7 +258,7 @@ handle_mouse( FL_OBJECT * ob,
     if ( fabs( val - oldv ) > range / 1800.0 )
     {
         sp->val = val;
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
         return FL_RETURN_CHANGED;
     }
 
@@ -271,11 +271,11 @@ handle_mouse( FL_OBJECT * ob,
  ***************************************/
 
 static int
-handle_mouse_wheel( FL_OBJECT * ob,
+handle_mouse_wheel( FL_OBJECT * obj,
                     XEvent *    xev,
                     int         key )
 {
-    FLI_DIAL_SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = obj->spec;
     double val,
            step,
            oldv = sp->val,
@@ -316,7 +316,7 @@ handle_mouse_wheel( FL_OBJECT * ob,
     if ( val != oldv )
     {
         sp->val = val;
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
         return FL_RETURN_CHANGED;
     }
 
@@ -407,16 +407,16 @@ fl_create_dial( int          type,
                 FL_Coord     h,
                 const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
     FLI_DIAL_SPEC *sp;
 
-    ob = fl_make_object( FL_DIAL, type, x, y, w, h, label, handle_dial );
-    ob->col1       = FL_DIAL_COL1;
-    ob->col2       = FL_DIAL_COL2;
-    ob->align      = FL_DIAL_ALIGN;
-    ob->lcol       = FL_DIAL_LCOL;
-    ob->boxtype    = FL_DIAL_BOXTYPE;
-    ob->spec       = sp = fl_calloc( 1, sizeof *sp );
+    obj = fl_make_object( FL_DIAL, type, x, y, w, h, label, handle_dial );
+    obj->col1     = FL_DIAL_COL1;
+    obj->col2     = FL_DIAL_COL2;
+    obj->align    = FL_DIAL_ALIGN;
+    obj->lcol     = FL_DIAL_LCOL;
+    obj->boxtype  = FL_DIAL_BOXTYPE;
+    obj->spec     = sp = fl_calloc( 1, sizeof *sp );
 
     sp->min       = 0.0;
     sp->max       = 1.0;
@@ -428,7 +428,7 @@ fl_create_dial( int          type,
     sp->direction = FL_DIAL_CW;
     get_mapping( sp );
 
-    return ob;
+    return obj;
 }
 
 
@@ -461,15 +461,15 @@ fl_add_dial( int          type,
  ***************************************/
 
 void
-fl_set_dial_value( FL_OBJECT * ob,
+fl_set_dial_value( FL_OBJECT * obj,
                    double      val )
 {
-    FLI_DIAL_SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = obj->spec;
 
     if ( sp->val != val )
     {
         sp->val = sp->start_val = val;
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 
@@ -478,11 +478,11 @@ fl_set_dial_value( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_dial_bounds( FL_OBJECT * ob,
+fl_set_dial_bounds( FL_OBJECT * obj,
                     double      min,
                     double      max )
 {
-    FLI_DIAL_SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = obj->spec;
 
     if ( sp->min != min || sp->max != max )
     {
@@ -490,7 +490,7 @@ fl_set_dial_bounds( FL_OBJECT * ob,
         sp->max = max;
         get_mapping( sp );
         sp->val = fli_clamp( sp->val, sp->min, sp->max );
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 
@@ -499,11 +499,11 @@ fl_set_dial_bounds( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_dial_angles( FL_OBJECT * ob,
+fl_set_dial_angles( FL_OBJECT * obj,
                     double      amin,
                     double      amax )
 {
-    FLI_DIAL_SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = obj->spec;
 
     if ( ( amin = fmod( amin, 360.0 ) ) < 0.0 )
         amin += 360.0;
@@ -515,7 +515,7 @@ fl_set_dial_angles( FL_OBJECT * ob,
         sp->thetaf = amax;
         sp->thetai = amin;
         get_mapping( sp );
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 
@@ -524,10 +524,10 @@ fl_set_dial_angles( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_dial_cross( FL_OBJECT * ob,
+fl_set_dial_cross( FL_OBJECT * obj,
                    int         flag )
 {
-    ( ( FLI_DIAL_SPEC * ) ob->spec )->cross_over = flag;
+    ( ( FLI_DIAL_SPEC * ) obj->spec )->cross_over = flag;
 }
 
 
@@ -535,9 +535,9 @@ fl_set_dial_cross( FL_OBJECT * ob,
  ***************************************/
 
 double
-fl_get_dial_value( FL_OBJECT * ob )
+fl_get_dial_value( FL_OBJECT * obj )
 {
-    return ( ( FLI_DIAL_SPEC * ) ob->spec )->val;
+    return ( ( FLI_DIAL_SPEC * ) obj->spec )->val;
 }
 
 
@@ -545,12 +545,12 @@ fl_get_dial_value( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_get_dial_bounds( FL_OBJECT * ob,
+fl_get_dial_bounds( FL_OBJECT * obj,
                     double *    min,
                     double *    max )
 {
-    *min = ( ( FLI_DIAL_SPEC * ) ob->spec )->min;
-    *max = ( ( FLI_DIAL_SPEC * ) ob->spec )->max;
+    *min = ( ( FLI_DIAL_SPEC * ) obj->spec )->min;
+    *max = ( ( FLI_DIAL_SPEC * ) obj->spec )->max;
 }
 
 
@@ -573,10 +573,10 @@ fl_set_dial_return( FL_OBJECT    * obj,
  ***************************************/
 
 void
-fl_set_dial_step( FL_OBJECT * ob,
+fl_set_dial_step( FL_OBJECT * obj,
                   double      value )
 {
-    ( ( FLI_DIAL_SPEC * ) ob->spec )->step = value;
+    ( ( FLI_DIAL_SPEC * ) obj->spec )->step = value;
 }
 
 
@@ -584,16 +584,16 @@ fl_set_dial_step( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_dial_direction( FL_OBJECT * ob,
+fl_set_dial_direction( FL_OBJECT * obj,
                        int         dir )
 {
-    FLI_DIAL_SPEC *sp = ob->spec;
+    FLI_DIAL_SPEC *sp = obj->spec;
 
     if ( sp->direction != dir )
     {
         sp->direction = dir;
         get_mapping( sp );
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 

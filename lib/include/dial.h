@@ -63,35 +63,35 @@ FL_EXPORT FL_OBJECT * fl_add_dial( int          type,
                                    FL_Coord     h,
                                    const char * label );
 
-FL_EXPORT void fl_set_dial_value( FL_OBJECT * ob,
+FL_EXPORT void fl_set_dial_value( FL_OBJECT * obj,
                                   double      val );
 
-FL_EXPORT double fl_get_dial_value( FL_OBJECT * ob );
+FL_EXPORT double fl_get_dial_value( FL_OBJECT * obj );
 
-FL_EXPORT void fl_set_dial_bounds( FL_OBJECT * ob,
+FL_EXPORT void fl_set_dial_bounds( FL_OBJECT * obj,
                                    double      min,
                                    double      max );
 
-FL_EXPORT void fl_get_dial_bounds( FL_OBJECT * ob,
+FL_EXPORT void fl_get_dial_bounds( FL_OBJECT * obj,
                                    double    * min,
                                    double    * max );
 
-FL_EXPORT void fl_set_dial_step( FL_OBJECT * ob,
+FL_EXPORT void fl_set_dial_step( FL_OBJECT * obj,
                                  double      value );
 
-FL_EXPORT void fl_set_dial_return( FL_OBJECT    * ob,
+FL_EXPORT void fl_set_dial_return( FL_OBJECT    * obj,
                                    unsigned int   value );
 
-FL_EXPORT void fl_set_dial_angles( FL_OBJECT * ob,
+FL_EXPORT void fl_set_dial_angles( FL_OBJECT * obj,
                                    double      amin,
                                    double      amax );
 
-FL_EXPORT void fl_set_dial_cross( FL_OBJECT * ob,
+FL_EXPORT void fl_set_dial_cross( FL_OBJECT * obj,
                                   int         flag );
 
 #define fl_set_dial_crossover  fl_set_dial_cross
 
-FL_EXPORT void fl_set_dial_direction( FL_OBJECT * ob,
+FL_EXPORT void fl_set_dial_direction( FL_OBJECT * obj,
                                       int         dir );
 
 #endif /* ! defined FL_DIAL_H */

@@ -33,8 +33,8 @@ typedef enum {
 
 #define FL_COUNTER_BOXTYPE  FL_UP_BOX
 #define FL_COUNTER_COL1     FL_COL1
-#define FL_COUNTER_COL2     FL_BLUE     /* ct label     */
-#define FL_COUNTER_LCOL     FL_LCOL     /* ct reporting */
+#define FL_COUNTER_COL2     FL_BLUE           /* ct label     */
+#define FL_COUNTER_LCOL     FL_LCOL           /* ct reporting */
 #define FL_COUNTER_ALIGN    FL_ALIGN_BOTTOM
 
 /***** Others *****/

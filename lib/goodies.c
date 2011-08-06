@@ -235,7 +235,7 @@ fli_add_q_icon( FL_Coord x,
 {
     FL_OBJECT *obj;
 
-    fl_add_free( FL_SLEEPING_FREE, x, y, w, h, "", draw_box );
+    fl_add_free( FL_INACTIVE_FREE, x, y, w, h, "", draw_box );
     obj = fl_add_bitmap( FL_NORMAL_BITMAP, x, y, w, h, "" );
     fl_set_bitmap_data( obj, q_width, q_height, q_bits );
     fl_set_object_color( obj, FL_YELLOW, FL_YELLOW );
@@ -254,7 +254,7 @@ fli_add_warn_icon( FL_Coord x,
 {
     FL_OBJECT *obj;
 
-    fl_add_free( FL_SLEEPING_FREE, x, y, w, h, "", draw_box );
+    fl_add_free( FL_INACTIVE_FREE, x, y, w, h, "", draw_box );
     obj = fl_add_bitmap( FL_NORMAL_BITMAP, x, y, w, h, "" );
     fl_set_bitmap_data( obj, warn_width, warn_height, warn_bits );
     fl_set_object_color( obj, FL_YELLOW, FL_YELLOW );
