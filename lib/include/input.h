@@ -208,4 +208,8 @@ typedef struct {
 
 FL_EXPORT void fl_set_input_editkeymap( const FL_EditKeymap * keymap );
 
+FL_EXPORT void fl_get_input_editkeymap( FL_EditKeymap * keymap );
+
+FL_EXPORT void fl_set_default_editkeymap( void );
+
 #endif /* ! defined FL_INPUT_H */

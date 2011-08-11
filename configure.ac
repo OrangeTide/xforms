@@ -27,6 +27,9 @@ done
 AC_ARG_ENABLE(bwc_bs_hack, [AS_HELP_STRING([--enable-bwc-bs-hack],[Enable backward compatiblity hack for browser, scrollbar and tabfolder objects])])
 AM_CONDITIONAL(USE_BWC_BS_HACK, test x$enable_bwc_bs_hack = xyes)
 
+AC_ARG_ENABLE(classic_editkeys, [AS_HELP_STRING([--enable-classic-editkeys],[Enable backward compatiblity for behaviour of input edit keys])])
+AM_CONDITIONAL(USE_CLASSIC_EDITKEYS, test x$enable_classic_editkeys = xyes)
+
 AC_ARG_ENABLE(demos, [AS_HELP_STRING([--enable-demos],[Build demo programs])])
 AM_CONDITIONAL(BUILD_DEMOS, test x$enable_demos = xyes)
 

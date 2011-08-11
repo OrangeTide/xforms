@@ -96,60 +96,59 @@ but does collect text for the application program to use.
 
 Whenever the user presses the mouse inside an input field a cursor
 will appear in it (and the field will change color to indicate that it
-received the input focus). Further input will be directed to this
+received the input focus). Further input will be directed into this
 field. The user can use the following keys (as in @code{emacs(1)}) to
 edit or move around inside the input field:
 @table @asis
 @item delete previous char
-@code{<DELETE>}
+@code{<Backspace>}, @code{<Ctrl>h}
 @item delete next char
-@code{<Ctrl>D}
+@code{<Delete>}
 @item delete previous word
-@code{<Meta><Delete>}, @code{<Ctrl>W}
+@code{<Ctrl><Backspace>}
 @item delete next word
-@code{<Meta>d}
-@item delete to end of line
+@code{<Ctrl><Delete>}
+@item delete from cursor position to end of line
 @code{<Ctrl>k}
-@item backspace
-@code{<Ctrl>H}
+@item delete from cursor position to begin of line
+@code{<Meta>k}
 @item jump to beginning of line
-@code{<Ctrl>A}, @code{<Shift><Left>}
+@code{<Ctrl>a}
 @item jump to end of line
-@code{<Ctrl>E}, @code{<Shift><Right>}
+@code{<Ctrl>e}
 @item move char backward
-@code{<Ctrl>B}, @code{<Left>}
+@code{<Ctrl>b}
 @item move char forward
-@code{<Ctrl>F}, @code{<Right>}
+@code{<Ctrl>f}
 @item move to next line
-@code{<Ctrl>N}, @code{<Down>}
+@code{<Ctrl>n}, @code{<Down>}
 @item move to previous line
-@code{<Ctrl>P}, @code{<Up>}
-@item move to next page
-@code{<PageDown>}
-@item nove to previous page
-@code{<PageUp>}
+@code{<Ctrl>p}, @code{<Up>}
 @item move word backward
 @code{<Meta>b}
 @item move word forward
 @code{<Meta>f}
 @item move to begin of field
-@code{<Meta>!}, @code{<HOME>}, @code{<SHIFT><UP>}
+@code{<Home>}
 @item move to end of field
-@code{<Meta>?}, @code{<Ebd>}, @code{<Shift><Dwon>}
+@code{<End>}
 @item clear input field
-@code{<Ctrl>U}
+@code{<Ctrl>u}
 @item paste
 @code{<Ctrl>y}
 @end table
 
-It is possible to remap the the bindings, see later for details. There
-are three ways to select part of the input field. Dragging,
+It is possible to remap the the bindings, see below for details.
+
+A single click into the input field positions the cursor at the
+position of the mouse click.
+
+There are three ways to select part of the input field. Dragging,
 double-click and triple-click. A double-click selects the word the
 mouse is on and a triple-click selects the entire line the mouse is
 on. The selected part of the input field is removed when the user
-types the @code{<Backspace>} key or replaced by what the user types
-in. Also the cursor can be placed at different positions in the input
-field using the mouse.
+types the @code{<Backspace>} or @code{<Delete>} key or replaced by
+what the user types in. 
 
 One additional property of selecting part of the text field is that if
 the selection is done with the left mouse button the selected part
@@ -666,6 +665,12 @@ typedef struct @{
     long del_next_char;     /* delete next char */
     long del_prev_word;     /* delete previous word */
     long del_next_word;     /* delete next word */
+    long del_to_eol;        /* delete from cursor to end of line */
+    long del_to_bol;        /* delete from cursor to begin of line */
+    long clear_field;       /* delete all */
+    long del_to_eos;        /* not implemented */
+    long backspace;         /* alternative for del_prev_char */
+
     long moveto_prev_line;  /* one line up */
     long moveto_next_line;  /* one line down */
     long moveto_prev_char;  /* one char left */
@@ -678,13 +683,9 @@ typedef struct @{
     long moveto_eol;        /* move to end of line */
     long moveto_bof;        /* move to begin of file */
     long moveto_eof;        /* move to end of file */
+
     long transpose;         /* switch two char positions*/
     long paste;             /* paste the edit buffer */
-    long backspace;         /* alias for del_prev_char */
-    long del_to_eol;        /* cut to end of line */
-    long del_to_bol;        /* cut to end of line */
-    long clear_field;       /* delete all */
-    long del_to_eos;        /* not implemented yet */
 @} FL_EditKeymap;
 @end example
 
@@ -692,7 +693,7 @@ To change the default edit keymaps, the following routine is available:
 @findex fl_set_input_editkeymap()
 @anchor{fl_set_input_editkeymap()}
 @example
-void fl_set_input_editkeymap(FL_EditKeymap *km);
+void fl_set_input_editkeymap(const FL_EditKeymap *km);
 @end example
 @noindent
 with a filled or partially filled @code{@ref{FL_EditKeymap}}
@@ -706,6 +707,17 @@ Calling @code{@ref{fl_set_input_editkeymap()}} with @code{km} set to
 can't be used in the mapping. For example, if you try to set
 @code{del_prev_char} to @code{<Home>}, pressing the @code{<Home>} key
 will not delete the previous character.
+
+To obtain the current map of the edit keys use the function
+@findex fl_get_input_editkeymap()
+@anchor{fl_get_input_editkeymap()}
+@example
+void fl_get_input_editkeymap(FL_EditKeymap *km);
+@end example
+@noindent
+with the @code{km} argument pointing of a user supplied structure
+which after the call will be set up with the current settings for
+the edit keys.
 
 In filling the keymap structure, ASCII characters (i.e.@: characters
 with values below 128, including the control characters with values
@@ -721,17 +733,27 @@ etc.). Control and special character combinations can be obtained by adding
 
 @example
 FL_EditKeymap ekm;
-memset(ekm, 0, sizeof ekm);                   /* zero struct */
-ekm.del_prev_char = 8;                        /* control-H */
-ekm.del_next_char = 127;                      /* delete */
-ekm.del_prev_word = 'h' | FL_ALT_MASK;        /* meta-H */
-ekm.del_next_word = 127 | FL_ALT_MASK;        /* meta-delete */
-ekm.moveto_bof    = XK_F1;                    /* F1 to bof */
-ekm.moveto_eof    = XK_F1 | FL_CONTROL_MASK;  /* cntl-F1 to eof */
+memset(&ekm, 0, sizeof ekm);                  /* zero struct */
+
+ekm.del_prev_char = 8;                        /* <Backspace> */
+ekm.del_prev_word = 8 | FL_CONTROL_MASK;      /* <Ctrl><Backspace> */
+ekm.del_next_char = 127;                      /* <Delete> */
+ekm.del_prev_word = 'h' | FL_ALT_MASK;        /* <Meta>h */
+ekm.del_next_word = 127 | FL_ALT_MASK;        /* <Meta><Delete> */
+ekm.moveto_bof    = XK_F1;                    /* <F1> */
+ekm.moveto_eof    = XK_F1 | FL_CONTROL_MASK;  /* <Ctrl><F1> */
 
 fl_set_input_editkeymap(&ekm);
 @end example
 
+Note: In earlier versions of XForms (all version before 1.2) the
+default behaviour of the edit keys was slightly different which
+doesn't fit modern user expectations, as was the way the way the
+edit keymap was to be set up. If you use XForms for some older
+application that makes massive use of the "classical" behaviour
+you can compile XForms to use the old behaviour by using the
+@code{--enable-classic-editkeys} option when configuring the
+library for compilation.
 
 @node Input Remarks
 @section Remarks

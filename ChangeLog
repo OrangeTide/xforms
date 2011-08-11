@@ -1,3 +1,10 @@
+2011-08-11 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c, lib/include/input.h: Changes tp the
+	default behavior of the edit keys. Old behavior can
+	be obtained via the '--enable-classic-editkeys' option
+	to 'configure'.
+
 2011-05-21 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/xyplot.c: Two new public functions added:

@@ -432,6 +432,7 @@ handle_select( FL_Coord    mx,
 
     if ( what == WORD_SELECT )
     {
+#if defined USE_CLASSIC_EDITKEYS
         if ( sp->str[ thepos ] == ' ' )
             return 0;
 
@@ -441,7 +442,49 @@ handle_select( FL_Coord    mx,
 
         for ( n = thepos; n >= 0 && ! DELIM( sp->str[ n ] ); n-- )
             /* empty */ ;
+
         sp->beginrange = n + 1;
+#else
+        if ( ! isalnum( sp->str[ thepos ] ) && sp->str[ thepos ] != '_' )
+        {
+            for ( n = thepos;
+                     sp->str[ n ]
+                  && ! isalnum( sp->str[ n ] )
+                  && sp->str[ n ] != '_'
+                  && sp->str[ n ] != '\n';
+                  n++ )
+                /* empty */ ;
+            sp->endrange = n;
+
+            for ( n = thepos;
+                     n
+                  && ! isalnum( sp->str[ n ] )
+                  && sp->str[ n ] != '_'
+                  && sp->str[ n ] != '\n';
+                  n-- )
+                /* empty */ ;
+            if ( n > 0 )
+                ++n;
+            sp->beginrange = n;
+        }
+        else
+        {
+            for ( n = thepos;
+                     sp->str[ n ]
+                  && ( isalnum( sp->str[ n ] ) || sp->str[ n ] == '_' );
+                  n++ )
+                /* empty */ ;
+            sp->endrange = n;
+
+            for ( n = thepos;
+                  n && ( isalnum( sp->str[ n ] ) || sp->str[ n ] == '_' );
+                  n-- )
+                /* empty */ ;
+            if ( n > 0 )
+                ++n;
+            sp->beginrange = n;
+        }
+#endif
     }
     else if ( what == LINE_SELECT )
     {
@@ -588,12 +631,12 @@ get_substring_width( FL_OBJECT * obj,
  * Byte 4 will be used to indicate modifiers.
  ***************************************/
 
-#define METAMASK   FL_ALT_MASK
 static FL_EditKeymap kmap;
 
 static int paste_it( FL_OBJECT *,
                      const unsigned char *,
                      int );
+
 static void set_default_keymap( int );
 
 #define set_to_eol( p )  while ( ( p ) < slen && sp->str[ p ] != '\n' ) ( p )++
@@ -759,11 +802,13 @@ handle_movement( FL_OBJECT * obj,
     }
     else if ( key == kmap.moveto_prev_word )
     {
+#if defined USE_CLASSIC_EDITKEYS
         if ( sp->position > 0 )
             sp->position--;
 
-        while ( sp->position > 0 && (    sp->str[ sp->position ] == ' '
-                                      || sp->str[ sp->position ] == '\n' ) )
+        while (    sp->position > 0
+                && (    sp->str[ sp->position ] == ' '
+                     || sp->str[ sp->position ] == '\n' ) )
         {
             if ( sp->str[ sp->position ] == '\n' )
                 sp->ypos--;
@@ -775,6 +820,22 @@ handle_movement( FL_OBJECT * obj,
                 && sp->str[ sp->position ] != ' '
                 && sp->str[ sp->position ] != '\n' )
             sp->position--;
+#else
+        if ( sp->position > 0 )
+            sp->position--;
+
+        if (     ! isalnum( sp->str[ sp->position ] )
+              && sp->str[ sp->position ] != '_' )
+            while (    sp->position > 0
+                    && ! (    isalnum( sp->str[ sp->position ] )
+                           || sp->str[ sp->position ] == '_' ) )
+                --sp->position;
+        else
+            while (    sp->position > 0
+                    && (    isalnum( sp->str[ sp->position ] )
+                         || sp->str[ sp->position ] == '_' ) )
+                --sp->position;
+#endif
 
         if ( sp->position > 0 )
             sp->position++;
@@ -783,6 +844,7 @@ handle_movement( FL_OBJECT * obj,
     {
         i = sp->position;
 
+#if defined USE_CLASSIC_EDITKEYS
         while ( i < slen && ( sp->str[ i ] == ' ' || sp->str[ i ] == '\n' ) )
         {
             if ( sp->str[ i ] == '\n' )
@@ -792,7 +854,18 @@ handle_movement( FL_OBJECT * obj,
 
         while ( i < slen && sp->str[ i ] != ' ' && sp->str[ i ] != '\n' )
             i++;
-
+#else
+        if ( ! isalnum( sp->str[ i ] ) && sp->str[ i ] != '_' )
+            while (    i < slen
+                    && ! isalnum( sp->str[ i ] )
+                    && sp->str[ i ] != '_' )
+                ++i;
+        else
+            while (    i < slen
+                    && (    isalnum( sp->str[ i ] )
+                         || sp->str[ i ] == '_' ) )
+                ++i;
+#endif
         sp->position = i;
     }
 }
@@ -834,37 +907,98 @@ handle_edit( FL_OBJECT * obj,
     }
     else if ( key == kmap.del_next_word )
     {
-        i = sp->position;
-        while ( i < slen && ( sp->str[ i ] == ' ' || sp->str[ i ] == '\n' ) )
-            i++;
-        while ( i < slen && sp->str[ i ] != ' ' && sp->str[ i ] != '\n' )
-            i++;
-        delete_piece( obj, sp->position, i - 1 );
+        if ( obj->type == FL_SECRET_INPUT || ( i = sp->position ) == slen )
+            ret = FL_RETURN_NONE;
+        else
+        {
+
+#if defined USE_CLASSIC_EDITKEYS
+            while (    i < slen
+                    && ( sp->str[ i ] == ' ' || sp->str[ i ] == '\n' ) )
+                i++;
+            while ( i < slen && sp->str[ i ] != ' ' && sp->str[ i ] != '\n' )
+                i++;
+#else
+            /* If the first character is neiter a letter or digit or an under-
+               score delete it and all other characters of the same kind.
+               Otherwise delete all charaters that are letters. digit or
+               underscores. This is the same behaviour as in e.g. Qt.
+            */
+
+            if ( ! isalnum( sp->str[ i ] ) && sp->str[ i ] != '_' )
+                while (    i < slen
+                        && ! isalnum( sp->str[ i ] )
+                        && sp->str[ i ] != '_' )
+                    i++;
+            else
+                while (    i < slen
+                        && ( isalnum( sp->str[ i ] ) || sp->str[ i ] == '_' ) )
+                    i++;
+#endif
+            if ( i - sp->position > 1 )
+                fli_sstrcpy( cutbuf, sp->str + sp->position,
+                             FL_min( i - sp->position + 1, MAXCBLEN ) );
+
+            delete_piece( obj, sp->position, i - 1 );
+        }
     }
     else if ( key == kmap.del_prev_word )
     {
-        prev = -1;
-        j = sp->position;
-        if ( sp->position > 0 )
-            sp->position--;
-        while ( sp->position > 0 && (    sp->str[ sp->position ] == ' '
-                                      || sp->str[ sp->position ] == '\n' ) )
-            sp->position--;
-        while (   sp->position > 0
-               && sp->str[ sp->position ] != ' '
-               && sp->str[ sp->position ] != '\n' )
-            sp->position--;
-        if ( sp->position != j )
-            delete_piece( obj, sp->position, j - 1 );
-        else
+        if ( obj->type == FL_SECRET_INPUT || ( j = sp->position ) == 0 )
             ret = FL_RETURN_NONE;
+        else
+        {
+
+            prev = -1;
+
+#if defined USE_CLASSIC_EDITKEYS
+            sp->position--;
+            while (    sp->position > 0
+                    && (    sp->str[ sp->position ] == ' '
+                         || sp->str[ sp->position ] == '\n' ) )
+                sp->position--;
+            while (    sp->position > 0
+                    && sp->str[ sp->position ] != ' '
+                    && sp->str[ sp->position ] != '\n' )
+                sp->position--;
+#else
+            --sp->position;
+            if (    ! isalnum( sp->str[ sp->position ] ) 
+                 && sp->str[ sp->position ] != '_' )
+                while (    sp->position > 0
+                        && ! isalnum( sp->str[ sp->position ] ) 
+                        && sp->str[ sp->position ] != '_' )
+                    --sp->position;
+            else
+                while (    sp->position > 0
+                        && (    isalnum( sp->str[ sp->position ] ) 
+                             || sp->str[ sp->position ] == '_' ) )
+                    --sp->position;
+
+            if ( sp->position )
+                ++sp->position;
+#endif
+            if ( sp->position != j )
+            {
+                if ( j - sp->position > 1 )
+                    fli_sstrcpy( cutbuf, sp->str + sp->position,
+                                 FL_min( j - sp->position + 1, MAXCBLEN ) );
+                delete_piece( obj, sp->position, j - 1 );
+            }
+            else
+                ret = FL_RETURN_NONE;
+        }
     }
     else if ( key == kmap.clear_field )
     {
         prev = 0;
         sp->xoffset = 0;
         if ( slen > 0 )
+        {
+            if ( slen > 1 )
+                fli_sstrcpy( cutbuf, sp->str, FL_min( slen, MAXCBLEN ) );
             delete_piece( obj, 0, slen - 1 );
+        }
         else
             ret = FL_RETURN_NONE;
     }
@@ -882,13 +1016,38 @@ handle_edit( FL_OBJECT * obj,
 
             if ( i - sp->position > 1 )
                 fli_sstrcpy( cutbuf, sp->str + sp->position,
-                             FL_min( i - sp->position, MAXCBLEN ) );
+                             FL_min( i - sp->position + 1, MAXCBLEN ) );
 
             delete_piece( obj, sp->position, i - 1 );
         }
         else
             ret = FL_RETURN_NONE;
     }
+#if ! defined USE_CLASSIC_EDITKEYS
+    else if ( key == kmap.del_to_bol )
+    {
+        prev = -1;
+
+        if ( ( j = sp->position ) == 0 )
+            ret = FL_RETURN_NONE;
+        else
+        {
+            if ( sp->str[ --sp->position ] != '\n' )
+            {
+                while ( sp->position > 0 && sp->str[ --sp->position ] != '\n' )
+                    /* empty */;
+                if ( sp->str[ sp->position ] == '\n' )
+                    ++sp->position;
+            }
+
+            if ( j - sp->position > 1 )
+                fli_sstrcpy( cutbuf, sp->str + sp->position,
+                             FL_min( j - sp->position + 1, MAXCBLEN ) );
+
+            delete_piece( obj, sp->position, j - 1 );
+        }
+    }
+#endif
     else if ( key == kmap.paste )
     {
         paste_it( obj, ( unsigned char * ) cutbuf, strlen( cutbuf ) );
@@ -957,11 +1116,16 @@ handle_key( FL_OBJECT    * obj,
     while ( startpos > 0 && sp->str[ startpos - 1 ] != '\n' )
         startpos--;
 
+#if defined USE_CLASSIC_EDITKEYS
     if ( controlkey_down( kmask ) && key > 255 )
         key |= FL_CONTROL_MASK;
+#else
+    if ( controlkey_down( kmask ) )
+        key |= FL_CONTROL_MASK;
+#endif
 
     if ( metakey_down( kmask ) )
-        key |= METAMASK;
+        key |= FL_ALT_MASK;
 
     if ( shiftkey_down( kmask ) )
     {
@@ -1962,7 +2126,7 @@ fl_get_input_selected_range( FL_OBJECT * obj,
     if ( end )
         *end = sp->endrange;
 
-    if ( n > nselbuf )
+    if ( n != nselbuf )
     {
         selbuf = fl_realloc( selbuf, n + 1 );
         nselbuf = n;
@@ -2090,14 +2254,24 @@ fl_get_input_cursorpos( FL_OBJECT * obj,
 }
 
 
-#define Control( c ) ( ( c ) - 'a' + 1 )
-#define Meta( c )    ( ( c ) | METAMASK )
+/***************************************
+ * Reverts to the default keymap for edit keys
+ ***************************************/
 
+void
+fl_set_default_editkeymap( void )
+{
+    set_default_keymap( 1 );
+}
+
+
+#if defined USE_CLASSIC_EDITKEYS
 
 /***************************************
- * Really should let the user have a chance to override any of the
- * defaults here. _TODO_
  ***************************************/
+
+#define Control( c ) ( ( c ) - 'a' + 1 )
+#define Meta( c )    ( ( c ) | FL_ALT_MASK )
 
 static void
 set_default_keymap( int force )
@@ -2135,6 +2309,53 @@ set_default_keymap( int force )
     kmap.paste = Control( 'y' );
     kmap.clear_field = Control( 'u' );
 }
+
+
+#else
+
+#define Ctrl( c ) ( islower( c ) ? ( c ) - 'a' + 1 : ( c ) )
+
+/***************************************
+ ***************************************/
+
+static void
+set_default_keymap( int force )
+{
+    static int initialized;
+
+    if ( ! force && initialized )
+        return;
+
+    initialized = 1;
+
+    /* Emacs defaults */
+
+    kmap.moveto_next_char = Ctrl( 'f' )  | FL_CONTROL_MASK;
+    kmap.moveto_prev_char = Ctrl( 'b' )  | FL_CONTROL_MASK;
+    kmap.moveto_next_line = Ctrl( 'n' )  | FL_CONTROL_MASK;
+    kmap.moveto_prev_line = Ctrl( 'p' )  | FL_CONTROL_MASK;
+    kmap.moveto_prev_word = 'b'          | FL_ALT_MASK;
+    kmap.moveto_next_word = 'f'          | FL_ALT_MASK;
+
+    kmap.moveto_bof       = '<'          | FL_ALT_MASK;
+    kmap.moveto_eof       = '>'          | FL_ALT_MASK;
+    kmap.moveto_bol       = Ctrl( 'a' )  | FL_CONTROL_MASK;
+    kmap.moveto_eol       = Ctrl( 'e' )  | FL_CONTROL_MASK;
+
+    kmap.del_prev_char    = '\b';
+    kmap.del_prev_word    = '\b'         | FL_CONTROL_MASK;
+    kmap.del_next_char    = 0x7f;
+    kmap.del_next_word    = 0x7f         | FL_CONTROL_MASK;
+    kmap.del_to_eol       = Ctrl( 'k' )  | FL_CONTROL_MASK;
+    kmap.del_to_bol       = 'k'          | FL_ALT_MASK;
+
+    kmap.backspace        = '\b';
+    kmap.transpose        = Ctrl( 't' )  | FL_CONTROL_MASK;
+    kmap.paste            = Ctrl( 'y' )  | FL_CONTROL_MASK;
+    kmap.clear_field      = Ctrl( 'u' )  | FL_CONTROL_MASK;
+}
+
+#endif
 
 
 /***************************************
@@ -2665,6 +2886,27 @@ fl_set_input_editkeymap( const FL_EditKeymap * keymap )
     SetKey( del_to_eos );
     SetKey( del_to_eol );
     SetKey( del_to_bol );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_get_input_editkeymap( FL_EditKeymap * keymap )
+{
+    /* Don't do anything if we got a NULL pointer */
+
+    if ( ! keymap )
+        return;
+
+    /* Make sure the keymap is set up */
+
+    set_default_keymap( 0 );
+
+    /* Copy the current keymap to the user supplied buffer */
+
+    memcpy( keymap, &kmap, sizeof kmap );
 }
 
 
