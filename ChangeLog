@@ -1,3 +1,14 @@
+2011-09-11 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Several corrections for problems pointed out by Donato
+	Lorenzo that resulted in problems when building with
+	aCC on HP-UX and of which some might have led to memory
+	corruption (calls of calloc() with sizeof(void) which gcc
+	doesn't complain about).
+
+	* lib/handling.c: Guard added to avoid an idle callback
+	accidentally being called from within itself.
+
 2011-08-11 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c, lib/include/input.h: Changes tp the
@@ -195,7 +206,7 @@
 
 2010-05-19 Jens Thoms Toerring    <jt@toerring.de>
 
-	* fdesign: small changes (mostly to fd/ui_theforms.fd)
+	* fdesign: Minor changes (mostly to fd/ui_theforms.fd)
 	to get rid of annoying flicker in the control window
 	when adding a new object in the other window.
 
@@ -467,6 +478,7 @@
 2009-08-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_printC.c: Some corrections/bug fixes
+
 	* Bit of clean-up all over the place;-)
 
 2009-08-06 Jens Thoms Toerring    <jt@toerring.de>
@@ -844,6 +856,7 @@
 2008-09-22 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Further code cleanup
+
 	* Update of man page
 
 2008-09-21 Jens Thoms Toerring    <jt@toerring.de>

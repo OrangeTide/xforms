@@ -164,7 +164,7 @@ spinner_callback( FL_OBJECT * obj,
     FLI_SPINNER_SPEC *sp = obj->parent->spec;
     const char *s_val = fl_get_input( sp->input );
     int max_len = 4 + sp->prec + log10( DBL_MAX );
-    char buf[ max_len ];
+    char *buf = NULL;
 
     /* Don't react to editing the input field unless user ended interaction
        with input field */
@@ -211,8 +211,11 @@ spinner_callback( FL_OBJECT * obj,
                 sp->i_val = sp->i_min;
         }
 
+        buf = fl_malloc( max_len );
         sprintf( buf, "%d", sp->i_val );
         fl_set_input( sp->input, buf );
+        fl_free( buf );
+        buf = NULL;
 
         if ( obj->returned & FL_RETURN_END )
             obj->parent->returned |= FL_RETURN_END;
@@ -270,8 +273,11 @@ spinner_callback( FL_OBJECT * obj,
                 sp->f_val = sp->f_min;
         }
 
+        buf = malloc( max_len );
         sprintf( buf, "%.*f", sp->prec, sp->f_val );
         fl_set_input( sp->input, buf );
+        fl_free( buf );
+        buf = NULL;
 
         if ( obj->returned & FL_RETURN_END )
             obj->parent->returned |= FL_RETURN_END;
@@ -443,10 +449,11 @@ fl_get_spinner_value( FL_OBJECT * obj )
         if ( *eptr )
         {
             int max_len = 4 + sp->prec + log10( DBL_MAX );
-            char buf[ max_len ];
+            char *buf = fl_malloc( max_len );
 
             sprintf( buf, "%.*f", sp->prec, f_val );
             fl_set_input( sp->input, buf );
+            fl_free( buf );
         }
 
         return sp->f_val = f_val;

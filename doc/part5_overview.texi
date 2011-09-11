@@ -1933,7 +1933,10 @@ where @code{callback} is the function that will get called whenever
 the main loop is idle. The time interval between invocations of the
 idle callback can vary considerably depending on interface activity
 and other factors. A range between 50 and @w{300 msec} should be
-expected.
+expected. While the idle callback is executed it won't be called
+from again (i.e.@: no call of any XForms function from within the
+idle callback function will call the idle callback function), so it
+doesn't need to be reentrant.
 
 It is possible to change what the library considers to be "idle" with
 the following function:

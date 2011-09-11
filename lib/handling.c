@@ -925,9 +925,12 @@ fli_handle_idling( XEvent * xev,
                    long     msec,
                    int      do_idle_cb )
 {
-    int i;
+    
 
-    /* Sleep a bit while keeping a lookout for async IO events */
+    static int within_idle_cb = 0;   /* Flag used to avoid an idle callback
+                                        being called from within itself */
+
+    /* Sleep a bit while being on the lookout for async IO events */
 
     fli_watch_io( fli_context->io_rec, msec );
 
@@ -949,11 +952,12 @@ fli_handle_idling( XEvent * xev,
     else
         xev->xmotion.time += msec;
 
-    /* FL_UPDATE and automatic handlers as well as idle callbacks can expect
-       a synthetic MotionNotify event, make it up, then call the handler */
+    /* FL_UPDATE and automatic handlers as well as idle callbacks get a
+       synthetic MotionNotify event. Make it up, then call the handler. */
 
     xev->type            = MotionNotify;
-    xev->xany.window     = fli_int.mouseform ? fli_int.mouseform->window : None;
+    xev->xany.window     = fli_int.mouseform ?
+                           fli_int.mouseform->window : None;
     xev->xany.send_event = 1;
     xev->xmotion.state   = fli_int.keymask;
     xev->xmotion.x       = fli_int.mousex;
@@ -974,16 +978,26 @@ fli_handle_idling( XEvent * xev,
     /* Handle automatic tasks */
 
     if ( fli_int.auto_count )
+    {
+        int i;
+
         for ( i = 0; i < fli_int.formnumb; i++ )
             if ( fli_int.forms[ i ]->num_auto_objects )
                 fli_handle_form( fli_int.forms[ i ], FL_STEP, 0, xev );
+    }
 
-    /* If asked to also execute user idle callbacks */
+    /* If there's a user idle callback invoke it (unless we got called with
+       'do_idle_cb' set to false or we're already running the idle callback) */
 
     if (    do_idle_cb
+         && ! within_idle_cb
          && fli_context->idle_rec
          && fli_context->idle_rec->callback )
+    {
+        within_idle_cb = 1;
         fli_context->idle_rec->callback( xev, fli_context->idle_rec->data );
+        within_idle_cb = 0;
+    }
 }
 
 
@@ -1030,13 +1044,13 @@ get_next_event_or_idle( int        wait_io,
            return 1;
 
         /* Please note: we do event compression before the user ever sees the
-           events. This is a bit questionable at least for mouse movements
+           events. This is a bit questionable, at least for mouse movements,
            since a user may want to get all events (e.g. because s/he wants
            to draw something exactly following the mouse movements). If this
-           is removed then care must be taken that in the mask for MotionNotify
-           PointerMotionHintMask is *not* set (see the fli_xevent_to_mask()
-           function in appwin.c) since that keeps most motion events from
-           coming through! */
+           would be changed then care would have be taken that in the mask
+           for MotionNotify PointerMotionHintMask is *not* set (see the
+           fli_xevent_to_mask() function in appwin.c) since that keeps most
+           motion events from coming through! */
 
         fli_compress_event( xev,
                               ExposureMask

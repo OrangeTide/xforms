@@ -32,6 +32,7 @@
 #endif
 
 #include "include/forms.h"
+#include "private/pcanvas.h"
 #include "flinternal.h"
 #include "fd_main.h"
 
@@ -83,16 +84,17 @@ fl_create_simu_canvas( int          type,
                        const char * label )
 {
     FL_OBJECT *ob;
+    FLI_CANVAS_SPEC *sp;
 
     ob = fl_make_object( FL_CANVAS, type, x, y, w, h, label,
                          handle_simu_canvas );
-    ob->boxtype = FL_CANVAS_BOXTYPE;
-    ob->col1    = FL_NoColor;
-    ob->col2    = FL_BLACK;
-    ob->lcol    = FL_LCOL;
-    ob->align   = FL_ALIGN_CENTER;
-    ob->active  = 0;
-    ob->spec    = fl_calloc( 1, sizeof *ob->spec );
+    ob->boxtype   = FL_CANVAS_BOXTYPE;
+    ob->col1      = FL_NoColor;
+    ob->col2      = FL_BLACK;
+    ob->lcol      = FL_LCOL;
+    ob->align     = FL_ALIGN_CENTER;
+    ob->active    = 0;
+    ob->spec = sp = fl_calloc( 1, sizeof *sp );
 
     return ob;
 }
@@ -131,6 +133,7 @@ fl_create_simu_glcanvas( int          type,
                          const char * label )
 {
     FL_OBJECT *ob;
+    FLI_CANVAS_SPEC *sp;
 
     ob = fl_make_object( FL_GLCANVAS, type, x, y, w, h, label,
                          handle_simu_canvas );

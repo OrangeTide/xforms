@@ -176,7 +176,7 @@ fl_remove_io_callback( int            fd,
 
 void
 fli_watch_io( FLI_IO_REC * io_rec,
-              long        msec )
+              long         msec )
 {
     fd_set rfds,
            wfds,
@@ -191,6 +191,7 @@ fli_watch_io( FLI_IO_REC * io_rec,
     {
         if ( msec > 0 )
             fl_msleep( msec );
+
         return;
     }
 
@@ -217,11 +218,13 @@ fli_watch_io( FLI_IO_REC * io_rec,
 
         else if ( errno != 0 )
             M_err( "fli_watch_io", fli_get_syserror_msg( ) );
+
+        return;
     }
 
-    /* Time expired */
+    /* Timeout kicked in */
 
-    if ( nf <= 0 )
+    if ( nf == 0 )
         return;
 
     /* Handle it */

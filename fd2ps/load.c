@@ -96,7 +96,7 @@ flps_make_object( int          objclass,
 
     ob->label = fl_strdup( label ? label : "" );
 
-    /* Default. Must agree with FL default */
+    /* Default, must agree with FL default */
 
     ob->align = FL_ALIGN_CENTER;
     ob->col1  = FL_COL1;
@@ -113,14 +113,14 @@ flps_make_object( int          objclass,
     ob->bw = ( psinfo.bw && FL_abs( psinfo.bw ) <= 6 ) ?
              psinfo.bw : FL_BOUND_WIDTH;
 
-    sp = ob->spec = calloc( 1, sizeof *ob->spec );
+    sp = ob->spec = calloc( 1, sizeof *sp );
     sp->content = calloc( MAX_CONTENT + 1, sizeof *sp->content );
     sp->mode = calloc( MAX_CONTENT + 1, sizeof *sp->mode );
 
     sp->fontstyle = FL_NORMAL_STYLE;
     sp->fontsize = FL_DEFAULT_FONT;
 
-    /* set object specific defaults */
+    /* Set object specific defaults */
 
     if (    ob->objclass == FL_SLIDER
          || ob->objclass == FL_VALSLIDER
