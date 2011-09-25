@@ -100,7 +100,7 @@ main( int    argc,
 	fl_set_object_return( fd_input->secretinput, FL_RETURN_ALWAYS );
 	fl_set_object_return( fd_input->multiinput, FL_RETURN_ALWAYS );
 
-	/* show the first form */
+	/* Show the form */
 
 	fl_show_form( fd_input->input, FL_PLACE_CENTERFREE, FL_FULLBORDER,
 				  "input" );

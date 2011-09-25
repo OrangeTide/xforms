@@ -44,7 +44,7 @@
 #include <string.h>
 
 
-#define TRANY( obj, form )    ( form->h - obj->h - obj->y )
+#define TRANSLATE_Y( obj, form )    ( form->h - obj->h - obj->y )
 
 #define LInside( a )    \
                ( ( ( a ) == FL_ALIGN_CENTER ) || ( ( a ) & FL_ALIGN_INSIDE ) )
@@ -238,7 +238,7 @@ fl_add_object( FL_FORM   * form,
     obj->form = form;
 
     if ( fli_inverted_y )
-        obj->y = TRANY( obj, form );
+        obj->y = TRANSLATE_Y( obj, form );
 
     obj->fl1 = obj->x;
     obj->fr1 = form->w_hr - obj->fl1;
@@ -349,7 +349,7 @@ fli_insert_object( FL_OBJECT * obj,
     }
 
     if ( fli_inverted_y )
-        obj->y = TRANY( obj, form );
+        obj->y = TRANSLATE_Y( obj, form );
 
     obj->fl1 = obj->x;
     obj->fr1 = form->w_hr - obj->fl1;
@@ -2918,9 +2918,6 @@ fl_scale_object( FL_OBJECT * obj,
         obj->w    = FL_crnd( new_w );
         obj->h    = FL_crnd( new_h );
 
-        if ( fli_inverted_y )
-            obj->y = TRANY( obj, obj->form );
-
         fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
 
         /* If there are child objects also inform them about the size change */
@@ -3062,6 +3059,9 @@ fl_move_object( FL_OBJECT * obj,
      FL_Coord x,
               y;
 
+     if ( fli_inverted_y )
+         dy = - dy;
+
     if ( obj->objclass == FL_BEGIN_GROUP )
     {
         FL_OBJECT *o;
@@ -3094,7 +3094,7 @@ fl_get_object_position( FL_OBJECT * obj,
                         FL_Coord  * y )
 {
     *x = obj->x;
-    *y = fli_inverted_y ? TRANY( obj, obj->form ) : obj->y;
+    *y = fli_inverted_y ? TRANSLATE_Y( obj, obj->form ) : obj->y;
 }
 
 
@@ -3109,9 +3109,6 @@ fl_set_object_position( FL_OBJECT * obj,
 {
     int visible = obj->visible;
     double diff;
-
-    if ( obj->x == x && obj->y == y )
-        return;
 
     if ( fli_inverted_y )
         y = obj->form->h - obj->h - y;
@@ -3142,9 +3139,6 @@ fl_set_object_position( FL_OBJECT * obj,
         obj->y = y;
     }
 
-    if ( fli_inverted_y )
-        obj->y = TRANY( obj, obj->form );
-
     if ( ! obj->parent )
         fli_recalc_intersections( obj->form );
 
@@ -3170,9 +3164,9 @@ fl_get_object_size( FL_OBJECT * obj,
 }
 
 
-/***************************************
+/*****************************
  * Sets the size of an object
- ***************************************/
+ *****************************/
 
 void
 fl_set_object_size( FL_OBJECT * obj,
@@ -3242,9 +3236,6 @@ fl_set_object_size( FL_OBJECT * obj,
         obj->h = FL_crnd( obj->ft2 - obj->ft1 );
     }
 
-    if ( fli_inverted_y )
-        obj->y = TRANY( obj, obj->form );
-
     fli_handle_object( obj, FL_RESIZED, 0, 0, 0, NULL, 0 );
 
     /* If there are child objects also inform them about the size change */
@@ -3293,7 +3284,7 @@ fl_set_object_geometry( FL_OBJECT * obj,
 
 
 /***************************************
- * Computes object geometry also taking the label into account
+ * Computes object geometry taking also the label into account
  ***************************************/
 
 void
@@ -3358,6 +3349,8 @@ fl_get_object_bbox( FL_OBJECT * obj,
 
     *x = xr->x;
     *y = xr->y;
+    if ( fli_inverted_y && obj->form )
+        *y = obj->form->h - *y;
     *w = xr->width;
     *h = xr->height;
 }

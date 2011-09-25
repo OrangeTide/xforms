@@ -217,11 +217,11 @@ extern void paste_selection( void );    /* Puts elements from buffer into
 extern void copy_selection( void ); /* Copies objects in selection to
                                        buffer */
 
-extern void *dup_selection( void );
+extern FL_OBJECT **dup_selection( void );
 
-extern void set_selection( void * );
+extern void set_selection( FL_OBJECT ** );
 
-extern void free_dupped_selection( void * );
+extern void free_dupped_selection( FL_OBJECT ** );
 
 extern void next_selection( void );
 

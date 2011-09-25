@@ -150,8 +150,8 @@ main( int    argc,
 /***************************************
  ***************************************/
 
-static
-void make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )
+static void
+make_folder( FL_OBJECT * folder  FL_UNUSED_ARG )
 {
 	FD_buttonform *fd_buttonform;
 	FD_staticform *fd_staticform;

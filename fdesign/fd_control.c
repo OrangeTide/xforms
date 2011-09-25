@@ -835,10 +835,10 @@ undoalign_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     {
         set_selection( fd_align->vdata );
 
-        /* only allow undo once */
+        /* Only allow undo once */
 
         free_dupped_selection( fd_align->vdata );
-        fd_align->vdata = 0;
+        fd_align->vdata = NULL;
     }
 }
 

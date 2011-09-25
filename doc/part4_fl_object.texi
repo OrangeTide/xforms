@@ -46,8 +46,17 @@ and/or size. To change the position and/or size of an object never
 change the elements of the structures directly (except in a function
 like @code{fl_add_NEW()}) but always use
 @code{@ref{fl_set_object_geometry()}},
-@code{@ref{fl_set_object_position()}} and
-@code{@ref{fl_set_object_size()}}!
+@code{@ref{fl_set_object_position()}},
+@code{@ref{fl_set_object_size()}} and
+@code{@ref{fl_move_object()}}!
+
+Also note that the @code{y}-member is always relative to the top of
+the form the object belongs to, even if the user had called
+@code{@ref{fl_flip_yorigin()}} - this only results in @code{y}-values
+passed by and returned to the user when using fünctions like
+@code{@ref{fl_set_object_position()}} or
+@code{@ref{fl_get_object_position()}} getting "flipped", internally
+always the normal coordinate system is used.
 
 @item unsigned int resize
 Controls if the object should be resized if the form it is on is

@@ -1356,7 +1356,7 @@ copy_selection( void )
  * Makes a copy of the current selection
  ***************************************/
 
-void *
+FL_OBJECT **
 dup_selection( void )
 {
     FL_OBJECT **ob;
@@ -1365,10 +1365,12 @@ dup_selection( void )
     if ( ! selnumb )
         return NULL;
 
-    ob = fl_calloc( selnumb + 1, sizeof *ob );
+    ob = fl_malloc( ( selnumb + 1 ) * sizeof *ob );
 
     for ( i = 0; i < selnumb; i++ )
         ob[ i ] = copy_object( selobj[ i ], 1 );
+
+    ob[ selnumb ] = NULL;
 
     return ob;
 }
@@ -1378,26 +1380,27 @@ dup_selection( void )
  ***************************************/
 
 void
-free_dupped_selection( void *a )
+free_dupped_selection( FL_OBJECT ** ob )
 {
-    FL_OBJECT **ob = a;
+    int i;
 
-    for ( ; *ob; ob++ )
-        fl_free_object( *ob );
+    for ( i = 0; ob[ i ]; i++ )
+        fl_free_object( ob[ i ] );
 
-    fl_free( a );
+    fl_free( ob );
 }
 
 
 /***************************************
- * Changes the selection to a new list of objects and show it
+ * Changes the selection to a new list of objects and show it.
+ * The pointer received must be an array of object pointers
+ * with the last element being set to NULL.
  ***************************************/
 
 void
-set_selection( void *a )
+set_selection( FL_OBJECT ** ob )
 {
-    FL_OBJECT *obj,
-              **ob = a;
+    FL_OBJECT *obj;
     int i;
 
     for ( i = 0; i < selnumb; i++ )
@@ -1406,11 +1409,11 @@ set_selection( void *a )
     clear_selection( );
     redraw_the_form( 0 );
 
-    for ( selnumb = 0; ob[ selnumb ]; selnumb++ )
+    for ( selnumb = 0; selnumb < MAXSEL && ob[ selnumb ]; selnumb++ )
     {
         obj = copy_object( ob[ selnumb ], 1 );
-        if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
-             && selobj[ i ]->objclass != FL_END_GROUP )
+        if (    selobj[ selnumb ]->objclass != FL_BEGIN_GROUP
+             && selobj[ selnumb ]->objclass != FL_END_GROUP )
             fl_add_object( cur_form, obj );
         selobj[ selnumb ] = obj;
     }

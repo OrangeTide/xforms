@@ -1,3 +1,7 @@
+2011-09-24 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_select.c: Bug in undo of alignment fixed.
+
 2011-09-11 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Several corrections for problems pointed out by Donato

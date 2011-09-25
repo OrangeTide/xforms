@@ -431,9 +431,14 @@ Similar to @code{FL_HOR_THIN_SCROLLBAR}.
 
 Whenever the user changes the value of the scrollbar, the scrollbar's
 callback is called (if one is associated with the scrollbar). The
-scrollbar position is changed by moving the mouse inside the scrollbar
-area or. For fine control hold down the left or right @code{<Shift>}
-key while moving the slider.
+scrollbar position can be changed in several ways. The most simple one
+is to left-click on the knob of the scrollbar and move the know while
+the left mouse button is kept pressed down. Left-clicking beside the
+know will move the knob in large steps toward the current position of
+the mouse, clicking with the middle or right mouse button in smaller
+steps. Small shifts can also be obtained by clicking on one of the
+buttons at the side of the scrollbar or by using the scroll-wheel
+somehwere over the scrollbar.
 
 You can control under which conditions the scrollbar gets returned to
 your application or its callback invoked. To change the default, call

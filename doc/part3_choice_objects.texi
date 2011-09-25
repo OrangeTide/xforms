@@ -1092,34 +1092,36 @@ selections with the mouse by pointing to a line or by using the cursor
 keys.
 
 For @code{@ref{FL_SELECT_BROWSER}}'s, as long as the user keeps the
-mouse pressed, the current line under the mouse is highlighted.
-Whenever he releases the mouse the highlighting disappears and the
-browser is returned to the application program. The application
-program can now figure out which line was selected using a call of
-@code{@ref{fl_get_browser()}} to be described below. It returns the
-number of the last selected line (with the topmost line being line
-1.)
+left mouse button pressed, the current line under the mouse is
+highlighted. Whenever she releases the left mouse button the
+highlighting disappears and the browser is returned to the application
+program. The application program can now figure out which line was
+selected using a call of @code{@ref{fl_get_browser()}} to be described
+below. It returns the number of the last selected line (with the
+topmost line being line 1).
 
 An @code{@ref{FL_HOLD_BROWSER}} works exactly the same except that,
-when the mouse is released, the selection remains highlighted.
+when the left mouse button is released, the selection remains
+highlighted.
 
 An @code{@ref{FL_MULTI_BROWSER}} allows the user to select and
 de-select multiple lines. Whenever he selects or de-selects a line the
-browser is returned to the application program that can next figure
-out (using @code{@ref{fl_get_browser()}} described below) which line
-was selected. It returns the number of the last selected line. When
-the last line was de-selected it returns the negation of the line
-number. I.e., if line 10 was selected last the routine returns 10 and
-if line 10 was de-selected last, it returns -10. When the user presses
-the mouse on a non-selected line and then moves it with the mouse
-button still pressed down, he will select all lines he touches with
-his mouse until he releases it. All these lines will become
-highlighted. When the user starts pressing the mouse on an already
-selected line he de-selects lines rather than selecting them.
+browser object is returned to the application program (or a callback
+is executed when installed) that then can figure out which line was
+selected using @code{@ref{fl_get_browser()}} (described in more detail
+below). That function returns the number of the last line to be
+selected or de-selected. When a line was de-selected the negation of
+the line number gets returned. I.e., if line 10 was selected the
+routine returns 10 and if line 10 was de-selected -10. When the user
+presses the left mouse button on a non-selected line and then moves it
+with the mouse button still pressed down, he will select all lines he
+touches with his mouse until he releases it. All these lines will
+become highlighted. When the user starts pressing the mouse on an
+already selected line he de-selects lines rather than selecting them.
 
 
-Per default a browser gets only returned or the associated callback
-invoked on selection of a line (and, in the case of
+Per default a browser only gets returned (or a possibly associated
+callback gets invoked) on selection of a line (and, in the case of
 @code{@ref{FL_MULTI_BROWSER}}, on deselections). This behaviour can be
 changed by using the function
 @example

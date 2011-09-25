@@ -947,8 +947,8 @@ get_shortcut_string( const FL_OBJECT * obj )
 
 
 /***************************************
- * Makes a copy of the object. If 'exact' is set neither
- * shortcut nor object name are copied.
+ * Makes a copy of the object. Only if 'exact' is set
+ * the objects name is copied.
  ***************************************/
 
 FL_OBJECT *

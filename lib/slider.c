@@ -410,7 +410,7 @@ handle_mouse( FL_OBJECT    * obj,
         {
             if ( key == FL_MBUTTON1 )
                 newval = sp->val + sp->mouse_off_knob * sp->ldelta;
-            else if ( key == FL_MBUTTON2 )
+            else if ( key == FL_MBUTTON2 || key == FL_MBUTTON3 )
                 newval = sp->val + sp->mouse_off_knob * sp->rdelta;
             else
                 return FL_RETURN_NONE;
@@ -531,7 +531,7 @@ handle_push( FL_OBJECT * obj,
     FLI_SLIDER_SPEC *sp = obj->spec;
     int ret;
 
-    if ( key != FL_MBUTTON1 && key != FL_MBUTTON2 )
+    if ( key != FL_MBUTTON1 && key != FL_MBUTTON2 && key != FL_MBUTTON3 )
         return FL_RETURN_NONE;
 
     sp->start_val = sp->val;

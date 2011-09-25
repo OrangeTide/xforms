@@ -147,9 +147,11 @@ set_object_name( FL_OBJECT  * obj,
 
     if ( name )
         fli_sstrcpy( objects[ on ].name, name, sizeof objects[ on ].name );
+
     if ( cbname )
         fli_sstrcpy( objects[ on ].cbname, cbname,
                      sizeof objects[ on ].cbname );
+
     if ( argname )
         fli_sstrcpy( objects[ on ].argname, argname,
                      sizeof objects[ on ].argname  );

@@ -407,10 +407,10 @@ fli_object_qread( void )
 {
     FL_OBJECT *obj = fli_get_from_obj_queue( );
 
-    if ( ! obj || obj == FL_EVENT )
+    if ( obj == FL_EVENT )
         return obj;
 
-    if ( ! obj->form )
+    if ( ! obj || ! obj->form )
         return NULL;
 
     /* If the object has a callback execute it and return NULL unless the
@@ -422,6 +422,7 @@ fli_object_qread( void )
     if ( obj->object_callback )
     {
         fli_handled_obj = obj;
+
         obj->object_callback( obj, obj->argument );
 
         if ( fli_handled_obj )
@@ -436,7 +437,7 @@ fli_object_qread( void )
        between also check if there are further events for other childs
        of the same parent in the queue and also execute their callbacks.
        And keep in mind that execution of one of these callbacks may
-       delete the object and its parent... */
+       delete the object (and even its parent...) */
 
     if ( obj->parent )
     {

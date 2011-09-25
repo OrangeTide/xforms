@@ -2105,7 +2105,7 @@ handle_mouse( FL_OBJECT * obj,
     if ( sp->num_lines == 0 )
         return ret;
 
-    /* Figure out the index of the line the mouse is on, if mouse us below
+    /* Figure out the index of the line the mouse is on, if mouse is below
        or above the text area scroll up or down */
 
     if (    ev == FL_UPDATE
@@ -2318,6 +2318,8 @@ handle_tbox( FL_OBJECT * obj,
             break;
 
         case FL_RELEASE :
+            if ( key != FL_MBUTTON1 )
+                break;
             ret |= handle_mouse( obj, my, ev ) | FL_RETURN_END;
             if ( sp->yoffset != old_yoffset )
                 ret |= FL_RETURN_CHANGED;

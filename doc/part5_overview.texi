@@ -443,13 +443,13 @@ It is recommended that this function be used before
 @code{@ref{fl_initialize()}} so the user has the option to override
 the default through application resources.
 
-Prior to version 0.80, the origin of XForms' coordinate system was at
-the lower-left corner of the form. The new Form Designer will convert
-the form definition file to the new coordinate system, i.e., with the
-origin at the upper-left hand corner, so no manual intervention is
-required. To help those who lost the @code{.fd} files or otherwise
-can't use a newer version of @code{fdesign}, a compatibility function
-is provided
+Prior to version 0.80 the origin of XForms' coordinate system was at
+the lower left-hand corner of the form. The new Form Designer will
+convert the form definition file to the new coordinate system, i.e.,
+with the origin at the upper left-hand corner, so no manual
+intervention is required. To help those who lost the @code{.fd} files
+or otherwise can't use a newer version of @code{fdesign}, a
+compatibility function is provided
 @findex fl_flip_yorigin()
 @anchor{fl_flip_yorigin()}
 @example
@@ -883,7 +883,18 @@ void fl_get_object_position(FL_OBJECT *obj, FL_Coord *x, FL_Coord *y);
 @noindent
 exist. If the object is visible it's redrawn at the new position.
 
-To change or inquire the size of an object use
+An object can also be moved relative to its current position using
+the function
+@findex fl_move_object()
+@anchor{fl_move_object()}
+@example
+void fl_move_object(FL_OBJECT *obj, FL_Coord dx, FL_Coord dy);
+@end example
+@noindent
+where @code{dx} and @code{dy} are the amounts by which the object
+is moved to the right and down.
+
+To change or inquire about the size of an object use
 @findex fl_set_object_size()
 @anchor{fl_set_object_size()}
 @findex fl_get_object_size()
@@ -893,10 +904,10 @@ void fl_set_object_size(FL_OBJECT *obj, FL_Coord w, FL_Coord h);
 void fl_get_object_size(FL_OBJECT *obj, FL_Coord *w, FL_Coord *h);
 @end example
 @noindent
-When changing th size the position of the upper left hand corner of
-the object remains unchanged.
+When changing the size of the object the position of its upper left
+hand corner remains unchanged.
 
-To set or query both the position and size of an object the
+To set or query both the position and the size of an object the
 functions
 @findex fl_set_object_geometry()
 @anchor{fl_set_object_geometry()}
@@ -917,7 +928,7 @@ information stored in the object directly. There's some double
 bookkeeping going on under the hood that makes sure that the objects
 position and size won't change due to rounding errors when the
 whole form gets resized and changing the internal information kept in
-the objects structure would interfer with this.
+the objects structure would interfere with this.
 
 There's a second function for calculation an objects geometry:
 @findex fl_get_object_bbox()

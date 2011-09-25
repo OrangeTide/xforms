@@ -143,7 +143,7 @@ fl_create_simu_glcanvas( int          type,
     ob->lcol    = FL_LCOL;
     ob->align   = FL_ALIGN_CENTER;
     ob->active  = 0;
-    ob->spec = fl_calloc( 1, sizeof *ob->spec );
+    ob->spec    = sp = fl_calloc( 1, sizeof *sp );
 
     return ob;
 }
