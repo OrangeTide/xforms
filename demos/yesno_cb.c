@@ -38,7 +38,8 @@ yes_push( FL_OBJECT * ob    FL_UNUSED_ARG,
 		  long        data  FL_UNUSED_ARG )
 {
 	fprintf( stderr, "Yes is pushed\n" );
-	exit( 1 );
+	fl_finish( );
+	exit( 0 );
 }
 
 
@@ -81,7 +82,8 @@ main( int    argc,
 
 	fl_do_forms( );
 
-	fl_hide_form( form );
-	fl_finish( );
+	/* We'll never get here since all objects have callback
+	   functions and thus fl_do_forms() never returns */
+
 	return 0;
 }

@@ -1,6 +1,8 @@
 2011-09-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_select.c: Bug in undo of alignment fixed.
+	* demos/yesno.c, demos/yesno_cb.c: Changed them to have
+	them behave exactly identical.
 
 2011-09-11 Jens Thoms Toerring    <jt@toerring.de>
 

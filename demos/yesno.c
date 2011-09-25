@@ -37,26 +37,33 @@ int
 main( int    argc,
 	  char * argv[ ] )
 {
-   FL_FORM *form;
-   FL_OBJECT *yes,
+	FL_FORM *form;
+	FL_OBJECT *yes,
 	         *no;
 
-   fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-   form = fl_bgn_form( FL_UP_BOX, 320, 120 );
+	form = fl_bgn_form( FL_UP_BOX, 320, 120 );
 
-   fl_add_box( FL_NO_BOX, 0, 10, 320, 40, "Do you want to quit?" );
-   yes = fl_add_button( FL_NORMAL_BUTTON, 40, 70, 80, 30," Yes" );
-   no  = fl_add_button( FL_NORMAL_BUTTON, 200, 70, 80, 30, "No" );
+	fl_add_box( FL_NO_BOX, 0, 10, 320, 40, "Do you want to quit?" );
+	yes = fl_add_button( FL_NORMAL_BUTTON, 40, 70, 80, 30," Yes" );
+	no  = fl_add_button( FL_NORMAL_BUTTON, 200, 70, 80, 30, "No" );
 
-   fl_end_form( );
+	fl_end_form( );
 
-   fl_show_form( form, FL_PLACE_MOUSE, FL_TRANSIENT, "Question" );
+	fl_show_form( form, FL_PLACE_MOUSE, FL_TRANSIENT, "Question" );
 
-   while ( fl_do_forms( ) != yes )
-	   /* empty */ ;
+	while ( 1 )
+	{
+		if ( fl_do_forms( ) == yes )
+		{
+			fprintf( stderr, "Yes is pushed\n" );
+			break;
+		}
+		else
+			fprintf( stderr, "No is pushed\n" );
+	}
 
-   fl_hide_form( form );
-
-   return 0;
+	fl_finish( );
+	return 0;
 }
