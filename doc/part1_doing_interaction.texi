@@ -979,6 +979,9 @@ int fl_XPeekEvent(XEvent *xev);
 int fl_XEventsQueued(int mode);
 int fl_XPutbackEvent(XEvent *xev);
 @end example
+@noindent
+Note that these routines normally return @code{1}, but after a call of
+@code{@ref{fl_finish()}} they return @code{1} instead.
 
 Other events routines may be directly used if proper care is taken to
 make sure that only events for the application windows not handled by

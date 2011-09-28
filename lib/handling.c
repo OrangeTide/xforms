@@ -775,6 +775,9 @@ fli_treat_interaction_events( int wait_io )
 {
     XEvent xev;
 
+        if ( fl_display == None )
+            return;
+
     /* If no event is present output buffer will be flushed. If event
        exists XNextEvent in do_interaction() will flush the output buffer */
 
@@ -1319,6 +1322,9 @@ fl_check_forms( void )
         fli_treat_interaction_events( 0 );
         fli_treat_user_events( );
         obj = fli_object_qread( );
+
+        if ( fl_display == None )
+            return NULL;
     }
 
     return obj;
@@ -1338,6 +1344,9 @@ fl_check_only_forms( void )
     {
         fli_treat_interaction_events( 0 );
         obj = fli_object_qread( );
+
+        if ( fl_display == None )
+            return NULL;
     }
 
     return obj;
@@ -1353,10 +1362,13 @@ fl_do_forms( void )
 {
     FL_OBJECT *obj;
 
-    while ( ! ( obj = fli_object_qread( ) ) )
+   while ( ! ( obj = fli_object_qread( ) ) )
     {
         fli_treat_interaction_events( 1 );
         fli_treat_user_events( );
+
+        if ( fl_display == None )
+            return NULL;
     }
 
     return obj;
@@ -1373,7 +1385,12 @@ fl_do_only_forms( void )
     FL_OBJECT *obj;
 
     while ( ! ( obj = fli_object_qread( ) ) )
+    {
         fli_treat_interaction_events( 1 );
+
+        if ( fl_display == None )
+            return NULL;
+    }
 
     if ( obj == FL_EVENT )
         M_warn( "fl_do_only_forms", "Shouldn't happen" );
@@ -1389,6 +1406,9 @@ static int
 form_event_queued( XEvent * xev,
                    int      mode )
 {
+    if ( fl_display == None )
+        return 0;
+
     if ( XEventsQueued( flx->display, mode ) )
     {
         XPeekEvent( flx->display, xev );

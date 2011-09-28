@@ -1619,9 +1619,10 @@ is
 FL_OBJECT *fl_do_forms(void);
 @end example
 @noindent
-It starts the main loop of the program and returns only when the state
-of an object changes that has no callback bound to it. A pointer to
-this object is then returned.
+It starts the main loop of the program and returns only when either
+the state of an object changes that has no callback bound to it or
+@code{@ref{fl_finish()}} is called in a callback. In the first case
+the address of the object is returned, in the latter @code{NULL}.
 
 A second way of doing interaction with the currently displayed forms
 is using
@@ -1633,7 +1634,8 @@ FL_OBJECT *fl_check_forms(void);
 @noindent
 This routine returns @code{NULL} immediately unless the state of one
 of the object (without a callback bound to it) changed. In that case a
-pointer to this object gets returned.
+pointer to this object gets returned. @code{NULL} also gets returned
+after a call of @code{@ref{fl_finish()}}.
 
 Then there are two more functions:
 @anchor{fl_do_only_forms()}

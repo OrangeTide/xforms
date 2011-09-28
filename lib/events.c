@@ -710,6 +710,9 @@ fl_XEventsQueued( int mode  FL_UNUSED_ARG )
 {
     if ( event_queue.tail == NULL )
     {
+        if ( fl_display == None )
+            return 0;
+
         fli_treat_interaction_events( 0 );
         fli_treat_user_events( );
     }
@@ -727,8 +730,14 @@ fl_XEventsQueued( int mode  FL_UNUSED_ARG )
 int
 fl_XNextEvent( XEvent * xev )
 {
+    if ( fl_display == None )
+        return 0;
+
     while ( event_queue.tail == NULL )
     {
+        if ( fl_display == None )
+            return 0;
+
         fli_treat_interaction_events( 1 );
         fli_treat_user_events( );
     }
@@ -747,8 +756,14 @@ fl_XNextEvent( XEvent * xev )
 int
 fl_XPeekEvent( XEvent * xev )
 {
+    if ( fl_display == None )
+        return 0;
+
     while ( event_queue.tail == NULL )
     {
+        if ( fl_display == None )
+            return 0;
+
         fli_treat_interaction_events( 1 );
         fli_treat_user_events( );
     }
@@ -769,7 +784,7 @@ fli_treat_user_events( void )
 {
     XEvent xev;
 
-    while ( event_queue.count )
+    while ( fl_display != None && event_queue.count )
     {
         if ( fli_event_callback )
         {

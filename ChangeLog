@@ -1,3 +1,8 @@
+2011-09-28 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: memory leak in fl_set_xyplot_alphatic()
+	found by Alessandro Basili fixed.
+
 2011-09-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_select.c: Bug in undo of alignment fixed.

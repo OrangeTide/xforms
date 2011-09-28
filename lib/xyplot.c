@@ -131,11 +131,16 @@ free_overlay_data( FLI_XYPLOT_SPEC * sp,
 static void
 free_atic( char ** atic )
 {
-    for ( ; *atic; atic++ )
+    size_t cnt = 0;
+
+    for ( ; *atic; atic++, cnt++ )
     {
         fl_free( *atic );
         *atic = NULL;
     }
+
+    while ( ++cnt < MAX_ALABEL - 1 )
+        *++atic = NULL;
 }
 
 
@@ -1019,22 +1024,23 @@ add_xtics( FL_OBJECT * ob )
         xr = sp->xtic_major[ i ];
         fl_line( xr, yi, xr, yf, ob->col2 );
 
-        if ( ! *sp->axtic )
+        if ( ! *sp->axtic || i >= MAX_ALABEL )
             fli_xyplot_nice_label( tic, sp->xminor,
                                    sp->xmajor_val[ i ], label = buf );
         else
         {
             char *p;
 
-            if ( ( p = strchr( sp->axtic[ i ], '@' ) ) )
+            if ( sp->axtic[ i ] && ( p = strchr( sp->axtic[ i ], '@' ) ) )
                 label = fli_sstrcpy( buf, sp->axtic[ i ],
                                      p - sp->axtic[ i ] + 1 );
             else
                 label = sp->axtic[ i ];
         }
-
-        fl_drw_text( FL_ALIGN_TOP, xr, sp->yf + ticl - 2, 0, 0,
-                     ob->col2, sp->lstyle, sp->lsize, label );
+        
+        if ( label )
+            fl_drw_text( FL_ALIGN_TOP, xr, sp->yf + ticl - 2, 0, 0,
+                         ob->col2, sp->lstyle, sp->lsize, label );
     }
 }
 
@@ -2067,6 +2073,9 @@ init_spec( FL_OBJECT       * ob,
     sp->xpi++;
     sp->n1             = 0;
 
+    sp->axtic[ 0 ]     = NULL;
+    sp->aytic[ 0 ]     = NULL;
+
     sp->cur_nxp        = 1;
     sp->xp             = fl_malloc( ( sp->cur_nxp + 3 ) * sizeof *sp->xp );
     sp->xp++;
@@ -2370,8 +2379,7 @@ fl_set_xyplot_xtics( FL_OBJECT * ob,
         sp->xmajor = major ? major : XMAJOR;
         sp->xminor = minor ? minor : XMINOR;
 
-        if ( *sp->axtic )
-            free_atic( sp->axtic );
+        free_atic( sp->axtic );
 
         fl_redraw_object( ob );
     }
@@ -2536,8 +2544,7 @@ fl_set_xyplot_ytics( FL_OBJECT * ob,
 
         sp->ymajor = yma;
         sp->yminor = ymi;
-        if ( *sp->aytic )
-            free_atic( sp->aytic );
+        free_atic( sp->aytic );
 
         if ( sp->ymajor < 0 )
             sp->ytic = -1;
@@ -3569,11 +3576,14 @@ fl_set_xyplot_alphaxtics( FL_OBJECT  * ob,
          *item;
     int n;
 
+    free_atic( sp->axtic );
+
     tmps = fl_strdup( m ? m : "" );
-    for ( n = 0, item = strtok( tmps, "|" ); item; item = strtok( NULL, "|" ) )
+    for ( n = 0, item = strtok( tmps, "|" ); n < MAX_ALABEL - 1 && item;
+          item = strtok( NULL, "|" ) )
         sp->axtic[ n++ ] = fl_strdup( item );
 
-    sp->axtic[ n ] = 0;
+    sp->axtic[ n ] = NULL;
     sp->xmajor = n;
     sp->xminor = 1;
     fl_free( tmps );
