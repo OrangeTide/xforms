@@ -3582,11 +3582,12 @@ fl_set_xyplot_alphaxtics( FL_OBJECT  * ob,
     for ( n = 0, item = strtok( tmps, "|" ); n < MAX_ALABEL - 1 && item;
           item = strtok( NULL, "|" ) )
         sp->axtic[ n++ ] = fl_strdup( item );
+    fl_free( tmps );
 
     sp->axtic[ n ] = NULL;
     sp->xmajor = n;
     sp->xminor = 1;
-    fl_free( tmps );
+
     fl_redraw_object( ob );
 }
 
@@ -3604,13 +3605,18 @@ fl_set_xyplot_alphaytics( FL_OBJECT  * ob,
          *item;
     int n;
 
+    free_atic( sp->aytic );
+
     tmps = fl_strdup( m ? m : "" );
-    for ( n = 0, item = strtok( tmps, "|" ); item; item = strtok( NULL, "|" ) )
+    for ( n = 0, item = strtok( tmps, "|" ); n < MAX_ALABEL - 1 && item;
+          item = strtok( NULL, "|" ) )
         sp->aytic[ n++ ] = fl_strdup( item );
+    fl_free( tmps );
+
     sp->aytic[ n ] = 0;
     sp->ymajor = n;
     sp->yminor = 1;
-    fl_free( tmps );
+
     fl_redraw_object( ob );
 }
 
