@@ -48,8 +48,9 @@ button_cb( FL_OBJECT * ob,
     {
        if ( fl_show_question( "Want to Quit ?", 1 ) == 1 )
        {
-          fl_finish( );
-          exit( 0 );
+		   fl_free( ob->form->fdui );
+		   fl_finish( );
+		   exit( 0 );
        }
     }
     else

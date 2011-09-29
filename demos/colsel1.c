@@ -20,7 +20,7 @@
 
 /************
 
-show the use of setting object colors and call-back routines.
+Show the use of setting object colors and call-back routines.
 
 
 ************/

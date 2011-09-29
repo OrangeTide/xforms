@@ -1265,14 +1265,14 @@ fl_initialize( int        * na,
     fli_context->ext_request_size -= 8;
     fli_context->tooltip_time = 600;
 
-    fl_add_io_callback( ConnectionNumber( fl_display ), FL_READ, 0, 0 );
+    fl_add_io_callback( ConnectionNumber( fl_display ), FL_READ, NULL, NULL );
 
-    /* has to be here, otherwise fl_add_symbol won't be able to replace the
+    /* Has to be here, otherwise fl_add_symbol won't be able to replace the
        built-in */
 
     fli_init_symbols( );
 
-    /* hang the database on the display so application can get it */
+    /* Hang the database on the display so application can get it */
 
     XrmSetDatabase( fl_display, fldatabase );
 
@@ -1370,6 +1370,11 @@ fl_finish( void )
         XCloseIM( fli_context->xim );
     }
 #endif
+
+    while ( fli_context->io_rec )
+        fl_remove_io_callback( fli_context->io_rec->source,
+                               fli_context->io_rec->mask,
+                               fli_context->io_rec->callback );
 
     fl_safe_free( fli_context );
 

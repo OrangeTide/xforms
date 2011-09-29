@@ -345,6 +345,7 @@ main( int    argc,
 	fl_do_forms();
 
 	fl_finish( );
+	fl_free( fd_canvasform );
 
 	return 0;
 }

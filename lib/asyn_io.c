@@ -58,11 +58,8 @@ static fd_set st_rfds,
               st_efds;
 
 
-static void fl_add_to_freelist( FLI_IO_REC * io );
-static void fl_clear_freelist( void );
-
 /***************************************
- * collect all the fd_sets so we don't do it inside the
+ * Collect all the fd_sets so we don't do it inside the
  * critical select inner loop
  ***************************************/
 
@@ -72,13 +69,13 @@ collect_fd( void )
     FLI_IO_REC *p;
     int nf = 0;
 
-    /* initialize the sets */
+    /* Initialize the sets */
 
     FD_ZERO( &st_rfds );
     FD_ZERO( &st_wfds );
     FD_ZERO( &st_efds );
 
-    /* loop through all requested IOs */
+    /* Loop through all requested IOs */
 
     for ( p = fli_context->io_rec; p; p = p->next )
     {
@@ -114,9 +111,10 @@ fl_add_io_callback( int              fd,
 {
     FLI_IO_REC *io_rec;
 
-    /* create new record and make it the start of the list */
+    /* Create new record and make it the start of the list */
 
     io_rec = fl_malloc( sizeof *io_rec );
+
     io_rec->next     = fli_context->io_rec;
     io_rec->callback = callback;
     io_rec->data     = data;
@@ -163,7 +161,7 @@ fl_remove_io_callback( int            fd,
         else
             last->next = io->next;
 
-        fl_add_to_freelist( io );
+        fl_free( io );
     }
 
     collect_fd( );
@@ -184,8 +182,6 @@ fli_watch_io( FLI_IO_REC * io_rec,
     struct timeval timeout;
     FLI_IO_REC *p;
     int nf;
-
-    fl_clear_freelist( );
 
     if ( ! io_rec )
     {
@@ -243,8 +239,6 @@ fli_watch_io( FLI_IO_REC * io_rec,
         if ( p->mask & FL_EXCEPT && FD_ISSET( p->source, &efds ) )
             p->callback( p->source, p->data );
     }
-
-    fl_clear_freelist( );
 }
 
 
@@ -261,49 +255,6 @@ fli_is_watched_io( int fd )
             return 1;
 
     return 0;
-}
-
-
-/***************************************
- ***************************************/
-
-typedef struct free_list_
-{
-    struct free_list_ * next;
-    FLI_IO_REC         * io;
-} Free_List_T;
-
-static Free_List_T *fl = NULL;
-
-
-static void
-fl_add_to_freelist( FLI_IO_REC * io )
-{
-    Free_List_T *cur;
-
-    cur = malloc( sizeof *cur );
-    cur->next = fl;
-    cur->io   = io;
-
-    fl = cur;
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-fl_clear_freelist( void )
-{
-    Free_List_T *cur;
-
-    while ( fl )
-    {
-        fl_free( fl->io );
-        cur = fl;
-        fl = fl->next;
-        fl_free( cur );
-    }
 }
 
 

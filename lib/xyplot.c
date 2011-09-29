@@ -2006,7 +2006,7 @@ allocate_spec( FLI_XYPLOT_SPEC * sp,
         sp->interpolate[ i ] = 0;
         sp->type[ i ] = -1;
         sp->thickness[ i ] = 0;
-        sp->key[ i ] = 0;
+        sp->key[ i ] = NULL;
     }
 
     return oldn;
@@ -2033,7 +2033,16 @@ free_spec_dynamic_mem( FLI_XYPLOT_SPEC * sp )
     fl_safe_free( sp->interpolate );
     fl_safe_free( sp->talign );
     fl_safe_free( sp->thickness );
-    fl_safe_free( sp->key );
+    fl_safe_free( sp->symbol );
+    if ( sp->key )
+    {
+        int i;
+
+        for ( i = 0; i < sp->maxoverlay; i++ )
+            fl_safe_free( sp->key[ i ] );
+
+        fl_safe_free( sp->key );
+    }
 }
 
 

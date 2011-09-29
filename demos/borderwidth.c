@@ -49,7 +49,7 @@ typedef struct {
 	FL_OBJECT * pmobj;
 } FD_bwform;
 
-FD_bwform *fd_bwform;
+FD_bwform *fd_bwform = NULL;
 
 extern FD_bwform * create_form_bwform( void );
 
@@ -64,6 +64,7 @@ done_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 			   long        data  FL_UNUSED_ARG )
 {
 	fl_finish( );
+	fl_free( fd_bwform );
 	exit( 0 );
 }
 
@@ -95,14 +96,14 @@ main( int    argc,
 	int bw;
 	char txt[ 9 ];
 
-	/* application default. Can be overriden by the command line options */
+	/* Application default. Can be overriden by the command line options */
 
 	fl_set_border_width( 1 );
 
 	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 	fd_bwform = create_form_bwform( );
 
-	/* form initialization code */
+	/* Form initialization code */
 
 	fl_set_pixmapbutton_file( fd_bwform->pmobj, "crab.xpm" );
 

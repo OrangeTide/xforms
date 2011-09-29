@@ -92,9 +92,10 @@ setanimatedcursor_cb( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
+void done_cb( FL_OBJECT * ob,
 			  long        data  FL_UNUSED_ARG )
 {
+	fl_free( ob->form->fdui );
     fl_finish( );
     exit( 0 );
 }
