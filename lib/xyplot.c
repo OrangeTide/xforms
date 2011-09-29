@@ -371,28 +371,28 @@ mapw2s( FL_OBJECT * ob,
     {
         double lbase = 1.0 / sp->lxbase;
 
-        for ( i = n1; i <= n2; i++ )
+        for ( i = n1; i < n2; i++ )
         {
             double t = log10( FL_max( x[ i ], FMIN ) ) * lbase;
             p[ i - n1 ].x = FL_crnd( sp->ax * t + sp->bx );
         }
     }
     else
-        for ( i = n1; i <= n2; i++ )
+        for ( i = n1; i < n2; i++ )
             p[ i - n1 ].x = FL_crnd( sp->ax * x[ i ] + sp->bx );
 
     if ( sp->yscale == FL_LOG )
     {
         double lbase = 1.0 / sp->lybase;
 
-        for ( i = n1; i <= n2; i++ )
+        for ( i = n1; i < n2; i++ )
         {
             double t = log10( FL_max( y[ i ], FMIN ) ) * lbase;
             p[ i - n1 ].y = FL_crnd( sp->ay * t + sp->by );
         }
     }
     else
-        for ( i = n1; i <= n2; i++ )
+        for ( i = n1; i < n2; i++ )
         {
             int tmp = FL_crnd( sp->ay * y[ i ] + sp->by );
 
