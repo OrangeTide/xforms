@@ -2080,8 +2080,7 @@ init_spec( FL_OBJECT       * ob,
     sp->xpi++;
     sp->n1             = 0;
 
-    sp->axtic[ 0 ]     = NULL;
-    sp->aytic[ 0 ]     = NULL;
+    sp->axtic[ 0 ]     = sp->aytic[ 0 ] = NULL;
 
     sp->cur_nxp        = 1;
     sp->xp             = fl_malloc( ( sp->cur_nxp + 3 ) * sizeof *sp->xp );
@@ -2141,7 +2140,8 @@ fl_add_xyplot( int          t,
 
     /* Active_xyplot looks a little better in double buffer mode */
 
-    fl_set_object_dblbuffer( ob, sp->active );
+    if ( sp->active )
+        fl_set_object_dblbuffer( ob, 1 );
     return ob;
 }
 

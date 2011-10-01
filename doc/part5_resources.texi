@@ -251,9 +251,9 @@ appname*depth:       8
 appname*ulThickness: 2
 @end example
 
-Since resources based on a form by form basis are yet to be
-implemented, there is no point specifying anything more specific
-although also @code{appname.XForm.depth} etc.@: would work correctly.
+Since resources on a form by form basis are yet to be implemented,
+there is no point specifying anything more specific although also
+@code{appname.XForm.depth} etc.@: would work correctly.
 
 @ifnottex
 
@@ -295,14 +295,14 @@ int main(int argc, char *argv[]) @{
 @}
 @end example
 @noindent
-After this, both variables @code{foolevel} and @code{ifbar} are set
+After this both variables @code{foolevel} and @code{ifbar} are set
 either through resource files or command line options, with the
 command line options overriding those set in the resource files. In
 case neither the command line nor the resource files specified the
 options, the default value string is converted.
 
 There is another routine, a resource routine of the lowest level in
-XForms, which might be useful if a quick&dirty option needs to be
+XForms, which might be useful if a quick-and-dirty option needs to be
 read:
 @findex fl_get_resource()
 @anchor{fl_get_resource()}

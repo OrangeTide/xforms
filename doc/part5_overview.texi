@@ -493,8 +493,8 @@ basis by using the following routines:
 @findex fl_set_object_dblbuffer()
 @anchor{fl_set_object_dblbuffer()}
 @example
-void fl_set_form_dblbuffer(FL_FORM *form, int yes);
-void fl_set_object_dblbuffer(FL_OBJECT *obj, int yes);
+void fl_set_form_dblbuffer(FL_FORM *form, int yes_no);
+void fl_set_object_dblbuffer(FL_OBJECT *obj, int yes_no);
 @end example
 @noindent
 Currently double buffering for objects having a non-rectangular box
@@ -1085,7 +1085,7 @@ use the following routine
 @findex fl_set_object_automatic()
 @anchor{fl_set_object_automatic()}
 @example
-void fl_set_object_automatic(FL_OBJECT *obj, int yes);
+void fl_set_object_automatic(FL_OBJECT *obj, int yes_no);
 @end example
 
 To determine if an object receives @code{FL_STEP} events use
@@ -1451,7 +1451,7 @@ form is shown):
 @findex fl_set_app_nomainform()
 @anchor{fl_set_app_nomainform()}
 @example
-void fl_set_app_nomainform(int yes);
+void fl_set_app_nomainform(int yes_no);
 @end example
 @noindent
 with a true flag.
