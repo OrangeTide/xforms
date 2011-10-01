@@ -28,28 +28,28 @@
 #include "include/forms.h"
 
 typedef struct {
-	FL_FORM   * pupform;
-	void      * vdata;
-	char      * cdata;
-	long        ldata;
-	FL_OBJECT * menu;
-	FL_OBJECT * button;
-	FL_OBJECT * choice;
-	FL_OBJECT * status;
-	FL_OBJECT * done_cb;
+    FL_FORM   * pupform;
+    void      * vdata;
+    char      * cdata;
+    long        ldata;
+    FL_OBJECT * menu;
+    FL_OBJECT * button;
+    FL_OBJECT * choice;
+    FL_OBJECT * status;
+    FL_OBJECT * done_cb;
 } FD_pupform;
 
 
 extern FD_pupform * create_form_pupform( void );
 
 extern void menu_callback( FL_OBJECT *,
-						   long );
+                           long );
 
 extern void dopup_callback( FL_OBJECT *,
-							long );
+                            long );
 
 extern void choice_callback( FL_OBJECT *,
-							 long );
+                             long );
 
 static void init_menu( FL_OBJECT * );
 
@@ -63,20 +63,20 @@ FD_pupform *fd_pupform;
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	fl_initialize( &argc, argv, 0, 0, 0 );
-	fd_pupform = create_form_pupform( );
+    fl_initialize( &argc, argv, 0, 0, 0 );
+    fd_pupform = create_form_pupform( );
 
-	/* fill-in form initialization code */
+    /* fill-in form initialization code */
 
-	init_menu( fd_pupform->menu );
-	init_choice( fd_pupform->choice );
+    init_menu( fd_pupform->menu );
+    init_choice( fd_pupform->choice );
 
-	/* show the first form */
+    /* show the first form */
 
-	fl_show_form( fd_pupform->pupform, FL_PLACE_CENTER, FL_FULLBORDER,
-				  "pupform" );
+    fl_show_form( fd_pupform->pupform, FL_PLACE_CENTER, FL_FULLBORDER,
+                  "pupform" );
 
    fl_do_forms( );
 
@@ -93,13 +93,13 @@ main( int    argc,
 
 void
 menu_callback( FL_OBJECT * ob,
-			   long        data  FL_UNUSED_ARG )
+               long        data  FL_UNUSED_ARG )
 {
     FD_pupform *fdui = ob->form->fdui;
     char buf[ 128 ];
 
     sprintf( buf,"item %d (%s) selected",
-			 fl_get_menu( ob ), fl_get_menu_text( ob ) );
+             fl_get_menu( ob ), fl_get_menu_text( ob ) );
 
     fl_set_object_label( fdui->status, buf );
 }
@@ -109,18 +109,18 @@ menu_callback( FL_OBJECT * ob,
 
 FL_PUP_ENTRY menu_entries[ ] =
 {
-	{ "Menu Item1",    NULL, NULL, 0 },
-	{ "Menu Item2",    NULL, NULL, 0 },
-	{ "_Menu Item3",   NULL, NULL, 0 },
-	{ "/_Menu Item 4", NULL, NULL, 0 },
-	  { "Menu Item 5", NULL, NULL, 0 },
-	  { "Menu Item 6", NULL, NULL, 0 },
-	  { "Menu Item 7", NULL, NULL, 0 },
-	  { "Menu Item 8", NULL, NULL, 0 },
-	  { NULL,          NULL, NULL, 0 },
-	{ "Menu Item10", NULL, NULL, 0 },
-	{ "menu Item11", NULL, NULL, 0 },
-	{ NULL,          NULL, NULL, 0 }
+    { "Menu Item1",    NULL, NULL, 0 },
+    { "Menu Item2",    NULL, NULL, 0 },
+    { "_Menu Item3",   NULL, NULL, 0 },
+    { "/_Menu Item 4", NULL, NULL, 0 },
+      { "Menu Item 5", NULL, NULL, 0 },
+      { "Menu Item 6", NULL, NULL, 0 },
+      { "Menu Item 7", NULL, NULL, 0 },
+      { "Menu Item 8", NULL, NULL, 0 },
+      { NULL,          NULL, NULL, 0 },
+    { "Menu Item10", NULL, NULL, 0 },
+    { "menu Item11", NULL, NULL, 0 },
+    { NULL,          NULL, NULL, 0 }
 };
 
 
@@ -129,14 +129,14 @@ FL_PUP_ENTRY menu_entries[ ] =
 
 static void
 menuitem_entercb( int    n,
-				  void * data )
+                  void * data )
 {
-	char buf[ 128 ];
-	FD_pupform *fdui = data;
+    char buf[ 128 ];
+    FD_pupform *fdui = data;
 
-	fprintf( stderr, "pupId=%d\n", fl_current_pup( ) );
-	sprintf( buf,"Entered %d (%s)", n, fl_get_menu_item_text( fdui->menu, n ) );
-	fl_set_object_label( fdui->status, buf );
+    fprintf( stderr, "pupId=%d\n", fl_current_pup( ) );
+    sprintf( buf,"Entered %d (%s)", n, fl_get_menu_item_text( fdui->menu, n ) );
+    fl_set_object_label( fdui->status, buf );
 }
 
 
@@ -175,7 +175,7 @@ pupitem_cb( int selected )
 
      fprintf( stderr, "pupId=%d\n", fl_current_pup( ) );
      sprintf( buf, "Item %d (%s) selected",
-			  selected, fl_getpup_text( pupID, selected ) );
+              selected, fl_getpup_text( pupID, selected ) );
      fl_set_object_label( fd_pupform->status, buf );
      return selected;
 }
@@ -183,18 +183,18 @@ pupitem_cb( int selected )
 
 FL_PUP_ENTRY pup_entries[ ] =
 {
-	{ "Popup Item1", pupitem_cb, "1", FL_PUP_RADIO },
-	{ "Popup Item2", pupitem_cb, "2", FL_PUP_RADIO },
-	{ "Popup Item3", pupitem_cb, "3", FL_PUP_RADIO },
-	{ "/Popup Item 4", pupitem_cb, NULL, 0 },
-	{ "Popup Item 5", pupitem_cb, NULL, 0 },
-	{ "Popup Item 6", pupitem_cb, NULL, 0 },
-	{ "Popup Item 7", pupitem_cb, NULL, 0 },
-	{ "Popup Item 8", pupitem_cb, NULL, 0 },
-	{ NULL, NULL, NULL, 0 },
-	{ "Popup Item10", pupitem_cb, 0, FL_PUP_GRAY },
-	{ "Popup Item11", pupitem_cb, NULL, 0 },
-	{ NULL, NULL, NULL, 0 }
+    { "Popup Item1", pupitem_cb, "1", FL_PUP_RADIO },
+    { "Popup Item2", pupitem_cb, "2", FL_PUP_RADIO },
+    { "Popup Item3", pupitem_cb, "3", FL_PUP_RADIO },
+    { "/Popup Item 4", pupitem_cb, NULL, 0 },
+    { "Popup Item 5", pupitem_cb, NULL, 0 },
+    { "Popup Item 6", pupitem_cb, NULL, 0 },
+    { "Popup Item 7", pupitem_cb, NULL, 0 },
+    { "Popup Item 8", pupitem_cb, NULL, 0 },
+    { NULL, NULL, NULL, 0 },
+    { "Popup Item10", pupitem_cb, 0, FL_PUP_GRAY },
+    { "Popup Item11", pupitem_cb, NULL, 0 },
+    { NULL, NULL, NULL, 0 }
 };
 
 
@@ -203,14 +203,14 @@ FL_PUP_ENTRY pup_entries[ ] =
 
 static void
 pup_entercb( int    n,
-			 void * data )
+             void * data )
 {
-	FD_pupform *fdui = data;
-	char buf[ 128 ];
+    FD_pupform *fdui = data;
+    char buf[ 128 ];
 
-	fprintf( stderr, "pupId=%d\n", fl_current_pup( ) );
-	sprintf( buf, "Entered %d (%s)", n, pup_entries[ n - 1 ].text );
-	fl_set_object_label( fdui->status, buf );
+    fprintf( stderr, "pupId=%d\n", fl_current_pup( ) );
+    sprintf( buf, "Entered %d (%s)", n, pup_entries[ n - 1 ].text );
+    fl_set_object_label( fdui->status, buf );
 }
 
 
@@ -219,7 +219,7 @@ pup_entercb( int    n,
 
 void
 dopup_callback( FL_OBJECT * ob,
-				long        data  FL_UNUSED_ARG )
+                long        data  FL_UNUSED_ARG )
 {
     if ( pupID < 0 )
     {
@@ -253,13 +253,13 @@ init_choice( FL_OBJECT * ob )
 
 void
 choice_callback( FL_OBJECT * ob,
-				 long        data  FL_UNUSED_ARG )
+                 long        data  FL_UNUSED_ARG )
 {
     char buf[ 128 ];
     FD_pupform *fdui = ob->form->fdui;
 
     sprintf( buf,"%d (%s) selected",
-			 fl_get_choice( ob ), fl_get_choice_text( ob ) );
+             fl_get_choice( ob ), fl_get_choice_text( ob ) );
     fl_set_object_label( fdui->status, buf );
 }
 
@@ -275,41 +275,49 @@ choice_callback( FL_OBJECT * ob,
 FD_pupform *
 create_form_pupform( void )
 {
-	FL_OBJECT *obj;
-	FD_pupform *fdui = fl_calloc( 1, sizeof *fdui );
+    FL_OBJECT *obj;
+    FD_pupform *fdui = fl_calloc( 1, sizeof *fdui );
 
-	fdui->pupform = fl_bgn_form( FL_NO_BOX, 320, 250 );
+    fdui->pupform = fl_bgn_form( FL_NO_BOX, 320, 250 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
+    obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 250, "" );
 
-	fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 95, 60, 20, "Menu" );
+    fdui->menu = obj = fl_add_menu( FL_PULLDOWN_MENU, 20, 95, 60, 20, "Menu" );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );
     fl_set_object_callback( obj, menu_callback, 0 );
 
-	fdui->button = obj = fl_add_button( FL_MENU_BUTTON, 100, 90, 75, 30,
-										"Button" );
+    fdui->button = obj = fl_add_button( FL_MENU_BUTTON, 100, 90, 75, 30,
+                                        "Button" );
     fl_set_object_callback( obj, dopup_callback, 0 );
     fl_set_object_shortcut( obj, "#BB", 1 );
 
-	fdui->choice = obj = fl_add_choice( FL_NORMAL_CHOICE2, 195, 90, 105, 30,
-										"" );
+    fdui->choice = obj = fl_add_choice( FL_NORMAL_CHOICE2, 195, 90, 105, 30,
+                                        "" );
     fl_set_object_callback( obj, choice_callback, 0 );
 
-	fdui->status = obj = fl_add_text( FL_NORMAL_TEXT, 25, 30, 265, 30, "" );
+    fdui->status = obj = fl_add_text( FL_NORMAL_TEXT, 25, 30, 265, 30, "" );
     fl_set_object_boxtype( obj, FL_FRAME_BOX );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_dblbuffer( obj, 1 );
 
-	fdui->done_cb = obj = fl_add_button( FL_NORMAL_BUTTON, 210, 200, 85, 30,
-										 "Done" );
+    fdui->done_cb = obj = fl_add_button( FL_NORMAL_BUTTON, 210, 200, 85, 30,
+                                         "Done" );
 
 //    fl_add_thumbwheel( FL_FLAT_BOX, 30, 150, 20, 75, "test" );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	fl_adjust_form_size( fdui->pupform );
+    fl_adjust_form_size( fdui->pupform );
 
-	fdui->pupform->fdui = fdui;
+    fdui->pupform->fdui = fdui;
 
-	return fdui;
+    return fdui;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

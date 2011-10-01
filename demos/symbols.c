@@ -48,9 +48,9 @@ char *symbols[ ] =
 
 static void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-		 long        data  FL_UNUSED_ARG )
+         long        data  FL_UNUSED_ARG )
 {
-	exit( 0 );
+    exit( 0 );
 }
 
 
@@ -61,27 +61,27 @@ FL_FORM *
 make_symbols( void )
 {
     char **p,
-		 buf[ 32 ];
+         buf[ 32 ];
     int x0 = 10,
-		y0 = 10,
-		dx = 35,
-		dy = 35,
-		ty = 17,
-		n = 7;
+        y0 = 10,
+        dx = 35,
+        dy = 35,
+        ty = 17,
+        n = 7;
     int xsep = 15,
-		ysep = 5;
+        ysep = 5;
     int x,
-		y,
-		i,
-		w,
-		h;
+        y,
+        i,
+        w,
+        h;
     FL_OBJECT *obj;
-	FL_FORM *form;
+    FL_FORM *form;
 
     form = fl_bgn_form( FL_FLAT_BOX,
-						w = 2 * x0 + n * dx + ( n - 1 ) * xsep,
-						h = 2 * y0 + ( 1 + N / n - ! ( N % n ) )
-						             * ( dy + ty + ysep ) );
+                        w = 2 * x0 + n * dx + ( n - 1 ) * xsep,
+                        h = 2 * y0 + ( 1 + N / n - ! ( N % n ) )
+                                     * ( dy + ty + ysep ) );
 
     obj = fl_add_button( FL_HIDDEN_BUTTON, 0, 0, w, h, "" );
 
@@ -110,7 +110,7 @@ make_symbols( void )
 
      fl_adjust_form_size( form );
 
-	 return form;
+     return form;
 }
 
 
@@ -119,16 +119,24 @@ make_symbols( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FL_FORM *form;
+    FL_FORM *form;
 
-	fl_initialize( &argc, argv , 0, 0, 0 );
-	form = make_symbols( );
-	fl_show_form( form, FL_PLACE_FREE, FL_FULLBORDER, "test" );
+    fl_initialize( &argc, argv , 0, 0, 0 );
+    form = make_symbols( );
+    fl_show_form( form, FL_PLACE_FREE, FL_FULLBORDER, "test" );
 
-	while ( fl_do_forms( ) )
-		/* empty */;
+    while ( fl_do_forms( ) )
+        /* empty */;
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

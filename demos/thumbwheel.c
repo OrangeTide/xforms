@@ -32,13 +32,13 @@
 
 void
 valchange_cb( FL_OBJECT * ob,
-			  long        data  FL_UNUSED_ARG )
+              long        data  FL_UNUSED_ARG )
 {
-	FD_twheelform *fdui = ( FD_twheelform * ) ob->form->fdui;
-	char buf[ 128 ];
+    FD_twheelform *fdui = ( FD_twheelform * ) ob->form->fdui;
+    char buf[ 128 ];
 
-	sprintf( buf, "%.3f", fl_get_thumbwheel_value( ob ) );
-	fl_set_object_label( fdui->report, buf );
+    sprintf( buf, "%.3f", fl_get_thumbwheel_value( ob ) );
+    fl_set_object_label( fdui->report, buf );
 }
 
 
@@ -47,19 +47,19 @@ valchange_cb( FL_OBJECT * ob,
 
 void
 returnchange_cb( FL_OBJECT * ob,
-				 long        data  FL_UNUSED_ARG )
+                 long        data  FL_UNUSED_ARG )
 {
      FD_twheelform *fdui = ( FD_twheelform * ) ob->form->fdui;
      int n = fl_get_choice( ob );
 
-	 if ( n == 1 )
-		 n = FL_RETURN_END_CHANGED;
-	 else if ( n == 2 )
-		 n = FL_RETURN_CHANGED;
-	 else if ( n == 3 )
-		 n = FL_RETURN_END;
-	 else
-		 n = FL_RETURN_ALWAYS;
+     if ( n == 1 )
+         n = FL_RETURN_END_CHANGED;
+     else if ( n == 2 )
+         n = FL_RETURN_CHANGED;
+     else if ( n == 3 )
+         n = FL_RETURN_END;
+     else
+         n = FL_RETURN_ALWAYS;
 
      fl_set_thumbwheel_return( fdui->vert, n );
      fl_set_thumbwheel_return( fdui->hor, n );
@@ -71,18 +71,26 @@ returnchange_cb( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FD_twheelform *fd_twheelform;
+    FD_twheelform *fd_twheelform;
 
-	fl_initialize( &argc, argv, 0, 0, 0 );
-	fd_twheelform = create_form_twheelform( );
+    fl_initialize( &argc, argv, 0, 0, 0 );
+    fd_twheelform = create_form_twheelform( );
 
-	/* show the first form */
+    /* show the first form */
 
-	fl_show_form( fd_twheelform->twheelform,
-				  FL_PLACE_CENTERFREE, FL_FULLBORDER, "twheelform" );
+    fl_show_form( fd_twheelform->twheelform,
+                  FL_PLACE_CENTERFREE, FL_FULLBORDER, "twheelform" );
 
-	fl_do_forms( );
-	return 0;
+    fl_do_forms( );
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -46,7 +46,7 @@ FL_OBJECT *button1,
 
 void
 exit_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
-		 long        arg  FL_UNUSED_ARG )
+         long        arg  FL_UNUSED_ARG )
 {
     fl_finish( );
     exit( 0 );
@@ -58,18 +58,18 @@ exit_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 void
 setit( FL_OBJECT * obj,
-	   int         val )
+       int         val )
 {
-	if ( val )
-	{
-		fl_set_object_lcol( obj, FL_BLACK );
-		fl_activate_object( obj );
-	}
-	else
-	{
-		fl_set_object_lcol( obj, FL_INACTIVE );
-		fl_deactivate_object( obj );
-	}
+    if ( val )
+    {
+        fl_set_object_lcol( obj, FL_BLACK );
+        fl_activate_object( obj );
+    }
+    else
+    {
+        fl_set_object_lcol( obj, FL_INACTIVE );
+        fl_deactivate_object( obj );
+    }
 }
 
 
@@ -78,14 +78,14 @@ setit( FL_OBJECT * obj,
 
 void
 doit( int b1,
-	  int b2,
-	  int b3,
-	  int b4 )
+      int b2,
+      int b3,
+      int b4 )
 {
-	setit( button1, b1 );
-	setit( button2, b2 );
-	setit( button3, b3 );
-	setit( button4, b4 );
+    setit( button1, b1 );
+    setit( button2, b2 );
+    setit( button3, b3 );
+    setit( button4, b4 );
 }
 
 
@@ -94,26 +94,26 @@ doit( int b1,
 
 void
 set_active( FL_OBJECT * obj  FL_UNUSED_ARG,
-			long        arg)
+            long        arg)
 {
-	switch ( arg )
-	{
-		case 0 :
-			doit( 1, 1, 1, 1 );
-			break;
+    switch ( arg )
+    {
+        case 0 :
+            doit( 1, 1, 1, 1 );
+            break;
 
-		case 1 :
-			doit( 0, 0, 0, 0 );
-			break;
+        case 1 :
+            doit( 0, 0, 0, 0 );
+            break;
 
-		case 2 :
-			doit( 0, 1, 0, 1 );
-			break;
+        case 2 :
+            doit( 0, 1, 0, 1 );
+            break;
 
-		case 3 :
-			doit( 1, 0, 1, 0 );
-			break;
-	}
+        case 3 :
+            doit( 1, 0, 1, 0 );
+            break;
+    }
 }
 
 
@@ -123,56 +123,56 @@ set_active( FL_OBJECT * obj  FL_UNUSED_ARG,
 void
 create_form( void )
 {
-	FL_OBJECT *obj;
+    FL_OBJECT *obj;
 
-	form = fl_bgn_form( FL_NO_BOX, 420, 230 );
+    form = fl_bgn_form( FL_NO_BOX, 420, 230 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 420, 230, "" );
-	fl_set_object_color( obj, FL_SLATEBLUE, FL_COL1 );
+    obj = fl_add_box( FL_UP_BOX, 0, 0, 420, 230, "" );
+    fl_set_object_color( obj, FL_SLATEBLUE, FL_COL1 );
 
-	button1 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 170, 150, 40,
-								   "Button 1" );
-	fl_set_object_lsize( obj ,FL_LARGE_SIZE );
-	fl_set_button_shortcut( obj, "1", 1 );
+    button1 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 170, 150, 40,
+                                   "Button 1" );
+    fl_set_object_lsize( obj ,FL_LARGE_SIZE );
+    fl_set_button_shortcut( obj, "1", 1 );
 
-	button2 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 120, 150, 40,
-								   "Button 2" );
-	fl_set_object_lsize( obj, FL_LARGE_SIZE );
-	fl_set_button_shortcut( obj, "2", 1 );
+    button2 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 120, 150, 40,
+                                   "Button 2" );
+    fl_set_object_lsize( obj, FL_LARGE_SIZE );
+    fl_set_button_shortcut( obj, "2", 1 );
 
-	button3 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 70, 150, 40,
-								   "Button 3" );
-	fl_set_object_lsize( obj, FL_LARGE_SIZE );
-	fl_set_button_shortcut( obj, "3", 1 );
+    button3 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 70, 150, 40,
+                                   "Button 3" );
+    fl_set_object_lsize( obj, FL_LARGE_SIZE );
+    fl_set_button_shortcut( obj, "3", 1 );
 
-	button4 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 20, 150, 40,
-								   "Button 4" );
-	fl_set_button_shortcut( obj, "4", 1 );
-	fl_set_object_lsize( obj,FL_LARGE_SIZE );
+    button4 = obj = fl_add_button( FL_NORMAL_BUTTON, 20, 20, 150, 40,
+                                   "Button 4" );
+    fl_set_button_shortcut( obj, "4", 1 );
+    fl_set_object_lsize( obj,FL_LARGE_SIZE );
 
-	group = fl_bgn_group( );
+    group = fl_bgn_group( );
 
-	firstbut = obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 180, 140, 30,
-										 "All active" );
-	fl_set_object_callback( obj, set_active, 0 );
+    firstbut = obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 180, 140, 30,
+                                         "All active" );
+    fl_set_object_callback( obj, set_active, 0 );
 
-	obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 150, 140, 30,
-							  "Non active" );
-	fl_set_object_callback( obj, set_active, 1 );
+    obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 150, 140, 30,
+                              "Non active" );
+    fl_set_object_callback( obj, set_active, 1 );
 
-	obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 120, 140 ,30,
-							  "Even active" );
-	fl_set_object_callback(obj, set_active, 2 );
+    obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 120, 140 ,30,
+                              "Even active" );
+    fl_set_object_callback(obj, set_active, 2 );
 
-	obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 90, 140, 30, "Odd active" );
-	fl_set_object_callback( obj, set_active, 3 );
+    obj = fl_add_lightbutton( FL_RADIO_BUTTON, 260, 90, 140, 30, "Odd active" );
+    fl_set_object_callback( obj, set_active, 3 );
 
-	fl_end_group( );
+    fl_end_group( );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 270, 20, 130, 30, "Quit" );
-	fl_set_object_callback( obj, exit_cb, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 270, 20, 130, 30, "Quit" );
+    fl_set_object_callback( obj, exit_cb, 0 );
 
-	fl_end_form( );
+    fl_end_form( );
 }
 
 
@@ -181,17 +181,25 @@ create_form( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-	create_form( );
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    create_form( );
 
-	fl_set_button( firstbut, 1 );
+    fl_set_button( firstbut, 1 );
 
-	fl_show_form( form, FL_PLACE_CENTER, FL_NOBORDER, NULL );
+    fl_show_form( form, FL_PLACE_CENTER, FL_NOBORDER, NULL );
 
-	while ( fl_do_forms( ) )
-		/* empty */ ;
+    while ( fl_do_forms( ) )
+        /* empty */ ;
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

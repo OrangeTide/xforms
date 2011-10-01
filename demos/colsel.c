@@ -27,18 +27,27 @@
 #include "include/forms.h"
 
 
-
 /***************************************
  ***************************************/
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	int i = 0;
+    int i = 0;
 
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-	while ( 1 )
-		i = fl_show_colormap( i );
-	return 0;
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+
+    while ( 1 )
+        i = fl_show_colormap( i );
+
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -41,9 +41,9 @@
 
 static void initialize( void );
 static void usage( const char *,
-				   int );
+                   int );
 static int parse_command_line( int *,
-							   char ** );
+                               char ** );
 
 
 /***************************************
@@ -51,7 +51,7 @@ static int parse_command_line( int *,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     FL_IMAGE *im;
     const char *fmt = 0;
@@ -61,8 +61,8 @@ main( int    argc,
     args = argv + parse_command_line( &argc, argv );
 
     if (   argc < 3 ||
-		 ! ( fmt = argc >= 4 ? args[ 3 ] : strrchr( args[ 2 ], '.' ) ) )
-		usage( argv[ 0 ], argc >= 3 );
+         ! ( fmt = argc >= 4 ? args[ 3 ] : strrchr( args[ 2 ], '.' ) ) )
+        usage( argv[ 0 ], argc >= 3 );
 
     fmt += fmt[ 0 ] == '.';
     im = flimage_load( strdup( args[ 1 ] ) );
@@ -75,22 +75,21 @@ main( int    argc,
 
 static void
 usage( const char * cmd,
-	   int          more )
+       int          more )
 {
     const FLIMAGE_FORMAT_INFO *info;
     int n,
-		i,
-		k;
+        i,
+        k;
 
     fprintf( stderr, "Usage: %s [-verbose][-help] infile outfile [fmt]\n",
-			 cmd );
+             cmd );
 
     if ( ! more )
        exit( 1 );
 
-    fputs( " The output format is determined by the file extension "
-		   "or fmt.\n fmt or extension must be one of the following\n",
-		   stderr );
+    fputs( " The output format is determined by the file extension or fmt.\n"
+		   " fmt or extension must be one of the following:\n", stderr );
 
     n = flimage_get_number_of_formats( );
     for ( i = 1, k = 0; i <= n; i++ )
@@ -98,14 +97,15 @@ usage( const char * cmd,
           info = flimage_get_format_info( i );
           if ( info->read_write & FLIMAGE_WRITABLE )
           {
-			  fprintf( stderr, "\t%s", info->extension );
-			  if ( ++k % 6 == 0 )
-				  fputc( '\n', stderr );
+              fprintf( stderr, "\t%s", info->extension );
+              if ( ++k % 6 == 0 )
+                  fputc( '\n', stderr );
           }
     }
 
     if ( k % 6 )
         fputc( '\n', stderr );
+
     exit( 1 );
 }
 
@@ -117,7 +117,7 @@ usage( const char * cmd,
 
 static int
 noop( FL_IMAGE   * im  FL_UNUSED_ARG,
-	  const char * s   FL_UNUSED_ARG )
+      const char * s   FL_UNUSED_ARG )
 {
     return 0;
 }
@@ -128,7 +128,7 @@ noop( FL_IMAGE   * im  FL_UNUSED_ARG,
 
 static int
 parse_command_line( int  * argc,
-					char * argv[ ] )
+                    char * argv[ ] )
 {
     int i;
     static FLIMAGE_SETUP setup;
@@ -137,22 +137,23 @@ parse_command_line( int  * argc,
 
     for ( i = 1; i < *argc && *argv[ i ] == '-'; )
     {
-		if ( strncmp( argv[ i ], "-verb", 5 ) == 0 )
-		{
-			setup.visual_cue = 0;
-			i++;
-		}
-		else if ( strncmp( argv[ i ], "-h", 2 ) == 0 )
-		{
-			usage( argv[ 0 ], 1 );
-			i++;
-		}
-		else
-			usage( argv[ 0 ], 0 );
+        if ( strncmp( argv[ i ], "-verb", 5 ) == 0 )
+        {
+            setup.visual_cue = 0;
+            i++;
+        }
+        else if ( strncmp( argv[ i ], "-h", 2 ) == 0 )
+        {
+            usage( argv[ 0 ], 1 );
+            i++;
+        }
+        else
+            usage( argv[ 0 ], 0 );
     }
 
     flimage_setup( &setup );
     *argc -= i - 1;
+
     return i - 1;
 }
 
@@ -176,3 +177,11 @@ initialize( void )
     flimage_enable_jpeg( );
 #endif
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

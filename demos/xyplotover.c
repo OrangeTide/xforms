@@ -53,7 +53,7 @@ extern void init_xyplot( FD_fff * );
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     FD_fff *fd_fff;
 
@@ -68,12 +68,12 @@ main( int    argc,
     /* Show the first form */
 
     fl_show_form( fd_fff->fff, FL_PLACE_MOUSE | FL_FREE_SIZE, FL_TRANSIENT,
-				  "XYPlot Overlay" );
+                  "XYPlot Overlay" );
 
     fl_do_forms( );
 
     if ( fl_object_ps_dump( fd_fff->xyplot, "test.ps" ) >= 0 )
-		fprintf( stderr, "PostScript output test.ps written\n" );
+        fprintf( stderr, "PostScript output test.ps written\n" );
 
     return 0;
 }
@@ -87,16 +87,16 @@ init_xyplot( FD_fff * fd_fff )
 {
     int i;
     float xx[ 20 ],
-		  yy[ 20 ];
+          yy[ 20 ];
 
     for ( i = 0; i <= 10; i++ )
     {
-		xx[ i ] = i;
-		yy[ i ] = exp( - 0.125 * ( i - 5 ) * ( i - 5 ) );
+        xx[ i ] = i;
+        yy[ i ] = exp( - 0.125 * ( i - 5 ) * ( i - 5 ) );
     }
 
     fl_set_xyplot_data( fd_fff->xyplot, xx, yy, 8,
-						"Plot Title", "X-Axis", "Y|Axis");
+                        "Plot Title", "X-Axis", "Y|Axis");
     fl_set_xyplot_ybounds( fd_fff->xyplot, 0, 1.1 );
     fl_set_xyplot_xbounds( fd_fff->xyplot, 0, 10 );
     fl_add_xyplot_overlay( fd_fff->xyplot, 1, xx, yy, 11, FL_YELLOW );
@@ -104,12 +104,12 @@ init_xyplot( FD_fff * fd_fff )
     fl_set_xyplot_interpolate( fd_fff->xyplot, 1, 2, 0.1 );
 
     fl_add_xyplot_text( fd_fff->xyplot, 0.5, 1.0, "Gaussian\nDistribution",
-						FL_ALIGN_RIGHT, FL_WHITE );
+                        FL_ALIGN_RIGHT, FL_WHITE );
 
     fl_set_xyplot_key( fd_fff->xyplot, 0, "Original" );
     fl_set_xyplot_key( fd_fff->xyplot, 1, "Overlay" );
     fl_set_xyplot_key_position( fd_fff->xyplot, 9.8, 1.08,
-								FL_ALIGN_LEFT_BOTTOM );
+                                FL_ALIGN_LEFT_BOTTOM );
 }
 
 
@@ -127,16 +127,24 @@ create_form_fff( void )
     fl_add_box( FL_UP_BOX, 0, 0, 370, 310, "" );
 
     fdui->xyplot = obj = fl_add_xyplot( FL_IMPULSE_XYPLOT, 10, 20, 350, 260,
-										"An XYPlot with overlay" );
-	fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
-	fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-	fl_set_object_boxtype( obj, FL_DOWN_BOX );
-	fl_set_object_color( obj, FL_BLACK, FL_GREEN );
+                                        "An XYPlot with overlay" );
+    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lsize( obj, FL_NORMAL_SIZE );
+    fl_set_object_boxtype( obj, FL_DOWN_BOX );
+    fl_set_object_color( obj, FL_BLACK, FL_GREEN );
 
     obj = fl_add_button( FL_HIDDEN_BUTTON, 10, 10, 350, 290, "" );
-	fl_set_button_shortcut( obj,"qQ", 0 );
+    fl_set_button_shortcut( obj,"qQ", 0 );
 
     fl_end_form( );
 
     return fdui;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

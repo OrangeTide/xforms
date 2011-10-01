@@ -33,13 +33,13 @@
 /**** Forms and Objects ****/
 
 typedef struct {
-	FL_FORM   * form;
-	int         timer_id;
-	void      * vdata;
-	long        ldata;
-	FL_OBJECT * timer;
-	FL_OBJECT * restart;
-	FL_OBJECT * report;
+    FL_FORM   * form;
+    int         timer_id;
+    void      * vdata;
+    long        ldata;
+    FL_OBJECT * timer;
+    FL_OBJECT * restart;
+    FL_OBJECT * report;
 } FD_form;
 
 static FD_form * create_form_form( void );
@@ -54,7 +54,7 @@ static long end_sec,
 
 static void
 exit_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-		 long        data  FL_UNUSED_ARG )
+         long        data  FL_UNUSED_ARG )
 {
    fl_finish( );
    exit( 0 );
@@ -67,7 +67,7 @@ exit_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 static void
 timer_cb( int    id  FL_UNUSED_ARG,
-		  void * data )
+          void * data )
 {
    char buf[ 128 ];
    double df;
@@ -81,7 +81,7 @@ timer_cb( int    id  FL_UNUSED_ARG,
    df = end_sec - start_sec + 1.0e-6 * ( end_usec - start_usec );
 
    sprintf( buf,"Timeout: %.3f  Actual: %.3f  DeltaE: %.3f",
-			timerval, df, df - timerval );
+            timerval, df, df - timerval );
 
    fl_set_object_label( fd->report, buf );
 
@@ -93,13 +93,13 @@ timer_cb( int    id  FL_UNUSED_ARG,
 
 static void
 start_timer( FL_OBJECT * ob,
-			 long        data  FL_UNUSED_ARG )
+             long        data  FL_UNUSED_ARG )
 {
    FD_form *fd = ob->form->fdui;
    char buf[ 128 ];
 
    if ( fd->timer_id )
-	   fl_remove_timeout( fd->timer_id );
+       fl_remove_timeout( fd->timer_id );
 
    fd->ldata += 200;
    sprintf( buf, "Timer accuracy testing %.3f sec ...", fd->ldata * 0.001 );
@@ -114,7 +114,7 @@ start_timer( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
    FD_form *fd_form;
 
@@ -130,7 +130,7 @@ main( int    argc,
    /* show the first form */
 
    fl_show_form( fd_form->form, FL_PLACE_CENTER, FL_FULLBORDER,
-				 "Timeout precision" );
+                 "Timeout precision" );
    fl_do_forms( );
 
    return 0;
@@ -143,25 +143,33 @@ main( int    argc,
 static FD_form *
 create_form_form(void)
 {
-	FL_OBJECT *obj;
-	FD_form *fdui = fl_calloc( 1, sizeof *fdui );
+    FL_OBJECT *obj;
+    FD_form *fdui = fl_calloc( 1, sizeof *fdui );
 
-	fdui->form = fl_bgn_form( FL_NO_BOX, 320, 130 );
+    fdui->form = fl_bgn_form( FL_NO_BOX, 320, 130 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 130, "" );
+    obj = fl_add_box( FL_UP_BOX, 0, 0, 320, 130, "" );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 210, 80, 90, 35, "Done" );
-	fl_set_object_callback( obj, exit_cb, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 210, 80, 90, 35, "Done" );
+    fl_set_object_callback( obj, exit_cb, 0 );
 
-	fdui->restart = obj = fl_add_button( FL_TOUCH_BUTTON, 110, 80, 90, 35,
-										 "Restart" );
+    fdui->restart = obj = fl_add_button( FL_TOUCH_BUTTON, 110, 80, 90, 35,
+                                         "Restart" );
     fl_set_object_callback( obj, start_timer, 0 );
 
-	fdui->report = obj = fl_add_text( FL_NORMAL_TEXT, 10, 20, 290, 50,"" );
+    fdui->report = obj = fl_add_text( FL_NORMAL_TEXT, 10, 20, 290, 50,"" );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	fdui->form->fdui = fdui;
+    fdui->form->fdui = fdui;
 
-	return fdui;
+    return fdui;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

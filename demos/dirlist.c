@@ -43,7 +43,7 @@ fill_browser( FL_OBJECT * ob )
     FD_fbform *fdui = ( FD_fbform * ) ob->form->fdui;
     int nfiles = 0;
     const FL_Dirlist *dl = fl_get_dirlist( ".", "*", &nfiles, 0 );
-	const FL_Dirlist *ds;
+    const FL_Dirlist *ds;
     const FL_Dirlist *dlend = dl + nfiles;
     char buf[ 2048 ];
 
@@ -54,9 +54,9 @@ fill_browser( FL_OBJECT * ob )
 
     for ( ds = dl; dl < dlend; dl++ )
     {
-		sprintf( buf, "%-10s\t\t%5ldK\t%s", dl->name, dl->dl_size >> 10,
+        sprintf( buf, "%-10s\t\t%5ldK\t%s", dl->name, dl->dl_size >> 10,
                  ctime( &dl->dl_mtime ) + 3 );
-		fl_addto_browser_chars( fdui->browser, buf );
+        fl_addto_browser_chars( fdui->browser, buf );
     }
 
     fl_unfreeze_form( ob->form );
@@ -72,7 +72,7 @@ fill_browser( FL_OBJECT * ob )
 
 void
 sort_method_cb( FL_OBJECT * ob,
-				long        data )
+                long        data )
 {
     fl_set_dirlist_sort( data );
     fill_browser( ob );
@@ -84,7 +84,7 @@ sort_method_cb( FL_OBJECT * ob,
 
 void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-		 long        data  FL_UNUSED_ARG )
+         long        data  FL_UNUSED_ARG )
 {
     fl_finish( );
     exit( 0 );
@@ -96,24 +96,32 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FD_fbform *fd_fbform;
+    FD_fbform *fd_fbform;
 
-	fl_initialize( &argc, argv, 0, 0, 0 );
-	fd_fbform = create_form_fbform( );
-	fl_set_browser_fontstyle( fd_fbform->browser, FL_FIXED_STYLE );
+    fl_initialize( &argc, argv, 0, 0, 0 );
+    fd_fbform = create_form_fbform( );
+    fl_set_browser_fontstyle( fd_fbform->browser, FL_FIXED_STYLE );
 
-	/* fill-in form initialization code */
+    /* fill-in form initialization code */
 
-	fill_browser( fd_fbform->browser );
+    fill_browser( fd_fbform->browser );
 
-	/* show the first form */
+    /* show the first form */
 
-	fl_show_form( fd_fbform->fbform, FL_PLACE_CENTERFREE, FL_FULLBORDER,
-				  "fbform" );
+    fl_show_form( fd_fbform->fbform, FL_PLACE_CENTERFREE, FL_FULLBORDER,
+                  "fbform" );
 
-	fl_do_forms( );
+    fl_do_forms( );
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

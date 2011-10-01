@@ -38,14 +38,14 @@
 FD_ttt *fd_ttt;
 
 static int load_file( const char *,
-					  void       * );
+                      void       * );
 
 /***************************************
  ***************************************/
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
     fd_ttt = create_form_ttt( );
@@ -65,56 +65,56 @@ main( int    argc,
 
 static int
 load_file( const char * fname,
-		   void       * data  FL_UNUSED_ARG )
+           void       * data  FL_UNUSED_ARG )
 {
-	char *p;
-	struct stat buff;
+    char *p;
+    struct stat buff;
 
-	if ( ! fname || ! *fname )
-	{
-		fprintf( stderr, "Missing file name\n" );
-		return 0;
-	}
+    if ( ! fname || ! *fname )
+    {
+        fprintf( stderr, "Missing file name\n" );
+        return 0;
+    }
 
-	if ( ! stat( fname, &buff ) )
-	{
-		if ( ! S_ISDIR( buff.st_mode ) )
-		{
-			if ( ( p = strrchr( fname, '.' ) ) )
-			{
-				if ( ! strcmp( p + 1, "xpm" ) )
-				{
-					fl_hide_object( fd_ttt->bm );
-					fl_free_pixmap_pixmap( fd_ttt->pm );
-					fl_set_pixmap_file( fd_ttt->pm, fname );
-					fl_show_object( fd_ttt->pm );
-				}
-				else if ( ! strcmp( p + 1, "xbm" ) )
-				{
-					fl_hide_object( fd_ttt->pm );
-					fl_set_bitmap_file( fd_ttt->bm, fname );
-					 fl_show_object( fd_ttt->bm );
-				}
-				else
-				{
-					fprintf( stderr, "Invalid file extension: %s\n", p + 1 );
-					return 0;
-				}
-			}
-			else
-			{
-				fprintf( stderr, "Neither .xpm nor .xbm file\n" );
-				return 0;
-			}
-		}
-	}
-	else
-	{
-		fprintf( stderr, "Can't stat() file %s\n", fname );
-		return 0;
-	}
+    if ( ! stat( fname, &buff ) )
+    {
+        if ( ! S_ISDIR( buff.st_mode ) )
+        {
+            if ( ( p = strrchr( fname, '.' ) ) )
+            {
+                if ( ! strcmp( p + 1, "xpm" ) )
+                {
+                    fl_hide_object( fd_ttt->bm );
+                    fl_free_pixmap_pixmap( fd_ttt->pm );
+                    fl_set_pixmap_file( fd_ttt->pm, fname );
+                    fl_show_object( fd_ttt->pm );
+                }
+                else if ( ! strcmp( p + 1, "xbm" ) )
+                {
+                    fl_hide_object( fd_ttt->pm );
+                    fl_set_bitmap_file( fd_ttt->bm, fname );
+                     fl_show_object( fd_ttt->bm );
+                }
+                else
+                {
+                    fprintf( stderr, "Invalid file extension: %s\n", p + 1 );
+                    return 0;
+                }
+            }
+            else
+            {
+                fprintf( stderr, "Neither .xpm nor .xbm file\n" );
+                return 0;
+            }
+        }
+    }
+    else
+    {
+        fprintf( stderr, "Can't stat() file %s\n", fname );
+        return 0;
+    }
 
-	return 1;
+    return 1;
 }
 
 
@@ -122,7 +122,7 @@ load_file( const char * fname,
  ***************************************/
 
 void done( FL_OBJECT * ob  FL_UNUSED_ARG,
-		   long        q   FL_UNUSED_ARG )
+           long        q   FL_UNUSED_ARG )
 {
     fl_finish( );
     exit( 0 );
@@ -133,9 +133,17 @@ void done( FL_OBJECT * ob  FL_UNUSED_ARG,
  ***************************************/
 
 void reload( FL_OBJECT * ob  FL_UNUSED_ARG,
-			 long        q   FL_UNUSED_ARG )
+             long        q   FL_UNUSED_ARG )
 {
     fl_set_fselector_placement( FL_PLACE_MOUSE );
     fl_set_fselector_callback( load_file, 0 );
     fl_show_fselector( "Load a Pix/bitMap file", NULL, NULL, NULL );
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

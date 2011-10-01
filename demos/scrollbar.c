@@ -34,7 +34,7 @@
  ***************************************/
 
 void hide_cb( FL_OBJECT * ob,
-			  long        data  FL_UNUSED_ARG )
+              long        data  FL_UNUSED_ARG )
 {
     FD_scb *fdui = ob->form->fdui;
 
@@ -55,7 +55,7 @@ void hide_cb( FL_OBJECT * ob,
  ***************************************/
 
 void deactivate_cb( FL_OBJECT * ob,
-					long        data  FL_UNUSED_ARG )
+                    long        data  FL_UNUSED_ARG )
 {
     FD_scb *fdui = ob->form->fdui;
 
@@ -76,9 +76,9 @@ void deactivate_cb( FL_OBJECT * ob,
  ***************************************/
 
 void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			  long        data  FL_UNUSED_ARG )
+              long        data  FL_UNUSED_ARG )
 {
-	fl_finish( );
+    fl_finish( );
     exit( 0 );
 }
 
@@ -87,7 +87,7 @@ void done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 void noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			  long        data  FL_UNUSED_ARG )
+              long        data  FL_UNUSED_ARG )
 {
 }
 
@@ -96,17 +96,25 @@ void noop_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 int main( int    argc,
-		  char * argv[ ] )
+          char * argv[ ] )
 {
-	FD_scb *fd_scb;
+    FD_scb *fd_scb;
 
-	fl_initialize( &argc, argv, 0, 0, 0 );
-	fd_scb = create_form_scb( );
+    fl_initialize( &argc, argv, 0, 0, 0 );
+    fd_scb = create_form_scb( );
 
-	fl_show_form( fd_scb->scb, FL_PLACE_CENTERFREE, FL_FULLBORDER, "form0" );
+    fl_show_form( fd_scb->scb, FL_PLACE_CENTERFREE, FL_FULLBORDER, "form0" );
 
-	fl_do_forms( );
-	fl_finish( );
+    fl_do_forms( );
+    fl_finish( );
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

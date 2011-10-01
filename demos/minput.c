@@ -29,7 +29,7 @@
 
 void
 input_cb( FL_OBJECT * ob,
-		  long        data  FL_UNUSED_ARG )
+          long        data  FL_UNUSED_ARG )
 {
     int x, y;
 
@@ -43,15 +43,15 @@ input_cb( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FL_FORM *form;
-	FL_OBJECT *but,
-		      *obj;
+    FL_FORM *form;
+    FL_OBJECT *but,
+              *obj;
 
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-	form = fl_bgn_form( FL_UP_BOX, 400, 450 );
+    form = fl_bgn_form( FL_UP_BOX, 400, 450 );
 
     fl_add_input( FL_MULTILINE_INPUT, 30, 270, 340, 150, "" );
 
@@ -59,17 +59,25 @@ main( int    argc,
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_callback( obj, input_cb, 0 );
 
-	but = fl_add_button( FL_NORMAL_BUTTON, 160, 30, 80, 30, "Exit" );
+    but = fl_add_button( FL_NORMAL_BUTTON, 160, 30, 80, 30, "Exit" );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	fl_show_form( form, FL_PLACE_CENTERFREE, FL_FULLBORDER, "MultiLineInput" );
+    fl_show_form( form, FL_PLACE_CENTERFREE, FL_FULLBORDER, "MultiLineInput" );
 
-	do
-		obj = fl_do_forms( );
-	while ( obj != but );
+    do
+        obj = fl_do_forms( );
+    while ( obj != but );
 
-	fl_finish( );
+    fl_finish( );
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

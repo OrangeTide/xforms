@@ -33,9 +33,9 @@
 #include "bm2.xbm"
 
 typedef struct {
-	FL_FORM * menubar;
-	void    * vdata;
-	long      ldata;
+    FL_FORM * menubar;
+    void    * vdata;
+    long      ldata;
 } FD_menubar;
 
 extern FD_menubar *create_form_menubar( void );
@@ -46,7 +46,7 @@ extern FD_menubar *create_form_menubar( void );
 
 void
 done_cb( FL_OBJECT * ob,
-		 long        data )
+         long        data )
 {
     fl_finish( );
     exit( 0 );
@@ -58,20 +58,20 @@ done_cb( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FD_menubar *fd_menubar;
+    FD_menubar *fd_menubar;
 
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-	fd_menubar = create_form_menubar( );
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    fd_menubar = create_form_menubar( );
 
-	fl_show_form( fd_menubar->menubar, FL_PLACE_CENTER, FL_FULLBORDER,
-				  "menubar" );
+    fl_show_form( fd_menubar->menubar, FL_PLACE_CENTER, FL_FULLBORDER,
+                  "menubar" );
 
-	while ( fl_do_forms( ) )
-		/* empty */ ;
+    while ( fl_do_forms( ) )
+        /* empty */ ;
 
-	return 0;
+    return 0;
 }
 
 
@@ -91,19 +91,19 @@ FL_PUP_ENTRY file_menu[] =
 FD_menubar *
 create_form_menubar( void )
 {
-	FL_OBJECT *obj;
-	FD_menubar *fdui = fl_calloc( 1, sizeof *fdui );
+    FL_OBJECT *obj;
+    FD_menubar *fdui = fl_calloc( 1, sizeof *fdui );
 
-	fdui->menubar = fl_bgn_form( FL_NO_BOX, 325, 175 );
+    fdui->menubar = fl_bgn_form( FL_NO_BOX, 325, 175 );
 
-	fl_add_box( FL_UP_BOX, 0, 0, 325, 175, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 325, 175, "" );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 140, 60, 25, "Done" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 250, 140, 60, 25, "Done" );
     fl_set_object_callback( obj, done_cb, 0 );
 
-	fl_add_menubar( 0, 0, 0, 325, 30, "test" );
+    fl_add_menubar( 0, 0, 0, 325, 30, "test" );
 
-	fl_end_form( );
+    fl_end_form( );
 
    fl_set_menubar( obj, "File|Message|Find" );
    fl_set_menubar_entries( obj,"File", file_menu );
@@ -111,3 +111,11 @@ create_form_menubar( void )
    return fdui;
 }
 /*---------------------------------------*/
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -22,7 +22,10 @@
 #include <config.h>
 #endif
 #include "include/forms.h"
+
+
 /**** Forms and Objects ****/
+
 typedef struct {
         FL_FORM *S;
         void *vdata;
@@ -38,9 +41,9 @@ FD_S *S;
 
 void
 timeoutCB( int    tid    FL_UNUSED_ARG,
-		   void * stuff  FL_UNUSED_ARG )
+           void * stuff  FL_UNUSED_ARG )
 {
-	fl_show_alert( "Standby", "This may abort", "with SEGV", 1 );
+    fl_show_alert( "Standby", "This may abort", "with SEGV", 1 );
 }
 
 
@@ -49,11 +52,11 @@ timeoutCB( int    tid    FL_UNUSED_ARG,
 
 void
 pressedCB( FL_OBJECT * obj   FL_UNUSED_ARG,
-		   long        data  FL_UNUSED_ARG )
+           long        data  FL_UNUSED_ARG )
 {
-	int tid = fl_add_timeout( 300L, timeoutCB, NULL );
+    int tid = fl_add_timeout( 300L, timeoutCB, NULL );
 
-	fprintf( stderr, "tid=%d\n", tid );
+    fprintf( stderr, "tid=%d\n", tid );
 }
 
 
@@ -63,25 +66,25 @@ pressedCB( FL_OBJECT * obj   FL_UNUSED_ARG,
 FD_S *
 create_form_S( void )
 {
-	FL_OBJECT *obj;
-	FD_S *fdui = fl_calloc( 1, sizeof *fdui );
-	int old_unit = fl_get_coordunit( );
+    FL_OBJECT *obj;
+    FD_S *fdui = fl_calloc( 1, sizeof *fdui );
+    int old_unit = fl_get_coordunit( );
 
-	fl_set_coordunit( FL_COORD_centiMM );
+    fl_set_coordunit( FL_COORD_centiMM );
 
-	fdui->S = fl_bgn_form( FL_NO_BOX, 10837, 8467 );
+    fdui->S = fl_bgn_form( FL_NO_BOX, 10837, 8467 );
 
-	fl_add_box( FL_UP_BOX, 0, 0, 10837, 8467, "" );
+    fl_add_box( FL_UP_BOX, 0, 0, 10837, 8467, "" );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 1693, 1693, 7451, 4403, "Press Me" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 1693, 1693, 7451, 4403, "Press Me" );
     fl_set_object_callback( obj, pressedCB, 0 );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	fdui->S->fdui = fdui;
-	fl_set_coordunit( old_unit );
+    fdui->S->fdui = fdui;
+    fl_set_coordunit( old_unit );
 
-	return fdui;
+    return fdui;
 }
 
 
@@ -90,16 +93,24 @@ create_form_S( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	fl_initialize( &argc, argv, "S", 0, 0 );
+    fl_initialize( &argc, argv, "S", 0, 0 );
 
-	S = create_form_S( );
+    S = create_form_S( );
 
-	fl_show_form( S->S, FL_PLACE_CENTER, FL_FULLBORDER, "Crash Test" );
+    fl_show_form( S->S, FL_PLACE_CENTER, FL_FULLBORDER, "Crash Test" );
 
-	while ( 1 )
-		fl_do_forms( );
+    while ( 1 )
+        fl_do_forms( );
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

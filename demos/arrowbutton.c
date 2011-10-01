@@ -37,14 +37,14 @@
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FL_FORM *form;
-	FL_OBJECT *obj;
+    FL_FORM *form;
+    FL_OBJECT *obj;
 
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-	form = fl_bgn_form( FL_UP_BOX, 400, 400 );
+    form = fl_bgn_form( FL_UP_BOX, 400, 400 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 50, 250, 100, 100, "@1" );
     fl_set_object_lcol( obj, FL_BLUE );
@@ -74,13 +74,21 @@ main( int    argc,
     fl_set_object_lcol( obj, FL_GREEN );
     fl_set_object_color( obj, FL_MAGENTA, FL_RED );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	fl_show_form( form, FL_PLACE_ASPECT, FL_TRANSIENT, "Buttons" );
+    fl_show_form( form, FL_PLACE_ASPECT, FL_TRANSIENT, "Buttons" );
 
-	while ( fl_do_forms( ) != obj )
-		/* empty */ ;
+    while ( fl_do_forms( ) != obj )
+        /* empty */ ;
 
-	fl_finish( );
-	return 0;
+    fl_finish( );
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

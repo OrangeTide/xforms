@@ -49,9 +49,9 @@ create_form( void )
               *childobj,
               *licenceobj,
               *marriedobj;
-	FL_POPUP_ITEM items[ ] = { { "Male%SM",   cb,   "M",  0, 0 },
-							   { "Female%SF", cb,   "F",  0, 0 },
-							   { NULL,        NULL, NULL, 0, 0 } };
+    FL_POPUP_ITEM items[ ] = { { "Male%SM",   cb,   "M",  0, 0 },
+                               { "Female%SF", cb,   "F",  0, 0 },
+                               { NULL,        NULL, NULL, 0, 0 } };
 
     form = fl_bgn_form( FL_NO_BOX, 420, 360 );
 
@@ -114,3 +114,11 @@ main( int    argc,
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -38,21 +38,25 @@ FL_FORM * create_form_form(void);
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FL_FORM *form;
-	Pixmap p,
-		   mask;
-	unsigned int w,
-		         h;
+    FL_FORM *form;
+    Pixmap p,
+           mask;
+    unsigned int w,
+                 h;
 
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-	form = create_form_form( );
-	p = fl_read_pixmapfile( fl_root, "crab.xpm", &w, &h, &mask, 0, 0, 0 );
-	fl_set_form_icon( form, p, mask );
-	fl_show_form( form, FL_PLACE_CENTER, FL_FULLBORDER, "IconTest" );
-	fl_do_forms( );
-	return 0;
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+
+    form = create_form_form( );
+    p = fl_read_pixmapfile( fl_root, "crab.xpm", &w, &h, &mask, 0, 0, 0 );
+    fl_set_form_icon( form, p, mask );
+
+    fl_show_form( form, FL_PLACE_CENTER, FL_FULLBORDER, "IconTest" );
+    fl_do_forms( );
+
+	fl_finish( );
+    return 0;
 }
 
 
@@ -62,16 +66,24 @@ main( int    argc,
 FL_FORM *
 create_form_form( void )
 {
-	FL_OBJECT *obj;
-	FL_FORM *form = fl_bgn_form( FL_NO_BOX, 151, 111 );
+    FL_OBJECT *obj;
+    FL_FORM *form = fl_bgn_form( FL_NO_BOX, 151, 111 );
 
-	obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 0, 0, 151, 111,
-							   "Iconify Me\nvia Window Manager" );
-	fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
-	fl_set_object_lstyle( obj, FL_BOLD_STYLE );
-	fl_set_pixmapbutton_data( obj, crab );
+    obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 0, 0, 151, 111,
+                               "Iconify Me\nvia Window Manager" );
+    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
+    fl_set_pixmapbutton_data( obj, crab );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	return form;
+    return form;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

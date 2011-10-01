@@ -55,14 +55,14 @@ static FD_form0 *fd_form0;
  ***************************************/
 
 const char *mess[ ] = { "slider returned",
-		                "counter returned",
-		                "input 1 returned",
-		                "input 2 returned" };
+                        "counter returned",
+                        "input 1 returned",
+                        "input 2 returned" };
 
 
 void
 return_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
-		   long        data )
+           long        data )
 {
     fl_addto_browser( fd_form0->br, mess[ data ] );
 }
@@ -86,9 +86,9 @@ set_when( int n )
 
 void
 when_cb( FL_OBJECT * ob,
-		 long        data  FL_UNUSED_ARG )
+         long        data  FL_UNUSED_ARG )
 {
-	set_when( fl_get_select_item( ob )->val );
+    set_when( fl_get_select_item( ob )->val );
 }
 
 
@@ -97,7 +97,7 @@ when_cb( FL_OBJECT * ob,
 
 void
 resetlog_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-			 long        data  FL_UNUSED_ARG )
+             long        data  FL_UNUSED_ARG )
 {
     fl_clear_browser( fd_form0->br );
 }
@@ -108,7 +108,7 @@ resetlog_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 int
 main( int    argc,
-	  char * argv[] )
+      char * argv[] )
 {
     fl_set_border_width( -2 );
 
@@ -120,10 +120,10 @@ main( int    argc,
     set_when( 0 );
     fl_set_object_dblbuffer( fd_form0->br, 1);
     fl_add_select_items( fd_form0->when,
-						 "RETURN_NONE%x|RETURN_CHANGED%x|"
-						 "RETURN_END%x|RETURN_END_CHANGED%x|RETURN_ALWAYS%x",
-						 FL_RETURN_NONE, FL_RETURN_CHANGED, FL_RETURN_END,
-						 FL_RETURN_END_CHANGED, FL_RETURN_ALWAYS );
+                         "RETURN_NONE%x|RETURN_CHANGED%x|"
+                         "RETURN_END%x|RETURN_END_CHANGED%x|RETURN_ALWAYS%x",
+                         FL_RETURN_NONE, FL_RETURN_CHANGED, FL_RETURN_END,
+                         FL_RETURN_END_CHANGED, FL_RETURN_ALWAYS );
 
     /* show the first form */
 
@@ -141,45 +141,53 @@ main( int    argc,
 FD_form0 *
 create_form_form0( void )
 {
-	FL_OBJECT *obj;
-	FD_form0 *fdui = fl_calloc( 1, sizeof *fdui );
+    FL_OBJECT *obj;
+    FD_form0 *fdui = fl_calloc( 1, sizeof *fdui );
 
-	fdui->form0 = fl_bgn_form( FL_NO_BOX, 321, 276 );
+    fdui->form0 = fl_bgn_form( FL_NO_BOX, 321, 276 );
 
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 321, 276, "" );
+    obj = fl_add_box( FL_UP_BOX, 0, 0, 321, 276, "" );
 
-	fdui->obj[ 0 ] = obj = fl_add_valslider( FL_HOR_SLIDER, 12, 55, 138, 22,
-											 "" );
+    fdui->obj[ 0 ] = obj = fl_add_valslider( FL_HOR_SLIDER, 12, 55, 138, 22,
+                                             "" );
     fl_set_object_lalign( obj ,FL_ALIGN_BOTTOM| FL_ALIGN_INSIDE );
     fl_set_object_callback( obj, return_cb, 0 );
-	fl_set_slider_return( obj, FL_RETURN_CHANGED );
+    fl_set_slider_return( obj, FL_RETURN_CHANGED );
 
-	fdui->obj[ 1 ] = obj = fl_add_counter( FL_NORMAL_COUNTER, 12, 85, 138, 22,
-										   "" );
+    fdui->obj[ 1 ] = obj = fl_add_counter( FL_NORMAL_COUNTER, 12, 85, 138, 22,
+                                           "" );
     fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
     fl_set_object_callback( obj, return_cb, 1 );
 
-	fdui->obj[ 2 ] = obj = fl_add_input( FL_NORMAL_INPUT, 12, 150, 138, 25,
-										 "" );
+    fdui->obj[ 2 ] = obj = fl_add_input( FL_NORMAL_INPUT, 12, 150, 138, 25,
+                                         "" );
     fl_set_object_callback( obj, return_cb, 2 );
 
-	fdui->br = obj = fl_add_browser( FL_NORMAL_BROWSER, 170, 55, 140, 160, "" );
+    fdui->br = obj = fl_add_browser( FL_NORMAL_BROWSER, 170, 55, 140, 160, "" );
 
-	fdui->obj[ 3 ] = obj = fl_add_input( FL_INT_INPUT, 12, 187, 138, 25,
-										 "" );
+    fdui->obj[ 3 ] = obj = fl_add_input( FL_INT_INPUT, 12, 187, 138, 25,
+                                         "" );
     fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
     fl_set_object_callback( obj, return_cb, 3 );
 
-	fdui->when = obj = fl_add_select( FL_NORMAL_SELECT, 40, 12, 240, 27, "" );
+    fdui->when = obj = fl_add_select( FL_NORMAL_SELECT, 40, 12, 240, 27, "" );
     fl_set_object_callback( obj, when_cb, 0 );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 170, 239, 80, 25, "Done" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 170, 239, 80, 25, "Done" );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 70, 239, 80, 25, "ResetLog" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 70, 239, 80, 25, "ResetLog" );
     fl_set_object_callback( obj, resetlog_cb, 0 );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	return fdui;
+    return fdui;
 }
 /*---------------------------------------*/
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

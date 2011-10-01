@@ -40,9 +40,9 @@
  ***************************************/
 
 void done_cb( FL_OBJECT * ob,
-			  long        data  FL_UNUSED_ARG )
+              long        data  FL_UNUSED_ARG )
 {
-	fl_free( ob->form->fdui );
+    fl_free( ob->form->fdui );
     fl_finish( );
     exit( 0 );
 }
@@ -52,7 +52,7 @@ void done_cb( FL_OBJECT * ob,
  ***************************************/
 
 void bw_cb( FL_OBJECT * ob,
-		    long        data  FL_UNUSED_ARG )
+            long        data  FL_UNUSED_ARG )
 {
     int bws[ ] = { -4, -3, -2, -1, 1, 2, 3, 4 };
     int n = fl_get_choice( ob ) - 1;
@@ -75,7 +75,7 @@ void bw_cb( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     FD_buttform *fd_buttform;
 
@@ -87,15 +87,24 @@ main( int    argc,
     fl_set_pixmapbutton_file( fd_buttform->pbutt,"crab45.xpm" );
     fl_set_bitmapbutton_file( fd_buttform->bbutt,"bm1.xbm" );
     fl_addto_choice( fd_buttform->bw_obj,
-					 " -4 | -3 | -2 | -1 |  1|  2|  3|  4" );
+                     " -4 | -3 | -2 | -1 |  1|  2|  3|  4" );
     fl_set_choice( fd_buttform->bw_obj, 5 );
 
     /* show the first form */
 
     fl_show_form( fd_buttform->buttform, FL_PLACE_CENTER, FL_FULLBORDER,
-				  "buttform" );
+                  "buttform" );
+
     while ( fl_do_forms( ) )
-		/* empty */ ;
+        /* empty */ ;
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

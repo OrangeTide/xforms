@@ -22,6 +22,7 @@
    radio buttons and input fields.
 */
 
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -40,36 +41,36 @@ FL_OBJECT *but;
 void
 make_form1( void )
 {
-	FL_OBJECT *obj;
+    FL_OBJECT *obj;
 
-	form = fl_bgn_form( FL_UP_BOX, 500, 400 );
+    form = fl_bgn_form( FL_UP_BOX, 500, 400 );
 
     fl_bgn_group( );
 
-	obj = fl_add_box( FL_UP_BOX, 150, 295, 300, 65, "Children  " );
-	fl_set_object_lalign( obj, FL_ALIGN_LEFT);
-	fl_add_lightbutton( FL_RADIO_BUTTON, 175, 310, 50, 35, "1" );
-	fl_add_lightbutton( FL_RADIO_BUTTON, 241, 310, 50, 35, "2" );
-	fl_add_lightbutton( FL_RADIO_BUTTON, 308, 310, 50, 35, "3" );
-	fl_add_lightbutton( FL_RADIO_BUTTON, 375, 310, 50, 35, "4" );
+    obj = fl_add_box( FL_UP_BOX, 150, 295, 300, 65, "Children  " );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT);
+    fl_add_lightbutton( FL_RADIO_BUTTON, 175, 310, 50, 35, "1" );
+    fl_add_lightbutton( FL_RADIO_BUTTON, 241, 310, 50, 35, "2" );
+    fl_add_lightbutton( FL_RADIO_BUTTON, 308, 310, 50, 35, "3" );
+    fl_add_lightbutton( FL_RADIO_BUTTON, 375, 310, 50, 35, "4" );
 
     fl_end_group( );
 
     fl_bgn_group( );
 
-	obj = fl_add_box( FL_UP_BOX, 150, 230, 300, 65, "Married  " );
-	fl_set_object_lalign( obj, FL_ALIGN_LEFT );
-	fl_add_lightbutton( FL_RADIO_BUTTON, 175, 245, 100, 35, "Yes" );
-	fl_add_lightbutton( FL_RADIO_BUTTON, 325, 245, 100, 35, "No" );
+    obj = fl_add_box( FL_UP_BOX, 150, 230, 300, 65, "Married  " );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT );
+    fl_add_lightbutton( FL_RADIO_BUTTON, 175, 245, 100, 35, "Yes" );
+    fl_add_lightbutton( FL_RADIO_BUTTON, 325, 245, 100, 35, "No" );
 
     fl_end_group( );
 
     fl_bgn_group( );
 
-	obj = fl_add_box( FL_UP_BOX, 150, 165, 300, 65, "Sex  " );
-	fl_set_object_lalign( obj, FL_ALIGN_LEFT );
-	fl_add_lightbutton( FL_RADIO_BUTTON, 175, 180, 100, 35, "Male" );
-	fl_add_lightbutton( FL_RADIO_BUTTON, 325, 180, 100, 35, "Female" );
+    obj = fl_add_box( FL_UP_BOX, 150, 165, 300, 65, "Sex  " );
+    fl_set_object_lalign( obj, FL_ALIGN_LEFT );
+    fl_add_lightbutton( FL_RADIO_BUTTON, 175, 180, 100, 35, "Male" );
+    fl_add_lightbutton( FL_RADIO_BUTTON, 325, 180, 100, 35, "Female" );
 
     fl_end_group( );
 
@@ -90,26 +91,33 @@ make_form1( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FL_OBJECT *obj;
+    FL_OBJECT *obj;
 
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-	make_form1( );
-	fl_show_form( form, FL_PLACE_CENTER, FL_NOBORDER, "Demo06" );
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    make_form1( );
 
-	while ( 1 )
-	{
-		do
-			obj = fl_do_forms( );
-		while ( obj != but );
+    fl_show_form( form, FL_PLACE_CENTER, FL_NOBORDER, "Demo06" );
 
-		if ( fl_show_question( "Do you really want to Quit?", 0 ))
-		{
-			fl_finish( );
-			exit( 0 );
-		}
-	}
+    while ( 1 )
+    {
+        do
+            obj = fl_do_forms( );
+        while ( obj != but );
 
-	return 0;
+        if ( fl_show_question( "Do you really want to Quit?", 0 ))
+            break;
+    }
+
+    fl_finish( );
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

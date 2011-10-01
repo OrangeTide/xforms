@@ -48,7 +48,7 @@ typedef struct
     FD_saveAs_form * fd_saveAs_form;
     const char     * outformat;
     int              double_buffer;
-    int rgb[ 4 ];			/* current fill color */
+    int              rgb[ 4 ];           /* current fill color */
 } App;
 
 static App app;
@@ -60,15 +60,15 @@ static int testicon = 1;
 
 int
 visual_cue( FL_IMAGE   * im,
-			const char * s )
+            const char * s )
 {
     fl_set_object_label( app.fd_mainform->status, s );
 
     if ( im->completed < 0 )
-		fl_set_slider_value( app.fd_mainform->progressbar, 0 );
+        fl_set_slider_value( app.fd_mainform->progressbar, 0 );
     else
-		fl_set_slider_value( app.fd_mainform->progressbar,
-							 im->completed / ( double ) im->total );
+        fl_set_slider_value( app.fd_mainform->progressbar,
+                             ( double ) im->completed / im->total );
     return 0;
 }
 
@@ -79,7 +79,7 @@ visual_cue( FL_IMAGE   * im,
 
 static int
 image_file_filter( const char * name,
-				   int          type )
+                   int          type )
 {
      return type == FT_FILE && flimage_is_supported( name );
 }
@@ -122,11 +122,11 @@ app_init( void )
 
 void
 doublebuffer_callback( FL_OBJECT * ob,
-					   long        data  FL_UNUSED_ARG )
+                       long        data  FL_UNUSED_ARG )
 {
     app.double_buffer = fl_get_button( ob );
     if ( app.image )
-		app.image->double_buffer = app.double_buffer;
+        app.image->double_buffer = app.double_buffer;
 }
 
 
@@ -135,14 +135,14 @@ doublebuffer_callback( FL_OBJECT * ob,
 
 void
 windowlevel_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-					  long        data  FL_UNUSED_ARG )
+                      long        data  FL_UNUSED_ARG )
 {
     if ( ! app.image )
-		return;
+        return;
 
     flimage_windowlevel( app.image,
-						 fl_get_slider_value( app.fd_viewform->level ),
-						 fl_get_slider_value( app.fd_viewform->window ) );
+                         fl_get_slider_value( app.fd_viewform->level ),
+                         fl_get_slider_value( app.fd_viewform->window ) );
     app.image->display( app.image, app.image->win );
 }
 
@@ -154,12 +154,12 @@ windowlevel_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 vscroll_callback( FL_OBJECT * ob,
-				  long        data  FL_UNUSED_ARG )
+                  long        data  FL_UNUSED_ARG )
 {
     if ( app.image )
     {
-		app.image->wy = ( 0.5 - fl_get_scrollbar_value( ob ) ) * app.image->h;
-		app.image->display( app.image, app.image->win );
+        app.image->wy = ( 0.5 - fl_get_scrollbar_value( ob ) ) * app.image->h;
+        app.image->display( app.image, app.image->win );
     }
 }
 
@@ -169,7 +169,7 @@ vscroll_callback( FL_OBJECT * ob,
 
 void
 hscroll_callback( FL_OBJECT * ob,
-				  long        data  FL_UNUSED_ARG )
+                  long        data  FL_UNUSED_ARG )
 {
     if ( app.image )
     {
@@ -184,7 +184,7 @@ hscroll_callback( FL_OBJECT * ob,
 
 void
 outformat_callback( FL_OBJECT * ob,
-					long        data  FL_UNUSED_ARG )
+                    long        data  FL_UNUSED_ARG )
 {
     app.outformat = fl_get_choice_text( ob );
 }
@@ -197,7 +197,7 @@ outformat_callback( FL_OBJECT * ob,
 
 void
 colorchange_callback( FL_OBJECT * ob,
-					  long        data )
+                      long        data )
 {
     app.rgb[ data ] = fl_get_slider_value( ob ) + 0.1;
     fl_mapcolor( FL_FREE_COL1, app.rgb[ 0 ], app.rgb[ 1 ], app.rgb[ 2 ] );
@@ -210,10 +210,10 @@ colorchange_callback( FL_OBJECT * ob,
 
 void
 autocrop_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-				   long        data  FL_UNUSED_ARG )
+                   long        data  FL_UNUSED_ARG )
 {
     if ( ! app.image )
-		return;
+        return;
 
     flimage_autocrop( app.image, FLIMAGE_AUTOCOLOR );
     app.image->display( app.image, app.image->win );
@@ -225,27 +225,27 @@ autocrop_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 convolve_callback( FL_OBJECT * ob  FL_UNUSED_ARG,
-				   long        data)
+                   long        data)
 {
 #if 1
     if ( app.image )
     {
-		flimage_convolve( app.image, ( int ** ) data, 0, 0 );
-		app.image->display( app.image, app.image->win );
+        flimage_convolve( app.image, ( int ** ) data, 0, 0 );
+        app.image->display( app.image, app.image->win );
     }
 #else
     /* pixtran test */
-	
+    
     int red[ 256 ],
-		green[ 256 ],
-		blue[ 256 ],
-		i;
+        green[ 256 ],
+        blue[ 256 ],
+        i;
 
     for ( i = 0; i < 256; i++ )
     {
-		red[ i ]   = i * ( log10( 1.0 + 5 * i / 255.0 ) / log10( 1.0 + 5 ) );
-		green[ i ] = i * ( log10( 1.0 + 5 * i / 255.0 ) / log10( 1.0 + 5 ) );
-		blue[ i ]  = i * ( log10( 1.0 + 5 * i / 255.0 ) / log10( 1.0 + 5 ) );
+        red[ i ]   = i * ( log10( 1.0 + 5 * i / 255.0 ) / log10( 1.0 + 5 ) );
+        green[ i ] = i * ( log10( 1.0 + 5 * i / 255.0 ) / log10( 1.0 + 5 ) );
+        blue[ i ]  = i * ( log10( 1.0 + 5 * i / 255.0 ) / log10( 1.0 + 5 ) );
     }
 
     flimage_transform_pixel( app.image, red, green, blue );
@@ -259,48 +259,48 @@ convolve_callback( FL_OBJECT * ob  FL_UNUSED_ARG,
 
 void
 scaling_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-				  long        data  FL_UNUSED_ARG )
+                  long        data  FL_UNUSED_ARG )
 {
     FD_processform *processform = app.fd_processform;
     int neww,
-		newh,
-		options;
+        newh,
+        options;
     float sw,
-		  sh;
+          sh;
 
     if ( ! app.image )
-		return;
+        return;
 
     sw = fl_get_counter_value( processform->width );
     sh = fl_get_counter_value( processform->height );
 
     if ( fl_get_button( processform->pixel ) )
     {
-		neww = sw + 0.1;
-		newh = sh + 0.1;
+        neww = sw + 0.1;
+        newh = sh + 0.1;
     }
     else
     {
-		neww = sw * app.image->w + 0.1;
-		newh = sh * app.image->h + 0.1;
+        neww = sw * app.image->w + 0.1;
+        newh = sh * app.image->h + 0.1;
     }
 
     if ( ! strcmp( fl_get_choice_text( processform->subpixel ), "subpixel" ) )
-		options = FLIMAGE_SUBPIXEL;
+        options = FLIMAGE_SUBPIXEL;
     else
-		options = FLIMAGE_NOSUBPIXEL;
+        options = FLIMAGE_NOSUBPIXEL;
 
     if ( ! strcmp( fl_get_choice_text( processform->aspect ), "aspect" ) )
-		options |= FLIMAGE_ASPECT;
+        options |= FLIMAGE_ASPECT;
 
     if ( ! strcmp( fl_get_choice_text( processform->align ), "center" ) )
-		options |= FLIMAGE_CENTER;
+        options |= FLIMAGE_CENTER;
     else
-		options |= FLIMAGE_NOCENTER;
+        options |= FLIMAGE_NOCENTER;
 
     app.image->fill_color = FL_PACK(app.rgb[ 0 ], app.rgb[ 1 ], app.rgb[ 2 ] );
     if ( flimage_scale( app.image, neww, newh, options) < 0 )
-		fprintf( stderr, "scaling failed\n" );
+        fprintf( stderr, "scaling failed\n" );
 
     app.image->display( app.image, app.image->win );
 }
@@ -311,15 +311,15 @@ scaling_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 switchtopixel_callback( FL_OBJECT * ob,
-					    long        data  FL_UNUSED_ARG )
+                        long        data  FL_UNUSED_ARG )
 {
     FD_processform *processform = app.fd_processform;
     float w,
-		h;
+        h;
     FL_IMAGE *im = app.image;
 
     if ( ! app.image )
-		return;
+        return;
 
     /* this function may be called in two ways: real callback when switch to
        pixel button is pressed or when called directly by the application
@@ -327,38 +327,38 @@ switchtopixel_callback( FL_OBJECT * ob,
 
     if ( fl_get_button( processform->pixel ) )
     {
-		w = ob == 0 ? 1.0 : fl_get_counter_value( processform->width );
-		h = ob == 0 ? 1.0 : fl_get_counter_value( processform->height );
+        w = ob == 0 ? 1.0 : fl_get_counter_value( processform->width );
+        h = ob == 0 ? 1.0 : fl_get_counter_value( processform->height );
     }
     else
     {
-		w = ob == 0 ? im->w : fl_get_counter_value( processform->width );
-		h = ob == 0 ? im->h : fl_get_counter_value( processform->height );
+        w = ob == 0 ? im->w : fl_get_counter_value( processform->width );
+        h = ob == 0 ? im->h : fl_get_counter_value( processform->height );
     }
 
     fl_freeze_form( processform->processform );
 
     if ( fl_get_button( processform->pixel ) )
     {
-		fl_set_counter_bounds( processform->width, 0.1 * im->w, 10.0 * im->w );
-		fl_set_counter_bounds( processform->height, 0.1 * im->h, 10.0 * im->h );
-		fl_set_counter_value( processform->width, w * im->w );
-		fl_set_counter_value( processform->height, h * im->h );
-		fl_set_counter_precision( processform->width, 0 );
-		fl_set_counter_precision( processform->height, 0 );
-		fl_set_counter_step( processform->width, 1, 10 );
-		fl_set_counter_step( processform->height, 1, 10 );
+        fl_set_counter_bounds( processform->width, 0.1 * im->w, 10.0 * im->w );
+        fl_set_counter_bounds( processform->height, 0.1 * im->h, 10.0 * im->h );
+        fl_set_counter_value( processform->width, w * im->w );
+        fl_set_counter_value( processform->height, h * im->h );
+        fl_set_counter_precision( processform->width, 0 );
+        fl_set_counter_precision( processform->height, 0 );
+        fl_set_counter_step( processform->width, 1, 10 );
+        fl_set_counter_step( processform->height, 1, 10 );
     }
     else
     {
-		fl_set_counter_bounds( processform->width, 0.1, 10.0 );
-		fl_set_counter_bounds( processform->height, 0.1, 10.0 );
-		fl_set_counter_value( processform->width, w / im->w );
-		fl_set_counter_value( processform->height, h / im->h );
-		fl_set_counter_precision( processform->width, 1 );
-		fl_set_counter_precision( processform->height, 1 );
-		fl_set_counter_step( processform->width, 0.1, 1 );
-		fl_set_counter_step( processform->height, 0.1, 1 );
+        fl_set_counter_bounds( processform->width, 0.1, 10.0 );
+        fl_set_counter_bounds( processform->height, 0.1, 10.0 );
+        fl_set_counter_value( processform->width, w / im->w );
+        fl_set_counter_value( processform->height, h / im->h );
+        fl_set_counter_precision( processform->width, 1 );
+        fl_set_counter_precision( processform->height, 1 );
+        fl_set_counter_step( processform->width, 0.1, 1 );
+        fl_set_counter_step( processform->height, 0.1, 1 );
     }
 
     fl_unfreeze_form( processform->processform );
@@ -405,7 +405,7 @@ test_icon( void )
 
     im = flimage_dup( app.image );
     if( app.image->w > 64 || app.image->h > 64 )
-		flimage_scale( im, 64, 64, FLIMAGE_ASPECT );
+        flimage_scale( im, 64, 64, FLIMAGE_ASPECT );
 
     pixmap = flimage_to_pixmap( im, FL_ObjWin( app.fd_viewform->pixmap ) );
     fl_free_pixmap_pixmap( app.fd_viewform->pixmap );
@@ -420,72 +420,72 @@ test_icon( void )
 
 static int
 load_and_show( const char * file,
-			   void       * data )
+               void       * data )
 {
     FD_is_mainform *fdui = data;
     FL_IMAGE *image;
     FD_viewform *fd_viewform = app.fd_viewform;
-	struct stat buff;
+    struct stat buff;
 
-	if ( ! file || ! *file )
-	{
-		fprintf( stderr, "Missing file name\n" );
-		return 0;
-	}
+    if ( ! file || ! *file )
+    {
+        fprintf( stderr, "Missing file name\n" );
+        return 0;
+    }
 
-	if ( ! stat( file, &buff ) && S_ISDIR( buff.st_mode ) )
-	{
-		fl_set_directory( file );
-		return 0;
-	}
+    if ( ! stat( file, &buff ) && S_ISDIR( buff.st_mode ) )
+    {
+        fl_set_directory( file );
+        return 0;
+    }
 
-	if ( ! ( image = flimage_load( file ) ) )
-		return 0;
+    if ( ! ( image = flimage_load( file ) ) )
+        return 0;
 
-	image->u_vdata = data;
-	reset_scrollbar( image );
-	image->display( image, FL_ObjWin( fdui->canvas ) );
-	if ( app.image )
-		flimage_free( app.image );
-	app.image = image;
-	app.image->double_buffer = app.double_buffer;
-	app.outformat = image->fmt_name;
+    image->u_vdata = data;
+    reset_scrollbar( image );
+    image->display( image, FL_ObjWin( fdui->canvas ) );
+    if ( app.image )
+        flimage_free( app.image );
+    app.image = image;
+    app.image->double_buffer = app.double_buffer;
+    app.outformat = image->fmt_name;
 
 
-	/* update image info */
+    /* update image info */
 
-	fl_freeze_form( fd_viewform->viewform );
+    fl_freeze_form( fd_viewform->viewform );
 
-	fl_set_choice_text( app.fd_saveAs_form->outformat, app.outformat );
-	fl_clear_browser( fd_viewform->headerinfo );
+    fl_set_choice_text( app.fd_saveAs_form->outformat, app.outformat );
+    fl_clear_browser( fd_viewform->headerinfo );
 
-	if ( app.image->info )
-	    fl_addto_browser( fd_viewform->headerinfo, app.image->info );
+    if ( app.image->info )
+        fl_addto_browser( fd_viewform->headerinfo, app.image->info );
 
-	if ( app.image->type == FL_IMAGE_GRAY16 )
-	{
-	    fl_activate_object( fd_viewform->level );
-	    fl_activate_object( fd_viewform->window );
-	    fl_set_slider_bounds( fd_viewform->level, 0, image->gray_maxval );
-	    fl_set_slider_bounds( fd_viewform->window, 0, image->gray_maxval );
-	}
-	else
-	{
-	    fl_deactivate_object( fd_viewform->level );
-	    fl_deactivate_object( fd_viewform->window );
-	}
+    if ( app.image->type == FL_IMAGE_GRAY16 )
+    {
+        fl_activate_object( fd_viewform->level );
+        fl_activate_object( fd_viewform->window );
+        fl_set_slider_bounds( fd_viewform->level, 0, image->gray_maxval );
+        fl_set_slider_bounds( fd_viewform->window, 0, image->gray_maxval );
+    }
+    else
+    {
+        fl_deactivate_object( fd_viewform->level );
+        fl_deactivate_object( fd_viewform->window );
+    }
 
-	test_icon( );
-	fl_unfreeze_form( fd_viewform->viewform );
+    test_icon( );
+    fl_unfreeze_form( fd_viewform->viewform );
 
-	update_process_form( );
+    update_process_form( );
 
     return 0;
 }
 
 
 static int save_file( const char *,
-					  void * );
+                      void * );
 
 
 /***************************************
@@ -493,40 +493,40 @@ static int save_file( const char *,
 
 void
 filemenu_callback( FL_OBJECT * ob,
-				   long        data  FL_UNUSED_ARG )
+                   long        data  FL_UNUSED_ARG )
 {
     int n = fl_get_menu( ob );
 
     switch ( n )
     {
-		case 2:            /* Open    */
-			fl_use_fselector( 0 );
-			fl_set_fselector_placement( FL_PLACE_MOUSE );
-			fl_set_fselector_callback( load_and_show, ob->form->fdui );
-			fl_show_fselector( "Load an Image", 0, "*", 0 );
-			break;
+        case 2:            /* Open    */
+            fl_use_fselector( 0 );
+            fl_set_fselector_placement( FL_PLACE_MOUSE );
+            fl_set_fselector_callback( load_and_show, ob->form->fdui );
+            fl_show_fselector( "Load an Image", 0, "*", 0 );
+            break;
 
-		case 3:           /* Save    */
-			if( app.image )
-			{
-				const char *f;
+        case 3:           /* Save    */
+            if( app.image )
+            {
+                const char *f;
 
-				fl_use_fselector( 1 );
-				if ( ( f = fl_show_fselector( "OutputName", 0, "*",
-											  app.image->infile ) ) )
-					save_file( f, 0 );
-			}
-			break;
+                fl_use_fselector( 1 );
+                if ( ( f = fl_show_fselector( "OutputName", 0, "*",
+                                              app.image->infile ) ) )
+                    save_file( f, 0 );
+            }
+            break;
 
-		case 4:           /* Save As */
-			if( app.image )
-				fl_show_form( app.fd_saveAs_form->saveAs_form,
-							  FL_PLACE_CENTERFREE, FL_TRANSIENT,
-							  "OutputForm");
-			break;
+        case 4:           /* Save As */
+            if( app.image )
+                fl_show_form( app.fd_saveAs_form->saveAs_form,
+                              FL_PLACE_CENTERFREE, FL_TRANSIENT,
+                              "OutputForm");
+            break;
 
-		case 5:
-			exit( 0 );
+        case 5:
+            exit( 0 );
     }
 }
 
@@ -536,7 +536,7 @@ filemenu_callback( FL_OBJECT * ob,
 
 void
 progressbar( FL_OBJECT * ob    FL_UNUSED_ARG,
-			 long        data  FL_UNUSED_ARG )
+             long        data  FL_UNUSED_ARG )
 {
     /* fill-in code for callback */
 }
@@ -547,14 +547,14 @@ progressbar( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 static int
 expose_handle( FL_OBJECT * ob    FL_UNUSED_ARG,
-			   Window      win,
-			   int         w     FL_UNUSED_ARG,
-			   int         h     FL_UNUSED_ARG,
-			   XEvent    * xev   FL_UNUSED_ARG,
-			   void      * data  FL_UNUSED_ARG)
+               Window      win,
+               int         w     FL_UNUSED_ARG,
+               int         h     FL_UNUSED_ARG,
+               XEvent    * xev   FL_UNUSED_ARG,
+               void      * data  FL_UNUSED_ARG)
 {
     if ( app.image )
-		app.image->display( app.image, win );
+        app.image->display( app.image, win );
     return 0;
 }
 
@@ -568,7 +568,7 @@ expose_handle( FL_OBJECT * ob    FL_UNUSED_ARG,
  ***************************************/
 
 static int save_file( const char * file,
-					  void       * data  FL_UNUSED_ARG )
+                      void       * data  FL_UNUSED_ARG )
 {
      if ( ! file || ! *file )
          return -1;
@@ -580,11 +580,11 @@ static int save_file( const char * file,
  ***************************************/
 
 static void hide_it( FL_OBJECT * ob    FL_UNUSED_ARG,
-					 long        data  FL_UNUSED_ARG )
+                     long        data  FL_UNUSED_ARG )
 {
     char file[ 256 ];
     const char *d,
-		       *f;
+               *f;
 
     /* get the selected file */
 
@@ -607,7 +607,7 @@ static void init_save_as_form( void )
     static FD_saveAs_form *fd_saveAs_form;
     const FLIMAGE_FORMAT_INFO *fmtinfo;
     int i,
-		n;
+        n;
     FD_FSELECTOR *fd_fselect;
 
     fd_saveAs_form = create_form_saveAs_form( );
@@ -619,12 +619,12 @@ static void init_save_as_form( void )
     fl_set_object_callback( fd_fselect->ready, hide_it, 0 );
     fl_show_object( fd_fselect->ready );
     fl_set_form_atclose( app.fd_saveAs_form->saveAs_form,
-						 fl_goodies_atclose, fd_fselect->ready );
+                         fl_goodies_atclose, fd_fselect->ready );
 
     /* put fselector into the formbrowser as a way of reparenting */
 
     fl_addto_formbrowser( app.fd_saveAs_form->formcontainer,
-						  fd_fselect->fselect );
+                          fd_fselect->fselect );
 
     /* fill the output format choice */
 
@@ -634,7 +634,7 @@ static void init_save_as_form( void )
 
         if ( fmtinfo->read_write & FLIMAGE_WRITABLE )
             fl_addto_choice( app.fd_saveAs_form->outformat,
-							 fmtinfo->short_name );
+                             fmtinfo->short_name );
     }
 
     app.outformat = fl_get_choice_text( app.fd_saveAs_form->outformat );
@@ -646,7 +646,7 @@ static void init_save_as_form( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     FD_is_mainform *fd_is_mainform;
     FD_viewform *fd_viewform;
@@ -675,14 +675,14 @@ main( int    argc,
     fl_set_browser_fontstyle( fd_viewform->headerinfo, FL_FIXED_STYLE );
 
     fl_addto_tabfolder( fd_is_mainform->tabfolder, " View ",
-						fd_viewform->viewform);
+                        fd_viewform->viewform);
     fl_addto_tabfolder( fd_is_mainform->tabfolder, "Processing",
-						fd_processform->processform );
+                        fd_processform->processform );
     fl_addto_tabfolder( fd_is_mainform->tabfolder, "Annotation",
-						fd_annotationform->annotationform);
+                        fd_annotationform->annotationform);
 
     fl_add_canvas_handler( fd_is_mainform->canvas,
-						   Expose, expose_handle, 0 );
+                           Expose, expose_handle, 0 );
 
     app.rgb[ 0 ] = fl_get_slider_value( fd_processform->red )   + 0.1;
     app.rgb[ 1 ] = fl_get_slider_value( fd_processform->green ) + 0.1;
@@ -693,12 +693,20 @@ main( int    argc,
     /* show the main form */
 
     fl_show_form( fd_is_mainform->is_mainform, FL_PLACE_CENTERFREE,
-				  FL_FULLBORDER, "is_mainform" );
+                  FL_FULLBORDER, "is_mainform" );
 
     while ( fl_do_forms( ) )
-		/* empty */ ;
+        /* empty */ ;
 
     return 0;
 }
 
 #include "fd/is_gui.c"
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

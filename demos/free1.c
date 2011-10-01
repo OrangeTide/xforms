@@ -38,38 +38,39 @@ FL_COLOR cole;
  * The call back routine
  ***************************************/
 
-int handle_free1( FL_OBJECT * obj,
-				  int         event,
-				  FL_Coord    mx   FL_UNUSED_ARG,
-				  FL_Coord    my   FL_UNUSED_ARG,
-				  int         key  FL_UNUSED_ARG,
-				  void      * ev   FL_UNUSED_ARG )
+int
+handle_free1( FL_OBJECT * obj,
+			  int         event,
+			  FL_Coord    mx   FL_UNUSED_ARG,
+			  FL_Coord    my   FL_UNUSED_ARG,
+			  int         key  FL_UNUSED_ARG,
+			  void      * ev   FL_UNUSED_ARG )
 {
-	static int dcol = 1;
+    static int dcol = 1;
 
-	switch ( event )
-	{
-		case FL_DRAW:
-			fl_rectf( obj->x, obj->y, obj->w, obj->h, obj->u_ldata );
-			break;
+    switch ( event )
+    {
+        case FL_DRAW:
+            fl_rectf( obj->x, obj->y, obj->w, obj->h, obj->u_ldata );
+            break;
 
-		case FL_RELEASE:
-			on = ! on;
-			break;
+        case FL_RELEASE:
+            on = ! on;
+            break;
 
-		case FL_STEP:
-			if ( on )
-			{
-				if ( ( FL_COLOR ) obj->u_ldata >= cole )
-					dcol = -1;
-				if ( obj->u_ldata <= FL_FREE_COL1 )
-					dcol = 1;
-				obj->u_ldata += dcol;
-				fl_redraw_object( obj );
-			}
-			break;
-	}
-	return 0;
+        case FL_STEP:
+            if ( on )
+            {
+                if ( ( FL_COLOR ) obj->u_ldata >= cole )
+                    dcol = -1;
+                if ( obj->u_ldata <= FL_FREE_COL1 )
+                    dcol = 1;
+                obj->u_ldata += dcol;
+                fl_redraw_object( obj );
+            }
+            break;
+    }
+    return 0;
 }
 
 
@@ -77,10 +78,10 @@ int handle_free1( FL_OBJECT * obj,
  ***************************************/
 
 void done( FL_OBJECT * ob    FL_UNUSED_ARG,
-		   long        data  FL_UNUSED_ARG )
+           long        data  FL_UNUSED_ARG )
 {
-	fl_finish( );
-	exit( 0 );
+    fl_finish( );
+    exit( 0 );
 }
 
 
@@ -89,54 +90,62 @@ void done( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FL_FORM *form;
-	FL_OBJECT *obj;
-	FL_COLOR i;
-	int j,
-		depth,
-		col;
+    FL_FORM *form;
+    FL_OBJECT *obj;
+    FL_COLOR i;
+    int j,
+        depth,
+        col;
 
-	fl_initialize(&argc, argv, "FormDemo", 0, 0);
+    fl_initialize(&argc, argv, "FormDemo", 0, 0);
 
-	form = fl_bgn_form( FL_UP_BOX, 400, 400 );
-	obj = fl_add_button( FL_NORMAL_BUTTON, 320, 20, 40, 30, "Exit" );
-	fl_set_object_callback( obj, done, 0 );
-	obj = fl_add_free( FL_CONTINUOUS_FREE, 40, 80, 320, 280, "", handle_free1 );
-	fl_end_form( );
+    form = fl_bgn_form( FL_UP_BOX, 400, 400 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 320, 20, 40, 30, "Exit" );
+    fl_set_object_callback( obj, done, 0 );
+    obj = fl_add_free( FL_CONTINUOUS_FREE, 40, 80, 320, 280, "", handle_free1 );
+    fl_end_form( );
 
-	/* Can't do it if less than 4 bit deep... */
+    /* Can't do it if less than 4 bit deep... */
 
-	depth  = fl_get_visual_depth( );
+    depth  = fl_get_visual_depth( );
 
-	if ( depth < 4 )
-	{
-		fprintf( stderr,"This Demo requires a depth of at least 4 bits\n" );
-		fl_finish( );
-		exit( 1 );
-	}
+    if ( depth < 4 )
+    {
+        fprintf( stderr,"This Demo requires a depth of at least 4 bits\n" );
+        fl_finish( );
+        exit( 1 );
+    }
 
-	/* ...but too large a depth also won't do */
+    /* ...but too large a depth also won't do */
 
-	if ( depth > 7 )
-		depth = 7;
+    if ( depth > 7 )
+        depth = 7;
 
-	cole = ( 1 << depth ) - 1;
-	if ( cole > 64 )
-		cole = 64;
+    cole = ( 1 << depth ) - 1;
+    if ( cole > 64 )
+        cole = 64;
 
-	obj->u_ldata = col = FL_FREE_COL1;
-	cole += col;
+    obj->u_ldata = col = FL_FREE_COL1;
+    cole += col;
 
-	for ( i = col; i <= cole; i++ )
-	{
-		j =  255 * ( i - col ) / ( double ) ( cole  - col );
-		fl_mapcolor( i, j, j, j );
-	}
+    for ( i = col; i <= cole; i++ )
+    {
+        j =  255 * ( i - col ) / ( double ) ( cole  - col );
+        fl_mapcolor( i, j, j, j );
+    }
 
-	fl_show_form( form,FL_PLACE_CENTER, FL_NOBORDER, "Free Object" );
-	fl_do_forms( );
+    fl_show_form( form,FL_PLACE_CENTER, FL_NOBORDER, "Free Object" );
+    fl_do_forms( );
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

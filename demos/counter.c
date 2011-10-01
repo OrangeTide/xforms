@@ -32,22 +32,24 @@
 #include <stdio.h>
 #include "include/forms.h"
 
+
 FL_FORM *form;
 FL_OBJECT *result,
           *co[ 3 ];
+
 
 /***************************************
  ***************************************/
 
 void
 color_change( FL_OBJECT * ob    FL_UNUSED_ARG,
-			  long        data  FL_UNUSED_ARG )
+              long        data  FL_UNUSED_ARG )
 {
-	int c[ 3 ];
-	int i;
+    int c[ 3 ];
+    int i;
 
-	for ( i = 0; i < 3; i++ )
-		c[ i ] = fl_get_counter_value( co[ i ] );
+    for ( i = 0; i < 3; i++ )
+        c[ i ] = fl_get_counter_value( co[ i ] );
 
     fl_mapcolor( FL_FREE_COL1, c[ 0 ], c[ 1 ], c[ 2 ] );
     fl_redraw_object( result );
@@ -92,28 +94,37 @@ create_form_form( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-   int i;
+	int i;
 
-   fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-   create_form_form( );
-   fl_set_object_color( result, FL_FREE_COL1, FL_FREE_COL1 );
+	create_form_form( );
+	fl_set_object_color( result, FL_FREE_COL1, FL_FREE_COL1 );
 
-   for ( i = 0; i < 3; i++ )
-   {
-      fl_set_counter_bounds( co[ i ], 0.0, 255.0 );
-      fl_set_counter_step( co[ i ], 1.0, 10.0 );
-      fl_set_counter_precision( co[ i ], 0 );
-      fl_set_counter_return( co[ i ], 1 );
-   }
+	for ( i = 0; i < 3; i++ )
+	{
+		fl_set_counter_bounds( co[ i ], 0.0, 255.0 );
+		fl_set_counter_step( co[ i ], 1.0, 10.0 );
+		fl_set_counter_precision( co[ i ], 0 );
+		fl_set_counter_return( co[ i ], 1 );
+	}
 
-   fl_call_object_callback( co[ 0 ] );
+	fl_call_object_callback( co[ 0 ] );
 
-   fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Counter" );
+	fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Counter" );
 
-   fl_do_forms( );
+	fl_do_forms( );
 
-   return 0;
+	fl_finish( );
+	return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

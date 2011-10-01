@@ -40,10 +40,10 @@
 
 void
 done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
-		 long        data  FL_UNUSED_ARG )
+         long        data  FL_UNUSED_ARG )
 {
-	fl_finish( );
-	exit( 0 );
+    fl_finish( );
+    exit( 0 );
 }
 
 
@@ -52,15 +52,15 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 void
 input_cb( FL_OBJECT * ob,
-		  long        data  FL_UNUSED_ARG )
+          long        data  FL_UNUSED_ARG )
 {
-	int cx,
-		cy;
-	char buf[ 128 ];
+    int cx,
+        cy;
+    char buf[ 128 ];
 
-	fl_get_input_cursorpos( ob, &cx, &cy );
-	sprintf( buf,"x = %d y = %d", cx, cy );
-	fl_set_object_label( ( ( FD_input * ) ob->form->fdui )->report, buf );
+    fl_get_input_cursorpos( ob, &cx, &cy );
+    sprintf( buf,"x = %d y = %d", cx, cy );
+    fl_set_object_label( ( ( FD_input * ) ob->form->fdui )->report, buf );
 }
 
 
@@ -69,14 +69,14 @@ input_cb( FL_OBJECT * ob,
 
 void
 hide_show_cb( FL_OBJECT * ob,
-			  long        data  FL_UNUSED_ARG )
+              long        data  FL_UNUSED_ARG )
 {
     FD_input *fd = ob->form->fdui;
 
     if ( fl_object_is_visible( fd->multiinput ) )
-		fl_hide_object( fd->multiinput );
+        fl_hide_object( fd->multiinput );
     else
-		fl_show_object( fd->multiinput );
+        fl_show_object( fd->multiinput );
 }
 
 
@@ -85,28 +85,36 @@ hide_show_cb( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FD_input *fd_input;
+    FD_input *fd_input;
 
-	fl_initialize( &argc, argv, 0, 0, 0 );
-	fd_input = create_form_input( );
+    fl_initialize( &argc, argv, 0, 0, 0 );
+    fd_input = create_form_input( );
 
-	fl_set_object_dblbuffer( fd_input->report, 1 );
-	fl_set_object_return( fd_input->norminput, FL_RETURN_ALWAYS );
-	fl_set_object_return( fd_input->intinput, FL_RETURN_ALWAYS );
-	fl_set_object_return( fd_input->floatinput, FL_RETURN_ALWAYS );
-	fl_set_object_return( fd_input->dateinput, FL_RETURN_ALWAYS );
-	fl_set_object_return( fd_input->secretinput, FL_RETURN_ALWAYS );
-	fl_set_object_return( fd_input->multiinput, FL_RETURN_ALWAYS );
+    fl_set_object_dblbuffer( fd_input->report, 1 );
+    fl_set_object_return( fd_input->norminput, FL_RETURN_ALWAYS );
+    fl_set_object_return( fd_input->intinput, FL_RETURN_ALWAYS );
+    fl_set_object_return( fd_input->floatinput, FL_RETURN_ALWAYS );
+    fl_set_object_return( fd_input->dateinput, FL_RETURN_ALWAYS );
+    fl_set_object_return( fd_input->secretinput, FL_RETURN_ALWAYS );
+    fl_set_object_return( fd_input->multiinput, FL_RETURN_ALWAYS );
 
-	/* Show the form */
+    /* Show the form */
 
-	fl_show_form( fd_input->input, FL_PLACE_CENTERFREE, FL_FULLBORDER,
-				  "input" );
+    fl_show_form( fd_input->input, FL_PLACE_CENTERFREE, FL_FULLBORDER,
+                  "input" );
 
-	while ( fl_do_forms( ) )
-		/* empty */ ;
+    while ( fl_do_forms( ) )
+        /* empty */ ;
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

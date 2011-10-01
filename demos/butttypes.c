@@ -32,6 +32,7 @@
 #include "fd/butttypes_gui.h"
 #include <stdlib.h>
 
+
 /* callbacks for form form0 */
 
 /***************************************
@@ -39,7 +40,7 @@
 
 void
 button_cb( FL_OBJECT * ob,
-		   long        data  FL_UNUSED_ARG )
+           long        data  FL_UNUSED_ARG )
 {
     FD_form0 *ui = ( FD_form0 * ) ob->form->fdui;
     char buf[ 128 ];
@@ -48,9 +49,9 @@ button_cb( FL_OBJECT * ob,
     {
        if ( fl_show_question( "Want to Quit ?", 1 ) == 1 )
        {
-		   fl_free( ob->form->fdui );
-		   fl_finish( );
-		   exit( 0 );
+           fl_free( ob->form->fdui );
+           fl_finish( );
+           exit( 0 );
        }
     }
     else
@@ -66,16 +67,16 @@ button_cb( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     FD_form0 *fd_form0;
 
     fl_initialize( &argc, argv, 0, 0, 0 );
     fd_form0 = create_form_form0( );
 
-	/* fill-in form initialization code */
+    /* fill-in form initialization code */
 
-	/* show the first form */
+    /* show the first form */
 
     fl_show_form( fd_form0->form0, FL_PLACE_CENTER, FL_FULLBORDER, "form0" );
 
@@ -83,3 +84,11 @@ main( int    argc,
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

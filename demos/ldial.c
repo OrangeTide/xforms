@@ -36,9 +36,9 @@ FL_OBJECT *dial[ 3 ],
           *result;
 
 enum {
-	RED,
-	GREEN,
-	BLUE
+    RED,
+    GREEN,
+    BLUE
 };
 
 
@@ -47,20 +47,20 @@ enum {
 
 static void
 dial_callback( FL_OBJECT * obj  FL_UNUSED_ARG,
-			   long        arg )
+               long        arg )
 {
-	int clr[ 3 ];
-	size_t i;
-	char str[ 60 ];
+    int clr[ 3 ];
+    size_t i;
+    char str[ 60 ];
 
-	for ( i = RED; i <= BLUE; i++ )
-		clr[ i ] = fl_get_dial_value( dial[ i ] );
+    for ( i = RED; i <= BLUE; i++ )
+        clr[ i ] = fl_get_dial_value( dial[ i ] );
 
-	sprintf( str, "%d", clr[ arg ] );
-	fl_set_object_label( text[ arg ], str );
+    sprintf( str, "%d", clr[ arg ] );
+    fl_set_object_label( text[ arg ], str );
 
-	fl_mapcolor( FL_FREE_COL1, clr[ 0 ], clr[ 1 ], clr[ 2 ] );
-	fl_redraw_object( result );
+    fl_mapcolor( FL_FREE_COL1, clr[ 0 ], clr[ 1 ], clr[ 2 ] );
+    fl_redraw_object( result );
 }
 
 
@@ -70,36 +70,36 @@ dial_callback( FL_OBJECT * obj  FL_UNUSED_ARG,
 static void
 makeform( void )
 {
-	FL_OBJECT *quit;
-	size_t i;
-	const char *txt[ ] = { "Red",  "Green",  "Blue"  };
-	FL_COLOR clr[ ]    = { FL_RED, FL_GREEN, FL_BLUE };
+    FL_OBJECT *quit;
+    size_t i;
+    const char *txt[ ] = { "Red",  "Green",  "Blue"  };
+    FL_COLOR clr[ ]    = { FL_RED, FL_GREEN, FL_BLUE };
 
-	form = fl_bgn_form( FL_UP_BOX, 300, 330 );
+    form = fl_bgn_form( FL_UP_BOX, 300, 330 );
 
     quit = fl_add_button( FL_NORMAL_BUTTON, 45, 15, 210, 45, "A Color Editor" );
     fl_set_object_lsize( quit, FL_LARGE_SIZE );
 
-	for ( i = RED; i <= BLUE; i++ )
-	{
-		dial[ i ] = fl_add_dial( FL_LINE_DIAL, 30, 240 - i * 85, 60, 60,
-								 txt[ i ] );
-		fl_set_dial_bounds( dial[ i ], 0.0, 255.0 );
-		fl_set_dial_angles( dial[ i ], 15.0, 345.0 );
-		fl_set_dial_value( dial[ i ], 128.0 );
-		fl_set_object_color( dial[ i ], clr[ i ], FL_DIAL_COL2 );
-	    fl_set_object_return( dial[ i ], FL_RETURN_CHANGED );
-		fl_set_object_callback( dial[ i ], dial_callback, i );
+    for ( i = RED; i <= BLUE; i++ )
+    {
+        dial[ i ] = fl_add_dial( FL_LINE_DIAL, 30, 240 - i * 85, 60, 60,
+                                 txt[ i ] );
+        fl_set_dial_bounds( dial[ i ], 0.0, 255.0 );
+        fl_set_dial_angles( dial[ i ], 15.0, 345.0 );
+        fl_set_dial_value( dial[ i ], 128.0 );
+        fl_set_object_color( dial[ i ], clr[ i ], FL_DIAL_COL2 );
+        fl_set_object_return( dial[ i ], FL_RETURN_CHANGED );
+        fl_set_object_callback( dial[ i ], dial_callback, i );
 
-		text[ i ] = fl_add_box( FL_DOWN_BOX, 105, 255 - i * 85, 50, 25, "128" );
-	}
+        text[ i ] = fl_add_box( FL_DOWN_BOX, 105, 255 - i * 85, 50, 25, "128" );
+    }
 
     result = fl_add_box( FL_DOWN_BOX, 180, 70, 90, 245, "" );
-	fl_mapcolor( FL_FREE_COL1, 128, 128, 128 );
+    fl_mapcolor( FL_FREE_COL1, 128, 128, 128 );
     fl_set_object_color( result, FL_FREE_COL1, FL_FREE_COL1 );
     fl_set_object_dblbuffer( result, 1 );
 
-	fl_end_form( );
+    fl_end_form( );
 }
 
 
@@ -108,15 +108,22 @@ makeform( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	fl_initialize( &argc, argv, "ColorEditor", 0, 0 );
-	makeform( );
-	fl_show_form( form, FL_PLACE_MOUSE, FL_TRANSIENT, "Color Editor" );
+    fl_initialize( &argc, argv, "ColorEditor", 0, 0 );
+    makeform( );
 
-	fl_do_forms( );
+    fl_show_form( form, FL_PLACE_MOUSE, FL_TRANSIENT, "Color Editor" );
+    fl_do_forms( );
 
-	fl_finish();
-
-	return 0;
+    fl_finish();
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

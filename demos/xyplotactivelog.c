@@ -127,60 +127,60 @@ notic_cb( FL_OBJECT * obj,
 
 void
 bounds_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
-		   long        data )
+           long        data )
 {
-	char buf[ 50 ];
+    char buf[ 50 ];
 
-	if ( ! data )
-	{
-		float xmin = strtod( fl_get_input( xypui->xmin ), NULL );
-		float xmax = strtod( fl_get_input( xypui->xmax ), NULL );
+    if ( ! data )
+    {
+        float xmin = strtod( fl_get_input( xypui->xmin ), NULL );
+        float xmax = strtod( fl_get_input( xypui->xmax ), NULL );
 
-		if ( xmin <= 0.0 )
-		{
-			xmin = 1.0;
-			fl_set_input( xypui->xmin, "1.0" );
-		}
+        if ( xmin <= 0.0 )
+        {
+            xmin = 1.0;
+            fl_set_input( xypui->xmin, "1.0" );
+        }
 
-		if ( xmax <= 0.0 )
-		{
-			xmax = 10.0;
-			fl_set_input( xypui->xmax, "10.0" );
-		}
+        if ( xmax <= 0.0 )
+        {
+            xmax = 10.0;
+            fl_set_input( xypui->xmax, "10.0" );
+        }
 
-		fl_set_xyplot_xbounds( xypui->xyplot, xmin, xmax );
+        fl_set_xyplot_xbounds( xypui->xyplot, xmin, xmax );
 
-		fl_get_xyplot_xbounds( xypui->xyplot, &xmin, &xmax );
-		sprintf( buf, "%g", xmin );
-		fl_set_input( xypui->xmin, buf );
-		sprintf( buf, "%g", xmax );
-		fl_set_input( xypui->xmax, buf );
-	}
-	else
-	{
-		float ymin = strtod( fl_get_input( xypui->ymin ), NULL );
-		float ymax = strtod( fl_get_input( xypui->ymax ), NULL );
+        fl_get_xyplot_xbounds( xypui->xyplot, &xmin, &xmax );
+        sprintf( buf, "%g", xmin );
+        fl_set_input( xypui->xmin, buf );
+        sprintf( buf, "%g", xmax );
+        fl_set_input( xypui->xmax, buf );
+    }
+    else
+    {
+        float ymin = strtod( fl_get_input( xypui->ymin ), NULL );
+        float ymax = strtod( fl_get_input( xypui->ymax ), NULL );
 
-		if ( ymin <= 0.0 )
-		{
-			ymin = 1.0;
-			fl_set_input( xypui->ymin, "1.0" );
-		}
+        if ( ymin <= 0.0 )
+        {
+            ymin = 1.0;
+            fl_set_input( xypui->ymin, "1.0" );
+        }
 
-		if ( ymax <= 0.0 )
-		{
-			ymax = 10.0;
-			fl_set_input( xypui->ymax, "10.0" );
-		}
+        if ( ymax <= 0.0 )
+        {
+            ymax = 10.0;
+            fl_set_input( xypui->ymax, "10.0" );
+        }
 
-		fl_set_xyplot_ybounds( xypui->xyplot, ymin, ymax );
+        fl_set_xyplot_ybounds( xypui->xyplot, ymin, ymax );
 
-		fl_get_xyplot_ybounds( xypui->xyplot, &ymin, &ymax );
-		sprintf( buf, "%g", ymin );
-		fl_set_input( xypui->ymin, buf );
-		sprintf( buf, "%g", ymax );
-		fl_set_input( xypui->ymax, buf );
-	}
+        fl_get_xyplot_ybounds( xypui->xyplot, &ymin, &ymax );
+        sprintf( buf, "%g", ymin );
+        fl_set_input( xypui->ymin, buf );
+        sprintf( buf, "%g", ymax );
+        fl_set_input( xypui->ymax, buf );
+    }
 }
 
 
@@ -215,8 +215,8 @@ main( int    argc,
         y[ i ] +=  ( double ) rand( ) / RAND_MAX - 0.5;
 
     fl_set_xyplot_data( xypui->xyplot, x, y, 10,
-						"Active (log) xyplot with overlay",
-						"x-axis", "y-axis" );
+                        "Active (log) xyplot with overlay",
+                        "x-axis", "y-axis" );
     fl_set_xyplot_linewidth( xypui->xyplot, 0, 2 );
     fl_set_xyplot_xgrid( xypui->xyplot, FL_GRID_MINOR );
 
@@ -247,8 +247,8 @@ create_form_axypform( void )
     fdui->xyplot = obj = fl_add_xyplot( FL_ACTIVE_XYPLOT, 20, 50, 285, 235,
                                         "" );
 
-	fl_set_xyplot_xscale( obj, FL_LOG, 2.0 );
-	fl_set_xyplot_yscale( obj, FL_LOG, 2.0 );
+    fl_set_xyplot_xscale( obj, FL_LOG, 2.0 );
+    fl_set_xyplot_yscale( obj, FL_LOG, 2.0 );
 
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_BLACK, FL_GREEN );
@@ -276,31 +276,31 @@ create_form_axypform( void )
     fl_set_object_callback( obj, notic_cb, 0 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
-	fdui->xmin = obj = fl_add_input( FL_FLOAT_INPUT, 315, 150, 50, 20,
-									 " x_min" );
-	fl_set_input( obj, "1.0" );
-	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
+    fdui->xmin = obj = fl_add_input( FL_FLOAT_INPUT, 315, 150, 50, 20,
+                                     " x_min" );
+    fl_set_input( obj, "1.0" );
+    fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 0 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
-	fdui->xmax = obj = fl_add_input( FL_FLOAT_INPUT, 315, 170, 50, 20,
-									 " x_max" );
-	fl_set_input( obj, "10.0" );
-	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
+    fdui->xmax = obj = fl_add_input( FL_FLOAT_INPUT, 315, 170, 50, 20,
+                                     " x_max" );
+    fl_set_input( obj, "10.0" );
+    fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 0 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
-	fdui->ymin = obj = fl_add_input( FL_FLOAT_INPUT, 315, 200, 50, 20,
-									 " y_min" );
-	fl_set_input( obj, "1.0" );
-	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
+    fdui->ymin = obj = fl_add_input( FL_FLOAT_INPUT, 315, 200, 50, 20,
+                                     " y_min" );
+    fl_set_input( obj, "1.0" );
+    fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 1 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
-	fdui->ymax = obj = fl_add_input( FL_FLOAT_INPUT, 315, 220, 50, 20,
-									 " y_max" );
-	fl_set_input( obj, "10.0" );
-	fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
+    fdui->ymax = obj = fl_add_input( FL_FLOAT_INPUT, 315, 220, 50, 20,
+                                     " y_max" );
+    fl_set_input( obj, "10.0" );
+    fl_set_object_lalign( obj, FL_ALIGN_RIGHT );
     fl_set_object_callback( obj, bounds_cb, 1 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
 
@@ -316,3 +316,11 @@ create_form_axypform( void )
 
   return fdui;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

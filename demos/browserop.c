@@ -31,6 +31,7 @@
 #endif
 #include "include/forms.h"
 
+
 FL_FORM *form;
 FL_OBJECT *browserobj,
           *inputobj, *exitobj;
@@ -41,12 +42,12 @@ FL_OBJECT *browserobj,
 
 void
 addit( FL_OBJECT * obj  FL_UNUSED_ARG,
-	   long        arg  FL_UNUSED_ARG )
+       long        arg  FL_UNUSED_ARG )
 {
-	/* append and show the last line. Don't use this if you just want
-	 * to add some lines. use fl_add_browser_line */
+    /* append and show the last line. Don't use this if you just want
+     * to add some lines. use fl_add_browser_line */
 
-	fl_addto_browser( browserobj, fl_get_input( inputobj ) );
+    fl_addto_browser( browserobj, fl_get_input( inputobj ) );
 }
 
 
@@ -55,11 +56,11 @@ addit( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 void
 insertit( FL_OBJECT * obj  FL_UNUSED_ARG,
-		  long        arg  FL_UNUSED_ARG )
+          long        arg  FL_UNUSED_ARG )
 {
-	fl_insert_browser_line( browserobj,
-							fl_get_browser( browserobj ),
-							fl_get_input( inputobj ) );
+    fl_insert_browser_line( browserobj,
+                            fl_get_browser( browserobj ),
+                            fl_get_input( inputobj ) );
 }
 
 
@@ -68,12 +69,12 @@ insertit( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 void
 replaceit( FL_OBJECT * obj  FL_UNUSED_ARG,
-		   long        arg  FL_UNUSED_ARG )
+           long        arg  FL_UNUSED_ARG )
 {
-	int n;
+    int n;
 
-	if ( ( n = fl_get_browser( browserobj ) ) )
-		fl_replace_browser_line( browserobj, n, fl_get_input( inputobj ) );
+    if ( ( n = fl_get_browser( browserobj ) ) )
+        fl_replace_browser_line( browserobj, n, fl_get_input( inputobj ) );
 }
 
 
@@ -82,12 +83,12 @@ replaceit( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 void
 deleteit( FL_OBJECT * obj  FL_UNUSED_ARG,
-		  long        arg  FL_UNUSED_ARG )
+          long        arg  FL_UNUSED_ARG )
 {
-	int n;
+    int n;
 
-	if ( ( n = fl_get_browser( browserobj ) ) )
-		fl_delete_browser_line( browserobj, n );
+    if ( ( n = fl_get_browser( browserobj ) ) )
+        fl_delete_browser_line( browserobj, n );
 }
 
 
@@ -95,9 +96,9 @@ deleteit( FL_OBJECT * obj  FL_UNUSED_ARG,
  ***************************************/
 
 void clearit( FL_OBJECT * obj  FL_UNUSED_ARG,
-			  long        arg  FL_UNUSED_ARG )
+              long        arg  FL_UNUSED_ARG )
 {
-	fl_clear_browser( browserobj );
+    fl_clear_browser( browserobj );
 }
 
 
@@ -107,33 +108,33 @@ void clearit( FL_OBJECT * obj  FL_UNUSED_ARG,
 void
 create_form( void )
 {
-	FL_OBJECT *obj;
+    FL_OBJECT *obj;
 
-	form = fl_bgn_form( FL_UP_BOX, 390, 420 );
+    form = fl_bgn_form( FL_UP_BOX, 390, 420 );
 
-	browserobj = fl_add_browser( FL_HOLD_BROWSER, 20, 20, 210, 330, "" );
-	fl_set_object_dblbuffer( browserobj, 1 );
+    browserobj = fl_add_browser( FL_HOLD_BROWSER, 20, 20, 210, 330, "" );
+    fl_set_object_dblbuffer( browserobj, 1 );
 
-	inputobj = fl_add_input( FL_NORMAL_INPUT, 20, 370, 210, 30, "" );
+    inputobj = fl_add_input( FL_NORMAL_INPUT, 20, 370, 210, 30, "" );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 20, 120, 30, "Add" );
-	fl_set_object_callback( obj, addit, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 250, 20, 120, 30, "Add" );
+    fl_set_object_callback( obj, addit, 0 );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 60, 120, 30, "Insert" );
-	fl_set_object_callback( obj, insertit, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 250, 60, 120, 30, "Insert" );
+    fl_set_object_callback( obj, insertit, 0 );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 100, 120, 30, "Replace" );
-	fl_set_object_callback( obj, replaceit, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 250, 100, 120, 30, "Replace" );
+    fl_set_object_callback( obj, replaceit, 0 );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 160, 120, 30, "Delete" );
-	fl_set_object_callback( obj, deleteit, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 250, 160, 120, 30, "Delete" );
+    fl_set_object_callback( obj, deleteit, 0 );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 250, 200, 120, 30, "Clear" );
-	fl_set_object_callback( obj, clearit, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 250, 200, 120, 30, "Clear" );
+    fl_set_object_callback( obj, clearit, 0 );
 
-	exitobj = fl_add_button( FL_NORMAL_BUTTON, 250, 370, 120, 30, "Exit" );
+    exitobj = fl_add_button( FL_NORMAL_BUTTON, 250, 370, 120, 30, "Exit" );
 
-	fl_end_form( );
+    fl_end_form( );
 }
 
 
@@ -142,18 +143,25 @@ create_form( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
-	FL_OBJECT *obj;
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
-	create_form( );
-	fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Browser Op" );
+    create_form( );
 
-	do
-		obj = fl_do_forms( );
-	while ( obj != exitobj );
+    fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "Browser Op" );
 
-	fl_hide_form( form );
-	return 0;
+	while ( fl_do_forms( ) != exitobj )
+		/* empty */ ;
+
+	fl_finish( );
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

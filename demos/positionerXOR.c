@@ -43,7 +43,7 @@ FL_OBJECT *xval,
 
 void
 positioner_cb( FL_OBJECT * ob,
-			   long        q   FL_UNUSED_ARG )
+               long        q   FL_UNUSED_ARG )
 {
     char str[ 30 ];
 
@@ -60,42 +60,50 @@ positioner_cb( FL_OBJECT * ob,
 
 int
 main( int    argc,
-	  char  * argv[ ] )
+      char  * argv[ ] )
 {
-	FL_FORM *form;
-	FL_OBJECT *pos,
-		      *ob;
+    FL_FORM *form;
+    FL_OBJECT *pos,
+              *ob;
 
-	fl_set_border_width( -2 );
-	fl_initialize( &argc, argv, "FormDemo", 0, 0 );
+    fl_set_border_width( -2 );
+    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-	form = fl_bgn_form( FL_UP_BOX, 350, 250 );
+    form = fl_bgn_form( FL_UP_BOX, 350, 250 );
 
-	ob = fl_add_pixmap( FL_NORMAL_PIXMAP, 60, 70, 100, 100, "" );
-	fl_set_object_boxtype( ob, FL_DOWN_BOX );
-	fl_set_pixmap_file( ob, "porsche.xpm" );
+    ob = fl_add_pixmap( FL_NORMAL_PIXMAP, 60, 70, 100, 100, "" );
+    fl_set_object_boxtype( ob, FL_DOWN_BOX );
+    fl_set_pixmap_file( ob, "porsche.xpm" );
 
-	pos = fl_add_positioner( FL_OVERLAY_POSITIONER, 60, 70, 100, 100, "" );
-	fl_set_positioner_xbounds( pos, 0, 1 );
-	fl_set_positioner_ybounds( pos, 0, 1 );
-	fl_set_object_callback( pos, positioner_cb, 0 );
+    pos = fl_add_positioner( FL_OVERLAY_POSITIONER, 60, 70, 100, 100, "" );
+    fl_set_positioner_xbounds( pos, 0, 1 );
+    fl_set_positioner_ybounds( pos, 0, 1 );
+    fl_set_object_callback( pos, positioner_cb, 0 );
 
-	xval = fl_add_box( FL_DOWN_BOX, 230, 40, 100, 30, "" );
-	fl_set_object_color( xval, FL_COL1, FL_COL1 );
+    xval = fl_add_box( FL_DOWN_BOX, 230, 40, 100, 30, "" );
+    fl_set_object_color( xval, FL_COL1, FL_COL1 );
 
-	yval = fl_add_box( FL_DOWN_BOX, 230, 90, 100, 30, "" );
-	fl_set_object_color( yval, FL_COL1, FL_COL1 );
+    yval = fl_add_box( FL_DOWN_BOX, 230, 90, 100, 30, "" );
+    fl_set_object_color( yval, FL_COL1, FL_COL1 );
 
-	fl_add_button( FL_NORMAL_BUTTON, 230, 200, 100, 30, "Exit" );
+    fl_add_button( FL_NORMAL_BUTTON, 230, 200, 100, 30, "Exit" );
 
-	fl_end_form( );
+    fl_end_form( );
 
-	fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "XOR Positioner" );
+    fl_show_form( form, FL_PLACE_CENTER, FL_TRANSIENT, "XOR Positioner" );
 
-	positioner_cb( pos, 0 );
-	fl_do_forms( );
-	fl_hide_form( form );
-	fl_finish( );
+    positioner_cb( pos, 0 );
+    fl_do_forms( );
+    fl_hide_form( form );
+    fl_finish( );
 
-	return 0;
+    return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

@@ -38,10 +38,10 @@ FL_FORM *fclock;
 
 void
 exit_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
-		 long        q   FL_UNUSED_ARG )
+         long        q   FL_UNUSED_ARG )
 {
-	fl_finish( );
-	exit( 0 );
+    fl_finish( );
+    exit( 0 );
 }
 
 
@@ -51,30 +51,28 @@ exit_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
 void
 create_form_clock( void )
 {
-	FL_OBJECT *obj;
+    FL_OBJECT *obj;
 
-	if ( fclock )
-		return;
+    fclock = fl_bgn_form( FL_NO_BOX, 500, 350 );
 
-	fclock = fl_bgn_form( FL_NO_BOX, 500, 350 );
-	obj = fl_add_box( FL_UP_BOX, 0, 0, 500, 350, "" );
+    obj = fl_add_box( FL_UP_BOX, 0, 0, 500, 350, "" );
 
-	obj = fl_add_clock( FL_DIGITAL_CLOCK, 185, 20, 150, 35, "" );
-	fl_set_object_boxtype( obj, FL_ROUNDED_BOX );
-	fl_set_object_color( obj, FL_COL1,FL_BLACK );
-	fl_set_object_lsize( obj, FL_MEDIUM_SIZE );
-	fl_set_object_lstyle( obj, FL_BOLD_STYLE );
+    obj = fl_add_clock( FL_DIGITAL_CLOCK, 185, 20, 150, 35, "" );
+    fl_set_object_boxtype( obj, FL_ROUNDED_BOX );
+    fl_set_object_color( obj, FL_COL1,FL_BLACK );
+    fl_set_object_lsize( obj, FL_MEDIUM_SIZE );
+    fl_set_object_lstyle( obj, FL_BOLD_STYLE );
 
-	obj = fl_add_clock( FL_ANALOG_CLOCK, 30, 70, 220, 200, "" );
-	fl_set_object_boxtype( obj, FL_UP_BOX );
+    obj = fl_add_clock( FL_ANALOG_CLOCK, 30, 70, 220, 200, "" );
+    fl_set_object_boxtype( obj, FL_UP_BOX );
 
-	obj = fl_add_clock( FL_ANALOG_CLOCK, 260, 70, 220, 200, "" );
-	fl_set_object_boxtype( obj, FL_OVAL3D_UPBOX );
+    obj = fl_add_clock( FL_ANALOG_CLOCK, 260, 70, 220, 200, "" );
+    fl_set_object_boxtype( obj, FL_OVAL3D_UPBOX );
 
-	obj = fl_add_button( FL_NORMAL_BUTTON, 375, 300, 110, 35, "Exit" );
-	fl_set_object_callback( obj, exit_cb, 0 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 375, 300, 110, 35, "Exit" );
+    fl_set_object_callback( obj, exit_cb, 0 );
 
-	fl_end_form( );
+    fl_end_form( );
 
    fl_scale_form( fclock, 0.7, 0.7 );
 }
@@ -85,14 +83,23 @@ create_form_clock( void )
 
 int
 main( int    argc,
-	  char * argv[ ] )
+      char * argv[ ] )
 {
     fl_initialize( &argc, argv, "FormDemo", 0,  0 );
 
     create_form_clock( );
     fl_show_form( fclock, FL_PLACE_CENTER, FL_TRANSIENT,"clocks" );
-    fl_do_forms( );
-	fl_finish( );
 
+    fl_do_forms( );
+
+    fl_finish( );
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */
