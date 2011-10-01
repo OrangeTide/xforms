@@ -457,7 +457,7 @@ load_fd_header( void )
                     "version, the new output file may not be compatible",
                     tmp );
 
-        fl_safe_free( tmp );
+        fli_safe_free( tmp );
     }
 
     if (    ff_read( "Internal Form Definition File" ) < 0
@@ -586,12 +586,12 @@ load_forms( int          merge,
 
         if ( ! p || ! *p )
         {
-            fl_safe_free( p );
+            fli_safe_free( p );
             return ff_err( "Expected name of the form" );
         }
 
         fli_sstrcpy( forms[ fnumb ].fname, p, sizeof forms[ fnumb ].fname );
-        fl_safe_free( p );
+        fli_safe_free( p );
 
         /* Having gotten the name read all the remaining information. We then
            should either end up at the start of a new form or at the end of
@@ -632,14 +632,14 @@ load_forms( int          merge,
         changed = 1;
     else if ( record && ( tmp = strrchr( fname, '/' ) ) )
     {
-        fl_safe_free( loadedfile );
+        fli_safe_free( loadedfile );
         *tmp = '\0';
         loadedfile = fl_strdup( fname );
     }
 
     if ( ! merge )
     {
-        fl_safe_free( loadedfile_fullpath );
+        fli_safe_free( loadedfile_fullpath );
         loadedfile_fullpath = fl_strdup( fname );
     }
 

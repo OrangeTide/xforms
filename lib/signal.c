@@ -187,7 +187,7 @@ fl_remove_signal_callback( int s )
 #endif
     }
 
-    fl_safe_free( rec );
+    fli_safe_free( rec );
 }
 
 

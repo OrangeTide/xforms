@@ -988,7 +988,7 @@ main( int    argc,
         select_pallette_entry( FL_BUTTON );
     }
 
-    fl_safe_free( tmp );
+    fli_safe_free( tmp );
 
     /* Do auto-naming for single file only */
 

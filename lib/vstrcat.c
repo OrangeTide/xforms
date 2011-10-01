@@ -81,7 +81,7 @@ fli_vstrcat( const char * fmt,
 void
 fli_free_vstrcat( void * p )
 {
-    fl_safe_free( p );
+    fli_safe_free( p );
 }
 
 

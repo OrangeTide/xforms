@@ -467,7 +467,7 @@ handle_button( FL_OBJECT * obj,
             if ( ( cleanup = lookup_cleanupfunc( obj->objclass ) ) )
                 cleanup( sp );
             free_pixmap( sp );
-            fl_safe_free( obj->spec );
+            fli_safe_free( obj->spec );
             break;
     }
 

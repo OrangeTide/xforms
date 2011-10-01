@@ -557,7 +557,7 @@ fix_button_label_size( FL_FORM * form,
     }
 
     if ( ! save )
-        fl_safe_free( osize );
+        fli_safe_free( osize );
 }
 
 
@@ -586,7 +586,7 @@ fix_menu_etc( FL_FORM * form,
             {
                 if ( sp->numitems > 0 )
                     for ( i = 1; i <= sp->numitems; i++ )
-                        fl_safe_free( sp->cb[ i ] );
+                        fli_safe_free( sp->cb[ i ] );
                 else
                 {
                     fl_addto_menu( ob, "menuitem 1" );
@@ -768,7 +768,7 @@ stoptest_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
             ob->h = p->h;
         }
 
-        fl_safe_free( oldgeom );
+        fli_safe_free( oldgeom );
     }
 
     redraw_the_form( 0 );

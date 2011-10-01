@@ -398,7 +398,7 @@ flimage_load( const char * file )
         if ( ( ( FLIMAGE_IO * ) image->image_io )->annotation )
             flimage_read_annotation( image );
         flimage_close( image );
-        fl_safe_free( image->io_spec );
+        fli_safe_free( image->io_spec );
         image->spec_size = 0;
         image->display = flimage_sdisplay;
         return image;
@@ -620,8 +620,8 @@ flimage_free( FL_IMAGE * image )
         if ( im == image )
             flimage_close( im );
         imnext = im->next;
-        fl_safe_free( im->infile );
-        fl_safe_free( im->outfile );
+        fli_safe_free( im->infile );
+        fli_safe_free( im->outfile );
         im->next = NULL;
         fl_free( im );
     }
@@ -642,9 +642,9 @@ flimage_get_linearlut( FL_IMAGE * im )
 
     if ( im->map_len > im->llut_len )
     {
-        fl_safe_free( im->llut[ 0 ] );
-        fl_safe_free( im->llut[ 1 ] );
-        fl_safe_free( im->llut[ 2 ] );
+        fli_safe_free( im->llut[ 0 ] );
+        fli_safe_free( im->llut[ 1 ] );
+        fli_safe_free( im->llut[ 2 ] );
     }
 
     if ( ! im->llut[ 0 ] )
@@ -656,8 +656,8 @@ flimage_get_linearlut( FL_IMAGE * im )
 
     if ( ! im->llut[ 2 ] )
     {
-        fl_safe_free( im->llut[ 0 ] );
-        fl_safe_free( im->llut[ 1 ]);
+        fli_safe_free( im->llut[ 0 ] );
+        fli_safe_free( im->llut[ 1 ]);
         return -1;
     }
 
@@ -672,9 +672,9 @@ flimage_get_linearlut( FL_IMAGE * im )
 void
 flimage_free_linearlut( FL_IMAGE * im )
 {
-    fl_safe_free( im->llut[ 0 ] );
-    fl_safe_free( im->llut[ 1 ] );
-    fl_safe_free( im->llut[ 2 ] );
+    fli_safe_free( im->llut[ 0 ] );
+    fli_safe_free( im->llut[ 1 ] );
+    fli_safe_free( im->llut[ 2 ] );
 
     im->llut_len = 0;
 }
@@ -738,7 +738,7 @@ flimage_getmem( FL_IMAGE * im )
 
             if ( ! err && ( ! im->wlut || im->gray_maxval > im->wlut_len ) )
             {
-                fl_safe_free( im->wlut );
+                fli_safe_free( im->wlut );
                 if ( ( im->wlut_len = im->gray_maxval + 1 ) < 256 )
                     im->wlut_len = 256;
                 err = ! ( im->wlut = fl_malloc( im->wlut_len
@@ -829,9 +829,9 @@ flimage_getcolormap( FL_IMAGE * im )
 
     if ( ! im->alpha_lut )
     {
-        fl_safe_free( im->red_lut );
-        fl_safe_free( im->green_lut );
-        fl_safe_free( im->blue_lut );
+        fli_safe_free( im->red_lut );
+        fli_safe_free( im->green_lut );
+        fli_safe_free( im->blue_lut );
         return -1;
     }
 
@@ -912,7 +912,7 @@ flimage_freemem( FL_IMAGE * image )
         image->ci = NULL;
     }
 
-    fl_safe_free( image->wlut );
+    fli_safe_free( image->wlut );
     image->wlut_len = 0;
 
     if ( image->gray )
@@ -946,7 +946,7 @@ flimage_freemem( FL_IMAGE * image )
         image->map_len = 0;
     }
 
-    fl_safe_free( image->comments );
+    fli_safe_free( image->comments );
     image->comments_len = 0;
 
     image->free_text( image );
@@ -990,10 +990,10 @@ flimage_freemem( FL_IMAGE * image )
         image->pixels = NULL;
     }
 
-    fl_safe_free( image->io_spec );
+    fli_safe_free( image->io_spec );
     image->spec_size = 0;
 
-    fl_safe_free( image->info );
+    fli_safe_free( image->info );
 
     image->w = image->h = 0;
     image->matr = image->matc = 0;
@@ -1238,7 +1238,7 @@ flimage_add_comments( FL_IMAGE   * im,
 
     if ( ! s || len <= 0 )
     {
-        fl_safe_free( im->comments );
+        fli_safe_free( im->comments );
         im->comments_len = 0;
         return;
     }

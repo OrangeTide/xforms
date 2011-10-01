@@ -211,7 +211,7 @@ get_how_return_val( const char * s )
         p = strtok( NULL, "|" );
     }
 
-    fl_safe_free( tmp );
+    fli_safe_free( tmp );
 
     return val;
 }

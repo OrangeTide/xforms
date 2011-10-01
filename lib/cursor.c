@@ -182,7 +182,7 @@ init_cursors( void )
 void
 fli_free_cursors( void )
 {
-    fl_safe_free( cursors );
+    fli_safe_free( cursors );
 }
 
 

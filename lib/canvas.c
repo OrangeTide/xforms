@@ -152,7 +152,7 @@ free_canvas( FL_OBJECT * ob )
     if ( ! sp->keep_colormap && sp->colormap != fli_colormap( fl_vmode ) )
         XFreeColormap( flx->display, sp->colormap );
 
-    fl_safe_free( ob->spec );
+    fli_safe_free( ob->spec );
 }
 
 

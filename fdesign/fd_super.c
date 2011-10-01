@@ -95,9 +95,9 @@ spec_to_superspec( FL_OBJECT * ob )
 
         for ( i = 1; i <= spp->nlines; i++ )
         {
-            fl_safe_free( spp->content[ i ] );
-            fl_safe_free( spp->shortcut[ i ] );
-            fl_safe_free( spp->callback[ i ] );
+            fli_safe_free( spp->content[ i ] );
+            fli_safe_free( spp->shortcut[ i ] );
+            fli_safe_free( spp->callback[ i ] );
         }
 
         n = fl_get_browser_maxline( ob );
@@ -126,8 +126,8 @@ spec_to_superspec( FL_OBJECT * ob )
 
         for ( i = 1; i <= spp->nlines; i++ )
         {
-            fl_safe_free( spp->content[ i ] );
-            fl_safe_free( spp->shortcut[ i ] );
+            fli_safe_free( spp->content[ i ] );
+            fli_safe_free( spp->shortcut[ i ] );
         }
 
         n = spp->nlines = sp->numitems;
@@ -163,9 +163,9 @@ spec_to_superspec( FL_OBJECT * ob )
 
         for ( i = 1; i <= spp->nlines; i++ )
         {
-            fl_safe_free( spp->content[ i ] );
-            fl_safe_free( spp->shortcut[ i ] );
-            fl_safe_free( spp->callback[ i ] );
+            fli_safe_free( spp->content[ i ] );
+            fli_safe_free( spp->shortcut[ i ] );
+            fli_safe_free( spp->callback[ i ] );
         }
 
         n = spp->nlines = sp->numitems;

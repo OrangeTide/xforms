@@ -936,7 +936,7 @@ fli_free_colormap( int vmode )
     if ( fli_visual( vmode ) != DefaultVisual( flx->display, fl_screen ) )
         XFreeColormap( flx->display, fli_map( vmode ) );
 
-    fl_safe_free( defaultc );
+    fli_safe_free( defaultc );
 }
 
 

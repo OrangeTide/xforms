@@ -417,8 +417,8 @@ fl_clear_menu( FL_OBJECT * ob )
 
     for ( i = 1; i <= sp->numitems; i++ )
     {
-        fl_safe_free( sp->items[ i ] );
-        fl_safe_free( sp->shortcut[ i ] );
+        fli_safe_free( sp->items[ i ] );
+        fli_safe_free( sp->shortcut[ i ] );
         sp->mode[ i ] = FL_PUP_NONE;
         sp->cb[ i ] = NULL;
     }
@@ -672,8 +672,8 @@ fl_delete_menu_item( FL_OBJECT * ob,
     if ( ISPUP( sp ) || ( numb = val_to_index( ob, numb ) ) <= 0 )
         return;
 
-    fl_safe_free( sp->items[ numb ] );
-    fl_safe_free( sp->shortcut[ numb ] );
+    fli_safe_free( sp->items[ numb ] );
+    fli_safe_free( sp->shortcut[ numb ] );
 
     for ( i = numb; i < sp->numitems; i++ )
     {
@@ -734,7 +734,7 @@ fl_set_menu_item_shortcut( FL_OBJECT  * ob,
     if ( ISPUP( sp ) || ( numb = val_to_index( ob, numb ) ) <= 0 )
         return;
 
-    fl_safe_free( sp->shortcut[ numb ] );
+    fli_safe_free( sp->shortcut[ numb ] );
     sp->shortcut[ numb ] = fl_strdup( str ? str : "" );
 }
 

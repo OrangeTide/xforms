@@ -138,7 +138,7 @@ fl_show_messages( const char *str )
     {
         fl_hide_form( fd_msg->form );
         fl_free_form( fd_msg->form );
-        fl_safe_free( fd_msg );
+        fli_safe_free( fd_msg );
     }
     else
         fl_deactivate_all_forms( );
@@ -154,7 +154,7 @@ fl_show_messages( const char *str )
 
     fl_hide_form( fd_msg->form );
     fl_free_form( fd_msg->form );
-    fl_safe_free( fd_msg );
+    fli_safe_free( fd_msg );
     fl_activate_all_forms( );
 }
 
@@ -263,7 +263,7 @@ fl_hide_message( void )
 void
 fli_msg_cleanup( void )
 {
-    fl_safe_free( fd_msg );
+    fli_safe_free( fd_msg );
 }
 
 

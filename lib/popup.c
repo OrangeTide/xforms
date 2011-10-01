@@ -725,7 +725,7 @@ fli_popup_insert_items( FL_POPUP       * popup,
 
         /* Set the entries text member to exactly what the user gave us */
 
-        fl_safe_free( after->text );
+        fli_safe_free( after->text );
         if ( ( after->text = fl_strdup( e->text ) ) == NULL )
         {
             fl_popup_delete( popup );
@@ -873,7 +873,7 @@ fl_popup_delete( FL_POPUP * popup )
 
     /* Get rid of the title string (if it exists) */
 
-    fl_safe_free( popup->title );
+    fli_safe_free( popup->title );
 
     /* Finally unlink it from the list */
 
@@ -928,10 +928,10 @@ fl_popup_entry_delete( FL_POPUP_ENTRY * entry )
 
     /* Free all remaining memory used by entry */
 
-    fl_safe_free( entry->text );
-    fl_safe_free( entry->label );
-    fl_safe_free( entry->accel );
-    fl_safe_free( entry->shortcut );
+    fli_safe_free( entry->text );
+    fli_safe_free( entry->label );
+    fli_safe_free( entry->accel );
+    fli_safe_free( entry->shortcut );
 
     /* For entries that refer to sub-popups delete the sub-popup */
 
@@ -1082,9 +1082,9 @@ fl_popup_entry_set_text( FL_POPUP_ENTRY * entry,
 
     /* Get rid  of the old text, label and accelerator strings */
 
-    fl_safe_free( entry->text );
-    fl_safe_free( entry->label );
-    fl_safe_free( entry->accel );
+    fli_safe_free( entry->text );
+    fli_safe_free( entry->label );
+    fli_safe_free( entry->accel );
 
     /* Make two copies of the text, the first one for storing in the entry,
        the second one for creating the label the accelerator string */
@@ -1126,13 +1126,13 @@ fl_popup_entry_set_text( FL_POPUP_ENTRY * entry,
 
  REPLACE_DONE:
 
-    fl_safe_free( t );
+    fli_safe_free( t );
 
     if ( ret == -1 )
     {
-        fl_safe_free( entry->text );
-        fl_safe_free( entry->label );
-        fl_safe_free( entry->accel );
+        fli_safe_free( entry->text );
+        fli_safe_free( entry->label );
+        fli_safe_free( entry->accel );
         M_err( "fl_popup_entry_set_text", "Running out of memory" );
     }
 
@@ -1166,7 +1166,7 @@ fl_popup_entry_set_shortcut( FL_POPUP_ENTRY * entry,
         return;
     }
 
-    fl_safe_free( entry->shortcut );
+    fli_safe_free( entry->shortcut );
 
     if ( sc == NULL )
         entry->ulpos = -1;
@@ -1228,7 +1228,7 @@ fl_popup_set_title( FL_POPUP   * popup,
         return NULL;
     }
 
-    fl_safe_free( popup->title );
+    fli_safe_free( popup->title );
 
     if ( title && *title )
     {
@@ -2673,7 +2673,7 @@ convert_shortcut( const char     * shortcut,
 
     cnt = fli_convert_shortcut( shortcut, sc );
 
-    fl_safe_free( entry->shortcut );
+    fli_safe_free( entry->shortcut );
     entry->shortcut = fl_malloc( ( cnt + 1 ) * sizeof *entry->shortcut );
     memcpy( entry->shortcut, sc, ( cnt + 1 ) * sizeof *entry->shortcut );
 }
@@ -2865,7 +2865,7 @@ entry_text_dimensions( FL_POPUP_ENTRY * entry,
             }
         }
 
-        fl_safe_free( s );
+        fli_safe_free( s );
     }
 
     /* Repeat this for the accelerator key text (minimum spacing between this
@@ -2891,7 +2891,7 @@ entry_text_dimensions( FL_POPUP_ENTRY * entry,
                                         c, strlen( c ), &dummy, &dummy );
         }
 
-        fl_safe_free( s );
+        fli_safe_free( s );
 
         *w += aw;
         *h = FL_max( *h, ah );

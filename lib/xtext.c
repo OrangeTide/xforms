@@ -82,11 +82,11 @@ extend_workmem( int nl )
 void
 fli_free_xtext_workmem( void )
 {
-    fl_safe_free( lines );
-    fl_safe_free( start );
-    fl_safe_free( startx );
-    fl_safe_free( starty );
-    fl_safe_free( slen );
+    fli_safe_free( lines );
+    fli_safe_free( start );
+    fli_safe_free( startx );
+    fli_safe_free( starty );
+    fli_safe_free( slen );
 }
 
 
@@ -160,7 +160,7 @@ fli_drw_string( int           horalign,
 
     if ( flx->win == None )
     {
-        fl_safe_free( str );
+        fli_safe_free( str );
         return 0;
     }
 

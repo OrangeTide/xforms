@@ -142,7 +142,7 @@ fli_free_fselectors( void )
     int i;
 
     for ( i = 0; i < FL_MAX_FSELECTOR; i++ )
-        fl_safe_free( fd_fselector[ i ] );
+        fli_safe_free( fd_fselector[ i ] );
 }
 
 

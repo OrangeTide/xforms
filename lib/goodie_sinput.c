@@ -99,12 +99,12 @@ fl_show_simple_input( const char * str1,
     {
         fl_hide_form( fd_input->form );
         fl_free_form( fd_input->form );
-        fl_safe_free( fd_input );
+        fli_safe_free( fd_input );
     }
     else
         fl_deactivate_all_forms( );
 
-    fl_safe_free( ret_str );
+    fli_safe_free( ret_str );
 
     fd_input = create_input( str1, defstr );
 
@@ -118,7 +118,7 @@ fl_show_simple_input( const char * str1,
 
     fl_hide_form( fd_input->form );
     fl_free_form( fd_input->form );
-    fl_safe_free( fd_input );
+    fli_safe_free( fd_input );
 
     fl_activate_all_forms( );
 
@@ -132,8 +132,8 @@ fl_show_simple_input( const char * str1,
 void
 fli_sinput_cleanup( void )
 {
-    fl_safe_free( fd_input );
-    fl_safe_free( ret_str );
+    fli_safe_free( fd_input );
+    fli_safe_free( ret_str );
 }
 
 

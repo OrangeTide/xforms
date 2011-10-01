@@ -1422,11 +1422,11 @@ fl_freepup( int n )
         {
             if ( p->item[ i ]->subm >= 0 && p->isEntry )
                 fl_freepup( p->item[ i ]->subm );
-            fl_safe_free( p->item[ i ]->str );
-            fl_safe_free( p->item[ i ]->shortcut );
+            fli_safe_free( p->item[ i ]->str );
+            fli_safe_free( p->item[ i ]->shortcut );
         }
 
-        fl_safe_free( p->item[ i ] );
+        fli_safe_free( p->item[ i ] );
     }
 
     p->used = 0;
@@ -1436,7 +1436,7 @@ fl_freepup( int n )
     if ( p->gc_inactive != None )
         XFreeGC( flx->display, p->gc_inactive );
 
-    fl_safe_free( p->title );
+    fli_safe_free( p->title );
 
     close_pupwin( p );
 }
@@ -1573,7 +1573,7 @@ fl_setpup_title( int          nm,
     if ( nm < 0 || nm >= fl_maxpup || ! menu_rec[ nm ].used || ! title )
         return;
 
-    fl_safe_free( m->title );
+    fli_safe_free( m->title );
     m->title = fl_strdup( title ? title : "" );
     b = t = fl_strdup( title ? title : "" );
     while ( ( b = strchr( b, '\b' ) ) )
@@ -2185,7 +2185,7 @@ fli_replacepup_text( int          nm,
 
     if ( ( item = requested_item_is_valid( "fli_replacepup_text", nm, ni ) ) )
     {
-        fl_safe_free( item->str );
+        fli_safe_free( item->str );
         item->str = fl_strdup( nt );
     }
 }

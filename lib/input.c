@@ -380,7 +380,7 @@ draw_input( FL_OBJECT * obj )
 
     if ( obj->type == FL_SECRET_INPUT )
     {
-        fl_safe_free( sp->str );
+        fli_safe_free( sp->str );
         sp->str = saved;
     }
 
@@ -1597,8 +1597,8 @@ handle_input( FL_OBJECT * obj,
             break;
 
         case FL_FREEMEM:
-            fl_safe_free( ( ( FLI_INPUT_SPEC * ) obj->spec )->str );
-            fl_safe_free( obj->spec );
+            fli_safe_free( ( ( FLI_INPUT_SPEC * ) obj->spec )->str );
+            fli_safe_free( obj->spec );
             break;
     }
 

@@ -275,7 +275,7 @@ fli_choice_cleanup( void )
     if ( fd_choice->sc[ 2 ] )
         fl_free( ( char * ) fd_choice->sc[ 2 ] );
 
-    fl_safe_free( fd_choice );
+    fli_safe_free( fd_choice );
 }
 
 

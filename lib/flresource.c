@@ -809,9 +809,9 @@ fli_free_cmdline_args( void )
         return;
 
     for ( i = 0; fl_argv[ i ]; i++ )
-        fl_safe_free( fl_argv[ i ] );
+        fli_safe_free( fl_argv[ i ] );
 
-    fl_safe_free( fl_argv );
+    fli_safe_free( fl_argv );
 }
 
 
@@ -1376,7 +1376,7 @@ fl_finish( void )
                                fli_context->io_rec->mask,
                                fli_context->io_rec->callback );
 
-    fl_safe_free( fli_context );
+    fli_safe_free( fli_context );
 
     /* Close the display */
 

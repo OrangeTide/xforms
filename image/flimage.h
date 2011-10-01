@@ -31,14 +31,6 @@ extern "C"
 #define FL_EXPORT extern
 #endif
 
-#define fl_safe_free( p )     do {                   \
-                                  if ( p )           \
-                                  {                  \
-                                      fl_free( p );  \
-                                      p = NULL;      \
-                                  }                  \
-                              } while( 0 )
-
 #define FL_RGB2GRAY( r, g, b )  \
     ( ( unsigned int )( ( 78 * ( r ) + 150 * ( g ) + 28 * ( b ) ) >> 8 ) )
 

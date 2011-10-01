@@ -730,7 +730,7 @@ handle_slider( FL_OBJECT * ob,
             break;
 
         case FL_FREEMEM :
-            fl_safe_free( ob->spec );
+            fli_safe_free( ob->spec );
             break;
 
         case FL_ENTER :

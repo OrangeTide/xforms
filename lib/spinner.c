@@ -143,7 +143,7 @@ handle_spinner( FL_OBJECT * obj,
             break;
 
         case FL_FREEMEM :
-            fl_safe_free( obj->spec );
+            fli_safe_free( obj->spec );
             break;
     }
 

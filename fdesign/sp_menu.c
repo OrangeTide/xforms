@@ -408,7 +408,7 @@ add_menu_item_cb( FL_OBJECT * ob,
 
         fl_set_menu_item_mode( ui->vdata, k, get_pupmode_value( mode ) );
 
-        fl_safe_free( sp->cb[ i ] );
+        fli_safe_free( sp->cb[ i ] );
 
         if ( item_cb && *item_cb )
             fl_set_menu_item_callback( ui->vdata, k,
@@ -455,7 +455,7 @@ replace_menu_item_cb( FL_OBJECT * ob,
 
         fl_set_menu_item_mode( ui->vdata, k, get_pupmode_value( mode ) );
 
-        fl_safe_free( sp->cb[ i ] );
+        fli_safe_free( sp->cb[ i ] );
 
         if ( item_cb && *item_cb )
             fl_set_menu_item_callback( ui->vdata, k,
@@ -487,7 +487,7 @@ delete_menu_item_cb( FL_OBJECT * ob,
         FLI_MENU_SPEC *sp = ( ( FL_OBJECT * ) ui->vdata )->spec;
 
         fl_delete_browser_line( ui->content_br, i );
-        fl_safe_free( sp->cb[ i ] );
+        fli_safe_free( sp->cb[ i ] );
         fl_delete_menu_item( ui->vdata, sp->mval[ i ] );
         if ( auto_apply )
             redraw_the_form( 0 );

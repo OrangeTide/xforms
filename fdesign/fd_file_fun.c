@@ -101,8 +101,8 @@ ff_close( void )
         ff.fp = NULL;
     }
 
-    fl_safe_free( ff.fname );
-    fl_safe_free( ff.line );
+    fli_safe_free( ff.fname );
+    fli_safe_free( ff.line );
 
     ff.pos = NULL;
     ff.line_no = 0;
@@ -139,7 +139,7 @@ ff_get_line( void )
     if ( ff.fp )
         do
         {
-            fl_safe_free( ff.line );
+            fli_safe_free( ff.line );
 
             if ( ! ( ff.line = fli_read_line( ff.fp ) ) )
             {
@@ -578,12 +578,12 @@ ff_match_objclass( int * p )
     if ( ! *class_name || ( class = class_val( class_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fl_safe_free( class_name );
+        fli_safe_free( class_name );
         return -1;
     }
 
     *p = class;
-    fl_safe_free( class_name );
+    fli_safe_free( class_name );
     return 0;
 }
 
@@ -604,12 +604,12 @@ ff_match_boxtype( int * p )
     if ( ! *boxtype_name || ( boxtype = boxtype_val( boxtype_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fl_safe_free( boxtype_name );
+        fli_safe_free( boxtype_name );
         return -1;
     }
 
     *p = boxtype;
-    fl_safe_free( boxtype_name );
+    fli_safe_free( boxtype_name );
     return 0;
 }
 
@@ -632,7 +632,7 @@ ff_match_color( FL_COLOR * p )
               && color != FL_NoColor ) )
     {
         ff.pos = old_pos;
-        fl_safe_free( color_name );
+        fli_safe_free( color_name );
         return -1;
     }
 
@@ -640,7 +640,7 @@ ff_match_color( FL_COLOR * p )
     if ( *p == 0x8fffffff )
         *p = FL_NoColor;
 
-    fl_safe_free( color_name );
+    fli_safe_free( color_name );
     return 0;
 }
 
@@ -677,7 +677,7 @@ ff_match_align( int * p )
         *sp = '\0';
         if ( ff_match_spaceless_string( &a1 ) < 0 || ! *a1 )
         {
-            fl_safe_free( a1 );
+            fli_safe_free( a1 );
             ff.pos = old_pos;
             *sp = o;
             return -1;
@@ -689,26 +689,26 @@ ff_match_align( int * p )
 
         if ( ff_match_spaceless_string( &a2 ) < 0 || ! *a2 )
         {
-            fl_safe_free( a1 );
-            fl_safe_free( a2 );
+            fli_safe_free( a1 );
+            fli_safe_free( a2 );
             ff.pos = old_pos;
             return -1;
         }
 
         align_name = fli_print_to_string( "%s|%s", a1, a2 );
-        fl_safe_free( a1 );
-        fl_safe_free( a2 );
+        fli_safe_free( a1 );
+        fli_safe_free( a2 );
     }
 
     if ( ! *align_name || ( align = align_val( align_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fl_safe_free( align_name );
+        fli_safe_free( align_name );
         return -1;
     }
 
     *p =  align;
-    fl_safe_free( align_name );
+    fli_safe_free( align_name );
     return 0;
 }
 
@@ -757,24 +757,24 @@ ff_match_lstyle( int * p )
         if ( ff_match_spaceless_string( &l2 ) < 0 || ! *l2 )
         {
             ff.pos = old_pos;
-            fl_safe_free( l1 );
+            fli_safe_free( l1 );
             return -1;
         }
 
         lstyle_name = fli_print_to_string( "%s|%s", l1, l2 );
-        fl_safe_free( l1 );
-        fl_safe_free( l2 );
+        fli_safe_free( l1 );
+        fli_safe_free( l2 );
     }
 
     if ( ! *lstyle_name || ( lstyle = style_val( lstyle_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fl_safe_free( lstyle_name );
+        fli_safe_free( lstyle_name );
         return -1;
     }
 
     *p = lstyle;
-    fl_safe_free( lstyle_name );
+    fli_safe_free( lstyle_name );
     return 0;
 }
 
@@ -794,13 +794,13 @@ ff_match_lsize( int * p )
 
     if( ! *lsize_name || ( lsize = lsize_val( lsize_name ) ) == -1 )
     {
-        fl_safe_free( lsize_name );
+        fli_safe_free( lsize_name );
         ff.pos = old_pos;
         return -1;
     }
 
     *p = lsize;
-    fl_safe_free( lsize_name );
+    fli_safe_free( lsize_name );
     return 0;
 }
 
@@ -820,13 +820,13 @@ ff_match_resize( int * p )
 
     if ( ! *resize_name || ( resize = resize_val( resize_name ) ) == -1 )
     {
-        fl_safe_free( resize_name );
+        fli_safe_free( resize_name );
         ff.pos = old_pos;
         return -1;
     }
 
     *p = resize;
-    fl_safe_free( resize_name );
+    fli_safe_free( resize_name );
     return 0;
 }
 
@@ -847,12 +847,12 @@ ff_match_gravity( int * p )
     if ( ! *gravity_name || ( gravity = gravity_val( gravity_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fl_safe_free( gravity_name );
+        fli_safe_free( gravity_name );
         return -1;
     }
 
     *p = gravity;
-    fl_safe_free( gravity_name );
+    fli_safe_free( gravity_name );
     return 0;
 }
 
@@ -873,12 +873,12 @@ ff_match_unit( int * p )
     if ( ! *unit_name || ( unit = unit_val( unit_name ) ) == -1 )
     {
         ff.pos = old_pos;
-        fl_safe_free( unit_name );
+        fli_safe_free( unit_name );
         return -1;
     }
 
     *p = unit;
-    fl_safe_free( unit_name );
+    fli_safe_free( unit_name );
     return 0;
 }
 

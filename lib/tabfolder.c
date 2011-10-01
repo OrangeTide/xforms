@@ -123,8 +123,8 @@ handle_tabfolder( FL_OBJECT * ob,
             break;
 
         case FL_FREEMEM:
-            fl_safe_free( sp->forms );
-            fl_safe_free( sp->title );
+            fli_safe_free( sp->forms );
+            fli_safe_free( sp->title );
             fl_free( sp );
             break;
     }

@@ -168,7 +168,7 @@ show_it( const char * title,
 
     fl_hide_form( fd_alert->form );
     fl_free_form( fd_alert->form );
-    fl_safe_free( fd_alert );
+    fli_safe_free( fd_alert );
     fl_activate_all_forms( );
 }
 
@@ -270,7 +270,7 @@ fl_hide_alert( void )
 void
 fli_alert_cleanup( void )
 {
-    fl_safe_free( fd_alert );
+    fli_safe_free( fd_alert );
 }
 
 

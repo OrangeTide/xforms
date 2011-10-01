@@ -118,14 +118,15 @@ free_overlay_data( FLI_XYPLOT_SPEC * sp,
 {
     if ( sp->n[ id ] )
     {
-        fl_safe_free( sp->x[ id ] );
-        fl_safe_free( sp->y[ id ] );
+        fli_safe_free( sp->x[ id ] );
+        fli_safe_free( sp->y[ id ] );
         sp->n[ id ] = 0;
     }
 }
 
 
 /***************************************
+ * Free strings for alpha-tics
  ***************************************/
 
 static void
@@ -134,10 +135,7 @@ free_atic( char ** atic )
     size_t cnt = 0;
 
     for ( ; *atic; atic++, cnt++ )
-    {
-        fl_free( *atic );
-        *atic = NULL;
-    }
+        fli_safe_free( *atic );
 
     while ( ++cnt < MAX_ALABEL - 1 )
         *++atic = NULL;
@@ -181,21 +179,20 @@ free_xyplot( FL_OBJECT * ob )
     fl_free( --sp->xpi );
     fl_free( --sp->xp );
 
-    /* various labels */
+    /* Various labels */
 
-    fl_safe_free( sp->xlabel );
-    fl_safe_free( sp->ylabel );
-    fl_safe_free( sp->title );
-    fl_safe_free( sp->text );
-    sp->text = NULL;
+    fli_safe_free( sp->xlabel );
+    fli_safe_free( sp->ylabel );
+    fli_safe_free( sp->title );
+    fli_safe_free( sp->text );
 
     free_atic( sp->axtic );
     free_atic( sp->aytic );
 
-    fl_safe_free( sp->xmargin1 );
-    fl_safe_free( sp->xmargin2 );
-    fl_safe_free( sp->ymargin1 );
-    fl_safe_free( sp->ymargin2 );
+    fli_safe_free( sp->xmargin1 );
+    fli_safe_free( sp->xmargin2 );
+    fli_safe_free( sp->ymargin1 );
+    fli_safe_free( sp->ymargin2 );
 
     free_spec_dynamic_mem( sp );
 }
@@ -503,7 +500,7 @@ draw_curve_only( FL_OBJECT * ob )
             continue;
 
         fl_color( col = sp->col[ nplot ] );
-        drawsymbol = 0;
+        drawsymbol = NULL;
         noline = 0;
 
         /* Without autoscaling some of the data might fall outside the range
@@ -563,7 +560,7 @@ draw_curve_only( FL_OBJECT * ob )
         switch ( type )
         {
             case FL_ACTIVE_XYPLOT:
-                drawsymbol = sp->mark_active ? draw_square : 0;
+                drawsymbol = sp->mark_active ? draw_square : NULL;
                 break;
 
             case FL_SQUARE_XYPLOT:
@@ -611,12 +608,12 @@ draw_curve_only( FL_OBJECT * ob )
 
             case FL_EMPTY_XYPLOT:
                 noline = 1;
-                drawsymbol = 0;
+                drawsymbol = NULL;
                 break;
 
             case FL_IMPULSE_XYPLOT:
                 noline = 1;
-                drawsymbol = 0;
+                drawsymbol = NULL;
                 for ( i = 0; i < nxp; i++ )
                     fl_line( xp[ i ].x, sp->yf - 1, xp[ i ].x, xp[ i ].y, col );
                 break;
@@ -2020,28 +2017,29 @@ allocate_spec( FLI_XYPLOT_SPEC * sp,
 static void
 free_spec_dynamic_mem( FLI_XYPLOT_SPEC * sp )
 {
-    fl_safe_free( sp->text );
-    fl_safe_free( sp->xt );
-    fl_safe_free( sp->yt );
-    fl_safe_free( sp->x );
-    fl_safe_free( sp->y );
-    fl_safe_free( sp->grid );
-    fl_safe_free( sp->col );
-    fl_safe_free( sp->tcol );
-    fl_safe_free( sp->type );
-    fl_safe_free( sp->n );
-    fl_safe_free( sp->interpolate );
-    fl_safe_free( sp->talign );
-    fl_safe_free( sp->thickness );
-    fl_safe_free( sp->symbol );
+    fli_safe_free( sp->text );
+    fli_safe_free( sp->xt );
+    fli_safe_free( sp->yt );
+    fli_safe_free( sp->x );
+    fli_safe_free( sp->y );
+    fli_safe_free( sp->grid );
+    fli_safe_free( sp->col );
+    fli_safe_free( sp->tcol );
+    fli_safe_free( sp->type );
+    fli_safe_free( sp->n );
+    fli_safe_free( sp->interpolate );
+    fli_safe_free( sp->talign );
+    fli_safe_free( sp->thickness );
+    fli_safe_free( sp->symbol );
+
     if ( sp->key )
     {
         int i;
 
         for ( i = 0; i < sp->maxoverlay; i++ )
-            fl_safe_free( sp->key[ i ] );
+            fli_safe_free( sp->key[ i ] );
 
-        fl_safe_free( sp->key );
+        fli_safe_free( sp->key );
     }
 }
 
@@ -2303,14 +2301,14 @@ fl_set_xyplot_symbol( FL_OBJECT        * ob,
                       FL_XYPLOT_SYMBOL   symbol )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
-    FL_XYPLOT_SYMBOL old = 0;
+    FL_XYPLOT_SYMBOL old = NULL;
     int i;
 
     if ( id > sp->maxoverlay )
     {
         M_err( "fl_set_xyplot_symbol", "ID %d is not in range (0,%d)",
                id, sp->maxoverlay );
-        return 0;
+        return NULL;
     }
 
     for ( i = 0; i <= sp->maxoverlay; i++ )
@@ -2335,14 +2333,14 @@ fl_set_xyplot_symbol( FL_OBJECT        * ob,
 
 void
 fl_set_xyplot_inspect( FL_OBJECT * ob,
-                       int         yes )
+                       int         yes_no )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
-    if ( sp->inspect == yes )
+    if ( sp->inspect == yes_no )
         return;
 
-    sp->inspect = yes;
+    sp->inspect = yes_no;
 
     if ( ob->type != FL_ACTIVE_XYPLOT )
     {
@@ -2646,9 +2644,9 @@ fl_set_xyplot_data_double( FL_OBJECT  * ob,
 
     free_overlay_data( sp, 0 );
 
-    fl_safe_free( sp->xlabel );
-    fl_safe_free( sp->ylabel );
-    fl_safe_free( sp->title );
+    fli_safe_free( sp->xlabel );
+    fli_safe_free( sp->ylabel );
+    fli_safe_free( sp->title );
 
     sp->xlabel = fl_strdup( xlabel ? xlabel : "" );
     sp->ylabel = fl_strdup( ylabel ? ylabel : "" );
@@ -2706,9 +2704,9 @@ fl_set_xyplot_data( FL_OBJECT  * ob,
 
     free_overlay_data( sp, 0 );
 
-    fl_safe_free( sp->xlabel );
-    fl_safe_free( sp->ylabel );
-    fl_safe_free( sp->title );
+    fli_safe_free( sp->xlabel );
+    fli_safe_free( sp->ylabel );
+    fli_safe_free( sp->title );
 
     sp->xlabel = fl_strdup( xlabel ? xlabel : "" );
     sp->ylabel = fl_strdup( ylabel ? ylabel : "" );
@@ -2845,8 +2843,10 @@ fl_add_xyplot_overlay( FL_OBJECT * ob,
 
     sp->x[ id ] = fl_malloc( n * sizeof **sp->x );
     sp->y[ id ] = fl_malloc( n * sizeof **sp->y );
+
     memcpy( sp->x[ id ], x, n * sizeof **sp->x );
     memcpy( sp->y[ id ], y, n * sizeof **sp->y );
+
     sp->n[ id ] = n;
 
     /* Extend screen points if needed. */
@@ -2891,7 +2891,8 @@ load_data( const char  * f,
     *x = fl_malloc( maxp * sizeof **x );
     *y = fl_malloc( maxp * sizeof **y );
 
-    /* Comment chars are ; # ! and seperators are spaces and tabs  */
+    /* Comment chars are semicolon, hash and exclamation mark while seperators
+       between numbers are space, comma and tab */
 
     while ( fgets( buf, sizeof buf, fp ) )
     {
@@ -3231,11 +3232,45 @@ fl_set_xyplot_fontstyle( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ * Truncates a floating point number to a requested significant digits
+ * (if the number of digits is 0 truncate to the nearest integer)
+ ***************************************/
+
+static double
+trunc_f( double f,
+         int    digits )
+{
+    int sign;
+    double fac;
+    int expon;
+
+    if ( fabs( f ) < 1.e-20 )
+        return 0.0;
+
+    if ( digits < 0 )
+        digits = 1;
+
+    if ( ! digits )
+        return f >= 0 ? floor( f + 0.5 ) : ceil( f - 0.5 );
+
+    sign = f >= 0 ? 1 : -1;
+    f *= sign;
+
+    if ( f >= 1.0 )
+        expon = floor( log10( f ) );
+	else if ( f == 0.0 )
+		return 0.0;
+	else
+		expon = ceil( log10( f ) );
+
+	fac = pow( 10.0, digits - expon );
+	return sign * floor( fac * f + 0.5 ) / fac;
+}
+
+
 #define ADVANCE  0.1        /* shoulde not be greater than 0.25 */
 #define FACTOR   1.9        /* max major expansion              */
-
-static double trunc_f( double,
-                       int );
 
 
 /***************************************
@@ -3325,43 +3360,6 @@ gen_logtic( float tmin,
         tic = 1.0;
 
     return floor( tic + 0.5 );
-}
-
-
-/***************************************
- * Truncates a floating point number to a requested significant digits
- * (if the number of digits is 0 truncate to the nearest integer)
- ***************************************/
-
-static double
-trunc_f( double f,
-         int    digits )
-{
-    int sign;
-    double fac;
-    int expon;
-
-    if ( fabs( f ) < 1.e-20 )
-        return 0.0;
-
-    if ( digits < 0 )
-        digits = 1;
-
-    if ( ! digits )
-        return f >= 0 ? floor( f + 0.5 ) : ceil( f - 0.5 );
-
-    sign = f >= 0 ? 1 : -1;
-    f *= sign;
-
-    if ( f >= 1.0 )
-        expon = floor( log10( f ) );
-	else if ( f == 0.0 )
-		return 0.0;
-	else
-		expon = ceil( log10( f ) );
-
-	fac = pow( 10.0, digits - expon );
-	return sign * floor( fac * f + 0.5 ) / fac;
 }
 
 
@@ -3486,11 +3484,13 @@ fl_set_xyplot_xscale( FL_OBJECT * ob,
     if ( sp->xscale != scale || sp->xbase != base )
     {
         sp->xscale = scale;
+
         if ( scale == FL_LOG )
         {
             sp->xbase = base;
             sp->lxbase = log10( base );
         }
+
         fl_redraw_object( ob );
     }
 }
@@ -3515,6 +3515,7 @@ fl_set_xyplot_yscale( FL_OBJECT * ob,
     if ( sp->yscale != scale || sp->ybase != base )
     {
         sp->yscale = scale;
+
         if ( scale == FL_LOG )
         {
             sp->ybase = base;
@@ -3536,14 +3537,15 @@ fl_set_xyplot_fixed_xaxis( FL_OBJECT  * ob,
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
-    fl_safe_free( sp->xmargin1 );
-    fl_safe_free( sp->xmargin2 );
+    fli_safe_free( sp->xmargin1 );
+    fli_safe_free( sp->xmargin2 );
 
     sp->xmargin1 = lm ? fl_strdup( lm ) : NULL;
     sp->xmargin2 = rm ? fl_strdup( rm ) : NULL;
 
     if ( sp->xmargin2 && ! sp->xmargin1 )
         sp->xmargin1 = fl_strdup( "" );
+
     if ( sp->xmargin1 && ! sp->xmargin2 )
         sp->xmargin2 = fl_strdup( "" );
 }
@@ -3559,14 +3561,15 @@ fl_set_xyplot_fixed_yaxis( FL_OBJECT  * ob,
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
 
-    fl_safe_free( sp->ymargin1 );
-    fl_safe_free( sp->ymargin1 );
+    fli_safe_free( sp->ymargin1 );
+    fli_safe_free( sp->ymargin1 );
 
     sp->ymargin1 = tm ? fl_strdup( tm ) : NULL;
     sp->ymargin2 = bm ? fl_strdup( bm ) : NULL;
 
     if ( sp->ymargin2 && ! sp->ymargin1 )
         sp->ymargin1 = fl_strdup( "" );
+
     if ( sp->ymargin1 && ! sp->ymargin2 )
         sp->ymargin2 = fl_strdup( "" );
 }
@@ -3588,9 +3591,11 @@ fl_set_xyplot_alphaxtics( FL_OBJECT  * ob,
     free_atic( sp->axtic );
 
     tmps = fl_strdup( m ? m : "" );
+
     for ( n = 0, item = strtok( tmps, "|" ); n < MAX_ALABEL - 1 && item;
           item = strtok( NULL, "|" ) )
         sp->axtic[ n++ ] = fl_strdup( item );
+
     fl_free( tmps );
 
     sp->axtic[ n ] = NULL;
@@ -3617,9 +3622,11 @@ fl_set_xyplot_alphaytics( FL_OBJECT  * ob,
     free_atic( sp->aytic );
 
     tmps = fl_strdup( m ? m : "" );
+
     for ( n = 0, item = strtok( tmps, "|" ); n < MAX_ALABEL - 1 && item;
           item = strtok( NULL, "|" ) )
         sp->aytic[ n++ ] = fl_strdup( item );
+
     fl_free( tmps );
 
     sp->aytic[ n ] = 0;
@@ -3644,7 +3651,7 @@ fl_clear_xyplot( FL_OBJECT * ob )
     for ( i = 0; i <= sp->maxoverlay; i++ )
     {
         free_overlay_data( ob->spec, i );
-        fl_safe_free( sp->text[ i ] );
+        fli_safe_free( sp->text[ i ] );
     }
 
     fl_redraw_object( ob );
@@ -3663,7 +3670,8 @@ fl_set_xyplot_key( FL_OBJECT  * ob,
 
     if ( id >= 0 && id < sp->maxoverlay )
     {
-        fl_safe_free( sp->key[ id ] );
+        fli_safe_free( sp->key[ id ] );
+
         if ( key && *key )
             sp->key[ id ] = fl_strdup( key );
     }
@@ -3684,6 +3692,7 @@ fl_set_xyplot_key_position( FL_OBJECT * ob,
     sp->key_x = x;
     sp->key_y = y;
     sp->key_align = align & ~ FL_ALIGN_INSIDE;
+
     fl_redraw_object( ob );
 }
 
@@ -3722,6 +3731,7 @@ fl_set_xyplot_key_font( FL_OBJECT * ob,
     {
         sp->key_lstyle = style;
         sp->key_lsize = size;
+
         fl_redraw_object( ob );
     }
 }
@@ -3749,11 +3759,10 @@ fl_set_xyplot_mark_active( FL_OBJECT * ob,
 
 /***************************************
  * Function that allows to determine the rectangle into which the data
- * of the xyplot widget are drawn into (when axes are drawn this is
- * also the rectangle formed by those axes). The first two return
- * arguments are the coordinates (relative to the object) of the
- * lower left hand corner, while the other two are those of the
- * upper right hand corner.
+ * of the xyplot widget get drawn (when axes are drawn this is also the
+ * rectangle formed by those axes). The first two return arguments are
+ * the coordinates (relative to the object) of the lower left hand corner,
+ * while the other two are those of the upper right hand corner.
  ***************************************/
 
 void
@@ -3774,11 +3783,10 @@ fl_get_xyplot_screen_area( FL_OBJECT * obj,
 
 /***************************************
  * Function that allows to determine the rectangle into which the data
- * of the xyplot widget are drawn into (when axes are drawn this is
- * also the rectangle formed by those axes). The first two return
- * arguments are the coordinates (in "world" units) of the lower
- * left hand corner, while the other two are those of the upper
- * right hand corner.
+ * of the xyplot widget get drawn (when axes are drawn this is also the
+ * rectangle formed by those axes). The first two return arguments are
+ * the coordinates (in "world" units) of the lower left hand corner,
+ * while the other two are those of the upper right hand corner.
  ***************************************/
 
 void

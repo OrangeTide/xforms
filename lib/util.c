@@ -215,7 +215,7 @@ fli_print_to_string( const char * fmt,
         old_c = c;
         if ( ( c = fl_realloc( c, len ) ) == NULL )
         {
-            fl_safe_free( old_c );
+            fli_safe_free( old_c );
             M_err( "fli_print_to_string", "Running out of memory\n" );
             return NULL;
         }
@@ -271,7 +271,7 @@ fli_read_line( FILE *fp )
     {
         if ( ( line = fl_realloc( line, len ) ) == NULL )
         {
-            fl_safe_free( old_line );
+            fli_safe_free( old_line );
             M_err( "fli_read_line", "Running out of memory\n" );
             return NULL;
         }

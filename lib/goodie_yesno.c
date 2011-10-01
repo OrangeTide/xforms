@@ -167,7 +167,7 @@ fl_show_question( const char * str,
 
     fl_hide_form( fd_yesno->form );
     fl_free_form( fd_yesno->form );
-    fl_safe_free( fd_yesno );
+    fli_safe_free( fd_yesno );
     fl_activate_all_forms( );
 
     return k;
@@ -193,7 +193,7 @@ fl_hide_question( void )
 void
 fli_question_cleanup( void )
 {
-    fl_safe_free( fd_yesno );
+    fli_safe_free( fd_yesno );
 }
 
 

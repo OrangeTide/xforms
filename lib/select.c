@@ -420,7 +420,7 @@ fl_set_select_items( FL_OBJECT     * obj,
 
         fl_free( txt );
 
-        fl_safe_free( e->text );
+        fli_safe_free( e->text );
         e->text = fl_strdup( items->text );
     }
 
@@ -957,7 +957,7 @@ handle_select( FL_OBJECT * obj,
         case FL_FREEMEM :
             if ( sp && sp->popup )
                 fl_popup_delete( sp->popup );
-            fl_safe_free( obj->spec );
+            fli_safe_free( obj->spec );
             break;
     }
 

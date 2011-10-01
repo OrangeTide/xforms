@@ -795,7 +795,7 @@ handle_nmenu( FL_OBJECT * obj,
         case FL_FREEMEM :
             if ( sp && sp->popup )
                 fl_popup_delete( sp->popup );
-            fl_safe_free( obj->spec );
+            fli_safe_free( obj->spec );
             break;
     }
 

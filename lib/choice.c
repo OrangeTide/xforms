@@ -50,9 +50,9 @@ free_choice( FLI_CHOICE_SPEC * sp )
     for ( i = 1; i <= FL_CHOICE_MAXITEMS; i++ )
     {
         if ( sp->items[ i ] )
-            fl_safe_free( sp->items[ i ] );
+            fli_safe_free( sp->items[ i ] );
         if ( sp->shortcut[ i ] )
-            fl_safe_free( sp->shortcut[ i ] );
+            fli_safe_free( sp->shortcut[ i ] );
     }
 }
 

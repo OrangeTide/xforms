@@ -472,7 +472,7 @@ ff_read_sp_h_pref( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     i = get_scrollbar_pref_value( p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     if ( i < 0 )
         return ff_err( "Invalid value for \"h_pref\" key" );
@@ -502,7 +502,7 @@ ff_read_sp_v_pref( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     i = get_scrollbar_pref_value( p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     if ( i < 0 )
         return ff_err( "Invalid value for \"v_pref\" key" );
@@ -782,7 +782,7 @@ ff_read_sp_mode( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     i = get_pupmode_value( p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     if ( i < 0 )
         return ff_err( "Invalid value for \"mode\" key" );
@@ -868,7 +868,7 @@ ff_read_sp_file( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     strcpy( sp->filename, p );
  
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     return 0;
 }
@@ -892,7 +892,7 @@ ff_read_sp_focus_file( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     strcpy( sp->focus_filename, p );
  
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     return 0;
 }
@@ -935,7 +935,7 @@ ff_read_sp_data( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     strcpy( sp->data, p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     return 0;
 }
@@ -956,7 +956,7 @@ ff_read_sp_focus_data( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     strcpy( sp->focus_data, p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     return 0;
 }
@@ -996,7 +996,7 @@ ff_read_sp_width( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     strcpy( sp->width, p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     return 0;
 }
@@ -1017,7 +1017,7 @@ ff_read_sp_height( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     strcpy( sp->height, p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     return 0;
 }
@@ -1041,7 +1041,7 @@ ff_read_sp_helper( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     strcpy( sp->helper, p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     return 0;
 }
@@ -1186,7 +1186,7 @@ ff_read_sp_xscale( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     xscale = get_scale_value( p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     if ( xscale < 0 )
         return ff_err( "Invalid value for first value for \"xscale\" key" );
@@ -1219,7 +1219,7 @@ ff_read_sp_yscale( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     yscale = get_scale_value( p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     if ( yscale < 0 )
         return ff_err( "Invalid value for first value for \"yscale\" key" );
@@ -1252,7 +1252,7 @@ ff_read_sp_grid( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     g = get_grid_value( p1 );
 
-    fl_safe_free( p1 );
+    fli_safe_free( p1 );
 
     if ( g < 0 )
         return ff_err( "Invalid first value for \"grid\" key" );
@@ -1264,7 +1264,7 @@ ff_read_sp_grid( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     g = get_grid_value( p2 );
 
-    fl_safe_free( p2 );
+    fli_safe_free( p2 );
 
     if ( g < 0 )
         return ff_err( "Invalid second value for \"grid\" key" );
@@ -1294,7 +1294,7 @@ ff_read_sp_gridstyle( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     g = get_linestyle_value( p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     if ( g < 0 )
         return ff_err( "Invalid value for \"gridstyle\" key" );
@@ -1343,7 +1343,7 @@ ff_read_sp_dir( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     dir = get_direction_value( p );
 
-    fl_safe_free( p );
+    fli_safe_free( p );
 
     if ( dir < 0 )
         return ff_err( "Invalid value for \"dir\" key" );
@@ -1376,7 +1376,7 @@ ff_read_sp_return( FL_OBJECT * obj,
 
     ret = get_how_return_val( return_name );
 
-    fl_safe_free( return_name );
+    fli_safe_free( return_name );
 
     if ( ret == -1 )
         return ff_err( "Invalid value for \"return\" key" );
@@ -1467,12 +1467,12 @@ skip_spec_info( char * key )
 
     do
     {
-        fl_safe_free( key );
+        fli_safe_free( key );
 
         if ( ff_read( "%s", &rest ) < 0 )
             return ff_err( "Failed to read from file" );
 
-        fl_safe_free( rest );
+        fli_safe_free( rest );
 
         if ( ( r = ff_read( "%k", &key ) ) < 0 )
             return ff_err( "Failed to read from file" );
@@ -1483,12 +1483,12 @@ skip_spec_info( char * key )
 
     if (  ! strcmp( key, "Name" ) )
     {
-        fl_safe_free( key );
+        fli_safe_free( key );
         return FF_AT_START_OF_FORM;
     }
     else if ( ! strcmp( key, "class" ) )
     {
-        fl_safe_free( key );
+        fli_safe_free( key );
         return FF_AT_START_OF_OBJECT;
     }
 
@@ -1499,7 +1499,7 @@ skip_spec_info( char * key )
     else
     {
         fli_sstrcpy( main_name, p, MAX_VAR_LEN );
-        fl_safe_free( p );
+        fli_safe_free( p );
     }
 
     return FF_AT_END_OF_FILE;
@@ -1530,7 +1530,7 @@ load_objclass_spec_info( FL_OBJECT * obj,
         for ( i = 0; i < sizeof attr_array / sizeof *attr_array; i++ )
             if ( ! strcmp( key, attr_array[ i ].name ) )
             {
-                fl_safe_free( key );
+                fli_safe_free( key );
 
                 if ( attr_array[ i ].func( obj, sp ) == FF_READ_FAILURE )
                     return FF_READ_FAILURE;
@@ -1544,13 +1544,13 @@ load_objclass_spec_info( FL_OBJECT * obj,
             char *tmp = fli_print_to_string( "Read invalid object specific "
                                              "key \"%s\"", key );
 
-            fl_safe_free( key );
+            fli_safe_free( key );
             ff_err( tmp );
-            fl_safe_free( tmp );
+            fli_safe_free( tmp );
             return FF_READ_FAILURE;
         }
 
-        fl_safe_free( key );
+        fli_safe_free( key );
 
         if ( ( r = ff_read( "%k", &key ) ) < 0 )
             return ff_err( "Failed to read from file" );
@@ -1572,7 +1572,7 @@ load_objclass_spec_info( FL_OBJECT * obj,
         else
         {
             fli_sstrcpy( main_name, p, MAX_VAR_LEN );
-            fl_safe_free( p );
+            fli_safe_free( p );
         }
 
         return FF_AT_END_OF_FILE;
@@ -1582,13 +1582,13 @@ load_objclass_spec_info( FL_OBJECT * obj,
 
     if ( ! strcmp( key, "class" ) )
     {
-        fl_safe_free( key );
+        fli_safe_free( key );
         return FF_AT_START_OF_OBJECT;
     }
 
     /* ...or start of new form */
 
-    fl_safe_free( key );
+    fli_safe_free( key );
     return FF_AT_START_OF_FORM;
 }
 

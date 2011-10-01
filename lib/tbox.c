@@ -163,7 +163,7 @@ fli_tbox_delete_line( FL_OBJECT * obj,
 
     /* Deallocate memory for the text of the line to delete */
 
-    fl_safe_free( sp->lines[ line ]->fulltext );
+    fli_safe_free( sp->lines[ line ]->fulltext );
 
     /* Get rid of memory for the structure */
 
@@ -629,7 +629,7 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
     tl->text = tl->fulltext + ( old_text - old_fulltext );
     tl->len = new_len;
 
-    fl_safe_free( old_fulltext );
+    fli_safe_free( old_fulltext );
 
     /* Text of a separator line never gets shown */
 
@@ -728,11 +728,11 @@ fli_tbox_clear( FL_OBJECT * obj )
             XFreeGC( flx->display, sp->lines[ i ]->specialGC );
             sp->lines[ i ]->specialGC = None;
         }
-        fl_safe_free( sp->lines[ i ]->fulltext );
-        fl_safe_free( sp->lines[ i ] );
+        fli_safe_free( sp->lines[ i ]->fulltext );
+        fli_safe_free( sp->lines[ i ] );
     }
 
-    fl_safe_free( sp->lines );
+    fli_safe_free( sp->lines );
 
     sp->num_lines  = 0;
     sp->max_width  = 0;
@@ -781,7 +781,7 @@ fli_tbox_load( FL_OBJECT  * obj,
         fl_free( text );
     }
 
-    fl_safe_free( text );
+    fli_safe_free( text );
 
     fclose( fp );
 
@@ -1601,11 +1601,11 @@ free_tbox_spec( FL_OBJECT * obj )
         if ( sp->lines[ i ]->specialGC )
             XFreeGC( flx->display, sp->lines[ i ]->specialGC );
 
-        fl_safe_free( sp->lines[ i ]->fulltext );
-        fl_safe_free( sp->lines[ i ] );
+        fli_safe_free( sp->lines[ i ]->fulltext );
+        fli_safe_free( sp->lines[ i ] );
     }
 
-    fl_safe_free( sp->lines );
+    fli_safe_free( sp->lines );
 
     if ( sp->defaultGC )
         XFreeGC( flx->display, sp->defaultGC );
@@ -1622,7 +1622,7 @@ free_tbox_spec( FL_OBJECT * obj )
     if ( sp->bw_selectGC )
         XFreeGC( flx->display, sp->bw_selectGC );
 
-    fl_safe_free( obj->spec );
+    fli_safe_free( obj->spec );
 }
 
 

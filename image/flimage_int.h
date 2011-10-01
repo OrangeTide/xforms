@@ -29,6 +29,14 @@
 
 #include "ulib.h"
 
+#define fli_safe_free( p )   do {                   \
+                                 if ( p )           \
+                                 {                  \
+                                     fl_free( p );  \
+                                     p = NULL;      \
+                                 }                  \
+                             } while( 0 )
+
 typedef struct flimageIO {
     const char          * formal_name;
     const char          * short_name;

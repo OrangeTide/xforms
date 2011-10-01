@@ -113,7 +113,7 @@ typedef struct {
 
 #define IsValidClass( o, c ) ( ( o ) && ( o )->objclass == ( c ) )
 
-#define fl_safe_free( p )    \
+#define fli_safe_free( p )   \
     do { if ( p ) {          \
              fl_free( p );   \
              p = NULL;       \

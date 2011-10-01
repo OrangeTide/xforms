@@ -1321,9 +1321,9 @@ fli_release_symbols( void )
     size_t i;
 
     for ( i = 0; i < nsymbols; i++ )
-        fl_safe_free( symbols[ i ].name );
+        fli_safe_free( symbols[ i ].name );
         
-    fl_safe_free( symbols );
+    fli_safe_free( symbols );
     nsymbols = 0;
 }
 

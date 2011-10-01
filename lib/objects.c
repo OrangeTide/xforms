@@ -579,14 +579,14 @@ fl_free_object( FL_OBJECT * obj )
 
     /* Finally free all other memory we allocated for the object */
 
-    fl_safe_free( obj->label );
-    fl_safe_free( obj->tooltip );
-    fl_safe_free( obj->shortcut );
+    fli_safe_free( obj->label );
+    fli_safe_free( obj->tooltip );
+    fli_safe_free( obj->shortcut );
 
     if ( obj->flpixmap )
     {
         fli_free_flpixmap( obj->flpixmap ) ;
-        fl_safe_free( obj->flpixmap );
+        fli_safe_free( obj->flpixmap );
     }
 
     fl_free( obj );
@@ -3488,7 +3488,7 @@ fl_set_object_helper( FL_OBJECT  * obj,
         return;
     }
 
-    fl_safe_free( obj->tooltip );
+    fli_safe_free( obj->tooltip );
     obj->tooltip = tip ? fl_strdup( tip ) : NULL;
 }
 
