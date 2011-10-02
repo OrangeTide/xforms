@@ -22,8 +22,6 @@
  *  This file is part of the XForms library package.
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
- *
- *   clocks
  */
 
 #ifdef HAVE_CONFIG_H
@@ -175,7 +173,7 @@ draw_clock( int      type  FL_UNUSED_ARG,
     w -= 4;
     h -= 4;
 
-    /* draw hour ticks */
+    /* Draw hour ticks */
 
     f2 = 0.40 * h;
     f3 = 0.44 * h;
@@ -195,10 +193,6 @@ draw_clock( int      type  FL_UNUSED_ARG,
     show_hands( x + 2 + 0.02 * w, y + 2 + 0.02 * h,
                 w, h, FL_RIGHT_BCOL, FL_RIGHT_BCOL );
     show_hands( x, y, w, h, col2, FL_LEFT_BCOL );
-
-#if FL_DEBUG >= ML_DEBUG
-    M_info( "draw_clock", "done" );
-#endif
 }
 
 
@@ -268,6 +262,7 @@ handle_clock( FL_OBJECT * ob,
 
             sp->nstep = 0;
             ticks = time( 0 ) + sp->offset;
+
             if ( ticks != sp->sec )
             {
                 updating   = 1;
@@ -378,13 +373,13 @@ fl_get_clock( FL_OBJECT * ob,
 
 void
 fl_set_clock_ampm( FL_OBJECT * ob,
-                   int         y )
+                   int         am_pm )
 {
     SPEC *sp = ob->spec;
 
-    if ( sp->am_pm != y )
+    if ( sp->am_pm != am_pm )
     {
-        sp->am_pm = y;
+        sp->am_pm = am_pm;
         fl_redraw_object( ob );
     }
 }

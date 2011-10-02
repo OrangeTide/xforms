@@ -1,3 +1,8 @@
+2011-10-01 Jens Thoms Toerring    <jt@toerring.de>
+
+	* Bits of code cleanup in preparation for new pre-release
+	and removal of a bug introduced a few commits earlier.
+
 2011-09-28 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/xyplot.c: memory leak in fl_set_xyplot_alphatic()

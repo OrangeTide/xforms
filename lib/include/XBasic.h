@@ -164,13 +164,14 @@ struct FL_pixmap_ {
 
 /* Fonts related */
 
-#define FL_MAX_FONTSIZES   10
+#define FL_MAX_FONTSIZES         10
+#define FL_MAX_FONTNAME_LENGTH   80
 
 typedef struct {
-    XFontStruct * fs[ FL_MAX_FONTSIZES ];     /* cached fontstruct */
-    short         size[ FL_MAX_FONTSIZES ];   /* cached sizes */
-    short         nsize;                      /* cached so far */
-    char          fname[ 80 ];                /* without size info */
+    XFontStruct * fs[ FL_MAX_FONTSIZES ];               /* cached fontstruct */
+    short         size[ FL_MAX_FONTSIZES ];             /* cached sizes */
+    short         nsize;                                /* cached so far */
+    char          fname[ FL_MAX_FONTNAME_LENGTH + 1 ];  /* without size info */
 } FL_FONT;
 
 /* Some basic drawing routines */
@@ -393,9 +394,9 @@ FL_EXPORT void fl_raise_form( FL_FORM * form );
 FL_EXPORT void fl_lower_form( FL_FORM * form );
 
 FL_EXPORT void fl_set_foreground( GC       gc,
-								  FL_COLOR color );
+                                  FL_COLOR color );
 FL_EXPORT void fl_set_background( GC       gc,
-								  FL_COLOR color );
+                                  FL_COLOR color );
 
 /* General windowing support */
 

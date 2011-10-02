@@ -1538,11 +1538,14 @@ static void
 add_idle_callback( FL_APPEVENT_CB   cb,
                    void           * data )
 {
-    if ( ! fli_context->idle_rec )
+    if ( ! cb )
     {
-        fli_context->idle_rec = fl_malloc( sizeof *fli_context->io_rec );
-        fli_context->idle_rec->next = NULL;
+        fli_safe_free( fli_context->idle_rec );
+        return;
     }
+
+    if ( ! fli_context->idle_rec )
+        fli_context->idle_rec = fl_malloc( sizeof *fli_context->idle_rec );
 
     fli_context->idle_rec->callback = cb;
     fli_context->idle_rec->data = data;

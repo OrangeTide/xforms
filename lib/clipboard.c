@@ -44,30 +44,13 @@ typedef struct {
                            size;
     FL_LOSE_SELECTION_CB   lose_callback;
     FL_SELECTION_CB        got_it_callback;
-
-    /* the following are not used */
-
-    void                 * losecb_data;
-    void                 * gotitcb_data;
 } ClipBoard;
 
-static ClipBoard clipboard,
-                 *cp;
+static ClipBoard clipboard;
 
 int ( * fli_handle_clipboard )( void * ) = NULL; /* also needed in handling.c */
 
 static int handle_clipboard_event( void * );
-
-
-/***************************************
- ***************************************/
-
-static int
-noop_lose_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
-                    long        type  FL_UNUSED_ARG )
-{
-    return 0;
-}
 
 
 /***************************************
@@ -81,9 +64,9 @@ fl_stuff_clipboard( FL_OBJECT            * ob,
                     FL_LOSE_SELECTION_CB   lose_callback )
 {
     Window win = FL_ObjWin( ob );
+    ClipBoard *cp = &clipboard;
 
     fli_handle_clipboard = handle_clipboard_event;
-    cp = &clipboard;
 
     if ( ! win )
     {
@@ -93,7 +76,7 @@ fl_stuff_clipboard( FL_OBJECT            * ob,
 
     XSetSelectionOwner( flx->display, XA_PRIMARY, win, CurrentTime );
 
-    /* make sure we got it */
+    /* Make sure we got it */
 
     if ( XGetSelectionOwner( flx->display, XA_PRIMARY ) != win )
     {
@@ -101,15 +84,14 @@ fl_stuff_clipboard( FL_OBJECT            * ob,
         return 0;
     }
 
-    /* create structure that holds clipboard info */
+    /* Create structure that holds clipboard info */
 
-    cp->window = win;
-    cp->ob = ob;
-    cp->size = size;
+    cp->window        = win;
+    cp->ob            = ob;
+    cp->size          = size;
+    cp->lose_callback = lose_callback ? lose_callback : NULL;
 
-    cp->lose_callback = lose_callback ? lose_callback : noop_lose_callback;
-
-    /* cheap (and fast!) shot */
+    /* Cheap (and fast!) shot */
 
     XStoreBuffer( flx->display, data, size, 0 );
     return size;
@@ -128,11 +110,17 @@ fl_request_clipboard( FL_OBJECT       * ob,
                       FL_SELECTION_CB   got_it_callback )
 {
     Window win;
+    ClipBoard *cp = &clipboard;
     void *buf;
     int nb = 0;
 
-    cp = &clipboard;
     cp->req_ob = ob;
+
+    if ( got_it_callback == NULL )
+    {
+        M_warn( "fl_request_clipboard", "Callback is NULL" );
+        return -1;
+    }
 
     if ( ! clipboard_prop )
     {
@@ -141,7 +129,7 @@ fl_request_clipboard( FL_OBJECT       * ob,
     }
 
     cp->got_it_callback = got_it_callback;
-    cp->req_window = FL_ObjWin( ob );
+    cp->req_window      = FL_ObjWin( ob );
 
     win = XGetSelectionOwner( flx->display, XA_PRIMARY );
 
@@ -169,7 +157,7 @@ fl_request_clipboard( FL_OBJECT       * ob,
     }
     else if ( win == cp->req_window )
     {
-        /* we own the buffer */
+        /* We own the buffer */
 
         buf = XFetchBuffer( flx->display, &nb, 0 );
         cp->got_it_callback( cp->req_ob, XA_STRING, buf, nb );
@@ -190,19 +178,18 @@ handle_clipboard_event( void * event )
     XSelectionRequestEvent *sreq = event;
     XEvent *xev = event;
     XSelectionEvent sev;
+    ClipBoard *cp = &clipboard;
     char *s;
     int n;
 
-    /* SelectionClear confirms loss of selection */
-    /* SelectionRequest indicates that another app wants to own selection */
-    /* SelectionNotify confirms that request of selection is ok */
+    /* SelectionClear confirms loss of selection
+       SelectionRequest indicates that another app wants to own selection
+       SelectionNotify confirms that request of selection is ok */
 
     if ( ! targets_prop )
         targets_prop = XInternAtom( flx->display, "TARGETS", False );
     if ( ! clipboard_prop )
         clipboard_prop = XInternAtom( flx->display, "FL_CLIPBOARD", False );
-
-    cp = &clipboard;
 
     if ( ! cp->req_window && ! cp->window )
     {
@@ -212,9 +199,9 @@ handle_clipboard_event( void * event )
 
     if ( xev->type == SelectionClear )
     {
-        if ( cp->ob )
+        if ( cp->ob && cp->lose_callback )
             cp->lose_callback( cp->ob, cp->type );
-        cp->ob = NULL;
+        cp->ob     = NULL;
         cp->window = None;
     }
     else if ( xev->type == SelectionNotify && cp->req_ob )
@@ -227,7 +214,7 @@ handle_clipboard_event( void * event )
                       ret_after;
         unsigned char *ret = NULL;
 
-        /* X gurantees 16K request size */
+        /* X guarantees 16K request size */
 
         long chunksize = fli_context->max_request_size,
              offset = 0;

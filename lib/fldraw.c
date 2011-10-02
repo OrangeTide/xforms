@@ -107,12 +107,7 @@ fl_rectbound( FL_Coord x,
 
 #define MAX_RADIUS  18
 
-/*    0.0, 0.034074, 0.1339746, 0.292893, 0.5, 0.741181, 1.0 */
-
-static double offset[ ] =
-{
-    0.0, 0.07612, 0.29289, 0.61732, 1.0
-};
+static double offset[ ] = { 0.0, 0.07612, 0.29289, 0.61732, 1.0 };
 
 #define RN     ( sizeof offset / sizeof *offset )
 
@@ -188,7 +183,7 @@ fl_roundrectangle( int      fill,
 }
 
 
-#define Shrink( x, y, w, h, d )  \
+#define SHRINK( x, y, w, h, d )  \
     do { x += ( d );             \
          y += ( d );             \
          w -= 2 * ( d );         \
@@ -213,7 +208,7 @@ fl_rounded3dbox( int      style,
     int n = 4 * RN,
         olw;
 
-    Shrink( x, y, w, h, ( int ) ( lw / 2 ) );
+    SHRINK( x, y, w, h, ( int ) ( lw / 2 ) );
 
     compute_round_corners( x, y, w, h, point );
     fl_polyf( point, n, col );
@@ -270,7 +265,7 @@ fl_oval3dbox( int      style,
         ww,
         hh;
 
-    Shrink( x, y, w, h, ( int ) ( absbw / 2 ) );
+    SHRINK( x, y, w, h, ( int ) ( absbw / 2 ) );
     fl_pieslice( 1, x, y, w, h, 0, 3600, col );
 
     xx = x + extra;
@@ -326,9 +321,9 @@ fl_oval3dbox( int      style,
 }
 
 
-#define SetPoint( v, xp, yp )  \
-    do { ( v )->x = xp;        \
-         ( v )->y = yp;        \
+#define SET_POINT( v, xp, yp )  \
+    do { ( v )->x = xp;         \
+         ( v )->y = yp;         \
     } while ( 0 )
 
 
@@ -388,18 +383,18 @@ fl_drw_box( int      style,
             fl_rectf( x + B, y + B, w - 1 - B, bw, FL_TOP_BCOL );
             fl_rectf( x + B, y + h - bw - B, w - 1 - B, bw, FL_BOTTOM_BCOL );
 
-            SetPoint( vert,     x + w - B - bw, y + bw + B     );
-            SetPoint( vert + 1, x + w - B - bw, y + h - B - bw );
-            SetPoint( vert + 2, x + w - B,      y + h - B      );
-            SetPoint( vert + 3, x + w - B,      y + B          );
+            SET_POINT( vert,     x + w - B - bw, y + bw + B     );
+            SET_POINT( vert + 1, x + w - B - bw, y + h - B - bw );
+            SET_POINT( vert + 2, x + w - B,      y + h - B      );
+            SET_POINT( vert + 3, x + w - B,      y + B          );
             fl_polyf( vert, 4, FL_RIGHT_BCOL );
 
             /* left trapzoidal */
 
-            SetPoint( vert,     x + B,      y + B          );
-            SetPoint( vert + 1, x + B,      y + h - B      );
-            SetPoint( vert + 2, x + bw + B, y + h - bw - B );
-            SetPoint( vert + 3, x + bw + B, y + bw + B     );
+            SET_POINT( vert,     x + B,      y + B          );
+            SET_POINT( vert + 1, x + B,      y + h - B      );
+            SET_POINT( vert + 2, x + bw + B, y + h - bw - B );
+            SET_POINT( vert + 3, x + bw + B, y + bw + B     );
             fl_polyf( vert, 4, FL_LEFT_BCOL );
 
             if ( B || fli_dithered( fl_vmode ) )
@@ -411,9 +406,9 @@ fl_drw_box( int      style,
             {
                 if ( bw > 2 )
                 {
-                    SetPoint( vert,     x + B,          y + B  );
-                    SetPoint( vert + 1, x + B + bw - 1, y + bw );
-                    SetPoint( vert + 2, x + w - bw,     y + bw );
+                    SET_POINT( vert,     x + B,          y + B  );
+                    SET_POINT( vert + 1, x + B + bw - 1, y + bw );
+                    SET_POINT( vert + 2, x + w - bw,     y + bw );
                     fl_lines( vert, 3, FL_BLACK );
                     fl_simple_line( x + B + bw - 1, y + B + bw, x + B + bw - 1,
                                     y + h - bw, FL_BLACK );
@@ -430,27 +425,27 @@ fl_drw_box( int      style,
 
             /* right trapzoid */
 
-            SetPoint( vert,     x + w - bw, y + bw     );
-            SetPoint( vert + 1, x + w - bw, y + h - bw );
-            SetPoint( vert + 2, x + w - dp, y + h      );
-            SetPoint( vert + 3, x + w - dp, y          );
+            SET_POINT( vert,     x + w - bw, y + bw     );
+            SET_POINT( vert + 1, x + w - bw, y + h - bw );
+            SET_POINT( vert + 2, x + w - dp, y + h      );
+            SET_POINT( vert + 3, x + w - dp, y          );
             fl_polyf( vert, 4, FL_LEFT_BCOL );
 
             /* left trapzoid */
 
-            SetPoint( vert,     x,      y          );
-            SetPoint( vert + 1, x,      y + h - 1  );
-            SetPoint( vert + 2, x + bw, y + h - bw );
-            SetPoint( vert + 3, x + bw, y + bw     );
+            SET_POINT( vert,     x,      y          );
+            SET_POINT( vert + 1, x,      y + h - 1  );
+            SET_POINT( vert + 2, x + bw, y + h - bw );
+            SET_POINT( vert + 3, x + bw, y + bw     );
             fl_polyf( vert, 4, FL_RIGHT_BCOL );
 
             /* special hack for B&W */
 
             if ( fli_dithered( fl_vmode ) )
             {
-                SetPoint( vert,     x + B,     y + h - 1 );
-                SetPoint( vert + 1, x + w - 1, y + h - 1 );
-                SetPoint( vert + 2, x + w - 1, y + B     );
+                SET_POINT( vert,     x + B,     y + h - 1 );
+                SET_POINT( vert + 1, x + w - 1, y + h - 1 );
+                SET_POINT( vert + 2, x + w - 1, y + B     );
                 fl_lines( vert, 3, FL_BLACK );
             }
             break;
@@ -576,14 +571,14 @@ fl_drw_checkbox( int      type,
 
     /* generate all points */
 
-    SetPoint( allp,     x + halfw, y         );
-    SetPoint( allp + 1, x,         y + halfh );
-    SetPoint( allp + 2, x + halfw, y + h     );
-    SetPoint( allp + 3, x + w,     y + halfh );
-    SetPoint( allp + 4, x + halfw,  y + bw     );
-    SetPoint( allp + 5, x + bw,     y + halfh  );
-    SetPoint( allp + 6, x + halfw,  y + h - bw );
-    SetPoint( allp + 7, x + w - bw, y + halfh  );
+    SET_POINT( allp,     x + halfw, y         );
+    SET_POINT( allp + 1, x,         y + halfh );
+    SET_POINT( allp + 2, x + halfw, y + h     );
+    SET_POINT( allp + 3, x + w,     y + halfh );
+    SET_POINT( allp + 4, x + halfw,  y + bw     );
+    SET_POINT( allp + 5, x + bw,     y + halfh  );
+    SET_POINT( allp + 6, x + halfw,  y + h - bw );
+    SET_POINT( allp + 7, x + w - bw, y + halfh  );
 
     /* draw overall box */
 
@@ -600,7 +595,7 @@ fl_drw_checkbox( int      type,
         xpoint[ 0 ] = allp[ 0 ];
         xpoint[ 1 ] = allp[ 4 ];
         xpoint[ 2 ] = allp[ 7 ];
-        SetPoint( xpoint + 3, allp[ 3 ].x, allp[ 3 ].y );
+        SET_POINT( xpoint + 3, allp[ 3 ].x, allp[ 3 ].y );
         fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_TOP_BCOL : FL_BOTTOM_BCOL );
 
         xpoint[ 0 ] = allp[ 6 ];
@@ -669,18 +664,18 @@ fl_drw_frame( int      style,
             fl_rectf( x + B, y + B, w - 1 - B, bw, FL_TOP_BCOL );
             fl_rectf( x + B, y + h - bw - B, w - 1 - B, bw, FL_BOTTOM_BCOL );
 
-            SetPoint( vert,     x + w - B - bw, y + bw + B     );
-            SetPoint( vert + 1, x + w - B - bw, y + h - B - bw );
-            SetPoint( vert + 2, x + w - B,      y + h - B      );
-            SetPoint( vert + 3, x + w - B,      y + B          );
+            SET_POINT( vert,     x + w - B - bw, y + bw + B     );
+            SET_POINT( vert + 1, x + w - B - bw, y + h - B - bw );
+            SET_POINT( vert + 2, x + w - B,      y + h - B      );
+            SET_POINT( vert + 3, x + w - B,      y + B          );
             fl_polyf( vert, 4, FL_RIGHT_BCOL );
 
             /* left trapzoidal */
 
-            SetPoint( vert,     x + B,      y + B          );
-            SetPoint( vert + 1, x + B,      y + h - B      );
-            SetPoint( vert + 2, x + bw + B, y + h - bw - B );
-            SetPoint( vert + 3, x + bw + B, y + bw + B     );
+            SET_POINT( vert,     x + B,      y + B          );
+            SET_POINT( vert + 1, x + B,      y + h - B      );
+            SET_POINT( vert + 2, x + bw + B, y + h - bw - B );
+            SET_POINT( vert + 3, x + bw + B, y + bw + B     );
             fl_polyf( vert, 4, FL_LEFT_BCOL );
 
             if ( B || fli_dithered( fl_vmode ) )
@@ -692,9 +687,9 @@ fl_drw_frame( int      style,
             {
                 if ( bw > 2 )
                 {
-                    SetPoint( vert,     x + B,          y + B  );
-                    SetPoint( vert + 1, x + B + bw - 1, y + bw );
-                    SetPoint( vert + 2, x + w - bw,     y + bw );
+                    SET_POINT( vert,     x + B,          y + B  );
+                    SET_POINT( vert + 1, x + B + bw - 1, y + bw );
+                    SET_POINT( vert + 2, x + w - bw,     y + bw );
                     fl_lines( vert, 3, FL_BLACK );
                     fl_simple_line( x + B + bw - 1, y + B + bw,
                                     x + B + bw - 1, y + h - bw, FL_BLACK );
@@ -717,27 +712,27 @@ fl_drw_frame( int      style,
 
             /* right trapzoid */
 
-            SetPoint( vert,     x + w - bw, y + bw     );
-            SetPoint( vert + 1, x + w - bw, y + h - bw );
-            SetPoint( vert + 2, x + w - dp, y + h      );
-            SetPoint( vert + 3, x + w - dp, y          );
+            SET_POINT( vert,     x + w - bw, y + bw     );
+            SET_POINT( vert + 1, x + w - bw, y + h - bw );
+            SET_POINT( vert + 2, x + w - dp, y + h      );
+            SET_POINT( vert + 3, x + w - dp, y          );
             fl_polyf( vert, 4, FL_LEFT_BCOL );
 
             /* left trapzoid */
 
-            SetPoint( vert,     x,      y          );
-            SetPoint( vert + 1, x,      y + h - 1  );
-            SetPoint( vert + 2, x + bw, y + h - bw );
-            SetPoint( vert + 3, x + bw, y + bw     );
+            SET_POINT( vert,     x,      y          );
+            SET_POINT( vert + 1, x,      y + h - 1  );
+            SET_POINT( vert + 2, x + bw, y + h - bw );
+            SET_POINT( vert + 3, x + bw, y + bw     );
             fl_polyf( vert, 4, FL_RIGHT_BCOL );
 
             /* special hack for B&W */
 
             if ( fli_dithered( fl_vmode ) )
             {
-                SetPoint( vert,     x + B,     y + h - 1 );
-                SetPoint( vert + 1, x + w - 1, y + h - 1 );
-                SetPoint( vert + 2, x + w - 1, y + B     );
+                SET_POINT( vert,     x + B,     y + h - 1 );
+                SET_POINT( vert + 1, x + w - 1, y + h - 1 );
+                SET_POINT( vert + 2, x + w - 1, y + B     );
                 fl_lines( vert, 3, FL_BLACK );
             }
             break;
@@ -939,7 +934,7 @@ fl_foldertab_box( int      style,
         bw = h / 2 - 1;
 
     ctr = absbw / 2;
-    Shrink( x, y, w, h, ctr );
+    SHRINK( x, y, w, h, ctr );
 
     right = x + w - 1;
     bott = y + h - 1;
@@ -947,14 +942,14 @@ fl_foldertab_box( int      style,
     switch ( style )
     {
         case FL_TOPTAB_UPBOX:
-            SetPoint( vert,     x,             y + h - ( ctr == 0 ) );
-            SetPoint( vert + 1, x,             y + C - 1            );
-            SetPoint( vert + 2, x + C - 1,     y                    );
-            SetPoint( vert + 3, right - C,     y                    );
-            SetPoint( vert + 4, x + C - 1,     y                    );
-            SetPoint( vert + 5, right - C + 1, y                    );
-            SetPoint( vert + 6, right,         y + C - 1            );
-            SetPoint( vert + 7, right,         y + h - ( ctr == 0 ) );
+            SET_POINT( vert,     x,             y + h - ( ctr == 0 ) );
+            SET_POINT( vert + 1, x,             y + C - 1            );
+            SET_POINT( vert + 2, x + C - 1,     y                    );
+            SET_POINT( vert + 3, right - C,     y                    );
+            SET_POINT( vert + 4, x + C - 1,     y                    );
+            SET_POINT( vert + 5, right - C + 1, y                    );
+            SET_POINT( vert + 6, right,         y + C - 1            );
+            SET_POINT( vert + 7, right,         y + h - ( ctr == 0 ) );
             fl_polyf( vert, 8, c );
 
             fl_set_linewidth( absbw );
@@ -1000,14 +995,14 @@ fl_foldertab_box( int      style,
             break;
 
         case FL_SELECTED_TOPTAB_UPBOX:
-            SetPoint( vert,     x,             bott + absbw + 3 );
-            SetPoint( vert + 1, x,             y + C - 1        );
-            SetPoint( vert + 2, x + C - 1,     y                );
-            SetPoint( vert + 3, right - C,     y                );
-            SetPoint( vert + 4, x + C - 1,     y                );
-            SetPoint( vert + 5, right - C + 1, y                );
-            SetPoint( vert + 6, right,         y + C - 1        );
-            SetPoint( vert + 7, right,         bott + absbw + 3 );
+            SET_POINT( vert,     x,             bott + absbw + 3 );
+            SET_POINT( vert + 1, x,             y + C - 1        );
+            SET_POINT( vert + 2, x + C - 1,     y                );
+            SET_POINT( vert + 3, right - C,     y                );
+            SET_POINT( vert + 4, x + C - 1,     y                );
+            SET_POINT( vert + 5, right - C + 1, y                );
+            SET_POINT( vert + 6, right,         y + C - 1        );
+            SET_POINT( vert + 7, right,         bott + absbw + 3 );
             fl_polyf( vert, 8, c );
 
             fl_set_linewidth( absbw );
@@ -1036,14 +1031,14 @@ fl_foldertab_box( int      style,
             break;
 
         case FL_BOTTOMTAB_UPBOX:
-            SetPoint( vert,     x,         y + ( ctr == 0 ) );
-            SetPoint( vert + 1, x,         bott - C + 1     );
-            SetPoint( vert + 2, x + C - 1, bott             );
-            SetPoint( vert + 3, x + C - 1, bott             );
-            SetPoint( vert + 4, right - C, bott             );
-            SetPoint( vert + 5, right - C, bott             );
-            SetPoint( vert + 6, right,     bott - C         );
-            SetPoint( vert + 7, right,     y + ( ctr == 0 ) );
+            SET_POINT( vert,     x,         y + ( ctr == 0 ) );
+            SET_POINT( vert + 1, x,         bott - C + 1     );
+            SET_POINT( vert + 2, x + C - 1, bott             );
+            SET_POINT( vert + 3, x + C - 1, bott             );
+            SET_POINT( vert + 4, right - C, bott             );
+            SET_POINT( vert + 5, right - C, bott             );
+            SET_POINT( vert + 6, right,     bott - C         );
+            SET_POINT( vert + 7, right,     y + ( ctr == 0 ) );
             fl_polyf( vert, 8, c );
 
             fl_linewidth( absbw );
@@ -1069,14 +1064,14 @@ fl_foldertab_box( int      style,
             break;
 
         case FL_SELECTED_BOTTOMTAB_UPBOX:
-            SetPoint( vert,     x,         y - absbw - 1 );
-            SetPoint( vert + 1, x,         bott - C + 1  );
-            SetPoint( vert + 2, x + C - 1, bott          );
-            SetPoint( vert + 3, x + C - 1, bott          );
-            SetPoint( vert + 4, right - C, bott          );
-            SetPoint( vert + 5, right - C, bott          );
-            SetPoint( vert + 6, right,     bott - C + 1  );
-            SetPoint( vert + 7, right,    y - absbw - 1 );
+            SET_POINT( vert,     x,         y - absbw - 1 );
+            SET_POINT( vert + 1, x,         bott - C + 1  );
+            SET_POINT( vert + 2, x + C - 1, bott          );
+            SET_POINT( vert + 3, x + C - 1, bott          );
+            SET_POINT( vert + 4, right - C, bott          );
+            SET_POINT( vert + 5, right - C, bott          );
+            SET_POINT( vert + 6, right,     bott - C + 1  );
+            SET_POINT( vert + 7, right,    y - absbw - 1 );
             fl_polyf( vert, 8, c );
 
             fl_linewidth( absbw );
@@ -1139,13 +1134,13 @@ fli_drw_tbox( int      style,
     switch ( style )
     {
         case FLI_TRIANGLE_UPBOX8:
-            SetPoint( vert,     xc,         y + bw     );
-            SetPoint( vert + 1, x + bw,     y + h - bw );
-            SetPoint( vert + 2, x + w - bw, y + h - bw );
+            SET_POINT( vert,     xc,         y + bw     );
+            SET_POINT( vert + 1, x + bw,     y + h - bw );
+            SET_POINT( vert + 2, x + w - bw, y + h - bw );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             xc = x + w / 2;
             fl_line( xc, y,         x,         y + h - 1, FL_LEFT_BCOL   );
             fl_line( x,  y + h - 1, x + w - 1, y + h - 1, FL_BOTTOM_BCOL );
@@ -1154,13 +1149,13 @@ fli_drw_tbox( int      style,
             break;
 
         case FLI_TRIANGLE_DOWNBOX8:
-            SetPoint( vert,     xc,         y + bw     );
-            SetPoint( vert + 1, x + bw,     y + h - bw );
-            SetPoint( vert + 2, x + w - bw, y + h - bw );
+            SET_POINT( vert,     xc,         y + bw     );
+            SET_POINT( vert + 1, x + bw,     y + h - bw );
+            SET_POINT( vert + 2, x + w - bw, y + h - bw );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             xc = x + w / 2;
             fl_line( xc, y,         x,         y + h - 1, FL_BOTTOM_BCOL );
             fl_line( x,  y + h - 1, x + w - 1, y + h - 1, FL_TOP_BCOL    );
@@ -1169,13 +1164,13 @@ fli_drw_tbox( int      style,
             break;
 
         case FLI_TRIANGLE_UPBOX2:
-            SetPoint( vert,     xc,         y + h - bw );
-            SetPoint( vert + 1, x + bw,     y + bw     );
-            SetPoint( vert + 2, x + w - bw, y + bw     );
+            SET_POINT( vert,     xc,         y + h - bw );
+            SET_POINT( vert + 1, x + bw,     y + bw     );
+            SET_POINT( vert + 2, x + w - bw, y + bw     );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             xc = x + w / 2;
             fl_line( xc, y + h - 1, x, y, FL_LEFT_BCOL );
             fl_line( x, y, x + w - 1, y, FL_TOP_BCOL );
@@ -1184,13 +1179,13 @@ fli_drw_tbox( int      style,
             break;
 
         case FLI_TRIANGLE_DOWNBOX2:
-            SetPoint( vert,     xc,         y + h - bw );
-            SetPoint( vert + 1, x + bw,     y + bw     );
-            SetPoint( vert + 2, x + w - bw, y + bw     );
+            SET_POINT( vert,     xc,         y + h - bw );
+            SET_POINT( vert + 1, x + bw,     y + bw     );
+            SET_POINT( vert + 2, x + w - bw, y + bw     );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             xc = x + w / 2;
             fl_line( xc, y + h - 1, x, y, FL_BOTTOM_BCOL );
             fl_line( x, y, x + w - 1, y, FL_BOTTOM_BCOL );
@@ -1199,13 +1194,13 @@ fli_drw_tbox( int      style,
             break;
 
         case FLI_TRIANGLE_UPBOX4:
-            SetPoint( vert,     x + bw, yc );
-            SetPoint( vert + 1, x + w - bw, y + bw     );
-            SetPoint( vert + 2, x + w - bw, y + h - bw );
+            SET_POINT( vert,     x + bw, yc );
+            SET_POINT( vert + 1, x + w - bw, y + bw     );
+            SET_POINT( vert + 2, x + w - bw, y + h - bw );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             yc = y + h / 2;
             fl_line( x, yc, x + w - 1, y, FL_TOP_BCOL );
             fl_line( x + w - 1, y, x + w - 1, y + h - 1, FL_RIGHT_BCOL );
@@ -1214,13 +1209,13 @@ fli_drw_tbox( int      style,
             break;
 
         case FLI_TRIANGLE_DOWNBOX4:
-            SetPoint( vert,     x + bw,     yc         );
-            SetPoint( vert + 1, x + w - bw, y + bw     );
-            SetPoint( vert + 2, x + w - bw, y + h - bw );
+            SET_POINT( vert,     x + bw,     yc         );
+            SET_POINT( vert + 1, x + w - bw, y + bw     );
+            SET_POINT( vert + 2, x + w - bw, y + h - bw );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             yc = y + h / 2;
             fl_line( x, yc, x + w - 1, y, FL_BOTTOM_BCOL );
             fl_line( x + w - 1, y, x + w - 1, y + h - 1, FL_LEFT_BCOL );
@@ -1229,13 +1224,13 @@ fli_drw_tbox( int      style,
             break;
 
         case FLI_TRIANGLE_UPBOX6:
-            SetPoint( vert,     x + bw,     y + bw     );
-            SetPoint( vert + 1, x + w - bw, yc         );
-            SetPoint( vert + 2, x + bw,     y + h - bw );
+            SET_POINT( vert,     x + bw,     y + bw     );
+            SET_POINT( vert + 1, x + w - bw, yc         );
+            SET_POINT( vert + 2, x + bw,     y + h - bw );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             yc = y + h / 2;
             fl_line( x, y, x + w - 1, yc, FL_RIGHT_BCOL );
             fl_line( x + w - 1, yc, x, y + h - 1, FL_BOTTOM_BCOL );
@@ -1244,13 +1239,13 @@ fli_drw_tbox( int      style,
             break;
 
         case FLI_TRIANGLE_DOWNBOX6:
-            SetPoint( vert,     x + bw,     y + bw     );
-            SetPoint( vert + 1, x + w - bw, yc         );
-            SetPoint( vert + 2, x + bw,     y + h - bw );
+            SET_POINT( vert,     x + bw,     y + bw     );
+            SET_POINT( vert + 1, x + w - bw, yc         );
+            SET_POINT( vert + 2, x + bw,     y + h - bw );
             fl_polyf( vert, 3, c );
 
             fl_linewidth( bw );
-            Shrink( x, y, w, h, halfbw );
+            SHRINK( x, y, w, h, halfbw );
             yc = y + h / 2;
             fl_line( x, y, x + w - 1, yc, FL_LEFT_BCOL );
             fl_line( x + w - 1, yc, x, y + h - 1, FL_TOP_BCOL );

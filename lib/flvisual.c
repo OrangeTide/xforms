@@ -23,8 +23,6 @@
  *  Copyright (c) 1996-2002  T.C. Zhao and Mark Overmars
  *  All rights reserved.
  *
- * Visual
- *
  *  XForm will by default use the visual that has the most depth
  */
 
@@ -48,10 +46,10 @@
 
 static int max_server_depth;
 
+
 /********************************************************************
  * Setup the most appropriate visual for FORMS
  ****************************************************************{***/
-
 
 /***************************************
  * Get the conversion factors from RGB->pixel in TrueColor and

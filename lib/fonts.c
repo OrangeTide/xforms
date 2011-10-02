@@ -203,13 +203,19 @@ fl_set_font_name( int          n,
 
     if ( n < 0 || n >= FL_MAXFONTS )
     {
-        M_warn( "fl_set_font_name", "bad font number (%d)", n );
+        M_warn( "fl_set_font_name", "Bad font number (%d)", n );
         return -1;
     }
 
     if ( ! name )
     {
-        M_warn( "fl_set_font_name", "bad font name" );
+        M_warn( "fl_set_font_name", "Bad font name" );
+        return -1;
+    }
+
+    if ( strlen( name ) > FL_MAX_FONTNAME_LENGTH )
+    {
+        M_warn( "fl_set_font_name", "Font name too long" );
         return -1;
     }
 

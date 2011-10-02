@@ -25,7 +25,7 @@
  *
  *  Handle input other than the X event queue. Mostly maintanance
  *  here. Actual input/output handling is triggered in the main loop
- *  via fli_watch_io.
+ *  via fli_watch_io().
  */
 
 #ifdef HAVE_CONFIG_H
@@ -56,6 +56,9 @@
 static fd_set st_rfds,
               st_wfds,
               st_efds;
+
+static void add_to_freelist( FLI_IO_REC * io );
+static void clear_freelist( void );
 
 
 /***************************************
@@ -136,12 +139,12 @@ fl_remove_io_callback( int            fd,
                        FL_IO_CALLBACK cb )
 {
     FLI_IO_REC *io,
-               *last;
+               *previous_io = NULL;
 
-    for ( last = io = fli_context->io_rec;
+    for ( io = fli_context->io_rec;
           io && ! ( io->source == fd && io->callback == cb && io->mask & mask );
-          last = io, io = io->next )
-        /* empty */ ;
+          io = io->next )
+        previous_io = io;
 
     if ( ! io )
     {
@@ -149,19 +152,28 @@ fl_remove_io_callback( int            fd,
         return;
     }
 
-    io->mask &= ~mask;
+    /* If after removal the fd isn't to be checked anymore (i.e. mask == 0)
+       remove it from global record */
 
-    /* Special case: if after removal fd does not do anything
-       anymore, i.e. mask == 0, remove it from global record */
-
-    if ( io->mask == 0 )
+    if ( ! ( io->mask &= ~ mask ) )
     {
-        if ( io == fli_context->io_rec )
-            fli_context->io_rec = io->next;
+        if ( previous_io )
+            previous_io->next = io->next;
         else
-            last->next = io->next;
+            fli_context->io_rec = io->next;
 
-        fl_free( io );
+        /* Caution: the following may look idiotic at first: simply getting
+           rid of the structure for the callback would seem to be appropriate.
+           But things get interesting if the callback gets removed from within
+           the callback - then just removing it gets us into trouble since
+           then fli_watch_io(), iterating over all IO callbacks still tries to
+           to access the 'next' field and if the structure has been
+           deallocated completely (instead of having been temporarily moved
+           to somewhere else where it still can be accessed) stumbles badly.
+           That's also why fli_watch_io() calls clear_freelist() - it's the
+           only instance that knows when the structure isn't needed anymore. */
+
+        add_to_freelist( io );
     }
 
     collect_fd( );
@@ -183,6 +195,8 @@ fli_watch_io( FLI_IO_REC * io_rec,
     FLI_IO_REC *p;
     int nf;
 
+    clear_freelist( );
+
     if ( ! io_rec )
     {
         if ( msec > 0 )
@@ -194,7 +208,7 @@ fli_watch_io( FLI_IO_REC * io_rec,
     timeout.tv_usec = 1000 * ( msec % 1000 );
     timeout.tv_sec  = msec / 1000;
 
-    /* initialize the sets */
+    /* Initialize the sets */
 
     rfds = st_rfds;
     wfds = st_wfds;
@@ -218,7 +232,7 @@ fli_watch_io( FLI_IO_REC * io_rec,
         return;
     }
 
-    /* Timeout kicked in */
+    /* Timeout expired */
 
     if ( nf == 0 )
         return;
@@ -239,6 +253,8 @@ fli_watch_io( FLI_IO_REC * io_rec,
         if ( p->mask & FL_EXCEPT && FD_ISSET( p->source, &efds ) )
             p->callback( p->source, p->data );
     }
+
+    clear_freelist( );
 }
 
 
@@ -255,6 +271,46 @@ fli_is_watched_io( int fd )
             return 1;
 
     return 0;
+}
+
+
+/***************************************
+ ***************************************/
+
+static struct free_list
+{
+    struct free_list * next;
+    FLI_IO_REC       * io;
+} *fl = NULL;
+
+static void
+add_to_freelist( FLI_IO_REC * io )
+{
+    struct free_list *cur;
+
+    cur = malloc( sizeof *cur );
+    cur->next = fl;
+    cur->io   = io;
+
+    fl = cur;
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+clear_freelist( void )
+{
+    struct free_list *cur;
+
+    while ( fl )
+    {
+        fl_free( fl->io );
+        cur = fl;
+        fl = fl->next;
+        fl_free( cur );
+    }
 }
 
 

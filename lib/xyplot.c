@@ -49,14 +49,6 @@
 #define YMAJOR       5
 #define YMINOR       2
 
-#define XRound( s )  (    ( s )->xtic > 0.0      \
-                       && ! *( s )->axtic        \
-                       && ( s )->xmajor > 1 )
-
-#define YRound( s )  (    ( s )->ytic > 0.0      \
-                       && ! *( s )->aytic        \
-                       && ( s )->ymajor > 1 )
-
 static float gen_tic( float,
                       float,
                       int, int );
@@ -401,7 +393,7 @@ mapw2s( FL_OBJECT * ob,
 
 
 /***************************************
- * If non-autoscaling some of the data might fall outside the range
+ * If not autoscaling some of the data might fall outside the range
  * desired, get rid of them so actual data that get plotted are bound
  * by (n1, n2)
  ***************************************/
@@ -510,9 +502,7 @@ draw_curve_only( FL_OBJECT * ob )
         fli_xyplot_compute_data_bounds( ob, &n1, &n2, nplot );
         sp->n1 = n1;
 
-        /* Convert data */
-
-        /* If interpolate, do it here */
+        /* Convert data. If interpolate is requested do it here */
 
         if (    sp->interpolate[ nplot ] > 1
              && n2 - n1 > 3
@@ -675,7 +665,7 @@ draw_curve_only( FL_OBJECT * ob )
         fl_linewidth( cur_lw = savelw );
     }
 
-    /* Finally we do extra text */
+    /* Finally we draw extra text */
 
     draw_inset( ob );
 
@@ -733,7 +723,9 @@ gen_xtic( FL_OBJECT * ob )
     xmin = mxmin = FL_min( sp->xscmin, sp->xscmax );
     xmax = mxmax = FL_max( sp->xscmin, sp->xscmax );
 
-    if ( XRound( sp ) )
+    if (    sp->xtic > 0.0      \
+         && ! *sp->axtic                    \
+         && sp->xmajor > 1 )
     {
         mxmin = floor( xmin / tic ) * tic;
         mxmax = ceil( xmax / tic ) * tic;
@@ -837,7 +829,9 @@ gen_ytic( FL_OBJECT * ob )
     mymin = ymin = FL_min( sp->yscmin, sp->yscmax );
     mymax = ymax = FL_max( sp->yscmin, sp->yscmax );
 
-    if ( YRound( sp ) )
+    if (    sp->ytic > 0.0      \
+         && ! *sp->aytic                     \
+         && sp->ymajor > 1 )
     {
         mymin = floor( ymin / tic ) * tic;
         mymax = ceil( ymax / tic ) * tic;
@@ -863,6 +857,7 @@ gen_ytic( FL_OBJECT * ob )
             sp->num_ymajor = j;
             sp->num_yminor = 1;
         }
+
         return;
     }
 
@@ -2344,8 +2339,7 @@ fl_set_xyplot_inspect( FL_OBJECT * ob,
 
     if ( ob->type != FL_ACTIVE_XYPLOT )
     {
-        /* Work-around, need to get doublebuffer to get inspect work
-           right */
+        /* Work-around, need to use doublebuffer to get inspect work right */
 
         fl_set_object_dblbuffer( ob, sp->active || sp->inspect );
         fl_redraw_object( ob );

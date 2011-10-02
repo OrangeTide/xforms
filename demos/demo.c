@@ -356,7 +356,6 @@ void
 doexit( FL_OBJECT * obj  FL_UNUSED_ARG,
         long        arg  FL_UNUSED_ARG )
 {
-    fl_hide_form( form );
     fl_finish( );
     exit( 0 );
 }
@@ -435,6 +434,7 @@ load_the_menu( const char * fname )
         cname[ j ] = '\0';
         addto_menu( mname, iname, cname );
     }
+
     fclose( fin );
     return 1;
 }

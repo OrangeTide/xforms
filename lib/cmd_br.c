@@ -114,7 +114,7 @@ check_for_activity( PIDList * cur )
 {
     XEvent xev;
 
-    /* we must read until the pipe is closed otherwise waitpid will hang */
+    /* We must read until the pipe is closed, otherwise waitpid will hang */
 
     do
     {
@@ -624,7 +624,7 @@ fl_end_command( FL_PID_T pid )
             *last;
     int pstat;
 
-    for ( last = 0, cur = pidlist;
+    for ( last = NULL, cur = pidlist;
           cur && cur->pid != pid;
           last = cur, cur = last->next )
         /* empty */ ;

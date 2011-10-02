@@ -466,11 +466,10 @@ extern int fli_initialize_program_visual( void );
 #define FLI_TIMER_RES           50  /* resolution of FL_STEP event */
 
 
-/* currently only one idle procedure is permitted, so the next
+/* Currently only one idle procedure is permitted, so the next
  * field is of no much use */
 
 typedef struct fli_idle_cb_ {
-    struct fli_idle_cb_ * next;
     FL_APPEVENT_CB        callback;
     void                * data;
 } FLI_IDLE_REC;
@@ -482,7 +481,6 @@ typedef struct fli_io_event_ {
     unsigned int           mask;
     int                    source;
 } FLI_IO_REC;
-
 
 
 /* signals */
@@ -529,7 +527,7 @@ typedef struct fli_context_ {
     FL_FORM_ATCLOSE      atclose;           /* what to do if WM_DELETE_WINDOW */
     void               * close_data;
     FLI_IDLE_REC       * idle_rec;          /* idle callback record   */
-    FLI_IO_REC         * io_rec;            /* async IO      record   */
+    FLI_IO_REC         * io_rec;            /* async IO record        */
     FLI_SIGNAL_REC     * signal_rec;        /* list of app signals    */
     FLI_TIMEOUT_REC    * timeout_rec;       /* timeout callbacks      */
     int                  idle_delta;        /* timer resolution       */
