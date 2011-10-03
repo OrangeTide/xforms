@@ -124,12 +124,10 @@ draw_triangle( int           fill,
 }
 
 
-static DrawFunc drawfunc[] =
-{
-    fl_oval,
-    fl_rectangle,
-    draw_triangle
-};
+static DrawFunc drawfunc[ ] = { fl_oval,
+                                fl_rectangle,
+                                draw_triangle
+                              };
 
 typedef struct
 {
@@ -372,8 +370,8 @@ create_form_drawfree( void )
     fl_set_object_lcol( obj, FL_YELLOW );
     fl_set_object_callback( obj, switch_object, 0 );
 
-    fdui->drobj[1] = obj = fl_add_button( FL_RADIO_BUTTON, 50, 60, 40, 40,
-                                          "@#square" );
+    fdui->drobj[ 1 ] = obj = fl_add_button( FL_RADIO_BUTTON, 50, 60, 40, 40,
+                                            "@#square" );
     fl_set_object_lcol( obj, FL_YELLOW );
     fl_set_object_callback( obj, switch_object, 1 );
 

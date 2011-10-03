@@ -160,7 +160,7 @@ create_form( void )
     tobj[ 3 ] = fl_add_chart(FL_BAR_CHART, 160, 110, 160, 110, "Chart");
 
     tobj[ 4 ] = fl_add_clock( FL_ANALOG_CLOCK, 40, 390, 90, 90, "Clock" );
-    fl_set_object_dblbuffer( tobj[4], 1 );
+    fl_set_object_dblbuffer( tobj[ 4 ], 1 );
 
     tobj[ 5 ] = fl_add_button( FL_NORMAL_BUTTON, 340, 110, 120, 30, "Button" );
 

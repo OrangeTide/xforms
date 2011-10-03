@@ -75,14 +75,12 @@ main( int    argc,
 }
 
 
-FL_PUP_ENTRY file_menu[] =
-{
-    { "_Open" },
-    { "Save" },
-    { "_Save As ..." },
-    { "Exit" },
-    { NULL }
-};
+FL_PUP_ENTRY file_menu[ ] = { { "_Open" },
+                              { "Save" },
+                              { "_Save As ..." },
+                              { "Exit" },
+                              { NULL }
+                            };
 
 
 /***************************************

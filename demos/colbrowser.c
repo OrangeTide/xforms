@@ -43,7 +43,7 @@ static FL_OBJECT *rescol,
                  *rs,
                  *gs,
                  *bs;
-char dbname[ FL_PATH_MAX] ;
+char dbname[ FL_PATH_MAX ] ;
 static void create_form_cl( void );
 static int load_browser( char * );
 

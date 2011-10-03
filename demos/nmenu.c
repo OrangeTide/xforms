@@ -141,21 +141,22 @@ create_form( void )
     obj = fl_add_box( FL_UP_BOX, 0, 0, 444, 29, "" );
     fl_set_object_color( obj, FL_COL1, FL_COL1 );
 
-    menu[0] = obj = fl_add_nmenu( FL_NORMAL_NMENU, 2, 2, 110, 25, "Color 1" );
+    menu[ 0 ] = obj = fl_add_nmenu( FL_NORMAL_NMENU, 2, 2, 110, 25, "Color 1" );
     fl_set_object_shortcut( obj, "1#1", 1 );
     fl_set_object_callback( obj, menu_cb, 0 );
 
-    menu[1] = obj = fl_add_nmenu( FL_NORMAL_TOUCH_NMENU, 112, 2, 110, 25,
-                                  "Color 2" );
+    menu[ 1 ] = obj = fl_add_nmenu( FL_NORMAL_TOUCH_NMENU, 112, 2, 110, 25,
+                                    "Color 2" );
     fl_set_object_shortcut( obj, "2#2", 1 );
     fl_set_object_callback( obj, menu_cb, 1 );
 
-    menu[2] = obj = fl_add_nmenu( FL_BUTTON_NMENU, 222, 2, 110, 25, "Color 3" );
+    menu[ 2 ] = obj = fl_add_nmenu( FL_BUTTON_NMENU, 222, 2, 110, 25,
+                                    "Color 3" );
     fl_set_object_shortcut( obj, "3#3", 1 );
     fl_set_object_callback( obj, menu_cb, 2 );
 
-    menu[3] = obj = fl_add_nmenu( FL_BUTTON_TOUCH_NMENU, 332, 2, 110, 25,
-                                  "Color 4" );
+    menu[ 3 ] = obj = fl_add_nmenu( FL_BUTTON_TOUCH_NMENU, 332, 2, 110, 25,
+                                    "Color 4" );
     fl_set_object_shortcut( obj, "4#4", 1 );
     fl_set_object_callback( obj, menu_cb, 3 );
 

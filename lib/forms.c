@@ -1042,7 +1042,7 @@ fl_prepare_form_window( FL_FORM    * form,
 
     if ( fl_current_form )
     {
-        M_err( "fl_prepare_form_window", "You forgot to call fl_end_form %s",
+        M_err( "fl_prepare_form_window", "You forgot to call fl_end_form() %s",
                name ? name : "" );
         fl_current_form = NULL;
     }

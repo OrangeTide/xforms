@@ -30,8 +30,6 @@
 #include "include/forms.h"
 #include <stdlib.h>
 
-extern void invert_it(FL_OBJECT *, long);
-
 typedef struct {
     FL_FORM   * inv;
     void      * vdata;
@@ -41,14 +39,15 @@ typedef struct {
     FL_OBJECT * done;
 } FD_inv;
 
-extern FD_inv *create_form_inv( void );
-
 FD_inv *ui;
+
+static FD_inv *create_form_inv( void );
+
 
 /***************************************
  ***************************************/
 
-void
+static void
 invert_it( FL_OBJECT * ob,
            long        data  FL_UNUSED_ARG )
 {
@@ -83,15 +82,16 @@ main( int    argc,
     while ( fl_do_forms( ) != ui->done )
         /* empty */ ;
 
+    fl_finish( );
+    fl_free( ui );
     return 0;
 }
 
 
 /***************************************
- * Form definition file generated with fdesign.
  ***************************************/
 
-FD_inv *
+static FD_inv *
 create_form_inv( void )
 {
     FL_OBJECT *obj;
@@ -101,11 +101,13 @@ create_form_inv( void )
 
     fl_add_box(FL_UP_BOX,0,0,245,280,"");
 
-    fdui->sl[0] = fl_add_valslider( FL_VERT_SLIDER, 20, 30, 35, 230, "" );
+    fdui->sl[ 0 ] = fl_add_valslider( FL_VERT_SLIDER, 20, 30, 35, 230, "" );
 
-    fdui->sl[1] = fl_add_valslider( FL_VERT_FILL_SLIDER, 65, 30, 35, 230, "" );
+    fdui->sl[ 1 ] = fl_add_valslider( FL_VERT_FILL_SLIDER, 65, 30, 35, 230,
+                                      "" );
 
-    fdui->sl[2] = obj = fl_add_valslider( FL_VERT_NICE_SLIDER, 115, 30, 35, 230,
+    fdui->sl[ 2 ] = obj = fl_add_valslider( FL_VERT_NICE_SLIDER,
+                                            115, 30, 35, 230,
                                           "" );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );
     fl_set_object_color( obj, FL_COL1, FL_BLUE );

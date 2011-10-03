@@ -709,7 +709,7 @@ main( int    argc,
 
 #if STUPID_WM
     vmode = fl_get_vclass( );
-    map = fl_create_colormap( fl_state[vmode].xvinfo, 30 );
+    map = fl_create_colormap( fl_state[ vmode ].xvinfo, 30 );
     fprintf( stderr, "map=0x%x\n", map );
     fl_set_canvas_colormap( fd_ibcanvas->canvas, map );
     fl_add_canvas_handler( fd_ibcanvas->canvas,

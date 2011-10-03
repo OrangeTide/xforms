@@ -108,7 +108,7 @@ resetlog_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 
 int
 main( int    argc,
-      char * argv[] )
+      char * argv[ ] )
 {
     fl_set_border_width( -2 );
 
