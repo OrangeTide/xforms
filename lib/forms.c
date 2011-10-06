@@ -811,7 +811,7 @@ fl_set_form_maxsize( FL_FORM * form,
 
 void
 fl_set_form_dblbuffer( FL_FORM * form,
-                       int       y )
+                       int       yesno )
 {
     if ( ! form )
     {
@@ -819,7 +819,7 @@ fl_set_form_dblbuffer( FL_FORM * form,
         return;
     }
 
-    form->use_pixmap = y;
+    form->use_pixmap = yesno;
 }
 
 

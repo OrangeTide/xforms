@@ -1,3 +1,9 @@
+2011-10-06 Jens Thoms Toerring    <jt@toerring.de>
+
+	* xyplot.c: Drawing bug when fl_set_xyplot_fixed_xaxis()
+	or fl_set_xyplot_fixed_yaxis() had been used and pointed
+	out by Alessandro Basili hopefully fixed.
+
 2011-10-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	* Bits of code cleanup in preparation for new pre-release

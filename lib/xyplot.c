@@ -1322,20 +1322,20 @@ convert_coord( FL_OBJECT       * ob,
 
     if ( sp->xmargin1 )
     {
-        extrax1 =   extrax2 = FL_abs( ob->bw ) + 1 + fl_get_linewidth( )
-                  + fl_get_string_width( sp->lstyle, sp->lsize, sp->xmargin1,
-                                         strlen( sp->xmargin1 ) );
+        extrax1 = extrax2 = FL_abs( ob->bw ) + 1 + fl_get_linewidth( );
+        extrax1 += fl_get_string_width( sp->lstyle, sp->lsize, sp->xmargin1,
+                                        strlen( sp->xmargin1 ) ) - 1;
         extrax2 += fl_get_string_width( sp->lstyle, sp->lsize, sp->xmargin2,
-                                        strlen( sp->xmargin2 ) );
+                                        strlen( sp->xmargin2 ) ) + 1;
     }
 
     if ( sp->ymargin1 )
     {
-        extray1 =   extray2 = FL_abs( ob->bw ) + 1
-                  + fl_get_string_width( sp->lstyle, sp->lsize, sp->ymargin1,
-                                         strlen( sp->ymargin1 ) );
+        extray1 = extray2 = FL_abs( ob->bw ) + 1;
+        extray1 += fl_get_string_width( sp->lstyle, sp->lsize, sp->ymargin1,
+                                        strlen( sp->ymargin1 ) ) - 1;
         extray2 += fl_get_string_width( sp->lstyle, sp->lsize, sp->ymargin2,
-                                        strlen( sp->ymargin2 ) );
+                                        strlen( sp->ymargin2 ) ) + 1;
     }
 
     sp->xi = ob->x + extrax1;

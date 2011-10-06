@@ -179,24 +179,24 @@ for all options. The following are the defaults:
 @item @code{-double}
 @tab
 @tab enables double buffering
-@tab false
+@tab true
 
-@item -bw @i{width}
+@item @code{-bw} @i{width}
 @tab int
 @tab changes border width
 @tab 1
 
-@item -rgamma @i{gamma}
+@item @code{-rgamma} @i{gamma}
 @tab float
 @tab specifies red gamma
 @tab 1.0
 
-@item -ggamma @i{gamma}
+@item @code{-ggamma} @i{gamma}
 @tab float
 @tab specifies green gamma
 @tab 1.0
 
-@item -bgamma @i{gamma}
+@item @code{-bgamma} @i{gamma}
 @tab float
 @tab specifies blue gamma
 @tab 1.0

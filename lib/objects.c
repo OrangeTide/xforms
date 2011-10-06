@@ -894,7 +894,7 @@ fl_set_object_dblbuffer( FL_OBJECT * obj,
         return;
     }
 
-    /* Never bother with composite object */
+    /* Never bother with composite objects */
 
     if ( obj->child || obj->parent )
         return;
