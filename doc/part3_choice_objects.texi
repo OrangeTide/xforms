@@ -58,10 +58,9 @@ look:
 Per default this type is drawn as a rounded, flat box (but you can
 change that by setting a different boxtype for the object) with the
 text of the currently selected item in its center.
-@tindex FL_MENU_SELECT
 
-@tindex MENU_SELECT
-@anchor{MENU_SELECT}
+@tindex FL_MENU_SELECT
+@anchor{FL_MENU_SELECT}
 @item FL_MENU_SELECT
 This select object looks like a button with a little extra box at its
 right side (just like a @code{FL_MENU_BUTTON}) and the text of the
