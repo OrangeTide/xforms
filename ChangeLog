@@ -1,3 +1,8 @@
+2011-12-06 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/flresource.c: Previous change that made double
+	buffering the default for forms reverted.
+
 2011-10-06 Jens Thoms Toerring    <jt@toerring.de>
 
 	* xyplot.c: Drawing bug when fl_set_xyplot_fixed_xaxis()

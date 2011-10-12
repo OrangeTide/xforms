@@ -107,14 +107,15 @@ Number of entries in the option list.
 
 The @code{@ref{fl_initialize()}} function builds the resource
 database, calls the Xlib @code{XrmParseCommand()} function to parse
-the command line arguments, and performs other per display
+the command line arguments and performs other per display
 initialization. After the creation of the database, it is associated
 with the display via @code{XrmSetDatabase()}, so the application can
 get at it if necessary.
 
 All recognized options are removed from the argument list and their
-corresponding values set. Forms Library provides appropriate defaults
-for all options. The following are the defaults:
+corresponding values set. The XForms library provides appropriate
+defaults for all options. The following are recognized by the
+library:
 @multitable @columnfractions 0.25 0.1 0.45 0.2
 @item @strong{Option}
 @tab @strong{Type}
@@ -123,27 +124,27 @@ for all options. The following are the defaults:
 
 @item @code{-fldebug} @i{level}
 @tab int
-@tab prints debug information
-@tab 0
+@tab Print debug information
+@tab 0 (off)
 
 @item @code{-name} @i{appname}
 @tab string
-@tab changes application name
+@tab Change application name
 @tab none
 
 @item @code{-flversion}
 @tab
-@tab prints the version of the library
+@tab Print version of the library
 @tab
 
 @item @code{-sync}
 @tab
-@tab requests synchronous mode(debug)
+@tab Synchronous X11 mode (debug)
 @tab false
 
 @item @code{-display} @i{host:dpy}
 @tab string
-@tab specifies remote host
+@tab Set (remote) host
 @tab @code{$DISPLAY}
 
 @item @code{-visual} @i{class}
@@ -153,52 +154,52 @@ for all options. The following are the defaults:
 
 @item @code{-depth} @i{depth}
 @tab int
-@tab specifies prefered visual depth
+@tab Set prefered visual depth
 @tab best
 
 @item @code{-vid} @i{id}
 @tab long
-@tab specifies prefered visual ID
-@tab
+@tab Set prefered visual ID
+@tab 0
 
 @item @code{-private}
 @tab
-@tab forces private colormap
+@tab Force use of private colormap
 @tab false
 
 @item @code{-shared}
 @tab
-@tab forces shared colormap
+@tab Force use of shared colormap
 @tab false
 
 @item @code{-stdcmap}
 @tab
-@tab forces standard colormap
+@tab Force use of standard colormap
 @tab false
 
 @item @code{-double}
 @tab
-@tab enables double buffering
-@tab true
+@tab Enable double buffering for forms
+@tab false
 
 @item @code{-bw} @i{width}
 @tab int
-@tab changes border width
+@tab Set object border width
 @tab 1
 
 @item @code{-rgamma} @i{gamma}
 @tab float
-@tab specifies red gamma
+@tab Set red gamma
 @tab 1.0
 
 @item @code{-ggamma} @i{gamma}
 @tab float
-@tab specifies green gamma
+@tab Set green gamma
 @tab 1.0
 
 @item @code{-bgamma} @i{gamma}
 @tab float
-@tab specifies blue gamma
+@tab Set blue gamma
 @tab 1.0
 @end multitable
 
@@ -223,9 +224,10 @@ matches @code{-ggamma} in the absence of @code{-ggamma}. Thus you
 should avoid using single character command line options.
 
 If the border width is set to a negative number, all objects appear to
-have a softer appearance. Some people might prefer @code{-bw -2}.
+have a softer appearance. Older version of the library used a larger
+default for the border width of 3.
 
-Depending on your application, XForms defaults may or may not be
+Depending on your application XForms defaults may or may not be
 appropriate. E.g., on machines capable of @w{24 bits} visuals, Forms
 Library always selects the deeper @w{24 bits} visual. If your
 application only uses a limited number of colors, it might

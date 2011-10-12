@@ -105,7 +105,7 @@ typedef char Iop[ 8 ];      /* Integer default */
 static Bop OpPrivateMap,
            OpSharedMap,
            OpStandardMap,
-           OpDouble = "true";
+           OpDouble;
 static Bop OpSync,
            OpULW = "1";
 static Iop OpDebug,

@@ -66,7 +66,7 @@ fli_set_form_window( FL_FORM * form )
 
 
 /***************************************
- * Function is kept at the moment only for backward compatibility
+ * Function is kept only for backward compatibility
  ***************************************/
 
 void
