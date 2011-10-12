@@ -59,13 +59,11 @@ void bw_cb( FL_OBJECT * ob,
     FD_buttform *fdui = ob->form->fdui;
 
     fl_freeze_form( ob->form );
+
     fl_set_object_bw( fdui->backface, bws[ n ] );
     fl_set_object_bw( fdui->objsgroup, bws[ n ] );
     fl_set_object_bw( fdui->done, bws[ n ] );
 
-    /* redrawing the backface wipes out the done button. Redraw it*/
-
-    fl_redraw_object( fdui->done );
     fl_unfreeze_form( ob->form );
 }
 

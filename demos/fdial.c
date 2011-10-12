@@ -111,8 +111,9 @@ main( int    argc,
         g =  fl_get_dial_value( green ) + 0.001;
         b =  fl_get_dial_value( blue  ) + 0.001;
 
+        fl_freeze_form( form );
+
         fl_mapcolor( FL_FREE_COL1, r, g, b );
-        fl_redraw_object( result );
 
         sprintf( str, "%d", r );
         fl_set_object_label( redtext, str );
@@ -120,6 +121,8 @@ main( int    argc,
         fl_set_object_label( greentext, str );
         sprintf( str, "%d", b );
         fl_set_object_label( bluetext, str );
+
+        fl_unfreeze_form( form );
 
         ret = fl_do_forms( );
     }  while ( ret != button );

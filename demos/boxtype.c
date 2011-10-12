@@ -101,7 +101,6 @@ boxtype_cb( FL_OBJECT * ob,
     if ( lastbt != req_bt )
     {
         fl_freeze_form( form );
-        fl_redraw_form( form );
         for ( i = 0; i < sizeof tobj / sizeof *tobj; i++ )
             fl_set_object_boxtype( tobj[ i ], btypes[ req_bt ].val );
         fl_unfreeze_form ( form );

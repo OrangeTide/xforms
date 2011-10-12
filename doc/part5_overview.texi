@@ -252,7 +252,7 @@ used to set other program defaults, such as label font size, unit of
 measure for form sizes etc.
 
 The following table lists the fields, masks and their meanings of
-@code{FL_IOPT}:
+@code{@ref{FL_IOPT}}:
 @multitable @columnfractions 0.25 0.3 0.45
 @headitem Structure
 @tab Mask Name
@@ -650,7 +650,8 @@ the object for this function to work.
 
 All colors with indices smaller than @code{FL_FREE_COL1} are used (or
 can potentially be used) by the Forms Library. If you wish they can be
-changed using the function prior to @code{@ref{fl_initialize()}}:
+changed using the following function prior to
+@code{@ref{fl_initialize()}}:
 @findex fl_set_icm_color()
 @anchor{fl_set_icm_color()}
 @example
@@ -780,9 +781,10 @@ void fl_free_object(FL_OBJECT *obj);
 @noindent
 If @code{@ref{fl_delete_object()}} hadn't been called for the object
 this will happen now. The object receives a final event of type
-@code{FL_FREEMEM} to allow it to free memory it did allocate and do
-whatever other clean-up required. Finally all memory allocated for the
-object is freed. After being freed an object should not be referenced.
+@code{@ref{FL_FREEMEM}} to allow it to free memory it did allocate and
+do whatever other clean-up required. Finally all memory allocated for
+the object is freed. After being freed an object should not be
+referenced.
 
 A form as a whole, together with all the objects it contains can be
 deleted by calling
@@ -1036,7 +1038,7 @@ void fl_set_tooltip_font(int style, int size);
 @end example
 @noindent
 where @code{boxtype} is the backface of the form that displays the
-text. The default is @code{FL_BORDER_BOX}. @code{textcolor} and
+text. The default is @code{@ref{FL_BORDER_BOX}}. @code{textcolor} and
 @code{background} specify the color of the text and the color of the
 backface. The defaults for these are @code{FL_BLACK} and
 @code{FL_YELLOW}. @code{style} and @code{size} are the font style and
@@ -1066,8 +1068,8 @@ void fl_get_object_gravity(FL_OBJECT *obj, unsigned int *NWgravity,
 on the resizing behaviour of objects.
 
 If you change many attributes of a single object or many objects in a
-visible form, the changed object is redrawn after each change. To
-avoid this, put the changes between calls of the two functions
+visible form the changed object is redrawn after each change. To
+avoid this put the changes between calls of the two functions
 @findex fl_freeze_form()
 @anchor{fl_freeze_form()}
 @findex fl_unfreeze_form()
@@ -1076,13 +1078,18 @@ avoid this, put the changes between calls of the two functions
 void fl_freeze_form(FL_FORM *form);
 void fl_unfreeze_form(FL_FORM *form);
 @end example
+@noindent
+The form is automatically redrawn once it is "unfrozen", so a call of
+@code{@ref{fl_redraw_form()}} isn't required (and, while the form is
+"frozen", calling this function as well as @code{@ref{fl_redraw_object()}}
+has no effects).
 
 There are also routines that influence the way events are dispatched.
 These routines are provided mainly to facilitate the development of
 (unusual) new objects where attributes need to be changed on the fly.
 These routines should not be used on the built-in ones.
 
-To enable or disable an object to receive the @code{FL_STEP} event,
+To enable or disable an object to receive the @code{@ref{FL_STEP}} event,
 use the following routine
 @findex fl_set_object_automatic()
 @anchor{fl_set_object_automatic()}
@@ -1090,15 +1097,15 @@ use the following routine
 void fl_set_object_automatic(FL_OBJECT *obj, int yes_no);
 @end example
 
-To determine if an object receives @code{FL_STEP} events use
+To determine if an object receives @code{@ref{FL_STEP}} events use
 @findex fl_object_is_automatic()
 @anchor{fl_object_is_automatic()}
 @example
 int fl_object_is_automatic(FL_OBJECT *obj);
 @end example
 
-To enable or disable an object to receive the FL_DBLCLICK event use
-the following routine
+To enable or disable an object to receive the @code{@ref{FL_DBLCLICK}}
+event use the following routine
 @findex fl_set_object_dblclick()
 @anchor{fl_set_object_dblclick()}
 @example
@@ -1154,13 +1161,13 @@ void fl_set_focus_object(FL_FORM *form, FL_OBJECT *obj);
 @end example
 @noindent
 sets the input focus in form @code{form} to object @code{obj}. Note
-however, if this routine is used as a response to an @code{FL_UNFOCUS}
-event, i.e., as an attempt to override the focus assignment by the
-main loop from within an objects event handler, this routine will not
-work as the main loop assigns a new focus object upon return from the
-object event handler, which undoes the focus change inside the event
-handler. To override the @code{FL_UNFOCUS} event the following routine
-should be used:
+however, if this routine is used as a response to an
+@code{@ref{FL_UNFOCUS}} event, i.e., as an attempt to override the
+focus assignment by the main loop from within an objects event
+handler, this routine will not work as the main loop assigns a new
+focus object upon return from the object event handler, which undoes
+the focus change inside the event handler. To override the
+@code{@ref{FL_UNFOCUS}} event the following routine should be used:
 @findex fl_reset_focus_object()
 @anchor{fl_reset_focus_object()}
 @example

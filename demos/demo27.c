@@ -64,6 +64,7 @@ color_callback( FL_OBJECT * obj  FL_UNUSED_ARG,
     r = 255 * fl_get_slider_value( redsl   );
     g = 255 * fl_get_slider_value( greensl );
     b = 255 * fl_get_slider_value( bluesl  );
+
     fl_mapcolor( FL_FREE_COL1, r, g, b );
     fl_redraw_object( colorobj );
 }

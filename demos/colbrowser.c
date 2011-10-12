@@ -45,17 +45,20 @@ static FL_OBJECT *rescol,
                  *bs;
 char dbname[ FL_PATH_MAX ] ;
 static void create_form_cl( void );
-static int load_browser( char * );
+static int load_browser( const char * );
 
 /* the RGB data file does not have a standard location on unix. */
 
 #ifdef __VMS
-  static char *rgbfile = "SYS$MANAGER:DECW$RGB.DAT";
+    static char *rgbfile = "SYS$MANAGER:DECW$RGB.DAT";
 #else
 #ifdef __EMX__   /* OS2 */
-  static char *rgbfile = "/XFree86/lib/X11/rgb.txt";
+    static char *rgbfile = "/XFree86/lib/X11/rgb.txt";
 #else
-  static char *rgbfile = "/usr/lib/X11/rgb.txt";
+	#include <sys/stat.h>
+
+    static char *rgbfile = "/usr/lib/X11/rgb.txt";
+    static char *rgbfile_2 = "/usr/share/X11/rgb.txt";
 #endif
 #endif
 
@@ -78,6 +81,15 @@ main( int    argc,
 
     create_form_cl( );
     strcpy( dbname, rgbfile );
+
+#if ! defined __EMX__ && ! defined __VMS
+    {
+        struct stat buf;
+
+        if ( stat( rgbfile, &buf ) == -1 )
+            strcpy( dbname, rgbfile_2 );
+    }
+#endif
 
     if ( load_browser( dbname ) )
         fl_set_object_label( dbobj, dbname );
@@ -108,7 +120,6 @@ set_entry( int i )
     fl_set_slider_value( rs, db->r );
     fl_set_slider_value( gs, db->g );
     fl_set_slider_value( bs, db->b );
-    fl_redraw_object( rescol );
     fl_unfreeze_form( cl );
 }
 
@@ -122,9 +133,8 @@ br_cb( FL_OBJECT * ob,
 {
     int r = fl_get_browser( ob );
 
-    if ( r <= 0 )
-        return;
-    set_entry( r - 1 );
+    if ( r > 0 )
+        set_entry( r - 1 );
 }
 
 
@@ -172,7 +182,7 @@ read_entry( FILE * fp,
  ***************************************/
 
 static int
-load_browser( char * fname )
+load_browser( const char * fname )
 {
     FILE *fp;
     RGBdb *db = rgbdb,
@@ -184,7 +194,7 @@ load_browser( char * fname )
         lg = -1,
         lb = -1;
     char name[ 256 ],
-        buf[ 256 ];
+         buf[ 256 ];
 
 #ifdef __EMX__
     extern char *__XOS2RedirRoot( const char * );
@@ -304,10 +314,9 @@ search_rgb( FL_OBJECT * ob  FL_UNUSED_ARG,
 
     fl_freeze_form( cl );
     fl_mapcolor( FL_FREE_COL4, r, g, b );
-    fl_redraw_object( rescol );
     i = search_entry( r, g, b );
 
-    /* change topline only if necessary */
+    /* Change topline only if necessary */
 
     if ( i < top || i > top + 15 )
         fl_set_browser_topline( colbr, i - 8 );
