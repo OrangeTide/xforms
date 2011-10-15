@@ -1551,10 +1551,10 @@ form by the window manager's decorations. Obviously, the above
 function can't be used for forms that are embedded into another form.
 
 The function
-@findex fl_form_is_isconified()
-@anchor{fl_form_is_isconified()}
+@findex fl_form_is_iconified()
+@anchor{fl_form_is_iconified()}
 @example
-int fl_form_is_isconified(FL_FORM *form);
+int fl_form_is_iconified(FL_FORM *form);
 @end example
 @noindent
 allows to test if the (visible) window of a form is in iconified
@@ -1616,8 +1616,8 @@ int fl_form_is_visible(FL_FORM *form)'
 @end example
 @noindent
 The function can return that the form is visible
-(@code{@ref{FL_VISIBLE}}), is invisible (@code{@code{FL_INSIBILE}}) or
-in the processing of becoming invisible
+(@code{@ref{FL_VISIBLE}}), is invisible (@code{@ref{FL_INVISIBLE}}) or
+is in the processing of becoming invisible
 (@code{@ref{FL_BEING_HIDDEN}}).
 
 The most important function for doing the actual interaction with forms

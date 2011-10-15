@@ -159,7 +159,7 @@ struct FL_pixmap_ {
     int            depth;
     FL_COLOR       dbl_background;
     FL_COLOR       pixel;
-};  /* typedef'ed to FL_pixmap in Basic.h */
+};
 
 
 /* Fonts related */
@@ -702,7 +702,7 @@ typedef struct {
     int    coordUnit;
     int    borderWidth;
     int    safe;
-    char * rgbfile;             /* where RGB file is     */
+    char * rgbfile;             /* where RGB file is, not used */
     char   vname[ 24 ];
 } FL_IOPT;
 

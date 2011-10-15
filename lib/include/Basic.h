@@ -712,7 +712,7 @@ struct FL_OBJECT_ {
     void             ( * set_return )( FL_OBJECT *,
                                        unsigned int );
 
-    /* re-configure preference */
+    /* Re-configure preference */
 
     unsigned int     resize;         /* what to do if WM resizes the FORM     */
     unsigned int     nwgravity;      /* how to re-position top-left corner    */
@@ -728,7 +728,7 @@ struct FL_OBJECT_ {
     FL_pixmap      * flpixmap;       /* pixmap double buffering stateinfo */
     int              use_pixmap;     /* true to use pixmap double buffering*/
 
-    /* some interaction flags */
+    /* Some interaction flags */
 
     int              returned;       /* what last interaction returned */
     unsigned int     how_return;     /* under which conditions to return */
@@ -755,28 +755,28 @@ struct FL_OBJECT_ {
     int              group_id;
     int              want_motion;
     int              want_update;
-}; /* typedef'ed to FL_OBJECT above */
+};
 
 
-/* callback function for an entire form */
+/* Callback function for an entire form */
 
 typedef void ( * FL_FORMCALLBACKPTR )( FL_OBJECT *,
                                        void * );
-/* object callback function      */
+/* Object callback function      */
 
 typedef void ( * FL_CALLBACKPTR )( FL_OBJECT *,
                                    long );
 
-/* preemptive callback function  */
+/* Preemptive callback function  */
 
 typedef int ( * FL_RAW_CALLBACK )( FL_FORM *,
                                    void * );
 
-/* at close (WM menu delete/close etc.) */
+/* At close (WM menu delete/close etc.) function */
 
 typedef int ( * FL_FORM_ATCLOSE )( FL_FORM *,
                                    void * );
-/* deactivate/activate callback */
+/* Deactivate/activate callback */
 
 typedef void ( * FL_FORM_ATDEACTIVATE )( FL_FORM *,
                                          void * );
@@ -790,7 +790,7 @@ typedef int ( * FL_HANDLEPTR )( FL_OBJECT *,
                                 int,
                                 void * );
 
-/* error callback */
+/* Error callback */
 
 typedef void ( * FL_ERROR_FUNC )( const char *,
                                   const char *,
@@ -800,7 +800,7 @@ FL_EXPORT FL_OBJECT *FL_EVENT;
 
 /*** FORM ****/
 
-/* form visibility state: form->visible */
+/* Form visibility state: form->visible */
 
 enum {
   FL_BEING_HIDDEN = -1,
@@ -858,7 +858,7 @@ struct FL_FORM_ {
     Pixmap                 icon_pixmap;
     Pixmap                 icon_mask;
 
-    /* interaction and other flags */
+    /* Interaction and other flags */
 
     int                    deactivated;      /* non-zero if deactivated */
     int                    use_pixmap;       /* true if dbl buffering */
@@ -876,7 +876,7 @@ struct FL_FORM_ {
     void                   ( * pre_attach )( FL_FORM * );
     void                 * attach_data;
     int                    no_tooltip;
-};  /* typedef'ed to FL_FORM above */
+};
 
 
 /* All FD_xxx structure emitted by fdesign contains at least the
@@ -927,7 +927,6 @@ FL_EXPORT void fl_signal_caught( int s );
 FL_EXPORT void fl_app_signal_direct( int y );
 
 
-
 enum {
 	FL_INPUT_END_EVENT_CLASSIC = 0,
 	FL_INPUT_END_EVENT_ALWAYS  = 1
@@ -936,7 +935,7 @@ enum {
 FL_EXPORT int fl_input_end_return_handling( int type );
 
 
-/* timeouts */
+/* Timeouts */
 
 typedef void (* FL_TIMEOUT_CALLBACK )( int, void * );
 
@@ -1256,7 +1255,7 @@ FL_EXPORT void fl_get_object_position( FL_OBJECT * ob,
                                        FL_Coord  * x,
                                        FL_Coord  * y );
 
-/* this one takes into account the label */
+/* This one takes into account the label */
 
 FL_EXPORT void fl_get_object_bbox( FL_OBJECT * obj,
                                    FL_Coord  * x,
@@ -1316,7 +1315,7 @@ FL_EXPORT int fl_set_font_name( int          n,
 FL_EXPORT void fl_set_font( int numb,
                             int size );
 
-/* routines that facilitate free object */
+/* Routines that facilitate free object */
 
 FL_EXPORT int fl_get_char_height( int   style,
                                   int   size,
@@ -1491,7 +1490,7 @@ FL_EXPORT void fl_show_errors( int y );
 typedef int ( * FL_FSCB )( const char *,
                            void * );
 
-/* utilities for new objects */
+/* Utilities for new objects */
 
 FL_EXPORT FL_FORM *fl_current_form;
 
@@ -1527,7 +1526,7 @@ FL_EXPORT int fl_get_coordunit( void );
 
 FL_EXPORT int fl_get_border_width( void );
 
-/* misc. routines */
+/* Misc. routines */
 
 FL_EXPORT void fl_ringbell( int percent );
 
@@ -1554,7 +1553,7 @@ FL_EXPORT char ** fl_get_cmdline_args( int * );
 
 #define fl_mousebutton fl_mouse_button
 
-/* these give more flexibility for future changes. Also application
+/* These give more flexibility for future changes. Also application
  * can re-assign these pointers to whatever function it wants, e.g.,
  * to a shared memory pool allocator. */
 

@@ -482,14 +482,8 @@ and @code{ccol} is the color of the cursor. To obtain the
 string in the field (when the user has changed it) use:
 @findex fl_get_input()
 @example
-[const] char *fl_get_input(FL_OBJECT *obj);
+const char *fl_get_input(FL_OBJECT *obj);
 @end example
-@noindent
-Notice the bracket around the qualifier const. This indicates although
-the function is not declared to return a pointer to const string, it
-should be used as one. This is done mainly for compilation on machines
-whose string library header is buggy. Modifying the string returned by
-this function can produce unpredictable results.
 
 See the program @file{demo06.c} for an example of the use of input
 fields.
@@ -697,6 +691,7 @@ substitution by the closest color will happen.
 @headitem Name
 @tab RGB triple
 @tindex FL_BLACK
+@anchor{FL_BLACK}
 @item @code{FL_BLACK}
 @tab @code{(  0,   0,   0)}
 @ifhtml
@@ -706,6 +701,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_BLACK,2cm,5mm}
 @end ifnothtml
 @tindex FL_WHITE
+@anchor{FL_WHITE}
 @item @code{FL_WHITE}
 @tab @code{(255, 255, 255)},
 @ifhtml
@@ -715,6 +711,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_WHITE,2cm,5mm}
 @end ifnothtml
 @tindex FL_COL1
+@anchor{FL_COL1}
 @item @code{FL_COL1}
 @tab @code{(173, 173, 173)}
 @ifhtml
@@ -724,6 +721,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_COL1,2cm,5mm}
 @end ifnothtml
 @tindex FL_BOTTOM_BCOL
+@anchor{FL_BOTTOM_BCOL}
 @item @code{FL_BOTTOM_BCOL}
 @tab @code{(  89,  89,  89)}
 @ifhtml
@@ -733,6 +731,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_BOTTOM_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_RIGHT_BCOL
+@anchor{FL_RIGHT_BCOL}
 @item @code{FL_RIGHT_BCOL}
 @tab @code{(  41,  41,  41)}
 @ifhtml
@@ -742,6 +741,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_RIGHT_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_MCOL
+@anchor{FL_MCOL}
 @item @code{FL_MCOL}
 @tab @code{(191, 191, 191)}
 @ifhtml
@@ -751,6 +751,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_MCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_LEFT_BCOL
+@anchor{FL_LEFT_BCOL}
 @item @code{FL_LEFT_BCOL}
 @tab @code{(222, 222, 222)}
 @ifhtml
@@ -760,6 +761,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_LEFT_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_LIGHTER_COL1
+@anchor{FL_LIGHTER_COL1}
 @item @code{FL_LIGHTER_COL1}
 @tab @code{(204, 204, 204)}
 @ifhtml
@@ -769,6 +771,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_LIGHTER_COL1,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKER_COL1
+@anchor{FL_DARKER_COL1}
 @item @code{FL_DARKER_COL1}
 @tab @code{(161, 161, 161)}
 @ifhtml
@@ -778,6 +781,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DARKER_COL1,2cm,5mm}
 @end ifnothtml
 @tindex FL_SLATEBLUE
+@anchor{FL_SLATEBLUE}
 @item @code{FL_SLATEBLUE}
 @tab @code{(113, 113, 198)}
 @ifhtml
@@ -787,6 +791,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_SLATEBLUE,2cm,5mm}
 @end ifnothtml
 @tindex FL_INDIANRED
+@anchor{FL_INDIANRED}
 @item @code{FL_INDIANRED}
 @tab @code{(198, 113, 113)}
 @ifhtml
@@ -796,6 +801,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_INDIANARED,2cm,5mm}
 @end ifnothtml
 @tindex FL_RED
+@anchor{FL_RED}
 @item @code{FL_RED}
 @tab @code{(255,   0,   0)}
 @ifhtml
@@ -805,6 +811,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_RED,2cm,5mm}
 @end ifnothtml
 @tindex FL_BLUE
+@anchor{FL_BLUE}
 @item @code{FL_BLUE}
 @tab @code{(  0,   0, 255)}
 @ifhtml
@@ -814,6 +821,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_BLUE,2cm,5mm}
 @end ifnothtml
 @tindex FL_GREEN
+@anchor{FL_GREEN}
 @item @code{FL_GREEN}
 @tab @code{(  0, 255,   0)}
 @ifhtml
@@ -823,6 +831,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_GREEN,2cm,5mm}
 @end ifnothtml
 @tindex FL_YELLOW
+@anchor{FL_YELLOW}
 @item @code{FL_YELLOW}
 @tab @code{(255, 255,   0)}
 @ifhtml
@@ -832,6 +841,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_YELLOW,2cm,5mm}
 @end ifnothtml
 @tindex FL_MAGENTA
+@anchor{FL_MAGENTA}
 @item @code{FL_MAGENTA}
 @tab @code{(255,   0, 255)}
 @ifhtml
@@ -841,6 +851,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_MAGENTA,2cm,5mm}
 @end ifnothtml
 @tindex FL_CYAN
+@anchor{FL_CYAN}
 @item @code{FL_CYAN}
 @tab @code{(  0, 255, 255)}
 @ifhtml
@@ -850,6 +861,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_CYAN,2cm,5mm}
 @end ifnothtml
 @tindex FL_TOMATO
+@anchor{FL_TOMATO}
 @item @code{FL_TOMATO}
 @tab @code{       255,  99,  71}
 @ifhtml
@@ -859,6 +871,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_TOMATO,2cm,5mm}
 @end ifnothtml
 @tindex FL_INACTIVE
+@anchor{FL_INACTIVE}
 @item @code{FL_INACTIVE}
 @tab @code{(110, 110, 110)}
 @ifhtml
@@ -868,6 +881,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_INACTIVE,2cm,5mm}
 @end ifnothtml
 @tindex FL_TOP_BCOL
+@anchor{FL_TOP_BCOL}
 @item @code{FL_TOP_BCOL}
 @tab @code{(204, 204, 204)}
 @ifhtml
@@ -877,6 +891,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_TOP_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_PALEGREEN
+@anchor{FL_PALEGREEN}
 @item @code{FL_PALEGREEN}
 @tab @code{(113, 198, 113)}
 @ifhtml
@@ -886,6 +901,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_PALEGREEN,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKGOLD
+@anchor{FL_DARKGOLD}
 @item @code{FL_DARKGOLD}
 @tab @code{(205, 149,  10)}
 @ifhtml
@@ -895,6 +911,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DARKGOLD,2cm,5mm}
 @end ifnothtml
 @tindex FL_ORCHID
+@anchor{FL_ORCHID}
 @item @code{FL_ORCHID}
 @tab @code{(205, 105, 201)}
 @ifhtml
@@ -904,6 +921,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_ORCHID,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKCYAN
+@anchor{FL_DARKCYAN}
 @item @code{FL_DARKCYAN}
 @tab @code{(40, 170, 175)}
 @ifhtml
@@ -913,6 +931,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DARKCYAN,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKTOMATO
+@anchor{FL_DARKTOMATO}
 @item @code{FL_DARKTOMATO}
 @tab @code{(139,  54,  38)}
 @ifhtml
@@ -922,6 +941,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DARKTOMATO,2cm,5mm}
 @end ifnothtml
 @tindex FL_WHEAT
+@anchor{FL_WHEAT}
 @item @code{FL_WHEAT}
 @tab @code{(255, 231, 155)}
 @ifhtml
@@ -931,6 +951,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_WHEAT,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKORANGE
+@anchor{FL_DARKORANGE}
 @item @code{FL_DARKORANGE}
 @tab @code{(255, 128,   0)}
 @ifhtml
@@ -940,6 +961,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DARKORANGE,2cm,5mm}
 @end ifnothtml
 @tindex FL_DEEPPINK
+@anchor{FL_DEEPPINK}
 @item @code{FL_DEEPPINK}
 @tab @code{(255,   0, 128)}
 @ifhtml
@@ -949,6 +971,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DARKPINK,2cm,5mm}
 @end ifnothtml
 @tindex FL_CHARTREUSE
+@anchor{FL_CHARTREUSE}
 @item @code{FL_CHARTREUSE}
 @tab @code{(128, 255,   0)}
 @ifhtml
@@ -958,6 +981,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_CHARTEUSE,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKVIOLET
+@anchor{FL_DARKVIOLET}
 @item @code{FL_DARKVIOLET}
 @tab @code{(128,   0, 255)}
 @ifhtml
@@ -967,6 +991,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DARKVIOLET,2cm,5mm}
 @end ifnothtml
 @tindex FL_SPRINGGREEN
+@anchor{FL_SPRINGGREEN}
 @item @code{FL_SPRINGGREEN}
 @tab @code{(  0, 255, 128)}
 @ifhtml
@@ -976,6 +1001,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_SPRINGGREEN,2cm,5mm}
 @end ifnothtml
 @tindex FL_DODGERBLUE
+@anchor{FL_DODGERBLUE}
 @item @code{FL_DODGERBLUE}
 @tab @code{(  0, 128, 255)}
 @ifhtml
@@ -985,6 +1011,7 @@ substitution by the closest color will happen.
 @tab @image{images/FL_DODGERBLUE,2cm,5mm}
 @end ifnothtml
 @tindex FL_FREE_COL1
+@anchor{FL_FREE_COL1}
 @item @code{FL_FREE_COL1}
 @tab @code{(  ?,   ?,   ?)}
 @end multitable
@@ -1006,8 +1033,8 @@ and as a matter of fact the Forms Library will always select TrueColor
 or DirectColor if the hardware is capable of it.
 
 The actual color is handled by an internal colormap of
-@anchor{FL_MAX_COLORS}
 @tindex FL_MAX_COLORS
+@anchor{FL_MAX_COLORS}
 @code{FL_MAX_COLORS} entries (default is 1024). To change or query the
 values of this internal colormap use the call
 @findex fl_set_icm_color()
@@ -1027,6 +1054,7 @@ made known to the X server by the initialization routine
 To change the colormap and make a color index active so that it can be
 used in various drawing routines after @code{@ref{fl_initialize()}}
 initialization, use the following function
+@findex fl_mapcolor()
 @example
 unsigned long fl_mapcolor(FL_COLOR i,
                           int red, int green, int blue);
@@ -1042,6 +1070,7 @@ Indices larger than 224 are reserved and should not be used.
 Sometimes it may be more convenient to associate an index with a
 colorname, e.g., "red" etc., which may have been obtained via resources.
 To this end, the following routine exists
+@findex fl_mapcolorname()
 @example
 long fl_mapcolorname(FL_COLOR i, const char *name);
 @end example
@@ -1051,6 +1080,7 @@ listed in a file named @file{rgb.txt} and usually resides in
 @file{/usr/lib/X11/}}. The function returns -1 if the colorname name is
 not resolved. You can obtain the RGB values of an index by using the
 following routine
+@findex fl_getmcolor()
 @example
 unsigned long fl_getmcolor(FL_COLOR i,
                            int *red, int *green, int *blue);
@@ -1069,6 +1099,7 @@ specified in the range of 0-255 inclusive.
 
 To free any colors that you no longer need, the following routine should
 be used
+@findex fl_free_colors()
 @example
 void fl_free_colors(FL_COLOR colors[], int ncolors);
 @end example
@@ -1080,6 +1111,8 @@ colormap overflow and some other undesirable behavior. Since there may
 still be some applications based on older versions of the Forms Library,
 a routine is provided to force the library to be compatible with the
 (buggy) behavior:
+@findex fl_set_color_leak()
+@anchor{fl_set_color_leak()}
 @example
 void fl_set_color_leak(int flag);
 @end example
@@ -1104,6 +1137,7 @@ shapes. For boxes it is determined by the type. For text it is normally
 not visible. For input fields it normally is a @code{FL_DOWN_BOX}, etc.
 The shape of the box can be changed using the routine
 @example
+@findex fl_set_object_boxtype()
 void fl_set_object_boxtype(FL_OBJECT *obj, int boxtype);
 @end example
 @noindent
@@ -1121,6 +1155,7 @@ on the different classes of objects.
 
 It is possible to alter the appearance of an object by changing the
 border width attribute
+@findex fl_set_object_bw()
 @example
 void fl_set_object_bw(FL_OBJECT *obj, int bw);
 @end example
@@ -1159,6 +1194,7 @@ the @samp{-bw} flag.
 
 There also exists a call that changes the object border width for the
 entire application
+@findex fl_set_border_width()
 @example
 void fl_set_border_width(int border_width);
 @end example
@@ -1169,13 +1205,14 @@ void fl_set_border_width(int border_width);
 
 There are also a number of routines to change the appearance of the
 label. The first one is
+@findex fl_set_object_lcol()
 @example
 void fl_set_object_lcol(FL_OBJECT *obj, FL_COLOR lcol);
 @end example
 @noindent
-It sets the color of the label. The default is black
-(@code{FL_BLACK}). The font size of the label
-can be changed using the routine
+It sets the color of the label. The default is black (@code{FL_BLACK}).
+The font size of the label can be changed using the routine
+@findex fl_set_object_lsize()
 @example
 void fl_set_object_lsize(FL_OBJECT *obj, int lsize);
 @end example
@@ -1224,6 +1261,7 @@ default size for XForms is 10pt.
 
 Labels can be drawn in many different font styles. The style of the
 label can be controlled with the routine
+@findex fl_set_object_lstyle()
 @example
 void fl_set_object_lstyle(FL_OBJECT *obj, int lstyle);
 @end example
@@ -1324,6 +1362,7 @@ The other 32 fonts (numbers 16-47) can be filled in by the application
 program. Actually, the application program can also change the first 16
 fonts if required (e.g., to force a particular resolution). To change a
 font for the the entire application, use the following routine:
+@findex fl_set_font_name()
 @example
 int fl_set_font_name(int index, const char *name);
 @end example
@@ -1367,6 +1406,8 @@ means that although both
 are valid font names, the first form may be re-scalable while the the
 second is not. To obtain the actual built-in font names, use the
 following function
+@findex fl_enumerate_fonts()
+@anchor{fl_enumerate_fonts()}
 @example
 int fl_enumerate_fonts(void (*cb)(const char *f), int shortform);
 @end example
@@ -1387,6 +1428,7 @@ available.
 
 You can change the alignment of the label with respect to the bounding
 box of the object. For this you use the routine
+@findex fl_set_object_lalign()
 @example
 void fl_set_object_lalign(FL_OBJECT *obj, int align);
 @end example
@@ -1482,6 +1524,10 @@ a 600 milli-second delay. A internal copy of the string is made.
 
 The boxtype, color and font for the message display can be customized
 further using the following routines
+@findex fl_set_tooltip_boxtype()
+@findex fl_set_tooltip_color()
+@findex fl_set_tooltip_font()
+@findex fl_set_tooltip_lalign()
 @example
 void fl_set_tooltip_boxtype(int boxtype);
 void fl_set_tooltip_color(FL_COLOR textcolor, FL_COLOR background);
@@ -1510,11 +1556,13 @@ the old one but this is not always the case. For example, when placing
 labels outside the box (not using @code{FL_ALIGN_CENTER}) they are not
 correctly erased. It is always possible to force the system to redraw an
 object using
+@findex fl_redraw_object()
 @example
 void fl_redraw_object(FL_OBJECT *obj);
 @end example
 When the object is a group it redraws the complete group. To redraw an
 entire form, use
+@findex fl_redraw_form()
 @example
 void fl_redraw_form(FL_FORM *form);
 @end example
@@ -1538,11 +1586,13 @@ being made. This can be done by "freezing" the form. While a form is
 being frozen it is not redrawn, all changes made are instead buffered
 internally. Only when you unfreeze the form, all changes made in the
 meantime are drawn at once. For freezing and unfreezing two calls exist:
+@findex fl_freeze_form()
 @example
 void fl_freeze_form(FL_FORM *form);
 @end example
 @noindent
 and
+@findex fl_unfreeze_form()
 @example
 void fl_unfreeze_form(FL_FORM *form);
 @end example
@@ -1697,6 +1747,7 @@ tasks.
 
 In some situations you might want to add an object to an existing form.
 This can be done using the call
+@findex fl_addto_form()
 @example
 FL_FORM *fl_addto_form(FL_FORM *form);
 @end example
@@ -1710,10 +1761,11 @@ not everything behaves well (e.g.@: strange things might happen when a
 group is started but not yet finished).
 
 To delete an object from a form simply use
+@findex fl_delete_object()
 @example
 void fl_delete_object(FL_OBJECT *obj);
 @end example
-
+@noindent
 It deletes the object from the form it currently belongs to and also
 from a group it may belong to. The argument can also be the
 pseudo-object starting a group (i.e.@: the return value of
@@ -1739,6 +1791,7 @@ the start or end of a group.
 
 If the application program does not need an object anymore, it can free
 the memory used by the object using the call
+@findex fl_free_object()
 @example
 void fl_free_object(FL_OBJECT *obj);
 @end example
@@ -1748,6 +1801,7 @@ object from the form it did belong to before this will happen
 automatically.
 
 To free the memory used by an entire form use the call
+@findex fl_free_form()
 @example
 void fl_free_form(FL_FORM *form);
 @end example

@@ -37,6 +37,7 @@
 #include "include/forms.h"
 #include "fd2ps.h"
 #include "global.h"
+#include <sys/stat.h>
 
 static int parse_command_line( int argc, char * argv[ ] );
 static void usage( const char *, int );
@@ -145,6 +146,7 @@ static void
 fd2ps_init( void )
 {
     char *env;
+    struct stat statbuf;
 
     psinfo.xdpi = psinfo.ydpi = 85;
     psinfo.paper_name = "Letter";
@@ -159,11 +161,15 @@ fd2ps_init( void )
     psinfo.pack = 1;
     psinfo.landscape = -1;  /* auto */
     psinfo.fp = stdout;
+
     psinfo.rgbfile = "/usr/lib/X11/rgb.txt";
+    if ( stat( psinfo.rgbfile, &statbuf ) < 0 )
+        psinfo.rgbfile = "/usr/share/X11/rgb.txt";
+
     psinfo.xpmtops_direct = 1;
     flps = &psinfo;
 
-    /* check if enviornment variable paper is defined */
+    /* Check if enviornment variable paper is defined */
 
     if ( ( env = getenv( "PAPER" ) ) )
     {

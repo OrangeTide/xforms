@@ -58,7 +58,6 @@ static char *fl_app_name,
 static void fli_init_resources( void );
 static void fli_set_debug_level( int );
 
-
 /* Command line options */
 
 static XrmOptionDescRec copt[ ] =
@@ -543,7 +542,7 @@ init_resource_database( const char *appclass )
     }
     else
     {
-        /* try ~/.Xdefaults   */
+        /* Try ~/.Xdefaults   */
 
         if ( ( rstr = getenv( "HOME" ) ) )
         {
@@ -557,7 +556,7 @@ init_resource_database( const char *appclass )
         }
     }
 
-    /* load file XENVIRONMENT */
+    /* Load file XENVIRONMENT */
 
     M_info( "init_resource_database",
             "Trying environment variable XEVIRONMENT" );
@@ -648,7 +647,7 @@ fl_get_resource( const char * rname,    /* resource name */
         fl_snprintf( res_class, sizeof res_class,"%s.%s", fl_app_class, cname );
 
     /* Just checking the return value of XrmGetResource() doesn't seem to
-       work (as it should, unless I completely mis-understand the man
+       work (as it should, unless I completely misunderstand the man
        page), and 'entry' seems to return the same data as on a previous
        call (despite the initialization!), but 'type' seems to get set to
        NULL in cases of failure to find the requested resource in the
@@ -931,7 +930,7 @@ fl_initialize( int        * na,
         return fl_display;
     }
 
-    /* be paranoid */
+    /* Be paranoid */
 
     if ( ! na || ! *na )
     {
@@ -942,11 +941,12 @@ fl_initialize( int        * na,
 
     /* Setting the locale was introduced in 0.89.5 (as far as I could figure
        out) but never was officially documented. Since it can break programs
-       when run in a different locale then the one the original author used
+       when run in a different locale than the one the original author used
        (e.g. because reading of files with scanf() may not work anymore when,
-       due to the locale setting a ',' instead of a '.' as the decimal point is
-       expected) I have thrown it out. Jean-Marc and Angus already planned to
-       do that back in 2004 but obviously never got around to doing it.  JTT */
+       due to the locale setting where ',' instead of a '.' as the decimal
+       point is expected) I have thrown it out. Jean-Marc and Angus already
+       planned to do that back in 2004 but obviously never got around to
+       doing it. */
 
 #if 0
     setlocale( LC_ALL, "" );
