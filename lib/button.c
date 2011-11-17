@@ -508,13 +508,13 @@ fl_create_generic_button( int          objclass,
         obj->how_return = FL_RETURN_CHANGED;
     }
 
-    sp = obj->spec  = fl_calloc( 1, sizeof *sp );
+    sp = obj->spec = fl_calloc( 1, sizeof *sp );
 
-    sp->event      = FL_DRAW;
-    sp->is_pushed  = 0;
-    sp->pixmap     = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
-    sp->cspecv     = NULL;
-    sp-> filename  = sp->focus_filename = NULL;
+    sp->event     = FL_DRAW;
+    sp->is_pushed = 0;
+    sp->pixmap    = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
+    sp->cspecv    = NULL;
+    sp-> filename = sp->focus_filename = NULL;
 
     /* Per default a button (unfortunately) reacts to all mouse buttons */
 
@@ -545,7 +545,7 @@ fl_set_button( FL_OBJECT * obj,
     if ( sp->val == pushed )
         return;
 
-    /* If this is a radio button to be show as switched on unset other
+    /* If this is a radio button to be shown as switched on unset other
        radio button in its group */
 
     if ( obj->type == FL_RADIO_BUTTON && pushed )
@@ -553,7 +553,7 @@ fl_set_button( FL_OBJECT * obj,
 
     /* Set new state and redraw the button */
 
-    sp->val = pushed;
+    sp->val = sp->is_pushed = pushed;
     fl_redraw_object( obj );
 }
 

@@ -3317,8 +3317,10 @@ fl_get_object_bbox( FL_OBJECT * obj,
     rect.width  = obj->w + 2 * extra;
     rect.height = obj->h + 2 * extra;
 
-    /* Label position (only check labels that aren't within the object,
-       if they extend beyond the limits of the object ) */
+    /* Include the label into the bounding box - but only for labels that are
+       not within the object. If "inside" labels extend beyond the limits of
+       the object things look ugly anyway and it doesn't seem to make much
+       sense to slow down the program or them. */
 
     if ( obj->label && *obj->label && ! ( obj->align & FL_ALIGN_INSIDE) )
     {
