@@ -581,7 +581,7 @@ handle_move( const XEvent * xev )
 
 
 /***************************************
- * We know how many pixles to move
+ * We know how many pixels to move
  ***************************************/
 
 void

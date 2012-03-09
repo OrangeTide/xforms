@@ -140,7 +140,7 @@ FL_Coord winw,
          winh;
 
 
-/* various options  of the program */
+/* Various options  of the program */
 
 FD_Opt fdopt;
 Conv convertor[ MAX_CONVERTOR + 1 ];
@@ -162,11 +162,11 @@ unsigned long fd_red,
               fd_black,
               fd_white,
               fd_col;
-Display *fd_display;
-int changed = 0;                /* Whether something has changed. */
-char main_name[ MAX_VAR_LEN ];  /* Name of the main calling routine */
-char *loadedfile;
-char *loadedfile_fullpath;
+Display * fd_display;
+int changed = FL_FALSE;             /* whether something has changed. */
+char main_name[ MAX_VAR_LEN ];      /* name of the main calling routine */
+char * loadedfile;
+char * loadedfile_fullpath;
 
 
 /***************************************
@@ -188,13 +188,6 @@ add_something( void )
         return;
     }
 
-    if ( cur_class == -1 )
-    {
-        fl_show_alert( "Warning", "Please select what object to add first",
-                       "", 0 );
-        return;
-    }
-
     fl_winset( main_window );
     get_mouse_pos( &xx, &yy );
     scale_box( &xx, &yy, &ww, &hh );
@@ -205,9 +198,9 @@ add_something( void )
     obj = add_an_object( cur_class, -1, xx, yy, ww, hh );
     clear_selection( );
     addto_selection( obj );
-    changed = 1;
+    changed = FL_TRUE;
 
-    /* reset current selection */
+    /* Reset the object type selection */
 
     fl_deselect_browser( fd_control->objectbrowser );
     reset_pallette( );
@@ -232,7 +225,8 @@ mainname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         strcpy( main_name, s );
     else
         strcpy( main_name, "create_the_forms" );
-    changed = 1;
+
+    changed = FL_TRUE;
 }
 
 
@@ -288,7 +282,7 @@ handle_click( XEvent * xev,
         return 0;
     }
 
-    if ( xev->xbutton.button == 1 && cur_class != -1 )
+    if ( xev->xbutton.button == 1 && cur_class >= 0 )
     {
         XEvent ev;
 
@@ -363,8 +357,8 @@ handle_keypress( const XKeyEvent * xev )
  * badly, can't use buttonpress callback
  ***************************************/
 
-void
-process_xevent( int no_add  FL_UNUSED_ARG )
+static void
+process_xevent( void )
 {
     XEvent xev;
 
@@ -398,7 +392,7 @@ main_loop( void )
     {
         obj = fl_do_forms( );
 
-        /* Check whether testing a form */
+        /* Check whether we're just testing a form */
 
         if ( thetestform != NULL && obj != FL_EVENT )
         {
@@ -413,7 +407,7 @@ main_loop( void )
         }
 
         if ( obj == FL_EVENT )
-            process_xevent( 0 );
+            process_xevent( );
     }
 }
 

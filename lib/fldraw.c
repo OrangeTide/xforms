@@ -569,18 +569,18 @@ fl_drw_checkbox( int      type,
     w = 2 * halfw;
     h = 2 * halfh;
 
-    /* generate all points */
+    /* Generate all points */
 
-    SET_POINT( allp,     x + halfw, y         );
-    SET_POINT( allp + 1, x,         y + halfh );
-    SET_POINT( allp + 2, x + halfw, y + h     );
-    SET_POINT( allp + 3, x + w,     y + halfh );
+    SET_POINT( allp,     x + halfw,  y          );
+    SET_POINT( allp + 1, x,          y + halfh  );
+    SET_POINT( allp + 2, x + halfw,  y + h      );
+    SET_POINT( allp + 3, x + w,      y + halfh  );
     SET_POINT( allp + 4, x + halfw,  y + bw     );
     SET_POINT( allp + 5, x + bw,     y + halfh  );
     SET_POINT( allp + 6, x + halfw,  y + h - bw );
     SET_POINT( allp + 7, x + w - bw, y + halfh  );
 
-    /* draw overall box */
+    /* Draw overall box */
 
     fl_polyf( allp + 4, 4, col );
 
@@ -590,31 +590,36 @@ fl_drw_checkbox( int      type,
         xpoint[ 1 ] = allp[ 1 ];
         xpoint[ 2 ] = allp[ 5 ];
         xpoint[ 3 ] = allp[ 4 ];
-        fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_LEFT_BCOL : FL_RIGHT_BCOL );
+        fl_polyf( xpoint, 4,
+                  type == FL_UP_BOX ? FL_LEFT_BCOL : FL_RIGHT_BCOL );
 
         xpoint[ 0 ] = allp[ 0 ];
         xpoint[ 1 ] = allp[ 4 ];
         xpoint[ 2 ] = allp[ 7 ];
         SET_POINT( xpoint + 3, allp[ 3 ].x, allp[ 3 ].y );
-        fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_TOP_BCOL : FL_BOTTOM_BCOL );
+        fl_polyf( xpoint, 4,
+                  type == FL_UP_BOX ? FL_TOP_BCOL : FL_BOTTOM_BCOL );
 
         xpoint[ 0 ] = allp[ 6 ];
         xpoint[ 1 ] = allp[ 2 ];
         xpoint[ 2 ] = allp[ 3 ];
         xpoint[ 3 ] = allp[ 7 ];
-        fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_RIGHT_BCOL : FL_LEFT_BCOL );
+        fl_polyf( xpoint, 4,
+                  type == FL_UP_BOX ? FL_RIGHT_BCOL : FL_LEFT_BCOL );
 
         xpoint[ 0 ] = allp[ 1 ];
         xpoint[ 1 ] = allp[ 2 ];
         xpoint[ 2 ] = allp[ 6 ];
         xpoint[ 3 ] = allp[ 5 ];
-        fl_polyf( xpoint, 4, type == FL_UP_BOX ? FL_BOTTOM_BCOL : FL_TOP_BCOL );
+        fl_polyf( xpoint, 4,
+                  type == FL_UP_BOX ? FL_BOTTOM_BCOL : FL_TOP_BCOL );
     }
 
 #if 1
-    /* add a border. destructive as polyl uses the allp[ 5 ] */
+    /* Special hack for B&W, add a border, destructive as polyl uses the
+       allp[ 5 ] */
 
-    if ( fli_dithered( fl_vmode ) /* || tbw > 0 */ )
+    if ( fli_dithered( fl_vmode ) )
         fl_polyl( allp, 4, FL_BLACK );
 #endif
 
@@ -649,7 +654,7 @@ fl_drw_frame( int      style,
     switch ( style )
     {
         case FL_UP_FRAME:
-            /* must guarante the width of rectangle > 0 */
+            /* Must guarante that width of rectangle > 0 */
 
             if ( ( w - 2 * bw ) <= 0 )
                 bw = w / 2;
@@ -670,7 +675,7 @@ fl_drw_frame( int      style,
             SET_POINT( vert + 3, x + w - B,      y + B          );
             fl_polyf( vert, 4, FL_RIGHT_BCOL );
 
-            /* left trapzoidal */
+            /* Left trapzoidal */
 
             SET_POINT( vert,     x + B,      y + B          );
             SET_POINT( vert + 1, x + B,      y + h - B      );
@@ -681,7 +686,7 @@ fl_drw_frame( int      style,
             if ( B || fli_dithered( fl_vmode ) )
                 fl_rect( x, y, w - 1, h - 1, FL_BLACK );
 
-            /* special hack for B&W */
+            /* Special hack for B&W */
 
             if ( fli_dithered( fl_vmode ) )
             {

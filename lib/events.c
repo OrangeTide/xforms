@@ -285,7 +285,7 @@ void
 fli_object_qflush( FL_FORM * form )
 {
     FLI_OBJECT_QUEUE_ENTRY *c,
-                          *p;
+                           *p;
 
     while (    obj_queue.tail
             && obj_queue.tail->obj != FL_EVENT

@@ -290,7 +290,7 @@ where you indicate a scaling factor in the x- and y-direction with
 respect to the current size. See @file{rescale.c} for an example.
 
 When a form is scaled, either programmatically or interactively, all
-objects on the form per defaukt will also be scaled. This includes
+objects on the form per default will also be scaled. This includes
 both the sizes and positions of the objects. For most cases, this
 default behavior is adequate. In some cases, e.g., to keep a group of
 objects together, more control is needed. To this end, the following

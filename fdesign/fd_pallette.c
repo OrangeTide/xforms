@@ -42,8 +42,7 @@ static FD_pmain *pmain;
 typedef struct {
     FL_OBJECT * ob;        /* the object (radio button) handle */
     int         cls;       /* the obj class it represents      */
-}
-Entry;
+} Entry;
 
 static Entry *entries;
 static int nentries;
@@ -161,7 +160,7 @@ show_pallette( void )
 
 
 /***************************************
- * all pallette entries are radio buttons
+ * All pallette entries are radio buttons
  ***************************************/
 
 void
@@ -195,7 +194,7 @@ reset_pallette( void )
 
 
 /***************************************
- * this function will be called if object browser is selected
+ * This function will be called if object browser is selected
  ***************************************/
 
 void

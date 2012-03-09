@@ -660,8 +660,6 @@ extern void control_init( FD_control * );
 
 extern FL_FORM *thetestform;
 
-extern void process_xevent( int );
-
 extern int within_selection( float,
                              float );
 

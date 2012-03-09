@@ -115,7 +115,7 @@ mergeforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
                long        arg  FL_UNUSED_ARG )
 {
     load_forms( FL_TRUE, NULL, 0 );
-    changed = 1;
+    changed = FL_TRUE;
     loadedfile = 0;
 }
 
@@ -158,7 +158,7 @@ loadforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         return;
 
     load_forms( FL_FALSE, NULL, 1 );
-    changed = 0;
+    changed = FL_FALSE;
 }
 
 
