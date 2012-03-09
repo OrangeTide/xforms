@@ -245,6 +245,7 @@ object_cb( FL_OBJECT * obj,
 
         for ( i = 0; classes[ i ].cname && i < MAXCLASSES; i++ )
             if ( ! strcmp( classes[ i ].cname, name ) )
+            {
                 cur_class = classes[ i ].cn;
                 break;
             }
