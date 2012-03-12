@@ -125,12 +125,12 @@ draw_motion( FL_OBJECT * ob )
             xrec[ 0 ].height = knob.y + 1;
 
             xrec[ 1 ].x      = xrec[ 0 ].x;
-            xrec[ 1 ].y      = xrec[ 0 ].y +knob.y + knob.h - 1;
+            xrec[ 1 ].y      = xrec[ 0 ].y + knob.y + knob.h - 1;
             xrec[ 1 ].width  = sp->w;
             xrec[ 1 ].height = sp->h - knob.y - knob.h + 1;
         }
 
-        fl_set_clippings( xrec, 2 );
+        XSetClipRectangles( flx->display, flx->gc, 0, 0, xrec, 2, Unsorted );
         fl_drw_box( FL_FLAT_BOX, ob->x + sp->x + abbw, ob->y + sp->y + abbw,
                     sp->w - 2 * abbw, sp->h - 2 * abbw, ob->col1, 0 );
     }

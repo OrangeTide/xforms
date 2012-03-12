@@ -237,21 +237,17 @@ create_form( void )
     fl_bgn_group( );
 
     obj = fl_add_lightbutton( FL_RADIO_BUTTON, 20, 500, 100, 30, "Tiny" );
-    fl_set_object_lsize( obj, FL_TINY_SIZE );
-    fl_set_object_callback( obj, set_size, obj->lsize );
+    fl_set_object_callback( obj, set_size, FL_TINY_SIZE );
 
     obj = fl_add_lightbutton( FL_RADIO_BUTTON, 130, 500, 100, 30, "Small" );
-    fl_set_object_lsize( obj, FL_SMALL_SIZE );
-    fl_set_object_callback( obj, set_size, obj->lsize );
+    fl_set_object_callback( obj, set_size, FL_SMALL_SIZE );
     fl_set_button( obj, 1 );
 
     obj = fl_add_lightbutton( FL_RADIO_BUTTON, 240, 500, 100, 30, "Normal" );
-    fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-    fl_set_object_callback( obj, set_size, obj->lsize );
+    fl_set_object_callback( obj, set_size, FL_NORMAL_SIZE );
 
     obj = fl_add_lightbutton( FL_RADIO_BUTTON, 350, 500, 100, 30, "Large" );
-    fl_set_object_lsize( obj, FL_LARGE_SIZE );
-    fl_set_object_callback( obj, set_size, obj->lsize );
+    fl_set_object_callback( obj, set_size, FL_LARGE_SIZE );
 
     obj = fl_add_button( FL_BUTTON, 470, 510, 45,30, "Link" );
     fl_set_object_callback( obj, link_browsers, 0 );

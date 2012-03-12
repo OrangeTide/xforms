@@ -382,11 +382,11 @@ extern void fli_check_key_focus( const char *,
 extern void fli_free_cmdline_args( void );
 
 
-extern XRectangle *fli_get_underline_rect( XFontStruct *,
-                                           FL_Coord,
-                                           FL_Coord,
-                                           const char *,
-                                           int );
+extern FL_RECT * fli_get_underline_rect( XFontStruct *,
+                                         FL_Coord,
+                                         FL_Coord,
+                                         const char *,
+                                         int );
 
 
 /* Group some WM stuff into a structure for easy maintainance */
@@ -422,17 +422,21 @@ extern void fli_drw_slider( FL_OBJECT *,
                             const char *,
                             int );
 
-extern void fli_set_perm_clipping( FL_Coord,
-                                   FL_Coord,
-                                   FL_Coord,
-                                   FL_Coord );
 
-extern void fli_unset_perm_clipping( void );
+extern void fli_set_global_clipping( FL_Coord,
+                                     FL_Coord,
+                                     FL_Coord,
+                                     FL_Coord );
+
+extern void fli_unset_global_clipping( void );
 
 
-extern int fli_perm_clip;
+extern void fli_set_additional_clipping( FL_Coord,
+                                         FL_Coord,
+                                         FL_Coord,
+                                         FL_Coord );
 
-extern XRectangle fli_perm_xcr;
+extern FL_RECT * fli_get_global_clip_rect( void );
 
 
 /* Application windows */
@@ -847,13 +851,8 @@ enum {
     FLI_TRIANGLE_DOWNBOX9
 };
 
-extern void fli_set_additional_clipping( FL_Coord,
-                                         FL_Coord,
-                                        FL_Coord,
-                                        FL_Coord );
-
-extern FL_RECT *fli_union_rect( const FL_RECT *,
-                                const FL_RECT * );
+extern FL_RECT * fli_intersect_rects( const FL_RECT *,
+                                      const FL_RECT * );
 
 extern void fli_xyplot_nice_label( float,
                                    int,
@@ -896,11 +895,6 @@ extern void fli_set_form_icon_data( FL_FORM *,
 
 extern char *fli_getcwd( char *,
                          int );
-
-extern void fli_get_clipping( FL_Coord *,
-                              FL_Coord *,
-                              FL_Coord *,
-                              FL_Coord * );
 
 extern void fli_replacepup_text( int,
                                  int,

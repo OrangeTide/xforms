@@ -70,9 +70,11 @@ drawit( Window   win,
 
     /* Get the currently set clipping */
 
-    fli_get_clipping( &clip_x, &clip_y, &clip_w, &clip_h );
-    if ( clip_w > 0 && clip_h > 0 )
+    if ( fl_get_clipping( 1, &clip_x, &clip_y, &clip_w, &clip_h ) )
     {
+        if ( w <= 0 || h <= 0 )
+            return;
+
         /* If the bitmap is not within the clipping region nothing is
            to be drawn */
 

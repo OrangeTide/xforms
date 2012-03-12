@@ -273,7 +273,7 @@ The following table lists the fields, masks and their meanings of
 @tab @code{FL_PDVisual}
 @tab Prefered visual, @code{TrueColor} etc.
 
-@item @code{int doubleBffer;}
+@item @code{int doubleBuffer;}
 @tab @code{FL_PDDouble}
 @tab Simulate double buffering
 

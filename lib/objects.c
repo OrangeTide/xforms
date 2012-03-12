@@ -1440,8 +1440,8 @@ fli_hide_and_get_region( FL_OBJECT * obj,
     fli_object_qflush_object( obj );
 #endif
 
-    /* The object can't be the object anymore that has the focus or be
-       the pushed object or the object the mouse is on */
+    /* The object can't be the object anymore that has the focus and it also
+       can't be the pushed object or the object the mouse is on */
 
     lose_focus( obj );
     if ( obj == fli_int.pushobj )
@@ -1546,19 +1546,13 @@ fl_hide_object( FL_OBJECT * obj )
     if ( obj->form->visible != FL_VISIBLE )
         return;
 
-    /* Redraw only the area covered by the object (take care with the
-       order the different clipping types are set and unset, changing
-       them has strange effects) */
+    /* Redraw only the area covered by the object */
 
-    fli_set_perm_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
-    fl_set_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
-    fl_set_text_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
+    fli_set_global_clipping( xrect.x, xrect.y, xrect.width, xrect.height );
 
     fli_redraw_form_using_xevent( obj->form, 0, NULL );
 
-    fli_unset_perm_clipping( );
-    fl_unset_clipping( );
-    fl_unset_text_clipping( );
+    fli_unset_global_clipping( );
 }
 
 
@@ -1975,20 +1969,23 @@ fli_find_last( FL_FORM * form,
  ***************************************/
 
 static int
-object_is_clipped( FL_OBJECT * obj )
+is_object_clipped( FL_OBJECT * obj )
 {
-    FL_RECT xr,
+    FL_RECT obj_rect,
             *xc;
     int extra = 1;
 
-    get_object_bbox_rect( obj, &xr );
+    if ( ! fl_is_global_clipped( ) )
+        return 0;
 
-    xr.x      -= extra;
-    xr.y      -= extra;
-    xr.width  += 2 * extra;
-    xr.height += 2 * extra;
+    get_object_bbox_rect( obj, &obj_rect );
 
-    xc = fli_union_rect( &xr, &fli_perm_xcr );
+    obj_rect.x      -= extra;
+    obj_rect.y      -= extra;
+    obj_rect.width  += 2 * extra;
+    obj_rect.height += 2 * extra;
+
+    xc = fli_intersect_rects( &obj_rect, fli_get_global_clip_rect( ) );
 
     if ( ! xc )
         return 1;
@@ -2094,17 +2091,14 @@ redraw_marked( FL_FORM * form,
 
         obj->redraw = 0;
 
-        if (    ! obj->visible
-             || ( fli_perm_clip && object_is_clipped( obj ) ) )
+        if ( ! obj->visible || is_object_clipped( obj ) )
             continue;
 
         fli_create_object_pixmap( obj );
 
-        /* Don't allow free objects to draw outside of their boxes. Check
-           perm_clip so we don't have draw regions we don't have to
-           (Expose etc.) */
+        /* Don't allow free objects to draw outside of their boxes. */
 
-        if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
+        if ( obj->objclass == FL_FREE )
         {
             fl_set_clipping( obj->x, obj->y, obj->w, obj->h );
             fl_set_text_clipping( obj->x, obj->y, obj->w, obj->h );
@@ -2112,7 +2106,7 @@ redraw_marked( FL_FORM * form,
 
         fli_handle_object( obj, FL_DRAW, 0, 0, key, xev, 0 );
 
-        if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
+        if ( obj->objclass == FL_FREE )
         {
             fl_unset_clipping( );
             fl_unset_text_clipping( );
@@ -2251,7 +2245,7 @@ fli_redraw_form_using_xevent( FL_FORM * form,
     if ( ! form || form->visible != FL_VISIBLE || form->frozen > 0 )
         return;
 
-    /* Set the window (or drawable) to be drawn to (flx->win) */
+    /* Set the window (or drawable) to be drawn to flx->win */
 
     fli_set_form_window( form );
     fli_create_form_pixmap( form );
@@ -2263,16 +2257,14 @@ fli_redraw_form_using_xevent( FL_FORM * form,
         if (    ! obj->visible
              || obj->objclass == FL_BEGIN_GROUP
              || obj->objclass == FL_END_GROUP
-             || ( fli_perm_clip && object_is_clipped( obj ) ) )
+             || is_object_clipped( obj ) )
             continue;
 
         fli_create_object_pixmap( obj );
 
-        /* Don't allow free objects to draw outside of their boxes. Check
-           perm_clip so we don't have draw regions we don't have to
-           (Expose etc.) */
+        /* Don't allow free objects to draw outside of their boxes. */
 
-        if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
+        if ( obj->objclass == FL_FREE )
         {
             fl_set_clipping( obj->x, obj->y, obj->w, obj->h );
             fl_set_text_clipping( obj->x, obj->y, obj->w, obj->h );
@@ -2280,7 +2272,7 @@ fli_redraw_form_using_xevent( FL_FORM * form,
 
         fli_handle_object( obj, FL_DRAW, 0, 0, key, xev, 0 );
 
-        if ( ( obj->objclass == FL_FREE || obj->clip ) && ! fli_perm_clip )
+        if ( obj->objclass == FL_FREE || obj->clip )
         {
             fl_unset_clipping( );
             fl_unset_text_clipping( );
@@ -2503,9 +2495,8 @@ handle_object( FL_OBJECT * obj,
     {
         case FL_ENTER:
         {
-            /* We assign the timer to the parent widget in the case of a
-               composite object as that's the thing that's actually got the
-               tip. */
+            /* In the case of a composite object we assign the timer to the
+               parent widget as that's the thing that's actually got the tip. */
 
             FL_OBJECT * const parent = get_parent( obj );
 
@@ -2814,31 +2805,27 @@ fl_get_real_object_window( FL_OBJECT * obj )
 
 
 /***************************************
+ * Takes two rectangles and returns a pointer to a new rectangle
+ * (memory for it is allocated in the function and mut be released
+ * by the caller!) of the intersection of both - or a NULL pointer
+ * if the two rectangles have no common area.
  ***************************************/
 
 FL_RECT *
-fli_union_rect( const FL_RECT * r1,
-                const FL_RECT * r2 )
+fli_intersect_rects( const FL_RECT * r1,
+                     const FL_RECT * r2 )
 {
-    FL_RECT *p = fl_malloc( sizeof *p );
-    int xi,
-        yi,
-        xf,
-        yf;
+    FL_RECT * p = fl_malloc( sizeof *p );
+    int x = FL_min( r1->x + r1->width,  r2->x + r2->width  ),
+        y = FL_min( r1->y + r1->height, r2->y + r2->height );
 
-    xi = p->x = FL_max( r1->x, r2->x );
-    yi = p->y = FL_max( r1->y, r2->y );
-    xf = FL_min( r1->x + r1->width,  r2->x + r2->width )  - 1;
-    yf = FL_min( r1->y + r1->height, r2->y + r2->height ) - 1;
-
-    p->width  = xf - xi + 1;
-    p->height = yf - yi + 1;
+    p->x      = FL_max( r1->x, r2->x );
+    p->y      = FL_max( r1->y, r2->y );
+    p->width  = x - p->x;
+    p->height = y - p->y;
 
     if ( p->width <= 0 || p->height <= 0 )
-    {
-        fl_free( p );
-        return NULL;
-    }
+        fli_safe_free( p );
 
     return p;
 }
@@ -2848,15 +2835,13 @@ fli_union_rect( const FL_RECT * r1,
  ***************************************/
 
 static void
-get_bounding_rect( FL_RECT       * r1,
-                   const FL_RECT * r2 )
+fli_combine_rectangles( FL_RECT       * r1,
+                        const FL_RECT * r2 )
 {
-    int xf,
-        yf;
+    int xf = FL_max( r1->x + r1->width,  r2->x + r2->width  ),
+        yf = FL_max( r1->y + r1->height, r2->y + r2->height );
 
-    xf = FL_max( r1->x + r1->width,  r2->x + r2->width  );
     r1->x = FL_min( r1->x, r2->x );
-    yf = FL_max( r1->y + r1->height, r2->y + r2->height );
     r1->y = FL_min( r1->y, r2->y );
 
     r1->width  = xf - r1->x;
@@ -2999,7 +2984,7 @@ fl_trigger_object( FL_OBJECT * obj )
 void
 fl_draw_object_label( FL_OBJECT * obj )
 {
-    int align = obj->align % FL_ALIGN_INSIDE;
+    int align = obj->align & ~ FL_ALIGN_INSIDE;
 
     if ( align != obj->align )
         fl_drw_text( align, obj->x, obj->y, obj->w, obj->h,
@@ -3301,9 +3286,26 @@ fl_get_object_bbox( FL_OBJECT * obj,
                     FL_Coord  * w,
                     FL_Coord  * h )
 {
+    XRectangle rect;
+
+    get_object_bbox_rect( obj, &rect );
+
+    *x = rect.x;
+    *y = rect.y;
+    *w = rect.width;
+    *h = rect.height;
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+get_object_bbox_rect( FL_OBJECT * obj,
+                      FL_RECT   * rect )
+{
     FL_OBJECT *tmp;
     int extra = 0;
-    XRectangle rect;
 
     if ( obj->objclass == FL_FRAME || obj->objclass == FL_LABELFRAME )
         extra += FL_abs( obj->bw );
@@ -3312,15 +3314,15 @@ fl_get_object_bbox( FL_OBJECT * obj,
          && obj->objclass <= FL_USER_CLASS_END )
         extra = FL_abs( obj->bw ) + obj->lsize;
 
-    rect.x      = obj->x - extra;
-    rect.y      = obj->y - extra;
-    rect.width  = obj->w + 2 * extra;
-    rect.height = obj->h + 2 * extra;
+    rect->x      = obj->x - extra;
+    rect->y      = obj->y - extra;
+    rect->width  = obj->w + 2 * extra;
+    rect->height = obj->h + 2 * extra;
 
     /* Include the label into the bounding box - but only for labels that are
        not within the object. If "inside" labels extend beyond the limits of
        the object things look ugly anyway and it doesn't seem to make much
-       sense to slow down the program or them. */
+       sense to slow down the program for that case. */
 
     if ( obj->label && *obj->label && ! ( obj->align & FL_ALIGN_INSIDE) )
     {
@@ -3343,43 +3345,18 @@ fl_get_object_bbox( FL_OBJECT * obj,
         tmp_rect.width  = sw + 1;
         tmp_rect.height = sh + descent;
 
-        get_bounding_rect( &rect, &tmp_rect );
+        fli_combine_rectangles( rect, &tmp_rect );
     }
 
     for ( tmp = obj->child; tmp; tmp = tmp->nc )
     {
         XRectangle tmp_rect = { tmp->x, tmp->y, tmp->w, tmp->h };
 
-        get_bounding_rect( &rect, &tmp_rect );
+        fli_combine_rectangles( rect, &tmp_rect );
     }
 
-    *x = rect.x;
-    *y = rect.y;
     if ( fli_inverted_y && obj->form )
-        *y = obj->form->h - *y;
-    *w = rect.width;
-    *h = rect.height;
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-get_object_bbox_rect( FL_OBJECT * obj,
-                      FL_RECT   * xr )
-{
-    FL_Coord x,
-             y,
-             w,
-             h;
-
-    fl_get_object_bbox( obj, &x, &y, &w, &h );
-
-    xr->x      = x;
-    xr->y      = y;
-    xr->width  = w;
-    xr->height = h;
+        rect->y = obj->form->h - rect->y;
 }
 
 

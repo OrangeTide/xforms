@@ -25,7 +25,7 @@
  *
  *  Basic low level drawing routines in Xlib.
  *
- *  BUGS: All form window share a common GC and Colormap.
+ *  BUGS: All form window share a common GC and color map.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -131,8 +131,7 @@ fl_polygon( int        fill,
         {
             xp[ n ].x = xp[ 0 ].x;
             xp[ n ].y = xp[ 0 ].y;
-            n++;
-            XDrawLines( flx->display, flx->win, flx->gc, xp, n,
+            XDrawLines( flx->display, flx->win, flx->gc, xp, n + 1,
                         CoordModeOrigin );
         }
     }
@@ -146,8 +145,8 @@ fl_polygon( int        fill,
     {
         xp[ n ].x = xp[ 0 ].x;
         xp[ n ].y = xp[ 0 ].y;
-        n++;
-        XDrawLines( flx->display, flx->win, flx->gc, xp, n, CoordModeOrigin );
+        XDrawLines( flx->display, flx->win, flx->gc, xp, n + 1,
+                    CoordModeOrigin );
     }
 
     if ( bw )
@@ -348,7 +347,7 @@ fl_lines( FL_POINT * xp,
 
     fl_color( col );
 
-    /* we may need to break up the request into smaller pieces */
+    /* We may need to break up the request into smaller pieces */
 
     if ( fli_context->ext_request_size >= n )
         XDrawLines( flx->display, flx->win, flx->gc, xp, n, CoordModeOrigin );
@@ -617,40 +616,344 @@ fl_dashedlinestyle( const char * dash,
  *  Remember global clipping so unset_clipping will restore it. Most
  *  useful as part of event dispatching
  */
+ 
+enum {
+    FLI_GLOBAL_CLIP = 0,
+    FLI_NORMAL_CLIP = 1,
+    FLI_TEXT_CLIP   = 2,
+    FLI_GC_CLIP     = 3
+};
 
-XRectangle fli_perm_xcr;
-int fli_perm_clip;
-static FL_RECT cur_clip;    /* not includng perm clip, probably should */
+
+static int fli_is_clipped[ ] = { 0, 0, 0, 0 };
+static FL_RECT fli_clip_rect[ ] = { { 0, 0, 0, 0 },
+                                    { 0, 0, 0, 0 },
+                                    { 0, 0, 0, 0 },
+                                    { 0, 0, 0, 0 } };
+
+
+#define SET_RECT( t, a, b, c, d )  \
+   do {                            \
+       ( t ).x      = a;           \
+       ( t ).y      = b;           \
+       ( t ).width  = c;           \
+       ( t ).height = d;           \
+   } while ( 0 )
+
+
+#define GET_RECT( t, a, b, c, d )  \
+   do {                            \
+       *a = ( t ).x;               \
+       *b = ( t ).y;               \
+       *c = ( t ).width;           \
+       *d = ( t ).height;          \
+   } while ( 0 )
 
 
 /***************************************
+ * Returns if global clipping is switched on - in which case
+ * the region for global clipping can be obtained via a call
+ * of fli_get_global_clipping( ).
  ***************************************/
 
-void
-fli_set_perm_clipping( FL_Coord x,
-                       FL_Coord y,
-                       FL_Coord w,
-                       FL_Coord h )
+int
+fl_is_global_clipped( void )
 {
-    fli_perm_clip       = 1;
-    fli_perm_xcr.x      = x;
-    fli_perm_xcr.y      = y;
-    fli_perm_xcr.width  = w;
-    fli_perm_xcr.height = h;
+    return fli_is_clipped[ FLI_GLOBAL_CLIP ];
 }
 
 
 /***************************************
+ * Helper function for determining if normal or text clipping is set
+ * (also reports if global clipping is set when 'include_global' is
+ * set).
  ***************************************/
 
-void
-fli_unset_perm_clipping( void )
+static int
+is_clipped( int type,
+                int include_global )
 {
-    fli_perm_clip = 0;
+    return    fli_is_clipped[ type ]
+           || ( include_global && fli_is_clipped[ FLI_GLOBAL_CLIP ] );
 }
 
 
 /***************************************
+ * Sets global clipping to the specified rectangle. If normal clipping
+ * is already on the rectange use is the one resulting from intersecting
+ * the requested rectangle with the one for normal clipping. Text is
+ * clipped in the same way. If called with a negative width or height
+ * global clipping is switched off.
+ ***************************************/
+
+void
+fli_set_global_clipping( FL_Coord x,
+                         FL_Coord y,
+                         FL_Coord w,
+                         FL_Coord h )
+{
+    /* Calling the function with a rectangle with a negative width or height
+       results in switching off of global clipping */
+
+    if ( w < 0 || h < 0 )
+    {
+        fli_unset_global_clipping( );
+        return;
+    }
+
+    SET_RECT( fli_clip_rect[ FLI_GLOBAL_CLIP ], x, y, w, h );
+
+    /* If normal clipping is already on intersect the new global and the
+       normal clip area and set clipping to the result. If normal clipping
+       is off just use the rectangle specified by the arguments. */
+
+    if ( fli_is_clipped[ FLI_NORMAL_CLIP ] )
+    {
+        FL_RECT * r = fli_intersect_rects( fli_clip_rect + FLI_GLOBAL_CLIP,
+                                           fli_clip_rect + FLI_NORMAL_CLIP );
+        
+        if ( r )
+        {
+            XSetClipRectangles( flx->display, flx->gc, 0, 0, r, 1, Unsorted );
+            fli_safe_free( r );
+        }
+        else
+        {
+            FL_RECT n = { 0, 0, 0, 0 };
+
+            XSetClipRectangles( flx->display, flx->gc, 0, 0, &n, 1, Unsorted );
+        }
+    }
+    else
+        XSetClipRectangles( flx->display, flx->gc, 0, 0,
+                            &fli_clip_rect[ FLI_GLOBAL_CLIP ], 1, Unsorted );
+
+    /* The same again for text clipping */
+
+    if ( fli_is_clipped[ FLI_TEXT_CLIP ] )
+    {
+        FL_RECT * r = fli_intersect_rects( fli_clip_rect + FLI_GLOBAL_CLIP,
+                                           fli_clip_rect + FLI_TEXT_CLIP );
+
+        if ( r )
+        {
+            XSetClipRectangles( flx->display, flx->textgc, 0, 0, r, 1,
+                                Unsorted );
+            fli_safe_free( r );
+        }
+        else
+        {
+            FL_RECT n = { 0, 0, 0, 0 };
+
+            XSetClipRectangles( flx->display, flx->textgc, 0, 0, &n, 1,
+                                Unsorted );
+        }
+    }
+    else
+        XSetClipRectangles( flx->display, flx->textgc, 0, 0,
+                            fli_clip_rect + FLI_GLOBAL_CLIP, 1, Unsorted );
+
+    fli_is_clipped[ FLI_GLOBAL_CLIP ] = 1;
+}
+
+
+/***************************************
+ * Unsets global clipping - "normal" and text clipping, if set, are retained
+ ***************************************/
+
+void
+fli_unset_global_clipping( void )
+{
+    if ( ! fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+        return;
+
+    SET_RECT( fli_clip_rect[ FLI_GLOBAL_CLIP ], 0, 0, 0, 0 );
+
+    /* If normal clipping is also on set the clipping rectangle to that set
+       for normal clipping, otherwise switch clipping off completely. */
+
+    if ( fli_is_clipped[ FLI_NORMAL_CLIP ] )
+        XSetClipRectangles( flx->display, flx->gc, 0, 0,
+                            fli_clip_rect + FLI_NORMAL_CLIP, 1, Unsorted );
+    else
+        XSetClipMask( flx->display, flx->gc, None );
+
+    /* Same for text clipping */
+
+    if ( fli_is_clipped[ FLI_TEXT_CLIP ] )
+        XSetClipRectangles( flx->display, flx->textgc, 0, 0,
+                            fli_clip_rect + FLI_TEXT_CLIP, 1, Unsorted );
+    else
+        XSetClipMask( flx->display, flx->textgc, None );
+
+    fli_is_clipped[ FLI_GLOBAL_CLIP ] = 0;
+}
+
+
+/***************************************
+ * Returns a pointer to the rectangle used for global clipping (only
+ * to be used when global clipping is on!)
+ ***************************************/
+
+FL_RECT *
+fli_get_global_clip_rect( void )
+{
+    return fli_clip_rect + FLI_GLOBAL_CLIP;
+}
+
+
+/***************************************
+ * Function returns as its return value if global clipping is on or off
+ * and, via the pointer arguments, the clipping rectangle.
+ ***************************************/
+
+int
+fl_get_global_clipping( FL_COORD * x,
+                        FL_COORD * y,
+                        FL_COORD * w,
+                        FL_COORD * h )
+{
+    GET_RECT( fli_clip_rect[ FLI_GLOBAL_CLIP ], x, y, w, h );
+    return fli_is_clipped[ FLI_GLOBAL_CLIP ];
+}
+
+
+/***************************************
+ * Helper function to switch off normal, text or GC clipping - if global
+ * clipping is on it will be retained.
+ ***************************************/
+
+static void
+unset_clipping( int type,
+                GC  gc )
+{
+    if ( ! fli_is_clipped[ type ] )
+        return;
+
+    SET_RECT( fli_clip_rect[ type ], 0, 0, 0, 0 );
+
+    if ( fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+        XSetClipRectangles( flx->display, gc, 0, 0,
+                            fli_clip_rect + FLI_GLOBAL_CLIP, 1, Unsorted );
+    else
+        XSetClipMask( flx->display, gc, None );
+
+    fli_is_clipped[ type ] = 0;
+}
+
+
+/***************************************
+ * Helper function to switch normal, text or GC clipping on for a certain
+ * a certain region. 'type' is the type of clipping and 'gc' the GC for
+ * which the clipping is to be set. If global clipping is already on the
+ * clipping region is the intersection of the requested clipping region
+ * with the clipping region for global clipping.
+ ***************************************/
+
+static void
+set_clipping( int      type,
+              GC       gc,
+              FL_Coord x,
+              FL_Coord y,
+              FL_Coord w,
+              FL_Coord h )
+{
+    if ( w < 0 || h < 0 )
+    {
+        unset_clipping( type, gc );
+        return;
+    }
+
+    SET_RECT( fli_clip_rect[ type ], x, y, w, h );
+
+    if ( fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+    {
+        FL_RECT * r = fli_intersect_rects( fli_clip_rect + FLI_GLOBAL_CLIP,
+                                           fli_clip_rect + type );
+        
+        if ( r )
+        {
+            XSetClipRectangles( flx->display, gc, 0, 0, r, 1, Unsorted );
+            fli_safe_free( r );
+        }
+        else
+        {
+            FL_RECT n = { 0, 0, 0, 0 };
+
+            XSetClipRectangles( flx->display, gc, 0, 0, &n, 1, Unsorted );
+        }
+    }
+    else
+        XSetClipRectangles( flx->display, gc, 0, 0, &fli_clip_rect[ type ],
+                            1, Unsorted );
+
+    fli_is_clipped[ type ] = 1;
+}
+
+
+/***************************************
+ * Helper function for determining if normal or text clipping is on and the
+ * region clipped to. 'type' is the type of clipping. If 'include_global' is
+ * set also clipping due to global clipping is taken into account (and the
+ * reported clipping region is the one resulting from intersection of the
+ * clipping region for the requested type of clipping and the one for global
+ * clipping). The function returns as its return value if there's clipping
+ * going on (which may, when 'include_global', also be due to global clipping).
+ ***************************************/
+
+static int
+get_clipping( int        type,
+              int        include_global,
+              FL_COORD * x,
+              FL_COORD * y,
+              FL_COORD * w,
+              FL_COORD * h )
+{
+    if (    ( ! include_global || ! fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+         && fli_is_clipped[ type ] )
+        GET_RECT( fli_clip_rect[ type ], x, y, w, h );
+    else if ( include_global && fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+    {
+        if ( fli_is_clipped[ type ] )
+        {
+            FL_RECT * r =
+                fli_intersect_rects( fli_clip_rect + FLI_GLOBAL_CLIP,
+                                     fli_clip_rect + type );
+            
+            if ( r )
+            {
+                GET_RECT( *r, x, y, w, h );
+                fl_free( r );
+            }
+        }
+        else
+            GET_RECT( fli_clip_rect[ FLI_GLOBAL_CLIP ], x, y, w, h );
+    }
+
+    return    ( include_global && fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+           || fli_is_clipped[ type ];
+}
+
+
+/***************************************
+ * Returns if "normal" (i.e. non-text) clipping is switched on.
+ * If 'include_global' is set also also global clipping (used
+ * e.g. when redrawing on an expose event) is on, otherwise only
+ * clipping set via a call of fl_set_clipping() is reported.
+ ***************************************/
+
+int
+fl_is_clipped( int include_global )
+{
+    return is_clipped( FLI_NORMAL_CLIP, include_global );
+}
+
+
+/***************************************
+ * Function for setting normal clipping. If global clipping is on the
+ * rectangle set for clipping is the intersection of the rectangle specified
+ * by the arguments and the one for global clipping.  Specifying a negative
+ * clipping width or height results in clipping becoming switched off.
  ***************************************/
 
 void
@@ -659,20 +962,61 @@ fl_set_clipping( FL_Coord x,
                  FL_Coord w,
                  FL_Coord h )
 {
-    cur_clip.x      = x;
-    cur_clip.y      = y;
-    cur_clip.width  = w;
-    cur_clip.height = h;
+    set_clipping( FLI_NORMAL_CLIP, flx->gc, x, y, w, h );
+}
 
-    if ( w > 0 && h > 0 )
-       XSetClipRectangles( flx->display, flx->gc, 0, 0, &cur_clip, 1,
-                           Unsorted );
-    else
-        XSetClipMask( flx->display, flx->gc, None );
+
+/****************************************
+ * Function for switching of normal clipping. Note that global clipping
+ * will be retained.
+ ***************************************/
+
+void
+fl_unset_clipping( )
+{
+    unset_clipping( FLI_NORMAL_CLIP, flx->gc );
 }
 
 
 /***************************************
+ * Function for determining if normal clipping is on and the region clipped
+ * to. If 'include_global' is set also clipping due to global clipping is
+ * taken into account (and the reported clipping region is the one resulting
+ * from intersection of the normal clipping region and the one for global
+ * clipping). The function returns as its return value if there's clipping
+ * going on (which may, when 'include_global', also be due to global clipping).
+ ***************************************/
+
+int
+fl_get_clipping( int        include_global,
+                 FL_COORD * x,
+                 FL_COORD * y,
+                 FL_COORD * w,
+                 FL_COORD * h )
+{
+    return get_clipping( FLI_NORMAL_CLIP, include_global, x, y, w, h );
+}
+
+
+/***************************************
+ * Returns if "text" clipping is switched on. If 'include_global'
+ * is set also also global clipping (used e.g. when redrawing on
+ * an expose event) is on, otherwise only clipping set via a call
+ * of fl_set_text_clipping() is reported.
+ ***************************************/
+
+int
+fl_is_text_clipped( int include_global )
+{
+    return is_clipped( FLI_TEXT_CLIP, include_global );
+}
+
+
+/***************************************
+ * Function for setting text clipping. If global clipping is on the rectangle
+ * set for clipping is the intersection of the rectangle specified by the
+ * arguments and the one for global clipping. Specifying a negative clipping
+ * width or height results in clipping becoming switched off.
  ***************************************/
 
 void
@@ -681,33 +1025,71 @@ fl_set_text_clipping( FL_Coord x,
                       FL_Coord w,
                       FL_Coord h )
 {
-    fl_set_gc_clipping( flx->textgc, x, y, w, h );
+    set_clipping( FLI_TEXT_CLIP, flx->textgc, x, y, w, h );
 }
 
 
 /***************************************
+ * Function for switching of text clipping. Note that global clipping
+ * will be retained.
  ***************************************/
 
 void
 fl_unset_text_clipping( void )
 {
-    fl_unset_gc_clipping( flx->textgc );
+    unset_clipping( FLI_TEXT_CLIP, flx->textgc );
 }
 
 
 /***************************************
+ * Function for determining if text clipping is on and the region clipped
+ * to. If 'include_global' is set also clipping due to global clipping is
+ * taken into account (and the reported clipping region is the one resulting
+ * from intersection of the text clipping region and the one for global
+ * clipping). The function returns as its return value if there's clipping
+ * going on (which may, when 'include_global', also be due to global clipping).
+ ***************************************/
+
+int
+fl_get_text_clipping( int        include_global,
+                      FL_COORD * x,
+                      FL_COORD * y,
+                      FL_COORD * w,
+                      FL_COORD * h )
+{
+    return get_clipping( FLI_TEXT_CLIP, include_global, x, y, w, h );
+}
+
+
+/***************************************
+ * Function for setting clipping for the specified GC. If global clipping is
+ * on the rectangle set for clipping is the intersection of the rectangle
+ * specified by the arguments and the one for global clipping. Specifying a
+ * negative clipping width or height results in clipping becoming switched off.
  ***************************************/
 
 void
-fli_get_clipping( FL_Coord * x,
-                  FL_Coord * y,
-                  FL_Coord * w,
-                  FL_Coord * h )
+fl_set_gc_clipping( GC       gc,
+                    FL_Coord x,
+                    FL_Coord y,
+                    FL_Coord w,
+                    FL_Coord h )
 {
-    *x = cur_clip.x;
-    *y = cur_clip.y;
-    *w = cur_clip.width;
-    *h = cur_clip.height;
+    fli_is_clipped[ FLI_GC_CLIP ] = 1;
+    set_clipping( FLI_GC_CLIP, gc, x, y, w, h );
+}
+
+
+/***************************************
+ * Function for switching of clipping for the given gc. Note that global
+ * clipping will be retained.
+ ***************************************/
+
+void
+fl_unset_gc_clipping( GC gc )
+{
+    fli_is_clipped[ FLI_GC_CLIP ] = 1;
+    unset_clipping( FLI_GC_CLIP, gc );
 }
 
 
@@ -720,87 +1102,25 @@ fli_set_additional_clipping( FL_Coord x,
                              FL_Coord w,
                              FL_Coord h )
 {
-    FL_RECT rect[ 2 ],
-            *r;
+    FL_RECT rect;
 
-    rect[ 0 ]        = cur_clip;
-    rect[ 1 ].x      = x;
-    rect[ 1 ].y      = y;
-    rect[ 1 ].width  = w;
-    rect[ 1 ].height = h;
+    SET_RECT( rect, x, y, w, h );
 
-    r = fli_union_rect( rect, rect + 1 );
-
-    if ( r != NULL )
+    if ( fli_is_clipped[ FLI_NORMAL_CLIP ] )
     {
-        XSetClipRectangles( flx->display, flx->gc, 0, 0, r, 1, Unsorted );
-        fl_free( r );
+        FL_RECT * r = fli_intersect_rects( fli_clip_rect + FLI_NORMAL_CLIP,
+                                           &rect );
+
+        if ( r )
+        {
+            rect = *r;
+            fli_safe_free( r );
+        }
+        else
+            SET_RECT( rect, 0, 0, 0, 0 );
     }
-}
 
-
-/***************************************
- ***************************************/
-
-void
-fl_set_gc_clipping( GC       gc,
-                    FL_Coord x,
-                    FL_Coord y,
-                    FL_Coord w,
-                    FL_Coord h )
-{
-    XRectangle xrect;
-
-    xrect.x      = x;
-    xrect.y      = y;
-    xrect.width  = w;
-    xrect.height = h;
-    XSetClipRectangles( flx->display, gc, 0, 0, &xrect, 1, Unsorted );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_set_clippings( FL_RECT * xrect,
-                  int       n )
-{
-    XSetClipRectangles( flx->display, flx->gc, 0, 0, xrect, n, Unsorted );
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_unset_clipping( void )
-{
-    if ( ! fli_perm_clip )
-    {
-        XSetClipMask( flx->display, flx->gc, None );
-        cur_clip.x = cur_clip.y = cur_clip.width = cur_clip.height = 0;
-    }
-    else
-    {
-        XSetClipRectangles( flx->display, flx->gc, 0, 0, &fli_perm_xcr, 1,
-                            Unsorted );
-        cur_clip = fli_perm_xcr;
-    }
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_unset_gc_clipping( GC gc )
-{
-    if ( ! fli_perm_clip )
-        XSetClipMask( flx->display, gc, None );
-    else
-        XSetClipRectangles( flx->display, gc, 0, 0, &fli_perm_xcr, 1,
-                            Unsorted );
+    fl_set_clipping( rect.x, rect.y, rect.width, rect.height );
 }
 
 
@@ -810,16 +1130,43 @@ fl_unset_gc_clipping( GC gc )
 static void
 fli_set_current_gc( GC gc )
 {
-    if ( flx->gc != gc )
+    if ( flx->gc == gc )
+        return;
+
+    flx->gc    = gc;
+    flx->color = FL_NoColor;
+
+    if (    fli_is_clipped[ FLI_GLOBAL_CLIP ]
+         && fli_is_clipped[ FLI_NORMAL_CLIP ] )
     {
-        flx->gc = gc;
-        flx->color = FL_NoColor;
+        FL_RECT * r = fli_intersect_rects( fli_clip_rect + FLI_GLOBAL_CLIP,
+                                           fli_clip_rect + FLI_NORMAL_CLIP );
+        
+        if ( r )
+        {
+            XSetClipRectangles( flx->display, gc, 0, 0, r, 1, Unsorted );
+            fli_safe_free( r );
+        }
+        else
+        {
+            FL_RECT n = { 0, 0, 0, 0 };
+
+            XSetClipRectangles( flx->display, gc, 0, 0, &n, 1, Unsorted );
+        }
     }
+    else if ( fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+        XSetClipRectangles( flx->display, gc, 0, 0,
+                            fli_clip_rect + FLI_GLOBAL_CLIP, 1, Unsorted );
+    else if ( fli_is_clipped[ FLI_NORMAL_CLIP ] )
+        XSetClipRectangles( flx->display, gc, 0, 0,
+                            fli_clip_rect + FLI_NORMAL_CLIP, 1, Unsorted );
+    else
+        XSetClipMask( flx->display, gc, None );
 }
 
 
 /***************************************
- * manually dither non-gray scale colors by changing default GC. Grayscales
+ * Manually dither non-gray scale colors by changing default GC. Grayscales
  * are typically used in buttons, boxes etc, better not to dither them
  ***************************************/
 

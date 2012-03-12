@@ -77,7 +77,7 @@ draw_lightbutton( FL_OBJECT * ob )
 
     absbw = FL_abs( ob->bw );
 
-    /* adjustment for non-rectangular boxes */
+    /* Adjustment for non-rectangular boxes */
 
     if (    ob->boxtype == FL_ROUNDED3D_UPBOX
          || ob->boxtype == FL_ROUNDED3D_DOWNBOX )
@@ -129,7 +129,7 @@ draw_lightbutton( FL_OBJECT * ob )
 
     /* Draw the label */
 
-    if ( ( ob->align & ~ FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER )
+    if ( ob->align & ~ FL_ALIGN_INSIDE == FL_ALIGN_CENTER )
         fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
                      ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
@@ -147,7 +147,7 @@ draw_lightbutton( FL_OBJECT * ob )
 
 
 /***************************************
- * creates an object
+ * Creates a light-button object
  ***************************************/
 
 FL_OBJECT *

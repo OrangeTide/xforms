@@ -757,10 +757,42 @@ FL_EXPORT int fl_vclass_val( const char * v );
 FL_EXPORT void fl_set_ul_property( int prop,
                                    int thickness );
 
+FL_EXPORT int fl_is_global_clipped( void );
+
+FL_EXPORT int fl_is_clipped( int include_global );
+
+FL_EXPORT int fl_is_text_clipped( int include_global );
+
 FL_EXPORT void fl_set_clipping( FL_Coord x,
-                                FL_Coord y,
-                                FL_Coord w,
-                                FL_Coord h );
+								FL_Coord y,
+								FL_Coord w,
+								FL_Coord h );
+
+FL_EXPORT void fl_unset_clipping( );
+
+FL_EXPORT void fl_set_text_clipping( FL_Coord x,
+									 FL_Coord y,
+									 FL_Coord w,
+									 FL_Coord h );
+
+FL_EXPORT void fl_unset_text_clipping( void );
+
+FL_EXPORT int fl_get_global_clipping( FL_COORD * x,
+									  FL_COORD * y,
+									  FL_COORD * w,
+									  FL_COORD * h );
+
+FL_EXPORT int fl_get_clipping( int        include_global,
+							   FL_COORD * x,
+							   FL_COORD * y,
+							   FL_COORD * w,
+							   FL_COORD * h );
+
+FL_EXPORT int fl_get_text_clipping( int        include_global,
+									FL_COORD * x,
+									FL_COORD * y,
+									FL_COORD * w,
+									FL_COORD * h );
 
 FL_EXPORT void fl_set_gc_clipping( GC       gc,
                                    FL_Coord x,
@@ -769,18 +801,6 @@ FL_EXPORT void fl_set_gc_clipping( GC       gc,
                                    FL_Coord h );
 
 FL_EXPORT void fl_unset_gc_clipping( GC gc );
-
-FL_EXPORT void fl_set_clippings( FL_RECT * xrect,
-                                 int       n );
-
-FL_EXPORT void fl_unset_clipping( void );
-
-FL_EXPORT void fl_set_text_clipping( FL_Coord x,
-                                     FL_Coord y,
-                                     FL_Coord w,
-                                     FL_Coord h );
-
-FL_EXPORT void fl_unset_text_clipping( void );
 
 
 /* How we pack and unpack colors */

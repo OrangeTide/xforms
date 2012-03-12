@@ -267,10 +267,11 @@ To avoid drawing outside a box the following routine exists:
 void fl_set_clipping(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h);
 @end example
 @noindent
-It sets a clipping region in the Forms Library's default @code{GC}.
-@code{x}, @code{y}, @code{w} and @code{h} define the area drawing is
-to restrict to and are relative to the window/form that will be drawn
-to. In this way you can prevent drawing over other objects.
+It sets a clipping region in the Forms Library's default @code{GC}
+used for drawing (but not for output of text, see below). @code{x},
+@code{y}, @code{w} and @code{h} define the area drawing is to restrict
+to and are relative to the window/form that will be drawn to. In this
+way you can prevent drawing over other objects.
 
 When finished with drawing always use
 @findex fl_unset_clipping()
@@ -280,6 +281,17 @@ void fl_unset_clipping(void);
 @end example
 @noindent
 to stop clipping.
+
+To set clippings for text, which uses a different @code{GC}, the following
+routine must be used
+@findex fl_set_text_clipping()
+@anchor{fl_set_text_clipping()}
+@findex fl_set_untext_clipping()
+@anchor{fl_set_untext_clipping()}
+@example
+void fl_set_text_clipping(FL_Coord x,FL_Coord y,FL_Coord w,FL_Coord h);
+void wfl_unset_text_clipping(void);
+@end example
 
 Similar functions are available to set the clipping for a specific @code{GC}:
 @findex fl_set_gc_clipping()
@@ -293,23 +305,13 @@ void fl_unset_gc_clipping(GC gc);
 @end example
 
 To obtain the bounding box of an object with the dimension and
-location of the label taken into account (compare with
-@code{@ref{fl_get_object_geometry()}} the following routine exists:
+location of the label taken into account (in contrast to the
+@code{@ref{fl_get_object_geometry()} function which doesn't include a
+label that isn't inside the object} the following routine exists:
 @findex fl_get_object_bbox()
 @example
 void fl_get_object_bbox(FL_OBJECT *obj, FL_Coord *x, FL_Coord *y,
                         FL_Coord *w, FL_Coord *h);
-@end example
-
-To set clippings for text, which uses a different GC, the following
-routine should be used
-@findex fl_set_text_clipping()
-@anchor{fl_set_text_clipping()}
-@findex fl_set_untext_clipping()
-@anchor{fl_set_untext_clipping()}
-@example
-void fl_set_text_clipping(FL_Coord x,FL_Coord y,FL_Coord w,FL_Coord h);
-void wfl_unset_text_clipping(void);
 @end example
 
 For drawing text at the correct places you will need some information
@@ -835,7 +837,7 @@ according to the alignment, which could be inside or outside of the
 bounding box. The second routine will always draw the label outside of
 the bounding box.
 
-An important of aspect of (re)drawing an object is efficiency which
+An important aspect of (re)drawing an object is efficiency which
 can result in flicker and non-responsiveness if not handled with
 care. For simple objects like buttons or objects that do not have
 "movable parts", drawing efficiency is not a serious issue although

@@ -195,7 +195,7 @@ fli_tbox_delete_line( FL_OBJECT * obj,
             sp->xoffset = sp->max_width - sp->w;
     }
 
-    /* Check thaty offset is still reasonable */
+    /* Check that offset is still reasonable */
 
     if ( sp->num_lines == 0 )
         sp->yoffset = 0;
@@ -1465,9 +1465,9 @@ fli_tbox_recalc_area( FL_OBJECT * obj )
     sp->w = obj->w - 2 * FL_abs( obj->bw ) - LEFT_MARGIN - RIGHT_MARGIN;
     sp->h = obj->h - 2 * FL_abs( obj->bw ) - TOP_MARGIN - BOTTOM_MARGIN;
 
-    /* This is necessary because different box types haven't all the same
-       inside size but will look still wrong with anything but up and down
-       boxes... */
+    /* This is necessary because different box types don't have all the same
+       inside size - but it will look still wrong with anything but up and
+       down boxes... */
 
     if ( obj->boxtype == FL_UP_BOX )
     {
@@ -1645,11 +1645,12 @@ draw_tbox( FL_OBJECT * obj )
     if ( sp->num_lines == 0 )
         return;
 
+    fl_set_clipping( obj->x, obj->y, obj->w, obj->h );
+
     for ( i = 0; i < sp->num_lines; i++ )
     {
         TBOX_LINE *tl;
         GC activeGC = sp->defaultGC;
-
 
         tl = sp->lines[ i ];
 
@@ -1735,6 +1736,8 @@ draw_tbox( FL_OBJECT * obj )
                            obj->y + sp->y - sp->yoffset + tl->y + tl->asc,
                            tl->style, tl->size, tl->text, tl->len, 0 );
     }
+
+    fl_unset_clipping( );
 }
 
 
@@ -2132,19 +2135,16 @@ handle_mouse( FL_OBJECT * obj,
             }
         }
     }
-    else if ( obj->type != FL_NORMAL_BROWSER )      
+    else if ( obj->type != FL_NORMAL_BROWSER )
         line = find_mouse_line( obj, my );
 
-    /* A normal textbox doesn't react to the mouse otherwise */
+    /* A normal textbox doesn't react to the mouse in other ways */
 
     if ( obj->type == FL_NORMAL_BROWSER )
         return ret;
     else if (    obj->type == FL_SELECT_BROWSER
               || obj->type == FL_HOLD_BROWSER )
     {
-        if ( line < 0 || ! sp->lines[ line ]->selectable )
-            return ret;
-
         /* For FL_SELECT_BROWSER browsers the selection is undone when the
            mouse is released */
 
@@ -2155,7 +2155,7 @@ handle_mouse( FL_OBJECT * obj,
             return ret;
         }
 
-        if ( line < 0 )
+        if ( line < 0 || ! sp->lines[ line ]->selectable )
             return ret;
 
         if ( ev == FL_PUSH )
@@ -2268,6 +2268,11 @@ handle_tbox( FL_OBJECT * obj,
     FLI_TBOX_SPEC *sp = obj->spec;
     int ret = FL_RETURN_NONE;
     static int old_yoffset = -1;
+
+    if (     obj->type == FL_NORMAL_BROWSER
+          && key == FL_MBUTTON1
+          && sp->select_line >= 0 )
+		fli_tbox_deselect_line( obj, sp->select_line );
 
     /* Mouse wheel hack */
 

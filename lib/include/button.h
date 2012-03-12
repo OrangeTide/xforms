@@ -75,7 +75,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_BUTTON_COL1              FL_COL1
 #define FL_BUTTON_COL2              FL_COL1
 #define FL_BUTTON_LCOL              FL_LCOL
-#define FL_BUTTON_ALIGN             FL_ALIGN_CENTER
+#define FL_BUTTON_ALIGN             ( FL_ALIGN_CENTER | FL_ALIGN_INSIDE )
 #define FL_BUTTON_MCOL1             FL_MCOL
 #define FL_BUTTON_MCOL2             FL_MCOL
 #define FL_BUTTON_BW                FL_BOUND_WIDTH
@@ -86,7 +86,7 @@ typedef void ( * FL_CleanupButton )( FL_BUTTON_STRUCT * );
 #define FL_LIGHTBUTTON_COL1         FL_COL1
 #define FL_LIGHTBUTTON_COL2         FL_YELLOW
 #define FL_LIGHTBUTTON_LCOL         FL_LCOL
-#define FL_LIGHTBUTTON_ALIGN        FL_ALIGN_CENTER
+#define FL_LIGHTBUTTON_ALIGN        ( FL_ALIGN_CENTER | FL_ALIGN_INSIDE )
 #define FL_LIGHTBUTTON_TOPCOL       FL_COL1
 #define FL_LIGHTBUTTON_MCOL         FL_MCOL
 #define FL_LIGHTBUTTON_MINSIZE      ( ( FL_Coord ) 12 )

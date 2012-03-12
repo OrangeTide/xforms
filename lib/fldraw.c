@@ -498,13 +498,16 @@ fl_drw_box( int      style,
         case FL_RSHADOW_BOX:
             if ( w > 70 && h > 70 )
                 bw++;
-            fli_get_clipping( &cx, &cy, &cw, &ch );
 
-            /* draw the shadow.  draw it several times with clipping */
+            if (    fl_get_clipping( 1, &cx, &cy, &cw, &ch )
+                 && ( cw <= 0 || ch <= 0 ) )
+                break;
+
+            /* Draw the shadow, raw it several times with clipping */
 
             fl_roundrectf( x + bw, y + bw, w - bw, h - bw, FLI_SHADOW_COL );
 
-            /* draw the box */
+            /* Draw the box */
 
             fli_set_additional_clipping( x, y, w, h );
             fl_roundrectf( x + 1, y + 1, w - 1 - bw, h - 1 - bw, c );
@@ -549,7 +552,7 @@ fl_drw_box( int      style,
  *     0
  *   1   3
  *     2
- * draw a box rotated 45 degrees
+ * Draws a box rotated by 45 degrees
  ***************************************/
 
 void
@@ -561,11 +564,11 @@ fl_drw_checkbox( int      type,
                  FL_COLOR col,
                  int      bw )
 {
-    FL_POINT xpoint[ 5 ],          /* need one extra for closing of polygon! */
+    int halfw = w / 2,
+        halfh = h / 2;
+    FL_POINT xp[ 4 ],            /* need one extra for closing of polygons! */
              allp[ 9 ];
-    int halfh = h / 2,
-        halfw = w / 2;
-
+                      
     w = 2 * halfw;
     h = 2 * halfh;
 
@@ -579,45 +582,39 @@ fl_drw_checkbox( int      type,
     SET_POINT( allp + 5, x + bw,     y + halfh  );
     SET_POINT( allp + 6, x + halfw,  y + h - bw );
     SET_POINT( allp + 7, x + w - bw, y + halfh  );
+    SET_POINT( allp + 8, x + halfw,  y + halfh  );
 
-    /* Draw overall box */
-
-    fl_polyf( allp + 4, 4, col );
+    /* Draw the borders for up and down boxes (plus the interior, it will
+       be overdrawn in the next step) */
 
     if ( type == FL_UP_BOX || type == FL_DOWN_BOX )
     {
-        xpoint[ 0 ] = allp[ 0 ];
-        xpoint[ 1 ] = allp[ 1 ];
-        xpoint[ 2 ] = allp[ 5 ];
-        xpoint[ 3 ] = allp[ 4 ];
-        fl_polyf( xpoint, 4,
-                  type == FL_UP_BOX ? FL_LEFT_BCOL : FL_RIGHT_BCOL );
+        xp[ 2 ] = allp[ 8 ];
 
-        xpoint[ 0 ] = allp[ 0 ];
-        xpoint[ 1 ] = allp[ 4 ];
-        xpoint[ 2 ] = allp[ 7 ];
-        SET_POINT( xpoint + 3, allp[ 3 ].x, allp[ 3 ].y );
-        fl_polyf( xpoint, 4,
-                  type == FL_UP_BOX ? FL_TOP_BCOL : FL_BOTTOM_BCOL );
+        xp[ 0 ] = allp[ 0 ];
+        xp[ 1 ] = allp[ 1 ];
+        fl_polyf( xp, 3, type == FL_UP_BOX ? FL_LEFT_BCOL : FL_RIGHT_BCOL );
 
-        xpoint[ 0 ] = allp[ 6 ];
-        xpoint[ 1 ] = allp[ 2 ];
-        xpoint[ 2 ] = allp[ 3 ];
-        xpoint[ 3 ] = allp[ 7 ];
-        fl_polyf( xpoint, 4,
-                  type == FL_UP_BOX ? FL_RIGHT_BCOL : FL_LEFT_BCOL );
 
-        xpoint[ 0 ] = allp[ 1 ];
-        xpoint[ 1 ] = allp[ 2 ];
-        xpoint[ 2 ] = allp[ 6 ];
-        xpoint[ 3 ] = allp[ 5 ];
-        fl_polyf( xpoint, 4,
-                  type == FL_UP_BOX ? FL_BOTTOM_BCOL : FL_TOP_BCOL );
+        xp[ 0 ] = allp[ 1 ];
+        xp[ 1 ] = allp[ 2 ];
+        fl_polyf( xp, 3, type == FL_UP_BOX ? FL_BOTTOM_BCOL : FL_TOP_BCOL );
+
+        xp[ 0 ] = allp[ 2 ];
+        xp[ 1 ] = allp[ 3 ];
+        fl_polyf( xp, 3, type == FL_UP_BOX ? FL_RIGHT_BCOL : FL_LEFT_BCOL );
+
+        xp[ 0 ] = allp[ 3 ];
+        xp[ 1 ] = allp[ 0 ];
+        fl_polyf( xp, 3, type == FL_UP_BOX ? FL_TOP_BCOL : FL_BOTTOM_BCOL );
     }
 
+    /* Draw the interior */
+
+    fl_polyf( allp + 4, 4, col );
+
 #if 1
-    /* Special hack for B&W, add a border, destructive as polyl uses the
-       allp[ 5 ] */
+    /* Special hack for B&W, add a border */
 
     if ( fli_dithered( fl_vmode ) )
         fl_polyl( allp, 4, FL_BLACK );
@@ -627,9 +624,9 @@ fl_drw_checkbox( int      type,
 
 
 /***************************************
- * Draw a frame around a box. The frame is so drawn that it is just
- * outside of the box without any gap. A flat with the same size
- * as the frame just fit the inside the of the frame.
+ * Draws a frame around a box. The frame is drawn that it is just
+ * outside of the box without any gap. A flat box with the same
+ * size as that frame just fit the inside the of the frame.
  ***************************************/
 
 void
@@ -801,6 +798,12 @@ void
 fli_add_vertex( FL_Coord x,
                 FL_Coord y )
 {
+    if ( npt >= MAX_BUF_POINT )
+    {
+        M_err( "fli_add_vertex", "Vertices Out of bounds" );
+        return;
+    }
+
     xpbuf[ npt   ].x = x;
     xpbuf[ npt++ ].y = y;
 }
@@ -813,6 +816,12 @@ void
 fli_add_float_vertex( float x,
                       float y )
 {
+    if ( npt >= MAX_BUF_POINT )
+    {
+        M_err( "fli_add_float_vertex", "Vertices Out of bounds" );
+        return;
+    }
+
     xpbuf[ npt   ].x = FL_nint( x );
     xpbuf[ npt++ ].y = FL_nint( y );
 }
@@ -851,7 +860,7 @@ fli_endline( void )
 void
 fli_endclosedline( void )
 {
-    if ( npt >= MAX_BUF_POINT )
+    if ( npt - 1 >= MAX_BUF_POINT )
     {
         M_err( "fli_endclosedline", "Vertices Out of bounds" );
         return;

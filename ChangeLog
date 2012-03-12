@@ -1,3 +1,15 @@
+2012-03-12 Jens Thoms Toerring    <jt@toerring.de>
+	* lib/xdraw.c: Code cleanup for handlong clipping
+	several new functions for that introduced
+	* lib/tbox.c: Drawing outside the object disabled,
+	thanks to Sian Mountbatten for reportimg the problem
+	and Paul Nicholson for analyzing its causes.
+	* lib/handling.c: Bug that appeared when in the
+	callback of a browswer a new window was created,
+	that led to inconsistencies in the original browser
+	hopefully fixed. Thanks to Werner Heisch for finding
+	that strange problem and preparing an example program.
+
 2011-11-17 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/button.c: But pointed out by Michal Szymanski

@@ -45,7 +45,7 @@ draw_checkbutton( FL_OBJECT * ob )
              ww,
              hh,
              bw = FL_abs( ob->bw );
-    FL_BUTTON_STRUCT *sp = ob->spec;
+    FL_BUTTON_STRUCT * sp = ob->spec;
 
     if ( sp->event == FL_ENTER || sp->event == FL_LEAVE )
         return;

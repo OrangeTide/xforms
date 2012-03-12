@@ -527,6 +527,7 @@ fli_handle_form( FL_FORM * form,
             {
                 obj = fli_int.pushobj;
                 fli_int.pushobj = NULL;
+
                 fli_handle_object( obj, FL_RELEASE, x, y, key, xev, 1 );
             }
             break;
@@ -658,7 +659,7 @@ do_keyboard( XEvent * xev,
         /* empty */ ;
     else if ( IsTab( keysym ) )
     {
-        /* Fake a tab key, some systems shift+tab do not generate a tab */
+        /* Fake a tab key, on some systems shift+tab do not generate a tab */
 
         fli_handle_form( fli_int.keyform, formevent, '\t', xev );
     }
@@ -883,9 +884,31 @@ do_interaction_step( int wait_io )
 
             fli_context->mouse_button = st_xev.xbutton.button;
 
+            /* Before the button was released (but after the press) a new form
+               window may have been created, just below the mouse. In that case
+               the mouse form, which is the one to receive the release event
+               isn't the one that actually gets the event - it goes instead to
+               the newly opened form window. And in this case the coordinates of
+               where the mouse was release are for the new window but all the
+               functions called for the object in the original mouse form
+               expect them to be relative to the previous form. Thus we need
+               to adjust these coordinates to be relative to the original mouse
+               form window onstead of window opened since the mouse press.
+               Thanks to Werner Heisch for finding this weired problem... */
+
             if ( fli_int.mouseform )
+            {
+                if ( fli_int.mouseform != evform )
+                {
+                    st_xev.xbutton.x = fli_int.mousex +=
+                                              evform->x - fli_int.mouseform->x;
+                    st_xev.xbutton.y = fli_int.mousey +=
+                                              evform->y - fli_int.mouseform->y;
+                }
+
                 fli_handle_form( fli_int.mouseform, FL_RELEASE,
                                  st_xev.xbutton.button, &st_xev );
+            }
 
             fli_int.mouseform = evform;
             break;
@@ -1216,10 +1239,8 @@ handle_Expose_event( FL_FORM  * evform,
             st_xev.xexpose.height = evform->h - st_xev.xexpose.y;
     }
 
-    fli_set_perm_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
-                           st_xev.xexpose.width, st_xev.xexpose.height );
-    fl_set_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
-                     st_xev.xexpose.width, st_xev.xexpose.height );
+    fli_set_global_clipping( st_xev.xexpose.x, st_xev.xexpose.y,
+                             st_xev.xexpose.width, st_xev.xexpose.height );
 
     /* Run into trouble by ignoring configure notify */
 
@@ -1237,9 +1258,7 @@ handle_Expose_event( FL_FORM  * evform,
 
     fli_handle_form( evform, FL_DRAW, 0, &st_xev );
 
-    fli_unset_perm_clipping( );
-    fl_unset_clipping( );
-    fl_unset_text_clipping( );
+    fli_unset_global_clipping( );
 }
 
 
