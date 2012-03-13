@@ -671,7 +671,7 @@ fl_is_global_clipped( void )
 
 static int
 is_clipped( int type,
-                int include_global )
+            int include_global )
 {
     return    fli_is_clipped[ type ]
            || ( include_global && fli_is_clipped[ FLI_GLOBAL_CLIP ] );
@@ -808,10 +808,10 @@ fli_get_global_clip_rect( void )
  ***************************************/
 
 int
-fl_get_global_clipping( FL_COORD * x,
-                        FL_COORD * y,
-                        FL_COORD * w,
-                        FL_COORD * h )
+fl_get_global_clipping( FL_Coord * x,
+                        FL_Coord * y,
+                        FL_Coord * w,
+                        FL_Coord * h )
 {
     GET_RECT( fli_clip_rect[ FLI_GLOBAL_CLIP ], x, y, w, h );
     return fli_is_clipped[ FLI_GLOBAL_CLIP ];
@@ -904,12 +904,12 @@ set_clipping( int      type,
 static int
 get_clipping( int        type,
               int        include_global,
-              FL_COORD * x,
-              FL_COORD * y,
-              FL_COORD * w,
-              FL_COORD * h )
+              FL_Coord * x,
+              FL_Coord * y,
+              FL_Coord * w,
+              FL_Coord * h )
 {
-    if (    ( ! include_global || ! fli_is_clipped[ FLI_GLOBAL_CLIP ] )
+    if (    ! ( include_global && fli_is_clipped[ FLI_GLOBAL_CLIP ] )
          && fli_is_clipped[ type ] )
         GET_RECT( fli_clip_rect[ type ], x, y, w, h );
     else if ( include_global && fli_is_clipped[ FLI_GLOBAL_CLIP ] )
@@ -930,8 +930,7 @@ get_clipping( int        type,
             GET_RECT( fli_clip_rect[ FLI_GLOBAL_CLIP ], x, y, w, h );
     }
 
-    return    ( include_global && fli_is_clipped[ FLI_GLOBAL_CLIP ] )
-           || fli_is_clipped[ type ];
+    return is_clipped( type, include_global );
 }
 
 
@@ -989,10 +988,10 @@ fl_unset_clipping( )
 
 int
 fl_get_clipping( int        include_global,
-                 FL_COORD * x,
-                 FL_COORD * y,
-                 FL_COORD * w,
-                 FL_COORD * h )
+                 FL_Coord * x,
+                 FL_Coord * y,
+                 FL_Coord * w,
+                 FL_Coord * h )
 {
     return get_clipping( FLI_NORMAL_CLIP, include_global, x, y, w, h );
 }
@@ -1052,10 +1051,10 @@ fl_unset_text_clipping( void )
 
 int
 fl_get_text_clipping( int        include_global,
-                      FL_COORD * x,
-                      FL_COORD * y,
-                      FL_COORD * w,
-                      FL_COORD * h )
+                      FL_Coord * x,
+                      FL_Coord * y,
+                      FL_Coord * w,
+                      FL_Coord * h )
 {
     return get_clipping( FLI_TEXT_CLIP, include_global, x, y, w, h );
 }

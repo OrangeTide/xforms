@@ -273,7 +273,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
     if ( line >= sp->num_lines )
         line = sp->num_lines;
 
-    /* Make sure the line marked as selected and deselected stay correct */
+    /* Make sure the lines marked as selected and deselected remain unchanged */
 
     if ( sp->select_line >= line )
         sp->select_line++;
@@ -2108,7 +2108,7 @@ handle_mouse( FL_OBJECT * obj,
     if ( sp->num_lines == 0 )
         return ret;
 
-    /* Figure out the index of the line the mouse is on, if mouse is below
+    /* Figure out the index of the line the mouse is on. If the mouse is below
        or above the text area scroll up or down */
 
     if (    ev == FL_UPDATE
@@ -2138,7 +2138,7 @@ handle_mouse( FL_OBJECT * obj,
     else if ( obj->type != FL_NORMAL_BROWSER )
         line = find_mouse_line( obj, my );
 
-    /* A normal textbox doesn't react to the mouse in other ways */
+    /* A normal textbox doesn't react to the mouse in any other ways */
 
     if ( obj->type == FL_NORMAL_BROWSER )
         return ret;
@@ -2272,7 +2272,10 @@ handle_tbox( FL_OBJECT * obj,
     if (     obj->type == FL_NORMAL_BROWSER
           && key == FL_MBUTTON1
           && sp->select_line >= 0 )
+    {
+        fprintf( stderr, "Deselecting\n" );
 		fli_tbox_deselect_line( obj, sp->select_line );
+    }
 
     /* Mouse wheel hack */
 

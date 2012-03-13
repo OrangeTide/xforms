@@ -8,11 +8,11 @@
 	callback of a browswer a new window was created,
 	that led to inconsistencies in the original browser
 	hopefully fixed. Thanks to Werner Heisch for finding
-	that strange problem and preparing an example program.
+	this strange problem!x
 
 2011-11-17 Jens Thoms Toerring    <jt@toerring.de>
 
-	* lib/button.c: But pointed out by Michal Szymanski
+	* lib/button.c: Bug pointed out by Michal Szymanski
 	on resetting radio buttons fixed.
 
 2011-11-06 Jens Thoms Toerring    <jt@toerring.de>
