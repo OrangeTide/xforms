@@ -609,18 +609,20 @@ fl_add_browser( int          type,
 
 void
 fl_set_browser_vscrollbar( FL_OBJECT * obj,
-                           int         on )
+                           int         on_off )
 {
     FLI_BROWSER_SPEC *comp = obj->spec;
 
-    if ( comp->v_pref != on )
-    {
-        comp->v_pref = on;
-        redraw_scrollbar( obj );
-        fli_tbox_react_to_vert( comp->tb, on != FL_OFF );
-        get_geometry( obj );
-        fl_redraw_object( obj );
-    }
+    on_off = on_off ? FL_ON : FL_OFF;
+
+    if ( comp->v_pref == on_off )
+        return;
+
+    comp->v_pref = on_off;
+    redraw_scrollbar( obj );
+    fli_tbox_react_to_vert( comp->tb, on_off );
+    get_geometry( obj );
+    fl_redraw_object( obj );
 }
 
 
@@ -630,18 +632,20 @@ fl_set_browser_vscrollbar( FL_OBJECT * obj,
 
 void
 fl_set_browser_hscrollbar( FL_OBJECT * obj,
-                           int         on )
+                           int         on_off )
 {
     FLI_BROWSER_SPEC *comp = obj->spec;
 
-    if ( comp->h_pref != on )
-    {
-        comp->h_pref = on;
-        redraw_scrollbar( obj );
-        fli_tbox_react_to_hori( comp->tb, on != FL_OFF );
-        get_geometry( obj );
-        fl_redraw_object( obj );
-    }
+    on_off = on_off ? FL_ON : FL_OFF;
+
+    if ( comp->h_pref == on_off )
+        return;
+
+    comp->h_pref = on_off;
+    redraw_scrollbar( obj );
+    fli_tbox_react_to_hori( comp->tb, on_off );
+    get_geometry( obj );
+    fl_redraw_object( obj );
 }
 
 

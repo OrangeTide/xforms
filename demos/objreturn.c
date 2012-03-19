@@ -150,13 +150,13 @@ create_form_form0( void )
 
     fdui->obj[ 0 ] = obj = fl_add_valslider( FL_HOR_SLIDER, 12, 55, 138, 22,
                                              "" );
-    fl_set_object_lalign( obj ,FL_ALIGN_BOTTOM| FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_callback( obj, return_cb, 0 );
     fl_set_slider_return( obj, FL_RETURN_CHANGED );
 
     fdui->obj[ 1 ] = obj = fl_add_counter( FL_NORMAL_COUNTER, 12, 85, 138, 22,
                                            "" );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_callback( obj, return_cb, 1 );
 
     fdui->obj[ 2 ] = obj = fl_add_input( FL_NORMAL_INPUT, 12, 150, 138, 25,
@@ -167,7 +167,7 @@ create_form_form0( void )
 
     fdui->obj[ 3 ] = obj = fl_add_input( FL_INT_INPUT, 12, 187, 138, 25,
                                          "" );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_LEFT ) );
     fl_set_object_callback( obj, return_cb, 3 );
 
     fdui->when = obj = fl_add_select( FL_NORMAL_SELECT, 40, 12, 240, 27, "" );

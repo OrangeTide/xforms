@@ -69,7 +69,7 @@ handle_lframe( FL_OBJECT * ob,
             fl_get_string_dimension( ob->lstyle, ob->lsize,
                                      ob->label, len, &sw, &sh );
 
-            align = ob->align & ~FL_ALIGN_INSIDE;
+            align = fl_to_outside_lalign( ob->align );
 
             sw += 8;
             margin = 11 + ob->w * 0.02;
@@ -93,35 +93,38 @@ handle_lframe( FL_OBJECT * ob,
             if ( ob->type == FL_UP_FRAME || ob->type == FL_DOWN_FRAME )
                 dy = ( bw + 1 ) / 2;
 
-            if ( align == FL_ALIGN_RIGHT_TOP || align == FL_ALIGN_RIGHT )
+            switch ( align )
             {
-                sx = ob->x + ob->w - margin - sw;
-                sy = ob->y - sh / 2 - dy;
-            }
-            else if ( align == FL_ALIGN_TOP )
-            {
-                sx = ob->x + ( ob->w - sw ) / 2;
-                sy = ob->y - sh / 2 - dy;
-            }
-            else if ( align == FL_ALIGN_LEFT_BOTTOM )
-            {
-                sx = ob->x + margin;
-                sy = ob->y + ob->h - sh / 2 + dy;
-            }
-            else if ( align == FL_ALIGN_RIGHT_BOTTOM )
-            {
-                sx = ob->x + ob->w - margin - sw;
-                sy = ob->y + ob->h - sh / 2 + dy;
-            }
-            else if ( align == FL_ALIGN_BOTTOM )
-            {
-                sx = ob->x + ( ob->w - sw ) / 2;
-                sy = ob->y + ob->h - sh / 2 + dy;
-            }
-            else
-            {
-                sx = ob->x + margin;
-                sy = ob->y - sh / 2 - dy;
+                case FL_ALIGN_RIGHT_TOP :
+                case FL_ALIGN_RIGHT :
+                    sx = ob->x + ob->w - margin - sw;
+                    sy = ob->y - sh / 2 - dy;
+                    break;
+
+                case FL_ALIGN_TOP :
+                    sx = ob->x + ( ob->w - sw ) / 2;
+                    sy = ob->y - sh / 2 - dy;
+                    break;
+
+                case FL_ALIGN_LEFT_BOTTOM :
+                    sx = ob->x + margin;
+                    sy = ob->y + ob->h - sh / 2 + dy;
+                    break;
+
+                case FL_ALIGN_RIGHT_BOTTOM :
+                    sx = ob->x + ob->w - margin - sw;
+                    sy = ob->y + ob->h - sh / 2 + dy;
+                    break;
+
+                case FL_ALIGN_BOTTOM :
+                    sx = ob->x + ( ob->w - sw ) / 2;
+                    sy = ob->y + ob->h - sh / 2 + dy;
+                    break;
+
+                default :
+                    sx = ob->x + margin;
+                    sy = ob->y - sh / 2 - dy;
+                    break;
             }
 
             fl_drw_box( FL_FLAT_BOX, sx, sy, sw, sh, ob->col2, 0 );

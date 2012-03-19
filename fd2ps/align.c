@@ -36,13 +36,65 @@
 /***************************************
  ***************************************/
 
+int
+fl_is_inside_lalign( int align )
+{
+    return    ( unsigned int ) align & FL_ALIGN_INSIDE
+           || align == FL_ALIGN_CENTER;
+}
+
+/***************************************
+ ***************************************/
+
+int
+fl_is_outside_lalign( int align )
+{
+    return ! fl_is_inside_lalign( align );
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_is_center_lalign( int align )
+{
+    return ( ( unsigned int ) align & ~ FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_to_inside_lalign( int align )
+{
+    return fl_is_center_lalign( align ) ?
+           FL_ALIGN_CENTER : ( ( unsigned int ) align | FL_ALIGN_INSIDE );
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_to_outside_lalign( int align )
+{
+    return fl_is_center_lalign( align ) ?
+           FL_ALIGN_CENTER : ( ( unsigned int ) align & ~FL_ALIGN_INSIDE );
+}
+
+
+/***************************************
+ ***************************************/
+
 void
 fl_get_hv_align( int   align,
                  int * halign,
                  int * valign )
 {
 
-    align &= ~FL_ALIGN_INSIDE;
+    align = fl_to_outside_lalign( align );
 
     switch ( align )
     {
@@ -117,7 +169,7 @@ fl_get_outside_align( int   align,
     *newy = y;
     *new_align = FL_ALIGN_CENTER;
 
-    align &= ~FL_ALIGN_INSIDE;
+    align = fl_to_outside_lalign( align );
 
     if ( align == FL_ALIGN_LEFT )
     {

@@ -129,7 +129,7 @@ draw_lightbutton( FL_OBJECT * ob )
 
     /* Draw the label */
 
-    if ( ob->align & ~ FL_ALIGN_INSIDE == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         fl_drw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, ob->w - ww - 3,
                      ob->h, ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else

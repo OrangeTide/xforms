@@ -1,6 +1,19 @@
+2012-03-19 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c, lib/forms.c: Several changes to speed up
+	redraw, thanks to Werner Heisch noticing the problem.
+	Function for setting form background color added.
+	* lib/handling.c: when in a callback e.g. for a browser a
+	new window was opened was under the mouse the browser didn't
+	receive the correct coordinates on mouse release as
+	Werner Heisch noticed.
+	* lib/align.c: Cleanup of code for label alignments and
+	some new functions added (this resulted also in lot of
+	minor changes in other files).
+
 2012-03-12 Jens Thoms Toerring    <jt@toerring.de>
-	* lib/xdraw.c: Code cleanup for handlong clipping
-	several new functions for that introduced
+	* lib/xdraw.c: Code cleanup for handling of clipping,
+	several new functions added for that.
 	* lib/tbox.c: Drawing outside the object disabled,
 	thanks to Sian Mountbatten for reportimg the problem
 	and Paul Nicholson for analyzing its causes.

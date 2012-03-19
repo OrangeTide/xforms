@@ -596,7 +596,7 @@ pixalign_change( FL_OBJECT * obj,
 
     /* Don't allow outside align */
 
-    fl_set_pixmap_align( edited, info->align | FL_ALIGN_INSIDE,
+    fl_set_pixmap_align( edited, fl_to_inside_lalign( info->align ),
                          info->dx, info->dy );
     if ( auto_apply )
         redraw_the_form( 0 );

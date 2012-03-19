@@ -203,7 +203,7 @@ draw_slider( FL_OBJECT * ob )
     val = sp->min == sp->max ?
           0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
 
-    if ( ob->align == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
     {
         fli_drw_slider( ob, ob->col1, ob->col2,
                         IS_FILL( ob ) ? "" : ob->label,
@@ -716,11 +716,13 @@ handle_slider( FL_OBJECT * ob,
     {
         case FL_ATTRIB :
         case FL_RESIZED :
+            ob->align = fl_to_outside_lalign( ob->align );
+            if ( fl_is_center_lalign( ob->align ) )
+                ob->align = FL_SLIDER_ALIGN;
             compute_bounds( ob );
             break;
 
         case FL_DRAW :
-            ob->align &= ~ FL_ALIGN_INSIDE;
             sp->draw_type = COMPLETE;
             draw_slider( ob );
             break;

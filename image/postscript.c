@@ -1038,7 +1038,7 @@ flps_draw_text_point( int      lalign,
                       int      lsize,
                       char   * str )
 {
-    int align = lalign & ~ FL_ALIGN_INSIDE;
+    int align = fl_to_outside_lalign( lalign );
     int bbox = 1.4 * lsize + 6;
     int xx = x,
         yy = y;

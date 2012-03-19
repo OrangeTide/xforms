@@ -505,7 +505,7 @@ within the bounding box that should not be painted, which is not
 easily done without complex and expensive clipping and unacceptable
 inefficiency. XForms gets around this by painting these regions with
 the form's backface color. In most cases, this should prove to be
-adequate. If needed, you can modify the background of the pixamp by
+adequate. If needed, you can modify the background of the pixmap by
 changing @code{obj->dbl_background} after switching to double buffer.
 
 Normally the Forms Library reports errors to @code{stderr}. This can

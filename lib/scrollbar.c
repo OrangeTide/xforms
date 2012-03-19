@@ -73,8 +73,7 @@ handle_scrollbar( FL_OBJECT * obj,
             /* fall through */
 
         case FL_DRAWLABEL :
-            if ( obj->label && *obj->label )
-                fl_draw_object_label_outside( obj );
+            fl_draw_object_label_outside( obj );
             break;
 
         case FL_FREEMEM :
@@ -305,7 +304,7 @@ fl_create_scrollbar( int          type,
     obj->spec       = sp = fl_calloc( 1, sizeof *sp );
     obj->col1       = FL_COL1;
     obj->col2       = FL_COL1;
-    obj->align      = FL_ALIGN_BOTTOM;
+    obj->align      = FL_SCROLLBAR_ALIGN;
     obj->set_return = fl_set_scrollbar_return;
 
     if ( IsThin( type ) )

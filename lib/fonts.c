@@ -62,22 +62,20 @@ static char *get_fname( const char *str,
 
 static const char *fnts[ FL_MAXFONTS ] =
 {
-    "-*-helvetica-medium-r-*-*-*-?-*-*-p-*-*-*",
-    "-*-helvetica-bold-r-*-*-*-?-*-*-p-*-*-*",
-    "-*-helvetica-medium-o-*-*-*-?-*-*-p-*-*-*",
-    "-*-helvetica-bold-o-no*-*-*-?-*-*-p-*-*-*",
+    "-*-helvetica-medium-r-*-*-*-?-*-*-*-*-*-*",
+    "-*-helvetica-bold-r-*-*-*-?-*-*-*-*-*-*",
+    "-*-helvetica-medium-o-*-*-*-?-*-*-*-*-*-*",
+    "-*-helvetica-bold-o-no*-*-*-?-*-*-*-*-*-*",
 
-    "-*-courier-medium-r-*-*-*-?-*-*-m-*-*-*",
-    "-*-courier-bold-r-*-*-*-?-*-*-m-*-*-*",
-    "-*-courier-medium-o-*-*-*-?-*-*-m-*-*-*",
-    "-*-courier-bold-o-*-*-*-?-*-*-m-*-*-*",
+    "-*-courier-medium-r-*-*-*-?-*-*-*-*-*-*",
+    "-*-courier-bold-r-*-*-*-?-*-*-*-*-*-*",
+    "-*-courier-medium-o-*-*-*-?-*-*-*-*-*-*",
+    "-*-courier-bold-o-*-*-*-?-*-*-*-*-*-*",
 
-    "-*-times-medium-r-*-*-*-?-*-*-p-*-*-*",
-    "-*-times-bold-r-*-*-*-?-*-*-p-*-*-*",
-    "-*-times-medium-i-*-*-*-?-*-*-p-*-*-*",
-    "-*-times-bold-i-*-*-*-?-*-*-p-*-*-*",
-
- /* bitstream fonts can scale all */
+    "-*-times-medium-r-*-*-*-?-*-*-*-*-*-*",
+    "-*-times-bold-r-*-*-*-?-*-*-*-*-*-*",
+    "-*-times-medium-i-*-*-*-?-*-*-*-*-*-*",
+    "-*-times-bold-i-*-*-*-?-*-*-*-*-*-*",
 
     "-*-charter-medium-r-*-*-*-?-*-*-*-*-*-*",
     "-*-charter-bold-r-*-*-*-?-*-*-*-*-*-*",
@@ -287,8 +285,8 @@ try_get_font_struct( int numb,
         if ( ! fli_no_connection ) {
 
             /* This function is typically used to test whether a font is
-               loadable or not, so need not be a fatal condition if
-               it fails. Issue a message for information therefore. */
+               loadable or not, so it's not a fatal error if it fails. Issue
+               a message for information therefore. */
 
             M_info( "try_get_font_struct", "Bad FontStyle requested: %d: %s",
                     numb, flf->fname );

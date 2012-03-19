@@ -67,7 +67,7 @@ draw_roundbutton( FL_OBJECT * ob )
         fl_circ(  xx, yy, ( int ) ( 0.8 * rr ), FL_BLACK );
     }
 
-    if ( ob->align == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
                      ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else

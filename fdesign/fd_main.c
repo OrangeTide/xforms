@@ -184,8 +184,9 @@ add_something( void )
 
     if ( ! cur_form )
     {
-        fl_show_alert( "Warning", "Please add a form first", "", 0 );
-        return;
+        addform_cb( NULL, 0 );
+        if ( ! cur_form )
+            return;
     }
 
     fl_winset( main_window );

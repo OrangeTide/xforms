@@ -317,6 +317,7 @@ create_new_form( FL_Coord w,
     form->close_data        = NULL;
     form->icon_pixmap       = form->icon_mask = None;
     form->no_tooltip        = 0;
+    form->needs_full_redraw = 1;
 
     return form;
 }
@@ -414,7 +415,7 @@ fl_addto_form( FL_FORM * form )
 
 
 /***************************************
- * Starts a group definition
+ * Starts a group definition by adding an object of type FL_BEGIN_GROUP
  ***************************************/
 
 FL_OBJECT *
@@ -450,7 +451,7 @@ fl_bgn_group( void )
 
 
 /***************************************
- * Ends a group definition
+ * Ends a group definition by adding an object of type FL_END_GROUP
  ***************************************/
 
 FL_OBJECT *
@@ -807,6 +808,9 @@ fl_set_form_maxsize( FL_FORM * form,
 
 
 /***************************************
+ * Switches double buffering for forms on or off (with double buffering
+ * on we draw first to a pixmap for the form before copying that to the
+ * forms window - can reduces flickering)
  ***************************************/
 
 void
@@ -818,6 +822,18 @@ fl_set_form_dblbuffer( FL_FORM * form,
         M_err( "fl_set_form_dblbuffer", "NULL form" );
         return;
     }
+
+    if ( form->use_pixmap == yesno )
+        return;
+
+    /* If the form is currently frozen the redraw on unfreeze will only
+       draw those objects that have been changed and thus have their
+       'redraw' flag set. But when switching double buffering on there's
+       no pixmap yet that already contains the non-modified objects. Thus
+       in this case we must make sure all objects of the form get redrawn. */
+
+    if ( yesno && form->frozen )
+        form->needs_full_redraw = 1;
 
     form->use_pixmap = yesno;
 }
@@ -920,6 +936,71 @@ fl_set_form_position( FL_FORM * form,
 
 
 /***************************************
+ * Sets the background color of the form - a bit of a hack since it
+ * actually uses the first or second object of the form...
+ ***************************************/
+
+void
+fl_set_form_background_color( FL_FORM * form,
+                              FL_COLOR  color )
+{
+    if ( ! form )
+    {
+        M_err( "fl_set_forms_background_color", "NULL form" );
+        return;
+    }
+
+    /* If the empty box that all forms get as their first object on creation
+       does not exist anymore we can't set a background color */
+
+    if ( ! form->first )
+    {
+        M_err( "fl_set_forms_background_color", "Form has no background" );
+        return;
+    }
+
+    /* If there's no other object except the empty box or the first object
+       isn't an empty box anymore set the color for this first object, otherwise
+       for the next object. */
+
+    if ( ! form->first->next || form->first->boxtype != FL_NO_BOX )
+        fl_set_object_color( form->first, color, form->first->col2 );
+    else
+        fl_set_object_color( form->first->next, color,
+                             form->first->next->col2 );
+}
+
+
+/***************************************
+ * Returns the background color used for the form
+ ***************************************/
+
+FL_COLOR
+fl_get_form_background_color( FL_FORM * form )
+{
+    if ( ! form )
+    {
+        M_err( "fl_get_forms_background_color", "NULL form" );
+        return FL_COL1;
+    }
+
+    /* If the empty box that all forms get as their first object on creation
+       does not exist anymore we can't set a background color */
+
+    if ( ! form->first )
+    {
+        M_err( "fl_get_forms_background_color", "Form has no background" );
+        return FL_COL1;
+    }
+
+    if ( form->first->boxtype != FL_NO_BOX || ! form->first->next )
+        return form->first->col1;
+    else
+        return form->first->next->col1;
+}
+
+
+/***************************************
  * Sets the position of the hotspot of a form
  ***************************************/
 
@@ -992,8 +1073,8 @@ force_visible( FL_FORM * form )
 
 
 /***************************************
- * Sets the name (label) of the form and. if the
- * form is shown, the form's window title
+ * Sets the name (label) of the form and. If the
+ * form is shown it's also the form's window title.
  ***************************************/
 
 void
@@ -1576,7 +1657,7 @@ fl_deactivate_form( FL_FORM * form )
 
 
 /***************************************
- * Installs handler to be called at (final) re-activation of the form
+ * Installs handler to be called on (final) re-activation of the form
  ***************************************/
 
 FL_FORM_ATACTIVATE
@@ -1601,7 +1682,7 @@ fl_set_form_atactivate( FL_FORM            * form,
 
 
 /***************************************
- * Installs handler to be called at (first) deactivation of the form
+ * Installs handler to be called on (first) deactivation of the form
  ***************************************/
 
 FL_FORM_ATDEACTIVATE
@@ -1654,7 +1735,7 @@ fl_deactivate_all_forms( void )
 
 
 /***************************************
- * Installs handler to be called at close of the form
+ * Installs handler to be called on close of the form
  ***************************************/
 
 FL_FORM_ATCLOSE
@@ -1679,6 +1760,8 @@ fl_set_form_atclose( FL_FORM         * form,
 
 
 /***************************************
+ * Installs handler to be called on end of application by the user
+ * using some window manager method to close a window
  ***************************************/
 
 FL_FORM_ATCLOSE
@@ -1889,7 +1972,7 @@ simple_form_rescale( FL_FORM * form,
 
     for ( obj = form->first; obj; obj = obj->next )
         if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
-            fl_scale_object( obj, scale, scale );
+            fli_scale_object( obj, scale, scale );
 
     fl_redraw_form( form );
 }
@@ -1915,6 +1998,14 @@ fl_fit_object_label( FL_OBJECT * obj,
            yfactor;
 
     if ( fli_no_connection )
+        return;
+
+    if (    fl_is_inside_lalign( obj->align )
+         || obj->objclass == FL_INPUT
+         || obj->parent
+         || ! obj->label
+         || ! *obj->label
+         || *obj->label == '@' )
         return;
 
     fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
@@ -2043,50 +2134,48 @@ fl_adjust_form_size( FL_FORM * form )
     max_factor = factor = 1.0;
     for ( obj = form->first; obj; obj = obj->next )
     {
-        if (    (    obj->align == FL_ALIGN_CENTER
-                  || obj->align & FL_ALIGN_INSIDE
-                  || obj->objclass == FL_INPUT )
-             && ! obj->parent
-             && *obj->label
-             && *obj->label != '@'
-             && obj->boxtype != FL_NO_BOX
-             && ( obj->boxtype != FL_FLAT_BOX || obj->objclass == FL_MENU ) )
+        if (    fl_is_inside_lalign( obj->align )
+             || obj->objclass == FL_INPUT
+             || obj->parent
+             || ! obj->label
+             || ! *obj->label
+             || *obj->label == '@' )
+            continue;
+
+        fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
+                                 strlen( obj->label ), &sw, &sh );
+
+        bw = ( obj->boxtype == FL_UP_BOX || obj->boxtype == FL_DOWN_BOX ) ?
+             FL_abs( obj->bw ) : 1;
+
+        if (    obj->objclass == FL_BUTTON
+             && (    obj->type == FL_RETURN_BUTTON
+                  || obj->type == FL_MENU_BUTTON ) )
+            sw += FL_min( 0.6 * obj->h, 0.6 * obj->w ) - 1;
+
+        if ( obj->objclass == FL_BUTTON && obj->type == FL_LIGHTBUTTON )
+            sw += FL_LIGHTBUTTON_MINSIZE + 1;
+
+        if (    sw <= obj->w - 2 * ( bw + xm )
+             && sh <= obj->h - 2 * ( bw + ym ) )
+            continue;
+
+        if ( ( osize = obj->w - 2 * ( bw + xm ) ) <= 0 )
+            osize = 1;
+        xfactor = ( double ) sw / osize;
+
+        if ( ( osize = obj->h - 2 * ( bw + ym ) ) <= 0 )
+            osize = 1;
+        yfactor = ( double ) sh / osize;
+
+        if ( obj->objclass == FL_INPUT )
         {
-            fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
-                                     strlen( obj->label ), &sw, &sh );
-
-            bw = ( obj->boxtype == FL_UP_BOX || obj->boxtype == FL_DOWN_BOX ) ?
-                 FL_abs( obj->bw ) : 1;
-
-            if (    obj->objclass == FL_BUTTON
-                 && (    obj->type == FL_RETURN_BUTTON
-                      || obj->type == FL_MENU_BUTTON ) )
-                sw += FL_min( 0.6 * obj->h, 0.6 * obj->w ) - 1;
-
-            if ( obj->objclass == FL_BUTTON && obj->type == FL_LIGHTBUTTON )
-                sw += FL_LIGHTBUTTON_MINSIZE + 1;
-
-            if (    sw <= obj->w - 2 * ( bw + xm )
-                 && sh <= obj->h - 2 * ( bw + ym ) )
-                continue;
-
-            if ( ( osize = obj->w - 2 * ( bw + xm ) ) <= 0 )
-                osize = 1;
-            xfactor = ( double ) sw / osize;
-
-            if ( ( osize = obj->h - 2 * ( bw + ym ) ) <= 0 )
-                osize = 1;
-            yfactor = ( double ) sh / osize;
-
-            if ( obj->objclass == FL_INPUT )
-            {
-                xfactor = 1.0;
-                yfactor = ( sh + 1.6 ) / osize;
-            }
-
-            if ( ( factor = FL_max( xfactor, yfactor ) ) > max_factor )
-                max_factor = factor;
+            xfactor = 1.0;
+            yfactor = ( sh + 1.6 ) / osize;
         }
+
+        if ( ( factor = FL_max( xfactor, yfactor ) ) > max_factor )
+            max_factor = factor;
     }
 
     if ( max_factor <= 1.0 )

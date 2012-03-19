@@ -460,8 +460,8 @@ fli_handle_form( FL_FORM * form,
 
     switch ( event )
     {
-        case FL_DRAW:       /* form must be redrawn */
-            fli_redraw_form_using_xevent( form, key, xev );
+        case FL_DRAW:       /* form must be redrawn completely */
+            fl_redraw_form( form );
             break;
 
         case FL_ENTER:      /* mouse did enter the form */
@@ -889,12 +889,13 @@ do_interaction_step( int wait_io )
                the mouse form, which is the one to receive the release event
                isn't the one that actually gets the event - it goes instead to
                the newly opened form window. And in this case the coordinates of
-               where the mouse was release are for the new window but all the
-               functions called for the object in the original mouse form
-               expect them to be relative to the previous form. Thus we need
-               to adjust these coordinates to be relative to the original mouse
-               form window onstead of window opened since the mouse press.
-               Thanks to Werner Heisch for finding this weired problem... */
+               where the mouse was release are relative to the new window but
+               all the functions called for the object in the original mouse
+               form expect them to be relative to the previous form. Thus we
+               need to adjust these coordinates to be relative to the original
+               mouse form window instead of the window opened since the mouse
+               press. Thanks to Werner Heisch for finding this weired
+               problem... */
 
             if ( fli_int.mouseform )
             {
@@ -951,8 +952,6 @@ fli_handle_idling( XEvent * xev,
                    long     msec,
                    int      do_idle_cb )
 {
-    
-
     static int within_idle_cb = 0;   /* Flag used to avoid an idle callback
                                         being called from within itself */
 

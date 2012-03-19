@@ -67,7 +67,7 @@ create_it( void )
     tip->fntstyle    = FL_NORMAL_STYLE;
     tip->fntsize     = FL_DEFAULT_SIZE;
     tip->boxtype     = FL_BORDER_BOX;
-    tip->lalign      = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
+    tip->lalign      = fl_to_inside_lalign( FL_ALIGN_LEFT );
     tip->textcolor   = FL_BLACK;
     tip->background  = FL_YELLOW;
 
@@ -195,7 +195,8 @@ void
 fl_set_tooltip_lalign( int align )
 {
     create_it( );
-    fl_set_object_lalign( tip->text, tip->lalign = align );
+    fl_set_object_lalign( tip->text,
+                          tip->lalign = fl_to_inside_lalign( align ) );
 }
 
 

@@ -1469,8 +1469,9 @@ handle_input( FL_OBJECT * obj,
     int ret = FL_RETURN_NONE,
         val;
 
-    if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
-         && ! fli_handle_mouse_wheel( &event, &key, ev ) )
+    if (    event == FL_RELEASE
+         && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+         && ! fli_mouse_wheel_to_keypress( &event, &key, ev ) )
         return ret;
 
     switch ( event )
@@ -1489,9 +1490,9 @@ handle_input( FL_OBJECT * obj,
                     sp->dummy = sp->input = obj;
             }
 
-            sp->dummy->align &= ~FL_ALIGN_INSIDE;
+            sp->dummy->align = fl_to_outside_lalign( sp->dummy->align );
             copy_attributes( sp->input, sp->dummy );
-            if ( event == FL_DRAW && sp->input->type != FL_HIDDEN_INPUT )
+            if ( sp->input->type != FL_HIDDEN_INPUT )
                 draw_input( sp->input );
             /* fall through */
 

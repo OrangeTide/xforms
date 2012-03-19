@@ -222,7 +222,7 @@ emit_pixmap_code( FILE      * fp,
 
     if ( info->align != definfo->align && ob->objclass == FL_PIXMAP )
         fprintf( fp, "    fl_set_pixmap_align( obj, %s, %d, %d );\n",
-                 align_name( info->align | FL_ALIGN_INSIDE, 1 ), info->dx,
+                 align_name( fl_to_inside_lalign(info->align ), 1 ), info->dx,
                  info->dy );
 
     if ( *info->data && info->use_data && *info->filename )
@@ -276,7 +276,7 @@ save_pixmap_attrib( FILE      * fp,
 
     if ( info->align != definfo->align )
         fprintf( fp, "    align: %s\n",
-                 align_name( info->align | FL_ALIGN_INSIDE, 0 ) );
+                 align_name( fl_to_inside_lalign( info->align ), 0 ) );
 
     if ( *info->data && *info->filename )
         fprintf( fp, "    data: %s\n", info->data );
@@ -350,7 +350,7 @@ pixmapalign_change( FL_OBJECT * ob,
 
     /* Don't allow outside align */
 
-    fl_set_pixmap_align( edited, info->align | FL_ALIGN_INSIDE,
+    fl_set_pixmap_align( edited, fl_to_inside_lalign( info->align ),
                          info->dx, info->dy );
     if ( auto_apply )
         redraw_the_form( 0 );

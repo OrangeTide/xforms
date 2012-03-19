@@ -148,7 +148,7 @@ handle_timer( FL_OBJECT * ob,
             if ( ob->type != FL_HIDDEN_TIMER && ! update_only )
             {
                 if (    ob->type == FL_VALUE_TIMER
-                     && ( ob->align & ~ FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER )
+                     && fl_is_center_lalign( ob->align ) )
                     fl_drw_text_beside( FL_ALIGN_LEFT, ob->x, ob->y,
                                         ob->w, ob->h, ob->lcol, ob->lstyle,
                                         ob->lsize, ob->label );

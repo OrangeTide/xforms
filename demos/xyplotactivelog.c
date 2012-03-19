@@ -252,7 +252,7 @@ create_form_axypform( void )
 
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_BLACK, FL_GREEN );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_callback( obj, xyplot_cb, 0 );
     fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );
 
@@ -307,7 +307,7 @@ create_form_axypform( void )
     fdui->status = obj = fl_add_box( FL_BORDER_BOX, 20, 15, 285, 25, "" );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_gravity( obj, FL_NorthWest, FL_NorthEast );
-    fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 325, 250, 90, 30, "Done" );
     fl_set_object_gravity( obj, FL_SouthEast, FL_SouthEast );

@@ -457,7 +457,7 @@ FD_www *create_form_www( void )
 
     fdui->listbr = obj = fl_add_browser( FL_HOLD_BROWSER, 20, 90,
                                          250, 220, "" );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );
     fl_set_object_callback( obj, change_sites, 0 );
 

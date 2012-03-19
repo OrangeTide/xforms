@@ -1,4 +1,4 @@
-Magic: 14000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 8
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 630 310
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,7 +33,7 @@ argument:
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 541 0 89 310
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: RETURN_BUTTON
+type: FL_RETURN_BUTTON
 box: 550 85 70 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -69,7 +69,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 550 109 70 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -87,7 +87,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 550 133 70 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -105,7 +105,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 550 158 70 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -123,7 +123,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 545 25 25 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_BLUE
@@ -141,7 +141,7 @@ argument: 0
 
 --------------------
 class: FL_TABFOLDER
-type: TOP_TABFOLDER
+type: FL_TOP_TABFOLDER
 box: 6 5 531 299
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -165,7 +165,7 @@ Number of Objects: 25
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 534 278
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -183,26 +183,11 @@ argument:
 
 --------------------
 class: FL_BEGIN_GROUP
-type: 0
-box: 0 10 10 0
-boxtype: FL_NO_BOX
-colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: 
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
 name: generic_group
-callback: 
-argument: 
-return: FL_RETURN_ALWAYS
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 235 120 185 137
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -220,7 +205,7 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 235 15 185 95
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -238,7 +223,7 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 15 212 242
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -256,7 +241,7 @@ argument:
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 69 31 143 25
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -274,7 +259,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 69 61 143 25
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -292,7 +277,7 @@ argument: 0
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 69 121 143 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_TOP_BCOL
@@ -311,7 +296,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 69 151 143 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_TOP_BCOL
@@ -330,7 +315,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 69 181 143 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_TOP_BCOL
@@ -349,7 +334,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 69 211 143 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_TOP_BCOL
@@ -368,7 +353,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 69 91 143 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_TOP_BCOL
@@ -387,7 +372,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 278 24 131 25
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -405,7 +390,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 278 51 131 25
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -423,7 +408,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 278 78 131 25
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -441,7 +426,7 @@ argument: 0
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 431 80 89 150
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -459,7 +444,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 440 191 70 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -477,7 +462,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 440 111 70 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -495,7 +480,7 @@ argument: 1
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 440 151 70 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -513,7 +498,7 @@ argument: 2
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 305 130 108 23
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -531,7 +516,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 305 182 108 23
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -549,7 +534,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 305 206 108 23
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -567,7 +552,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 305 154 108 23
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -585,7 +570,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE
+type: FL_NORMAL_CHOICE
 box: 305 230 108 23
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_BLACK
@@ -603,22 +588,6 @@ argument: 0
 
 --------------------
 class: FL_END_GROUP
-type: 0
-box: 0 0 0 0
-boxtype: FL_NO_BOX
-colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: 
-shortcut: 
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: 
-argument: 
-return: FL_RETURN_ALWAYS
 
 =============== FORM ===============
 Name: nullattrib
@@ -628,7 +597,7 @@ Number of Objects: 2
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 540 280
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -646,7 +615,7 @@ argument:
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 90 100 350 50
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1

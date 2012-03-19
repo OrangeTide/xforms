@@ -185,7 +185,7 @@ create_form_axypform( void )
                                         20, 50, 285, 235, "" );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_BLACK, FL_GREEN );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_callback( obj, xyplot_cb, 0 );
 
     obj = fl_add_checkbutton( FL_PUSH_BUTTON, 315, 40, 80, 25, "AlwaysReturn" );

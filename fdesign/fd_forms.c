@@ -209,7 +209,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     cur_form = forms[ fnumb ].form = fl_bgn_form( FL_NO_BOX, w, h );
     fl_end_form( );
 
-    add_an_object( FL_BOX, FL_UP_BOX, 0, 0, w, h );
+    add_an_object( FL_BOX, FL_FLAT_BOX, 0, 0, w, h );
     fl_set_form_dblbuffer( cur_form, 1 );
 
     /* Get form name and add it */
@@ -220,7 +220,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         sprintf( forms[ fnumb ].fname, "form%d", form_seq++ );
     fl_add_browser_line( fd_control->formbrowser, forms[ fnumb ].fname );
 
-    /* finish off */
+    /* Finish off */
 
     set_form( fnumb++ );
     fl_activate_form( fd_control->control );

@@ -793,14 +793,14 @@ fl_set_select_text_align( FL_OBJECT * obj,
         return -1;
     }
 
-    if ( ! ( align & FL_ALIGN_INSIDE ) )
+    if ( fl_is_outside_lalign( align ) )
     {
         M_warn( "fl_set_select_text_align", "Adding FL_ALIGN_INSIDE flag" );
-        align |= FL_ALIGN_INSIDE;
+        align = fl_to_inside_lalign( align );
     }
 
-    if (    align < ( FL_ALIGN_CENTER | FL_ALIGN_INSIDE )
-         || align > ( FL_ALIGN_RIGHT_BOTTOM | FL_ALIGN_INSIDE ) )
+    if (    fl_to_outside_lalign( align ) < FL_ALIGN_CENTER
+         || fl_to_outside_lalign( align ) > FL_ALIGN_RIGHT_BOTTOM )
     {
         M_err( "fl_set_select_text_align", "Invalid value for align" );
         return -1;
@@ -884,6 +884,12 @@ handle_select( FL_OBJECT * obj,
 
     switch ( event )
     {
+        case FL_ATTRIB :
+            obj->align = fl_to_outside_lalign( obj->align );
+            if ( fl_is_center_lalign( obj->align ) )
+                obj->align = FL_SELECT_ALIGN;
+            break;
+
         case FL_DRAW :
             if ( obj->type != FL_DROPLIST_SELECT )
                 draw_select( obj );
@@ -892,8 +898,7 @@ handle_select( FL_OBJECT * obj,
             /* fall through */
 
         case FL_DRAWLABEL :
-            obj->align &= ~ FL_ALIGN_INSIDE;
-            fl_drw_text_beside( obj->align & ~ FL_ALIGN_INSIDE, obj->x, obj->y,
+            fl_drw_text_beside( obj->align, obj->x, obj->y,
                                 obj->w, obj->h, obj->lcol, obj->lstyle,
                                 obj->lsize, obj->label );
             break;

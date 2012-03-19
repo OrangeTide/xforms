@@ -420,10 +420,10 @@ readback_attributes( FL_OBJECT * obj )
     obj->align = align_val( tmpbuf );
 
     if (    fl_get_choice( fd_generic_attrib->inside ) == 1
-         && obj->align != FL_ALIGN_CENTER )
-        obj->align |= FL_ALIGN_INSIDE;
+         && ! fl_is_center_lalign( obj->align ) )
+        obj->align = fl_to_inside_lalign( obj->align );
     else
-        obj->align &= ~FL_ALIGN_INSIDE;
+        obj->align = fl_to_outside_lalign( obj->align );
 
     fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
                  fl_get_choice_text( fd_generic_attrib->resize ) );
@@ -481,7 +481,7 @@ show_attributes( const FL_OBJECT * obj )
         lstyle,
         spstyle,
         oksize,
-        align = obj->align & ~FL_ALIGN_INSIDE;
+        align = fl_to_outside_lalign( obj->align );
     static char othersize[ 32 ];
 
     fl_freeze_form( fd_generic_attrib->generic_attrib );

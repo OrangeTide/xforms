@@ -366,7 +366,8 @@ ps_draw_text_beside( int          align,
     if ( ! str || ! *str )
         return;
 
-    align &= ~FL_ALIGN_INSIDE;
+    align = fl_to_outside_lalign( align );
+
 #if 1
     fl_get_outside_align( align, x, y, w, h, &newa, &newx, &newy );
     ps_draw_text( newa, newx, newy, w, h, col, style, size, str );

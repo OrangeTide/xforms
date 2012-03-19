@@ -11,7 +11,7 @@ FD_attrib *
 create_form_attrib( void )
 {
     FL_OBJECT *obj;
-    FD_attrib *fdui = fl_malloc( sizeof *fdui );
+    FD_attrib *fdui = ( FD_attrib * ) fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
     fl_set_border_width( -1 );
@@ -26,20 +26,16 @@ create_form_attrib( void )
     obj = fl_add_box( FL_UP_BOX, 541, 0, 89, 310, "" );
 
     fdui->readyobj = obj = fl_add_button( FL_RETURN_BUTTON, 550, 85, 70, 24, "Accept" );
-    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
     fdui->cancelobj = obj = fl_add_button( FL_NORMAL_BUTTON, 550, 109, 70, 24, "Cancel" );
     fl_set_button_shortcut( obj, "#C^[", 1 );
-    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
     fdui->applyobj = obj = fl_add_button( FL_NORMAL_BUTTON, 550, 133, 70, 24, "Apply" );
     fl_set_button_shortcut( obj, "#A", 1 );
-    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, apply_cb, 0 );
 
     fdui->restoreobj = obj = fl_add_button( FL_NORMAL_BUTTON, 550, 158, 70, 24, "   Restore   " );
     fl_set_button_shortcut( obj, "#R", 1 );
-    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_callback( obj, restore_cb, 0 );
 
     fdui->autoapplyobj = obj = fl_add_checkbutton( FL_PUSH_BUTTON, 545, 25, 25, 30, "AutoApply" );
@@ -67,7 +63,7 @@ FD_generic_attrib *
 create_form_generic_attrib( void )
 {
     FL_OBJECT *obj;
-    FD_generic_attrib *fdui = fl_malloc( sizeof *fdui );
+    FD_generic_attrib *fdui = ( FD_generic_attrib * ) fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
     fl_set_border_width( -1 );
@@ -196,7 +192,7 @@ FD_nullattrib *
 create_form_nullattrib( void )
 {
     FL_OBJECT *obj;
-    FD_nullattrib *fdui = fl_malloc( sizeof *fdui );
+    FD_nullattrib *fdui = ( FD_nullattrib * ) fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
     fl_set_border_width( -1 );

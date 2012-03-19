@@ -71,11 +71,8 @@ create_form_input( const char *str1,
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-    fdui->form = fl_bgn_form( FL_NO_BOX, 410, 120 );
+    fdui->form = fl_bgn_form( FL_FLAT_BOX, 410, 120 );
     fl_set_form_title( fdui->form, "Input" );
-
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 410, 120, "" );
-    fl_set_object_bw( obj, -2 );
 
     obj = fl_add_frame( FL_ENGRAVED_FRAME, 8, 9, 394, 67, "" );
 

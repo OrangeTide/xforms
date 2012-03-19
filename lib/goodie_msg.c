@@ -92,7 +92,7 @@ create_msg( const char * str )
     box_w = FL_max( box_w, but_w + 40 );
     box_h += h_but + 20;
 
-    fdui->form = fl_bgn_form( FL_UP_BOX, box_w, box_h );
+    fdui->form = fl_bgn_form( FL_FLAT_BOX, box_w, box_h );
 
     fdui->str = fl_add_box( FL_FLAT_BOX, ( box_w - w_msg ) / 2, 20,
                             w_msg, h_msg, str );

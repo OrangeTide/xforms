@@ -1147,21 +1147,19 @@ create_form_fselect( void )
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-    fs->fselect = fl_bgn_form( FL_NO_BOX, 305, 330 );
-
-    fl_add_box( FL_UP_BOX, 0, 0, 305, 330, "" );
+    fs->fselect = fl_bgn_form( FL_FLAT_BOX, 305, 330 );
 
     fs->dirlabel = obj = fl_add_text( FL_NORMAL_TEXT, 12, 15, 64, 24,
                                       "D\010irectory" );
     fl_set_object_boxtype( obj, FL_FRAME_BOX );
-    fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
 
     fs->dirbutt = obj = fl_add_button( FL_NORMAL_BUTTON, 76, 15, 217, 24, "" );
     fl_set_button_shortcut( obj, "#D#d", 1 );
     fl_set_object_boxtype( obj, FL_FRAME_BOX );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_LEFT ) );
     fl_set_object_resize( obj, FL_RESIZE_X );
     fl_set_object_gravity( obj, FL_NorthWest, FL_NorthEast );
     fl_set_object_callback( obj, directory_cb, 0 );
@@ -1169,7 +1167,7 @@ create_form_fselect( void )
     fs->patlabel = obj = fl_add_text( FL_NORMAL_TEXT, 12, 41, 64, 24,
                                       "P\010attern" );
     fl_set_object_boxtype( obj, FL_FRAME_BOX );
-    fl_set_object_lalign( obj, FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, FL_ALIGN_CENTER );
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_NorthWest, FL_NorthWest );
 
@@ -1202,7 +1200,7 @@ create_form_fselect( void )
 
     fs->prompt = obj = fl_add_text( FL_NORMAL_TEXT, 20, 270, 264, 18,
                                     "File name:" );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_LEFT ) );
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_SouthWest, FL_SouthWest );
 

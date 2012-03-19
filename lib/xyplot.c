@@ -1368,7 +1368,7 @@ fl_drw_text_point( int        lalign,
                    int        lsize,
                    char     * str )
 {
-    int align = lalign & ~ FL_ALIGN_INSIDE;
+    int align = fl_to_outside_lalign( lalign );
     int bbox = 1.4 * lsize + 6;
     int xx = x,
         yy = y;
@@ -3685,7 +3685,7 @@ fl_set_xyplot_key_position( FL_OBJECT * ob,
 
     sp->key_x = x;
     sp->key_y = y;
-    sp->key_align = align & ~ FL_ALIGN_INSIDE;
+    sp->key_align = fl_to_outside_lalign( align );
 
     fl_redraw_object( ob );
 }

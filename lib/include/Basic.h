@@ -230,7 +230,7 @@ typedef enum {
 /* How to place text relative to a box */
 
 typedef enum {
-    FL_ALIGN_CENTER,
+	FL_ALIGN_CENTER,
     FL_ALIGN_TOP          = 1,
     FL_ALIGN_BOTTOM       = 2,
     FL_ALIGN_LEFT         = 4,
@@ -249,6 +249,17 @@ typedef enum {
     FL_ALIGN_BOTTOM_LEFT  = FL_ALIGN_LEFT_BOTTOM,
     FL_ALIGN_BOTTOM_RIGHT = FL_ALIGN_RIGHT_BOTTOM
 } FL_ALIGN;
+
+
+FL_EXPORT int fl_is_inside_lalign( int align );
+
+FL_EXPORT int fl_is_outside_lalign( int align );
+
+FL_EXPORT int fl_is_center_lalign( int align );
+
+FL_EXPORT int fl_to_inside_lalign( int align );
+
+FL_EXPORT int fl_to_outside_lalign( int align );
 
 /* Mouse buttons. Don't have to be consecutive */
 
@@ -867,7 +878,7 @@ struct FL_FORM_ {
     int                    wm_border;        /* window manager info */
     unsigned int           prop;             /* other attributes */
     int                    num_auto_objects;
-    int                    top;
+    int                    needs_full_redraw;
     int                    sort_of_modal;    /* internal use */
     FL_FORM              * parent;
     FL_FORM              * child;
@@ -1040,6 +1051,11 @@ FL_EXPORT void fl_set_form_size( FL_FORM  * form,
                                  FL_Coord   w,
                                  FL_Coord   h );
 
+FL_EXPORT void fl_set_form_background_color( FL_FORM * form,
+											 FL_COLOR  color );
+
+FL_EXPORT FL_COLOR fl_get_form_background_color( FL_FORM * form );
+
 FL_EXPORT void fl_set_form_hotspot( FL_FORM  * form,
                                     FL_Coord   x,
                                     FL_Coord   y );
@@ -1107,8 +1123,8 @@ FL_EXPORT void fl_end_group( void );
 
 FL_EXPORT FL_OBJECT *fl_addto_group( FL_OBJECT * group );
 
-/****** Routines that deal with FL_OBJECTS ********/
 
+/****** Routines that deal with FL_OBJECTS ********/
 
 FL_EXPORT int fl_get_object_objclass( FL_OBJECT * obj );
 
@@ -1281,10 +1297,6 @@ FL_EXPORT FL_CALLBACKPTR fl_set_object_callback( FL_OBJECT      * obj,
 #define fl_set_call_back      fl_set_object_callback
 
 FL_EXPORT void fl_redraw_object( FL_OBJECT * obj );
-
-FL_EXPORT void fl_scale_object( FL_OBJECT * ob,
-                                double      xs,
-                                double      ys );
 
 FL_EXPORT void fl_show_object( FL_OBJECT * ob );
 

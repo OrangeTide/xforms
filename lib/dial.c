@@ -267,7 +267,7 @@ handle_mouse( FL_OBJECT * obj,
 
 
 /***************************************
- * Function for handling mouse wheel input
+ * Function for handling mouse wheel events
  ***************************************/
 
 static int
@@ -396,7 +396,7 @@ get_mapping( FLI_DIAL_SPEC *sp )
 
 
 /***************************************
- * creates an object
+ * Creates an object
  ***************************************/
 
 FL_OBJECT *

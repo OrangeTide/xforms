@@ -128,7 +128,7 @@ create_form_fff( void )
 
     fdui->xyplot = obj = fl_add_xyplot( FL_IMPULSE_XYPLOT, 10, 20, 350, 260,
                                         "An XYPlot with overlay" );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_BLACK, FL_GREEN );

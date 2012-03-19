@@ -57,9 +57,7 @@ create_input( const char * str1,
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-    fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
-
-    fdui->str1 = fl_add_box( FL_NO_BOX, 20, 15, 420, 20, "" );
+    fdui->form = fl_bgn_form( FL_FLAT_BOX, 460, 130 );
 
     fdui->input = fl_add_input( FL_NORMAL_INPUT, 30, 50, 400, 30, str1 );
     fl_set_input( fdui->input, defstr );

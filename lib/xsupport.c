@@ -37,6 +37,9 @@
 #include "flinternal.h"
 
 
+static int xerror_detected = 0;
+
+
 /***************************************
  * For debugging only
  ***************************************/
@@ -235,16 +238,16 @@ change_form_drawable( FL_pixmap * p,
  ***************************************/
 
 static int
-fl_xerror_handler( Display     * d  FL_UNUSED_ARG,
-                   XErrorEvent * xev )
+xerror_handler( Display     * d  FL_UNUSED_ARG,
+                XErrorEvent * xev )
 {
     if ( xev->error_code == BadAlloc )
-        M_err( "fl_xerror_handler", "XError: can't allocate - ignored " );
+        M_err( "xerror_handler", "XError: can't allocate - ignored " );
     else
-        M_err( "fl_xerror_handler", "XError: %d", xev->error_code );
+        M_err( "xerror_handler", "XError: %d", xev->error_code );
 
+    xerror_detected = 1;
     return 0;
-
 }
 
 
@@ -274,10 +277,10 @@ fli_create_object_pixmap( FL_OBJECT * obj )
        to draw to a pixmap for the form itself. */
 
     if (    ! obj->use_pixmap
+         || ( obj->form->flpixmap && obj->form->flpixmap->win )
          || obj->w <= 0
          || obj->h <= 0
-         || NON_SQB( obj )
-         || ( obj->form->flpixmap && obj->form->flpixmap->win ) )
+         || NON_SQB( obj ) )
         return;
 
     /* If we already got a pixmap that fits the objects properties just
@@ -302,24 +305,21 @@ fli_create_object_pixmap( FL_OBJECT * obj )
     else if ( p->pixmap )
         XFreePixmap( flx->display, p->pixmap );
 
-    oldhandler = XSetErrorHandler( fl_xerror_handler );
+    oldhandler = XSetErrorHandler( xerror_handler );
 
     p->pixmap = XCreatePixmap( flx->display, FL_ObjWin( obj ), obj->w, obj->h,
                                fli_depth( fl_vmode ) );
 
-    /* Make sure it succeeds by forcing a two way request */
+    XSetErrorHandler( oldhandler );
 
-    if (    fli_cntl.safe
-         && ! XGetGeometry( flx->display, p->pixmap, &root, &i,
-                            &i, &junk, &junk, &junk, &junk ) )
+    /* Test if creating the pixmap succeeded or we can't use one */
+
+    if ( xerror_detected )
     {
-        M_err( "fli_create_object_pixmap", "Can't create" );
+        xerror_detected = 0;
         p->pixmap = None;
-        XSetErrorHandler( oldhandler );
         return;
     }
-
-    XSetErrorHandler( oldhandler );
 
     p->w = obj->w;
     p->h = obj->h;
@@ -421,20 +421,20 @@ fli_create_form_pixmap( FL_FORM * form )
     else if ( p->pixmap )
         XFreePixmap( flx->display, p->pixmap );
 
-    oldhandler = XSetErrorHandler( fl_xerror_handler );
+    oldhandler = XSetErrorHandler( xerror_handler );
 
     p->pixmap = XCreatePixmap( flx->display, form->window,
                                form->w, form->h,
                                fli_depth( fl_vmode ) );
 
-    /* Make sure it succeeds by forcing a two way request */
+    XSetErrorHandler( oldhandler );
 
-    if ( ! XGetGeometry( flx->display, p->pixmap, &root, &ijunk, &ijunk,
-                         &uijunk, &uijunk, &uijunk, &uijunk ) )
+    /* Test if creating a pixmap worked, otherwise we can't use one */
+
+    if ( xerror_detected )
     {
-        M_warn( "fli_create_form_pixmap", "Can't create pixmap" );
+        xerror_detected = 0;
         p->pixmap = None;
-        XSetErrorHandler( oldhandler );
         return;
     }
 

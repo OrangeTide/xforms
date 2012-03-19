@@ -666,8 +666,8 @@ align_name( int val,
 {
     static char buf[ 128 ];
 
-    strcpy( buf, get_vn_name( vn_align, val % FL_ALIGN_INSIDE ) );
-    if ( val & FL_ALIGN_INSIDE )
+    strcpy( buf, get_vn_name( vn_align, fl_to_outside_lalign( val ) ) );
+    if ( fl_is_inside_lalign( val ) && ! fl_is_center_lalign( val ) )
     {
         strcat( buf, with_spaces ? " | " : "|" );
         strcat( buf, "FL_ALIGN_INSIDE" );
@@ -696,7 +696,7 @@ align_val( const char * cc )
     }
     val = get_vn_val( vn_align, s );
 
-    return p ? ( val | FL_ALIGN_INSIDE ) : val;
+    return p ? fl_to_inside_lalign( val ) : val;
 }
 
 
@@ -881,17 +881,12 @@ get_conversion_factor( void )
 
 
 /***************************************
- * unit indicates what kind of output is desired.
  ***************************************/
 
 int
 convert_u( FL_Coord l )
 {
-    FL_Coord len = l,
-             t = 0;
-
-    fli_scale_length( &t, &len, get_conversion_factor( ) );
-    return len;
+    return FL_nint( get_conversion_factor( ) * l );
 }
 
 
@@ -1015,7 +1010,7 @@ print_form_newformat( FILE       * fn,
                  "    %s->ldata = 0;\n\n", fdvname, fdvname, fdvname );
 
     fprintf( fn, "    %s->%s = fl_bgn_form( FL_NO_BOX, %d, %d );\n",
-             fdvname, fname, convert_u(form->w), convert_u(form->h));
+             fdvname, fname, convert_u( form->w ), convert_u( form->h ) );
 
     /* Don't output the first object, it's an unnecessary box */
 
@@ -1622,7 +1617,7 @@ output_object( FILE      * fn,
         fakeobj.y = obj->y;
         fakeobj.w = obj->w;
         fakeobj.h = obj->h;
-        fl_scale_object( &fakeobj, sc, sc );
+        fli_scale_object( &fakeobj, sc, sc );
 
         label = get_label( obj, 1 );
         if ( obj->objclass != FL_FREE )

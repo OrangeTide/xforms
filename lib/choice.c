@@ -79,13 +79,13 @@ draw_choice( FL_OBJECT * ob )
         int dh = FL_max( 6 + ( ob->bw > 0 ), ob->h * 0.1 );
         int dw = FL_max( 0.11 * ob->w, 13 );
         int dbh = FL_max( absbw - 1, 1 );
-        int align = sp->align & ~ FL_ALIGN_INSIDE;
+        int align = fl_to_outside_lalign( sp->align );
 
         fl_drw_box( FL_UP_BOX,
                     ob->x + ob->w - dw - absbw - 2, ob->y + ( ob->h - dh ) / 2,
                     dw, dh, ob->col1, - dbh );
 
-        off1 = align == FL_ALIGN_CENTER ? ( dw / 2 ) : 0;
+        off1 = fl_is_center_lalign( align ) ? ( dw / 2 ) : 0;
         off2 = align == FL_ALIGN_RIGHT ? dw : 0;
     }
 
@@ -310,13 +310,13 @@ handle_choice( FL_OBJECT * ob,
 
     switch ( event )
     {
-        case FL_DRAW:
+        case FL_ATTRIB :
             /* always force outside alignment */
 
-            ob->align &= ~FL_ALIGN_INSIDE;
+            ob->align = fl_to_outside_lalign( ob->align );
+            break;
 
-            /* Draw the object */
-
+        case FL_DRAW:
             if ( ob->type == FL_DROPLIST_CHOICE )
                 draw_droplist_choice( ob );
             else
@@ -796,6 +796,7 @@ fl_set_choice_item_shortcut( FL_OBJECT *  ob,
 
     if ( sp->shortcut[ item ] )
         fl_free( sp->shortcut[ item ] );
+
     sp->shortcut[ item ] = fl_strdup( sc ? sc : "" );
 }
 

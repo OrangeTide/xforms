@@ -144,12 +144,12 @@ create_form_fontsform( void )
 
     fdui->fontobj = obj = fl_add_browser( FL_HOLD_BROWSER, 10, 145, 195, 135,
                                           "" );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_callback( obj, style_cb, 0 );
 
     fdui->sizeobj = obj = fl_add_browser( FL_HOLD_BROWSER, 215, 145, 145, 135,
                                           "" );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_callback( obj, size_cb, 0 );
 
     fdui->textobj = obj = fl_add_text( FL_NORMAL_TEXT, 10, 5, 351, 125,

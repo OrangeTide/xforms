@@ -74,7 +74,7 @@ main( int    argc,
     if ( fl_show_question( "Do you want to quit?", 0 ) )
         exit( 0 );
 
-    strcpy( str1, ( s = fl_show_input( "Give a string:","" ) ) ? s : "" );
+    strcpy( str1, ( s = fl_show_input( "Enter a string:","" ) ) ? s : "" );
     fl_show_message( "You typed:", "", str1 );
     choice = fl_show_choices( "Pick a choice", 3, "One", "Two", "Three", 2 );
     switch ( choice )
@@ -97,7 +97,7 @@ main( int    argc,
     }
 
     strcpy( str2,
-            ( s = fl_show_input( "Give another string:", str1 ) ) ?
+            ( s = fl_show_input( "Enter another string:", str1 ) ) ?
             s : "<Cancel>" );
     fl_show_message( "You typed:", "", str2 );
     fl_show_messages( "Good Bye" );

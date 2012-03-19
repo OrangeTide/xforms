@@ -71,7 +71,7 @@ create_form_form( void )
 
     obj = fl_add_pixmapbutton( FL_NORMAL_BUTTON, 0, 0, 151, 111,
                                "Iconify Me\nvia Window Manager" );
-    fl_set_object_lalign( obj, FL_ALIGN_BOTTOM | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_BOTTOM ) );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
     fl_set_pixmapbutton_data( obj, crab );
 

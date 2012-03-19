@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 3
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 380 210
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,11 +33,11 @@ argument:
 
 --------------------
 class: FL_TABFOLDER
-type: TOP_TABFOLDER
+type: FL_TOP_TABFOLDER
 box: 5 5 370 175
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 311 183 62 23
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -75,7 +75,7 @@ Number of Objects: 9
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 360 150
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -93,7 +93,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 10 345 130
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -111,7 +111,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 15 15 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -126,15 +126,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BUTTON
-file: ../xpm/butt.xpm
-focus_file: 
-fullpath: 0
-data: butt_pixels
-focus_data: 
+    file: ../xpm/butt.xpm
+    fullpath: 0
+    data: butt_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 101 15 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -149,15 +147,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_LIGHTBUTTON
-file: ../xpm/lightb.xpm
-focus_file: 
-fullpath: 0
-data: lightb_pixels
-focus_data: 
+    file: ../xpm/lightb.xpm
+    fullpath: 0
+    data: lightb_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 188 15 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -172,15 +168,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_ROUNDBUTTON
-file: ../xpm/roundb.xpm
-focus_file: 
-fullpath: 0
-data: roundb_pixels
-focus_data: 
+    file: ../xpm/roundb.xpm
+    fullpath: 0
+    data: roundb_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 275 15 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -195,16 +189,14 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_ROUND3DBUTTON
-file: ../xpm/r3dbut.xpm
-focus_file: 
-fullpath: 0
-align: FL_ALIGN_TOP|FL_ALIGN_INSIDE
-data: r3dbut_pixels
-focus_data: 
+    file: ../xpm/r3dbut.xpm
+    fullpath: 0
+    align: FL_ALIGN_TOP|FL_ALIGN_INSIDE
+    data: r3dbut_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 58 80 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -219,15 +211,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHECKBUTTON
-file: ../xpm/check.xpm
-focus_file: 
-fullpath: 0
-data: check_pixels
-focus_data: 
+    file: ../xpm/check.xpm
+    fullpath: 0
+    data: check_pixels
 
 --------------------
 class: FL_BITMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 145 80 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -242,17 +232,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BITMAPBUTTON
-file: ../xpm/picture.xbm
-focus_file: 
-fullpath: 0
-data: picture_bits
-focus_data: 
-width: picture_width
-height: picture_height
+    file: ../xpm/picture.xbm
+    fullpath: 0
+    data: picture_bits
+    width: picture_width
+    height: picture_height
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 231 80 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -261,17 +249,15 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: PixmapButton
-shortcut: P#p
+shortcut: P#P
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_PIXMAPBUTTON
-file: ../xpm/xconq.xpm
-focus_file: 
-fullpath: 0
-data: xconq
-focus_data: 
+    file: ../xpm/xconq.xpm
+    fullpath: 0
+    data: xconq
 
 =============== FORM ===============
 Name: staticform
@@ -281,7 +267,7 @@ Number of Objects: 9
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 360 150
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -299,7 +285,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 10 345 130
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -317,7 +303,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 30 20 65 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -332,15 +318,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BOX
-file: ../xpm/box.xpm
-focus_file: 
-fullpath: 0
-data: box_pixels
-focus_data: 
+    file: ../xpm/box.xpm
+    fullpath: 0
+    data: box_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 110 20 65 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -355,15 +339,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_TEXT
-file: ../xpm/text.xpm
-focus_file: 
-fullpath: 0
-data: text_pixels
-focus_data: 
+    file: ../xpm/text.xpm
+    fullpath: 0
+    data: text_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 190 20 65 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -378,15 +360,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_LABELFRAME
-file: ../xpm/frame.xpm
-focus_file: 
-fullpath: 0
-data: frame_pixels
-focus_data: 
+    file: ../xpm/frame.xpm
+    fullpath: 0
+    data: frame_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 270 20 65 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -401,15 +381,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHART
-file: ../xpm/chart.xpm
-focus_file: 
-fullpath: 0
-data: chart_pixels
-focus_data: 
+    file: ../xpm/chart.xpm
+    fullpath: 0
+    data: chart_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 30 80 65 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -424,15 +402,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CLOCK
-file: ../xpm/clock.xpm
-focus_file: 
-fullpath: 0
-data: clock_pixels
-focus_data: 
+    file: ../xpm/clock.xpm
+    fullpath: 0
+    data: clock_pixels
 
 --------------------
 class: FL_BITMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 110 80 65 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -447,17 +423,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BITMAP
-file: ../xpm/picture1.xbm
-focus_file: 
-fullpath: 0
-data: picture1_bits
-focus_data: 
-width: picture1_width
-height: picture1_height
+    file: ../xpm/picture1.xbm
+    fullpath: 0
+    data: picture1_bits
+    width: picture1_width
+    height: picture1_height
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 210 80 65 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -472,11 +446,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_PIXMAP
-file: ../xpm/xconq1.xpm
-focus_file: 
-fullpath: 0
-data: xconq1
-focus_data: 
+    file: ../xpm/xconq1.xpm
+    fullpath: 0
+    data: xconq1
 
 =============== FORM ===============
 Name: valuatorform
@@ -486,7 +458,7 @@ Number of Objects: 9
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 360 150
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -504,7 +476,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 8 345 130
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -522,7 +494,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 30 16 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -537,15 +509,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_SLIDER
-file: ../xpm/sld.xpm
-focus_file: 
-fullpath: 0
-data: sld_pixels
-focus_data: 
+    file: ../xpm/sld.xpm
+    fullpath: 0
+    data: sld_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 183 16 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -554,21 +524,19 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Scrollbar
-shortcut: b#b
+shortcut: b#B
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_SCROLLBAR
-file: ../xpm/scb.xpm
-focus_file: 
-fullpath: 0
-data: scb_pixels
-focus_data: 
+    file: ../xpm/scb.xpm
+    fullpath: 0
+    data: scb_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 260 16 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -583,15 +551,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_DIAL
-file: ../xpm/dial.xpm
-focus_file: 
-fullpath: 0
-data: dial_pixels
-focus_data: 
+    file: ../xpm/dial.xpm
+    fullpath: 0
+    data: dial_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 30 76 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -606,15 +572,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_COUNTER
-file: ../xpm/cnt.xpm
-focus_file: 
-fullpath: 0
-data: cnt_pixels
-focus_data: 
+    file: ../xpm/cnt.xpm
+    fullpath: 0
+    data: cnt_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 105 76 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -629,15 +593,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_POSITIONER
-file: ../xpm/pos.xpm
-focus_file: 
-fullpath: 0
-data: pos_pixels
-focus_data: 
+    file: ../xpm/pos.xpm
+    fullpath: 0
+    data: pos_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 106 16 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -652,15 +614,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_VALSLIDER
-file: ../xpm/vals.xpm
-focus_file: 
-fullpath: 0
-data: vals_pixels
-focus_data: 
+    file: ../xpm/vals.xpm
+    fullpath: 0
+    data: vals_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 185 76 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -669,17 +629,15 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Thumbwheel
-shortcut: t#t
+shortcut: t#T
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_THUMBWHEEL
-file: ../xpm/twheel.xpm
-focus_file: 
-fullpath: 0
-data: twheel
-focus_data: 
+    file: ../xpm/twheel.xpm
+    fullpath: 0
+    data: twheel
 
 =============== FORM ===============
 Name: choiceform
@@ -689,7 +647,7 @@ Number of Objects: 5
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 360 150
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -707,7 +665,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 10 345 130
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -725,7 +683,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 30 20 60 60
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -740,15 +698,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_MENU
-file: ../xpm/menu.xpm
-focus_file: 
-fullpath: 0
-data: menu_pixels
-focus_data: 
+    file: ../xpm/menu.xpm
+    fullpath: 0
+    data: menu_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 100 20 60 60
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -763,15 +719,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_CHOICE
-file: ../xpm/choice.xpm
-focus_file: 
-fullpath: 0
-data: choice_pixels
-focus_data: 
+    file: ../xpm/choice.xpm
+    fullpath: 0
+    data: choice_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 170 20 60 60
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -786,11 +740,9 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_BROWSER
-file: ../xpm/br.xpm
-focus_file: 
-fullpath: 0
-data: br_pixels
-focus_data: 
+    file: ../xpm/br.xpm
+    fullpath: 0
+    data: br_pixels
 
 =============== FORM ===============
 Name: miscform
@@ -800,7 +752,7 @@ Number of Objects: 7
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 360 150
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -818,7 +770,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 10 345 130
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -836,7 +788,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 30 16 70 45
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -851,15 +803,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_TIMER
-file: ../xpm/timer.xpm
-focus_file: 
-fullpath: 0
-data: timer_pixels
-focus_data: 
+    file: ../xpm/timer.xpm
+    fullpath: 0
+    data: timer_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 103 16 70 45
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -874,15 +824,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_XYPLOT
-file: ../xpm/xyplot.xpm
-focus_file: 
-fullpath: 0
-data: xyplot_pixels
-focus_data: 
+    file: ../xpm/xyplot.xpm
+    fullpath: 0
+    data: xyplot_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 176 16 70 45
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -900,7 +848,7 @@ argument: FL_CANVAS
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 250 16 70 45
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -915,15 +863,13 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_GLCANVAS
-file: ../xpm/glcan.xpm
-focus_file: 
-fullpath: 0
-data: glcan_pixels
-focus_data: 
+    file: ../xpm/glcan.xpm
+    fullpath: 0
+    data: glcan_pixels
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: RADIO_BUTTON
+type: FL_RADIO_BUTTON
 box: 30 82 70 40
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -932,17 +878,15 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: Tabfolder
-shortcut: f#f
+shortcut: f#F
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: pallette_entry_callback
 argument: FL_NTABFOLDER
-file: ../xpm/tab.xpm
-focus_file: 
-fullpath: 0
-data: tabfolder_pixels
-focus_data: 
+    file: ../xpm/tab.xpm
+    fullpath: 0
+    data: tabfolder_pixels
 
 ==============================
 create_the_forms

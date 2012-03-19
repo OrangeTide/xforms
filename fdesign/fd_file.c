@@ -89,7 +89,7 @@ save_object( FILE      * fl,
         fake_obj.y = obj->y;
         fake_obj.w = obj->w;
         fake_obj.h = obj->h;
-        fl_scale_object( &fake_obj, sc, sc );
+        fli_scale_object( &fake_obj, sc, sc );
         fprintf( fl, "box: %d %d %d %d\n", fake_obj.x, fake_obj.y,
                  fake_obj.w, fake_obj.h );
 
@@ -820,21 +820,17 @@ write_form( FILE    * fl,
     fprintf( fl, "Width: %d\n", convert_u( form->w ) );
     fprintf( fl, "Height: %d\n", convert_u( form->h ) );
 
-    /* print the object number */
+    /* Print the object number */
 
     for ( onumb = 0, obj = form->first->next; obj; obj = obj->next )
         onumb += obj->parent == NULL;
 
     fprintf( fl, "Number of Objects: %d\n", onumb );
 
-    /* print the objects */
+    /* Print the objects */
 
-    obj = form->first->next;
-    while ( obj != NULL )
-    {
+    for ( obj = form->first->next; obj; obj = obj->next )
         save_object( fl, obj );
-        obj = obj->next;
-    }
 }
 
 

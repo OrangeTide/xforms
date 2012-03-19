@@ -37,12 +37,91 @@
 /***************************************
  ***************************************/
 
+int
+fli_test_lalign( int          align,
+                 const char * txt )
+{
+    if (    align < 0
+         || ( unsigned int ) align & ~ FL_ALIGN_INSIDE > FL_ALIGN_RIGHT_BOTTOM )
+    {
+        M_err( txt, "Invalid value for align" );
+        return 0;
+    }
+
+    return 1;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_is_inside_lalign( int align )
+{
+    return    fli_test_lalign( align, "fl_is_inside_lalign" )
+           && (    ( unsigned int ) align & FL_ALIGN_INSIDE
+                || align == FL_ALIGN_CENTER );
+}
+
+/***************************************
+ ***************************************/
+
+int
+fl_is_outside_lalign( int align )
+{
+    return    fli_test_lalign( align, "fl_is_outside_lalign" )
+           && ! fl_is_inside_lalign( align );
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_is_center_lalign( int align )
+{
+    return    fli_test_lalign( align, "fl_is_center_lalign" )
+           && ( ( unsigned int ) align & ~ FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_to_inside_lalign( int align )
+{
+    if ( ! fli_test_lalign( align, "fl_to_inside_lalign" ) )
+        return -1;
+
+    return fl_is_center_lalign( align ) ?
+           FL_ALIGN_CENTER : ( ( unsigned int ) align | FL_ALIGN_INSIDE );
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_to_outside_lalign( int align )
+{
+    if ( ! fli_test_lalign( align, "fl_to_inside_lalign" ) )
+        return -1;
+
+    return fl_is_center_lalign( align ) ?
+           FL_ALIGN_CENTER : ( ( unsigned int ) align & ~FL_ALIGN_INSIDE );
+}
+
+
+/***************************************
+ ***************************************/
+
 void
 fli_get_hv_align( int   align,
                   int * halign,
                   int * valign )
 {
-    align &= ~ FL_ALIGN_INSIDE;
+    align = fl_to_outside_lalign( align );
 
     switch ( align )
     {
@@ -117,7 +196,7 @@ fli_get_outside_align( int   align,
     *newy = y;
     *new_align = FL_ALIGN_CENTER;
 
-    align &= ~ FL_ALIGN_INSIDE;
+    align = fl_to_outside_lalign( align );
 
     switch ( align )
     {
@@ -263,7 +342,7 @@ fl_get_align_xy( int   align,
                  int * xx,
                  int * yy )
 {
-    ( ( align & FL_ALIGN_INSIDE ) ? get_align_inside : get_align_outside )
+    ( fl_is_inside_lalign( align ) ? get_align_inside : get_align_outside )
         ( align, x, y, w, h, xsize, ysize, xoff, yoff, xx, yy );
 }
 

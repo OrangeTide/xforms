@@ -1427,13 +1427,13 @@ See @file{fonts.c} for a demonstration of all the built-in font styles
 available.
 
 You can change the alignment of the label with respect to the bounding
-box of the object. For this you use the routine
+box of the object. For this you should use the routine
 @findex fl_set_object_lalign()
 @example
 void fl_set_object_lalign(FL_OBJECT *obj, int align);
 @end example
-
-The following possibilities exist:
+@noindent
+with the following values for the @code{align} argument:
 @multitable @columnfractions 0.3 0.7
 @anchor{FL_ALIGN_LEFT}
 @tindex FL_ALIGN_LEFT
@@ -1473,17 +1473,70 @@ The following possibilities exist:
 @tab To the left and top of the box.
 @end multitable
 
-Normally, all the alignment requests place the text outside the box,
-except for
-@anchor{FL_ALIGN_INSIDE}
+Alignment requests with the abpve constants place the text outside the
+box (except for @code{@ref{FL_ALIGN_CENTER}}). To get a value that can
+be used to align the label within the object the function
+@findex fl_to_inside_lalign()
+@anchor{fl_to_inside_lalign()}
+@example
+int fl_to_inside_lalign(int align);
+@end example
+@noindent
+can be used, which returns the necessary value for the corresponding
+inside alignment. Except for the case of @code{@ref{FL_ALIGN_CENTER}}
+(which is always inside the object) the result is the original value,
+logically or'ed with the constant
 @tindex FL_ALIGN_INSIDE
-@code{FL_ALIGN_CENTER}. This can be changed by using a
-special mask, @code{FL_ALIGN_INSIDE}, to request alignments that place
-the text inside the box. This works for most of the objects in the
-library but not for all. For sliders, inputs and some others, placing
-the label inside the box simply does not make sense. In these cases,
-inside request is ignored. See the demo program @file{lalign.c} for an
-example use of @code{FL_ALIGN_INSIDE}.
+@anchor{FL_ALIGN_INSIDE}
+.
+
+There's also a function for the reverse conversion, i.e.@: from a
+calue for inside to outside alignment
+@findex fl_to_outside_lalign()
+@anchor{fl_to_outside_lalign()}
+@example
+int fl_to_outside_lalign(int align);
+@end example
+@noindent
+Using this functions is a bit simpler than combining the value with
+the @code{@ref{FL_ALIGN_INSIDE}} constant, especially when it comes
+to @code{@ref{FL_ALIGN_CENTER}} (which doesn't has the this bit set,
+even though labels with this alignment will always be shown within
+the object.
+
+Both functions return @code{-1} if an invalid value for the alignment
+is passed to them.
+
+There exist also three functions to test for the inside or outside
+alignment:
+@findex fl_is_inside_lalign()
+@anchor{fl_is_inside_lalign()}
+@findex fl_is_outside_lalign()
+@anchor{fl_is_outside_lalign()}
+@findex fl_is_center_lalign()
+@anchor{fl_is_center_lalign()}
+@example
+int fl_is_inside_lalign(int align);
+int fl_is_outside_lalign(int align);
+int fl_is_center_lalign(int align);
+@end example
+@noindent
+Note that these functions return @code{0} also in the case that the
+alignment value passed to them is invalid.
+
+Not all objects accept all kinds of label alignment. For example for
+sliders, inputs etc. it doesn't make sense to have the label within
+the object und in these cases a request for an inside label is ignored
+(or, more precisely, converted to the corresponding request for an
+outside label or, on a request with @code{@ref{FL_ALIGN_CENTER}}, the
+reversion to the default label position). On the other hand, some
+objects like the text object (where the text to be shown is the
+label's text) accept only inside alignment and a request for an
+outside alignment will automatically replaced by the corresponding
+inside alignment.
+
+See also the demo program @file{lalign.c} for an example of the
+positioning of labels using the above constants.
 
 Finally, the routine
 @findex fl_set_object_label()

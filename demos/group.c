@@ -214,7 +214,7 @@ create_form_objsform( void )
     fdui->group[ 2 ] = fl_bgn_group( );
 
     obj = fl_add_text( FL_NORMAL_TEXT, 260, 140, 80, 30, "Text" );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_LEFT ) );
 
     fl_add_slider( FL_HOR_BROWSER_SLIDER, 60, 120, 170, 25, "" );
 
@@ -281,7 +281,7 @@ create_form_objsform( void )
 
     obj = fl_add_text( FL_NORMAL_TEXT, 240, 130, 100, 30,
                        "Text stuff\nand more stuff" );
-    fl_set_object_lalign( obj,FL_ALIGN_CENTER | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj,FL_ALIGN_CENTER );
 
     fl_end_group( );
 

@@ -60,7 +60,7 @@ fl_create_nmenu( int          type,
     obj->col2    = IS_BUTTON_NMENU( obj ) ? FL_MCOL : FL_BOTTOM_BCOL;
     obj->lcol    = FL_LCOL;
     obj->lstyle  = FL_NORMAL_STYLE;
-    obj->align   = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;
+    obj->align   = FL_ALIGN_CENTER;
 
     sp = obj->spec = fl_malloc( sizeof *sp );
 
@@ -813,7 +813,7 @@ draw_menu( FL_OBJECT * obj )
     {
         fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h, obj->col1,
                     obj->bw );
-        obj->align |= FL_ALIGN_INSIDE;
+        obj->align = fl_to_outside_lalign( obj->align );
         fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, obj->lcol,
                      obj->lstyle, obj->lsize, obj->label );
     }
@@ -824,7 +824,7 @@ draw_menu( FL_OBJECT * obj )
         fl_drw_box( ( IS_BUTTON_NMENU( obj ) && obj->boxtype == FL_FLAT_BOX ) ?
                     FL_UP_BOX : obj->boxtype,
                     obj->x, obj->y, obj->w, obj->h, obj->col2, obj->bw );
-        obj->align |= FL_ALIGN_INSIDE;
+        obj->align = fl_to_inside_lalign( obj->align );
         fl_drw_text( obj->align, obj->x, obj->y, obj->w, obj->h, sp->hl_color,
                      obj->lstyle, obj->lsize, obj->label );
     }   

@@ -39,7 +39,7 @@
 #include "include/forms.h"
 
 FL_FORM *form;
-extern void create_the_forms( void );
+static void create_the_forms( void );
 static int load_the_menu( const char * );
 static void push_menu( const char * );
 
@@ -533,7 +533,7 @@ create_form_form( void )
 /***************************************
  ***************************************/
 
-void
+static void
 create_the_forms( void )
 {
     create_form_form( );

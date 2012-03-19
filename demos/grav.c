@@ -268,11 +268,9 @@ create_form_gravity( FD_help * help )
     int s = 25;
     int m = 5;
 
+    fdui->grav = fl_bgn_form( FL_FLAT_BOX, 500, 400 );
 
-    fdui->grav = fl_bgn_form( FL_NO_BOX, 500, 400 );
-
-    obj = fl_add_box( FL_UP_BOX, 0, 0, w, h, "" );
-    fl_set_object_bw( obj, -1 );
+    fl_set_form_background_color( fdui->grav, FL_DARKER_COL1 );
 
     fdui->box = obj = fl_add_box( FL_FRAME_BOX, ( w - bw ) / 2, ( h - bh ) / 2,
                                   bw, bh, "" );
@@ -379,12 +377,9 @@ create_form_help( void )
         "out (but not deactivated)."
     };
 
-    fdui->help = fl_bgn_form( FL_NO_BOX, 345, 325 );
+    fdui->help = fl_bgn_form( FL_FLAT_BOX, 345, 325 );
 
     fdui->is_shown = 0;
-
-    obj = fl_add_box( FL_UP_BOX, 0, 0, 345, 325, "" );
-    fl_set_object_bw( obj, -1 );
 
     obj = fl_add_browser( FL_NORMAL_BROWSER, 5, 5, 335, 285, "" );
     fl_set_object_bw( obj, -1 );

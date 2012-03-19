@@ -1,3 +1,4 @@
+
 /*
  * This file is part of XForms.
  *
@@ -557,7 +558,7 @@ handle_move( const XEvent * xev )
                 selobj[ i ]->fb1 += oy;
                 selobj[ i ]->fb2 += oy;
 
-                fl_scale_object( selobj[ i ], w / ow, h / oh);
+                fli_scale_object( selobj[ i ], w / ow, h / oh);
 
                 selobj[ i ]->x = selobj[ i ]->fl1 += x;
                 selobj[ i ]->fl2 += x;
@@ -715,7 +716,7 @@ resize_selection( FL_Coord dx,
             selobj[ i ]->fb1 += oy;
             selobj[ i ]->fb2 += oy;
 
-            fl_scale_object( selobj[ i ], xscale, yscale );
+            fli_scale_object( selobj[ i ], xscale, yscale );
 
             selobj[ i ]->x = selobj[ i ]->fl1 += x;
             selobj[ i ]->fl2 += x;
@@ -1179,6 +1180,7 @@ lower_selection( void )
 static FL_OBJECT *cutbuf[ MAXSEL ]; /* Buffered objects */
 static int ncut = 0;                /* and their number */
 
+
 /***************************************
  ***************************************/
 
@@ -1195,7 +1197,7 @@ clear_cutbuffer( void )
 
 
 /***************************************
- * Removes all elements in the selection.
+ * Removes all elements in the selection
  ***************************************/
 
 void
@@ -1203,13 +1205,14 @@ cut_selection( void )
 {
     int i;
 
-    if (backf)
+    if ( backf )
         return;         /* Cannot cut the backface. */
 
-    if (! cur_form )
+    if ( ! cur_form )
     {
-        fl_show_alert("Warning", "Please Add a form first", "", 0);
-        return;
+        addform_cb( NULL, 0 );
+        if ( ! cur_form )
+            return;
     }
 
     if ( selnumb == 0 )

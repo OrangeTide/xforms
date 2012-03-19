@@ -68,7 +68,6 @@ create_alert( const char * title,
     int box_w,
         box_h,
         but_w;
-    FL_OBJECT *ob;
     char but_text[ 256 ] = "Dismiss";
 
     fli_inverted_y = 0;
@@ -95,12 +94,10 @@ create_alert( const char * title,
     box_w = FL_max( 400, FL_max( FL_max( w_tit, w_msg ), but_w ) + 80 );
     box_h = FL_max( h_tit + 20, 30 ) + 5 + h_msg + 30 + h_but + 20;
 
-    fdui->form = fl_bgn_form( FL_NO_BOX, box_w, box_h );
+    fdui->form = fl_bgn_form( FL_FLAT_BOX, box_w, box_h );
     fl_set_form_title( fdui->form, "Alert" );
 
     fli_get_goodie_title( fdui->form, FLAlertTitle );
-
-    ob = fl_add_box( FL_UP_BOX, 0, 0, box_w, box_h, "" );
 
     fdui->title = fl_add_box( FL_FLAT_BOX, 60, 10, box_w - 80, h_tit,
                               title ? title : "" );
@@ -185,8 +182,8 @@ fl_show_alert( const char * title,
 {
     char *buf;
 
-    buf= fl_malloc(   ( str1 ? strlen( str1 ) : 0 ) + 1
-                    + ( str2 ? strlen( str2 ) : 0 ) + 1 );
+    buf = fl_malloc(   ( str1 ? strlen( str1 ) : 0 ) + 1
+                     + ( str2 ? strlen( str2 ) : 0 ) + 1 );
     sprintf( buf,"%s\n%s", str1 ? str1 : "", str2 ? str2 : "" );
     show_it( title, buf, c );
     fl_free( buf );

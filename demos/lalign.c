@@ -87,7 +87,10 @@ align_cb( FL_OBJECT * ob  FL_UNUSED_ARG,
           long        n )
 {
     if ( fl_get_button( fd_form0->inside ) )
-        n |= FL_ALIGN_INSIDE;
+        n = fl_to_inside_lalign( n );
+
+    if ( n == FL_ALIGN_CENTER )
+        fl_set_button( fd_form0->inside, 1 );
 
 #ifndef TEST_PIXMAP_ALIGN
     fl_set_object_lalign( fd_form0->box, n );
@@ -104,10 +107,12 @@ static void
 inside_cb( FL_OBJECT * ob,
            long        data  FL_UNUSED_ARG )
 {
+    int align = fl_get_object_lalign( fd_form0->box );
+
     if ( fl_get_button( ob ) )
-        fd_form0->box->align |= FL_ALIGN_INSIDE;
+        fl_set_object_lalign( fd_form0->box, fl_to_inside_lalign( align ) );
     else
-        fd_form0->box->align &= ~FL_ALIGN_INSIDE;
+        fl_set_object_lalign( fd_form0->box, fl_to_outside_lalign( align ) );
 
 #ifdef TEST_PIXMAP_ALIGN
     fl_set_pixmap_align( fd_form0->box, fd_form0->box->align, 3, 3 );
@@ -141,6 +146,7 @@ create_form_form0( void )
 
     fdui->inside = obj = fl_add_lightbutton( FL_PUSH_BUTTON, 20, 125, 90, 30,
                                              "Inside" );
+    fl_set_button( obj, 1 );
     fl_set_object_callback( obj, inside_cb, 0 );
 
     fl_bgn_group();

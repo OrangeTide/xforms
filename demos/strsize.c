@@ -115,7 +115,7 @@ create_form_form0( void )
     fl_set_object_callback( obj, input_cb, 0 );
 
     fdui->text = obj = fl_add_text( FL_NORMAL_TEXT, 60, 90, 130, 30, "Text" );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
+    fl_set_object_lalign( obj, fl_to_inside_lalign( FL_ALIGN_LEFT ) );
 
     fl_end_form( );
 

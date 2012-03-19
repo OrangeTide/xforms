@@ -393,7 +393,7 @@ switch_folder( FL_OBJECT * ob,
             last = sp->num_visible + sp->offset + 1;
             last = FL_clamp( last, 0, sp->nforms - 1 );
             sp->title[ last ]->boxtype |= FLI_BROKEN_BOX;
-            sp->title[ last ]->align = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
+            sp->title[ last ]->align = fl_to_inside_lalign( FL_ALIGN_LEFT );
             fl_redraw_form( ob->form );
         }
     }
@@ -1020,7 +1020,7 @@ compute_top_position( FL_OBJECT * ob )
         else if ( ( tab->w -= sp->x - sp->canvas->x - sp->canvas->w ) > 0 )
         {
             tab->boxtype |= FLI_BROKEN_BOX;
-            tab->align = FL_ALIGN_LEFT | FL_ALIGN_INSIDE;
+            tab->align = fl_to_inside_lalign( FL_ALIGN_LEFT );
             tab->visible = 1;
         }
         else

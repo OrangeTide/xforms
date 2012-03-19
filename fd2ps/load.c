@@ -897,7 +897,7 @@ align_val( const char *cc )
 
     for ( ; vn->val >= 0; vn++)
         if ( strcmp( s, vn->name ) == 0 )
-            return p ? ( vn->val | FL_ALIGN_INSIDE ) : vn->val;
+            return p ? fl_to_inside_lalign( vn->val ) : vn->val;
 
     if ( ! isdigit( ( int ) cc[ 0 ] ) )
         fprintf( stderr, "Unknown alignment %s\n", cc );

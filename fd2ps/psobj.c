@@ -348,7 +348,7 @@ fl_convert_shortcut(const char * str,
 static void
 ps_draw_object_label( FL_OBJECT * ob )
 {
-    int align = ob->align % FL_ALIGN_INSIDE;
+    int align = fl_to_outside_lalign( ob->align );
 
     ( align != ob->align ? ps_draw_text : ps_draw_text_beside )
         ( align, ob->x, ob->y, ob->w, ob->h, ob->lcol,
@@ -763,7 +763,7 @@ flps_draw_lightbutton( FL_OBJECT * ob )
 
     /* Draw the label */
 
-    if ( ( ob->align & ~FL_ALIGN_INSIDE ) == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         ps_draw_text( FL_ALIGN_LEFT, xx + ww, ob->y, 0, ob->h,
                       ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
@@ -800,7 +800,7 @@ flps_draw_roundbutton( FL_OBJECT * ob )
     ps_circ( 1, xx, yy, rr, ob->col2 );
     ps_circ( 0, xx, yy, rr, FL_BLACK );
 
-    if ( ob->align == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         ps_draw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
                       ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
@@ -891,7 +891,7 @@ flps_draw_round3dbutton( FL_OBJECT * ob )
     else
         ps_circ( 1, xx, yy, rr - bw, ob->col1 );
 
-    if ( ob->align == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         ps_draw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
                       ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
@@ -925,7 +925,7 @@ flps_draw_checkbutton( FL_OBJECT * ob )
     else
         ps_draw_checkbox( FL_UP_BOX, xx, yy, ww, hh, ob->col1, bw );
 
-    if ( ob->align == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         ps_draw_text( FL_ALIGN_LEFT, xx + ww + 1, ob->y, 0, ob->h,
                       ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
@@ -1169,7 +1169,7 @@ flps_draw_choice( FL_OBJECT * ob )
         int dh = FL_max( 6 + ( ob->bw > 1 ), ob->h * 0.1 );
         int dw = FL_max( 0.11 * ob->w, 13 );
         int dbh = FL_max( absbw - 1.2, 1 );
-        int align = sp->align & ~FL_ALIGN_INSIDE;
+        int align = fl_to_outside_lalign( sp->align );
 
         ps_draw_box( FL_UP_BOX, ob->x + ob->w - dw - absbw - 2,
                      ob->y + ( ob->h - dh ) / 2, dw, dh, ob->col1, -dbh );
@@ -1570,7 +1570,7 @@ flps_draw_slider( FL_OBJECT * ob )
 
     /* Draw the slider */
 
-    if ( ob->align == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         ps_drw_slider_shape( ob->boxtype, sx, sy, sw, sh, ob->col1, ob->col2,
                              ob->type, sp->slsize, val, ob->label, inv,
                              ob->bw );
@@ -1797,7 +1797,7 @@ flps_draw_lframe( FL_OBJECT * ob )
     if ( ob->type == FL_UP_FRAME || ob->type == FL_DOWN_FRAME )
         dy = ( FL_abs( ob->bw ) + 1 ) / 2;
 
-    align = ob->align & ~FL_ALIGN_INSIDE;
+    align = fl_to_outside_lalign( ob->align );
 
     margin = 11 + ob->w * 0.02;
     if ( ob->type == FL_ROUNDED_FRAME )
@@ -1817,40 +1817,43 @@ flps_draw_lframe( FL_OBJECT * ob )
 
     ps_len( ob->label, ob->lstyle, ob->lsize );
 
-    if ( align == FL_ALIGN_LEFT_BOTTOM )
+    switch( align )
     {
-        ps_output( "/x {%d %d add} bind def\n", ob->x, margin );
-        ps_output( "/y {%d h -2 div add %d sub} bind def\n", ob->y, dy );
-    }
-    else if ( align == FL_ALIGN_BOTTOM )
-    {
-        ps_output( "/x {%d %d w sub 2 div add} bind def\n", ob->x, ob->w );
-        ps_output( "/y {%d h -2 div add %d sub} bind def\n", ob->y, dy );
-    }
-    else if ( align == FL_ALIGN_RIGHT_BOTTOM )
-    {
-        ps_output( "/x {%d %d add w sub %d sub} bind def\n",
-                   ob->x, ob->w, margin );
-        ps_output( "/y {%d h -2 div add %d sub} bind def\n", ob->y, dy );
-    }
-    else if ( align == FL_ALIGN_TOP )
-    {
-        ps_output( "/x {%d %d w sub 2 div add} bind def\n", ob->x, ob->w );
-        ps_output( "/y {%d %d add h -2 div add %d add} bind def\n",
-                   ob->y, ob->h, dy );
-    }
-    else if ( align == FL_ALIGN_RIGHT_TOP || align == FL_ALIGN_RIGHT )
-    {
-        ps_output( "/x {%d %d add w sub %d sub} bind def\n",
-                   ob->x, ob->w, margin );
-        ps_output( "/y {%d %d add h -2 div add %d add} bind def\n",
-                   ob->y, ob->h, dy );
-    }
-    else
-    {
-        ps_output( "/x {%d %d add} bind def\n", ob->x, margin );
-        ps_output( "/y {%d %d add h -2 div add %d add} bind def\n",
-                   ob->y, ob->h, dy );
+        case FL_ALIGN_LEFT_BOTTOM :
+            ps_output( "/x {%d %d add} bind def\n", ob->x, margin );
+            ps_output( "/y {%d h -2 div add %d sub} bind def\n", ob->y, dy );
+            break;
+
+        case FL_ALIGN_BOTTOM :
+            ps_output( "/x {%d %d w sub 2 div add} bind def\n", ob->x, ob->w );
+            ps_output( "/y {%d h -2 div add %d sub} bind def\n", ob->y, dy );
+            break;
+
+        case FL_ALIGN_RIGHT_BOTTOM :
+            ps_output( "/x {%d %d add w sub %d sub} bind def\n",
+                       ob->x, ob->w, margin );
+            ps_output( "/y {%d h -2 div add %d sub} bind def\n", ob->y, dy );
+            break;
+
+        case FL_ALIGN_TOP :
+            ps_output( "/x {%d %d w sub 2 div add} bind def\n", ob->x, ob->w );
+            ps_output( "/y {%d %d add h -2 div add %d add} bind def\n",
+                       ob->y, ob->h, dy );
+            break;
+
+        case FL_ALIGN_RIGHT_TOP :
+        case FL_ALIGN_RIGHT :
+            ps_output( "/x {%d %d add w sub %d sub} bind def\n",
+                       ob->x, ob->w, margin );
+            ps_output( "/y {%d %d add h -2 div add %d add} bind def\n",
+                       ob->y, ob->h, dy );
+            break;
+
+        default :
+            ps_output( "/x {%d %d add} bind def\n", ob->x, margin );
+            ps_output( "/y {%d %d add h -2 div add %d add} bind def\n",
+                       ob->y, ob->h, dy );
+            break;
     }
 
     ps_boxf( ob->col2 );
@@ -2021,7 +2024,7 @@ flps_draw_input( FL_OBJECT * ob )
 {
     long col = ob->focus ? ob->col2 : ob->col1;
 
-    ob->align &= ~FL_ALIGN_INSIDE;
+    ob->align = fl_to_outside_lalign( ob->align );
     ps_draw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, col, ob->bw );
     ps_draw_object_label_beside( ob );
 }
@@ -2081,7 +2084,7 @@ flps_draw_timer( FL_OBJECT * ob )
         str = default_filter( ob, sp->val == 0.0 ? 100.0 : sp->val );
         ps_draw_text( FL_ALIGN_CENTER, ob->x, ob->y, ob->w, ob->h,
                       ob->lcol, ob->lstyle, ob->lsize, str );
-        ob->align &= ~FL_ALIGN_INSIDE;
+        ob->align = fl_to_outside_lalign( ob->align ) ;
         if ( ob->align == FL_ALIGN_CENTER )
             ob->align = FL_ALIGN_LEFT;
     }

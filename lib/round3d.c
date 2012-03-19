@@ -82,7 +82,7 @@ draw_round3dbutton( FL_OBJECT * ob )
         fl_circf( xx, yy, ( int ) FL_max( 1, 0.85 * rr - 1.0 - 0.5 * bw ),
                   ob->col2 );
 
-    if ( ob->align == FL_ALIGN_CENTER )
+    if ( fl_is_center_lalign( ob->align ) )
         fl_drw_text( FL_ALIGN_LEFT, xx + rr + 1, ob->y, 0, ob->h,
                      ob->lcol, ob->lstyle, ob->lsize, ob->label );
     else
@@ -90,8 +90,7 @@ draw_round3dbutton( FL_OBJECT * ob )
                             ob->lcol, ob->lstyle, ob->lsize, ob->label );
 
     if ( ob->type == FL_RETURN_BUTTON )
-        fl_drw_text( 0,
-                     ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
+        fl_drw_text( 0, ob->x + ob->w - 0.8 * ob->h, ob->y + 0.2 * ob->h,
                      0.6 * ob->h, 0.6 * ob->h, ob->lcol, 0, 0, "@returnarrow" );
 }
 

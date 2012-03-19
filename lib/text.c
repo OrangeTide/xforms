@@ -47,8 +47,11 @@ handle_text( FL_OBJECT * ob,
 {
     switch ( event )
     {
+        case FL_ATTRIB :
+            ob->align = fl_to_inside_lalign( ob->align );
+            break;
+
         case FL_DRAW:
-            ob->align |= FL_ALIGN_INSIDE;
             fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h, ob->col1,
                         ob->bw );
             /* fall through */
@@ -84,7 +87,7 @@ fl_create_text( int          type,
     obj->col1    = FL_TEXT_COL1;
     obj->col2    = FL_TEXT_COL2;
     obj->lcol    = FL_TEXT_LCOL;
-    obj->align   = FL_TEXT_ALIGN | FL_ALIGN_INSIDE;
+    obj->align   = FL_TEXT_ALIGN;
     obj->active  = 0;
 
     return obj;

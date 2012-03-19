@@ -204,6 +204,12 @@ extern const char *find_class_name( int );
 extern int find_class_val( const char * );
 extern void ps_set_font( int, int );
 extern int load_form_definition( const char * );
+int
+fl_is_inside_lalign( int align );
+extern int fl_is_outside_lalign( int align );
+extern int fl_is_center_lalign( int align );
+extern int fl_to_inside_lalign( int align );
+extern int fl_to_outside_lalign( int align );
 extern void fl_get_outside_align( int align, int x, int y, int w, int h,
                                   int *new_align, int *newx, int *newy );
 extern void fl_get_hv_align( int, int *, int * );

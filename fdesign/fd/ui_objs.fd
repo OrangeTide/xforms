@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 9
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 581 51
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,7 +33,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 20 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 60 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -69,7 +69,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 100 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -87,7 +87,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 140 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -105,7 +105,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 180 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -123,7 +123,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 220 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -141,7 +141,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 260 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -159,7 +159,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 300 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -183,7 +183,7 @@ Number of Objects: 7
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 581 51
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -201,7 +201,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 20 5 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -219,7 +219,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 66 5 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -237,7 +237,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 112 5 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -255,7 +255,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 158 5 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -273,7 +273,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 204 5 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -291,7 +291,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 250 5 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -315,7 +315,7 @@ Number of Objects: 9
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 581 51
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -333,7 +333,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 20 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -351,7 +351,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 70 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -369,7 +369,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 120 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -387,7 +387,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 170 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -405,7 +405,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 220 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -423,7 +423,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 270 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -441,7 +441,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 320 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -459,7 +459,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 370 3 30 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW

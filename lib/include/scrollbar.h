@@ -39,11 +39,14 @@ enum {
 };
 
 enum {
-   FL_NORMAL_SCROLLBAR,
-   FL_THIN_SCROLLBAR,
-   FL_NICE_SCROLLBAR,
-   FL_PLAIN_SCROLLBAR
+	FL_NORMAL_SCROLLBAR,
+	FL_THIN_SCROLLBAR,
+	FL_NICE_SCROLLBAR,
+	FL_PLAIN_SCROLLBAR
 };
+
+#define FL_SCROLLBAR_ALIGN   FL_ALIGN_BOTTOM
+
 
 FL_EXPORT FL_OBJECT * fl_create_scrollbar( int          type,
                                            FL_Coord     x,

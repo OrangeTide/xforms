@@ -43,14 +43,12 @@ static GC dithered_gc;
 
 
 /*******************************************************************
- *
  * Rectangle routines
- *
  ****************************************************************{**/
 
 
 /***************************************
- * General rectangle routine
+ * Function for drawing a (possibly filled) rectangle
  ***************************************/
 
 void
@@ -98,14 +96,13 @@ fl_rectangle( int      fill,
 
 
 /****************************************************************
- *
  * Polygon and polylines
- *
  ***********************************************************{****/
 
 
 /***************************************
- * xp must have n + 1 elements !!!
+ * Function for drawing a closed (possibly filled) polygon.
+ * The 'xp' argument must point to an array with n + 1 elements!
  ***************************************/
 
 void
@@ -154,12 +151,8 @@ fl_polygon( int        fill,
 }
 
 
-/****************** End of polygons *******************}********/
-
 /****************************************************************
- *
- * Ellipse
- *
+ * Function for drawing a (possibly filled) ellipse.
  **********************************************************{******/
 
 void
@@ -205,6 +198,7 @@ fl_oval( int      fill,
 
 
 /***************************************
+ * Draws a filled ellipse with a black border
  ***************************************/
 
 void
@@ -381,7 +375,7 @@ fl_lines( FL_POINT * xp,
 
 
 /***************************************
- * simple line (x1,y1) (x2,y2)
+ * Drwas a simple line from (x1,y1) to (x2,y2)
  ***************************************/
 
 void
@@ -405,6 +399,7 @@ fl_line( FL_Coord xi,
 /* points */
 
 /***************************************
+ * Draws a simple point at the given position
  ***************************************/
 
 void
@@ -421,6 +416,7 @@ fl_point( FL_Coord x,
 
 
 /***************************************
+ * Draws a set of simple point at the given positions
  ***************************************/
 
 void
@@ -498,6 +494,7 @@ fli_xlinestyle( Display * d,
     ls = n;
 
     gcmask = GCLineStyle;
+
     if ( n == FL_DOT )
         fli_xdashedlinestyle( d, gc, dots, 2 );
     else if ( n == FL_DOTDASH )
@@ -1093,6 +1090,10 @@ fl_unset_gc_clipping( GC gc )
 
 
 /***************************************
+ * Function that allows to set additional (always reducing the clipping
+ * rectangle further) to already set clipping - the intersection of the
+ * region and the already set clipping region is calculated and clipping
+ * then set to the resulting rectangle.
  ***************************************/
 
 void

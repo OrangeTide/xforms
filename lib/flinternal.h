@@ -219,10 +219,6 @@ extern FL_OBJECT *fli_find_first( FL_FORM *,
                                   FL_Coord,
                                   FL_Coord );
 
-extern void fli_redraw_form_using_xevent( FL_FORM *,
-                                          int,
-                                          XEvent * );
-
 extern void fli_show_object( FL_OBJECT * );
 
 extern void fli_recalc_intersections( FL_FORM * );
@@ -245,9 +241,17 @@ extern FL_OBJECT *fli_find_object_backwards( FL_OBJECT *,
 extern void fli_insert_object( FL_OBJECT *,
                                FL_OBJECT * );
 
+extern void fli_scale_object( FL_OBJECT *,
+                              double     ,
+                              double );
 
 extern void fli_set_object_visibility( FL_OBJECT * obj,
                                        int         vis );
+
+
+extern int fli_mouse_wheel_to_keypress( int       * ev,
+                                        int       * key,
+                                        void      * xev );
 
 /* double buffering etc. */
 
@@ -617,6 +621,9 @@ extern int fli_do_shortcut( FL_FORM *,
                             FL_Coord,
                             XEvent * );
 
+extern int fli_test_lalign( int          align,
+                            const char * txt );
+
 extern void fli_get_hv_align( int,
                               int *,
                               int *);
@@ -759,10 +766,6 @@ extern int fli_convert_shortcut( const char *,
 extern int fli_get_underline_pos( const char *,
                                   const char * );
 
-extern void fli_scale_length( FL_Coord *,
-                              FL_Coord *,
-                              double );
-
 extern int fli_get_visible_forms_index( FL_FORM * );
 
 extern void fli_recount_auto_objects( void );
@@ -899,10 +902,6 @@ extern char *fli_getcwd( char *,
 extern void fli_replacepup_text( int,
                                  int,
                                  const char * );
-
-extern int fli_handle_mouse_wheel( int *,
-                                   int *,
-                                   void * );
 
 extern int fli_valuator_handle_drag( FL_OBJECT *,
                                      double );

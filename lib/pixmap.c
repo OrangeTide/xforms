@@ -467,7 +467,7 @@ fl_create_pixmap( int          type,
     sp->cspecv = psp = fl_calloc( 1, sizeof *psp );
 
     psp->dx    = psp->dy = 0;
-    psp->align = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;
+    psp->align = FL_ALIGN_CENTER;
 
     return obj;
 }
@@ -805,7 +805,7 @@ fl_create_pixmapbutton( int          type,
     sp->cspecv = psp = fl_calloc( 1, sizeof *psp );
 
     psp->show_focus = 1;
-    psp->align      = FL_ALIGN_CENTER | FL_ALIGN_INSIDE;
+    psp->align      = FL_ALIGN_CENTER;
     psp->dx         = psp->dy = 3;
 
     return obj;

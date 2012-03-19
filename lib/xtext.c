@@ -240,12 +240,16 @@ fli_drw_string( int           horalign,
         if ( i < topline || i > endline )
             continue;
 
+        horalign = fl_to_outside_lalign( horalign );
+
         if ( horalign == FL_ALIGN_LEFT )
             startx[ i ] = x;
         else if ( horalign == FL_ALIGN_CENTER )
             startx[ i ] = x + 0.5 * ( w - width );
         else if ( horalign == FL_ALIGN_RIGHT )
             startx[ i ] = x + w - width;
+
+        vertalign = fl_to_outside_lalign( vertalign );
 
         if ( vertalign == FL_ALIGN_BOTTOM )
             starty[ i ] = y + h - 1 + ( i - lnumb ) * flx->fheight + height;
@@ -374,7 +378,7 @@ fli_drw_string( int           horalign,
 
 
 /***************************************
- *routine returning the position of the mouse in a string
+ * Routine returning the position of the mouse in a string
  ***************************************/
 
 int
@@ -419,6 +423,8 @@ fli_get_pos_in_string( int          horalign,
 
     /* Calculate line in which mouse lies  */
 
+    vertalign = fl_to_outside_lalign( vertalign );
+
     if ( vertalign == FL_ALIGN_BOTTOM )
         toppos = y + h - 1;
     else if ( vertalign == FL_ALIGN_CENTER )
@@ -450,6 +456,8 @@ fli_get_pos_in_string( int          horalign,
 
     width = XTextWidth( flx->fs, ( char * ) line,
                         start[ theline + 1 ] - start[ theline ] );
+
+    horalign = fl_to_outside_lalign( horalign );
 
     if ( horalign == FL_ALIGN_LEFT )
         xstart = x;
@@ -690,7 +698,7 @@ fl_draw_text_beside( int        align,
     if ( ! str || ! *str )
         return;
 
-    if ( align & FL_ALIGN_INSIDE )
+    if ( fl_is_inside_lalign( align ) )
         M_warn( "drw_text_beside", "align request is inside" );
 
     if ( align & FL_ALIGN_LEFT )
@@ -745,7 +753,7 @@ fl_drw_text_beside( int          align,
     if ( ! str || ! *str || w <= 0 || h <= 0 )
         return;
 
-    if ( align & FL_ALIGN_INSIDE )
+    if ( fl_is_inside_lalign( align ) )
         M_warn( "drw_text_beside", "align request is inside" );
 
     if ( align & FL_ALIGN_LEFT )

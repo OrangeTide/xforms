@@ -60,7 +60,7 @@ create_choice( void )
     fli_inverted_y = 0;
     fl_set_coordunit( FL_COORD_PIXEL );
 
-    fdui->form = fl_bgn_form( FL_UP_BOX, 460, 130 );
+    fdui->form = fl_bgn_form( FL_FLAT_BOX, 460, 130 );
     fl_set_form_title( fdui->form, "Choice" );
 
     fdui->str = fl_add_box( FL_FLAT_BOX, 20, 15, 420, 65, "" );

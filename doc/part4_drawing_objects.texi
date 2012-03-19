@@ -21,13 +21,13 @@
 
 An important aspect of a new object class (or a free object) is how to
 draw it. As indicated above this should happen when the event
-@code{FL_DRAW} is received by the object. The place, i.e.@:w bounding
-box, where the object has to be drawn is indicated by the fields
-@code{obj->x}, @code{obj->y}, @code{obj->w} and @code{obj->h}. Forms
-are drawn in the Forms Library default visual or the user requested
-visual, which could be any of the X supported visuals. Hence,
-preferably your classes should run well in all visuals. The Forms
-Library tries to hide as much as possible the information about
+@code{FL_DRAW} is received by the object. The place and size, i.e.@:
+the bounding box, of the object are indicated by the object tructure
+fields @code{obj->x}, @code{obj->y}, @code{obj->w} and @code{obj->h}.
+Forms are drawn in the Forms Library default visual or the user
+requested visual, which could be any of the X supported visuals.
+Hence, preferably your classes should run well in all visuals. The
+Forms Library tries to hide as much as possible the information about
 graphics mode and, in general, using the built-in drawing routines is
 the best approach. Here are some details about graphics state in case
 such information is needed.
@@ -522,9 +522,9 @@ void fl_rect(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
              FL_COLOR col);
 @end example
 @noindent
-Both functions draw a rectangle on the screen in color @code{col}. The
-difference is that @code{@ref{fl_rectf()}} draws a filled rectangle
-while @code{@ref{fl_rect()}} just draws the outline.
+Both functions draw a rectangle on the screen in color @code{col}.
+While @code{@ref{fl_rectf()}} draws a filled rectangle,
+@code{@ref{fl_rect()}} just draws the outline in the given color.
 
 To draw a filled (with color @code{col}) rectangle with a black border
 use
@@ -570,11 +570,14 @@ void fl_polybound(FL_POINT *xpoint, int n, FL_COLOR col);
 @code{@ref{fl_polyf()}} draws a filled polygon defined by @code{n}
 points, @code{@ref{fl_polyl()}} the ouline of a polygon and
 @code{@ref{fl_polybound()}} a filled polygon with a black outline.
-Note all polygon routines @strong{require} that the array
-@code{xpoint} has to have enough spaces to hold @code{n+1} points!
 
-To draw an ellipse. either filled or open, the following routines can
-be used (use @code{w} equal to @code{h} to get a circle):
+Note: @strong{all} polygon routines require that the array
+@code{xpoint} has spaces for @strong{@code{n+1}} points, i.e.@: one
+more than then number of points you intend to draw!
+
+To draw an ellipse. either filled, either open, filled with a black
+border the following routines can be used (use @code{w} equal to
+@code{h} to get a circle):
 @findex fl_ovalf()
 @anchor{fl_ovalf()}
 @findex fl_ovall()
@@ -609,7 +612,7 @@ circle), and @code{x} and @code{y} are the center of the arc. If the
 difference between @code{theta_end} and @code{theta_start} is larger
 than 3600 (360 degrees), drawing is truncated to 360 degrees.
 
-To draw elliptical arcs the following routine should be used:
+To draw elliptical arcs the following routine can be used:
 @findex fl_pieslice()
 @anchor{fl_pieslice()}
 @example

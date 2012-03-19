@@ -492,16 +492,17 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
     {
         sp->max_width = tl->w;
         for ( i = 0; i < sp->num_lines; i++ )
-            if ( sp->lines[ i ]->align == FL_ALIGN_CENTER )
+            if ( fl_is_center_lalign( sp->lines[ i ]->align ) )
                 sp->lines[ i ]->x = ( sp->max_width - sp->lines[ i ]->w ) / 2;
-            else if ( sp->lines[ i ]->align == FL_ALIGN_RIGHT )
+            else if ( fl_to_outside_lalign( sp->lines[ i ]->align ) ==
+                                                             FL_ALIGN_RIGHT )
                 sp->lines[ i ]->x = sp->max_width - sp->lines[ i ]->w;
     }
     else
     {
-        if ( tl->align == FL_ALIGN_CENTER )
+        if ( fl_is_center_lalign( tl->align ) )
             tl->x = ( sp->max_width - tl->w ) / 2;
-        else if ( tl->align == FL_ALIGN_RIGHT )
+        else if ( fl_to_outside_lalign( tl->align ) == FL_ALIGN_RIGHT )
             tl->x = sp->max_width - tl->w;
     }
 
@@ -649,16 +650,17 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
     {
         sp->max_width = tl->w;
         for ( i = 0; i < sp->num_lines; i++ )
-            if ( sp->lines[ i ]->align == FL_ALIGN_CENTER )
+            if ( fl_is_center_lalign( sp->lines[ i ]->align ) )
                 sp->lines[ i ]->x = ( sp->max_width - sp->lines[ i ]->w ) / 2;
-            else if ( sp->lines[ i ]->align == FL_ALIGN_RIGHT )
+            else if ( fl_to_outside_lalign( sp->lines[ i ]->align ) ==
+                                                              FL_ALIGN_RIGHT )
                 sp->lines[ i ]->x = sp->max_width - sp->lines[ i ]->w;
     }
     else
     {
-        if ( tl->align == FL_ALIGN_CENTER )
+        if ( fl_is_center_lalign( tl->align ) )
             tl->x = ( sp->max_width - tl->w ) / 2;
-        else if ( tl->align == FL_ALIGN_RIGHT )
+        else if ( fl_to_outside_lalign( tl->align ) == FL_ALIGN_RIGHT )
             tl->x = sp->max_width - tl->w;
     }
 
@@ -1485,6 +1487,8 @@ fli_tbox_recalc_area( FL_OBJECT * obj )
 
 
 /***************************************
+ * Function called whenever the size or some other visual attribute
+ * was changed before redrawing the object
  ***************************************/
 
 static void
@@ -1501,9 +1505,10 @@ fli_tbox_prepare_drawing( FL_OBJECT * obj )
     /* Recalculate horizontal positions of all lines */
 
     for ( i = 0; i < sp->num_lines; i++ )
-        if ( sp->lines[ i ]->align == FL_ALIGN_CENTER )
+        if ( fl_is_center_lalign( sp->lines[ i ]->align ) )
             sp->lines[ i ]->x = ( sp->max_width - sp->lines[ i ]->w ) / 2;
-        else if ( sp->lines[ i ]->align == FL_ALIGN_RIGHT )
+        else if ( fl_to_outside_lalign( sp->lines[ i ]->align ) ==
+                                                          FL_ALIGN_RIGHT )
             sp->lines[ i ]->x = sp->max_width - sp->lines[ i ]->w;
 
     /* We might get called before the textbox is shown and then the
@@ -1635,6 +1640,9 @@ draw_tbox( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
     int i;
+
+    fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                obj->col1, obj->bw );
 
     XFillRectangle( flx->display, FL_ObjWin( obj ),
                     sp->backgroundGC,
@@ -1981,43 +1989,6 @@ handle_keyboard( FL_OBJECT * obj,
 
 
 /***************************************
- * Mouse wheel hack - the (release) event is converted
- * to a key event (function is also used by input.c)
- ***************************************/
-
-int
-fli_handle_mouse_wheel( int       * ev,
-                        int       * key,
-                        void      * xev )
-{
-    if ( *ev == FL_PUSH )
-        return 0;
-
-    if ( *ev == FL_RELEASE )
-    {
-        *ev = FL_KEYPRESS;
-
-        if ( xev && shiftkey_down( ( ( XButtonEvent * ) xev )->state ) )
-        {
-            ( ( XButtonEvent * ) xev )->state &= ~ ShiftMask;
-            ( ( XKeyEvent * ) xev )->state &= ~ ShiftMask;
-            *key = *key == FL_MBUTTON4 ? FLI_1LINE_UP : FLI_1LINE_DOWN;
-        }
-        else if ( xev && controlkey_down( ( ( XButtonEvent * ) xev )->state ) )
-        {
-            ( ( XButtonEvent * ) xev )->state &= ~ ControlMask;
-            ( ( XKeyEvent * ) xev )->state &= ~ ControlMask;
-            *key = *key == FL_MBUTTON4 ? XK_Prior : XK_Next;
-        }
-        else
-            *key = *key == FL_MBUTTON4 ? FLI_HALFPAGE_UP : FLI_HALFPAGE_DOWN;
-    }
-
-    return 1;
-}
-
-
-/***************************************
  * Tries to find the index of the line under the mouse,
  * returns -1 if there's none
  ***************************************/
@@ -2272,16 +2243,14 @@ handle_tbox( FL_OBJECT * obj,
     if (     obj->type == FL_NORMAL_BROWSER
           && key == FL_MBUTTON1
           && sp->select_line >= 0 )
-    {
-        fprintf( stderr, "Deselecting\n" );
 		fli_tbox_deselect_line( obj, sp->select_line );
-    }
 
-    /* Mouse wheel hack */
+    /* Convert mouse wheel events to keypress events */
 
-    if (    ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
+    if (    ev == FL_RELEASE
+         && ( key == FL_MBUTTON4 || key == FL_MBUTTON5 )
          && ! obj->want_update
-         && ! fli_handle_mouse_wheel( &ev, &key, xev ) )
+         && ! fli_mouse_wheel_to_keypress( &ev, &key, xev ) )
         return ret;
 
     switch ( ev )
@@ -2298,8 +2267,6 @@ handle_tbox( FL_OBJECT * obj,
                 sp->attrib = 0;
             }
 
-            fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
-                        obj->col1, obj->bw );
             draw_tbox( obj );
             break;
 
@@ -2316,19 +2283,19 @@ handle_tbox( FL_OBJECT * obj,
         case FL_PUSH :
             if ( key != FL_MBUTTON1 )
                 break;
-            obj->want_update = 1;
+            obj->want_update = 1;       /* so we can follow mouse movements */
             old_yoffset = sp->yoffset;
-            ret |= handle_mouse( obj, my, ev );
+            ret = handle_mouse( obj, my, ev );
             break;
 
         case FL_UPDATE :
-            ret |= handle_mouse( obj, my, ev );
+            ret = handle_mouse( obj, my, ev );
             break;
 
         case FL_RELEASE :
             if ( key != FL_MBUTTON1 )
                 break;
-            ret |= handle_mouse( obj, my, ev ) | FL_RETURN_END;
+            ret = handle_mouse( obj, my, ev ) | FL_RETURN_END;
             if ( sp->yoffset != old_yoffset )
                 ret |= FL_RETURN_CHANGED;
             obj->want_update = 0;

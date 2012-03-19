@@ -62,7 +62,7 @@ handle_simu_canvas( FL_OBJECT * ob,
             break;
 
         case FL_DRAWLABEL:
-            if ( ob->align != FL_ALIGN_CENTER )
+            if ( ! fl_is_center_lalign( ob->align ) )
                 fl_drw_text( ob->align, ob->x, ob->y, ob->w, ob->h,
                              ob->lcol, ob->lstyle, ob->lsize, ob->label );
             break;

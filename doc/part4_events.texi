@@ -206,23 +206,38 @@ action. Clock and timer objects use this type of event.
 @tindex FL_UPDATE
 @anchor{FL_UPDATE}
 @item FL_UPDATE
-An @code{FL_UPDATE} event, like the @code{@ref{FL_STEP}} event, also gets
-send about every @w{50 msec} (but less often under high load) to
+An @code{FL_UPDATE} event, like the @code{@ref{FL_STEP}} event, also
+gets send about every @w{50 msec} (but less often under high load) to
 objects while they are "pushed", i.e.@: between receiving a
-@code{@ref{FL_PUSH}} and a @code{@ref{FL_RELEASE}} event if the
-@code{obj->want_update} field is set for the object. Like for the
-@code{FL_STEP} event the handling routine receives a synthetic
-@code{MotionNotify} event as the XEvent. This is typically used
-by objects that have to perform tasks at regular time intervals while
-they are "pushed" (e.g.@: counters that need to count up or down while
-the mouse is pushed on one of its buttons).
+@code{@ref{FL_PUSH}} and a @code{@ref{FL_RELEASE}} event if their
+@code{obj->want_update} field is set. Like for the @code{FL_STEP}
+event the handling routine receives a synthetic @code{MotionNotify}
+event as the XEvent. This is typically used by objects that have to
+perform tasks at regular time intervals while they are "pushed"
+(e.g.@: counters that need to count up or down while the mouse is
+pushed on one of its buttons).
+
+@tindex FL_ATTRIB
+@anchor{FL_ATTRIB}
+@item FL_ATTRIB
+An @code{FL_ATTRIB} event is sent to an object (via calling the
+handler function each object type must define for this purpose)
+whenever one of it's properties changes, be it its size, position, box
+type, border width, colors, label, label color, style or alignment
+etc. This can e.g.@: be used by the object to do preparations for
+later drawing of it or check that what got set is reasonable. It
+should not use this event to actually draw anything (this is to be
+done only when an @code{@ref{FL_DRAW}} event is received). When the
+handler function for events is called all the arguments it gets passed
+are @code{0}.
 
 @tindex FL_FREEMEM
 @anchor{FL_FREEMEM}
 @tindex FL_FREEMEM
 @item FL_FREEMEM
 This event is sent when the object is to be freed. All memory
-allocated for the object must be freed when this event is received.
+allocated for the object internally must be freed when this event is
+received.
 
 @tindex FL_OTHER
 @anchor{FL_OTHER}
