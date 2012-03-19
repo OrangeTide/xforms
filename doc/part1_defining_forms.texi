@@ -27,7 +27,7 @@ how to work with them.
 * Hiding and Showing::
 * Deactivating and Triggering Objects::
 * Changing Attributes::
-* Adding and Deleting::
+* Adding and Removing Objects::
 * Freeing Objects::
 @end menu
 
@@ -1795,69 +1795,73 @@ graphics, application of which can be quite pleasant given the right
 tasks.
 
 
-@node Adding and Deleting
-@section Adding and Deleting Objects
+@node Adding and Removing Objects
+@section Adding and Removing Objects
 
-In some situations you might want to add an object to an existing form.
-This can be done using the call
+In some situations you might want to add a objects to an existing form
+(i.e.@: a form for which @code{@code{fl_end_form()}} already has been
+called. Reopening a form for the addition of further objects be done
+by using the call
 @findex fl_addto_form()
 @example
 FL_FORM *fl_addto_form(FL_FORM *form);
 @end example
 @noindent
-After this call you can continue adding objects to the form with the
-usual functions for adding objects like @code{@ref{fl_add_button()}}
-etc. To stop adding objects to the form again use
+After this call you can again add objects to the form with the usual
+functions for adding objects like @code{@ref{fl_add_button()}} etc.
+When done adding objects to the form again call
 @code{@ref{fl_end_form()}}. It is possible to add objects to forms
 that are being displayed, but this is not always a good idea because
 not everything behaves well (e.g.@: strange things might happen when a
 group is started but not yet finished).
 
-To delete an object from a form simply use
+To remove an object from a form simply use
 @findex fl_delete_object()
 @example
 void fl_delete_object(FL_OBJECT *obj);
 @end example
 @noindent
-It deletes the object from the form it currently belongs to and also
+It removes the object from the form it currently belongs to and also
 from a group it may belong to. The argument can also be the
 pseudo-object starting a group (i.e.@: the return value of
 @code{@ref{fl_bgn_group()}}) in which case the whole group of objects
 will be removed from the form.
 
-The object remains available (except if it's an object that marks the
-start or end of a group) and can be added again to the same or another
-form later using
+Contrary to what the name of the function may hint at the object
+itself isn't deleted but it remains available (except if it's an
+object that marks the start or end of a group) and thus it can be
+added again to the same or another form (without having to call
+@code{@ref{fl_addto_form()}} first and @code{@ref{fl_end_form()}}
+afterwards) using the function
 @findex fl_add_object()
-@anchor{fl_add_object()}
 @example
 void fl_add_object(FL_FORM *form, FL_OBJECT *obj);
 @end example
 @noindent
-Normally, this function is used in object classes to add a newly
-created object to a form. It may not be used for objects representing
-the start or end of a group.
+Normally, this function is used within object classes to add a newly
+created object to a form. It can not be used for pseude-objects
+representing the start or end of a group.
 
 
 @node Freeing Objects
 @section Freeing Objects
 
-If the application program does not need an object anymore, it can free
-the memory used by the object using the call
+If the application program does not need an object anymore, it can
+completely delete it, freeing all memory used for it, using a call of
 @findex fl_free_object()
 @example
 void fl_free_object(FL_OBJECT *obj);
 @end example
 @noindent
-After this the object can no longer be used. If you hadn't deleted the
-object from the form it did belong to before this will happen
-automatically.
+After this the object truely destroyed and can no longer be used. If
+you hadn't deleted the object from the form it did belong to using
+@code{@ref{fl_delete_object()}} before this will be done automatically.
 
-To free the memory used by an entire form use the call
+To free the memory used by an entire form use a call of
 @findex fl_free_form()
 @example
 void fl_free_form(FL_FORM *form);
 @end example
 @noindent
-This will delete and free all the objects on the form and the form
-itself. A freed form may not be referenced anymore.
+This will delete and free all the objects of the form and the form
+itself. A freed form can not be referenced anymore.

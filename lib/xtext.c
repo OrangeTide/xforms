@@ -698,7 +698,7 @@ fl_draw_text_beside( int        align,
     if ( ! str || ! *str )
         return;
 
-    if ( fl_is_inside_lalign( align ) )
+    if ( fl_is_inside_lalign( align ) && ! fl_is_center_lalign( align ) )
         M_warn( "drw_text_beside", "align request is inside" );
 
     if ( align & FL_ALIGN_LEFT )
@@ -753,7 +753,7 @@ fl_drw_text_beside( int          align,
     if ( ! str || ! *str || w <= 0 || h <= 0 )
         return;
 
-    if ( fl_is_inside_lalign( align ) )
+    if ( fl_is_inside_lalign( align ) && ! fl_is_center_lalign( align ) )
         M_warn( "drw_text_beside", "align request is inside" );
 
     if ( align & FL_ALIGN_LEFT )

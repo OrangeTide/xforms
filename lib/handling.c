@@ -30,13 +30,19 @@ static void do_interaction_step( int );
 static int get_next_event_or_idle( int,
                                    FL_FORM **,
                                    XEvent * );
+static void handle_keyboard_event( XEvent * xev,
+                                   int      formevent );
 static void handle_EnterNotify_event( FL_FORM * );
 static void handle_LeaveNotify_event( void );
 static void handle_MotionNotify_event( FL_FORM * );
+static void handle_ButtonPress_event( FL_FORM * evform );
+static void handle_ButtonRelease_event( FL_FORM * evform );
 static void handle_Expose_event( FL_FORM *,
                                  FL_FORM ** );
 static void handle_ConfigureNotify_event( FL_FORM *,
                                           FL_FORM ** );
+static void handle_ClientMessage_event( FL_FORM * form,
+                                        void    * xev );
 static int form_event_queued( XEvent *,
                               int );
 
@@ -598,131 +604,6 @@ fli_handle_form( FL_FORM * form,
 }
 
 
-/***************************************
- * Formevent is either FL_KEYPRESS or FL_KEYRELEASE
- ***************************************/
-
-static void
-do_keyboard( XEvent * xev,
-             int      formevent )
-{
-    Window win = xev->xkey.window;
-    KeySym keysym = 0;
-    unsigned char keybuf[ 227 ];
-    int kbuflen;
-
-    fli_int.mousex    = xev->xkey.x;
-    fli_int.mousey    = xev->xkey.y;
-    fli_int.keymask   = xev->xkey.state;
-    fli_int.query_age = 0;
-
-    /* Before doing anything save the current modifier key for the handlers */
-
-    if (    win
-         && (    ! fli_int.keyform
-              || fli_get_visible_forms_index( fli_int.keyform ) < 0 ) )
-        fli_int.keyform = fl_win_to_form( win );
-
-    /* Switch keyboard input only if different top-level form */
-
-    if ( fli_int.keyform && fli_int.keyform->window != win )
-    {
-        M_warn( "do_keyboard", "pointer/keybd focus differ" );
-
-        if (    fli_int.keyform->child
-             && fli_int.keyform->child->window != win
-             && fli_int.keyform->parent
-             && fli_int.keyform->parent->window != win )
-            fli_int.keyform = fl_win_to_form( win );
-    }
-
-    if ( ! fli_int.keyform )
-        return;
-
-    kbuflen = fli_XLookupString( ( XKeyEvent * ) xev, ( char * ) keybuf,
-                                 sizeof keybuf, &keysym );
-
-    if ( kbuflen < 0 )
-    {
-        if ( kbuflen != INT_MIN )
-            M_err( "do_keyboard", "keyboad buffer overflow?" );
-        else
-            M_err( "do_keyboard", "fli_XLookupString failed?" );
-
-        return;
-    }
-
-    /* Ignore modifier keys as they don't cause action and are taken care
-       of by the lookupstring routine */
-
-    if ( IsModifierKey( keysym ) )
-        /* empty */ ;
-    else if ( IsTab( keysym ) )
-    {
-        /* Fake a tab key, on some systems shift+tab do not generate a tab */
-
-        fli_handle_form( fli_int.keyform, formevent, '\t', xev );
-    }
-    else if ( IsCursorKey( keysym ) || kbuflen == 0 )
-        fli_handle_form( fli_int.keyform, formevent, keysym, xev );
-    else
-    {
-        unsigned char *ch;
-
-        /* All regular keys, including mapped strings */
-
-        for ( ch = keybuf; ch < keybuf + kbuflen && fli_int.keyform; ch++ )
-            fli_handle_form( fli_int.keyform, formevent, *ch, xev );
-    }
-}
-
-
-/***************************************
- * ClientMessage is intercepted if it's WM_DELETE_WINDOW
- ***************************************/
-
-static void
-handle_ClientMessage_event( FL_FORM * form,
-                            void    * xev )
-{
-    XClientMessageEvent *xcm = xev;
-    static Atom atom_protocol;
-    static Atom atom_del_win = None;
-
-    if ( ! atom_del_win )
-    {
-        atom_protocol = XInternAtom( xcm->display, "WM_PROTOCOLS", 0 );
-        atom_del_win = XInternAtom( xcm->display, "WM_DELETE_WINDOW", 0 );
-    }
-
-    /* If delete top-level window, quit unless handlers are installed */
-
-    if (    xcm->message_type == atom_protocol
-         && ( Atom ) xcm->data.l[ 0 ] == atom_del_win )
-    {
-        if ( form->close_callback )
-        {
-            if (    form->close_callback( form, form->close_data ) != FL_IGNORE
-                 && form->visible == FL_VISIBLE )
-                fl_hide_form( form );
-
-            if ( form->sort_of_modal )
-                fl_activate_all_forms( );
-        }
-        else if ( fli_context->atclose )
-        {
-            if ( fli_context->atclose( form,
-                                       fli_context->close_data ) != FL_IGNORE )
-                exit( 1 );
-        }
-        else
-            exit( 1 );
-    }
-    else    /* pump it through current form */
-        fli_handle_form( form, FL_OTHER, 0, xev );
-}
-
-
 static int preemptive_consumed( FL_FORM *,
                                 int,
                                 XEvent * );
@@ -841,11 +722,11 @@ do_interaction_step( int wait_io )
             break;
 
         case KeyPress:
-            do_keyboard( &st_xev, FL_KEYPRESS );
+            handle_keyboard_event( &st_xev, FL_KEYPRESS );
             break;
 
         case KeyRelease:
-            do_keyboard( &st_xev, FL_KEYRELEASE );
+            handle_keyboard_event( &st_xev, FL_KEYRELEASE );
             break;
 
         case EnterNotify:
@@ -861,57 +742,11 @@ do_interaction_step( int wait_io )
             break;
 
         case ButtonPress:
-            fli_int.mousex  = st_xev.xbutton.x;
-            fli_int.mousey  = st_xev.xbutton.y;
-            fli_int.keymask = st_xev.xbutton.state
-                           | ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
-            fli_int.query_age = 0;
-
-            fli_context->mouse_button = st_xev.xbutton.button;
-            if ( metakey_down( fli_int.keymask ) && st_xev.xbutton.button == 2 )
-                fli_print_version( 1 );
-            else
-                fli_handle_form( fli_int.mouseform, FL_PUSH,
-                                 st_xev.xbutton.button, &st_xev );
+            handle_ButtonPress_event( evform );
             break;
 
         case ButtonRelease:
-            fli_int.mousex  = st_xev.xbutton.x;
-            fli_int.mousey  = st_xev.xbutton.y;
-            fli_int.keymask = st_xev.xbutton.state
-                          & ~ ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
-            fli_int.query_age = 0;
-
-            fli_context->mouse_button = st_xev.xbutton.button;
-
-            /* Before the button was released (but after the press) a new form
-               window may have been created, just below the mouse. In that case
-               the mouse form, which is the one to receive the release event
-               isn't the one that actually gets the event - it goes instead to
-               the newly opened form window. And in this case the coordinates of
-               where the mouse was release are relative to the new window but
-               all the functions called for the object in the original mouse
-               form expect them to be relative to the previous form. Thus we
-               need to adjust these coordinates to be relative to the original
-               mouse form window instead of the window opened since the mouse
-               press. Thanks to Werner Heisch for finding this weired
-               problem... */
-
-            if ( fli_int.mouseform )
-            {
-                if ( fli_int.mouseform != evform )
-                {
-                    st_xev.xbutton.x = fli_int.mousex +=
-                                              evform->x - fli_int.mouseform->x;
-                    st_xev.xbutton.y = fli_int.mousey +=
-                                              evform->y - fli_int.mouseform->y;
-                }
-
-                fli_handle_form( fli_int.mouseform, FL_RELEASE,
-                                 st_xev.xbutton.button, &st_xev );
-            }
-
-            fli_int.mouseform = evform;
+            handle_ButtonRelease_event( evform );
             break;
 
         case Expose:
@@ -1095,6 +930,86 @@ get_next_event_or_idle( int        wait_io,
 
 
 /***************************************
+ * Handling for KeyPress and KeyRelease events (indicated by either FL_KEYPRESS
+ * or FL_KEYRELEASE as the second argument)
+ ***************************************/
+
+static void
+handle_keyboard_event( XEvent * xev,
+                       int      formevent )
+{
+    Window win = xev->xkey.window;
+    KeySym keysym = 0;
+    unsigned char keybuf[ 227 ];
+    int kbuflen;
+
+    fli_int.mousex    = xev->xkey.x;
+    fli_int.mousey    = xev->xkey.y;
+    fli_int.keymask   = xev->xkey.state;
+    fli_int.query_age = 0;
+
+    /* Before doing anything save the current modifiers key for the handlers */
+
+    if (    win
+         && (    ! fli_int.keyform
+              || fli_get_visible_forms_index( fli_int.keyform ) < 0 ) )
+        fli_int.keyform = fl_win_to_form( win );
+
+    /* Switch keyboard input only if different top-level form */
+
+    if ( fli_int.keyform && fli_int.keyform->window != win )
+    {
+        M_warn( "handle_keyboard_event", "pointer/keybd focus differ" );
+
+        if (    fli_int.keyform->child
+             && fli_int.keyform->child->window != win
+             && fli_int.keyform->parent
+             && fli_int.keyform->parent->window != win )
+            fli_int.keyform = fl_win_to_form( win );
+    }
+
+    if ( ! fli_int.keyform )
+        return;
+
+    kbuflen = fli_XLookupString( ( XKeyEvent * ) xev, ( char * ) keybuf,
+                                 sizeof keybuf, &keysym );
+
+    if ( kbuflen < 0 )
+    {
+        if ( kbuflen != INT_MIN )
+            M_err( "handle_keyboard_event", "keyboad buffer overflow?" );
+        else
+            M_err( "handle_keyboard_event", "fli_XLookupString failed?" );
+
+        return;
+    }
+
+    /* Ignore modifier keys as they don't cause action and are taken care
+       of by the lookupstring routine */
+
+    if ( IsModifierKey( keysym ) )
+        /* empty */ ;
+    else if ( IsTab( keysym ) )
+    {
+        /* Fake a tab key, on some systems shift+tab do not generate a tab */
+
+        fli_handle_form( fli_int.keyform, formevent, '\t', xev );
+    }
+    else if ( IsCursorKey( keysym ) || kbuflen == 0 )
+        fli_handle_form( fli_int.keyform, formevent, keysym, xev );
+    else
+    {
+        unsigned char *ch;
+
+        /* All regular keys, including mapped strings */
+
+        for ( ch = keybuf; ch < keybuf + kbuflen && fli_int.keyform; ch++ )
+            fli_handle_form( fli_int.keyform, formevent, *ch, xev );
+    }
+}
+
+
+/***************************************
  * Handling of EnterNotiy events
  ***************************************/
 
@@ -1193,16 +1108,85 @@ handle_MotionNotify_event( FL_FORM * evform )
         return;
     }
 
+    /* If there's an object that has the mouse focus but the event isn't for
+       the form of this object the mouse position reported is not relative
+       to that window and we need to adjust it. */
+
     if ( fli_int.mouseform->window != win )
     {
-        M_warn( "handle_MotionNotify_event", "mousewin = %ld event win = %ld",
-                fli_int.mouseform->window, win );
         fli_int.mousex += evform->x - fli_int.mouseform->x;
         fli_int.mousey += evform->y - fli_int.mouseform->y;
     }
 
     fli_handle_form( fli_int.mouseform, FL_MOTION,
                      xmask2button( fli_int.keymask ), &st_xev );
+}
+
+
+/***************************************
+ * Handling of ButttonPress events
+ ***************************************/
+
+static void
+handle_ButtonPress_event( FL_FORM * evform  FL_UNUSED_ARG )
+{
+    fli_int.mousex  = st_xev.xbutton.x;
+    fli_int.mousey  = st_xev.xbutton.y;
+    fli_int.keymask = st_xev.xbutton.state
+        | ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
+    fli_int.query_age = 0;
+
+    fli_context->mouse_button = st_xev.xbutton.button;
+    if ( metakey_down( fli_int.keymask ) && st_xev.xbutton.button == 2 )
+        fli_print_version( 1 );
+    else
+        fli_handle_form( fli_int.mouseform, FL_PUSH,
+                         st_xev.xbutton.button, &st_xev );
+}
+
+
+/***************************************
+ * Handling of ButttonRelease events
+ ***************************************/
+
+static void
+handle_ButtonRelease_event( FL_FORM * evform )
+{
+    fli_int.mousex  = st_xev.xbutton.x;
+    fli_int.mousey  = st_xev.xbutton.y;
+    fli_int.keymask =   st_xev.xbutton.state
+                      & ~ ( Button1Mask << ( st_xev.xbutton.button - 1 ) );
+    fli_int.query_age = 0;
+
+    fli_context->mouse_button = st_xev.xbutton.button;
+
+    /* Before the button was released (but after the press) a new form window
+       may have been created, just below the mouse. In that case the mouse
+       form, which is the one to receive the release event isn't the one that
+       actually gets the event - it goes instead to the newly opened form
+       window. And in this case the coordinates of where the mouse was release
+       are relative to the new window but all the functions called for the
+       object in the original mouse form expect them to be relative to the
+       previous form. Thus we need to adjust these coordinates to be relative
+       to the original mouse form window instead of the window opened since
+       the mouse press. Thanks to Werner Heisch for finding this weired
+       problem... */
+
+    if ( fli_int.mouseform )
+    {
+        if ( fli_int.mouseform != evform )
+        {
+            st_xev.xbutton.x = fli_int.mousex +=
+                                              evform->x - fli_int.mouseform->x;
+            st_xev.xbutton.y = fli_int.mousey +=
+                                              evform->y - fli_int.mouseform->y;
+        }
+
+        fli_handle_form( fli_int.mouseform, FL_RELEASE,
+                         st_xev.xbutton.button, &st_xev );
+    }
+
+    fli_int.mouseform = evform;
 }
 
 
@@ -1323,6 +1307,53 @@ handle_ConfigureNotify_event( FL_FORM  * evform,
         fl_redraw_form( evform );
     else if ( ! ( evform->w > old_w && evform->h > old_h ) ) 
         *redraw_form = evform;
+}
+
+
+/***************************************
+ * Handling of ClientMessage events, intercepts WM_DELETE_WINDOW messages
+ ***************************************/
+
+static void
+handle_ClientMessage_event( FL_FORM * form,
+                            void    * xev )
+{
+    XClientMessageEvent *xcm = xev;
+    static Atom atom_protocol;
+    static Atom atom_del_win = None;
+
+    if ( ! atom_del_win )
+    {
+        atom_protocol = XInternAtom( xcm->display, "WM_PROTOCOLS", 0 );
+        atom_del_win = XInternAtom( xcm->display, "WM_DELETE_WINDOW", 0 );
+    }
+
+    /* On message for deletion of top-level window quit unless handlers are
+       installed */
+
+    if (    xcm->message_type == atom_protocol
+         && ( Atom ) xcm->data.l[ 0 ] == atom_del_win )
+    {
+        if ( form->close_callback )
+        {
+            if (    form->close_callback( form, form->close_data ) != FL_IGNORE
+                 && form->visible == FL_VISIBLE )
+                fl_hide_form( form );
+
+            if ( form->sort_of_modal )
+                fl_activate_all_forms( );
+        }
+        else if ( fli_context->atclose )
+        {
+            if ( fli_context->atclose( form,
+                                       fli_context->close_data ) != FL_IGNORE )
+                exit( 1 );
+        }
+        else
+            exit( 1 );
+    }
+    else    /* pump it through current form */
+        fli_handle_form( form, FL_OTHER, 0, xev );
 }
 
 

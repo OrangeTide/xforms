@@ -372,7 +372,7 @@ handle_mouse( FL_OBJECT * ob,
             ret |= FL_RETURN_END;
             break;
 
-        /* During an update (and if we're on a button) and the time has
+        /* During an update (and if we're on a button) and the timer has
            expired a change of the counters value is in order */
 
         case FL_UPDATE :

@@ -1002,13 +1002,14 @@ A demo can be found in @file{positioner.c}.
 @node Counter Object
 @section Counter Object
 
-A counter provides a different mechanism for the user to indicate a
-value. In consists of a box displaying a value and two or four
-buttons, two at the left and two at the right side. The user can press
-these buttons to change the value. If the counter has four buttons,
-the left-most and right-most button make the value change in large
-steps, the other buttons make it change in small steps. As long as the
-user keeps the mouse pressed, the value changes.
+A counter provides a different mechanism for the user to select a
+value. In consists of a box displaying a value with one or two buttons
+on each side. The user can press these buttons to change the value
+(and while the mouse button is kept pressed down the value will
+continue to change, slow at first and faster after some time). If the
+counter has four buttons, the left- and right-most button make the
+value change in large steps, the other buttons make it change in small
+steps.
 
 
 @ifnottex

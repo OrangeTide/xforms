@@ -321,7 +321,7 @@ try_get_font_struct( int numb,
         flf->nsize--;
     }
 
-    /* Font is not cached, try to load the font */
+    /* Font is not cached, try to load it */
 
     if ( ! fs )
     {
