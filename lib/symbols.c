@@ -802,7 +802,7 @@ draw_line( FL_Coord x,
     xp = xpoint;
 
     AddPoint( xp, x, yc );
-    AddPoint( xp, x + w - 1, yc );
+    AddPoint( xp, x + w - 2, yc );
 
     rotate_it( xc, yc, xpoint, 2, angle );
 
@@ -834,9 +834,9 @@ draw_ripplelines( FL_Coord x,
     if ( angle == 0 || angle == 180 )
         for ( i = 0; i < 3; i++ )
         {
-            fl_line( x + mw, ys, x + w - 1 - mw, ys, FL_LEFT_BCOL );
+            fl_line( x + mw, ys, x + w - 2 - mw, ys, FL_LEFT_BCOL );
             ys += 1;
-            fl_line( x + mw, ys, x + w - 1 - mw, ys, FL_RIGHT_BCOL );
+            fl_line( x + mw, ys, x + w - 2 - mw, ys, FL_RIGHT_BCOL );
             ys += 3;
         }
     else if ( angle == 90 || angle == 270 )
@@ -849,9 +849,9 @@ draw_ripplelines( FL_Coord x,
         e = h < 15;
         for ( i = 0; i < 3; i++ )
         {
-            fl_line( xs, y + mw - e, xs, y + h - 1 - mw + e, FL_LEFT_BCOL );
+            fl_line( xs, y + mw - e, xs, y + h - 2 - mw + e, FL_LEFT_BCOL );
             xs += 1;
-            fl_line( xs, y + mw - e, xs, y + h - 1 - mw + e, FL_RIGHT_BCOL );
+            fl_line( xs, y + mw - e, xs, y + h - 2 - mw + e, FL_RIGHT_BCOL );
             xs += 3;
         }
     }
@@ -881,7 +881,7 @@ draw_dnline( FL_Coord x,
     xp = xpnt;
 
     AddPoint( xp, x, yc );
-    AddPoint( xp, x + w - 1, yc );
+    AddPoint( xp, x + w - 2, yc );
 
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
 
@@ -919,7 +919,7 @@ draw_upline( FL_Coord x,
     xp = xpnt;
 
     AddPoint( xp, x, yc );
-    AddPoint( xp, x + w - 1, yc );
+    AddPoint( xp, x + w - 2, yc );
 
     rotate_it( x + w / 2, yc, xpnt, 2, angle );
 
@@ -1281,7 +1281,7 @@ draw_bar_arrow_tip_right( FL_Coord x,
         dbar,
         mar,
         xl;
-    int d = 3 + ( w + h ) * 0.07;
+    int d = 2 + ( w + h ) * 0.07;
     FL_POINT point[ 5 ],
              *p;
 
