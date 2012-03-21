@@ -10,6 +10,8 @@
 	takes only a single argument).
 	lib/box.c: Boxes of type FL_NO_BOX and FL_FLAT_BOX now have a
 	border width of 0.
+	lib/objects.c: attempt to speed up the detection of overlap
+	between objects.
 
 2012-03-19 Jens Thoms Toerring    <jt@toerring.de>
 

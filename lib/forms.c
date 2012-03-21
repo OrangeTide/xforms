@@ -2000,8 +2000,9 @@ fl_fit_object_label( FL_OBJECT * obj,
     if ( fli_no_connection )
         return;
 
-    if (    fl_is_inside_lalign( obj->align )
-         || obj->objclass == FL_INPUT
+    if (    fl_is_outside_lalign( obj->align )
+         || obj->type == FL_BEGIN_GROUP
+         || obj->type == FL_END_GROUP
          || obj->parent
          || ! obj->label
          || ! *obj->label
@@ -2134,8 +2135,9 @@ fl_adjust_form_size( FL_FORM * form )
     max_factor = factor = 1.0;
     for ( obj = form->first; obj; obj = obj->next )
     {
-        if (    fl_is_inside_lalign( obj->align )
-             || obj->objclass == FL_INPUT
+        if (    fl_is_outside_lalign( obj->align )
+             || obj->type == FL_BEGIN_GROUP
+             || obj->type == FL_END_GROUP
              || obj->parent
              || ! obj->label
              || ! *obj->label
@@ -2167,12 +2169,6 @@ fl_adjust_form_size( FL_FORM * form )
         if ( ( osize = obj->h - 2 * ( bw + ym ) ) <= 0 )
             osize = 1;
         yfactor = ( double ) sh / osize;
-
-        if ( obj->objclass == FL_INPUT )
-        {
-            xfactor = 1.0;
-            yfactor = ( sh + 1.6 ) / osize;
-        }
 
         if ( ( factor = FL_max( xfactor, yfactor ) ) > max_factor )
             max_factor = factor;

@@ -2063,48 +2063,45 @@ static int
 objects_intersect( FL_OBJECT * obj1,
                    FL_OBJECT * obj2 )
 {
-    FL_OBJECT *ob[ ] = { obj1, obj2 };
+    FL_OBJECT *obj[ ] = { obj1, obj2 };
     int i;
-    FL_RECT xrect;
-    Region reg[ 2 ];
+    FL_RECT r[ 2 ];
     int extra;
 
     for ( i = 0; i < 2; i++ )
     {
-        reg[ i ] = XCreateRegion( );
-
-        if (    ob[ i ]->objclass == FL_CANVAS
-             || ob[ i ]->objclass == FL_GLCANVAS )
+        if (    obj[ i ]->objclass == FL_CANVAS
+             || obj[ i ]->objclass == FL_GLCANVAS )
         {
-            extra        = 3;
-            xrect.x      = ob[ i ]->x - extra;
-            xrect.y      = ob[ i ]->y - extra;
-            xrect.width  = ob[ i ]->w + 2 * extra + 1;
-            xrect.height = ob[ i ]->h + 2 * extra + 1;
+            extra         = 3;
+            r[ i ].x      = obj[ i ]->x - extra;
+            r[ i ].y      = obj[ i ]->y - extra;
+            r[ i ].width  = obj[ i ]->w + 2 * extra + 1;
+            r[ i ].height = obj[ i ]->h + 2 * extra + 1;
         }
         else
         {
-            get_object_bbox_rect( ob[ i ], &xrect );
+            get_object_bbox_rect( obj[ i ], r + i );
     
-            if ( ob[ i ]->objclass == FL_FRAME )
+            if ( obj[ i ]->objclass == FL_FRAME )
             {
-                extra         = FL_abs( ob[ i ]->bw );
-                xrect.x      -= extra;
-                xrect.y      -= extra;
-                xrect.width  += 2 * extra + 1;
-                xrect.height += 2 * extra + 1;
+                extra          = FL_abs( obj[ i ]->bw );
+                r[ i ].x      -= extra;
+                r[ i ].y      -= extra;
+                r[ i ].width  += 2 * extra + 1;
+                r[ i ].height += 2 * extra + 1;
             }
         }
-
-        XUnionRectWithRegion( &xrect, reg[ i ], reg[ i ] );
     }
 
-    XIntersectRegion( reg[ 0 ], reg[ 1 ], reg[ 0 ] );
-    XClipBox( reg[ 0 ], &xrect );
-    XDestroyRegion( reg[ 1 ] );
-    XDestroyRegion( reg[ 0 ] );
-
-    return xrect.width > 0 && xrect.height > 0;
+    return      (    (    r[ 0 ].x <= r[ 1 ].x
+                       && r[ 0 ].x + r[ 0 ].width  > r[ 1 ].x )
+                  || (    r[ 1 ].x <= r[ 0 ].x
+                       && r[ 1 ].x + r[ 1 ].width  > r[ 0 ].x ) )
+            && (    (    r[ 0 ].y <= r[ 1 ].y
+                      && r[ 0 ].y + r[ 0 ].height > r[ 1 ].y )
+                 || (    r[ 1 ].y <= r[ 0 ].y
+                      && r[ 1 ].y + r[ 1 ].height > r[ 0 ].y ) );
 }
 
 
@@ -2758,7 +2755,7 @@ fl_get_object_bw( FL_OBJECT * obj )
     if ( ! obj )
     {
         M_err( "fl_get_object_bw", "NULL object" );
-        return;
+        return -1;
     }
 
     return obj->bw;

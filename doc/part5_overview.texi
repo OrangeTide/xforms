@@ -612,21 +612,21 @@ double fl_adjust_form_size(FL_FORM *form);
 @end example
 This function works by computing the size (in pixels) of every object
 on the form that has an inside label and compares it to the size of
-the object. Scaling factors are computed if any object labels don't
-fit. The maximum scaling factor found is then used to scale the form
-so every object label fits inside the object. It will never shrink a
-form. The function returns the resulting scaling factor. In scaling
-the form the aspect ratio of the form is left unmodified and all
-object gravity specifications are ignored. Since this function is
-meant to compensate for font size and server display resolution
-variations, scaling is limited to 125% per invocation. The best place
-to use this function is right after the creation of the forms. If the
-forms are properly designed, this function should be a no-op on the
-machine the forms were designed on. Form Designer has a special option
+the object. Scaling factors are computed for all object labels that
+don't fit. The maximum scaling factor found is then used to scale the
+form so every object label fits inside the object. It will never
+shrink a form. The function returns the resulting scaling factor. In
+scaling the aspect ratio of the form is left unmodified and all object
+gravity specifications are ignored. Since this function is meant to
+compensate for font size and server display resolution variations,
+scaling is limited to 125% per invocation. The best place to use this
+function is right after the creation of the forms. If the forms are
+properly designed this function should be a no-op on the machine the
+forms were designed on. Form Designer has a special option
 @code{-compensate} and resource @code{compensate} to request the
 emission of this function automatically for every form created. It is
-likely that this will become the default once the usefulness of it is
-established.
+likely that this will become the default once the usefulness of it has
+been established.
 
 There is a similar function that works the same way, but on an
 object-by-object basis and further allows explicit margin
