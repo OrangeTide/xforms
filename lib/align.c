@@ -42,7 +42,8 @@ fli_test_lalign( int          align,
                  const char * txt )
 {
     if (    align < 0
-         || ( unsigned int ) align & ~ FL_ALIGN_INSIDE > FL_ALIGN_RIGHT_BOTTOM )
+         || ( ( unsigned int ) align & ~ FL_ALIGN_INSIDE ) >
+                                                        FL_ALIGN_RIGHT_BOTTOM )
     {
         M_err( txt, "Invalid value for align" );
         return 0;

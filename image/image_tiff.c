@@ -244,7 +244,6 @@ TIFF_write( FL_IMAGE * image )
     int err,
         t;
     SPEC *sp;
-    size_t dummy;
 
     /* we do not touch im->io_spec. Use this local copy */
 
@@ -264,7 +263,7 @@ TIFF_write( FL_IMAGE * image )
 
     initialize_tiff_io( sp, sp->endian );
 
-    dummy = fwrite( sp->endian == LSBFirst ? "II" : "MM", 1, 2, fp );
+    fwrite( sp->endian == LSBFirst ? "II" : "MM", 1, 2, fp );
     sp->write2bytes( 42, fp );
     sp->next_pos = 4;
     sp->max_tags = 15;

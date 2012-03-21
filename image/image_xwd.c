@@ -530,7 +530,6 @@ XWD_write_image( FL_IMAGE * im )
         ( * write16 )( int, FILE * );
     unsigned char *uc;
     static int machine_endian = -1;
-    size_t dummy;
 
     if ( machine_endian < 0 )
         machine_endian = detect_endian( );
@@ -618,7 +617,7 @@ XWD_write_image( FL_IMAGE * im )
     for ( n = 0; ( size_t ) n < sizeof *h / sizeof h->file_version; n++, c32++ )
         write32( *c32, fp );
 
-    dummy = fwrite( im->outfile, 1, strlen( im->outfile ) + 1, fp );
+    fwrite( im->outfile, 1, strlen( im->outfile ) + 1, fp );
 
     if ( h->ncolors )
     {
@@ -666,7 +665,7 @@ XWD_write_image( FL_IMAGE * im )
         {
             for ( x = 0; x < im->w; x++ )
                 uc[ x ] = im->ci[ y ][ x ];
-            dummy = fwrite( uc, 1, h->bytes_per_line, fp );
+            fwrite( uc, 1, h->bytes_per_line, fp );
         }
 
         fl_free( uc );
@@ -684,7 +683,7 @@ XWD_write_image( FL_IMAGE * im )
         for ( y = 0; y < im->h; y++ )
         {
             fl_pack_bits( uc, im->ci[ y ], im->w );
-            dummy = fwrite( uc, 1, h->bytes_per_line, fp );
+            fwrite( uc, 1, h->bytes_per_line, fp );
         }
 
         fl_free( uc );

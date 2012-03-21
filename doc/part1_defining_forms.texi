@@ -1659,14 +1659,14 @@ on the next.
 @node Symbols
 @subsection Symbols
 
-Rather than textual labels, it is possible to place symbols like arrows
-etc. on objects. This is done in the following way:
+Rather than using text as a label it is possible to place symbols like
+an arrows etc.@: on objects. This is done in the following way:
 
-When the label starts with the character @code{@@} no label is drawn but
-a particular symbol is drawn instead@footnote{If you want a literal
-@code{@@} character as the first character, escape it with another
-@code{@@} character.}. The rest of the label string indicates the
-symbol. A number of pre-defined symbols are available:
+When the label starts with the character @code{@@} instead of the text
+a particular symbol is drawn@footnote{If you want a literal @code{@@}
+character as the first character of a label text, escape it with
+another @code{@@} character.}. The rest of the label string indicates
+the symbol. A number of pre-defined symbols are available:
 @multitable   @columnfractions 0.2 0.8
 @item @code{->}
 @tab Normal arrow pointing to the right.
@@ -1712,18 +1712,20 @@ symbol. A number of pre-defined symbols are available:
 @tab An engraved arrow.
 @end multitable
 @noindent
-See Fig. 3.6 for how some of them look. See also @file{symbols.c}.
+See Fig. 3.6 for how some of them look.
 
-It is possible to put the symbols in different orientations. When the
-symbol name is preceded by a digit 1-9 (not 5) it is rotated like on the
-numerical keypad, i.e., 6 indicates no rotation, 9 a rotation of 45
-degrees counter-clockwise, 8 a rotation of 90 degrees, etc. Hence the
-order is 6, 9, 8, 7, 4, 1, 2, 3. (Just think of the keypad as consisting
-of arrow keys.) So to get an arrow that is pointing to the left top use
-a label @code{@@7->}. To put the symbol in other orientations, put a 0
-after the @code{@@}, followed by three digits that indicate the angle
-(counter-clockwise). E.g. to draw an arrow at an angle of 30 degrees use
-label @code{@@0030->}.
+It is possible to use the symbols in different orientations. When the
+symbol name is preceded by a digit @code{1}-@code{9} it is rotated
+like on the numerical keypad, i.e.@: @code{6} (and also @code{5})
+result in no rotation, @code{9} a rotation of @w{45 degrees}
+counter-clockwise, @code{8} a rotation of @w{90 degrees}, etc. Hence
+the order is @code{6}, @code{9}, @code{8}, @code{7}, @code{4},
+@code{1}, @code{2}, @code{3}. (Just think of the keypad as consisting
+of arrow keys with 6 pointing in the default orientation, i.e.@: to
+the right). So to get an arrow that is pointing to the left top use a
+label @code{@@7->}. To put the symbol in other orientations, put a 0
+after the @code{@@}, followed by the angle (counter-clockwise). E.g.@:
+to draw an arrow at an angle of 30 degrees you can use @code{@@030->}.
 
 The symbol will be scaled to fit in the bounding box. When the bounding
 box is not square, scaling in the x- and y-directions will be different.
@@ -1731,12 +1733,26 @@ If keeping the aspect ratio is desired, put a sharp (@code{#})
 immediately after the @. E.g., @code{@@#9->}.
 
 Two additional prefixes, @code{+} and @code{-}, followed by a single
-digit, can be used to make small symbol size adjustment. These prefixes
-must be either immediately after @code{@@} or follow @code{#}. The +
-indicates increase the symbol size and - indicates decrease the symbol
-size. The digit following the prefixes indicates the increment
-(decrement) in pixels. For example, to draw a circle that is 3 pixels
-smaller in radius than the default size, use @code{@@-3square}.
+digit, can be used to make small symbol size adjustment. A @code{+}
+indicates an increase of the symbol size while a @code{-} a decrease.
+The single digit following the prefix is the amount of increment (or
+decrement) in pixels. For example, to draw a square that is @w{3
+pixels} smaller in size than the default size use @code{@@-3square}.
+If a single sequence of @code{+} or @code{-} and a single digit does
+not suffice, it can repeated, the effect is cumulative. Of course,
+this can also be combined with a rotation etc., so i.e.@:
+@code{@@-9-3030->} (the order in which the different sequences are
+used doesn't matter) will result in an arrow drawn @w{12 pixels}
+smaller than normal and rotated by @w{30 degrees} counter-clockwise.
+
+As already stated the "default" size of a symbol is (this at least
+holds for the built-in ones) one where it fits autoatically into the
+box it is to be drawn into, with a bit of room left around it. Thus
+the size of the symbol should in most cases be fine without any
+further fine-tuning. If you increase the size for whatever reasons
+please consider that the symbol automatically gets clipped to the area
+it is will be drawn into, i.e.@: increments that result in the symbol
+becoming larger than the box it is to be drawn into should be avoided.
 
 @ifhtml
 @center @image{images/symbols}
@@ -1756,20 +1772,23 @@ int fl_draw_symbol(const char *symbolname, FL_Coord x, FL_Coord y,
 @noindent
 (the function returns @code{1} on success and @code{0} on failure
 when the symbol name isn't valid) or indirectly via
-@code{@ref{fl_drw_text()}}. The application program can also add
-symbols to the system which it can then use to display symbols on
-objects that are not provided by the Forms Library. To add
-a symbol, use the call
+@code{@ref{fl_drw_text()}}. Drawing is clipped automatically to the
+area given by the arguments.
+
+The application program can also add symbols to the system which it
+can then use to display symbols on objects that are not provided by
+the Forms Library. To add a symbol, use the call
 @findex fl_add_symbol()
 @anchor{fl_add_symbol()}
 @example
 int fl_add_symbol(const char *name, void (*drawit)(),int sc);
 @end example
 @noindent
-@code{name} is the name under which the symbol should be known (at most
-15 characters), without the leading @code{@@}. @code{drawit()} is the
-drawing routine that draws the symbol. @code{sc} is reserved and
-currently has no meaning. Simply setting it to zero would do.
+@code{name} is the name under which the symbol should be known, which
+may not have a @code{@@}, a @code{#} or a digit at the start (or
+@code{+} or @code{-}, directly followed by a digit). @code{drawit()}
+is the routine to be called for drawing the symbol. @code{sc} is
+reserved and currently has no meaning. Best set it to @code{0}.
 
 The routine @code{drawit()} should have the form
 @example
@@ -1782,12 +1801,15 @@ color that can be provided and changed by the application program. The
 routine should draw the symbol centered inside the box by @code{x},
 @code{y}, @code{w}, @code{h} and rotated from its natural position by
 @code{angle} degrees. The draw function can call all types of drawing
-routines, including @code{@ref{fl_draw_symbol()}}.
+routines, including @code{@ref{fl_draw_symbol()}}. Before it is called
+clipping is set to the area given by the first four arguments.
 
-If the new symbol name is the same as one of the built-ins, the new
-definition overrides the built-in. Note the the new symbol does not have
-to be vector graphics, you can use pixmap or whatever in the drawing
-function.
+If the new symbol name is the same as that of a built-in or of one
+previously defined, the new definition overrides the built-in or
+previously defined one.
+
+The function returns @code{1} on success and @code{0} on failure
+(due to invalid arguments).
 
 The symbol handling routines really should be viewed as a means of
 associating an arbitrary piece of text (the label) with arbitrary
@@ -1795,13 +1817,25 @@ graphics, application of which can be quite pleasant given the right
 tasks.
 
 
+A symbol (built-in or previously defined) can also be deleted
+using
+@findex fl_delete_symbol()
+@anchor{fl_delete_symbol()}
+@example
+int fl_delete_symbol(const char *name);
+@end example
+@noindent
+On success @code{1} is returned, otherwise @code{0}.
+
+
+
 @node Adding and Removing Objects
 @section Adding and Removing Objects
 
-In some situations you might want to add a objects to an existing form
-(i.e.@: a form for which @code{@code{fl_end_form()}} already has been
-called. Reopening a form for the addition of further objects be done
-by using the call
+In some situations you might want to add objects to an already
+existing form (i.e.@: a form for which @code{@code{fl_end_form()}}
+has already been called. Reopening a form for the addition of further
+objects can be done by using the call
 @findex fl_addto_form()
 @example
 FL_FORM *fl_addto_form(FL_FORM *form);

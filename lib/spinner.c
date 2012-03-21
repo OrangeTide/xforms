@@ -315,8 +315,8 @@ fl_create_spinner( int          type,
     FL_OBJECT *obj;
     FLI_SPINNER_SPEC *sp;
     FL_Coord iw, ih,
-             ux, uy,
-             dx, dy,
+             uy,
+             dy,
              bwh;
     int orient;
 
@@ -327,7 +327,6 @@ fl_create_spinner( int          type,
         bwh = FL_max( bwh, 1 );
         h = ih = 2 * bwh;
         iw = w - bwh - 1;
-        ux = dx = x + iw - 1;
         uy = x;
         dy = uy + bwh;
     }
@@ -338,8 +337,6 @@ fl_create_spinner( int          type,
         bwh = FL_max( bwh, 1 );
         w = iw = 2 * bwh;
         ih = h - bwh - 1;
-        dx = x;
-        ux = dx + bwh;
         uy = dy = y + ih - 1;
     }
 
@@ -510,13 +507,12 @@ fl_set_spinner_bounds( FL_OBJECT * obj,
                        double      max )
 {
     FLI_SPINNER_SPEC *sp = obj->spec;
-    double tmp;
 
     if ( min > max )
     {
-        tmp = min;
+        double tmp = min;
         min = max;
-        max = min;
+        max = tmp;
     }
 
     if ( obj->type == FL_INT_SPINNER )

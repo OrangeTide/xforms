@@ -1030,15 +1030,13 @@ write_gif_comments( FILE       * fp,
 
     for ( len = 0; p < str + k; p += len )
     {
-        size_t dummy;
-
         strncpy( s, p, 255 );
         s[ 255 ] = '\0';
         len = strlen( s );
         putc( EXTENSION, fp );
         fputc( GIFEXT_COM, fp );
         putc( len, fp );
-        dummy = fwrite( s, 1, len, fp );
+        fwrite( s, 1, len, fp );
         putc( 0, fp );
     }
 }
@@ -1056,7 +1054,6 @@ write_descriptor( FL_IMAGE * im )
     if ( im->app_background >= 0 )
     {
         int tran = flimage_get_closest_color_from_map( im, im->app_background );
-        size_t dummy;
 
         buf[ 0 ] = GIFEXT_GC;
         buf[ 1 ] = 4;       /* count */
@@ -1066,7 +1063,7 @@ write_descriptor( FL_IMAGE * im )
         buf[ 5 ] = tran;
         buf[ 6 ] = 0;       /* end of block */
         putc( EXTENSION, ffp );
-        dummy = fwrite( buf, 1, 7, ffp );
+        fwrite( buf, 1, 7, ffp );
     }
 
     /* image descriptions  */
@@ -1313,8 +1310,6 @@ output_lzw_code( unsigned int   code,
 
     if ( bytes >= 254 || ( int ) code == EOFCode )
     {
-        size_t dummy;
-
         if ( ( int ) code == EOFCode && bits )
         {
             *ch = ( unsigned char ) ( accum & 255 );
@@ -1323,7 +1318,7 @@ output_lzw_code( unsigned int   code,
         }
 
         putc(bytes, fp);
-        dummy = fwrite( bbuf, 1, bytes, fp );
+        fwrite( bbuf, 1, bytes, fp );
         bytes = 0;
     }
 }

@@ -31,13 +31,13 @@
 #include "include/forms.h"
 #include <stdlib.h>
 
-char *symbols[ ] =
+const char * symbols[ ] =
 {
-   "@>",      "@<-",     "@9->",     "@DnLine", "@8>",    "@circle",   "@->|",
-   "@>>",     "@square", "@4->|",    "@8->|",   "@<->",   "@UpArrow",  "@9+",
-   "@->",     "@<",      "@DnArrow", "@+",      "@-->",   "@line",     "@3->",
-   "@UpLine", "@>|",     "@2-->",    "@4>|",    "@8>|",   "@=",        "@menu",
-   "@8=",     "@|>",     "@2|>",     "@-32|>",  "@+32|>", "@-2circle", NULL
+    "@>",      "@<-",     "@9->",     "@DnLine", "@8>",    "@circle",   "@->|",
+    "@>>",     "@square", "@4->|",    "@8->|",   "@<->",   "@UpArrow",  "@9+",
+    "@->",     "@<",      "@DnArrow", "@+",      "@-->",   "@line",     "@3->",
+    "@UpLine", "@>|",     "@2-->",    "@4>|",    "@8>|",   "@=",        "@menu",
+    "@8=",     "@|>",     "@2|>",     "@-32|>",  "@+32|>", "@-2circle", NULL
 };
 
 #define N  ( sizeof symbols / sizeof * symbols - 1 )
@@ -60,8 +60,8 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 FL_FORM *
 make_symbols( void )
 {
-    char **p,
-         buf[ 32 ];
+    const char **p;
+    char buf[ 32 ];
     int x0 = 10,
         y0 = 10,
         dx = 35,
@@ -89,10 +89,21 @@ make_symbols( void )
 
     for ( x = x0, y = y0, i = 1, p = symbols; *p; p++, i++ )
     {
+        int txt_x, txt_y, txt_w, txt_h;
+
         obj = fl_add_box( FL_UP_BOX, x, y, dx, dy, *p );
         fl_set_object_lcol( obj, FL_BOTTOM_BCOL );
-        strcat( strcpy( buf, " ") , *p );
-        fl_add_box( FL_FLAT_BOX, x, y + dy, dx, ty, buf );
+
+        strcat( strcpy( buf, "@" ) , *p );
+        obj = fl_add_box( FL_FLAT_BOX, x, y + dy, dx, ty, buf );
+
+        fl_get_object_geometry( obj, &txt_x, &txt_y, &txt_w, &txt_h );
+        w =   fl_get_string_width( fl_get_object_lstyle( obj ),
+                                   fl_get_object_lsize( obj ),
+                                   *p, strlen( *p ) )
+            + 2 * fl_get_object_bw( obj );
+        fl_set_object_geometry( obj, txt_x + ( txt_w - w ) / 2, txt_y,
+                                w, txt_h );
 
         if ( i % n == 0 )
         {

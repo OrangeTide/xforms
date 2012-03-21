@@ -264,10 +264,7 @@ xerror_handler( Display     * d  FL_UNUSED_ARG,
 void
 fli_create_object_pixmap( FL_OBJECT * obj )
 {
-    Window root;
-    unsigned int junk;
     FL_pixmap *p = obj->flpixmap;
-    int i;
     int ( * oldhandler )( Display *, XErrorEvent * );
 
     /* Check to see if we need to create a pixmap. None-square boxes can't
@@ -396,9 +393,6 @@ form_pixmapable( FL_FORM * form )
 void
 fli_create_form_pixmap( FL_FORM * form )
 {
-    Window root;
-    int ijunk;
-    unsigned int uijunk;
     FL_pixmap *p = form->flpixmap;
     int ( * oldhandler )( Display *, XErrorEvent * );
 

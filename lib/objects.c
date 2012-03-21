@@ -2752,9 +2752,8 @@ fl_set_object_bw( FL_OBJECT * obj,
  * Returns the borderwidth of an object
  ***************************************/
 
-void
-fl_get_object_bw( FL_OBJECT * obj,
-                  int       * bw )
+int
+fl_get_object_bw( FL_OBJECT * obj )
 {
     if ( ! obj )
     {
@@ -2762,7 +2761,7 @@ fl_get_object_bw( FL_OBJECT * obj,
         return;
     }
 
-    *bw = obj->bw;
+    return obj->bw;
 }
 
 

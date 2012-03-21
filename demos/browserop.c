@@ -116,7 +116,7 @@ create_form( void )
     fl_set_object_dblbuffer( browserobj, 1 );
 
     inputobj = fl_add_input( FL_NORMAL_INPUT, 20, 370, 210, 30, "" );
-    fl_set_object_return( obj, FL_RETURN_CHANGED );
+    fl_set_object_return( inputobj, FL_RETURN_CHANGED );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 250, 20, 120, 30, "Add" );
     fl_set_object_callback( obj, addit, 0 );

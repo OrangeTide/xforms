@@ -1,3 +1,16 @@
+2012-03-21 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/symbols.c: Simplifications (control sequences are now more
+	powerful and the order is unimportant) and new function for
+	removing symbols.
+	lib/vstrcat.c: Removed the file after rewriting the only
+	function in lib/errmsg.c that used anything from that file.
+	lib/objects.c: Changed signature of fl_get_object_bw()
+	to match the documentation (it now returns an int and
+	takes only a single argument).
+	lib/box.c: Boxes of type FL_NO_BOX and FL_FLAT_BOX now have a
+	border width of 0.
+
 2012-03-19 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c, lib/forms.c: Several changes to speed up

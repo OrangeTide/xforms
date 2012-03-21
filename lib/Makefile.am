@@ -122,7 +122,6 @@ libforms_la_SOURCES = \
 	valuator.c \
 	version.c \
 	vn_pair.c \
-	vstrcat.c \
 	win.c \
 	xdraw.c \
 	xpopup.c \

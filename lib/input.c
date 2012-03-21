@@ -2535,7 +2535,6 @@ float_int_validator( FL_OBJECT  * obj,
     char *ptr = NULL;
     int slen,
         c;
-    double dummy;
 
     /* Empty string is considered valid */
 
@@ -2548,11 +2547,6 @@ float_int_validator( FL_OBJECT  * obj,
          && newc != '+'
          && obj->type == FL_INT_INPUT )
         return FL_INVALID | FL_RINGBELL;
-
-    if ( obj->type == FL_FLOAT_INPUT )
-        dummy = strtod( str, &ptr );
-    else
-        dummy = strtol( str, &ptr, 10 );
 
     lc = str + slen - 1;
     llc = lc - 1;

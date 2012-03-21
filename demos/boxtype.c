@@ -212,9 +212,9 @@ create_form( void )
 /*************** Main Routine ***********************/
 
 char *browserlines[ ] = {
-   " ", "@C1@c@l@bObjects Demo",    " ",
-   "This demo shows you most",       "objects that currently",
-   "exist in the Forms Library.",   " ",
+   "@C1@c@l@bObjects Demo",
+   "This demo shows you many of",   "the objects that currently",
+   "exist in the Forms Library.",   "",
    "You can change the boxtype",    "of the different objects",
    "using the buttons at the",      "top of the form. Note that",
    "some combinations might not",   "look too good. Also realize",

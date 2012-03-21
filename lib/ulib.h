@@ -70,13 +70,6 @@ extern char * fli_de_space_de( char * );
 extern char * fli_nuke_all_non_alnum( char * );
 
 
-/********* Variable number arguments strcat ******************/
-
-extern char * fli_vstrcat( const char *,
-                      ... );
-extern void fli_free_vstrcat( void * );
-
-
 /*********************************************************************
  * Basic error handling routines
  ********************************************************************/

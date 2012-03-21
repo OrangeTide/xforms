@@ -112,7 +112,6 @@ int main( int    argc,
     FD_mainform *fd_mainform;
     FD_valuatorform *fd_valuatorform;
     FD_choiceform *fd_choiceform;
-    FD_inputform *fd_inputform;
     FD_big *fd_big;
 
     fl_set_border_width( -2 );
@@ -123,7 +122,7 @@ int main( int    argc,
     fd_mainform = create_form_mainform( );
     fd_valuatorform = create_form_valuatorform( );
     fd_choiceform = create_form_choiceform( );
-    fd_inputform = create_form_inputform( );
+    create_form_inputform( );
 
     fd_big = create_form_big( );
     {
@@ -133,7 +132,7 @@ int main( int    argc,
         fl_set_xyplot_data( fd_big->xyplot, xx, yy, 5, "title", "x", "y" );
     }
 
-/*   fl_set_object_boxtype( fd_mainform->formbrowser, FL_SHADOW_BOX ); */
+	/* fl_set_object_boxtype( fd_mainform->formbrowser, FL_SHADOW_BOX ); */
 
     fl_addto_formbrowser( fd_mainform->formbrowser, fd_buttonform->buttonform );
     fl_addto_formbrowser( fd_mainform->formbrowser,

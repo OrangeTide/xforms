@@ -565,7 +565,7 @@ fli_draw_text_inside( int          align,
                       FL_Coord     y,
                       FL_Coord     w,
                       FL_Coord     h,
-                      const char * istr,
+                      const char * str,
                       int          style,
                       int          size,
                       FL_COLOR     c,
@@ -575,16 +575,13 @@ fli_draw_text_inside( int          align,
     int special = 0;
     int xoff,
         yoff;
-    char *str;
     int sw = w,
         sh = h,
         sx = x,
         sy = y;
 
-    if ( ! istr || ! *istr )
+    if ( ! str || ! *str )
         return;
-
-    str = fl_strdup( istr );
 
     if ( str[ 0 ] == '@' && str[ 1 ] != '@' )
     {
@@ -596,15 +593,11 @@ fli_draw_text_inside( int          align,
         }
 
         if ( fl_draw_symbol( str, sx, sy, sw, sh, c ) )
-        {
-            fl_free( str );
             return;
-        }
         else
-            str[ 0 ] = ' ';
+            str++;
     }
-
-    if ( str[ 0 ] == '@' )
+    else if ( str[ 0 ] == '@' && str[ 1 ] == '@' )
         str++;
 
     xoff = 5;
@@ -646,8 +639,6 @@ fli_draw_text_inside( int          align,
 
     fli_draw_text_cursor( align, x, y, w, h, str, style, size,
                           c, bc, 0, special ? 0 : bk, -1 );
-
-    fl_free( str );
 }
 
 
@@ -664,9 +655,9 @@ fl_drw_text( int          align,
              FL_COLOR     c,
              int          style,
              int          size,
-             const char * istr )
+             const char * str )
 {
-    fli_draw_text_inside( align, x, y, w, h, istr, style, size, c, 0, 0 );
+    fli_draw_text_inside( align, x, y, w, h, str, style, size, c, 0, 0 );
 }
 
 

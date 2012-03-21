@@ -38,8 +38,7 @@ main( int    argc,
       char * argv[ ] )
 {
     FL_FORM *form;
-    FL_OBJECT *yes,
-             *no;
+    FL_OBJECT *yes;
 
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
@@ -47,7 +46,7 @@ main( int    argc,
 
     fl_add_box( FL_NO_BOX, 0, 10, 320, 40, "Do you want to quit?" );
     yes = fl_add_button( FL_NORMAL_BUTTON, 40, 70, 80, 30," Yes" );
-    no  = fl_add_button( FL_NORMAL_BUTTON, 200, 70, 80, 30, "No" );
+    fl_add_button( FL_NORMAL_BUTTON, 200, 70, 80, 30, "No" );
 
     fl_end_form( );
 
@@ -57,7 +56,7 @@ main( int    argc,
     {
         if ( fl_do_forms( ) == yes )
         {
-            fprintf( stderr, "Yes is pushed\n" );
+            fprintf( stderr, "\"Yes\" has been pushed\n" );
             break;
         }
         else

@@ -1426,6 +1426,8 @@ FL_EXPORT int fl_add_symbol( const char * name,
                              FL_DRAWPTR   drawit,
                              int          scalable );
 
+FL_EXPORT int fl_delete_symbol( const char * name );
+
 FL_EXPORT int fl_draw_symbol( const char * label,
                               FL_Coord     x,
                               FL_Coord     y,

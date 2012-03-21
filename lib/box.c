@@ -36,7 +36,7 @@
  ***************************************/
 
 static int
-handle_box( FL_OBJECT * ob,
+handle_box( FL_OBJECT * obj,
             int         event,
             FL_Coord    mx   FL_UNUSED_ARG,
             FL_Coord    my   FL_UNUSED_ARG,
@@ -46,16 +46,17 @@ handle_box( FL_OBJECT * ob,
     switch ( event )
     {
         case FL_DRAW:
-            fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-                        ob->col1, ob->bw );
+            fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                        obj->col1, obj->bw );
             /* fall through */
 
         case FL_DRAWLABEL:
-            if ( fl_is_inside_lalign( ob->align ) )
-                fl_set_text_clipping( ob->x + ob->bw, ob->y + ob->bw,
-                                      ob->w - 2 * ob->bw, ob->h - 2 * ob->bw );
-            fl_draw_object_label( ob );
-            if ( fl_is_inside_lalign( ob->align ) )
+            if ( fl_is_inside_lalign( obj->align ) )
+                fl_set_text_clipping( obj->x + obj->bw, obj->y + obj->bw,
+                                      obj->w - 2 * obj->bw,
+                                      obj->h - 2 * obj->bw );
+            fl_draw_object_label( obj );
+            if ( fl_is_inside_lalign( obj->align ) )
                 fl_unset_text_clipping( );
             break;
     }
@@ -75,17 +76,20 @@ fl_create_box( int          type,
                FL_Coord     h,
                const char * label )
 {
-    FL_OBJECT *ob;
+    FL_OBJECT *obj;
 
-    ob = fl_make_object( FL_BOX, type, x, y, w, h, label, handle_box );
-    ob->boxtype = type;
-    ob->col1    = FL_COL1;
-    ob->col2    = FL_COL1;
-    ob->lcol    = FL_LCOL;
-    ob->align   = FL_ALIGN_CENTER;
-    ob->active  = 0;
+    obj = fl_make_object( FL_BOX, type, x, y, w, h, label, handle_box );
+    obj->boxtype = type;
+    obj->col1    = FL_COL1;
+    obj->col2    = FL_COL1;
+    obj->lcol    = FL_LCOL;
+    obj->align   = FL_ALIGN_CENTER;
+    obj->active  = 0;
 
-    return ob;
+    if ( type == FL_NO_BOX || type == FL_FLAT_BOX )
+        obj->bw = 0;
+
+    return obj;
 }
 
 
@@ -100,11 +104,11 @@ fl_add_box( int          type,
             FL_Coord     h,
             const char * label)
 {
-    FL_OBJECT *ob = fl_create_box( type, x, y, w, h, label );
+    FL_OBJECT *obj = fl_create_box( type, x, y, w, h, label );
 
-    fl_add_object( fl_current_form, ob );
+    fl_add_object( fl_current_form, obj );
 
-    return ob;
+    return obj;
 }
 
 

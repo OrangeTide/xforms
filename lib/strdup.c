@@ -31,7 +31,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "include/forms.h"
-#include "flinternal.h"
 
 
 /***************************************
@@ -40,9 +39,7 @@
 char *
 fl_strdup( const char * s )
 {
-    char *p = fl_malloc( strlen( s ) + 1 );
-
-    return p ? strcpy( p, s ) : p;
+    return strcpy( fl_malloc( strlen( s ) + 1 ), s );
 }
 
 

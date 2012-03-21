@@ -166,7 +166,6 @@ draw_slider( FL_OBJECT * ob )
 {
     FLI_SLIDER_SPEC *sp = ob->spec;
     char valstr[ 64 ];
-    double val;
     FL_Coord bx = ob->x,    /* value box */
              by = ob->y,
              bw = ob->w,
@@ -199,9 +198,6 @@ draw_slider( FL_OBJECT * ob )
     }
 
     /* Draw the slider */
-
-    val = sp->min == sp->max ?
-          0.5 : ( sp->val - sp->min ) / ( sp->max - sp->min );
 
     if ( fl_is_center_lalign( ob->align ) )
     {
@@ -1066,14 +1062,11 @@ fl_set_slider_size( FL_OBJECT * ob,
     FLI_SLIDER_SPEC *sp = ob->spec;
     double dim;
     int min_knob = IS_SCROLLBAR( ob ) ? MINKNOB_SB : MINKNOB_SL;
-    double old;
 
     if ( size <= 0.0 )
         size = 0.0;
     else if (size >= 1.0)
         size = 1.0;
-
-    old = size;
 
     /* Impose minimum knob size */
 

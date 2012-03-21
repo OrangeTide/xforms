@@ -598,11 +598,7 @@ write_bmp_header( FL_IMAGE * im,
     }
 
         for ( ; i < 1 << sp->bpp; i++ )
-        {
-            size_t dummy;
-
-            dummy = fwrite( junk, 1, 4, fp );
-        }
+            fwrite( junk, 1, 4, fp );
     }
 
     return 0;
@@ -696,10 +692,8 @@ BMP_write_image( FL_IMAGE * im )
 
         for ( i = im->h; --i >= 0; )
         {
-            size_t dummy;
-
             fl_pack_bits( tmpbuf, im->ci[ i ], im->w );
-            dummy = fwrite( tmpbuf, 1, totalbpl, fp );
+            fwrite( tmpbuf, 1, totalbpl, fp );
         }
 
         fl_free( tmpbuf );

@@ -72,7 +72,7 @@ static FILE *errlog;           /* where the msg is going       */
 static int threshold;          /* current threshold            */
 static int level;              /* requested message level      */
 static const char *file;       /* source file name             */
-static int lineno;             /* line no. in that file        */
+static int lineno = 0;         /* line no. in that file        */
 
 
 FL_ERROR_FUNC efp_;                  /* global pointer to shut up lint */
@@ -140,10 +140,11 @@ P_errmsg( const char * func,
           ... )
 {
     va_list args;
-    char *where,
+    char *line,
+         *where = NULL,
          why[ MAXESTR + 1 ] = "";
 
-    /* Check if there is nothing to do */
+    /* Return if there is nothing to do */
 
     if ( level >= threshold )
         return;
@@ -151,24 +152,19 @@ P_errmsg( const char * func,
     if ( ! errlog )
         errlog = stderr;
 
-    /* Set up the string where it happended */
+    /* Set up the string where it happened */
 
-    if ( func )
-    {
-        char line[ 20 ];
-
-        if ( lineno > 0 )
-            sprintf( line, "%d", lineno );
-        else
-            strcpy( line, "?" );
-
-        where = *func ?
-                fli_vstrcat( "In ", func, "() [", file, ":", line, "] ",
-                             ( char * ) 0 ) :
-                fli_vstrcat( "In [", file, ":", line, "]: ", ( char * ) 0 );
-    }
+    if ( lineno > 0 )
+        line = fli_print_to_string( "%d", lineno );
     else
-        where = strdup( "" );
+        line = fl_strdup( "?" );
+
+    if ( func && *func )
+        where = fli_print_to_string( "In %s() [%s:%s]", func, file, line );
+    else
+        where = fli_print_to_string( "In [%s:%s]", file, line );
+        
+    fli_safe_free( line );
 
     /* Now find out why */
 
@@ -179,13 +175,12 @@ P_errmsg( const char * func,
         va_end( args );
     }
 
-    /* Having gotten the message as well as where and why show it */
+    /* Having gotten where and why it happened print it out */
 
-    fprintf( errlog, "%s%s\n", where, why );
+    fprintf( errlog, "%s: %s\n", where, why );
 
-    fli_free_vstrcat( where );
+    fli_safe_free( where );
 }
-
 
 /*********************************************************************
  * Set the level, line number and file where error occurred, return
