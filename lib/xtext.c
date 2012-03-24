@@ -39,40 +39,44 @@
 
 
 static int UL_thickness = -1;
-static int UL_propwidth = 1;    /* 1 for proportional. 0 for constant */
+static int UL_propwidth = 1;    /* 1 for proportional, 0 for constant */
 
 static void do_underline( FL_Coord,
                           FL_Coord,
                           const char *,
                           int );
+
 static void do_underline_all( FL_Coord,
                               FL_Coord,
                               const char *,
-                              int );
+                              int,
+                              unsigned long *,
+                              unsigned long * );
 
-#define LINES           1024
-#define LINES_INCREMENT  512
+#define NUM_LINES_INCREMENT  64
 
-static char **lines = NULL;
-static int *start = NULL;       /* start position of these lines  */
-static int *startx = NULL;      /* start x-FL_coordinate of these lines  */
-static int *starty = NULL;      /* start y-FL_coordinate of these lines  */
-static int *slen = NULL;
-static int nlines = LINES;
-static int max_pixelline;
+static struct LINE_INFO {
+    char   * str;
+    int      len;
+    int      index;
+    int      underline_index;
+    int      x;
+    int      y;
+} * lines = NULL;
+    
+static int nlines;
+
+static int max_pixelline = 0;
 
 
 /***************************************
  ***************************************/
 
-static void
+static int
 extend_workmem( int nl )
 {
-    lines  = fl_realloc( lines,  nl * sizeof *lines );
-    start  = fl_realloc( start,  nl * sizeof *start );
-    startx = fl_realloc( startx, nl * sizeof *startx );
-    starty = fl_realloc( starty, nl * sizeof *starty );
-    slen   = fl_realloc( slen,   nl * sizeof *slen );
+    lines = fl_realloc( lines, nl * sizeof *lines );
+    return nlines = nl;
 }
 
 
@@ -83,14 +87,13 @@ void
 fli_free_xtext_workmem( void )
 {
     fli_safe_free( lines );
-    fli_safe_free( start );
-    fli_safe_free( startx );
-    fli_safe_free( starty );
-    fli_safe_free( slen );
+    nlines = 0;
 }
 
 
 /***************************************
+ * Returns the index of the widest line drawn in a previous
+ * call of fli_drw_string() (only used by input.c)
  ***************************************/
 
 int
@@ -99,10 +102,6 @@ fli_get_maxpixel_line( void )
     return max_pixelline;
 }
 
-
-/* wrong, but looks nicer */
-
-#define CDELTA  ( flx->fdesc / 3 )
 
 typedef int ( * DrawString )( Display *,
                               Drawable, GC,
@@ -116,20 +115,19 @@ typedef int ( * DrawString )( Display *,
  * Major text drawing routine
  * clip == 0:  no clipping
  * clip == 1:  do clipping here
- * clip == -1: clipping is done outside of this routine
+ * clip == -1: clipping is already been set by the caller to the object size
  ***************************************/
 
 int
-fli_drw_string( int           horalign,
-                int           vertalign,
+fli_drw_string( int           align,
                 FL_Coord      x,
                 FL_Coord      y,
                 FL_Coord      w,
                 FL_Coord      h,
                 int           clip,
-                FL_COLOR      backcol,
-                FL_COLOR      forecol,
-                FL_COLOR      curscol,
+                FL_COLOR      backcol,     /* selected text color */
+                FL_COLOR      forecol,     /* text and sel. bckground color */
+                FL_COLOR      curscol,     /* cursor color */
                 int           style,
                 int           size,
                 int           curspos,
@@ -137,238 +135,296 @@ fli_drw_string( int           horalign,
                 int           selend,
                 const char *  istr,
                 int           img,
-                int           topline,
+                int           topline,     /* starts at 1 */
                 int           endline,
-                FL_COLOR      bkcol )
+                FL_COLOR      bkcol        /* normal background color */ )
 {
     int i;
-    int width;          /* string width of the lines  */
     int lnumb;          /* number of lines  */
-    FL_Coord height;
-    int slstart,
-        slend;      /* Temporary selection positions  */
-    int xsel,
-        wsel;       /* position and width of selection area  */
-    /* underline stuff */
-    char *p,
-         newlabel[ 256 ];
-    int ulpos;
     int max_pixels = 0;
-    int cdelta;
-    DrawString XdrawString;
-    char *str = fl_strdup( istr );
+    int horalign,
+        vertalign;
+    char * str = NULL,
+         * p = NULL;
+    DrawString drawIt = img ? XDrawImageString : XDrawString;
 
-    if ( flx->win == None )
-    {
-        fli_safe_free( str );
+    /* Check if anything has to be drawn at all - do nothing if we either
+       have no window or the cursor is to be drawn somewhere else than in
+       the very first position and there's no string to output */
+
+    if (    flx->win == None
+         || ( curspos > 0 && ! ( istr && *istr ) )
+         || h <= 0 )
         return 0;
-    }
 
-    if ( ! startx )
-        extend_workmem( nlines = LINES );
+    /* We operate only on a copy of the input string */
 
-    /* Check whether anything has to be done  */
+    if ( istr && *istr )
+        p = str = fl_strdup( istr );
 
-    if ( curspos != 0 && ( ! str || ! *str ) )
-        return max_pixels;
+    /* Split up the string into lines, store the index where it begins
+       in the original string and its length */
 
-    XdrawString = img ? XDrawImageString : XDrawString;
+    lnumb = 0;
 
-    fl_set_font( style, size );
-
-    height = flx->fheight - flx->fdesc;
-
-    /* Set clipping if required  */
-
-    if ( clip > 0 )
-        fl_set_text_clipping( x, y, w, h );
-
-    /* Split string into lines  */
-
-    *lines = str;
-    *start = 0;
-    *slen = 0;
-    lnumb = 1;
-    i = 0;
-
-  redo:
-
-    while ( str[ i ] && lnumb < nlines - 1 )
+    while ( p )
     {
-        slen[ lnumb - 1 ]++;
-        if ( str[ i++ ] == '\n' )
-        {
-            str[ i - 1 ] = '\0';
-            slen[ lnumb - 1 ]--;    /* remove '\0'. from spl */
-            lines[ lnumb ] = str + i;
-            start[ lnumb ] = i;
-            slen[ lnumb ] = 0;
-            lnumb++;
-        }
+        /* Make sure we got enough memory */
+
+        if ( lnumb >= nlines )
+            extend_workmem( nlines + NUM_LINES_INCREMENT );
+
+        /* Get pointer to the start of the line and it's index in the
+           complete string */
+
+        lines[ lnumb ].str = p;
+        lines[ lnumb ].index = p - str;   /* where line begins in str */
+
+        /* Try to find the next new line and replace the '\n' with '\0' */
+
+        if ( ( p = strchr( p, '\n' ) ) )
+            *p++ = '\0';
+
+        /* Calculate the length of the string */
+
+        lines[ lnumb ].len = p ? ( p - lines[ lnumb ].str - 1 ) :
+                                 ( int ) strlen( lines[ lnumb ].str );
+        ++lnumb;
     }
 
-    if ( str[ i ] )
-    {
-        extend_workmem( nlines += LINES_INCREMENT );
-        goto redo;
-    }
+    /* Correct values for the top and end line to be shown (they are given
+       starting to count at 1) */
 
-    start[ lnumb ] = i + 1;
-
-    if ( ( topline -= 2 ) < 0 || topline > lnumb )
+    if ( --topline < 0 || topline >= lnumb )
         topline = 0;
 
-    if ( endline > lnumb || endline <= 0 )
+    if ( --endline >= lnumb || endline < 0 )
         endline = lnumb;
 
-    /* Using fl_fheight etc. is not theorectically correct since it is the
-       max height. For lines that do not have desc, we are overestimating
-       the height of the string. */
+    /* Calculate coordinates of all lines (for y the baseline position) */
 
-    /* Calculate start FL_coordinates of lines  */
+    fl_set_font( style, size );
+    flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
+    fli_get_hv_align( align, &horalign, &vertalign );
 
-    cdelta = CDELTA;
     for ( i = topline; i < endline; i++ )
     {
-        width = XTextWidth( flx->fs, lines[ i ], slen[ i ] );
+        struct LINE_INFO *line = lines + i;
+        int width;
+
+        /* Check for the special character which indicates underlining (all
+           the line if it's in the very first position, otherwise just after
+           the character to underline), remove it from the string but remember
+           were it was and correct the selection positions if necessary (i.e.
+           if they are in the line after the character to be underlined).
+           Same for the cursor position if it's in the line. */
+
+        if ( ( p = strchr( line->str, *fl_ul_magic_char ) ) )
+        {
+            line->underline_index = p - line->str;
+
+            if (    selstart < line->index + line->len
+                 && selstart > line->index + line->underline_index )
+                --selstart;
+            if (    selend < line->index + line->len
+                 && selend > line->index + line->underline_index )
+                --selend;
+            if (    curspos >= line->index + line->underline_index
+                 && selstart < line->index + line->len )
+                --curspos;
+
+            memmove( p, p + 1, line->len-- - line->underline_index );
+        }
+        else
+            line->underline_index = -1;
+
+        /* Determine the width (in pixel) of the line) */
+
+        width = XTextWidth( flx->fs, line->str, line->len );
+
         if ( width > max_pixels )
         {
             max_pixels = width;
             max_pixelline = i;
         }
 
-        if ( i < topline || i > endline )
-            continue;
-
-        horalign = fl_to_outside_lalign( horalign );
+        /* Calculate the x- and y- positon of were to print the text */
 
         if ( horalign == FL_ALIGN_LEFT )
-            startx[ i ] = x;
+            line->x = x;
         else if ( horalign == FL_ALIGN_CENTER )
-            startx[ i ] = x + 0.5 * ( w - width );
+            line->x = x + 0.5 * ( w - width );
         else if ( horalign == FL_ALIGN_RIGHT )
-            startx[ i ] = x + w - width;
+            line->x = x + w - width;
 
-        vertalign = fl_to_outside_lalign( vertalign );
-
-        if ( vertalign == FL_ALIGN_BOTTOM )
-            starty[ i ] = y + h - 1 + ( i - lnumb ) * flx->fheight + height;
+        if ( vertalign == FL_ALIGN_TOP )
+            line->y = y + i * flx->fheight + flx->fasc;
         else if ( vertalign == FL_ALIGN_CENTER )
-            starty[ i ] = y + 0.5 * h + ( i - 0.5 * lnumb ) * flx->fheight +
-                height + cdelta;
-        else if ( vertalign == FL_ALIGN_TOP )
-            starty[ i ] = y + i * flx->fheight + height;
+            line->y =   y + 0.5 * h + ( i - 0.5 * lnumb ) * flx->fheight
+                      + flx->fasc;
+        else if ( vertalign == FL_ALIGN_BOTTOM )
+            line->y = y + h - 1 + ( i - lnumb ) * flx->fheight + flx->fasc;
     }
 
+    /* Set clipping if we got asked to */
+
+    if ( clip > 0 )
+        fl_set_text_clipping( x, y, w, h );
+
+    /* Set foreground and background color for text */
+
+    fl_textcolor( forecol );
     fl_bk_textcolor( bkcol );
+
+    /* Now draw the lines requested */
 
     for ( i = topline; i < endline; i++ )
     {
-        /* If clipping, check whether any of the font is visible  */
+        struct LINE_INFO *line = lines + i;
+        FL_COLOR underline_col = forecol;
+        int xsel = 0,       /* start position of selected text */
+            wsel = 0;       /* and its length (in pixel) */
 
-        if ( clip != 0 && starty[ i ] - flx->fasc > y + h )
-            break;
+        /* Skip lines that can't be visile due to clipping */
 
-        ulpos = -1;
-
-        /* Check if have underline request */
-
-        if ( ( p = strchr( lines[ i ], *fl_ul_magic_char ) ) )
+        if ( clip != 0 )
         {
-            char *q;
-
-            ulpos = p - lines[ i ];
-            q = newlabel;
-            for ( p = lines[ i ]; *p; p++ )
-                if ( *p != *fl_ul_magic_char )
-                    *q++ = *p;
-            *q = 0;
-
-#if FL_DEBUG >= ML_DEBUG
-            M_info2( "fli_drw_string", "new = %s old = %s",
-                     newlabel, lines[ i ] );
-#endif
-
-            lines[ i ] = newlabel;
-            slen[ i ] = strlen( lines[ i ] );
-            startx[ i ] += XTextWidth( flx->fs, fl_ul_magic_char, 1 ) / 2;
+            if ( line->y + flx->fdesc < y )
+                continue;
+            if ( line->y - flx->fasc >= y + h )
+                break;
         }
 
-        /* Draw it  */
+        /* Draw the text */
 
-        fl_textcolor( forecol );
+        drawIt( flx->display, flx->win, flx->textgc,
+                line->x, line->y, line->str, line->len );
 
-        XdrawString( flx->display, flx->win, flx->textgc,
-                     startx[ i ], starty[ i ], lines[ i ], slen[ i ] );
+        /* Draw selection area if required - for this we need to draw
+           the selection background and then redraw the text in this
+           region (in the clor that was used for the background before).
+           Of course all this only needs to be done if the selection started
+           before or in this line and didn't end before it. */
 
-        /* Set up correct underline color in proper GC */
-
-        if ( ulpos > 0 )
+        if (    selstart <  selend
+             && selstart <= line->index + line->len
+             && selend   >  line->index )
         {
-            fl_color( forecol );
-            do_underline( startx[ i ], starty[ i ], lines[ i ], ulpos - 1 );
-        }
-        else if ( ulpos == 0 )
-        {
-            fl_color( forecol );
-            do_underline_all( startx[ i ], starty[ i ], lines[ i ], slen[ i ] );
-        }
+            int start,     /* start index of selected text */
+                end,       /* end index */
+                len;       /* its length (in chars) */
 
-        /* Draw selection area if required  */
+            /* The selection may have started before the line we're just
+               dealing with and may end after it. Find the start and end
+               position in this line */
 
-        if ( selstart < start[ i + 1 ] && selend > start[ i ] )
-        {
-            size_t len;
-
-            if ( selstart <= start[ i ] )
-                slstart = start[ i ];
+            if ( selstart <= line->index )
+                start = 0;
             else
-                slstart = selstart;
+                start = selstart - line->index;
 
-            if ( selend >= start[ i + 1 ] )
-                slend = start[ i + 1 ] - 1;
+            if ( selend >= line->index + line->len )
+                end = line->len;
             else
-                slend = selend;
+                end = selend - line->index;
 
-            xsel =   startx[ i ]
-                   + XTextWidth( flx->fs, lines[ i ], slstart - start[ i ] );
-            len = slend - slstart;
+            len = end - start;
 
-            wsel = XTextWidth( flx->fs, str + slstart, len );
-            if ( wsel > w )
-                wsel = w + 1;
+            /* Get the start position and width (in pixels) of the selected
+               region (the -1 in the calculation  of wsel is a fudge factor
+               to make it look a bit better) */
 
-            fl_rectf( xsel, starty[ i ] - height, wsel, flx->fheight, forecol );
-            fl_textcolor( backcol );
+            xsel = line->x + XTextWidth( flx->fs, line->str, start );
 
-            XdrawString( flx->display, flx->win, flx->textgc, xsel, starty[ i ],
-                         str + slstart, len );
+            wsel = XTextWidth( flx->fs, line->str + start, len ) - 1;
+            if ( xsel + wsel > x + w )
+                wsel = x + w - xsel;
+
+            /* Draw in the selection color */
+
+            fl_rectf( xsel, line->y - flx->fasc, wsel,
+                      flx->fheight, forecol );
+
+            fl_textcolor( backcol );  /* bkcol ? */
+            drawIt( flx->display, flx->win, flx->textgc, xsel,
+                    line->y, line->str + start, len );
+            fl_textcolor( forecol );
+
+            if ( line->underline_index > 0 )
+                underline_col = backcol;
+        }
+
+        /* Next do underlining */
+
+        if ( line->underline_index > 0 )
+        {
+            fl_color( underline_col );
+            do_underline( line->x, line->y, line->str,
+                          line->underline_index - 1 );
+        }
+        else if ( line->underline_index == 0 )
+        {
+            unsigned long offset,
+                          thickness;
+
+            fl_color( forecol );
+            do_underline_all( line->x, line->y, line->str,
+                              line->len, &offset, &thickness );
+
+            /* If wsel is larger than 0 some part of the underlined
+               string is selected and then we need to draw underine of
+               the part of the string that is selected in the color used
+               for drawing that part of the string. */
+
+            if ( wsel > 0 && thickness > 0 )
+            {
+                fl_color( underline_col );
+                XFillRectangle( flx->display, flx->win, flx->gc, xsel,
+                                line->y + offset, wsel, thickness);
+            }
+        }
+
+        /* Finally, we also may have to draw a cursor */
+
+        if (    curspos >= line->index
+             && curspos <= line->index + line->len )
+        {
+            int tt = XTextWidth( flx->fs, line->str,
+                                 curspos - line->index );
+
+            fl_rectf( line->x + tt, line->y - flx->fasc,
+                      2, flx->fheight, curscol );
         }
     }
 
-    /* Draw the cursor  */
+    /* One possiblity remains: there's no text but the cursor is to be set
+       at the very first position */
 
-    if ( curspos >= 0 && w - 2 > 0 && h > 0 )
+    if ( curspos == 0 && lnumb == 0 && w >= 2 )
     {
-        int tt;
+        int xc,
+            yc;
 
-        for ( i = 0; i < lnumb && start[ i ] <= curspos; i++ )
-            /* empty */;
-        i--;
+        if ( horalign == FL_ALIGN_LEFT )
+            xc = x;
+        else if ( horalign == FL_ALIGN_CENTER )
+            xc = x + 0.5 * w - 1;
+        else if ( horalign == FL_ALIGN_RIGHT )
+            xc = x + w - 2;
 
-        tt = XTextWidth( flx->fs, lines[ i ], curspos - start[ i ] );
+        if ( vertalign == FL_ALIGN_BOTTOM )
+            yc = y + h - 1 - flx->fasc;
+        else if ( vertalign == FL_ALIGN_CENTER )
+            yc = y + 0.5 * ( h - flx->fheight );
+        else
+            yc = y;
 
-        if ( clip >= 0 )
-            fl_set_clipping( x, y, w - 2, h );
-        fl_rectf( startx[ i ] + tt, starty[ i ] - height,
-                  2, flx->fheight, curscol );
-        if ( clip >= 0 )
-            fl_unset_clipping( );
+        fl_rectf( xc, yc, 2, flx->fheight, curscol );
     }
 
-    fl_free( str );
+    fli_safe_free( str );
 
-    /* Reset clipping if required  */
+    /* Reset clipping if required */
 
     if ( clip > 0 )
         fl_unset_text_clipping( );
@@ -378,12 +434,16 @@ fli_drw_string( int           horalign,
 
 
 /***************************************
- * Routine returning the position of the mouse in a string
+ * Routine returns the index of the character the mouse is on in a string
+ * via the return value and the line number and character position in the
+ * line via 'yp' and 'xp' (note: they count starting at 1, 0 indicates the
+ * mouse is to the left of the start of the line)
+ * The function expects a string that doesn't contain mon-rintable characters
+ * (except '\n' for starting a new line)
  ***************************************/
 
 int
-fli_get_pos_in_string( int          horalign,
-                       int          vertalign,
+fli_get_pos_in_string( int          align,
                        FL_Coord     x,
                        FL_Coord     y,
                        FL_Coord     w,
@@ -396,105 +456,134 @@ fli_get_pos_in_string( int          horalign,
                        int        * xp,
                        int        * yp )
 {
-    int i,
-        i0,
-        len;
-    int lnumb;          /* number of lines  */
-    int theline;        /* number of line in which the mouse lies  */
-    int width;          /* string width of this line  */
-    const char *line;   /* line in which mouse lies  */
-    int xstart;         /* start x-FL_coordinate of this line  */
-    double toppos;      /* y-FL_coord of the top line  */
+    int lnumb;                 /* number of lines  */
+    int horalign,
+        vertalign;
+    struct LINE_INFO * line;
+    int width;                 /* string width of that line... */
+    int xstart;                /* start x-coordinate of this line  */
+    int toppos;                /* y-coord of the top line  */
+    const char *p = str;
+    int xlen;
 
-    /* Check whether anything has to be done  */
+    /* Give the user some slack in hitting the mark - he might try to place
+       the cursor between two characters and accidentally has the mouse a
+       bit too far to the right. */
+
+    xpos -= 2;
+
+    /* Nothing to be done if there's no string */
 
     if ( ! str || ! *str )
         return 0;
 
     fl_set_font( style, size );
+    flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
 
-    /* Split string into lines  */
+    /* Find all the lines starts etc. in the string */
 
-    start[ 0 ] = 0;
-    for ( lnumb = 1, i = 0; str[ i ]; i++ )
-        if ( str[ i ] == '\n' )
-            start[ lnumb++ ] = i + 1;
-    start[ lnumb ] = i + 1;
+    lnumb = 0;
 
-    /* Calculate line in which mouse lies  */
+    while ( p )
+    {
+        if ( lnumb + 1 >= nlines )
+            extend_workmem( nlines + NUM_LINES_INCREMENT );
 
-    vertalign = fl_to_outside_lalign( vertalign );
+        lines[ lnumb ].str = ( char * ) p;
+        lines[ lnumb++ ].index = p - str;
+        if ( ( p = strchr( p, '\n' ) ) )
+            ++p;
+    }
 
-    if ( vertalign == FL_ALIGN_BOTTOM )
-        toppos = y + h - 1;
-    else if ( vertalign == FL_ALIGN_CENTER )
-        toppos = y + 0.5 * h - 0.5 * lnumb * flx->fheight + CDELTA;
-    else if ( vertalign == FL_ALIGN_TOP )
+    /* Find the line in which the mouse is  */
+
+    fli_get_hv_align( align, &horalign, &vertalign );
+
+    if ( vertalign == FL_ALIGN_TOP )
         toppos = y;
+    else if ( vertalign == FL_ALIGN_CENTER )
+        toppos = y + 0.5 * ( h - lnumb * flx->fheight );
     else
-        toppos = y + 0.5 * h - 0.5 * lnumb * flx->fheight;
+        toppos = y + h - 1 - flx->fheight;
 
-    theline = ( ypos - toppos ) / flx->fheight + 0.01;
+    *yp = ( ypos - toppos ) / flx->fheight;
 
-    if ( theline < 0 )
-    {
-        *yp = 1;
-        theline = 0;
-    }
+    if ( *yp < 0 )
+        *yp = 0;
+    else if ( *yp >= lnumb )
+        *yp = lnumb - 1;
 
-    if ( theline >= lnumb )
-    {
-        theline = lnumb - 1;
-        *yp = lnumb;
-    }
+    line = lines + *yp;
 
-    line = str + start[ theline ];
+    if ( *yp == lnumb - 1 )
+        line->len = strlen( line->str );
+    else
+        line->len = lines[ *yp + 1 ].str - line->str - 1;
 
-    *yp = theline + 1;
+    /* Calculate width and start x coordinate of the line  */
 
-    /* Calculate start FL_coordinate of the line  */
-
-    width = XTextWidth( flx->fs, ( char * ) line,
-                        start[ theline + 1 ] - start[ theline ] );
-
-    horalign = fl_to_outside_lalign( horalign );
+    width = XTextWidth( flx->fs, line->str, line->len );
 
     if ( horalign == FL_ALIGN_LEFT )
         xstart = x;
     else if ( horalign == FL_ALIGN_CENTER )
         xstart = x + 0.5 * ( w - width );
-    else if ( horalign == FL_ALIGN_RIGHT )
-        xstart = x + w - width;
     else
-        xstart = x;
+        xstart = x + w - width;
 
-    /* total pixels away from the begining of line */
+    xpos -= xstart;
 
-    xpos = xpos + 2 - xstart;
+    /* If the mose is before or behind the string things are simple.... */
 
-    /* take a guess for the char offset. Assuming char H > W */
-
-    i0 = xpos / flx->fheight + 1;
-
-    len = start[ theline + 1 ] - start[ theline ];
-
-    for ( i = i0; i < len; i++ )
+    if ( xpos <= 0 )
     {
-        if ( XTextWidth( flx->fs, line, i ) > xpos )
-        {
-            *xp = i - 1;
-            return start[ theline ] + i - 1;
-        }
+        *xp = 0;
+        *yp += 1;
+        return line->index;
+    }
+    else if ( xpos >= width )
+    {
+        *xp = line->len;
+        *yp += 1;
+        return line->index + line->len;
     }
 
-    *xp = len;
-    return start[ theline + 1 ] - 1;
+    /* ...otherwise take a guess at the offset in the string where the mouse
+       is, assuming all chars have the same width */
+
+    *xp = ( double ) ( xpos * line->len ) / width;
+
+    xlen = XTextWidth( flx->fs, line->str, ++*xp );
+
+    /* If we don't have hit it directly search to the left or right */
+
+    if ( xlen > xpos )
+    {
+        do
+        {
+            *xp -= 1;
+            xlen = XTextWidth( flx->fs, line->str, *xp );
+        }
+        while ( *xp > 0 && xlen > xpos );
+        *xp += 1;
+    }
+    else if ( xlen < xpos )
+        do
+        {
+            *xp += 1;
+            xlen = XTextWidth( flx->fs, line->str, *xp );
+        }
+        while ( *xp < lines->len && xlen < xpos );
+
+    *yp += 1;
+
+    return line->index + *xp;
 }
 
-/***
-  Misselaneous text drawing routines
-***/
 
+/***
+  Miscellaneous text drawing routines
+***/
 
 /***************************************
  * Draws a (multi-line) text with a cursor
@@ -513,12 +602,7 @@ fl_drw_text_cursor( int          align,
                     int          cc,
                     int          pos )
 {
-    int horalign,
-        vertalign;
-
-    flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
-    fli_get_hv_align( align, &horalign, &vertalign );
-    fli_drw_string( horalign, vertalign, x, y, w, h, 0, FL_WHITE, c, cc,
+    fli_drw_string( align, x, y, w, h, 0, FL_WHITE, c, cc,
                     style, size, pos, 0, -1, str, 0, 0, 0, 0 );
 }
 
@@ -541,12 +625,7 @@ fli_draw_text_cursor( int          align,
                       int          bk,
                       int          pos )
 {
-    int horalign,
-        vertalign;
-
-    flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
-    fli_get_hv_align( align, &horalign, &vertalign );
-    fli_drw_string( horalign, vertalign, x, y, w, h, 0, FL_WHITE, c, cc,
+    fli_drw_string( align, x, y, w, h, 0, FL_WHITE, c, cc,
                     style, size, pos, 0, -1, str, bk, 0, 0, bc );
 }
 
@@ -824,7 +903,7 @@ fli_get_underline_rect( XFontStruct * fs,
     if ( ! XGetFontProperty( fs, XA_UNDERLINE_POSITION, &ul_pos ) )
         ul_pos = DESC( ch ) ? ( 1 + flx->fdesc ) : 1;
 
-    /* if the character is narrow, use the width of g otherwise use the width
+    /* If the character is narrow, use the width of g otherwise use the width
        of D. Of course, if UL_width == proportional, this really does not
        matter */
 
@@ -835,7 +914,7 @@ fli_get_underline_rect( XFontStruct * fs,
 
     xoff = fli_get_string_widthTABfs( fs, str + pre, n - pre );
 
-    /* try to center the underline on the correct character */
+    /* Try to center the underline on the correct character */
 
     if ( UL_propwidth )
         x = x + xoff;
@@ -881,42 +960,41 @@ do_underline( FL_Coord     x,
  ***************************************/
 
 static void
-do_underline_all( FL_Coord     x,
-                  FL_Coord     y,
-                  const char * cstr,
-                  int          n )
+do_underline_all( FL_Coord        x,
+                  FL_Coord        y,
+                  const char    * str,
+                  int             n,
+                  unsigned long * ul_pos,
+                  unsigned long * ul_thickness )
 {
     int ul_width;
-    unsigned long ul_pos,
-                  ul_thickness = 0;
-    char *str = ( char * ) cstr;
 
     if ( flx->win == None )
         return;
 
     if ( UL_thickness < 0 )
-        XGetFontProperty( flx->fs, XA_UNDERLINE_THICKNESS, &ul_thickness );
+        XGetFontProperty( flx->fs, XA_UNDERLINE_THICKNESS, ul_thickness );
     else
-        ul_thickness = UL_thickness;
+        *ul_thickness = UL_thickness;
 
-    if ( ul_thickness == 0 || ul_thickness > 100 )
-        ul_thickness = strstr( fli_curfnt, "bold" ) ? 2 : 1;
+    if ( *ul_thickness == 0 || *ul_thickness > 100 )
+        *ul_thickness = strstr( fli_curfnt, "bold" ) ? 2 : 1;
 
-    if ( ! XGetFontProperty( flx->fs, XA_UNDERLINE_POSITION, &ul_pos ) )
-        ul_pos = has_desc( str ) ? ( 1 + flx->fdesc ) : 1;
+    if ( ! XGetFontProperty( flx->fs, XA_UNDERLINE_POSITION, ul_pos ) )
+        *ul_pos = has_desc( str ) ? ( 1 + flx->fdesc ) : 1;
 
     ul_width = XTextWidth( flx->fs, str, n );
 
-    /* do it */
+    /* Draw it */
 
-    if ( ul_width > 0 && ul_thickness > 0 )
-        XFillRectangle( flx->display, flx->win, flx->gc, x, y + ul_pos,
-                        ul_width, ul_thickness );
+    if ( ul_width > 0 && *ul_thickness > 0 )
+        XFillRectangle( flx->display, flx->win, flx->gc, x, y + *ul_pos,
+                        ul_width, *ul_thickness );
 }
 
 
 /***************************************
- * Draw a single string possibly with embedded tabs
+ * Draw a single line string possibly with embedded tabs
  ***************************************/
 
 int
@@ -934,27 +1012,26 @@ fli_drw_stringTAB( Window       win,
     const char *p,
                *q;
     XFontStruct *fs = fl_get_font_struct( style, size );
-    DrawString XdrawString;
+    DrawString drawIt = img ? XDrawImageString : XDrawString;
 
     if ( win == 0 )
         return 0;
 
     tab = fli_get_tabpixels( fs );
-    XdrawString = img ? XDrawImageString : XDrawString;
 
     XSetFont( flx->display, gc, fs->fid );
 
     for ( w = 0, q = s; *q && ( p = strchr( q, '\t' ) ) && p - s < len;
           q = p + 1 )
     {
-        XdrawString( flx->display, win, gc, x + w, y, ( char * ) q, p - q );
+        drawIt( flx->display, win, gc, x + w, y, ( char * ) q, p - q );
         w += XTextWidth( fs, q, p - q );
         w = ( w / tab + 1 ) * tab;
     }
 
-    XdrawString( flx->display, win, gc, x + w, y, ( char * ) q, s - q + len );
+    drawIt( flx->display, win, gc, x + w, y, ( char * ) q, s - q + len );
 
-    return 0;           /* w + XTextWidth(fs, q, len - (q - s)); */
+    return 0;
 }
 
 

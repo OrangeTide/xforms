@@ -49,7 +49,7 @@ fli_de_space( char * s )
 
     /* Not all isspace considers '\t' a white space */
 
-    for ( p = s; p && ( isspace( ( int ) *p ) || *p == '\t' ); p++ )
+    for ( p = s; p && ( isspace( ( unsigned char ) *p ) || *p == '\t' ); p++ )
         /* empty */ ;
 
     return p == s ? s : memmove( s, p, strlen( p ) + 1 );
@@ -73,7 +73,8 @@ fli_space_de( char * s )
 
     /* maybe replace \ with space ? */
 
-    for ( q--; p >= s && isspace( ( int ) *p ) && ( q < s || *q != '\\' );
+    for ( q--;
+          p >= s && isspace( ( unsigned char ) *p ) && ( q < s || *q != '\\' );
           p--,q-- )
         /* empty */ ;
 
@@ -106,7 +107,7 @@ fli_nuke_all_non_alnum( char * s )
     char buf[ 1024 ];
 
     for ( b = buf; p < q; p++ )
-        if ( isalnum( ( int ) *p ) )
+        if ( isalnum( ( unsigned char ) *p ) )
             *b++ = *p;
     *b = '\0';
 

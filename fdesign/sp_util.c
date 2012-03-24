@@ -170,10 +170,10 @@ get_how_return_val( const char * s )
 
     while ( p )
     {
-        while ( *p && isspace( ( int ) *p ) )
+        while ( *p && isspace( ( unsigned char ) *p ) )
             p++;
         st = p;
-        while ( *p && ! isspace( ( int ) *p ) )
+        while ( *p && ! isspace( ( unsigned char ) *p ) )
             p++;
         *p = '\0';
 

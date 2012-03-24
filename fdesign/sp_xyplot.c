@@ -331,7 +331,7 @@ xscale_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
                   long        data  FL_UNUSED_ARG )
 {
     int s = fl_get_choice( xyplot_attrib->xscale ) - 1;
-    float base = get_finput_value( xyplot_attrib->xbase );
+    double base = get_finput_value( xyplot_attrib->xbase );
 
     if ( s == FL_LOG )
         fl_show_object( xyplot_attrib->xbase );
@@ -355,7 +355,7 @@ yscale_change_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
     /* fill-in code for callback */
 
     int s = fl_get_choice( xyplot_attrib->yscale ) - 1;
-    float base = get_finput_value( xyplot_attrib->ybase );
+    double base = get_finput_value( xyplot_attrib->ybase );
 
     if ( s == FL_LOG )
         fl_show_object( xyplot_attrib->ybase );

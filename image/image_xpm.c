@@ -471,11 +471,11 @@ get_xpm_pixel_name( char * str )
 
     /* make sure it's a legal C name */
 
-    if ( ! isalpha( ( int ) *name ) )
+    if ( ! isalpha( ( unsigned char ) *name ) )
         *name = 'A';
 
     for ( p = name + 1; *p; p++ )
-        if ( ! isalnum( ( int ) *p ) && *p != '_' )
+        if ( ! isalnum( ( unsigned char ) *p ) && *p != '_' )
             *p = '_';
 
     return name;

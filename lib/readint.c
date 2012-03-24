@@ -96,7 +96,7 @@ fli_readint( FILE * fp )
         c = getc( fp );
     }
 
-    while ( isdigit( c ) )
+    while ( isdigit( ( unsigned char ) c ) )
     {
         num = 10 * num + c - '0';
         c = getc( fp );
@@ -129,7 +129,7 @@ fli_readpint( FILE * fp )
             c = skip_comment( fp );
     } while ( IS_FS( c ) );
 
-    if ( ! ( c == '+' || isdigit( c ) ) )
+    if ( ! ( c == '+' || isdigit( ( unsigned char ) c ) ) )
     {
         bad_character( c );
         return EOF;
@@ -139,7 +139,7 @@ fli_readpint( FILE * fp )
     {
         num = 10 * num + c - '0';
         c = getc( fp );
-    } while ( isdigit( c ) );
+    } while ( isdigit( ( unsigned char ) c ) );
 
     return num;
 }
@@ -155,7 +155,7 @@ fli_readhexint( FILE * fp )
     int num = 0, i, c;
     static short hextab[ 256 ];
 
-    /* initialize the hex table */
+    /* Initialize the hex table */
 
     if ( ! hextab[ '1' ] )
     {
@@ -182,10 +182,10 @@ fli_readhexint( FILE * fp )
         return EOF;
     }
 
-    /* now do the coversion */
+    /* Now do the coversion */
 
-    while ( ( c = getc( fp ) ), isxdigit( c ) )
-        num = ( num << 4 ) + hextab[ c ];
+    while ( ( c = getc( fp ) ), isxdigit( ( unsigned char ) c ) )
+        num = ( num << 4 ) + hextab[ ( unsigned char ) c ];
 
     return num;
 }

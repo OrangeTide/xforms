@@ -115,7 +115,7 @@ fl_add_symbol( const char * name,
 
     if (    ! name
          || ! *name
-         || isdigit( ( int ) *name )
+         || isdigit( ( unsigned char ) *name )
          || *name == '@'
          || ! drawit )
     {
@@ -212,14 +212,14 @@ fl_draw_symbol( const char * label,
     while ( label[ pos ] )
     {
         if (    label[ pos ] == '-'
-             && isdigit( ( int ) label[ pos + 1 ] )
+             && isdigit( ( unsigned char ) label[ pos + 1 ] )
              && label[ pos + 1 ] != '0' )
         {
             delta += label[ ++pos ] - '0';
             ++pos;
         }
         else if (    label[ pos ] == '+'
-                  && isdigit( ( int ) label[ pos + 1 ] )
+                  && isdigit( ( unsigned char ) label[ pos + 1 ] )
                   && label[ pos + 1 ] != '0' )
         {
             delta -= label[ ++pos ] - '0';
@@ -230,12 +230,13 @@ fl_draw_symbol( const char * label,
             equalscale = 1;
             ++pos;
         }
-        else if ( isdigit( ( int ) label[ pos ] ) )
+        else if ( isdigit( ( unsigned char ) label[ pos ] ) )
         {
             if ( label[ pos ] == '0' )
             {
                 rotated = 0;
-                while ( label[ ++pos ] && isdigit( ( int ) label[ pos ] ) )
+                while (    label[ ++pos ]
+                        && isdigit( ( unsigned char ) label[ pos ] ) )
                     rotated = 10 * rotated + label[ pos ] - '0';
 
                 while ( rotated > 360 )

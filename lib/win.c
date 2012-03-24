@@ -558,8 +558,8 @@ fl_label_to_res_name( const char * label )
 
     fli_sstrcpy( res, label ? label : "", sizeof res );
     fli_nuke_all_non_alnum( res );
-    if ( res[ 0 ] && isupper( ( int ) res[ 0 ] ) )
-        res[ 0 ] = tolower( ( int ) res[ 0 ] );
+    if ( res[ 0 ] && isupper( ( unsigned char ) res[ 0 ] ) )
+        res[ 0 ] = tolower( ( unsigned char ) res[ 0 ] );
     return res;
 }
 

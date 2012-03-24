@@ -385,7 +385,7 @@ parse_entry( int          n,
                         break;
                     }
                     item->ret = num;
-                    while ( isspace( ( int ) *e ) )
+                    while ( isspace( ( unsigned char ) *e ) )
                         e++;
                     MV( p, e );
                     break;
@@ -420,7 +420,7 @@ parse_entry( int          n,
                         break;
                     }
                     item->radio = num;
-                    while ( isspace( ( int ) *e ) )
+                    while ( isspace( ( unsigned char ) *e ) )
                         e++;
 
                     /* if the item is to be in on state all other items

@@ -49,7 +49,7 @@ static void set_form_property( FL_FORM *,
 
 static FL_FORM *fli_mainform;
 static int nomainform;
-static int reopened_group;
+static int reopened_group = 0;
 
 int fli_fast_free_object = 0;    /* exported to objects.c */
 
@@ -489,7 +489,7 @@ fli_end_group( void )
         obj->objclass = FL_END_GROUP;
     }
 
-    if ( reopened_group == 3 )
+    if ( reopened_group == 2 )
         fl_end_form( );
 
     reopened_group = 0;
@@ -1974,6 +1974,8 @@ simple_form_rescale( FL_FORM * form,
         if ( obj->objclass != FL_BEGIN_GROUP && obj->objclass != FL_END_GROUP )
             fli_scale_object( obj, scale, scale );
 
+    fli_recalc_intersections( form );
+
     fl_redraw_form( form );
 }
 
@@ -2084,8 +2086,7 @@ fl_addto_group( FL_OBJECT * group )
     if ( fli_current_group )
         M_warn( "fl_addto_group", "Group was never closed" );
 
-    reopened_group = 1;
-    reopened_group += fl_current_form ? 0 : 2;
+    reopened_group = fl_current_form ? 1 : 2;
     fl_current_form = group->form;
     return fli_current_group = group;
 }
@@ -2147,8 +2148,15 @@ fl_adjust_form_size( FL_FORM * form )
         fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
                                  strlen( obj->label ), &sw, &sh );
 
-        bw = ( obj->boxtype == FL_UP_BOX || obj->boxtype == FL_DOWN_BOX ) ?
+        bw = (    obj->boxtype == FL_UP_BOX
+               || obj->boxtype == FL_DOWN_BOX
+               || obj->boxtype == FL_EMBOSSED_BOX
+               || obj->boxtype == FL_EMBOSSED_BOX) ?
              FL_abs( obj->bw ) : 1;
+
+        if (    obj->boxtype == FL_EMBOSSED_BOX
+             || obj->boxtype == FL_EMBOSSED_BOX )
+            bw += obj->bw > 2 ? obj->bw - 1 : 2;
 
         if (    obj->objclass == FL_BUTTON
              && (    obj->type == FL_RETURN_BUTTON

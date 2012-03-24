@@ -239,8 +239,8 @@ void
 cnt_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
                    long        data  FL_UNUSED_ARG )
 {
-    float s1 = get_finput_value( cnt_attrib->step1 );
-    float s2 = get_finput_value( cnt_attrib->step2 );
+    double s1 = get_finput_value( cnt_attrib->step1 );
+    double s2 = get_finput_value( cnt_attrib->step2 );
 
     fl_set_counter_step( cnt_attrib->vdata, s1, s2 );
 

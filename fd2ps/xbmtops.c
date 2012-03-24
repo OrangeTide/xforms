@@ -37,16 +37,17 @@
 static int
 gethexint(FILE * fp)
 {
-    char buf[20], *p;
+    char buf[ 20 ], *p;
     int c;
 
-    while ((c = getc(fp)) == ',' || isspace(c))
+    while ( ( c = getc( fp ) ) == ',' || isspace( ( unsigned char ) c ) )
         /* empty */ ;
 
     if (c == EOF)
         return -1;
 
-    for (p = buf; c != EOF && c != ',' && !isspace(c); c = getc(fp))
+    for ( p = buf; c != EOF && c != ',' && !isspace( ( unsigned char ) c );
+          c = getc( fp ) )
         *p++ = c;
     *p = '\0';
 

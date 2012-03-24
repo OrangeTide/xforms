@@ -676,7 +676,7 @@ get_xpm_stuff( char * inbuf,
                 /* empty */;
             while ( *p && *++p != '[' )
             {
-                if ( ! isspace( ( int ) *p ) )
+                if ( ! isspace( ( unsigned char ) *p ) )
                     *q++ = *p;
             }
             *q = '\0';

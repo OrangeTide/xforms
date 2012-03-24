@@ -899,7 +899,7 @@ align_val( const char *cc )
         if ( strcmp( s, vn->name ) == 0 )
             return p ? fl_to_inside_lalign( vn->val ) : vn->val;
 
-    if ( ! isdigit( ( int ) cc[ 0 ] ) )
+    if ( ! isdigit( ( unsigned char ) cc[ 0 ] ) )
         fprintf( stderr, "Unknown alignment %s\n", cc );
 
     return atoi( cc );
@@ -917,7 +917,7 @@ de_space( char *s )
 
     /* not all isspace considers '\t' a white space */
 
-    for ( p = s; p && ( isspace( ( int ) *p ) || *p == '\t' ); p++ )
+    for ( p = s; p && ( isspace( ( unsigned char ) *p ) || *p == '\t' ); p++ )
         /* empty */ ;
     return ( p == s ) ? s : strcpy( s, p );
 }

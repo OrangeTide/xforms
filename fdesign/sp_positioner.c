@@ -241,7 +241,7 @@ void
 pos_xstepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
                     long        data  FL_UNUSED_ARG )
 {
-    float s = get_finput_value( pos_attrib->xstep );
+    double s = get_finput_value( pos_attrib->xstep );
 
     fl_set_positioner_xstep( pos_attrib->vdata, s );
 
@@ -257,7 +257,7 @@ void
 pos_ystepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
                     long        data  FL_UNUSED_ARG )
 {
-    float s = get_finput_value( pos_attrib->ystep );
+    double s = get_finput_value( pos_attrib->ystep );
 
     fl_set_positioner_ystep( pos_attrib->vdata, s );
 

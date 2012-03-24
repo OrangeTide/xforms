@@ -1138,8 +1138,7 @@ FL_EXPORT int fl_get_object_boxtype( FL_OBJECT * obj );
 FL_EXPORT void fl_set_object_bw( FL_OBJECT * ob,
                                  int         bw );
 
-FL_EXPORT void fl_get_object_bw( FL_OBJECT * ob,
-                                 int       * bw );
+FL_EXPORT int fl_get_object_bw( FL_OBJECT * ob );
 
 FL_EXPORT void fl_set_object_resize( FL_OBJECT    * ob,
                                      unsigned int   what );

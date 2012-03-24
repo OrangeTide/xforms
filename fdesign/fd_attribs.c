@@ -328,11 +328,11 @@ valid_c_identifier( const char * s )
     if ( ! s || ! *s || ( *s == ' ' && *( s + 1 ) == '\0' ) )
         return 1;
 
-    if ( ! isalpha( ( int ) *s ) && *s != '_' )
+    if ( ! isalpha( ( unsigned char ) *s ) && *s != '_' )
         return 0;
 
     for ( s++; *s; s++ )
-        if ( ! isalnum( ( int ) *s ) && ! OK_letter( s ) )
+        if ( ! isalnum( ( unsigned char ) *s ) && ! OK_letter( s ) )
             return 0;
 
     return 1;
@@ -772,7 +772,9 @@ set_shortcut( FL_OBJECT  * obj,
 
 /* if \ preceeds c, \ does not need quote */
 
-#define Ok( c ) ( c== '"' || c== '\\' || c == 't' || c == 'n' || isdigit( c ) )
+#define Ok( c ) \
+    ( c== '"' || c== '\\' || c == 't' || c == 'n' \
+      || isdigit( ( unsigned char )  c ) )
 
 
 /***************************************
@@ -793,7 +795,7 @@ need_quote( const char * s,
     if ( c == '"' && p != '\\' )
         return 1;
     else if ( c == '\\' && p != '\\' )
-        return ! isdigit( n ) && ! Ok( n );
+        return ! isdigit( ( unsigned char ) n ) && ! Ok( n );
     else
         return 0;
 }

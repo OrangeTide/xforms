@@ -309,7 +309,6 @@ extern long fli_query_namedcolor( const char *s );
 void fli_free_xtext_workmem( void );
 
 extern int fli_get_pos_in_string( int,
-                                  int,
                                   FL_Coord,
                                   FL_Coord,
                                   FL_Coord,
@@ -333,7 +332,6 @@ extern int fli_drw_stringTAB( Window,
                               int );
 
 extern int fli_drw_string( int,
-                           int,
                            FL_Coord,
                            FL_Coord,
                            FL_Coord,

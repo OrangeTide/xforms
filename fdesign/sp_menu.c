@@ -183,7 +183,7 @@ get_pupentry_name( FL_OBJECT * ob )
     /* Get rid of illegal chars */
 
     for ( i = 0, p = pupname; *p; p++ )
-        if (isalnum( ( int ) *p ) || *p == '_' )
+        if ( isalnum( ( unsigned char ) *p ) || *p == '_' )
             pupname[ i++ ] = *p;
 
     pupname[ i++ ] = '\0';

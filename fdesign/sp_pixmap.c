@@ -419,7 +419,7 @@ get_xpm_stuff( IconInfo * in,
                 /* empty */ ;
 
             while ( *p && *++p != '[' ) /* ] */
-                if ( ! isspace( ( int ) *p ) )
+                if ( ! isspace( ( unsigned char ) *p ) )
                     *q++ = *p;
 
             *q = '\0';

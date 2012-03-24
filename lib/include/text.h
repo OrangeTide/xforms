@@ -32,7 +32,7 @@ enum {
 #define FL_TEXT_COL1       FL_COL1
 #define FL_TEXT_COL2       FL_MCOL
 #define FL_TEXT_LCOL       FL_LCOL
-#define FL_TEXT_ALIGN      FL_ALIGN_LEFT
+#define FL_TEXT_ALIGN      ( FL_ALIGN_LEFT | FL_ALIGN_INSIDE )
 
 FL_EXPORT FL_OBJECT * fl_create_text( int          type,
                                       FL_Coord     x,

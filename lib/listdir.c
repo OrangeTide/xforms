@@ -717,7 +717,8 @@ fl_fix_dirname( char * dir )
     }
     else
 #elif defined opennt
-    if ( ldir[ 0 ] == '/' && ldir[ 1 ] == '/' && isalpha( ldir[ 2 ] ) )
+    if (    ldir[ 0 ] == '/' && ldir[ 1 ] == '/'
+         && isalpha( ( unsigned char ) ldir[ 2 ] ) )
     {               /* //E is E dirver */
         dir[ 0 ] = ldir[ 0 ];
         dir[ 1 ] = ldir[ 1 ];
@@ -766,7 +767,7 @@ fl_fix_dirname( char * dir )
     if (    strlen( dir ) == 3
          && dir[ 0 ] == '/'
          && dir[ 1 ] == '/'
-         && isalpha( ldir[ 2 ] ) )
+         && isalpha( ( unsigned char ) ldir[ 2 ] ) )
     {               /* fix  "//C" */
         dir[ 3 ] = '/';
         dir[ 4 ] = '\0';

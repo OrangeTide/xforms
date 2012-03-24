@@ -109,7 +109,7 @@ typedef struct {
                     v_on;
     int             dead_area,
                     attrib;
-    int             no_cursor;
+    int             cursor_visible;
     int             field_char;
 } FLI_INPUT_SPEC;
 
@@ -301,10 +301,8 @@ static void
 draw_input( FL_OBJECT * obj )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
-    FL_COLOR col,
-             textcol;
+    FL_COLOR col;
     FL_COLOR curscol = fli_dithered( fl_vmode ) ? FL_BLACK : sp->curscol;
-    int valign;
     FL_Coord xmargin,
              ymargin;
     int bw = FL_abs( obj->bw );
@@ -332,11 +330,6 @@ draw_input( FL_OBJECT * obj )
         fl_draw_object_label_outside( obj );
     }
 
-    valign = obj->type == FL_MULTILINE_INPUT ? FL_ALIGN_TOP : FL_ALIGN_CENTER;
-
-    sp->charh = fl_get_char_height( obj->lstyle, obj->lsize, 0, 0 );
-    textcol = sp->textcol;
-
     if ( obj->type == FL_SECRET_INPUT )
     {
         saved = sp->str;
@@ -350,22 +343,25 @@ draw_input( FL_OBJECT * obj )
     fl_set_text_clipping( cx, cy, sp->w, sp->h );
     fl_set_clipping( cx, cy, sp->w, sp->h );
 
-    max_pixels = fli_drw_string( FL_ALIGN_LEFT,
-                                 valign,                /* Align left cent. */
+    max_pixels = fli_drw_string( obj->type == FL_MULTILINE_INPUT ?
+                                 FL_ALIGN_LEFT_TOP : FL_ALIGN_LEFT,
                                  cx - sp->xoffset,      /* Bounding box */
                                  cy - sp->yoffset,
                                  sp->w + sp->xoffset,
                                  sp->h + sp->yoffset,
-                                 -5,                    /* Do clipping */
-                                 col, textcol, curscol,
+                                 -1,               /* Clipping is already set */
+                                 col, sp->textcol, curscol,
                                  obj->lstyle, obj->lsize,
-                                 sp->no_cursor ? -1 : sp->position,
+                                 (    sp->cursor_visible 
+                                   && sp->beginrange >= sp->endrange ) ?
+                                 sp->position : -1,
                                  sp->beginrange, sp->endrange,
                                  sp->str, sp->drawtype != COMPLETE,
                                  sp->topline,
                                  sp->topline + sp->screenlines, 0 );
 
     max_pixels_line = fli_get_maxpixel_line( ) + 1;
+    sp->charh = fl_get_char_height( obj->lstyle, obj->lsize, 0, 0 );
 
     if (    max_pixels > sp->max_pixels
          || (    sp->max_pixels_line >= sp->topline
@@ -399,12 +395,11 @@ static int
 handle_select( FL_Coord    mx,
                FL_Coord    my,
                FL_OBJECT * obj,
-               int         mouse,
-               int         what )
+               int         movement,
+               int         mode )
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     int thepos,
-        valign,
         n;
     int oldpos = sp->position,
         oldbeg = sp->beginrange,
@@ -418,10 +413,10 @@ handle_select( FL_Coord    mx,
 
     /* Compute the mouse position in the string */
 
-    valign = obj->type == FL_MULTILINE_INPUT ? FL_ALIGN_TOP : FL_ALIGN_CENTER;
     get_margin( obj->boxtype, bw, &xmargin, &ymargin );
 
-    thepos = fli_get_pos_in_string( FL_ALIGN_LEFT, valign,
+    thepos = fli_get_pos_in_string( obj->type == FL_MULTILINE_INPUT ?
+                                    FL_ALIGN_LEFT_TOP : FL_ALIGN_LEFT,
                                     sp->input->x + xmargin - sp->xoffset,
                                     sp->input->y + ymargin - sp->yoffset,
                                     sp->w + sp->xoffset,
@@ -430,7 +425,7 @@ handle_select( FL_Coord    mx,
                                     mx, my, sp->str,
                                     &sp->xpos, &sp->ypos );
 
-    if ( what == WORD_SELECT )
+    if ( mode == WORD_SELECT )
     {
 #if defined USE_CLASSIC_EDITKEYS
         if ( sp->str[ thepos ] == ' ' )
@@ -445,11 +440,12 @@ handle_select( FL_Coord    mx,
 
         sp->beginrange = n + 1;
 #else
-        if ( ! isalnum( sp->str[ thepos ] ) && sp->str[ thepos ] != '_' )
+        if (    ! isalnum( ( unsigned char ) sp->str[ thepos ] )
+             && sp->str[ thepos ] != '_' )
         {
             for ( n = thepos;
                      sp->str[ n ]
-                  && ! isalnum( sp->str[ n ] )
+                  && ! isalnum( ( unsigned char ) sp->str[ n ] )
                   && sp->str[ n ] != '_'
                   && sp->str[ n ] != '\n';
                   n++ )
@@ -458,7 +454,7 @@ handle_select( FL_Coord    mx,
 
             for ( n = thepos;
                      n
-                  && ! isalnum( sp->str[ n ] )
+                  && ! isalnum( ( unsigned char ) sp->str[ n ] )
                   && sp->str[ n ] != '_'
                   && sp->str[ n ] != '\n';
                   n-- )
@@ -471,13 +467,15 @@ handle_select( FL_Coord    mx,
         {
             for ( n = thepos;
                      sp->str[ n ]
-                  && ( isalnum( sp->str[ n ] ) || sp->str[ n ] == '_' );
+                  && (    isalnum( ( unsigned char ) sp->str[ n ] )
+                       || sp->str[ n ] == '_' );
                   n++ )
                 /* empty */ ;
             sp->endrange = n;
 
             for ( n = thepos;
-                  n && ( isalnum( sp->str[ n ] ) || sp->str[ n ] == '_' );
+                  n && (    isalnum( ( unsigned char ) sp->str[ n ] )
+                         || sp->str[ n ] == '_' );
                   n-- )
                 /* empty */ ;
             if ( n > 0 )
@@ -486,7 +484,7 @@ handle_select( FL_Coord    mx,
         }
 #endif
     }
-    else if ( what == LINE_SELECT )
+    else if ( mode == LINE_SELECT )
     {
         for ( n = thepos; sp->str[ n ] && sp->str[ n ] != '\n'; n++ )
             /* empty */ ;
@@ -500,7 +498,7 @@ handle_select( FL_Coord    mx,
     {
         /* Adapt the range */
 
-        if ( mouse )
+        if ( movement )
         {
             fl_freeze_form( obj->form );
             make_line_visible( obj, sp->ypos );
@@ -824,15 +822,16 @@ handle_movement( FL_OBJECT * obj,
         if ( sp->position > 0 )
             sp->position--;
 
-        if (     ! isalnum( sp->str[ sp->position ] )
+        if (     ! isalnum( ( unsigned char ) sp->str[ sp->position ] )
               && sp->str[ sp->position ] != '_' )
             while (    sp->position > 0
-                    && ! (    isalnum( sp->str[ sp->position ] )
+                    && ! (    isalnum( ( unsigned char )
+                                       sp->str[ sp->position ] )
                            || sp->str[ sp->position ] == '_' ) )
                 --sp->position;
         else
             while (    sp->position > 0
-                    && (    isalnum( sp->str[ sp->position ] )
+                    && (    isalnum( ( unsigned char ) sp->str[ sp->position ] )
                          || sp->str[ sp->position ] == '_' ) )
                 --sp->position;
 #endif
@@ -855,14 +854,15 @@ handle_movement( FL_OBJECT * obj,
         while ( i < slen && sp->str[ i ] != ' ' && sp->str[ i ] != '\n' )
             i++;
 #else
-        if ( ! isalnum( sp->str[ i ] ) && sp->str[ i ] != '_' )
+        if (    ! isalnum( ( unsigned char ) sp->str[ i ] )
+             && sp->str[ i ] != '_' )
             while (    i < slen
-                    && ! isalnum( sp->str[ i ] )
+                    && ! isalnum( ( unsigned char ) sp->str[ i ] )
                     && sp->str[ i ] != '_' )
                 ++i;
         else
             while (    i < slen
-                    && (    isalnum( sp->str[ i ] )
+                    && (    isalnum( ( unsigned char ) sp->str[ i ] )
                          || sp->str[ i ] == '_' ) )
                 ++i;
 #endif
@@ -925,14 +925,16 @@ handle_edit( FL_OBJECT * obj,
                underscores. This is the same behaviour as in e.g. Qt.
             */
 
-            if ( ! isalnum( sp->str[ i ] ) && sp->str[ i ] != '_' )
+            if (    ! isalnum( ( unsigned char ) sp->str[ i ] )
+                 && sp->str[ i ] != '_' )
                 while (    i < slen
-                        && ! isalnum( sp->str[ i ] )
+                        && ! isalnum( ( unsigned char ) sp->str[ i ] )
                         && sp->str[ i ] != '_' )
                     i++;
             else
                 while (    i < slen
-                        && ( isalnum( sp->str[ i ] ) || sp->str[ i ] == '_' ) )
+                        && (    isalnum( ( unsigned char ) sp->str[ i ] )
+                             || sp->str[ i ] == '_' ) )
                     i++;
 #endif
             if ( i - sp->position > 1 )
@@ -963,15 +965,17 @@ handle_edit( FL_OBJECT * obj,
                 sp->position--;
 #else
             --sp->position;
-            if (    ! isalnum( sp->str[ sp->position ] ) 
+            if (    ! isalnum( ( unsigned char ) sp->str[ sp->position ] ) 
                  && sp->str[ sp->position ] != '_' )
                 while (    sp->position > 0
-                        && ! isalnum( sp->str[ sp->position ] ) 
+                        && ! isalnum( ( unsigned char )
+                                      sp->str[ sp->position ] ) 
                         && sp->str[ sp->position ] != '_' )
                     --sp->position;
             else
                 while (    sp->position > 0
-                        && (    isalnum( sp->str[ sp->position ] ) 
+                        && (    isalnum( ( unsigned char )
+                                         sp->str[ sp->position ] ) 
                              || sp->str[ sp->position ] == '_' ) )
                     --sp->position;
 
@@ -1463,8 +1467,8 @@ handle_input( FL_OBJECT * obj,
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     static int motion,
-               lx,
-               ly,
+               lx = INT_MAX,
+               ly = INT_MAX,
                paste;
     int ret = FL_RETURN_NONE,
         val;
@@ -1548,8 +1552,10 @@ handle_input( FL_OBJECT * obj,
                       | FL_RETURN_END;
             break;
 
-        case FL_MOTION:
+//        case FL_MOTION:
         case FL_UPDATE:
+            if ( ! obj->focus )
+                break;
             motion = ( mx != lx || my != ly ) && ! paste;
             if ( motion && handle_select( mx, my, obj, 1, NORMAL_SELECT ) )
                 fl_redraw_object( sp->input );
@@ -1740,14 +1746,15 @@ fl_create_input( int          type,
     obj->click_timeout = FL_CLICK_TIMEOUT;
     obj->spec = sp     = fl_calloc( 1, sizeof *sp );
 
-    sp->textcol  = FL_INPUT_TCOL;
-    sp->curscol  = FL_INPUT_CCOL;
-    sp->position = -1;
-    sp->endrange = -1;
-    sp->size     = 8;
-    sp->lines    = sp->ypos = 1;
-    sp->str      = fl_malloc( sp->size );
-    *sp->str     = '\0';
+    sp->textcol        = FL_INPUT_TCOL;
+    sp->curscol        = FL_INPUT_CCOL;
+    sp->position       = -1;
+    sp->endrange       = -1;
+    sp->size           = 8;
+    sp->lines          = sp->ypos = 1;
+    sp->str            = fl_malloc( sp->size );
+    *sp->str           = '\0';
+    sp->cursor_visible = 1;
 
     switch ( obj->type )
     {
@@ -1894,8 +1901,13 @@ fl_add_input( int          type,
 
 
 /***************************************
- * Sets the particular input string. No checks for validity
+ * Sets the input string. Only printable character and, for multi-line
+ * inputs new-lines are accepted.
  ***************************************/
+
+#define IS_VALID_INPUT_CHAR( c )   \
+       isprint( ( unsigned char ) ( c ) )    \
+    || ( obj->type == FL_MULTILINE_INPUT && ( c ) == '\n' )
 
 void
 fl_set_input( FL_OBJECT  * obj,
@@ -1904,11 +1916,14 @@ fl_set_input( FL_OBJECT  * obj,
     FLI_INPUT_SPEC *sp = obj->spec;
     int len;
     char *p;
+    const char *q;
 
     if ( ! str )
         str = "";
 
-    len = strlen( str );
+    for ( len = 0, q = str; *q; ++q )
+        if ( IS_VALID_INPUT_CHAR( *q ) )
+            ++len;
 
     if ( sp->size < len + 1 )
     {
@@ -1916,13 +1931,10 @@ fl_set_input( FL_OBJECT  * obj,
         sp->str = fl_realloc( sp->str, sp->size );
     }
 
-    strcpy( sp->str, str );
-
-    if ( obj->type != FL_MULTILINE_INPUT && ( p = strchr( sp->str, '\n' ) ) )
-    {
-        *p = '\0';
-        len = strlen( sp->str );
-    }
+    for ( p = sp->str, q = str; *q; ++q )
+        if ( IS_VALID_INPUT_CHAR( *q ) )
+            *p++ = *q;
+    *p = '\0';
 
     /* Set position of cursor in string to the end (if object doesn't has
        focus must be negative of length of strig minus one) */
@@ -2314,7 +2326,7 @@ set_default_keymap( int force )
 
 #else
 
-#define Ctrl( c ) ( islower( c ) ? ( c ) - 'a' + 1 : ( c ) )
+#define Ctrl( c ) ( islower( ( unsigned char ) c ) ? ( c ) - 'a' + 1 : ( c ) )
 
 /***************************************
  ***************************************/
@@ -2395,7 +2407,8 @@ fl_set_input_format( FL_OBJECT * obj,
 {
     FLI_INPUT_SPEC *sp = obj->spec;
 
-    if ( ! isprint( sep ) || isdigit( sep ) )
+    if (    ! isprint( ( unsigned char ) sep )
+         || isdigit( ( unsigned char ) sep ) )
         sep = '/';
     sp->attrib1 = fmt;
     sp->attrib2 = sep;
@@ -2467,7 +2480,7 @@ date_validator( FL_OBJECT  * obj,
     *ssep = sep;
     strcat( strcpy( sepsep, ssep ), ssep );
 
-    if (    ( newc != sep && newc != 0 && ! isdigit( newc ) )
+    if (    ( newc != sep && newc != 0 && ! isdigit( ( unsigned char ) newc ) )
          || *newstr == sep || strstr( newstr, sepsep ) )
         return invalid;
 
@@ -2542,7 +2555,7 @@ float_int_validator( FL_OBJECT  * obj,
         return FL_VALID;
 
     if (    newc
-         && ! isdigit( newc )
+         && ! isdigit( ( unsigned char ) newc )
          && newc != '-'
          && newc != '+'
          && obj->type == FL_INT_INPUT )
@@ -2567,8 +2580,10 @@ float_int_validator( FL_OBJECT  * obj,
          && (    ( *lc != '-' && *lc != 'e' && *lc != '+' && *lc != 'E' )
               || ( *lc == '-' && *llc != 'e' && *llc != 'E' )
               || ( *lc == '+' && *llc != 'e' && *llc != 'E' )
-              || ( *lc == 'e' && ! isdigit( ( int ) *llc ) && *llc != '.' )
-              || ( *lc == 'E' && ! isdigit( ( int ) *llc )  && *llc != '.' ) ) )
+              || (    *lc == 'e' && ! isdigit( ( unsigned char )  *llc )
+                   && *llc != '.' )
+              || (    *lc == 'E' && ! isdigit( ( unsigned char )  *llc )
+                   && *llc != '.' ) ) )
         return FL_INVALID | FL_RINGBELL;
 
     return FL_VALID;
@@ -2741,6 +2756,7 @@ make_char_visible( FL_OBJECT * obj,
         fl_redraw_object( sp->input );
         return 1;
     }
+
     return 0;
 }
 
@@ -2981,9 +2997,9 @@ fl_set_input_cursor_visible( FL_OBJECT * obj,
 {
     FLI_INPUT_SPEC *sp = obj->spec;
 
-    if ( sp->no_cursor != ! visible )
+    if ( sp->cursor_visible != visible )
     {
-        sp->no_cursor = ! visible;
+        sp->cursor_visible = visible;
         fl_redraw_object( obj );
     }
 }

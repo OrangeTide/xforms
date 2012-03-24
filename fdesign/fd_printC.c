@@ -691,7 +691,7 @@ align_val( const char * cc )
     if ( ( p = strchr( s, '|' ) ) )
     {
         *p = '\0';
-        while ( isspace( ( int ) *--p  ) )
+        while ( isspace( ( unsigned char ) *--p  ) )
             *p = '\0';
     }
     val = get_vn_val( vn_align, s );
@@ -1559,7 +1559,8 @@ output_object( FILE      * fn,
                FL_OBJECT * obj,
                int         altfmt )
 {
-    FL_OBJECT *defobj, fakeobj;
+    FL_OBJECT * defobj,
+                fakeobj;
     char name[ MAX_VAR_LEN ],
          cbname[ MAX_VAR_LEN ],
          argname[ MAX_VAR_LEN ];

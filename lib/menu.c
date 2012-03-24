@@ -470,7 +470,7 @@ addto_menu( FL_OBJECT  * ob,
         sp->mval[ n ] = ++sp->cur_val;
     else
     {
-        if ( ! isdigit( ( int ) p[ 2 ] ) )
+        if ( ! isdigit( ( unsigned char ) p[ 2 ] ) )
         {
             M_err( "addto_menu", "Missing number after %%x" );
             sp->mval[ n ] = ++sp->cur_val;
@@ -480,7 +480,7 @@ addto_menu( FL_OBJECT  * ob,
             char *eptr;
 
             sp->mval[ n ] = strtol( p + 2, &eptr, 10 );
-            while ( *eptr && isspace( ( int ) *eptr ) )
+            while ( *eptr && isspace( ( unsigned char ) *eptr ) )
                 eptr++;
             if ( *eptr )
                 memmove( p, eptr, strlen( eptr ) + 1 );
@@ -637,10 +637,10 @@ fl_replace_menu_item( FL_OBJECT  * ob,
 
     if ( ( p = strstr( s, "%x" ) ) )
     {
-        if ( isdigit( ( int ) p[ 2 ] ) )
+        if ( isdigit( ( unsigned char ) p[ 2 ] ) )
         {
             sp->mval[ numb ] = strtol( p + 2, &eptr, 10 );
-            while ( *eptr && isspace( ( int ) *eptr ) )
+            while ( *eptr && isspace( ( unsigned char ) *eptr ) )
                 eptr++;
             if ( *eptr )
                 memmove( p, eptr, strlen( eptr ) + 1 );

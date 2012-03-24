@@ -1134,6 +1134,7 @@ fl_textcolor( FL_COLOR col )
 
 
 /***************************************
+ * Set the background color for drawing
  ***************************************/
 
 void
@@ -1151,6 +1152,7 @@ fl_bk_color( FL_COLOR col )
 
 
 /***************************************
+ * Set the background color for text
  ***************************************/
 
 void

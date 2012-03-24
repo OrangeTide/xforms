@@ -258,7 +258,7 @@ void
 dial_stepchange_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
                     long        data  FL_UNUSED_ARG )
 {
-    float s = get_finput_value( dial_attrib->step );
+    double s = get_finput_value( dial_attrib->step );
 
     fl_set_dial_step( dial_attrib->vdata, s );
     if ( auto_apply )

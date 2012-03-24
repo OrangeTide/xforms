@@ -49,11 +49,11 @@ extern Display *fd_display;
   ROUNDING
 *****/
 
-static float xmin   = 0.0,
-             ymin   = 0.0,
-             width  = 1280.0,
-             height = 1024.0;
-static float stepsize = 10.0;   /* Step size (for alignment) */
+static double xmin   = 0.0,
+              ymin   = 0.0,
+              width  = 1280.0,
+              height = 1024.0;
+static double stepsize = 10.0;   /* Step size (for alignment) */
 
 
 /***************************************
@@ -61,7 +61,7 @@ static float stepsize = 10.0;   /* Step size (for alignment) */
  ***************************************/
 
 void
-set_step_size( float size )
+set_step_size( double size )
 {
     stepsize = size < 1.0 ? 1.0 : size;
 }
@@ -71,7 +71,7 @@ set_step_size( float size )
  * Returns the step size
  ***************************************/
 
-float
+double
 get_step_size( void )
 {
     return stepsize;
@@ -83,10 +83,10 @@ get_step_size( void )
  ***************************************/
 
 void
-set_bounding_box( float x,
-                  float y,
-                  float w,
-                  float h )
+set_bounding_box( double x,
+                  double y,
+                  double w,
+                  double h )
 {
     xmin   = x;
     ymin   = y;
@@ -100,10 +100,10 @@ set_bounding_box( float x,
  ***************************************/
 
 static void
-round_size( float * x,
-            float * y,
-            float * w,
-            float * h )
+round_size( double * x,
+            double * y,
+            double * w,
+            double * h )
 {
     int t;
 
@@ -150,10 +150,10 @@ round_size( float * x,
  ***************************************/
 
 static void
-round_position( float * x,
-                float * y,
-                float * w,
-                float * h )
+round_position( double * x,
+                double * y,
+                double * w,
+                double * h )
 {
     int t;
 
@@ -189,10 +189,10 @@ round_position( float * x,
  ***************************************/
 
 static void
-show_box( float x,
-          float y,
-          float w,
-          float h )
+show_box( double x,
+          double y,
+          double w,
+          double h )
 {
     XSetFunction( fd_display, fd_gc, GXxor );
     color( fd_col ^ fd_black );
@@ -235,8 +235,8 @@ ready( void )
  ***************************************/
 
 void
-get_mouse_pos( float * xx,
-               float * yy )
+get_mouse_pos( double * xx,
+               double * yy )
 {
     FL_Coord x,
              y;
@@ -253,14 +253,14 @@ get_mouse_pos( float * xx,
  ***************************************/
 
 void
-move_box( float * x,
-          float * y,
-          float * w,
-          float * h,
-          int     offset )
+move_box( double * x,
+          double * y,
+          double * w,
+          double * h,
+          int      offset )
 {
-    float oldx = *x, oldy = *y, oldw = *w, oldh = *h;
-    float xoff, yoff;
+    double oldx = *x, oldy = *y, oldw = *w, oldh = *h;
+    double xoff, yoff;
 
     if ( offset )
     {
@@ -305,13 +305,13 @@ move_box( float * x,
  ***************************************/
 
 void
-scale_box( float * x,
-           float * y,
-           float * w,
-           float * h )
+scale_box( double * x,
+           double * y,
+           double * w,
+           double * h )
 {
-    float oldw = 1.0,
-          oldh = 1.0;
+    double oldw = 1.0,
+           oldh = 1.0;
 
     round_position( x, y, w, h );
 

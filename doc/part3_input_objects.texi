@@ -111,8 +111,8 @@ edit or move around inside the input field:
 @item delete from cursor position to end of line
 @code{<Ctrl>k}
 @item delete from cursor position to begin of line
-@code{<Meta>k}
-@item jump to beginning of line
+@code{<Meta>h}
+@item jump to begin of line
 @code{<Ctrl>a}
 @item jump to end of line
 @code{<Ctrl>e}
@@ -371,17 +371,17 @@ the contents of the input field use the routine
 void fl_set_input(FL_OBJECT *obj, const char *str);
 @end example
 @noindent
-There is very limited check for the validity of the string set for the
-input field. Use an empty string to clear an input field.
+Only a limited check on the string passed to the function is done in
+that only printable characters (according to the @code{isprint()}
+function) and, in the case of @code{@ref{FL_MULTILINE_INPUT}} objects,
+new-lines (@code{'\n'}) are accepted (i.e.@: all that don't fit are
+skipped). Use an empty string (or a @code{NULL} pointer as the second
+argument) to clear an input field.
 
-Setting the content of an input field does not trigger object event,
-i.e., the object callback is not called. In some situations you might
-want to have the callback invoked. For this, use the the function
-@code{@ref{fl_call_object_callback()}}
-@findex fl_call_object_callback()
-@example
-void fl_call_object_callback(FL_OBJECT *obj);
-@end example
+Setting the content of an input field does not trigger an object
+event, i.e.@: the object callback is not called. In some situations
+you might want to have the callback invoked. For this, you may use
+the function @code{@ref{fl_call_object_callback()}}.
 
 To obtain the string in the field (when the user has changed it) use:
 @findex fl_get_input()

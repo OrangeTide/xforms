@@ -143,8 +143,8 @@ void
 addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
             long        arg  FL_UNUSED_ARG )
 {
-    float w = 0,
-          h = 0;
+    double w = 0,
+           h = 0;
     FL_Coord xx,
              yy;
     static int form_seq;

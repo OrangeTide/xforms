@@ -1634,11 +1634,12 @@ fli_convert_shortcut( const char * str,
                     sc[ i++ ] = XK_Right + offset;
                 else if ( c[ 1 ] == 'D' )
                     sc[ i++ ] = XK_Left + offset;
-                else if ( isdigit( ( int ) c[ 1 ] ) && c[ 1 ] > '0' )
+                else if (    isdigit( ( unsigned char ) c[ 1 ] )
+                          && c[ 1 ] > '0' )
                 {
                     long j = c[ 1 ]  - '0';
 
-                    if (    isdigit( ( int ) c[ 2 ] )
+                    if (    isdigit( ( unsigned char ) c[ 2 ] )
                          && 10 * j + c[ 2 ] - '0' <= 35 )
                     {
                          j = 10 * c[ 2 ] - '0';
@@ -1691,11 +1692,12 @@ fli_get_underline_pos( const char * label,
 
     for ( c = '\0', p = sc; ! c && *p; p++ )
     {
-        if ( isalnum( ( int ) *p ) )
+        if ( isalnum( ( unsigned char ) *p ) )
         {
             if ( p == sc )
                 c = *p;
-            else if ( * ( p - 1 ) != '&' && ! isdigit( ( int ) * ( p - 1 ) ) )
+            else if (    * ( p - 1 ) != '&'
+                      && ! isdigit( ( unsigned char ) * ( p - 1 ) ) )
                 c = *p;
         }
     }
@@ -1708,7 +1710,8 @@ fli_get_underline_pos( const char * label,
     if ( c == *sc )
         p = strchr( label, c );
     else if ( ! ( p = strchr( label, c ) ) )
-        p = strchr( label, islower( c ) ? toupper( c ) : tolower( c ) );
+        p = strchr( label, islower( ( unsigned char ) c ) ?
+                    toupper( c ) : tolower( c ) );
 
     if ( ! p )
         return -1;
@@ -2833,9 +2836,11 @@ fli_combine_rectangles( FL_RECT       * r1,
 
 /***************************************
  * Scale an object. No gravity and resize settings for the object are
- * taken into account. The calculation takes care of round-off errors
+ * taken into account. The calculation takes care of rounding errors
  * and has the property that if two objects were "glued" together be-
- * fore scaling, they will remain so.
+ * fore scaling they will remain so. The function also doesn't re-
+ * calculates intersection between objects, this has to be done by the
+ * caller if necessary.
  ***************************************/
 
 void
@@ -2879,8 +2884,6 @@ fli_scale_object( FL_OBJECT * obj,
 
         if ( obj->child )
             fli_composite_has_been_resized( obj );
-
-        fli_recalc_intersections( obj->form );
     }
 }
 

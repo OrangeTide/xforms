@@ -734,10 +734,10 @@ fl_portable_vsnprintf( char       * str,
                      justify_left = 1;
                  }
              }
-             else if ( isdigit( ( int ) *p ) )
+             else if ( isdigit( ( unsigned char ) *p ) )
              {
                  min_field_width = *p++ - '0';
-                 while (isdigit( ( int ) *p ) )
+                 while (isdigit( ( unsigned char ) *p ) )
                      min_field_width = 10 * min_field_width + ( *p++ - '0' );
              }
 
@@ -763,10 +763,10 @@ fl_portable_vsnprintf( char       * str,
                           * which is what we do here.
                           */
                      }
-                 } else if ( isdigit( ( int ) *p ) )
+                 } else if ( isdigit( ( unsigned char ) *p ) )
                  {
                      precision = *p++ - '0';
-                     while ( isdigit( ( int ) *p ) )
+                     while ( isdigit( ( unsigned char ) *p ) )
                          precision = 10 * precision + ( *p++ - '0' );
                  }
              }

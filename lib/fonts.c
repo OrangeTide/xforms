@@ -523,7 +523,7 @@ fl_get_string_dimension( int          fntstyle,
         maxw = 0,
         maxh = 0;
 
-    h = fl_get_string_height( fntstyle, fntsize, "qjb", 3, 0, 0 );
+    h = fl_get_string_height( fntstyle, fntsize, "qbjQ", 3, 0, 0 );
 
     for ( q = s; *q && ( p = strchr( q, '\n' ) ); q = p + 1 )
     {
@@ -608,7 +608,9 @@ fli_get_tabpixels( XFontStruct * fs )
  * auxilary info.
  ***************************************/
 
-#define is_garb( c )  ( ! isalpha( ( int ) c ) && ! isdigit( ( int ) c ) )
+#define is_garb( c )                        \
+    (    ! isalpha( ( unsigned char ) c )   \
+      && ! isdigit( ( unsigned char ) c ) )
 
 static const char *
 cv_fname( const char *f )

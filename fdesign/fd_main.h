@@ -122,36 +122,36 @@ extern char main_name[ ];   /* Main creation routine name */
 
 /* Contains routines for drawing rubberband boxes. */
 
-extern void set_step_size( float );    /* sets the stepsize */
+extern void set_step_size( double );    /* sets the stepsize */
 
-extern float get_step_size( void );    /* returns the stepsize */
+extern double get_step_size( void );    /* returns the stepsize */
 
 /* Sets the bounding box in which the drawing occurs */
 
-extern void set_bounding_box( float,
-                              float,
-                              float,
-                              float );
+extern void set_bounding_box( double,
+                              double,
+                              double,
+                              double );
 
 /* returns the position of the mouse in world coordinates */
 
-extern void get_mouse_pos( float *,
-                           float * );
+extern void get_mouse_pos( double *,
+                           double * );
 
 /* drag a box around until the user releases a mouse button */
 
-extern void move_box( float *,
-                      float *,
-                      float *,
-                      float *,
+extern void move_box( double *,
+                      double *,
+                      double *,
+                      double *,
                       int );
 
 /* scales a box until the user releases a left mouse button */
 
-extern void scale_box( float *,
-                       float *,
-                       float *,
-                       float * );
+extern void scale_box( double *,
+                       double *,
+                       double *,
+                       double * );
 
 /******** in fd_select.c *********/
 
@@ -660,8 +660,8 @@ extern void control_init( FD_control * );
 
 extern FL_FORM *thetestform;
 
-extern int within_selection( float,
-                             float );
+extern int within_selection( double,
+                             double );
 
 extern int no_selection;
 
@@ -733,24 +733,24 @@ extern void reset_pallette( void );
 #define MAX_CONTENT  128
 
 typedef struct {
-    float            min,
+    double           min,
                      max,
                      xmin,
                      xmax,
                      ymin,
                      ymax;
-    float            val,
+    double           val,
                      xval,
                      yval;
-    float            step,
+    double           step,
                      sstep,
                      lstep,
                      xstep,
                      ystep;
-    float            slsize;
-    float            thetai,
+    double           slsize;
+    double           thetai,
                      thetaf;
-    float            ldelta,
+    double           ldelta,
                      rdelta;
     double           dval,
                      dmin,

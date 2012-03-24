@@ -38,6 +38,7 @@
 #include "include/forms.h"
 #include "fd_main.h"
 #include <ctype.h>
+#include <float.h>
 
 #define MAXSEL  2048
 
@@ -277,16 +278,16 @@ clear_selection( void )
  ***************************************/
 
 static void
-compute_selbox( float * x,
-                float * y,
-                float * w,
-                float * h )
+compute_selbox( double * x,
+                double * y,
+                double * w,
+                double * h )
 {
     int i;
-    float x1 =   1.0e+37,
-          y1 =   1.0e+37,
-          x2 = - 1.0e+37,
-          y2 = - 1.0e+37;
+    double x1 =   DBL_MAX,
+           y1 =   DBL_MAX,
+           x2 = - DBL_MAX,
+           y2 = - DBL_MAX;
 
     for ( i = 0; i < selnumb; i++ )
         if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
@@ -314,8 +315,8 @@ compute_selbox( float * x,
  ***************************************/
 
 static void
-find_mousepos( float * mx,
-               float * my )
+find_mousepos( double * mx,
+               double * my )
 {
     if ( cur_form == NULL )
         return;
@@ -332,8 +333,8 @@ find_mousepos( float * mx,
 static FL_OBJECT *
 find_mouseobj( void )
 {
-    float xx,
-          yy;
+    double xx,
+           yy;
 
     if ( cur_form == NULL )
         return NULL;
@@ -360,10 +361,10 @@ int hidden = FL_FALSE;
 void
 draw_selbox( void )
 {
-    float x,
-          y,
-          w,
-          h;
+    double x,
+           y,
+           w,
+           h;
     int i;
     FL_OBJECT *ob;
 
@@ -417,13 +418,13 @@ draw_selbox( void )
  ***************************************/
 
 int
-within_selection( float mx,
-                  float my )
+within_selection( double mx,
+                  double my )
 {
-    float x,
-          y,
-          w = 0.0,
-          h = 0.0;
+    double x,
+           y,
+           w = 0.0,
+           h = 0.0;
 
     if ( ! selnumb || ! cur_form || ! cur_form->first )
         return 0;
@@ -448,16 +449,16 @@ within_selection( float mx,
 void
 handle_move( const XEvent * xev )
 {
-    float x,
-          y,
-          w,
-          h;
-    float mx,
-          my;
-    float ox,
-          oy,
-          ow,
-          oh;
+    double x,
+           y,
+           w,
+           h;
+    double mx,
+           my;
+    double ox,
+           oy,
+           ow,
+           oh;
     FL_Coord xx,
              yy;
     int i,
@@ -488,6 +489,7 @@ handle_move( const XEvent * xev )
             scale_box( &x, &y, &w, &h );
             cur_form->w_hr = cur_form->w = w;
             cur_form->h_hr = cur_form->h = h;
+
             selobj[ 0 ]->fl1 = selobj[ 0 ]->w = w;
             selobj[ 0 ]->fl2 = selobj[ 0 ]->fl1 + w;
             selobj[ 0 ]->fr1 = cur_form->w_hr - selobj[ 0 ]->fl1;
@@ -496,6 +498,7 @@ handle_move( const XEvent * xev )
             selobj[ 0 ]->ft2 = selobj[ 0 ]->ft1 + h;
             selobj[ 0 ]->fb1 = cur_form->h_hr - selobj[ 0 ]->ft1;
             selobj[ 0 ]->fb2 = cur_form->h_hr - selobj[ 0 ]->ft2;
+
             set_bounding_box( 0.0, 0.0, cur_form->w, cur_form->h );
             fl_winresize( main_window, cur_form->w, cur_form->h );
 
@@ -575,6 +578,8 @@ handle_move( const XEvent * xev )
         }
     }
 
+    fli_recalc_intersections( cur_form );
+
     hidden = FL_FALSE;
     redraw_the_form( backf );
     changed = FL_TRUE;
@@ -590,12 +595,12 @@ move_selection( FL_Coord dx,
                 FL_Coord dy )
 {
     int i;
-    float x,
-          y,
-          w,
-          h;
-    float ox,
-          oy;
+    double x,
+           y,
+           w,
+           h;
+    double ox,
+           oy;
     FL_OBJECT *ob;
 
     if ( ! cur_form || backf || selnumb == 0 )
@@ -656,22 +661,22 @@ void
 resize_selection( FL_Coord dx,
                   FL_Coord dy )
 {
-    float x,
-          y,
-          w,
-          h,
-          ox,
-          oy,
-          ow,
-          oh;
-    float yscale,
-          xscale;
+    double x,
+           y,
+           w,
+           h,
+           ox,
+           oy,
+           ow,
+           oh;
+    double yscale,
+           xscale;
     int i;
 
     if ( ! cur_form || selnumb == 0 )
         return;
 
-    compute_selbox(&x, &y, &w, &h);
+    compute_selbox( &x, &y, &w, &h );
 
     ox = x;
     oy = y;
@@ -697,8 +702,8 @@ resize_selection( FL_Coord dx,
     if ( w == ow && oh == h )
         return;
 
-    xscale = ( float ) w / ow;
-    yscale = ( float ) h / oh;
+    xscale = w / ow;
+    yscale = h / oh;
 
     /* Recompute object sizes */
 
@@ -731,6 +736,8 @@ resize_selection( FL_Coord dx,
             fl_notify_object( selobj[ i ], FL_RESIZED );
         }
 
+    fli_recalc_intersections( cur_form );
+
     if ( backf )
     {
         cur_form->w_hr = cur_form->w = selobj[ 0 ]->w;
@@ -751,13 +758,13 @@ void
 handle_select( const XEvent * xev )
 {
     int s;
-    FL_OBJECT *obj,
-              *mouseobj;
-    float x,
-          y,
-          w,
-          h;
-    float stepsize;
+    FL_OBJECT * obj,
+              * mouseobj;
+    double x,
+           y,
+           w,
+           h;
+    double stepsize;
 
     if ( cur_form == NULL || ! ( mouseobj = find_mouseobj( ) ) )
         return;
@@ -937,12 +944,12 @@ change_selection( void )
 void
 align_selection( int dir )
 {
-    float x,
-          y,
-          w,
-          h,
-          gap,
-          shift;
+    double x,
+           y,
+           w,
+           h,
+           gap,
+           shift;
     int used[ MAXSEL ],
         current;
     int i,
@@ -1243,13 +1250,13 @@ void
 paste_selection(void)
 {
     FL_OBJECT *obj;
-    float x,
-          y,
-          w,
-          h,
-          ox,
-          oy,
-          shift;
+    double x,
+           y,
+           w,
+           h,
+           ox,
+           oy,
+           shift;
     int i;
 
     if ( ! cur_form || ncut == 0 )

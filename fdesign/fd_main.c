@@ -177,10 +177,10 @@ static void
 add_something( void )
 {
     FL_OBJECT *obj;
-    float xx,
-          yy,
-          ww = 0.0,
-          hh = 0.0;
+    double xx,
+           yy,
+           ww = 0.0,
+           hh = 0.0;
 
     if ( ! cur_form )
     {
