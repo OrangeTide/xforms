@@ -587,8 +587,8 @@ reshape_form( FL_FORM * form )
 
 /***************************************
  * Scale a form with the given scaling factors and take care of object
- * gravity. This one differs from fl_scale_form() in the fact that we
- * don't reshape the window in any way. Most useful as a follow up to
+ * gravity. This one differs from fl_scale_form() in that we don't
+ * reshape the window in any way. Most useful as a follow up to
  * ConfigureNotify event
  ***************************************/
 
@@ -1994,7 +1994,8 @@ fl_fit_object_label( FL_OBJECT * obj,
 {
     int sw,
         sh,
-        osize;
+        osize,
+        bw;
     double factor,
            xfactor,
            yfactor;
@@ -2014,26 +2015,44 @@ fl_fit_object_label( FL_OBJECT * obj,
     fl_get_string_dimension( obj->lstyle, obj->lsize, obj->label,
                              strlen( obj->label ), &sw, &sh );
 
-    if (    sw <= obj->w - 2 * ( FL_abs( obj->bw ) + xmargin )
-         && sh <= obj->h - 2 * ( FL_abs( obj->bw ) + ymargin ) )
+    bw = (    obj->boxtype == FL_UP_BOX
+           || obj->boxtype == FL_DOWN_BOX
+           || obj->boxtype == FL_EMBOSSED_BOX
+           || obj->boxtype == FL_EMBOSSED_BOX) ?
+        FL_abs( obj->bw ) : 1;
+
+    if (    obj->boxtype == FL_EMBOSSED_BOX
+         || obj->boxtype == FL_EMBOSSED_BOX )
+        bw += bw > 2 ? bw - 2 : 1;
+
+    if (    obj->objclass == FL_BUTTON
+          && (    obj->type == FL_RETURN_BUTTON
+               || obj->type == FL_MENU_BUTTON ) )
+        sw += FL_min( 0.6 * obj->h, 0.6 * obj->w ) - 1;
+
+    if ( obj->objclass == FL_BUTTON && obj->type == FL_LIGHTBUTTON )
+        sw += FL_LIGHTBUTTON_MINSIZE + 1;
+
+    if (    sw <= obj->w - 2 * ( bw + xmargin )
+         && sh <= obj->h - 2 * ( bw + ymargin ) )
         return;
 
-    if ( ( osize = obj->w - 2 * ( FL_abs( obj->bw ) + xmargin ) ) <= 0 )
+    if ( ( osize = obj->w - 2 * ( bw + xmargin ) ) <= 0 )
         osize = 1;
     xfactor = ( double ) sw / osize;
 
-    if ( ( osize = obj->h - 2 * ( FL_abs( obj->bw ) + ymargin ) ) <= 0 )
+    if ( ( osize = obj->h - 2 * ( bw + ymargin ) ) <= 0 )
         osize = 1;
     yfactor = ( double ) sh / osize;
 
     factor = FL_max( xfactor, yfactor );
 
-    if ( factor > 1.5 )
-        factor = 1.5;
+    factor = FL_clamp( factor, 1.0, 1.5 );
 
     /* Scale all objects without taking care of gravity etc. */
 
-    simple_form_rescale( obj->form, factor );
+    if ( factor > 1.0 )
+        simple_form_rescale( obj->form, factor );
 }
 
 
@@ -2118,17 +2137,15 @@ fl_form_is_visible( FL_FORM * form )
 double
 fl_adjust_form_size( FL_FORM * form )
 {
-    FL_OBJECT *obj;
+    FL_OBJECT * obj;
     double xfactor,
            yfactor,
            max_factor,
            factor;
     int sw,
         sh,
-        osize;
-    double xm = 0.5,
-           ym = 0.5;
-    int bw;
+        osize,
+        bw;
 
     if ( fli_no_connection )
         return 1.0;
@@ -2156,7 +2173,7 @@ fl_adjust_form_size( FL_FORM * form )
 
         if (    obj->boxtype == FL_EMBOSSED_BOX
              || obj->boxtype == FL_EMBOSSED_BOX )
-            bw += obj->bw > 2 ? obj->bw - 1 : 2;
+            bw += bw > 2 ? bw - 2 : 1;
 
         if (    obj->objclass == FL_BUTTON
              && (    obj->type == FL_RETURN_BUTTON
@@ -2166,15 +2183,15 @@ fl_adjust_form_size( FL_FORM * form )
         if ( obj->objclass == FL_BUTTON && obj->type == FL_LIGHTBUTTON )
             sw += FL_LIGHTBUTTON_MINSIZE + 1;
 
-        if (    sw <= obj->w - 2 * ( bw + xm )
-             && sh <= obj->h - 2 * ( bw + ym ) )
+        if (    sw <= obj->w - 2 * ( bw + 1 )
+             && sh <= obj->h - 2 * ( bw + 1 ))
             continue;
 
-        if ( ( osize = obj->w - 2 * ( bw + xm ) ) <= 0 )
+        if ( ( osize = obj->w - 2 * ( bw + 1 ) ) <= 0 )
             osize = 1;
         xfactor = ( double ) sw / osize;
 
-        if ( ( osize = obj->h - 2 * ( bw + ym ) ) <= 0 )
+        if ( ( osize = obj->h - 2 * ( bw + 1 ) ) <= 0 )
             osize = 1;
         yfactor = ( double ) sh / osize;
 
@@ -2182,17 +2199,14 @@ fl_adjust_form_size( FL_FORM * form )
             max_factor = factor;
     }
 
-    if ( max_factor <= 1.0 )
-        return 1.0;
+    /* Don't scale down and don't scale up by more than a factor of 1.25 */
 
-    max_factor = 0.01 * ( int ) ( max_factor * 100.0 );
-
-    if ( max_factor > 1.25 )
-        max_factor = 1.25;
+    max_factor = FL_clamp( max_factor, 1.0, 1.25 );
 
     /* Scale all objects without taking care of gravity etc. */
 
-    simple_form_rescale( form, max_factor );
+    if ( max_factor > 1.0 )
+        simple_form_rescale( form, max_factor );
 
     return max_factor;
 }

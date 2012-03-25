@@ -400,7 +400,8 @@ handle_select( FL_Coord    mx,
 {
     FLI_INPUT_SPEC *sp = obj->spec;
     int thepos,
-        n;
+        n,
+        dummy;
     int oldpos = sp->position,
         oldbeg = sp->beginrange,
         oldend = sp->endrange;
@@ -423,7 +424,7 @@ handle_select( FL_Coord    mx,
                                     sp->h + sp->yoffset,
                                     obj->lstyle, obj->lsize,
                                     mx, my, sp->str,
-                                    &sp->xpos, &sp->ypos );
+                                    &sp->xpos, &sp->ypos, &dummy );
 
     if ( mode == WORD_SELECT )
     {

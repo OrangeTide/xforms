@@ -95,6 +95,7 @@ noinst_PROGRAMS = arrowbutton \
 	sldinactive \
 	sldsize \
 	sliderall \
+	strange_button
 	strsize \
 	symbols \
 	thumbwheel \
@@ -260,6 +261,7 @@ sld_radio_SOURCES = sld_radio.c
 sldinactive_SOURCES = sldinactive.c
 sldsize_SOURCES = sldsize.c
 sliderall_SOURCES = sliderall.c
+strange_button_SOURCES = strange_button.c
 strsize_SOURCES = strsize.c
 symbols_SOURCES = symbols.c
 

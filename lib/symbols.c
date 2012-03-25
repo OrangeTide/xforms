@@ -113,9 +113,10 @@ fl_add_symbol( const char * name,
 {
     SYMBOL *s;
 
-    if (    ! name
-         || ! *name
-         || isdigit( ( unsigned char ) *name )
+    if ( ! name )
+        name = "";
+
+    if (    isdigit( ( unsigned char ) *name )
          || *name == '@'
          || ! drawit )
     {
@@ -153,8 +154,8 @@ fl_delete_symbol( const char * name )
     SYMBOL *s;
     size_t pos;
 
-    if ( ! name || ! *name )
-        return 0;
+    if ( ! name )
+        name = "";
 
     if ( ! ( s = find_symbol( name ) ) )
         return 0;
@@ -253,7 +254,7 @@ fl_draw_symbol( const char * label,
 
     /* Check if the reminder of the string is a valid symbol */
 
-    if ( ! ( label[ pos ] && ( s =  find_symbol( label + pos ) ) ) )
+    if ( ! ( s = find_symbol( label + pos ) ) )
     {
         M_err( "fl_draw_symbol", "Bad symbol: \"%s\"", label );
         return 0;
@@ -1345,6 +1346,7 @@ fli_init_symbols( void )
     if ( symbols )
         return;
 
+    fl_add_symbol( "",            draw_arrow_right,            1 );
     fl_add_symbol( "->",          draw_arrow_right,            1 );
     fl_add_symbol( ">",           draw_arrow_tip_right,        1 );
     fl_add_symbol( ">>",          draw_arrow_double_tip_right, 1 );

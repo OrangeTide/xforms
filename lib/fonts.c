@@ -37,13 +37,14 @@
 #include <string.h>
 #include <ctype.h>
 
-static XFontStruct *defaultfs;
+static XFontStruct * defaultfs;
 
-static XFontStruct *try_get_font_struct( int,
-                                         int,
-                                         int );
-static char *get_fname( const char *str,
-                        int size );
+static XFontStruct * try_get_font_struct( int,
+                                          int,
+                                          int );
+static char * get_fname( const char *,
+                         int );
+
 
 /*
  * Question marks indicate the sizes in tenth of a point. It will be
@@ -161,20 +162,13 @@ fl_set_font( int numb,
 
     fl_state[ fl_vmode ].cur_fnt = flx->fs = fs;
 
-#if 1
-    /* Basic font info */
+    /* Basic font info (no need to send a string, we just want the maximum
+       ascent and descent) */
 
-    XTextExtents( flx->fs, "gbjQ", 4, &dh, &flx->fasc, &flx->fdesc, &overall );
-#else
-
-    /* This is theorectically correct, but looks bad */
-
-    fl->fdesc = flx->fs->max_bounds.descent;
-    fl->fasc = flx->fs->max_bounds.ascent;
-#endif
+    XTextExtents( flx->fs, "", 0, &dh, &flx->fasc, &flx->fdesc, &overall );
+    flx->fheight = flx->fasc + flx->fdesc;
 
     XSetFont( flx->display, flx->textgc, flx->fs->fid );
-    flx->fheight = flx->fasc + flx->fdesc;
 
     if ( fli_cntl.debug > 1 )
     {
@@ -489,11 +483,12 @@ fl_get_char_height( int   style,
                     int * asc,
                     int * desc )
 {
-    return fl_get_string_height( style, size, "gbjQ", 4, asc, desc );
+    return fl_get_string_height( style, size, "", 0, asc, desc );
 }
 
 
 /***************************************
+ * Function returns the width of the widest character in the requested font
  ***************************************/
 
 int
@@ -523,7 +518,7 @@ fl_get_string_dimension( int          fntstyle,
         maxw = 0,
         maxh = 0;
 
-    h = fl_get_string_height( fntstyle, fntsize, "qbjQ", 3, 0, 0 );
+    h = fl_get_string_height( fntstyle, fntsize, "", 0, 0, 0 );
 
     for ( q = s; *q && ( p = strchr( q, '\n' ) ); q = p + 1 )
     {
@@ -605,7 +600,7 @@ fli_get_tabpixels( XFontStruct * fs )
 
 /***************************************
  * Convert X font names to more conventional names by striping the
- * auxilary info.
+ * auxiliary info.
  ***************************************/
 
 #define is_garb( c )                        \

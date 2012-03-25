@@ -1374,6 +1374,8 @@ FL_EXPORT void fl_get_align_xy( int   align,
                                 int * xx,
                                 int * yy );
 
+FL_EXPORT int fl_get_label_char_at_mouse( FL_OBJECT * obj );
+
 FL_EXPORT void fl_drw_text( int          align,
                             FL_Coord     x,
                             FL_Coord     y,

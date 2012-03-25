@@ -112,10 +112,37 @@ typedef int ( * DrawString )( Display *,
 
 
 /***************************************
- * Major text drawing routine
- * clip == 0:  no clipping
- * clip == 1:  do clipping here
- * clip == -1: clipping is already been set by the caller to the object size
+ * Major text drawing routine. It draws text (possibly consisting of several
+ * lines) into the given box using the given alignment. Also a cursor is
+ * drawn. For lines that contain a specal character indicating underlining
+ * this is also handled. Finally, parts of the text can be shown as selected.
+ *
+ * Arguments:
+ *  align:       Alignmnet of the text relative to the box
+ *  x, ym w, h:  postion and size of box
+ *  clip:        0 = no clipping is to be used at all
+ *               1 = clipping is to be done by this function
+ *               -1 = clipping is done but already has been set externally
+ *  backcol:     color to be used for selected text
+ *  forecol:     color for (unselected) text
+ *  curscol:     color of cursor
+ *  style:       text font style
+ *  size:        text font size
+ *  curspos:     index into string where cursor is to be drawn (if negative or
+ *               non-zero and there's no text no cursor is drawn)
+ *  selstart:    index into string where selection starts
+ *  selend:      index into string where selection ends (to get selection this
+ *               must be larger than 'selstart')
+ *  istr:        pointer to the text to be drawn
+ *  img:         if non-zero use XDrawImageString() instead of XDrawString()
+ *               to draw the text
+ *  topline:     first line of the text to be actually shown (counting starts
+ *               at 1)
+ *  endline:     last line to be shown (if less than 1 or too large is replaced
+ *               by the number of lines in the text)
+ *  bkcol:       background color
+ *
+ * Returns the width (in pixel) of the widest line of the text.
  ***************************************/
 
 int
@@ -125,9 +152,9 @@ fli_drw_string( int           align,
                 FL_Coord      w,
                 FL_Coord      h,
                 int           clip,
-                FL_COLOR      backcol,     /* selected text color */
-                FL_COLOR      forecol,     /* text and sel. bckground color */
-                FL_COLOR      curscol,     /* cursor color */
+                FL_COLOR      backcol,
+                FL_COLOR      forecol,
+                FL_COLOR      curscol,
                 int           style,
                 int           size,
                 int           curspos,
@@ -135,12 +162,12 @@ fli_drw_string( int           align,
                 int           selend,
                 const char *  istr,
                 int           img,
-                int           topline,     /* starts at 1 */
+                int           topline,
                 int           endline,
-                FL_COLOR      bkcol        /* normal background color */ )
+                FL_COLOR      bkcol )
 {
     int i;
-    int lnumb;          /* number of lines  */
+    int lnumb = 0;           /* number of lines in string */
     int max_pixels = 0;
     int horalign,
         vertalign;
@@ -162,14 +189,12 @@ fli_drw_string( int           align,
     if ( istr && *istr )
         p = str = fl_strdup( istr );
 
-    /* Split up the string into lines, store the index where it begins
-       in the original string and its length */
-
-    lnumb = 0;
+    /* Split the string into lines, store the index where each of them begins
+       in the original string as well as the length */
 
     while ( p )
     {
-        /* Make sure we got enough memory */
+        /* Make sure we have enough memory */
 
         if ( lnumb >= nlines )
             extend_workmem( nlines + NUM_LINES_INCREMENT );
@@ -193,7 +218,7 @@ fli_drw_string( int           align,
     }
 
     /* Correct values for the top and end line to be shown (they are given
-       starting to count at 1) */
+       starting at 1) */
 
     if ( --topline < 0 || topline >= lnumb )
         topline = 0;
@@ -201,10 +226,10 @@ fli_drw_string( int           align,
     if ( --endline >= lnumb || endline < 0 )
         endline = lnumb;
 
-    /* Calculate coordinates of all lines (for y the baseline position) */
+    /* Calculate coordinates of all lines (for y the baseline position),
+     for that make sure the correct font is set up */
 
     fl_set_font( style, size );
-    flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
     fli_get_hv_align( align, &horalign, &vertalign );
 
     for ( i = topline; i < endline; i++ )
@@ -250,20 +275,44 @@ fli_drw_string( int           align,
 
         /* Calculate the x- and y- positon of were to print the text */
 
-        if ( horalign == FL_ALIGN_LEFT )
-            line->x = x;
-        else if ( horalign == FL_ALIGN_CENTER )
-            line->x = x + 0.5 * ( w - width );
-        else if ( horalign == FL_ALIGN_RIGHT )
-            line->x = x + w - width;
+        switch ( horalign )
+        {
+            case  FL_ALIGN_LEFT :
+                line->x = x;
+                break;
 
-        if ( vertalign == FL_ALIGN_TOP )
-            line->y = y + i * flx->fheight + flx->fasc;
-        else if ( vertalign == FL_ALIGN_CENTER )
-            line->y =   y + 0.5 * h + ( i - 0.5 * lnumb ) * flx->fheight
-                      + flx->fasc;
-        else if ( vertalign == FL_ALIGN_BOTTOM )
-            line->y = y + h - 1 + ( i - lnumb ) * flx->fheight + flx->fasc;
+            case FL_ALIGN_CENTER :
+                line->x = x + 0.5 * ( w - width );
+                break;
+
+            case FL_ALIGN_RIGHT :
+                line->x = x + w - width;
+                break;
+
+            default :
+                M_err( "fli_drw_string", "This is impossible" );
+                return 0;
+        }
+
+        switch ( vertalign )
+        {
+            case FL_ALIGN_TOP :
+                line->y = y + i * flx->fheight + flx->fasc;
+                break;
+
+            case FL_ALIGN_CENTER :
+                line->y =   y + 0.5 * h + ( i - 0.5 * lnumb ) * flx->fheight
+                          + flx->fasc;
+                break;
+
+            case FL_ALIGN_BOTTOM :
+                line->y = y + h - 1 + ( i - lnumb ) * flx->fheight + flx->fasc;
+                break;
+
+            default :
+                M_err( "fli_drw_string", "This is impossible" );
+                return 0;
+        }
     }
 
     /* Set clipping if we got asked to */
@@ -276,7 +325,7 @@ fli_drw_string( int           align,
     fl_textcolor( forecol );
     fl_bk_textcolor( bkcol );
 
-    /* Now draw the lines requested */
+    /* Draw the lines requested */
 
     for ( i = topline; i < endline; i++ )
     {
@@ -409,7 +458,7 @@ fli_drw_string( int           align,
             xc = x;
         else if ( horalign == FL_ALIGN_CENTER )
             xc = x + 0.5 * w - 1;
-        else if ( horalign == FL_ALIGN_RIGHT )
+        else
             xc = x + w - 2;
 
         if ( vertalign == FL_ALIGN_BOTTOM )
@@ -434,12 +483,67 @@ fli_drw_string( int           align,
 
 
 /***************************************
+ ***************************************/
+
+int
+fl_get_label_char_at_mouse( FL_OBJECT * obj )
+{
+    int x,
+        y,
+        xp,
+        yp,
+        pos,
+        outside;
+    unsigned int dummy;
+
+    if (    ! obj->form
+         || ! fl_is_inside_lalign( obj->align )
+         || ! obj->label || ! *obj->label
+         || strchr( obj->label, *fl_ul_magic_char )
+         || ( obj->label[ 0 ] == '@' && obj->label[ 1 ] != '@' ) )
+        return -1;
+
+    if (    fl_get_form_mouse( obj->form, &x, &y, &dummy ) != obj->form->window
+         || x < obj->x || x >= obj->x + obj->w
+         || y < obj->y || y >= obj->y + obj->h )
+        return -1;
+
+    x += 2;
+
+    pos = fli_get_pos_in_string( obj->align, obj->x, obj->y, obj->w, obj->h,
+                                 obj->lstyle, obj->lsize, x, y, obj->label,
+                                 &xp, &yp, &outside ) - 1;
+
+    if ( outside )
+        return -1;
+
+    return pos;
+}
+
+
+/***************************************
  * Routine returns the index of the character the mouse is on in a string
  * via the return value and the line number and character position in the
  * line via 'yp' and 'xp' (note: they count starting at 1, 0 indicates the
  * mouse is to the left of the start of the line)
- * The function expects a string that doesn't contain mon-rintable characters
- * (except '\n' for starting a new line)
+ * The function expects a string that doesn't contain mon-printable characters
+ * (except '\n' for starts a new lines)
+ * This function is supposed to ork on text drawn using fli_drw_string()
+ * using the same relevant arguments (alignment, box, font style and size
+ * and string) as passed to this function.
+ *
+ * Arguments:
+ *  align:       alignment of the text in the box
+ *  x, y, w, h:  box the text is to be found in
+ *  style:       font style used when drawing the text
+ *  size:        font size used when drawing the text
+ *  xpos:        x-position of the mouse
+ *  ypos:        y-position of the mouse
+ *  str:         pointer to the text itself
+ *  xp:          pointer for returning the index in the line where the mouse is
+ *               (tarts at 1 with 0 meaning before the start of the string)
+ *  yp:          pointer for returning the line number (starting at 1)
+ *  outside:     set if the mouse wasn't directly within the string
  ***************************************/
 
 int
@@ -454,9 +558,10 @@ fli_get_pos_in_string( int          align,
                        FL_Coord     ypos,
                        const char * str,
                        int        * xp,
-                       int        * yp )
+                       int        * yp,
+                       int        * outside )
 {
-    int lnumb;                 /* number of lines  */
+    int lnumb = 0;             /* number of lines  */
     int horalign,
         vertalign;
     struct LINE_INFO * line;
@@ -465,24 +570,27 @@ fli_get_pos_in_string( int          align,
     int toppos;                /* y-coord of the top line  */
     const char *p = str;
     int xlen;
+    int fheight;
+    int dummy;
 
     /* Give the user some slack in hitting the mark - he might try to place
        the cursor between two characters and accidentally has the mouse a
        bit too far to the right. */
 
     xpos -= 2;
+    *outside = 0;
 
     /* Nothing to be done if there's no string */
 
     if ( ! str || ! *str )
         return 0;
 
-    fl_set_font( style, size );
-    flx->fheight = fl_get_char_height( style, size, &flx->fasc, &flx->fdesc );
+    /* No need to actually set the font (we're not drawing anything), all
+       required is its height */
+
+    fheight = fl_get_char_height( style, size, &dummy, &dummy );
 
     /* Find all the lines starts etc. in the string */
-
-    lnumb = 0;
 
     while ( p )
     {
@@ -499,19 +607,37 @@ fli_get_pos_in_string( int          align,
 
     fli_get_hv_align( align, &horalign, &vertalign );
 
-    if ( vertalign == FL_ALIGN_TOP )
-        toppos = y;
-    else if ( vertalign == FL_ALIGN_CENTER )
-        toppos = y + 0.5 * ( h - lnumb * flx->fheight );
-    else
-        toppos = y + h - 1 - flx->fheight;
+    switch ( vertalign )
+    {
+        case FL_ALIGN_TOP :
+            toppos = y;
+            break;
 
-    *yp = ( ypos - toppos ) / flx->fheight;
+        case FL_ALIGN_CENTER :
+            toppos = y + 0.5 * ( h - lnumb * fheight );
+            break;
+
+        case FL_ALIGN_BOTTOM :
+            toppos = y + h - 1 - fheight;
+            break;
+
+        default :
+            M_err( "fli_get_pos_in_string", "This is impossible" );
+            return 0;
+    }
+
+    *yp = ( ypos - toppos ) / fheight;
 
     if ( *yp < 0 )
+    {
+        *outside = 1;
         *yp = 0;
+    }
     else if ( *yp >= lnumb )
+    {
+        *outside = 1;
         *yp = lnumb - 1;
+    }
 
     line = lines + *yp;
 
@@ -524,27 +650,41 @@ fli_get_pos_in_string( int          align,
 
     width = XTextWidth( flx->fs, line->str, line->len );
 
-    if ( horalign == FL_ALIGN_LEFT )
-        xstart = x;
-    else if ( horalign == FL_ALIGN_CENTER )
-        xstart = x + 0.5 * ( w - width );
-    else
-        xstart = x + w - width;
+    switch ( horalign )
+    {
+        case FL_ALIGN_LEFT :
+            xstart = x;
+            break;
+
+        case FL_ALIGN_CENTER :
+            xstart = x + 0.5 * ( w - width );
+            break;
+
+        case FL_ALIGN_RIGHT :
+            xstart = x + w - width;
+            break;
+
+        default :
+            M_err( "fli_get_pos_in_string", "This is impossible" );
+            return 0;
+    }
 
     xpos -= xstart;
 
-    /* If the mose is before or behind the string things are simple.... */
+    /* If the mouse is before or behind the string things are simple.... */
 
     if ( xpos <= 0 )
     {
         *xp = 0;
         *yp += 1;
+        *outside = 1;
         return line->index;
     }
     else if ( xpos >= width )
     {
         *xp = line->len;
         *yp += 1;
+        *outside = 1;
         return line->index + line->len;
     }
 
@@ -586,7 +726,7 @@ fli_get_pos_in_string( int          align,
 ***/
 
 /***************************************
- * Draws a (multi-line) text with a cursor
+ * Draws a (multi-line) text with a cursor on a white background
  ***************************************/
 
 void

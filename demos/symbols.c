@@ -119,8 +119,6 @@ make_symbols( void )
 
      fl_end_form( );
 
-     fl_adjust_form_size( form );
-
      return form;
 }
 

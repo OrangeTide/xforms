@@ -319,6 +319,7 @@ extern int fli_get_pos_in_string( int,
                                   FL_Coord,
                                   const char *,
                                   int *,
+                                  int *,
                                   int * );
 
 extern int fli_drw_stringTAB( Window,
