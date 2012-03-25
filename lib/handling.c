@@ -1532,12 +1532,25 @@ preemptive_consumed( FL_FORM * form,
 
 
 /***************************************
+ * Returns the current state of the mouse buttons
  ***************************************/
 
 long
 fl_mouse_button( void )
 {
     return fli_context->mouse_button;
+}
+
+
+/***************************************
+ * Returns the event currently being handled - only makes sense to
+ * call this from within an object or form callback.
+ ***************************************/
+
+int
+fl_current_event( void )
+{
+    return fli_context->last_event;
 }
 
 

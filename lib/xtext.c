@@ -496,7 +496,8 @@ fl_get_label_char_at_mouse( FL_OBJECT * obj )
         outside;
     unsigned int dummy;
 
-    if (    ! obj->form
+    if (    ! obj
+         || ! obj->form
          || ! fl_is_inside_lalign( obj->align )
          || ! obj->label || ! *obj->label
          || strchr( obj->label, *fl_ul_magic_char )

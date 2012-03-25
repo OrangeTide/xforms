@@ -1234,7 +1234,7 @@ void fl_set_object_callback(FL_OBJECT *obj,
 @noindent
 binds a callback routine to an object.
 
- To invoke the callback manually (as opposed to invocation by the main
+To invoke the callback manually (as opposed to invocation by the main
 loop), use the following function
 @findex fl_call_object_callback()
 @anchor{fl_call_object_callback()}
@@ -1255,8 +1255,8 @@ void fl_set_form_callback(FL_FORM *form,
 @noindent
 binds a callback routine to an entire form.
 
-It is sometimes useful to obtain the last event from within a callback
-function, e.g., to implement different functionalities depending on
+It is sometimes useful to obtain the last X event from within a callback
+function, e.g.@: to implement different functionalities depending on
 which button triggers the callback. For this, the following routine
 can be used from within a callback function.
 @findex fl_last_event()
@@ -1265,6 +1265,46 @@ can be used from within a callback function.
 const XEvent *fl_last_event(void);
 @end example
 @noindent
+
+In other rare circumstances one might not be interested not in the X
+event but instead the internal XForms event resulting in the
+invocation of an object or form callback. This information
+can be obtained by calling
+@findex fl_current_event()
+@anchor{fl_current_event()}
+@example
+int fl_current_event(void);
+@end example
+@noindent
+A callback invocation resulting from a call of
+@code{@ref{fl_call_object_callback()}} will return
+@tindex FL_TRIGGER
+@anchor{FL_TRIGGER}
+@code{FL_TRIGGER}.
+For other possible return value see @ref{Part IV Events, , the chapter
+about XForms internal events}. Calling this function is only useful
+while within an object or form callback, at all other times it returns
+just
+@tindex FL_NOEVENT
+@anchor{FL_NOEVENT}
+@code{FL_NOEVENT}.
+
+Also in objects callback it might be of interest to find out if the
+mouse is on top of a certain letter of the (inside) label (one trivial
+use of this can be found in the program @file{demo/strange_button.c}.
+To find out about this use
+@findex fl_get_label_char_at_mouse()
+@anchor{fl_get_label_char_at_mouse)}
+@example
+int fl_get_label_char_at_mouse(FL_OBJECT *obj);
+@end example
+@noindent
+The function returns the index of the character in the label of the
+object the mouse is on or @code{-1} if it's not over the label. Note
+that this function has some limitations: it can only be used on labels
+inside of the object and the label string may not contain underline
+characters (and the label can't be a symbol) - if you try to use it on
+labels that don't satisfy these requirements @code{-1} is returned.
 
 Sometimes, it may be desirable to obtain hardcopies of some objects
 in a what-you-see-is-what-you-get (WYSISYG) way, especially those that

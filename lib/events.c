@@ -35,7 +35,8 @@
 #include "private/flsnprintf.h"
 
 
-static void fli_handle_input_object( FL_OBJECT * obj );
+static void fli_handle_input_object( FL_OBJECT * obj,
+                                     int         event );
 
 /*** Global event handlers for all windows ******/
 
@@ -122,6 +123,7 @@ fl_set_event_callback( FL_APPEVENT_CB callback,
 typedef struct FLI_OBJECT_QUEUE_ENTRY_ {
     FL_OBJECT *                      obj;
     int                              ret;
+    int                              event;
     struct FLI_OBJECT_QUEUE_ENTRY_ * next;
 } FLI_OBJECT_QUEUE_ENTRY;
 
@@ -190,7 +192,8 @@ fli_obj_queue_delete( void )
  ***********************************************************/
 
 static void
-fli_add_to_obj_queue( FL_OBJECT * obj )
+fli_add_to_obj_queue( FL_OBJECT * obj,
+                      int         event )
 {
     if ( obj == NULL )
         return;
@@ -207,17 +210,18 @@ fli_add_to_obj_queue( FL_OBJECT * obj )
 
     obj_queue.head->next = NULL;
     obj_queue.head->obj = obj;
+    obj_queue.head->event = event;
     if ( obj != FL_EVENT )
         obj_queue.head->ret = obj->returned;
 }
 
 
 /*****************************************************************
- * Function for fetching the oldest element form the object queue
+ * Function for fetching the oldest element from the object queue
  *****************************************************************/
 
 static FL_OBJECT *
-fli_get_from_obj_queue( void )
+fli_get_from_obj_queue( int * event )
 {
     FLI_OBJECT_QUEUE_ENTRY *t = obj_queue.tail;
 
@@ -235,6 +239,8 @@ fli_get_from_obj_queue( void )
     if ( t->obj != FL_EVENT )
         t->obj->returned = t->ret;
 
+    if ( event )
+        *event = t->event;
     return t->obj;
 }
     
@@ -251,7 +257,7 @@ fli_object_qflush_object( FL_OBJECT * obj )
                            *p;
 
     while ( obj_queue.tail && obj_queue.tail->obj == obj )
-        fli_get_from_obj_queue( );
+        fli_get_from_obj_queue( NULL );
 
     if ( ! obj_queue.tail )
         return;
@@ -292,8 +298,9 @@ fli_object_qflush( FL_FORM * form )
             && obj_queue.tail->obj->form == form )
     {
         if ( obj_queue.tail->obj->objclass == FL_INPUT )
-            fli_handle_input_object( obj_queue.tail->obj );
-        fli_get_from_obj_queue( );
+            fli_handle_input_object( obj_queue.tail->obj,
+                                     obj_queue.tail->event );
+        fli_get_from_obj_queue( NULL );
     }
 
     if ( ! obj_queue.tail )
@@ -303,7 +310,7 @@ fli_object_qflush( FL_FORM * form )
         if ( c->obj != FL_EVENT && c->obj->form == form )
         {
             if ( c->obj->objclass == FL_INPUT )
-                fli_handle_input_object( c->obj );
+                fli_handle_input_object( c->obj, c->event );
 
             p->next = c->next;
             c->next = obj_queue.empty;
@@ -319,7 +326,8 @@ fli_object_qflush( FL_FORM * form )
  ***************************************/
 
 void
-fli_object_qenter( FL_OBJECT * obj )
+fli_object_qenter( FL_OBJECT * obj,
+                   int         event )
 {
     if ( ! obj )
     {
@@ -346,19 +354,23 @@ fli_object_qenter( FL_OBJECT * obj )
         if ( obj->object_callback )
         {
             XFlush( flx->display );
+            fli_context->last_event = event;
             obj->object_callback( obj, obj->argument );
+            fli_context->last_event = FL_NOEVENT;
             return;
         }
         else if ( obj->form->form_callback )
         {
             XFlush( flx->display );
+            fli_context->last_event = event;
             obj->form->form_callback( obj, obj->form->form_cb_data );
+            fli_context->last_event = FL_NOEVENT;
             return;
         }
     }
 #endif /* ! DELAYED_ACTION */
 
-    fli_add_to_obj_queue( obj );
+    fli_add_to_obj_queue( obj, event );
 }
 
 
@@ -405,7 +417,8 @@ fli_filter_returns( FL_OBJECT * obj )
 FL_OBJECT *
 fli_object_qread( void )
 {
-    FL_OBJECT *obj = fli_get_from_obj_queue( );
+    int event;
+    FL_OBJECT *obj = fli_get_from_obj_queue( &event );
 
     if ( obj == FL_EVENT )
         return obj;
@@ -415,7 +428,7 @@ fli_object_qread( void )
 
     /* If the object has a callback execute it and return NULL unless the
        object is a child object (in that case we're supposed to also check
-       the for callbacks for the parent etc.). It's also important to make
+       for callbacks for the parent etc.). It's also important to make
        sure the object didn't get deleted within its callback - if that's
        the case it would be catastrophic to check for the parent... */
 
@@ -423,7 +436,9 @@ fli_object_qread( void )
     {
         fli_handled_obj = obj;
 
+        fli_context->last_event = event;
         obj->object_callback( obj, obj->argument );
+        fli_context->last_event = FL_NOEVENT;
 
         if ( fli_handled_obj )
             obj->returned = FL_RETURN_NONE;
@@ -452,7 +467,9 @@ fli_object_qread( void )
             if ( obj->object_callback )
             {
                 fli_handled_obj = obj;
+                fli_context->last_event = event;
                 obj->object_callback( obj, obj->argument );
+                fli_context->last_event = FL_NOEVENT;
                 if ( fli_handled_obj )
                     obj->returned = FL_RETURN_NONE;
                 else
@@ -482,7 +499,7 @@ fli_object_qread( void )
             if ( p != obj )
                 break;
 
-            n = fli_get_from_obj_queue( );
+            n = fli_get_from_obj_queue( &event );
             do
             {
                 fli_filter_returns( n );
@@ -492,7 +509,9 @@ fli_object_qread( void )
                 if ( n->object_callback )
                 {
                     fli_handled_obj = n;
+                    fli_context->last_event = event;
                     n->object_callback( n, n->argument );
+                    fli_context->last_event = FL_NOEVENT;
                     if ( fli_handled_obj )
                         n->returned = FL_RETURN_NONE;
                     else
@@ -516,7 +535,9 @@ fli_object_qread( void )
     else if ( obj->object_callback  )
     {
         fli_handled_obj = obj;
+        fli_context->last_event = event;
         obj->object_callback( obj, obj->argument );
+        fli_context->last_event = FL_NOEVENT;
         if ( fli_handled_obj )
             obj->returned = FL_RETURN_NONE;
         return NULL;
@@ -524,7 +545,9 @@ fli_object_qread( void )
     else if ( obj->form->form_callback )
     {
         fli_handled_obj = obj;
+        fli_context->last_event = event;
         obj->form->form_callback( obj, obj->form->form_cb_data );
+        fli_context->last_event = FL_NOEVENT;
         if ( fli_handled_obj )
             obj->returned = FL_RETURN_NONE;
         return NULL;
@@ -543,15 +566,18 @@ fli_object_qread( void )
  ***************************************/
 
 static void
-fli_handle_input_object( FL_OBJECT * obj )
+fli_handle_input_object( FL_OBJECT * obj,
+                         int         event )
 {
     if ( obj != FL_EVENT || ! obj->form )
         return;
 
+    fli_context->last_event = event;
     if ( obj->object_callback )
         obj->object_callback( obj, obj->argument );
     else if ( obj->form->form_callback )
         obj->form->form_callback( obj, obj->form->form_cb_data );
+    fli_context->last_event = FL_NOEVENT;
 }
 
 
@@ -792,7 +818,7 @@ fli_treat_user_events( void )
             fli_event_callback( &xev, fli_user_data );
         }
         else
-            fli_object_qenter( FL_EVENT );
+            fli_object_qenter( FL_EVENT, FL_NOEVENT );
 
         event_queue.count--;
     }

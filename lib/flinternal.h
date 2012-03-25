@@ -145,7 +145,8 @@ extern void fli_obj_queue_delete( void );
 
 extern void fli_event_queue_delete( void );
 
-extern void fli_object_qenter( FL_OBJECT * );
+extern void fli_object_qenter( FL_OBJECT *,
+                               int );
 
 extern void fli_filter_returns( FL_OBJECT * );
 
@@ -538,6 +539,7 @@ typedef struct fli_context_ {
     FLI_SIGNAL_REC     * signal_rec;        /* list of app signals    */
     FLI_TIMEOUT_REC    * timeout_rec;       /* timeout callbacks      */
     int                  idle_delta;        /* timer resolution       */
+    int                  last_event;        /* last event received    */
     long                 mouse_button;      /* push/release record    */
     int                  pup_id;            /* current active pup id  */
     FL_FORM            * modal;             /* current modal form     */
@@ -558,7 +560,7 @@ typedef struct fli_context_ {
     long                 reserverd[ 6 ];
 } FLI_CONTEXT;
 
-/* some X info that helps to make the windowing system independent
+/* Some X info that helps to make the windowing system independent
  * API work (fl_color() etc. */
 
 typedef struct {

@@ -2602,7 +2602,7 @@ handle_object( FL_OBJECT * obj,
         event = cur_event;
         cur_event = 0;
         if ( ! keep_ret && obj->returned )
-            fli_object_qenter( obj );
+            fli_object_qenter( obj, cur_event );
         goto recover;
     }
 
@@ -2645,7 +2645,7 @@ fli_handle_object( FL_OBJECT * obj,
     if ( enter_it && obj->form && obj->form->window )
     {
         if ( ( res = handle_object( obj, event, mx, my, key, xev, 0 ) ) )
-            fli_object_qenter( obj );
+            fli_object_qenter( obj, event );
     }
     else
         handle_object( obj, event, mx, my, key, xev, 1 );
@@ -2940,7 +2940,7 @@ fl_trigger_object( FL_OBJECT * obj )
          && obj->active )
     {
         obj->returned = FL_RETURN_TRIGGERED;
-        fli_object_qenter( obj );
+        fli_object_qenter( obj, FL_TRIGGER );
     }
 }
 

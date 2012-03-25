@@ -499,27 +499,27 @@ typedef enum {
 /* Events that a form reacts to  */
 
 typedef enum {
-    FL_NOEVENT,                /*  0 */
-    FL_DRAW,                   /*  1 */
-    FL_PUSH,                   /*  2 */
-    FL_RELEASE,                /*  3 */
-    FL_ENTER,                  /*  4 */
-    FL_LEAVE,                  /*  5 */
-    FL_MOTION,                 /*  6 */
-    FL_FOCUS,                  /*  7 */
-    FL_UNFOCUS,                /*  8 */
-    FL_KEYPRESS,               /*  9 */
+    FL_NOEVENT,                /*  0 No event */
+    FL_DRAW,                   /*  1 object is asked to redraw itself */
+    FL_PUSH,                   /*  2 mouse button was pressed on the object */
+    FL_RELEASE,                /*  3 mouse button was release gain */
+    FL_ENTER,                  /*  4 mouse entered the object */
+    FL_LEAVE,                  /*  5 mouse left the object */
+    FL_MOTION,                 /*  6 mouse motion over the object happend */
+    FL_FOCUS,                  /*  7 object obtained focus */
+    FL_UNFOCUS,                /*  8 object lost focus */
+    FL_KEYPRESS,               /*  9 key was pressed while object has focus */
     FL_UPDATE,                 /* 10 for objects that need to update something
                                      from time to time */
     FL_STEP,                   /* 11 */
     FL_SHORTCUT,               /* 12 */
-    FL_FREEMEM,                /* 13 */
+    FL_FREEMEM,                /* 13 object is asked to free all its memory */
     FL_OTHER,                  /* 14 property, selection etc */
     FL_DRAWLABEL,              /* 15 */
-    FL_DBLCLICK,               /* 16 double click              */
-    FL_TRPLCLICK,              /* 17 triple click              */
-    FL_ATTRIB,                 /* 18 attribute change          */
-    FL_KEYRELEASE,             /* 19 */
+    FL_DBLCLICK,               /* 16 double click on object */
+    FL_TRPLCLICK,              /* 17 triple click on object */
+    FL_ATTRIB,                 /* 18 an object attribute changed */
+    FL_KEYRELEASE,             /* 19 key was released while object has focus */
     FL_PS,                     /* 20 dump a form into EPS      */
     FL_MOVEORIGIN,             /* 21 dragging the form across the screen
                                      changes its absolute x,y coords. Objects
@@ -529,12 +529,14 @@ typedef enum {
                                      Tell it that this has happened so that
                                      it can resize any FL_FORMs that it
                                      contains. */
+	FL_PASTE,                  /* 23 text was pasted into input object */
+	FL_TRIGGER,                /* 24 result of fl_trigger_object() */
 
 	/* The following are only for backward compatibility, not used anymore */
 
-	FL_MOVE = FL_MOTION,
-    FL_KEYBOARD = FL_KEYPRESS,
-    FL_MOUSE = FL_UPDATE
+	FL_MOVE      = FL_MOTION,
+    FL_KEYBOARD  = FL_KEYPRESS,
+    FL_MOUSE     = FL_UPDATE
 
 } FL_EVENTS;
 
@@ -1553,6 +1555,8 @@ FL_EXPORT const char * fl_now( void );
 FL_EXPORT const char * fl_whoami( void );
 
 FL_EXPORT long fl_mouse_button( void );
+
+FL_EXPORT int fl_current_event( void );
 
 FL_EXPORT char * fl_strdup( const char * s );
 

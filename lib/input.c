@@ -1380,7 +1380,7 @@ gotit_cb( FL_OBJECT  * obj,
     {
         selection_hack = sp->changed = 0;
         obj->returned = FL_RETURN_CHANGED;
-        fli_object_qenter( obj );
+        fli_object_qenter( obj, FL_PASTE );
     }
 
     return 0;

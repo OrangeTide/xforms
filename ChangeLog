@@ -1,3 +1,12 @@
+2012-03-25 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/xtext.c: Added fl_get_label_char_at_mouse() function
+	and new demo program 'strange_button.c'.
+	lib/events.c, lib/handling.c: Added new function
+	fl_current_event() that allows callbacks to determine
+	the Xforms event they were called for (instead of the
+	raw XEvent as it can be obtained with fl_last_event()).
+
 2012-03-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/xtext.c, lib/input.c: Clean-up in string drawing routine
