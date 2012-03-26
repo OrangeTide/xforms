@@ -136,7 +136,7 @@ create_form_x( void )
 
     fl_end_form( );
 
-	/* Just to make sure the label fits completely into the box */
+	/* Just to make sure the label fits completely into the button */
 
 	fl_adjust_form_size( fdui->x );
 
@@ -171,3 +171,11 @@ main( int    argc,
 
     return 0;
 }
+
+
+/*
+ * Local variables:
+ * tab-width: 4
+ * indent-tabs-mode: nil
+ * End:
+ */

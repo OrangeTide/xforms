@@ -95,7 +95,7 @@ noinst_PROGRAMS = arrowbutton \
 	sldinactive \
 	sldsize \
 	sliderall \
-	strange_button
+	strange_button \
 	strsize \
 	symbols \
 	thumbwheel \
