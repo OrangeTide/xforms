@@ -806,10 +806,10 @@ int fl_add_timeout(long msec, FL_TIMEOUT_CALLBACK callback,
 The function returns the timeout's ID@footnote{The function will not
 return 0 or -1 as timeout IDs, so the application program can use these
 values to tag invalid or expired timeouts.}. When the time interval
-specified by @code{msec} (in milli-second) is elapsed, the timeout is
+specified by @code{msec} (in milli-seconds) has elapsed the timeout is
 removed, then the callback function is called. The timeout ID is passed
-to the callback function as the first parameter. The second parameter of
-the callback function is passed the data pointer that was passed to
+to the callback function as the first parameter. The second parameter
+the callback function is passed is the data pointer that was passed to
 @code{@ref{fl_add_timeout()}}.
 
 To remove a timeout before it triggers, use the following routine

@@ -27,14 +27,13 @@
 #include <stdlib.h>
 #include "include/forms.h"
 
-/**** Forms and Objects ****/
 
 typedef struct {
     FL_FORM *   grav;
     FL_OBJECT * box;
     FL_OBJECT * rx;
     FL_OBJECT * ry;
-} FD_gravity;
+} FD_gravity_form;
 
 typedef struct {
     FL_OBJECT *  box;
@@ -46,7 +45,7 @@ typedef struct {
 typedef struct {
     FL_FORM * help;
     int       is_shown;
-} FD_help;
+} FD_help_form;
 
 
 static FD_grav_data gd[ 9 ];
@@ -150,7 +149,7 @@ static void
 nw_callback( FL_OBJECT * obj   FL_UNUSED_ARG,
              long              data )
 {
-    FD_grav_data *g = ( FD_grav_data * ) data;
+    FD_grav_data * g = ( FD_grav_data * ) data;
 
     fl_set_object_gravity( g->box, g->grav, g->box->segravity );
     check_resize( g );
@@ -164,7 +163,7 @@ static void
 se_callback( FL_OBJECT * obj   FL_UNUSED_ARG,
              long              data )
 {
-    FD_grav_data *g = ( FD_grav_data * ) data;
+    FD_grav_data * g = ( FD_grav_data * ) data;
 
     fl_set_object_gravity( g->box, g->box->nwgravity, g->grav );
     check_resize( g );
@@ -178,7 +177,7 @@ static void
 rx_callback( FL_OBJECT * obj   FL_UNUSED_ARG,
              long              data )
 {
-    FD_grav_data *g = ( FD_grav_data * ) data;
+    FD_grav_data * g = ( FD_grav_data * ) data;
     unsigned int r = g->box->resize;
 
     if ( r & FL_RESIZE_X )
@@ -197,7 +196,7 @@ static void
 ry_callback( FL_OBJECT * obj   FL_UNUSED_ARG,
              long              data )
 {
-    FD_grav_data *g = ( FD_grav_data * ) data;
+    FD_grav_data * g = ( FD_grav_data * ) data;
     unsigned int r = g->box->resize;
 
     if ( r & FL_RESIZE_Y )
@@ -216,7 +215,7 @@ static void
 reset_callback( FL_OBJECT * obj   FL_UNUSED_ARG,
                 long        data )
 {
-    FD_grav_data *g = ( FD_grav_data * ) data;
+    FD_grav_data * g = ( FD_grav_data * ) data;
     
     fl_set_form_size( g->box->form, w, h );
     fl_set_object_geometry( g->box, ( w - bw ) / 2, ( h - bh ) / 2, bw, bh );
@@ -230,7 +229,7 @@ static void
 help_callback( FL_OBJECT * obj  FL_UNUSED_ARG,
                 long       data )
 {
-    FD_help *h = ( FD_help * ) data;
+    FD_help_form * h = ( FD_help_form * ) data;
 
     if ( ! h->is_shown )
     {
@@ -248,7 +247,7 @@ static void
 close_callback( FL_OBJECT * obj   FL_UNUSED_ARG,
                 long        data )
 {
-    FD_help *h = ( FD_help * ) data;
+    FD_help_form * h = ( FD_help_form * ) data;
 
     fl_hide_form( h->help );
     h->is_shown = 0;
@@ -258,12 +257,12 @@ close_callback( FL_OBJECT * obj   FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-static FD_gravity *
-create_form_gravity( FD_help * help )
+static FD_gravity_form *
+create_form_gravity( FD_help_form * help )
 {
-    FL_OBJECT *obj;
-    FD_gravity *fdui = fl_malloc( sizeof *fdui );
-    const char *label[ ] = { "NW", "N", "NE", "W", "-", "E", "SW", "S", "SE" };
+    FL_OBJECT * obj;
+    FD_gravity_form * fdui = fl_malloc( sizeof *fdui );
+    const char * label[ ] = { "NW", "N", "NE", "W", "-", "E", "SW", "S", "SE" };
     int i;
     int s = 25;
     int m = 5;
@@ -277,6 +276,7 @@ create_form_gravity( FD_help * help )
     fl_set_object_color( obj, FL_GREEN, FL_GREEN );
 
     fl_bgn_group( );
+
     for ( i = 0; i < 9; i++ )
     {
         obj = fl_add_button( FL_RADIO_BUTTON,
@@ -305,6 +305,7 @@ create_form_gravity( FD_help * help )
         fl_set_object_color( obj, FL_COL1, FL_MCOL );
         fl_set_button( obj, fdui->box->segravity == g[ i ] );
     }
+
     fl_end_group( );
 
     fdui->rx = obj = fl_add_button( FL_PUSH_BUTTON, m, h - s - m, 80, s,
@@ -351,31 +352,28 @@ create_form_gravity( FD_help * help )
 /***************************************
  ***************************************/
 
-static FD_help *
+static FD_help_form *
 create_form_help( void )
 {
-    FL_OBJECT *obj;
-    FD_help *fdui = fl_malloc( sizeof *fdui );  
-    size_t i;
-    const char *text[ ] = {
-        "Gravity and resize settings demonstration",
-        "",
-        "The interaction between gravity and resize settings",
-        "can sometimes be difficult to understand  This pro-",
-        "gram allows you to test some of the effects.",
-        "",
-        "With the sets of buttons in the upper left hand and",
-        "lower right hand corner you can set the gravity for",
-        "the corresponding corners of the green rectangle.",
-        "",
-        "With the buttons labeled 'X Resize' and 'Y Resize'",
-        "you can set if the rectangle may be scaled in x-",
-        "and/or y-direction. Please note that for several",
-        "combinations of gravity settings the resizing",
-        "settings are not taken into account by XForms. In",
-        "these cases the corresponding buttons are grayed",
-        "out (but not deactivated)."
-    };
+    FL_OBJECT * obj;
+    FD_help_form * fdui = fl_malloc( sizeof *fdui );  
+    const char * text = "Gravity and resize settings demonstration\n"
+                        "\n"
+                        "The interaction between gravity and resize settings\n"
+                        "can sometimes be difficult to understand  This pro-\n"
+                        "gram allows you to test some of the effects.\n"
+                        "\n"
+                        "With the sets of buttons in the upper left hand and\n"
+                        "lower right hand corner you can set the gravity for\n"
+                        "the corresponding corners of the green rectangle.\n"
+                        "\n"
+                        "With the buttons labeled 'X Resize' and 'Y Resize'\n"
+                        "you can set if the rectangle may be scaled in x-\n"
+                        "and/or y-direction. Please note that for several\n"
+                        "combinations of gravity settings the resizing\n"
+                        "settings are not taken into account by XForms. In\n"
+                        "these cases the corresponding buttons are grayed\n"
+                        "out (but not deactivated).";
 
     fdui->help = fl_bgn_form( FL_FLAT_BOX, 345, 325 );
 
@@ -385,9 +383,7 @@ create_form_help( void )
     fl_set_object_bw( obj, -1 );
     fl_set_object_color( obj, FL_WHITE, FL_WHITE );
     fl_set_object_gravity( obj, FL_NorthWest, FL_SouthEast );
-
-    for ( i = 0; i < sizeof text / sizeof *text; i++ )
-        fl_add_browser_line( obj, text[ i ] );
+    fl_add_browser_line( obj, text );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 133, 295, 80, 25, "Close" );
     fl_set_object_bw( obj, -1 );
@@ -408,8 +404,8 @@ int
 main( int    argc,
       char * argv[ ] )
 {
-    FD_gravity *grav;
-    FD_help *help;
+    FD_gravity_form * grav;
+    FD_help_form * help;
     int i;
 
     fl_initialize( &argc, argv, "Gravity Demo", 0, 0 );

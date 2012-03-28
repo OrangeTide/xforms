@@ -1,3 +1,4 @@
+
 /*
  *  This file is part of XForms.
  *
@@ -44,7 +45,7 @@ main( int    argc,
 
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-    form = fl_bgn_form( FL_UP_BOX, 400, 400 );
+    form = fl_bgn_form( FL_FLAT_BOX, 400, 400 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 50, 250, 100, 100, "@1" );
     fl_set_object_lcol( obj, FL_BLUE );

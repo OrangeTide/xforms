@@ -35,8 +35,8 @@
 #include "private/flsnprintf.h"
 
 
-static void fli_handle_input_object( FL_OBJECT * obj,
-                                     int         event );
+static void handle_input_object( FL_OBJECT * obj,
+                                 int         event );
 
 /*** Global event handlers for all windows ******/
 
@@ -145,7 +145,7 @@ static FLI_OBJECT_QUEUE obj_queue = { NULL, NULL, NULL, NULL };
  ***************************************************/
 
 static void
-fli_extend_obj_queue( void )
+extend_obj_queue( void )
 {
     FLI_OBJECT_QUEUE_ENTRY *p = fl_malloc( ( FLI_QSIZE + 1 ) * sizeof *p );
     size_t i;
@@ -192,14 +192,14 @@ fli_obj_queue_delete( void )
  ***********************************************************/
 
 static void
-fli_add_to_obj_queue( FL_OBJECT * obj,
-                      int         event )
+add_to_obj_queue( FL_OBJECT * obj,
+                  int         event )
 {
     if ( obj == NULL )
         return;
 
     if ( obj_queue.empty == NULL )
-        fli_extend_obj_queue( );
+        extend_obj_queue( );
 
     if ( obj_queue.head )
         obj_queue.head = obj_queue.head->next = obj_queue.empty;
@@ -221,7 +221,7 @@ fli_add_to_obj_queue( FL_OBJECT * obj,
  *****************************************************************/
 
 static FL_OBJECT *
-fli_get_from_obj_queue( int * event )
+get_from_obj_queue( int * event )
 {
     FLI_OBJECT_QUEUE_ENTRY *t = obj_queue.tail;
 
@@ -241,6 +241,7 @@ fli_get_from_obj_queue( int * event )
 
     if ( event )
         *event = t->event;
+
     return t->obj;
 }
     
@@ -257,7 +258,7 @@ fli_object_qflush_object( FL_OBJECT * obj )
                            *p;
 
     while ( obj_queue.tail && obj_queue.tail->obj == obj )
-        fli_get_from_obj_queue( NULL );
+        get_from_obj_queue( NULL );
 
     if ( ! obj_queue.tail )
         return;
@@ -298,9 +299,9 @@ fli_object_qflush( FL_FORM * form )
             && obj_queue.tail->obj->form == form )
     {
         if ( obj_queue.tail->obj->objclass == FL_INPUT )
-            fli_handle_input_object( obj_queue.tail->obj,
-                                     obj_queue.tail->event );
-        fli_get_from_obj_queue( NULL );
+            handle_input_object( obj_queue.tail->obj,
+                                 obj_queue.tail->event );
+        get_from_obj_queue( NULL );
     }
 
     if ( ! obj_queue.tail )
@@ -310,7 +311,7 @@ fli_object_qflush( FL_FORM * form )
         if ( c->obj != FL_EVENT && c->obj->form == form )
         {
             if ( c->obj->objclass == FL_INPUT )
-                fli_handle_input_object( c->obj, c->event );
+                handle_input_object( c->obj, c->event );
 
             p->next = c->next;
             c->next = obj_queue.empty;
@@ -370,7 +371,7 @@ fli_object_qenter( FL_OBJECT * obj,
     }
 #endif /* ! DELAYED_ACTION */
 
-    fli_add_to_obj_queue( obj, event );
+    add_to_obj_queue( obj, event );
 }
 
 
@@ -418,7 +419,7 @@ FL_OBJECT *
 fli_object_qread( void )
 {
     int event;
-    FL_OBJECT *obj = fli_get_from_obj_queue( &event );
+    FL_OBJECT *obj = get_from_obj_queue( &event );
 
     if ( obj == FL_EVENT )
         return obj;
@@ -499,7 +500,7 @@ fli_object_qread( void )
             if ( p != obj )
                 break;
 
-            n = fli_get_from_obj_queue( &event );
+            n = get_from_obj_queue( &event );
             do
             {
                 fli_filter_returns( n );
@@ -566,8 +567,8 @@ fli_object_qread( void )
  ***************************************/
 
 static void
-fli_handle_input_object( FL_OBJECT * obj,
-                         int         event )
+handle_input_object( FL_OBJECT * obj,
+                     int         event )
 {
     if ( obj != FL_EVENT || ! obj->form )
         return;
@@ -613,7 +614,7 @@ static FL_EVENT_QUEUE event_queue = { NULL, NULL, NULL, NULL, 0 };
  ***************************************************/
 
 static void
-fli_extend_event_queue( void )
+extend_event_queue( void )
 {
     FL_EVENT_QUEUE_ENTRY *p = fl_malloc( ( FLI_QSIZE + 1 ) * sizeof *p );
     size_t i;
@@ -660,10 +661,10 @@ fli_event_queue_delete( void )
  ***********************************************************/
 
 static void
-fli_add_to_event_queue( XEvent * xev )
+add_to_event_queue( XEvent * xev )
 {
     if ( event_queue.empty == NULL )
-        fli_extend_event_queue( );
+        extend_event_queue( );
 
     if ( event_queue.head )
         event_queue.head = event_queue.head->next = event_queue.empty;
@@ -683,7 +684,7 @@ fli_add_to_event_queue( XEvent * xev )
  ****************************************************************/
 
 static XEvent
-fli_get_from_event_queue( void )
+get_from_event_queue( void )
 {
     FL_EVENT_QUEUE_ENTRY *t = event_queue.tail;
 
@@ -722,7 +723,7 @@ fl_XPutBackEvent( XEvent * xev )
     }
 
     fli_xevent_name( "fl_XPutBackEvent", xev );
-    fli_add_to_event_queue( xev );
+    add_to_event_queue( xev );
 }
 
 
@@ -768,7 +769,7 @@ fl_XNextEvent( XEvent * xev )
         fli_treat_user_events( );
     }
 
-    *xev = fli_get_from_event_queue( );
+    *xev = get_from_event_queue( );
     return 1;
 }
 
@@ -970,11 +971,11 @@ fli_xevent_name( const char *   where,
  ***************************************/
 
 static int
-fli_badwin_handler( Display *     dpy  FL_UNUSED_ARG,
-                    XErrorEvent * xev )
+badwin_handler( Display *     dpy  FL_UNUSED_ARG,
+                XErrorEvent * xev )
 {
     if ( xev->type != BadWindow && xev->type != BadDrawable )
-        M_err( "fli_badwin_handler",
+        M_err( "badwin_handler",
                "X error happened when expecting only BadWindow/Drawable\n" );
     return 0;
 }
@@ -989,7 +990,7 @@ fli_badwin_handler( Display *     dpy  FL_UNUSED_ARG,
  ************************************************************************/
 
 static void
-fli_compress_redraw( XEvent * ev )
+compress_redraw( XEvent * ev )
 {
     XEvent expose_ev;
     Window win = ev->xexpose.window;
@@ -1071,7 +1072,7 @@ fli_compress_redraw( XEvent * ev )
  ***************************************/
 
 static void
-fli_compress_motion( XEvent * xme )
+compress_motion( XEvent * xme )
 {
     Window win = xme->xmotion.window;
     unsigned long evm = PointerMotionMask | ButtonMotionMask;
@@ -1082,7 +1083,7 @@ fli_compress_motion( XEvent * xme )
     do
     {
 #if FL_DEBUG >= ML_DEBUG
-        M_info2( "fli_compress_motion", "win = %ld (%d, %d) %s",
+        M_info2( "compress_motion", "win = %ld (%d, %d) %s",
                  xme->xany.window, xme->xmotion.x, xme->xmotion.y,
                  xme->xmotion.is_hint ? "hint" : "" )
 #endif
@@ -1097,7 +1098,7 @@ fli_compress_motion( XEvent * xme )
            looked for Motion events, and there could be a Destroy event
            which makes the XQueryPointer fail as the window is deleted. */
 
-        old = XSetErrorHandler( fli_badwin_handler );
+        old = XSetErrorHandler( badwin_handler );
         fl_get_win_mouse( xme->xmotion.window,
                           &xme->xmotion.x, &xme->xmotion.y,
                           &xme->xmotion.state );
@@ -1115,10 +1116,10 @@ fli_compress_event( XEvent *      xev,
                     unsigned long mask )
 {
     if ( xev->type == Expose && mask & ExposureMask )
-        fli_compress_redraw( xev );
+        compress_redraw( xev );
     else if (    xev->type == MotionNotify
               && mask & ( PointerMotionMask | ButtonMotionMask ) )
-        fli_compress_motion( xev );
+        compress_motion( xev );
 }
 
 

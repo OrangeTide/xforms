@@ -90,7 +90,7 @@ FL_OBJECT *tobj[ 18 ],
 /***************************************
  ***************************************/
 
-void
+static void
 boxtype_cb( FL_OBJECT * ob,
             long        arg  FL_UNUSED_ARG )
 {
@@ -112,7 +112,7 @@ boxtype_cb( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void
+static void
 mode_cb( FL_OBJECT * ob,
          long        arg  FL_UNUSED_ARG )
 {
@@ -133,7 +133,7 @@ mode_cb( FL_OBJECT * ob,
 /***************************************
  ***************************************/
 
-void
+static void
 create_form( void )
 {
     FL_OBJECT *obj;
@@ -211,18 +211,18 @@ create_form( void )
 
 /*************** Main Routine ***********************/
 
-char *browserlines[ ] = {
-   "@C1@c@l@bObjects Demo",
-   "This demo shows you many of",   "the objects that currently",
-   "exist in the Forms Library.",   "",
-   "You can change the boxtype",    "of the different objects",
-   "using the buttons at the",      "top of the form. Note that",
-   "some combinations might not",   "look too good. Also realize",
-   "that for all object classes",   "many different types are",
-   "available with different",      "behaviour.", " ",
-   "With this demo you can also",   "see the effect of the drawing",
-   "mode on the appearance of the", "objects.",
-   0
+static char * browserlines[ ] = {
+    "@C1@c@l@bObjects Demo",
+    "This demo shows you many of",   "the objects that currently",
+    "exist in the Forms Library.",   "",
+    "You can change the boxtype",    "of the different objects",
+    "using the buttons at the",      "top of the form. Note that",
+    "some combinations might not",   "look too good. Also realize",
+    "that for all object classes",   "many different types are",
+    "available with different",      "behaviour.", " ",
+    "With this demo you can also",   "see the effect of the drawing",
+    "mode on the appearance of the", "objects.",
+    NULL
 };
 
 

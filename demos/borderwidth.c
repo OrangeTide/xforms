@@ -33,10 +33,6 @@
 #include <stdlib.h>
 
 
-extern void done_callback( FL_OBJECT *, long );
-extern void bw_callback( FL_OBJECT *, long );
-
-
 /**** Forms and Objects ****/
 
 typedef struct {
@@ -50,17 +46,19 @@ typedef struct {
     FL_OBJECT * pmobj;
 } FD_bwform;
 
-FD_bwform *fd_bwform = NULL;
+static FD_bwform * fd_bwform;
 
-extern FD_bwform * create_form_bwform( void );
+static FD_bwform * create_form_bwform( void );
+static void done_callback( FL_OBJECT *, long );
+static void bw_callback( FL_OBJECT *, long );
 
 
-/* callbacks for form bwform */
+/* Callbacks for form bwform */
 
 /***************************************
  ***************************************/
 
-void
+static void
 done_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
                long        data  FL_UNUSED_ARG )
 {
@@ -73,7 +71,7 @@ done_callback( FL_OBJECT * ob    FL_UNUSED_ARG,
 /***************************************
  ***************************************/
 
-void
+static void
 bw_callback( FL_OBJECT * ob,
              long        data  FL_UNUSED_ARG )
 {
@@ -136,7 +134,7 @@ main( int    argc,
  * Form definition file generated with fdesign.
  ***************************************/
 
-FD_bwform *
+static FD_bwform *
 create_form_bwform( void )
 {
     FL_OBJECT *obj;

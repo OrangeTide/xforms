@@ -34,10 +34,10 @@
 #include "include/forms.h"
 
 
-FL_FORM *form;
-FL_OBJECT *br[ 4 ],
-          *exitobj,
-          *readout;
+FL_FORM * form;
+FL_OBJECT * br[ 4 ],
+          * exitobj,
+          * readout;
 
 static void create_form( void );
 static void fill_browsers( void );
@@ -83,7 +83,7 @@ deselect( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int i;
 
-    for ( i = 0; i < 4; i++ )
+    for ( i = 2; i < 4; i++ )
         fl_deselect_browser( br[ i ] );
 }
 
@@ -124,8 +124,8 @@ br_callback( FL_OBJECT * ob,
              long        arg )
 {
     char buf[ 1024 ];
-    const char *mb[ ] = { "left", "middle", "right",
-                          "scroll-up", "scroll-down" };
+    const char * mb[ ] = { "left", "middle", "right",
+                           "scroll-up", "scroll-down" };
     int i;
 
     if (    ( i = fl_mouse_button( ) ) >= FL_LEFT_MOUSE
@@ -200,9 +200,9 @@ link_browsers( FL_OBJECT * ob,
 static void
 create_form( void )
 {
-    FL_OBJECT *obj;
+    FL_OBJECT * obj;
 
-    form = fl_bgn_form( FL_UP_BOX, 700, 570 );
+    form = fl_bgn_form( FL_FLAT_BOX, 700, 570 );
 
     readout = fl_add_text( FL_NORMAL_TEXT, 50, 30, 600, 50, "" );
     fl_set_object_lsize( readout, FL_NORMAL_SIZE );
