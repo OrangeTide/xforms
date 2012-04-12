@@ -59,7 +59,7 @@ draw_lightbutton( FL_OBJECT * ob )
     if ( ob->boxtype == FL_NO_BOX || ob->boxtype == FL_FLAT_BOX )
         absbw = FL_abs( FL_BOUND_WIDTH );
 
-    /* otherwise too close to the edge */
+    /* Otherwise it's too close to the edge... */
 
     if ( absbw < 3 )
         absbw = 3;

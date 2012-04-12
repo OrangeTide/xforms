@@ -1089,12 +1089,12 @@ add_logxtics( FL_OBJECT * ob )
 
             ll = sprintf( label, "%g", sp->xbase );
 
-            fl_drw_text( FL_ALIGN_TOP, xr - 3, yf - 2, 0, 0,
+            fl_drw_text( FL_ALIGN_TOP, xr, yf - 2, 0, 0,
                          ob->col2, sp->lstyle, sp->lsize, label );
             len1 = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
             ll = sprintf( label, "%d", ( int ) ceil( xw ) );
             len2 = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
-            fl_drw_text( FL_ALIGN_TOP, xr - 3 + len1 / 2 + 1 + len2 / 2,
+            fl_drw_text( FL_ALIGN_TOP, xr + len1 / 2 + 2 + len2 / 2,
                          yf - 6, 0, 0, ob->col2, sp->lstyle, sp->lsize, label );
         }
     }
@@ -1146,7 +1146,7 @@ add_logytics( FL_OBJECT * ob )
                          0, 0, ob->col2, sp->lstyle, sp->lsize, label );
             len = fl_get_string_width( sp->lstyle, sp->lsize, label, ll );
             sprintf( label, "%g", sp->ybase );
-            fl_drw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 2 - len - 1,
+            fl_drw_text( FL_ALIGN_RIGHT, sp->xi - ticl + 1 - len,
                          yr + 1, 0, 0, ob->col2, sp->lstyle, sp->lsize, label );
         }
     }
@@ -1636,21 +1636,16 @@ draw_xyplot( FL_OBJECT * ob )
     if ( sp->ylabel && *sp->ylabel )
     {
         int cw = fl_get_char_width( sp->lstyle, sp->lsize );
-        int w;
-        int ch = fl_get_char_height( sp->lstyle, sp->lsize, 0, 0 );
-        int jj;
+        int ch = fl_get_char_height( sp->lstyle, sp->lsize, NULL, NULL );
         int nc = strlen( sp->ylabel );
-        char ss[ 2 ];
+        int j;
+        char s[ 2 ] = "";
 
-        for ( ss[ 1 ] = '\0', jj = 0; jj < nc; jj++ )
-        {
-            *ss = sp->ylabel[ jj ];
-            w = fl_get_string_width( sp->lstyle, sp->lsize, ss, 1 );
-            fl_drw_text( FL_ALIGN_RIGHT,
-                         sp->xi - sp->maxytic + 4 - ( cw - w ) / 2,
-                         ( sp->yi + sp->yf ) / 2 + ( jj - nc / 2 ) * ch,
-                         1, 1, ob->col2, sp->lstyle, sp->lsize, ss );
-        }
+        for ( j = 0; ( *s = sp->ylabel[ j ] ); j++ )
+            fl_drw_text( FL_ALIGN_CENTER,
+                         sp->xi - sp->maxytic - 2 - cw,
+                         ( sp->yi + sp->yf ) / 2 + ( j - 0.5 * nc ) * ch,
+                         cw, ch, ob->col2, sp->lstyle, sp->lsize, s );
     }
 
     fl_unset_text_clipping( );

@@ -444,6 +444,9 @@ fl_get_string_widthTAB( int          style,
 
 
 /***************************************
+ * Function returns the font height (not, as its name may make one believe,
+ * the height of the string) and, via 'asc' and 'desc' (but which both can
+ * be NULL pointers) the fonts ascent and descent.
  ***************************************/
 
 int
@@ -475,6 +478,7 @@ fl_get_string_height( int          style,
 
 
 /***************************************
+ * Returns font height and, via 'asc' and 'desc', the fonts ascent and descent.
  ***************************************/
 
 int
@@ -518,7 +522,7 @@ fl_get_string_dimension( int          fntstyle,
         maxw = 0,
         maxh = 0;
 
-    h = fl_get_string_height( fntstyle, fntsize, "", 0, 0, 0 );
+    h = fl_get_string_height( fntstyle, fntsize, "", 0, NULL, NULL );
 
     for ( q = s; *q && ( p = strchr( q, '\n' ) ); q = p + 1 )
     {

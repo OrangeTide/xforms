@@ -63,31 +63,29 @@ flinear( double val,
  ***************************************/
 
 static void
-draw_positioner( FL_OBJECT * ob )
+draw_positioner( FL_OBJECT * obj )
 {
-    FLI_POSITIONER_SPEC *sp = ob->spec;
-    FL_Coord absbw = FL_abs( ob->bw );
-    FL_Coord x1 = ob->x + absbw + 1,
-             y1 = ob->y + absbw + 1;
-    FL_Coord w1 = ob->w - 2 * absbw - 2,
-              h1 = ob->h - 2 * absbw - 2;
+    FLI_POSITIONER_SPEC *sp = obj->spec;
+    FL_Coord absbw = FL_abs( obj->bw );
+    FL_Coord x1 = obj->x + absbw + 1,
+             y1 = obj->y + absbw + 1;
+    FL_Coord w1 = obj->w - 2 * absbw - 2,
+             h1 = obj->h - 2 * absbw - 2;
     FL_Coord xx,
              yy;
     int oldmode = fl_get_drawmode( );
-    int newmode = ob->type == FL_OVERLAY_POSITIONER ? GXxor : GXcopy;
-
+    int newmode = obj->type == FL_OVERLAY_POSITIONER ? GXxor : GXcopy;
 
     if ( ! sp->partial )
     {
-        if ( ob->type != FL_OVERLAY_POSITIONER )
-            fl_drw_box( ob->boxtype, ob->x, ob->y, ob->w, ob->h,
-                        ob->col1, ob->bw );
-        fl_draw_object_label_outside( ob );
-
+        if ( obj->type != FL_OVERLAY_POSITIONER )
+            fl_drw_box( obj->boxtype, obj->x, obj->y, obj->w, obj->h,
+                        obj->col1, obj->bw );
+        fl_draw_object_label_outside( obj );
     }
     else
     {
-        long col = ob->type == FL_OVERLAY_POSITIONER ? ob->col2 : ob->col1;
+        long col = obj->type == FL_OVERLAY_POSITIONER ? obj->col2 : obj->col1;
 
         xx = flinear( sp->lxval, sp->xmin, sp->xmax, x1, x1 + w1 - 1.0 );
         yy = flinear( sp->lyval, sp->ymin, sp->ymax, y1 + h1 - 1.0, y1 );
@@ -105,8 +103,8 @@ draw_positioner( FL_OBJECT * ob )
     if ( oldmode != newmode )
         fl_drawmode( newmode );
 
-    fl_diagline( x1, yy, w1, 1, ob->col2 );
-    fl_diagline( xx, y1, 1, h1, ob->col2 );
+    fl_diagline( x1, yy, w1, 1, obj->col2 );
+    fl_diagline( xx, y1, 1, h1, obj->col2 );
 
     if ( oldmode != newmode )
         fl_drawmode( oldmode );
@@ -118,16 +116,16 @@ draw_positioner( FL_OBJECT * ob )
  ***************************************/
 
 static int
-handle_mouse( FL_OBJECT * ob,
+handle_mouse( FL_OBJECT * obj,
               FL_Coord    mx,
               FL_Coord    my )
 {
-    FLI_POSITIONER_SPEC *sp = ob->spec;
-    FL_Coord absbw = FL_abs(ob->bw);
-    FL_Coord x1 = ob->x + absbw + 1,
-             y1 = ob->y + absbw + 1;
-    FL_Coord w1 = ob->w - 2 * absbw - 2,
-             h1 = ob->h - 2 * absbw - 2;
+    FLI_POSITIONER_SPEC * sp = obj->spec;
+    FL_Coord absbw = FL_abs( obj->bw );
+    FL_Coord x1 = obj->x + absbw + 1,
+             y1 = obj->y + absbw + 1;
+    FL_Coord w1 = obj->w - 2 * absbw - 2,
+             h1 = obj->h - 2 * absbw - 2;
     double oldx = sp->xval,
            oldy = sp->yval;
 
@@ -135,11 +133,11 @@ handle_mouse( FL_OBJECT * ob,
     sp->yval = flinear( my, y1 + h1 - 1.0, y1, sp->ymin, sp->ymax );
 
     if ( sp->xstep != 0.0 )
-        sp->xval = ( ( int ) (sp->xval / sp->xstep + 0.5 ) ) * sp->xstep;
+        sp->xval = ( ( int ) ( sp->xval / sp->xstep + 0.5 ) ) * sp->xstep;
     if ( sp->ystep != 0.0 )
         sp->yval = ( ( int ) ( sp->yval / sp->ystep + 0.5 ) ) * sp->ystep;
 
-    /* make sure the position is in bounds */
+    /* Make sure the position is within bounds */
 
     sp->xval = fli_clamp( sp->xval, sp->xmin, sp->xmax );
     sp->yval = fli_clamp( sp->yval, sp->ymin, sp->ymax );
@@ -149,8 +147,9 @@ handle_mouse( FL_OBJECT * ob,
         sp->partial = 1;
         sp->lxval = oldx;
         sp->lyval = oldy;
-        fl_redraw_object( ob );
-        if ( ! ( ob->how_return & FL_RETURN_END_CHANGED ) )
+        fl_redraw_object( obj );
+
+        if ( ! ( obj->how_return & FL_RETURN_END_CHANGED ) )
             return FL_RETURN_CHANGED;
     }
 
@@ -163,52 +162,56 @@ handle_mouse( FL_OBJECT * ob,
  ***************************************/
 
 static int
-handle_positioner( FL_OBJECT * ob,
+handle_positioner( FL_OBJECT * obj,
                    int         event,
                    FL_Coord    mx,
                    FL_Coord    my,
                    int         key  FL_UNUSED_ARG,
                    void      * ev   FL_UNUSED_ARG )
 {
-    FLI_POSITIONER_SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC *sp = obj->spec;
     int ret = FL_RETURN_NONE;
 
     switch ( event )
     {
         case FL_DRAW:
-            if ( ob->type != FL_INVISIBLE_POSITIONER )
-                draw_positioner( ob );
+            if ( obj->type != FL_INVISIBLE_POSITIONER )
+                draw_positioner( obj );
             sp->partial = 0;
             break;
 
         case FL_DRAWLABEL:
-            fl_draw_object_label_outside( ob );
+            fl_draw_object_label_outside( obj );
             break;
 
         case FL_PUSH:
-            if ( key != FL_MBUTTON1 )
+            if (    key < FL_MBUTTON1
+                 || key > FL_MBUTTON5
+                 || ! sp->react_to[ key - 1 ] )
                 break;
+            sp->mousebut = key;
             sp->old_x = sp->xval;
             sp->old_y = sp->yval;
             /* fall through */
 
         case FL_MOTION:
-            if ( key != FL_MBUTTON1 )
-                break;
-            ret = handle_mouse( ob, mx, my );
+            ret = handle_mouse( obj, mx, my );
             break;
 
         case FL_RELEASE:
-            if ( key != FL_MBUTTON1 )
+            if ( sp->mousebut != key )
+            {
+                fli_int.pushobj = obj;
                 break;
+            }
             ret = FL_RETURN_END;
-            if (    ob->how_return & FL_RETURN_END_CHANGED
+            if (    obj->how_return & FL_RETURN_END_CHANGED
                  && ( sp->xval != sp->old_x || sp->yval != sp->old_y ) )
                  ret |= FL_RETURN_CHANGED;
             break;
 
         case FL_FREEMEM:
-            fl_free( ob->spec );
+            fl_free( obj->spec );
             break;
     }
 
@@ -227,25 +230,26 @@ fl_create_positioner( int          type,
                       FL_Coord     h,
                       const char * label )
 {
-    FL_OBJECT *ob;
-    FLI_POSITIONER_SPEC *sp;
+    FL_OBJECT * obj;
+    FLI_POSITIONER_SPEC * sp;
+    int i;
 
-    ob = fl_make_object( FL_POSITIONER, type, x, y, w, h, label,
-                         handle_positioner );
-    ob->boxtype    = FL_POSITIONER_BOXTYPE;
-    ob->col1       = FL_POSITIONER_COL1;
-    ob->col2       = FL_POSITIONER_COL2;
-    ob->align      = FL_POSITIONER_ALIGN;
-    ob->lcol       = FL_POSITIONER_LCOL;
+    obj = fl_make_object( FL_POSITIONER, type, x, y, w, h, label,
+                          handle_positioner );
+    obj->boxtype = FL_POSITIONER_BOXTYPE;
+    obj->col1    = FL_POSITIONER_COL1;
+    obj->col2    = FL_POSITIONER_COL2;
+    obj->align   = FL_POSITIONER_ALIGN;
+    obj->lcol    = FL_POSITIONER_LCOL;
 
-    if (   ob->type == FL_OVERLAY_POSITIONER
-        || ob->type == FL_INVISIBLE_POSITIONER )
+    if (    obj->type == FL_OVERLAY_POSITIONER
+         || obj->type == FL_INVISIBLE_POSITIONER )
     {
-        ob->bw = 0;
-        ob->boxtype = FL_NO_BOX;
+        obj->bw = 0;
+        obj->boxtype = FL_NO_BOX;
     }
 
-    ob->spec = sp = fl_calloc( 1, sizeof *sp );
+    obj->spec = sp = fl_calloc( 1, sizeof *sp );
 
     sp->xmin = 0.0;
     sp->ymin = 0.0;
@@ -254,9 +258,15 @@ fl_create_positioner( int          type,
     sp->xval = sp->lxval = 0.5;
     sp->yval = sp->lyval = 0.5;
 
-    fl_set_object_return( ob, FL_RETURN_CHANGED );
+    /* Per default a positioner reacts to the left mouse button only */
 
-    return ob;
+    sp->react_to[ 0 ] = 1;
+    for ( i = 1; i < 5; i++ )
+        sp->react_to[ i ] = 0;
+
+    fl_set_object_return( obj, FL_RETURN_CHANGED );
+
+    return obj;
 }
 
 
@@ -283,9 +293,10 @@ fl_add_positioner( int          type,
  ***************************************/
 
 void
-fl_set_positioner_xvalue(FL_OBJECT * ob, double val)
+fl_set_positioner_xvalue(FL_OBJECT * obj,
+                         double      val)
 {
-    FLI_POSITIONER_SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC * sp = obj->spec;
 
     val = fli_clamp( val, sp->xmin, sp->xmax );
 
@@ -293,7 +304,7 @@ fl_set_positioner_xvalue(FL_OBJECT * ob, double val)
     {
         sp->lxval = sp->xval;
         sp->xval = val;
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 
@@ -302,10 +313,10 @@ fl_set_positioner_xvalue(FL_OBJECT * ob, double val)
  ***************************************/
 
 void
-fl_set_positioner_yvalue( FL_OBJECT * ob,
+fl_set_positioner_yvalue( FL_OBJECT * obj,
                           double      val )
 {
-    FLI_POSITIONER_SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC * sp = obj->spec;
 
     val = fli_clamp( val, sp->ymin, sp->ymax );
 
@@ -313,7 +324,7 @@ fl_set_positioner_yvalue( FL_OBJECT * ob,
     {
         sp->lyval = sp->yval;
         sp->yval = val;
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 
@@ -322,18 +333,18 @@ fl_set_positioner_yvalue( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_positioner_xbounds( FL_OBJECT * ob,
+fl_set_positioner_xbounds( FL_OBJECT * obj,
                            double      min,
                            double      max )
 {
-    FLI_POSITIONER_SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC * sp = obj->spec;
 
     if ( sp->xmin != min || sp->xmax != max )
     {
         sp->xmin = min;
         sp->xmax = max;
         sp->xval = fli_clamp( sp->xval, sp->xmin, sp->xmax );
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 
@@ -342,18 +353,18 @@ fl_set_positioner_xbounds( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_positioner_ybounds( FL_OBJECT * ob,
+fl_set_positioner_ybounds( FL_OBJECT * obj,
                            double      min,
                            double     max )
 {
-    FLI_POSITIONER_SPEC *sp = ob->spec;
+    FLI_POSITIONER_SPEC * sp = obj->spec;
 
     if ( sp->ymin != min || sp->ymax != max )
     {
         sp->ymin = min;
         sp->ymax = max;
         sp->yval = fli_clamp( sp->yval, sp->ymin, sp->ymax );
-        fl_redraw_object( ob );
+        fl_redraw_object( obj );
     }
 }
 
@@ -362,9 +373,9 @@ fl_set_positioner_ybounds( FL_OBJECT * ob,
  ***************************************/
 
 double
-fl_get_positioner_xvalue( FL_OBJECT * ob )
+fl_get_positioner_xvalue( FL_OBJECT * obj )
 {
-    return ( ( FLI_POSITIONER_SPEC * ) ob->spec )->xval;
+    return ( ( FLI_POSITIONER_SPEC * ) obj->spec )->xval;
 }
 
 
@@ -372,9 +383,9 @@ fl_get_positioner_xvalue( FL_OBJECT * ob )
  ***************************************/
 
 double
-fl_get_positioner_yvalue( FL_OBJECT * ob )
+fl_get_positioner_yvalue( FL_OBJECT * obj )
 {
-    return ( ( FLI_POSITIONER_SPEC * ) ob->spec )->yval;
+    return ( ( FLI_POSITIONER_SPEC * ) obj->spec )->yval;
 }
 
 
@@ -382,21 +393,21 @@ fl_get_positioner_yvalue( FL_OBJECT * ob )
  ***************************************/
 
 void
-fl_get_positioner_xbounds( FL_OBJECT * ob,
+fl_get_positioner_xbounds( FL_OBJECT * obj,
                            double    * min,
                            double    * max )
 {
-    *min = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->xmin;
-    *max = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->xmax;
+    *min = ( ( FLI_POSITIONER_SPEC * ) obj->spec)->xmin;
+    *max = ( ( FLI_POSITIONER_SPEC * ) obj->spec)->xmax;
 }
 
 void
-fl_get_positioner_ybounds( FL_OBJECT * ob,
+fl_get_positioner_ybounds( FL_OBJECT * obj,
                            double    * min,
                            double    * max)
 {
-    *min = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->ymin;
-    *max = ( ( FLI_POSITIONER_SPEC * ) ob->spec)->ymax;
+    *min = ( ( FLI_POSITIONER_SPEC * ) obj->spec)->ymin;
+    *max = ( ( FLI_POSITIONER_SPEC * ) obj->spec)->ymax;
 }
 
 
@@ -405,10 +416,10 @@ fl_get_positioner_ybounds( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_positioner_xstep( FL_OBJECT * ob,
+fl_set_positioner_xstep( FL_OBJECT * obj,
                          double      value )
 {
-    ( ( FLI_POSITIONER_SPEC * ) ob->spec )->xstep = value;
+    ( ( FLI_POSITIONER_SPEC * ) obj->spec )->xstep = value;
 }
 
 
@@ -417,10 +428,10 @@ fl_set_positioner_xstep( FL_OBJECT * ob,
  ***************************************/
 
 void
-fl_set_positioner_ystep( FL_OBJECT * ob,
+fl_set_positioner_ystep( FL_OBJECT * obj,
                          double      value )
 {
-    ( ( FLI_POSITIONER_SPEC * ) ob->spec )->ystep = value;
+    ( ( FLI_POSITIONER_SPEC * ) obj->spec )->ystep = value;
 }
 
 
@@ -440,6 +451,65 @@ fl_set_positioner_return( FL_OBJECT    * obj,
         fl_set_object_return( obj, FL_RETURN_CHANGED );
     else
         fl_set_object_return( obj, FL_RETURN_END );
+}
+
+
+/***************************************
+ * Function allows to set up to which mouse
+ * buttons the positioner object will react.
+ ***************************************/
+
+void
+fl_set_positioner_mouse_buttons( FL_OBJECT    * obj,
+                                 unsigned int   mouse_buttons )
+{
+    FLI_POSITIONER_SPEC *sp = obj->spec;
+    unsigned int i;
+
+    for ( i = 0; i < 5; i++, mouse_buttons >>= 1 )
+        sp->react_to[ i ] = mouse_buttons & 1;
+}
+
+
+/***************************************
+ * Function returns a value via 'mouse_buttons', indicating
+ * which mouse buttons the positioner object will react to.
+ ***************************************/
+
+void
+fl_get_positioner_mouse_buttons( FL_OBJECT    * obj,
+                                 unsigned int * mouse_buttons )
+{
+    FLI_POSITIONER_SPEC *sp;
+    int i;
+    unsigned int k;
+
+    if ( ! obj )
+    {
+        M_err( "fl_get_positioner_mouse_buttons", "NULL object" );
+        return;
+    }
+
+    if ( ! mouse_buttons )
+        return;
+
+    sp = obj->spec;
+
+    *mouse_buttons = 0;
+    for ( i = 0, k = 1; i < 5; i++, k <<= 1 )
+        *mouse_buttons |= sp->react_to[ i ] ? k : 0;
+}
+
+
+/***************************************
+ * Returns the number of the last used mouse button.
+ * fl_mouse_button will also return the mouse number
+ ***************************************/
+
+int
+fl_get_positioner_numb( FL_OBJECT * obj )
+{
+    return ( ( FLI_POSITIONER_SPEC * ) obj->spec )->mousebut;
 }
 
 

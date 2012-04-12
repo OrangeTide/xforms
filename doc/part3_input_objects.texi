@@ -48,12 +48,18 @@ Any type of text can be typed into this field.
 @tindex FL_FLOAT_INPUT
 @anchor{FL_FLOAT_INPUT}
 @item FL_FLOAT_INPUT
-Only a float value can be typed in (e.g. -23.2e12).
+Only a floating point numbers can be typed in (e.g. -23.2e12). The
+resulting string will be accepted by @code{strtod()} in its entirety
+(but may be too big to be represented by an @code{int} or
+@code{long}).
 
 @tindex FL_INT_INPUT
 @anchor{FL_INT_INPUT}
 @item FL_INT_INPUT
-Only an integer value can be typed in (e.g. -86).
+Only an integers can be typed in (e.g. -86). The resulting tring will
+be accepted by @code{strtol()} in its entirety (but may be too big to
+be represented by an @code{float} or @code{double}).
+
 
 @tindex FL_DATE_INPUT
 @anchor{FL_DATE_INPUT}
@@ -212,10 +218,11 @@ See demo @file{objreturn.c} for an example use of this.
 
 A few additional notes: when you read "the fields has been changed"
 this includes the case that the user e.g.@: deleted a character and
-then added it back. Also this case is reported as a "change" so the
-term "changed"  does not necessarily mean that the content of the
-field has changed but that the user made changes (but which still
-might result in the exact same content as before.
+then added it back again. Also this case is reported as a "change" (a
+delete alone isn't) so the term "changed" does not necessarily mean
+that the content of the field has changed but that the user made
+changes (but which still might result in the exact same content as
+before).
 
 Another term that may be understood differently is "end". In the
 versions since 1.0.91 it means that the users either hits the

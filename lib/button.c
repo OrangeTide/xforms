@@ -310,13 +310,17 @@ handle_button( FL_OBJECT * obj,
             break;
 
         case FL_PUSH:
-            if (    key < FL_MBUTTON1
+            /* Don't accept pushes for an already pushed button (e.g. if the
+               user pushes another mouse button) or for mouse buttons the
+               button isn't set up to react to */
+
+            if (    sp->is_pushed
+                 || key < FL_MBUTTON1
                  || key > FL_MBUTTON5
                  || ! sp->react_to[ key - 1 ] )
                 break;
 
             sp->event = FL_PUSH;
-            sp->is_pushed = 1;
 
             if ( obj->type == FL_RADIO_BUTTON )
             {
@@ -326,10 +330,11 @@ handle_button( FL_OBJECT * obj,
                 return FL_RETURN_CHANGED | FL_RETURN_END;
             }
 
-            oldval = sp->val;
-            sp->val = ! sp->val;
-            sp->mousebut = key;
-            sp->timdel = 1;
+            oldval        = sp->val;
+            sp->val       = ! sp->val;
+            sp->is_pushed = 1;
+            sp->mousebut  = key;
+            sp->timdel    = 1;
             fl_redraw_object( obj );
 
             if ( obj->type == FL_MENU_BUTTON )
@@ -342,38 +347,31 @@ handle_button( FL_OBJECT * obj,
             break;
 
         case FL_MOTION:
-            if (    key < FL_MBUTTON1
-                 || key > FL_MBUTTON5
-                 || ! sp->react_to[ key - 1 ] )
+            if (    obj->type == FL_RADIO_BUTTON
+                 || obj->type == FL_INOUT_BUTTON
+                 || obj->type == FL_MENU_BUTTON )
                 break;
 
-            if (    obj->type != FL_RADIO_BUTTON
-                 && obj->type != FL_INOUT_BUTTON
-                 && obj->type != FL_MENU_BUTTON )
+            if ( WITHIN( obj, mx, my ) )
             {
-                if ( WITHIN( obj, mx, my ) )
-                {
-                    obj->belowmouse = 1;
-                    newval = ! oldval;
-                }
-                else
-                {
-                    obj->belowmouse = 0;
-                    newval = oldval;
-                }
+                obj->belowmouse = 1;
+                newval = ! oldval;
+            }
+            else
+            {
+                obj->belowmouse = 0;
+                newval = oldval;
+            }
 
-                if ( sp->val != newval )
-                {
-                    sp->val = newval;
-                    fl_redraw_object( obj );
-                }
+            if ( sp->val != newval )
+            {
+                sp->val = newval;
+                fl_redraw_object( obj );
             }
             break;
 
         case FL_RELEASE:
-            if (    key < FL_MBUTTON1
-                 || key > FL_MBUTTON5
-                 || ! sp->react_to[ key - 1 ] )
+            if ( key != sp->mousebut && obj->type != FL_RADIO_BUTTON )
             {
                 fli_int.pushobj = obj;
                 break;
@@ -382,8 +380,7 @@ handle_button( FL_OBJECT * obj,
             sp->event = FL_RELEASE;
             sp->is_pushed = 0;
 
-            if ( obj->type == FL_INOUT_BUTTON
-                 && ! WITHIN( obj, mx, my ) )
+            if ( obj->type == FL_INOUT_BUTTON && ! WITHIN( obj, mx, my ) )
                 obj->belowmouse = 0;
 
             if ( obj->type == FL_PUSH_BUTTON )
@@ -398,41 +395,23 @@ handle_button( FL_OBJECT * obj,
             {
                 sp->val = 0;
                 fl_redraw_object( obj );
+
                 if (    obj->type != FL_MENU_BUTTON
                      && obj->type != FL_TOUCH_BUTTON )
                     ret |= FL_RETURN_END | FL_RETURN_CHANGED;
+
                 if ( obj->type == FL_TOUCH_BUTTON )
                     ret |= FL_RETURN_END;
             }
 
             break;
 
-        case FL_UPDATE:
-            if (    key < FL_MBUTTON1
-                 || key > FL_MBUTTON5
-                 || ! sp->react_to[ key - 1 ] )
-                break;
-
+        case FL_UPDATE:                 /* only FL_TOUCH_BUTTON receives it */
             sp->event = FL_UPDATE;
             if (    sp->val
-                 && obj->type == FL_TOUCH_BUTTON
                  && sp->timdel++ > 10
                  && ( sp->timdel & 1 ) == 0 )
                 ret |= FL_RETURN_CHANGED;
-            else if (    obj->type != FL_RADIO_BUTTON
-                      && obj->type != FL_INOUT_BUTTON )
-            {
-                if ( ! WITHIN( obj, mx, my ) )
-                    newval = oldval;
-                else
-                    newval = ! oldval;
-
-                if ( sp->val != newval )
-                {
-                    sp->val = newval;
-                    fl_redraw_object( obj );
-                }
-            }
             break;
 
         case FL_SHORTCUT:
@@ -515,6 +494,8 @@ fl_create_generic_button( int          objclass,
     sp->pixmap    = sp->mask = sp->focus_pixmap = sp->focus_mask = None;
     sp->cspecv    = NULL;
     sp-> filename = sp->focus_filename = NULL;
+    sp->is_pushed = 0;
+    sp->mousebut  = 0;
 
     /* Per default a button (unfortunately) reacts to all mouse buttons */
 
@@ -553,7 +534,7 @@ fl_set_button( FL_OBJECT * obj,
 
     /* Set new state and redraw the button */
 
-    sp->val = sp->is_pushed = pushed;
+    sp->val = pushed;
     fl_redraw_object( obj );
 }
 

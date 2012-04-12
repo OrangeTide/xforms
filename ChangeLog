@@ -1,3 +1,12 @@
+2012-04-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xtext.c: Problem when drawing strings with zero or
+	negative "height" fixed
+	* lib/positioner.c: Fucntion for selecting which mouse
+	a positioner reacts to added
+	* lib/button.c: Button now reacts only to the release of
+	the mouse button that was pressed first on it
+
 2012-03-25 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/xtext.c: Added fl_get_label_char_at_mouse() function

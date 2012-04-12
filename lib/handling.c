@@ -528,7 +528,7 @@ fli_handle_form( FL_FORM * form,
                 fli_do_radio_push( obj, x, y, key, xev, 0 );
             break;
 
-        case FL_RELEASE:        /* mouse button was released inside the form */
+        case FL_RELEASE :       /* mouse button was released inside the form */
             if ( fli_int.pushobj )
             {
                 obj = fli_int.pushobj;

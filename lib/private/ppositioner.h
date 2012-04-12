@@ -43,6 +43,8 @@ typedef struct {
     int    partial;
     double old_x,               /* values at start of ineraction */
            old_y;
+    int    react_to[ 5 ];
+    int    mousebut;
 } FLI_POSITIONER_SPEC;
 
 

@@ -177,11 +177,15 @@ fli_drw_string( int           align,
 
     /* Check if anything has to be drawn at all - do nothing if we either
        have no window or the cursor is to be drawn somewhere else than in
-       the very first position and there's no string to output */
+       the very first position and there's no string to output. It would
+       be tempting to also bail out if the height 'h' is 0 or even negative
+       but there are some code paths were this actually may happen and we
+       wouldn't outut a string even though it is needed (I know, it's a
+       bloody mess but fixing it right now would probably take a few weeks
+       and even might break existing code...) */
 
     if (    flx->win == None
-         || ( curspos > 0 && ! ( istr && *istr ) )
-         || h <= 0 )
+         || ( curspos > 0 && ! ( istr && *istr ) ) )
         return 0;
 
     /* We operate only on a copy of the input string */

@@ -94,6 +94,7 @@ post( FL_OBJECT * ob,
     {
         float wx, wy;
         char buf[ 64 ];
+
         fl_xyplot_s2w( ob, mx, my, &wx, &wy );
         sprintf( buf, "x=%d y=%d wx=%.1f wy=%.1f", mx, my, wx, wy );
         fl_show_oneliner( buf, ob->x + ob->form->x + 5, ob->y + ob->form->y );

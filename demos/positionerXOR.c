@@ -33,24 +33,24 @@
 #include <stdio.h>
 #include "include/forms.h"
 
-FL_OBJECT *xval,
-          *yval;
+FL_OBJECT * xval,
+          * yval;
 
 
 /***************************************
- * callback routine
+ * Callback routine
  ***************************************/
 
 void
-positioner_cb( FL_OBJECT * ob,
-               long        q   FL_UNUSED_ARG )
+positioner_cb( FL_OBJECT * obj,
+               long        data   FL_UNUSED_ARG )
 {
     char str[ 30 ];
 
-    sprintf( str, "%f", fl_get_positioner_xvalue( ob ) );
+    sprintf( str, "%f", fl_get_positioner_xvalue( obj ) );
     fl_set_object_label( xval, str );
 
-    sprintf( str, "%f", fl_get_positioner_yvalue( ob ) );
+    sprintf( str, "%f", fl_get_positioner_yvalue( obj ) );
     fl_set_object_label( yval, str );
 }
 
@@ -59,21 +59,21 @@ positioner_cb( FL_OBJECT * ob,
  ***************************************/
 
 int
-main( int    argc,
+main( int     argc,
       char  * argv[ ] )
 {
-    FL_FORM *form;
-    FL_OBJECT *pos,
-              *ob;
+    FL_FORM   * form;
+    FL_OBJECT * pos,
+              * obj;
 
     fl_set_border_width( -2 );
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
     form = fl_bgn_form( FL_UP_BOX, 350, 250 );
 
-    ob = fl_add_pixmap( FL_NORMAL_PIXMAP, 60, 70, 100, 100, "" );
-    fl_set_object_boxtype( ob, FL_DOWN_BOX );
-    fl_set_pixmap_file( ob, "porsche.xpm" );
+    obj = fl_add_pixmap( FL_NORMAL_PIXMAP, 60, 70, 100, 100, "" );
+    fl_set_object_boxtype( obj, FL_DOWN_BOX );
+    fl_set_pixmap_file( obj, "porsche.xpm" );
 
     pos = fl_add_positioner( FL_OVERLAY_POSITIONER, 60, 70, 100, 100, "" );
     fl_set_positioner_xbounds( pos, 0, 1 );

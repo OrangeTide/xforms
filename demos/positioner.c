@@ -27,16 +27,17 @@
 #include <stdio.h>
 #include "include/forms.h"
 
-FL_OBJECT *xval, *yval;
+static FL_OBJECT * xval,
+                 * yval;
 
 
 /***************************************
  * callback routine
  ***************************************/
 
-void
+static void
 positioner_cb( FL_OBJECT * ob,
-               long        q   FL_UNUSED_ARG )
+               long        data   FL_UNUSED_ARG )
 {
     char str[ 30 ];
 
@@ -54,8 +55,8 @@ int
 main( int    argc,
       char * argv[ ] )
 {
-    FL_FORM *form;
-    FL_OBJECT *pos;
+    FL_FORM   * form;
+    FL_OBJECT * pos;
 
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 

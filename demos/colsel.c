@@ -34,12 +34,18 @@ int
 main( int    argc,
       char * argv[ ] )
 {
-    int i = 0;
+    int old_col = 1,
+        new_col = 0;
 
     fl_initialize( &argc, argv, "FormDemo", 0, 0 );
 
-    while ( 1 )
-        i = fl_show_colormap( i );
+    while ( old_col != new_col )
+    {
+        old_col = new_col;
+        new_col = fl_show_colormap( old_col );
+    }
+
+    fl_finish( );
 
     return 0;
 }

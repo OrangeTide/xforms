@@ -137,10 +137,15 @@ static int date_validator( FL_OBJECT *,
                            const char *,
                            int );
 
-static int float_int_validator( FL_OBJECT *,
-                                const char *,
-                                const char *,
-                                int );
+static int int_validator( FL_OBJECT *,
+                           const char *,
+                          const char *,
+                          int );
+
+static int float_validator( FL_OBJECT *,
+                           const char *,
+                            const char *,
+                            int );
 
 
 enum {
@@ -1779,9 +1784,14 @@ fl_create_input( int          type,
     /* Can't remember why validated input return is set to RETURN_END
        but probably with some reason. Wait until 1.0 to reset it */
 
-    if ( obj->type == FL_FLOAT_INPUT || obj->type == FL_INT_INPUT )
+    if ( obj->type == FL_INT_INPUT )
     {
-        sp->validate = float_int_validator;
+        sp->validate = int_validator;
+        obj->how_return = FL_RETURN_END;
+    }
+    else if ( obj->type == FL_FLOAT_INPUT )
+    {
+        sp->validate = float_validator;
         obj->how_return = FL_RETURN_END;
     }
     else if ( obj->type == FL_DATE_INPUT )
@@ -2539,55 +2549,89 @@ date_validator( FL_OBJECT  * obj,
  ***************************************/
 
 static int
-float_int_validator( FL_OBJECT  * obj,
-                     const char * oldstr  FL_UNUSED_ARG,
-                     const char * str,
-                     int          newc )
+int_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
+               const char * oldstr  FL_UNUSED_ARG,
+               const char * str,
+               int          newc )
 {
-    const char *lc,
-               *llc;
-    char *ptr = NULL;
-    int slen,
-        c;
+    char *eptr = NULL;
 
-    /* Empty string is considered valid */
+    /* The empty string is considered to be valid */
 
-    if ( ! ( slen = strlen( str ) ) )
+    if ( ! *str )
         return FL_VALID;
 
-    if (    newc
-         && ! isdigit( ( unsigned char ) newc )
-         && newc != '-'
-         && newc != '+'
-         && obj->type == FL_INT_INPUT )
+    /* If there was a new character and all we got is a '+' or '-' this is ok */
+
+    if ( ! str[ 1 ] && ( newc == '+' || newc == '-' ) )
+        return FL_VALID;
+
+    strtol( str, &eptr, 10 );
+
+    return ! *eptr ? FL_VALID : ( FL_INVALID | FL_RINGBELL );
+}
+
+
+/***************************************
+ ***************************************/
+
+static int
+float_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
+                 const char * oldstr  FL_UNUSED_ARG,
+                 const char * str,
+                 int          newc )
+{
+    char *eptr = NULL;
+    size_t len;
+
+    /* The empty string is considered valid */
+
+    if ( ! *str )
+        return FL_VALID;
+
+    /* Try strtod() an the string*/
+
+    strtod( str, &eptr );
+
+    /* If it reports no problem were finished */
+
+    if ( ! *eptr )
+        return FL_VALID;
+
+    /* Otherwise, if there's no new character the input must be invalid */
+
+    if ( ! newc )
         return FL_INVALID | FL_RINGBELL;
+            
+    /* Now we handle cases that strtod() flagged as bad but which we need to
+       accept while editing is still going on. If there's only a single char
+       it should be a dot or a sign */
 
-    lc = str + slen - 1;
-    llc = lc - 1;
+    len = strlen( str );
 
-    if (    ! newc
-         && (    ( c = tolower( ( int ) *lc ) ) == '+'
-              || c == '-'
-              || c == 'e' ) )
-        return FL_INVALID | FL_RINGBELL;
+    if ( len == 1 )
+        return ( newc == '+' || newc == '-' || newc == '.' ) ?
+            FL_VALID : FL_INVALID | FL_RINGBELL;
 
-    /* -+eE at end can cause strtod to fail, but it is in fact valid. The
-       check is too lenient though */
+    /* If there are two characters accept a sequence of a sign and a decimal
+       point */
 
-    if (    * ptr
-         && strcmp( str, "-" )
-         && strcmp( str, "+" )
-         && ( strcmp( str, "." ) || obj->type != FL_FLOAT_INPUT )
-         && (    ( *lc != '-' && *lc != 'e' && *lc != '+' && *lc != 'E' )
-              || ( *lc == '-' && *llc != 'e' && *llc != 'E' )
-              || ( *lc == '+' && *llc != 'e' && *llc != 'E' )
-              || (    *lc == 'e' && ! isdigit( ( unsigned char )  *llc )
-                   && *llc != '.' )
-              || (    *lc == 'E' && ! isdigit( ( unsigned char )  *llc )
-                   && *llc != '.' ) ) )
-        return FL_INVALID | FL_RINGBELL;
+    if ( len == 2 )
+        return ( ! strcmp( str, "+." ) || strcmp( str, "-." ) ) ?
+               FL_VALID : FL_INVALID | FL_RINGBELL;
 
-    return FL_VALID;
+    /* Additionally accept an 'e' (or 'E') in the last position, or, when in
+       the second last position, when it's followed by a sign - but only if
+       it's the first 'e' (or 'E') in the string */
+
+    if ( ( *eptr == 'e' || *eptr == 'E' )
+         && strchr( str, *eptr ) == eptr
+         && (    eptr == str + len - 1
+              || (    eptr == str + len - 2
+                   && ( eptr[ 1 ] == '+' || eptr[ 1 ] == '-' ) ) ) )
+         return FL_VALID;
+
+    return FL_INVALID | FL_RINGBELL;
 }
 
 

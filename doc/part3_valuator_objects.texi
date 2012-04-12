@@ -855,12 +855,12 @@ Cross-hair inside a box.
 @tindex FL_OVERLAY_POSITIONER
 @anchor{FL_OVERLAY_POSITIONER}
 @item FL_OVERLAY_POSITIONER
-Cross-hair inside a transparent box (i.e.@{ drawn in in XOR mode).
+Cross-hair inside a transparent box (i.e.@ drawn in in XOR mode).
 
 @tindex FL_INVISIBLE_POSITIONER
 @anchor{FL_INVISIBLE_POSITIONER}
 @item FL_INVISIBLE_POSITIONER
-Completely invisible positioner to be used just for the side effect
+Completely invisible positioner, to be used just for the side effect
 of obtaining a position (typically an object is below below it that
 otherwise would receive user events).
 @end table
@@ -901,6 +901,46 @@ positioners value changed or not.
 Return or invoke callback when value has changed or mouse button has
 been released.
 @end table
+
+Per default a positioner only reacts to the left mouse button.
+But sometimes it can be useful to modify which mouse buttons it
+will reacts to. To set this use
+@findex fl_set_positoner_mouse_buttons()
+@anchor{fl_set_positioner_mouse_buttons()}
+@example
+void fl_set_positioner_mouse_buttons(FL_OBJECT *obj,
+                                     int mbuttons);
+@end example
+@noindent
+@code{mbuttons} is the bitwise OR of the numbers 1 for the left
+mouse button, 2 for the middle, 4 for the right mouse button, 8 for
+moving the scroll wheel up "button" and 16 for scrolling down
+"button". Per default a button reacts to all mouse buttons.
+
+To determine which mouse buttons a positioner reacts to use
+@findex fl_get_positioner_mouse_buttons()
+@anchor{fl_get_positioner_mouse_buttons()}
+@example
+void fl_get_positioner_mouse_buttons(FL_OBJECT *obj,
+                                     unsigned int *mbuttons);
+@end example
+@noindent
+The value returned via @code{mbuttons} is the same value as would
+be used in @code{@ref{fl_set_positioner_mouse_buttons()}}.
+
+Sometimes you may want to assign different meanings to the mouse
+buttons used to interact with the positioner. To find out which
+one has been used there's the function
+@findex fl_get_positioner_numb()
+@anchor{fl_get_positioner_numb()}
+@example
+int fl_get_positioner_numb(FL_OBJECT *obj);
+@end example
+@noindent
+It returns one of the constants @code{@ref{FL_LEFT_MOUSE}},
+@code{@ref{FL_MIDDLE_MOUSE}}, @code{@ref{FL_RIGHT_MOUSE}},
+@code{@ref{FL_SCROLLUP_MOUSE}} or @code{@ref{FL_SCROLLDOWN_MOUSE}}
+(the latter two are from the scroll wheel of the mouse).
 
 
 @node Other Positioner Routines

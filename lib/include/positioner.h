@@ -88,4 +88,13 @@ FL_EXPORT void fl_set_positioner_ystep( FL_OBJECT * ob,
 FL_EXPORT void fl_set_positioner_return( FL_OBJECT    * ob,
                                          unsigned int   when );
 
+FL_EXPORT void fl_set_positioner_mouse_buttons( FL_OBJECT    * obj,
+												unsigned int   mouse_buttons );
+
+FL_EXPORT void fl_get_positioner_mouse_buttons( FL_OBJECT    * obj,
+												unsigned int * mouse_buttons );
+
+FL_EXPORT int fl_get_positioner_numb( FL_OBJECT * obj );
+
+
 #endif /* ! defined FL_POSITIONER_H */
