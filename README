@@ -84,8 +84,8 @@ XForms relies on some other libraries, namely
 	* libGL (optional)
 
 You will find generic installation instructions common to all
-autoconf-based packages in the file INSTALL. In general, all it takes
-to compile and install XForms is
+autoconf-based packages in the file INSTALL. In general, all it
+takes to compile and install XForms is
 
 	./configure
 	make
