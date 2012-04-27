@@ -1,4 +1,4 @@
-/*
+*
  *  This file is part of the XForms library package.
  *
  *  XForms is free software; you can redistribute it and/or modify it
@@ -62,7 +62,7 @@ fl_get_matrix( int          nrows,
 
 
 /***************************************
- * given a piece of memory, make a matrix out of it
+ * Given a piece of memory, make a matrix out of it
  ***************************************/
 
 void *

@@ -1457,7 +1457,7 @@ routine
 @findex flimage_convolve()
 @anchor{flimage_convolve()}
 @example
-int flimage_convolve(FL_IMAGE *im, int** kernel,
+int flimage_convolve(FL_IMAGE *im, int **kernel,
                      int krow, int kcol);
 @end example
 
@@ -1471,7 +1471,7 @@ function
 @findex flimage_convolvea()
 @anchor{flimage_convolvea()}
 @example
-int flimage_convolvea(FL_IMAGE *im, int* kernel,
+int flimage_convolvea(FL_IMAGE *im, int *kernel,
                       int krow, int kcol);
 @end example
 

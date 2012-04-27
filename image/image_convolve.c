@@ -296,15 +296,12 @@ flimage_convolve( FL_IMAGE  * im,
         return -1;
     }
 
-    /* check subimage settings */
+    /* Check subimage settings */
 
-    if ( im->subw )
+    if ( im->subw && ( im->subw < kcol || im->subh < krow ) )
     {
-        if ( im->subw < kcol || im->subh < krow )
-        {
-            im->error_message( im, "Convolve: subimage size less than kernel" );
-            return -1;
-        }
+        im->error_message( im, "Convolve: subimage size less than kernel" );
+        return -1;
     }
 
     if ( ! sharpen_kernel )
@@ -336,7 +333,7 @@ flimage_convolve( FL_IMAGE  * im,
         return -1;
     }
 
-    /* always convert to RGB or GRAY */
+    /* Always convert to RGB or GRAY */
 
     if ( ! FL_IsGray( im->type ) )
         flimage_convert( im, FL_IMAGE_RGB, 0 );

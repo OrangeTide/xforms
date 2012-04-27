@@ -70,10 +70,10 @@ the actual work but it's no problem to define new forms also later on.
 @node Boxes
 @section Boxes
 
-The first type of objects are boxes. Boxes are simply used to give the
-forms and objects a nicer appearance. They can be used to visually
-group other objects together. The background of each form is a box. To
-add a box to a form you use the routine
+The probably simplest type of objects are boxes. Boxes are used to
+give the forms and objects a nicer appearance. They can be used to
+visually group other objects together. The background of each form is
+a box. To add a box to a form you use the routine
 @findex fl_add_box()
 @example
 FL_OBJECT *fl_add_box(int type, FL_Coord x, FL_Coord y,
@@ -143,16 +143,17 @@ An oval box going into the screen
 @center @image{images/boxtypes,15cm}
 @end ifnothtml
 
-@code{x} and @code{y} indicate the upper left corner of the box in the
-form. @code{w} and @code{h} are the width and height of the box.
+The arguments @code{x} and @code{y} in the call of
+@code{@ref{fl_add_box()}}indicate the upper left corner of the box in
+the form while @code{w} and @code{h} are its width and height.
 @code{label} is a text that is placed in the center of the box. If you
-don't want a label in the box, use an empty string or a @code{NULL}
+don't want a label in the box use an empty string or a @code{NULL}
 pointer. The label can be either one line or multiple lines. To obtain
 multi-line labels, insert newline characters (@code{\n}) in the label
 string. It is also possible to underline the label or one of the
 characters in the label. This is accomplished by embedding
-@code{<CNTRL> H} (@code{\010}) after the letter that needs to be
-underlined. If the very first character of the label is
+@code{<CNTRL> H} (@code{\010} or @code{'\b'}) after the letter that
+needs to be underlined. If the very first character of the label is
 @code{<Ctrl>H}, the entire label is underlined.
 
 The routine @code{@ref{fl_add_box()}} returns a pointer to the box object.
@@ -175,7 +176,9 @@ fl_set_object_lcol(thebox, FL_GREEN );      /* make label green */
 fl_set_object_lsize(thebox, FL_LARGE_SIZE); /* make label large */
 @end example
 @noindent
-Of course, this has to be placed inside a form definition.
+Of course, this has to be placed inside a form definition (but the
+functions for changing the object attributes can also used anywhere
+else within the program).
 
 
 @node Texts
@@ -197,18 +200,19 @@ The text can be placed inside a box using the routine
 @code{@ref{fl_set_object_boxtype()}} to be described in @ref{Changing
 Attributes}. Again, the text can be multi-lined or underlined by
 embedding respectively the newline (@code{\n}) or @code{<Ctrl>H}
-(@code{\010}) in the label. The style, size and color of the text can
-be controlled and changed in many ways. @xref{Label Attributes and
-Fonts}.
+(@code{\010} or @code{'\b'}) in the label. The style, size and color
+of the text can be controlled and changed in many ways. @xref{Label
+Attributes and Fonts}.
 
 Note that there is almost no difference between a box with a label and
 a text. The only difference lies in the position where the text is
-placed. Text is normally placed inside the box at the left side. This
-helps you put different lines of text below each other. Labels inside
-boxes are by default centered in the box. You can change the position
-of the text inside the box using the routines in @ref{Label Attributes
-and Fonts}. Note that, when not using any box around the text there is
-no need to specify a width and height of the box; they can both be 0.
+placed object. Text is normally placed inside the box at the left
+side. This helps you put different lines of text below each other.
+Labels inside boxes are by default centered in the box. You can change
+the position of the text inside the box using the routines in
+@ref{Label Attributes and Fonts}. Note that, when not using any box
+around the text there is no need to specify a width and height of the
+box, they can both be 0.
 
 
 @node Buttons
