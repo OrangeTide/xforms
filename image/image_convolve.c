@@ -284,7 +284,7 @@ flimage_convolve( FL_IMAGE  * im,
                   int         krow,
                   int         kcol )
 {
-    int weight,
+    int weight = 0,
         i;
     const char * what = "convolving";
     char buf[ 128 ];
@@ -321,10 +321,10 @@ flimage_convolve( FL_IMAGE  * im,
     }
 
     if ( ! ( krow & 1 ) || ! ( kcol & 1 ) )
-        M_err( "Convolve", "even or zero kernel size (row=%d col=%d)!",
+        M_err( "Convolve", "even or zero kernel size (row = %d, col = %d)!",
                krow, kcol );
 
-    for ( weight = i = 0; i < kcol * krow; i++ )
+    for ( i = 0; i < kcol * krow; i++ )
         weight += kernel[ 0 ][ i ];
 
     if ( weight <= 0 )
@@ -369,7 +369,7 @@ flimage_convolve( FL_IMAGE  * im,
 
 
 /***************************************
- * almost the same as convolve except the kernel is a proper C array
+ * Almost the same as convolve except the kernel is a proper C array
  * kernel[krow][kcol]
  ***************************************/
 
@@ -383,11 +383,11 @@ flimage_convolvea( FL_IMAGE * im,
         status;
 
     if ( ! ( krow & 1 ) || ! ( kcol & 1 ) )
-        M_err( "Convolve", "even or zero kernel size (row=%d col=%d)!",
+        M_err( "Convolve", "even or zero kernel size (row = %d, col = %d)!",
                krow, kcol );
 
-    kk = fl_make_matrix( krow, kcol, sizeof( int ), kernel );
-    status = flimage_convolve( im, kk, krow,kcol );
+    kk = fl_make_matrix( krow, kcol, sizeof **kk, kernel );
+    status = flimage_convolve( im, kk, krow, kcol );
     fl_free_matrix( kk );
     return status;
 }

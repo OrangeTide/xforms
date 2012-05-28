@@ -1,4 +1,4 @@
-*
+/*
  *  This file is part of the XForms library package.
  *
  *  XForms is free software; you can redistribute it and/or modify it

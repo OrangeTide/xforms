@@ -48,16 +48,16 @@ static void show_spec( SuperSPEC * );
 void *
 get_slider_spec_fdform( void )
 {
-    if ( ! sl_attrib )
-    {
-        sl_attrib = create_form_sliderattrib( );
+    if ( sl_attrib )
+        return sl_attrib;
 
-        setup_how_return_menu( sl_attrib->returnsetting );
-        fl_set_menu_item_mode( sl_attrib->returnsetting, 5,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-        fl_set_menu_item_mode( sl_attrib->returnsetting, 6,
-                               FL_PUP_BOX | FL_PUP_GRAY );
-    }
+    sl_attrib = create_form_sliderattrib( );
+
+    setup_how_return_menu( sl_attrib->returnsetting );
+    fl_set_menu_item_mode( sl_attrib->returnsetting, 5,
+                           FL_PUP_BOX | FL_PUP_GRAY );
+    fl_set_menu_item_mode( sl_attrib->returnsetting, 6,
+                           FL_PUP_BOX | FL_PUP_GRAY );
     return sl_attrib;
 }
 
@@ -150,9 +150,9 @@ void
 emit_slider_code( FILE      * fp,
                   FL_OBJECT * ob )
 {
-    FL_OBJECT *defobj;
-    SuperSPEC *sp,
-              *defsp;
+    FL_OBJECT * defobj;
+    SuperSPEC * sp,
+              * defsp;
 
     if ( ob->objclass != FL_SLIDER && ob->objclass != FL_VALSLIDER )
         return;
@@ -161,7 +161,7 @@ emit_slider_code( FILE      * fp,
 
     defobj = ( ob->objclass == FL_SLIDER ?
                fl_create_slider : fl_create_valslider )
-                 ( ob->type, 0, 0, 0, 0, "");
+                 ( ob->type, 0, 0, 0, 0, "" );
 
     defsp = get_superspec( defobj );
     sp = get_superspec( ob );

@@ -43,7 +43,7 @@ typedef struct
     int    objclass[ MAXOBJCLASS ];
     void * ( * get_fdform )( void );                    /* spec form     */
     int    ( * set_spec )( FL_OBJECT * );               /* interaction   */
-    void   ( * restore_spec )( FL_OBJECT *, long );     /* how to resotre */
+    void   ( * restore_spec )( FL_OBJECT *, long );     /* how to restore */
     void   ( * save_attrib )( FILE *, FL_OBJECT * );    /* write to .fd  */
     void   ( * emit_code )( FILE *, FL_OBJECT * );      /* write fl code */
     void   ( * emit_header )( FILE *, FL_OBJECT * );    /* write fl code */
@@ -329,7 +329,7 @@ ff_read_sp_bounds( FL_OBJECT * obj,
     if (    (    obj->objclass == FL_SPINNER
               && ( r = ff_read( "%F%F", &sp->dmin, &sp->dmax ) ) < 0 )
          || (    obj->objclass != FL_SPINNER
-              && ( r = ff_read( "%f%f", &sp->min, &sp->max ) ) < 0 )  )
+              && ( r = ff_read( "%F%F", &sp->min, &sp->max ) ) < 0 )  )
         return ff_err( "Can't read expected object bounds" );
 
     if ( r == 0 )
@@ -369,7 +369,7 @@ ff_read_sp_increment( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f%f", &sp->ldelta, &sp->rdelta) ) < 0 )
+    if ( ( r = ff_read( "%F%F", &sp->ldelta, &sp->rdelta) ) < 0 )
         return ff_err( "Can't read expected object increment values" );
 
     if ( r == 0 )
@@ -403,7 +403,7 @@ ff_read_sp_value( FL_OBJECT * obj,
         if ( ( r = ff_read( "%F", &sp->dval ) ) < 0 )
             return ff_err( "Can't read expected object value" );
     }
-    else if ( ( r = ff_read( "%f", &sp->val ) ) < 0 )
+    else if ( ( r = ff_read( "%F", &sp->val ) ) < 0 )
         return ff_err( "Can't read expected object value" );
 
     if ( r == 0 )
@@ -421,7 +421,7 @@ ff_read_sp_slsize( FL_OBJECT * ob  FL_UNUSED_ARG,
                    SuperSPEC * sp )
 {
     int r;
-    if ( ( r = ff_read( "%f", &sp->slsize ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->slsize ) ) < 0 )
         return ff_err( "Can't read expected object slider size" );
 
     if ( r == 0 )
@@ -443,7 +443,7 @@ ff_read_sp_step( FL_OBJECT * obj  FL_UNUSED_ARG,
     if (    (    obj->objclass == FL_SPINNER
               && ( r = ff_read( "%F", &sp->dstep ) ) < 0 )
          || (    obj->objclass != FL_SPINNER
-              && ( r = ff_read( "%f", &sp->step ) ) < 0 ) )
+              && ( r = ff_read( "%F", &sp->step ) ) < 0 ) )
         return ff_err( "Can't read expected object step" );
 
     if ( r == 0 )
@@ -522,7 +522,7 @@ ff_read_sp_sstep( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f", &sp->sstep ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->sstep ) ) < 0 )
         return ff_err( "Can't read expected object small step" );
 
     if ( r == 0 )
@@ -541,7 +541,7 @@ ff_read_sp_lstep( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f", &sp->lstep ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->lstep ) ) < 0 )
         return ff_err( "Can't read expected object large step" );
 
     if ( r == 0 )
@@ -560,7 +560,7 @@ ff_read_sp_xbounds( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f%f", &sp->xmin, &sp->xmax ) ) < 0 )
+    if ( ( r = ff_read( "%F%F", &sp->xmin, &sp->xmax ) ) < 0 )
         return ff_err( "Can't read expected object xbounds" );
 
     if ( r == 0 )
@@ -581,7 +581,7 @@ ff_read_sp_ybounds( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f%f", &sp->ymin, &sp->ymax ) ) < 0 )
+    if ( ( r = ff_read( "%F%F", &sp->ymin, &sp->ymax ) ) < 0 )
         return ff_err( "Can't read expected object ybounds" );
 
     if ( r == 0 )
@@ -602,7 +602,7 @@ ff_read_sp_xvalue( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f", &sp->xval ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->xval ) ) < 0 )
         return ff_err( "Can't read expected object xvalue" );
 
     if ( r == 0 )
@@ -621,7 +621,7 @@ ff_read_sp_yvalue( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f", &sp->yval ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->yval ) ) < 0 )
         return ff_err( "Can't read expected object yvalue" );
 
     if ( r == 0 )
@@ -640,7 +640,7 @@ ff_read_sp_xstep( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f", &sp->xstep ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->xstep ) ) < 0 )
         return ff_err( "Can't read expected object xstep" );
 
     if ( r == 0 )
@@ -659,7 +659,7 @@ ff_read_sp_ystep( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f", &sp->ystep ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->ystep ) ) < 0 )
         return ff_err( "Can't read expected object ystep" );
 
     if ( r == 0 )
@@ -678,7 +678,7 @@ ff_read_sp_angles( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f%f", &sp->thetai, &sp->thetaf ) ) < 0 )
+    if ( ( r = ff_read( "%F%F", &sp->thetai, &sp->thetaf ) ) < 0 )
         return ff_err( "Can't read expected object angles" );
 
     if ( r == 0 )
@@ -718,7 +718,7 @@ ff_read_sp_initial_val( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int r;
 
-    if ( ( r = ff_read( "%f", &sp->val ) ) < 0 )
+    if ( ( r = ff_read( "%F", &sp->val ) ) < 0 )
         return ff_err( "Can't read expected object initial value" );
 
     if ( r == 0 )
