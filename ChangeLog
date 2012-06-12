@@ -1,3 +1,10 @@
+2012-06-12 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/tbox.c: Problem poinyed out by Rob Carpenter with
+	fl_addto_browser_chars() when first seting an "escape
+	sequence" and then text (which resulted in the effects of
+	the escape sequence getting lost) fixed.
+
 2012-04-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/xtext.c: Problem when drawing strings with zero or

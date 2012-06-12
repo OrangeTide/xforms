@@ -1536,6 +1536,11 @@ The next number indicates the color index for this line.
 @item N
 Non-selectable line (in selectable browsers).
 
+@item ' '
+(a space character) Does nothing, can be used to separate between the
+digits specifying a color (following @code{"@@C"}, see above) and the
+text of a line starting with a digit.
+
 @item @@@@
 Regular @code{'@@'} character.
 @end table

@@ -315,6 +315,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
     tl->color         = obj->lcol;
     tl->is_special    = 0;
     tl->specialGC     = None;
+    tl->incomp_esc    = 0;
 
     /* Check for flags at the start of the line. When we're done 'p'
        points to the start of the string to be shown in the textbox. */
@@ -331,6 +332,7 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
         switch ( p [ 1 ] )
         {
             case '\0' :
+                tl->incomp_esc = 1;
                 done = 1;
                 break;
 
@@ -439,7 +441,10 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
                 tl->color = strtol( p + 2, &e, 10 );
                 if ( e == p + 2 )
                 {
-                    M_err( "fli_tbox_insert_line", "missing color" );
+                    if ( p[ 2 ] == '\0' )
+                        tl->incomp_esc = 1;
+                    else
+                        M_err( "fli_tbox_insert_line", "missing color" );
                     p += 1;
                     break;
                 }
@@ -450,6 +455,10 @@ fli_tbox_insert_line( FL_OBJECT  * obj,
                     tl->color = obj->lcol;
                 }
                 p = e;
+                break;
+
+            case ' ' :
+                p += 2;
                 break;
 
             default :
@@ -592,16 +601,50 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
         return;
     }
 
-    /* If the last line is empty replace it by the stuff to be added */
+    tl = sp->lines[ sp->num_lines - 1 ];
 
-    if ( sp->lines[ sp->num_lines - 1 ]->len == 0 )
+    /* If there's no text or the line has an incomplete escape sequence that
+       possibly could become completed due to the new text assemble the text
+       of the line from the old text and the new text, delete te old line and
+       then draw a new one in its place.
+
+       Another question is how to deal with situations where by a previous
+       call with e.g. "@C3" a color was selected and in the next call the
+       string to be added starts with a digit, let's say '7'. One possibility
+       would be to re-evaluate the combined string to mean "@C37", setting
+       a different color. But since in older versions this didn't happen
+       (and some users may rely on this, it is assumed that this isn't the
+       users intention and to avoid the two digits to become collated and
+       interpreted as the number of a different color "@ " is inserted in
+       between the digits, with "@ " treated as a separator between digits
+       (the intended ose of "@ " is to allow lines like "@C3@ 2. Chapter", i.
+       e. having a color specification, followed by printable text that starts
+       with a digit). */
+
+    if ( tl->len == 0 || tl->incomp_esc )
     {
         int old_no_redraw = sp->no_redraw;
+        size_t old_len = strlen( tl->fulltext );
+        size_t len = strlen( add ) + 1;
+        int insert = tl->len == 0
+                     && old_len > 0
+                     && isdigit( tl->fulltext[ old_len - 1 ] )
+                     && isdigit( *add ) ? 2 : 0;
 
+        new_text = fl_malloc( old_len + len + insert );
+        if ( old_len )
+        {
+            memcpy( new_text, tl->fulltext, old_len );
+            if ( insert )
+                memcpy( new_text + old_len, "@ ", 2 );
+        }
+        memcpy( new_text + old_len + insert, add, len ); 
         sp->no_redraw = 1;
+
         fli_tbox_delete_line( obj, sp->num_lines - 1 );
-        fli_tbox_insert_lines( obj, sp->num_lines, add );
+        fli_tbox_insert_lines( obj, sp->num_lines, new_text );
         sp->no_redraw = old_no_redraw;
+        fl_free( new_text );
         return;
     }
 
@@ -616,11 +659,9 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
     else
         new_text = ( char * ) add;
 
-    tl = sp->lines[ sp->num_lines - 1 ];
-
     /* Make up the new text of the line from the old and the new text */
 
-    new_len = strlen( tl->fulltext ) + strlen( new_text );
+    new_len = strlen( tl->fulltext ) + strlen( new_text ) + 1;
     old_text = tl->text;
     old_fulltext = tl->fulltext;
 
@@ -628,7 +669,7 @@ fli_tbox_add_chars( FL_OBJECT  * obj,
     strcpy( tl->fulltext, old_fulltext );
     strcat( tl->fulltext, new_text );
     tl->text = tl->fulltext + ( old_text - old_fulltext );
-    tl->len = new_len;
+    tl->len = strlen( tl->text ); //new_len;
 
     fli_safe_free( old_fulltext );
 

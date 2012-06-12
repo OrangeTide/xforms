@@ -39,6 +39,7 @@ typedef struct {
     int            is_separator;     /* is this a separator line? */
     int            is_special;       /* does it need special GC? */
     GC             specialGC;        /* GC for if not default font/color */
+    int            incomp_esc;       /* text has incomplete escape sequence */
 } TBOX_LINE;
 
 
