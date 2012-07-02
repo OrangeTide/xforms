@@ -355,12 +355,14 @@ handle_button( FL_OBJECT * obj,
             if ( WITHIN( obj, mx, my ) )
             {
                 obj->belowmouse = 1;
-                newval = ! oldval;
+                if ( sp->react_to[ key - 1 ] )
+                    newval = ! oldval;
             }
             else
             {
                 obj->belowmouse = 0;
-                newval = oldval;
+                if ( sp->react_to[ key - 1 ] )
+                    newval = oldval;
             }
 
             if ( sp->val != newval )

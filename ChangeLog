@@ -1,3 +1,11 @@
+2012-07-02 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/objects.c: Attempt to avoid a massive slow-down observed
+	by Rob Carpenter while creating and deleting forms due to
+	much too many calls of fli_recalc_intersections().
+	lib/button.c: Some mis-handling of mouse buttons a button
+	isn't supposed to react to found by Rob fixed.
+
 2012-06-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/tbox.c: Problem poinyed out by Rob Carpenter with
@@ -9,7 +17,7 @@
 
 	* lib/xtext.c: Problem when drawing strings with zero or
 	negative "height" fixed
-	* lib/positioner.c: Fucntion for selecting which mouse
+	* lib/positioner.c: Function for selecting which mouse
 	a positioner reacts to added
 	* lib/button.c: Button now reacts only to the release of
 	the mouse button that was pressed first on it

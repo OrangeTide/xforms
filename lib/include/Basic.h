@@ -888,7 +888,7 @@ struct FL_FORM_ {
     int                    attached;         /* not independent anymore */
     void                   ( * pre_attach )( FL_FORM * );
     void                 * attach_data;
-    int                    no_tooltip;
+    int                    in_redraw;
 };
 
 

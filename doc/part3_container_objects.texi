@@ -587,7 +587,7 @@ the following routine is available
 @findex fl_set_formbrowser_scroll()
 @anchor{fl_set_formbrowser_scroll()}
 @example
-void fl_set_formbrowser_scroll(FL_OBJECT *how)
+void fl_set_formbrowser_scroll(FL_OBJECT *obj, int how)
 @end example
 @noindent
 where @code{how} can be one of the following

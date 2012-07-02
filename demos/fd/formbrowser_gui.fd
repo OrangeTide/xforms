@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -14,7 +14,7 @@ Number of Objects: 11
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 430 210
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -32,7 +32,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 30 151 80 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -50,7 +50,7 @@ argument:
 
 --------------------
 class: FL_ROUNDBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 40 91 100 30
 boxtype: FL_NO_BOX
 colors: FL_MCOL FL_YELLOW
@@ -68,7 +68,7 @@ argument:
 
 --------------------
 class: FL_ROUND3DBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 160 160 110 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_BLUE
@@ -86,7 +86,7 @@ argument:
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 170 120 110 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -104,7 +104,7 @@ argument:
 
 --------------------
 class: FL_LIGHTBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 20 50 100 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -122,7 +122,7 @@ argument:
 
 --------------------
 class: FL_PIXMAPBUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 320 36 80 80
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_YELLOW
@@ -137,13 +137,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	file: porsche.xpm
-	focus_file: 
-	fullpath: 1
+    file: porsche.xpm
+    fullpath: 1
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 140 50 100 30
 boxtype: FL_ROUNDED3D_UPBOX
 colors: FL_COL1 FL_COL1
@@ -161,7 +160,7 @@ argument:
 
 --------------------
 class: FL_LIGHTBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 290 146 100 30
 boxtype: FL_EMBOSSED_BOX
 colors: FL_COL1 FL_YELLOW
@@ -179,7 +178,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 210 90 60 25
 boxtype: FL_SHADOW_BOX
 colors: FL_COL1 FL_SLATEBLUE
@@ -197,7 +196,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 130 10 150 30
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -221,7 +220,7 @@ Number of Objects: 8
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 431 211
 boxtype: FL_FLAT_BOX
 colors: FL_INDIANRED FL_INDIANRED
@@ -239,7 +238,7 @@ argument:
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 40 40 60 45
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -257,11 +256,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 130 30 120 55
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_INDIANRED
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -275,7 +274,7 @@ argument:
 
 --------------------
 class: FL_CHART
-type: PIE_CHART
+type: FL_PIE_CHART
 box: 270 20 130 105
 boxtype: FL_BORDER_BOX
 colors: FL_INDIANRED FL_COL1
@@ -293,7 +292,7 @@ argument:
 
 --------------------
 class: FL_CLOCK
-type: ANALOG_CLOCK
+type: FL_ANALOG_CLOCK
 box: 30 100 85 85
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_RIGHT_BCOL
@@ -311,7 +310,7 @@ argument:
 
 --------------------
 class: FL_BITMAP
-type: NORMAL_BITMAP
+type: FL_NORMAL_BITMAP
 box: 150 140 30 25
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_COL1
@@ -326,13 +325,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	file: nomail.xbm
-	focus_file: 
-	fullpath: 1
+    file: nomail.xbm
+    fullpath: 1
 
 --------------------
 class: FL_PIXMAP
-type: NORMAL_PIXMAP
+type: FL_NORMAL_PIXMAP
 box: 210 120 60 60
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_COL1
@@ -347,13 +345,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	file: porsche.xpm
-	focus_file: 
-	fullpath: 1
+    file: porsche.xpm
+    fullpath: 1
 
 --------------------
 class: FL_TEXT
-type: NORMAL_TEXT
+type: FL_NORMAL_TEXT
 box: 310 150 70 25
 boxtype: FL_BORDER_BOX
 colors: FL_COL1 FL_MCOL
@@ -377,7 +374,7 @@ Number of Objects: 8
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 0 0 460 290
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -395,7 +392,7 @@ argument:
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 381 250 64 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -406,14 +403,14 @@ lcol: FL_BLACK
 label: Done
 shortcut: 
 resize: FL_RESIZE_NONE
-gravity: FL_NoGravity FL_NoGravity
+gravity: FL_South FL_South
 name: done
 callback: done_cb
 argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 15 249 64 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -424,14 +421,14 @@ lcol: FL_BLACK
 label: Hide
 shortcut: #H
 resize: FL_RESIZE_NONE
-gravity: FL_NoGravity FL_NoGravity
+gravity: FL_South FL_South
 name: hide
 callback: hide_show_cb
 argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 79 249 64 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -442,14 +439,14 @@ lcol: FL_BLACK
 label: Show
 shortcut: #S
 resize: FL_RESIZE_NONE
-gravity: FL_NoGravity FL_NoGravity
+gravity: FL_South FL_South
 name: show
 callback: hide_show_cb
 argument: 1
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 155 249 64 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -460,14 +457,14 @@ lcol: FL_BLACK
 label: ReShow
 shortcut: #R
 resize: FL_RESIZE_NONE
-gravity: FL_NoGravity FL_NoGravity
+gravity: FL_South FL_South
 name: reshow
 callback: reshow_cb
 argument: 0
 
 --------------------
 class: FL_BUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 217 249 79 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -478,14 +475,14 @@ lcol: FL_BLACK
 label: Jump
 shortcut: 
 resize: FL_RESIZE_NONE
-gravity: FL_NoGravity FL_NoGravity
+gravity: FL_South FL_South
 name: set
 callback: scroll_cb
 argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 296 249 69 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -496,14 +493,14 @@ lcol: FL_BLACK
 label: Deactivate
 shortcut: 
 resize: FL_RESIZE_NONE
-gravity: FL_NoGravity FL_NoGravity
+gravity: FL_South FL_South
 name: deactivate
 callback: deactivate_cb
 argument: 0
 
 --------------------
 class: FL_FORMBROWSER
-type: NORMAL_FORMBROWSER
+type: FL_NORMAL_FORMBROWSER
 box: 20 20 420 220
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -513,8 +510,8 @@ size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: 
 shortcut: 
-resize: FL_RESIZE_NONE
-gravity: FL_NoGravity FL_NoGravity
+resize: FL_RESIZE_ALL
+gravity: FL_NorthWest FL_SouthEast
 name: formbrowser
 callback: 
 argument: 
@@ -527,7 +524,7 @@ Number of Objects: 13
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 430 390
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -545,7 +542,7 @@ argument:
 
 --------------------
 class: FL_POSITIONER
-type: NORMAL_POSITIONER
+type: FL_NORMAL_POSITIONER
 box: 260 180 110 110
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_RED
@@ -560,12 +557,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-  xvalue: 0.679012
-  yvalue: 0.71831
+    xvalue: 0.679012
+    yvalue: 0.71831
 
 --------------------
 class: FL_VALSLIDER
-type: HOR_NICE_SLIDER
+type: FL_HOR_NICE_SLIDER
 box: 130 130 250 20
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_BLUE
@@ -580,11 +577,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	value: 0.87
+return: FL_RETURN_CHANGED
+    value: 0.87
 
 --------------------
 class: FL_COUNTER
-type: NORMAL_COUNTER
+type: FL_NORMAL_COUNTER
 box: 30 270 110 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLUE
@@ -599,11 +597,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-  value: -1.0
+    value: -1.0
 
 --------------------
 class: FL_SLIDER
-type: VERT_NICE_SLIDER
+type: FL_VERT_NICE_SLIDER
 box: 10 40 20 160
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_RED
@@ -618,11 +616,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	value: 0.49
+return: FL_RETURN_CHANGED
+    value: 0.49
 
 --------------------
 class: FL_VALSLIDER
-type: HOR_BROWSER_SLIDER
+type: FL_HOR_BROWSER_SLIDER
 box: 60 350 150 21
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -637,11 +636,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	slsize: 0.10
+return: FL_RETURN_CHANGED
 
 --------------------
 class: FL_SLIDER
-type: HOR_FILL_SLIDER
+type: FL_HOR_FILL_SLIDER
 box: 60 170 159 22
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_SLATEBLUE
@@ -656,11 +655,12 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	value: 0.25
+return: FL_RETURN_CHANGED
+    value: 0.25
 
 --------------------
 class: FL_DIAL
-type: NORMAL_DIAL
+type: FL_NORMAL_DIAL
 box: 160 220 60 58
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_RIGHT_BCOL
@@ -675,10 +675,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_SCROLLBAR
-type: VERT_THIN_SCROLLBAR
+type: FL_VERT_THIN_SCROLLBAR
 box: 394 14 18 180
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
@@ -693,11 +694,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	slsize: 0.20
+    slsize: 0.20
 
 --------------------
 class: FL_SCROLLBAR
-type: HOR_SCROLLBAR
+type: FL_HOR_SCROLLBAR
 box: 170 70 140 16
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -712,11 +713,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
-	slsize: 0.25
+    slsize: 0.25
 
 --------------------
 class: FL_THUMBWHEEL
-type: VERT_THUMBWHEEL
+type: FL_VERT_THUMBWHEEL
 box: 80 70 17 84
 boxtype: FL_BORDER_BOX
 colors: FL_COL1 FL_COL1
@@ -734,7 +735,7 @@ argument:
 
 --------------------
 class: FL_THUMBWHEEL
-type: HOR_THUMBWHEEL
+type: FL_HOR_THUMBWHEEL
 box: 280 330 90 19
 boxtype: FL_BORDER_BOX
 colors: FL_COL1 FL_COL1
@@ -752,7 +753,7 @@ argument:
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 100 10 180 30
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -776,7 +777,7 @@ Number of Objects: 6
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 430 210
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -794,7 +795,7 @@ argument:
 
 --------------------
 class: FL_MENU
-type: PULLDOWN_MENU
+type: FL_PULLDOWN_MENU
 box: 40 70 52 22
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_LEFT_BCOL
@@ -809,18 +810,21 @@ gravity: FL_NoGravity FL_NoGravity
 name: pulldown
 callback: 
 argument: 
-  content: Menu item 1
-  shortcut: 1#1
-  content: Menu item 2
-  shortcut: 2#2
-  content: Menu Item None
-  mode: FL_PUP_GRAY
-  content: Menu item 3
-  shortcut: 3#3
+    content: Menu item 1
+    mode: FL_PUP_NONE
+    shortcut: 1#1
+    content: Menu item 2
+    mode: FL_PUP_NONE
+    shortcut: 2#2
+    content: Menu Item None
+    mode: FL_PUP_GRAY
+    content: Menu item 3
+    mode: FL_PUP_NONE
+    shortcut: 3#3
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 10 120 111 27
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -835,14 +839,17 @@ gravity: FL_NoGravity FL_NoGravity
 name: choice
 callback: 
 argument: 
-  content: Choice item 1
-  shortcut: 1#1
-  content: Choice item 2
-  content: Choice item 3
+    content: Choice item 1
+    mode: FL_PUP_NONE
+    shortcut: 1#1
+    content: Choice item 2
+    mode: FL_PUP_NONE
+    content: Choice item 3
+    mode: FL_PUP_NONE
 
 --------------------
 class: FL_BROWSER
-type: HOLD_BROWSER
+type: FL_HOLD_BROWSER
 box: 250 10 164 184
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_YELLOW
@@ -857,25 +864,25 @@ gravity: FL_NoGravity FL_NoGravity
 name: browser
 callback: 
 argument: 
-  content: @c@bBrowser
-  content: This is line #1 of the browser
-  content: This is line #2 of the browser
-  content: This is line #3 of the browser
-  content: This is line #4 of the browser
-  content: This is line #5 of the browser
-  content: This is line #6 of the browser
-  content: This is line #7 of the browser
-  content: @C1This is line #8 of the browser
-  content: This is line #9 of the browser
-  content: @C2This is line #10 of the browser
-  content: This is line #11 of the browser
-  content: This is line #12 of the browser
-  content: This is line #13 of the browser
-  content: @C3This is line #14 of the browser
+content: @c@bBrowser
+content: This is line #1 of the browser
+content: This is line #2 of the browser
+content: This is line #3 of the browser
+content: This is line #4 of the browser
+content: This is line #5 of the browser
+content: This is line #6 of the browser
+content: This is line #7 of the browser
+content: @C1This is line #8 of the browser
+content: This is line #9 of the browser
+content: @C2This is line #10 of the browser
+content: This is line #11 of the browser
+content: This is line #12 of the browser
+content: This is line #13 of the browser
+content: @C3This is line #14 of the browser
 
 --------------------
 class: FL_MENU
-type: PUSH_MENU
+type: FL_PUSH_MENU
 box: 150 130 75 26
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_MCOL
@@ -890,14 +897,18 @@ gravity: FL_NoGravity FL_NoGravity
 name: pushmenu
 callback: 
 argument: 
-  content: 1
-  content: 2
-  content: 3
-  content: 4
+    content: 1
+    mode: FL_PUP_NONE
+    content: 2
+    mode: FL_PUP_NONE
+    content: 3
+    mode: FL_PUP_NONE
+    content: 4
+    mode: FL_PUP_NONE
 
 --------------------
 class: FL_FRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 40 10 170 30
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -921,7 +932,7 @@ Number of Objects: 3
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 430 210
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -939,7 +950,7 @@ argument:
 
 --------------------
 class: FL_INPUT
-type: MULTILINE_INPUT
+type: FL_MULTILINE_INPUT
 box: 70 40 280 90
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -954,10 +965,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 80 152 250 34
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -972,6 +984,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: 
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 
 =============== FORM ===============
 Name: big
@@ -981,7 +994,7 @@ Number of Objects: 5
 
 --------------------
 class: FL_BOX
-type: BORDER_BOX
+type: FL_BORDER_BOX
 box: 0 0 520 460
 boxtype: FL_BORDER_BOX
 colors: FL_COL1 FL_COL1
@@ -999,7 +1012,7 @@ argument:
 
 --------------------
 class: FL_THUMBWHEEL
-type: VERT_THUMBWHEEL
+type: FL_VERT_THUMBWHEEL
 box: 100 50 17 80
 boxtype: FL_BORDER_BOX
 colors: FL_COL1 FL_COL1
@@ -1017,7 +1030,7 @@ argument:
 
 --------------------
 class: FL_POSITIONER
-type: NORMAL_POSITIONER
+type: FL_NORMAL_POSITIONER
 box: 180 30 180 150
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_RED
@@ -1035,7 +1048,7 @@ argument:
 
 --------------------
 class: FL_XYPLOT
-type: ACTIVE_XYPLOT
+type: FL_ACTIVE_XYPLOT
 box: 30 210 290 210
 boxtype: FL_DOWN_BOX
 colors: FL_BLACK FL_GREEN
@@ -1053,7 +1066,7 @@ argument:
 
 --------------------
 class: FL_BOX
-type: UP_BOX
+type: FL_UP_BOX
 box: 345 425 170 30
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1

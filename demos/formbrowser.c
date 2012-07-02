@@ -74,8 +74,8 @@ scroll_cb( FL_OBJECT * ob,
      static int n;
      FD_mainform *fdui = ob->form->fdui;
 
-     fl_set_object_label( ob, n % 2 ? "Jump" : "Smooth" );
-     fl_set_formbrowser_scroll( fdui->formbrowser, ++n % 2 );
+     fl_set_object_label( ob, n ? "Jump" : "Smooth" );
+     fl_set_formbrowser_scroll( fdui->formbrowser, n ^= 1 );
 }
 
 

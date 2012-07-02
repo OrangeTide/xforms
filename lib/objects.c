@@ -36,7 +36,7 @@
 
 #define TRANSLATE_Y( obj, form )    ( form->h - obj->h - obj->y )
 
-extern int fli_fast_free_object;     /* defined in forms.c */
+extern FL_FORM * fli_fast_free_object;     /* defined in forms.c */
 static void redraw( FL_FORM *,
                     int );
 static void lose_focus( FL_OBJECT * );
@@ -237,7 +237,7 @@ fl_add_object( FL_FORM   * form,
     obj->fb2 = form->h - obj->ft2;
 
     /* If adding to a group, set objects group ID, then find the end of the
-       group or the end of the object list on this form */
+       group or the end of the object list of this form */
 
     if ( fli_current_group )
     {
@@ -256,7 +256,6 @@ fl_add_object( FL_FORM   * form,
             obj->prev = end->prev;
             obj->next = end;
             end->prev = obj;
-            fl_redraw_object( obj );
             return;
         }
     }
@@ -273,23 +272,10 @@ fl_add_object( FL_FORM   * form,
     if ( obj->input && obj->active && ! form->focusobj )
         fl_set_focus_object( form, obj );
 
-    /* If the object has child objects also add them to the form,
-       otherwise check if the object partialy or completely hides
-       any objects before it in the list of objects of the form. */
+    /* If the object has child objects also add them to the form */
 
     if ( obj->child )
         fli_add_composite( obj );
-
-    for ( o = form->first; o != obj; o = o->next )
-    {
-        if (    o->is_under
-             || o->objclass == FL_BEGIN_GROUP
-             || o->objclass == FL_END_GROUP )
-            continue;
-
-        if ( objects_intersect( o, obj ) )
-            o->is_under = 1;
-    }
 
     if (    obj->form->first
          && obj->form->first != obj )
@@ -306,8 +292,6 @@ fl_add_object( FL_FORM   * form,
 
         obj->dbl_background = bkcol;
     }
-
-    redraw( form, 1 );
 }
 
 
@@ -335,8 +319,8 @@ fli_insert_object( FL_OBJECT * obj,
         return;
     }
 
-    form          = before->form;
-    obj->next     = before;
+    form      = before->form;
+    obj->next = before;
 
     if ( before->type != FL_BEGIN_GROUP )
         obj->group_id = before->group_id;
@@ -483,10 +467,16 @@ fl_delete_object( FL_OBJECT * obj )
     else
         form->last = obj->prev;
 
-    fli_recalc_intersections( form );
+    /* Redraw the form (except when the complete form is being deleted) */
 
-    if ( obj->visible )
-        redraw( form, 1 );
+    if ( fli_fast_free_object != form )
+    {
+        if ( ! obj->parent )
+            fli_recalc_intersections( form );
+
+        if ( obj->visible )
+            redraw( form, 1 );
+    }
 }
 
 
@@ -592,8 +582,6 @@ fl_free_object( FL_OBJECT * obj )
         fli_safe_free( obj->flpixmap );
     }
 
-    fl_free( obj );
-
     /* We might have arrived here due to a callback for the object we just
        deleted (or one of it's child objects). The following tests allow
        the routine that invoked the callback to check if that is the case
@@ -603,6 +591,8 @@ fl_free_object( FL_OBJECT * obj )
         fli_handled_obj = NULL;
     if ( obj == fli_handled_parent )
         fli_handled_parent = NULL;
+
+    fl_free( obj );
 }
 
 
@@ -708,7 +698,8 @@ fl_set_object_resize( FL_OBJECT    * obj,
     /* Check if thr object is a group, if so also change all members */
 
     if ( obj->objclass == FL_BEGIN_GROUP )
-        for ( obj = obj->next; obj && obj->objclass != FL_END_GROUP; obj = obj->next )
+        for ( obj = obj->next; obj && obj->objclass != FL_END_GROUP;
+              obj = obj->next )
             fl_set_object_resize( obj, what );
 }
 
@@ -1226,7 +1217,8 @@ fl_set_object_lalign( FL_OBJECT * obj,
         fl_redraw_object( obj );
     else if ( obj->form )
     {
-        fli_recalc_intersections( obj->form );
+        if ( ! obj->parent )
+            fli_recalc_intersections( obj->form );
         redraw( obj->form, 1 );
     }
 }
@@ -2059,7 +2051,7 @@ fl_redraw_object( FL_OBJECT * obj )
 
 
 /***************************************
- * Function to test if the areas of 'obj1' and 'obj2' intersect
+ * Function to test if the areas of two objects intersect
  ***************************************/
 
 static int
@@ -2072,7 +2064,6 @@ objects_intersect( FL_OBJECT * obj1,
     int extra;
 
     for ( i = 0; i < 2; i++ )
-    {
         if (    obj[ i ]->objclass == FL_CANVAS
              || obj[ i ]->objclass == FL_GLCANVAS )
         {
@@ -2095,12 +2086,11 @@ objects_intersect( FL_OBJECT * obj1,
                 r[ i ].height += 2 * extra + 1;
             }
         }
-    }
 
     return      (    (    r[ 0 ].x <= r[ 1 ].x
-                       && r[ 0 ].x + r[ 0 ].width  > r[ 1 ].x )
+                       && r[ 0 ].x + r[ 0 ].width > r[ 1 ].x )
                   || (    r[ 1 ].x <= r[ 0 ].x
-                       && r[ 1 ].x + r[ 1 ].width  > r[ 0 ].x ) )
+                       && r[ 1 ].x + r[ 1 ].width > r[ 0 ].x ) )
             && (    (    r[ 0 ].y <= r[ 1 ].y
                       && r[ 0 ].y + r[ 0 ].height > r[ 1 ].y )
                  || (    r[ 1 ].y <= r[ 0 ].y
@@ -2109,48 +2099,10 @@ objects_intersect( FL_OBJECT * obj1,
 
 
 /***************************************
- * Function to test if the areas of an object intersects with any of its
- * successors in its forms list of objects (objects are always sorted in
- * a way that objects earlier in the list are drawn under those following
- * it). We don't need to look at objects that have a parent since for
- * them the tests for the parent objects will do.
- ***************************************/
-
-static int
-object_is_under( FL_OBJECT * obj )
-{
-    FL_OBJECT *o;
-
-    if (    ! obj->next
-         || obj->parent
-         || obj->objclass == FL_BEGIN_GROUP 
-         || obj->objclass == FL_END_GROUP )
-        return 0;
-
-    for ( o = obj->next; o; o = o->next )
-    {
-        if (    o->parent
-             || o->objclass == FL_BEGIN_GROUP 
-             || o->objclass == FL_END_GROUP )
-            continue;
-
-        if ( objects_intersect( obj, o ) )
-            return 1;
-    }
-
-    return 0;
-}
-
-
-/***************************************
- * Redraws a form
- ***************************************/
-
-/***************************************
  * Redraws a form or only a subset of its objects - when called with the
  * 'draw_all' argument being set it redraws the complete form with all its
  * objects while, with 'draw_all' being unset (when getting call from e.g.
- * fl_redraw_object() or fl_unfreeze_form()), only draes those objects that
+ * fl_redraw_object() or fl_unfreeze_form()), only draws those objects that
  * are marked for needing a redraw (and all objects as well that would be
  * obscured by that because they're "higher up").
  ***************************************/
@@ -2161,8 +2113,10 @@ redraw( FL_FORM * form,
 {
     FL_OBJECT *obj;
 
-    if ( ! form )
+    if ( ! form || ! form->visible || form->frozen || form->in_redraw )
         return;
+
+    form->in_redraw = 1;
 
     /* Store it when we're asked to do a full redraw - we might leave without
        drawing at all since the form is invisible or frozen and then the next
@@ -2174,14 +2128,18 @@ redraw( FL_FORM * form,
     /* If the form is invisible or frozen we're already done */
 
     if ( form->visible != FL_VISIBLE || form->frozen > 0 )
+    {
+        form->in_redraw = 0;
         return;
+    }
 
-    /* If we don't do a full redraw anyway check if there are any objects
-       that partially or fully hide one of the objects not to be redrawn and
-       mark those also for redrawing. Otherwise such objects "higher up" (i.e.
-       coming later in the list of objects of the form) would be obscured by
-       the "lower" object - and, of course, those that are "above" the newly
-       marked objects also). */
+    /* If we don't do a full redraw check if any of the object to be redrawn
+       are (at least partially) hidden by a "higher" object i.e. coming later
+       in the list of objects of th form) that isn't set for a redraw. If that
+       's the case this "higher" object also must be marked for a redraw
+       since it itherwise might become obscured when the "lower" object is
+       redrawn. Of course, those that are "above" the newly marked objects
+       then also need a redraw... */
 
     if ( ! form->needs_full_redraw )
         for ( obj = form->first; obj && obj->next; obj = obj->next )
@@ -2191,6 +2149,7 @@ redraw( FL_FORM * form,
             if (    ! obj->visible
                  || ! obj->redraw
                  || ! obj->is_under
+                 || obj->parent
                  || obj->objclass == FL_BEGIN_GROUP
                  || obj->objclass == FL_END_GROUP )
                 continue;
@@ -2199,6 +2158,7 @@ redraw( FL_FORM * form,
             {
                 if (    ! o->visible
                      || o->redraw
+                     || o->parent
                      || o->objclass == FL_BEGIN_GROUP
                      || o->objclass == FL_END_GROUP )
                     continue;
@@ -2265,6 +2225,7 @@ redraw( FL_FORM * form,
     fli_show_form_pixmap( form );
 
     form->needs_full_redraw = 0;
+    form->in_redraw = 0;
 }
 
 
@@ -2488,7 +2449,7 @@ handle_object( FL_OBJECT * obj,
             {
                 char const * const tooltip = parent->tooltip;
 
-                if ( tooltip && *tooltip && ! parent->form->no_tooltip )
+                if ( tooltip && *tooltip )
                     parent->tipID = fl_add_timeout( fli_context->tooltip_time,
                                                     tooltip_handler, parent );
             }
@@ -2997,6 +2958,39 @@ fl_call_object_callback( FL_OBJECT * obj )
 
 
 /***************************************
+ * Function to test if an object is ( partially) hidden by any of its
+ * successors in the forms list of objects (objects are always sorted in
+ * a way that objects earlier in the list are drawn under those following
+ * it). We don't need to look at objects that have a parent since for
+ * them the tests for the parent objects will do.
+ ***************************************/
+
+static int
+object_is_under( FL_OBJECT * obj )
+{
+    FL_OBJECT *o;
+
+    if (    obj->parent
+         || obj->objclass == FL_BEGIN_GROUP 
+         || obj->objclass == FL_END_GROUP )
+        return 0;
+
+    for ( o = obj->next; o; o = o->next )
+    {
+        if (    o->parent
+             || o->objclass == FL_BEGIN_GROUP 
+             || o->objclass == FL_END_GROUP )
+            continue;
+
+        if ( objects_intersect( obj, o ) )
+            return 1;
+    }
+
+    return 0;
+}
+
+
+/***************************************
  * Rechecks for all objects of a form if they are
  * partially or fully hidden by another object
  ***************************************/
@@ -3005,6 +2999,14 @@ void
 fli_recalc_intersections( FL_FORM * form )
 {
     FL_OBJECT *obj;
+
+    /* When we're still adding to a form (and thus 'fl_current_form' isn't
+       NULL) there typically are a lot of calls that normally would require
+       a recalculation of intersections. Delay this until the form gets
+       closed. */
+
+    if ( fl_current_form )
+        return;
 
     for ( obj = form->first; obj && obj->next; obj = obj->next )
         obj->is_under = object_is_under( obj );
@@ -3105,7 +3107,8 @@ fl_set_object_position( FL_OBJECT * obj,
         obj->y = y;
     }
 
-    fli_recalc_intersections( obj->form );
+    if ( ! obj->parent )
+        fli_recalc_intersections( obj->form );
 
     if ( visible )
     {
@@ -3208,7 +3211,8 @@ fl_set_object_size( FL_OBJECT * obj,
     if ( obj->child )
         fli_composite_has_been_resized( obj );
 
-    fli_recalc_intersections( obj->form );
+    if ( ! obj->parent )
+        fli_recalc_intersections( obj->form );
 
     if ( visible )
         fl_show_object( obj );

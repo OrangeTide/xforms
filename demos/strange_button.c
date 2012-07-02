@@ -133,6 +133,7 @@ create_form_x( void )
 						  "(Also try the scroll wheel if you have.)" );
 
     obj = fl_add_button( FL_RETURN_BUTTON, 50, 130, 70, 30, "Exit" );
+	fl_set_button_mouse_buttons( obj, 1 );
 
     fl_end_form( );
 

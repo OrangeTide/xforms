@@ -28,6 +28,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 
 #define TOP_MARGIN     1

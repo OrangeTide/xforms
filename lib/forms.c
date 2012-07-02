@@ -51,7 +51,7 @@ static FL_FORM *fli_mainform;
 static int nomainform;
 static int reopened_group = 0;
 
-int fli_fast_free_object = 0;    /* exported to objects.c */
+FL_FORM * fli_fast_free_object = NULL;    /* exported to objects.c */
 
 static int has_initial;
 
@@ -316,7 +316,7 @@ create_new_form( FL_Coord w,
     form->close_callback    = NULL;
     form->close_data        = NULL;
     form->icon_pixmap       = form->icon_mask = None;
-    form->no_tooltip        = 0;
+    form->in_redraw         = 0;
     form->needs_full_redraw = 1;
 
     return form;
@@ -372,6 +372,8 @@ fl_bgn_form( int      type,
 void
 fl_end_form( void )
 {
+    FL_FORM * f = fl_current_form;
+
     if ( ! fl_current_form )
         M_err( "fl_end_form", "No current form" );
 
@@ -382,6 +384,11 @@ fl_end_form( void )
     }
 
     fl_current_form = NULL;
+
+    fli_recalc_intersections( f );
+
+    if ( f->visible && ! f->frozen )
+        fl_redraw_form( f );
 }
 
 
@@ -1570,12 +1577,12 @@ fl_free_form( FL_FORM * form )
 
     /* Free all objects of the form */
 
-    fli_fast_free_object = 1;
+    fli_fast_free_object = form;
 
     while ( form->first )
         fl_free_object( form->first );
 
-    fli_fast_free_object = 0;
+    fli_fast_free_object = NULL;
 
     if ( form->flpixmap )
     {

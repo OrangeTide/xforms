@@ -787,6 +787,10 @@ handle_formbrowser( FL_OBJECT * ob,
 
     switch ( event )
     {
+        case FL_RESIZED :
+            fl_redraw_object( ob );
+            break;
+
         case FL_DRAW :
             fl_set_object_boxtype( sp->canvas,
                                    fli_boxtype2frametype( ob->boxtype ) );
@@ -996,12 +1000,12 @@ check_scrollbar( FL_OBJECT * ob )
     int h_on = sp->h_on,
         v_on = sp->v_on;
 
-    /* Inherit the boxtype of parent */
+    /* Inherit the boxtype of the parent */
 
     sp->hsl->boxtype = ob->boxtype;
     sp->vsl->boxtype = ob->boxtype;
 
-    /* Gravity/resize may screwup the ratios. Recompute */
+    /* Gravity/resize may screw up the ratios. Recompute */
 
     sp->canvas->x = ob->x + absbw;
     sp->canvas->y = ob->y + absbw;
@@ -1020,18 +1024,29 @@ check_scrollbar( FL_OBJECT * ob )
                     || (    sp->v_pref != FL_OFF
                          && sp->canvas->h < sp->max_height ) );
 
+    if ( sp->h_on && ! sp->v_on )
+        sp->v_on =    sp->canvas->h - 2 * absbw - sp->hh_def > 0
+                   && sp->canvas->h - 2 * absbw - sp->hh_def > 0
+                   && sp->v_pref != FL_OFF
+                   && sp->canvas->h < sp->max_height + sp->hh_def;
+    else if ( ! sp->h_on && sp->v_on )
+        sp->h_on =    sp->canvas->h - 2 * absbw - sp->hh_def > 0
+                   && sp->canvas->h - 2 * absbw - sp->hh_def > 0
+                   && sp->h_pref != FL_OFF
+                   && sp->canvas->w < sp->max_width + sp->vw_def;
+
     if ( sp->v_on )
     {
         sp->vw = sp->vw_def;
         sp->vsl->x = ob->x + ob->w - sp->vw;
         sp->vsl->y = ob->y;
         sp->vsl->w = sp->vw;
-        sp->vsl->visible = 1;
+        fli_set_object_visibility( sp->vsl, FL_VISIBLE );
         fl_notify_object( sp->vsl, FL_RESIZED );
     }
     else
     {
-        sp->vsl->visible = 0;
+        fli_set_object_visibility( sp->vsl, FL_HIDDEN );
         sp->vw = 0;
     }
 
@@ -1041,13 +1056,13 @@ check_scrollbar( FL_OBJECT * ob )
         sp->hsl->x = ob->x;
         sp->hsl->y = ob->y + ob->h - sp->hh;
         sp->hsl->h = sp->hh;
-        sp->hsl->visible = 1;
+        fli_set_object_visibility( sp->hsl, FL_VISIBLE );
         fl_notify_object( sp->hsl, FL_RESIZED );
     }
     else
     {
+        fli_set_object_visibility( sp->hsl, FL_HIDDEN );
         sp->hh = 0;
-        sp->hsl->visible = 0;
     }
 
     /* Recheck vertical */
@@ -1073,8 +1088,7 @@ check_scrollbar( FL_OBJECT * ob )
     sp->hsl->w = sp->canvas->w + 2 * absbw;
     sp->vsl->h = sp->canvas->h + 2 * absbw;
 
-    /* If scrollbars get turned off due since the canvas is large enough,
-       adjust the offsets. */
+    /* If scrollbars get turned off adjust the offsets. */
 
     if ( ! sp->v_on && v_on && sp->canvas->h >= sp->max_height )
     {
@@ -1089,15 +1103,11 @@ check_scrollbar( FL_OBJECT * ob )
         fl_set_scrollbar_value( sp->hsl, sp->old_hval = 0.0 );
     }
 
-    sp->vsl->visible = sp->v_on;
-    sp->hsl->visible = sp->h_on;
-
     if ( sp->h_on )
     {
         fl_set_scrollbar_size( sp->hsl,
                                ( double ) sp->canvas->w / sp->max_width );
         fl_set_formbrowser_xoffset( ob, fl_get_formbrowser_xoffset( ob ) );
-        fl_redraw_object( sp->hsl );
     }
 
     if ( sp->v_on )
@@ -1105,7 +1115,6 @@ check_scrollbar( FL_OBJECT * ob )
         fl_set_scrollbar_size( sp->vsl,
                                ( double ) sp->canvas->h / sp->max_height );
         fl_set_formbrowser_yoffset( ob, fl_get_formbrowser_yoffset( ob ) );
-        fl_redraw_object( sp->vsl );
     }
 
     if ( sp->canvas->w > 0 && sp->canvas->h > 0 )
