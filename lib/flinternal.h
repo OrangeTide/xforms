@@ -254,6 +254,9 @@ extern int fli_mouse_wheel_to_keypress( int       * ev,
                                         int       * key,
                                         void      * xev );
 
+extern void fl_notify_object( FL_OBJECT * obj,
+                              int         reason );
+
 /* double buffering etc. */
 
 extern void fli_free_flpixmap( FL_pixmap * );

@@ -59,7 +59,7 @@ attrib_change( FL_OBJECT * ob )
     sp->tb->col1    = ob->col1;
     sp->tb->col2    = ob->col2;
     sp->tb->bw      = ob->bw;
-    fl_notify_object( sp->tb, FL_RESIZED );
+    fli_notify_object( sp->tb, FL_RESIZED );
 
     /* Scrollbars */
 
@@ -152,7 +152,7 @@ get_geometry( FL_OBJECT * obj )
         comp->vsl->y = obj->y;
         comp->vsl->w = comp->vw;
         comp->vsl->h = obj->h - comp->hh;
-        fl_notify_object( comp->vsl, FL_RESIZED );
+        fli_notify_object( comp->vsl, FL_RESIZED );
 
         comp->vval  = old_yrel;
         comp->vsize = comp->vinc1 = ( double ) sp->h / sp->max_height;
@@ -170,7 +170,7 @@ get_geometry( FL_OBJECT * obj )
         comp->hsl->y = obj->y + obj->h - comp->hh;
         comp->hsl->w = obj->w - comp->vw;
         comp->hsl->h = comp->hh;
-        fl_notify_object( comp->hsl, FL_RESIZED );
+        fli_notify_object( comp->hsl, FL_RESIZED );
 
         comp->hval  = old_xrel;
         comp->hsize = ( double ) sp->w / sp->max_width;
@@ -208,7 +208,7 @@ get_geometry( FL_OBJECT * obj )
     sp->no_redraw = 0;
 
     if ( h_on != comp->h_on || v_on != comp->v_on )
-        fl_notify_object( tb, FL_RESIZED );
+        fli_notify_object( tb, FL_RESIZED );
 }
 
 

@@ -62,9 +62,10 @@ Between these two calls objects are added to the form. The following
 sections describe some of the more common classes of objects that can
 be added to a form.
 
-Many different forms can be defined and displayed when required.
-Normally you probably will first define all your forms before starting
-the actual work but it's no problem to define new forms also later on.
+there's no built-in upper limit on the number of forms that can be
+defined and displayed when required. Normally you probably will first
+define all your forms before starting the actual work but it's no
+problem to define new forms also later on.
 
 
 @node Boxes
@@ -1846,8 +1847,8 @@ FL_FORM *fl_addto_form(FL_FORM *form);
 @end example
 @noindent
 After this call you can again add objects to the form with the usual
-functions for adding objects like @code{@ref{fl_add_button()}} etc.
-When done adding objects to the form again call
+functions for adding objects (like @code{@ref{fl_add_button()}} etc.).
+When done with adding objects to the form again call
 @code{@ref{fl_end_form()}}. It is possible to add objects to forms
 that are being displayed, but this is not always a good idea because
 not everything behaves well (e.g.@: strange things might happen when a
@@ -1876,24 +1877,26 @@ afterwards) using the function
 void fl_add_object(FL_FORM *form, FL_OBJECT *obj);
 @end example
 @noindent
-Normally, this function is used within object classes to add a newly
-created object to a form. It can not be used for pseude-objects
-representing the start or end of a group.
+Normally, this function should only be used within object classes to
+add a newly created object to the form currently under construction.
+It can not be used for pseude-objects representing the start or end of
+a group.
 
 
 @node Freeing Objects
 @section Freeing Objects
 
-If the application program does not need an object anymore, it can
+If the application program does not need an object anymore it can
 completely delete it, freeing all memory used for it, using a call of
 @findex fl_free_object()
 @example
 void fl_free_object(FL_OBJECT *obj);
 @end example
 @noindent
-After this the object truely destroyed and can no longer be used. If
-you hadn't deleted the object from the form it did belong to using
-@code{@ref{fl_delete_object()}} before this will be done automatically.
+After this the object is truely destroyed and can no longer be used.
+If you hadn't removed the object from the form it did belong to using
+@code{@ref{fl_delete_object()}} before this will be done
+automatically.
 
 To free the memory used by an entire form use a call of
 @findex fl_free_form()

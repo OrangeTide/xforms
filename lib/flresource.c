@@ -333,7 +333,7 @@ fl_get_defaults( FL_IOPT * cntl )
 void
 fl_set_coordunit( int u )
 {
-    const char *cu = fli_get_vn_name( vn_coordunit, u );
+    const char * cu = fli_get_vn_name( vn_coordunit, u );
 
     if ( cu == NULL )
     {
@@ -366,6 +366,7 @@ void
 fl_set_scrollbar_type( int t )
 {
     fli_cntl.scrollbarType = t;
+
     if ( t == FL_NORMAL_SCROLLBAR )
         strcpy( OpSCBT, "normal" );
     else if ( t == FL_NICE_SCROLLBAR )
@@ -456,8 +457,8 @@ handle_applresdir( const char * rstr,
 static void
 init_resource_database( const char *appclass )
 {
-    char buf[ FL_PATH_MAX + 127 ],
-         *rstr;
+    char   buf[ FL_PATH_MAX + 127 ],
+         * rstr;
     XrmDatabase fdb = 0;
 
     if ( ! fl_display )
@@ -605,7 +606,7 @@ init_resource_database( const char *appclass )
  ***************************************/
 
 static int
-is_true( const char *s )
+is_true( const char * s )
 {
     return    strncmp( s, "True", 4 ) == 0
            || strncmp( s, "true", 4 ) == 0
@@ -633,18 +634,19 @@ fl_get_resource( const char * rname,    /* resource name */
                  int          size )    /* buffer size if string */
 {
     XrmValue entry = { 0, NULL };
-    char *type = NULL;
+    char * type = NULL;
     char res_name[ 256 ]  = "",
          res_class[ 256 ] = "";
 
 
-    if ( ( ! rname || ! * rname ) && ( ! cname || ! *cname ) )
+    if ( ! ( rname && * rname ) && ! ( cname && *cname ) )
         return NULL;
 
     if ( rname && *rname )
-        fl_snprintf( res_name, sizeof res_name,"%s.%s", fl_app_name, rname );
-    else if ( cname && *cname )
-        fl_snprintf( res_class, sizeof res_class,"%s.%s", fl_app_class, cname );
+        fl_snprintf( res_name, sizeof res_name, "%s.%s", fl_app_name, rname );
+    else
+        fl_snprintf( res_class, sizeof res_class, "%s.%s",
+                     fl_app_class, cname );
 
     /* Just checking the return value of XrmGetResource() doesn't seem to
        work (as it should, unless I completely misunderstand the man
@@ -671,23 +673,23 @@ fl_get_resource( const char * rname,    /* resource name */
     switch ( dtype )
     {
         case FL_SHORT:
-            *( short * ) val = atoi( entry.addr );
+            * ( short * ) val = strtol( entry.addr, NULL, 10 );
             break;
 
         case FL_INT:
-            *( int * ) val = atoi( entry.addr );
+            * ( int * ) val = strtol( entry.addr, NULL, 10 );
             break;
 
         case FL_BOOL:
-            *( int * ) val = is_true( entry.addr );
+            * ( int * ) val = is_true( entry.addr );
             break;
 
         case FL_LONG:
-            *( long * ) val = strtol( entry.addr, NULL, 0 );
+            * ( long * ) val = strtol( entry.addr, NULL, 10 );
             break;
 
         case FL_FLOAT:
-            * ( float * ) val = ( float ) atof( entry.addr );
+            * ( float * ) val = atof( entry.addr );
             break;
 
         case FL_STRING:
@@ -731,9 +733,9 @@ fli_init_resources( void )
     char res[ 256 ],
          cls[ 256 ],
          ores[ 256 ];
-    char *appname = fl_app_name,
-         *appclass = fl_app_class;
-    char *ori_appname = fl_ori_app_name;
+    char * appname = fl_app_name,
+         * appclass = fl_app_class;
+    char * ori_appname = fl_ori_app_name;
 
     /* internal resources need to be prefixed xform and XForm. need to
        generate for all names */
@@ -760,7 +762,7 @@ fli_init_resources( void )
 
 
 static int fl_argc;
-static char **fl_argv;
+static char ** fl_argv;
 
 
 /***************************************
@@ -789,7 +791,7 @@ dup_argv( char ** argv,
  ***************************************/
 
 char **
-fl_get_cmdline_args( int *n )
+fl_get_cmdline_args( int * n )
 {
     *n = fl_argc;
     return fl_argv;
@@ -939,19 +941,6 @@ fl_initialize( int        * na,
         exit( 1 );
     }
 
-    /* Setting the locale was introduced in 0.89.5 (as far as I could figure
-       out) but never was officially documented. Since it can break programs
-       when run in a different locale than the one the original author used
-       (e.g. because reading of files with scanf() may not work anymore when,
-       due to the locale setting where ',' instead of a '.' as the decimal
-       point is expected) I have thrown it out. Jean-Marc and Angus already
-       planned to do that back in 2004 but obviously never got around to
-       doing it. */
-
-#if 0
-    setlocale( LC_ALL, "" );
-#endif
-
     fli_internal_init( );
 
     XrmInitialize( );
@@ -1007,7 +996,7 @@ fl_initialize( int        * na,
         buf[ sizeof buf - 1 ] = '\0';
     }
 
-    /* Open display and quit if failure */
+    /* Open display and quit on failure */
 
     if ( ! ( fl_display = XOpenDisplay( buf ) ) )
     {

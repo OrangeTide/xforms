@@ -1042,7 +1042,7 @@ check_scrollbar( FL_OBJECT * ob )
         sp->vsl->y = ob->y;
         sp->vsl->w = sp->vw;
         fli_set_object_visibility( sp->vsl, FL_VISIBLE );
-        fl_notify_object( sp->vsl, FL_RESIZED );
+        fli_notify_object( sp->vsl, FL_RESIZED );
     }
     else
     {
@@ -1057,7 +1057,7 @@ check_scrollbar( FL_OBJECT * ob )
         sp->hsl->y = ob->y + ob->h - sp->hh;
         sp->hsl->h = sp->hh;
         fli_set_object_visibility( sp->hsl, FL_VISIBLE );
-        fl_notify_object( sp->hsl, FL_RESIZED );
+        fli_notify_object( sp->hsl, FL_RESIZED );
     }
     else
     {

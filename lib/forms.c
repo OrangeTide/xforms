@@ -47,7 +47,7 @@ static void set_form_property( FL_FORM *,
                                unsigned int );
 
 
-static FL_FORM *fli_mainform;
+static FL_FORM * fli_mainform;
 static int nomainform;
 static int reopened_group = 0;
 
@@ -338,9 +338,9 @@ fl_bgn_form( int      type,
         exit( 1 );
     }
 
-    /* Check that we're not already in a form definition - an error actually
-       is serious and can't be fixed easily as it might be due to a bad
-       recursion */
+    /* Check that we're not already in a form definition - the error is
+       a serious one and can't be fixed easily as it might be due to a
+       bad recursion */
 
     if ( fl_current_form )
     {

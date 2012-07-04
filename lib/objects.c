@@ -37,6 +37,7 @@
 #define TRANSLATE_Y( obj, form )    ( form->h - obj->h - obj->y )
 
 extern FL_FORM * fli_fast_free_object;     /* defined in forms.c */
+
 static void redraw( FL_FORM *,
                     int );
 static void lose_focus( FL_OBJECT * );
@@ -61,7 +62,7 @@ static FL_OBJECT *refocus;
 
 
 /***************************************
- * Creates an object, NOT FOR USERS OF THE LIBRARY.
+ * Creates an object, NOT TO BE USE BY USERS OF THE LIBRARY!
  ***************************************/
 
 FL_OBJECT *
@@ -214,14 +215,14 @@ fl_add_object( FL_FORM   * form,
         return;
     }
 
+    obj->prev = obj->next = NULL;
+    obj->form = form;
+
     if ( obj->automatic )
     {
         form->num_auto_objects++;
         fli_recount_auto_objects( );
     }
-
-    obj->prev = obj->next = NULL;
-    obj->form = form;
 
     if ( fli_inverted_y )
         obj->y = TRANSLATE_Y( obj, form );
@@ -292,6 +293,19 @@ fl_add_object( FL_FORM   * form,
 
         obj->dbl_background = bkcol;
     }
+
+    /* It only make sense to realculate intersections between objects
+       and to redraw the form with the new obkect when we're not within
+       a fl_bgn_form()/fl_end_form() pair and also only for objects that
+       aren't child objects */
+
+    if ( fl_current_form != form && ! obj->parent )
+    {
+        fli_recalc_intersections( form );
+
+        if ( form->visible && ! form->frozen )
+            redraw( form, 1 );
+    }
 }
 
 
@@ -336,9 +350,6 @@ fli_insert_object( FL_OBJECT * obj,
         obj->prev->next = obj;
     }
 
-    if ( fli_inverted_y )
-        obj->y = TRANSLATE_Y( obj, form );
-
     obj->fl1 = obj->x;
     obj->fr1 = form->w_hr - obj->fl1;
     obj->ft1 = obj->y;
@@ -352,6 +363,15 @@ fli_insert_object( FL_OBJECT * obj,
     before->prev = obj;
     obj->form    = form;
 
+    if ( obj->automatic )
+    {
+        form->num_auto_objects++;
+        fli_recount_auto_objects( );
+    }
+
+    if ( fli_inverted_y )
+        obj->y = TRANSLATE_Y( obj, form );
+
     if ( obj->input && obj->active && ! form->focusobj )
         fl_set_focus_object( form, obj );
 
@@ -360,8 +380,13 @@ fli_insert_object( FL_OBJECT * obj,
     if ( obj->child )
         fli_insert_composite( obj, before );
 
-    if ( ! obj->parent )
-        redraw( form, 1 );
+    if ( fl_current_form != form && fl_current_form != form && ! obj->parent )
+    {
+        fli_recalc_intersections( form );
+
+        if ( form->visible && ! form->frozen )
+            redraw( form, 1 );
+    }
 }
 
 
@@ -467,14 +492,14 @@ fl_delete_object( FL_OBJECT * obj )
     else
         form->last = obj->prev;
 
-    /* Redraw the form (except when the complete form is being deleted) */
+    /* Redraw the form (except when the complete form is being deleted, in
+       that case 'fli_fast_free_object' is set to the form being deleted) */
 
-    if ( fli_fast_free_object != form )
+    if ( fli_fast_free_object != form && ! obj->parent )
     {
-        if ( ! obj->parent )
-            fli_recalc_intersections( form );
+        fli_recalc_intersections( form );
 
-        if ( obj->visible )
+        if ( obj->visible && form->visible && ! form->frozen )
             redraw( form, 1 );
     }
 }
@@ -2694,16 +2719,20 @@ fl_set_object_bw( FL_OBJECT * obj,
             {
                 obj->bw = bw;
                 fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
-                fl_redraw_object( obj );
+                mark_object_for_redraw( obj );
             }
 
         if ( form )
+        {
+            fli_recalc_intersections( form );
             fl_unfreeze_form( form );
+        }
     }
     else if ( obj->bw != bw )
     {
         obj->bw = bw;
         fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+        fli_recalc_intersections( obj->form );
         fl_redraw_object( obj );
     }
 }
@@ -2958,8 +2987,8 @@ fl_call_object_callback( FL_OBJECT * obj )
 
 
 /***************************************
- * Function to test if an object is ( partially) hidden by any of its
- * successors in the forms list of objects (objects are always sorted in
+ * Function to test if an object is (at least partially) hidden by any of
+ * its successors in the forms list of objects (objects are always sorted in
  * a way that objects earlier in the list are drawn under those following
  * it). We don't need to look at objects that have a parent since for
  * them the tests for the parent objects will do.
@@ -3003,7 +3032,8 @@ fli_recalc_intersections( FL_FORM * form )
     /* When we're still adding to a form (and thus 'fl_current_form' isn't
        NULL) there typically are a lot of calls that normally would require
        a recalculation of intersections. Delay this until the form gets
-       closed. */
+       closed (i.e. only recalculate the intersections during the final
+       call of fl_end_group()). */
 
     if ( fl_current_form )
         return;
@@ -3491,16 +3521,16 @@ fl_set_object_return( FL_OBJECT    * obj,
  ***************************************/
 
 void
-fl_notify_object( FL_OBJECT * obj,
-                  int         cause )
+fli_notify_object( FL_OBJECT * obj,
+                   int         reason )
 {
     if (    ! obj 
-         || (    cause != FL_ATTRIB
-              && cause != FL_RESIZED
-              && cause != FL_MOVEORIGIN ) )
+         || (    reason != FL_ATTRIB
+              && reason != FL_RESIZED
+              && reason != FL_MOVEORIGIN ) )
         return;
 
-    fli_handle_object( obj, cause, 0, 0, 0, NULL, 0 );
+    fli_handle_object( obj, reason, 0, 0, 0, NULL, 0 );
 }
 
 

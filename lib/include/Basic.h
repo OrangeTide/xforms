@@ -708,7 +708,7 @@ struct FL_OBJECT_ {
     void             ( * object_callback )( FL_OBJECT *,
                                             long );
     long             argument;
-    void           * spec;            /* instantiation */
+    void           * spec;           /* instantiation */
 
     int              ( * prehandle )( FL_OBJECT *,
                                       int,
@@ -1174,9 +1174,6 @@ FL_EXPORT FL_COLOR fl_get_object_lcol( FL_OBJECT * obj );
 
 FL_EXPORT int fl_set_object_return( FL_OBJECT    * ob,
                                     unsigned int   when );
-
-FL_EXPORT void fl_notify_object( FL_OBJECT * obj,
-                                 int         cause );
 
 FL_EXPORT void fl_set_object_lalign( FL_OBJECT * obj,
                                      int         align );

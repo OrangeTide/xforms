@@ -286,9 +286,9 @@ check_scrollbar_size( FL_OBJECT * obj )
         sp->vsize = 1.0;
 
     sp->hscroll->w = sp->input->w;
-    fl_notify_object( sp->hscroll, FL_RESIZED );
+    fli_notify_object( sp->hscroll, FL_RESIZED );
     sp->vscroll->h = sp->input->h;
-    fl_notify_object( sp->vscroll, FL_RESIZED );
+    fli_notify_object( sp->vscroll, FL_RESIZED );
     sp->w = sp->input->w - 2 * xmargin;
 
     if ( h_on != sp->h_on || v_on != sp->v_on )

@@ -1,3 +1,7 @@
+2012-07-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	A bit of clean-up for new pre-release
+
 2012-07-02 Jens Thoms Toerring    <jt@toerring.de>
 
 	lib/objects.c: Attempt to avoid a massive slow-down observed
@@ -5,6 +9,8 @@
 	much too many calls of fli_recalc_intersections().
 	lib/button.c: Some mis-handling of mouse buttons a button
 	isn't supposed to react to found by Rob fixed.
+	lib/formbrowser.c: Some problem resulting in infinite
+	recursion fixed.
 
 2012-06-12 Jens Thoms Toerring    <jt@toerring.de>
 

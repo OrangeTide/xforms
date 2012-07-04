@@ -102,7 +102,7 @@ attrib_change( FL_OBJECT * obj )
     sp->up->col2     = sp->down->col2    = obj->col2;
     sp->up->boxtype  = sp->down->boxtype = sp->slider->boxtype = obj->boxtype;
 
-    fl_notify_object( sp->slider, FL_ATTRIB );
+    fli_notify_object( sp->slider, FL_ATTRIB );
 }
 
 
@@ -200,7 +200,7 @@ get_geom( FL_OBJECT * obj )
         }
     }
 
-    fl_notify_object( slider, FL_RESIZED );
+    fli_notify_object( slider, FL_RESIZED );
 }
 
 
