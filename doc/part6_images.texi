@@ -287,7 +287,7 @@ typedef struct flimage_ @{
     int              comments_len;
     void            * io_spec;
     int               spec_size;
-    int               (*display)(struct flimage_ *, FL_WINDOW win);
+    int               (*display) (struct flimage_ *, FL_WINDOW win);
     struct flimage_ * next;
     int               double_buffer;
     unsigned long     pixmap;
@@ -912,10 +912,10 @@ The API for doing so is the following
 @findex flimage_add_format()
 @anchor{flimage_add_format()}
 @example
-typedef int (*FLIMAGE_Identify)(FILE *);
-typedef int (*FLIMAGE_Description)(FL_IMAGE *);
-typedef int (*FLIMAGE_Read_Pixels)(FL_IMAGE *);
-typedef int (*FLIMAGE_Write_Image)(FL_IMAGE *);
+typedef int (*FLIMAGE_Identify) (FILE *);
+typedef int (*FLIMAGE_Description) (FL_IMAGE *);
+typedef int (*FLIMAGE_Read_Pixels) (FL_IMAGE *);
+typedef int (*FLIMAGE_Write_Image) (FL_IMAGE *);
 
 int flimage_add_format(const char *formal_name,
                        const char *short_name,
@@ -1256,7 +1256,7 @@ need a GUI system to work. As a matter of fact, for the most part it
 doesn't even need an X connection to work (obviously without a
 connection, you won't be able to display images). For this reason,
 some of the typical (and necessary) tasks, such as progress and error
-reporting, are by default implemented tp only use text output (i.e.@:
+reporting, are by default implemented only to use text output (i.e.@:
 to @code{stderr}). Obviously, with a GUI in place this is not quite
 adequate. Hooks are available for application program to re-define
 what to do with these tasks.
@@ -1274,8 +1274,8 @@ as follows:
 @example
 typedef struct @{
     void       * app_data;
-    int          (*visual_cue)(FL_IMAGE *im, const char *msg);
-    void         (*error_message)(FL_IMAGE *im, const char *msg);
+    int          (*visual_cue) (FL_IMAGE *im, const char *msg);
+    void         (*error_message) (FL_IMAGE *im, const char *msg);
     const char * rgbfile;
     int          do_not_clear;
     int          max_frames;
@@ -2053,7 +2053,7 @@ so you can define your own markers:
 @anchor{flimage_define_marker()}
 @example
 int flimage_define_marker(const char *name,
-                          void (*draw)(FLIMAGE_MARKER *marker),
+                          void (*draw) (FLIMAGE_MARKER *marker),
                           const char *psdraw);
 @end example
 @noindent

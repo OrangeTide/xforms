@@ -288,6 +288,7 @@ create_form_gravity( FD_help_form * help )
         fl_set_object_callback( obj, nw_callback, ( long ) ( gd + i ) );
         fl_set_object_color( obj, FL_COL1, FL_MCOL );
         fl_set_button( obj, fdui->box->nwgravity == g[ i ] );
+        fl_set_button_mouse_buttons( obj, 1 );
     }
     fl_end_group( );
 
@@ -304,6 +305,7 @@ create_form_gravity( FD_help_form * help )
         fl_set_object_callback( obj, se_callback, ( long ) ( gd + i ) );
         fl_set_object_color( obj, FL_COL1, FL_MCOL );
         fl_set_button( obj, fdui->box->segravity == g[ i ] );
+        fl_set_button_mouse_buttons( obj, 1 );
     }
 
     fl_end_group( );
@@ -316,6 +318,7 @@ create_form_gravity( FD_help_form * help )
     fl_set_object_callback( obj, rx_callback, ( long ) gd );
     fl_set_object_color( obj, FL_COL1, FL_MCOL );
     fl_set_button( obj, fdui->box->resize & FL_RESIZE_X );
+    fl_set_button_mouse_buttons( obj, 1 );
 
     fdui->ry = obj = fl_add_button( FL_PUSH_BUTTON, 2 * m + 80, h - s - m,
                                     80, s, "Y Resize" ); 
@@ -325,11 +328,13 @@ create_form_gravity( FD_help_form * help )
     fl_set_object_callback( obj, ry_callback, ( long ) gd );
     fl_set_object_color( obj, FL_COL1, FL_MCOL );
     fl_set_button( obj, fdui->box->resize & FL_RESIZE_Y );
+    fl_set_button_mouse_buttons( obj, 1 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, w - 85, 5, 80, s, "Help" );
     fl_set_object_bw( obj, -1 );
     fl_set_object_gravity( obj, FL_NorthEast, FL_NorthEast );
     fl_set_object_callback( obj, help_callback, ( long ) help );
+    fl_set_button_mouse_buttons( obj, 1 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 200, h - s - m,
                          80, s, "Reset" );
@@ -337,11 +342,13 @@ create_form_gravity( FD_help_form * help )
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_South, FL_South );
     fl_set_object_callback( obj, reset_callback, ( long ) gd );
+    fl_set_button_mouse_buttons( obj, 1 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, m + 280, h - s - m, 80, s, "Quit" );
     fl_set_object_bw( obj, -1 );
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_gravity( obj, FL_South, FL_South );
+    fl_set_button_mouse_buttons( obj, 1 );
 
     fl_end_form();
 
@@ -390,6 +397,7 @@ create_form_help( void )
     fl_set_object_gravity( obj, FL_South, FL_South );
     fl_set_object_resize( obj, FL_RESIZE_NONE );
     fl_set_object_callback( obj, close_callback, ( long ) fdui );
+    fl_set_button_mouse_buttons( obj, 1 );
 
     fl_end_form();
 

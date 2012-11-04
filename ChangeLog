@@ -1,3 +1,17 @@
+2012-11-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/sinner.c: Bug reported by Sian Mountbatten fixed
+	that led to two invocations of a spinner's callback
+	when one of the buttons was clicked.
+
+2012-07-20 Jens Thoms Toerring    <jt@toerring.de>
+
+	lib/xdraw.c, include/XBasic.h: fl_circ() and fl_xircf()
+	macros replaced by functions, fl_circbound() added.
+	Also fl_arc() and fl_arcf() macros replaced by functions.
+	Documentation updated - thanks to Rouben Rostamian for
+	pointing out several problems.
+
 2012-07-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	A bit of clean-up for new pre-release

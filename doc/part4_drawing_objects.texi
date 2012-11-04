@@ -575,8 +575,9 @@ Note: @strong{all} polygon routines require that the array
 @code{xpoint} has spaces for @strong{@code{n+1}} points, i.e.@: one
 more than then number of points you intend to draw!
 
-To draw an ellipse. either filled, either open, filled with a black
-border the following routines can be used (use @code{w} equal to
+To draw an ellipse. either filled, open (with the outline drawn in the
+given color), or filled with a black border the following routines can
+be used (use @code{w} equal to
 @code{h} to get a circle):
 @findex fl_ovalf()
 @anchor{fl_ovalf()}
@@ -592,6 +593,40 @@ void fl_ovall(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
 void fl_ovalbound(FL_Coord x, FL_Coord y, FL_Coord w, FL_Coord h,
                   FL_COLOR col);
 @end example
+@noindent
+The @code{x} and @code{y} arguments are the upper left hand corner
+of the ellipse, while @code{w} and @code{h} are its width and height.
+
+Note: @code{@ref{fl_ovall()}} (with two 'l') isn't a typo, the
+trailing 'l' it's meant indicate that only a line will be drawn. And
+there's also the function
+@findex fl_oval()
+@example
+void fl_ovalf(int fill, FL_Coord x, FL_Coord y, FL_Coord w,
+              FL_Coord h, FL_COLOR col);
+@end example
+which is invoked by both (the macros) @code{@ref{fl_ovalf()}}
+and @code{@ref{fl_ovall()}} with the first argument @code{fill}
+set to either @code{1} or @code{0}.
+
+To simplify drawing circles there are three additional functions. The
+first one draws a filled circle, the second one an open circle (with
+the circumfence in the given color), and the last one a filled circle
+with a black circumfence:
+@findex fl_circf()
+@anchor{fl_circf()}
+@findex fl_circl()
+@anchor{fl_circl()}
+@findex fl_circbound()
+@anchor{fl_circbound()}
+@example
+void fl_circf(FL_Coord x, FL_Coord y, FL_Coord r, FL_COLOR col);
+void fl_circl(FL_Coord x, FL_Coord y, FL_Coord r, FL_COLOR col);
+void fl_circbound(FL_Coord x, FL_Coord y, FL_Coord r, FL_COLOR col);
+@end example
+@noindent
+Here @code{x} and @code{y} are the coordinates of the center of the
+circle, @code{r} is its radius and @code{col} the color to be used.
 
 To draw circular arcs, either open or filled, the following routines
 can be used
@@ -605,12 +640,14 @@ void fl_arc(FL_Coord x, FL_Coord y, FL_Coord radius,
 void fl_arcf(FL_Coord x, FL_Coord y, FL_Coord radius,
              int start_theta, int end_theta, FL_COLOR col);
 @end example
-where @code{start_theta} and @code{end_theta} are the starting and
-ending angles of the arc in units of tenths of a degree (where 0
-stands for a direction of 3 o'clock, i.e.@: the right-most point of a
-circle), and @code{x} and @code{y} are the center of the arc. If the
-difference between @code{theta_end} and @code{theta_start} is larger
-than 3600 (360 degrees), drawing is truncated to 360 degrees.
+@code{x} and @code{y} are the coordinates of the center and @code{r}
+is the radius. @code{start_theta} and @code{end_theta} are the
+starting and ending angles of the arc in units of tenths of a degree
+(where 0 stands for a direction of 3 o'clock, i.e.@: the right-most
+point of a circle), and @code{x} and @code{y} are the center of the
+arc. If the difference between @code{theta_end} and @code{theta_start}
+is larger than 3600 (360 degrees), drawing is truncated to 360
+degrees.
 
 To draw elliptical arcs the following routine can be used:
 @findex fl_pieslice()
@@ -621,9 +658,9 @@ void fl_pieslice(int fill, FL_Coord x, FL_Coord y, FL_Coord w,
                  FL_COLOR col);
 @end example
 @noindent
-The center of the arc is the center of the bounding box specified by
-@code{x}, @code{y}, @code{w}, @code{h}, @code{w} and @code{h}
-specifing the axes of the ellipse.. @code{start_theta} and
+@code{x} and @code{y} are the upper left hand corner of the box
+enclosing the ellipse that the pieslice is part of and @code{w} and
+@code{h} the width and height of that box. @code{start_theta} and
 @code{end_theta}, to be given in tenth of a degree, specify the
 starting and ending angles measured from zero degrees (3 o'clock).
 

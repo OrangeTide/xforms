@@ -152,6 +152,50 @@ fl_polygon( int        fill,
 
 
 /****************************************************************
+ * Draws a circle at (x, y) woth radius r and col as to color
+ * of the outline
+ **********************************************************{******/
+
+void
+fl_circ( FL_COORD x,
+         FL_COORD y,
+         FL_COORD r,
+         FL_COLOR col )
+{
+    fl_oval( 0, x - r, y - r, 2 * r, 2 * r, col );
+}
+
+
+/****************************************************************
+ * Draws a filled circle at (x, y) woth radius r in color col
+ **********************************************************{******/
+
+void
+fl_circf( FL_COORD x,
+          FL_COORD y,
+          FL_COORD r,
+          FL_COLOR col )
+{
+    fl_oval( 1, x - r, y - r, 2 * r, 2 * r, col );
+}
+
+
+/****************************************************************
+ * Draws a filled circle at (x, y) woth radius r in color col and
+ * the circumfence in black.
+ **********************************************************{******/
+
+void
+fl_circbound( FL_COORD x,
+              FL_COORD y,
+              FL_COORD r,
+              FL_COLOR col )
+{
+    fl_ovalbound( x - r, y - r, 2 * r, 2 * r, col );
+}
+
+
+/****************************************************************
  * Function for drawing a (possibly filled) ellipse.
  **********************************************************{******/
 
@@ -271,6 +315,36 @@ fl_ovalarc( int      fill,
 
     if ( mono )
         fli_set_current_gc( fl_state[ fl_vmode ].gc[ 0 ] );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_arcf( FL_COORD x,
+         FL_Coord y,
+         FL_COORD r,
+         int      a1,
+         int      a2,
+         FL_COLOR col )
+{
+    fl_pieslice( 1, x - r, y - r, 2 * r, 2 * r, a1, a2, col );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_arc( FL_COORD x,
+        FL_Coord y,
+        FL_COORD r,
+        int      a1,
+        int      a2,
+        FL_COLOR col )
+{
+    fl_pieslice( 0, x - r, y - r, 2 * r, 2 * r, a1, a2, col );
 }
 
 

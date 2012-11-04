@@ -109,7 +109,7 @@ set_geom( FL_OBJECT * obj )
  * react to. If it got resized the positions and sizes of the child
  * objects it's made up from need to be recalculated, but that can
  * be deferred until it's redrawn. Drawing it works mostly auto-
- * matically except the redraw of the label. And on deletion just
+ * matically except the redraw of the label. And on deletion only
  * the FLI_SPINNER_SPEC needs to be deallocated (the child objects
  * referenced there-in have already been deallocated before).
  ***************************************/
@@ -172,11 +172,13 @@ spinner_callback( FL_OBJECT * obj,
     if ( data == 0 && ! ( obj->returned & FL_RETURN_END ) )
         return;
 
+    obj->parent->returned = FL_RETURN_NONE;
+
     if ( obj->parent->type == FL_INT_SPINNER )
     { 
         int old_i_val = sp->i_val;
 
-        if ( data == 0 )
+        if ( data == 0 )    /* spinners input object was modified */
         {
             char *eptr;
             long i_val = strtol( s_val, &eptr, 10 );
@@ -217,24 +219,19 @@ spinner_callback( FL_OBJECT * obj,
         fl_free( buf );
         buf = NULL;
 
-        if ( obj->returned & FL_RETURN_END )
-            obj->parent->returned |= FL_RETURN_END;
-
-        if ( sp->i_val != old_i_val )
+        if ( data != 0 )
+        {
+            if ( sp->i_val != old_i_val )
+                obj->parent->returned |= FL_RETURN_CHANGED;
+        }
+        else if ( obj->returned & FL_RETURN_END && sp->i_val != sp->old_ival )
             obj->parent->returned |= FL_RETURN_CHANGED;
 
-        if (    sp->i_val != sp->old_ival
-             && data != 0
-             && obj->returned & FL_RETURN_END )
-            obj->parent->returned |= FL_RETURN_CHANGED | FL_RETURN_END;
-
-        if ( obj->parent->returned & FL_RETURN_END )
+        if ( obj->returned & FL_RETURN_END )
+        {
+            obj->parent->returned |= FL_RETURN_END;
             sp->old_ival = sp->i_val;
-
-        if ( obj->parent->how_return & FL_RETURN_END_CHANGED
-             && ! (    obj->parent->returned & FL_RETURN_CHANGED
-                    && obj->parent->returned & FL_RETURN_END ) )
-            obj->parent->returned = FL_RETURN_NONE;
+        }
     }
     else
     {
@@ -279,24 +276,19 @@ spinner_callback( FL_OBJECT * obj,
         fl_free( buf );
         buf = NULL;
 
-        if ( obj->returned & FL_RETURN_END )
-            obj->parent->returned |= FL_RETURN_END;
-
-        if ( sp->f_val != old_f_val )
+        if ( data != 0 )
+        {
+            if ( sp->f_val != old_f_val )
+                obj->parent->returned |= FL_RETURN_CHANGED;
+        }
+        else if ( obj->returned & FL_RETURN_END && sp->f_val != sp->old_fval )
             obj->parent->returned |= FL_RETURN_CHANGED;
 
-        if (    sp->f_val != sp->old_fval
-             && data != 0
-             && obj->returned & FL_RETURN_END )
-            obj->parent->returned |= FL_RETURN_CHANGED | FL_RETURN_END;
-
-        if ( obj->parent->returned & FL_RETURN_END )
+        if ( obj->returned & FL_RETURN_END )
+        {
+            obj->parent->returned |= FL_RETURN_END;
             sp->old_fval = sp->f_val;
-
-        if ( obj->parent->how_return & FL_RETURN_END_CHANGED
-             && ! (    obj->parent->returned & FL_RETURN_CHANGED
-                    && obj->parent->returned & FL_RETURN_END ) )
-            obj->parent->returned = FL_RETURN_NONE;
+        }
     }
 }
 
@@ -701,8 +693,8 @@ set_spinner_return( FL_OBJECT    * obj,
 
     obj->how_return = when;
     fl_set_object_return( sp->input, FL_RETURN_ALWAYS );
-    fl_set_object_return( sp->up,   FL_RETURN_CHANGED | FL_RETURN_END );
-    fl_set_object_return( sp->down, FL_RETURN_CHANGED | FL_RETURN_END );
+    fl_set_object_return( sp->up,    FL_RETURN_CHANGED | FL_RETURN_END );
+    fl_set_object_return( sp->down,  FL_RETURN_CHANGED | FL_RETURN_END );
 }
 
 

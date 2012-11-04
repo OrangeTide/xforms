@@ -63,25 +63,25 @@ static char * get_fname( const char *,
 
 static const char *fnts[ FL_MAXFONTS ] =
 {
-    "-*-helvetica-medium-r-*-*-*-?-*-*-*-*-*-*",
-    "-*-helvetica-bold-r-*-*-*-?-*-*-*-*-*-*",
-    "-*-helvetica-medium-o-*-*-*-?-*-*-*-*-*-*",
-    "-*-helvetica-bold-o-no*-*-*-?-*-*-*-*-*-*",
+    "-*-helvetica-medium-r-*-*-*-?-*-*-p-*-*-*",
+    "-*-helvetica-bold-r-*-*-*-?-*-*-p-*-*-*",
+    "-*-helvetica-medium-o-*-*-*-?-*-*-p-*-*-*",
+    "-*-helvetica-bold-o-*-*-*-?-*-*-p-*-*-*",
 
     "-*-courier-medium-r-*-*-*-?-*-*-*-*-*-*",
     "-*-courier-bold-r-*-*-*-?-*-*-*-*-*-*",
     "-*-courier-medium-o-*-*-*-?-*-*-*-*-*-*",
     "-*-courier-bold-o-*-*-*-?-*-*-*-*-*-*",
 
-    "-*-times-medium-r-*-*-*-?-*-*-*-*-*-*",
-    "-*-times-bold-r-*-*-*-?-*-*-*-*-*-*",
-    "-*-times-medium-i-*-*-*-?-*-*-*-*-*-*",
-    "-*-times-bold-i-*-*-*-?-*-*-*-*-*-*",
+    "-*-times-medium-r-*-*-*-?-*-*-p-*-*-*",
+    "-*-times-bold-r-*-*-*-?-*-*-p-*-*-*",
+    "-*-times-medium-i-*-*-*-?-*-*-p-*-*-*",
+    "-*-times-bold-i-*-*-*-?-*-*-p-*-*-*",
 
     "-*-charter-medium-r-*-*-*-?-*-*-*-*-*-*",
     "-*-charter-bold-r-*-*-*-?-*-*-*-*-*-*",
     "-*-charter-medium-i-*-*-*-?-*-*-*-*-*-*",
-    "-*-symbol-medium-r-*-*-*-?-*-*-*-*-*-*",
+    "-*-charter-bold-i-*-*-*-?-*-*-*-*-*-*",
 };
 
 static FL_FONT fl_fonts[ FL_MAXFONTS ];
@@ -339,7 +339,7 @@ try_get_font_struct( int numb,
         int mdiff = 1000,
             k = -1;
 
-        M_warn( "try_get_font_struct", "can't load %s", fli_curfnt );
+        M_warn( "try_get_font_struct", "Can't load %s", fli_curfnt );
 
         /* Search for a replacement */
 

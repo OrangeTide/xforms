@@ -62,7 +62,7 @@ static FL_OBJECT *refocus;
 
 
 /***************************************
- * Creates an object, NOT TO BE USE BY USERS OF THE LIBRARY!
+ * Creates an object - NOT FOR USE BY USERS OF THE LIBRARY!
  ***************************************/
 
 FL_OBJECT *
@@ -295,7 +295,7 @@ fl_add_object( FL_FORM   * form,
     }
 
     /* It only make sense to realculate intersections between objects
-       and to redraw the form with the new obkect when we're not within
+       and to redraw the form with the new object when we're not within
        a fl_bgn_form()/fl_end_form() pair and also only for objects that
        aren't child objects */
 

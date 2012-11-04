@@ -521,7 +521,6 @@ the menu API (but adding and removing menu items is not supported for
 menus created this way ) or popup API, the application should not free
 the popup directly and use @code{@ref{fl_clear_menu()}} instead.
 
-
 To clear the whole menu use
 @findex fl_clear_menu()
 @anchor{fl_clear_menu()}
@@ -548,18 +547,12 @@ in the string for the text of the menu item.
 @item
 Menu items can get associated with a callback function that is
 executed when the menu item is selected. The callback function is of
-type @code{FL_PUP_CB} and receives the menu item ID of the selected
-menu. If such a callback is set for a menu item the return value of
-@code{@ref{fl_get_menu()}} is the return value of this function
-instead of the menu item ID that would have been returned otherwise.
+type @code{@ref{FL_PUP_CB}} and receives the menu item ID of the
+selected menu. If such a callback is set for a menu item the return
+value of @code{@ref{fl_get_menu()}} is the return value of this
+function instead of the menu item ID that would have been returned
+otherwise.
 @end enumerate
-
-To obtain the text of the item selected
-@findex fl_get_menu_text()
-@anchor{fl_get_menu_text()}
-@example
-const char *fl_get_menu_text(FL_OBJECT *obj);
-@end example
 
 To obtain the text of any item, use the following routine
 @findex fl_get_menu_item_text()
@@ -570,6 +563,13 @@ const char *fl_get_menu_item_text(FL_OBJECT *obj, int miid);
 @noindent
 where @code{miid} is the menu item ID. If @code{n} isn't a valid menu
 iem ID item @code{NULL} is returned.
+
+To obtain the text of the selected enu item use
+@findex fl_get_menu_text()
+@anchor{fl_get_menu_text()}
+@example
+const char *fl_get_menu_text(FL_OBJECT *obj);
+@end example
 
 To obtain the total number of menu items, use the function
 @findex fl_get_menu_maxitems()
@@ -633,6 +633,21 @@ an item after interaction, mostly useful for toggle or radio items:
 @example
 unsigned int fl_get_menu_item_mode(FL_OBJECT *obj, int miid);
 @end example
+
+While a callback associated with a menu entry can be set when it is
+created it can also set later on or be changed. For this use the
+function
+@findex fl_set_menu_item_callback()
+@anchor{fl_set_menu_item_callback()}
+@example
+FL_PUP_CB fl_set_menu_item_callback(FL_OBJECT *ob,
+                                    int numb, FL_PUP_CB cb);
+@end example
+@noindent
+where @code{numb} is the menu entries ID and @code{cb} is the
+callback function of type @code{@ref{FL_PUP_CB}} (or @code{NULL}
+to disable a callback). The return value is a pointer to the
+previously used callback function (or @code{NULL}).
 
 It is often useful to define keyboard shortcuts for particular menu
 items. For example, it would be nice to have @code{<Alt>s} behave like
@@ -709,6 +724,8 @@ int fl_get_menu_popup(FL_OBJECT *obj);
 The function return the popup ID if the menu was created using
 @code{@ref{fl_set_menu_popup()}} or
 @code{@ref{fl_set_menu_entries()}}, otherwise it returns -1.
+
+The callback associated with a menu 
 
 Normally in the popup opened for a menu a title is shown. This can be
 switched off (and back on again by using the function
@@ -1147,6 +1164,7 @@ Two convenience functions are available to set the callback functions
 for items of a XPopup and the XPopup as a whole (called whenever a
 selection is made):
 @tindex FL_PUP_CB
+@anchor{FL_PUP_CB}
 @findex fl_setpup_itemcb()
 @anchor{fl_setpup_itemcb()}
 @findex fl_setpup_menucb()

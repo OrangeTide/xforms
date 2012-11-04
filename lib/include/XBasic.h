@@ -283,6 +283,21 @@ FL_EXPORT int fl_get_drawmode( void );
 
 /** Ellipses **/
 
+FL_EXPORT void fl_circ( FL_COORD x,
+						FL_COORD y,
+						FL_COORD r,
+						FL_COLOR col );
+
+FL_EXPORT void fl_circf( FL_COORD x,
+						 FL_COORD y,
+						 FL_COORD r,
+						 FL_COLOR col );
+
+FL_EXPORT void fl_circbound( FL_COORD x,
+							 FL_COORD y,
+							 FL_COORD r,
+							 FL_COLOR col );
+
 FL_EXPORT void fl_oval( int      fill,
                         FL_Coord x,
                         FL_Coord y,
@@ -309,12 +324,21 @@ FL_EXPORT void fl_ovalarc( int      fill,
 #define fl_ovall( x, y, w, h, c )     fl_oval( 0, x, y, w, h, c )
 #define fl_oval_bound                 fl_ovalbound
 
-#define fl_circf( x, y, r, col )   \
-    fl_oval( 1, ( x ) - ( r ), ( y ) - ( r ), 2 * ( r ), 2 * ( r ), col )
-#define fl_circ( x, y, r, col )    \
-    fl_oval( 0, ( x ) - ( r ), ( y ) - ( r ), 2 * ( r ), 2 * ( r ), col )
-
 /* Arcs */
+
+FL_EXPORT void fl_arcf( FL_COORD x,
+						FL_Coord y,
+						FL_COORD r,
+						int      a1,
+						int      a2,
+						FL_COLOR col );
+
+FL_EXPORT void fl_arc( FL_COORD x,
+					   FL_Coord y,
+					   FL_COORD r,
+					   int      a1,
+					   int      a2,
+					   FL_COLOR col );
 
 FL_EXPORT void fl_pieslice( int      fill,
                             FL_Coord x,
@@ -324,13 +348,6 @@ FL_EXPORT void fl_pieslice( int      fill,
                             int      a1,
                             int      a2,
                             FL_COLOR col );
-
-#define fl_arcf( x, y, r, a1, a2, c )  \
-    fl_pieslice( 1, ( x ) - ( r ), ( y ) - ( r ), \
-                 2 * ( r ), 2 * ( r ), a1, a2, c )
-#define fl_arc( x, y, r, a1, a2, c )    \
-    fl_pieslice( 0, ( x ) - ( r ), ( y ) - ( r ), \
-                 2 * ( r ), 2 * ( r ), a1, a2, c )
 
 /* High level drawing routines */
 
