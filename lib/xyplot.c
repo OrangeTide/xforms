@@ -1627,7 +1627,8 @@ draw_xyplot( FL_OBJECT * ob )
 
     fl_drw_text( FL_ALIGN_BOTTOM,
                  ( sp->xi + sp->xf ) / 2,
-                 sp->objy + ob->h - bw - ( draw_to_pixmap ? sp->objy : 0 ),
+//                 sp->objy + ob->h - bw - ( draw_to_pixmap ? sp->objy : 0 ),
+                 ob->y + ob->h - bw - ( draw_to_pixmap ? ob->y : 0 ),
                  1, 1,
                  ob->col2, sp->lstyle, sp->lsize, sp->xlabel );
 
@@ -1680,8 +1681,8 @@ find_data( FL_OBJECT * ob,
 
     if ( draw_to_pixmap )
     {
-        mx -= sp->objx;
-        my -= sp->objy;
+        mx -= ob->x;
+        my -= ob->y;
     }
 
     for ( i = found = 0; i < *sp->n && ! found; i++ )
@@ -1795,8 +1796,8 @@ handle_mouse( FL_OBJECT * ob,
     /* Now we are sure we're not in inspect mode and are shifting around
        one of the points. */
 
-    fmx = ( lmx - sp->bxm - ( draw_to_pixmap ? sp->objx : 0 ) ) / sp->ax;
-    fmy = ( lmy - sp->bym - ( draw_to_pixmap ? sp->objy : 0 ) ) / sp->ay;
+    fmx = ( lmx - sp->bxm - ( draw_to_pixmap ? ob->x : 0 ) ) / sp->ax;
+    fmy = ( lmy - sp->bym - ( draw_to_pixmap ? ob->y : 0 ) ) / sp->ay;
 
     if ( sp->xscale == FL_LOG )
         fmx = pow( sp->xbase, fmx );
@@ -2058,8 +2059,6 @@ init_spec( FL_OBJECT       * ob,
     sp->wx             = fl_malloc( sizeof *sp->wx );
     sp->wy             = fl_malloc( sizeof *sp->wy );
 
-    sp->objx           = ob->x;
-    sp->objy           = ob->y;
     sp->active         = ob->type == FL_ACTIVE_XYPLOT;
     sp->key_lsize      = ob->lsize;
     sp->key_lstyle     = ob->lstyle;
@@ -3421,8 +3420,8 @@ w2s_draw( FL_OBJECT * ob,
     fl_xyplot_w2s( ob, wx, wy, sx, sy );
     if ( ! draw_to_pixmap )
     {
-        *sx += sp->objx;
-        *sy += sp->objy;
+        *sx += ob->x;
+        *sy += ob->y;
     }
     sp->bxm = sbx;
     sp->bym = sby;
