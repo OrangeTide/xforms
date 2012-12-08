@@ -320,7 +320,7 @@ fl_exe_command( const char * cmd,
     {
         fl_snprintf( buf, sizeof buf,
                      "Can't create pipe - %s", fli_get_syserror_msg( ) );
-        fprintf(stderr, "%s\n", buf);
+        fprintf( stderr, "%s\n", buf );
         fl_addto_browser( logger->browser, buf );
         if ( p_err[ 0 ] > 0 )
         {

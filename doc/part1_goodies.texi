@@ -349,16 +349,19 @@ long fl_exe_command(const char *cmd, int block);
 @noindent
 This function, similar to a @code{system(3)} call, forks a new process
 that runs the command @code{cmd}, which must be a (null-terminated)
-string containing a shell command line. The output (both @code{stderr}
-and @code{stdout}) of @code{cmd} is logged into a browser, which can be
-presented to the user when appropriate (see below). The @code{block}
-argument is a flag indicating if the function should wait for the child
-process to finish. If the argument @code{block} is true (non-zero), the
-function waits until the command @code{cmd} completes and then returns
-the exit status of the command @code{cmd}. If the argument @code{block}
-is false (0), the function returns immediately without waiting for the
-command to finish. In this case, the function returns the process ID of
-the child process or -1 if an error occured.
+string containing a command line passed to the (sh) shell. The output
+(both @code{stderr} and @code{stdout}) of @code{cmd} is logged into a
+browser, which can be presented to the user when appropriate (see
+below). The @code{block} argument is a flag indicating if the function
+should wait for the child process to finish. If the argument
+@code{block} is true (non-zero), the function waits until the command
+@code{cmd} completes and then returns the exit status of the command
+@code{cmd} (i.e. the status one gets form @code{wait()} or
+@code{waitpid()}, so use @code{WEXITSTATUS()} on it if you want the
+return or @code{exit()} value from the program started)). If the
+argument @code{block} is false (0), the function returns immediately
+without waiting for the command to finish. In this case, the function
+returns the process ID of the child process or -1 if an error occured.
 
 Unlike other goodies, @code{@ref{fl_exe_command()}} does not
 deactivate other forms even in blockng mode. This means that the user

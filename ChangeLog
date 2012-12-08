@@ -1,3 +1,7 @@
+2012-12-08 Jens Thoms Toerring    <jt@toerring.de>
+
+	* doc/part1_goodies.texi: Small documentation improvement.
+
 2012-11-29 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/xyplot.c: Bug in postioning of x-axis after a
