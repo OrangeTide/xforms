@@ -1,3 +1,14 @@
+2012-12-26 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/objects.c (and some other file): Lots of changes to the
+	way things are redrawn in order to fix bugs and speed up things
+	* lib/flresource.c: Rare problem about a BadWindow error in
+	initialization of the library fixed
+	* fdesign/fd_file.c: Reading the label style from an .fd file
+	didn't work properly
+	* config/libtool.m4 and ltmain.sh: Use newest files from the
+	libtools package
+
 2012-12-08 Jens Thoms Toerring    <jt@toerring.de>
 
 	* doc/part1_goodies.texi: Small documentation improvement.

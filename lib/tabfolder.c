@@ -68,11 +68,7 @@ static void get_tabsize( FL_OBJECT *,
 static void shift_tabs( FL_OBJECT *,
                         int left );
 
-
 #define IsFolderClass( ob ) ( ( ob ) && ( ob )->objclass == FL_TABFOLDER )
-
-
-
 
 
 /***************************************

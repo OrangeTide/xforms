@@ -4,7 +4,7 @@ ACLOCAL="aclocal"
 AUTOHEADER="autoheader"
 AUTOMAKE="automake -a -c --foreign"
 AUTOCONF="autoconf"
-ACINCLUDE_FILES="xformsinclude.m4 libtool.m4 cygwin.m4"
+ACINCLUDE_FILES="libtool.m4 xformsinclude.m4 cygwin.m4"
 
 # Discover what version of autoconf we are using.
 autoversion=`$AUTOCONF --version | head -n 1`

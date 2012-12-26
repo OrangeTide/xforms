@@ -267,11 +267,11 @@ fli_create_object_pixmap( FL_OBJECT * obj )
     FL_pixmap *p = obj->flpixmap;
     int ( * oldhandler )( Display *, XErrorEvent * );
 
-    /* Check to see if we need to create a pixmap. None-square boxes can't
-       be used as it is not easy to figure out the object color beneath the
+    /* Check to see if we need to create a pixmap. Don't do it for none-square
+       boxes as it is not easy to figure out the object color beneath the
        object we are trying to paint. It also makes no sense to draw to
-       on a special pixmap for the object if we're already been directed
-       to draw to a pixmap for the form itself. */
+       a pixmap for the object if we're already been directed to draw to a
+       pixmap for the form itself. */
 
     if (    ! obj->use_pixmap
          || ( obj->form->flpixmap && obj->form->flpixmap->win )

@@ -271,6 +271,7 @@ handle_button( FL_OBJECT * obj,
     switch ( event )
     {
         case FL_DRAW:
+            sp->event = FL_DRAW;
             if (    obj->type != FL_HIDDEN_BUTTON
                  && obj->type != FL_HIDDEN_RET_BUTTON )
             {
@@ -280,7 +281,6 @@ handle_button( FL_OBJECT * obj,
                     M_err( "handle_button", "Unknown button class: %d",
                            obj->objclass );
             }
-            sp->event = FL_DRAW;
             break;
 
         case FL_DRAWLABEL:
@@ -351,6 +351,8 @@ handle_button( FL_OBJECT * obj,
                  || obj->type == FL_INOUT_BUTTON
                  || obj->type == FL_MENU_BUTTON )
                 break;
+
+            newval = sp->val;
 
             if ( WITHIN( obj, mx, my ) )
             {

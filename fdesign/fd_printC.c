@@ -587,7 +587,7 @@ style_val( const char * cc )
 
     fli_sstrcpy( lstyle, cc, sizeof lstyle );
     *spstyle = '\0';
-    if ( ( p = strchr( lstyle, '+' ) ) )
+    if ( ( p = strchr( lstyle, '|' ) ) )
     {
         strcpy( spstyle, p + 1 );
         *p = 0;

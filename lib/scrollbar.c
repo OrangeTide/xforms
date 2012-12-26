@@ -321,8 +321,8 @@ fl_create_scrollbar( int          type,
         sp->up   = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "6" );
         sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "4" );
         fl_set_object_callback( sp->up, button_cb, 1 );
-        fl_set_object_resize( sp->up, FL_RESIZE_NONE );
         fl_set_object_callback( sp->down, button_cb, -1 );
+        fl_set_object_resize( sp->up, FL_RESIZE_NONE );
         fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
         if ( type == FL_HOR_SCROLLBAR )
@@ -347,8 +347,8 @@ fl_create_scrollbar( int          type,
         sp->up = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "8" );
         sp->down = fl_create_scrollbutton( FL_TOUCH_BUTTON, 1, 1, 1, 1, "2" );
         fl_set_object_callback( sp->up, button_cb, -1 );
-        fl_set_object_resize( sp->up, FL_RESIZE_NONE );
         fl_set_object_callback( sp->down, button_cb, 1 );
+        fl_set_object_resize( sp->up, FL_RESIZE_NONE );
         fl_set_object_resize( sp->down, FL_RESIZE_NONE );
 
         if ( type == FL_VERT_SCROLLBAR )

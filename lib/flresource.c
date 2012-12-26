@@ -1380,6 +1380,13 @@ fl_finish( void )
 
 #include <X11/Xatom.h>
 
+static int
+xerror_handler( Display     * d  FL_UNUSED_ARG,
+                XErrorEvent * xev )
+{
+    return xev->error_code;
+}
+
 static Window
 fli_GetVRoot( Display * dpy,
               int       scr )
@@ -1391,10 +1398,20 @@ fli_GetVRoot( Display * dpy,
     Window root = RootWindow( dpy, scr );
     Atom __SWM_VROOT = None;
     unsigned int i;
+    int ( * oldhandler )( Display *, XErrorEvent * );
 
     __SWM_VROOT = XInternAtom( dpy, "__SWM_VROOT", False );
     XQueryTree( dpy, root, &rootReturn, &parentReturn, &children,
                 &numChildren );
+
+    /* For some reasons XQueryTree sometimes seems to return an invalid window
+       in the list of children (perhaps the window  vanishes between the call
+       of XQueryTree() and the subsequent call of XGetWindowProperty()?). To
+       avoid a program using XForms aborting with a strange X error message on
+       start-up, we catch these errors with a temporary error handler (which
+       gets reset before leaving the function). */
+
+    oldhandler = XSetErrorHandler( xerror_handler );
 
     for ( i = 0; i < numChildren; i++ )
     {
@@ -1407,6 +1424,7 @@ fli_GetVRoot( Display * dpy,
            ( unsigned char ** ) ( void * ) &newRoot
            is there to avoid a spurious  GCC warning         JTT */
 
+        children[ i ] = 0;
         if (    XGetWindowProperty( dpy, children[ i ], __SWM_VROOT, 0, 1,
                                     False, XA_WINDOW, &actual_type,
                                     &actual_format, &nitems, &bytesafter,
@@ -1419,6 +1437,7 @@ fli_GetVRoot( Display * dpy,
         }
     }
 
+    XSetErrorHandler( oldhandler );
     XFree( ( char * ) children );
     return root;
 }

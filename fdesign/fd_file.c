@@ -738,7 +738,7 @@ load_object( void )
        next form or object) it must be an object specific key */
 
     if ( r == 1 && strcmp( key, "Name" ) && strcmp( key, "class" ) )
-       r = load_objclass_spec_info( obj, key );
+        r = load_objclass_spec_info( obj, key );
     else
     {
         /* If a key could be read continue, otherwise this must be (nearly)

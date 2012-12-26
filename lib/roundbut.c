@@ -46,8 +46,7 @@ draw_roundbutton( FL_OBJECT * ob )
              rr;
     FL_BUTTON_STRUCT *sp = ob->spec;
 
-    if (    ob->boxtype == FL_NO_BOX
-         && ( sp->event == FL_ENTER || sp->event == FL_LEAVE ) )
+    if ( sp->event == FL_ENTER || sp->event == FL_LEAVE )
         return;
 
     c1 = ob->belowmouse ? FL_ROUNDBUTTON_MCOL : FL_ROUNDBUTTON_TOPCOL;

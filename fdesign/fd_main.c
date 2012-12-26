@@ -684,9 +684,7 @@ pre_connect( int    argc,
         else if ( strncmp( argv[ i ] + 1, "lang", 4 ) == 0 && i + 1 < argc )
             fdopt.language = lang_val( argv[ ++i ] );
         else
-        {
             fdopt.language = lang_val( argv[ i ] + 1 );
-        }
     }
 
     if ( fdopt.language < FD_C || fdopt.language > FD_EXP )
@@ -703,39 +701,38 @@ pre_connect( int    argc,
     if ( fdopt.language != FD_C )
         fdopt.lax = 1;
 
-    if ( fdopt.conv_only )
+    if ( ! fdopt.conv_only )
+        return;
+
+    fli_set_app_name( argv[ 0 ], "Fdesign" );   /* resource routine needs it */
+    fli_init_context( );
+    create_the_forms( );
+    init_classes( );
+
+    fli_dpi = 95;
+
+    if ( i > argc - 1 )
     {
-        fli_set_app_name( argv[ 0 ], "Fdesign" );     /* resource routine
-                                                       wants this */
-        fli_init_context( );
-        create_the_forms( );
-        init_classes( );
-
-        fli_dpi = 95;
-
-        if ( i > argc - 1 )
-        {
-            fprintf( stderr, "-convert requires arguments\n" );
-            usage( argv[ 0 ], 1 );
-        }
-
-        for ( s = i; s < argc; s++ )
-        {
-            if ( load_forms( FL_FALSE, argv[ s ], 0 ) < 0 )
-            {
-                fprintf( stderr, "Unable to load %s\n", argv[ s ] );
-                exit( 1 );
-            }
-
-            if ( ! save_forms( argv[ s ] ) )
-            {
-                fprintf( stderr, "Unable to convert %s\n", argv[ s ] );
-                exit( 1 );
-            }
-        }
-
-        exit( 0 );
+        fprintf( stderr, "'-convert' requires arguments\n" );
+        usage( argv[ 0 ], 1 );
     }
+
+    for ( s = i; s < argc; s++ )
+    {
+        if ( load_forms( FL_FALSE, argv[ s ], 0 ) < 0 )
+        {
+            fprintf( stderr, "Unable to load %s\n", argv[ s ] );
+            exit( 1 );
+        }
+
+        if ( ! save_forms( argv[ s ] ) )
+        {
+            fprintf( stderr, "Unable to convert %s\n", argv[ s ] );
+            exit( 1 );
+        }
+    }
+
+    exit( 0 );
 }
 
 
@@ -966,9 +963,9 @@ main( int    argc,
 
     /* Load files */
 
-    /* If only one argument and the file does not exist, we can assume that
-       the intention is to create a new file so we don't bother to try to
-       load it */
+    /* If only one argument is given and the file does not exist, we can
+       assume that the intention is to create a new file so we don't bother
+       to try to load it */
 
     if (    argc >= 2
          && access( tmp = append_fd_suffix( argv[ argc - 1 ] ), R_OK ) == 0 )
@@ -978,7 +975,7 @@ main( int    argc,
                 break;
     }
     else
-   {
+    {
         select_object_by_class( FL_BUTTON );
         select_pallette_entry( FL_BUTTON );
     }

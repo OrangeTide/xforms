@@ -56,7 +56,6 @@ draw_round3dbutton( FL_OBJECT * ob )
     fl_drw_box(ob->boxtype, ob->x, ob->y, ob->w, ob->h, c1, ob->bw);
 
     rr = 0.3 * FL_min( ob->w, ob->h ) + 0.5;
-//    xx = ob->x + 1.5 * ( bw < 2 ? 2 : bw ) + rr + 1.1;
     xx = ob->x + rr + 4.1;
     yy = ob->y + 0.5 * ob->h;
 

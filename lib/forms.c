@@ -385,6 +385,8 @@ fl_end_form( void )
 
     fl_current_form = NULL;
 
+    /* Now is the proper time for calculating the overlaps of objects */
+
     fli_recalc_intersections( f );
 
     if ( f->visible && ! f->frozen )
@@ -1349,6 +1351,7 @@ fl_show_form( FL_FORM *    form,
     }
 
     fl_prepare_form_window( form, place, border, name );
+    form->in_redraw = 0;
     return fl_show_form_window( form );
 }
 

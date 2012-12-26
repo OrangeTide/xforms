@@ -2555,6 +2555,7 @@ int_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
                int          newc )
 {
     char *eptr = NULL;
+    long dummy;
 
     /* The empty string is considered to be valid */
 
@@ -2566,9 +2567,13 @@ int_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
     if ( ! str[ 1 ] && ( newc == '+' || newc == '-' ) )
         return FL_VALID;
 
-    strtol( str, &eptr, 10 );
+    dummy = strtol( str, &eptr, 10 );
 
-    return ! *eptr ? FL_VALID : ( FL_INVALID | FL_RINGBELL );
+    if (    ( ( dummy == LONG_MAX || dummy == LONG_MIN ) && errno == ERANGE )
+         || *eptr )
+        return FL_INVALID | FL_RINGBELL;
+
+    return FL_VALID;
 }
 
 
@@ -2583,6 +2588,7 @@ float_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
 {
     char *eptr = NULL;
     size_t len;
+    double dummy;
 
     /* The empty string is considered valid */
 
@@ -2591,11 +2597,12 @@ float_validator( FL_OBJECT  * obj     FL_UNUSED_ARG,
 
     /* Try strtod() an the string*/
 
-    strtod( str, &eptr );
+    dummy = strtod( str, &eptr );
 
     /* If it reports no problem were finished */
 
-    if ( ! *eptr )
+    if (    ! ( ( dummy == HUGE_VAL || dummy == -HUGE_VAL ) && errno == ERANGE )
+         && ! *eptr )
         return FL_VALID;
 
     /* Otherwise, if there's no new character the input must be invalid */

@@ -651,7 +651,7 @@ fli_get_pos_in_string( int          align,
     else
         line->len = lines[ *yp + 1 ].str - line->str - 1;
 
-    /* Calculate width and start x coordinate of the line  */
+    /* Calculate width and start x-coordinate of the line */
 
     width = XTextWidth( flx->fs, line->str, line->len );
 

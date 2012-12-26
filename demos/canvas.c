@@ -85,9 +85,12 @@ canvas_key( FL_OBJECT * ob   FL_UNUSED_ARG,
 {
     FD_canvasform *ui = d;
     char buf[ 128 ];
+	KeySym *keysymT;
+    int dummy;
 
-    sprintf( buf, "KeyPress: keysym=%ld",
-             XKeycodeToKeysym( fl_display, ev->xkey.keycode, 0 ) );
+	keysymT = XGetKeyboardMapping( fl_display, ev->xkey.keycode, 1, &dummy);
+    sprintf( buf, "KeyPress: keysym=%ld", ( long ) keysymT[ 0 ] );
+    XFree( keysymT );
     fl_addto_browser( ui->br, buf );
     return 0;
 }

@@ -359,7 +359,7 @@ fl_drw_box( int      style,
     if ( ! ( B = bw > 0 ) )
         bw = - bw;
 
-    if ( bw == 0 && style != FL_NO_BOX )
+    if ( bw == 0 )
         style = FL_FLAT_BOX;
 
     /* We must guarantee width of rectangle is larger than 0 */
@@ -374,9 +374,6 @@ fl_drw_box( int      style,
 
     switch ( style )
     {
-        case FL_NO_BOX:
-            break;
-
         case FL_UP_BOX:
             fl_rectf( x + bw + B, y + bw + B, w - 2 * bw - 2 * B,
                       h - 2 * bw - 2 * B, c );

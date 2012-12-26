@@ -60,8 +60,8 @@ int
 fl_is_inside_lalign( int align )
 {
     return    fli_test_lalign( align, "fl_is_inside_lalign" )
-           && (    ( unsigned int ) align & FL_ALIGN_INSIDE
-                || align == FL_ALIGN_CENTER );
+        && (    ( unsigned int ) align & FL_ALIGN_INSIDE
+             || align == FL_ALIGN_CENTER );
 }
 
 /***************************************

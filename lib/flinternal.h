@@ -254,8 +254,8 @@ extern int fli_mouse_wheel_to_keypress( int       * ev,
                                         int       * key,
                                         void      * xev );
 
-extern void fl_notify_object( FL_OBJECT * obj,
-                              int         reason );
+extern void fli_notify_object( FL_OBJECT * obj,
+                               int         reason );
 
 /* double buffering etc. */
 
