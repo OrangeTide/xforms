@@ -117,7 +117,13 @@ done
 
 
 %changelog
-* Sa Nov 22 2008 Jens Thoms Toerring <jt@toerring.de> 1.0.91
+* Thu Jun 1 2010 Jens Thoms Toerring <jt@toerring.de> 1.0.93sp1
+- New release 1.0.93sp1
+
+* Wed Nov 4 2009 Jens Thoms Toerring <jt@toerring.de> 1.0.93sp1
+- New release 1.0.91sp2
+
+* Sat Nov 22 2008 Jens Thoms Toerring <jt@toerring.de> 1.0.91
 - New release 1.0.91 - lots of bug fixes
 
 * Wed Oct 6 2004 Angus Leeming <angus.leeming@btopenworld.com> 1.0.90
