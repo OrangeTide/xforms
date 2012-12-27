@@ -1504,7 +1504,7 @@ fli_hide_and_get_region( FL_OBJECT * obj,
     fli_object_qflush_object( obj );
 #endif
 
-    if ( ! ! FORM_IS_UPDATABLE( obj->form ) )
+    if ( ! FORM_IS_UPDATABLE( obj->form ) )
     {
         obj->visible = 0;
 
