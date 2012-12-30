@@ -1915,6 +1915,13 @@ handle_keyboard( FL_OBJECT * obj,
     int old_xoffset = sp->xoffset;
     int ret = FL_RETURN_NONE;
 
+    /* Don't react to keyboard events while deactivated, the browser also
+       doesn't react to the mouse, so anything else woild seen to be
+       inconsistent */
+
+    if ( ! obj->active )
+        return ret;
+
     if ( IsHome( key ) && sp->react_to_vert )
         fli_tbox_set_rel_yoffset( obj, 0.0 );
     else if ( IsEnd( key ) && sp->react_to_vert )

@@ -556,7 +556,7 @@ typedef enum {
 typedef enum {
     FL_KEY_NORMAL  = 1,     /* normal keys(0-255) - tab +left/right */
     FL_KEY_TAB     = 2,     /* normal keys + 4 direction cursor     */
-    FL_KEY_SPECIAL = 4,     /* only needs special keys(>255)        */
+    FL_KEY_SPECIAL = 4,     /* only needs special keys (>255)       */
     FL_KEY_ALL     = 7      /* all keys                             */
 } FL_KEY;
 

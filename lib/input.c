@@ -2734,6 +2734,9 @@ fl_set_input_topline( FL_OBJECT * obj,
 {
     FLI_INPUT_SPEC *sp = obj->spec;
 
+    if ( sp->input->type != FL_MULTILINE_INPUT )
+        return;
+
     correct_topline( sp, &top );
 
     if ( sp->topline != top )
@@ -2893,7 +2896,12 @@ fl_get_input_scrollbarsize( FL_OBJECT * obj,
 int
 fl_get_input_topline( FL_OBJECT * obj )
 {
-    return ( ( FLI_INPUT_SPEC * ) obj->spec )->topline;
+    FLI_INPUT_SPEC *sp = obj->spec;
+
+    if ( sp->input->type != FL_MULTILINE_INPUT )
+        return 1;
+
+    return sp->topline;
 }
 
 

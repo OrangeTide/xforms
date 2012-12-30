@@ -38,6 +38,8 @@
 
 
 /***************************************
+ * Some attribue of the object changed, we better recalculate how
+ * it should oook like
  ***************************************/
 
 static void

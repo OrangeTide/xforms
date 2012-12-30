@@ -1,11 +1,26 @@
+2012-12-30 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/tbox.c: made browser not react to keyboard input when
+	deactivated (to be consistent with the fact that a browser
+	also doesn't resond to mouse events under that condition) -
+	thanks to Serge Bromow for making me aware of this issue
+
+	* lib/imput.c: Fixed another bug Serge pointed out: when
+	pressing the <End> or <Home> button on single-line input
+	objects strange things happend. Fix was to do nothing in
+	fl_set_input_topline() for that kind of objects.
+
 2012-12-26 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/objects.c (and some other file): Lots of changes to the
 	way things are redrawn in order to fix bugs and speed up things
+
 	* lib/flresource.c: Rare problem about a BadWindow error in
 	initialization of the library fixed
+
 	* fdesign/fd_file.c: Reading the label style from an .fd file
 	didn't work properly
+
 	* config/libtool.m4 and ltmain.sh: Use newest files from the
 	libtools package
 
@@ -41,6 +56,7 @@
 	* lib/objects.c: Attempt to avoid a massive slow-down observed
 	by Rob Carpenter while creating and deleting forms due to
 	much too many calls of fli_recalc_intersections().
+
 	* lib/button.c: Some mis-handling of mouse buttons a button
 	isn't supposed to react to found by Rob fixed.
 	lib/formbrowser.c: Some problem resulting in infinite
@@ -57,8 +73,10 @@
 
 	* lib/xtext.c: Problem when drawing strings with zero or
 	negative "height" fixed
+
 	* lib/positioner.c: Function for selecting which mouse
 	a positioner reacts to added
+
 	* lib/button.c: Button now reacts only to the release of
 	the mouse button that was pressed first on it
 
@@ -66,6 +84,7 @@
 
 	* lib/xtext.c: Added fl_get_label_char_at_mouse() function
 	and new demo program 'strange_button.c'.
+
 	* lib/events.c, lib/handling.c: Added new function
 	fl_current_event() that allows callbacks to determine
 	the Xforms event they were called for (instead of the
@@ -82,13 +101,17 @@
 	* lib/symbols.c: Simplifications (control sequences are now more
 	powerful and the order is unimportant) and new function for
 	removing symbols.
+
 	* lib/vstrcat.c: Removed the file after rewriting the only
 	function in lib/errmsg.c that used anything from that file.
+
 	* lib/objects.c: Changed signature of fl_get_object_bw()
 	to match the documentation (it now returns an int and
 	takes only a single argument).
+
 	* lib/box.c: Boxes of type FL_NO_BOX and FL_FLAT_BOX now have a
 	border width of 0.
+
 	* lib/objects.c: attempt to speed up the detection of overlap
 	between objects.
 
@@ -97,10 +120,12 @@
 	* lib/objects.c, lib/forms.c: Several changes to speed up
 	redraw, thanks to Werner Heisch noticing the problem.
 	Function for setting form background color added.
+
 	* lib/handling.c: when in a callback e.g. for a browser a
 	new window was opened was under the mouse the browser didn't
 	receive the correct coordinates on mouse release as
 	Werner Heisch noticed.
+
 	* lib/align.c: Cleanup of code for label alignments and
 	some new functions added (this resulted also in lot of
 	minor changes in other files).
@@ -108,9 +133,11 @@
 2012-03-12 Jens Thoms Toerring    <jt@toerring.de>
 	* lib/xdraw.c: Code cleanup for handling of clipping,
 	several new functions added for that.
+
 	* lib/tbox.c: Drawing outside the object disabled,
 	thanks to Sian Mountbatten for reportimg the problem
 	and Paul Nicholson for analyzing its causes.
+
 	* lib/handling.c: Bug that appeared when in the
 	callback of a browswer a new window was created,
 	that led to inconsistencies in the original browser
@@ -146,6 +173,7 @@
 2011-09-24 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_select.c: Bug in undo of alignment fixed.
+
 	* demos/yesno.c, demos/yesno_cb.c: Changed them to have
 	them behave exactly identical.
 

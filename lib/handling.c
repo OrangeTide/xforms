@@ -404,17 +404,11 @@ handle_keyboard( FL_FORM  * form,
 
     /* Space is an exception for browser */
 
-    if ( ( key > 255 || key == ' ' ) && special->wantkey & FL_KEY_SPECIAL )
+    if (   (    ( key > 255 || key == ' ' )
+             && special->wantkey & FL_KEY_SPECIAL )
+         || ( key < 255 && special->wantkey & FL_KEY_NORMAL )
+         || ( special->wantkey == FL_KEY_ALL ) )
         fli_handle_object( special, FL_KEYPRESS, x, y, key, xev, 1 );
-    else if ( key < 255 && special->wantkey & FL_KEY_NORMAL )
-        fli_handle_object( special, FL_KEYPRESS, x, y, key, xev, 1 );
-    else if ( special->wantkey == FL_KEY_ALL )
-        fli_handle_object( special, FL_KEYPRESS, x, y, key, xev, 1 );
-
-#if FL_DEBUG >= ML_INFO1
-    M_info( "handle_keyboard", "(%d %d) pushing %d to %s\n",
-            x, y, key, special->label );
-#endif
 }
 
 
