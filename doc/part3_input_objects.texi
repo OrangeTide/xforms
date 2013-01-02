@@ -366,6 +366,45 @@ validator function set for the input, otherwise
 @code{@ref{FL_INVALID}}.
 
 
+There are two slightly different input modes for input objects. In the
+"normal" mode, when the input field is entered not using the mouse
+(e.g.@: by using of the <Tab> key) the cursor is placed again at the
+position it was when the field was left (or at the end of a possibly
+existing string when it's entered for the first time). When an input
+object has a maximum number of allowed characters set (via the
+@code{@ref{fl_set_input_maxchars()}} function) and there's no room
+left no new input is accepted until at least one character has been
+deleted.
+
+As an alternative there's an input mode that is similar to the way
+things were handle in DOS forms etc. Here, when the field is entered
+by any means but clicking into it with the mouse, the cursor is placed
+at the start of the text. And for fields with a maximum capacity, that
+contain already as many characters as possible, the character at the
+end of the field are removed when a new one is entered.
+
+To switch between the two modes use the function
+@findex fl_set_input_mode()
+@anchor{fl_set_input_mode()}
+@example int fl_set_input_mode( int mode );
+@end example
+@noindent
+where @code{mode} is one of
+@table @code
+@tindex FL_NORMAL_INPUT_MODE
+@anchor{FL_NORMAL_INPUT_MODE}
+@item FL_NORMAL_INPUT_MODE
+The default. Use it to switch to the "normal" input mode
+@tindex FL_DOS_INPUT_MODE
+@anchor{FL_DOS_INPUT_MODE}
+@item FL_DOS_INPUT_MODE
+For selecting the DOS-like input mode
+@end table
+@noindent
+The function returns the previous setting. Note that the function
+changes the input mode for all input fields in your application.
+
+
 @node Other Input Routines
 @section Other Input Routines
 
@@ -767,7 +806,7 @@ library for compilation.
 
 Always make sure that the input field is high enough to contain a
 single line of text. If the field is not high enough, the text may get
-clipped, i.e., become invisible.
+clipped, i.e., become unreadable.
 
 See the program @file{demo06.c} for an example of the use of input
 fields. See @file{minput.c} for multi-line input fields. See

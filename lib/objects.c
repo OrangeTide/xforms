@@ -2359,7 +2359,7 @@ void tooltip_handler( int    ID  FL_UNUSED_ARG,
 {
     FL_OBJECT * const obj = get_parent( data );
 
-    if ( obj->tooltip && *obj->tooltip )
+    if ( obj->tooltip && *obj->tooltip && obj->active )
         fli_show_tooltip( obj->tooltip, obj->form->x + obj->x,
                           obj->form->y + obj->y + obj->h + 1 );
     obj->tipID = 0;
@@ -3527,7 +3527,7 @@ fl_set_object_helper( FL_OBJECT  * obj,
     }
 
     fli_safe_free( obj->tooltip );
-    obj->tooltip = tip ? fl_strdup( tip ) : NULL;
+    obj->tooltip = ( tip && *tip ) ? fl_strdup( tip ) : NULL;
 }
 
 

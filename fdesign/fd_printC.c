@@ -587,7 +587,7 @@ style_val( const char * cc )
 
     fli_sstrcpy( lstyle, cc, sizeof lstyle );
     *spstyle = '\0';
-    if ( ( p = strchr( lstyle, '|' ) ) )
+    if ( ( p = strchr( lstyle, '|' ) ) || ( p = strchr( lstyle, '+' ) ) )
     {
         strcpy( spstyle, p + 1 );
         *p = 0;
@@ -763,7 +763,7 @@ init_array_names( void )
 
 
 /***************************************
- * Checks whether this name is an array name and remembers it
+ * Checks whether an object name is an array name and remembers it
  ***************************************/
 
 static int
@@ -808,7 +808,7 @@ check_array_name( char * aname )
  ***************************************/
 
 static int
-arethere_array_names( void )
+are_there_array_names( void )
 {
     return anumb > 0;
 }
@@ -825,7 +825,6 @@ print_array_names( FILE * fn,
     size_t i;
 
     for ( i = 0; i < anumb; i++ )
-    {
         if ( ! newf )
         {
             fprintf( fn, "    *%s[ %lu ]", arnames[ i ], arsizes[ i ] );
@@ -835,7 +834,6 @@ print_array_names( FILE * fn,
         else
             fprintf( fn, "    FL_OBJECT * %s[ %lu ];\n",
                      arnames[ i ], arsizes[ i ] );
-    }
 }
 
 
@@ -1071,7 +1069,7 @@ print_form_altformat( FILE       * fn,
         }
     }
 
-    if ( arethere_array_names( ) )
+    if ( are_there_array_names( ) )
     {
         fprintf( fn, first ? "FL_OBJECT\n" : ",\n");
         first = 0;
@@ -1302,7 +1300,7 @@ print_header_newformat( FILE       * fn,
             fprintf( fn, "    FL_OBJECT * %s;\n", name );
     }
 
-    if ( arethere_array_names( ) )
+    if ( are_there_array_names( ) )
         print_array_names( fn, 1 );
 
     fprintf( fn, "} %s;\n", fdtname );
@@ -1345,7 +1343,7 @@ print_header_altformat( FILE       * fn,
         }
     }
 
-    if ( arethere_array_names( ) )
+    if ( are_there_array_names( ) )
     {
         fprintf( fn, first ? "extern FL_OBJECT\n" : ",\n" );
         first = 0;

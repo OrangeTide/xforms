@@ -700,8 +700,8 @@ save_forms( const char *str )
 
     strcpy( fname, filename );
 
-    /* On conversion there's need to (re)save  the .fd file. It messes up
-       Makefile rules */
+    /* On conversion there's need no to (re)save  the .fd file - it would
+       just mess up Makefile rules */
 
     if ( fdopt.conv_only )
         goto emit_code;
@@ -746,7 +746,7 @@ save_forms( const char *str )
 
     conv = convertor + fdopt.language;
 
-    /* some converter works on the c code */
+    /* Some converter works on the c code */
 
     if ( conv->need_c_code )
         convertor[ FD_C ].convert( filename, forms, fnumb );

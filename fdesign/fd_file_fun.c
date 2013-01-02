@@ -714,7 +714,7 @@ ff_match_align( int * p )
 
 
 /***************************************
- * lstyle may consist of two values, separated by a '|' or '+'
+ * lstyle may consist of two values, separated by '|' or '+'
  ***************************************/
 
 static int

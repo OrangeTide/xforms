@@ -155,6 +155,9 @@ enum {
 };
 
 
+static int Input_Mode = FL_NORMAL_INPUT_MODE;
+
+
 /***************************************
  ***************************************/
 
@@ -207,7 +210,7 @@ check_scrollbar_size( FL_OBJECT * obj )
     get_margin( sp->input->boxtype, bw, &xmargin, &ymargin );
     sp->charh = fl_get_char_height( sp->input->lstyle, sp->input->lsize, 0, 0 );
 
-    /* See how many (potential) lines we can have */
+    /* See how many lines would fit in */
 
     sp->screenlines = ( sp->dummy->h - 2.0 * ymargin ) / sp->charh + 0.001;
 
@@ -326,8 +329,6 @@ draw_input( FL_OBJECT * obj )
     /* Partial means only text has changed. Internally DrawImage string will
        be used instead of normal string. --Unimplemented yet */
 
-    sp->drawtype = COMPLETE;
-
     if ( sp->drawtype == COMPLETE )
     {
         fl_drw_box( obj->boxtype, sp->input->x, sp->input->y,
@@ -357,7 +358,8 @@ draw_input( FL_OBJECT * obj )
                                  -1,               /* Clipping is already set */
                                  col, sp->textcol, curscol,
                                  obj->lstyle, obj->lsize,
-                                 (    sp->cursor_visible 
+                                 (    sp->cursor_visible
+                                   && obj->focus
                                    && sp->beginrange >= sp->endrange ) ?
                                  sp->position : -1,
                                  sp->beginrange, sp->endrange,
@@ -1178,7 +1180,10 @@ handle_key( FL_OBJECT    * obj,
             slen = strlen( sp->str );
         }
 
-        if ( sp->maxchars > 0 && slen >= sp->maxchars )
+        if (    sp->maxchars > 0
+             && slen >= sp->maxchars
+             && (    Input_Mode == FL_NORMAL_INPUT_MODE
+                  || slen == sp->position ) )
         {
             fl_ringbell( 0 );
             return FL_RETURN_NONE;
@@ -1193,8 +1198,17 @@ handle_key( FL_OBJECT    * obj,
 
         /* Merge the new character */
 
-        memmove( sp->str + sp->position + 1, sp->str + sp->position,
-                 slen - sp->position + 1 );
+        if (    Input_Mode == FL_DOS_INPUT_MODE
+             && sp->maxchars > 0
+             && slen == sp->maxchars )
+        {
+            memmove( sp->str + sp->position + 1, sp->str + sp->position,
+                     slen - sp->position );
+            sp->str[ sp->maxchars ] = '\0';
+        }
+        else
+            memmove( sp->str + sp->position + 1, sp->str + sp->position,
+                     slen - sp->position + 1 );
         sp->str[ sp->position++ ] = key;
 
         if ( key == '\n' )
@@ -1522,7 +1536,10 @@ handle_input( FL_OBJECT * obj,
             if ( obj->type == FL_MULTILINE_INPUT )
                 sp->dummy->focus = 1;
 
-            if ( sp->str )
+            // Put th cursor back into the position where it was (except
+            // for DOS mode where it's always positioned at the start)
+
+            if ( sp->str && Input_Mode != FL_DOS_INPUT_MODE )
             {
                 if ( sp->position < 0 )
                     sp->position = - sp->position - 1;
@@ -1534,6 +1551,7 @@ handle_input( FL_OBJECT * obj,
 
             sp->changed = 0;
             fl_redraw_object( sp->input );
+
             break;
 
         case FL_UNFOCUS:
@@ -1556,9 +1574,9 @@ handle_input( FL_OBJECT * obj,
             if ( ev )
                 ret =   ( sp->changed ? FL_RETURN_CHANGED : FL_RETURN_NONE )
                       | FL_RETURN_END;
+
             break;
 
-//        case FL_MOTION:
         case FL_UPDATE:
             if ( ! obj->focus )
                 break;
@@ -2243,8 +2261,8 @@ fl_set_input_cursorpos( FL_OBJECT * obj,
     if ( newp != sp->position )
     {
         sp->position = newp;
-        if ( ! make_line_visible( obj, sp->ypos ) )
-            fl_redraw_object( sp->input );
+        make_line_visible( obj, ypos );
+        fl_redraw_object( sp->input );
     }
 }
 
@@ -3100,6 +3118,21 @@ int
 fl_input_changed( FL_OBJECT *obj )
 {
     return ( ( FLI_INPUT_SPEC * ) obj->spec )->changed;
+}
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_set_input_mode( int mode )
+{
+    int old_mode = Input_Mode;
+
+    Input_Mode = mode == FL_DOS_INPUT_MODE ?
+                 FL_DOS_INPUT_MODE : FL_NORMAL_INPUT_MODE;
+
+    return old_mode;
 }
 
 

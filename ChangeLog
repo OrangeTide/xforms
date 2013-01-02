@@ -1,3 +1,16 @@
+2013-01-02 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/input.c: New function fl_set_input_mode() added
+	according to proposal by Serge Bromow.
+
+	* lib/objects.c: Don't show tooltip while object is de-
+	activated as proposed by Serge Bromow.
+
+	* fdesign/fd_main.c, fd_names.c: as Serge Bromow noticed
+	fdesign didn't ork correctly in '-convert' mode when lots
+	of files were converted at once by the same instance of the
+	program - hopefully fixed that.
+
 2012-12-30 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/tbox.c: made browser not react to keyboard input when

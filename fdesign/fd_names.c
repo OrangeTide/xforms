@@ -52,7 +52,27 @@ typedef struct
 #define MAXOBJ  1024
 
 static OBJ objects[ MAXOBJ ];   /* The stored objects */
-static int objnumb = 0;     /* Their number */
+static int objnumb = 0;         /* Their number */
+
+
+/***************************************
+ * Returns the number of the object in the list
+ ***************************************/
+
+void
+reset_object_list( void )
+{
+    int i;
+
+    for ( i = 0; i < objnumb; ++i )
+    {
+        objects[ i ].obj = NULL;
+        *objects[ i ].name = *objects[ i ].cbname
+                           = *objects[ i ].argname = '\0';
+    }
+
+    objnumb = 0;
+}
 
 
 /***************************************
@@ -104,8 +124,8 @@ get_object_name( const FL_OBJECT * obj,
 {
     int on = get_object_numb( obj );
 
-    *name = '\0';
-    *cbname = '\0';
+    *name    = '\0';
+    *cbname  = '\0';
     *argname = '\0';
     if ( on == -1 )
         return;

@@ -876,7 +876,7 @@ extern int get_how_return_val( const char * );
 extern const char * get_how_return_name( unsigned int,
                                          int );
 
-
+extern void reset_object_list( void );
 
 #endif /* FD_MAIN_H */
 

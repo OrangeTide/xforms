@@ -77,10 +77,13 @@ fli_draw_button( FL_OBJECT * obj )
     FL_BUTTON_STRUCT *sp = obj->spec;
     FL_COLOR col = sp->val ? obj->col2 : obj->col1;
 
-    if ( obj->belowmouse && col == FL_BUTTON_COL1 )
-        col = FL_BUTTON_MCOL1;
-    if ( obj->belowmouse && col == FL_BUTTON_COL2 )
-        col = FL_BUTTON_MCOL2;
+    if ( obj->belowmouse && obj->active )
+    {
+        if ( col == FL_BUTTON_COL1 )
+            col = FL_BUTTON_MCOL1;
+        else if ( col == FL_BUTTON_COL2 )
+            col = FL_BUTTON_MCOL2;
+    }
 
     if ( FL_IS_UPBOX( obj->boxtype ) && ( sp->val || sp->is_pushed ) )
         fl_drw_box( FL_TO_DOWNBOX( obj->boxtype ), obj->x, obj->y, obj->w,

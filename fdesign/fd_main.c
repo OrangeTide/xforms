@@ -713,21 +713,23 @@ pre_connect( int    argc,
 
     if ( i > argc - 1 )
     {
-        fprintf( stderr, "'-convert' requires arguments\n" );
+        fprintf( stderr, "'-convert' requires argument(s)\n" );
         usage( argv[ 0 ], 1 );
     }
 
     for ( s = i; s < argc; s++ )
     {
+        reset_object_list( );
+
         if ( load_forms( FL_FALSE, argv[ s ], 0 ) < 0 )
         {
-            fprintf( stderr, "Unable to load %s\n", argv[ s ] );
+            fprintf( stderr, "Unable to load '%s'\n", argv[ s ] );
             exit( 1 );
         }
 
         if ( ! save_forms( argv[ s ] ) )
         {
-            fprintf( stderr, "Unable to convert %s\n", argv[ s ] );
+            fprintf( stderr, "Unable to convert '%s'\n", argv[ s ] );
             exit( 1 );
         }
     }
