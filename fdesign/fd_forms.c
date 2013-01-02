@@ -46,7 +46,7 @@
 #include <ctype.h>
 
 static FRM *forms = NULL;   /* The forms */
-int fnumb = 0;
+static int fnumb = 0;
 
 FL_FORM *cur_form = NULL;   /* The current form */
 

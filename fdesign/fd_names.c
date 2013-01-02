@@ -38,45 +38,35 @@
 #include "fd_main.h"
 
 /****
-  THE DATA STRUCTURE
-****/
+ * Structure for storing names connected with an object
+ ****/
 
 typedef struct
 {
     FL_OBJECT * obj;                        /* The object */
-    char        name[ MAX_VAR_LEN ];        /* Its name (if any) */
-    char        cbname[ MAX_VAR_LEN ];      /* Callback Routine */
+    char        name[    MAX_VAR_LEN ];     /* Its name (if any) */
+    char        cbname[  MAX_VAR_LEN ];     /* Callback Routine */
     char        argname[ MAX_VAR_LEN ];     /* The argument */
 } OBJ;
 
-#define MAXOBJ  1024
-
-static OBJ objects[ MAXOBJ ];   /* The stored objects */
-static int objnumb = 0;         /* Their number */
+static OBJ * objects   = NULL;      /* The stored objects */
+static int num_objects = 0;         /* Their number */
 
 
 /***************************************
- * Returns the number of the object in the list
+ * Deletes the list of object name structures
  ***************************************/
 
 void
 reset_object_list( void )
 {
-    int i;
-
-    for ( i = 0; i < objnumb; ++i )
-    {
-        objects[ i ].obj = NULL;
-        *objects[ i ].name = *objects[ i ].cbname
-                           = *objects[ i ].argname = '\0';
-    }
-
-    objnumb = 0;
+    fli_safe_free( objects );
+    num_objects = 0;
 }
 
 
 /***************************************
- * Returns the number of the object in the list
+ * Returns the index of the object in the list (or -1 if it's not found)
  ***************************************/
 
 static int
@@ -84,15 +74,15 @@ get_object_numb( const FL_OBJECT * obj )
 {
     int i;
 
-    for ( i = 0; i < objnumb; i++ )
+    for ( i = 0; i < num_objects; i++ )
         if ( objects[ i ].obj == obj )
             return i;
+
     return -1;
 }
 
 
 /***************************************
- * Checks whether the names are correct C-names and don't occur already.
  ***************************************/
 
 static void
@@ -102,18 +92,11 @@ check_names( int on )
 
     if ( *objects[ on ].cbname && ! *objects[ on ].argname)
         strcpy( objects[ on ].argname, "0" );
-
-    /* HAS TO BE EXTENDED */
 }
 
 
-/****
-  ACTUAL ROUTINES
-****/
-
-
 /***************************************
- * returns the names of an object
+ * Returns the names associated with an object
  ***************************************/
 
 void
@@ -124,11 +107,11 @@ get_object_name( const FL_OBJECT * obj,
 {
     int on = get_object_numb( obj );
 
-    *name    = '\0';
-    *cbname  = '\0';
-    *argname = '\0';
     if ( on == -1 )
+    {
+        *name = *cbname = *argname = '\0';
         return;
+    }
 
     strcpy( name, objects[ on ].name );
     strcpy( cbname, objects[ on ].cbname );
@@ -137,7 +120,7 @@ get_object_name( const FL_OBJECT * obj,
 
 
 /***************************************
- * returns the names of an object
+ * Sets the names belonging to an object
  ***************************************/
 
 void
@@ -146,29 +129,31 @@ set_object_name( FL_OBJECT  * obj,
                  const char * cbname,
                  const char * argname )
 {
-    int on = get_object_numb( obj );
+    int on;
 
     if ( obj == NULL )
         return;
 
-    if ( on == -1 )
+    if ( ( on = get_object_numb( obj ) ) == -1 )
     {
         if (    ( ! name    || ! *name    )
              && ( ! cbname  || ! *cbname  )
              && ( ! argname || ! *argname ) )
             return;
 
-        if ( objnumb >= MAXOBJ )
-            return;
+        objects = fl_realloc( objects, ++num_objects * sizeof *objects );
+        on = num_objects - 1;
 
-        objects[ objnumb ].obj = obj;
-        on = objnumb++;
+        objects[ on ].obj = obj;
+        *objects[ on ].name = *objects[ on ].cbname
+                            = *objects[ on ].argname = '\0';
     }
 
     if ( name )
-        fli_sstrcpy( objects[ on ].name, name, sizeof objects[ on ].name );
+        fli_sstrcpy( objects[ on ].name, name,
+                     sizeof objects[ on ].name );
 
-    if ( cbname )
+    if ( cbname)
         fli_sstrcpy( objects[ on ].cbname, cbname,
                      sizeof objects[ on ].cbname );
 
