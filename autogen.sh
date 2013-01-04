@@ -25,58 +25,45 @@ esac
 # Generate acinclude.m4
 echo -n "Generate acinclude.m4... "
 rm -f acinclude.m4
-(cd config ; cat ${ACINCLUDE_FILES} ${EXTRA_ACINCLUDE_FILES} >../acinclude.m4)
-echo "done."
+( cd config; cat ${ACINCLUDE_FILES} ${EXTRA_ACINCLUDE_FILES} > ../acinclude.m4 )
+echo " done"
 
 # Generate the Makefiles and configure files
 if ( $ACLOCAL --version ) < /dev/null > /dev/null 2>&1; then
-	echo "Building macros..."
-	for dir in . ; do
-	    echo "        $dir"
-	    ( cd $dir ; $ACLOCAL )
-	done
-	echo "done."
+	echo -n "Building macros..."
+	$ACLOCAL
+	echo " done"
 else
 	echo "aclocal not found -- aborting"
 	exit
 fi
 
 if ( $AUTOHEADER --version ) < /dev/null > /dev/null 2>&1; then
-	echo "Building config header template..."
-	for dir in . ; do
-	    echo "        $dir"
-	    ( cd $dir ; $AUTOHEADER )
-	done
-	echo "done."
+	echo -n "Building config header template..."
+	$AUTOHEADER
+	echo " done"
 else
 	echo "autoheader not found -- aborting"
 	exit
 fi
 
 if ( $AUTOMAKE --version ) < /dev/null > /dev/null 2>&1; then
-	echo "Building Makefile templates..."
-	for dir in . ; do
-	    echo "        $dir"
-	    ( cd $dir ; $AUTOMAKE )
-	done
-	echo "done."
+	echo -n "Building Makefile templates..."
+	$AUTOMAKE
+	echo " done"
 else
 	echo "automake not found -- aborting"
 	exit
 fi
 
 if ( $AUTOCONF --version ) < /dev/null > /dev/null 2>&1; then
-	echo "Building configure..."
-	for dir in . ; do
-	    echo "       $dir"
-	    ( cd $dir ; $AUTOCONF )
-	done
-	echo "done."
+	echo -n "Building configure..."
+	$AUTOCONF
+	echo " done"
 else
 	echo "autoconf not found -- aborting"
 	exit
 fi
 
 echo
-echo 'run "./configure ; make"'
-echo
+echo 'Now run "./configure; make; make install"'

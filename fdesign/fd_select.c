@@ -48,9 +48,6 @@ static FL_OBJECT *selobj[ MAXSEL ]; /* the selected objects */
 static int selnumb = 0;             /* and their number */
 static int backf = FL_FALSE;        /* whether the selection is the backface */
 
-static FL_OBJECT *tmpobj[ MAXSEL ]; /* temporary list of objects */
-static int tmpnumb = 0;             /* and their number */
-
 
 /***************************************
  * Returns the index of a particular object. -1 if it is not selected
@@ -70,6 +67,28 @@ find_selobject( FL_OBJECT * obj )
 
 
 /***************************************
+ * Make a new, properly ordered list of selected objects, removing
+ * duplicates and objects set to NULL
+ ***************************************/
+
+static void
+cleanup_selection_list( void )
+{
+    FL_OBJECT **tmpobj = fl_malloc( selnumb * sizeof *tmpobj ),
+              *obj;
+    int tmpnumb = 0;
+
+    for ( obj = cur_form->first; obj != NULL; obj = obj->next )
+        if ( find_selobject( obj ) != -1 )
+            tmpobj[ tmpnumb++ ] = obj;
+
+    memcpy( selobj, tmpobj, tmpnumb * sizeof *tmpobj );
+    fl_free( tmpobj );
+    selnumb = tmpnumb;
+}
+
+
+/***************************************
  * Cleans up the selection, ordering the objects and creating
  * groups if all elements are in there
  ***************************************/
@@ -79,8 +98,7 @@ cleanup_selection( void )
 {
     FL_OBJECT *obj,
               *begobj = NULL;
-    int i,
-        tt,
+    int tt,
         sel = -1;
 
     if ( cur_form == NULL )
@@ -124,18 +142,7 @@ cleanup_selection( void )
         obj = obj->next;
     }
 
-    /* Make a new, ordered list of selected items, removing duplicates and
-       NULL objects */
-
-    tmpnumb = 0;
-    for ( obj = cur_form->first; obj != NULL; obj = obj->next )
-        if ( find_selobject( obj ) != -1 )
-            tmpobj[ tmpnumb++ ] = obj;
-
-    for ( i = 0; i < tmpnumb; i++ )
-        selobj[ i ] = tmpobj[ i ];
-
-    selnumb = tmpnumb;
+    cleanup_selection_list( );
     fillin_groups( );
 }
 
@@ -263,8 +270,8 @@ deletegroupfrom_selection( FL_OBJECT * obj )
 void
 clear_selection( void )
 {
-    selnumb = 0;
     backf = FL_FALSE;
+    selnumb = 0;
     cleanup_selection( );
 }
 
@@ -651,7 +658,7 @@ move_selection( FL_Coord dx,
 
 
 /***************************************
- * Change the selection  size
+ * Change the selection size
  ***************************************/
 
 #define MINSIZE 5
@@ -772,7 +779,11 @@ handle_select( const XEvent * xev )
     if ( ( s = ShiftIsDown( xev->xbutton.state ) ) )      /* Shift Push */
     {
         if ( ! cur_form->first )
-            fprintf( stderr, "something is wrong\n" );
+        {
+            fprintf( stderr, "something is wrong, form has No objects\n" );
+            return;
+        }
+
         if ( mouseobj == BackOBJ( ) )
             return;
 
@@ -1138,6 +1149,7 @@ void
 raise_selection( void )
 {
     int i;
+    FL_OBJECT **tmpobj;
 
     if ( backf )
         return;         /* Cannot raise the backface */
@@ -1145,15 +1157,82 @@ raise_selection( void )
     if ( ! cur_form )
         return;
 
+    tmpobj = fl_malloc( selnumb * sizeof *tmpobj );
+    memcpy( tmpobj, selobj, selnumb * sizeof *selobj );
+
     for ( i = 0; i < selnumb; i++ )
     {
-        fl_delete_object( selobj[ i ] );
-        if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
-             && selobj[ i ]->objclass != FL_END_GROUP )
-            fl_add_object( cur_form, selobj[ i ] );
+        FL_OBJECT *first,
+                  *last;
+        int idx;
+
+        first = last = selobj[ i ];
+
+        if ( ! first )
+            continue;
+
+        if ( first->objclass == FL_BEGIN_GROUP )
+        {
+            /* If a whole group is selected we move it all at once,
+               including the objects marking the groups begin and end */
+
+            do
+            {
+                last = last->next;
+                if ( ( idx = find_selobject( last ) ) != -1 )
+                    selobj[ idx ] = NULL;
+            } while ( last->objclass != FL_END_GROUP );
+
+            /* If the group is already at the end of the forms objects
+               there's nothing to raise */
+
+            if ( ! last->next )
+                continue;
+        }
+        else
+        {
+            /* If the object has children they also need raising, set last
+               to the last child belonging to the object */
+
+            if ( last->child )
+                while ( last->next && last->next->parent )
+                    last = last->next;
+
+            /* Nothing to raise if we're already at the end of the list of
+               objects of the form */
+
+            if ( ! last->next )
+                continue;
+
+            /* If the object we raise belongs to a group remove it (and all
+               it's chilren) from the
+               group */
+
+            if ( first->group_id )
+            {
+                FL_OBJECT *o = first;
+
+                for ( o = first; o != last; o = o->next )
+                    o->group_id = 0;
+                last->group_id = 0;
+            }
+        }
+
+        changed = 1;
+
+        first->prev->next = last->next;
+        last->next->prev  = first->prev;
+
+        first->prev = cur_form->last;
+        cur_form->last->next = first;
+        last->next  = NULL;
+
+        cur_form->last = last;
     }
 
-    changed = 1;
+    memcpy( selobj, tmpobj, selnumb * sizeof *selobj );
+    fl_free( tmpobj );
+    cleanup_selection( );
 }
 
 
@@ -1165,6 +1244,7 @@ void
 lower_selection( void )
 {
     int i;
+    FL_OBJECT **tmpobj;
 
     if ( backf )
         return;         /* Cannot lower the backface. */
@@ -1172,16 +1252,83 @@ lower_selection( void )
     if ( ! cur_form )
         return;
 
+    tmpobj = fl_malloc( selnumb * sizeof *tmpobj );
+    memcpy( tmpobj, selobj, selnumb * sizeof *selobj );
+
     for ( i = selnumb - 1; i >= 0; i-- )
     {
-        if ( selobj[ i ] != BackOBJ( )->next )
+        FL_OBJECT *first,
+                  *last;
+        int idx;
+
+        first = last = selobj[ i ];
+
+        if ( ! first || first->prev == BackOBJ( ) )
+            continue;
+
+        if ( first->objclass == FL_END_GROUP )
         {
-            fl_delete_object( selobj[ i ] );
-            fli_insert_object( selobj[ i ], BackOBJ( )->next );
+            do
+            {
+                first = first->prev;
+                if ( ( idx = find_selobject( first ) ) != -1 )
+                    selobj[ idx ] = NULL;
+            } while ( first->objclass != FL_BEGIN_GROUP );
+
+            /* If the group is already at the start of the forms objects
+               (except the backface object) there's nothing to raise */
+
+            if ( first->prev == BackOBJ( ) )
+            {
+                fprintf( stderr, "Ntbd %p\n", first );
+                continue;
+            }
         }
+        else
+        {
+            /* If the object has children they also need lowering, set last
+               to the last child belonging to the object */
+
+            if ( last->child )
+                while ( last->next && last->next->parent )
+                    last = last->next;
+
+            /* Nothing to lower if we're already at the start of the list of
+               objects of the form (module the backface object) */
+
+            if ( first->prev == BackOBJ( ) )
+                continue;
+            /* If the object we raise belongs to a group remove it (and all
+               it's chilren) from the
+               group */
+
+            if ( first->group_id )
+            {
+                FL_OBJECT *o = first;
+
+                for ( o = first; o != last; o = o->next )
+                    o->group_id = 0;
+                last->group_id = 0;
+            }
+        }
+
+        changed = 1;
+
+        first->prev->next = last->next;
+        if ( last->next )
+            last->next->prev  = first->prev;
+        else
+            cur_form->last = first->prev;
+
+        BackOBJ( )->next->prev = last;
+        last->next = BackOBJ( )->next;
+        BackOBJ( )->next = first;
+        first->prev = BackOBJ( );
     }
 
-    changed = 1;
+    memcpy( selobj, tmpobj, selnumb * sizeof *selobj );
+    fl_free( tmpobj );
+    cleanup_selection( );
 }
 
 
@@ -1559,8 +1706,15 @@ flatten_selection( void )
 
     for ( i = 0; i < selnumb; i++ )
     {
+        /* Bothig to be done for selected object that aren't oart of a group */
+
         if ( selobj[ i ]->objclass != FL_BEGIN_GROUP )
             continue;
+
+        /* Unset teh group ID all the objects that rae part of the group
+           (unless. of course, the object for the start and the end of the
+           group. that will keep them from getting deleted when the object
+           for the start of thegroup is deleted. */
 
         for ( j = i + 1; j < selnumb; j++ )
             if ( selobj[ j ]->objclass == FL_END_GROUP )
@@ -1568,10 +1722,21 @@ flatten_selection( void )
             else
                 selobj[ j ]->group_id = 0;
 
+        /* Delete the obkect for the start of the group - this will also
+           delete the object for teh end of the group (but ot the actual
+           members of the group since we just reset theirgroup ID) */
+
         fl_delete_object( selobj[ i ] );
+
+        /* Mark start and end object in the list of selected objects as
+           deleted */
+
         selobj[ i ] = NULL;
         if ( j < selnumb )
             selobj[ j ] = NULL;
+
+        /* Look for more grouped objects in the list of selected objects */
+
         i = j;
     }
 

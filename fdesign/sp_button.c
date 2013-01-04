@@ -364,12 +364,12 @@ save_button_attrib( FILE      * fp,
               *btspec;
     IconInfo *definfo;
 
-    if (!ISBUTTON(ob->objclass) || !(defobj = create_a_button(ob)))
+    if ( ! ISBUTTON( ob->objclass ) || ! ( defobj = create_a_button( ob ) ) )
         return;
 
-    defspec = get_superspec(defobj);
+    defspec = get_superspec( defobj );
     definfo = defspec->cspecv;
-    btspec = get_superspec(ob);
+    btspec = get_superspec( ob );
     info = btspec->cspecv;
 
     if ( btspec->mbuttons != defspec->mbuttons )

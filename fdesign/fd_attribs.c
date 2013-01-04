@@ -91,7 +91,7 @@ autoapply_setting_cb( FL_OBJECT * ob,
 
 /******* For cancel and restore operation *******{*/
 
-static FL_OBJECT *oldcopy,      /* object being changed */
+static FL_OBJECT *oldcopy = NULL,      /* object being changed */
                  *curobj;
 static char oldname[ MAX_VAR_LEN ];
 static char oldcbname[ MAX_VAR_LEN ],
@@ -112,12 +112,15 @@ save_object( FL_OBJECT * obj )
 
     if ( ! oldcopy )
         oldcopy = fl_make_object( 0, 0, 0, 0, 0, 0, NULL, NULL );
+
     ol = oldcopy->label;
     os = oldcopy->shortcut;
     *oldcopy = *obj;
     oldcopy->label = ol;
     oldcopy->shortcut = os;
+
     fl_set_object_label( oldcopy, obj->label );
+
     for ( tmp = obj->child; tmp; tmp = tmp->nc )
         tmp->parent = obj;
 }

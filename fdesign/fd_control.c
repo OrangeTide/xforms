@@ -575,7 +575,8 @@ fix_menu_etc( FL_FORM * form,
     {
         if (    ob->objclass != FL_MENU
              && ob->objclass != FL_CHOICE
-             && ob->objclass != FL_BROWSER )
+             && ob->objclass != FL_BROWSER
+             && ! ISBUTTON( ob->objclass ) )
             continue;
 
         if ( ob->objclass == FL_MENU )
@@ -656,6 +657,13 @@ fix_menu_etc( FL_FORM * form,
                 if ( nlines != ssp->nlines )
                     fl_clear_browser( ob );
             }
+        }
+        else if ( ISBUTTON( ob->objclass ) )
+        {
+            if ( save )
+                ob->u_ldata = ( ( FL_BUTTON_SPEC * ) ob->spec )->val;
+            else
+                ( ( FL_BUTTON_SPEC * ) ob->spec )->val = ob->u_ldata;
         }
     }
 }

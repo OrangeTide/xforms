@@ -171,10 +171,7 @@ fillin_groups( void )
         if (    obj2->objclass == FL_END_GROUP
              && obj2->prev != NULL
              && obj2->prev->objclass == FL_BEGIN_GROUP )
-        {
             fl_delete_object( obj2->prev );
-            fl_delete_object( obj2 );
-        }
     }
 
     /* Put the still existing groups in the list */

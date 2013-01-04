@@ -1,3 +1,13 @@
+2013-01-04 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_select.c: Raising and lowering objects
+	didn't work properly
+
+	* fdesign/fd_control.c: Store and reset button state
+	before and after test.
+
+	* autogen.sh: Cleanup
+
 2013-01-03 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_select.c: Ungrouping didn't work properly

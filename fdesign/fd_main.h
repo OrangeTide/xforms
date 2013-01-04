@@ -830,7 +830,7 @@ typedef struct {
 } IconInfo;
 
 #define ISBUTTON( cls )  (    ( cls ) == FL_BUTTON             \
-                           || ( cls ) == FL_LIGHTBUTTON    \
+                           || ( cls ) == FL_LIGHTBUTTON        \
                            || ( cls ) == FL_CHECKBUTTON        \
                            || ( cls ) == FL_ROUNDBUTTON        \
                            || ( cls ) == FL_ROUND3DBUTTON      \
