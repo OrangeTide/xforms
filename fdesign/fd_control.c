@@ -677,7 +677,7 @@ test_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     if ( cur_form == NULL )
         return;
 
-    fl_deactivate_form(fd_control->control);
+    fl_deactivate_form( fd_control->control );
     thetestform = cur_form;
 
     /* During test, accumulation error might result. Save the old size */

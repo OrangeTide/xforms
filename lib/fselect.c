@@ -47,6 +47,7 @@ static int bdevmarker   = 'b';  /* special file marker  */
 static int cdevmarker   = 'c';  /* special file marker  */
 static int fifomarker   = 'p';  /* pipe marker          */
 static int sockmarker   = 's';  /* socket marker        */
+static int filemarker   = ' ';  /* normal file marker   */
 static int listdirfirst = 1;    /* list directory first */
 
 extern int fli_sort_method;     /* form listdir.c */
@@ -332,7 +333,7 @@ select_cb( FL_OBJECT * obj,
         {
             strcat( append_slash( lfs->dname ), seltext );
             fl_fix_dirname( lfs->dname );
-            if ( fill_entries( lfs->browser, 0, 0 ) < 0 )
+            if ( fill_entries( lfs->browser, NULL, 0 ) < 0 )
                 fli_del_tail_slash( lfs->dname );
             *seltext = '\0';
         }
@@ -390,7 +391,7 @@ fl_set_directory( const char * p )
     }
 
     strcpy( fs->dname, tmpdir );
-    if ( fill_entries( fs->browser, 0, 1 ) < 0 )
+    if ( fill_entries( fs->browser, NULL, 1 ) < 0 )
         fli_del_tail_slash( fs->dname );
     else
         fl_set_object_label( fs->dirbutt, contract_dirname( fs->dname, 38 ) );
@@ -468,6 +469,9 @@ fill_entries( FL_OBJECT  * br,
     char tt[ FL_FLEN ];
     int n, i;
     FD_fselect *lfs = br->form->fdui;
+    int dcount = 1;
+    int lcount = 1;
+    int sel_line = 0;
 
     if ( br->form->visible )
     {
@@ -499,70 +503,72 @@ fill_entries( FL_OBJECT  * br,
     fl_set_object_label( lfs->dirbutt, contract_dirname( lfs->dname, 38 ) );
     fl_clear_browser( br );
 
-    /* List directories first */
-
-    if ( listdirfirst )
-    {
-        for ( dl = dirlist; dl->name; dl++ )
-        {
-            if ( dl->type == FT_DIR )
-            {
-                fl_snprintf( tt, sizeof tt, "%c %s", dirmarker, dl->name );
-                fl_add_browser_line( br, tt );
-            }
-        }
-    }
-
     for ( i = 0, dl = dirlist; dl->name; i++, dl++ )
     {
-        if ( dl->type == FT_DIR )
+        int cur_line;
+        char marker;
+        char *p;
+
+        switch ( dl->type )
         {
-            if ( ! listdirfirst )
-            {
-                fl_snprintf( tt, sizeof tt, "%c %s", dirmarker, dl->name );
-                fl_add_browser_line( br, tt );
-            }
+            case FT_DIR :
+                marker = dirmarker;
+                break;
+
+            case FT_FIFO :
+                marker = fifomarker;
+                break;
+
+            case FT_SOCK :
+                marker = sockmarker;
+                break;
+
+            case FT_BLK :
+                marker = bdevmarker;
+                break;
+
+            default :
+                marker = filemarker;
         }
-        else if ( dl->type == FT_FIFO )
+
+        fl_snprintf( tt, sizeof tt, "%c %s", marker, dl->name );
+
+        if ( dl->type == FT_DIR && listdirfirst )
         {
-            fl_snprintf( tt, sizeof tt, "%c %s", fifomarker, dl->name );
-            fl_add_browser_line( br, tt );
-        }
-        else if ( dl->type == FT_SOCK )
-        {
-            fl_snprintf( tt, sizeof tt, "%c %s", sockmarker, dl->name );
-            fl_add_browser_line( br, tt );
-        }
-        else if ( dl->type == FT_BLK )
-        {
-            fl_snprintf( tt, sizeof tt, "%c %s", bdevmarker, dl->name );
-            fl_add_browser_line( br, tt );
-        }
-        else if ( dl->type == FT_CHR )
-        {
-            fl_snprintf( tt, sizeof tt, "%c %s", cdevmarker, dl->name );
-            fl_add_browser_line( br, tt );
+            cur_line = dcount;
+            if ( sel_line > 0 && sel_line >= dcount )
+                sel_line++;
+            fl_insert_browser_line( br, dcount++, tt );
         }
         else
         {
-            fl_snprintf( tt, sizeof tt,"  %s", dl->name );
+            cur_line = lcount;
             fl_add_browser_line( br, tt );
-            if ( fn && strcmp( dl->name, fn ) == 0 )
-            {
-                int k = fl_get_browser_maxline( br );
-
-                fl_select_browser_line( br, k );
-
-                if ( show )
-                {
-                    int top = fl_get_browser_topline( br );
-                    int total = fl_get_browser_screenlines( br );
-
-                    if ( k < top || k > top + total - 1 )
-                        fl_set_browser_topline( br, k - total / 2 );
-                }
-            }
         }
+
+        lcount++;
+
+        if (    sel_line <= 0
+             && fn
+             && (    ! strcmp( dl->name, fn )
+                  || (    ( p = strrchr( fn, '/' ) )
+                       && ! strcmp( dl->name, p + 1 ) ) ) )
+        {
+            sel_line = cur_line;
+            fl_select_browser_line( br, cur_line );
+        }
+    }
+
+    if ( show && sel_line > 0 )
+    {
+        int total = fl_get_browser_screenlines( br );
+
+        if ( sel_line <= total / 2 )
+            fl_set_browser_topline( br,  1 );
+        else if ( sel_line > lcount - total - 1 )
+            fl_set_browser_topline( br, lcount - total - 1 );
+        else
+            fl_set_browser_topline( br, sel_line - total / 2 );
     }
 
     fl_unfreeze_form( lfs->fselect );
@@ -874,8 +880,8 @@ fl_show_fselector( const char * message,
 
     fl_fit_object_label( fs->resbutt, 1, 1 );
 
-    /* If selection call back exists, cancel has no meaning as whenver a file
-       is selected callback is executed and there is no backing out */
+    /* If selection call back exists, cancel has no meaning as whenever a file
+       is selected a callback is executed and there is no backing out */
 
     if ( ! ( fs->fselect_cb || fs->fselect->attached ) )
     {
@@ -1287,7 +1293,6 @@ fl_set_fselector_fontsize( int fsize )
     fl_set_object_lsize( fs->dirlabel, fsize );
     fl_set_object_lsize( fs->patlabel, fsize );
     fl_set_object_lsize( fs->ready,    fsize );
-
     fl_set_browser_fontsize( fs->browser, fsize );
 
     for ( i = 0; i < MAX_APPBUTT; i++ )

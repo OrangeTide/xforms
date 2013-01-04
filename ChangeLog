@@ -1,3 +1,20 @@
+2013-01-03 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_select.c: Ungrouping didn't work properly
+	since also all members of the group got deleted
+
+	*fdesign/fd_main.c: As proposed by Michal Szymanski a
+	left double clock on an object brings up the attribute
+	dialog, while deleting is done via right double click.
+
+	* lib/fselect.c: if a default file is passed to
+	fl_show_file_selctor() it's now shown centered in the
+	browser (and you don't have to strip the path from the
+	file name for that t work)
+
+	* lib/objects.c: Adding a composite object to a reopened
+	group didn't work, hopefully fixed.
+
 2013-01-02 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/input.c: New function fl_set_input_mode() added

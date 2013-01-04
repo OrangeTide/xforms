@@ -302,6 +302,23 @@ fl_add_object( FL_FORM   * form,
             obj->prev = end->prev;
             obj->next = end;
             end->prev = obj;
+
+            if ( obj->child )
+            {
+                FL_OBJECT * tmp;
+
+                for ( tmp = obj->child; tmp; tmp = tmp->nc )
+                    fl_add_object( form, tmp );
+            }
+
+            if (    fl_current_form != form
+                 && FORM_IS_UPDATABLE( obj->form )
+                 && ! obj->parent )
+            {
+                fli_recalc_intersections( form );
+                fl_redraw_object( obj );
+            }
+
             return;
         }
     }
@@ -470,9 +487,17 @@ fl_delete_object( FL_OBJECT * obj )
 
         for ( o = obj->next; o; o = o->next )
         {
+            /* Hack for fdesign to allow deletion of the FL_BRGIN_GROUP
+               and FL_END_GROUP objects with the objects in the group
+               (if there group ID was unset) */
+
+            if ( o->group_id != obj->group_id )
+                continue;
+
             fl_delete_object( o );
             if ( o->objclass == FL_END_GROUP )
                 break;
+
         }
 
         fl_unfreeze_form( obj->form );
@@ -486,8 +511,17 @@ fl_delete_object( FL_OBJECT * obj )
         FL_OBJECT *o;
 
         for ( o = obj->form->first; o && o != obj; o = o->next )
+        {
+            /* Hack for fdesign to allow deletion of the FL_BRGIN_GROUP
+               and FL_END_GROUP objects with the objects in the group
+               (if there group ID was unset) */
+
+            if ( o->group_id != obj->group_id )
+                continue;
+
             if ( o->group_id == obj->group_id && o->objclass != FL_BEGIN_GROUP )
                 break;
+        }
 
         if ( o != obj )
         {
@@ -2359,7 +2393,7 @@ void tooltip_handler( int    ID  FL_UNUSED_ARG,
 {
     FL_OBJECT * const obj = get_parent( data );
 
-    if ( obj->tooltip && *obj->tooltip && obj->active )
+    if ( obj->tooltip && *obj->tooltip && obj->visible )
         fli_show_tooltip( obj->tooltip, obj->form->x + obj->x,
                           obj->form->y + obj->y + obj->h + 1 );
     obj->tipID = 0;

@@ -192,13 +192,15 @@ thus the input focus order is what you intended.
 @section Setting Attributes
 
 To set attributes like type, color, label, etc., of an object first
-select it (using the right mouse button) and next press the function
-key @code{<F1>} (or click on the button labeled "F1"). If only one
-object is selected you can change all its attributes, including its
-label, name, etc. It is also possible to change the attributes of
-multiple objects as long as they all are of the same class. In this
-case you cannot change the label, name, etc. because you probably want
-them to remain different for the objects.
+select it (using the left mouse button) and next press the function
+key @code{<F1>} (or click on the button labeled "F1"). Also a double
+click (with the left mouse button) will select the object and open up
+the form for changing the obe=jects attributes. If only one object is
+selected you can change all its attributes, including its label, name,
+etc. It is also possible to change the attributes of multiple objects
+as long as they all are of the same class. In this case you cannot
+change the label, name, etc. because you probably want them to remain
+different for the objects.
 
 A form will appear in which you can indicate the different settings.
 Before we continue, the organization of the attributes form and
@@ -376,16 +378,16 @@ dependent way. In general, not using the full path is more flexible.
 
 You can remove objects from the form by first selecting them and next
 pressing function key @code{<F12>} or simply by double-clicking the
-left mouse button. The objects will disappear but are in fact saved in
-a buffer. You can put them back in the form, or in another form, by
-pasting them using @code{<F10>}. Note that only the last collection of
-deleted objects is saved in the buffer.
+right mouse button on it. The object(s) will disappear but in fact
+will be qsaved in a buffer. You can put it back into the form (or in
+another form) by pasting using @code{<F10>}. Note that only the last
+collection of deleted objects is saved in the buffer.
 
-It is also possible to put a copy of the selection in the buffer using
-@code{<F9>}. This selection can now be put into the same form or into
-a different form. This allows for a simple mechanism of making
-multiple copies of a set of objects and for moving information from
-one form to another.
+It is also possible to put a copy of the selection (i.e.@: without
+renoving the original object(s)) into the buffer using @code{<F9>}.
+The content of the bufer can now be put into the same or anotehr form.
+This allows for a simple mechanism of making multiple copies of a set
+of objects and for moving information from one form to another.
 
 To clone the currently selected object, hold down the @code{<Shift>}
 key and then drag the selected object to a new position. The cloned
@@ -393,6 +395,9 @@ object will have exactly the same attributes as the original object
 except for object name and shortcut keys. Should these be cloned, the
 generated code would not be compilable (or cause runtime misbehavior).
 
+Also, When you copy a objects belonging to a common group just the
+individual objects of the group will be copied, but they won't belong
+to a common group anymore.
 
 @node Groups
 @section Groups
@@ -430,8 +435,7 @@ have to type in the group name again.
 
 Sometimes you may want to un-group the objects in an existing group,
 i.e.@: get them out of the group they are currently in. To this end
-simply select the group and press @code{<F8>}. (This only works if one
-group is selected.)
+simply select the group and press @code{<F8>}.
 
 You can use the menu "Rename group" from the "Group" menu to change
 the name of a selected group. If multiple groups are selected only the

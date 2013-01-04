@@ -274,9 +274,9 @@ handle_click( XEvent * xev,
 
     if ( dblclk )
     {
-        if ( xev->xbutton.button == 1 )
+        if ( xev->xbutton.button == 3 )
             cut_selection( );
-        else if ( xev->xbutton.button == 3 )
+        else if ( xev->xbutton.button == 1 )
             change_selection( );
 
         redraw_the_form( 0 );

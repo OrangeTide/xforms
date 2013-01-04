@@ -567,6 +567,7 @@ change_object( FL_OBJECT * obj,
 {
     FL_OBJECT *retobj;
     FD_generic_attrib *ui = fd_generic_attrib;
+    FL_FORM * spec_form = NULL;
 
     attrib_init( fd_generic_attrib );
 
@@ -592,6 +593,9 @@ change_object( FL_OBJECT * obj,
         fl_hide_object( ui->nameobj   );
         fl_hide_object( ui->cbnameobj );
         fl_hide_object( ui->argobj    );
+        spec_form = fl_get_tabfolder_folder_bynumber( fd_attrib->attrib_folder,
+                                                      2 );
+        fl_delete_folder( fd_attrib->attrib_folder, spec_form );
     }
 
     /* Show attributes of the current object */
@@ -619,7 +623,7 @@ change_object( FL_OBJECT * obj,
 
     /* Both cancel and readyobj should have their own callbacks, so we don't
        need to call fl_do_forms(), but since attribute editing can't be
-       invoked for more than once item at a time we need to block the
+       invoked for more than one item at a time we need to block the
        proces_xevent. TODO */
 
     do
@@ -632,6 +636,8 @@ change_object( FL_OBJECT * obj,
     } while ( ! (    ( retobj == fd_attrib->readyobj && validate_attributes( ) )
                   || retobj == fd_attrib->cancelobj ) );
 
+    if ( spec_form )
+        fl_addto_tabfolder( fd_attrib->attrib_folder, "Spec", spec_form );
     fl_set_app_mainform( fd_control->control );
     fl_hide_form( fd_attrib->attrib );
     fl_activate_all_forms( );

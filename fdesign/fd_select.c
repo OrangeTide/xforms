@@ -896,43 +896,44 @@ change_selection( void )
     if ( selnumb == 0 )
     {
         fl_show_alert( "", "Please select an object first",
-                       "by clicking the right button on the object", 0 );
+                       "by single-clicking on that object", 0 );
         return;
     }
 
     if ( selnumb == 1 )
-        change_object( selobj[ 0 ], FL_TRUE );
-    else
     {
-        for ( i = 0; i < selnumb; i++ )
+        if ( change_object( selobj[ 0 ], FL_TRUE ) )
+            changed = 1;
+        return;
+    }
+    
+    for ( i = 0; i < selnumb; i++ )
+    {
+        ob = selobj[ i ];
+        if (    ob->objclass != FL_BEGIN_GROUP
+             && ob->objclass != FL_END_GROUP )
         {
-            ob = selobj[ i ];
-            if (    ob->objclass != FL_BEGIN_GROUP
-                 && ob->objclass != FL_END_GROUP )
+            if ( firstobj == NULL )
             {
-                if ( firstobj == NULL )
-                {
-                    firstobj = ob;
-                    objclass = ob->objclass;
-                }
-                else if ( objclass != ob->objclass )
-                {
-                    fl_show_messages( "Selected objects have different "
-                                      "classes" );
-                    return;
-                }
+                firstobj = ob;
+                objclass = ob->objclass;
+            }
+            else if ( objclass != ob->objclass )
+            {
+                fl_show_messages( "Selected objects have different "
+                                  "classes" );
+                return;
             }
         }
-
-        if ( firstobj == NULL )
-            return;
-
-        if ( ! change_object( firstobj, FL_FALSE ) )
-            return;
-
-        change_selected_objects( firstobj );
     }
 
+    if ( firstobj == NULL )
+        return;
+
+    if ( ! change_object( firstobj, FL_FALSE ) )
+        return;
+
+    change_selected_objects( firstobj );
     changed = 1;
 }
 
@@ -1523,7 +1524,8 @@ group_selection( void )
 
     for ( i = 0; i < selnumb; i++ )
     {
-        fl_delete_object( selobj[ i ] );
+        if ( selobj[ i ]->form )
+            fl_delete_object( selobj[ i ] );
 
         if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
              && selobj[ i ]->objclass != FL_END_GROUP )
@@ -1545,7 +1547,7 @@ group_selection( void )
 void
 flatten_selection( void )
 {
-    int i;
+    int i, j;
 
     /* Cannot flatten the backface */
 
@@ -1556,15 +1558,22 @@ flatten_selection( void )
         return;
 
     for ( i = 0; i < selnumb; i++ )
-        if (    selobj[ i ]->objclass == FL_BEGIN_GROUP
-             || selobj[ i ]->objclass == FL_END_GROUP)
-        {
-            fl_delete_object( selobj[ i ] );
+    {
+        if ( selobj[ i ]->objclass != FL_BEGIN_GROUP )
+            continue;
 
-            /* CAUSES PROBLEMS WITH NAMING fl_free_object(selobj[i]); */
+        for ( j = i + 1; j < selnumb; j++ )
+            if ( selobj[ j ]->objclass == FL_END_GROUP )
+                break;
+            else
+                selobj[ j ]->group_id = 0;
 
-            selobj[ i ] = NULL;
-        }
+        fl_delete_object( selobj[ i ] );
+        selobj[ i ] = NULL;
+        if ( j < selnumb )
+            selobj[ j ] = NULL;
+        i = j;
+    }
 
     cleanup_selection( );
     changed = 1;
