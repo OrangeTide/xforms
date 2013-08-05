@@ -273,7 +273,7 @@ handle_button( FL_OBJECT * obj,
 
     switch ( event )
     {
-        case FL_DRAW:
+        case FL_DRAW :
             sp->event = FL_DRAW;
             if (    obj->type != FL_HIDDEN_BUTTON
                  && obj->type != FL_HIDDEN_RET_BUTTON )
@@ -286,7 +286,7 @@ handle_button( FL_OBJECT * obj,
             }
             break;
 
-        case FL_DRAWLABEL:
+        case FL_DRAWLABEL :
             sp->event = FL_DRAWLABEL;
             break;          /* TODO. Missing labels */
 
@@ -302,7 +302,7 @@ handle_button( FL_OBJECT * obj,
             }
             /* fall through */
 
-        case FL_ENTER:
+        case FL_ENTER :
             /* Keep active radio buttons from reacting */
 
             if ( obj->type == FL_RADIO_BUTTON && sp->val == 1 )
@@ -312,7 +312,7 @@ handle_button( FL_OBJECT * obj,
             fl_redraw_object( obj );
             break;
 
-        case FL_PUSH:
+        case FL_PUSH :
             /* Don't accept pushes for an already pushed button (e.g. if the
                user pushes another mouse button) or for mouse buttons the
                button isn't set up to react to */
@@ -349,7 +349,7 @@ handle_button( FL_OBJECT * obj,
                 ret |= FL_RETURN_CHANGED;
             break;
 
-        case FL_MOTION:
+        case FL_MOTION :
             if (    obj->type == FL_RADIO_BUTTON
                  || obj->type == FL_INOUT_BUTTON
                  || obj->type == FL_MENU_BUTTON )
@@ -377,7 +377,7 @@ handle_button( FL_OBJECT * obj,
             }
             break;
 
-        case FL_RELEASE:
+        case FL_RELEASE :
             if ( key != sp->mousebut && obj->type != FL_RADIO_BUTTON )
             {
                 fli_int.pushobj = obj;
@@ -413,7 +413,7 @@ handle_button( FL_OBJECT * obj,
 
             break;
 
-        case FL_UPDATE:                 /* only FL_TOUCH_BUTTON receives it */
+        case FL_UPDATE :                /* only FL_TOUCH_BUTTON receives it */
             sp->event = FL_UPDATE;
             if (    sp->val
                  && sp->timdel++ > 10
@@ -421,7 +421,7 @@ handle_button( FL_OBJECT * obj,
                 ret |= FL_RETURN_CHANGED;
             break;
 
-        case FL_SHORTCUT:
+        case FL_SHORTCUT :
             sp->event = FL_SHORTCUT;
 
             /* This is a horrible hack */
@@ -449,7 +449,7 @@ handle_button( FL_OBJECT * obj,
             ret |= FL_RETURN_END | FL_RETURN_CHANGED;
             break;
 
-        case FL_FREEMEM:
+        case FL_FREEMEM :
             if ( ( cleanup = lookup_cleanupfunc( obj->objclass ) ) )
                 cleanup( sp );
             free_pixmap( sp );

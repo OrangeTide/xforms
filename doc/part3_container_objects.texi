@@ -94,7 +94,7 @@ top-level forms is that only one folder is active at any time. The
 user selects different folders by clicking on the tab rider associated
 with a folder.
 
-To set up when either the application is notified about events of the
+To set up when the application is notified about events of the
 tabfolder or the tabfolders callback is invoked (if installed) use
 @example
 void fl_set_object_return(FL_OBJECT *obj, unsigned int when);
@@ -108,9 +108,8 @@ changed.
 
 @item @ref{FL_RETURN_CHANGED}
 @item @ref{FL_RETURN_END_CHANGED}
-Result in a notification whenever the a different folder from the
-currently active one has been selected (this is the default for the
-tabfolder object).
+Result in a notification when a folder other that the currently
+active one has been selected (this is the default).
 
 @item @ref{FL_RETURN_END}
 @item @ref{FL_RETURN_ALWAYS}
@@ -118,16 +117,14 @@ Notify when either a new or the already active folder has been
 selected.
 @end table
 
-In older releases of the library on changes of the selected folder
-only a callback for the older was executed (if one was installed),
-but the folder object wasn't reported back via e.g.@:
-@code{@ref{fl_do_forms()}} etc. This has changed with version 1.0.92.
-To get the old behaviour you have to build XForms with the
-@code{--enable-bwc-bs-hack} being set.
+In the releases before version 1.0.92 of the library only a callback
+for the folder was executed (if one was installed) on change of the
+selected folder bur not via e.g.@: @code{@ref{fl_do_forms()}} etc.
+This has changed with version 1.0.92. To get the old behaviour you
+have to build XForms with the @code{--enable-bwc-bs-hack} being set.
 
 
-
-To find out which folder is currently active, the following routines
+To find out which folder is currently active the following routines
 the tab riders are available
 @findex fl_get_active_folder()
 @anchor{fl_get_active_folder()}
@@ -149,8 +146,9 @@ on the left, and the third the folder name. Depending on the
 application setup, one routine might be more convenient than the other
 two.
 
-To find out what the last active folder is (which may be of greater
-interest than the currently active one) the following can be used:
+To find out what the previous active folder was (which may be of
+similar interest as the currently active one) the following functions
+can be used:
 @findex fl_get_folder()
 @anchor{fl_get_folder()}
 @findex fl_get_folder_number()

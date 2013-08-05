@@ -459,7 +459,7 @@ fl_set_spinner_value( FL_OBJECT * obj,
 {
     FLI_SPINNER_SPEC *sp = obj->spec;
     int max_len = 4 + sp->prec + log10( DBL_MAX );
-    char buf[ max_len ];
+    char *buf = fl_malloc( max_len );
 
     if ( obj->type == FL_INT_SPINNER )
     {
@@ -473,6 +473,7 @@ fl_set_spinner_value( FL_OBJECT * obj,
         sprintf( buf, "%d", sp->i_val );
         fl_set_input( sp->input, buf );
 
+        fl_free( buf );
         return sp->old_ival = sp->i_val;
     }
 
@@ -486,6 +487,7 @@ fl_set_spinner_value( FL_OBJECT * obj,
     sprintf( buf, "%.*f", sp->prec, sp->f_val );
     fl_set_input( sp->input, buf );
 
+    fl_free( buf );
     return sp->old_fval = sp->f_val;
 }
 

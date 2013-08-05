@@ -1041,9 +1041,7 @@ print_form_altformat( FILE       * fn,
                       const char * fname )
 {
     FL_OBJECT *obj;
-    char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ];
+    char name[ MAX_VAR_LEN ];
     int first = 1;
 
     /* Print the form declaration */
@@ -1057,7 +1055,7 @@ print_form_altformat( FILE       * fn,
 
     while ( ( obj = obj->next ) != NULL )
     {
-        get_object_name( obj, name, cbname, argname );
+        get_object_name( obj, name, NULL, NULL );
         if ( *name )
         {
             if ( ! check_array_name( name ) )
@@ -1138,14 +1136,12 @@ already_emitted( FL_OBJECT  * first,
                  FL_OBJECT  * curobj,
                  const char * cb )
 {
-    char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ];
+    char cbname[ MAX_VAR_LEN ];
     FL_OBJECT *ob = first;
 
     for ( ob = first->next; ob && ob != curobj; ob = ob->next )
     {
-        get_object_name( ob, name, cbname, argname );
+        get_object_name( ob, NULL, cbname, NULL );
         if ( *cbname && strcmp( cbname, cb ) == 0 )
             return 1;
     }
@@ -1207,14 +1203,13 @@ print_callbacks_and_globals( FILE    * fn,
 {
     FL_OBJECT *obj;
     char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ];
+         cbname[ MAX_VAR_LEN ];
 
     obj = form->first;
 
     while ( ( obj = obj->next ) != NULL )
     {
-        get_object_name( obj, name, cbname, argname );
+        get_object_name( obj, name, cbname, NULL );
 
         if ( obj->objclass == FL_FREE )
         {
@@ -1280,8 +1275,6 @@ print_header_newformat( FILE       * fn,
 {
     FL_OBJECT *obj;
     char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ],
          fdtname[ MAX_VAR_LEN ];
 
     sprintf( fdtname, "FD_%s", fname );
@@ -1295,7 +1288,7 @@ print_header_newformat( FILE       * fn,
 
     for ( obj = form->first; obj; obj = obj->next )
     {
-        get_object_name( obj, name, cbname, argname );
+        get_object_name( obj, name, NULL, NULL );
         if ( *name && ! check_array_name( name ) )
             fprintf( fn, "    FL_OBJECT * %s;\n", name );
     }
@@ -1320,9 +1313,7 @@ print_header_altformat( FILE       * fn,
                         const char * fname)
 {
     FL_OBJECT *obj;
-    char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ];
+    char name[ MAX_VAR_LEN ];
     int first = 1;
 
     fprintf( fn, "extern FL_FORM *%s;\n\n", fname );
@@ -1331,7 +1322,7 @@ print_header_altformat( FILE       * fn,
 
     while ( ( obj = obj->next ) != NULL )
     {
-        get_object_name( obj, name, cbname, argname );
+        get_object_name( obj, name, NULL, NULL );
         if ( *name )
         {
             if ( ! check_array_name( name ) )

@@ -178,9 +178,15 @@ the form should be placed on the screen using
 @code{@ref{FL_PLACE_GEOMETRY}}, @code{@ref{FL_PLACE_FREE}}. E.g., to
 place a form at the lower-right corner of the screen use
 @example
-fl_set_form_position(form, -form->w, -form->h);
+fl_set_form_position(form, -1, -1);
 fl_show_form(form, FL_PLACE_GEOMETRY, FL_TRANSIENT, "formName");
 @end example
+@noindent
+(Following the X convention for specifying geometries a negative
+@code{x}-position specifies the distance of the right eside of the
+form from the right side of the screen and a negative
+@code{y}-position the distance of the bottom of the form from the
+bottom of the screen.)
 
 To show a form so that a particular object or point is under the
 mouse, use one of the following two routines to set the "hotspot"

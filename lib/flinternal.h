@@ -1067,6 +1067,24 @@ extern const char * fli_get_vn_name( FLI_VN_PAIR * vn_pair,
 
 #endif
 
+extern void fli_set_tab_color( FL_OBJECT * obj,
+                               FL_COLOR    col1,
+                               FL_COLOR    col2 );
+extern void fli_set_tab_lcol( FL_OBJECT * obj,
+                              FL_COLOR    lcol );
+
+extern void fli_set_tab_lsize( FL_OBJECT * obj,
+                               int         lsize );
+
+extern void fli_set_tab_lstyle( FL_OBJECT * obj,
+                                int         lstyle );
+
+extern void fli_set_tab_lalign( FL_OBJECT * obj,
+                                int         align );
+
+extern void fli_set_tab_bw( FL_OBJECT * obj,
+                            int         bw );
+
 #endif /* ! defined FL_INTERNAL_H */
 
 

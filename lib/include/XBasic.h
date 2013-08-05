@@ -284,19 +284,19 @@ FL_EXPORT int fl_get_drawmode( void );
 /** Ellipses **/
 
 FL_EXPORT void fl_circ( FL_COORD x,
-						FL_COORD y,
-						FL_COORD r,
-						FL_COLOR col );
+                        FL_COORD y,
+                        FL_COORD r,
+                        FL_COLOR col );
 
 FL_EXPORT void fl_circf( FL_COORD x,
-						 FL_COORD y,
-						 FL_COORD r,
-						 FL_COLOR col );
+                         FL_COORD y,
+                         FL_COORD r,
+                         FL_COLOR col );
 
 FL_EXPORT void fl_circbound( FL_COORD x,
-							 FL_COORD y,
-							 FL_COORD r,
-							 FL_COLOR col );
+                             FL_COORD y,
+                             FL_COORD r,
+                             FL_COLOR col );
 
 FL_EXPORT void fl_oval( int      fill,
                         FL_Coord x,
@@ -327,18 +327,18 @@ FL_EXPORT void fl_ovalarc( int      fill,
 /* Arcs */
 
 FL_EXPORT void fl_arcf( FL_COORD x,
-						FL_Coord y,
-						FL_COORD r,
-						int      a1,
-						int      a2,
-						FL_COLOR col );
+                        FL_Coord y,
+                        FL_COORD r,
+                        int      a1,
+                        int      a2,
+                        FL_COLOR col );
 
 FL_EXPORT void fl_arc( FL_COORD x,
-					   FL_Coord y,
-					   FL_COORD r,
-					   int      a1,
-					   int      a2,
-					   FL_COLOR col );
+                       FL_Coord y,
+                       FL_COORD r,
+                       int      a1,
+                       int      a2,
+                       FL_COLOR col );
 
 FL_EXPORT void fl_pieslice( int      fill,
                             FL_Coord x,
@@ -781,35 +781,35 @@ FL_EXPORT int fl_is_clipped( int include_global );
 FL_EXPORT int fl_is_text_clipped( int include_global );
 
 FL_EXPORT void fl_set_clipping( FL_Coord x,
-								FL_Coord y,
-								FL_Coord w,
-								FL_Coord h );
+                                FL_Coord y,
+                                FL_Coord w,
+                                FL_Coord h );
 
 FL_EXPORT void fl_unset_clipping( );
 
 FL_EXPORT void fl_set_text_clipping( FL_Coord x,
-									 FL_Coord y,
-									 FL_Coord w,
-									 FL_Coord h );
+                                     FL_Coord y,
+                                     FL_Coord w,
+                                     FL_Coord h );
 
 FL_EXPORT void fl_unset_text_clipping( void );
 
 FL_EXPORT int fl_get_global_clipping( FL_COORD * x,
-									  FL_COORD * y,
-									  FL_COORD * w,
-									  FL_COORD * h );
+                                      FL_COORD * y,
+                                      FL_COORD * w,
+                                      FL_COORD * h );
 
 FL_EXPORT int fl_get_clipping( int        include_global,
-							   FL_COORD * x,
-							   FL_COORD * y,
-							   FL_COORD * w,
-							   FL_COORD * h );
+                               FL_COORD * x,
+                               FL_COORD * y,
+                               FL_COORD * w,
+                               FL_COORD * h );
 
 FL_EXPORT int fl_get_text_clipping( int        include_global,
-									FL_COORD * x,
-									FL_COORD * y,
-									FL_COORD * w,
-									FL_COORD * h );
+                                    FL_COORD * x,
+                                    FL_COORD * y,
+                                    FL_COORD * w,
+                                    FL_COORD * h );
 
 FL_EXPORT void fl_set_gc_clipping( GC       gc,
                                    FL_Coord x,
@@ -856,11 +856,11 @@ typedef unsigned int       FL_PACKED4;
 
 #define FL_UNPACK( p, r, g, b )   \
     do { r = FL_GETR( p );        \
-         g = FL_GETG( p ),        \
+         g = FL_GETG( p );        \
          b = FL_GETB( p );        \
     } while( 0 )
 
-#define FL_UNPACK3         FL_UNPACK
+#define FL_UNPACK3 FL_UNPACK
 
 #define FL_UNPACK4( p, r, g, b, a )   \
     do { FL_UNPACK3( p, r, g, b );    \

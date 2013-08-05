@@ -192,3 +192,5 @@ libtool
 makelog
 xforms.spec
 semantic.cache
+*.tar.gz
+*.dvi

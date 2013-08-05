@@ -107,15 +107,14 @@ get_object_name( const FL_OBJECT * obj,
 {
     int on = get_object_numb( obj );
 
-    if ( on == -1 )
-    {
-        *name = *cbname = *argname = '\0';
-        return;
-    }
+    if ( name )
+        strcpy( name, on == -1 ? "" : objects[ on ].name );
 
-    strcpy( name, objects[ on ].name );
-    strcpy( cbname, objects[ on ].cbname );
-    strcpy( argname, objects[ on ].argname );
+    if ( cbname )
+        strcpy( cbname, on == -1 ? "" : objects[ on ].cbname );
+
+    if ( argname )
+        strcpy( argname, on == -1 ? "" : objects[ on ].argname );
 }
 
 

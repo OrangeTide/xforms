@@ -1,4 +1,3 @@
-
 /*
  * This file is part of XForms.
  *
@@ -1342,8 +1341,10 @@ static int ncut = 0;                /* and their number */
 static void
 clear_cutbuffer( void )
 {
-    for ( ; --ncut >= 0; )
+    while ( ncut > 0 )
     {
+        ncut--;
+
         if ( cutbuf[ ncut ]->u_vdata )
             fl_free( cutbuf[ ncut ]->u_vdata );
         fl_free_object( cutbuf[ ncut ] );
@@ -1378,12 +1379,14 @@ cut_selection( void )
     /* Make new deletion and save it */
 
     for ( i = 0; i < selnumb; i++ )
-    {
-        fl_delete_object( selobj[ i ] );
-        cutbuf[ i ] = copy_object( selobj[ i ], 1 );
-    }
+        if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
+             && selobj[ i ]->objclass != FL_END_GROUP )
+        {
+            fl_delete_object( selobj[ i ] );
+            cutbuf[ ncut++ ] = copy_object( selobj[ i ], 1 );
+        }
 
-    ncut = selnumb;
+    selnumb = 0;
     clear_selection( );
 
     changed = 1;
@@ -1490,7 +1493,6 @@ void
 copy_selection( void )
 
 {
-    FL_OBJECT *obj;
     int i;
 
     if ( backf || selnumb == 0 || ! cur_form )
@@ -1501,12 +1503,9 @@ copy_selection( void )
     /* Copy the objects */
 
     for ( i = 0; i < selnumb; i++ )
-    {
-        obj = copy_object( selobj[ i ], 0 );
-        cutbuf[ i ] = obj;
-    }
-
-    ncut = selnumb;
+        if (    selobj[ i ]->objclass != FL_BEGIN_GROUP
+             && selobj[ i ]->objclass != FL_END_GROUP )
+            cutbuf[ ncut++ ] = copy_object( selobj[ i ], 0 );
 }
 
 
@@ -1645,27 +1644,29 @@ group_selection( void )
 
  get_new_group_name:
 
-    if (    ! ( s = fl_show_input( "Enter group name (must be usable as "
-                                   "a C variable):", "" ) )
-          || ! *s )
+    if ( ! ( s = fl_show_input( "Group name (must be usable as "
+                                "a C variable or empty):", "" ) ) )
         return;
 
-    if (    ! isascii( ( unsigned char ) *s )
-         || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
+    if ( *s )
     {
-        fl_show_alert( "Error", "Invalid C identifier specified for group "
-                       "name:", s, 0 );
-        goto get_new_group_name;
-    }
-
-    for ( sp = s + 1; *sp; sp++ )
-        if (    ! isascii( ( unsigned char ) *sp )
-             || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
+        if (    ! isascii( ( unsigned char ) *s )
+             || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
         {
             fl_show_alert( "Error", "Invalid C identifier specified for group "
                            "name:", s, 0 );
             goto get_new_group_name;
         }
+
+        for ( sp = s + 1; *sp; sp++ )
+            if (    ! isascii( ( unsigned char ) *sp )
+                 || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
+            {
+                fl_show_alert( "Error", "Invalid C identifier specified for "
+                               "group name:", s, 0 );
+                goto get_new_group_name;
+            }
+    }
 
     obj = add_an_object( FL_BEGIN_GROUP, -1, 0, 0, 0, 0 );
 

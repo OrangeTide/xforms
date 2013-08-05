@@ -913,7 +913,9 @@ fl_set_object_color( FL_OBJECT * obj,
         return;
     }
 
-    if ( obj->col1 == col1 && obj->col2 == col2 )
+    if (    obj->col1 == col1
+         && obj->col2 == col2
+         && obj->objclass != FL_TABFOLDER )
         return;
 
     old_col1 = obj->col1;
@@ -933,6 +935,9 @@ fl_set_object_color( FL_OBJECT * obj,
         for ( o = obj->next; o; o = o->next )
             o->dbl_background = col1;
     }
+
+    if ( obj->objclass == FL_TABFOLDER )
+        fli_set_tab_color( obj, col1, col2 );
 
     fl_redraw_object( obj );
 }
@@ -1127,10 +1132,14 @@ fl_set_object_lcol( FL_OBJECT * obj,
         if ( form )
             fl_unfreeze_form( form );
     }
-    else if ( obj->lcol != lcol )
+    else if ( obj->lcol != lcol && obj->objclass != FL_TABFOLDER )
     {
         obj->lcol = lcol;
         fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+        if ( obj->objclass == FL_TABFOLDER )
+            fli_set_tab_lcol( obj, lcol );
+
         fl_redraw_object( obj );
     }
 }
@@ -1185,6 +1194,9 @@ fl_set_object_lsize( FL_OBJECT * obj,
 
     obj->lsize = lsize;
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+    if ( obj->objclass == FL_TABFOLDER )
+        fli_set_tab_lsize( obj, lsize );
 
     if ( obj->objclass == FL_BEGIN_GROUP )
         for ( o = obj->next; o && o->objclass != FL_END_GROUP; o = o->next )
@@ -1248,6 +1260,9 @@ fl_set_object_lstyle( FL_OBJECT * obj,
 
     obj->lstyle = lstyle;
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+    if ( obj->objclass == FL_TABFOLDER )
+        fli_set_tab_lstyle( obj, lstyle );
 
     if ( obj->objclass == FL_BEGIN_GROUP )
         for ( o = obj->next; o && o->objclass != FL_END_GROUP; o = o->next )
@@ -1316,6 +1331,9 @@ fl_set_object_lalign( FL_OBJECT * obj,
 
     obj->align = align;
     fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+    if ( obj->objclass == FL_TABFOLDER )
+        fli_set_tab_lalign( obj, align );
 
     if ( need_show )
         fl_show_object( obj );
@@ -2769,10 +2787,14 @@ fl_set_object_bw( FL_OBJECT * obj,
         if ( form )
             fl_unfreeze_form( form );
     }
-    else if ( obj->bw != bw )
+    else if ( obj->bw != bw && obj->objclass != FL_TABFOLDER )
     {
         obj->bw = bw;
         fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
+
+        if ( obj->objclass == FL_TABFOLDER )
+            fli_set_tab_bw( obj, bw );
+
         fl_redraw_object( obj );
     }
 }

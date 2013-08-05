@@ -1,3 +1,9 @@
+2013-01-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign/fd_select.c: Cutting/copying whole groups didn't
+	work properly, now only the members of the group get
+	copied/cut, but not the property of belonging to a group.
+
 2013-01-04 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_select.c: Raising and lowering objects

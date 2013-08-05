@@ -110,7 +110,6 @@ handle_tabfolder( FL_OBJECT * ob,
             }
             break;
 
-        case FL_ATTRIB:
         case FL_DRAW:
             fl_set_object_boxtype( sp->canvas,
                                    fli_boxtype2frametype( ob->boxtype ) );
@@ -158,7 +157,7 @@ canvas_handler( FL_OBJECT * ob,
 
 
 /***************************************
- * Before canvas is destroyed, this routine will be called.
+ * Before canvas is destroyed this routine will be called where
  * we need to close the form that is attached to this canvas
  ***************************************/
 
@@ -218,8 +217,8 @@ fl_create_tabfolder( int          type,
                          handle_tabfolder );
     fl_set_coordunit( FL_COORD_PIXEL );
 
-    ob->boxtype    = FL_UP_BOX;
-    ob->spec       = sp  = fl_calloc( 1, sizeof *sp );
+    ob->boxtype = FL_UP_BOX;
+    ob->spec    = sp  = fl_calloc( 1, sizeof *sp );
 
     absbw = FL_abs( ob->bw );
 
@@ -300,7 +299,7 @@ fl_get_tabfolder_numfolders( FL_OBJECT * ob )
 
 /***************************************
  * Tab is switched by the application, no need to invoke the callback
- * or report bacl to the user
+ * or report back to the user
  ***************************************/
 
 static void
@@ -504,6 +503,7 @@ fl_addto_tabfolder( FL_OBJECT  * ob,
     tab = sp->title[ sp->nforms ] = fl_create_button( FL_NORMAL_BUTTON,
                                                       0, 0, 10, 10, title );
 
+    fli_inherit_attributes( ob, tab );
     fl_set_object_boxtype( tab, ob->type != FL_BOTTOM_TABFOLDER ?
                            FL_TOPTAB_UPBOX : FL_BOTTOMTAB_UPBOX );
 
@@ -1004,7 +1004,6 @@ compute_top_position( FL_OBJECT * ob )
             max_h = tab->h;
         tab->x = sp->x;
         tab->y = sp->y;
-        fli_inherit_attributes( ob, tab );
         sp->x += tab->w + ( ob->bw > 0 );
         if ( sp->x < sp->canvas->x + sp->canvas->w - 2 )
         {
@@ -1141,6 +1140,97 @@ shift_tabs( FL_OBJECT * ob,
     sp->offset = newp;
 
     compute_position( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_set_tab_color( FL_OBJECT * obj,
+                     FL_COLOR    col1,
+                     FL_COLOR    col2 )
+{
+    FLI_TABFOLDER_SPEC *sp = obj->spec;
+    int i;
+
+    for ( i = 0; i < sp->nforms; i++ )
+        fl_set_object_color( sp->title[ i ], col1, col2 );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_set_tab_lcol( FL_OBJECT * obj,
+                  FL_COLOR    lcol )
+{
+    FLI_TABFOLDER_SPEC *sp = obj->spec;
+    int i;
+
+    for ( i = 0; i < sp->nforms; i++ )
+        fl_set_object_lcol( sp->title[ i ], lcol );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_set_tab_lsize( FL_OBJECT * obj,
+                   int         lsize )
+{
+    FLI_TABFOLDER_SPEC *sp = obj->spec;
+    int i;
+
+    for ( i = 0; i < sp->nforms; i++ )
+        fl_set_object_lsize( sp->title[ i ], lsize );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_set_tab_lstyle( FL_OBJECT * obj,
+                    int         lstyle )
+{
+    FLI_TABFOLDER_SPEC *sp = obj->spec;
+    int i;
+
+    for ( i = 0; i < sp->nforms; i++ )
+        fl_set_object_lstyle( sp->title[ i ], lstyle );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_set_tab_lalign( FL_OBJECT * obj,
+                    int         align )
+{
+    FLI_TABFOLDER_SPEC *sp = obj->spec;
+    int i;
+
+    for ( i = 0; i < sp->nforms; i++ )
+        fl_set_object_lalign( sp->title[ i ], align );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fli_set_tab_bw( FL_OBJECT * obj,
+                int         bw )
+{
+    FLI_TABFOLDER_SPEC *sp = obj->spec;
+    int i;
+
+    for ( i = 0; i < sp->nforms; i++ )
+        fl_set_object_bw( sp->title[ i ], bw );
 }
 
 

@@ -77,9 +77,7 @@ void
 changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
                     long        arg  FL_UNUSED_ARG )
 {
-    char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ];
+    char name[ MAX_VAR_LEN ];
     int i,
         numb = 0;
     const char *s;
@@ -105,34 +103,36 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
         return;
     }
 
-    get_object_name( begobj[ numb ], name, cbname, argname );
+    get_object_name( begobj[ numb ], name, NULL, NULL );
 
  get_changed_group_name:
 
-    if (    ! ( s = fl_show_input( "Enter group name (must be usable as "
-                                   "a C variable):", name ) )
-         || ! *s )
+    if ( ! ( s = fl_show_input( "Group name (must be usable as "
+                                "a C variable or empty):", name ) ) )
         return;
 
-    if (    ! isascii( ( unsigned char ) *s )
-         || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
+    if ( *s )
     {
-        fl_show_alert( "Error", "Invalid C identifier specified for group "
-                       "name:", s, 0 );
-        goto get_changed_group_name;
-    }
-
-    for ( sp = s + 1; *sp; sp++ )
-        if (    ! isascii( ( unsigned char ) *sp )
-             || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
+        if (    ! isascii( ( unsigned char ) *s )
+              || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
         {
             fl_show_alert( "Error", "Invalid C identifier specified for group "
                            "name:", s, 0 );
             goto get_changed_group_name;
         }
 
+        for ( sp = s + 1; *sp; sp++ )
+            if (    ! isascii( ( unsigned char ) *sp )
+                 || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
+            {
+                fl_show_alert( "Error", "Invalid C identifier specified for "
+                               "group name:", s, 0 );
+                goto get_changed_group_name;
+            }
+    }
+
     strcpy( name, s );
-    set_object_name( begobj[ numb ], name, cbname, argname );
+    set_object_name( begobj[ numb ], name, NULL, NULL );
     fillin_groups( );
     changed = 1;
 }
@@ -145,9 +145,7 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 void
 fillin_groups( void )
 {
-    char name[ MAX_VAR_LEN ],
-         cbname[ MAX_VAR_LEN ],
-         argname[ MAX_VAR_LEN ];
+    char name[ MAX_VAR_LEN ];
     FL_OBJECT *obj,
               *obj2;
     int i;
@@ -188,7 +186,7 @@ fillin_groups( void )
             if ( obj->objclass == FL_BEGIN_GROUP )
             {
                 begobj[ i ] = obj;
-                get_object_name( obj, name, cbname, argname );
+                get_object_name( obj, name, NULL, NULL );
                 if ( ! *name )
                     strcpy( name, "<no name>" );
                 fl_add_browser_line( fd_control->groupbrowser, name );
