@@ -515,8 +515,8 @@ fli_handle_form( FL_FORM * form,
                  && (    ! obj->input
                       || ( obj->input && obj->active && obj->focus ) ) )
             {
-                fli_handle_object( obj, FL_PUSH, x, y, key, xev, 1 );
                 fli_int.pushobj = obj;
+                fli_handle_object( obj, FL_PUSH, x, y, key, xev, 1 );
             }
             else if ( obj->radio )
                 fli_do_radio_push( obj, x, y, key, xev, 0 );

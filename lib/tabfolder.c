@@ -1075,7 +1075,6 @@ compute_bottom_position( FL_OBJECT * ob )
         if ( tab->h > max_h )
             max_h = tab->h;
         tab->x = sp->x;
-        fli_inherit_attributes( ob, tab );
         sp->x += tab->w + ( ob->bw > 0 );
     }
 

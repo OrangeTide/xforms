@@ -317,11 +317,16 @@ handle_button( FL_OBJECT * obj,
                user pushes another mouse button) or for mouse buttons the
                button isn't set up to react to */
 
-            if (    sp->is_pushed
-                 || key < FL_MBUTTON1
+            if (    sp->is_pushed )
+                break;
+
+            if (    key < FL_MBUTTON1
                  || key > FL_MBUTTON5
                  || ! sp->react_to[ key - 1 ] )
+            {
+                fli_int.pushobj = NULL;
                 break;
+            }
 
             sp->event = FL_PUSH;
 

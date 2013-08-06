@@ -188,7 +188,11 @@ handle_positioner( FL_OBJECT * obj,
             if (    key < FL_MBUTTON1
                  || key > FL_MBUTTON5
                  || ! sp->react_to[ key - 1 ] )
+            {
+                fli_int.pushobj = NULL;
                 break;
+            }
+
             sp->mousebut = key;
             sp->old_x = sp->xval;
             sp->old_y = sp->yval;
@@ -204,6 +208,7 @@ handle_positioner( FL_OBJECT * obj,
                 fli_int.pushobj = obj;
                 break;
             }
+
             ret = FL_RETURN_END;
             if (    obj->how_return & FL_RETURN_END_CHANGED
                  && ( sp->xval != sp->old_x || sp->yval != sp->old_y ) )
