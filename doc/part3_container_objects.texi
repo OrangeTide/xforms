@@ -352,10 +352,18 @@ bound to the foldertab button. Should the application change the
 callback functions of the foldertab buttons, these new callback
 functions must take the responsibility of switching the active folder.
 
+Some visual effects like colors and label font of the tab rider
+buttons can be set all at once by calling the corresponding functions
+(i.e.@: @code{@ref{fl_set_object_color()}},
+@code{@ref{fl_set_object_lstyle()}} etc.) with the tabbed folder
+object as the first argument. Individual tab rider buttons can also be
+modified by calling those function with the corresponding return value
+of @code{@ref{fl_addto_tabfolder()}} as the first argument.
+
 @code{fl_free_object(tabfolder)} does not free the individual forms
 that make up the tabfolder.
 
-See demo program @file{folder.c} for an example use of tabbed folder
+See the demo program @file{folder.c} for an example use of tabbed folder
 class.
 
 A nested tabfolder might not work correctly at the moment.
@@ -671,6 +679,6 @@ int fl_get_formbrowser_yoffset(FL_OBJECT *obj);
 A call of @code{fl_free_object(formbrowser)} does not free the
 individual forms, it only frees the formbrowser object itself.
 
-See demo program @file{formbrowser.c} for an example use of
+See the demo program @file{formbrowser.c} for an example use of
 formbrowser class. A nested formbrowser might not work correctly at
 the moment.
