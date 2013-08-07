@@ -71,15 +71,15 @@ Tabs on top of the folders.
 @item FL_BOTTOM_TABFOLDER
 Tabs at the bottom of the folders.
 
-@tindex FL_LEFT_TABFOLDER
-@anchor{FL_LEFT_TABFOLDER}
-@item FL_LEFT_TABFOLDER
-Tabs on the left of the folders (not yet functional).
-
-@tindex FL_RIGHT_TABFOLDER
-@anchor{FL_RIGHT_TABFOLDER}
-@item FL_RIGHT_TABFOLDER
-Tabs on the right of the folders (not yet functional).
+@c @tindex FL_LEFT_TABFOLDER
+@c @anchor{FL_LEFT_TABFOLDER}
+@c @item FL_LEFT_TABFOLDER
+@c Tabs on the left of the folders (not yet functional).
+@c 
+@c @tindex FL_RIGHT_TABFOLDER
+@c @anchor{FL_RIGHT_TABFOLDER}
+@c @item FL_RIGHT_TABFOLDER
+@c Tabs on the right of the folders (not yet functional).
 @end table
 
 

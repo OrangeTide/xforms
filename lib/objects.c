@@ -55,6 +55,9 @@ static void checked_hide_tooltip( FL_OBJECT *,
 
 static FL_OBJECT *refocus;
 
+static void **tmp_vdata = NULL;
+static FL_RECT *tmp_rects = NULL;
+
 #define IS_BUTTON_CLASS( i )   (    i == FL_BUTTON           \
                                  || i == FL_ROUNDBUTTON      \
                                  || i == FL_ROUND3DBUTTON    \
@@ -2205,8 +2208,16 @@ objects_intersect( FL_OBJECT * obj1,
 {
     FL_RECT r[ 2 ];
 
-    get_object_rect( obj1, r,     0 );
-    get_object_rect( obj2, r + 1, 0 );
+    if ( tmp_vdata )
+    {
+        r[ 0 ] = * ( FL_RECT * ) obj1->u_vdata;
+        r[ 1 ] = * ( FL_RECT * ) obj2->u_vdata;
+    }
+    else
+    {
+        get_object_rect( obj1, r,     0 );
+        get_object_rect( obj2, r + 1, 0 );
+    }
 
     return      (    (    r[ 0 ].x <= r[ 1 ].x
                        && r[ 0 ].x + r[ 0 ].width > r[ 1 ].x )
@@ -2360,7 +2371,7 @@ fl_unfreeze_form( FL_FORM * form )
     /* If the form becomes unfrozen at last and is visible recalculate
        overlaps between the objects and then redraw all objects that have
        been marked for a redraw since it became frozen or, if some objects
-       becoe hidden during that time, all objects. */
+       became hidden during that time, all objects. */
 
     if ( --form->frozen == 0 && form->visible == FL_VISIBLE )
     {
@@ -3087,6 +3098,70 @@ object_is_under( FL_OBJECT * obj )
 
 
 /***************************************
+ * Helper function for fli_recalc_intersections() - without this is a
+ * O(N^2) operation with respect to the recalculations of the N
+ * object bounding boxes. Here we use that the 'u_vdata' pointers
+ * of the objects don't get used during fli_recalc_intersections()
+ * and replace them all by pointers to pre-calculated bounding
+ * boxes, thus reducing the number of recalculations to N (in
+ * objects_intersect() it gets checked if 'tmp_vdata' is non-NULL
+ * and then uses the pre-calculated bounding boxes).
+ ***************************************/
+
+static void
+prep_recalc( FL_FORM * form )
+{
+    FL_OBJECT *obj;
+    int cnt = 0;
+    int i = 0;
+
+    /* Couny how many objects the form contains */
+
+    for ( obj = bg_object( form ); obj; obj = obj->next )
+        cnt++;
+
+    /* Get memory for temporary storing the 'u_vdata' pointers of all objects
+       and as many FL_RECT's */
+
+    tmp_vdata = fl_malloc( cnt * sizeof *tmp_vdata );
+    tmp_rects = fl_malloc( cnt * sizeof *tmp_rects );
+
+    /* Save the 'u_vdata' pointers and replace them by pointers to the
+       bounding box rectangles */
+
+    for ( obj = bg_object( form ); obj; obj = obj->next )
+    {
+        tmp_vdata[ i ] = obj->u_vdata;
+        obj->u_vdata = tmp_rects + i;
+        get_object_rect( obj, tmp_rects + i++, 0 );
+    }
+}
+
+
+/***************************************
+ * Another helper function for fli_recalc_intersections() - to be called when
+ * it's finished, restoring all objects 'u_vdata' pointers and getting rid
+ * of allocated memory.
+ ***************************************/
+
+static void
+finish_recalc( FL_FORM * form )
+{
+    FL_OBJECT *obj;
+    int i = 0;
+
+    if ( ! tmp_vdata )
+        return;
+
+    for ( obj = bg_object( form ); obj; obj = obj->next )
+        obj->u_vdata = tmp_vdata[ i++ ];
+
+    fli_safe_free( tmp_rects );
+    fli_safe_free( tmp_vdata );
+}
+   
+
+/***************************************
  * Rechecks for all objects of a form if they are
  * partially or fully hidden by another object
  ***************************************/
@@ -3098,15 +3173,18 @@ fli_recalc_intersections( FL_FORM * form )
 
     /* When we're still adding to a form (and thus 'fl_current_form' isn't
        NULL) there typically are a lot of calls that normally would require
-       a recalculation of intersections. Delay this until the form gets
-       closed (i.e. only recalculate the intersections during the final
-       call of fl_end_group()). */
+       a recalculation of intersections. The same applies if the form is
+       frozen. Delay this until the form gets closed (i.e. only recalculate
+       the intersections during the final call of fl_end_form()) or when it
+       isn't frozen anymore. */
 
-    if ( fl_current_form || ! form )
+    if ( fl_current_form || ! form || ( form && form->frozen ) )
         return;
 
+    prep_recalc( form );
     for ( obj = bg_object( form ); obj && obj->next; obj = obj->next )
         obj->is_under = object_is_under( obj );
+    finish_recalc( form );
 }
 
 
@@ -3434,8 +3512,6 @@ get_object_rect( FL_OBJECT * obj,
                  FL_RECT   * rect,
                  int         extra )
 {
-    FL_OBJECT *tmp;
-
     if (    obj->objclass == FL_FRAME
          || obj->objclass == FL_LABELFRAME
          || obj->objclass == FL_CANVAS
@@ -3451,19 +3527,13 @@ get_object_rect( FL_OBJECT * obj,
 
     /* Include the label into the box - but only for labels that are not
        within the object. If "inside" labels extend beyond the limits of the
-       object things look ugly anyway and it doesn't seem to make much sense
-       to slow down the program for that case. */
+       object things look ugly anyway and it doesn't seem to make too much
+       sense to slow down the program any further for that case. */
 
     if ( obj->label && *obj->label && OL( obj ) )
     {
-        XRectangle r;
-        fli_combine_rectangles( rect, get_label_rect( obj, &r ) );
-    }
-
-    for ( tmp = obj->child; tmp; tmp = tmp->nc )
-    {
-        XRectangle r = { tmp->x, tmp->y, tmp->w, tmp->h };
-        fli_combine_rectangles( rect, &r );
+        XRectangle lr;
+        fli_combine_rectangles( rect, get_label_rect( obj, &lr ) );
     }
 
     if ( fli_inverted_y && obj->form )
