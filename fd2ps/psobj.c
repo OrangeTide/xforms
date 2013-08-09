@@ -2218,7 +2218,9 @@ flps_draw_spinner( FL_OBJECT * ob )
         FL_Coord bwh = FL_max( ob->h / 2, 1 );
         ob->h = 2 * bwh;
 
-        input = flps_make_object( FL_INPUT, FL_FLOAT_INPUT,
+        input = flps_make_object( FL_INPUT,
+                                  ob->type == FL_INT_SPINNER ?
+                                  FL_INT_INPUT : FL_FLOAT_INPUT,
                                   ob->x, ob->y, ob->w - bwh - 1, ob->h,
                                   "", NULL );
         up = flps_make_object( FL_BUTTON, FL_TOUCH_BUTTON,
@@ -2233,7 +2235,9 @@ flps_draw_spinner( FL_OBJECT * ob )
         FL_Coord bwh = FL_max( ob->w / 2, 1 );
         ob->w = 2 * bwh;
 
-        input = flps_make_object( FL_INPUT, FL_FLOAT_INPUT,
+        input = flps_make_object( FL_INPUT,
+                                  ob->type == FL_INT_SPINNER ?
+                                  FL_INT_INPUT : FL_FLOAT_INPUT,
                                   ob->x, ob->y + bwh, ob->w, ob->h - bwh - 1,
                                   "", NULL );
         up = flps_make_object( FL_BUTTON, FL_TOUCH_BUTTON,
@@ -2244,6 +2248,7 @@ flps_draw_spinner( FL_OBJECT * ob )
                                  "@4>", NULL );
     }
 
+    input->boxtype = FL_DOWN_BOX;
     input->col1 = ob->col1;
     input->col2 = ob->col2;
 

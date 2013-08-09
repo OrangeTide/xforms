@@ -151,7 +151,7 @@ fd2ps_init( void )
     psinfo.xdpi = psinfo.ydpi = 85;
     psinfo.paper_name = "Letter";
     get_paper_size( psinfo.paper_name, &psinfo.paper_w, &psinfo.paper_h );
-    psinfo.bw = 2;          /* Should be 1 but then output looks shitty JTT */
+    psinfo.bw = 1;
     psinfo.verbose = 0;
     psinfo.colorps = 1;
     psinfo.eps = 0;
