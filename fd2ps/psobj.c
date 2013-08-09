@@ -43,26 +43,33 @@ extern int fl_get_underline_pos(const char *label, const char *sc);
 #endif
 
 static void ps_draw_object(FL_OBJECT * ob);
-/* stuff that only need to be output once */
+
+/***************************************
+ * stuff that only need to be output once
+ ***************************************/
+
 static void
-emit_prolog(void)
+emit_prolog( void )
 {
     static int emitted;
 
-    if (!emitted)
-    {
-        ps_verbatim("%%!PS-Adobe-3.0%s\n", psinfo.eps ? " EPSF-2.0" : "");
-        ps_verbatim("%%%%Creator: %s\n", get_version());
-        ps_verbatim("%%%%CreateDate: %s\n", ascii_date());
-        ps_verbatim("%%%%For: %s\n", whoami());
-        ps_verbatim("%%%%Pages: %d\n", psinfo.pages);
-        ps_verbatim("%%%%Orientation: %s\n",
-                    psinfo.landscape == 1 ? "Landscape" : "Portrait");
-        emitted = 1;
-    }
+    if ( emitted )
+        return;
+
+    ps_verbatim( "%%!PS-Adobe-3.0%s\n", psinfo.eps ? " EPSF-2.0" : "" );
+    ps_verbatim( "%%%%Creator: %s\n", get_version( ) );
+    ps_verbatim( "%%%%CreateDate: %s\n", ascii_date( ) );
+    ps_verbatim( "%%%%For: %s\n", whoami( ) );
+    ps_verbatim( "%%%%Pages: %d\n", psinfo.pages );
+    ps_verbatim( "%%%%Orientation: %s\n",
+                 psinfo.landscape == 1 ? "Landscape" : "Portrait" );
+    emitted = 1;
 }
 
-/* emit some basic macros */
+
+/***************************************
+ * emit some basic macros
+ ***************************************/
 
 static void
 emit_basic_defs( float xscale,
@@ -70,43 +77,43 @@ emit_basic_defs( float xscale,
 {
     static int emitted;
 
-    if (emitted)
+    if ( emitted )
         return;
 
     emitted = 1;
 
-    ps_output("/BD {bind def} def\n");
-    ps_output("/M {moveto} bind def  /LT {lineto} BD\n");
-    ps_output("/L {M LT}   bind def  /C  {closepath} BD\n");
-    ps_output("/LW {setlinewidth} BD\n");
-    ps_output("/S {stroke} BD /F {fill} BD\n");
-    ps_output("/G {setgray} bind def /RGB {setrgbcolor} BD\n");
+    ps_output( "/BD {bind def} def\n" );
+    ps_output( "/M {moveto} bind def  /LT {lineto} BD\n" );
+    ps_output( "/L {M LT}   bind def  /C  {closepath} BD\n" );
+    ps_output( "/LW {setlinewidth} BD\n" );
+    ps_output( "/S {stroke} BD /F {fill} BD\n" );
+    ps_output( "/G {setgray} bind def /RGB {setrgbcolor} BD\n" );
 
     /* x y x y N */
 
-    ps_output("/P {3 1 roll M 2 exch 1 exch {pop LT} for C} BD\n");
-    ps_output("/lines {3 1 roll M 2 exch 1 exch {pop LT} for S} BD\n");
-    ps_output("/SX %.2g def /SY %.2g def\n", xscale, yscale);
+    ps_output( "/P {3 1 roll M 2 exch 1 exch {pop LT} for C} BD\n" );
+    ps_output( "/lines {3 1 roll M 2 exch 1 exch {pop LT} for S} BD\n" );
+    ps_output( "/SX %.2g def /SY %.2g def\n", xscale, yscale );
 
 #if 0
-    if (psinfo.epsf_import && !psinfo.xpmtops_direct)
-        emit_epsf_import_command();
+    if ( psinfo.epsf_import && ! psinfo.xpmtops_direct )
+        emit_epsf_import_command( );
 #endif
 
-    ps_text_init();
+    ps_text_init( );
 }
 
 
-/* Since some of the internal coordinates defaults, such
-   * as border width and line width, are expressed in pixels,
-   * it is more convenient to work in pixles coordinates.
-   * For point, mm units, we convert everything to a pseudo pixel
-   * unit.
-   *
-   * psinfo.scale turns object coordinates into pseudo pixel unit
-   * and xscale yscale turns pseudo pixel into point
-   *
- */
+/***************************************
+ * Since some of the internal coordinates defaults, such
+ * as border width and line width, are expressed in pixels,
+ * it is more convenient to work in pixel coordinates.
+ * For point, mm units, we convert everything to a pseudo pixel
+ * unit.
+ *
+ * psinfo.scale turns object coordinates into pseudo pixel unit
+ * and xscale yscale turns pseudo pixel into point
+ ***************************************/
 
 void
 get_scale_unit( int     unit,
@@ -122,7 +129,7 @@ get_scale_unit( int     unit,
     else if ( unit == FL_COORD_centiPOINT )
     {
         *xscale = *yscale = 0.8;              /* pixel size in point */
-        psinfo.xscale = psinfo.yscale = 0.01  / *xscale;
+        psinfo.xscale = psinfo.yscale = 0.01 / *xscale;
     }
     else if ( unit == FL_COORD_POINT )
     {
@@ -140,6 +147,9 @@ get_scale_unit( int     unit,
 
 
 #define P2CM( n )  ( n / 72.0 * 2.45 )
+
+/***************************************
+ ***************************************/
 
 static void
 auto_orientation( float pw,
@@ -160,6 +170,9 @@ auto_orientation( float pw,
                       && ( pbm < 0 || plm < 0 );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 ps_bgn_form( int          w,
@@ -242,9 +255,10 @@ ps_bgn_form( int          w,
 }
 
 
-/* Since ob->{x,y,w,h} are int special care needs to be taken
+/***************************************
+ * Since ob->{x,y,w,h} are int special care needs to be taken
  * to avoid numerical inaccuracies
- */
+ ***************************************/
 
 static void
 scale_object( FL_OBJECT * ob )
@@ -267,6 +281,9 @@ scale_object( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 ps_end_form( void )
 {
@@ -282,6 +299,9 @@ ps_end_form( void )
 #define CNTL_CHAR     '^'
 #define FKEY_CHAR     '&'
 
+
+/***************************************
+ ***************************************/
 
 int
 fl_convert_shortcut(const char * str,
@@ -356,6 +376,9 @@ ps_draw_object_label( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 ps_draw_object_label_beside( FL_OBJECT * ob )
 {
@@ -363,6 +386,9 @@ ps_draw_object_label_beside( FL_OBJECT * ob )
                          ob->lcol, ob->lstyle, ob->lsize, ob->label );
 }
 
+
+/***************************************
+ ***************************************/
 
 int
 fl_get_underline_pos( const char * label,
@@ -401,6 +427,9 @@ fl_get_underline_pos( const char * label,
     return ( p - label ) + 1;
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 flps_set_object_shortcut( FL_OBJECT  * obj,
@@ -445,6 +474,9 @@ flps_set_object_shortcut( FL_OBJECT  * obj,
 #define ISUPBOX  FL_IS_UPBOX
 #define DOWNBOX  FL_TO_DOWNBOX
 
+
+/***************************************
+ ***************************************/
 
 static void
 flps_draw_button( FL_OBJECT * ob )
@@ -496,6 +528,9 @@ flps_draw_button( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_labelbutton( FL_OBJECT * ob )
 {
@@ -526,6 +561,9 @@ flps_draw_labelbutton( FL_OBJECT * ob )
 #define NEAR 600.0f
 #define GRID 0.18
 
+
+/***************************************
+ ***************************************/
 
 static void
 flps_draw_thumbwheel( FL_OBJECT * ob )
@@ -681,6 +719,9 @@ flps_draw_thumbwheel( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_lightbutton( FL_OBJECT * ob )
 {
@@ -780,6 +821,9 @@ flps_draw_lightbutton( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_roundbutton( FL_OBJECT * ob )
 {
@@ -856,6 +900,9 @@ flps_draw_scrollbutton( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_round3dbutton( FL_OBJECT * ob )
 {
@@ -904,6 +951,9 @@ flps_draw_round3dbutton( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_checkbutton( FL_OBJECT * ob )
 {
@@ -937,6 +987,9 @@ flps_draw_checkbutton( FL_OBJECT * ob )
                       ob->lcol, 0, 0, "@returnarrow" );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 flps_draw_pixmap( FL_OBJECT * ob )
@@ -975,6 +1028,9 @@ static float xori, yori;
     ( yori + ( ( x ) - xori ) * sin( a ) + ( ( y ) - yori ) * cos( a ) )
 
 
+/***************************************
+ ***************************************/
+
 static void
 rotate_it( Point * xp,
            float   x,
@@ -985,6 +1041,9 @@ rotate_it( Point * xp,
     xp->y = ROTy( x, y, a );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 flps_draw_dial( FL_OBJECT * ob )
@@ -1137,6 +1196,9 @@ flps_draw_dial( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_text( FL_OBJECT * ob )
 {
@@ -1153,6 +1215,9 @@ flps_draw_box( FL_OBJECT * ob )
     ps_draw_object_label_beside( ob );
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 flps_draw_choice( FL_OBJECT * ob )
@@ -1271,7 +1336,9 @@ flps_draw_counter( FL_OBJECT * ob )
 
 
 
-/* Performs linear interpolation */
+/***************************************
+ * Performs linear interpolation
+ ***************************************/
 
 static float
 flinear( float val,
@@ -1314,6 +1381,9 @@ flinear( float val,
                           || t == FL_HOR_BROWSER_SLIDER2   \
                           || t == FL_VERT_BROWSER_SLIDER   \
                           || t == FL_VERT_BROWSER_SLIDER2 )
+
+/***************************************
+ ***************************************/
 
 static void
 ps_drw_slider_shape( int          boxtype,
@@ -1522,6 +1592,9 @@ ps_drw_slider_shape( int          boxtype,
 #define VAL_BOXH  25
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_slider( FL_OBJECT * ob )
 {
@@ -1592,6 +1665,9 @@ flps_draw_slider( FL_OBJECT * ob )
                                 || t == FL_HOR_NICE_SCROLLBAR   \
                                 || t == FL_HOR_BASIC_SCROLLBAR)
 
+
+/***************************************
+ ***************************************/
 
 static void
 get_geom( FL_OBJECT * parent,
@@ -1667,6 +1743,9 @@ get_geom( FL_OBJECT * parent,
         up->boxtype = down->boxtype = parent->boxtype;
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 flps_draw_scrollbar( FL_OBJECT * ob )
@@ -1752,6 +1831,9 @@ flps_draw_scrollbar( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_frame( FL_OBJECT * ob )
 {
@@ -1775,6 +1857,9 @@ ps_len( const char * s,
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 ps_boxf( long col )
 {
@@ -1785,6 +1870,9 @@ ps_boxf( long col )
     ps_output( "x w 1 sub add y 4 P F\n" );       /* (x+w-1,y) */
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 flps_draw_lframe( FL_OBJECT * ob )
@@ -1862,6 +1950,9 @@ flps_draw_lframe( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_positioner( FL_OBJECT * ob )
 {
@@ -1892,6 +1983,9 @@ flps_draw_positioner( FL_OBJECT * ob )
                            || b == FL_ROUNDED_BOX )
 
 
+/***************************************
+ ***************************************/
+
 static int
 calc_sbw( FL_OBJECT * ob )
 {
@@ -1906,6 +2000,9 @@ calc_sbw( FL_OBJECT * ob )
         return 14 + delta - flat;
 }
 
+
+/***************************************
+ ***************************************/
 
 static void
 browser_partition( FL_OBJECT * ob,
@@ -1972,6 +2069,9 @@ browser_partition( FL_OBJECT * ob,
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_browser( FL_OBJECT * ob )
 {
@@ -2019,6 +2119,9 @@ flps_draw_browser( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_input( FL_OBJECT * ob )
 {
@@ -2030,6 +2133,9 @@ flps_draw_input( FL_OBJECT * ob )
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_free( FL_OBJECT * ob )
 {
@@ -2037,7 +2143,8 @@ flps_draw_free( FL_OBJECT * ob )
 }
 
 
-/*************** timer ********************/
+/***************************************
+ ***************************************/
 
 static char *
 default_filter( FL_OBJECT * ob  FL_UNUSED_ARG,
@@ -2068,6 +2175,9 @@ default_filter( FL_OBJECT * ob  FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ ***************************************/
+
 static void
 flps_draw_timer( FL_OBJECT * ob )
 {
@@ -2090,6 +2200,59 @@ flps_draw_timer( FL_OBJECT * ob )
     }
 
     ps_draw_object_label( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+static void
+flps_draw_spinner( FL_OBJECT * ob )
+{
+    FL_OBJECT *input,
+              *up,
+              *down;
+
+    if ( ob->w >= ob->h )
+    {
+        FL_Coord bwh = FL_max( ob->h / 2, 1 );
+        ob->h = 2 * bwh;
+
+        input = flps_make_object( FL_INPUT, FL_FLOAT_INPUT,
+                                  ob->x, ob->y, ob->w - bwh - 1, ob->h,
+                                  "", NULL );
+        up = flps_make_object( FL_BUTTON, FL_TOUCH_BUTTON,
+                               ob->x + ob->w - bwh - 1, ob->y + bwh, bwh, bwh,
+                               "@8>", NULL );
+        down = flps_make_object( FL_BUTTON, FL_TOUCH_BUTTON,
+                                 ob->x + ob->w - bwh - 1, ob->y, bwh, bwh,
+                                 "@2>", NULL );
+    }
+    else
+    {
+        FL_Coord bwh = FL_max( ob->w / 2, 1 );
+        ob->w = 2 * bwh;
+
+        input = flps_make_object( FL_INPUT, FL_FLOAT_INPUT,
+                                  ob->x, ob->y + bwh, ob->w, ob->h - bwh - 1,
+                                  "", NULL );
+        up = flps_make_object( FL_BUTTON, FL_TOUCH_BUTTON,
+                               ob->x + bwh, ob->y, bwh, bwh,
+                               "@6>", NULL );
+        down = flps_make_object( FL_BUTTON, FL_TOUCH_BUTTON,
+                                 ob->x, ob->y, bwh, bwh,
+                                 "@4>", NULL );
+    }
+
+    input->col1 = ob->col1;
+    input->col2 = ob->col2;
+
+    ps_draw_object( input );
+    ps_draw_object( up );
+    ps_draw_object( down );
+
+    ob->align = fl_to_outside_lalign( ob->align );
+    ps_draw_object_label_beside( ob );
 }
 
 
@@ -2131,10 +2294,14 @@ static FLPS_draw flps_draw[ ] =
     { FL_LABELFRAME,    flps_draw_lframe        },
     { FL_INPUT,         flps_draw_input         },
     { FL_FREE,          flps_draw_free          },
-    { FL_TIMER,         flps_draw_timer         }
+    { FL_TIMER,         flps_draw_timer         },
+    { FL_SPINNER,       flps_draw_spinner       }
 };
 
 #define NOBJ   ( sizeof flps_draw / sizeof *flps_draw )
+
+/***************************************
+ ***************************************/
 
 static void
 ps_draw_object( FL_OBJECT * ob )
@@ -2159,6 +2326,9 @@ ps_draw_object( FL_OBJECT * ob )
                  find_class_name( ob->objclass ), ob->objclass );
 }
 
+
+/***************************************
+ ***************************************/
 
 void
 ps_show_form( FL_FORM * form )

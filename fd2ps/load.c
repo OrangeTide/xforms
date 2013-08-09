@@ -489,6 +489,7 @@ load_object( FL_FORM * form,
                 fprintf( stderr, "Somethings wrong with the file\n" );
                 exit( EXIT_FAILURE );
             }
+
             obj->col1 = fl_get_namedcolor(cn1);
             obj->col2 = fl_get_namedcolor(cn2);
         }

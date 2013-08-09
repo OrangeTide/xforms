@@ -1,19 +1,39 @@
 Installing from git repository
 ==============================
 
-If you're planning to the sourve codde from the git repository
-you need one extra step when installing XForms. The "normal"
-distribution already comes with a 'configure' script that
-checks if all software required ti successfully install XForms
-is present on your machine and then creares Makefiles etc. But
-the 'cpnfigure' script itself also gets created automatically
-using the 'automake' and 'autoconf' tools.
+If you're planning to use the source code from the git
+repository you need to have git installed. Then you can
+run
 
-So, in orde to compile from the bare git repository you need
-the 'autoconf' and 'automake' tools. Most Linux distributions
-have packages by those name, so you probbaly can install them
-without furthe effort. If uou can't use them then you will
-have to download them from
+git clone git://git.savannah.nongnu.org/xforms.git
+
+which will create a directory named 'xforms' with the
+complete source code and all available information about
+the changes made since about 2003 (thus more hard disk
+space will be needed compared to downloading the bare
+source code tar ball).
+
+(Later on you only need to run the command
+
+git pull
+
+to obtain the diffs for the newest version, thus reducing
+the amount of data to be transfered compared with a new
+tar ball.)
+
+You also will need one extra step when installing XForms.
+The "normal" distribution already comes with a 'configure'
+script that checks if all software required to install XForms
+successfully is present on your machine and then creates
+Makefiles etc. But the 'configure' script itself also gets
+created automatically using the 'automake' and 'autoconf'
+tools.
+
+So, in orde to compile from the git repository sources you
+need the 'autoconf' and 'automake' tools. Most Linux distri-
+butions have packages by those name, so you probably can
+install them without much effort. If you can't use them
+then you will have to download them from
 
 http://www.gnu.org/software/autoconf/
 http://www.gnu.org/software/automake/
@@ -21,8 +41,9 @@ http://www.gnu.org/software/automake/
 and install them according to the documentation contained
 in these packages.
 
-Once this tools are installed all you've got to do is to run
-the script 'autogen.sh' in the main directory of XForms. Then
-you can continue like in a "normal" install (i.e. first run
-'./confgure', yhem 'make' and finally 'make install' (also
-see the INSTALL file for more detailed instructions).
+Once this tools are installed all you've got to do is to
+run the script 'autogen.sh' in the main directory of XForms.
+You then can continue like in a "normal" install (i.e. first
+run the './confgure' script, followed by 'make' and finally
+'make install' - also see the INSTALL file for more detailed
+instructions).

@@ -75,7 +75,7 @@ set_geom( FL_OBJECT * obj )
     {
         bwh = obj->w / 2;
         bwh = FL_max( bwh, 1 );
-        obj->w = sp->input->w = 2 * bwh;
+        obj->w = 2 * bwh;
 
         sp->input->x = obj->x;
         sp->input->y = obj->y;

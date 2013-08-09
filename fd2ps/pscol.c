@@ -46,47 +46,42 @@
 
 static FLI_IMAP fl_imap[ ] =
 {
-    { NV( FL_BLACK), 0, 0, 0, 0, 0},
-    { NV( FL_WHITE), 255, 255, 255, 0, 0},
-
-    { NV( FL_COL1), 161, 161, 161, 0, 0},     /* default color, gray63 */
-    { NV( FL_MCOL), 191, 191, 191, 0, 0},     /* used as magic, gray75 */
-    { NV( FL_RIGHT_BCOL), 41, 41, 41, 0, 0},  /* right  gray16  */
-    { NV( FL_BOTTOM_BCOL), 89, 89, 89, 0, 0}, /* bottom  gray35 */
-    { NV( FL_LEFT_BCOL), 222, 222, 222, 0, 0},    /* left color  gray87 */
-
-    { NV( FL_SLATEBLUE), 113, 113, 198, 0, 0},
-    { NV( FL_INDIANRED), 198, 113, 113, 0, 0},
-
-    { NV( FL_RED), 255, 0, 0, 0, 0},
-    { NV( FL_BLUE), 0, 0, 255, 0, 0},
-    { NV( FL_GREEN), 0, 255, 0, 0, 0},
-    { NV( FL_YELLOW), 255, 255, 0, 0, 0},
-    { NV( FL_MAGENTA), 255, 0, 255, 0, 0},
-    { NV( FL_CYAN), 0, 255, 255, 0, 0},
-    { NV( FL_TOMATO), 255, 99, 71, 0, 0},
-
-    { NV( FL_INACTIVE), 110, 110, 110, 0, 0}, /* gray43       */
-    { NV( FL_TOP_BCOL), 204, 204, 204, 0, 0}, /* top  gray80  */
-
-    { NV( FL_PALEGREEN), 113, 198, 113, 0, 0},
-    { NV( FL_DARKGOLD), 205, 149, 10, 0, 0},
-    { NV( FL_ORCHID), 205, 105, 201, 0, 0},
-    { NV( FL_DARKCYAN), 40, 170, 175, 0, 0},
-    { NV( FL_DARKTOMATO), 139, 54, 38, 0, 0},
-    { NV( FL_WHEAT), 255, 231, 155, 0, 0},
-    { NV( FL_DARKORANGE), 255, 128, 0, 0, 0},
-    { NV( FL_DEEPPINK), 255, 0, 128, 0, 0},
-    { NV( FL_CHARTREUSE), 128, 255, 0, 0, 0},
-    { NV( FL_DARKVIOLET), 128, 0, 255, 0, 0},
-    { NV( FL_SPRINGGREEN), 0, 255, 128, 0, 0},
-    { NV( FL_DODGERBLUE), 0, 128, 255, 0, 0},
-    { NV( FL_DOGERBLUE), 0, 128, 255, 0, 0},
-    { NV( FL_LIGHTER_COL1), 173, 173, 173, 0, 0},
-    { NV( FL_DARKER_COL1), 153, 153, 153, 0, 0}
+    { NV( FL_BLACK        ),   0,   0,   0, 0, 0 },
+    { NV( FL_WHITE        ), 255, 255, 255, 0, 0 },
+    { NV( FL_COL1         ), 161, 161, 161, 0, 0 }, /* default color, gray63 */
+    { NV( FL_MCOL         ), 191, 191, 191, 0, 0 }, /* used as magic, gray75 */
+    { NV( FL_RIGHT_BCOL   ),  41,  41,  41, 0, 0 }, /* right  gray16  */
+    { NV( FL_BOTTOM_BCOL  ),  89,  89,  89, 0, 0 }, /* bottom  gray35 */
+    { NV( FL_LEFT_BCOL    ), 222, 222, 222, 0, 0 }, /* left color  gray87 */
+    { NV( FL_SLATEBLUE    ), 113, 113, 198, 0, 0 },
+    { NV( FL_INDIANRED    ), 198, 113, 113, 0, 0 },
+    { NV( FL_RED          ), 255,   0,   0, 0, 0 },
+    { NV( FL_BLUE         ),   0,   0, 255, 0, 0 },
+    { NV( FL_GREEN        ),   0, 255,   0, 0, 0 },
+    { NV( FL_YELLOW       ), 255, 255,   0, 0, 0 },
+    { NV( FL_MAGENTA      ), 255,   0, 255, 0, 0 },
+    { NV( FL_CYAN         ),   0, 255, 255, 0, 0 },
+    { NV( FL_TOMATO       ), 255,  99,  71, 0, 0 },
+    { NV( FL_INACTIVE     ), 110, 110, 110, 0, 0 }, /* gray43       */
+    { NV( FL_TOP_BCOL     ), 204, 204, 204, 0, 0 }, /* top  gray80  */
+    { NV( FL_PALEGREEN    ), 113, 198, 113, 0, 0 },
+    { NV( FL_DARKGOLD     ), 205, 149,  10, 0, 0 },
+    { NV( FL_ORCHID       ), 205, 105, 201, 0, 0 },
+    { NV( FL_DARKCYAN     ),  40, 170, 175, 0, 0 },
+    { NV( FL_DARKTOMATO   ), 139,  54,  38, 0, 0 },
+    { NV( FL_WHEAT        ), 255, 231, 155, 0, 0 },
+    { NV( FL_DARKORANGE   ), 255, 128,   0, 0, 0 },
+    { NV( FL_DEEPPINK     ), 255,   0, 128, 0, 0 },
+    { NV( FL_CHARTREUSE   ), 128, 255,   0, 0, 0 },
+    { NV( FL_DARKVIOLET   ), 128,   0, 255, 0, 0 },
+    { NV( FL_SPRINGGREEN  ),   0, 255, 128, 0, 0 },
+    { NV( FL_DODGERBLUE   ),   0, 128, 255, 0, 0 },
+    { NV( FL_DOGERBLUE    ),   0, 128, 255, 0, 0 },
+    { NV( FL_LIGHTER_COL1 ), 173, 173, 173, 0, 0 },
+    { NV( FL_DARKER_COL1  ), 153, 153, 153, 0, 0 }
 };
 
-#define builtin   sizeof(fl_imap)/sizeof(fl_imap[0])
+#define builtin sizeof fl_imap / sizeof *fl_imap
 
 
 /***************************************
