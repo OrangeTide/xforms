@@ -166,7 +166,6 @@ Display * fd_display;
 int changed = FL_FALSE;             /* whether something has changed. */
 char main_name[ MAX_VAR_LEN ];      /* name of the main calling routine */
 char * loadedfile;
-char * loadedfile_fullpath;
 
 
 /***************************************
@@ -987,7 +986,7 @@ main( int    argc,
     /* Do auto-naming for single file only */
 
     if ( argc == 2 )
-        loadedfile = fl_strdup( argv[ 1 ] );
+        loadedfile = rel2abs( argv[ 1 ] );
 
     /* See if color change */
 

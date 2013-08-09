@@ -854,6 +854,8 @@ extern void reset_dupinfo_cache( void );
 extern int is_duplicate_info( FL_OBJECT *,
                               const char * );
 
+extern char * rel2abs( const char * rel_path );
+
 extern int noop_handle( FL_OBJECT *,
                         int,
                         FL_Coord,

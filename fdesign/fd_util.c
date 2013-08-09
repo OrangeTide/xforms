@@ -81,6 +81,61 @@ is_duplicate_info( FL_OBJECT  * ob  FL_UNUSED_ARG,
 }
 
 
+/***************************************
+ * Returns a newly allocated string with the aboslute path
+ * for the input path
+ ***************************************/
+
+char *
+rel2abs( const char * rel_path )
+{
+    char * abs_path = NULL;
+    char *res;
+
+    if ( *rel_path == '/' )
+        abs_path = fl_strdup( rel_path );
+    else
+    {
+        long path_max = pathconf(".", _PC_PATH_MAX);
+        size_t size;
+
+        if ( path_max == -1 )
+            size = 1024;
+
+        while ( 1 )
+        {
+            abs_path = fl_realloc( abs_path, size + strlen( rel_path ) + 2 );
+            if ( ! getcwd( abs_path, size ) )
+                size += 1024;
+            else
+                break;
+        }
+
+        strcat( strcat( abs_path, "/" ), rel_path );
+    }
+
+    while ( ( res = strstr( abs_path, "/./" ) ) )
+        memmove( res, res + 2, strlen( res ) - 1 );
+
+    while ( ( res = strstr( abs_path, "/../" ) ) )
+    {
+		if ( res != abs_path )
+		{
+			char * dest = res - 1;
+
+			while ( *dest != '/' )
+				dest--;
+
+			memmove( dest, res + 3, strlen( res ) - 2 );
+		}
+		else
+			memmove( abs_path, abs_path + 3, strlen( abs_path ) - 2 );
+    }
+
+    return fl_realloc( abs_path, strlen( abs_path ) + 1 );
+}
+
+
 /*
  * Local variables:
  * tab-width: 4

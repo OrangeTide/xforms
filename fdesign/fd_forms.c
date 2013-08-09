@@ -634,13 +634,13 @@ load_forms( int          merge,
     {
         fli_safe_free( loadedfile );
         *tmp = '\0';
-        loadedfile = fl_strdup( fname );
+        loadedfile = rel2abs( fname );
     }
 
     if ( ! merge )
     {
-        fli_safe_free( loadedfile_fullpath );
-        loadedfile_fullpath = fl_strdup( fname );
+        fli_safe_free( loadedfile );
+        loadedfile = rel2abs( fname );
     }
 
     fl_free( fname );
