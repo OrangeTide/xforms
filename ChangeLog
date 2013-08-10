@@ -1,3 +1,18 @@
+2013-08-09 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/tabfolder.c: Problem with setting graphic properties
+	of the tab riders infividually ad all at once pointed out
+	by Rob Carpenter hopefully fixed.
+
+	* lib/objects.c: Slow down of fl_unfreeze_form() due to the
+	fli_recalc_interactions function noticed by Rob Carpenter
+	whle not completely eliminated hopefully made less noticable.
+
+	* fd2ps/psobj.c: Support for FL_SPINNER added
+
+	* fdesign: Inconsistencies in handling of path names pointed
+	out by Donato Lorenzo López hopefully fixed.
+
 2013-01-05 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign/fd_select.c: Cutting/copying whole groups didn't

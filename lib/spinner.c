@@ -38,7 +38,7 @@ set_spinner_return( FL_OBJECT *,
  * This function got to be called before a redraw, at least if
  * the form the spinner belongs to has been resized or proper-
  * ties of the spinner have been changed. It calculates the
- * new positions and sizes of the objectes the spinner widget
+ * new positions and sizes of the objects the spinner widget
  * is made up from.
  ***************************************/
 
@@ -137,6 +137,8 @@ handle_spinner( FL_OBJECT * obj,
                 set_geom( obj );
                 sp->attrib = 0;
             }
+
+            /* fall through */
 
         case FL_DRAWLABEL :
             fl_draw_object_label_outside( obj );
@@ -356,8 +358,8 @@ fl_create_spinner( int          type,
     fl_set_object_lcolor( sp->up,   FL_BLUE );
     fl_set_object_lcolor( sp->down, FL_BLUE );
 
-    obj->col1 = sp->input->col1;
-    obj->col2 = sp->input->col2;
+    obj->col1  = sp->input->col1;
+    obj->col2  = sp->input->col2;
 
     sp->i_val  = sp->old_ival = 0;
     sp->i_min  = - 10000;
@@ -407,6 +409,7 @@ fl_add_spinner( int          type,
 
 
 /***************************************
+ * Returns the spinner value
  ***************************************/
 
 double
@@ -451,6 +454,7 @@ fl_get_spinner_value( FL_OBJECT * obj )
 
 
 /***************************************
+ * Sets the spinner value
  ***************************************/
 
 double
@@ -493,6 +497,7 @@ fl_set_spinner_value( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the lower and upper bound of the spinner value
  ***************************************/
 
 void
@@ -549,6 +554,7 @@ fl_set_spinner_bounds( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the lower and upper limit of the spinner value
  ***************************************/
 
 void
@@ -572,6 +578,9 @@ fl_get_spinner_bounds( FL_OBJECT * obj,
 
 
 /***************************************
+ * Sets the step size (increment or decrement value when the up
+ * or down button is clicked on) for the spinner. For FL_INT_SPINNER
+ * objects the number is rounded to the nearest integer.
  ***************************************/
 
 void
@@ -585,10 +594,15 @@ fl_set_spinner_step( FL_OBJECT * obj,
 
     if ( obj->type == FL_INT_SPINNER )
     {
-        if ( FL_nint( step ) > sp->i_max - sp->i_min )
+        int istep = FL_nint( step );
+
+        if ( istep == 0 )
+            istep = 1;
+
+        if ( istep > sp->i_max - sp->i_min )
             sp->i_incr = sp->i_max - sp->i_min;
         else
-            sp->i_incr = FL_nint( step );
+            sp->i_incr = istep;
     }
     else
     {
@@ -601,6 +615,8 @@ fl_set_spinner_step( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the step size (increment or decrement value when the up
+ * or down button is clicked on) for the spinner 
  ***************************************/
 
 double
@@ -613,6 +629,8 @@ fl_get_spinner_step( FL_OBJECT * obj )
 
 
 /***************************************
+ * Sets the number of digits to be shown agter the decimal point (works
+ * on FL_FLOAT_SPINNER objects only)
  ***************************************/
 
 void
@@ -638,6 +656,8 @@ fl_set_spinner_precision( FL_OBJECT * obj,
 
 
 /***************************************
+ * Returns the number of digits shown after the decimal point
+ * (always returns 0 for FL_INT_SPINNER objects)
  ***************************************/
 
 int
@@ -651,6 +671,7 @@ fl_get_spinner_precision( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the input sub-object
  ***************************************/
 
 FL_OBJECT *
@@ -661,6 +682,7 @@ fl_get_spinner_input( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the button sub-object for raising the spinner value
  ***************************************/
 
 FL_OBJECT *
@@ -671,6 +693,7 @@ fl_get_spinner_up_button( FL_OBJECT * obj )
 
 
 /***************************************
+ * Returns the button sub-object for lowering the spinner value
  ***************************************/
 
 FL_OBJECT *

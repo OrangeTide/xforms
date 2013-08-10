@@ -1510,10 +1510,11 @@ FL_OBJECT *fl_get_spinner_down_button(FL_OBJECT *obj);
 @end example
 @noindent
 They return the addresses of the objects the spinner object is made up
-from and those then can be used to set or query the way the individual
-components are drawn. The addresses of these sub-objects shouldn't be
-used for any other purposes, especially their callback function may
-never be changed!
+from, i.e. that of the input field and the buttons for increasing and
+decreasing the spinner's value. These then can be used to set or query
+the way the individual component objects are drawn. The addresses of these
+sub-objects shouldn't be used for any other purposes, especially their
+callback function may never be changed!
 
 
 @node Thumbwheel Object
