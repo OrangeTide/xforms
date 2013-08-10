@@ -45,8 +45,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-static FRM *forms = NULL;   /* The forms */
-static int fnumb = 0;
+static FRM *forms = NULL;   /* The list of forms */
+static int fnumb = 0;       /* number of forms */
 
 FL_FORM *cur_form = NULL;   /* The current form */
 
@@ -68,7 +68,7 @@ get_form_numb( FL_FORM * form )
 
 
 /***************************************
- * Sets the current form to numb, to NULL when numb = -1
+ * Sets the current form to 'numb' or to NULL when 'numb' is -1
  ***************************************/
 
 static void
@@ -97,7 +97,7 @@ set_form( int numb )
 
 
 /***************************************
- * Change current form background. Called when the main window is resized
+ * Change the current forms background. Called when the main window is resized
  ***************************************/
 
 void
@@ -230,6 +230,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 /***************************************
  * Callback routine invoked when the user wants to change the name
+ * of the current form
  ***************************************/
 
 void
@@ -239,6 +240,7 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     int fn = get_form_numb( cur_form );
     const char *s;
     const char *sp;
+    int i;
 
     if ( cur_form == NULL || fn == -1 )
         return;
@@ -250,22 +252,26 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
          || ! *s )
         return;
 
-    if (    ! isascii( ( unsigned char ) *s )
-         || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
+    if ( ! is_valid_c_name( s ) )
     {
         fl_show_alert( "Error", "Invalid C identifier specified for form "
                        "name:", s, 0 );
         goto get_changed_form_name;
     }
 
-    for ( sp = s + 1; *sp; sp++ )
-        if (    ! isascii( ( unsigned char ) *sp )
-             || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
+    for ( i = 0; i < fnumb; i++ )
+    {
+        if ( i == fn )
+            continue;
+
+        if ( ! strcmp( forms[ i ].fname, s ) )
         {
-            fl_show_alert( "Error", "Invalid C identifier specified for form "
-                           "name:", s, 0 );
+            fl_show_alert( "Error", "New name is already in use for another "
+                           "form", NULL, 0 );
             goto get_changed_form_name;
         }
+    }
+
 
     fli_sstrcpy( forms[ fn ].fname, s, MAX_VAR_LEN );
 
@@ -344,7 +350,7 @@ changesize_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 
 /***************************************
- * Callback routine called to delete a form
+ * Callback routine for deleting a form
  ***************************************/
 
 void
@@ -356,15 +362,20 @@ deleteform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
     if ( cur_form == NULL || fn == -1 )
         return;
+
     if ( ! fl_show_question( "Delete current form?", 1 ) )
         return;
+
     fl_delete_browser_line( fd_control->formbrowser, fn + 1 );
+
     for ( i = fn; i < fnumb - 1; i++ )
         forms[ i ] = forms[ i + 1 ];
+
     fnumb--;
     set_form( -1 );
-    changed = 1;
+    changed = FL_TRUE;
 }
+
 
 /****
   DRAWING FORMS
@@ -629,7 +640,7 @@ load_forms( int          merge,
     set_form( fnumb > 0 ? 0 : -1 );
 
     if ( merge )
-        changed = 1;
+        changed = FL_TRUE;
     else if ( record && ( tmp = strrchr( fname, '/' ) ) )
     {
         fli_safe_free( loadedfile );
@@ -695,25 +706,25 @@ save_forms( const char *str )
 
     strcpy( filename, str );
     i = strlen( filename ) - 1;
-    if ( strcmp( filename + i - 2, ".fd" ) == 0 )
+    if ( ! strcmp( filename + i - 2, ".fd" ) )
         filename[ i - 2 ] = '\0';
 
     strcpy( fname, filename );
 
-    /* On conversion there's need no to (re)save  the .fd file - it would
+    /* On conversion there's no need to (re)save  the .fd file - it would
        just mess up Makefile rules */
 
     if ( fdopt.conv_only )
         goto emit_code;
 
-    /* Make the .fd file. */
+    /* Make the .fd file */
 
     strcat( fname, ".fd" );
     make_backup( fname );
 
     if ( ( fn = fopen( fname, "w" ) ) == 0 )
     {
-        fl_show_alert( "Cannot create definition file!!", "", "", 1 );
+        fl_show_alert( "Cannot create definition file!", "", "", 1 );
         return 0;
     }
 

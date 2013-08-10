@@ -1031,6 +1031,10 @@ ff_read( const char * format,
                     r = ff_match_string( va_arg( ap, char ** ) );
                     break;
 
+                case 'h' :               /* string (without embedded spaces) */
+                    r = ff_match_spaceless_string( va_arg( ap, char ** ) );
+                    break;
+
                 case 'f' :                    /* float */
                     r = ff_match_float( va_arg( ap, float * ) );
                     break;

@@ -856,6 +856,8 @@ extern int is_duplicate_info( FL_OBJECT *,
 
 extern char * rel2abs( const char * rel_path );
 
+extern int is_valid_c_name( const char * str );
+
 extern int noop_handle( FL_OBJECT *,
                         int,
                         FL_Coord,

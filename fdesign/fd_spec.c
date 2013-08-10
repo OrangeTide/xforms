@@ -1178,11 +1178,11 @@ ff_read_sp_xscale( FL_OBJECT * obj  FL_UNUSED_ARG,
     char *p;
     int xscale;
 
-    if ( ( r = ff_read( "%s%f", &p, &sp->xbase ) ) < 0 )
+    if ( ( r = ff_read( "%h%f", &p, &sp->xbase ) ) < 0 )
         return ff_err( "Can't read expected object xscale values" );
 
     if ( r == 0 )
-        return ff_err( "\"yscale\" key with no or invalid values" );
+        return ff_err( "\"xscale\" key with no or invalid values" );
 
     xscale = get_scale_value( p );
 
@@ -1211,7 +1211,7 @@ ff_read_sp_yscale( FL_OBJECT * obj  FL_UNUSED_ARG,
     char *p;
     int yscale;
 
-    if ( ( r = ff_read( "%s%f", &p, &sp->ybase ) ) < 0 )
+    if ( ( r = ff_read( "%h%f", &p, &sp->ybase ) ) < 0 )
         return ff_err( "Can't read expected object yscale values" );
 
     if ( r == 0 )

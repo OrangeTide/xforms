@@ -81,7 +81,6 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     int i,
         numb = 0;
     const char *s;
-    const char *sp;
 
     if ( cur_form == NULL )
         return;
@@ -111,30 +110,17 @@ changegroupname_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
                                 "a C variable or empty):", name ) ) )
         return;
 
-    if ( *s )
+    if ( *s && ! is_valid_c_name( s ) )
     {
-        if (    ! isascii( ( unsigned char ) *s )
-              || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
-        {
-            fl_show_alert( "Error", "Invalid C identifier specified for group "
-                           "name:", s, 0 );
-            goto get_changed_group_name;
-        }
-
-        for ( sp = s + 1; *sp; sp++ )
-            if (    ! isascii( ( unsigned char ) *sp )
-                 || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
-            {
-                fl_show_alert( "Error", "Invalid C identifier specified for "
-                               "group name:", s, 0 );
-                goto get_changed_group_name;
-            }
+        fl_show_alert( "Error", "Invalid C identifier specified for group "
+                       "name:", s, 0 );
+        goto get_changed_group_name;
     }
 
     strcpy( name, s );
     set_object_name( begobj[ numb ], name, NULL, NULL );
     fillin_groups( );
-    changed = 1;
+    changed = FL_TRUE;
 }
 
 

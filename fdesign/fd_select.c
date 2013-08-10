@@ -1634,7 +1634,6 @@ group_selection( void )
     int i;
     FL_OBJECT *obj;
     const char *s;
-    const char *sp;
 
     if ( backf )
         return;         /* Cannot group the backface */
@@ -1648,24 +1647,11 @@ group_selection( void )
                                 "a C variable or empty):", "" ) ) )
         return;
 
-    if ( *s )
+    if ( *s && ! is_valid_c_name( s ) )
     {
-        if (    ! isascii( ( unsigned char ) *s )
-             || ! ( isalpha( ( unsigned char ) *s ) || *s == '_' ) )
-        {
-            fl_show_alert( "Error", "Invalid C identifier specified for group "
-                           "name:", s, 0 );
-            goto get_new_group_name;
-        }
-
-        for ( sp = s + 1; *sp; sp++ )
-            if (    ! isascii( ( unsigned char ) *sp )
-                 || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
-            {
-                fl_show_alert( "Error", "Invalid C identifier specified for "
-                               "group name:", s, 0 );
-                goto get_new_group_name;
-            }
+        fl_show_alert( "Error", "Invalid C identifier specified for group "
+                       "name:", s, 0 );
+        goto get_new_group_name;
     }
 
     obj = add_an_object( FL_BEGIN_GROUP, -1, 0, 0, 0, 0 );

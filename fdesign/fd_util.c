@@ -136,6 +136,28 @@ rel2abs( const char * rel_path )
 }
 
 
+/***************************************
+ * Returns if a string can be used as a valid C identifier
+ ***************************************/
+
+int
+is_valid_c_name( const char * str )
+{
+    const char * sp;
+
+    if (    ! isascii( ( unsigned char ) *str )
+         || ! ( isalpha( ( unsigned char ) *str ) || *str == '_' ) )
+        return 0;
+
+    for ( sp = str + 1; *sp; sp++ )
+        if (    ! isascii( ( unsigned char ) *sp )
+             || ! ( isalnum( ( unsigned char ) *sp ) || *sp == '_' ) )
+            return 0;
+
+    return 1;
+}
+
+
 /*
  * Local variables:
  * tab-width: 4
