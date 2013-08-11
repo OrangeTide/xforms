@@ -325,14 +325,29 @@ spec_to_superspec( FL_OBJECT * ob )
         FLI_SCROLLBAR_SPEC *scbsp = ob->spec;
         FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
-        spp->val        = sp->val;
-        spp->min        = sp->min;
-        spp->max        = sp->max;
-        spp->prec       = sp->prec;
-        spp->step       = sp->step;
-        spp->slsize     = sp->slsize;
-        spp->ldelta     = sp->ldelta;
-        spp->rdelta     = sp->rdelta;
+        spp->val    = sp->val;
+        spp->min    = sp->min;
+        spp->max    = sp->max;
+        spp->prec   = sp->prec;
+        spp->step   = sp->step;
+        spp->slsize = sp->slsize;
+        spp->ldelta = sp->ldelta;
+        spp->rdelta = sp->rdelta;
+    }
+    else if ( ob->objclass == FL_SPINNER )
+    {
+        FLI_SPINNER_SPEC *sp = ob->spec;
+
+        spp->i_val  = sp->i_val;
+        spp->i_min  = sp->i_min;
+        spp->i_max  = sp->i_max;
+        spp->i_incr = sp->i_incr;
+        spp->f_val  = sp->f_val;
+        spp->f_min  = sp->f_min;
+        spp->f_max  = sp->f_max;
+        spp->f_incr = sp->f_incr;
+        spp->orient = sp->orient;
+        spp->prec   = sp->prec;
     }
 
     return spp;
@@ -539,14 +554,29 @@ superspec_to_spec( FL_OBJECT * ob )
         FLI_SCROLLBAR_SPEC *scbsp = ob->spec;
         FLI_SLIDER_SPEC *sp = scbsp->slider->spec;
 
-        sp->val       = spp->val;
-        sp->min       = spp->min;
-        sp->max       = spp->max;
-        sp->prec       = spp->prec;
-        sp->step       = spp->step;
-        sp->slsize     = spp->slsize;
-        sp->ldelta     = spp->ldelta;
-        sp->rdelta     = spp->rdelta;
+        sp->val    = spp->val;
+        sp->min    = spp->min;
+        sp->max    = spp->max;
+        sp->prec   = spp->prec;
+        sp->step   = spp->step;
+        sp->slsize = spp->slsize;
+        sp->ldelta = spp->ldelta;
+        sp->rdelta = spp->rdelta;
+    }
+    else if ( ob->objclass == FL_SLIDER )
+    {
+        FLI_SPINNER_SPEC *sp = ob->spec;
+
+        sp->i_val  = spp->i_val;
+        sp->i_min  = spp->i_min;
+        sp->i_max  = spp->i_max;
+        sp->i_incr = spp->i_incr;
+        sp->f_val  = spp->f_val;
+        sp->f_min  = spp->f_min;
+        sp->f_max  = spp->f_max;
+        sp->f_incr = spp->f_incr;
+        sp->orient = spp->orient;
+        sp->prec   = spp->prec;
     }
 
     return v;

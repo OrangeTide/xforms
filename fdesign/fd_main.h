@@ -802,6 +802,15 @@ typedef struct {
     int            * mval;
     char             helper[ 512 ];
     int              reserverd[ 12 ];
+    int              i_val;
+    int              i_min;
+    int              i_max;
+    int              i_incr;
+    double           f_val;
+    double           f_min;
+    double           f_max;
+    double           f_incr;
+    int              orient;
 } SuperSPEC;
 
 extern SuperSPEC *get_superspec( FL_OBJECT * );

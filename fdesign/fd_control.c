@@ -164,7 +164,6 @@ loadforms_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 /***** End of FileMenu *****/
 
-
 /* Group Menu entry */
 
 static MenuEntry gmenu[ ] =

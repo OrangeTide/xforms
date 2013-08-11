@@ -490,17 +490,17 @@ fl_delete_object( FL_OBJECT * obj )
 
         for ( o = obj->next; o; o = o->next )
         {
-            /* Hack for fdesign to allow deletion of the FL_BRGIN_GROUP
-               and FL_END_GROUP objects with the objects in the group
-               (if there group ID was unset) */
+            /* Hack for fdesign to allow deletion of the FL_BEGIN_GROUP and
+               FL_END_GROUP objects while keeping the objects in the group
+               if their group ID was unset */
 
-            if ( o->group_id != obj->group_id )
+            if (    o->group_id != obj->group_id
+                 || ( o->parent && o->parent->group_id != obj->group_id ) )
                 continue;
 
             fl_delete_object( o );
             if ( o->objclass == FL_END_GROUP )
                 break;
-
         }
 
         fl_unfreeze_form( obj->form );
@@ -515,11 +515,12 @@ fl_delete_object( FL_OBJECT * obj )
 
         for ( o = obj->form->first; o && o != obj; o = o->next )
         {
-            /* Hack for fdesign to allow deletion of the FL_BRGIN_GROUP
+            /* Hack for fdesign to allow deletion of the FL_BEGIN_GROUP
                and FL_END_GROUP objects with the objects in the group
                (if there group ID was unset) */
 
-            if ( o->group_id != obj->group_id )
+            if (    o->group_id != obj->group_id
+                 || ( o->parent && o->parent->group_id != obj->group_id ) )
                 continue;
 
             if ( o->group_id == obj->group_id && o->objclass != FL_BEGIN_GROUP )

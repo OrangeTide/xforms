@@ -181,7 +181,7 @@ fillin_groups( void )
             }
             else if ( obj->objclass == FL_END_GROUP )
                 i++;
-    }
+        }
 
     fl_unfreeze_form( fd_control->groupbrowser->form );
 }

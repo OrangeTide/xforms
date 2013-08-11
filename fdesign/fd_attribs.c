@@ -113,10 +113,10 @@ save_object( FL_OBJECT * obj )
     if ( ! oldcopy )
         oldcopy = fl_make_object( 0, 0, 0, 0, 0, 0, NULL, NULL );
 
-    ol = oldcopy->label;
-    os = oldcopy->shortcut;
-    *oldcopy = *obj;
-    oldcopy->label = ol;
+    ol                = oldcopy->label;
+    os                = oldcopy->shortcut;
+    *oldcopy          = *obj;
+    oldcopy->label    = ol;
     oldcopy->shortcut = os;
 
     fl_set_object_label( oldcopy, obj->label );

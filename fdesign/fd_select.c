@@ -109,8 +109,7 @@ cleanup_selection( void )
 
     /* Figure out whether whole groups are selected */
 
-    obj = cur_form->first;
-    while ( obj != NULL )
+    for ( obj = cur_form->first; obj != NULL; obj = obj->next )
     {
         if ( obj->objclass == FL_BEGIN_GROUP )
         {
@@ -123,6 +122,7 @@ cleanup_selection( void )
             {
                 selobj[ selnumb++ ] = begobj;
                 selobj[ selnumb++ ] = obj;
+                sel = 0;
             }
             else
             {
@@ -132,13 +132,8 @@ cleanup_selection( void )
                     selobj[ tt ] = NULL;
             }
         }
-        else
-        {
-            if ( find_selobject( obj ) == -1 )
-                sel = 0;
-        }
-
-        obj = obj->next;
+        else if ( ! obj->parent && find_selobject( obj ) == -1 )
+            sel = 0;
     }
 
     cleanup_selection_list( );
@@ -164,6 +159,11 @@ is_selected( FL_OBJECT * obj )
 void
 addto_selection( FL_OBJECT * obj )
 {
+    /* Find the real parent */
+
+    while ( obj->parent )
+        obj = obj->parent;
+
     /* Don't add objects with backface */
 
     if ( backf )
@@ -177,11 +177,6 @@ addto_selection( FL_OBJECT * obj )
         fprintf( stderr, "Exceeding selection limits\n" );
         return;
     }
-
-    /* Find the real parent */
-
-    while ( obj->parent )
-        obj = obj->parent;
 
     selobj[ selnumb++ ] = obj;
     cleanup_selection( );
@@ -205,6 +200,9 @@ addgroupto_selection( FL_OBJECT * obj )
 
     for ( ob = obj; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
     {
+        if ( ob->parent )
+            continue;
+
         if ( selnumb >= MAXSEL - 1 )
         {
             fprintf( stderr, "Exceeding selection limits\n" );
@@ -1278,10 +1276,7 @@ lower_selection( void )
                (except the backface object) there's nothing to raise */
 
             if ( first->prev == BackOBJ( ) )
-            {
-                fprintf( stderr, "Ntbd %p\n", first );
                 continue;
-            }
         }
         else
         {
@@ -1410,7 +1405,7 @@ paste_selection(void)
            shift;
     int i;
 
-    if ( ! cur_form || ncut == 0 )
+    if ( ! cur_form || ! ncut )
         return;
 
     is_pasting = 1;     /* horrible hack */
@@ -1422,10 +1417,6 @@ paste_selection(void)
 
     for ( i = 0; i < ncut; i++ )
     {
-        if (    selobj[ i ]->objclass == FL_BEGIN_GROUP
-             || selobj[ i ]->objclass == FL_END_GROUP )
-            continue;
-
         obj = copy_object( cutbuf[ i ], 1 );
 
         /* Fix label:  if underlining caused by cutbuf shortcut, remove it.
@@ -1693,12 +1684,12 @@ flatten_selection( void )
 
     for ( i = 0; i < selnumb; i++ )
     {
-        /* Bothig to be done for selected object that aren't oart of a group */
+        /* Bothig to be done for selected object that aren't part of a group */
 
         if ( selobj[ i ]->objclass != FL_BEGIN_GROUP )
             continue;
 
-        /* Unset teh group ID all the objects that rae part of the group
+        /* Unset the group ID of all the objects that rae part of the group
            (unless. of course, the object for the start and the end of the
            group. that will keep them from getting deleted when the object
            for the start of thegroup is deleted. */

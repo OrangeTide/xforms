@@ -145,6 +145,9 @@ is_valid_c_name( const char * str )
 {
     const char * sp;
 
+    if ( fdopt.lax )
+        return 1;
+
     if (    ! isascii( ( unsigned char ) *str )
          || ! ( isalpha( ( unsigned char ) *str ) || *str == '_' ) )
         return 0;
