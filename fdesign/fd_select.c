@@ -167,10 +167,7 @@ addto_selection( FL_OBJECT * obj )
     /* Don't add objects with backface */
 
     if ( backf )
-    {
-        M_warn( "", "ignoring object with backface" );
-        return;
-    }
+        clear_selection( );
 
     if ( selnumb >= MAXSEL )
     {
@@ -192,11 +189,13 @@ addgroupto_selection( FL_OBJECT * obj )
 {
     FL_OBJECT *ob;
 
-    if ( backf )
-        return;         /* Don't add objects with backface */
-
     if ( obj->objclass != FL_BEGIN_GROUP )
         return;
+
+    /* If the currently selected object is the backface then deselect it */
+
+    if ( backf )
+        clear_selection( );
 
     for ( ob = obj; ob && ob->objclass != FL_END_GROUP; ob = ob->next )
     {

@@ -59,12 +59,12 @@ void
 group_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
           long        arg  FL_UNUSED_ARG )
 {
-    int nn = fl_get_browser( fd_control->groupbrowser );
+    int n = fl_get_browser( fd_control->groupbrowser );
 
-    if ( nn > 0 )
-        addgroupto_selection( begobj[ nn ] );
-    else if ( nn < 0 )
-        deletegroupfrom_selection( begobj[ -nn ] );
+    if ( n > 0 )
+        addgroupto_selection( begobj[ n ] );
+    else if ( n < 0 )
+        deletegroupfrom_selection( begobj[ -n ] );
     redraw_the_form( 0 );
 }
 

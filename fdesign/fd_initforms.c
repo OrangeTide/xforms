@@ -160,8 +160,8 @@ init_controlform( void )
         fl_set_object_lsize( fd_control->groupbrowser, FL_NORMAL_SIZE );
     }
 
-    fl_fit_object_label( fd_control->renameform, 1, 0 );
-    fl_fit_object_label( fd_control->resizeform, 1, 0 );
+//    fl_fit_object_label( fd_control->renameform, 1, 0 );
+//    fl_fit_object_label( fd_control->resizeform, 1, 0 );
     fl_fit_object_label( fd_control->objectmenu, -3, 0 );
 }
 

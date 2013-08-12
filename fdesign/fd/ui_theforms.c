@@ -19,122 +19,105 @@ create_form_control( void )
     fdui->vdata = fdui->cdata = NULL;
     fdui->ldata = 0;
 
-    fdui->control = fl_bgn_form( FL_NO_BOX, 580, 280 );
+    fdui->control = fl_bgn_form( FL_NO_BOX, 475, 296 );
 
-    obj = fl_add_box( FL_FLAT_BOX, 0, 0, 580, 280, "" );
+    obj = fl_add_box( FL_FLAT_BOX, 0, 0, 475, 296, "" );
 
     obj = fl_add_frame( FL_UP_FRAME, 2, 2, 576, 26, "" );
     fl_set_object_color( obj, FL_COL1, FL_COL1 );
 
-    obj = fl_add_box( FL_UP_BOX, 476, 30, 104, 250, "" );
+    obj = fl_add_box( FL_UP_BOX, 370, 35, 100, 225, "" );
 
-    fdui->title = obj = fl_add_text( FL_NORMAL_TEXT, 452, 0, 125, 22, "Form Designer" );
+    fdui->title = obj = fl_add_text( FL_NORMAL_TEXT, 345, 0, 125, 22, "Form Designer" );
     fl_set_object_boxtype( obj, FL_NO_BOX );
     fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_lsize( obj, FL_MEDIUM_SIZE );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
-    fdui->selmsg = obj = fl_add_text( FL_NORMAL_TEXT, 10, 254, 298, 22, "" );
+    fdui->selmsg = obj = fl_add_text( FL_NORMAL_TEXT, 5, 270, 325, 20, "" );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_COL1, FL_COL1 );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
 
-    fdui->oristatus = obj = fl_add_text( FL_NORMAL_TEXT, 315, 254, 75, 22, "" );
+    fdui->oristatus = obj = fl_add_text( FL_NORMAL_TEXT, 335, 270, 65, 20, "" );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_COL1, FL_COL1 );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
-    obj = fl_add_frame( FL_ENGRAVED_FRAME, 10, 70, 460, 181, "" );
+    obj = fl_add_frame( FL_ENGRAVED_FRAME, 5, 70, 360, 190, "" );
 
     fdui->fkey_group = fl_bgn_group( );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 483, 51, 45, 35, "F1\nattribs" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 375, 40, 45, 35, "F1\nattribs" );
     fl_set_object_callback( obj, func_cb, 1 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 528, 51, 46, 35, "F2\nlower" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 420, 40, 46, 35, "F2\nlower" );
     fl_set_object_callback( obj, func_cb, 2 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 483, 86, 45, 35, "F3\nraise" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 375, 75, 45, 35, "F3\nraise" );
     fl_set_object_callback( obj, func_cb, 3 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 528, 86, 46, 35, "F4\nall" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 420, 75, 46, 35, "F4\nall" );
     fl_set_object_callback( obj, func_cb, 4 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 483, 121, 45, 35, "F5\nshow" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 375, 110, 45, 35, "F5\nshow" );
     fl_set_object_callback( obj, func_cb, 5 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 528, 121, 46, 35, "F6\nhide" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 420, 110, 46, 35, "F6\nhide" );
     fl_set_object_callback( obj, func_cb, 6 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 483, 156, 45, 35, "F7\ngroup" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 375, 145, 45, 35, "F7\ngroup" );
     fl_set_object_callback( obj, func_cb, 7 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 528, 156, 46, 35, "F8\nungroup" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 420, 145, 46, 35, "F8\nungroup" );
     fl_set_object_callback( obj, func_cb, 8 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 483, 191, 45, 35, "F9\ncopy" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 375, 180, 45, 35, "F9\ncopy" );
     fl_set_object_callback( obj, func_cb, 9 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 528, 191, 46, 35, "F10\npaste" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 420, 180, 46, 35, "F10\npaste" );
     fl_set_object_callback( obj, func_cb, 10 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 483, 226, 45, 35, "F11\nselect" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 375, 215, 45, 35, "F11\nselect" );
     fl_set_object_callback( obj, func_cb, 11 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 528, 226, 46, 35, "F12\ncut" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 420, 215, 46, 35, "F12\ncut" );
     fl_set_object_callback( obj, func_cb, 12 );
     fl_end_group( );
 
 
-    fdui->formbrowser = obj = fl_add_browser( FL_HOLD_BROWSER, 20, 89, 140, 68, "Forms" );
+    fdui->formbrowser = obj = fl_add_browser( FL_HOLD_BROWSER, 15, 90, 185, 80, "Forms" );
     fl_set_object_lalign( obj, FL_ALIGN_TOP );
     fl_set_object_callback( obj, form_cb, 0 );
 
-    fdui->groupbrowser = obj = fl_add_browser( FL_MULTI_BROWSER, 20, 174, 140, 70, "Groups" );
+    fdui->groupbrowser = obj = fl_add_browser( FL_MULTI_BROWSER, 15, 190, 185, 65, "Groups" );
     fl_set_object_lalign( obj, FL_ALIGN_TOP );
     fl_set_object_callback( obj, group_cb, 0 );
 
-    fdui->sizestatus = obj = fl_add_text( FL_NORMAL_TEXT, 390, 254, 80, 22, "" );
+    fdui->sizestatus = obj = fl_add_text( FL_NORMAL_TEXT, 405, 270, 65, 20, "" );
     fl_set_object_boxtype( obj, FL_DOWN_BOX );
     fl_set_object_color( obj, FL_COL1, FL_COL1 );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
-    obj = fl_add_text( FL_NORMAL_TEXT, 440, 17, 138, 13, "(c) T.C. Zhao & Mark Overmars" );
+    obj = fl_add_text( FL_NORMAL_TEXT, 320, 15, 150, 15, "(c) T.C. Zhao & Mark Overmars" );
     fl_set_object_boxtype( obj, FL_NO_BOX );
     fl_set_object_lsize( obj, FL_TINY_SIZE );
     fl_set_object_lalign( obj, FL_ALIGN_CENTER );
 
-    fdui->objectbrowser = obj = fl_add_browser( FL_HOLD_BROWSER, 170, 89, 135, 155, "Objects" );
+    fdui->objectbrowser = obj = fl_add_browser( FL_HOLD_BROWSER, 210, 90, 145, 165, "Object classes" );
     fl_set_object_lalign( obj, FL_ALIGN_TOP );
     fl_set_object_callback( obj, object_cb, 0 );
 
     fdui->shortcut_group = fl_bgn_group( );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 10, 36, 63, 25, "New Form" );
-    fl_set_button_shortcut( obj, "^N", 1 );
-    fl_set_object_callback( obj, addform_cb, 0 );
-
-    obj = fl_add_button( FL_NORMAL_BUTTON, 74, 36, 73, 25, "Delete Form" );
-    fl_set_button_shortcut( obj, "^D", 1 );
-    fl_set_object_callback( obj, deleteform_cb, 0 );
-
-    fdui->renameform = obj = fl_add_button( FL_NORMAL_BUTTON, 148, 36, 78, 25, "Rename Form" );
-    fl_set_button_shortcut( obj, "^R", 1 );
-    fl_set_object_callback( obj, changename_cb, 0 );
-
-    fdui->resizeform = obj = fl_add_button( FL_NORMAL_BUTTON, 227, 36, 70, 25, "Resize Form" );
-    fl_set_button_shortcut( obj, "^S", 1 );
-    fl_set_object_callback( obj, changesize_cb, 0 );
-
-    obj = fl_add_button( FL_NORMAL_BUTTON, 310, 36, 50, 25, "Align" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 5, 35, 50, 25, "Align" );
     fl_set_button_shortcut( obj, "^A", 1 );
     fl_set_object_callback( obj, align_cb, 0 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 365, 36, 50, 25, "Test" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 65, 35, 50, 25, "Test" );
     fl_set_button_shortcut( obj, "^T", 1 );
     fl_set_object_callback( obj, test_cb, 0 );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 420, 36, 50, 25, "Help" );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 310, 35, 50, 25, "Help" );
     fl_set_button_shortcut( obj, "^H", 1 );
     fl_set_object_callback( obj, help_cb, 0 );
     fl_end_group( );
@@ -142,7 +125,7 @@ create_form_control( void )
 
     fdui->menubar_group = fl_bgn_group( );
 
-    fdui->optionmenu = obj = fl_add_menu( FL_PULLDOWN_MENU, 365, 4, 60, 20, "Options" );
+    fdui->optionmenu = obj = fl_add_menu( FL_PULLDOWN_MENU, 255, 5, 60, 20, "Options" );
     fl_set_object_shortcut( obj, "^P", 1 );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
     fl_set_object_callback( obj, optionmenu_callback, 0 );
@@ -386,7 +369,6 @@ create_form_resize( void )
 
     obj = fl_add_text( FL_NORMAL_TEXT, 35, 10, 170, 20, "Size of current form:" );
     fl_set_object_lsize( obj, FL_NORMAL_SIZE );
-    fl_set_object_lalign( obj, FL_ALIGN_LEFT | FL_ALIGN_INSIDE );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE );
 
     fdui->width = obj = fl_add_spinner( FL_INT_SPINNER, 105, 55, 90, 24, "Width: " );

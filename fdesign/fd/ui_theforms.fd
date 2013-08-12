@@ -10,14 +10,14 @@ SnapGrid: 5
 
 =============== FORM ===============
 Name: control
-Width: 580
-Height: 280
-Number of Objects: 42
+Width: 475
+Height: 296
+Number of Objects: 38
 
 --------------------
 class: FL_BOX
 type: FL_FLAT_BOX
-box: 0 0 580 280
+box: 0 0 475 296
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -53,7 +53,7 @@ argument:
 --------------------
 class: FL_BOX
 type: FL_UP_BOX
-box: 476 30 104 250
+box: 370 35 100 225
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -71,7 +71,7 @@ argument:
 --------------------
 class: FL_TEXT
 type: FL_NORMAL_TEXT
-box: 452 0 125 22
+box: 345 0 125 22
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_CENTER
@@ -89,7 +89,7 @@ argument:
 --------------------
 class: FL_TEXT
 type: FL_NORMAL_TEXT
-box: 10 254 298 22
+box: 5 270 325 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_LEFT|FL_ALIGN_INSIDE
@@ -107,7 +107,7 @@ argument:
 --------------------
 class: FL_TEXT
 type: FL_NORMAL_TEXT
-box: 315 254 75 22
+box: 335 270 65 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -125,7 +125,7 @@ argument:
 --------------------
 class: FL_FRAME
 type: FL_ENGRAVED_FRAME
-box: 10 70 460 181
+box: 5 70 360 190
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -147,7 +147,7 @@ name: fkey_group
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 483 51 45 35
+box: 375 40 45 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -165,7 +165,7 @@ argument: 1
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 528 51 46 35
+box: 420 40 46 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -183,7 +183,7 @@ argument: 2
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 483 86 45 35
+box: 375 75 45 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -201,7 +201,7 @@ argument: 3
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 528 86 46 35
+box: 420 75 46 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -219,7 +219,7 @@ argument: 4
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 483 121 45 35
+box: 375 110 45 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -237,7 +237,7 @@ argument: 5
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 528 121 46 35
+box: 420 110 46 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -255,7 +255,7 @@ argument: 6
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 483 156 45 35
+box: 375 145 45 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -273,7 +273,7 @@ argument: 7
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 528 156 46 35
+box: 420 145 46 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -291,7 +291,7 @@ argument: 8
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 483 191 45 35
+box: 375 180 45 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -309,7 +309,7 @@ argument: 9
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 528 191 46 35
+box: 420 180 46 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -327,7 +327,7 @@ argument: 10
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 483 226 45 35
+box: 375 215 45 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -345,7 +345,7 @@ argument: 11
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 528 226 46 35
+box: 420 215 46 35
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -366,7 +366,7 @@ class: FL_END_GROUP
 --------------------
 class: FL_BROWSER
 type: FL_HOLD_BROWSER
-box: 20 89 140 68
+box: 15 90 185 80
 boxtype: FL_DOWN_BOX
 colors: FL_WHITE FL_YELLOW
 alignment: FL_ALIGN_TOP
@@ -384,7 +384,7 @@ argument: 0
 --------------------
 class: FL_BROWSER
 type: FL_MULTI_BROWSER
-box: 20 174 140 70
+box: 15 190 185 65
 boxtype: FL_DOWN_BOX
 colors: FL_WHITE FL_YELLOW
 alignment: FL_ALIGN_TOP
@@ -402,7 +402,7 @@ argument: 0
 --------------------
 class: FL_TEXT
 type: FL_NORMAL_TEXT
-box: 390 254 80 22
+box: 405 270 65 20
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -420,7 +420,7 @@ argument:
 --------------------
 class: FL_TEXT
 type: FL_NORMAL_TEXT
-box: 440 17 138 13
+box: 320 15 150 15
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_CENTER
@@ -438,14 +438,14 @@ argument:
 --------------------
 class: FL_BROWSER
 type: FL_HOLD_BROWSER
-box: 170 89 135 155
+box: 210 90 145 165
 boxtype: FL_DOWN_BOX
 colors: FL_WHITE FL_YELLOW
 alignment: FL_ALIGN_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
-label: Objects
+label: Object classes
 shortcut: 
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
@@ -460,79 +460,7 @@ name: shortcut_group
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 10 36 63 25
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: New Form
-shortcut: ^N
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: addform_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: FL_NORMAL_BUTTON
-box: 74 36 73 25
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: Delete Form
-shortcut: ^D
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: 
-callback: deleteform_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: FL_NORMAL_BUTTON
-box: 148 36 78 25
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: Rename Form
-shortcut: ^R
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: renameform
-callback: changename_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: FL_NORMAL_BUTTON
-box: 227 36 70 25
-boxtype: FL_UP_BOX
-colors: FL_COL1 FL_COL1
-alignment: FL_ALIGN_CENTER
-style: FL_NORMAL_STYLE
-size: FL_DEFAULT_SIZE
-lcol: FL_BLACK
-label: Resize Form
-shortcut: ^S
-resize: FL_RESIZE_ALL
-gravity: FL_NoGravity FL_NoGravity
-name: resizeform
-callback: changesize_cb
-argument: 0
-
---------------------
-class: FL_BUTTON
-type: FL_NORMAL_BUTTON
-box: 310 36 50 25
+box: 5 35 50 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -550,7 +478,7 @@ argument: 0
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 365 36 50 25
+box: 65 35 50 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -568,7 +496,7 @@ argument: 0
 --------------------
 class: FL_BUTTON
 type: FL_NORMAL_BUTTON
-box: 420 36 50 25
+box: 310 35 50 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
 alignment: FL_ALIGN_CENTER
@@ -593,7 +521,7 @@ name: menubar_group
 --------------------
 class: FL_MENU
 type: FL_PULLDOWN_MENU
-box: 365 4 60 20
+box: 255 5 60 20
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_MCOL
 alignment: FL_ALIGN_CENTER

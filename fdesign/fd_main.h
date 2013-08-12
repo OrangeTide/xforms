@@ -891,6 +891,19 @@ extern const char * get_how_return_name( unsigned int,
 
 extern void reset_object_list( void );
 
+
+extern void addform_cb( FL_OBJECT *,
+                        long );
+
+extern void deleteform_cb( FL_OBJECT *,
+                           long );
+
+extern void changename_cb( FL_OBJECT *,
+                           long );
+
+extern void changesize_cb( FL_OBJECT *,
+                           long );
+
 #endif /* FD_MAIN_H */
 
 

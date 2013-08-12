@@ -445,7 +445,7 @@ show_geometry( FL_Coord     x,
 
     if ( x != lx || y != ly )
     {
-        sprintf( buf, "(%d %d)", x, y );
+        sprintf( buf, "%dx%d", x, y );
         fl_set_object_label( fd_control->oristatus, buf );
         lx = x;
         ly = y;
@@ -453,7 +453,7 @@ show_geometry( FL_Coord     x,
 
     if ( w != lw || h != lh )
     {
-        sprintf( buf, "(%d %d)", w, h );
+        sprintf( buf, "%dx%d", w, h );
         fl_set_object_label( fd_control->sizestatus, buf );
         lw = w;
         lh = h;
