@@ -4,9 +4,8 @@
 @strong{Please note: This chapter is probably completely outdated!}
 
 This chapter discusses the language filter support in Form Designer,
-targeted primarily to the developers of other language bindings to
-Forms Library. As of this writing, the authors are aware of the
-following bindings
+targeted primarily to the developers of bindings to other language. As
+of this writing, the authors are aware of the following bindings
 @table @code
 @item ada95
 by G.@: Vincent Castellano @email{gvc@@ocsystems.com}

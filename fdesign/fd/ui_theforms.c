@@ -332,8 +332,8 @@ create_form_helpform( void )
     fl_set_button_shortcut( obj, "Ss^S", 1 );
     fl_set_object_callback( obj, showhelp_cb, HELP_SAVE );
 
-    obj = fl_add_button( FL_NORMAL_BUTTON, 471, 286, 50, 26, "Hide" );
-    fl_set_button_shortcut( obj, "Hh^H", 1 );
+    obj = fl_add_button( FL_NORMAL_BUTTON, 471, 286, 50, 26, "Close" );
+    fl_set_button_shortcut( obj, "Cc^C", 1 );
     fl_set_object_callback( obj, exithelp_cb, 0 );
 
     fl_end_form( );

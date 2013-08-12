@@ -462,12 +462,10 @@ handle_move( const XEvent * xev )
            oy,
            ow,
            oh;
-    FL_Coord xx,
-             yy;
     int i,
         s;
 
-    if ( cur_form == NULL )
+    if ( cur_form == NULL || backf )
         return;
 
     fl_winset( main_window );
@@ -483,32 +481,7 @@ handle_move( const XEvent * xev )
     hidden = FL_TRUE;
     redraw_the_form( 0 );
 
-    if ( backf )
-    {
-        if ( mx >= x + w - HS && my >= y + h - HS )
-        {
-            fl_get_winsize( main_window, &xx, &yy );
-            set_bounding_box( 0.0, 0.0, xx, yy );
-            scale_box( &x, &y, &w, &h );
-            cur_form->w_hr = cur_form->w = w;
-            cur_form->h_hr = cur_form->h = h;
-
-            selobj[ 0 ]->fl1 = selobj[ 0 ]->w = w;
-            selobj[ 0 ]->fl2 = selobj[ 0 ]->fl1 + w;
-            selobj[ 0 ]->fr1 = cur_form->w_hr - selobj[ 0 ]->fl1;
-            selobj[ 0 ]->fr2 = cur_form->w_hr - selobj[ 0 ]->fl2;
-            selobj[ 0 ]->ft1 = selobj[ 0 ]->h = h;
-            selobj[ 0 ]->ft2 = selobj[ 0 ]->ft1 + h;
-            selobj[ 0 ]->fb1 = cur_form->h_hr - selobj[ 0 ]->ft1;
-            selobj[ 0 ]->fb2 = cur_form->h_hr - selobj[ 0 ]->ft2;
-
-            set_bounding_box( 0.0, 0.0, cur_form->w, cur_form->h );
-            fl_winresize( main_window, cur_form->w, cur_form->h );
-
-            fli_notify_object( selobj[ 0 ], FL_RESIZED );
-        }
-    }
-    else if ( s )
+    if ( s )
     {
         copy_selection( );
         paste_selection( );
@@ -769,7 +742,7 @@ handle_select( const XEvent * xev )
            h;
     double stepsize;
 
-    if ( cur_form == NULL || ! ( mouseobj = find_mouseobj( ) ) )
+    if ( ! ( mouseobj = find_mouseobj( ) ) )
         return;
 
     if ( ( s = ShiftIsDown( xev->xbutton.state ) ) )      /* Shift Push */
@@ -1584,10 +1557,11 @@ next_selection( void )
             selobj[ 0 ] = BackOBJ( )->next ? BackOBJ( )->next : BackOBJ( );
         else if ( selnumb && selobj[ 0 ]->next )
             selobj[ 0 ] = selobj[ 0 ]->next;
+        selnumb = 1;
+    } while (    selobj[ 0 ]->parent
+              || selobj[ 0 ]->objclass == FL_BEGIN_GROUP
+              || selobj[ 0 ]->objclass == FL_END_GROUP );
 
-    } while ( selobj[ 0 ]->parent );
-
-    selnumb = 1;
     redraw_the_form( 0 );
 }
 

@@ -1,21 +1,21 @@
 @node Part II Saving and Loading Forms
 @chapter Saving and Loading Forms
 
- To save the set of forms created select the item "Save" or "Save As"
+To save the set of forms created select the item "Save" or "Save As"
 from the "File" menu. You will be prompted for a file name using the
 file selector if the latter is selected. Choose a name that ends with
 @code{.fd}, e.g. @file{ttt.fd}.
 
 The program will now generate three files: @file{ttt.c}, @file{ttt.h}
 and @file{ttt.fd}. If these files already exist, backup copies of
-these are made (by appending @code{.bak} to the already existing file
+them are made (by appending @code{.bak} to the already existing file
 names). @file{ttt.c} contains a piece of C-code that builds up the
 forms and @file{ttt.h} contains all the object and form names as
 indicated by the user. It also contains declaration of the defined
 callback routines.
 
 Depending on the options selected from the "Options" menu, two more
-files may be emitted. Namely the main program and callback function
+files may be emitted, namely the main program and callback function
 templates. They are named @file{ttt_main.c} and @file{ttt_cb.c}
 respectively.
 
@@ -128,20 +128,19 @@ int main(int argc, char *argv[]) @{
 As you see, @code{fdesign} generates a structure that groups together
 all objects on a particular form and the form itself into a structure
 for easy maintenance and access. The other benefit of doing this is
-that the application program can create more than one instances of the
+that the application program can create more than one instance of the
 form if needed.
 
 It is difficult to avoid globals in an event-driven callback scheme
-with the most difficulties occurring inside the callback function
-where another object on the same form may need to be accessed. The
-current setup makes this possible and relatively painless to achieve
-this.
+with most difficulties occurring inside the callback function where
+another object on the same form may need to be accessed. The current
+setup makes it possible and relatively painless to achieve this.
 
 There are a couple of ways to do this. The easiest and most robust way
-is to use the member @code{form->fdui}, which fdesign set up to point
-to the @code{FD_} structure in which the form is a member. To
-illustrate how this is done, let's take the above two forms and try to
-access a different object from within a callback function.
+is to use the member @code{form->fdui}, which fdesign sets up to point
+to the @code{FD_} structure of which the form (pointer) is a member.
+To illustrate how this is done, let's take the above two forms and try
+to access a different object from within a callback function.
 @example
 fd_foo = create_form_foo();
 ...
@@ -169,9 +168,9 @@ fd_foo->vdata = fd_bar;
 @end example
 
 The other method, not as easy as using @code{form->fdui} (because you
-get no help from fdesign), but just as workable, is simply use the
-@code{u_vdata} field in the @code{FD_} structure to hold the ID of the
-object that needs to be accessed. In case of the need to access
+get no help from fdesign), but just as workable, is simply using the
+@code{u_vdata} field in the @code{FD_} structure to hold the address
+of the object that needs to be accessed. In case of need to access
 multiple objects, there is a field @code{u_vdata} in both the
 @code{FL_FORM} and @code{FL_OBJECT} structures you can use. You simply
 use the field to hold the @code{FD_} structure:
@@ -203,11 +202,11 @@ typedef struct @{
 @} FD_Any;
 @end example
 @noindent
-you can use to cast a specific @code{FD_} structure get at @code{vdata}
-etc. Another alternative is to use the @code{FD_} structure as the
-user data in the callback@footnote{Unfortunately, this scheme isn't
-legal C as a pointer may be longer than a long, but in practice, it
-should work out ok on virtually all platforms.}
+you can use a cast to a specific @code{FD_} structure to get at
+@code{vdata} etc. Another alternative is to use the @code{FD_}
+structure as the user data in the callback@footnote{Unfortunately,
+this scheme isn't legal C as a pointer may be longer than a long, but
+in practice, it should work out ok on virtually all platforms.}
 @example
 fl_set_object_callback(obj, callback, (long) fdui);
 @end example
@@ -222,18 +221,17 @@ void callback(FL_OBJECT *obj, long arg) @{
 @end example
 
 Avoiding globals is, in general, a good idea, but as everything else,
-also an excess of a good things can be bad. Sometimes, simply making
+also an excess of a good things can be bad. Sometimes simply making
 the @code{FD_} structure global makes a program clearer and more
 maintainable.
 
 There still is another difficulty that might arise with the current
 setup. For example, in @code{f1obj1}'s callback we change the state of
-some other objects , say, @code{f1obj2} via
-@code{@ref{fl_set_button()}} or @code{@ref{fl_set_input()}}. Now the
-state of @code{f1obj2} is changed and it needs to be handled. You
-probably don't want to put much code for handling @code{f1obj2} in
-@code{f1obj1}'s callback. In this situation, the following function
-comes in handy
+some other object, say, @code{f1obj2} via @code{@ref{fl_set_button()}}
+or @code{@ref{fl_set_input()}}. Now the state of @code{f1obj2} is
+changed and it needs to be handled. You probably don't want to put
+much code for handling @code{f1obj2} in @code{f1obj1}'s callback. In
+this situation, the following function is handy
 @example
 void fl_call_object_callback(FL_OBJECT *obj);
 @end example

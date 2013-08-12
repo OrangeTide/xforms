@@ -62,7 +62,16 @@ group_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     int n = fl_get_browser( fd_control->groupbrowser );
 
     if ( n > 0 )
+    {
+        /* In order to stay consistent with the rest of the interface
+           (where adding to the selection requires the <Shift> button
+           to be kept pressed down) we clear the selection of the
+           <Shift> button isn't pressed */
+
+        if ( ! fl_last_event( )->xmotion.state & ShiftMask )
+            clear_selection( );
         addgroupto_selection( begobj[ n ] );
+    }
     else if ( n < 0 )
         deletegroupfrom_selection( begobj[ -n ] );
     redraw_the_form( 0 );

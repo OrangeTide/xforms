@@ -96,7 +96,7 @@ set_bounding_box( double x,
 
 
 /***************************************
- * Rounds the box size to the stepsize and inside the bounding box
+ * Rounds the box size to the step size and inside the bounding box
  ***************************************/
 
 static void

@@ -18,80 +18,80 @@ The control panel consists of five parts. The first part is the menu
 bar, consisting of several groups of menus from which you can make
 selections or give commands to the program. 
 
-Directly below the menu you have a row of buttons for manipulating
-forms and to invoke few other functions described below.
+Directly below the menu you have a row of buttons for alignment,
+testing and getting help, see below.
 
-At the left there is a list of all existing forms. At the
-start the list is empty, indicating that there are no forms yet.
-There's no upper limit to the number of forms you that can be
-created. You can work on exactly one form at a time and use this
-list to switch between the different forms. Below the forms list
-is another list of all groups in the form you're currently working
-on. It will be empty at first because there are no groups yet.
-Ignore this at the moment as we will come back to groups and their
-uses later.
+Then there's a panel with three browsers. At the left there is a list
+of all existing forms. When the program is started without an already
+existing file as an argument the list is empty, indicating that there
+are no forms yet. There's no upper limit to the number of forms that
+can be created but you can only work on exactly one form at a time.
+Use this list to switch between the different forms. Below the forms
+list is another list showing all groups in the form you're currently
+working on. It will be empty for a new form because there are no
+groups yet. Ignore this at the moment as we will come back to groups
+and their uses later.
 
 Just right of those two lists you find a list of all the different
-types of objects that can be placed into the form. Use the
-mouse to select the type of object you want to add to the form.
+classes of objects that can be placed into the form. Use the mouse to
+select the class of a new object you want to add to the form.
 
-On the right side you find a number of buttons to give commands to the
-program. Each of these buttons is bound to a function key. You can
-either press the buttons with the mouse or press the corresponding
-function keys on the keyboard. The functions of these keys will be
-described below.
+On the right side beside the panel with the browsers you find a number
+of buttons to give commands to the program. Each of these buttons is
+bound to a function key. You can either press the buttons with the
+mouse or press the corresponding function keys on the keyboard (while
+the keyboard focus is on the window with the form). The functions of
+these keys will be described below.
 
-To create a new form click on the button labeled "New Form" in the
-top-left corner of the control panel, just below the menu bar. A
+To create a new form select the "New Form" entry in the "Form" menu. A
 little popup box will appear, prompting you for the name of the new
-form. This is the name under which the application program will know
-the form. You will have to provide a name (which must be a legal C
-variable name). Type in the name and press @code{<Return>}. Now the
-color of the other window for working on forms changes to that of the
-background color of the new form. (Actually, each new form gets
-created with a box already covering its entire area, what you see is
-the color of this box. You can change most properties of this box
-using the methods described below. Just its size is fixed to the size
-of the form, which can be simply changed by resizing the window.) Note
-that the form's name is added to the list of forms in the control
-panel.
+form. This is the name under which the program you're going to write
+will know the form. Thus you will have to provide a name which must be
+a legal C variable name. Type in the name and press @code{<Ok>}. Now
+the color of the window for showing the form you're working on changes
+to that of the default background color of forms. (Actually, each new
+form gets created with a box already covering its entire area, what
+you see is the color of this box. You can change most properties of
+this box using the methods described below. Just its size is fixed to
+the size of the form, which can be simply changed by resizing the
+window.) Note that the form's name is added to the list of forms in
+the control panel.
 
-To add an object to the form choose the type of object in the control
-panel by clicking in the list of object classes. Next move the mouse
-into the form you are creating and drag the mouse while pressing the
-left mouse button. By keeping the mouse button pressed you create a
-box that has the desired size of the object. Release the button and
-the object will appear. Note that a red outline appears around the new
-object. This indicates that the object is selected. In this way you
-can put all kinds of objects on the form.
+To add an object to the form choose the class of the new object in the
+control panel by clicking in the list of object classes. Next move the
+mouse into the window with the form you are creating and drag the
+mouse while pressing the left mouse button. By keeping the mouse
+button pressed you create a box that has the desired size of the
+object. Release the button and the object will appear. Note that a red
+outline appears around the new object. This indicates that the object
+is selected. In this way you can put all kinds of objects on the form.
 
 It is possible to move objects around or change their sizes. To this
-end first select the object by pressing the mouse in it. A red outline
-will appear around the object. You now will be able to drag the object
+end first select the object by left-clicking on it. A red outline will
+appear around the object. You now will be able to drag the object
 around with the mouse. By grabbing the object at one of the four red
-corners you can change its size. In this way you can change the layout
-of the objects on the form. It is also possible to select multiple
-objects and move or scale them simultaneously. See below for details.
+corners you can change its size. It is also possible to select
+multiple objects and move or scale them simultaneously. See below for
+details.
 
-To change the object's attributes, e.g. the label, of an object, first
-single-click on the object to select it. Next press the function key
-@code{<F1>} or click on the button labeled "F1 attribs'' in the
-control panel or select "Object attributes" from the "Object" menu.
-The same effect can also be achieved by double-clicking on the object
-with the right mouse button. A new form appears in which you can
-change all the different attributes. Their meanings should be clear
-(if you have read the documentation on the Forms Library). Change the
-attributes you want to change and finally press the button labeled
-"Accept". To reset all attributes to their original values press
-"Restore" (or "Cancel" if you also want to close the window for
-modifying the attributes). See below for more information about
-changing attributes.
+To change the object's attributes, e.g. its label, first single-click
+on the object to select it. Next press the function key @code{<F1>}.
+Or click on the button labeled "F1 attribs" in the control panel or
+select "Object attributes" from the "Object" menu. Or, even simpler
+double-click on the object with the left mouse button. A new form
+appears in which you can change all the different attributes. Their
+meanings should be clear (if you have read the documentation on the
+Forms Library). Change the attributes you want to change and finally
+press the button labeled "Accept". To reset all attributes to their
+original values press "Restore" (or "Cancel" if you also want to close
+the window for modifying the attributes). See below for more
+information about changing attributes.
 
 In this way you can create the forms you want to have. Note that you
-can work on different forms at the same moment. Just add another form
-in the way described above and use the list of forms to switch between
-them. After you have created all your forms select "Save" from the
-"File" menu to save them to disk. It will ask you for a file name
+can have more than one form. Just add another form in the way
+described above and use the list of forms to switch between them.
+After you have created all your forms select "Save" or "Save As"from
+the "File" menu to save them to disk. It will ask you for a file name
 using the file selector. In this file selector you can walk through
 the directory tree to locate the place where you want to save the
 file. Next, you can type in the name of the file (or point to it when

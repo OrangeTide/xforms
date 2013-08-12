@@ -7,11 +7,6 @@ printed hardcopies or something appropriate for inclusion in your
 program document. Most of these involves saving a snapshot of your
 interface on the screen into a file. Then this file is translated into
 something that a printer can understand, such as @code{PostScript}.
-While this approach works, the resulting file is typically huge.
-Further, by taking a snapshot of the screen, the resolution of the
-output is limited by the screen resolution, which typically is much
-lower than the printer resolution. This is especially evident for
-text.
 
 Another approach is to design the printing capabilities into the
 objects themselves so the GUI is somewhat output device independent in

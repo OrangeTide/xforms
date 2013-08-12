@@ -66,8 +66,14 @@ void
 help_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
          long        arg  FL_UNUSED_ARG )
 {
+    static int has_pos = 0;
+
     fl_show_form( fd_help->helpform,
-                  FL_PLACE_GEOMETRY, FL_FULLBORDER, "fdesign help" );
+                  has_pos ? FL_PLACE_GEOMETRY : FL_PLACE_CENTER,
+                  FL_FULLBORDER, "fdesign help" );
+
+    if ( ! has_pos )
+        has_pos = 1;
 }
 
 
@@ -134,14 +140,15 @@ showhelp_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 
 
 #define S( a )  #a
-#define LIBVERSION( a, b ) " (LibraryVersion " S( a ) "." S( b ) ")"
+#define LIBVERSION( a, b ) S( a ) "." S( b )
+ 
 
 char mainhelp[ ][ 80 ] =
 {
     "  ",
     "@C4@M@b@cForm Designer",
     "  ",
-    "@C4@b@c$Revision: 1.14 $" LIBVERSION(FL_VERSION, FL_REVISION),
+    "@C4@b@cVersion: " LIBVERSION( FL_VERSION, FL_REVISION ) "." FL_FIXLEVEL,
     "@C4@b@cWritten by T.C. Zhao & Mark Overmars",
     "@-",
     " ",
