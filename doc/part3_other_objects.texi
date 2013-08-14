@@ -441,8 +441,24 @@ Note that the actual scaling routine may choose a value other than
 that requested if it decides that this would make the plot look nicer,
 thus @code{major} and @code{minor} are only taken as a hint to the
 scaling routine. However, in almost all cases the scaling routine will
-not generate a major that differs from the requested value by more
+not generate a major tic that differs from the requested value by more
 than 3.
+
+Normally the minor tics of logarithmic scales are drawn equidistant.
+To have them also drawn logarithmically use the functions
+@findex fl_set_xyplot_log_minor_xtics()
+@anchor{fl_set_xyplot_log_minor_xtics()}
+@findex fl_set_xyplot_log_minor_ytics()
+@anchor{fl_set_xyplot_log_minor_ytics()}
+@example
+int fl_set_xyplot_log_minor_xtics(FL_OBJECT *obj, int yesno);
+int fl_set_xyplot_log_minor_ytics(FL_OBJECT *obj, int yesno);
+@end example
+@noindent
+With this enabled e.g.@: the minor tics between 1 and 10 (when the
+interval is to be divided into 5 subintervals) will be drawn at the
+positions 2, 4, 6, and 8 instead of at 10^0.2, 10^0.4, 10^0.6 and
+10^0.8. The functions return the previous setting.
 
 It is possible to label the major tic marks with alphanumerical
 characters instead of numerical values. To this end, use the following
@@ -461,10 +477,15 @@ void fl_set_xyplot_alphaytics(FL_OBJECT *obj, const char *major,
 where @code{major} is a string specifying the labels with the embedded
 character @code{|} that specifies major divisions. For example, to
 label a plot with Monday, Tuesday etc, @code{major} should be given as
-@code{Monday|Tuesday|...}. Parameter @code{minor} is currently unused
-and the minor divisions are set to 1, i.e, no divisions between major
-tic marks. Naturally the number of major/minor divisions set by this
-routine and @code{@ref{fl_set_xyplot_xtics()}} and
+@code{Monday|Tuesday|...}. For each of these ticks also its position
+can be specified by appending a @code{@@} to the label, followed by an
+integer or floating point number, i.e.@:
+@code{Monday@@1|Thursday@@2|...}.
+
+Parameter @code{minor} is currently unused and the minor divisions are
+set to 1, i.e, no divisions between major tic marks. Naturally the
+number of major/minor divisions set by this routine and
+@code{@ref{fl_set_xyplot_xtics()}} and
 @code{@ref{fl_set_xyplot_ytics()}} can't be active at the same time
 and the one that gets used is the one that was set last.
 
@@ -853,8 +874,8 @@ void fl_set_xyplot_yscale(FL_OBJECT *obj, int scale, double base);
 where the valid scaling options for scale are
 @tindex FL_LINEAR
 @tindex FL_LOG
-@code{FL_LINEAR} and @code{FL_LOG}, and @code{base} is used only for
-@code{FL_LOG} and in that case it is the base of the logarithm to be
+q@code{FL_LINEAR} and @code{FL_LOG}, and @code{base} is used only for
+@code{FL_LOG} and in that case is the base of the logarithm to be
 used.
 
 Use the following routine to clear an xyplot

@@ -342,7 +342,7 @@ save_menu_attrib( FILE      * fp,
               *sp;
     int i;
 
-    /* create a default object */
+    /* Create a default object */
 
     defobj = fl_create_menu( ob->type, 0, 0, 0, 0, "" );
 
@@ -357,18 +357,19 @@ save_menu_attrib( FILE      * fp,
 
     for ( i = 1; i <= sp->nlines; i++ )
     {
-        fprintf( fp, "    content: %s\n", sp->content[i]);
+        if ( sp->content && sp->content[ i ] )
+            fprintf( fp, "    content: %s\n", sp->content[ i ] );
 
-        if ( sp->mval[ i ] != i )
+        if ( sp->mval && sp->mval[ i ] != i )
             fprintf( fp, "    id: %d\n", sp->mval[ i ] );
 
-        if ( sp->mode[ i ] != defsp->mode[ i ] )
+        if ( sp->mode && sp->mode[ i ] != defsp->mode[ i ] )
             fprintf( fp, "    mode: %s\n", get_pupmode_name(sp->mode[ i ] ) );
 
-        if ( sp->shortcut[ i ] && *sp->shortcut[ i ] )
+        if ( sp->shortcut && sp->shortcut[ i ] && *sp->shortcut[ i ] )
             fprintf( fp, "    shortcut: %s\n", sp->shortcut[ i ] );
 
-        if ( sp->callback[ i ] ) 
+        if ( sp->callback && sp->callback[ i ] ) 
             fprintf( fp, "    callback: %s\n", sp->callback[ i ] );
     }
 }

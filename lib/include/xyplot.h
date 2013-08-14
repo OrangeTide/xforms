@@ -348,4 +348,11 @@ FL_EXPORT void fl_get_xyplot_world_area( FL_OBJECT * obj,
 										 float     * urx,
 										 float     * ury );
 
+FL_EXPORT int fl_set_xyplot_log_minor_ytics( FL_OBJECT * obj,
+											 int         yesno );
+
+FL_EXPORT int fl_set_xyplot_log_minor_ytics( FL_OBJECT * obj,
+											 int         yesno );
+
+
 #endif  /* ! defined FL_XYPLOT_H */

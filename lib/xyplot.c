@@ -124,13 +124,10 @@ free_overlay_data( FLI_XYPLOT_SPEC * sp,
 static void
 free_atic( char ** atic )
 {
-    size_t cnt = 0;
+    size_t cnt;
 
-    for ( ; *atic; atic++, cnt++ )
+    for ( cnt = 0; cnt < MAX_MAJOR && *atic; atic++, cnt++ )
         fli_safe_free( *atic );
-
-    while ( ++cnt < MAX_ALABEL - 1 )
-        *++atic = NULL;
 }
 
 
@@ -508,8 +505,8 @@ draw_curve_only( FL_OBJECT * ob )
              && n2 - n1 > 3
              && ( newn = fli_xyplot_interpolate( ob, nplot, n1, n2 ) ) >= 0 )
         {
-            x = sp->wx;
-            y = sp->wy;
+            x  = sp->wx;
+            y  = sp->wy;
             xp = sp->xpi;
 
             mapw2s( ob, xp, 0, newn, x, y );
@@ -708,14 +705,12 @@ gen_xtic( FL_OBJECT * ob )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
     float tic = sp->xtic;
+    double x;
     float xmin,
-          xmax = sp->xmax, xw;
+          xmax = sp->xmax;
     float mxmin,
-          mxmax,
-          val;
-    int i,
-        j;
-    char *p;
+          mxmax;
+    int i;
 
     if ( tic < 0 )
         return;
@@ -733,74 +728,130 @@ gen_xtic( FL_OBJECT * ob )
 
     /* Handle ticlable@location stuff */
 
-    if ( *sp->axtic && strchr( *sp->axtic, '@' ) )
+    if ( *sp->axtic )
     {
-        for ( i = j = 0; i < sp->xmajor; i++ )
+        char *p;
+        char *eptr;
+        int j = 0;
+
+        for ( i = 0; i < sp->xmajor; i++ )
         {
             if ( ( p = strchr( sp->axtic[ i ], '@' ) ) )
-                val = atof( p + 1 );
-            else
-                val = mxmin + ( i * tic * sp->xminor );
+                x = strtod( p + 1, &eptr );
+                
+            if ( ! p || eptr == p + 1 )
+                x = mxmin + ( i * tic * sp->xminor );
+            else if ( sp->xscale == FL_LOG )
+                x = log( x ) / sp->lxbase;
 
-            if ( val >= xmin && val <= xmax )
+            if ( x >= xmin && x <= xmax )
             {
-                sp->xtic_major[ i ] = FL_crnd( sp->ax * val + sp->bx );
-                sp->xmajor_val[ i ] = val;
+                sp->xtic_major[ i ] = FL_crnd( sp->ax * x + sp->bx );
+                sp->xmajor_val[ i ] = x;
                 j++;
             }
-
-            sp->num_xmajor = j;
-            sp->num_xminor = 1;
         }
 
+        sp->num_xmajor = j;
+        sp->num_xminor = 1;
         return;
     }
 
     if ( sp->xscale != FL_LOG )
     {
-        /* Other minor tics */
+        /* Minor tics */
 
-        for ( i = 0, xw = mxmin; xw <= mxmax; xw += tic )
-            if ( xw >= xmin && xw <= xmax )
-                sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * xw + sp->bx );
+        for ( i = 0, x = mxmin; i < MAX_TIC && x <= mxmax; x += tic )
+            if ( x >= xmin && x <= xmax )
+                sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * x + sp->bx );
 
         sp->num_xminor = i;
 
-        for ( i = 0, xw = mxmin; xw <= mxmax; xw += tic * sp->xminor )
-            if ( xw >= xmin && xw <= xmax )
+        /* Major tics */
+
+        for ( i = 0, x = mxmin; i < MAX_MAJOR && x <= mxmax;
+              x += tic * sp->xminor )
+            if ( x >= xmin && x <= xmax )
             {
-                sp->xtic_major[ i ] = FL_crnd( sp->ax * xw + sp->bx );
-                sp->xmajor_val[ i++ ] = xw;
+                sp->xtic_major[ i ] = FL_crnd( sp->ax * x + sp->bx );
+                sp->xmajor_val[ i++ ] = x;
             }
 
         sp->num_xmajor = i;
     }
     else
     {
-        double minortic = tic / sp->xminor;
-
-        /* Minor */
-
-        xw = floor( xmin / minortic ) * minortic;
-        while ( xw + 1.0e-5 <= xw )
-            xw += minortic;
-
-        for ( i = 0; xw - 1.0e-5 <= xmax; xw += minortic )
-            sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * xw + sp->bx );
-
-        sp->num_xminor = i;
-
-        xw = floor( xmin / tic ) * tic;
-        while ( xw + 1.0e-5 <= xmin )
-            xw += tic;
-
-        for ( i = 0; xw - 1.0e-5 <= xmax; xw += tic )
+        if ( sp->log_minor_xtics < 0.5)
         {
-            sp->xtic_major[ i ] = FL_crnd( sp->ax * xw + sp->bx );
-            sp->xmajor_val[ i++ ] = xw;
-        }
+            double minortic = tic / sp->xminor;
 
-        sp->num_xmajor = i;
+            /* Minor tics */
+
+            x = floor( xmin / minortic ) * minortic;
+            while ( sp->ax * ( xmin - x ) > 1 )
+                x += minortic;
+
+            for ( i = 0; i < MAX_TIC && sp->ax * ( xmax - x ) >= 0;
+                  x += minortic )
+                sp->xtic_minor[ i++ ] = FL_crnd( sp->ax * x + sp->bx );
+
+            sp->num_xminor = i;
+
+            /* Major tics */
+
+            x = floor( xmin / tic ) * tic;
+            while ( sp->ax * ( xmin - x ) > 1 )
+                x += tic;
+
+            for ( i = 0; i < MAX_MAJOR && sp->ax * ( xmax - x ) >= 0;
+                  x += tic )
+            {
+                sp->xtic_major[ i ] = FL_crnd( sp->ax * x + sp->bx );
+                sp->xmajor_val[ i++ ] = x;
+            }
+
+            sp->num_xmajor = i;
+        }
+        else
+        {
+            int j;
+            int k;
+
+            double xmaj = floor( xmin / tic ) * tic;
+            while ( sp->ax * ( xmin - xmaj ) > 1 )
+                xmaj += tic;
+
+            double xmaj_u = pow( sp->xbase, xmaj );
+            double xmaj_d = pow( sp->xbase, xmaj - tic );
+            double xl = pow( sp->xbase, xmax );
+
+            double step = ( xmaj_u - xmaj_d ) / sp->xminor;
+
+            double z = xmaj_u - step;
+            for ( j = 0; z >= pow( sp->xbase, xmin ); z -= step )
+                sp->xtic_minor[ j++ ] =
+                    FL_crnd( sp->ax * log( z ) / sp->lxbase + sp->bx );
+
+            for ( i = 0; i < MAX_MAJOR && sp->ax * ( xmax - xmaj ) > 1;
+                  xmaj += tic )
+            {
+                sp->xtic_major[ i ] = FL_crnd( sp->ax * xmaj + sp->bx );
+                sp->xmajor_val[ i++ ] = xmaj;
+
+                xmaj_d = pow( sp->xbase, xmaj );
+                xmaj_u = pow( sp->xbase, xmaj + tic );
+                step = ( xmaj_u - xmaj_d ) / sp->xminor;
+
+                for ( k = 1, z = xmaj_d + step; 
+                      j < MAX_TIC && k < sp->xminor && z <= xl;
+                      z += step, k++ )
+                    sp->xtic_minor[ j++ ] =
+                          FL_crnd( sp->ax * log10( z ) / sp->lxbase + sp->bx );
+            }
+
+            sp->num_xmajor = i;
+            sp->num_xminor = j;
+        }
     }
 }
 
@@ -816,12 +867,9 @@ gen_ytic( FL_OBJECT * ob )
           ymax,
           mymin,
           mymax,
-          tic = sp->ytic, val;
-    double yw;
-    int i,
-        n,
-        j;
-    char *p;
+          tic = sp->ytic;
+    double y;
+    int i;
 
     if ( tic < 0 )
         return;
@@ -829,7 +877,7 @@ gen_ytic( FL_OBJECT * ob )
     mymin = ymin = FL_min( sp->yscmin, sp->yscmax );
     mymax = ymax = FL_max( sp->yscmin, sp->yscmax );
 
-    if (    sp->ytic > 0.0      \
+    if (    sp->ytic > 0.0
          && ! *sp->aytic                     \
          && sp->ymajor > 1 )
     {
@@ -839,73 +887,125 @@ gen_ytic( FL_OBJECT * ob )
 
     /* Handle ticlable@location stuff */
 
-    if ( *sp->aytic && strchr( *sp->aytic, '@' ) )
+    if ( *sp->aytic )
     {
-        for ( i = j = 0; i < sp->ymajor; i++ )
+        char *p;
+        char *eptr;
+        int j = 0;
+
+        for ( i = 0; i < sp->ymajor; i++ )
         {
             if ( ( p = strchr( sp->aytic[ i ], '@' ) ) )
-                val = atof( p + 1 );
-            else
-                val = mymin + i * tic * sp->yminor;
+                y = strtod( p + 1, &eptr );
 
-            if ( val >= ymin && val <= ymax )
+            if ( ! p || eptr != p + 1 )
+                y = mymin + i * tic * sp->yminor;
+            else if ( sp->yscale == FL_LOG )
+                y = log( y ) / sp->lybase;
+
+            if ( y >= ymin && y <= ymax )
             {
-                sp->ytic_major[ i ] = FL_crnd( sp->ay * val + sp->by );
-                sp->ymajor_val[ i ] = val;
+                sp->ytic_major[ i ] = FL_crnd( sp->ay * y + sp->by );
+                sp->ymajor_val[ i ] = y;
                 j++;
             }
-            sp->num_ymajor = j;
-            sp->num_yminor = 1;
         }
 
+        sp->num_ymajor = j;
+        sp->num_yminor = 1;
         return;
     }
 
     if ( sp->yscale != FL_LOG )
     {
-        for ( i = 0, yw = mymin; yw <= mymax; yw += tic )
-            if ( yw >= ymin && yw <= ymax )
-                sp->ytic_minor[i++] = FL_crnd( sp->ay * yw + sp->by );
+        for ( i = 0, y = mymin; i < MAX_MAJOR && y <= mymax; y += tic )
+            if ( y >= ymin && y <= ymax )
+                sp->ytic_minor[i++] = FL_crnd( sp->ay * y + sp->by );
 
         sp->num_yminor = i;
 
-        for ( n = i = 0, yw = mymin; yw <= mymax; n++ )
+        for ( i = 0, y = mymin; i < MAX_MINOR && y <= mymax;
+              y += tic * sp->yminor )
         {
-            if ( yw >= ymin && yw <= ymax )
+            if ( y >= ymin && y <= ymax )
             {
-                sp->ytic_major[ i ] = FL_crnd( sp->ay * yw + sp->by );
-                sp->ymajor_val[ i++ ] = yw;
+                sp->ytic_major[ i ] = FL_crnd( sp->ay * y + sp->by );
+                sp->ymajor_val[ i++ ] = y;
             }
-
-            yw = mymin + ( n + 1 ) * tic * sp->yminor;
         }
 
         sp->num_ymajor = i;
     }
     else
     {
-        double minortic = sp->ytic / sp->yminor;
-
-        yw = floor( ymin / minortic ) * minortic;
-        while ( yw + 1.0e-5 < ymin )
-            yw += minortic;
-
-        for ( i = 0; yw - 1.0e-5 <= ymax; yw += minortic )
-            sp->ytic_minor[ i++ ] = FL_crnd( sp->ay * yw + sp->by );
-
-        sp->num_yminor = i;
-
-        yw = floor( ymin / tic ) * tic;
-        while ( yw + 1.0e-5 < ymin )
-            yw += tic;
-
-        for ( i = 0; yw - 1.0e-5 <= ymax; yw += tic )
+        if ( sp->log_minor_ytics < 0.5)
         {
-            sp->ytic_major[ i ] = FL_crnd( sp->ay * yw + sp->by );
-            sp->ymajor_val[ i++ ] = yw;
-        }
+            double minortic = sp->ytic / sp->yminor;
 
-        sp->num_ymajor = i;
+            /* Note that sp->ay is always negative! */
+
+            y = floor( ymin / minortic ) * minortic;
+            while ( sp->ay * ( ymin - y ) < 1 )
+                y += minortic;
+
+            for ( i = 0; i < MAX_TIC && sp->ay * ( ymax - y ) <= 0;
+                  y += minortic )
+                sp->ytic_minor[ i++ ] = FL_crnd( sp->ay * y + sp->by );
+
+            sp->num_yminor = i;
+
+            y = floor( ymin / tic ) * tic;
+            while ( y + 1.0e-5 < ymin )
+                y += tic;
+
+            for ( i = 0; i < MAX_MAJOR && sp->ay * ( ymax - y ) <= 0; y += tic )
+            {
+                sp->ytic_major[ i ] = FL_crnd( sp->ay * y + sp->by );
+                sp->ymajor_val[ i++ ] = y;
+            }
+
+            sp->num_ymajor = i;
+        }
+        else
+        {
+            int j;
+            int k;
+
+            double ymaj = floor( ymin / tic ) * tic;
+            while ( sp->ay * ( ymin - ymaj ) < 1 )
+                ymaj += tic;
+
+            double ymaj_u = pow( sp->ybase, ymaj );
+            double ymaj_d = pow( sp->ybase, ymaj - tic );
+            double yl     = pow( sp->ybase, ymax );
+
+            double step = ( ymaj_u - ymaj_d ) / sp->yminor;
+
+            double z = ymaj_u - step;
+            for ( j = 0; z >= pow( sp->ybase, ymin ); z -= step )
+                sp->ytic_minor[ j++ ] =
+                    FL_crnd( sp->ay * log( z ) / sp->lybase + sp->by );
+
+            for ( i = 0; i < MAX_MAJOR && sp->ay * ( ymax - ymaj ) <= 0;
+                  ymaj += tic )
+            {
+                sp->ytic_major[ i ] = FL_crnd( sp->ay * ymaj + sp->by );
+                sp->ymajor_val[ i++ ] = ymaj;
+
+                ymaj_d = pow( sp->ybase, ymaj );
+                ymaj_u = pow( sp->ybase, ymaj + tic );
+                step = ( ymaj_u - ymaj_d ) / sp->yminor;
+
+                for ( k = 1, z = ymaj_d + step; 
+                      j < MAX_TIC && k < sp->yminor && z <= yl;
+                      z += step, k++ )
+                    sp->ytic_minor[ j++ ] =
+                        FL_crnd( sp->ay * log10( z ) / sp->lybase + sp->by );
+            }
+
+            sp->num_ymajor = i;
+            sp->num_yminor = j;
+        }
     }
 }
 
@@ -1016,7 +1116,7 @@ add_xtics( FL_OBJECT * ob )
         xr = sp->xtic_major[ i ];
         fl_line( xr, yi, xr, yf, ob->col2 );
 
-        if ( ! *sp->axtic || i >= MAX_ALABEL )
+        if ( ! *sp->axtic || i >= MAX_MAJOR )
             fli_xyplot_nice_label( tic, sp->xminor,
                                    sp->xmajor_val[ i ], label = buf );
         else
@@ -1580,7 +1680,7 @@ draw_xyplot( FL_OBJECT * ob )
     if ( *sp->n <= 0 || ! *sp->x || ! *sp->y )
         return;
 
-    sp->xtic = sp->ytic = -1;
+    sp->xtic   = sp->ytic = -1;
     sp->xscmin = sp->xmin;
     sp->xscmax = sp->xmax;
     sp->yscmin = sp->ymin;
@@ -2070,6 +2170,7 @@ init_spec( FL_OBJECT       * ob,
     sp->n1             = 0;
 
     sp->axtic[ 0 ]     = sp->aytic[ 0 ] = NULL;
+    sp->axtic[ MAX_MAJOR ] = sp->aytic[ MAX_MAJOR ] = NULL;
 
     sp->cur_nxp        = 1;
     sp->xp             = fl_malloc( ( sp->cur_nxp + 3 ) * sizeof *sp->xp );
@@ -2350,32 +2451,83 @@ fl_set_xyplot_xtics( FL_OBJECT * ob,
                      int         minor )
 {
     FLI_XYPLOT_SPEC *sp = ob->spec;
-    int ma = major ? major : XMAJOR;
-    int mi = minor ? minor : XMINOR;
 
-    if ( major > MAX_MAJOR )
+    /* 0 restores the default */
+
+    if ( major < 0 )
+        major = minor = -1;
+    else if ( major == 0 )
+        major = XMAJOR;
+    else if ( major > MAX_MAJOR )
         major = MAX_MAJOR;
 
-    if ( minor > MAX_MINOR )
+    if ( minor < 0 )
+        minor = -1;
+    else if ( minor == 0 )
+        minor = XMINOR;
+    else if ( minor > MAX_MINOR )
         minor = MAX_MINOR;
 
-    if ( major * minor >= MAX_TIC )
+    if (    major > 0
+         && (    ( minor > 0 && major * minor > MAX_TIC )
+              || ( minor < 0 && major > MAX_TIC ) ) )
     {
         M_err( "fl_set_xyplot_xtics",
-               "major * minor should be less than %d", MAX_TIC );
-        minor = 5;
-        major = 10;
+               "More than maximum of %d tics would be required", MAX_TIC );
+        if ( minor > 0 )
+            minor = 2;
+        major = 5;
     }
 
-    if ( sp->xmajor != ma || sp->xminor != mi )
+    if ( *sp->axtic || sp->xmajor != major || sp->xminor != minor )
     {
-        /* 0 restores the default */
-
-        sp->xmajor = major ? major : XMAJOR;
-        sp->xminor = minor ? minor : XMINOR;
-
+        sp->xmajor = major;
+        sp->xminor = minor;
         free_atic( sp->axtic );
+        fl_redraw_object( ob );
+    }
+}
 
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_xyplot_ytics( FL_OBJECT * ob,
+                     int         major,
+                     int         minor )
+{
+    FLI_XYPLOT_SPEC *sp = ob->spec;
+
+    if ( major < 0 )
+        major = minor = -1;
+    else if ( major == 0 )
+        major = YMAJOR;
+    else if ( major > MAX_MAJOR )
+        major = MAX_MAJOR;
+
+    if ( minor < 0 )
+        minor = -1;
+    else if ( minor == 0 )
+        minor = YMINOR;
+    else if ( minor > MAX_MINOR )
+        minor = MAX_MINOR;
+
+    if (    major > 0
+         && (    ( minor > 0 && major * minor > MAX_TIC )
+              || ( minor < 0 && major > MAX_TIC ) ) )
+    {
+        M_err( "fl_set_xyplot_ytics",
+               "More than maximum of %d tics would be required", MAX_TIC );
+        minor = 2;
+        major = 5;
+    }
+
+    if ( *sp->aytic || sp->ymajor != major || sp->yminor != minor )
+    {
+        sp->ymajor = major;
+        sp->yminor = minor;
+        free_atic( sp->aytic );
         fl_redraw_object( ob );
     }
 }
@@ -2509,40 +2661,6 @@ fl_set_xyplot_ybounds( FL_OBJECT * ob,
         sp->ymax = ymax;
         sp->ymin = ymin;
         find_ybounds( sp );
-
-        fl_redraw_object( ob );
-    }
-}
-
-
-/***************************************
- ***************************************/
-
-void
-fl_set_xyplot_ytics( FL_OBJECT * ob,
-                     int         major,
-                     int         minor )
-{
-    FLI_XYPLOT_SPEC *sp = ob->spec;
-    int yma = major ? major : YMAJOR;
-    int ymi = minor ? minor : YMINOR;
-
-    if ( major > MAX_MAJOR )
-        major = MAX_MAJOR;
-
-    if ( minor > MAX_MINOR )
-        minor = MAX_MINOR;
-
-    if ( sp->ymajor != yma || sp->yminor != ymi )
-    {
-        /* 0 restores the default */
-
-        sp->ymajor = yma;
-        sp->yminor = ymi;
-        free_atic( sp->aytic );
-
-        if ( sp->ymajor < 0 )
-            sp->ytic = -1;
 
         fl_redraw_object( ob );
     }
@@ -3580,13 +3698,12 @@ fl_set_xyplot_alphaxtics( FL_OBJECT  * ob,
 
     tmps = fl_strdup( m ? m : "" );
 
-    for ( n = 0, item = strtok( tmps, "|" ); n < MAX_ALABEL - 1 && item;
+    for ( n = 0, item = strtok( tmps, "|" ); n < MAX_MAJOR && item;
           item = strtok( NULL, "|" ) )
         sp->axtic[ n++ ] = fl_strdup( item );
 
     fl_free( tmps );
 
-    sp->axtic[ n ] = NULL;
     sp->xmajor = n;
     sp->xminor = 1;
 
@@ -3611,13 +3728,12 @@ fl_set_xyplot_alphaytics( FL_OBJECT  * ob,
 
     tmps = fl_strdup( m ? m : "" );
 
-    for ( n = 0, item = strtok( tmps, "|" ); n < MAX_ALABEL - 1 && item;
+    for ( n = 0, item = strtok( tmps, "|" ); n < MAX_MAJOR && item;
           item = strtok( NULL, "|" ) )
         sp->aytic[ n++ ] = fl_strdup( item );
 
     fl_free( tmps );
 
-    sp->aytic[ n ] = 0;
     sp->ymajor = n;
     sp->yminor = 1;
 
@@ -3790,6 +3906,46 @@ fl_get_xyplot_world_area( FL_OBJECT * obj,
     fl_xyplot_s2w( obj, sp->xf, sp->yi, urx, ury );
 }
 
+
+/***************************************
+ ***************************************/
+
+int
+fl_set_xyplot_log_minor_xtics( FL_OBJECT * obj,
+                               int         yesno )
+{
+    FLI_XYPLOT_SPEC *sp = obj->spec;
+    int old_state = sp->log_minor_xtics > 0.5;
+
+    if ( old_state != yesno )
+    {
+        sp->log_minor_xtics = yesno ? 1 : 0;
+        fl_redraw_object( obj );
+    }
+
+    return old_state;
+}
+        
+
+/***************************************
+ ***************************************/
+
+int
+fl_set_xyplot_log_minor_ytics( FL_OBJECT * obj,
+                               int         yesno )
+{
+    FLI_XYPLOT_SPEC *sp = obj->spec;
+    int old_state = sp->log_minor_ytics > 0;
+
+    if ( old_state != yesno )
+    {
+        sp->log_minor_ytics = yesno ? 1 : 0;
+        fl_redraw_object( obj );
+    }
+
+    return old_state;
+}
+        
 
 /*
  * Local variables:

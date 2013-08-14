@@ -30,10 +30,9 @@
 #define PXYPLOT_H
 
 
-#define MAX_ALABEL        64
 #define MAX_MAJOR         50
-#define MAX_MINOR         50
-#define MAX_TIC           200   /* really should be MAJOR * MINOR */
+#define MAX_MINOR         20
+#define MAX_TIC           200
 
 
 typedef struct {
@@ -62,8 +61,8 @@ typedef struct {
     char              * title;              /* overall title                */
     char              * xlabel,
                       * ylabel;             /* the x- and y-axis labels     */
-    char              * axtic[ MAX_ALABEL ];/* alphanumerical tic marks     */
-    char              * aytic[ MAX_ALABEL ];/* alphanumerical tic marks     */
+    char              * axtic[ MAX_MAJOR + 1 ]; /* alphanumerical tic marks */
+    char              * aytic[ MAX_MAJOR + 1 ]; /* alphanumerical tic marks */
     char              * xmargin1,
                       * xmargin2;
     char              * ymargin1,
@@ -74,8 +73,8 @@ typedef struct {
     float            ** x,
                      ** y;                  /* real data *x, *y[over+1]     */
     float             * grid;               /* interpolating grid[over+1]   */
-    float               ux,                 /* points to be updated         */
-                        uy;
+    float               log_minor_xtics,    /* use logarithmix minor tics?  */
+                        log_minor_ytics;
     float             * wx,                 /* working array for interpolat.*/
                       * wy;
     FL_POINT          * xp;                 /* screen data                  */

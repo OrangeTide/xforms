@@ -1,3 +1,8 @@
+2013-08-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: Logarithmic minor tic added as
+	suggested by Bill Unruh and minor bug fixes
+
 2013-08-12 Jens Thoms Toerring    <jt@toerring.de>
 
 	* fdesign: Some more bug fixes and modification of tge
