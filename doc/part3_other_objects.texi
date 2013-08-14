@@ -477,10 +477,7 @@ void fl_set_xyplot_alphaytics(FL_OBJECT *obj, const char *major,
 where @code{major} is a string specifying the labels with the embedded
 character @code{|} that specifies major divisions. For example, to
 label a plot with Monday, Tuesday etc, @code{major} should be given as
-@code{Monday|Tuesday|...}. For each of these ticks also its position
-can be specified by appending a @code{@@} to the label, followed by an
-integer or floating point number, i.e.@:
-@code{Monday@@1|Thursday@@2|...}.
+@code{"Monday|Tuesday|..."}.
 
 Parameter @code{minor} is currently unused and the minor divisions are
 set to 1, i.e, no divisions between major tic marks. Naturally the
@@ -489,19 +486,21 @@ number of major/minor divisions set by this routine and
 @code{@ref{fl_set_xyplot_ytics()}} can't be active at the same time
 and the one that gets used is the one that was set last.
 
-The above two functions can be used to specify non-uniform and
-arbitary major divisions. To achieve this, you should embed the major
-tic location information in the alphanumerical text. The location
-information is introduced by the @ symbol and followed by a float
-number specifying the coordinates in world coordinates. The entire
-location info should follow the label. For example,
-@code{"Begin@@1.0|3/4@@0.75|1.9@@1.9"} will produce three major tic
-marks at 0.75, 1.0, and 1.9 and labeled "3/4", "begin", and "1.9".
+The above two functions can also be used to specify non-uniform and
+arbitary major divisions. To achieve this you must embed the major tic
+location information in the alphanumerical text. The location
+information is introduced by the @code{@@} symbol and followed by a
+float or integer number specifying the coordinates in world
+coordinates. The entire location info should follow the label. For
+example, @code{"Begin@@1|3/4@@0.75|1.9@@1.9"} will produce three
+major tic marks at 0.75, 1.0, and 1.9 with labels "3/4", "begin" and
+"1.9".
 
-To get a gridded XYPlot, use the following routine
+To get a gridded XYPlot use the following routines
 @findex fl_set_xyplot_xgrid()
 @anchor{fl_set_xyplot_xgrid()}
-ffindex fl_set_xyplot_ygrid()
+@findex fl_set_xyplot_ygrid()
+@anchor{fl_set_xyplot_ygrid()}
 @example
 void fl_set_xyplot_xgrid(FL_OBJECT *obj, int xgrid);
 void fl_set_xyplot_ygrid(FL_OBJECT *obj, int ygrid);

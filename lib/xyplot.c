@@ -742,7 +742,7 @@ gen_xtic( FL_OBJECT * ob )
             if ( ! p || eptr == p + 1 )
                 x = mxmin + ( i * tic * sp->xminor );
             else if ( sp->xscale == FL_LOG )
-                x = log( x ) / sp->lxbase;
+                x = log10( x ) / sp->lxbase;
 
             if ( x >= xmin && x <= xmax )
             {
@@ -788,7 +788,7 @@ gen_xtic( FL_OBJECT * ob )
             /* Minor tics */
 
             x = floor( xmin / minortic ) * minortic;
-            while ( sp->ax * ( xmin - x ) > 1 )
+            while ( sp->ax * ( xmin - x ) >= 1 )
                 x += minortic;
 
             for ( i = 0; i < MAX_TIC && sp->ax * ( xmax - x ) >= 0;
@@ -818,21 +818,29 @@ gen_xtic( FL_OBJECT * ob )
             int k;
 
             double xmaj = floor( xmin / tic ) * tic;
-            while ( sp->ax * ( xmin - xmaj ) > 1 )
+            double xmaj_u, xmaj_d;
+            double xl, step;
+
+            while ( sp->ax * ( xmin - xmaj ) >= 1 )
                 xmaj += tic;
 
-            double xmaj_u = pow( sp->xbase, xmaj );
-            double xmaj_d = pow( sp->xbase, xmaj - tic );
-            double xl = pow( sp->xbase, xmax );
+            xmaj_u = pow( sp->xbase, xmaj );
+            xmaj_d = pow( sp->xbase, xmaj - tic );
+            xl     = pow( sp->xbase, xmin );
+            step   = ( xmaj_u - xmaj_d ) / sp->xminor;
+            x      = xmaj_u - step;
 
-            double step = ( xmaj_u - xmaj_d ) / sp->xminor;
+            /* Create minor tics before first major tic */
 
-            double z = xmaj_u - step;
-            for ( j = 0; z >= pow( sp->xbase, xmin ); z -= step )
+            for ( j = 0; x >= xl; x -= step )
                 sp->xtic_minor[ j++ ] =
-                    FL_crnd( sp->ax * log( z ) / sp->lxbase + sp->bx );
+                    FL_crnd( sp->ax * log10( x) / sp->lxbase + sp->bx );
 
-            for ( i = 0; i < MAX_MAJOR && sp->ax * ( xmax - xmaj ) > 1;
+            /* Create all remaining major and minor tics */
+
+            xl = pow( sp->xbase, xmax );
+
+            for ( i = 0; i < MAX_MAJOR && sp->ax * ( xmax - xmaj ) >= 0;
                   xmaj += tic )
             {
                 sp->xtic_major[ i ] = FL_crnd( sp->ax * xmaj + sp->bx );
@@ -842,11 +850,11 @@ gen_xtic( FL_OBJECT * ob )
                 xmaj_u = pow( sp->xbase, xmaj + tic );
                 step = ( xmaj_u - xmaj_d ) / sp->xminor;
 
-                for ( k = 1, z = xmaj_d + step; 
-                      j < MAX_TIC && k < sp->xminor && z <= xl;
-                      z += step, k++ )
+                for ( k = 1, x = xmaj_d + step; 
+                      j < MAX_TIC && k < sp->xminor && x <= xl; 
+                      x += step, k++ )
                     sp->xtic_minor[ j++ ] =
-                          FL_crnd( sp->ax * log10( z ) / sp->lxbase + sp->bx );
+                          FL_crnd( sp->ax * log10( x ) / sp->lxbase + sp->bx );
             }
 
             sp->num_xmajor = i;
@@ -901,7 +909,7 @@ gen_ytic( FL_OBJECT * ob )
             if ( ! p || eptr != p + 1 )
                 y = mymin + i * tic * sp->yminor;
             else if ( sp->yscale == FL_LOG )
-                y = log( y ) / sp->lybase;
+                y = log10( y ) / sp->lybase;
 
             if ( y >= ymin && y <= ymax )
             {
@@ -945,7 +953,7 @@ gen_ytic( FL_OBJECT * ob )
             /* Note that sp->ay is always negative! */
 
             y = floor( ymin / minortic ) * minortic;
-            while ( sp->ay * ( ymin - y ) < 1 )
+            while ( sp->ay * ( ymin - y ) <= -1 )
                 y += minortic;
 
             for ( i = 0; i < MAX_TIC && sp->ay * ( ymax - y ) <= 0;
@@ -972,19 +980,27 @@ gen_ytic( FL_OBJECT * ob )
             int k;
 
             double ymaj = floor( ymin / tic ) * tic;
-            while ( sp->ay * ( ymin - ymaj ) < 1 )
+            double ymaj_u, ymaj_d;
+            double yl, step;
+
+            /* Note: sp->ay is always negative */
+
+            while ( sp->ay * ( ymin - ymaj ) <= -1 )
                 ymaj += tic;
 
-            double ymaj_u = pow( sp->ybase, ymaj );
-            double ymaj_d = pow( sp->ybase, ymaj - tic );
-            double yl     = pow( sp->ybase, ymax );
+            ymaj_u = pow( sp->ybase, ymaj );
+            ymaj_d = pow( sp->ybase, ymaj - tic );
+            yl     = pow( sp->ybase, ymax );
+            step   = ( ymaj_u - ymaj_d ) / sp->yminor;
+            y      = ymaj_u - step;
 
-            double step = ( ymaj_u - ymaj_d ) / sp->yminor;
+            /* Create minor tics before first major tic */
 
-            double z = ymaj_u - step;
-            for ( j = 0; z >= pow( sp->ybase, ymin ); z -= step )
+            for ( j = 0; y >= pow( sp->ybase, ymin ); y -= step )
                 sp->ytic_minor[ j++ ] =
-                    FL_crnd( sp->ay * log( z ) / sp->lybase + sp->by );
+                    FL_crnd( sp->ay * log10( y ) / sp->lybase + sp->by );
+
+            /* Create all remaining major and minor tics */
 
             for ( i = 0; i < MAX_MAJOR && sp->ay * ( ymax - ymaj ) <= 0;
                   ymaj += tic )
@@ -996,11 +1012,11 @@ gen_ytic( FL_OBJECT * ob )
                 ymaj_u = pow( sp->ybase, ymaj + tic );
                 step = ( ymaj_u - ymaj_d ) / sp->yminor;
 
-                for ( k = 1, z = ymaj_d + step; 
-                      j < MAX_TIC && k < sp->yminor && z <= yl;
-                      z += step, k++ )
+                for ( k = 1, y = ymaj_d + step;
+                      j < MAX_TIC && k < sp->yminor && y <= yl;
+                      y += step, k++ )
                     sp->ytic_minor[ j++ ] =
-                        FL_crnd( sp->ay * log10( z ) / sp->lybase + sp->by );
+                        FL_crnd( sp->ay * log10( y ) / sp->lybase + sp->by );
             }
 
             sp->num_ymajor = i;

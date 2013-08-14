@@ -598,11 +598,11 @@ routine can be used
 Pixmap fl_get_pixmap_pixmap(FL_OBJECT *obj, Pixmap *id,
                             Pixmap *mask);
 @end example
-@noindent
+
 In some situations, you might already have a pixmap resource ID,
 e.g.@: from @code{@ref{fl_read_pixmapfile()}} (see below in the
-"Remarks" subsection) you can use the following routine to change the
-the pixmap
+"Remarks" subsection). Then you can use the following routine to
+change the the pixmap
 @findex fl_set_pixmap_pixmap()
 @anchor{fl_set_pixmap_pixmap()}
 @example
@@ -638,7 +638,7 @@ a pixmap outside of the bounding box, it probably is not a good idea.
 @node Pixmap Attributes
 @subsection Pixmap Attributes
 
-By default, if a pixmap has more colors than that available in the
+By default if a pixmap has more colors than that available in the
 colormap, the library will use substitute colors that are judged
 "close enough". This closeness is defined as the difference between
 the requested color and the color found being smaller than some
@@ -655,7 +655,7 @@ void fl_set_pixmap_colorcloseness(int red, int green, int blue);
 @node Pixmap Remarks
 @subsection Remarks
 
-The following routines may come in handy to read a pixmap file into a
+The following routines may be handy for reading a pixmap file into a
 pixmap
 @findex fl_read_pixmapfile()
 @anchor{fl_read_pixmapfile()}
@@ -675,8 +675,8 @@ transparency. @code{hotx} and @code{hoty} are the center of the pixmap
 (useful if the pixmap is to be used as a cursor). Parameter
 @code{tran} is currently not used.
 
-If you have already had the pixmap data in memory, the following
-routine may be used
+If you already have the pixmap data in memory, the following routine
+can be used
 @findex fl_create_from_pixmapdata()
 @anchor{fl_create_from_pixmapdata()}
 @example
@@ -692,7 +692,7 @@ Note that the Forms Library handles transparency, if specified in the
 pixmap file or data, for pixmap and pixmapbutton objects. However,
 when using @code{@ref{fl_read_pixmapfile()}} or
 @code{@ref{fl_create_from_pixmapdata()}}, the application programmer
-is responsible to set the clip mask in an appropriate GCs.
+is responsible to set the clip mask in an appropriate GC.
 
 Finally there is a routine that can be used to free a Pixmap
 @findex fl_free_pixmap()
@@ -700,11 +700,11 @@ Finally there is a routine that can be used to free a Pixmap
 @example
 void fl_free_pixmap(Pixmap id);
 @end example
-@noindent
-You will need the XPM library (version 3.4c or later) developed by
-Arnaud Le Hors and GROUPE BULL (@email{lehors@@sophia.inria.fr}) to
-use pixmap. The XPM library can be obtained from many X
-distribution/mirror sites via anonymous FTP, e.g.@:
+
+You will need the XPM library (version 3.4c or later)m developed by
+Arnaud Le Hors and Groupe Bull, to use pixmaps. The XPM library is
+avalialble as a package for most distributions, but can also be
+obtained from many X mirror sites, e.g.@: via anonymous FTP from
 (@uref{ftp://ftp.x.org/contrib/libraries/}. Its home page is
 @uref{http://old.koalateam.com/lehors/xpm.html}.
 
@@ -739,8 +739,8 @@ FL_OBJECT *fl_add_clock(int type, FL_Coord x, FL_Coord y,
                         FL_Coord w, FL_Coord h, char label[])
 @end example
 @noindent
-The meaning of the parameters is as usual. The label is by default
-placed below the clock.
+The meaning of the parameters is as usual. The label is placed below
+the clock by default.
 
 
 @node Clock Types
@@ -817,7 +817,7 @@ Functions}, for other time related routines.
 @section Chart Object
 
 The chart object gives you an easy way to display a number of
-different types of charts like bar-charts, pie-charts, line-charts,
+different types of charts like bar-charts, pie-charts, line-charts
 etc. They can either be used to display some fixed chart or a changing
 chart (e.g. a strip-chart). Values in the chart can be changed and new
 values can be added which makes the chart move to the left, i.e., new
@@ -881,7 +881,7 @@ A pie-chart with displaced first item
 @end table
 
 All charts except pie-charts can display positive and negative data.
-Pie-charts will ignore values that are less then or equal 0. The
+Pie-charts will ignore values that are less then or equal to 0. The
 maximum number of values displayed in the chart can be set using the
 routine @code{@ref{fl_set_chart_maxnumb()}}. The argument must be not
 larger than @code{FL_CHART_MAX} which currently is 512. Switching
