@@ -31,6 +31,7 @@
 #include <config.h>
 #endif
 
+#include <ctype.h>
 #include "include/forms.h"
 #include "fd_main.h"
 

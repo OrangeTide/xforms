@@ -1954,7 +1954,8 @@ handle_keyboard( FL_OBJECT * obj,
             if ( --topline >= 0 )
                 fli_tbox_set_yoffset( obj, sp->lines[ topline ]->y );
         }
-        else if ( obj->type == FL_HOLD_BROWSER )
+        else if (    obj->type == FL_HOLD_BROWSER
+                  || obj->type == FL_DESELECTABLE_HOLD_BROWSER )
         {
             TBOX_LINE *tl;
             int line = find_previous_selectable( obj, sp->select_line );
@@ -2000,7 +2001,8 @@ handle_keyboard( FL_OBJECT * obj,
             else
                 fli_tbox_set_yoffset( obj, sp->max_height );
         }
-        else if ( obj->type == FL_HOLD_BROWSER )
+        else if (    obj->type == FL_HOLD_BROWSER
+                  || obj->type == FL_DESELECTABLE_HOLD_BROWSER )
         {
             TBOX_LINE *tl;
             int line = find_next_selectable( obj, sp->select_line );
@@ -2163,7 +2165,8 @@ handle_mouse( FL_OBJECT * obj,
     if ( obj->type == FL_NORMAL_BROWSER )
         return ret;
     else if (    obj->type == FL_SELECT_BROWSER
-              || obj->type == FL_HOLD_BROWSER )
+              || obj->type == FL_HOLD_BROWSER
+              || obj->type == FL_DESELECTABLE_HOLD_BROWSER )
     {
         /* For FL_SELECT_BROWSER browsers the selection is undone when the
            mouse is released */
@@ -2185,11 +2188,17 @@ handle_mouse( FL_OBJECT * obj,
                 fli_tbox_select_line( obj, line );
                 ret |= FL_RETURN_SELECTION;
             }
-        }
-        else  if ( line >= 0 && line != sp->select_line )   
-        {
-            fli_tbox_select_line( obj, line );
-            ret |= FL_RETURN_SELECTION;
+            else  if ( line != sp->select_line )   
+            {
+                fli_tbox_select_line( obj, line );
+                ret |= FL_RETURN_SELECTION;
+            }
+            else  if (    line == sp->select_line
+                       && obj->type == FL_DESELECTABLE_HOLD_BROWSER )
+            {
+                fli_tbox_deselect_line( obj, line );
+                ret |= FL_RETURN_SELECTION;
+            }
         }
 
         return ret;

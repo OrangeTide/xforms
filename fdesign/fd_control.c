@@ -357,7 +357,9 @@ control_init( FD_control * ui )
     fl_set_form_atdeactivate( ui->control, deactivate_control, ui );
     fl_set_form_atactivate( ui->control, activate_control, ui );
 
-    fl_set_object_dblbuffer( ui->selmsg,     1 );
+    fl_set_object_dblbuffer( ui->seltype,    1 );
+    fl_set_object_dblbuffer( ui->selname,    1 );
+    fl_set_object_dblbuffer( ui->selcb,      1 );
     fl_set_object_dblbuffer( ui->sizestatus, 1 );
     fl_set_object_dblbuffer( ui->oristatus,  1 );
 
@@ -473,25 +475,45 @@ show_selmessage( FL_OBJECT * sel[ ],
          argname[ MAX_VAR_LEN ];
     char buf[ MAX_VAR_LEN ];
 
+    get_object_name( sel[ 0 ], objname, cbname, argname );
     *buf = '\0';
 
     if ( n == 1 )
-    {
-        get_object_name( sel[ 0 ], objname, cbname, argname );
-        sprintf( buf, "%s Name: %s  %s%s",
-                 find_type_name( sel[ 0 ]->objclass, sel[ 0 ]->type ),
-                 *objname ? objname : "None",
-                 *cbname  ? "Callback: " : "",
-                 *cbname  ? cbname : "" );
-    }
+        sprintf( buf, "%s",
+                 find_type_name( sel[ 0 ]->objclass, sel[ 0 ]->type ) );
     else
     {
-        if ( sel[ 0 ]->objclass == FL_BEGIN_GROUP )
-            n -= 2;
-        sprintf( buf, "%d objects", n );
+        int cnt = n,
+            i;
+
+        for ( i = 0; i < n; i++ )
+            if (    sel[ i ]->objclass == FL_BEGIN_GROUP
+                 || sel[ i ]->objclass == FL_END_GROUP )
+                cnt--;
+
+        sprintf( buf, "%d object selected", cnt );
     }
 
-    fl_set_object_label( fd_control->selmsg, buf );
+    fl_set_object_label( fd_control->seltype, buf );
+
+    if ( n == 1 )
+        sprintf( buf, "%s", *objname ? objname : "<no name>" );
+    else
+        *buf = '\0';
+
+    fl_set_object_label( fd_control->selname, buf );
+
+    if ( n == 1 )
+    {
+        if ( * cbname )
+            sprintf( buf, "%s(%s)", cbname, argname );
+        else
+            strcpy( buf, "<no callback>" );
+    }
+    else
+        *buf = '\0';
+
+    fl_set_object_label( fd_control->selcb, buf );
 }
 
 

@@ -225,6 +225,13 @@ fd_add_free( int          type,
 
 
 /****
+  INITIALIZING THE CLASSES
+****/
+
+int cur_class = -1;     /* class selected in the object class browser */
+
+
+/****
   CALLBACK ROUTINES
 ****/
 
@@ -237,6 +244,9 @@ object_cb( FL_OBJECT * obj,
            long        arg  FL_UNUSED_ARG )
 {
     int line = fl_get_browser( obj );
+
+    clear_selection( );
+    redraw_the_form( 0 );
 
     if ( line > 0 )
     {
@@ -255,13 +265,6 @@ object_cb( FL_OBJECT * obj,
 
     select_pallette_entry( cur_class );
 }
-
-
-/****
-  INITIALIZING THE CLASSES
-****/
-
-int cur_class = -1;     /* The current class used */
 
 
 /***************************************
@@ -554,6 +557,8 @@ init_classes( void )
     add_type_def( FL_BROWSER, FL_NORMAL_BROWSER, "NORMAL_BROWSER" );
     add_type_def( FL_BROWSER, FL_SELECT_BROWSER, "SELECT_BROWSER" );
     add_type_def( FL_BROWSER, FL_HOLD_BROWSER,   "HOLD_BROWSER" );
+    add_type_def( FL_BROWSER, FL_DESELECTABLE_HOLD_BROWSER,
+                                                 "DESELECTABLE_HOLD_BROWSER" );
     add_type_def( FL_BROWSER, FL_MULTI_BROWSER,  "MULTI_BROWSER" );
 
     fl_add_browser_line( fd_control->objectbrowser, "@-" );

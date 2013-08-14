@@ -194,7 +194,7 @@ reset_pallette( void )
 
 
 /***************************************
- * This function will be called if object browser is selected
+ * This function will be called on object class browser (de)selections
  ***************************************/
 
 void

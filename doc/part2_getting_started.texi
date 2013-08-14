@@ -57,35 +57,39 @@ the size of the form, which can be simply changed by resizing the
 window.) Note that the form's name is added to the list of forms in
 the control panel.
 
-To add an object to the form choose the class of the new object in the
-control panel by clicking in the list of object classes. Next move the
-mouse into the window with the form you are creating and drag the
-mouse while pressing the left mouse button. By keeping the mouse
-button pressed you create a box that has the desired size of the
-object. Release the button and the object will appear. Note that a red
-outline appears around the new object. This indicates that the object
-is selected. In this way you can put all kinds of objects on the form.
+To add an object to the form select its class in the control panel by
+selecting an item the list of object classes. Then move the mouse into
+the window with the form you are working on and drag the mouse while
+pressing the left mouse button. By keeping the mouse button pressed
+you create a box that has the size of the object to be created.
+Release the button and the object will appear. Note that a red outline
+appears around the new object. This indicates that the object is
+selected. In this way you can put all kinds of objects on the form.
 
-It is possible to move objects around or change their sizes. To this
-end first select the object by left-clicking on it. A red outline will
-appear around the object. You now will be able to drag the object
-around with the mouse. By grabbing the object at one of the four red
-corners you can change its size. It is also possible to select
-multiple objects and move or scale them simultaneously. See below for
-details.
+Object already created can be modified in several ways. You can move
+them around, change their sizes or their attributes. To this end first
+select the object by left-clicking on it. But this only works if there
+isn't an obkect class selected in the object class browser in the
+control panel. To get rid of such a selection either click on the
+selected entry in this browser or by right-click somewhere in the
+window with the new form. When the object is selected a red outline
+appears around it. You now will be able to drag the object around with
+the mouse. By grabbing the object at one of the four red corners you
+can change its size. It is also possible to select multiple objects
+and move or scale them simultaneously. See below for details.
 
-To change the object's attributes, e.g. its label, first single-click
-on the object to select it. Next press the function key @code{<F1>}.
-Or click on the button labeled "F1 attribs" in the control panel or
-select "Object attributes" from the "Object" menu. Or, even simpler
-double-click on the object with the left mouse button. A new form
-appears in which you can change all the different attributes. Their
-meanings should be clear (if you have read the documentation on the
-Forms Library). Change the attributes you want to change and finally
-press the button labeled "Accept". To reset all attributes to their
-original values press "Restore" (or "Cancel" if you also want to close
-the window for modifying the attributes). See below for more
-information about changing attributes.
+To change the object's attributes, e.g.@: its label, simply
+double-click on it with the left mouse button. Or single-click on it
+and then press the function key @code{<F1>} (or click on the button
+labeled "F1 attribs" in the control panel or select "Object
+attributes" from the "Object" menu). A new form appears in which you
+can change all the different attributes. Their meanings should be
+clear (if you have read the documentation on the Forms Library).
+Change the attributes you want to change and finally press the button
+labeled "Accept". To reset all attributes to their original values
+press "Restore" (or "Cancel" if you also want to close the window for
+modifying the attributes). See below for more information about
+changing attributes.
 
 In this way you can create the forms you want to have. Note that you
 can have more than one form. Just add another form in the way

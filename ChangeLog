@@ -1,7 +1,14 @@
 2013-08-13 Jens Thoms Toerring    <jt@toerring.de>
 
-	* lib/xyplot.c: Logarithmic minor tic added as
-	suggested by Bill Unruh and minor bug fixes
+	* lib/browser.c etc.: New type FL_DESELECTABLE_HOLD_BROWSER
+	added.
+	* fdesign: Some more bug fixes and cleanup for consistency
+	of handling.
+
+2013-08-13 Jens Thoms Toerring    <jt@toerring.de>
+
+	* lib/xyplot.c: Logarithmically spaces minor tic added
+	aa suggested by Bill Unruh and minor bug fixes
 
 2013-08-12 Jens Thoms Toerring    <jt@toerring.de>
 
@@ -10,7 +17,7 @@
 
 2013-08-11 Jens Thoms Toerring    <jt@toerring.de>
 
-	* fdesign: Bug fixes in handling of groups
+	* fdesign: Bug fixes in handling of group cutting/pasting
 
 2013-08-10 Jens Thoms Toerring    <jt@toerring.de>
 

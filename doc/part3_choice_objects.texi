@@ -1062,12 +1062,20 @@ A browser in which no selections can be made.
 @tindex FL_SELECT_BROWSER
 @anchor{FL_SELECT_BROWSER}
 @item FL_SELECT_BROWSER
-In this case the user can make single line selections.
+In this type of browser the user can make single line selections which
+get reset immediately when the mouse button is released.
 
 @tindex FL_HOLD_BROWSER
 @anchor{FL_HOLD_BROWSER}
 @item FL_HOLD_BROWSER
-Same but the selection remains visible till the next selection.
+Same as @code{FL_SELECT_BROSER} but the selection remains visible till
+the next selection.
+
+@tindex FL_DESELECTABLE_HOLD_BROWSER
+@anchor{FL_DESELECTABLE_HOLD_BROWSER}
+@item FL_DESELECTABLE_HOLD_BROWSER
+Same as the @code{FL_HOLD_BROWSER} but the user can deselect the
+selected line.
 
 @tindex FL_MULTI_BROWSER
 @anchor{FL_MULTI_BROWSER}

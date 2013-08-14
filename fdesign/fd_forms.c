@@ -90,6 +90,10 @@ set_form( int numb )
             XSync( fl_display, 0 );
     }
 
+    fl_deselect_browser( fd_control->objectbrowser );
+    reset_pallette( );
+    cur_class = -1;
+
     clear_selection( );
     fillin_groups( );
     redraw_the_form( 1 );
@@ -239,7 +243,6 @@ changename_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int fn = get_form_numb( cur_form );
     const char *s;
-    const char *sp;
     int i;
 
     if ( cur_form == NULL || fn == -1 )

@@ -275,7 +275,7 @@ handle_click( XEvent * xev,
     {
         if ( xev->xbutton.button == 3 )
             cut_selection( );
-        else if ( xev->xbutton.button == 1 )
+        else if ( xev->xbutton.button == 1 && cur_class < 0 )
             change_selection( );
 
         redraw_the_form( 0 );
@@ -290,6 +290,12 @@ handle_click( XEvent * xev,
 
         if ( ev.type == MotionNotify )
             add_something( );
+    }
+    else if ( xev->xbutton.button == 3 && cur_class >= 0 )
+    {
+        cur_class = -1;
+        fl_deselect_browser( fd_control->objectbrowser );
+        select_pallette_entry( cur_class );
     }
     else if ( is_pasting )
         /* empty */;

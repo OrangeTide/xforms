@@ -61,6 +61,12 @@ group_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
 {
     int n = fl_get_browser( fd_control->groupbrowser );
 
+    cur_class = -1;
+
+    fl_deselect_browser( fd_control->objectbrowser );
+    reset_pallette( );
+    cur_class = -1;
+
     if ( n > 0 )
     {
         /* In order to stay consistent with the rest of the interface
