@@ -550,7 +550,7 @@ show_attributes( const FL_OBJECT * obj )
     fl_set_input( fd_generic_attrib->cbnameobj, cbname );
     fl_set_input( fd_generic_attrib->argobj, argname );
 
-    fl_set_input(fd_generic_attrib->scobj, get_shortcut_string( obj ) );
+    fl_set_input( fd_generic_attrib->scobj, get_shortcut_string( obj ) );
 
     fl_set_object_color( fd_generic_attrib->col1obj, obj->col1, obj->col1 );
     fl_set_object_color( fd_generic_attrib->col2obj, obj->col2, obj->col2 );
@@ -775,7 +775,7 @@ set_shortcut( FL_OBJECT  * obj,
 {
     if (    obj->type != FL_RETURN_BUTTON
          && obj->type != FL_HIDDEN_RET_BUTTON )
-        fl_set_object_shortcut(obj, sc, 1);
+        fl_set_object_shortcut( obj, sc, 1 );
 }
 
 

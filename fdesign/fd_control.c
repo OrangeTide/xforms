@@ -293,7 +293,7 @@ optionmenu_callback( FL_OBJECT * ob,
  ***************************************/
 
 void
-reset_pallette_menu_status(void)
+reset_pallette_menu_status( void)
 {
     fl_set_menu_item_mode( fd_control->optionmenu, 2, FL_PUP_BOX );
     fd_show_palette = 0;

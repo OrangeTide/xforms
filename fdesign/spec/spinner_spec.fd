@@ -1,4 +1,4 @@
-Magic: 14000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -16,7 +16,7 @@ Number of Objects: 8
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 540 280
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -34,7 +34,7 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 25 20 485 235
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
@@ -52,7 +52,7 @@ argument:
 
 --------------------
 class: FL_COUNTER
-type: SIMPLE_COUNTER
+type: FL_SIMPLE_COUNTER
 box: 65 170 135 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLUE
@@ -67,11 +67,10 @@ gravity: FL_NoGravity FL_NoGravity
 name: prec
 callback: spn_precision_cb
 argument: 0
-return: FL_RETURN_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 340 60 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -90,7 +89,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 340 100 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -109,7 +108,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_MENU
-type: PULLDOWN_MENU
+type: FL_PULLDOWN_MENU
 box: 60 80 138 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_MCOL
@@ -127,7 +126,7 @@ argument: 0
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 340 150 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -146,7 +145,7 @@ return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 340 200 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL

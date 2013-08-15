@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 16
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 520 270
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,11 +33,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 15 20 480 230
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLACK
@@ -51,11 +51,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 225 57 111 140
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -69,11 +69,11 @@ argument:
 
 --------------------
 class: FL_BROWSER
-type: HOLD_BROWSER
+type: FL_HOLD_BROWSER
 box: 353 55 120 150
 boxtype: FL_DOWN_BOX
 colors: FL_WHITE FL_YELLOW
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -87,11 +87,11 @@ argument:
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 35 67 170 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -102,10 +102,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: input
 callback: 
 argument: 
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 235 72 84 26
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -123,7 +124,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 235 133 84 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -141,7 +142,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 235 162 84 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -159,7 +160,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 95 175 90 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -177,7 +178,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 95 147 90 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -186,7 +187,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: 
-shortcut: #v
+shortcut: #V
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: vscb_pref
@@ -195,7 +196,7 @@ argument: 0
 
 --------------------
 class: FL_MENU
-type: PULLDOWN_MENU
+type: FL_PULLDOWN_MENU
 box: 140 210 138 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_MCOL
@@ -213,7 +214,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 120 101 82 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -222,7 +223,7 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: ClearField
-shortcut: #l
+shortcut: #L
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: 
@@ -231,7 +232,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 35 99 24 27
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_BLUE
@@ -240,17 +241,17 @@ style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
 label: AutoClear
-shortcut: #u
+shortcut: #U
 resize: FL_RESIZE_ALL
 gravity: FL_NoGravity FL_NoGravity
 name: auto_clear
 callback: 
 argument: 
-	value: 1
+    value: 1
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 235 102 84 26
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -268,7 +269,7 @@ argument: 0
 
 --------------------
 class: FL_BOX
-type: NO_BOX
+type: FL_NO_BOX
 box: 33 176 62 22
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_COL1
@@ -286,7 +287,7 @@ argument:
 
 --------------------
 class: FL_BOX
-type: NO_BOX
+type: FL_NO_BOX
 box: 32 148 62 22
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_COL1

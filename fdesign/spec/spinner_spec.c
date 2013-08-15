@@ -11,7 +11,7 @@ FD_spinnerattrib *
 create_form_spinnerattrib( void )
 {
     FL_OBJECT *obj;
-    FD_spinnerattrib *fdui = fl_malloc( sizeof *fdui );
+    FD_spinnerattrib *fdui = ( FD_spinnerattrib * ) fl_malloc( sizeof *fdui );
 
     int old_bw = fl_get_border_width( );
     fl_set_border_width( -1 );

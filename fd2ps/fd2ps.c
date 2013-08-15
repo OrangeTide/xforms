@@ -203,25 +203,25 @@ parse_command_line( int    argc,
         }
         else if ( strncmp( argv[ i ], "-verb", 5 ) == 0 )
             psinfo.verbose = 1;
-        else if ( strcmp(argv[ i ], "-eps" ) == 0 )
+        else if ( strcmp( argv[ i ], "-eps" ) == 0 )
             psinfo.eps = 1;
         else if ( strncmp( argv[ i ], "-vers", 5 ) == 0 )
             print_version( 1 );
-        else if (strncmp( argv[ i ], "-h", 2 ) == 0 )
+        else if ( strncmp( argv[ i ], "-h", 2 ) == 0 )
             usage( argv[ 0 ], 1 );
         else if ( strcmp( argv[ i ], "-pw" ) == 0 && i + 1 < argc )
         {
             psinfo.paper_w = atof( argv[ ++i ] );
             psinfo.paper_name = 0;
         }
-        else if ( strcmp(argv[ i ], "-ph" ) == 0 && i + 1 < argc )
+        else if ( strcmp( argv[ i ], "-ph" ) == 0 && i + 1 < argc )
         {
             psinfo.paper_h = atof( argv[ ++i ] );
             psinfo.paper_name = 0;
         }
         else if ( strcmp( argv[ i ], "-G" ) == 0 && i + 1 < argc )
             psinfo.gamma = atof( argv[ ++i ] );
-        else if (strcmp( argv[ i ], "-l" ) == 0 )
+        else if ( strcmp( argv[ i ], "-l" ) == 0 )
             psinfo.landscape = 1;
         else if ( strcmp( argv[ i ], "-p" ) == 0 )
         psinfo.landscape = 0;

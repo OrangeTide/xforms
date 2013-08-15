@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 11
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 540 280
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,11 +33,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 30 20 475 235
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_TIMESBOLD_STYLE
 size: FL_MEDIUM_SIZE
 lcol: FL_BLACK
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_MENU
-type: PULLDOWN_MENU
+type: FL_PULLDOWN_MENU
 box: 195 55 138 24
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_MCOL
@@ -69,7 +69,7 @@ argument: 0
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 170 95 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -84,10 +84,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: xminval
 callback: pos_xminmax_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 170 131 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -102,10 +103,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: xmaxval
 callback: pos_xminmax_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 170 168 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -120,10 +122,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: initialxval
 callback: pos_initialxvalue_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 170 205 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -138,10 +141,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: xstep
 callback: pos_xstepchange_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 275 95 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -156,10 +160,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: yminval
 callback: pos_yminmax_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 275 131 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -174,10 +179,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: ymaxval
 callback: pos_yminmax_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 275 168 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -192,10 +198,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: initialyval
 callback: pos_initialyvalue_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 275 205 92 24
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -210,6 +217,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: ystep
 callback: pos_ystepchange_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 ==============================
 create_the_forms

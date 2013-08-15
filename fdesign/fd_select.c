@@ -1365,7 +1365,7 @@ cut_selection( void )
  ***************************************/
 
 void
-paste_selection(void)
+paste_selection( void )
 {
     FL_OBJECT *obj;
     double x,
@@ -1581,7 +1581,7 @@ prev_selection( void )
             selobj[ 0 ] = BackOBJ( )->prev ? BackOBJ( )->prev : BackOBJ( );
         else if ( selnumb && selobj[ 0 ]->prev )
             selobj[ 0 ] = selobj[ 0 ]->prev;
-    } while (selobj[ 0 ]->parent );
+    } while ( selobj[ 0 ]->parent );
 
     selnumb = 1;
     redraw_the_form( 0 );

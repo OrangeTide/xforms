@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 7
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 540 280
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,11 +33,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 20 20 490 240
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_TIMESBOLD_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLACK
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 160 113 210 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -66,10 +66,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: filename
 callback: pixmap_filename_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 282 60 155 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -87,7 +88,7 @@ argument: 0
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 372 113 66 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -105,7 +106,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 175 155 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -123,7 +124,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 275 155 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW

@@ -46,9 +46,9 @@
  * system always starts from lower-left corner of the screen */
 
 #if 0
-#define OBJ_Y(ob)   ob->form->h - ob->y - ob->h
+#define OBJ_Y( ob )   ( ob->form->h - ob->y - ob->h )
 #else
-#define OBJ_Y(ob)   obj->y
+#define OBJ_Y( ob )   obj->y
 #endif
 
 

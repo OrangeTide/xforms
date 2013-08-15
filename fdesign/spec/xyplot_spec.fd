@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 15
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 520 270
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,11 +33,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 10 20 500 240
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLACK
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 70 60 85 23
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -69,7 +69,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 70 90 85 23
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -87,7 +87,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 70 170 85 23
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -105,7 +105,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 70 210 85 23
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -123,7 +123,7 @@ argument: 0
 
 --------------------
 class: FL_COUNTER
-type: NORMAL_COUNTER
+type: FL_NORMAL_COUNTER
 box: 370 160 115 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLUE
@@ -138,15 +138,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: ymajor
 callback: ymajorminor_change_cb
 argument: 0
-  bounds: -1 20
-  precision: 0
-  value: 1
-  sstep: 1
-  lstep: 2
+    bounds: -1 20
+    precision: 0
+    value: 1
+    sstep: 1
+    lstep: 2
 
 --------------------
 class: FL_COUNTER
-type: NORMAL_COUNTER
+type: FL_NORMAL_COUNTER
 box: 370 200 115 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLUE
@@ -161,15 +161,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: yminor
 callback: ymajorminor_change_cb
 argument: 0
-  bounds: 0 10
-  precision: 0
-  value: 1
-  sstep: 1
-  lstep: 2
+    bounds: 0 10
+    precision: 0
+    value: 1
+    sstep: 1
+    lstep: 2
 
 --------------------
 class: FL_COUNTER
-type: NORMAL_COUNTER
+type: FL_NORMAL_COUNTER
 box: 370 70 115 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLUE
@@ -184,15 +184,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: xmajor
 callback: xmajorminor_change_cb
 argument: 0
-  bounds: -1 20
-  precision: 0
-  value: 1
-  sstep: 1
-  lstep: 2
+    bounds: -1 20
+    precision: 0
+    value: 1
+    sstep: 1
+    lstep: 2
 
 --------------------
 class: FL_COUNTER
-type: NORMAL_COUNTER
+type: FL_NORMAL_COUNTER
 box: 370 110 115 20
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLUE
@@ -207,15 +207,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: xminor
 callback: xmajorminor_change_cb
 argument: 0
-  bounds: 0 10
-  precision: 0
-  value: 1
-  sstep: 1
-  lstep: 2
+    bounds: 0 10
+    precision: 0
+    value: 1
+    sstep: 1
+    lstep: 2
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 160 170 39 23
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -230,10 +230,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: xbase
 callback: xscale_change_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_INPUT
-type: FLOAT_INPUT
+type: FL_FLOAT_INPUT
 box: 158 210 39 23
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -248,10 +249,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: ybase
 callback: yscale_change_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_MENU
-type: PULLDOWN_MENU
+type: FL_PULLDOWN_MENU
 box: 193 29 150 22
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_MCOL
@@ -269,7 +271,7 @@ argument: 0
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 70 120 85 23
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -287,7 +289,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 230 80 100 25
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW

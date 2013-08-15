@@ -428,7 +428,7 @@ superspec_to_spec( FL_OBJECT * ob )
         sp->rdelta = spp->rdelta;
         sp->slsize = spp->slsize;
     }
-    else if (    ISBUTTON(ob->objclass)
+    else if (    ISBUTTON( ob->objclass )
               || ob->objclass == FL_PIXMAP
               || ob->objclass == FL_BITMAP )
     {

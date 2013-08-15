@@ -419,7 +419,7 @@ init_classes( void )
     add_type_def( FL_BITMAP, FL_NORMAL_BITMAP, "NORMAL_BITMAP" );
 
     fl_add_browser_line( fd_control->objectbrowser, "pixmap" );
-    add_class_def(VN( FL_PIXMAP ), OBJNAME( pixmap ), ++bl );
+    add_class_def( VN( FL_PIXMAP ), OBJNAME( pixmap ), ++bl );
     add_type_def( FL_PIXMAP, FL_NORMAL_PIXMAP, "NORMAL_PIXMAP" );
 
     fl_add_browser_line( fd_control->objectbrowser, "chart" );
@@ -975,7 +975,7 @@ add_an_object( int      objclass,
             break;
 
         case FL_XYPLOT:
-            if (type == -1)
+            if ( type == -1 )
                 type = FL_NORMAL_XYPLOT;
             {
                 float xx[ 30 ],
@@ -988,7 +988,7 @@ add_an_object( int      objclass,
                     yy[ i ] = FL_abs( sin( 2 * xx[ i ] ) + cos( xx[ i ] ) );
                 }
 
-                obj = cls->addit(type, x, y, w, h, "");
+                obj = cls->addit( type, x, y, w, h, "" );
                 fl_set_xyplot_data( obj, xx, yy, 30, "", "", "" );
             }
             break;

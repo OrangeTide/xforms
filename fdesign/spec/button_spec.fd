@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 18
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 540 280
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,11 +33,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 20 20 490 240
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_TIMESBOLD_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLACK
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 160 60 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -69,7 +69,7 @@ argument: 0
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 160 110 210 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -84,10 +84,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: filename
 callback: iconbutton_filename_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_CHOICE
-type: NORMAL_CHOICE2
+type: FL_NORMAL_CHOICE2
 box: 280 70 155 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_BLACK
@@ -105,7 +106,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 160 80 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -120,11 +121,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: showfocus
 callback: showfocus_change
 argument: 0
-value: 1
+    value: 1
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 370 110 66 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -142,7 +143,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 175 175 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -160,7 +161,7 @@ argument: 0
 
 --------------------
 class: FL_CHECKBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 275 175 30 30
 boxtype: FL_NO_BOX
 colors: FL_COL1 FL_YELLOW
@@ -178,7 +179,7 @@ argument: 0
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 160 145 210 25
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -193,10 +194,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: focus_filename
 callback: focusiconbutton_filename_change
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_BUTTON
-type: NORMAL_BUTTON
+type: FL_NORMAL_BUTTON
 box: 372 145 66 25
 boxtype: FL_UP_BOX
 colors: FL_COL1 FL_COL1
@@ -214,7 +216,7 @@ argument: 1
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 160 215 240 28
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -229,14 +231,15 @@ gravity: FL_NoGravity FL_NoGravity
 name: tooltip
 callback: helper_change_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 --------------------
 class: FL_TEXT
-type: NORMAL_TEXT
+type: FL_NORMAL_TEXT
 box: 60 40 100 20
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_MCOL
-alignment: FL_ALIGN_CENTER | FL_ALIGN_INSIDE
+alignment: FL_ALIGN_CENTER
 style: FL_NORMAL_STYLE
 size: FL_DEFAULT_SIZE
 lcol: FL_BLACK
@@ -250,7 +253,7 @@ argument:
 
 --------------------
 class: FL_ROUNDBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 160 40 20 20
 boxtype: FL_NO_BOX
 colors: FL_MCOL FL_YELLOW
@@ -265,11 +268,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: react_left
 callback: react_to_button
 argument: 0
-value: 1
+    value: 1
 
 --------------------
 class: FL_ROUNDBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 210 40 20 20
 boxtype: FL_NO_BOX
 colors: FL_MCOL FL_YELLOW
@@ -284,11 +287,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: react_middle
 callback: react_to_button
 argument: 1
-value: 1
+    value: 1
 
 --------------------
 class: FL_ROUNDBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 280 40 20 20
 boxtype: FL_NO_BOX
 colors: FL_MCOL FL_YELLOW
@@ -303,11 +306,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: react_right
 callback: react_to_button
 argument: 2
-value: 1
+    value: 1
 
 --------------------
 class: FL_ROUNDBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 340 40 20 20
 boxtype: FL_NO_BOX
 colors: FL_MCOL FL_YELLOW
@@ -322,11 +325,11 @@ gravity: FL_NoGravity FL_NoGravity
 name: react_up
 callback: react_to_button
 argument: 3
-value: 1
+    value: 1
 
 --------------------
 class: FL_ROUNDBUTTON
-type: PUSH_BUTTON
+type: FL_PUSH_BUTTON
 box: 390 40 20 20
 boxtype: FL_NO_BOX
 colors: FL_MCOL FL_YELLOW
@@ -341,7 +344,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: react_down
 callback: react_to_button
 argument: 4
-value: 1
+    value: 1
 
 ==============================
 create_the_forms

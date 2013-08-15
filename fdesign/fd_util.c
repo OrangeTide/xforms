@@ -97,7 +97,7 @@ rel2abs( const char * rel_path )
         abs_path = fl_strdup( rel_path );
     else
     {
-        long path_max = pathconf(".", _PC_PATH_MAX);
+        long path_max = pathconf( ".", _PC_PATH_MAX );
         size_t size;
 
         if ( path_max == -1 )

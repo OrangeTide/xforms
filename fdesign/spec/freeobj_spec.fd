@@ -1,4 +1,4 @@
-Magic: 13000
+Magic: 15000
 
 Internal Form Definition File
     (do not change)
@@ -15,7 +15,7 @@ Number of Objects: 3
 
 --------------------
 class: FL_BOX
-type: FLAT_BOX
+type: FL_FLAT_BOX
 box: 0 0 540 280
 boxtype: FL_FLAT_BOX
 colors: FL_COL1 FL_COL1
@@ -33,11 +33,11 @@ argument:
 
 --------------------
 class: FL_LABELFRAME
-type: ENGRAVED_FRAME
+type: FL_ENGRAVED_FRAME
 box: 20 20 490 240
 boxtype: FL_NO_BOX
 colors: FL_BLACK FL_COL1
-alignment: FL_ALIGN_TOP_LEFT
+alignment: FL_ALIGN_LEFT_TOP
 style: FL_BOLD_STYLE
 size: FL_NORMAL_SIZE
 lcol: FL_BLACK
@@ -51,7 +51,7 @@ argument:
 
 --------------------
 class: FL_INPUT
-type: NORMAL_INPUT
+type: FL_NORMAL_INPUT
 box: 145 110 280 30
 boxtype: FL_DOWN_BOX
 colors: FL_COL1 FL_MCOL
@@ -66,6 +66,7 @@ gravity: FL_NoGravity FL_NoGravity
 name: hname
 callback: handler_name_change_cb
 argument: 0
+return: FL_RETURN_END_CHANGED
 
 ==============================
 create_the_forms

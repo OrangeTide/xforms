@@ -623,7 +623,7 @@ lsize_val( const char * cc )
 char *
 gravity_name( int val )
 {
-    return get_vn_name(vn_gravity, val);
+    return get_vn_name( vn_gravity, val );
 }
 
 
@@ -1018,7 +1018,7 @@ print_form_newformat( FILE       * fn,
     fprintf( fn, "\n    fl_end_form( );\n\n");
 
     if ( fdopt.compensate )
-        fprintf(fn, "    fl_adjust_form_size( %s->%s );\n", fdvname, fname );
+        fprintf( fn, "    fl_adjust_form_size( %s->%s );\n", fdvname, fname );
 
     fprintf( fn, "    %s->%s->%s = %s;\n", fdvname, fname, fdvname, fdvname );
 
@@ -1430,7 +1430,7 @@ output_main_newformat( FILE * fn,
         fprintf( fn, "    %s *fd_%s;\n", fdtname, fname );
     }
 
-    fprintf(fn, "\n");
+    fprintf( fn, "\n" );
 
     fprintf( fn, "    fl_initialize( &argc, argv, 0, 0, 0 );\n" );
 

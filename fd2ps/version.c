@@ -40,7 +40,7 @@
 
 static char *version[ ] =
 {
-    "fd2ps " LIBVERSION( FL_VERSION, FL_REVISION ) "." FL_FIXLEVEL "\n",
+    "fd2ps " LIBVERSION( FL_VERSION, FL_REVISION ) "." FL_FIXLEVEL,
     "Copyright (c) 1997-2002 by T.C. Zhao",
     "GNU Lesser General Public License since 2002",
     NULL
@@ -102,7 +102,7 @@ print_version( int die )
     char **q = version;
 
     for ( ; *q; q++ )
-        fprintf( stderr, q == version ? "%s" : "%s\n", rm_rcs_kw( *q, 0 ) );
+        fprintf( stderr, "%s\n", rm_rcs_kw( *q, 0 ) );
 
     if ( die )
         exit( 0 );
@@ -118,7 +118,7 @@ get_version( void )
     static char buf[ 1024 ];
     char **q = version;
 
-    for ( buf[ 0 ] = '\0'; *q; q++ )
+    for ( *buf = '\0'; *q; q++ )
         strcat( buf, rm_rcs_kw( *q, 1 ));
 
     return buf;

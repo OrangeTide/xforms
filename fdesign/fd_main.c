@@ -42,7 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(__EMX__) || defined(WIN32)
+#if defined( __EMX__ ) || defined( WIN32 )
 #define strcasecmp stricmp
 #endif
 
@@ -181,13 +181,6 @@ add_something( void )
            ww = 0.0,
            hh = 0.0;
 
-    if ( ! cur_form )
-    {
-        addform_cb( NULL, 0 );
-        if ( ! cur_form )
-            return;
-    }
-
     fl_winset( main_window );
     get_mouse_pos( &xx, &yy );
     scale_box( &xx, &yy, &ww, &hh );
@@ -268,6 +261,17 @@ handle_click( XEvent * xev,
 {
     int dblclk = double_click( xev );
 
+    /* If no form exists yet ask the user to create it */
+
+    if ( ! cur_form )
+    {
+        int cc = cur_class;
+
+        addform_cb( NULL, 0 );
+        select_object_by_class( cc );
+        return;
+    }
+
     if ( no_selection )
         return 0;
 
@@ -339,7 +343,7 @@ handle_keypress( const XKeyEvent * xev )
         ( shift ? resize_selection : move_selection )( -stp, 0 );
     else if ( IsUp( keysym ) )
         ( shift ? resize_selection : move_selection )( 0, -stp );
-    else if ( IsDown(keysym ) )
+    else if ( IsDown( keysym ) )
         ( shift ? resize_selection : move_selection )( 0, stp );
     else if ( keysym == XK_Escape )
         exit_cb( 0, 0 );
@@ -453,7 +457,7 @@ static FL_CMD_OPT fd_cmdopt[ ] =
     { "-help",       ".help",           XrmoptionNoArg, "1"       }
 };
 
-#define Ncopt (sizeof fd_cmdopt / sizeof *fd_cmdopt )
+#define Ncopt ( sizeof fd_cmdopt / sizeof *fd_cmdopt )
 
 /* resources */
 
@@ -659,7 +663,7 @@ pre_connect( int    argc,
             fdopt.altformat = 1;
         else if ( strncmp( argv[ i ] + 1, "callback", 3 ) == 0 )
             fdopt.emit_cb = 1;
-        else if ( strncmp(argv[ i ] + 1, "compensate", 4 ) == 0 )
+        else if ( strncmp( argv[ i ] + 1, "compensate", 4 ) == 0 )
             fdopt.compensate = 1;
         else if ( strncmp( argv[ i ] + 1, "main", 3 ) == 0 )
             fdopt.emit_main = 1;
@@ -1009,7 +1013,7 @@ main( int    argc,
 
     fl_set_app_mainform( fd_control->control );
     fli_set_form_icon_data( fd_control->control, fd_logo_pixels );
-    fl_show_form(fd_control->control, FL_PLACE_GEOMETRY,
+    fl_show_form( fd_control->control, FL_PLACE_GEOMETRY,
                  ( 1 || fd_cntlborder ) ? FL_FULLBORDER : FL_TRANSIENT,
                  "Control" );
 
