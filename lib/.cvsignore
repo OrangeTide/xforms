@@ -1,8 +1,0 @@
-libforms*
-Makefile
-Makefile.in
-config.*
-.deps
-.libs
-*.lo
-xforms.5

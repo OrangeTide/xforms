@@ -390,10 +390,11 @@ static AllObj allobj[ ] =
     {
         VNP( FL_BROWSER ),
         {
-            VNP( FL_NORMAL_BROWSER ),
-            VNP( FL_SELECT_BROWSER ),
-            VNP( FL_HOLD_BROWSER   ),
-            VNP( FL_MULTI_BROWSER  ),
+            VNP( FL_NORMAL_BROWSER             ),
+            VNP( FL_SELECT_BROWSER             ),
+            VNP( FL_HOLD_BROWSER               ),
+            VNP( FL_MULTI_BROWSER              ),
+            VNP( FL_DESELECTABLE_HOLD_BROWSER  ),
             VNP( -1 ),
         }
     },

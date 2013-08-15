@@ -4,7 +4,7 @@ CLEANFILES = fdesign.1
 
 EXTRA_DIST = Change Readme fdesign.man
 
-SUBDIRS = fd fd4test notes spec xpm
+SUBDIRS = fd spec xpm
 
 man_MANS = fdesign.1
 

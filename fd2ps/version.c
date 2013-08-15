@@ -34,14 +34,17 @@
 #include <string.h>
 #include "fd2ps.h"
 
-static char *version[ ] =
-	{
-	    "fd2ps",
-	    "$State: Exp $ $Revision: 1.8 $ of $Date: 2009/12/15 23:09:10 $",
-	    "Copyright (c) 1997-2000 by T.C. Zhao",
-	    0
-	};
 
+#define S( a )  #a
+#define LIBVERSION( a, b ) S( a ) "." S( b )
+
+static char *version[ ] =
+{
+    "fd2ps " LIBVERSION( FL_VERSION, FL_REVISION ) "." FL_FIXLEVEL "\n",
+    "Copyright (c) 1997-2002 by T.C. Zhao",
+    "GNU Lesser General Public License since 2002",
+    NULL
+};
 
 
 /***************************************

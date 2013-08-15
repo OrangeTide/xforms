@@ -1107,9 +1107,10 @@ selected using a call of @code{@ref{fl_get_browser()}} to be described
 below. It returns the number of the last selected line (with the
 topmost line being line 1).
 
-An @code{@ref{FL_HOLD_BROWSER}} works exactly the same except that,
+A @code{@ref{FL_HOLD_BROWSER}} works exactly the same except that,
 when the left mouse button is released, the selection remains
-highlighted.
+highlighted. A @code{@ref{FL_DESELECTABLE_HOLD_BROWSER}} additionally
+allows the user to undo a selection (by clicking on it again).
 
 An @code{@ref{FL_MULTI_BROWSER}} allows the user to select and
 de-select multiple lines. Whenever he selects or de-selects a line the
@@ -1145,9 +1146,11 @@ Return or invoke callback on selection of a line. Please note that for
 for a number of lines having been selected.
 
 @item @ref{FL_RETURN_DESELECTION}
-Return or invoke callback on deselection of a line. This only works
-for @code{@ref{FL_MULTI_BROWSER}} browsers and the browser may be
-returned just once for a number of lines having been deselected.
+Return or invoke a callback on deselection of a line. This only
+happens for @code{@ref{FL_DESELECTABLE_HOLD_BROWSER}} and
+@code{@ref{FL_MULTI_BROWSER}} objects and, for the latter, the browser
+may get returned (or the callback invoked) just once for a number of
+lines having been deselected.
 
 @item @ref{FL_RETURN_END_CHANGED}
 Return or invoke callback at end (mouse release) if the text in the

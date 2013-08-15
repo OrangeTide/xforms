@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.61)
-AC_INIT([xforms],[1.0.94pre18],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.0.94pre19],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
@@ -187,8 +187,6 @@ AC_CONFIG_FILES([Makefile \
        gl/Makefile \
        fdesign/Makefile \
        fdesign/fd/Makefile \
-       fdesign/fd4test/Makefile \
-       fdesign/notes/Makefile \
        fdesign/spec/Makefile \
        fdesign/xpm/Makefile \
        fd2ps/Makefile \

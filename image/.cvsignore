@@ -1,6 +1,0 @@
-libflimage*
-Makefile
-Makefile.in
-.deps
-.libs
-*.lo
