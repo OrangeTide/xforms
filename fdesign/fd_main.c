@@ -269,7 +269,7 @@ handle_click( XEvent * xev,
 
         addform_cb( NULL, 0 );
         select_object_by_class( cc );
-        return;
+        return 0;
     }
 
     if ( no_selection )
