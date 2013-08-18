@@ -50,59 +50,13 @@ static char *version[ ] =
 /***************************************
  ***************************************/
 
-static const char *
-rm_rcs_kw( const char * s,
-           int          strip_time )
-{
-    static char buf[ 6 ][ 255 ];
-    static int nbuf;
-    char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
-    int left = 0, lastc = -1;
-
-    while ( *s && q - buf[ nbuf] < ( int ) sizeof( buf[ nbuf ] ) - 2 )
-    {
-        switch ( *s )
-        {
-            case '$':
-                if ( ( left = ! left ) )
-                    while ( *s && *s != ':' )
-                        s++;
-                break;
-
-            default:
-                /* Copy the char and remove extra space */
-
-                if ( ! ( lastc == ' ' && *s == ' ' ) )
-                    *q++ = lastc = *s;
-                break;
-        }
-        s++;
-    }
-
-    *q = '\0';
-
-    /* All xforms' RCS time has the format xx:xx:xx */
-
-    if ( strip_time )
-    {
-        if ( ( q = strchr( buf[ nbuf ], ':' ) ) )
-            *( q - 2 ) = '\0';
-    }
-
-    return buf[ nbuf ];
-}
-
-
-/***************************************
- ***************************************/
-
 void
 print_version( int die )
 {
     char **q = version;
 
     for ( ; *q; q++ )
-        fprintf( stderr, "%s\n", rm_rcs_kw( *q, 0 ) );
+        fprintf( stderr, "%s\n", *q );
 
     if ( die )
         exit( 0 );
@@ -115,11 +69,11 @@ print_version( int die )
 const char *
 get_version( void )
 {
-    static char buf[ 1024 ];
+    static char buf[ 256 ];
     char **q = version;
 
     for ( *buf = '\0'; *q; q++ )
-        strcat( buf, rm_rcs_kw( *q, 1 ));
+        strcat( buf, *q );
 
     return buf;
 }

@@ -55,52 +55,16 @@ extern int strcasecmp( const char *, const char * );
  * Info about the program
  ***************************************/
 
+#define S( a )  #a
+#define LIBVERSION( a, b ) S( a ) "." S( b )
+
 static const char *fd_version[ ] =
 {
-    "fdesign (FORM Designer)"
-    "$State: Exp $  $Revision: 1.39 $ of $Date: 2010/05/19 21:18:01 $",
+    "fdesign (FORM Designer) " LIBVERSION( FL_VERSION, FL_REVISION ) "." FL_FIXLEVEL,
     "Copyright (c) 1996-2002 by T.C. Zhao and Mark Overmars",
     "GNU Lesser General Public License sinc 2002",
     NULL
 };
-
-
-/***************************************
- * Remove RCS keywords
- ***************************************/
-
-static const char *
-rm_rcs_kw( const char * s )
-{
-    static unsigned char buf[ 5 ][ 255 ];
-    static int nbuf;
-    unsigned char *q = buf[ ( nbuf = ( nbuf + 1 ) % 5 ) ];
-    int left = 0,
-        lastc = -1;
-
-    while ( *s && ( q - buf[ nbuf ] ) < ( int ) sizeof buf[ nbuf ] - 2 )
-    {
-        switch ( *s )
-        {
-            case '$':
-                if ( ( left = ! left ) )
-                    while ( *s && *s != ':' )
-                        s++;
-                break;
-
-            default:
-                /* copy the char and remove extra space */
-                if ( ! ( lastc == ' ' && *s == ' ' ) )
-                    *q++ = lastc = *s;
-                break;
-        }
-        s++;
-    }
-
-    *q = '\0';
-
-    return ( const char * ) buf[ nbuf ];
-}
 
 
 /***************************************
@@ -112,21 +76,7 @@ print_version( int die )
     const char **p = fd_version;
 
     for ( ; *p; p++ )
-        fprintf( stderr, "%s\n", rm_rcs_kw( *p ) );
-
-    if ( die )
-        exit( 0 );
-}
-
-
-/***************************************
- ***************************************/
-
-static void
-print_xforms_version( int die )
-{
-    fprintf( stderr, "FORMS Library Version %d.%d.%s\n",
-             FL_VERSION, FL_REVISION, FL_FIXLEVEL );
+        fprintf( stderr, "%s\n", *p );
 
     if ( die )
         exit( 0 );
@@ -180,6 +130,9 @@ add_something( void )
            yy,
            ww = 0.0,
            hh = 0.0;
+
+    if ( ! cur_form )
+        return;
 
     fl_winset( main_window );
     get_mouse_pos( &xx, &yy );
@@ -265,10 +218,7 @@ handle_click( XEvent * xev,
 
     if ( ! cur_form )
     {
-        int cc = cur_class;
-
         addform_cb( NULL, 0 );
-        select_object_by_class( cc );
         return 0;
     }
 
@@ -657,8 +607,6 @@ pre_connect( int    argc,
             usage( argv[ 0 ], 1 );
         else if ( strncmp( argv[ i ] + 1, "version", 4 ) == 0 )
             print_version( 1 );
-        else if ( strncmp( argv[ i ] + 1, "xforms_version", 4 ) == 0 )
-            print_xforms_version( 1 );
         else if ( strncmp( argv[ i ] + 1, "altformat", 3 ) == 0 )
             fdopt.altformat = 1;
         else if ( strncmp( argv[ i ] + 1, "callback", 3 ) == 0 )
@@ -954,7 +902,7 @@ main( int    argc,
 
     init_classes( );
 
-    fl_set_counter_bounds( fd_align->snapobj, 0.0, 500.0 );
+    fl_set_counter_bounds( fd_align->snapobj, 1.0, 500.0 );
     fl_set_counter_step( fd_align->snapobj, 1.0, 5.0 );
     fl_set_counter_value( fd_align->snapobj, 10.0 );
     fl_set_counter_precision( fd_align->snapobj, 0 );

@@ -11,13 +11,13 @@ autoversion=`$AUTOCONF --version | head -n 1`
 
 echo "Using $autoversion"
 case $autoversion in
-    *2.5[12346789])
+    *2.5[2-9])
 		;;
-    *2.[6789][0123456789])
+    *2.[6-9][0-9])
 		;;
     *)
-		echo "This autoconf version is not supported by xforms."
-		echo "Please update to autoconf 2.51 or newer."
+		echo "This autoconf version is not supported by XForms."
+		echo "Please update to autoconf 2.52 or newer."
 		exit
 	;;
 esac

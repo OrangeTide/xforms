@@ -2,17 +2,20 @@
 @unnumbered @emph{Preface}
 
 The Forms Library (or XForms for short) is a GUI toolkit with a rather
-long history. Developed in the last decade of the last millenium by
-@strong{Dr.@: T.@: C.@: Zhao} (then at the Department of Physics,
-University of Wisconsin-Milwaukee, USA) and @strong{Prof.@: Dr.@: Mark
-Overmars} (Department of Computer Science, Utrecht University,
-Netherlands) at a time when there were hardly any alternatives. It
-became open source software in 2002, distributed according to the
-Lesser GNU Public License (LGPL).
+long history. It was developed in the last decade of the last
+millenium by @strong{Dr.@: T.@: C.@: Zhao} (then at the Department of
+Physics, University of Wisconsin-Milwaukee, USA) and @strong{Prof.@:
+Dr.@: Mark Overmars} (Department of Computer Science, Utrecht
+University, Netherlands) at a time when there were hardly any
+alternatives except expensive packages. While at first being closed
+source it became open source software in 2002, distributed according
+to the Lesser GNU Public License (LGPL).
 
 While development slowed down a bit while other toolkits became
-available and matured, XForms is still used and development
-continues.
+available and matured, XForms is still used, and development
+continues. While it may not be as polished as newer toolkits are it
+has the advantage of being relatively small and thus easier to get
+started with it.
 
 The XForms home page is at
 @center @url{http://xforms-toolkit.org/}
@@ -22,12 +25,10 @@ The source package can be downloaded from
 @center @url{https://savannah.nongnu.org/files/?group=xforms}
 while the @code{git} repository can be accessed via
 @center @url{git://git.savannah.nongnu.org/xforms.git}
-and the CVS repository via
-@center @url{https://savannah.nongnu.org/cvs/?group=xforms}
+@center @url{http://git.savannah.gnu.org/r/xforms.git}
+@center @url{ssh://git.sv.gnu.org/srv/git/xforms.git}
 
-There also is a mailing list, maintained until recently by Dr.@:
-Robert Williams. Since August 2009 the maling list has a new home. You
-can subscribe to it at
+There also is a mailing list. You can subscribe to it at
 @center @url{http://lists.nongnu.org/mailman/listinfo/xforms-development}
 The archive of the mailing list can be found at
 @center @url{http://lists.gnu.org/archive/html/xforms-development/}
@@ -39,17 +40,14 @@ Please write to the mailing list if you have questions or find bugs.
 This document is based on the documentation for version 0.89 of the
 Forms Library. It has been reconstructed from the PDF version (the
 original sources seem to have gone AWOL) and has been updated to cover
-the changes introduced since version 0.89. Some things from older
-versions are missing (e.g.@: function that are deprecated but still
-can be used), while some features described here may not be available
-with older versions of XForms.
+the changes introduced since version 0.89.
 
 In the following the preface for the last available version of the
 documentation (version 0.89 from June 2000) is reproduced. Please note
-that a lot of the information there-in is outdated. Many of the URLs
-mentioned don't exist anymore, email addresses have changed and the
-restrictions on the distribution of the library have been removed by
-the original authors in favor of the LGPL.
+that quite a bit of the information there-in is outdated. Many of the
+URLs mentioned don't exist anymore, email addresses have changed and
+the restrictions on the distribution of the library have been removed
+by the original authors in favor of the LGPL.
 
 @sp 4
 

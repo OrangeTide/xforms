@@ -155,6 +155,7 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     const char *s;
     const char *sp;
     FRM *new_forms;
+    int cc = cur_class;
 
     new_forms = fl_realloc( forms, ( fnumb + 1 ) * sizeof *forms );
 
@@ -229,6 +230,9 @@ addform_cb( FL_OBJECT * obj  FL_UNUSED_ARG,
     set_form( fnumb++ );
     fl_activate_form( fd_control->control );
     changed = FL_TRUE;
+
+    if ( cc >= 0 )
+        select_object_by_class( cc );
 }
 
 

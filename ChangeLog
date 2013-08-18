@@ -1,3 +1,7 @@
+2013-08-17 Jens Thoms Toerring    <jt@toerring.de>
+
+	* fdesign: small fixes of some inconsistencies
+
 2013-08-13 Jens Thoms Toerring    <jt@toerring.de>
 
 	* lib/browser.c etc.: New type FL_DESELECTABLE_HOLD_BROWSER

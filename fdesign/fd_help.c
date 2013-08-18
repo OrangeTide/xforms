@@ -206,8 +206,8 @@ char generalhelp[ ][ 80 ] =
     "the new window to align it/them left, horizontal centers, right, etc. It",
     "is also possible to put equal distances between objects. With this form",
     "you can also set the 'snap value' which tells fdesign about the number of",
-    "pixels to which values are rounded when positioning or resizing objects in",
-    "your forms.",
+    "pixels to which values are rounded when positioning or resizing objects",
+    "in your forms.",
     " ",
 
     "@bConfiguration",
