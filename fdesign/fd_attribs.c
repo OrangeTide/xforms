@@ -636,7 +636,8 @@ change_object( FL_OBJECT * obj,
         retobj = fl_do_forms( );
         if ( retobj == FL_EVENT )
             fl_XNextEvent( &xev );
-    } while ( ! (    ( retobj == fd_attrib->readyobj && validate_attributes( ) )
+    } while ( ! (    (    retobj == fd_attrib->readyobj
+                       && validate_attributes( ) )
                   || retobj == fd_attrib->cancelobj ) );
 
     if ( spec_form )
@@ -682,9 +683,18 @@ set_attribs( FL_OBJECT  * obj,
     obj->col1    = col1;
     obj->col2    = col2;
     obj->lcol    = lcol;
-    obj->align   = align;
     obj->lsize   = lsize;
     obj->lstyle  = lstyle;
+
+    if (    obj->objclass == FL_SLIDER
+         && ! ( obj->type & FL_VERT_PROGRESS_BAR ) )
+    {
+        obj->align = fl_to_outside_lalign( obj->align );
+        if ( fl_is_center_lalign( obj->align ) )
+            obj->align = FL_SLIDER_ALIGN;
+    }
+    else
+        obj->align   = align;
 
     if ( ( s = strchr( label, '\010' ) ) )
         memmove( s, s + 1, strlen( s ) + 1 );

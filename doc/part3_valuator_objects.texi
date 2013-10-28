@@ -109,7 +109,21 @@ A different looking vertical slider.
 @anchor{FL_HOR_BROWSER_SLIDER}
 @item FL_HOR_BROWSER_SLIDER
 A different looking horizontal slider.
+
+@tindex FL_VERT_PROGRESS_BAR
+@anchor{FL_VERT_PROGRESS_BAR}
+@item FL_VERT_PROGRESS_BAR
+A vertical progress bar
+
+@tindex FL_HOR_PROGRESS_BAR
+@anchor{FL_HOR_PROGRESS_BAR}
+@item FL_HOR_PROGRESS_BAR
+A horizontal progress bar
 @end table
+
+Please note that except for @code{@ref{FL_VERT_PROGRESS_BAR}} and
+@code{@ref{FL_HOR_PROGRESS_BAR}} the label will always drawn on the
+outside of the slider (even if you attempt to set an inside alignment).
 
 @ifhtml
 @center @image{images/slidertypes}
@@ -127,6 +141,17 @@ slider is returned (unless there's callback function associated with
 the object) by the interaction routines. The slider position is
 changed by moving the mouse inside the slider area. For fine control,
 hold down the @code{<Shift>} key while moving the slider.
+
+Please note: the @code{@ref{FL_VERT_PROGRESS_BAR}} and
+@code{@ref{FL_HOR_PROGRESS_BAR}} aren't actually valuator objects
+(they don't react to any user interaction) but are vor visualization
+only (i.e.@: showing a progress bar that is changed by the program
+only), they appear hear because they are directly derived from the
+@code{@ref{FL_VERT_FILL_SLIDER}} and @code{@ref{FL_VERT_FILL_SLIDER}}
+slider. Thus the only way to change the value of objects of these
+types is by calling @code{@ref{fl_set_slider_value()}}! To obtain the
+correct "progress bar" behaviour you should also update the label
+accordingly.
 
 In some cases you might not want the slider to be returned or its
 callback called each time its value changes. To change the default,

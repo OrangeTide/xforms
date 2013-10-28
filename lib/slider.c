@@ -206,7 +206,8 @@ draw_slider( FL_OBJECT * ob )
                         FLI_SLIDER_ALL & ~sp->mouse );
         
         /* Added 10/21/00 TCZ: need this to get the inside label right
-           otherwise fli_drw_slider() draw lable centered on the filled part!*/
+           otherwise fli_drw_slider() draws the lable centered on the
+           xfilled part!*/
 
         if ( IS_FILL( ob ) )
             fl_draw_object_label( ob );
@@ -215,7 +216,11 @@ draw_slider( FL_OBJECT * ob )
     {
         fli_drw_slider( ob, ob->col1, ob->col2, "",
                         FLI_SLIDER_ALL & ~sp->mouse );
-        fl_draw_object_label_outside( ob );
+
+        if ( fl_is_inside_lalign( ob->align ) )
+            fl_draw_object_label( ob );
+        else
+            fl_draw_object_label_outside( ob );
     }
 
     if ( sp->mouse != FLI_SLIDER_NONE )
@@ -712,9 +717,12 @@ handle_slider( FL_OBJECT * ob,
     {
         case FL_ATTRIB :
         case FL_RESIZED :
-            ob->align = fl_to_outside_lalign( ob->align );
-            if ( fl_is_center_lalign( ob->align ) )
-                ob->align = FL_SLIDER_ALIGN;
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+            {
+                ob->align = fl_to_outside_lalign( ob->align );
+                if ( fl_is_center_lalign( ob->align ) )
+                    ob->align = FL_SLIDER_ALIGN;
+            }
             compute_bounds( ob );
             break;
 
@@ -724,7 +732,10 @@ handle_slider( FL_OBJECT * ob,
             break;
 
         case FL_DRAWLABEL :
-            fl_draw_object_label_outside( ob );
+            if ( fl_is_inside_lalign( ob->align ) )
+                fl_draw_object_label( ob );
+            else
+                fl_draw_object_label_outside( ob );
             break;
 
         case FL_FREEMEM :
@@ -732,27 +743,33 @@ handle_slider( FL_OBJECT * ob,
             break;
 
         case FL_ENTER :
-            handle_enter( ob, mx, my );
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+                handle_enter( ob, mx, my );
             break;
 
         case FL_LEAVE :
-            handle_leave( ob );
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+                handle_leave( ob );
             break;
 
         case FL_MOTION :
-            ret |= handle_motion( ob, mx, my, key, ev );
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+                ret |= handle_motion( ob, mx, my, key, ev );
             break;
 
         case FL_PUSH :
-            ret |= handle_push( ob, mx, my, key, ev );
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+                ret |= handle_push( ob, mx, my, key, ev );
             break;
 
         case FL_UPDATE :
-            ret |= handle_update( ob, mx, my, key );
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+                ret |= handle_update( ob, mx, my, key );
             break;
 
         case FL_RELEASE :
-            ret |= handle_release( ob, mx, my, key, ev );
+            if ( ! ( ob->type & FL_VERT_PROGRESS_BAR ) )
+                ret |= handle_release( ob, mx, my, key, ev );
             break;
     }
 

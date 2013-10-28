@@ -901,7 +901,7 @@ get_next_event_or_idle( int        wait_io,
            events. This is a bit questionable, at least for mouse movements,
            since a user may want to get all events (e.g. because s/he wants
            to draw something exactly following the mouse movements). If this
-           would be changed then care would have be taken that in the mask
+           would be changed then care would have to be taken that in the mask
            for MotionNotify PointerMotionHintMask is *not* set (see the
            fli_xevent_to_mask() function in appwin.c) since that keeps most
            motion events from coming through! */

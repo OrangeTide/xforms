@@ -97,12 +97,6 @@ show_spec( SuperSPEC * spec )
 }
 
 
-#define is_vert(t)     (    t == FL_VERT_SLIDER          \
-                         || t == FL_VERT_NICE_SLIDER     \
-                         || t == FL_VERT_BROWSER_SLIDER  \
-                         || t == FL_VERT_FILL_SLIDER )
-
-
 /***************************************
  ***************************************/
 
@@ -122,17 +116,17 @@ set_slider_attrib( FL_OBJECT * ob )
     fl_set_counter_step( sl_attrib->prec, 1, 2 );
     fl_set_counter_precision( sl_attrib->prec, 0 );
     fl_set_counter_bounds( sl_attrib->prec, 0, 6 );
-    fl_redraw_object( sl_attrib->prec );   /* need this to draw counter fully */
+    fl_redraw_object( sl_attrib->prec );  /* need this to draw counter fully */
 
-    if ( is_vert( ob->type ) )
-    {
-        fl_set_object_label( sl_attrib->minval, "Value at top" );
-        fl_set_object_label( sl_attrib->maxval, "Value at bottom" );
-    }
-    else
+    if ( ob->type & FL_HOR_FLAG )
     {
         fl_set_object_label( sl_attrib->minval, "Value at left" );
         fl_set_object_label( sl_attrib->maxval, "Value at right" );
+    }
+    else
+    {
+        fl_set_object_label( sl_attrib->minval, "Value at top" );
+        fl_set_object_label( sl_attrib->maxval, "Value at bottom" );
     }
 
     show_spec( slider_spec );
@@ -157,7 +151,7 @@ emit_slider_code( FILE      * fp,
     if ( ob->objclass != FL_SLIDER && ob->objclass != FL_VALSLIDER )
         return;
 
-    /* create a default object */
+    /* Create a default object */
 
     defobj = ( ob->objclass == FL_SLIDER ?
                fl_create_slider : fl_create_valslider )
@@ -201,7 +195,7 @@ save_slider_attrib( FILE      * fp,
     if ( ob->objclass != FL_SLIDER && ob->objclass != FL_VALSLIDER )
         return;
 
-    /* create a default object */
+    /* Create a default object */
 
     defobj = ( ob->objclass == FL_SLIDER ?
                fl_create_slider : fl_create_valslider )

@@ -42,8 +42,8 @@ typedef FLI_VALUATOR_SPEC FLI_SLIDER_SPEC;
 
 #define IS_VSLIDER( o )      ( ! IS_HSLIDER( o ) )
 
-#define IS_FILL( o )         (    ( o )->type == FL_VERT_FILL_SLIDER    \
-                               || ( o )->type == FL_HOR_FILL_SLIDER )
+#define IS_FILL( o )         (    ( o )->type & FL_VERT_FILL_SLIDER    \
+                               || ( o )->type & FL_VERT_PROGRESS_BAR )
 
 #define IS_SCROLLBAR( o )    ( ( o )->type & FL_SCROLL_FLAG )
 

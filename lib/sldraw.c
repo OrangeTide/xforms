@@ -70,7 +70,7 @@ fli_calc_slider_size( FL_OBJECT          * ob,
     int fudge2 = IS_FLATORUPBOX( ob->boxtype ) ?
                  0 : ( 2 * ( bw == -2 ) + ( bw >= 2 ) );
 
-    if ( ob->type == FL_VERT_FILL_SLIDER )
+    if ( ob->type == FL_VERT_FILL_SLIDER || ob->type == FL_VERT_PROGRESS_BAR )
     {
         int inv = sp->min > sp->max;
 
@@ -80,7 +80,8 @@ fli_calc_slider_size( FL_OBJECT          * ob,
         knob->x = absbw;
         return;
     }
-    else if ( ob->type == FL_HOR_FILL_SLIDER )
+    else if (    ob->type == FL_HOR_FILL_SLIDER
+              || ob->type == FL_HOR_PROGRESS_BAR )
     {
         knob->w = val * ( sp->w - 2 * absbw );
         knob->x = absbw;

@@ -317,6 +317,8 @@ add_slider_types( int sclass )
     add_type_def( sclass, FL_HOR_NICE_SLIDER,     "HOR_NICE_SLIDER"     );
     add_type_def( sclass, FL_VERT_BROWSER_SLIDER, "VERT_BROWSER_SLIDER" );
     add_type_def( sclass, FL_HOR_BROWSER_SLIDER,  "HOR_BROWSER_SLIDER"  );
+    add_type_def( sclass, FL_VERT_PROGRESS_BAR,   "VERT_PROGRESS_BAR"   );
+    add_type_def( sclass, FL_HOR_PROGRESS_BAR,    "HOR_PROGRESS_BAR"    );
 }
 
 /***************************************

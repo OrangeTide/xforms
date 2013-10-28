@@ -28,7 +28,7 @@
 
 
 #define FL_HOR_FLAG     1
-#define FL_SCROLL_FLAG  8
+#define FL_SCROLL_FLAG  16
 
 typedef enum {
     FL_VERT_SLIDER           = 0,
@@ -42,6 +42,9 @@ typedef enum {
 
     FL_VERT_BROWSER_SLIDER   = 6,
     FL_HOR_BROWSER_SLIDER    = FL_VERT_BROWSER_SLIDER  | FL_HOR_FLAG,
+
+	FL_VERT_PROGRESS_BAR     = 8,
+	FL_HOR_PROGRESS_BAR      = FL_VERT_PROGRESS_BAR    | FL_HOR_FLAG,
 
     /* The following are for use with scrollbars only! */
 
