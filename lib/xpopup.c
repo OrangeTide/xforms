@@ -63,13 +63,13 @@
 
 typedef struct
 {
-    char         * str;             /* label               */
-    FL_PUP_CB      icb;             /* callback            */
-    long         * shortcut;        /* shortcut keys       */
-    int            subm;            /* sub menu            */
-    unsigned int   mode;            /* various attributes  */
-    int            ret;             /* %x stuff            */
-    short          ulpos;           /* hotkeys in label    */
+    char         * str;             /* label                        */
+    FL_PUP_CB      icb;             /* callback                     */
+    long         * shortcut;        /* shortcut keys                */
+    int            subm;            /* sub menu                     */
+    unsigned int   mode;            /* various attributes           */
+    int            ret;             /* %x stuff                     */
+    short          ulpos;           /* hotkeys in label             */
     short          radio;           /* radio entry. 0 mean no radio */
     short          len;
 } MenuItem;
@@ -78,25 +78,25 @@ typedef struct
 typedef struct
 {
     int              used;
-    char           * title;         /* Menu title            */
-    Window           win;           /* menu window           */
-    Cursor           cursor;        /* cursor for the pup    */
-    GC               gc_active;     /* GC for maintext       */
-    GC               gc_inactive;   /* GC for inactive text  */
+    char           * title;         /* Menu title                   */
+    Window           win;           /* menu window                  */
+    Cursor           cursor;        /* cursor for the pup           */
+    GC               gc_active;     /* GC for main text             */
+    GC               gc_inactive;   /* GC for inactive text         */
     MenuItem       * item[ FL_MAXPUPI + 1 ];
-    FL_PUP_CB        menu_cb;       /* call back routine     */
-    FL_PUP_ENTERCB   enter_cb;      /* enter callback routine */
+    FL_PUP_CB        menu_cb;       /* callback routine             */
+    FL_PUP_ENTERCB   enter_cb;      /* enter callback routine       */
     void           * enter_data;
-    FL_PUP_ENTERCB   leave_cb;      /* enter callback routine */
+    FL_PUP_ENTERCB   leave_cb;      /* leave callback routine       */
     void           * leave_data;
     unsigned long    event_mask;
-    int              x,             /* origin relative to root */
+    int              x,             /* origin relative to root      */
                      y;
-    unsigned int     w,             /* total dimension       */
+    unsigned int     w,             /* total dimension              */
                      h;
     short            titleh;
-    short            nitems;        /* no. of item in menu   */
-    short            title_width;   /* title width           */
+    short            nitems;        /* no. of item in menu          */
+    short            title_width;   /* title width                  */
     short            maxw;
     short            bw;
     short            lpad;
@@ -182,7 +182,7 @@ init_pupfont( void )
 
 
 /***************************************
- * initialize a particular menu
+ * Initialize a particular menu
  ***************************************/
 
 static void
@@ -288,7 +288,7 @@ reset_max_width( PopUP * m )
  * Parse the menu entries
  ***************************************/
 
-#define MV( d, s )   memmove( d, s, strlen( s ) + 1 );
+#define MV( d, s )   memmove( ( d ), ( s ), strlen( s ) + 1 )
 
 static int
 parse_entry( int          n,
@@ -423,7 +423,7 @@ parse_entry( int          n,
                     while ( isspace( ( unsigned char ) *e ) )
                         e++;
 
-                    /* if the item is to be in on state all other items
+                    /* If the item is to be in on state all other items
                        belonging to the same group must be in off state */
 
                     if ( p[ 1 ] == 'R' )
@@ -955,7 +955,7 @@ handle_submenu( PopUP    * m,
 
 
 /***************************************
- * keyboard. Also checks shortcut
+ * Keyboard handling. Also checks shortcut
  ***************************************/
 
 static int
@@ -1045,7 +1045,7 @@ pup_keyboard( XKeyEvent * xev,
 
 
 /***************************************
- * mouse moved. val is set to the item number (not value) upon return
+ * Mouse moved - val is set to the item number (not value) upon return
  ***************************************/
 
 static MenuItem *

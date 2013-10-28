@@ -136,20 +136,20 @@ draw_droplist_choice( FL_OBJECT * ob )
     if ( bw > 0 )
         bw -= ob->bw > 1;
 
-    /* arrows */
+    /* Arrows */
 
     fl_drw_box( sp->pushed ? FL_DOWN_BOX : FL_UP_BOX, ob->x + dx, ob->y,
                 dw, ob->h, c1, bw );
     fl_drw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2, dw - 4, ob->h - 4,
                  FL_BLACK, 0, 0, "@#2->" );
 
-    /* choice box */
+    /* Choice box */
 
     fl_drw_box( ob->boxtype, ob->x, ob->y, dx, ob->h, ob->col1, ob->bw );
     fl_drw_text_beside( ob->align, ob->x, ob->y, dx, ob->h, ob->lcol,
                         ob->lstyle, ob->lsize, ob->label );
 
-    /* string can conceivably contain "type flags", need to get rid of them
+    /* String can conceivably contain "type flags", need to get rid of them
        on the fly */
 
     if ( sp->val > 0 && sp->val <= sp->numitems )
@@ -235,7 +235,7 @@ do_pup( FL_OBJECT * ob )
 
     popup_id = fl_newpup( FL_ObjWin( ob ) );
 
-    /* fake a title */
+    /* Fake a title */
 
     if (    ob->label
          && ob->label[ 0 ]

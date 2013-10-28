@@ -45,6 +45,17 @@ static FL_FORM * create_new_form( FL_Coord,
 static void force_visible( FL_FORM * );
 static void set_form_property( FL_FORM *,
                                unsigned int );
+static void get_decoration_sizes_from_wm( Atom ,
+                                          FL_FORM *,
+                                          int *,
+                                          int *,
+                                          int *,
+                                          int * );
+static void get_decorations_sizes_from_parent( FL_FORM *,
+                                               int *,
+                                               int *,
+                                               int *,
+                                               int * );
 
 
 static FL_FORM * fli_mainform;
@@ -94,8 +105,8 @@ get_hidden_forms_index( FL_FORM * form )
 
 
 /***************************************
- * Extend the list of forms by one element and append the
- * new forms address (thus listing it as invisible)
+ * Extend the list of forms by one element and appends the
+ * new forms address (listing it as invisible)
  ***************************************/
 
 static void
@@ -109,8 +120,7 @@ add_form_to_hidden_list( FL_FORM * form )
 
 
 /***************************************
- * Moves a form from the list of hidden forms
- * to the list of visible forms
+ * Moves a form from the list of hidden to the list of visible forms
  ***************************************/
 
 static int
@@ -146,8 +156,7 @@ move_form_to_visible_list( FL_FORM * form )
 
 
 /***************************************
- * Moves a form from the list of visible forms
- * to the list of hidden forms
+ * Moves a form from the list of visible to the list of hidden forms
  ***************************************/
 
 static int
@@ -597,7 +606,7 @@ reshape_form( FL_FORM * form )
 /***************************************
  * Scale a form with the given scaling factors and take care of object
  * gravity. This one differs from fl_scale_form() in that we don't
- * reshape the window in any way. Most useful as a follow up to
+ * reshape the window in any way. Most useful as a follow up to a
  * ConfigureNotify event
  ***************************************/
 
@@ -2252,13 +2261,12 @@ fl_lower_form( FL_FORM * form )
  * Returns the sizes of the "decorations" the window manager puts around
  * a forms window. Returns 0 on success and 1 if the form isn't visible
  * or it's a form embedded into another form.
- * This first tries to use the "_NET_FRAME_EXTENTS" atom which window
- * manager in principle should set for windows that have decorations.
- * For those window managers that don't have that atom we try it with the
- * old trick of searching up for the parent window that's either Null or
- * is a direct child of the root window and using this windows geometry
- * (but note: this doesn't work with window managers that don't reparent
- * the windows they manage, but we can't recognize that).
+ * This tries to use the "_NET_FRAME_EXTENTS" atom which resonably recent
+ * window managers in principle should set. For those window managers that
+ * don't have that atom we try it with the old trick of searching up for
+ * the enclosing parent window and using the geometry of this window (but
+ * note: this doesn't work with window managers that don't reparent the
+ * windows they manage, and we can't recognize that).
  ***************************************/
 
 int
@@ -2276,109 +2284,148 @@ fl_get_decoration_sizes( FL_FORM * form,
          || form->parent )
         return 1;
 
-    *top = *right = *bottom = *left = 0;
-
-    /* If the window manager knows about '_NET_FRAME_EXTENTS' ask for
-       the settings for the forms window (if there are none the window
-       probably has no decorations) */
+    /* If the window manager knows about the '_NET_FRAME_EXTENTS' atom ask
+       for the settings for the forms window, otherwise try by looking for
+       the size of the enclosing parent window */
 
     if ( ( a = XInternAtom( fl_get_display( ), "_NET_FRAME_EXTENTS", True ) )
-                                                                       != None )
-    {
-        Atom actual_type;
-        int actual_format;
-        unsigned long nitems;
-        unsigned long bytes_after;
-        static unsigned char *prop;
-
-        XGetWindowProperty( fl_get_display( ), form->window, a, 0,
-                            4, False, XA_CARDINAL,
-                            &actual_type, &actual_format, &nitems,
-                            &bytes_after, &prop );
-
-        if (    actual_type == XA_CARDINAL
-             && actual_format == 32
-             && nitems == 4 )
-        {
-            *top    = ( ( long * ) prop )[ 2 ];
-            *right  = ( ( long * ) prop )[ 1 ];
-            *bottom = ( ( long * ) prop )[ 3 ];
-            *left   = ( ( long * ) prop )[ 0 ];
-        }
-    }
+                                                                      != None )
+        get_decoration_sizes_from_wm( a, form, top, right, bottom, left );
     else
-    {
-        /* The window manager doesn't have the _NET_FRAME_EXTENDS atom so we
-           have to try the traditional method (which assumes that the window
-           manager reparents the windows it manages) */
-
-        Window cur_win = form->window;
-        Window root;
-        Window parent;
-        Window *childs = NULL;
-        XWindowAttributes win_attr;
-        XWindowAttributes frame_attr;
-        Window wdummy;
-        unsigned int udummy;
-
-        /* Get the coordinates and size of the form's window */
-
-        XGetWindowAttributes( fl_get_display( ), cur_win, &win_attr );
-
-        /* Check try to get its parent window */
-
-        XQueryTree( fl_get_display( ), cur_win, &root, &parent, &childs,
-                    &udummy );
-        if ( childs )
-        {
-            XFree( childs );
-            childs = NULL;
-        }
-
-        /* If there's no parent or the parent window is the root window
-           itself we've got to assume that there are no decorations */
-
-        if ( ! parent || parent == root )
-            return 0;
-
-        /* Now translate the form window's coordiates (that are relative to
-           its parent) to that relative to the root window and then find the
-           top-most parent that isn't the root window itself */
-
-        XTranslateCoordinates( fl_get_display( ), parent, root,
-                               win_attr.x, win_attr.y,
-                               &win_attr.x, &win_attr.y, &wdummy );
-
-        while ( parent && parent != root )
-        {
-            cur_win = parent;
-            XQueryTree( fl_get_display( ), cur_win, &root, &parent, &childs,
-                        &udummy );
-            if ( childs )
-            {
-                XFree( childs );
-                childs = NULL;
-            }
-        }
-
-        /* Get the cordinates and sizes of that top-most window... */
-
-        XGetWindowAttributes( fl_get_display( ), cur_win, &frame_attr );
-
-        /* ...and finally calculate the decoration sizes */
-
-        *top    = win_attr.y - frame_attr.y;
-        *left   = win_attr.x - frame_attr.x;
-        *bottom = frame_attr.height - win_attr.height - *top;
-        *right  = frame_attr.width  - win_attr.width  - *left;
-    }
+        get_decorations_sizes_from_parent( form, top, right, bottom, left );
 
     return 0;
 }
 
 
 /***************************************
- * Returns if a forms window is in iconified state
+ * Gets the decorations sizes via the _NET_FRAME_EXTENTS atom.
+ ***************************************/
+
+static
+void
+get_decoration_sizes_from_wm( Atom      a,
+                              FL_FORM * form,
+                              int     * top,
+                              int     * right,
+                              int     * bottom,
+                              int     * left )
+{
+    Atom actual_type;
+    int actual_format;
+    unsigned long nitems;
+    unsigned long bytes_after;
+    static unsigned char *prop;
+
+    XGetWindowProperty( fl_get_display( ), form->window, a, 0,
+                        4, False, XA_CARDINAL,
+                        &actual_type, &actual_format, &nitems,
+                        &bytes_after, &prop );
+
+    /* If no properties are returne the window probably has no decorations */
+
+    if (    actual_type == XA_CARDINAL
+         && actual_format == 32
+         && nitems == 4 )
+    {
+        *top    = ( ( long * ) prop )[ 2 ];
+        *right  = ( ( long * ) prop )[ 1 ];
+        *bottom = ( ( long * ) prop )[ 3 ];
+        *left   = ( ( long * ) prop )[ 0 ];
+    }
+    else
+        *top = *right =*bottom = *left = 0;
+}
+
+
+/***************************************
+ * Tries to get the size of the decorations of a form the traditional
+ * way, asuming that the form window is the child of a parent window
+ * that encloses also the decoration windows (assuming that the window
+ * manager reparents the windows it manages, otherwise we'll report
+ * back zero sized decorations without any chance of figuring out that
+ * this is wrong;-(
+ ***************************************/
+
+static
+void
+get_decorations_sizes_from_parent( FL_FORM * form,
+                                   int     * top,
+                                   int     * right,
+                                   int     * bottom,
+                                   int     * left )
+{
+    Window cur_win = form->window;
+    Window root;
+    Window parent;
+    Window *childs = NULL;
+    XWindowAttributes win_attr;
+    XWindowAttributes frame_attr;
+    Window wdummy;
+    unsigned int udummy;
+
+    /* Get the coordinates and size of the form's window */
+
+    XGetWindowAttributes( fl_get_display( ), cur_win, &win_attr );
+
+    /* Try to get its parent window */
+
+    XQueryTree( fl_get_display( ), cur_win, &root, &parent, &childs,
+                &udummy );
+
+    /* Childs aren't used, get rid of them */
+
+    if ( childs )
+    {
+        XFree( childs );
+        childs = NULL;
+    }
+
+    /* If there's no parent or the parent window is the root window
+       we've got to assume that there are no decorations */
+
+    if ( ! parent || parent == root )
+    {
+        *top = *right =*bottom = *left = 0;
+        return;
+    }
+
+    /* Now translate the form window's coordiates (that are relative to
+       its parent) to that relative to the root window and then find the
+       top-most parent that isn't the root window itself */
+
+    XTranslateCoordinates( fl_get_display( ), parent, root,
+                           win_attr.x, win_attr.y,
+                           &win_attr.x, &win_attr.y, &wdummy );
+
+    while ( parent && parent != root )
+    {
+        cur_win = parent;
+        XQueryTree( fl_get_display( ), cur_win, &root, &parent, &childs,
+                    &udummy );
+
+        if ( childs )
+        {
+            XFree( childs );
+            childs = NULL;
+        }
+    }
+
+    /* Get the cordinates and sizes of the top-most window... */
+
+    XGetWindowAttributes( fl_get_display( ), cur_win, &frame_attr );
+
+    /* ...and finally calculate the decoration sizes */
+
+    *top    = win_attr.y - frame_attr.y;
+    *left   = win_attr.x - frame_attr.x;
+    *bottom = frame_attr.height - win_attr.height - *top;
+    *right  = frame_attr.width  - win_attr.width  - *left;
+}
+
+
+/***************************************
+ * Returns if a form window is in iconified state
  ***************************************/
 
 int

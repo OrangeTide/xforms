@@ -45,7 +45,7 @@ typedef enum {
 
     /* The following are for use with scrollbars only! */
 
-    /* for FL_VERT_SCROLLBAR and FL_HOR_SCROLLBAR */
+    /* For FL_VERT_SCROLLBAR and FL_HOR_SCROLLBAR */
 
     FL_VERT_BROWSER_SLIDER2   = FL_VERT_SLIDER         | FL_SCROLL_FLAG,
     FL_HOR_BROWSER_SLIDER2    = FL_HOR_SLIDER          | FL_SCROLL_FLAG,
@@ -55,7 +55,7 @@ typedef enum {
     FL_VERT_THIN_SLIDER       = FL_VERT_FILL_SLIDER    | FL_SCROLL_FLAG,
     FL_HOR_THIN_SLIDER        = FL_HOR_FILL_SLIDER     | FL_SCROLL_FLAG,
 
-    /* for FL_VERT_NICE_SCROLLBAR and FL_HOR_NICE_SCROLLBAR */
+    /* For FL_VERT_NICE_SCROLLBAR and FL_HOR_NICE_SCROLLBAR */
 
     FL_VERT_NICE_SLIDER2      = FL_VERT_NICE_SLIDER    | FL_SCROLL_FLAG,
     FL_HOR_NICE_SLIDER2       = FL_HOR_NICE_SLIDER     | FL_SCROLL_FLAG,

@@ -202,10 +202,10 @@ draw_slider( FL_OBJECT * ob )
     if ( fl_is_center_lalign( ob->align ) )
     {
         fli_drw_slider( ob, ob->col1, ob->col2,
-                        IS_FILL( ob ) ? "" : ob->label,
+                        IS_FILL( ob ) ? NULL : ob->label,
                         FLI_SLIDER_ALL & ~sp->mouse );
         
-        /* added 10/21/00 TCZ: need this to get the inside label right
+        /* Added 10/21/00 TCZ: need this to get the inside label right
            otherwise fli_drw_slider() draw lable centered on the filled part!*/
 
         if ( IS_FILL( ob ) )
@@ -784,7 +784,6 @@ create_slider( int          objclass,
     ob->lcol    = FL_SLIDER_LCOL;
     ob->lsize   = FL_TINY_SIZE;
     ob->spec    = sp = fl_calloc( 1, sizeof *sp );
-
     sp->min            = 0.0;
     sp->max            = 1.0;
     sp->val            = sp->start_val = 0.5;
@@ -795,6 +794,7 @@ create_slider( int          objclass,
     sp->timeout_id     = -1;
     sp->mouse_off_knob = 0;
     sp->was_shift      = 0;
+    sp->cross_over     = 0;
     sp->old_mx = sp->old_my = 0;
     if ( IS_SCROLLBAR( ob ) )
         sp->slsize    *= 1.5;
