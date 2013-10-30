@@ -117,4 +117,7 @@ FL_EXPORT int fl_set_choice_entries( FL_OBJECT    * ob,
 FL_EXPORT int fl_set_choice_notitle( FL_OBJECT * ob,
                                      int         n );
 
+FL_EXPORT int fl_set_choice_align_bottom( FL_OBJECT * ob,
+										  int         n );
+
 #endif /* ! defined FL_CHOICE_H */

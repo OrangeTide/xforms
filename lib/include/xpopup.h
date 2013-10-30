@@ -81,6 +81,8 @@ FL_EXPORT void fl_setpup_shortcut( int          nm,
 FL_EXPORT void fl_setpup_position( int x,
                                    int y );
 
+FL_EXPORT void fl_setpup_align_bottom( void );
+
 FL_EXPORT void fl_setpup_selection( int nm,
                                     int ni );
 

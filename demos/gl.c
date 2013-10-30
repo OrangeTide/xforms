@@ -74,30 +74,40 @@ void draw_cube( void )
     glEnd( );
 
     glBegin( prim );
-    v3f( -1.0, 1.0, 1.0 );   v3f( -1.0, 1.0, -1.0 );
-    v3f( -1.0, -1.0, -1.0 ); v3f( -1.0, -1.0, 1.0 );
+    v3f( -1.0,  1.0,  1.0 );
+    v3f( -1.0,  1.0, -1.0 );
+    v3f( -1.0, -1.0, -1.0 );
+    v3f( -1.0, -1.0,  1.0 );
     glEnd( );
 
     glColor3f( 0.0, 1.0, 0.0 );
     glBegin( prim );
-    v3f(  1.0, 1.0,  1.0 ); v3f(  1.0, 1.0, -1.0 );
-    v3f( -1.0, 1.0, -1.0 ); v3f( -1.0, 1.0,  1.0 );
+    v3f(  1.0,  1.0,  1.0 );
+    v3f(  1.0,  1.0, -1.0 );
+    v3f( -1.0,  1.0, -1.0 );
+    v3f( -1.0,  1.0,  1.0 );
     glEnd( );
 
     glBegin( prim );
-    v3f(  1.0, -1.0,  1.0 ); v3f( -1.0, -1.0,  1.0 );
-    v3f( -1.0, -1.0, -1.0 ); v3f(  1.0, -1.0, -1.0 );
+    v3f(  1.0, -1.0,  1.0 );
+    v3f( -1.0, -1.0,  1.0 );
+    v3f( -1.0, -1.0, -1.0 );
+    v3f(  1.0, -1.0, -1.0 );
     glEnd( );
 
     glColor3f( 0.0, 0.0, 1.0 );
     glBegin( prim );
-    v3f(  1.0,  1.0,  1.0 ); v3f( -1.0,  1.0,  1.0 );
-    v3f( -1.0, -1.0,  1.0 ); v3f(  1.0, -1.0,  1.0 );
+    v3f(  1.0,  1.0,  1.0 );
+    v3f( -1.0,  1.0,  1.0 );
+    v3f( -1.0, -1.0,  1.0 );
+    v3f(  1.0, -1.0,  1.0 );
     glEnd( );
 
     glBegin( prim );
-    v3f(  1.0, 1.0, -1.0 ); v3f(  1.0,-1.0, -1.0 );
-    v3f( -1.0,-1.0, -1.0 ); v3f( -1.0, 1.0, -1.0 );
+    v3f(  1.0,  1.0, -1.0 );
+    v3f(  1.0, -1.0, -1.0 );
+    v3f( -1.0, -1.0, -1.0 );
+    v3f( -1.0,  1.0, -1.0 );
     glEnd( );
 }
 
@@ -117,7 +127,7 @@ idle_cb( XEvent * ev,
          || ! fl_object_is_visible( ui->canvas ) )
         return 0;
 
-    fl_activate_glcanvas(ui->canvas);
+    fl_activate_glcanvas( ui->canvas );
 
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
@@ -191,9 +201,9 @@ buttonpress_cb( FL_OBJECT * ob   FL_UNUSED_ARG,
                 XEvent *    xev  FL_UNUSED_ARG,
                 void *      ud   FL_UNUSED_ARG )
 {
-   static int suspended;
+   static int suspended = 0;
 
-   suspended = ( suspended + 1 ) % 2;
+   suspended ^= 1;
    fl_set_idle_callback( suspended ? 0 : idle_cb, 0 );
 
    return 0;
@@ -267,9 +277,6 @@ menu_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 int main( int    argc,
           char * argv[ ] )
 {
-
-   FL_OBJECT *ob;
-
    fl_initialize( &argc, argv, "FormDemo", 0, 0 );
    ui = create_form_form( );
 
@@ -289,7 +296,7 @@ int main( int    argc,
    fl_show_form( ui->form, FL_PLACE_CENTER | FL_FREE_SIZE, FL_FULLBORDER,
                  "OpenGL Canvas");
 
-   while( ( ob = fl_do_forms( ) ) != ui->done )
+   while ( fl_do_forms( ) != ui->done )
        /* empty */ ;
 
    fl_finish( );

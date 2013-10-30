@@ -2,11 +2,11 @@
 @chapter Deprecated Objects
 
 In this chapter describes object types that have been replaced by
-newer ones. They may be in use in older applications and also still
-can be used in new programs (though this isn't recommended). There
-probably will be no more support for these objects in terms of bug
+newer ones. They may be in use in older applications. But they
+will remain part of XForms and can be used in new programs. There
+probably will be no more support for these objects except bug
 fixes etc.
-
+x
 
 @ifnottex
 @menu
@@ -281,6 +281,23 @@ popup, use the XPopup functions
 @code{@ref{fl_setpup_default_fontstyle()}}. Note that these functions
 influence the font settings of all popups! @xref{Label Attributes and
 Fonts}, for details on font sizes and styles.
+
+Normally the pop-up shown for the choice objects will be displayed at
+the current mouse position or, for those of type
+@code{@code{FL_DROPLIST_CHOICE}}, directly below the choice object.
+This can be modified by a call of the function
+@findex fl_set_choice_aloign_bottom()
+@anchor{fl_set_choice_aloign_bottom()}
+@example
+int fl_set_choice_aloign_bottom(GL_OBJECT *obj, int flag);
+@end example
+@noindent
+If @code{flag} is @code{0} the normal behaviour is used, but when
+@code{flag} is @code{1} the popup will be displayed with its
+lower right hand corner at the current mouse position or, for
+objects of type @code{@code{FL_DROPLIST_CHOICE}} above the
+choise object. The function returns the previously set value
+for @code{flag}.
 
 
 @node Choice Remarks
@@ -1299,6 +1316,20 @@ is not remembered afterwards.
 If @code{x} or @code{y} is negative, the absolute value is taken to
 mean the desired location relative to the right or bottom corner of
 the popup (not the screen!).
+
+Another function exists for controlling the positon of the popup.
+When the fuunction
+@findex  fl_setpup_align_bottom()
+@anchor{fl_setpup_align_bottom()}
+@example
+void fl_setpup_align_bottom(void);
+@end example
+@noindent
+then the pop-up will appear with its lower right hand corner aligned
+aligned with the mouse position or, if also
+@code{@ref{fl_setpup_position()}} is active, the postion set this way
+will be interpreted to mean the lower right hand position of the
+popu-up.
 
 A radio item in a group can be initialized to be in "pushed" state by
 using @code{%R}. But you can also switch a such a radio item to

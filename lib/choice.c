@@ -38,6 +38,10 @@
 #include <stdlib.h>
 
 
+#define NO_TITLE_MASK      1
+#define ALIGN_BOTTOM_MASK  2
+
+
 
 /***************************************
  ***************************************/
@@ -92,7 +96,7 @@ draw_choice( FL_OBJECT * ob )
     fl_drw_text_beside( ob->align, ob->x, ob->y, ob->w, ob->h, ob->lcol,
                         ob->lstyle, ob->lsize, ob->label );
 
-    /* string can conceivably contain "type flags". need to get rid of them
+    /* String can conceivably contain "type flags". need to get rid of them
        on the fly */
 
     if ( sp->val > 0 && sp->val <= sp->numitems )
@@ -140,8 +144,14 @@ draw_droplist_choice( FL_OBJECT * ob )
 
     fl_drw_box( sp->pushed ? FL_DOWN_BOX : FL_UP_BOX, ob->x + dx, ob->y,
                 dw, ob->h, c1, bw );
-    fl_drw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2, dw - 4, ob->h - 4,
-                 FL_BLACK, 0, 0, "@#2->" );
+    if ( sp->no_title & ALIGN_BOTTOM_MASK )
+        fl_drw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2,
+                     dw - 4, ob->h - 4,
+                     FL_BLACK, 0, 0, "@#8->" );
+    else
+        fl_drw_text( FL_ALIGN_CENTER, ob->x + dx + 2, ob->y + 2,
+                     dw - 4, ob->h - 4,
+                     FL_BLACK, 0, 0, "@#2->" );
 
     /* Choice box */
 
@@ -240,7 +250,7 @@ do_pup( FL_OBJECT * ob )
     if (    ob->label
          && ob->label[ 0 ]
          && ob->type != FL_DROPLIST_CHOICE
-         && ! sp->no_title )
+         && ! ( sp->no_title & NO_TITLE_MASK ) )
     {
         char *t = fl_malloc( strlen( ob->label ) + 3 );
 
@@ -267,6 +277,9 @@ do_pup( FL_OBJECT * ob )
     fl_setpup_selection( popup_id, sp->val );
 
     fl_setpup_softedge( popup_id, ob->bw < 0 );
+
+    if ( sp->no_title & ALIGN_BOTTOM_MASK )
+        fl_setpup_align_bottom( );
 
     val = fl_dopup( popup_id );
 
@@ -417,8 +430,12 @@ handle_choice( FL_OBJECT * ob,
                 break;
             }
 
-            fl_setpup_position( - ( ob->form->x + ob->x + ob->w ),
-                                ob->form->y + ob->y + ob->h + FL_PUP_PADH );
+            if ( sp->no_title & ALIGN_BOTTOM_MASK )
+                fl_setpup_position( - ( ob->form->x + ob->x + ob->w ),
+                                    ob->form->y + ob->y - FL_PUP_PADH );
+            else
+                fl_setpup_position( - ( ob->form->x + ob->x + ob->w ),
+                                    ob->form->y + ob->y + ob->h + FL_PUP_PADH );
             sp->pushed = 0;
             if ( do_pup( ob ) > 0 )
                 ret |= FL_RETURN_CHANGED | FL_RETURN_END;
@@ -955,11 +972,36 @@ fl_set_choice_notitle( FL_OBJECT * ob,
                        int         n )
 {
     FLI_CHOICE_SPEC *sp = ob->spec;
-    int old = sp->no_title;
+    int old = sp->no_title & NO_TITLE_MASK ? 1 : 0;
 
-    sp->no_title = n;
+    if ( n )
+        sp->no_title |= NO_TITLE_MASK;
+    else
+        sp->no_title &= ~ NO_TITLE_MASK;
+
     return old;
 }
+
+
+/***************************************
+ ***************************************/
+
+int
+fl_set_choice_align_bottom( FL_OBJECT * ob,
+                            int         n )
+{
+    FLI_CHOICE_SPEC *sp = ob->spec;
+    int old = sp->no_title & ALIGN_BOTTOM_MASK ? 1 : 0;
+
+    if ( n )
+        sp->no_title |= ALIGN_BOTTOM_MASK;
+    else
+        sp->no_title &= ~ ALIGN_BOTTOM_MASK;
+
+    return old;
+}
+
+
 
 
 /*

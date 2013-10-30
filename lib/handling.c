@@ -654,8 +654,8 @@ fli_treat_interaction_events( int wait_io )
         if ( fl_display == None )
             return;
 
-    /* If no event is present output buffer will be flushed. If event
-       exists XNextEvent in do_interaction() will flush the output buffer */
+    /* If no event is present output buffer will be flushed. If one exists
+       XNextEvent() in do_interaction_step() will flush the output buffer */
 
     do
         do_interaction_step( wait_io );
@@ -911,13 +911,12 @@ get_next_event_or_idle( int        wait_io,
                             | PointerMotionMask
                             | ButtonMotionMask );
         fl_XPutBackEvent( xev );
-
-        return 0;
     }
-
-    cnt = 0;
-
-    fli_handle_idling( &st_xev, msec, 1 );
+    else
+    {
+        cnt = 0;
+        fli_handle_idling( &st_xev, msec, 1 );
+    }
 
     return 0;
 }
@@ -1360,7 +1359,7 @@ fl_check_forms( void )
 {
     FL_OBJECT *obj;
 
-    if ( ( obj = fli_object_qread( ) ) == NULL )
+    if ( ! ( obj = fli_object_qread( ) ) )
     {
         fli_treat_interaction_events( 0 );
         fli_treat_user_events( );
@@ -1383,7 +1382,7 @@ fl_check_only_forms( void )
 {
     FL_OBJECT *obj;
 
-    if ( ( obj = fli_object_qread( ) ) == NULL )
+    if ( ! ( obj = fli_object_qread( ) ) )
     {
         fli_treat_interaction_events( 0 );
         obj = fli_object_qread( );

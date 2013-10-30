@@ -76,6 +76,7 @@ create_form( void )
                               "Children" );
 
     licenceobj = fl_add_choice( FL_NORMAL_CHOICE, 280, 80, 110, 30, "Licence" );
+    fl_set_choice_align_bottom( licenceobj, 1 );
 
     marriedobj = fl_add_choice( FL_DROPLIST_CHOICE, 70, 80, 110, 27,
                                 "Married" );

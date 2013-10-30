@@ -234,7 +234,7 @@ remove_form_from_hidden_list( FL_FORM * form )
 
 
 /***************************************
- * Returns the form that's shown in 'win'
+ * Returns the (visible) form that's shown in 'win'
  ***************************************/
 
 FL_FORM *

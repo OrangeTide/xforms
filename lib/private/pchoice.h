@@ -44,7 +44,7 @@ typedef struct {
     int             below;
     unsigned char   modechange[ FL_CHOICE_MAXITEMS + 1 ];
     int             counter;
-    int             no_title;
+    unsigned int    no_title;
 } FLI_CHOICE_SPEC;
 
 #endif

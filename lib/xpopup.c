@@ -191,22 +191,22 @@ init_pup( PopUP * m )
     m->menu_cb     = NULL;
     m->enter_cb    = m->leave_cb = NULL;
     m->w = m->h    = m->maxw = 0;
-    m->nitems      = 0;
-    m->title_width = 0;
-    m->win         = None;
-    m->gc_active   = m->gc_inactive = None;
-    m->bw          = pup_bw;
-    m->title       = NULL;
-    m->item[ 0 ]   = NULL;
-    m->padh        = PADH;
+    m->nitems       = 0;
+    m->title_width  = 0;
+    m->win          = None;
+    m->gc_active    = m->gc_inactive = None;
+    m->bw           = pup_bw;
+    m->title        = NULL;
+    m->item[ 0 ]    = NULL;
+    m->padh         = PADH;
     if ( ! pup_defcursor )
         pup_defcursor = fl_get_cursor_byname( XC_sb_right_arrow );
-    m->cursor      = pup_defcursor;
-    m->lpad        = m->rpad = PADW;
+    m->cursor       = pup_defcursor;
+    m->lpad         = m->rpad = PADW;
     init_pupfont( );
-    m->cellh       = pup_ascent + pup_desc + 2 * m->padh;
-    m->isEntry     = 0;
-    m->form        = NULL;
+    m->cellh        = pup_ascent + pup_desc + 2 * m->padh;
+    m->isEntry      = 0;
+    m->form         = NULL;
 }
 
 
@@ -1891,13 +1891,18 @@ draw_title( Display  * d,
 
 
 /***************************************
- * Instead of poping up the menu at mouse location, use externally
+ * Instead of popping up the menu at mouse location, use externally
  * set position. Good for programmatical pop-ups
  ***************************************/
 
 static int extpos = 0;
 static FL_Coord extx = 0,
                 exty = 0;
+static int align_bottom = 0;
+
+
+/***************************************
+ ***************************************/
 
 void
 fl_setpup_position( int x,
@@ -1906,6 +1911,16 @@ fl_setpup_position( int x,
     extpos = 1;
     extx   = x;
     exty   = y;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_setpup_align_bottom( void )
+{
+    align_bottom = 1;
 }
 
 
@@ -1990,6 +2005,9 @@ fl_showpup( int n )
             m->y = - exty - m->h;
     }
 
+    if ( align_bottom )
+        m->y -= m->h;
+
     /* Try to make sure the popup is within the root window */
 
     if ( m->x + m->w > ( unsigned int ) fl_scrw )
@@ -2015,6 +2033,7 @@ fl_showpup( int n )
        reused for another popup */
 
     extpos = 0;
+    align_bottom = 0;
 
     /* If the window doesn't exist yet create it, otherwise move it to the
        requested position and, if necessary, resize it */
