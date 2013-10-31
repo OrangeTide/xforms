@@ -15,6 +15,7 @@ EXTRA_DIST = \
 	pscrollbar.h \
 	pselect.h \
 	pslider.h \
+	pspinner.h \
 	ptbox.h \
 	ptwheel.h \
 	pvaluator.h \

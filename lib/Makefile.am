@@ -8,18 +8,17 @@ endif
 
 CLEANFILES = forms.h xforms.5
 
-EXTRA_DIST = xforms.man \
-	dirent_vms.h \
-	vms_readdir.c
+EXTRA_DIST = dirent_vms.h \
+	         vms_readdir.c
 
 SUBDIRS = bitmaps fd include private
 
 # The Autobook recommends using "man5_MANS = xforms.man" which certainly
 # simplifies things but appears not to work with automake 1.5.
-man_MANS = xforms.5
-
-xforms.5:
-	cp -p $(srcdir)/xforms.man xforms.5
+#man_MANS = xforms.5
+#
+#xforms.5:
+#	cp -p $(srcdir)/xforms.man xforms.5
 
 INCLUDES = -DMAKING_FORMS $(X_CFLAGS) $(BWC)
 

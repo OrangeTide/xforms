@@ -519,11 +519,7 @@ fl_create_counter( int          type,
     ob->lcol        = FL_COUNTER_LCOL;
     ob->want_motion = 1;
     ob->want_update = 1;
-
-    /* Counter has a different default */
-
-    if ( ob->bw == FL_BOUND_WIDTH && ob->bw == 3 )
-        ob->bw = FL_COUNTER_BW;
+//    ob->bw          = FL_COUNTER_BW;
 
     sp = ob->spec     = fl_calloc( 1, sizeof *sp );
     sp->min           = -1000000.0;

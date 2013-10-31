@@ -39,7 +39,7 @@ typedef enum {
 
 /***** Others *****/
 
-#define FL_COUNTER_BW       ( FL_BOUND_WIDTH - 1 )
+#define FL_COUNTER_BW       FL_BOUND_WIDTH
 
 /***** Routines *****/
 

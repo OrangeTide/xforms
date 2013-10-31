@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.52)
-AC_INIT([xforms],[1.0.94pre20],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.0.94pre21],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
@@ -13,7 +13,7 @@ AM_MAINTAINER_MODE
 
 ### This defines the version number of the installed .so files
 ### using libtool's versioning system.
-AC_SUBST(SO_VERSION, ["2:0:0"])
+AC_SUBST(SO_VERSION, ["3:1:1"])
 
 # fix the value of the prefixes.
 test "x$prefix" = xNONE && prefix=$ac_default_prefix
@@ -42,7 +42,8 @@ XFORMS_PROG_CC
 AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
-AC_PROG_RANLIB
+
+#### AC_PROG_RANLIB   has become obsolete    
 
 ### check for special systems
 AC_ISC_POSIX
@@ -193,7 +194,8 @@ AC_CONFIG_FILES([Makefile \
        fd2ps/test/Makefile \
        demos/Makefile \
        demos/fd/Makefile \
-	   doc/Makefile
+	   doc/Makefile \
+	   doc/images/Makefile
 ])
 
 AC_OUTPUT

@@ -72,7 +72,7 @@ typedef enum {
 /***** Defaults *****/
 
 #define FL_SLIDER_BW1       FL_BOUND_WIDTH
-#define FL_SLIDER_BW2       ( FL_abs( FL_BOUND_WIDTH ) - 1 )
+#define FL_SLIDER_BW2       FL_abs( FL_BOUND_WIDTH )
 #define FL_SLIDER_BOXTYPE   FL_DOWN_BOX
 #define FL_SLIDER_COL1      FL_COL1
 #define FL_SLIDER_COL2      FL_COL1

@@ -36,6 +36,9 @@ EXTRA_DIST = browser_spec.c \
 	slider_spec.c \
 	slider_spec.fd \
 	slider_spec.h \
+	spinner_spec.c \
+	spinner_spec.fd \
+	spinner_spec.h \
 	twheel_spec.c \
 	twheel_spec.fd \
 	twheel_spec.h \

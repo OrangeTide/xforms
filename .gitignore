@@ -194,3 +194,4 @@ xforms.spec
 semantic.cache
 *.tar.gz
 *.dvi
+doc/xforms.5
