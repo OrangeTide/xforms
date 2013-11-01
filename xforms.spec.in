@@ -65,7 +65,7 @@ rm -f %{_tmppath}/%{name}-%{version}-devfiles
 
 %post -n %{name}
 #
-# Create symbolic links from libforms.so.1.1.0 to libforms.so, libforms.so.1
+# Create symbolic links from libforms.so.1.2.0 to libforms.so, libforms.so.2
 #
 # 1. Create a list of files that require symbolic links.
 #

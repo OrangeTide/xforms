@@ -26,13 +26,13 @@ The "normal" distribution already comes with a 'configure'
 script that checks if all software required to install XForms
 successfully is present on your machine and then creates
 Makefiles etc. But the 'configure' script itself also gets
-created automatically using the 'automake' and 'autoconf'
+created automatically using the 'autoconf' and 'automake'
 tools.
 
 So, in orde to compile from the git repository sources you
-need the 'autoconf' and 'automake' tools. Most Linux distri-
-butions have packages by those name, so you probably can
-install them without much effort. If you can't use them
+need the 'autoconf' and 'automake' tools installed. Most
+Linux distributions have packages by those name, so you
+probably can install them without much effort. If you can't
 then you will have to download them from
 
 http://www.gnu.org/software/autoconf/

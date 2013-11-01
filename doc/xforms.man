@@ -7,7 +7,7 @@
 .\"   ul | more -fsk to view
 .\"
 .\"
-.TH XFORMS 5 "October 2009" "Version 1.0.92" "Forms Library"
+.TH XFORMS 5 "November 2013" "Version 1.2.0" "Forms Library"
 .SH NAME
 xforms \-   A GUI Toolkit for X Window Systems
 .\"
@@ -115,7 +115,7 @@ T.C. Zhao, Mark Overmars and Steve Lamont
 .br
 Since 2002: GNU Lesser General Public License
 .br
-Maintainers: Jean-Marc Lasgouttes, Angus Leeming and Jens Thoms Toerring
+Maintainers: Jean-Marc Lasgouttes, Angus Leeming, Jens Thoms Toerring
 <jt@toerring.de>
 
 .SH HOME PAGE

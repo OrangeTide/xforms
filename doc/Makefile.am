@@ -76,6 +76,9 @@ uninstall-local:
 	rm -rf $(htmldir)
 	rm -rf $(infodir)/xforms_images
 
+xforms.5:
+	cp -p ./xforms.man xforms.5
+
 # Rule for creating the HTML documentation from the texi files - afterwards
 # all generated HTML files get copie to their own directory - the lower level
 # Makefile in 'xforms_images' will also copy the required figures into it
@@ -84,6 +87,7 @@ uninstall-local:
 	$(TEXI2HTML) --init-file xforms.init xforms.texi
 	/bin/mkdir -p xforms.html
 	mv index.html xforms_*.html xforms.html
+	cp -r xforms_images xforms.html
 
 clean-local:
-	-rm -rf xforms.html *~
+	-rm -rf xforms.5 xforms.info* xforms.html *~
