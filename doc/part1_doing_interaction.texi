@@ -407,10 +407,10 @@ distance to the lower-right corner of the form, then,
 @end multitable
 
 @ifhtml
-@center @image{images/gravity}
+@center @image{xforms_images/gravity}
 @end ifhtml
 @ifnothtml
-@center @image{images/gravity,7cm}
+@center @image{xforms_images/gravity,7cm}
 @end ifnothtml
 
 Default for all object is @code{@ref{FL_RESIZE_ALL}} and

@@ -126,10 +126,10 @@ Please note that except for @code{@ref{FL_VERT_PROGRESS_BAR}} and
 outside of the slider (even if you attempt to set an inside alignment).
 
 @ifhtml
-@center @image{images/slidertypes}
+@center @image{xforms_images/slidertypes}
 @end ifhtml
 @ifnothtml
-@center @image{images/slidertypes,12cm}
+@center @image{xforms_images/slidertypes,12cm}
 @end ifnothtml
 
 
@@ -397,10 +397,10 @@ placed below the scrollbar.
 
 
 @ifhtml
-@center @image{images/scrollbars}
+@center @image{xforms_images/scrollbars}
 @end ifhtml
 @ifnothtml
-@center @image{images/scrollbars,14cm}
+@center @image{xforms_images/scrollbars,14cm}
 @end ifnothtml
 
 
@@ -665,10 +665,10 @@ placed below the dial.
 @subsection Dial Types
 
 @ifhtml
-@center @image{images/dials}
+@center @image{xforms_images/dials}
 @end ifhtml
 @ifnothtml
-@center @image{images/dials,10cm}
+@center @image{xforms_images/dials,10cm}
 @end ifnothtml
 
 
@@ -1109,10 +1109,10 @@ placed below the counter.
 @subsection Counter Types
 
 @ifhtml
-@center @image{images/counters}
+@center @image{xforms_images/counters}
 @end ifhtml
 @ifnothtml
-@center @image{images/counters,8cm}
+@center @image{xforms_images/counters,8cm}
 @end ifnothtml
 
 
@@ -1585,10 +1585,10 @@ placed below the thumbwheel.
 
 
 @ifhtml
-@center @image{images/thumbwheels}
+@center @image{xforms_images/thumbwheels}
 @end ifhtml
 @ifnothtml
-@center @image{images/thumbwheels,7cm}
+@center @image{xforms_images/thumbwheels,7cm}
 @end ifnothtml
 
 

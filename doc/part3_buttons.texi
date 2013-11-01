@@ -9,10 +9,10 @@ user pushes them again and radio buttons that make other buttons be
 released.
 
 @ifhtml
-@center @image{images/buttontypes}
+@center @image{xforms_images/buttontypes}
 @end ifhtml
 @ifnothtml
-@center @image{images/buttontypes,7cm}
+@center @image{xforms_images/buttontypes,7cm}
 @end ifnothtml
 
 

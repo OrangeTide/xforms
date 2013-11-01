@@ -20,9 +20,12 @@ test "x$prefix" = xNONE && prefix=$ac_default_prefix
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
 
 ### Set the execute permissions of the various scripts correctly
+
 for file in config/install-sh config/mkinstalldirs ; do
   chmod 755 ${srcdir}/${file}
 done
+
+# Check if the bwc-bs-hack is to be used
 
 AC_ARG_ENABLE(bwc_bs_hack, [AS_HELP_STRING([--enable-bwc-bs-hack],[Enable backward compatiblity hack for browser, scrollbar and tabfolder objects])])
 AM_CONDITIONAL(USE_BWC_BS_HACK, test x$enable_bwc_bs_hack = xyes)
@@ -33,9 +36,28 @@ AM_CONDITIONAL(USE_CLASSIC_EDITKEYS, test x$enable_classic_editkeys = xyes)
 AC_ARG_ENABLE(demos, [AS_HELP_STRING([--enable-demos],[Build demo programs])])
 AM_CONDITIONAL(BUILD_DEMOS, test x$enable_demos = xyes)
 
-AC_ARG_ENABLE(docs, [AS_HELP_STRING([--enable-docs],[Build documentation])])
+# Check if docs are to be build
+
+AC_ARG_ENABLE(docs, [AS_HELP_STRING([--enable-docs],[Build documentation (needs makeinfo)])])
 AM_CONDITIONAL(BUILD_DOCS, test x$enable_docs = xyes)
 
+# If docs are to be build check for presence of texi2html and pdftex, needed
+# for also building the html and pdf versions of the docs
+
+if test BUILD_DOCS; then
+  AC_CHECK_PROG(TEXI2HTML, texi2html, texi2html)
+  if test -z "$TEXI2HTML"; then
+     AC_MSG_WARN([Unable to create HTML version of the user manual, please install 'html2texi'.])
+  fi
+
+  AC_CHECK_PROG(PDFTEX, pdftex, pdftex)
+  if test -z "$PDFTEX"; then
+     AC_MSG_WARN([Unable to create PDF version of the user manual, please install 'pdftex'.])
+  fi
+fi
+
+AM_CONDITIONAL([BUILD_HTML_DOCS], test -n "$TEXI2HTML")
+AM_CONDITIONAL([BUILD_PDF_DOCS], test -n "$PDFTEX")
 
 ### Check for programs
 XFORMS_PROG_CC
@@ -195,7 +217,7 @@ AC_CONFIG_FILES([Makefile \
        demos/Makefile \
        demos/fd/Makefile \
 	   doc/Makefile \
-	   doc/images/Makefile
+	   doc/xforms_images/Makefile
 ])
 
 AC_OUTPUT

@@ -261,10 +261,10 @@ can changed (within limits) via calls of
 @code{@ref{fl_set_object_lalign()}}.
 
 @ifhtml
-@center @image{images/labelframe}
+@center @image{xforms_images/labelframe}
 @end ifhtml
 @ifnothtml
-@center @image{images/labelframe,7cm}
+@center @image{xforms_images/labelframe,7cm}
 @end ifnothtml
 
 

@@ -1,6 +1,11 @@
+2013-11-01 Jens Thoms Toerring    <jt@toerring.de>
+
+	Further changes to build system to check for availability
+	of tools required for creating the documentation
+
 2013-10-31 Jens Thoms Toerring    <jt@toerring.de>
 
-	Changes in the built system, mostly for automatic
+	Changes in the build system, mostly for automatic
 	build and installation of documentation
 
 2013-10-30 Jens Thoms Toerring    <jt@toerring.de>

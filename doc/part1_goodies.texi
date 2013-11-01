@@ -547,10 +547,10 @@ content changes while it is being displayed in the file selector the
 @code{ReScan} button can be used to request a rescan of the directory.
 
 @ifhtml
-@center @image{images/fselect}
+@center @image{xforms_images/fselect}
 @end ifhtml
 @ifnothtml
-@center @image{images/fselect,7cm}
+@center @image{xforms_images/fselect,7cm}
 @end ifnothtml
 
 

@@ -136,10 +136,10 @@ objects an equal sized gap is placed. The objects are kept in the same
 left to right or bottom to top order.
 
 @ifhtml
-@center @image{images/fd_align}
+@center @image{xforms_images/fd_align}
 @end ifhtml
 @ifnothtml
-@center @image{images/fd_align,9cm}
+@center @image{xforms_images/fd_align,9cm}
 @end ifnothtml
 
 The "Undo" button undoes the last alignment change. It is an undo with

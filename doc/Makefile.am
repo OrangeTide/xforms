@@ -2,12 +2,18 @@ include $(top_srcdir)/config/common.am
 
 EXTRA_DIST = xforms.man xforms.css xforms.init
 
-# Tool for converting texi files to HTML
+# Set up which parts of the documentation are to be build (some may be
+# impossible to build since the required tools are unavailable)
 
-TEXI2HTML = texi2html
-
-
-docs = xforms.info xforms.pdf xforms.html
+if BUILD_HTML_DOCS
+html_file = xforms.html
+endif
+if BUILD_PDF_DOCS
+pdf_file = xforms.pdf
+endif
+doc_DATA = $(pdf_file)
+html_docs = $(html_file)
+man_MANS = xforms.5
 
 info_TEXINFOS = xforms.texi
 xforms_TEXINFOS = part0_preface.texi \
@@ -55,38 +61,29 @@ xforms_TEXINFOS = part0_preface.texi \
 				  part6.texi \
 				  part6_images.texi
 
+SUBDIRS = xforms_images
 
-man_MANS = xforms.5
-
-xforms.5:
-	cp -p ./xforms.man xforms.5
-
-SUBDIRS = images
-
-all-local: $(docs)
-doc_DATA = xforms.pdf xforms.man
+all-local: $(html_docs)
 
 install-data-local:
 	@$(NORMAL_INSTALL)
 	/bin/mkdir -p $(htmldir)
-	/usr/bin/install -c -m 644 xforms.html/*.html xforms.html/xforms.css $(htmldir)
+	/usr/bin/install -c -m 644 xforms.html/*.html $(htmldir)
 
 
 uninstall-local:
 	@$(NORMAL_UNINSTALL)
 	rm -rf $(htmldir)
-	rm -rf $(infodir)/images
+	rm -rf $(infodir)/xforms_images
 
 # Rule for creating the HTML documentation from the texi files - afterwards
-# all generated files and the css file to its own directory - the lower level
-# Makefile in 'images' will also copy the required figures into it
+# all generated HTML files get copie to their own directory - the lower level
+# Makefile in 'xforms_images' will also copy the required figures into it
 
 .texi.html:
 	$(TEXI2HTML) --init-file xforms.init xforms.texi
 	/bin/mkdir -p xforms.html
 	mv index.html xforms_*.html xforms.html
-	cp -p xforms.css xforms.html
-	cp -r images xforms.html
 
 clean-local:
-	-rm -rf xforms.info* xforms.pdf xforms.html *.html xforms.5 *~
+	-rm -rf xforms.html *~

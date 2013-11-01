@@ -8,10 +8,10 @@ the screen. This is the window in which you can create your forms.
 Next the control panel appears on the screen. No form is shown yet.
 
 @ifhtml
-@center @image{images/fdesign}
+@center @image{xforms_images/fdesign}
 @end ifhtml
 @ifnothtml
-@center @image{images/fdesign,14cm}
+@center @image{xforms_images/fdesign,14cm}
 @end ifnothtml
 
 The control panel consists of five parts. The first part is the menu

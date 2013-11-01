@@ -138,10 +138,10 @@ An oval box going into the screen
 @end table
 
 @ifhtml
-@center @image{images/boxtypes}
+@center @image{xforms_images/boxtypes}
 @end ifhtml
 @ifnothtml
-@center @image{images/boxtypes,15cm}
+@center @image{xforms_images/boxtypes,15cm}
 @end ifnothtml
 
 The arguments @code{x} and @code{y} in the call of
@@ -386,10 +386,10 @@ the use of these routines.
 
 
 @ifhtml
-@center @image{images/slider}
+@center @image{xforms_images/slider}
 @end ifhtml
 @ifnothtml
-@center @image{images/slider,8cm}
+@center @image{xforms_images/slider,8cm}
 @end ifnothtml
 
 @node ValSliders
@@ -439,10 +439,10 @@ buttons in the form. See the overview of object classes. The
 @code{<Tab>} key always works.)
 
 @ifhtml
-@center @image{images/input}
+@center @image{xforms_images/input}
 @end ifhtml
 @ifnothtml
-@center @image{images/input,8cm}
+@center @image{xforms_images/input,8cm}
 @end ifnothtml
 
 The user can use the mouse to select parts of the input field which will
@@ -700,320 +700,320 @@ substitution by the closest color will happen.
 @item @code{FL_BLACK}
 @tab @code{(  0,   0,   0)}
 @ifhtml
-@tab @image{images/FL_BLACK}
+@tab @image{xforms_images/FL_BLACK}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_BLACK,2cm,5mm}
+@tab @image{xforms_images/FL_BLACK,2cm,5mm}
 @end ifnothtml
 @tindex FL_WHITE
 @anchor{FL_WHITE}
 @item @code{FL_WHITE}
 @tab @code{(255, 255, 255)},
 @ifhtml
-@tab @image{images/FL_WHITE}
+@tab @image{xforms_images/FL_WHITE}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_WHITE,2cm,5mm}
+@tab @image{xforms_images/FL_WHITE,2cm,5mm}
 @end ifnothtml
 @tindex FL_COL1
 @anchor{FL_COL1}
 @item @code{FL_COL1}
 @tab @code{(173, 173, 173)}
 @ifhtml
-@tab @image{images/FL_COL1}
+@tab @image{xforms_images/FL_COL1}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_COL1,2cm,5mm}
+@tab @image{xforms_images/FL_COL1,2cm,5mm}
 @end ifnothtml
 @tindex FL_BOTTOM_BCOL
 @anchor{FL_BOTTOM_BCOL}
 @item @code{FL_BOTTOM_BCOL}
 @tab @code{(  89,  89,  89)}
 @ifhtml
-@tab @image{images/FL_BOTTOM_BCOL}
+@tab @image{xforms_images/FL_BOTTOM_BCOL}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_BOTTOM_BCOL,2cm,5mm}
+@tab @image{xforms_images/FL_BOTTOM_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_RIGHT_BCOL
 @anchor{FL_RIGHT_BCOL}
 @item @code{FL_RIGHT_BCOL}
 @tab @code{(  41,  41,  41)}
 @ifhtml
-@tab @image{images/FL_RIGHT_BCOL}
+@tab @image{xforms_images/FL_RIGHT_BCOL}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_RIGHT_BCOL,2cm,5mm}
+@tab @image{xforms_images/FL_RIGHT_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_MCOL
 @anchor{FL_MCOL}
 @item @code{FL_MCOL}
 @tab @code{(191, 191, 191)}
 @ifhtml
-@tab @image{images/FL_MCOL}
+@tab @image{xforms_images/FL_MCOL}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_MCOL,2cm,5mm}
+@tab @image{xforms_images/FL_MCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_LEFT_BCOL
 @anchor{FL_LEFT_BCOL}
 @item @code{FL_LEFT_BCOL}
 @tab @code{(222, 222, 222)}
 @ifhtml
-@tab @image{images/FL_LEFT_BCOL}
+@tab @image{xforms_images/FL_LEFT_BCOL}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_LEFT_BCOL,2cm,5mm}
+@tab @image{xforms_images/FL_LEFT_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_LIGHTER_COL1
 @anchor{FL_LIGHTER_COL1}
 @item @code{FL_LIGHTER_COL1}
 @tab @code{(204, 204, 204)}
 @ifhtml
-@tab @image{images/FL_LIGHTER_COL1}
+@tab @image{xforms_images/FL_LIGHTER_COL1}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_LIGHTER_COL1,2cm,5mm}
+@tab @image{xforms_images/FL_LIGHTER_COL1,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKER_COL1
 @anchor{FL_DARKER_COL1}
 @item @code{FL_DARKER_COL1}
 @tab @code{(161, 161, 161)}
 @ifhtml
-@tab @image{images/FL_DARKER_COL1}
+@tab @image{xforms_images/FL_DARKER_COL1}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DARKER_COL1,2cm,5mm}
+@tab @image{xforms_images/FL_DARKER_COL1,2cm,5mm}
 @end ifnothtml
 @tindex FL_SLATEBLUE
 @anchor{FL_SLATEBLUE}
 @item @code{FL_SLATEBLUE}
 @tab @code{(113, 113, 198)}
 @ifhtml
-@tab @image{images/FL_SLATEBLUE}
+@tab @image{xforms_images/FL_SLATEBLUE}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_SLATEBLUE,2cm,5mm}
+@tab @image{xforms_images/FL_SLATEBLUE,2cm,5mm}
 @end ifnothtml
 @tindex FL_INDIANRED
 @anchor{FL_INDIANRED}
 @item @code{FL_INDIANRED}
 @tab @code{(198, 113, 113)}
 @ifhtml
-@tab @image{images/FL_INDIANARED}
+@tab @image{xforms_images/FL_INDIANARED}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_INDIANARED,2cm,5mm}
+@tab @image{xforms_images/FL_INDIANARED,2cm,5mm}
 @end ifnothtml
 @tindex FL_RED
 @anchor{FL_RED}
 @item @code{FL_RED}
 @tab @code{(255,   0,   0)}
 @ifhtml
-@tab @image{images/FL_RED}
+@tab @image{xforms_images/FL_RED}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_RED,2cm,5mm}
+@tab @image{xforms_images/FL_RED,2cm,5mm}
 @end ifnothtml
 @tindex FL_BLUE
 @anchor{FL_BLUE}
 @item @code{FL_BLUE}
 @tab @code{(  0,   0, 255)}
 @ifhtml
-@tab @image{images/FL_BLUE}
+@tab @image{xforms_images/FL_BLUE}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_BLUE,2cm,5mm}
+@tab @image{xforms_images/FL_BLUE,2cm,5mm}
 @end ifnothtml
 @tindex FL_GREEN
 @anchor{FL_GREEN}
 @item @code{FL_GREEN}
 @tab @code{(  0, 255,   0)}
 @ifhtml
-@tab @image{images/FL_GREEN}
+@tab @image{xforms_images/FL_GREEN}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_GREEN,2cm,5mm}
+@tab @image{xforms_images/FL_GREEN,2cm,5mm}
 @end ifnothtml
 @tindex FL_YELLOW
 @anchor{FL_YELLOW}
 @item @code{FL_YELLOW}
 @tab @code{(255, 255,   0)}
 @ifhtml
-@tab @image{images/FL_YELLOW}
+@tab @image{xforms_images/FL_YELLOW}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_YELLOW,2cm,5mm}
+@tab @image{xforms_images/FL_YELLOW,2cm,5mm}
 @end ifnothtml
 @tindex FL_MAGENTA
 @anchor{FL_MAGENTA}
 @item @code{FL_MAGENTA}
 @tab @code{(255,   0, 255)}
 @ifhtml
-@tab @image{images/FL_MAGENTA}
+@tab @image{xforms_images/FL_MAGENTA}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_MAGENTA,2cm,5mm}
+@tab @image{xforms_images/FL_MAGENTA,2cm,5mm}
 @end ifnothtml
 @tindex FL_CYAN
 @anchor{FL_CYAN}
 @item @code{FL_CYAN}
 @tab @code{(  0, 255, 255)}
 @ifhtml
-@tab @image{images/FL_CYAN}
+@tab @image{xforms_images/FL_CYAN}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_CYAN,2cm,5mm}
+@tab @image{xforms_images/FL_CYAN,2cm,5mm}
 @end ifnothtml
 @tindex FL_TOMATO
 @anchor{FL_TOMATO}
 @item @code{FL_TOMATO}
 @tab @code{       255,  99,  71}
 @ifhtml
-@tab @image{images/FL_TOMATO}
+@tab @image{xforms_images/FL_TOMATO}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_TOMATO,2cm,5mm}
+@tab @image{xforms_images/FL_TOMATO,2cm,5mm}
 @end ifnothtml
 @tindex FL_INACTIVE
 @anchor{FL_INACTIVE}
 @item @code{FL_INACTIVE}
 @tab @code{(110, 110, 110)}
 @ifhtml
-@tab @image{images/FL_INACTIVE}
+@tab @image{xforms_images/FL_INACTIVE}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_INACTIVE,2cm,5mm}
+@tab @image{xforms_images/FL_INACTIVE,2cm,5mm}
 @end ifnothtml
 @tindex FL_TOP_BCOL
 @anchor{FL_TOP_BCOL}
 @item @code{FL_TOP_BCOL}
 @tab @code{(204, 204, 204)}
 @ifhtml
-@tab @image{images/FL_TOP_BCOL}
+@tab @image{xforms_images/FL_TOP_BCOL}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_TOP_BCOL,2cm,5mm}
+@tab @image{xforms_images/FL_TOP_BCOL,2cm,5mm}
 @end ifnothtml
 @tindex FL_PALEGREEN
 @anchor{FL_PALEGREEN}
 @item @code{FL_PALEGREEN}
 @tab @code{(113, 198, 113)}
 @ifhtml
-@tab @image{images/FL_PALEGREEN}
+@tab @image{xforms_images/FL_PALEGREEN}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_PALEGREEN,2cm,5mm}
+@tab @image{xforms_images/FL_PALEGREEN,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKGOLD
 @anchor{FL_DARKGOLD}
 @item @code{FL_DARKGOLD}
 @tab @code{(205, 149,  10)}
 @ifhtml
-@tab @image{images/FL_DARKGOLD}
+@tab @image{xforms_images/FL_DARKGOLD}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DARKGOLD,2cm,5mm}
+@tab @image{xforms_images/FL_DARKGOLD,2cm,5mm}
 @end ifnothtml
 @tindex FL_ORCHID
 @anchor{FL_ORCHID}
 @item @code{FL_ORCHID}
 @tab @code{(205, 105, 201)}
 @ifhtml
-@tab @image{images/FL_ORCHID}
+@tab @image{xforms_images/FL_ORCHID}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_ORCHID,2cm,5mm}
+@tab @image{xforms_images/FL_ORCHID,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKCYAN
 @anchor{FL_DARKCYAN}
 @item @code{FL_DARKCYAN}
 @tab @code{(40, 170, 175)}
 @ifhtml
-@tab @image{images/FL_DARKCYAN}
+@tab @image{xforms_images/FL_DARKCYAN}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DARKCYAN,2cm,5mm}
+@tab @image{xforms_images/FL_DARKCYAN,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKTOMATO
 @anchor{FL_DARKTOMATO}
 @item @code{FL_DARKTOMATO}
 @tab @code{(139,  54,  38)}
 @ifhtml
-@tab @image{images/FL_DARKTOMATO}
+@tab @image{xforms_images/FL_DARKTOMATO}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DARKTOMATO,2cm,5mm}
+@tab @image{xforms_images/FL_DARKTOMATO,2cm,5mm}
 @end ifnothtml
 @tindex FL_WHEAT
 @anchor{FL_WHEAT}
 @item @code{FL_WHEAT}
 @tab @code{(255, 231, 155)}
 @ifhtml
-@tab @image{images/FL_WHEAT}
+@tab @image{xforms_images/FL_WHEAT}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_WHEAT,2cm,5mm}
+@tab @image{xforms_images/FL_WHEAT,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKORANGE
 @anchor{FL_DARKORANGE}
 @item @code{FL_DARKORANGE}
 @tab @code{(255, 128,   0)}
 @ifhtml
-@tab @image{images/FL_DARKORANGE}
+@tab @image{xforms_images/FL_DARKORANGE}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DARKORANGE,2cm,5mm}
+@tab @image{xforms_images/FL_DARKORANGE,2cm,5mm}
 @end ifnothtml
 @tindex FL_DEEPPINK
 @anchor{FL_DEEPPINK}
 @item @code{FL_DEEPPINK}
 @tab @code{(255,   0, 128)}
 @ifhtml
-@tab @image{images/FL_DARKPINK}
+@tab @image{xforms_images/FL_DARKPINK}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DARKPINK,2cm,5mm}
+@tab @image{xforms_images/FL_DARKPINK,2cm,5mm}
 @end ifnothtml
 @tindex FL_CHARTREUSE
 @anchor{FL_CHARTREUSE}
 @item @code{FL_CHARTREUSE}
 @tab @code{(128, 255,   0)}
 @ifhtml
-@tab @image{images/FL_CHARTEUSE}
+@tab @image{xforms_images/FL_CHARTEUSE}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_CHARTEUSE,2cm,5mm}
+@tab @image{xforms_images/FL_CHARTEUSE,2cm,5mm}
 @end ifnothtml
 @tindex FL_DARKVIOLET
 @anchor{FL_DARKVIOLET}
 @item @code{FL_DARKVIOLET}
 @tab @code{(128,   0, 255)}
 @ifhtml
-@tab @image{images/FL_DARKVIOLET}
+@tab @image{xforms_images/FL_DARKVIOLET}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DARKVIOLET,2cm,5mm}
+@tab @image{xforms_images/FL_DARKVIOLET,2cm,5mm}
 @end ifnothtml
 @tindex FL_SPRINGGREEN
 @anchor{FL_SPRINGGREEN}
 @item @code{FL_SPRINGGREEN}
 @tab @code{(  0, 255, 128)}
 @ifhtml
-@tab @image{images/FL_SPRINGGREEN}
+@tab @image{xforms_images/FL_SPRINGGREEN}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_SPRINGGREEN,2cm,5mm}
+@tab @image{xforms_images/FL_SPRINGGREEN,2cm,5mm}
 @end ifnothtml
 @tindex FL_DODGERBLUE
 @anchor{FL_DODGERBLUE}
 @item @code{FL_DODGERBLUE}
 @tab @code{(  0, 128, 255)}
 @ifhtml
-@tab @image{images/FL_DODGERBLUE}
+@tab @image{xforms_images/FL_DODGERBLUE}
 @end ifhtml
 @ifnothtml
-@tab @image{images/FL_DODGERBLUE,2cm,5mm}
+@tab @image{xforms_images/FL_DODGERBLUE,2cm,5mm}
 @end ifnothtml
 @tindex FL_FREE_COL1
 @anchor{FL_FREE_COL1}
@@ -1191,10 +1191,10 @@ object basis so the user has the option to change it at run time via
 the @samp{-bw} flag.
 
 @ifhtml
-@center @image{images/borderwidth}
+@center @image{xforms_images/borderwidth}
 @end ifhtml
 @ifnothtml
-@center @image{images/borderwidth,14cm}
+@center @image{xforms_images/borderwidth,14cm}
 @end ifnothtml
 
 There also exists a call that changes the object border width for the
@@ -1257,10 +1257,10 @@ default size for XForms is 10pt.
 @end multitable
 
 @ifhtml
-@center @image{images/fontsize}
+@center @image{xforms_images/fontsize}
 @end ifhtml
 @ifnothtml
-@center @image{images/fontsize,6cm}
+@center @image{xforms_images/fontsize,6cm}
 @end ifnothtml
 
 
@@ -1760,10 +1760,10 @@ it is will be drawn into, i.e.@: increments that result in the symbol
 becoming larger than the box it is to be drawn into should be avoided.
 
 @ifhtml
-@center @image{images/symbols}
+@center @image{xforms_images/symbols}
 @end ifhtml
 @ifnothtml
-@center @image{images/symbols}
+@center @image{xforms_images/symbols}
 @end ifnothtml
 
 In addition to using symbols as object labels, symbols can also be drawn

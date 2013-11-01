@@ -209,10 +209,10 @@ class developers.
 
 
 @ifhtml
-@center @image{images/crossbutton}
+@center @image{xforms_images/crossbutton}
 @end ifhtml
 @ifnothtml
-@center @image{images/crossbutton,8cm}
+@center @image{xforms_images/crossbutton,8cm}
 @end ifnothtml
 
 
