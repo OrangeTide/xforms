@@ -57,7 +57,7 @@ create_it( void )
 
     fl_set_object_lstyle( text, fntstyle );
     fl_set_object_lsize( text, fntsize );
-    fl_set_object_lcol( text, textcolor );
+    fl_set_object_lcolor( text, textcolor );
     fl_set_object_color( text, background, background );
     fl_end_form( );
 }
@@ -116,7 +116,7 @@ fl_set_oneliner_color( FL_COLOR tc,
                        FL_COLOR bc )
 {
     create_it( );
-    fl_set_object_lcol( text, textcolor = tc );
+    fl_set_object_lcolor( text, textcolor = tc );
     background = bc;
     fl_set_object_color( text, background, background );
 }

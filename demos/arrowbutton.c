@@ -48,31 +48,31 @@ main( int    argc,
     form = fl_bgn_form( FL_FLAT_BOX, 400, 400 );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 50, 250, 100, 100, "@1" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 150, 250, 100, 100, "@2" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 250, 250, 100, 100, "@3" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 50, 150, 100, 100, "@4" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 250, 150, 100, 100, "@6" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 50, 50, 100, 100, "@7" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 150, 50, 100, 100, "@8" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 250, 50, 100, 100, "@9" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
 
     obj = fl_add_button( FL_NORMAL_BUTTON, 150, 150, 100, 100, "@square" );
-    fl_set_object_lcol( obj, FL_GREEN );
+    fl_set_object_lcolor( obj, FL_GREEN );
     fl_set_object_color( obj, FL_MAGENTA, FL_RED );
 
     fl_end_form( );

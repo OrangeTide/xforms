@@ -97,6 +97,7 @@ fli_create_tbox( int          type,
                         fli_cntl.browserFontSize : FLI_TBOX_FONTSIZE;
     sp->def_style     = FL_NORMAL_STYLE;
     sp->def_align     = FL_ALIGN_LEFT;
+    sp->def_height    = 0;
     sp->defaultGC     = None;
     sp->backgroundGC  = None;
     sp->selectGC      = None;
@@ -1849,18 +1850,26 @@ fli_tbox_get_num_lines( FL_OBJECT * obj )
 
 
 /***************************************
- * Returns the index of the first line that
- * is completete shown on the screen
+ * Returns the index of the first line that is completete shown on the
+ * screen or -1 if there are no lines
  ***************************************/
 
 int
 fli_tbox_get_topline( FL_OBJECT * obj )
 {
     FLI_TBOX_SPEC *sp = obj->spec;
-    int i = FL_min( sp->yoffset / sp->def_height, sp->num_lines - 1);
+    int i;
 
-    if ( sp->num_lines == 0 )
+    if ( ! sp->num_lines )
         return -1;
+
+    /* If the box was never shown assume that the very first line will
+       be the one that's goin tp be in topmost position */
+
+    if ( ! sp->def_height )
+        return 0;
+
+    i = FL_min( sp->yoffset / sp->def_height, sp->num_lines - 1 );
 
     if ( sp->lines[ i ]->y < sp->yoffset )
     {
@@ -1882,8 +1891,8 @@ fli_tbox_get_topline( FL_OBJECT * obj )
 
 
 /***************************************
- * Returns the index of the last line that
- * is completete shown on the screen
+ * Returns the index of the last line that is completete shown on the
+ * screen or -1 if there are no lines
  ***************************************/
 
 int

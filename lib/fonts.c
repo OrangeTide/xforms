@@ -34,6 +34,7 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
+#include "private/flvasprintf.h"
 #include <string.h>
 #include <ctype.h>
 
@@ -182,7 +183,7 @@ fl_set_font( int numb,
 
 /***************************************
  * Add a new font (indexed by n) or change an existing font.
- * preferably the font name constains a '?' in the size
+ * Preferably the font name constains a '?' in the size
  * position so different sizes can be used.
  ***************************************/
 
@@ -227,6 +228,25 @@ fl_set_font_name( int          n,
         return 1;
 
     return try_get_font_struct( n, FL_DEFAULT_SIZE, 1 ) ? 0 : -1;
+}
+
+
+/***************************************
+ * Add a new font (indexed by n) or change an existing font.
+ ***************************************/
+
+int
+fl_set_font_name_f( int          n,
+                    const char * fmt,
+                    ... )
+{
+    char *buf;
+    int ret;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    ret = fl_set_font_name( n, buf );
+    fl_free( buf );
+    return ret;
 }
 
 

@@ -1,7 +1,7 @@
 dnl Process with autoconf to generate configure script   -*- sh -*-
 
 AC_PREREQ(2.52)
-AC_INIT([xforms],[1.0.94pre21],[xforms-development@nongnu.org])
+AC_INIT([xforms],[1.0.94pre22],[xforms-development@nongnu.org])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(lib/forms.c)
 XFORMS_CHECK_VERSION
@@ -136,7 +136,7 @@ AC_TYPE_SIGNAL
 if test $ac_cv_type_signal = "void" ; then
   AC_DEFINE(RETSIGTYPE_IS_VOID, 1, [Define if the return type of signal handlers is void])
 fi
-AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep nanosleep vsnprintf sigaction])
+AC_CHECK_FUNCS([snprintf strcasecmp strerror usleep nanosleep vsnprintf vasprintf sigaction])
 XFORMS_CHECK_DECL(snprintf, stdio.h)
 XFORMS_CHECK_DECL(vsnprintf, stdio.h)
 XFORMS_CHECK_DECL(sigaction, signal.h)

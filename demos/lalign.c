@@ -152,40 +152,40 @@ create_form_form0( void )
     fl_bgn_group();
 
     obj = fl_add_button( FL_RADIO_BUTTON, 20, 20, 30, 30, "@#7->" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_LEFT_TOP );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 50, 20, 30, 30, "@#8->" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_TOP );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 80, 20, 30, 30, "@#9->" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_RIGHT_TOP );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 80, 50, 30, 30, "@#->" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_RIGHT );
 
     fdui->center = obj = fl_add_button( FL_RADIO_BUTTON, 50, 50, 30, 30,
                                         "@circle" );
-    fl_set_object_lcol( obj, FL_RED );
+    fl_set_object_lcolor( obj, FL_RED );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_CENTER );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 20, 50, 30, 30, "@#<-" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_LEFT );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 20, 80, 30, 30, "@#1->" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_LEFT_BOTTOM );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 50, 80, 30, 30, "@#2->" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_BOTTOM );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 80, 80, 30, 30, "@#3->" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_set_object_callback( obj, align_cb, FL_ALIGN_RIGHT_BOTTOM );
 
     fl_end_group( );

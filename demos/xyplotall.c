@@ -223,7 +223,7 @@ void create_form_xyplot( void )
 
     obj = fl_add_text( FL_NORMAL_TEXT, ( 3 * ( dx + 20 ) + 20 ) / 2 - 90,
                        15, 240, 30, "FL_XYPLOT" );
-    fl_set_object_lcol( obj, FL_SLATEBLUE );
+    fl_set_object_lcolor( obj, FL_SLATEBLUE );
     fl_set_object_lsize( obj, FL_HUGE_SIZE );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE|FL_EMBOSSED_STYLE );
     fl_set_object_boxtype( obj, FL_FLAT_BOX );

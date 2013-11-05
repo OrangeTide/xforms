@@ -42,7 +42,7 @@
  * NOTE:
  *   If macro SNPRINTF_LONGLONG_SUPPORT is not defined (default) the
  *   data type modifier 'll' is recognized but treated the same as 'l',
- *   which may cause argument value truncation! Defining
+sn *   which may cause argument value truncation! Defining
  *   SNPRINTF_LONGLONG_SUPPORT requires that your system's sprintf also
  *   handles data type modifier 'll'. long long int is a language
  *   extension which may not be portable.
@@ -72,7 +72,7 @@
  *   - the n$ specification for direct reference to n-th argument
  *   - locales
  *
- * It is permitted for str_m to be zero, and it is permitted to specify NULL
+ * It is permitted for size to be zero, and it is permitted to specify NULL
  * pointer for resulting string argument if str_m is zero (as per ISO C9X).
  *
  * The return value is the number of characters which would be generated
@@ -152,15 +152,15 @@
  *
  * If HAVE_SNPRINTF is defined this module will not produce code for
  * snprintf and vsnprintf, unless PREFER_PORTABLE_SNPRINTF is defined as well,
- * causing this portable version of snprintf to be called fl_portable_snprintf
- * (and fl_portable_vsnprintf).
+ * causing this portable version of snprintf to be called fli_portable_snprintf
+ * (and fli_portable_vsnprintf).
  */
 /* #define HAVE_SNPRINTF */
 
 /* Define PREFER_PORTABLE_SNPRINTF if your system does have snprintf and
  * vsnprintf but you would prefer to use the portable routine(s) instead.
- * In this case the portable routine is declared as fl_portable_snprintf
- * (and fl_portable_vsnprintf) and a macro 'snprintf' (and 'vsnprintf')
+ * In this case the portable routine is declared as fli_portable_snprintf
+ * (and fli_portable_vsnprintf) and a macro 'snprintf' (and 'vsnprintf')
  * is defined to expand to 'portable_v?snprintf' - see file snprintf.h .
  * Defining this macro is only useful if HAVE_SNPRINTF is also defined,
  * but does does no harm if defined nevertheless.
@@ -189,7 +189,7 @@
 /* Define NEED_V?ASN?PRINTF macros if you need library extension
  * routines asprintf, vasprintf, asnprintf, vasnprintf respectively,
  * and your system library does not provide them. They are all small
- * wrapper routines around fl_portable_vsnprintf. Defining any of the four
+ * wrapper routines around fli_portable_vsnprintf. Defining any of the four
  * NEED_V?ASN?PRINTF macros automatically turns off NEED_SNPRINTF_ONLY
  * and turns on PREFER_PORTABLE_SNPRINTF.
  *
@@ -243,7 +243,7 @@
 /* added by Lgb, the LyX Project */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+#include "config.h"
 #endif
 
 /* ============================================= */
@@ -323,27 +323,27 @@ int vasnprintf( char **,
 
 #if 0
 #if defined ( HAVE_SNPRINTF )
-/* declare our portable snprintf  routine under name fl_portable_snprintf  */
-/* declare our portable vsnprintf routine under name fl_portable_vsnprintf */
+/* declare our portable snprintf  routine under name fli_portable_snprintf  */
+/* declare our portable vsnprintf routine under name fli_portable_vsnprintf */
 #else
 /* declare our portable routines under names snprintf and vsnprintf */
-#define fl_portable_snprintf snprintf
+#define fli_portable_snprintf snprintf
 #if !defined ( NEED_SNPRINTF_ONLY )
-#define fl_portable_vsnprintf vsnprintf
+#define fli_portable_vsnprintf vsnprintf
 #endif
 #endif
 #endif /* 0 */
 
 #if ! defined ( HAVE_SNPRINTF ) || defined ( PREFER_PORTABLE_SNPRINTF )
-int fl_portable_snprintf( char *,
-                          size_t,
-                          const char *,
-                          ... );
-#if ! defined ( NEED_SNPRINTF_ONLY )
-int fl_portable_vsnprintf( char *,
+int fli_portable_snprintf( char *,
                            size_t,
                            const char *,
-                           va_list );
+                          ... );
+#if ! defined ( NEED_SNPRINTF_ONLY )
+int fli_portable_vsnprintf( char *,
+                            size_t,
+                            const char *,
+                            va_list );
 #endif
 #endif
 
@@ -362,7 +362,7 @@ int asprintf( char **ptr,
 
     *ptr = NULL;
     va_start( ap, fmt );                       /* measure the required size */
-    str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
+    str_l = fli_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
     va_end( ap );
 
     assert( str_l >= 0 );    /* possible integer overflow if str_m > INT_MAX */
@@ -378,7 +378,7 @@ int asprintf( char **ptr,
         int str_l2;
 
         va_start( ap, fmt );
-        str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+        str_l2 = fli_portable_vsnprintf( *ptr, str_m, fmt, ap );
         va_end( ap );
 
         assert( str_l2 == str_l );
@@ -410,7 +410,7 @@ vasprintf( char       ** ptr,
 
         /* measure the required size: */
 
-        str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
+        str_l = fli_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
         va_end( ap2 );
     }
 
@@ -425,7 +425,7 @@ vasprintf( char       ** ptr,
     }
     else
     {
-        int str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+        int str_l2 = fli_portable_vsnprintf( *ptr, str_m, fmt, ap );
 
         assert( str_l2 == str_l );
     }
@@ -450,7 +450,7 @@ asnprintf( char       ** ptr,
 
     *ptr = NULL;
     va_start( ap, fmt );                        /* measure the required size */
-    str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
+    str_l = fli_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap );
     va_end( ap );
 
     assert( str_l >= 0 );     /* possible integer overflow if str_m > INT_MAX */
@@ -477,7 +477,7 @@ asnprintf( char       ** ptr,
             int str_l2;
 
             va_start( ap, fmt );
-            str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+            str_l2 = fli_portable_vsnprintf( *ptr, str_m, fmt, ap );
             va_end( ap );
             assert( str_l2 == str_l );
         }
@@ -507,7 +507,7 @@ vasnprintf ( char **      ptr,
 
         /* measure the required size: */
 
-        str_l = fl_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
+        str_l = fli_portable_vsnprintf( NULL, ( size_t ) 0, fmt, ap2 );
         va_end( ap2 );
     }
 
@@ -531,7 +531,7 @@ vasnprintf ( char **      ptr,
         }
         else
         {
-            int str_l2 = fl_portable_vsnprintf( *ptr, str_m, fmt, ap );
+            int str_l2 = fli_portable_vsnprintf( *ptr, str_m, fmt, ap );
 
             assert( str_l2 == str_l );
         }
@@ -555,16 +555,16 @@ vasnprintf ( char **      ptr,
 
 #if ! defined ( NEED_SNPRINTF_ONLY )
 int
-fl_portable_snprintf( char       * str,
-                      size_t       str_m,
-                      const char * fmt,
-                      ... )
+fli_portable_snprintf( char       * str,
+                       size_t       str_m,
+                       const char * fmt,
+                       ... )
 {
     va_list ap;
     int str_l;
 
     va_start( ap, fmt );
-    str_l = fl_portable_vsnprintf( str, str_m, fmt, ap );
+    str_l = fli_portable_vsnprintf( str, str_m, fmt, ap );
     va_end( ap );
     return str_l;
 }
@@ -576,17 +576,17 @@ fl_portable_snprintf( char       * str,
 
 #if defined ( NEED_SNPRINTF_ONLY )
 int
-fl_portable_snprintf( char       * str,
-                      size_t       str_m,
-                      const char * fmt,
-                      ... )
+fli_portable_snprintf( char       * str,
+                       size_t       str_m,
+                       const char * fmt,
+                       ... )
 {
 #else
 int
-fl_portable_vsnprintf( char       * str,
-                       size_t       str_m,
-                       const char * fmt,
-                       va_list      ap )
+fli_portable_vsnprintf( char       * str,
+                        size_t       str_m,
+                        const char * fmt,
+                        va_list      ap )
 {
 #endif
 
@@ -596,8 +596,8 @@ fl_portable_vsnprintf( char       * str,
      size_t str_l = 0;
      const char *p = fmt;
 
-    /* In contrast with POSIX, the ISO C9X now says
-     * that str can be NULL and str_m can be 0. This is more useful. */
+    /* In contrast to POSIX the ISO C9X now says that str can be NULL
+       and str_m can be 0. This is more useful. */
 
     /*if (str_m < 1) return -1;*/
 
@@ -981,7 +981,7 @@ fl_portable_vsnprintf( char       * str,
                              tmp[ str_arg_l++ ] =
                                                 space_for_positive ? ' ' : '+';
 
-                         /* leave negative numbers for sprintf to handle,
+                         /* Leave negative numbers for sprintf to handle,
                             to avoid handling tricky cases like
                             (short int)(-32768) */
 
@@ -1279,7 +1279,7 @@ fl_portable_vsnprintf( char       * str,
      if ( str_m > 0 )
      {               /* make sure the string is null-terminated
                         even at the expense of overwriting the last character */
-         str[ str_l <= str_m - 1 ? str_l : str_m-1 ] = '\0';
+         str[ str_l <= str_m - 1 ? str_l : str_m -1 ] = '\0';
      }
 
      return str_l;    /* return the number of characters formatted

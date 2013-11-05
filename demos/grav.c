@@ -131,14 +131,14 @@ check_resize( FD_grav_data * g )
     fl_set_button( g->ry, g->box->resize & FL_RESIZE_Y );
 
     if ( HAS_FIXED_WIDTH( g->box ) )
-        fl_set_object_lcol( g->rx, FL_INACTIVE_COL );
+        fl_set_object_lcolor( g->rx, FL_INACTIVE_COL );
     else
-        fl_set_object_lcol( g->rx, FL_BLACK );
+        fl_set_object_lcolor( g->rx, FL_BLACK );
 
     if ( HAS_FIXED_HEIGHT( g->box ) )
-        fl_set_object_lcol( g->ry, FL_INACTIVE_COL );
+        fl_set_object_lcolor( g->ry, FL_INACTIVE_COL );
     else
-        fl_set_object_lcol( g->ry, FL_BLACK );
+        fl_set_object_lcolor( g->ry, FL_BLACK );
 }
 
 

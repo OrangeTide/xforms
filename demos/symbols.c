@@ -92,7 +92,7 @@ make_symbols( void )
         int txt_x, txt_y, txt_w, txt_h;
 
         obj = fl_add_box( FL_UP_BOX, x, y, dx, dy, *p );
-        fl_set_object_lcol( obj, FL_BOTTOM_BCOL );
+        fl_set_object_lcolor( obj, FL_BOTTOM_BCOL );
 
         strcat( strcpy( buf, "@" ) , *p );
         obj = fl_add_box( FL_FLAT_BOX, x, y + dy, dx, ty, buf );

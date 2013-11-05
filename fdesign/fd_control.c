@@ -307,10 +307,10 @@ static void
 deactivate_control( FL_FORM * form  FL_UNUSED_ARG,
                     void    * data  FL_UNUSED_ARG )
 {
-    fl_set_object_lcol( fd_control->title, FL_SLATEBLUE );
-    fl_set_object_lcol( fd_control->menubar_group, FL_INACTIVE );
-    fl_set_object_lcol( fd_control->shortcut_group, FL_INACTIVE );
-    fl_set_object_lcol( fd_control->fkey_group, FL_INACTIVE );
+    fl_set_object_lcolor( fd_control->title, FL_SLATEBLUE );
+    fl_set_object_lcolor( fd_control->menubar_group, FL_INACTIVE );
+    fl_set_object_lcolor( fd_control->shortcut_group, FL_INACTIVE );
+    fl_set_object_lcolor( fd_control->fkey_group, FL_INACTIVE );
 }
 
 
@@ -321,10 +321,10 @@ static void
 activate_control( FL_FORM * form  FL_UNUSED_ARG,
                   void    * data  FL_UNUSED_ARG )
 {
-    fl_set_object_lcol( fd_control->title, FL_BLUE );
-    fl_set_object_lcol( fd_control->menubar_group, FL_BLACK );
-    fl_set_object_lcol( fd_control->shortcut_group, FL_BLACK );
-    fl_set_object_lcol( fd_control->fkey_group, FL_BLACK );
+    fl_set_object_lcolor( fd_control->title, FL_BLUE );
+    fl_set_object_lcolor( fd_control->menubar_group, FL_BLACK );
+    fl_set_object_lcolor( fd_control->shortcut_group, FL_BLACK );
+    fl_set_object_lcolor( fd_control->fkey_group, FL_BLACK );
 }
 
 

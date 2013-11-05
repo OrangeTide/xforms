@@ -44,17 +44,17 @@ when the message is a single line or when you know the message in
 advance. Embed newlines in @code{str} to get multi-line messages.
 
 As a third alternative you can also use
-@findex fl_show_msg()
-@anchor{fl_show_msg()}
+@findex fl_show_messages_f()
+@anchor{fl_show_messages_f()}
 @example
-void fl_show_msg(const char * fmt, ...);
+void fl_show_messages_f(const char * fmt, ...);
 @end example
 @noindent
 The only required argument @code{fmt} is a format string as you would
 use it for e.g.@: @code{printf(3)}, which then is followed by as many
 arguments as there are format specifiers in the format string. The
-string resulting from expansion of the format string using the
-remaining arguments can have arbitrary length and embedded newline
+string resulting from expanding the format string, using the
+remaining arguments, can have arbitrary length and embedded newline
 characters (@code{'\n'}), producing line breaks. The size of the
 message box is automatically made to fit the whole text.
 
@@ -83,9 +83,9 @@ void fl_hide_oneliner(void);
 @end example
 @noindent
 where @code{str} is the message and @code{x} and @code{y} are the
-coordinate (relative to the root window) the message should be placed.
-Note that multi-line message is possible by embedding the newline
-character in @code{str}. See the demo program @file{preemptive.c} for an
+coordinates (relative to the root window) the message should be placed.
+Note that multi-line messages are possible by embedding the newline
+character into @code{str}. See the demo program @file{preemptive.c} for an
 example of its use.
 
 By default, the background of the message is yellow and the text black.
@@ -120,8 +120,8 @@ extra parameter @code{centered} controls whether to display the form
 centered on the screen.
 
 As in the case of messages also another function is avaialble
-@findex fl_show_alert2()
-@anchor{fl_show_alert2()}
+@findex fl_show_alert_f()
+@anchor{fl_show_alert_f()}
 @example
 void fl_show_alert2(int centered, const char *fmt, ...);
 @end example
@@ -130,8 +130,8 @@ void fl_show_alert2(int centered, const char *fmt, ...);
 @code{fmt} must be a format string as e.g.@: used for
 @code{printf(3)}. After the format string as many further arguments
 are required as there are format specifiers in the format string. The
-string resulting from expansion of the format string using the rest of
-the arguents can have arbitrary length and the first embedded
+string resulting from expanding the format string, using the rest of
+the arguments, can have arbitrary length and the first embedded
 form-feed character (@code{'\f'}) is used as the separator between the
 title string and the message of the alert box. Embedded newline
 characters (@code{'\n'}) produce line breaks.
@@ -462,14 +462,18 @@ It is possible to add arbitrary text to the command browser via the
 following routine
 @findex fl_addto_command_log()
 @anchor{fl_addto_command_log()}
+@findex fl_addto_command_log_f()
+@anchor{fl_addto_command_log_f()}
 @example
-void fl_addto_command_log(const char *s);
+void fl_addto_command_log(const char *txt);
+void fl_addto_command_log_f(const char *fmt, ...);
 @end example
 @noindent
-where @code{s} is a (null-terminated) string with possible embedded
-newlines. The string @code{s} is added to the browser using
-@code{@ref{fl_addto_browser_chars()}}, i.e.@: the string is appended
-after the last line in the browser.
+where @code{txt} for @code{fl_addto_command_log()} is a string and
+@code{fmt} for @code{fl_addto_command_log_f()} is a format string like
+for @code{printf()} that gets expanded using the following arguments.
+This string, with possible embedded newlines, gets added to the last
+line of the browser using @code{@ref{fl_addto_browser_chars()}}.
 
 Finally, there is a routine that can be used to obtain the GUI structure
 of the command browser

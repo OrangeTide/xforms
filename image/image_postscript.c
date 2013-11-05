@@ -136,8 +136,8 @@ load_page( FL_IMAGE * im,
     FLIMAGE_IO *fileIO;
     int status, n;
 
-    fl_snprintf( name, sizeof name, "%s/%s_%d",
-                 sp->tmpdir, sp->prefix, pageNo );
+    fli_snprintf( name, sizeof name, "%s/%s_%d",
+                  sp->tmpdir, sp->prefix, pageNo );
 
     if ( sp->verbose )
         M_err( "LoadPage", "loading %s", name );
@@ -191,7 +191,8 @@ PS_cleanup( FL_IMAGE * im )
 
     for ( i = 1; i <= n; i++ )
     {
-        fl_snprintf( name, sizeof name, "%s/%s_%d", sp->tmpdir, sp->prefix, i );
+        fli_snprintf( name, sizeof name, "%s/%s_%d", sp->tmpdir,
+                      sp->prefix, i );
         if ( sp->verbose )
             M_err( "Cleanup", "deleting %s", name );
         remove( name );
@@ -232,20 +233,20 @@ PS_read_pixels( FL_IMAGE * im )
 
     /* the tmp file pattern will be /tmp/gs_$InputFile_$pid_pageNO */
 
-    fl_snprintf( prefix, sizeof prefix,
-                 "gs_%s_%d", file_tail( im->infile ), ( int ) fli_getpid( ) );
+    fli_snprintf( prefix, sizeof prefix,
+                  "gs_%s_%d", file_tail( im->infile ), ( int ) fli_getpid( ) );
 
     sp->prefix = strdup( prefix );
 
     if ( sp->verbose )
         M_err( "LoadPS", "prefix=%s", sp->prefix );
 
-    fl_snprintf( cmd, sizeof cmd,
-                 "gs -sDEVICE=%s %s -r%dx%d -sOutputFile=%s/%s_%%d -- %s %s",
-                 GS_DEVICE, GS_OPTION, (int) sp->xdpi, ( int ) sp->ydpi,
-                 sp->tmpdir, sp->prefix, im->infile,
-                 sp->first_page_only ?
-                 "/showpage { systemdict begin showpage quit end} def" : "" );
+    fli_snprintf( cmd, sizeof cmd,
+                  "gs -sDEVICE=%s %s -r%dx%d -sOutputFile=%s/%s_%%d -- %s %s",
+                  GS_DEVICE, GS_OPTION, (int) sp->xdpi, ( int ) sp->ydpi,
+                  sp->tmpdir, sp->prefix, im->infile,
+                  sp->first_page_only ?
+                  "/showpage { systemdict begin showpage quit end} def" : "" );
 
     if ( sp->verbose )
         M_err( "LoadPS", "executing %s\n", cmd );

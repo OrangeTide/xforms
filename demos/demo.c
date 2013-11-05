@@ -457,7 +457,7 @@ create_form_form( void )
     fl_set_object_color( obj, FL_INDIANRED, FL_COL1 );
     fl_set_object_lsize( obj, FL_HUGE_SIZE );
     fl_set_object_lstyle( obj, FL_ENGRAVED_STYLE + FL_BOLD_STYLE );
-    fl_set_object_lcol( obj, FL_INDIANRED );
+    fl_set_object_lcolor( obj, FL_INDIANRED );
 
     obj = fl_add_box( FL_FRAME_BOX, 20, 70, 330, 330, "" );
     fl_set_object_color( obj, FL_INDIANRED, FL_COL1 );

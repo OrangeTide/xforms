@@ -68,7 +68,7 @@ create_colorform( void )
             cs->col[ 8 * i + j ] = fl_add_button( FL_NORMAL_BUTTON, 40 + j * 20,
                                                   10 + i * 20, 20, 20, "" );
             fl_set_object_boxtype( cs->col[ 8 * i + j ], FL_BORDER_BOX );
-            fl_set_object_lcol( cs->col[ 8 * i + j ], 7 );
+            fl_set_object_lcolor( cs->col[ 8 * i + j ], 7 );
         }
 
     cs->prev = fl_add_button( FL_NORMAL_BUTTON, 10, 10, 30, 160, "@4" );

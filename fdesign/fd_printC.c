@@ -92,13 +92,13 @@ build_fname( char       * fname,
     int npc;
 
     if ( fdopt.output_dir )
-        npc = fl_snprintf( fname, fname_capacity, "%s%s%s%s",
-                           fdopt.output_dir,
-                           fdopt.output_dir[ strlen( fdopt.output_dir ) - 1 ]
+        npc = fli_snprintf( fname, fname_capacity, "%s%s%s%s",
+                            fdopt.output_dir,
+                            fdopt.output_dir[ strlen( fdopt.output_dir ) - 1 ]
                                                               != '/' ? "/" : "",
                            filename_only( filename ), ext );
     else
-        npc = fl_snprintf( fname, fname_capacity, "%s%s", filename, ext );
+        npc = fli_snprintf( fname, fname_capacity, "%s%s", filename, ext );
 
     /* Older libc return -1 if text doesn't, newer ones the total number
        of chars that would have been written if there would have been

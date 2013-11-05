@@ -41,6 +41,7 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "private/flvasprintf.h"
 
 #define H_PAD  ( sp->charh )    /* how much to scroll each time */
 
@@ -1998,6 +1999,24 @@ fl_set_input( FL_OBJECT  * obj,
 
     if ( obj->form )
         fl_unfreeze_form( obj->form );
+}
+
+
+/***************************************
+ * Sets the input string using a format string and an appropriate number
+ * of (unspecified) arguments
+ ***************************************/
+
+void
+fl_set_input_f( FL_OBJECT  * obj,
+                const char * fmt,
+                ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_set_input( obj, buf );
+    fl_free( buf );
 }
 
 

@@ -154,7 +154,7 @@ create_form( void )
     tobj[ 1 ] = fl_add_text( FL_NORMAL_TEXT, 30, 240, 110, 30, "Text" );
 
     tobj[ 2 ] = fl_add_bitmap( FL_NORMAL_BITMAP, 40, 280, 90, 80, "Bitmap" );
-    fl_set_object_lcol( tobj[ 2 ], FL_BLUE );
+    fl_set_object_lcolor( tobj[ 2 ], FL_BLUE );
 
     tobj[ 3 ] = fl_add_chart(FL_BAR_CHART, 160, 110, 160, 110, "Chart");
 

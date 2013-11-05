@@ -22,6 +22,7 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
+#include "private/flvasprintf.h"
 #include <ctype.h>
 
 
@@ -1247,6 +1248,25 @@ fl_popup_set_title( FL_POPUP   * popup,
 
 
 /***************************************
+ * Set a new title for a popup
+ ***************************************/
+
+FL_POPUP *
+fl_popup_set_title_f( FL_POPUP   * popup,
+                      const char * fmt,
+                      ... )
+{
+    char *buf;
+    FL_POPUP *p;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    p = fl_popup_set_title( popup, buf );
+    fl_free( buf );
+    return p;
+}
+
+
+/***************************************
  * Return title font for a popup
  ***************************************/
 
@@ -2178,6 +2198,25 @@ fl_popup_entry_get_by_text( FL_POPUP   * popup,
 
 
 /***************************************
+ * Find a popup entry by its text
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_popup_entry_get_by_text_f( FL_POPUP   * popup,
+                              const char * fmt,
+                              ... )
+{
+    FL_POPUP_ENTRY *e;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    e = fl_popup_entry_get_by_text( popup, buf );
+    fl_free( buf );
+    return e;
+}
+
+
+/***************************************
  * Find a popup entry by its label
  ***************************************/
 
@@ -2208,6 +2247,25 @@ fl_popup_entry_get_by_label( FL_POPUP   * popup,
     }
 
     return NULL;
+}
+
+
+/***************************************
+ * Find a popup entry by its label
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_popup_entry_get_by_label_f( FL_POPUP   * popup,
+                               const char * fmt,
+                               ... )
+{
+    FL_POPUP_ENTRY *e;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    e = fl_popup_entry_get_by_label( popup, buf );
+    fl_free( buf );
+    return e;
 }
 
 

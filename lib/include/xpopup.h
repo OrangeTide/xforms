@@ -98,6 +98,10 @@ FL_EXPORT void fl_setpup_bw( int n,
 FL_EXPORT void fl_setpup_title( int          nm,
                                 const char * title );
 
+FL_EXPORT void fl_setpup_title_f( int          nm,
+								  const char * fmt,
+								  ... );
+
 FL_EXPORT FL_PUP_ENTERCB fl_setpup_entercb( int              nm,
                                             FL_PUP_ENTERCB   cb,
                                             void           * data );

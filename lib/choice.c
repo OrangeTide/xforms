@@ -33,7 +33,7 @@
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/pchoice.h"
-#include "private/flsnprintf.h"
+#include "private/flvasprintf.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -482,7 +482,7 @@ handle_choice( FL_OBJECT * ob,
 
 
 /***************************************
- * creates an object
+ * Creates an object
  ***************************************/
 
 FL_OBJECT *
@@ -571,7 +571,7 @@ fl_clear_choice( FL_OBJECT * ob )
 
 
 /***************************************
- * add a single choice item
+ * Add a single choice item
  ***************************************/
 
 static void
@@ -599,7 +599,7 @@ addto_choice( FL_OBJECT *  ob,
 
 
 /***************************************
- * user interface routine. | allowed
+ * User interface routine.
  ***************************************/
 
 int
@@ -639,6 +639,24 @@ fl_addto_choice( FL_OBJECT *  ob,
 
 
 /***************************************
+ ***************************************/
+
+int
+fl_addto_choice_f( FL_OBJECT *  ob,
+                   const char * fmt,
+                   ... )
+{
+    int n;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    n = fl_addto_choice( ob, buf );
+    fl_free( buf );
+    return n;
+}
+
+
+/***************************************
  * Replaces a line to the choice item.
  ***************************************/
 
@@ -658,6 +676,23 @@ fl_replace_choice( FL_OBJECT *  ob,
 
     if ( sp->val == numb )
         fl_redraw_object( ob );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_replace_choice_f( FL_OBJECT *  ob,
+                     int          numb,
+                     const char * fmt,
+                     ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_replace_choice( ob, numb, buf );
+    fl_free( buf );
 }
 
 
@@ -722,7 +757,7 @@ fl_set_choice( FL_OBJECT * ob,
 
 
 /***************************************
- * similar to set_choice, except we use txt
+ * Similar to set_choice, except we use txt
  ***************************************/
 
 void
@@ -750,6 +785,22 @@ fl_set_choice_text( FL_OBJECT *  ob,
         }
 
     M_err( "fl_set_choice_text", "%s not found", txt );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_choice_text_f( FL_OBJECT *  ob,
+                      const char * fmt,
+                      ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_set_choice_text( ob, buf );
+    fl_free( buf );
 }
 
 

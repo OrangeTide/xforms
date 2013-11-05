@@ -374,7 +374,7 @@ create_form_cl( void )
     fl_set_object_color( obj, FL_COL1, FL_COL1 );
 
     obj = fl_add_box( FL_NO_BOX, 40, 10, 250, 30, "Color Browser" );
-    fl_set_object_lcol( obj, FL_RED );
+    fl_set_object_lcolor( obj, FL_RED );
     fl_set_object_lsize( obj, FL_HUGE_SIZE );
     fl_set_object_lstyle( obj, FL_BOLD_STYLE + FL_SHADOW_STYLE );
     fl_set_object_gravity( obj, FL_North, FL_North );

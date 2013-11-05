@@ -1,3 +1,12 @@
+2013-11-05 Jens Thoms Toerring    <jt@toerring.de>
+
+	Addition of several functions that instead of accepting
+	just a string expect a printf()-like format string and
+	and an unspecified number of arguments, from which the
+	string is constructed. All these functions have the same
+	name as their simpler counterpart but with an "_f" added
+	at the end.
+
 2013-11-01 Jens Thoms Toerring    <jt@toerring.de>
 
 	Further changes to build system to check for availability

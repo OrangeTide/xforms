@@ -40,23 +40,23 @@ int vsnprintf( char *,
                va_list);
 #endif
 
-#define fl_snprintf  snprintf
-#define fl_vsnprintf vsnprintf
+#define fli_snprintf  snprintf
+#define fli_vsnprintf vsnprintf
 
-#else /* HAVE_SNPRINTF */
+#else
 
-FL_EXPORT int fl_portable_snprintf( char *,
-                                    size_t,
-                                    const char *,
-                                    ... );
+int fli_portable_snprintf( char *,
+                           size_t,
+                           const char *,
+                                     ... );
 
-FL_EXPORT int fl_portable_vsnprintf( char *,
-                                     size_t,
-                                     const char *,
-                                     va_list );
+int fli_portable_vsnprintf( char *,
+                            size_t,
+                            const char *,
+                            va_list );
 
-#define fl_snprintf  fl_portable_snprintf
-#define fl_vsnprintf fl_portable_vsnprintf
+#define fli_snprintf  fli_portable_snprintf
+#define fli_vsnprintf fli_portable_vsnprintf
 
 #endif /* HAVE_SNPRINTF */
 

@@ -553,20 +553,27 @@ where @code{show} indicates whether to show (1) or not show (0) the
 errors. With newer versions of the Forms Library this function has
 no effect.
 
-The fonts used in all forms can be changed using the routine
+The fonts used in all forms can be changed using the routines
 @findex fl_set_font_name()
 @anchor{fl_set_font_name()}
+@findex fl_set_font_name_f()
+@anchor{fl_set_font_name_f()}
 @example
 int fl_set_font_name(int n, const char *name);
+int fl_set_font_name_f(int n, const char *fmt, ,,,);
 @end example
 @noindent
-where @code{n} is a number between 0 and @code{FL_MAXFONTS -1}. The
+The first function just accepts a simple string while the second
+constructs the font name from a format string just as it's used for
+@code{printf()} etc. and the following arguments. The first argument,
+@code{n}, must be a number between 0 and @code{FL_MAXFONTS-1}. The
 function returns @code{0} on success, @code{1} if called before proper
 initialization of the library and @code{-1} for either invalid
-arguments (@code{name} isn't set or isn't a name of a font that could
-be found, @code{n} negative or larger or equal to @code{FL_MAXFONTS}).
-@xref{Label Attributes and Fonts}, for details. A redraw of all forms
-is required to actually see the change for visible forms.
+arguments (@code{name} or the result of the expansion of the format
+string doesn't name an available font, @code{n} negative or not less
+than @code{FL_MAXFONTS}). @xref{Label Attributes and Fonts}, for
+details. A redraw of all forms is required to actually see the change
+for visible forms.
 
 Since the dimension of an object is typically given in pixels,
 depending on the server resolution and the font used, this can lead to
@@ -1015,8 +1022,8 @@ hscrollbar = fl_get_object_component(browser, FL_SCROLLBAR,
 
 To influence change the color, font size, font style, alignment and
 text of the label of an object use
-@findex fl_set_object_lcol()
-@anchor{fl_set_object_lcol()}
+@findex fl_set_object_lcolor()
+@anchor{fl_set_object_lcolor()}
 @findex fl_set_object_lsize()
 @anchor{fl_set_object_lsize()}
 @findex fl_set_object_lstyle()
@@ -1025,18 +1032,21 @@ text of the label of an object use
 @anchor{fl_set_object_lalign()}
 @findex fl_set_object_label()
 @anchor{fl_set_object_label()}
+@findex fl_set_object_label_f()
+@anchor{fl_set_object_label_f()}
 @example
-void fl_set_object_lcol(FL_OBJECT *obj, FL_COLOR lcol);
+void fl_set_object_lcolor(FL_OBJECT *obj, FL_COLOR lcol);
 void fl_set_object_lsize(FL_OBJECT *obj, int lsize);
 void fl_set_object_lstyle(FL_OBJECT *obj, int lstyle);
 void fl_set_object_lalign(FL_OBJECT *obj, int align);
 void fl_set_object_label(FL_OBJECT *obj, const char *label);
+void fl_set_object_label(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 
 To find out about the object labels color, font size, style, alignment
 and the string itself use
-@findex fl_get_object_lcol()
-@anchor{fl_get_object_lcol()}
+@findex fl_get_object_lcolor()
+@anchor{fl_get_object_lcolor()}
 @findex fl_get_object_lsize()
 @anchor{fl_get_object_lsize()}
 @findex fl_get_object_lstyle()
@@ -1046,23 +1056,29 @@ and the string itself use
 @findex fl_get_object_label()
 @anchor{fl_get_object_label()}
 @example
-FL_COLOR fl_get_object_lcol(FL_OBJECT *obj);
+FL_COLOR fl_get_object_lcolor(FL_OBJECT *obj);
 int fl_get_object_lsize(FL_OBJECT *obj);
 int fl_get_object_lstyle(FL_OBJECT *obj);
 int fl_get_object_lalign(FL_OBJECT *obj);
 const char * fl_get_object_label(FL_OBJECT *obj);
 @end example
 
-To set a tool-tip text for an object use the following routine
+To set a tool-tip text for an object use the following routines
 @findex fl_set_object_helper()
 @anchor{fl_set_object_helper()}
+@findex fl_set_object_helper_f()
+@anchor{fl_set_object_helper_f()}
 @example
 void fl_set_object_helper(FL_OBJECT *obj, const char *helpmsg);
+void fl_set_object_helper_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 @noindent
 where @code{helpmsg} is a text string (with possible embedded newlines
 in it) that will be shown when the mouse hovers over the object for
 nore than about @w{600 msec}. A copy of the string is made internally.
+The second functions accepts instead of a simple string a format
+string just as it's used for @code{printf()} etc., followed by as many
+further arguments as the format string contains format specifiers.
 
 The boxtype, color and font for the tool-tip message displayed can be
 customized further using the following routines:
@@ -1672,13 +1688,20 @@ for some of the routines that can be used to create pixmaps.) Note
 that a previously set icon if not freed or modified in anyway.
 
 If, for any reason, you would like to change the form title after the
-form has been made visible, the following call can be used (this will
+form has been made visible, the following calls can be used (they will
 also change the icon title)
 @findex fl_set_form_title()
 @anchor{fl_set_form_title()}
+@findex fl_set_form_title_f()
+@anchor{fl_set_form_title_f()}
 @example
 void fl_set_form_title(FL_FORM *form, const char *name);
+void fl_set_form_title_f(FL_FORM *form, const char *fmt, ...);
 @end example
+@noindent
+(While the first function expects a simple string, the second has to
+be called with a format string as @code{printf()} etc., followed by
+the corresponding number of arguments.)
 
 The routine
 @findex fl_hide_form()

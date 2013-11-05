@@ -116,14 +116,18 @@ ff_close( void )
 int 
 ff_err( const char * message )
 {
-    if ( ! fdopt.conv_only )
-        fl_show_alert2( 0, "Error:\f%s\n%s:%lu.%lu",
-                        message, ff.fname, ( unsigned long ) ff.line_no,
-                        ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
-    else
-        M_err( "Error", "%s at %s:%lu.%lu",
+    if ( message )
+    {
+        if ( ! fdopt.conv_only )
+            fl_show_alert2( 0, "Error:\f%s\n%s:%lu.%lu",
+                            message, ff.fname, ( unsigned long ) ff.line_no,
+                            ff.line ?
+                            ( unsigned long ) ( ff.pos - ff.line ) : 0 );
+        else
+            M_err( "Error", "%s at %s:%lu.%lu",
                message, ff.fname, ( unsigned long ) ff.line_no,
-               ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
+                   ff.line ? ( unsigned long ) ( ff.pos - ff.line ) : 0 );
+    }
 
     ff_close( );
     return FF_READ_FAILURE;
@@ -695,12 +699,15 @@ ff_match_align( int * p )
             return -1;
         }
 
-        align_name = fli_print_to_string( "%s|%s", a1, a2 );
+        if ( ! asprintf( &align_name, "%s|%s", a1, a2 ) )
+            align_name = NULL;
         fli_safe_free( a1 );
         fli_safe_free( a2 );
     }
 
-    if ( ! *align_name || ( align = align_val( align_name ) ) == -1 )
+    if (    ! align_name
+         || ! *align_name
+         || ( align = align_val( align_name ) ) == -1 )
     {
         ff.pos = old_pos;
         fli_safe_free( align_name );
@@ -761,12 +768,15 @@ ff_match_lstyle( int * p )
             return -1;
         }
 
-        lstyle_name = fli_print_to_string( "%s|%s", l1, l2 );
+        if ( ! asprintf( &lstyle_name, "%s|%s", l1, l2 ) )
+            lstyle_name = NULL;
         fli_safe_free( l1 );
         fli_safe_free( l2 );
     }
 
-    if ( ! *lstyle_name || ( lstyle = style_val( lstyle_name ) ) == -1 )
+    if (    ! lstyle_name
+         || ! *lstyle_name
+         || ( lstyle = style_val( lstyle_name ) ) == -1 )
     {
         ff.pos = old_pos;
         fli_safe_free( lstyle_name );

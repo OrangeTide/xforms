@@ -215,7 +215,7 @@ and use the callback as follows
 @example
 void callback(FL_OBJECT *obj, long arg) @{
     FD_foo *fd_foo = (FD_foo *) arg;
-    fl_set_object_lcol(fd + foo->f1obj1, FL_RED);
+    fl_set_object_lcolor(fd + foo->f1obj1, FL_RED);
     ...
 @}
 @end example

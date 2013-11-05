@@ -239,7 +239,7 @@ fli_add_q_icon( FL_Coord x,
     obj = fl_add_bitmap( FL_NORMAL_BITMAP, x, y, w, h, "" );
     fl_set_bitmap_data( obj, q_width, q_height, q_bits );
     fl_set_object_color( obj, FL_YELLOW, FL_YELLOW );
-    fl_set_object_lcol( obj, FL_BLACK );
+    fl_set_object_lcolor( obj, FL_BLACK );
 }
 
 
@@ -258,7 +258,7 @@ fli_add_warn_icon( FL_Coord x,
     obj = fl_add_bitmap( FL_NORMAL_BITMAP, x, y, w, h, "" );
     fl_set_bitmap_data( obj, warn_width, warn_height, warn_bits );
     fl_set_object_color( obj, FL_YELLOW, FL_YELLOW );
-    fl_set_object_lcol( obj, FL_BLACK );
+    fl_set_object_lcolor( obj, FL_BLACK );
 }
 
 

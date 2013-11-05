@@ -1511,7 +1511,7 @@ this type of spinners.
 Please don't change the boxtype from @code{@ref{FL_NO_BOX}}.
 
 The label color and font can be set using the normal
-@code{@ref{fl_set_object_lcol()}}, @code{@ref{fl_set_object_lsize()}}
+@code{@ref{fl_set_object_lcolor()}}, @code{@ref{fl_set_object_lsize()}}
 and @code{@ref{fl_set_object_lstyle()}} functions. The color of the
 input field of a spinner object can be set via using
 @code{@ref{fl_set_object_color()}} where the first color argument

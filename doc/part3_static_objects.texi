@@ -362,7 +362,9 @@ Only one type of text exists: @code{FL_NORMAL_TEXT}.
 @node Text Attributes
 @subsection Text Attributes
 
-To set or change the text shown, use @code{@ref{fl_set_object_label()}}.
+To set or change the text shown, use
+@code{@ref{fl_set_object_label()}} or
+@code{@ref{fl_set_object_label_f()}}.
 
 Any boxtype can be used for text.
 
@@ -370,7 +372,7 @@ The first color argument (@code{col1}) of
 @code{@ref{fl_set_object_color()}} controls the color of the box the
 text is placed into, the second (@code{col2}) is not used. The color of
 the text itself is controlled by calls of
-@code{@ref{fl_set_object_lcol()}} as usual.
+@code{@ref{fl_set_object_lcolor()}} as usual.
 
 If the text is to change dynamically, boxtype @code{NO_BOX} should
 not be used for the object.
@@ -489,7 +491,7 @@ should be displayed using @code{XCopyPlane()}.
 @node Bitmap Attributes
 @subsection Bitmap Attributes
 
-The label color as set by @code{@ref{fl_set_object_lcol()}} controls
+The label color as set by @code{@ref{fl_set_object_lcolor()}} controls
 both the foreground color of the bitmap and the color of the label
 (i.e.@: they are always identical).
 

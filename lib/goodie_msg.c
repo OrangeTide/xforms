@@ -30,7 +30,7 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
-#include "private/flsnprintf.h"
+#include "private/flvasprintf.h"
 
 
 /*************** Three line messages *******************{*****/
@@ -163,51 +163,13 @@ fl_show_messages( const char *str )
  ***************************************/
 
 void
-fl_show_msg( const char * fmt,
-             ... )
+fl_show_messages_f( const char * fmt,
+                    ... )
 {
-    char *buf,
-         *p;
-    int len;
-    int written;
-    va_list ap;
+    char *buf;
 
-    if ( ! fmt || ! * fmt )
-    {
-        M_warn( "fl_show_msg", "NULL or empty format string" );
-        return;
-    }
-
-    /* Try to come up with an estimate of the length required for the
-       whole string */
-
-    len = strlen( fmt ) + 1;
-
-    for ( p = strchr( fmt, '%' ); p; p = strchr( ++p, '%' ) )
-        len += 15;
-
-    buf = fl_malloc( len );
-
-    while ( 1 )
-    {
-        va_start( ap, fmt );
-        written = fl_vsnprintf( buf, len, fmt, ap );
-        va_end( ap );
-
-        /* Take care: e.g. in older libc versions a negative value got
-           returned if the buffer wasn't large enough while newer ones
-           follow C99 and return the length of the string that would be
-           needed (but without the trailing '\0') */
-
-        if ( written > -1 && written < len )
-            break;
-
-        len = written < 0 ? ( 2 * len ) : ( written + 1 );
-        buf = fl_realloc( buf, len );
-    }
-
+    EXPAND_FORMAT_STRING( buf, fmt );
     fl_show_messages( buf );
-
     fl_free( buf );
 }
 
@@ -235,8 +197,8 @@ fl_show_message( const char * s1,
 
     buf = fl_malloc( len );
 
-    fl_snprintf( buf, len, "%s\n%s\n%s",
-                 s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "" );
+    fli_snprintf( buf, len, "%s\n%s\n%s",
+                  s1 ? s1 : "", s2 ? s2 : "", s3 ? s3 : "" );
 
     fl_show_messages( buf );
 

@@ -47,7 +47,7 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
-#include "private/flsnprintf.h"
+#include "private/flvasprintf.h"
 #include "ulib.h"
 
 extern int errno;       /* system error no            */
@@ -55,8 +55,6 @@ extern int errno;       /* system error no            */
 #ifndef HAVE_STRERROR
 extern char *sys_errlist[ ];
 #endif
-
-#define MAXESTR 2048        /* maximum error string len   */
 
 
 /**********************************************************************
@@ -139,10 +137,8 @@ P_errmsg( const char * func,
           const char * fmt,
           ... )
 {
-    va_list args;
-    char *line,
-         *where = NULL,
-         why[ MAXESTR + 1 ] = "";
+    char line[ ( int ) log10( INT_MAX ) + 3 ],
+         *why;
 
     /* Return if there is nothing to do */
 
@@ -152,35 +148,22 @@ P_errmsg( const char * func,
     if ( ! errlog )
         errlog = stderr;
 
-    /* Set up the string where it happened */
+    EXPAND_FORMAT_STRING( why, fmt );
 
     if ( lineno > 0 )
-        line = fli_print_to_string( "%d", lineno );
+        sprintf( line, "%d", lineno );
     else
-        line = fl_strdup( "?" );
+        strcpy( line, "?" );
 
     if ( func && *func )
-        where = fli_print_to_string( "In %s() [%s:%s]", func, file, line );
+        fprintf( errlog, "In %s() [%s:%s]: %s\n", func, file, line,
+                 why ? why : "" );
     else
-        where = fli_print_to_string( "In [%s:%s]", file, line );
-        
-    fli_safe_free( line );
+        fprintf( errlog, "In [%s:%s]: %s\n", file, line, why ? why : "" );
 
-    /* Now find out why */
-
-    if ( fmt && *fmt )
-    {
-        va_start( args, fmt );
-        fl_vsnprintf( why, sizeof why, fmt, args );
-        va_end( args );
-    }
-
-    /* Having gotten where and why it happened print it out */
-
-    fprintf( errlog, "%s: %s\n", where, why );
-
-    fli_safe_free( where );
+    fli_safe_free( why );
 }
+
 
 /*********************************************************************
  * Set the level, line number and file where error occurred, return

@@ -32,6 +32,7 @@
 #include "include/forms.h"
 #include "flinternal.h"
 #include <string.h>
+#include "private/flvasprintf.h"
 
 
 #define TRANSLATE_Y( obj, form )    ( form->h - obj->h - obj->y )
@@ -1088,6 +1089,24 @@ fl_set_object_label( FL_OBJECT  * obj,
 
 
 /***************************************
+ * Sets the label of an object using a format string and an appropriate
+ * number of (unspecified) argiments
+ ***************************************/
+
+void
+fl_set_object_label_f( FL_OBJECT  * obj,
+                       const char * fmt,
+                       ... )
+{
+    char * buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_set_object_label( obj, buf );
+    fl_free( buf );
+}
+
+
+/***************************************
  * Returns the objects label string
  ***************************************/
 
@@ -1109,8 +1128,8 @@ fl_get_object_label( FL_OBJECT * obj )
  ***************************************/
 
 void
-fl_set_object_lcol( FL_OBJECT * obj,
-                    FL_COLOR    lcol )
+fl_set_object_lcolor( FL_OBJECT * obj,
+                      FL_COLOR    lcol )
 {
     FL_FORM * form;
 
@@ -1131,19 +1150,19 @@ fl_set_object_lcol( FL_OBJECT * obj,
 
         for ( obj = obj->next; obj && obj->objclass != FL_END_GROUP;
               obj = obj->next )
-            fl_set_object_lcol( obj, lcol );
+            fl_set_object_lcolor( obj, lcol );
 
         if ( form )
             fl_unfreeze_form( form );
     }
-    else if ( obj->lcol != lcol && obj->objclass != FL_TABFOLDER )
+    else if ( obj->lcol != lcol )
     {
         obj->lcol = lcol;
-        fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
 
         if ( obj->objclass == FL_TABFOLDER )
-            fli_set_tab_lcol( obj, lcol );
+            fli_set_tab_lcolor( obj, lcol );
 
+        fli_handle_object( obj, FL_ATTRIB, 0, 0, 0, NULL, 0 );
         fl_redraw_object( obj );
     }
 }
@@ -1154,7 +1173,7 @@ fl_set_object_lcol( FL_OBJECT * obj,
  ***************************************/
 
 FL_COLOR
-fl_get_object_lcol( FL_OBJECT * obj )
+fl_get_object_lcolor( FL_OBJECT * obj )
 {
     if ( ! obj )
     {
@@ -3655,6 +3674,22 @@ fl_set_object_helper( FL_OBJECT  * obj,
 
     fli_safe_free( obj->tooltip );
     obj->tooltip = ( tip && *tip ) ? fl_strdup( tip ) : NULL;
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_object_helper_f( FL_OBJECT  * obj,
+                        const char * fmt,
+                        ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_set_object_helper( obj, buf );
+    fl_free( buf );
 }
 
 

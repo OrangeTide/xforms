@@ -92,6 +92,14 @@ FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_value( FL_OBJECT *,
 FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_label( FL_OBJECT *,
                                                        const char * );
 
+FL_EXPORT FL_POPUP_ENTRY * fl_get_select_item_by_label_f( FL_OBJECT  *,
+														  const char *,
+														  ... );
+
+FL_EXPORT FL_POPUP_ENTRY * fl_get_select_item_by_text_f( FL_OBJECT  * obj,
+														 const char * fmt,
+														 ... );
+
 FL_EXPORT FL_POPUP_ENTRY *fl_get_select_item_by_text( FL_OBJECT *,
                                                       const char * );
 

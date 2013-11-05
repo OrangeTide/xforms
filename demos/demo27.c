@@ -174,15 +174,15 @@ create_controlform( void )
 
     squareobj = obj = fl_add_button( FL_RADIO_BUTTON, 20, 150, 60, 60,
                                      "@square" );
-    fl_set_object_lcol( obj, FL_YELLOW );
+    fl_set_object_lcolor( obj, FL_YELLOW );
     fl_set_object_callback( obj, select_object, 1 );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 20, 90, 60, 60, "@circle" );
-    fl_set_object_lcol( obj, FL_YELLOW );
+    fl_set_object_lcolor( obj, FL_YELLOW );
     fl_set_object_callback( obj, select_object, 2 );
 
     obj = fl_add_button( FL_RADIO_BUTTON, 20, 30, 60, 60, "@8>" );
-    fl_set_object_lcol( obj, FL_YELLOW );
+    fl_set_object_lcolor( obj, FL_YELLOW );
     fl_set_object_callback( obj, select_object, 3 );
 
     fl_end_group( );

@@ -32,8 +32,7 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
-
-#define TBDEBUG    0
+#include "private/flvasprintf.h"
 
 typedef struct {
     FL_OBJECT  * canvas;
@@ -585,6 +584,22 @@ fl_delete_folder_byname( FL_OBJECT  * ob,
  ***************************************/
 
 void
+fl_delete_folder_byname_f( FL_OBJECT  * ob,
+                           const char * fmt,
+                           ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_delete_folder_byname( ob, buf );
+    fl_free( buf );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
 fl_delete_folder_bynumber( FL_OBJECT * ob,
                            int         num )
 {
@@ -675,6 +690,24 @@ fl_get_tabfolder_folder_byname( FL_OBJECT  * ob,
 /***************************************
  ***************************************/
 
+FL_FORM *
+fl_get_tabfolder_folder_byname_f( FL_OBJECT  * ob,
+                                  const char * fmt,
+                                  ...)
+{
+    FL_FORM *f;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    f = fl_get_tabfolder_folder_byname( ob, buf );
+    fl_free( buf );
+    return f;
+}
+
+
+/***************************************
+ ***************************************/
+
 void
 fl_delete_folder( FL_OBJECT * ob,
                   FL_FORM   * form )
@@ -744,6 +777,22 @@ fl_set_folder_byname( FL_OBJECT  * ob,
             program_switch( sp->title[ i ], i );
             done = 1;
         }
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_set_folder_byname_f( FL_OBJECT  * ob,
+                        const char * fmt,
+                        ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_set_folder_byname( ob, buf );
+    fl_free( buf );
 }
 
 
@@ -1162,14 +1211,14 @@ fli_set_tab_color( FL_OBJECT * obj,
  ***************************************/
 
 void
-fli_set_tab_lcol( FL_OBJECT * obj,
-                  FL_COLOR    lcol )
+fli_set_tab_lcolor( FL_OBJECT * obj,
+                    FL_COLOR    lcol )
 {
     FLI_TABFOLDER_SPEC *sp = obj->spec;
     int i;
 
     for ( i = 0; i < sp->nforms; i++ )
-        fl_set_object_lcol( sp->title[ i ], lcol );
+        fl_set_object_lcolor( sp->title[ i ], lcol );
 }
 
 

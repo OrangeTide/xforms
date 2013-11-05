@@ -465,7 +465,7 @@ embedded circle. For bitmapbuttons, @code{col1} is the normal box
 color (or bitmap background if boxtype is not @code{FL_NO_BOX}) and
 @code{col2} is used to indicate the focus color. The foreground color
 of the bitmap is controlled by label color (as set via
-@code{@ref{fl_set_object_lcol()}}. For scrollbutton, @code{col1} is
+@code{@ref{fl_set_object_lcolor()}}. For scrollbutton, @code{col1} is
 the overall boundbox color (if boxtype is not @code{FL_NO_BOX}),
 @code{col2} is the arrow color. The label of a scrollbutton must be a
 string with a number between 1 and 9 (except 5), indicating the arrow

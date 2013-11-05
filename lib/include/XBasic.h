@@ -468,8 +468,16 @@ FL_EXPORT int fl_winisvalid( Window win );
 FL_EXPORT void fl_wintitle( Window       win,
                             const char * title );
 
+FL_EXPORT void fl_wintitle_f( Window       win,
+							  const char * fmt,
+							  ... );
+
 FL_EXPORT void fl_winicontitle( Window       win,
                                 const char * title );
+
+FL_EXPORT void fl_winicontitle_f( Window       win,
+								  const char * fmt,
+								  ... );
 
 FL_EXPORT void fl_winposition( FL_Coord x,
                                FL_Coord y );

@@ -62,6 +62,10 @@ FL_EXPORT FL_FORM * fl_get_tabfolder_folder_bynumber( FL_OBJECT * ob,
 FL_EXPORT FL_FORM * fl_get_tabfolder_folder_byname( FL_OBJECT  * ob,
                                                     const char * name );
 
+FL_EXPORT FL_FORM * fl_get_tabfolder_folder_byname_f( FL_OBJECT  * ob,
+													  const char * fmt,
+													  ...);
+
 FL_EXPORT void fl_delete_folder( FL_OBJECT * ob,
                                  FL_FORM   * form );
 
@@ -71,11 +75,19 @@ FL_EXPORT void fl_delete_folder_bynumber( FL_OBJECT * ob,
 FL_EXPORT void fl_delete_folder_byname( FL_OBJECT  * ob,
                                         const char * name );
 
+FL_EXPORT void fl_delete_folder_byname_f( FL_OBJECT  * ob,
+										  const char * fmt,
+										  ... );
+
 FL_EXPORT void fl_set_folder( FL_OBJECT * ob,
                               FL_FORM   * form );
 
 FL_EXPORT void fl_set_folder_byname( FL_OBJECT  * ob,
                                      const char * name );
+
+FL_EXPORT void fl_set_folder_byname_f( FL_OBJECT  * ob,
+									   const char * fmt,
+									   ... );
 
 FL_EXPORT void fl_set_folder_bynumber( FL_OBJECT * ob,
                                        int         num );

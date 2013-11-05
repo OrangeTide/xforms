@@ -77,7 +77,7 @@ create_it( void )
     fl_set_object_bw( text, -1 );
     fl_set_object_lstyle( text, tip->fntstyle );
     fl_set_object_lsize( text, tip->fntsize );
-    fl_set_object_lcol( text, tip->textcolor );
+    fl_set_object_lcolor( text, tip->textcolor );
     fl_set_object_lalign( text, tip->lalign );
     fl_set_object_color( text, tip->background, tip->background );
 
@@ -169,7 +169,7 @@ fl_set_tooltip_color( FL_COLOR tc,
                       FL_COLOR bc )
 {
     create_it( );
-    fl_set_object_lcol( tip->text, tip->textcolor = tc );
+    fl_set_object_lcolor( tip->text, tip->textcolor = tc );
     tip->background = bc;
     fl_set_object_color( tip->text, tip->background, tip->background );
 }

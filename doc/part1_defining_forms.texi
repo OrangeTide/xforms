@@ -173,7 +173,7 @@ FL_OBJECT *thebox;
 
 thebox = fl_add_box(FL_UP_BOX, 20, 20, 100, 100, "I am a Box");
 fl_set_object_color(thebox, FL_RED, 0 );    /* make box red     */
-fl_set_object_lcol(thebox, FL_GREEN );      /* make label green */
+fl_set_object_lcolor(thebox, FL_GREEN );    /* make label green */
 fl_set_object_lsize(thebox, FL_LARGE_SIZE); /* make label large */
 @end example
 @noindent
@@ -470,10 +470,12 @@ FL_OBJECT *fl_get_focus_object(FL_FORM *form);
 
 Note that the label is not the default text in the input field. The
 label is (by default) placed in front of the input field. To set the
-contents of the input field use the routine
+contents of the input field use the routines
 @findex fl_set_input()
+@findex fl_set_input_f()
 @example
 void fl_set_input(FL_OBJECT *obj, const char *str);
+void fl_set_input_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 
 To change the color of the input text or the cursor use
@@ -1210,9 +1212,9 @@ void fl_set_border_width(int border_width);
 
 There are also a number of routines to change the appearance of the
 label. The first one is
-@findex fl_set_object_lcol()
+@findex fl_set_object_lcolor()
 @example
-void fl_set_object_lcol(FL_OBJECT *obj, FL_COLOR lcol);
+void fl_set_object_lcolor(FL_OBJECT *obj, FL_COLOR lcol);
 @end example
 @noindent
 It sets the color of the label. The default is black (@code{FL_BLACK}).
@@ -1366,19 +1368,24 @@ pre-defined. The following table gives their names:
 The other 32 fonts (numbers 16-47) can be filled in by the application
 program. Actually, the application program can also change the first 16
 fonts if required (e.g., to force a particular resolution). To change a
-font for the the entire application, use the following routine:
+font for the the entire application, use one of the following routines:
 @findex fl_set_font_name()
+@findex fl_set_font_name_f()
 @example
 int fl_set_font_name(int index, const char *name);
+int fl_set_font_name(int index, const char *fmt, ...);
 @end example
-where @code{index} is the number of the font (between 0 and 47) and
-@code{name} should be a valid font name (with the exception of the size
-field). If you are defining a completely different font family
-starting at index @code{k}, it's a good idea to define
-@code{k + FL_BOLD_STYLE} to be the corresponding bold font in the
-family , and @code{k + FL_ITALIC_STYLE} the corresponding italic font
-in the family (so object like browser can obtain correct style when
-switching font styles):
+The first form accepts just a simple string for the font name while
+the second assembles the name from a format string as it's used with
+@code{printf()} etc. and the following arguments. The first argument,
+@code{index}, is the number of the font (between 0 and
+@code{FL_MAXFONTS-1}) and the font name should be a valid font name
+(with the exception of the size field). If you are defining a
+completely different font family starting at index @code{k}, it's a
+good idea to define @code{k + FL_BOLD_STYLE} to be the corresponding
+bold font in the family , and @code{k + FL_ITALIC_STYLE} the
+corresponding italic font in the family (so object like browser can
+obtain correct style when switching font styles):
 @example
 #define Pretty       30
 #define PrettyBold   (Pretty + FL_BOLD_STYLE)
@@ -1421,12 +1428,12 @@ built-in font name. The font name is passed to the callback function as
 the string pointer parameter while @code{shortform} selects if a short
 form of the name should be used.
 
-XForms only specifies the absolutely needed parts of the font names, and
-assumes the font path is set so that the server always chooses the most
-optimal fonts for the system. If this is not true, you can use
-@code{@ref{fl_set_font_name()}} to select the exact
-font you want. In general, this is not recommended if your application
-is to be run/displayed on different servers.
+XForms only specifies the absolutely needed parts of the font names,
+and assumes the font path is set so that the server always chooses the
+most optimal fonts for the system. If this is not true, you can use
+@code{@ref{fl_set_font_name()}} or @code{@ref{fl_set_font_name_f()}}
+to select the exact font you want. In general, this is not recommended
+if your application is to be run/displayed on different servers.
 
 See @file{fonts.c} for a demonstration of all the built-in font styles
 available.
@@ -1543,16 +1550,22 @@ inside alignment.
 See also the demo program @file{lalign.c} for an example of the
 positioning of labels using the above constants.
 
-Finally, the routine
+Finally, the routines
 @findex fl_set_object_label()
+@findex fl_set_object_label_f()
 @example
 void fl_set_object_label(FL_OBJECT *obj, const char *label);
+void fl_set_object_label_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
-changes the label of a given object. An internal copy of the parameter
-@code{label} is made. As mentioned earlier, newline (@code{\n}) can be
-embedded in the label to generate multiple lines. By embedding
-@code{<Ctrl>H} (@code{\010}) in the label, the entire label or one of
-the characters in the label can be underlined. The function
+change the label of a given object. Whilw the first function expects a
+simple string for the label. the second one accepts a format string
+with the same format specifiers as @code{printf()} etc., followed by
+as many additional arguments as there are format specifiers. An
+internal copy of the label for the object is made. As mentioned
+earlier, newline (@code{\n}) can be embedded in the label to generate
+multiple lines. By embedding @code{<Ctrl>H} (@code{\010}) in the
+label, the entire label or one of the characters in the label can be
+underlined. The function
 @findex fl_get_object_label()
 @example
 const char * fl_get_object_label(FL_OBJECT *obj);
@@ -1571,14 +1584,19 @@ conditions. Forms Library elected to show the message after the mouse
 enters the object for about 600 milli-seconds. The text is removed when
 the mouse leaves the object or when the mouse is pressed.
 
-To set the text, use the following routine
+To set the text, use the following routines
 @findex fl_set_object_helper()
+@findex fl_set_object_helper_f()
 @example
 void fl_set_object_helper(FL_OBJECT *obj, const char *helpmsg);
+void fl_set_object_helper_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 where @code{helpmsg} is a text string (with possible embedded newlines
-in it) that will be shown when the mouse enters the object, after about
-a 600 milli-second delay. A internal copy of the string is made.
+in it) that will be shown when the mouse enters the object, after
+about a 600 milli-second delay. The second form of the function
+accepts instead a format string like @code{printf()} etc., followed by
+the appropriate number of arguments. In both cases an internal copy of
+the string is made.
 
 The boxtype, color and font for the message display can be customized
 further using the following routines

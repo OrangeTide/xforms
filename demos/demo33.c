@@ -43,7 +43,7 @@ main( int    argc,
     form = fl_bgn_form( FL_UP_BOX, 200, 200 );
 
     obj = fl_add_bitmap( FL_NORMAL_BITMAP, 50, 50, 100, 100, "A bitmap" );
-    fl_set_object_lcol( obj, FL_BLUE );
+    fl_set_object_lcolor( obj, FL_BLUE );
     fl_add_button( FL_HIDDEN_BUTTON, 50, 50, 100, 100, "" );
 
     fl_end_form( );

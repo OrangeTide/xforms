@@ -53,8 +53,9 @@ FL_EXPORT void fl_show_message( const char *,
 
 FL_EXPORT void fl_show_messages( const char * );
 
-FL_EXPORT void fl_show_msg( const char *,
-                            ... );
+#define fl_show_msg fl_show_messages_f
+FL_EXPORT void fl_show_messages_f( const char *,
+								   ... );
 
 FL_EXPORT void fl_hide_message( void );
 
@@ -71,8 +72,10 @@ FL_EXPORT void fl_show_alert( const char *,
                               const char *,
                               int );
 
-FL_EXPORT void fl_show_alert2( int          c,
-                               const char * fmt,
+
+#define fl_show_alert2  fl_show_alert_f
+FL_EXPORT void fl_show_alert_f( int          c,
+								const char * fmt,
                                ... );
 
 FL_EXPORT void fl_hide_alert( void );
@@ -176,6 +179,9 @@ FL_EXPORT void fl_hide_command_log( void );
 FL_EXPORT void fl_clear_command_log( void );
 
 FL_EXPORT void fl_addto_command_log( const char * );
+
+FL_EXPORT void fl_addto_command_log_f( const char *,
+									   ...);
 
 FL_EXPORT void fl_set_command_log_position( int,
                                             int );

@@ -70,12 +70,12 @@ show_image_info( FL_IMAGE * im )
      if ( im->comments )
      {
          fl_activate_object( fdui->comments );
-         fl_set_object_lcol( fdui->comments, FL_BLACK );
+         fl_set_object_lcolor( fdui->comments, FL_BLACK );
      }
      else
      {
          fl_deactivate_object( fdui->comments );
-         fl_set_object_lcol( fdui->comments, FL_INACTIVE_COL );
+         fl_set_object_lcolor( fdui->comments, FL_INACTIVE_COL );
      }
 }
 

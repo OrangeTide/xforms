@@ -78,17 +78,35 @@ FL_EXPORT void fl_clear_browser( FL_OBJECT * ob );
 FL_EXPORT void fl_add_browser_line( FL_OBJECT  * ob,
                                     const char * newtext );
 
-FL_EXPORT void fl_addto_browser( FL_OBJECT  * ob,
-                                 const char * newtext );
+FL_EXPORT void fl_add_browser_line_f( FL_OBJECT  * ob,
+									  const char * fmt,
+									  ... );
 
+
+FL_EXPORT void fl_addto_browser( FL_OBJECT  * obj,
+                                 const char * text );
+
+FL_EXPORT void fl_addto_browser_f( FL_OBJECT  * obj,
+								   const char * fmt,
+								   ...);
+
+#define fl_append_browser  fl_addto_browser_chars
 FL_EXPORT void fl_addto_browser_chars( FL_OBJECT  * ob,
                                        const char * str );
 
-#define fl_append_browser  fl_addto_browser_chars
+FL_EXPORT void fl_addto_browser_chars_f( FL_OBJECT  * ob,
+										 const char * fmt,
+										 ... );
 
+#define fl_append_browser_f  fl_addto_browser_chars_f
 FL_EXPORT void fl_insert_browser_line( FL_OBJECT  * ob,
                                        int          linenumb,
                                        const char * newtext );
+
+FL_EXPORT void fl_insert_browser_line_f( FL_OBJECT  * ob,
+										 int          linenumb,
+										 const char * fmt,
+										 ... );
 
 FL_EXPORT void fl_delete_browser_line( FL_OBJECT * ob,
                                        int         linenumb );
@@ -96,6 +114,11 @@ FL_EXPORT void fl_delete_browser_line( FL_OBJECT * ob,
 FL_EXPORT void fl_replace_browser_line( FL_OBJECT  * ob,
                                         int          linenumb,
                                         const char * newtext );
+
+FL_EXPORT void fl_replace_browser_line_f( FL_OBJECT  * ob,
+										  int          linenumb,
+										  const char * fmt,
+										  ... );
 
 FL_EXPORT const char *fl_get_browser_line( FL_OBJECT * ob,
                                            int         linenumb );

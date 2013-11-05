@@ -35,6 +35,7 @@
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/pbrowser.h"
+#include "private/flvasprintf.h"
 
 
 /***************************************
@@ -920,16 +921,36 @@ fl_select_browser_line( FL_OBJECT * ob,
 
 
 /***************************************
- * Adds a line to the (end of the) browser and shifts the dos[alyed
+ * Adds a line (given by a forma string and the appropriate number of
+ * argumens) to the (end of the) browser and shifts the displayed
  * area so that the line is visible
  ***************************************/
 
 void
-fl_addto_browser( FL_OBJECT  * ob,
+fl_addto_browser( FL_OBJECT  * obj,
                   const char * text )
 {
-    fli_tbox_add_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb, text, 1 );
-    redraw_scrollbar( ob );
+    fli_tbox_add_line( ( ( FLI_BROWSER_SPEC * ) obj->spec )->tb, text, 1 );
+    redraw_scrollbar( obj );
+}
+
+
+/***************************************
+ * Adds a line (specified using a format string and an unspecified number
+ * of further arguments) to the (end of the) browser and shifts the
+ * displayed area so that the line is visible
+ ***************************************/
+
+void
+fl_addto_browser_f( FL_OBJECT  * obj,
+                    const char * fmt,
+                    ...)
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_addto_browser( obj, buf );
+    fl_free( buf );
 }
 
 
@@ -960,6 +981,26 @@ fl_insert_browser_line( FL_OBJECT  * ob,
 
 
 /***************************************
+ * Inserts a line (given by a format string and the aprropriate number
+ * of arguments) into the browser before the line currently having the
+ * number 'linenumb'
+ ***************************************/
+
+void
+fl_insert_browser_line_f( FL_OBJECT  * ob,
+                          int          linenumb,
+                          const char * fmt,
+                          ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_insert_browser_line( ob, linenumb, buf );
+    fl_free( buf );
+}
+
+
+/***************************************
  * Deletes the line at line number 'linenumb' from the browser
  ***************************************/
 
@@ -985,6 +1026,25 @@ fl_replace_browser_line( FL_OBJECT  * ob,
     fli_tbox_replace_line( ( ( FLI_BROWSER_SPEC * ) ob->spec )->tb,
                            linenumb - 1, newtext );
     redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ * Replaces the browser line at line number 'linenumb' with a new one
+ * derived from the format string and the following arguments.
+ ***************************************/
+
+void
+fl_replace_browser_line_f( FL_OBJECT  * ob,
+                           int          linenumb,
+                           const char * fmt,
+                           ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_replace_browser_line( ob, linenumb, buf );
+    fl_free( buf );
 }
 
 
@@ -1098,7 +1158,8 @@ fl_set_browser_fontstyle( FL_OBJECT * ob,
 
 
 /***************************************
- * Returns the number of the topmost line that is completely visible
+ * Returns the number of the topmost line that is completely visible,
+ * may return 0 if there are no lines in the browser
  ***************************************/
 
 int
@@ -1141,6 +1202,24 @@ fl_add_browser_line( FL_OBJECT  * ob,
 
     fli_tbox_add_line( sp->tb, newtext, 0 );
     redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ * Adds a line to the (end of the) browser (does not make the line
+ * visible)
+ ***************************************/
+
+void
+fl_add_browser_line_f( FL_OBJECT  * ob,
+                       const char * fmt,
+                       ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_add_browser_line( ob,buf );
+    fl_free( buf );
 }
 
 
@@ -1241,6 +1320,23 @@ fl_addto_browser_chars( FL_OBJECT  * ob,
 
     fli_tbox_add_chars( sp->tb, str );
     redraw_scrollbar( ob );
+}
+
+
+/***************************************
+ * Appends characters to the end of the last line in the browser
+ ***************************************/
+
+void
+fl_addto_browser_chars_f( FL_OBJECT  * ob,
+                          const char * fmt,
+                          ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_addto_browser_chars_f( ob, buf );
+    fl_free( buf );
 }
 
 

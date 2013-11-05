@@ -183,81 +183,13 @@ fli_object_class_name( FL_OBJECT * ob )
 
 
 /***************************************
- * This function is a poor mans asprintf() and expects a format
- * string as printf() and arguments which must correspond to the
- * given format string and returns a string of the right length
- * into which the arguments are written. The caller of the function
- * is responsible for fl_free()-ing the string.
- * -> 1. printf()-type format string
- *    2. As many arguments as there are conversion specifiers etc.
- *       in the format string.
- * <- Pointer to character array of exactly the right length into
- *    which the string characterized by the format string has been
- *    written. On failure, i.e. if there is not enough space, the
- *    function emits an error message and returns NULL.
- ***************************************/
-
-#define STRING_TRY_LENGTH 128
-
-char *
-fli_print_to_string( const char * fmt,
-                    ... )
-{
-    char *c = NULL;
-    char *old_c;
-    size_t len = STRING_TRY_LENGTH;
-    va_list ap;
-    int wr;
-
-
-    while ( 1 )
-    {
-        old_c = c;
-        if ( ( c = fl_realloc( c, len ) ) == NULL )
-        {
-            fli_safe_free( old_c );
-            M_err( "fli_print_to_string", "Running out of memory\n" );
-            return NULL;
-        }
-
-        va_start( ap, fmt );
-        wr = vsnprintf( c, len, fmt, ap );
-        va_end( ap );
-
-        if ( wr < 0 )         /* indicates not enough space with older glibs */
-        {
-            len *= 2;
-            continue;
-        }
-
-        if ( ( size_t ) wr + 1 > len )   /* newer glibs return the number of */
-        {                                /* chars needed, not counting the   */
-            len = wr + 1;                /* trailing '\0'                    */
-            continue;
-        }
-
-        break;
-    }
-
-    /* Trim the string down to the number of required characters */
-
-    if ( ( size_t ) wr + 1 < len )
-    {
-        old_c = c;
-        if ( ( c = fl_realloc( c, ( size_t ) wr + 1 ) ) == NULL )
-            return old_c;
-    }
-
-    return c;
-}
-
-
-/***************************************
  * Function tries to read a line (of arbirary length) from a file
  * On failure (either due to read error or missing memory) NULL is
  * returned, otherwise a pointer to an allocated buffer that must
  * be freed by the caller.
  ***************************************/
+
+#define STRING_TRY_LENGTH 128
 
 char *
 fli_read_line( FILE *fp )

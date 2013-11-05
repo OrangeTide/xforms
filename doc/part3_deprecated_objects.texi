@@ -123,13 +123,19 @@ There are a number of routines to change the list of possible choices.
 To add a line to a choice object use
 @findex fl_addto_choice()
 @anchor{fl_addto_choice()}
+@findex fl_addto_choice_f()
+@anchor{fl_addto_choice_f()}
 @example
 int fl_addto_choice(FL_OBJECT *obj, const char *text);
+int fl_addto_choice_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 @noindent
 The function returns the number of the new item. The items in the list
 are numbered in the order in which they were inserted. The first item
-has number 1, etc.
+has number 1, etc. The two functions differ in that the first one
+accepts just a simple string while for the second the text is
+assembled from a format string as used by @code{printf()} etc. and
+the following arguments.
 
 To delete a line use:
 @findex fl_delete_choice()
@@ -149,9 +155,15 @@ void fl_clear_choice(FL_OBJECT *obj)
 One can also replace a line using
 @findex fl_replace_choice()
 @anchor{fl_replace_choice()}
+@findex fl_replace_choice_f()
+@anchor{fl_replace_choice_f()}
 @example
 void fl_replace_choice(FL_OBJECT *obj, int line, const char *text);
+void fl_replace_choice(FL_OBJECT *obj, int line, const char *fmt, ...);
 @end example
+@noindent
+(The second function assembles the new text from a format string as
+used for @code{printf()} etc. and the following arguments.)
 
 To obtain the currently selected item in the choice object use the call
 @findex fl_get_choice()
@@ -219,28 +231,29 @@ of the choice using a call of
 @anchor{fl_set_choice()}
 @findex fl_set_choice_text()
 @anchor{fl_set_choice_text()}
+@findex fl_set_choice_text_f()
+@anchor{fl_set_choice_text_f()}
 @example
 void fl_set_choice(FL_OBJECT *obj, int line);
 void fl_set_choice_text(FL_OBJECT *obj, const char *txt)
+void fl_set_choice_text_f(FL_OBJECT *obj, const char *fmt, ...)
 @end example
 @noindent
-where @code{txt} must must be the text of exactly one of the choice
-items. For example, after the following choice is created
+where @code{txt} (for @code{fl_set_choice_text()} or the text
+resulting from the expansion of the @code{printf()}-compatible format
+string and the following arguments for @code{fl_set_choice_text_f()}
+must must be the text of exactly one of the choice items. For example,
+after the following choice is created
 @example
-fl_addto_choice(obj," item1 | item2 | item3 ");
+fl_addto_choice(obj,"item1|item2|item3");
 @end example
 @noindent
-You can select the second item by either using
+You can select the second item by using any of the following lines
 @example
 fl_set_choice(obj, 2);
+fl_set_choice_text(obj, "item2");
+fl_set_choice_text_f(obj, "item%d", 2 );
 @end example
-@noindent
-or
-@example
-fl_set_choice_text(obj, " item2 ");
-@end example
-@noindent
-Note the spaces in the text.
 
 
 @node Choice Attributes
@@ -698,6 +711,8 @@ the right of the menu label. By default no symbol is shown.
 Any boxtype can be used for a menu except for those of type
 @code{FL_PULLDOWN_MENU}, for which @code{FL_NO_BOX} should not be
 used.
+
+Using the functiond
 
 The first color argument (@code{col1}) to
 @code{@ref{fl_set_object_color()}} controls the color of the menu's
@@ -1353,6 +1368,21 @@ int fl_getpup_items(int popup_id)
 
 @node XPopup Attributes
 @subsection XPopup Attributes
+
+The title of a XPopup can be set using the functions
+@findex fl_setpup_title()
+@anchor{fl_setpup_title()}
+@findex fl_setpup_title_f()
+@anchor{fl_setpup_title_f()}
+@example
+void fl_setpup_title(int popup_id, const char *title);
+void fl_setpup_title_f(int popup_id, const char *fmt, ...);
+@end example
+@noindent
+They only differ in the way the new title is passed to the function,
+the first one accepts a simple string while the second expects a
+format string as used for @code{printf()} etc., followed by the
+appropriate number of (unspecified) arguments.
 
 Use the following routines to modify the default popup font style,
 font size and border width:

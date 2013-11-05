@@ -37,7 +37,7 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
-#include "private/flsnprintf.h"
+#include "private/flvasprintf.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -1580,6 +1580,22 @@ fl_setpup_title( int          nm,
         memmove( b, b + 1, strlen( b ) );
     m->title_width = XTextWidth( pup_title_font_struct, t, strlen( t ) );
     fl_free( t );
+}
+
+
+/***************************************
+ ***************************************/
+
+void
+fl_setpup_title_f( int          nm,
+                   const char * fmt,
+                   ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_setpup_title( nm, buf );
+    fl_free( buf );
 }
 
 

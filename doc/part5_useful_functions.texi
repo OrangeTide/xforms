@@ -244,15 +244,26 @@ resizing.
 To change the window title (and its associated icon title) use
 @findex fl_wintitle()
 @anchor{fl_wintitle()}
+@findex fl_wintitle_f()
+@anchor{fl_wintitle_f()}
 @example
 void fl_wintitle(Window win, const char *title);
+void fl_wintitle_f(Window win, const char *fmt, ...);
 @end example
+@noindent
+While the first function only accepts a simple string for the window
+title the second one allows to pass a format string just like the one
+used for @code{printf()} etc. and an appropriate number of further
+arguments which are used to construct the title.
 
-To change the icon title only use the routine
+To change the icon title only use the routines
 @findex fl_winicontitle()
 @anchor{fl_winicontitle()}
+@findex fl_winicontitle_f()
+@anchor{fl_winicontitle_f()}
 @example
 void fl_winicontitle(Window win, const char *title);
+void fl_winicontitle_f(Window win, const char *fmt, ...);
 @end example
 
 To install an icon for the window use

@@ -204,17 +204,23 @@ modify something on it, use the following routines
 @anchor{fl_get_tabfolder_folder_bynumber()}
 @findex fl_get_tabfolder_folder_byname()
 @anchor{fl_get_tabfolder_folder_byname()}
+@findex fl_get_tabfolder_folder_byname_f()
+@anchor{fl_get_tabfolder_folder_byname_f()}
 @example
 FL_FORM *fl_get_tabfolder_folder_bynumber(FL_OBJECT *obj, int num);
 FL_FORM *fl_get_tabfolder_folder_byname(FL_OBJECT *obj,
                                         const char *name);
+FL_FORM *fl_get_tabfolder_folder_byname_f(FL_OBJECT *obj,
+                                          const char *fnt, ...);
 @end example
 @noindent
-where @code{num} and @code{name} are the sequence number (the first
-tab on the left has a sequence number 1, the second 2 etc) and the tab
-name, respectively. The functions return the form associated with the
-number or the name. If the requested number or name is invalid,
-@code{NULL} is returned.
+The functions take either the sequence number (the first tab on the
+left has a sequence number 1, the second 2 etc) or the tab name, which
+can either be passed directly as a string or via a format string like
+for @code{printf()} etc. and the corresponding (unspecified)
+arguments. The functions return the form associated with the number or
+the name. If the requested number or name is invalid, @code{NULL} is
+returned.
 
 If there are more tabs than that can be shown, the right-most tab will
 be shown as "broken". Clicking on the "broken" tab scrolls the tab to
@@ -261,16 +267,23 @@ To remove a folder, the following routine is available
 @anchor{fl_delete_folder_bynumber()}
 @findex fl_delete_folder_byname()
 @anchor{fl_delete_folder_byname()}
+@findex fl_delete_folder_byname_f()
+@anchor{fl_delete_folder_byname_f()}
 @example
 void fl_delete_folder(FL_OBJECT *obj, FL_FORM *folder);
 void fl_delete_folder_bynumber(FL_OBJECT *obj, int num);
 void fl_delete_folder_byname(FL_OBJECT *obj, const char *name);
+void fl_delete_folder_byname_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 @noindent
-Note that after deletion, the number of folders in the tabfolder as
-well as the sequence numbers are updated. This means if you want to
-delete all folders after the second folder, you can do that by
-deleting the third folder repeatedly.
+(the last two function differ in the way the tab names gets passed,
+the first is to be called with a simple string while the second
+expects a format string as used for @code{printf()} etc. and the
+appropriate number of arguments, from which the tab name gets
+constructed). wNote that after deletion, the number of folders in the
+tabfolder as well as the sequence numbers are updated. This means if
+you want to delete all folders after the second folder, you can do
+that by deleting the third folder repeatedly.
 
 The application program can select which folder to show by using the
 following routines
@@ -280,11 +293,20 @@ following routines
 @anchor{fl_set_folder_bynumber()}
 @findex fl_set_folder_byname()
 @anchor{fl_set_folder_byname()}
+@findex fl_set_folder_byname_f()
+@anchor{fl_set_folder_byname_f()}
 @example
 void fl_set_folder(FL_OBJECT *obj, FL_FORM *folder);
 void fl_set_folder_bynumber(FL_OBJECT *obj, int num);
-void fl_set_folder_byname(FL_OBJECT *obj, const char *tab);
+void fl_set_folder_byname(FL_OBJECT *obj, const char *name);
+void fl_set_folder_byname_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
+@noindent
+(The latter two functions only differ in the way the tab name gets
+passed top them, the first accepts a simple string while the second
+expects a format string as used for @code{printf()} etc. and the
+appropriate number of (unspecified arguments, from which the tab name
+is constructed.)
 
 Since the area occupied by the tabbed folder contains the space for
 tabs, the following routine is available to obtain the actual folder

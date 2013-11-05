@@ -410,13 +410,20 @@ changes the input mode for all input fields in your application.
 
 
 Note that the label is not the default text in the input field. To set
-the contents of the input field use the routine
+the contents of the input field use one of these routines:
 @findex fl_set_input()
 @anchor{fl_set_input()}
+@findex fl_set_input_f()
+@anchor{fl_set_input_f()}
 @example
 void fl_set_input(FL_OBJECT *obj, const char *str);
+void fl_set_input_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 @noindent
+The first one takes a simple string while the second expects a format
+string with format specifiers just like @code{printf()} etc. and as
+many (appropriate) arguments as there are format specifiers.
+
 Only a limited check on the string passed to the function is done in
 that only printable characters (according to the @code{isprint()}
 function) and, in the case of @code{@ref{FL_MULTILINE_INPUT}} objects,

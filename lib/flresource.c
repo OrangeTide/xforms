@@ -438,7 +438,7 @@ handle_applresdir( const char * rstr,
     strcpy( rbuf, rstr );
     for ( tok = strtok( rbuf, ":" ); tok; tok = strtok( 0, ":" ) )
     {
-        fl_snprintf( buf, sizeof buf,"%s/%s", tok,appclass );
+        fli_snprintf( buf, sizeof buf,"%s/%s", tok,appclass );
         M_info( "handle_applresdir", "Trying XAPPLRESDIR: %s", buf );
         if ( ( fdb = XrmGetFileDatabase( buf ) ) )
         {
@@ -481,7 +481,7 @@ init_resource_database( const char *appclass )
        The window resource manager for this display
     */
 
-    fl_snprintf( buf, sizeof buf, "DECW$SYSTEM_DEFAULTS:%s.DAT", appclass );
+    fli_snprintf( buf, sizeof buf, "DECW$SYSTEM_DEFAULTS:%s.DAT", appclass );
     M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
@@ -489,7 +489,7 @@ init_resource_database( const char *appclass )
         M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
-    fl_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:%s.DAT", appclass );
+    fli_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:%s.DAT", appclass );
     M_info( "init_resource_database", "Trying User_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
@@ -497,7 +497,7 @@ init_resource_database( const char *appclass )
         M_warn( "init_resource_database", "System default %s loaded", buf );
     }
 
-    fl_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT" );
+    fli_snprintf( buf, sizeof buf, "DECW$USER_DEFAULTS:DECW$XDEFAULTS.DAT" );
     M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
@@ -516,7 +516,7 @@ init_resource_database( const char *appclass )
     }
 #else /* !VMS */
 
-    fl_snprintf( buf, sizeof buf, "/usr/lib/X11/app-defaults/%s", appclass );
+    fli_snprintf( buf, sizeof buf, "/usr/lib/X11/app-defaults/%s", appclass );
     M_info( "init_resource_database", "Trying Sys_default: %s", buf );
     if ( ( fdb = XrmGetFileDatabase( buf ) ) )
     {
@@ -547,7 +547,7 @@ init_resource_database( const char *appclass )
 
         if ( ( rstr = getenv( "HOME" ) ) )
         {
-            fl_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
+            fli_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
             M_info( "init_resource_database", "Trying %s", buf );
             if ( ( fdb = XrmGetFileDatabase( buf ) ) )
             {
@@ -578,7 +578,7 @@ init_resource_database( const char *appclass )
         {
             int l;
 
-            fl_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
+            fli_snprintf( buf, sizeof buf,"%s/.Xdefaults", rstr );
             l = strlen( strcat( buf, "-" ) );
             gethostname( buf + l, sizeof buf - l );
             M_info( "init_resource_database", "Trying %s", buf );
@@ -643,9 +643,9 @@ fl_get_resource( const char * rname,    /* resource name */
         return NULL;
 
     if ( rname && *rname )
-        fl_snprintf( res_name, sizeof res_name, "%s.%s", fl_app_name, rname );
+        fli_snprintf( res_name, sizeof res_name, "%s.%s", fl_app_name, rname );
     else
-        fl_snprintf( res_class, sizeof res_class, "%s.%s",
+        fli_snprintf( res_class, sizeof res_class, "%s.%s",
                      fl_app_class, cname );
 
     /* Just checking the return value of XrmGetResource() doesn't seem to
@@ -718,7 +718,7 @@ fl_set_resource( const char * str,
 {
     char res_name[ 256 ];
 
-    fl_snprintf( res_name, sizeof res_name, "%s.%s", fl_app_name, str );
+    fli_snprintf( res_name, sizeof res_name, "%s.%s", fl_app_name, str );
     XrmPutStringResource( &fldatabase, res_name, ( char * ) val );
 }
 
@@ -740,11 +740,11 @@ fli_init_resources( void )
     /* internal resources need to be prefixed xform and XForm. need to
        generate for all names */
 
-    fl_snprintf( cls, sizeof cls, "%s.XForm", fl_app_class );
+    fli_snprintf( cls, sizeof cls, "%s.XForm", fl_app_class );
     fl_app_class = cls;
-    fl_snprintf( res, sizeof res, "%s.xform", fl_app_name );
+    fli_snprintf( res, sizeof res, "%s.xform", fl_app_name );
     fl_app_name = res;
-    fl_snprintf( ores, sizeof ores, "%s.xform", fl_ori_app_name );
+    fli_snprintf( ores, sizeof ores, "%s.xform", fl_ori_app_name );
     fl_ori_app_name = ores;
     fl_get_app_resources( internal_resources, Niopt );
 
@@ -977,16 +977,16 @@ fl_initialize( int        * na,
 
     /* Check version request */
 
-    fl_snprintf( disp_name, sizeof disp_name, "%s.fl_version", fl_app_name );
-    fl_snprintf( disp_cls, sizeof disp_cls, "%s.flversion", fl_app_name );
+    fli_snprintf( disp_name, sizeof disp_name, "%s.fl_version", fl_app_name );
+    fli_snprintf( disp_cls, sizeof disp_cls, "%s.flversion", fl_app_name );
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
         fli_print_version( 0 );
 
     /* Get the display name first before doing anything */
 
-    fl_snprintf( disp_name, sizeof disp_name, "%s.display", fl_ori_app_name );
-    fl_snprintf( disp_cls , sizeof disp_cls , "%s.Display", fl_app_class );
+    fli_snprintf( disp_name, sizeof disp_name, "%s.display", fl_ori_app_name );
+    fli_snprintf( disp_cls , sizeof disp_cls , "%s.Display", fl_app_class );
 
     *buf = '\0';
 
@@ -1014,15 +1014,15 @@ fl_initialize( int        * na,
     /* Get debug level settings since all error reporting will be controled
        by it */
 
-    fl_snprintf( disp_name, sizeof disp_name, "%s.fldebug", fl_app_name );
-    fl_snprintf( disp_cls , sizeof disp_cls , "%s.flDebug", fl_app_class );
+    fli_snprintf( disp_name, sizeof disp_name, "%s.fldebug", fl_app_name );
+    fli_snprintf( disp_cls , sizeof disp_cls , "%s.flDebug", fl_app_class );
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
         fli_set_debug_level( atoi( xval.addr ) );
 
     /* print help */
 
-    fl_snprintf( disp_name, sizeof disp_name, "%s.flhelp", fl_app_name );
-    fl_snprintf( disp_cls , sizeof disp_cls , "%s.flhelp", fl_app_class );
+    fli_snprintf( disp_name, sizeof disp_name, "%s.flhelp", fl_app_name );
+    fli_snprintf( disp_cls , sizeof disp_cls , "%s.flhelp", fl_app_class );
 
     if ( XrmGetResource( cmddb, disp_name, disp_cls, &type, &xval ) )
     {
@@ -1048,8 +1048,8 @@ fl_initialize( int        * na,
 
     /* Check if -name is present */
 
-    fl_snprintf( disp_name, sizeof disp_name, "%s.name", fl_app_name );
-    fl_snprintf( disp_cls,  sizeof disp_cls , "%s.Name", fl_app_class );
+    fli_snprintf( disp_name, sizeof disp_name, "%s.name", fl_app_name );
+    fli_snprintf( disp_cls,  sizeof disp_cls , "%s.Name", fl_app_class );
 
     M_warn( "fl_initialize", "Trying display %s", disp_name );
 

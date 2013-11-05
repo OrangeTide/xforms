@@ -891,8 +891,8 @@ fli_get_xevent_name( const XEvent *xev )
       {
           if ( evname[ i ].type == xev->type )
           {
-              fl_snprintf( buf, sizeof buf, "%s(0x%x)",
-                           evname[ i ].name, xev->type );
+              fli_snprintf( buf, sizeof buf, "%s(0x%x)",
+                            evname[ i ].name, xev->type );
               return buf;
           }
       }

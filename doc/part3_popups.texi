@@ -472,8 +472,9 @@ entries of the popup. See the @code{@ref{FL_POPUP_ENTRY}} structure
 documented above on how to iterate over all entries.
 
 Finally, @code{title} is the title shown at the top of the popup (if
-one is set). Never try to change it directly, there's the function
-@code{@ref{fl_popup_set_title()}}, described below, for that.
+one is set). Never try to change it directly, there ars the functions
+@code{@ref{fl_popup_set_title()}} and
+@code{@ref{fl_popup_set_title_f()}}, described below, to do just that.
 
 To remove a popup entry use
 @findex fl_popup_entry_delete()
@@ -962,14 +963,21 @@ First, you can ask for the entry that had been created with a certain
 text, including all the special sequences, by calling
 @findex fl_popup_entry_get_by_text()
 @anchor{fl_popup_entry_get_by_text()}
+@findex fl_popup_entry_get_by_text_f()
+@anchor{fl_popup_entry_get_by_text_f()}
 @example
 FL_POPUP_ENTRY *fl_popup_entry_get_by_text(FL_POPUP *popup,
                                            const char *text);
+FL_POPUP_ENTRY *fl_popup_entry_get_by_text_f(FL_POPUP *popup,
+                                             const char *fmt, ...);
 @end example
 @noindent
-The function returns either a pointer to the entry found or
+The functions returns either a pointer to the entry found or
 @code{NULL} on failure (because either no entry with this text was
-found or the popup doesn't exist).
+found or the popup doesn't exist). (The functions differ in that
+the first one accepts just a simple string while the second assembles
+the text from a format  string, just as it's used for @code{printf()}
+etc., and an appropriate number of following arguments.)
 
 You may as well search by the left-flushed label parts of the entries
 as shown on the screen (note that tab characters @code{'\t'}
@@ -978,14 +986,20 @@ replaced by single spaces and backspace characters @code{'\b'} were
 removed as well as all special sequences)
 @findex fl_popup_entry_get_by_label()
 @anchor{fl_popup_entry_get_by_label()}
+@findex fl_popup_entry_get_by_label_f()
+@anchor{fl_popup_entry_get_by_label_f()}
 @example
 FL_POPUP_ENTRY *fl_popup_entry_get_by_label(FL_POPUP *popup,
                                             const char *label);
+FL_POPUP_ENTRY *fl_popup_entry_get_by_label_f(FL_POPUP *popup,
+                                              const char *fmt, ...);
 @end example
 @noindent
 Thus, since an entry created via a string like
 @code{"I\bt%Tem\t1%SCtrl+X"} will shown with a left-flushed label part
-of @code{"Item 1"}, this will found when searching with this string.
+of @code{"Item 1"}, this will be found when searching with either this
+string or a format string fo e.g. @code{"Item %d"} and a following
+integer argument of @code{1}.
 
 Another way to search for an entry is by its value as either specified
 via the @code{"%x"} special sequence or assigned automatically by
@@ -1027,15 +1041,22 @@ currently being hidden are.
 Using
 @findex fl_popup_set_title()
 @anchor{fl_popup_set_title()}
+@findex fl_popup_set_title_f()
+@anchor{fl_popup_set_title_f()}
 @findex fl_popup_get_title()
 @anchor{fl_popup_get_title()}
 @example
 void fl_popup_set_title(FL_POPUP *popup, const char *title);
+void fl_popup_set_title_f(FL_POPUP *popup, const char *fmt, ...);
 const char *fl_popup_set_title(FL_POPUP *popup);
 @end example
 @noindent
 the title of a popup can be changed or the currently set title
-determined.
+determined. (The two functions for setting the title are just
+different in the way the title is passed: the first one receives
+a simple string while the second one assembles the title from a
+format string just like the one used with @code{printf()} etc.
+and an appropriate number of following arguments.)
 
 To query or set the font the popups title is drawn in use
 @findex fl_popup_get_title_font()

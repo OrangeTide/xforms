@@ -62,12 +62,12 @@ setit( FL_OBJECT * obj,
 {
     if ( val )
     {
-        fl_set_object_lcol( obj, FL_BLACK );
+        fl_set_object_lcolor( obj, FL_BLACK );
         fl_activate_object( obj );
     }
     else
     {
-        fl_set_object_lcol( obj, FL_INACTIVE );
+        fl_set_object_lcolor( obj, FL_INACTIVE );
         fl_deactivate_object( obj );
     }
 }

@@ -1037,6 +1037,10 @@ FL_EXPORT void fl_set_form_position( FL_FORM  * form,
 FL_EXPORT void fl_set_form_title( FL_FORM    * form,
                                   const char * name );
 
+FL_EXPORT void fl_set_form_title_f( FL_FORM *    form,
+									const char * fmt,
+									... );
+
 FL_EXPORT void fl_set_app_mainform( FL_FORM * form );
 
 FL_EXPORT FL_FORM * fl_get_app_mainform( void );
@@ -1167,10 +1171,10 @@ FL_EXPORT void fl_set_object_lstyle( FL_OBJECT * obj,
 
 FL_EXPORT int fl_get_object_lstyle( FL_OBJECT * obj );
 
-FL_EXPORT void fl_set_object_lcol( FL_OBJECT * ob,
-                                   FL_COLOR    lcol );
+FL_EXPORT void fl_set_object_lcolor( FL_OBJECT * ob,
+									 FL_COLOR    lcol );
 
-FL_EXPORT FL_COLOR fl_get_object_lcol( FL_OBJECT * obj );
+FL_EXPORT FL_COLOR fl_get_object_lcolor( FL_OBJECT * obj );
 
 FL_EXPORT int fl_set_object_return( FL_OBJECT    * ob,
                                     unsigned int   when );
@@ -1200,6 +1204,10 @@ FL_EXPORT void fl_get_object_color( FL_OBJECT * obj,
 
 FL_EXPORT void fl_set_object_label( FL_OBJECT  * ob,
                                     const char * label );
+
+FL_EXPORT void fl_set_object_label_f( FL_OBJECT  * obj,
+									  const char * fmt,
+									  ... );
 
 FL_EXPORT const char * fl_get_object_label( FL_OBJECT * obj );
 
@@ -1253,7 +1261,8 @@ FL_EXPORT void fl_move_object( FL_OBJECT * obj,
                                FL_Coord    dx,
                                FL_Coord    dy );
 
-#define fl_set_object_lcolor  fl_set_object_lcol
+#define fl_set_object_lcol  fl_set_object_lcolor
+#define fl_get_object_lcol  fl_get_object_lcolor
 
 FL_EXPORT void fl_fit_object_label( FL_OBJECT * obj,
                                     FL_Coord    xmargin,
@@ -1321,6 +1330,10 @@ FL_EXPORT int fl_enumerate_fonts( void ( * output )( const char * s ),
 
 FL_EXPORT int fl_set_font_name( int          n,
                                 const char * name );
+
+FL_EXPORT int fl_set_font_name_f( int          n,
+								  const char * fmt,
+								  ... );
 
 FL_EXPORT void fl_set_font( int numb,
                             int size );

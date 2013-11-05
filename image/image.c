@@ -520,8 +520,8 @@ flimage_dump( FL_IMAGE   * image,
             flimage_close( image );
 
             image->completed = image->total;
-            fl_snprintf( buf, sizeof buf,
-                         "Done Writing %s(%s)", image->outfile, fmt );
+            fli_snprintf( buf, sizeof buf,
+                          "Done Writing %s(%s)", image->outfile, fmt );
             image->visual_cue( image, buf );
             return status;
         }
@@ -1458,7 +1458,7 @@ error_message( FL_IMAGE   * im  FL_UNUSED_ARG,
 
 
 /***************************************
- * a short cut for error message generating
+ * A short cut for error message generating
  ***************************************/
 
 void
@@ -1473,7 +1473,7 @@ flimage_error( FL_IMAGE   * im,
     if ( fmt && *fmt )
     {
         va_start( args, fmt );
-        fl_vsnprintf( buf, sizeof buf, fmt, args );
+        fli_vsnprintf( buf, sizeof buf, fmt, args );
         va_end( args );
     }
 

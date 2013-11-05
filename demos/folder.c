@@ -126,6 +126,7 @@ done_cb( FL_OBJECT * ob    FL_UNUSED_ARG,
 static void
 make_folder( FL_OBJECT * folder )
 {
+    FL_OBJECT *x;
     FD_buttonform *fd_buttonform;
     FD_staticform *fd_staticform;
     FD_valuatorform *fd_valuatorform;
@@ -153,11 +154,16 @@ make_folder( FL_OBJECT * folder )
 
     fl_load_browser( fd_choiceform->browser, "01Readme" );
 
-    fl_addto_tabfolder( folder,"ButtonObj", fd_buttonform->buttonform );
-    fl_addto_tabfolder( folder,"StaticObj", fd_staticform->staticform );
+    x = fl_addto_tabfolder( folder,"ButtonObj", fd_buttonform->buttonform );
+    fl_set_object_lcolor( x, FL_GREEN );
+//    fl_set_object_lstyle( x, FL_EMBOSSED_STYLE | FL_BOLD_STYLE );
+    x =fl_addto_tabfolder( folder,"StaticObj", fd_staticform->staticform );
+    fl_set_object_lcolor( x, FL_RED );
     fl_addto_tabfolder( folder,"ValuatorObj", fd_valuatorform->valuatorform );
     fl_addto_tabfolder( folder,"ChoiceObj", fd_choiceform->choiceform );
     fl_addto_tabfolder( folder,"InputObj", fd_inputform->inputform );
+    fl_set_object_lcolor( folder, FL_WHITE );
+    fl_set_object_lstyle( folder, FL_EMBOSSED_STYLE | FL_BOLD_STYLE );
 }
 
 

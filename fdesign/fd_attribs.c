@@ -357,12 +357,16 @@ validate_cvar_name( FL_OBJECT * obj,
 
         if ( ! w || ! *w )
             m = fl_strdup( "Invalid C identifier:" );
-        else
-            m = fli_print_to_string( "Invalid C identifier specified for %s:",
-                                     w );
+        else if ( ! ( asprintf( &m, "Invalid C identifier specified for %s:",
+                                w ) ) )
+            m = NULL;
 
-        fl_show_alert( "Error", m, s, 0 );
-        fl_free( m );
+        if ( m )
+        {
+            fl_show_alert( "Error", m, s, 0 );
+            fl_free( m );
+        }
+
         fl_set_focus_object( obj->form, obj );
         return 0;
     }
@@ -418,8 +422,8 @@ readback_attributes( FL_OBJECT * obj )
     obj->col2 = fd_generic_attrib->col2obj->col1;
     obj->lcol = fd_generic_attrib->lcolobj->col1;
 
-    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_ALIGN_%s",
-                 fl_get_choice_text( fd_generic_attrib->align ) );
+    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_ALIGN_%s",
+                  fl_get_choice_text( fd_generic_attrib->align ) );
     obj->align = align_val( tmpbuf );
 
     if (    fl_get_choice( fd_generic_attrib->inside ) == 1
@@ -428,16 +432,16 @@ readback_attributes( FL_OBJECT * obj )
     else
         obj->align = fl_to_outside_lalign( obj->align );
 
-    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
-                 fl_get_choice_text( fd_generic_attrib->resize ) );
+    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
+                  fl_get_choice_text( fd_generic_attrib->resize ) );
     obj->resize = resize_val( tmpbuf );
 
-    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
-                 fl_get_choice_text( fd_generic_attrib->segravity ) );
+    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
+                  fl_get_choice_text( fd_generic_attrib->segravity ) );
     obj->segravity = gravity_val( tmpbuf );
 
-    fl_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
-                 fl_get_choice_text( fd_generic_attrib->nwgravity ) );
+    fli_snprintf( tmpbuf, sizeof tmpbuf, "FL_%s",
+                  fl_get_choice_text( fd_generic_attrib->nwgravity ) );
     obj->nwgravity = gravity_val( tmpbuf );
 
     obj->lsize = fsizes[ fl_get_choice( fd_generic_attrib->sizeobj ) - 1 ].size;

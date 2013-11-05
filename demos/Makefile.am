@@ -108,8 +108,7 @@ noinst_PROGRAMS = arrowbutton \
 	xyplotall \
 	xyplotover \
 	yesno \
-	yesno_cb \
-	wwwl
+	yesno_cb
 
 #	menubar
 
@@ -284,7 +283,6 @@ xyplotover_LDADD  = ../image/libflimage.la ../lib/libforms.la \
 
 yesno_SOURCES = yesno.c
 yesno_cb_SOURCES = yesno_cb.c
-wwwl_SOURCES = wwwl.c
 
 
 .fd.c: ../fdesign/fdesign

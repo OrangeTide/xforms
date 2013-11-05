@@ -33,6 +33,7 @@
 #include <ctype.h>
 #include "include/forms.h"
 #include "flinternal.h"
+#include "private/flvasprintf.h"
 
 
 #define PointToPixel( a )     FL_crnd( ( a ) * fli_dpi / 72.0   )
@@ -1091,8 +1092,8 @@ force_visible( FL_FORM * form )
 
 
 /***************************************
- * Sets the name (label) of the form and. If the
- * form is shown it's also the form's window title.
+ * Sets the name (label) of the form. If the form
+ * is shown it's also the form's window title.
  ***************************************/
 
 void
@@ -1115,6 +1116,23 @@ fl_set_form_title( FL_FORM *    form,
     if ( form->window )
         fl_wintitle( form->window, form->label );
 }
+
+
+/***************************************
+ * Sets the name (label) of the form using a format string
+ ***************************************/
+
+void
+fl_set_form_title_f( FL_FORM *    form,
+                     const char * fmt,
+                     ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_set_form_title( form, buf );
+    fl_free( buf );
+}   
 
 
 /***************************************

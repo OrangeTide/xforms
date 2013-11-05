@@ -35,6 +35,7 @@
 #include <ctype.h>
 #include "include/forms.h"
 #include "flinternal.h"
+#include "private/flvasprintf.h"
 
 
 /*********************************************************************
@@ -1004,6 +1005,22 @@ fl_wintitle( Window       win,
  ***************************************/
 
 void
+fl_wintitle_f( Window       win,
+               const char * fmt,
+               ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_wintitle( win, buf );
+    fl_free( buf );
+}
+    
+
+/***************************************
+ ***************************************/
+
+void
 fl_winicontitle( Window       win,
                  const char * title )
 {
@@ -1019,6 +1036,22 @@ fl_winicontitle( Window       win,
         XFree( xtp.value );
 }
 
+
+/***************************************
+ ***************************************/
+
+void
+fl_winicontitle_f( Window       win,
+                   const char * fmt,
+                   ... )
+{
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    fl_winicontitle( win, buf );
+    fl_free( buf );
+}
+    
 
 /***************************************
  * Grab keyboard focus

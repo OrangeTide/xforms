@@ -83,6 +83,10 @@ FL_EXPORT FL_OBJECT * fl_add_input( int          type,
 FL_EXPORT void fl_set_input( FL_OBJECT  * ob,
                              const char * str );
 
+FL_EXPORT void fl_set_input_f( FL_OBJECT  * obj,
+							   const char * fmt,
+							   ... );
+
 FL_EXPORT void fl_set_input_return( FL_OBJECT    * ob,
                                     unsigned int   when );
 

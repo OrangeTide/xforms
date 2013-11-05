@@ -99,7 +99,7 @@ makeforms( void )
 
     tim = fl_add_timer( FL_VALUE_TIMER, 200, 40, 90, 50, "Time Left" );
     fl_set_object_callback( tim, timer1_expired, 0 );
-    fl_set_object_lcol( tim, FL_BLACK );
+    fl_set_object_lcolor( tim, FL_BLACK );
 
     fl_end_form( );
 

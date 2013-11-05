@@ -333,29 +333,44 @@ search the list of items according to several criteria:
 @anchor{fl_get_select_item_by_value()}
 @findex fl_get_select_item_by_label()
 @anchor{fl_get_select_item_by_label()}
+@findex fl_get_select_item_by_label_f()
+@anchor{fl_get_select_item_by_label_f()}
 @findex fl_get_select_item_by_text()
 @anchor{fl_get_select_item_by_text()}
+@findex fl_get_select_item_by_text_f()
+@anchor{fl_get_select_item_by_text_f()}
 @example
 FL_POPUP_ENTRY *fl_get_select_item_by_value(FL_OBJECT *obj, long val);
 FL_POPUP_ENTRY *fl_get_select_item_by_label(FL_OBJECT *obj,
                                             const char *label);
+FL_POPUP_ENTRY *fl_get_select_item_by_label_f(FL_OBJECT *obj,
+                                              const char *fmt, ...);
 FL_POPUP_ENTRY *fl_get_select_item_by_text(FL_OBJECT *obj,
                                            const char *text);
+FL_POPUP_ENTRY *fl_get_select_item_by_text_f(FL_OBJECT *obj,
+                                             const char *fmt, ...);
 @end example
 The first function, @code{@ref{fl_get_select_item_by_value()}},
 searches through the list of items and returns the first one with the
 @code{val} associated with the item (or @code{NULL} if none is found).
-The second, @code{@ref{fl_get_select_item_by_label()}} searches for a
-certain label as displayed for the item in the popup. The third,
-@code{@ref{fl_get_select_item_by_text()}} searches for the text the
+The second and third, @code{@ref{fl_get_select_item_by_label()}} and
+@code{@ref{fl_get_select_item_by_label_f()}} searches for a certain
+label as displayed for the item in the popup. The last two,
+@code{@ref{fl_get_select_item_by_text()}} and
+@code{@ref{fl_get_select_item_by_text_f()}} searches for the text the
 item was created by (that might be the same as the label text in
-simple cases). Please note that all functions return a structure of
-type @code{@ref{FL_POPUP_ENTRY}} (and not
-@code{@ref{FL_POPUP_RETURN}}, which gives you direct access to the
-entry in the popup for the item.
+simple cases). The difference between the second and third and the
+forth and the last is the way the text is passed to the functions,
+it's either a simple string or the result of the expansion of a format
+string as used for @code{printf()} etc. using the following
+unspecified arguments.
 
-Using e.g.@: the result of one of the functions above you can also
-set the currently selected item via your program using
+Please note that all these functions return a structure of type
+@code{@ref{FL_POPUP_ENTRY}} (and not @code{@ref{FL_POPUP_RETURN}},
+which gives you direct access to the entry in the popup for the item.
+
+Using e.g.@: the result of one of the functions above you can also set
+the currently selected item via your program using
 @findex fl_set_select_item()
 @anchor{fl_set_select_item()}
 @example
@@ -963,7 +978,7 @@ color that can be controlled via the first color argument,
 (i.e.@: while the popup is shown) its background is drawn in the color
 of second color argument, @code{col2}, of the same function. The color
 of the label when "inactive" is controlled via
-@code{@ref{fl_set_object_lcol()}}. When in "active" state the color
+@code{@ref{fl_set_object_lcolor()}}. When in "active" state the color
 use for the label can be set via the function
 @findex fl_set_nmenu_hl_text_color()
 @anchor{fl_set_nmenu_hl_text_color()}
@@ -1189,41 +1204,56 @@ To remove all lnes from a browser use
 void fl_clear_browser(FL_OBJECT *obj);
 @end example
 
-To add a line to a browser use
+To add a line to a browser use one of
 @findex fl_add_browser_line()
 @anchor{fl_add_browser_line()}
+@findex fl_add_browser_line_f()
+@anchor{fl_add_browser_line_f()}
 @example
 void fl_add_browser_line(FL_OBJECT *obj, const char *text);
+void fl_add_browser_line_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
-The line may contain embedded newline characters (@code{'\n'}).
-These will result in the text being split up into several lines,
-separated at the newline characters.
+The first function receives a simple string as the argument, the
+second one expects a format string just like for @code{printf()} etc.
+and followed by the appropriate number of arguments of the correct
+types. The line to be added may contain embedded newline characters
+(@code{'\n'}). These will result in the text being split up into
+several lines, separated at the newline characters.
 
-A second way of adding a line to the browser is to use the call
+A second way of adding a line to the browser is to use calls of
 @findex fl_addto_browser()
 @anchor{fl_addto_browser()}
+@findex fl_addto_browser_f()
+@anchor{fl_addto_browser_f()}
 @example
 void fl_addto_browser(FL_OBJECT *obj, const char *text);
 @end example
 @noindent
-The difference to @code{@ref{fl_add_browser_line()}} is that with this
-call the browser will be shifted such that the newly appended line is
+The difference to @code{@ref{fl_add_browser_line()}} and
+@code{@ref{fl_add_browser_line_f()}} is that with these
+calls the browser will be shifted such that the newly appended line is
 visible. This is useful when e.g.@: using the browser to display
 messages.
 
 Sometimes it may be more convenient to add characters to a browser
-without starting of a new line. To this end, the following routine
+without starting of a new line. To this end, the following routines
 exists
 @findex fl_addto_browser_chars()
 @anchor{fl_addto_browser_chars()}
+@findex fl_addto_browser_chars_f()
+@anchor{fl_addto_browser_chars_f()}
 @example
 void fl_addto_browser_chars(FL_OBJECT *obj, const char *text);
+void fl_addto_browser_chars_f(FL_OBJECT *obj, const char *fmt, ...);
 @end example
 @noindent
-This function appends text to the last line in the browser without
-advancing the line counter. Again the text may contain embedded
-newline characters (@code{'\n'}). In that case, the text before the
-first embedded newline is appended to the last line, and everything
+These functions appends text to the last line in the browser without
+advancing the line counter. The to functions differ in that the first
+one takes a simple string argument while the second expects a format
+string just as for @code{printf()} etc., followed by a corresponding
+number of arguments. Again the text may contain embedded newline
+characters (@code{'\n'}). In that case, the text before the first
+embedded newline is appended to the last line, and everything
 afterwards is put onto new lines. As in the case of
 @code{@ref{fl_addto_browser()}} the last added line will be visible in
 the browser.
@@ -1232,18 +1262,28 @@ You can also insert a line in front of a given line. All lines after
 it will be shifted. Note that the top line is numbered 1 (not 0).
 @findex fl_insert_browser_line()
 @anchor{fl_insert_browser_line()}
+@findex fl_insert_browser_line_f()
+@anchor{fl_insert_browser_line_f()}
 @example
 void fl_insert_browser_line(FL_OBJECT *obj, int line,
                             const char *text);
+void fl_insert_browser_line_f(FL_OBJECT *obj, int line,
+                              const char *fmt, ...);
 @end example
 @noindent
+The first function takes a simple string argument while the second one
+expects a format string as used for @code{printf()} etc. and the
+appropriate number of arguments (of the types specified in the format
+string).
+
 Please note that on insertion (as well as replacements, see below)
 embedded newline characters don't result in the line being split up as
 it's done in the previous functions. Instead they will rather likely
 appear as strange looking characters in the text shown. The only
 exception is when inserting into an empty browser or after the last
 line, then this function works exactly as if you had called
-@code{@ref{fl_add_browser_line()}}.
+@code{@ref{fl_add_browser_line()}} or
+@code{@ref{fl_add_browser_line_f()}}.
 
 To delete a line (shifting the following lines) use:
 @findex fl_delete_browser_line()
@@ -1253,17 +1293,26 @@ void fl_delete_browser_line(FL_OBJECT *obj, int line);
 
 @end example
 
-One can also replace a line using
+One can also replace a line using one of
 @findex fl_replace_browser_line()
 @anchor{fl_replace_browser_line()}
+@findex fl_replace_browser_line_f()
+@anchor{fl_replace_browser_line_f()}
 @example
 void fl_replace_browser_line(FL_OBJECT *obj, int line,
                              const char *text);
+void fl_replace_browser_line_f(FL_OBJECT *obj, int line,
+                               const char *fmt, ...);
 @end example
-As in the case of @code{@ref{fl_insert_browser_line()}} newline
-characters embedded into the replacement text don't have any special
-meaning, i.e.@: they don't result in replacement of more than a single
-line.
+The first one takes a simple string for the replacement text while for
+the second it is to be specified by a format string exactly as used in
+@code{printf()} etc. and the appropriate number of arguments of the
+types specifed in the format string.
+\
+As in the case of @code{@ref{fl_insert_browser_line()}} and
+@code{@ref{fl_insert_browser_line_f()}} newline characters embedded
+into the replacement text don't have any special meaning, i.e.@: they
+don't result in replacement of more than a single line.
 
 Making many changes to a visible browser after another, e.g.@:
 clearing it and then adding a number of new lines, is slow because the
@@ -1380,7 +1429,9 @@ is currently shown at the top of the browser:
 int fl_get_browser_topline(FL_OBJECT *obj);
 @end example
 @noindent
-Note that the index of the top line is 1, not 0.
+Note that the index of the top line is @code{1}, not @code{0}. A
+value of @code{0} is returned if the browser doesn't contain any
+lines.
 
 It is possible to register a callback function that gets called when a
 line is double-clicked on. To do so, the following function is
@@ -1559,7 +1610,8 @@ Regular @code{'@@'} character.
 The modifiers (bold and itatic) work by adding
 @code{@ref{FL_BOLD_STYLE}} and @code{@ref{FL_ITALIC_STYLE}} to the
 current active font index to look up the font in the font table (you
-can modify the table using @code{@ref{fl_set_font_name()}}).
+can modify the table using @code{@ref{fl_set_font_name()}} or
+@code{@ref{fl_set_font_name_f()}}).
 
 More than one option can be used by putting them next to each other.
 For example, @code{"@@C1@@l@@f@@b@@cTitle"} will give you the red,

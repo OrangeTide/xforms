@@ -239,6 +239,10 @@ FL_EXPORT const char *fl_popup_get_title( FL_POPUP   * );
 FL_EXPORT FL_POPUP *fl_popup_set_title( FL_POPUP *,
                                         const char * );
 
+FL_EXPORT FL_POPUP * fl_popup_set_title_f( FL_POPUP   * popup,
+										   const char * fmt,
+										   ... );
+
 FL_EXPORT FL_POPUP_CB fl_popup_entry_set_callback( FL_POPUP_ENTRY *,
                                                    FL_POPUP_CB );
 
@@ -286,8 +290,16 @@ FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_user_data( FL_POPUP *,
 FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_text( FL_POPUP *,
                                                       const char * );
 
+FL_EXPORT FL_POPUP_ENTRY * fl_popup_entry_get_by_text_f( FL_POPUP *,
+														 const char *,
+														 ... );
+
 FL_EXPORT FL_POPUP_ENTRY *fl_popup_entry_get_by_label( FL_POPUP *,
                                                        const char * );
+
+FL_EXPORT FL_POPUP_ENTRY * fl_popup_entry_get_by_label_f( FL_POPUP *,
+														  const char *,
+														  ... );
 
 FL_EXPORT int fl_popup_entry_get_group( FL_POPUP_ENTRY * );
 

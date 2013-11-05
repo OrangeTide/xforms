@@ -22,6 +22,7 @@
 #include "include/forms.h"
 #include "flinternal.h"
 #include "private/pselect.h"
+#include "private/flvasprintf.h"
 
 
 static void timeout_cb( int, void * );
@@ -629,6 +630,24 @@ fl_get_select_item_by_label( FL_OBJECT  * obj,
  ***************************************/
 
 FL_POPUP_ENTRY *
+fl_get_select_item_by_label_f( FL_OBJECT  * obj,
+                               const char * fmt,
+                               ... )
+{
+    FL_POPUP_ENTRY *e;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    e = fl_get_select_item_by_label( obj, buf );
+    fl_free( buf );
+    return e;
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_POPUP_ENTRY *
 fl_get_select_item_by_text( FL_OBJECT  * obj,
                             const char * text )
 {
@@ -647,6 +666,24 @@ fl_get_select_item_by_text( FL_OBJECT  * obj,
                                    "fl_get_select_item_by_text" );
 
     return fl_popup_entry_get_by_text( sp->popup, text );
+}
+
+
+/***************************************
+ ***************************************/
+
+FL_POPUP_ENTRY *
+fl_get_select_item_by_text_f( FL_OBJECT  * obj,
+                              const char * fmt,
+                              ... )
+{
+    FL_POPUP_ENTRY *e;
+    char *buf;
+
+    EXPAND_FORMAT_STRING( buf, fmt );
+    e = fl_get_select_item_by_text( obj, buf );
+    fl_free( buf );
+    return e;
 }
 
 

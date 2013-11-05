@@ -342,7 +342,7 @@ ff_read_lsize( FL_OBJECT * obj )
  ***************************************/
 
 static int
-ff_read_lcol( FL_OBJECT * obj )
+ff_read_lcolor( FL_OBJECT * obj )
 {
     int r;
 
@@ -561,7 +561,7 @@ static obj_attr_handlers attr_array[ ] =
     { "lstyle",    ff_read_lstyle    },
     { "size",      ff_read_lsize     },
     { "lsize",     ff_read_lsize     },
-    { "lcol",      ff_read_lcol      },
+    { "lcol",      ff_read_lcolor    },
     { "resize",    ff_read_resize    },
     { "label",     ff_read_label     },
     { "shortcut",  ff_read_shortcut  },
@@ -621,8 +621,12 @@ load_object( void )
 
         if ( ( type = find_type_value( objclass, type_name ) ) < 0 )
         {
-            char *tmp = fli_print_to_string( "Invalid type \"%s\" for object "
-                                             "class", type_name );
+            char *tmp;
+
+            if ( ! asprintf( &tmp, "Invalid type \"%s\" for object class",
+                             type_name ) )
+                tmp = NULL;
+
             fli_safe_free( type_name );
             ff_err( tmp );
             fli_safe_free( type_name );
@@ -644,9 +648,12 @@ load_object( void )
                 ff_err( "Expected object box size" );
             else
             {
-                char *msg = fli_print_to_string( "Expected object box sizes "
-                                                 "as 4 values, found %d valid "
-                                                 "ones", r - 1 );
+                char *msg;
+
+                if ( ! asprintf( &msg, "Expected object box sizes as 4 "
+                                 "values, found %d valid ones", r - 1 ) )
+                    msg = NULL;
+
                 ff_err( msg );
                 fli_safe_free( msg );
             }

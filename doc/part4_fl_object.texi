@@ -81,23 +81,25 @@ colors with @code{@ref{fl_get_object_color()}}. The routine
 @code{fl_add_NEW()} should fill in defaults.
 
 @item char *label
-This is a pointer to a text string. This can be used by class routines
-to provide a label for the object. The class routines may not forget
-to allocate storage for it when it sets the pointer itself, i.e.@:
-doesn't use @code{@ref{fl_set_object_label()}} - an empty label should
-be the empty string and not just a @code{NULL} pointer. The user can
-change it using the routine @code{@ref{fl_set_object_label()}} or ask
-for it using @code{@ref{fl_get_object_label()}}. The label must be
-drawn by the routine handling the object when it receives a
-@code{FL_DRAWLABEL} event (or it could be part of the code for
-@code{FL_DRAW} event). For non-offsetted labels, i.e.@: the alignment
-is relative to the entire bounding box, simply calling
-@code{@ref{fl_draw_object_label()}} should be enough.
+This is a pointer to an allocated text string. This can be used by
+class routines to provide a label for the object. The class routines
+may not forget to allocate storage for it when it sets the pointer
+itself, i.e.@: doesn't use @code{@ref{fl_set_object_label()}} - an
+empty label should be the empty string and not just a @code{NULL}
+pointer. The user can change it using the routines
+@code{@ref{fl_set_object_label()}} and
+@code{@ref{fl_set_object_label_f()}} or ask for it using
+@code{@ref{fl_get_object_label()}}. The label must be drawn by the
+routine handling the object when it receives a @code{FL_DRAWLABEL}
+event (or it could be part of the code for @code{FL_DRAW} event). For
+non-offsetted labels, i.e.@: the alignment is relative to the entire
+bounding box, simply calling @code{@ref{fl_draw_object_label()}}
+should be enough.
 
 @item FL_COLOR lcol
 The color of the label. The class routines can freely use this. The
-user can set it with @code{@ref{fl_set_object_lcol()}} and test it
-with @code{@ref{fl_get_object_lcol()}}.
+user can set it with @code{@ref{fl_set_object_lcolor()}} and test it
+with @code{@ref{fl_get_object_lcolor()}}.
 
 @item int lsize
 The size of the font used to draw the label. The class routines can

@@ -485,7 +485,7 @@ fill_entries( FL_OBJECT  * br,
         char tmpbuf[ 256 ],
              *p;
 
-        fl_snprintf( tmpbuf, sizeof tmpbuf, "Can't read %s", lfs->dname );
+        fli_snprintf( tmpbuf, sizeof tmpbuf, "Can't read %s", lfs->dname );
         tmpbuf[ sizeof tmpbuf - 1 ] = '\0';
         fl_show_alert( "ReadDir", tmpbuf, fli_get_syserror_msg( ), 0 );
         M_err( "fill_entries", "Can't read %s", lfs->dname );
@@ -531,7 +531,7 @@ fill_entries( FL_OBJECT  * br,
                 marker = filemarker;
         }
 
-        fl_snprintf( tt, sizeof tt, "%c %s", marker, dl->name );
+        fli_snprintf( tt, sizeof tt, "%c %s", marker, dl->name );
 
         if ( dl->type == FT_DIR && listdirfirst )
         {

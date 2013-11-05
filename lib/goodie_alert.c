@@ -30,7 +30,7 @@
 
 #include "include/forms.h"
 #include "flinternal.h"
-#include "private/flsnprintf.h"
+#include "private/flvasprintf.h"
 
 
 /****************** Alert dialog ********************{**/
@@ -194,49 +194,14 @@ fl_show_alert( const char * title,
  ***************************************/
 
 void
-fl_show_alert2( int c,
-                const char * fmt,
-                ... )
+fl_show_alert_f( int c,
+                 const char * fmt,
+                 ... )
 {
     char *buf,
          *p;
-    int len;
-    int written;
-    va_list ap;
 
-    if ( ! fmt || ! * fmt )
-    {
-        M_warn( "fl_show_msg", "NULL or empty format string" );
-        return;
-    }
-
-    /* Try to come up with an estimate of the length required for the
-       whole string */
-
-    len = strlen( fmt ) + 1;
-
-    for ( p = strchr( fmt, '%' ); p; p = strchr( ++p, '%' ) )
-        len += 15;
-
-    buf = fl_malloc( len );
-
-    while ( 1 )
-    {
-        va_start( ap, fmt );
-        written = fl_vsnprintf( buf, len, fmt, ap );
-        va_end( ap );
-
-        /* Take care: e.g. in older libc versions a negative value got
-           returned if the buffer wasn't large enough while newer ones
-           follow C99 and return the length of the string that would be
-           needed (but without the trailing '\0') */
-
-        if ( written > -1 && written < len )
-            break;
-
-        len = written < 0 ? ( 2 * len ) : ( written + 1 );
-        buf = fl_realloc( buf, len );
-    }
+    EXPAND_FORMAT_STRING( buf, fmt );
 
     p = strchr( buf, '\f' );
     if ( p )
@@ -244,7 +209,9 @@ fl_show_alert2( int c,
     else
         p = NULL;
 
-    show_it( buf, p, c );
+    fl_show_alert( buf, p, NULL, c );
+
+    fl_free( buf );
 }
 
 

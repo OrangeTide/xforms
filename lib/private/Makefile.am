@@ -2,6 +2,7 @@ include $(top_srcdir)/config/common.am
 
 EXTRA_DIST = \
 	flsnprintf.h \
+	flvasprintf.h \
 	pbrowser.h \
 	pcanvas.h \
 	pchoice.h \

@@ -888,9 +888,6 @@ extern int fli_is_watched_io( int );
 
 extern const char *fli_object_class_name( FL_OBJECT * );
 
-extern char *fli_print_to_string( const char * fmt,
-                                  ... );
-
 extern char *fli_read_line( FILE * fp );
 
 extern char *fli_sstrcpy( char       * dest,
@@ -1070,8 +1067,8 @@ extern const char * fli_get_vn_name( FLI_VN_PAIR * vn_pair,
 extern void fli_set_tab_color( FL_OBJECT * obj,
                                FL_COLOR    col1,
                                FL_COLOR    col2 );
-extern void fli_set_tab_lcol( FL_OBJECT * obj,
-                              FL_COLOR    lcol );
+extern void fli_set_tab_lcolor( FL_OBJECT * obj,
+                                FL_COLOR    lcol );
 
 extern void fli_set_tab_lsize( FL_OBJECT * obj,
                                int         lsize );

@@ -466,10 +466,12 @@ either through command line options, resources or programmatically. See
 the Part V for details.
 
 If for any reason, you would like to change the form title (as well as
-its associated icon) after it is shown, the following call can be used
+its associated icon) after it is shown, the following functions can be used
 @findex fl_set_form_title()
+@findex fl_set_form_title_f()
 @example
 void fl_set_form_title(FL_FORM *form, const char *name)
+void fl_set_form_title_f(FL_FORM *form, const char *fmt, ...)
 @end example
 
 To set or change the icon shown when a form is iconified, use the
@@ -919,7 +921,7 @@ It is a good idea to give the user a visual clue that a form is
 deactivated. This is not automatically done mainly for performance
 reasons. Experience shows that graying out some important objects on
 the form is in general adequate. Graying out an object can be
-accomplished by using @code{@ref{fl_set_object_lcol()}} (see
+accomplished by using @code{@ref{fl_set_object_lcolor()}} (see
 @file{objinactive.c}. What objects to gray out is obviously
 application dependent.
 

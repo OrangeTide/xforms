@@ -68,9 +68,9 @@ get_tmpf( char * obuf )
             /* empty */ ;
         else
         {
-            fl_snprintf( buf[ k ], sizeof buf[ k ],
-                         "%s/.FL%03d_%d.tmp", "/tmp", seq++,
-                         ( int ) getpid( ) );
+            fli_snprintf( buf[ k ], sizeof buf[ k ],
+                          "%s/.FL%03d_%d.tmp", "/tmp", seq++,
+                          ( int ) getpid( ) );
             name = buf[ k ];
 
             /* create the file now in exclusive mode (for security) */
@@ -114,7 +114,7 @@ flimage_description_via_filter( FL_IMAGE     * im,
 
     do
     {
-        fl_snprintf( cmd, sizeof cmd - 12, *q, im->infile, tmpf );
+        fli_snprintf( cmd, sizeof cmd - 12, *q, im->infile, tmpf );
         if ( verbose )
             fprintf( stderr, "executing %s\n", cmd );
         else
@@ -264,7 +264,7 @@ flimage_write_via_filter( FL_IMAGE     * im,
 
     for ( shellcmd = cmds, status = ! err; status && *shellcmd; shellcmd++ )
     {
-        fl_snprintf( cmd, sizeof cmd, *shellcmd, tmpf, ofile );
+        fli_snprintf( cmd, sizeof cmd, *shellcmd, tmpf, ofile );
         if ( ! verbose )
             strcat( cmd, " 2>/dev/null" );
         else
